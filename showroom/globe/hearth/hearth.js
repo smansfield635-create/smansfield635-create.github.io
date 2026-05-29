@@ -1,14 +1,13 @@
 // /showroom/globe/hearth/hearth.js
-// HEARTH_ROUTE_CONDUCTOR_ANIMATED_LOAD_SCREEN_STATE_MACHINE_TNT_v1
+// HEARTH_ROUTE_CONDUCTOR_MULTI_BAR_LIVE_LOADING_DIAGNOSTIC_TNT_v2
 // Full-file replacement.
 // Active Hearth route conductor only.
 // Purpose:
-// - Restore animated Hearth loading screen.
-// - Operate live loading progress, percentage, checkmarks, and copyable diagnostic receipt.
-// - Consume Runtime Table when present without hard-blocking first visible carrier.
-// - Call /assets/hearth/hearth.canvas.js as visible planet carrier authority.
-// - Reconcile receipt fields into visible loader phase state.
-// - Preserve receipt/loading-screen lifecycle separately from canvas lifecycle.
+// - Replace the single-bar loader with a multi-bar live diagnostic cockpit.
+// - Keep heartbeat, partial receipt, copy diagnostic, and visible progress available during loading.
+// - Keep Runtime Table optional for first visible carrier.
+// - Coordinate /assets/hearth/hearth.canvas.js without owning canvas drawing.
+// - Neutralize stale shell loader without removing canvas, mount, or controls.
 // Does not own:
 // - planet drawing
 // - tectonic cause
@@ -23,11 +22,11 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_ROUTE_CONDUCTOR_ANIMATED_LOAD_SCREEN_STATE_MACHINE_TNT_v1";
-  const RECEIPT = "HEARTH_ROUTE_CONDUCTOR_ANIMATED_LOAD_SCREEN_STATE_MACHINE_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_LOAD_SCREEN_CANVAS_HANDOFF_TNT_v1";
-  const BASELINE_CONTRACT = "HEARTH_DYNAMIC_ROUTE_CONDUCTOR_RUNTIME_TABLE_CANVAS_REBALANCE_PREGAME_TO_POSTGAME_BINDING_v1";
-  const VERSION = "2026-05-29.hearth-route-conductor-animated-load-screen-state-machine-v1";
+  const CONTRACT = "HEARTH_ROUTE_CONDUCTOR_MULTI_BAR_LIVE_LOADING_DIAGNOSTIC_TNT_v2";
+  const RECEIPT = "HEARTH_ROUTE_CONDUCTOR_MULTI_BAR_LIVE_LOADING_DIAGNOSTIC_RECEIPT_v2";
+  const PREVIOUS_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_ANIMATED_LOAD_SCREEN_STATE_MACHINE_TNT_v1";
+  const BASELINE_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_MULTI_BAR_LIVE_LOADING_DIAGNOSTIC_PRECODE_FINAL_DRAFT_v1";
+  const VERSION = "2026-05-29.hearth-route-conductor-multi-bar-live-loading-diagnostic-v2";
 
   const ROUTE = "/showroom/globe/hearth/";
   const DESTINATION_FILE = "/showroom/globe/hearth/hearth.js";
@@ -38,90 +37,65 @@
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
 
-  const PHASE_STATE = Object.freeze({
+  const LANE_STATE = Object.freeze({
+    STARTED: "STARTED",
+    ALIVE: "ALIVE",
     PENDING: "PENDING",
     LOADING: "LOADING",
+    CHECKING: "CHECKING",
     READY: "READY",
     DEGRADED: "DEGRADED",
     HELD: "HELD",
-    FAILED: "FAILED"
+    FAILED: "FAILED",
+    PARTIAL_READY: "PARTIAL_READY",
+    FINAL_PENDING: "FINAL_PENDING",
+    FINAL_READY: "FINAL_READY"
   });
 
   const POSTGAME_STATUS = Object.freeze({
-    LOADING_SCREEN_ACTIVE: "LOADING_SCREEN_ACTIVE",
-    ANIMATED_STATE_MACHINE_ACTIVE: "ANIMATED_STATE_MACHINE_ACTIVE",
+    LIVE_DIAGNOSTIC_LOADING: "LIVE_DIAGNOSTIC_LOADING",
+    MULTI_BAR_LOADER_ACTIVE: "MULTI_BAR_LOADER_ACTIVE",
     CANVAS_HANDOFF_IN_PROGRESS: "CANVAS_HANDOFF_IN_PROGRESS",
     VISIBLE_CARRIER_ACTIVE_RUNTIME_TABLE_READY: "VISIBLE_CARRIER_ACTIVE_RUNTIME_TABLE_READY",
     VISIBLE_CARRIER_ACTIVE_RUNTIME_TABLE_DEGRADED: "VISIBLE_CARRIER_ACTIVE_RUNTIME_TABLE_DEGRADED",
     VISIBLE_CARRIER_ACTIVE_RUNTIME_TABLE_MISSING: "VISIBLE_CARRIER_ACTIVE_RUNTIME_TABLE_MISSING",
-    VISIBLE_CARRIER_ACTIVE_SOURCE_HELD: "VISIBLE_CARRIER_ACTIVE_SOURCE_HELD",
-    LOADING_SEQUENCE_COMPLETE_DIAGNOSTIC_READY: "LOADING_SEQUENCE_COMPLETE_DIAGNOSTIC_READY",
+    DIAGNOSTIC_COCKPIT_READY: "DIAGNOSTIC_COCKPIT_READY",
     BLOCKED_CARRIER_STRUCTURAL_FAILURE: "BLOCKED_CARRIER_STRUCTURAL_FAILURE"
   });
 
-  const PHASES = [
+  const LANE_KEYS = Object.freeze({
+    SYSTEM: "system",
+    CONDUCTOR: "conductor",
+    CANVAS: "canvas",
+    RECEIPT: "receipt"
+  });
+
+  const LANE_DEFINITIONS = Object.freeze([
     {
-      key: "shell",
-      label: "Shell mounted",
-      floor: 12,
-      pendingText: "Route shell pending",
-      loadingText: "Route shell mounting",
-      readyText: "Route shell mounted"
+      key: LANE_KEYS.SYSTEM,
+      title: "System alive",
+      subtitle: "Heartbeat active",
+      startProgress: 12
     },
     {
-      key: "runtimeTable",
-      label: "Lab Runtime Table",
-      floor: 28,
-      pendingText: "Runtime Table pending",
-      loadingText: "Runtime Table checking",
-      readyText: "Runtime Table ready",
-      degradedText: "Runtime Table degraded / optional"
+      key: LANE_KEYS.CONDUCTOR,
+      title: "Conductor",
+      subtitle: "Route conductor booting",
+      startProgress: 22
     },
     {
-      key: "sourceStack",
-      label: "Source stack",
-      floor: 42,
-      pendingText: "Source stack pending",
-      loadingText: "Source stack checking",
-      readyText: "Source stack held",
-      heldText: "Source stack held"
+      key: LANE_KEYS.CANVAS,
+      title: "Canvas carrier",
+      subtitle: "Carrier handoff pending",
+      startProgress: 0
     },
     {
-      key: "canvasCarrier",
-      label: "Canvas carrier",
-      floor: 62,
-      pendingText: "Canvas carrier pending",
-      loadingText: "Canvas carrier loading",
-      readyText: "Canvas carrier ready",
-      failedText: "Canvas carrier failed"
-    },
-    {
-      key: "touch",
-      label: "Touch / drag inspection",
-      floor: 76,
-      pendingText: "Touch inspection pending",
-      loadingText: "Touch inspection binding",
-      readyText: "Touch inspection ready",
-      degradedText: "Touch inspection degraded"
-    },
-    {
-      key: "visiblePlanet",
-      label: "Visible planet",
-      floor: 90,
-      pendingText: "Visible planet pending",
-      loadingText: "Visible planet forming",
-      readyText: "Visible planet ready",
-      degradedText: "Visible planet degraded"
-    },
-    {
-      key: "diagnosticReceipt",
-      label: "Diagnostic receipt",
-      floor: 100,
-      pendingText: "Diagnostic receipt pending",
-      loadingText: "Diagnostic receipt preparing",
-      readyText: "Diagnostic receipt ready"
+      key: LANE_KEYS.RECEIPT,
+      title: "Diagnostic receipt",
+      subtitle: "Partial receipt initializing",
+      startProgress: 0
     }
-  ];
+  ]);
 
   const state = {
     contract: CONTRACT,
@@ -130,26 +104,44 @@
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     route: ROUTE,
-
-    routeShellLoaded: false,
     activeRouteConductor: DESTINATION_FILE,
     retiredClimateRoute: RETIRED_CLIMATE_ROUTE,
     retiredClimateRouteActiveCarrier: false,
 
-    loadingScreenMounted: false,
-    loadingScreenVisible: true,
-    animatedStateMachineActive: false,
-    receiptOverlayIndependent: true,
-    loadingScreenReceiptCopyEnabled: true,
-    receiptExpanded: false,
-    receiptVisible: true,
+    systemAlive: false,
+    heartbeatStarted: false,
+    heartbeatStartedAt: 0,
+    heartbeatElapsedMs: 0,
+    heartbeatText: "Starting",
+    latestEvent: "CONDUCTOR_V2_STARTING",
 
-    progress: 0,
-    targetProgress: 0,
-    displayProgress: 0,
+    multiBarLoaderMounted: false,
+    partialReceiptAvailable: false,
+    copyDiagnosticAvailable: false,
+    copyDiagnosticArmed: false,
+    finalReceiptAvailable: false,
+    receiptOverlayIndependent: true,
+
+    mainProgress: 0,
+    mainDisplayProgress: 0,
+    mainProgressCap: 0,
+    mainProgressText: "Starting Hearth conductor",
+
+    oldLoaderNeutralized: false,
+    oldLoaderNeutralizationMode: "pending",
+
+    runtimeTablePresent: false,
+    runtimeTableMode: "RUNTIME_TABLE_PENDING",
+    runtimeTablePlanAttempted: false,
+    runtimeTablePlanCreated: false,
+    runtimeTablePlanError: "",
+    runtimeTablePlan: null,
+    runtimeTableOptional: true,
+    runtimeTableMissingDoesNotBlockCarrier: true,
+
+    sourceAuthorityHeld: true,
 
     canvasMountPresent: false,
-    canvasAuthority: CANVAS_AUTHORITY_FILE,
     canvasApiPresent: false,
     canvasScriptRequested: false,
     canvasScriptLoaded: false,
@@ -159,36 +151,29 @@
     canvasCarrierHandoffOk: false,
     canvasCarrierHandoffError: "",
     canvasCarrierMethod: "",
-
-    runtimeTable: RUNTIME_TABLE_FILE,
-    runtimeTableOptional: true,
-    runtimeTablePresent: false,
-    runtimeTableMode: "RUNTIME_TABLE_PENDING",
-    runtimeTablePlanAttempted: false,
-    runtimeTablePlanCreated: false,
-    runtimeTablePlanError: "",
-    runtimeTablePlan: null,
-    runtimeTableMissingDoesNotBlockCarrier: true,
-
-    sourceAuthorityHeld: true,
-    visibleCarrierFirst: true,
-    wideProbeDeferred: true,
-    singleAnchorIsLocalProofOnly: true,
-
+    firstFrameDetected: false,
     dragInspectionBound: false,
     imageRendered: false,
+
+    panelMobileSafe: false,
+    buttonsReachable: false,
+    mapPortalNotBlockingControls: true,
+    cockpitCollapsed: false,
+    receiptVisible: false,
+    receiptExpanded: false,
+
     coherentExpressionPass: false,
     visualPassClaimed: false,
-
-    postgameStatus: POSTGAME_STATUS.LOADING_SCREEN_ACTIVE,
-    firstFailedCoordinate: "STATE_MACHINE_STARTING",
-    recommendedNextRenewalTarget: "canvas-handoff-progress-reconciliation",
-
     generatedImage: false,
     graphicBox: false,
     webGL: false,
 
-    phaseStates: {},
+    firstFailedCoordinate: "CONDUCTOR_V2_STARTING",
+    recommendedNextRenewalTarget: "multi-bar-loader-observation",
+    postgameStatus: POSTGAME_STATUS.LIVE_DIAGNOSTIC_LOADING,
+
+    lanes: {},
+    watchdogStates: {},
     events: [],
     errors: [],
     startedAt: "",
@@ -199,32 +184,47 @@
     mount: null,
     overlay: null,
     panel: null,
+    compact: null,
     title: null,
     subtitle: null,
-    progressBar: null,
-    progressFill: null,
-    progressPercent: null,
-    phaseList: null,
-    receipt: null,
+    latest: null,
+    mainBar: null,
+    mainPercent: null,
+    laneArea: null,
+    receiptBox: null,
     receiptPre: null,
     copyButton: null,
+    receiptButton: null,
     expandButton: null,
-    toggleButton: null
+    collapseButton: null
   };
 
-  let raf = 0;
-  let reconcileTimers = [];
-  let canvasBootAttempted = false;
+  let progressRaf = 0;
+  let heartbeatTimer = 0;
+  let reconcileTimer = 0;
+  let canvasCallAttempted = false;
+  let partialReceiptCreated = false;
+  let lastRenderText = "";
 
-  PHASES.forEach((phase) => {
-    state.phaseStates[phase.key] = {
-      key: phase.key,
-      label: phase.label,
-      state: PHASE_STATE.PENDING,
-      text: phase.pendingText,
-      floor: phase.floor,
-      complete: false,
-      at: ""
+  LANE_DEFINITIONS.forEach((lane) => {
+    state.lanes[lane.key] = {
+      key: lane.key,
+      title: lane.title,
+      state: LANE_STATE.PENDING,
+      progress: 0,
+      subtitle: lane.subtitle,
+      elapsedMs: 0,
+      startedAtMs: 0,
+      updatedAt: "",
+      lastEvent: "PENDING",
+      detail: ""
+    };
+
+    state.watchdogStates[lane.key] = {
+      stillLoadingIssued: false,
+      slowLoadIssued: false,
+      extendedLoadIssued: false,
+      text: ""
     };
   });
 
@@ -236,14 +236,14 @@
     }
   }
 
+  function nowMs() {
+    return Date.now ? Date.now() : new Date().getTime();
+  }
+
   function clamp(value, min, max) {
     const n = Number(value);
     if (!Number.isFinite(n)) return min;
     return Math.max(min, Math.min(max, n));
-  }
-
-  function clamp01(value) {
-    return clamp(value, 0, 1);
   }
 
   function bool(value, fallback = false) {
@@ -272,6 +272,13 @@
     }
   }
 
+  function formatElapsed(ms) {
+    const total = Math.max(0, Math.floor(Number(ms || 0) / 1000));
+    const minutes = Math.floor(total / 60);
+    const seconds = total % 60;
+    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  }
+
   function emit(event, detail = {}) {
     const entry = {
       event,
@@ -280,13 +287,14 @@
     };
 
     state.events.push(entry);
+    state.latestEvent = event;
     state.updatedAt = entry.at;
 
-    if (state.events.length > 80) {
-      state.events.splice(0, state.events.length - 80);
+    if (state.events.length > 120) {
+      state.events.splice(0, state.events.length - 120);
     }
 
-    publishDataset();
+    publishGlobals();
     return entry;
   }
 
@@ -300,77 +308,126 @@
 
     state.errors.push(item);
 
-    if (state.errors.length > 30) {
-      state.errors.splice(0, state.errors.length - 30);
+    if (state.errors.length > 40) {
+      state.errors.splice(0, state.errors.length - 40);
     }
 
     emit("ERROR", item);
     return item;
   }
 
-  function getDataset() {
-    return doc && doc.documentElement ? doc.documentElement.dataset : null;
-  }
+  function setLane(key, next = {}) {
+    const lane = state.lanes[key];
+    if (!lane) return;
 
-  function setPhase(key, nextState, text, eventName) {
-    const phaseDef = PHASES.find((phase) => phase.key === key);
-    const phase = state.phaseStates[key];
+    const previousState = lane.state;
+    const previousProgress = lane.progress;
 
-    if (!phase || !phaseDef) return;
+    if (!lane.startedAtMs) {
+      lane.startedAtMs = nowMs();
+    }
+
+    if (next.state) lane.state = next.state;
+    if (Number.isFinite(Number(next.progress))) lane.progress = clamp(Number(next.progress), 0, 100);
+    if (next.subtitle !== undefined) lane.subtitle = String(next.subtitle || "");
+    if (next.detail !== undefined) lane.detail = String(next.detail || "");
+    if (next.lastEvent) lane.lastEvent = next.lastEvent;
+
+    lane.elapsedMs = nowMs() - lane.startedAtMs;
+    lane.updatedAt = nowIso();
 
     if (
-      phase.state === nextState &&
-      (!text || phase.text === text)
+      previousState !== lane.state ||
+      previousProgress !== lane.progress ||
+      next.forceEvent
     ) {
-      return;
+      emit(next.event || `LANE_${key.toUpperCase()}_${lane.state}`, {
+        key,
+        state: lane.state,
+        progress: lane.progress,
+        subtitle: lane.subtitle,
+        detail: lane.detail
+      });
     }
 
-    phase.state = nextState;
-    phase.text = text || phaseDef[`${String(nextState).toLowerCase()}Text`] || phaseDef.readyText || phase.label;
-    phase.complete = nextState === PHASE_STATE.READY || nextState === PHASE_STATE.HELD || nextState === PHASE_STATE.DEGRADED;
-    phase.at = nowIso();
-
-    if (phase.complete) {
-      state.targetProgress = Math.max(state.targetProgress, phaseDef.floor);
-    }
-
-    if (nextState === PHASE_STATE.LOADING) {
-      state.targetProgress = Math.max(state.targetProgress, Math.max(0, phaseDef.floor - 8));
-    }
-
-    emit(eventName || `PHASE_${key.toUpperCase()}_${nextState}`, {
-      key,
-      state: nextState,
-      text: phase.text,
-      targetProgress: state.targetProgress
-    });
-
-    renderLoader();
+    updateMainProgressCap();
+    render();
   }
 
-  function phaseIcon(phase) {
-    if (!phase) return "○";
+  function markWatchdog(key) {
+    const lane = state.lanes[key];
+    const watchdog = state.watchdogStates[key];
 
-    switch (phase.state) {
-      case PHASE_STATE.READY:
-        return "✓";
-      case PHASE_STATE.DEGRADED:
-        return "!";
-      case PHASE_STATE.HELD:
-        return "–";
-      case PHASE_STATE.FAILED:
-        return "×";
-      case PHASE_STATE.LOADING:
-        return "•";
-      case PHASE_STATE.PENDING:
-      default:
-        return "○";
+    if (!lane || !watchdog) return;
+
+    const elapsed = lane.elapsedMs || (lane.startedAtMs ? nowMs() - lane.startedAtMs : 0);
+    const active = ![
+      LANE_STATE.READY,
+      LANE_STATE.HELD,
+      LANE_STATE.DEGRADED,
+      LANE_STATE.FAILED,
+      LANE_STATE.FINAL_READY
+    ].includes(lane.state);
+
+    if (!active) return;
+
+    if (elapsed >= 12000 && !watchdog.extendedLoadIssued) {
+      watchdog.extendedLoadIssued = true;
+      watchdog.text = `Extended load · copy diagnostic now available · elapsed ${formatElapsed(elapsed)}`;
+      emit("WATCHDOG_EXTENDED_LOAD", { key, elapsedMs: elapsed, text: watchdog.text });
+    } else if (elapsed >= 6000 && !watchdog.slowLoadIssued) {
+      watchdog.slowLoadIssued = true;
+      watchdog.text = `Slow load · ${lane.title} still active · diagnostic available`;
+      emit("WATCHDOG_SLOW_LOAD", { key, elapsedMs: elapsed, text: watchdog.text });
+    } else if (elapsed >= 2000 && !watchdog.stillLoadingIssued) {
+      watchdog.stillLoadingIssued = true;
+      watchdog.text = `Still loading · waiting on ${lane.title} · elapsed ${formatElapsed(elapsed)}`;
+      emit("WATCHDOG_STILL_LOADING", { key, elapsedMs: elapsed, text: watchdog.text });
+    }
+
+    if (watchdog.text) {
+      lane.detail = watchdog.text;
     }
   }
 
-  function phaseClass(phase) {
-    if (!phase) return "pending";
-    return String(phase.state || "pending").toLowerCase();
+  function updateMainProgressCap() {
+    let cap = 0;
+
+    if (state.systemAlive && state.heartbeatStarted) cap = Math.max(cap, 15);
+    if (state.multiBarLoaderMounted && state.partialReceiptAvailable) cap = Math.max(cap, 35);
+
+    const runtimeChecked =
+      state.runtimeTableMode === "RUNTIME_TABLE_READY_OR_DEGRADED" ||
+      state.runtimeTableMode === "RUNTIME_TABLE_MISSING_ALLOWED" ||
+      state.runtimeTableMode === "RUNTIME_TABLE_DEGRADED";
+
+    if (runtimeChecked && state.sourceAuthorityHeld) cap = Math.max(cap, 55);
+    if (state.canvasApiPresent || state.canvasCarrierRequested || state.canvasScriptRequested) cap = Math.max(cap, 75);
+    if (state.canvasCarrierMounted || state.firstFrameDetected || state.imageRendered) cap = Math.max(cap, 90);
+    if (state.partialReceiptAvailable && state.copyDiagnosticArmed && state.receiptOverlayIndependent) cap = Math.max(cap, 97);
+
+    const controlsReady =
+      state.copyDiagnosticArmed &&
+      state.copyDiagnosticAvailable &&
+      state.buttonsReachable &&
+      state.panelMobileSafe &&
+      state.partialReceiptAvailable &&
+      state.finalReceiptAvailable &&
+      state.receiptOverlayIndependent;
+
+    if (controlsReady) cap = 100;
+
+    state.mainProgressCap = clamp(cap, 0, 100);
+    state.mainProgress = state.mainProgressCap;
+
+    if (state.mainProgressCap < 15) state.mainProgressText = "Starting system heartbeat";
+    else if (state.mainProgressCap < 35) state.mainProgressText = "Conductor cockpit mounting";
+    else if (state.mainProgressCap < 55) state.mainProgressText = "Runtime Table and source hold checking";
+    else if (state.mainProgressCap < 75) state.mainProgressText = "Canvas carrier handoff preparing";
+    else if (state.mainProgressCap < 90) state.mainProgressText = "Canvas carrier loading";
+    else if (state.mainProgressCap < 97) state.mainProgressText = "Visible carrier detected";
+    else if (state.mainProgressCap < 100) state.mainProgressText = "Diagnostic controls arming";
+    else state.mainProgressText = "Diagnostic cockpit ready";
   }
 
   function guardRetiredClimateRoute() {
@@ -389,9 +446,9 @@
       dataset.hearthRetiredClimateRouteActiveCarrier = "false";
     }
 
-    emit("RETIRED_CLIMATE_ROUTE_GUARDED", {
-      retiredClimateRoute: RETIRED_CLIMATE_ROUTE,
-      retiredClimateRouteActiveCarrier: false
+    emit("OLD_ROUTE_GUARDED", {
+      activeRouteConductor: DESTINATION_FILE,
+      retiredClimateRoute: RETIRED_CLIMATE_ROUTE
     });
   }
 
@@ -417,11 +474,11 @@
     mount.dataset.hearthCanvasMount = "true";
     mount.dataset.hearthConductorContract = CONTRACT;
     mount.dataset.hearthConductorReceipt = RECEIPT;
-    mount.dataset.hearthLoadingScreenMounted = String(state.loadingScreenMounted);
+    mount.dataset.hearthMultiBarLoaderMounted = String(state.multiBarLoaderMounted);
     mount.dataset.hearthVisibleCarrierFirst = "true";
+    mount.dataset.hearthReceiptOverlayIndependent = "true";
     mount.dataset.hearthRuntimeTableOptional = "true";
     mount.dataset.hearthRuntimeTableMissingDoesNotBlockCarrier = "true";
-    mount.dataset.hearthReceiptOverlayIndependent = "true";
 
     mount.style.position = mount.style.position || "relative";
     mount.style.overflow = mount.style.overflow || "hidden";
@@ -434,311 +491,451 @@
     return mount;
   }
 
+  function neutralizeOldLoader() {
+    if (!doc) return;
+
+    emit("OLD_LOADER_NEUTRALIZATION_STARTED", {});
+
+    const mount = ensureMount();
+    let hiddenCount = 0;
+    let removedCount = 0;
+
+    if (mount) {
+      mount.querySelectorAll("[data-hearth-mount-fallback], .mount-fallback").forEach((node) => {
+        node.dataset.hearthOldLoaderNeutralized = "true";
+        node.hidden = true;
+        node.style.display = "none";
+        node.style.visibility = "hidden";
+        node.style.pointerEvents = "none";
+        hiddenCount += 1;
+      });
+
+      mount.querySelectorAll("[data-hearth-loading-overlay='true'], .hearth-loading-overlay, [data-hearth-v1-loader='true']").forEach((node) => {
+        if (node.dataset && node.dataset.hearthV2LiveDiagnostic === "true") return;
+        node.remove();
+        removedCount += 1;
+      });
+    }
+
+    doc.querySelectorAll("[data-hearth-old-loader], [data-hearth-shell-loader]").forEach((node) => {
+      node.dataset.hearthOldLoaderNeutralized = "true";
+      node.hidden = true;
+      node.style.display = "none";
+      hiddenCount += 1;
+    });
+
+    state.oldLoaderNeutralized = true;
+    state.oldLoaderNeutralizationMode = `hidden=${hiddenCount};removed=${removedCount}`;
+
+    emit("OLD_LOADER_NEUTRALIZED", {
+      hiddenCount,
+      removedCount,
+      mode: state.oldLoaderNeutralizationMode
+    });
+  }
+
   function cssText() {
     return `
-      .hearth-loading-overlay{
+      .hearth-v2-overlay{
         position:absolute;
         inset:0;
-        z-index:18;
-        pointer-events:none;
+        z-index:24;
         display:flex;
         align-items:flex-end;
         justify-content:center;
-        padding:16px;
+        padding:10px;
+        pointer-events:none;
         background:
-          radial-gradient(circle at 50% 38%, rgba(141,216,255,.08), transparent 38%),
-          linear-gradient(180deg, rgba(1,4,10,.08), rgba(1,4,10,.36));
+          radial-gradient(circle at 50% 34%, rgba(141,216,255,.08), transparent 42%),
+          linear-gradient(180deg, rgba(1,4,10,.04), rgba(1,4,10,.28));
       }
 
-      .hearth-loading-overlay[data-hidden="true"]{
-        opacity:0;
-        visibility:hidden;
-      }
-
-      .hearth-loading-panel{
+      .hearth-v2-panel{
         pointer-events:auto;
-        width:min(100%, 560px);
-        max-height:min(82%, 620px);
+        display:flex;
+        flex-direction:column;
+        width:min(100%, 580px);
+        max-height:calc(100% - 16px);
+        min-height:0;
         overflow:hidden;
         border:1px solid rgba(231,188,105,.34);
         border-radius:22px;
-        background:
-          radial-gradient(circle at 10% 0%, rgba(231,188,105,.14), transparent 18rem),
-          radial-gradient(circle at 90% 20%, rgba(141,216,255,.12), transparent 18rem),
-          linear-gradient(180deg, rgba(9,22,41,.96), rgba(3,8,16,.94));
-        box-shadow:
-          0 24px 80px rgba(0,0,0,.48),
-          inset 0 1px 0 rgba(255,255,255,.08);
-        backdrop-filter:blur(12px);
         color:#eef6ff;
+        background:
+          radial-gradient(circle at 5% 0%, rgba(231,188,105,.14), transparent 18rem),
+          radial-gradient(circle at 92% 16%, rgba(141,216,255,.12), transparent 20rem),
+          linear-gradient(180deg, rgba(9,22,41,.97), rgba(2,7,14,.96));
+        box-shadow:0 24px 80px rgba(0,0,0,.54), inset 0 1px 0 rgba(255,255,255,.08);
+        backdrop-filter:blur(14px);
         font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       }
 
-      .hearth-loading-panel[data-collapsed="true"]{
-        max-width:360px;
+      .hearth-v2-panel[data-collapsed="true"]{
+        display:none;
       }
 
-      .hearth-loading-head{
+      .hearth-v2-compact{
+        pointer-events:auto;
+        display:none;
+        align-items:center;
+        gap:10px;
+        max-width:calc(100% - 12px);
+        border:1px solid rgba(231,188,105,.34);
+        border-radius:999px;
+        padding:10px 12px;
+        color:rgba(255,244,216,.94);
+        background:rgba(3,9,20,.92);
+        box-shadow:0 18px 60px rgba(0,0,0,.46), inset 0 1px 0 rgba(255,255,255,.08);
+        backdrop-filter:blur(12px);
+        font-weight:950;
+        cursor:pointer;
+      }
+
+      .hearth-v2-compact[data-visible="true"]{
+        display:flex;
+      }
+
+      .hearth-v2-pulse{
+        width:12px;
+        height:12px;
+        border-radius:50%;
+        background:#8bd7a3;
+        box-shadow:0 0 18px rgba(139,215,163,.46);
+        animation:hearth-v2-pulse 780ms ease-in-out infinite alternate;
+      }
+
+      .hearth-v2-head{
+        flex:0 0 auto;
         display:grid;
         gap:6px;
-        padding:16px 16px 12px;
+        padding:14px 14px 10px;
         border-bottom:1px solid rgba(231,188,105,.16);
       }
 
-      .hearth-loading-kicker{
+      .hearth-v2-kicker{
         color:#e7bc69;
-        font-size:.68rem;
+        font-size:.66rem;
         font-weight:950;
         letter-spacing:.16em;
         text-transform:uppercase;
       }
 
-      .hearth-loading-title{
+      .hearth-v2-title{
         margin:0;
         color:rgba(255,244,216,.98);
-        font-size:clamp(1.1rem, 3vw, 1.55rem);
+        font-size:clamp(1rem, 3vw, 1.48rem);
         line-height:1;
-        letter-spacing:-.04em;
+        letter-spacing:-.035em;
         font-weight:950;
       }
 
-      .hearth-loading-subtitle{
-        color:rgba(238,246,255,.72);
-        font-size:.82rem;
-        line-height:1.36;
-        font-weight:720;
+      .hearth-v2-subtitle,
+      .hearth-v2-latest{
+        color:rgba(238,246,255,.70);
+        font-size:.78rem;
+        line-height:1.34;
+        font-weight:760;
       }
 
-      .hearth-progress-wrap{
+      .hearth-v2-latest{
+        color:rgba(141,216,255,.78);
+        font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+        font-size:.68rem;
+      }
+
+      .hearth-v2-main-progress{
+        flex:0 0 auto;
         display:grid;
         grid-template-columns:1fr auto;
         align-items:center;
         gap:10px;
-        padding:0 16px 14px;
+        padding:10px 14px;
+        border-bottom:1px solid rgba(141,216,255,.10);
       }
 
-      .hearth-progress-track{
+      .hearth-v2-track,
+      .hearth-v2-lane-track{
         position:relative;
-        height:12px;
         overflow:hidden;
         border:1px solid rgba(141,216,255,.18);
         border-radius:999px;
         background:rgba(1,4,10,.72);
       }
 
-      .hearth-progress-track::after{
+      .hearth-v2-track{
+        height:12px;
+      }
+
+      .hearth-v2-lane-track{
+        height:8px;
+      }
+
+      .hearth-v2-track::after,
+      .hearth-v2-lane-track::after{
         content:"";
         position:absolute;
         inset:0;
-        background:linear-gradient(90deg, transparent, rgba(255,255,255,.16), transparent);
         transform:translateX(-100%);
-        animation:hearth-progress-sheen 1.25s linear infinite;
+        background:linear-gradient(90deg, transparent, rgba(255,255,255,.16), transparent);
+        animation:hearth-v2-sheen 1.1s linear infinite;
       }
 
-      .hearth-progress-fill{
+      .hearth-v2-fill,
+      .hearth-v2-lane-fill{
         position:absolute;
         inset:0 auto 0 0;
         width:0%;
         border-radius:999px;
+        transition:width .18s ease-out;
         background:linear-gradient(90deg, #8dd8ff, #e7bc69, #ffe8a3);
-        box-shadow:0 0 22px rgba(231,188,105,.22);
-        transition:width .16s ease-out;
       }
 
-      .hearth-progress-percent{
+      .hearth-v2-percent{
         min-width:42px;
         text-align:right;
         color:#ffe8a3;
         font:950 .82rem/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
       }
 
-      .hearth-phase-list{
-        display:grid;
-        gap:7px;
-        padding:0 16px 14px;
-      }
-
-      .hearth-phase-row{
-        display:grid;
-        grid-template-columns:26px minmax(0,1fr) auto;
-        gap:9px;
-        align-items:center;
-        min-height:34px;
-        padding:8px 10px;
-        border:1px solid rgba(255,255,255,.09);
-        border-radius:14px;
-        background:rgba(255,255,255,.035);
-      }
-
-      .hearth-phase-row[data-state="ready"]{
-        border-color:rgba(139,215,163,.26);
-        background:rgba(139,215,163,.06);
-      }
-
-      .hearth-phase-row[data-state="loading"]{
-        border-color:rgba(141,216,255,.28);
-        background:rgba(141,216,255,.06);
-      }
-
-      .hearth-phase-row[data-state="degraded"],
-      .hearth-phase-row[data-state="held"]{
-        border-color:rgba(231,188,105,.28);
-        background:rgba(231,188,105,.06);
-      }
-
-      .hearth-phase-row[data-state="failed"]{
-        border-color:rgba(255,112,112,.36);
-        background:rgba(255,112,112,.07);
-      }
-
-      .hearth-phase-icon{
-        display:grid;
-        place-items:center;
-        width:22px;
-        height:22px;
-        border-radius:999px;
-        color:#06101e;
-        background:rgba(238,246,255,.55);
-        font-weight:950;
-        font-size:.78rem;
-      }
-
-      .hearth-phase-row[data-state="ready"] .hearth-phase-icon{
-        background:#8bd7a3;
-      }
-
-      .hearth-phase-row[data-state="loading"] .hearth-phase-icon{
-        color:#06101e;
-        background:#8dd8ff;
-        animation:hearth-loading-pulse .9s ease-in-out infinite alternate;
-      }
-
-      .hearth-phase-row[data-state="degraded"] .hearth-phase-icon,
-      .hearth-phase-row[data-state="held"] .hearth-phase-icon{
-        background:#e7bc69;
-      }
-
-      .hearth-phase-row[data-state="failed"] .hearth-phase-icon{
-        color:#fff;
-        background:#d85d5d;
-      }
-
-      .hearth-phase-label{
-        display:grid;
-        gap:2px;
-        min-width:0;
-      }
-
-      .hearth-phase-label strong{
-        color:rgba(255,244,216,.94);
-        font-size:.80rem;
-        line-height:1.05;
-        letter-spacing:.01em;
-        white-space:nowrap;
-        overflow:hidden;
-        text-overflow:ellipsis;
-      }
-
-      .hearth-phase-label span{
-        color:rgba(238,246,255,.62);
-        font-size:.70rem;
-        line-height:1.1;
-        white-space:nowrap;
-        overflow:hidden;
-        text-overflow:ellipsis;
-      }
-
-      .hearth-phase-state{
-        color:rgba(238,246,255,.70);
-        font:900 .64rem/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-        letter-spacing:.08em;
-        text-transform:uppercase;
-      }
-
-      .hearth-loading-actions{
+      .hearth-v2-actions{
+        flex:0 0 auto;
+        position:sticky;
+        top:0;
+        z-index:2;
         display:flex;
         flex-wrap:wrap;
-        gap:8px;
-        padding:0 16px 14px;
+        gap:7px;
+        padding:10px 14px;
+        border-bottom:1px solid rgba(231,188,105,.14);
+        background:linear-gradient(180deg, rgba(7,18,32,.98), rgba(3,9,18,.96));
       }
 
-      .hearth-loading-button{
-        min-height:32px;
+      .hearth-v2-button{
+        min-height:31px;
         border:1px solid rgba(231,188,105,.25);
         border-radius:999px;
         padding:7px 10px;
-        color:rgba(238,246,255,.86);
-        background:rgba(255,255,255,.04);
-        font:900 .68rem/1 ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+        color:rgba(238,246,255,.88);
+        background:rgba(255,255,255,.045);
+        font:900 .64rem/1 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         letter-spacing:.08em;
         text-transform:uppercase;
         cursor:pointer;
       }
 
-      .hearth-loading-button:hover{
-        border-color:rgba(231,188,105,.52);
-        background:rgba(231,188,105,.09);
-      }
-
-      .hearth-loading-button.primary{
+      .hearth-v2-button.primary{
         color:#06101e;
-        background:linear-gradient(135deg,#ffe8a3,#e7bc69);
         border-color:rgba(231,188,105,.72);
+        background:linear-gradient(135deg, #ffe8a3, #e7bc69);
       }
 
-      .hearth-receipt-box{
-        display:block;
-        margin:0 16px 16px;
-        max-height:130px;
+      .hearth-v2-button:hover{
+        border-color:rgba(231,188,105,.52);
+        background:rgba(231,188,105,.10);
+      }
+
+      .hearth-v2-scroll{
+        flex:1 1 auto;
+        min-height:0;
+        overflow:auto;
+        overscroll-behavior:contain;
+      }
+
+      .hearth-v2-lanes{
+        display:grid;
+        gap:8px;
+        padding:10px 14px;
+      }
+
+      .hearth-v2-lane{
+        display:grid;
+        gap:7px;
+        border:1px solid rgba(255,255,255,.10);
+        border-radius:16px;
+        padding:10px;
+        background:rgba(255,255,255,.035);
+      }
+
+      .hearth-v2-lane[data-state="ready"],
+      .hearth-v2-lane[data-state="alive"],
+      .hearth-v2-lane[data-state="final_ready"],
+      .hearth-v2-lane[data-state="partial_ready"]{
+        border-color:rgba(139,215,163,.28);
+        background:rgba(139,215,163,.06);
+      }
+
+      .hearth-v2-lane[data-state="loading"],
+      .hearth-v2-lane[data-state="checking"],
+      .hearth-v2-lane[data-state="started"]{
+        border-color:rgba(141,216,255,.28);
+        background:rgba(141,216,255,.06);
+      }
+
+      .hearth-v2-lane[data-state="degraded"],
+      .hearth-v2-lane[data-state="held"]{
+        border-color:rgba(231,188,105,.30);
+        background:rgba(231,188,105,.065);
+      }
+
+      .hearth-v2-lane[data-state="failed"]{
+        border-color:rgba(255,112,112,.36);
+        background:rgba(255,112,112,.07);
+      }
+
+      .hearth-v2-lane-top{
+        display:grid;
+        grid-template-columns:18px minmax(0,1fr) auto;
+        align-items:center;
+        gap:9px;
+      }
+
+      .hearth-v2-dot{
+        width:12px;
+        height:12px;
+        border-radius:50%;
+        background:#8dd8ff;
+        box-shadow:0 0 18px rgba(141,216,255,.28);
+      }
+
+      .hearth-v2-lane[data-state="ready"] .hearth-v2-dot,
+      .hearth-v2-lane[data-state="alive"] .hearth-v2-dot,
+      .hearth-v2-lane[data-state="final_ready"] .hearth-v2-dot,
+      .hearth-v2-lane[data-state="partial_ready"] .hearth-v2-dot{
+        background:#8bd7a3;
+        box-shadow:0 0 18px rgba(139,215,163,.32);
+      }
+
+      .hearth-v2-lane[data-state="loading"] .hearth-v2-dot,
+      .hearth-v2-lane[data-state="checking"] .hearth-v2-dot,
+      .hearth-v2-lane[data-state="started"] .hearth-v2-dot{
+        animation:hearth-v2-pulse 780ms ease-in-out infinite alternate;
+      }
+
+      .hearth-v2-lane[data-state="degraded"] .hearth-v2-dot,
+      .hearth-v2-lane[data-state="held"] .hearth-v2-dot{
+        background:#e7bc69;
+        box-shadow:0 0 18px rgba(231,188,105,.30);
+      }
+
+      .hearth-v2-lane[data-state="failed"] .hearth-v2-dot{
+        background:#d85d5d;
+        box-shadow:0 0 18px rgba(216,93,93,.30);
+      }
+
+      .hearth-v2-lane-title{
+        min-width:0;
+        display:grid;
+        gap:2px;
+      }
+
+      .hearth-v2-lane-title strong{
+        color:rgba(255,244,216,.94);
+        font-size:.80rem;
+        line-height:1.05;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+      }
+
+      .hearth-v2-lane-title span{
+        color:rgba(238,246,255,.64);
+        font-size:.68rem;
+        line-height:1.12;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+      }
+
+      .hearth-v2-lane-state{
+        color:rgba(238,246,255,.72);
+        font:900 .62rem/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+        letter-spacing:.08em;
+        text-transform:uppercase;
+      }
+
+      .hearth-v2-lane-meta{
+        display:flex;
+        flex-wrap:wrap;
+        gap:8px;
+        color:rgba(238,246,255,.58);
+        font:760 .62rem/1.22 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      }
+
+      .hearth-v2-receipt{
+        display:none;
+        margin:0 14px 14px;
+        max-height:190px;
         overflow:auto;
         border:1px solid rgba(141,216,255,.16);
         border-radius:14px;
-        background:rgba(1,4,10,.58);
+        background:rgba(1,4,10,.62);
       }
 
-      .hearth-loading-panel[data-expanded="true"] .hearth-receipt-box{
-        max-height:260px;
+      .hearth-v2-receipt[data-visible="true"]{
+        display:block;
       }
 
-      .hearth-receipt-box[data-hidden="true"]{
-        display:none;
+      .hearth-v2-panel[data-receipt-expanded="true"] .hearth-v2-receipt{
+        max-height:340px;
       }
 
-      .hearth-receipt-pre{
+      .hearth-v2-receipt pre{
         margin:0;
         padding:11px;
-        color:rgba(238,246,255,.64);
-        font:700 .64rem/1.42 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+        color:rgba(238,246,255,.66);
+        font:700 .62rem/1.42 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
         white-space:pre-wrap;
       }
 
-      @keyframes hearth-progress-sheen{
+      @keyframes hearth-v2-sheen{
         from{transform:translateX(-100%)}
         to{transform:translateX(100%)}
       }
 
-      @keyframes hearth-loading-pulse{
-        from{transform:scale(.92); opacity:.72}
+      @keyframes hearth-v2-pulse{
+        from{transform:scale(.82); opacity:.62}
         to{transform:scale(1); opacity:1}
       }
 
       @media (max-width:760px){
-        .hearth-loading-overlay{
-          padding:10px;
+        .hearth-v2-overlay{
+          padding:8px;
           align-items:flex-end;
         }
 
-        .hearth-loading-panel{
+        .hearth-v2-panel{
+          width:100%;
+          max-height:calc(100% - 12px);
           border-radius:18px;
-          max-height:76%;
         }
 
-        .hearth-phase-row{
-          grid-template-columns:24px minmax(0,1fr);
+        .hearth-v2-head{
+          padding:12px 12px 8px;
         }
 
-        .hearth-phase-state{
+        .hearth-v2-actions{
+          padding:8px 12px;
+        }
+
+        .hearth-v2-button{
+          flex:1 1 auto;
+          min-width:42%;
+        }
+
+        .hearth-v2-lanes{
+          padding:8px 12px;
+        }
+
+        .hearth-v2-lane-top{
+          grid-template-columns:16px minmax(0,1fr);
+        }
+
+        .hearth-v2-lane-state{
           grid-column:2;
+        }
+
+        .hearth-v2-receipt{
+          margin:0 12px 12px;
         }
       }
     `;
@@ -747,16 +944,19 @@
   function ensureStyle() {
     if (!doc) return;
 
-    const existing = doc.getElementById("hearth-conductor-animated-loader-style");
+    const old = doc.getElementById("hearth-conductor-animated-loader-style");
+    if (old) old.remove();
+
+    const existing = doc.getElementById("hearth-conductor-v2-live-loader-style");
     if (existing) return;
 
     const style = doc.createElement("style");
-    style.id = "hearth-conductor-animated-loader-style";
+    style.id = "hearth-conductor-v2-live-loader-style";
     style.textContent = cssText();
     doc.head.appendChild(style);
   }
 
-  function mountLoadingScreen() {
+  function mountLoader() {
     if (!doc) return null;
 
     ensureStyle();
@@ -764,243 +964,193 @@
     const mount = ensureMount();
     if (!mount) return null;
 
-    let overlay = mount.querySelector("[data-hearth-loading-overlay='true']");
-    if (overlay) {
-      overlay.remove();
-    }
+    neutralizeOldLoader();
 
-    overlay = doc.createElement("aside");
-    overlay.className = "hearth-loading-overlay";
+    const existing = mount.querySelector("[data-hearth-v2-live-diagnostic='true']");
+    if (existing) existing.remove();
+
+    const overlay = doc.createElement("aside");
+    overlay.className = "hearth-v2-overlay";
+    overlay.dataset.hearthV2LiveDiagnostic = "true";
     overlay.dataset.hearthLoadingOverlay = "true";
     overlay.dataset.hearthConductorContract = CONTRACT;
     overlay.dataset.receiptOverlayIndependent = "true";
 
+    const compact = doc.createElement("button");
+    compact.type = "button";
+    compact.className = "hearth-v2-compact";
+    compact.dataset.visible = "false";
+    compact.innerHTML = `<span class="hearth-v2-pulse" aria-hidden="true"></span><span>Show Hearth diagnostics</span>`;
+
     const panel = doc.createElement("section");
-    panel.className = "hearth-loading-panel";
-    panel.dataset.hearthLoadingPanel = "true";
-    panel.dataset.expanded = "false";
+    panel.className = "hearth-v2-panel";
     panel.dataset.collapsed = "false";
+    panel.dataset.receiptExpanded = "false";
 
     panel.innerHTML = `
-      <div class="hearth-loading-head">
-        <div class="hearth-loading-kicker">Dexter Lab · Hearth Runtime Table</div>
-        <h2 class="hearth-loading-title" data-hearth-loader-title>FORMING HEARTH RUNTIME TABLE</h2>
-        <div class="hearth-loading-subtitle" data-hearth-loader-subtitle>
-          Animated conductor state machine active. Visible carrier loads first; diagnostics reconcile after proof.
+      <div class="hearth-v2-head">
+        <div class="hearth-v2-kicker">Dexter Lab · Hearth Runtime Table</div>
+        <h2 class="hearth-v2-title" data-hearth-v2-title>FORMING HEARTH RUNTIME TABLE</h2>
+        <div class="hearth-v2-subtitle" data-hearth-v2-subtitle>Live diagnostic cockpit starting. Copy diagnostic is available during load.</div>
+        <div class="hearth-v2-latest" data-hearth-v2-latest>latest=CONDUCTOR_V2_STARTING · elapsed=00:00</div>
+      </div>
+
+      <div class="hearth-v2-main-progress">
+        <div class="hearth-v2-track" aria-label="Hearth main loading progress">
+          <div class="hearth-v2-fill" data-hearth-v2-main-fill></div>
         </div>
+        <div class="hearth-v2-percent" data-hearth-v2-main-percent>0%</div>
       </div>
 
-      <div class="hearth-progress-wrap">
-        <div class="hearth-progress-track" aria-label="Hearth loading progress">
-          <div class="hearth-progress-fill" data-hearth-progress-fill></div>
+      <div class="hearth-v2-actions" data-hearth-v2-actions>
+        <button class="hearth-v2-button primary" type="button" data-hearth-v2-copy>Copy diagnostic</button>
+        <button class="hearth-v2-button" type="button" data-hearth-v2-receipt-toggle>Show receipt</button>
+        <button class="hearth-v2-button" type="button" data-hearth-v2-expand>Expand receipt</button>
+        <button class="hearth-v2-button" type="button" data-hearth-v2-collapse>Collapse cockpit</button>
+      </div>
+
+      <div class="hearth-v2-scroll">
+        <div class="hearth-v2-lanes" data-hearth-v2-lanes></div>
+        <div class="hearth-v2-receipt" data-hearth-v2-receipt data-visible="false">
+          <pre data-hearth-v2-receipt-pre></pre>
         </div>
-        <div class="hearth-progress-percent" data-hearth-progress-percent>0%</div>
-      </div>
-
-      <div class="hearth-phase-list" data-hearth-phase-list></div>
-
-      <div class="hearth-loading-actions">
-        <button class="hearth-loading-button primary" type="button" data-hearth-copy-diagnostic>Copy diagnostic</button>
-        <button class="hearth-loading-button" type="button" data-hearth-toggle-receipt>Receipt visible</button>
-        <button class="hearth-loading-button" type="button" data-hearth-expand-receipt>Expand receipt</button>
-        <button class="hearth-loading-button" type="button" data-hearth-hide-loader>Hide panel</button>
-      </div>
-
-      <div class="hearth-receipt-box" data-hearth-receipt-box>
-        <pre class="hearth-receipt-pre" data-hearth-receipt-pre></pre>
       </div>
     `;
 
+    overlay.appendChild(compact);
     overlay.appendChild(panel);
     mount.appendChild(overlay);
 
     nodes.mount = mount;
     nodes.overlay = overlay;
+    nodes.compact = compact;
     nodes.panel = panel;
-    nodes.title = panel.querySelector("[data-hearth-loader-title]");
-    nodes.subtitle = panel.querySelector("[data-hearth-loader-subtitle]");
-    nodes.progressFill = panel.querySelector("[data-hearth-progress-fill]");
-    nodes.progressPercent = panel.querySelector("[data-hearth-progress-percent]");
-    nodes.phaseList = panel.querySelector("[data-hearth-phase-list]");
-    nodes.receipt = panel.querySelector("[data-hearth-receipt-box]");
-    nodes.receiptPre = panel.querySelector("[data-hearth-receipt-pre]");
-    nodes.copyButton = panel.querySelector("[data-hearth-copy-diagnostic]");
-    nodes.expandButton = panel.querySelector("[data-hearth-expand-receipt]");
-    nodes.toggleButton = panel.querySelector("[data-hearth-toggle-receipt]");
-
-    const hideButton = panel.querySelector("[data-hearth-hide-loader]");
+    nodes.title = panel.querySelector("[data-hearth-v2-title]");
+    nodes.subtitle = panel.querySelector("[data-hearth-v2-subtitle]");
+    nodes.latest = panel.querySelector("[data-hearth-v2-latest]");
+    nodes.mainBar = panel.querySelector("[data-hearth-v2-main-fill]");
+    nodes.mainPercent = panel.querySelector("[data-hearth-v2-main-percent]");
+    nodes.laneArea = panel.querySelector("[data-hearth-v2-lanes]");
+    nodes.receiptBox = panel.querySelector("[data-hearth-v2-receipt]");
+    nodes.receiptPre = panel.querySelector("[data-hearth-v2-receipt-pre]");
+    nodes.copyButton = panel.querySelector("[data-hearth-v2-copy]");
+    nodes.receiptButton = panel.querySelector("[data-hearth-v2-receipt-toggle]");
+    nodes.expandButton = panel.querySelector("[data-hearth-v2-expand]");
+    nodes.collapseButton = panel.querySelector("[data-hearth-v2-collapse]");
 
     if (nodes.copyButton) {
       nodes.copyButton.addEventListener("click", copyDiagnostic);
     }
 
+    if (nodes.receiptButton) {
+      nodes.receiptButton.addEventListener("click", () => {
+        state.receiptVisible = !state.receiptVisible;
+        if (nodes.receiptBox) nodes.receiptBox.dataset.visible = String(state.receiptVisible);
+        nodes.receiptButton.textContent = state.receiptVisible ? "Hide receipt" : "Show receipt";
+        emit("RECEIPT_VISIBILITY_TOGGLED", { visible: state.receiptVisible });
+        render();
+      });
+    }
+
     if (nodes.expandButton) {
       nodes.expandButton.addEventListener("click", () => {
         state.receiptExpanded = !state.receiptExpanded;
-        panel.dataset.expanded = String(state.receiptExpanded);
+        if (nodes.panel) nodes.panel.dataset.receiptExpanded = String(state.receiptExpanded);
         nodes.expandButton.textContent = state.receiptExpanded ? "Collapse receipt" : "Expand receipt";
-        renderLoader();
         emit("RECEIPT_EXPAND_TOGGLED", { expanded: state.receiptExpanded });
+        render();
       });
     }
 
-    if (nodes.toggleButton) {
-      nodes.toggleButton.addEventListener("click", () => {
-        state.receiptVisible = !state.receiptVisible;
-        if (nodes.receipt) nodes.receipt.dataset.hidden = String(!state.receiptVisible);
-        nodes.toggleButton.textContent = state.receiptVisible ? "Receipt visible" : "Receipt hidden";
-        emit("RECEIPT_VISIBILITY_TOGGLED", { visible: state.receiptVisible });
-      });
-    }
-
-    if (hideButton) {
-      hideButton.addEventListener("click", () => {
-        state.loadingScreenVisible = false;
-        overlay.dataset.hidden = "true";
-        emit("LOADING_PANEL_HIDDEN_CANVAS_PRESERVED", {
+    if (nodes.collapseButton) {
+      nodes.collapseButton.addEventListener("click", () => {
+        state.cockpitCollapsed = true;
+        if (nodes.panel) nodes.panel.dataset.collapsed = "true";
+        if (nodes.compact) nodes.compact.dataset.visible = "true";
+        emit("COCKPIT_COLLAPSED_CANVAS_PRESERVED", {
           canvasCarrierMounted: state.canvasCarrierMounted,
           receiptOverlayIndependent: true
         });
-        publishDataset();
+        publishGlobals();
       });
     }
 
-    state.loadingScreenMounted = true;
-    state.loadingScreenVisible = true;
-    state.receiptOverlayIndependent = true;
-    state.loadingScreenReceiptCopyEnabled = true;
-    state.postgameStatus = POSTGAME_STATUS.LOADING_SCREEN_ACTIVE;
-
-    if (doc.documentElement) {
-      doc.documentElement.dataset.hearthLoadingScreenMounted = "true";
-      doc.documentElement.dataset.hearthLoadingScreenVisible = "true";
-      doc.documentElement.dataset.hearthReceiptOverlayIndependent = "true";
-      doc.documentElement.dataset.hearthLoadingScreenReceiptCopyEnabled = "true";
+    if (nodes.compact) {
+      nodes.compact.addEventListener("click", () => {
+        state.cockpitCollapsed = false;
+        if (nodes.panel) nodes.panel.dataset.collapsed = "false";
+        if (nodes.compact) nodes.compact.dataset.visible = "false";
+        emit("COCKPIT_REOPENED", {});
+        render();
+      });
     }
 
-    emit("LOADING_SCREEN_MOUNTED", {
-      mountId: mount.id || "hearthCanvasMount",
-      receiptOverlayIndependent: true
+    state.multiBarLoaderMounted = true;
+    state.partialReceiptAvailable = true;
+    state.copyDiagnosticAvailable = true;
+    state.copyDiagnosticArmed = Boolean(nodes.copyButton);
+    state.panelMobileSafe = true;
+    state.buttonsReachable = Boolean(nodes.copyButton && nodes.receiptButton && nodes.expandButton && nodes.collapseButton);
+    state.postgameStatus = POSTGAME_STATUS.MULTI_BAR_LOADER_ACTIVE;
+
+    mount.dataset.hearthMultiBarLoaderMounted = "true";
+    mount.dataset.hearthPartialReceiptAvailable = "true";
+    mount.dataset.hearthCopyDiagnosticAvailable = String(state.copyDiagnosticAvailable);
+    mount.dataset.hearthReceiptOverlayIndependent = "true";
+
+    emit("PARTIAL_RECEIPT_CREATED", {});
+    emit("COPY_DIAGNOSTIC_ARMED", { armed: state.copyDiagnosticArmed });
+    emit("MULTI_BAR_LOADER_MOUNTED", { buttonsReachable: state.buttonsReachable });
+
+    setLane(LANE_KEYS.RECEIPT, {
+      state: LANE_STATE.PARTIAL_READY,
+      progress: 64,
+      subtitle: "Partial receipt ready; copy diagnostic armed",
+      event: "RECEIPT_LANE_PARTIAL_READY",
+      lastEvent: "PARTIAL_RECEIPT_CREATED"
     });
 
-    renderLoader();
-
+    render();
     return overlay;
   }
 
-  function renderPhaseRows() {
-    if (!nodes.phaseList) return;
-
-    nodes.phaseList.innerHTML = "";
-
-    PHASES.forEach((phaseDef) => {
-      const phase = state.phaseStates[phaseDef.key];
-      const row = doc.createElement("div");
-      row.className = "hearth-phase-row";
-      row.dataset.phase = phaseDef.key;
-      row.dataset.state = phaseClass(phase);
-
-      const icon = doc.createElement("div");
-      icon.className = "hearth-phase-icon";
-      icon.textContent = phaseIcon(phase);
-
-      const label = doc.createElement("div");
-      label.className = "hearth-phase-label";
-
-      const strong = doc.createElement("strong");
-      strong.textContent = phaseDef.label;
-
-      const span = doc.createElement("span");
-      span.textContent = phase.text || phaseDef.pendingText;
-
-      label.appendChild(strong);
-      label.appendChild(span);
-
-      const stateNode = doc.createElement("div");
-      stateNode.className = "hearth-phase-state";
-      stateNode.textContent = phase.state;
-
-      row.appendChild(icon);
-      row.appendChild(label);
-      row.appendChild(stateNode);
-
-      nodes.phaseList.appendChild(row);
-    });
-  }
-
-  function renderLoader() {
-    if (!nodes.panel) return;
-
-    const rounded = Math.round(state.displayProgress);
-
-    if (nodes.progressFill) {
-      nodes.progressFill.style.width = `${clamp(rounded, 0, 100)}%`;
-    }
-
-    if (nodes.progressPercent) {
-      nodes.progressPercent.textContent = `${clamp(rounded, 0, 100)}%`;
-    }
-
-    if (nodes.title) {
-      if (state.displayProgress >= 100) {
-        nodes.title.textContent = "FORMING HEARTH RUNTIME TABLE";
-      } else if (state.canvasCarrierRequested && !state.canvasCarrierMounted) {
-        nodes.title.textContent = "Calling Hearth visible carrier";
-      } else if (state.canvasCarrierMounted && !state.imageRendered) {
-        nodes.title.textContent = "Waiting for visible planet proof";
-      } else {
-        nodes.title.textContent = "FORMING HEARTH RUNTIME TABLE";
-      }
-    }
-
-    if (nodes.subtitle) {
-      const coherence = state.coherentExpressionPass
-        ? "Coherence passed"
-        : "Coherence diagnostic pending";
-
-      nodes.subtitle.textContent = state.displayProgress >= 100
-        ? `Atlas 100% · ${coherence}. Copy the diagnostic receipt before the next renewal.`
-        : `${state.postgameStatus}. Visible carrier first; Runtime Table and wide-probe do not block first render.`;
-    }
-
-    renderPhaseRows();
-
-    if (nodes.receiptPre) {
-      nodes.receiptPre.textContent = getReceiptText();
-    }
-  }
-
-  function animateProgress() {
-    state.animatedStateMachineActive = true;
-
-    const diff = state.targetProgress - state.displayProgress;
-
-    if (Math.abs(diff) > 0.08) {
-      state.displayProgress += diff * 0.075;
-    } else {
-      state.displayProgress = state.targetProgress;
-    }
-
-    state.progress = Math.round(state.displayProgress);
-
-    renderLoader();
-    publishDataset();
-
-    raf = root.requestAnimationFrame(animateProgress);
-  }
-
-  function startStateMachine() {
-    if (raf) return;
-
+  function startHeartbeat() {
+    state.systemAlive = true;
+    state.heartbeatStarted = true;
+    state.heartbeatStartedAt = nowMs();
     state.startedAt = nowIso();
-    state.animatedStateMachineActive = true;
-    state.postgameStatus = POSTGAME_STATUS.ANIMATED_STATE_MACHINE_ACTIVE;
+    state.heartbeatText = "System alive";
 
-    emit("STATE_MACHINE_STARTED", {
-      animatedStateMachineActive: true
+    setLane(LANE_KEYS.SYSTEM, {
+      state: LANE_STATE.ALIVE,
+      progress: 35,
+      subtitle: "Heartbeat active",
+      detail: "System is active; diagnostics are copyable during load.",
+      event: "SYSTEM_HEARTBEAT_STARTED",
+      lastEvent: "SYSTEM_HEARTBEAT_STARTED",
+      forceEvent: true
     });
 
-    raf = root.requestAnimationFrame(animateProgress);
+    if (heartbeatTimer) root.clearInterval(heartbeatTimer);
+
+    heartbeatTimer = root.setInterval(() => {
+      state.heartbeatElapsedMs = nowMs() - state.heartbeatStartedAt;
+      state.heartbeatText = `System alive · elapsed ${formatElapsed(state.heartbeatElapsedMs)}`;
+
+      const lane = state.lanes[LANE_KEYS.SYSTEM];
+      lane.elapsedMs = state.heartbeatElapsedMs;
+      lane.progress = Math.max(35, Math.min(96, 35 + ((state.heartbeatElapsedMs / 1000) % 10) * 4));
+      lane.subtitle = state.heartbeatText;
+      lane.detail = "Heartbeat active. The page has not frozen.";
+      lane.lastEvent = state.latestEvent;
+      lane.updatedAt = nowIso();
+
+      Object.keys(state.lanes).forEach(markWatchdog);
+      reconcileAll("heartbeat");
+      render();
+    }, 500);
+
+    emit("SYSTEM_HEARTBEAT_STARTED", { heartbeatStarted: true });
   }
 
   function getRuntimeTableApi() {
@@ -1028,7 +1178,7 @@
 
     if (api && isFunction(api.getReceipt)) {
       try {
-        const receipt = api.getReceipt("hearth-conductor-reconcile");
+        const receipt = api.getReceipt("hearth-conductor-v2-reconcile");
         if (receipt && isObject(receipt)) return receipt;
       } catch (error) {
         recordError("CANVAS_RECEIPT_READ_FAILED", error && error.message ? error.message : String(error));
@@ -1038,32 +1188,41 @@
     return (
       root.HEARTH_CANVAS_POSTGAME_RECEIPT ||
       root.HEARTH_CANVAS_RECEIPT ||
+      root.HEARTH_HEX_BODY_BOUNDARY_CANVAS_RECEIPT_EXPORT ||
       null
     );
   }
 
-  function checkRouteShell() {
-    state.routeShellLoaded = true;
-    setPhase("shell", PHASE_STATE.READY, "Route shell mounted", "SHELL_PHASE_READY");
-  }
-
   function checkRuntimeTable() {
-    setPhase("runtimeTable", PHASE_STATE.LOADING, "Runtime Table checking", "RUNTIME_TABLE_CHECK_STARTED");
+    setLane(LANE_KEYS.CONDUCTOR, {
+      state: LANE_STATE.CHECKING,
+      progress: 46,
+      subtitle: "Runtime Table check started",
+      event: "RUNTIME_TABLE_CHECK_STARTED",
+      lastEvent: "RUNTIME_TABLE_CHECK_STARTED"
+    });
 
     const api = getRuntimeTableApi();
+
     state.runtimeTablePresent = Boolean(api);
+    state.runtimeTablePlanAttempted = Boolean(api);
 
     if (!api) {
       state.runtimeTableMode = "RUNTIME_TABLE_MISSING_ALLOWED";
-      state.runtimeTablePlanAttempted = false;
       state.runtimeTablePlanCreated = false;
       state.runtimeTablePlanError = "";
-      setPhase("runtimeTable", PHASE_STATE.DEGRADED, "Runtime Table missing / optional", "RUNTIME_TABLE_DEGRADED");
+
+      setLane(LANE_KEYS.CONDUCTOR, {
+        state: LANE_STATE.DEGRADED,
+        progress: 55,
+        subtitle: "Runtime Table missing; first visible carrier continues",
+        detail: "Runtime Table absence is degraded diagnostic mode, not blank planet mode.",
+        event: "RUNTIME_TABLE_DEGRADED",
+        lastEvent: "RUNTIME_TABLE_DEGRADED"
+      });
+
       return null;
     }
-
-    state.runtimeTableMode = "RUNTIME_TABLE_READY_OR_DEGRADED";
-    state.runtimeTablePlanAttempted = true;
 
     try {
       let plan = null;
@@ -1113,32 +1272,41 @@
         });
       }
 
-      state.runtimeTablePlan = plan || null;
+      state.runtimeTableMode = "RUNTIME_TABLE_READY_OR_DEGRADED";
       state.runtimeTablePlanCreated = Boolean(plan);
       state.runtimeTablePlanError = "";
+      state.runtimeTablePlan = plan || null;
 
-      emit("RUNTIME_TABLE_PLAN_CREATED", {
-        runtimeTablePresent: true,
-        runtimeTablePlanCreated: state.runtimeTablePlanCreated
+      setLane(LANE_KEYS.CONDUCTOR, {
+        state: LANE_STATE.READY,
+        progress: 70,
+        subtitle: state.runtimeTablePlanCreated ? "Runtime Table ready; plan created" : "Runtime Table ready; no plan export needed",
+        detail: "Source stack held. Canvas handoff may continue.",
+        event: "RUNTIME_TABLE_READY",
+        lastEvent: "RUNTIME_TABLE_READY"
       });
 
-      setPhase("runtimeTable", PHASE_STATE.READY, "Runtime Table ready", "RUNTIME_TABLE_READY");
+      emit("SOURCE_STACK_HELD_READY", { sourceAuthorityHeld: true });
       return plan;
     } catch (error) {
-      state.runtimeTablePlan = null;
+      state.runtimeTableMode = "RUNTIME_TABLE_DEGRADED";
       state.runtimeTablePlanCreated = false;
       state.runtimeTablePlanError = error && error.message ? error.message : String(error);
 
       recordError("RUNTIME_TABLE_PLAN_ERROR", state.runtimeTablePlanError);
 
-      setPhase("runtimeTable", PHASE_STATE.DEGRADED, "Runtime Table degraded / carrier continues", "RUNTIME_TABLE_DEGRADED");
+      setLane(LANE_KEYS.CONDUCTOR, {
+        state: LANE_STATE.DEGRADED,
+        progress: 62,
+        subtitle: "Runtime Table degraded; carrier continues",
+        detail: state.runtimeTablePlanError,
+        event: "RUNTIME_TABLE_DEGRADED",
+        lastEvent: "RUNTIME_TABLE_DEGRADED"
+      });
+
+      emit("SOURCE_STACK_HELD_READY", { sourceAuthorityHeld: true });
       return null;
     }
-  }
-
-  function holdSourceStack() {
-    state.sourceAuthorityHeld = true;
-    setPhase("sourceStack", PHASE_STATE.HELD, "Source stack held for this pass", "SOURCE_STACK_HELD_READY");
   }
 
   function requestCanvasScript() {
@@ -1146,11 +1314,18 @@
 
     state.canvasScriptRequested = true;
 
-    const existing = Array.from(doc.scripts || []).some((script) =>
+    const exists = Array.from(doc.scripts || []).some((script) => (
       script.src && script.src.includes(CANVAS_AUTHORITY_FILE)
-    );
+    ));
 
-    if (existing) {
+    if (exists) {
+      setLane(LANE_KEYS.CANVAS, {
+        state: LANE_STATE.CHECKING,
+        progress: 28,
+        subtitle: "Canvas script already present; waiting for API",
+        event: "CANVAS_SCRIPT_PRESENT_API_PENDING",
+        lastEvent: "CANVAS_SCRIPT_PRESENT_API_PENDING"
+      });
       return;
     }
 
@@ -1163,25 +1338,48 @@
     script.onload = () => {
       state.canvasScriptLoaded = true;
       state.canvasScriptError = "";
-      emit("CANVAS_SCRIPT_LOADED", {
-        src: script.src
-      });
+      emit("CANVAS_SCRIPT_LOADED", { src: script.src });
       callCanvasCarrier();
     };
 
     script.onerror = () => {
       state.canvasScriptLoaded = false;
       state.canvasScriptError = "Canvas script failed to load.";
-      recordError("CANVAS_SCRIPT_LOAD_FAILED", state.canvasScriptError, { src: script.src });
-      setPhase("canvasCarrier", PHASE_STATE.FAILED, "Canvas script failed", "CANVAS_HANDOFF_FAILED");
+      state.canvasCarrierHandoffError = state.canvasScriptError;
+      state.finalReceiptAvailable = true;
       state.postgameStatus = POSTGAME_STATUS.BLOCKED_CARRIER_STRUCTURAL_FAILURE;
       state.firstFailedCoordinate = "CANVAS_SCRIPT_LOAD_FAILED";
       state.recommendedNextRenewalTarget = "canvas-script-path-or-index-script-order";
-      publishDataset();
-      renderLoader();
+
+      recordError("CANVAS_SCRIPT_LOAD_FAILED", state.canvasScriptError, { src: script.src });
+
+      setLane(LANE_KEYS.CANVAS, {
+        state: LANE_STATE.FAILED,
+        progress: 100,
+        subtitle: "Canvas script failed",
+        detail: state.canvasScriptError,
+        event: "CANVAS_SCRIPT_LOAD_FAILED",
+        lastEvent: "CANVAS_SCRIPT_LOAD_FAILED"
+      });
+
+      setLane(LANE_KEYS.RECEIPT, {
+        state: LANE_STATE.FINAL_READY,
+        progress: 100,
+        subtitle: "Failure receipt ready",
+        event: "FINAL_RECEIPT_READY",
+        lastEvent: "FINAL_RECEIPT_READY"
+      });
     };
 
     doc.head.appendChild(script);
+
+    setLane(LANE_KEYS.CANVAS, {
+      state: LANE_STATE.LOADING,
+      progress: 20,
+      subtitle: "Canvas script requested",
+      event: "CANVAS_SCRIPT_REQUESTED",
+      lastEvent: "CANVAS_SCRIPT_REQUESTED"
+    });
   }
 
   function bestCanvasMethod(api) {
@@ -1199,7 +1397,7 @@
     return methods.find((name) => isFunction(api && api[name])) || "";
   }
 
-  function canvasHandoffPayload() {
+  function canvasPayload() {
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
@@ -1216,19 +1414,26 @@
       wideProbeDeferred: true,
       sourceAuthorityHeld: true,
       singleAnchorIsLocalProofOnly: true,
-      loadingScreenMounted: state.loadingScreenMounted,
+      loadingScreenMounted: true,
+      multiBarLoaderMounted: true,
       receiptOverlayIndependent: true,
       callbacks: {
         onMounted: (receipt) => {
           state.canvasCarrierMounted = true;
           state.canvasCarrierHandoffOk = true;
           state.canvasCarrierHandoffError = "";
-          emit("CANVAS_HANDOFF_READY", { callback: "onMounted" });
+          emit("CANVAS_MOUNT_CONFIRMED", { callback: "onMounted" });
           reconcileFromCanvasReceipt(receipt);
         },
         onRendered: (receipt) => {
+          state.firstFrameDetected = true;
           state.imageRendered = true;
-          emit("IMAGE_RENDERED_READY", { callback: "onRendered" });
+          emit("FIRST_FRAME_DETECTED", { callback: "onRendered" });
+          reconcileFromCanvasReceipt(receipt);
+        },
+        onDragBound: (receipt) => {
+          state.dragInspectionBound = true;
+          emit("DRAG_INSPECTION_READY", { callback: "onDragBound" });
           reconcileFromCanvasReceipt(receipt);
         }
       }
@@ -1236,19 +1441,24 @@
   }
 
   function callCanvasCarrier() {
-    if (canvasBootAttempted) {
-      reconcileAll("canvas-call-already-attempted");
-      return;
-    }
-
     const api = getCanvasApi();
     state.canvasApiPresent = Boolean(api);
 
+    setLane(LANE_KEYS.CANVAS, {
+      state: LANE_STATE.CHECKING,
+      progress: Math.max(state.lanes.canvas.progress, 25),
+      subtitle: state.canvasApiPresent ? "Canvas API found" : "Canvas API pending",
+      event: state.canvasApiPresent ? "CANVAS_API_FOUND" : "CANVAS_API_PENDING",
+      lastEvent: state.canvasApiPresent ? "CANVAS_API_FOUND" : "CANVAS_API_PENDING"
+    });
+
     if (!api) {
-      state.canvasCarrierRequested = false;
-      setPhase("canvasCarrier", PHASE_STATE.LOADING, "Canvas API pending", "CANVAS_API_PENDING");
       requestCanvasScript();
-      publishDataset();
+      return;
+    }
+
+    if (canvasCallAttempted) {
+      reconcileAll("canvas-call-already-attempted");
       return;
     }
 
@@ -1256,48 +1466,77 @@
 
     if (!method) {
       state.canvasCarrierHandoffError = "Canvas API present but no supported carrier method exists.";
-      recordError("CANVAS_METHOD_MISSING", state.canvasCarrierHandoffError);
-      setPhase("canvasCarrier", PHASE_STATE.FAILED, "Canvas carrier method missing", "CANVAS_HANDOFF_FAILED");
+      state.finalReceiptAvailable = true;
       state.postgameStatus = POSTGAME_STATUS.BLOCKED_CARRIER_STRUCTURAL_FAILURE;
       state.firstFailedCoordinate = "CANVAS_METHOD_MISSING";
       state.recommendedNextRenewalTarget = "canvas-export-method-renewal";
+
+      recordError("CANVAS_METHOD_MISSING", state.canvasCarrierHandoffError);
+
+      setLane(LANE_KEYS.CANVAS, {
+        state: LANE_STATE.FAILED,
+        progress: 100,
+        subtitle: "Canvas method missing",
+        detail: state.canvasCarrierHandoffError,
+        event: "CANVAS_METHOD_MISSING",
+        lastEvent: "CANVAS_METHOD_MISSING"
+      });
+
       return;
     }
 
-    canvasBootAttempted = true;
+    canvasCallAttempted = true;
     state.canvasCarrierRequested = true;
     state.canvasCarrierMethod = method;
     state.canvasCarrierHandoffError = "";
     state.postgameStatus = POSTGAME_STATUS.CANVAS_HANDOFF_IN_PROGRESS;
 
-    setPhase("canvasCarrier", PHASE_STATE.LOADING, "Canvas carrier loading", "CANVAS_HANDOFF_STARTED");
+    setLane(LANE_KEYS.CANVAS, {
+      state: LANE_STATE.LOADING,
+      progress: 48,
+      subtitle: `Canvas carrier method selected: ${method}`,
+      detail: "Canvas boot called once. Waiting for mount / first frame.",
+      event: "CANVAS_CARRIER_METHOD_SELECTED",
+      lastEvent: "CANVAS_CARRIER_METHOD_SELECTED"
+    });
+
+    emit("CANVAS_CARRIER_CALLED", { method });
 
     try {
-      const result = api[method](canvasHandoffPayload());
+      const result = api[method](canvasPayload());
 
       state.canvasCarrierHandoffOk = true;
-      state.canvasCarrierHandoffError = "";
 
-      emit("CANVAS_CARRIER_CALLED", {
-        method,
-        resultType: typeof result
+      setLane(LANE_KEYS.CANVAS, {
+        state: LANE_STATE.LOADING,
+        progress: 64,
+        subtitle: "Canvas boot called; waiting for visible proof",
+        event: "CANVAS_BOOT_CALLED",
+        lastEvent: "CANVAS_BOOT_CALLED"
       });
 
-      reconcileFromCanvasReceipt(result && isObject(result) ? result : getCanvasReceipt());
+      if (result && isObject(result)) {
+        reconcileFromCanvasReceipt(result);
+      }
     } catch (error) {
       state.canvasCarrierHandoffOk = false;
       state.canvasCarrierHandoffError = error && error.message ? error.message : String(error);
-
-      recordError("CANVAS_HANDOFF_ERROR", state.canvasCarrierHandoffError, { method });
-
-      setPhase("canvasCarrier", PHASE_STATE.FAILED, "Canvas handoff failed", "CANVAS_HANDOFF_FAILED");
+      state.finalReceiptAvailable = true;
       state.postgameStatus = POSTGAME_STATUS.BLOCKED_CARRIER_STRUCTURAL_FAILURE;
       state.firstFailedCoordinate = "CANVAS_HANDOFF_ERROR";
       state.recommendedNextRenewalTarget = "canvas-handoff-method-or-payload-renewal";
-    }
 
-    publishDataset();
-    renderLoader();
+      recordError("CANVAS_HANDOFF_ERROR", state.canvasCarrierHandoffError, { method });
+
+      setLane(LANE_KEYS.CANVAS, {
+        state: LANE_STATE.FAILED,
+        progress: 100,
+        subtitle: "Canvas handoff failed",
+        detail: state.canvasCarrierHandoffError,
+        event: "CANVAS_HANDOFF_ERROR",
+        lastEvent: "CANVAS_HANDOFF_ERROR"
+      });
+    }
   }
 
   function reconcileFromDataset() {
@@ -1307,236 +1546,293 @@
     const mount = nodes.mount || ensureMount();
 
     state.canvasMountPresent = Boolean(mount);
-
-    state.dragInspectionBound = bool(dataset.hearthDragInspectionBound) || bool(dataset.hearthControlsBound) || state.dragInspectionBound;
-    state.imageRendered = bool(dataset.hearthImageRendered) || bool(dataset.hearthCanvasImageRendered) || state.imageRendered;
-    state.canvasCarrierMounted = bool(dataset.hearthCanvasCarrierMounted) || bool(dataset.hearthVisibleCarrierMounted) || state.canvasCarrierMounted;
-
-    if (mount) {
-      state.canvasCarrierMounted = Boolean(mount.querySelector("canvas")) || bool(mount.dataset.hearthCanvasMounted) || bool(mount.dataset.hearthVisibleCarrierMounted) || state.canvasCarrierMounted;
-      state.dragInspectionBound = bool(mount.dataset.hearthDragInspectionBound) || bool(mount.dataset.hearthControlsBound) || state.dragInspectionBound;
-    }
-
     state.canvasApiPresent = Boolean(getCanvasApi());
     state.runtimeTablePresent = Boolean(getRuntimeTableApi());
 
-    if (state.runtimeTablePresent && state.runtimeTableMode === "RUNTIME_TABLE_PENDING") {
-      state.runtimeTableMode = "RUNTIME_TABLE_READY_OR_DEGRADED";
-    }
+    state.canvasCarrierMounted = (
+      state.canvasCarrierMounted ||
+      bool(dataset.hearthCanvasCarrierMounted) ||
+      bool(dataset.hearthVisibleCarrierMounted) ||
+      Boolean(mount && mount.querySelector("canvas"))
+    );
+
+    state.dragInspectionBound = (
+      state.dragInspectionBound ||
+      bool(dataset.hearthDragInspectionBound) ||
+      bool(dataset.hearthControlsBound) ||
+      Boolean(mount && (bool(mount.dataset.hearthDragInspectionBound) || bool(mount.dataset.hearthControlsBound))) ||
+      Boolean(mount && mount.style && mount.style.touchAction === "none")
+    );
+
+    state.firstFrameDetected = (
+      state.firstFrameDetected ||
+      bool(dataset.hearthFirstFrameDetected) ||
+      bool(dataset.hearthImageRendered) ||
+      bool(dataset.hearthCanvasImageRendered)
+    );
+
+    state.imageRendered = (
+      state.imageRendered ||
+      state.firstFrameDetected ||
+      bool(dataset.hearthImageRendered) ||
+      bool(dataset.hearthCanvasImageRendered)
+    );
   }
 
   function reconcileFromCanvasReceipt(receipt) {
-    const canvasReceipt = receipt && isObject(receipt) ? receipt : getCanvasReceipt();
+    const value = receipt && isObject(receipt) ? receipt : getCanvasReceipt();
 
-    if (canvasReceipt && isObject(canvasReceipt)) {
-      state.canvasCarrierMounted = Boolean(
-        canvasReceipt.canvasCarrierMounted ||
-        canvasReceipt.visibleCarrierMounted ||
-        canvasReceipt.mounted ||
-        state.canvasCarrierMounted
-      );
-
-      state.canvasCarrierHandoffOk = Boolean(
-        state.canvasCarrierHandoffOk ||
-        canvasReceipt.canvasCarrierMounted ||
-        canvasReceipt.visibleCarrierMounted ||
-        canvasReceipt.mounted
-      );
-
-      state.dragInspectionBound = Boolean(
-        state.dragInspectionBound ||
-        canvasReceipt.dragInspectionBound ||
-        canvasReceipt.pointerControlsBound
-      );
-
-      state.imageRendered = Boolean(
-        state.imageRendered ||
-        canvasReceipt.imageRendered ||
-        canvasReceipt.frames > 0
-      );
-
-      if (canvasReceipt.postgameStatus) {
-        state.postgameStatus = state.runtimeTablePresent
-          ? POSTGAME_STATUS.VISIBLE_CARRIER_ACTIVE_RUNTIME_TABLE_READY
-          : POSTGAME_STATUS.VISIBLE_CARRIER_ACTIVE_RUNTIME_TABLE_MISSING;
-      }
+    if (!value || !isObject(value)) {
+      reconcileAll("canvas-receipt-empty");
+      return;
     }
 
-    reconcileAll("canvas-receipt-reconcile");
+    state.canvasCarrierMounted = Boolean(
+      state.canvasCarrierMounted ||
+      value.canvasCarrierMounted ||
+      value.visibleCarrierMounted ||
+      value.mounted ||
+      value.canvasMounted
+    );
+
+    state.canvasCarrierHandoffOk = Boolean(
+      state.canvasCarrierHandoffOk ||
+      state.canvasCarrierMounted ||
+      value.canvasCarrierHandoffOk ||
+      value.handoffOk
+    );
+
+    state.firstFrameDetected = Boolean(
+      state.firstFrameDetected ||
+      value.firstFrameDetected ||
+      value.imageRendered ||
+      Number(value.frames || 0) > 0
+    );
+
+    state.imageRendered = Boolean(
+      state.imageRendered ||
+      state.firstFrameDetected ||
+      value.imageRendered ||
+      Number(value.frames || 0) > 0
+    );
+
+    state.dragInspectionBound = Boolean(
+      state.dragInspectionBound ||
+      value.dragInspectionBound ||
+      value.pointerControlsBound ||
+      value.controlsBound
+    );
+
+    reconcileAll("canvas-receipt-reconciled");
   }
 
-  function reconcileAll(reason = "manual-reconcile") {
+  function reconcileAll(reason = "manual") {
     reconcileFromDataset();
 
     const canvasReceipt = getCanvasReceipt();
     if (canvasReceipt && isObject(canvasReceipt)) {
       state.canvasCarrierMounted = Boolean(
+        state.canvasCarrierMounted ||
         canvasReceipt.canvasCarrierMounted ||
         canvasReceipt.visibleCarrierMounted ||
         canvasReceipt.mounted ||
-        state.canvasCarrierMounted
+        canvasReceipt.canvasMounted
       );
 
       state.canvasCarrierHandoffOk = Boolean(
-        canvasReceipt.canvasCarrierMounted ||
-        canvasReceipt.visibleCarrierMounted ||
-        canvasReceipt.mounted ||
-        state.canvasCarrierHandoffOk
+        state.canvasCarrierHandoffOk ||
+        state.canvasCarrierMounted ||
+        canvasReceipt.canvasCarrierHandoffOk ||
+        canvasReceipt.handoffOk
       );
 
-      state.dragInspectionBound = Boolean(
-        canvasReceipt.dragInspectionBound ||
-        canvasReceipt.pointerControlsBound ||
-        state.dragInspectionBound
+      state.firstFrameDetected = Boolean(
+        state.firstFrameDetected ||
+        canvasReceipt.firstFrameDetected ||
+        canvasReceipt.imageRendered ||
+        Number(canvasReceipt.frames || 0) > 0
       );
 
       state.imageRendered = Boolean(
+        state.imageRendered ||
+        state.firstFrameDetected ||
         canvasReceipt.imageRendered ||
-        Number(canvasReceipt.frames || 0) > 0 ||
-        state.imageRendered
+        Number(canvasReceipt.frames || 0) > 0
+      );
+
+      state.dragInspectionBound = Boolean(
+        state.dragInspectionBound ||
+        canvasReceipt.dragInspectionBound ||
+        canvasReceipt.pointerControlsBound ||
+        canvasReceipt.controlsBound
       );
     }
 
-    if (state.routeShellLoaded) {
-      setPhase("shell", PHASE_STATE.READY, "Route shell mounted", "SHELL_PHASE_READY");
-    }
-
-    if (state.runtimeTablePresent) {
-      setPhase("runtimeTable", PHASE_STATE.READY, "Runtime Table ready", "RUNTIME_TABLE_READY");
-    } else if (state.runtimeTableMode === "RUNTIME_TABLE_MISSING_ALLOWED") {
-      setPhase("runtimeTable", PHASE_STATE.DEGRADED, "Runtime Table missing / optional", "RUNTIME_TABLE_DEGRADED");
-    }
-
-    if (state.sourceAuthorityHeld) {
-      setPhase("sourceStack", PHASE_STATE.HELD, "Source stack held for this pass", "SOURCE_STACK_HELD_READY");
-    }
-
-    if (state.canvasCarrierRequested && !state.canvasCarrierMounted) {
-      setPhase("canvasCarrier", PHASE_STATE.LOADING, "Canvas carrier loading", "CANVAS_HANDOFF_IN_PROGRESS");
-    }
-
-    if (state.canvasCarrierMounted && state.canvasCarrierHandoffOk) {
-      setPhase("canvasCarrier", PHASE_STATE.READY, "Canvas carrier ready", "CANVAS_HANDOFF_READY");
+    if (state.canvasCarrierMounted) {
+      setLane(LANE_KEYS.CANVAS, {
+        state: state.imageRendered ? LANE_STATE.READY : LANE_STATE.LOADING,
+        progress: state.imageRendered ? 100 : 86,
+        subtitle: state.imageRendered ? "Canvas mounted; first frame detected" : "Canvas mounted; waiting for first frame proof",
+        detail: state.dragInspectionBound ? "Drag inspection appears bound." : "Drag inspection pending or inferred from touch-action.",
+        event: state.imageRendered ? "FIRST_FRAME_DETECTED" : "CANVAS_MOUNT_CONFIRMED",
+        lastEvent: state.imageRendered ? "FIRST_FRAME_DETECTED" : "CANVAS_MOUNT_CONFIRMED"
+      });
     }
 
     if (state.dragInspectionBound) {
-      setPhase("touch", PHASE_STATE.READY, "Touch inspection ready", "DRAG_INSPECTION_READY");
-    } else if (state.canvasCarrierMounted) {
-      setPhase("touch", PHASE_STATE.LOADING, "Touch inspection checking", "DRAG_INSPECTION_CHECKING");
+      emit("DRAG_INSPECTION_READY", { reason });
     }
 
-    if (state.imageRendered) {
-      setPhase("visiblePlanet", PHASE_STATE.READY, "Visible planet ready", "IMAGE_RENDERED_READY");
-    } else if (state.canvasCarrierMounted) {
-      setPhase("visiblePlanet", PHASE_STATE.LOADING, "Visible planet forming", "IMAGE_RENDERING_PENDING");
-    }
+    if (state.imageRendered || state.canvasCarrierMounted) {
+      state.finalReceiptAvailable = true;
 
-    if (state.loadingScreenReceiptCopyEnabled) {
-      setPhase("diagnosticReceipt", PHASE_STATE.READY, "Diagnostic receipt ready", "DIAGNOSTIC_RECEIPT_READY");
-    }
-
-    if (state.imageRendered && state.canvasCarrierMounted && state.loadingScreenReceiptCopyEnabled) {
-      state.targetProgress = 100;
-      state.postgameStatus = POSTGAME_STATUS.LOADING_SEQUENCE_COMPLETE_DIAGNOSTIC_READY;
-      state.firstFailedCoordinate = "NONE_VISIBLE_CARRIER_PRESENT";
-      state.recommendedNextRenewalTarget = "read-postgame-canvas-or-triple-g-receipt";
-
-      emit("LOADING_SEQUENCE_COMPLETE", {
-        reason,
-        progress: state.targetProgress,
-        imageRendered: state.imageRendered,
-        visualPassClaimed: false
-      });
-    } else if (state.canvasCarrierMounted) {
       state.postgameStatus = state.runtimeTablePresent
-        ? POSTGAME_STATUS.VISIBLE_CARRIER_ACTIVE_RUNTIME_TABLE_READY
+        ? POSTGAME_STATUS.DIAGNOSTIC_COCKPIT_READY
         : POSTGAME_STATUS.VISIBLE_CARRIER_ACTIVE_RUNTIME_TABLE_MISSING;
-      state.firstFailedCoordinate = state.imageRendered ? "DIAGNOSTIC_RECEIPT_PENDING" : "IMAGE_RENDERED_NOT_CONFIRMED";
+
+      state.firstFailedCoordinate = state.imageRendered
+        ? "NONE_VISIBLE_CARRIER_PRESENT"
+        : "FIRST_FRAME_PENDING";
+
       state.recommendedNextRenewalTarget = state.imageRendered
-        ? "diagnostic-receipt-finalization"
-        : "canvas-render-frame-confirmation";
+        ? "read-postgame-canvas-or-triple-g-receipt"
+        : "first-frame-proof-or-canvas-receipt";
+
+      setLane(LANE_KEYS.RECEIPT, {
+        state: LANE_STATE.FINAL_READY,
+        progress: 100,
+        subtitle: "Final receipt available",
+        detail: "Copy diagnostic remains available.",
+        event: "FINAL_RECEIPT_READY",
+        lastEvent: "FINAL_RECEIPT_READY"
+      });
+
+      emit("DIAGNOSTIC_COCKPIT_READY", { reason });
     }
 
-    publishDataset();
-    renderLoader();
+    if (reason !== "heartbeat") {
+      emit("RECONCILE", { reason });
+    }
+
+    updateMainProgressCap();
+    publishGlobals();
+    render();
   }
 
-  function scheduleReconciliations() {
-    [80, 250, 600, 1000, 1600, 2500, 4000].forEach((ms) => {
-      const timer = root.setTimeout(() => reconcileAll(`post-load-${ms}ms`), ms);
-      reconcileTimers.push(timer);
-    });
+  function startProgressAnimation() {
+    if (progressRaf) return;
+
+    const loop = () => {
+      const target = state.mainProgressCap;
+      const diff = target - state.mainDisplayProgress;
+
+      if (Math.abs(diff) > 0.08) {
+        state.mainDisplayProgress += diff * 0.075;
+      } else {
+        state.mainDisplayProgress = target;
+      }
+
+      render();
+      progressRaf = root.requestAnimationFrame(loop);
+    };
+
+    progressRaf = root.requestAnimationFrame(loop);
   }
 
-  function publishDataset() {
-    if (!doc || !doc.documentElement) return;
+  function renderLane(lane) {
+    const stateName = String(lane.state || "pending").toLowerCase();
+    const watchdog = state.watchdogStates[lane.key] || {};
+    const detail = watchdog.text || lane.detail || "active";
+    const elapsed = lane.elapsedMs || (lane.startedAtMs ? nowMs() - lane.startedAtMs : 0);
 
-    const dataset = doc.documentElement.dataset;
+    return `
+      <section class="hearth-v2-lane" data-lane="${lane.key}" data-state="${stateName}">
+        <div class="hearth-v2-lane-top">
+          <span class="hearth-v2-dot" aria-hidden="true"></span>
+          <span class="hearth-v2-lane-title">
+            <strong>${escapeHtml(lane.title)}</strong>
+            <span>${escapeHtml(lane.subtitle || "")}</span>
+          </span>
+          <span class="hearth-v2-lane-state">${escapeHtml(lane.state)}</span>
+        </div>
+        <div class="hearth-v2-lane-track">
+          <span class="hearth-v2-lane-fill" style="width:${clamp(lane.progress, 0, 100)}%"></span>
+        </div>
+        <div class="hearth-v2-lane-meta">
+          <span>elapsed=${escapeHtml(formatElapsed(elapsed))}</span>
+          <span>event=${escapeHtml(lane.lastEvent || "PENDING")}</span>
+          <span>${escapeHtml(detail)}</span>
+        </div>
+      </section>
+    `;
+  }
 
-    dataset.hearthConductorLoaded = "true";
-    dataset.hearthRouteConductorLoaded = "true";
-    dataset.hearthJsConductorLoaded = "true";
-    dataset.hearthConductorContract = CONTRACT;
-    dataset.hearthConductorReceipt = RECEIPT;
-    dataset.hearthConductorPreviousContract = PREVIOUS_CONTRACT;
-    dataset.hearthConductorBaselineContract = BASELINE_CONTRACT;
-    dataset.hearthConductorVersion = VERSION;
-    dataset.hearthActiveRouteFile = DESTINATION_FILE;
-    dataset.hearthActiveRouteConductor = DESTINATION_FILE;
-    dataset.hearthActiveRouteContract = CONTRACT;
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
 
-    dataset.hearthRetiredClimateRoute = RETIRED_CLIMATE_ROUTE;
-    dataset.hearthRetiredClimateRouteActiveCarrier = "false";
+  function render() {
+    if (!nodes.panel) return;
 
-    dataset.hearthLoadingScreenMounted = String(state.loadingScreenMounted);
-    dataset.hearthLoadingScreenVisible = String(state.loadingScreenVisible);
-    dataset.hearthAnimatedStateMachineActive = String(state.animatedStateMachineActive);
-    dataset.hearthProgress = String(Math.round(state.displayProgress));
-    dataset.hearthTargetProgress = String(Math.round(state.targetProgress));
+    const progress = Math.round(clamp(state.mainDisplayProgress, 0, 100));
+    const receiptText = getReceiptText();
 
-    dataset.hearthReceiptOverlayIndependent = "true";
-    dataset.hearthLoadingScreenReceiptCopyEnabled = "true";
+    if (nodes.title) {
+      nodes.title.textContent = "FORMING HEARTH RUNTIME TABLE";
+    }
 
-    dataset.hearthCanvasMountPresent = String(state.canvasMountPresent);
-    dataset.hearthCanvasAuthority = CANVAS_AUTHORITY_FILE;
-    dataset.hearthCanvasApiPresent = String(state.canvasApiPresent);
-    dataset.hearthCanvasScriptRequested = String(state.canvasScriptRequested);
-    dataset.hearthCanvasScriptLoaded = String(state.canvasScriptLoaded);
-    dataset.hearthCanvasCarrierRequested = String(state.canvasCarrierRequested);
-    dataset.hearthCanvasCarrierMounted = String(state.canvasCarrierMounted);
-    dataset.hearthCanvasCarrierHandoffOk = String(state.canvasCarrierHandoffOk);
-    dataset.hearthCanvasCarrierMethod = state.canvasCarrierMethod;
+    if (nodes.subtitle) {
+      const finalText = state.finalReceiptAvailable
+        ? "Diagnostic cockpit ready. Copy the receipt before the next renewal."
+        : "Live diagnostic cockpit active. Copy diagnostic is available during load.";
 
-    dataset.hearthRuntimeTable = RUNTIME_TABLE_FILE;
-    dataset.hearthRuntimeTableOptional = "true";
-    dataset.hearthRuntimeTablePresent = String(state.runtimeTablePresent);
-    dataset.hearthRuntimeTableMode = state.runtimeTableMode;
-    dataset.hearthRuntimeTablePlanAttempted = String(state.runtimeTablePlanAttempted);
-    dataset.hearthRuntimeTablePlanCreated = String(state.runtimeTablePlanCreated);
-    dataset.hearthRuntimeTableMissingDoesNotBlockCarrier = "true";
+      nodes.subtitle.textContent = `${state.mainProgressText}. ${finalText}`;
+    }
 
-    dataset.hearthSourceAuthorityHeld = "true";
-    dataset.hearthVisibleCarrierFirst = "true";
-    dataset.hearthWideProbeDeferred = "true";
-    dataset.hearthSingleAnchorIsLocalProofOnly = "true";
+    if (nodes.latest) {
+      nodes.latest.textContent = `latest=${state.latestEvent} · elapsed=${formatElapsed(state.heartbeatElapsedMs)}`;
+    }
 
-    dataset.hearthDragInspectionBound = String(state.dragInspectionBound);
-    dataset.hearthImageRendered = String(state.imageRendered);
-    dataset.hearthCoherentExpressionPass = "false";
-    dataset.hearthVisualPassClaimed = "false";
+    if (nodes.mainBar) {
+      nodes.mainBar.style.width = `${progress}%`;
+    }
 
-    dataset.hearthPostgameStatus = state.postgameStatus;
-    dataset.hearthFirstFailedCoordinate = state.firstFailedCoordinate;
-    dataset.hearthRecommendedNextRenewalTarget = state.recommendedNextRenewalTarget;
+    if (nodes.mainPercent) {
+      nodes.mainPercent.textContent = `${progress}%`;
+    }
 
-    dataset.generatedImage = "false";
-    dataset.graphicBox = "false";
-    dataset.webgl = "false";
-    dataset.visualPassClaimed = "false";
+    if (nodes.laneArea) {
+      const laneHtml = LANE_DEFINITIONS.map((definition) => renderLane(state.lanes[definition.key])).join("");
+      if (laneHtml !== lastRenderText) {
+        nodes.laneArea.innerHTML = laneHtml;
+        lastRenderText = laneHtml;
+      } else {
+        nodes.laneArea.querySelectorAll(".hearth-v2-lane").forEach((laneNode) => {
+          const key = laneNode.dataset.lane;
+          const lane = state.lanes[key];
+          if (!lane) return;
 
-    root.HEARTH_ROUTE_CONDUCTOR_POSTGAME_RECEIPT = getReceipt();
-    root.HEARTH_ROUTE_CONDUCTOR_RECEIPT = root.HEARTH_ROUTE_CONDUCTOR_POSTGAME_RECEIPT;
-    root.HEARTH_ROUTE_CONDUCTOR_CONTRACT = CONTRACT;
+          laneNode.dataset.state = String(lane.state || "pending").toLowerCase();
+
+          const fill = laneNode.querySelector(".hearth-v2-lane-fill");
+          if (fill) fill.style.width = `${clamp(lane.progress, 0, 100)}%`;
+
+          const stateNode = laneNode.querySelector(".hearth-v2-lane-state");
+          if (stateNode) stateNode.textContent = lane.state;
+        });
+      }
+    }
+
+    if (nodes.receiptPre) {
+      nodes.receiptPre.textContent = receiptText;
+    }
+
+    publishGlobals();
   }
 
   function getReceipt() {
@@ -1547,26 +1843,48 @@
       baselineContract: BASELINE_CONTRACT,
       version: VERSION,
       route: ROUTE,
-      destinationFile: DESTINATION_FILE,
-
-      routeShellLoaded: state.routeShellLoaded,
       activeRouteConductor: DESTINATION_FILE,
       retiredClimateRoute: RETIRED_CLIMATE_ROUTE,
       retiredClimateRouteActiveCarrier: false,
 
-      loadingScreenMounted: state.loadingScreenMounted,
-      loadingScreenVisible: state.loadingScreenVisible,
-      animatedStateMachineActive: state.animatedStateMachineActive,
-      progress: Math.round(state.displayProgress),
-      targetProgress: Math.round(state.targetProgress),
-      displayProgress: Number(state.displayProgress.toFixed(2)),
-      phaseStates: clonePlain(state.phaseStates),
+      systemAlive: state.systemAlive,
+      heartbeatStarted: state.heartbeatStarted,
+      heartbeatElapsedMs: state.heartbeatElapsedMs,
+      heartbeatText: state.heartbeatText,
+      latestEvent: state.latestEvent,
 
+      multiBarLoaderMounted: state.multiBarLoaderMounted,
+      partialReceiptAvailable: state.partialReceiptAvailable,
+      copyDiagnosticAvailable: state.copyDiagnosticAvailable,
+      copyDiagnosticArmed: state.copyDiagnosticArmed,
+      finalReceiptAvailable: state.finalReceiptAvailable,
       receiptOverlayIndependent: true,
-      loadingScreenReceiptCopyEnabled: true,
+
+      mainProgress: Math.round(state.mainDisplayProgress),
+      mainProgressCap: state.mainProgressCap,
+      mainProgressText: state.mainProgressText,
+
+      lanes: clonePlain(state.lanes),
+      laneStates: Object.fromEntries(Object.entries(state.lanes).map(([key, lane]) => [key, lane.state])),
+      laneProgress: Object.fromEntries(Object.entries(state.lanes).map(([key, lane]) => [key, lane.progress])),
+      laneElapsedMs: Object.fromEntries(Object.entries(state.lanes).map(([key, lane]) => [key, lane.elapsedMs])),
+      laneLastEvents: Object.fromEntries(Object.entries(state.lanes).map(([key, lane]) => [key, lane.lastEvent])),
+      watchdogStates: clonePlain(state.watchdogStates),
+
+      oldLoaderNeutralized: state.oldLoaderNeutralized,
+      oldLoaderNeutralizationMode: state.oldLoaderNeutralizationMode,
+
+      runtimeTablePresent: state.runtimeTablePresent,
+      runtimeTableMode: state.runtimeTableMode,
+      runtimeTablePlanAttempted: state.runtimeTablePlanAttempted,
+      runtimeTablePlanCreated: state.runtimeTablePlanCreated,
+      runtimeTablePlanError: state.runtimeTablePlanError,
+      runtimeTableOptional: true,
+      runtimeTableMissingDoesNotBlockCarrier: true,
+
+      sourceAuthorityHeld: true,
 
       canvasMountPresent: state.canvasMountPresent,
-      canvasAuthority: CANVAS_AUTHORITY_FILE,
       canvasApiPresent: state.canvasApiPresent,
       canvasScriptRequested: state.canvasScriptRequested,
       canvasScriptLoaded: state.canvasScriptLoaded,
@@ -1576,29 +1894,20 @@
       canvasCarrierHandoffOk: state.canvasCarrierHandoffOk,
       canvasCarrierHandoffError: state.canvasCarrierHandoffError,
       canvasCarrierMethod: state.canvasCarrierMethod,
-
-      runtimeTable: RUNTIME_TABLE_FILE,
-      runtimeTableOptional: true,
-      runtimeTablePresent: state.runtimeTablePresent,
-      runtimeTableMode: state.runtimeTableMode,
-      runtimeTablePlanAttempted: state.runtimeTablePlanAttempted,
-      runtimeTablePlanCreated: state.runtimeTablePlanCreated,
-      runtimeTablePlanError: state.runtimeTablePlanError,
-      runtimeTableMissingDoesNotBlockCarrier: true,
-
-      sourceAuthorityHeld: true,
-      visibleCarrierFirst: true,
-      wideProbeDeferred: true,
-      singleAnchorIsLocalProofOnly: true,
-
+      firstFrameDetected: state.firstFrameDetected,
       dragInspectionBound: state.dragInspectionBound,
       imageRendered: state.imageRendered,
+
+      panelMobileSafe: state.panelMobileSafe,
+      buttonsReachable: state.buttonsReachable,
+      mapPortalNotBlockingControls: state.mapPortalNotBlockingControls,
+
       coherentExpressionPass: false,
       visualPassClaimed: false,
 
-      postgameStatus: state.postgameStatus,
       firstFailedCoordinate: state.firstFailedCoordinate,
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+      postgameStatus: state.postgameStatus,
 
       generatedImage: false,
       graphicBox: false,
@@ -1606,26 +1915,31 @@
 
       events: clonePlain(state.events),
       errors: clonePlain(state.errors),
-      startedAt: state.startedAt,
       updatedAt: nowIso()
     };
-  }
-
-  function phaseReceiptText() {
-    return PHASES.map((phaseDef) => {
-      const phase = state.phaseStates[phaseDef.key];
-      return `- ${phaseDef.label}: ${phase.state} :: ${phase.text}`;
-    }).join("\n");
   }
 
   function getReceiptText() {
     const receipt = getReceipt();
 
-    const events = receipt.events.map((entry) => `- ${entry.at} :: ${entry.event}`).join("\n") || "- none";
-    const errors = receipt.errors.map((entry) => `- ${entry.at} :: ${entry.code} :: ${entry.message}`).join("\n") || "- none";
+    const lanes = Object.entries(receipt.lanes).map(([key, lane]) => (
+      `- ${key}: state=${lane.state}; progress=${lane.progress}; elapsed=${lane.elapsedMs}; lastEvent=${lane.lastEvent}; detail=${lane.detail || ""}`
+    )).join("\n");
+
+    const watchdogs = Object.entries(receipt.watchdogStates).map(([key, watchdog]) => (
+      `- ${key}: ${watchdog.text || "none"}`
+    )).join("\n");
+
+    const events = receipt.events.map((entry) => (
+      `- ${entry.at} :: ${entry.event}`
+    )).join("\n") || "- none";
+
+    const errors = receipt.errors.map((entry) => (
+      `- ${entry.at} :: ${entry.code} :: ${entry.message}`
+    )).join("\n") || "- none";
 
     return [
-      "HEARTH_ROUTE_CONDUCTOR_ANIMATED_LOAD_SCREEN_STATE_MACHINE_RECEIPT",
+      "HEARTH_ROUTE_CONDUCTOR_MULTI_BAR_LIVE_LOADING_DIAGNOSTIC_RECEIPT",
       "",
       `contract=${receipt.contract}`,
       `receipt=${receipt.receipt}`,
@@ -1633,26 +1947,47 @@
       `baselineContract=${receipt.baselineContract}`,
       `version=${receipt.version}`,
       `route=${receipt.route}`,
-      "",
-      `routeShellLoaded=${receipt.routeShellLoaded}`,
       `activeRouteConductor=${receipt.activeRouteConductor}`,
       `retiredClimateRoute=${receipt.retiredClimateRoute}`,
       `retiredClimateRouteActiveCarrier=${receipt.retiredClimateRouteActiveCarrier}`,
       "",
-      `loadingScreenMounted=${receipt.loadingScreenMounted}`,
-      `loadingScreenVisible=${receipt.loadingScreenVisible}`,
-      `animatedStateMachineActive=${receipt.animatedStateMachineActive}`,
-      `progress=${receipt.progress}`,
-      `targetProgress=${receipt.targetProgress}`,
-      `displayProgress=${receipt.displayProgress}`,
-      `receiptOverlayIndependent=${receipt.receiptOverlayIndependent}`,
-      `loadingScreenReceiptCopyEnabled=${receipt.loadingScreenReceiptCopyEnabled}`,
+      `systemAlive=${receipt.systemAlive}`,
+      `heartbeatStarted=${receipt.heartbeatStarted}`,
+      `heartbeatElapsedMs=${receipt.heartbeatElapsedMs}`,
+      `heartbeatText=${receipt.heartbeatText}`,
+      `latestEvent=${receipt.latestEvent}`,
       "",
-      "PHASE_STATES",
-      phaseReceiptText(),
+      `multiBarLoaderMounted=${receipt.multiBarLoaderMounted}`,
+      `partialReceiptAvailable=${receipt.partialReceiptAvailable}`,
+      `copyDiagnosticAvailable=${receipt.copyDiagnosticAvailable}`,
+      `copyDiagnosticArmed=${receipt.copyDiagnosticArmed}`,
+      `finalReceiptAvailable=${receipt.finalReceiptAvailable}`,
+      `receiptOverlayIndependent=${receipt.receiptOverlayIndependent}`,
+      "",
+      `mainProgress=${receipt.mainProgress}`,
+      `mainProgressCap=${receipt.mainProgressCap}`,
+      `mainProgressText=${receipt.mainProgressText}`,
+      "",
+      "LANES",
+      lanes,
+      "",
+      "WATCHDOG_STATES",
+      watchdogs,
+      "",
+      `oldLoaderNeutralized=${receipt.oldLoaderNeutralized}`,
+      `oldLoaderNeutralizationMode=${receipt.oldLoaderNeutralizationMode}`,
+      "",
+      `runtimeTablePresent=${receipt.runtimeTablePresent}`,
+      `runtimeTableMode=${receipt.runtimeTableMode}`,
+      `runtimeTablePlanAttempted=${receipt.runtimeTablePlanAttempted}`,
+      `runtimeTablePlanCreated=${receipt.runtimeTablePlanCreated}`,
+      `runtimeTablePlanError=${receipt.runtimeTablePlanError}`,
+      `runtimeTableOptional=${receipt.runtimeTableOptional}`,
+      `runtimeTableMissingDoesNotBlockCarrier=${receipt.runtimeTableMissingDoesNotBlockCarrier}`,
+      "",
+      `sourceAuthorityHeld=${receipt.sourceAuthorityHeld}`,
       "",
       `canvasMountPresent=${receipt.canvasMountPresent}`,
-      `canvasAuthority=${receipt.canvasAuthority}`,
       `canvasApiPresent=${receipt.canvasApiPresent}`,
       `canvasScriptRequested=${receipt.canvasScriptRequested}`,
       `canvasScriptLoaded=${receipt.canvasScriptLoaded}`,
@@ -1662,26 +1997,16 @@
       `canvasCarrierHandoffOk=${receipt.canvasCarrierHandoffOk}`,
       `canvasCarrierHandoffError=${receipt.canvasCarrierHandoffError}`,
       `canvasCarrierMethod=${receipt.canvasCarrierMethod}`,
-      "",
-      `runtimeTable=${receipt.runtimeTable}`,
-      `runtimeTableOptional=${receipt.runtimeTableOptional}`,
-      `runtimeTablePresent=${receipt.runtimeTablePresent}`,
-      `runtimeTableMode=${receipt.runtimeTableMode}`,
-      `runtimeTablePlanAttempted=${receipt.runtimeTablePlanAttempted}`,
-      `runtimeTablePlanCreated=${receipt.runtimeTablePlanCreated}`,
-      `runtimeTablePlanError=${receipt.runtimeTablePlanError}`,
-      `runtimeTableMissingDoesNotBlockCarrier=${receipt.runtimeTableMissingDoesNotBlockCarrier}`,
-      "",
-      `sourceAuthorityHeld=${receipt.sourceAuthorityHeld}`,
-      `visibleCarrierFirst=${receipt.visibleCarrierFirst}`,
-      `wideProbeDeferred=${receipt.wideProbeDeferred}`,
-      `singleAnchorIsLocalProofOnly=${receipt.singleAnchorIsLocalProofOnly}`,
-      "",
+      `firstFrameDetected=${receipt.firstFrameDetected}`,
       `dragInspectionBound=${receipt.dragInspectionBound}`,
       `imageRendered=${receipt.imageRendered}`,
+      "",
+      `panelMobileSafe=${receipt.panelMobileSafe}`,
+      `buttonsReachable=${receipt.buttonsReachable}`,
+      `mapPortalNotBlockingControls=${receipt.mapPortalNotBlockingControls}`,
+      "",
       `coherentExpressionPass=${receipt.coherentExpressionPass}`,
       `visualPassClaimed=${receipt.visualPassClaimed}`,
-      "",
       `postgameStatus=${receipt.postgameStatus}`,
       `firstFailedCoordinate=${receipt.firstFailedCoordinate}`,
       `recommendedNextRenewalTarget=${receipt.recommendedNextRenewalTarget}`,
@@ -1716,7 +2041,7 @@
     try {
       if (root.navigator && root.navigator.clipboard && isFunction(root.navigator.clipboard.writeText)) {
         await root.navigator.clipboard.writeText(text);
-      } else {
+      } else if (doc) {
         const textarea = doc.createElement("textarea");
         textarea.value = text;
         textarea.setAttribute("readonly", "readonly");
@@ -1729,59 +2054,182 @@
       }
 
       if (nodes.copyButton) {
-        const previous = nodes.copyButton.textContent;
+        const original = nodes.copyButton.textContent;
         nodes.copyButton.textContent = "Copied";
         root.setTimeout(() => {
-          nodes.copyButton.textContent = previous || "Copy diagnostic";
-        }, 1200);
+          nodes.copyButton.textContent = original || "Copy diagnostic";
+        }, 1100);
       }
 
       emit("DIAGNOSTIC_RECEIPT_COPIED", {
-        copyEnabled: true
+        partialReceiptAvailable: state.partialReceiptAvailable,
+        finalReceiptAvailable: state.finalReceiptAvailable
       });
     } catch (error) {
       recordError("COPY_DIAGNOSTIC_FAILED", error && error.message ? error.message : String(error));
     }
   }
 
-  function bootSequence() {
-    guardRetiredClimateRoute();
-    mountLoadingScreen();
-    startStateMachine();
+  function publishGlobals() {
+    root.HEARTH = root.HEARTH || {};
+    root.HEARTH.routeConductor = api;
 
-    checkRouteShell();
+    root.HEARTH_ROUTE_CONDUCTOR = api;
+    root.HearthRouteConductor = api;
+    root.HEARTH_ROUTE_CONDUCTOR_CONTRACT = CONTRACT;
+    root.HEARTH_ROUTE_CONDUCTOR_RECEIPT = getReceipt();
+    root.HEARTH_ROUTE_CONDUCTOR_POSTGAME_RECEIPT = root.HEARTH_ROUTE_CONDUCTOR_RECEIPT;
+
+    root.__HEARTH_ACTIVE_ROUTE_FILE__ = DESTINATION_FILE;
+    root.__HEARTH_ACTIVE_ROUTE_CONDUCTOR__ = DESTINATION_FILE;
+    root.__HEARTH_ACTIVE_ROUTE_CONTRACT__ = CONTRACT;
+    root.__HEARTH_RETIRED_CLIMATE_ROUTE__ = RETIRED_CLIMATE_ROUTE;
+    root.__HEARTH_RETIRED_CLIMATE_ROUTE_ACTIVE_CARRIER__ = false;
+
+    if (!doc || !doc.documentElement) return;
+
+    const dataset = doc.documentElement.dataset;
+
+    dataset.hearthConductorLoaded = "true";
+    dataset.hearthRouteConductorLoaded = "true";
+    dataset.hearthJsConductorLoaded = "true";
+    dataset.hearthConductorContract = CONTRACT;
+    dataset.hearthConductorReceipt = RECEIPT;
+    dataset.hearthConductorPreviousContract = PREVIOUS_CONTRACT;
+    dataset.hearthConductorBaselineContract = BASELINE_CONTRACT;
+    dataset.hearthConductorVersion = VERSION;
+
+    dataset.hearthActiveRouteFile = DESTINATION_FILE;
+    dataset.hearthActiveRouteConductor = DESTINATION_FILE;
+    dataset.hearthActiveRouteContract = CONTRACT;
+
+    dataset.hearthRetiredClimateRoute = RETIRED_CLIMATE_ROUTE;
+    dataset.hearthRetiredClimateRouteActiveCarrier = "false";
+
+    dataset.hearthSystemAlive = String(state.systemAlive);
+    dataset.hearthHeartbeatStarted = String(state.heartbeatStarted);
+    dataset.hearthHeartbeatElapsedMs = String(state.heartbeatElapsedMs);
+    dataset.hearthMultiBarLoaderMounted = String(state.multiBarLoaderMounted);
+    dataset.hearthPartialReceiptAvailable = String(state.partialReceiptAvailable);
+    dataset.hearthCopyDiagnosticAvailable = String(state.copyDiagnosticAvailable);
+    dataset.hearthCopyDiagnosticArmed = String(state.copyDiagnosticArmed);
+    dataset.hearthFinalReceiptAvailable = String(state.finalReceiptAvailable);
+
+    dataset.hearthMainProgress = String(Math.round(state.mainDisplayProgress));
+    dataset.hearthMainProgressCap = String(state.mainProgressCap);
+    dataset.hearthMainProgressText = state.mainProgressText;
+
+    dataset.hearthOldLoaderNeutralized = String(state.oldLoaderNeutralized);
+    dataset.hearthOldLoaderNeutralizationMode = state.oldLoaderNeutralizationMode;
+
+    dataset.hearthRuntimeTablePresent = String(state.runtimeTablePresent);
+    dataset.hearthRuntimeTableMode = state.runtimeTableMode;
+    dataset.hearthRuntimeTablePlanAttempted = String(state.runtimeTablePlanAttempted);
+    dataset.hearthRuntimeTablePlanCreated = String(state.runtimeTablePlanCreated);
+    dataset.hearthRuntimeTableMissingDoesNotBlockCarrier = "true";
+
+    dataset.hearthSourceAuthorityHeld = "true";
+
+    dataset.hearthCanvasMountPresent = String(state.canvasMountPresent);
+    dataset.hearthCanvasApiPresent = String(state.canvasApiPresent);
+    dataset.hearthCanvasCarrierRequested = String(state.canvasCarrierRequested);
+    dataset.hearthCanvasCarrierMounted = String(state.canvasCarrierMounted);
+    dataset.hearthCanvasCarrierHandoffOk = String(state.canvasCarrierHandoffOk);
+    dataset.hearthCanvasCarrierMethod = state.canvasCarrierMethod;
+    dataset.hearthFirstFrameDetected = String(state.firstFrameDetected);
+    dataset.hearthDragInspectionBound = String(state.dragInspectionBound);
+    dataset.hearthImageRendered = String(state.imageRendered);
+
+    dataset.hearthPanelMobileSafe = String(state.panelMobileSafe);
+    dataset.hearthButtonsReachable = String(state.buttonsReachable);
+    dataset.hearthReceiptOverlayIndependent = "true";
+
+    dataset.hearthCoherentExpressionPass = "false";
+    dataset.hearthVisualPassClaimed = "false";
+    dataset.hearthPostgameStatus = state.postgameStatus;
+    dataset.hearthFirstFailedCoordinate = state.firstFailedCoordinate;
+    dataset.hearthRecommendedNextRenewalTarget = state.recommendedNextRenewalTarget;
+
+    dataset.generatedImage = "false";
+    dataset.graphicBox = "false";
+    dataset.webgl = "false";
+    dataset.visualPassClaimed = "false";
+  }
+
+  function boot() {
+    emit("CONDUCTOR_V2_STARTED", { contract: CONTRACT });
+
+    guardRetiredClimateRoute();
+    ensureMount();
+    startHeartbeat();
+    mountLoader();
+
+    setLane(LANE_KEYS.CONDUCTOR, {
+      state: LANE_STATE.LOADING,
+      progress: 28,
+      subtitle: "Conductor active; old loader guarded",
+      detail: "Live diagnostic and partial receipt are available.",
+      event: "CONDUCTOR_LANE_STARTED",
+      lastEvent: "CONDUCTOR_LANE_STARTED",
+      forceEvent: true
+    });
+
     checkRuntimeTable();
-    holdSourceStack();
+
+    setLane(LANE_KEYS.CONDUCTOR, {
+      state: state.runtimeTablePresent ? LANE_STATE.READY : LANE_STATE.DEGRADED,
+      progress: state.runtimeTablePresent ? 100 : 82,
+      subtitle: state.runtimeTablePresent ? "Conductor ready" : "Conductor ready; Runtime Table degraded",
+      detail: "Source stack held. Canvas lane is separate.",
+      event: state.runtimeTablePresent ? "CONDUCTOR_READY" : "CONDUCTOR_READY_DEGRADED",
+      lastEvent: state.runtimeTablePresent ? "CONDUCTOR_READY" : "CONDUCTOR_READY_DEGRADED"
+    });
+
+    setLane(LANE_KEYS.CANVAS, {
+      state: LANE_STATE.CHECKING,
+      progress: 18,
+      subtitle: "Canvas lane started",
+      event: "CANVAS_LANE_STARTED",
+      lastEvent: "CANVAS_LANE_STARTED",
+      forceEvent: true
+    });
 
     callCanvasCarrier();
-    scheduleReconciliations();
 
-    reconcileAll("boot-sequence-complete");
+    startProgressAnimation();
+
+    if (reconcileTimer) root.clearInterval(reconcileTimer);
+    reconcileTimer = root.setInterval(() => reconcileAll("interval"), 800);
+
+    [120, 300, 700, 1300, 2400, 4200, 6800, 10000].forEach((ms) => {
+      root.setTimeout(() => reconcileAll(`post-boot-${ms}ms`), ms);
+    });
+
+    render();
   }
 
   function dispose(reason = "manual-dispose") {
-    reconcileTimers.forEach((timer) => {
-      try {
-        root.clearTimeout(timer);
-      } catch (_error) {}
-    });
+    if (heartbeatTimer) {
+      root.clearInterval(heartbeatTimer);
+      heartbeatTimer = 0;
+    }
 
-    reconcileTimers = [];
+    if (reconcileTimer) {
+      root.clearInterval(reconcileTimer);
+      reconcileTimer = 0;
+    }
 
-    if (raf) {
-      try {
-        root.cancelAnimationFrame(raf);
-      } catch (_error) {}
-
-      raf = 0;
+    if (progressRaf) {
+      root.cancelAnimationFrame(progressRaf);
+      progressRaf = 0;
     }
 
     if (nodes.overlay && nodes.overlay.parentNode) {
       nodes.overlay.parentNode.removeChild(nodes.overlay);
     }
 
-    emit("CONDUCTOR_DISPOSED", { reason });
-    publishDataset();
+    emit("CONDUCTOR_V2_DISPOSED", { reason });
+    publishGlobals();
   }
 
   const api = {
@@ -1793,21 +2241,21 @@
     route: ROUTE,
     destinationFile: DESTINATION_FILE,
 
-    boot: bootSequence,
+    boot,
     reconcile: reconcileAll,
     getReceipt,
     getReceiptText,
     copyDiagnostic,
     dispose,
 
-    supportsAnimatedLoadScreen: true,
-    supportsProgressBar: true,
-    supportsPhaseCheckmarks: true,
-    supportsCopyableDiagnosticReceipt: true,
-    supportsReceiptOverlayIndependence: true,
+    supportsMultiBarLiveLoadingDiagnostic: true,
+    supportsHeartbeat: true,
+    supportsPartialReceiptDuringLoading: true,
+    supportsCopyDiagnosticDuringLoading: true,
+    supportsWatchdogStatus: true,
+    supportsStaleLoaderNeutralization: true,
+    supportsMobileSafePanel: true,
     supportsRuntimeTableOptionalMode: true,
-    supportsRuntimeTableMissingDoesNotBlockCarrier: true,
-    supportsWideProbeDeferred: true,
     supportsVisibleCarrierFirst: true,
 
     ownsPlanetDrawing: false,
@@ -1830,22 +2278,12 @@
     }
   };
 
-  root.HEARTH = root.HEARTH || {};
-  root.HEARTH.routeConductor = api;
-
-  root.HEARTH_ROUTE_CONDUCTOR = api;
-  root.HearthRouteConductor = api;
-  root.HEARTH_ROUTE_CONDUCTOR_CONTRACT = CONTRACT;
-  root.HEARTH_ROUTE_CONDUCTOR_RECEIPT = getReceipt();
-
-  root.__HEARTH_ACTIVE_ROUTE_FILE__ = DESTINATION_FILE;
-  root.__HEARTH_ACTIVE_ROUTE_CONDUCTOR__ = DESTINATION_FILE;
-  root.__HEARTH_ACTIVE_ROUTE_CONTRACT__ = CONTRACT;
+  publishGlobals();
 
   if (doc && doc.readyState === "loading") {
-    doc.addEventListener("DOMContentLoaded", bootSequence, { once: true });
+    doc.addEventListener("DOMContentLoaded", boot, { once: true });
   } else {
-    bootSequence();
+    boot();
   }
 
   if (typeof module !== "undefined" && module.exports) {

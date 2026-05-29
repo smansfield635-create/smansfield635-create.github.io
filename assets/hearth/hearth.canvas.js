@@ -5,11 +5,12 @@
 // Purpose:
 // - Restore visible Hearth planet carrier immediately.
 // - Keep pointer/touch drag active immediately.
-// - Consume Runtime Table v3 procedural visual-carrier plan.
+// - Consume the current Universal Planet Wide-Probe Diagnostic Loading Standard procedural visual-carrier plan.
 // - Let Runtime Table decide visual carrier eligibility, atlas-start authorization, mode, coordinates, and renewal target.
 // - Start atlas when the Runtime Table plan authorizes it.
 // - Preserve water-child failure as diagnostic degradation, not visualization erasure.
 // - Keep water child as external truth authority.
+// - Sync current Runtime Table metadata echoes without changing the visible carrier.
 // Does not own:
 // - Runtime Table procedural law
 // - Triple G diagnostic law
@@ -33,9 +34,12 @@
   const VERSION = "2026-05-29.hearth-canvas-runtime-table-directed-visible-carrier-v1";
 
   const LAB_RUNTIME_TABLE_PATH = "/assets/lab/runtime-table.js";
-  const REQUIRED_RUNTIME_TABLE_CONTRACT = "LAB_RUNTIME_TABLE_VISUAL_CARRIER_ATLAS_SEQUENCE_STANDARD_TNT_v3";
-  const PREVIOUS_RUNTIME_TABLE_CONTRACT = "LAB_RUNTIME_TABLE_AND_TRIPLE_G_COHERENCE_DIAGNOSTIC_STANDARD_TNT_v2";
-  const RUNTIME_TABLE_CACHE_KEY = "lab-runtime-table-visual-carrier-plan-v3";
+  const REQUIRED_RUNTIME_TABLE_CONTRACT = "LAB_UNIVERSAL_PLANET_WIDE_PROBE_DIAGNOSTIC_LOADING_STANDARD_TNT_v1";
+  const PREVIOUS_RUNTIME_TABLE_CONTRACT = "LAB_RUNTIME_TABLE_VISUAL_CARRIER_ATLAS_SEQUENCE_STANDARD_TNT_v3";
+  const RUNTIME_TABLE_CACHE_KEY = "lab-universal-planet-wide-probe-diagnostic-loading-standard-v1";
+
+  const HEARTH_ROUTE_CONTROLLER_CONTRACT = "HEARTH_ELEVATION_COMPOSITION_MATERIAL_ROUTE_SYNC_TNT_v22";
+  const HEARTH_ROUTE_PREVIOUS_CONTRACT = "HEARTH_TECTONIC_PARENT_CHAIN_ROUTE_TNT_v21";
 
   const LAND_CONTRACT = "HEARTH_LAND_SURFACE_ATTACHMENT_CHANNEL_TNT_v1";
   const WATER_CONTRACT = "HEARTH_WATER_HYDROSPHERE_SURFACE_CHANNEL_TNT_v1";
@@ -826,6 +830,12 @@
       firstFailedCoordinate: plan.firstFailedCoordinate || "",
       recommendedNextRenewalTarget: plan.recommendedNextRenewalTarget || "",
 
+      hearthRouteControllerContract: HEARTH_ROUTE_CONTROLLER_CONTRACT,
+      hearthRoutePreviousContract: HEARTH_ROUTE_PREVIOUS_CONTRACT,
+      hearthActiveRouteContract: HEARTH_ROUTE_CONTROLLER_CONTRACT,
+      activeRouteContract: HEARTH_ROUTE_CONTROLLER_CONTRACT,
+      hearthCanvasRouteEchoMetadataOnly: "true",
+
       visualCarrierAllowed: Boolean(plan.visualCarrierAllowed),
       visualizationBlocked: Boolean(plan.visualizationBlocked),
       visualizationBlockReason: plan.visualizationBlockReason || "",
@@ -1297,7 +1307,7 @@
         failedCheckpoints: [],
         warningCheckpoints: [],
         renewalTargets: ["runtime-table-plan-authority-load"],
-        nextStrategy: ["Load Runtime Table v3 before atlas plan consumption."],
+        nextStrategy: ["Load the Universal Planet Wide-Probe Diagnostic Loading Standard before atlas plan consumption."],
         waterConnectorProof: state.waterProof || {},
         channelPlan: {},
         runtimeTableLedger: state.runtimeTableLedger || null,
@@ -1430,6 +1440,12 @@
     canvas.dataset.hearthRuntimeTablePlanConsumed = "false";
     canvas.dataset.hearthRuntimeTableRuntimeAllowed = "false";
     canvas.dataset.hearthRuntimeTableHandoff = "PENDING";
+
+    canvas.dataset.hearthRouteControllerContract = HEARTH_ROUTE_CONTROLLER_CONTRACT;
+    canvas.dataset.hearthRoutePreviousContract = HEARTH_ROUTE_PREVIOUS_CONTRACT;
+    canvas.dataset.hearthActiveRouteContract = HEARTH_ROUTE_CONTROLLER_CONTRACT;
+    canvas.dataset.activeRouteContract = HEARTH_ROUTE_CONTROLLER_CONTRACT;
+    canvas.dataset.hearthCanvasRouteEchoMetadataOnly = "true";
 
     canvas.dataset.hearthCanvasChannelMultiplexReady = "false";
     canvas.dataset.hearthCanvasChannelMultiplexDegraded = "true";
@@ -2433,6 +2449,11 @@
       runtimeTablePreviousContract: PREVIOUS_RUNTIME_TABLE_CONTRACT,
       runtimeTablePath: LAB_RUNTIME_TABLE_PATH,
 
+      routeEchoMetadataOnly: true,
+      routeControllerContract: HEARTH_ROUTE_CONTROLLER_CONTRACT,
+      routePreviousContract: HEARTH_ROUTE_PREVIOUS_CONTRACT,
+      canvasDoesNotOwnRouteOrchestration: true,
+
       shellFirstMount: true,
       visibleCarrierImmediate: true,
       fallbackDiagnosticCarrierImmediate: true,
@@ -2474,7 +2495,8 @@
         "diagnostic-receipt-export",
         "receipt-visible-toggle",
         "receipt-expanded-toggle",
-        "copyable-diagnostic-export"
+        "copyable-diagnostic-export",
+        "metadata-echo-sync"
       ],
       doesNotOwn: [
         "Runtime Table procedural law",
@@ -2566,7 +2588,12 @@
     runtimeTableDirected: true,
     runtimeTablePlanConsumer: true,
     runtimeTableRequiredContract: REQUIRED_RUNTIME_TABLE_CONTRACT,
+    runtimeTablePreviousContract: PREVIOUS_RUNTIME_TABLE_CONTRACT,
     runtimeTablePath: LAB_RUNTIME_TABLE_PATH,
+
+    routeEchoMetadataOnly: true,
+    routeControllerContract: HEARTH_ROUTE_CONTROLLER_CONTRACT,
+    routePreviousContract: HEARTH_ROUTE_PREVIOUS_CONTRACT,
 
     canvasOwnsProceduralPlan: false,
     canvasOwnsWaterTruth: false,
@@ -2644,6 +2671,12 @@
     dataset.hearthCanvasConsumesLabRuntimeTable = "true";
     dataset.hearthCanvasConsumesLabTripleGDiagnostic = "true";
     dataset.hearthCanvasConsumesRuntimeTableProceduralPlan = "true";
+
+    dataset.hearthRouteControllerContract = HEARTH_ROUTE_CONTROLLER_CONTRACT;
+    dataset.hearthRoutePreviousContract = HEARTH_ROUTE_PREVIOUS_CONTRACT;
+    dataset.hearthActiveRouteContract = HEARTH_ROUTE_CONTROLLER_CONTRACT;
+    dataset.activeRouteContract = HEARTH_ROUTE_CONTROLLER_CONTRACT;
+    dataset.hearthCanvasRouteEchoMetadataOnly = "true";
 
     dataset.visualCarrierAllowed = "true";
     dataset.visualizationBlocked = "false";

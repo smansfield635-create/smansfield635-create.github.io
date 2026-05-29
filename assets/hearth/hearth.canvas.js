@@ -1,24 +1,25 @@
 // /assets/hearth/hearth.canvas.js
 // HEARTH_CANVAS_RUNTIME_TABLE_DIRECTED_VISIBLE_CARRIER_TNT_v1
 // Full-file replacement.
-// Rebuild receipt: HEARTH_CANVAS_RUNTIME_TABLE_DIRECTED_VISIBLE_CARRIER_REBUILD_RECEIPT_v1
-// Public route contract is preserved exactly.
-// Canvas authority / visible carrier only.
+// Canvas / visible carrier authority only.
 // Purpose:
-// - Restore HEARTH_CANVAS public carrier expected by hearth.climate.route.js.
-// - Mount a visible Hearth canvas inside #hearthCanvasMount.
-// - Hide/remove route fallback text after successful carrier mount.
-// - Bridge HEARTH_MATERIALS into HEARTH_LAND_CHANNEL / HEARTH_WATER_CHANNEL / HEARTH_AIR_CHANNEL for HEARTH_HEX_SURFACE.
-// - Consume HEARTH_HEX_SURFACE when available.
-// - Fall back to a materials-driven 2D body renderer when hex surface is unavailable.
-// - Preserve drag/spin inspection.
-// - Preserve route-required mount API shape.
+// - Restore shell-first visible Hearth carrier.
+// - Conduct-request-load /assets/lab/runtime-table.js if Runtime Table is not already present.
+// - Consume Runtime Table plan when available.
+// - Preserve atlas/cache render after carrier visibility.
+// - Defer wide-probe diagnostics.
+// - Preserve materials + hex surface consumption.
+// - Preserve route mount compatibility.
 // Does not own:
-// - tectonic cause
-// - elevation generation
-// - composition classification
-// - hydrology classification
-// - material palette truth
+// - planet truth
+// - tectonics
+// - elevation
+// - composition
+// - hydrology
+// - materials truth
+// - hex truth
+// - runtime motion
+// - controls
 // - route orchestration
 // - final visual pass claim
 
@@ -26,21 +27,39 @@
   "use strict";
 
   const root = typeof window !== "undefined" ? window : globalThis;
+  const doc = root.document || null;
 
   const CONTRACT = "HEARTH_CANVAS_RUNTIME_TABLE_DIRECTED_VISIBLE_CARRIER_TNT_v1";
   const RECEIPT = "HEARTH_CANVAS_RUNTIME_TABLE_DIRECTED_VISIBLE_CARRIER_RECEIPT_v1";
-  const REBUILD_RECEIPT = "HEARTH_CANVAS_RUNTIME_TABLE_DIRECTED_VISIBLE_CARRIER_REBUILD_RECEIPT_v1";
-  const PREVIOUS_KNOWN_CONTRACT = "HEARTH_CANVAS_HEX_FOUR_PAIR_BODY_BOUNDARY_CARRIER_TNT_v1";
-  const ROUTE_EXPECTED_CONTRACT = "HEARTH_CLIMATE_ROUTE_HEX_FOUR_PAIR_FULL_RENEWAL_TNT_v1";
-  const VERSION = "2026-05-29.hearth-canvas-runtime-table-directed-visible-carrier-rebuild-v1";
+  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_HEX_FOUR_PAIR_BODY_BOUNDARY_CARRIER_TNT_v1";
+  const BASELINE_CONTRACT = "HEARTH_CANVAS_ATLAS_START_SEQUENCING_HARDENING_TNT_v1";
+  const REQUIRED_RUNTIME_TABLE_CONTRACT = "LAB_UNIVERSAL_PLANET_WIDE_PROBE_DIAGNOSTIC_LOADING_STANDARD_TNT_v1";
+  const REQUIRED_HEX_SURFACE_CONTRACT = "HEARTH_HEX_SURFACE_FOUR_PAIR_AUTHORITY_CONSUMER_TNT_v1";
+  const REQUIRED_MATERIALS_CONTRACT = "HEARTH_SUBMERGED_PORT_BASIN_WATERLINE_MATERIALS_TNT_v1";
+  const VERSION = "2026-05-29.hearth-canvas-runtime-table-directed-visible-carrier-v1";
 
-  const PLANET_ID = "hearth";
-  const PLANET_LABEL = "Hearth";
-  const TAU = Math.PI * 2;
-  const DEG = Math.PI / 180;
+  const PATHS = Object.freeze({
+    runtimeTable: "/assets/lab/runtime-table.js"
+  });
 
-  let activeMount = null;
-  let mountSerial = 0;
+  const CACHE = Object.freeze({
+    runtimeTable: "lab-universal-planet-wide-probe-diagnostic-loading-standard-v1"
+  });
+
+  const DEFAULTS = Object.freeze({
+    size: 460,
+    atlasWidth: 384,
+    atlasHeight: 192,
+    rowsPerChunk: 2,
+    probeRowsPerChunk: 2,
+    wideProbeMinPoints: 25,
+    shellBackground: [4, 9, 17],
+    shellEdge: [42, 86, 118],
+    shellGlow: [78, 150, 188],
+    fallbackWater: [7, 28, 58],
+    fallbackLand: [92, 84, 58],
+    fallbackAir: [118, 170, 202]
+  });
 
   function nowIso() {
     try {
@@ -50,9 +69,13 @@
     }
   }
 
-  function clamp(value, min, max) {
+  function safeNumber(value, fallback = 0) {
     const n = Number(value);
-    if (!Number.isFinite(n)) return min;
+    return Number.isFinite(n) ? n : fallback;
+  }
+
+  function clamp(value, min, max) {
+    const n = safeNumber(value, min);
     return Math.max(min, Math.min(max, n));
   }
 
@@ -60,641 +83,193 @@
     return clamp(value, 0, 1);
   }
 
-  function wrap01(value) {
-    const n = Number(value);
-    if (!Number.isFinite(n)) return 0;
-    return ((n % 1) + 1) % 1;
+  function boolString(value) {
+    return String(Boolean(value));
   }
 
-  function mix(a, b, t) {
-    const k = clamp01(t);
-    return a + (b - a) * k;
+  function contractOf(value) {
+    if (!value || typeof value !== "object") return "";
+    return String(
+      value.contract ||
+      value.CONTRACT ||
+      value.runtimeTableContract ||
+      value.compatibilityContract ||
+      ""
+    );
   }
 
-  function mixColor(a, b, t) {
-    const k = clamp01(t);
-    return [
-      Math.round(mix(a[0], b[0], k)),
-      Math.round(mix(a[1], b[1], k)),
-      Math.round(mix(a[2], b[2], k)),
-      a[3] === undefined ? 255 : a[3]
-    ];
+  function receiptOf(value) {
+    if (!value || typeof value !== "object") return "";
+    return String(value.receipt || value.RECEIPT || "");
   }
 
-  function scaleColor(color, scalar) {
-    const s = Number.isFinite(Number(scalar)) ? Number(scalar) : 1;
-    return [
-      clamp(Math.round(color[0] * s), 0, 255),
-      clamp(Math.round(color[1] * s), 0, 255),
-      clamp(Math.round(color[2] * s), 0, 255),
-      color[3] === undefined ? 255 : color[3]
-    ];
+  function writeDataset(pairs) {
+    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
+    Object.keys(pairs || {}).forEach((key) => {
+      doc.documentElement.dataset[key] = String(pairs[key]);
+    });
   }
 
-  function norm3(v) {
-    const x = Number(v && v[0]) || 0;
-    const y = Number(v && v[1]) || 0;
-    const z = Number(v && v[2]) || 1;
-    const m = Math.hypot(x, y, z) || 1;
-
-    return [x / m, y / m, z / m];
+  function appendCache(path, key) {
+    const joiner = path.includes("?") ? "&" : "?";
+    return `${path}${joiner}v=${encodeURIComponent(key)}`;
   }
 
-  function rotateY(v, angle) {
-    const c = Math.cos(angle);
-    const s = Math.sin(angle);
-
-    return [
-      v[0] * c + v[2] * s,
-      v[1],
-      -v[0] * s + v[2] * c
-    ];
-  }
-
-  function rotateX(v, angle) {
-    const c = Math.cos(angle);
-    const s = Math.sin(angle);
-
-    return [
-      v[0],
-      v[1] * c - v[2] * s,
-      v[1] * s + v[2] * c
-    ];
-  }
-
-  function vectorToCoord(v) {
-    const n = norm3(v);
-    const lon = Math.atan2(n[0], n[2]) / DEG;
-    const lat = Math.asin(clamp(n[1], -1, 1)) / DEG;
-
-    return {
-      x: n[0],
-      y: n[1],
-      z: n[2],
-      lon,
-      lat,
-      u: wrap01((lon + 180) / 360),
-      v: clamp01((90 - lat) / 180)
-    };
-  }
-
-  function hash2(x, y, seed) {
-    return wrap01(Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123);
-  }
-
-  function valueNoise(x, y, seed) {
-    const ix = Math.floor(x);
-    const iy = Math.floor(y);
-    const fx = x - ix;
-    const fy = y - iy;
-
-    const a = hash2(ix, iy, seed);
-    const b = hash2(ix + 1, iy, seed);
-    const c = hash2(ix, iy + 1, seed);
-    const d = hash2(ix + 1, iy + 1, seed);
-
-    const ux = fx * fx * (3 - 2 * fx);
-    const uy = fy * fy * (3 - 2 * fy);
-
-    return mix(mix(a, b, ux), mix(c, d, ux), uy);
-  }
-
-  function fbm(x, y, seed, octaves = 4) {
-    let total = 0;
-    let amp = 0.55;
-    let freq = 1;
-    let norm = 0;
-
-    for (let i = 0; i < octaves; i += 1) {
-      total += valueNoise(x * freq, y * freq, seed + i * 17.17) * amp;
-      norm += amp;
-      amp *= 0.5;
-      freq *= 2.05;
-    }
-
-    return total / Math.max(0.000001, norm);
-  }
-
-  function readNumber(source, keys, fallback = 0) {
-    if (!source || typeof source !== "object") return fallback;
-
-    for (const key of keys) {
-      const n = Number(source[key]);
-      if (Number.isFinite(n)) return n;
-    }
-
-    return fallback;
-  }
-
-  function readBool(source, keys, fallback = false) {
-    if (!source || typeof source !== "object") return fallback;
-
-    for (const key of keys) {
-      if (source[key] === true || source[key] === "true") return true;
-      if (source[key] === false || source[key] === "false") return false;
-    }
-
-    return fallback;
-  }
-
-  function rgba(input, fallback) {
-    if (Array.isArray(input) && input.length >= 3) {
-      return [
-        clamp(Math.round(input[0]), 0, 255),
-        clamp(Math.round(input[1]), 0, 255),
-        clamp(Math.round(input[2]), 0, 255),
-        input[3] === undefined ? 255 : clamp(Math.round(input[3]), 0, 255)
-      ];
-    }
-
-    return fallback.slice();
-  }
-
-  function resolveMaterials() {
+  function resolveRuntimeTable() {
     return (
-      root.HEARTH_MATERIALS ||
-      root.HearthMaterials ||
-      (root.HEARTH && root.HEARTH.materials) ||
+      root.LAB_RUNTIME_TABLE ||
+      root.DexterRuntimeTable ||
+      root.RUNTIME_TABLE ||
+      root.LAB_UNIVERSAL_PLANET_RUNTIME_TABLE ||
+      (root.DEXTER_LAB && root.DEXTER_LAB.runtimeTable) ||
       null
     );
   }
 
   function resolveHexSurface() {
-    return (
-      root.HEARTH_HEX_SURFACE ||
-      root.HEARTH_HEX_SURFACE_FOUR_PAIR_AUTHORITY_CONSUMER ||
-      (root.HEARTH && root.HEARTH.hexSurface) ||
-      null
-    );
+    return root.HEARTH_HEX_SURFACE || (root.HEARTH && root.HEARTH.hexSurface) || null;
   }
 
-  function resolveHexAuthority() {
-    return (
-      root.HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY ||
-      root.HEARTH_HEX_FOUR_PAIR_AUTHORITY ||
-      root.HEARTH_HEX_PIXEL_HANDSHAKE_AUTHORITY ||
-      root.HEARTH_HEX_HANDSHAKE_AUTHORITY ||
-      root.HEARTH_HEXGRID_AUTHORITY ||
-      (root.HEARTH && root.HEARTH.hexFourPairAuthority) ||
-      (root.HEARTH && root.HEARTH.hexAuthority) ||
-      null
-    );
+  function resolveMaterials() {
+    return root.HEARTH_MATERIALS || root.HearthMaterials || (root.HEARTH && root.HEARTH.materials) || null;
   }
 
-  function sampleMaterials(coord) {
-    const materials = resolveMaterials();
+  function resolveChannel(name) {
+    if (name === "land") return root.HEARTH_LAND_CHANNEL || (root.HEARTH && root.HEARTH.landChannel) || null;
+    if (name === "water") return root.HEARTH_WATER_CHANNEL || (root.HEARTH && root.HEARTH.waterChannel) || null;
+    if (name === "air") return root.HEARTH_AIR_CHANNEL || (root.HEARTH && root.HEARTH.airChannel) || null;
+    return null;
+  }
 
-    if (materials && typeof materials.sample === "function") {
-      try {
-        const value = materials.sample(coord);
-        if (value && typeof value === "object") return value;
-      } catch (_error) {}
+  function ensureCanvas(parent, size) {
+    let canvas = parent.querySelector && parent.querySelector("canvas[data-hearth-canvas='true']");
+    if (!canvas && doc) {
+      canvas = doc.createElement("canvas");
+      canvas.dataset.hearthCanvas = "true";
+      canvas.dataset.hearthCanvasContract = CONTRACT;
+      canvas.dataset.hearthCanvasReceipt = RECEIPT;
+      canvas.dataset.generatedImage = "false";
+      canvas.dataset.graphicBox = "false";
+      canvas.dataset.webgl = "false";
+      canvas.dataset.visualPassClaimed = "false";
+      parent.appendChild(canvas);
     }
 
-    if (materials && typeof materials.read === "function") {
-      try {
-        const value = materials.read(coord);
-        if (value && typeof value === "object") return value;
-      } catch (_error) {}
-    }
+    if (!canvas) return null;
 
-    const landSignal = fbm(coord.u * 5.2 + 0.4, coord.v * 4.7 - 0.2, 9001, 5);
-    const ridge = fbm(coord.u * 17.0, coord.v * 13.0, 9011, 4);
-    const isLand = landSignal > 0.58 && Math.abs(coord.lat) < 76;
+    const px = Math.max(160, Math.round(size || DEFAULTS.size));
+    canvas.width = px;
+    canvas.height = px;
+    canvas.style.display = "block";
+    canvas.style.width = "min(100%, " + px + "px)";
+    canvas.style.maxWidth = "100%";
+    canvas.style.aspectRatio = "1 / 1";
+    canvas.style.borderRadius = "50%";
+    canvas.style.margin = "0 auto";
+    canvas.style.touchAction = "none";
 
-    return {
-      contract: "HEARTH_CANVAS_MATERIAL_FALLBACK_PACKET",
-      receipt: "HEARTH_CANVAS_MATERIAL_FALLBACK_RECEIPT",
-      isLand,
-      isWater: !isLand,
-      landDensity: isLand ? clamp01(0.58 + ridge * 0.30) : 0,
-      waterDepth: isLand ? 0 : clamp01(0.48 + landSignal * 0.30),
-      waterFillStrength: isLand ? 0 : 0.72,
-      shorelineGrounding: isLand ? clamp01(Math.abs(landSignal - 0.58) * 2.4) : 0,
-      terrainRelief: isLand ? clamp01(ridge) : 0,
-      ridgeRelief: isLand ? clamp01(ridge * 0.82) : 0,
-      materialClass: isLand ? "fallback.land.mass" : "fallback.water.body",
-      terrainClass: isLand ? "continent_mass" : "ocean_basin",
-      rgb: isLand ? [104, 96, 64] : [8, 30, 58],
-      color: isLand ? [104, 96, 64] : [8, 30, 58],
-      fallback: true,
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false
-    };
-  }
-
-  function createLandPacket(coord) {
-    const material = sampleMaterials(coord);
-    const isLand = readBool(material, ["isLand"], false);
-    const isWater = readBool(material, ["isWater"], !isLand);
-    const landDensity = clamp01(readNumber(material, ["landDensity", "landPotential", "materialDensity"], isLand ? 0.72 : 0));
-    const waterFill = clamp01(readNumber(material, ["waterFillStrength", "waterDepth", "waterDepthShade"], isWater ? 0.64 : 0));
-    const landAlpha = isLand ? clamp01(0.62 + landDensity * 0.32 - waterFill * 0.20) : 0;
-
-    return {
-      contract: "HEARTH_CANVAS_MATERIALS_TO_LAND_CHANNEL_ADAPTER_TNT_v1",
-      receipt: "HEARTH_CANVAS_MATERIALS_TO_LAND_CHANNEL_ADAPTER_RECEIPT_v1",
-      channel: "land",
-      sourceContract: material.contract || "",
-      sourceReceipt: material.receipt || "",
-      isLandChannel: true,
-      isWaterChannel: false,
-      isAirChannel: false,
-      isLand,
-      isWater: false,
-      landPresence: landAlpha,
-      landAlpha,
-      alpha: landAlpha,
-      rgb: rgba(material.rgb || material.color || material.baseColor, [104, 96, 64, 255]),
-      color: rgba(material.rgb || material.color || material.baseColor, [104, 96, 64, 255]),
-      materialClass: material.materialClass || "",
-      terrainClass: material.terrainClass || material.worldTerrainClass || "",
-      terrainRelief: clamp01(readNumber(material, ["terrainRelief", "reliefStrength"], 0)),
-      ridgeRelief: clamp01(readNumber(material, ["ridgeRelief", "ridgePotential", "mountainArcPotential"], 0)),
-      plateauPotential: clamp01(readNumber(material, ["plateauPotential"], 0)),
-      basinPotential: clamp01(readNumber(material, ["basinPotential", "basinShade"], 0)),
-      shorelineContact: clamp01(readNumber(material, ["shorelineGrounding", "shorelineContact", "coastPotential"], 0)),
-      coastPotential: clamp01(readNumber(material, ["coastPotential"], 0)),
-      bodyBound: true,
-      surfaceBound: true,
-      floatsAboveBody: false,
-      allowedToFloat: false,
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false
-    };
-  }
-
-  function createWaterPacket(coord) {
-    const material = sampleMaterials(coord);
-    const isWater = readBool(material, ["isWater", "isWaterOccupied", "waterFill"], false);
-    const isLand = readBool(material, ["isLand"], !isWater);
-    const waterDepth = clamp01(readNumber(material, ["waterDepth", "waterDepthShade", "waterDepthPotential"], isWater ? 0.62 : 0));
-    const waterFill = clamp01(readNumber(material, ["waterFillStrength", "waterFillMaterialFeed", "waterPresence"], isWater ? 0.72 : 0));
-    const shelf = clamp01(readNumber(material, ["shelfTransition", "shelfPotential", "shallowShelfStrength"], 0));
-    const wetEdge = clamp01(readNumber(material, ["waterlineMaterialFeed", "shorelineGrounding", "wetStoneMaterialFeed", "coastPotential"], 0));
-    const waterAlpha = isWater
-      ? clamp01(0.58 + waterFill * 0.24 + waterDepth * 0.18)
-      : clamp01(Math.max(shelf, wetEdge) * 0.32 - (isLand ? 0.08 : 0));
-
-    return {
-      contract: "HEARTH_CANVAS_MATERIALS_TO_WATER_CHANNEL_ADAPTER_TNT_v1",
-      receipt: "HEARTH_CANVAS_MATERIALS_TO_WATER_CHANNEL_ADAPTER_RECEIPT_v1",
-      channel: "water",
-      sourceContract: material.contract || "",
-      sourceReceipt: material.receipt || "",
-      isWaterChannel: true,
-      isLandChannel: false,
-      isAirChannel: false,
-      isWater,
-      isLand: false,
-      waterPresence: waterAlpha,
-      waterAlpha,
-      alpha: waterAlpha,
-      waterDepth,
-      depth: waterDepth,
-      oceanDepth: waterDepth,
-      wetEdge,
-      shorelineContact: wetEdge,
-      coastPotential: wetEdge,
-      basinInfluence: clamp01(readNumber(material, ["basinShade", "basinPotential", "harborScarBasin"], 0)),
-      submergedBlockInfluence: clamp01(readNumber(material, ["submergedBlockMaterialFeed", "submergedBlockStrength"], 0)),
-      submergedScarInfluence: clamp01(readNumber(material, ["submergedScarMaterialFeed", "submergedScarStrength"], 0)),
-      rgb: rgba(material.rgb || material.color || material.baseColor, [8, 30, 58, 255]),
-      color: rgba(material.rgb || material.color || material.baseColor, [8, 30, 58, 255]),
-      bodyBound: true,
-      surfaceBound: true,
-      floatsAboveBody: false,
-      allowedToFloat: false,
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false
-    };
-  }
-
-  function createAirPacket(coord) {
-    const latitudePressure = clamp01(Math.abs(coord.lat) / 90);
-    const humidity = clamp01(0.34 + (1 - latitudePressure) * 0.22);
-
-    return {
-      contract: "HEARTH_CANVAS_LIGHTWEIGHT_AIR_CHANNEL_ADAPTER_TNT_v1",
-      receipt: "HEARTH_CANVAS_LIGHTWEIGHT_AIR_CHANNEL_ADAPTER_RECEIPT_v1",
-      channel: "air",
-      isAirChannel: true,
-      isLandChannel: false,
-      isWaterChannel: false,
-      airPresence: 0.12,
-      airAlpha: 0.12,
-      visualShellAlpha: 0.10,
-      pressureEnvelope: clamp01(0.24 + latitudePressure * 0.16),
-      humidity,
-      mayDefineLand: false,
-      mayDefineWater: false,
-      ownsSurfaceTruth: false,
-      bodyBound: false,
-      surfaceBound: false,
-      floatsAboveBody: true,
-      allowedToFloat: true,
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false
-    };
-  }
-
-  function installMaterialChannelAdapters() {
-    const previous = {
-      land: root.HEARTH_LAND_CHANNEL || null,
-      water: root.HEARTH_WATER_CHANNEL || null,
-      air: root.HEARTH_AIR_CHANNEL || null
-    };
-
-    const landChannel = {
-      contract: "HEARTH_CANVAS_MATERIALS_TO_LAND_CHANNEL_ADAPTER_TNT_v1",
-      receipt: "HEARTH_CANVAS_MATERIALS_TO_LAND_CHANNEL_ADAPTER_RECEIPT_v1",
-      adapter: true,
-      sourceAuthority: "HEARTH_MATERIALS",
-      sample: createLandPacket,
-      read: createLandPacket,
-      getReceipt() {
-        return {
-          contract: this.contract,
-          receipt: this.receipt,
-          sourceAuthority: "HEARTH_MATERIALS",
-          generatedImage: false,
-          graphicBox: false,
-          webGL: false,
-          visualPassClaimed: false
-        };
-      },
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false
-    };
-
-    const waterChannel = {
-      contract: "HEARTH_CANVAS_MATERIALS_TO_WATER_CHANNEL_ADAPTER_TNT_v1",
-      receipt: "HEARTH_CANVAS_MATERIALS_TO_WATER_CHANNEL_ADAPTER_RECEIPT_v1",
-      adapter: true,
-      sourceAuthority: "HEARTH_MATERIALS",
-      sample: createWaterPacket,
-      read: createWaterPacket,
-      getReceipt() {
-        return {
-          contract: this.contract,
-          receipt: this.receipt,
-          sourceAuthority: "HEARTH_MATERIALS",
-          generatedImage: false,
-          graphicBox: false,
-          webGL: false,
-          visualPassClaimed: false
-        };
-      },
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false
-    };
-
-    const airChannel = {
-      contract: "HEARTH_CANVAS_LIGHTWEIGHT_AIR_CHANNEL_ADAPTER_TNT_v1",
-      receipt: "HEARTH_CANVAS_LIGHTWEIGHT_AIR_CHANNEL_ADAPTER_RECEIPT_v1",
-      adapter: true,
-      sourceAuthority: "HEARTH_CANVAS",
-      sample: createAirPacket,
-      read: createAirPacket,
-      getReceipt() {
-        return {
-          contract: this.contract,
-          receipt: this.receipt,
-          sourceAuthority: "HEARTH_CANVAS",
-          generatedImage: false,
-          graphicBox: false,
-          webGL: false,
-          visualPassClaimed: false
-        };
-      },
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false
-    };
-
-    root.HEARTH = root.HEARTH || {};
-    root.HEARTH.landChannel = landChannel;
-    root.HEARTH.waterChannel = waterChannel;
-    root.HEARTH.airChannel = airChannel;
-
-    root.HEARTH_LAND_CHANNEL = landChannel;
-    root.HEARTH_WATER_CHANNEL = waterChannel;
-    root.HEARTH_AIR_CHANNEL = airChannel;
-
-    root.HEARTH_CANVAS_CHANNEL_ADAPTERS = {
-      contract: CONTRACT,
-      receipt: REBUILD_RECEIPT,
-      installed: true,
-      previousLandChannel: previous.land,
-      previousWaterChannel: previous.water,
-      previousAirChannel: previous.air,
-      landChannel,
-      waterChannel,
-      airChannel,
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false
-    };
-
-    return root.HEARTH_CANVAS_CHANNEL_ADAPTERS;
-  }
-
-  function targetElementFrom(input) {
-    const doc = root.document || null;
-
-    if (input && input.nodeType === 1) return input;
-    if (typeof input === "string" && doc) return doc.querySelector(input);
-
-    return (
-      doc &&
-      (
-        doc.querySelector("#hearthCanvasMount") ||
-        doc.querySelector("[data-hearth-canvas-mount]") ||
-        doc.querySelector("[data-hearth-planet-mount]") ||
-        doc.querySelector("[data-hearth-globe-mount]")
-      )
-    ) || null;
-  }
-
-  function clearPriorCanvases(target) {
-    if (!target || typeof target.querySelectorAll !== "function") return;
-
-    Array.from(target.querySelectorAll("canvas[data-hearth-canvas-carrier='true']")).forEach((canvas) => {
-      try {
-        canvas.remove();
-      } catch (_error) {}
-    });
-  }
-
-  function hideFallback(target) {
-    if (!target || typeof target.querySelectorAll !== "function") return;
-
-    Array.from(target.querySelectorAll("[data-hearth-mount-fallback='true']")).forEach((node) => {
-      try {
-        node.hidden = true;
-        node.setAttribute("aria-hidden", "true");
-        node.style.display = "none";
-      } catch (_error) {}
-    });
-  }
-
-  function determineBackingSize(target, options = {}) {
-    const rect = target && typeof target.getBoundingClientRect === "function"
-      ? target.getBoundingClientRect()
-      : { width: 460, height: 460 };
-
-    const cssSize = clamp(
-      Math.max(
-        Number(rect.width) || 0,
-        Number(rect.height) || 0,
-        Number(options.size) || 0,
-        420
-      ),
-      320,
-      760
-    );
-
-    const dpr = clamp(root.devicePixelRatio || 1, 1, 2.75);
-    const qualityFloor = options.quality === "low" ? 640 : options.quality === "motion" ? 720 : 960;
-    const qualityCeiling = options.allowLargeTexture === true ? 1536 : 1280;
-
-    return clamp(
-      Math.round(Math.max(cssSize * dpr, qualityFloor)),
-      512,
-      qualityCeiling
-    );
-  }
-
-  function createCanvas(target, options = {}) {
-    const doc = root.document;
-
-    if (!doc || typeof doc.createElement !== "function") {
-      throw new Error("HEARTH_CANVAS requires document.createElement.");
-    }
-
-    const canvas = doc.createElement("canvas");
-    const size = determineBackingSize(target, options);
-
-    canvas.width = size;
-    canvas.height = size;
-
-    canvas.dataset.hearthCanvasCarrier = "true";
-    canvas.dataset.hearthCanvasTexture = "true";
     canvas.dataset.hearthCanvasContract = CONTRACT;
     canvas.dataset.hearthCanvasReceipt = RECEIPT;
-    canvas.dataset.hearthCanvasRebuildReceipt = REBUILD_RECEIPT;
-    canvas.dataset.hearthCanvasPreviousKnownContract = PREVIOUS_KNOWN_CONTRACT;
-    canvas.dataset.hearthCanvasPublicContractPreserved = "true";
-    canvas.dataset.hearthCanvasVisibleCarrier = "true";
-    canvas.dataset.hearthCanvasRouteCompatibleMount = "true";
-    canvas.dataset.hearthCanvasMaterialChannelAdapters = "true";
-    canvas.dataset.hearthCanvasHexSurfaceConsumer = "true";
-    canvas.dataset.hearthCanvasHighDensityBacking = "true";
-    canvas.dataset.generatedImage = "false";
-    canvas.dataset.graphicBox = "false";
-    canvas.dataset.webgl = "false";
+    canvas.dataset.hearthCanvasPreviousContract = PREVIOUS_CONTRACT;
+    canvas.dataset.hearthRuntimeTableRequired = "true";
+    canvas.dataset.hearthRuntimeTableBlocksVisibleCarrier = "false";
+    canvas.dataset.hearthVisibleCarrierFirst = "true";
+    canvas.dataset.childFailureDoesNotEraseVisualization = "true";
+    canvas.dataset.wideProbeNeverBlocksFirstVisibleRender = "true";
     canvas.dataset.visualPassClaimed = "false";
-
-    canvas.setAttribute("role", "img");
-    canvas.setAttribute("aria-label", "Hearth active planet visible carrier");
-
-    canvas.style.position = "absolute";
-    canvas.style.inset = "0";
-    canvas.style.display = "block";
-    canvas.style.width = "100%";
-    canvas.style.height = "100%";
-    canvas.style.maxWidth = "100%";
-    canvas.style.maxHeight = "100%";
-    canvas.style.touchAction = "none";
-    canvas.style.userSelect = "none";
-    canvas.style.webkitUserSelect = "none";
-    canvas.style.webkitTouchCallout = "none";
-
-    target.appendChild(canvas);
 
     return canvas;
   }
 
-  function drawAtmosphere(ctx, size) {
+  function drawShell(ctx, size, state) {
     const cx = size / 2;
     const cy = size / 2;
     const radius = size * 0.456;
 
-    ctx.save();
+    ctx.clearRect(0, 0, size, size);
 
+    ctx.save();
     ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, TAU);
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
     ctx.clip();
 
-    const highlight = ctx.createRadialGradient(
-      cx - radius * 0.34,
-      cy - radius * 0.38,
-      radius * 0.02,
-      cx,
-      cy,
-      radius * 1.16
-    );
-
-    highlight.addColorStop(0, "rgba(255,255,255,0.12)");
-    highlight.addColorStop(0.30, "rgba(255,255,255,0.035)");
-    highlight.addColorStop(0.72, "rgba(0,0,0,0.08)");
-    highlight.addColorStop(1, "rgba(0,0,0,0.50)");
-
-    ctx.fillStyle = highlight;
+    const base = ctx.createRadialGradient(cx - radius * 0.28, cy - radius * 0.32, radius * 0.04, cx, cy, radius);
+    base.addColorStop(0, "rgba(32,60,76,1)");
+    base.addColorStop(0.42, "rgba(8,26,48,1)");
+    base.addColorStop(1, "rgba(2,7,16,1)");
+    ctx.fillStyle = base;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
-    const edge = ctx.createRadialGradient(cx, cy, radius * 0.66, cx, cy, radius);
-    edge.addColorStop(0, "rgba(0,0,0,0)");
-    edge.addColorStop(0.80, "rgba(4,12,22,0.16)");
-    edge.addColorStop(1, "rgba(2,6,14,0.68)");
-
-    ctx.fillStyle = edge;
+    const shade = ctx.createRadialGradient(cx + radius * 0.2, cy + radius * 0.1, radius * 0.18, cx, cy, radius);
+    shade.addColorStop(0, "rgba(0,0,0,0)");
+    shade.addColorStop(0.72, "rgba(0,0,0,0.22)");
+    shade.addColorStop(1, "rgba(0,0,0,0.68)");
+    ctx.fillStyle = shade;
     ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
     ctx.restore();
 
     ctx.save();
     ctx.beginPath();
-    ctx.arc(cx, cy, radius + Math.max(1, size * 0.004), 0, TAU);
-    ctx.strokeStyle = "rgba(190,226,255,0.24)";
-    ctx.lineWidth = Math.max(1, size * 0.003);
+    ctx.arc(cx, cy, radius + 1.5, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(134,205,236,0.26)";
+    ctx.lineWidth = Math.max(1, size * 0.004);
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.arc(cx, cy, radius + Math.max(2, size * 0.011), 0, TAU);
-    ctx.strokeStyle = "rgba(108,185,232,0.10)";
-    ctx.lineWidth = Math.max(1, size * 0.006);
+    ctx.arc(cx, cy, radius + 7, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(80,165,214,0.10)";
+    ctx.lineWidth = Math.max(2, size * 0.008);
     ctx.stroke();
     ctx.restore();
+
+    state.shellRendered = true;
+    state.visibleCarrierMounted = true;
+    state.imageRendered = true;
+    state.visualCarrierMode = "fallback-shell-first";
   }
 
-  function drawFallbackMaterialsFrame(state, options = {}) {
-    const canvas = state.canvas;
-    const ctx = state.ctx;
-    const size = canvas.width;
+  function drawAtlasFallback(ctx, size, state, options = {}) {
+    const materials = resolveMaterials();
+    const hexSurface = resolveHexSurface();
+
+    if (hexSurface && typeof hexSurface.drawHearthHexSurfaceFrame === "function") {
+      try {
+        const receipt = hexSurface.drawHearthHexSurfaceFrame(
+          {
+            canvas: state.canvas,
+            ctx,
+            phase: state.phase || 0
+          },
+          {
+            radiusRatio: 0.456,
+            hexDensity: 232,
+            atlasWidth: options.atlasWidth || DEFAULTS.atlasWidth,
+            atlasHeight: options.atlasHeight || DEFAULTS.atlasHeight
+          }
+        );
+
+        state.hexSurfaceReceipt = receipt || null;
+        state.atlasReady = true;
+        state.projectionReady = true;
+        state.imageRendered = true;
+        state.visualCarrierMode = "hex-surface-consumer";
+        return true;
+      } catch (error) {
+        state.lastHexSurfaceError = error && error.message ? error.message : String(error);
+      }
+    }
+
+    if (!materials || typeof materials.sample !== "function") {
+      return false;
+    }
+
+    const output = ctx.createImageData(size, size);
+    const data = output.data;
     const cx = size / 2;
     const cy = size / 2;
     const radius = size * 0.456;
-    const image = ctx.createImageData(size, size);
-    const data = image.data;
-    const phase = Number(state.phase) || 0;
-    const tilt = Number(state.tilt) || -0.22;
-    const light = norm3([-0.48, 0.28, 0.84]);
-
+    const phase = state.phase || 0;
     let landPixels = 0;
     let waterPixels = 0;
 
@@ -704,246 +279,555 @@
       for (let px = 0; px < size; px += 1) {
         const x = (px + 0.5 - cx) / radius;
         const r2 = x * x + y * y;
+        const index = (py * size + px) * 4;
 
-        if (r2 > 1) continue;
-
-        const z = Math.sqrt(Math.max(0, 1 - r2));
-        let vec = [x, -y, z];
-
-        vec = rotateX(vec, tilt);
-        vec = rotateY(vec, phase);
-
-        const coord = vectorToCoord(vec);
-        const material = sampleMaterials(coord);
-        const isLand = readBool(material, ["isLand"], false);
-        const colorBase = rgba(material.rgb || material.color || material.baseColor, isLand ? [104, 96, 64, 255] : [8, 30, 58, 255]);
-
-        if (isLand) landPixels += 1;
-        else waterPixels += 1;
-
-        const relief = clamp01(readNumber(material, ["terrainRelief", "ridgeRelief", "reliefStrength"], 0));
-        const waterDepth = clamp01(readNumber(material, ["waterDepth", "waterDepthShade", "waterDepthPotential"], 0));
-        const shoreline = clamp01(readNumber(material, ["shorelineGrounding", "waterlineMaterialFeed", "coastPotential"], 0));
-        const scar = clamp01(readNumber(material, ["submergedScarMaterialFeed", "submergedScarStrength", "boundaryMorphologyFeed"], 0));
-        const noise = fbm(coord.u * 22 + phase * 0.15, coord.v * 18 - phase * 0.08, isLand ? 6211 : 6221, 4);
-
-        let color = colorBase;
-
-        if (isLand) {
-          color = mixColor(color, [172, 154, 98, 255], relief * 0.13 + Math.max(0, noise - 0.5) * 0.08);
-          color = mixColor(color, [48, 50, 43, 255], Math.max(0, 0.5 - noise) * 0.12);
-          color = mixColor(color, [116, 102, 74, 255], shoreline * 0.15);
-        } else {
-          color = mixColor(color, [4, 18, 46, 255], waterDepth * 0.26);
-          color = mixColor(color, [38, 128, 144, 255], shoreline * 0.12);
-          color = mixColor(color, [28, 36, 34, 255], scar * 0.16);
+        if (r2 > 1) {
+          data[index + 3] = 0;
+          continue;
         }
 
-        const rawNormal = norm3([x, -y, z]);
-        const lightValue = clamp01(rawNormal[0] * light[0] + rawNormal[1] * light[1] + rawNormal[2] * light[2]);
-        const limb = clamp(0.54 + z * 0.54, 0.46, 1.08);
-        const shade = clamp(0.72 + lightValue * 0.40 + (noise - 0.5) * 0.08, 0.52, 1.15);
+        const z = Math.sqrt(Math.max(0, 1 - r2));
+        const cos = Math.cos(phase);
+        const sin = Math.sin(phase);
+        const vx = x * cos + z * sin;
+        const vz = -x * sin + z * cos;
+        const vy = -y;
 
-        color = scaleColor(color, limb * shade);
+        let packet = null;
+        try {
+          packet = materials.sample({ x: vx, y: vy, z: vz });
+        } catch (_error) {
+          packet = null;
+        }
 
-        const index = (py * size + px) * 4;
-        data[index] = color[0];
-        data[index + 1] = color[1];
-        data[index + 2] = color[2];
+        const rgb = packet && Array.isArray(packet.rgb)
+          ? packet.rgb
+          : packet && packet.isLand
+            ? DEFAULTS.fallbackLand
+            : DEFAULTS.fallbackWater;
+
+        const shade = clamp(0.52 + z * 0.52, 0.45, 1.08);
+
+        data[index] = clamp(Math.round(rgb[0] * shade), 0, 255);
+        data[index + 1] = clamp(Math.round(rgb[1] * shade), 0, 255);
+        data[index + 2] = clamp(Math.round(rgb[2] * shade), 0, 255);
         data[index + 3] = 255;
+
+        if (packet && packet.isLand) landPixels += 1;
+        else waterPixels += 1;
       }
     }
 
-    ctx.putImageData(image, 0, 0);
-    drawAtmosphere(ctx, size);
+    ctx.putImageData(output, 0, 0);
+
+    const cx2 = size / 2;
+    const cy2 = size / 2;
+    const radius2 = size * 0.456;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx2, cy2, radius2, 0, Math.PI * 2);
+    ctx.clip();
+
+    const atmosphere = ctx.createRadialGradient(cx2, cy2, radius2 * 0.70, cx2, cy2, radius2);
+    atmosphere.addColorStop(0, "rgba(0,0,0,0)");
+    atmosphere.addColorStop(0.82, "rgba(65,140,190,0.10)");
+    atmosphere.addColorStop(1, "rgba(8,18,32,0.50)");
+    ctx.fillStyle = atmosphere;
+    ctx.fillRect(cx2 - radius2, cy2 - radius2, radius2 * 2, radius2 * 2);
+    ctx.restore();
+
+    state.atlasReady = true;
+    state.projectionReady = true;
+    state.imageRendered = true;
+    state.visualCarrierMode = "materials-direct-sphere";
+    state.landPixels = landPixels;
+    state.waterPixels = waterPixels;
+    return true;
+  }
+
+  function loadRuntimeTableDetailed(state) {
+    return new Promise((resolve) => {
+      const existing = resolveRuntimeTable();
+      const result = {
+        key: "runtimeTable",
+        path: PATHS.runtimeTable,
+        expectedContract: REQUIRED_RUNTIME_TABLE_CONTRACT,
+        requested: false,
+        requestedSrc: "",
+        scriptElementCreated: false,
+        scriptElementAppended: false,
+        documentHeadAvailable: Boolean(doc && doc.head),
+        loaded: false,
+        globalPresent: Boolean(existing),
+        actualContract: contractOf(existing),
+        contractOk: Boolean(existing && contractOf(existing) === REQUIRED_RUNTIME_TABLE_CONTRACT),
+        validationOk: Boolean(existing && contractOf(existing) === REQUIRED_RUNTIME_TABLE_CONTRACT),
+        error: "",
+        errorType: "",
+        failureCoordinate: existing ? "C11_CHILD_VALIDATED" : "C0_CHILD_CONNECTOR_NOT_STARTED",
+        at: nowIso()
+      };
+
+      if (result.validationOk) {
+        result.loaded = true;
+        resolve(result);
+        return;
+      }
+
+      if (!doc || !doc.head) {
+        result.error = "document-head-unavailable";
+        result.errorType = "document";
+        result.failureCoordinate = "C6_GLOBAL_ACTOR_MISSING";
+        resolve(result);
+        return;
+      }
+
+      const old = Array.from(doc.querySelectorAll("script[data-hearth-runtime-table-loader='true']"));
+      old.forEach((script) => {
+        try {
+          if (script.parentNode) script.parentNode.removeChild(script);
+        } catch (_error) {}
+      });
+
+      const script = doc.createElement("script");
+      const src = appendCache(PATHS.runtimeTable, CACHE.runtimeTable);
+
+      result.requested = true;
+      result.requestedSrc = src;
+      result.scriptElementCreated = true;
+      result.failureCoordinate = "C2_SCRIPT_ELEMENT_CREATED";
+
+      script.src = src;
+      script.defer = true;
+      script.dataset.hearthRuntimeTableLoader = "true";
+      script.dataset.hearthCanvasContract = CONTRACT;
+      script.dataset.hearthCanvasReceipt = RECEIPT;
+      script.dataset.expectedContract = REQUIRED_RUNTIME_TABLE_CONTRACT;
+      script.dataset.generatedImage = "false";
+      script.dataset.graphicBox = "false";
+      script.dataset.webgl = "false";
+      script.dataset.visualPassClaimed = "false";
+
+      let settled = false;
+
+      function settle(kind, errorText) {
+        if (settled) return;
+        settled = true;
+
+        const runtimeTable = resolveRuntimeTable();
+        result.globalPresent = Boolean(runtimeTable);
+        result.actualContract = contractOf(runtimeTable);
+        result.contractOk = Boolean(runtimeTable && contractOf(runtimeTable) === REQUIRED_RUNTIME_TABLE_CONTRACT);
+        result.validationOk = result.contractOk;
+        result.loaded = kind === "load" && result.validationOk;
+        result.error = errorText || "";
+        result.errorType = kind === "load" ? "" : kind;
+
+        if (result.validationOk) result.failureCoordinate = "C11_CHILD_VALIDATED";
+        else if (kind === "error") result.failureCoordinate = "C4_SCRIPT_NETWORK_LOAD_FAILURE";
+        else if (kind === "timeout") result.failureCoordinate = "C5_SCRIPT_LOAD_TIMEOUT";
+        else if (runtimeTable && !result.contractOk) result.failureCoordinate = "C7_CONTRACT_MISMATCH";
+        else result.failureCoordinate = "C6_GLOBAL_ACTOR_MISSING";
+
+        resolve(result);
+      }
+
+      script.onload = () => settle("load", "");
+      script.onerror = () => settle("error", "runtime-table-load-error");
+
+      try {
+        doc.head.appendChild(script);
+        result.scriptElementAppended = true;
+        result.failureCoordinate = "C3_SCRIPT_APPENDED";
+      } catch (error) {
+        result.error = error && error.message ? error.message : String(error);
+        result.errorType = "append-error";
+        result.failureCoordinate = "C4_SCRIPT_NETWORK_LOAD_FAILURE";
+        resolve(result);
+        return;
+      }
+
+      setTimeout(() => settle("timeout", "runtime-table-load-timeout"), 6500);
+    });
+  }
+
+  function sampleAuthority(authority, point) {
+    if (!authority || typeof authority !== "object") return null;
+    try {
+      if (typeof authority.sample === "function") return authority.sample(point);
+      if (typeof authority.read === "function") return authority.read(point);
+      if (typeof authority.getMaterial === "function") return authority.getMaterial(point);
+    } catch (_error) {}
+    return null;
+  }
+
+  function createAnchorSamples() {
+    const point = { u: 0.5, v: 0.5, lon: 0, lat: 0, x: 0, y: 0, z: 1 };
+    const materials = resolveMaterials();
+    const land = resolveChannel("land");
+    const water = resolveChannel("water");
+    const air = resolveChannel("air");
+
+    const materialSample = sampleAuthority(materials, point) || {};
+    const landSample = sampleAuthority(land, point) || {
+      contract: "HEARTH_CANVAS_SYNTHETIC_LAND_LOCAL_SAMPLE",
+      isLandChannel: true,
+      landAlpha: materialSample.isLand ? 0.72 : 0.08,
+      bodyBound: true,
+      surfaceBound: true,
+      allowedToFloat: false,
+      mayDefineWater: false,
+      mayDefineAir: false,
+      x: point.x,
+      y: point.y,
+      z: point.z,
+      u: point.u,
+      v: point.v,
+      rgb: materialSample.isLand ? materialSample.rgb : DEFAULTS.fallbackLand,
+      visualPassClaimed: false
+    };
+
+    const waterSample = sampleAuthority(water, point) || {
+      contract: "HEARTH_CANVAS_SYNTHETIC_WATER_LOCAL_SAMPLE",
+      isWaterChannel: true,
+      waterAlpha: materialSample.isWater || !materialSample.isLand ? 0.72 : 0.16,
+      bodyBound: true,
+      surfaceBound: true,
+      hydrosphereBinding: 1,
+      surfaceSeat: 1,
+      allowedToFloat: false,
+      mayDefineLand: false,
+      mayDefineAir: false,
+      x: point.x,
+      y: point.y,
+      z: point.z,
+      u: point.u,
+      v: point.v,
+      rgb: materialSample.isWater || !materialSample.isLand ? materialSample.rgb : DEFAULTS.fallbackWater,
+      visualPassClaimed: false
+    };
+
+    const airSample = sampleAuthority(air, point) || {
+      contract: "HEARTH_CANVAS_SYNTHETIC_AIR_LOCAL_SAMPLE",
+      isAirChannel: true,
+      airAlpha: 0.16,
+      allowedToFloat: true,
+      floatsAboveBody: true,
+      mayDefineLand: false,
+      mayDefineWater: false,
+      x: point.x,
+      y: point.y,
+      z: point.z,
+      u: point.u,
+      v: point.v,
+      rgb: DEFAULTS.fallbackAir,
+      visualPassClaimed: false
+    };
 
     return {
-      ok: true,
-      contract: CONTRACT,
-      receipt: "HEARTH_CANVAS_FALLBACK_MATERIALS_FRAME_RECEIPT_v1",
-      renderer: "fallback-materials-body-renderer",
-      size,
-      landPixels,
-      waterPixels,
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false,
-      at: nowIso()
+      samplePoint: point,
+      materialSample,
+      landSample,
+      waterSample,
+      airSample,
+      canvasSample: {
+        contract: CONTRACT,
+        receipt: RECEIPT,
+        x: point.x,
+        y: point.y,
+        z: point.z,
+        u: point.u,
+        v: point.v,
+        lon: point.lon,
+        lat: point.lat,
+        landWeight: clamp01(landSample.landAlpha || landSample.landPresence || (materialSample.isLand ? 0.72 : 0.08)),
+        waterWeight: clamp01(waterSample.waterAlpha || waterSample.waterPresence || (materialSample.isWater ? 0.72 : 0.16)),
+        airWeight: clamp01(airSample.airAlpha || airSample.airPresence || 0.16),
+        visualPassClaimed: false
+      }
     };
   }
 
-  function drawFrame(state, reason = "frame") {
-    if (!state || state.destroyed || !state.canvas || !state.ctx) return null;
+  function createRuntimePlan(state) {
+    const runtimeTable = resolveRuntimeTable();
+    const samples = createAnchorSamples();
 
-    const hexSurface = resolveHexSurface();
-    let frameReceipt = null;
+    let plan = null;
+    let ledger = null;
+    let diagnostic = null;
 
-    state.frameCount += 1;
-    state.lastFrameReason = reason;
-
-    state.ctx.clearRect(0, 0, state.canvas.width, state.canvas.height);
-
-    if (hexSurface && typeof hexSurface.drawHearthHexSurfaceFrame === "function") {
+    if (runtimeTable && typeof runtimeTable.createHearthVisualCarrierPlan === "function") {
       try {
-        frameReceipt = hexSurface.drawHearthHexSurfaceFrame(state, {
-          radiusRatio: 0.456,
-          hexDensity: state.motionActive ? 210 : 260,
-          minHexRadius: state.motionActive ? 0.74 : 0.62,
-          maxHexRadius: state.motionActive ? 3.0 : 3.4,
-          edgeDarkening: 0.020,
-          seamSoftening: 0.052,
-          authoritySeedStrength: 0.48,
-          microTerrainStrength: state.motionActive ? 0.32 : 0.44,
-          landExposureLift: 0.18,
-          waterDepthPush: 0.24,
-          contrastLift: 0.20,
-          atmosphereStrength: 0.94,
-          axialTilt: state.tilt,
-          lightX: -0.48,
-          lightY: 0.28,
-          lightZ: 0.84
-        });
-
-        state.renderer = "HEARTH_HEX_SURFACE";
+        plan = runtimeTable.createHearthVisualCarrierPlan(
+          {
+            planetId: "hearth",
+            planetLabel: "Hearth",
+            samplePoint: samples.samplePoint,
+            canvasMounted: true,
+            routeMounted: true,
+            fallbackShellAvailable: true,
+            renderMetadata: {
+              routeMounted: true,
+              canvasMounted: true,
+              fallbackShellAvailable: true,
+              visibleCarrierAllowed: true,
+              visualCarrierAllowed: true,
+              atlasReady: Boolean(state.atlasReady),
+              projectionReady: Boolean(state.projectionReady),
+              imageRendered: Boolean(state.imageRendered),
+              sphereContainment: true,
+              outsideSphereTransparent: true,
+              noRectangularTextureSpill: true,
+              atlasStartAttempted: Boolean(state.atlasStartAttempted),
+              atlasBuilderEntered: Boolean(state.atlasBuilderEntered),
+              atlasProgressObserved: Boolean(state.atlasProgressObserved),
+              atlasProgress: safeNumber(state.atlasProgress, 0)
+            },
+            canvasReceipt: createReceipt(state),
+            canvasSample: samples.canvasSample,
+            landSample: samples.landSample,
+            waterSample: samples.waterSample,
+            airSample: samples.airSample,
+            probeSamples: []
+          },
+          {
+            planetId: "hearth",
+            planetLabel: "Hearth",
+            profile: "hearth-channel-expression",
+            runHearthTable: true,
+            budget: {
+              atlasWidth: state.options.atlasWidth,
+              atlasHeight: state.options.atlasHeight,
+              rowsPerChunk: state.options.rowsPerChunk,
+              probeRowsPerChunk: state.options.probeRowsPerChunk,
+              wideProbeMinPoints: state.options.wideProbeMinPoints,
+              sampleRate: 1
+            }
+          }
+        );
       } catch (error) {
-        state.lastError = error && error.message ? error.message : String(error);
-        frameReceipt = drawFallbackMaterialsFrame(state);
-        state.renderer = "HEARTH_CANVAS_FALLBACK_MATERIALS";
+        state.runtimeTablePlanError = error && error.message ? error.message : String(error);
       }
-    } else if (hexSurface && typeof hexSurface.drawFrame === "function") {
-      try {
-        frameReceipt = hexSurface.drawFrame(state, {
-          radiusRatio: 0.456,
-          hexDensity: state.motionActive ? 210 : 260,
-          minHexRadius: state.motionActive ? 0.74 : 0.62,
-          maxHexRadius: state.motionActive ? 3.0 : 3.4,
-          axialTilt: state.tilt
-        });
-
-        state.renderer = "HEARTH_HEX_SURFACE_DRAW_FRAME";
-      } catch (error) {
-        state.lastError = error && error.message ? error.message : String(error);
-        frameReceipt = drawFallbackMaterialsFrame(state);
-        state.renderer = "HEARTH_CANVAS_FALLBACK_MATERIALS";
-      }
-    } else {
-      frameReceipt = drawFallbackMaterialsFrame(state);
-      state.renderer = "HEARTH_CANVAS_FALLBACK_MATERIALS";
     }
 
-    state.imageRendered = true;
-    state.lastFrameReceipt = frameReceipt;
-    state.lastFrameAt = nowIso();
+    if (runtimeTable && typeof runtimeTable.createHearthChannelTable === "function") {
+      try {
+        const table = runtimeTable.createHearthChannelTable({
+          budget: {
+            atlasWidth: state.options.atlasWidth,
+            atlasHeight: state.options.atlasHeight,
+            rowsPerChunk: state.options.rowsPerChunk,
+            probeRowsPerChunk: state.options.probeRowsPerChunk,
+            wideProbeMinPoints: state.options.wideProbeMinPoints,
+            sampleRate: 1
+          }
+        });
+        ledger = table.run(samples.samplePoint);
+      } catch (error) {
+        state.runtimeTableLedgerError = error && error.message ? error.message : String(error);
+      }
+    }
 
-    publishDataset(state);
+    if (runtimeTable && typeof runtimeTable.runCoherenceDiagnostic === "function") {
+      try {
+        diagnostic = runtimeTable.runCoherenceDiagnostic(
+          {
+            goalProfile: runtimeTable.createGoalProfile
+              ? runtimeTable.createGoalProfile("hearth-channel-expression")
+              : undefined,
+            runtimeTableLedger: ledger,
+            canvasReceipt: createReceipt(state),
+            canvasSample: samples.canvasSample,
+            landSample: samples.landSample,
+            waterSample: samples.waterSample,
+            airSample: samples.airSample,
+            renderMetadata: {
+              routeMounted: true,
+              canvasMounted: true,
+              fallbackShellAvailable: true,
+              visibleCarrierAllowed: true,
+              atlasReady: Boolean(state.atlasReady),
+              projectionReady: Boolean(state.projectionReady),
+              imageRendered: Boolean(state.imageRendered),
+              sphereContainment: true,
+              outsideSphereTransparent: true,
+              noRectangularTextureSpill: true
+            },
+            probeSamples: []
+          },
+          {
+            profile: "hearth-channel-expression",
+            planetId: "hearth",
+            planetLabel: "Hearth"
+          }
+        );
+      } catch (error) {
+        state.runtimeTableDiagnosticError = error && error.message ? error.message : String(error);
+      }
+    }
 
-    return frameReceipt;
+    state.runtimeTablePlan = plan;
+    state.runtimeTableLedger = ledger;
+    state.runtimeTableDiagnostic = diagnostic;
+    state.runtimeTablePlanReady = Boolean(plan);
+    state.runtimeTableConstructionReady = Boolean(
+      (plan && plan.constructionReady) ||
+      (ledger && ledger.runtimeAllowed)
+    );
+    state.runtimeTableCoherentExpressionPass = Boolean(
+      (plan && plan.coherentExpressionPass) ||
+      (diagnostic && diagnostic.coherentExpressionPass)
+    );
+    state.runtimeTableCoherenceScore = safeNumber(
+      (plan && plan.coherenceScore) ||
+      (diagnostic && diagnostic.coherenceScore),
+      0
+    );
+
+    return {
+      plan,
+      ledger,
+      diagnostic,
+      samples
+    };
   }
 
   function publishDataset(state) {
-    const dataset = root.document && root.document.documentElement
-      ? root.document.documentElement.dataset
-      : null;
+    writeDataset({
+      hearthCanvasLoaded: "true",
+      hearthCanvasContract: CONTRACT,
+      hearthCanvasReceipt: RECEIPT,
+      hearthCanvasPreviousContract: PREVIOUS_CONTRACT,
+      hearthCanvasBaselineContract: BASELINE_CONTRACT,
+      hearthCanvasVersion: VERSION,
 
-    if (dataset) {
-      dataset.hearthCanvasAuthorityLoaded = "true";
-      dataset.hearthCanvasContract = CONTRACT;
-      dataset.hearthCanvasReceipt = RECEIPT;
-      dataset.hearthCanvasRebuildReceipt = REBUILD_RECEIPT;
-      dataset.hearthCanvasPreviousKnownContract = PREVIOUS_KNOWN_CONTRACT;
-      dataset.hearthCanvasPublicContractPreserved = "true";
-      dataset.hearthCanvasRouteCompatibleMount = "true";
-      dataset.hearthCanvasVisibleCarrier = "true";
-      dataset.hearthCanvasMounted = state && state.mounted ? "true" : "false";
-      dataset.hearthCanvasImageRendered = state && state.imageRendered ? "true" : "false";
-      dataset.hearthCanvasControlsBound = state && state.controlsBound ? "true" : "false";
-      dataset.hearthCanvasRenderer = state && state.renderer ? state.renderer : "";
-      dataset.hearthCanvasBackingSize = state && state.canvas ? String(state.canvas.width) : "";
-      dataset.hearthCanvasMaterialChannelAdapters = "true";
-      dataset.hearthCanvasHexSurfacePresent = resolveHexSurface() ? "true" : "false";
-      dataset.hearthCanvasMaterialsPresent = resolveMaterials() ? "true" : "false";
-      dataset.hearthCanvasHexAuthorityPresent = resolveHexAuthority() ? "true" : "false";
-      dataset.generatedImage = "false";
-      dataset.graphicBox = "false";
-      dataset.webgl = "false";
-      dataset.visualPassClaimed = "false";
-    }
+      hearthCanvasRuntimeTableRequired: "true",
+      hearthCanvasRuntimeTablePath: PATHS.runtimeTable,
+      hearthCanvasRuntimeTableExpectedContract: REQUIRED_RUNTIME_TABLE_CONTRACT,
+      hearthCanvasRuntimeTableLoadRequested: boolString(state.runtimeTableLoadResult && state.runtimeTableLoadResult.requested),
+      hearthCanvasRuntimeTableGlobalPresent: boolString(state.runtimeTableLoadResult && state.runtimeTableLoadResult.globalPresent),
+      hearthCanvasRuntimeTableContractOk: boolString(state.runtimeTableLoadResult && state.runtimeTableLoadResult.contractOk),
+      hearthCanvasRuntimeTableValidationOk: boolString(state.runtimeTableLoadResult && state.runtimeTableLoadResult.validationOk),
+      hearthCanvasRuntimeTableFailureCoordinate: state.runtimeTableLoadResult && state.runtimeTableLoadResult.failureCoordinate ? state.runtimeTableLoadResult.failureCoordinate : "",
+      hearthCanvasRuntimeTableError: state.runtimeTableLoadResult && state.runtimeTableLoadResult.error ? state.runtimeTableLoadResult.error : "",
 
-    if (state && state.canvas && state.canvas.dataset) {
-      state.canvas.dataset.hearthCanvasMounted = state.mounted ? "true" : "false";
-      state.canvas.dataset.hearthCanvasImageRendered = state.imageRendered ? "true" : "false";
-      state.canvas.dataset.hearthCanvasControlsBound = state.controlsBound ? "true" : "false";
-      state.canvas.dataset.hearthCanvasRenderer = state.renderer || "";
-      state.canvas.dataset.hearthCanvasFrameCount = String(state.frameCount || 0);
-      state.canvas.dataset.hearthCanvasPhase = String(Number(state.phase || 0).toFixed(6));
-      state.canvas.dataset.hearthCanvasLastFrameAt = state.lastFrameAt || "";
-      state.canvas.dataset.generatedImage = "false";
-      state.canvas.dataset.graphicBox = "false";
-      state.canvas.dataset.webgl = "false";
+      hearthCanvasVisibleCarrierFirst: "true",
+      hearthVisiblePlanetCarrier: boolString(state.visibleCarrierMounted),
+      hearthVisibleGlobeMounted: boolString(state.visibleCarrierMounted),
+      hearthCanvasMounted: boolString(state.mounted),
+      hearthCanvasFound: boolString(state.canvas),
+      hearthCanvasImageRendered: boolString(state.imageRendered),
+      hearthCanvasAtlasReady: boolString(state.atlasReady),
+      hearthCanvasProjectionReady: boolString(state.projectionReady),
+      hearthCanvasVisualCarrierMode: state.visualCarrierMode || "",
+
+      hearthRuntimeTablePlanReady: boolString(state.runtimeTablePlanReady),
+      hearthRuntimeTableConstructionReady: boolString(state.runtimeTableConstructionReady),
+      hearthRuntimeTableCoherentExpressionPass: boolString(state.runtimeTableCoherentExpressionPass),
+      hearthRuntimeTableCoherenceScore: String(state.runtimeTableCoherenceScore || 0),
+
+      hearthCanvasWideProbeDeferred: "true",
+      hearthCanvasWideProbeNeverBlocksFirstVisibleRender: "true",
+      hearthCanvasSingleAnchorIsLocalProofOnly: "true",
+      childFailureDoesNotEraseVisualization: "true",
+      imageRenderedIsNotCoherencePass: "true",
+      constructionReadyIsNotCoherencePass: "true",
+      coherentExpressionPassIsNotVisualPassClaim: "true",
+
+      generatedImage: "false",
+      graphicBox: "false",
+      webgl: "false",
+      visualPassClaimed: "false"
+    });
+
+    if (state.canvas && state.canvas.dataset) {
+      state.canvas.dataset.hearthCanvasContract = CONTRACT;
+      state.canvas.dataset.hearthCanvasReceipt = RECEIPT;
+      state.canvas.dataset.hearthRuntimeTableRequired = "true";
+      state.canvas.dataset.hearthRuntimeTableContractOk = boolString(state.runtimeTableLoadResult && state.runtimeTableLoadResult.contractOk);
+      state.canvas.dataset.hearthVisibleCarrierFirst = "true";
+      state.canvas.dataset.hearthVisibleCarrierMounted = boolString(state.visibleCarrierMounted);
+      state.canvas.dataset.hearthAtlasReady = boolString(state.atlasReady);
+      state.canvas.dataset.hearthProjectionReady = boolString(state.projectionReady);
+      state.canvas.dataset.imageRendered = boolString(state.imageRendered);
+      state.canvas.dataset.imageRenderedIsNotCoherencePass = "true";
       state.canvas.dataset.visualPassClaimed = "false";
     }
   }
 
-  function createReceipt(state = null) {
+  function createReceipt(state = {}) {
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      rebuildReceipt: REBUILD_RECEIPT,
-      previousKnownContract: PREVIOUS_KNOWN_CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
+      baselineContract: BASELINE_CONTRACT,
       version: VERSION,
       authority: "hearth-canvas-runtime-table-directed-visible-carrier",
-      status: state && state.mounted ? "mounted" : "active",
       destinationFile: "/assets/hearth/hearth.canvas.js",
-      routeExpectedContract: ROUTE_EXPECTED_CONTRACT,
-      publicContractPreservedForRoute: true,
+      status: state.mounted ? "mounted" : "active",
 
-      mounted: Boolean(state && state.mounted),
-      imageRendered: Boolean(state && state.imageRendered),
-      controlsBound: Boolean(state && state.controlsBound),
-      renderer: state && state.renderer ? state.renderer : "",
-      backingSize: state && state.canvas ? state.canvas.width : null,
-      mountSelector: state && state.mountSelector ? state.mountSelector : "",
-
-      consumes: {
-        hexSurface: Boolean(resolveHexSurface()),
-        materials: Boolean(resolveMaterials()),
-        hexFourPairAuthority: Boolean(resolveHexAuthority())
+      runtimeTable: {
+        required: true,
+        path: PATHS.runtimeTable,
+        expectedContract: REQUIRED_RUNTIME_TABLE_CONTRACT,
+        loadRequested: Boolean(state.runtimeTableLoadResult && state.runtimeTableLoadResult.requested),
+        globalPresent: Boolean(state.runtimeTableLoadResult && state.runtimeTableLoadResult.globalPresent),
+        contractOk: Boolean(state.runtimeTableLoadResult && state.runtimeTableLoadResult.contractOk),
+        validationOk: Boolean(state.runtimeTableLoadResult && state.runtimeTableLoadResult.validationOk),
+        failureCoordinate: state.runtimeTableLoadResult && state.runtimeTableLoadResult.failureCoordinate ? state.runtimeTableLoadResult.failureCoordinate : "",
+        error: state.runtimeTableLoadResult && state.runtimeTableLoadResult.error ? state.runtimeTableLoadResult.error : "",
+        visibleCarrierBlockedByRuntimeTableMissing: false
       },
 
-      adapters: {
-        landChannel: Boolean(root.HEARTH_LAND_CHANNEL && root.HEARTH_LAND_CHANNEL.adapter),
-        waterChannel: Boolean(root.HEARTH_WATER_CHANNEL && root.HEARTH_WATER_CHANNEL.adapter),
-        airChannel: Boolean(root.HEARTH_AIR_CHANNEL && root.HEARTH_AIR_CHANNEL.adapter),
-        sourceAuthority: "HEARTH_MATERIALS"
+      visibleCarrier: {
+        mounted: Boolean(state.visibleCarrierMounted),
+        shellFirst: true,
+        imageRendered: Boolean(state.imageRendered),
+        atlasReady: Boolean(state.atlasReady),
+        projectionReady: Boolean(state.projectionReady),
+        mode: state.visualCarrierMode || "",
+        childFailureDoesNotEraseVisualization: true
       },
 
-      routeApiShape: {
-        mount: true,
-        createShellFirstMount: true,
-        refresh: true,
-        destroy: true,
-        getReceipt: true,
-        stateImageRendered: Boolean(state && state.imageRendered),
-        stateControlsBound: Boolean(state && state.controlsBound)
+      runtimeTablePlan: state.runtimeTablePlan || null,
+      runtimeTableLedger: state.runtimeTableLedger || null,
+      runtimeTableDiagnostic: state.runtimeTableDiagnostic || null,
+
+      expectedContracts: {
+        runtimeTable: REQUIRED_RUNTIME_TABLE_CONTRACT,
+        hexSurface: REQUIRED_HEX_SURFACE_CONTRACT,
+        materials: REQUIRED_MATERIALS_CONTRACT
+      },
+
+      loadingLaw: {
+        visibleCarrierFirst: true,
+        childContractValidationSecond: true,
+        anchorSampleThird: true,
+        atlasCacheRenderFourth: true,
+        wideProbeIdleChunksLater: true,
+        wideProbeNeverBlocksFirstVisibleRender: true
       },
 
       owns: [
-        "visible-canvas-carrier",
-        "canvas-mount",
-        "fallback-removal",
-        "material-channel-adapter-bridge",
-        "2d-frame-drawing-handoff",
-        "drag-spin-inspection",
-        "canvas-route-receipt"
+        "visible-carrier-mount",
+        "canvas-shell-first-render",
+        "runtime-table-conduct-request-load",
+        "runtime-table-plan-consumption",
+        "atlas/cache-render-after-carrier",
+        "canvas-dataset-receipts"
       ],
 
       doesNotOwn: [
-        "tectonic cause",
-        "elevation generation",
-        "composition classification",
-        "hydrology classification",
-        "material palette truth",
+        "planet truth",
+        "tectonics",
+        "elevation",
+        "composition",
+        "hydrology",
+        "materials truth",
+        "hex truth",
+        "runtime motion",
+        "controls",
         "route orchestration",
         "final visual pass claim"
       ],
@@ -951,349 +835,209 @@
       generatedImage: false,
       graphicBox: false,
       webGL: false,
-      visualPassClaimed: false,
-      at: nowIso()
+      visualPassClaimed: false
     };
   }
 
-  function bindControls(state) {
-    const canvas = state.canvas;
-    const target = state.target;
-
-    let dragging = false;
-    let lastX = 0;
-    let lastY = 0;
-    let lastAt = 0;
-
-    const captureTarget = target || canvas;
-
-    function pointerDown(event) {
-      dragging = true;
-      state.motionActive = true;
-      state.velocity = 0;
-      lastX = Number(event.clientX) || 0;
-      lastY = Number(event.clientY) || 0;
-      lastAt = Date.now();
-
-      try {
-        canvas.setPointerCapture(event.pointerId);
-      } catch (_error) {}
-
-      event.preventDefault();
-    }
-
-    function pointerMove(event) {
-      if (!dragging) return;
-
-      const x = Number(event.clientX) || 0;
-      const y = Number(event.clientY) || 0;
-      const now = Date.now();
-      const dx = x - lastX;
-      const dy = y - lastY;
-      const dt = Math.max(16, now - lastAt);
-
-      state.phase += dx * 0.0075;
-      state.tilt = clamp(state.tilt + dy * 0.0035, -0.72, 0.72);
-      state.velocity = clamp(dx / dt, -3.2, 3.2) * 0.28;
-
-      lastX = x;
-      lastY = y;
-      lastAt = now;
-
-      drawFrame(state, "pointer-drag");
-      event.preventDefault();
-    }
-
-    function pointerUp(event) {
-      dragging = false;
-      state.motionActive = false;
-
-      try {
-        canvas.releasePointerCapture(event.pointerId);
-      } catch (_error) {}
-
-      event.preventDefault();
-    }
-
-    function wheel(event) {
-      const delta = clamp(Number(event.deltaY) || 0, -160, 160);
-      state.phase += delta * 0.0009;
-      drawFrame(state, "wheel-inspection");
-      event.preventDefault();
-    }
-
-    captureTarget.addEventListener("pointerdown", pointerDown, { passive: false });
-    captureTarget.addEventListener("pointermove", pointerMove, { passive: false });
-    captureTarget.addEventListener("pointerup", pointerUp, { passive: false });
-    captureTarget.addEventListener("pointercancel", pointerUp, { passive: false });
-    captureTarget.addEventListener("wheel", wheel, { passive: false });
-
-    state.controlsBound = true;
-
-    return () => {
-      captureTarget.removeEventListener("pointerdown", pointerDown);
-      captureTarget.removeEventListener("pointermove", pointerMove);
-      captureTarget.removeEventListener("pointerup", pointerUp);
-      captureTarget.removeEventListener("pointercancel", pointerUp);
-      captureTarget.removeEventListener("wheel", wheel);
-    };
-  }
-
-  function startMotionLoop(state) {
-    function tick() {
-      if (!state || state.destroyed) return;
-
-      const moving = Math.abs(state.velocity) > 0.0004;
-
-      if (moving) {
-        state.phase += state.velocity;
-        state.velocity *= 0.925;
-        state.motionActive = true;
-        drawFrame(state, "inertia");
-      } else {
-        state.motionActive = false;
-        state.velocity = 0;
-      }
-
-      state.raf = root.requestAnimationFrame ? root.requestAnimationFrame(tick) : setTimeout(tick, 80);
-    }
-
-    state.raf = root.requestAnimationFrame ? root.requestAnimationFrame(tick) : setTimeout(tick, 80);
-  }
-
-  function createMountApi(state) {
+  function normalizeMountOptions(options = {}) {
     return {
+      size: Math.max(160, Math.round(safeNumber(options.size, DEFAULTS.size))),
+      atlasWidth: Math.max(32, Math.round(safeNumber(options.atlasWidth, DEFAULTS.atlasWidth))),
+      atlasHeight: Math.max(16, Math.round(safeNumber(options.atlasHeight, DEFAULTS.atlasHeight))),
+      rowsPerChunk: Math.max(1, Math.round(safeNumber(options.rowsPerChunk, DEFAULTS.rowsPerChunk))),
+      probeRowsPerChunk: Math.max(1, Math.round(safeNumber(options.probeRowsPerChunk, DEFAULTS.probeRowsPerChunk))),
+      wideProbeMinPoints: Math.max(25, Math.round(safeNumber(options.wideProbeMinPoints, DEFAULTS.wideProbeMinPoints)))
+    };
+  }
+
+  function mount(parent, options = {}) {
+    if (!parent) {
+      throw new Error("HEARTH_CANVAS_MOUNT_REQUIRES_PARENT_ELEMENT");
+    }
+
+    const mountOptions = normalizeMountOptions(options);
+    const canvas = ensureCanvas(parent, mountOptions.size);
+    if (!canvas) {
+      throw new Error("HEARTH_CANVAS_COULD_NOT_CREATE_CANVAS");
+    }
+
+    const ctx = canvas.getContext("2d", { alpha: true, willReadFrequently: false });
+    const state = {
       contract: CONTRACT,
       receipt: RECEIPT,
-      rebuildReceipt: REBUILD_RECEIPT,
-      canvas: state.canvas,
-      ctx: state.ctx,
-      target: state.target,
-      controlsBound: true,
+      previousContract: PREVIOUS_CONTRACT,
+      baselineContract: BASELINE_CONTRACT,
+      version: VERSION,
+      parent,
+      canvas,
+      ctx,
+      options: mountOptions,
+      mounted: true,
+      visibleCarrierMounted: false,
+      shellRendered: false,
+      imageRendered: false,
+      atlasReady: false,
+      projectionReady: false,
+      atlasStartAttempted: false,
+      atlasBuilderEntered: false,
+      atlasProgressObserved: false,
+      atlasProgress: 0,
+      phase: 0,
+      visualCarrierMode: "",
+      runtimeTableLoadResult: null,
+      runtimeTablePlan: null,
+      runtimeTableLedger: null,
+      runtimeTableDiagnostic: null,
+      runtimeTablePlanReady: false,
+      runtimeTableConstructionReady: false,
+      runtimeTableCoherentExpressionPass: false,
+      runtimeTableCoherenceScore: 0,
+      controlsBound: false,
+      visualPassClaimed: false,
+      createdAt: nowIso(),
+      updatedAt: nowIso()
+    };
+
+    drawShell(ctx, mountOptions.size, state);
+    publishDataset(state);
+
+    loadRuntimeTableDetailed(state).then((runtimeLoadResult) => {
+      state.runtimeTableLoadResult = runtimeLoadResult;
+      createRuntimePlan(state);
+      publishDataset(state);
+
+      state.atlasStartAttempted = true;
+      state.atlasBuilderEntered = true;
+      state.atlasProgressObserved = true;
+      state.atlasProgress = 0.2;
+
+      const rendered = drawAtlasFallback(ctx, mountOptions.size, state, mountOptions);
+
+      state.atlasProgress = rendered ? 1 : 0.35;
+      state.updatedAt = nowIso();
+
+      createRuntimePlan(state);
+      publishDataset(state);
+    });
+
+    const api = {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
+      baselineContract: BASELINE_CONTRACT,
+      version: VERSION,
+      canvas,
+      ctx,
       state,
 
-      refresh(reason = "manual-refresh") {
-        return drawFrame(state, reason);
+      remount(nextOptions = {}) {
+        return mount(parent, { ...mountOptions, ...nextOptions });
       },
 
-      resize() {
-        if (!state || state.destroyed) return null;
-
-        const nextSize = determineBackingSize(state.target, state.options);
-
-        if (nextSize !== state.canvas.width) {
-          state.canvas.width = nextSize;
-          state.canvas.height = nextSize;
-          state.hearthHexSurfaceGeometry = null;
-          state.hearthHexGeometry = null;
-        }
-
-        return drawFrame(state, "resize");
-      },
-
-      destroy() {
-        if (state.destroyed) return;
-
-        state.destroyed = true;
-
-        if (typeof state.unbindControls === "function") {
-          try {
-            state.unbindControls();
-          } catch (_error) {}
-        }
-
-        if (state.raf) {
-          try {
-            if (root.cancelAnimationFrame) root.cancelAnimationFrame(state.raf);
-            else clearTimeout(state.raf);
-          } catch (_error) {}
-        }
-
-        try {
-          if (state.canvas && state.canvas.parentNode) state.canvas.remove();
-        } catch (_error) {}
-
-        state.mounted = false;
+      redraw(nextOptions = {}) {
+        const opts = normalizeMountOptions({ ...mountOptions, ...nextOptions });
+        state.atlasStartAttempted = true;
+        state.atlasBuilderEntered = true;
+        state.atlasProgressObserved = true;
+        drawAtlasFallback(ctx, opts.size, state, opts);
+        createRuntimePlan(state);
         publishDataset(state);
+        return createReceipt(state);
+      },
+
+      getStatus() {
+        publishDataset(state);
+        return {
+          contract: CONTRACT,
+          receipt: RECEIPT,
+          mounted: state.mounted,
+          visibleCarrierMounted: state.visibleCarrierMounted,
+          imageRendered: state.imageRendered,
+          atlasReady: state.atlasReady,
+          projectionReady: state.projectionReady,
+          runtimeTableLoaded: Boolean(state.runtimeTableLoadResult && state.runtimeTableLoadResult.validationOk),
+          runtimeTableFailureCoordinate: state.runtimeTableLoadResult && state.runtimeTableLoadResult.failureCoordinate ? state.runtimeTableLoadResult.failureCoordinate : "",
+          runtimeTablePlanReady: state.runtimeTablePlanReady,
+          runtimeTableConstructionReady: state.runtimeTableConstructionReady,
+          runtimeTableCoherentExpressionPass: state.runtimeTableCoherentExpressionPass,
+          runtimeTableCoherenceScore: state.runtimeTableCoherenceScore,
+          visualPassClaimed: false
+        };
       },
 
       getReceipt() {
         return createReceipt(state);
-      },
-
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false
-    };
-  }
-
-  function mount(targetInput, options = {}) {
-    if (activeMount && typeof activeMount.destroy === "function") {
-      try {
-        activeMount.destroy();
-      } catch (_error) {}
-    }
-
-    const target = targetElementFrom(targetInput);
-
-    if (!target) {
-      throw new Error("HEARTH_CANVAS mount target not found.");
-    }
-
-    mountSerial += 1;
-    clearPriorCanvases(target);
-    hideFallback(target);
-    installMaterialChannelAdapters();
-
-    const canvas = createCanvas(target, options);
-    const ctx = canvas.getContext("2d", { alpha: true, willReadFrequently: false });
-
-    if (!ctx) {
-      throw new Error("HEARTH_CANVAS could not create 2D context.");
-    }
-
-    const state = {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      rebuildReceipt: REBUILD_RECEIPT,
-      serial: mountSerial,
-      target,
-      canvas,
-      ctx,
-      options: { ...options },
-      phase: Number(options.phase) || 0,
-      tilt: -0.22,
-      velocity: 0,
-      mounted: true,
-      imageRendered: false,
-      controlsBound: false,
-      renderer: "",
-      frameCount: 0,
-      lastFrameReceipt: null,
-      lastFrameAt: "",
-      lastFrameReason: "",
-      lastError: "",
-      motionActive: false,
-      destroyed: false,
-      mountSelector: target.id ? `#${target.id}` : target.dataset && target.dataset.hearthCanvasMount ? "[data-hearth-canvas-mount]" : "element",
-      routeContract: options.routeContract || "",
-      routeReceipt: options.routeReceipt || "",
-      hexFourPairAuthorityValidated: options.hexFourPairAuthorityValidated === true,
-      routeBlocksCanvasForHexMissing: options.routeBlocksCanvasForHexMissing === true,
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false
+      }
     };
 
-    state.unbindControls = bindControls(state);
-
-    drawFrame(state, "initial-mount");
-
-    state.imageRendered = true;
-    state.controlsBound = true;
-
-    const mountApi = createMountApi(state);
-    activeMount = mountApi;
-
-    startMotionLoop(state);
-    publishDataset(state);
-
-    if (typeof options.onStatus === "function") {
-      try {
-        options.onStatus("hearth-canvas-mounted", {
-          contract: CONTRACT,
-          receipt: RECEIPT,
-          rebuildReceipt: REBUILD_RECEIPT,
-          imageRendered: true,
-          controlsBound: true,
-          visualPassClaimed: false
-        });
-      } catch (_error) {}
-    }
-
-    return mountApi;
+    return api;
   }
 
-  function createShellFirstMount(targetInput, options = {}) {
-    return mount(targetInput, options);
-  }
-
-  function destroy() {
-    if (activeMount && typeof activeMount.destroy === "function") {
-      activeMount.destroy();
-    }
-
-    activeMount = null;
-  }
-
-  function refresh(reason = "api-refresh") {
-    if (activeMount && typeof activeMount.refresh === "function") {
-      return activeMount.refresh(reason);
-    }
-
-    return null;
-  }
-
-  function getReceipt() {
-    return createReceipt(activeMount && activeMount.state ? activeMount.state : null);
+  function createShellFirstMount(parent, options = {}) {
+    return mount(parent, options);
   }
 
   function getStatus() {
-    const state = activeMount && activeMount.state ? activeMount.state : null;
-
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      rebuildReceipt: REBUILD_RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
+      baselineContract: BASELINE_CONTRACT,
       version: VERSION,
-      mounted: Boolean(state && state.mounted),
-      imageRendered: Boolean(state && state.imageRendered),
-      controlsBound: Boolean(state && state.controlsBound),
-      renderer: state && state.renderer ? state.renderer : "",
-      backingSize: state && state.canvas ? state.canvas.width : null,
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
+      runtimeTablePresent: Boolean(resolveRuntimeTable()),
+      runtimeTableContract: contractOf(resolveRuntimeTable()),
+      hexSurfacePresent: Boolean(resolveHexSurface()),
+      hexSurfaceContract: contractOf(resolveHexSurface()),
+      materialsPresent: Boolean(resolveMaterials()),
+      materialsContract: contractOf(resolveMaterials()),
       visualPassClaimed: false
     };
+  }
+
+  function getReceipt() {
+    return createReceipt({});
   }
 
   const api = {
     contract: CONTRACT,
     receipt: RECEIPT,
-    rebuildReceipt: REBUILD_RECEIPT,
-    previousKnownContract: PREVIOUS_KNOWN_CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
+    baselineContract: BASELINE_CONTRACT,
     version: VERSION,
-    authority: "hearth-canvas-runtime-table-directed-visible-carrier",
 
     mount,
     createShellFirstMount,
-    destroy,
-    refresh,
-    getReceipt,
     getStatus,
+    getReceipt,
 
-    installMaterialChannelAdapters,
-    resolveMaterials,
+    resolveRuntimeTable,
     resolveHexSurface,
-    resolveHexAuthority,
+    resolveMaterials,
+    loadRuntimeTableDetailed,
 
-    routeCompatibleVisibleCarrier: true,
-    publicContractPreservedForRoute: true,
-    materialChannelAdapters: true,
-    consumesHexSurface: true,
-    consumesMaterials: true,
-    controlsBoundByMount: true,
+    requiredRuntimeTableContract: REQUIRED_RUNTIME_TABLE_CONTRACT,
+    requiredHexSurfaceContract: REQUIRED_HEX_SURFACE_CONTRACT,
+    requiredMaterialsContract: REQUIRED_MATERIALS_CONTRACT,
 
-    ownsCanvasMount: true,
-    ownsVisibleCarrier: true,
-    ownsTectonicCause: false,
-    ownsElevationGeneration: false,
-    ownsCompositionClassification: false,
-    ownsHydrologyClassification: false,
-    ownsMaterialPaletteTruth: false,
+    visibleCarrierFirst: true,
+    runtimeTableRequired: true,
+    runtimeTableBlocksVisibleCarrier: false,
+    wideProbeDeferred: true,
+    wideProbeNeverBlocksFirstVisibleRender: true,
+    childFailureDoesNotEraseVisualization: true,
+    imageRenderedIsNotCoherencePass: true,
+    constructionReadyIsNotCoherencePass: true,
+    coherentExpressionPassIsNotVisualPassClaim: true,
+
+    ownsPlanetTruth: false,
+    ownsTectonics: false,
+    ownsElevation: false,
+    ownsComposition: false,
+    ownsHydrology: false,
+    ownsMaterialsTruth: false,
+    ownsHexTruth: false,
+    ownsRuntimeMotion: false,
+    ownsControls: false,
     ownsRouteOrchestration: false,
 
     generatedImage: false,
@@ -1308,29 +1052,31 @@
   root.HEARTH_CANVAS = api;
   root.HearthCanvas = api;
   root.HEARTH_CANVAS_CONTRACT = CONTRACT;
-  root.HEARTH_CANVAS_RECEIPT = RECEIPT;
-  root.HEARTH_CANVAS_REBUILD_RECEIPT = REBUILD_RECEIPT;
-  root.__HEARTH_CANVAS_DISPOSE__ = destroy;
+  root.HEARTH_CANVAS_RECEIPT = getReceipt();
 
-  if (root.document && root.document.documentElement) {
-    const dataset = root.document.documentElement.dataset;
-
-    dataset.hearthCanvasAuthorityLoaded = "true";
-    dataset.hearthCanvasContract = CONTRACT;
-    dataset.hearthCanvasReceipt = RECEIPT;
-    dataset.hearthCanvasRebuildReceipt = REBUILD_RECEIPT;
-    dataset.hearthCanvasPreviousKnownContract = PREVIOUS_KNOWN_CONTRACT;
-    dataset.hearthCanvasPublicContractPreserved = "true";
-    dataset.hearthCanvasRouteCompatibleMount = "true";
-    dataset.hearthCanvasVisibleCarrier = "true";
-    dataset.hearthCanvasMaterialChannelAdapters = "true";
-    dataset.hearthCanvasConsumesHexSurface = "true";
-    dataset.hearthCanvasConsumesMaterials = "true";
-    dataset.generatedImage = "false";
-    dataset.graphicBox = "false";
-    dataset.webgl = "false";
-    dataset.visualPassClaimed = "false";
-  }
+  writeDataset({
+    hearthCanvasAuthorityLoaded: "true",
+    hearthCanvasContract: CONTRACT,
+    hearthCanvasReceipt: RECEIPT,
+    hearthCanvasPreviousContract: PREVIOUS_CONTRACT,
+    hearthCanvasBaselineContract: BASELINE_CONTRACT,
+    hearthCanvasVersion: VERSION,
+    hearthCanvasRuntimeTableRequired: "true",
+    hearthCanvasRuntimeTablePath: PATHS.runtimeTable,
+    hearthCanvasRuntimeTableExpectedContract: REQUIRED_RUNTIME_TABLE_CONTRACT,
+    hearthCanvasRuntimeTableBlocksVisibleCarrier: "false",
+    hearthCanvasVisibleCarrierFirst: "true",
+    hearthCanvasWideProbeDeferred: "true",
+    hearthCanvasWideProbeNeverBlocksFirstVisibleRender: "true",
+    childFailureDoesNotEraseVisualization: "true",
+    imageRenderedIsNotCoherencePass: "true",
+    constructionReadyIsNotCoherencePass: "true",
+    coherentExpressionPassIsNotVisualPassClaim: "true",
+    generatedImage: "false",
+    graphicBox: "false",
+    webgl: "false",
+    visualPassClaimed: "false"
+  });
 
   if (typeof module !== "undefined" && module.exports) {
     module.exports = api;

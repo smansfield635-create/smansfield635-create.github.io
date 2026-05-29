@@ -1,17 +1,15 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_LAB_RUNTIME_TABLE_TRIPLE_G_COHERENCE_PREWIRED_CANVAS_TNT_v4_2
+// HEARTH_TRIPLE_G_RECEIPT_VISIBILITY_AND_COPY_EXPORT_CANVAS_TNT_v4_3
 // Full-file replacement.
-// Canvas / mount / Runtime Table consumer / Triple G diagnostic consumer / semiconductor outlet authority only.
+// Canvas / mount / Runtime Table consumer / Triple G diagnostic consumer / receipt UI-export authority only.
 // Purpose:
 // - Preserve shell-first nonblocking mount.
 // - Preserve immediate thumb / pointer drag.
-// - Consume canonical Dexter Lab Runtime Table equipment.
-// - Accept lab Runtime Table v2 with Triple G coherence diagnostic, while preserving v1 compatibility.
-// - Validate land/water/air children through LAB_RUNTIME_TABLE.createHearthChannelTable().
-// - Build final atlas only after Runtime Table allows runtime handoff.
-// - Run Triple G coherent-expression diagnostic after image render when lab v2 is available.
-// - Separate Construction Ready, Image Rendered, and Coherent Expression states.
-// - Behave as semiconductor-style outlet: conduct, gate, synchronize, project, and composite.
+// - Preserve Runtime Table v2 compatibility and v1 fallback.
+// - Preserve Triple G coherent-expression diagnostic consumption.
+// - Add hidden / compact / expanded diagnostic receipt modes.
+// - Add copyable plain-text diagnostic receipt export.
+// - Keep Construction Ready, Image Rendered, and Coherent Expression separate.
 // - Decide no channel truth.
 // Does not own:
 // - Runtime Table canonical standard
@@ -33,10 +31,10 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_LAB_RUNTIME_TABLE_TRIPLE_G_COHERENCE_PREWIRED_CANVAS_TNT_v4_2";
-  const RECEIPT = "HEARTH_LAB_RUNTIME_TABLE_TRIPLE_G_COHERENCE_PREWIRED_CANVAS_RECEIPT_v4_2";
-  const PREVIOUS_CONTRACT = "HEARTH_LAB_RUNTIME_TABLE_PREWIRED_CANVAS_TNT_v4_1";
-  const VERSION = "2026-05-29.hearth-lab-runtime-table-triple-g-coherence-prewired-canvas-v4-2";
+  const CONTRACT = "HEARTH_TRIPLE_G_RECEIPT_VISIBILITY_AND_COPY_EXPORT_CANVAS_TNT_v4_3";
+  const RECEIPT = "HEARTH_TRIPLE_G_RECEIPT_VISIBILITY_AND_COPY_EXPORT_CANVAS_RECEIPT_v4_3";
+  const PREVIOUS_CONTRACT = "HEARTH_LAB_RUNTIME_TABLE_TRIPLE_G_COHERENCE_PREWIRED_CANVAS_TNT_v4_2";
+  const VERSION = "2026-05-29.hearth-triple-g-receipt-visibility-copy-export-canvas-v4-3";
 
   const LAB_RUNTIME_TABLE_PATH = "/assets/lab/runtime-table.js";
   const LAB_RUNTIME_TABLE_CONTRACT_V1 = "LAB_RUNTIME_TABLE_MULTI_FUNCTION_ANIMATION_STANDARD_TNT_v1";
@@ -50,6 +48,12 @@
   const LAND_CONTRACT = "HEARTH_LAND_SURFACE_ATTACHMENT_CHANNEL_TNT_v1";
   const WATER_CONTRACT = "HEARTH_WATER_HYDROSPHERE_SURFACE_CHANNEL_TNT_v1";
   const AIR_CONTRACT = "HEARTH_AIR_PRESSURE_HUMIDITY_CHANNEL_TNT_v1";
+
+  const RECEIPT_MODES = Object.freeze({
+    HIDDEN: "hidden",
+    COMPACT: "compact",
+    EXPANDED: "expanded"
+  });
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const DEG = Math.PI / 180;
@@ -94,11 +98,6 @@
     "FALLBACK_PASS"
   ]);
 
-  const BLOCKED_HANDOFFS = Object.freeze([
-    "REJECTED",
-    "BLOCKING"
-  ]);
-
   const COLORS = Object.freeze({
     shellDark: [5, 9, 19],
     shellMid: [16, 31, 48],
@@ -111,6 +110,14 @@
     shadow: [2, 5, 12],
     transparent: [0, 0, 0]
   });
+
+  function nowIso() {
+    try {
+      return new Date().toISOString();
+    } catch (_error) {
+      return "";
+    }
+  }
 
   function clamp(value, min, max) {
     const n = Number(value);
@@ -251,11 +258,10 @@
 
     const radial = Math.sqrt(rr);
     const z = Math.sqrt(Math.max(0, 1 - rr));
-    const edgeAlpha = clamp01((1 - radial) / 0.025);
 
     return {
       inside: true,
-      edgeAlpha,
+      edgeAlpha: clamp01((1 - radial) / 0.025),
       radial,
       vector: normalize3({
         x: dx,
@@ -330,6 +336,25 @@
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;");
+  }
+
+  function stringifyForReceipt(value) {
+    try {
+      return JSON.stringify(value, null, 2);
+    } catch (_error) {
+      return String(value);
+    }
+  }
+
+  function datasetToObject(element) {
+    const output = {};
+    if (!element || !element.dataset) return output;
+
+    Object.keys(element.dataset).forEach((key) => {
+      output[key] = element.dataset[key];
+    });
+
+    return output;
   }
 
   function getRuntimeTableApi() {
@@ -428,7 +453,7 @@
       floatsAboveBody: false,
       allowedToFloat: false,
       isLandChannel: true,
-      sourceContract: "FALLBACK_LAND_CHANNEL"
+      contract: "FALLBACK_LAND_CHANNEL"
     };
   }
 
@@ -453,7 +478,7 @@
       floatsAboveBody: false,
       allowedToFloat: false,
       isWaterChannel: true,
-      sourceContract: "FALLBACK_WATER_CHANNEL"
+      contract: "FALLBACK_WATER_CHANNEL"
     };
   }
 
@@ -483,7 +508,21 @@
       mayDefineLand: false,
       mayDefineWater: false,
       isAirChannel: true,
-      sourceContract: "FALLBACK_AIR_CHANNEL"
+      contract: "FALLBACK_AIR_CHANNEL"
+    };
+  }
+
+  function coordinateDefaults(p) {
+    const ll = vectorToLonLat(p);
+
+    return {
+      u: lonToU(ll.lon),
+      v: latToV(ll.lat),
+      lon: ll.lon,
+      lat: ll.lat,
+      x: p.x,
+      y: p.y,
+      z: p.z
     };
   }
 
@@ -491,15 +530,12 @@
     const fallback = fallbackLand(p);
     const source = raw && typeof raw === "object" ? raw : fallback;
     const rgb = colorField(source, ["rgb", "color", "landRgb"], fallback.rgb);
+    const coords = coordinateDefaults(p);
 
     return {
       ...fallback,
       ...source,
-      u: numberField(source, "u", lonToU(vectorToLonLat(p).lon)),
-      v: numberField(source, "v", latToV(vectorToLonLat(p).lat)),
-      x: numberField(source, "x", p.x),
-      y: numberField(source, "y", p.y),
-      z: numberField(source, "z", p.z),
+      ...coords,
       rgb,
       color: rgb,
       alpha: clamp01(numberField(source, "alpha", numberField(source, "landAlpha", fallback.alpha))),
@@ -512,7 +548,7 @@
       floatsAboveBody: false,
       allowedToFloat: false,
       isLandChannel: true,
-      contract: source.contract || source.sourceContract || fallback.sourceContract
+      contract: source.contract || source.sourceContract || fallback.contract
     };
   }
 
@@ -520,15 +556,12 @@
     const fallback = fallbackWater(p);
     const source = raw && typeof raw === "object" ? raw : fallback;
     const rgb = colorField(source, ["rgb", "color", "waterRgb", "oceanRgb"], fallback.rgb);
+    const coords = coordinateDefaults(p);
 
     return {
       ...fallback,
       ...source,
-      u: numberField(source, "u", lonToU(vectorToLonLat(p).lon)),
-      v: numberField(source, "v", latToV(vectorToLonLat(p).lat)),
-      x: numberField(source, "x", p.x),
-      y: numberField(source, "y", p.y),
-      z: numberField(source, "z", p.z),
+      ...coords,
       rgb,
       color: rgb,
       alpha: clamp01(numberField(source, "alpha", numberField(source, "waterAlpha", fallback.alpha))),
@@ -542,7 +575,7 @@
       floatsAboveBody: false,
       allowedToFloat: false,
       isWaterChannel: true,
-      contract: source.contract || source.sourceContract || fallback.sourceContract
+      contract: source.contract || source.sourceContract || fallback.contract
     };
   }
 
@@ -550,15 +583,12 @@
     const fallback = fallbackAir(p);
     const source = raw && typeof raw === "object" ? raw : fallback;
     const rgb = colorField(source, ["rgb", "color", "airRgb", "atmosphereRgb"], fallback.rgb);
+    const coords = coordinateDefaults(p);
 
     return {
       ...fallback,
       ...source,
-      u: numberField(source, "u", lonToU(vectorToLonLat(p).lon)),
-      v: numberField(source, "v", latToV(vectorToLonLat(p).lat)),
-      x: numberField(source, "x", p.x),
-      y: numberField(source, "y", p.y),
-      z: numberField(source, "z", p.z),
+      ...coords,
       rgb,
       color: rgb,
       alpha: clamp01(numberField(source, "alpha", numberField(source, "airAlpha", fallback.alpha))),
@@ -577,7 +607,7 @@
       mayDefineLand: false,
       mayDefineWater: false,
       isAirChannel: true,
-      contract: source.contract || source.sourceContract || fallback.sourceContract
+      contract: source.contract || source.sourceContract || fallback.contract
     };
   }
 
@@ -588,17 +618,9 @@
     const waterWeight = clamp01(water.waterAlpha * (0.68 + water.hydrosphereBinding * 0.22 + water.depthBinding * 0.12));
     const airWeight = clamp01(air.airAlpha * (0.28 + air.atmosphereSeparation * 0.18 + air.rimHaze * 0.12));
 
-    if (landWeight > 0.01) {
-      rgb = mixColor(rgb, land.rgb, landWeight);
-    }
-
-    if (waterWeight > 0.01) {
-      rgb = mixColor(rgb, water.rgb, waterWeight);
-    }
-
-    if (airWeight > 0.01) {
-      rgb = mixColor(rgb, air.rgb, airWeight);
-    }
+    if (landWeight > 0.01) rgb = mixColor(rgb, land.rgb, landWeight);
+    if (waterWeight > 0.01) rgb = mixColor(rgb, water.rgb, waterWeight);
+    if (airWeight > 0.01) rgb = mixColor(rgb, air.rgb, airWeight);
 
     const light = normalize3({ x: -0.34, y: 0.42, z: 0.83 });
     const illumination = clamp01(0.66 + dot3(p, light) * 0.30);
@@ -610,8 +632,7 @@
         0.08
     );
 
-    const seatedShade = clamp01(0.76 + illumination * 0.22 + bodyLock * 0.08);
-    rgb = scaleColor(rgb, seatedShade);
+    rgb = scaleColor(rgb, clamp01(0.76 + illumination * 0.22 + bodyLock * 0.08));
 
     return {
       rgb,
@@ -625,30 +646,24 @@
 
   function multiplexSample(...args) {
     const p = parseInput(...args);
-    const ll = vectorToLonLat(p);
+    const coords = coordinateDefaults(p);
 
     const land = normalizeLand(callChannel(getLandChannel(), args, p), p);
     const water = normalizeWater(callChannel(getWaterChannel(), args, p), p);
     const air = normalizeAir(callChannel(getAirChannel(), args, p), p);
     const composed = composeChannels(land, water, air, p);
+    const runtimeApi = getRuntimeTableApi();
 
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
-      authority: "lab-runtime-table-triple-g-coherence-prewired-semiconductor-canvas",
+      authority: "hearth-triple-g-receipt-visibility-copy-export-canvas",
+      ...coords,
 
-      u: lonToU(ll.lon),
-      v: latToV(ll.lat),
-      lon: ll.lon,
-      lat: ll.lat,
-      x: p.x,
-      y: p.y,
-      z: p.z,
-
-      runtimeTableConsumed: Boolean(getRuntimeTableApi()),
-      runtimeTableContract: getRuntimeTableApi() && getRuntimeTableApi().contract ? getRuntimeTableApi().contract : "",
+      runtimeTableConsumed: Boolean(runtimeApi),
+      runtimeTableContract: runtimeApi && runtimeApi.contract ? runtimeApi.contract : "",
       preferredRuntimeTableContract: LAB_RUNTIME_TABLE_CONTRACT_V2,
       runtimeTableAcceptedContracts: LAB_RUNTIME_TABLE_ACCEPTED_CONTRACTS.slice(),
       runtimeTableCanonicalOwner: "Dexter Lab",
@@ -675,7 +690,6 @@
       bodyLock: composed.bodyLock,
 
       compositeOrder: "planet-body-shell → land-channel → water-channel → air-channel → rim-lighting",
-
       constructionReadyIsNotCoherencePass: true,
       imageRenderedIsNotCoherencePass: true,
       landFloatsAboveBody: false,
@@ -687,12 +701,6 @@
       ownsLandTruth: false,
       ownsWaterTruth: false,
       ownsAirTruth: false,
-      ownsTectonicCause: false,
-      ownsElevationGeneration: false,
-      ownsCompositionClassification: false,
-      ownsHydrology: false,
-      ownsMaterialPalette: false,
-      ownsOceanAuthority: false,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -727,7 +735,7 @@
 
     canvas.width = size;
     canvas.height = size;
-    canvas.className = options.className || "hearth-canvas-texture hearth-canvas-contained-sphere hearth-canvas-lab-runtime-table-triple-g-coherence-prewired";
+    canvas.className = options.className || "hearth-canvas-texture hearth-canvas-contained-sphere hearth-canvas-receipt-export-v4-3";
     canvas.style.maxWidth = "100%";
     canvas.style.height = "auto";
     canvas.style.display = "block";
@@ -745,6 +753,7 @@
     canvas.dataset.hearthCanvasSemiconductorOutlet = "true";
     canvas.dataset.hearthCanvasDecidesNothing = "true";
     canvas.dataset.hearthRuntimeTablePrewired = "true";
+    canvas.dataset.hearthTripleGCoherencePrewired = "true";
     canvas.dataset.hearthRuntimeTableContract = LAB_RUNTIME_TABLE_CONTRACT;
     canvas.dataset.hearthRuntimeTableAcceptedContracts = LAB_RUNTIME_TABLE_ACCEPTED_CONTRACTS.join(",");
     canvas.dataset.hearthRuntimeTableLoaded = "false";
@@ -774,6 +783,13 @@
     canvas.dataset.hearthCanvasSphereContainment = "true";
     canvas.dataset.hearthCanvasNoRectangularTextureSpill = "true";
     canvas.dataset.hearthCanvasOutsideSphereTransparent = "true";
+    canvas.dataset.hearthReceiptMode = RECEIPT_MODES.COMPACT;
+    canvas.dataset.hearthReceiptVisible = "true";
+    canvas.dataset.hearthReceiptExpanded = "false";
+    canvas.dataset.hearthDiagnosticExportAvailable = "false";
+    canvas.dataset.hearthDiagnosticExportCopied = "false";
+    canvas.dataset.hearthDiagnosticExportLength = "0";
+    canvas.dataset.hearthDiagnosticExportError = "";
     canvas.dataset.visualPassClaimed = "false";
 
     return canvas;
@@ -785,27 +801,392 @@
     panel.dataset.hearthRuntimeLoadingPanel = "true";
     panel.dataset.hearthFormationPanel = "true";
     panel.dataset.hearthTripleGCoherencePanel = "true";
+    panel.dataset.hearthReceiptPanel = "true";
     panel.style.position = "absolute";
     panel.style.left = "50%";
     panel.style.bottom = "14px";
     panel.style.transform = "translateX(-50%)";
     panel.style.width = "min(92%, 560px)";
-    panel.style.maxHeight = "54%";
+    panel.style.maxHeight = "58%";
     panel.style.overflow = "auto";
     panel.style.padding = "12px 14px";
     panel.style.border = "1px solid rgba(174,216,236,.22)";
     panel.style.borderRadius = "16px";
-    panel.style.background = "linear-gradient(180deg, rgba(5,9,19,.82), rgba(2,5,12,.74))";
+    panel.style.background = "linear-gradient(180deg, rgba(5,9,19,.84), rgba(2,5,12,.76))";
     panel.style.backdropFilter = "blur(10px)";
     panel.style.boxShadow = "0 18px 50px rgba(0,0,0,.36)";
     panel.style.color = "rgba(238,246,255,.90)";
     panel.style.fontFamily = "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
     panel.style.fontSize = "11px";
     panel.style.lineHeight = "1.35";
-    panel.style.pointerEvents = "none";
+    panel.style.pointerEvents = "auto";
     panel.style.zIndex = "4";
 
     return panel;
+  }
+
+  function syncReceiptDataset(api) {
+    if (!api || !api.state) return;
+
+    const state = api.state;
+    const canvas = api.canvas || null;
+    const mode = state.receiptMode || RECEIPT_MODES.COMPACT;
+
+    state.receiptVisible = mode !== RECEIPT_MODES.HIDDEN;
+    state.receiptExpanded = mode === RECEIPT_MODES.EXPANDED;
+
+    if (canvas) {
+      canvas.dataset.hearthReceiptMode = mode;
+      canvas.dataset.hearthReceiptVisible = String(state.receiptVisible);
+      canvas.dataset.hearthReceiptExpanded = String(state.receiptExpanded);
+      canvas.dataset.hearthDiagnosticExportAvailable = String(Boolean(state.diagnosticExportAvailable));
+      canvas.dataset.hearthDiagnosticExportCopied = String(Boolean(state.diagnosticExportCopied));
+      canvas.dataset.hearthDiagnosticExportLength = String(state.diagnosticExportLength || 0);
+      canvas.dataset.hearthDiagnosticExportError = state.diagnosticExportError || "";
+    }
+
+    if (root.document && root.document.documentElement) {
+      root.document.documentElement.dataset.hearthReceiptMode = mode;
+      root.document.documentElement.dataset.hearthReceiptVisible = String(state.receiptVisible);
+      root.document.documentElement.dataset.hearthReceiptExpanded = String(state.receiptExpanded);
+      root.document.documentElement.dataset.hearthDiagnosticExportAvailable = String(Boolean(state.diagnosticExportAvailable));
+      root.document.documentElement.dataset.hearthDiagnosticExportCopied = String(Boolean(state.diagnosticExportCopied));
+      root.document.documentElement.dataset.hearthDiagnosticExportLength = String(state.diagnosticExportLength || 0);
+      root.document.documentElement.dataset.hearthDiagnosticExportError = state.diagnosticExportError || "";
+    }
+  }
+
+  function setReceiptMode(api, mode) {
+    if (!api || !api.state) return null;
+
+    const allowed = Object.values(RECEIPT_MODES);
+    api.state.receiptMode = allowed.includes(mode) ? mode : RECEIPT_MODES.COMPACT;
+    api.state.receiptUserInteracted = true;
+
+    syncReceiptDataset(api);
+    renderLoadingPanel(api.loadingPanel, api.state, api);
+
+    return api.state.receiptMode;
+  }
+
+  function toggleReceiptVisibility(api) {
+    if (!api || !api.state) return null;
+    return setReceiptMode(
+      api,
+      api.state.receiptMode === RECEIPT_MODES.HIDDEN ? RECEIPT_MODES.COMPACT : RECEIPT_MODES.HIDDEN
+    );
+  }
+
+  function toggleReceiptExpansion(api) {
+    if (!api || !api.state) return null;
+    return setReceiptMode(
+      api,
+      api.state.receiptMode === RECEIPT_MODES.EXPANDED ? RECEIPT_MODES.COMPACT : RECEIPT_MODES.EXPANDED
+    );
+  }
+
+  function getCoherenceReceipt(api) {
+    const state = api && api.state ? api.state : {};
+
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      authority: "hearth-canvas-coherence-consumer-receipt",
+      tripleGDiagnosticAvailable: runtimeTableV2Available(),
+      tripleGDiagnosticContract: runtimeTableV2Available() ? LAB_RUNTIME_TABLE_CONTRACT_V2 : "",
+      coherentExpressionChecked: Boolean(state.coherenceChecked),
+      coherentExpressionPass: Boolean(state.coherentExpressionPass),
+      coherenceStatus: state.coherenceStatus || "PENDING",
+      coherenceScore: Number.isFinite(Number(state.coherenceScore)) ? Number(state.coherenceScore) : 0,
+      failedCheckpoints: Array.isArray(state.failedCheckpoints) ? state.failedCheckpoints.slice() : [],
+      renewalTargets: Array.isArray(state.renewalTargets) ? state.renewalTargets.slice() : [],
+      constructionReady: Boolean(state.runtimeAllowed),
+      imageRendered: Boolean(state.imageRendered),
+      constructionReadyIsNotCoherencePass: true,
+      imageRenderedIsNotCoherencePass: true,
+      generatedImage: false,
+      graphicBox: false,
+      visualPassClaimed: false
+    };
+  }
+
+  function buildDiagnosticExport(api) {
+    const state = api && api.state ? api.state : {};
+    const coherenceReport = state.coherenceReport || api.coherenceReport || null;
+    const canvas = api && api.canvas ? api.canvas : null;
+    const records = state.runtimeTableLedger && Array.isArray(state.runtimeTableLedger.records)
+      ? state.runtimeTableLedger.records
+      : [];
+
+    const exportPacket = {
+      header: "HEARTH_DIAGNOSTIC_RECEIPT_EXPORT",
+      timestamp: nowIso(),
+      canvasContract: CONTRACT,
+      canvasReceipt: RECEIPT,
+      previousCanvasContract: PREVIOUS_CONTRACT,
+      labRuntimeTableContract: state.labRuntimeTableContract || (getRuntimeTableApi() && getRuntimeTableApi().contract) || "",
+      preferredLabRuntimeTableContract: LAB_RUNTIME_TABLE_CONTRACT_V2,
+      acceptedLabRuntimeTableContracts: LAB_RUNTIME_TABLE_ACCEPTED_CONTRACTS.slice(),
+      runtimeHandoff: state.runtimeHandoff || "",
+      constructionReady: Boolean(state.runtimeAllowed),
+      imageRendered: Boolean(state.imageRendered),
+      coherentExpressionPass: Boolean(state.coherentExpressionPass),
+      coherenceStatus: state.coherenceStatus || "PENDING",
+      coherenceScore: Number.isFinite(Number(state.coherenceScore)) ? Number(state.coherenceScore) : 0,
+      failedCheckpoints: Array.isArray(state.failedCheckpoints) ? state.failedCheckpoints.slice() : [],
+      warningCheckpoints: coherenceReport && Array.isArray(coherenceReport.warningCheckpoints) ? coherenceReport.warningCheckpoints.slice() : [],
+      renewalTargets: Array.isArray(state.renewalTargets) ? state.renewalTargets.slice() : [],
+      nextStrategy: coherenceReport && Array.isArray(coherenceReport.nextStrategy) ? coherenceReport.nextStrategy.slice() : [],
+      landChannelContract: LAND_CONTRACT,
+      waterChannelContract: WATER_CONTRACT,
+      airChannelContract: AIR_CONTRACT,
+      runtimeTableRecords: records.map((record) => ({
+        key: record.key,
+        name: record.name,
+        status: record.status,
+        rawStatus: record.rawStatus,
+        contractOk: record.contractOk,
+        expectedContract: record.expectedContract,
+        actualContract: record.actualContract,
+        sampleOk: record.sampleOk,
+        coordinatesOk: record.coordinatesOk,
+        issues: Array.isArray(record.issues) ? record.issues : []
+      })),
+      tripleGCheckpointReceipts: coherenceReport && Array.isArray(coherenceReport.checkpoints) ? coherenceReport.checkpoints : [],
+      renderMetadata: {
+        atlasReady: Boolean(state.atlasReady || api.atlasReady),
+        atlasBuilding: Boolean(state.atlasBuilding || api.atlasBuilding),
+        atlasProgress: Number.isFinite(Number(state.atlasProgress)) ? Number(state.atlasProgress) : 0,
+        projectionReady: Boolean(state.atlasReady || api.cachedAtlasProjection),
+        sphereContainment: true,
+        outsideSphereTransparent: true,
+        noRectangularTextureSpill: true,
+        imageRendered: Boolean(state.imageRendered),
+        visualPassClaimed: false
+      },
+      canvasDataset: datasetToObject(canvas),
+      visualPassClaimed: false,
+      strategicSummary: {
+        constructionReady: Boolean(state.runtimeAllowed) ? "pass" : "fail",
+        imageRendered: Boolean(state.imageRendered) ? "pass" : "fail",
+        coherentExpression: Boolean(state.coherentExpressionPass) ? "pass" : (state.coherenceStatus || "pending"),
+        recommendedNextRenewalTarget: Array.isArray(state.renewalTargets) && state.renewalTargets.length ? state.renewalTargets[0] : ""
+      },
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false
+    };
+
+    const lines = [
+      "HEARTH_DIAGNOSTIC_RECEIPT_EXPORT",
+      "",
+      `timestamp=${exportPacket.timestamp}`,
+      `canvasContract=${exportPacket.canvasContract}`,
+      `canvasReceipt=${exportPacket.canvasReceipt}`,
+      `previousCanvasContract=${exportPacket.previousCanvasContract}`,
+      `labRuntimeTableContract=${exportPacket.labRuntimeTableContract}`,
+      `preferredLabRuntimeTableContract=${exportPacket.preferredLabRuntimeTableContract}`,
+      `acceptedLabRuntimeTableContracts=${exportPacket.acceptedLabRuntimeTableContracts.join(",")}`,
+      `runtimeHandoff=${exportPacket.runtimeHandoff}`,
+      `constructionReady=${exportPacket.constructionReady}`,
+      `imageRendered=${exportPacket.imageRendered}`,
+      `coherentExpressionPass=${exportPacket.coherentExpressionPass}`,
+      `coherenceStatus=${exportPacket.coherenceStatus}`,
+      `coherenceScore=${exportPacket.coherenceScore}`,
+      `failedCheckpoints=${exportPacket.failedCheckpoints.join(",")}`,
+      `warningCheckpoints=${exportPacket.warningCheckpoints.join(",")}`,
+      `renewalTargets=${exportPacket.renewalTargets.join(",")}`,
+      `nextStrategy=${exportPacket.nextStrategy.join(" | ")}`,
+      `landChannelContract=${exportPacket.landChannelContract}`,
+      `waterChannelContract=${exportPacket.waterChannelContract}`,
+      `airChannelContract=${exportPacket.airChannelContract}`,
+      `visualPassClaimed=${exportPacket.visualPassClaimed}`,
+      "",
+      "STRATEGIC_SUMMARY",
+      stringifyForReceipt(exportPacket.strategicSummary),
+      "",
+      "RUNTIME_TABLE_RECORDS",
+      stringifyForReceipt(exportPacket.runtimeTableRecords),
+      "",
+      "TRIPLE_G_CHECKPOINT_RECEIPTS",
+      stringifyForReceipt(exportPacket.tripleGCheckpointReceipts),
+      "",
+      "RENDER_METADATA",
+      stringifyForReceipt(exportPacket.renderMetadata),
+      "",
+      "CANVAS_DATASET",
+      stringifyForReceipt(exportPacket.canvasDataset)
+    ];
+
+    const text = lines.join("\n");
+
+    if (api && api.state) {
+      api.state.latestDiagnosticExport = text;
+      api.state.diagnosticExportAvailable = true;
+      api.state.diagnosticExportLength = text.length;
+      api.state.diagnosticExportError = "";
+      syncReceiptDataset(api);
+    }
+
+    return text;
+  }
+
+  function getDiagnosticExport(api) {
+    if (!api || !api.state) return "";
+    return api.state.latestDiagnosticExport || buildDiagnosticExport(api);
+  }
+
+  function copyTextFallback(text) {
+    if (!root.document || typeof root.document.createElement !== "function") {
+      return false;
+    }
+
+    const textarea = root.document.createElement("textarea");
+    textarea.value = text;
+    textarea.setAttribute("readonly", "readonly");
+    textarea.style.position = "fixed";
+    textarea.style.left = "-9999px";
+    textarea.style.top = "0";
+    root.document.body.appendChild(textarea);
+    textarea.select();
+
+    let copied = false;
+
+    try {
+      copied = root.document.execCommand("copy");
+    } catch (_error) {
+      copied = false;
+    }
+
+    if (textarea.parentNode) textarea.parentNode.removeChild(textarea);
+    return copied;
+  }
+
+  async function copyDiagnosticExport(api) {
+    if (!api || !api.state) return false;
+
+    const text = buildDiagnosticExport(api);
+    let copied = false;
+    let errorMessage = "";
+
+    try {
+      if (root.navigator && root.navigator.clipboard && typeof root.navigator.clipboard.writeText === "function") {
+        await root.navigator.clipboard.writeText(text);
+        copied = true;
+      }
+    } catch (error) {
+      errorMessage = error && error.message ? error.message : String(error);
+      copied = false;
+    }
+
+    if (!copied) {
+      copied = copyTextFallback(text);
+    }
+
+    api.state.diagnosticExportCopied = copied;
+    api.state.diagnosticExportError = copied ? "" : (errorMessage || "Copy unavailable. Expanded receipt remains selectable for manual copy.");
+    api.state.diagnosticExportAvailable = true;
+    api.state.diagnosticExportLength = text.length;
+
+    if (!copied) {
+      api.state.receiptMode = RECEIPT_MODES.EXPANDED;
+    }
+
+    syncReceiptDataset(api);
+    renderLoadingPanel(api.loadingPanel, api.state, api);
+
+    return copied;
+  }
+
+  function renderReceiptControls(api) {
+    const state = api && api.state ? api.state : {};
+    const mode = state.receiptMode || RECEIPT_MODES.COMPACT;
+    const visibleLabel = mode === RECEIPT_MODES.HIDDEN ? "Show Receipt" : "Hide Receipt";
+    const expandLabel = mode === RECEIPT_MODES.EXPANDED ? "Collapse Receipt" : "Expand Receipt";
+    const copyLabel = state.diagnosticExportCopied ? "Receipt Copied" : "Copy Diagnostic Receipt";
+
+    const buttonStyle = [
+      "appearance:none",
+      "border:1px solid rgba(174,216,236,.24)",
+      "background:rgba(174,216,236,.08)",
+      "color:rgba(238,246,255,.90)",
+      "border-radius:999px",
+      "padding:5px 8px",
+      "font:inherit",
+      "font-size:10px",
+      "line-height:1",
+      "cursor:pointer",
+      "pointer-events:auto"
+    ].join(";");
+
+    return [
+      "<div data-hearth-receipt-controls=\"true\" style=\"display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 8px 0;pointer-events:auto;\">",
+      `<button type="button" data-hearth-receipt-action="toggle-visibility" style="${buttonStyle}">${escapeHtml(visibleLabel)}</button>`,
+      mode === RECEIPT_MODES.HIDDEN ? "" : `<button type="button" data-hearth-receipt-action="toggle-expanded" style="${buttonStyle}">${escapeHtml(expandLabel)}</button>`,
+      mode === RECEIPT_MODES.HIDDEN ? "" : `<button type="button" data-hearth-receipt-action="copy" style="${buttonStyle}">${escapeHtml(copyLabel)}</button>`,
+      "</div>"
+    ].join("");
+  }
+
+  function renderExpandedReceipt(api) {
+    const exportText = buildDiagnosticExport(api);
+    const state = api && api.state ? api.state : {};
+    const error = state.diagnosticExportError
+      ? `<div style="color:rgba(255,210,180,.92);margin:6px 0;">${escapeHtml(state.diagnosticExportError)}</div>`
+      : "";
+
+    return [
+      error,
+      "<pre data-hearth-expanded-receipt=\"true\" style=\"",
+      "white-space:pre-wrap;",
+      "word-break:break-word;",
+      "max-height:260px;",
+      "overflow:auto;",
+      "margin:8px 0 0 0;",
+      "padding:10px;",
+      "border:1px solid rgba(174,216,236,.16);",
+      "border-radius:12px;",
+      "background:rgba(0,0,0,.28);",
+      "color:rgba(238,246,255,.86);",
+      "font-size:10px;",
+      "line-height:1.35;",
+      "user-select:text;",
+      "pointer-events:auto;",
+      "\">",
+      escapeHtml(exportText),
+      "</pre>"
+    ].join("");
+  }
+
+  function attachReceiptControlHandlers(panel, api) {
+    if (!panel || !api) return;
+
+    panel.querySelectorAll("[data-hearth-receipt-action]").forEach((button) => {
+      button.addEventListener("pointerdown", (event) => {
+        event.stopPropagation();
+      }, { passive: true });
+
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const action = button.dataset.hearthReceiptAction;
+
+        if (action === "toggle-visibility") {
+          toggleReceiptVisibility(api);
+          return;
+        }
+
+        if (action === "toggle-expanded") {
+          toggleReceiptExpansion(api);
+          return;
+        }
+
+        if (action === "copy") {
+          copyDiagnosticExport(api);
+        }
+      });
+    });
   }
 
   function statusBadge(value) {
@@ -858,8 +1239,32 @@
     return lines;
   }
 
-  function renderLoadingPanel(panel, state) {
-    if (!panel) return;
+  function renderLoadingPanel(panel, state, api = null) {
+    if (!panel || !state) return;
+
+    const mode = state.receiptMode || RECEIPT_MODES.COMPACT;
+    syncReceiptDataset(api);
+
+    if (mode === RECEIPT_MODES.HIDDEN) {
+      panel.style.width = "auto";
+      panel.style.maxHeight = "none";
+      panel.style.overflow = "visible";
+      panel.style.padding = "8px 10px";
+      panel.innerHTML = [
+        "<div style=\"display:flex;align-items:center;gap:8px;pointer-events:auto;\">",
+        "<strong style=\"font-size:10px;letter-spacing:.08em;text-transform:uppercase;opacity:.82;\">Receipt</strong>",
+        renderReceiptControls(api),
+        "</div>"
+      ].join("");
+
+      attachReceiptControlHandlers(panel, api);
+      return;
+    }
+
+    panel.style.width = "min(92%, 560px)";
+    panel.style.maxHeight = "58%";
+    panel.style.overflow = "auto";
+    panel.style.padding = "12px 14px";
 
     const stages = state.loadingStages || {};
     const handoff = state.runtimeTableLedger && state.runtimeTableLedger.handoff
@@ -868,8 +1273,8 @@
 
     const runtimeIssues = formatRuntimeTableIssues(state.runtimeTableLedger);
     const coherenceIssues = formatCoherenceIssues(state.coherenceReport);
-
     const issueLines = runtimeIssues.concat(coherenceIssues);
+
     const issueHtml = issueLines.length
       ? `<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(174,216,236,.14);color:rgba(255,210,180,.92);">${issueLines.slice(0, 7).map((line) => `<div>${escapeHtml(line)}</div>`).join("")}</div>`
       : "";
@@ -905,17 +1310,26 @@
       ].join("");
     }).join("");
 
+    const copiedNotice = state.diagnosticExportCopied
+      ? "<div style=\"margin-top:6px;color:rgba(184,236,205,.92);\">Diagnostic receipt copied.</div>"
+      : "";
+
     panel.innerHTML = [
-      "<div style=\"display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:8px;\">",
-      "<strong style=\"font-size:12px;letter-spacing:.08em;text-transform:uppercase;\">Forming Hearth Runtime Table</strong>",
+      "<div style=\"display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:6px;\">",
+      "<strong style=\"font-size:12px;letter-spacing:.08em;text-transform:uppercase;\">Hearth Diagnostic Receipt</strong>",
       `<span style="font-size:10px;opacity:.70;">Atlas ${escapeHtml(formatPercent(state.atlasProgress || 0))} · Coherence ${escapeHtml(String(coherenceScore))}</span>`,
       "</div>",
+      renderReceiptControls(api),
       "<div style=\"height:4px;border-radius:999px;background:rgba(174,216,236,.12);overflow:hidden;margin-bottom:9px;\">",
       `<div style="height:100%;width:${escapeHtml(formatPercent(state.atlasProgress || 0))};background:rgba(174,216,236,.72);border-radius:999px;"></div>`,
       "</div>",
       rowsHtml,
-      issueHtml
+      issueHtml,
+      copiedNotice,
+      mode === RECEIPT_MODES.EXPANDED ? renderExpandedReceipt(api) : ""
     ].join("");
+
+    attachReceiptControlHandlers(panel, api);
   }
 
   function updateLoadingStatus(api, patch = {}) {
@@ -947,7 +1361,8 @@
       if (state.error) api.canvas.dataset.hearthRuntimeTableError = state.error;
     }
 
-    renderLoadingPanel(api.loadingPanel, state);
+    syncReceiptDataset(api);
+    renderLoadingPanel(api.loadingPanel, state, api);
   }
 
   function updateCoherenceStatus(api, report) {
@@ -963,6 +1378,7 @@
     state.coherentExpressionPass = Boolean(report && report.coherentExpressionPass);
     state.failedCheckpoints = report && Array.isArray(report.failedCheckpoints) ? report.failedCheckpoints.slice() : [];
     state.renewalTargets = report && Array.isArray(report.renewalTargets) ? report.renewalTargets.slice() : [];
+    state.diagnosticExportAvailable = Boolean(report);
 
     api.coherenceReport = report || null;
     api.coherenceChecked = state.coherenceChecked;
@@ -982,6 +1398,14 @@
       canvas.dataset.hearthTripleGFailedCheckpoints = state.failedCheckpoints.join(",");
       canvas.dataset.hearthTripleGRenewalTargets = state.renewalTargets.join(",");
       canvas.dataset.visualPassClaimed = "false";
+    }
+
+    if (report) buildDiagnosticExport(api);
+
+    if (state.coherentExpressionPass && !state.receiptUserInteracted) {
+      state.receiptMode = RECEIPT_MODES.HIDDEN;
+    } else if (!state.coherentExpressionPass && state.receiptMode === RECEIPT_MODES.HIDDEN && !state.receiptUserInteracted) {
+      state.receiptMode = RECEIPT_MODES.COMPACT;
     }
 
     updateLoadingStatus(api, {
@@ -1027,7 +1451,6 @@
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, TWO_PI);
     ctx.clip();
-
     ctx.fillStyle = shell;
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
 
@@ -1044,7 +1467,6 @@
     shade.addColorStop(0.44, "rgba(255,255,255,0.00)");
     shade.addColorStop(0.78, "rgba(0,0,0,0.24)");
     shade.addColorStop(1, "rgba(0,0,0,0.52)");
-
     ctx.fillStyle = shade;
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
     ctx.restore();
@@ -1064,6 +1486,7 @@
     canvas.dataset.hearthCanvasFallbackShellPainted = "true";
     canvas.dataset.hearthCanvasNeutralLoadingShell = "true";
     canvas.dataset.hearthCanvasFrames = String(Number(canvas.dataset.hearthCanvasFrames || 0) + 1);
+
     return canvas;
   }
 
@@ -1144,6 +1567,7 @@
     targetCanvas.dataset.hearthCanvasImageRendered = "true";
     targetCanvas.dataset.hearthCanvasFrames = String(Number(targetCanvas.dataset.hearthCanvasFrames || 0) + 1);
     targetCanvas.dataset.visualPassClaimed = "false";
+
     return targetCanvas;
   }
 
@@ -1213,9 +1637,10 @@
       "lab-runtime-table",
       () => {
         const api = getRuntimeTableApi();
+
         return Boolean(
           api &&
-            runtimeTableContractAccepted(api) &&
+            api.contract === LAB_RUNTIME_TABLE_CONTRACT_V2 &&
             typeof api.createHearthChannelTable === "function"
         );
       },
@@ -1229,7 +1654,7 @@
   }
 
   function ensureChannelScripts(options = {}) {
-    const cacheKey = options.channelCacheKey || "hearth-channel-multiplex-v4-2";
+    const cacheKey = options.channelCacheKey || "hearth-channel-multiplex-v4-3";
 
     return Promise.all(CHANNEL_FILES.map((item) => loadScriptOnce(
       item.path,
@@ -1314,6 +1739,7 @@
   function buildCoherenceInput(api) {
     const state = api && api.state ? api.state : {};
     const canvasSample = multiplexSample(SHARED_RUNTIME_TABLE_SAMPLE_POINT);
+    const lab = getRuntimeTableApi();
 
     return {
       runtimeTableLedger: state.runtimeTableLedger || api.runtimeTableLedger || null,
@@ -1335,8 +1761,8 @@
         visualPassClaimed: false
       },
       imageRendered: Boolean(state.imageRendered),
-      goalProfile: runtimeTableV2Available() && getRuntimeTableApi().createGoalProfile
-        ? getRuntimeTableApi().createGoalProfile("hearth-channel-expression", {
+      goalProfile: runtimeTableV2Available(lab) && lab.createGoalProfile
+        ? lab.createGoalProfile("hearth-channel-expression", {
           expectedContracts: {
             canvas: CONTRACT
           }
@@ -1409,31 +1835,6 @@
       updateCoherenceStatus(api, report);
       return report;
     }
-  }
-
-  function getCoherenceReceipt(api) {
-    const state = api && api.state ? api.state : {};
-
-    return {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      authority: "hearth-canvas-coherence-consumer-receipt",
-      tripleGDiagnosticAvailable: runtimeTableV2Available(),
-      tripleGDiagnosticContract: runtimeTableV2Available() ? LAB_RUNTIME_TABLE_CONTRACT_V2 : "",
-      coherentExpressionChecked: Boolean(state.coherenceChecked),
-      coherentExpressionPass: Boolean(state.coherentExpressionPass),
-      coherenceStatus: state.coherenceStatus || "PENDING",
-      coherenceScore: Number.isFinite(Number(state.coherenceScore)) ? Number(state.coherenceScore) : 0,
-      failedCheckpoints: Array.isArray(state.failedCheckpoints) ? state.failedCheckpoints.slice() : [],
-      renewalTargets: Array.isArray(state.renewalTargets) ? state.renewalTargets.slice() : [],
-      constructionReady: Boolean(state.runtimeAllowed),
-      imageRendered: Boolean(state.imageRendered),
-      constructionReadyIsNotCoherencePass: true,
-      imageRenderedIsNotCoherencePass: true,
-      generatedImage: false,
-      graphicBox: false,
-      visualPassClaimed: false
-    };
   }
 
   function createAtlasTextureCanvas(options = {}) {
@@ -1807,6 +2208,7 @@
     frame.dataset.hearthCanvasFrame = "true";
     frame.dataset.hearthRuntimeTablePrewired = "true";
     frame.dataset.hearthTripleGCoherencePrewired = "true";
+    frame.dataset.hearthReceiptExportReady = "true";
     frame.style.position = "relative";
     frame.style.display = "grid";
     frame.style.placeItems = "center";
@@ -1853,6 +2255,15 @@
       failedCheckpoints: [],
       renewalTargets: [],
       imageRendered: false,
+      receiptMode: RECEIPT_MODES.COMPACT,
+      receiptVisible: true,
+      receiptExpanded: false,
+      receiptUserInteracted: false,
+      diagnosticExportAvailable: false,
+      diagnosticExportCopied: false,
+      diagnosticExportError: "",
+      diagnosticExportLength: 0,
+      latestDiagnosticExport: "",
       landChannelLoaded: Boolean(getLandChannel()),
       waterChannelLoaded: Boolean(getWaterChannel()),
       airChannelLoaded: Boolean(getAirChannel()),
@@ -1909,6 +2320,7 @@
       canvasDecidesNothing: true,
       constructionReadyIsNotCoherencePass: true,
       imageRenderedIsNotCoherencePass: true,
+      receiptModes: RECEIPT_MODES,
       contract: CONTRACT,
       receipt: RECEIPT,
       generatedImage: false,
@@ -1958,21 +2370,12 @@
       unbindControls: null
     };
 
-    canvas.dataset.hearthCanvasMountedImmediately = "true";
-    canvas.dataset.hearthCanvasInteractiveShellMounted = "true";
-    canvas.dataset.hearthCanvasAtlasReady = "false";
-    canvas.dataset.hearthCanvasAtlasBuilding = "false";
-    canvas.dataset.hearthCanvasAtlasProgress = "0";
-    canvas.dataset.hearthCanvasSemiconductorOutlet = "true";
-    canvas.dataset.hearthCanvasDecidesNothing = "true";
-    canvas.dataset.hearthRuntimeTablePrewired = "true";
-    canvas.dataset.hearthTripleGCoherencePrewired = "true";
-
-    drawFallbackShell(canvas, state);
-
     api.unbindControls = bindPointerDrag(canvas, api);
     api.controlsBound = true;
     state.controlsBound = true;
+
+    syncReceiptDataset(api);
+    drawFallbackShell(canvas, state);
 
     updateLoadingStatus(api, {
       stages: {
@@ -1992,6 +2395,8 @@
         runtimeTableContract: LAB_RUNTIME_TABLE_CONTRACT,
         runtimeTableAcceptedContracts: LAB_RUNTIME_TABLE_ACCEPTED_CONTRACTS.slice(),
         tripleGCoherencePrewired: true,
+        receiptExportReady: true,
+        receiptMode: state.receiptMode,
         semiconductorOutlet: true,
         canvasDecidesNothing: true,
         channelMultiplexReady: false,
@@ -2008,7 +2413,7 @@
     const startRuntimeTableSequence = () => {
       if (state.destroyed) return;
 
-      ensureRuntimeTable(options).then((runtimeTableResult) => {
+      ensureRuntimeTable(options).then(() => {
         if (state.destroyed) return;
 
         const runtimeApi = getRuntimeTableApi();
@@ -2047,6 +2452,7 @@
         if (!runtimeReady) {
           state.runtimeHandoff = "BLOCKING";
           state.runtimeAllowed = false;
+
           updateLoadingStatus(api, {
             runtimeHandoff: "BLOCKING",
             runtimeAllowed: false,
@@ -2058,6 +2464,7 @@
               coherence: "blocked"
             }
           });
+
           return;
         }
 
@@ -2133,6 +2540,7 @@
               handoff,
               ledger,
               channelLoadResults: channelResults,
+              receiptMode: state.receiptMode,
               semiconductorOutlet: true,
               canvasDecidesNothing: true,
               constructionReadyIsNotCoherencePass: true,
@@ -2188,6 +2596,7 @@
                     atlasProgress: progress,
                     imageRendered: false,
                     coherenceChecked: false,
+                    receiptMode: state.receiptMode,
                     frames: state.frames,
                     contract: CONTRACT,
                     receipt: RECEIPT
@@ -2230,6 +2639,7 @@
                 });
 
                 const coherenceReport = runTripleGDiagnostic(api);
+                buildDiagnosticExport(api);
 
                 if (typeof options.onStatus === "function") {
                   options.onStatus("triple-g-coherence-diagnostic-complete", {
@@ -2246,22 +2656,13 @@
                     coherenceScore: coherenceReport && coherenceReport.coherenceScore,
                     failedCheckpoints: coherenceReport && coherenceReport.failedCheckpoints,
                     renewalTargets: coherenceReport && coherenceReport.renewalTargets,
+                    diagnosticExportAvailable: state.diagnosticExportAvailable,
+                    diagnosticExportLength: state.diagnosticExportLength,
+                    receiptMode: state.receiptMode,
                     contract: CONTRACT,
                     receipt: RECEIPT
                   });
-                }
 
-                if (loadingPanel && state.coherentExpressionPass) {
-                  loadingPanel.style.opacity = "0";
-                  loadingPanel.style.transition = "opacity 420ms ease";
-                  setTimeout(() => {
-                    if (!state.destroyed && loadingPanel.parentNode) {
-                      loadingPanel.parentNode.removeChild(loadingPanel);
-                    }
-                  }, 520);
-                }
-
-                if (typeof options.onStatus === "function") {
                   options.onStatus("runtime-table-handoff-complete", {
                     mounted: true,
                     canvasFound: true,
@@ -2276,6 +2677,8 @@
                     coherentExpressionPass: state.coherentExpressionPass,
                     coherenceStatus: state.coherenceStatus,
                     coherenceScore: state.coherenceScore,
+                    receiptMode: state.receiptMode,
+                    diagnosticExportAvailable: state.diagnosticExportAvailable,
                     frames: state.frames,
                     contract: CONTRACT,
                     receipt: RECEIPT
@@ -2323,6 +2726,7 @@
                     atlasBuilding: false,
                     imageRendered: false,
                     error: error && error.message ? error.message : String(error),
+                    receiptMode: state.receiptMode,
                     frames: state.frames,
                     contract: CONTRACT,
                     receipt: RECEIPT
@@ -2348,10 +2752,10 @@
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
-      authority: "hearth-lab-runtime-table-triple-g-coherence-prewired-canvas",
+      authority: "hearth-triple-g-receipt-visibility-copy-export-canvas",
       status: "active",
       primaryTarget: "/assets/hearth/hearth.canvas.js",
-      role: "Hearth Runtime Table and Triple G diagnostic consumer plus semiconductor outlet",
+      role: "Hearth Runtime Table and Triple G diagnostic consumer with receipt visibility and copy export",
       runtimeTableConsumed: true,
       runtimeTableContract: LAB_RUNTIME_TABLE_CONTRACT,
       preferredLabRuntimeTableContract: LAB_RUNTIME_TABLE_CONTRACT_V2,
@@ -2362,13 +2766,14 @@
       hearthRuntimeTableInstance: true,
       tripleGDiagnosticConsumed: true,
       coherenceDiagnosticAvailable: runtimeTableV2Available(),
+      receiptModes: Object.values(RECEIPT_MODES),
+      receiptVisibilityToggle: true,
+      receiptExpansionToggle: true,
+      diagnosticCopyExport: true,
+      diagnosticExportFormat: "plain-text",
+      diagnosticExportHeader: "HEARTH_DIAGNOSTIC_RECEIPT_EXPORT",
       constructionReadyIsNotCoherencePass: true,
       imageRenderedIsNotCoherencePass: true,
-      coherentExpressionChecked: false,
-      coherentExpressionPass: false,
-      coherenceScore: 0,
-      failedCheckpoints: [],
-      renewalTargets: [],
       canvasDecidesNothing: true,
       semiconductorOutlet: true,
       shellFirstMount: true,
@@ -2392,7 +2797,6 @@
         air: AIR_CONTRACT
       },
       allowedHandoffs: ALLOWED_HANDOFFS.slice(),
-      blockedHandoffs: BLOCKED_HANDOFFS.slice(),
       compositeOrder: [
         "planet-body-shell",
         "land-channel",
@@ -2404,22 +2808,22 @@
         "Runtime Table and Triple G standards belong to Dexter Lab",
         "canvas consumes Runtime Table",
         "canvas consumes Triple G diagnostic",
-        "canvas binds language",
-        "canvas connects current",
-        "canvas maintains flow",
-        "canvas multiplexes channel output",
-        "canvas reports coherence",
+        "canvas displays and exports receipt",
         "canvas decides no channel truth",
         "land and water are body-bound",
         "air is the only floating channel",
-        "final atlas requires Runtime Table allowed handoff",
         "image rendered is not coherent expression pass",
-        "construction ready is not coherent expression pass"
+        "construction ready is not coherent expression pass",
+        "receipt visibility is a UI concern only"
       ],
       owns: [
         "visible-canvas-shell",
         "neutral-loading-shell",
         "instrumented-formation-panel",
+        "receipt-visibility-toggle",
+        "receipt-expanded-view",
+        "diagnostic-export-generation",
+        "diagnostic-copy-action",
         "fallback-shell-drawing",
         "pointer-touch-drag-binding",
         "rotation-state",
@@ -2456,15 +2860,13 @@
         "mount-visible-shell-before-runtime-table-load",
         "bind-controls-before-runtime-table-load",
         "return-api-before-runtime-table-load",
-        "load-lab-runtime-table-as-canonical-equipment",
         "accept-lab-runtime-table-v2",
         "accept-lab-runtime-table-v1-as-fallback",
-        "create-hearth-runtime-table-instance",
         "run-triple-g-diagnostic-after-image-render-when-v2-available",
-        "block-final-atlas-on-rejected-handoff",
-        "block-final-atlas-on-blocking-handoff",
-        "if-atlas-fails-keep-draggable-diagnostic-shell",
-        "if-coherence-fails-report-receipts-and-renewal-targets",
+        "if-coherence-fails-keep-receipt-available",
+        "receipt-may-hide-with-user-toggle",
+        "expanded-receipt-must-be-selectable",
+        "copy-export-must-be-plain-text",
         "no-blank-planet",
         "no-map-portal-freeze",
         "no-raw-rectangle-fallback"
@@ -2530,6 +2932,16 @@
     getCoherenceReceipt,
     getReceipt,
 
+    setReceiptMode,
+    toggleReceiptVisibility,
+    toggleReceiptExpansion,
+    buildDiagnosticExport,
+    copyDiagnosticExport,
+    getDiagnosticExport,
+    renderReceiptControls,
+    renderExpandedReceipt,
+    syncReceiptDataset,
+
     supportsTrueShellFirstMount: true,
     supportsNonBlockingMount: true,
     supportsAsyncRuntimeTableLoad: true,
@@ -2538,6 +2950,10 @@
     supportsLabRuntimeTableV1Fallback: true,
     supportsTripleGCoherenceDiagnosticConsumption: true,
     supportsConstructionReadyImageRenderedCoherentExpressionSplit: true,
+    supportsReceiptVisibilityToggle: true,
+    supportsReceiptExpansionToggle: true,
+    supportsDiagnosticCopyExport: true,
+    supportsPlainTextDiagnosticExport: true,
     supportsAsyncAtlasBuild: true,
     supportsChunkedAtlasBuild: true,
     supportsImmediateFallbackShell: true,
@@ -2545,6 +2961,8 @@
     supportsImmediatePointerDrag: true,
     supportsChannelMultiplex: true,
     supportsSemiconductorOutlet: true,
+
+    receiptModes: RECEIPT_MODES,
 
     runtimeTableConsumed: true,
     runtimeTableContract: LAB_RUNTIME_TABLE_CONTRACT,
@@ -2605,6 +3023,7 @@
   root.HEARTH_CANVAS_CONSUMES_LAB_TRIPLE_G_DIAGNOSTIC = true;
   root.HEARTH_CANVAS_RUNTIME_TABLE_CONTRACT = LAB_RUNTIME_TABLE_CONTRACT;
   root.HEARTH_CANVAS_RUNTIME_TABLE_ACCEPTED_CONTRACTS = LAB_RUNTIME_TABLE_ACCEPTED_CONTRACTS.slice();
+  root.HEARTH_CANVAS_RECEIPT_MODES = RECEIPT_MODES;
 
   if (root.document && root.document.documentElement) {
     root.document.documentElement.dataset.hearthCanvasAuthorityLoaded = "true";
@@ -2632,6 +3051,13 @@
     root.document.documentElement.dataset.hearthTripleGCoherentExpressionPass = "false";
     root.document.documentElement.dataset.constructionReadyIsNotCoherencePass = "true";
     root.document.documentElement.dataset.imageRenderedIsNotCoherencePass = "true";
+    root.document.documentElement.dataset.hearthReceiptMode = RECEIPT_MODES.COMPACT;
+    root.document.documentElement.dataset.hearthReceiptVisible = "true";
+    root.document.documentElement.dataset.hearthReceiptExpanded = "false";
+    root.document.documentElement.dataset.hearthDiagnosticExportAvailable = "false";
+    root.document.documentElement.dataset.hearthDiagnosticExportCopied = "false";
+    root.document.documentElement.dataset.hearthDiagnosticExportLength = "0";
+    root.document.documentElement.dataset.hearthDiagnosticExportError = "";
     root.document.documentElement.dataset.hearthCanvasLandChannelContract = LAND_CONTRACT;
     root.document.documentElement.dataset.hearthCanvasWaterChannelContract = WATER_CONTRACT;
     root.document.documentElement.dataset.hearthCanvasAirChannelContract = AIR_CONTRACT;

@@ -1,14 +1,14 @@
 // /assets/hearth/hearth.water.channel.js
-// HEARTH_WATER_CHILD_SEMICONDUCTOR_MULTIPLEX_ADAPTER_TNT_v1
+// HEARTH_WATER_CHILD_ACTIVE_EXPRESSION_SEMICONDUCTOR_ACTOR_TNT_v1
 // Full-file replacement.
-// Water Child / semiconductor multiplex adapter authority only.
+// Water Child / active child-channel actor / semiconductor multiplex adapter authority only.
 // Purpose:
-// - Serve the missing Hearth Water Child at the deployed asset path.
-// - Export one canonical downstream water channel.
-// - Coordinate existing water-adjacent authorities without mutating them.
-// - Normalize hydrology/materials/composition/elevation/land/air signals into one body-bound water packet.
-// - Prevent synonymous water-language overlap from becoming competing visual output.
-// - Satisfy canvas, Runtime Table, and Triple G child validation.
+// - Express Water as a live Hearth child actor equal to Land and Air.
+// - Export HEARTH_WATER_CHANNEL at the exact actor name the canvas and Runtime Table expect.
+// - Preserve downstream contract HEARTH_WATER_HYDROSPHERE_SURFACE_CHANNEL_TNT_v1.
+// - Provide callable, coordinate-valid, body-bound, surface-bound hydrosphere samples.
+// - Act as a semiconductor/multiplex adapter for existing water-adjacent authorities.
+// - Emit one normalized downstream water packet.
 // Does not own:
 // - route orchestration
 // - canvas composition
@@ -22,16 +22,16 @@
 // - air truth
 // - runtime motion
 // - controls
-// - final visual pass claim
+// - visual pass
 
 (() => {
   "use strict";
 
   const CONTRACT = "HEARTH_WATER_HYDROSPHERE_SURFACE_CHANNEL_TNT_v1";
   const RECEIPT = "HEARTH_WATER_HYDROSPHERE_SURFACE_CHANNEL_RECEIPT_v1";
-  const BUILD_CONTRACT = "HEARTH_WATER_CHILD_SEMICONDUCTOR_MULTIPLEX_ADAPTER_TNT_v1";
-  const PREVIOUS_BUILD_CONTRACT = "HEARTH_DEPLOYED_ROUTE_ALIGNED_WATER_CHILD_TNT_v1";
-  const VERSION = "2026-05-29.hearth-water-child-semiconductor-multiplex-adapter-v1";
+  const BUILD_CONTRACT = "HEARTH_WATER_CHILD_ACTIVE_EXPRESSION_SEMICONDUCTOR_ACTOR_TNT_v1";
+  const PREVIOUS_BUILD_CONTRACT = "HEARTH_WATER_CHILD_SEMICONDUCTOR_MULTIPLEX_ADAPTER_TNT_v1";
+  const VERSION = "2026-05-29.hearth-water-child-active-expression-semiconductor-actor-v1";
 
   const ROUTE_PARENT = "/showroom/globe/hearth/";
   const ROUTE_CONDUCTOR = "/showroom/globe/hearth/hearth.climate.route.js";
@@ -46,16 +46,8 @@
   const LAND_CHANNEL_AUTHORITY = "/assets/hearth/hearth.land.channel.js";
   const AIR_CHANNEL_AUTHORITY = "/assets/hearth/hearth.air.channel.js";
 
-  const HYDROLOGY_EXPECTED_CONTRACT = "HEARTH_SEA_LEVEL_WATERLINE_BEACH_BOUNDARY_HYDROLOGY_TNT_v1";
-  const MATERIALS_EXPECTED_CONTRACT = "HEARTH_SUBMERGED_PORT_BASIN_WATERLINE_MATERIALS_TNT_v1";
-  const COMPOSITION_EXPECTED_CONTRACT = "HEARTH_TECTONICS_SEATED_COMPOSITION_COORDINATION_TNT_v2";
-  const ELEVATION_EXPECTED_CONTRACT = "HEARTH_TECTONICS_SEATED_ELEVATION_RESOLVER_TNT_v2";
-  const LAND_EXPECTED_CONTRACT = "HEARTH_LAND_SURFACE_ATTACHMENT_CHANNEL_TNT_v1";
-  const AIR_EXPECTED_CONTRACT = "HEARTH_AIR_PRESSURE_HUMIDITY_CHANNEL_TNT_v1";
-
   const root = typeof window !== "undefined" ? window : globalThis;
   const DEG = Math.PI / 180;
-  const TWO_PI = Math.PI * 2;
 
   const COLORS = Object.freeze({
     deepOcean: [4, 14, 44],
@@ -157,7 +149,9 @@
     return 90 - clamp(Number(v), 0, 1) * 180;
   }
 
-  function parseInput(...args) {
+  function parseInput() {
+    const args = Array.prototype.slice.call(arguments);
+
     if (args.length === 1 && args[0] && typeof args[0] === "object") {
       const p = args[0];
 
@@ -226,48 +220,48 @@
   function getDirectory() {
     return {
       contract: CONTRACT,
+      receipt: RECEIPT,
       buildContract: BUILD_CONTRACT,
-      version: VERSION,
       route: {
         routeParent: ROUTE_PARENT,
         routeConductor: ROUTE_CONDUCTOR,
+        routeAligned: true,
         role: "context-only"
       },
       self: {
         assetAuthority: ASSET_AUTHORITY,
-        role: "normalized-water-output-authority",
+        actorName: "HEARTH_WATER_CHANNEL",
+        role: "active-water-child-channel-actor",
         downstreamContract: CONTRACT
+      },
+      peers: {
+        land: {
+          actor: "HEARTH_LAND_CHANNEL",
+          authority: LAND_CHANNEL_AUTHORITY,
+          role: "peer-child-actor"
+        },
+        air: {
+          actor: "HEARTH_AIR_CHANNEL",
+          authority: AIR_CHANNEL_AUTHORITY,
+          role: "peer-child-actor"
+        }
       },
       upstream: {
         hydrology: {
           authority: HYDROLOGY_AUTHORITY,
-          expectedContract: HYDROLOGY_EXPECTED_CONTRACT,
           role: "where-water-belongs"
         },
         materials: {
           authority: MATERIALS_AUTHORITY,
-          expectedContract: MATERIALS_EXPECTED_CONTRACT,
           role: "water-adjacent-material-hints"
         },
         composition: {
           authority: COMPOSITION_AUTHORITY,
-          expectedContract: COMPOSITION_EXPECTED_CONTRACT,
           role: "surface-class-context"
         },
         elevation: {
           authority: ELEVATION_AUTHORITY,
-          expectedContract: ELEVATION_EXPECTED_CONTRACT,
           role: "sea-level-and-depth-context"
-        },
-        land: {
-          authority: LAND_CHANNEL_AUTHORITY,
-          expectedContract: LAND_EXPECTED_CONTRACT,
-          role: "land-conflict-boundary"
-        },
-        air: {
-          authority: AIR_CHANNEL_AUTHORITY,
-          expectedContract: AIR_EXPECTED_CONTRACT,
-          role: "air-conflict-boundary"
         }
       },
       downstream: {
@@ -284,69 +278,52 @@
           role: "coherence-diagnostic"
         }
       },
-      rule: "upstream-files-provide-signals-water-child-emits-one-normalized-water-packet"
+      rule: "water-child-is-the-active-actor-and-single-water-output-channel"
     };
   }
 
   function getAuthorityByNames(names) {
     for (const name of names) {
-      const value = name.split(".").reduce((node, key) => {
-        if (!node || typeof node !== "object") return null;
-        return node[key] || null;
-      }, root);
+      const parts = name.split(".");
+      let node = root;
 
-      if (value && typeof value === "object") return value;
+      for (const part of parts) {
+        if (!node || typeof node !== "object") {
+          node = null;
+          break;
+        }
+
+        node = node[part] || null;
+      }
+
+      if (node && typeof node === "object") return node;
     }
 
     return null;
   }
 
   function getHydrologyAuthority() {
-    return getAuthorityByNames([
-      "HEARTH.hydrology",
-      "HEARTH_HYDROLOGY",
-      "HearthHydrology"
-    ]);
+    return getAuthorityByNames(["HEARTH.hydrology", "HEARTH_HYDROLOGY", "HearthHydrology"]);
   }
 
   function getMaterialsAuthority() {
-    return getAuthorityByNames([
-      "HEARTH.materials",
-      "HEARTH_MATERIALS",
-      "HearthMaterials"
-    ]);
+    return getAuthorityByNames(["HEARTH.materials", "HEARTH_MATERIALS", "HearthMaterials"]);
   }
 
   function getCompositionAuthority() {
-    return getAuthorityByNames([
-      "HEARTH.composition",
-      "HEARTH_COMPOSITION",
-      "HearthComposition"
-    ]);
+    return getAuthorityByNames(["HEARTH.composition", "HEARTH_COMPOSITION", "HearthComposition"]);
   }
 
   function getElevationAuthority() {
-    return getAuthorityByNames([
-      "HEARTH.elevation",
-      "HEARTH_ELEVATION",
-      "HearthElevation"
-    ]);
+    return getAuthorityByNames(["HEARTH.elevation", "HEARTH_ELEVATION", "HearthElevation"]);
   }
 
   function getLandAuthority() {
-    return getAuthorityByNames([
-      "HEARTH.landChannel",
-      "HEARTH_LAND_CHANNEL",
-      "HearthLandChannel"
-    ]);
+    return getAuthorityByNames(["HEARTH.landChannel", "HEARTH_LAND_CHANNEL", "HearthLandChannel"]);
   }
 
   function getAirAuthority() {
-    return getAuthorityByNames([
-      "HEARTH.airChannel",
-      "HEARTH_AIR_CHANNEL",
-      "HearthAirChannel"
-    ]);
+    return getAuthorityByNames(["HEARTH.airChannel", "HEARTH_AIR_CHANNEL", "HearthAirChannel"]);
   }
 
   function callAuthority(authority, input) {
@@ -355,6 +332,7 @@
         present: false,
         sampleOk: false,
         contract: "",
+        method: "",
         value: null,
         error: "authority-missing"
       };
@@ -381,13 +359,14 @@
 
       try {
         const value = authority[method].call(authority, input);
+
         if (value && typeof value === "object") {
           return {
             present: true,
             sampleOk: true,
             contract: String(authority.contract || value.contract || ""),
-            value,
             method,
+            value,
             error: ""
           };
         }
@@ -396,8 +375,8 @@
           present: true,
           sampleOk: false,
           contract: String(authority.contract || ""),
-          value: null,
           method,
+          value: null,
           error: error && error.message ? error.message : String(error)
         };
       }
@@ -407,24 +386,25 @@
       present: true,
       sampleOk: false,
       contract: String(authority.contract || ""),
-      value: null,
       method: "",
+      value: null,
       error: "no-readable-method"
     };
   }
 
-  function numericField(source, keys, fallback = 0) {
+  function numericField(source, keys, fallback) {
     for (const key of keys) {
       const value = source && source[key];
 
       if (typeof value === "boolean") return value ? 1 : 0;
 
       if (Number.isFinite(Number(value))) {
-        return Number(value);
+        return clamp01(Number(value));
       }
 
       if (typeof value === "string") {
         const lower = value.toLowerCase();
+
         if (
           lower.includes("ocean") ||
           lower.includes("water") ||
@@ -432,7 +412,8 @@
           lower.includes("shelf") ||
           lower.includes("beach") ||
           lower.includes("submerged") ||
-          lower.includes("basin")
+          lower.includes("basin") ||
+          lower.includes("wet")
         ) {
           return 1;
         }
@@ -442,17 +423,26 @@
     return fallback;
   }
 
-  function booleanField(source, keys, fallback = false) {
+  function booleanField(source, keys, fallback) {
     for (const key of keys) {
       const value = source && source[key];
 
       if (typeof value === "boolean") return value;
-
       if (Number.isFinite(Number(value))) return Number(value) > 0.5;
 
       if (typeof value === "string") {
         const lower = value.toLowerCase();
-        if (["true", "yes", "water", "ocean", "shelf", "shore", "beach", "submerged"].some((token) => lower.includes(token))) {
+
+        if (
+          lower.includes("true") ||
+          lower.includes("yes") ||
+          lower.includes("water") ||
+          lower.includes("ocean") ||
+          lower.includes("shore") ||
+          lower.includes("shelf") ||
+          lower.includes("beach") ||
+          lower.includes("submerged")
+        ) {
           return true;
         }
       }
@@ -523,14 +513,12 @@
     const basin = numericField(value, ["basin", "basinDepth", "submergedPortBasin", "depthBasin"], 0);
     const submerged = numericField(value, ["submergedBlock", "submergedScar", "submerged", "belowSeaLevel"], 0);
 
-    const score = clamp01(seaLevel * 0.24 + shore * 0.18 + shelf * 0.18 + basin * 0.22 + submerged * 0.18);
-
     return {
       source: "hydrology",
       present: read.present,
       sampleOk: read.sampleOk,
       contract: read.contract,
-      signal: score,
+      signal: clamp01(seaLevel * 0.24 + shore * 0.18 + shelf * 0.18 + basin * 0.22 + submerged * 0.18),
       seaLevel,
       shore,
       shelf,
@@ -549,14 +537,12 @@
     const coastalScar = numericField(value, ["coastalScar", "submergedScar", "scarMaterial"], 0);
     const materialWater = numericField(value, ["water", "waterMaterial", "oceanMaterial", "hydrologyMaterial"], 0);
 
-    const score = clamp01(wetStone * 0.16 + beachShelf * 0.18 + submergedPortBasin * 0.24 + coastalScar * 0.16 + materialWater * 0.26);
-
     return {
       source: "materials",
       present: read.present,
       sampleOk: read.sampleOk,
       contract: read.contract,
-      signal: score,
+      signal: clamp01(wetStone * 0.16 + beachShelf * 0.18 + submergedPortBasin * 0.24 + coastalScar * 0.16 + materialWater * 0.26),
       wetStone,
       beachShelf,
       submergedPortBasin,
@@ -568,23 +554,20 @@
 
   function adaptComposition(read) {
     const value = read.value || {};
+    const text = String(value.terrainClass || value.className || value.kind || "").toLowerCase();
 
     const openOcean = numericField(value, ["openOcean", "ocean", "oceanic", "waterClass", "isWater"], 0);
     const coastalBoundary = numericField(value, ["coastalBoundary", "coast", "shore", "shoreline"], 0);
     const basinClass = numericField(value, ["basin", "basinClass", "depression", "lowland"], 0);
     const terrainWater = numericField(value, ["terrainWater", "waterPresence", "hydrologyPresence"], 0);
-
-    const terrainClassText = String(value.terrainClass || value.className || value.kind || "").toLowerCase();
-    const textWater = terrainClassText.includes("ocean") || terrainClassText.includes("water") || terrainClassText.includes("shore") || terrainClassText.includes("basin") ? 1 : 0;
-
-    const score = clamp01(openOcean * 0.30 + coastalBoundary * 0.22 + basinClass * 0.20 + terrainWater * 0.18 + textWater * 0.10);
+    const textWater = text.includes("ocean") || text.includes("water") || text.includes("shore") || text.includes("basin") ? 1 : 0;
 
     return {
       source: "composition",
       present: read.present,
       sampleOk: read.sampleOk,
       contract: read.contract,
-      signal: score,
+      signal: clamp01(openOcean * 0.30 + coastalBoundary * 0.22 + basinClass * 0.20 + terrainWater * 0.18 + textWater * 0.10),
       openOcean,
       coastalBoundary,
       basinClass,
@@ -596,25 +579,33 @@
 
   function adaptElevation(read) {
     const value = read.value || {};
+    const elevation = Number(value.elevation);
+    const height = Number(value.height);
+    const altitude = Number(value.altitude);
+
+    let elevationSignal = 0;
+    const rawElevation = Number.isFinite(elevation)
+      ? elevation
+      : Number.isFinite(height)
+        ? height
+        : Number.isFinite(altitude)
+          ? altitude
+          : NaN;
+
+    if (Number.isFinite(rawElevation)) {
+      elevationSignal = rawElevation < 0 ? clamp01(Math.abs(rawElevation)) : clamp01(1 - rawElevation);
+    }
 
     const belowSeaLevel = numericField(value, ["belowSeaLevel", "submerged", "underSeaLevel"], 0);
     const nearSeaLevel = numericField(value, ["nearSeaLevel", "seaLevelBand", "waterlineBand"], 0);
     const depth = numericField(value, ["depth", "waterDepth", "basinDepth", "negativeElevation"], 0);
-    const elevation = Number(value.elevation ?? value.height ?? value.altitude);
-
-    let elevationSignal = 0;
-    if (Number.isFinite(elevation)) {
-      elevationSignal = elevation < 0 ? clamp01(Math.abs(elevation)) : clamp01(1 - elevation);
-    }
-
-    const score = clamp01(belowSeaLevel * 0.34 + nearSeaLevel * 0.18 + depth * 0.28 + elevationSignal * 0.20);
 
     return {
       source: "elevation",
       present: read.present,
       sampleOk: read.sampleOk,
       contract: read.contract,
-      signal: score,
+      signal: clamp01(belowSeaLevel * 0.34 + nearSeaLevel * 0.18 + depth * 0.28 + elevationSignal * 0.20),
       belowSeaLevel,
       nearSeaLevel,
       depth,
@@ -625,17 +616,15 @@
 
   function adaptLandConflict(read) {
     const value = read.value || {};
-
     const landAlpha = numericField(value, ["landAlpha", "landPresence", "alpha"], 0);
     const bodyBinding = numericField(value, ["bodyBinding", "surfaceAttachment", "landBodyScore"], 0);
-    const landConflict = clamp01(landAlpha * 0.70 + bodyBinding * landAlpha * 0.30);
 
     return {
       source: "land",
       present: read.present,
       sampleOk: read.sampleOk,
       contract: read.contract,
-      signal: landConflict,
+      signal: clamp01(landAlpha * 0.70 + bodyBinding * landAlpha * 0.30),
       landAlpha,
       bodyBinding,
       mayDefineWater: booleanField(value, ["mayDefineWater", "definesWaterTruth"], false),
@@ -645,18 +634,16 @@
 
   function adaptAirConflict(read) {
     const value = read.value || {};
-
     const airAlpha = numericField(value, ["airAlpha", "airPresence", "alpha"], 0);
     const humidity = numericField(value, ["humidity", "humiditySignal", "moisture"], 0);
     const rimHaze = numericField(value, ["rimHaze", "limbAtmosphere", "haze"], 0);
-    const airConflict = clamp01(airAlpha * 0.48 + humidity * 0.30 + rimHaze * 0.22);
 
     return {
       source: "air",
       present: read.present,
       sampleOk: read.sampleOk,
       contract: read.contract,
-      signal: airConflict,
+      signal: clamp01(airAlpha * 0.48 + humidity * 0.30 + rimHaze * 0.22),
       airAlpha,
       humidity,
       rimHaze,
@@ -683,8 +670,7 @@
     const land = adaptLandConflict(callAuthority(getLandAuthority(), input));
     const air = adaptAirConflict(callAuthority(getAirAuthority(), input));
 
-    const presentCount = [hydrology, materials, composition, elevation, land, air].filter((entry) => entry.present).length;
-    const sampleOkCount = [hydrology, materials, composition, elevation, land, air].filter((entry) => entry.sampleOk).length;
+    const entries = [hydrology, materials, composition, elevation, land, air];
 
     return {
       hydrology,
@@ -693,9 +679,9 @@
       elevation,
       land,
       air,
-      presentCount,
-      sampleOkCount,
-      fallbackMathUsed: sampleOkCount === 0
+      presentCount: entries.filter((entry) => entry.present).length,
+      sampleOkCount: entries.filter((entry) => entry.sampleOk).length,
+      fallbackMathUsed: entries.filter((entry) => entry.sampleOk).length === 0
     };
   }
 
@@ -724,19 +710,35 @@
     const airRejection = clamp01(airConflictSignal * 0.24);
 
     const rawWater = clamp01(baseWater * fallbackWeight + upstreamWater * upstreamWeight);
+    const normalizedWater = clamp01(rawWater * (1 - landRejection * 0.45) * (1 - airRejection * 0.20));
+
     const waterSeatEvidence = clamp01(
       elevationSignal * 0.28 +
-      hydrologySignal * 0.30 +
-      compositionSignal * 0.18 +
-      baseWater * 0.24
+        hydrologySignal * 0.30 +
+        compositionSignal * 0.18 +
+        baseWater * 0.24
     );
 
-    const normalizedWater = clamp01(rawWater * (1 - landRejection * 0.45) * (1 - airRejection * 0.20));
-    const shelf = clamp01(baseShelf * 0.60 + upstream.hydrology.shelf * 0.18 + upstream.materials.beachShelf * 0.12 + upstream.composition.coastalBoundary * 0.10);
-    const shoreline = clamp01(baseShoreline * 0.58 + upstream.hydrology.shore * 0.20 + upstream.hydrology.seaLevel * 0.12 + upstream.materials.wetStone * 0.10);
-    const basin = clamp01(baseWater * 0.34 + upstream.hydrology.basin * 0.24 + upstream.elevation.depth * 0.24 + upstream.materials.submergedPortBasin * 0.18);
+    const shelf = clamp01(
+      baseShelf * 0.60 +
+        upstream.hydrology.shelf * 0.18 +
+        upstream.materials.beachShelf * 0.12 +
+        upstream.composition.coastalBoundary * 0.10
+    );
 
-    let dominantWaterCause = "fallback-coordinate-waterfield";
+    const shoreline = clamp01(
+      baseShoreline * 0.58 +
+        upstream.hydrology.shore * 0.20 +
+        upstream.hydrology.seaLevel * 0.12 +
+        upstream.materials.wetStone * 0.10
+    );
+
+    const basin = clamp01(
+      baseWater * 0.34 +
+        upstream.hydrology.basin * 0.24 +
+        upstream.elevation.depth * 0.24 +
+        upstream.materials.submergedPortBasin * 0.18
+    );
 
     const causes = [
       ["hydrology", hydrologySignal],
@@ -745,10 +747,6 @@
       ["elevation", elevationSignal],
       ["fallback", baseWater]
     ].sort((a, b) => b[1] - a[1]);
-
-    if (causes[0] && causes[0][1] > 0.05) {
-      dominantWaterCause = `${causes[0][0]}-signal`;
-    }
 
     return {
       baseWater,
@@ -767,16 +765,16 @@
       basin,
       multiplexScore: clamp01(
         normalizedWater * 0.34 +
-        waterSeatEvidence * 0.24 +
-        shelf * 0.12 +
-        shoreline * 0.10 +
-        basin * 0.16 +
-        upstream.sampleOkCount * 0.02
+          waterSeatEvidence * 0.24 +
+          shelf * 0.12 +
+          shoreline * 0.10 +
+          basin * 0.16 +
+          upstream.sampleOkCount * 0.02
       ),
       multiplexSourceCount: upstream.sampleOkCount,
       multiplexReady: true,
       fallbackMathUsed: upstream.fallbackMathUsed,
-      dominantWaterCause
+      dominantWaterCause: causes[0] && causes[0][1] > 0.05 ? `${causes[0][0]}-signal` : "fallback-coordinate-waterfield"
     };
   }
 
@@ -853,8 +851,7 @@
       : 0.46;
 
     let rgb = waterColor(waterDepthClass, waterAlpha, multiplex.shelf, multiplex.shoreline, multiplex.basin);
-    const bodyShade = clamp01(0.72 + coords.z * 0.12 + hydrosphereBinding * 0.10);
-    rgb = scaleColor(rgb, bodyShade);
+    rgb = scaleColor(rgb, clamp01(0.72 + coords.z * 0.12 + hydrosphereBinding * 0.10));
 
     return {
       contract: CONTRACT,
@@ -862,7 +859,7 @@
       buildContract: BUILD_CONTRACT,
       previousBuildContract: PREVIOUS_BUILD_CONTRACT,
       version: VERSION,
-      authority: "hearth-water-child-semiconductor-multiplex-adapter",
+      authority: "hearth-water-child-active-expression-semiconductor-actor",
 
       routeParent: ROUTE_PARENT,
       routeAligned: true,
@@ -912,7 +909,7 @@
       airConflictSignal: multiplex.airConflictSignal,
       multiplexScore: multiplex.multiplexScore,
       multiplexSourceCount: multiplex.multiplexSourceCount,
-      multiplexReady: multiplex.multiplexReady,
+      multiplexReady: true,
       fallbackMathUsed: multiplex.fallbackMathUsed,
       dominantWaterCause: multiplex.dominantWaterCause,
 
@@ -947,6 +944,7 @@
       surfaceNormalLock: true,
       coordinateLock: true,
       coordinateMapReady: true,
+      activeChildActor: true,
       semiconductorAdapter: true,
       singleOutputChannel: true,
 
@@ -961,61 +959,39 @@
     };
   }
 
-  function sample(...args) {
-    return buildWaterSample(parseInput(...args));
+  function sample() {
+    return buildWaterSample(parseInput.apply(null, arguments));
   }
 
-  function read(...args) {
-    return sample(...args);
+  function read() {
+    return sample.apply(null, arguments);
   }
 
-  function sampleWater(...args) {
-    return sample(...args);
+  function sampleWater() {
+    return sample.apply(null, arguments);
   }
 
-  function readWater(...args) {
-    return sample(...args);
+  function readWater() {
+    return sample.apply(null, arguments);
   }
 
-  function waterAt(...args) {
-    return sample(...args);
+  function waterAt() {
+    return sample.apply(null, arguments);
   }
 
-  function getWater(...args) {
-    return sample(...args);
+  function getWater() {
+    return sample.apply(null, arguments);
   }
 
-  function resolveWater(...args) {
-    return sample(...args);
+  function resolveWater() {
+    return sample.apply(null, arguments);
   }
 
   function getMultiplexReceipt(input) {
-    try {
-      const packet = sample(input || { u: 0.5, v: 0.5 });
+    let packet;
 
-      return {
-        contract: CONTRACT,
-        receipt: RECEIPT,
-        buildContract: BUILD_CONTRACT,
-        routeParent: ROUTE_PARENT,
-        assetAuthority: ASSET_AUTHORITY,
-        multiplexReady: packet.multiplexReady,
-        multiplexScore: packet.multiplexScore,
-        multiplexSourceCount: packet.multiplexSourceCount,
-        fallbackMathUsed: packet.fallbackMathUsed,
-        dominantWaterCause: packet.dominantWaterCause,
-        hydrologySignal: packet.hydrologySignal,
-        materialsSignal: packet.materialsSignal,
-        compositionSignal: packet.compositionSignal,
-        elevationSignal: packet.elevationSignal,
-        landConflictSignal: packet.landConflictSignal,
-        airConflictSignal: packet.airConflictSignal,
-        bodyBound: packet.bodyBound,
-        surfaceBound: packet.surfaceBound,
-        allowedToFloat: packet.allowedToFloat,
-        singleOutputChannel: true,
-        visualPassClaimed: false
-      };
+    try {
+      packet = sample(input || { u: 0.5, v: 0.5 });
     } catch (error) {
       return {
         contract: CONTRACT,
@@ -1026,114 +1002,66 @@
         visualPassClaimed: false
       };
     }
+
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      buildContract: BUILD_CONTRACT,
+      activeChildActor: true,
+      routeParent: ROUTE_PARENT,
+      assetAuthority: ASSET_AUTHORITY,
+      multiplexReady: packet.multiplexReady,
+      multiplexScore: packet.multiplexScore,
+      multiplexSourceCount: packet.multiplexSourceCount,
+      fallbackMathUsed: packet.fallbackMathUsed,
+      dominantWaterCause: packet.dominantWaterCause,
+      hydrologySignal: packet.hydrologySignal,
+      materialsSignal: packet.materialsSignal,
+      compositionSignal: packet.compositionSignal,
+      elevationSignal: packet.elevationSignal,
+      landConflictSignal: packet.landConflictSignal,
+      airConflictSignal: packet.airConflictSignal,
+      bodyBound: packet.bodyBound,
+      surfaceBound: packet.surfaceBound,
+      allowedToFloat: packet.allowedToFloat,
+      singleOutputChannel: true,
+      visualPassClaimed: false
+    };
   }
 
   function getCoordinateMap() {
     return {
       contract: CONTRACT,
+      receipt: RECEIPT,
       buildContract: BUILD_CONTRACT,
       chronologicalOrder: [
-        "served-file",
-        "global-export",
-        "internal-directory",
-        "input-acceptance",
-        "shared-body-math",
-        "upstream-soft-read",
-        "signal-classification",
-        "semiconductor-gate",
-        "multiplex-normalization",
-        "normalized-water-packet",
-        "dataset-receipt",
-        "runtime-table-validation",
-        "triple-g-receipt",
-        "calibration-handoff"
+        "E0_asset_expression",
+        "E1_script_load",
+        "E2_global_actor",
+        "E3_contract_identity",
+        "E4_callable_api",
+        "E5_input_acceptance",
+        "E6_shared_coordinate_body",
+        "E7_body_bound_authority",
+        "E8_semiconductor_multiplex_role",
+        "E9_normalized_water_packet",
+        "E10_dataset_receipt",
+        "E11_runtime_table_recognition",
+        "E12_triple_g_receipt_verification",
+        "E13_calibration_handoff"
       ],
-      coordinates: [
-        {
-          id: "E0_SERVED_FILE",
-          path: ASSET_AUTHORITY,
-          request: "/assets/hearth/hearth.water.channel.js?v=hearth-water-channel-load-export-v1",
-          acceptance: "waterScriptLoaded=true"
-        },
-        {
-          id: "E1_GLOBAL_EXPORT",
-          globals: ["HEARTH_WATER_CHANNEL", "HearthWaterChannel", "HEARTH.waterChannel"],
-          acceptance: "waterGlobalPresent=true"
-        },
-        {
-          id: "E2_INTERNAL_DIRECTORY",
-          directory: getDirectory(),
-          acceptance: "hearthWaterDirectoryReady=true"
-        },
-        {
-          id: "E3_INPUT_ACCEPTANCE",
-          acceptedInputs: ["{u,v}", "{lon,lat}", "{longitude,latitude}", "{x,y,z}", "x,y,z", "lon,lat"],
-          probe: { u: 0.5, v: 0.5, x: 0, y: 0, z: 1 },
-          acceptance: "waterSampleProbeOk=true"
-        },
-        {
-          id: "E4_SHARED_BODY_MATH",
-          laws: ["x²+y²+z²≈1", "u=wrap((lon+180)/360)", "v=clamp((90-lat)/180)"],
-          acceptance: "waterSampleProbeCoordinatesOk=true"
-        },
-        {
-          id: "E5_UPSTREAM_SOFT_READ",
-          authorities: ["hydrology", "materials", "composition", "elevation", "land", "air"],
-          failureMode: "fail-soft",
-          acceptance: "missing-upstream-does-not-break-sample"
-        },
-        {
-          id: "E6_SIGNAL_CLASSIFICATION",
-          signals: ["hydrologySignal", "materialsSignal", "compositionSignal", "elevationSignal", "landConflictSignal", "airConflictSignal"],
-          acceptance: "signals-classified-before-expression"
-        },
-        {
-          id: "E7_SEMICONDUCTOR_GATE",
-          rejectionLaws: [
-            "materialWetnessIsNotHydrosphere",
-            "airHumidityIsNotWaterBody",
-            "hydrologyHintIsNotFinalColor",
-            "landBoundaryIsNotWaterBody"
-          ],
-          acceptance: "overlap-rejected"
-        },
-        {
-          id: "E8_MULTIPLEX_NORMALIZATION",
-          output: "one-normalized-water-packet",
-          acceptance: "singleOutputChannel=true"
-        },
-        {
-          id: "E9_NORMALIZED_PACKET",
-          requiredFlags: {
-            channel: "water",
-            isWaterChannel: true,
-            bodyBound: true,
-            surfaceBound: true,
-            allowedToFloat: false
-          },
-          acceptance: "waterSampleProbeFlagsOk=true"
-        },
-        {
-          id: "E10_DATASET_RECEIPT",
-          acceptance: "document-root-water-child-receipt-present"
-        },
-        {
-          id: "E11_RUNTIME_TABLE_VALIDATION",
-          acceptance: "water.status=READY"
-        },
-        {
-          id: "E12_TRIPLE_G_RECEIPT",
-          acceptance: "RECEIPT_VERIFICATION_CHECK=PASS"
-        },
-        {
-          id: "E13_CALIBRATION_HANDOFF",
-          order: [
-            "WATER_SURFACE_SEATING_CHECK",
-            "CHANNEL_SEPARATION_CHECK",
-            "LAND_BODY_BINDING_CHECK",
-            "DISTRIBUTION_SHAPE_CHECK"
-          ]
-        }
+      currentActor: "HEARTH_WATER_CHANNEL",
+      targetPath: ASSET_AUTHORITY,
+      expectedRequest: "/assets/hearth/hearth.water.channel.js?v=hearth-water-channel-load-export-v1",
+      expectedReceiptSequence: [
+        "waterScriptLoaded=true",
+        "waterGlobalPresent=true",
+        "waterActualContract=HEARTH_WATER_HYDROSPHERE_SURFACE_CHANNEL_TNT_v1",
+        "waterSampleProbeOk=true",
+        "waterSampleProbeCoordinatesOk=true",
+        "waterSampleProbeFlagsOk=true",
+        "water.status=READY",
+        "RECEIPT_VERIFICATION_CHECK=PASS"
       ]
     };
   }
@@ -1145,10 +1073,10 @@
       buildContract: BUILD_CONTRACT,
       previousBuildContract: PREVIOUS_BUILD_CONTRACT,
       version: VERSION,
-      authority: "hearth-water-child-semiconductor-multiplex-adapter",
+      authority: "hearth-water-child-active-expression-semiconductor-actor",
       primaryTarget: ASSET_AUTHORITY,
       status: "active",
-      role: "Water Child / semiconductor multiplex adapter / normalized hydrosphere output",
+      role: "Water Child / active child-channel actor / semiconductor multiplex adapter",
 
       routeParent: ROUTE_PARENT,
       routeAligned: true,
@@ -1157,6 +1085,9 @@
       expectedCanvasConsumer: CANVAS_AUTHORITY,
       expectedRuntimeValidator: RUNTIME_VALIDATOR,
 
+      actorName: "HEARTH_WATER_CHANNEL",
+      activeChildActor: true,
+      peerClass: ["HEARTH_LAND_CHANNEL", "HEARTH_AIR_CHANNEL"],
       directoryReady: true,
       directory: getDirectory(),
       coordinateMapReady: true,
@@ -1192,19 +1123,6 @@
         "y",
         "z"
       ],
-      multiplexFields: [
-        "hydrologySignal",
-        "materialsSignal",
-        "compositionSignal",
-        "elevationSignal",
-        "landConflictSignal",
-        "airConflictSignal",
-        "multiplexScore",
-        "multiplexSourceCount",
-        "multiplexReady",
-        "fallbackMathUsed",
-        "dominantWaterCause"
-      ],
       waterFields: [
         "waterAlpha",
         "waterPresence",
@@ -1219,14 +1137,10 @@
         "shorelineBoundaryStrength",
         "shallowShelf",
         "shallowShelfStrength",
-        "surfaceTension"
-      ],
-      waterClasses: [
-        "deep-ocean",
-        "open-water",
-        "shallow-shelf",
-        "coastal-boundary",
-        "low-water"
+        "surfaceTension",
+        "rgb",
+        "color",
+        "waterRgb"
       ],
       semiconductorRejectionLaws: {
         materialWetnessIsNotHydrosphere: true,
@@ -1247,14 +1161,15 @@
         definesAirTruth: false
       },
       owns: [
-        "water-sector-directory",
-        "upstream-soft-read",
-        "signal-classification",
-        "semantic-overlap-rejection",
-        "multiplex-normalization",
+        "active-water-child-actor-identity",
+        "global-export-binding",
+        "contract-identity",
+        "callable-child-api",
+        "shared-coordinate-body",
+        "body-bound-hydrosphere-authority-flags",
+        "semiconductor-multiplex-role",
         "single-normalized-water-packet",
-        "body-bound-water-channel-output",
-        "water-sample-coordinate-identity"
+        "document-root-diagnostic-receipts"
       ],
       doesNotOwn: [
         "route-orchestration",
@@ -1270,22 +1185,6 @@
         "runtime-motion",
         "controls",
         "final-visual-pass-claim"
-      ],
-      acceptanceTarget: [
-        "waterScriptLoaded true",
-        "waterGlobalPresent true",
-        "waterActualContract matches HEARTH_WATER_HYDROSPHERE_SURFACE_CHANNEL_TNT_v1",
-        "waterSampleProbeOk true",
-        "waterSampleProbeCoordinatesOk true",
-        "waterSampleProbeFlagsOk true",
-        "Runtime Table water record READY",
-        "RECEIPT_VERIFICATION_CHECK PASS"
-      ],
-      calibrationAfterMissingChildClosure: [
-        "WATER_SURFACE_SEATING_CHECK",
-        "CHANNEL_SEPARATION_CHECK",
-        "LAND_BODY_BINDING_CHECK",
-        "DISTRIBUTION_SHAPE_CHECK"
       ],
       generatedImage: false,
       graphicBox: false,
@@ -1324,6 +1223,7 @@
     getCoordinateMap,
     getMultiplexReceipt,
 
+    activeChildActor: true,
     isWaterChannel: true,
     bodyBound: true,
     surfaceBound: true,
@@ -1362,6 +1262,7 @@
   root.HEARTH_WATER_CHANNEL_RECEIPT = getReceipt();
   root.HEARTH_WATER_CHANNEL_CONTRACT = CONTRACT;
   root.HEARTH_WATER_CHANNEL_LOADED = true;
+  root.HEARTH_WATER_CHANNEL_ACTIVE_ACTOR = true;
   root.HEARTH_WATER_CHANNEL_ROUTE_ALIGNED = true;
   root.HEARTH_WATER_CHANNEL_SEMICONDUCTOR_ADAPTER = true;
   root.HEARTH_WATER_CHANNEL_MULTIPLEX_READY = true;
@@ -1375,29 +1276,13 @@
     dataset.hearthWaterChildBuildContract = BUILD_CONTRACT;
     dataset.hearthWaterChildPreviousBuildContract = PREVIOUS_BUILD_CONTRACT;
 
+    dataset.hearthWaterChannelActiveActor = "true";
     dataset.hearthWaterChannelRouteAligned = "true";
     dataset.hearthWaterChannelRouteParent = ROUTE_PARENT;
     dataset.hearthWaterChannelAssetAuthority = ASSET_AUTHORITY;
     dataset.hearthWaterChannelExpectedRouteConductor = ROUTE_CONDUCTOR;
     dataset.hearthWaterChannelExpectedCanvasConsumer = CANVAS_AUTHORITY;
     dataset.hearthWaterChannelExpectedRuntimeValidator = RUNTIME_VALIDATOR;
-
-    dataset.hearthWaterDirectoryReady = "true";
-    dataset.hearthWaterDirectoryIncludesHydrology = "true";
-    dataset.hearthWaterDirectoryIncludesMaterials = "true";
-    dataset.hearthWaterDirectoryIncludesComposition = "true";
-    dataset.hearthWaterDirectoryIncludesElevation = "true";
-    dataset.hearthWaterDirectoryIncludesLand = "true";
-    dataset.hearthWaterDirectoryIncludesAir = "true";
-    dataset.hearthWaterDirectoryIncludesCanvas = "true";
-    dataset.hearthWaterDirectoryIncludesRuntimeTable = "true";
-
-    dataset.hearthWaterHydrologyAuthority = HYDROLOGY_AUTHORITY;
-    dataset.hearthWaterMaterialsAuthority = MATERIALS_AUTHORITY;
-    dataset.hearthWaterCompositionAuthority = COMPOSITION_AUTHORITY;
-    dataset.hearthWaterElevationAuthority = ELEVATION_AUTHORITY;
-    dataset.hearthWaterLandChannelAuthority = LAND_CHANNEL_AUTHORITY;
-    dataset.hearthWaterAirChannelAuthority = AIR_CHANNEL_AUTHORITY;
 
     dataset.hearthWaterSemiconductorAdapter = "true";
     dataset.hearthWaterMultiplexReady = "true";

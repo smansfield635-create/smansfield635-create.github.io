@@ -1,101 +1,74 @@
 // /assets/lab/runtime-table.south.js
-// LAB_RUNTIME_TABLE_SOUTH_FINAL_PROTOCOL_FORWARD_PROGRESS_TNT_v1
+// HEARTH_SOUTH_VISIBLE_STATE_COMPOSER_API_HANDSHAKE_RECOVERY_TNT_v1
 // Full-file replacement.
-// South / final protocol authority for the four-file Runtime Table split.
+// Canonical Dexter Lab South file.
 // Purpose:
-// - Consume North Runtime Table checkpoint authority without replacing it.
-// - Convert hard blocking into precise gap assessment where safe.
-// - Preserve forward progress whenever the visible carrier is structurally safe.
-// - Prevent false READY / false visual-pass claims.
-// - Distinguish final completion from forward-with-gap continuation.
-// - Provide postgame receipts for Hearth, Audralia, H-Earth, Earth reference, Showroom planets, and future planet bodies.
+// - Restore the South visible-state composer API expected by the Hearth route.
+// - Export composeVisibleState() and compatibility aliases.
+// - Convert North checkpoint authority + East event flow + West inspect state + canvas evidence into a safe visible UI packet.
+// - Prevent South receipt/composition failures from stalling the checkpoint session at F1A.
+// - Treat queued, archived, blocked, duplicate, or late events as audit information unless North makes them structurally blocking.
 // Does not own:
-// - planet truth
-// - page truth
-// - child channel truth
+// - North checkpoint truth
+// - East event admission truth
+// - West inspect truth
 // - canvas drawing
-// - atlas pixel painting
-// - touch/drag controls
-// - route orchestration
-// - runtime motion
-// - North checkpoint law
-// - East sequence law
-// - West diagnostic/control law
+// - canvas boot
+// - atlas rendering
+// - source/channel truth
 // - final visual pass claim
 
 (() => {
   "use strict";
 
-  const CONTRACT = "LAB_RUNTIME_TABLE_SOUTH_FINAL_PROTOCOL_FORWARD_PROGRESS_TNT_v1";
-  const RECEIPT = "LAB_RUNTIME_TABLE_SOUTH_FINAL_PROTOCOL_FORWARD_PROGRESS_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "LAB_RUNTIME_TABLE_FOUR_FILE_SPLIT_WEST_DIAGNOSTIC_PROTOCOL_TNT_v1";
-  const BASELINE_CONTRACT = "LAB_RUNTIME_TABLE_FOUR_FILE_SPLIT_SOUTH_FINAL_PROTOCOL_PRECODE_FINAL_DRAFT_v1";
-  const VERSION = "2026-05-29.lab-runtime-table-south-final-protocol-forward-progress-v1";
+  const CONTRACT = "HEARTH_SOUTH_VISIBLE_STATE_COMPOSER_API_HANDSHAKE_RECOVERY_TNT_v1";
+  const RECEIPT = "HEARTH_SOUTH_VISIBLE_STATE_COMPOSER_API_HANDSHAKE_RECOVERY_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "HEARTH_SOUTH_VISIBLE_STATE_FINAL_PROTOCOL_TNT_v1";
+  const BASELINE_CONTRACT = "HEARTH_SOUTH_VISIBLE_STATE_COMPOSER_API_HANDSHAKE_RECOVERY_PRECODE_FINAL_DRAFT_v1";
+  const VERSION = "2026-05-29.hearth-south-visible-state-composer-api-handshake-recovery-v1";
+  const DESTINATION_FILE = "/assets/lab/runtime-table.south.js";
 
   const root = typeof window !== "undefined" ? window : globalThis;
 
-  const SOUTH_STATUS = Object.freeze({
-    FINAL_PASS: "FINAL_PASS",
-    FORWARD_WITH_GAP: "FORWARD_WITH_GAP",
-    SOFT_HOLD: "SOFT_HOLD",
-    HARD_BLOCK: "HARD_BLOCK",
-    DEGRADED: "DEGRADED",
-    FALLBACK: "FALLBACK"
-  });
+  const CHECKPOINTS = Object.freeze([
+    ["F1A_HTML_SHELL_RENDERED", 1, "F1A", 6, "HTML_SHELL_RENDERED"],
+    ["F1B_LOAD_LEDGER_INITIALIZED", 2, "F1B", 12, "LOAD_LEDGER_INITIALIZED"],
+    ["F2_FIRST_PAINT_COCKPIT_VISIBLE", 3, "F2", 22, "FIRST_PAINT_COCKPIT_VISIBLE"],
+    ["F3_SCRIPT_ORDER_COMPLETE", 4, "F3", 36, "SCRIPT_ORDER_COMPLETE"],
+    ["F5_AUTHORITY_AVAILABILITY_READY", 5, "F5", 55, "AUTHORITY_AVAILABILITY_READY"],
+    ["F8_CONDUCTOR_HYDRATED", 6, "F8", 72, "CONDUCTOR_HYDRATED"],
+    ["F13A_CANVAS_COOPERATIVE_BOOT_STARTED", 7, "F13A", 78, "CANVAS_COOPERATIVE_BOOT_STARTED"],
+    ["F13B_CANVAS_MOUNT_CREATED", 8, "F13B", 81, "CANVAS_MOUNT_CREATED"],
+    ["F13C_CANVAS_CONTEXT_READY", 9, "F13C", 84, "CANVAS_CONTEXT_READY"],
+    ["F13D_DRAG_INSPECTION_BOUND", 10, "F13D", 86, "DRAG_INSPECTION_BOUND"],
+    ["F13E_ATLAS_BUILD_STARTED", 11, "F13E", 88, "ATLAS_BUILD_STARTED"],
+    ["F13F_ATLAS_BUILD_COMPLETE", 12, "F13F", 91, "ATLAS_BUILD_COMPLETE"],
+    ["F13G_TEXTURE_COMPOSE_STARTED", 13, "F13G", 93, "TEXTURE_COMPOSE_STARTED"],
+    ["F13H_TEXTURE_COMPOSE_COMPLETE", 14, "F13H", 96, "TEXTURE_COMPOSE_COMPLETE"],
+    ["F13I_FIRST_FRAME_REQUESTED", 15, "F13I", 97, "FIRST_FRAME_REQUESTED"],
+    ["F13J_FIRST_FRAME_DETECTED", 16, "F13J", 98, "FIRST_FRAME_DETECTED"],
+    ["F13K_CANVAS_READY", 17, "F13K", 98, "CANVAS_READY"],
+    ["F13L_VISIBLE_CONTENT_PROOF_STARTED", 18, "F13L", 98, "VISIBLE_CONTENT_PROOF_STARTED"],
+    ["F13M_VISIBLE_CONTENT_PROOF_PASSED", 19, "F13M", 98, "VISIBLE_CONTENT_PROOF_PASSED"],
+    ["F13N_INSPECT_MODE_READY", 20, "F13N", 98, "INSPECT_MODE_READY"],
+    ["F21_COMPLETION_LATCHED", 21, "F21", 100, "COMPLETION_LATCHED"]
+  ].map(([id, rank, fibonacci, progress, event]) => ({
+    id,
+    rank,
+    fibonacci,
+    progress,
+    event
+  })));
 
-  const FINAL_CLAIM = Object.freeze({
-    ALLOWED: "ALLOWED",
-    FORBIDDEN_PENDING_GAP: "FORBIDDEN_PENDING_GAP",
-    FORBIDDEN_HARD_BLOCK: "FORBIDDEN_HARD_BLOCK"
-  });
+  const CHECKPOINT_BY_ID = CHECKPOINTS.reduce((map, checkpoint) => {
+    map[checkpoint.id] = checkpoint;
+    return map;
+  }, {});
 
-  const FORWARD_MODE = Object.freeze({
-    POSTGAME_COMPLETE: "POSTGAME_COMPLETE",
-    CONTINUE_TO_INSPECT: "CONTINUE_TO_INSPECT",
-    CONTINUE_TO_VISIBLE_PROOF: "CONTINUE_TO_VISIBLE_PROOF",
-    CONTINUE_TO_DIAGNOSTIC_REPAIR: "CONTINUE_TO_DIAGNOSTIC_REPAIR",
-    CONTINUE_WITH_FALLBACK_CARRIER: "CONTINUE_WITH_FALLBACK_CARRIER",
-    STOP_FOR_STRUCTURAL_BLOCK: "STOP_FOR_STRUCTURAL_BLOCK"
-  });
-
-  const GAP_SEVERITY = Object.freeze({
-    INFO: "INFO",
-    SOFT: "SOFT",
-    DEGRADED: "DEGRADED",
-    HARD: "HARD"
-  });
-
-  const NEWS_GATES = Object.freeze({
-    NORTH: "NORTH",
-    EAST: "EAST",
-    WEST: "WEST",
-    SOUTH: "SOUTH",
-    F21: "F21"
-  });
-
-  const FIBONACCI_FINAL = Object.freeze({
-    F13_VISIBLE_CONTENT_PROOF: 13,
-    F13_INSPECT_MODE: 13,
-    F21_COMPLETION: 21,
-    FINAL_DENOMINATOR: 47
-  });
-
-  const F13_REQUIRED = Object.freeze([
-    "F13A_CANVAS_COOPERATIVE_BOOT_STARTED",
-    "F13B_CANVAS_MOUNT_CREATED",
-    "F13C_CANVAS_CONTEXT_READY",
-    "F13D_DRAG_INSPECTION_BOUND",
-    "F13E_ATLAS_BUILD_STARTED",
-    "F13F_ATLAS_BUILD_COMPLETE",
-    "F13G_TEXTURE_COMPOSE_STARTED",
-    "F13H_TEXTURE_COMPOSE_COMPLETE",
-    "F13I_FIRST_FRAME_REQUESTED",
-    "F13J_FIRST_FRAME_DETECTED",
-    "F13K_CANVAS_READY",
-    "F13L_VISIBLE_CONTENT_PROOF_STARTED",
-    "F13M_VISIBLE_CONTENT_PROOF_PASSED",
-    "F13N_INSPECT_MODE_READY"
-  ]);
+  const CHECKPOINT_BY_EVENT = CHECKPOINTS.reduce((map, checkpoint) => {
+    map[checkpoint.event] = checkpoint;
+    return map;
+  }, {});
 
   function nowIso() {
     try {
@@ -109,13 +82,31 @@
     return Boolean(value && typeof value === "object" && !Array.isArray(value));
   }
 
-  function asArray(value) {
-    if (Array.isArray(value)) return value.slice();
-    if (value === undefined || value === null || value === "") return [];
-    if (typeof value === "string" && value.includes(",")) {
-      return value.split(",").map((item) => item.trim()).filter(Boolean);
-    }
-    return [value];
+  function isFunction(value) {
+    return typeof value === "function";
+  }
+
+  function safeString(value, fallback = "") {
+    if (value === undefined || value === null) return fallback;
+    return String(value);
+  }
+
+  function safeNumber(value, fallback = 0) {
+    const number = Number(value);
+    return Number.isFinite(number) ? number : fallback;
+  }
+
+  function safeBool(value, fallback = false) {
+    if (typeof value === "boolean") return value;
+    if (value === "true") return true;
+    if (value === "false") return false;
+    if (value === 1 || value === "1") return true;
+    if (value === 0 || value === "0") return false;
+    return fallback;
+  }
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, safeNumber(value, min)));
   }
 
   function clonePlain(value) {
@@ -129,583 +120,648 @@
     }
   }
 
-  function safeBool(value, fallback = false) {
-    if (typeof value === "boolean") return value;
-    if (typeof value === "number") return value !== 0;
+  function asArray(value) {
+    if (Array.isArray(value)) return value.slice();
+    if (value === undefined || value === null || value === "") return [];
     if (typeof value === "string") {
-      const normalized = value.trim().toLowerCase();
-      if (normalized === "true" || normalized === "yes" || normalized === "1") return true;
-      if (normalized === "false" || normalized === "no" || normalized === "0" || normalized === "") return false;
+      return value
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean);
+    }
+    return [value];
+  }
+
+  function objectValue(source, path) {
+    if (!isObject(source)) return undefined;
+
+    const parts = String(path).split(".");
+    let cursor = source;
+
+    for (const part of parts) {
+      if (!isObject(cursor) && !Array.isArray(cursor)) return undefined;
+      if (cursor[part] === undefined) return undefined;
+      cursor = cursor[part];
+    }
+
+    return cursor;
+  }
+
+  function firstDefined(...values) {
+    for (const value of values) {
+      if (value !== undefined && value !== null && value !== "") return value;
+    }
+    return undefined;
+  }
+
+  function firstString(...values) {
+    const value = firstDefined(...values);
+    return value === undefined ? "" : String(value);
+  }
+
+  function firstBool(fallback, ...values) {
+    for (const value of values) {
+      if (value !== undefined && value !== null && value !== "") {
+        return safeBool(value, fallback);
+      }
     }
     return fallback;
   }
 
-  function safeNumber(value, fallback = 0) {
-    const n = Number(value);
-    return Number.isFinite(n) ? n : fallback;
+  function firstNumber(fallback, ...values) {
+    for (const value of values) {
+      if (value !== undefined && value !== null && value !== "") {
+        return safeNumber(value, fallback);
+      }
+    }
+    return fallback;
   }
 
-  function clamp(value, min, max) {
-    const n = safeNumber(value, min);
-    return Math.max(min, Math.min(max, n));
+  function readReceipt(authority) {
+    if (!authority || !isObject(authority)) return null;
+
+    if (isFunction(authority.getReceipt)) {
+      try {
+        const receipt = authority.getReceipt();
+        return isObject(receipt) ? receipt : null;
+      } catch (_error) {
+        return null;
+      }
+    }
+
+    if (isObject(authority.receipt)) return authority.receipt;
+    if (isObject(authority.receiptPacket)) return authority.receiptPacket;
+
+    return null;
   }
 
-  function parseReceiptText(text = "") {
+  function mergeSources(...sources) {
     const output = {};
 
-    String(text || "").split(/\r?\n/).forEach((line) => {
-      const trimmed = line.trim();
-      if (!trimmed || trimmed.startsWith("- ") || !trimmed.includes("=")) return;
+    sources.forEach((source) => {
+      if (!isObject(source)) return;
 
-      const index = trimmed.indexOf("=");
-      const key = trimmed.slice(0, index).trim();
-      const value = trimmed.slice(index + 1).trim();
-
-      if (!key) return;
-      output[key] = value;
+      Object.keys(source).forEach((key) => {
+        if (output[key] === undefined) output[key] = source[key];
+      });
     });
 
     return output;
   }
 
-  function normalizeInput(input = {}) {
-    if (typeof input === "string") return parseReceiptText(input);
-    if (!input || !isObject(input)) return {};
-    return clonePlain(input);
-  }
-
-  function getFirst(packet, keys, fallback = undefined) {
-    const source = packet || {};
-
-    for (const key of asArray(keys)) {
-      if (source[key] !== undefined) return source[key];
-      if (source.snapshot && source.snapshot[key] !== undefined) return source.snapshot[key];
-      if (source.detail && source.detail[key] !== undefined) return source.detail[key];
-      if (source.receipt && source.receipt[key] !== undefined) return source.receipt[key];
-      if (source.checkpointReceipt && source.checkpointReceipt[key] !== undefined) return source.checkpointReceipt[key];
-      if (source.checkpointSessionReceipt && source.checkpointSessionReceipt[key] !== undefined) return source.checkpointSessionReceipt[key];
+  function findNestedReceipt(input, names) {
+    for (const name of names) {
+      const direct = objectValue(input, name);
+      if (isObject(direct)) return direct;
     }
 
-    return fallback;
+    return {};
   }
 
-  function getBool(packet, keys, fallback = false) {
-    return safeBool(getFirst(packet, keys, fallback), fallback);
+  function inferCheckpointFromEvidence(flat) {
+    const completionLatched = firstBool(false, flat.completionLatched);
+    const f21Allowed = firstBool(false, flat.f21Allowed, flat.newsGatePassedBeforeF21);
+    const f13SubsequenceComplete = firstBool(false, flat.f13SubsequenceComplete);
+    const visibleContentProof = firstBool(false, flat.visibleContentProof);
+    const visibleContentProofStarted = firstBool(false, flat.visibleContentProofStarted);
+    const inspectModeAvailable = firstBool(false, flat.inspectModeAvailable);
+    const diagnosticCanLeavePlanetFrame = firstBool(false, flat.diagnosticCanLeavePlanetFrame);
+    const buttonsReachable = firstBool(false, flat.buttonsReachable);
+    const canvasReady = firstBool(false, flat.canvasReady);
+    const firstFrameDetected = firstBool(false, flat.firstFrameDetected);
+    const firstFrameRequested = firstBool(false, flat.firstFrameRequested);
+    const textureComposeComplete = firstBool(false, flat.textureComposeComplete);
+    const textureComposeStarted = firstBool(false, flat.textureComposeStarted);
+    const atlasBuildComplete = firstBool(false, flat.atlasBuildComplete);
+    const atlasBuildStarted = firstBool(false, flat.atlasBuildStarted);
+    const dragInspectionBound = firstBool(false, flat.dragInspectionBound);
+    const canvasContextReady = firstBool(false, flat.canvasContextReady);
+    const canvasMountCreated = firstBool(false, flat.canvasMountCreated);
+    const canvasBootStarted = firstBool(false, flat.canvasBootStartedAt, flat.canvasBootStarted);
+
+    if (completionLatched && f21Allowed && f13SubsequenceComplete) return CHECKPOINT_BY_ID.F21_COMPLETION_LATCHED;
+    if (visibleContentProof && inspectModeAvailable && diagnosticCanLeavePlanetFrame && buttonsReachable) return CHECKPOINT_BY_ID.F13N_INSPECT_MODE_READY;
+    if (visibleContentProof) return CHECKPOINT_BY_ID.F13M_VISIBLE_CONTENT_PROOF_PASSED;
+    if (visibleContentProofStarted) return CHECKPOINT_BY_ID.F13M_VISIBLE_CONTENT_PROOF_PASSED;
+    if (canvasReady) return CHECKPOINT_BY_ID.F13K_CANVAS_READY;
+    if (firstFrameDetected) return CHECKPOINT_BY_ID.F13J_FIRST_FRAME_DETECTED;
+    if (firstFrameRequested) return CHECKPOINT_BY_ID.F13I_FIRST_FRAME_REQUESTED;
+    if (textureComposeComplete) return CHECKPOINT_BY_ID.F13H_TEXTURE_COMPOSE_COMPLETE;
+    if (textureComposeStarted) return CHECKPOINT_BY_ID.F13G_TEXTURE_COMPOSE_STARTED;
+    if (atlasBuildComplete) return CHECKPOINT_BY_ID.F13F_ATLAS_BUILD_COMPLETE;
+    if (atlasBuildStarted) return CHECKPOINT_BY_ID.F13E_ATLAS_BUILD_STARTED;
+    if (dragInspectionBound) return CHECKPOINT_BY_ID.F13D_DRAG_INSPECTION_BOUND;
+    if (canvasContextReady) return CHECKPOINT_BY_ID.F13C_CANVAS_CONTEXT_READY;
+    if (canvasMountCreated) return CHECKPOINT_BY_ID.F13B_CANVAS_MOUNT_CREATED;
+    if (canvasBootStarted) return CHECKPOINT_BY_ID.F13A_CANVAS_COOPERATIVE_BOOT_STARTED;
+
+    return CHECKPOINT_BY_ID.F1A_HTML_SHELL_RENDERED;
   }
 
-  function getNumber(packet, keys, fallback = 0) {
-    return safeNumber(getFirst(packet, keys, fallback), fallback);
+  function checkpointFromIdOrEvent(idOrEvent) {
+    if (!idOrEvent) return null;
+    const key = String(idOrEvent);
+    return CHECKPOINT_BY_ID[key] || CHECKPOINT_BY_EVENT[key] || null;
   }
 
-  function createGap(code, message, severity, detail = {}) {
+  function normalizeVisibleInput(input = {}) {
+    const source = isObject(input) ? input : {};
+
+    const north = findNestedReceipt(source, [
+      "north",
+      "northReceipt",
+      "checkpointReceipt",
+      "checkpointSessionReceipt",
+      "checkpointSession",
+      "sessionReceipt",
+      "session",
+      "northState"
+    ]);
+
+    const east = findNestedReceipt(source, [
+      "east",
+      "eastReceipt",
+      "eventFlow",
+      "eventReceipt",
+      "eventState"
+    ]);
+
+    const west = findNestedReceipt(source, [
+      "west",
+      "westReceipt",
+      "inspect",
+      "inspectReceipt",
+      "diagnostic",
+      "diagnosticReceipt",
+      "cockpit",
+      "cockpitReceipt"
+    ]);
+
+    const canvas = findNestedReceipt(source, [
+      "canvas",
+      "canvasReceipt",
+      "canvasState",
+      "render",
+      "renderMetadata",
+      "canvasMetadata"
+    ]);
+
+    const route = findNestedReceipt(source, [
+      "routeState",
+      "routeReceipt",
+      "hearth",
+      "hearthReceipt"
+    ]);
+
+    const runtime = findNestedReceipt(source, [
+      "runtime",
+      "runtimeTable",
+      "runtimeTableReceipt",
+      "runtimeTableLedger"
+    ]);
+
+    const snapshot = mergeSources(
+      objectValue(north, "snapshot"),
+      objectValue(source, "snapshot"),
+      objectValue(canvas, "snapshot"),
+      objectValue(west, "snapshot")
+    );
+
+    const flat = mergeSources(
+      source,
+      route,
+      north,
+      east,
+      west,
+      canvas,
+      runtime,
+      snapshot
+    );
+
+    const completedCheckpoints = asArray(firstDefined(
+      flat.completedCheckpoints,
+      objectValue(north, "completedCheckpoints")
+    ));
+
+    const activeRaw = firstString(
+      flat.activeCheckpointId,
+      objectValue(north, "activeCheckpointId"),
+      flat.activeCheckpoint,
+      flat.currentCheckpointId,
+      flat.latestVisibleEvent
+    );
+
+    const activeFromNorth = checkpointFromIdOrEvent(activeRaw);
+    const inferredFromEvidence = inferCheckpointFromEvidence(flat);
+
+    const queuedEventsCount = firstNumber(0, flat.queuedEventsCount, objectValue(north, "queuedEventsCount"));
+    const northLooksStalledByPriorSouthError = Boolean(
+      activeFromNorth &&
+      activeFromNorth.id === "F1A_HTML_SHELL_RENDERED" &&
+      queuedEventsCount > 0 &&
+      firstBool(false, flat.canvasReady, flat.imageRendered, flat.visibleContentProof) &&
+      safeString(firstDefined(flat.checkpointSessionError, flat.southCompositionError)).includes("composeVisibleState")
+    );
+
+    const activeCheckpoint = northLooksStalledByPriorSouthError
+      ? inferredFromEvidence
+      : activeFromNorth || inferredFromEvidence;
+
+    const highestCompletedRaw = firstString(
+      flat.highestCompletedCheckpointId,
+      objectValue(north, "highestCompletedCheckpointId")
+    );
+
+    const highestCompletedCheckpoint =
+      checkpointFromIdOrEvent(highestCompletedRaw) ||
+      checkpointFromIdOrEvent(completedCheckpoints[completedCheckpoints.length - 1]) ||
+      (completedCheckpoints.includes("F21_COMPLETION_LATCHED")
+        ? CHECKPOINT_BY_ID.F21_COMPLETION_LATCHED
+        : null);
+
+    const explicitContentReceiptProof = firstBool(false, flat.explicitContentReceiptProof, canvas.explicitContentReceiptProof);
+    const carrierOnlyDetected = firstBool(false, flat.carrierOnlyDetected, canvas.carrierOnlyDetected);
+    const rawVisibleContentProof = firstBool(false, flat.visibleContentProof, canvas.visibleContentProof);
+    const visibleContentProof = explicitContentReceiptProof ? true : (carrierOnlyDetected ? false : rawVisibleContentProof);
+
+    const visiblePlanetAvailable = firstBool(
+      visibleContentProof,
+      flat.visiblePlanetAvailable,
+      canvas.visiblePlanetAvailable
+    );
+
+    const inspectModeAvailable = firstBool(false, flat.inspectModeAvailable, west.inspectModeAvailable);
+    const inspectPlanetControlAvailable = firstBool(false, flat.inspectPlanetControlAvailable, west.inspectPlanetControlAvailable);
+    const diagnosticCanLeavePlanetFrame = firstBool(false, flat.diagnosticCanLeavePlanetFrame, west.diagnosticCanLeavePlanetFrame);
+    const diagnosticDockRestorable = firstBool(true, flat.diagnosticDockRestorable, west.diagnosticDockRestorable);
+    const showDiagnosticTabVisibleWhenHidden = firstBool(true, flat.showDiagnosticTabVisibleWhenHidden, west.showDiagnosticTabVisibleWhenHidden);
+    const copyDiagnosticPreserved = firstBool(true, flat.copyDiagnosticPreserved, west.copyDiagnosticPreserved);
+    const receiptToggleReady = firstBool(true, flat.receiptToggleReady, west.receiptToggleReady);
+    const buttonsReachable = firstBool(false, flat.buttonsReachable, west.buttonsReachable);
+    const receiptOverlayIndependent = firstBool(true, flat.receiptOverlayIndependent, west.receiptOverlayIndependent);
+
+    const canvasReady = firstBool(false, flat.canvasReady, canvas.canvasReady);
+    const atlasBuildComplete = firstBool(false, flat.atlasBuildComplete, canvas.atlasBuildComplete);
+    const textureComposeComplete = firstBool(false, flat.textureComposeComplete, canvas.textureComposeComplete);
+    const firstFrameDetected = firstBool(false, flat.firstFrameDetected, canvas.firstFrameDetected);
+    const imageRendered = firstBool(false, flat.imageRendered, canvas.imageRendered);
+    const cooperativeBootUsed = firstBool(false, flat.cooperativeBootUsed, canvas.cooperativeBootUsed);
+    const syncBootFallbackUsed = firstBool(false, flat.syncBootFallbackUsed, canvas.syncBootFallbackUsed);
+    const canvasCarrierRequested = firstBool(false, flat.canvasCarrierRequested, canvas.canvasCarrierRequested);
+    const canvasCarrierHandoffOk = firstBool(false, flat.canvasCarrierHandoffOk, canvas.canvasCarrierHandoffOk);
+    const blockingFutureEventViolation = firstBool(false, flat.blockingFutureEventViolation);
+
+    const northGateReady = firstBool(
+      Boolean(canvasReady && atlasBuildComplete && textureComposeComplete && visibleContentProof && visiblePlanetAvailable),
+      flat.northGateReady,
+      objectValue(north, "northGateReady"),
+      objectValue(north, "newsGateState.northGateReady")
+    );
+
+    const eastGateReady = firstBool(
+      Boolean(cooperativeBootUsed && !syncBootFallbackUsed && canvasCarrierRequested && canvasCarrierHandoffOk && !blockingFutureEventViolation),
+      flat.eastGateReady,
+      objectValue(north, "eastGateReady"),
+      objectValue(north, "newsGateState.eastGateReady")
+    );
+
+    const westGateReady = firstBool(
+      Boolean(copyDiagnosticPreserved && receiptToggleReady && inspectPlanetControlAvailable && diagnosticDockRestorable && buttonsReachable && receiptOverlayIndependent),
+      flat.westGateReady,
+      objectValue(north, "westGateReady"),
+      objectValue(north, "newsGateState.westGateReady")
+    );
+
+    const southGateReady = firstBool(
+      Boolean(imageRendered && firstFrameDetected && firstBool(false, flat.dragInspectionBound, canvas.dragInspectionBound) && visiblePlanetAvailable && diagnosticCanLeavePlanetFrame),
+      flat.southGateReady,
+      objectValue(north, "southGateReady"),
+      objectValue(north, "newsGateState.southGateReady")
+    );
+
+    const newsGatePassedBeforeF21 = firstBool(
+      Boolean(northGateReady && eastGateReady && westGateReady && southGateReady),
+      flat.newsGatePassedBeforeF21,
+      objectValue(north, "newsGatePassedBeforeF21"),
+      objectValue(north, "newsGateState.newsGatePassedBeforeF21")
+    );
+
+    const f13SubsequenceComplete = firstBool(
+      Boolean(completedCheckpoints.includes("F13N_INSPECT_MODE_READY") || (visibleContentProof && inspectModeAvailable && diagnosticCanLeavePlanetFrame && buttonsReachable)),
+      flat.f13SubsequenceComplete,
+      objectValue(north, "f13SubsequenceComplete")
+    );
+
+    const f21Allowed = firstBool(
+      Boolean(f13SubsequenceComplete && newsGatePassedBeforeF21),
+      flat.f21Allowed,
+      objectValue(north, "f21Allowed")
+    );
+
+    const completionLatched = firstBool(
+      Boolean(completedCheckpoints.includes("F21_COMPLETION_LATCHED") && f21Allowed),
+      flat.completionLatched,
+      objectValue(north, "completionLatched")
+    );
+
     return {
-      code,
-      message,
-      severity,
-      detail: clonePlain(detail),
-      at: nowIso()
-    };
-  }
+      source: clonePlain(source),
+      north: clonePlain(north),
+      east: clonePlain(east),
+      west: clonePlain(west),
+      canvas: clonePlain(canvas),
+      runtime: clonePlain(runtime),
+      flat: clonePlain(flat),
 
-  function resolveNorth() {
-    return (
-      root.LAB_RUNTIME_TABLE ||
-      root.LAB_UNIVERSAL_PLANET_RUNTIME_TABLE ||
-      root.RUNTIME_TABLE ||
-      (root.DEXTER_LAB && root.DEXTER_LAB.runtimeTable) ||
-      null
-    );
-  }
+      completedCheckpoints,
+      activeCheckpoint,
+      highestCompletedCheckpoint,
+      northLooksStalledByPriorSouthError,
 
-  function evaluateNewsGateState(input = {}) {
-    const packet = normalizeInput(input);
+      queuedEventsCount,
+      archivedEventsCount: firstNumber(0, flat.archivedEventsCount, objectValue(north, "archivedEventsCount")),
+      blockedEventsCount: firstNumber(0, flat.blockedEventsCount, objectValue(north, "blockedEventsCount")),
+      admittedEventsCount: firstNumber(0, flat.admittedEventsCount, objectValue(north, "admittedEventsCount")),
+      regressionPrevented: firstNumber(0, flat.regressionPrevented, objectValue(north, "regressionPrevented")),
 
-    const northGateReady = Boolean(
-      getBool(packet, "northGateReady") ||
-      (
-        getBool(packet, "canvasReady") &&
-        getBool(packet, "atlasBuildComplete") &&
-        getBool(packet, "textureComposeComplete") &&
-        getBool(packet, "visibleContentProof") &&
-        getBool(packet, "visiblePlanetAvailable")
-      )
-    );
+      visibleContentProof,
+      visibleContentProofStarted: firstBool(false, flat.visibleContentProofStarted, canvas.visibleContentProofStarted),
+      visibleContentProofMethod: firstString(flat.visibleContentProofMethod, canvas.visibleContentProofMethod),
+      visibleContentProofError: firstString(flat.visibleContentProofError, canvas.visibleContentProofError),
+      visibleContentSampleCount: firstNumber(0, flat.visibleContentSampleCount, canvas.visibleContentSampleCount),
+      visibleContentVarianceScore: firstNumber(0, flat.visibleContentVarianceScore, canvas.visibleContentVarianceScore),
+      visibleContentClassCount: firstNumber(0, flat.visibleContentClassCount, canvas.visibleContentClassCount),
+      visibleContentClasses: firstString(flat.visibleContentClasses, canvas.visibleContentClasses),
+      visibleContentLandSampleCount: firstNumber(0, flat.visibleContentLandSampleCount, canvas.visibleContentLandSampleCount),
+      visibleContentWaterSampleCount: firstNumber(0, flat.visibleContentWaterSampleCount, canvas.visibleContentWaterSampleCount),
+      visibleContentOtherSampleCount: firstNumber(0, flat.visibleContentOtherSampleCount, canvas.visibleContentOtherSampleCount),
+      carrierOnlyDetected,
+      explicitContentReceiptProof,
+      renderedAfterTexture: firstBool(false, flat.renderedAfterTexture, canvas.renderedAfterTexture),
 
-    const eastGateReady = Boolean(
-      getBool(packet, "eastGateReady") ||
-      (
-        getBool(packet, "cooperativeBootUsed") &&
-        getBool(packet, "canvasCarrierRequested") &&
-        getBool(packet, "canvasCarrierHandoffOk") &&
-        !getBool(packet, "syncBootFallbackUsed")
-      )
-    );
+      visiblePlanetAvailable,
+      planetCanvasPresent: firstBool(false, flat.planetCanvasPresent, canvas.planetCanvasPresent),
+      planetCanvasNonZeroSize: firstBool(false, flat.planetCanvasNonZeroSize, canvas.planetCanvasNonZeroSize),
+      planetFramePainted: firstBool(false, flat.planetFramePainted, canvas.planetFramePainted),
+      nonblankPlanetVisible: firstBool(false, flat.nonblankPlanetVisible, canvas.nonblankPlanetVisible),
+      planetNotObstructed: firstBool(false, flat.planetNotObstructed, canvas.planetNotObstructed),
 
-    const westGateReady = Boolean(
-      getBool(packet, "westGateReady") ||
-      (
-        getBool(packet, "copyDiagnosticPreserved") &&
-        getBool(packet, "receiptToggleReady") &&
-        getBool(packet, "diagnosticDockRestorable") &&
-        getBool(packet, "receiptOverlayIndependent", true) &&
-        (
-          getBool(packet, "inspectModeAvailable") ||
-          getBool(packet, "inspectPlanetControlAvailable") ||
-          getBool(packet, "diagnosticCanLeavePlanetFrame")
-        )
-      )
-    );
+      inspectModeAvailable,
+      inspectPlanetControlAvailable,
+      diagnosticCanLeavePlanetFrame,
+      diagnosticDockHiddenForInspection: firstBool(false, flat.diagnosticDockHiddenForInspection, west.diagnosticDockHiddenForInspection),
+      showDiagnosticTabVisible: firstBool(false, flat.showDiagnosticTabVisible, west.showDiagnosticTabVisible),
+      showDiagnosticTabVisibleWhenHidden,
+      diagnosticDockRestorable,
+      copyDiagnosticPreserved,
+      receiptToggleReady,
+      buttonsReachable,
+      receiptOverlayIndependent,
 
-    const southGateReady = Boolean(
-      getBool(packet, "southGateReady") ||
-      (
-        getBool(packet, "imageRendered") &&
-        getBool(packet, "firstFrameDetected") &&
-        getBool(packet, "dragInspectionBound") &&
-        getBool(packet, "visiblePlanetAvailable")
-      )
-    );
+      canvasReady,
+      canvasCarrierMounted: firstBool(false, flat.canvasCarrierMounted, canvas.canvasCarrierMounted),
+      canvasCarrierRequested,
+      canvasCarrierHandoffOk,
+      canvasCarrierHandoffError: firstString(flat.canvasCarrierHandoffError, canvas.canvasCarrierHandoffError),
+      canvasCarrierMethod: firstString(flat.canvasCarrierMethod, canvas.canvasCarrierMethod),
+      cooperativeBootAvailable: firstBool(false, flat.cooperativeBootAvailable, canvas.cooperativeBootAvailable),
+      cooperativeBootUsed,
+      syncBootFallbackUsed,
+      canvasBootStartedAt: firstString(flat.canvasBootStartedAt, canvas.canvasBootStartedAt),
+      canvasBootCompletedAt: firstString(flat.canvasBootCompletedAt, canvas.canvasBootCompletedAt),
+      canvasBootElapsedMs: firstNumber(0, flat.canvasBootElapsedMs, canvas.canvasBootElapsedMs),
+      canvasYieldCount: firstNumber(0, flat.canvasYieldCount, canvas.canvasYieldCount),
+      canvasPhaseCount: firstNumber(0, flat.canvasPhaseCount, canvas.canvasPhaseCount),
+      lastCanvasPhase: firstString(flat.lastCanvasPhase, canvas.lastCanvasPhase),
+      lastCanvasProgress: firstNumber(0, flat.lastCanvasProgress, canvas.lastCanvasProgress),
+      loaderRepaintDuringCanvasBoot: firstBool(false, flat.loaderRepaintDuringCanvasBoot, canvas.loaderRepaintDuringCanvasBoot),
+      f13ProgressStreamActive: firstBool(false, flat.f13ProgressStreamActive, canvas.f13ProgressStreamActive),
+      canvasLaneClosed: firstBool(false, flat.canvasLaneClosed, canvas.canvasLaneClosed),
+      postCanvasPhaseBouncePrevented: firstBool(true, flat.postCanvasPhaseBouncePrevented, canvas.postCanvasPhaseBouncePrevented),
+      ignoredDuplicateCanvasEvents: firstNumber(0, flat.ignoredDuplicateCanvasEvents, canvas.ignoredDuplicateCanvasEvents),
 
-    const newsGatePassedBeforeF21 = Boolean(
-      getBool(packet, "newsGatePassedBeforeF21") ||
-      (
-        northGateReady &&
-        eastGateReady &&
-        westGateReady &&
-        southGateReady
-      )
-    );
+      atlasBuildStarted: firstBool(false, flat.atlasBuildStarted, canvas.atlasBuildStarted),
+      atlasBuildProgress: firstNumber(0, flat.atlasBuildProgress, canvas.atlasBuildProgress),
+      atlasBuildComplete,
+      textureComposeStarted: firstBool(false, flat.textureComposeStarted, canvas.textureComposeStarted),
+      textureComposeProgress: firstNumber(0, flat.textureComposeProgress, canvas.textureComposeProgress),
+      textureComposeComplete,
+      firstFrameRequested: firstBool(false, flat.firstFrameRequested, canvas.firstFrameRequested),
+      firstFrameDetected,
+      imageRendered,
+      dragInspectionBound: firstBool(false, flat.dragInspectionBound, canvas.dragInspectionBound),
 
-    return {
+      runtimeTablePresent: firstBool(false, flat.runtimeTablePresent, runtime.runtimeTablePresent),
+      runtimeTableMode: firstString(flat.runtimeTableMode, runtime.runtimeTableMode),
+      runtimeTablePlanAttempted: firstBool(false, flat.runtimeTablePlanAttempted, runtime.runtimeTablePlanAttempted),
+      runtimeTablePlanCreated: firstBool(false, flat.runtimeTablePlanCreated, runtime.runtimeTablePlanCreated),
+      runtimeTablePlanError: firstString(flat.runtimeTablePlanError, runtime.runtimeTablePlanError),
+      sourceAuthorityHeld: firstBool(false, flat.sourceAuthorityHeld, runtime.sourceAuthorityHeld),
+
       northGateReady,
       eastGateReady,
       westGateReady,
       southGateReady,
-      newsGatePassedBeforeF21
+      newsGatePassedBeforeF21,
+      f13SubsequenceComplete,
+      f13LastRequiredEvent: firstString(flat.f13LastRequiredEvent, objectValue(north, "f13LastRequiredEvent")),
+      f21Allowed,
+      completionLatched,
+
+      partialReceiptAvailable: firstBool(true, flat.partialReceiptAvailable),
+      finalReceiptAvailable: firstBool(false, flat.finalReceiptAvailable),
+      copyDiagnosticArmed: firstBool(true, flat.copyDiagnosticArmed),
+      dockVisible: firstBool(true, flat.dockVisible),
+      fullCockpitExpanded: firstBool(false, flat.fullCockpitExpanded),
+      heartbeatElapsedMs: firstNumber(0, flat.heartbeatElapsedMs),
+
+      latestVisibleEvent: firstString(flat.latestVisibleEvent),
+      currentStage: firstString(flat.currentStage),
+      highestStage: firstString(flat.highestStage),
+      firstFailedCoordinate: firstString(flat.firstFailedCoordinate),
+      recommendedNextRenewalTarget: firstString(flat.recommendedNextRenewalTarget)
     };
   }
 
-  function completedCheckpointSet(input = {}) {
-    const packet = normalizeInput(input);
-    const raw = getFirst(packet, "completedCheckpoints", []);
-    return new Set(asArray(raw));
+  function resolveFirstFailedCoordinate(normalized, southCompositionFailed) {
+    if (southCompositionFailed) return "WAITING_southComposeVisibleState";
+    if (!normalized.visibleContentProof) return "WAITING_VISIBLE_CONTENT_PROOF_PASSED";
+    if (!normalized.inspectModeAvailable) return "WAITING_inspectModeAvailable";
+    if (!normalized.inspectPlanetControlAvailable) return "WAITING_inspectPlanetControlAvailable";
+    if (!normalized.diagnosticCanLeavePlanetFrame) return "WAITING_diagnosticCanLeavePlanetFrame";
+    if (!normalized.buttonsReachable) return "WAITING_buttonsReachable";
+    if (!normalized.northGateReady) return "WAITING_northGateReady";
+    if (!normalized.eastGateReady) return "WAITING_eastGateReady";
+    if (!normalized.westGateReady) return "WAITING_westGateReady";
+    if (!normalized.southGateReady) return "WAITING_southGateReady";
+    if (!normalized.completionLatched) return "WAITING_completionLatch";
+    return "NONE_NEWS_FIBONACCI_F21_LATCHED";
   }
 
-  function evaluateFibonacciState(input = {}) {
-    const packet = normalizeInput(input);
-    const completed = completedCheckpointSet(packet);
+  function resolveRenewalTarget(firstFailedCoordinate) {
+    if (firstFailedCoordinate === "WAITING_southComposeVisibleState") {
+      return "/assets/lab/runtime-table.south.js";
+    }
 
-    const f13Completed = F13_REQUIRED.filter((checkpoint) => completed.has(checkpoint));
-    const f13CompletionRatio = F13_REQUIRED.length
-      ? f13Completed.length / F13_REQUIRED.length
-      : 0;
+    if (firstFailedCoordinate === "WAITING_VISIBLE_CONTENT_PROOF_PASSED") {
+      return "/assets/hearth/hearth.canvas.js";
+    }
 
-    const f13MComplete = completed.has("F13M_VISIBLE_CONTENT_PROOF_PASSED") || getBool(packet, "visibleContentProof");
-    const f13NComplete = completed.has("F13N_INSPECT_MODE_READY") || getBool(packet, "inspectModeAvailable");
-    const f21Complete = completed.has("F21_COMPLETION_LATCHED") || getBool(packet, "completionLatched");
+    if (
+      firstFailedCoordinate === "WAITING_inspectModeAvailable" ||
+      firstFailedCoordinate === "WAITING_inspectPlanetControlAvailable" ||
+      firstFailedCoordinate === "WAITING_diagnosticCanLeavePlanetFrame" ||
+      firstFailedCoordinate === "WAITING_buttonsReachable"
+    ) {
+      return "/showroom/globe/hearth/hearth.js";
+    }
 
-    const news = evaluateNewsGateState(packet);
-    const f21Allowed = Boolean(
-      getBool(packet, "f21Allowed") ||
-      (
-        f13MComplete &&
-        f13NComplete &&
-        news.newsGatePassedBeforeF21
-      )
+    if (firstFailedCoordinate === "NONE_NEWS_FIBONACCI_F21_LATCHED") {
+      return "read-postgame-canvas-or-triple-g-receipt";
+    }
+
+    return "/showroom/globe/hearth/hearth.js";
+  }
+
+  function resolvePostgameStatus(normalized, southCompositionFailed) {
+    if (southCompositionFailed) return "SOUTH_VISIBLE_STATE_FALLBACK_ACTIVE";
+
+    if (
+      normalized.completionLatched &&
+      normalized.f21Allowed &&
+      normalized.f13SubsequenceComplete &&
+      normalized.newsGatePassedBeforeF21 &&
+      normalized.visibleContentProof &&
+      normalized.visiblePlanetAvailable &&
+      normalized.inspectModeAvailable &&
+      normalized.diagnosticCanLeavePlanetFrame &&
+      normalized.buttonsReachable
+    ) {
+      return "READY_PLANET_VISIBLE_DIAGNOSTIC_AVAILABLE";
+    }
+
+    if (!normalized.visibleContentProof) return "VISIBLE_CONTENT_PROOF_PENDING";
+
+    if (
+      !normalized.inspectModeAvailable ||
+      !normalized.inspectPlanetControlAvailable ||
+      !normalized.diagnosticCanLeavePlanetFrame ||
+      !normalized.buttonsReachable
+    ) {
+      return "INSPECT_OR_NEWS_GATE_PENDING";
+    }
+
+    if (!normalized.newsGatePassedBeforeF21) return "NEWS_GATE_PENDING";
+
+    if (!normalized.canvasReady) return "CANVAS_SEQUENCE_PENDING";
+
+    return "CHECKPOINT_SEQUENCE_ACTIVE";
+  }
+
+  function resolveVisibleCheckpoint(normalized, postgameStatus) {
+    if (postgameStatus === "READY_PLANET_VISIBLE_DIAGNOSTIC_AVAILABLE") {
+      return CHECKPOINT_BY_ID.F21_COMPLETION_LATCHED;
+    }
+
+    if (postgameStatus === "VISIBLE_CONTENT_PROOF_PENDING") {
+      return normalized.visibleContentProofStarted
+        ? CHECKPOINT_BY_ID.F13M_VISIBLE_CONTENT_PROOF_PASSED
+        : normalized.activeCheckpoint || CHECKPOINT_BY_ID.F13L_VISIBLE_CONTENT_PROOF_STARTED;
+    }
+
+    if (postgameStatus === "INSPECT_OR_NEWS_GATE_PENDING") {
+      return CHECKPOINT_BY_ID.F13N_INSPECT_MODE_READY;
+    }
+
+    if (postgameStatus === "NEWS_GATE_PENDING") {
+      return CHECKPOINT_BY_ID.F21_COMPLETION_LATCHED;
+    }
+
+    return normalized.activeCheckpoint || inferCheckpointFromEvidence(normalized.flat || {});
+  }
+
+  function resolveLatestVisibleEvent(normalized, checkpoint, postgameStatus) {
+    if (postgameStatus === "READY_PLANET_VISIBLE_DIAGNOSTIC_AVAILABLE") return "COMPLETION_LATCHED";
+    if (postgameStatus === "VISIBLE_CONTENT_PROOF_PENDING") return normalized.visibleContentProofStarted ? "VISIBLE_CONTENT_PROOF_STARTED" : "CANVAS_READY";
+    if (postgameStatus === "INSPECT_OR_NEWS_GATE_PENDING") return normalized.visibleContentProof ? "VISIBLE_CONTENT_PROOF_PASSED" : "VISIBLE_CONTENT_PROOF_STARTED";
+    if (normalized.latestVisibleEvent) return normalized.latestVisibleEvent;
+    return checkpoint ? checkpoint.event : "";
+  }
+
+  function resolveProgress(normalized, checkpoint, postgameStatus) {
+    const completed =
+      postgameStatus === "READY_PLANET_VISIBLE_DIAGNOSTIC_AVAILABLE" &&
+      normalized.completionLatched &&
+      normalized.f21Allowed;
+
+    if (completed) {
+      return {
+        mainDisplayProgress: 100,
+        mainProgressCap: 100,
+        readyTextAllowed: true
+      };
+    }
+
+    const sourceProgress = firstNumber(
+      checkpoint ? checkpoint.progress : 0,
+      normalized.flat && normalized.flat.mainDisplayProgress,
+      normalized.flat && normalized.flat.visibleProgress
     );
-
-    const finalNumerator =
-      (f13MComplete ? FIBONACCI_FINAL.F13_VISIBLE_CONTENT_PROOF : 0) +
-      (f13NComplete ? FIBONACCI_FINAL.F13_INSPECT_MODE : 0) +
-      (news.newsGatePassedBeforeF21 ? FIBONACCI_FINAL.F21_COMPLETION : 0);
-
-    const finalFibonacciRatio = finalNumerator / FIBONACCI_FINAL.FINAL_DENOMINATOR;
 
     return {
-      fibonacciSequenceActive: getBool(packet, "fibonacciSequenceActive", true),
-      f13RequiredCount: F13_REQUIRED.length,
-      f13CompletedCount: f13Completed.length,
-      f13CompletionRatio,
-      f13MComplete,
-      f13NComplete,
-      f21Complete,
-      f21Allowed,
-      f21AfterF13N: Boolean(f21Complete && f13NComplete),
-      finalNumerator,
-      finalDenominator: FIBONACCI_FINAL.FINAL_DENOMINATOR,
-      finalFibonacciRatio,
-      equation: "F21_ALLOWED = F13M_VISIBLE_CONTENT_PROOF_PASSED ∧ F13N_INSPECT_MODE_READY ∧ (NORTH ∧ EAST ∧ WEST ∧ SOUTH)"
+      mainDisplayProgress: clamp(Math.max(sourceProgress, 0), 0, 98),
+      mainProgressCap: 98,
+      readyTextAllowed: false
     };
   }
 
-  function evaluateHardBlocks(input = {}) {
-    const packet = normalizeInput(input);
-    const gaps = [];
+  function composePacket(normalized, southCompositionFailed = false, southCompositionError = "") {
+    const firstFailedCoordinate = resolveFirstFailedCoordinate(normalized, southCompositionFailed);
+    const postgameStatus = resolvePostgameStatus(normalized, southCompositionFailed);
+    const checkpoint = resolveVisibleCheckpoint(normalized, postgameStatus);
+    const progress = resolveProgress(normalized, checkpoint, postgameStatus);
+    const latestVisibleEvent = resolveLatestVisibleEvent(normalized, checkpoint, postgameStatus);
+    const recommendedNextRenewalTarget = resolveRenewalTarget(firstFailedCoordinate);
 
-    const routeMounted = getBool(packet, "routeMounted", true);
-    const canvasCarrierMounted = getBool(packet, "canvasCarrierMounted", getBool(packet, "planetCanvasPresent"));
-    const planetCanvasPresent = getBool(packet, "planetCanvasPresent", canvasCarrierMounted);
-    const planetCanvasNonZeroSize = getBool(packet, "planetCanvasNonZeroSize", true);
-    const canvasCarrierHandoffOk = getBool(packet, "canvasCarrierHandoffOk", true);
-    const canvasCarrierHandoffError = String(getFirst(packet, "canvasCarrierHandoffError", "") || "");
-    const generatedImage = getBool(packet, "generatedImage", false);
-    const graphicBox = getBool(packet, "graphicBox", false);
+    const activeCheckpointId = checkpoint ? checkpoint.id : "";
+    const activeCheckpointRank = checkpoint ? checkpoint.rank : 0;
+    const activeFibonacciStage = checkpoint ? checkpoint.fibonacci : "";
 
-    if (!routeMounted) {
-      gaps.push(createGap(
-        "ROUTE_NOT_MOUNTED",
-        "Route mount is unavailable. South cannot authorize forward visible progress.",
-        GAP_SEVERITY.HARD,
-        { routeMounted }
-      ));
-    }
-
-    if (!canvasCarrierMounted || !planetCanvasPresent) {
-      gaps.push(createGap(
-        "CANVAS_CARRIER_MISSING",
-        "Canvas carrier is missing. Forward progress would become a false visual state.",
-        GAP_SEVERITY.HARD,
-        { canvasCarrierMounted, planetCanvasPresent }
-      ));
-    }
-
-    if (!planetCanvasNonZeroSize) {
-      gaps.push(createGap(
-        "CANVAS_ZERO_SIZE",
-        "Planet canvas exists but has zero size.",
-        GAP_SEVERITY.HARD,
-        { planetCanvasNonZeroSize }
-      ));
-    }
-
-    if (!canvasCarrierHandoffOk && canvasCarrierHandoffError) {
-      gaps.push(createGap(
-        "CANVAS_HANDOFF_ERROR",
-        "Canvas carrier handoff reported an error.",
-        GAP_SEVERITY.HARD,
-        { canvasCarrierHandoffOk, canvasCarrierHandoffError }
-      ));
-    }
-
-    if (generatedImage || graphicBox) {
-      gaps.push(createGap(
-        "FORBIDDEN_VISUAL_SOURCE",
-        "Generated image or GraphicBox source is forbidden for this runtime path.",
-        GAP_SEVERITY.HARD,
-        { generatedImage, graphicBox }
-      ));
-    }
-
-    return gaps;
-  }
-
-  function evaluateSoftGaps(input = {}) {
-    const packet = normalizeInput(input);
-    const gaps = [];
-    const news = evaluateNewsGateState(packet);
-    const fib = evaluateFibonacciState(packet);
-
-    const canvasReady = getBool(packet, "canvasReady");
-    const firstFrameDetected = getBool(packet, "firstFrameDetected");
-    const imageRendered = getBool(packet, "imageRendered");
-    const visibleContentProof = getBool(packet, "visibleContentProof");
-    const visiblePlanetAvailable = getBool(packet, "visiblePlanetAvailable");
-    const carrierOnlyDetected = getBool(packet, "carrierOnlyDetected");
-    const inspectModeAvailable = getBool(packet, "inspectModeAvailable");
-    const diagnosticCanLeavePlanetFrame = getBool(packet, "diagnosticCanLeavePlanetFrame");
-    const buttonsReachable = getBool(packet, "buttonsReachable");
-    const completionLatched = getBool(packet, "completionLatched");
-
-    if (!canvasReady) {
-      gaps.push(createGap(
-        "CANVAS_READY_PENDING",
-        "Canvas is not ready yet. Forward progress may continue only as loading/diagnostic shell.",
-        GAP_SEVERITY.SOFT,
-        { canvasReady }
-      ));
-    }
-
-    if (!firstFrameDetected || !imageRendered) {
-      gaps.push(createGap(
-        "FIRST_FRAME_PENDING",
-        "First visible frame has not been fully proven.",
-        GAP_SEVERITY.SOFT,
-        { firstFrameDetected, imageRendered }
-      ));
-    }
-
-    if (!visibleContentProof) {
-      gaps.push(createGap(
-        "VISIBLE_CONTENT_PROOF_PENDING",
-        "Visible content proof has not passed. This blocks final claim but should not erase the visible carrier.",
-        GAP_SEVERITY.SOFT,
-        {
-          visibleContentProof,
-          visibleContentProofError: getFirst(packet, "visibleContentProofError", ""),
-          visibleContentSampleCount: getNumber(packet, "visibleContentSampleCount"),
-          visibleContentClassCount: getNumber(packet, "visibleContentClassCount"),
-          visibleContentLandSampleCount: getNumber(packet, "visibleContentLandSampleCount"),
-          visibleContentWaterSampleCount: getNumber(packet, "visibleContentWaterSampleCount")
-        }
-      ));
-    }
-
-    if (carrierOnlyDetected) {
-      gaps.push(createGap(
-        "CARRIER_DOMINANCE_GAP",
-        "Carrier-only or insufficient content sample was detected. Treat as a visible-content gap, not a structural stop.",
-        GAP_SEVERITY.DEGRADED,
-        { carrierOnlyDetected }
-      ));
-    }
-
-    if (!visiblePlanetAvailable) {
-      gaps.push(createGap(
-        "VISIBLE_PLANET_AVAILABLE_PENDING",
-        "Planet canvas is present but final visible-planet availability has not passed.",
-        GAP_SEVERITY.SOFT,
-        { visiblePlanetAvailable }
-      ));
-    }
-
-    if (!inspectModeAvailable) {
-      gaps.push(createGap(
-        "INSPECT_MODE_PENDING",
-        "Inspect mode is pending. Continue forward into inspect repair instead of blocking the whole route.",
-        GAP_SEVERITY.SOFT,
-        { inspectModeAvailable }
-      ));
-    }
-
-    if (!diagnosticCanLeavePlanetFrame) {
-      gaps.push(createGap(
-        "DIAGNOSTIC_FRAME_EXIT_PENDING",
-        "Diagnostic cockpit cannot yet leave the planet frame.",
-        GAP_SEVERITY.SOFT,
-        { diagnosticCanLeavePlanetFrame }
-      ));
-    }
-
-    if (!buttonsReachable) {
-      gaps.push(createGap(
-        "BUTTONS_REACHABLE_PENDING",
-        "Diagnostic controls are not fully reachable.",
-        GAP_SEVERITY.SOFT,
-        { buttonsReachable }
-      ));
-    }
-
-    if (!news.northGateReady) {
-      gaps.push(createGap(
-        "NEWS_NORTH_PENDING",
-        "North gate is pending.",
-        GAP_SEVERITY.SOFT,
-        { northGateReady: news.northGateReady }
-      ));
-    }
-
-    if (!news.eastGateReady) {
-      gaps.push(createGap(
-        "NEWS_EAST_PENDING",
-        "East gate is pending.",
-        GAP_SEVERITY.SOFT,
-        { eastGateReady: news.eastGateReady }
-      ));
-    }
-
-    if (!news.westGateReady) {
-      gaps.push(createGap(
-        "NEWS_WEST_PENDING",
-        "West gate is pending.",
-        GAP_SEVERITY.SOFT,
-        { westGateReady: news.westGateReady }
-      ));
-    }
-
-    if (!news.southGateReady) {
-      gaps.push(createGap(
-        "NEWS_SOUTH_PENDING",
-        "South gate is pending.",
-        GAP_SEVERITY.SOFT,
-        { southGateReady: news.southGateReady }
-      ));
-    }
-
-    if (!fib.f21Allowed) {
-      gaps.push(createGap(
-        "F21_ADMISSIBILITY_PENDING",
-        "F21 completion is not admissible until F13M, F13N, and NEWS gates pass.",
-        GAP_SEVERITY.SOFT,
-        {
-          f13MComplete: fib.f13MComplete,
-          f13NComplete: fib.f13NComplete,
-          newsGatePassedBeforeF21: news.newsGatePassedBeforeF21,
-          equation: fib.equation
-        }
-      ));
-    }
-
-    if (!completionLatched) {
-      gaps.push(createGap(
-        "COMPLETION_LATCH_PENDING",
-        "Completion latch has not been lawfully reached.",
-        GAP_SEVERITY.SOFT,
-        { completionLatched }
-      ));
-    }
-
-    return gaps;
-  }
-
-  function chooseFirstGap(hardGaps, softGaps) {
-    if (hardGaps.length) return hardGaps[0];
-    if (softGaps.length) return softGaps[0];
-    return null;
-  }
-
-  function chooseForwardMode(packet, hardGaps, softGaps, finalPass) {
-    if (hardGaps.length) return FORWARD_MODE.STOP_FOR_STRUCTURAL_BLOCK;
-    if (finalPass) return FORWARD_MODE.POSTGAME_COMPLETE;
-
-    const codes = new Set(softGaps.map((gap) => gap.code));
-
-    if (codes.has("VISIBLE_CONTENT_PROOF_PENDING") || codes.has("CARRIER_DOMINANCE_GAP")) {
-      return FORWARD_MODE.CONTINUE_TO_VISIBLE_PROOF;
-    }
-
-    if (
-      codes.has("INSPECT_MODE_PENDING") ||
-      codes.has("DIAGNOSTIC_FRAME_EXIT_PENDING") ||
-      codes.has("BUTTONS_REACHABLE_PENDING")
-    ) {
-      return FORWARD_MODE.CONTINUE_TO_INSPECT;
-    }
-
-    if (
-      codes.has("NEWS_NORTH_PENDING") ||
-      codes.has("NEWS_EAST_PENDING") ||
-      codes.has("NEWS_WEST_PENDING") ||
-      codes.has("NEWS_SOUTH_PENDING") ||
-      codes.has("F21_ADMISSIBILITY_PENDING") ||
-      codes.has("COMPLETION_LATCH_PENDING")
-    ) {
-      return FORWARD_MODE.CONTINUE_TO_DIAGNOSTIC_REPAIR;
-    }
-
-    if (
-      getBool(packet, "canvasCarrierMounted") ||
-      getBool(packet, "planetCanvasPresent") ||
-      getBool(packet, "fallbackShellAvailable", true)
-    ) {
-      return FORWARD_MODE.CONTINUE_WITH_FALLBACK_CARRIER;
-    }
-
-    return FORWARD_MODE.CONTINUE_TO_DIAGNOSTIC_REPAIR;
-  }
-
-  function chooseRenewalTarget(firstGap, packet = {}) {
-    if (!firstGap) return "read-postgame-canvas-or-triple-g-receipt";
-
-    switch (firstGap.code) {
-      case "ROUTE_NOT_MOUNTED":
-        return "/showroom/globe/hearth/index.js";
-
-      case "CANVAS_CARRIER_MISSING":
-      case "CANVAS_ZERO_SIZE":
-      case "CANVAS_HANDOFF_ERROR":
-      case "CANVAS_READY_PENDING":
-      case "FIRST_FRAME_PENDING":
-        return "/assets/hearth/hearth.canvas.js";
-
-      case "VISIBLE_CONTENT_PROOF_PENDING":
-      case "CARRIER_DOMINANCE_GAP":
-      case "VISIBLE_PLANET_AVAILABLE_PENDING":
-      case "INSPECT_MODE_PENDING":
-      case "DIAGNOSTIC_FRAME_EXIT_PENDING":
-      case "BUTTONS_REACHABLE_PENDING":
-      case "NEWS_WEST_PENDING":
-      case "NEWS_SOUTH_PENDING":
-      case "F21_ADMISSIBILITY_PENDING":
-      case "COMPLETION_LATCH_PENDING":
-        return getFirst(packet, "file", "/showroom/globe/hearth/hearth.js");
-
-      case "NEWS_NORTH_PENDING":
-        return "/assets/lab/runtime-table.js";
-
-      case "NEWS_EAST_PENDING":
-        return "/assets/lab/runtime-table.east.js";
-
-      default:
-        return getFirst(packet, "file", "/showroom/globe/hearth/hearth.js");
-    }
-  }
-
-  function evaluateSouthFinalProtocol(input = {}, options = {}) {
-    const packet = normalizeInput(input);
-    const news = evaluateNewsGateState(packet);
-    const fib = evaluateFibonacciState(packet);
-    const hardGaps = evaluateHardBlocks(packet);
-    const softGaps = evaluateSoftGaps(packet);
-
-    const visualCarrierStructurallySafe = hardGaps.length === 0;
-    const visibleCarrierCanContinue = Boolean(
-      visualCarrierStructurallySafe &&
-      (
-        getBool(packet, "canvasCarrierMounted") ||
-        getBool(packet, "planetCanvasPresent") ||
-        getBool(packet, "fallbackShellAvailable", true)
-      )
+    const highestCompleted = normalized.highestCompletedCheckpoint || (
+      normalized.completionLatched
+        ? CHECKPOINT_BY_ID.F21_COMPLETION_LATCHED
+        : normalized.completedCheckpoints.includes("F13N_INSPECT_MODE_READY")
+          ? CHECKPOINT_BY_ID.F13N_INSPECT_MODE_READY
+          : normalized.completedCheckpoints.includes("F13M_VISIBLE_CONTENT_PROOF_PASSED")
+            ? CHECKPOINT_BY_ID.F13M_VISIBLE_CONTENT_PROOF_PASSED
+            : null
     );
 
-    const finalPass = Boolean(
-      visualCarrierStructurallySafe &&
-      getBool(packet, "visibleContentProof") &&
-      getBool(packet, "visiblePlanetAvailable") &&
-      getBool(packet, "inspectModeAvailable") &&
-      getBool(packet, "diagnosticCanLeavePlanetFrame") &&
-      getBool(packet, "buttonsReachable") &&
-      fib.f21Allowed &&
-      getBool(packet, "completionLatched")
-    );
+    const currentStage = progress.mainDisplayProgress === 100
+      ? "F21"
+      : activeFibonacciStage || normalized.currentStage || "";
 
-    const firstGap = chooseFirstGap(hardGaps, softGaps);
-    const forwardMode = chooseForwardMode(packet, hardGaps, softGaps, finalPass);
+    const highestStage = progress.mainDisplayProgress === 100
+      ? "F21"
+      : firstString(
+        normalized.highestStage,
+        highestCompleted && highestCompleted.fibonacci,
+        activeFibonacciStage
+      );
 
-    let southStatus = SOUTH_STATUS.FORWARD_WITH_GAP;
-    if (hardGaps.length) southStatus = SOUTH_STATUS.HARD_BLOCK;
-    else if (finalPass) southStatus = SOUTH_STATUS.FINAL_PASS;
-    else if (softGaps.some((gap) => gap.severity === GAP_SEVERITY.DEGRADED)) southStatus = SOUTH_STATUS.DEGRADED;
-    else if (!visibleCarrierCanContinue) southStatus = SOUTH_STATUS.FALLBACK;
-    else southStatus = SOUTH_STATUS.FORWARD_WITH_GAP;
+    const finalReceiptAvailable = progress.mainDisplayProgress === 100
+      ? true
+      : normalized.finalReceiptAvailable;
 
-    const finalClaimStatus = finalPass
-      ? FINAL_CLAIM.ALLOWED
-      : hardGaps.length
-        ? FINAL_CLAIM.FORBIDDEN_HARD_BLOCK
-        : FINAL_CLAIM.FORBIDDEN_PENDING_GAP;
+    const diagnosticCockpitReady =
+      postgameStatus === "READY_PLANET_VISIBLE_DIAGNIC_AVAILABLE" ||
+      postgameStatus === "READY_PLANET_VISIBLE_DIAGNOSTIC_AVAILABLE" ||
+      normalized.visiblePlanetAvailable ||
+      normalized.partialReceiptAvailable;
 
-    const forwardProgressAllowed = Boolean(
-      finalPass ||
-      (
-        hardGaps.length === 0 &&
-        visibleCarrierCanContinue
-      )
-    );
-
-    const progressCap = finalPass ? 100 : 98;
-    const displayProgress = finalPass
-      ? 100
-      : Math.min(98, Math.max(0, getNumber(packet, ["mainDisplayProgress", "visibleProgress"], 98)));
-
-    const firstFailedCoordinate = finalPass
-      ? "NONE_SOUTH_FINAL_PROTOCOL_PASSED"
-      : firstGap
-        ? `WAITING_${firstGap.code}`
-        : "WAITING_UNKNOWN_GAP";
-
-    const recommendedNextRenewalTarget = finalPass
-      ? "read-postgame-canvas-or-triple-g-receipt"
-      : chooseRenewalTarget(firstGap, packet);
+    const cockpitMode = progress.mainDisplayProgress === 100 || normalized.visiblePlanetAvailable
+      ? "diagnostic-dock"
+      : "loading-cockpit";
 
     return {
       contract: CONTRACT,
@@ -713,246 +769,282 @@
       previousContract: PREVIOUS_CONTRACT,
       baselineContract: BASELINE_CONTRACT,
       version: VERSION,
-      authority: "lab-runtime-table-south-final-protocol-forward-progress",
-      planetId: getFirst(packet, "planetId", options.planetId || ""),
-      planetLabel: getFirst(packet, "planetLabel", options.planetLabel || ""),
-      route: getFirst(packet, "route", options.route || ""),
+      file: DESTINATION_FILE,
+      role: "south-visible-state-composer",
 
-      southProtocolActive: true,
-      southStatus,
-      forwardMode,
-      forwardProgressAllowed,
-      visibleCarrierStructurallySafe,
-      visibleCarrierCanContinue,
-      finalClaimStatus,
-      finalPass,
-      finalVisualPassClaimAllowed: finalPass,
-      visualPassClaimed: false,
+      southCompositionOk: !southCompositionFailed,
+      southFallbackUsed: southCompositionFailed,
+      southCompositionError: southCompositionError || "",
+      visibleStateRecoverable: true,
 
-      progressCap,
-      mainProgressCap: progressCap,
-      displayProgress,
-      readyTextAllowed: finalPass,
+      currentStage,
+      highestStage,
+      activeCheckpointId,
+      activeCheckpointRank,
+      activeFibonacciStage,
+      highestCompletedCheckpointId: highestCompleted ? highestCompleted.id : "",
+      highestCompletedRank: highestCompleted ? highestCompleted.rank : 0,
 
-      newsGateState: clonePlain(news),
-      northGateReady: news.northGateReady,
-      eastGateReady: news.eastGateReady,
-      westGateReady: news.westGateReady,
-      southGateReady: news.southGateReady,
-      newsGatePassedBeforeF21: news.newsGatePassedBeforeF21,
+      latestVisibleEvent,
+      visibleLoadingActive: progress.mainDisplayProgress < 100 && postgameStatus !== "CHECKPOINT_SEQUENCE_ACTIVE",
+      diagnosticCockpitReady,
+      cockpitMode,
+      dockVisible: normalized.dockVisible,
+      fullCockpitExpanded: normalized.fullCockpitExpanded,
 
-      fibonacciState: clonePlain(fib),
-      fibonacciSequenceActive: fib.fibonacciSequenceActive,
-      f13CompletionRatio: fib.f13CompletionRatio,
-      f13CompletedCount: fib.f13CompletedCount,
-      f13RequiredCount: fib.f13RequiredCount,
-      f13MComplete: fib.f13MComplete,
-      f13NComplete: fib.f13NComplete,
-      f21Allowed: fib.f21Allowed,
-      f21AfterF13N: fib.f21AfterF13N,
-      finalFibonacciRatio: fib.finalFibonacciRatio,
-      finalFibonacciEquation: fib.equation,
+      partialReceiptAvailable: normalized.partialReceiptAvailable,
+      finalReceiptAvailable,
+      copyDiagnosticArmed: normalized.copyDiagnosticArmed,
+      receiptToggleReady: normalized.receiptToggleReady,
+      buttonsReachable: normalized.buttonsReachable,
 
-      hardGaps,
-      softGaps,
-      gapCount: hardGaps.length + softGaps.length,
-      hardGapCount: hardGaps.length,
-      softGapCount: softGaps.length,
-      firstGap: clonePlain(firstGap),
+      postgameStatus,
       firstFailedCoordinate,
       recommendedNextRenewalTarget,
 
-      sourceContract: getFirst(packet, "contract", ""),
-      sourceReceipt: getFirst(packet, "receipt", ""),
-      sourceFile: getFirst(packet, "file", ""),
-      activeCheckpointId: getFirst(packet, "activeCheckpointId", ""),
-      activeCheckpointRank: getNumber(packet, "activeCheckpointRank"),
-      activeFibonacciStage: getFirst(packet, "activeFibonacciStage", ""),
-      highestCompletedCheckpointId: getFirst(packet, "highestCompletedCheckpointId", ""),
-      highestCompletedRank: getNumber(packet, "highestCompletedRank"),
-      completionLatched: getBool(packet, "completionLatched"),
+      mainDisplayProgress: progress.mainDisplayProgress,
+      mainProgressCap: progress.mainProgressCap,
+      readyTextAllowed: progress.readyTextAllowed,
+      completionLatched: progress.readyTextAllowed && progress.mainDisplayProgress === 100,
 
-      visibleContentProof: getBool(packet, "visibleContentProof"),
-      carrierOnlyDetected: getBool(packet, "carrierOnlyDetected"),
-      visiblePlanetAvailable: getBool(packet, "visiblePlanetAvailable"),
-      inspectModeAvailable: getBool(packet, "inspectModeAvailable"),
-      diagnosticCanLeavePlanetFrame: getBool(packet, "diagnosticCanLeavePlanetFrame"),
-      buttonsReachable: getBool(packet, "buttonsReachable"),
+      visibleContentProof: normalized.visibleContentProof,
+      visibleContentProofStarted: normalized.visibleContentProofStarted,
+      visibleContentProofMethod: normalized.visibleContentProofMethod,
+      visibleContentProofError: normalized.visibleContentProofError,
+      visibleContentSampleCount: normalized.visibleContentSampleCount,
+      visibleContentVarianceScore: normalized.visibleContentVarianceScore,
+      visibleContentClassCount: normalized.visibleContentClassCount,
+      visibleContentClasses: normalized.visibleContentClasses,
+      visibleContentLandSampleCount: normalized.visibleContentLandSampleCount,
+      visibleContentWaterSampleCount: normalized.visibleContentWaterSampleCount,
+      visibleContentOtherSampleCount: normalized.visibleContentOtherSampleCount,
+      carrierOnlyDetected: normalized.carrierOnlyDetected,
+      explicitContentReceiptProof: normalized.explicitContentReceiptProof,
+      renderedAfterTexture: normalized.renderedAfterTexture,
 
-      quickGapAssessment: true,
-      hardBlockOnlyForStructuralUnsafeCarrier: true,
-      softGapsDoNotEraseVisualization: true,
-      forwardProgressBeatsPrematureBlocking: true,
-      readyTextRequiresCompletionLatch: true,
-      completionRequiresF13MF13NNewsAndLatch: true,
+      visiblePlanetAvailable: normalized.visiblePlanetAvailable,
+      planetCanvasPresent: normalized.planetCanvasPresent,
+      planetCanvasNonZeroSize: normalized.planetCanvasNonZeroSize,
+      planetFramePainted: normalized.planetFramePainted,
+      nonblankPlanetVisible: normalized.nonblankPlanetVisible,
+      planetNotObstructed: normalized.planetNotObstructed,
+
+      inspectModeAvailable: normalized.inspectModeAvailable,
+      inspectPlanetControlAvailable: normalized.inspectPlanetControlAvailable,
+      diagnosticCanLeavePlanetFrame: normalized.diagnosticCanLeavePlanetFrame,
+      diagnosticDockHiddenForInspection: normalized.diagnosticDockHiddenForInspection,
+      showDiagnosticTabVisible: normalized.showDiagnosticTabVisible,
+      showDiagnosticTabVisibleWhenHidden: normalized.showDiagnosticTabVisibleWhenHidden,
+      diagnosticDockRestorable: normalized.diagnosticDockRestorable,
+      copyDiagnosticPreserved: normalized.copyDiagnosticPreserved,
+      receiptOverlayIndependent: normalized.receiptOverlayIndependent,
+
+      northGateReady: normalized.northGateReady,
+      eastGateReady: normalized.eastGateReady,
+      westGateReady: normalized.westGateReady,
+      southGateReady: normalized.southGateReady,
+      newsGatePassedBeforeF21: normalized.newsGatePassedBeforeF21,
+
+      f13SubsequenceComplete: normalized.f13SubsequenceComplete,
+      f13LastRequiredEvent: normalized.f13LastRequiredEvent,
+      f21Allowed: normalized.f21Allowed,
+      f21AfterF13N: normalized.f13SubsequenceComplete && normalized.f21Allowed,
+
+      queuedEventsCount: normalized.queuedEventsCount,
+      archivedEventsCount: normalized.archivedEventsCount,
+      blockedEventsCount: normalized.blockedEventsCount,
+      admittedEventsCount: normalized.admittedEventsCount,
+      regressionPrevented: normalized.regressionPrevented,
+      northLooksStalledByPriorSouthError: normalized.northLooksStalledByPriorSouthError,
+
+      canvasReady: normalized.canvasReady,
+      canvasCarrierMounted: normalized.canvasCarrierMounted,
+      canvasCarrierRequested: normalized.canvasCarrierRequested,
+      canvasCarrierHandoffOk: normalized.canvasCarrierHandoffOk,
+      canvasCarrierHandoffError: normalized.canvasCarrierHandoffError,
+      canvasCarrierMethod: normalized.canvasCarrierMethod,
+      cooperativeBootAvailable: normalized.cooperativeBootAvailable,
+      cooperativeBootUsed: normalized.cooperativeBootUsed,
+      syncBootFallbackUsed: normalized.syncBootFallbackUsed,
+      canvasBootStartedAt: normalized.canvasBootStartedAt,
+      canvasBootCompletedAt: normalized.canvasBootCompletedAt,
+      canvasBootElapsedMs: normalized.canvasBootElapsedMs,
+      canvasYieldCount: normalized.canvasYieldCount,
+      canvasPhaseCount: normalized.canvasPhaseCount,
+      lastCanvasPhase: normalized.lastCanvasPhase,
+      lastCanvasProgress: normalized.lastCanvasProgress,
+      loaderRepaintDuringCanvasBoot: normalized.loaderRepaintDuringCanvasBoot,
+      f13ProgressStreamActive: normalized.f13ProgressStreamActive,
+      canvasLaneClosed: normalized.canvasLaneClosed,
+      postCanvasPhaseBouncePrevented: normalized.postCanvasPhaseBouncePrevented,
+      ignoredDuplicateCanvasEvents: normalized.ignoredDuplicateCanvasEvents,
+
+      atlasBuildStarted: normalized.atlasBuildStarted,
+      atlasBuildProgress: normalized.atlasBuildProgress,
+      atlasBuildComplete: normalized.atlasBuildComplete,
+      textureComposeStarted: normalized.textureComposeStarted,
+      textureComposeProgress: normalized.textureComposeProgress,
+      textureComposeComplete: normalized.textureComposeComplete,
+      firstFrameRequested: normalized.firstFrameRequested,
+      firstFrameDetected: normalized.firstFrameDetected,
+      imageRendered: normalized.imageRendered,
+      dragInspectionBound: normalized.dragInspectionBound,
+
+      runtimeTablePresent: normalized.runtimeTablePresent,
+      runtimeTableMode: normalized.runtimeTableMode,
+      runtimeTablePlanAttempted: normalized.runtimeTablePlanAttempted,
+      runtimeTablePlanCreated: normalized.runtimeTablePlanCreated,
+      runtimeTablePlanError: normalized.runtimeTablePlanError,
+      sourceAuthorityHeld: normalized.sourceAuthorityHeld,
 
       generatedImage: false,
       graphicBox: false,
       webGL: false,
+      visualPassClaimed: false,
       updatedAt: nowIso()
     };
   }
 
-  function createSouthSession(options = {}) {
-    const sessionId = options.id || `${options.planetId || "planet"}-south-final-protocol-${Math.random().toString(36).slice(2, 9)}`;
+  function composeFallbackVisibleState(input = {}, error = null) {
+    const message = error && error.message ? error.message : safeString(error, "");
 
-    const state = {
-      sessionId,
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      planetId: options.planetId || "",
-      planetLabel: options.planetLabel || "",
-      route: options.route || "",
-      evaluations: [],
-      lastEvaluation: null,
-      createdAt: nowIso(),
-      updatedAt: nowIso()
-    };
-
-    function ingest(input = {}) {
-      const report = evaluateSouthFinalProtocol(input, {
-        planetId: state.planetId,
-        planetLabel: state.planetLabel,
-        route: state.route
-      });
-
-      state.evaluations.push(report);
-      if (state.evaluations.length > 80) state.evaluations.splice(0, state.evaluations.length - 80);
-
-      state.lastEvaluation = report;
-      state.updatedAt = nowIso();
-
-      return report;
-    }
-
-    function getLastEvaluation() {
-      return clonePlain(state.lastEvaluation);
-    }
-
-    function reset() {
-      state.evaluations = [];
-      state.lastEvaluation = null;
-      state.updatedAt = nowIso();
-      return getReceipt();
-    }
-
-    function getReceipt() {
-      const last = state.lastEvaluation || null;
-
-      return {
-        contract: CONTRACT,
-        receipt: RECEIPT,
-        southSessionContract: "LAB_RUNTIME_TABLE_SOUTH_FINAL_PROTOCOL_SESSION_v1",
-        southSessionReceipt: "LAB_RUNTIME_TABLE_SOUTH_FINAL_PROTOCOL_SESSION_RECEIPT_v1",
-        sessionId: state.sessionId,
-        planetId: state.planetId,
-        planetLabel: state.planetLabel,
-        route: state.route,
-        southProtocolActive: true,
-        evaluationCount: state.evaluations.length,
-        lastSouthStatus: last ? last.southStatus : "NO_EVALUATION",
-        lastForwardMode: last ? last.forwardMode : "",
-        lastForwardProgressAllowed: last ? last.forwardProgressAllowed : false,
-        lastFinalPass: last ? last.finalPass : false,
-        lastFinalClaimStatus: last ? last.finalClaimStatus : "",
-        lastFirstFailedCoordinate: last ? last.firstFailedCoordinate : "",
-        lastRecommendedNextRenewalTarget: last ? last.recommendedNextRenewalTarget : "",
-        hardBlockOnlyForStructuralUnsafeCarrier: true,
-        softGapsDoNotEraseVisualization: true,
-        quickGapAssessment: true,
-        forwardProgressBeatsPrematureBlocking: true,
-        visualPassClaimed: false,
-        generatedImage: false,
-        graphicBox: false,
-        webGL: false,
-        createdAt: state.createdAt,
-        updatedAt: state.updatedAt
-      };
-    }
-
-    function getReceiptText() {
-      const receipt = getReceipt();
-      const last = state.lastEvaluation || {};
-
-      const hardGaps = asArray(last.hardGaps).map((gap) => (
-        `- ${gap.code}: severity=${gap.severity}; ${gap.message}`
-      )).join("\n") || "- none";
-
-      const softGaps = asArray(last.softGaps).map((gap) => (
-        `- ${gap.code}: severity=${gap.severity}; ${gap.message}`
-      )).join("\n") || "- none";
-
-      return [
-        "LAB_RUNTIME_TABLE_SOUTH_FINAL_PROTOCOL_SESSION_RECEIPT",
-        "",
-        `contract=${receipt.contract}`,
-        `receipt=${receipt.receipt}`,
-        `sessionId=${receipt.sessionId}`,
-        `planetId=${receipt.planetId}`,
-        `route=${receipt.route}`,
-        "",
-        `southProtocolActive=${receipt.southProtocolActive}`,
-        `evaluationCount=${receipt.evaluationCount}`,
-        `lastSouthStatus=${receipt.lastSouthStatus}`,
-        `lastForwardMode=${receipt.lastForwardMode}`,
-        `lastForwardProgressAllowed=${receipt.lastForwardProgressAllowed}`,
-        `lastFinalPass=${receipt.lastFinalPass}`,
-        `lastFinalClaimStatus=${receipt.lastFinalClaimStatus}`,
-        "",
-        `lastFirstFailedCoordinate=${receipt.lastFirstFailedCoordinate}`,
-        `lastRecommendedNextRenewalTarget=${receipt.lastRecommendedNextRenewalTarget}`,
-        "",
-        `hardBlockOnlyForStructuralUnsafeCarrier=${receipt.hardBlockOnlyForStructuralUnsafeCarrier}`,
-        `softGapsDoNotEraseVisualization=${receipt.softGapsDoNotEraseVisualization}`,
-        `quickGapAssessment=${receipt.quickGapAssessment}`,
-        `forwardProgressBeatsPrematureBlocking=${receipt.forwardProgressBeatsPrematureBlocking}`,
-        "",
-        "HARD_GAPS",
-        hardGaps,
-        "",
-        "SOFT_GAPS",
-        softGaps,
-        "",
-        `generatedImage=${receipt.generatedImage}`,
-        `graphicBox=${receipt.graphicBox}`,
-        `webGL=${receipt.webGL}`,
-        `visualPassClaimed=${receipt.visualPassClaimed}`,
-        "",
-        `updatedAt=${receipt.updatedAt}`
-      ].join("\n");
-    }
-
-    return {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      sessionId: state.sessionId,
-      ingest,
-      evaluate: ingest,
-      getLastEvaluation,
-      getReceipt,
-      getReceiptText,
-      reset,
-      get state() {
-        return state;
+    const normalized = (() => {
+      try {
+        return normalizeVisibleInput(input);
+      } catch (_normalizationError) {
+        return {
+          flat: {},
+          completedCheckpoints: [],
+          activeCheckpoint: CHECKPOINT_BY_ID.F1A_HTML_SHELL_RENDERED,
+          highestCompletedCheckpoint: null,
+          queuedEventsCount: 0,
+          archivedEventsCount: 0,
+          blockedEventsCount: 0,
+          admittedEventsCount: 0,
+          regressionPrevented: 0,
+          visibleContentProof: false,
+          visibleContentProofStarted: false,
+          visibleContentProofMethod: "",
+          visibleContentProofError: "",
+          visibleContentSampleCount: 0,
+          visibleContentVarianceScore: 0,
+          visibleContentClassCount: 0,
+          visibleContentClasses: "",
+          visibleContentLandSampleCount: 0,
+          visibleContentWaterSampleCount: 0,
+          visibleContentOtherSampleCount: 0,
+          carrierOnlyDetected: false,
+          explicitContentReceiptProof: false,
+          renderedAfterTexture: false,
+          visiblePlanetAvailable: false,
+          planetCanvasPresent: false,
+          planetCanvasNonZeroSize: false,
+          planetFramePainted: false,
+          nonblankPlanetVisible: false,
+          planetNotObstructed: false,
+          inspectModeAvailable: false,
+          inspectPlanetControlAvailable: false,
+          diagnosticCanLeavePlanetFrame: false,
+          diagnosticDockHiddenForInspection: false,
+          showDiagnosticTabVisible: false,
+          showDiagnosticTabVisibleWhenHidden: true,
+          diagnosticDockRestorable: true,
+          copyDiagnosticPreserved: true,
+          receiptToggleReady: true,
+          buttonsReachable: false,
+          receiptOverlayIndependent: true,
+          canvasReady: false,
+          canvasCarrierMounted: false,
+          canvasCarrierRequested: false,
+          canvasCarrierHandoffOk: false,
+          canvasCarrierHandoffError: "",
+          canvasCarrierMethod: "",
+          cooperativeBootAvailable: false,
+          cooperativeBootUsed: false,
+          syncBootFallbackUsed: false,
+          canvasBootStartedAt: "",
+          canvasBootCompletedAt: "",
+          canvasBootElapsedMs: 0,
+          canvasYieldCount: 0,
+          canvasPhaseCount: 0,
+          lastCanvasPhase: "",
+          lastCanvasProgress: 0,
+          loaderRepaintDuringCanvasBoot: false,
+          f13ProgressStreamActive: false,
+          canvasLaneClosed: false,
+          postCanvasPhaseBouncePrevented: true,
+          ignoredDuplicateCanvasEvents: 0,
+          atlasBuildStarted: false,
+          atlasBuildProgress: 0,
+          atlasBuildComplete: false,
+          textureComposeStarted: false,
+          textureComposeProgress: 0,
+          textureComposeComplete: false,
+          firstFrameRequested: false,
+          firstFrameDetected: false,
+          imageRendered: false,
+          dragInspectionBound: false,
+          runtimeTablePresent: false,
+          runtimeTableMode: "",
+          runtimeTablePlanAttempted: false,
+          runtimeTablePlanCreated: false,
+          runtimeTablePlanError: "",
+          sourceAuthorityHeld: false,
+          northGateReady: false,
+          eastGateReady: false,
+          westGateReady: false,
+          southGateReady: false,
+          newsGatePassedBeforeF21: false,
+          f13SubsequenceComplete: false,
+          f13LastRequiredEvent: "",
+          f21Allowed: false,
+          completionLatched: false,
+          partialReceiptAvailable: true,
+          finalReceiptAvailable: false,
+          copyDiagnosticArmed: true,
+          dockVisible: true,
+          fullCockpitExpanded: false,
+          heartbeatElapsedMs: 0,
+          latestVisibleEvent: "",
+          currentStage: "F1A",
+          highestStage: "F1A",
+          firstFailedCoordinate: "WAITING_southComposeVisibleState",
+          recommendedNextRenewalTarget: DESTINATION_FILE,
+          northLooksStalledByPriorSouthError: false
+        };
       }
-    };
+    })();
+
+    return composePacket(normalized, true, message || "South visible-state composition fallback used.");
   }
 
-  function createHearthSouthSession(options = {}) {
-    return createSouthSession({
-      planetId: "hearth",
-      planetLabel: "Hearth",
-      route: "/showroom/globe/hearth/",
-      ...options
-    });
+  function composeVisibleState(input = {}) {
+    try {
+      const normalized = normalizeVisibleInput(input);
+      return composePacket(normalized, false, "");
+    } catch (error) {
+      return composeFallbackVisibleState(input, error);
+    }
   }
 
-  function createSouthFinalProtocol(options = {}) {
-    return createSouthSession(options);
+  function composeReceiptState(input = {}) {
+    return composeVisibleState(input);
   }
 
-  function createHearthSouthFinalProtocol(options = {}) {
-    return createHearthSouthSession(options);
+  function compose(input = {}) {
+    return composeVisibleState(input);
+  }
+
+  function composeState(input = {}) {
+    return composeVisibleState(input);
+  }
+
+  function composeCheckpointState(input = {}) {
+    return composeVisibleState(input);
+  }
+
+  function composePostgameState(input = {}) {
+    return composeVisibleState(input);
   }
 
   function getReceipt() {
@@ -962,53 +1054,66 @@
       previousContract: PREVIOUS_CONTRACT,
       baselineContract: BASELINE_CONTRACT,
       version: VERSION,
-      authority: "lab-runtime-table-south-final-protocol-forward-progress",
-      destinationFile: "/assets/lab/runtime-table.south.js",
+      destinationFile: DESTINATION_FILE,
       status: "active",
-      role: "south-final-protocol-gap-assessment-forward-progress-and-postgame-adjudication",
-      fourFileSplitMember: true,
-      cardinalRole: "SOUTH",
-      northPrecedenceRequired: true,
-      consumesNorthRuntimeTable: true,
-      consumesEastSequence: true,
-      consumesWestDiagnostic: true,
-      doesNotReplaceNorth: true,
-
-      southProtocolActive: true,
-      quickGapAssessment: true,
-      hardBlockOnlyForStructuralUnsafeCarrier: true,
-      softGapsDoNotEraseVisualization: true,
-      forwardProgressBeatsPrematureBlocking: true,
+      authority: "hearth-south-visible-state-composer",
+      southFile: true,
+      visibleStateComposer: true,
+      composeVisibleStateExported: true,
+      composeFallbackVisibleStateExported: true,
+      composeReceiptStateExported: true,
+      normalizeVisibleInputExported: true,
+      compatibilityAliasesExported: true,
+      nonThrowComposer: true,
+      northOwnsCheckpointTruth: true,
+      eastOwnsEventFlow: true,
+      westOwnsInspectProof: true,
+      canvasOwnsDrawing: true,
+      southOwnsVisibleStateCompositionOnly: true,
+      queuedEventsAreAuditNotFailure: true,
+      archivedEventsAreAuditNotFailure: true,
+      blockedEventsDoNotEraseProgress: true,
+      progressCapBeforeF21: 98,
       readyTextRequiresCompletionLatch: true,
-      completionRequiresF13MF13NNewsAndLatch: true,
-      finalVisualPassClaimRemainsForbiddenUntilFinalPass: true,
-
-      ownedFunctions: [
-        "evaluateNewsGateState",
-        "evaluateFibonacciState",
-        "evaluateSouthFinalProtocol",
-        "createSouthSession",
-        "createHearthSouthSession",
-        "createSouthFinalProtocol",
-        "createHearthSouthFinalProtocol"
+      f21RequiresF13NAndNews: true,
+      expectedExports: [
+        "composeVisibleState",
+        "composeFallbackVisibleState",
+        "composeReceiptState",
+        "normalizeVisibleInput",
+        "getReceipt"
       ],
-      coreLaw: [
-        "South assesses the final gap quickly.",
-        "South does not hard-block unless carrier structure is unsafe.",
-        "Visible carrier may continue through soft gaps.",
-        "Soft gaps block final claim but not forward diagnostic progress.",
-        "F21 requires F13M visible-content proof, F13N inspect-mode readiness, NEWS gates, and completion latch.",
-        "READY text requires finalPass true.",
-        "visualPassClaimed remains false here; this file adjudicates but does not claim final visual pass."
+      compatibilityExports: [
+        "compose",
+        "composeState",
+        "composeCheckpointState",
+        "composePostgameState"
       ],
-      statuses: Object.values(SOUTH_STATUS),
-      finalClaims: Object.values(FINAL_CLAIM),
-      forwardModes: Object.values(FORWARD_MODE),
-      gapSeverities: Object.values(GAP_SEVERITY),
-      newsGates: clonePlain(NEWS_GATES),
-      fibonacciFinal: clonePlain(FIBONACCI_FINAL),
-      f13Required: F13_REQUIRED.slice(),
-
+      globalNamespaces: [
+        "HEARTH_RUNTIME_TABLE_SOUTH",
+        "HEARTH_SOUTH",
+        "HEARTH_VISIBLE_STATE_COMPOSER",
+        "DEXTER_LAB.runtimeTableSouth",
+        "DEXTER_LAB.south",
+        "DEXTER_LAB.visibleStateComposer"
+      ],
+      owns: [
+        "visible-stage-composition",
+        "visible-progress-composition",
+        "visible-postgame-status-composition",
+        "first-failed-coordinate-display-selection",
+        "safe-receipt-visible-packet-generation"
+      ],
+      doesNotOwn: [
+        "north-checkpoint-truth",
+        "east-event-admission-truth",
+        "west-inspect-truth",
+        "canvas-boot",
+        "canvas-drawing",
+        "atlas-rendering",
+        "source-channel-truth",
+        "final-visual-pass-claim"
+      ],
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -1023,41 +1128,28 @@
     previousContract: PREVIOUS_CONTRACT,
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
+    destinationFile: DESTINATION_FILE,
 
-    SOUTH_STATUS,
-    FINAL_CLAIM,
-    FORWARD_MODE,
-    GAP_SEVERITY,
-    NEWS_GATES,
-    FIBONACCI_FINAL,
-    F13_REQUIRED,
-
-    evaluateNewsGateState,
-    evaluateFibonacciState,
-    evaluateSouthFinalProtocol,
-    createSouthSession,
-    createHearthSouthSession,
-    createSouthFinalProtocol,
-    createHearthSouthFinalProtocol,
+    composeVisibleState,
+    composeFallbackVisibleState,
+    composeReceiptState,
+    normalizeVisibleInput,
     getReceipt,
 
-    fourFileSplitMember: true,
-    cardinalRole: "SOUTH",
-    southProtocolActive: true,
-    northPrecedenceRequired: true,
-    consumesNorthRuntimeTable: true,
-    consumesEastSequence: true,
-    consumesWestDiagnostic: true,
-    doesNotReplaceNorth: true,
+    compose,
+    composeState,
+    composeCheckpointState,
+    composePostgameState,
 
-    quickGapAssessment: true,
-    hardBlockOnlyForStructuralUnsafeCarrier: true,
-    softGapsDoNotEraseVisualization: true,
-    forwardProgressBeatsPrematureBlocking: true,
+    southFile: true,
+    visibleStateComposer: true,
+    nonThrowComposer: true,
+    queuedEventsAreAuditNotFailure: true,
+    archivedEventsAreAuditNotFailure: true,
+    blockedEventsDoNotEraseProgress: true,
+    progressCapBeforeF21: 98,
     readyTextRequiresCompletionLatch: true,
-    completionRequiresF13MF13NNewsAndLatch: true,
-    finalVisualPassClaimRemainsForbiddenUntilFinalPass: true,
-
+    f21RequiresF13NAndNews: true,
     generatedImage: false,
     graphicBox: false,
     webGL: false,
@@ -1065,47 +1157,43 @@
   };
 
   root.DEXTER_LAB = root.DEXTER_LAB || {};
-  root.DEXTER_LAB.runtimeTableSouth = api;
-  root.DEXTER_LAB.southFinalProtocol = api;
 
+  root.HEARTH_RUNTIME_TABLE_SOUTH = api;
+  root.HEARTH_SOUTH = api;
+  root.HEARTH_VISIBLE_STATE_COMPOSER = api;
   root.LAB_RUNTIME_TABLE_SOUTH = api;
-  root.LAB_SOUTH_FINAL_PROTOCOL = api;
-  root.LAB_RUNTIME_TABLE_SOUTH_FINAL_PROTOCOL = api;
-  root.LAB_FINAL_PROTOCOL = api;
+  root.LAB_VISIBLE_STATE_COMPOSER_SOUTH = api;
 
-  const north = resolveNorth();
-  if (north && isObject(north)) {
-    north.southFinalProtocol = api;
-    north.runtimeTableSouth = api;
-    north.evaluateSouthFinalProtocol = north.evaluateSouthFinalProtocol || evaluateSouthFinalProtocol;
-    north.createSouthSession = north.createSouthSession || createSouthSession;
-    north.createHearthSouthSession = north.createHearthSouthSession || createHearthSouthSession;
+  root.DEXTER_LAB.runtimeTableSouth = api;
+  root.DEXTER_LAB.south = api;
+  root.DEXTER_LAB.visibleStateComposer = api;
+
+  if (root.DEXTER_LAB.runtimeTable && isObject(root.DEXTER_LAB.runtimeTable)) {
+    root.DEXTER_LAB.runtimeTable.south = api;
+    root.DEXTER_LAB.runtimeTable.visibleStateComposerSouth = api;
+  }
+
+  if (root.LAB_RUNTIME_TABLE && isObject(root.LAB_RUNTIME_TABLE)) {
+    root.LAB_RUNTIME_TABLE.south = api;
+    root.LAB_RUNTIME_TABLE.visibleStateComposerSouth = api;
   }
 
   if (root.document && root.document.documentElement) {
     const dataset = root.document.documentElement.dataset;
 
-    dataset.labRuntimeTableSouthLoaded = "true";
-    dataset.labRuntimeTableSouthContract = CONTRACT;
-    dataset.labRuntimeTableSouthReceipt = RECEIPT;
-    dataset.labRuntimeTableSouthPreviousContract = PREVIOUS_CONTRACT;
-    dataset.labRuntimeTableSouthBaselineContract = BASELINE_CONTRACT;
-    dataset.labSouthFinalProtocolLoaded = "true";
-    dataset.labSouthFinalProtocolContract = CONTRACT;
-    dataset.labSouthProtocolActive = "true";
-    dataset.labSouthFourFileSplitMember = "true";
-    dataset.labSouthCardinalRole = "SOUTH";
-    dataset.labSouthNorthPrecedenceRequired = "true";
-    dataset.labSouthConsumesNorthRuntimeTable = "true";
-    dataset.labSouthConsumesEastSequence = "true";
-    dataset.labSouthConsumesWestDiagnostic = "true";
-    dataset.labSouthDoesNotReplaceNorth = "true";
-    dataset.labSouthQuickGapAssessment = "true";
-    dataset.labSouthHardBlockOnlyForStructuralUnsafeCarrier = "true";
-    dataset.labSouthSoftGapsDoNotEraseVisualization = "true";
-    dataset.labSouthForwardProgressBeatsPrematureBlocking = "true";
-    dataset.labSouthReadyTextRequiresCompletionLatch = "true";
-    dataset.labSouthCompletionRequiresF13MF13NNewsAndLatch = "true";
+    dataset.hearthRuntimeTableSouthLoaded = "true";
+    dataset.hearthRuntimeTableSouthContract = CONTRACT;
+    dataset.hearthRuntimeTableSouthReceipt = RECEIPT;
+    dataset.hearthRuntimeTableSouthVersion = VERSION;
+    dataset.hearthSouthVisibleStateComposerLoaded = "true";
+    dataset.hearthSouthComposeVisibleStateExported = "true";
+    dataset.hearthSouthNonThrowComposer = "true";
+    dataset.hearthSouthQueuedEventsAuditOnly = "true";
+    dataset.hearthSouthArchivedEventsAuditOnly = "true";
+    dataset.hearthSouthBlockedEventsDoNotEraseProgress = "true";
+    dataset.hearthSouthReadyTextRequiresCompletionLatch = "true";
+    dataset.hearthSouthProgressCapBeforeF21 = "98";
+    dataset.hearthSouthF21RequiresF13NAndNews = "true";
     dataset.generatedImage = "false";
     dataset.graphicBox = "false";
     dataset.webgl = "false";

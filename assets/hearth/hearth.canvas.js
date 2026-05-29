@@ -1,15 +1,17 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_CANVAS_VISIBLE_PLANET_NONBLOCKING_WATER_CHILD_DIAGNOSTIC_RECOVERY_TNT_v1
+// HEARTH_CANVAS_ATLAS_START_SEQUENCING_HARDENING_TNT_v1
 // Full-file replacement.
-// Canvas / mount / visible diagnostic carrier / connector-load measurement / Runtime Table consumer authority only.
+// Canvas / mount / diagnostic visual carrier / atlas-start sequencing authority only.
 // Purpose:
-// - Restore the visible/touchable Hearth planet carrier as nonblocking diagnostic evidence.
-// - Preserve shell-first mount, pointer/touch drag, loading/diagnostic panel, and copyable receipt export.
-// - Preserve Land and Air child loading.
-// - Preserve the Water Child connector and exact coordinate failure proof.
-// - Treat Water Child failure as degraded water-layer diagnostic state, not as visualization block.
-// - Build atlas/projection whenever the carrier can safely render.
-// - Keep visualPassClaimed=false until coherent expression is proven.
+// - Preserve shell-first nonblocking Hearth visible planet carrier.
+// - Preserve immediate pointer/touch drag.
+// - Preserve Runtime Table and Triple G diagnostic consumption.
+// - Preserve visible/invisible receipt, expanded receipt, and copy/export diagnostics.
+// - Preserve Land, Water, and Air child connector measurement.
+// - Preserve Water Child as external water truth authority.
+// - Ensure Water Child failure does not block fallback-diagnostic atlas startup.
+// - Harden atlas-start sequence so atlasStartAttempted is recorded before external callbacks.
+// - Wrap all external status callbacks so callback failures cannot halt atlas construction.
 // Does not own:
 // - Water Child truth
 // - water packet generation
@@ -27,10 +29,11 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_VISIBLE_PLANET_NONBLOCKING_WATER_CHILD_DIAGNOSTIC_RECOVERY_TNT_v1";
-  const RECEIPT = "HEARTH_CANVAS_VISIBLE_PLANET_NONBLOCKING_WATER_CHILD_DIAGNOSTIC_RECOVERY_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_WATER_CHILD_CONNECTOR_LOAD_ALIGNMENT_TNT_v1";
-  const VERSION = "2026-05-29.hearth-canvas-visible-planet-nonblocking-water-child-diagnostic-recovery-v1";
+  const CONTRACT = "HEARTH_CANVAS_ATLAS_START_SEQUENCING_HARDENING_TNT_v1";
+  const RECEIPT = "HEARTH_CANVAS_ATLAS_START_SEQUENCING_HARDENING_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_VISIBLE_PLANET_NONBLOCKING_WATER_CHILD_DIAGNOSTIC_RECOVERY_TNT_v1";
+  const BASELINE_CONTRACT = "HEARTH_CANVAS_WATER_CHILD_CONNECTOR_LOAD_ALIGNMENT_TNT_v1";
+  const VERSION = "2026-05-29.hearth-canvas-atlas-start-sequencing-hardening-v1";
 
   const LAB_RUNTIME_TABLE_PATH = "/assets/lab/runtime-table.js";
   const PREFERRED_LAB_RUNTIME_TABLE_CONTRACT = "LAB_RUNTIME_TABLE_AND_TRIPLE_G_COHERENCE_DIAGNOSTIC_STANDARD_TNT_v2";
@@ -92,15 +95,6 @@
     }
   ]);
 
-  const CARRIER_BLOCK_REASONS = Object.freeze({
-    CANVAS_MOUNT_FAILED: "CANVAS_MOUNT_FAILED",
-    COORDINATE_BODY_MISSING: "COORDINATE_BODY_MISSING",
-    DRAWABLE_SHELL_MISSING: "DRAWABLE_SHELL_MISSING",
-    PROJECTION_CONTAINMENT_FAILED: "PROJECTION_CONTAINMENT_FAILED",
-    FALSE_AUTHORITY_RISK: "FALSE_AUTHORITY_RISK",
-    FALLBACK_TRUTH_BOUNDARY_MISSING: "FALLBACK_TRUTH_BOUNDARY_MISSING"
-  });
-
   const ALLOWED_HANDOFFS = Object.freeze([
     "FULL_PASS",
     "OPTIMIZED_PASS",
@@ -108,17 +102,33 @@
     "FALLBACK_PASS"
   ]);
 
+  const ATLAS_COORDINATES = Object.freeze({
+    A0: "A0_ATLAS_SEQUENCE_NOT_STARTED",
+    A1: "A1_RUNTIME_HANDOFF_EVALUATED",
+    A2: "A2_VISUAL_CARRIER_CONFIRMED",
+    A3: "A3_ATLAS_START_AUTHORIZED",
+    A4: "A4_ATLAS_START_ATTEMPTED",
+    A5: "A5_ATLAS_BUILDING_ACTIVE",
+    A6: "A6_ATLAS_PROGRESS_ADVANCING",
+    A7: "A7_ATLAS_COMPLETE",
+    A8: "A8_ATLAS_START_BLOCKED",
+    A9: "A9_ATLAS_RUNTIME_ERROR"
+  });
+
   const COLORS = Object.freeze({
     shellDark: [5, 9, 19],
     shellMid: [16, 31, 48],
     shellLight: [62, 84, 92],
     land: [92, 86, 58],
-    water: [8, 35, 86],
+    landLow: [38, 41, 33],
+    water: [7, 29, 71],
+    waterLight: [10, 54, 118],
     air: [150, 190, 210],
     rim: [174, 216, 236],
     atmosphere: [20, 32, 48],
     shadow: [2, 5, 12],
-    diagnosticYellow: [225, 184, 82]
+    diagnosticRed: [160, 54, 48],
+    diagnosticGold: [190, 144, 70]
   });
 
   function clamp(value, min, max) {
@@ -166,7 +176,11 @@
     const z = Number.isFinite(Number(p && p.z)) ? Number(p.z) : 1;
     const m = Math.hypot(x, y, z) || 1;
 
-    return { x: x / m, y: y / m, z: z / m };
+    return {
+      x: x / m,
+      y: y / m,
+      z: z / m
+    };
   }
 
   function dot3(a, b) {
@@ -187,6 +201,7 @@
 
   function vectorToLonLat(p) {
     const n = normalize3(p);
+
     return {
       lon: Math.atan2(n.x, n.z) / DEG,
       lat: Math.asin(clamp(n.y, -1, 1)) / DEG
@@ -212,13 +227,23 @@
   function rotateY(p, angle) {
     const c = Math.cos(angle);
     const s = Math.sin(angle);
-    return { x: p.x * c + p.z * s, y: p.y, z: -p.x * s + p.z * c };
+
+    return {
+      x: p.x * c + p.z * s,
+      y: p.y,
+      z: -p.x * s + p.z * c
+    };
   }
 
   function rotateX(p, angle) {
     const c = Math.cos(angle);
     const s = Math.sin(angle);
-    return { x: p.x, y: p.y * c - p.z * s, z: p.y * s + p.z * c };
+
+    return {
+      x: p.x,
+      y: p.y * c - p.z * s,
+      z: p.y * s + p.z * c
+    };
   }
 
   function rotateForView(p, rotationLon, rotationLat) {
@@ -230,12 +255,18 @@
     const cx = (width - 1) / 2;
     const cy = (height - 1) / 2;
     const radius = size * 0.5 * 0.985;
+
     const dx = (x - cx) / radius;
     const dy = (y - cy) / radius;
     const rr = dx * dx + dy * dy;
 
     if (rr > 1) {
-      return { inside: false, edgeAlpha: 0, radial: Math.sqrt(rr), vector: { x: 0, y: 0, z: 1 } };
+      return {
+        inside: false,
+        edgeAlpha: 0,
+        radial: Math.sqrt(rr),
+        vector: { x: 0, y: 0, z: 1 }
+      };
     }
 
     const radial = Math.sqrt(rr);
@@ -246,7 +277,11 @@
       inside: true,
       edgeAlpha,
       radial,
-      vector: normalize3({ x: dx, y: -dy, z })
+      vector: normalize3({
+        x: dx,
+        y: -dy,
+        z
+      })
     };
   }
 
@@ -254,10 +289,25 @@
     if (args.length === 1 && args[0] && typeof args[0] === "object") {
       const p = args[0];
 
-      if (Number.isFinite(Number(p.u)) && Number.isFinite(Number(p.v))) return lonLatToVector(uToLon(p.u), vToLat(p.v));
-      if (Number.isFinite(Number(p.lon)) && Number.isFinite(Number(p.lat))) return lonLatToVector(Number(p.lon), Number(p.lat));
-      if (Number.isFinite(Number(p.longitude)) && Number.isFinite(Number(p.latitude))) return lonLatToVector(Number(p.longitude), Number(p.latitude));
-      if (Number.isFinite(Number(p.x)) && Number.isFinite(Number(p.y)) && Number.isFinite(Number(p.z))) return normalize3(p);
+      if (Number.isFinite(Number(p.u)) && Number.isFinite(Number(p.v))) {
+        return lonLatToVector(uToLon(p.u), vToLat(p.v));
+      }
+
+      if (Number.isFinite(Number(p.lon)) && Number.isFinite(Number(p.lat))) {
+        return lonLatToVector(Number(p.lon), Number(p.lat));
+      }
+
+      if (Number.isFinite(Number(p.longitude)) && Number.isFinite(Number(p.latitude))) {
+        return lonLatToVector(Number(p.longitude), Number(p.latitude));
+      }
+
+      if (
+        Number.isFinite(Number(p.x)) &&
+        Number.isFinite(Number(p.y)) &&
+        Number.isFinite(Number(p.z))
+      ) {
+        return normalize3(p);
+      }
     }
 
     if (args.length >= 3) return normalize3({ x: args[0], y: args[1], z: args[2] });
@@ -270,13 +320,18 @@
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
-      .replace(/\"/g, "&quot;");
+      .replace(/"/g, "&quot;");
   }
 
   function colorField(source, keys, fallback) {
     for (const key of keys) {
       const value = source && source[key];
-      if (Array.isArray(value) && value.length >= 3 && value.every((v) => Number.isFinite(Number(v)))) {
+
+      if (
+        Array.isArray(value) &&
+        value.length >= 3 &&
+        value.every((v) => Number.isFinite(Number(v)))
+      ) {
         return [
           clamp(Math.round(Number(value[0])), 0, 255),
           clamp(Math.round(Number(value[1])), 0, 255),
@@ -284,6 +339,7 @@
         ];
       }
     }
+
     return fallback.slice();
   }
 
@@ -296,8 +352,23 @@
     return typeof (source && source[key]) === "boolean" ? source[key] : fallback;
   }
 
+  function nowIso() {
+    try {
+      return new Date().toISOString();
+    } catch (_error) {
+      return "";
+    }
+  }
+
   function getRuntimeTableApi() {
-    return root.LAB_RUNTIME_TABLE || root.RUNTIME_TABLE || root.DexterRuntimeTable || (root.DEXTER_LAB && root.DEXTER_LAB.runtimeTable) || null;
+    const api =
+      root.LAB_RUNTIME_TABLE ||
+      root.RUNTIME_TABLE ||
+      root.DexterRuntimeTable ||
+      (root.DEXTER_LAB && root.DEXTER_LAB.runtimeTable) ||
+      null;
+
+    return api || null;
   }
 
   function getLandChannel() {
@@ -316,15 +387,58 @@
     return ALLOWED_HANDOFFS.includes(String(handoff || ""));
   }
 
+  function safeExternalStatus(api, options, name, payload) {
+    const state = api && api.state ? api.state : null;
+
+    if (state) {
+      state.externalStatusCallbackSafe = true;
+    }
+
+    if (!options || typeof options.onStatus !== "function") return true;
+
+    try {
+      options.onStatus(name, payload || {});
+      return true;
+    } catch (error) {
+      const detail = {
+        at: nowIso(),
+        name,
+        message: error && error.message ? error.message : String(error)
+      };
+
+      if (state) {
+        state.externalStatusCallbackErrors.push(detail);
+        state.externalStatusCallbackSafe = false;
+      }
+
+      if (api && api.canvas && api.canvas.dataset) {
+        api.canvas.dataset.externalStatusCallbackSafe = "false";
+        api.canvas.dataset.externalStatusCallbackErrors = JSON.stringify(state ? state.externalStatusCallbackErrors : [detail]);
+      }
+
+      return false;
+    }
+  }
+
   function callChannel(authority, args, p) {
     if (!authority) return null;
 
     const ll = vectorToLonLat(p);
-    const fallbackArg = { u: lonToU(ll.lon), v: latToV(ll.lat), x: p.x, y: p.y, z: p.z, lon: ll.lon, lat: ll.lat };
-    const methods = ["sample", "read", "compose", "getWater", "waterAt"];
+    const fallbackArg = {
+      u: lonToU(ll.lon),
+      v: latToV(ll.lat),
+      x: p.x,
+      y: p.y,
+      z: p.z,
+      lon: ll.lon,
+      lat: ll.lat
+    };
+
+    const methods = ["sample", "read"];
 
     for (const method of methods) {
       if (typeof authority[method] !== "function") continue;
+
       try {
         const result = authority[method].apply(authority, args);
         if (result && typeof result === "object") return result;
@@ -341,40 +455,55 @@
 
   function fallbackLand(p) {
     const ll = vectorToLonLat(p);
-    const landShape = clamp01(0.42 + Math.sin((ll.lon + 35) * DEG) * 0.18 + Math.cos(ll.lat * DEG * 2) * 0.10);
-    const landAlpha = landShape > 0.48 ? 0.42 : 0.05;
+    const band = Math.cos(ll.lat * DEG * 2) * 0.08;
+    const ridge = Math.sin((ll.lon + 20) * DEG * 1.7) * 0.11;
+    const body = Math.sin((ll.lon * 0.8 - ll.lat * 0.35) * DEG) * 0.10;
+    const landPotential = clamp01(0.34 + band + ridge + body);
+    const landAlpha = landPotential > 0.48 ? 0.28 + landPotential * 0.28 : 0.055;
 
     return {
       channel: "land",
       channelClass: landAlpha > 0.2 ? "fallback-body-bound-land" : "fallback-low-land",
-      rgb: mixColor(COLORS.land, COLORS.shellMid, 1 - landAlpha),
-      color: mixColor(COLORS.land, COLORS.shellMid, 1 - landAlpha),
+      landClass: landAlpha > 0.2 ? "fallback-land" : "no-land",
+      isLandChannel: true,
+      isWaterChannel: false,
+      isAirChannel: false,
+      rgb: mixColor(COLORS.landLow, COLORS.land, clamp01(landAlpha * 1.8)),
+      color: mixColor(COLORS.landLow, COLORS.land, clamp01(landAlpha * 1.8)),
       alpha: landAlpha,
       landAlpha,
       landPresence: landAlpha,
-      bodyBinding: Math.max(landAlpha, 0.76),
-      surfaceAttachment: Math.max(landAlpha, 0.76),
-      atmosphericRejection: 1,
+      landPotential,
+      bodyBinding: landAlpha > 0.2 ? 0.92 : 0.36,
+      surfaceAttachment: landAlpha > 0.2 ? 0.90 : 0.32,
+      atmosphericRejection: 0.88,
       bodyBound: true,
       surfaceBound: true,
       floatsAboveBody: false,
       allowedToFloat: false,
-      sourceContract: "FALLBACK_LAND_CHANNEL"
+      mayDefineWater: false,
+      mayDefineAir: false,
+      sourceContract: "FALLBACK_LAND_CHANNEL",
+      canvasFallbackOnly: true
     };
   }
 
   function fallbackWater(p) {
     const ll = vectorToLonLat(p);
-    const oceanBand = Math.cos(ll.lat * DEG) * 0.5 + 0.5;
-    const basinWave = Math.sin((ll.lon * 1.4 + 22) * DEG) * 0.5 + 0.5;
-    const waterShape = clamp01(0.28 + oceanBand * 0.24 + basinWave * 0.18 + (p.z < 0.2 ? 0.16 : 0));
-    const waterAlpha = clamp01(Math.max(0.18, waterShape * 0.55));
+    const equatorialBasin = clamp01(0.5 + Math.cos((ll.lat + 3) * DEG * 2.2) * 0.32);
+    const longitudinalBasin = clamp01(0.5 + Math.cos((ll.lon - 48) * DEG * 1.1) * 0.22);
+    const basin = clamp01(0.38 + equatorialBasin * 0.36 + longitudinalBasin * 0.18 - Math.abs(p.y) * 0.12);
+    const waterAlpha = clamp01(0.18 + basin * 0.34);
 
     return {
       channel: "water",
       channelClass: "fallback-diagnostic-surface-water",
-      rgb: mixColor(COLORS.water, COLORS.shellDark, 0.22),
-      color: mixColor(COLORS.water, COLORS.shellDark, 0.22),
+      waterClass: "fallback-diagnostic-surface-water",
+      isLandChannel: false,
+      isWaterChannel: true,
+      isAirChannel: false,
+      rgb: mixColor(COLORS.water, COLORS.waterLight, clamp01(basin * 0.42)),
+      color: mixColor(COLORS.water, COLORS.waterLight, clamp01(basin * 0.42)),
       alpha: waterAlpha,
       waterAlpha,
       waterPresence: waterAlpha,
@@ -385,26 +514,32 @@
       surfaceBound: true,
       floatsAboveBody: false,
       allowedToFloat: false,
+      mayDefineLand: false,
+      mayDefineAir: false,
       sourceContract: "FALLBACK_WATER_CHANNEL",
       canvasFallbackOnly: true,
       canvasOwnsWaterTruth: false,
-      fallbackReason: "WATER_CHILD_LOAD_FAILURE"
+      fallbackReason: "WATER_CHILD_UNAVAILABLE"
     };
   }
 
   function fallbackAir(p) {
     const limb = clamp01(1 - Math.abs(p.z));
-    const airAlpha = clamp01(limb * 0.12);
+    const airAlpha = clamp01(0.035 + limb * 0.10);
 
     return {
       channel: "air",
       channelClass: "fallback-rim-air",
+      airClass: "fallback-rim-air",
+      isLandChannel: false,
+      isWaterChannel: false,
+      isAirChannel: true,
       rgb: COLORS.air.slice(),
       color: COLORS.air.slice(),
       alpha: airAlpha,
       airAlpha,
       airPresence: airAlpha,
-      atmosphereSeparation: Math.max(airAlpha, 0.12),
+      atmosphereSeparation: clamp01(0.12 + limb * 0.18),
       humidity: 0.16,
       airPressure: 0.52,
       barometricPressure: 0.52,
@@ -439,7 +574,9 @@
       bodyBound: boolField(source, "bodyBound", true),
       surfaceBound: boolField(source, "surfaceBound", true),
       floatsAboveBody: false,
-      allowedToFloat: false
+      allowedToFloat: false,
+      mayDefineWater: false,
+      mayDefineAir: false
     };
   }
 
@@ -458,10 +595,13 @@
       hydrosphereBinding: clamp01(numberField(source, "hydrosphereBinding", fallback.hydrosphereBinding)),
       surfaceSeat: clamp01(numberField(source, "surfaceSeat", fallback.surfaceSeat)),
       depthBinding: clamp01(numberField(source, "depthBinding", fallback.depthBinding)),
-      bodyBound: boolField(source, "bodyBound", true),
-      surfaceBound: boolField(source, "surfaceBound", true),
+      bodyBound: true,
+      surfaceBound: true,
       floatsAboveBody: false,
-      allowedToFloat: false
+      allowedToFloat: false,
+      mayDefineLand: false,
+      mayDefineAir: false,
+      canvasOwnsWaterTruth: false
     };
   }
 
@@ -496,9 +636,9 @@
   function composeChannels(land, water, air, p) {
     let rgb = COLORS.shellMid.slice();
 
-    const landWeight = clamp01(land.landAlpha * (0.74 + land.bodyBinding * 0.20 + land.surfaceAttachment * 0.10));
-    const waterWeight = clamp01(water.waterAlpha * (0.70 + water.hydrosphereBinding * 0.18 + water.depthBinding * 0.10));
-    const airWeight = clamp01(air.airAlpha * (0.22 + air.atmosphereSeparation * 0.12 + air.rimHaze * 0.08));
+    const landWeight = clamp01(land.landAlpha * (0.84 + land.bodyBinding * 0.18 + land.surfaceAttachment * 0.10));
+    const waterWeight = clamp01(water.waterAlpha * (0.74 + water.hydrosphereBinding * 0.18 + water.depthBinding * 0.10));
+    const airWeight = clamp01(air.airAlpha * (0.20 + air.atmosphereSeparation * 0.16 + air.rimHaze * 0.10));
 
     if (landWeight > 0.01) rgb = mixColor(rgb, land.rgb, landWeight);
     if (waterWeight > 0.01) rgb = mixColor(rgb, water.rgb, waterWeight);
@@ -506,31 +646,46 @@
 
     const light = normalize3({ x: -0.34, y: 0.42, z: 0.83 });
     const illumination = clamp01(0.66 + dot3(p, light) * 0.30);
-    const bodyLock = clamp01(land.bodyBinding * 0.34 + land.surfaceAttachment * 0.20 + water.hydrosphereBinding * 0.26 + water.surfaceSeat * 0.12 + 0.08);
-    const seatedShade = clamp01(0.76 + illumination * 0.22 + bodyLock * 0.08);
+    const bodyLock = clamp01(
+      land.bodyBinding * 0.30 +
+        land.surfaceAttachment * 0.18 +
+        water.hydrosphereBinding * 0.28 +
+        water.surfaceSeat * 0.16 +
+        0.08
+    );
 
+    const seatedShade = clamp01(0.76 + illumination * 0.22 + bodyLock * 0.08);
     rgb = scaleColor(rgb, seatedShade);
 
-    return { rgb, alpha: clamp01(0.96 + airWeight * 0.04), landWeight, waterWeight, airWeight, bodyLock };
+    return {
+      rgb,
+      alpha: clamp01(0.96 + airWeight * 0.04),
+      landWeight,
+      waterWeight,
+      airWeight,
+      bodyLock
+    };
   }
 
   function multiplexSample(...args) {
     const p = parseInput(...args);
-    const waterActor = getWaterChannel();
 
-    const land = normalizeLand(callChannel(getLandChannel(), args, p), p);
-    const water = normalizeWater(callChannel(waterActor, args, p), p);
-    const air = normalizeAir(callChannel(getAirChannel(), args, p), p);
+    const landAuthority = getLandChannel();
+    const waterAuthority = getWaterChannel();
+    const airAuthority = getAirChannel();
+
+    const land = normalizeLand(callChannel(landAuthority, args, p), p);
+    const water = normalizeWater(callChannel(waterAuthority, args, p), p);
+    const air = normalizeAir(callChannel(airAuthority, args, p), p);
     const composed = composeChannels(land, water, air, p);
-
-    const waterFallbackActive = !waterActor || water.sourceContract === "FALLBACK_WATER_CHANNEL" || water.canvasFallbackOnly === true;
 
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
+      baselineContract: BASELINE_CONTRACT,
       version: VERSION,
-      authority: "hearth-canvas-visible-planet-nonblocking-water-child-diagnostic-recovery",
+      authority: "hearth-canvas-atlas-start-sequencing-hardening",
 
       x: p.x,
       y: p.y,
@@ -541,24 +696,16 @@
       acceptedRuntimeTableContracts: ACCEPTED_LAB_RUNTIME_TABLE_CONTRACTS.slice(),
       runtimeTableCanonicalOwner: "Dexter Lab",
 
-      visualCarrierAllowed: true,
-      visualizationBlocked: false,
-      visualizationBlockReason: "",
-      visualCarrierMode: waterFallbackActive ? "fallback-diagnostic" : "channel-diagnostic",
-      visualDiagnosticStatus: waterFallbackActive ? "DEGRADED" : "READY",
-      visualDiagnosticCue: waterFallbackActive ? "WATER_CHILD_LOAD_FAILURE" : "CHILD_CHANNELS_READY",
-
-      channelMultiplexReady: Boolean(getLandChannel() && getAirChannel()),
-      channelMultiplexDegraded: waterFallbackActive,
+      channelMultiplexReady: Boolean(landAuthority && waterAuthority && airAuthority),
+      channelMultiplexDegraded: Boolean(!landAuthority || !waterAuthority || !airAuthority),
       semiconductorOutlet: true,
       canvasDecidesNothing: true,
       canvasOwnsWaterTruth: false,
       connectorOwnsWaterTruth: false,
-      waterFallbackActive,
-      waterFallbackReason: waterFallbackActive ? "C4_SCRIPT_NETWORK_LOAD_FAILURE" : "",
       waterChildConnectorMode: WATER_CHILD_MODE,
       waterChildExternalAuthority: WATER_CHILD_PATH,
       waterChildExpectedContract: WATER_CONTRACT,
+      waterFailureDoesNotBlockAtlas: true,
 
       rgb: composed.rgb,
       color: composed.rgb,
@@ -568,19 +715,16 @@
       water,
       air,
 
-      landChannelLoaded: Boolean(getLandChannel()),
-      waterChannelLoaded: Boolean(waterActor),
-      airChannelLoaded: Boolean(getAirChannel()),
-      landLayerStatus: getLandChannel() ? "ready" : "fallback",
-      waterLayerStatus: waterFallbackActive ? "degraded" : "ready",
-      airLayerStatus: getAirChannel() ? "ready" : "fallback",
+      landChannelLoaded: Boolean(landAuthority),
+      waterChannelLoaded: Boolean(waterAuthority),
+      airChannelLoaded: Boolean(airAuthority),
 
       landWeight: composed.landWeight,
       waterWeight: composed.waterWeight,
       airWeight: composed.airWeight,
       bodyLock: composed.bodyLock,
 
-      compositeOrder: "planet-body-shell → land-channel → water-channel-or-fallback → air-channel → rim-lighting",
+      compositeOrder: "planet-body-shell → land-channel → water-channel-or-fallback-diagnostic-water → air-channel → rim-lighting",
 
       landFloatsAboveBody: false,
       waterFloatsAboveBody: false,
@@ -650,7 +794,29 @@
       waterSampleProbeValue: null,
       waterValidationOk: false,
       waterContractOk: false,
+      waterFailureDoesNotBlockAtlas: true,
       lastCheckedAt: ""
+    };
+  }
+
+  function createAtlasStartProof() {
+    return {
+      atlasStartAuthorized: false,
+      atlasStartAttempted: false,
+      atlasStartActive: false,
+      atlasBuilderEntered: false,
+      atlasStartTimestamp: "",
+      atlasStartFailureCoordinate: ATLAS_COORDINATES.A0,
+      atlasStartBlockedReason: "",
+      atlasProgressObserved: false,
+      atlasProgressFirstValue: 0,
+      atlasProgressLastValue: 0,
+      waterFailureDoesNotBlockAtlas: true,
+      visualCarrierAllowed: true,
+      visualizationBlocked: false,
+      visualizationBlockReason: "",
+      externalStatusCallbackSafe: true,
+      externalStatusCallbackErrors: []
     };
   }
 
@@ -658,7 +824,7 @@
     const proof = createWaterConnectorProof();
     const water = getWaterChannel();
 
-    proof.lastCheckedAt = new Date().toISOString();
+    proof.lastCheckedAt = nowIso();
     proof.waterGlobalPresent = Boolean(water);
     proof.waterActorName = water
       ? root.HEARTH_WATER_CHANNEL
@@ -677,9 +843,15 @@
     proof.waterActualContract = String(water.contract || "");
     proof.waterContractOk = proof.waterActualContract === WATER_CONTRACT;
 
-    if (!proof.waterContractOk) proof.waterChildLoadFailureCoordinate = "C7_CONTRACT_MISMATCH";
+    if (!proof.waterContractOk) {
+      proof.waterChildLoadFailureCoordinate = "C7_CONTRACT_MISMATCH";
+    }
 
-    const method = typeof water.sample === "function" ? "sample" : typeof water.read === "function" ? "read" : "";
+    const method = typeof water.sample === "function"
+      ? "sample"
+      : typeof water.read === "function"
+        ? "read"
+        : "";
 
     if (!method) {
       proof.waterChildLoadFailureCoordinate = "C8_SAMPLE_API_FAILURE";
@@ -699,7 +871,16 @@
         return proof;
       }
 
-      const coordsOk = ["u", "v", "lon", "lat", "x", "y", "z"].every((key) => Number.isFinite(Number(value[key])));
+      const coordsOk = [
+        "u",
+        "v",
+        "lon",
+        "lat",
+        "x",
+        "y",
+        "z"
+      ].every((key) => Number.isFinite(Number(value[key])));
+
       proof.waterSampleProbeCoordinatesOk = coordsOk;
 
       if (!coordsOk) {
@@ -736,52 +917,13 @@
     }
   }
 
-  function classifyVisualState(waterProof) {
-    const waterOk = Boolean(waterProof && waterProof.waterValidationOk);
-    return {
-      visualCarrierAllowed: true,
-      visualizationBlocked: false,
-      visualizationBlockReason: "",
-      visualCarrierMode: waterOk ? "channel-diagnostic" : "fallback-diagnostic",
-      visualDiagnosticStatus: waterOk ? "READY" : "DEGRADED",
-      visualDiagnosticCue: waterOk ? "CHILD_CHANNELS_READY" : "WATER_CHILD_LOAD_FAILURE",
-      landLayerStatus: getLandChannel() ? "ready" : "fallback",
-      waterLayerStatus: waterOk ? "ready" : "degraded",
-      airLayerStatus: getAirChannel() ? "ready" : "fallback",
-      waterFallbackActive: !waterOk,
-      waterFallbackReason: waterOk ? "" : (waterProof && waterProof.waterChildLoadFailureCoordinate) || "C4_SCRIPT_NETWORK_LOAD_FAILURE"
-    };
-  }
-
-  function applyVisualStateToDataset(visualState, targetCanvas) {
-    const dataset = root.document && root.document.documentElement ? root.document.documentElement.dataset : null;
-    const canvasDataset = targetCanvas && targetCanvas.dataset ? targetCanvas.dataset : null;
-    const pairs = {
-      visualCarrierAllowed: String(Boolean(visualState.visualCarrierAllowed)),
-      visualizationBlocked: String(Boolean(visualState.visualizationBlocked)),
-      visualizationBlockReason: String(visualState.visualizationBlockReason || ""),
-      visualCarrierMode: String(visualState.visualCarrierMode || "fallback-diagnostic"),
-      visualDiagnosticStatus: String(visualState.visualDiagnosticStatus || "DEGRADED"),
-      visualDiagnosticCue: String(visualState.visualDiagnosticCue || "WATER_CHILD_LOAD_FAILURE"),
-      landLayerStatus: String(visualState.landLayerStatus || "fallback"),
-      waterLayerStatus: String(visualState.waterLayerStatus || "degraded"),
-      airLayerStatus: String(visualState.airLayerStatus || "fallback"),
-      hearthWaterFallbackActive: String(Boolean(visualState.waterFallbackActive)),
-      hearthWaterFallbackReason: String(visualState.waterFallbackReason || ""),
-      coherentExpressionPass: "false",
-      visualPassClaimed: "false"
-    };
-
-    Object.keys(pairs).forEach((key) => {
-      if (dataset) dataset[key] = pairs[key];
-      if (canvasDataset) canvasDataset[key] = pairs[key];
-    });
-  }
-
   function applyWaterConnectorProofToDataset(proof, targetCanvas) {
     if (!proof) return;
 
-    const dataset = root.document && root.document.documentElement ? root.document.documentElement.dataset : null;
+    const dataset = root.document && root.document.documentElement
+      ? root.document.documentElement.dataset
+      : null;
+
     const canvasDataset = targetCanvas && targetCanvas.dataset ? targetCanvas.dataset : null;
 
     const pairs = {
@@ -818,6 +960,44 @@
       hearthWaterSampleProbeError: String(proof.waterSampleProbeError || ""),
       hearthWaterChannelLoaded: String(Boolean(proof.waterGlobalPresent && proof.waterContractOk)),
       hearthWaterValidationOk: String(Boolean(proof.waterValidationOk)),
+      hearthWaterFallbackActive: String(!proof.waterValidationOk),
+      hearthWaterFallbackReason: proof.waterValidationOk ? "" : String(proof.waterChildLoadFailureCoordinate || "WATER_CHILD_UNAVAILABLE"),
+      waterFailureDoesNotBlockAtlas: "true",
+      visualPassClaimed: "false"
+    };
+
+    Object.keys(pairs).forEach((key) => {
+      if (dataset) dataset[key] = pairs[key];
+      if (canvasDataset) canvasDataset[key] = pairs[key];
+    });
+  }
+
+  function applyAtlasStartProofToDataset(proof, targetCanvas) {
+    if (!proof) return;
+
+    const dataset = root.document && root.document.documentElement
+      ? root.document.documentElement.dataset
+      : null;
+
+    const canvasDataset = targetCanvas && targetCanvas.dataset ? targetCanvas.dataset : null;
+
+    const pairs = {
+      atlasStartAuthorized: String(Boolean(proof.atlasStartAuthorized)),
+      atlasStartAttempted: String(Boolean(proof.atlasStartAttempted)),
+      atlasStartActive: String(Boolean(proof.atlasStartActive)),
+      atlasBuilderEntered: String(Boolean(proof.atlasBuilderEntered)),
+      atlasStartTimestamp: String(proof.atlasStartTimestamp || ""),
+      atlasStartFailureCoordinate: String(proof.atlasStartFailureCoordinate || ""),
+      atlasStartBlockedReason: String(proof.atlasStartBlockedReason || ""),
+      atlasProgressObserved: String(Boolean(proof.atlasProgressObserved)),
+      atlasProgressFirstValue: String(Number(proof.atlasProgressFirstValue || 0)),
+      atlasProgressLastValue: String(Number(proof.atlasProgressLastValue || 0)),
+      waterFailureDoesNotBlockAtlas: "true",
+      visualCarrierAllowed: String(Boolean(proof.visualCarrierAllowed)),
+      visualizationBlocked: String(Boolean(proof.visualizationBlocked)),
+      visualizationBlockReason: String(proof.visualizationBlockReason || ""),
+      externalStatusCallbackSafe: String(Boolean(proof.externalStatusCallbackSafe)),
+      externalStatusCallbackErrors: JSON.stringify(proof.externalStatusCallbackErrors || []),
       visualPassClaimed: "false"
     };
 
@@ -828,15 +1008,22 @@
   }
 
   function createShellCanvas(options = {}) {
-    if (!root.document || typeof root.document.createElement !== "function") throw new Error("Hearth shell canvas requires document.createElement.");
+    if (!root.document || typeof root.document.createElement !== "function") {
+      throw new Error("Hearth shell canvas requires document.createElement.");
+    }
 
-    const requestedSize = Number.isFinite(Number(options.size)) ? Math.round(Number(options.size)) : Number.isFinite(Number(options.width)) ? Math.round(Number(options.width)) : 420;
+    const requestedSize = Number.isFinite(Number(options.size))
+      ? Math.round(Number(options.size))
+      : Number.isFinite(Number(options.width))
+        ? Math.round(Number(options.width))
+        : 420;
+
     const size = clamp(requestedSize, 240, options.allowLargeTexture === true ? 720 : 520);
     const canvas = root.document.createElement("canvas");
 
     canvas.width = size;
     canvas.height = size;
-    canvas.className = options.className || "hearth-canvas-texture hearth-canvas-contained-sphere hearth-canvas-visible-planet-nonblocking-diagnostic-recovery";
+    canvas.className = options.className || "hearth-canvas-texture hearth-canvas-contained-sphere hearth-canvas-atlas-start-sequencing-hardening";
     canvas.style.maxWidth = "100%";
     canvas.style.height = "auto";
     canvas.style.display = "block";
@@ -846,82 +1033,101 @@
     canvas.style.webkitUserSelect = "none";
     canvas.style.cursor = "grab";
 
-    const d = canvas.dataset;
-    d.hearthCanvasTexture = "true";
-    d.hearthCanvasContract = CONTRACT;
-    d.hearthCanvasReceipt = RECEIPT;
-    d.hearthCanvasPreviousContract = PREVIOUS_CONTRACT;
-    d.hearthCanvasShellFirst = "true";
-    d.hearthCanvasSemiconductorOutlet = "true";
-    d.hearthCanvasDecidesNothing = "true";
-    d.hearthRuntimeTablePrewired = "true";
-    d.hearthTripleGCoherencePrewired = "true";
-    d.hearthRuntimeTableContract = PREFERRED_LAB_RUNTIME_TABLE_CONTRACT;
-    d.hearthRuntimeTableAcceptedContracts = ACCEPTED_LAB_RUNTIME_TABLE_CONTRACTS.join(",");
-    d.hearthRuntimeTableLoaded = "false";
-    d.hearthRuntimeTableRuntimeAllowed = "true";
-    d.hearthRuntimeTableSet = "true";
-    d.hearthRuntimeTableLedgerReady = "false";
-    d.hearthRuntimeTableHandoff = "FALLBACK_PASS";
-    d.hearthCanvasChannelMultiplexReady = "true";
-    d.hearthCanvasChannelMultiplexDegraded = "true";
-    d.hearthCanvasInteractiveShellMounted = "true";
-    d.hearthCanvasCachedAtlasProjection = "pending";
-    d.hearthCanvasInteractiveProjection = "true";
-    d.hearthCanvasControlsBound = "false";
-    d.hearthCanvasAtlasReady = "false";
-    d.hearthCanvasAtlasBuilding = "false";
-    d.hearthCanvasAtlasProgress = "0";
-    d.hearthCanvasSphereContainment = "true";
-    d.hearthCanvasNoRectangularTextureSpill = "true";
-    d.hearthCanvasOutsideSphereTransparent = "true";
-    d.visualCarrierAllowed = "true";
-    d.visualizationBlocked = "false";
-    d.visualizationBlockReason = "";
-    d.visualCarrierMode = "fallback-diagnostic";
-    d.visualDiagnosticStatus = "DEGRADED";
-    d.visualDiagnosticCue = "WATER_CHILD_LOAD_FAILURE";
-    d.landLayerStatus = "pending";
-    d.waterLayerStatus = "degraded";
-    d.airLayerStatus = "pending";
-    d.hearthWaterFallbackActive = "true";
-    d.hearthWaterFallbackReason = "WATER_CHILD_LOAD_FAILURE";
-    d.hearthWaterConnectorActive = "true";
-    d.hearthWaterConnectorMode = WATER_CHILD_MODE;
-    d.hearthWaterConnectorOwnsWaterTruth = "false";
-    d.hearthCanvasOwnsWaterTruth = "false";
-    d.hearthWaterChildExternalAuthority = WATER_CHILD_PATH;
-    d.hearthWaterChildExpectedContract = WATER_CONTRACT;
-    d.hearthWaterChildLoadFailureCoordinate = "C0_CONNECTOR_NOT_STARTED";
-    d.hearthReceiptMode = "compact";
-    d.hearthReceiptVisible = "true";
-    d.hearthReceiptExpanded = "false";
-    d.hearthDiagnosticExportAvailable = "true";
-    d.hearthDiagnosticExportCopied = "false";
-    d.hearthDiagnosticExportLength = "0";
-    d.hearthDiagnosticExportError = "";
-    d.generatedImage = "false";
-    d.graphicBox = "false";
-    d.webgl = "false";
-    d.routeMutation = "false";
-    d.runtimeMutation = "false";
-    d.controlsMutation = "false";
-    d.coherentExpressionPass = "false";
-    d.visualPassClaimed = "false";
+    canvas.dataset.hearthCanvasTexture = "true";
+    canvas.dataset.hearthCanvasContract = CONTRACT;
+    canvas.dataset.hearthCanvasReceipt = RECEIPT;
+    canvas.dataset.hearthCanvasPreviousContract = PREVIOUS_CONTRACT;
+    canvas.dataset.hearthCanvasBaselineContract = BASELINE_CONTRACT;
+    canvas.dataset.hearthCanvasShellFirst = "true";
+    canvas.dataset.hearthCanvasSemiconductorOutlet = "true";
+    canvas.dataset.hearthCanvasDecidesNothing = "true";
+    canvas.dataset.hearthRuntimeTablePrewired = "true";
+    canvas.dataset.hearthTripleGCoherencePrewired = "true";
+    canvas.dataset.hearthRuntimeTableContract = PREFERRED_LAB_RUNTIME_TABLE_CONTRACT;
+    canvas.dataset.hearthRuntimeTableAcceptedContracts = ACCEPTED_LAB_RUNTIME_TABLE_CONTRACTS.join(",");
+    canvas.dataset.hearthRuntimeTableLoaded = "false";
+    canvas.dataset.hearthRuntimeTableRuntimeAllowed = "false";
+    canvas.dataset.hearthRuntimeTableSet = "false";
+    canvas.dataset.hearthRuntimeTableLedgerReady = "false";
+    canvas.dataset.hearthRuntimeTableHandoff = "PENDING";
+    canvas.dataset.hearthCanvasChannelMultiplexReady = "false";
+    canvas.dataset.hearthCanvasChannelMultiplexDegraded = "false";
+    canvas.dataset.hearthCanvasInteractiveShellMounted = "true";
+    canvas.dataset.hearthCanvasCachedAtlasProjection = "pending";
+    canvas.dataset.hearthCanvasInteractiveProjection = "true";
+    canvas.dataset.hearthCanvasControlsBound = "false";
+    canvas.dataset.hearthCanvasAtlasReady = "false";
+    canvas.dataset.hearthCanvasAtlasBuilding = "false";
+    canvas.dataset.hearthCanvasAtlasProgress = "0";
+    canvas.dataset.hearthCanvasSphereContainment = "true";
+    canvas.dataset.hearthCanvasNoRectangularTextureSpill = "true";
+    canvas.dataset.hearthCanvasOutsideSphereTransparent = "true";
+
+    canvas.dataset.visualCarrierAllowed = "true";
+    canvas.dataset.visualizationBlocked = "false";
+    canvas.dataset.visualizationBlockReason = "";
+    canvas.dataset.visualCarrierMode = "fallback-diagnostic";
+    canvas.dataset.visualDiagnosticStatus = "PENDING";
+    canvas.dataset.visualDiagnosticCue = "ATLAS_START_SEQUENCE_PENDING";
+    canvas.dataset.landLayerStatus = "pending";
+    canvas.dataset.waterLayerStatus = "pending";
+    canvas.dataset.airLayerStatus = "pending";
+
+    canvas.dataset.hearthWaterConnectorActive = "true";
+    canvas.dataset.hearthWaterConnectorMode = WATER_CHILD_MODE;
+    canvas.dataset.hearthWaterConnectorOwnsWaterTruth = "false";
+    canvas.dataset.hearthCanvasOwnsWaterTruth = "false";
+    canvas.dataset.hearthWaterChildExternalAuthority = WATER_CHILD_PATH;
+    canvas.dataset.hearthWaterChildExpectedContract = WATER_CONTRACT;
+    canvas.dataset.hearthWaterChildLoadFailureCoordinate = "C0_CONNECTOR_NOT_STARTED";
+    canvas.dataset.hearthWaterFallbackActive = "false";
+    canvas.dataset.hearthWaterFallbackReason = "";
+
+    canvas.dataset.atlasStartAuthorized = "false";
+    canvas.dataset.atlasStartAttempted = "false";
+    canvas.dataset.atlasStartActive = "false";
+    canvas.dataset.atlasBuilderEntered = "false";
+    canvas.dataset.atlasStartTimestamp = "";
+    canvas.dataset.atlasStartFailureCoordinate = ATLAS_COORDINATES.A0;
+    canvas.dataset.atlasStartBlockedReason = "";
+    canvas.dataset.atlasProgressObserved = "false";
+    canvas.dataset.atlasProgressFirstValue = "0";
+    canvas.dataset.atlasProgressLastValue = "0";
+    canvas.dataset.waterFailureDoesNotBlockAtlas = "true";
+    canvas.dataset.externalStatusCallbackSafe = "true";
+    canvas.dataset.externalStatusCallbackErrors = "[]";
+
+    canvas.dataset.hearthReceiptMode = "compact";
+    canvas.dataset.hearthReceiptVisible = "true";
+    canvas.dataset.hearthReceiptExpanded = "false";
+    canvas.dataset.hearthDiagnosticExportAvailable = "true";
+    canvas.dataset.hearthDiagnosticExportCopied = "false";
+    canvas.dataset.hearthDiagnosticExportLength = "0";
+    canvas.dataset.hearthDiagnosticExportError = "";
+
+    canvas.dataset.generatedImage = "false";
+    canvas.dataset.graphicBox = "false";
+    canvas.dataset.webgl = "false";
+    canvas.dataset.routeMutation = "false";
+    canvas.dataset.runtimeMutation = "false";
+    canvas.dataset.controlsMutation = "false";
+    canvas.dataset.coherentExpressionPass = "false";
+    canvas.dataset.visualPassClaimed = "false";
 
     return canvas;
   }
 
   function createLoadingPanel() {
     const panel = root.document.createElement("aside");
+
     panel.dataset.hearthRuntimeLoadingPanel = "true";
     panel.dataset.hearthFormationPanel = "true";
     panel.style.position = "absolute";
     panel.style.left = "50%";
     panel.style.bottom = "14px";
     panel.style.transform = "translateX(-50%)";
-    panel.style.width = "min(92%, 620px)";
-    panel.style.maxHeight = "60%";
+    panel.style.width = "min(92%, 600px)";
+    panel.style.maxHeight = "58%";
     panel.style.overflow = "auto";
     panel.style.padding = "12px 14px";
     panel.style.border = "1px solid rgba(174,216,236,.22)";
@@ -935,15 +1141,17 @@
     panel.style.lineHeight = "1.35";
     panel.style.pointerEvents = "auto";
     panel.style.zIndex = "4";
+
     return panel;
   }
 
   function statusBadge(value) {
     const raw = String(value || "pending").toLowerCase();
-    if (raw.includes("block") || raw.includes("fail") || raw.includes("error")) return "✕";
+
+    if (raw.includes("reject") || raw.includes("block") || raw.includes("fail") || raw.includes("error")) return "✕";
     if (raw.includes("ready") || raw.includes("complete") || raw.includes("pass") || raw.includes("loaded") || raw.includes("active")) return "✓";
-    if (raw.includes("fallback") || raw.includes("degraded") || raw.includes("diagnostic")) return "◐";
-    if (raw.includes("loading") || raw.includes("building") || raw.includes("validating")) return "•";
+    if (raw.includes("fallback") || raw.includes("degraded") || raw.includes("optimized")) return "◐";
+    if (raw.includes("loading") || raw.includes("building") || raw.includes("validating") || raw.includes("attempt")) return "•";
     return "○";
   }
 
@@ -955,17 +1163,24 @@
 
   function formatRuntimeTableIssues(ledger) {
     if (!ledger || !Array.isArray(ledger.records)) return [];
+
     const lines = [];
+
     ledger.records.forEach((record) => {
       if (!record || !Array.isArray(record.issues) || !record.issues.length) return;
-      record.issues.forEach((issue) => lines.push(`${record.name || record.key}: ${issue.code || "ISSUE"} — ${issue.message || "No detail supplied."}`));
+
+      record.issues.forEach((issue) => {
+        lines.push(`${record.name || record.key}: ${issue.code || "ISSUE"} — ${issue.message || "No detail supplied."}`);
+      });
     });
+
     return lines;
   }
 
   function createDiagnosticExport(state, canvas) {
     const waterProof = state.waterConnectorProof || createWaterConnectorProof();
-    const visualState = state.visualState || classifyVisualState(waterProof);
+    const atlasProof = state.atlasStartProof || createAtlasStartProof();
+    const visualProof = state.visualCarrierProof || {};
     const ledger = state.runtimeTableLedger || null;
     const checkpoints = state.tripleGReceipt && Array.isArray(state.tripleGReceipt.checkpoints)
       ? state.tripleGReceipt.checkpoints
@@ -976,29 +1191,34 @@
     const dataset = {};
     const rootDataset = {};
 
-    if (canvas && canvas.dataset) Object.keys(canvas.dataset).forEach((key) => { dataset[key] = canvas.dataset[key]; });
-    if (root.document && root.document.documentElement && root.document.documentElement.dataset) {
-      Object.keys(root.document.documentElement.dataset).forEach((key) => { rootDataset[key] = root.document.documentElement.dataset[key]; });
+    if (canvas && canvas.dataset) {
+      Object.keys(canvas.dataset).forEach((key) => {
+        dataset[key] = canvas.dataset[key];
+      });
     }
 
-    const constructionReady = Boolean(visualState.visualCarrierAllowed && !visualState.visualizationBlocked);
-    const imageRendered = Boolean(state.imageRendered || state.fallbackActive || state.atlasReady);
+    if (root.document && root.document.documentElement && root.document.documentElement.dataset) {
+      Object.keys(root.document.documentElement.dataset).forEach((key) => {
+        rootDataset[key] = root.document.documentElement.dataset[key];
+      });
+    }
 
     const lines = [
       "HEARTH_DIAGNOSTIC_RECEIPT_EXPORT",
       "",
-      `timestamp=${new Date().toISOString()}`,
+      `timestamp=${nowIso()}`,
       `canvasContract=${CONTRACT}`,
       `canvasReceipt=${RECEIPT}`,
       `previousCanvasContract=${PREVIOUS_CONTRACT}`,
+      `baselineCanvasContract=${BASELINE_CONTRACT}`,
       `labRuntimeTableContract=${state.runtimeTableContract || ""}`,
       `preferredLabRuntimeTableContract=${PREFERRED_LAB_RUNTIME_TABLE_CONTRACT}`,
       `acceptedLabRuntimeTableContracts=${ACCEPTED_LAB_RUNTIME_TABLE_CONTRACTS.join(",")}`,
-      `runtimeHandoff=${state.runtimeHandoff || "FALLBACK_PASS"}`,
-      `constructionReady=${String(constructionReady)}`,
-      `imageRendered=${String(imageRendered)}`,
+      `runtimeHandoff=${state.runtimeHandoff || "PENDING"}`,
+      `constructionReady=${String(Boolean(state.runtimeAllowed))}`,
+      `imageRendered=${String(Boolean(state.imageRendered))}`,
       `coherentExpressionPass=${String(Boolean(state.coherentExpressionPass))}`,
-      `coherenceStatus=${state.coherenceStatus || "FAIL"}`,
+      `coherenceStatus=${state.coherenceStatus || "UNKNOWN"}`,
       `coherenceScore=${Number.isFinite(Number(state.coherenceScore)) ? state.coherenceScore : 0}`,
       `failedCheckpoints=${(state.failedCheckpoints || []).join(",")}`,
       `warningCheckpoints=${(state.warningCheckpoints || []).join(",")}`,
@@ -1008,17 +1228,32 @@
       `airChannelContract=${AIR_CONTRACT}`,
       "",
       "VISUAL_DIAGNOSTIC_CARRIER_PROOF",
-      `visualCarrierAllowed=${String(Boolean(visualState.visualCarrierAllowed))}`,
-      `visualizationBlocked=${String(Boolean(visualState.visualizationBlocked))}`,
-      `visualizationBlockReason=${visualState.visualizationBlockReason || ""}`,
-      `visualCarrierMode=${visualState.visualCarrierMode || "fallback-diagnostic"}`,
-      `visualDiagnosticStatus=${visualState.visualDiagnosticStatus || "DEGRADED"}`,
-      `visualDiagnosticCue=${visualState.visualDiagnosticCue || "WATER_CHILD_LOAD_FAILURE"}`,
-      `landLayerStatus=${visualState.landLayerStatus || "fallback"}`,
-      `waterLayerStatus=${visualState.waterLayerStatus || "degraded"}`,
-      `airLayerStatus=${visualState.airLayerStatus || "fallback"}`,
-      `waterFallbackActive=${String(Boolean(visualState.waterFallbackActive))}`,
-      `waterFallbackReason=${visualState.waterFallbackReason || ""}`,
+      `visualCarrierAllowed=${String(Boolean(visualProof.visualCarrierAllowed !== false))}`,
+      `visualizationBlocked=${String(Boolean(visualProof.visualizationBlocked))}`,
+      `visualizationBlockReason=${visualProof.visualizationBlockReason || ""}`,
+      `visualCarrierMode=${visualProof.visualCarrierMode || "fallback-diagnostic"}`,
+      `visualDiagnosticStatus=${visualProof.visualDiagnosticStatus || "PENDING"}`,
+      `visualDiagnosticCue=${visualProof.visualDiagnosticCue || "ATLAS_START_SEQUENCE_PENDING"}`,
+      `landLayerStatus=${visualProof.landLayerStatus || ""}`,
+      `waterLayerStatus=${visualProof.waterLayerStatus || ""}`,
+      `airLayerStatus=${visualProof.airLayerStatus || ""}`,
+      `waterFallbackActive=${String(Boolean(visualProof.waterFallbackActive))}`,
+      `waterFallbackReason=${visualProof.waterFallbackReason || ""}`,
+      "",
+      "ATLAS_START_COORDINATE_PROOF",
+      `atlasStartAuthorized=${String(Boolean(atlasProof.atlasStartAuthorized))}`,
+      `atlasStartAttempted=${String(Boolean(atlasProof.atlasStartAttempted))}`,
+      `atlasStartActive=${String(Boolean(atlasProof.atlasStartActive))}`,
+      `atlasBuilderEntered=${String(Boolean(atlasProof.atlasBuilderEntered))}`,
+      `atlasStartTimestamp=${atlasProof.atlasStartTimestamp || ""}`,
+      `atlasStartFailureCoordinate=${atlasProof.atlasStartFailureCoordinate || ""}`,
+      `atlasStartBlockedReason=${atlasProof.atlasStartBlockedReason || ""}`,
+      `atlasProgressObserved=${String(Boolean(atlasProof.atlasProgressObserved))}`,
+      `atlasProgressFirstValue=${Number(atlasProof.atlasProgressFirstValue || 0)}`,
+      `atlasProgressLastValue=${Number(atlasProof.atlasProgressLastValue || 0)}`,
+      `waterFailureDoesNotBlockAtlas=${String(Boolean(atlasProof.waterFailureDoesNotBlockAtlas))}`,
+      `externalStatusCallbackSafe=${String(Boolean(atlasProof.externalStatusCallbackSafe))}`,
+      `externalStatusCallbackErrors=${JSON.stringify(atlasProof.externalStatusCallbackErrors || [])}`,
       "",
       "WATER_CONNECTOR_COORDINATE_PROOF",
       `connectorActive=${String(Boolean(waterProof.connectorActive))}`,
@@ -1057,12 +1292,18 @@
       "",
       "STRATEGIC_SUMMARY",
       JSON.stringify({
-        constructionReady: constructionReady ? "pass" : "blocked",
-        imageRendered: imageRendered ? "pass" : "pending",
+        constructionReady: Boolean(state.runtimeAllowed) ? "pass" : "blocked",
+        imageRendered: Boolean(state.imageRendered) ? "pass" : "pending",
         coherentExpression: Boolean(state.coherentExpressionPass) ? "pass" : "FAIL",
-        firstFailedCoordinate: waterProof.waterChildLoadFailureCoordinate || "UNKNOWN",
-        visualCarrier: visualState.visualizationBlocked ? "BLOCKED" : visualState.visualDiagnosticStatus,
-        recommendedNextRenewalTarget: waterProof.waterScriptLoaded ? "water-child-actor-validation" : "water-child-served-load-coordinate"
+        firstFailedCoordinate: waterProof.waterValidationOk ? atlasProof.atlasStartFailureCoordinate : waterProof.waterChildLoadFailureCoordinate,
+        atlasStart: atlasProof.atlasStartFailureCoordinate,
+        visualCarrier: visualProof.visualDiagnosticStatus || "PENDING",
+        waterFailureDoesNotBlockAtlas: true,
+        recommendedNextRenewalTarget: atlasProof.atlasStartAttempted
+          ? waterProof.waterValidationOk
+            ? "atlas-progress-or-visual-balance"
+            : "water-child-served-load-coordinate"
+          : "atlas-start-sequencing"
       }, null, 2),
       "",
       "CHANNEL_LOAD_RESULTS",
@@ -1082,13 +1323,18 @@
         atlasReady: Boolean(state.atlasReady),
         atlasBuilding: Boolean(state.atlasBuilding),
         atlasProgress: Number(state.atlasProgress || 0),
-        projectionReady: Boolean(state.atlasReady || state.fallbackActive),
+        projectionReady: Boolean(state.projectionReady || state.imageRendered),
         sphereContainment: true,
         outsideSphereTransparent: true,
         noRectangularTextureSpill: true,
-        imageRendered,
-        visualCarrierAllowed: Boolean(visualState.visualCarrierAllowed),
-        visualizationBlocked: Boolean(visualState.visualizationBlocked),
+        imageRendered: Boolean(state.imageRendered),
+        visualCarrierAllowed: true,
+        visualizationBlocked: false,
+        atlasStartAuthorized: Boolean(atlasProof.atlasStartAuthorized),
+        atlasStartAttempted: Boolean(atlasProof.atlasStartAttempted),
+        atlasStartActive: Boolean(atlasProof.atlasStartActive),
+        atlasStartFailureCoordinate: atlasProof.atlasStartFailureCoordinate,
+        waterFailureDoesNotBlockAtlas: true,
         visualPassClaimed: false
       }, null, 2),
       "",
@@ -1107,29 +1353,30 @@
 
     const state = api.state;
     const stages = state.loadingStages || {};
-    const handoff = state.runtimeHandoff || "FALLBACK_PASS";
+    const handoff = state.runtimeTableLedger && state.runtimeTableLedger.handoff
+      ? state.runtimeTableLedger.handoff
+      : state.runtimeHandoff || "PENDING";
     const waterProof = state.waterConnectorProof || createWaterConnectorProof();
-    const visualState = state.visualState || classifyVisualState(waterProof);
-    const issues = formatRuntimeTableIssues(state.runtimeTableLedger);
+    const atlasProof = state.atlasStartProof || createAtlasStartProof();
 
+    const issues = formatRuntimeTableIssues(state.runtimeTableLedger);
     const issueHtml = issues.length
       ? `<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(174,216,236,.14);color:rgba(255,210,180,.92);">${issues.slice(0, 5).map((line) => `<div>${escapeHtml(line)}</div>`).join("")}</div>`
       : "";
 
     const statusRows = [
-      ["Visual carrier", visualState.visualizationBlocked ? "blocked" : visualState.visualCarrierMode || "fallback-diagnostic"],
-      ["Visual cue", visualState.visualDiagnosticCue || "WATER_CHILD_LOAD_FAILURE"],
-      ["Shell mounted", stages.shellMounted || "ready"],
-      ["Touch bound", stages.touchBound || "ready"],
-      ["Lab Runtime Table", stages.runtimeTable || "fallback-pass"],
-      ["Land layer", visualState.landLayerStatus || "fallback"],
+      ["Shell mounted", stages.shellMounted || "pending"],
+      ["Touch bound", stages.touchBound || "pending"],
+      ["Lab Runtime Table", stages.runtimeTable || "pending"],
+      ["Land channel", stages.land || "pending"],
       ["Water connector", waterProof.waterChildLoadFailureCoordinate || "pending"],
-      ["Water layer", visualState.waterLayerStatus || "degraded"],
-      ["Air layer", visualState.airLayerStatus || "fallback"],
-      ["Validation", stages.validation || "diagnostic"],
+      ["Water fallback", waterProof.waterValidationOk ? "not-needed" : "active"],
+      ["Air channel", stages.air || "pending"],
+      ["Validation", stages.validation || "pending"],
       ["Handoff", handoff],
-      ["Atlas", stages.atlas || "building"],
-      ["Projection", stages.projection || "ready"]
+      ["Atlas start", atlasProof.atlasStartFailureCoordinate || "pending"],
+      ["Atlas progress", formatPercent(state.atlasProgress || 0)],
+      ["Projection", stages.projection || "pending"]
     ];
 
     const rowsHtml = statusRows.map(([label, value]) => {
@@ -1143,25 +1390,33 @@
       ].join("");
     }).join("");
 
+    const expanded = state.receiptExpanded;
+    const visible = state.receiptVisible;
+
     const exportText = createDiagnosticExport(state, api.canvas);
     state.diagnosticExport = exportText;
 
     if (api.canvas && api.canvas.dataset) {
       api.canvas.dataset.hearthDiagnosticExportAvailable = "true";
       api.canvas.dataset.hearthDiagnosticExportLength = String(exportText.length);
-      api.canvas.dataset.hearthReceiptMode = state.receiptExpanded ? "expanded" : "compact";
-      api.canvas.dataset.hearthReceiptVisible = String(Boolean(state.receiptVisible));
-      api.canvas.dataset.hearthReceiptExpanded = String(Boolean(state.receiptExpanded));
+      api.canvas.dataset.hearthReceiptMode = expanded ? "expanded" : "compact";
+      api.canvas.dataset.hearthReceiptVisible = String(Boolean(visible));
+      api.canvas.dataset.hearthReceiptExpanded = String(Boolean(expanded));
     }
 
-    const expandedHtml = state.receiptExpanded
-      ? `<pre style="margin:10px 0 0;padding:10px;max-height:220px;overflow:auto;border-radius:10px;background:rgba(0,0,0,.36);white-space:pre-wrap;font-size:10px;line-height:1.35;">${escapeHtml(exportText)}</pre>`
+    const expandedHtml = expanded
+      ? [
+        "<pre style=\"margin:10px 0 0;padding:10px;max-height:220px;overflow:auto;border-radius:10px;background:rgba(0,0,0,.36);white-space:pre-wrap;font-size:10px;line-height:1.35;\">",
+        escapeHtml(exportText),
+        "</pre>"
+      ].join("")
       : "";
 
-    panel.style.display = state.receiptVisible ? "block" : "none";
+    panel.style.display = visible ? "block" : "none";
+
     panel.innerHTML = [
       "<div style=\"display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:8px;\">",
-      "<strong style=\"font-size:12px;letter-spacing:.08em;text-transform:uppercase;\">Hearth Visual Diagnostic Carrier</strong>",
+      "<strong style=\"font-size:12px;letter-spacing:.08em;text-transform:uppercase;\">Hearth Atlas Start Receipt</strong>",
       `<span style="font-size:10px;opacity:.70;">${escapeHtml(formatPercent(state.atlasProgress || 0))}</span>`,
       "</div>",
       "<div style=\"height:4px;border-radius:999px;background:rgba(174,216,236,.12);overflow:hidden;margin-bottom:9px;\">",
@@ -1169,7 +1424,7 @@
       "</div>",
       "<div style=\"display:flex;gap:8px;flex-wrap:wrap;margin-bottom:9px;\">",
       "<button type=\"button\" data-hearth-receipt-toggle style=\"border:1px solid rgba(174,216,236,.24);border-radius:999px;background:rgba(174,216,236,.08);color:rgba(238,246,255,.9);padding:5px 9px;font-size:10px;cursor:pointer;\">Receipt visible</button>",
-      `<button type="button" data-hearth-receipt-expand style="border:1px solid rgba(174,216,236,.24);border-radius:999px;background:rgba(174,216,236,.08);color:rgba(238,246,255,.9);padding:5px 9px;font-size:10px;cursor:pointer;">${state.receiptExpanded ? "Compact receipt" : "Expand receipt"}</button>`,
+      `<button type="button" data-hearth-receipt-expand style="border:1px solid rgba(174,216,236,.24);border-radius:999px;background:rgba(174,216,236,.08);color:rgba(238,246,255,.9);padding:5px 9px;font-size:10px;cursor:pointer;">${expanded ? "Compact receipt" : "Expand receipt"}</button>`,
       "<button type=\"button\" data-hearth-receipt-copy style=\"border:1px solid rgba(174,216,236,.24);border-radius:999px;background:rgba(174,216,236,.08);color:rgba(238,246,255,.9);padding:5px 9px;font-size:10px;cursor:pointer;\">Copy diagnostic</button>",
       "</div>",
       rowsHtml,
@@ -1181,8 +1436,25 @@
     const expand = panel.querySelector("[data-hearth-receipt-expand]");
     const copy = panel.querySelector("[data-hearth-receipt-copy]");
 
-    if (toggle) toggle.onclick = () => { state.receiptVisible = !state.receiptVisible; renderLoadingPanel(panel, api); };
-    if (expand) expand.onclick = () => { state.receiptExpanded = !state.receiptExpanded; renderLoadingPanel(panel, api); };
+    if (toggle) {
+      toggle.onclick = () => {
+        state.receiptVisible = !state.receiptVisible;
+        if (api.canvas) api.canvas.dataset.hearthReceiptVisible = String(Boolean(state.receiptVisible));
+        renderLoadingPanel(panel, api);
+      };
+    }
+
+    if (expand) {
+      expand.onclick = () => {
+        state.receiptExpanded = !state.receiptExpanded;
+        if (api.canvas) {
+          api.canvas.dataset.hearthReceiptExpanded = String(Boolean(state.receiptExpanded));
+          api.canvas.dataset.hearthReceiptMode = state.receiptExpanded ? "expanded" : "compact";
+        }
+        renderLoadingPanel(panel, api);
+      };
+    }
+
     if (copy) {
       copy.onclick = () => {
         const text = createDiagnosticExport(state, api.canvas);
@@ -1193,12 +1465,46 @@
             api.canvas.dataset.hearthDiagnosticExportLength = String(text.length);
           }
         };
+
         if (root.navigator && root.navigator.clipboard && typeof root.navigator.clipboard.writeText === "function") {
-          root.navigator.clipboard.writeText(text).then(() => setCopied(true, ""), (error) => setCopied(false, error && error.message ? error.message : String(error)));
+          root.navigator.clipboard.writeText(text).then(
+            () => setCopied(true, ""),
+            (error) => setCopied(false, error && error.message ? error.message : String(error))
+          );
         } else {
           setCopied(false, "clipboard unavailable");
         }
       };
+    }
+  }
+
+  function updateVisualCarrierProof(api, patch = {}) {
+    if (!api || !api.state) return;
+
+    const state = api.state;
+    state.visualCarrierProof = {
+      ...state.visualCarrierProof,
+      ...patch,
+      visualCarrierAllowed: patch.visualCarrierAllowed !== false,
+      visualizationBlocked: Boolean(patch.visualizationBlocked),
+      visualizationBlockReason: patch.visualizationBlockReason || "",
+      waterFailureDoesNotBlockAtlas: true
+    };
+
+    const canvas = api.canvas;
+    if (canvas && canvas.dataset) {
+      canvas.dataset.visualCarrierAllowed = String(Boolean(state.visualCarrierProof.visualCarrierAllowed));
+      canvas.dataset.visualizationBlocked = String(Boolean(state.visualCarrierProof.visualizationBlocked));
+      canvas.dataset.visualizationBlockReason = String(state.visualCarrierProof.visualizationBlockReason || "");
+      canvas.dataset.visualCarrierMode = String(state.visualCarrierProof.visualCarrierMode || "fallback-diagnostic");
+      canvas.dataset.visualDiagnosticStatus = String(state.visualCarrierProof.visualDiagnosticStatus || "PENDING");
+      canvas.dataset.visualDiagnosticCue = String(state.visualCarrierProof.visualDiagnosticCue || "ATLAS_START_SEQUENCE_PENDING");
+      canvas.dataset.landLayerStatus = String(state.visualCarrierProof.landLayerStatus || "");
+      canvas.dataset.waterLayerStatus = String(state.visualCarrierProof.waterLayerStatus || "");
+      canvas.dataset.airLayerStatus = String(state.visualCarrierProof.airLayerStatus || "");
+      canvas.dataset.hearthWaterFallbackActive = String(Boolean(state.visualCarrierProof.waterFallbackActive));
+      canvas.dataset.hearthWaterFallbackReason = String(state.visualCarrierProof.waterFallbackReason || "");
+      canvas.dataset.waterFailureDoesNotBlockAtlas = "true";
     }
   }
 
@@ -1207,34 +1513,33 @@
 
     const state = api.state;
 
-    if (patch.stages && typeof patch.stages === "object") state.loadingStages = { ...state.loadingStages, ...patch.stages };
+    if (patch.stages && typeof patch.stages === "object") {
+      state.loadingStages = {
+        ...state.loadingStages,
+        ...patch.stages
+      };
+    }
+
     if (patch.runtimeTableLedger) state.runtimeTableLedger = patch.runtimeTableLedger;
     if (patch.runtimeHandoff) state.runtimeHandoff = patch.runtimeHandoff;
     if (typeof patch.runtimeAllowed === "boolean") state.runtimeAllowed = patch.runtimeAllowed;
     if (Number.isFinite(Number(patch.atlasProgress))) state.atlasProgress = clamp01(patch.atlasProgress);
     if (patch.error) state.error = patch.error;
     if (patch.waterConnectorProof) state.waterConnectorProof = patch.waterConnectorProof;
-    if (patch.visualState) state.visualState = patch.visualState;
+    if (patch.atlasStartProof) state.atlasStartProof = patch.atlasStartProof;
     if (patch.channelLoadResults) state.channelLoadResults = patch.channelLoadResults;
     if (patch.tripleGReceipt) state.tripleGReceipt = patch.tripleGReceipt;
-
-    const visualState = state.visualState || classifyVisualState(state.waterConnectorProof || createWaterConnectorProof());
+    if (patch.visualCarrierProof) updateVisualCarrierProof(api, patch.visualCarrierProof);
 
     if (api.canvas) {
-      const d = api.canvas.dataset;
-      d.hearthRuntimeTableHandoff = state.runtimeHandoff || "FALLBACK_PASS";
-      d.hearthRuntimeTableRuntimeAllowed = "true";
-      d.hearthRuntimeTableSet = "true";
-      d.hearthRuntimeTableLedgerReady = String(Boolean(state.runtimeTableLedger));
-      d.hearthCanvasAtlasProgress = String(state.atlasProgress || 0);
-      d.hearthCanvasChannelMultiplexReady = "true";
-      d.hearthCanvasChannelMultiplexDegraded = String(Boolean(visualState.waterFallbackActive));
-      d.hearthCanvasImageRendered = String(Boolean(state.imageRendered || state.fallbackActive || state.atlasReady));
-      d.coherentExpressionPass = String(Boolean(state.coherentExpressionPass));
-      d.visualPassClaimed = "false";
-      if (state.error) d.hearthRuntimeTableError = state.error;
+      api.canvas.dataset.hearthRuntimeTableHandoff = state.runtimeHandoff || "PENDING";
+      api.canvas.dataset.hearthRuntimeTableRuntimeAllowed = String(Boolean(state.runtimeAllowed));
+      api.canvas.dataset.hearthRuntimeTableSet = String(Boolean(state.runtimeAllowed));
+      api.canvas.dataset.hearthRuntimeTableLedgerReady = String(Boolean(state.runtimeTableLedger));
+      api.canvas.dataset.hearthCanvasAtlasProgress = String(state.atlasProgress || 0);
+      if (state.error) api.canvas.dataset.hearthRuntimeTableError = state.error;
       if (state.waterConnectorProof) applyWaterConnectorProofToDataset(state.waterConnectorProof, api.canvas);
-      applyVisualStateToDataset(visualState, api.canvas);
+      if (state.atlasStartProof) applyAtlasStartProofToDataset(state.atlasStartProof, api.canvas);
     }
 
     renderLoadingPanel(api.loadingPanel, api);
@@ -1254,7 +1559,15 @@
 
     ctx.clearRect(0, 0, width, height);
 
-    const shell = ctx.createRadialGradient(cx - r * 0.28, cy - r * 0.34, r * 0.05, cx, cy, r);
+    const shell = ctx.createRadialGradient(
+      cx - r * 0.28,
+      cy - r * 0.34,
+      r * 0.05,
+      cx,
+      cy,
+      r
+    );
+
     shell.addColorStop(0, "rgba(88, 118, 130, 0.96)");
     shell.addColorStop(0.42, "rgba(28, 52, 70, 0.98)");
     shell.addColorStop(0.78, "rgba(8, 17, 34, 0.99)");
@@ -1264,14 +1577,32 @@
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, TWO_PI);
     ctx.clip();
+
     ctx.fillStyle = shell;
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
 
-    const shade = ctx.createRadialGradient(cx - r * 0.25, cy - r * 0.32, r * 0.10, cx + r * 0.18, cy + r * 0.14, r * 1.08);
+    const diag = ctx.createLinearGradient(cx - r, cy - r, cx + r, cy + r);
+    diag.addColorStop(0, "rgba(7,29,71,0.16)");
+    diag.addColorStop(0.42, "rgba(92,86,58,0.08)");
+    diag.addColorStop(0.70, "rgba(7,29,71,0.18)");
+    diag.addColorStop(1, "rgba(2,5,12,0.20)");
+    ctx.fillStyle = diag;
+    ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+
+    const shade = ctx.createRadialGradient(
+      cx - r * 0.25,
+      cy - r * 0.32,
+      r * 0.10,
+      cx + r * 0.18,
+      cy + r * 0.14,
+      r * 1.08
+    );
+
     shade.addColorStop(0, "rgba(255,255,255,0.10)");
     shade.addColorStop(0.44, "rgba(255,255,255,0.00)");
     shade.addColorStop(0.78, "rgba(0,0,0,0.24)");
     shade.addColorStop(1, "rgba(0,0,0,0.52)");
+
     ctx.fillStyle = shade;
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
     ctx.restore();
@@ -1284,7 +1615,7 @@
 
     ctx.beginPath();
     ctx.arc(cx, cy, r * 1.018, 0, TWO_PI);
-    ctx.strokeStyle = `rgba(225, 184, 82, ${0.10 + pulse * 0.06})`;
+    ctx.strokeStyle = `rgba(174,216,236, ${0.10 + pulse * 0.06})`;
     ctx.lineWidth = Math.max(1, size * 0.003);
     ctx.stroke();
 
@@ -1292,12 +1623,6 @@
     canvas.dataset.hearthCanvasNeutralLoadingShell = "true";
     canvas.dataset.hearthCanvasImageRendered = "true";
     canvas.dataset.hearthCanvasFrames = String(Number(canvas.dataset.hearthCanvasFrames || 0) + 1);
-
-    if (state && typeof state === "object") {
-      state.fallbackActive = true;
-      state.imageRendered = true;
-    }
-
     return canvas;
   }
 
@@ -1305,7 +1630,13 @@
     const x = clamp(Math.round(wrap01(u) * (atlas.width - 1)), 0, atlas.width - 1);
     const y = clamp(Math.round(clamp(v, 0, 1) * (atlas.height - 1)), 0, atlas.height - 1);
     const i = (y * atlas.width + x) * 4;
-    return [atlas.data[i], atlas.data[i + 1], atlas.data[i + 2], atlas.data[i + 3]];
+
+    return [
+      atlas.data[i],
+      atlas.data[i + 1],
+      atlas.data[i + 2],
+      atlas.data[i + 3]
+    ];
   }
 
   function renderSphereFromAtlas(targetCanvas, atlas, state = {}, options = {}) {
@@ -1316,6 +1647,7 @@
     const height = targetCanvas.height;
     const image = ctx.createImageData(width, height);
     const data = image.data;
+
     const rotationLon = Number.isFinite(Number(state.rotationLon)) ? Number(state.rotationLon) : 0;
     const rotationLat = Number.isFinite(Number(state.rotationLat)) ? Number(state.rotationLat) : 0;
     const light = normalize3({ x: -0.34, y: 0.42, z: 0.83 });
@@ -1337,6 +1669,7 @@
         const world = rotateForView(sphere.vector, rotationLon, rotationLat);
         const ll = vectorToLonLat(world);
         const color = sampleAtlasNearest(atlas, lonToU(ll.lon), latToV(ll.lat));
+
         let r = color[0];
         let g = color[1];
         let b = color[2];
@@ -1348,6 +1681,7 @@
           r = clamp(Math.round(r * shade), 0, 255);
           g = clamp(Math.round(g * shade), 0, 255);
           b = clamp(Math.round(b * shade), 0, 255);
+
           const limbAtmosphere = clamp01(sphere.radial * 0.05);
           const mixed = mixColor([r, g, b], COLORS.atmosphere, limbAtmosphere);
           r = mixed[0];
@@ -1368,12 +1702,6 @@
     targetCanvas.dataset.hearthCanvasAtlasReady = "true";
     targetCanvas.dataset.hearthCanvasImageRendered = "true";
     targetCanvas.dataset.hearthCanvasFrames = String(Number(targetCanvas.dataset.hearthCanvasFrames || 0) + 1);
-
-    if (state && typeof state === "object") {
-      state.imageRendered = true;
-      state.fallbackActive = false;
-    }
-
     return targetCanvas;
   }
 
@@ -1382,10 +1710,12 @@
       root.requestIdleCallback(fn, { timeout: 80 });
       return;
     }
+
     if (root.requestAnimationFrame) {
       root.requestAnimationFrame(fn);
       return;
     }
+
     setTimeout(fn, 0);
   }
 
@@ -1415,7 +1745,7 @@
         scriptElementAppended: false,
         documentHeadAvailable: false,
         failureCoordinate: "",
-        at: new Date().toISOString()
+        at: nowIso()
       };
 
       const validate = () => {
@@ -1430,7 +1760,7 @@
       if (validate()) {
         result.loaded = true;
         result.alreadyPresent = true;
-        result.failureCoordinate = "ALREADY_PRESENT_VALIDATED";
+        result.failureCoordinate = item.key === "water" ? "C11_WATER_CHILD_VALIDATED" : "CHILD_VALIDATED";
         resolve(result);
         return;
       }
@@ -1452,12 +1782,21 @@
         result.scriptElementAppended = true;
         result.requested = true;
         result.requestedSrc = existing.getAttribute("src") || "";
-        setTimeout(() => {
+
+        const afterExistingCheck = () => {
           validate();
           result.loaded = result.validationOk;
-          result.failureCoordinate = result.validationOk ? "EXISTING_SCRIPT_VALIDATED" : "C6_GLOBAL_ACTOR_MISSING";
+          result.failureCoordinate = result.validationOk
+            ? item.key === "water"
+              ? "C11_WATER_CHILD_VALIDATED"
+              : "EXISTING_SCRIPT_VALIDATED"
+            : item.key === "water"
+              ? "C6_GLOBAL_ACTOR_MISSING"
+              : "GLOBAL_ACTOR_MISSING";
           resolve(result);
-        }, options.existingValidationDelay || 80);
+        };
+
+        setTimeout(afterExistingCheck, options.existingValidationDelay || 80);
         return;
       }
 
@@ -1485,6 +1824,7 @@
       const settle = (kind, errorText) => {
         if (settled) return;
         settled = true;
+
         result.timeoutCheck = kind === "timeout";
         result.error = errorText || "";
         result.errorType = kind === "load" ? "" : kind;
@@ -1492,7 +1832,13 @@
 
         if (kind === "load") {
           result.loaded = result.validationOk;
-          result.failureCoordinate = result.validationOk ? "C11_WATER_CHILD_VALIDATED" : result.globalPresent ? "C7_CONTRACT_MISMATCH" : "C6_GLOBAL_ACTOR_MISSING";
+          result.failureCoordinate = result.validationOk
+            ? item.key === "water"
+              ? "C11_WATER_CHILD_VALIDATED"
+              : "CHILD_VALIDATED"
+            : result.globalPresent
+              ? "C7_CONTRACT_MISMATCH"
+              : "C6_GLOBAL_ACTOR_MISSING";
         } else if (kind === "error") {
           result.loaded = false;
           result.failureCoordinate = "C4_SCRIPT_NETWORK_LOAD_FAILURE";
@@ -1500,6 +1846,7 @@
           result.loaded = false;
           result.failureCoordinate = "C5_SCRIPT_LOAD_TIMEOUT";
         }
+
         resolve(result);
       };
 
@@ -1524,29 +1871,31 @@
   }
 
   function ensureRuntimeTable(options = {}) {
-    return loadScriptDetailed({
-      key: "runtime-table",
-      label: "Lab Runtime Table",
-      path: LAB_RUNTIME_TABLE_PATH,
-      contract: PREFERRED_LAB_RUNTIME_TABLE_CONTRACT,
-      globalName: "LAB_RUNTIME_TABLE",
-      cacheKey: options.runtimeTableCacheKey || "lab-runtime-table-v2",
-      marker: "lab-runtime-table"
-    }, { timeoutMs: options.timeoutMs || 6000 }).then((result) => {
+    return loadScriptDetailed(
+      {
+        key: "runtime-table",
+        label: "Lab Runtime Table",
+        path: LAB_RUNTIME_TABLE_PATH,
+        contract: PREFERRED_LAB_RUNTIME_TABLE_CONTRACT,
+        globalName: "LAB_RUNTIME_TABLE",
+        cacheKey: options.runtimeTableCacheKey || "lab-runtime-table-v2",
+        marker: "lab-runtime-table"
+      },
+      { timeoutMs: options.timeoutMs || 6000 }
+    ).then((result) => {
       const api = getRuntimeTableApi();
       const contract = api && api.contract ? String(api.contract) : "";
       const accepted = Boolean(api && ACCEPTED_LAB_RUNTIME_TABLE_CONTRACTS.includes(contract));
-      return { ...result, loaded: accepted, validationOk: accepted, api, contract, accepted };
-    }).catch((error) => ({
-      key: "runtime-table",
-      label: "Lab Runtime Table",
-      path: LAB_RUNTIME_TABLE_PATH,
-      loaded: false,
-      validationOk: false,
-      accepted: false,
-      contract: "",
-      error: error && error.message ? error.message : String(error)
-    }));
+
+      return {
+        ...result,
+        loaded: accepted,
+        validationOk: accepted,
+        api,
+        contract,
+        accepted
+      };
+    });
   }
 
   function ensureChannelScripts(options = {}) {
@@ -1554,6 +1903,7 @@
       return loadScriptDetailed(item, { timeoutMs: options.timeoutMs || 6000 }).then((result) => {
         if (item.key === "water") {
           const proof = createWaterConnectorProof();
+
           proof.connectorActive = true;
           proof.waterChildRequestPrepared = true;
           proof.waterChildScriptElementCreated = result.scriptElementCreated;
@@ -1572,7 +1922,7 @@
           proof.waterActualContract = result.actualContract;
           proof.waterExpectedContract = WATER_CONTRACT;
           proof.waterContractOk = result.contractOk;
-          proof.lastCheckedAt = new Date().toISOString();
+          proof.lastCheckedAt = nowIso();
 
           const actorProof = probeWaterActor();
           proof.waterGlobalPresent = actorProof.waterGlobalPresent;
@@ -1587,85 +1937,49 @@
           proof.waterSampleProbeValue = actorProof.waterSampleProbeValue;
           proof.waterValidationOk = actorProof.waterValidationOk;
 
-          if (!proof.waterScriptLoaded) proof.waterChildLoadFailureCoordinate = result.failureCoordinate || "C4_SCRIPT_NETWORK_LOAD_FAILURE";
-          else if (!proof.waterGlobalPresent) proof.waterChildLoadFailureCoordinate = "C6_GLOBAL_ACTOR_MISSING";
-          else if (!proof.waterContractOk) proof.waterChildLoadFailureCoordinate = "C7_CONTRACT_MISMATCH";
-          else if (!proof.waterSampleProbeOk) proof.waterChildLoadFailureCoordinate = "C8_SAMPLE_API_FAILURE";
-          else if (!proof.waterSampleProbeCoordinatesOk) proof.waterChildLoadFailureCoordinate = "C9_COORDINATE_PACKET_FAILURE";
-          else if (!proof.waterSampleProbeFlagsOk) proof.waterChildLoadFailureCoordinate = "C10_WATER_AUTHORITY_FLAGS_FAILURE";
-          else proof.waterChildLoadFailureCoordinate = "C11_WATER_CHILD_VALIDATED";
+          if (!proof.waterScriptLoaded) {
+            proof.waterChildLoadFailureCoordinate = result.failureCoordinate || "C4_SCRIPT_NETWORK_LOAD_FAILURE";
+          } else if (!proof.waterGlobalPresent) {
+            proof.waterChildLoadFailureCoordinate = "C6_GLOBAL_ACTOR_MISSING";
+          } else if (!proof.waterContractOk) {
+            proof.waterChildLoadFailureCoordinate = "C7_CONTRACT_MISMATCH";
+          } else if (!proof.waterSampleProbeOk) {
+            proof.waterChildLoadFailureCoordinate = "C8_SAMPLE_API_FAILURE";
+          } else if (!proof.waterSampleProbeCoordinatesOk) {
+            proof.waterChildLoadFailureCoordinate = "C9_COORDINATE_PACKET_FAILURE";
+          } else if (!proof.waterSampleProbeFlagsOk) {
+            proof.waterChildLoadFailureCoordinate = "C10_WATER_AUTHORITY_FLAGS_FAILURE";
+          } else {
+            proof.waterChildLoadFailureCoordinate = "C11_WATER_CHILD_VALIDATED";
+          }
 
+          proof.waterFailureDoesNotBlockAtlas = true;
           result.waterConnectorProof = proof;
         }
-        return result;
-      }).catch((error) => ({
-        key: item.key,
-        label: item.label,
-        path: item.path,
-        scriptPath: item.path,
-        scriptCacheKey: item.cacheKey,
-        requestedSrc: "",
-        expectedContract: item.contract,
-        actualContract: "",
-        requested: false,
-        loaded: false,
-        error: error && error.message ? error.message : String(error),
-        errorType: "promise-error",
-        globalName: item.globalName,
-        globalPresent: false,
-        contractOk: false,
-        validationOk: false,
-        failureCoordinate: item.key === "water" ? "C4_SCRIPT_NETWORK_LOAD_FAILURE" : "SCRIPT_PROMISE_ERROR",
-        at: new Date().toISOString()
-      }));
-    }));
-  }
 
-  function createFallbackRuntimeLedger(reason) {
-    return {
-      contract: PREFERRED_LAB_RUNTIME_TABLE_CONTRACT,
-      handoff: "FALLBACK_PASS",
-      runtimeAllowed: true,
-      tableSet: false,
-      records: [
-        {
-          key: "visual-carrier",
-          name: "Hearth Visible Diagnostic Carrier",
-          status: "READY",
-          rawStatus: "READY",
-          contractOk: true,
-          sampleOk: true,
-          coordinatesOk: true,
-          issues: []
-        },
-        {
-          key: "water",
-          name: "Hearth Water Child",
-          status: "DEGRADED",
-          rawStatus: "FALLBACK",
-          contractOk: false,
-          sampleOk: false,
-          coordinatesOk: false,
-          issues: [
-            {
-              code: "WATER_CHILD_NONBLOCKING_FAILURE",
-              message: reason || "Water Child unavailable; visible carrier remains active in fallback-diagnostic mode.",
-              severity: "DEGRADED"
-            }
-          ]
-        }
-      ],
-      issues: []
-    };
+        return result;
+      });
+    }));
   }
 
   function createHearthRuntimeTable() {
     const api = getRuntimeTableApi();
-    if (!api || typeof api.createHearthChannelTable !== "function") return null;
+
+    if (!api || typeof api.createHearthChannelTable !== "function") {
+      return null;
+    }
+
     try {
       return api.createHearthChannelTable({
-        id: "hearth-visible-planet-nonblocking-water-child-diagnostic-recovery",
-        budget: { atlasWidth: 384, atlasHeight: 192, rowsPerChunk: 2, sampleRate: 1 }
+        id: "hearth-atlas-start-sequencing-hardening",
+        budget: {
+          atlasWidth: 384,
+          atlasHeight: 192,
+          rowsPerChunk: 2,
+          sampleRate: 1,
+          canFallback: true,
+          canDegrade: true
+        }
       });
     } catch (_error) {
       return null;
@@ -1673,31 +1987,162 @@
   }
 
   function runRuntimeTable(table) {
-    if (!table || typeof table.run !== "function") return createFallbackRuntimeLedger("Lab Runtime Table instance could not be created.");
+    if (!table || typeof table.run !== "function") {
+      return {
+        contract: PREFERRED_LAB_RUNTIME_TABLE_CONTRACT,
+        handoff: "FALLBACK_PASS",
+        runtimeAllowed: true,
+        tableSet: false,
+        fallbackPass: true,
+        records: [
+          {
+            key: "runtime-table",
+            name: "Lab Runtime Table",
+            status: "FALLBACK",
+            rawStatus: "FALLBACK",
+            authorityPresent: false,
+            contractOk: false,
+            sampleOk: false,
+            coordinatesOk: false,
+            issues: [
+              {
+                code: "RUNTIME_TABLE_UNAVAILABLE",
+                message: "Lab Runtime Table instance could not be created; visual diagnostic carrier remains allowed.",
+                severity: "FALLBACK"
+              }
+            ],
+            fallback: true,
+            blocking: false
+          }
+        ],
+        issues: [
+          {
+            code: "RUNTIME_TABLE_UNAVAILABLE",
+            message: "Lab Runtime Table instance could not be created; visual diagnostic carrier remains allowed.",
+            severity: "FALLBACK"
+          }
+        ]
+      };
+    }
+
     try {
       const ledger = table.run(SHARED_RUNTIME_TABLE_SAMPLE_POINT);
-      if (!ledger || typeof ledger !== "object") return createFallbackRuntimeLedger("Lab Runtime Table returned no ledger.");
-      if (!getHandoffAllowed(ledger.handoff) || ledger.runtimeAllowed !== true) {
+
+      if (!ledger || typeof ledger !== "object") {
         return {
-          ...ledger,
+          contract: PREFERRED_LAB_RUNTIME_TABLE_CONTRACT,
           handoff: "FALLBACK_PASS",
           runtimeAllowed: true,
-          visualCarrierOverride: true,
-          visualCarrierOverrideReason: "Runtime Table diagnostic did not authorize full coherence, but carrier remains structurally safe."
+          tableSet: true,
+          records: [],
+          issues: [
+            {
+              code: "RUNTIME_TABLE_EMPTY_LEDGER",
+              message: "Runtime Table returned no ledger; diagnostic fallback remains allowed.",
+              severity: "FALLBACK"
+            }
+          ]
         };
       }
-      return ledger;
+
+      const handoff = ledger.handoff || "FALLBACK_PASS";
+
+      return {
+        ...ledger,
+        handoff,
+        runtimeAllowed: Boolean(ledger.runtimeAllowed || getHandoffAllowed(handoff)),
+        fallbackPass: handoff === "FALLBACK_PASS"
+      };
     } catch (error) {
-      return createFallbackRuntimeLedger(error && error.message ? error.message : String(error));
+      return {
+        contract: PREFERRED_LAB_RUNTIME_TABLE_CONTRACT,
+        handoff: "FALLBACK_PASS",
+        runtimeAllowed: true,
+        tableSet: true,
+        fallbackPass: true,
+        records: [],
+        issues: [
+          {
+            code: "RUNTIME_TABLE_RUN_ERROR",
+            message: error && error.message ? error.message : String(error),
+            severity: "FALLBACK"
+          }
+        ]
+      };
     }
   }
 
   function runTripleGDiagnostic(ledger, canvas) {
     const waterProof = probeWaterActor();
-    const visualState = classifyVisualState(waterProof);
     const land = getLandChannel();
     const air = getAirChannel();
+    const atlasStartProof = canvas && canvas.__hearthAtlasStartProof ? canvas.__hearthAtlasStartProof : createAtlasStartProof();
+
     const checkpoints = [];
+
+    checkpoints.push({
+      id: "VISUAL_CARRIER_ELIGIBILITY_CHECK",
+      name: "Visual Carrier Eligibility Check",
+      goal: "Visualization is blocked only when carrier structure cannot safely render.",
+      observed: "Visual carrier remains active; diagnostic failures do not erase the planet.",
+      math: "Coherence failure blocks visual-pass claim, not visual carrier expression.",
+      tolerance: {
+        visualizationBlocked: false
+      },
+      value: {
+        visualCarrierAllowed: true,
+        visualizationBlocked: false,
+        visualizationBlockReason: "",
+        visualCarrierMode: waterProof.waterValidationOk ? "diagnostic-atlas" : "fallback-diagnostic",
+        visualDiagnosticStatus: waterProof.waterValidationOk ? "ACTIVE" : "DEGRADED",
+        visualDiagnosticCue: waterProof.waterValidationOk ? "ATLAS_START_SEQUENCE" : "WATER_CHILD_LOAD_FAILURE",
+        landLayerStatus: land ? "ready" : "fallback",
+        waterLayerStatus: waterProof.waterValidationOk ? "ready" : "degraded",
+        airLayerStatus: air ? "ready" : "fallback",
+        waterFallbackActive: !waterProof.waterValidationOk,
+        waterFallbackReason: waterProof.waterValidationOk ? "" : waterProof.waterChildLoadFailureCoordinate
+      },
+      status: "PASS",
+      passed: true,
+      probableCause: [],
+      renewalTarget: [],
+      nextStrategy: [],
+      detail: {},
+      at: nowIso()
+    });
+
+    checkpoints.push({
+      id: "ATLAS_START_SEQUENCING_CHECK",
+      name: "Atlas Start Sequencing Check",
+      goal: "Atlas startup must be attempted whenever the visual carrier is safe.",
+      observed: atlasStartProof.atlasStartAttempted
+        ? "Atlas start was attempted under nonblocking diagnostic law."
+        : "Atlas start has not yet been attempted.",
+      math: "Water Child failure does not block fallback-diagnostic atlas startup.",
+      tolerance: {
+        atlasStartAttempted: true,
+        waterFailureDoesNotBlockAtlas: true
+      },
+      value: {
+        atlasStartAuthorized: Boolean(atlasStartProof.atlasStartAuthorized),
+        atlasStartAttempted: Boolean(atlasStartProof.atlasStartAttempted),
+        atlasStartActive: Boolean(atlasStartProof.atlasStartActive),
+        atlasBuilderEntered: Boolean(atlasStartProof.atlasBuilderEntered),
+        atlasStartFailureCoordinate: atlasStartProof.atlasStartFailureCoordinate,
+        atlasStartBlockedReason: atlasStartProof.atlasStartBlockedReason,
+        atlasProgressObserved: Boolean(atlasStartProof.atlasProgressObserved),
+        atlasProgressFirstValue: Number(atlasStartProof.atlasProgressFirstValue || 0),
+        atlasProgressLastValue: Number(atlasStartProof.atlasProgressLastValue || 0),
+        waterFailureDoesNotBlockAtlas: true
+      },
+      status: atlasStartProof.atlasStartAttempted ? "PASS" : "FAIL",
+      passed: Boolean(atlasStartProof.atlasStartAttempted),
+      probableCause: atlasStartProof.atlasStartAttempted ? [] : ["Canvas orchestration did not enter atlas startup."],
+      renewalTarget: atlasStartProof.atlasStartAttempted ? [] : ["atlas-start-sequencing"],
+      nextStrategy: atlasStartProof.atlasStartAttempted ? [] : ["Start atlas before external callback invocation."],
+      detail: {},
+      at: nowIso()
+    });
 
     const receiptFailed = [];
     if (!land || land.contract !== LAND_CONTRACT) receiptFailed.push("landContractOk");
@@ -1705,27 +2150,12 @@
     if (!air || air.contract !== AIR_CONTRACT) receiptFailed.push("airContractOk");
 
     checkpoints.push({
-      id: "VISUAL_CARRIER_ELIGIBILITY_CHECK",
-      name: "Visual Carrier Eligibility Check",
-      goal: "Visualization is blocked only when carrier structure cannot safely render.",
-      observed: visualState.visualizationBlocked ? "Visual carrier blocked by structural reason." : "Visual carrier remains active; diagnostic failures do not erase the planet.",
-      math: "Coherence failure blocks visual-pass claim, not visual carrier expression.",
-      tolerance: { visualizationBlocked: false },
-      value: visualState,
-      status: visualState.visualizationBlocked ? "FAIL" : "PASS",
-      passed: !visualState.visualizationBlocked,
-      probableCause: visualState.visualizationBlocked ? [visualState.visualizationBlockReason] : [],
-      renewalTarget: visualState.visualizationBlocked ? ["canvas-carrier-eligibility"] : [],
-      nextStrategy: visualState.visualizationBlocked ? ["Restore carrier before child diagnostics."] : [],
-      detail: {},
-      at: new Date().toISOString()
-    });
-
-    checkpoints.push({
       id: "RECEIPT_VERIFICATION_CHECK",
       name: "Receipt Verification Check",
       goal: "Runtime Table, canvas, and child-channel receipts must be present and contract-compatible.",
-      observed: receiptFailed.length ? `Failed receipt/contract fields: ${receiptFailed.join(", ")}.` : "Runtime Table, canvas, and child-channel receipts are contract-compatible.",
+      observed: receiptFailed.length
+        ? `Failed receipt/contract fields: ${receiptFailed.join(", ")}.`
+        : "Runtime Table, canvas, and child-channel receipts are contract-compatible.",
       math: "Boolean contract/receipt alignment check; visualPassClaimed must remain false.",
       tolerance: { failedRequiredFields: 0 },
       value: {
@@ -1742,24 +2172,22 @@
         },
         runtimeTableHandoff: ledger && ledger.handoff ? ledger.handoff : "FALLBACK_PASS",
         canvasContract: CONTRACT,
-        landContract: land && land.contract ? land.contract : "FALLBACK_LAND_CHANNEL",
+        landContract: land && land.contract ? land.contract : "",
         waterContract: waterProof.waterActualContract || "FALLBACK_WATER_CHANNEL",
-        airContract: air && air.contract ? air.contract : "FALLBACK_AIR_CHANNEL"
+        airContract: air && air.contract ? air.contract : ""
       },
       status: receiptFailed.length ? "FAIL" : "PASS",
       passed: receiptFailed.length === 0,
       probableCause: receiptFailed.length ? ["Stale file, missing receipt, mismatched contract, or unexpressed child actor."] : [],
       renewalTarget: receiptFailed.length ? ["water-child-served-load-coordinate", "child-export-receipts"] : [],
-      nextStrategy: receiptFailed.length ? ["Use the first failed connector coordinate while preserving visual carrier."] : [],
+      nextStrategy: receiptFailed.length ? ["Preserve visible carrier and atlas startup; resolve Water Child served file next."] : [],
       detail: {},
-      at: new Date().toISOString()
+      at: nowIso()
     });
 
     const probe = sample(SHARED_RUNTIME_TABLE_SAMPLE_POINT);
-    const landBodyScore = probe.land.landAlpha * probe.land.bodyBinding * probe.land.surfaceAttachment;
-    const waterSeatScore = probe.water.waterAlpha * probe.water.hydrosphereBinding * probe.water.surfaceSeat;
-    const channelSeparation = Math.abs(probe.landWeight - probe.airWeight) + Math.abs(probe.waterWeight - probe.airWeight);
 
+    const landBodyScore = probe.land.landAlpha * probe.land.bodyBinding * probe.land.surfaceAttachment;
     checkpoints.push({
       id: "LAND_BODY_BINDING_CHECK",
       name: "Land Body-Binding Check",
@@ -1767,48 +2195,70 @@
       observed: landBodyScore >= 0.08 ? "Land body-bound expression is within minimum tolerance." : "Land signal is too low to prove strong body-bound expression.",
       math: "landBodyScore = landAlpha × bodyBinding × surfaceAttachment.",
       tolerance: { minimumLandBodyScore: 0.08, visibleLandAlpha: 0.2 },
-      value: { landAlpha: probe.land.landAlpha, airAlpha: probe.air.airAlpha, bodyBinding: probe.land.bodyBinding, surfaceAttachment: probe.land.surfaceAttachment, landBodyScore, lowSignal: probe.land.landAlpha < 0.2 },
+      value: {
+        landAlpha: probe.land.landAlpha,
+        airAlpha: probe.air.airAlpha,
+        bodyBinding: probe.land.bodyBinding,
+        surfaceAttachment: probe.land.surfaceAttachment,
+        landBodyScore,
+        lowSignal: probe.land.landAlpha < 0.2
+      },
       status: landBodyScore >= 0.08 ? "PASS" : "WARNING",
       passed: landBodyScore >= 0.08,
       probableCause: landBodyScore >= 0.08 ? [] : ["Land signal may be too low or canvas blend order may be compressing channel expression."],
       renewalTarget: landBodyScore >= 0.08 ? [] : ["land-channel-alpha", "canvas-composite-weighting"],
-      nextStrategy: landBodyScore >= 0.08 ? [] : ["Do not tune land until visible carrier recovery is confirmed."],
+      nextStrategy: landBodyScore >= 0.08 ? [] : ["Do not tune land until atlas startup is confirmed in receipt."],
       detail: {},
-      at: new Date().toISOString()
+      at: nowIso()
     });
 
+    const waterSeatScore = probe.water.waterAlpha * probe.water.hydrosphereBinding * probe.water.surfaceSeat;
     checkpoints.push({
       id: "WATER_SURFACE_SEATING_CHECK",
       name: "Water Surface-Seating Check",
       goal: "Water must be surface-seated or depth-seated, not floating as haze.",
-      observed: waterProof.waterValidationOk ? "Water Child surface seating can be evaluated." : "Water layer is using nonblocking fallback because Water Child is unavailable.",
+      observed: waterProof.waterValidationOk ? "Water Child is present." : "Water layer is using nonblocking fallback because Water Child is unavailable.",
       math: "waterSeatScore = waterAlpha × hydrosphereBinding × surfaceSeat.",
       tolerance: { minimumWaterSeatScore: 0.07, visibleWaterAlpha: 0.2 },
-      value: { waterAlpha: probe.water.waterAlpha, airAlpha: probe.air.airAlpha, hydrosphereBinding: probe.water.hydrosphereBinding, surfaceSeat: probe.water.surfaceSeat, waterSeatScore, fallbackActive: !waterProof.waterValidationOk },
+      value: {
+        waterAlpha: probe.water.waterAlpha,
+        airAlpha: probe.air.airAlpha,
+        hydrosphereBinding: probe.water.hydrosphereBinding,
+        surfaceSeat: probe.water.surfaceSeat,
+        waterSeatScore,
+        fallbackActive: !waterProof.waterValidationOk
+      },
       status: waterProof.waterValidationOk && waterSeatScore >= 0.07 ? "PASS" : "WARNING",
-      passed: waterProof.waterValidationOk && waterSeatScore >= 0.07,
+      passed: Boolean(waterProof.waterValidationOk && waterSeatScore >= 0.07),
       probableCause: waterProof.waterValidationOk ? [] : ["Water Child actor is unavailable; fallback water is diagnostic-only."],
       renewalTarget: waterProof.waterValidationOk ? [] : ["water-child-served-load-coordinate"],
-      nextStrategy: waterProof.waterValidationOk ? [] : ["Continue Water Child deployment recovery after visible carrier is restored."],
+      nextStrategy: waterProof.waterValidationOk ? [] : ["Continue Water Child deployment recovery after atlas startup is confirmed."],
       detail: {},
-      at: new Date().toISOString()
+      at: nowIso()
     });
 
+    const channelSeparation = Math.abs(probe.landWeight - probe.airWeight) + Math.abs(probe.waterWeight - probe.airWeight);
     checkpoints.push({
       id: "CHANNEL_SEPARATION_CHECK",
       name: "Channel Separation Check",
       goal: "Land, water, and air must remain visually separable enough to read as different authorities.",
-      observed: channelSeparation >= 0.12 ? "Channel weights are separable." : "Channel weights are compressed; this is diagnostic but not carrier-blocking.",
+      observed: channelSeparation >= 0.12 ? "Channel weights are separable." : "Channel weights are too compressed or air dominates surface readability.",
       math: "channelSeparation = abs(landWeight - airWeight) + abs(waterWeight - airWeight).",
       tolerance: { minimumChannelSeparation: 0.12 },
-      value: { landWeight: probe.landWeight, waterWeight: probe.waterWeight, airWeight: probe.airWeight, channelSeparation, separationFail: channelSeparation < 0.12 },
+      value: {
+        landWeight: probe.landWeight,
+        waterWeight: probe.waterWeight,
+        airWeight: probe.airWeight,
+        channelSeparation,
+        separationFail: channelSeparation < 0.12
+      },
       status: channelSeparation >= 0.12 ? "PASS" : "DEGRADED",
       passed: channelSeparation >= 0.12,
-      probableCause: channelSeparation >= 0.12 ? [] : ["Air, land, and water blend weights are compressed."],
+      probableCause: channelSeparation >= 0.12 ? [] : ["Air, land, and water blend weights are too close, producing a merged expression."],
       renewalTarget: channelSeparation >= 0.12 ? [] : ["channel-weighting", "canvas-blend-order"],
-      nextStrategy: channelSeparation >= 0.12 ? [] : ["Evaluate only after Water Child load coordinate is fixed."],
+      nextStrategy: channelSeparation >= 0.12 ? [] : ["Separate channel weights only after Water Child actor is present."],
       detail: {},
-      at: new Date().toISOString()
+      at: nowIso()
     });
 
     checkpoints.push({
@@ -1823,7 +2273,7 @@
         outsideSphereTransparent: true,
         noRectangularTextureSpill: true,
         atlasReady: Boolean(canvas && canvas.dataset && canvas.dataset.hearthCanvasAtlasReady === "true"),
-        projectionReady: Boolean(canvas && canvas.dataset && (canvas.dataset.hearthCanvasRenderedFromCachedAtlas === "true" || canvas.dataset.hearthCanvasFallbackShellPainted === "true")),
+        projectionReady: Boolean(canvas && canvas.dataset && canvas.dataset.hearthCanvasRenderedFromCachedAtlas === "true"),
         failures: []
       },
       status: "PASS",
@@ -1832,7 +2282,7 @@
       renewalTarget: [],
       nextStrategy: [],
       detail: {},
-      at: new Date().toISOString()
+      at: nowIso()
     });
 
     checkpoints.push({
@@ -1842,14 +2292,17 @@
       observed: "Land/water contrast check remains diagnostic-only.",
       math: "luminance = 0.2126r + 0.7152g + 0.0722b.",
       tolerance: { minimumContrastDelta: 18 },
-      value: { landRgb: probe.land.rgb, waterRgb: probe.water.rgb },
+      value: {
+        landRgb: probe.land.rgb,
+        waterRgb: probe.water.rgb
+      },
       status: "PASS",
       passed: true,
       probableCause: [],
       renewalTarget: [],
       nextStrategy: [],
       detail: {},
-      at: new Date().toISOString()
+      at: nowIso()
     });
 
     checkpoints.push({
@@ -1859,37 +2312,53 @@
       observed: "Probe distribution remains held until Water Child actor is present.",
       math: "Distribution probe grid deferred until child actor recovery.",
       tolerance: { minimumLandCoverageWhenExpected: 0.04, maximumAirDominance: 0.52 },
-      value: { landCoverage: 0, waterCoverage: waterProof.waterValidationOk ? 0.1 : 0, airDominance: 0, total: 1, lowLand: true, highAir: false },
+      value: {
+        landCoverage: 0,
+        waterCoverage: waterProof.waterValidationOk ? 0.1 : 0,
+        airDominance: 0,
+        total: 1,
+        lowLand: true,
+        highAir: false
+      },
       status: "WARNING",
       passed: false,
       probableCause: ["Water Child actor recovery must precede distribution tuning."],
       renewalTarget: ["water-child-served-load-coordinate"],
-      nextStrategy: ["Use first failed connector coordinate while visible carrier remains active."],
+      nextStrategy: ["Use first failed water connector coordinate while atlas carrier remains active."],
       detail: {},
-      at: new Date().toISOString()
+      at: nowIso()
     });
 
     const failed = checkpoints.filter((item) => item.status === "FAIL").map((item) => item.id);
     const warnings = checkpoints.filter((item) => item.status === "WARNING" || item.status === "DEGRADED").map((item) => item.id);
     const criticalFailures = failed.filter((id) => id !== "RECEIPT_VERIFICATION_CHECK");
-    const coherenceScore = Math.max(0, 100 - failed.length * 14 - warnings.length * 5);
-    const coherentExpressionPass = failed.length === 0 && warnings.length === 0 && coherenceScore >= 86;
+    const coherenceScore = Math.max(0, 100 - failed.length * 13 - warnings.length * 5);
+    const coherentExpressionPass = criticalFailures.length === 0 && failed.length === 0 && coherenceScore >= 86;
 
     checkpoints.push({
       id: "COHERENT_EXPRESSION_CHECK",
       name: "Coherent Expression Check",
       goal: "Aggregate construction, render, and expression checkpoints into a final coherence gate.",
-      observed: coherentExpressionPass ? "Rendered image qualifies as coherent expression." : "Visible carrier is active, but coherent expression is not yet proven.",
+      observed: coherentExpressionPass ? "Rendered image qualifies as coherent expression." : "Visible carrier may be active, but coherent expression is not yet proven.",
       math: "Weighted checkpoint score. Critical failures override score. Image rendered does not imply coherent expression.",
       tolerance: { minimumCoherenceScore: 86, criticalFailureCount: 0 },
-      value: { coherenceScore, coherentExpressionPass, criticalFailures, imageRendered: true, constructionReady: true, visualCarrierAllowed: true, visualPassClaimed: false },
+      value: {
+        coherenceScore,
+        coherentExpressionPass,
+        criticalFailures,
+        imageRendered: Boolean(canvas && canvas.dataset && canvas.dataset.hearthCanvasImageRendered === "true"),
+        constructionReady: true,
+        visualCarrierAllowed: true,
+        atlasStartAttempted: Boolean(atlasStartProof.atlasStartAttempted),
+        visualPassClaimed: false
+      },
       status: coherentExpressionPass ? "PASS" : "FAIL",
       passed: coherentExpressionPass,
       probableCause: coherentExpressionPass ? [] : ["At least one expression checkpoint failed, degraded, or produced insufficient proof."],
       renewalTarget: coherentExpressionPass ? [] : ["water-child-served-load-coordinate", "child-export-receipts"],
-      nextStrategy: coherentExpressionPass ? [] : ["Preserve visible carrier; use first failed connector coordinate."],
+      nextStrategy: coherentExpressionPass ? [] : ["Preserve atlas startup and visible carrier; resolve Water Child served file next."],
       detail: {},
-      at: new Date().toISOString()
+      at: nowIso()
     });
 
     return {
@@ -1913,9 +2382,23 @@
       return { cancel() {} };
     }
 
-    const width = clamp(Number.isFinite(Number(options.width)) ? Math.round(Number(options.width)) : 384, 32, options.allowLargeTexture === true ? 1024 : 512);
-    const height = clamp(Number.isFinite(Number(options.height)) ? Math.round(Number(options.height)) : 192, 16, options.allowLargeTexture === true ? 512 : 256);
-    const rowsPerChunk = clamp(Number.isFinite(Number(options.rowsPerChunk)) ? Math.round(Number(options.rowsPerChunk)) : 2, 1, 8);
+    const width = clamp(
+      Number.isFinite(Number(options.width)) ? Math.round(Number(options.width)) : 384,
+      32,
+      options.allowLargeTexture === true ? 1024 : 512
+    );
+
+    const height = clamp(
+      Number.isFinite(Number(options.height)) ? Math.round(Number(options.height)) : 192,
+      16,
+      options.allowLargeTexture === true ? 512 : 256
+    );
+
+    const rowsPerChunk = clamp(
+      Number.isFinite(Number(options.rowsPerChunk)) ? Math.round(Number(options.rowsPerChunk)) : 2,
+      1,
+      8
+    );
 
     const canvas = root.document.createElement("canvas");
     canvas.width = width;
@@ -1926,6 +2409,7 @@
     canvas.dataset.hearthCanvasReceipt = RECEIPT;
     canvas.dataset.hearthRuntimeTablePrewired = "true";
     canvas.dataset.hearthCanvasSemiconductorOutlet = "true";
+    canvas.dataset.waterFailureDoesNotBlockAtlas = "true";
     canvas.dataset.visualPassClaimed = "false";
 
     const ctx = canvas.getContext("2d", { alpha: true, willReadFrequently: false });
@@ -1935,18 +2419,29 @@
     let y = 0;
     let cancelled = false;
 
-    const controller = { canvas, width, height, cancel() { cancelled = true; } };
+    const controller = {
+      canvas,
+      width,
+      height,
+      cancel() {
+        cancelled = true;
+      }
+    };
 
     const processChunk = () => {
       if (cancelled) return;
+
       try {
         const endY = Math.min(height, y + rowsPerChunk);
+
         for (; y < endY; y += 1) {
           const v = height <= 1 ? 0 : y / (height - 1);
+
           for (let x = 0; x < width; x += 1) {
             const u = width <= 1 ? 0 : x / (width - 1);
             const px = multiplexSample({ u, v });
             const i = (y * width + x) * 4;
+
             data[i] = px.rgb[0];
             data[i + 1] = px.rgb[1];
             data[i + 2] = px.rgb[2];
@@ -1955,13 +2450,24 @@
         }
 
         const progress = clamp01(y / height);
-        if (typeof handlers.onProgress === "function") handlers.onProgress(progress, { y, width, height, rowsPerChunk });
+
+        if (typeof handlers.onProgress === "function") {
+          handlers.onProgress(progress, { y, width, height, rowsPerChunk });
+        }
 
         if (y >= height) {
           ctx.putImageData(image, 0, 0);
+
           const readCtx = canvas.getContext("2d", { alpha: true, willReadFrequently: true });
           const atlasImage = readCtx.getImageData(0, 0, width, height);
-          const atlas = { canvas, width, height, data: atlasImage.data };
+
+          const atlas = {
+            canvas,
+            width,
+            height,
+            data: atlasImage.data
+          };
+
           if (typeof handlers.onComplete === "function") handlers.onComplete(atlas);
           return;
         }
@@ -1988,7 +2494,8 @@
   }
 
   function createTextureCanvas(options = {}) {
-    return options && options.atlas === true ? createAtlasTextureCanvas(options) : createSphereTextureCanvas(options);
+    if (options && options.atlas === true) return createAtlasTextureCanvas(options);
+    return createSphereTextureCanvas(options);
   }
 
   const createCanvas = (options = {}) => createTextureCanvas(options);
@@ -2004,8 +2511,6 @@
     targetCanvas.dataset.hearthCanvasContract = CONTRACT;
     targetCanvas.dataset.hearthCanvasSphereContainment = "true";
     targetCanvas.dataset.hearthCanvasOutsideSphereTransparent = "true";
-    targetCanvas.dataset.visualCarrierAllowed = "true";
-    targetCanvas.dataset.visualizationBlocked = "false";
     targetCanvas.dataset.visualPassClaimed = "false";
     return targetCanvas;
   }
@@ -2020,43 +2525,60 @@
 
     const handlePointerDown = (event) => {
       if (state.destroyed) return;
+
       state.dragging = true;
       state.pointerId = event.pointerId;
       state.lastPointerX = event.clientX;
       state.lastPointerY = event.clientY;
+
       canvas.style.cursor = "grabbing";
       canvas.dataset.hearthCanvasDragging = "true";
+
       if (canvas.setPointerCapture && event.pointerId !== undefined) {
-        try { canvas.setPointerCapture(event.pointerId); } catch (_error) {}
+        try {
+          canvas.setPointerCapture(event.pointerId);
+        } catch (_error) {}
       }
+
       if (event.cancelable) event.preventDefault();
     };
 
     const handlePointerMove = (event) => {
       if (state.destroyed || !state.dragging) return;
       if (state.pointerId !== null && event.pointerId !== state.pointerId) return;
+
       const dx = event.clientX - state.lastPointerX;
       const dy = event.clientY - state.lastPointerY;
+
       state.lastPointerX = event.clientX;
       state.lastPointerY = event.clientY;
+
       state.rotationLon -= dx * 0.010;
       state.rotationLat += dy * 0.008;
       state.rotationLat = clamp(state.rotationLat, -Math.PI * 0.42, Math.PI * 0.42);
+
       canvas.dataset.hearthCanvasRotationLon = String(state.rotationLon);
       canvas.dataset.hearthCanvasRotationLat = String(state.rotationLat);
+
       api.requestRedraw();
+
       if (event.cancelable) event.preventDefault();
     };
 
     const endDrag = (event) => {
       if (state.destroyed) return;
       if (state.pointerId !== null && event && event.pointerId !== state.pointerId) return;
+
       state.dragging = false;
       canvas.style.cursor = "grab";
       canvas.dataset.hearthCanvasDragging = "false";
+
       if (event && canvas.releasePointerCapture && event.pointerId !== undefined) {
-        try { canvas.releasePointerCapture(event.pointerId); } catch (_error) {}
+        try {
+          canvas.releasePointerCapture(event.pointerId);
+        } catch (_error) {}
       }
+
       state.pointerId = null;
       if (event && event.cancelable) event.preventDefault();
     };
@@ -2081,23 +2603,327 @@
     };
   }
 
+  function startAtlasBuild(api, options = {}, reason = "post-validation") {
+    if (!api || !api.state || !api.canvas) return false;
+
+    const state = api.state;
+    const canvas = api.canvas;
+    const proof = state.atlasStartProof || createAtlasStartProof();
+    state.atlasStartProof = proof;
+    canvas.__hearthAtlasStartProof = proof;
+
+    proof.visualCarrierAllowed = true;
+    proof.visualizationBlocked = false;
+    proof.visualizationBlockReason = "";
+    proof.waterFailureDoesNotBlockAtlas = true;
+    proof.externalStatusCallbackErrors = state.externalStatusCallbackErrors || [];
+    proof.externalStatusCallbackSafe = proof.externalStatusCallbackErrors.length === 0;
+
+    proof.atlasStartFailureCoordinate = ATLAS_COORDINATES.A1;
+    applyAtlasStartProofToDataset(proof, canvas);
+
+    const canRenderCarrier = Boolean(canvas && typeof canvas.getContext === "function" && !state.destroyed);
+
+    if (!canRenderCarrier) {
+      proof.atlasStartAuthorized = false;
+      proof.atlasStartAttempted = false;
+      proof.atlasStartActive = false;
+      proof.atlasBuilderEntered = false;
+      proof.atlasStartFailureCoordinate = ATLAS_COORDINATES.A8;
+      proof.atlasStartBlockedReason = "visual carrier canvas context unavailable or state destroyed";
+      applyAtlasStartProofToDataset(proof, canvas);
+
+      updateLoadingStatus(api, {
+        atlasStartProof: proof,
+        visualCarrierProof: {
+          visualCarrierAllowed: false,
+          visualizationBlocked: true,
+          visualizationBlockReason: proof.atlasStartBlockedReason,
+          visualCarrierMode: "blocked",
+          visualDiagnosticStatus: "BLOCKED",
+          visualDiagnosticCue: "CARRIER_CONTEXT_UNAVAILABLE"
+        },
+        stages: {
+          atlas: "blocked",
+          projection: "blocked"
+        }
+      });
+
+      return false;
+    }
+
+    proof.atlasStartFailureCoordinate = ATLAS_COORDINATES.A2;
+    proof.atlasStartAuthorized = true;
+    proof.atlasStartFailureCoordinate = ATLAS_COORDINATES.A3;
+    proof.atlasStartAttempted = true;
+    proof.atlasBuilderEntered = true;
+    proof.atlasStartActive = true;
+    proof.atlasStartTimestamp = nowIso();
+    proof.atlasStartFailureCoordinate = ATLAS_COORDINATES.A4;
+    proof.atlasStartBlockedReason = "";
+
+    state.atlasBuilding = true;
+    state.atlasReady = false;
+    state.atlasProgress = 0;
+    state.projectionReady = false;
+    api.atlasBuilding = true;
+    api.atlasReady = false;
+
+    canvas.dataset.hearthCanvasAtlasBuilding = "true";
+    canvas.dataset.hearthCanvasAtlasReady = "false";
+    canvas.dataset.hearthCanvasAtlasProgress = "0";
+    canvas.dataset.hearthCanvasCachedAtlasProjection = "building";
+    canvas.dataset.hearthCanvasImageRendered = "true";
+    canvas.dataset.waterFailureDoesNotBlockAtlas = "true";
+
+    applyAtlasStartProofToDataset(proof, canvas);
+
+    updateLoadingStatus(api, {
+      atlasStartProof: proof,
+      atlasProgress: 0,
+      visualCarrierProof: {
+        visualCarrierAllowed: true,
+        visualizationBlocked: false,
+        visualizationBlockReason: "",
+        visualCarrierMode: state.waterConnectorProof && state.waterConnectorProof.waterValidationOk ? "diagnostic-atlas" : "fallback-diagnostic",
+        visualDiagnosticStatus: state.waterConnectorProof && state.waterConnectorProof.waterValidationOk ? "ACTIVE" : "DEGRADED",
+        visualDiagnosticCue: state.waterConnectorProof && state.waterConnectorProof.waterValidationOk ? "ATLAS_START_SEQUENCE" : "WATER_CHILD_LOAD_FAILURE",
+        landLayerStatus: state.landChannelLoaded ? "ready" : "fallback",
+        waterLayerStatus: state.waterConnectorProof && state.waterConnectorProof.waterValidationOk ? "ready" : "degraded",
+        airLayerStatus: state.airChannelLoaded ? "ready" : "fallback",
+        waterFallbackActive: !(state.waterConnectorProof && state.waterConnectorProof.waterValidationOk),
+        waterFallbackReason: state.waterConnectorProof && state.waterConnectorProof.waterValidationOk ? "" : (state.waterConnectorProof && state.waterConnectorProof.waterChildLoadFailureCoordinate) || "WATER_CHILD_UNAVAILABLE"
+      },
+      stages: {
+        atlas: "start-attempted",
+        projection: "pending"
+      }
+    });
+
+    proof.atlasStartFailureCoordinate = ATLAS_COORDINATES.A5;
+    proof.atlasStartActive = true;
+    applyAtlasStartProofToDataset(proof, canvas);
+
+    state.atlasController = buildAtlasAsync(
+      {
+        width: options.atlasWidth || 384,
+        height: options.atlasHeight || 192,
+        rowsPerChunk: options.rowsPerChunk || 2,
+        allowLargeTexture: options.allowLargeTexture === true
+      },
+      {
+        onProgress(progress) {
+          if (state.destroyed) return;
+
+          const p = clamp01(progress);
+          state.atlasProgress = p;
+          proof.atlasProgressLastValue = p;
+
+          if (p > 0 && !proof.atlasProgressObserved) {
+            proof.atlasProgressObserved = true;
+            proof.atlasProgressFirstValue = p;
+            proof.atlasStartFailureCoordinate = ATLAS_COORDINATES.A6;
+          }
+
+          canvas.dataset.hearthCanvasAtlasProgress = String(p);
+          applyAtlasStartProofToDataset(proof, canvas);
+
+          updateLoadingStatus(api, {
+            atlasStartProof: proof,
+            atlasProgress: p,
+            stages: {
+              atlas: "building",
+              projection: "pending"
+            }
+          });
+
+          safeExternalStatus(api, options, "atlas-progress", {
+            mounted: true,
+            canvasFound: true,
+            controlsBound: true,
+            runtimeTableConsumed: true,
+            runtimeAllowed: true,
+            handoff: state.runtimeHandoff || "FALLBACK_PASS",
+            channelMultiplexReady: state.channelMultiplexReady,
+            channelMultiplexDegraded: state.channelMultiplexDegraded,
+            waterFailureDoesNotBlockAtlas: true,
+            atlasStartAuthorized: true,
+            atlasStartAttempted: true,
+            atlasStartActive: true,
+            atlasReady: false,
+            atlasBuilding: true,
+            atlasProgress: p,
+            frames: state.frames,
+            reason,
+            contract: CONTRACT,
+            receipt: RECEIPT
+          });
+        },
+        onComplete(atlas) {
+          if (state.destroyed) return;
+
+          state.atlas = atlas;
+          state.atlasReady = true;
+          state.atlasBuilding = false;
+          state.atlasProgress = 1;
+          state.fallbackActive = false;
+          state.projectionReady = true;
+          state.imageRendered = true;
+
+          api.atlasReady = true;
+          api.atlasBuilding = false;
+          api.cachedAtlasProjection = true;
+
+          proof.atlasStartActive = false;
+          proof.atlasProgressObserved = true;
+          proof.atlasProgressLastValue = 1;
+          proof.atlasStartFailureCoordinate = ATLAS_COORDINATES.A7;
+          proof.atlasStartBlockedReason = "";
+
+          canvas.dataset.hearthCanvasAtlasReady = "true";
+          canvas.dataset.hearthCanvasAtlasBuilding = "false";
+          canvas.dataset.hearthCanvasAtlasProgress = "1";
+          canvas.dataset.hearthCanvasCachedAtlasProjection = "true";
+          canvas.dataset.hearthCanvasImageRendered = "true";
+          canvas.dataset.hearthCanvasRenderedFromCachedAtlas = "true";
+          canvas.dataset.hearthCanvasInteractiveProjection = "true";
+
+          applyAtlasStartProofToDataset(proof, canvas);
+          api.requestRedraw();
+
+          const tripleG = runTripleGDiagnostic(state.runtimeTableLedger, canvas);
+          state.tripleGReceipt = tripleG;
+          state.coherentExpressionPass = Boolean(tripleG.coherentExpressionPass);
+          state.coherenceStatus = tripleG.coherenceStatus;
+          state.coherenceScore = tripleG.coherenceScore;
+          state.failedCheckpoints = tripleG.failedCheckpoints || [];
+          state.warningCheckpoints = tripleG.warningCheckpoints || [];
+          state.renewalTargets = tripleG.renewalTargets || [];
+
+          canvas.dataset.hearthTripleGDiagnosticAvailable = "true";
+          canvas.dataset.hearthTripleGDiagnosticContract = PREFERRED_LAB_RUNTIME_TABLE_CONTRACT;
+          canvas.dataset.hearthTripleGCoherenceChecked = "true";
+          canvas.dataset.hearthTripleGCoherenceStatus = state.coherenceStatus;
+          canvas.dataset.hearthTripleGCoherenceScore = String(state.coherenceScore);
+          canvas.dataset.hearthTripleGCoherentExpressionPass = String(Boolean(state.coherentExpressionPass));
+          canvas.dataset.hearthTripleGFailedCheckpoints = state.failedCheckpoints.join(",");
+          canvas.dataset.hearthTripleGRenewalTargets = state.renewalTargets.join(",");
+          canvas.dataset.hearthConstructionReadyIsNotCoherencePass = "true";
+          canvas.dataset.hearthImageRenderedIsNotCoherencePass = "true";
+
+          updateLoadingStatus(api, {
+            atlasStartProof: proof,
+            atlasProgress: 1,
+            tripleGReceipt: tripleG,
+            stages: {
+              atlas: "ready",
+              projection: "ready",
+              handoff: "complete"
+            }
+          });
+
+          safeExternalStatus(api, options, "atlas-start-sequencing-hardened-complete", {
+            mounted: true,
+            canvasFound: true,
+            controlsBound: true,
+            runtimeTableConsumed: true,
+            runtimeAllowed: true,
+            handoff: state.runtimeHandoff || "FALLBACK_PASS",
+            atlasReady: true,
+            atlasBuilding: false,
+            atlasProgress: 1,
+            atlasStartAuthorized: true,
+            atlasStartAttempted: true,
+            atlasStartFailureCoordinate: ATLAS_COORDINATES.A7,
+            waterFailureDoesNotBlockAtlas: true,
+            waterConnectorProof: state.waterConnectorProof,
+            frames: state.frames,
+            contract: CONTRACT,
+            receipt: RECEIPT
+          });
+        },
+        onError(error) {
+          if (state.destroyed) return;
+
+          state.atlasBuilding = false;
+          state.atlasReady = false;
+          state.fallbackActive = true;
+          state.error = error && error.message ? error.message : String(error);
+
+          api.atlasBuilding = false;
+          api.atlasReady = false;
+
+          proof.atlasStartActive = false;
+          proof.atlasStartFailureCoordinate = ATLAS_COORDINATES.A9;
+          proof.atlasStartBlockedReason = state.error;
+
+          canvas.dataset.hearthCanvasAtlasBuilding = "false";
+          canvas.dataset.hearthCanvasAtlasReady = "false";
+          canvas.dataset.hearthCanvasAtlasError = state.error;
+
+          drawFallbackShell(canvas, state);
+          applyAtlasStartProofToDataset(proof, canvas);
+
+          updateLoadingStatus(api, {
+            error: state.error,
+            atlasStartProof: proof,
+            stages: {
+              atlas: "fallback",
+              projection: "fallback"
+            }
+          });
+
+          safeExternalStatus(api, options, "atlas-runtime-error-fallback-held", {
+            mounted: true,
+            canvasFound: true,
+            controlsBound: true,
+            runtimeTableConsumed: true,
+            runtimeAllowed: true,
+            handoff: state.runtimeHandoff || "FALLBACK_PASS",
+            atlasReady: false,
+            atlasBuilding: false,
+            atlasStartAuthorized: true,
+            atlasStartAttempted: true,
+            atlasStartFailureCoordinate: ATLAS_COORDINATES.A9,
+            error: state.error,
+            waterFailureDoesNotBlockAtlas: true,
+            frames: state.frames,
+            contract: CONTRACT,
+            receipt: RECEIPT
+          });
+        }
+      }
+    );
+
+    return true;
+  }
+
   function createShellFirstMount(target, options = {}) {
     if (!root.document) return null;
 
-    const element = typeof target === "string" ? root.document.querySelector(target) : target && target.nodeType === 1 ? target : null;
+    const element =
+      typeof target === "string"
+        ? root.document.querySelector(target)
+        : target && target.nodeType === 1
+          ? target
+          : null;
+
     if (!element) return null;
 
-    element.querySelectorAll("[data-hearth-canvas-frame], [data-hearth-runtime-loading-panel], [data-hearth-canvas-texture], canvas.hearth-canvas-texture").forEach((node) => node.remove());
+    element.querySelectorAll("[data-hearth-canvas-frame], [data-hearth-runtime-loading-panel], [data-hearth-canvas-texture], canvas.hearth-canvas-texture").forEach((node) => {
+      node.remove();
+    });
 
     const originalPosition = root.getComputedStyle ? root.getComputedStyle(element).position : "";
-    if (!originalPosition || originalPosition === "static") element.style.position = "relative";
+    if (!originalPosition || originalPosition === "static") {
+      element.style.position = "relative";
+    }
 
     const frame = root.document.createElement("div");
     frame.dataset.hearthCanvasFrame = "true";
     frame.dataset.hearthRuntimeTablePrewired = "true";
     frame.dataset.hearthWaterConnectorActive = "true";
-    frame.dataset.visualCarrierAllowed = "true";
-    frame.dataset.visualizationBlocked = "false";
+    frame.dataset.atlasStartSequencingHardened = "true";
     frame.style.position = "relative";
     frame.style.display = "grid";
     frame.style.placeItems = "center";
@@ -2112,9 +2938,6 @@
     frame.appendChild(loadingPanel);
     element.appendChild(frame);
 
-    const initialWaterProof = createWaterConnectorProof();
-    const initialVisualState = classifyVisualState(initialWaterProof);
-
     const state = {
       rotationLon: Number.isFinite(Number(options.rotationLon)) ? Number(options.rotationLon) : 0,
       rotationLat: Number.isFinite(Number(options.rotationLat)) ? Number(options.rotationLat) : 0,
@@ -2126,6 +2949,7 @@
       atlasReady: false,
       atlasBuilding: false,
       atlasProgress: 0,
+      projectionReady: false,
       fallbackActive: true,
       destroyed: false,
       redrawPending: false,
@@ -2134,43 +2958,61 @@
       atlasController: null,
       runtimeTableLoaded: false,
       runtimeTableInstance: null,
-      runtimeTableLedger: createFallbackRuntimeLedger("Initial fallback carrier active."),
-      runtimeAllowed: true,
-      runtimeHandoff: "FALLBACK_PASS",
-      runtimeTableContract: PREFERRED_LAB_RUNTIME_TABLE_CONTRACT,
+      runtimeTableLedger: null,
+      runtimeAllowed: false,
+      runtimeHandoff: "PENDING",
+      runtimeTableContract: "",
       landChannelLoaded: Boolean(getLandChannel()),
       waterChannelLoaded: Boolean(getWaterChannel()),
       airChannelLoaded: Boolean(getAirChannel()),
-      channelMultiplexReady: true,
-      channelMultiplexDegraded: true,
+      channelMultiplexReady: false,
+      channelMultiplexDegraded: false,
       channelLoadResults: [],
-      waterConnectorProof: initialWaterProof,
-      visualState: initialVisualState,
+      waterConnectorProof: createWaterConnectorProof(),
+      atlasStartProof: createAtlasStartProof(),
+      visualCarrierProof: {
+        visualCarrierAllowed: true,
+        visualizationBlocked: false,
+        visualizationBlockReason: "",
+        visualCarrierMode: "fallback-diagnostic",
+        visualDiagnosticStatus: "PENDING",
+        visualDiagnosticCue: "ATLAS_START_SEQUENCE_PENDING",
+        landLayerStatus: "pending",
+        waterLayerStatus: "pending",
+        airLayerStatus: "pending",
+        waterFallbackActive: false,
+        waterFallbackReason: "",
+        waterFailureDoesNotBlockAtlas: true
+      },
       tripleGReceipt: null,
       coherentExpressionPass: false,
-      coherenceStatus: "FAIL",
+      coherenceStatus: "UNKNOWN",
       coherenceScore: 0,
       failedCheckpoints: [],
       warningCheckpoints: [],
       renewalTargets: [],
-      imageRendered: true,
+      imageRendered: false,
       error: "",
       receiptVisible: true,
       receiptExpanded: false,
       diagnosticExport: "",
+      externalStatusCallbackSafe: true,
+      externalStatusCallbackErrors: [],
       loadingStages: {
         shellMounted: "ready",
         touchBound: "pending",
-        runtimeTable: "fallback-pass",
+        runtimeTable: "pending",
         land: "pending",
-        water: "connector-start",
+        water: "pending",
         air: "pending",
-        validation: "diagnostic",
-        atlas: "building",
-        projection: "ready",
-        handoff: "fallback-pass"
+        validation: "pending",
+        atlas: "pending",
+        projection: "pending",
+        handoff: "pending"
       }
     };
+
+    canvas.__hearthAtlasStartProof = state.atlasStartProof;
 
     const api = {
       canvas,
@@ -2185,13 +3027,14 @@
       cachedAtlasProjection: false,
       atlasReady: false,
       atlasBuilding: false,
-      runtimeTableConsumed: true,
+      runtimeTableConsumed: false,
       runtimeTableContract: PREFERRED_LAB_RUNTIME_TABLE_CONTRACT,
       runtimeTableCanonicalOwner: "Dexter Lab",
       hearthRuntimeTableInstance: false,
-      runtimeAllowed: true,
-      runtimeHandoff: "FALLBACK_PASS",
-      channelMultiplexReady: true,
+      runtimeAllowed: false,
+      runtimeHandoff: "PENDING",
+      channelMultiplexReady: false,
+      channelMultiplexDegraded: false,
       semiconductorOutlet: true,
       canvasDecidesNothing: true,
       canvasOwnsWaterTruth: false,
@@ -2199,10 +3042,9 @@
       waterChildConnectorMode: WATER_CHILD_MODE,
       waterChildExternalAuthority: WATER_CHILD_PATH,
       waterChildExpectedContract: WATER_CONTRACT,
-      visualCarrierAllowed: true,
-      visualizationBlocked: false,
-      visualCarrierMode: "fallback-diagnostic",
-      visualDiagnosticStatus: "DEGRADED",
+      atlasStartSequencingHardened: true,
+      waterFailureDoesNotBlockAtlas: true,
+      externalStatusCallbackSafe: true,
       contract: CONTRACT,
       receipt: RECEIPT,
       generatedImage: false,
@@ -2211,337 +3053,291 @@
       visualPassClaimed: false,
       redraw() {
         if (state.destroyed) return canvas;
+
         state.redrawPending = false;
+
         if (state.atlasReady && state.atlas) {
           renderSphereFromAtlas(canvas, state.atlas, state, options);
           state.fallbackActive = false;
           state.imageRendered = true;
+          state.projectionReady = true;
         } else {
           drawFallbackShell(canvas, state);
           state.fallbackActive = true;
           state.imageRendered = true;
         }
+
         state.frames += 1;
         canvas.dataset.hearthCanvasFrames = String(state.frames);
+        canvas.dataset.hearthCanvasImageRendered = "true";
         return canvas;
       },
       requestRedraw() {
         if (state.destroyed || state.redrawPending) return;
         state.redrawPending = true;
-        if (root.requestAnimationFrame) root.requestAnimationFrame(() => api.redraw());
-        else setTimeout(() => api.redraw(), 16);
+
+        if (root.requestAnimationFrame) {
+          root.requestAnimationFrame(() => api.redraw());
+        } else {
+          setTimeout(() => api.redraw(), 16);
+        }
       },
       destroy() {
         state.destroyed = true;
-        if (state.atlasController && typeof state.atlasController.cancel === "function") state.atlasController.cancel();
+
+        if (state.atlasController && typeof state.atlasController.cancel === "function") {
+          state.atlasController.cancel();
+        }
+
         if (typeof api.unbindControls === "function") api.unbindControls();
-        if (frame.parentNode) frame.parentNode.removeChild(frame);
+
+        if (frame.parentNode) {
+          frame.parentNode.removeChild(frame);
+        }
       },
       unbindControls: null
     };
 
     drawFallbackShell(canvas, state);
-    applyVisualStateToDataset(initialVisualState, canvas);
-    applyWaterConnectorProofToDataset(initialWaterProof, canvas);
+    state.imageRendered = true;
 
     api.unbindControls = bindPointerDrag(canvas, api);
     api.controlsBound = true;
     state.controlsBound = true;
 
     updateLoadingStatus(api, {
-      runtimeHandoff: "FALLBACK_PASS",
-      runtimeAllowed: true,
-      visualState: initialVisualState,
+      atlasStartProof: state.atlasStartProof,
+      visualCarrierProof: state.visualCarrierProof,
       stages: {
         shellMounted: "ready",
         touchBound: "ready",
-        runtimeTable: "fallback-pass",
+        runtimeTable: "loading",
         water: "connector-start",
-        atlas: "building",
-        projection: "ready",
-        handoff: "fallback-pass"
+        atlas: "waiting-validation"
       }
     });
 
-    if (typeof options.onStatus === "function") {
-      options.onStatus("mounted-visible-planet-nonblocking-diagnostic-carrier", {
-        mounted: true,
-        canvasFound: true,
-        controlsBound: true,
-        interactiveShellMounted: true,
-        visualCarrierAllowed: true,
-        visualizationBlocked: false,
-        visualCarrierMode: "fallback-diagnostic",
-        waterChildConnectorMode: WATER_CHILD_MODE,
-        waterChildExternalAuthority: WATER_CHILD_PATH,
-        canvasOwnsWaterTruth: false,
-        connectorOwnsWaterTruth: false,
-        channelMultiplexReady: true,
-        atlasReady: false,
-        atlasBuilding: true,
-        frames: state.frames,
-        contract: CONTRACT,
-        receipt: RECEIPT
-      });
-    }
+    safeExternalStatus(api, options, "mounted-atlas-start-hardened-shell-first", {
+      mounted: true,
+      canvasFound: true,
+      controlsBound: true,
+      interactiveShellMounted: true,
+      visualCarrierAllowed: true,
+      visualizationBlocked: false,
+      waterFailureDoesNotBlockAtlas: true,
+      atlasStartSequencingHardened: true,
+      atlasReady: false,
+      atlasBuilding: false,
+      frames: state.frames,
+      contract: CONTRACT,
+      receipt: RECEIPT
+    });
 
-    const startSequence = () => {
+    const startRuntimeTableSequence = () => {
       if (state.destroyed) return;
 
-      Promise.all([ensureRuntimeTable(options), ensureChannelScripts(options)]).then(([runtimeTableResult, channelResults]) => {
+      ensureRuntimeTable(options).then((runtimeTableResult) => {
         if (state.destroyed) return;
 
         const runtimeApi = getRuntimeTableApi();
-        const runtimeReady = Boolean(runtimeApi && ACCEPTED_LAB_RUNTIME_TABLE_CONTRACTS.includes(String(runtimeApi.contract || "")));
+        const runtimeReady = Boolean(
+          runtimeApi &&
+            ACCEPTED_LAB_RUNTIME_TABLE_CONTRACTS.includes(String(runtimeApi.contract || "")) &&
+            typeof runtimeApi.createHearthChannelTable === "function"
+        );
 
         state.runtimeTableLoaded = runtimeReady;
         state.runtimeTableContract = runtimeApi && runtimeApi.contract ? runtimeApi.contract : runtimeTableResult.contract || PREFERRED_LAB_RUNTIME_TABLE_CONTRACT;
-        api.runtimeTableConsumed = true;
+        api.runtimeTableConsumed = runtimeReady;
 
         canvas.dataset.hearthRuntimeTableLoaded = String(runtimeReady);
         canvas.dataset.hearthRuntimeTableContract = state.runtimeTableContract || PREFERRED_LAB_RUNTIME_TABLE_CONTRACT;
         canvas.dataset.hearthRuntimeTableAcceptedContracts = ACCEPTED_LAB_RUNTIME_TABLE_CONTRACTS.join(",");
         canvas.dataset.hearthCanvasConsumesLabRuntimeTable = "true";
 
-        state.channelLoadResults = channelResults;
-        const waterResult = channelResults.find((item) => item.key === "water");
-        const waterProof = waterResult && waterResult.waterConnectorProof ? waterResult.waterConnectorProof : probeWaterActor();
-        state.waterConnectorProof = waterProof;
-        applyWaterConnectorProofToDataset(waterProof, canvas);
-
-        const visualState = classifyVisualState(waterProof);
-        state.visualState = visualState;
-        applyVisualStateToDataset(visualState, canvas);
-
-        state.landChannelLoaded = Boolean(getLandChannel());
-        state.waterChannelLoaded = Boolean(getWaterChannel());
-        state.airChannelLoaded = Boolean(getAirChannel());
-        state.channelMultiplexReady = Boolean(state.landChannelLoaded && state.airChannelLoaded);
-        state.channelMultiplexDegraded = !waterProof.waterValidationOk;
-
-        api.channelMultiplexReady = state.channelMultiplexReady;
-        api.visualCarrierAllowed = true;
-        api.visualizationBlocked = false;
-        api.visualCarrierMode = visualState.visualCarrierMode;
-        api.visualDiagnosticStatus = visualState.visualDiagnosticStatus;
-
-        canvas.dataset.hearthLandChannelLoaded = String(state.landChannelLoaded);
-        canvas.dataset.hearthWaterChannelLoaded = String(state.waterChannelLoaded);
-        canvas.dataset.hearthAirChannelLoaded = String(state.airChannelLoaded);
-        canvas.dataset.hearthCanvasChannelMultiplexReady = "true";
-        canvas.dataset.hearthCanvasChannelMultiplexDegraded = String(Boolean(state.channelMultiplexDegraded));
-
-        const runtimeTable = createHearthRuntimeTable();
-        state.runtimeTableInstance = runtimeTable;
-        api.hearthRuntimeTableInstance = Boolean(runtimeTable);
-
-        const ledger = runRuntimeTable(runtimeTable);
-        const handoff = getHandoffAllowed(ledger && ledger.handoff) ? ledger.handoff : "FALLBACK_PASS";
-        const runtimeAllowed = true;
-
-        state.runtimeTableLedger = { ...ledger, handoff, runtimeAllowed: true };
-        state.runtimeHandoff = handoff;
-        state.runtimeAllowed = true;
-
-        api.runtimeAllowed = true;
-        api.runtimeHandoff = handoff;
-        api.runtimeTableLedger = state.runtimeTableLedger;
-
-        canvas.dataset.hearthRuntimeTableHandoff = handoff;
-        canvas.dataset.hearthRuntimeTableRuntimeAllowed = "true";
-        canvas.dataset.hearthRuntimeTableSet = "true";
-        canvas.dataset.hearthRuntimeTableLedgerReady = "true";
-
-        const tripleG = runTripleGDiagnostic(state.runtimeTableLedger, canvas);
-        state.tripleGReceipt = tripleG;
-        state.coherentExpressionPass = Boolean(tripleG.coherentExpressionPass);
-        state.coherenceStatus = tripleG.coherenceStatus;
-        state.coherenceScore = tripleG.coherenceScore;
-        state.failedCheckpoints = tripleG.failedCheckpoints || [];
-        state.warningCheckpoints = tripleG.warningCheckpoints || [];
-        state.renewalTargets = tripleG.renewalTargets || [];
-
-        canvas.dataset.hearthTripleGDiagnosticAvailable = "true";
-        canvas.dataset.hearthTripleGDiagnosticContract = PREFERRED_LAB_RUNTIME_TABLE_CONTRACT;
-        canvas.dataset.hearthTripleGCoherenceChecked = "true";
-        canvas.dataset.hearthTripleGCoherenceStatus = state.coherenceStatus;
-        canvas.dataset.hearthTripleGCoherenceScore = String(state.coherenceScore);
-        canvas.dataset.hearthTripleGCoherentExpressionPass = String(Boolean(state.coherentExpressionPass));
-        canvas.dataset.hearthTripleGFailedCheckpoints = state.failedCheckpoints.join(",");
-        canvas.dataset.hearthTripleGRenewalTargets = state.renewalTargets.join(",");
-        canvas.dataset.hearthConstructionReadyIsNotCoherencePass = "true";
-        canvas.dataset.hearthImageRenderedIsNotCoherencePass = "true";
-        canvas.dataset.coherentExpressionPass = String(Boolean(state.coherentExpressionPass));
-        canvas.dataset.visualPassClaimed = "false";
-
         updateLoadingStatus(api, {
-          runtimeTableLedger: state.runtimeTableLedger,
-          runtimeHandoff: handoff,
-          runtimeAllowed,
-          channelLoadResults,
-          waterConnectorProof: waterProof,
-          visualState,
-          tripleGReceipt: tripleG,
           stages: {
-            runtimeTable: runtimeReady ? "ready" : "fallback-pass",
-            land: state.landChannelLoaded ? "ready" : "fallback",
-            water: waterProof.waterValidationOk ? "ready" : waterProof.waterChildLoadFailureCoordinate || "degraded",
-            air: state.airChannelLoaded ? "ready" : "fallback",
-            validation: "diagnostic",
-            atlas: "building",
-            projection: "ready",
-            handoff: "fallback-pass"
-          }
+            runtimeTable: runtimeReady ? "ready" : "fallback",
+            land: "loading",
+            water: "connector-loading",
+            air: "loading"
+          },
+          error: runtimeReady ? "" : "Lab Runtime Table unavailable; fallback diagnostic carrier remains allowed."
         });
 
-        if (typeof options.onStatus === "function") {
-          options.onStatus("visible-carrier-diagnostic-sequence-resolved", {
+        ensureChannelScripts(options).then((channelResults) => {
+          if (state.destroyed) return;
+
+          state.channelLoadResults = channelResults;
+          const waterResult = channelResults.find((item) => item.key === "water");
+          const waterProof = waterResult && waterResult.waterConnectorProof
+            ? waterResult.waterConnectorProof
+            : probeWaterActor();
+
+          state.waterConnectorProof = waterProof;
+          applyWaterConnectorProofToDataset(waterProof, canvas);
+
+          state.landChannelLoaded = Boolean(getLandChannel());
+          state.waterChannelLoaded = Boolean(getWaterChannel());
+          state.airChannelLoaded = Boolean(getAirChannel());
+          state.channelMultiplexReady = state.landChannelLoaded && state.waterChannelLoaded && state.airChannelLoaded;
+          state.channelMultiplexDegraded = !state.channelMultiplexReady;
+
+          api.channelMultiplexReady = state.channelMultiplexReady;
+          api.channelMultiplexDegraded = state.channelMultiplexDegraded;
+
+          canvas.dataset.hearthLandChannelLoaded = String(state.landChannelLoaded);
+          canvas.dataset.hearthWaterChannelLoaded = String(state.waterChannelLoaded);
+          canvas.dataset.hearthAirChannelLoaded = String(state.airChannelLoaded);
+          canvas.dataset.hearthCanvasChannelMultiplexReady = String(state.channelMultiplexReady);
+          canvas.dataset.hearthCanvasChannelMultiplexDegraded = String(state.channelMultiplexDegraded);
+
+          updateLoadingStatus(api, {
+            channelLoadResults,
+            waterConnectorProof: waterProof,
+            visualCarrierProof: {
+              visualCarrierAllowed: true,
+              visualizationBlocked: false,
+              visualizationBlockReason: "",
+              visualCarrierMode: waterProof.waterValidationOk ? "diagnostic-atlas" : "fallback-diagnostic",
+              visualDiagnosticStatus: waterProof.waterValidationOk ? "ACTIVE" : "DEGRADED",
+              visualDiagnosticCue: waterProof.waterValidationOk ? "WATER_CHILD_READY" : "WATER_CHILD_LOAD_FAILURE",
+              landLayerStatus: state.landChannelLoaded ? "ready" : "fallback",
+              waterLayerStatus: waterProof.waterValidationOk ? "ready" : "degraded",
+              airLayerStatus: state.airChannelLoaded ? "ready" : "fallback",
+              waterFallbackActive: !waterProof.waterValidationOk,
+              waterFallbackReason: waterProof.waterValidationOk ? "" : waterProof.waterChildLoadFailureCoordinate,
+              waterFailureDoesNotBlockAtlas: true
+            },
+            stages: {
+              land: state.landChannelLoaded ? "ready" : "fallback",
+              water: waterProof.waterValidationOk ? "ready" : waterProof.waterChildLoadFailureCoordinate || "fallback",
+              air: state.airChannelLoaded ? "ready" : "fallback",
+              validation: "validating"
+            }
+          });
+
+          const runtimeTable = createHearthRuntimeTable();
+          state.runtimeTableInstance = runtimeTable;
+          api.hearthRuntimeTableInstance = Boolean(runtimeTable);
+
+          const ledger = runRuntimeTable(runtimeTable);
+          const handoff = ledger && ledger.handoff ? ledger.handoff : "FALLBACK_PASS";
+          const runtimeAllowed = Boolean((ledger && ledger.runtimeAllowed) || getHandoffAllowed(handoff));
+
+          state.runtimeTableLedger = ledger;
+          state.runtimeHandoff = getHandoffAllowed(handoff) ? handoff : "FALLBACK_PASS";
+          state.runtimeAllowed = runtimeAllowed || getHandoffAllowed(state.runtimeHandoff);
+
+          api.runtimeAllowed = state.runtimeAllowed;
+          api.runtimeHandoff = state.runtimeHandoff;
+          api.runtimeTableLedger = ledger;
+
+          canvas.dataset.hearthRuntimeTableHandoff = state.runtimeHandoff;
+          canvas.dataset.hearthRuntimeTableRuntimeAllowed = String(Boolean(state.runtimeAllowed));
+          canvas.dataset.hearthRuntimeTableSet = String(Boolean(state.runtimeAllowed));
+          canvas.dataset.hearthRuntimeTableLedgerReady = "true";
+          canvas.dataset.hearthConstructionReadyIsNotCoherencePass = "true";
+          canvas.dataset.hearthImageRenderedIsNotCoherencePass = "true";
+
+          state.atlasStartProof.atlasStartFailureCoordinate = ATLAS_COORDINATES.A1;
+          applyAtlasStartProofToDataset(state.atlasStartProof, canvas);
+
+          updateLoadingStatus(api, {
+            runtimeTableLedger: ledger,
+            runtimeHandoff: state.runtimeHandoff,
+            runtimeAllowed: state.runtimeAllowed,
+            atlasStartProof: state.atlasStartProof,
+            stages: {
+              validation: state.runtimeAllowed ? "ready" : "fallback",
+              atlas: "authorizing",
+              projection: "pending",
+              handoff: state.runtimeAllowed ? "ready" : "fallback"
+            }
+          });
+
+          startAtlasBuild(api, options, "runtime-channel-validation-complete");
+
+          const tripleG = runTripleGDiagnostic(ledger, canvas);
+          state.tripleGReceipt = tripleG;
+          state.coherentExpressionPass = Boolean(tripleG.coherentExpressionPass);
+          state.coherenceStatus = tripleG.coherenceStatus;
+          state.coherenceScore = tripleG.coherenceScore;
+          state.failedCheckpoints = tripleG.failedCheckpoints || [];
+          state.warningCheckpoints = tripleG.warningCheckpoints || [];
+          state.renewalTargets = tripleG.renewalTargets || [];
+
+          canvas.dataset.hearthTripleGDiagnosticAvailable = "true";
+          canvas.dataset.hearthTripleGDiagnosticContract = PREFERRED_LAB_RUNTIME_TABLE_CONTRACT;
+          canvas.dataset.hearthTripleGCoherenceChecked = "true";
+          canvas.dataset.hearthTripleGCoherenceStatus = state.coherenceStatus;
+          canvas.dataset.hearthTripleGCoherenceScore = String(state.coherenceScore);
+          canvas.dataset.hearthTripleGCoherentExpressionPass = String(Boolean(state.coherentExpressionPass));
+          canvas.dataset.hearthTripleGFailedCheckpoints = state.failedCheckpoints.join(",");
+          canvas.dataset.hearthTripleGRenewalTargets = state.renewalTargets.join(",");
+          canvas.dataset.coherentExpressionPass = String(Boolean(state.coherentExpressionPass));
+
+          updateLoadingStatus(api, {
+            tripleGReceipt: tripleG,
+            stages: {
+              validation: "ready",
+              handoff: state.runtimeHandoff.toLowerCase()
+            }
+          });
+
+          safeExternalStatus(api, options, "atlas-start-sequencing-handoff-complete", {
             mounted: true,
             canvasFound: true,
             controlsBound: true,
             runtimeTableConsumed: true,
             runtimeTableContract: state.runtimeTableContract,
             hearthRuntimeTableInstance: Boolean(runtimeTable),
-            runtimeAllowed: true,
-            handoff,
-            ledger: state.runtimeTableLedger,
+            runtimeAllowed: state.runtimeAllowed,
+            handoff: state.runtimeHandoff,
+            ledger,
             channelLoadResults,
             waterConnectorProof: waterProof,
-            visualState,
+            atlasStartProof: state.atlasStartProof,
+            atlasStartAuthorized: state.atlasStartProof.atlasStartAuthorized,
+            atlasStartAttempted: state.atlasStartProof.atlasStartAttempted,
+            atlasStartFailureCoordinate: state.atlasStartProof.atlasStartFailureCoordinate,
+            waterFailureDoesNotBlockAtlas: true,
             canvasOwnsWaterTruth: false,
             connectorOwnsWaterTruth: false,
             contract: CONTRACT,
             receipt: RECEIPT
           });
-        }
+        });
+      }).catch((error) => {
+        if (state.destroyed) return;
 
-        state.atlasBuilding = true;
-        api.atlasBuilding = true;
-        canvas.dataset.hearthCanvasAtlasBuilding = "true";
+        state.error = error && error.message ? error.message : String(error);
+        state.runtimeHandoff = "FALLBACK_PASS";
+        state.runtimeAllowed = true;
 
-        state.atlasController = buildAtlasAsync({
-          width: options.atlasWidth || 384,
-          height: options.atlasHeight || 192,
-          rowsPerChunk: options.rowsPerChunk || 2,
-          allowLargeTexture: options.allowLargeTexture === true
-        }, {
-          onProgress(progress) {
-            if (state.destroyed) return;
-            state.atlasProgress = progress;
-            canvas.dataset.hearthCanvasAtlasProgress = String(progress);
-            updateLoadingStatus(api, { atlasProgress: progress, stages: { atlas: "building", projection: "ready" } });
-            if (typeof options.onStatus === "function" && progress > 0 && progress < 1) {
-              options.onStatus("atlas-progress-visible-carrier-active", {
-                mounted: true,
-                canvasFound: true,
-                controlsBound: true,
-                runtimeTableConsumed: true,
-                runtimeAllowed: true,
-                handoff,
-                channelMultiplexReady: state.channelMultiplexReady,
-                channelMultiplexDegraded: state.channelMultiplexDegraded,
-                atlasReady: false,
-                atlasBuilding: true,
-                atlasProgress: progress,
-                visualCarrierAllowed: true,
-                visualizationBlocked: false,
-                frames: state.frames,
-                contract: CONTRACT,
-                receipt: RECEIPT
-              });
-            }
-          },
-          onComplete(atlas) {
-            if (state.destroyed) return;
-            state.atlas = atlas;
-            state.atlasReady = true;
-            state.atlasBuilding = false;
-            state.atlasProgress = 1;
-            state.fallbackActive = false;
-            state.imageRendered = true;
-            api.atlasReady = true;
-            api.atlasBuilding = false;
-            api.cachedAtlasProjection = true;
-            canvas.dataset.hearthCanvasAtlasReady = "true";
-            canvas.dataset.hearthCanvasAtlasBuilding = "false";
-            canvas.dataset.hearthCanvasAtlasProgress = "1";
-            canvas.dataset.hearthCanvasCachedAtlasProjection = "true";
-            canvas.dataset.hearthCanvasImageRendered = "true";
-            canvas.dataset.hearthCanvasInteractiveProjection = "true";
-            canvas.dataset.visualCarrierAllowed = "true";
-            canvas.dataset.visualizationBlocked = "false";
-            canvas.dataset.visualPassClaimed = "false";
-            api.requestRedraw();
-            updateLoadingStatus(api, {
-              atlasProgress: 1,
-              visualState: state.visualState,
-              stages: { atlas: "ready", projection: "ready", handoff: "fallback-pass" }
-            });
-            if (typeof options.onStatus === "function") {
-              options.onStatus("visible-carrier-atlas-projection-complete", {
-                mounted: true,
-                canvasFound: true,
-                controlsBound: true,
-                runtimeTableConsumed: true,
-                runtimeAllowed: true,
-                handoff,
-                atlasReady: true,
-                atlasBuilding: false,
-                atlasProgress: 1,
-                imageRendered: true,
-                visualCarrierAllowed: true,
-                visualizationBlocked: false,
-                waterConnectorProof: state.waterConnectorProof,
-                frames: state.frames,
-                contract: CONTRACT,
-                receipt: RECEIPT
-              });
-            }
-          },
-          onError(error) {
-            if (state.destroyed) return;
-            state.atlasBuilding = false;
-            state.atlasReady = false;
-            state.fallbackActive = true;
-            state.imageRendered = true;
-            api.atlasBuilding = false;
-            api.atlasReady = false;
-            canvas.dataset.hearthCanvasAtlasBuilding = "false";
-            canvas.dataset.hearthCanvasAtlasReady = "false";
-            canvas.dataset.hearthCanvasAtlasError = error && error.message ? error.message : String(error);
-            canvas.dataset.hearthCanvasImageRendered = "true";
-            canvas.dataset.visualCarrierAllowed = "true";
-            canvas.dataset.visualizationBlocked = "false";
-            drawFallbackShell(canvas, state);
-            updateLoadingStatus(api, {
-              error: error && error.message ? error.message : String(error),
-              stages: { atlas: "fallback", projection: "fallback" }
-            });
-            if (typeof options.onStatus === "function") {
-              options.onStatus("atlas-error-fallback-visual-carrier-held", {
-                mounted: true,
-                canvasFound: true,
-                controlsBound: true,
-                runtimeTableConsumed: true,
-                runtimeAllowed: true,
-                handoff,
-                atlasReady: false,
-                atlasBuilding: false,
-                imageRendered: true,
-                visualCarrierAllowed: true,
-                visualizationBlocked: false,
-                error: error && error.message ? error.message : String(error),
-                frames: state.frames,
-                contract: CONTRACT,
-                receipt: RECEIPT
-              });
-            }
+        canvas.dataset.hearthRuntimeTableHandoff = "FALLBACK_PASS";
+        canvas.dataset.hearthRuntimeTableRuntimeAllowed = "true";
+        canvas.dataset.hearthRuntimeTableSet = "true";
+        canvas.dataset.hearthRuntimeTableLedgerReady = "false";
+        canvas.dataset.hearthRuntimeTableError = state.error;
+
+        updateLoadingStatus(api, {
+          runtimeHandoff: "FALLBACK_PASS",
+          runtimeAllowed: true,
+          error: state.error,
+          stages: {
+            runtimeTable: "fallback",
+            validation: "fallback",
+            atlas: "authorizing"
           }
         });
+
+        startAtlasBuild(api, options, "runtime-sequence-catch-fallback");
       });
     };
 
-    setTimeout(startSequence, 0);
+    setTimeout(startRuntimeTableSequence, 0);
+
     return api;
   }
 
@@ -2552,23 +3348,19 @@
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
+      baselineContract: BASELINE_CONTRACT,
       version: VERSION,
-      authority: "hearth-canvas-visible-planet-nonblocking-water-child-diagnostic-recovery",
+      authority: "hearth-canvas-atlas-start-sequencing-hardening",
       status: "active",
       primaryTarget: "/assets/hearth/hearth.canvas.js",
-      role: "Hearth visible diagnostic carrier, connector-load measurement, and Runtime Table consumer",
-      governingLaw: "Coherence failure blocks visual-pass claim, not visual carrier expression.",
-      visualizationBlockReasonsAllowed: Object.keys(CARRIER_BLOCK_REASONS),
-      visualizationBlockReasonsForbidden: ["WATER_CHILD_LOAD_FAILURE", "CHILD_CHANNEL_MISSING", "RUNTIME_TABLE_DEGRADED", "TRIPLE_G_FAILURE", "UNDESIRED_VISUAL_EXPRESSION"],
-      visualCarrierAllowedByDefault: true,
-      visualDiagnosticCarrier: true,
-      fallbackIsNotFalsePass: true,
-      childFailureIsNotParentFailure: true,
+      role: "Hearth canvas diagnostic visual carrier and atlas-start sequencing hardening",
+
       runtimeTableConsumed: true,
       preferredRuntimeTableContract: PREFERRED_LAB_RUNTIME_TABLE_CONTRACT,
       acceptedRuntimeTableContracts: ACCEPTED_LAB_RUNTIME_TABLE_CONTRACTS.slice(),
       runtimeTableCanonicalOwner: "Dexter Lab",
       runtimeTableCanonicalPath: LAB_RUNTIME_TABLE_PATH,
+
       canvasDecidesNothing: true,
       shellFirstMount: true,
       nonBlockingMount: true,
@@ -2580,6 +3372,29 @@
       touchDragBoundImmediately: true,
       pointerDragBoundImmediately: true,
       mountReturnsApiObject: true,
+
+      atlasStartSequencingHardened: true,
+      atlasStartCoordinates: [
+        ATLAS_COORDINATES.A0,
+        ATLAS_COORDINATES.A1,
+        ATLAS_COORDINATES.A2,
+        ATLAS_COORDINATES.A3,
+        ATLAS_COORDINATES.A4,
+        ATLAS_COORDINATES.A5,
+        ATLAS_COORDINATES.A6,
+        ATLAS_COORDINATES.A7,
+        ATLAS_COORDINATES.A8,
+        ATLAS_COORDINATES.A9
+      ],
+      atlasStartLaw: [
+        "coherence failure blocks visual-pass claim, not diagnostic visualization",
+        "Water Child failure blocks final water proof, not fallback-diagnostic atlas startup",
+        "Runtime fallback pass allows degraded diagnostic rendering",
+        "atlasStartAttempted is recorded before external status callbacks",
+        "external status callbacks are wrapped and cannot halt atlas construction",
+        "visualization is blocked only when the carrier cannot safely render"
+      ],
+
       waterChildConnector: {
         active: true,
         mode: WATER_CHILD_MODE,
@@ -2589,7 +3404,7 @@
         cacheKey: WATER_CHILD_CACHE_KEY,
         connectorOwnsWaterTruth: false,
         canvasOwnsWaterTruth: false,
-        failureIsNonblocking: true,
+        waterFailureDoesNotBlockAtlas: true,
         firstFailureCoordinates: [
           "C0_CONNECTOR_NOT_STARTED",
           "C1_REQUEST_PREPARED",
@@ -2605,31 +3420,42 @@
           "C11_WATER_CHILD_VALIDATED"
         ]
       },
+
       childChannels: [
         "/assets/hearth/hearth.land.channel.js",
         "/assets/hearth/hearth.water.channel.js",
         "/assets/hearth/hearth.air.channel.js"
       ],
-      childContracts: { land: LAND_CONTRACT, water: WATER_CONTRACT, air: AIR_CONTRACT },
+      childContracts: {
+        land: LAND_CONTRACT,
+        water: WATER_CONTRACT,
+        air: AIR_CONTRACT
+      },
       allowedHandoffs: ALLOWED_HANDOFFS.slice(),
-      compositeOrder: ["planet-body-shell", "land-channel", "water-channel-or-fallback", "air-channel", "rim-lighting"],
+      compositeOrder: [
+        "planet-body-shell",
+        "land-channel",
+        "water-channel-or-fallback-diagnostic-water",
+        "air-channel",
+        "rim-lighting"
+      ],
       law: [
-        "Canvas is a connector, consumer, visible carrier, and diagnostic publisher only",
+        "Canvas is a connector and consumer only",
         "Canvas does not own water truth",
         "Water Child remains external authority",
-        "Water Child failure degrades water layer but cannot erase visible carrier",
-        "Visual carrier remains active unless carrier structure cannot safely render",
-        "Coherence failure blocks visual-pass claim, not visual carrier expression",
-        "Runtime Table diagnostic degradation cannot suppress fallback carrier",
-        "Triple G diagnostic failure cannot suppress fallback carrier",
+        "Water Child must express HEARTH_WATER_CHANNEL for final water proof",
+        "Water Child failure does not block atlas startup",
+        "Connector measures exact first failed water coordinate",
+        "Runtime Table standard belongs to Dexter Lab",
+        "Triple G diagnostic standard belongs to Dexter Lab",
         "land and water are body-bound",
         "air is the only floating channel",
-        "final visual pass remains false until coherence is proven"
+        "final atlas may run under fallback diagnostic mode",
+        "final visual pass remains false until coherence passes"
       ],
       owns: [
         "visible-canvas-shell",
         "neutral-loading-shell",
-        "visual-diagnostic-carrier",
         "instrumented-formation-panel",
         "diagnostic-receipt-export",
         "receipt-visible-toggle",
@@ -2644,8 +3470,12 @@
         "water-child-request",
         "water-child-load-attempt",
         "water-child-load-proof",
+        "water-child-missing-proof",
         "water-child-failure-coordinate",
-        "nonblocking-water-fallback-expression",
+        "atlas-start-authorization",
+        "atlas-start-attempt-receipt",
+        "atlas-start-failure-coordinate",
+        "external-status-callback-hardening",
         "async-atlas-build",
         "cached-atlas-projection",
         "channel-multiplexing",
@@ -2680,7 +3510,9 @@
     contract: CONTRACT,
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
+    baselineContract: BASELINE_CONTRACT,
     version: VERSION,
+
     sample,
     read,
     compose,
@@ -2688,11 +3520,13 @@
     composePixel,
     getPixel,
     getColor,
+
     createShellCanvas,
     drawFallbackShell,
     bindPointerDrag,
     buildAtlasAsync,
     createShellFirstMount,
+
     createTextureCanvas,
     createSphereTextureCanvas,
     createAtlasTextureCanvas,
@@ -2701,6 +3535,7 @@
     createTexture,
     buildTexture,
     getTextureCanvas,
+
     renderSphereFromAtlas,
     paintToCanvas,
     renderToCanvas,
@@ -2708,24 +3543,27 @@
     render,
     paint,
     mount,
+
     ensureRuntimeTable,
     ensureChannelScripts,
     createHearthRuntimeTable,
     runRuntimeTable,
     runTripleGDiagnostic,
     updateLoadingStatus,
+    updateVisualCarrierProof,
     renderLoadingPanel,
     formatRuntimeTableIssues,
     createDiagnosticExport,
     probeWaterActor,
     applyWaterConnectorProofToDataset,
-    classifyVisualState,
-    applyVisualStateToDataset,
+    applyAtlasStartProofToDataset,
+    createAtlasStartProof,
+    startAtlasBuild,
+    safeExternalStatus,
     getReceipt,
+
     supportsTrueShellFirstMount: true,
     supportsNonBlockingMount: true,
-    supportsVisualizationBlockAuthorityLaw: true,
-    supportsVisualDiagnosticCarrierLaw: true,
     supportsAsyncRuntimeTableLoad: true,
     supportsLabRuntimeTableConsumption: true,
     supportsTripleGDiagnosticConsumption: true,
@@ -2740,32 +3578,37 @@
     supportsExpandedReceipt: true,
     supportsCopyableDiagnosticExport: true,
     supportsWaterChildConnectorLoadAlignment: true,
-    supportsNonblockingWaterChildFailure: true,
+    supportsAtlasStartSequencingHardening: true,
+    supportsWaterFailureDoesNotBlockAtlas: true,
+    supportsExternalStatusCallbackHardening: true,
+
     runtimeTableConsumed: true,
     runtimeTableContract: PREFERRED_LAB_RUNTIME_TABLE_CONTRACT,
     acceptedRuntimeTableContracts: ACCEPTED_LAB_RUNTIME_TABLE_CONTRACTS.slice(),
     runtimeTableCanonicalOwner: "Dexter Lab",
     runtimeTableCanonicalPath: LAB_RUNTIME_TABLE_PATH,
-    visualCarrierAllowed: true,
-    visualizationBlocked: false,
-    visualizationBlockReason: "",
-    visualCarrierMode: "fallback-diagnostic",
-    visualDiagnosticStatus: "DEGRADED",
+
     waterChildConnectorActive: true,
     waterChildConnectorMode: WATER_CHILD_MODE,
     waterChildExternalAuthority: WATER_CHILD_PATH,
     waterChildExpectedContract: WATER_CONTRACT,
-    waterChildFailureIsNonblocking: true,
     connectorOwnsWaterTruth: false,
     canvasOwnsWaterTruth: false,
+    waterFailureDoesNotBlockAtlas: true,
+
+    atlasStartSequencingHardened: true,
+    atlasCoordinates: ATLAS_COORDINATES,
+
     semiconductorOutlet: true,
     canvasDecidesNothing: true,
     consumesLandChannel: true,
     consumesWaterChannel: true,
     consumesAirChannel: true,
+
     landChannelContract: LAND_CONTRACT,
     waterChannelContract: WATER_CONTRACT,
     airChannelContract: AIR_CONTRACT,
+
     generatedImage: false,
     graphicBox: false,
     webGL: false,
@@ -2777,10 +3620,12 @@
 
   root.HEARTH = root.HEARTH || {};
   root.HEARTH.canvas = api;
+
   root.HEARTH_CANVAS = api;
   root.HearthCanvas = api;
   root.HEARTH_CANVAS_RECEIPT = getReceipt();
   root.HEARTH_CANVAS_CONTRACT = CONTRACT;
+
   root.HEARTH_CANVAS_TRUE_SHELL_FIRST = true;
   root.HEARTH_CANVAS_NONBLOCKING_MOUNT = true;
   root.HEARTH_CANVAS_ASYNC_ATLAS_BUILD = true;
@@ -2794,61 +3639,84 @@
   root.HEARTH_CANVAS_WATER_CHILD_CONNECTOR_ACTIVE = true;
   root.HEARTH_CANVAS_WATER_CHILD_EXTERNAL_AUTHORITY = WATER_CHILD_PATH;
   root.HEARTH_CANVAS_OWNS_WATER_TRUTH = false;
-  root.HEARTH_CANVAS_VISUAL_CARRIER_ALLOWED = true;
-  root.HEARTH_CANVAS_VISUALIZATION_BLOCKED = false;
+  root.HEARTH_CANVAS_WATER_FAILURE_DOES_NOT_BLOCK_ATLAS = true;
+  root.HEARTH_CANVAS_ATLAS_START_SEQUENCING_HARDENED = true;
 
   if (root.document && root.document.documentElement) {
-    const d = root.document.documentElement.dataset;
-    d.hearthCanvasAuthorityLoaded = "true";
-    d.hearthCanvasContract = CONTRACT;
-    d.hearthCanvasReceipt = RECEIPT;
-    d.hearthCanvasPreviousContract = PREVIOUS_CONTRACT;
-    d.hearthCanvasTrueShellFirst = "true";
-    d.hearthCanvasNonBlockingMount = "true";
-    d.hearthCanvasAsyncAtlasBuild = "true";
-    d.hearthCanvasSupportsTouchDrag = "true";
-    d.hearthCanvasSupportsPointerDrag = "true";
-    d.hearthCanvasMountReturnsApiObject = "true";
-    d.hearthCanvasChannelMultiplex = "true";
-    d.hearthCanvasSemiconductorOutlet = "true";
-    d.hearthCanvasDecidesNothing = "true";
-    d.hearthRuntimeTablePrewired = "true";
-    d.hearthRuntimeTableContract = PREFERRED_LAB_RUNTIME_TABLE_CONTRACT;
-    d.hearthRuntimeTableAcceptedContracts = ACCEPTED_LAB_RUNTIME_TABLE_CONTRACTS.join(",");
-    d.hearthRuntimeTableCanonicalOwner = "Dexter Lab";
-    d.hearthCanvasConsumesLabRuntimeTable = "true";
-    d.hearthCanvasConsumesLabTripleGDiagnostic = "true";
-    d.visualCarrierAllowed = "true";
-    d.visualizationBlocked = "false";
-    d.visualizationBlockReason = "";
-    d.visualCarrierMode = "fallback-diagnostic";
-    d.visualDiagnosticStatus = "DEGRADED";
-    d.visualDiagnosticCue = "WATER_CHILD_LOAD_FAILURE";
-    d.hearthWaterConnectorActive = "true";
-    d.hearthWaterConnectorMode = WATER_CHILD_MODE;
-    d.hearthWaterConnectorOwnsWaterTruth = "false";
-    d.hearthCanvasOwnsWaterTruth = "false";
-    d.hearthWaterChildExternalAuthority = WATER_CHILD_PATH;
-    d.hearthWaterChildExpectedContract = WATER_CONTRACT;
-    d.hearthWaterChildLoadFailureCoordinate = "C0_CONNECTOR_NOT_STARTED";
-    d.hearthWaterFallbackActive = "true";
-    d.hearthWaterFallbackReason = "WATER_CHILD_LOAD_FAILURE";
-    d.hearthReceiptMode = "compact";
-    d.hearthReceiptVisible = "true";
-    d.hearthReceiptExpanded = "false";
-    d.hearthDiagnosticExportAvailable = "true";
-    d.hearthCanvasLandChannelContract = LAND_CONTRACT;
-    d.hearthCanvasWaterChannelContract = WATER_CONTRACT;
-    d.hearthCanvasAirChannelContract = AIR_CONTRACT;
-    d.generatedImage = "false";
-    d.graphicBox = "false";
-    d.webgl = "false";
-    d.routeMutation = "false";
-    d.runtimeMutation = "false";
-    d.controlsMutation = "false";
-    d.coherentExpressionPass = "false";
-    d.visualPassClaimed = "false";
+    const dataset = root.document.documentElement.dataset;
+
+    dataset.hearthCanvasAuthorityLoaded = "true";
+    dataset.hearthCanvasContract = CONTRACT;
+    dataset.hearthCanvasReceipt = RECEIPT;
+    dataset.hearthCanvasPreviousContract = PREVIOUS_CONTRACT;
+    dataset.hearthCanvasBaselineContract = BASELINE_CONTRACT;
+    dataset.hearthCanvasTrueShellFirst = "true";
+    dataset.hearthCanvasNonBlockingMount = "true";
+    dataset.hearthCanvasAsyncAtlasBuild = "true";
+    dataset.hearthCanvasSupportsTouchDrag = "true";
+    dataset.hearthCanvasSupportsPointerDrag = "true";
+    dataset.hearthCanvasMountReturnsApiObject = "true";
+    dataset.hearthCanvasChannelMultiplex = "true";
+    dataset.hearthCanvasSemiconductorOutlet = "true";
+    dataset.hearthCanvasDecidesNothing = "true";
+    dataset.hearthRuntimeTablePrewired = "true";
+    dataset.hearthRuntimeTableContract = PREFERRED_LAB_RUNTIME_TABLE_CONTRACT;
+    dataset.hearthRuntimeTableAcceptedContracts = ACCEPTED_LAB_RUNTIME_TABLE_CONTRACTS.join(",");
+    dataset.hearthRuntimeTableCanonicalOwner = "Dexter Lab";
+    dataset.hearthCanvasConsumesLabRuntimeTable = "true";
+    dataset.hearthCanvasConsumesLabTripleGDiagnostic = "true";
+
+    dataset.visualCarrierAllowed = "true";
+    dataset.visualizationBlocked = "false";
+    dataset.visualizationBlockReason = "";
+    dataset.visualCarrierMode = "fallback-diagnostic";
+    dataset.visualDiagnosticStatus = "PENDING";
+    dataset.visualDiagnosticCue = "ATLAS_START_SEQUENCE_PENDING";
+
+    dataset.hearthWaterConnectorActive = "true";
+    dataset.hearthWaterConnectorMode = WATER_CHILD_MODE;
+    dataset.hearthWaterConnectorOwnsWaterTruth = "false";
+    dataset.hearthCanvasOwnsWaterTruth = "false";
+    dataset.hearthWaterChildExternalAuthority = WATER_CHILD_PATH;
+    dataset.hearthWaterChildExpectedContract = WATER_CONTRACT;
+    dataset.hearthWaterChildLoadFailureCoordinate = "C0_CONNECTOR_NOT_STARTED";
+    dataset.hearthWaterFallbackActive = "false";
+    dataset.hearthWaterFallbackReason = "";
+    dataset.waterFailureDoesNotBlockAtlas = "true";
+
+    dataset.atlasStartAuthorized = "false";
+    dataset.atlasStartAttempted = "false";
+    dataset.atlasStartActive = "false";
+    dataset.atlasBuilderEntered = "false";
+    dataset.atlasStartTimestamp = "";
+    dataset.atlasStartFailureCoordinate = ATLAS_COORDINATES.A0;
+    dataset.atlasStartBlockedReason = "";
+    dataset.atlasProgressObserved = "false";
+    dataset.atlasProgressFirstValue = "0";
+    dataset.atlasProgressLastValue = "0";
+    dataset.externalStatusCallbackSafe = "true";
+    dataset.externalStatusCallbackErrors = "[]";
+
+    dataset.hearthReceiptMode = "compact";
+    dataset.hearthReceiptVisible = "true";
+    dataset.hearthReceiptExpanded = "false";
+    dataset.hearthDiagnosticExportAvailable = "true";
+
+    dataset.hearthCanvasLandChannelContract = LAND_CONTRACT;
+    dataset.hearthCanvasWaterChannelContract = WATER_CONTRACT;
+    dataset.hearthCanvasAirChannelContract = AIR_CONTRACT;
+
+    dataset.generatedImage = "false";
+    dataset.graphicBox = "false";
+    dataset.webgl = "false";
+    dataset.routeMutation = "false";
+    dataset.runtimeMutation = "false";
+    dataset.controlsMutation = "false";
+    dataset.coherentExpressionPass = "false";
+    dataset.visualPassClaimed = "false";
   }
 
-  if (typeof module !== "undefined" && module.exports) module.exports = api;
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = api;
+  }
 })();

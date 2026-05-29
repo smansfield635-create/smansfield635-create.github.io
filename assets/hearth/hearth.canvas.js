@@ -1,28 +1,31 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_TRIPLE_G_RECEIPT_VISIBILITY_AND_COPY_EXPORT_CANVAS_TNT_v4_3
+// HEARTH_WATER_CHANNEL_CACHE_KEY_AND_LOAD_PROOF_CANVAS_TNT_v4_4
 // Full-file replacement.
-// Canvas / mount / Runtime Table consumer / Triple G diagnostic consumer / receipt UI-export authority only.
+// Canvas / mount / Runtime Table consumer / Triple G diagnostic consumer / loader-proof receipt authority only.
 // Purpose:
 // - Preserve shell-first nonblocking mount.
 // - Preserve immediate thumb / pointer drag.
 // - Preserve Runtime Table v2 compatibility and v1 fallback.
 // - Preserve Triple G coherent-expression diagnostic consumption.
-// - Add hidden / compact / expanded diagnostic receipt modes.
-// - Add copyable plain-text diagnostic receipt export.
+// - Preserve hidden / compact / expanded diagnostic receipt modes.
+// - Preserve copyable plain-text diagnostic receipt export.
+// - Add per-channel cache keys.
+// - Add water channel loader proof by exact coordinate.
+// - Prove whether water fails at request, load, global export, sample, coordinate, flags, Runtime Table, canvas multiplex, Triple G, or export.
 // - Keep Construction Ready, Image Rendered, and Coherent Expression separate.
 // - Decide no channel truth.
 // Does not own:
 // - Runtime Table canonical standard
 // - Triple G diagnostic canonical standard
+// - water truth
+// - land truth
+// - air truth
 // - tectonic cause
 // - elevation generation
 // - composition classification
 // - hydrology classification
 // - material palette authority
 // - ocean authority generation
-// - land channel truth
-// - water channel truth
-// - air channel truth
 // - route orchestration
 // - runtime motion authority
 // - external controls authority
@@ -31,10 +34,10 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_TRIPLE_G_RECEIPT_VISIBILITY_AND_COPY_EXPORT_CANVAS_TNT_v4_3";
-  const RECEIPT = "HEARTH_TRIPLE_G_RECEIPT_VISIBILITY_AND_COPY_EXPORT_CANVAS_RECEIPT_v4_3";
-  const PREVIOUS_CONTRACT = "HEARTH_LAB_RUNTIME_TABLE_TRIPLE_G_COHERENCE_PREWIRED_CANVAS_TNT_v4_2";
-  const VERSION = "2026-05-29.hearth-triple-g-receipt-visibility-copy-export-canvas-v4-3";
+  const CONTRACT = "HEARTH_WATER_CHANNEL_CACHE_KEY_AND_LOAD_PROOF_CANVAS_TNT_v4_4";
+  const RECEIPT = "HEARTH_WATER_CHANNEL_CACHE_KEY_AND_LOAD_PROOF_CANVAS_RECEIPT_v4_4";
+  const PREVIOUS_CONTRACT = "HEARTH_TRIPLE_G_RECEIPT_VISIBILITY_AND_COPY_EXPORT_CANVAS_TNT_v4_3";
+  const VERSION = "2026-05-29.hearth-water-channel-cache-key-load-proof-canvas-v4-4";
 
   const LAB_RUNTIME_TABLE_PATH = "/assets/lab/runtime-table.js";
   const LAB_RUNTIME_TABLE_CONTRACT_V1 = "LAB_RUNTIME_TABLE_MULTI_FUNCTION_ANIMATION_STANDARD_TNT_v1";
@@ -53,6 +56,12 @@
     HIDDEN: "hidden",
     COMPACT: "compact",
     EXPANDED: "expanded"
+  });
+
+  const CHANNEL_CACHE_KEYS = Object.freeze({
+    land: "hearth-land-channel-active-v1",
+    water: "hearth-water-channel-load-export-v1",
+    air: "hearth-air-channel-active-v1"
   });
 
   const root = typeof window !== "undefined" ? window : globalThis;
@@ -357,6 +366,12 @@
     return output;
   }
 
+  function getDocumentRootDataset() {
+    return root.document && root.document.documentElement
+      ? datasetToObject(root.document.documentElement)
+      : {};
+  }
+
   function getRuntimeTableApi() {
     return (
       root.LAB_RUNTIME_TABLE ||
@@ -395,8 +410,373 @@
     return root.HEARTH_AIR_CHANNEL || root.HearthAirChannel || (root.HEARTH && root.HEARTH.airChannel) || null;
   }
 
+  function getChannelGlobal(item) {
+    if (!item || !item.globalName) return null;
+    return root[item.globalName] || null;
+  }
+
   function getHandoffAllowed(handoff) {
     return ALLOWED_HANDOFFS.includes(String(handoff || ""));
+  }
+
+  function getPerChannelCacheKey(channelKey, options = {}) {
+    if (options.perChannelCacheKeys && options.perChannelCacheKeys[channelKey]) {
+      return String(options.perChannelCacheKeys[channelKey]);
+    }
+
+    const optionKey = `${channelKey}ChannelCacheKey`;
+
+    if (options[optionKey]) {
+      return String(options[optionKey]);
+    }
+
+    return CHANNEL_CACHE_KEYS[channelKey] || options.channelCacheKey || `hearth-channel-${channelKey}-v4-4`;
+  }
+
+  function buildScriptSrc(src, cacheKey) {
+    const joiner = src.includes("?") ? "&" : "?";
+    return `${src}${joiner}v=${encodeURIComponent(cacheKey || VERSION)}`;
+  }
+
+  function loadScriptOnce(src, marker, validate, cacheKey) {
+    return new Promise((resolve) => {
+      const requestedSrc = buildScriptSrc(src, cacheKey);
+
+      if (typeof validate === "function" && validate()) {
+        resolve({
+          requested: true,
+          loaded: true,
+          alreadyPresent: true,
+          src,
+          requestedSrc,
+          cacheKey,
+          error: ""
+        });
+        return;
+      }
+
+      if (!root.document || !root.document.head) {
+        resolve({
+          requested: false,
+          loaded: false,
+          src,
+          requestedSrc,
+          cacheKey,
+          error: "document unavailable"
+        });
+        return;
+      }
+
+      const existing = root.document.querySelector(`script[data-hearth-loader-marker="${marker}"]`);
+
+      if (existing && typeof validate === "function" && !validate()) {
+        existing.remove();
+      } else if (existing) {
+        existing.addEventListener("load", () => {
+          resolve({
+            requested: true,
+            loaded: Boolean(validate && validate()),
+            existing: true,
+            src,
+            requestedSrc: existing.src || requestedSrc,
+            cacheKey,
+            error: ""
+          });
+        }, { once: true });
+
+        existing.addEventListener("error", () => {
+          resolve({
+            requested: true,
+            loaded: false,
+            existing: true,
+            src,
+            requestedSrc: existing.src || requestedSrc,
+            cacheKey,
+            error: "load-error"
+          });
+        }, { once: true });
+
+        setTimeout(() => {
+          resolve({
+            requested: true,
+            loaded: Boolean(validate && validate()),
+            existing: true,
+            timeoutCheck: true,
+            src,
+            requestedSrc: existing.src || requestedSrc,
+            cacheKey,
+            error: Boolean(validate && validate()) ? "" : "existing-script-validation-failed"
+          });
+        }, 160);
+
+        return;
+      }
+
+      const script = root.document.createElement("script");
+      script.src = requestedSrc;
+      script.defer = true;
+      script.dataset.hearthLoaderMarker = marker;
+      script.dataset.hearthCanvasContract = CONTRACT;
+      script.dataset.hearthCanvasReceipt = RECEIPT;
+      script.dataset.hearthScriptCacheKey = cacheKey || "";
+      script.dataset.generatedImage = "false";
+      script.dataset.graphicBox = "false";
+      script.dataset.webgl = "false";
+      script.dataset.visualPassClaimed = "false";
+
+      script.onload = () => {
+        resolve({
+          requested: true,
+          loaded: Boolean(validate && validate()),
+          src,
+          requestedSrc,
+          cacheKey,
+          error: Boolean(validate && validate()) ? "" : "loaded-but-validation-failed"
+        });
+      };
+
+      script.onerror = () => {
+        resolve({
+          requested: true,
+          loaded: false,
+          src,
+          requestedSrc,
+          cacheKey,
+          error: "load-error"
+        });
+      };
+
+      root.document.head.appendChild(script);
+    });
+  }
+
+  function loadChannelScriptWithProof(item, options = {}) {
+    const cacheKey = getPerChannelCacheKey(item.key, options);
+    const marker = `hearth-${item.key}-channel`;
+    const scriptPath = item.path;
+    const expectedContract = item.contract;
+
+    const validate = () => {
+      const channel = getChannelGlobal(item);
+      return Boolean(channel && channel.contract === expectedContract);
+    };
+
+    return loadScriptOnce(scriptPath, marker, validate, cacheKey).then((result) => {
+      const globalObject = getChannelGlobal(item);
+      const actualContract = globalObject && globalObject.contract ? String(globalObject.contract) : "";
+      const globalPresent = Boolean(globalObject);
+      const contractOk = actualContract === expectedContract;
+
+      return {
+        key: item.key,
+        label: item.label,
+        path: item.path,
+        scriptPath,
+        scriptCacheKey: cacheKey,
+        requestedSrc: result.requestedSrc || buildScriptSrc(scriptPath, cacheKey),
+        expectedContract,
+        actualContract,
+        requested: Boolean(result.requested),
+        loaded: Boolean(result.loaded),
+        alreadyPresent: Boolean(result.alreadyPresent),
+        existing: Boolean(result.existing),
+        timeoutCheck: Boolean(result.timeoutCheck),
+        error: result.error || "",
+        globalName: item.globalName,
+        globalPresent,
+        contractOk,
+        validationOk: Boolean(globalPresent && contractOk),
+        at: nowIso()
+      };
+    });
+  }
+
+  function finiteCoordinatePacket(packet) {
+    return Boolean(
+      packet &&
+        Number.isFinite(Number(packet.u)) &&
+        Number.isFinite(Number(packet.v)) &&
+        Number.isFinite(Number(packet.x)) &&
+        Number.isFinite(Number(packet.y)) &&
+        Number.isFinite(Number(packet.z))
+    );
+  }
+
+  function probeWaterChannel() {
+    const water = getWaterChannel();
+    const proof = {
+      waterExpectedContract: WATER_CONTRACT,
+      waterGlobalPresent: Boolean(water),
+      waterActualContract: water && water.contract ? String(water.contract) : "",
+      waterSampleProbeOk: false,
+      waterSampleProbeContract: "",
+      waterSampleProbeCoordinatesOk: false,
+      waterSampleProbeFlagsOk: false,
+      waterSampleProbeError: "",
+      waterSampleProbeValue: null,
+      at: nowIso()
+    };
+
+    if (!water) {
+      proof.waterSampleProbeError = "HEARTH_WATER_CHANNEL global missing.";
+      return proof;
+    }
+
+    if (typeof water.sample !== "function") {
+      proof.waterSampleProbeError = "HEARTH_WATER_CHANNEL.sample is not a function.";
+      return proof;
+    }
+
+    try {
+      const samplePacket = water.sample(SHARED_RUNTIME_TABLE_SAMPLE_POINT);
+      proof.waterSampleProbeValue = samplePacket || null;
+      proof.waterSampleProbeOk = Boolean(samplePacket && typeof samplePacket === "object");
+      proof.waterSampleProbeContract = samplePacket && samplePacket.contract ? String(samplePacket.contract) : "";
+      proof.waterSampleProbeCoordinatesOk = finiteCoordinatePacket(samplePacket);
+      proof.waterSampleProbeFlagsOk = Boolean(
+        samplePacket &&
+          samplePacket.isWaterChannel === true &&
+          samplePacket.allowedToFloat === false &&
+          samplePacket.bodyBound === true &&
+          samplePacket.surfaceBound === true
+      );
+
+      if (!proof.waterSampleProbeOk) {
+        proof.waterSampleProbeError = "sample returned no object packet.";
+      } else if (proof.waterSampleProbeContract !== WATER_CONTRACT) {
+        proof.waterSampleProbeError = `sample contract mismatch: ${proof.waterSampleProbeContract || "missing"}`;
+      } else if (!proof.waterSampleProbeCoordinatesOk) {
+        proof.waterSampleProbeError = "sample missing finite u/v/x/y/z coordinates.";
+      } else if (!proof.waterSampleProbeFlagsOk) {
+        proof.waterSampleProbeError = "sample water authority flags invalid.";
+      }
+    } catch (error) {
+      proof.waterSampleProbeError = error && error.message ? error.message : String(error);
+    }
+
+    return proof;
+  }
+
+  function updateChannelLoadProof(api, channelResults = []) {
+    if (!api || !api.state) return;
+
+    const state = api.state;
+    const canvas = api.canvas || null;
+    const byKey = {};
+
+    channelResults.forEach((result) => {
+      if (result && result.key) byKey[result.key] = result;
+    });
+
+    const land = byKey.land || null;
+    const water = byKey.water || null;
+    const air = byKey.air || null;
+    const waterProof = probeWaterChannel();
+
+    state.channelLoadResults = channelResults.slice();
+    state.landLoadResult = land;
+    state.waterLoadResult = water;
+    state.airLoadResult = air;
+
+    state.waterScriptRequested = Boolean(water && water.requested);
+    state.waterScriptLoaded = Boolean(water && water.loaded);
+    state.waterScriptPath = water ? water.scriptPath : "/assets/hearth/hearth.water.channel.js";
+    state.waterScriptCacheKey = water ? water.scriptCacheKey : CHANNEL_CACHE_KEYS.water;
+    state.waterScriptError = water && water.error ? water.error : "";
+
+    state.waterGlobalPresent = waterProof.waterGlobalPresent;
+    state.waterActualContract = waterProof.waterActualContract;
+    state.waterExpectedContract = waterProof.waterExpectedContract;
+
+    state.waterSampleProbeOk = waterProof.waterSampleProbeOk;
+    state.waterSampleProbeContract = waterProof.waterSampleProbeContract;
+    state.waterSampleProbeCoordinatesOk = waterProof.waterSampleProbeCoordinatesOk;
+    state.waterSampleProbeFlagsOk = waterProof.waterSampleProbeFlagsOk;
+    state.waterSampleProbeError = waterProof.waterSampleProbeError;
+    state.waterSampleProbeValue = waterProof.waterSampleProbeValue;
+
+    state.channelLoadProofReady = true;
+
+    if (canvas) {
+      canvas.dataset.hearthChannelLoadProofReady = "true";
+      canvas.dataset.hearthWaterScriptRequested = String(state.waterScriptRequested);
+      canvas.dataset.hearthWaterScriptLoaded = String(state.waterScriptLoaded);
+      canvas.dataset.hearthWaterScriptPath = state.waterScriptPath || "";
+      canvas.dataset.hearthWaterScriptCacheKey = state.waterScriptCacheKey || "";
+      canvas.dataset.hearthWaterScriptError = state.waterScriptError || "";
+      canvas.dataset.hearthWaterGlobalPresent = String(state.waterGlobalPresent);
+      canvas.dataset.hearthWaterActualContract = state.waterActualContract || "";
+      canvas.dataset.hearthWaterExpectedContract = state.waterExpectedContract || WATER_CONTRACT;
+      canvas.dataset.hearthWaterSampleProbeOk = String(state.waterSampleProbeOk);
+      canvas.dataset.hearthWaterSampleProbeContract = state.waterSampleProbeContract || "";
+      canvas.dataset.hearthWaterSampleProbeCoordinatesOk = String(state.waterSampleProbeCoordinatesOk);
+      canvas.dataset.hearthWaterSampleProbeFlagsOk = String(state.waterSampleProbeFlagsOk);
+      canvas.dataset.hearthWaterSampleProbeError = state.waterSampleProbeError || "";
+    }
+
+    if (root.document && root.document.documentElement) {
+      root.document.documentElement.dataset.hearthChannelLoadProofReady = "true";
+      root.document.documentElement.dataset.hearthWaterScriptRequested = String(state.waterScriptRequested);
+      root.document.documentElement.dataset.hearthWaterScriptLoaded = String(state.waterScriptLoaded);
+      root.document.documentElement.dataset.hearthWaterScriptPath = state.waterScriptPath || "";
+      root.document.documentElement.dataset.hearthWaterScriptCacheKey = state.waterScriptCacheKey || "";
+      root.document.documentElement.dataset.hearthWaterScriptError = state.waterScriptError || "";
+      root.document.documentElement.dataset.hearthWaterGlobalPresent = String(state.waterGlobalPresent);
+      root.document.documentElement.dataset.hearthWaterActualContract = state.waterActualContract || "";
+      root.document.documentElement.dataset.hearthWaterExpectedContract = state.waterExpectedContract || WATER_CONTRACT;
+      root.document.documentElement.dataset.hearthWaterSampleProbeOk = String(state.waterSampleProbeOk);
+      root.document.documentElement.dataset.hearthWaterSampleProbeContract = state.waterSampleProbeContract || "";
+      root.document.documentElement.dataset.hearthWaterSampleProbeCoordinatesOk = String(state.waterSampleProbeCoordinatesOk);
+      root.document.documentElement.dataset.hearthWaterSampleProbeFlagsOk = String(state.waterSampleProbeFlagsOk);
+      root.document.documentElement.dataset.hearthWaterSampleProbeError = state.waterSampleProbeError || "";
+    }
+  }
+
+  function formatChannelLoadProof(api) {
+    const state = api && api.state ? api.state : {};
+    const lines = [];
+
+    if (!state.channelLoadProofReady) return lines;
+
+    if (state.waterScriptLoaded && state.waterGlobalPresent && state.waterSampleProbeOk && state.waterSampleProbeCoordinatesOk && state.waterSampleProbeFlagsOk) {
+      lines.push(`Water loader: valid · ${state.waterActualContract || "contract-present"}`);
+      return lines;
+    }
+
+    if (!state.waterScriptRequested) {
+      lines.push("Water loader: script was not requested.");
+      return lines;
+    }
+
+    if (!state.waterScriptLoaded) {
+      lines.push(`Water loader: script did not validate/load · ${state.waterScriptError || "unknown error"}`);
+      return lines;
+    }
+
+    if (!state.waterGlobalPresent) {
+      lines.push("Water loader: script loaded but HEARTH_WATER_CHANNEL global is missing.");
+      return lines;
+    }
+
+    if (state.waterActualContract !== WATER_CONTRACT) {
+      lines.push(`Water loader: wrong contract · ${state.waterActualContract || "missing"}`);
+      return lines;
+    }
+
+    if (!state.waterSampleProbeOk) {
+      lines.push(`Water loader: sample failed · ${state.waterSampleProbeError || "unknown sample error"}`);
+      return lines;
+    }
+
+    if (!state.waterSampleProbeCoordinatesOk) {
+      lines.push("Water loader: sample coordinates invalid.");
+    }
+
+    if (!state.waterSampleProbeFlagsOk) {
+      lines.push("Water loader: sample flags invalid.");
+    }
+
+    return lines;
   }
 
   function callChannel(authority, args, p) {
@@ -659,7 +1039,7 @@
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
-      authority: "hearth-triple-g-receipt-visibility-copy-export-canvas",
+      authority: "hearth-water-channel-cache-key-load-proof-canvas",
       ...coords,
 
       runtimeTableConsumed: Boolean(runtimeApi),
@@ -735,7 +1115,7 @@
 
     canvas.width = size;
     canvas.height = size;
-    canvas.className = options.className || "hearth-canvas-texture hearth-canvas-contained-sphere hearth-canvas-receipt-export-v4-3";
+    canvas.className = options.className || "hearth-canvas-texture hearth-canvas-contained-sphere hearth-canvas-water-loader-proof-v4-4";
     canvas.style.maxWidth = "100%";
     canvas.style.height = "auto";
     canvas.style.display = "block";
@@ -790,6 +1170,22 @@
     canvas.dataset.hearthDiagnosticExportCopied = "false";
     canvas.dataset.hearthDiagnosticExportLength = "0";
     canvas.dataset.hearthDiagnosticExportError = "";
+
+    canvas.dataset.hearthChannelLoadProofReady = "false";
+    canvas.dataset.hearthWaterScriptRequested = "false";
+    canvas.dataset.hearthWaterScriptLoaded = "false";
+    canvas.dataset.hearthWaterScriptPath = "/assets/hearth/hearth.water.channel.js";
+    canvas.dataset.hearthWaterScriptCacheKey = CHANNEL_CACHE_KEYS.water;
+    canvas.dataset.hearthWaterScriptError = "";
+    canvas.dataset.hearthWaterGlobalPresent = "false";
+    canvas.dataset.hearthWaterActualContract = "";
+    canvas.dataset.hearthWaterExpectedContract = WATER_CONTRACT;
+    canvas.dataset.hearthWaterSampleProbeOk = "false";
+    canvas.dataset.hearthWaterSampleProbeContract = "";
+    canvas.dataset.hearthWaterSampleProbeCoordinatesOk = "false";
+    canvas.dataset.hearthWaterSampleProbeFlagsOk = "false";
+    canvas.dataset.hearthWaterSampleProbeError = "";
+
     canvas.dataset.visualPassClaimed = "false";
 
     return canvas;
@@ -802,6 +1198,7 @@
     panel.dataset.hearthFormationPanel = "true";
     panel.dataset.hearthTripleGCoherencePanel = "true";
     panel.dataset.hearthReceiptPanel = "true";
+    panel.dataset.hearthChannelLoadProofPanel = "true";
     panel.style.position = "absolute";
     panel.style.left = "50%";
     panel.style.bottom = "14px";
@@ -940,6 +1337,26 @@
       landChannelContract: LAND_CONTRACT,
       waterChannelContract: WATER_CONTRACT,
       airChannelContract: AIR_CONTRACT,
+
+      channelLoadResults: state.channelLoadResults || [],
+      landLoadResult: state.landLoadResult || null,
+      waterLoadResult: state.waterLoadResult || null,
+      airLoadResult: state.airLoadResult || null,
+      waterScriptRequested: Boolean(state.waterScriptRequested),
+      waterScriptLoaded: Boolean(state.waterScriptLoaded),
+      waterScriptPath: state.waterScriptPath || "/assets/hearth/hearth.water.channel.js",
+      waterScriptCacheKey: state.waterScriptCacheKey || CHANNEL_CACHE_KEYS.water,
+      waterScriptError: state.waterScriptError || "",
+      waterGlobalPresent: Boolean(state.waterGlobalPresent),
+      waterActualContract: state.waterActualContract || "",
+      waterExpectedContract: state.waterExpectedContract || WATER_CONTRACT,
+      waterSampleProbeOk: Boolean(state.waterSampleProbeOk),
+      waterSampleProbeContract: state.waterSampleProbeContract || "",
+      waterSampleProbeCoordinatesOk: Boolean(state.waterSampleProbeCoordinatesOk),
+      waterSampleProbeFlagsOk: Boolean(state.waterSampleProbeFlagsOk),
+      waterSampleProbeError: state.waterSampleProbeError || "",
+      waterSampleProbeValue: state.waterSampleProbeValue || null,
+
       runtimeTableRecords: records.map((record) => ({
         key: record.key,
         name: record.name,
@@ -965,11 +1382,13 @@
         visualPassClaimed: false
       },
       canvasDataset: datasetToObject(canvas),
+      documentRootDataset: getDocumentRootDataset(),
       visualPassClaimed: false,
       strategicSummary: {
         constructionReady: Boolean(state.runtimeAllowed) ? "pass" : "fail",
         imageRendered: Boolean(state.imageRendered) ? "pass" : "fail",
         coherentExpression: Boolean(state.coherentExpressionPass) ? "pass" : (state.coherenceStatus || "pending"),
+        waterFailureCoordinate: getWaterFailureCoordinate(state),
         recommendedNextRenewalTarget: Array.isArray(state.renewalTargets) && state.renewalTargets.length ? state.renewalTargets[0] : ""
       },
       generatedImage: false,
@@ -1000,10 +1419,43 @@
       `landChannelContract=${exportPacket.landChannelContract}`,
       `waterChannelContract=${exportPacket.waterChannelContract}`,
       `airChannelContract=${exportPacket.airChannelContract}`,
+      "",
+      "WATER_LOADER_COORDINATE_PROOF",
+      `channelLoadProofReady=${Boolean(state.channelLoadProofReady)}`,
+      `waterScriptRequested=${exportPacket.waterScriptRequested}`,
+      `waterScriptLoaded=${exportPacket.waterScriptLoaded}`,
+      `waterScriptPath=${exportPacket.waterScriptPath}`,
+      `waterScriptCacheKey=${exportPacket.waterScriptCacheKey}`,
+      `waterScriptError=${exportPacket.waterScriptError}`,
+      `waterGlobalPresent=${exportPacket.waterGlobalPresent}`,
+      `waterActualContract=${exportPacket.waterActualContract}`,
+      `waterExpectedContract=${exportPacket.waterExpectedContract}`,
+      `waterSampleProbeOk=${exportPacket.waterSampleProbeOk}`,
+      `waterSampleProbeContract=${exportPacket.waterSampleProbeContract}`,
+      `waterSampleProbeCoordinatesOk=${exportPacket.waterSampleProbeCoordinatesOk}`,
+      `waterSampleProbeFlagsOk=${exportPacket.waterSampleProbeFlagsOk}`,
+      `waterSampleProbeError=${exportPacket.waterSampleProbeError}`,
+      `waterFailureCoordinate=${exportPacket.strategicSummary.waterFailureCoordinate}`,
+      "",
       `visualPassClaimed=${exportPacket.visualPassClaimed}`,
       "",
       "STRATEGIC_SUMMARY",
       stringifyForReceipt(exportPacket.strategicSummary),
+      "",
+      "CHANNEL_LOAD_RESULTS",
+      stringifyForReceipt(exportPacket.channelLoadResults),
+      "",
+      "LAND_LOAD_RESULT",
+      stringifyForReceipt(exportPacket.landLoadResult),
+      "",
+      "WATER_LOAD_RESULT",
+      stringifyForReceipt(exportPacket.waterLoadResult),
+      "",
+      "AIR_LOAD_RESULT",
+      stringifyForReceipt(exportPacket.airLoadResult),
+      "",
+      "WATER_SAMPLE_PROBE_VALUE",
+      stringifyForReceipt(exportPacket.waterSampleProbeValue),
       "",
       "RUNTIME_TABLE_RECORDS",
       stringifyForReceipt(exportPacket.runtimeTableRecords),
@@ -1015,7 +1467,10 @@
       stringifyForReceipt(exportPacket.renderMetadata),
       "",
       "CANVAS_DATASET",
-      stringifyForReceipt(exportPacket.canvasDataset)
+      stringifyForReceipt(exportPacket.canvasDataset),
+      "",
+      "DOCUMENT_ROOT_DATASET",
+      stringifyForReceipt(exportPacket.documentRootDataset)
     ];
 
     const text = lines.join("\n");
@@ -1029,6 +1484,35 @@
     }
 
     return text;
+  }
+
+  function getWaterFailureCoordinate(state = {}) {
+    if (!state.waterScriptRequested) return "Coordinate 0 — File request not made";
+    if (!state.waterScriptLoaded) return "Coordinate 1 — Script load/deployment/cache validation";
+    if (!state.waterGlobalPresent) return "Coordinate 2 — Global export missing";
+    if (state.waterActualContract !== WATER_CONTRACT) return "Coordinate 2 — Global export contract mismatch";
+    if (!state.waterSampleProbeOk) return "Coordinate 3 — Direct sample probe failed";
+    if (!state.waterSampleProbeCoordinatesOk) return "Coordinate 3 — Direct sample coordinates invalid";
+    if (!state.waterSampleProbeFlagsOk) return "Coordinate 3 — Direct sample authority flags invalid";
+
+    const records = state.runtimeTableLedger && Array.isArray(state.runtimeTableLedger.records)
+      ? state.runtimeTableLedger.records
+      : [];
+    const waterRecord = records.find((record) => record && record.key === "water");
+
+    if (waterRecord && waterRecord.status !== "READY") {
+      return "Coordinate 4 — Runtime Table registration/global lookup";
+    }
+
+    if (!state.channelMultiplexReady) {
+      return "Coordinate 5 — Canvas multiplex readiness";
+    }
+
+    if (state.coherenceChecked && !state.coherentExpressionPass) {
+      return "Coordinate 6 — True coherence calibration";
+    }
+
+    return "No water-loader failure coordinate detected";
   }
 
   function getDiagnosticExport(api) {
@@ -1193,7 +1677,7 @@
     const raw = String(value || "pending").toLowerCase();
 
     if (raw.includes("reject") || raw.includes("block") || raw.includes("fail")) return "✕";
-    if (raw.includes("ready") || raw.includes("complete") || raw.includes("pass") || raw.includes("rendered")) return "✓";
+    if (raw.includes("ready") || raw.includes("complete") || raw.includes("pass") || raw.includes("rendered") || raw.includes("valid")) return "✓";
     if (raw.includes("fallback") || raw.includes("degraded") || raw.includes("optimized") || raw.includes("warning")) return "◐";
     if (raw.includes("loading") || raw.includes("building") || raw.includes("validating") || raw.includes("running")) return "•";
     return "○";
@@ -1273,21 +1757,28 @@
 
     const runtimeIssues = formatRuntimeTableIssues(state.runtimeTableLedger);
     const coherenceIssues = formatCoherenceIssues(state.coherenceReport);
-    const issueLines = runtimeIssues.concat(coherenceIssues);
+    const channelProofLines = formatChannelLoadProof(api);
+    const issueLines = channelProofLines.concat(runtimeIssues).concat(coherenceIssues);
 
     const issueHtml = issueLines.length
-      ? `<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(174,216,236,.14);color:rgba(255,210,180,.92);">${issueLines.slice(0, 7).map((line) => `<div>${escapeHtml(line)}</div>`).join("")}</div>`
+      ? `<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(174,216,236,.14);color:rgba(255,210,180,.92);">${issueLines.slice(0, 9).map((line) => `<div>${escapeHtml(line)}</div>`).join("")}</div>`
       : "";
 
     const coherenceScore = Number.isFinite(Number(state.coherenceScore)) ? Number(state.coherenceScore) : 0;
     const coherenceStatus = state.coherenceStatus || "pending";
     const coherentExpression = state.coherentExpressionPass ? "pass" : state.coherenceChecked ? coherenceStatus : "pending";
+    const waterLoaderStatus = state.channelLoadProofReady
+      ? state.waterSampleProbeOk && state.waterSampleProbeCoordinatesOk && state.waterSampleProbeFlagsOk
+        ? "valid"
+        : getWaterFailureCoordinate(state)
+      : "pending";
 
     const statusRows = [
       ["Shell mounted", stages.shellMounted || "pending"],
       ["Touch bound", stages.touchBound || "pending"],
       ["Lab Runtime Table", stages.runtimeTable || "pending"],
       ["Land channel", stages.land || "pending"],
+      ["Water loader", waterLoaderStatus],
       ["Water channel", stages.water || "pending"],
       ["Air channel", stages.air || "pending"],
       ["Runtime validation", stages.validation || "pending"],
@@ -1305,7 +1796,7 @@
         "<div style=\"display:grid;grid-template-columns:22px 1fr auto;gap:7px;align-items:center;padding:2px 0;\">",
         `<span style="opacity:.78;">${statusBadge(text)}</span>`,
         `<span style="opacity:.86;">${escapeHtml(label)}</span>`,
-        `<span style="opacity:.72;text-transform:uppercase;letter-spacing:.08em;font-size:9px;">${escapeHtml(text)}</span>`,
+        `<span style="opacity:.72;text-transform:uppercase;letter-spacing:.08em;font-size:9px;text-align:right;">${escapeHtml(text)}</span>`,
         "</div>"
       ].join("");
     }).join("");
@@ -1585,52 +2076,6 @@
     setTimeout(fn, 0);
   }
 
-  function loadScriptOnce(src, marker, validate, cacheKey) {
-    return new Promise((resolve) => {
-      if (typeof validate === "function" && validate()) {
-        resolve({ loaded: true, alreadyPresent: true, src });
-        return;
-      }
-
-      if (!root.document || !root.document.head) {
-        resolve({ loaded: false, error: "document unavailable", src });
-        return;
-      }
-
-      const existing = root.document.querySelector(`script[data-hearth-loader-marker="${marker}"]`);
-
-      if (existing && typeof validate === "function" && !validate()) {
-        existing.remove();
-      } else if (existing) {
-        existing.addEventListener("load", () => resolve({ loaded: Boolean(validate && validate()), existing: true, src }), { once: true });
-        existing.addEventListener("error", () => resolve({ loaded: false, existing: true, error: "load-error", src }), { once: true });
-
-        setTimeout(() => {
-          resolve({ loaded: Boolean(validate && validate()), existing: true, timeoutCheck: true, src });
-        }, 120);
-
-        return;
-      }
-
-      const script = root.document.createElement("script");
-      const joiner = src.includes("?") ? "&" : "?";
-      script.src = `${src}${joiner}v=${encodeURIComponent(cacheKey || VERSION)}`;
-      script.defer = true;
-      script.dataset.hearthLoaderMarker = marker;
-      script.dataset.hearthCanvasContract = CONTRACT;
-      script.dataset.hearthCanvasReceipt = RECEIPT;
-      script.dataset.generatedImage = "false";
-      script.dataset.graphicBox = "false";
-      script.dataset.webgl = "false";
-      script.dataset.visualPassClaimed = "false";
-
-      script.onload = () => resolve({ loaded: Boolean(validate && validate()), src });
-      script.onerror = () => resolve({ loaded: false, error: "load-error", src });
-
-      root.document.head.appendChild(script);
-    });
-  }
-
   function ensureRuntimeTable(options = {}) {
     return loadScriptOnce(
       LAB_RUNTIME_TABLE_PATH,
@@ -1640,7 +2085,7 @@
 
         return Boolean(
           api &&
-            api.contract === LAB_RUNTIME_TABLE_CONTRACT_V2 &&
+            runtimeTableContractAccepted(api) &&
             typeof api.createHearthChannelTable === "function"
         );
       },
@@ -1654,22 +2099,7 @@
   }
 
   function ensureChannelScripts(options = {}) {
-    const cacheKey = options.channelCacheKey || "hearth-channel-multiplex-v4-3";
-
-    return Promise.all(CHANNEL_FILES.map((item) => loadScriptOnce(
-      item.path,
-      `hearth-${item.key}-channel`,
-      () => Boolean(root[item.globalName] && root[item.globalName].contract === item.contract),
-      cacheKey
-    ).then((result) => ({
-      ...result,
-      key: item.key,
-      label: item.label,
-      path: item.path,
-      expectedContract: item.contract,
-      loaded: Boolean(root[item.globalName] && root[item.globalName].contract === item.contract),
-      actualContract: root[item.globalName] && root[item.globalName].contract
-    }))));
+    return Promise.all(CHANNEL_FILES.map((item) => loadChannelScriptWithProof(item, options)));
   }
 
   function createHearthRuntimeTable() {
@@ -2209,6 +2639,7 @@
     frame.dataset.hearthRuntimeTablePrewired = "true";
     frame.dataset.hearthTripleGCoherencePrewired = "true";
     frame.dataset.hearthReceiptExportReady = "true";
+    frame.dataset.hearthChannelLoadProofReady = "true";
     frame.style.position = "relative";
     frame.style.display = "grid";
     frame.style.placeItems = "center";
@@ -2264,6 +2695,27 @@
       diagnosticExportError: "",
       diagnosticExportLength: 0,
       latestDiagnosticExport: "",
+
+      channelLoadProofReady: false,
+      channelLoadResults: [],
+      landLoadResult: null,
+      waterLoadResult: null,
+      airLoadResult: null,
+      waterScriptRequested: false,
+      waterScriptLoaded: false,
+      waterScriptPath: "/assets/hearth/hearth.water.channel.js",
+      waterScriptCacheKey: CHANNEL_CACHE_KEYS.water,
+      waterScriptError: "",
+      waterGlobalPresent: false,
+      waterActualContract: "",
+      waterExpectedContract: WATER_CONTRACT,
+      waterSampleProbeOk: false,
+      waterSampleProbeContract: "",
+      waterSampleProbeCoordinatesOk: false,
+      waterSampleProbeFlagsOk: false,
+      waterSampleProbeError: "",
+      waterSampleProbeValue: null,
+
       landChannelLoaded: Boolean(getLandChannel()),
       waterChannelLoaded: Boolean(getWaterChannel()),
       airChannelLoaded: Boolean(getAirChannel()),
@@ -2396,6 +2848,7 @@
         runtimeTableAcceptedContracts: LAB_RUNTIME_TABLE_ACCEPTED_CONTRACTS.slice(),
         tripleGCoherencePrewired: true,
         receiptExportReady: true,
+        channelLoadProofReady: true,
         receiptMode: state.receiptMode,
         semiconductorOutlet: true,
         canvasDecidesNothing: true,
@@ -2471,6 +2924,8 @@
         ensureChannelScripts(options).then((channelResults) => {
           if (state.destroyed) return;
 
+          updateChannelLoadProof(api, channelResults);
+
           state.landChannelLoaded = Boolean(getLandChannel());
           state.waterChannelLoaded = Boolean(getWaterChannel());
           state.airChannelLoaded = Boolean(getAirChannel());
@@ -2539,7 +2994,19 @@
               runtimeAllowed,
               handoff,
               ledger,
-              channelLoadResults: channelResults,
+              channelLoadResults: state.channelLoadResults,
+              waterLoadProof: {
+                waterScriptRequested: state.waterScriptRequested,
+                waterScriptLoaded: state.waterScriptLoaded,
+                waterGlobalPresent: state.waterGlobalPresent,
+                waterActualContract: state.waterActualContract,
+                waterExpectedContract: state.waterExpectedContract,
+                waterSampleProbeOk: state.waterSampleProbeOk,
+                waterSampleProbeCoordinatesOk: state.waterSampleProbeCoordinatesOk,
+                waterSampleProbeFlagsOk: state.waterSampleProbeFlagsOk,
+                waterSampleProbeError: state.waterSampleProbeError,
+                waterFailureCoordinate: getWaterFailureCoordinate(state)
+              },
               receiptMode: state.receiptMode,
               semiconductorOutlet: true,
               canvasDecidesNothing: true,
@@ -2656,6 +3123,7 @@
                     coherenceScore: coherenceReport && coherenceReport.coherenceScore,
                     failedCheckpoints: coherenceReport && coherenceReport.failedCheckpoints,
                     renewalTargets: coherenceReport && coherenceReport.renewalTargets,
+                    waterFailureCoordinate: getWaterFailureCoordinate(state),
                     diagnosticExportAvailable: state.diagnosticExportAvailable,
                     diagnosticExportLength: state.diagnosticExportLength,
                     receiptMode: state.receiptMode,
@@ -2677,6 +3145,7 @@
                     coherentExpressionPass: state.coherentExpressionPass,
                     coherenceStatus: state.coherenceStatus,
                     coherenceScore: state.coherenceScore,
+                    waterFailureCoordinate: getWaterFailureCoordinate(state),
                     receiptMode: state.receiptMode,
                     diagnosticExportAvailable: state.diagnosticExportAvailable,
                     frames: state.frames,
@@ -2752,10 +3221,10 @@
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
-      authority: "hearth-triple-g-receipt-visibility-copy-export-canvas",
+      authority: "hearth-water-channel-cache-key-and-load-proof-canvas",
       status: "active",
       primaryTarget: "/assets/hearth/hearth.canvas.js",
-      role: "Hearth Runtime Table and Triple G diagnostic consumer with receipt visibility and copy export",
+      role: "Hearth canvas loader proof, Runtime Table consumer, Triple G diagnostic consumer, receipt export surface",
       runtimeTableConsumed: true,
       runtimeTableContract: LAB_RUNTIME_TABLE_CONTRACT,
       preferredLabRuntimeTableContract: LAB_RUNTIME_TABLE_CONTRACT_V2,
@@ -2766,6 +3235,21 @@
       hearthRuntimeTableInstance: true,
       tripleGDiagnosticConsumed: true,
       coherenceDiagnosticAvailable: runtimeTableV2Available(),
+      perChannelCacheKeys: {
+        land: CHANNEL_CACHE_KEYS.land,
+        water: CHANNEL_CACHE_KEYS.water,
+        air: CHANNEL_CACHE_KEYS.air
+      },
+      waterLoadProofCoordinates: [
+        "Coordinate 0 — File request",
+        "Coordinate 1 — Script load",
+        "Coordinate 2 — Global export",
+        "Coordinate 3 — Direct sample probe",
+        "Coordinate 4 — Runtime Table validation",
+        "Coordinate 5 — Canvas multiplex readiness",
+        "Coordinate 6 — Triple G receipt",
+        "Coordinate 7 — Diagnostic export"
+      ],
       receiptModes: Object.values(RECEIPT_MODES),
       receiptVisibilityToggle: true,
       receiptExpansionToggle: true,
@@ -2806,12 +3290,12 @@
       ],
       law: [
         "Runtime Table and Triple G standards belong to Dexter Lab",
+        "water truth belongs to the water child",
+        "canvas proves whether water is reachable",
         "canvas consumes Runtime Table",
         "canvas consumes Triple G diagnostic",
         "canvas displays and exports receipt",
         "canvas decides no channel truth",
-        "land and water are body-bound",
-        "air is the only floating channel",
         "image rendered is not coherent expression pass",
         "construction ready is not coherent expression pass",
         "receipt visibility is a UI concern only"
@@ -2824,6 +3308,12 @@
         "receipt-expanded-view",
         "diagnostic-export-generation",
         "diagnostic-copy-action",
+        "per-channel-cache-key-loading",
+        "water-script-load-proof",
+        "water-global-export-proof",
+        "water-direct-sample-proof",
+        "water-coordinate-proof",
+        "water-authority-flag-proof",
         "fallback-shell-drawing",
         "pointer-touch-drag-binding",
         "rotation-state",
@@ -2842,15 +3332,15 @@
       doesNotOwn: [
         "Runtime Table canonical standard",
         "Triple G diagnostic canonical standard",
+        "water-truth",
+        "land-truth",
+        "air-truth",
         "tectonic-cause",
         "elevation-generation",
         "composition-classification",
         "hydrology-classification",
         "material-palette-authority",
         "ocean-authority-generation",
-        "land-channel-truth",
-        "water-channel-truth",
-        "air-channel-truth",
         "route-orchestration",
         "runtime-motion-authority",
         "external-controls-authority",
@@ -2862,6 +3352,9 @@
         "return-api-before-runtime-table-load",
         "accept-lab-runtime-table-v2",
         "accept-lab-runtime-table-v1-as-fallback",
+        "use-explicit-water-cache-key",
+        "run-water-direct-probe-before-runtime-table",
+        "include-water-loader-proof-in-export",
         "run-triple-g-diagnostic-after-image-render-when-v2-available",
         "if-coherence-fails-keep-receipt-available",
         "receipt-may-hide-with-user-toggle",
@@ -2932,6 +3425,12 @@
     getCoherenceReceipt,
     getReceipt,
 
+    getPerChannelCacheKey,
+    loadChannelScriptWithProof,
+    probeWaterChannel,
+    updateChannelLoadProof,
+    formatChannelLoadProof,
+
     setReceiptMode,
     toggleReceiptVisibility,
     toggleReceiptExpansion,
@@ -2954,6 +3453,10 @@
     supportsReceiptExpansionToggle: true,
     supportsDiagnosticCopyExport: true,
     supportsPlainTextDiagnosticExport: true,
+    supportsPerChannelCacheKeys: true,
+    supportsWaterChannelLoadProof: true,
+    supportsWaterDirectProbe: true,
+    supportsWaterFailureCoordinate: true,
     supportsAsyncAtlasBuild: true,
     supportsChunkedAtlasBuild: true,
     supportsImmediateFallbackShell: true,
@@ -2963,6 +3466,7 @@
     supportsSemiconductorOutlet: true,
 
     receiptModes: RECEIPT_MODES,
+    channelCacheKeys: CHANNEL_CACHE_KEYS,
 
     runtimeTableConsumed: true,
     runtimeTableContract: LAB_RUNTIME_TABLE_CONTRACT,
@@ -3024,6 +3528,7 @@
   root.HEARTH_CANVAS_RUNTIME_TABLE_CONTRACT = LAB_RUNTIME_TABLE_CONTRACT;
   root.HEARTH_CANVAS_RUNTIME_TABLE_ACCEPTED_CONTRACTS = LAB_RUNTIME_TABLE_ACCEPTED_CONTRACTS.slice();
   root.HEARTH_CANVAS_RECEIPT_MODES = RECEIPT_MODES;
+  root.HEARTH_CANVAS_CHANNEL_CACHE_KEYS = CHANNEL_CACHE_KEYS;
 
   if (root.document && root.document.documentElement) {
     root.document.documentElement.dataset.hearthCanvasAuthorityLoaded = "true";
@@ -3058,6 +3563,20 @@
     root.document.documentElement.dataset.hearthDiagnosticExportCopied = "false";
     root.document.documentElement.dataset.hearthDiagnosticExportLength = "0";
     root.document.documentElement.dataset.hearthDiagnosticExportError = "";
+    root.document.documentElement.dataset.hearthChannelLoadProofReady = "false";
+    root.document.documentElement.dataset.hearthWaterScriptRequested = "false";
+    root.document.documentElement.dataset.hearthWaterScriptLoaded = "false";
+    root.document.documentElement.dataset.hearthWaterScriptPath = "/assets/hearth/hearth.water.channel.js";
+    root.document.documentElement.dataset.hearthWaterScriptCacheKey = CHANNEL_CACHE_KEYS.water;
+    root.document.documentElement.dataset.hearthWaterScriptError = "";
+    root.document.documentElement.dataset.hearthWaterGlobalPresent = "false";
+    root.document.documentElement.dataset.hearthWaterActualContract = "";
+    root.document.documentElement.dataset.hearthWaterExpectedContract = WATER_CONTRACT;
+    root.document.documentElement.dataset.hearthWaterSampleProbeOk = "false";
+    root.document.documentElement.dataset.hearthWaterSampleProbeContract = "";
+    root.document.documentElement.dataset.hearthWaterSampleProbeCoordinatesOk = "false";
+    root.document.documentElement.dataset.hearthWaterSampleProbeFlagsOk = "false";
+    root.document.documentElement.dataset.hearthWaterSampleProbeError = "";
     root.document.documentElement.dataset.hearthCanvasLandChannelContract = LAND_CONTRACT;
     root.document.documentElement.dataset.hearthCanvasWaterChannelContract = WATER_CONTRACT;
     root.document.documentElement.dataset.hearthCanvasAirChannelContract = AIR_CONTRACT;

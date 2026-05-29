@@ -1,37 +1,36 @@
 // /showroom/globe/hearth/hearth.js
-// HEARTH_DISTRIBUTED_LOAD_LEDGER_CONDUCTOR_HYDRATION_LATCH_TNT_v1
+// HEARTH_LOAD_LEDGER_MONOTONIC_CONDUCTOR_DOCK_LATCH_TNT_v1
 // Full-file replacement.
 // Active Hearth route conductor only.
 // Purpose:
-// - Hydrate the HTML first-paint Hearth loading cockpit.
-// - Consume / initialize window.HEARTH_LOAD_LEDGER.
-// - Coordinate Fibonacci load stages F8, F13, and F21.
-// - Call /assets/hearth/hearth.canvas.js without owning drawing.
-// - Preserve copyable diagnostics during loading.
-// - Latch completion so visible loading does not loop at 100%.
+// - Hydrate the existing HTML first-paint cockpit.
+// - Enforce monotonic Fibonacci stage progression.
+// - Prevent late HTML/script events from visually regressing F21 back to F2/F3.
+// - Require first-frame/render proof before completion latch.
+// - Convert the blocking cockpit into a compact diagnostic dock after planet visibility.
+// - Preserve copyable diagnostics, canvas inspection, and receipt independence.
 // Does not own:
 // - HTML first paint
-// - planet drawing
+// - planet pixel drawing
 // - tectonic cause
 // - elevation generation
 // - composition classification
 // - hydrology truth
 // - material palette
-// - canvas pixel rendering
-// - runtime motion
+// - Runtime Table source code
 // - final visual pass claim
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_DISTRIBUTED_LOAD_LEDGER_CONDUCTOR_HYDRATION_LATCH_TNT_v1";
-  const RECEIPT = "HEARTH_DISTRIBUTED_LOAD_LEDGER_CONDUCTOR_HYDRATION_LATCH_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_MULTI_BAR_LIVE_LOADING_DIAGNOSTIC_TNT_v2";
-  const BASELINE_CONTRACT = "HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_CONDUCTOR_PAIR_PRECODE_FINAL_DRAFT_v1";
-  const VERSION = "2026-05-29.hearth-distributed-load-ledger-conductor-hydration-latch-v1";
+  const CONTRACT = "HEARTH_LOAD_LEDGER_MONOTONIC_CONDUCTOR_DOCK_LATCH_TNT_v1";
+  const RECEIPT = "HEARTH_LOAD_LEDGER_MONOTONIC_CONDUCTOR_DOCK_LATCH_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "HEARTH_DISTRIBUTED_LOAD_LEDGER_CONDUCTOR_HYDRATION_LATCH_TNT_v1";
+  const BASELINE_CONTRACT = "HEARTH_LOAD_LEDGER_MONOTONIC_STAGE_AND_DIAGNOSTIC_DOCK_PAIR_PRECODE_FINAL_DRAFT_v1";
+  const VERSION = "2026-05-29.hearth-load-ledger-monotonic-conductor-dock-latch-v1";
 
   const ROUTE = "/showroom/globe/hearth/";
-  const DESTINATION_FILE = "/showroom/globe/hearth/hearth.js";
+  const ACTIVE_ROUTE_FILE = "/showroom/globe/hearth/hearth.js";
   const CANVAS_AUTHORITY_FILE = "/assets/hearth/hearth.canvas.js";
   const RUNTIME_TABLE_FILE = "/assets/lab/runtime-table.js";
   const RETIRED_CLIMATE_ROUTE = "/showroom/globe/hearth/hearth.climate.route.js";
@@ -40,14 +39,32 @@
   const doc = root.document || null;
 
   const FIB = Object.freeze({
-    F1A: { id: "F1A", value: 1, label: "HTML shell", progress: 6 },
-    F1B: { id: "F1B", value: 1, label: "Load ledger", progress: 12 },
-    F2: { id: "F2", value: 2, label: "First-paint cockpit", progress: 22 },
-    F3: { id: "F3", value: 3, label: "Script order", progress: 36 },
-    F5: { id: "F5", value: 5, label: "Authority availability", progress: 55 },
-    F8: { id: "F8", value: 8, label: "Conductor hydration", progress: 72 },
-    F13: { id: "F13", value: 13, label: "Canvas and diagnostic", progress: 92 },
-    F21: { id: "F21", value: 21, label: "Completion latch", progress: 100 }
+    F1A: { id: "F1A", rank: 1, value: 1, label: "HTML shell", progress: 6 },
+    F1B: { id: "F1B", rank: 2, value: 1, label: "Load ledger", progress: 12 },
+    F2: { id: "F2", rank: 3, value: 2, label: "First-paint cockpit", progress: 22 },
+    F3: { id: "F3", rank: 4, value: 3, label: "Script order", progress: 36 },
+    F5: { id: "F5", rank: 5, value: 5, label: "Authority availability", progress: 55 },
+    F8: { id: "F8", rank: 6, value: 8, label: "Conductor hydration", progress: 72 },
+    F13: { id: "F13", rank: 7, value: 13, label: "Canvas and diagnostic", progress: 92 },
+    F21: { id: "F21", rank: 8, value: 21, label: "Completion latch", progress: 100 }
+  });
+
+  const STATUS_RANK = Object.freeze({
+    REQUESTED: 1,
+    LOADING: 2,
+    LOADED: 3,
+    READY: 4,
+    DEGRADED: 4,
+    HELD: 4,
+    HYDRATED: 5,
+    MOUNTED: 6,
+    BOUND: 7,
+    RENDERED: 8,
+    COPY_ARMED: 8,
+    FINAL_READY: 9,
+    LATCHED: 10,
+    FAILED: 10,
+    ARCHIVED: 0
   });
 
   const STATUS = Object.freeze({
@@ -64,7 +81,8 @@
     BOUND: "BOUND",
     COPY_ARMED: "COPY_ARMED",
     FINAL_READY: "FINAL_READY",
-    LATCHED: "LATCHED"
+    LATCHED: "LATCHED",
+    ARCHIVED: "ARCHIVED"
   });
 
   const LANES = Object.freeze([
@@ -86,26 +104,35 @@
     version: VERSION,
     route: ROUTE,
 
-    activeRouteConductor: DESTINATION_FILE,
+    activeRouteConductor: ACTIVE_ROUTE_FILE,
     retiredClimateRoute: RETIRED_CLIMATE_ROUTE,
     retiredClimateRouteActiveCarrier: false,
 
-    loadLedgerPresent: false,
     hydratedExistingCockpit: false,
     duplicateCockpitCreated: false,
     fallbackCockpitCreated: false,
+    loadLedgerPresent: false,
+    monotonicStageGuardActive: false,
+    stageRegressionPrevented: 0,
+    archivedLateEvents: [],
 
     fibonacciStage: "F8",
     currentFibonacciStage: "F8",
-    stageLabel: FIB.F8.label,
+    highestStageReached: "F8",
+    highestStageRank: FIB.F8.rank,
 
     completionLatched: false,
     visibleLoadingActive: true,
     diagnosticCockpitReady: false,
     latestVisibleEvent: "CONDUCTOR_STARTING",
 
-    mainProgressCap: 0,
-    mainDisplayProgress: 0,
+    cockpitMode: "loading-cockpit",
+    dockVisible: false,
+    fullCockpitExpanded: true,
+    planetObstructionReduced: false,
+
+    mainProgressCap: FIB.F8.progress,
+    mainDisplayProgress: FIB.F8.progress,
 
     runtimeTablePresent: false,
     runtimeTableMode: "RUNTIME_TABLE_PENDING",
@@ -118,9 +145,6 @@
     sourceAuthorityHeld: true,
 
     canvasApiPresent: false,
-    canvasScriptRequested: false,
-    canvasScriptLoaded: false,
-    canvasScriptError: "",
     canvasCarrierRequested: false,
     canvasCarrierMounted: false,
     canvasCarrierHandoffOk: false,
@@ -129,6 +153,9 @@
     firstFrameDetected: false,
     dragInspectionBound: false,
     imageRendered: false,
+    canvasBootStartedAt: 0,
+    canvasBootElapsedMs: 0,
+    longWaitMessage: "",
 
     partialReceiptAvailable: false,
     copyDiagnosticArmed: false,
@@ -138,7 +165,7 @@
 
     postgameStatus: "CONDUCTOR_HYDRATING",
     firstFailedCoordinate: "F8_CONDUCTOR_HYDRATION",
-    recommendedNextRenewalTarget: "html-first-paint-loader-bind-last",
+    recommendedNextRenewalTarget: "execute-index-html-monotonic-dock-binding-last",
 
     generatedImage: false,
     graphicBox: false,
@@ -146,11 +173,9 @@
     visualPassClaimed: false,
 
     startedAt: "",
+    startedAtMs: 0,
     updatedAt: "",
-    heartbeatStartedAt: 0,
     heartbeatElapsedMs: 0,
-    quietHeartbeat: false,
-
     events: [],
     errors: []
   };
@@ -162,6 +187,7 @@
     stage: null,
     heartbeat: null,
     latest: null,
+    title: null,
     mainFill: null,
     mainPercent: null,
     laneList: null,
@@ -169,15 +195,15 @@
     receiptPre: null,
     copyButton: null,
     receiptToggle: null,
-    collapseButton: null,
-    expandButton: null
+    collapseButton: null
   };
 
-  let raf = 0;
   let heartbeatTimer = 0;
+  let enforcementTimer = 0;
   let reconcileTimer = 0;
+  let raf = 0;
   let canvasCallAttempted = false;
-  let lastRenderedLaneText = "";
+  let lastLaneMarkup = "";
 
   function nowIso() {
     try {
@@ -218,9 +244,15 @@
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
-      if (Array.isArray(value)) return value.slice();
-      return { ...value };
+      return Array.isArray(value) ? value.slice() : { ...value };
     }
+  }
+
+  function formatElapsed(ms) {
+    const total = Math.max(0, Math.floor(Number(ms || 0) / 1000));
+    const minutes = Math.floor(total / 60);
+    const seconds = total % 60;
+    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
   }
 
   function escapeHtml(value) {
@@ -232,27 +264,56 @@
       .replaceAll("'", "&#039;");
   }
 
-  function formatElapsed(ms) {
-    const total = Math.max(0, Math.floor(Number(ms || 0) / 1000));
-    const minutes = Math.floor(total / 60);
-    const seconds = total % 60;
-    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  function stageRank(stage) {
+    return FIB[stage] ? FIB[stage].rank : 0;
   }
 
-  function existingLedgerState(ledger) {
-    if (!ledger || !isObject(ledger)) return null;
-    if (isObject(ledger.state)) return ledger.state;
-    return ledger;
+  function statusRank(status) {
+    return STATUS_RANK[status] || 0;
   }
 
-  function makeLane(key, label, fib, status = STATUS.REQUESTED, message = "") {
+  function stageProgress(stage) {
+    return FIB[stage] ? FIB[stage].progress : 0;
+  }
+
+  function stageLabel(stage) {
+    return FIB[stage] ? FIB[stage].label : stage;
+  }
+
+  function archiveLateEvent(event, reason = "archive-only") {
+    const archived = {
+      ...clonePlain(event),
+      archived: true,
+      archiveReason: reason,
+      archivedAt: nowIso()
+    };
+
+    state.archivedLateEvents.push(archived);
+    state.stageRegressionPrevented += 1;
+
+    if (state.archivedLateEvents.length > 80) {
+      state.archivedLateEvents.splice(0, state.archivedLateEvents.length - 80);
+    }
+
+    const led = ledgerState();
+    if (Array.isArray(led.archivedLateEvents)) {
+      led.archivedLateEvents.push(archived);
+      if (led.archivedLateEvents.length > 120) {
+        led.archivedLateEvents.splice(0, led.archivedLateEvents.length - 120);
+      }
+    }
+
+    return archived;
+  }
+
+  function makeLane(definition, status = STATUS.REQUESTED, message = "") {
     return {
-      key,
-      label,
-      fibonacci: fib,
+      key: definition.key,
+      label: definition.label,
+      fibonacci: definition.fib,
       status,
-      message: message || label,
-      progress: FIB[fib] ? FIB[fib].progress : 0,
+      message: message || definition.label,
+      progress: stageProgress(definition.fib),
       elapsedMs: 0,
       startedAt: nowIso(),
       updatedAt: nowIso(),
@@ -261,45 +322,61 @@
     };
   }
 
-  function ensureLedger() {
-    const existing = root.HEARTH_LOAD_LEDGER && isObject(root.HEARTH_LOAD_LEDGER)
-      ? root.HEARTH_LOAD_LEDGER
-      : null;
-
-    const baseState = existingLedgerState(existing) || {};
-
-    const ledger = existing || {};
+  function normalizeLedger(existing) {
+    const ledger = existing && isObject(existing) ? existing : {};
     const ledgerState = isObject(ledger.state) ? ledger.state : ledger;
 
-    ledgerState.contract = ledgerState.contract || "HEARTH_DISTRIBUTED_LOAD_LEDGER_SHARED_v1";
+    ledger.state = ledgerState;
+
+    ledgerState.contract = ledgerState.contract || "HEARTH_LOAD_LEDGER_MONOTONIC_SHARED_v1";
     ledgerState.route = ledgerState.route || ROUTE;
     ledgerState.startedAt = ledgerState.startedAt || nowIso();
     ledgerState.updatedAt = nowIso();
     ledgerState.currentFibonacciStage = ledgerState.currentFibonacciStage || "F1B";
+    ledgerState.highestStageReached = ledgerState.highestStageReached || ledgerState.currentFibonacciStage || "F1B";
+    ledgerState.highestStageRank = Math.max(
+      Number(ledgerState.highestStageRank || 0),
+      stageRank(ledgerState.highestStageReached),
+      stageRank(ledgerState.currentFibonacciStage)
+    );
     ledgerState.completionLatched = bool(ledgerState.completionLatched, false);
     ledgerState.visibleLoadingActive = ledgerState.visibleLoadingActive !== false;
     ledgerState.diagnosticCockpitReady = bool(ledgerState.diagnosticCockpitReady, false);
+    ledgerState.cockpitMode = ledgerState.cockpitMode || "loading-cockpit";
+    ledgerState.dockVisible = bool(ledgerState.dockVisible, false);
+    ledgerState.fullCockpitExpanded = ledgerState.fullCockpitExpanded !== false;
+    ledgerState.planetObstructionReduced = bool(ledgerState.planetObstructionReduced, false);
     ledgerState.partialReceiptAvailable = ledgerState.partialReceiptAvailable !== false;
     ledgerState.finalReceiptAvailable = bool(ledgerState.finalReceiptAvailable, false);
     ledgerState.copyDiagnosticArmed = bool(ledgerState.copyDiagnosticArmed, false);
     ledgerState.visualPassClaimed = false;
+    ledgerState.monotonicStageGuardActive = true;
     ledgerState.events = Array.isArray(ledgerState.events) ? ledgerState.events : [];
+    ledgerState.archivedLateEvents = Array.isArray(ledgerState.archivedLateEvents) ? ledgerState.archivedLateEvents : [];
     ledgerState.errors = Array.isArray(ledgerState.errors) ? ledgerState.errors : [];
     ledgerState.scripts = isObject(ledgerState.scripts) ? ledgerState.scripts : {};
     ledgerState.lanes = isObject(ledgerState.lanes) ? ledgerState.lanes : {};
 
     LANES.forEach((lane) => {
       if (!isObject(ledgerState.lanes[lane.key])) {
-        ledgerState.lanes[lane.key] = makeLane(lane.key, lane.label, lane.fib);
+        ledgerState.lanes[lane.key] = makeLane(lane);
       }
     });
 
-    ledger.state = ledgerState;
+    return ledger;
+  }
 
-    ledger.push = ledger.push || function push(event = {}) {
+  function ensureLedger() {
+    const existing = root.HEARTH_LOAD_LEDGER;
+    const ledger = normalizeLedger(existing);
+
+    const originalPush = isFunction(ledger.push) ? ledger.push.bind(ledger) : null;
+    const originalGetReceiptText = isFunction(ledger.getReceiptText) ? ledger.getReceiptText.bind(ledger) : null;
+
+    ledger.push = function push(event = {}) {
       const evt = {
         id: event.id || event.event || "LEDGER_EVENT",
-        stage: event.stage || ledgerState.currentFibonacciStage || "",
+        stage: event.stage || ledger.state.currentFibonacciStage || "",
         fibonacci: event.fibonacci || (FIB[event.stage] ? FIB[event.stage].value : ""),
         owner: event.owner || "unknown",
         file: event.file || "",
@@ -307,29 +384,124 @@
         status: event.status || "",
         message: event.message || "",
         timestamp: nowIso(),
-        elapsedMs: root.performance && isFunction(root.performance.now)
-          ? Math.round(root.performance.now())
-          : 0,
+        elapsedMs: nowMs() - state.startedAtMs,
         detail: clonePlain(event.detail || {})
       };
 
-      ledgerState.events.push(evt);
-      ledgerState.updatedAt = evt.timestamp;
+      const eventRank = stageRank(evt.stage);
+      const currentRank = Number(ledger.state.highestStageRank || stageRank(ledger.state.currentFibonacciStage));
 
-      if (ledgerState.events.length > 160) {
-        ledgerState.events.splice(0, ledgerState.events.length - 160);
+      if (
+        ledger.state.completionLatched &&
+        eventRank > 0 &&
+        eventRank < stageRank("F21") &&
+        evt.lane !== "receipt" &&
+        evt.lane !== "copy"
+      ) {
+        archiveLateEvent(evt, "post-latch-lower-stage-event");
+      }
+
+      ledger.state.events.push(evt);
+      ledger.state.updatedAt = evt.timestamp;
+
+      if (eventRank > currentRank && !ledger.state.completionLatched) {
+        ledger.setStage(evt.stage, evt.message || evt.id, { fromPush: true });
+      }
+
+      if (ledger.state.events.length > 220) {
+        ledger.state.events.splice(0, ledger.state.events.length - 220);
       }
 
       return evt;
     };
 
-    ledger.setLane = ledger.setLane || function setLane(laneKey, next = {}) {
-      const laneDef = LANES.find((item) => item.key === laneKey) || { key: laneKey, label: laneKey, fib: "F1B" };
-      const lane = ledgerState.lanes[laneKey] || makeLane(laneDef.key, laneDef.label, laneDef.fib);
+    ledger.archiveLateEvent = function ledgerArchiveLateEvent(event = {}) {
+      return archiveLateEvent(event, event.archiveReason || "ledger-archive");
+    };
 
-      lane.status = next.status || lane.status;
+    ledger.setStage = function setStage(nextStage, message = "", options = {}) {
+      const nextRank = stageRank(nextStage);
+      const currentRank = Number(ledger.state.highestStageRank || stageRank(ledger.state.currentFibonacciStage));
+      const event = {
+        id: `STAGE_${nextStage}`,
+        stage: nextStage,
+        owner: options.owner || "ledger",
+        file: options.file || "",
+        lane: "stage",
+        status: STATUS.READY,
+        message: message || stageLabel(nextStage),
+        detail: options.detail || {}
+      };
+
+      if (!nextRank) {
+        return ledger.push(event);
+      }
+
+      if (ledger.state.completionLatched && nextStage !== "F21") {
+        return archiveLateEvent(event, "setStage-blocked-after-latch");
+      }
+
+      if (nextRank < currentRank) {
+        return archiveLateEvent(event, "monotonic-stage-regression-blocked");
+      }
+
+      ledger.state.currentFibonacciStage = nextStage;
+      ledger.state.highestStageReached = nextStage;
+      ledger.state.highestStageRank = nextRank;
+      ledger.state.updatedAt = nowIso();
+
+      state.currentFibonacciStage = nextStage;
+      state.fibonacciStage = nextStage;
+      state.highestStageReached = nextStage;
+      state.highestStageRank = nextRank;
+      state.mainProgressCap = Math.max(state.mainProgressCap, stageProgress(nextStage));
+
+      if (!options.fromPush) {
+        return ledger.push(event);
+      }
+
+      return event;
+    };
+
+    ledger.promoteStage = ledger.setStage;
+
+    ledger.setLane = function setLane(laneKey, next = {}) {
+      const laneDef = LANES.find((item) => item.key === laneKey) || { key: laneKey, label: laneKey, fib: "F1B" };
+      const lane = ledger.state.lanes[laneKey] || makeLane(laneDef);
+      const nextStage = next.stage || lane.fibonacci || laneDef.fib;
+      const nextStatus = next.status || lane.status;
+      const nextEvent = {
+        id: next.event || next.latestEvent || `LANE_${String(laneKey).toUpperCase()}_${nextStatus}`,
+        stage: nextStage,
+        owner: next.owner || "ledger",
+        file: next.file || "",
+        lane: laneKey,
+        status: nextStatus,
+        message: next.message || lane.message || laneDef.label,
+        detail: next.detail || {}
+      };
+
+      if (
+        ledger.state.completionLatched &&
+        laneKey !== "completionLatch" &&
+        laneKey !== "canvasAndDiagnostic" &&
+        laneKey !== "conductorHydration"
+      ) {
+        return archiveLateEvent(nextEvent, "post-latch-lane-update-archived");
+      }
+
+      if (
+        statusRank(lane.status) > statusRank(nextStatus) &&
+        lane.status !== STATUS.FAILED &&
+        nextStatus !== STATUS.FAILED
+      ) {
+        return archiveLateEvent(nextEvent, "lane-status-regression-blocked");
+      }
+
+      lane.status = nextStatus;
       lane.message = next.message || lane.message;
       lane.progress = Number.isFinite(Number(next.progress)) ? clamp(Number(next.progress), 0, 100) : lane.progress;
+      lane.progress = Math.max(Number(lane.progress || 0), Number(next.progress || 0));
       lane.latestEvent = next.event || next.latestEvent || lane.latestEvent;
       lane.updatedAt = nowIso();
 
@@ -337,43 +509,40 @@
         lane.elapsedMs = Math.max(0, new Date(lane.updatedAt).getTime() - new Date(lane.startedAt).getTime());
       }
 
-      ledgerState.lanes[laneKey] = lane;
-
-      ledger.push({
-        id: next.event || `LANE_${String(laneKey).toUpperCase()}_${lane.status}`,
-        stage: next.stage || lane.fibonacci,
-        owner: next.owner || "ledger",
-        file: next.file || "",
-        lane: laneKey,
-        status: lane.status,
-        message: lane.message,
-        detail: next.detail || {}
-      });
-
+      ledger.state.lanes[laneKey] = lane;
+      ledger.push(nextEvent);
       return lane;
     };
 
-    ledger.setStage = ledger.setStage || function setStage(stage, message = "") {
-      ledgerState.currentFibonacciStage = stage;
-      ledgerState.updatedAt = nowIso();
-
+    ledger.setCockpitMode = function setCockpitMode(mode) {
+      ledger.state.cockpitMode = mode;
+      ledger.state.dockVisible = mode === "diagnostic-dock";
+      ledger.state.fullCockpitExpanded = mode !== "diagnostic-dock";
+      ledger.state.planetObstructionReduced = mode === "diagnostic-dock";
       return ledger.push({
-        id: `STAGE_${stage}`,
-        stage,
-        owner: "ledger",
-        lane: "stage",
+        id: "COCKPIT_MODE_SET",
+        stage: ledger.state.currentFibonacciStage,
+        owner: "hearth.js",
+        file: ACTIVE_ROUTE_FILE,
+        lane: "completionLatch",
         status: STATUS.READY,
-        message: message || (FIB[stage] ? FIB[stage].label : stage)
+        message: mode
       });
     };
 
-    ledger.latchCompletion = ledger.latchCompletion || function latchCompletion(reason = "completion-latched") {
-      ledgerState.completionLatched = true;
-      ledgerState.visibleLoadingActive = false;
-      ledgerState.diagnosticCockpitReady = true;
-      ledgerState.finalReceiptAvailable = true;
-      ledgerState.currentFibonacciStage = "F21";
-      ledgerState.updatedAt = nowIso();
+    ledger.latchCompletion = function latchCompletion(reason = "completion-latched") {
+      ledger.state.completionLatched = true;
+      ledger.state.visibleLoadingActive = false;
+      ledger.state.diagnosticCockpitReady = true;
+      ledger.state.finalReceiptAvailable = true;
+      ledger.state.currentFibonacciStage = "F21";
+      ledger.state.highestStageReached = "F21";
+      ledger.state.highestStageRank = stageRank("F21");
+      ledger.state.cockpitMode = "diagnostic-dock";
+      ledger.state.dockVisible = true;
+      ledger.state.fullCockpitExpanded = false;
+      ledger.state.planetObstructionReduced = true;
+      ledger.state.updatedAt = nowIso();
 
       ledger.setLane("completionLatch", {
         status: STATUS.LATCHED,
@@ -381,75 +550,52 @@
         event: "COMPLETION_LATCHED",
         stage: "F21",
         owner: "hearth.js",
-        file: DESTINATION_FILE,
+        file: ACTIVE_ROUTE_FILE,
         message: reason
       });
 
       return ledger.push({
-        id: "COMPLETION_LATCHED",
+        id: "LOADING_LOOP_SETTLED",
         stage: "F21",
         owner: "hearth.js",
-        file: DESTINATION_FILE,
+        file: ACTIVE_ROUTE_FILE,
         lane: "completionLatch",
         status: STATUS.LATCHED,
-        message: reason
+        message: "Visible loader settled into compact diagnostic dock."
       });
     };
 
-    ledger.getReceipt = ledger.getReceipt || function getLedgerReceipt() {
-      return clonePlain(ledgerState);
+    ledger.getReceipt = function getLedgerReceipt() {
+      return clonePlain(ledger.state);
     };
 
-    ledger.getReceiptText = ledger.getReceiptText || function getLedgerReceiptText() {
-      const receipt = ledger.getReceipt();
-      const lanes = Object.entries(receipt.lanes || {}).map(([key, lane]) => (
-        `- ${key}: status=${lane.status}; progress=${lane.progress}; event=${lane.latestEvent}; message=${lane.message}`
-      )).join("\n") || "- none";
-
-      const scripts = Object.entries(receipt.scripts || {}).map(([key, script]) => (
-        `- ${key}: status=${script.status}; src=${script.src || ""}; error=${script.error || ""}`
-      )).join("\n") || "- none";
-
-      const events = (receipt.events || []).map((event) => (
-        `- ${event.timestamp} :: ${event.id} :: ${event.status} :: ${event.message}`
-      )).join("\n") || "- none";
-
-      return [
-        "HEARTH_LOAD_LEDGER_RECEIPT",
-        `contract=${receipt.contract}`,
-        `route=${receipt.route}`,
-        `currentFibonacciStage=${receipt.currentFibonacciStage}`,
-        `completionLatched=${receipt.completionLatched}`,
-        `visibleLoadingActive=${receipt.visibleLoadingActive}`,
-        `diagnosticCockpitReady=${receipt.diagnosticCockpitReady}`,
-        `partialReceiptAvailable=${receipt.partialReceiptAvailable}`,
-        `finalReceiptAvailable=${receipt.finalReceiptAvailable}`,
-        `copyDiagnosticArmed=${receipt.copyDiagnosticArmed}`,
-        `visualPassClaimed=${receipt.visualPassClaimed}`,
-        "",
-        "LANES",
-        lanes,
-        "",
-        "SCRIPTS",
-        scripts,
-        "",
-        "EVENTS",
-        events
-      ].join("\n");
+    ledger.getReceiptText = function getLedgerReceiptText() {
+      if (originalGetReceiptText && !state.completionLatched) {
+        try {
+          return originalGetReceiptText();
+        } catch (_error) {}
+      }
+      return getReceiptText();
     };
 
-    ledger.copyDiagnostic = ledger.copyDiagnostic || function copyLedgerDiagnostic() {
-      return copyText(ledger.getReceiptText());
+    ledger.copyDiagnostic = function copyLedgerDiagnostic() {
+      return copyText(getReceiptText());
     };
 
     root.HEARTH_LOAD_LEDGER = ledger;
     refs.ledger = ledger;
-    state.loadLedgerPresent = true;
 
-    emitLocal("HEARTH_LOAD_LEDGER_ACQUIRED", {
-      existed: Boolean(existing),
-      currentFibonacciStage: ledgerState.currentFibonacciStage
-    });
+    state.loadLedgerPresent = true;
+    state.monotonicStageGuardActive = true;
+    state.currentFibonacciStage = ledger.state.currentFibonacciStage || state.currentFibonacciStage;
+    state.highestStageReached = ledger.state.highestStageReached || state.highestStageReached;
+    state.highestStageRank = Math.max(stageRank(state.highestStageReached), Number(ledger.state.highestStageRank || 0));
+
+    emitLocal("MONOTONIC_LOAD_LEDGER_ACQUIRED", {
+      existingLedger: Boolean(existing),
+      currentFibonacciStage: ledger.state.currentFibonacciStage,
+      highestStageReached: ledger.state.highestStageReached
+    }, false);
 
     return ledger;
   }
@@ -458,34 +604,19 @@
     return refs.ledger && refs.ledger.state ? refs.ledger.state : {};
   }
 
-  function pushLedger(event = {}) {
+  function pushLedger(event) {
     const ledger = refs.ledger || ensureLedger();
+    return ledger.push(event);
+  }
 
-    if (ledger && isFunction(ledger.push)) {
-      return ledger.push(event);
-    }
-
-    return null;
+  function setLedgerStage(stage, message, options = {}) {
+    const ledger = refs.ledger || ensureLedger();
+    return ledger.setStage(stage, message, options);
   }
 
   function setLedgerLane(lane, next = {}) {
     const ledger = refs.ledger || ensureLedger();
-
-    if (ledger && isFunction(ledger.setLane)) {
-      return ledger.setLane(lane, next);
-    }
-
-    return null;
-  }
-
-  function setLedgerStage(stage, message = "") {
-    const ledger = refs.ledger || ensureLedger();
-
-    if (ledger && isFunction(ledger.setStage)) {
-      return ledger.setStage(stage, message);
-    }
-
-    return null;
+    return ledger.setLane(lane, next);
   }
 
   function emitLocal(event, detail = {}, visible = true) {
@@ -503,8 +634,8 @@
       state.latestVisibleEvent = event;
     }
 
-    if (state.events.length > 120) {
-      state.events.splice(0, state.events.length - 120);
+    if (state.events.length > 140) {
+      state.events.splice(0, state.events.length - 140);
     }
 
     return entry;
@@ -512,18 +643,19 @@
 
   function emit(event, detail = {}, options = {}) {
     const visible = options.visible !== false && !state.completionLatched;
+    const stage = options.stage || state.currentFibonacciStage || state.fibonacciStage;
+    const lane = options.lane || "";
+    const status = options.status || "";
+
     const local = emitLocal(event, detail, visible);
 
     pushLedger({
       id: event,
-      stage: options.stage || state.currentFibonacciStage || state.fibonacciStage,
-      fibonacci: FIB[options.stage || state.currentFibonacciStage || state.fibonacciStage]
-        ? FIB[options.stage || state.currentFibonacciStage || state.fibonacciStage].value
-        : "",
+      stage,
       owner: options.owner || "hearth.js",
-      file: DESTINATION_FILE,
-      lane: options.lane || "",
-      status: options.status || "",
+      file: options.file || ACTIVE_ROUTE_FILE,
+      lane,
+      status,
       message: options.message || event,
       detail
     });
@@ -542,18 +674,107 @@
 
     state.errors.push(item);
 
-    if (state.errors.length > 40) {
-      state.errors.splice(0, state.errors.length - 40);
+    if (state.errors.length > 50) {
+      state.errors.splice(0, state.errors.length - 50);
     }
 
     const led = ledgerState();
     if (Array.isArray(led.errors)) {
       led.errors.push(item);
-      if (led.errors.length > 60) led.errors.splice(0, led.errors.length - 60);
+      if (led.errors.length > 80) {
+        led.errors.splice(0, led.errors.length - 80);
+      }
     }
 
     emit("ERROR", item, { visible: false, lane: "errors", status: STATUS.FAILED });
     return item;
+  }
+
+  function ensureStyle() {
+    if (!doc || doc.getElementById("hearth-monotonic-dock-style")) return;
+
+    const style = doc.createElement("style");
+    style.id = "hearth-monotonic-dock-style";
+    style.textContent = `
+      .hearth-ledger-cockpit{
+        transition:max-height .22s ease, inset .22s ease, opacity .18s ease, transform .18s ease;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="false"]{
+        inset:auto 10px 10px 10px!important;
+        max-height:128px!important;
+        min-height:0!important;
+        overflow:hidden!important;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="false"] .hearth-ledger-head{
+        padding:10px 14px 8px!important;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="false"] .hearth-ledger-kicker{
+        font-size:.58rem!important;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="false"] .hearth-ledger-title{
+        font-size:.96rem!important;
+        white-space:nowrap!important;
+        overflow:hidden!important;
+        text-overflow:ellipsis!important;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="false"] .hearth-ledger-meta{
+        display:none!important;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="false"] .hearth-ledger-latest{
+        font-size:.64rem!important;
+        white-space:nowrap!important;
+        overflow:hidden!important;
+        text-overflow:ellipsis!important;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="false"] .hearth-ledger-progress{
+        display:none!important;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="false"] .hearth-ledger-scroll{
+        display:none!important;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="false"] .hearth-ledger-actions{
+        padding:7px 10px 10px!important;
+        border-bottom:0!important;
+        position:relative!important;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="false"] .hearth-ledger-button{
+        min-height:28px!important;
+        padding:6px 9px!important;
+        font-size:.58rem!important;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="true"]{
+        inset:auto 10px 10px 10px!important;
+        max-height:calc(100% - 20px)!important;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] [data-hearth-main-progress-fill]{
+        width:100%!important;
+      }
+
+      @media (max-width:760px){
+        .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="false"]{
+          inset:auto 8px 8px 8px!important;
+          max-height:132px!important;
+        }
+
+        .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="false"] .hearth-ledger-button{
+          flex:1 1 auto!important;
+          min-width:30%!important;
+        }
+      }
+    `;
+    doc.head.appendChild(style);
   }
 
   function ensureMount() {
@@ -576,12 +797,9 @@
 
     mount.id = mount.id || "hearthCanvasMount";
     mount.dataset.hearthCanvasMount = "true";
-    mount.dataset.hearthConductorHydrationContract = CONTRACT;
-    mount.dataset.hearthConductorHydrationReceipt = RECEIPT;
+    mount.dataset.hearthConductorContract = CONTRACT;
+    mount.dataset.hearthConductorReceipt = RECEIPT;
     mount.dataset.hearthReceiptOverlayIndependent = "true";
-
-    mount.style.position = mount.style.position || "relative";
-    mount.style.overflow = mount.style.overflow || "hidden";
     mount.style.touchAction = "none";
     mount.style.userSelect = "none";
 
@@ -600,272 +818,11 @@
     );
   }
 
-  function ensureFallbackStyle() {
-    if (!doc || doc.getElementById("hearth-distributed-conductor-fallback-style")) return;
-
-    const style = doc.createElement("style");
-    style.id = "hearth-distributed-conductor-fallback-style";
-    style.textContent = `
-      .hearth-ledger-cockpit{
-        position:absolute;
-        inset:auto 10px 10px 10px;
-        z-index:28;
-        max-height:calc(100% - 20px);
-        display:flex;
-        flex-direction:column;
-        overflow:hidden;
-        border:1px solid rgba(231,188,105,.34);
-        border-radius:22px;
-        color:#eef6ff;
-        background:
-          radial-gradient(circle at 0% 0%,rgba(231,188,105,.14),transparent 18rem),
-          radial-gradient(circle at 100% 14%,rgba(141,216,255,.12),transparent 20rem),
-          linear-gradient(180deg,rgba(9,22,41,.97),rgba(2,7,14,.96));
-        box-shadow:0 24px 80px rgba(0,0,0,.54),inset 0 1px 0 rgba(255,255,255,.08);
-        backdrop-filter:blur(14px);
-        font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-        pointer-events:auto;
-      }
-
-      .hearth-ledger-cockpit[data-collapsed="true"]{
-        max-height:58px;
-      }
-
-      .hearth-ledger-cockpit[data-collapsed="true"] .hearth-ledger-scroll,
-      .hearth-ledger-cockpit[data-collapsed="true"] .hearth-ledger-receipt{
-        display:none;
-      }
-
-      .hearth-ledger-head{
-        display:grid;
-        gap:5px;
-        padding:12px 14px 10px;
-        border-bottom:1px solid rgba(231,188,105,.16);
-      }
-
-      .hearth-ledger-kicker{
-        color:#e7bc69;
-        font-size:.64rem;
-        font-weight:950;
-        letter-spacing:.16em;
-        text-transform:uppercase;
-      }
-
-      .hearth-ledger-title{
-        margin:0;
-        color:rgba(255,244,216,.98);
-        font-size:clamp(1rem,3vw,1.42rem);
-        line-height:1;
-        letter-spacing:-.035em;
-        font-weight:950;
-      }
-
-      .hearth-ledger-meta,
-      .hearth-ledger-latest{
-        color:rgba(238,246,255,.70);
-        font:760 .68rem/1.34 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-      }
-
-      .hearth-ledger-progress{
-        display:grid;
-        grid-template-columns:1fr auto;
-        gap:10px;
-        align-items:center;
-        padding:9px 14px;
-        border-bottom:1px solid rgba(141,216,255,.10);
-      }
-
-      .hearth-ledger-track,
-      .hearth-ledger-lane-track{
-        position:relative;
-        overflow:hidden;
-        border:1px solid rgba(141,216,255,.18);
-        border-radius:999px;
-        background:rgba(1,4,10,.72);
-      }
-
-      .hearth-ledger-track{height:12px}
-      .hearth-ledger-lane-track{height:7px}
-
-      .hearth-ledger-fill,
-      .hearth-ledger-lane-fill{
-        position:absolute;
-        inset:0 auto 0 0;
-        width:0%;
-        border-radius:999px;
-        background:linear-gradient(90deg,#8dd8ff,#e7bc69,#ffe8a3);
-        transition:width .16s ease-out;
-      }
-
-      .hearth-ledger-percent{
-        min-width:42px;
-        color:#ffe8a3;
-        text-align:right;
-        font:950 .80rem/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-      }
-
-      .hearth-ledger-actions{
-        display:flex;
-        flex-wrap:wrap;
-        gap:7px;
-        padding:9px 14px;
-        border-bottom:1px solid rgba(231,188,105,.14);
-        background:linear-gradient(180deg,rgba(7,18,32,.98),rgba(3,9,18,.96));
-      }
-
-      .hearth-ledger-button{
-        min-height:30px;
-        border:1px solid rgba(231,188,105,.25);
-        border-radius:999px;
-        padding:7px 10px;
-        color:rgba(238,246,255,.88);
-        background:rgba(255,255,255,.045);
-        font:900 .62rem/1 ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-        letter-spacing:.08em;
-        text-transform:uppercase;
-        cursor:pointer;
-      }
-
-      .hearth-ledger-button.primary{
-        color:#06101e;
-        border-color:rgba(231,188,105,.72);
-        background:linear-gradient(135deg,#ffe8a3,#e7bc69);
-      }
-
-      .hearth-ledger-scroll{
-        flex:1 1 auto;
-        min-height:0;
-        overflow:auto;
-      }
-
-      .hearth-ledger-lanes{
-        display:grid;
-        gap:7px;
-        padding:10px 14px;
-      }
-
-      .hearth-ledger-lane{
-        display:grid;
-        gap:6px;
-        border:1px solid rgba(255,255,255,.10);
-        border-radius:14px;
-        padding:9px;
-        background:rgba(255,255,255,.035);
-      }
-
-      .hearth-ledger-lane[data-status="READY"],
-      .hearth-ledger-lane[data-status="HYDRATED"],
-      .hearth-ledger-lane[data-status="MOUNTED"],
-      .hearth-ledger-lane[data-status="RENDERED"],
-      .hearth-ledger-lane[data-status="COPY_ARMED"],
-      .hearth-ledger-lane[data-status="FINAL_READY"],
-      .hearth-ledger-lane[data-status="LATCHED"]{
-        border-color:rgba(139,215,163,.28);
-        background:rgba(139,215,163,.06);
-      }
-
-      .hearth-ledger-lane[data-status="LOADING"],
-      .hearth-ledger-lane[data-status="REQUESTED"],
-      .hearth-ledger-lane[data-status="LOADED"]{
-        border-color:rgba(141,216,255,.28);
-        background:rgba(141,216,255,.06);
-      }
-
-      .hearth-ledger-lane[data-status="DEGRADED"],
-      .hearth-ledger-lane[data-status="HELD"]{
-        border-color:rgba(231,188,105,.30);
-        background:rgba(231,188,105,.065);
-      }
-
-      .hearth-ledger-lane[data-status="FAILED"]{
-        border-color:rgba(255,112,112,.36);
-        background:rgba(255,112,112,.07);
-      }
-
-      .hearth-ledger-lane-top{
-        display:grid;
-        grid-template-columns:minmax(0,1fr) auto;
-        gap:8px;
-        align-items:center;
-      }
-
-      .hearth-ledger-lane-title{
-        min-width:0;
-        display:grid;
-        gap:2px;
-      }
-
-      .hearth-ledger-lane-title strong{
-        color:rgba(255,244,216,.94);
-        font-size:.78rem;
-        line-height:1.05;
-        white-space:nowrap;
-        overflow:hidden;
-        text-overflow:ellipsis;
-      }
-
-      .hearth-ledger-lane-title span{
-        color:rgba(238,246,255,.64);
-        font:720 .63rem/1.15 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-        white-space:nowrap;
-        overflow:hidden;
-        text-overflow:ellipsis;
-      }
-
-      .hearth-ledger-lane-status{
-        color:rgba(238,246,255,.72);
-        font:900 .60rem/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-        letter-spacing:.08em;
-      }
-
-      .hearth-ledger-receipt{
-        display:none;
-        margin:0 14px 14px;
-        max-height:230px;
-        overflow:auto;
-        border:1px solid rgba(141,216,255,.16);
-        border-radius:14px;
-        background:rgba(1,4,10,.62);
-      }
-
-      .hearth-ledger-receipt[data-visible="true"]{display:block}
-
-      .hearth-ledger-receipt pre{
-        margin:0;
-        padding:11px;
-        color:rgba(238,246,255,.66);
-        font:700 .61rem/1.42 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-        white-space:pre-wrap;
-      }
-
-      @media (max-width:760px){
-        .hearth-ledger-cockpit{
-          inset:auto 8px 8px 8px;
-          border-radius:18px;
-          max-height:calc(100% - 16px);
-        }
-
-        .hearth-ledger-actions{
-          position:sticky;
-          top:0;
-          z-index:2;
-        }
-
-        .hearth-ledger-button{
-          flex:1 1 auto;
-          min-width:42%;
-        }
-      }
-    `;
-
-    doc.head.appendChild(style);
-  }
-
   function createFallbackCockpit() {
-    const mount = ensureMount();
-    if (!doc || !mount) return null;
+    if (!doc) return null;
 
-    ensureFallbackStyle();
+    const mount = ensureMount();
+    if (!mount) return null;
 
     const cockpit = doc.createElement("aside");
     cockpit.id = "hearthLoadCockpit";
@@ -874,21 +831,21 @@
     cockpit.dataset.hearthFirstPaintCockpit = "fallback-created-by-conductor";
     cockpit.dataset.hearthLedgerOwner = "hearth.js";
     cockpit.dataset.hearthFibonacciStage = "F8";
-    cockpit.dataset.hearthHydratedByConductor = "true";
 
     cockpit.innerHTML = `
       <div class="hearth-ledger-head">
-        <div class="hearth-ledger-kicker">Hearth · Distributed Load Ledger</div>
+        <div class="hearth-ledger-kicker">Hearth · Monotonic Load Ledger</div>
         <h2 class="hearth-ledger-title">FORMING HEARTH RUNTIME TABLE</h2>
-        <div class="hearth-ledger-meta" data-hearth-heartbeat-text>heartbeat=starting · stage=F8</div>
+        <div class="hearth-ledger-meta" data-hearth-stage-label>F8 · Conductor hydration</div>
+        <div class="hearth-ledger-meta" data-hearth-heartbeat-text>heartbeat=active · stage=F8 · elapsed=00:00</div>
         <div class="hearth-ledger-latest" data-hearth-latest-event>latest=CONDUCTOR_STARTING</div>
       </div>
 
       <div class="hearth-ledger-progress">
         <div class="hearth-ledger-track">
-          <span class="hearth-ledger-fill" data-hearth-main-progress-fill></span>
+          <span class="hearth-ledger-fill" data-hearth-main-progress-fill style="width:72%"></span>
         </div>
-        <div class="hearth-ledger-percent" data-hearth-main-progress-percent>0%</div>
+        <div class="hearth-ledger-percent" data-hearth-main-progress-percent>72%</div>
       </div>
 
       <div class="hearth-ledger-actions">
@@ -906,74 +863,59 @@
     `;
 
     mount.appendChild(cockpit);
-
     state.fallbackCockpitCreated = true;
-    state.duplicateCockpitCreated = false;
-
-    emit("FALLBACK_COCKPIT_CREATED_BY_CONDUCTOR", {}, { stage: "F8", lane: "conductorHydration" });
 
     return cockpit;
   }
 
   function hydrateCockpit() {
+    ensureStyle();
+
     const existing = findExistingCockpit();
     const cockpit = existing || createFallbackCockpit();
 
     if (!cockpit) return;
 
     refs.cockpit = cockpit;
+    refs.title = cockpit.querySelector(".hearth-ledger-title");
     refs.stage =
       cockpit.querySelector("[data-hearth-stage-label]") ||
       cockpit.querySelector("[data-hearth-fibonacci-stage-label]");
-
     refs.heartbeat =
       cockpit.querySelector("[data-hearth-heartbeat-text]") ||
       cockpit.querySelector("[data-hearth-ledger-heartbeat]");
-
     refs.latest =
       cockpit.querySelector("[data-hearth-latest-event]") ||
       cockpit.querySelector("[data-hearth-ledger-latest]");
-
     refs.mainFill =
       cockpit.querySelector("[data-hearth-main-progress-fill]") ||
       cockpit.querySelector("[data-hearth-ledger-progress-fill]");
-
     refs.mainPercent =
       cockpit.querySelector("[data-hearth-main-progress-percent]") ||
       cockpit.querySelector("[data-hearth-ledger-progress-percent]");
-
     refs.laneList =
       cockpit.querySelector("[data-hearth-lane-list]") ||
       cockpit.querySelector("[data-hearth-ledger-lanes]");
-
     refs.receiptBox =
       cockpit.querySelector("[data-hearth-receipt-box]") ||
       cockpit.querySelector("[data-hearth-ledger-receipt]");
-
     refs.receiptPre =
       cockpit.querySelector("[data-hearth-receipt-text]") ||
       cockpit.querySelector("[data-hearth-ledger-receipt-text]");
-
     refs.copyButton =
       cockpit.querySelector("[data-hearth-copy-diagnostic]") ||
       cockpit.querySelector("[data-hearth-ledger-copy]");
-
     refs.receiptToggle =
       cockpit.querySelector("[data-hearth-toggle-receipt]") ||
       cockpit.querySelector("[data-hearth-ledger-toggle-receipt]");
-
     refs.collapseButton =
       cockpit.querySelector("[data-hearth-collapse-cockpit]") ||
       cockpit.querySelector("[data-hearth-ledger-collapse]");
 
-    refs.expandButton =
-      cockpit.querySelector("[data-hearth-expand-receipt]") ||
-      cockpit.querySelector("[data-hearth-ledger-expand]");
-
     cockpit.dataset.hearthHydratedByConductor = "true";
     cockpit.dataset.hearthConductorContract = CONTRACT;
     cockpit.dataset.hearthConductorReceipt = RECEIPT;
-    cockpit.dataset.hearthFibonacciStage = "F8";
+    cockpit.dataset.hearthMonotonicStageGuardActive = "true";
 
     state.hydratedExistingCockpit = Boolean(existing);
     state.duplicateCockpitCreated = false;
@@ -991,83 +933,49 @@
         const visible = refs.receiptBox.dataset.visible !== "true";
         refs.receiptBox.dataset.visible = String(visible);
         refs.receiptToggle.textContent = visible ? "Hide receipt" : "Show receipt";
-        emit("RECEIPT_VISIBILITY_TOGGLED", { visible }, { visible: false, lane: "conductorHydration" });
         render();
       };
     }
 
     if (refs.collapseButton) {
       refs.collapseButton.onclick = () => {
-        const collapsed = cockpit.dataset.collapsed !== "true";
-        cockpit.dataset.collapsed = String(collapsed);
+        if (state.completionLatched) {
+          const expanded = refs.cockpit.dataset.fullExpanded !== "true";
+          setCockpitMode(expanded ? "expanded-cockpit" : "diagnostic-dock");
+          return;
+        }
+
+        const collapsed = refs.cockpit.dataset.collapsed !== "true";
+        refs.cockpit.dataset.collapsed = String(collapsed);
         refs.collapseButton.textContent = collapsed ? "Open cockpit" : "Collapse cockpit";
-        emit("COCKPIT_COLLAPSE_TOGGLED_CANVAS_PRESERVED", { collapsed }, { visible: false, lane: "conductorHydration" });
       };
     }
 
-    if (refs.expandButton) {
-      refs.expandButton.onclick = () => {
-        if (!refs.receiptBox) return;
-        const expanded = refs.receiptBox.dataset.expanded !== "true";
-        refs.receiptBox.dataset.expanded = String(expanded);
-        emit("RECEIPT_EXPAND_TOGGLED", { expanded }, { visible: false, lane: "conductorHydration" });
-      };
-    }
+    setLedgerStage("F8", "Conductor hydration active", {
+      owner: "hearth.js",
+      file: ACTIVE_ROUTE_FILE
+    });
 
-    setLedgerStage("F8", "Conductor hydrated existing cockpit");
     setLedgerLane("conductorHydration", {
       status: STATUS.HYDRATED,
-      progress: 72,
+      progress: stageProgress("F8"),
       event: "CONDUCTOR_HYDRATED_EXISTING_COCKPIT",
       stage: "F8",
       owner: "hearth.js",
-      file: DESTINATION_FILE,
+      file: ACTIVE_ROUTE_FILE,
       message: state.hydratedExistingCockpit
         ? "Existing HTML cockpit hydrated."
-        : "Fallback cockpit created because HTML cockpit was not present."
-    });
-
-    setLedgerLane("staticCockpit", {
-      status: state.hydratedExistingCockpit ? STATUS.READY : STATUS.DEGRADED,
-      progress: FIB.F2.progress,
-      event: state.hydratedExistingCockpit ? "HTML_COCKPIT_PRESENT" : "HTML_COCKPIT_MISSING_FALLBACK_USED",
-      stage: "F2",
-      owner: "hearth.js",
-      file: DESTINATION_FILE,
-      message: state.hydratedExistingCockpit
-        ? "HTML first-paint cockpit was present for hydration."
-        : "HTML first-paint cockpit missing; conductor fallback used until index.html is executed."
-    });
-
-    setLedgerLane("ledger", {
-      status: STATUS.READY,
-      progress: FIB.F1B.progress,
-      event: "LEDGER_HYDRATED_BY_CONDUCTOR",
-      stage: "F1B",
-      owner: "hearth.js",
-      file: DESTINATION_FILE,
-      message: "Shared ledger is present."
-    });
-
-    setLedgerLane("authorityAvailability", {
-      status: STATUS.HELD,
-      progress: FIB.F5.progress,
-      event: "SOURCE_STACK_HELD",
-      stage: "F5",
-      owner: "hearth.js",
-      file: DESTINATION_FILE,
-      message: "Source stack is held during this pass."
+        : "Fallback cockpit created by conductor."
     });
 
     emit("CONDUCTOR_HYDRATED_EXISTING_COCKPIT", {
       hydratedExistingCockpit: state.hydratedExistingCockpit,
-      duplicateCockpitCreated: false,
-      fallbackCockpitCreated: state.fallbackCockpitCreated
-    }, { stage: "F8", lane: "conductorHydration", status: STATUS.HYDRATED });
-
-    emit("COPY_DIAGNOSTIC_ARMED", {
-      copyDiagnosticArmed: state.copyDiagnosticArmed
-    }, { stage: "F8", lane: "conductorHydration", status: STATUS.COPY_ARMED });
+      duplicateCockpitCreated: false
+    }, {
+      stage: "F8",
+      lane: "conductorHydration",
+      status: STATUS.HYDRATED
+    });
 
     render();
   }
@@ -1076,52 +984,51 @@
     if (!doc) return;
 
     const mount = ensureMount();
-    let hidden = 0;
-    let removed = 0;
+    if (!mount) return;
 
-    const isCurrentCockpit = (node) => refs.cockpit && node === refs.cockpit;
+    mount.querySelectorAll("[data-hearth-mount-fallback], .mount-fallback").forEach((node) => {
+      node.hidden = true;
+      node.style.display = "none";
+      node.dataset.hearthOldLoaderNeutralized = "true";
+    });
 
-    if (mount) {
-      mount.querySelectorAll("[data-hearth-mount-fallback], .mount-fallback").forEach((node) => {
-        node.hidden = true;
-        node.style.display = "none";
-        node.dataset.hearthOldLoaderNeutralized = "true";
-        hidden += 1;
-      });
+    mount.querySelectorAll(".hearth-v2-overlay, .hearth-loading-overlay, [data-hearth-v2-live-diagnostic='true']").forEach((node) => {
+      if (refs.cockpit && (node === refs.cockpit || refs.cockpit.contains(node))) return;
+      node.remove();
+    });
 
-      mount.querySelectorAll(".hearth-v2-overlay, .hearth-loading-overlay, [data-hearth-v2-live-diagnostic='true']").forEach((node) => {
-        if (isCurrentCockpit(node) || (refs.cockpit && refs.cockpit.contains(node))) return;
-        node.remove();
-        removed += 1;
-      });
-    }
-
-    emit("OLD_LOADER_NEUTRALIZED", {
-      hidden,
-      removed
-    }, { stage: "F8", lane: "conductorHydration", status: STATUS.READY });
+    emit("OLD_LOADER_NEUTRALIZED", {}, {
+      stage: "F8",
+      lane: "conductorHydration",
+      status: STATUS.READY
+    });
   }
 
   function guardRetiredClimateRoute() {
-    root.__HEARTH_ACTIVE_ROUTE_FILE__ = DESTINATION_FILE;
-    root.__HEARTH_ACTIVE_ROUTE_CONDUCTOR__ = DESTINATION_FILE;
+    root.__HEARTH_ACTIVE_ROUTE_FILE__ = ACTIVE_ROUTE_FILE;
+    root.__HEARTH_ACTIVE_ROUTE_CONDUCTOR__ = ACTIVE_ROUTE_FILE;
     root.__HEARTH_ACTIVE_ROUTE_CONTRACT__ = CONTRACT;
     root.__HEARTH_RETIRED_CLIMATE_ROUTE__ = RETIRED_CLIMATE_ROUTE;
     root.__HEARTH_RETIRED_CLIMATE_ROUTE_ACTIVE_CARRIER__ = false;
 
     if (doc && doc.documentElement) {
       const dataset = doc.documentElement.dataset;
-      dataset.hearthActiveRouteFile = DESTINATION_FILE;
-      dataset.hearthActiveRouteConductor = DESTINATION_FILE;
+      dataset.hearthActiveRouteFile = ACTIVE_ROUTE_FILE;
+      dataset.hearthActiveRouteConductor = ACTIVE_ROUTE_FILE;
       dataset.hearthActiveRouteContract = CONTRACT;
       dataset.hearthRetiredClimateRoute = RETIRED_CLIMATE_ROUTE;
       dataset.hearthRetiredClimateRouteActiveCarrier = "false";
+      dataset.hearthMonotonicStageGuardActive = "true";
     }
 
     emit("RETIRED_CLIMATE_ROUTE_GUARDED", {
       retiredClimateRoute: RETIRED_CLIMATE_ROUTE,
       retiredClimateRouteActiveCarrier: false
-    }, { stage: "F8", lane: "conductorHydration", status: STATUS.READY });
+    }, {
+      stage: "F8",
+      lane: "conductorHydration",
+      status: STATUS.READY
+    });
   }
 
   function getRuntimeTableApi() {
@@ -1137,28 +1044,22 @@
 
   function checkRuntimeTable() {
     const api = getRuntimeTableApi();
+
     state.runtimeTablePresent = Boolean(api);
     state.runtimeTableOptional = true;
 
     if (!api) {
       state.runtimeTableMode = "RUNTIME_TABLE_MISSING_ALLOWED";
-      state.runtimeTablePlanAttempted = false;
-      state.runtimeTablePlanCreated = false;
 
       setLedgerLane("authorityAvailability", {
         status: STATUS.DEGRADED,
-        progress: FIB.F5.progress,
-        event: "RUNTIME_TABLE_DEGRADED",
+        progress: stageProgress("F5"),
+        event: "RUNTIME_TABLE_MISSING_ALLOWED",
         stage: "F5",
         owner: "hearth.js",
-        file: DESTINATION_FILE,
-        message: "Runtime Table missing; first visible carrier continues."
+        file: RUNTIME_TABLE_FILE,
+        message: "Runtime Table missing; visible carrier continues."
       });
-
-      emit("RUNTIME_TABLE_OPTIONAL_CONFIRMED", {
-        runtimeTablePresent: false,
-        runtimeTableMode: state.runtimeTableMode
-      }, { stage: "F8", lane: "conductorHydration", status: STATUS.DEGRADED });
 
       return null;
     }
@@ -1178,35 +1079,19 @@
           renderMetadata: {
             routeMounted: true,
             canvasMounted: Boolean(refs.mount),
-            fallbackShellAvailable: true,
             visibleCarrierAllowed: true,
             sphereContainment: true,
-            outsideSphereTransparent: true,
-            noRectangularTextureSpill: true
+            noRectangularTextureSpill: true,
+            distributedLoadLedger: true,
+            monotonicStageGuard: true
           }
         }, {
-          profile: "hearth-channel-expression",
+          profile: "hearth-monotonic-loader-carrier",
           planetId: "hearth",
           planetLabel: "Hearth"
         });
       } else if (isFunction(api.createVisualCarrierPlan)) {
         plan = api.createVisualCarrierPlan({
-          planetId: "hearth",
-          planetLabel: "Hearth",
-          route: ROUTE,
-          samplePoint: { u: 0.5, v: 0.5, lon: 0, lat: 0, x: 0, y: 0, z: 1 },
-          renderMetadata: {
-            routeMounted: true,
-            canvasMounted: Boolean(refs.mount),
-            fallbackShellAvailable: true,
-            visibleCarrierAllowed: true,
-            sphereContainment: true,
-            outsideSphereTransparent: true,
-            noRectangularTextureSpill: true
-          }
-        });
-      } else if (isFunction(api.runProceduralPlan)) {
-        plan = api.runProceduralPlan({
           planetId: "hearth",
           planetLabel: "Hearth",
           route: ROUTE,
@@ -1216,40 +1101,32 @@
 
       state.runtimeTablePlan = plan || null;
       state.runtimeTablePlanCreated = Boolean(plan);
-      state.runtimeTablePlanError = "";
 
       setLedgerLane("authorityAvailability", {
         status: STATUS.READY,
-        progress: FIB.F5.progress,
+        progress: stageProgress("F5"),
         event: "RUNTIME_TABLE_AVAILABLE",
         stage: "F5",
         owner: "hearth.js",
-        file: DESTINATION_FILE,
+        file: RUNTIME_TABLE_FILE,
         message: state.runtimeTablePlanCreated
-          ? "Runtime Table available and visual carrier plan created."
-          : "Runtime Table available; no plan export required."
+          ? "Runtime Table available and carrier plan created."
+          : "Runtime Table available."
       });
-
-      emit("RUNTIME_TABLE_OPTIONAL_CONFIRMED", {
-        runtimeTablePresent: true,
-        runtimeTablePlanCreated: state.runtimeTablePlanCreated
-      }, { stage: "F8", lane: "conductorHydration", status: STATUS.READY });
 
       return plan;
     } catch (error) {
       state.runtimeTableMode = "RUNTIME_TABLE_DEGRADED";
-      state.runtimeTablePlanCreated = false;
       state.runtimeTablePlanError = error && error.message ? error.message : String(error);
-
       recordError("RUNTIME_TABLE_PLAN_ERROR", state.runtimeTablePlanError);
 
       setLedgerLane("authorityAvailability", {
         status: STATUS.DEGRADED,
-        progress: FIB.F5.progress,
+        progress: stageProgress("F5"),
         event: "RUNTIME_TABLE_DEGRADED",
         stage: "F5",
         owner: "hearth.js",
-        file: DESTINATION_FILE,
+        file: RUNTIME_TABLE_FILE,
         message: state.runtimeTablePlanError
       });
 
@@ -1286,7 +1163,7 @@
 
     if (api && isFunction(api.getReceipt)) {
       try {
-        const receipt = api.getReceipt("hearth-distributed-conductor-reconcile");
+        const receipt = api.getReceipt("hearth-monotonic-conductor-reconcile");
         if (receipt && isObject(receipt)) return receipt;
       } catch (error) {
         recordError("CANVAS_RECEIPT_READ_FAILED", error && error.message ? error.message : String(error));
@@ -1301,80 +1178,6 @@
     );
   }
 
-  function requestCanvasScriptIfNeeded() {
-    if (!doc || state.canvasScriptRequested) return;
-
-    const existing = Array.from(doc.scripts || []).some((script) =>
-      script.src && script.src.includes(CANVAS_AUTHORITY_FILE)
-    );
-
-    if (existing) {
-      state.canvasScriptRequested = true;
-
-      setLedgerLane("canvasAndDiagnostic", {
-        status: STATUS.LOADING,
-        progress: 35,
-        event: "CANVAS_SCRIPT_PRESENT_API_PENDING",
-        stage: "F13",
-        owner: "hearth.js",
-        file: CANVAS_AUTHORITY_FILE,
-        message: "Canvas script tag present; waiting for API."
-      });
-
-      return;
-    }
-
-    state.canvasScriptRequested = true;
-
-    const script = doc.createElement("script");
-    script.src = `${CANVAS_AUTHORITY_FILE}?v=${encodeURIComponent(CONTRACT)}`;
-    script.defer = true;
-    script.dataset.hearthCanvasRequestedByConductor = "true";
-    script.dataset.hearthConductorContract = CONTRACT;
-
-    script.onload = () => {
-      state.canvasScriptLoaded = true;
-      state.canvasScriptError = "";
-
-      emit("CANVAS_SCRIPT_LOADED", { src: script.src }, { stage: "F13", lane: "canvasAndDiagnostic", status: STATUS.LOADED });
-      callCanvasCarrier();
-    };
-
-    script.onerror = () => {
-      state.canvasScriptLoaded = false;
-      state.canvasScriptError = "Canvas script failed to load.";
-      state.canvasCarrierHandoffError = state.canvasScriptError;
-      state.finalReceiptAvailable = true;
-      state.postgameStatus = "CANVAS_SCRIPT_LOAD_FAILED";
-      state.firstFailedCoordinate = "F13_CANVAS_SCRIPT_LOAD_FAILED";
-      state.recommendedNextRenewalTarget = "index-script-order-or-canvas-path";
-
-      recordError("CANVAS_SCRIPT_LOAD_FAILED", state.canvasScriptError, { src: script.src });
-
-      setLedgerLane("canvasAndDiagnostic", {
-        status: STATUS.FAILED,
-        progress: 100,
-        event: "CANVAS_SCRIPT_LOAD_FAILED",
-        stage: "F13",
-        owner: "hearth.js",
-        file: CANVAS_AUTHORITY_FILE,
-        message: state.canvasScriptError
-      });
-    };
-
-    doc.head.appendChild(script);
-
-    setLedgerLane("canvasAndDiagnostic", {
-      status: STATUS.REQUESTED,
-      progress: 24,
-      event: "CANVAS_SCRIPT_REQUESTED",
-      stage: "F13",
-      owner: "hearth.js",
-      file: CANVAS_AUTHORITY_FILE,
-      message: "Canvas authority requested by conductor fallback path."
-    });
-  }
-
   function canvasPayload() {
     return {
       contract: CONTRACT,
@@ -1383,7 +1186,7 @@
       baselineContract: BASELINE_CONTRACT,
       route: ROUTE,
       mountId: "hearthCanvasMount",
-      activeRouteConductor: DESTINATION_FILE,
+      activeRouteConductor: ACTIVE_ROUTE_FILE,
       retiredClimateRoute: RETIRED_CLIMATE_ROUTE,
       runtimeTablePlan: state.runtimeTablePlan,
       visibleCarrierFirst: true,
@@ -1393,67 +1196,105 @@
       sourceAuthorityHeld: true,
       singleAnchorIsLocalProofOnly: true,
       distributedLoadLedger: true,
+      monotonicStageGuard: true,
+      diagnosticDockAfterLatch: true,
       loadLedger: refs.ledger || null,
       callbacks: {
         onMounted: (receipt) => {
           state.canvasCarrierMounted = true;
           state.canvasCarrierHandoffOk = true;
-          state.canvasCarrierHandoffError = "";
-
-          emit("CANVAS_MOUNT_CONFIRMED", {}, { stage: "F13", lane: "canvasAndDiagnostic", status: STATUS.MOUNTED });
+          emit("CANVAS_MOUNT_CONFIRMED", {}, {
+            stage: "F13",
+            lane: "canvasAndDiagnostic",
+            status: STATUS.MOUNTED
+          });
           reconcileFromCanvasReceipt(receipt);
         },
         onRendered: (receipt) => {
           state.firstFrameDetected = true;
           state.imageRendered = true;
-
-          emit("FIRST_FRAME_DETECTED", {}, { stage: "F13", lane: "canvasAndDiagnostic", status: STATUS.RENDERED });
+          emit("FIRST_FRAME_DETECTED", {}, {
+            stage: "F13",
+            lane: "canvasAndDiagnostic",
+            status: STATUS.RENDERED
+          });
           reconcileFromCanvasReceipt(receipt);
         },
         onDragBound: (receipt) => {
           state.dragInspectionBound = true;
-
-          emit("DRAG_INSPECTION_READY", {}, { stage: "F13", lane: "canvasAndDiagnostic", status: STATUS.BOUND });
+          emit("DRAG_INSPECTION_READY", {}, {
+            stage: "F13",
+            lane: "canvasAndDiagnostic",
+            status: STATUS.BOUND
+          });
           reconcileFromCanvasReceipt(receipt);
         }
       }
     };
   }
 
-  function callCanvasCarrier() {
-    const canvasApi = getCanvasApi();
-    state.canvasApiPresent = Boolean(canvasApi);
+  function updateCanvasWaitMessage() {
+    if (!state.canvasCarrierRequested || state.canvasCarrierMounted || state.completionLatched) return;
 
-    if (!canvasApi) {
-      setLedgerStage("F13", "Canvas API pending");
+    state.canvasBootElapsedMs = state.canvasBootStartedAt ? nowMs() - state.canvasBootStartedAt : 0;
+    const elapsed = formatElapsed(state.canvasBootElapsedMs);
+
+    if (state.canvasBootElapsedMs >= 30000) {
+      state.longWaitMessage = `Long canvas boot · planet carrier still active · receipt available · elapsed ${elapsed}`;
+    } else if (state.canvasBootElapsedMs >= 12000) {
+      state.longWaitMessage = `Extended canvas boot · copy diagnostic available · elapsed ${elapsed}`;
+    } else if (state.canvasBootElapsedMs >= 6000) {
+      state.longWaitMessage = `Canvas still booting · diagnostic alive · elapsed ${elapsed}`;
+    } else if (state.canvasBootElapsedMs >= 2000) {
+      state.longWaitMessage = `Canvas carrier booting · elapsed ${elapsed}`;
+    } else {
+      state.longWaitMessage = `Canvas carrier booting · elapsed ${elapsed}`;
+    }
+
+    setLedgerLane("canvasAndDiagnostic", {
+      status: STATUS.LOADING,
+      progress: Math.max(78, Number(ledgerState().lanes?.canvasAndDiagnostic?.progress || 0)),
+      event: "CANVAS_BOOT_WAIT_VISIBLE",
+      stage: "F13",
+      owner: "hearth.js",
+      file: CANVAS_AUTHORITY_FILE,
+      message: state.longWaitMessage
+    });
+  }
+
+  function callCanvasCarrier() {
+    const api = getCanvasApi();
+    state.canvasApiPresent = Boolean(api);
+
+    if (!api) {
+      setLedgerStage("F13", "Canvas API pending", {
+        owner: "hearth.js",
+        file: CANVAS_AUTHORITY_FILE
+      });
+
       setLedgerLane("canvasAndDiagnostic", {
         status: STATUS.LOADING,
-        progress: 30,
+        progress: 64,
         event: "CANVAS_API_PENDING",
         stage: "F13",
         owner: "hearth.js",
         file: CANVAS_AUTHORITY_FILE,
-        message: "Canvas API not yet present."
+        message: "Canvas API pending."
       });
 
-      requestCanvasScriptIfNeeded();
       render();
       return;
     }
-
-    emit("CANVAS_API_FOUND", {
-      canvasApiPresent: true
-    }, { stage: "F13", lane: "canvasAndDiagnostic", status: STATUS.READY });
 
     if (canvasCallAttempted) {
       reconcileAll("canvas-call-already-attempted");
       return;
     }
 
-    const method = bestCanvasMethod(canvasApi);
+    const method = bestCanvasMethod(api);
 
     if (!method) {
-      state.canvasCarrierHandoffError = "Canvas API present but no supported carrier method exists.";
+      state.canvasCarrierHandoffError = "Canvas API present but no supported boot/mount method exists.";
       state.finalReceiptAvailable = true;
       state.postgameStatus = "CANVAS_METHOD_MISSING";
       state.firstFailedCoordinate = "F13_CANVAS_METHOD_MISSING";
@@ -1471,67 +1312,80 @@
         message: state.canvasCarrierHandoffError
       });
 
+      render();
       return;
     }
 
     canvasCallAttempted = true;
     state.canvasCarrierRequested = true;
     state.canvasCarrierMethod = method;
-    state.canvasCarrierHandoffError = "";
-    state.fibonacciStage = "F13";
-    state.currentFibonacciStage = "F13";
+    state.canvasBootStartedAt = nowMs();
+    state.longWaitMessage = "Canvas carrier booting · elapsed 00:00";
 
-    setLedgerStage("F13", "Canvas and diagnostic reconciliation");
-
-    emit("CANVAS_CARRIER_METHOD_SELECTED", {
-      method
-    }, { stage: "F13", lane: "canvasAndDiagnostic", status: STATUS.READY });
+    setLedgerStage("F13", "Canvas carrier booting", {
+      owner: "hearth.js",
+      file: CANVAS_AUTHORITY_FILE
+    });
 
     setLedgerLane("canvasAndDiagnostic", {
       status: STATUS.LOADING,
-      progress: 58,
-      event: "CANVAS_CARRIER_CALLED",
+      progress: 78,
+      event: "CANVAS_CARRIER_BOOTING",
       stage: "F13",
       owner: "hearth.js",
       file: CANVAS_AUTHORITY_FILE,
-      message: `Canvas carrier method called: ${method}`
+      message: state.longWaitMessage
     });
 
-    try {
-      const result = canvasApi[method](canvasPayload());
-
-      state.canvasCarrierHandoffOk = true;
-
-      if (result && isObject(result)) {
-        reconcileFromCanvasReceipt(result);
-      }
-
-      emit("CANVAS_CARRIER_CALLED", {
-        method,
-        handoffOk: true
-      }, { stage: "F13", lane: "canvasAndDiagnostic", status: STATUS.LOADING });
-    } catch (error) {
-      state.canvasCarrierHandoffOk = false;
-      state.canvasCarrierHandoffError = error && error.message ? error.message : String(error);
-      state.finalReceiptAvailable = true;
-      state.postgameStatus = "CANVAS_HANDOFF_ERROR";
-      state.firstFailedCoordinate = "F13_CANVAS_HANDOFF_ERROR";
-      state.recommendedNextRenewalTarget = "canvas-handoff-method-or-payload-renewal";
-
-      recordError("CANVAS_HANDOFF_ERROR", state.canvasCarrierHandoffError, { method });
-
-      setLedgerLane("canvasAndDiagnostic", {
-        status: STATUS.FAILED,
-        progress: 100,
-        event: "CANVAS_HANDOFF_ERROR",
-        stage: "F13",
-        owner: "hearth.js",
-        file: CANVAS_AUTHORITY_FILE,
-        message: state.canvasCarrierHandoffError
-      });
-    }
+    emit("CANVAS_CARRIER_METHOD_SELECTED", { method }, {
+      stage: "F13",
+      lane: "canvasAndDiagnostic",
+      status: STATUS.READY
+    });
 
     render();
+
+    root.setTimeout(() => {
+      try {
+        const result = api[method](canvasPayload());
+
+        state.canvasCarrierHandoffOk = true;
+
+        emit("CANVAS_CARRIER_CALLED", { method, handoffOk: true }, {
+          visible: false,
+          stage: "F13",
+          lane: "canvasAndDiagnostic",
+          status: STATUS.LOADING
+        });
+
+        if (result && isObject(result)) {
+          reconcileFromCanvasReceipt(result);
+        } else {
+          reconcileAll("canvas-method-returned");
+        }
+      } catch (error) {
+        state.canvasCarrierHandoffOk = false;
+        state.canvasCarrierHandoffError = error && error.message ? error.message : String(error);
+        state.finalReceiptAvailable = true;
+        state.postgameStatus = "CANVAS_HANDOFF_ERROR";
+        state.firstFailedCoordinate = "F13_CANVAS_HANDOFF_ERROR";
+        state.recommendedNextRenewalTarget = "canvas-handoff-method-or-payload-renewal";
+
+        recordError("CANVAS_HANDOFF_ERROR", state.canvasCarrierHandoffError, { method });
+
+        setLedgerLane("canvasAndDiagnostic", {
+          status: STATUS.FAILED,
+          progress: 100,
+          event: "CANVAS_HANDOFF_ERROR",
+          stage: "F13",
+          owner: "hearth.js",
+          file: CANVAS_AUTHORITY_FILE,
+          message: state.canvasCarrierHandoffError
+        });
+
+        render();
+      }
+    }, 80);
   }
 
   function reconcileFromDataset() {
@@ -1542,47 +1396,150 @@
 
     state.canvasApiPresent = Boolean(getCanvasApi());
 
-    state.canvasCarrierMounted = (
+    state.canvasCarrierMounted = Boolean(
       state.canvasCarrierMounted ||
       bool(dataset.hearthCanvasCarrierMounted) ||
       bool(dataset.hearthVisibleCarrierMounted) ||
-      Boolean(mount && mount.querySelector("canvas")) ||
-      Boolean(mount && bool(mount.dataset.hearthCanvasMounted)) ||
-      Boolean(mount && bool(mount.dataset.hearthVisibleCarrierMounted))
+      (mount && mount.querySelector("canvas")) ||
+      (mount && bool(mount.dataset.hearthCanvasMounted)) ||
+      (mount && bool(mount.dataset.hearthVisibleCarrierMounted))
     );
 
-    state.firstFrameDetected = (
+    state.firstFrameDetected = Boolean(
       state.firstFrameDetected ||
       bool(dataset.hearthFirstFrameDetected) ||
       bool(dataset.hearthImageRendered) ||
       bool(dataset.hearthCanvasImageRendered)
     );
 
-    state.imageRendered = (
+    state.imageRendered = Boolean(
       state.imageRendered ||
       state.firstFrameDetected ||
       bool(dataset.hearthImageRendered) ||
       bool(dataset.hearthCanvasImageRendered)
     );
 
-    state.dragInspectionBound = (
+    state.dragInspectionBound = Boolean(
       state.dragInspectionBound ||
       bool(dataset.hearthDragInspectionBound) ||
       bool(dataset.hearthControlsBound) ||
-      Boolean(mount && bool(mount.dataset.hearthDragInspectionBound)) ||
-      Boolean(mount && bool(mount.dataset.hearthControlsBound)) ||
-      Boolean(mount && mount.style && mount.style.touchAction === "none")
+      (mount && bool(mount.dataset.hearthDragInspectionBound)) ||
+      (mount && bool(mount.dataset.hearthControlsBound)) ||
+      (mount && mount.style && mount.style.touchAction === "none")
     );
+
+    if (state.canvasCarrierMounted && !state.firstFrameDetected && !state.imageRendered) {
+      root.requestAnimationFrame(() => {
+        if (state.canvasCarrierMounted) {
+          state.firstFrameDetected = true;
+          state.imageRendered = true;
+          reconcileAll("request-animation-frame-first-frame-inferred");
+        }
+      });
+    }
   }
 
   function reconcileFromCanvasReceipt(receipt) {
     const value = receipt && isObject(receipt) ? receipt : getCanvasReceipt();
 
-    if (!value || !isObject(value)) {
-      reconcileAll("canvas-receipt-empty");
-      return;
+    if (value && isObject(value)) {
+      state.canvasCarrierMounted = Boolean(
+        state.canvasCarrierMounted ||
+        value.canvasCarrierMounted ||
+        value.visibleCarrierMounted ||
+        value.mounted ||
+        value.canvasMounted
+      );
+
+      state.canvasCarrierHandoffOk = Boolean(
+        state.canvasCarrierHandoffOk ||
+        state.canvasCarrierMounted ||
+        value.canvasCarrierHandoffOk ||
+        value.handoffOk
+      );
+
+      state.firstFrameDetected = Boolean(
+        state.firstFrameDetected ||
+        value.firstFrameDetected ||
+        value.imageRendered ||
+        Number(value.frames || 0) > 0
+      );
+
+      state.imageRendered = Boolean(
+        state.imageRendered ||
+        state.firstFrameDetected ||
+        value.imageRendered ||
+        Number(value.frames || 0) > 0
+      );
+
+      state.dragInspectionBound = Boolean(
+        state.dragInspectionBound ||
+        value.dragInspectionBound ||
+        value.pointerControlsBound ||
+        value.controlsBound
+      );
     }
 
+    reconcileAll("canvas-receipt-reconciled");
+  }
+
+  function reconcileAll(reason = "manual") {
+    reconcileFromDataset();
+
+    const canvasReceipt = getCanvasReceipt();
+
+    if (canvasReceipt && isObject(canvasReceipt)) {
+      reconcileFromCanvasReceiptLight(canvasReceipt);
+    }
+
+    if (state.canvasCarrierMounted) {
+      setLedgerLane("canvasAndDiagnostic", {
+        status: state.imageRendered ? STATUS.RENDERED : STATUS.MOUNTED,
+        progress: state.imageRendered ? 96 : 88,
+        event: state.imageRendered ? "FIRST_FRAME_DETECTED" : "CANVAS_MOUNT_CONFIRMED",
+        stage: "F13",
+        owner: "hearth.js",
+        file: CANVAS_AUTHORITY_FILE,
+        message: state.imageRendered
+          ? "Canvas carrier mounted and first frame/render proof detected."
+          : "Canvas carrier mounted; first frame proof pending."
+      });
+    }
+
+    if (state.canvasCarrierMounted && (state.firstFrameDetected || state.imageRendered)) {
+      state.finalReceiptAvailable = true;
+      state.postgameStatus = "DIAGNOSTIC_COCKPIT_READY";
+      state.firstFailedCoordinate = "NONE_VISIBLE_CARRIER_PRESENT";
+      state.recommendedNextRenewalTarget = "read-postgame-canvas-or-triple-g-receipt";
+
+      setLedgerLane("canvasAndDiagnostic", {
+        status: STATUS.FINAL_READY,
+        progress: 100,
+        event: "FINAL_RECEIPT_READY",
+        stage: "F13",
+        owner: "hearth.js",
+        file: ACTIVE_ROUTE_FILE,
+        message: "Final conductor receipt available."
+      });
+
+      tryLatchCompletion();
+    } else if (!state.completionLatched && state.canvasCarrierRequested) {
+      updateCanvasWaitMessage();
+    }
+
+    if (!state.completionLatched && reason !== "heartbeat") {
+      emit("RECONCILE", { reason }, {
+        visible: false,
+        stage: state.currentFibonacciStage,
+        lane: "conductorHydration"
+      });
+    }
+
+    publishGlobals();
+    render();
+  }
+
+  function reconcileFromCanvasReceiptLight(value) {
     state.canvasCarrierMounted = Boolean(
       state.canvasCarrierMounted ||
       value.canvasCarrierMounted ||
@@ -1618,100 +1575,18 @@
       value.pointerControlsBound ||
       value.controlsBound
     );
-
-    reconcileAll("canvas-receipt-reconciled");
-  }
-
-  function reconcileAll(reason = "manual") {
-    reconcileFromDataset();
-
-    const canvasReceipt = getCanvasReceipt();
-
-    if (canvasReceipt && isObject(canvasReceipt)) {
-      state.canvasCarrierMounted = Boolean(
-        state.canvasCarrierMounted ||
-        canvasReceipt.canvasCarrierMounted ||
-        canvasReceipt.visibleCarrierMounted ||
-        canvasReceipt.mounted ||
-        canvasReceipt.canvasMounted
-      );
-
-      state.canvasCarrierHandoffOk = Boolean(
-        state.canvasCarrierHandoffOk ||
-        state.canvasCarrierMounted ||
-        canvasReceipt.canvasCarrierHandoffOk ||
-        canvasReceipt.handoffOk
-      );
-
-      state.firstFrameDetected = Boolean(
-        state.firstFrameDetected ||
-        canvasReceipt.firstFrameDetected ||
-        canvasReceipt.imageRendered ||
-        Number(canvasReceipt.frames || 0) > 0
-      );
-
-      state.imageRendered = Boolean(
-        state.imageRendered ||
-        state.firstFrameDetected ||
-        canvasReceipt.imageRendered ||
-        Number(canvasReceipt.frames || 0) > 0
-      );
-
-      state.dragInspectionBound = Boolean(
-        state.dragInspectionBound ||
-        canvasReceipt.dragInspectionBound ||
-        canvasReceipt.pointerControlsBound ||
-        canvasReceipt.controlsBound
-      );
-    }
-
-    if (state.canvasCarrierMounted || state.imageRendered) {
-      setLedgerStage("F13", "Canvas and diagnostic reconciled");
-
-      setLedgerLane("canvasAndDiagnostic", {
-        status: state.imageRendered ? STATUS.RENDERED : STATUS.MOUNTED,
-        progress: state.imageRendered ? 94 : 82,
-        event: state.imageRendered ? "FIRST_FRAME_DETECTED" : "CANVAS_MOUNT_CONFIRMED",
-        stage: "F13",
-        owner: "hearth.js",
-        file: CANVAS_AUTHORITY_FILE,
-        message: state.imageRendered
-          ? "Canvas carrier mounted and first frame/render proof detected."
-          : "Canvas carrier mounted; first frame proof pending."
-      });
-
-      state.finalReceiptAvailable = true;
-      state.postgameStatus = "DIAGNOSTIC_COCKPIT_READY";
-      state.firstFailedCoordinate = state.imageRendered ? "NONE_VISIBLE_CARRIER_PRESENT" : "FIRST_FRAME_PENDING";
-      state.recommendedNextRenewalTarget = state.imageRendered
-        ? "read-postgame-canvas-or-triple-g-receipt"
-        : "first-frame-proof-or-canvas-receipt";
-
-      setLedgerLane("canvasAndDiagnostic", {
-        status: STATUS.FINAL_READY,
-        progress: 100,
-        event: "FINAL_RECEIPT_READY",
-        stage: "F13",
-        owner: "hearth.js",
-        file: DESTINATION_FILE,
-        message: "Final conductor receipt available."
-      });
-
-      if (!state.completionLatched) {
-        tryLatchCompletion();
-      }
-    }
-
-    if (!state.completionLatched && reason !== "heartbeat") {
-      emit("RECONCILE", { reason }, { visible: false, stage: state.fibonacciStage, lane: "conductorHydration" });
-    }
-
-    publishGlobals();
-    render();
   }
 
   function completionReady() {
     return (
+      state.hydratedExistingCockpit === true &&
+      state.loadLedgerPresent === true &&
+      state.canvasApiPresent === true &&
+      state.canvasCarrierRequested === true &&
+      state.canvasCarrierMounted === true &&
+      state.canvasCarrierHandoffOk === true &&
+      (state.firstFrameDetected === true || state.imageRendered === true) &&
+      state.dragInspectionBound === true &&
       state.copyDiagnosticArmed === true &&
       state.buttonsReachable === true &&
       state.partialReceiptAvailable === true &&
@@ -1725,26 +1600,40 @@
 
     state.fibonacciStage = "F21";
     state.currentFibonacciStage = "F21";
-    state.stageLabel = FIB.F21.label;
+    state.highestStageReached = "F21";
+    state.highestStageRank = stageRank("F21");
     state.completionLatched = true;
     state.visibleLoadingActive = false;
     state.diagnosticCockpitReady = true;
     state.latestVisibleEvent = "COMPLETION_LATCHED";
     state.mainProgressCap = 100;
+    state.mainDisplayProgress = 100;
+    state.cockpitMode = "diagnostic-dock";
+    state.dockVisible = true;
+    state.fullCockpitExpanded = false;
+    state.planetObstructionReduced = true;
     state.postgameStatus = "DIAGNOSTIC_COCKPIT_READY";
     state.firstFailedCoordinate = "NONE_VISIBLE_CARRIER_PRESENT";
     state.recommendedNextRenewalTarget = "read-postgame-canvas-or-triple-g-receipt";
 
     const led = ledgerState();
+    led.completionLatched = true;
+    led.visibleLoadingActive = false;
+    led.diagnosticCockpitReady = true;
+    led.currentFibonacciStage = "F21";
+    led.highestStageReached = "F21";
+    led.highestStageRank = stageRank("F21");
+    led.cockpitMode = "diagnostic-dock";
+    led.dockVisible = true;
+    led.fullCockpitExpanded = false;
+    led.planetObstructionReduced = true;
+    led.finalReceiptAvailable = true;
     led.copyDiagnosticArmed = true;
     led.partialReceiptAvailable = true;
-    led.finalReceiptAvailable = true;
 
     if (refs.ledger && isFunction(refs.ledger.latchCompletion)) {
-      refs.ledger.latchCompletion("Diagnostic cockpit ready; visible loading settled.");
+      refs.ledger.latchCompletion("READY · Planet visible · diagnostic available");
     }
-
-    setLedgerStage("F21", "Completion latched");
 
     setLedgerLane("completionLatch", {
       status: STATUS.LATCHED,
@@ -1752,64 +1641,91 @@
       event: "COMPLETION_LATCHED",
       stage: "F21",
       owner: "hearth.js",
-      file: DESTINATION_FILE,
-      message: "Loading loop settled. Diagnostic cockpit remains copyable."
+      file: ACTIVE_ROUTE_FILE,
+      message: "READY · Planet visible · diagnostic available"
     });
 
     emitLocal("COMPLETION_LATCHED", {
       diagnosticCockpitReady: true,
-      visibleLoadingActive: false
+      cockpitMode: "diagnostic-dock",
+      planetObstructionReduced: true
     }, true);
 
-    pushLedger({
-      id: "LOADING_LOOP_SETTLED",
-      stage: "F21",
-      owner: "hearth.js",
-      file: DESTINATION_FILE,
-      lane: "completionLatch",
-      status: STATUS.LATCHED,
-      message: "Visible loader no longer cycles as unfinished."
-    });
-
-    pushLedger({
-      id: "NEXT_TARGET_READY",
-      stage: "F21",
-      owner: "hearth.js",
-      file: DESTINATION_FILE,
-      lane: "completionLatch",
-      status: STATUS.READY,
-      message: state.recommendedNextRenewalTarget
-    });
-
+    setCockpitMode("diagnostic-dock");
+    enforcePostLatchVisibleState();
     render();
     publishGlobals();
 
     return true;
   }
 
-  function computeMainProgressCap() {
+  function setCockpitMode(mode) {
+    if (!refs.cockpit) return;
+
+    const expanded = mode === "expanded-cockpit";
+
+    state.cockpitMode = expanded ? "expanded-cockpit" : "diagnostic-dock";
+    state.dockVisible = !expanded;
+    state.fullCockpitExpanded = expanded;
+    state.planetObstructionReduced = !expanded;
+
+    refs.cockpit.dataset.cockpitMode = expanded ? "expanded-cockpit" : "diagnostic-dock";
+    refs.cockpit.dataset.fullExpanded = String(expanded);
+    refs.cockpit.dataset.hearthCockpitMode = refs.cockpit.dataset.cockpitMode;
+    refs.cockpit.dataset.hearthDockVisible = String(!expanded);
+    refs.cockpit.dataset.hearthPlanetObstructionReduced = String(!expanded);
+    refs.cockpit.dataset.collapsed = "false";
+
+    if (refs.collapseButton) {
+      refs.collapseButton.textContent = expanded ? "Collapse dock" : "Expand cockpit";
+    }
+
     const led = ledgerState();
-    const stage = state.completionLatched ? "F21" : (led.currentFibonacciStage || state.fibonacciStage || "F8");
-
-    let cap = FIB[stage] ? FIB[stage].progress : FIB.F8.progress;
-
-    if (state.hydratedExistingCockpit || state.fallbackCockpitCreated) cap = Math.max(cap, FIB.F8.progress);
-    if (state.canvasCarrierRequested || state.canvasApiPresent) cap = Math.max(cap, 80);
-    if (state.canvasCarrierMounted) cap = Math.max(cap, 88);
-    if (state.imageRendered) cap = Math.max(cap, 94);
-    if (state.finalReceiptAvailable && state.copyDiagnosticArmed) cap = Math.max(cap, 98);
-    if (state.completionLatched) cap = 100;
-
-    state.mainProgressCap = clamp(cap, 0, 100);
-    return state.mainProgressCap;
+    led.cockpitMode = state.cockpitMode;
+    led.dockVisible = state.dockVisible;
+    led.fullCockpitExpanded = state.fullCockpitExpanded;
+    led.planetObstructionReduced = state.planetObstructionReduced;
   }
 
-  function renderLaneHtml() {
+  function enforcePostLatchVisibleState() {
+    if (!state.completionLatched) return;
+
+    state.currentFibonacciStage = "F21";
+    state.fibonacciStage = "F21";
+    state.highestStageReached = "F21";
+    state.highestStageRank = stageRank("F21");
+    state.mainProgressCap = 100;
+    state.mainDisplayProgress = 100;
+    state.visibleLoadingActive = false;
+    state.diagnosticCockpitReady = true;
+    state.latestVisibleEvent = "COMPLETION_LATCHED";
+
+    const led = ledgerState();
+    led.currentFibonacciStage = "F21";
+    led.highestStageReached = "F21";
+    led.highestStageRank = stageRank("F21");
+    led.completionLatched = true;
+    led.visibleLoadingActive = false;
+    led.diagnosticCockpitReady = true;
+    led.cockpitMode = state.cockpitMode || "diagnostic-dock";
+    led.visualPassClaimed = false;
+
+    if (refs.cockpit) {
+      refs.cockpit.dataset.hearthFibonacciStage = "F21";
+      refs.cockpit.dataset.hearthCompletionLatched = "true";
+      refs.cockpit.dataset.hearthVisibleLoadingActive = "false";
+      refs.cockpit.dataset.hearthDiagnosticCockpitReady = "true";
+      refs.cockpit.dataset.cockpitMode = state.cockpitMode || "diagnostic-dock";
+      refs.cockpit.dataset.fullExpanded = String(state.fullCockpitExpanded);
+    }
+  }
+
+  function laneMarkup() {
     const led = ledgerState();
     const lanes = led.lanes || {};
 
     return LANES.map((laneDef) => {
-      const lane = lanes[laneDef.key] || makeLane(laneDef.key, laneDef.label, laneDef.fib);
+      const lane = lanes[laneDef.key] || makeLane(laneDef);
       const status = lane.status || STATUS.REQUESTED;
       const progress = clamp(lane.progress, 0, 100);
       const fib = lane.fibonacci || laneDef.fib;
@@ -1839,53 +1755,77 @@
   function render() {
     if (!refs.cockpit) return;
 
-    computeMainProgressCap();
-
-    if (Math.abs(state.mainProgressCap - state.mainDisplayProgress) > 0.08) {
-      state.mainDisplayProgress += (state.mainProgressCap - state.mainDisplayProgress) * 0.09;
-    } else {
-      state.mainDisplayProgress = state.mainProgressCap;
+    if (state.completionLatched) {
+      enforcePostLatchVisibleState();
     }
 
-    const progress = Math.round(state.mainDisplayProgress);
     const led = ledgerState();
-    const stage = state.completionLatched ? "F21" : (led.currentFibonacciStage || state.fibonacciStage || "F8");
-    const stageLabel = FIB[stage] ? FIB[stage].label : stage;
-    const elapsed = formatElapsed(state.heartbeatElapsedMs);
+    const stage = state.completionLatched
+      ? "F21"
+      : (led.currentFibonacciStage || state.currentFibonacciStage || "F8");
+    const elapsed = nowMs() - state.startedAtMs;
+
+    let progress = state.completionLatched
+      ? 100
+      : Math.max(stageProgress(stage), Number(state.mainProgressCap || 0));
+
+    if (!state.completionLatched) {
+      if (Math.abs(progress - state.mainDisplayProgress) > 0.08) {
+        state.mainDisplayProgress += (progress - state.mainDisplayProgress) * 0.12;
+      } else {
+        state.mainDisplayProgress = progress;
+      }
+    } else {
+      state.mainDisplayProgress = 100;
+    }
+
+    const displayProgress = Math.round(state.mainDisplayProgress);
 
     refs.cockpit.dataset.hearthFibonacciStage = stage;
     refs.cockpit.dataset.hearthCompletionLatched = String(state.completionLatched);
     refs.cockpit.dataset.hearthDiagnosticCockpitReady = String(state.diagnosticCockpitReady);
     refs.cockpit.dataset.hearthVisibleLoadingActive = String(state.visibleLoadingActive);
-    refs.cockpit.dataset.hearthHydratedExistingCockpit = String(state.hydratedExistingCockpit);
+    refs.cockpit.dataset.hearthMonotonicStageGuardActive = "true";
+    refs.cockpit.dataset.cockpitMode = state.cockpitMode;
+    refs.cockpit.dataset.fullExpanded = String(state.fullCockpitExpanded);
+
+    if (refs.title) {
+      refs.title.textContent = state.completionLatched
+        ? "READY · PLANET VISIBLE · DIAGNOSTIC AVAILABLE"
+        : "FORMING HEARTH RUNTIME TABLE";
+    }
 
     if (refs.stage) {
-      refs.stage.textContent = `${stage} · ${stageLabel}`;
+      refs.stage.textContent = state.completionLatched
+        ? "F21 · Completion latch"
+        : `${stage} · ${stageLabel(stage)}`;
     }
 
     if (refs.heartbeat) {
       refs.heartbeat.textContent = state.completionLatched
-        ? `heartbeat=quiet · latched=true · elapsed=${elapsed}`
-        : `heartbeat=active · stage=${stage} · elapsed=${elapsed}`;
+        ? `heartbeat=quiet · latched=true · elapsed=${formatElapsed(elapsed)}`
+        : (state.longWaitMessage || `heartbeat=active · stage=${stage} · elapsed=${formatElapsed(elapsed)}`);
     }
 
     if (refs.latest) {
-      refs.latest.textContent = `latest=${state.completionLatched ? "COMPLETION_LATCHED" : state.latestVisibleEvent}`;
+      refs.latest.textContent = state.completionLatched
+        ? "latest=COMPLETION_LATCHED · READY"
+        : `latest=${state.latestVisibleEvent}`;
     }
 
     if (refs.mainFill) {
-      refs.mainFill.style.width = `${progress}%`;
+      refs.mainFill.style.width = `${displayProgress}%`;
     }
 
     if (refs.mainPercent) {
-      refs.mainPercent.textContent = `${progress}%`;
+      refs.mainPercent.textContent = `${displayProgress}%`;
     }
 
     if (refs.laneList) {
-      const next = renderLaneHtml();
-      if (next !== lastRenderedLaneText) {
+      const next = laneMarkup();
+      if (next !== lastLaneMarkup) {
         refs.laneList.innerHTML = next;
-        lastRenderedLaneText = next;
+        lastLaneMarkup = next;
       }
     }
 
@@ -1897,77 +1837,51 @@
 
     if (!state.completionLatched || Math.abs(state.mainDisplayProgress - state.mainProgressCap) > 0.08) {
       raf = root.requestAnimationFrame(render);
+    } else {
+      raf = 0;
     }
   }
 
   function startHeartbeat() {
     if (heartbeatTimer) root.clearInterval(heartbeatTimer);
 
-    state.startedAt = state.startedAt || nowIso();
-    state.heartbeatStartedAt = nowMs();
-
     heartbeatTimer = root.setInterval(() => {
-      state.heartbeatElapsedMs = nowMs() - state.heartbeatStartedAt;
+      state.heartbeatElapsedMs = nowMs() - state.startedAtMs;
 
       if (!state.completionLatched) {
-        const led = ledgerState();
-        const activeLanes = Object.values(led.lanes || {}).filter((lane) => (
-          ![STATUS.READY, STATUS.HELD, STATUS.DEGRADED, STATUS.FAILED, STATUS.FINAL_READY, STATUS.LATCHED, STATUS.HYDRATED, STATUS.MOUNTED, STATUS.RENDERED, STATUS.BOUND, STATUS.COPY_ARMED].includes(lane.status)
-        ));
-
-        activeLanes.forEach((lane) => {
-          const elapsed = lane.elapsedMs || 0;
-
-          if (elapsed > 12000 && !lane.watchdogExtended) {
-            lane.watchdogExtended = true;
-            lane.watchdog = `Extended load · copy diagnostic now available`;
-            pushLedger({
-              id: "WATCHDOG_EXTENDED_LOAD",
-              stage: lane.fibonacci,
-              owner: "hearth.js",
-              file: DESTINATION_FILE,
-              lane: lane.key,
-              status: lane.status,
-              message: lane.watchdog
-            });
-          } else if (elapsed > 6000 && !lane.watchdogSlow) {
-            lane.watchdogSlow = true;
-            lane.watchdog = `${lane.label} still active · diagnostic available`;
-            pushLedger({
-              id: "WATCHDOG_SLOW_LOAD",
-              stage: lane.fibonacci,
-              owner: "hearth.js",
-              file: DESTINATION_FILE,
-              lane: lane.key,
-              status: lane.status,
-              message: lane.watchdog
-            });
-          } else if (elapsed > 2000 && !lane.watchdogStill) {
-            lane.watchdogStill = true;
-            lane.watchdog = `Still loading · waiting on ${lane.label} · elapsed ${formatElapsed(elapsed)}`;
-            pushLedger({
-              id: "WATCHDOG_STILL_LOADING",
-              stage: lane.fibonacci,
-              owner: "hearth.js",
-              file: DESTINATION_FILE,
-              lane: lane.key,
-              status: lane.status,
-              message: lane.watchdog
-            });
-          }
-        });
-
+        updateCanvasWaitMessage();
         reconcileAll("heartbeat");
       } else {
-        state.quietHeartbeat = true;
+        enforcePostLatchVisibleState();
         publishGlobals();
+        render();
       }
     }, 1000);
   }
 
-  function startAnimationLoop() {
-    if (raf) return;
-    raf = root.requestAnimationFrame(render);
+  function startEnforcement() {
+    if (enforcementTimer) root.clearInterval(enforcementTimer);
+
+    enforcementTimer = root.setInterval(() => {
+      if (!state.completionLatched) return;
+
+      const led = ledgerState();
+      const regressed = led.currentFibonacciStage !== "F21" || state.currentFibonacciStage !== "F21";
+
+      if (regressed) {
+        archiveLateEvent({
+          id: "POST_LATCH_STAGE_REGRESSION_REPAIRED",
+          stage: led.currentFibonacciStage || state.currentFibonacciStage,
+          owner: "hearth.js",
+          lane: "completionLatch",
+          status: STATUS.ARCHIVED,
+          message: "Visible state was forced back to F21 after post-latch regression."
+        }, "post-latch-enforcement");
+      }
+
+      enforcePostLatchVisibleState();
+      render();
+    }, 450);
   }
 
   async function copyText(text) {
@@ -2005,9 +1919,13 @@
 
     emit("DIAGNOSTIC_RECEIPT_COPIED", {
       ok,
-      partialReceiptAvailable: state.partialReceiptAvailable,
-      finalReceiptAvailable: state.finalReceiptAvailable
-    }, { visible: false, stage: state.fibonacciStage, lane: "conductorHydration" });
+      finalReceiptAvailable: state.finalReceiptAvailable,
+      completionLatched: state.completionLatched
+    }, {
+      visible: false,
+      stage: state.currentFibonacciStage,
+      lane: "copy"
+    });
 
     return ok;
   }
@@ -2023,7 +1941,7 @@
       version: VERSION,
       route: ROUTE,
 
-      activeRouteConductor: DESTINATION_FILE,
+      activeRouteConductor: ACTIVE_ROUTE_FILE,
       retiredClimateRoute: RETIRED_CLIMATE_ROUTE,
       retiredClimateRouteActiveCarrier: false,
 
@@ -2031,12 +1949,22 @@
       duplicateCockpitCreated: false,
       fallbackCockpitCreated: state.fallbackCockpitCreated,
       loadLedgerPresent: state.loadLedgerPresent,
+      monotonicStageGuardActive: state.monotonicStageGuardActive,
+      stageRegressionPrevented: state.stageRegressionPrevented,
+      archivedLateEvents: clonePlain(state.archivedLateEvents),
 
       fibonacciStage: state.fibonacciStage,
-      currentFibonacciStage: led.currentFibonacciStage || state.currentFibonacciStage,
+      currentFibonacciStage: state.currentFibonacciStage,
+      highestStageReached: state.highestStageReached,
+      highestStageRank: state.highestStageRank,
+
       completionLatched: state.completionLatched,
       visibleLoadingActive: state.visibleLoadingActive,
       diagnosticCockpitReady: state.diagnosticCockpitReady,
+      cockpitMode: state.cockpitMode,
+      dockVisible: state.dockVisible,
+      fullCockpitExpanded: state.fullCockpitExpanded,
+      planetObstructionReduced: state.planetObstructionReduced,
 
       runtimeTablePresent: state.runtimeTablePresent,
       runtimeTableMode: state.runtimeTableMode,
@@ -2047,17 +1975,16 @@
       sourceAuthorityHeld: true,
 
       canvasApiPresent: state.canvasApiPresent,
-      canvasScriptRequested: state.canvasScriptRequested,
-      canvasScriptLoaded: state.canvasScriptLoaded,
-      canvasScriptError: state.canvasScriptError,
       canvasCarrierRequested: state.canvasCarrierRequested,
       canvasCarrierMounted: state.canvasCarrierMounted,
       canvasCarrierHandoffOk: state.canvasCarrierHandoffOk,
       canvasCarrierHandoffError: state.canvasCarrierHandoffError,
       canvasCarrierMethod: state.canvasCarrierMethod,
       firstFrameDetected: state.firstFrameDetected,
-      dragInspectionBound: state.dragInspectionBound,
       imageRendered: state.imageRendered,
+      dragInspectionBound: state.dragInspectionBound,
+      canvasBootElapsedMs: state.canvasBootElapsedMs,
+      longWaitMessage: state.longWaitMessage,
 
       partialReceiptAvailable: state.partialReceiptAvailable,
       copyDiagnosticArmed: state.copyDiagnosticArmed,
@@ -2098,8 +2025,8 @@
       `- ${key}: status=${script.status}; src=${script.src || ""}; error=${script.error || ""}`
     )).join("\n") || "- none";
 
-    const events = (receipt.ledger && Array.isArray(receipt.ledger.events) ? receipt.ledger.events : []).map((event) => (
-      `- ${event.timestamp} :: ${event.id} :: stage=${event.stage} :: lane=${event.lane} :: status=${event.status} :: ${event.message}`
+    const archived = receipt.archivedLateEvents.map((event) => (
+      `- ${event.archivedAt || ""} :: ${event.id || event.event || "ARCHIVED"} :: stage=${event.stage || ""} :: reason=${event.archiveReason || ""} :: ${event.message || ""}`
     )).join("\n") || "- none";
 
     const localEvents = receipt.events.map((entry) => (
@@ -2111,7 +2038,7 @@
     )).join("\n") || "- none";
 
     return [
-      "HEARTH_DISTRIBUTED_LOAD_LEDGER_CONDUCTOR_HYDRATION_LATCH_RECEIPT",
+      "HEARTH_LOAD_LEDGER_MONOTONIC_CONDUCTOR_DOCK_LATCH_RECEIPT",
       "",
       `contract=${receipt.contract}`,
       `receipt=${receipt.receipt}`,
@@ -2128,12 +2055,21 @@
       `duplicateCockpitCreated=${receipt.duplicateCockpitCreated}`,
       `fallbackCockpitCreated=${receipt.fallbackCockpitCreated}`,
       `loadLedgerPresent=${receipt.loadLedgerPresent}`,
+      `monotonicStageGuardActive=${receipt.monotonicStageGuardActive}`,
+      `stageRegressionPrevented=${receipt.stageRegressionPrevented}`,
       "",
       `fibonacciStage=${receipt.fibonacciStage}`,
       `currentFibonacciStage=${receipt.currentFibonacciStage}`,
+      `highestStageReached=${receipt.highestStageReached}`,
+      `highestStageRank=${receipt.highestStageRank}`,
+      "",
       `completionLatched=${receipt.completionLatched}`,
       `visibleLoadingActive=${receipt.visibleLoadingActive}`,
       `diagnosticCockpitReady=${receipt.diagnosticCockpitReady}`,
+      `cockpitMode=${receipt.cockpitMode}`,
+      `dockVisible=${receipt.dockVisible}`,
+      `fullCockpitExpanded=${receipt.fullCockpitExpanded}`,
+      `planetObstructionReduced=${receipt.planetObstructionReduced}`,
       "",
       `runtimeTablePresent=${receipt.runtimeTablePresent}`,
       `runtimeTableMode=${receipt.runtimeTableMode}`,
@@ -2144,17 +2080,16 @@
       `sourceAuthorityHeld=${receipt.sourceAuthorityHeld}`,
       "",
       `canvasApiPresent=${receipt.canvasApiPresent}`,
-      `canvasScriptRequested=${receipt.canvasScriptRequested}`,
-      `canvasScriptLoaded=${receipt.canvasScriptLoaded}`,
-      `canvasScriptError=${receipt.canvasScriptError}`,
       `canvasCarrierRequested=${receipt.canvasCarrierRequested}`,
       `canvasCarrierMounted=${receipt.canvasCarrierMounted}`,
       `canvasCarrierHandoffOk=${receipt.canvasCarrierHandoffOk}`,
       `canvasCarrierHandoffError=${receipt.canvasCarrierHandoffError}`,
       `canvasCarrierMethod=${receipt.canvasCarrierMethod}`,
       `firstFrameDetected=${receipt.firstFrameDetected}`,
-      `dragInspectionBound=${receipt.dragInspectionBound}`,
       `imageRendered=${receipt.imageRendered}`,
+      `dragInspectionBound=${receipt.dragInspectionBound}`,
+      `canvasBootElapsedMs=${receipt.canvasBootElapsedMs}`,
+      `longWaitMessage=${receipt.longWaitMessage}`,
       "",
       `partialReceiptAvailable=${receipt.partialReceiptAvailable}`,
       `copyDiagnosticArmed=${receipt.copyDiagnosticArmed}`,
@@ -2177,8 +2112,8 @@
       "LEDGER_SCRIPTS",
       scripts,
       "",
-      "LEDGER_EVENTS",
-      events,
+      "ARCHIVED_LATE_EVENTS",
+      archived,
       "",
       "LOCAL_EVENTS",
       localEvents,
@@ -2215,8 +2150,8 @@
     root.HEARTH_ROUTE_CONDUCTOR_RECEIPT = getReceipt();
     root.HEARTH_ROUTE_CONDUCTOR_POSTGAME_RECEIPT = root.HEARTH_ROUTE_CONDUCTOR_RECEIPT;
 
-    root.__HEARTH_ACTIVE_ROUTE_FILE__ = DESTINATION_FILE;
-    root.__HEARTH_ACTIVE_ROUTE_CONDUCTOR__ = DESTINATION_FILE;
+    root.__HEARTH_ACTIVE_ROUTE_FILE__ = ACTIVE_ROUTE_FILE;
+    root.__HEARTH_ACTIVE_ROUTE_CONDUCTOR__ = ACTIVE_ROUTE_FILE;
     root.__HEARTH_ACTIVE_ROUTE_CONTRACT__ = CONTRACT;
     root.__HEARTH_RETIRED_CLIMATE_ROUTE__ = RETIRED_CLIMATE_ROUTE;
     root.__HEARTH_RETIRED_CLIMATE_ROUTE_ACTIVE_CARRIER__ = false;
@@ -2234,8 +2169,8 @@
     dataset.hearthConductorBaselineContract = BASELINE_CONTRACT;
     dataset.hearthConductorVersion = VERSION;
 
-    dataset.hearthActiveRouteFile = DESTINATION_FILE;
-    dataset.hearthActiveRouteConductor = DESTINATION_FILE;
+    dataset.hearthActiveRouteFile = ACTIVE_ROUTE_FILE;
+    dataset.hearthActiveRouteConductor = ACTIVE_ROUTE_FILE;
     dataset.hearthActiveRouteContract = CONTRACT;
     dataset.hearthRetiredClimateRoute = RETIRED_CLIMATE_ROUTE;
     dataset.hearthRetiredClimateRouteActiveCarrier = "false";
@@ -2243,30 +2178,32 @@
     dataset.hearthLoadLedgerPresent = String(state.loadLedgerPresent);
     dataset.hearthHydratedExistingCockpit = String(state.hydratedExistingCockpit);
     dataset.hearthDuplicateCockpitCreated = "false";
-    dataset.hearthFallbackCockpitCreated = String(state.fallbackCockpitCreated);
+    dataset.hearthMonotonicStageGuardActive = String(state.monotonicStageGuardActive);
+    dataset.hearthStageRegressionPrevented = String(state.stageRegressionPrevented);
 
     dataset.hearthFibonacciStage = state.fibonacciStage;
+    dataset.hearthCurrentFibonacciStage = state.currentFibonacciStage;
+    dataset.hearthHighestStageReached = state.highestStageReached;
     dataset.hearthCompletionLatched = String(state.completionLatched);
     dataset.hearthVisibleLoadingActive = String(state.visibleLoadingActive);
     dataset.hearthDiagnosticCockpitReady = String(state.diagnosticCockpitReady);
+    dataset.hearthCockpitMode = state.cockpitMode;
+    dataset.hearthDockVisible = String(state.dockVisible);
+    dataset.hearthFullCockpitExpanded = String(state.fullCockpitExpanded);
+    dataset.hearthPlanetObstructionReduced = String(state.planetObstructionReduced);
 
     dataset.hearthRuntimeTablePresent = String(state.runtimeTablePresent);
     dataset.hearthRuntimeTableMode = state.runtimeTableMode;
-    dataset.hearthRuntimeTablePlanAttempted = String(state.runtimeTablePlanAttempted);
-    dataset.hearthRuntimeTablePlanCreated = String(state.runtimeTablePlanCreated);
-
     dataset.hearthSourceAuthorityHeld = "true";
 
     dataset.hearthCanvasApiPresent = String(state.canvasApiPresent);
-    dataset.hearthCanvasScriptRequested = String(state.canvasScriptRequested);
-    dataset.hearthCanvasScriptLoaded = String(state.canvasScriptLoaded);
     dataset.hearthCanvasCarrierRequested = String(state.canvasCarrierRequested);
     dataset.hearthCanvasCarrierMounted = String(state.canvasCarrierMounted);
     dataset.hearthCanvasCarrierHandoffOk = String(state.canvasCarrierHandoffOk);
     dataset.hearthCanvasCarrierMethod = state.canvasCarrierMethod;
     dataset.hearthFirstFrameDetected = String(state.firstFrameDetected);
-    dataset.hearthDragInspectionBound = String(state.dragInspectionBound);
     dataset.hearthImageRendered = String(state.imageRendered);
+    dataset.hearthDragInspectionBound = String(state.dragInspectionBound);
 
     dataset.hearthPartialReceiptAvailable = String(state.partialReceiptAvailable);
     dataset.hearthCopyDiagnosticArmed = String(state.copyDiagnosticArmed);
@@ -2287,7 +2224,7 @@
 
   function boot() {
     state.startedAt = nowIso();
-    emitLocal("CONDUCTOR_STARTING", { contract: CONTRACT }, true);
+    state.startedAtMs = nowMs();
 
     ensureMount();
     ensureLedger();
@@ -2295,34 +2232,46 @@
     hydrateCockpit();
     neutralizeOldLoaders();
 
+    setLedgerLane("ledger", {
+      status: STATUS.READY,
+      progress: stageProgress("F1B"),
+      event: "MONOTONIC_LEDGER_GUARD_ACTIVE",
+      stage: "F1B",
+      owner: "hearth.js",
+      file: ACTIVE_ROUTE_FILE,
+      message: "Monotonic stage guard active."
+    });
+
+    setLedgerLane("authorityAvailability", {
+      status: STATUS.HELD,
+      progress: stageProgress("F5"),
+      event: "SOURCE_STACK_HELD",
+      stage: "F5",
+      owner: "hearth.js",
+      file: ACTIVE_ROUTE_FILE,
+      message: "Source authority stack held during loader-only renewal."
+    });
+
     startHeartbeat();
-
+    startEnforcement();
     checkRuntimeTable();
-
-    emit("SOURCE_STACK_HELD", {
-      sourceAuthorityHeld: true
-    }, { stage: "F5", lane: "authorityAvailability", status: STATUS.HELD });
-
     callCanvasCarrier();
 
-    if (reconcileTimer) root.clearInterval(reconcileTimer);
     reconcileTimer = root.setInterval(() => {
       if (!state.completionLatched) {
         reconcileAll("interval");
       } else {
+        enforcePostLatchVisibleState();
         publishGlobals();
       }
-    }, 800);
+    }, 900);
 
-    [120, 300, 700, 1300, 2400, 4200, 6800, 10000].forEach((ms) => {
+    [120, 360, 900, 1600, 2600, 4200, 7000, 12000].forEach((ms) => {
       root.setTimeout(() => {
-        if (!state.completionLatched) {
-          reconcileAll(`post-boot-${ms}ms`);
-        }
+        if (!state.completionLatched) reconcileAll(`post-boot-${ms}ms`);
       }, ms);
     });
 
-    startAnimationLoop();
     render();
   }
 
@@ -2330,6 +2279,11 @@
     if (heartbeatTimer) {
       root.clearInterval(heartbeatTimer);
       heartbeatTimer = 0;
+    }
+
+    if (enforcementTimer) {
+      root.clearInterval(enforcementTimer);
+      enforcementTimer = 0;
     }
 
     if (reconcileTimer) {
@@ -2342,8 +2296,10 @@
       raf = 0;
     }
 
-    emit("CONDUCTOR_DISPOSED", { reason }, { visible: false, lane: "conductorHydration" });
-    publishGlobals();
+    emit("CONDUCTOR_DISPOSED", { reason }, {
+      visible: false,
+      lane: "conductorHydration"
+    });
   }
 
   const api = {
@@ -2353,11 +2309,13 @@
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     route: ROUTE,
-    destinationFile: DESTINATION_FILE,
+    destinationFile: ACTIVE_ROUTE_FILE,
 
     boot,
     reconcile: reconcileAll,
     tryLatchCompletion,
+    setCockpitMode,
+    enforcePostLatchVisibleState,
     getReceipt,
     getReceiptText,
     copyDiagnostic,
@@ -2366,7 +2324,9 @@
     supportsDistributedLoadLedger: true,
     supportsHtmlCockpitHydration: true,
     supportsFibonacciLoadStages: true,
-    supportsCompletionLatch: true,
+    supportsMonotonicStageGuard: true,
+    supportsStrictCompletionLatch: true,
+    supportsDiagnosticDockAfterLatch: true,
     supportsPartialReceiptDuringLoading: true,
     supportsCopyDiagnosticDuringLoading: true,
     supportsRuntimeTableOptionalMode: true,

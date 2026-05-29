@@ -2,10 +2,11 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="hearth-route-shell-loading-screen-visible-planet-rebind"
+  data-page="hearth-distributed-load-ledger-html-first-paint-cockpit"
   data-route="/showroom/globe/hearth/"
-  data-contract="HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2"
+  data-contract="HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1"
   data-previous-contract="HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1"
+  data-baseline-contract="HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_CONDUCTOR_PAIR_PRECODE_FINAL_DRAFT_v1"
   data-body="hearth"
   data-mirrorland-door="true"
   data-map-portal-required="true"
@@ -13,6 +14,14 @@
   data-map-portal-registry="/assets/manor-blueprint/manor.blueprint.registry.js"
   data-map-blip-single-entryway="true"
   data-main-menu-route="false"
+
+  data-load-architecture="distributed-load-ledger"
+  data-one-visible-loading-cockpit="true"
+  data-html-first-paint-loader="true"
+  data-shared-load-ledger="true"
+  data-distributed-file-status-reporting="true"
+  data-conductor-hydrates-existing-cockpit="true"
+  data-final-completion-latch="true"
 
   data-active-route-file="/showroom/globe/hearth/hearth.js"
   data-active-route-conductor="/showroom/globe/hearth/hearth.js"
@@ -23,8 +32,6 @@
   data-route-shell-loaded="true"
   data-route-shell-active="true"
   data-route-shell-owns-script-order="true"
-  data-loading-screen-required="true"
-  data-loading-screen-visible="true"
   data-canvas-mount-required="true"
   data-canvas-authority="/assets/hearth/hearth.canvas.js"
   data-visible-carrier-first="true"
@@ -34,7 +41,7 @@
   data-source-authority-held="true"
 
   data-parent-chain-aligned="true"
-  data-parent-chain-order="runtime-table-optional-tectonics-elevation-composition-hydrology-materials-hex-authority-hex-surface-canvas-conductor"
+  data-parent-chain-order="ledger-first-paint-runtime-table-source-stack-canvas-conductor"
   data-runtime-table-authority="/assets/lab/runtime-table.js"
   data-tectonics-authority="/assets/hearth/hearth.tectonics.js"
   data-elevation-authority="/assets/hearth/hearth.elevation.js"
@@ -44,17 +51,19 @@
   data-hex-authority="/assets/hearth/hearth.hex.four-pair.authority.js"
   data-hex-surface-authority="/assets/hearth/hearth.hex.surface.js"
 
-  data-target-land-ratio="0.30"
-  data-earth-reference-land-ratio="0.29"
-  data-rocky-means-jagged-not-gray="true"
-  data-plate-tectonics-active="true"
+  data-fibonacci-load-order="1-1-2-3-5-8-13-21"
+  data-narrative-time="forty-billion-years-future"
   data-narrative-identity="Hearth · Survival Becomes Shelter"
   data-world-lane="survival-pressure-becomes-home"
-  data-future-earth-lens="forty-billion-years-forward"
   data-zionts-role="consequence"
   data-h-earth-role="survival-condition-pressure"
   data-audralia-role="untouched-living-possibility"
   data-hearth-role="survival-pressure-becomes-shelter"
+  data-target-land-ratio="0.30"
+  data-earth-reference-land-ratio="0.29"
+  data-rocky-means-jagged-not-gray="true"
+  data-plate-tectonics-active="true"
+
   data-generated-image="false"
   data-graphic-box="false"
   data-webgl="false"
@@ -70,56 +79,10 @@
   <title>Hearth · Survival Becomes Shelter · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Hearth is the Mirrorland world where survival pressure becomes shelter: a future-world planet carrier with tectonic scars, hydrology, materials, and survival pressure becoming home."
+    content="Hearth is the Mirrorland world where survival pressure becomes shelter: active planet, distributed loading ledger, first-paint diagnostic cockpit, and visible carrier handoff."
   >
   <link rel="canonical" href="https://diamondgatebridge.com/showroom/globe/hearth/">
   <meta name="theme-color" content="#030914">
-
-  <script>
-    (() => {
-      "use strict";
-
-      window.HEARTH_ROUTE_SCRIPT_LOADS = window.HEARTH_ROUTE_SCRIPT_LOADS || {};
-
-      window.__HEARTH_MARK_SCRIPT_LOAD__ = (key, ok, src) => {
-        const record = {
-          key,
-          ok: ok === true,
-          src: src || "",
-          at: new Date().toISOString()
-        };
-
-        window.HEARTH_ROUTE_SCRIPT_LOADS[key] = record;
-
-        try {
-          const datasetKey = `hearthScript${String(key || "")
-            .replace(/[^a-zA-Z0-9]+(.)/g, (_match, chr) => String(chr || "").toUpperCase())
-            .replace(/^[a-z]/, (chr) => chr.toUpperCase())}`;
-          document.documentElement.dataset[datasetKey] = String(record.ok);
-        } catch (_error) {}
-      };
-    })();
-  </script>
-
-  <link rel="stylesheet" href="/assets/manor-blueprint/manor.blueprint.css?v=HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2">
-  <script src="/assets/manor-blueprint/manor.blueprint.registry.js?v=HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2" defer onload="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('manorRegistry',true,this.src)" onerror="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('manorRegistry',false,this.src)"></script>
-  <script src="/assets/manor-blueprint/manor.blueprint.js?v=HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2" defer onload="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('manorBlueprint',true,this.src)" onerror="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('manorBlueprint',false,this.src)"></script>
-
-  <!-- Optional diagnostic equipment. Must not block first visible render. -->
-  <script src="/assets/lab/runtime-table.js?v=HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2" defer onload="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('runtimeTable',true,this.src)" onerror="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('runtimeTable',false,this.src)"></script>
-
-  <!-- Held source authorities. HTML loads availability only; it does not own source truth. -->
-  <script src="/assets/hearth/hearth.tectonics.js?v=HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2" defer onload="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('tectonics',true,this.src)" onerror="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('tectonics',false,this.src)"></script>
-  <script src="/assets/hearth/hearth.elevation.js?v=HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2" defer onload="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('elevation',true,this.src)" onerror="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('elevation',false,this.src)"></script>
-  <script src="/assets/hearth/hearth.composition.js?v=HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2" defer onload="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('composition',true,this.src)" onerror="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('composition',false,this.src)"></script>
-  <script src="/assets/hearth/hearth.hydrology.js?v=HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2" defer onload="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('hydrology',true,this.src)" onerror="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('hydrology',false,this.src)"></script>
-  <script src="/assets/hearth/hearth.materials.js?v=HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2" defer onload="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('materials',true,this.src)" onerror="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('materials',false,this.src)"></script>
-  <script src="/assets/hearth/hearth.hex.four-pair.authority.js?v=HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2" defer onload="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('hexAuthority',true,this.src)" onerror="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('hexAuthority',false,this.src)"></script>
-  <script src="/assets/hearth/hearth.hex.surface.js?v=HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2" defer onload="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('hexSurface',true,this.src)" onerror="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('hexSurface',false,this.src)"></script>
-
-  <!-- Visible carrier authority, then active route conductor. -->
-  <script src="/assets/hearth/hearth.canvas.js?v=HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2" defer onload="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('canvasAuthority',true,this.src)" onerror="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('canvasAuthority',false,this.src)"></script>
-  <script src="/showroom/globe/hearth/hearth.js?v=HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2" defer onload="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('routeConductor',true,this.src)" onerror="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('routeConductor',false,this.src)"></script>
 
   <style>
     :root{
@@ -374,14 +337,6 @@
       text-wrap:balance;
     }
 
-    h3{
-      margin:0;
-      color:rgba(255,244,216,.96);
-      font-size:clamp(1.08rem,2.3vw,1.45rem);
-      line-height:1.08;
-      letter-spacing:-.035em;
-    }
-
     p{
       margin:0;
       color:var(--muted);
@@ -458,11 +413,6 @@
       border-color:rgba(231,188,105,.86);
     }
 
-    .button:hover{
-      transform:translateY(-1px);
-      border-color:rgba(231,188,105,.58);
-    }
-
     .planet-card{
       display:grid;
       gap:12px;
@@ -501,22 +451,10 @@
       box-shadow:0 0 38px rgba(231,188,105,.08);
     }
 
-    #hearthCanvasMount::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      z-index:1;
-      pointer-events:none;
-      background:
-        radial-gradient(circle at 50% 50%,rgba(141,216,255,.10),transparent 34%),
-        radial-gradient(circle at 50% 52%,rgba(231,188,105,.06),transparent 42%),
-        linear-gradient(135deg,rgba(255,255,255,.035),transparent 42%,rgba(0,0,0,.18));
-    }
-
     #hearthCanvasMount canvas{
       position:absolute;
       inset:0;
-      z-index:6;
+      z-index:4;
       display:block;
       width:100%;
       height:100%;
@@ -527,148 +465,259 @@
       -webkit-touch-callout:none;
     }
 
-    .carrier-loader{
+    .mount-fallback{
       position:absolute;
       inset:0;
-      z-index:4;
+      z-index:1;
       display:grid;
       place-items:center;
-      pointer-events:none;
-      padding:24px;
+      color:rgba(238,246,255,.68);
+      font-weight:850;
       text-align:center;
+      padding:20px;
+    }
+
+    .hearth-ledger-cockpit{
+      position:absolute;
+      inset:auto 10px 10px 10px;
+      z-index:30;
+      max-height:calc(100% - 20px);
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+      border:1px solid rgba(231,188,105,.34);
+      border-radius:22px;
+      color:#eef6ff;
       background:
-        radial-gradient(circle at 50% 42%,rgba(141,216,255,.14),transparent 18rem),
-        radial-gradient(circle at 50% 52%,rgba(231,188,105,.11),transparent 21rem),
-        radial-gradient(circle at 50% 50%,rgba(0,0,0,.12),rgba(1,4,10,.58) 72%);
+        radial-gradient(circle at 0% 0%,rgba(231,188,105,.14),transparent 18rem),
+        radial-gradient(circle at 100% 14%,rgba(141,216,255,.12),transparent 20rem),
+        linear-gradient(180deg,rgba(9,22,41,.97),rgba(2,7,14,.96));
+      box-shadow:0 24px 80px rgba(0,0,0,.54),inset 0 1px 0 rgba(255,255,255,.08);
+      backdrop-filter:blur(14px);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      pointer-events:auto;
     }
 
-    .loader-core{
-      position:relative;
+    .hearth-ledger-cockpit[data-collapsed="true"]{
+      max-height:58px;
+    }
+
+    .hearth-ledger-cockpit[data-collapsed="true"] .hearth-ledger-scroll,
+    .hearth-ledger-cockpit[data-collapsed="true"] .hearth-ledger-receipt{
+      display:none;
+    }
+
+    .hearth-ledger-head{
       display:grid;
-      place-items:center;
-      width:min(78%,340px);
-      aspect-ratio:1/1;
-      border-radius:50%;
+      gap:5px;
+      padding:12px 14px 10px;
+      border-bottom:1px solid rgba(231,188,105,.16);
     }
 
-    .loader-ring,
-    .loader-ring::before,
-    .loader-ring::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      border-radius:50%;
-      border:1px solid rgba(231,188,105,.20);
-      box-shadow:
-        0 0 28px rgba(231,188,105,.09),
-        inset 0 0 36px rgba(141,216,255,.06);
-    }
-
-    .loader-ring::before{
-      inset:10%;
-      border-color:rgba(141,216,255,.22);
-    }
-
-    .loader-ring::after{
-      inset:22%;
-      border-color:rgba(139,215,163,.18);
-    }
-
-    .loader-orbit{
-      position:absolute;
-      inset:5%;
-      border-radius:50%;
-      border:1px dashed rgba(231,188,105,.18);
-      animation:hearth-loader-orbit 13s linear infinite;
-    }
-
-    .loader-orbit::before{
-      content:"";
-      position:absolute;
-      top:6%;
-      left:50%;
-      width:9px;
-      height:9px;
-      border-radius:50%;
-      transform:translateX(-50%);
-      background:var(--gold);
-      box-shadow:0 0 18px rgba(231,188,105,.52);
-    }
-
-    .loader-copy{
-      position:relative;
-      z-index:2;
-      display:grid;
-      gap:10px;
-      max-width:290px;
-      padding:22px;
-      border:1px solid rgba(231,188,105,.22);
-      border-radius:24px;
-      background:
-        linear-gradient(180deg,rgba(9,22,41,.78),rgba(4,10,20,.66));
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
-    }
-
-    .loader-copy b{
-      color:rgba(255,244,216,.98);
-      font-size:1.02rem;
-      line-height:1.1;
-      letter-spacing:-.015em;
-    }
-
-    .loader-copy span{
-      color:rgba(238,246,255,.72);
-      font-size:.88rem;
-      line-height:1.35;
-    }
-
-    .loader-stages{
-      display:grid;
-      gap:6px;
-      margin:6px 0 0;
-      padding:0;
-      list-style:none;
-      text-align:left;
-    }
-
-    .loader-stages li{
-      display:grid;
-      grid-template-columns:auto 1fr;
-      align-items:center;
-      gap:7px;
-      color:rgba(238,246,255,.60);
-      font-size:.72rem;
-      line-height:1.25;
-      font-weight:800;
-      letter-spacing:.035em;
+    .hearth-ledger-kicker{
+      color:#e7bc69;
+      font-size:.64rem;
+      font-weight:950;
+      letter-spacing:.16em;
       text-transform:uppercase;
     }
 
-    .loader-stages li::before{
+    .hearth-ledger-title{
+      margin:0;
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1rem,3vw,1.42rem);
+      line-height:1;
+      letter-spacing:-.035em;
+      font-weight:950;
+    }
+
+    .hearth-ledger-meta,
+    .hearth-ledger-latest{
+      color:rgba(238,246,255,.70);
+      font:760 .68rem/1.34 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+    }
+
+    .hearth-ledger-progress{
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:10px;
+      align-items:center;
+      padding:9px 14px;
+      border-bottom:1px solid rgba(141,216,255,.10);
+    }
+
+    .hearth-ledger-track,
+    .hearth-ledger-lane-track{
+      position:relative;
+      overflow:hidden;
+      border:1px solid rgba(141,216,255,.18);
+      border-radius:999px;
+      background:rgba(1,4,10,.72);
+    }
+
+    .hearth-ledger-track{height:12px}
+    .hearth-ledger-lane-track{height:7px}
+
+    .hearth-ledger-fill,
+    .hearth-ledger-lane-fill{
+      position:absolute;
+      inset:0 auto 0 0;
+      width:0%;
+      border-radius:999px;
+      background:linear-gradient(90deg,#8dd8ff,#e7bc69,#ffe8a3);
+      transition:width .16s ease-out;
+    }
+
+    .hearth-ledger-track::after,
+    .hearth-ledger-lane-track::after{
       content:"";
-      width:7px;
-      height:7px;
-      border-radius:50%;
-      border:1px solid rgba(141,216,255,.34);
-      background:rgba(141,216,255,.08);
+      position:absolute;
+      inset:0;
+      transform:translateX(-100%);
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent);
+      animation:hearth-ledger-sheen 1.1s linear infinite;
     }
 
-    .loader-stages li[data-state="pass"]{
-      color:rgba(139,215,163,.86);
+    .hearth-ledger-percent{
+      min-width:42px;
+      color:#ffe8a3;
+      text-align:right;
+      font:950 .80rem/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
     }
 
-    .loader-stages li[data-state="pass"]::before{
-      border-color:rgba(139,215,163,.62);
-      background:rgba(139,215,163,.36);
+    .hearth-ledger-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:7px;
+      padding:9px 14px;
+      border-bottom:1px solid rgba(231,188,105,.14);
+      background:linear-gradient(180deg,rgba(7,18,32,.98),rgba(3,9,18,.96));
     }
 
-    .loader-stages li[data-state="warn"]{
-      color:rgba(255,180,95,.86);
+    .hearth-ledger-button{
+      min-height:30px;
+      border:1px solid rgba(231,188,105,.25);
+      border-radius:999px;
+      padding:7px 10px;
+      color:rgba(238,246,255,.88);
+      background:rgba(255,255,255,.045);
+      font:900 .62rem/1 ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      cursor:pointer;
     }
 
-    .loader-stages li[data-state="warn"]::before{
-      border-color:rgba(255,180,95,.62);
-      background:rgba(255,180,95,.28);
+    .hearth-ledger-button.primary{
+      color:#06101e;
+      border-color:rgba(231,188,105,.72);
+      background:linear-gradient(135deg,#ffe8a3,#e7bc69);
+    }
+
+    .hearth-ledger-scroll{
+      flex:1 1 auto;
+      min-height:0;
+      overflow:auto;
+      overscroll-behavior:contain;
+    }
+
+    .hearth-ledger-lanes{
+      display:grid;
+      gap:7px;
+      padding:10px 14px;
+    }
+
+    .hearth-ledger-lane{
+      display:grid;
+      gap:6px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:14px;
+      padding:9px;
+      background:rgba(255,255,255,.035);
+    }
+
+    .hearth-ledger-lane[data-status="READY"],
+    .hearth-ledger-lane[data-status="HYDRATED"],
+    .hearth-ledger-lane[data-status="MOUNTED"],
+    .hearth-ledger-lane[data-status="RENDERED"],
+    .hearth-ledger-lane[data-status="COPY_ARMED"],
+    .hearth-ledger-lane[data-status="FINAL_READY"],
+    .hearth-ledger-lane[data-status="LATCHED"]{
+      border-color:rgba(139,215,163,.28);
+      background:rgba(139,215,163,.06);
+    }
+
+    .hearth-ledger-lane[data-status="LOADING"],
+    .hearth-ledger-lane[data-status="REQUESTED"],
+    .hearth-ledger-lane[data-status="LOADED"]{
+      border-color:rgba(141,216,255,.28);
+      background:rgba(141,216,255,.06);
+    }
+
+    .hearth-ledger-lane[data-status="DEGRADED"],
+    .hearth-ledger-lane[data-status="HELD"]{
+      border-color:rgba(231,188,105,.30);
+      background:rgba(231,188,105,.065);
+    }
+
+    .hearth-ledger-lane[data-status="FAILED"]{
+      border-color:rgba(255,112,112,.36);
+      background:rgba(255,112,112,.07);
+    }
+
+    .hearth-ledger-lane-top{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) auto;
+      gap:8px;
+      align-items:center;
+    }
+
+    .hearth-ledger-lane-title{
+      min-width:0;
+      display:grid;
+      gap:2px;
+    }
+
+    .hearth-ledger-lane-title strong{
+      color:rgba(255,244,216,.94);
+      font-size:.78rem;
+      line-height:1.05;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .hearth-ledger-lane-title span{
+      color:rgba(238,246,255,.64);
+      font:720 .63rem/1.15 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .hearth-ledger-lane-status{
+      color:rgba(238,246,255,.72);
+      font:900 .60rem/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      letter-spacing:.08em;
+    }
+
+    .hearth-ledger-receipt{
+      display:none;
+      margin:0 14px 14px;
+      max-height:230px;
+      overflow:auto;
+      border:1px solid rgba(141,216,255,.16);
+      border-radius:14px;
+      background:rgba(1,4,10,.62);
+    }
+
+    .hearth-ledger-receipt[data-visible="true"]{display:block}
+
+    .hearth-ledger-receipt pre{
+      margin:0;
+      padding:11px;
+      color:rgba(238,246,255,.66);
+      font:700 .61rem/1.42 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      white-space:pre-wrap;
     }
 
     .planet-caption{
@@ -840,15 +889,13 @@
       font-size:.76rem;
     }
 
-    @keyframes hearth-loader-orbit{
-      from{transform:rotate(0deg)}
-      to{transform:rotate(360deg)}
+    @keyframes hearth-ledger-sheen{
+      from{transform:translateX(-100%)}
+      to{transform:translateX(100%)}
     }
 
     @media (max-width:1080px){
-      .hero{
-        grid-template-columns:1fr;
-      }
+      .hero{grid-template-columns:1fr}
 
       .world-grid,
       .proof-grid,
@@ -896,8 +943,21 @@
         min-height:300px;
       }
 
-      .loader-core{
-        width:min(86%,310px);
+      .hearth-ledger-cockpit{
+        inset:auto 8px 8px 8px;
+        border-radius:18px;
+        max-height:calc(100% - 16px);
+      }
+
+      .hearth-ledger-actions{
+        position:sticky;
+        top:0;
+        z-index:2;
+      }
+
+      .hearth-ledger-button{
+        flex:1 1 auto;
+        min-width:42%;
       }
     }
 
@@ -912,6 +972,763 @@
       }
     }
   </style>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const CONTRACT = "HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1";
+      const RECEIPT = "HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_RECEIPT_v1";
+      const PREVIOUS_CONTRACT = "HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1";
+      const BASELINE_CONTRACT = "HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_CONDUCTOR_PAIR_PRECODE_FINAL_DRAFT_v1";
+      const VERSION = "2026-05-29.hearth-distributed-load-ledger-html-first-paint-cockpit-v1";
+      const ROUTE = "/showroom/globe/hearth/";
+      const ACTIVE_CONDUCTOR = "/showroom/globe/hearth/hearth.js";
+      const RETIRED_CLIMATE_ROUTE = "/showroom/globe/hearth/hearth.climate.route.js";
+      const CANVAS_AUTHORITY = "/assets/hearth/hearth.canvas.js";
+      const RUNTIME_TABLE = "/assets/lab/runtime-table.js";
+
+      const FIB = {
+        F1A:{id:"F1A", value:1, label:"HTML shell", progress:6},
+        F1B:{id:"F1B", value:1, label:"Load ledger", progress:12},
+        F2:{id:"F2", value:2, label:"First-paint cockpit", progress:22},
+        F3:{id:"F3", value:3, label:"Script order", progress:36},
+        F5:{id:"F5", value:5, label:"Authority availability", progress:55},
+        F8:{id:"F8", value:8, label:"Conductor hydration", progress:72},
+        F13:{id:"F13", value:13, label:"Canvas and diagnostic", progress:92},
+        F21:{id:"F21", value:21, label:"Completion latch", progress:100}
+      };
+
+      const STATUS = {
+        REQUESTED:"REQUESTED",
+        LOADING:"LOADING",
+        LOADED:"LOADED",
+        READY:"READY",
+        DEGRADED:"DEGRADED",
+        HELD:"HELD",
+        FAILED:"FAILED",
+        HYDRATED:"HYDRATED",
+        MOUNTED:"MOUNTED",
+        RENDERED:"RENDERED",
+        BOUND:"BOUND",
+        COPY_ARMED:"COPY_ARMED",
+        FINAL_READY:"FINAL_READY",
+        LATCHED:"LATCHED"
+      };
+
+      const LANES = [
+        { key:"shell", label:"Shell", fibonacci:"F1A" },
+        { key:"ledger", label:"Ledger", fibonacci:"F1B" },
+        { key:"staticCockpit", label:"Static cockpit", fibonacci:"F2" },
+        { key:"scriptOrder", label:"Script order", fibonacci:"F3" },
+        { key:"authorityAvailability", label:"Authority availability", fibonacci:"F5" },
+        { key:"conductorHydration", label:"Conductor hydration", fibonacci:"F8" },
+        { key:"canvasAndDiagnostic", label:"Canvas and diagnostic", fibonacci:"F13" },
+        { key:"completionLatch", label:"Completion latch", fibonacci:"F21" }
+      ];
+
+      const SCRIPT_MANIFEST = [
+        { key:"manorRegistry", lane:"scriptOrder", owner:"index.html", src:"/assets/manor-blueprint/manor.blueprint.registry.js" },
+        { key:"manorBlueprint", lane:"scriptOrder", owner:"index.html", src:"/assets/manor-blueprint/manor.blueprint.js" },
+        { key:"runtimeTable", lane:"authorityAvailability", owner:"runtime-table.js", src:RUNTIME_TABLE },
+        { key:"sourceTectonics", lane:"authorityAvailability", owner:"hearth.tectonics.js", src:"/assets/hearth/hearth.tectonics.js" },
+        { key:"sourceElevation", lane:"authorityAvailability", owner:"hearth.elevation.js", src:"/assets/hearth/hearth.elevation.js" },
+        { key:"sourceComposition", lane:"authorityAvailability", owner:"hearth.composition.js", src:"/assets/hearth/hearth.composition.js" },
+        { key:"sourceHydrology", lane:"authorityAvailability", owner:"hearth.hydrology.js", src:"/assets/hearth/hearth.hydrology.js" },
+        { key:"sourceMaterials", lane:"authorityAvailability", owner:"hearth.materials.js", src:"/assets/hearth/hearth.materials.js" },
+        { key:"sourceHexAuthority", lane:"authorityAvailability", owner:"hearth.hex.four-pair.authority.js", src:"/assets/hearth/hearth.hex.four-pair.authority.js" },
+        { key:"sourceHexSurface", lane:"authorityAvailability", owner:"hearth.hex.surface.js", src:"/assets/hearth/hearth.hex.surface.js" },
+        { key:"canvasAuthority", lane:"canvasAndDiagnostic", owner:"hearth.canvas.js", src:CANVAS_AUTHORITY },
+        { key:"conductor", lane:"conductorHydration", owner:"hearth.js", src:ACTIVE_CONDUCTOR }
+      ];
+
+      function nowIso() {
+        try {
+          return new Date().toISOString();
+        } catch (_error) {
+          return "";
+        }
+      }
+
+      function nowMs() {
+        return Date.now ? Date.now() : new Date().getTime();
+      }
+
+      function clamp(value, min, max) {
+        const n = Number(value);
+        if (!Number.isFinite(n)) return min;
+        return Math.max(min, Math.min(max, n));
+      }
+
+      function clonePlain(value) {
+        if (!value || typeof value !== "object") return value;
+        try {
+          return JSON.parse(JSON.stringify(value));
+        } catch (_error) {
+          return Array.isArray(value) ? value.slice() : { ...value };
+        }
+      }
+
+      function formatElapsed(ms) {
+        const total = Math.max(0, Math.floor(Number(ms || 0) / 1000));
+        const minutes = Math.floor(total / 60);
+        const seconds = total % 60;
+        return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+      }
+
+      function makeLane(definition, status, message) {
+        return {
+          key:definition.key,
+          label:definition.label,
+          fibonacci:definition.fibonacci,
+          status:status || STATUS.REQUESTED,
+          message:message || definition.label,
+          progress:FIB[definition.fibonacci] ? FIB[definition.fibonacci].progress : 0,
+          elapsedMs:0,
+          startedAt:nowIso(),
+          updatedAt:nowIso(),
+          latestEvent:"LANE_INITIALIZED",
+          watchdog:""
+        };
+      }
+
+      const state = {
+        contract:"HEARTH_DISTRIBUTED_LOAD_LEDGER_SHARED_v1",
+        htmlContract:CONTRACT,
+        htmlReceipt:RECEIPT,
+        previousContract:PREVIOUS_CONTRACT,
+        baselineContract:BASELINE_CONTRACT,
+        version:VERSION,
+        route:ROUTE,
+        startedAt:nowIso(),
+        updatedAt:nowIso(),
+        startedAtMs:nowMs(),
+        currentFibonacciStage:"F1B",
+        completionLatched:false,
+        visibleLoadingActive:true,
+        diagnosticCockpitReady:false,
+        partialReceiptAvailable:true,
+        finalReceiptAvailable:false,
+        copyDiagnosticArmed:false,
+        firstPaintCockpitVisible:false,
+        staticCopyDiagnosticFallbackArmed:false,
+        visualPassClaimed:false,
+        activeRouteConductor:ACTIVE_CONDUCTOR,
+        retiredClimateRoute:RETIRED_CLIMATE_ROUTE,
+        retiredClimateRouteActiveCarrier:false,
+        runtimeTableOptional:true,
+        sourceAuthorityHeld:true,
+        canvasAuthority:CANVAS_AUTHORITY,
+        events:[],
+        errors:[],
+        scripts:{},
+        lanes:{}
+      };
+
+      LANES.forEach((lane) => {
+        state.lanes[lane.key] = makeLane(lane, STATUS.REQUESTED, lane.label);
+      });
+
+      SCRIPT_MANIFEST.forEach((script) => {
+        state.scripts[script.key] = {
+          key:script.key,
+          lane:script.lane,
+          owner:script.owner,
+          src:script.src,
+          status:STATUS.REQUESTED,
+          error:"",
+          requestedAt:nowIso(),
+          loadedAt:"",
+          updatedAt:nowIso()
+        };
+      });
+
+      function push(event) {
+        const entry = {
+          id:event.id || event.event || "LEDGER_EVENT",
+          stage:event.stage || state.currentFibonacciStage,
+          fibonacci:event.fibonacci || (FIB[event.stage || state.currentFibonacciStage] ? FIB[event.stage || state.currentFibonacciStage].value : ""),
+          owner:event.owner || "index.html",
+          file:event.file || "",
+          lane:event.lane || "",
+          status:event.status || "",
+          message:event.message || "",
+          timestamp:nowIso(),
+          elapsedMs:nowMs() - state.startedAtMs,
+          detail:clonePlain(event.detail || {})
+        };
+
+        state.events.push(entry);
+        state.updatedAt = entry.timestamp;
+
+        if (state.events.length > 180) {
+          state.events.splice(0, state.events.length - 180);
+        }
+
+        renderCockpit();
+        publishDataset();
+        return entry;
+      }
+
+      function setStage(stage, message) {
+        state.currentFibonacciStage = stage;
+        push({
+          id:`STAGE_${stage}`,
+          stage,
+          owner:"index.html",
+          lane:"stage",
+          status:STATUS.READY,
+          message:message || (FIB[stage] ? FIB[stage].label : stage)
+        });
+      }
+
+      function setLane(laneKey, next) {
+        const lane = state.lanes[laneKey];
+        if (!lane) return null;
+
+        lane.status = next.status || lane.status;
+        lane.message = next.message || lane.message;
+        lane.progress = Number.isFinite(Number(next.progress)) ? clamp(Number(next.progress), 0, 100) : lane.progress;
+        lane.latestEvent = next.event || next.latestEvent || lane.latestEvent;
+        lane.updatedAt = nowIso();
+
+        if (lane.startedAt) {
+          lane.elapsedMs = Math.max(0, new Date(lane.updatedAt).getTime() - new Date(lane.startedAt).getTime());
+        }
+
+        push({
+          id:next.event || `LANE_${String(laneKey).toUpperCase()}_${lane.status}`,
+          stage:next.stage || lane.fibonacci,
+          owner:next.owner || "index.html",
+          file:next.file || "",
+          lane:laneKey,
+          status:lane.status,
+          message:lane.message,
+          detail:next.detail || {}
+        });
+
+        return lane;
+      }
+
+      function reportScript(key, status, src, error) {
+        const script = state.scripts[key] || {
+          key,
+          lane:"scriptOrder",
+          owner:"unknown",
+          src:src || "",
+          status:STATUS.REQUESTED,
+          error:"",
+          requestedAt:nowIso(),
+          loadedAt:"",
+          updatedAt:nowIso()
+        };
+
+        script.src = src || script.src || "";
+        script.status = status || STATUS.LOADING;
+        script.error = error || "";
+        script.updatedAt = nowIso();
+
+        if (status === STATUS.LOADED || status === "LOADED") script.loadedAt = nowIso();
+
+        state.scripts[key] = script;
+
+        const isSource = key.indexOf("source") === 0;
+        const scriptFailed = status === STATUS.FAILED || status === "FAILED";
+
+        setStage("F3", "Script order reporting active");
+
+        setLane("scriptOrder", {
+          status: scriptFailed ? STATUS.DEGRADED : STATUS.LOADING,
+          progress: FIB.F3.progress,
+          event: `SCRIPT_${status}`,
+          stage: "F3",
+          owner: "index.html",
+          file: script.src,
+          message: `${key} ${status}`
+        });
+
+        if (key === "runtimeTable") {
+          setLane("authorityAvailability", {
+            status: scriptFailed ? STATUS.DEGRADED : STATUS.READY,
+            progress: FIB.F5.progress,
+            event: scriptFailed ? "RUNTIME_TABLE_DEGRADED" : "RUNTIME_TABLE_AVAILABLE",
+            stage: "F5",
+            owner: "index.html",
+            file: script.src,
+            message: scriptFailed ? "Runtime Table degraded; first paint continues." : "Runtime Table script loaded."
+          });
+        }
+
+        if (isSource) {
+          setLane("authorityAvailability", {
+            status: STATUS.HELD,
+            progress: FIB.F5.progress,
+            event: "SOURCE_STACK_HELD",
+            stage: "F5",
+            owner: "index.html",
+            file: script.src,
+            message: "Source stack load tracked; source authority held."
+          });
+        }
+
+        if (key === "canvasAuthority") {
+          setLane("canvasAndDiagnostic", {
+            status: scriptFailed ? STATUS.DEGRADED : STATUS.LOADED,
+            progress: scriptFailed ? 40 : FIB.F13.progress - 12,
+            event: scriptFailed ? "CANVAS_AUTHORITY_DEGRADED" : "CANVAS_AUTHORITY_AVAILABLE",
+            stage: "F13",
+            owner: "index.html",
+            file: script.src,
+            message: scriptFailed ? "Canvas authority degraded; conductor may retry." : "Canvas authority script loaded."
+          });
+        }
+
+        if (key === "conductor") {
+          setLane("conductorHydration", {
+            status: scriptFailed ? STATUS.FAILED : STATUS.LOADED,
+            progress: scriptFailed ? 100 : FIB.F8.progress,
+            event: scriptFailed ? "CONDUCTOR_SCRIPT_ERROR" : "CONDUCTOR_AVAILABLE",
+            stage: "F8",
+            owner: "index.html",
+            file: script.src,
+            message: scriptFailed ? "Conductor script failed." : "Conductor script loaded; hydration expected."
+          });
+        }
+
+        renderCockpit();
+        publishDataset();
+      }
+
+      function getReceipt() {
+        return clonePlain(state);
+      }
+
+      function getReceiptText() {
+        const receipt = getReceipt();
+
+        const lanes = Object.entries(receipt.lanes || {}).map(([key, lane]) => {
+          return `- ${key}: status=${lane.status}; fibonacci=${lane.fibonacci}; progress=${lane.progress}; event=${lane.latestEvent}; message=${lane.message}`;
+        }).join("\n") || "- none";
+
+        const scripts = Object.entries(receipt.scripts || {}).map(([key, script]) => {
+          return `- ${key}: status=${script.status}; src=${script.src || ""}; error=${script.error || ""}`;
+        }).join("\n") || "- none";
+
+        const events = (receipt.events || []).map((event) => {
+          return `- ${event.timestamp} :: ${event.id} :: stage=${event.stage} :: lane=${event.lane} :: status=${event.status} :: ${event.message}`;
+        }).join("\n") || "- none";
+
+        return [
+          "HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_RECEIPT",
+          "",
+          `contract=${CONTRACT}`,
+          `receipt=${RECEIPT}`,
+          `previousContract=${PREVIOUS_CONTRACT}`,
+          `baselineContract=${BASELINE_CONTRACT}`,
+          `version=${VERSION}`,
+          `route=${ROUTE}`,
+          "",
+          `ledgerInitialized=true`,
+          `firstPaintCockpitVisible=${state.firstPaintCockpitVisible}`,
+          `staticCopyDiagnosticFallbackArmed=${state.staticCopyDiagnosticFallbackArmed}`,
+          `currentFibonacciStage=${state.currentFibonacciStage}`,
+          `completionLatched=${state.completionLatched}`,
+          `visibleLoadingActive=${state.visibleLoadingActive}`,
+          `diagnosticCockpitReady=${state.diagnosticCockpitReady}`,
+          "",
+          `activeRouteConductor=${ACTIVE_CONDUCTOR}`,
+          `retiredClimateRoute=${RETIRED_CLIMATE_ROUTE}`,
+          `retiredClimateRouteActiveCarrier=false`,
+          `runtimeTableOptional=true`,
+          `sourceAuthorityHeld=true`,
+          `canvasAuthority=${CANVAS_AUTHORITY}`,
+          "",
+          "LANES",
+          lanes,
+          "",
+          "SCRIPTS",
+          scripts,
+          "",
+          "EVENTS",
+          events,
+          "",
+          "SOURCE_STACK_HELD",
+          "- /assets/hearth/hearth.tectonics.js",
+          "- /assets/hearth/hearth.elevation.js",
+          "- /assets/hearth/hearth.composition.js",
+          "- /assets/hearth/hearth.hydrology.js",
+          "- /assets/hearth/hearth.materials.js",
+          "- /assets/hearth/hearth.hex.four-pair.authority.js",
+          "- /assets/hearth/hearth.hex.surface.js",
+          "- /assets/lab/runtime-table.js",
+          "",
+          "generatedImage=false",
+          "graphicBox=false",
+          "webGL=false",
+          "visualPassClaimed=false",
+          "",
+          `updatedAt=${nowIso()}`
+        ].join("\n");
+      }
+
+      async function copyDiagnostic() {
+        const text = getReceiptText();
+        let ok = false;
+
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(text);
+            ok = true;
+          } else {
+            const textarea = document.createElement("textarea");
+            textarea.value = text;
+            textarea.setAttribute("readonly", "readonly");
+            textarea.style.position = "fixed";
+            textarea.style.left = "-9999px";
+            document.body.appendChild(textarea);
+            textarea.select();
+            ok = document.execCommand("copy");
+            textarea.remove();
+          }
+        } catch (_error) {
+          ok = false;
+        }
+
+        push({
+          id: ok ? "STATIC_COPY_DIAGNOSTIC_COPIED" : "STATIC_COPY_DIAGNOSTIC_FAILED",
+          stage: state.currentFibonacciStage,
+          owner: "index.html",
+          lane: "staticCockpit",
+          status: ok ? STATUS.COPY_ARMED : STATUS.DEGRADED,
+          message: ok ? "Static diagnostic copied." : "Static diagnostic copy failed."
+        });
+
+        const button = document.querySelector("[data-hearth-copy-diagnostic]");
+        if (button) {
+          const original = button.textContent;
+          button.textContent = ok ? "Copied" : "Copy failed";
+          setTimeout(() => { button.textContent = original || "Copy diagnostic"; }, 1200);
+        }
+
+        return ok;
+      }
+
+      function latchCompletion(reason) {
+        state.completionLatched = true;
+        state.visibleLoadingActive = false;
+        state.diagnosticCockpitReady = true;
+        state.finalReceiptAvailable = true;
+        state.currentFibonacciStage = "F21";
+
+        setLane("completionLatch", {
+          status: STATUS.LATCHED,
+          progress: 100,
+          event: "COMPLETION_LATCHED",
+          stage: "F21",
+          owner: "index.html",
+          file: ACTIVE_CONDUCTOR,
+          message: reason || "Completion latched."
+        });
+
+        push({
+          id: "LOADING_LOOP_SETTLED",
+          stage: "F21",
+          owner: "index.html",
+          lane: "completionLatch",
+          status: STATUS.LATCHED,
+          message: "Visible loading settled into diagnostic cockpit mode."
+        });
+
+        renderCockpit();
+        publishDataset();
+      }
+
+      function laneHtml(lane) {
+        const status = lane.status || STATUS.REQUESTED;
+        const progress = clamp(lane.progress, 0, 100);
+
+        return `
+          <section class="hearth-ledger-lane" data-lane="${lane.key}" data-status="${status}">
+            <div class="hearth-ledger-lane-top">
+              <span class="hearth-ledger-lane-title">
+                <strong>${lane.label} · ${lane.fibonacci}</strong>
+                <span>${lane.message || ""}</span>
+              </span>
+              <span class="hearth-ledger-lane-status">${status}</span>
+            </div>
+            <div class="hearth-ledger-lane-track">
+              <span class="hearth-ledger-lane-fill" style="width:${progress}%"></span>
+            </div>
+            <span class="hearth-ledger-lane-title">
+              <span>event=${lane.latestEvent || "PENDING"}</span>
+            </span>
+          </section>
+        `;
+      }
+
+      function renderCockpit() {
+        const cockpit = document.querySelector("[data-hearth-load-cockpit='true']");
+        if (!cockpit) return;
+
+        const stage = state.currentFibonacciStage || "F2";
+        const stageMeta = FIB[stage] || FIB.F2;
+        const elapsed = nowMs() - state.startedAtMs;
+        const progress = clamp(stageMeta.progress, 0, 100);
+
+        const stageNode = cockpit.querySelector("[data-hearth-stage-label]");
+        const heartbeatNode = cockpit.querySelector("[data-hearth-heartbeat-text]");
+        const latestNode = cockpit.querySelector("[data-hearth-latest-event]");
+        const fillNode = cockpit.querySelector("[data-hearth-main-progress-fill]");
+        const percentNode = cockpit.querySelector("[data-hearth-main-progress-percent]");
+        const laneList = cockpit.querySelector("[data-hearth-lane-list]");
+        const receiptText = cockpit.querySelector("[data-hearth-receipt-text]");
+
+        cockpit.dataset.hearthFibonacciStage = stage;
+        cockpit.dataset.hearthCompletionLatched = String(state.completionLatched);
+        cockpit.dataset.hearthVisibleLoadingActive = String(state.visibleLoadingActive);
+        cockpit.dataset.hearthDiagnosticCockpitReady = String(state.diagnosticCockpitReady);
+
+        if (stageNode) stageNode.textContent = `${stage} · ${stageMeta.label}`;
+        if (heartbeatNode) {
+          heartbeatNode.textContent = state.completionLatched
+            ? `heartbeat=quiet · latched=true · elapsed=${formatElapsed(elapsed)}`
+            : `heartbeat=active · stage=${stage} · elapsed=${formatElapsed(elapsed)}`;
+        }
+
+        if (latestNode) {
+          const latest = state.events[state.events.length - 1];
+          latestNode.textContent = `latest=${latest ? latest.id : "FIRST_PAINT_LOADING_COCKPIT_VISIBLE"}`;
+        }
+
+        if (fillNode) fillNode.style.width = `${progress}%`;
+        if (percentNode) percentNode.textContent = `${progress}%`;
+
+        if (laneList) {
+          laneList.innerHTML = LANES.map((lane) => laneHtml(state.lanes[lane.key])).join("");
+        }
+
+        if (receiptText) {
+          receiptText.textContent = getReceiptText();
+        }
+      }
+
+      function publishDataset() {
+        const dataset = document.documentElement.dataset;
+
+        dataset.hearthHtmlContract = CONTRACT;
+        dataset.hearthHtmlReceipt = RECEIPT;
+        dataset.hearthDistributedLoadLedger = "true";
+        dataset.hearthLoadLedgerInitialized = "true";
+        dataset.hearthFirstPaintCockpitVisible = String(state.firstPaintCockpitVisible);
+        dataset.hearthStaticCopyDiagnosticFallbackArmed = String(state.staticCopyDiagnosticFallbackArmed);
+        dataset.hearthFibonacciStage = state.currentFibonacciStage;
+        dataset.hearthCompletionLatched = String(state.completionLatched);
+        dataset.hearthVisibleLoadingActive = String(state.visibleLoadingActive);
+        dataset.hearthDiagnosticCockpitReady = String(state.diagnosticCockpitReady);
+        dataset.hearthActiveRouteFile = ACTIVE_CONDUCTOR;
+        dataset.hearthActiveRouteConductor = ACTIVE_CONDUCTOR;
+        dataset.hearthRetiredClimateRoute = RETIRED_CLIMATE_ROUTE;
+        dataset.hearthRetiredClimateRouteActiveCarrier = "false";
+        dataset.hearthRuntimeTableOptional = "true";
+        dataset.hearthSourceAuthorityHeld = "true";
+        dataset.hearthCanvasAuthority = CANVAS_AUTHORITY;
+        dataset.generatedImage = "false";
+        dataset.graphicBox = "false";
+        dataset.webgl = "false";
+        dataset.visualPassClaimed = "false";
+      }
+
+      window.HEARTH_LOAD_LEDGER = {
+        state,
+        push,
+        setLane,
+        setStage,
+        getReceipt,
+        getReceiptText,
+        copyDiagnostic,
+        latchCompletion,
+        reportScript
+      };
+
+      window.__HEARTH_LEDGER_REPORT_SCRIPT = reportScript;
+      window.__HEARTH_LEDGER_COPY = copyDiagnostic;
+      window.__HEARTH_LEDGER_TOGGLE_RECEIPT = () => {
+        const box = document.querySelector("[data-hearth-receipt-box]");
+        const button = document.querySelector("[data-hearth-toggle-receipt]");
+        if (!box) return;
+        const visible = box.dataset.visible !== "true";
+        box.dataset.visible = String(visible);
+        if (button) button.textContent = visible ? "Hide receipt" : "Show receipt";
+        push({
+          id:"STATIC_RECEIPT_VISIBILITY_TOGGLED",
+          stage:state.currentFibonacciStage,
+          owner:"index.html",
+          lane:"staticCockpit",
+          status:STATUS.READY,
+          message:`receipt visible=${visible}`
+        });
+      };
+
+      window.__HEARTH_LEDGER_COLLAPSE = () => {
+        const cockpit = document.querySelector("[data-hearth-load-cockpit='true']");
+        const button = document.querySelector("[data-hearth-collapse-cockpit]");
+        if (!cockpit) return;
+        const collapsed = cockpit.dataset.collapsed !== "true";
+        cockpit.dataset.collapsed = String(collapsed);
+        if (button) button.textContent = collapsed ? "Open cockpit" : "Collapse cockpit";
+        push({
+          id:"STATIC_COCKPIT_COLLAPSE_TOGGLED",
+          stage:state.currentFibonacciStage,
+          owner:"index.html",
+          lane:"staticCockpit",
+          status:STATUS.READY,
+          message:`collapsed=${collapsed}`
+        });
+      };
+
+      setLane("shell", {
+        status:STATUS.READY,
+        progress:FIB.F1A.progress,
+        event:"HTML_SHELL_RENDERED",
+        stage:"F1A",
+        owner:"index.html",
+        file:"/showroom/globe/hearth/index.html",
+        message:"HTML shell rendered."
+      });
+
+      setLane("ledger", {
+        status:STATUS.READY,
+        progress:FIB.F1B.progress,
+        event:"HEARTH_LOAD_LEDGER_INITIALIZED",
+        stage:"F1B",
+        owner:"index.html",
+        file:"/showroom/globe/hearth/index.html",
+        message:"Shared load ledger initialized before external scripts."
+      });
+
+      SCRIPT_MANIFEST.forEach((script) => {
+        reportScript(script.key, STATUS.REQUESTED, script.src, "");
+      });
+
+      document.addEventListener("DOMContentLoaded", () => {
+        state.firstPaintCockpitVisible = true;
+        state.staticCopyDiagnosticFallbackArmed = Boolean(document.querySelector("[data-hearth-copy-diagnostic]"));
+        state.copyDiagnosticArmed = state.staticCopyDiagnosticFallbackArmed;
+
+        setStage("F2", "First-paint loading cockpit visible");
+
+        setLane("staticCockpit", {
+          status:STATUS.COPY_ARMED,
+          progress:FIB.F2.progress,
+          event:"FIRST_PAINT_LOADING_COCKPIT_VISIBLE",
+          stage:"F2",
+          owner:"index.html",
+          file:"/showroom/globe/hearth/index.html",
+          message:"Static cockpit visible; copy diagnostic fallback armed."
+        });
+
+        renderCockpit();
+        publishDataset();
+      }, { once:true });
+
+      setInterval(() => {
+        const elapsed = nowMs() - state.startedAtMs;
+        Object.values(state.lanes).forEach((lane) => {
+          if (!lane.startedAt) return;
+          lane.elapsedMs = elapsed;
+        });
+        renderCockpit();
+      }, 1000);
+
+      publishDataset();
+    })();
+  </script>
+
+  <link rel="stylesheet" href="/assets/manor-blueprint/manor.blueprint.css?v=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1">
+
+  <script
+    src="/assets/manor-blueprint/manor.blueprint.registry.js?v=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1"
+    defer
+    onload="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('manorRegistry','LOADED',this.src,'')"
+    onerror="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('manorRegistry','FAILED',this.src,'script error')"
+  ></script>
+
+  <script
+    src="/assets/manor-blueprint/manor.blueprint.js?v=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1"
+    defer
+    onload="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('manorBlueprint','LOADED',this.src,'')"
+    onerror="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('manorBlueprint','FAILED',this.src,'script error')"
+  ></script>
+
+  <script
+    src="/assets/lab/runtime-table.js?v=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1"
+    defer
+    onload="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('runtimeTable','LOADED',this.src,'')"
+    onerror="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('runtimeTable','FAILED',this.src,'script error')"
+  ></script>
+
+  <script
+    src="/assets/hearth/hearth.tectonics.js?v=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1"
+    defer
+    onload="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('sourceTectonics','LOADED',this.src,'')"
+    onerror="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('sourceTectonics','FAILED',this.src,'script error')"
+  ></script>
+
+  <script
+    src="/assets/hearth/hearth.elevation.js?v=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1"
+    defer
+    onload="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('sourceElevation','LOADED',this.src,'')"
+    onerror="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('sourceElevation','FAILED',this.src,'script error')"
+  ></script>
+
+  <script
+    src="/assets/hearth/hearth.composition.js?v=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1"
+    defer
+    onload="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('sourceComposition','LOADED',this.src,'')"
+    onerror="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('sourceComposition','FAILED',this.src,'script error')"
+  ></script>
+
+  <script
+    src="/assets/hearth/hearth.hydrology.js?v=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1"
+    defer
+    onload="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('sourceHydrology','LOADED',this.src,'')"
+    onerror="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('sourceHydrology','FAILED',this.src,'script error')"
+  ></script>
+
+  <script
+    src="/assets/hearth/hearth.materials.js?v=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1"
+    defer
+    onload="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('sourceMaterials','LOADED',this.src,'')"
+    onerror="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('sourceMaterials','FAILED',this.src,'script error')"
+  ></script>
+
+  <script
+    src="/assets/hearth/hearth.hex.four-pair.authority.js?v=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1"
+    defer
+    onload="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('sourceHexAuthority','LOADED',this.src,'')"
+    onerror="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('sourceHexAuthority','FAILED',this.src,'script error')"
+  ></script>
+
+  <script
+    src="/assets/hearth/hearth.hex.surface.js?v=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1"
+    defer
+    onload="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('sourceHexSurface','LOADED',this.src,'')"
+    onerror="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('sourceHexSurface','FAILED',this.src,'script error')"
+  ></script>
+
+  <script
+    src="/assets/hearth/hearth.canvas.js?v=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1"
+    defer
+    onload="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('canvasAuthority','LOADED',this.src,'')"
+    onerror="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('canvasAuthority','FAILED',this.src,'script error')"
+  ></script>
+
+  <script
+    src="/showroom/globe/hearth/hearth.js?v=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1"
+    defer
+    onload="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('conductor','LOADED',this.src,'')"
+    onerror="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('conductor','FAILED',this.src,'script error')"
+  ></script>
 </head>
 
 <body>
@@ -942,24 +1759,19 @@
     <main id="hearth-main">
       <section class="panel hero" aria-labelledby="hearth-title">
         <div class="hero-copy">
-          <div class="eyebrow">Hearth · Active Planet · Loading Screen / Conductor / Carrier Route</div>
+          <div class="eyebrow">Hearth · Distributed Load Ledger · 40 Billion Years Forward</div>
 
           <h1 id="hearth-title">Survival becomes shelter.</h1>
 
           <p class="lede">
-            Hearth is the world where pressure does not end at endurance. Exposed terrain, fractured coastlines, hydrology, materials, plate stress, and body-level survival begin turning into shelter, continuity, and home.
+            Hearth is a future-Earth survival lane: a technically advanced world roughly forty billion years forward, showing what Earth could become if it survived, adapted, and converted pressure into shelter.
           </p>
 
           <p class="lede">
-            This shell restores the visible loading screen first, then hands off to <code>hearth.js</code> as conductor and <code>/assets/hearth/hearth.canvas.js</code> as the visible planet carrier. Runtime Table remains optional.
-          </p>
-
-          <p class="lede">
-            Narrative lens: Hearth can be read as a forty-billion-year future survival planet — what an Earthlike civilization might resemble if it became technically advanced enough to survive deep time and turn pressure into shelter.
+            The route now first-paints one loading cockpit, initializes a shared load ledger, reports file status chronologically, and lets Hearth.js hydrate the existing cockpit instead of creating a competing screen.
           </p>
 
           <div class="world-law" aria-label="World lane roles">
-            <span class="badge gold">40B-Year Future Lens</span>
             <span class="badge gold">ZIONTS · Consequence</span>
             <span class="badge blue">H-Earth · Survival Conditions</span>
             <span class="badge">Hearth · Shelter From Pressure</span>
@@ -978,10 +1790,9 @@
           <section
             id="hearthCanvasMount"
             data-hearth-canvas-mount="true"
-            data-hearth-loading-screen-visible="true"
             data-hearth-parent-chain-aligned="true"
             data-hearth-active-visible-planet-carrier="true"
-            data-hearth-route-shell-contract="HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2"
+            data-hearth-route-shell-contract="HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1"
             data-hearth-active-route-conductor="/showroom/globe/hearth/hearth.js"
             data-hearth-canvas-authority="/assets/hearth/hearth.canvas.js"
             data-hearth-retired-climate-route="/showroom/globe/hearth/hearth.climate.route.js"
@@ -989,32 +1800,100 @@
             data-runtime-table-optional="true"
             data-runtime-table-missing-does-not-block-carrier="true"
             data-visible-carrier-first="true"
-            data-wide-probe-deferred="true"
             aria-label="Hearth active planet canvas mount"
           >
-            <div class="carrier-loader" data-hearth-loading-screen="true" aria-live="polite">
-              <div class="loader-core" aria-label="Hearth loading screen">
-                <div class="loader-ring" aria-hidden="true"></div>
-                <div class="loader-orbit" aria-hidden="true"></div>
-                <div class="loader-copy">
-                  <b>Hearth carrier loading.</b>
-                  <span>Loading screen active. Visible planet carrier preparing.</span>
-                  <ul class="loader-stages" aria-label="Hearth load stages">
-                    <li data-stage="shell" data-state="pass">Shell mounted</li>
-                    <li data-stage="runtime-table" data-state="warn">Runtime Table optional</li>
-                    <li data-stage="source-stack" data-state="warn">Source stack loading</li>
-                    <li data-stage="canvas" data-state="warn">Canvas carrier loading</li>
-                    <li data-stage="conductor" data-state="warn">Conductor handoff pending</li>
-                  </ul>
+            <span class="mount-fallback" data-hearth-mount-fallback="true">
+              Hearth static carrier shell is active. Distributed load ledger is preparing.
+            </span>
+
+            <aside
+              id="hearthLoadCockpit"
+              class="hearth-ledger-cockpit"
+              data-hearth-load-cockpit="true"
+              data-hearth-first-paint-cockpit="true"
+              data-hearth-ledger-owner="index.html"
+              data-hearth-fibonacci-stage="F2"
+              data-hearth-completion-latched="false"
+              data-hearth-visible-loading-active="true"
+              data-hearth-diagnostic-cockpit-ready="false"
+              aria-label="Hearth distributed loading cockpit"
+            >
+              <div class="hearth-ledger-head">
+                <div class="hearth-ledger-kicker">Hearth · Distributed Load Ledger</div>
+                <h2 class="hearth-ledger-title">FORMING HEARTH RUNTIME TABLE</h2>
+                <div class="hearth-ledger-meta" data-hearth-stage-label>F2 · First-paint cockpit</div>
+                <div class="hearth-ledger-meta" data-hearth-heartbeat-text>heartbeat=active · stage=F2 · elapsed=00:00</div>
+                <div class="hearth-ledger-latest" data-hearth-latest-event>latest=FIRST_PAINT_LOADING_COCKPIT_VISIBLE</div>
+              </div>
+
+              <div class="hearth-ledger-progress">
+                <div class="hearth-ledger-track" aria-label="Hearth Fibonacci loading progress">
+                  <span class="hearth-ledger-fill" data-hearth-main-progress-fill style="width:22%"></span>
+                </div>
+                <div class="hearth-ledger-percent" data-hearth-main-progress-percent>22%</div>
+              </div>
+
+              <div class="hearth-ledger-actions">
+                <button class="hearth-ledger-button primary" type="button" data-hearth-copy-diagnostic onclick="window.__HEARTH_LEDGER_COPY&&window.__HEARTH_LEDGER_COPY()">Copy diagnostic</button>
+                <button class="hearth-ledger-button" type="button" data-hearth-toggle-receipt onclick="window.__HEARTH_LEDGER_TOGGLE_RECEIPT&&window.__HEARTH_LEDGER_TOGGLE_RECEIPT()">Show receipt</button>
+                <button class="hearth-ledger-button" type="button" data-hearth-collapse-cockpit onclick="window.__HEARTH_LEDGER_COLLAPSE&&window.__HEARTH_LEDGER_COLLAPSE()">Collapse cockpit</button>
+              </div>
+
+              <div class="hearth-ledger-scroll">
+                <div class="hearth-ledger-lanes" data-hearth-lane-list>
+                  <section class="hearth-ledger-lane" data-lane="shell" data-status="READY">
+                    <div class="hearth-ledger-lane-top">
+                      <span class="hearth-ledger-lane-title">
+                        <strong>Shell · F1A</strong>
+                        <span>HTML shell rendered.</span>
+                      </span>
+                      <span class="hearth-ledger-lane-status">READY</span>
+                    </div>
+                    <div class="hearth-ledger-lane-track"><span class="hearth-ledger-lane-fill" style="width:6%"></span></div>
+                    <span class="hearth-ledger-lane-title"><span>event=HTML_SHELL_RENDERED</span></span>
+                  </section>
+
+                  <section class="hearth-ledger-lane" data-lane="ledger" data-status="READY">
+                    <div class="hearth-ledger-lane-top">
+                      <span class="hearth-ledger-lane-title">
+                        <strong>Ledger · F1B</strong>
+                        <span>Shared load ledger initialized.</span>
+                      </span>
+                      <span class="hearth-ledger-lane-status">READY</span>
+                    </div>
+                    <div class="hearth-ledger-lane-track"><span class="hearth-ledger-lane-fill" style="width:12%"></span></div>
+                    <span class="hearth-ledger-lane-title"><span>event=HEARTH_LOAD_LEDGER_INITIALIZED</span></span>
+                  </section>
+
+                  <section class="hearth-ledger-lane" data-lane="staticCockpit" data-status="COPY_ARMED">
+                    <div class="hearth-ledger-lane-top">
+                      <span class="hearth-ledger-lane-title">
+                        <strong>Static cockpit · F2</strong>
+                        <span>First-paint cockpit visible; copy diagnostic armed.</span>
+                      </span>
+                      <span class="hearth-ledger-lane-status">COPY_ARMED</span>
+                    </div>
+                    <div class="hearth-ledger-lane-track"><span class="hearth-ledger-lane-fill" style="width:22%"></span></div>
+                    <span class="hearth-ledger-lane-title"><span>event=FIRST_PAINT_LOADING_COCKPIT_VISIBLE</span></span>
+                  </section>
+                </div>
+
+                <div class="hearth-ledger-receipt" data-hearth-receipt-box data-visible="false">
+                  <pre data-hearth-receipt-text>HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_RECEIPT
+contract=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1
+route=/showroom/globe/hearth/
+firstPaintCockpitVisible=true
+staticCopyDiagnosticFallbackArmed=true
+visualPassClaimed=false</pre>
                 </div>
               </div>
-            </div>
+            </aside>
           </section>
 
           <div class="planet-caption">
-            <b>Visible Carrier Funnel</b>
+            <b>Distributed Loading Funnel</b>
             <span>
-              The loading screen is part of the shell and survives degraded diagnostics. The planet carrier belongs to <code>/assets/hearth/hearth.canvas.js</code>. The old climate route is retired from active drawing duty.
+              One cockpit is visible from HTML first paint. Runtime Table, source stack, canvas authority, and the Hearth conductor report into one shared ledger. Hearth.js hydrates this cockpit and latches completion.
             </span>
           </div>
         </aside>
@@ -1023,18 +1902,18 @@
       <section class="panel section" id="narrative" aria-labelledby="narrative-title">
         <div class="section-head">
           <div class="section-kicker">Narrative Construct</div>
-          <h2 id="narrative-title">Hearth sits between survival pressure and future home.</h2>
+          <h2 id="narrative-title">Hearth is future Earth surviving long enough to become shelter.</h2>
           <p>
-            Hearth gives Mirrorland a world lane that is more intimate than planetary possibility and more constructive than raw survival diagnostics. It asks whether survival can become shelter before pressure becomes collapse.
+            Hearth is not a generic planet. It is a future-Earth survival chamber: a technically advanced world, roughly forty billion years forward, where pressure, scars, hydrology, materials, and shelter systems show what could remain if Earth survived instead of collapsed.
           </p>
         </div>
 
         <div class="narrative-band">
           <p>
-            <strong>ZIONTS</strong> shows consequence after living conditions fail. <strong>H-Earth</strong> studies the pressure conditions that survival must face. <strong>Audralia</strong> shows the untouched living possibility. <strong>Hearth</strong> is the conversion room: survival pressure becoming a place where people can actually stay.
+            <strong>ZIONTS</strong> shows consequence after living conditions fail. <strong>H-Earth</strong> studies the pressure conditions that survival must face. <strong>Audralia</strong> shows untouched living possibility. <strong>Hearth</strong> is the conversion room: survival pressure becoming a place where people can actually stay.
           </p>
           <p>
-            The future-world lens places Hearth far beyond ordinary recovery: a forty-billion-year-forward survival planet where ancient technology, carved coastlines, hydrology, mineral substrate, and long-term adaptation have had enough time to become part of the terrain itself.
+            The engineering layer remains a proof layer. The visible cockpit is diagnostic equipment. The planet carrier remains canvas-owned. The source stack remains held.
           </p>
         </div>
 
@@ -1067,36 +1946,36 @@
 
       <section class="panel section" id="proof-layer" aria-labelledby="proof-title">
         <div class="section-head">
-          <div class="section-kicker">Proof Layer · Source Stack Held</div>
-          <h2 id="proof-title">The engineering layer supports the story without replacing the route.</h2>
+          <div class="section-kicker">Proof Layer · Distributed Status</div>
+          <h2 id="proof-title">The page now shows what is loading while the files load themselves.</h2>
           <p>
-            The route shell no longer erases source authority globals and no longer reactivates the climate-route emergency carrier. Source files remain truth providers. Hearth.js conducts. Canvas displays.
+            Each file reports its own status into one cockpit: shell, ledger, script order, authority availability, conductor hydration, canvas diagnostics, and completion latch. The user can copy a diagnostic while loading is still active.
           </p>
         </div>
 
         <div class="proof-grid" aria-label="Hearth parent chain support">
           <article class="proof-card" style="--accent:var(--amber)">
-            <b>Tectonics</b>
-            <strong>Structural cause</strong>
-            <p>Plate stress, uplift ridges, fault pressure, cliff cuts, island breaks, and fractured coast behavior.</p>
+            <b>HTML</b>
+            <strong>First-paint cockpit</strong>
+            <p>Renders the cockpit and ledger before external scripts finish.</p>
           </article>
 
           <article class="proof-card" style="--accent:var(--gold)">
-            <b>Elevation / Composition</b>
-            <strong>Height and substrate</strong>
-            <p>Elevation resolves height and depth. Composition classifies material-ready terrain without drawing the page.</p>
+            <b>Ledger</b>
+            <strong>Chronological reporting</strong>
+            <p>Tracks the Fibonacci sequence: 1 → 1 → 2 → 3 → 5 → 8 → 13 → 21.</p>
           </article>
 
           <article class="proof-card" style="--accent:var(--blue)">
-            <b>Hydrology / Materials</b>
-            <strong>Waterline expression</strong>
-            <p>Hydrology classifies sea-level truth. Materials reveal water fill, shelves, wet stone, and submerged scars.</p>
+            <b>Conductor</b>
+            <strong>Hydration and latch</strong>
+            <p>Hearth.js hydrates the existing cockpit and stops visible loading after completion.</p>
           </article>
 
           <article class="proof-card" style="--accent:var(--green)">
             <b>Canvas</b>
             <strong>Visible carrier</strong>
-            <p>Canvas mounts the visible object and survives Runtime Table degraded or missing mode.</p>
+            <p>Canvas remains the planet carrier. Receipt and cockpit controls do not own drawing.</p>
           </article>
         </div>
       </section>
@@ -1137,536 +2016,38 @@
         </div>
       </section>
 
-      <pre id="hearth-route-status" data-hearth-route-status="true">Hearth loading screen active. Route shell preparing conductor / carrier funnel.</pre>
+      <pre id="hearth-route-status" data-hearth-route-status="true">Hearth distributed load ledger first-paint cockpit active.</pre>
 
       <template id="hearth-route-receipt" data-route-receipt>
-HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2
+HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1
 route=/showroom/globe/hearth/
 previous=HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1
-route_shell_loaded=true
-route_shell_active=true
-route_shell_owns_script_order=true
-loading_screen_required=true
-loading_screen_visible=true
-active_route_conductor=/showroom/globe/hearth/hearth.js
-active_route_conductor_expected=true
-retired_climate_route=/showroom/globe/hearth/hearth.climate.route.js
-retired_climate_route_active_carrier=false
-canvas_mount_present=true
-canvas_authority=/assets/hearth/hearth.canvas.js
-runtime_table=/assets/lab/runtime-table.js
-runtime_table_optional=true
-runtime_table_missing_does_not_block_carrier=true
-visible_carrier_first=true
-wide_probe_deferred=true
-source_authority_held=true
-source_order=runtime-table-optional→tectonics→elevation→composition→hydrology→materials→hex-authority→hex-surface→canvas→conductor
-tectonics=/assets/hearth/hearth.tectonics.js
-elevation=/assets/hearth/hearth.elevation.js
-composition=/assets/hearth/hearth.composition.js
-hydrology=/assets/hearth/hearth.hydrology.js
-materials=/assets/hearth/hearth.materials.js
-hex_authority=/assets/hearth/hearth.hex.four-pair.authority.js
-hex_surface=/assets/hearth/hearth.hex.surface.js
-target_land_ratio=0.30
-earth_reference_land_ratio=0.29
-future_earth_lens=forty-billion-years-forward
-rocky_means_jagged_not_gray=true
-plate_tectonics_active=true
-narrative_identity=Hearth · Survival Becomes Shelter
-world_lane=survival_pressure_becomes_home
-map_portal_required=true
-map_portal_source=/assets/manor-blueprint/manor.blueprint.js
-map_portal_registry=/assets/manor-blueprint/manor.blueprint.registry.js
-map_blip_single_entryway=true
-top_navigation_is_not_map_portal=true
-generated_image=false
-graphic_box=false
-webgl=false
-visual_pass_claimed=false
-next_diagnostic_target=postgame-conductor-canvas-receipt
+baseline=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_CONDUCTOR_PAIR_PRECODE_FINAL_DRAFT_v1
+ledgerInitialized=true
+firstPaintCockpitVisible=true
+staticCopyDiagnosticFallbackArmed=true
+oneVisibleLoadingCockpit=true
+sharedLoadLedger=true
+distributedFileStatusReporting=true
+conductorHydratesExistingCockpit=true
+completionLatchRequired=true
+fibonacciLoadOrder=1→1→2→3→5→8→13→21
+activeRouteConductor=/showroom/globe/hearth/hearth.js
+retiredClimateRoute=/showroom/globe/hearth/hearth.climate.route.js
+retiredClimateRouteActiveCarrier=false
+runtimeTableOptional=true
+sourceAuthorityHeld=true
+canvasAuthority=/assets/hearth/hearth.canvas.js
+generatedImage=false
+graphicBox=false
+webGL=false
+visualPassClaimed=false
       </template>
     </main>
 
     <footer>
-      HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2 · /showroom/globe/hearth/ · loading screen first · visible carrier handoff.
+      HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1 · /showroom/globe/hearth/ · Hearth · Survival Becomes Shelter.
     </footer>
   </div>
-
-  <script>
-    (() => {
-      "use strict";
-
-      const CONTRACT = "HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2";
-      const RECEIPT = "HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_RECEIPT_v2";
-      const PREVIOUS_CONTRACT = "HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1";
-      const ACTIVE_CONDUCTOR_FILE = "/showroom/globe/hearth/hearth.js";
-      const RETIRED_CLIMATE_ROUTE = "/showroom/globe/hearth/hearth.climate.route.js";
-      const CANVAS_AUTHORITY = "/assets/hearth/hearth.canvas.js";
-      const RUNTIME_TABLE = "/assets/lab/runtime-table.js";
-      const MOUNT_ID = "hearthCanvasMount";
-
-      const state = {
-        contract: CONTRACT,
-        receipt: RECEIPT,
-        previousContract: PREVIOUS_CONTRACT,
-        route: "/showroom/globe/hearth/",
-        routeShellLoaded: true,
-        routeShellActive: true,
-        loadingScreenRequired: true,
-        loadingScreenVisible: true,
-        loadingScreenHiddenAfterCanvas: false,
-        activeRouteConductor: ACTIVE_CONDUCTOR_FILE,
-        conductorConfirmed: false,
-        retiredClimateRoute: RETIRED_CLIMATE_ROUTE,
-        retiredClimateRouteActiveCarrier: false,
-        canvasAuthority: CANVAS_AUTHORITY,
-        runtimeTable: RUNTIME_TABLE,
-        runtimeTableOptional: true,
-        runtimeTablePresent: false,
-        runtimeTableMode: "RUNTIME_TABLE_PENDING",
-        runtimeTableMissingDoesNotBlockCarrier: true,
-        visibleCarrierFirst: true,
-        wideProbeDeferred: true,
-        sourceAuthorityHeld: true,
-        canvasMountPresent: false,
-        canvasApiPresent: false,
-        canvasCarrierMounted: false,
-        dragInspectionBound: false,
-        receiptOverlayIndependent: true,
-        imageRendered: false,
-        coherentExpressionPass: false,
-        visualPassClaimed: false,
-        firstFailedCoordinate: "LOADING_SCREEN_ACTIVE_CONDUCTOR_PENDING",
-        recommendedNextRenewalTarget: "wait-for-conductor-and-canvas-receipt",
-        generatedImage: false,
-        graphicBox: false,
-        webGL: false,
-        status: "LOADING_SCREEN_ACTIVE_CONDUCTOR_PENDING",
-        bootRequests: 0,
-        bootInvoked: false,
-        updatedAt: ""
-      };
-
-      function bool(value) {
-        return value === true || value === "true";
-      }
-
-      function getMount() {
-        return document.getElementById(MOUNT_ID);
-      }
-
-      function markStage(stage, status) {
-        const node = document.querySelector(`[data-stage="${stage}"]`);
-        if (node) node.dataset.state = status;
-      }
-
-      function getRuntimeTableApi() {
-        return (
-          window.LAB_RUNTIME_TABLE ||
-          window.DexterRuntimeTable ||
-          window.RUNTIME_TABLE ||
-          window.LAB_UNIVERSAL_PLANET_RUNTIME_TABLE ||
-          (window.DEXTER_LAB && window.DEXTER_LAB.runtimeTable) ||
-          null
-        );
-      }
-
-      function getCanvasApi() {
-        return (
-          window.HEARTH_CANVAS ||
-          window.HearthCanvas ||
-          (window.HEARTH && window.HEARTH.canvas) ||
-          null
-        );
-      }
-
-      function getConductorApi() {
-        return (
-          window.HEARTH_ROUTE_CONDUCTOR ||
-          window.HearthRouteConductor ||
-          window.HEARTH_CONDUCTOR ||
-          (window.HEARTH && window.HEARTH.routeConductor) ||
-          (window.HEARTH && window.HEARTH.conductor) ||
-          null
-        );
-      }
-
-      function sourceStackStatus() {
-        const loads = window.HEARTH_ROUTE_SCRIPT_LOADS || {};
-        const required = ["tectonics", "elevation", "composition", "hydrology", "materials"];
-        const loaded = required.filter((key) => loads[key] && loads[key].ok === true);
-        const failed = required.filter((key) => loads[key] && loads[key].ok === false);
-
-        return {
-          required,
-          loaded,
-          failed,
-          allCoreLoaded: loaded.length === required.length,
-          anyFailed: failed.length > 0
-        };
-      }
-
-      function detectRuntimeTableMode() {
-        const api = getRuntimeTableApi();
-
-        state.runtimeTablePresent = Boolean(api);
-        state.runtimeTableMode = api
-          ? "RUNTIME_TABLE_READY_OR_DEGRADED"
-          : "RUNTIME_TABLE_MISSING_ALLOWED";
-
-        markStage("runtime-table", api ? "pass" : "warn");
-
-        return api;
-      }
-
-      function detectConductorAndCanvas() {
-        const doc = document.documentElement;
-        const mount = getMount();
-        const canvasApi = getCanvasApi();
-        const conductorApi = getConductorApi();
-        const sourceStatus = sourceStackStatus();
-
-        state.canvasMountPresent = Boolean(mount);
-        state.canvasApiPresent = Boolean(canvasApi);
-
-        state.conductorConfirmed = Boolean(
-          conductorApi ||
-          window.__HEARTH_ACTIVE_ROUTE_FILE__ === ACTIVE_CONDUCTOR_FILE ||
-          window.__HEARTH_ACTIVE_ROUTE_CONDUCTOR__ === ACTIVE_CONDUCTOR_FILE ||
-          bool(doc.dataset.hearthConductorLoaded) ||
-          bool(doc.dataset.hearthRouteConductorLoaded) ||
-          bool(doc.dataset.hearthJsConductorLoaded)
-        );
-
-        state.canvasCarrierMounted = Boolean(
-          mount &&
-          (
-            mount.querySelector("canvas") ||
-            bool(mount.dataset.hearthCanvasMounted) ||
-            bool(mount.dataset.hearthVisibleCarrierMounted) ||
-            bool(mount.dataset.hearthCanvasCarrierMounted) ||
-            bool(doc.dataset.hearthCanvasCarrierMounted) ||
-            bool(doc.dataset.hearthVisibleCarrierMounted)
-          )
-        );
-
-        state.dragInspectionBound = Boolean(
-          bool(doc.dataset.hearthDragInspectionBound) ||
-          bool(doc.dataset.hearthControlsBound) ||
-          (mount && bool(mount.dataset.hearthDragInspectionBound)) ||
-          (mount && bool(mount.dataset.hearthControlsBound))
-        );
-
-        state.imageRendered = Boolean(
-          state.canvasCarrierMounted ||
-          bool(doc.dataset.hearthImageRendered) ||
-          bool(doc.dataset.hearthCanvasImageRendered)
-        );
-
-        state.loadingScreenVisible = Boolean(
-          mount && mount.querySelector("[data-hearth-loading-screen]")
-        );
-
-        markStage("source-stack", sourceStatus.anyFailed ? "warn" : sourceStatus.loaded.length ? "pass" : "warn");
-        markStage("canvas", state.canvasCarrierMounted || state.canvasApiPresent ? "pass" : "warn");
-        markStage("conductor", state.conductorConfirmed ? "pass" : "warn");
-
-        if (mount) {
-          mount.dataset.hearthLoadingScreenVisible = String(state.loadingScreenVisible);
-          mount.dataset.hearthCanvasApiPresent = String(state.canvasApiPresent);
-          mount.dataset.hearthCanvasCarrierMounted = String(state.canvasCarrierMounted);
-          mount.dataset.hearthConductorConfirmed = String(state.conductorConfirmed);
-          mount.dataset.hearthDragInspectionBound = String(state.dragInspectionBound);
-        }
-
-        if (state.canvasCarrierMounted) {
-          state.status = state.runtimeTablePresent
-            ? "VISIBLE_CARRIER_ACTIVE_RUNTIME_TABLE_READY"
-            : "VISIBLE_CARRIER_ACTIVE_RUNTIME_TABLE_MISSING_ALLOWED";
-          state.firstFailedCoordinate = "NONE_VISIBLE_CARRIER_PRESENT";
-          state.recommendedNextRenewalTarget = "read-postgame-conductor-canvas-or-triple-g-receipt";
-          return;
-        }
-
-        if (state.conductorConfirmed || state.canvasApiPresent) {
-          state.status = "LOADING_SCREEN_ACTIVE_CANVAS_PENDING";
-          state.firstFailedCoordinate = "CANVAS_CARRIER_NOT_CONFIRMED";
-          state.recommendedNextRenewalTarget = "canvas-carrier-mount-verification";
-          return;
-        }
-
-        state.status = "LOADING_SCREEN_ACTIVE_CONDUCTOR_PENDING";
-        state.firstFailedCoordinate = "CONDUCTOR_NOT_CONFIRMED";
-        state.recommendedNextRenewalTarget = "hearth.js-conductor-load-verification";
-      }
-
-      function buildPayload(reason) {
-        return {
-          contract: CONTRACT,
-          receipt: RECEIPT,
-          previousContract: PREVIOUS_CONTRACT,
-          route: "/showroom/globe/hearth/",
-          reason,
-          mountId: MOUNT_ID,
-          mount: getMount(),
-          activeRouteConductor: ACTIVE_CONDUCTOR_FILE,
-          canvasAuthority: CANVAS_AUTHORITY,
-          retiredClimateRoute: RETIRED_CLIMATE_ROUTE,
-          retiredClimateRouteActiveCarrier: false,
-          runtimeTableOptional: true,
-          runtimeTableMissingDoesNotBlockCarrier: true,
-          visibleCarrierFirst: true,
-          wideProbeDeferred: true,
-          sourceAuthorityHeld: true,
-          loadingScreenVisible: state.loadingScreenVisible,
-          generatedImage: false,
-          graphicBox: false,
-          webGL: false,
-          visualPassClaimed: false,
-          requestedAt: new Date().toISOString()
-        };
-      }
-
-      function safeInvoke(authority, methods, payload) {
-        if (!authority || typeof authority !== "object") return false;
-
-        for (const method of methods) {
-          if (typeof authority[method] !== "function") continue;
-
-          try {
-            authority[method](payload);
-            return true;
-          } catch (_error) {}
-        }
-
-        return false;
-      }
-
-      function requestBoot(reason) {
-        const mount = getMount();
-        const payload = buildPayload(reason);
-
-        state.bootRequests += 1;
-
-        try {
-          window.dispatchEvent(new CustomEvent("hearth:route-shell-ready", { detail: payload }));
-        } catch (_error) {}
-
-        try {
-          if (mount) {
-            mount.dispatchEvent(new CustomEvent("hearth:visible-carrier-request", {
-              detail: payload,
-              bubbles: true
-            }));
-          }
-        } catch (_error) {}
-
-        if (state.canvasCarrierMounted) return;
-
-        const conductor = getConductorApi();
-        const canvas = getCanvasApi();
-
-        const conductorInvoked = safeInvoke(conductor, [
-          "boot",
-          "mount",
-          "start",
-          "init",
-          "run",
-          "requestBoot",
-          "conduct",
-          "mountVisibleCarrier"
-        ], payload);
-
-        const canvasInvoked = conductorInvoked
-          ? false
-          : safeInvoke(canvas, [
-            "boot",
-            "mount",
-            "start",
-            "init",
-            "run",
-            "requestBoot",
-            "attach",
-            "attachToMount",
-            "mountVisibleCarrier",
-            "createVisibleCarrier"
-          ], payload);
-
-        state.bootInvoked = state.bootInvoked || conductorInvoked || canvasInvoked;
-      }
-
-      function publishStatus(reason) {
-        const dataset = document.documentElement.dataset;
-        const statusNode = document.getElementById("hearth-route-status");
-        const loads = window.HEARTH_ROUTE_SCRIPT_LOADS || {};
-        const sourceStatus = sourceStackStatus();
-
-        detectRuntimeTableMode();
-        detectConductorAndCanvas();
-
-        state.updatedAt = new Date().toISOString();
-
-        dataset.hearthRouteShellLoaded = "true";
-        dataset.hearthRouteShellActive = "true";
-        dataset.hearthRouteShellContract = CONTRACT;
-        dataset.hearthRouteShellReceipt = RECEIPT;
-        dataset.hearthRouteShellPreviousContract = PREVIOUS_CONTRACT;
-
-        dataset.hearthLoadingScreenRequired = "true";
-        dataset.hearthLoadingScreenVisible = String(state.loadingScreenVisible);
-
-        dataset.hearthActiveRouteFile = ACTIVE_CONDUCTOR_FILE;
-        dataset.hearthActiveRouteConductor = ACTIVE_CONDUCTOR_FILE;
-        dataset.hearthActiveRouteConductorExpected = "true";
-        dataset.hearthConductorConfirmed = String(state.conductorConfirmed);
-
-        dataset.hearthRetiredClimateRoute = RETIRED_CLIMATE_ROUTE;
-        dataset.hearthRetiredClimateRouteActiveCarrier = "false";
-
-        dataset.hearthCanvasMountPresent = String(state.canvasMountPresent);
-        dataset.hearthCanvasAuthority = CANVAS_AUTHORITY;
-        dataset.hearthCanvasApiPresent = String(state.canvasApiPresent);
-        dataset.hearthCanvasCarrierMounted = String(state.canvasCarrierMounted);
-
-        dataset.hearthRuntimeTable = RUNTIME_TABLE;
-        dataset.hearthRuntimeTableOptional = "true";
-        dataset.hearthRuntimeTablePresent = String(state.runtimeTablePresent);
-        dataset.hearthRuntimeTableMode = state.runtimeTableMode;
-        dataset.hearthRuntimeTableMissingDoesNotBlockCarrier = "true";
-
-        dataset.hearthVisibleCarrierFirst = "true";
-        dataset.hearthWideProbeDeferred = "true";
-        dataset.hearthSourceAuthorityHeld = "true";
-        dataset.hearthReceiptOverlayIndependent = "true";
-        dataset.hearthImageRendered = String(state.imageRendered);
-        dataset.hearthCoherentExpressionPass = "false";
-        dataset.hearthVisualPassClaimed = "false";
-        dataset.hearthFirstFailedCoordinate = state.firstFailedCoordinate;
-        dataset.hearthRecommendedNextRenewalTarget = state.recommendedNextRenewalTarget;
-        dataset.hearthRouteShellPostgameStatus = state.status;
-        dataset.hearthFutureEarthLens = "forty-billion-years-forward";
-
-        dataset.generatedImage = "false";
-        dataset.graphicBox = "false";
-        dataset.webgl = "false";
-        dataset.visualPassClaimed = "false";
-
-        window.__HEARTH_ACTIVE_ROUTE_FILE__ = ACTIVE_CONDUCTOR_FILE;
-        window.__HEARTH_ACTIVE_ROUTE_CONDUCTOR__ = ACTIVE_CONDUCTOR_FILE;
-        window.__HEARTH_RETIRED_CLIMATE_ROUTE__ = RETIRED_CLIMATE_ROUTE;
-        window.__HEARTH_RETIRED_CLIMATE_ROUTE_ACTIVE_CARRIER__ = false;
-
-        window.HEARTH_ROUTE_SHELL_POSTGAME_RECEIPT = {
-          ...state,
-          reason,
-          postgameStatus: state.status,
-          routeShellLoaded: true,
-          loadingScreenVisible: state.loadingScreenVisible,
-          activeRouteConductor: ACTIVE_CONDUCTOR_FILE,
-          conductorConfirmed: state.conductorConfirmed,
-          retiredClimateRoute: RETIRED_CLIMATE_ROUTE,
-          retiredClimateRouteActiveCarrier: false,
-          runtimeTableMissingDoesNotBlockCarrier: true,
-          sourceAuthorityHeld: true,
-          sourceScriptLoads: loads,
-          sourceStatus,
-          visibleCarrierFirst: true,
-          wideProbeDeferred: true,
-          futureEarthLens: "forty-billion-years-forward",
-          visualPassClaimed: false
-        };
-
-        if (statusNode) {
-          statusNode.textContent = [
-            "Hearth loading screen / visible planet route shell active.",
-            `Contract ${CONTRACT}`,
-            `Receipt ${RECEIPT}`,
-            `Previous ${PREVIOUS_CONTRACT}`,
-            `Status ${state.status}`,
-            `Reason ${reason}`,
-            `Loading screen visible ${state.loadingScreenVisible}`,
-            `Active route conductor ${ACTIVE_CONDUCTOR_FILE}`,
-            `Conductor confirmed ${state.conductorConfirmed}`,
-            `Retired climate route ${RETIRED_CLIMATE_ROUTE}`,
-            "Retired climate route active carrier false",
-            `Canvas authority ${CANVAS_AUTHORITY}`,
-            `Canvas mount present ${state.canvasMountPresent}`,
-            `Canvas API present ${state.canvasApiPresent}`,
-            `Canvas carrier mounted ${state.canvasCarrierMounted}`,
-            `Drag inspection bound ${state.dragInspectionBound}`,
-            `Runtime Table optional true`,
-            `Runtime Table present ${state.runtimeTablePresent}`,
-            `Runtime Table mode ${state.runtimeTableMode}`,
-            "Runtime Table missing does not block carrier true",
-            "Visible carrier first true",
-            "Wide probe deferred true",
-            "Source authority held true",
-            `Source core loaded ${sourceStatus.loaded.join(", ") || "none"}`,
-            `Source core failed ${sourceStatus.failed.join(", ") || "none"}`,
-            "Receipt overlay independent true",
-            `Image rendered ${state.imageRendered}`,
-            "Coherent expression pass false",
-            "Visual pass claimed false",
-            `First failed coordinate ${state.firstFailedCoordinate}`,
-            `Recommended next renewal target ${state.recommendedNextRenewalTarget}`,
-            "Future Earth lens forty-billion-years-forward",
-            "Generated image false",
-            "GraphicBox false",
-            "WebGL false",
-            `Boot requests ${state.bootRequests}`,
-            `Boot invoked ${state.bootInvoked}`,
-            `Updated ${state.updatedAt}`
-          ].join("\n");
-        }
-      }
-
-      markStage("shell", "pass");
-      publishStatus("shell-inline-pre-defer-status");
-
-      window.addEventListener("DOMContentLoaded", () => {
-        publishStatus("dom-content-loaded-before-boot-request");
-        requestBoot("dom-content-loaded-route-shell-ready");
-        publishStatus("dom-content-loaded-after-boot-request");
-      }, { once: true });
-
-      window.addEventListener("load", () => {
-        publishStatus("window-load-before-boot-request");
-        requestBoot("window-load-route-shell-ready");
-        publishStatus("window-load-after-boot-request");
-
-        window.setTimeout(() => {
-          requestBoot("post-load-250ms-route-shell-ready");
-          publishStatus("post-load-250ms");
-        }, 250);
-
-        window.setTimeout(() => {
-          requestBoot("post-load-1000ms-route-shell-ready");
-          publishStatus("post-load-1000ms");
-        }, 1000);
-
-        window.setTimeout(() => {
-          requestBoot("post-load-2500ms-route-shell-ready");
-          publishStatus("post-load-2500ms");
-        }, 2500);
-
-        window.setTimeout(() => {
-          publishStatus("post-load-5000ms-final-html-check");
-        }, 5000);
-      }, { once: true });
-
-      window.addEventListener("hearth:canvas-carrier-mounted", () => {
-        publishStatus("canvas-carrier-mounted-event");
-      });
-
-      window.addEventListener("hearth:visible-carrier-mounted", () => {
-        publishStatus("visible-carrier-mounted-event");
-      });
-
-      window.addEventListener("hearth:conductor-ready", () => {
-        publishStatus("conductor-ready-event");
-      });
-    })();
-  </script>
 </body>
 </html>

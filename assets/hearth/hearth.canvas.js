@@ -1,15 +1,18 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_CHANNEL_MULTIPLEX_SEMICONDUCTOR_CANVAS_TNT_v4
+// HEARTH_LAB_RUNTIME_TABLE_PREWIRED_CANVAS_TNT_v4_1
 // Full-file replacement.
-// Canvas / mount / multiplex outlet authority only.
+// Canvas / mount / Runtime Table consumer / semiconductor outlet authority only.
 // Purpose:
-// - Preserve v3 shell-first nonblocking mount.
+// - Preserve shell-first nonblocking mount.
 // - Preserve immediate thumb / pointer drag.
-// - Connect land, water, and air channel children.
+// - Consume canonical Dexter Lab Runtime Table equipment.
+// - Validate land/water/air children through LAB_RUNTIME_TABLE.createHearthChannelTable().
+// - Show an instrumented formation/loading panel.
+// - Build final atlas only after Runtime Table allows runtime handoff.
 // - Behave as semiconductor-style outlet: conduct, gate, synchronize, project, and composite.
 // - Decide no channel truth.
-// - Keep land/water body-bound and air floating above the body.
 // Does not own:
+// - Runtime Table canonical standard
 // - tectonic cause
 // - elevation generation
 // - composition classification
@@ -20,17 +23,20 @@
 // - water channel truth
 // - air channel truth
 // - route orchestration
-// - runtime motion
+// - runtime motion authority
 // - external controls authority
 // - final visual pass claim
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CHANNEL_MULTIPLEX_SEMICONDUCTOR_CANVAS_TNT_v4";
-  const RECEIPT = "HEARTH_CHANNEL_MULTIPLEX_SEMICONDUCTOR_CANVAS_RECEIPT_v4";
-  const PREVIOUS_CONTRACT = "HEARTH_TRUE_SHELL_FIRST_NONBLOCKING_CANVAS_TNT_v3";
-  const VERSION = "2026-05-28.hearth-channel-multiplex-semiconductor-canvas-v4";
+  const CONTRACT = "HEARTH_LAB_RUNTIME_TABLE_PREWIRED_CANVAS_TNT_v4_1";
+  const RECEIPT = "HEARTH_LAB_RUNTIME_TABLE_PREWIRED_CANVAS_RECEIPT_v4_1";
+  const PREVIOUS_CONTRACT = "HEARTH_CHANNEL_MULTIPLEX_SEMICONDUCTOR_CANVAS_TNT_v4";
+  const VERSION = "2026-05-29.hearth-lab-runtime-table-prewired-canvas-v4-1";
+
+  const LAB_RUNTIME_TABLE_PATH = "/assets/lab/runtime-table.js";
+  const LAB_RUNTIME_TABLE_CONTRACT = "LAB_RUNTIME_TABLE_MULTI_FUNCTION_ANIMATION_STANDARD_TNT_v1";
 
   const LAND_CONTRACT = "HEARTH_LAND_SURFACE_ATTACHMENT_CHANNEL_TNT_v1";
   const WATER_CONTRACT = "HEARTH_WATER_HYDROSPHERE_SURFACE_CHANNEL_TNT_v1";
@@ -40,25 +46,48 @@
   const DEG = Math.PI / 180;
   const TWO_PI = Math.PI * 2;
 
+  const SHARED_RUNTIME_TABLE_SAMPLE_POINT = Object.freeze({
+    u: 0.5,
+    v: 0.5,
+    x: 0,
+    y: 0,
+    z: 1
+  });
+
   const CHANNEL_FILES = Object.freeze([
     {
       key: "land",
+      label: "Land channel",
       path: "/assets/hearth/hearth.land.channel.js",
       contract: LAND_CONTRACT,
       globalName: "HEARTH_LAND_CHANNEL"
     },
     {
       key: "water",
+      label: "Water channel",
       path: "/assets/hearth/hearth.water.channel.js",
       contract: WATER_CONTRACT,
       globalName: "HEARTH_WATER_CHANNEL"
     },
     {
       key: "air",
+      label: "Air channel",
       path: "/assets/hearth/hearth.air.channel.js",
       contract: AIR_CONTRACT,
       globalName: "HEARTH_AIR_CHANNEL"
     }
+  ]);
+
+  const ALLOWED_HANDOFFS = Object.freeze([
+    "FULL_PASS",
+    "OPTIMIZED_PASS",
+    "DEGRADED_PASS",
+    "FALLBACK_PASS"
+  ]);
+
+  const BLOCKED_HANDOFFS = Object.freeze([
+    "REJECTED",
+    "BLOCKING"
   ]);
 
   const COLORS = Object.freeze({
@@ -286,6 +315,16 @@
     return typeof (source && source[key]) === "boolean" ? source[key] : fallback;
   }
 
+  function getRuntimeTableApi() {
+    return (
+      root.LAB_RUNTIME_TABLE ||
+      root.RUNTIME_TABLE ||
+      root.DexterRuntimeTable ||
+      (root.DEXTER_LAB && root.DEXTER_LAB.runtimeTable) ||
+      null
+    );
+  }
+
   function getLandChannel() {
     return root.HEARTH_LAND_CHANNEL || root.HearthLandChannel || (root.HEARTH && root.HEARTH.landChannel) || null;
   }
@@ -298,15 +337,22 @@
     return root.HEARTH_AIR_CHANNEL || root.HearthAirChannel || (root.HEARTH && root.HEARTH.airChannel) || null;
   }
 
+  function getHandoffAllowed(handoff) {
+    return ALLOWED_HANDOFFS.includes(String(handoff || ""));
+  }
+
   function callChannel(authority, args, p) {
     if (!authority) return null;
 
+    const ll = vectorToLonLat(p);
     const fallbackArg = {
-      u: lonToU(vectorToLonLat(p).lon),
-      v: latToV(vectorToLonLat(p).lat),
+      u: lonToU(ll.lon),
+      v: latToV(ll.lat),
       x: p.x,
       y: p.y,
-      z: p.z
+      z: p.z,
+      lon: ll.lon,
+      lat: ll.lat
     };
 
     const methods = ["sample", "read"];
@@ -533,12 +579,15 @@
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
-      authority: "channel-multiplex-semiconductor-canvas",
+      authority: "lab-runtime-table-prewired-semiconductor-canvas",
 
       x: p.x,
       y: p.y,
       z: p.z,
 
+      runtimeTableConsumed: Boolean(getRuntimeTableApi()),
+      runtimeTableContract: LAB_RUNTIME_TABLE_CONTRACT,
+      runtimeTableCanonicalOwner: "Dexter Lab",
       channelMultiplexReady: Boolean(getLandChannel() && getWaterChannel() && getAirChannel()),
       semiconductorOutlet: true,
       canvasDecidesNothing: true,
@@ -566,6 +615,7 @@
       waterFloatsAboveBody: false,
       airFloatsAboveBody: true,
 
+      ownsRuntimeTableStandard: false,
       ownsLandTruth: false,
       ownsWaterTruth: false,
       ownsAirTruth: false,
@@ -609,7 +659,7 @@
 
     canvas.width = size;
     canvas.height = size;
-    canvas.className = options.className || "hearth-canvas-texture hearth-canvas-contained-sphere hearth-canvas-semiconductor-outlet";
+    canvas.className = options.className || "hearth-canvas-texture hearth-canvas-contained-sphere hearth-canvas-lab-runtime-table-prewired";
     canvas.style.maxWidth = "100%";
     canvas.style.height = "auto";
     canvas.style.display = "block";
@@ -626,6 +676,13 @@
     canvas.dataset.hearthCanvasShellFirst = "true";
     canvas.dataset.hearthCanvasSemiconductorOutlet = "true";
     canvas.dataset.hearthCanvasDecidesNothing = "true";
+    canvas.dataset.hearthRuntimeTablePrewired = "true";
+    canvas.dataset.hearthRuntimeTableContract = LAB_RUNTIME_TABLE_CONTRACT;
+    canvas.dataset.hearthRuntimeTableLoaded = "false";
+    canvas.dataset.hearthRuntimeTableRuntimeAllowed = "false";
+    canvas.dataset.hearthRuntimeTableSet = "false";
+    canvas.dataset.hearthRuntimeTableLedgerReady = "false";
+    canvas.dataset.hearthRuntimeTableHandoff = "PENDING";
     canvas.dataset.hearthCanvasChannelMultiplexReady = "false";
     canvas.dataset.hearthCanvasInteractiveShellMounted = "true";
     canvas.dataset.hearthCanvasCachedAtlasProjection = "pending";
@@ -642,6 +699,154 @@
     return canvas;
   }
 
+  function createLoadingPanel() {
+    const panel = root.document.createElement("aside");
+
+    panel.dataset.hearthRuntimeLoadingPanel = "true";
+    panel.dataset.hearthFormationPanel = "true";
+    panel.style.position = "absolute";
+    panel.style.left = "50%";
+    panel.style.bottom = "14px";
+    panel.style.transform = "translateX(-50%)";
+    panel.style.width = "min(92%, 520px)";
+    panel.style.maxHeight = "48%";
+    panel.style.overflow = "auto";
+    panel.style.padding = "12px 14px";
+    panel.style.border = "1px solid rgba(174,216,236,.22)";
+    panel.style.borderRadius = "16px";
+    panel.style.background = "linear-gradient(180deg, rgba(5,9,19,.80), rgba(2,5,12,.72))";
+    panel.style.backdropFilter = "blur(10px)";
+    panel.style.boxShadow = "0 18px 50px rgba(0,0,0,.36)";
+    panel.style.color = "rgba(238,246,255,.90)";
+    panel.style.fontFamily = "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+    panel.style.fontSize = "11px";
+    panel.style.lineHeight = "1.35";
+    panel.style.pointerEvents = "none";
+    panel.style.zIndex = "4";
+
+    return panel;
+  }
+
+  function statusBadge(value) {
+    const raw = String(value || "pending").toLowerCase();
+
+    if (raw.includes("reject") || raw.includes("block") || raw.includes("fail")) return "✕";
+    if (raw.includes("ready") || raw.includes("complete") || raw.includes("pass")) return "✓";
+    if (raw.includes("fallback") || raw.includes("degraded") || raw.includes("optimized")) return "◐";
+    if (raw.includes("loading") || raw.includes("building") || raw.includes("validating")) return "•";
+    return "○";
+  }
+
+  function formatPercent(value) {
+    const n = Number(value);
+    if (!Number.isFinite(n)) return "0%";
+    return `${Math.round(clamp01(n) * 100)}%`;
+  }
+
+  function formatRuntimeTableIssues(ledger) {
+    if (!ledger || !Array.isArray(ledger.records)) return [];
+
+    const lines = [];
+
+    ledger.records.forEach((record) => {
+      if (!record || !Array.isArray(record.issues) || !record.issues.length) return;
+
+      record.issues.forEach((issue) => {
+        lines.push(`${record.name || record.key}: ${issue.code || "ISSUE"} — ${issue.message || "No detail supplied."}`);
+      });
+    });
+
+    return lines;
+  }
+
+  function renderLoadingPanel(panel, state) {
+    if (!panel) return;
+
+    const stages = state.loadingStages || {};
+    const handoff = state.runtimeTableLedger && state.runtimeTableLedger.handoff
+      ? state.runtimeTableLedger.handoff
+      : state.runtimeHandoff || "PENDING";
+
+    const issues = formatRuntimeTableIssues(state.runtimeTableLedger);
+    const issueHtml = issues.length
+      ? `<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(174,216,236,.14);color:rgba(255,210,180,.92);">${issues.slice(0, 5).map((line) => `<div>${escapeHtml(line)}</div>`).join("")}</div>`
+      : "";
+
+    const statusRows = [
+      ["Shell mounted", stages.shellMounted || "pending"],
+      ["Touch bound", stages.touchBound || "pending"],
+      ["Lab Runtime Table", stages.runtimeTable || "pending"],
+      ["Land channel", stages.land || "pending"],
+      ["Water channel", stages.water || "pending"],
+      ["Air channel", stages.air || "pending"],
+      ["Validation", stages.validation || "pending"],
+      ["Handoff", handoff],
+      ["Atlas", stages.atlas || "pending"],
+      ["Projection", stages.projection || "pending"]
+    ];
+
+    const rowsHtml = statusRows.map(([label, value]) => {
+      const text = String(value || "pending");
+      return [
+        "<div style=\"display:grid;grid-template-columns:22px 1fr auto;gap:7px;align-items:center;padding:2px 0;\">",
+        `<span style="opacity:.78;">${statusBadge(text)}</span>`,
+        `<span style="opacity:.86;">${escapeHtml(label)}</span>`,
+        `<span style="opacity:.72;text-transform:uppercase;letter-spacing:.08em;font-size:9px;">${escapeHtml(text)}</span>`,
+        "</div>"
+      ].join("");
+    }).join("");
+
+    panel.innerHTML = [
+      "<div style=\"display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:8px;\">",
+      "<strong style=\"font-size:12px;letter-spacing:.08em;text-transform:uppercase;\">Forming Hearth Runtime Table</strong>",
+      `<span style="font-size:10px;opacity:.70;">${escapeHtml(formatPercent(state.atlasProgress || 0))}</span>`,
+      "</div>",
+      "<div style=\"height:4px;border-radius:999px;background:rgba(174,216,236,.12);overflow:hidden;margin-bottom:9px;\">",
+      `<div style="height:100%;width:${escapeHtml(formatPercent(state.atlasProgress || 0))};background:rgba(174,216,236,.72);border-radius:999px;"></div>`,
+      "</div>",
+      rowsHtml,
+      issueHtml
+    ].join("");
+  }
+
+  function escapeHtml(value) {
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function updateLoadingStatus(api, patch = {}) {
+    if (!api || !api.state) return;
+
+    const state = api.state;
+
+    if (patch.stages && typeof patch.stages === "object") {
+      state.loadingStages = {
+        ...state.loadingStages,
+        ...patch.stages
+      };
+    }
+
+    if (patch.runtimeTableLedger) state.runtimeTableLedger = patch.runtimeTableLedger;
+    if (patch.runtimeHandoff) state.runtimeHandoff = patch.runtimeHandoff;
+    if (typeof patch.runtimeAllowed === "boolean") state.runtimeAllowed = patch.runtimeAllowed;
+    if (Number.isFinite(Number(patch.atlasProgress))) state.atlasProgress = clamp01(patch.atlasProgress);
+    if (patch.error) state.error = patch.error;
+
+    if (api.canvas) {
+      api.canvas.dataset.hearthRuntimeTableHandoff = state.runtimeHandoff || "PENDING";
+      api.canvas.dataset.hearthRuntimeTableRuntimeAllowed = String(Boolean(state.runtimeAllowed));
+      api.canvas.dataset.hearthRuntimeTableSet = String(Boolean(state.runtimeAllowed));
+      api.canvas.dataset.hearthRuntimeTableLedgerReady = String(Boolean(state.runtimeTableLedger));
+      api.canvas.dataset.hearthCanvasAtlasProgress = String(state.atlasProgress || 0);
+      if (state.error) api.canvas.dataset.hearthRuntimeTableError = state.error;
+    }
+
+    renderLoadingPanel(api.loadingPanel, state);
+  }
+
   function drawFallbackShell(canvas, state = {}) {
     if (!canvas || typeof canvas.getContext !== "function") return null;
 
@@ -652,8 +857,7 @@
     const cx = width / 2;
     const cy = height / 2;
     const r = size * 0.47;
-    const rotationLon = Number.isFinite(Number(state.rotationLon)) ? Number(state.rotationLon) : 0;
-    const rotationLat = Number.isFinite(Number(state.rotationLat)) ? Number(state.rotationLat) : 0;
+    const pulse = Math.sin((Number(state.frames) || 0) * 0.06) * 0.5 + 0.5;
 
     ctx.clearRect(0, 0, width, height);
 
@@ -666,66 +870,18 @@
       r
     );
 
-    shell.addColorStop(0, "rgba(82, 112, 118, 0.98)");
-    shell.addColorStop(0.34, "rgba(31, 57, 73, 0.98)");
-    shell.addColorStop(0.72, "rgba(8, 18, 36, 0.99)");
+    shell.addColorStop(0, "rgba(88, 118, 130, 0.96)");
+    shell.addColorStop(0.42, "rgba(28, 52, 70, 0.98)");
+    shell.addColorStop(0.78, "rgba(8, 17, 34, 0.99)");
     shell.addColorStop(1, "rgba(1, 4, 12, 1)");
 
     ctx.save();
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, TWO_PI);
     ctx.clip();
+
     ctx.fillStyle = shell;
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
-
-    ctx.globalAlpha = 0.42;
-    ctx.strokeStyle = "rgba(138, 130, 88, 0.62)";
-    ctx.lineWidth = Math.max(1.2, size * 0.005);
-
-    for (let i = 0; i < 7; i += 1) {
-      const phase = rotationLon * 0.9 + i * 0.91;
-      const y = cy + Math.sin(phase + rotationLat) * r * 0.42;
-      const rx = r * (0.28 + (i % 3) * 0.10);
-      const ry = r * (0.08 + (i % 2) * 0.04);
-      const x = cx + Math.cos(phase * 0.7) * r * 0.22;
-
-      ctx.beginPath();
-      ctx.ellipse(x, y, rx, ry, phase * 0.22, 0.18 * Math.PI, 1.72 * Math.PI);
-      ctx.stroke();
-    }
-
-    ctx.globalAlpha = 0.22;
-    ctx.strokeStyle = "rgba(24, 122, 190, 0.68)";
-    ctx.lineWidth = Math.max(1, size * 0.0035);
-
-    for (let i = 0; i < 5; i += 1) {
-      const phase = rotationLon * 1.15 + i * 1.17;
-      const y = cy + Math.sin(phase - rotationLat * 0.6) * r * 0.36;
-      const rx = r * (0.34 + (i % 2) * 0.12);
-      const ry = r * 0.07;
-      const x = cx + Math.cos(phase * 0.5) * r * 0.18;
-
-      ctx.beginPath();
-      ctx.ellipse(x, y, rx, ry, phase * 0.18, 0, TWO_PI);
-      ctx.stroke();
-    }
-
-    ctx.globalAlpha = 0.16;
-    ctx.strokeStyle = "rgba(170, 210, 235, 0.50)";
-    ctx.lineWidth = Math.max(1, size * 0.0028);
-
-    for (let i = 0; i < 4; i += 1) {
-      const phase = rotationLon * 0.7 + i * 1.31;
-      ctx.beginPath();
-      ctx.arc(
-        cx + Math.cos(phase) * r * 0.10,
-        cy + Math.sin(phase + rotationLat) * r * 0.10,
-        r * (0.52 + i * 0.018),
-        0.15 * Math.PI + phase * 0.05,
-        1.25 * Math.PI + phase * 0.05
-      );
-      ctx.stroke();
-    }
 
     const shade = ctx.createRadialGradient(
       cx - r * 0.25,
@@ -736,23 +892,29 @@
       r * 1.08
     );
 
-    shade.addColorStop(0, "rgba(255,255,255,0.12)");
-    shade.addColorStop(0.42, "rgba(255,255,255,0.00)");
-    shade.addColorStop(0.75, "rgba(0,0,0,0.20)");
-    shade.addColorStop(1, "rgba(0,0,0,0.48)");
+    shade.addColorStop(0, "rgba(255,255,255,0.10)");
+    shade.addColorStop(0.44, "rgba(255,255,255,0.00)");
+    shade.addColorStop(0.78, "rgba(0,0,0,0.24)");
+    shade.addColorStop(1, "rgba(0,0,0,0.52)");
 
-    ctx.globalAlpha = 1;
     ctx.fillStyle = shade;
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
     ctx.restore();
 
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, TWO_PI);
-    ctx.strokeStyle = "rgba(172, 219, 240, 0.28)";
+    ctx.strokeStyle = `rgba(172, 219, 240, ${0.22 + pulse * 0.10})`;
     ctx.lineWidth = Math.max(1, size * 0.005);
     ctx.stroke();
 
+    ctx.beginPath();
+    ctx.arc(cx, cy, r * 1.018, 0, TWO_PI);
+    ctx.strokeStyle = `rgba(174,216,236, ${0.10 + pulse * 0.06})`;
+    ctx.lineWidth = Math.max(1, size * 0.003);
+    ctx.stroke();
+
     canvas.dataset.hearthCanvasFallbackShellPainted = "true";
+    canvas.dataset.hearthCanvasNeutralLoadingShell = "true";
     canvas.dataset.hearthCanvasFrames = String(Number(canvas.dataset.hearthCanvasFrames || 0) + 1);
     return canvas;
   }
@@ -849,47 +1011,138 @@
     setTimeout(fn, 0);
   }
 
-  function loadScriptOnce(item, cacheKey) {
+  function loadScriptOnce(src, marker, validate, cacheKey) {
     return new Promise((resolve) => {
-      if (root[item.globalName]) {
-        resolve({ key: item.key, loaded: true, alreadyPresent: true });
+      if (typeof validate === "function" && validate()) {
+        resolve({ loaded: true, alreadyPresent: true, src });
         return;
       }
 
       if (!root.document || !root.document.head) {
-        resolve({ key: item.key, loaded: false, error: "document unavailable" });
+        resolve({ loaded: false, error: "document unavailable", src });
         return;
       }
 
-      const existing = root.document.querySelector(`script[data-hearth-channel-file="${item.key}"]`);
+      const existing = root.document.querySelector(`script[data-hearth-loader-marker="${marker}"]`);
 
       if (existing) {
-        existing.addEventListener("load", () => resolve({ key: item.key, loaded: Boolean(root[item.globalName]), existing: true }), { once: true });
-        existing.addEventListener("error", () => resolve({ key: item.key, loaded: false, existing: true, error: "load-error" }), { once: true });
+        existing.addEventListener("load", () => resolve({ loaded: Boolean(validate && validate()), existing: true, src }), { once: true });
+        existing.addEventListener("error", () => resolve({ loaded: false, existing: true, error: "load-error", src }), { once: true });
         return;
       }
 
       const script = root.document.createElement("script");
-      script.src = `${item.path}?v=${encodeURIComponent(cacheKey || VERSION)}`;
+      const joiner = src.includes("?") ? "&" : "?";
+      script.src = `${src}${joiner}v=${encodeURIComponent(cacheKey || VERSION)}`;
       script.defer = true;
-      script.dataset.hearthChannelFile = item.key;
-      script.dataset.hearthChannelContract = item.contract;
-      script.dataset.hearthCanvasSemiconductorOutlet = CONTRACT;
+      script.dataset.hearthLoaderMarker = marker;
+      script.dataset.hearthCanvasContract = CONTRACT;
+      script.dataset.hearthCanvasReceipt = RECEIPT;
       script.dataset.generatedImage = "false";
       script.dataset.graphicBox = "false";
       script.dataset.webgl = "false";
       script.dataset.visualPassClaimed = "false";
 
-      script.onload = () => resolve({ key: item.key, loaded: Boolean(root[item.globalName]), path: item.path });
-      script.onerror = () => resolve({ key: item.key, loaded: false, path: item.path, error: "load-error" });
+      script.onload = () => resolve({ loaded: Boolean(validate && validate()), src });
+      script.onerror = () => resolve({ loaded: false, error: "load-error", src });
 
       root.document.head.appendChild(script);
     });
   }
 
+  function ensureRuntimeTable(options = {}) {
+    return loadScriptOnce(
+      LAB_RUNTIME_TABLE_PATH,
+      "lab-runtime-table",
+      () => {
+        const api = getRuntimeTableApi();
+        return Boolean(api && api.contract === LAB_RUNTIME_TABLE_CONTRACT && typeof api.createHearthChannelTable === "function");
+      },
+      options.runtimeTableCacheKey || "lab-runtime-table-v1"
+    ).then((result) => ({
+      ...result,
+      api: getRuntimeTableApi(),
+      contract: getRuntimeTableApi() && getRuntimeTableApi().contract
+    }));
+  }
+
   function ensureChannelScripts(options = {}) {
-    const cacheKey = options.channelCacheKey || "hearth-channel-multiplex-v4";
-    return Promise.all(CHANNEL_FILES.map((item) => loadScriptOnce(item, cacheKey)));
+    const cacheKey = options.channelCacheKey || "hearth-channel-multiplex-v4-1";
+
+    return Promise.all(CHANNEL_FILES.map((item) => loadScriptOnce(
+      item.path,
+      `hearth-${item.key}-channel`,
+      () => Boolean(root[item.globalName] && root[item.globalName].contract === item.contract),
+      cacheKey
+    ).then((result) => ({
+      ...result,
+      key: item.key,
+      label: item.label,
+      path: item.path,
+      expectedContract: item.contract,
+      loaded: Boolean(root[item.globalName] && root[item.globalName].contract === item.contract),
+      actualContract: root[item.globalName] && root[item.globalName].contract
+    }))));
+  }
+
+  function createHearthRuntimeTable() {
+    const api = getRuntimeTableApi();
+
+    if (!api || typeof api.createHearthChannelTable !== "function") {
+      return null;
+    }
+
+    try {
+      return api.createHearthChannelTable({
+        id: "hearth-lab-runtime-table-consumer",
+        budget: {
+          atlasWidth: 384,
+          atlasHeight: 192,
+          rowsPerChunk: 2,
+          sampleRate: 1
+        }
+      });
+    } catch (_error) {
+      return null;
+    }
+  }
+
+  function runRuntimeTable(table) {
+    if (!table || typeof table.run !== "function") {
+      return {
+        contract: LAB_RUNTIME_TABLE_CONTRACT,
+        handoff: "BLOCKING",
+        runtimeAllowed: false,
+        tableSet: false,
+        records: [],
+        issues: [
+          {
+            code: "RUNTIME_TABLE_UNAVAILABLE",
+            message: "Lab Runtime Table instance could not be created.",
+            severity: "BLOCKING"
+          }
+        ]
+      };
+    }
+
+    try {
+      return table.run(SHARED_RUNTIME_TABLE_SAMPLE_POINT);
+    } catch (error) {
+      return {
+        contract: LAB_RUNTIME_TABLE_CONTRACT,
+        handoff: "BLOCKING",
+        runtimeAllowed: false,
+        tableSet: false,
+        records: [],
+        issues: [
+          {
+            code: "RUNTIME_TABLE_RUN_ERROR",
+            message: error && error.message ? error.message : String(error),
+            severity: "BLOCKING"
+          }
+        ]
+      };
+    }
   }
 
   function createAtlasTextureCanvas(options = {}) {
@@ -916,6 +1169,7 @@
     canvas.dataset.hearthCanvasAtlasTexture = "true";
     canvas.dataset.hearthCanvasContract = CONTRACT;
     canvas.dataset.hearthCanvasReceipt = RECEIPT;
+    canvas.dataset.hearthRuntimeTablePrewired = "true";
     canvas.dataset.hearthCanvasSemiconductorOutlet = "true";
     canvas.dataset.hearthCanvasRawAtlasDisplayForbidden = "true";
     canvas.dataset.visualPassClaimed = "false";
@@ -987,6 +1241,7 @@
     canvas.dataset.hearthCanvasAsyncAtlas = "true";
     canvas.dataset.hearthCanvasContract = CONTRACT;
     canvas.dataset.hearthCanvasReceipt = RECEIPT;
+    canvas.dataset.hearthRuntimeTablePrewired = "true";
     canvas.dataset.hearthCanvasSemiconductorOutlet = "true";
     canvas.dataset.visualPassClaimed = "false";
 
@@ -1086,6 +1341,7 @@
     canvas.dataset.hearthCanvasTexture = "true";
     canvas.dataset.hearthCanvasContract = CONTRACT;
     canvas.dataset.hearthCanvasReceipt = RECEIPT;
+    canvas.dataset.hearthRuntimeTablePrewired = "true";
     canvas.dataset.hearthCanvasSemiconductorOutlet = "true";
     canvas.dataset.hearthCanvasSphereContainment = "true";
     canvas.dataset.hearthCanvasOutsideSphereTransparent = "true";
@@ -1133,6 +1389,7 @@
 
     targetCanvas.dataset.hearthCanvasPainted = "true";
     targetCanvas.dataset.hearthCanvasContract = CONTRACT;
+    targetCanvas.dataset.hearthRuntimeTablePrewired = "true";
     targetCanvas.dataset.hearthCanvasSemiconductorOutlet = "true";
     targetCanvas.dataset.hearthCanvasSphereContainment = "true";
     targetCanvas.dataset.hearthCanvasOutsideSphereTransparent = "true";
@@ -1242,11 +1499,31 @@
 
     if (!element) return null;
 
-    element.querySelectorAll("[data-hearth-canvas-texture], canvas.hearth-canvas-texture").forEach((node) => {
+    element.querySelectorAll("[data-hearth-canvas-frame], [data-hearth-runtime-loading-panel], [data-hearth-canvas-texture], canvas.hearth-canvas-texture").forEach((node) => {
       node.remove();
     });
 
+    const originalPosition = root.getComputedStyle ? root.getComputedStyle(element).position : "";
+    if (!originalPosition || originalPosition === "static") {
+      element.style.position = "relative";
+    }
+
+    const frame = root.document.createElement("div");
+    frame.dataset.hearthCanvasFrame = "true";
+    frame.dataset.hearthRuntimeTablePrewired = "true";
+    frame.style.position = "relative";
+    frame.style.display = "grid";
+    frame.style.placeItems = "center";
+    frame.style.width = "100%";
+    frame.style.minHeight = "260px";
+    frame.style.overflow = "hidden";
+
     const canvas = createShellCanvas(options);
+    const loadingPanel = createLoadingPanel();
+
+    frame.appendChild(canvas);
+    frame.appendChild(loadingPanel);
+    element.appendChild(frame);
 
     const state = {
       rotationLon: Number.isFinite(Number(options.rotationLon)) ? Number(options.rotationLon) : 0,
@@ -1265,14 +1542,34 @@
       controlsBound: false,
       atlas: null,
       atlasController: null,
+      runtimeTableLoaded: false,
+      runtimeTableInstance: null,
+      runtimeTableLedger: null,
+      runtimeAllowed: false,
+      runtimeHandoff: "PENDING",
       landChannelLoaded: Boolean(getLandChannel()),
       waterChannelLoaded: Boolean(getWaterChannel()),
       airChannelLoaded: Boolean(getAirChannel()),
-      channelMultiplexReady: false
+      channelMultiplexReady: false,
+      error: "",
+      loadingStages: {
+        shellMounted: "ready",
+        touchBound: "pending",
+        runtimeTable: "pending",
+        land: "pending",
+        water: "pending",
+        air: "pending",
+        validation: "pending",
+        atlas: "pending",
+        projection: "pending",
+        handoff: "pending"
+      }
     };
 
     const api = {
       canvas,
+      frame,
+      loadingPanel,
       node: element,
       state,
       mounted: true,
@@ -1282,6 +1579,12 @@
       cachedAtlasProjection: false,
       atlasReady: false,
       atlasBuilding: false,
+      runtimeTableConsumed: false,
+      runtimeTableContract: LAB_RUNTIME_TABLE_CONTRACT,
+      runtimeTableCanonicalOwner: "Dexter Lab",
+      hearthRuntimeTableInstance: false,
+      runtimeAllowed: false,
+      runtimeHandoff: "PENDING",
       channelMultiplexReady: false,
       semiconductorOutlet: true,
       canvasDecidesNothing: true,
@@ -1327,14 +1630,12 @@
 
         if (typeof api.unbindControls === "function") api.unbindControls();
 
-        if (canvas.parentNode) {
-          canvas.parentNode.removeChild(canvas);
+        if (frame.parentNode) {
+          frame.parentNode.removeChild(frame);
         }
       },
       unbindControls: null
     };
-
-    element.appendChild(canvas);
 
     canvas.dataset.hearthCanvasMountedImmediately = "true";
     canvas.dataset.hearthCanvasInteractiveShellMounted = "true";
@@ -1343,6 +1644,7 @@
     canvas.dataset.hearthCanvasAtlasProgress = "0";
     canvas.dataset.hearthCanvasSemiconductorOutlet = "true";
     canvas.dataset.hearthCanvasDecidesNothing = "true";
+    canvas.dataset.hearthRuntimeTablePrewired = "true";
 
     drawFallbackShell(canvas, state);
 
@@ -1350,12 +1652,22 @@
     api.controlsBound = true;
     state.controlsBound = true;
 
+    updateLoadingStatus(api, {
+      stages: {
+        shellMounted: "ready",
+        touchBound: "ready",
+        runtimeTable: "loading"
+      }
+    });
+
     if (typeof options.onStatus === "function") {
-      options.onStatus("mounted-semiconductor-shell-first", {
+      options.onStatus("mounted-runtime-table-shell-first", {
         mounted: true,
         canvasFound: true,
         controlsBound: true,
         interactiveShellMounted: true,
+        runtimeTablePrewired: true,
+        runtimeTableContract: LAB_RUNTIME_TABLE_CONTRACT,
         semiconductorOutlet: true,
         canvasDecidesNothing: true,
         channelMultiplexReady: false,
@@ -1367,152 +1679,280 @@
       });
     }
 
-    const startAtlas = () => {
+    const startRuntimeTableSequence = () => {
       if (state.destroyed) return;
 
-      ensureChannelScripts(options).then((results) => {
+      ensureRuntimeTable(options).then((runtimeTableResult) => {
         if (state.destroyed) return;
 
-        state.landChannelLoaded = Boolean(getLandChannel());
-        state.waterChannelLoaded = Boolean(getWaterChannel());
-        state.airChannelLoaded = Boolean(getAirChannel());
-        state.channelMultiplexReady = state.landChannelLoaded && state.waterChannelLoaded && state.airChannelLoaded;
+        const runtimeApi = getRuntimeTableApi();
+        const runtimeReady = Boolean(
+          runtimeApi &&
+            runtimeApi.contract === LAB_RUNTIME_TABLE_CONTRACT &&
+            typeof runtimeApi.createHearthChannelTable === "function"
+        );
 
-        api.channelMultiplexReady = state.channelMultiplexReady;
+        state.runtimeTableLoaded = runtimeReady;
+        api.runtimeTableConsumed = runtimeReady;
 
-        canvas.dataset.hearthLandChannelLoaded = String(state.landChannelLoaded);
-        canvas.dataset.hearthWaterChannelLoaded = String(state.waterChannelLoaded);
-        canvas.dataset.hearthAirChannelLoaded = String(state.airChannelLoaded);
-        canvas.dataset.hearthCanvasChannelMultiplexReady = String(state.channelMultiplexReady);
+        canvas.dataset.hearthRuntimeTableLoaded = String(runtimeReady);
+        canvas.dataset.hearthRuntimeTableContract = LAB_RUNTIME_TABLE_CONTRACT;
+        canvas.dataset.hearthCanvasConsumesLabRuntimeTable = "true";
 
-        if (typeof options.onStatus === "function") {
-          options.onStatus("channels-checked", {
-            mounted: true,
-            canvasFound: true,
-            controlsBound: true,
-            semiconductorOutlet: true,
-            canvasDecidesNothing: true,
-            channelMultiplexReady: state.channelMultiplexReady,
-            landChannelLoaded: state.landChannelLoaded,
-            waterChannelLoaded: state.waterChannelLoaded,
-            airChannelLoaded: state.airChannelLoaded,
-            channelLoadResults: results,
-            contract: CONTRACT,
-            receipt: RECEIPT
+        updateLoadingStatus(api, {
+          stages: {
+            runtimeTable: runtimeReady ? "ready" : "blocking",
+            land: "loading",
+            water: "loading",
+            air: "loading"
+          },
+          error: runtimeReady ? "" : "Lab Runtime Table could not be loaded."
+        });
+
+        if (!runtimeReady) {
+          state.runtimeHandoff = "BLOCKING";
+          state.runtimeAllowed = false;
+          updateLoadingStatus(api, {
+            runtimeHandoff: "BLOCKING",
+            runtimeAllowed: false,
+            stages: {
+              validation: "blocking",
+              atlas: "blocked",
+              projection: "blocked"
+            }
           });
+          return;
         }
 
-        state.atlasBuilding = true;
-        api.atlasBuilding = true;
-        canvas.dataset.hearthCanvasAtlasBuilding = "true";
+        ensureChannelScripts(options).then((channelResults) => {
+          if (state.destroyed) return;
 
-        state.atlasController = buildAtlasAsync(
-          {
-            width: options.atlasWidth || 384,
-            height: options.atlasHeight || 192,
-            rowsPerChunk: options.rowsPerChunk || 2,
-            allowLargeTexture: options.allowLargeTexture === true
-          },
-          {
-            onProgress(progress) {
-              if (state.destroyed) return;
+          state.landChannelLoaded = Boolean(getLandChannel());
+          state.waterChannelLoaded = Boolean(getWaterChannel());
+          state.airChannelLoaded = Boolean(getAirChannel());
+          state.channelMultiplexReady = state.landChannelLoaded && state.waterChannelLoaded && state.airChannelLoaded;
 
-              state.atlasProgress = progress;
-              canvas.dataset.hearthCanvasAtlasProgress = String(progress);
+          api.channelMultiplexReady = state.channelMultiplexReady;
 
-              if (typeof options.onStatus === "function" && progress > 0 && progress < 1) {
-                options.onStatus("atlas-progress", {
-                  mounted: true,
-                  canvasFound: true,
-                  controlsBound: true,
-                  semiconductorOutlet: true,
-                  canvasDecidesNothing: true,
-                  channelMultiplexReady: state.channelMultiplexReady,
-                  atlasReady: false,
-                  atlasBuilding: true,
+          canvas.dataset.hearthLandChannelLoaded = String(state.landChannelLoaded);
+          canvas.dataset.hearthWaterChannelLoaded = String(state.waterChannelLoaded);
+          canvas.dataset.hearthAirChannelLoaded = String(state.airChannelLoaded);
+          canvas.dataset.hearthCanvasChannelMultiplexReady = String(state.channelMultiplexReady);
+
+          updateLoadingStatus(api, {
+            stages: {
+              land: state.landChannelLoaded ? "ready" : "fallback",
+              water: state.waterChannelLoaded ? "ready" : "fallback",
+              air: state.airChannelLoaded ? "ready" : "fallback",
+              validation: "validating"
+            }
+          });
+
+          const runtimeTable = createHearthRuntimeTable();
+          state.runtimeTableInstance = runtimeTable;
+          api.hearthRuntimeTableInstance = Boolean(runtimeTable);
+
+          const ledger = runRuntimeTable(runtimeTable);
+          const handoff = ledger && ledger.handoff ? ledger.handoff : "BLOCKING";
+          const runtimeAllowed = Boolean(ledger && ledger.runtimeAllowed && getHandoffAllowed(handoff));
+
+          state.runtimeTableLedger = ledger;
+          state.runtimeHandoff = handoff;
+          state.runtimeAllowed = runtimeAllowed;
+
+          api.runtimeAllowed = runtimeAllowed;
+          api.runtimeHandoff = handoff;
+          api.runtimeTableLedger = ledger;
+
+          canvas.dataset.hearthRuntimeTableHandoff = handoff;
+          canvas.dataset.hearthRuntimeTableRuntimeAllowed = String(runtimeAllowed);
+          canvas.dataset.hearthRuntimeTableSet = String(runtimeAllowed);
+          canvas.dataset.hearthRuntimeTableLedgerReady = "true";
+
+          updateLoadingStatus(api, {
+            runtimeTableLedger: ledger,
+            runtimeHandoff: handoff,
+            runtimeAllowed,
+            stages: {
+              validation: runtimeAllowed ? "ready" : String(handoff).toLowerCase(),
+              atlas: runtimeAllowed ? "building" : "blocked",
+              projection: runtimeAllowed ? "pending" : "blocked"
+            }
+          });
+
+          if (typeof options.onStatus === "function") {
+            options.onStatus("runtime-table-resolved", {
+              mounted: true,
+              canvasFound: true,
+              controlsBound: true,
+              runtimeTableConsumed: true,
+              runtimeTableContract: LAB_RUNTIME_TABLE_CONTRACT,
+              hearthRuntimeTableInstance: Boolean(runtimeTable),
+              runtimeAllowed,
+              handoff,
+              ledger,
+              channelLoadResults: channelResults,
+              semiconductorOutlet: true,
+              canvasDecidesNothing: true,
+              contract: CONTRACT,
+              receipt: RECEIPT
+            });
+          }
+
+          if (!runtimeAllowed) {
+            drawFallbackShell(canvas, state);
+            return;
+          }
+
+          state.atlasBuilding = true;
+          api.atlasBuilding = true;
+          canvas.dataset.hearthCanvasAtlasBuilding = "true";
+
+          state.atlasController = buildAtlasAsync(
+            {
+              width: options.atlasWidth || 384,
+              height: options.atlasHeight || 192,
+              rowsPerChunk: options.rowsPerChunk || 2,
+              allowLargeTexture: options.allowLargeTexture === true
+            },
+            {
+              onProgress(progress) {
+                if (state.destroyed) return;
+
+                state.atlasProgress = progress;
+                canvas.dataset.hearthCanvasAtlasProgress = String(progress);
+
+                updateLoadingStatus(api, {
                   atlasProgress: progress,
-                  frames: state.frames,
-                  contract: CONTRACT,
-                  receipt: RECEIPT
+                  stages: {
+                    atlas: "building"
+                  }
                 });
-              }
-            },
-            onComplete(atlas) {
-              if (state.destroyed) return;
 
-              state.atlas = atlas;
-              state.atlasReady = true;
-              state.atlasBuilding = false;
-              state.atlasProgress = 1;
-              state.fallbackActive = false;
+                if (typeof options.onStatus === "function" && progress > 0 && progress < 1) {
+                  options.onStatus("atlas-progress", {
+                    mounted: true,
+                    canvasFound: true,
+                    controlsBound: true,
+                    runtimeTableConsumed: true,
+                    runtimeAllowed: true,
+                    handoff,
+                    semiconductorOutlet: true,
+                    canvasDecidesNothing: true,
+                    channelMultiplexReady: state.channelMultiplexReady,
+                    atlasReady: false,
+                    atlasBuilding: true,
+                    atlasProgress: progress,
+                    frames: state.frames,
+                    contract: CONTRACT,
+                    receipt: RECEIPT
+                  });
+                }
+              },
+              onComplete(atlas) {
+                if (state.destroyed) return;
 
-              api.atlasReady = true;
-              api.atlasBuilding = false;
-              api.cachedAtlasProjection = true;
+                state.atlas = atlas;
+                state.atlasReady = true;
+                state.atlasBuilding = false;
+                state.atlasProgress = 1;
+                state.fallbackActive = false;
 
-              canvas.dataset.hearthCanvasAtlasReady = "true";
-              canvas.dataset.hearthCanvasAtlasBuilding = "false";
-              canvas.dataset.hearthCanvasAtlasProgress = "1";
-              canvas.dataset.hearthCanvasCachedAtlasProjection = "true";
+                api.atlasReady = true;
+                api.atlasBuilding = false;
+                api.cachedAtlasProjection = true;
 
-              api.requestRedraw();
+                canvas.dataset.hearthCanvasAtlasReady = "true";
+                canvas.dataset.hearthCanvasAtlasBuilding = "false";
+                canvas.dataset.hearthCanvasAtlasProgress = "1";
+                canvas.dataset.hearthCanvasCachedAtlasProjection = "true";
 
-              if (typeof options.onStatus === "function") {
-                options.onStatus("semiconductor-atlas-ready", {
-                  mounted: true,
-                  canvasFound: true,
-                  controlsBound: true,
-                  semiconductorOutlet: true,
-                  canvasDecidesNothing: true,
-                  channelMultiplexReady: state.channelMultiplexReady,
-                  atlasReady: true,
-                  atlasBuilding: false,
+                api.requestRedraw();
+
+                updateLoadingStatus(api, {
                   atlasProgress: 1,
-                  frames: state.frames,
-                  contract: CONTRACT,
-                  receipt: RECEIPT
+                  stages: {
+                    atlas: "ready",
+                    projection: "ready",
+                    handoff: "complete"
+                  }
                 });
-              }
-            },
-            onError(error) {
-              if (state.destroyed) return;
 
-              state.atlasBuilding = false;
-              state.atlasReady = false;
-              state.fallbackActive = true;
+                if (loadingPanel) {
+                  loadingPanel.style.opacity = "0";
+                  loadingPanel.style.transition = "opacity 420ms ease";
+                  setTimeout(() => {
+                    if (!state.destroyed && loadingPanel.parentNode) {
+                      loadingPanel.parentNode.removeChild(loadingPanel);
+                    }
+                  }, 520);
+                }
 
-              api.atlasBuilding = false;
-              api.atlasReady = false;
+                if (typeof options.onStatus === "function") {
+                  options.onStatus("runtime-table-handoff-complete", {
+                    mounted: true,
+                    canvasFound: true,
+                    controlsBound: true,
+                    runtimeTableConsumed: true,
+                    runtimeAllowed: true,
+                    handoff,
+                    atlasReady: true,
+                    atlasBuilding: false,
+                    atlasProgress: 1,
+                    frames: state.frames,
+                    contract: CONTRACT,
+                    receipt: RECEIPT
+                  });
+                }
+              },
+              onError(error) {
+                if (state.destroyed) return;
 
-              canvas.dataset.hearthCanvasAtlasBuilding = "false";
-              canvas.dataset.hearthCanvasAtlasReady = "false";
-              canvas.dataset.hearthCanvasAtlasError = error && error.message ? error.message : String(error);
+                state.atlasBuilding = false;
+                state.atlasReady = false;
+                state.fallbackActive = true;
 
-              drawFallbackShell(canvas, state);
+                api.atlasBuilding = false;
+                api.atlasReady = false;
 
-              if (typeof options.onStatus === "function") {
-                options.onStatus("atlas-error-fallback-held", {
-                  mounted: true,
-                  canvasFound: true,
-                  controlsBound: true,
-                  semiconductorOutlet: true,
-                  canvasDecidesNothing: true,
-                  channelMultiplexReady: state.channelMultiplexReady,
-                  atlasReady: false,
-                  atlasBuilding: false,
+                canvas.dataset.hearthCanvasAtlasBuilding = "false";
+                canvas.dataset.hearthCanvasAtlasReady = "false";
+                canvas.dataset.hearthCanvasAtlasError = error && error.message ? error.message : String(error);
+
+                drawFallbackShell(canvas, state);
+
+                updateLoadingStatus(api, {
                   error: error && error.message ? error.message : String(error),
-                  frames: state.frames,
-                  contract: CONTRACT,
-                  receipt: RECEIPT
+                  stages: {
+                    atlas: "fallback",
+                    projection: "fallback"
+                  }
                 });
+
+                if (typeof options.onStatus === "function") {
+                  options.onStatus("atlas-error-fallback-held", {
+                    mounted: true,
+                    canvasFound: true,
+                    controlsBound: true,
+                    runtimeTableConsumed: true,
+                    runtimeAllowed,
+                    handoff,
+                    atlasReady: false,
+                    atlasBuilding: false,
+                    error: error && error.message ? error.message : String(error),
+                    frames: state.frames,
+                    contract: CONTRACT,
+                    receipt: RECEIPT
+                  });
+                }
               }
             }
-          }
-        );
+          );
+        });
       });
     };
 
-    setTimeout(startAtlas, 0);
+    setTimeout(startRuntimeTableSequence, 0);
 
     return api;
   }
@@ -1525,14 +1965,21 @@
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
-      authority: "channel-multiplex-semiconductor-canvas",
+      authority: "hearth-lab-runtime-table-prewired-canvas",
       status: "active",
       primaryTarget: "/assets/hearth/hearth.canvas.js",
-      role: "mount-language-binder-current-connector-multiplex-outlet",
-      semiconductorOutlet: true,
+      role: "Hearth Runtime Table consumer and semiconductor outlet",
+      runtimeTableConsumed: true,
+      runtimeTableContract: LAB_RUNTIME_TABLE_CONTRACT,
+      runtimeTableCanonicalOwner: "Dexter Lab",
+      runtimeTableCanonicalPath: LAB_RUNTIME_TABLE_PATH,
+      hearthRuntimeTableInstance: true,
       canvasDecidesNothing: true,
+      semiconductorOutlet: true,
       shellFirstMount: true,
       nonBlockingMount: true,
+      asyncRuntimeTableLoad: true,
+      asyncChannelLoad: true,
       asyncAtlasBuild: true,
       chunkedAtlasBuild: true,
       fallbackShellImmediate: true,
@@ -1549,6 +1996,8 @@
         water: WATER_CONTRACT,
         air: AIR_CONTRACT
       },
+      allowedHandoffs: ALLOWED_HANDOFFS.slice(),
+      blockedHandoffs: BLOCKED_HANDOFFS.slice(),
       compositeOrder: [
         "planet-body-shell",
         "land-channel",
@@ -1557,21 +2006,28 @@
         "rim-lighting"
       ],
       law: [
+        "Runtime Table standard belongs to Dexter Lab",
+        "canvas consumes Runtime Table",
         "canvas binds language",
         "canvas connects current",
         "canvas maintains flow",
         "canvas multiplexes channel output",
         "canvas decides no channel truth",
         "land and water are body-bound",
-        "air is the only floating channel"
+        "air is the only floating channel",
+        "final atlas requires Runtime Table allowed handoff"
       ],
       owns: [
         "visible-canvas-shell",
+        "neutral-loading-shell",
+        "instrumented-formation-panel",
         "fallback-shell-drawing",
         "pointer-touch-drag-binding",
         "rotation-state",
         "redraw-scheduling",
+        "async-runtime-table-loading",
         "async-channel-loading",
+        "runtime-table-consumption",
         "async-atlas-build",
         "cached-atlas-projection",
         "channel-multiplexing",
@@ -1579,6 +2035,7 @@
         "spherical-alpha-containment-for-visible-canvas-output"
       ],
       doesNotOwn: [
+        "Runtime Table canonical standard",
         "tectonic-cause",
         "elevation-generation",
         "composition-classification",
@@ -1589,16 +2046,19 @@
         "water-channel-truth",
         "air-channel-truth",
         "route-orchestration",
-        "runtime-motion",
+        "runtime-motion-authority",
         "external-controls-authority",
         "final-visual-pass-claim"
       ],
       failSoftRules: [
-        "mount-visible-shell-before-channel-load",
-        "bind-controls-before-channel-load",
-        "return-api-before-channel-load",
-        "if-child-channel-missing-use-local-fallback-channel",
-        "if-atlas-fails-keep-draggable-fallback-shell",
+        "mount-visible-shell-before-runtime-table-load",
+        "bind-controls-before-runtime-table-load",
+        "return-api-before-runtime-table-load",
+        "load-lab-runtime-table-as-canonical-equipment",
+        "create-hearth-runtime-table-instance",
+        "block-final-atlas-on-rejected-handoff",
+        "block-final-atlas-on-blocking-handoff",
+        "if-atlas-fails-keep-draggable-diagnostic-shell",
         "no-blank-planet",
         "no-map-portal-freeze",
         "no-raw-rectangle-fallback"
@@ -1650,11 +2110,19 @@
     paint,
     mount,
 
+    ensureRuntimeTable,
     ensureChannelScripts,
+    createHearthRuntimeTable,
+    runRuntimeTable,
+    updateLoadingStatus,
+    renderLoadingPanel,
+    formatRuntimeTableIssues,
     getReceipt,
 
     supportsTrueShellFirstMount: true,
     supportsNonBlockingMount: true,
+    supportsAsyncRuntimeTableLoad: true,
+    supportsLabRuntimeTableConsumption: true,
     supportsAsyncAtlasBuild: true,
     supportsChunkedAtlasBuild: true,
     supportsImmediateFallbackShell: true,
@@ -1662,6 +2130,12 @@
     supportsImmediatePointerDrag: true,
     supportsChannelMultiplex: true,
     supportsSemiconductorOutlet: true,
+
+    runtimeTableConsumed: true,
+    runtimeTableContract: LAB_RUNTIME_TABLE_CONTRACT,
+    runtimeTableCanonicalOwner: "Dexter Lab",
+    runtimeTableCanonicalPath: LAB_RUNTIME_TABLE_PATH,
+    hearthRuntimeTableInstance: true,
 
     semiconductorOutlet: true,
     canvasDecidesNothing: true,
@@ -1698,6 +2172,8 @@
   root.HEARTH_CANVAS_CHANNEL_MULTIPLEX = true;
   root.HEARTH_CANVAS_SEMICONDUCTOR_OUTLET = true;
   root.HEARTH_CANVAS_DECIDES_NOTHING = true;
+  root.HEARTH_CANVAS_CONSUMES_LAB_RUNTIME_TABLE = true;
+  root.HEARTH_CANVAS_RUNTIME_TABLE_CONTRACT = LAB_RUNTIME_TABLE_CONTRACT;
 
   if (root.document && root.document.documentElement) {
     root.document.documentElement.dataset.hearthCanvasAuthorityLoaded = "true";
@@ -1713,6 +2189,10 @@
     root.document.documentElement.dataset.hearthCanvasChannelMultiplex = "true";
     root.document.documentElement.dataset.hearthCanvasSemiconductorOutlet = "true";
     root.document.documentElement.dataset.hearthCanvasDecidesNothing = "true";
+    root.document.documentElement.dataset.hearthRuntimeTablePrewired = "true";
+    root.document.documentElement.dataset.hearthRuntimeTableContract = LAB_RUNTIME_TABLE_CONTRACT;
+    root.document.documentElement.dataset.hearthRuntimeTableCanonicalOwner = "Dexter Lab";
+    root.document.documentElement.dataset.hearthCanvasConsumesLabRuntimeTable = "true";
     root.document.documentElement.dataset.hearthCanvasLandChannelContract = LAND_CONTRACT;
     root.document.documentElement.dataset.hearthCanvasWaterChannelContract = WATER_CONTRACT;
     root.document.documentElement.dataset.hearthCanvasAirChannelContract = AIR_CONTRACT;

@@ -1,33 +1,35 @@
 // /showroom/globe/hearth/hearth.js
-// HEARTH_LOAD_LEDGER_MONOTONIC_CONDUCTOR_DOCK_LATCH_TNT_v1
+// HEARTH_ROUTE_CONDUCTOR_COOPERATIVE_CANVAS_HANDOFF_TNT_v1
 // Full-file replacement.
 // Active Hearth route conductor only.
 // Purpose:
 // - Hydrate the existing HTML first-paint cockpit.
-// - Enforce monotonic Fibonacci stage progression.
-// - Prevent late HTML/script events from visually regressing F21 back to F2/F3.
-// - Require first-frame/render proof before completion latch.
-// - Convert the blocking cockpit into a compact diagnostic dock after planet visibility.
-// - Preserve copyable diagnostics, canvas inspection, and receipt independence.
+// - Preserve monotonic Fibonacci stage progression.
+// - Prefer /assets/hearth/hearth.canvas.js cooperative boot.
+// - Translate canvas cooperative phase events into visible F13 loading progress.
+// - Prevent F13 from appearing frozen during long canvas work.
+// - Latch F21 only after canvas ready / first-frame / drag proof.
+// - Collapse into compact diagnostic dock after readiness.
 // Does not own:
 // - HTML first paint
 // - planet pixel drawing
-// - tectonic cause
-// - elevation generation
-// - composition classification
-// - hydrology truth
-// - material palette
 // - Runtime Table source code
+// - tectonic cause
+// - elevation truth
+// - composition truth
+// - hydrology truth
+// - source material authority
+// - climate route authority
 // - final visual pass claim
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_LOAD_LEDGER_MONOTONIC_CONDUCTOR_DOCK_LATCH_TNT_v1";
-  const RECEIPT = "HEARTH_LOAD_LEDGER_MONOTONIC_CONDUCTOR_DOCK_LATCH_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "HEARTH_DISTRIBUTED_LOAD_LEDGER_CONDUCTOR_HYDRATION_LATCH_TNT_v1";
-  const BASELINE_CONTRACT = "HEARTH_LOAD_LEDGER_MONOTONIC_STAGE_AND_DIAGNOSTIC_DOCK_PAIR_PRECODE_FINAL_DRAFT_v1";
-  const VERSION = "2026-05-29.hearth-load-ledger-monotonic-conductor-dock-latch-v1";
+  const CONTRACT = "HEARTH_ROUTE_CONDUCTOR_COOPERATIVE_CANVAS_HANDOFF_TNT_v1";
+  const RECEIPT = "HEARTH_ROUTE_CONDUCTOR_COOPERATIVE_CANVAS_HANDOFF_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "HEARTH_LOAD_LEDGER_MONOTONIC_CONDUCTOR_DOCK_LATCH_TNT_v1";
+  const BASELINE_CONTRACT = "HEARTH_CANVAS_COOPERATIVE_BOOT_PROGRESS_HANDOFF_FINAL_DRAFT_PREWRITE_v1";
+  const VERSION = "2026-05-29.hearth-route-conductor-cooperative-canvas-handoff-v1";
 
   const ROUTE = "/showroom/globe/hearth/";
   const ACTIVE_ROUTE_FILE = "/showroom/globe/hearth/hearth.js";
@@ -45,7 +47,7 @@
     F3: { id: "F3", rank: 4, value: 3, label: "Script order", progress: 36 },
     F5: { id: "F5", rank: 5, value: 5, label: "Authority availability", progress: 55 },
     F8: { id: "F8", rank: 6, value: 8, label: "Conductor hydration", progress: 72 },
-    F13: { id: "F13", rank: 7, value: 13, label: "Canvas and diagnostic", progress: 92 },
+    F13: { id: "F13", rank: 7, value: 13, label: "Canvas and diagnostic", progress: 78 },
     F21: { id: "F21", rank: 8, value: 21, label: "Completion latch", progress: 100 }
   });
 
@@ -145,17 +147,39 @@
     sourceAuthorityHeld: true,
 
     canvasApiPresent: false,
+    cooperativeBootAvailable: false,
+    cooperativeBootUsed: false,
+    syncBootFallbackUsed: false,
+
     canvasCarrierRequested: false,
     canvasCarrierMounted: false,
     canvasCarrierHandoffOk: false,
     canvasCarrierHandoffError: "",
     canvasCarrierMethod: "",
+    canvasBootStartedAt: "",
+    canvasBootCompletedAt: "",
+    canvasBootStartedAtMs: 0,
+    canvasBootCompletedAtMs: 0,
+    canvasBootElapsedMs: 0,
+    canvasYieldCount: 0,
+    canvasPhaseCount: 0,
+    lastCanvasPhase: "",
+    lastCanvasProgress: 0,
+    loaderRepaintDuringCanvasBoot: false,
+    f13ProgressStreamActive: false,
+
+    atlasBuildStarted: false,
+    atlasBuildProgress: 0,
+    atlasBuildComplete: false,
+    textureComposeStarted: false,
+    textureComposeProgress: 0,
+    textureComposeComplete: false,
+
+    firstFrameRequested: false,
     firstFrameDetected: false,
     dragInspectionBound: false,
     imageRendered: false,
-    canvasBootStartedAt: 0,
-    canvasBootElapsedMs: 0,
-    longWaitMessage: "",
+    canvasReady: false,
 
     partialReceiptAvailable: false,
     copyDiagnosticArmed: false,
@@ -165,7 +189,7 @@
 
     postgameStatus: "CONDUCTOR_HYDRATING",
     firstFailedCoordinate: "F8_CONDUCTOR_HYDRATION",
-    recommendedNextRenewalTarget: "execute-index-html-monotonic-dock-binding-last",
+    recommendedNextRenewalTarget: "await-cooperative-canvas-receipt",
 
     generatedImage: false,
     graphicBox: false,
@@ -176,6 +200,7 @@
     startedAtMs: 0,
     updatedAt: "",
     heartbeatElapsedMs: 0,
+    phaseEvents: [],
     events: [],
     errors: []
   };
@@ -291,15 +316,15 @@
     state.archivedLateEvents.push(archived);
     state.stageRegressionPrevented += 1;
 
-    if (state.archivedLateEvents.length > 80) {
-      state.archivedLateEvents.splice(0, state.archivedLateEvents.length - 80);
+    if (state.archivedLateEvents.length > 100) {
+      state.archivedLateEvents.splice(0, state.archivedLateEvents.length - 100);
     }
 
     const led = ledgerState();
     if (Array.isArray(led.archivedLateEvents)) {
       led.archivedLateEvents.push(archived);
-      if (led.archivedLateEvents.length > 120) {
-        led.archivedLateEvents.splice(0, led.archivedLateEvents.length - 120);
+      if (led.archivedLateEvents.length > 140) {
+        led.archivedLateEvents.splice(0, led.archivedLateEvents.length - 140);
       }
     }
 
@@ -327,7 +352,6 @@
     const ledgerState = isObject(ledger.state) ? ledger.state : ledger;
 
     ledger.state = ledgerState;
-
     ledgerState.contract = ledgerState.contract || "HEARTH_LOAD_LEDGER_MONOTONIC_SHARED_v1";
     ledgerState.route = ledgerState.route || ROUTE;
     ledgerState.startedAt = ledgerState.startedAt || nowIso();
@@ -369,8 +393,6 @@
   function ensureLedger() {
     const existing = root.HEARTH_LOAD_LEDGER;
     const ledger = normalizeLedger(existing);
-
-    const originalPush = isFunction(ledger.push) ? ledger.push.bind(ledger) : null;
     const originalGetReceiptText = isFunction(ledger.getReceiptText) ? ledger.getReceiptText.bind(ledger) : null;
 
     ledger.push = function push(event = {}) {
@@ -385,7 +407,8 @@
         message: event.message || "",
         timestamp: nowIso(),
         elapsedMs: nowMs() - state.startedAtMs,
-        detail: clonePlain(event.detail || {})
+        detail: clonePlain(event.detail || {}),
+        progress: event.progress ?? ""
       };
 
       const eventRank = stageRank(evt.stage);
@@ -396,7 +419,8 @@
         eventRank > 0 &&
         eventRank < stageRank("F21") &&
         evt.lane !== "receipt" &&
-        evt.lane !== "copy"
+        evt.lane !== "copy" &&
+        evt.lane !== "canvasAndDiagnostic"
       ) {
         archiveLateEvent(evt, "post-latch-lower-stage-event");
       }
@@ -408,8 +432,8 @@
         ledger.setStage(evt.stage, evt.message || evt.id, { fromPush: true });
       }
 
-      if (ledger.state.events.length > 220) {
-        ledger.state.events.splice(0, ledger.state.events.length - 220);
+      if (ledger.state.events.length > 260) {
+        ledger.state.events.splice(0, ledger.state.events.length - 260);
       }
 
       return evt;
@@ -470,6 +494,7 @@
       const lane = ledger.state.lanes[laneKey] || makeLane(laneDef);
       const nextStage = next.stage || lane.fibonacci || laneDef.fib;
       const nextStatus = next.status || lane.status;
+      const nextProgress = Number.isFinite(Number(next.progress)) ? clamp(Number(next.progress), 0, 100) : Number(lane.progress || 0);
       const nextEvent = {
         id: next.event || next.latestEvent || `LANE_${String(laneKey).toUpperCase()}_${nextStatus}`,
         stage: nextStage,
@@ -478,7 +503,8 @@
         lane: laneKey,
         status: nextStatus,
         message: next.message || lane.message || laneDef.label,
-        detail: next.detail || {}
+        detail: next.detail || {},
+        progress: nextProgress
       };
 
       if (
@@ -493,15 +519,16 @@
       if (
         statusRank(lane.status) > statusRank(nextStatus) &&
         lane.status !== STATUS.FAILED &&
-        nextStatus !== STATUS.FAILED
+        nextStatus !== STATUS.FAILED &&
+        nextStatus !== STATUS.FINAL_READY &&
+        nextStatus !== STATUS.LATCHED
       ) {
         return archiveLateEvent(nextEvent, "lane-status-regression-blocked");
       }
 
       lane.status = nextStatus;
       lane.message = next.message || lane.message;
-      lane.progress = Number.isFinite(Number(next.progress)) ? clamp(Number(next.progress), 0, 100) : lane.progress;
-      lane.progress = Math.max(Number(lane.progress || 0), Number(next.progress || 0));
+      lane.progress = Math.max(Number(lane.progress || 0), nextProgress);
       lane.latestEvent = next.event || next.latestEvent || lane.latestEvent;
       lane.updatedAt = nowIso();
 
@@ -634,8 +661,8 @@
       state.latestVisibleEvent = event;
     }
 
-    if (state.events.length > 140) {
-      state.events.splice(0, state.events.length - 140);
+    if (state.events.length > 160) {
+      state.events.splice(0, state.events.length - 160);
     }
 
     return entry;
@@ -657,7 +684,8 @@
       lane,
       status,
       message: options.message || event,
-      detail
+      detail,
+      progress: options.progress ?? ""
     });
 
     publishGlobals();
@@ -674,15 +702,15 @@
 
     state.errors.push(item);
 
-    if (state.errors.length > 50) {
-      state.errors.splice(0, state.errors.length - 50);
+    if (state.errors.length > 60) {
+      state.errors.splice(0, state.errors.length - 60);
     }
 
     const led = ledgerState();
     if (Array.isArray(led.errors)) {
       led.errors.push(item);
-      if (led.errors.length > 80) {
-        led.errors.splice(0, led.errors.length - 80);
+      if (led.errors.length > 90) {
+        led.errors.splice(0, led.errors.length - 90);
       }
     }
 
@@ -691,10 +719,10 @@
   }
 
   function ensureStyle() {
-    if (!doc || doc.getElementById("hearth-monotonic-dock-style")) return;
+    if (!doc || doc.getElementById("hearth-cooperative-conductor-dock-style")) return;
 
     const style = doc.createElement("style");
-    style.id = "hearth-monotonic-dock-style";
+    style.id = "hearth-cooperative-conductor-dock-style";
     style.textContent = `
       .hearth-ledger-cockpit{
         transition:max-height .22s ease, inset .22s ease, opacity .18s ease, transform .18s ease;
@@ -834,7 +862,7 @@
 
     cockpit.innerHTML = `
       <div class="hearth-ledger-head">
-        <div class="hearth-ledger-kicker">Hearth · Monotonic Load Ledger</div>
+        <div class="hearth-ledger-kicker">Hearth · Cooperative Load Ledger</div>
         <h2 class="hearth-ledger-title">FORMING HEARTH RUNTIME TABLE</h2>
         <div class="hearth-ledger-meta" data-hearth-stage-label>F8 · Conductor hydration</div>
         <div class="hearth-ledger-meta" data-hearth-heartbeat-text>heartbeat=active · stage=F8 · elapsed=00:00</div>
@@ -916,6 +944,7 @@
     cockpit.dataset.hearthConductorContract = CONTRACT;
     cockpit.dataset.hearthConductorReceipt = RECEIPT;
     cockpit.dataset.hearthMonotonicStageGuardActive = "true";
+    cockpit.dataset.hearthCooperativeCanvasHandoff = "true";
 
     state.hydratedExistingCockpit = Boolean(existing);
     state.duplicateCockpitCreated = false;
@@ -951,7 +980,7 @@
       };
     }
 
-    setLedgerStage("F8", "Conductor hydration active", {
+    setLedgerStage("F8", "Cooperative conductor hydration active", {
       owner: "hearth.js",
       file: ACTIVE_ROUTE_FILE
     });
@@ -1019,6 +1048,7 @@
       dataset.hearthRetiredClimateRoute = RETIRED_CLIMATE_ROUTE;
       dataset.hearthRetiredClimateRouteActiveCarrier = "false";
       dataset.hearthMonotonicStageGuardActive = "true";
+      dataset.hearthCooperativeCanvasHandoff = "true";
     }
 
     emit("RETIRED_CLIMATE_ROUTE_GUARDED", {
@@ -1083,10 +1113,11 @@
             sphereContainment: true,
             noRectangularTextureSpill: true,
             distributedLoadLedger: true,
-            monotonicStageGuard: true
+            monotonicStageGuard: true,
+            cooperativeCanvasBoot: true
           }
         }, {
-          profile: "hearth-monotonic-loader-carrier",
+          profile: "hearth-cooperative-loader-carrier",
           planetId: "hearth",
           planetLabel: "Hearth"
         });
@@ -1143,8 +1174,10 @@
     );
   }
 
-  function bestCanvasMethod(api) {
-    const methods = [
+  function selectCanvasMethod(api) {
+    if (api && isFunction(api.bootCooperative)) return "bootCooperative";
+
+    const fallback = [
       "boot",
       "mountVisibleCarrier",
       "bootVisibleCarrier",
@@ -1153,9 +1186,176 @@
       "init",
       "render",
       "conduct"
-    ];
+    ].find((name) => isFunction(api && api[name]));
 
-    return methods.find((name) => isFunction(api && api[name])) || "";
+    return fallback || "";
+  }
+
+  function handleCanvasPhase(event) {
+    const phase = event && (event.phase || event.id || event.event) ? String(event.phase || event.id || event.event) : "CANVAS_PHASE";
+    const percent = clamp(Number(event.percent ?? event.progress ?? state.lastCanvasProgress ?? 78), 0, 100);
+    const detail = isObject(event.detail) ? event.detail : {};
+    const elapsedMs = Number(detail.elapsedMs ?? event.elapsedMs ?? state.canvasBootElapsedMs ?? 0);
+
+    state.canvasPhaseCount += 1;
+    state.lastCanvasPhase = phase;
+    state.lastCanvasProgress = percent;
+    state.canvasBootElapsedMs = Math.max(Number(state.canvasBootElapsedMs || 0), elapsedMs);
+    state.canvasYieldCount = Math.max(Number(state.canvasYieldCount || 0), Number(detail.canvasYieldCount || 0));
+    state.loaderRepaintDuringCanvasBoot = Boolean(state.loaderRepaintDuringCanvasBoot || detail.loaderRepaintDuringCanvasBoot || state.canvasYieldCount > 0);
+    state.f13ProgressStreamActive = true;
+
+    if (phase === "CANVAS_COOPERATIVE_BOOT_STARTED") {
+      state.cooperativeBootUsed = true;
+      state.canvasBootStartedAt = state.canvasBootStartedAt || nowIso();
+      state.canvasBootStartedAtMs = state.canvasBootStartedAtMs || nowMs();
+    }
+
+    if (phase === "CANVAS_MOUNT_CREATED") {
+      state.canvasCarrierMounted = true;
+      state.canvasCarrierHandoffOk = true;
+    }
+
+    if (phase === "CANVAS_CONTEXT_READY") {
+      state.canvasApiPresent = true;
+    }
+
+    if (phase === "ATLAS_BUILD_STARTED") {
+      state.atlasBuildStarted = true;
+    }
+
+    if (phase === "ATLAS_BUILD_PROGRESS") {
+      state.atlasBuildStarted = true;
+      state.atlasBuildProgress = Math.max(state.atlasBuildProgress, Number(detail.atlasBuildProgress || 0));
+    }
+
+    if (phase === "ATLAS_BUILD_COMPLETE") {
+      state.atlasBuildStarted = true;
+      state.atlasBuildComplete = true;
+      state.atlasBuildProgress = 100;
+    }
+
+    if (phase === "TEXTURE_COMPOSE_STARTED") {
+      state.textureComposeStarted = true;
+    }
+
+    if (phase === "TEXTURE_COMPOSE_PROGRESS") {
+      state.textureComposeStarted = true;
+      state.textureComposeProgress = Math.max(state.textureComposeProgress, Number(detail.textureComposeProgress || 0));
+    }
+
+    if (phase === "TEXTURE_COMPOSE_COMPLETE") {
+      state.textureComposeStarted = true;
+      state.textureComposeComplete = true;
+      state.textureComposeProgress = 100;
+    }
+
+    if (phase === "FIRST_FRAME_REQUESTED") {
+      state.firstFrameRequested = true;
+    }
+
+    if (phase === "FIRST_FRAME_DETECTED") {
+      state.firstFrameRequested = true;
+      state.firstFrameDetected = true;
+      state.imageRendered = true;
+    }
+
+    if (phase === "DRAG_INSPECTION_BOUND") {
+      state.dragInspectionBound = true;
+    }
+
+    if (phase === "CANVAS_READY") {
+      state.canvasReady = true;
+      state.canvasCarrierMounted = true;
+      state.canvasCarrierHandoffOk = true;
+      state.firstFrameDetected = true;
+      state.imageRendered = true;
+      state.dragInspectionBound = true;
+      state.canvasBootCompletedAt = state.canvasBootCompletedAt || nowIso();
+      state.canvasBootCompletedAtMs = state.canvasBootCompletedAtMs || nowMs();
+      state.canvasBootElapsedMs = Number(detail.canvasBootElapsedMs || state.canvasBootElapsedMs || (state.canvasBootCompletedAtMs - state.canvasBootStartedAtMs));
+      state.postgameStatus = "CANVAS_READY_DIAGNOSTIC_DOCK_ACTIVE";
+      state.firstFailedCoordinate = "NONE_CANVAS_READY";
+      state.recommendedNextRenewalTarget = "read-postgame-canvas-or-triple-g-receipt";
+    }
+
+    const message = event.message || phaseToMessage(phase, percent, detail);
+
+    state.phaseEvents.push({
+      at: nowIso(),
+      phase,
+      percent,
+      message,
+      detail: clonePlain(detail)
+    });
+
+    if (state.phaseEvents.length > 180) {
+      state.phaseEvents.splice(0, state.phaseEvents.length - 180);
+    }
+
+    state.latestVisibleEvent = phase;
+    state.mainProgressCap = Math.max(state.mainProgressCap, percent);
+
+    setLedgerStage("F13", message, {
+      owner: "hearth.js",
+      file: CANVAS_AUTHORITY_FILE
+    });
+
+    setLedgerLane("canvasAndDiagnostic", {
+      status: phase === "CANVAS_READY" ? STATUS.FINAL_READY : phaseStatus(phase),
+      progress: percent,
+      event: phase,
+      stage: "F13",
+      owner: "hearth.canvas.js",
+      file: CANVAS_AUTHORITY_FILE,
+      message,
+      detail
+    });
+
+    publishGlobals();
+    render();
+
+    if (phase === "CANVAS_READY" || (state.canvasCarrierMounted && state.firstFrameDetected && state.imageRendered && state.dragInspectionBound)) {
+      state.finalReceiptAvailable = true;
+      tryLatchCompletion();
+    }
+
+    return event;
+  }
+
+  function phaseStatus(phase) {
+    if (phase === "CANVAS_MOUNT_CREATED") return STATUS.MOUNTED;
+    if (phase === "CANVAS_CONTEXT_READY") return STATUS.READY;
+    if (phase === "ATLAS_BUILD_COMPLETE") return STATUS.READY;
+    if (phase === "TEXTURE_COMPOSE_COMPLETE") return STATUS.READY;
+    if (phase === "FIRST_FRAME_DETECTED") return STATUS.RENDERED;
+    if (phase === "DRAG_INSPECTION_BOUND") return STATUS.BOUND;
+    if (phase === "CANVAS_READY") return STATUS.FINAL_READY;
+    return STATUS.LOADING;
+  }
+
+  function phaseToMessage(phase, percent, detail = {}) {
+    const elapsed = formatElapsed(detail.elapsedMs || state.canvasBootElapsedMs || 0);
+
+    if (phase === "CANVAS_COOPERATIVE_BOOT_STARTED") return `Canvas cooperative boot started · elapsed ${elapsed}`;
+    if (phase === "CANVAS_MOUNT_CREATED") return `Canvas mount created · elapsed ${elapsed}`;
+    if (phase === "CANVAS_CONTEXT_READY") return `Canvas context ready · elapsed ${elapsed}`;
+    if (phase === "ATLAS_BUILD_STARTED") return `Atlas build started · elapsed ${elapsed}`;
+    if (phase === "ATLAS_BUILD_PROGRESS") {
+      const chunk = detail.chunkIndex && detail.totalChunks ? `${detail.chunkIndex}/${detail.totalChunks} chunks` : `${detail.atlasBuildProgress || percent}%`;
+      return `Atlas build active · ${chunk} · elapsed ${elapsed}`;
+    }
+    if (phase === "ATLAS_BUILD_COMPLETE") return `Atlas build complete · elapsed ${elapsed}`;
+    if (phase === "TEXTURE_COMPOSE_STARTED") return `Texture composition started · elapsed ${elapsed}`;
+    if (phase === "TEXTURE_COMPOSE_PROGRESS") {
+      return `Texture composition active · ${detail.textureComposeProgress || percent}% · elapsed ${elapsed}`;
+    }
+    if (phase === "TEXTURE_COMPOSE_COMPLETE") return `Texture composition complete · elapsed ${elapsed}`;
+    if (phase === "FIRST_FRAME_REQUESTED") return `First frame requested · elapsed ${elapsed}`;
+    if (phase === "FIRST_FRAME_DETECTED") return `First frame detected · elapsed ${elapsed}`;
+    if (phase === "DRAG_INSPECTION_BOUND") return `Drag inspection bound · elapsed ${elapsed}`;
+    if (phase === "CANVAS_READY") return `Canvas ready · elapsed ${elapsed}`;
+    return `${phase} · elapsed ${elapsed}`;
   }
 
   function getCanvasReceipt() {
@@ -1163,7 +1363,7 @@
 
     if (api && isFunction(api.getReceipt)) {
       try {
-        const receipt = api.getReceipt("hearth-monotonic-conductor-reconcile");
+        const receipt = api.getReceipt("hearth-cooperative-conductor-reconcile");
         if (receipt && isObject(receipt)) return receipt;
       } catch (error) {
         recordError("CANVAS_RECEIPT_READ_FAILED", error && error.message ? error.message : String(error));
@@ -1197,37 +1397,40 @@
       singleAnchorIsLocalProofOnly: true,
       distributedLoadLedger: true,
       monotonicStageGuard: true,
+      cooperativeCanvasBoot: true,
       diagnosticDockAfterLatch: true,
       loadLedger: refs.ledger || null,
       callbacks: {
+        onCanvasPhase: handleCanvasPhase,
+        onCanvasProgress: handleCanvasPhase,
         onMounted: (receipt) => {
           state.canvasCarrierMounted = true;
           state.canvasCarrierHandoffOk = true;
-          emit("CANVAS_MOUNT_CONFIRMED", {}, {
-            stage: "F13",
-            lane: "canvasAndDiagnostic",
-            status: STATUS.MOUNTED
-          });
-          reconcileFromCanvasReceipt(receipt);
+          handleCanvasReceipt(receipt, "onMounted");
         },
-        onRendered: (receipt) => {
+        onFirstFrame: (receipt) => {
+          state.firstFrameRequested = true;
           state.firstFrameDetected = true;
           state.imageRendered = true;
-          emit("FIRST_FRAME_DETECTED", {}, {
-            stage: "F13",
-            lane: "canvasAndDiagnostic",
-            status: STATUS.RENDERED
-          });
-          reconcileFromCanvasReceipt(receipt);
+          handleCanvasReceipt(receipt, "onFirstFrame");
+        },
+        onRendered: (receipt) => {
+          state.firstFrameRequested = true;
+          state.firstFrameDetected = true;
+          state.imageRendered = true;
+          handleCanvasReceipt(receipt, "onRendered");
         },
         onDragBound: (receipt) => {
           state.dragInspectionBound = true;
-          emit("DRAG_INSPECTION_READY", {}, {
-            stage: "F13",
-            lane: "canvasAndDiagnostic",
-            status: STATUS.BOUND
-          });
-          reconcileFromCanvasReceipt(receipt);
+          handleCanvasReceipt(receipt, "onDragBound");
+        },
+        onReady: (receipt) => {
+          state.canvasReady = true;
+          state.finalReceiptAvailable = true;
+          handleCanvasReceipt(receipt, "onReady");
+        },
+        onError: (receipt) => {
+          handleCanvasReceipt(receipt, "onError");
         }
       }
     };
@@ -1236,30 +1439,36 @@
   function updateCanvasWaitMessage() {
     if (!state.canvasCarrierRequested || state.canvasCarrierMounted || state.completionLatched) return;
 
-    state.canvasBootElapsedMs = state.canvasBootStartedAt ? nowMs() - state.canvasBootStartedAt : 0;
+    state.canvasBootElapsedMs = state.canvasBootStartedAtMs ? nowMs() - state.canvasBootStartedAtMs : 0;
     const elapsed = formatElapsed(state.canvasBootElapsedMs);
 
-    if (state.canvasBootElapsedMs >= 30000) {
-      state.longWaitMessage = `Long canvas boot · planet carrier still active · receipt available · elapsed ${elapsed}`;
-    } else if (state.canvasBootElapsedMs >= 12000) {
-      state.longWaitMessage = `Extended canvas boot · copy diagnostic available · elapsed ${elapsed}`;
-    } else if (state.canvasBootElapsedMs >= 6000) {
-      state.longWaitMessage = `Canvas still booting · diagnostic alive · elapsed ${elapsed}`;
-    } else if (state.canvasBootElapsedMs >= 2000) {
-      state.longWaitMessage = `Canvas carrier booting · elapsed ${elapsed}`;
-    } else {
-      state.longWaitMessage = `Canvas carrier booting · elapsed ${elapsed}`;
+    let message = `Canvas cooperative boot pending · elapsed ${elapsed}`;
+
+    if (state.cooperativeBootUsed) {
+      message = `Canvas cooperative boot active · ${state.lastCanvasPhase || "starting"} · elapsed ${elapsed}`;
+    } else if (state.syncBootFallbackUsed) {
+      message = `Synchronous fallback boot active · browser may pause · elapsed ${elapsed}`;
+    }
+
+    if (state.canvasBootElapsedMs >= 30000 && state.cooperativeBootUsed) {
+      message = `Long cooperative canvas boot · ${state.lastCanvasPhase || "active"} · receipt alive · elapsed ${elapsed}`;
+    } else if (state.canvasBootElapsedMs >= 12000 && state.cooperativeBootUsed) {
+      message = `Extended cooperative canvas boot · ${state.lastCanvasPhase || "active"} · elapsed ${elapsed}`;
+    } else if (state.canvasBootElapsedMs >= 6000 && state.cooperativeBootUsed) {
+      message = `Canvas still booting cooperatively · diagnostic alive · elapsed ${elapsed}`;
     }
 
     setLedgerLane("canvasAndDiagnostic", {
       status: STATUS.LOADING,
       progress: Math.max(78, Number(ledgerState().lanes?.canvasAndDiagnostic?.progress || 0)),
-      event: "CANVAS_BOOT_WAIT_VISIBLE",
+      event: "CANVAS_COOPERATIVE_BOOT_WAIT_VISIBLE",
       stage: "F13",
       owner: "hearth.js",
       file: CANVAS_AUTHORITY_FILE,
-      message: state.longWaitMessage
+      message
     });
+
+    state.latestVisibleEvent = "CANVAS_COOPERATIVE_BOOT_WAIT_VISIBLE";
   }
 
   function callCanvasCarrier() {
@@ -1291,7 +1500,9 @@
       return;
     }
 
-    const method = bestCanvasMethod(api);
+    const method = selectCanvasMethod(api);
+
+    state.cooperativeBootAvailable = Boolean(isFunction(api.bootCooperative));
 
     if (!method) {
       state.canvasCarrierHandoffError = "Canvas API present but no supported boot/mount method exists.";
@@ -1319,50 +1530,53 @@
     canvasCallAttempted = true;
     state.canvasCarrierRequested = true;
     state.canvasCarrierMethod = method;
-    state.canvasBootStartedAt = nowMs();
-    state.longWaitMessage = "Canvas carrier booting · elapsed 00:00";
+    state.cooperativeBootUsed = method === "bootCooperative";
+    state.syncBootFallbackUsed = method !== "bootCooperative";
+    state.canvasBootStartedAt = nowIso();
+    state.canvasBootStartedAtMs = nowMs();
+    state.canvasBootElapsedMs = 0;
+    state.lastCanvasPhase = state.cooperativeBootUsed ? "CANVAS_COOPERATIVE_BOOT_SELECTED" : "SYNC_BOOT_FALLBACK_SELECTED";
+    state.lastCanvasProgress = state.cooperativeBootUsed ? 78 : 76;
+    state.f13ProgressStreamActive = state.cooperativeBootUsed;
+    state.postgameStatus = state.cooperativeBootUsed ? "COOPERATIVE_CANVAS_BOOT_STARTED" : "SYNC_BOOT_FALLBACK_USED";
+    state.firstFailedCoordinate = state.cooperativeBootUsed ? "F13_CANVAS_COOPERATIVE_BOOT_STARTED" : "F13_SYNC_BOOT_FALLBACK";
 
-    setLedgerStage("F13", "Canvas carrier booting", {
+    setLedgerStage("F13", state.cooperativeBootUsed ? "Canvas cooperative boot starting" : "Canvas synchronous fallback starting", {
       owner: "hearth.js",
       file: CANVAS_AUTHORITY_FILE
     });
 
     setLedgerLane("canvasAndDiagnostic", {
       status: STATUS.LOADING,
-      progress: 78,
-      event: "CANVAS_CARRIER_BOOTING",
+      progress: state.lastCanvasProgress,
+      event: state.lastCanvasPhase,
       stage: "F13",
       owner: "hearth.js",
       file: CANVAS_AUTHORITY_FILE,
-      message: state.longWaitMessage
+      message: state.cooperativeBootUsed
+        ? "Canvas cooperative boot selected."
+        : "Synchronous canvas fallback selected; loader may pause."
     });
 
-    emit("CANVAS_CARRIER_METHOD_SELECTED", { method }, {
+    emit("CANVAS_CARRIER_METHOD_SELECTED", {
+      method,
+      cooperativeBootAvailable: state.cooperativeBootAvailable,
+      cooperativeBootUsed: state.cooperativeBootUsed,
+      syncBootFallbackUsed: state.syncBootFallbackUsed
+    }, {
       stage: "F13",
       lane: "canvasAndDiagnostic",
-      status: STATUS.READY
+      status: STATUS.READY,
+      progress: state.lastCanvasProgress
     });
 
     render();
 
     root.setTimeout(() => {
+      let result;
+
       try {
-        const result = api[method](canvasPayload());
-
-        state.canvasCarrierHandoffOk = true;
-
-        emit("CANVAS_CARRIER_CALLED", { method, handoffOk: true }, {
-          visible: false,
-          stage: "F13",
-          lane: "canvasAndDiagnostic",
-          status: STATUS.LOADING
-        });
-
-        if (result && isObject(result)) {
-          reconcileFromCanvasReceipt(result);
-        } else {
-          reconcileAll("canvas-method-returned");
-        }
+        result = api[method](canvasPayload());
       } catch (error) {
         state.canvasCarrierHandoffOk = false;
         state.canvasCarrierHandoffError = error && error.message ? error.message : String(error);
@@ -1384,6 +1598,56 @@
         });
 
         render();
+        return;
+      }
+
+      state.canvasCarrierHandoffOk = true;
+
+      emit("CANVAS_CARRIER_CALLED", {
+        method,
+        handoffOk: true,
+        cooperativeBootUsed: state.cooperativeBootUsed,
+        syncBootFallbackUsed: state.syncBootFallbackUsed
+      }, {
+        visible: false,
+        stage: "F13",
+        lane: "canvasAndDiagnostic",
+        status: STATUS.LOADING
+      });
+
+      if (result && isFunction(result.then)) {
+        result
+          .then((receipt) => {
+            handleCanvasReceipt(receipt, "cooperative-promise-resolved");
+          })
+          .catch((error) => {
+            state.canvasCarrierHandoffOk = false;
+            state.canvasCarrierHandoffError = error && error.message ? error.message : String(error);
+            state.postgameStatus = "CANVAS_BOOT_PHASE_ERROR";
+            state.firstFailedCoordinate = "F13_CANVAS_PROMISE_REJECTED";
+            state.finalReceiptAvailable = true;
+
+            recordError("CANVAS_PROMISE_REJECTED", state.canvasCarrierHandoffError);
+
+            setLedgerLane("canvasAndDiagnostic", {
+              status: STATUS.FAILED,
+              progress: 100,
+              event: "CANVAS_PROMISE_REJECTED",
+              stage: "F13",
+              owner: "hearth.js",
+              file: CANVAS_AUTHORITY_FILE,
+              message: state.canvasCarrierHandoffError
+            });
+
+            render();
+          });
+        return;
+      }
+
+      if (result && isObject(result)) {
+        handleCanvasReceipt(result, "canvas-method-returned-receipt");
+      } else {
+        reconcileAll("canvas-method-returned-no-receipt");
       }
     }, 80);
   }
@@ -1396,6 +1660,22 @@
 
     state.canvasApiPresent = Boolean(getCanvasApi());
 
+    state.cooperativeBootAvailable = Boolean(
+      state.cooperativeBootAvailable ||
+      bool(dataset.hearthCanvasCooperativeBootAvailable) ||
+      isFunction(getCanvasApi()?.bootCooperative)
+    );
+
+    state.cooperativeBootUsed = Boolean(
+      state.cooperativeBootUsed ||
+      bool(dataset.hearthCanvasCooperativeBootUsed)
+    );
+
+    state.syncBootFallbackUsed = Boolean(
+      state.syncBootFallbackUsed ||
+      bool(dataset.hearthCanvasSyncBootFallbackUsed)
+    );
+
     state.canvasCarrierMounted = Boolean(
       state.canvasCarrierMounted ||
       bool(dataset.hearthCanvasCarrierMounted) ||
@@ -1403,6 +1683,17 @@
       (mount && mount.querySelector("canvas")) ||
       (mount && bool(mount.dataset.hearthCanvasMounted)) ||
       (mount && bool(mount.dataset.hearthVisibleCarrierMounted))
+    );
+
+    state.canvasCarrierHandoffOk = Boolean(
+      state.canvasCarrierHandoffOk ||
+      bool(dataset.hearthCanvasCarrierHandoffOk) ||
+      state.canvasCarrierMounted
+    );
+
+    state.firstFrameRequested = Boolean(
+      state.firstFrameRequested ||
+      bool(dataset.hearthFirstFrameRequested)
     );
 
     state.firstFrameDetected = Boolean(
@@ -1428,6 +1719,51 @@
       (mount && mount.style && mount.style.touchAction === "none")
     );
 
+    state.canvasReady = Boolean(
+      state.canvasReady ||
+      bool(dataset.hearthCanvasReady)
+    );
+
+    state.canvasBootElapsedMs = Math.max(
+      Number(state.canvasBootElapsedMs || 0),
+      Number(dataset.hearthCanvasBootElapsedMs || 0)
+    );
+
+    state.canvasYieldCount = Math.max(
+      Number(state.canvasYieldCount || 0),
+      Number(dataset.hearthCanvasYieldCount || 0)
+    );
+
+    state.canvasPhaseCount = Math.max(
+      Number(state.canvasPhaseCount || 0),
+      Number(dataset.hearthCanvasPhaseCount || 0)
+    );
+
+    if (dataset.hearthCanvasLastPhase) state.lastCanvasPhase = dataset.hearthCanvasLastPhase;
+    if (Number(dataset.hearthCanvasLastProgress || 0)) {
+      state.lastCanvasProgress = Math.max(state.lastCanvasProgress, Number(dataset.hearthCanvasLastProgress || 0));
+      state.mainProgressCap = Math.max(state.mainProgressCap, state.lastCanvasProgress);
+    }
+
+    state.loaderRepaintDuringCanvasBoot = Boolean(
+      state.loaderRepaintDuringCanvasBoot ||
+      bool(dataset.hearthLoaderRepaintDuringCanvasBoot) ||
+      state.canvasYieldCount > 0
+    );
+
+    state.f13ProgressStreamActive = Boolean(
+      state.f13ProgressStreamActive ||
+      bool(dataset.hearthF13ProgressStreamActive)
+    );
+
+    state.atlasBuildStarted = Boolean(state.atlasBuildStarted || bool(dataset.hearthAtlasBuildStarted));
+    state.atlasBuildProgress = Math.max(Number(state.atlasBuildProgress || 0), Number(dataset.hearthAtlasBuildProgress || 0));
+    state.atlasBuildComplete = Boolean(state.atlasBuildComplete || bool(dataset.hearthAtlasBuildComplete));
+
+    state.textureComposeStarted = Boolean(state.textureComposeStarted || bool(dataset.hearthTextureComposeStarted));
+    state.textureComposeProgress = Math.max(Number(state.textureComposeProgress || 0), Number(dataset.hearthTextureComposeProgress || 0));
+    state.textureComposeComplete = Boolean(state.textureComposeComplete || bool(dataset.hearthTextureComposeComplete));
+
     if (state.canvasCarrierMounted && !state.firstFrameDetected && !state.imageRendered) {
       root.requestAnimationFrame(() => {
         if (state.canvasCarrierMounted) {
@@ -1439,10 +1775,14 @@
     }
   }
 
-  function reconcileFromCanvasReceipt(receipt) {
+  function handleCanvasReceipt(receipt, reason = "canvas-receipt") {
     const value = receipt && isObject(receipt) ? receipt : getCanvasReceipt();
 
     if (value && isObject(value)) {
+      state.cooperativeBootAvailable = Boolean(state.cooperativeBootAvailable || value.cooperativeBootAvailable);
+      state.cooperativeBootUsed = Boolean(state.cooperativeBootUsed || value.cooperativeBootUsed);
+      state.syncBootFallbackUsed = Boolean(state.syncBootFallbackUsed || value.syncBootFallbackUsed);
+
       state.canvasCarrierMounted = Boolean(
         state.canvasCarrierMounted ||
         value.canvasCarrierMounted ||
@@ -1456,6 +1796,11 @@
         state.canvasCarrierMounted ||
         value.canvasCarrierHandoffOk ||
         value.handoffOk
+      );
+
+      state.firstFrameRequested = Boolean(
+        state.firstFrameRequested ||
+        value.firstFrameRequested
       );
 
       state.firstFrameDetected = Boolean(
@@ -1478,9 +1823,46 @@
         value.pointerControlsBound ||
         value.controlsBound
       );
+
+      state.canvasReady = Boolean(state.canvasReady || value.canvasReady);
+
+      state.canvasBootElapsedMs = Math.max(Number(state.canvasBootElapsedMs || 0), Number(value.canvasBootElapsedMs || 0));
+      state.canvasYieldCount = Math.max(Number(state.canvasYieldCount || 0), Number(value.canvasYieldCount || 0));
+      state.canvasPhaseCount = Math.max(Number(state.canvasPhaseCount || 0), Number(value.canvasPhaseCount || 0));
+      state.lastCanvasPhase = value.lastCanvasPhase || state.lastCanvasPhase;
+      state.lastCanvasProgress = Math.max(Number(state.lastCanvasProgress || 0), Number(value.lastCanvasProgress || 0));
+      state.loaderRepaintDuringCanvasBoot = Boolean(state.loaderRepaintDuringCanvasBoot || value.loaderRepaintDuringCanvasBoot || state.canvasYieldCount > 0);
+      state.f13ProgressStreamActive = Boolean(state.f13ProgressStreamActive || value.f13ProgressStreamActive);
+
+      state.atlasBuildStarted = Boolean(state.atlasBuildStarted || value.atlasBuildStarted);
+      state.atlasBuildProgress = Math.max(Number(state.atlasBuildProgress || 0), Number(value.atlasBuildProgress || 0));
+      state.atlasBuildComplete = Boolean(state.atlasBuildComplete || value.atlasBuildComplete);
+
+      state.textureComposeStarted = Boolean(state.textureComposeStarted || value.textureComposeStarted);
+      state.textureComposeProgress = Math.max(Number(state.textureComposeProgress || 0), Number(value.textureComposeProgress || 0));
+      state.textureComposeComplete = Boolean(state.textureComposeComplete || value.textureComposeComplete);
+
+      if (Array.isArray(value.phaseEvents)) {
+        value.phaseEvents.forEach((event) => {
+          if (!event || !event.phase) return;
+          if (state.phaseEvents.some((existing) => existing.at === event.at && existing.phase === event.phase)) return;
+          state.phaseEvents.push(clonePlain(event));
+        });
+        if (state.phaseEvents.length > 180) {
+          state.phaseEvents.splice(0, state.phaseEvents.length - 180);
+        }
+      }
+
+      if (value.postgameStatus && value.postgameStatus !== "COOPERATIVE_CANVAS_BOOT_PENDING") {
+        state.postgameStatus = value.postgameStatus;
+      }
+
+      if (value.firstFailedCoordinate) {
+        state.firstFailedCoordinate = value.firstFailedCoordinate;
+      }
     }
 
-    reconcileAll("canvas-receipt-reconciled");
+    reconcileAll(reason);
   }
 
   function reconcileAll(reason = "manual") {
@@ -1489,37 +1871,37 @@
     const canvasReceipt = getCanvasReceipt();
 
     if (canvasReceipt && isObject(canvasReceipt)) {
-      reconcileFromCanvasReceiptLight(canvasReceipt);
+      handleCanvasReceiptLight(canvasReceipt);
     }
 
     if (state.canvasCarrierMounted) {
       setLedgerLane("canvasAndDiagnostic", {
-        status: state.imageRendered ? STATUS.RENDERED : STATUS.MOUNTED,
-        progress: state.imageRendered ? 96 : 88,
-        event: state.imageRendered ? "FIRST_FRAME_DETECTED" : "CANVAS_MOUNT_CONFIRMED",
+        status: state.canvasReady ? STATUS.FINAL_READY : (state.imageRendered ? STATUS.RENDERED : STATUS.MOUNTED),
+        progress: state.canvasReady ? 100 : Math.max(state.lastCanvasProgress || 0, state.imageRendered ? 98 : 88),
+        event: state.canvasReady ? "CANVAS_READY" : (state.imageRendered ? "FIRST_FRAME_DETECTED" : "CANVAS_MOUNT_CONFIRMED"),
         stage: "F13",
         owner: "hearth.js",
         file: CANVAS_AUTHORITY_FILE,
-        message: state.imageRendered
-          ? "Canvas carrier mounted and first frame/render proof detected."
-          : "Canvas carrier mounted; first frame proof pending."
+        message: state.canvasReady
+          ? "Canvas ready."
+          : (state.imageRendered ? "Canvas first frame detected." : "Canvas carrier mounted; first frame proof pending.")
       });
     }
 
-    if (state.canvasCarrierMounted && (state.firstFrameDetected || state.imageRendered)) {
+    if (state.canvasReady || (state.canvasCarrierMounted && (state.firstFrameDetected || state.imageRendered) && state.dragInspectionBound)) {
       state.finalReceiptAvailable = true;
-      state.postgameStatus = "DIAGNOSTIC_COCKPIT_READY";
-      state.firstFailedCoordinate = "NONE_VISIBLE_CARRIER_PRESENT";
+      state.postgameStatus = "CANVAS_READY_DIAGNOSTIC_DOCK_ACTIVE";
+      state.firstFailedCoordinate = "NONE_CANVAS_READY";
       state.recommendedNextRenewalTarget = "read-postgame-canvas-or-triple-g-receipt";
 
       setLedgerLane("canvasAndDiagnostic", {
         status: STATUS.FINAL_READY,
         progress: 100,
-        event: "FINAL_RECEIPT_READY",
+        event: "CANVAS_READY",
         stage: "F13",
         owner: "hearth.js",
         file: ACTIVE_ROUTE_FILE,
-        message: "Final conductor receipt available."
+        message: "Canvas ready; final conductor receipt available."
       });
 
       tryLatchCompletion();
@@ -1539,7 +1921,11 @@
     render();
   }
 
-  function reconcileFromCanvasReceiptLight(value) {
+  function handleCanvasReceiptLight(value) {
+    state.cooperativeBootAvailable = Boolean(state.cooperativeBootAvailable || value.cooperativeBootAvailable);
+    state.cooperativeBootUsed = Boolean(state.cooperativeBootUsed || value.cooperativeBootUsed);
+    state.syncBootFallbackUsed = Boolean(state.syncBootFallbackUsed || value.syncBootFallbackUsed);
+
     state.canvasCarrierMounted = Boolean(
       state.canvasCarrierMounted ||
       value.canvasCarrierMounted ||
@@ -1554,6 +1940,8 @@
       value.canvasCarrierHandoffOk ||
       value.handoffOk
     );
+
+    state.firstFrameRequested = Boolean(state.firstFrameRequested || value.firstFrameRequested);
 
     state.firstFrameDetected = Boolean(
       state.firstFrameDetected ||
@@ -1575,6 +1963,15 @@
       value.pointerControlsBound ||
       value.controlsBound
     );
+
+    state.canvasReady = Boolean(state.canvasReady || value.canvasReady);
+    state.canvasBootElapsedMs = Math.max(Number(state.canvasBootElapsedMs || 0), Number(value.canvasBootElapsedMs || 0));
+    state.canvasYieldCount = Math.max(Number(state.canvasYieldCount || 0), Number(value.canvasYieldCount || 0));
+    state.canvasPhaseCount = Math.max(Number(state.canvasPhaseCount || 0), Number(value.canvasPhaseCount || 0));
+    state.lastCanvasPhase = value.lastCanvasPhase || state.lastCanvasPhase;
+    state.lastCanvasProgress = Math.max(Number(state.lastCanvasProgress || 0), Number(value.lastCanvasProgress || 0));
+    state.loaderRepaintDuringCanvasBoot = Boolean(state.loaderRepaintDuringCanvasBoot || value.loaderRepaintDuringCanvasBoot || state.canvasYieldCount > 0);
+    state.f13ProgressStreamActive = Boolean(state.f13ProgressStreamActive || value.f13ProgressStreamActive);
   }
 
   function completionReady() {
@@ -1591,7 +1988,7 @@
       state.buttonsReachable === true &&
       state.partialReceiptAvailable === true &&
       state.finalReceiptAvailable === true &&
-      state.postgameStatus === "DIAGNOSTIC_COCKPIT_READY"
+      (state.canvasReady === true || state.postgameStatus === "CANVAS_READY_DIAGNOSTIC_DOCK_ACTIVE")
     );
   }
 
@@ -1612,8 +2009,8 @@
     state.dockVisible = true;
     state.fullCockpitExpanded = false;
     state.planetObstructionReduced = true;
-    state.postgameStatus = "DIAGNOSTIC_COCKPIT_READY";
-    state.firstFailedCoordinate = "NONE_VISIBLE_CARRIER_PRESENT";
+    state.postgameStatus = "CANVAS_READY_DIAGNOSTIC_DOCK_ACTIVE";
+    state.firstFailedCoordinate = "NONE_CANVAS_READY";
     state.recommendedNextRenewalTarget = "read-postgame-canvas-or-triple-g-receipt";
 
     const led = ledgerState();
@@ -1767,11 +2164,11 @@
 
     let progress = state.completionLatched
       ? 100
-      : Math.max(stageProgress(stage), Number(state.mainProgressCap || 0));
+      : Math.max(stageProgress(stage), Number(state.mainProgressCap || 0), Number(state.lastCanvasProgress || 0));
 
     if (!state.completionLatched) {
       if (Math.abs(progress - state.mainDisplayProgress) > 0.08) {
-        state.mainDisplayProgress += (progress - state.mainDisplayProgress) * 0.12;
+        state.mainDisplayProgress += (progress - state.mainDisplayProgress) * 0.16;
       } else {
         state.mainDisplayProgress = progress;
       }
@@ -1786,6 +2183,7 @@
     refs.cockpit.dataset.hearthDiagnosticCockpitReady = String(state.diagnosticCockpitReady);
     refs.cockpit.dataset.hearthVisibleLoadingActive = String(state.visibleLoadingActive);
     refs.cockpit.dataset.hearthMonotonicStageGuardActive = "true";
+    refs.cockpit.dataset.hearthCooperativeCanvasHandoff = "true";
     refs.cockpit.dataset.cockpitMode = state.cockpitMode;
     refs.cockpit.dataset.fullExpanded = String(state.fullCockpitExpanded);
 
@@ -1802,9 +2200,15 @@
     }
 
     if (refs.heartbeat) {
-      refs.heartbeat.textContent = state.completionLatched
-        ? `heartbeat=quiet · latched=true · elapsed=${formatElapsed(elapsed)}`
-        : (state.longWaitMessage || `heartbeat=active · stage=${stage} · elapsed=${formatElapsed(elapsed)}`);
+      if (state.completionLatched) {
+        refs.heartbeat.textContent = `heartbeat=quiet · latched=true · elapsed=${formatElapsed(elapsed)}`;
+      } else if (stage === "F13") {
+        const phase = state.lastCanvasPhase || "CANVAS_BOOT_PENDING";
+        const canvasElapsed = state.canvasBootStartedAtMs ? nowMs() - state.canvasBootStartedAtMs : state.canvasBootElapsedMs;
+        refs.heartbeat.textContent = `cooperative=${state.cooperativeBootUsed} · phase=${phase} · elapsed=${formatElapsed(canvasElapsed)}`;
+      } else {
+        refs.heartbeat.textContent = `heartbeat=active · stage=${stage} · elapsed=${formatElapsed(elapsed)}`;
+      }
     }
 
     if (refs.latest) {
@@ -1836,7 +2240,7 @@
     publishGlobals();
 
     if (!state.completionLatched || Math.abs(state.mainDisplayProgress - state.mainProgressCap) > 0.08) {
-      raf = root.requestAnimationFrame(render);
+      if (!raf) raf = root.requestAnimationFrame(render);
     } else {
       raf = 0;
     }
@@ -1975,16 +2379,38 @@
       sourceAuthorityHeld: true,
 
       canvasApiPresent: state.canvasApiPresent,
+      cooperativeBootAvailable: state.cooperativeBootAvailable,
+      cooperativeBootUsed: state.cooperativeBootUsed,
+      syncBootFallbackUsed: state.syncBootFallbackUsed,
+
       canvasCarrierRequested: state.canvasCarrierRequested,
       canvasCarrierMounted: state.canvasCarrierMounted,
       canvasCarrierHandoffOk: state.canvasCarrierHandoffOk,
       canvasCarrierHandoffError: state.canvasCarrierHandoffError,
       canvasCarrierMethod: state.canvasCarrierMethod,
+
+      canvasBootStartedAt: state.canvasBootStartedAt,
+      canvasBootCompletedAt: state.canvasBootCompletedAt,
+      canvasBootElapsedMs: state.canvasBootElapsedMs,
+      canvasYieldCount: state.canvasYieldCount,
+      canvasPhaseCount: state.canvasPhaseCount,
+      lastCanvasPhase: state.lastCanvasPhase,
+      lastCanvasProgress: state.lastCanvasProgress,
+      loaderRepaintDuringCanvasBoot: state.loaderRepaintDuringCanvasBoot,
+      f13ProgressStreamActive: state.f13ProgressStreamActive,
+
+      atlasBuildStarted: state.atlasBuildStarted,
+      atlasBuildProgress: state.atlasBuildProgress,
+      atlasBuildComplete: state.atlasBuildComplete,
+      textureComposeStarted: state.textureComposeStarted,
+      textureComposeProgress: state.textureComposeProgress,
+      textureComposeComplete: state.textureComposeComplete,
+
+      firstFrameRequested: state.firstFrameRequested,
       firstFrameDetected: state.firstFrameDetected,
       imageRendered: state.imageRendered,
       dragInspectionBound: state.dragInspectionBound,
-      canvasBootElapsedMs: state.canvasBootElapsedMs,
-      longWaitMessage: state.longWaitMessage,
+      canvasReady: state.canvasReady,
 
       partialReceiptAvailable: state.partialReceiptAvailable,
       copyDiagnosticArmed: state.copyDiagnosticArmed,
@@ -2001,6 +2427,7 @@
       mainDisplayProgress: Math.round(state.mainDisplayProgress),
       heartbeatElapsedMs: state.heartbeatElapsedMs,
 
+      phaseEvents: clonePlain(state.phaseEvents),
       ledger: clonePlain(led),
       events: clonePlain(state.events),
       errors: clonePlain(state.errors),
@@ -2025,6 +2452,10 @@
       `- ${key}: status=${script.status}; src=${script.src || ""}; error=${script.error || ""}`
     )).join("\n") || "- none";
 
+    const phases = receipt.phaseEvents.map((event) => (
+      `- ${event.at || ""} :: ${event.phase || ""} :: progress=${event.percent || ""} :: ${event.message || ""}`
+    )).join("\n") || "- none";
+
     const archived = receipt.archivedLateEvents.map((event) => (
       `- ${event.archivedAt || ""} :: ${event.id || event.event || "ARCHIVED"} :: stage=${event.stage || ""} :: reason=${event.archiveReason || ""} :: ${event.message || ""}`
     )).join("\n") || "- none";
@@ -2038,7 +2469,7 @@
     )).join("\n") || "- none";
 
     return [
-      "HEARTH_LOAD_LEDGER_MONOTONIC_CONDUCTOR_DOCK_LATCH_RECEIPT",
+      "HEARTH_ROUTE_CONDUCTOR_COOPERATIVE_CANVAS_HANDOFF_RECEIPT",
       "",
       `contract=${receipt.contract}`,
       `receipt=${receipt.receipt}`,
@@ -2080,16 +2511,37 @@
       `sourceAuthorityHeld=${receipt.sourceAuthorityHeld}`,
       "",
       `canvasApiPresent=${receipt.canvasApiPresent}`,
+      `cooperativeBootAvailable=${receipt.cooperativeBootAvailable}`,
+      `cooperativeBootUsed=${receipt.cooperativeBootUsed}`,
+      `syncBootFallbackUsed=${receipt.syncBootFallbackUsed}`,
       `canvasCarrierRequested=${receipt.canvasCarrierRequested}`,
       `canvasCarrierMounted=${receipt.canvasCarrierMounted}`,
       `canvasCarrierHandoffOk=${receipt.canvasCarrierHandoffOk}`,
       `canvasCarrierHandoffError=${receipt.canvasCarrierHandoffError}`,
       `canvasCarrierMethod=${receipt.canvasCarrierMethod}`,
+      "",
+      `canvasBootStartedAt=${receipt.canvasBootStartedAt}`,
+      `canvasBootCompletedAt=${receipt.canvasBootCompletedAt}`,
+      `canvasBootElapsedMs=${receipt.canvasBootElapsedMs}`,
+      `canvasYieldCount=${receipt.canvasYieldCount}`,
+      `canvasPhaseCount=${receipt.canvasPhaseCount}`,
+      `lastCanvasPhase=${receipt.lastCanvasPhase}`,
+      `lastCanvasProgress=${receipt.lastCanvasProgress}`,
+      `loaderRepaintDuringCanvasBoot=${receipt.loaderRepaintDuringCanvasBoot}`,
+      `f13ProgressStreamActive=${receipt.f13ProgressStreamActive}`,
+      "",
+      `atlasBuildStarted=${receipt.atlasBuildStarted}`,
+      `atlasBuildProgress=${receipt.atlasBuildProgress}`,
+      `atlasBuildComplete=${receipt.atlasBuildComplete}`,
+      `textureComposeStarted=${receipt.textureComposeStarted}`,
+      `textureComposeProgress=${receipt.textureComposeProgress}`,
+      `textureComposeComplete=${receipt.textureComposeComplete}`,
+      "",
+      `firstFrameRequested=${receipt.firstFrameRequested}`,
       `firstFrameDetected=${receipt.firstFrameDetected}`,
       `imageRendered=${receipt.imageRendered}`,
       `dragInspectionBound=${receipt.dragInspectionBound}`,
-      `canvasBootElapsedMs=${receipt.canvasBootElapsedMs}`,
-      `longWaitMessage=${receipt.longWaitMessage}`,
+      `canvasReady=${receipt.canvasReady}`,
       "",
       `partialReceiptAvailable=${receipt.partialReceiptAvailable}`,
       `copyDiagnosticArmed=${receipt.copyDiagnosticArmed}`,
@@ -2111,6 +2563,9 @@
       "",
       "LEDGER_SCRIPTS",
       scripts,
+      "",
+      "CANVAS_PHASE_EVENTS",
+      phases,
       "",
       "ARCHIVED_LATE_EVENTS",
       archived,
@@ -2197,13 +2652,36 @@
     dataset.hearthSourceAuthorityHeld = "true";
 
     dataset.hearthCanvasApiPresent = String(state.canvasApiPresent);
+    dataset.hearthCanvasCooperativeBootAvailable = String(state.cooperativeBootAvailable);
+    dataset.hearthCanvasCooperativeBootUsed = String(state.cooperativeBootUsed);
+    dataset.hearthCanvasSyncBootFallbackUsed = String(state.syncBootFallbackUsed);
     dataset.hearthCanvasCarrierRequested = String(state.canvasCarrierRequested);
     dataset.hearthCanvasCarrierMounted = String(state.canvasCarrierMounted);
     dataset.hearthCanvasCarrierHandoffOk = String(state.canvasCarrierHandoffOk);
     dataset.hearthCanvasCarrierMethod = state.canvasCarrierMethod;
+
+    dataset.hearthCanvasBootStartedAt = state.canvasBootStartedAt;
+    dataset.hearthCanvasBootCompletedAt = state.canvasBootCompletedAt;
+    dataset.hearthCanvasBootElapsedMs = String(state.canvasBootElapsedMs);
+    dataset.hearthCanvasYieldCount = String(state.canvasYieldCount);
+    dataset.hearthCanvasPhaseCount = String(state.canvasPhaseCount);
+    dataset.hearthCanvasLastPhase = state.lastCanvasPhase;
+    dataset.hearthCanvasLastProgress = String(state.lastCanvasProgress);
+    dataset.hearthLoaderRepaintDuringCanvasBoot = String(state.loaderRepaintDuringCanvasBoot);
+    dataset.hearthF13ProgressStreamActive = String(state.f13ProgressStreamActive);
+
+    dataset.hearthAtlasBuildStarted = String(state.atlasBuildStarted);
+    dataset.hearthAtlasBuildProgress = String(state.atlasBuildProgress);
+    dataset.hearthAtlasBuildComplete = String(state.atlasBuildComplete);
+    dataset.hearthTextureComposeStarted = String(state.textureComposeStarted);
+    dataset.hearthTextureComposeProgress = String(state.textureComposeProgress);
+    dataset.hearthTextureComposeComplete = String(state.textureComposeComplete);
+
+    dataset.hearthFirstFrameRequested = String(state.firstFrameRequested);
     dataset.hearthFirstFrameDetected = String(state.firstFrameDetected);
     dataset.hearthImageRendered = String(state.imageRendered);
     dataset.hearthDragInspectionBound = String(state.dragInspectionBound);
+    dataset.hearthCanvasReady = String(state.canvasReady);
 
     dataset.hearthPartialReceiptAvailable = String(state.partialReceiptAvailable);
     dataset.hearthCopyDiagnosticArmed = String(state.copyDiagnosticArmed);
@@ -2249,7 +2727,7 @@
       stage: "F5",
       owner: "hearth.js",
       file: ACTIVE_ROUTE_FILE,
-      message: "Source authority stack held during loader-only renewal."
+      message: "Source authority stack held during cooperative canvas handoff."
     });
 
     startHeartbeat();
@@ -2316,6 +2794,8 @@
     tryLatchCompletion,
     setCockpitMode,
     enforcePostLatchVisibleState,
+    handleCanvasPhase,
+    handleCanvasReceipt,
     getReceipt,
     getReceiptText,
     copyDiagnostic,
@@ -2331,6 +2811,8 @@
     supportsCopyDiagnosticDuringLoading: true,
     supportsRuntimeTableOptionalMode: true,
     supportsVisibleCarrierFirst: true,
+    supportsCooperativeCanvasHandoff: true,
+    supportsF13ProgressStream: true,
 
     ownsPlanetDrawing: false,
     ownsTectonicCause: false,

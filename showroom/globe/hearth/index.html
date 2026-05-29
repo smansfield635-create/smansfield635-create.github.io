@@ -2,10 +2,10 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="hearth-active-planet-parent-chain-sync"
+  data-page="hearth-route-shell-conductor-canvas-rebalance"
   data-route="/showroom/globe/hearth/"
-  data-contract="HEARTH_ACTIVE_PLANET_PARENT_CHAIN_HTML_SYNC_TNT_v2"
-  data-previous-contract="HEARTH_ACTIVE_PLANET_NARRATIVE_MAP_PORTAL_HTML_TNT_v1"
+  data-contract="HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1"
+  data-previous-contract="HEARTH_ACTIVE_PLANET_PARENT_CHAIN_HTML_SYNC_TNT_v2"
   data-body="hearth"
   data-mirrorland-door="true"
   data-map-portal-required="true"
@@ -13,16 +13,35 @@
   data-map-portal-registry="/assets/manor-blueprint/manor.blueprint.registry.js"
   data-map-blip-single-entryway="true"
   data-main-menu-route="false"
-  data-active-route-file="/showroom/globe/hearth/hearth.climate.route.js"
-  data-active-route-contract="HEARTH_TECTONIC_PARENT_CHAIN_ROUTE_TNT_v21"
-  data-active-visible-planet-carrier="true"
+
+  data-active-route-file="/showroom/globe/hearth/hearth.js"
+  data-active-route-conductor="/showroom/globe/hearth/hearth.js"
+  data-active-route-conductor-expected="true"
+  data-retired-climate-route="/showroom/globe/hearth/hearth.climate.route.js"
+  data-retired-climate-route-active-carrier="false"
+
+  data-route-shell-loaded="true"
+  data-route-shell-active="true"
+  data-route-shell-owns-script-order="true"
+  data-canvas-mount-required="true"
+  data-canvas-authority="/assets/hearth/hearth.canvas.js"
+  data-visible-carrier-first="true"
+  data-runtime-table-optional="true"
+  data-runtime-table-missing-does-not-block-carrier="true"
+  data-wide-probe-deferred="true"
+  data-source-authority-held="true"
+
   data-parent-chain-aligned="true"
-  data-parent-chain-order="composition-tectonics-hydrology-materials-canvas"
+  data-parent-chain-order="runtime-table-optional-tectonics-elevation-composition-hydrology-materials-hex-authority-hex-surface-canvas-conductor"
+  data-runtime-table-authority="/assets/lab/runtime-table.js"
   data-tectonics-authority="/assets/hearth/hearth.tectonics.js"
+  data-elevation-authority="/assets/hearth/hearth.elevation.js"
   data-composition-authority="/assets/hearth/hearth.composition.js"
   data-hydrology-authority="/assets/hearth/hearth.hydrology.js"
   data-materials-authority="/assets/hearth/hearth.materials.js"
-  data-canvas-authority="/assets/hearth/hearth.canvas.js"
+  data-hex-authority="/assets/hearth/hearth.hex.four-pair.authority.js"
+  data-hex-surface-authority="/assets/hearth/hearth.hex.surface.js"
+
   data-target-land-ratio="0.30"
   data-earth-reference-land-ratio="0.29"
   data-rocky-means-jagged-not-gray="true"
@@ -53,9 +72,25 @@
   <link rel="canonical" href="https://diamondgatebridge.com/showroom/globe/hearth/">
   <meta name="theme-color" content="#030914">
 
-  <link rel="stylesheet" href="/assets/manor-blueprint/manor.blueprint.css?v=HEARTH_ACTIVE_PLANET_PARENT_CHAIN_HTML_SYNC_TNT_v2">
-  <script src="/assets/manor-blueprint/manor.blueprint.registry.js?v=HEARTH_ACTIVE_PLANET_PARENT_CHAIN_HTML_SYNC_TNT_v2" defer></script>
-  <script src="/assets/manor-blueprint/manor.blueprint.js?v=HEARTH_ACTIVE_PLANET_PARENT_CHAIN_HTML_SYNC_TNT_v2" defer></script>
+  <link rel="stylesheet" href="/assets/manor-blueprint/manor.blueprint.css?v=HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1">
+  <script src="/assets/manor-blueprint/manor.blueprint.registry.js?v=HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1" defer></script>
+  <script src="/assets/manor-blueprint/manor.blueprint.js?v=HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1" defer></script>
+
+  <!-- Optional diagnostic equipment. Must not block first visible render. -->
+  <script src="/assets/lab/runtime-table.js?v=HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1" defer></script>
+
+  <!-- Held source authorities. Shell loads availability; source truth remains owned by each source file. -->
+  <script src="/assets/hearth/hearth.tectonics.js?v=HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1" defer></script>
+  <script src="/assets/hearth/hearth.elevation.js?v=HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1" defer></script>
+  <script src="/assets/hearth/hearth.composition.js?v=HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1" defer></script>
+  <script src="/assets/hearth/hearth.hydrology.js?v=HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1" defer></script>
+  <script src="/assets/hearth/hearth.materials.js?v=HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1" defer></script>
+  <script src="/assets/hearth/hearth.hex.four-pair.authority.js?v=HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1" defer></script>
+  <script src="/assets/hearth/hearth.hex.surface.js?v=HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1" defer></script>
+
+  <!-- Visible carrier authority, then active route conductor. -->
+  <script src="/assets/hearth/hearth.canvas.js?v=HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1" defer></script>
+  <script src="/showroom/globe/hearth/hearth.js?v=HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1" defer></script>
 
   <style>
     :root{
@@ -129,6 +164,11 @@
     button:focus-visible{
       outline:2px solid var(--gold2);
       outline-offset:4px;
+    }
+
+    code{
+      color:rgba(255,244,216,.92);
+      font:800 .86em/1.2 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
     }
 
     .skip{
@@ -718,7 +758,7 @@
     <main id="hearth-main">
       <section class="panel hero" aria-labelledby="hearth-title">
         <div class="hero-copy">
-          <div class="eyebrow">Hearth · Active Planet · Mirrorland Survival Room</div>
+          <div class="eyebrow">Hearth · Active Planet · Conductor / Carrier Route</div>
 
           <h1 id="hearth-title">Survival becomes shelter.</h1>
 
@@ -727,7 +767,7 @@
           </p>
 
           <p class="lede">
-            This room keeps the active planet visible while the engineering parent chain stays underneath as proof. Hearth is not just a tectonic file; it is the narrative chamber where survival pressure becomes a habitable promise.
+            This route shell now preserves the visible mount, loads Hearth.js as conductor, keeps Runtime Table optional, and lets the canvas carrier survive degraded diagnostics.
           </p>
 
           <div class="world-law" aria-label="World lane roles">
@@ -751,19 +791,25 @@
             data-hearth-canvas-mount="true"
             data-hearth-parent-chain-aligned="true"
             data-hearth-active-visible-planet-carrier="true"
-            data-hearth-route-file="/showroom/globe/hearth/hearth.climate.route.js"
-            data-hearth-route-contract="HEARTH_TECTONIC_PARENT_CHAIN_ROUTE_TNT_v21"
+            data-hearth-route-shell-contract="HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1"
+            data-hearth-active-route-conductor="/showroom/globe/hearth/hearth.js"
+            data-hearth-canvas-authority="/assets/hearth/hearth.canvas.js"
+            data-hearth-retired-climate-route="/showroom/globe/hearth/hearth.climate.route.js"
+            data-hearth-retired-climate-route-active-carrier="false"
+            data-runtime-table-optional="true"
+            data-runtime-table-missing-does-not-block-carrier="true"
+            data-visible-carrier-first="true"
             aria-label="Hearth active planet canvas mount"
           >
             <span class="mount-fallback" data-hearth-mount-fallback="true">
-              Hearth active planet route loading.
+              Hearth visible carrier preparing.
             </span>
           </section>
 
           <div class="planet-caption">
-            <b>Active Planet Carrier</b>
+            <b>Visible Carrier Funnel</b>
             <span>
-              The visible planet is loaded by <code>./hearth.climate.route.js</code> through the v21 parent-chain carrier. Drag inspection remains active through the route carrier. This HTML pass synchronizes the page to the current route contract without renewing the planet JS.
+              The page shell loads <code>hearth.js</code> as conductor and <code>/assets/hearth/hearth.canvas.js</code> as the carrier. The old climate route is retired from active drawing duty.
             </span>
           </div>
         </aside>
@@ -783,7 +829,7 @@
             <strong>ZIONTS</strong> shows consequence after living conditions fail. <strong>H-Earth</strong> studies the pressure conditions that survival must face. <strong>Audralia</strong> shows the untouched living possibility. <strong>Hearth</strong> is the conversion room: survival pressure becoming a place where people can actually stay.
           </p>
           <p>
-            The active globe remains visible because Hearth must feel like a world, not only a report. The parent chain remains present because Hearth must prove that shelter has a material basis: tectonics, composition, hydrology, materials, and canvas authority.
+            The active globe remains visible because Hearth must feel like a world, not only a report. The parent chain remains present because Hearth must prove that shelter has a material basis: tectonics, elevation, composition, hydrology, materials, and canvas authority.
           </p>
         </div>
 
@@ -816,36 +862,36 @@
 
       <section class="panel section" id="proof-layer" aria-labelledby="proof-title">
         <div class="section-head">
-          <div class="section-kicker">Proof Layer · Parent Chain Preserved</div>
-          <h2 id="proof-title">The engineering layer now supports the story instead of replacing it.</h2>
+          <div class="section-kicker">Proof Layer · Source Stack Held</div>
+          <h2 id="proof-title">The engineering layer supports the story without replacing the route.</h2>
           <p>
-            The v21 tectonic parent-chain structure remains valid as the proof layer. Rocky means jagged, not gray. The exposed planet must preserve plate stress, uplift, collapsed basins, hydrology, mineral substrate, and material surface separation.
+            The route shell no longer erases source authority globals and no longer reactivates the climate-route emergency carrier. Source files remain truth providers. Hearth.js conducts. Canvas displays.
           </p>
         </div>
 
         <div class="proof-grid" aria-label="Hearth parent chain support">
           <article class="proof-card" style="--accent:var(--amber)">
             <b>Tectonics</b>
-            <strong>Jagged land authority</strong>
+            <strong>Structural cause</strong>
             <p>Plate stress, uplift ridges, fault pressure, cliff cuts, island breaks, and fractured coast behavior.</p>
           </article>
 
           <article class="proof-card" style="--accent:var(--gold)">
-            <b>Composition</b>
-            <strong>Substrate authority</strong>
-            <p>Diamond, opal, marble, slate, granite, gold, platinum, and silver remain material truth below the surface.</p>
+            <b>Elevation / Composition</b>
+            <strong>Height and substrate</strong>
+            <p>Elevation resolves height and depth. Composition classifies material-ready terrain without drawing the page.</p>
           </article>
 
           <article class="proof-card" style="--accent:var(--blue)">
-            <b>Hydrology</b>
-            <strong>Water follows scars</strong>
-            <p>Inland lakes, rivers, streams, brooks, marshes, swamps, shelves, and wet basins follow tectonic cuts.</p>
+            <b>Hydrology / Materials</b>
+            <strong>Waterline expression</strong>
+            <p>Hydrology classifies sea-level truth. Materials reveal water fill, shelves, wet stone, and submerged scars.</p>
           </article>
 
           <article class="proof-card" style="--accent:var(--green)">
-            <b>Materials</b>
-            <strong>Surface expression</strong>
-            <p>Grass, dirt, mud, rock, mountain stone, cliffs, snow, ice, and water render as terrain surface only.</p>
+            <b>Canvas</b>
+            <strong>Visible carrier</strong>
+            <p>Canvas mounts the visible object and survives Runtime Table degraded or missing mode.</p>
           </article>
         </div>
       </section>
@@ -886,50 +932,56 @@
         </div>
       </section>
 
-      <pre id="hearth-route-status" data-hearth-route-status="true">Hearth active planet parent-chain route preparing.</pre>
+      <pre id="hearth-route-status" data-hearth-route-status="true">Hearth route shell loading conductor / carrier funnel.</pre>
 
       <template id="hearth-route-receipt" data-route-receipt>
-HEARTH_ACTIVE_PLANET_PARENT_CHAIN_HTML_SYNC_TNT_v2
+HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1
 route=/showroom/globe/hearth/
-previous=HEARTH_ACTIVE_PLANET_NARRATIVE_MAP_PORTAL_HTML_TNT_v1
-active_route_file=/showroom/globe/hearth/hearth.climate.route.js
-active_route_contract=HEARTH_TECTONIC_PARENT_CHAIN_ROUTE_TNT_v21
-visible_planet_carrier_active=true
-html_route_contract_sync=true
-parent_chain_order=composition→tectonics→hydrology→materials→canvas
+previous=HEARTH_ACTIVE_PLANET_PARENT_CHAIN_HTML_SYNC_TNT_v2
+route_shell_loaded=true
+route_shell_active=true
+route_shell_owns_script_order=true
+active_route_conductor=/showroom/globe/hearth/hearth.js
+active_route_conductor_expected=true
+retired_climate_route=/showroom/globe/hearth/hearth.climate.route.js
+retired_climate_route_active_carrier=false
+canvas_mount_present=true
+canvas_authority=/assets/hearth/hearth.canvas.js
+runtime_table=/assets/lab/runtime-table.js
+runtime_table_optional=true
+runtime_table_missing_does_not_block_carrier=true
+visible_carrier_first=true
+wide_probe_deferred=true
+source_authority_held=true
+source_order=runtime-table-optional→tectonics→elevation→composition→hydrology→materials→hex-authority→hex-surface→canvas→conductor
+tectonics=/assets/hearth/hearth.tectonics.js
+elevation=/assets/hearth/hearth.elevation.js
+composition=/assets/hearth/hearth.composition.js
+hydrology=/assets/hearth/hearth.hydrology.js
+materials=/assets/hearth/hearth.materials.js
+hex_authority=/assets/hearth/hearth.hex.four-pair.authority.js
+hex_surface=/assets/hearth/hearth.hex.surface.js
+target_land_ratio=0.30
+earth_reference_land_ratio=0.29
+rocky_means_jagged_not_gray=true
+plate_tectonics_active=true
 narrative_identity=Hearth · Survival Becomes Shelter
 world_lane=survival_pressure_becomes_home
-zionts_role=consequence
-h_earth_role=survival_condition_pressure
-hearth_role=survival_pressure_becomes_shelter
-audralia_role=untouched_living_possibility
 map_portal_required=true
 map_portal_source=/assets/manor-blueprint/manor.blueprint.js
 map_portal_registry=/assets/manor-blueprint/manor.blueprint.registry.js
 map_blip_single_entryway=true
 top_navigation_is_not_map_portal=true
-tectonics=/assets/hearth/hearth.tectonics.js
-composition=/assets/hearth/hearth.composition.js
-hydrology=/assets/hearth/hearth.hydrology.js
-materials=/assets/hearth/hearth.materials.js
-canvas=/assets/hearth/hearth.canvas.js
-target_land_ratio=0.30
-earth_reference_land_ratio=0.29
-rocky_means_jagged_not_gray=true
-plate_tectonics_active=true
-vegetation_topology=held
-trees=false
-bushes=false
-forest_canopy=false
 generated_image=false
 graphic_box=false
 webgl=false
 visual_pass_claimed=false
+next_diagnostic_target=hearth.js-or-canvas-receipt-after-index-update
       </template>
     </main>
 
     <footer>
-      HEARTH_ACTIVE_PLANET_PARENT_CHAIN_HTML_SYNC_TNT_v2 · /showroom/globe/hearth/ · Hearth · Survival Becomes Shelter.
+      HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1 · /showroom/globe/hearth/ · Hearth · Survival Becomes Shelter.
     </footer>
   </div>
 
@@ -937,140 +989,255 @@ visual_pass_claimed=false
     (() => {
       "use strict";
 
-      const CONTRACT = "HEARTH_ACTIVE_PLANET_PARENT_CHAIN_HTML_SYNC_TNT_v2";
-      const PREVIOUS_CONTRACT = "HEARTH_ACTIVE_PLANET_NARRATIVE_MAP_PORTAL_HTML_TNT_v1";
-      const ACTIVE_ROUTE_CONTRACT = "HEARTH_TECTONIC_PARENT_CHAIN_ROUTE_TNT_v21";
-      const ACTIVE_ROUTE_FILE = "/showroom/globe/hearth/hearth.climate.route.js";
-      const key = `hearth-active-planet-parent-chain-html-sync-v2-${Date.now()}`;
+      const CONTRACT = "HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1";
+      const RECEIPT = "HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_RECEIPT_v1";
+      const PREVIOUS_CONTRACT = "HEARTH_ACTIVE_PLANET_PARENT_CHAIN_HTML_SYNC_TNT_v2";
+      const ACTIVE_CONDUCTOR_FILE = "/showroom/globe/hearth/hearth.js";
+      const RETIRED_CLIMATE_ROUTE = "/showroom/globe/hearth/hearth.climate.route.js";
+      const CANVAS_AUTHORITY = "/assets/hearth/hearth.canvas.js";
+      const RUNTIME_TABLE = "/assets/lab/runtime-table.js";
 
-      [
-        "__HEARTH_G4_ROUTE_DISPOSE__",
-        "__HEARTH_HABITABLE_FORMING_ROUTE_DISPOSE__",
-        "__HEARTH_CONTROLS_DISPOSE__",
-        "__HEARTH_CANVAS_DISPOSE__",
-        "__HEARTH_VISIBLE_RECOVERY_DISPOSE__"
-      ].forEach((name) => {
-        try {
-          if (typeof window[name] === "function") window[name]();
-        } catch (_error) {}
+      const state = {
+        contract: CONTRACT,
+        receipt: RECEIPT,
+        previousContract: PREVIOUS_CONTRACT,
+        route: "/showroom/globe/hearth/",
+        routeShellLoaded: true,
+        routeShellActive: true,
+        activeRouteConductor: ACTIVE_CONDUCTOR_FILE,
+        retiredClimateRoute: RETIRED_CLIMATE_ROUTE,
+        retiredClimateRouteActiveCarrier: false,
+        canvasAuthority: CANVAS_AUTHORITY,
+        runtimeTable: RUNTIME_TABLE,
+        runtimeTableOptional: true,
+        runtimeTablePresent: false,
+        runtimeTableMode: "RUNTIME_TABLE_PENDING",
+        runtimeTableMissingDoesNotBlockCarrier: true,
+        visibleCarrierFirst: true,
+        wideProbeDeferred: true,
+        sourceAuthorityHeld: true,
+        canvasMountPresent: false,
+        conductorPresent: false,
+        canvasApiPresent: false,
+        canvasCarrierMounted: false,
+        dragInspectionBound: false,
+        receiptOverlayIndependent: true,
+        imageRendered: false,
+        coherentExpressionPass: false,
+        visualPassClaimed: false,
+        firstFailedCoordinate: "A1_ATLAS_START_AUTHORIZED",
+        recommendedNextRenewalTarget: "hearth.js-or-canvas-receipt-after-index-update",
+        generatedImage: false,
+        graphicBox: false,
+        webGL: false,
+        status: "ROUTE_SHELL_REBALANCED_CONDUCTOR_PENDING",
+        updatedAt: ""
+      };
 
-        try {
-          window[name] = undefined;
-          delete window[name];
-        } catch (_error) {}
-      });
+      function bool(value) {
+        return value === true || value === "true";
+      }
 
-      [
-        "HEARTH_RUNTIME",
-        "HEARTH_CONTROLS",
-        "HEARTH_TERRAIN_EXTENSION",
-        "HEARTH_ELEVATION",
-        "HEARTH_CLIMATE",
-        "HEARTH_TECTONICS",
-        "HEARTH_COMPOSITION",
-        "HEARTH_HYDROLOGY",
-        "HEARTH_MATERIALS",
-        "HEARTH_ASSETS",
-        "HEARTH_CANVAS",
-        "__HEARTH_ACTIVE_ROUTE_FILE__",
-        "__HEARTH_ACTIVE_ROUTE_CONTRACT__"
-      ].forEach((name) => {
-        try {
-          window[name] = undefined;
-          delete window[name];
-        } catch (_error) {}
-      });
+      function detectRuntimeTableMode() {
+        const api =
+          window.LAB_RUNTIME_TABLE ||
+          window.DexterRuntimeTable ||
+          window.RUNTIME_TABLE ||
+          window.LAB_UNIVERSAL_PLANET_RUNTIME_TABLE ||
+          (window.DEXTER_LAB && window.DEXTER_LAB.runtimeTable) ||
+          null;
 
-      document.querySelectorAll([
-        'script[src*="./index.js"]',
-        'script[src*="/showroom/globe/hearth/index.js"]',
-        'script[src*="hearth.visible.recovery"]',
-        'script[src*="hearth.climate.route.js"]',
-        'script[data-hearth-file="true"]'
-      ].join(",")).forEach((script) => script.remove());
+        state.runtimeTablePresent = Boolean(api);
+        state.runtimeTableMode = api
+          ? "RUNTIME_TABLE_READY_OR_DEGRADED"
+          : "RUNTIME_TABLE_MISSING_ALLOWED";
 
-      function publishHtmlStatus(value) {
-        const status = document.getElementById("hearth-route-status");
+        return api;
+      }
 
-        document.documentElement.dataset.hearthHtmlContract = CONTRACT;
-        document.documentElement.dataset.hearthHtmlPreviousContract = PREVIOUS_CONTRACT;
-        document.documentElement.dataset.hearthActiveRouteFile = ACTIVE_ROUTE_FILE;
-        document.documentElement.dataset.hearthActiveRouteContract = ACTIVE_ROUTE_CONTRACT;
-        document.documentElement.dataset.hearthActiveVisiblePlanetCarrier = "true";
-        document.documentElement.dataset.hearthParentChainOrder = "composition-tectonics-hydrology-materials-canvas";
-        document.documentElement.dataset.hearthNarrativeIdentity = "Hearth · Survival Becomes Shelter";
-        document.documentElement.dataset.hearthMapPortalRequired = "true";
-        document.documentElement.dataset.generatedImage = "false";
-        document.documentElement.dataset.graphicBox = "false";
-        document.documentElement.dataset.webgl = "false";
-        document.documentElement.dataset.visualPassClaimed = "false";
+      function detectConductorAndCanvas() {
+        const doc = document.documentElement;
+        const mount = document.getElementById("hearthCanvasMount");
 
-        window.HEARTH_ACTIVE_PLANET_PARENT_CHAIN_HTML_SYNC_STATUS = {
-          contract: CONTRACT,
-          previousContract: PREVIOUS_CONTRACT,
-          route: "/showroom/globe/hearth/",
-          activeRouteFile: ACTIVE_ROUTE_FILE,
-          activeRouteContract: ACTIVE_ROUTE_CONTRACT,
-          activeVisiblePlanetCarrier: true,
-          parentChainOrder: "composition → tectonics → hydrology → materials → canvas",
-          narrativeIdentity: "Hearth · Survival Becomes Shelter",
-          mapPortalRequired: true,
-          mapPortalSource: "/assets/manor-blueprint/manor.blueprint.js",
-          mapPortalRegistry: "/assets/manor-blueprint/manor.blueprint.registry.js",
-          mapBlipSingleEntryway: true,
-          generatedImage: false,
-          graphicBox: false,
-          webGL: false,
-          visualPassClaimed: false,
-          status: value,
-          updatedAt: new Date().toISOString()
+        state.canvasMountPresent = Boolean(mount);
+        state.conductorPresent = Boolean(
+          window.__HEARTH_ACTIVE_ROUTE_FILE__ === ACTIVE_CONDUCTOR_FILE ||
+          window.__HEARTH_ACTIVE_ROUTE_CONDUCTOR__ === ACTIVE_CONDUCTOR_FILE ||
+          bool(doc.dataset.hearthConductorLoaded) ||
+          bool(doc.dataset.hearthRouteConductorLoaded) ||
+          bool(doc.dataset.hearthJsConductorLoaded)
+        );
+
+        state.canvasApiPresent = Boolean(
+          window.HEARTH_CANVAS ||
+          window.HearthCanvas ||
+          (window.HEARTH && window.HEARTH.canvas)
+        );
+
+        state.canvasCarrierMounted = Boolean(
+          mount &&
+          (
+            mount.querySelector("canvas") ||
+            bool(mount.dataset.hearthCanvasMounted) ||
+            bool(mount.dataset.hearthVisibleCarrierMounted) ||
+            bool(doc.dataset.hearthCanvasCarrierMounted) ||
+            bool(doc.dataset.hearthVisibleCarrierMounted)
+          )
+        );
+
+        state.dragInspectionBound = Boolean(
+          bool(doc.dataset.hearthDragInspectionBound) ||
+          bool(doc.dataset.hearthControlsBound) ||
+          (mount && bool(mount.dataset.hearthDragInspectionBound)) ||
+          (mount && bool(mount.dataset.hearthControlsBound))
+        );
+
+        state.imageRendered = Boolean(
+          state.canvasCarrierMounted ||
+          bool(doc.dataset.hearthImageRendered) ||
+          bool(doc.dataset.hearthCanvasImageRendered)
+        );
+
+        if (state.canvasCarrierMounted) {
+          state.status = state.runtimeTablePresent
+            ? "ROUTE_SHELL_REBALANCED_CANVAS_VISIBLE"
+            : "ROUTE_SHELL_REBALANCED_RUNTIME_TABLE_MISSING_ALLOWED";
+          state.firstFailedCoordinate = "NONE_VISIBLE_CARRIER_PRESENT";
+          state.recommendedNextRenewalTarget = "read-postgame-canvas-or-triple-g-receipt";
+          return;
+        }
+
+        if (state.conductorPresent) {
+          state.status = state.runtimeTablePresent
+            ? "ROUTE_SHELL_REBALANCED_CONDUCTOR_LOADED"
+            : "ROUTE_SHELL_REBALANCED_RUNTIME_TABLE_MISSING_ALLOWED";
+          state.firstFailedCoordinate = "CANVAS_CARRIER_NOT_CONFIRMED";
+          state.recommendedNextRenewalTarget = "canvas-carrier-mount-verification";
+          return;
+        }
+
+        state.status = "ROUTE_SHELL_REBALANCED_CONDUCTOR_PENDING";
+        state.firstFailedCoordinate = "CONDUCTOR_NOT_CONFIRMED";
+        state.recommendedNextRenewalTarget = "hearth.js-conductor-load-verification";
+      }
+
+      function publishStatus(reason) {
+        const dataset = document.documentElement.dataset;
+        const statusNode = document.getElementById("hearth-route-status");
+
+        detectRuntimeTableMode();
+        detectConductorAndCanvas();
+
+        state.updatedAt = new Date().toISOString();
+
+        dataset.hearthRouteShellLoaded = "true";
+        dataset.hearthRouteShellActive = "true";
+        dataset.hearthRouteShellContract = CONTRACT;
+        dataset.hearthRouteShellReceipt = RECEIPT;
+        dataset.hearthRouteShellPreviousContract = PREVIOUS_CONTRACT;
+
+        dataset.hearthActiveRouteFile = ACTIVE_CONDUCTOR_FILE;
+        dataset.hearthActiveRouteConductor = ACTIVE_CONDUCTOR_FILE;
+        dataset.hearthActiveRouteConductorExpected = "true";
+        dataset.hearthRetiredClimateRoute = RETIRED_CLIMATE_ROUTE;
+        dataset.hearthRetiredClimateRouteActiveCarrier = "false";
+
+        dataset.hearthCanvasMountPresent = String(state.canvasMountPresent);
+        dataset.hearthCanvasAuthority = CANVAS_AUTHORITY;
+        dataset.hearthCanvasApiPresent = String(state.canvasApiPresent);
+        dataset.hearthCanvasCarrierMounted = String(state.canvasCarrierMounted);
+
+        dataset.hearthRuntimeTable = RUNTIME_TABLE;
+        dataset.hearthRuntimeTableOptional = "true";
+        dataset.hearthRuntimeTablePresent = String(state.runtimeTablePresent);
+        dataset.hearthRuntimeTableMode = state.runtimeTableMode;
+        dataset.hearthRuntimeTableMissingDoesNotBlockCarrier = "true";
+
+        dataset.hearthVisibleCarrierFirst = "true";
+        dataset.hearthWideProbeDeferred = "true";
+        dataset.hearthSourceAuthorityHeld = "true";
+        dataset.hearthReceiptOverlayIndependent = "true";
+        dataset.hearthImageRendered = String(state.imageRendered);
+        dataset.hearthCoherentExpressionPass = "false";
+        dataset.hearthVisualPassClaimed = "false";
+        dataset.hearthFirstFailedCoordinate = state.firstFailedCoordinate;
+        dataset.hearthRecommendedNextRenewalTarget = state.recommendedNextRenewalTarget;
+        dataset.hearthRouteShellPostgameStatus = state.status;
+
+        dataset.generatedImage = "false";
+        dataset.graphicBox = "false";
+        dataset.webgl = "false";
+        dataset.visualPassClaimed = "false";
+
+        window.HEARTH_ROUTE_SHELL_POSTGAME_RECEIPT = {
+          ...state,
+          reason,
+          postgameStatus: state.status,
+          routeShellLoaded: true,
+          activeRouteConductor: ACTIVE_CONDUCTOR_FILE,
+          retiredClimateRoute: RETIRED_CLIMATE_ROUTE,
+          retiredClimateRouteActiveCarrier: false,
+          runtimeTableMissingDoesNotBlockCarrier: true,
+          sourceAuthorityHeld: true,
+          visibleCarrierFirst: true,
+          wideProbeDeferred: true,
+          visualPassClaimed: false
         };
 
-        if (status) {
-          status.textContent = [
-            "Hearth active planet parent-chain HTML loaded.",
-            `HTML contract ${CONTRACT}`,
-            `Previous HTML contract ${PREVIOUS_CONTRACT}`,
-            `Active route file ${ACTIVE_ROUTE_FILE}`,
-            `Active route contract ${ACTIVE_ROUTE_CONTRACT}`,
-            "Parent order composition → tectonics → hydrology → materials → canvas",
-            "Narrative identity Hearth · Survival Becomes Shelter",
-            "Visible planet carrier active true",
-            "Map / Portal imports active true",
-            "Map blip owns global estate navigation true",
-            "Top navigation is not the Map / Portal true",
+        if (statusNode) {
+          statusNode.textContent = [
+            "Hearth route shell conductor/canvas rebalance loaded.",
+            `Contract ${CONTRACT}`,
+            `Receipt ${RECEIPT}`,
+            `Previous ${PREVIOUS_CONTRACT}`,
+            `Status ${state.status}`,
+            `Reason ${reason}`,
+            `Active route conductor ${ACTIVE_CONDUCTOR_FILE}`,
+            `Retired climate route ${RETIRED_CLIMATE_ROUTE}`,
+            "Retired climate route active carrier false",
+            `Canvas authority ${CANVAS_AUTHORITY}`,
+            `Canvas mount present ${state.canvasMountPresent}`,
+            `Canvas API present ${state.canvasApiPresent}`,
+            `Canvas carrier mounted ${state.canvasCarrierMounted}`,
+            `Drag inspection bound ${state.dragInspectionBound}`,
+            `Runtime Table optional true`,
+            `Runtime Table present ${state.runtimeTablePresent}`,
+            `Runtime Table mode ${state.runtimeTableMode}`,
+            "Runtime Table missing does not block carrier true",
+            "Visible carrier first true",
+            "Wide probe deferred true",
+            "Source authority held true",
+            "Receipt overlay independent true",
+            `Image rendered ${state.imageRendered}`,
+            "Coherent expression pass false",
+            "Visual pass claimed false",
+            `First failed coordinate ${state.firstFailedCoordinate}`,
+            `Recommended next renewal target ${state.recommendedNextRenewalTarget}`,
             "Generated image false",
             "GraphicBox false",
             "WebGL false",
-            "Visual pass claimed false",
-            `Status ${value}`
+            `Updated ${state.updatedAt}`
           ].join("\n");
         }
       }
 
-      publishHtmlStatus("loading-active-route-file");
+      window.__HEARTH_ACTIVE_ROUTE_FILE__ = ACTIVE_CONDUCTOR_FILE;
+      window.__HEARTH_ACTIVE_ROUTE_CONDUCTOR__ = ACTIVE_CONDUCTOR_FILE;
+      window.__HEARTH_RETIRED_CLIMATE_ROUTE__ = RETIRED_CLIMATE_ROUTE;
+      window.__HEARTH_RETIRED_CLIMATE_ROUTE_ACTIVE_CARRIER__ = false;
 
-      const script = document.createElement("script");
-      script.src = `./hearth.climate.route.js?v=${encodeURIComponent(key)}`;
-      script.defer = true;
-      script.dataset.hearthFile = "true";
-      script.dataset.hearthFileRole = "active-planet-parent-chain-carrier";
-      script.dataset.hearthHtmlContract = CONTRACT;
-      script.dataset.hearthExpectedRouteContract = ACTIVE_ROUTE_CONTRACT;
-      script.dataset.generatedImage = "false";
-      script.dataset.graphicBox = "false";
-      script.dataset.webgl = "false";
-      script.dataset.visualPassClaimed = "false";
+      publishStatus("shell-inline-pre-defer-status");
 
-      script.onload = () => {
-        publishHtmlStatus("active-route-file-loaded");
-      };
+      window.addEventListener("DOMContentLoaded", () => {
+        publishStatus("dom-content-loaded");
+      }, { once: true });
 
-      script.onerror = () => {
-        publishHtmlStatus("active-route-file-failed-to-load");
-      };
-
-      document.head.appendChild(script);
+      window.addEventListener("load", () => {
+        publishStatus("window-load");
+        window.setTimeout(() => publishStatus("post-load-250ms"), 250);
+        window.setTimeout(() => publishStatus("post-load-1000ms"), 1000);
+        window.setTimeout(() => publishStatus("post-load-2500ms"), 2500);
+      }, { once: true });
     })();
   </script>
 </body>

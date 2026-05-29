@@ -1,14 +1,14 @@
 // /assets/lab/runtime-table.js
-// LAB_RUNTIME_TABLE_MULTI_FUNCTION_ANIMATION_STANDARD_TNT_v1
-// New reusable lab equipment.
-// Runtime Table standard only.
+// LAB_RUNTIME_TABLE_AND_TRIPLE_G_COHERENCE_DIAGNOSTIC_STANDARD_TNT_v2
+// Full-file replacement.
+// Canonical Dexter Lab equipment.
+// Runtime Table + Triple G Coherence Diagnostic standard.
 // Purpose:
-// - Provide a reusable pre-runtime coordination layer for dynamic animation systems.
-// - Validate child authorities before visible runtime expression.
-// - Coordinate shared coordinate bodies.
-// - Optimize construction budgets.
-// - Audit failures without false readiness.
-// - Resolve handoff as FULL_PASS, OPTIMIZED_PASS, DEGRADED_PASS, FALLBACK_PASS, REJECTED, or BLOCKING.
+// - Preserve reusable Runtime Table construction-readiness equipment.
+// - Add Triple G coherent-expression diagnostic equipment inside the same lab file.
+// - Validate construction before runtime performs.
+// - Verify coherent expression after render/image output exists.
+// - Produce checkpoint receipts with math, tolerance, result, probable cause, renewal target, and next strategy.
 // Does not own:
 // - page truth
 // - child channel truth
@@ -20,9 +20,10 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "LAB_RUNTIME_TABLE_MULTI_FUNCTION_ANIMATION_STANDARD_TNT_v1";
-  const RECEIPT = "LAB_RUNTIME_TABLE_MULTI_FUNCTION_ANIMATION_STANDARD_RECEIPT_v1";
-  const VERSION = "2026-05-29.lab-runtime-table-multi-function-animation-standard-v1";
+  const CONTRACT = "LAB_RUNTIME_TABLE_AND_TRIPLE_G_COHERENCE_DIAGNOSTIC_STANDARD_TNT_v2";
+  const RECEIPT = "LAB_RUNTIME_TABLE_AND_TRIPLE_G_COHERENCE_DIAGNOSTIC_STANDARD_RECEIPT_v2";
+  const PREVIOUS_CONTRACT = "LAB_RUNTIME_TABLE_MULTI_FUNCTION_ANIMATION_STANDARD_TNT_v1";
+  const VERSION = "2026-05-29.lab-runtime-table-triple-g-coherence-diagnostic-v2";
 
   const root = typeof window !== "undefined" ? window : globalThis;
 
@@ -45,7 +46,38 @@
     BLOCKING: "BLOCKING"
   });
 
+  const COHERENCE_STATUS = Object.freeze({
+    PASS: "PASS",
+    WARNING: "WARNING",
+    DEGRADED: "DEGRADED",
+    FAIL: "FAIL",
+    REJECTED: "REJECTED",
+    BLOCKING: "BLOCKING"
+  });
+
+  const COHERENCE_CHECKS = Object.freeze({
+    RECEIPT_VERIFICATION_CHECK: "RECEIPT_VERIFICATION_CHECK",
+    COORDINATE_BODY_CHECK: "COORDINATE_BODY_CHECK",
+    LAND_BODY_BINDING_CHECK: "LAND_BODY_BINDING_CHECK",
+    WATER_SURFACE_SEATING_CHECK: "WATER_SURFACE_SEATING_CHECK",
+    AIR_AUTHORITY_CHECK: "AIR_AUTHORITY_CHECK",
+    CHANNEL_SEPARATION_CHECK: "CHANNEL_SEPARATION_CHECK",
+    PROJECTION_SEATING_CHECK: "PROJECTION_SEATING_CHECK",
+    CONTRAST_VISIBILITY_CHECK: "CONTRAST_VISIBILITY_CHECK",
+    DISTRIBUTION_SHAPE_CHECK: "DISTRIBUTION_SHAPE_CHECK",
+    COHERENT_EXPRESSION_CHECK: "COHERENT_EXPRESSION_CHECK"
+  });
+
   const DEFAULT_COORDINATES = Object.freeze(["u", "v", "x", "y", "z"]);
+
+  const HEARTH_CONTRACTS = Object.freeze({
+    runtimeTable: CONTRACT,
+    previousRuntimeTable: PREVIOUS_CONTRACT,
+    canvas: "HEARTH_LAB_RUNTIME_TABLE_PREWIRED_CANVAS_TNT_v4_1",
+    land: "HEARTH_LAND_SURFACE_ATTACHMENT_CHANNEL_TNT_v1",
+    water: "HEARTH_WATER_HYDROSPHERE_SURFACE_CHANNEL_TNT_v1",
+    air: "HEARTH_AIR_PRESSURE_HUMIDITY_CHANNEL_TNT_v1"
+  });
 
   function nowIso() {
     try {
@@ -75,6 +107,19 @@
     return Math.max(min, Math.min(max, n));
   }
 
+  function clamp01(value) {
+    return clamp(value, 0, 1);
+  }
+
+  function safeNumber(value, fallback = 0) {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : fallback;
+  }
+
+  function safeBool(value, fallback = false) {
+    return typeof value === "boolean" ? value : fallback;
+  }
+
   function clonePlain(value) {
     if (!isObject(value)) return value;
 
@@ -83,6 +128,25 @@
     } catch (_error) {
       return { ...value };
     }
+  }
+
+  function mergePlain(base, overrides) {
+    const output = { ...(base || {}) };
+
+    Object.keys(overrides || {}).forEach((key) => {
+      if (
+        isObject(output[key]) &&
+        isObject(overrides[key]) &&
+        !Array.isArray(output[key]) &&
+        !Array.isArray(overrides[key])
+      ) {
+        output[key] = mergePlain(output[key], overrides[key]);
+      } else {
+        output[key] = overrides[key];
+      }
+    });
+
+    return output;
   }
 
   function createIssue(code, message, severity = STATUS.DEGRADED, detail = {}) {
@@ -366,6 +430,7 @@
       id: tableId,
       contract: CONTRACT,
       receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
       createdAt: nowIso(),
       updatedAt: nowIso(),
@@ -582,6 +647,7 @@
       return {
         contract: CONTRACT,
         receipt: RECEIPT,
+        previousContract: PREVIOUS_CONTRACT,
         version: VERSION,
         id: state.id,
         status: state.status,
@@ -618,7 +684,9 @@
           degraded: record.degraded,
           fallback: record.fallback,
           rejected: record.rejected,
-          blocking: record.blocking
+          blocking: record.blocking,
+          sample: clonePlain(record.sample),
+          receipt: clonePlain(record.receipt)
         })),
         ledger: clonePlain(state.ledger),
         lastSamplePoint: clonePlain(state.lastSamplePoint),
@@ -686,6 +754,7 @@
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
       id: state.id,
 
@@ -707,6 +776,7 @@
         return {
           contract: CONTRACT,
           receipt: RECEIPT,
+          previousContract: PREVIOUS_CONTRACT,
           version: VERSION,
           authority: "lab-runtime-table-standard-instance",
           id: state.id,
@@ -744,7 +814,7 @@
       key: "land",
       name: "Hearth Land Channel",
       globalName: "HEARTH_LAND_CHANNEL",
-      expectedContract: "HEARTH_LAND_SURFACE_ATTACHMENT_CHANNEL_TNT_v1",
+      expectedContract: HEARTH_CONTRACTS.land,
       requiredMethods: ["sample", "read"],
       requiredCoordinates: ["u", "v", "x", "y", "z"],
       laws: [
@@ -770,7 +840,7 @@
       key: "water",
       name: "Hearth Water Channel",
       globalName: "HEARTH_WATER_CHANNEL",
-      expectedContract: "HEARTH_WATER_HYDROSPHERE_SURFACE_CHANNEL_TNT_v1",
+      expectedContract: HEARTH_CONTRACTS.water,
       requiredMethods: ["sample", "read"],
       requiredCoordinates: ["u", "v", "x", "y", "z"],
       laws: [
@@ -796,7 +866,7 @@
       key: "air",
       name: "Hearth Air Channel",
       globalName: "HEARTH_AIR_CHANNEL",
-      expectedContract: "HEARTH_AIR_PRESSURE_HUMIDITY_CHANNEL_TNT_v1",
+      expectedContract: HEARTH_CONTRACTS.air,
       requiredMethods: ["sample", "read"],
       requiredCoordinates: ["u", "v", "x", "y", "z"],
       laws: [
@@ -828,19 +898,1079 @@
     return table;
   }
 
+  function createGoalProfile(type = "hearth-channel-expression", overrides = {}) {
+    const base = {
+      id: type,
+      label: "Hearth channel coherent-expression goal profile",
+      expectedContracts: {
+        runtimeTable: CONTRACT,
+        previousRuntimeTable: PREVIOUS_CONTRACT,
+        canvas: HEARTH_CONTRACTS.canvas,
+        land: HEARTH_CONTRACTS.land,
+        water: HEARTH_CONTRACTS.water,
+        air: HEARTH_CONTRACTS.air
+      },
+      laws: {
+        landBodyBound: true,
+        waterSurfaceSeated: true,
+        airFloatingOnly: true,
+        airMayDefineLand: false,
+        airMayDefineWater: false,
+        imageRenderedIsNotCoherencePass: true,
+        runtimeTableLedgerMustAgreeWithFinalOutput: true
+      },
+      tolerances: {
+        vectorMagnitudeError: 0.015,
+        uError: 0.025,
+        vError: 0.025,
+        coordinateError: 0.08,
+        landAtmosphericLeak: 0.08,
+        waterFloatingLeak: 0.08,
+        minimumLandBodyScore: 0.08,
+        minimumWaterSeatScore: 0.07,
+        minimumChannelSeparation: 0.12,
+        maximumDominantAirRisk: 0.18,
+        minimumContrastDelta: 18,
+        minimumCoherenceScore: 86,
+        minimumVisibleLandAlpha: 0.20,
+        minimumVisibleWaterAlpha: 0.20,
+        maximumAirDominance: 0.52,
+        minimumLandCoverageWhenExpected: 0.04
+      },
+      weights: {
+        RECEIPT_VERIFICATION_CHECK: 12,
+        COORDINATE_BODY_CHECK: 14,
+        LAND_BODY_BINDING_CHECK: 16,
+        WATER_SURFACE_SEATING_CHECK: 14,
+        AIR_AUTHORITY_CHECK: 12,
+        CHANNEL_SEPARATION_CHECK: 10,
+        PROJECTION_SEATING_CHECK: 10,
+        CONTRAST_VISIBILITY_CHECK: 6,
+        DISTRIBUTION_SHAPE_CHECK: 6
+      },
+      criticalChecks: [
+        COHERENCE_CHECKS.RECEIPT_VERIFICATION_CHECK,
+        COHERENCE_CHECKS.COORDINATE_BODY_CHECK,
+        COHERENCE_CHECKS.LAND_BODY_BINDING_CHECK,
+        COHERENCE_CHECKS.WATER_SURFACE_SEATING_CHECK,
+        COHERENCE_CHECKS.AIR_AUTHORITY_CHECK,
+        COHERENCE_CHECKS.PROJECTION_SEATING_CHECK
+      ],
+      generatedImage: false,
+      graphicBox: false,
+      visualPassClaimed: false
+    };
+
+    return mergePlain(base, overrides);
+  }
+
+  function extractContract(packet) {
+    if (!packet || !isObject(packet)) return "";
+    return packet.contract || packet.CONTRACT || packet.runtimeTableContract || "";
+  }
+
+  function extractReceipt(packet) {
+    if (!packet || !isObject(packet)) return "";
+    return packet.receipt || packet.RECEIPT || packet.runtimeTableReceipt || "";
+  }
+
+  function extractRgb(packet, fallback = [0, 0, 0]) {
+    const keys = ["rgb", "color", "landRgb", "waterRgb", "oceanRgb", "airRgb", "atmosphereRgb", "finalColorHint", "baseColor"];
+
+    for (const key of keys) {
+      const value = packet && packet[key];
+
+      if (
+        Array.isArray(value) &&
+        value.length >= 3 &&
+        value.every((item) => Number.isFinite(Number(item)))
+      ) {
+        return [
+          clamp(Math.round(Number(value[0])), 0, 255),
+          clamp(Math.round(Number(value[1])), 0, 255),
+          clamp(Math.round(Number(value[2])), 0, 255)
+        ];
+      }
+    }
+
+    return fallback.slice();
+  }
+
+  function luminance(rgb) {
+    const color = extractRgb({ rgb }, [0, 0, 0]);
+    return 0.2126 * color[0] + 0.7152 * color[1] + 0.0722 * color[2];
+  }
+
+  function statusRank(status) {
+    switch (status) {
+      case COHERENCE_STATUS.BLOCKING: return 0;
+      case COHERENCE_STATUS.REJECTED: return 1;
+      case COHERENCE_STATUS.FAIL: return 2;
+      case COHERENCE_STATUS.DEGRADED: return 3;
+      case COHERENCE_STATUS.WARNING: return 4;
+      case COHERENCE_STATUS.PASS: return 5;
+      default: return 2;
+    }
+  }
+
+  function statusScore(status) {
+    switch (status) {
+      case COHERENCE_STATUS.PASS: return 1;
+      case COHERENCE_STATUS.WARNING: return 0.78;
+      case COHERENCE_STATUS.DEGRADED: return 0.62;
+      case COHERENCE_STATUS.FAIL: return 0.35;
+      case COHERENCE_STATUS.REJECTED: return 0.10;
+      case COHERENCE_STATUS.BLOCKING: return 0;
+      default: return 0.35;
+    }
+  }
+
+  function worstStatus(statuses) {
+    return statuses.reduce((worst, item) => {
+      return statusRank(item) < statusRank(worst) ? item : worst;
+    }, COHERENCE_STATUS.PASS);
+  }
+
+  function makeCheckpointReceipt(config) {
+    return {
+      id: config.id,
+      name: config.name || config.id,
+      goal: config.goal || "",
+      observed: config.observed || "",
+      math: config.math || "",
+      tolerance: clonePlain(config.tolerance || {}),
+      value: clonePlain(config.value || {}),
+      status: config.status || COHERENCE_STATUS.FAIL,
+      passed: config.status === COHERENCE_STATUS.PASS,
+      probableCause: asArray(config.probableCause),
+      renewalTarget: asArray(config.renewalTarget),
+      nextStrategy: asArray(config.nextStrategy),
+      detail: clonePlain(config.detail || {}),
+      at: nowIso()
+    };
+  }
+
+  function getRuntimeRecordsByKey(ledger) {
+    const map = {};
+
+    if (ledger && Array.isArray(ledger.records)) {
+      ledger.records.forEach((record) => {
+        if (record && record.key) map[record.key] = record;
+      });
+    }
+
+    return map;
+  }
+
+  function normalizeDiagnosticInput(input = {}, options = {}) {
+    const goalProfile = input.goalProfile || options.goalProfile || createGoalProfile(options.profile || "hearth-channel-expression");
+    const canvasSample = input.canvasSample || {};
+    const landSample = input.landSample || (canvasSample && canvasSample.land) || {};
+    const waterSample = input.waterSample || (canvasSample && canvasSample.water) || {};
+    const airSample = input.airSample || (canvasSample && canvasSample.air) || {};
+    const runtimeTableLedger = input.runtimeTableLedger || input.ledger || null;
+    const canvasReceipt = input.canvasReceipt || input.canvas || {};
+    const renderMetadata = input.renderMetadata || input.render || {};
+    const probePoints = Array.isArray(input.probePoints) ? input.probePoints.slice() : [];
+    const probeSamples = Array.isArray(input.probeSamples) ? input.probeSamples.slice() : [];
+
+    return {
+      goalProfile,
+      runtimeTableLedger,
+      canvasReceipt,
+      canvasSample,
+      landSample,
+      waterSample,
+      airSample,
+      renderMetadata,
+      probePoints,
+      probeSamples,
+      imageRendered: safeBool(input.imageRendered, safeBool(renderMetadata.imageRendered, safeBool(renderMetadata.atlasReady, false))),
+      constructionReady: Boolean(runtimeTableLedger && runtimeTableLedger.runtimeAllowed),
+      generatedImage: false,
+      graphicBox: false,
+      visualPassClaimed: false
+    };
+  }
+
+  function coordinateMetrics(sample, reference) {
+    const x = safeNumber(sample && sample.x, NaN);
+    const y = safeNumber(sample && sample.y, NaN);
+    const z = safeNumber(sample && sample.z, NaN);
+
+    const vectorMagnitude = Number.isFinite(x) && Number.isFinite(y) && Number.isFinite(z)
+      ? Math.sqrt(x * x + y * y + z * z)
+      : NaN;
+
+    const vectorMagnitudeError = Number.isFinite(vectorMagnitude)
+      ? Math.abs(1 - vectorMagnitude)
+      : Infinity;
+
+    const lon = safeNumber(sample && (sample.lon ?? sample.longitude), NaN);
+    const lat = safeNumber(sample && (sample.lat ?? sample.latitude), NaN);
+    const u = safeNumber(sample && sample.u, NaN);
+    const v = safeNumber(sample && sample.v, NaN);
+
+    const expectedU = Number.isFinite(lon) ? ((lon + 180) / 360) : NaN;
+    const expectedV = Number.isFinite(lat) ? ((90 - lat) / 180) : NaN;
+
+    const uError = Number.isFinite(u) && Number.isFinite(expectedU)
+      ? Math.abs(u - expectedU)
+      : 0;
+
+    const vError = Number.isFinite(v) && Number.isFinite(expectedV)
+      ? Math.abs(v - expectedV)
+      : 0;
+
+    const rx = safeNumber(reference && reference.x, NaN);
+    const ry = safeNumber(reference && reference.y, NaN);
+    const rz = safeNumber(reference && reference.z, NaN);
+
+    const coordinateError =
+      Number.isFinite(x) &&
+      Number.isFinite(y) &&
+      Number.isFinite(z) &&
+      Number.isFinite(rx) &&
+      Number.isFinite(ry) &&
+      Number.isFinite(rz)
+        ? Math.sqrt((x - rx) ** 2 + (y - ry) ** 2 + (z - rz) ** 2)
+        : 0;
+
+    return {
+      vectorMagnitude,
+      vectorMagnitudeError,
+      uError,
+      vError,
+      coordinateError
+    };
+  }
+
+  function receiptVerificationCheck(ctx) {
+    const profile = ctx.goalProfile;
+    const ledger = ctx.runtimeTableLedger;
+    const canvasReceipt = ctx.canvasReceipt || {};
+    const records = getRuntimeRecordsByKey(ledger);
+
+    const checks = {
+      runtimeTableLedgerPresent: Boolean(ledger),
+      runtimeTableHandoffPresent: Boolean(ledger && ledger.handoff),
+      canvasReceiptPresent: Boolean(canvasReceipt && Object.keys(canvasReceipt).length),
+      canvasVisualPassNotClaimed: canvasReceipt.visualPassClaimed !== true,
+      landContractOk: !ctx.landSample || !extractContract(ctx.landSample) || extractContract(ctx.landSample) === profile.expectedContracts.land,
+      waterContractOk: !ctx.waterSample || !extractContract(ctx.waterSample) || extractContract(ctx.waterSample) === profile.expectedContracts.water,
+      airContractOk: !ctx.airSample || !extractContract(ctx.airSample) || extractContract(ctx.airSample) === profile.expectedContracts.air,
+      runtimeRecordsPresent: Boolean(records.land || records.water || records.air)
+    };
+
+    const failed = Object.keys(checks).filter((key) => !checks[key]);
+    const status = failed.length ? COHERENCE_STATUS.FAIL : COHERENCE_STATUS.PASS;
+
+    return makeCheckpointReceipt({
+      id: COHERENCE_CHECKS.RECEIPT_VERIFICATION_CHECK,
+      name: "Receipt Verification Check",
+      goal: "Runtime Table, canvas, and child-channel receipts must be present and contract-compatible.",
+      observed: failed.length ? `Failed receipt/contract fields: ${failed.join(", ")}.` : "Required receipts and contracts are compatible.",
+      math: "Boolean contract/receipt alignment check; visualPassClaimed must remain false.",
+      tolerance: {
+        failedRequiredFields: 0
+      },
+      value: {
+        failed,
+        checks,
+        runtimeTableHandoff: ledger && ledger.handoff ? ledger.handoff : "",
+        canvasContract: extractContract(canvasReceipt),
+        landContract: extractContract(ctx.landSample),
+        waterContract: extractContract(ctx.waterSample),
+        airContract: extractContract(ctx.airSample)
+      },
+      status,
+      probableCause: failed.length ? [
+        "Stale file, missing receipt, mismatched contract, or canvas over-claiming final visual status."
+      ] : [],
+      renewalTarget: failed.length ? [
+        "runtime-table-receipt-alignment",
+        "canvas-consumption-status",
+        "child-export-receipts",
+        "contract-cache-refresh"
+      ] : [],
+      nextStrategy: failed.length ? [
+        "Verify active script cache keys and exported receipt fields before renewing visual code."
+      ] : []
+    });
+  }
+
+  function coordinateBodyCheck(ctx) {
+    const profile = ctx.goalProfile;
+    const t = profile.tolerances;
+    const reference = ctx.canvasSample && Number.isFinite(Number(ctx.canvasSample.x))
+      ? ctx.canvasSample
+      : { x: 0, y: 0, z: 1, u: 0.5, v: 0.5 };
+
+    const samples = [
+      ["canvas", ctx.canvasSample],
+      ["land", ctx.landSample],
+      ["water", ctx.waterSample],
+      ["air", ctx.airSample]
+    ].filter(([, sample]) => sample && Object.keys(sample).length);
+
+    const metrics = samples.map(([key, sample]) => ({
+      key,
+      ...coordinateMetrics(sample, reference)
+    }));
+
+    const failures = metrics.filter((item) => (
+      item.vectorMagnitudeError > t.vectorMagnitudeError ||
+      item.uError > t.uError ||
+      item.vError > t.vError ||
+      item.coordinateError > t.coordinateError
+    ));
+
+    const missingCoordinateSamples = samples.length < 3;
+    const status = failures.length
+      ? COHERENCE_STATUS.FAIL
+      : missingCoordinateSamples
+        ? COHERENCE_STATUS.WARNING
+        : COHERENCE_STATUS.PASS;
+
+    return makeCheckpointReceipt({
+      id: COHERENCE_CHECKS.COORDINATE_BODY_CHECK,
+      name: "Coordinate Body Check",
+      goal: "All children must sample the same planetary coordinate body.",
+      observed: failures.length
+        ? `${failures.length} coordinate sample(s) exceeded tolerance.`
+        : missingCoordinateSamples
+          ? "Coordinate body appears usable, but too few samples were available for full certainty."
+          : "Coordinate body samples are within tolerance.",
+      math: "vectorMagnitudeError = abs(1 - sqrt(x² + y² + z²)); uError = abs(u - ((lon + 180) / 360)); vError = abs(v - ((90 - lat) / 180)); coordinateError = sqrt((child.x-canvas.x)² + (child.y-canvas.y)² + (child.z-canvas.z)²).",
+      tolerance: {
+        vectorMagnitudeError: t.vectorMagnitudeError,
+        uError: t.uError,
+        vError: t.vError,
+        coordinateError: t.coordinateError
+      },
+      value: {
+        metrics,
+        failures: failures.map((item) => item.key)
+      },
+      status,
+      probableCause: failures.length ? [
+        "One or more files may be sampling a different coordinate point or projection basis."
+      ] : [],
+      renewalTarget: failures.length ? [
+        "child-parse-input",
+        "shared-coordinate-adapter",
+        "canvas-projection-mapping",
+        "atlas-coordinate-conversion"
+      ] : [],
+      nextStrategy: failures.length ? [
+        "Renew the coordinate adapter before changing visual colors or terrain fields."
+      ] : []
+    });
+  }
+
+  function landBodyBindingCheck(ctx) {
+    const profile = ctx.goalProfile;
+    const t = profile.tolerances;
+    const land = ctx.landSample || {};
+    const air = ctx.airSample || {};
+    const canvas = ctx.canvasSample || {};
+
+    const landAlpha = clamp01(safeNumber(land.landAlpha ?? land.landPresence ?? land.alpha ?? canvas.landWeight, 0));
+    const airAlpha = clamp01(safeNumber(air.airAlpha ?? air.airPresence ?? air.alpha ?? canvas.airWeight, 0));
+    const bodyBinding = clamp01(safeNumber(land.bodyBinding ?? land.bodyBound === true ? 1 : land.bodyBinding, 0));
+    const surfaceAttachment = clamp01(safeNumber(land.surfaceAttachment ?? land.surfaceBound === true ? 1 : land.surfaceAttachment, 0));
+
+    const landAtmosphericLeak = landAlpha * airAlpha * (1 - bodyBinding);
+    const landBodyScore = landAlpha * bodyBinding * surfaceAttachment;
+
+    const leakFail = landAtmosphericLeak > t.landAtmosphericLeak;
+    const bodyFail = landAlpha > t.minimumVisibleLandAlpha && landBodyScore < t.minimumLandBodyScore;
+    const lowSignal = landAlpha <= t.minimumVisibleLandAlpha;
+
+    const status = leakFail || bodyFail
+      ? COHERENCE_STATUS.FAIL
+      : lowSignal
+        ? COHERENCE_STATUS.WARNING
+        : COHERENCE_STATUS.PASS;
+
+    return makeCheckpointReceipt({
+      id: COHERENCE_CHECKS.LAND_BODY_BINDING_CHECK,
+      name: "Land Body-Binding Check",
+      goal: "Land must remain seated on the planet body, not carried by the atmospheric layer.",
+      observed: leakFail || bodyFail
+        ? "Land body-binding failed or atmospheric leakage exceeded tolerance."
+        : lowSignal
+          ? "Land signal is too low to prove strong body-bound expression."
+          : "Land appears body-bound within tolerance.",
+      math: "landAtmosphericLeak = landAlpha × airAlpha × (1 - bodyBinding); landBodyScore = landAlpha × bodyBinding × surfaceAttachment.",
+      tolerance: {
+        maximumLandAtmosphericLeak: t.landAtmosphericLeak,
+        minimumLandBodyScore: t.minimumLandBodyScore,
+        visibleLandAlpha: t.minimumVisibleLandAlpha
+      },
+      value: {
+        landAlpha,
+        airAlpha,
+        bodyBinding,
+        surfaceAttachment,
+        landAtmosphericLeak,
+        landBodyScore,
+        leakFail,
+        bodyFail,
+        lowSignal
+      },
+      status,
+      probableCause: status !== COHERENCE_STATUS.PASS ? [
+        "Land bodyBinding is too weak, air is over-compositing land-shaped data, or canvas blend order is letting air carry land expression."
+      ] : [],
+      renewalTarget: status !== COHERENCE_STATUS.PASS ? [
+        "land-channel-body-binding",
+        "canvas-composite-weighting",
+        "air-channel-land-rejection",
+        "atlas-projection-seating"
+      ] : [],
+      nextStrategy: status !== COHERENCE_STATUS.PASS ? [
+        "Increase body-bound land weighting and suppress air contribution over land masks before renewing terrain shape."
+      ] : []
+    });
+  }
+
+  function waterSurfaceSeatingCheck(ctx) {
+    const profile = ctx.goalProfile;
+    const t = profile.tolerances;
+    const water = ctx.waterSample || {};
+    const air = ctx.airSample || {};
+    const canvas = ctx.canvasSample || {};
+
+    const waterAlpha = clamp01(safeNumber(water.waterAlpha ?? water.waterPresence ?? water.alpha ?? canvas.waterWeight, 0));
+    const airAlpha = clamp01(safeNumber(air.airAlpha ?? air.airPresence ?? air.alpha ?? canvas.airWeight, 0));
+    const hydrosphereBinding = clamp01(safeNumber(water.hydrosphereBinding ?? water.bodyBound === true ? 1 : water.hydrosphereBinding, 0));
+    const surfaceSeat = clamp01(safeNumber(water.surfaceSeat ?? water.surfaceBound === true ? 1 : water.surfaceSeat, 0));
+
+    const waterFloatingLeak = waterAlpha * airAlpha * (1 - hydrosphereBinding);
+    const waterSeatScore = waterAlpha * hydrosphereBinding * surfaceSeat;
+
+    const leakFail = waterFloatingLeak > t.waterFloatingLeak;
+    const seatFail = waterAlpha > t.minimumVisibleWaterAlpha && waterSeatScore < t.minimumWaterSeatScore;
+    const lowSignal = waterAlpha <= t.minimumVisibleWaterAlpha;
+
+    const status = leakFail || seatFail
+      ? COHERENCE_STATUS.FAIL
+      : lowSignal
+        ? COHERENCE_STATUS.WARNING
+        : COHERENCE_STATUS.PASS;
+
+    return makeCheckpointReceipt({
+      id: COHERENCE_CHECKS.WATER_SURFACE_SEATING_CHECK,
+      name: "Water Surface-Seating Check",
+      goal: "Water must be surface-seated or depth-seated, not floating as haze.",
+      observed: leakFail || seatFail
+        ? "Water seating failed or floating leak exceeded tolerance."
+        : lowSignal
+          ? "Water signal is too low to prove hydrosphere seating."
+          : "Water appears surface/depth-seated within tolerance.",
+      math: "waterFloatingLeak = waterAlpha × airAlpha × (1 - hydrosphereBinding); waterSeatScore = waterAlpha × hydrosphereBinding × surfaceSeat.",
+      tolerance: {
+        maximumWaterFloatingLeak: t.waterFloatingLeak,
+        minimumWaterSeatScore: t.minimumWaterSeatScore,
+        visibleWaterAlpha: t.minimumVisibleWaterAlpha
+      },
+      value: {
+        waterAlpha,
+        airAlpha,
+        hydrosphereBinding,
+        surfaceSeat,
+        waterFloatingLeak,
+        waterSeatScore,
+        leakFail,
+        seatFail,
+        lowSignal
+      },
+      status,
+      probableCause: status !== COHERENCE_STATUS.PASS ? [
+        "Water hydrosphereBinding is too weak, air is over-compositing water boundary, or canvas blend order is lifting water into haze."
+      ] : [],
+      renewalTarget: status !== COHERENCE_STATUS.PASS ? [
+        "water-channel-surface-seating",
+        "hydrology-ocean-continuity",
+        "canvas-water-weighting",
+        "air-suppression-over-water-boundary"
+      ] : [],
+      nextStrategy: status !== COHERENCE_STATUS.PASS ? [
+        "Strengthen water surfaceSeat/hydrosphereBinding and cap air overlay over water before changing ocean color."
+      ] : []
+    });
+  }
+
+  function airAuthorityCheck(ctx) {
+    const air = ctx.airSample || {};
+    const canvas = ctx.canvasSample || {};
+    const landWeight = clamp01(safeNumber(canvas.landWeight ?? (ctx.landSample && ctx.landSample.landAlpha), 0));
+    const waterWeight = clamp01(safeNumber(canvas.waterWeight ?? (ctx.waterSample && ctx.waterSample.waterAlpha), 0));
+    const airAlpha = clamp01(safeNumber(air.airAlpha ?? air.airPresence ?? air.alpha ?? canvas.airWeight, 0));
+
+    const allowedToFloat = safeBool(air.allowedToFloat, false);
+    const mayDefineLand = safeBool(air.mayDefineLand, false);
+    const mayDefineWater = safeBool(air.mayDefineWater, false);
+    const landWaterRejectionFailure = mayDefineLand || mayDefineWater ? 1 : 0;
+    const airSurfaceDefinitionLeak = airAlpha * Math.max(landWeight, waterWeight) * landWaterRejectionFailure;
+
+    const fieldFail = !allowedToFloat || mayDefineLand || mayDefineWater;
+    const status = fieldFail ? COHERENCE_STATUS.REJECTED : COHERENCE_STATUS.PASS;
+
+    return makeCheckpointReceipt({
+      id: COHERENCE_CHECKS.AIR_AUTHORITY_CHECK,
+      name: "Air Authority Check",
+      goal: "Air may float, but cannot define land or water.",
+      observed: fieldFail
+        ? "Air authority fields violate floating-only / non-surface-definition law."
+        : "Air authority remains separated from land and water definition.",
+      math: "landWaterRejectionFailure = air.mayDefineLand || air.mayDefineWater ? 1 : 0; airSurfaceDefinitionLeak = airAlpha × max(landWeight, waterWeight) × landWaterRejectionFailure.",
+      tolerance: {
+        allowedToFloat: true,
+        mayDefineLand: false,
+        mayDefineWater: false,
+        maximumAirSurfaceDefinitionLeak: 0
+      },
+      value: {
+        allowedToFloat,
+        mayDefineLand,
+        mayDefineWater,
+        airAlpha,
+        landWeight,
+        waterWeight,
+        landWaterRejectionFailure,
+        airSurfaceDefinitionLeak
+      },
+      status,
+      probableCause: fieldFail ? [
+        "Air channel is not explicitly barred from defining surface truth or is not marked as the only floating authority."
+      ] : [],
+      renewalTarget: fieldFail ? [
+        "air-channel-authority-law",
+        "air-channel-humidity-pressure-weighting",
+        "canvas-composite-order",
+        "land-water-mask-protection"
+      ] : [],
+      nextStrategy: fieldFail ? [
+        "Renew air channel law fields before attempting color, exposure, or atlas changes."
+      ] : []
+    });
+  }
+
+  function channelSeparationCheck(ctx) {
+    const profile = ctx.goalProfile;
+    const t = profile.tolerances;
+    const canvas = ctx.canvasSample || {};
+    const landWeight = clamp01(safeNumber(canvas.landWeight ?? (ctx.landSample && ctx.landSample.landAlpha), 0));
+    const waterWeight = clamp01(safeNumber(canvas.waterWeight ?? (ctx.waterSample && ctx.waterSample.waterAlpha), 0));
+    const airWeight = clamp01(safeNumber(canvas.airWeight ?? (ctx.airSample && ctx.airSample.airAlpha), 0));
+
+    const channelSeparation = Math.abs(landWeight - airWeight) + Math.abs(waterWeight - airWeight);
+    const dominantAirRisk = airWeight - Math.max(landWeight, waterWeight);
+
+    const separationFail = channelSeparation < t.minimumChannelSeparation;
+    const airRiskFail = dominantAirRisk > t.maximumDominantAirRisk;
+
+    const status = separationFail || airRiskFail
+      ? COHERENCE_STATUS.DEGRADED
+      : COHERENCE_STATUS.PASS;
+
+    return makeCheckpointReceipt({
+      id: COHERENCE_CHECKS.CHANNEL_SEPARATION_CHECK,
+      name: "Channel Separation Check",
+      goal: "Land, water, and air must remain visually separable enough to read as different authorities.",
+      observed: status === COHERENCE_STATUS.PASS
+        ? "Channel weights remain separable."
+        : "Channel weights are too compressed or air dominates surface readability.",
+      math: "channelSeparation = abs(landWeight - airWeight) + abs(waterWeight - airWeight); dominantAirRisk = airWeight - max(landWeight, waterWeight).",
+      tolerance: {
+        minimumChannelSeparation: t.minimumChannelSeparation,
+        maximumDominantAirRisk: t.maximumDominantAirRisk
+      },
+      value: {
+        landWeight,
+        waterWeight,
+        airWeight,
+        channelSeparation,
+        dominantAirRisk,
+        separationFail,
+        airRiskFail
+      },
+      status,
+      probableCause: status !== COHERENCE_STATUS.PASS ? [
+        "Air, land, and water blend weights are too close, producing a merged expression."
+      ] : [],
+      renewalTarget: status !== COHERENCE_STATUS.PASS ? [
+        "channel-weighting",
+        "air-alpha-cap",
+        "land-contrast",
+        "water-depth-color",
+        "canvas-blend-order"
+      ] : [],
+      nextStrategy: status !== COHERENCE_STATUS.PASS ? [
+        "Separate channel weights before renewing geological detail."
+      ] : []
+    });
+  }
+
+  function projectionSeatingCheck(ctx) {
+    const canvas = ctx.canvasReceipt || {};
+    const render = ctx.renderMetadata || {};
+
+    const sphereContainment = safeBool(render.sphereContainment, safeBool(canvas.sphereContainment, safeBool(canvas.supportsSphereContainment, true)));
+    const outsideSphereTransparent = safeBool(render.outsideSphereTransparent, safeBool(canvas.outsideSphereTransparent, safeBool(canvas.supportsOutsideSphereTransparency, true)));
+    const noRectangularTextureSpill = safeBool(render.noRectangularTextureSpill, safeBool(canvas.noRectangularTextureSpill, true));
+    const atlasReady = safeBool(render.atlasReady, safeBool(canvas.atlasReady, safeBool(render.imageRendered, ctx.imageRendered)));
+    const projectionReady = safeBool(render.projectionReady, safeBool(canvas.projectionReady, atlasReady));
+
+    const failures = [];
+    if (!sphereContainment) failures.push("sphereContainment");
+    if (!outsideSphereTransparent) failures.push("outsideSphereTransparent");
+    if (!noRectangularTextureSpill) failures.push("noRectangularTextureSpill");
+    if (ctx.imageRendered && !atlasReady) failures.push("atlasReady");
+    if (ctx.imageRendered && !projectionReady) failures.push("projectionReady");
+
+    const status = failures.length ? COHERENCE_STATUS.FAIL : COHERENCE_STATUS.PASS;
+
+    return makeCheckpointReceipt({
+      id: COHERENCE_CHECKS.PROJECTION_SEATING_CHECK,
+      name: "Projection Seating Check",
+      goal: "Atlas output must seat to the sphere and not leak as a raw rectangle or detached layer.",
+      observed: failures.length
+        ? `Projection seating failed fields: ${failures.join(", ")}.`
+        : "Projection seating fields are coherent.",
+      math: "Boolean projection gate: sphereContainment && outsideSphereTransparent && noRectangularTextureSpill && atlasReady && projectionReady.",
+      tolerance: {
+        allProjectionFlags: true
+      },
+      value: {
+        sphereContainment,
+        outsideSphereTransparent,
+        noRectangularTextureSpill,
+        atlasReady,
+        projectionReady,
+        failures
+      },
+      status,
+      probableCause: failures.length ? [
+        "Canvas projection, atlas sampling, or sphere containment metadata is not aligned."
+      ] : [],
+      renewalTarget: failures.length ? [
+        "canvas-projection-mapping",
+        "atlas-sampling",
+        "spherePixelToVector",
+        "renderSphereFromAtlas"
+      ] : [],
+      nextStrategy: failures.length ? [
+        "Repair projection seating before adjusting channel colors."
+      ] : []
+    });
+  }
+
+  function contrastVisibilityCheck(ctx) {
+    const profile = ctx.goalProfile;
+    const t = profile.tolerances;
+    const landRgb = extractRgb(ctx.landSample, extractRgb(ctx.canvasSample && ctx.canvasSample.land, [92, 86, 58]));
+    const waterRgb = extractRgb(ctx.waterSample, extractRgb(ctx.canvasSample && ctx.canvasSample.water, [8, 35, 86]));
+    const landLum = luminance(landRgb);
+    const waterLum = luminance(waterRgb);
+    const contrastDelta = Math.abs(landLum - waterLum);
+
+    const status = contrastDelta >= t.minimumContrastDelta
+      ? COHERENCE_STATUS.PASS
+      : COHERENCE_STATUS.DEGRADED;
+
+    return makeCheckpointReceipt({
+      id: COHERENCE_CHECKS.CONTRAST_VISIBILITY_CHECK,
+      name: "Contrast Visibility Check",
+      goal: "Land and water must be legible.",
+      observed: status === COHERENCE_STATUS.PASS
+        ? "Land/water contrast is above minimum tolerance."
+        : "Land/water contrast is too low for reliable visual readability.",
+      math: "luminance = 0.2126r + 0.7152g + 0.0722b; contrastDelta = abs(luminance(landRgb) - luminance(waterRgb)).",
+      tolerance: {
+        minimumContrastDelta: t.minimumContrastDelta
+      },
+      value: {
+        landRgb,
+        waterRgb,
+        landLum,
+        waterLum,
+        contrastDelta
+      },
+      status,
+      probableCause: status !== COHERENCE_STATUS.PASS ? [
+        "Land and water color/exposure are too close, even if the channels technically render."
+      ] : [],
+      renewalTarget: status !== COHERENCE_STATUS.PASS ? [
+        "land-exposure",
+        "water-depth-color",
+        "overall-illumination",
+        "canvas-final-lighting",
+        "atlas-color-calibration"
+      ] : [],
+      nextStrategy: status !== COHERENCE_STATUS.PASS ? [
+        "Increase land/water luminance separation after body-binding and seating checks pass."
+      ] : []
+    });
+  }
+
+  function distributionShapeCheck(ctx) {
+    const profile = ctx.goalProfile;
+    const t = profile.tolerances;
+    const samples = ctx.probeSamples.length
+      ? ctx.probeSamples
+      : [
+        {
+          land: ctx.landSample,
+          water: ctx.waterSample,
+          air: ctx.airSample,
+          canvas: ctx.canvasSample
+        }
+      ];
+
+    let landCount = 0;
+    let waterCount = 0;
+    let airCount = 0;
+    let total = 0;
+
+    samples.forEach((sample) => {
+      const land = sample.land || sample.canvas?.land || sample;
+      const water = sample.water || sample.canvas?.water || sample;
+      const air = sample.air || sample.canvas?.air || sample;
+      const canvas = sample.canvas || sample;
+
+      const landSignal = clamp01(safeNumber(canvas.landWeight ?? land.landAlpha ?? land.landPresence, 0));
+      const waterSignal = clamp01(safeNumber(canvas.waterWeight ?? water.waterAlpha ?? water.waterPresence, 0));
+      const airSignal = clamp01(safeNumber(canvas.airWeight ?? air.airAlpha ?? air.airPresence, 0));
+
+      if (landSignal > 0.12) landCount += 1;
+      if (waterSignal > 0.12) waterCount += 1;
+      if (airSignal > 0.12) airCount += 1;
+      total += 1;
+    });
+
+    total = Math.max(1, total);
+
+    const landCoverage = landCount / total;
+    const waterCoverage = waterCount / total;
+    const airDominance = airCount / total;
+
+    const lowLand = landCoverage < t.minimumLandCoverageWhenExpected;
+    const highAir = airDominance > t.maximumAirDominance && airDominance > landCoverage + waterCoverage;
+    const status = lowLand || highAir ? COHERENCE_STATUS.WARNING : COHERENCE_STATUS.PASS;
+
+    return makeCheckpointReceipt({
+      id: COHERENCE_CHECKS.DISTRIBUTION_SHAPE_CHECK,
+      name: "Distribution Shape Check",
+      goal: "Land, water, and air distribution should match the goal profile.",
+      observed: status === COHERENCE_STATUS.PASS
+        ? "Probe distribution is within initial tolerance."
+        : "Probe distribution suggests low land visibility or excessive air dominance.",
+      math: "landCoverage = visibleLandSamples / totalSamples; waterCoverage = visibleWaterSamples / totalSamples; airDominance = visibleAirSamples / totalSamples.",
+      tolerance: {
+        minimumLandCoverageWhenExpected: t.minimumLandCoverageWhenExpected,
+        maximumAirDominance: t.maximumAirDominance
+      },
+      value: {
+        landCoverage,
+        waterCoverage,
+        airDominance,
+        landCount,
+        waterCount,
+        airCount,
+        total,
+        lowLand,
+        highAir
+      },
+      status,
+      probableCause: status !== COHERENCE_STATUS.PASS ? [
+        "Land may be too sparse, air may dominate surface readability, or child-channel alpha distribution is misbalanced."
+      ] : [],
+      renewalTarget: status !== COHERENCE_STATUS.PASS ? [
+        "land-channel-alpha",
+        "water-channel-alpha",
+        "air-channel-suppression",
+        "composition-elevation-mask-later-if-required"
+      ] : [],
+      nextStrategy: status !== COHERENCE_STATUS.PASS ? [
+        "Use a wider probe grid before renewing upstream geography."
+      ] : []
+    });
+  }
+
+  function aggregateCoherence(ctx, checkpoints) {
+    const profile = ctx.goalProfile;
+    const weights = profile.weights || {};
+    const criticalChecks = asArray(profile.criticalChecks);
+    let totalWeight = 0;
+    let earned = 0;
+
+    checkpoints.forEach((checkpoint) => {
+      if (checkpoint.id === COHERENCE_CHECKS.COHERENT_EXPRESSION_CHECK) return;
+      const weight = safeNumber(weights[checkpoint.id], 1);
+      totalWeight += weight;
+      earned += weight * statusScore(checkpoint.status);
+    });
+
+    const coherenceScore = totalWeight ? Math.round((earned / totalWeight) * 100) : 0;
+
+    const criticalFailures = checkpoints.filter((checkpoint) => (
+      criticalChecks.includes(checkpoint.id) &&
+      (
+        checkpoint.status === COHERENCE_STATUS.FAIL ||
+        checkpoint.status === COHERENCE_STATUS.REJECTED ||
+        checkpoint.status === COHERENCE_STATUS.BLOCKING
+      )
+    ));
+
+    const anyBlocking = checkpoints.some((checkpoint) => checkpoint.status === COHERENCE_STATUS.BLOCKING);
+    const anyRejected = checkpoints.some((checkpoint) => checkpoint.status === COHERENCE_STATUS.REJECTED);
+    const anyFail = checkpoints.some((checkpoint) => checkpoint.status === COHERENCE_STATUS.FAIL);
+
+    const coherentExpressionPass =
+      coherenceScore >= profile.tolerances.minimumCoherenceScore &&
+      !criticalFailures.length &&
+      !anyBlocking &&
+      !anyRejected;
+
+    let status = COHERENCE_STATUS.PASS;
+
+    if (anyBlocking) status = COHERENCE_STATUS.BLOCKING;
+    else if (anyRejected) status = COHERENCE_STATUS.REJECTED;
+    else if (criticalFailures.length || anyFail) status = COHERENCE_STATUS.FAIL;
+    else if (coherenceScore < 70) status = COHERENCE_STATUS.FAIL;
+    else if (coherenceScore < profile.tolerances.minimumCoherenceScore) status = COHERENCE_STATUS.DEGRADED;
+
+    return {
+      coherenceScore,
+      coherentExpressionPass,
+      status,
+      criticalFailures: criticalFailures.map((item) => item.id)
+    };
+  }
+
+  function coherentExpressionCheck(ctx, checkpoints) {
+    const aggregate = aggregateCoherence(ctx, checkpoints);
+
+    return makeCheckpointReceipt({
+      id: COHERENCE_CHECKS.COHERENT_EXPRESSION_CHECK,
+      name: "Coherent Expression Check",
+      goal: "Aggregate construction, render, and expression checkpoints into a final coherence gate.",
+      observed: aggregate.coherentExpressionPass
+        ? "Coherent expression passed."
+        : "Rendered image does not yet qualify as coherent expression.",
+      math: "Weighted checkpoint score. Critical failures override score. Image rendered does not imply coherent expression.",
+      tolerance: {
+        minimumCoherenceScore: ctx.goalProfile.tolerances.minimumCoherenceScore,
+        criticalFailureCount: 0
+      },
+      value: {
+        coherenceScore: aggregate.coherenceScore,
+        coherentExpressionPass: aggregate.coherentExpressionPass,
+        criticalFailures: aggregate.criticalFailures,
+        imageRendered: ctx.imageRendered,
+        constructionReady: ctx.constructionReady
+      },
+      status: aggregate.status,
+      probableCause: aggregate.coherentExpressionPass ? [] : [
+        "At least one expression checkpoint failed, degraded, or produced insufficient proof."
+      ],
+      renewalTarget: aggregate.coherentExpressionPass ? [] : collectRenewalTargets(checkpoints),
+      nextStrategy: aggregate.coherentExpressionPass ? [] : [
+        "Use failed checkpoint receipts to select the next single-file renewal target."
+      ]
+    });
+  }
+
+  function collectRenewalTargets(checkpoints) {
+    const seen = new Set();
+    const targets = [];
+
+    checkpoints.forEach((checkpoint) => {
+      if (checkpoint.status === COHERENCE_STATUS.PASS) return;
+
+      asArray(checkpoint.renewalTarget).forEach((target) => {
+        if (!seen.has(target)) {
+          seen.add(target);
+          targets.push(target);
+        }
+      });
+    });
+
+    return targets;
+  }
+
+  function collectNextStrategy(checkpoints) {
+    const seen = new Set();
+    const strategies = [];
+
+    checkpoints.forEach((checkpoint) => {
+      if (checkpoint.status === COHERENCE_STATUS.PASS) return;
+
+      asArray(checkpoint.nextStrategy).forEach((strategy) => {
+        if (!seen.has(strategy)) {
+          seen.add(strategy);
+          strategies.push(strategy);
+        }
+      });
+    });
+
+    return strategies;
+  }
+
+  function runChecks(input = {}, options = {}) {
+    const ctx = normalizeDiagnosticInput(input, options);
+
+    const checkpoints = [
+      receiptVerificationCheck(ctx),
+      coordinateBodyCheck(ctx),
+      landBodyBindingCheck(ctx),
+      waterSurfaceSeatingCheck(ctx),
+      airAuthorityCheck(ctx),
+      channelSeparationCheck(ctx),
+      projectionSeatingCheck(ctx),
+      contrastVisibilityCheck(ctx),
+      distributionShapeCheck(ctx)
+    ];
+
+    const finalCheckpoint = coherentExpressionCheck(ctx, checkpoints);
+    checkpoints.push(finalCheckpoint);
+
+    const failedCheckpoints = checkpoints.filter((checkpoint) => (
+      checkpoint.status === COHERENCE_STATUS.FAIL ||
+      checkpoint.status === COHERENCE_STATUS.REJECTED ||
+      checkpoint.status === COHERENCE_STATUS.BLOCKING
+    ));
+
+    const warningCheckpoints = checkpoints.filter((checkpoint) => (
+      checkpoint.status === COHERENCE_STATUS.WARNING ||
+      checkpoint.status === COHERENCE_STATUS.DEGRADED
+    ));
+
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
+      version: VERSION,
+      authority: "lab-runtime-table-and-triple-g-coherence-diagnostic",
+      goalProfileId: ctx.goalProfile.id,
+      goalProfile: clonePlain(ctx.goalProfile),
+      constructionReady: ctx.constructionReady,
+      imageRendered: ctx.imageRendered,
+      coherentExpressionPass: finalCheckpoint.value.coherentExpressionPass,
+      coherenceScore: finalCheckpoint.value.coherenceScore,
+      coherenceStatus: finalCheckpoint.status,
+      runtimeTableHandoff: ctx.runtimeTableLedger && ctx.runtimeTableLedger.handoff ? ctx.runtimeTableLedger.handoff : "",
+      checkpoints,
+      failedCheckpoints: failedCheckpoints.map((checkpoint) => checkpoint.id),
+      warningCheckpoints: warningCheckpoints.map((checkpoint) => checkpoint.id),
+      renewalTargets: collectRenewalTargets(checkpoints),
+      nextStrategy: collectNextStrategy(checkpoints),
+      generatedImage: false,
+      graphicBox: false,
+      visualPassClaimed: false,
+      updatedAt: nowIso()
+    };
+  }
+
+  function createTripleGDiagnostic(options = {}) {
+    const profile = options.goalProfile || createGoalProfile(options.profile || "hearth-channel-expression", options.profileOverrides || {});
+    const diagnosticId = options.id || `triple-g-diagnostic-${Math.random().toString(36).slice(2, 9)}`;
+
+    const state = {
+      id: diagnosticId,
+      profile,
+      reports: [],
+      createdAt: nowIso(),
+      updatedAt: nowIso()
+    };
+
+    function run(input = {}) {
+      const report = runChecks(
+        {
+          ...input,
+          goalProfile: input.goalProfile || state.profile
+        },
+        {
+          ...options,
+          goalProfile: input.goalProfile || state.profile
+        }
+      );
+
+      state.reports.push(report);
+      state.updatedAt = nowIso();
+
+      return report;
+    }
+
+    function getLastReport() {
+      return state.reports[state.reports.length - 1] || null;
+    }
+
+    function getReceipt() {
+      return {
+        contract: CONTRACT,
+        receipt: RECEIPT,
+        previousContract: PREVIOUS_CONTRACT,
+        version: VERSION,
+        authority: "lab-triple-g-coherence-diagnostic-instance",
+        id: state.id,
+        goalProfileId: state.profile.id,
+        reportCount: state.reports.length,
+        tripleGDiagnostic: true,
+        coherentExpressionDiagnostic: true,
+        imageRenderedIsNotCoherencePass: true,
+        visualPassClaimed: false
+      };
+    }
+
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
+      version: VERSION,
+      id: state.id,
+      profile: state.profile,
+      run,
+      getLastReport,
+      getReceipt,
+      get state() {
+        return state;
+      }
+    };
+  }
+
+  function createHearthCoherenceDiagnostic(options = {}) {
+    return createTripleGDiagnostic({
+      ...options,
+      profile: "hearth-channel-expression",
+      profileOverrides: options.profileOverrides || {}
+    });
+  }
+
+  function runCoherenceDiagnostic(input = {}, options = {}) {
+    const diagnostic = options.diagnostic || createTripleGDiagnostic(options);
+    return diagnostic.run(input);
+  }
+
   function getReceipt() {
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
-      authority: "lab-runtime-table-standard",
+      authority: "lab-runtime-table-and-triple-g-coherence-diagnostic-standard",
       destinationFile: "/assets/lab/runtime-table.js",
       status: "active",
-      role: "reusable-runtime-preparation-equipment",
+      role: "reusable-runtime-preparation-and-coherence-diagnostic-equipment",
       labEquipment: true,
       runtimeTable: true,
-      purpose: "set the table before runtime performs in multi-function animation systems",
-      sequence: [
+      tripleGDiagnostic: true,
+      coherentExpressionDiagnostic: true,
+      purpose: "set the table before runtime performs and verify whether the rendered expression coheres with the goal profile",
+      runtimeTableSequence: [
         "validate",
         "coordinate",
         "optimize",
@@ -848,8 +1978,38 @@
         "resolve",
         "handoff"
       ],
+      tripleGSequence: [
+        "receipt-verification",
+        "coordinate-body-check",
+        "land-body-binding-check",
+        "water-surface-seating-check",
+        "air-authority-check",
+        "channel-separation-check",
+        "projection-seating-check",
+        "contrast-visibility-check",
+        "distribution-shape-check",
+        "coherent-expression-check"
+      ],
       statuses: Object.values(STATUS),
       handoffClasses: Object.values(HANDOFF),
+      coherenceStatuses: Object.values(COHERENCE_STATUS),
+      coherenceChecks: Object.values(COHERENCE_CHECKS),
+      preservedExports: [
+        "createTable",
+        "createHearthChannelTable",
+        "RuntimeTable",
+        "STATUS",
+        "HANDOFF",
+        "getReceipt"
+      ],
+      addedExports: [
+        "createTripleGDiagnostic",
+        "createHearthCoherenceDiagnostic",
+        "runCoherenceDiagnostic",
+        "createGoalProfile",
+        "COHERENCE_STATUS",
+        "COHERENCE_CHECKS"
+      ],
       reusableFor: [
         "Hearth channel rendering",
         "Audralia rendering",
@@ -861,6 +2021,13 @@
         "Guide Desk route-choice mechanics",
         "multi-child animation families"
       ],
+      coreLaw: [
+        "constructionReady is not coherentExpressionPass",
+        "imageRendered is not coherentExpressionPass",
+        "Runtime Table proves collaboration readiness",
+        "Triple G proves expression coherence",
+        "checkpoint receipts must include math and renewal targets"
+      ],
       doesNotOwn: [
         "truth",
         "channel meaning",
@@ -868,6 +2035,8 @@
         "runtime motion",
         "final visual pass claim"
       ],
+      generatedImage: false,
+      graphicBox: false,
       visualPassClaimed: false
     };
   }
@@ -875,38 +2044,65 @@
   const api = {
     contract: CONTRACT,
     receipt: RECEIPT,
+    previousContract: PREVIOUS_CONTRACT,
     version: VERSION,
 
     STATUS,
     HANDOFF,
+    COHERENCE_STATUS,
+    COHERENCE_CHECKS,
 
     createTable,
     createHearthChannelTable,
     RuntimeTable,
+
+    createGoalProfile,
+    createTripleGDiagnostic,
+    createHearthCoherenceDiagnostic,
+    runCoherenceDiagnostic,
+
     getReceipt,
 
     labEquipment: true,
     runtimeTable: true,
+    tripleGDiagnostic: true,
+    coherentExpressionDiagnostic: true,
     validatesBeforeExpression: true,
     coordinatesBeforeRuntimePerforms: true,
+    verifiesCoherenceAfterRender: true,
+    imageRenderedIsNotCoherencePass: true,
+    constructionReadyIsNotCoherencePass: true,
     doesNotOwnTruth: true,
+    generatedImage: false,
+    graphicBox: false,
     visualPassClaimed: false
   };
 
   root.DEXTER_LAB = root.DEXTER_LAB || {};
   root.DEXTER_LAB.runtimeTable = api;
+  root.DEXTER_LAB.tripleGDiagnostic = api;
 
   root.LAB_RUNTIME_TABLE = api;
   root.DexterRuntimeTable = api;
   root.RUNTIME_TABLE = api;
+  root.LAB_TRIPLE_G_DIAGNOSTIC = api;
+  root.TripleGDiagnostic = api;
 
   if (root.document && root.document.documentElement) {
     root.document.documentElement.dataset.labRuntimeTableLoaded = "true";
     root.document.documentElement.dataset.labRuntimeTableContract = CONTRACT;
+    root.document.documentElement.dataset.labRuntimeTablePreviousContract = PREVIOUS_CONTRACT;
     root.document.documentElement.dataset.labRuntimeTableReceipt = RECEIPT;
     root.document.documentElement.dataset.labRuntimeTableEquipment = "true";
+    root.document.documentElement.dataset.labTripleGDiagnosticLoaded = "true";
+    root.document.documentElement.dataset.labTripleGDiagnosticContract = CONTRACT;
     root.document.documentElement.dataset.runtimeTableReusable = "true";
+    root.document.documentElement.dataset.tripleGDiagnosticReusable = "true";
     root.document.documentElement.dataset.runtimeTableDoesNotOwnTruth = "true";
+    root.document.documentElement.dataset.imageRenderedIsNotCoherencePass = "true";
+    root.document.documentElement.dataset.constructionReadyIsNotCoherencePass = "true";
+    root.document.documentElement.dataset.generatedImage = "false";
+    root.document.documentElement.dataset.graphicBox = "false";
     root.document.documentElement.dataset.visualPassClaimed = "false";
   }
 

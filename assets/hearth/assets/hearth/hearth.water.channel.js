@@ -1,26 +1,26 @@
 // /assets/hearth/hearth.water.channel.js
-// HEARTH_WATER_CHANNEL_LOAD_EXPORT_ALIGNMENT_TNT_v1
+// HEARTH_WATER_CHILD_HYDROSPHERE_SURFACE_DEPTH_CHANNEL_TNT_v1
 // Full-file replacement.
-// Water child channel / hydrosphere surface-depth authority only.
+// Water Child / hydrosphere surface-depth authority only.
 // Purpose:
-// - Restore callable Hearth water channel export.
+// - Create the missing served Water Child file.
+// - Export HEARTH_WATER_CHANNEL at the exact path the v4.4 canvas requests.
+// - Provide coordinate-valid, contract-valid, body-bound water samples.
 // - Satisfy Runtime Table child validation.
-// - Provide coordinate-valid water samples.
-// - Keep water body-bound and surface/depth-seated.
-// - Prevent water from floating as atmosphere.
-// - Provide diagnostic fields for Triple G coherence checks.
+// - Give Triple G a real water child to audit.
 // Does not own:
 // - canvas composition
 // - Runtime Table canonical standard
 // - Triple G diagnostic canonical standard
 // - land truth
 // - air truth
-// - tectonic cause
-// - elevation generation
-// - hydrology parent law
-// - material palette authority
 // - route orchestration
 // - runtime motion
+// - controls
+// - materials authority
+// - hydrology parent law
+// - elevation
+// - tectonics
 // - final visual pass claim
 
 (() => {
@@ -28,19 +28,18 @@
 
   const CONTRACT = "HEARTH_WATER_HYDROSPHERE_SURFACE_CHANNEL_TNT_v1";
   const RECEIPT = "HEARTH_WATER_HYDROSPHERE_SURFACE_CHANNEL_RECEIPT_v1";
-  const LOAD_EXPORT_CONTRACT = "HEARTH_WATER_CHANNEL_LOAD_EXPORT_ALIGNMENT_TNT_v1";
-  const PREVIOUS_CONTRACT = "HEARTH_WATER_CHANNEL_MISSING_OR_UNAVAILABLE_FALLBACK_CORRECTION";
-  const VERSION = "2026-05-29.hearth-water-channel-load-export-alignment-v1";
+  const BUILD_CONTRACT = "HEARTH_WATER_CHILD_HYDROSPHERE_SURFACE_DEPTH_CHANNEL_TNT_v1";
+  const VERSION = "2026-05-29.hearth-water-child-hydrosphere-surface-depth-channel-v1";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const DEG = Math.PI / 180;
 
   const COLORS = Object.freeze({
-    deepOcean: [5, 16, 48],
-    openWater: [7, 36, 91],
-    shelf: [18, 73, 112],
-    coastal: [34, 92, 122],
-    lowWater: [10, 24, 42],
+    deepOcean: [4, 16, 48],
+    openWater: [7, 36, 88],
+    shelf: [18, 70, 112],
+    coastal: [34, 94, 124],
+    lowWater: [7, 20, 38],
     foam: [116, 160, 174],
     shadow: [2, 6, 15]
   });
@@ -155,12 +154,25 @@
         Number.isFinite(Number(p.y)) &&
         Number.isFinite(Number(p.z))
       ) {
-        return normalize3(p);
+        return normalize3({
+          x: Number(p.x),
+          y: Number(p.y),
+          z: Number(p.z)
+        });
       }
     }
 
-    if (args.length >= 3) return normalize3({ x: args[0], y: args[1], z: args[2] });
-    if (args.length >= 2) return lonLatToVector(Number(args[0]), Number(args[1]));
+    if (args.length >= 3) {
+      return normalize3({
+        x: Number(args[0]),
+        y: Number(args[1]),
+        z: Number(args[2])
+      });
+    }
+
+    if (args.length >= 2) {
+      return lonLatToVector(Number(args[0]), Number(args[1]));
+    }
 
     return lonLatToVector(0, 0);
   }
@@ -190,36 +202,36 @@
     const lat = coords.lat * DEG;
 
     const frontalBasin = clamp01(0.42 + coords.z * 0.38);
-    const equatorialSea = clamp01(0.22 + Math.cos(lat * 1.45) * 0.22);
-    const westernBasin = clamp01(0.18 + Math.sin(lon * 1.15 - lat * 0.42) * 0.16);
-    const easternShelf = clamp01(0.14 + Math.cos(lon * 2.05 + lat * 0.62) * 0.14);
-    const polarMute = clamp01(1 - Math.abs(coords.y) * 0.28);
+    const equatorialSea = clamp01(0.24 + Math.cos(lat * 1.35) * 0.22);
+    const westernBasin = clamp01(0.20 + Math.sin(lon * 1.15 - lat * 0.42) * 0.16);
+    const easternShelf = clamp01(0.16 + Math.cos(lon * 2.05 + lat * 0.62) * 0.14);
+    const polarMute = clamp01(1 - Math.abs(coords.y) * 0.24);
 
-    const straitLines = clamp01(
-      softBand(Math.sin(lon * 2.8 + lat * 1.1), 0.12, 0.42) * 0.12 +
-      softBand(Math.cos(lon * 1.7 - lat * 1.5), -0.08, 0.36) * 0.10
+    const straits = clamp01(
+      softBand(Math.sin(lon * 2.8 + lat * 1.1), 0.12, 0.42) * 0.13 +
+        softBand(Math.cos(lon * 1.7 - lat * 1.5), -0.08, 0.36) * 0.11
     );
 
-    const raw =
-      frontalBasin * 0.46 +
-      equatorialSea * 0.20 +
-      westernBasin * 0.13 +
-      easternShelf * 0.11 +
-      straitLines * 0.10;
-
-    return clamp01(raw * polarMute);
+    return clamp01(
+      (
+        frontalBasin * 0.47 +
+        equatorialSea * 0.20 +
+        westernBasin * 0.13 +
+        easternShelf * 0.10 +
+        straits * 0.10
+      ) * polarMute
+    );
   }
 
   function shelfPotential(coords, waterValue) {
     const lon = coords.lon * DEG;
     const lat = coords.lat * DEG;
 
-    const shelf =
+    return clamp01(
       softBand(waterValue, 0.42, 0.26) * 0.46 +
-      softBand(Math.sin(lon * 2.1 + lat * 0.75), 0.0, 0.52) * 0.18 +
-      softBand(Math.cos(lon * 1.3 - lat * 1.2), 0.16, 0.48) * 0.14;
-
-    return clamp01(shelf);
+        softBand(Math.sin(lon * 2.1 + lat * 0.75), 0.0, 0.52) * 0.18 +
+        softBand(Math.cos(lon * 1.3 - lat * 1.2), 0.16, 0.48) * 0.14
+    );
   }
 
   function shorelinePotential(coords, waterValue) {
@@ -228,8 +240,8 @@
 
     return clamp01(
       softBand(waterValue, 0.34, 0.14) * 0.58 +
-      softBand(Math.sin(lon * 3.2 - lat * 1.4), 0.05, 0.32) * 0.16 +
-      softBand(Math.cos(lon * 2.4 + lat * 1.8), -0.14, 0.30) * 0.12
+        softBand(Math.sin(lon * 3.2 - lat * 1.4), 0.05, 0.32) * 0.16 +
+        softBand(Math.cos(lon * 2.4 + lat * 1.8), -0.14, 0.30) * 0.12
     );
   }
 
@@ -270,48 +282,47 @@
     const shoreline = shorelinePotential(coords, potential);
 
     const waterAlpha = clamp01(
-      potential * 0.78 +
-      shelf * 0.12 +
-      shoreline * 0.06
+      potential * 0.80 +
+        shelf * 0.12 +
+        shoreline * 0.06
     );
 
     const waterPresence = clamp01(
       waterAlpha * 0.86 +
-      potential * 0.10 +
-      shoreline * 0.04
+        potential * 0.10 +
+        shoreline * 0.04
     );
 
     const waterDepth = clamp01(
       waterAlpha * 0.62 +
-      potential * 0.22 -
-      shelf * 0.08 -
-      shoreline * 0.04
+        potential * 0.22 -
+        shelf * 0.08 -
+        shoreline * 0.04
     );
 
-    const depthClass = classifyWater(waterAlpha, waterDepth, shelf, shoreline);
+    const waterDepthClass = classifyWater(waterAlpha, waterDepth, shelf, shoreline);
     const isVisibleWater = waterAlpha > 0.08;
     const isMajorWater = waterAlpha > 0.24;
 
-    const hydrosphereBinding = isVisibleWater ? clamp01(0.74 + waterAlpha * 0.24) : 0.62;
-    const surfaceSeat = isVisibleWater ? clamp01(0.76 + waterPresence * 0.22) : 0.60;
-    const depthBinding = isVisibleWater ? clamp01(0.58 + waterDepth * 0.38) : 0.44;
+    const hydrosphereBinding = isVisibleWater ? clamp01(0.76 + waterAlpha * 0.22) : 0.64;
+    const surfaceSeat = isVisibleWater ? clamp01(0.78 + waterPresence * 0.20) : 0.62;
+    const depthBinding = isVisibleWater ? clamp01(0.60 + waterDepth * 0.36) : 0.46;
 
-    let rgb = colorForWater(depthClass, waterAlpha, shelf, shoreline);
+    let rgb = colorForWater(waterDepthClass, waterAlpha, shelf, shoreline);
     const bodyShade = clamp01(0.72 + coords.z * 0.12 + hydrosphereBinding * 0.10);
     rgb = scaleColor(rgb, bodyShade);
 
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      loadExportContract: LOAD_EXPORT_CONTRACT,
-      previousContract: PREVIOUS_CONTRACT,
+      buildContract: BUILD_CONTRACT,
       version: VERSION,
-      authority: "hearth-water-hydrosphere-surface-channel",
+      authority: "hearth-water-child-hydrosphere-surface-depth-channel",
 
       ...coords,
 
       channel: "water",
-      channelClass: depthClass,
+      channelClass: waterDepthClass,
       isWaterChannel: true,
 
       rgb,
@@ -326,7 +337,7 @@
       depthBinding,
 
       waterDepth,
-      waterDepthClass: depthClass,
+      waterDepthClass,
       basinDepth: clamp01(waterDepth * 0.82 + potential * 0.12),
       oceanContinuity: clamp01(potential * 0.72 + waterPresence * 0.20),
       surfaceTension: clamp01(0.52 + shoreline * 0.22 + shelf * 0.08),
@@ -402,13 +413,12 @@
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      loadExportContract: LOAD_EXPORT_CONTRACT,
-      previousContract: PREVIOUS_CONTRACT,
+      buildContract: BUILD_CONTRACT,
       version: VERSION,
-      authority: "hearth-water-hydrosphere-surface-channel",
+      authority: "hearth-water-child-hydrosphere-surface-depth-channel",
       primaryTarget: "/assets/hearth/hearth.water.channel.js",
       status: "active",
-      role: "water child channel / hydrosphere surface-depth authority",
+      role: "Water Child / hydrosphere surface-depth authority",
       globalExports: [
         "HEARTH_WATER_CHANNEL",
         "HearthWaterChannel",
@@ -443,19 +453,32 @@
         "depthBinding",
         "waterDepth",
         "waterDepthClass",
-        "shorelineBoundary",
-        "shallowShelf",
+        "basinDepth",
         "oceanContinuity",
-        "basinDepth"
+        "shorelineBoundary",
+        "shorelineBoundaryStrength",
+        "shallowShelf",
+        "shallowShelfStrength",
+        "surfaceTension"
+      ],
+      waterClasses: [
+        "deep-ocean",
+        "open-water",
+        "shallow-shelf",
+        "coastal-boundary",
+        "low-water"
       ],
       channelTruth: {
+        channel: "water",
         isWaterChannel: true,
         bodyBound: true,
         surfaceBound: true,
         floatsAboveBody: false,
         allowedToFloat: false,
         mayDefineLand: false,
-        mayDefineAir: false
+        mayDefineAir: false,
+        definesLandTruth: false,
+        definesAirTruth: false
       },
       owns: [
         "water-presence",
@@ -464,6 +487,8 @@
         "surface-seat",
         "depth-binding",
         "water-depth-class",
+        "basin-depth",
+        "ocean-continuity",
         "shoreline-boundary-signal",
         "shallow-shelf-signal",
         "water-color-packet",
@@ -475,23 +500,24 @@
         "Triple G diagnostic canonical standard",
         "land-truth",
         "air-truth",
-        "tectonic-cause",
-        "elevation-generation",
-        "hydrology-parent-law",
-        "material-palette-authority",
         "route-orchestration",
         "runtime-motion",
+        "controls",
+        "materials-authority",
+        "hydrology-parent-law",
+        "elevation",
+        "tectonics",
         "final-visual-pass-claim"
       ],
       acceptanceTarget: [
-        "HEARTH_WATER_CHANNEL exists",
-        "contract matches HEARTH_WATER_HYDROSPHERE_SURFACE_CHANNEL_TNT_v1",
-        "sample returns object packet",
-        "read returns object packet",
-        "sample includes u/v/x/y/z",
-        "allowedToFloat is false",
-        "isWaterChannel is true",
-        "visualPassClaimed is false"
+        "waterScriptLoaded true",
+        "waterGlobalPresent true",
+        "waterActualContract matches",
+        "waterSampleProbeOk true",
+        "waterSampleProbeCoordinatesOk true",
+        "waterSampleProbeFlagsOk true",
+        "Runtime Table water record READY",
+        "RECEIPT_VERIFICATION_CHECK PASS"
       ],
       generatedImage: false,
       graphicBox: false,
@@ -506,8 +532,7 @@
   const api = {
     contract: CONTRACT,
     receipt: RECEIPT,
-    loadExportContract: LOAD_EXPORT_CONTRACT,
-    previousContract: PREVIOUS_CONTRACT,
+    buildContract: BUILD_CONTRACT,
     version: VERSION,
 
     sample,
@@ -526,6 +551,8 @@
     allowedToFloat: false,
     mayDefineLand: false,
     mayDefineAir: false,
+    definesLandTruth: false,
+    definesAirTruth: false,
     coordinateCompatible: true,
 
     generatedImage: false,
@@ -550,7 +577,7 @@
     root.document.documentElement.dataset.hearthWaterChannelLoaded = "true";
     root.document.documentElement.dataset.hearthWaterChannelContract = CONTRACT;
     root.document.documentElement.dataset.hearthWaterChannelReceipt = RECEIPT;
-    root.document.documentElement.dataset.hearthWaterChannelLoadExportContract = LOAD_EXPORT_CONTRACT;
+    root.document.documentElement.dataset.hearthWaterChildBuildContract = BUILD_CONTRACT;
     root.document.documentElement.dataset.hearthWaterChannelCoordinates = "true";
     root.document.documentElement.dataset.hearthWaterChannelSampleReady = "true";
     root.document.documentElement.dataset.hearthWaterChannelBodyBound = "true";

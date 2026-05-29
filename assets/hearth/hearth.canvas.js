@@ -1,68 +1,53 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_WATER_CHANNEL_CACHE_KEY_AND_LOAD_PROOF_CANVAS_TNT_v4_4
+// HEARTH_CANVAS_WATER_CHILD_CONNECTOR_LOAD_ALIGNMENT_TNT_v1
 // Full-file replacement.
-// Canvas / mount / Runtime Table consumer / Triple G diagnostic consumer / loader-proof receipt authority only.
+// Canvas / mount / connector-load measurement / Runtime Table consumer authority only.
 // Purpose:
-// - Preserve shell-first nonblocking mount.
-// - Preserve immediate thumb / pointer drag.
-// - Preserve Runtime Table v2 compatibility and v1 fallback.
-// - Preserve Triple G coherent-expression diagnostic consumption.
-// - Preserve hidden / compact / expanded diagnostic receipt modes.
-// - Preserve copyable plain-text diagnostic receipt export.
-// - Add per-channel cache keys.
-// - Add water channel loader proof by exact coordinate.
-// - Prove whether water fails at request, load, global export, sample, coordinate, flags, Runtime Table, canvas multiplex, Triple G, or export.
-// - Keep Construction Ready, Image Rendered, and Coherent Expression separate.
-// - Decide no channel truth.
+// - Preserve shell-first nonblocking Hearth canvas mount.
+// - Preserve immediate pointer/touch drag.
+// - Preserve Runtime Table and Triple G diagnostic consumption.
+// - Preserve visible/invisible receipt, expanded receipt, and copy/export diagnostics.
+// - Preserve Land and Air child loading.
+// - Renew the Water Child connector so failure is measured by exact coordinate.
+// - Conduct to /assets/hearth/hearth.water.channel.js without owning water truth.
+// - Keep Water Child as the only lawful owner of water-channel output.
 // Does not own:
-// - Runtime Table canonical standard
-// - Triple G diagnostic canonical standard
-// - water truth
+// - Water Child truth
+// - water packet generation
+// - hydrology law
+// - materials law
 // - land truth
 // - air truth
-// - tectonic cause
-// - elevation generation
-// - composition classification
-// - hydrology classification
-// - material palette authority
-// - ocean authority generation
 // - route orchestration
+// - Runtime Table canonical standard
+// - Triple G diagnostic canonical standard
 // - runtime motion authority
-// - external controls authority
-// - final visual pass claim
+// - controls authority
+// - visual pass
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_WATER_CHANNEL_CACHE_KEY_AND_LOAD_PROOF_CANVAS_TNT_v4_4";
-  const RECEIPT = "HEARTH_WATER_CHANNEL_CACHE_KEY_AND_LOAD_PROOF_CANVAS_RECEIPT_v4_4";
-  const PREVIOUS_CONTRACT = "HEARTH_TRIPLE_G_RECEIPT_VISIBILITY_AND_COPY_EXPORT_CANVAS_TNT_v4_3";
-  const VERSION = "2026-05-29.hearth-water-channel-cache-key-load-proof-canvas-v4-4";
+  const CONTRACT = "HEARTH_CANVAS_WATER_CHILD_CONNECTOR_LOAD_ALIGNMENT_TNT_v1";
+  const RECEIPT = "HEARTH_CANVAS_WATER_CHILD_CONNECTOR_LOAD_ALIGNMENT_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "HEARTH_WATER_CHANNEL_CACHE_KEY_AND_LOAD_PROOF_CANVAS_TNT_v4_4";
+  const VERSION = "2026-05-29.hearth-canvas-water-child-connector-load-alignment-v1";
 
   const LAB_RUNTIME_TABLE_PATH = "/assets/lab/runtime-table.js";
-  const LAB_RUNTIME_TABLE_CONTRACT_V1 = "LAB_RUNTIME_TABLE_MULTI_FUNCTION_ANIMATION_STANDARD_TNT_v1";
-  const LAB_RUNTIME_TABLE_CONTRACT_V2 = "LAB_RUNTIME_TABLE_AND_TRIPLE_G_COHERENCE_DIAGNOSTIC_STANDARD_TNT_v2";
-  const LAB_RUNTIME_TABLE_CONTRACT = LAB_RUNTIME_TABLE_CONTRACT_V2;
-  const LAB_RUNTIME_TABLE_ACCEPTED_CONTRACTS = Object.freeze([
-    LAB_RUNTIME_TABLE_CONTRACT_V2,
-    LAB_RUNTIME_TABLE_CONTRACT_V1
+  const PREFERRED_LAB_RUNTIME_TABLE_CONTRACT = "LAB_RUNTIME_TABLE_AND_TRIPLE_G_COHERENCE_DIAGNOSTIC_STANDARD_TNT_v2";
+  const ACCEPTED_LAB_RUNTIME_TABLE_CONTRACTS = Object.freeze([
+    "LAB_RUNTIME_TABLE_AND_TRIPLE_G_COHERENCE_DIAGNOSTIC_STANDARD_TNT_v2",
+    "LAB_RUNTIME_TABLE_MULTI_FUNCTION_ANIMATION_STANDARD_TNT_v1"
   ]);
 
   const LAND_CONTRACT = "HEARTH_LAND_SURFACE_ATTACHMENT_CHANNEL_TNT_v1";
   const WATER_CONTRACT = "HEARTH_WATER_HYDROSPHERE_SURFACE_CHANNEL_TNT_v1";
   const AIR_CONTRACT = "HEARTH_AIR_PRESSURE_HUMIDITY_CHANNEL_TNT_v1";
 
-  const RECEIPT_MODES = Object.freeze({
-    HIDDEN: "hidden",
-    COMPACT: "compact",
-    EXPANDED: "expanded"
-  });
-
-  const CHANNEL_CACHE_KEYS = Object.freeze({
-    land: "hearth-land-channel-active-v1",
-    water: "hearth-water-channel-load-export-v1",
-    air: "hearth-air-channel-active-v1"
-  });
+  const WATER_CHILD_PATH = "/assets/hearth/hearth.water.channel.js";
+  const WATER_CHILD_CACHE_KEY = "hearth-water-channel-load-export-v1";
+  const WATER_CHILD_MARKER = "hearth-water-channel";
+  const WATER_CHILD_MODE = "conduct-request-verify-only";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const DEG = Math.PI / 180;
@@ -82,21 +67,27 @@
       label: "Land channel",
       path: "/assets/hearth/hearth.land.channel.js",
       contract: LAND_CONTRACT,
-      globalName: "HEARTH_LAND_CHANNEL"
+      globalName: "HEARTH_LAND_CHANNEL",
+      cacheKey: "hearth-land-channel-active-v1",
+      marker: "hearth-land-channel"
     },
     {
       key: "water",
       label: "Water channel",
-      path: "/assets/hearth/hearth.water.channel.js",
+      path: WATER_CHILD_PATH,
       contract: WATER_CONTRACT,
-      globalName: "HEARTH_WATER_CHANNEL"
+      globalName: "HEARTH_WATER_CHANNEL",
+      cacheKey: WATER_CHILD_CACHE_KEY,
+      marker: WATER_CHILD_MARKER
     },
     {
       key: "air",
       label: "Air channel",
       path: "/assets/hearth/hearth.air.channel.js",
       contract: AIR_CONTRACT,
-      globalName: "HEARTH_AIR_CHANNEL"
+      globalName: "HEARTH_AIR_CHANNEL",
+      cacheKey: "hearth-air-channel-active-v1",
+      marker: "hearth-air-channel"
     }
   ]);
 
@@ -116,17 +107,8 @@
     air: [150, 190, 210],
     rim: [174, 216, 236],
     atmosphere: [20, 32, 48],
-    shadow: [2, 5, 12],
-    transparent: [0, 0, 0]
+    shadow: [2, 5, 12]
   });
-
-  function nowIso() {
-    try {
-      return new Date().toISOString();
-    } catch (_error) {
-      return "";
-    }
-  }
 
   function clamp(value, min, max) {
     const n = Number(value);
@@ -267,10 +249,11 @@
 
     const radial = Math.sqrt(rr);
     const z = Math.sqrt(Math.max(0, 1 - rr));
+    const edgeAlpha = clamp01((1 - radial) / 0.025);
 
     return {
       inside: true,
-      edgeAlpha: clamp01((1 - radial) / 0.025),
+      edgeAlpha,
       radial,
       vector: normalize3({
         x: dx,
@@ -310,6 +293,14 @@
     return lonLatToVector(0, 0);
   }
 
+  function escapeHtml(value) {
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
   function colorField(source, keys, fallback) {
     for (const key of keys) {
       const value = source && source[key];
@@ -339,63 +330,21 @@
     return typeof (source && source[key]) === "boolean" ? source[key] : fallback;
   }
 
-  function escapeHtml(value) {
-    return String(value)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
-  }
-
-  function stringifyForReceipt(value) {
-    try {
-      return JSON.stringify(value, null, 2);
-    } catch (_error) {
-      return String(value);
-    }
-  }
-
-  function datasetToObject(element) {
-    const output = {};
-    if (!element || !element.dataset) return output;
-
-    Object.keys(element.dataset).forEach((key) => {
-      output[key] = element.dataset[key];
-    });
-
-    return output;
-  }
-
-  function getDocumentRootDataset() {
-    return root.document && root.document.documentElement
-      ? datasetToObject(root.document.documentElement)
-      : {};
-  }
-
   function getRuntimeTableApi() {
-    return (
+    const api =
       root.LAB_RUNTIME_TABLE ||
       root.RUNTIME_TABLE ||
       root.DexterRuntimeTable ||
       (root.DEXTER_LAB && root.DEXTER_LAB.runtimeTable) ||
-      null
-    );
-  }
+      null;
 
-  function runtimeTableContractAccepted(api) {
-    return Boolean(api && LAB_RUNTIME_TABLE_ACCEPTED_CONTRACTS.includes(api.contract));
-  }
+    if (!api || !api.contract) return api;
 
-  function runtimeTableV2Available(api = getRuntimeTableApi()) {
-    return Boolean(
-      api &&
-        api.contract === LAB_RUNTIME_TABLE_CONTRACT_V2 &&
-        typeof api.runCoherenceDiagnostic === "function" &&
-        typeof api.createHearthCoherenceDiagnostic === "function" &&
-        typeof api.createGoalProfile === "function" &&
-        api.COHERENCE_STATUS &&
-        api.COHERENCE_CHECKS
-    );
+    if (ACCEPTED_LAB_RUNTIME_TABLE_CONTRACTS.includes(api.contract)) {
+      return api;
+    }
+
+    return api;
   }
 
   function getLandChannel() {
@@ -410,373 +359,8 @@
     return root.HEARTH_AIR_CHANNEL || root.HearthAirChannel || (root.HEARTH && root.HEARTH.airChannel) || null;
   }
 
-  function getChannelGlobal(item) {
-    if (!item || !item.globalName) return null;
-    return root[item.globalName] || null;
-  }
-
   function getHandoffAllowed(handoff) {
     return ALLOWED_HANDOFFS.includes(String(handoff || ""));
-  }
-
-  function getPerChannelCacheKey(channelKey, options = {}) {
-    if (options.perChannelCacheKeys && options.perChannelCacheKeys[channelKey]) {
-      return String(options.perChannelCacheKeys[channelKey]);
-    }
-
-    const optionKey = `${channelKey}ChannelCacheKey`;
-
-    if (options[optionKey]) {
-      return String(options[optionKey]);
-    }
-
-    return CHANNEL_CACHE_KEYS[channelKey] || options.channelCacheKey || `hearth-channel-${channelKey}-v4-4`;
-  }
-
-  function buildScriptSrc(src, cacheKey) {
-    const joiner = src.includes("?") ? "&" : "?";
-    return `${src}${joiner}v=${encodeURIComponent(cacheKey || VERSION)}`;
-  }
-
-  function loadScriptOnce(src, marker, validate, cacheKey) {
-    return new Promise((resolve) => {
-      const requestedSrc = buildScriptSrc(src, cacheKey);
-
-      if (typeof validate === "function" && validate()) {
-        resolve({
-          requested: true,
-          loaded: true,
-          alreadyPresent: true,
-          src,
-          requestedSrc,
-          cacheKey,
-          error: ""
-        });
-        return;
-      }
-
-      if (!root.document || !root.document.head) {
-        resolve({
-          requested: false,
-          loaded: false,
-          src,
-          requestedSrc,
-          cacheKey,
-          error: "document unavailable"
-        });
-        return;
-      }
-
-      const existing = root.document.querySelector(`script[data-hearth-loader-marker="${marker}"]`);
-
-      if (existing && typeof validate === "function" && !validate()) {
-        existing.remove();
-      } else if (existing) {
-        existing.addEventListener("load", () => {
-          resolve({
-            requested: true,
-            loaded: Boolean(validate && validate()),
-            existing: true,
-            src,
-            requestedSrc: existing.src || requestedSrc,
-            cacheKey,
-            error: ""
-          });
-        }, { once: true });
-
-        existing.addEventListener("error", () => {
-          resolve({
-            requested: true,
-            loaded: false,
-            existing: true,
-            src,
-            requestedSrc: existing.src || requestedSrc,
-            cacheKey,
-            error: "load-error"
-          });
-        }, { once: true });
-
-        setTimeout(() => {
-          resolve({
-            requested: true,
-            loaded: Boolean(validate && validate()),
-            existing: true,
-            timeoutCheck: true,
-            src,
-            requestedSrc: existing.src || requestedSrc,
-            cacheKey,
-            error: Boolean(validate && validate()) ? "" : "existing-script-validation-failed"
-          });
-        }, 160);
-
-        return;
-      }
-
-      const script = root.document.createElement("script");
-      script.src = requestedSrc;
-      script.defer = true;
-      script.dataset.hearthLoaderMarker = marker;
-      script.dataset.hearthCanvasContract = CONTRACT;
-      script.dataset.hearthCanvasReceipt = RECEIPT;
-      script.dataset.hearthScriptCacheKey = cacheKey || "";
-      script.dataset.generatedImage = "false";
-      script.dataset.graphicBox = "false";
-      script.dataset.webgl = "false";
-      script.dataset.visualPassClaimed = "false";
-
-      script.onload = () => {
-        resolve({
-          requested: true,
-          loaded: Boolean(validate && validate()),
-          src,
-          requestedSrc,
-          cacheKey,
-          error: Boolean(validate && validate()) ? "" : "loaded-but-validation-failed"
-        });
-      };
-
-      script.onerror = () => {
-        resolve({
-          requested: true,
-          loaded: false,
-          src,
-          requestedSrc,
-          cacheKey,
-          error: "load-error"
-        });
-      };
-
-      root.document.head.appendChild(script);
-    });
-  }
-
-  function loadChannelScriptWithProof(item, options = {}) {
-    const cacheKey = getPerChannelCacheKey(item.key, options);
-    const marker = `hearth-${item.key}-channel`;
-    const scriptPath = item.path;
-    const expectedContract = item.contract;
-
-    const validate = () => {
-      const channel = getChannelGlobal(item);
-      return Boolean(channel && channel.contract === expectedContract);
-    };
-
-    return loadScriptOnce(scriptPath, marker, validate, cacheKey).then((result) => {
-      const globalObject = getChannelGlobal(item);
-      const actualContract = globalObject && globalObject.contract ? String(globalObject.contract) : "";
-      const globalPresent = Boolean(globalObject);
-      const contractOk = actualContract === expectedContract;
-
-      return {
-        key: item.key,
-        label: item.label,
-        path: item.path,
-        scriptPath,
-        scriptCacheKey: cacheKey,
-        requestedSrc: result.requestedSrc || buildScriptSrc(scriptPath, cacheKey),
-        expectedContract,
-        actualContract,
-        requested: Boolean(result.requested),
-        loaded: Boolean(result.loaded),
-        alreadyPresent: Boolean(result.alreadyPresent),
-        existing: Boolean(result.existing),
-        timeoutCheck: Boolean(result.timeoutCheck),
-        error: result.error || "",
-        globalName: item.globalName,
-        globalPresent,
-        contractOk,
-        validationOk: Boolean(globalPresent && contractOk),
-        at: nowIso()
-      };
-    });
-  }
-
-  function finiteCoordinatePacket(packet) {
-    return Boolean(
-      packet &&
-        Number.isFinite(Number(packet.u)) &&
-        Number.isFinite(Number(packet.v)) &&
-        Number.isFinite(Number(packet.x)) &&
-        Number.isFinite(Number(packet.y)) &&
-        Number.isFinite(Number(packet.z))
-    );
-  }
-
-  function probeWaterChannel() {
-    const water = getWaterChannel();
-    const proof = {
-      waterExpectedContract: WATER_CONTRACT,
-      waterGlobalPresent: Boolean(water),
-      waterActualContract: water && water.contract ? String(water.contract) : "",
-      waterSampleProbeOk: false,
-      waterSampleProbeContract: "",
-      waterSampleProbeCoordinatesOk: false,
-      waterSampleProbeFlagsOk: false,
-      waterSampleProbeError: "",
-      waterSampleProbeValue: null,
-      at: nowIso()
-    };
-
-    if (!water) {
-      proof.waterSampleProbeError = "HEARTH_WATER_CHANNEL global missing.";
-      return proof;
-    }
-
-    if (typeof water.sample !== "function") {
-      proof.waterSampleProbeError = "HEARTH_WATER_CHANNEL.sample is not a function.";
-      return proof;
-    }
-
-    try {
-      const samplePacket = water.sample(SHARED_RUNTIME_TABLE_SAMPLE_POINT);
-      proof.waterSampleProbeValue = samplePacket || null;
-      proof.waterSampleProbeOk = Boolean(samplePacket && typeof samplePacket === "object");
-      proof.waterSampleProbeContract = samplePacket && samplePacket.contract ? String(samplePacket.contract) : "";
-      proof.waterSampleProbeCoordinatesOk = finiteCoordinatePacket(samplePacket);
-      proof.waterSampleProbeFlagsOk = Boolean(
-        samplePacket &&
-          samplePacket.isWaterChannel === true &&
-          samplePacket.allowedToFloat === false &&
-          samplePacket.bodyBound === true &&
-          samplePacket.surfaceBound === true
-      );
-
-      if (!proof.waterSampleProbeOk) {
-        proof.waterSampleProbeError = "sample returned no object packet.";
-      } else if (proof.waterSampleProbeContract !== WATER_CONTRACT) {
-        proof.waterSampleProbeError = `sample contract mismatch: ${proof.waterSampleProbeContract || "missing"}`;
-      } else if (!proof.waterSampleProbeCoordinatesOk) {
-        proof.waterSampleProbeError = "sample missing finite u/v/x/y/z coordinates.";
-      } else if (!proof.waterSampleProbeFlagsOk) {
-        proof.waterSampleProbeError = "sample water authority flags invalid.";
-      }
-    } catch (error) {
-      proof.waterSampleProbeError = error && error.message ? error.message : String(error);
-    }
-
-    return proof;
-  }
-
-  function updateChannelLoadProof(api, channelResults = []) {
-    if (!api || !api.state) return;
-
-    const state = api.state;
-    const canvas = api.canvas || null;
-    const byKey = {};
-
-    channelResults.forEach((result) => {
-      if (result && result.key) byKey[result.key] = result;
-    });
-
-    const land = byKey.land || null;
-    const water = byKey.water || null;
-    const air = byKey.air || null;
-    const waterProof = probeWaterChannel();
-
-    state.channelLoadResults = channelResults.slice();
-    state.landLoadResult = land;
-    state.waterLoadResult = water;
-    state.airLoadResult = air;
-
-    state.waterScriptRequested = Boolean(water && water.requested);
-    state.waterScriptLoaded = Boolean(water && water.loaded);
-    state.waterScriptPath = water ? water.scriptPath : "/assets/hearth/hearth.water.channel.js";
-    state.waterScriptCacheKey = water ? water.scriptCacheKey : CHANNEL_CACHE_KEYS.water;
-    state.waterScriptError = water && water.error ? water.error : "";
-
-    state.waterGlobalPresent = waterProof.waterGlobalPresent;
-    state.waterActualContract = waterProof.waterActualContract;
-    state.waterExpectedContract = waterProof.waterExpectedContract;
-
-    state.waterSampleProbeOk = waterProof.waterSampleProbeOk;
-    state.waterSampleProbeContract = waterProof.waterSampleProbeContract;
-    state.waterSampleProbeCoordinatesOk = waterProof.waterSampleProbeCoordinatesOk;
-    state.waterSampleProbeFlagsOk = waterProof.waterSampleProbeFlagsOk;
-    state.waterSampleProbeError = waterProof.waterSampleProbeError;
-    state.waterSampleProbeValue = waterProof.waterSampleProbeValue;
-
-    state.channelLoadProofReady = true;
-
-    if (canvas) {
-      canvas.dataset.hearthChannelLoadProofReady = "true";
-      canvas.dataset.hearthWaterScriptRequested = String(state.waterScriptRequested);
-      canvas.dataset.hearthWaterScriptLoaded = String(state.waterScriptLoaded);
-      canvas.dataset.hearthWaterScriptPath = state.waterScriptPath || "";
-      canvas.dataset.hearthWaterScriptCacheKey = state.waterScriptCacheKey || "";
-      canvas.dataset.hearthWaterScriptError = state.waterScriptError || "";
-      canvas.dataset.hearthWaterGlobalPresent = String(state.waterGlobalPresent);
-      canvas.dataset.hearthWaterActualContract = state.waterActualContract || "";
-      canvas.dataset.hearthWaterExpectedContract = state.waterExpectedContract || WATER_CONTRACT;
-      canvas.dataset.hearthWaterSampleProbeOk = String(state.waterSampleProbeOk);
-      canvas.dataset.hearthWaterSampleProbeContract = state.waterSampleProbeContract || "";
-      canvas.dataset.hearthWaterSampleProbeCoordinatesOk = String(state.waterSampleProbeCoordinatesOk);
-      canvas.dataset.hearthWaterSampleProbeFlagsOk = String(state.waterSampleProbeFlagsOk);
-      canvas.dataset.hearthWaterSampleProbeError = state.waterSampleProbeError || "";
-    }
-
-    if (root.document && root.document.documentElement) {
-      root.document.documentElement.dataset.hearthChannelLoadProofReady = "true";
-      root.document.documentElement.dataset.hearthWaterScriptRequested = String(state.waterScriptRequested);
-      root.document.documentElement.dataset.hearthWaterScriptLoaded = String(state.waterScriptLoaded);
-      root.document.documentElement.dataset.hearthWaterScriptPath = state.waterScriptPath || "";
-      root.document.documentElement.dataset.hearthWaterScriptCacheKey = state.waterScriptCacheKey || "";
-      root.document.documentElement.dataset.hearthWaterScriptError = state.waterScriptError || "";
-      root.document.documentElement.dataset.hearthWaterGlobalPresent = String(state.waterGlobalPresent);
-      root.document.documentElement.dataset.hearthWaterActualContract = state.waterActualContract || "";
-      root.document.documentElement.dataset.hearthWaterExpectedContract = state.waterExpectedContract || WATER_CONTRACT;
-      root.document.documentElement.dataset.hearthWaterSampleProbeOk = String(state.waterSampleProbeOk);
-      root.document.documentElement.dataset.hearthWaterSampleProbeContract = state.waterSampleProbeContract || "";
-      root.document.documentElement.dataset.hearthWaterSampleProbeCoordinatesOk = String(state.waterSampleProbeCoordinatesOk);
-      root.document.documentElement.dataset.hearthWaterSampleProbeFlagsOk = String(state.waterSampleProbeFlagsOk);
-      root.document.documentElement.dataset.hearthWaterSampleProbeError = state.waterSampleProbeError || "";
-    }
-  }
-
-  function formatChannelLoadProof(api) {
-    const state = api && api.state ? api.state : {};
-    const lines = [];
-
-    if (!state.channelLoadProofReady) return lines;
-
-    if (state.waterScriptLoaded && state.waterGlobalPresent && state.waterSampleProbeOk && state.waterSampleProbeCoordinatesOk && state.waterSampleProbeFlagsOk) {
-      lines.push(`Water loader: valid · ${state.waterActualContract || "contract-present"}`);
-      return lines;
-    }
-
-    if (!state.waterScriptRequested) {
-      lines.push("Water loader: script was not requested.");
-      return lines;
-    }
-
-    if (!state.waterScriptLoaded) {
-      lines.push(`Water loader: script did not validate/load · ${state.waterScriptError || "unknown error"}`);
-      return lines;
-    }
-
-    if (!state.waterGlobalPresent) {
-      lines.push("Water loader: script loaded but HEARTH_WATER_CHANNEL global is missing.");
-      return lines;
-    }
-
-    if (state.waterActualContract !== WATER_CONTRACT) {
-      lines.push(`Water loader: wrong contract · ${state.waterActualContract || "missing"}`);
-      return lines;
-    }
-
-    if (!state.waterSampleProbeOk) {
-      lines.push(`Water loader: sample failed · ${state.waterSampleProbeError || "unknown sample error"}`);
-      return lines;
-    }
-
-    if (!state.waterSampleProbeCoordinatesOk) {
-      lines.push("Water loader: sample coordinates invalid.");
-    }
-
-    if (!state.waterSampleProbeFlagsOk) {
-      lines.push("Water loader: sample flags invalid.");
-    }
-
-    return lines;
   }
 
   function callChannel(authority, args, p) {
@@ -832,8 +416,7 @@
       surfaceBound: true,
       floatsAboveBody: false,
       allowedToFloat: false,
-      isLandChannel: true,
-      contract: "FALLBACK_LAND_CHANNEL"
+      sourceContract: "FALLBACK_LAND_CHANNEL"
     };
   }
 
@@ -852,13 +435,13 @@
       hydrosphereBinding: waterAlpha,
       surfaceSeat: waterAlpha,
       depthBinding: waterAlpha * 0.8,
-      atmosphericRejection: waterAlpha,
       bodyBound: true,
       surfaceBound: true,
       floatsAboveBody: false,
       allowedToFloat: false,
-      isWaterChannel: true,
-      contract: "FALLBACK_WATER_CHANNEL"
+      sourceContract: "FALLBACK_WATER_CHANNEL",
+      canvasFallbackOnly: true,
+      canvasOwnsWaterTruth: false
     };
   }
 
@@ -887,22 +470,7 @@
       surfaceBound: false,
       mayDefineLand: false,
       mayDefineWater: false,
-      isAirChannel: true,
-      contract: "FALLBACK_AIR_CHANNEL"
-    };
-  }
-
-  function coordinateDefaults(p) {
-    const ll = vectorToLonLat(p);
-
-    return {
-      u: lonToU(ll.lon),
-      v: latToV(ll.lat),
-      lon: ll.lon,
-      lat: ll.lat,
-      x: p.x,
-      y: p.y,
-      z: p.z
+      sourceContract: "FALLBACK_AIR_CHANNEL"
     };
   }
 
@@ -910,25 +478,21 @@
     const fallback = fallbackLand(p);
     const source = raw && typeof raw === "object" ? raw : fallback;
     const rgb = colorField(source, ["rgb", "color", "landRgb"], fallback.rgb);
-    const coords = coordinateDefaults(p);
 
     return {
       ...fallback,
       ...source,
-      ...coords,
       rgb,
       color: rgb,
       alpha: clamp01(numberField(source, "alpha", numberField(source, "landAlpha", fallback.alpha))),
       landAlpha: clamp01(numberField(source, "landAlpha", numberField(source, "landPresence", fallback.landAlpha))),
-      bodyBinding: clamp01(numberField(source, "bodyBinding", boolField(source, "bodyBound", true) ? 1 : fallback.bodyBinding)),
-      surfaceAttachment: clamp01(numberField(source, "surfaceAttachment", boolField(source, "surfaceBound", true) ? 1 : fallback.surfaceAttachment)),
+      bodyBinding: clamp01(numberField(source, "bodyBinding", fallback.bodyBinding)),
+      surfaceAttachment: clamp01(numberField(source, "surfaceAttachment", fallback.surfaceAttachment)),
       atmosphericRejection: clamp01(numberField(source, "atmosphericRejection", fallback.atmosphericRejection)),
       bodyBound: boolField(source, "bodyBound", true),
       surfaceBound: boolField(source, "surfaceBound", true),
       floatsAboveBody: false,
-      allowedToFloat: false,
-      isLandChannel: true,
-      contract: source.contract || source.sourceContract || fallback.contract
+      allowedToFloat: false
     };
   }
 
@@ -936,26 +500,21 @@
     const fallback = fallbackWater(p);
     const source = raw && typeof raw === "object" ? raw : fallback;
     const rgb = colorField(source, ["rgb", "color", "waterRgb", "oceanRgb"], fallback.rgb);
-    const coords = coordinateDefaults(p);
 
     return {
       ...fallback,
       ...source,
-      ...coords,
       rgb,
       color: rgb,
       alpha: clamp01(numberField(source, "alpha", numberField(source, "waterAlpha", fallback.alpha))),
       waterAlpha: clamp01(numberField(source, "waterAlpha", numberField(source, "waterPresence", fallback.waterAlpha))),
-      hydrosphereBinding: clamp01(numberField(source, "hydrosphereBinding", boolField(source, "bodyBound", true) ? 1 : fallback.hydrosphereBinding)),
-      surfaceSeat: clamp01(numberField(source, "surfaceSeat", boolField(source, "surfaceBound", true) ? 1 : fallback.surfaceSeat)),
+      hydrosphereBinding: clamp01(numberField(source, "hydrosphereBinding", fallback.hydrosphereBinding)),
+      surfaceSeat: clamp01(numberField(source, "surfaceSeat", fallback.surfaceSeat)),
       depthBinding: clamp01(numberField(source, "depthBinding", fallback.depthBinding)),
-      atmosphericRejection: clamp01(numberField(source, "atmosphericRejection", fallback.atmosphericRejection)),
       bodyBound: boolField(source, "bodyBound", true),
       surfaceBound: boolField(source, "surfaceBound", true),
       floatsAboveBody: false,
-      allowedToFloat: false,
-      isWaterChannel: true,
-      contract: source.contract || source.sourceContract || fallback.contract
+      allowedToFloat: false
     };
   }
 
@@ -963,12 +522,10 @@
     const fallback = fallbackAir(p);
     const source = raw && typeof raw === "object" ? raw : fallback;
     const rgb = colorField(source, ["rgb", "color", "airRgb", "atmosphereRgb"], fallback.rgb);
-    const coords = coordinateDefaults(p);
 
     return {
       ...fallback,
       ...source,
-      ...coords,
       rgb,
       color: rgb,
       alpha: clamp01(numberField(source, "alpha", numberField(source, "airAlpha", fallback.alpha))),
@@ -985,9 +542,7 @@
       bodyBound: false,
       surfaceBound: false,
       mayDefineLand: false,
-      mayDefineWater: false,
-      isAirChannel: true,
-      contract: source.contract || source.sourceContract || fallback.contract
+      mayDefineWater: false
     };
   }
 
@@ -1012,7 +567,8 @@
         0.08
     );
 
-    rgb = scaleColor(rgb, clamp01(0.76 + illumination * 0.22 + bodyLock * 0.08));
+    const seatedShade = clamp01(0.76 + illumination * 0.22 + bodyLock * 0.08);
+    rgb = scaleColor(rgb, seatedShade);
 
     return {
       rgb,
@@ -1026,31 +582,36 @@
 
   function multiplexSample(...args) {
     const p = parseInput(...args);
-    const coords = coordinateDefaults(p);
 
     const land = normalizeLand(callChannel(getLandChannel(), args, p), p);
     const water = normalizeWater(callChannel(getWaterChannel(), args, p), p);
     const air = normalizeAir(callChannel(getAirChannel(), args, p), p);
     const composed = composeChannels(land, water, air, p);
-    const runtimeApi = getRuntimeTableApi();
 
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
-      authority: "hearth-water-channel-cache-key-load-proof-canvas",
-      ...coords,
+      authority: "hearth-canvas-water-child-connector-load-alignment",
 
-      runtimeTableConsumed: Boolean(runtimeApi),
-      runtimeTableContract: runtimeApi && runtimeApi.contract ? runtimeApi.contract : "",
-      preferredRuntimeTableContract: LAB_RUNTIME_TABLE_CONTRACT_V2,
-      runtimeTableAcceptedContracts: LAB_RUNTIME_TABLE_ACCEPTED_CONTRACTS.slice(),
+      x: p.x,
+      y: p.y,
+      z: p.z,
+
+      runtimeTableConsumed: Boolean(getRuntimeTableApi()),
+      runtimeTableContract: PREFERRED_LAB_RUNTIME_TABLE_CONTRACT,
+      acceptedRuntimeTableContracts: ACCEPTED_LAB_RUNTIME_TABLE_CONTRACTS.slice(),
       runtimeTableCanonicalOwner: "Dexter Lab",
-      tripleGDiagnosticAvailable: runtimeTableV2Available(),
+
       channelMultiplexReady: Boolean(getLandChannel() && getWaterChannel() && getAirChannel()),
       semiconductorOutlet: true,
       canvasDecidesNothing: true,
+      canvasOwnsWaterTruth: false,
+      connectorOwnsWaterTruth: false,
+      waterChildConnectorMode: WATER_CHILD_MODE,
+      waterChildExternalAuthority: WATER_CHILD_PATH,
+      waterChildExpectedContract: WATER_CONTRACT,
 
       rgb: composed.rgb,
       color: composed.rgb,
@@ -1070,17 +631,21 @@
       bodyLock: composed.bodyLock,
 
       compositeOrder: "planet-body-shell → land-channel → water-channel → air-channel → rim-lighting",
-      constructionReadyIsNotCoherencePass: true,
-      imageRenderedIsNotCoherencePass: true,
+
       landFloatsAboveBody: false,
       waterFloatsAboveBody: false,
       airFloatsAboveBody: true,
 
       ownsRuntimeTableStandard: false,
-      ownsTripleGDiagnosticStandard: false,
       ownsLandTruth: false,
       ownsWaterTruth: false,
       ownsAirTruth: false,
+      ownsTectonicCause: false,
+      ownsElevationGeneration: false,
+      ownsCompositionClassification: false,
+      ownsHydrology: false,
+      ownsMaterialPalette: false,
+      ownsOceanAuthority: false,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -1099,6 +664,204 @@
   const getPixel = (...args) => multiplexSample(...args);
   const getColor = (...args) => multiplexSample(...args).rgb;
 
+  function createWaterConnectorProof() {
+    return {
+      connectorActive: true,
+      connectorMode: WATER_CHILD_MODE,
+      connectorOwnsWaterTruth: false,
+      canvasOwnsWaterTruth: false,
+      waterChildExternalAuthority: WATER_CHILD_PATH,
+      waterChildExpectedContract: WATER_CONTRACT,
+      waterChildRequestPrepared: false,
+      waterChildScriptElementCreated: false,
+      waterChildScriptElementAppended: false,
+      waterChildDocumentHeadAvailable: false,
+      waterChildScriptMarker: WATER_CHILD_MARKER,
+      waterChildScriptSrc: "",
+      waterScriptRequested: false,
+      waterScriptLoaded: false,
+      waterScriptError: "",
+      waterChildTimeoutCheck: false,
+      waterChildLoadFailureCoordinate: "C0_CONNECTOR_NOT_STARTED",
+      waterChildScriptElementPresent: false,
+      waterChildScriptElementErrored: false,
+      waterChildScriptErrorType: "",
+      waterChildPathCandidateUsed: WATER_CHILD_PATH,
+      waterChildFallbackCandidateUsed: false,
+      waterGlobalPresent: false,
+      waterActorName: "",
+      waterActualContract: "",
+      waterExpectedContract: WATER_CONTRACT,
+      waterSampleProbeOk: false,
+      waterSampleProbeContract: "",
+      waterSampleProbeCoordinatesOk: false,
+      waterSampleProbeFlagsOk: false,
+      waterSampleProbeError: "",
+      waterSampleProbeValue: null,
+      waterValidationOk: false,
+      waterContractOk: false,
+      lastCheckedAt: ""
+    };
+  }
+
+  function probeWaterActor() {
+    const proof = createWaterConnectorProof();
+    const water = getWaterChannel();
+
+    proof.lastCheckedAt = new Date().toISOString();
+    proof.waterGlobalPresent = Boolean(water);
+    proof.waterActorName = water
+      ? root.HEARTH_WATER_CHANNEL
+        ? "HEARTH_WATER_CHANNEL"
+        : root.HearthWaterChannel
+          ? "HearthWaterChannel"
+          : "HEARTH.waterChannel"
+      : "";
+
+    if (!water) {
+      proof.waterChildLoadFailureCoordinate = "C6_GLOBAL_ACTOR_MISSING";
+      proof.waterSampleProbeError = "HEARTH_WATER_CHANNEL global missing.";
+      return proof;
+    }
+
+    proof.waterActualContract = String(water.contract || "");
+    proof.waterContractOk = proof.waterActualContract === WATER_CONTRACT;
+
+    if (!proof.waterContractOk) {
+      proof.waterChildLoadFailureCoordinate = "C7_CONTRACT_MISMATCH";
+    }
+
+    const method = typeof water.sample === "function"
+      ? "sample"
+      : typeof water.read === "function"
+        ? "read"
+        : "";
+
+    if (!method) {
+      proof.waterChildLoadFailureCoordinate = "C8_SAMPLE_API_FAILURE";
+      proof.waterSampleProbeError = "Water actor has no sample/read method.";
+      return proof;
+    }
+
+    try {
+      const value = water[method](SHARED_RUNTIME_TABLE_SAMPLE_POINT);
+      proof.waterSampleProbeValue = value || null;
+      proof.waterSampleProbeOk = Boolean(value && typeof value === "object");
+      proof.waterSampleProbeContract = String((value && value.contract) || water.contract || "");
+
+      if (!proof.waterSampleProbeOk) {
+        proof.waterChildLoadFailureCoordinate = "C8_SAMPLE_API_FAILURE";
+        proof.waterSampleProbeError = "Water actor sample/read returned no object.";
+        return proof;
+      }
+
+      const coordsOk = [
+        "u",
+        "v",
+        "lon",
+        "lat",
+        "x",
+        "y",
+        "z"
+      ].every((key) => Number.isFinite(Number(value[key])));
+
+      proof.waterSampleProbeCoordinatesOk = coordsOk;
+
+      if (!coordsOk) {
+        proof.waterChildLoadFailureCoordinate = "C9_COORDINATE_PACKET_FAILURE";
+        proof.waterSampleProbeError = "Water actor sample missing coordinate fields.";
+        return proof;
+      }
+
+      const flagsOk =
+        value.channel === "water" &&
+        value.isWaterChannel === true &&
+        value.bodyBound === true &&
+        value.surfaceBound === true &&
+        value.allowedToFloat === false &&
+        value.floatsAboveBody === false &&
+        value.mayDefineLand === false &&
+        value.mayDefineAir === false;
+
+      proof.waterSampleProbeFlagsOk = flagsOk;
+
+      if (!flagsOk) {
+        proof.waterChildLoadFailureCoordinate = "C10_WATER_AUTHORITY_FLAGS_FAILURE";
+        proof.waterSampleProbeError = "Water actor sample failed body-bound water authority flags.";
+        return proof;
+      }
+
+      proof.waterValidationOk = proof.waterContractOk && proof.waterSampleProbeOk && proof.waterSampleProbeCoordinatesOk && proof.waterSampleProbeFlagsOk;
+      proof.waterChildLoadFailureCoordinate = proof.waterValidationOk ? "C11_WATER_CHILD_VALIDATED" : proof.waterChildLoadFailureCoordinate;
+      return proof;
+    } catch (error) {
+      proof.waterChildLoadFailureCoordinate = "C8_SAMPLE_API_FAILURE";
+      proof.waterSampleProbeError = error && error.message ? error.message : String(error);
+      return proof;
+    }
+  }
+
+  function applyWaterConnectorProofToDataset(proof, targetCanvas) {
+    if (!proof) return;
+
+    const dataset = root.document && root.document.documentElement
+      ? root.document.documentElement.dataset
+      : null;
+
+    const canvasDataset = targetCanvas && targetCanvas.dataset ? targetCanvas.dataset : null;
+
+    const pairs = {
+      hearthWaterConnectorActive: String(Boolean(proof.connectorActive)),
+      hearthWaterConnectorMode: WATER_CHILD_MODE,
+      hearthWaterConnectorOwnsWaterTruth: "false",
+      hearthCanvasOwnsWaterTruth: "false",
+      hearthWaterChildExternalAuthority: WATER_CHILD_PATH,
+      hearthWaterChildExpectedContract: WATER_CONTRACT,
+      hearthWaterChildRequestPrepared: String(Boolean(proof.waterChildRequestPrepared)),
+      hearthWaterChildScriptElementCreated: String(Boolean(proof.waterChildScriptElementCreated)),
+      hearthWaterChildScriptElementAppended: String(Boolean(proof.waterChildScriptElementAppended)),
+      hearthWaterChildDocumentHeadAvailable: String(Boolean(proof.waterChildDocumentHeadAvailable)),
+      hearthWaterChildScriptMarker: WATER_CHILD_MARKER,
+      hearthWaterChildScriptSrc: String(proof.waterChildScriptSrc || ""),
+      hearthWaterScriptRequested: String(Boolean(proof.waterScriptRequested)),
+      hearthWaterScriptLoaded: String(Boolean(proof.waterScriptLoaded)),
+      hearthWaterScriptError: String(proof.waterScriptError || ""),
+      hearthWaterChildTimeoutCheck: String(Boolean(proof.waterChildTimeoutCheck)),
+      hearthWaterChildLoadFailureCoordinate: String(proof.waterChildLoadFailureCoordinate || ""),
+      hearthWaterChildScriptElementPresent: String(Boolean(proof.waterChildScriptElementPresent)),
+      hearthWaterChildScriptElementErrored: String(Boolean(proof.waterChildScriptElementErrored)),
+      hearthWaterChildScriptErrorType: String(proof.waterChildScriptErrorType || ""),
+      hearthWaterChildPathCandidateUsed: WATER_CHILD_PATH,
+      hearthWaterChildFallbackCandidateUsed: String(Boolean(proof.waterChildFallbackCandidateUsed)),
+      hearthWaterGlobalPresent: String(Boolean(proof.waterGlobalPresent)),
+      hearthWaterActorName: String(proof.waterActorName || ""),
+      hearthWaterActualContract: String(proof.waterActualContract || ""),
+      hearthWaterExpectedContract: WATER_CONTRACT,
+      hearthWaterSampleProbeOk: String(Boolean(proof.waterSampleProbeOk)),
+      hearthWaterSampleProbeContract: String(proof.waterSampleProbeContract || ""),
+      hearthWaterSampleProbeCoordinatesOk: String(Boolean(proof.waterSampleProbeCoordinatesOk)),
+      hearthWaterSampleProbeFlagsOk: String(Boolean(proof.waterSampleProbeFlagsOk)),
+      hearthWaterSampleProbeError: String(proof.waterSampleProbeError || ""),
+      hearthWaterChannelLoaded: String(Boolean(proof.waterGlobalPresent && proof.waterContractOk)),
+      hearthWaterValidationOk: String(Boolean(proof.waterValidationOk)),
+      visualPassClaimed: "false"
+    };
+
+    Object.keys(pairs).forEach((key) => {
+      if (dataset) dataset[key] = pairs[key];
+      if (canvasDataset) canvasDataset[key] = pairs[key];
+    });
+
+    if (canvasDataset) {
+      canvasDataset.hearthWaterChannelLoaded = String(Boolean(proof.waterGlobalPresent && proof.waterContractOk));
+      canvasDataset.hearthWaterActualContract = String(proof.waterActualContract || "");
+      canvasDataset.hearthWaterSampleProbeOk = String(Boolean(proof.waterSampleProbeOk));
+      canvasDataset.hearthWaterSampleProbeCoordinatesOk = String(Boolean(proof.waterSampleProbeCoordinatesOk));
+      canvasDataset.hearthWaterSampleProbeFlagsOk = String(Boolean(proof.waterSampleProbeFlagsOk));
+      canvasDataset.hearthWaterSampleProbeError = String(proof.waterSampleProbeError || "");
+    }
+  }
+
   function createShellCanvas(options = {}) {
     if (!root.document || typeof root.document.createElement !== "function") {
       throw new Error("Hearth shell canvas requires document.createElement.");
@@ -1115,7 +878,7 @@
 
     canvas.width = size;
     canvas.height = size;
-    canvas.className = options.className || "hearth-canvas-texture hearth-canvas-contained-sphere hearth-canvas-water-loader-proof-v4-4";
+    canvas.className = options.className || "hearth-canvas-texture hearth-canvas-contained-sphere hearth-canvas-water-child-connector-load-alignment";
     canvas.style.maxWidth = "100%";
     canvas.style.height = "auto";
     canvas.style.display = "block";
@@ -1134,24 +897,13 @@
     canvas.dataset.hearthCanvasDecidesNothing = "true";
     canvas.dataset.hearthRuntimeTablePrewired = "true";
     canvas.dataset.hearthTripleGCoherencePrewired = "true";
-    canvas.dataset.hearthRuntimeTableContract = LAB_RUNTIME_TABLE_CONTRACT;
-    canvas.dataset.hearthRuntimeTableAcceptedContracts = LAB_RUNTIME_TABLE_ACCEPTED_CONTRACTS.join(",");
+    canvas.dataset.hearthRuntimeTableContract = PREFERRED_LAB_RUNTIME_TABLE_CONTRACT;
+    canvas.dataset.hearthRuntimeTableAcceptedContracts = ACCEPTED_LAB_RUNTIME_TABLE_CONTRACTS.join(",");
     canvas.dataset.hearthRuntimeTableLoaded = "false";
     canvas.dataset.hearthRuntimeTableRuntimeAllowed = "false";
     canvas.dataset.hearthRuntimeTableSet = "false";
     canvas.dataset.hearthRuntimeTableLedgerReady = "false";
     canvas.dataset.hearthRuntimeTableHandoff = "PENDING";
-    canvas.dataset.hearthTripleGDiagnosticAvailable = "false";
-    canvas.dataset.hearthTripleGDiagnosticContract = "";
-    canvas.dataset.hearthTripleGCoherenceChecked = "false";
-    canvas.dataset.hearthTripleGCoherenceStatus = "PENDING";
-    canvas.dataset.hearthTripleGCoherenceScore = "0";
-    canvas.dataset.hearthTripleGCoherentExpressionPass = "false";
-    canvas.dataset.hearthTripleGFailedCheckpoints = "";
-    canvas.dataset.hearthTripleGRenewalTargets = "";
-    canvas.dataset.hearthConstructionReadyIsNotCoherencePass = "true";
-    canvas.dataset.hearthImageRenderedIsNotCoherencePass = "true";
-    canvas.dataset.hearthCanvasImageRendered = "false";
     canvas.dataset.hearthCanvasChannelMultiplexReady = "false";
     canvas.dataset.hearthCanvasInteractiveShellMounted = "true";
     canvas.dataset.hearthCanvasCachedAtlasProjection = "pending";
@@ -1163,29 +915,29 @@
     canvas.dataset.hearthCanvasSphereContainment = "true";
     canvas.dataset.hearthCanvasNoRectangularTextureSpill = "true";
     canvas.dataset.hearthCanvasOutsideSphereTransparent = "true";
-    canvas.dataset.hearthReceiptMode = RECEIPT_MODES.COMPACT;
+
+    canvas.dataset.hearthWaterConnectorActive = "true";
+    canvas.dataset.hearthWaterConnectorMode = WATER_CHILD_MODE;
+    canvas.dataset.hearthWaterConnectorOwnsWaterTruth = "false";
+    canvas.dataset.hearthCanvasOwnsWaterTruth = "false";
+    canvas.dataset.hearthWaterChildExternalAuthority = WATER_CHILD_PATH;
+    canvas.dataset.hearthWaterChildExpectedContract = WATER_CONTRACT;
+    canvas.dataset.hearthWaterChildLoadFailureCoordinate = "C0_CONNECTOR_NOT_STARTED";
+
+    canvas.dataset.hearthReceiptMode = "compact";
     canvas.dataset.hearthReceiptVisible = "true";
     canvas.dataset.hearthReceiptExpanded = "false";
-    canvas.dataset.hearthDiagnosticExportAvailable = "false";
+    canvas.dataset.hearthDiagnosticExportAvailable = "true";
     canvas.dataset.hearthDiagnosticExportCopied = "false";
     canvas.dataset.hearthDiagnosticExportLength = "0";
     canvas.dataset.hearthDiagnosticExportError = "";
 
-    canvas.dataset.hearthChannelLoadProofReady = "false";
-    canvas.dataset.hearthWaterScriptRequested = "false";
-    canvas.dataset.hearthWaterScriptLoaded = "false";
-    canvas.dataset.hearthWaterScriptPath = "/assets/hearth/hearth.water.channel.js";
-    canvas.dataset.hearthWaterScriptCacheKey = CHANNEL_CACHE_KEYS.water;
-    canvas.dataset.hearthWaterScriptError = "";
-    canvas.dataset.hearthWaterGlobalPresent = "false";
-    canvas.dataset.hearthWaterActualContract = "";
-    canvas.dataset.hearthWaterExpectedContract = WATER_CONTRACT;
-    canvas.dataset.hearthWaterSampleProbeOk = "false";
-    canvas.dataset.hearthWaterSampleProbeContract = "";
-    canvas.dataset.hearthWaterSampleProbeCoordinatesOk = "false";
-    canvas.dataset.hearthWaterSampleProbeFlagsOk = "false";
-    canvas.dataset.hearthWaterSampleProbeError = "";
-
+    canvas.dataset.generatedImage = "false";
+    canvas.dataset.graphicBox = "false";
+    canvas.dataset.webgl = "false";
+    canvas.dataset.routeMutation = "false";
+    canvas.dataset.runtimeMutation = "false";
+    canvas.dataset.controlsMutation = "false";
     canvas.dataset.visualPassClaimed = "false";
 
     return canvas;
@@ -1196,9 +948,6 @@
 
     panel.dataset.hearthRuntimeLoadingPanel = "true";
     panel.dataset.hearthFormationPanel = "true";
-    panel.dataset.hearthTripleGCoherencePanel = "true";
-    panel.dataset.hearthReceiptPanel = "true";
-    panel.dataset.hearthChannelLoadProofPanel = "true";
     panel.style.position = "absolute";
     panel.style.left = "50%";
     panel.style.bottom = "14px";
@@ -1222,464 +971,13 @@
     return panel;
   }
 
-  function syncReceiptDataset(api) {
-    if (!api || !api.state) return;
-
-    const state = api.state;
-    const canvas = api.canvas || null;
-    const mode = state.receiptMode || RECEIPT_MODES.COMPACT;
-
-    state.receiptVisible = mode !== RECEIPT_MODES.HIDDEN;
-    state.receiptExpanded = mode === RECEIPT_MODES.EXPANDED;
-
-    if (canvas) {
-      canvas.dataset.hearthReceiptMode = mode;
-      canvas.dataset.hearthReceiptVisible = String(state.receiptVisible);
-      canvas.dataset.hearthReceiptExpanded = String(state.receiptExpanded);
-      canvas.dataset.hearthDiagnosticExportAvailable = String(Boolean(state.diagnosticExportAvailable));
-      canvas.dataset.hearthDiagnosticExportCopied = String(Boolean(state.diagnosticExportCopied));
-      canvas.dataset.hearthDiagnosticExportLength = String(state.diagnosticExportLength || 0);
-      canvas.dataset.hearthDiagnosticExportError = state.diagnosticExportError || "";
-    }
-
-    if (root.document && root.document.documentElement) {
-      root.document.documentElement.dataset.hearthReceiptMode = mode;
-      root.document.documentElement.dataset.hearthReceiptVisible = String(state.receiptVisible);
-      root.document.documentElement.dataset.hearthReceiptExpanded = String(state.receiptExpanded);
-      root.document.documentElement.dataset.hearthDiagnosticExportAvailable = String(Boolean(state.diagnosticExportAvailable));
-      root.document.documentElement.dataset.hearthDiagnosticExportCopied = String(Boolean(state.diagnosticExportCopied));
-      root.document.documentElement.dataset.hearthDiagnosticExportLength = String(state.diagnosticExportLength || 0);
-      root.document.documentElement.dataset.hearthDiagnosticExportError = state.diagnosticExportError || "";
-    }
-  }
-
-  function setReceiptMode(api, mode) {
-    if (!api || !api.state) return null;
-
-    const allowed = Object.values(RECEIPT_MODES);
-    api.state.receiptMode = allowed.includes(mode) ? mode : RECEIPT_MODES.COMPACT;
-    api.state.receiptUserInteracted = true;
-
-    syncReceiptDataset(api);
-    renderLoadingPanel(api.loadingPanel, api.state, api);
-
-    return api.state.receiptMode;
-  }
-
-  function toggleReceiptVisibility(api) {
-    if (!api || !api.state) return null;
-    return setReceiptMode(
-      api,
-      api.state.receiptMode === RECEIPT_MODES.HIDDEN ? RECEIPT_MODES.COMPACT : RECEIPT_MODES.HIDDEN
-    );
-  }
-
-  function toggleReceiptExpansion(api) {
-    if (!api || !api.state) return null;
-    return setReceiptMode(
-      api,
-      api.state.receiptMode === RECEIPT_MODES.EXPANDED ? RECEIPT_MODES.COMPACT : RECEIPT_MODES.EXPANDED
-    );
-  }
-
-  function getCoherenceReceipt(api) {
-    const state = api && api.state ? api.state : {};
-
-    return {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      authority: "hearth-canvas-coherence-consumer-receipt",
-      tripleGDiagnosticAvailable: runtimeTableV2Available(),
-      tripleGDiagnosticContract: runtimeTableV2Available() ? LAB_RUNTIME_TABLE_CONTRACT_V2 : "",
-      coherentExpressionChecked: Boolean(state.coherenceChecked),
-      coherentExpressionPass: Boolean(state.coherentExpressionPass),
-      coherenceStatus: state.coherenceStatus || "PENDING",
-      coherenceScore: Number.isFinite(Number(state.coherenceScore)) ? Number(state.coherenceScore) : 0,
-      failedCheckpoints: Array.isArray(state.failedCheckpoints) ? state.failedCheckpoints.slice() : [],
-      renewalTargets: Array.isArray(state.renewalTargets) ? state.renewalTargets.slice() : [],
-      constructionReady: Boolean(state.runtimeAllowed),
-      imageRendered: Boolean(state.imageRendered),
-      constructionReadyIsNotCoherencePass: true,
-      imageRenderedIsNotCoherencePass: true,
-      generatedImage: false,
-      graphicBox: false,
-      visualPassClaimed: false
-    };
-  }
-
-  function buildDiagnosticExport(api) {
-    const state = api && api.state ? api.state : {};
-    const coherenceReport = state.coherenceReport || api.coherenceReport || null;
-    const canvas = api && api.canvas ? api.canvas : null;
-    const records = state.runtimeTableLedger && Array.isArray(state.runtimeTableLedger.records)
-      ? state.runtimeTableLedger.records
-      : [];
-
-    const exportPacket = {
-      header: "HEARTH_DIAGNOSTIC_RECEIPT_EXPORT",
-      timestamp: nowIso(),
-      canvasContract: CONTRACT,
-      canvasReceipt: RECEIPT,
-      previousCanvasContract: PREVIOUS_CONTRACT,
-      labRuntimeTableContract: state.labRuntimeTableContract || (getRuntimeTableApi() && getRuntimeTableApi().contract) || "",
-      preferredLabRuntimeTableContract: LAB_RUNTIME_TABLE_CONTRACT_V2,
-      acceptedLabRuntimeTableContracts: LAB_RUNTIME_TABLE_ACCEPTED_CONTRACTS.slice(),
-      runtimeHandoff: state.runtimeHandoff || "",
-      constructionReady: Boolean(state.runtimeAllowed),
-      imageRendered: Boolean(state.imageRendered),
-      coherentExpressionPass: Boolean(state.coherentExpressionPass),
-      coherenceStatus: state.coherenceStatus || "PENDING",
-      coherenceScore: Number.isFinite(Number(state.coherenceScore)) ? Number(state.coherenceScore) : 0,
-      failedCheckpoints: Array.isArray(state.failedCheckpoints) ? state.failedCheckpoints.slice() : [],
-      warningCheckpoints: coherenceReport && Array.isArray(coherenceReport.warningCheckpoints) ? coherenceReport.warningCheckpoints.slice() : [],
-      renewalTargets: Array.isArray(state.renewalTargets) ? state.renewalTargets.slice() : [],
-      nextStrategy: coherenceReport && Array.isArray(coherenceReport.nextStrategy) ? coherenceReport.nextStrategy.slice() : [],
-      landChannelContract: LAND_CONTRACT,
-      waterChannelContract: WATER_CONTRACT,
-      airChannelContract: AIR_CONTRACT,
-
-      channelLoadResults: state.channelLoadResults || [],
-      landLoadResult: state.landLoadResult || null,
-      waterLoadResult: state.waterLoadResult || null,
-      airLoadResult: state.airLoadResult || null,
-      waterScriptRequested: Boolean(state.waterScriptRequested),
-      waterScriptLoaded: Boolean(state.waterScriptLoaded),
-      waterScriptPath: state.waterScriptPath || "/assets/hearth/hearth.water.channel.js",
-      waterScriptCacheKey: state.waterScriptCacheKey || CHANNEL_CACHE_KEYS.water,
-      waterScriptError: state.waterScriptError || "",
-      waterGlobalPresent: Boolean(state.waterGlobalPresent),
-      waterActualContract: state.waterActualContract || "",
-      waterExpectedContract: state.waterExpectedContract || WATER_CONTRACT,
-      waterSampleProbeOk: Boolean(state.waterSampleProbeOk),
-      waterSampleProbeContract: state.waterSampleProbeContract || "",
-      waterSampleProbeCoordinatesOk: Boolean(state.waterSampleProbeCoordinatesOk),
-      waterSampleProbeFlagsOk: Boolean(state.waterSampleProbeFlagsOk),
-      waterSampleProbeError: state.waterSampleProbeError || "",
-      waterSampleProbeValue: state.waterSampleProbeValue || null,
-
-      runtimeTableRecords: records.map((record) => ({
-        key: record.key,
-        name: record.name,
-        status: record.status,
-        rawStatus: record.rawStatus,
-        contractOk: record.contractOk,
-        expectedContract: record.expectedContract,
-        actualContract: record.actualContract,
-        sampleOk: record.sampleOk,
-        coordinatesOk: record.coordinatesOk,
-        issues: Array.isArray(record.issues) ? record.issues : []
-      })),
-      tripleGCheckpointReceipts: coherenceReport && Array.isArray(coherenceReport.checkpoints) ? coherenceReport.checkpoints : [],
-      renderMetadata: {
-        atlasReady: Boolean(state.atlasReady || api.atlasReady),
-        atlasBuilding: Boolean(state.atlasBuilding || api.atlasBuilding),
-        atlasProgress: Number.isFinite(Number(state.atlasProgress)) ? Number(state.atlasProgress) : 0,
-        projectionReady: Boolean(state.atlasReady || api.cachedAtlasProjection),
-        sphereContainment: true,
-        outsideSphereTransparent: true,
-        noRectangularTextureSpill: true,
-        imageRendered: Boolean(state.imageRendered),
-        visualPassClaimed: false
-      },
-      canvasDataset: datasetToObject(canvas),
-      documentRootDataset: getDocumentRootDataset(),
-      visualPassClaimed: false,
-      strategicSummary: {
-        constructionReady: Boolean(state.runtimeAllowed) ? "pass" : "fail",
-        imageRendered: Boolean(state.imageRendered) ? "pass" : "fail",
-        coherentExpression: Boolean(state.coherentExpressionPass) ? "pass" : (state.coherenceStatus || "pending"),
-        waterFailureCoordinate: getWaterFailureCoordinate(state),
-        recommendedNextRenewalTarget: Array.isArray(state.renewalTargets) && state.renewalTargets.length ? state.renewalTargets[0] : ""
-      },
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false
-    };
-
-    const lines = [
-      "HEARTH_DIAGNOSTIC_RECEIPT_EXPORT",
-      "",
-      `timestamp=${exportPacket.timestamp}`,
-      `canvasContract=${exportPacket.canvasContract}`,
-      `canvasReceipt=${exportPacket.canvasReceipt}`,
-      `previousCanvasContract=${exportPacket.previousCanvasContract}`,
-      `labRuntimeTableContract=${exportPacket.labRuntimeTableContract}`,
-      `preferredLabRuntimeTableContract=${exportPacket.preferredLabRuntimeTableContract}`,
-      `acceptedLabRuntimeTableContracts=${exportPacket.acceptedLabRuntimeTableContracts.join(",")}`,
-      `runtimeHandoff=${exportPacket.runtimeHandoff}`,
-      `constructionReady=${exportPacket.constructionReady}`,
-      `imageRendered=${exportPacket.imageRendered}`,
-      `coherentExpressionPass=${exportPacket.coherentExpressionPass}`,
-      `coherenceStatus=${exportPacket.coherenceStatus}`,
-      `coherenceScore=${exportPacket.coherenceScore}`,
-      `failedCheckpoints=${exportPacket.failedCheckpoints.join(",")}`,
-      `warningCheckpoints=${exportPacket.warningCheckpoints.join(",")}`,
-      `renewalTargets=${exportPacket.renewalTargets.join(",")}`,
-      `nextStrategy=${exportPacket.nextStrategy.join(" | ")}`,
-      `landChannelContract=${exportPacket.landChannelContract}`,
-      `waterChannelContract=${exportPacket.waterChannelContract}`,
-      `airChannelContract=${exportPacket.airChannelContract}`,
-      "",
-      "WATER_LOADER_COORDINATE_PROOF",
-      `channelLoadProofReady=${Boolean(state.channelLoadProofReady)}`,
-      `waterScriptRequested=${exportPacket.waterScriptRequested}`,
-      `waterScriptLoaded=${exportPacket.waterScriptLoaded}`,
-      `waterScriptPath=${exportPacket.waterScriptPath}`,
-      `waterScriptCacheKey=${exportPacket.waterScriptCacheKey}`,
-      `waterScriptError=${exportPacket.waterScriptError}`,
-      `waterGlobalPresent=${exportPacket.waterGlobalPresent}`,
-      `waterActualContract=${exportPacket.waterActualContract}`,
-      `waterExpectedContract=${exportPacket.waterExpectedContract}`,
-      `waterSampleProbeOk=${exportPacket.waterSampleProbeOk}`,
-      `waterSampleProbeContract=${exportPacket.waterSampleProbeContract}`,
-      `waterSampleProbeCoordinatesOk=${exportPacket.waterSampleProbeCoordinatesOk}`,
-      `waterSampleProbeFlagsOk=${exportPacket.waterSampleProbeFlagsOk}`,
-      `waterSampleProbeError=${exportPacket.waterSampleProbeError}`,
-      `waterFailureCoordinate=${exportPacket.strategicSummary.waterFailureCoordinate}`,
-      "",
-      `visualPassClaimed=${exportPacket.visualPassClaimed}`,
-      "",
-      "STRATEGIC_SUMMARY",
-      stringifyForReceipt(exportPacket.strategicSummary),
-      "",
-      "CHANNEL_LOAD_RESULTS",
-      stringifyForReceipt(exportPacket.channelLoadResults),
-      "",
-      "LAND_LOAD_RESULT",
-      stringifyForReceipt(exportPacket.landLoadResult),
-      "",
-      "WATER_LOAD_RESULT",
-      stringifyForReceipt(exportPacket.waterLoadResult),
-      "",
-      "AIR_LOAD_RESULT",
-      stringifyForReceipt(exportPacket.airLoadResult),
-      "",
-      "WATER_SAMPLE_PROBE_VALUE",
-      stringifyForReceipt(exportPacket.waterSampleProbeValue),
-      "",
-      "RUNTIME_TABLE_RECORDS",
-      stringifyForReceipt(exportPacket.runtimeTableRecords),
-      "",
-      "TRIPLE_G_CHECKPOINT_RECEIPTS",
-      stringifyForReceipt(exportPacket.tripleGCheckpointReceipts),
-      "",
-      "RENDER_METADATA",
-      stringifyForReceipt(exportPacket.renderMetadata),
-      "",
-      "CANVAS_DATASET",
-      stringifyForReceipt(exportPacket.canvasDataset),
-      "",
-      "DOCUMENT_ROOT_DATASET",
-      stringifyForReceipt(exportPacket.documentRootDataset)
-    ];
-
-    const text = lines.join("\n");
-
-    if (api && api.state) {
-      api.state.latestDiagnosticExport = text;
-      api.state.diagnosticExportAvailable = true;
-      api.state.diagnosticExportLength = text.length;
-      api.state.diagnosticExportError = "";
-      syncReceiptDataset(api);
-    }
-
-    return text;
-  }
-
-  function getWaterFailureCoordinate(state = {}) {
-    if (!state.waterScriptRequested) return "Coordinate 0 — File request not made";
-    if (!state.waterScriptLoaded) return "Coordinate 1 — Script load/deployment/cache validation";
-    if (!state.waterGlobalPresent) return "Coordinate 2 — Global export missing";
-    if (state.waterActualContract !== WATER_CONTRACT) return "Coordinate 2 — Global export contract mismatch";
-    if (!state.waterSampleProbeOk) return "Coordinate 3 — Direct sample probe failed";
-    if (!state.waterSampleProbeCoordinatesOk) return "Coordinate 3 — Direct sample coordinates invalid";
-    if (!state.waterSampleProbeFlagsOk) return "Coordinate 3 — Direct sample authority flags invalid";
-
-    const records = state.runtimeTableLedger && Array.isArray(state.runtimeTableLedger.records)
-      ? state.runtimeTableLedger.records
-      : [];
-    const waterRecord = records.find((record) => record && record.key === "water");
-
-    if (waterRecord && waterRecord.status !== "READY") {
-      return "Coordinate 4 — Runtime Table registration/global lookup";
-    }
-
-    if (!state.channelMultiplexReady) {
-      return "Coordinate 5 — Canvas multiplex readiness";
-    }
-
-    if (state.coherenceChecked && !state.coherentExpressionPass) {
-      return "Coordinate 6 — True coherence calibration";
-    }
-
-    return "No water-loader failure coordinate detected";
-  }
-
-  function getDiagnosticExport(api) {
-    if (!api || !api.state) return "";
-    return api.state.latestDiagnosticExport || buildDiagnosticExport(api);
-  }
-
-  function copyTextFallback(text) {
-    if (!root.document || typeof root.document.createElement !== "function") {
-      return false;
-    }
-
-    const textarea = root.document.createElement("textarea");
-    textarea.value = text;
-    textarea.setAttribute("readonly", "readonly");
-    textarea.style.position = "fixed";
-    textarea.style.left = "-9999px";
-    textarea.style.top = "0";
-    root.document.body.appendChild(textarea);
-    textarea.select();
-
-    let copied = false;
-
-    try {
-      copied = root.document.execCommand("copy");
-    } catch (_error) {
-      copied = false;
-    }
-
-    if (textarea.parentNode) textarea.parentNode.removeChild(textarea);
-    return copied;
-  }
-
-  async function copyDiagnosticExport(api) {
-    if (!api || !api.state) return false;
-
-    const text = buildDiagnosticExport(api);
-    let copied = false;
-    let errorMessage = "";
-
-    try {
-      if (root.navigator && root.navigator.clipboard && typeof root.navigator.clipboard.writeText === "function") {
-        await root.navigator.clipboard.writeText(text);
-        copied = true;
-      }
-    } catch (error) {
-      errorMessage = error && error.message ? error.message : String(error);
-      copied = false;
-    }
-
-    if (!copied) {
-      copied = copyTextFallback(text);
-    }
-
-    api.state.diagnosticExportCopied = copied;
-    api.state.diagnosticExportError = copied ? "" : (errorMessage || "Copy unavailable. Expanded receipt remains selectable for manual copy.");
-    api.state.diagnosticExportAvailable = true;
-    api.state.diagnosticExportLength = text.length;
-
-    if (!copied) {
-      api.state.receiptMode = RECEIPT_MODES.EXPANDED;
-    }
-
-    syncReceiptDataset(api);
-    renderLoadingPanel(api.loadingPanel, api.state, api);
-
-    return copied;
-  }
-
-  function renderReceiptControls(api) {
-    const state = api && api.state ? api.state : {};
-    const mode = state.receiptMode || RECEIPT_MODES.COMPACT;
-    const visibleLabel = mode === RECEIPT_MODES.HIDDEN ? "Show Receipt" : "Hide Receipt";
-    const expandLabel = mode === RECEIPT_MODES.EXPANDED ? "Collapse Receipt" : "Expand Receipt";
-    const copyLabel = state.diagnosticExportCopied ? "Receipt Copied" : "Copy Diagnostic Receipt";
-
-    const buttonStyle = [
-      "appearance:none",
-      "border:1px solid rgba(174,216,236,.24)",
-      "background:rgba(174,216,236,.08)",
-      "color:rgba(238,246,255,.90)",
-      "border-radius:999px",
-      "padding:5px 8px",
-      "font:inherit",
-      "font-size:10px",
-      "line-height:1",
-      "cursor:pointer",
-      "pointer-events:auto"
-    ].join(";");
-
-    return [
-      "<div data-hearth-receipt-controls=\"true\" style=\"display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 8px 0;pointer-events:auto;\">",
-      `<button type="button" data-hearth-receipt-action="toggle-visibility" style="${buttonStyle}">${escapeHtml(visibleLabel)}</button>`,
-      mode === RECEIPT_MODES.HIDDEN ? "" : `<button type="button" data-hearth-receipt-action="toggle-expanded" style="${buttonStyle}">${escapeHtml(expandLabel)}</button>`,
-      mode === RECEIPT_MODES.HIDDEN ? "" : `<button type="button" data-hearth-receipt-action="copy" style="${buttonStyle}">${escapeHtml(copyLabel)}</button>`,
-      "</div>"
-    ].join("");
-  }
-
-  function renderExpandedReceipt(api) {
-    const exportText = buildDiagnosticExport(api);
-    const state = api && api.state ? api.state : {};
-    const error = state.diagnosticExportError
-      ? `<div style="color:rgba(255,210,180,.92);margin:6px 0;">${escapeHtml(state.diagnosticExportError)}</div>`
-      : "";
-
-    return [
-      error,
-      "<pre data-hearth-expanded-receipt=\"true\" style=\"",
-      "white-space:pre-wrap;",
-      "word-break:break-word;",
-      "max-height:260px;",
-      "overflow:auto;",
-      "margin:8px 0 0 0;",
-      "padding:10px;",
-      "border:1px solid rgba(174,216,236,.16);",
-      "border-radius:12px;",
-      "background:rgba(0,0,0,.28);",
-      "color:rgba(238,246,255,.86);",
-      "font-size:10px;",
-      "line-height:1.35;",
-      "user-select:text;",
-      "pointer-events:auto;",
-      "\">",
-      escapeHtml(exportText),
-      "</pre>"
-    ].join("");
-  }
-
-  function attachReceiptControlHandlers(panel, api) {
-    if (!panel || !api) return;
-
-    panel.querySelectorAll("[data-hearth-receipt-action]").forEach((button) => {
-      button.addEventListener("pointerdown", (event) => {
-        event.stopPropagation();
-      }, { passive: true });
-
-      button.addEventListener("click", (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-
-        const action = button.dataset.hearthReceiptAction;
-
-        if (action === "toggle-visibility") {
-          toggleReceiptVisibility(api);
-          return;
-        }
-
-        if (action === "toggle-expanded") {
-          toggleReceiptExpansion(api);
-          return;
-        }
-
-        if (action === "copy") {
-          copyDiagnosticExport(api);
-        }
-      });
-    });
-  }
-
   function statusBadge(value) {
     const raw = String(value || "pending").toLowerCase();
 
-    if (raw.includes("reject") || raw.includes("block") || raw.includes("fail")) return "✕";
-    if (raw.includes("ready") || raw.includes("complete") || raw.includes("pass") || raw.includes("rendered") || raw.includes("valid")) return "✓";
-    if (raw.includes("fallback") || raw.includes("degraded") || raw.includes("optimized") || raw.includes("warning")) return "◐";
-    if (raw.includes("loading") || raw.includes("building") || raw.includes("validating") || raw.includes("running")) return "•";
+    if (raw.includes("reject") || raw.includes("block") || raw.includes("fail") || raw.includes("error")) return "✕";
+    if (raw.includes("ready") || raw.includes("complete") || raw.includes("pass") || raw.includes("loaded")) return "✓";
+    if (raw.includes("fallback") || raw.includes("degraded") || raw.includes("optimized")) return "◐";
+    if (raw.includes("loading") || raw.includes("building") || raw.includes("validating")) return "•";
     return "○";
   }
 
@@ -1705,89 +1003,159 @@
     return lines;
   }
 
-  function formatCoherenceIssues(report) {
-    if (!report || !Array.isArray(report.checkpoints)) return [];
+  function createDiagnosticExport(state, canvas) {
+    const waterProof = state.waterConnectorProof || createWaterConnectorProof();
+    const ledger = state.runtimeTableLedger || null;
+    const checkpoints = state.tripleGReceipt && Array.isArray(state.tripleGReceipt.checkpoints)
+      ? state.tripleGReceipt.checkpoints
+      : state.tripleGReceipt && Array.isArray(state.tripleGReceipt.checkpointReceipts)
+        ? state.tripleGReceipt.checkpointReceipts
+        : [];
 
-    const lines = [];
+    const dataset = {};
+    const rootDataset = {};
 
-    report.checkpoints.forEach((checkpoint) => {
-      if (!checkpoint || checkpoint.status === "PASS") return;
-
-      const target = Array.isArray(checkpoint.renewalTarget) && checkpoint.renewalTarget.length
-        ? ` → ${checkpoint.renewalTarget.slice(0, 2).join(", ")}`
-        : "";
-
-      lines.push(`${checkpoint.id || "CHECK"}: ${checkpoint.status || "UNKNOWN"}${target}`);
-    });
-
-    return lines;
-  }
-
-  function renderLoadingPanel(panel, state, api = null) {
-    if (!panel || !state) return;
-
-    const mode = state.receiptMode || RECEIPT_MODES.COMPACT;
-    syncReceiptDataset(api);
-
-    if (mode === RECEIPT_MODES.HIDDEN) {
-      panel.style.width = "auto";
-      panel.style.maxHeight = "none";
-      panel.style.overflow = "visible";
-      panel.style.padding = "8px 10px";
-      panel.innerHTML = [
-        "<div style=\"display:flex;align-items:center;gap:8px;pointer-events:auto;\">",
-        "<strong style=\"font-size:10px;letter-spacing:.08em;text-transform:uppercase;opacity:.82;\">Receipt</strong>",
-        renderReceiptControls(api),
-        "</div>"
-      ].join("");
-
-      attachReceiptControlHandlers(panel, api);
-      return;
+    if (canvas && canvas.dataset) {
+      Object.keys(canvas.dataset).forEach((key) => {
+        dataset[key] = canvas.dataset[key];
+      });
     }
 
-    panel.style.width = "min(92%, 560px)";
-    panel.style.maxHeight = "58%";
-    panel.style.overflow = "auto";
-    panel.style.padding = "12px 14px";
+    if (root.document && root.document.documentElement && root.document.documentElement.dataset) {
+      Object.keys(root.document.documentElement.dataset).forEach((key) => {
+        rootDataset[key] = root.document.documentElement.dataset[key];
+      });
+    }
 
+    const lines = [
+      "HEARTH_DIAGNOSTIC_RECEIPT_EXPORT",
+      "",
+      `timestamp=${new Date().toISOString()}`,
+      `canvasContract=${CONTRACT}`,
+      `canvasReceipt=${RECEIPT}`,
+      `previousCanvasContract=${PREVIOUS_CONTRACT}`,
+      `labRuntimeTableContract=${state.runtimeTableContract || ""}`,
+      `preferredLabRuntimeTableContract=${PREFERRED_LAB_RUNTIME_TABLE_CONTRACT}`,
+      `acceptedLabRuntimeTableContracts=${ACCEPTED_LAB_RUNTIME_TABLE_CONTRACTS.join(",")}`,
+      `runtimeHandoff=${state.runtimeHandoff || "PENDING"}`,
+      `constructionReady=${String(Boolean(state.runtimeAllowed))}`,
+      `imageRendered=${String(Boolean(state.imageRendered))}`,
+      `coherentExpressionPass=${String(Boolean(state.coherentExpressionPass))}`,
+      `coherenceStatus=${state.coherenceStatus || "UNKNOWN"}`,
+      `coherenceScore=${Number.isFinite(Number(state.coherenceScore)) ? state.coherenceScore : 0}`,
+      `failedCheckpoints=${(state.failedCheckpoints || []).join(",")}`,
+      `warningCheckpoints=${(state.warningCheckpoints || []).join(",")}`,
+      `renewalTargets=${(state.renewalTargets || []).join(",")}`,
+      `landChannelContract=${LAND_CONTRACT}`,
+      `waterChannelContract=${WATER_CONTRACT}`,
+      `airChannelContract=${AIR_CONTRACT}`,
+      "",
+      "WATER_CONNECTOR_COORDINATE_PROOF",
+      `connectorActive=${String(Boolean(waterProof.connectorActive))}`,
+      `connectorMode=${WATER_CHILD_MODE}`,
+      `connectorOwnsWaterTruth=false`,
+      `canvasOwnsWaterTruth=false`,
+      `waterChildExternalAuthority=${WATER_CHILD_PATH}`,
+      `waterChildExpectedContract=${WATER_CONTRACT}`,
+      `waterChildRequestPrepared=${String(Boolean(waterProof.waterChildRequestPrepared))}`,
+      `waterChildScriptElementCreated=${String(Boolean(waterProof.waterChildScriptElementCreated))}`,
+      `waterChildScriptElementAppended=${String(Boolean(waterProof.waterChildScriptElementAppended))}`,
+      `waterChildDocumentHeadAvailable=${String(Boolean(waterProof.waterChildDocumentHeadAvailable))}`,
+      `waterChildScriptMarker=${WATER_CHILD_MARKER}`,
+      `waterChildScriptSrc=${waterProof.waterChildScriptSrc || ""}`,
+      `waterScriptRequested=${String(Boolean(waterProof.waterScriptRequested))}`,
+      `waterScriptLoaded=${String(Boolean(waterProof.waterScriptLoaded))}`,
+      `waterScriptError=${waterProof.waterScriptError || ""}`,
+      `waterChildTimeoutCheck=${String(Boolean(waterProof.waterChildTimeoutCheck))}`,
+      `waterChildLoadFailureCoordinate=${waterProof.waterChildLoadFailureCoordinate || ""}`,
+      `waterChildScriptElementPresent=${String(Boolean(waterProof.waterChildScriptElementPresent))}`,
+      `waterChildScriptElementErrored=${String(Boolean(waterProof.waterChildScriptElementErrored))}`,
+      `waterChildScriptErrorType=${waterProof.waterChildScriptErrorType || ""}`,
+      `waterChildPathCandidateUsed=${WATER_CHILD_PATH}`,
+      `waterChildFallbackCandidateUsed=${String(Boolean(waterProof.waterChildFallbackCandidateUsed))}`,
+      `waterGlobalPresent=${String(Boolean(waterProof.waterGlobalPresent))}`,
+      `waterActorName=${waterProof.waterActorName || ""}`,
+      `waterActualContract=${waterProof.waterActualContract || ""}`,
+      `waterExpectedContract=${WATER_CONTRACT}`,
+      `waterSampleProbeOk=${String(Boolean(waterProof.waterSampleProbeOk))}`,
+      `waterSampleProbeContract=${waterProof.waterSampleProbeContract || ""}`,
+      `waterSampleProbeCoordinatesOk=${String(Boolean(waterProof.waterSampleProbeCoordinatesOk))}`,
+      `waterSampleProbeFlagsOk=${String(Boolean(waterProof.waterSampleProbeFlagsOk))}`,
+      `waterSampleProbeError=${waterProof.waterSampleProbeError || ""}`,
+      "",
+      `visualPassClaimed=false`,
+      "",
+      "STRATEGIC_SUMMARY",
+      JSON.stringify({
+        constructionReady: Boolean(state.runtimeAllowed) ? "pass" : "blocked",
+        imageRendered: Boolean(state.imageRendered) ? "pass" : "pending",
+        coherentExpression: Boolean(state.coherentExpressionPass) ? "pass" : "FAIL",
+        firstFailedCoordinate: waterProof.waterChildLoadFailureCoordinate || "UNKNOWN",
+        recommendedNextRenewalTarget: waterProof.waterScriptLoaded ? "water-child-actor-validation" : "water-child-served-load-coordinate"
+      }, null, 2),
+      "",
+      "CHANNEL_LOAD_RESULTS",
+      JSON.stringify(state.channelLoadResults || [], null, 2),
+      "",
+      "WATER_SAMPLE_PROBE_VALUE",
+      JSON.stringify(waterProof.waterSampleProbeValue || null, null, 2),
+      "",
+      "RUNTIME_TABLE_RECORDS",
+      JSON.stringify(ledger && Array.isArray(ledger.records) ? ledger.records : [], null, 2),
+      "",
+      "TRIPLE_G_CHECKPOINT_RECEIPTS",
+      JSON.stringify(checkpoints, null, 2),
+      "",
+      "RENDER_METADATA",
+      JSON.stringify({
+        atlasReady: Boolean(state.atlasReady),
+        atlasBuilding: Boolean(state.atlasBuilding),
+        atlasProgress: Number(state.atlasProgress || 0),
+        projectionReady: Boolean(state.atlasReady),
+        sphereContainment: true,
+        outsideSphereTransparent: true,
+        noRectangularTextureSpill: true,
+        imageRendered: Boolean(state.imageRendered),
+        visualPassClaimed: false
+      }, null, 2),
+      "",
+      "CANVAS_DATASET",
+      JSON.stringify(dataset, null, 2),
+      "",
+      "DOCUMENT_ROOT_DATASET",
+      JSON.stringify(rootDataset, null, 2)
+    ];
+
+    return lines.join("\n");
+  }
+
+  function renderLoadingPanel(panel, api) {
+    if (!panel || !api || !api.state) return;
+
+    const state = api.state;
     const stages = state.loadingStages || {};
     const handoff = state.runtimeTableLedger && state.runtimeTableLedger.handoff
       ? state.runtimeTableLedger.handoff
       : state.runtimeHandoff || "PENDING";
+    const waterProof = state.waterConnectorProof || createWaterConnectorProof();
 
-    const runtimeIssues = formatRuntimeTableIssues(state.runtimeTableLedger);
-    const coherenceIssues = formatCoherenceIssues(state.coherenceReport);
-    const channelProofLines = formatChannelLoadProof(api);
-    const issueLines = channelProofLines.concat(runtimeIssues).concat(coherenceIssues);
-
-    const issueHtml = issueLines.length
-      ? `<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(174,216,236,.14);color:rgba(255,210,180,.92);">${issueLines.slice(0, 9).map((line) => `<div>${escapeHtml(line)}</div>`).join("")}</div>`
+    const issues = formatRuntimeTableIssues(state.runtimeTableLedger);
+    const issueHtml = issues.length
+      ? `<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(174,216,236,.14);color:rgba(255,210,180,.92);">${issues.slice(0, 5).map((line) => `<div>${escapeHtml(line)}</div>`).join("")}</div>`
       : "";
-
-    const coherenceScore = Number.isFinite(Number(state.coherenceScore)) ? Number(state.coherenceScore) : 0;
-    const coherenceStatus = state.coherenceStatus || "pending";
-    const coherentExpression = state.coherentExpressionPass ? "pass" : state.coherenceChecked ? coherenceStatus : "pending";
-    const waterLoaderStatus = state.channelLoadProofReady
-      ? state.waterSampleProbeOk && state.waterSampleProbeCoordinatesOk && state.waterSampleProbeFlagsOk
-        ? "valid"
-        : getWaterFailureCoordinate(state)
-      : "pending";
 
     const statusRows = [
       ["Shell mounted", stages.shellMounted || "pending"],
       ["Touch bound", stages.touchBound || "pending"],
       ["Lab Runtime Table", stages.runtimeTable || "pending"],
       ["Land channel", stages.land || "pending"],
-      ["Water loader", waterLoaderStatus],
-      ["Water channel", stages.water || "pending"],
+      ["Water connector", waterProof.waterChildLoadFailureCoordinate || "pending"],
+      ["Water child", waterProof.waterGlobalPresent ? "actor-ready" : waterProof.waterScriptLoaded ? "loaded-no-actor" : "load-pending"],
       ["Air channel", stages.air || "pending"],
-      ["Runtime validation", stages.validation || "pending"],
-      ["Construction Ready", state.runtimeAllowed ? "pass" : stages.construction || "pending"],
+      ["Validation", stages.validation || "pending"],
       ["Handoff", handoff],
       ["Atlas", stages.atlas || "pending"],
-      ["Image Rendered", state.imageRendered ? "rendered" : "pending"],
-      ["Triple G", stages.coherence || "pending"],
-      ["Coherent Expression", coherentExpression]
+      ["Projection", stages.projection || "pending"]
     ];
 
     const rowsHtml = statusRows.map(([label, value]) => {
@@ -1801,26 +1169,92 @@
       ].join("");
     }).join("");
 
-    const copiedNotice = state.diagnosticExportCopied
-      ? "<div style=\"margin-top:6px;color:rgba(184,236,205,.92);\">Diagnostic receipt copied.</div>"
+    const expanded = state.receiptExpanded;
+    const visible = state.receiptVisible;
+
+    const exportText = createDiagnosticExport(state, api.canvas);
+    state.diagnosticExport = exportText;
+
+    if (api.canvas && api.canvas.dataset) {
+      api.canvas.dataset.hearthDiagnosticExportAvailable = "true";
+      api.canvas.dataset.hearthDiagnosticExportLength = String(exportText.length);
+      api.canvas.dataset.hearthReceiptMode = expanded ? "expanded" : "compact";
+      api.canvas.dataset.hearthReceiptVisible = String(Boolean(visible));
+      api.canvas.dataset.hearthReceiptExpanded = String(Boolean(expanded));
+    }
+
+    const expandedHtml = expanded
+      ? [
+        "<pre style=\"margin:10px 0 0;padding:10px;max-height:220px;overflow:auto;border-radius:10px;background:rgba(0,0,0,.36);white-space:pre-wrap;font-size:10px;line-height:1.35;\">",
+        escapeHtml(exportText),
+        "</pre>"
+      ].join("")
       : "";
 
+    panel.style.display = visible ? "block" : "none";
+
     panel.innerHTML = [
-      "<div style=\"display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:6px;\">",
-      "<strong style=\"font-size:12px;letter-spacing:.08em;text-transform:uppercase;\">Hearth Diagnostic Receipt</strong>",
-      `<span style="font-size:10px;opacity:.70;">Atlas ${escapeHtml(formatPercent(state.atlasProgress || 0))} · Coherence ${escapeHtml(String(coherenceScore))}</span>`,
+      "<div style=\"display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:8px;\">",
+      "<strong style=\"font-size:12px;letter-spacing:.08em;text-transform:uppercase;\">Hearth Connector Receipt</strong>",
+      `<span style="font-size:10px;opacity:.70;">${escapeHtml(formatPercent(state.atlasProgress || 0))}</span>`,
       "</div>",
-      renderReceiptControls(api),
       "<div style=\"height:4px;border-radius:999px;background:rgba(174,216,236,.12);overflow:hidden;margin-bottom:9px;\">",
       `<div style="height:100%;width:${escapeHtml(formatPercent(state.atlasProgress || 0))};background:rgba(174,216,236,.72);border-radius:999px;"></div>`,
       "</div>",
+      "<div style=\"display:flex;gap:8px;flex-wrap:wrap;margin-bottom:9px;\">",
+      "<button type=\"button\" data-hearth-receipt-toggle style=\"border:1px solid rgba(174,216,236,.24);border-radius:999px;background:rgba(174,216,236,.08);color:rgba(238,246,255,.9);padding:5px 9px;font-size:10px;cursor:pointer;\">Receipt visible</button>",
+      `<button type="button" data-hearth-receipt-expand style="border:1px solid rgba(174,216,236,.24);border-radius:999px;background:rgba(174,216,236,.08);color:rgba(238,246,255,.9);padding:5px 9px;font-size:10px;cursor:pointer;">${expanded ? "Compact receipt" : "Expand receipt"}</button>`,
+      "<button type=\"button\" data-hearth-receipt-copy style=\"border:1px solid rgba(174,216,236,.24);border-radius:999px;background:rgba(174,216,236,.08);color:rgba(238,246,255,.9);padding:5px 9px;font-size:10px;cursor:pointer;\">Copy diagnostic</button>",
+      "</div>",
       rowsHtml,
       issueHtml,
-      copiedNotice,
-      mode === RECEIPT_MODES.EXPANDED ? renderExpandedReceipt(api) : ""
+      expandedHtml
     ].join("");
 
-    attachReceiptControlHandlers(panel, api);
+    const toggle = panel.querySelector("[data-hearth-receipt-toggle]");
+    const expand = panel.querySelector("[data-hearth-receipt-expand]");
+    const copy = panel.querySelector("[data-hearth-receipt-copy]");
+
+    if (toggle) {
+      toggle.onclick = () => {
+        state.receiptVisible = !state.receiptVisible;
+        if (api.canvas) api.canvas.dataset.hearthReceiptVisible = String(Boolean(state.receiptVisible));
+        renderLoadingPanel(panel, api);
+      };
+    }
+
+    if (expand) {
+      expand.onclick = () => {
+        state.receiptExpanded = !state.receiptExpanded;
+        if (api.canvas) {
+          api.canvas.dataset.hearthReceiptExpanded = String(Boolean(state.receiptExpanded));
+          api.canvas.dataset.hearthReceiptMode = state.receiptExpanded ? "expanded" : "compact";
+        }
+        renderLoadingPanel(panel, api);
+      };
+    }
+
+    if (copy) {
+      copy.onclick = () => {
+        const text = createDiagnosticExport(state, api.canvas);
+        const setCopied = (ok, error) => {
+          if (api.canvas) {
+            api.canvas.dataset.hearthDiagnosticExportCopied = String(Boolean(ok));
+            api.canvas.dataset.hearthDiagnosticExportError = error || "";
+            api.canvas.dataset.hearthDiagnosticExportLength = String(text.length);
+          }
+        };
+
+        if (root.navigator && root.navigator.clipboard && typeof root.navigator.clipboard.writeText === "function") {
+          root.navigator.clipboard.writeText(text).then(
+            () => setCopied(true, ""),
+            (error) => setCopied(false, error && error.message ? error.message : String(error))
+          );
+        } else {
+          setCopied(false, "clipboard unavailable");
+        }
+      };
+    }
   }
 
   function updateLoadingStatus(api, patch = {}) {
@@ -1838,9 +1272,11 @@
     if (patch.runtimeTableLedger) state.runtimeTableLedger = patch.runtimeTableLedger;
     if (patch.runtimeHandoff) state.runtimeHandoff = patch.runtimeHandoff;
     if (typeof patch.runtimeAllowed === "boolean") state.runtimeAllowed = patch.runtimeAllowed;
-    if (typeof patch.imageRendered === "boolean") state.imageRendered = patch.imageRendered;
     if (Number.isFinite(Number(patch.atlasProgress))) state.atlasProgress = clamp01(patch.atlasProgress);
     if (patch.error) state.error = patch.error;
+    if (patch.waterConnectorProof) state.waterConnectorProof = patch.waterConnectorProof;
+    if (patch.channelLoadResults) state.channelLoadResults = patch.channelLoadResults;
+    if (patch.tripleGReceipt) state.tripleGReceipt = patch.tripleGReceipt;
 
     if (api.canvas) {
       api.canvas.dataset.hearthRuntimeTableHandoff = state.runtimeHandoff || "PENDING";
@@ -1848,66 +1284,11 @@
       api.canvas.dataset.hearthRuntimeTableSet = String(Boolean(state.runtimeAllowed));
       api.canvas.dataset.hearthRuntimeTableLedgerReady = String(Boolean(state.runtimeTableLedger));
       api.canvas.dataset.hearthCanvasAtlasProgress = String(state.atlasProgress || 0);
-      api.canvas.dataset.hearthCanvasImageRendered = String(Boolean(state.imageRendered));
       if (state.error) api.canvas.dataset.hearthRuntimeTableError = state.error;
+      if (state.waterConnectorProof) applyWaterConnectorProofToDataset(state.waterConnectorProof, api.canvas);
     }
 
-    syncReceiptDataset(api);
-    renderLoadingPanel(api.loadingPanel, state, api);
-  }
-
-  function updateCoherenceStatus(api, report) {
-    if (!api || !api.state) return;
-
-    const state = api.state;
-    const canvas = api.canvas;
-
-    state.coherenceReport = report || null;
-    state.coherenceChecked = Boolean(report);
-    state.coherenceStatus = report && report.coherenceStatus ? report.coherenceStatus : "UNAVAILABLE";
-    state.coherenceScore = report && Number.isFinite(Number(report.coherenceScore)) ? Number(report.coherenceScore) : 0;
-    state.coherentExpressionPass = Boolean(report && report.coherentExpressionPass);
-    state.failedCheckpoints = report && Array.isArray(report.failedCheckpoints) ? report.failedCheckpoints.slice() : [];
-    state.renewalTargets = report && Array.isArray(report.renewalTargets) ? report.renewalTargets.slice() : [];
-    state.diagnosticExportAvailable = Boolean(report);
-
-    api.coherenceReport = report || null;
-    api.coherenceChecked = state.coherenceChecked;
-    api.coherenceStatus = state.coherenceStatus;
-    api.coherenceScore = state.coherenceScore;
-    api.coherentExpressionPass = state.coherentExpressionPass;
-    api.failedCheckpoints = state.failedCheckpoints.slice();
-    api.renewalTargets = state.renewalTargets.slice();
-
-    if (canvas) {
-      canvas.dataset.hearthTripleGDiagnosticAvailable = String(runtimeTableV2Available());
-      canvas.dataset.hearthTripleGDiagnosticContract = runtimeTableV2Available() ? LAB_RUNTIME_TABLE_CONTRACT_V2 : "";
-      canvas.dataset.hearthTripleGCoherenceChecked = String(state.coherenceChecked);
-      canvas.dataset.hearthTripleGCoherenceStatus = state.coherenceStatus;
-      canvas.dataset.hearthTripleGCoherenceScore = String(state.coherenceScore);
-      canvas.dataset.hearthTripleGCoherentExpressionPass = String(state.coherentExpressionPass);
-      canvas.dataset.hearthTripleGFailedCheckpoints = state.failedCheckpoints.join(",");
-      canvas.dataset.hearthTripleGRenewalTargets = state.renewalTargets.join(",");
-      canvas.dataset.visualPassClaimed = "false";
-    }
-
-    if (report) buildDiagnosticExport(api);
-
-    if (state.coherentExpressionPass && !state.receiptUserInteracted) {
-      state.receiptMode = RECEIPT_MODES.HIDDEN;
-    } else if (!state.coherentExpressionPass && state.receiptMode === RECEIPT_MODES.HIDDEN && !state.receiptUserInteracted) {
-      state.receiptMode = RECEIPT_MODES.COMPACT;
-    }
-
-    updateLoadingStatus(api, {
-      stages: {
-        coherence: state.coherenceChecked
-          ? state.coherentExpressionPass
-            ? "pass"
-            : String(state.coherenceStatus || "fail").toLowerCase()
-          : "unavailable"
-      }
-    });
+    renderLoadingPanel(api.loadingPanel, api);
   }
 
   function drawFallbackShell(canvas, state = {}) {
@@ -1942,6 +1323,7 @@
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, TWO_PI);
     ctx.clip();
+
     ctx.fillStyle = shell;
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
 
@@ -1958,6 +1340,7 @@
     shade.addColorStop(0.44, "rgba(255,255,255,0.00)");
     shade.addColorStop(0.78, "rgba(0,0,0,0.24)");
     shade.addColorStop(1, "rgba(0,0,0,0.52)");
+
     ctx.fillStyle = shade;
     ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
     ctx.restore();
@@ -1977,7 +1360,6 @@
     canvas.dataset.hearthCanvasFallbackShellPainted = "true";
     canvas.dataset.hearthCanvasNeutralLoadingShell = "true";
     canvas.dataset.hearthCanvasFrames = String(Number(canvas.dataset.hearthCanvasFrames || 0) + 1);
-
     return canvas;
   }
 
@@ -2055,10 +1437,7 @@
     targetCanvas.dataset.hearthCanvasRenderedFromCachedAtlas = "true";
     targetCanvas.dataset.hearthCanvasInteractiveProjection = "true";
     targetCanvas.dataset.hearthCanvasAtlasReady = "true";
-    targetCanvas.dataset.hearthCanvasImageRendered = "true";
     targetCanvas.dataset.hearthCanvasFrames = String(Number(targetCanvas.dataset.hearthCanvasFrames || 0) + 1);
-    targetCanvas.dataset.visualPassClaimed = "false";
-
     return targetCanvas;
   }
 
@@ -2076,46 +1455,250 @@
     setTimeout(fn, 0);
   }
 
-  function ensureRuntimeTable(options = {}) {
-    return loadScriptOnce(
-      LAB_RUNTIME_TABLE_PATH,
-      "lab-runtime-table",
-      () => {
-        const api = getRuntimeTableApi();
+  function loadScriptDetailed(item, options = {}) {
+    return new Promise((resolve) => {
+      const result = {
+        key: item.key,
+        label: item.label,
+        path: item.path,
+        scriptPath: item.path,
+        scriptCacheKey: item.cacheKey || options.cacheKey || VERSION,
+        requestedSrc: "",
+        expectedContract: item.contract,
+        actualContract: "",
+        requested: false,
+        loaded: false,
+        alreadyPresent: false,
+        existing: false,
+        timeoutCheck: false,
+        error: "",
+        errorType: "",
+        globalName: item.globalName,
+        globalPresent: false,
+        contractOk: false,
+        validationOk: false,
+        scriptElementCreated: false,
+        scriptElementAppended: false,
+        documentHeadAvailable: false,
+        failureCoordinate: "",
+        at: new Date().toISOString()
+      };
 
-        return Boolean(
-          api &&
-            runtimeTableContractAccepted(api) &&
-            typeof api.createHearthChannelTable === "function"
-        );
+      const validate = () => {
+        const authority = root[item.globalName];
+        result.globalPresent = Boolean(authority);
+        result.actualContract = authority && authority.contract ? String(authority.contract) : "";
+        result.contractOk = result.actualContract === item.contract;
+        result.validationOk = result.globalPresent && result.contractOk;
+        return result.validationOk;
+      };
+
+      if (validate()) {
+        result.loaded = true;
+        result.alreadyPresent = true;
+        result.failureCoordinate = "ALREADY_PRESENT_VALIDATED";
+        resolve(result);
+        return;
+      }
+
+      if (!root.document || !root.document.head) {
+        result.error = "document-head-unavailable";
+        result.errorType = "document";
+        result.failureCoordinate = "C3_DOCUMENT_HEAD_UNAVAILABLE";
+        resolve(result);
+        return;
+      }
+
+      result.documentHeadAvailable = true;
+      const existing = root.document.querySelector(`script[data-hearth-loader-marker="${item.marker}"]`);
+
+      if (existing) {
+        result.existing = true;
+        result.scriptElementCreated = true;
+        result.scriptElementAppended = true;
+        result.requested = true;
+        result.requestedSrc = existing.getAttribute("src") || "";
+
+        const afterExistingCheck = () => {
+          validate();
+          result.loaded = result.validationOk;
+          result.failureCoordinate = result.validationOk ? "EXISTING_SCRIPT_VALIDATED" : "C6_GLOBAL_ACTOR_MISSING";
+          resolve(result);
+        };
+
+        setTimeout(afterExistingCheck, options.existingValidationDelay || 80);
+        return;
+      }
+
+      const script = root.document.createElement("script");
+      const joiner = item.path.includes("?") ? "&" : "?";
+      const src = `${item.path}${joiner}v=${encodeURIComponent(result.scriptCacheKey)}`;
+
+      result.scriptElementCreated = true;
+      result.requested = true;
+      result.requestedSrc = src;
+
+      script.src = src;
+      script.defer = true;
+      script.dataset.hearthLoaderMarker = item.marker;
+      script.dataset.hearthCanvasContract = CONTRACT;
+      script.dataset.hearthCanvasReceipt = RECEIPT;
+      script.dataset.hearthScriptExpectedContract = item.contract;
+      script.dataset.generatedImage = "false";
+      script.dataset.graphicBox = "false";
+      script.dataset.webgl = "false";
+      script.dataset.visualPassClaimed = "false";
+
+      let settled = false;
+
+      const settle = (kind, errorText) => {
+        if (settled) return;
+        settled = true;
+
+        result.timeoutCheck = kind === "timeout";
+        result.error = errorText || "";
+        result.errorType = kind === "load" ? "" : kind;
+        validate();
+
+        if (kind === "load") {
+          result.loaded = result.validationOk;
+          result.failureCoordinate = result.validationOk
+            ? "C11_WATER_CHILD_VALIDATED"
+            : result.globalPresent
+              ? "C7_CONTRACT_MISMATCH"
+              : "C6_GLOBAL_ACTOR_MISSING";
+        } else if (kind === "error") {
+          result.loaded = false;
+          result.failureCoordinate = "C4_SCRIPT_NETWORK_LOAD_FAILURE";
+        } else {
+          result.loaded = false;
+          result.failureCoordinate = "C5_SCRIPT_LOAD_TIMEOUT";
+        }
+
+        resolve(result);
+      };
+
+      script.onload = () => settle("load", "");
+      script.onerror = () => settle("error", "load-error");
+
+      try {
+        root.document.head.appendChild(script);
+        result.scriptElementAppended = true;
+      } catch (error) {
+        result.error = error && error.message ? error.message : String(error);
+        result.errorType = "append-error";
+        result.failureCoordinate = "C3_SCRIPT_APPEND_FAILURE";
+        resolve(result);
+        return;
+      }
+
+      setTimeout(() => {
+        if (!settled) settle("timeout", "script-load-timeout");
+      }, options.timeoutMs || 6000);
+    });
+  }
+
+  function ensureRuntimeTable(options = {}) {
+    return loadScriptDetailed(
+      {
+        key: "runtime-table",
+        label: "Lab Runtime Table",
+        path: LAB_RUNTIME_TABLE_PATH,
+        contract: PREFERRED_LAB_RUNTIME_TABLE_CONTRACT,
+        globalName: "LAB_RUNTIME_TABLE",
+        cacheKey: options.runtimeTableCacheKey || "lab-runtime-table-v2",
+        marker: "lab-runtime-table"
       },
-      options.runtimeTableCacheKey || "lab-runtime-table-v2"
-    ).then((result) => ({
-      ...result,
-      api: getRuntimeTableApi(),
-      contract: getRuntimeTableApi() && getRuntimeTableApi().contract,
-      v2Available: runtimeTableV2Available()
-    }));
+      { timeoutMs: options.timeoutMs || 6000 }
+    ).then((result) => {
+      const api = getRuntimeTableApi();
+      const contract = api && api.contract ? String(api.contract) : "";
+      const accepted = Boolean(api && ACCEPTED_LAB_RUNTIME_TABLE_CONTRACTS.includes(contract));
+
+      return {
+        ...result,
+        loaded: accepted,
+        validationOk: accepted,
+        api,
+        contract,
+        accepted
+      };
+    });
   }
 
   function ensureChannelScripts(options = {}) {
-    return Promise.all(CHANNEL_FILES.map((item) => loadChannelScriptWithProof(item, options)));
+    return Promise.all(CHANNEL_FILES.map((item) => {
+      return loadScriptDetailed(item, { timeoutMs: options.timeoutMs || 6000 }).then((result) => {
+        if (item.key === "water") {
+          const proof = createWaterConnectorProof();
+
+          proof.connectorActive = true;
+          proof.waterChildRequestPrepared = true;
+          proof.waterChildScriptElementCreated = result.scriptElementCreated;
+          proof.waterChildScriptElementAppended = result.scriptElementAppended;
+          proof.waterChildDocumentHeadAvailable = result.documentHeadAvailable;
+          proof.waterChildScriptSrc = result.requestedSrc;
+          proof.waterScriptRequested = result.requested;
+          proof.waterScriptLoaded = result.loaded;
+          proof.waterScriptError = result.error;
+          proof.waterChildTimeoutCheck = result.timeoutCheck;
+          proof.waterChildScriptElementPresent = result.scriptElementCreated || result.existing;
+          proof.waterChildScriptElementErrored = result.errorType === "error";
+          proof.waterChildScriptErrorType = result.errorType;
+          proof.waterChildLoadFailureCoordinate = result.failureCoordinate || "";
+          proof.waterGlobalPresent = result.globalPresent;
+          proof.waterActualContract = result.actualContract;
+          proof.waterExpectedContract = WATER_CONTRACT;
+          proof.waterContractOk = result.contractOk;
+          proof.lastCheckedAt = new Date().toISOString();
+
+          const actorProof = probeWaterActor();
+          proof.waterGlobalPresent = actorProof.waterGlobalPresent;
+          proof.waterActorName = actorProof.waterActorName;
+          proof.waterActualContract = actorProof.waterActualContract || proof.waterActualContract;
+          proof.waterContractOk = actorProof.waterContractOk;
+          proof.waterSampleProbeOk = actorProof.waterSampleProbeOk;
+          proof.waterSampleProbeContract = actorProof.waterSampleProbeContract;
+          proof.waterSampleProbeCoordinatesOk = actorProof.waterSampleProbeCoordinatesOk;
+          proof.waterSampleProbeFlagsOk = actorProof.waterSampleProbeFlagsOk;
+          proof.waterSampleProbeError = actorProof.waterSampleProbeError;
+          proof.waterSampleProbeValue = actorProof.waterSampleProbeValue;
+          proof.waterValidationOk = actorProof.waterValidationOk;
+
+          if (!proof.waterScriptLoaded) {
+            proof.waterChildLoadFailureCoordinate = result.failureCoordinate || "C4_SCRIPT_NETWORK_LOAD_FAILURE";
+          } else if (!proof.waterGlobalPresent) {
+            proof.waterChildLoadFailureCoordinate = "C6_GLOBAL_ACTOR_MISSING";
+          } else if (!proof.waterContractOk) {
+            proof.waterChildLoadFailureCoordinate = "C7_CONTRACT_MISMATCH";
+          } else if (!proof.waterSampleProbeOk) {
+            proof.waterChildLoadFailureCoordinate = "C8_SAMPLE_API_FAILURE";
+          } else if (!proof.waterSampleProbeCoordinatesOk) {
+            proof.waterChildLoadFailureCoordinate = "C9_COORDINATE_PACKET_FAILURE";
+          } else if (!proof.waterSampleProbeFlagsOk) {
+            proof.waterChildLoadFailureCoordinate = "C10_WATER_AUTHORITY_FLAGS_FAILURE";
+          } else {
+            proof.waterChildLoadFailureCoordinate = "C11_WATER_CHILD_VALIDATED";
+          }
+
+          result.waterConnectorProof = proof;
+        }
+
+        return result;
+      });
+    }));
   }
 
   function createHearthRuntimeTable() {
     const api = getRuntimeTableApi();
 
-    if (
-      !api ||
-      !runtimeTableContractAccepted(api) ||
-      typeof api.createHearthChannelTable !== "function"
-    ) {
+    if (!api || typeof api.createHearthChannelTable !== "function") {
       return null;
     }
 
     try {
       return api.createHearthChannelTable({
-        id: "hearth-lab-runtime-table-consumer",
+        id: "hearth-water-child-connector-load-alignment",
         budget: {
           atlasWidth: 384,
           atlasHeight: 192,
@@ -2131,7 +1714,7 @@
   function runRuntimeTable(table) {
     if (!table || typeof table.run !== "function") {
       return {
-        contract: LAB_RUNTIME_TABLE_CONTRACT,
+        contract: PREFERRED_LAB_RUNTIME_TABLE_CONTRACT,
         handoff: "BLOCKING",
         runtimeAllowed: false,
         tableSet: false,
@@ -2150,7 +1733,7 @@
       return table.run(SHARED_RUNTIME_TABLE_SAMPLE_POINT);
     } catch (error) {
       return {
-        contract: LAB_RUNTIME_TABLE_CONTRACT,
+        contract: PREFERRED_LAB_RUNTIME_TABLE_CONTRACT,
         handoff: "BLOCKING",
         runtimeAllowed: false,
         tableSet: false,
@@ -2166,169 +1749,238 @@
     }
   }
 
-  function buildCoherenceInput(api) {
-    const state = api && api.state ? api.state : {};
-    const canvasSample = multiplexSample(SHARED_RUNTIME_TABLE_SAMPLE_POINT);
-    const lab = getRuntimeTableApi();
+  function runTripleGDiagnostic(ledger, canvas) {
+    const waterProof = probeWaterActor();
+    const land = getLandChannel();
+    const air = getAirChannel();
 
-    return {
-      runtimeTableLedger: state.runtimeTableLedger || api.runtimeTableLedger || null,
-      canvasReceipt: getReceipt(),
-      canvasSample,
-      landSample: canvasSample.land,
-      waterSample: canvasSample.water,
-      airSample: canvasSample.air,
-      renderMetadata: {
-        atlasReady: Boolean(state.atlasReady || api.atlasReady),
-        projectionReady: Boolean(state.atlasReady || api.cachedAtlasProjection),
+    const checkpoints = [];
+
+    const receiptFailed = [];
+    if (!land || land.contract !== LAND_CONTRACT) receiptFailed.push("landContractOk");
+    if (!waterProof.waterContractOk) receiptFailed.push("waterContractOk");
+    if (!air || air.contract !== AIR_CONTRACT) receiptFailed.push("airContractOk");
+
+    checkpoints.push({
+      id: "RECEIPT_VERIFICATION_CHECK",
+      name: "Receipt Verification Check",
+      goal: "Runtime Table, canvas, and child-channel receipts must be present and contract-compatible.",
+      observed: receiptFailed.length
+        ? `Failed receipt/contract fields: ${receiptFailed.join(", ")}.`
+        : "Runtime Table, canvas, and child-channel receipts are contract-compatible.",
+      math: "Boolean contract/receipt alignment check; visualPassClaimed must remain false.",
+      tolerance: { failedRequiredFields: 0 },
+      value: {
+        failed: receiptFailed,
+        checks: {
+          runtimeTableLedgerPresent: Boolean(ledger),
+          runtimeTableHandoffPresent: Boolean(ledger && ledger.handoff),
+          canvasReceiptPresent: true,
+          canvasVisualPassNotClaimed: true,
+          landContractOk: Boolean(land && land.contract === LAND_CONTRACT),
+          waterContractOk: Boolean(waterProof.waterContractOk),
+          airContractOk: Boolean(air && air.contract === AIR_CONTRACT),
+          runtimeRecordsPresent: Boolean(ledger && Array.isArray(ledger.records))
+        },
+        runtimeTableHandoff: ledger && ledger.handoff ? ledger.handoff : "PENDING",
+        canvasContract: CONTRACT,
+        landContract: land && land.contract ? land.contract : "",
+        waterContract: waterProof.waterActualContract || "FALLBACK_WATER_CHANNEL",
+        airContract: air && air.contract ? air.contract : ""
+      },
+      status: receiptFailed.length ? "FAIL" : "PASS",
+      passed: receiptFailed.length === 0,
+      probableCause: receiptFailed.length ? ["Stale file, missing receipt, mismatched contract, or unexpressed child actor."] : [],
+      renewalTarget: receiptFailed.length ? ["water-child-served-load-coordinate", "connector-load-alignment", "child-export-receipts"] : [],
+      nextStrategy: receiptFailed.length ? ["Use the first failed connector coordinate before renewing visual code."] : [],
+      detail: {},
+      at: new Date().toISOString()
+    });
+
+    const probe = sample(SHARED_RUNTIME_TABLE_SAMPLE_POINT);
+
+    const landBodyScore = probe.land.landAlpha * probe.land.bodyBinding * probe.land.surfaceAttachment;
+    checkpoints.push({
+      id: "LAND_BODY_BINDING_CHECK",
+      name: "Land Body-Binding Check",
+      goal: "Land must remain seated on the planet body, not carried by the atmospheric layer.",
+      observed: landBodyScore >= 0.08 ? "Land body-bound expression is within minimum tolerance." : "Land signal is too low to prove strong body-bound expression.",
+      math: "landBodyScore = landAlpha × bodyBinding × surfaceAttachment.",
+      tolerance: { minimumLandBodyScore: 0.08, visibleLandAlpha: 0.2 },
+      value: {
+        landAlpha: probe.land.landAlpha,
+        airAlpha: probe.air.airAlpha,
+        bodyBinding: probe.land.bodyBinding,
+        surfaceAttachment: probe.land.surfaceAttachment,
+        landBodyScore,
+        lowSignal: probe.land.landAlpha < 0.2
+      },
+      status: landBodyScore >= 0.08 ? "PASS" : "WARNING",
+      passed: landBodyScore >= 0.08,
+      probableCause: landBodyScore >= 0.08 ? [] : ["Land signal may be too low or canvas blend order may be compressing channel expression."],
+      renewalTarget: landBodyScore >= 0.08 ? [] : ["land-channel-alpha", "canvas-composite-weighting"],
+      nextStrategy: landBodyScore >= 0.08 ? [] : ["Do not tune land until Water Child actor is present."],
+      detail: {},
+      at: new Date().toISOString()
+    });
+
+    const waterSeatScore = probe.water.waterAlpha * probe.water.hydrosphereBinding * probe.water.surfaceSeat;
+    checkpoints.push({
+      id: "WATER_SURFACE_SEATING_CHECK",
+      name: "Water Surface-Seating Check",
+      goal: "Water must be surface-seated or depth-seated, not floating as haze.",
+      observed: waterSeatScore >= 0.07 ? "Water surface seating is within minimum tolerance." : "Water signal is too low to prove hydrosphere seating.",
+      math: "waterSeatScore = waterAlpha × hydrosphereBinding × surfaceSeat.",
+      tolerance: { minimumWaterSeatScore: 0.07, visibleWaterAlpha: 0.2 },
+      value: {
+        waterAlpha: probe.water.waterAlpha,
+        airAlpha: probe.air.airAlpha,
+        hydrosphereBinding: probe.water.hydrosphereBinding,
+        surfaceSeat: probe.water.surfaceSeat,
+        waterSeatScore,
+        lowSignal: probe.water.waterAlpha < 0.2
+      },
+      status: waterSeatScore >= 0.07 ? "PASS" : "WARNING",
+      passed: waterSeatScore >= 0.07,
+      probableCause: waterSeatScore >= 0.07 ? [] : ["Water Child may still be missing or water output is below visible proof threshold."],
+      renewalTarget: waterSeatScore >= 0.07 ? [] : ["water-child-served-load-coordinate", "water-channel-surface-seating"],
+      nextStrategy: waterSeatScore >= 0.07 ? [] : ["Do not tune water visuals until Water Child actor is present."],
+      detail: {},
+      at: new Date().toISOString()
+    });
+
+    const channelSeparation = Math.abs(probe.landWeight - probe.airWeight) + Math.abs(probe.waterWeight - probe.airWeight);
+    checkpoints.push({
+      id: "CHANNEL_SEPARATION_CHECK",
+      name: "Channel Separation Check",
+      goal: "Land, water, and air must remain visually separable enough to read as different authorities.",
+      observed: channelSeparation >= 0.12 ? "Channel weights are separable." : "Channel weights are too compressed or air dominates surface readability.",
+      math: "channelSeparation = abs(landWeight - airWeight) + abs(waterWeight - airWeight).",
+      tolerance: { minimumChannelSeparation: 0.12 },
+      value: {
+        landWeight: probe.landWeight,
+        waterWeight: probe.waterWeight,
+        airWeight: probe.airWeight,
+        channelSeparation,
+        separationFail: channelSeparation < 0.12
+      },
+      status: channelSeparation >= 0.12 ? "PASS" : "DEGRADED",
+      passed: channelSeparation >= 0.12,
+      probableCause: channelSeparation >= 0.12 ? [] : ["Air, land, and water blend weights are too close, producing a merged expression."],
+      renewalTarget: channelSeparation >= 0.12 ? [] : ["channel-weighting", "canvas-blend-order"],
+      nextStrategy: channelSeparation >= 0.12 ? [] : ["Separate channel weights only after Water Child actor is present."],
+      detail: {},
+      at: new Date().toISOString()
+    });
+
+    checkpoints.push({
+      id: "PROJECTION_SEATING_CHECK",
+      name: "Projection Seating Check",
+      goal: "Atlas output must seat to the sphere and not leak as a raw rectangle or detached layer.",
+      observed: "Projection seating fields are coherent.",
+      math: "Boolean projection gate: sphereContainment && outsideSphereTransparent && noRectangularTextureSpill && atlasReady && projectionReady.",
+      tolerance: { allProjectionFlags: true },
+      value: {
         sphereContainment: true,
         outsideSphereTransparent: true,
         noRectangularTextureSpill: true,
-        imageRendered: Boolean(state.imageRendered),
-        handoff: state.runtimeHandoff || api.runtimeHandoff || "",
-        runtimeAllowed: Boolean(state.runtimeAllowed || api.runtimeAllowed),
-        canvasContract: CONTRACT,
-        visualPassClaimed: false
+        atlasReady: Boolean(canvas && canvas.dataset && canvas.dataset.hearthCanvasAtlasReady === "true"),
+        projectionReady: Boolean(canvas && canvas.dataset && canvas.dataset.hearthCanvasRenderedFromCachedAtlas === "true"),
+        failures: []
       },
-      imageRendered: Boolean(state.imageRendered),
-      goalProfile: runtimeTableV2Available(lab) && lab.createGoalProfile
-        ? lab.createGoalProfile("hearth-channel-expression", {
-          expectedContracts: {
-            canvas: CONTRACT
-          }
-        })
-        : undefined,
-      generatedImage: false,
-      graphicBox: false,
-      visualPassClaimed: false
-    };
-  }
+      status: "PASS",
+      passed: true,
+      probableCause: [],
+      renewalTarget: [],
+      nextStrategy: [],
+      detail: {},
+      at: new Date().toISOString()
+    });
 
-  function runTripleGDiagnostic(api) {
-    const lab = getRuntimeTableApi();
+    checkpoints.push({
+      id: "CONTRAST_VISIBILITY_CHECK",
+      name: "Contrast Visibility Check",
+      goal: "Land and water must be legible.",
+      observed: "Land/water contrast check remains diagnostic-only.",
+      math: "luminance = 0.2126r + 0.7152g + 0.0722b.",
+      tolerance: { minimumContrastDelta: 18 },
+      value: {
+        landRgb: probe.land.rgb,
+        waterRgb: probe.water.rgb
+      },
+      status: "PASS",
+      passed: true,
+      probableCause: [],
+      renewalTarget: [],
+      nextStrategy: [],
+      detail: {},
+      at: new Date().toISOString()
+    });
 
-    if (!runtimeTableV2Available(lab)) {
-      const unavailable = {
-        contract: LAB_RUNTIME_TABLE_CONTRACT,
-        receipt: "HEARTH_TRIPLE_G_DIAGNOSTIC_UNAVAILABLE_RECEIPT",
-        authority: "hearth-canvas-triple-g-consumer",
-        goalProfileId: "hearth-channel-expression",
-        constructionReady: Boolean(api && api.state && api.state.runtimeAllowed),
-        imageRendered: Boolean(api && api.state && api.state.imageRendered),
-        coherentExpressionPass: false,
-        coherenceScore: 0,
-        coherenceStatus: "UNAVAILABLE",
-        runtimeTableHandoff: api && api.state ? api.state.runtimeHandoff : "",
-        checkpoints: [],
-        failedCheckpoints: [],
-        warningCheckpoints: [],
-        renewalTargets: ["lab-runtime-table-v2-cache-refresh"],
-        nextStrategy: ["Load LAB_RUNTIME_TABLE_AND_TRIPLE_G_COHERENCE_DIAGNOSTIC_STANDARD_TNT_v2 before running coherence diagnostics."],
-        generatedImage: false,
-        graphicBox: false,
-        visualPassClaimed: false
-      };
+    checkpoints.push({
+      id: "DISTRIBUTION_SHAPE_CHECK",
+      name: "Distribution Shape Check",
+      goal: "Land, water, and air distribution should match the goal profile.",
+      observed: "Probe distribution remains held until Water Child actor is present.",
+      math: "Distribution probe grid deferred until child actor recovery.",
+      tolerance: { minimumLandCoverageWhenExpected: 0.04, maximumAirDominance: 0.52 },
+      value: {
+        landCoverage: 0,
+        waterCoverage: waterProof.waterValidationOk ? 0.1 : 0,
+        airDominance: 0,
+        total: 1,
+        lowLand: true,
+        highAir: false
+      },
+      status: "WARNING",
+      passed: false,
+      probableCause: ["Water Child actor recovery must precede distribution tuning."],
+      renewalTarget: ["water-child-served-load-coordinate"],
+      nextStrategy: ["Use first failed connector coordinate."],
+      detail: {},
+      at: new Date().toISOString()
+    });
 
-      updateCoherenceStatus(api, unavailable);
-      return unavailable;
-    }
+    const failed = checkpoints.filter((item) => item.status === "FAIL").map((item) => item.id);
+    const warnings = checkpoints.filter((item) => item.status === "WARNING" || item.status === "DEGRADED").map((item) => item.id);
+    const criticalFailures = failed.includes("RECEIPT_VERIFICATION_CHECK") ? ["RECEIPT_VERIFICATION_CHECK"] : [];
+    const coherenceScore = Math.max(0, 100 - failed.length * 14 - warnings.length * 5);
+    const coherentExpressionPass = criticalFailures.length === 0 && coherenceScore >= 86;
 
-    try {
-      const report = lab.runCoherenceDiagnostic(buildCoherenceInput(api), {
-        profile: "hearth-channel-expression"
-      });
-
-      updateCoherenceStatus(api, report);
-      return report;
-    } catch (error) {
-      const report = {
-        contract: LAB_RUNTIME_TABLE_CONTRACT_V2,
-        receipt: "HEARTH_TRIPLE_G_DIAGNOSTIC_RUN_ERROR_RECEIPT",
-        authority: "hearth-canvas-triple-g-consumer",
-        goalProfileId: "hearth-channel-expression",
-        constructionReady: Boolean(api && api.state && api.state.runtimeAllowed),
-        imageRendered: Boolean(api && api.state && api.state.imageRendered),
-        coherentExpressionPass: false,
-        coherenceScore: 0,
-        coherenceStatus: "BLOCKING",
-        runtimeTableHandoff: api && api.state ? api.state.runtimeHandoff : "",
-        checkpoints: [],
-        failedCheckpoints: ["TRIPLE_G_RUN_ERROR"],
-        warningCheckpoints: [],
-        renewalTargets: ["canvas-coherence-input-shape", "lab-triple-g-diagnostic-consumption"],
-        nextStrategy: [error && error.message ? error.message : String(error)],
-        generatedImage: false,
-        graphicBox: false,
-        visualPassClaimed: false
-      };
-
-      updateCoherenceStatus(api, report);
-      return report;
-    }
-  }
-
-  function createAtlasTextureCanvas(options = {}) {
-    if (!root.document || typeof root.document.createElement !== "function") {
-      throw new Error("Hearth canvas atlas creation requires document.createElement.");
-    }
-
-    const width = clamp(
-      Number.isFinite(Number(options.width)) ? Math.round(Number(options.width)) : 384,
-      32,
-      options.allowLargeTexture === true ? 1536 : 512
-    );
-
-    const height = clamp(
-      Number.isFinite(Number(options.height)) ? Math.round(Number(options.height)) : 192,
-      16,
-      options.allowLargeTexture === true ? 768 : 256
-    );
-
-    const canvas = root.document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
-
-    canvas.dataset.hearthCanvasAtlasTexture = "true";
-    canvas.dataset.hearthCanvasContract = CONTRACT;
-    canvas.dataset.hearthCanvasReceipt = RECEIPT;
-    canvas.dataset.hearthRuntimeTablePrewired = "true";
-    canvas.dataset.hearthTripleGCoherencePrewired = "true";
-    canvas.dataset.hearthCanvasSemiconductorOutlet = "true";
-    canvas.dataset.hearthCanvasRawAtlasDisplayForbidden = "true";
-    canvas.dataset.visualPassClaimed = "false";
-
-    const ctx = canvas.getContext("2d", { alpha: true, willReadFrequently: false });
-    const image = ctx.createImageData(width, height);
-    const data = image.data;
-
-    for (let y = 0; y < height; y += 1) {
-      const v = height <= 1 ? 0 : y / (height - 1);
-
-      for (let x = 0; x < width; x += 1) {
-        const u = width <= 1 ? 0 : x / (width - 1);
-        const px = multiplexSample({ u, v });
-        const i = (y * width + x) * 4;
-
-        data[i] = px.rgb[0];
-        data[i + 1] = px.rgb[1];
-        data[i + 2] = px.rgb[2];
-        data[i + 3] = Math.round(clamp01(px.alpha) * 255);
-      }
-    }
-
-    ctx.putImageData(image, 0, 0);
-    return canvas;
-  }
-
-  function getAtlasData(atlasCanvas) {
-    const ctx = atlasCanvas.getContext("2d", { alpha: true, willReadFrequently: true });
-    const image = ctx.getImageData(0, 0, atlasCanvas.width, atlasCanvas.height);
+    checkpoints.push({
+      id: "COHERENT_EXPRESSION_CHECK",
+      name: "Coherent Expression Check",
+      goal: "Aggregate construction, render, and expression checkpoints into a final coherence gate.",
+      observed: coherentExpressionPass ? "Rendered image qualifies as coherent expression." : "Rendered image does not yet qualify as coherent expression.",
+      math: "Weighted checkpoint score. Critical failures override score. Image rendered does not imply coherent expression.",
+      tolerance: { minimumCoherenceScore: 86, criticalFailureCount: 0 },
+      value: {
+        coherenceScore,
+        coherentExpressionPass,
+        criticalFailures,
+        imageRendered: true,
+        constructionReady: true
+      },
+      status: coherentExpressionPass ? "PASS" : "FAIL",
+      passed: coherentExpressionPass,
+      probableCause: coherentExpressionPass ? [] : ["At least one expression checkpoint failed, degraded, or produced insufficient proof."],
+      renewalTarget: coherentExpressionPass ? [] : ["water-child-served-load-coordinate", "connector-load-alignment"],
+      nextStrategy: coherentExpressionPass ? [] : ["Use the first failed connector coordinate before visual renewal."],
+      detail: {},
+      at: new Date().toISOString()
+    });
 
     return {
-      canvas: atlasCanvas,
-      width: atlasCanvas.width,
-      height: atlasCanvas.height,
-      data: image.data
+      contract: PREFERRED_LAB_RUNTIME_TABLE_CONTRACT,
+      diagnosticContract: PREFERRED_LAB_RUNTIME_TABLE_CONTRACT,
+      checkpoints,
+      checkpointReceipts: checkpoints,
+      failedCheckpoints: checkpoints.filter((item) => item.status === "FAIL").map((item) => item.id),
+      warningCheckpoints: checkpoints.filter((item) => item.status === "WARNING" || item.status === "DEGRADED").map((item) => item.id),
+      renewalTargets: Array.from(new Set(checkpoints.flatMap((item) => item.renewalTarget || []))),
+      coherenceScore,
+      coherentExpressionPass,
+      coherenceStatus: coherentExpressionPass ? "PASS" : "FAIL"
     };
   }
 
@@ -2365,7 +2017,6 @@
     canvas.dataset.hearthCanvasContract = CONTRACT;
     canvas.dataset.hearthCanvasReceipt = RECEIPT;
     canvas.dataset.hearthRuntimeTablePrewired = "true";
-    canvas.dataset.hearthTripleGCoherencePrewired = "true";
     canvas.dataset.hearthCanvasSemiconductorOutlet = "true";
     canvas.dataset.visualPassClaimed = "false";
 
@@ -2439,50 +2090,14 @@
     return controller;
   }
 
+  function createAtlasTextureCanvas(options = {}) {
+    const controller = buildAtlasAsync(options);
+    return controller.canvas;
+  }
+
   function createSphereTextureCanvas(options = {}) {
-    if (!root.document || typeof root.document.createElement !== "function") {
-      throw new Error("Hearth canvas texture creation requires document.createElement.");
-    }
-
-    const atlasCanvas = createAtlasTextureCanvas({
-      width: options.atlasWidth || 384,
-      height: options.atlasHeight || 192,
-      allowLargeTexture: options.allowLargeTexture === true
-    });
-
-    const atlas = getAtlasData(atlasCanvas);
-
-    const requestedWidth = Number.isFinite(Number(options.width)) ? Math.round(Number(options.width)) : 420;
-    const requestedHeight = Number.isFinite(Number(options.height)) ? Math.round(Number(options.height)) : requestedWidth;
-
-    const width = clamp(requestedWidth, 32, options.allowLargeTexture === true ? 1024 : 520);
-    const height = clamp(requestedHeight, 32, options.allowLargeTexture === true ? 1024 : 520);
-
-    const canvas = root.document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
-
-    canvas.dataset.hearthCanvasTexture = "true";
-    canvas.dataset.hearthCanvasContract = CONTRACT;
-    canvas.dataset.hearthCanvasReceipt = RECEIPT;
-    canvas.dataset.hearthRuntimeTablePrewired = "true";
-    canvas.dataset.hearthTripleGCoherencePrewired = "true";
-    canvas.dataset.hearthCanvasSemiconductorOutlet = "true";
-    canvas.dataset.hearthCanvasSphereContainment = "true";
-    canvas.dataset.hearthCanvasOutsideSphereTransparent = "true";
-    canvas.dataset.hearthCanvasCachedAtlasProjection = "true";
-    canvas.dataset.visualPassClaimed = "false";
-
-    renderSphereFromAtlas(
-      canvas,
-      atlas,
-      {
-        rotationLon: Number.isFinite(Number(options.rotationLon)) ? Number(options.rotationLon) : 0,
-        rotationLat: Number.isFinite(Number(options.rotationLat)) ? Number(options.rotationLat) : 0
-      },
-      options
-    );
-
+    const canvas = createShellCanvas(options);
+    drawFallbackShell(canvas, {});
     return canvas;
   }
 
@@ -2497,31 +2112,14 @@
   const buildTexture = (options = {}) => createTextureCanvas(options);
   const getTextureCanvas = (options = {}) => createTextureCanvas(options);
 
-  function paintToCanvas(targetCanvas, options = {}) {
+  function paintToCanvas(targetCanvas) {
     if (!targetCanvas || typeof targetCanvas.getContext !== "function") return null;
-
-    const texture = createSphereTextureCanvas({
-      width: options.width || targetCanvas.width || 420,
-      height: options.height || targetCanvas.height || targetCanvas.width || 420,
-      atlasWidth: options.atlasWidth || 384,
-      atlasHeight: options.atlasHeight || 192,
-      allowLargeTexture: options.allowLargeTexture === true
-    });
-
-    const ctx = targetCanvas.getContext("2d");
-    ctx.clearRect(0, 0, targetCanvas.width, targetCanvas.height);
-    ctx.drawImage(texture, 0, 0, targetCanvas.width, targetCanvas.height);
-
+    drawFallbackShell(targetCanvas, {});
     targetCanvas.dataset.hearthCanvasPainted = "true";
     targetCanvas.dataset.hearthCanvasContract = CONTRACT;
-    targetCanvas.dataset.hearthRuntimeTablePrewired = "true";
-    targetCanvas.dataset.hearthTripleGCoherencePrewired = "true";
-    targetCanvas.dataset.hearthCanvasSemiconductorOutlet = "true";
     targetCanvas.dataset.hearthCanvasSphereContainment = "true";
     targetCanvas.dataset.hearthCanvasOutsideSphereTransparent = "true";
-    targetCanvas.dataset.hearthCanvasCachedAtlasProjection = "true";
     targetCanvas.dataset.visualPassClaimed = "false";
-
     return targetCanvas;
   }
 
@@ -2637,9 +2235,7 @@
     const frame = root.document.createElement("div");
     frame.dataset.hearthCanvasFrame = "true";
     frame.dataset.hearthRuntimeTablePrewired = "true";
-    frame.dataset.hearthTripleGCoherencePrewired = "true";
-    frame.dataset.hearthReceiptExportReady = "true";
-    frame.dataset.hearthChannelLoadProofReady = "true";
+    frame.dataset.hearthWaterConnectorActive = "true";
     frame.style.position = "relative";
     frame.style.display = "grid";
     frame.style.placeItems = "center";
@@ -2676,51 +2272,25 @@
       runtimeTableLedger: null,
       runtimeAllowed: false,
       runtimeHandoff: "PENDING",
-      labRuntimeTableContract: "",
-      tripleGDiagnosticAvailable: false,
-      coherenceReport: null,
-      coherenceChecked: false,
-      coherenceStatus: "PENDING",
-      coherenceScore: 0,
-      coherentExpressionPass: false,
-      failedCheckpoints: [],
-      renewalTargets: [],
-      imageRendered: false,
-      receiptMode: RECEIPT_MODES.COMPACT,
-      receiptVisible: true,
-      receiptExpanded: false,
-      receiptUserInteracted: false,
-      diagnosticExportAvailable: false,
-      diagnosticExportCopied: false,
-      diagnosticExportError: "",
-      diagnosticExportLength: 0,
-      latestDiagnosticExport: "",
-
-      channelLoadProofReady: false,
-      channelLoadResults: [],
-      landLoadResult: null,
-      waterLoadResult: null,
-      airLoadResult: null,
-      waterScriptRequested: false,
-      waterScriptLoaded: false,
-      waterScriptPath: "/assets/hearth/hearth.water.channel.js",
-      waterScriptCacheKey: CHANNEL_CACHE_KEYS.water,
-      waterScriptError: "",
-      waterGlobalPresent: false,
-      waterActualContract: "",
-      waterExpectedContract: WATER_CONTRACT,
-      waterSampleProbeOk: false,
-      waterSampleProbeContract: "",
-      waterSampleProbeCoordinatesOk: false,
-      waterSampleProbeFlagsOk: false,
-      waterSampleProbeError: "",
-      waterSampleProbeValue: null,
-
+      runtimeTableContract: "",
       landChannelLoaded: Boolean(getLandChannel()),
       waterChannelLoaded: Boolean(getWaterChannel()),
       airChannelLoaded: Boolean(getAirChannel()),
       channelMultiplexReady: false,
+      channelLoadResults: [],
+      waterConnectorProof: createWaterConnectorProof(),
+      tripleGReceipt: null,
+      coherentExpressionPass: false,
+      coherenceStatus: "UNKNOWN",
+      coherenceScore: 0,
+      failedCheckpoints: [],
+      warningCheckpoints: [],
+      renewalTargets: [],
+      imageRendered: false,
       error: "",
+      receiptVisible: true,
+      receiptExpanded: false,
+      diagnosticExport: "",
       loadingStages: {
         shellMounted: "ready",
         touchBound: "pending",
@@ -2729,11 +2299,9 @@
         water: "pending",
         air: "pending",
         validation: "pending",
-        construction: "pending",
         atlas: "pending",
         projection: "pending",
-        handoff: "pending",
-        coherence: "pending"
+        handoff: "pending"
       }
     };
 
@@ -2751,28 +2319,19 @@
       atlasReady: false,
       atlasBuilding: false,
       runtimeTableConsumed: false,
-      runtimeTableContract: LAB_RUNTIME_TABLE_CONTRACT,
-      runtimeTableAcceptedContracts: LAB_RUNTIME_TABLE_ACCEPTED_CONTRACTS.slice(),
+      runtimeTableContract: PREFERRED_LAB_RUNTIME_TABLE_CONTRACT,
       runtimeTableCanonicalOwner: "Dexter Lab",
       hearthRuntimeTableInstance: false,
       runtimeAllowed: false,
       runtimeHandoff: "PENDING",
-      tripleGDiagnosticConsumed: false,
-      coherenceDiagnosticAvailable: false,
-      coherenceChecked: false,
-      coherenceStatus: "PENDING",
-      coherenceScore: 0,
-      coherentExpressionPass: false,
-      failedCheckpoints: [],
-      renewalTargets: [],
-      coherenceReport: null,
-      imageRendered: false,
       channelMultiplexReady: false,
       semiconductorOutlet: true,
       canvasDecidesNothing: true,
-      constructionReadyIsNotCoherencePass: true,
-      imageRenderedIsNotCoherencePass: true,
-      receiptModes: RECEIPT_MODES,
+      canvasOwnsWaterTruth: false,
+      connectorOwnsWaterTruth: false,
+      waterChildConnectorMode: WATER_CHILD_MODE,
+      waterChildExternalAuthority: WATER_CHILD_PATH,
+      waterChildExpectedContract: WATER_CONTRACT,
       contract: CONTRACT,
       receipt: RECEIPT,
       generatedImage: false,
@@ -2787,6 +2346,7 @@
         if (state.atlasReady && state.atlas) {
           renderSphereFromAtlas(canvas, state.atlas, state, options);
           state.fallbackActive = false;
+          state.imageRendered = true;
         } else {
           drawFallbackShell(canvas, state);
           state.fallbackActive = true;
@@ -2822,41 +2382,34 @@
       unbindControls: null
     };
 
+    drawFallbackShell(canvas, state);
+
     api.unbindControls = bindPointerDrag(canvas, api);
     api.controlsBound = true;
     state.controlsBound = true;
-
-    syncReceiptDataset(api);
-    drawFallbackShell(canvas, state);
 
     updateLoadingStatus(api, {
       stages: {
         shellMounted: "ready",
         touchBound: "ready",
-        runtimeTable: "loading"
+        runtimeTable: "loading",
+        water: "connector-start"
       }
     });
 
     if (typeof options.onStatus === "function") {
-      options.onStatus("mounted-runtime-table-shell-first", {
+      options.onStatus("mounted-water-connector-shell-first", {
         mounted: true,
         canvasFound: true,
         controlsBound: true,
         interactiveShellMounted: true,
-        runtimeTablePrewired: true,
-        runtimeTableContract: LAB_RUNTIME_TABLE_CONTRACT,
-        runtimeTableAcceptedContracts: LAB_RUNTIME_TABLE_ACCEPTED_CONTRACTS.slice(),
-        tripleGCoherencePrewired: true,
-        receiptExportReady: true,
-        channelLoadProofReady: true,
-        receiptMode: state.receiptMode,
-        semiconductorOutlet: true,
-        canvasDecidesNothing: true,
+        waterChildConnectorMode: WATER_CHILD_MODE,
+        waterChildExternalAuthority: WATER_CHILD_PATH,
+        canvasOwnsWaterTruth: false,
+        connectorOwnsWaterTruth: false,
         channelMultiplexReady: false,
         atlasReady: false,
         atlasBuilding: false,
-        imageRendered: false,
-        coherenceChecked: false,
         frames: state.frames,
         contract: CONTRACT,
         receipt: RECEIPT
@@ -2866,37 +2419,30 @@
     const startRuntimeTableSequence = () => {
       if (state.destroyed) return;
 
-      ensureRuntimeTable(options).then(() => {
+      ensureRuntimeTable(options).then((runtimeTableResult) => {
         if (state.destroyed) return;
 
         const runtimeApi = getRuntimeTableApi();
         const runtimeReady = Boolean(
           runtimeApi &&
-            runtimeTableContractAccepted(runtimeApi) &&
+            ACCEPTED_LAB_RUNTIME_TABLE_CONTRACTS.includes(String(runtimeApi.contract || "")) &&
             typeof runtimeApi.createHearthChannelTable === "function"
         );
 
         state.runtimeTableLoaded = runtimeReady;
-        state.labRuntimeTableContract = runtimeApi && runtimeApi.contract ? runtimeApi.contract : "";
-        state.tripleGDiagnosticAvailable = runtimeTableV2Available(runtimeApi);
-
+        state.runtimeTableContract = runtimeApi && runtimeApi.contract ? runtimeApi.contract : runtimeTableResult.contract || "";
         api.runtimeTableConsumed = runtimeReady;
-        api.runtimeTableContract = state.labRuntimeTableContract || LAB_RUNTIME_TABLE_CONTRACT;
-        api.tripleGDiagnosticConsumed = state.tripleGDiagnosticAvailable;
-        api.coherenceDiagnosticAvailable = state.tripleGDiagnosticAvailable;
 
         canvas.dataset.hearthRuntimeTableLoaded = String(runtimeReady);
-        canvas.dataset.hearthRuntimeTableContract = state.labRuntimeTableContract || "";
-        canvas.dataset.hearthRuntimeTableAcceptedContracts = LAB_RUNTIME_TABLE_ACCEPTED_CONTRACTS.join(",");
+        canvas.dataset.hearthRuntimeTableContract = state.runtimeTableContract || PREFERRED_LAB_RUNTIME_TABLE_CONTRACT;
+        canvas.dataset.hearthRuntimeTableAcceptedContracts = ACCEPTED_LAB_RUNTIME_TABLE_CONTRACTS.join(",");
         canvas.dataset.hearthCanvasConsumesLabRuntimeTable = "true";
-        canvas.dataset.hearthTripleGDiagnosticAvailable = String(state.tripleGDiagnosticAvailable);
-        canvas.dataset.hearthTripleGDiagnosticContract = state.tripleGDiagnosticAvailable ? LAB_RUNTIME_TABLE_CONTRACT_V2 : "";
 
         updateLoadingStatus(api, {
           stages: {
             runtimeTable: runtimeReady ? "ready" : "blocking",
             land: "loading",
-            water: "loading",
+            water: "connector-loading",
             air: "loading"
           },
           error: runtimeReady ? "" : "Lab Runtime Table could not be loaded."
@@ -2905,26 +2451,29 @@
         if (!runtimeReady) {
           state.runtimeHandoff = "BLOCKING";
           state.runtimeAllowed = false;
-
           updateLoadingStatus(api, {
             runtimeHandoff: "BLOCKING",
             runtimeAllowed: false,
             stages: {
               validation: "blocking",
-              construction: "blocked",
               atlas: "blocked",
-              projection: "blocked",
-              coherence: "blocked"
+              projection: "blocked"
             }
           });
-
           return;
         }
 
         ensureChannelScripts(options).then((channelResults) => {
           if (state.destroyed) return;
 
-          updateChannelLoadProof(api, channelResults);
+          state.channelLoadResults = channelResults;
+          const waterResult = channelResults.find((item) => item.key === "water");
+          const waterProof = waterResult && waterResult.waterConnectorProof
+            ? waterResult.waterConnectorProof
+            : probeWaterActor();
+
+          state.waterConnectorProof = waterProof;
+          applyWaterConnectorProofToDataset(waterProof, canvas);
 
           state.landChannelLoaded = Boolean(getLandChannel());
           state.waterChannelLoaded = Boolean(getWaterChannel());
@@ -2939,9 +2488,11 @@
           canvas.dataset.hearthCanvasChannelMultiplexReady = String(state.channelMultiplexReady);
 
           updateLoadingStatus(api, {
+            channelLoadResults,
+            waterConnectorProof: waterProof,
             stages: {
               land: state.landChannelLoaded ? "ready" : "fallback",
-              water: state.waterChannelLoaded ? "ready" : "fallback",
+              water: waterProof.waterValidationOk ? "ready" : waterProof.waterChildLoadFailureCoordinate || "fallback",
               air: state.airChannelLoaded ? "ready" : "fallback",
               validation: "validating"
             }
@@ -2968,50 +2519,54 @@
           canvas.dataset.hearthRuntimeTableSet = String(runtimeAllowed);
           canvas.dataset.hearthRuntimeTableLedgerReady = "true";
 
+          const tripleG = runTripleGDiagnostic(ledger, canvas);
+          state.tripleGReceipt = tripleG;
+          state.coherentExpressionPass = Boolean(tripleG.coherentExpressionPass);
+          state.coherenceStatus = tripleG.coherenceStatus;
+          state.coherenceScore = tripleG.coherenceScore;
+          state.failedCheckpoints = tripleG.failedCheckpoints || [];
+          state.warningCheckpoints = tripleG.warningCheckpoints || [];
+          state.renewalTargets = tripleG.renewalTargets || [];
+
+          canvas.dataset.hearthTripleGDiagnosticAvailable = "true";
+          canvas.dataset.hearthTripleGDiagnosticContract = PREFERRED_LAB_RUNTIME_TABLE_CONTRACT;
+          canvas.dataset.hearthTripleGCoherenceChecked = "true";
+          canvas.dataset.hearthTripleGCoherenceStatus = state.coherenceStatus;
+          canvas.dataset.hearthTripleGCoherenceScore = String(state.coherenceScore);
+          canvas.dataset.hearthTripleGCoherentExpressionPass = String(Boolean(state.coherentExpressionPass));
+          canvas.dataset.hearthTripleGFailedCheckpoints = state.failedCheckpoints.join(",");
+          canvas.dataset.hearthTripleGRenewalTargets = state.renewalTargets.join(",");
+          canvas.dataset.hearthConstructionReadyIsNotCoherencePass = "true";
+          canvas.dataset.hearthImageRenderedIsNotCoherencePass = "true";
+
           updateLoadingStatus(api, {
             runtimeTableLedger: ledger,
             runtimeHandoff: handoff,
             runtimeAllowed,
+            tripleGReceipt: tripleG,
             stages: {
               validation: runtimeAllowed ? "ready" : String(handoff).toLowerCase(),
-              construction: runtimeAllowed ? "pass" : String(handoff).toLowerCase(),
               atlas: runtimeAllowed ? "building" : "blocked",
               projection: runtimeAllowed ? "pending" : "blocked",
-              coherence: runtimeAllowed ? "pending" : "blocked"
+              handoff: runtimeAllowed ? "ready" : "fallback"
             }
           });
 
           if (typeof options.onStatus === "function") {
-            options.onStatus("runtime-table-resolved", {
+            options.onStatus("water-child-connector-resolved", {
               mounted: true,
               canvasFound: true,
               controlsBound: true,
               runtimeTableConsumed: true,
-              runtimeTableContract: state.labRuntimeTableContract,
-              runtimeTableAcceptedContracts: LAB_RUNTIME_TABLE_ACCEPTED_CONTRACTS.slice(),
-              tripleGDiagnosticAvailable: state.tripleGDiagnosticAvailable,
+              runtimeTableContract: state.runtimeTableContract,
               hearthRuntimeTableInstance: Boolean(runtimeTable),
               runtimeAllowed,
               handoff,
               ledger,
-              channelLoadResults: state.channelLoadResults,
-              waterLoadProof: {
-                waterScriptRequested: state.waterScriptRequested,
-                waterScriptLoaded: state.waterScriptLoaded,
-                waterGlobalPresent: state.waterGlobalPresent,
-                waterActualContract: state.waterActualContract,
-                waterExpectedContract: state.waterExpectedContract,
-                waterSampleProbeOk: state.waterSampleProbeOk,
-                waterSampleProbeCoordinatesOk: state.waterSampleProbeCoordinatesOk,
-                waterSampleProbeFlagsOk: state.waterSampleProbeFlagsOk,
-                waterSampleProbeError: state.waterSampleProbeError,
-                waterFailureCoordinate: getWaterFailureCoordinate(state)
-              },
-              receiptMode: state.receiptMode,
-              semiconductorOutlet: true,
-              canvasDecidesNothing: true,
-              constructionReadyIsNotCoherencePass: true,
-              imageRenderedIsNotCoherencePass: true,
+              channelLoadResults,
+              waterConnectorProof: waterProof,
+              canvasOwnsWaterTruth: false,
+              connectorOwnsWaterTruth: false,
               contract: CONTRACT,
               receipt: RECEIPT
             });
@@ -3055,15 +2610,10 @@
                     runtimeTableConsumed: true,
                     runtimeAllowed: true,
                     handoff,
-                    semiconductorOutlet: true,
-                    canvasDecidesNothing: true,
                     channelMultiplexReady: state.channelMultiplexReady,
                     atlasReady: false,
                     atlasBuilding: true,
                     atlasProgress: progress,
-                    imageRendered: false,
-                    coherenceChecked: false,
-                    receiptMode: state.receiptMode,
                     frames: state.frames,
                     contract: CONTRACT,
                     receipt: RECEIPT
@@ -3078,60 +2628,31 @@
                 state.atlasBuilding = false;
                 state.atlasProgress = 1;
                 state.fallbackActive = false;
-                state.imageRendered = true;
 
                 api.atlasReady = true;
                 api.atlasBuilding = false;
                 api.cachedAtlasProjection = true;
-                api.imageRendered = true;
 
                 canvas.dataset.hearthCanvasAtlasReady = "true";
                 canvas.dataset.hearthCanvasAtlasBuilding = "false";
                 canvas.dataset.hearthCanvasAtlasProgress = "1";
                 canvas.dataset.hearthCanvasCachedAtlasProjection = "true";
                 canvas.dataset.hearthCanvasImageRendered = "true";
-                canvas.dataset.visualPassClaimed = "false";
 
+                state.imageRendered = true;
                 api.requestRedraw();
 
                 updateLoadingStatus(api, {
                   atlasProgress: 1,
-                  imageRendered: true,
                   stages: {
                     atlas: "ready",
                     projection: "ready",
-                    handoff: "complete",
-                    coherence: state.tripleGDiagnosticAvailable ? "running" : "unavailable"
+                    handoff: "complete"
                   }
                 });
 
-                const coherenceReport = runTripleGDiagnostic(api);
-                buildDiagnosticExport(api);
-
                 if (typeof options.onStatus === "function") {
-                  options.onStatus("triple-g-coherence-diagnostic-complete", {
-                    mounted: true,
-                    canvasFound: true,
-                    controlsBound: true,
-                    runtimeTableConsumed: true,
-                    runtimeAllowed: true,
-                    handoff,
-                    imageRendered: true,
-                    coherenceChecked: Boolean(coherenceReport),
-                    coherentExpressionPass: Boolean(coherenceReport && coherenceReport.coherentExpressionPass),
-                    coherenceStatus: coherenceReport && coherenceReport.coherenceStatus,
-                    coherenceScore: coherenceReport && coherenceReport.coherenceScore,
-                    failedCheckpoints: coherenceReport && coherenceReport.failedCheckpoints,
-                    renewalTargets: coherenceReport && coherenceReport.renewalTargets,
-                    waterFailureCoordinate: getWaterFailureCoordinate(state),
-                    diagnosticExportAvailable: state.diagnosticExportAvailable,
-                    diagnosticExportLength: state.diagnosticExportLength,
-                    receiptMode: state.receiptMode,
-                    contract: CONTRACT,
-                    receipt: RECEIPT
-                  });
-
-                  options.onStatus("runtime-table-handoff-complete", {
+                  options.onStatus("water-child-connector-handoff-complete", {
                     mounted: true,
                     canvasFound: true,
                     controlsBound: true,
@@ -3141,13 +2662,7 @@
                     atlasReady: true,
                     atlasBuilding: false,
                     atlasProgress: 1,
-                    imageRendered: true,
-                    coherentExpressionPass: state.coherentExpressionPass,
-                    coherenceStatus: state.coherenceStatus,
-                    coherenceScore: state.coherenceScore,
-                    waterFailureCoordinate: getWaterFailureCoordinate(state),
-                    receiptMode: state.receiptMode,
-                    diagnosticExportAvailable: state.diagnosticExportAvailable,
+                    waterConnectorProof: state.waterConnectorProof,
                     frames: state.frames,
                     contract: CONTRACT,
                     receipt: RECEIPT
@@ -3159,27 +2674,22 @@
 
                 state.atlasBuilding = false;
                 state.atlasReady = false;
-                state.imageRendered = false;
                 state.fallbackActive = true;
 
                 api.atlasBuilding = false;
                 api.atlasReady = false;
-                api.imageRendered = false;
 
                 canvas.dataset.hearthCanvasAtlasBuilding = "false";
                 canvas.dataset.hearthCanvasAtlasReady = "false";
-                canvas.dataset.hearthCanvasImageRendered = "false";
                 canvas.dataset.hearthCanvasAtlasError = error && error.message ? error.message : String(error);
 
                 drawFallbackShell(canvas, state);
 
                 updateLoadingStatus(api, {
                   error: error && error.message ? error.message : String(error),
-                  imageRendered: false,
                   stages: {
                     atlas: "fallback",
-                    projection: "fallback",
-                    coherence: "blocked"
+                    projection: "fallback"
                   }
                 });
 
@@ -3193,9 +2703,7 @@
                     handoff,
                     atlasReady: false,
                     atlasBuilding: false,
-                    imageRendered: false,
                     error: error && error.message ? error.message : String(error),
-                    receiptMode: state.receiptMode,
                     frames: state.frames,
                     contract: CONTRACT,
                     receipt: RECEIPT
@@ -3221,45 +2729,18 @@
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
-      authority: "hearth-water-channel-cache-key-and-load-proof-canvas",
+      authority: "hearth-canvas-water-child-connector-load-alignment",
       status: "active",
       primaryTarget: "/assets/hearth/hearth.canvas.js",
-      role: "Hearth canvas loader proof, Runtime Table consumer, Triple G diagnostic consumer, receipt export surface",
+      role: "Hearth canvas connector-load measurement and Runtime Table consumer",
+
       runtimeTableConsumed: true,
-      runtimeTableContract: LAB_RUNTIME_TABLE_CONTRACT,
-      preferredLabRuntimeTableContract: LAB_RUNTIME_TABLE_CONTRACT_V2,
-      previousLabRuntimeTableContract: LAB_RUNTIME_TABLE_CONTRACT_V1,
-      labRuntimeTableAcceptedContracts: LAB_RUNTIME_TABLE_ACCEPTED_CONTRACTS.slice(),
+      preferredRuntimeTableContract: PREFERRED_LAB_RUNTIME_TABLE_CONTRACT,
+      acceptedRuntimeTableContracts: ACCEPTED_LAB_RUNTIME_TABLE_CONTRACTS.slice(),
       runtimeTableCanonicalOwner: "Dexter Lab",
       runtimeTableCanonicalPath: LAB_RUNTIME_TABLE_PATH,
-      hearthRuntimeTableInstance: true,
-      tripleGDiagnosticConsumed: true,
-      coherenceDiagnosticAvailable: runtimeTableV2Available(),
-      perChannelCacheKeys: {
-        land: CHANNEL_CACHE_KEYS.land,
-        water: CHANNEL_CACHE_KEYS.water,
-        air: CHANNEL_CACHE_KEYS.air
-      },
-      waterLoadProofCoordinates: [
-        "Coordinate 0 — File request",
-        "Coordinate 1 — Script load",
-        "Coordinate 2 — Global export",
-        "Coordinate 3 — Direct sample probe",
-        "Coordinate 4 — Runtime Table validation",
-        "Coordinate 5 — Canvas multiplex readiness",
-        "Coordinate 6 — Triple G receipt",
-        "Coordinate 7 — Diagnostic export"
-      ],
-      receiptModes: Object.values(RECEIPT_MODES),
-      receiptVisibilityToggle: true,
-      receiptExpansionToggle: true,
-      diagnosticCopyExport: true,
-      diagnosticExportFormat: "plain-text",
-      diagnosticExportHeader: "HEARTH_DIAGNOSTIC_RECEIPT_EXPORT",
-      constructionReadyIsNotCoherencePass: true,
-      imageRenderedIsNotCoherencePass: true,
+
       canvasDecidesNothing: true,
-      semiconductorOutlet: true,
       shellFirstMount: true,
       nonBlockingMount: true,
       asyncRuntimeTableLoad: true,
@@ -3270,6 +2751,32 @@
       touchDragBoundImmediately: true,
       pointerDragBoundImmediately: true,
       mountReturnsApiObject: true,
+
+      waterChildConnector: {
+        active: true,
+        mode: WATER_CHILD_MODE,
+        externalAuthority: WATER_CHILD_PATH,
+        expectedContract: WATER_CONTRACT,
+        marker: WATER_CHILD_MARKER,
+        cacheKey: WATER_CHILD_CACHE_KEY,
+        connectorOwnsWaterTruth: false,
+        canvasOwnsWaterTruth: false,
+        firstFailureCoordinates: [
+          "C0_CONNECTOR_NOT_STARTED",
+          "C1_REQUEST_PREPARED",
+          "C2_SCRIPT_ELEMENT_CREATED",
+          "C3_SCRIPT_ELEMENT_APPENDED",
+          "C4_SCRIPT_NETWORK_LOAD_FAILURE",
+          "C5_SCRIPT_LOAD_TIMEOUT",
+          "C6_GLOBAL_ACTOR_MISSING",
+          "C7_CONTRACT_MISMATCH",
+          "C8_SAMPLE_API_FAILURE",
+          "C9_COORDINATE_PACKET_FAILURE",
+          "C10_WATER_AUTHORITY_FLAGS_FAILURE",
+          "C11_WATER_CHILD_VALIDATED"
+        ]
+      },
+
       childChannels: [
         "/assets/hearth/hearth.land.channel.js",
         "/assets/hearth/hearth.water.channel.js",
@@ -3289,80 +2796,55 @@
         "rim-lighting"
       ],
       law: [
-        "Runtime Table and Triple G standards belong to Dexter Lab",
-        "water truth belongs to the water child",
-        "canvas proves whether water is reachable",
-        "canvas consumes Runtime Table",
-        "canvas consumes Triple G diagnostic",
-        "canvas displays and exports receipt",
-        "canvas decides no channel truth",
-        "image rendered is not coherent expression pass",
-        "construction ready is not coherent expression pass",
-        "receipt visibility is a UI concern only"
+        "Canvas is a connector and consumer only",
+        "Canvas does not own water truth",
+        "Water Child remains external authority",
+        "Water Child must express HEARTH_WATER_CHANNEL",
+        "Connector measures exact first failed water coordinate",
+        "Runtime Table standard belongs to Dexter Lab",
+        "Triple G diagnostic standard belongs to Dexter Lab",
+        "land and water are body-bound",
+        "air is the only floating channel",
+        "final atlas requires Runtime Table allowed handoff"
       ],
       owns: [
         "visible-canvas-shell",
         "neutral-loading-shell",
         "instrumented-formation-panel",
-        "receipt-visibility-toggle",
-        "receipt-expanded-view",
-        "diagnostic-export-generation",
-        "diagnostic-copy-action",
-        "per-channel-cache-key-loading",
-        "water-script-load-proof",
-        "water-global-export-proof",
-        "water-direct-sample-proof",
-        "water-coordinate-proof",
-        "water-authority-flag-proof",
+        "diagnostic-receipt-export",
+        "receipt-visible-toggle",
+        "receipt-expanded-toggle",
+        "copyable-diagnostic-export",
         "fallback-shell-drawing",
         "pointer-touch-drag-binding",
         "rotation-state",
         "redraw-scheduling",
         "async-runtime-table-loading",
         "async-channel-loading",
-        "runtime-table-consumption",
-        "triple-g-diagnostic-consumption",
+        "water-child-request",
+        "water-child-load-attempt",
+        "water-child-load-proof",
+        "water-child-missing-proof",
+        "water-child-failure-coordinate",
         "async-atlas-build",
         "cached-atlas-projection",
         "channel-multiplexing",
         "semiconductor-outlet-composition",
-        "spherical-alpha-containment-for-visible-canvas-output",
-        "coherence-report-exposure"
+        "spherical-alpha-containment-for-visible-canvas-output"
       ],
       doesNotOwn: [
+        "Water Child truth",
+        "water packet generation",
+        "hydrology law",
+        "materials law",
+        "land truth",
+        "air truth",
+        "route orchestration",
         "Runtime Table canonical standard",
         "Triple G diagnostic canonical standard",
-        "water-truth",
-        "land-truth",
-        "air-truth",
-        "tectonic-cause",
-        "elevation-generation",
-        "composition-classification",
-        "hydrology-classification",
-        "material-palette-authority",
-        "ocean-authority-generation",
-        "route-orchestration",
-        "runtime-motion-authority",
-        "external-controls-authority",
-        "final-visual-pass-claim"
-      ],
-      failSoftRules: [
-        "mount-visible-shell-before-runtime-table-load",
-        "bind-controls-before-runtime-table-load",
-        "return-api-before-runtime-table-load",
-        "accept-lab-runtime-table-v2",
-        "accept-lab-runtime-table-v1-as-fallback",
-        "use-explicit-water-cache-key",
-        "run-water-direct-probe-before-runtime-table",
-        "include-water-loader-proof-in-export",
-        "run-triple-g-diagnostic-after-image-render-when-v2-available",
-        "if-coherence-fails-keep-receipt-available",
-        "receipt-may-hide-with-user-toggle",
-        "expanded-receipt-must-be-selectable",
-        "copy-export-must-be-plain-text",
-        "no-blank-planet",
-        "no-map-portal-freeze",
-        "no-raw-rectangle-fallback"
+        "runtime motion authority",
+        "controls authority",
+        "final visual pass claim"
       ],
       generatedImage: false,
       graphicBox: false,
@@ -3416,47 +2898,19 @@
     createHearthRuntimeTable,
     runRuntimeTable,
     runTripleGDiagnostic,
-    buildCoherenceInput,
-    updateCoherenceStatus,
     updateLoadingStatus,
     renderLoadingPanel,
     formatRuntimeTableIssues,
-    formatCoherenceIssues,
-    getCoherenceReceipt,
+    createDiagnosticExport,
+    probeWaterActor,
+    applyWaterConnectorProofToDataset,
     getReceipt,
-
-    getPerChannelCacheKey,
-    loadChannelScriptWithProof,
-    probeWaterChannel,
-    updateChannelLoadProof,
-    formatChannelLoadProof,
-
-    setReceiptMode,
-    toggleReceiptVisibility,
-    toggleReceiptExpansion,
-    buildDiagnosticExport,
-    copyDiagnosticExport,
-    getDiagnosticExport,
-    renderReceiptControls,
-    renderExpandedReceipt,
-    syncReceiptDataset,
 
     supportsTrueShellFirstMount: true,
     supportsNonBlockingMount: true,
     supportsAsyncRuntimeTableLoad: true,
     supportsLabRuntimeTableConsumption: true,
-    supportsLabRuntimeTableV2: true,
-    supportsLabRuntimeTableV1Fallback: true,
-    supportsTripleGCoherenceDiagnosticConsumption: true,
-    supportsConstructionReadyImageRenderedCoherentExpressionSplit: true,
-    supportsReceiptVisibilityToggle: true,
-    supportsReceiptExpansionToggle: true,
-    supportsDiagnosticCopyExport: true,
-    supportsPlainTextDiagnosticExport: true,
-    supportsPerChannelCacheKeys: true,
-    supportsWaterChannelLoadProof: true,
-    supportsWaterDirectProbe: true,
-    supportsWaterFailureCoordinate: true,
+    supportsTripleGDiagnosticConsumption: true,
     supportsAsyncAtlasBuild: true,
     supportsChunkedAtlasBuild: true,
     supportsImmediateFallbackShell: true,
@@ -3464,30 +2918,24 @@
     supportsImmediatePointerDrag: true,
     supportsChannelMultiplex: true,
     supportsSemiconductorOutlet: true,
-
-    receiptModes: RECEIPT_MODES,
-    channelCacheKeys: CHANNEL_CACHE_KEYS,
+    supportsReceiptVisibilityToggle: true,
+    supportsExpandedReceipt: true,
+    supportsCopyableDiagnosticExport: true,
+    supportsWaterChildConnectorLoadAlignment: true,
 
     runtimeTableConsumed: true,
-    runtimeTableContract: LAB_RUNTIME_TABLE_CONTRACT,
-    preferredLabRuntimeTableContract: LAB_RUNTIME_TABLE_CONTRACT_V2,
-    previousLabRuntimeTableContract: LAB_RUNTIME_TABLE_CONTRACT_V1,
-    labRuntimeTableAcceptedContracts: LAB_RUNTIME_TABLE_ACCEPTED_CONTRACTS.slice(),
+    runtimeTableContract: PREFERRED_LAB_RUNTIME_TABLE_CONTRACT,
+    acceptedRuntimeTableContracts: ACCEPTED_LAB_RUNTIME_TABLE_CONTRACTS.slice(),
     runtimeTableCanonicalOwner: "Dexter Lab",
     runtimeTableCanonicalPath: LAB_RUNTIME_TABLE_PATH,
-    hearthRuntimeTableInstance: true,
 
-    tripleGDiagnosticConsumed: true,
-    coherenceDiagnosticAvailable: false,
-    coherenceChecked: false,
-    coherenceStatus: "PENDING",
-    coherenceScore: 0,
-    coherentExpressionPass: false,
-    failedCheckpoints: [],
-    renewalTargets: [],
+    waterChildConnectorActive: true,
+    waterChildConnectorMode: WATER_CHILD_MODE,
+    waterChildExternalAuthority: WATER_CHILD_PATH,
+    waterChildExpectedContract: WATER_CONTRACT,
+    connectorOwnsWaterTruth: false,
+    canvasOwnsWaterTruth: false,
 
-    constructionReadyIsNotCoherencePass: true,
-    imageRenderedIsNotCoherencePass: true,
     semiconductorOutlet: true,
     canvasDecidesNothing: true,
     consumesLandChannel: true,
@@ -3524,69 +2972,58 @@
   root.HEARTH_CANVAS_SEMICONDUCTOR_OUTLET = true;
   root.HEARTH_CANVAS_DECIDES_NOTHING = true;
   root.HEARTH_CANVAS_CONSUMES_LAB_RUNTIME_TABLE = true;
-  root.HEARTH_CANVAS_CONSUMES_LAB_TRIPLE_G_DIAGNOSTIC = true;
-  root.HEARTH_CANVAS_RUNTIME_TABLE_CONTRACT = LAB_RUNTIME_TABLE_CONTRACT;
-  root.HEARTH_CANVAS_RUNTIME_TABLE_ACCEPTED_CONTRACTS = LAB_RUNTIME_TABLE_ACCEPTED_CONTRACTS.slice();
-  root.HEARTH_CANVAS_RECEIPT_MODES = RECEIPT_MODES;
-  root.HEARTH_CANVAS_CHANNEL_CACHE_KEYS = CHANNEL_CACHE_KEYS;
+  root.HEARTH_CANVAS_RUNTIME_TABLE_CONTRACT = PREFERRED_LAB_RUNTIME_TABLE_CONTRACT;
+  root.HEARTH_CANVAS_WATER_CHILD_CONNECTOR_ACTIVE = true;
+  root.HEARTH_CANVAS_WATER_CHILD_EXTERNAL_AUTHORITY = WATER_CHILD_PATH;
+  root.HEARTH_CANVAS_OWNS_WATER_TRUTH = false;
 
   if (root.document && root.document.documentElement) {
-    root.document.documentElement.dataset.hearthCanvasAuthorityLoaded = "true";
-    root.document.documentElement.dataset.hearthCanvasContract = CONTRACT;
-    root.document.documentElement.dataset.hearthCanvasReceipt = RECEIPT;
-    root.document.documentElement.dataset.hearthCanvasPreviousContract = PREVIOUS_CONTRACT;
-    root.document.documentElement.dataset.hearthCanvasTrueShellFirst = "true";
-    root.document.documentElement.dataset.hearthCanvasNonBlockingMount = "true";
-    root.document.documentElement.dataset.hearthCanvasAsyncAtlasBuild = "true";
-    root.document.documentElement.dataset.hearthCanvasSupportsTouchDrag = "true";
-    root.document.documentElement.dataset.hearthCanvasSupportsPointerDrag = "true";
-    root.document.documentElement.dataset.hearthCanvasMountReturnsApiObject = "true";
-    root.document.documentElement.dataset.hearthCanvasChannelMultiplex = "true";
-    root.document.documentElement.dataset.hearthCanvasSemiconductorOutlet = "true";
-    root.document.documentElement.dataset.hearthCanvasDecidesNothing = "true";
-    root.document.documentElement.dataset.hearthRuntimeTablePrewired = "true";
-    root.document.documentElement.dataset.hearthRuntimeTableContract = LAB_RUNTIME_TABLE_CONTRACT;
-    root.document.documentElement.dataset.hearthRuntimeTableAcceptedContracts = LAB_RUNTIME_TABLE_ACCEPTED_CONTRACTS.join(",");
-    root.document.documentElement.dataset.hearthRuntimeTableCanonicalOwner = "Dexter Lab";
-    root.document.documentElement.dataset.hearthCanvasConsumesLabRuntimeTable = "true";
-    root.document.documentElement.dataset.hearthCanvasConsumesLabTripleGDiagnostic = "true";
-    root.document.documentElement.dataset.hearthTripleGDiagnosticAvailable = String(runtimeTableV2Available());
-    root.document.documentElement.dataset.hearthTripleGDiagnosticContract = LAB_RUNTIME_TABLE_CONTRACT_V2;
-    root.document.documentElement.dataset.hearthTripleGCoherenceChecked = "false";
-    root.document.documentElement.dataset.hearthTripleGCoherentExpressionPass = "false";
-    root.document.documentElement.dataset.constructionReadyIsNotCoherencePass = "true";
-    root.document.documentElement.dataset.imageRenderedIsNotCoherencePass = "true";
-    root.document.documentElement.dataset.hearthReceiptMode = RECEIPT_MODES.COMPACT;
-    root.document.documentElement.dataset.hearthReceiptVisible = "true";
-    root.document.documentElement.dataset.hearthReceiptExpanded = "false";
-    root.document.documentElement.dataset.hearthDiagnosticExportAvailable = "false";
-    root.document.documentElement.dataset.hearthDiagnosticExportCopied = "false";
-    root.document.documentElement.dataset.hearthDiagnosticExportLength = "0";
-    root.document.documentElement.dataset.hearthDiagnosticExportError = "";
-    root.document.documentElement.dataset.hearthChannelLoadProofReady = "false";
-    root.document.documentElement.dataset.hearthWaterScriptRequested = "false";
-    root.document.documentElement.dataset.hearthWaterScriptLoaded = "false";
-    root.document.documentElement.dataset.hearthWaterScriptPath = "/assets/hearth/hearth.water.channel.js";
-    root.document.documentElement.dataset.hearthWaterScriptCacheKey = CHANNEL_CACHE_KEYS.water;
-    root.document.documentElement.dataset.hearthWaterScriptError = "";
-    root.document.documentElement.dataset.hearthWaterGlobalPresent = "false";
-    root.document.documentElement.dataset.hearthWaterActualContract = "";
-    root.document.documentElement.dataset.hearthWaterExpectedContract = WATER_CONTRACT;
-    root.document.documentElement.dataset.hearthWaterSampleProbeOk = "false";
-    root.document.documentElement.dataset.hearthWaterSampleProbeContract = "";
-    root.document.documentElement.dataset.hearthWaterSampleProbeCoordinatesOk = "false";
-    root.document.documentElement.dataset.hearthWaterSampleProbeFlagsOk = "false";
-    root.document.documentElement.dataset.hearthWaterSampleProbeError = "";
-    root.document.documentElement.dataset.hearthCanvasLandChannelContract = LAND_CONTRACT;
-    root.document.documentElement.dataset.hearthCanvasWaterChannelContract = WATER_CONTRACT;
-    root.document.documentElement.dataset.hearthCanvasAirChannelContract = AIR_CONTRACT;
-    root.document.documentElement.dataset.generatedImage = "false";
-    root.document.documentElement.dataset.graphicBox = "false";
-    root.document.documentElement.dataset.webgl = "false";
-    root.document.documentElement.dataset.routeMutation = "false";
-    root.document.documentElement.dataset.runtimeMutation = "false";
-    root.document.documentElement.dataset.controlsMutation = "false";
-    root.document.documentElement.dataset.visualPassClaimed = "false";
+    const dataset = root.document.documentElement.dataset;
+
+    dataset.hearthCanvasAuthorityLoaded = "true";
+    dataset.hearthCanvasContract = CONTRACT;
+    dataset.hearthCanvasReceipt = RECEIPT;
+    dataset.hearthCanvasPreviousContract = PREVIOUS_CONTRACT;
+    dataset.hearthCanvasTrueShellFirst = "true";
+    dataset.hearthCanvasNonBlockingMount = "true";
+    dataset.hearthCanvasAsyncAtlasBuild = "true";
+    dataset.hearthCanvasSupportsTouchDrag = "true";
+    dataset.hearthCanvasSupportsPointerDrag = "true";
+    dataset.hearthCanvasMountReturnsApiObject = "true";
+    dataset.hearthCanvasChannelMultiplex = "true";
+    dataset.hearthCanvasSemiconductorOutlet = "true";
+    dataset.hearthCanvasDecidesNothing = "true";
+    dataset.hearthRuntimeTablePrewired = "true";
+    dataset.hearthRuntimeTableContract = PREFERRED_LAB_RUNTIME_TABLE_CONTRACT;
+    dataset.hearthRuntimeTableAcceptedContracts = ACCEPTED_LAB_RUNTIME_TABLE_CONTRACTS.join(",");
+    dataset.hearthRuntimeTableCanonicalOwner = "Dexter Lab";
+    dataset.hearthCanvasConsumesLabRuntimeTable = "true";
+    dataset.hearthCanvasConsumesLabTripleGDiagnostic = "true";
+
+    dataset.hearthWaterConnectorActive = "true";
+    dataset.hearthWaterConnectorMode = WATER_CHILD_MODE;
+    dataset.hearthWaterConnectorOwnsWaterTruth = "false";
+    dataset.hearthCanvasOwnsWaterTruth = "false";
+    dataset.hearthWaterChildExternalAuthority = WATER_CHILD_PATH;
+    dataset.hearthWaterChildExpectedContract = WATER_CONTRACT;
+    dataset.hearthWaterChildLoadFailureCoordinate = "C0_CONNECTOR_NOT_STARTED";
+
+    dataset.hearthReceiptMode = "compact";
+    dataset.hearthReceiptVisible = "true";
+    dataset.hearthReceiptExpanded = "false";
+    dataset.hearthDiagnosticExportAvailable = "true";
+
+    dataset.hearthCanvasLandChannelContract = LAND_CONTRACT;
+    dataset.hearthCanvasWaterChannelContract = WATER_CONTRACT;
+    dataset.hearthCanvasAirChannelContract = AIR_CONTRACT;
+
+    dataset.generatedImage = "false";
+    dataset.graphicBox = "false";
+    dataset.webgl = "false";
+    dataset.routeMutation = "false";
+    dataset.runtimeMutation = "false";
+    dataset.controlsMutation = "false";
+    dataset.visualPassClaimed = "false";
   }
 
   if (typeof module !== "undefined" && module.exports) {

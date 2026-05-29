@@ -1,15 +1,15 @@
 // /showroom/globe/hearth/hearth.js
-// HEARTH_ROUTE_RUNTIME_TABLE_CHECKPOINT_GOVERNOR_CONSUMER_POSTGAME_COORDINATE_FIX_TNT_v5
+// HEARTH_ROUTE_CONSUMER_ACTIVE_MATCH_QUEUE_DRAIN_TNT_v6
 // Full-file replacement.
 // Coherence-side semiconductor only.
 // Purpose:
-// - Preserve the successful Runtime Table checkpoint-governor consumer from v4.
+// - Preserve the successful Runtime Table checkpoint-governor consumer from v4/v5.
 // - Preserve chronological NEWS + Fibonacci checkpoint sequencing.
-// - Preserve one-active-checkpoint-at-a-time behavior.
+// - Preserve one-active-checkpoint-at-a-time behavior governed by North Runtime Table.
 // - Preserve Copy diagnostic / Show receipt / Inspect planet / Show diagnostic.
 // - Preserve visible-content proof before F21.
 // - Preserve F13N inspect-mode gate before F21.
-// - Correct postgame receipt hygiene after F21 so firstFailedCoordinate and recommendedNextRenewalTarget no longer report a waiting state.
+// - Correct v5 stall by preserving queued checkpoint events locally and replaying only the event that matches North's current active checkpoint.
 // Does not own:
 // - first-paint survival from /showroom/globe/hearth/index.js
 // - canvas pixel drawing
@@ -24,11 +24,11 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_ROUTE_RUNTIME_TABLE_CHECKPOINT_GOVERNOR_CONSUMER_POSTGAME_COORDINATE_FIX_TNT_v5";
-  const RECEIPT = "HEARTH_ROUTE_RUNTIME_TABLE_CHECKPOINT_GOVERNOR_CONSUMER_POSTGAME_COORDINATE_FIX_RECEIPT_v5";
-  const PREVIOUS_CONTRACT = "HEARTH_ROUTE_RUNTIME_TABLE_CHECKPOINT_GOVERNOR_CONSUMER_INSPECT_GATE_TNT_v4";
-  const BASELINE_CONTRACT = "HEARTH_ROUTE_RUNTIME_TABLE_CHECKPOINT_GOVERNOR_CONSUMER_POSTGAME_COORDINATE_FIX_PRECODE_FINAL_DRAFT_v5";
-  const VERSION = "2026-05-29.hearth-route-runtime-table-checkpoint-governor-consumer-postgame-coordinate-fix-v5";
+  const CONTRACT = "HEARTH_ROUTE_CONSUMER_ACTIVE_MATCH_QUEUE_DRAIN_TNT_v6";
+  const RECEIPT = "HEARTH_ROUTE_CONSUMER_ACTIVE_MATCH_QUEUE_DRAIN_RECEIPT_v6";
+  const PREVIOUS_CONTRACT = "HEARTH_ROUTE_RUNTIME_TABLE_CHECKPOINT_GOVERNOR_CONSUMER_POSTGAME_COORDINATE_FIX_TNT_v5";
+  const BASELINE_CONTRACT = "HEARTH_ROUTE_CONSUMER_ACTIVE_MATCH_QUEUE_DRAIN_PRECODE_FINAL_DRAFT_v6";
+  const VERSION = "2026-05-29.hearth-route-consumer-active-match-queue-drain-v6";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
@@ -138,6 +138,26 @@
     admittedEventsCount: 0,
     regressionPrevented: 0,
 
+    activeMatchQueueDrainActive: true,
+    localQueuedCheckpointEvents: [],
+    localQueuedEventsCount: 0,
+    queueDrainInProgress: false,
+    queueDrainPasses: 0,
+    queueDrainReplayedCount: 0,
+    queueDrainHeldCount: 0,
+    queueDrainArchivedCount: 0,
+    queueDrainBlockedCount: 0,
+    queueDrainLastReason: "",
+    queueDrainLastActiveCheckpointId: "",
+    queueDrainLastReplayedCheckpointId: "",
+    queueDrainLastAction: "",
+    queueDrainGuardLimit: 24,
+    stuckAtQueuedActiveCheckpoint: false,
+    queuedActiveMatchReplayEnabled: true,
+    northCheckpointAuthorityPreserved: true,
+    runtimeTableMutation: false,
+    canvasMutation: false,
+
     newsProtocolActive: true,
     northGateReady: false,
     eastGateReady: false,
@@ -235,6 +255,7 @@
     cockpitMode: "loading-cockpit",
     dockVisible: true,
     fullCockpitExpanded: false,
+    planetInspectModeActive: false,
 
     partialReceiptAvailable: true,
     finalReceiptAvailable: false,
@@ -326,6 +347,7 @@
 
   function clonePlain(value) {
     if (!isObject(value)) return value;
+
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
@@ -382,7 +404,7 @@
 
     if (api && isFunction(api.getReceipt)) {
       try {
-        const receipt = api.getReceipt("hearth-route-v5-postgame-coordinate-fix");
+        const receipt = api.getReceipt("hearth-route-v6-active-match-queue-drain");
         if (receipt && isObject(receipt)) return receipt;
       } catch (error) {
         recordError("CANVAS_RECEIPT_READ_FAILED", error && error.message ? error.message : String(error));
@@ -558,7 +580,7 @@
     };
 
     state.localEvents.push(item);
-    if (state.localEvents.length > 260) state.localEvents.splice(0, state.localEvents.length - 260);
+    if (state.localEvents.length > 320) state.localEvents.splice(0, state.localEvents.length - 320);
     state.updatedAt = item.at;
     return item;
   }
@@ -603,6 +625,7 @@
     mount.dataset.hearthConstraintSemiconductor = INDEX_FILE;
     mount.dataset.hearthCoherenceSemiconductorFile = COHERENCE_FILE;
     mount.dataset.hearthRuntimeTableCheckpointGovernorConsumer = "true";
+    mount.dataset.hearthActiveMatchQueueDrain = "true";
     mount.dataset.generatedImage = "false";
     mount.dataset.graphicBox = "false";
     mount.dataset.webgl = "false";
@@ -616,131 +639,28 @@
   }
 
   function ensureStyle() {
-    if (!doc || doc.getElementById("hearth-route-v5-checkpoint-governor-style")) return;
+    if (!doc || doc.getElementById("hearth-route-v6-active-match-queue-drain-style")) return;
 
     const style = doc.createElement("style");
-    style.id = "hearth-route-v5-checkpoint-governor-style";
+    style.id = "hearth-route-v6-active-match-queue-drain-style";
     style.textContent = `
-      .hearth-ledger-cockpit{
-        transition:max-height .22s ease,opacity .18s ease,visibility .18s ease,transform .22s ease;
-      }
-
-      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"]{
-        inset:auto 10px 10px 10px!important;
-        min-height:132px!important;
-        max-height:186px!important;
-        overflow:hidden!important;
-      }
-
-      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-head{
-        padding:10px 14px 7px!important;
-      }
-
-      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-kicker{
-        font-size:.58rem!important;
-      }
-
-      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-title{
-        font-size:1rem!important;
-        line-height:1.02!important;
-      }
-
-      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-meta{
-        display:none!important;
-      }
-
-      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-latest{
-        font-size:.63rem!important;
-        white-space:nowrap!important;
-        overflow:hidden!important;
-        text-overflow:ellipsis!important;
-      }
-
-      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-progress{
-        padding:7px 10px!important;
-      }
-
-      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-scroll{
-        display:none!important;
-      }
-
-      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-actions{
-        padding:7px 10px 10px!important;
-        border-bottom:0!important;
-      }
-
-      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-button{
-        min-height:28px!important;
-        padding:6px 9px!important;
-        font-size:.56rem!important;
-      }
-
-      .hearth-ledger-cockpit[data-cockpit-mode="expanded-cockpit"]{
-        inset:10px!important;
-        max-height:calc(100% - 20px)!important;
-        min-height:170px!important;
-        overflow:hidden!important;
-      }
-
-      .hearth-ledger-cockpit[data-cockpit-mode="planet-inspect"]{
-        opacity:0!important;
-        visibility:hidden!important;
-        pointer-events:none!important;
-        transform:translateY(26px) scale(.985)!important;
-        max-height:0!important;
-        min-height:0!important;
-        overflow:hidden!important;
-      }
-
-      [data-hearth-coherence-show-diagnostic-tab]{
-        position:fixed;
-        right:max(12px,env(safe-area-inset-right));
-        bottom:max(72px,calc(env(safe-area-inset-bottom) + 72px));
-        z-index:10000;
-        display:none;
-        align-items:center;
-        justify-content:center;
-        min-height:38px;
-        padding:10px 14px;
-        border-radius:999px;
-        border:1px solid rgba(231,188,105,.66);
-        color:#06101e;
-        background:linear-gradient(135deg,#ffe8a3,#e7bc69);
-        box-shadow:0 16px 44px rgba(0,0,0,.40), inset 0 1px 0 rgba(255,255,255,.28);
-        font:950 .70rem/1 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-        letter-spacing:.08em;
-        text-transform:uppercase;
-        cursor:pointer;
-      }
-
-      html[data-hearth-planet-inspect="true"] [data-hearth-coherence-show-diagnostic-tab]{
-        display:inline-flex;
-      }
-
-      html[data-hearth-planet-inspect="true"] #hearthCanvasMount,
-      html[data-hearth-planet-inspect="true"] [data-hearth-canvas-mount="true"]{
-        cursor:grab;
-      }
-
-      @media (max-width:760px){
-        .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"]{
-          inset:auto 8px 8px 8px!important;
-          max-height:190px!important;
-        }
-
-        .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-button{
-          flex:1 1 auto!important;
-          min-width:28%!important;
-        }
-
-        [data-hearth-coherence-show-diagnostic-tab]{
-          right:max(10px,env(safe-area-inset-right));
-          bottom:max(68px,calc(env(safe-area-inset-bottom) + 68px));
-          min-height:34px;
-          padding:9px 12px;
-          font-size:.64rem;
-        }
-      }
+      .hearth-ledger-cockpit{transition:max-height .22s ease,opacity .18s ease,visibility .18s ease,transform .22s ease;}
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"]{inset:auto 10px 10px 10px!important;min-height:132px!important;max-height:186px!important;overflow:hidden!important;}
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-head{padding:10px 14px 7px!important;}
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-kicker{font-size:.58rem!important;}
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-title{font-size:1rem!important;line-height:1.02!important;}
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-meta{display:none!important;}
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-latest{font-size:.63rem!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;}
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-progress{padding:7px 10px!important;}
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-scroll{display:none!important;}
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-actions{padding:7px 10px 10px!important;border-bottom:0!important;}
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-button{min-height:28px!important;padding:6px 9px!important;font-size:.56rem!important;}
+      .hearth-ledger-cockpit[data-cockpit-mode="expanded-cockpit"]{inset:10px!important;max-height:calc(100% - 20px)!important;min-height:170px!important;overflow:hidden!important;}
+      .hearth-ledger-cockpit[data-cockpit-mode="planet-inspect"]{opacity:0!important;visibility:hidden!important;pointer-events:none!important;transform:translateY(26px) scale(.985)!important;max-height:0!important;min-height:0!important;overflow:hidden!important;}
+      [data-hearth-coherence-show-diagnostic-tab]{position:fixed;right:max(12px,env(safe-area-inset-right));bottom:max(72px,calc(env(safe-area-inset-bottom) + 72px));z-index:10000;display:none;align-items:center;justify-content:center;min-height:38px;padding:10px 14px;border-radius:999px;border:1px solid rgba(231,188,105,.66);color:#06101e;background:linear-gradient(135deg,#ffe8a3,#e7bc69);box-shadow:0 16px 44px rgba(0,0,0,.40), inset 0 1px 0 rgba(255,255,255,.28);font:950 .70rem/1 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;}
+      html[data-hearth-planet-inspect="true"] [data-hearth-coherence-show-diagnostic-tab]{display:inline-flex;}
+      html[data-hearth-planet-inspect="true"] #hearthCanvasMount,html[data-hearth-planet-inspect="true"] [data-hearth-canvas-mount="true"]{cursor:grab;}
+      @media (max-width:760px){.hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"]{inset:auto 8px 8px 8px!important;max-height:190px!important;}.hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-button{flex:1 1 auto!important;min-width:28%!important;}[data-hearth-coherence-show-diagnostic-tab]{right:max(10px,env(safe-area-inset-right));bottom:max(68px,calc(env(safe-area-inset-bottom) + 68px));min-height:34px;padding:9px 12px;font-size:.64rem;}}
     `;
 
     doc.head.appendChild(style);
@@ -756,7 +676,7 @@
     cockpit.id = COCKPIT_ID;
     cockpit.className = "hearth-ledger-cockpit";
     cockpit.dataset.hearthLoadCockpit = "true";
-    cockpit.dataset.hearthFirstPaintCockpit = "fallback-created-by-v5";
+    cockpit.dataset.hearthFirstPaintCockpit = "fallback-created-by-v6";
     cockpit.dataset.cockpitMode = "loading-cockpit";
     cockpit.setAttribute("aria-live", "polite");
 
@@ -856,6 +776,7 @@
     cockpit.dataset.hearthCoherenceReceipt = RECEIPT;
     cockpit.dataset.hearthConstraintSemiconductor = INDEX_FILE;
     cockpit.dataset.hearthRuntimeTableCheckpointGovernorConsumer = "true";
+    cockpit.dataset.hearthActiveMatchQueueDrain = "true";
     cockpit.dataset.hearthSynchronizedLoading = "true";
     cockpit.dataset.cockpitMode = cockpit.dataset.cockpitMode || "loading-cockpit";
 
@@ -886,7 +807,7 @@
       mount.querySelectorAll("[data-hearth-mount-fallback], .mount-fallback").forEach((fallback) => {
         fallback.hidden = true;
         fallback.style.display = "none";
-        fallback.dataset.hiddenByV5CheckpointGovernorConsumer = CONTRACT;
+        fallback.dataset.hiddenByV6ActiveMatchQueueDrain = CONTRACT;
       });
     }
 
@@ -958,13 +879,8 @@
       refs.showTab.dataset.visible = String(state.planetInspectModeActive);
     }
 
-    if (refs.inspectButton) {
-      refs.inspectButton.textContent = state.planetInspectModeActive ? "Show diagnostic" : "Inspect planet";
-    }
-
-    if (refs.expandButton) {
-      refs.expandButton.textContent = state.cockpitMode === "expanded-cockpit" ? "Collapse cockpit" : "Collapse cockpit";
-    }
+    if (refs.inspectButton) refs.inspectButton.textContent = state.planetInspectModeActive ? "Show diagnostic" : "Inspect planet";
+    if (refs.expandButton) refs.expandButton.textContent = state.cockpitMode === "expanded-cockpit" ? "Collapse cockpit" : "Collapse cockpit";
 
     evaluateInspectGate();
     scheduleRender();
@@ -993,6 +909,7 @@
     function getReceipt() {
       const current = active();
       const highest = completed.length ? getCheckpointById(completed[completed.length - 1]) : null;
+
       return {
         contract: CONTRACT,
         receipt: RECEIPT,
@@ -1043,33 +960,59 @@
       const current = active();
 
       if (!checkpoint || !current) {
-        archivedEvents.push({ event: clonePlain(event), classification: { action: "ARCHIVE", reason: "unknown-checkpoint-event" }, at: nowIso() });
+        archivedEvents.push({
+          event: clonePlain(event),
+          classification: { action: "ARCHIVE", reason: "unknown-checkpoint-event" },
+          at: nowIso()
+        });
         return { action: "ARCHIVE", reason: "unknown-checkpoint-event" };
       }
 
       if (completionLatched && checkpoint.id !== "F21_COMPLETION_LATCHED") {
-        archivedEvents.push({ event: clonePlain(event), classification: { action: "ARCHIVE", checkpointId: checkpoint.id, reason: "post-f21-event-archived" }, at: nowIso() });
+        archivedEvents.push({
+          event: clonePlain(event),
+          classification: { action: "ARCHIVE", checkpointId: checkpoint.id, reason: "post-f21-event-archived" },
+          at: nowIso()
+        });
         return { action: "ARCHIVE", checkpointId: checkpoint.id, reason: "post-f21-event-archived" };
       }
 
       if (checkpoint.rank > current.rank) {
-        queuedEvents.push({ event: clonePlain(event), classification: { action: "QUEUE", checkpointId: checkpoint.id, reason: "future-event-queued-until-prior-checkpoint-completes" }, at: nowIso() });
+        queuedEvents.push({
+          event: clonePlain(event),
+          classification: { action: "QUEUE", checkpointId: checkpoint.id, reason: "future-event-queued-until-prior-checkpoint-completes" },
+          at: nowIso()
+        });
         return { action: "QUEUE", checkpointId: checkpoint.id, reason: "future-event-queued-until-prior-checkpoint-completes" };
       }
 
       if (checkpoint.rank < current.rank) {
-        archivedEvents.push({ event: clonePlain(event), classification: { action: "ARCHIVE", checkpointId: checkpoint.id, reason: "duplicate-or-late-completed-event-archived" }, at: nowIso() });
+        archivedEvents.push({
+          event: clonePlain(event),
+          classification: { action: "ARCHIVE", checkpointId: checkpoint.id, reason: "duplicate-or-late-completed-event-archived" },
+          at: nowIso()
+        });
         return { action: "ARCHIVE", checkpointId: checkpoint.id, reason: "duplicate-or-late-completed-event-archived" };
       }
 
       if (checkpoint.id === "F21_COMPLETION_LATCHED" && !state.newsGatePassedBeforeF21) {
-        blockedEvents.push({ event: clonePlain(event), classification: { action: "BLOCK", checkpointId: checkpoint.id, reason: "f21-blocked-until-news-gates-pass" }, at: nowIso() });
+        blockedEvents.push({
+          event: clonePlain(event),
+          classification: { action: "BLOCK", checkpointId: checkpoint.id, reason: "f21-blocked-until-news-gates-pass" },
+          at: nowIso()
+        });
         return { action: "BLOCK", checkpointId: checkpoint.id, reason: "f21-blocked-until-news-gates-pass" };
       }
 
-      admittedEvents.push({ event: clonePlain(event), classification: { action: "ADMIT", checkpointId: checkpoint.id, reason: "event-matches-active-checkpoint" }, at: nowIso() });
+      admittedEvents.push({
+        event: clonePlain(event),
+        classification: { action: "ADMIT", checkpointId: checkpoint.id, reason: "event-matches-active-checkpoint" },
+        at: nowIso()
+      });
+
       checkpoint.complete = true;
       checkpoint.status = "COMPLETE";
+
       if (!completed.includes(checkpoint.id)) completed.push(checkpoint.id);
 
       if (checkpoint.id === "F21_COMPLETION_LATCHED") {
@@ -1105,6 +1048,7 @@
 
   function createCheckpointSession() {
     const runtimeTable = getRuntimeTableApi();
+
     state.runtimeTablePresent = Boolean(runtimeTable);
     state.checkpointGovernorPresent = Boolean(runtimeTable && isFunction(runtimeTable.createHearthCheckpointSession));
 
@@ -1135,8 +1079,203 @@
     return state.checkpointSession;
   }
 
-  function updateFromCheckpointReceipt(receipt) {
+  function purgeCompletedLocalQueue() {
+    if (!state.localQueuedCheckpointEvents.length) return;
+
+    const before = state.localQueuedCheckpointEvents.length;
+
+    state.localQueuedCheckpointEvents = state.localQueuedCheckpointEvents.filter((packet) => {
+      return !state.completedCheckpoints.includes(packet.checkpointId);
+    });
+
+    state.localQueuedEventsCount = state.localQueuedCheckpointEvents.length;
+
+    if (before !== state.localQueuedEventsCount) {
+      emitLocal("LOCAL_QUEUE_PURGED_COMPLETED", {
+        before,
+        after: state.localQueuedEventsCount
+      });
+    }
+  }
+
+  function storeLocalQueuedCheckpoint(eventName, checkpoint, detail = {}, result = {}) {
+    if (!checkpoint || state.completedCheckpoints.includes(checkpoint.id)) return null;
+
+    const packet = {
+      eventName,
+      checkpointId: checkpoint.id,
+      checkpointRank: checkpoint.rank,
+      fibonacci: checkpoint.fibonacci,
+      lane: checkpoint.lane,
+      detail: clonePlain(detail || {}),
+      snapshot: clonePlain(buildCheckpointSnapshot()),
+      reason: result.reason || "future-event-queued-until-prior-checkpoint-completes",
+      queuedAt: nowIso(),
+      replayCount: 0,
+      lastReplayAt: "",
+      lastAction: "QUEUE"
+    };
+
+    const index = state.localQueuedCheckpointEvents.findIndex((item) => {
+      return item.checkpointId === packet.checkpointId && item.eventName === packet.eventName;
+    });
+
+    if (index >= 0) {
+      state.localQueuedCheckpointEvents[index] = {
+        ...state.localQueuedCheckpointEvents[index],
+        ...packet
+      };
+    } else {
+      state.localQueuedCheckpointEvents.push(packet);
+    }
+
+    state.localQueuedCheckpointEvents.sort((a, b) => a.checkpointRank - b.checkpointRank);
+    state.localQueuedEventsCount = state.localQueuedCheckpointEvents.length;
+    state.stuckAtQueuedActiveCheckpoint = Boolean(
+      state.localQueuedCheckpointEvents.some((item) => item.checkpointId === state.activeCheckpointId)
+    );
+
+    emitLocal("LOCAL_QUEUE_STORED", {
+      checkpointId: packet.checkpointId,
+      eventName: packet.eventName,
+      localQueuedEventsCount: state.localQueuedEventsCount
+    });
+
+    return packet;
+  }
+
+  function removeLocalQueuedCheckpoint(checkpointId, eventName = "") {
+    const before = state.localQueuedCheckpointEvents.length;
+
+    state.localQueuedCheckpointEvents = state.localQueuedCheckpointEvents.filter((packet) => {
+      if (eventName) return !(packet.checkpointId === checkpointId && packet.eventName === eventName);
+      return packet.checkpointId !== checkpointId;
+    });
+
+    state.localQueuedEventsCount = state.localQueuedCheckpointEvents.length;
+    return before !== state.localQueuedEventsCount;
+  }
+
+  function findActiveLocalQueuedPacket() {
+    return state.localQueuedCheckpointEvents.find((packet) => {
+      return packet.checkpointId === state.activeCheckpointId && !state.completedCheckpoints.includes(packet.checkpointId);
+    }) || null;
+  }
+
+  function drainActiveMatchQueue(reason = "manual") {
+    if (!state.activeMatchQueueDrainActive || !state.queuedActiveMatchReplayEnabled) return false;
+    if (state.queueDrainInProgress || state.completionLatched) return false;
+
+    if (!state.localQueuedCheckpointEvents.length) {
+      state.localQueuedEventsCount = 0;
+      state.stuckAtQueuedActiveCheckpoint = false;
+      return false;
+    }
+
+    state.queueDrainInProgress = true;
+    state.queueDrainPasses += 1;
+    state.queueDrainLastReason = reason;
+
+    let replayed = false;
+    let guard = 0;
+
+    try {
+      purgeCompletedLocalQueue();
+
+      while (!state.completionLatched && guard < state.queueDrainGuardLimit) {
+        guard += 1;
+        state.queueDrainLastActiveCheckpointId = state.activeCheckpointId;
+
+        const packet = findActiveLocalQueuedPacket();
+
+        if (!packet) {
+          state.stuckAtQueuedActiveCheckpoint = false;
+          break;
+        }
+
+        packet.replayCount += 1;
+        packet.lastReplayAt = nowIso();
+
+        state.queueDrainLastReplayedCheckpointId = packet.checkpointId;
+        replayed = true;
+
+        const result = submitCheckpoint(packet.eventName, {
+          ...(packet.detail || {}),
+          ...(packet.snapshot || {}),
+          replayedFromLocalQueue: true,
+          localQueueDrainReason: reason,
+          localQueueReplayCount: packet.replayCount
+        }, {
+          fromQueueDrain: true,
+          skipQueueStore: true,
+          skipQueueDrain: true
+        });
+
+        const action = result && result.action ? result.action : "UNKNOWN";
+        packet.lastAction = action;
+        state.queueDrainLastAction = action;
+
+        if (action === "ADMIT") {
+          state.queueDrainReplayedCount += 1;
+          removeLocalQueuedCheckpoint(packet.checkpointId, packet.eventName);
+          purgeCompletedLocalQueue();
+          continue;
+        }
+
+        if (action === "ARCHIVE") {
+          state.queueDrainArchivedCount += 1;
+          removeLocalQueuedCheckpoint(packet.checkpointId, packet.eventName);
+          purgeCompletedLocalQueue();
+          continue;
+        }
+
+        if (action === "QUEUE") {
+          state.queueDrainHeldCount += 1;
+          state.stuckAtQueuedActiveCheckpoint = true;
+          break;
+        }
+
+        if (action === "BLOCK") {
+          state.queueDrainBlockedCount += 1;
+          state.stuckAtQueuedActiveCheckpoint = true;
+          break;
+        }
+
+        state.queueDrainHeldCount += 1;
+        state.stuckAtQueuedActiveCheckpoint = true;
+        break;
+      }
+    } finally {
+      state.queueDrainInProgress = false;
+      state.localQueuedEventsCount = state.localQueuedCheckpointEvents.length;
+
+      if (guard >= state.queueDrainGuardLimit) {
+        state.stuckAtQueuedActiveCheckpoint = true;
+        recordError("QUEUE_DRAIN_GUARD_LIMIT", `Queue drain guard limit reached at ${state.activeCheckpointId}.`, {
+          reason,
+          guard
+        });
+      }
+
+      emitLocal("ACTIVE_MATCH_QUEUE_DRAIN", {
+        reason,
+        replayed,
+        guard,
+        activeCheckpointId: state.activeCheckpointId,
+        localQueuedEventsCount: state.localQueuedEventsCount,
+        lastAction: state.queueDrainLastAction
+      });
+    }
+
+    publishGlobals();
+    scheduleRender();
+    return replayed;
+  }
+
+  function updateFromCheckpointReceipt(receipt, options = {}) {
     if (!receipt || !isObject(receipt)) return;
+
+    const priorActive = state.activeCheckpointId;
 
     state.checkpointSessionConsumed = true;
     state.checkpointSessionReceiptAvailable = true;
@@ -1173,6 +1312,8 @@
       state.newsGatePassedBeforeF21 = bool(receipt.newsGatePassedBeforeF21, state.newsGatePassedBeforeF21);
     }
 
+    purgeCompletedLocalQueue();
+
     if (state.completionLatched) {
       forcePostgameCoordinateFix();
     } else if (receipt.firstFailedCoordinate) {
@@ -1182,14 +1323,38 @@
     if (!state.completionLatched && receipt.recommendedNextRenewalTarget) {
       state.recommendedNextRenewalTarget = receipt.recommendedNextRenewalTarget;
     }
+
+    if (!options.skipQueueDrain && priorActive !== state.activeCheckpointId) {
+      drainActiveMatchQueue("active-checkpoint-changed-after-receipt");
+    }
   }
 
-  function submitCheckpoint(eventName, detail = {}) {
+  function submitCheckpoint(eventName, detail = {}, options = {}) {
     const checkpoint = getCheckpointByEvent(eventName);
     if (!checkpoint) return null;
 
+    if (state.completedCheckpoints.includes(checkpoint.id) && checkpoint.id !== "F21_COMPLETION_LATCHED") {
+      if (!options.fromQueueDrain) {
+        archiveLateEvent({
+          event: eventName,
+          stage: checkpoint.fibonacci,
+          lane: checkpoint.lane,
+          reason: "local-completed-checkpoint-duplicate",
+          message: checkpoint.label,
+          detail
+        });
+      }
+
+      return {
+        action: "ARCHIVE",
+        checkpointId: checkpoint.id,
+        reason: "local-completed-checkpoint-duplicate"
+      };
+    }
+
     const session = state.checkpointSession || createCheckpointSession();
     const snapshot = buildCheckpointSnapshot();
+
     const event = {
       id: eventName,
       event: eventName,
@@ -1210,25 +1375,29 @@
     try {
       result = session.submitEvent(event);
       const receipt = isFunction(session.getReceipt) ? session.getReceipt() : null;
-      updateFromCheckpointReceipt(receipt);
+      updateFromCheckpointReceipt(receipt, { skipQueueDrain: true });
     } catch (error) {
       recordError("CHECKPOINT_SUBMIT_FAILED", error && error.message ? error.message : String(error), { eventName });
       return null;
     }
 
     const action = result && result.action ? result.action : "UNKNOWN";
+
     emitLocal(eventName, {
       action,
       reason: result && result.reason ? result.reason : "",
       checkpointId: checkpoint.id,
-      activeCheckpointId: result && result.activeCheckpoint ? result.activeCheckpoint.id : state.activeCheckpointId
+      activeCheckpointId: result && result.activeCheckpoint ? result.activeCheckpoint.id : state.activeCheckpointId,
+      fromQueueDrain: options.fromQueueDrain === true
     });
 
     if (action === "ADMIT") {
+      removeLocalQueuedCheckpoint(checkpoint.id, eventName);
       state.latestVisibleEvent = eventName;
       state.currentStage = checkpoint.fibonacci;
       state.highestStage = checkpoint.fibonacci;
       state.mainDisplayProgress = Math.max(state.mainDisplayProgress, state.completionLatched ? 100 : Math.min(98, checkpoint.progress));
+
       setLane(checkpoint.lane, {
         status: checkpoint.id === "F21_COMPLETION_LATCHED" ? "LATCHED" : "READY",
         progress: checkpoint.progress,
@@ -1241,14 +1410,25 @@
       state.mainDisplayProgress = Math.min(98, Math.max(state.mainDisplayProgress, 98));
     } else if (action === "QUEUE") {
       state.queuedEventsCount += 1;
+
+      if (!options.skipQueueStore) {
+        storeLocalQueuedCheckpoint(eventName, checkpoint, detail, result);
+      }
     } else if (action === "ARCHIVE") {
       state.archivedEventsCount += 1;
+      removeLocalQueuedCheckpoint(checkpoint.id, eventName);
     }
+
+    purgeCompletedLocalQueue();
 
     if (state.completionLatched) {
       forcePostgameCoordinateFix();
     } else {
       deriveFailureCoordinate();
+    }
+
+    if (!options.skipQueueDrain) {
+      drainActiveMatchQueue(`after-submit-${eventName}`);
     }
 
     publishGlobals();
@@ -1384,9 +1564,20 @@
       return;
     }
 
+    const activePacket = findActiveLocalQueuedPacket();
+
+    if (activePacket) {
+      state.stuckAtQueuedActiveCheckpoint = true;
+      state.firstFailedCoordinate = `WAITING_ACTIVE_MATCH_QUEUE_DRAIN_${state.activeCheckpointId}`;
+      state.recommendedNextRenewalTarget = COHERENCE_FILE;
+      return;
+    }
+
+    state.stuckAtQueuedActiveCheckpoint = false;
+
     if (!state.canvasReady) {
       state.firstFailedCoordinate = `WAITING_${state.activeCheckpointId || "CANVAS_READY"}`;
-      state.recommendedNextRenewalTarget = CANVAS_FILE;
+      state.recommendedNextRenewalTarget = state.activeCheckpointRank >= 7 ? CANVAS_FILE : COHERENCE_FILE;
       return;
     }
 
@@ -1449,6 +1640,9 @@
     state.recommendedNextRenewalTarget = "read-postgame-canvas-or-triple-g-receipt";
     state.latestVisibleEvent = "COMPLETION_LATCHED";
     state.finalReceiptAvailable = true;
+    state.stuckAtQueuedActiveCheckpoint = false;
+    state.localQueuedCheckpointEvents = [];
+    state.localQueuedEventsCount = 0;
 
     if (refs.ledger && refs.ledger.state) {
       refs.ledger.state.currentStage = "F21";
@@ -1460,8 +1654,10 @@
 
   function maybeFinalize(reason = "manual") {
     hydrateCockpit();
+    drainActiveMatchQueue(`maybe-finalize-pre-${reason}`);
     evaluateInspectGate();
     evaluateNewsGates();
+    drainActiveMatchQueue(`maybe-finalize-post-gates-${reason}`);
 
     const ready = Boolean(
       state.canvasReady &&
@@ -1494,6 +1690,7 @@
       submitCheckpoint("INSPECT_MODE_READY");
     }
 
+    drainActiveMatchQueue(`maybe-finalize-after-f13n-${reason}`);
     evaluateNewsGates();
 
     if (!state.newsGatePassedBeforeF21) {
@@ -1544,6 +1741,7 @@
             coherenceSemiconductor: COHERENCE_FILE,
             synchronizedLoading: true,
             checkpointGovernorConsumer: true,
+            activeMatchQueueDrainConsumer: true,
             visualPassClaimed: false
           }
         }, {
@@ -1597,6 +1795,7 @@
       systematicAndSynchronized: true,
       synchronizedLoading: true,
       runtimeTableCheckpointGovernorConsumer: true,
+      activeMatchQueueDrainConsumer: true,
       visibleContentCompletionGate: true,
       inspectModeGate: true,
       sharedLedger: refs.ledger || ensureLedger(),
@@ -1760,6 +1959,7 @@
       root.setTimeout(() => startVisibleContentProof("canvas-ready-late-frame"), 360);
     }
 
+    drainActiveMatchQueue(`canvas-phase-${phase}`);
     scheduleRender();
     return event;
   }
@@ -1947,6 +2147,8 @@
       state.nonblankPlanetVisible = true;
       state.planetFramePainted = true;
     }
+
+    evaluateNewsGates();
   }
 
   function explicitReceiptContentProof(value) {
@@ -2011,6 +2213,7 @@
       });
     }
 
+    drainActiveMatchQueue(`visible-content-${reason}`);
     evaluateInspectGate();
     maybeFinalize(`visible-content-proof-${reason}`);
     return passed;
@@ -2182,9 +2385,9 @@
     state.planetFramePainted = Boolean(nonblank > 12 && (state.firstFrameDetected || state.imageRendered || state.canvasReady));
     state.nonblankPlanetVisible = Boolean(nonblank > 12);
 
-    const hasLand = land >= 6;
+    const hasLand = land >= 4;
     const hasWaterOrOther = water >= 6 || other >= 6;
-    const enoughVariance = variance >= 14;
+    const enoughVariance = variance >= 12;
     const enoughSamples = sampleCount >= 60 && nonblank >= 28;
     const passed = Boolean(enoughSamples && enoughVariance && hasLand && hasWaterOrOther && state.textureComposeComplete && state.canvasReady);
 
@@ -2287,12 +2490,15 @@
     const receipt = getCanvasReceipt();
     if (receipt && isObject(receipt)) handleCanvasReceiptLight(receipt);
 
+    drainActiveMatchQueue(`reconcile-pre-proof-${reason}`);
+
     if (state.canvasReady && !state.visibleContentProof) {
       startVisibleContentProof(`reconcile-${reason}`);
     }
 
     evaluateInspectGate();
     evaluateNewsGates();
+    drainActiveMatchQueue(`reconcile-post-gate-${reason}`);
 
     if (state.visibleContentProof) maybeFinalize(`reconcile-${reason}`);
     else deriveFailureCoordinate();
@@ -2323,10 +2529,11 @@
   }
 
   function renderLaneMarkup() {
-    const sequence = FIBONACCI_CHECKPOINTS.map((checkpoint) => {
+    return FIBONACCI_CHECKPOINTS.map((checkpoint) => {
       const complete = state.completedCheckpoints.includes(checkpoint.id);
       const active = state.activeCheckpointId === checkpoint.id;
-      const status = complete ? "COMPLETE" : active ? "ACTIVE" : checkpoint.rank < state.activeCheckpointRank ? "ARCHIVED" : "PENDING";
+      const queuedLocal = state.localQueuedCheckpointEvents.some((packet) => packet.checkpointId === checkpoint.id);
+      const status = complete ? "COMPLETE" : active ? "ACTIVE" : queuedLocal ? "QUEUED" : checkpoint.rank < state.activeCheckpointRank ? "ARCHIVED" : "PENDING";
       const progress = complete ? checkpoint.progress : active ? Math.min(98, checkpoint.progress) : 0;
 
       return `
@@ -2346,9 +2553,7 @@
           </div>
         </section>
       `;
-    });
-
-    return sequence.join("");
+    }).join("");
   }
 
   function scheduleRender() {
@@ -2400,6 +2605,8 @@
     refs.cockpit.dataset.hearthVisibleContentProof = String(state.visibleContentProof);
     refs.cockpit.dataset.hearthVisiblePlanetAvailable = String(state.visiblePlanetAvailable);
     refs.cockpit.dataset.hearthDiagnosticCanLeavePlanetFrame = String(state.diagnosticCanLeavePlanetFrame);
+    refs.cockpit.dataset.hearthActiveMatchQueueDrain = String(state.activeMatchQueueDrainActive);
+    refs.cockpit.dataset.hearthLocalQueuedEventsCount = String(state.localQueuedEventsCount);
     refs.cockpit.dataset.hearthFirstFailedCoordinate = state.firstFailedCoordinate;
     refs.cockpit.dataset.hearthRecommendedNextRenewalTarget = state.recommendedNextRenewalTarget;
 
@@ -2429,6 +2636,8 @@
       `Runtime Table present ${state.runtimeTablePresent}`,
       `Checkpoint session created ${state.checkpointSessionCreated}`,
       `Checkpoint governor fallback used ${state.checkpointGovernorFallbackUsed}`,
+      `Active-match queue drain ${state.activeMatchQueueDrainActive}`,
+      `Local queued events ${state.localQueuedEventsCount}`,
       `Chronological Fibonacci alignment ${state.chronologicalFibonacciAlignment}`,
       `NEWS Fibonacci alignment ${state.newsFibonacciAlignment}`,
       `One active checkpoint at a time ${state.oneActiveCheckpointAtATime}`,
@@ -2505,7 +2714,7 @@
 
     try {
       const receipt = state.checkpointSession.getReceipt();
-      updateFromCheckpointReceipt(receipt);
+      updateFromCheckpointReceipt(receipt, { skipQueueDrain: true });
       return receipt;
     } catch (error) {
       state.checkpointSessionError = error && error.message ? error.message : String(error);
@@ -2515,8 +2724,9 @@
   }
 
   function getReceipt() {
-    if (state.completionLatched) forcePostgameCoordinateFix();
-    else {
+    if (state.completionLatched) {
+      forcePostgameCoordinateFix();
+    } else {
       evaluateInspectGate();
       evaluateNewsGates();
       deriveFailureCoordinate();
@@ -2557,6 +2767,25 @@
       regressiveEventsBlocked: true,
       blockedProgressCap: 98,
       readyTextRequiresCompletionLatch: true,
+
+      activeMatchQueueDrainActive: state.activeMatchQueueDrainActive,
+      queuedActiveMatchReplayEnabled: state.queuedActiveMatchReplayEnabled,
+      northCheckpointAuthorityPreserved: state.northCheckpointAuthorityPreserved,
+      runtimeTableMutation: state.runtimeTableMutation,
+      canvasMutation: state.canvasMutation,
+      localQueuedEventsCount: state.localQueuedEventsCount,
+      queueDrainInProgress: state.queueDrainInProgress,
+      queueDrainPasses: state.queueDrainPasses,
+      queueDrainReplayedCount: state.queueDrainReplayedCount,
+      queueDrainHeldCount: state.queueDrainHeldCount,
+      queueDrainArchivedCount: state.queueDrainArchivedCount,
+      queueDrainBlockedCount: state.queueDrainBlockedCount,
+      queueDrainLastReason: state.queueDrainLastReason,
+      queueDrainLastActiveCheckpointId: state.queueDrainLastActiveCheckpointId,
+      queueDrainLastReplayedCheckpointId: state.queueDrainLastReplayedCheckpointId,
+      queueDrainLastAction: state.queueDrainLastAction,
+      stuckAtQueuedActiveCheckpoint: state.stuckAtQueuedActiveCheckpoint,
+      localQueuedCheckpointEvents: clonePlain(state.localQueuedCheckpointEvents),
 
       activeCheckpointId: state.activeCheckpointId,
       activeCheckpointRank: state.activeCheckpointRank,
@@ -2700,9 +2929,15 @@
 
     const sequenceText = receipt.checkpointSequence.map((checkpoint) => {
       const complete = state.completedCheckpoints.includes(checkpoint.id);
-      const status = complete ? "COMPLETE" : state.activeCheckpointId === checkpoint.id ? "ACTIVE" : "PENDING";
+      const queuedLocal = state.localQueuedCheckpointEvents.some((packet) => packet.checkpointId === checkpoint.id);
+      const status = complete ? "COMPLETE" : state.activeCheckpointId === checkpoint.id ? "ACTIVE" : queuedLocal ? "QUEUED_LOCAL" : "PENDING";
+
       return `- ${checkpoint.id}: rank=${checkpoint.rank}; fibonacci=${checkpoint.fibonacci}; status=${status}; complete=${complete}; progress=${checkpoint.progress}; event=${checkpoint.event}`;
     }).join("\n");
+
+    const localQueueText = receipt.localQueuedCheckpointEvents.map((packet) => (
+      `- ${packet.queuedAt || ""} :: ${packet.checkpointId} :: event=${packet.eventName}; rank=${packet.checkpointRank}; replayCount=${packet.replayCount}; lastAction=${packet.lastAction}; reason=${packet.reason}`
+    )).join("\n") || "- none";
 
     const phaseText = receipt.phaseEvents.map((event) => (
       `- ${event.at || ""} :: ${event.phase || ""} :: progress=${event.percent || ""} :: ${event.message || ""}`
@@ -2727,7 +2962,7 @@
     const sourceStackText = receipt.sourceStackHeld.map((item) => `- ${item}`).join("\n");
 
     return [
-      "HEARTH_ROUTE_RUNTIME_TABLE_CHECKPOINT_GOVERNOR_CONSUMER_POSTGAME_COORDINATE_FIX_RECEIPT",
+      "HEARTH_ROUTE_CONSUMER_ACTIVE_MATCH_QUEUE_DRAIN_RECEIPT",
       "",
       `contract=${receipt.contract}`,
       `receipt=${receipt.receipt}`,
@@ -2759,6 +2994,24 @@
       `regressiveEventsBlocked=${receipt.regressiveEventsBlocked}`,
       `blockedProgressCap=${receipt.blockedProgressCap}`,
       `readyTextRequiresCompletionLatch=${receipt.readyTextRequiresCompletionLatch}`,
+      "",
+      `activeMatchQueueDrainActive=${receipt.activeMatchQueueDrainActive}`,
+      `queuedActiveMatchReplayEnabled=${receipt.queuedActiveMatchReplayEnabled}`,
+      `northCheckpointAuthorityPreserved=${receipt.northCheckpointAuthorityPreserved}`,
+      `runtimeTableMutation=${receipt.runtimeTableMutation}`,
+      `canvasMutation=${receipt.canvasMutation}`,
+      `localQueuedEventsCount=${receipt.localQueuedEventsCount}`,
+      `queueDrainInProgress=${receipt.queueDrainInProgress}`,
+      `queueDrainPasses=${receipt.queueDrainPasses}`,
+      `queueDrainReplayedCount=${receipt.queueDrainReplayedCount}`,
+      `queueDrainHeldCount=${receipt.queueDrainHeldCount}`,
+      `queueDrainArchivedCount=${receipt.queueDrainArchivedCount}`,
+      `queueDrainBlockedCount=${receipt.queueDrainBlockedCount}`,
+      `queueDrainLastReason=${receipt.queueDrainLastReason}`,
+      `queueDrainLastActiveCheckpointId=${receipt.queueDrainLastActiveCheckpointId}`,
+      `queueDrainLastReplayedCheckpointId=${receipt.queueDrainLastReplayedCheckpointId}`,
+      `queueDrainLastAction=${receipt.queueDrainLastAction}`,
+      `stuckAtQueuedActiveCheckpoint=${receipt.stuckAtQueuedActiveCheckpoint}`,
       "",
       `activeCheckpointId=${receipt.activeCheckpointId}`,
       `activeCheckpointRank=${receipt.activeCheckpointRank}`,
@@ -2883,6 +3136,9 @@
       "CHECKPOINT_SEQUENCE",
       sequenceText,
       "",
+      "LOCAL_QUEUED_CHECKPOINT_EVENTS",
+      localQueueText,
+      "",
       "CANVAS_PHASE_EVENTS",
       phaseText,
       "",
@@ -2920,6 +3176,7 @@
     root.HEARTH_ACTIVE_ROUTE = api;
     root.HEARTH_ROUTE_COHERENCE_SEMICONDUCTOR = api;
     root.HEARTH_ROUTE_RUNTIME_TABLE_CHECKPOINT_GOVERNOR_CONSUMER = api;
+    root.HEARTH_ROUTE_CONSUMER_ACTIVE_MATCH_QUEUE_DRAIN = api;
     root.HEARTH_ROUTE_CONDUCTOR_CONTRACT = CONTRACT;
 
     root.__HEARTH_ACTIVE_ROUTE_FILE__ = COHERENCE_FILE;
@@ -2935,6 +3192,7 @@
     root.HEARTH_ROUTE_COHERENCE_SEMICONDUCTOR_RECEIPT = receipt;
     root.HEARTH_ROUTE_CONDUCTOR_RECEIPT = receipt;
     root.HEARTH_ROUTE_CONDUCTOR_POSTGAME_RECEIPT = receipt;
+    root.HEARTH_ROUTE_ACTIVE_MATCH_QUEUE_DRAIN_RECEIPT = receipt;
 
     if (!doc || !doc.documentElement) return;
 
@@ -2944,6 +3202,15 @@
     dataset.hearthCoherenceSemiconductorContract = CONTRACT;
     dataset.hearthCoherenceSemiconductorReceipt = RECEIPT;
     dataset.hearthRuntimeTableCheckpointGovernorConsumer = "true";
+    dataset.hearthActiveMatchQueueDrain = String(state.activeMatchQueueDrainActive);
+    dataset.hearthQueuedActiveMatchReplayEnabled = String(state.queuedActiveMatchReplayEnabled);
+    dataset.hearthNorthCheckpointAuthorityPreserved = String(state.northCheckpointAuthorityPreserved);
+    dataset.hearthRuntimeTableMutation = String(state.runtimeTableMutation);
+    dataset.hearthCanvasMutation = String(state.canvasMutation);
+    dataset.hearthLocalQueuedEventsCount = String(state.localQueuedEventsCount);
+    dataset.hearthQueueDrainReplayedCount = String(state.queueDrainReplayedCount);
+    dataset.hearthStuckAtQueuedActiveCheckpoint = String(state.stuckAtQueuedActiveCheckpoint);
+
     dataset.hearthPairedSemiconductor = "true";
     dataset.hearthConstraintSemiconductor = INDEX_FILE;
     dataset.hearthCoherenceSemiconductor = COHERENCE_FILE;
@@ -3025,6 +3292,17 @@
       chronologicalFibonacciAlignment: true,
       newsFibonacciAlignment: true,
       oneActiveCheckpointAtATime: true,
+
+      activeMatchQueueDrainActive: state.activeMatchQueueDrainActive,
+      queuedActiveMatchReplayEnabled: state.queuedActiveMatchReplayEnabled,
+      northCheckpointAuthorityPreserved: state.northCheckpointAuthorityPreserved,
+      runtimeTableMutation: state.runtimeTableMutation,
+      canvasMutation: state.canvasMutation,
+      localQueuedEventsCount: state.localQueuedEventsCount,
+      queueDrainReplayedCount: state.queueDrainReplayedCount,
+      queueDrainLastAction: state.queueDrainLastAction,
+      stuckAtQueuedActiveCheckpoint: state.stuckAtQueuedActiveCheckpoint,
+
       activeCheckpointId: state.activeCheckpointId,
       highestCompletedCheckpointId: state.highestCompletedCheckpointId,
       newsGatePassedBeforeF21: state.newsGatePassedBeforeF21,
@@ -3084,8 +3362,10 @@
     heartbeatTimer = root.setInterval(() => {
       state.heartbeatElapsedMs = state.startedAtMs ? nowMs() - state.startedAtMs : 0;
 
-      if (!state.completionLatched) reconcileAll("heartbeat");
-      else {
+      if (!state.completionLatched) {
+        reconcileAll("heartbeat");
+        drainActiveMatchQueue("heartbeat");
+      } else {
         forcePostgameCoordinateFix();
         publishGlobals();
         scheduleRender();
@@ -3097,8 +3377,12 @@
     if (reconcileTimer) root.clearInterval(reconcileTimer);
 
     reconcileTimer = root.setInterval(() => {
-      if (!state.completionLatched) reconcileAll("interval");
-      else forcePostgameCoordinateFix();
+      if (!state.completionLatched) {
+        reconcileAll("interval");
+        drainActiveMatchQueue("interval");
+      } else {
+        forcePostgameCoordinateFix();
+      }
     }, 1200);
   }
 
@@ -3127,6 +3411,8 @@
     submitCheckpoint("AUTHORITY_AVAILABILITY_READY");
     submitCheckpoint("CONDUCTOR_HYDRATED");
 
+    drainActiveMatchQueue("boot-initial-checkpoint-burst");
+
     publishGlobals();
     render();
 
@@ -3154,7 +3440,7 @@
     }
 
     ledgerPush({
-      id: "HEARTH_ROUTE_V5_DISPOSED",
+      id: "HEARTH_ROUTE_V6_DISPOSED",
       stage: state.currentStage,
       lane: "conductorHydration",
       status: "DISPOSED",
@@ -3184,6 +3470,7 @@
     tryFinalize: maybeFinalize,
     setCockpitMode,
     proveVisibleContent,
+    drainActiveMatchQueue,
     getReceipt,
     getReceiptText,
     copyDiagnostic,
@@ -3193,6 +3480,7 @@
     supportsChronologicalFibonacciAlignment: true,
     supportsNewsFibonacciAlignment: true,
     supportsOneActiveCheckpointAtATime: true,
+    supportsActiveMatchQueueDrain: true,
     supportsPostgameCoordinateFix: true,
     supportsVisibleContentCompletionGate: true,
     supportsInspectModeCompletionGate: true,
@@ -3206,11 +3494,16 @@
     ownsAtlasGeneration: false,
     ownsTextureGeneration: false,
     ownsRuntimeTableImplementation: false,
+    ownsRuntimeTableMutation: false,
+    ownsCanvasMutation: false,
     ownsSourceStackTruth: false,
     ownsHtmlStructure: false,
     ownsClimateRouteRendering: false,
     ownsFinalVisualPassClaim: false,
 
+    northCheckpointAuthorityPreserved: true,
+    runtimeTableMutation: false,
+    canvasMutation: false,
     generatedImage: false,
     graphicBox: false,
     webGL: false,

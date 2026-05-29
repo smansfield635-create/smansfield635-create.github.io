@@ -1,46 +1,45 @@
-// /showroom/globe/hearth/index.js
-// HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR_FIRST_PAINT_LEDGER_TNT_v1
+// /showroom/globe/hearth/hearth.js
+// HEARTH_ROUTE_COHERENCE_SEMICONDUCTOR_VISIBLE_CONTENT_PROOF_LATCH_TNT_v2
 // Full-file replacement.
-// Constraint-side semiconductor only.
+// Coherence-side semiconductor only.
 // Purpose:
-// - Start the Hearth visible process.
-// - Guarantee first-paint loading/ledger visibility.
-// - Create shared load ledger for the paired semiconductor system.
-// - Track script order and conductor availability.
-// - Delegate coherence completion to /showroom/globe/hearth/hearth.js.
-// - Preserve partial diagnostic/copy/receipt access before final completion.
-// - Reserve Inspect planet / Show diagnostic controls for synchronized handoff.
+// - Finish the Hearth visible process started by /showroom/globe/hearth/index.js.
+// - Hydrate the shared paired-semiconductor ledger.
+// - Consume cooperative canvas phase events without allowing post-ready phase bounce.
+// - Treat CANVAS_READY as necessary, not sufficient, for completion.
+// - Block F21 until visible Hearth content proof and inspect-mode proof are both true.
+// - Preserve Copy diagnostic / Show receipt / Inspect planet / Show diagnostic restoration.
 // Does not own:
-// - active route coherence
-// - canvas drawing
-// - atlas pixel generation
-// - texture composition
-// - visible planet proof
-// - final completion
-// - F21 latch
-// - final diagnostic receipt authority
+// - first-paint survival from blank page
+// - canvas pixel drawing
+// - atlas generation
+// - texture generation
 // - Runtime Table implementation
 // - source-stack truth
+// - HTML structure
 // - climate-route rendering
-// - visual pass claim
+// - final visual pass claim
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR_FIRST_PAINT_LEDGER_TNT_v1";
-  const RECEIPT = "HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR_FIRST_PAINT_LEDGER_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "HEARTH_INDEX_JS_ROUTE_BRIDGE_RECONSTRUCTION_TNT_v1";
-  const EXPECTED_COHERENCE_CONDUCTOR = "HEARTH_ROUTE_COHERENCE_SEMICONDUCTOR_VISIBLE_PLANET_COMPLETION_TNT_v1";
-  const VERSION = "2026-05-29.hearth-index-constraint-semiconductor-first-paint-ledger-v1";
+  const CONTRACT = "HEARTH_ROUTE_COHERENCE_SEMICONDUCTOR_VISIBLE_CONTENT_PROOF_LATCH_TNT_v2";
+  const RECEIPT = "HEARTH_ROUTE_COHERENCE_SEMICONDUCTOR_VISIBLE_CONTENT_PROOF_LATCH_RECEIPT_v2";
+  const PREVIOUS_CONTRACT = "HEARTH_CONDUCTOR_STRICT_CANVAS_READY_LATCH_AND_INSPECT_MODE_TNT_v1";
+  const BASELINE_CONTRACT = "HEARTH_ROUTE_COHERENCE_SEMICONDUCTOR_VISIBLE_CONTENT_PROOF_LATCH_PRECODE_FINAL_DRAFT_v2";
+  const VERSION = "2026-05-29.hearth-route-coherence-semiconductor-visible-content-proof-latch-v2";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
 
+  const ROUTE = "/showroom/globe/hearth/";
   const INDEX_FILE = "/showroom/globe/hearth/index.js";
   const COHERENCE_FILE = "/showroom/globe/hearth/hearth.js";
   const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
   const RETIRED_CLIMATE_FILE = "/showroom/globe/hearth/hearth.climate.route.js";
+
   const MOUNT_ID = "hearthCanvasMount";
+  const COCKPIT_ID = "hearthLoadCockpit";
   const STATUS_ID = "hearth-route-status";
 
   const FIB = Object.freeze({
@@ -49,8 +48,8 @@
     F2: { id: "F2", rank: 3, value: 2, label: "First-paint cockpit visible", progress: 22 },
     F3: { id: "F3", rank: 4, value: 3, label: "Script order visible", progress: 36 },
     F5: { id: "F5", rank: 5, value: 5, label: "Authority availability", progress: 55 },
-    F8: { id: "F8", rank: 6, value: 8, label: "Conductor hydration", progress: 72 },
-    F13: { id: "F13", rank: 7, value: 13, label: "Canvas phase stream", progress: 78 },
+    F8: { id: "F8", rank: 6, value: 8, label: "Coherence semiconductor hydrated", progress: 72 },
+    F13: { id: "F13", rank: 7, value: 13, label: "Canvas and visible content proof", progress: 78 },
     F21: { id: "F21", rank: 8, value: 21, label: "Completion latch", progress: 100 }
   });
 
@@ -62,110 +61,206 @@
     { key: "authorityAvailability", label: "Authority availability", fibonacci: "F5" },
     { key: "conductorHydration", label: "Conductor hydration", fibonacci: "F8" },
     { key: "canvasAndDiagnostic", label: "Canvas and diagnostic", fibonacci: "F13" },
-    { key: "visiblePlanetProof", label: "Visible planet proof", fibonacci: "F13" },
+    { key: "visiblePlanetProof", label: "Visible content proof", fibonacci: "F13" },
     { key: "inspectMode", label: "Inspect mode", fibonacci: "F13" },
     { key: "completionLatch", label: "Completion latch", fibonacci: "F21" }
   ]);
 
-  const SCRIPT_KEYS = Object.freeze([
-    { key: "manorRegistry", srcPart: "/assets/manor-blueprint/manor.blueprint.registry.js" },
-    { key: "manorBlueprint", srcPart: "/assets/manor-blueprint/manor.blueprint.js" },
-    { key: "runtimeTable", srcPart: "/assets/lab/runtime-table.js" },
-    { key: "sourceTectonics", srcPart: "/assets/hearth/hearth.tectonics.js" },
-    { key: "sourceElevation", srcPart: "/assets/hearth/hearth.elevation.js" },
-    { key: "sourceComposition", srcPart: "/assets/hearth/hearth.composition.js" },
-    { key: "sourceHydrology", srcPart: "/assets/hearth/hearth.hydrology.js" },
-    { key: "sourceMaterials", srcPart: "/assets/hearth/hearth.materials.js" },
-    { key: "sourceHexAuthority", srcPart: "/assets/hearth/hearth.hex.four-pair.authority.js" },
-    { key: "sourceHexSurface", srcPart: "/assets/hearth/hearth.hex.surface.js" },
-    { key: "canvasAuthority", srcPart: "/assets/hearth/hearth.canvas.js" },
-    { key: "coherenceConductor", srcPart: "/showroom/globe/hearth/hearth.js" }
+  const F13_REQUIRED = Object.freeze([
+    "CANVAS_COOPERATIVE_BOOT_STARTED",
+    "CANVAS_MOUNT_CREATED",
+    "CANVAS_CONTEXT_READY",
+    "ATLAS_BUILD_STARTED",
+    "ATLAS_BUILD_COMPLETE",
+    "TEXTURE_COMPOSE_STARTED",
+    "TEXTURE_COMPOSE_COMPLETE",
+    "FIRST_FRAME_REQUESTED",
+    "FIRST_FRAME_DETECTED",
+    "DRAG_INSPECTION_BOUND",
+    "CANVAS_READY",
+    "VISIBLE_CONTENT_PROOF_STARTED",
+    "VISIBLE_CONTENT_PROOF_PASSED",
+    "INSPECT_MODE_READY"
+  ]);
+
+  const EXPLICIT_CONTENT_FLAGS = Object.freeze([
+    "atlasPainted",
+    "textureApplied",
+    "surfaceTextureApplied",
+    "planetTexturePainted",
+    "visibleContentPainted",
+    "visibleContentProof",
+    "visibleHearthContentPainted",
+    "atlasAppliedToPlanet",
+    "textureAppliedToPlanet",
+    "surfaceAtlasPainted",
+    "landWaterTexturePainted"
   ]);
 
   const state = {
     contract: CONTRACT,
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
-    expectedCoherenceConductor: EXPECTED_COHERENCE_CONDUCTOR,
+    baselineContract: BASELINE_CONTRACT,
     version: VERSION,
-    file: INDEX_FILE,
-    route: "/showroom/globe/hearth/",
-    role: "constraint-side-semiconductor",
+    file: COHERENCE_FILE,
+    route: ROUTE,
+    role: "coherence-side-semiconductor",
 
     pairedSemiconductor: true,
-    pairedWith: COHERENCE_FILE,
+    pairedWith: INDEX_FILE,
     indexJsStartsProcess: true,
     hearthJsFinishesProcess: true,
     systematicAndSynchronized: true,
     synchronizedLoading: true,
 
-    ownsFirstPaintSurvival: true,
-    ownsMountCertainty: true,
-    ownsLoadingScreenCertainty: true,
-    ownsEarlyLedger: true,
-    ownsScriptOrderVisibility: true,
-    ownsActiveRouteConduction: false,
-    ownsFinalCompletion: false,
-    ownsCanvasDrawing: false,
-    ownsVisiblePlanetProof: false,
-    ownsFinalDiagnosticReceipt: false,
+    sharedLedgerHydrated: false,
+    indexConstraintAccepted: false,
+    indexConstraintPresent: false,
 
-    firstPaintCockpitReady: false,
-    visibleProgressStripReady: false,
-    loadLedgerPresent: false,
-    copyPartialDiagnosticReady: false,
-    receiptToggleReady: false,
-    inspectControlReserved: false,
-    showDiagnosticRestoreReserved: false,
+    newsProtocolActive: true,
+    northGateReady: false,
+    eastGateReady: false,
+    westGateReady: false,
+    southGateReady: false,
+    newsGatePassedBeforeF21: false,
 
-    newsProtocolInitialized: false,
-    fibonacciSequenceInitialized: false,
+    fibonacciSequenceActive: true,
+    fibonacciStageAtCanvasReady: "",
+    fibonacciStageAtVisibleContentProof: "",
+    fibonacciStageAtCompletionLatch: "",
+    f13SubsequenceComplete: false,
+    f13LastRequiredEvent: "",
+    f21AfterF13M: false,
 
-    mountReady: false,
-    mountCreatedByIndex: false,
-    loadingScreenReady: false,
-    partialReceiptAvailable: false,
+    strictCanvasReadyLatchActive: true,
+    visibleContentLatchActive: true,
+    canvasReadinessBarrierOpen: false,
+    visibleContentBarrierOpen: false,
+    prematureLatchPrevented: false,
+    falseReadyPrevented: false,
+    completionBlockedUntilVisibleContent: true,
+    completionReceiptRequiresVisiblePlanet: true,
+    completionReceiptRequiresVisibleContent: true,
+    completionReceiptRequiresInspectMode: true,
+    completionLatchedAfterCanvasReady: false,
+    completionLatchedAfterVisibleContent: false,
+    completionLatchedAfterInspectModeReady: false,
+    f13EventsArchivedBeforeCanvasReady: false,
+    stageRegressionPrevented: 0,
+    ignoredDuplicateCanvasEvents: 0,
 
-    activeRouteConductor: COHERENCE_FILE,
-    conductorDelegationReady: false,
-    conductorDelegationAccepted: false,
-    conductorGlobalPresent: false,
-    conductorScriptPresent: false,
-    conductorScriptRequested: false,
-    conductorScriptLoaded: false,
-    conductorScriptError: "",
-    conductorContract: "",
-    conductorBootMethodPresent: false,
-    conductorBootCallSuppressedToPreventDuplicate: true,
+    currentStage: "F8",
+    highestStage: "F8",
+    completionLatched: false,
+    visibleLoadingActive: true,
+    diagnosticCockpitReady: false,
+    postgameStatus: "COHERENCE_SEMICONDUCTOR_HYDRATING",
+    firstFailedCoordinate: "F8_COHERENCE_HYDRATION",
+    recommendedNextRenewalTarget: "await-visible-content-proof",
+    latestVisibleEvent: "COHERENCE_SEMICONDUCTOR_LOADED",
 
-    canvasScriptPresent: false,
-    canvasGlobalPresent: false,
-    canvasFallbackRequested: false,
-    canvasFallbackAllowed: false,
+    cockpitMode: "loading-cockpit",
+    priorDiagnosticMode: "diagnostic-dock",
+    dockVisible: true,
+    fullCockpitExpanded: false,
+    planetInspectModeActive: false,
+    planetNotObstructed: false,
 
-    climateRouteRetired: true,
-    runtimeTableRequiredForFirstRender: false,
-    sourceStackRequiredForFirstRender: false,
-    wideProbeDeferred: true,
+    runtimeTablePresent: false,
+    runtimeTableMode: "RUNTIME_TABLE_PENDING",
+    runtimeTablePlanAttempted: false,
+    runtimeTablePlanCreated: false,
+    runtimeTablePlanError: "",
+    sourceAuthorityHeld: true,
 
-    currentStage: "F1A",
-    highestStage: "F1A",
-    displayProgress: 6,
-    latestEvent: "INDEX_CONSTRAINT_SEMICONDUCTOR_LOADED",
-    status: "LOADED_NOT_BOOTED",
-    firstFailedCoordinate: "INDEX_CONSTRAINT_SEMICONDUCTOR_NOT_STARTED",
-    recommendedNextRenewalTarget: "boot-index-constraint-semiconductor",
+    canvasApiPresent: false,
+    cooperativeBootAvailable: false,
+    cooperativeBootUsed: false,
+    syncBootFallbackUsed: false,
+    canvasCarrierRequested: false,
+    canvasCarrierMounted: false,
+    canvasCarrierHandoffOk: false,
+    canvasCarrierHandoffError: "",
+    canvasCarrierMethod: "",
+
+    canvasBootStartedAt: "",
+    canvasBootCompletedAt: "",
+    canvasBootStartedAtMs: 0,
+    canvasBootCompletedAtMs: 0,
+    canvasBootElapsedMs: 0,
+    canvasYieldCount: 0,
+    canvasPhaseCount: 0,
+    lastCanvasPhase: "",
+    lastCanvasProgress: 0,
+    loaderRepaintDuringCanvasBoot: false,
+    f13ProgressStreamActive: false,
+    canvasLaneClosed: false,
+
+    atlasBuildStarted: false,
+    atlasBuildProgress: 0,
+    atlasBuildComplete: false,
+    textureComposeStarted: false,
+    textureComposeProgress: 0,
+    textureComposeComplete: false,
+
+    firstFrameRequested: false,
+    firstFrameDetected: false,
+    imageRendered: false,
+    dragInspectionBound: false,
+    canvasReady: false,
+
+    visiblePlanetAvailable: false,
+    visibleContentProof: false,
+    visibleContentProofStarted: false,
+    visibleContentProofMethod: "",
+    visibleContentProofError: "",
+    visibleContentSampleCount: 0,
+    visibleContentVarianceScore: 0,
+    visibleContentClassCount: 0,
+    visibleContentClasses: [],
+    visibleContentLandSampleCount: 0,
+    visibleContentWaterSampleCount: 0,
+    visibleContentOtherSampleCount: 0,
+    carrierOnlyDetected: true,
+    explicitContentReceiptProof: false,
+    renderedAfterTexture: false,
 
     planetCanvasPresent: false,
     planetCanvasNonZeroSize: false,
-    visiblePlanetPossiblyAvailable: false,
-    inspectModeReservedActive: false,
-    showDiagnosticTabVisible: false,
+    planetFramePainted: false,
+    nonblankPlanetVisible: false,
 
-    errors: [],
-    startedAt: "",
-    updatedAt: "",
+    inspectModeAvailable: false,
+    inspectPlanetControlAvailable: false,
+    diagnosticCanLeavePlanetFrame: false,
+    diagnosticDockHiddenForInspection: false,
+    showDiagnosticTabVisible: false,
+    showDiagnosticTabVisibleWhenHidden: false,
+    diagnosticDockRestorable: false,
+    copyDiagnosticPreserved: false,
+    receiptOverlayIndependent: true,
+    copyDiagnosticArmed: false,
+    receiptToggleReady: false,
+    buttonsReachable: false,
+    partialReceiptAvailable: true,
+    finalReceiptAvailable: false,
+
+    mainDisplayProgress: 72,
+    mainProgressCap: 72,
     heartbeatElapsedMs: 0,
+
+    f13Events: Object.create(null),
+    f13EventOrder: [],
+    phaseEvents: [],
+    phaseSignatures: Object.create(null),
+    archivedLateEvents: [],
+    localEvents: [],
+    errors: [],
+
+    startedAt: "",
+    startedAtMs: 0,
+    updatedAt: "",
 
     generatedImage: false,
     graphicBox: false,
@@ -174,6 +269,7 @@
   };
 
   const refs = {
+    ledger: null,
     mount: null,
     cockpit: null,
     title: null,
@@ -189,14 +285,14 @@
     receiptToggle: null,
     inspectButton: null,
     expandButton: null,
-    showTab: null,
-    ledger: null
+    showTab: null
   };
 
   let bootStarted = false;
-  let renderTimer = 0;
-  let watchdogTimer = 0;
+  let canvasBootRequested = false;
   let heartbeatTimer = 0;
+  let reconcileTimer = 0;
+  let renderTimer = 0;
 
   function nowIso() {
     try {
@@ -269,38 +365,6 @@
     return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
   }
 
-  function getGlobal(names) {
-    for (const name of names) {
-      if (root[name]) return root[name];
-    }
-    return null;
-  }
-
-  function recordError(code, message, detail = {}) {
-    const item = {
-      code,
-      message: String(message || ""),
-      detail: clonePlain(detail),
-      at: nowIso()
-    };
-
-    state.errors.push(item);
-
-    if (state.errors.length > 40) {
-      state.errors.splice(0, state.errors.length - 40);
-    }
-
-    const ledger = refs.ledger || root.HEARTH_LOAD_LEDGER;
-    if (ledger && ledger.state && Array.isArray(ledger.state.errors)) {
-      ledger.state.errors.push(item);
-      if (ledger.state.errors.length > 70) {
-        ledger.state.errors.splice(0, ledger.state.errors.length - 70);
-      }
-    }
-
-    return item;
-  }
-
   function makeLane(def) {
     return {
       key: def.key,
@@ -310,7 +374,7 @@
       message: `${def.label} pending.`,
       progress: stageProgress(def.fibonacci),
       latestEvent: "LANE_INITIALIZED",
-      owner: "index.js",
+      owner: "hearth.js",
       updatedAt: nowIso()
     };
   }
@@ -327,19 +391,20 @@
     led.ownerModel = "paired-semiconductor";
     led.constraintSemiconductor = INDEX_FILE;
     led.coherenceSemiconductor = COHERENCE_FILE;
-    led.route = "/showroom/globe/hearth/";
+    led.route = ROUTE;
     led.newsProtocolActive = true;
     led.fibonacciSequenceActive = true;
     led.synchronizedLoading = true;
-    led.startedAt = led.startedAt || nowIso();
-    led.updatedAt = nowIso();
-    led.currentStage = led.currentStage || "F1A";
-    led.highestStage = led.highestStage || "F1A";
-    led.currentFibonacciStage = led.currentFibonacciStage || led.currentStage;
-    led.highestStageReached = led.highestStageReached || led.highestStage;
     led.completionAuthority = "hearth.js";
     led.indexOwnsFinalCompletion = false;
     led.visualPassClaimed = false;
+    led.startedAt = led.startedAt || nowIso();
+    led.updatedAt = nowIso();
+    led.currentStage = led.currentStage || "F8";
+    led.highestStage = led.highestStage || "F8";
+    led.currentFibonacciStage = led.currentFibonacciStage || led.currentStage;
+    led.highestStageReached = led.highestStageReached || led.highestStage;
+    led.completionLatched = bool(led.completionLatched, false);
     led.events = Array.isArray(led.events) ? led.events : [];
     led.errors = Array.isArray(led.errors) ? led.errors : [];
     led.scripts = isObject(led.scripts) ? led.scripts : {};
@@ -355,11 +420,11 @@
     ledger.push = function push(event = {}) {
       const evt = {
         id: event.id || event.event || "LEDGER_EVENT",
-        stage: event.stage || led.currentStage || "F1A",
+        stage: event.stage || led.currentStage || "F8",
         lane: event.lane || "",
         status: event.status || "",
-        owner: event.owner || "index.js",
-        file: event.file || INDEX_FILE,
+        owner: event.owner || "hearth.js",
+        file: event.file || COHERENCE_FILE,
         message: event.message || "",
         detail: clonePlain(event.detail || {}),
         progress: event.progress ?? "",
@@ -369,8 +434,8 @@
       led.events.push(evt);
       led.updatedAt = evt.timestamp;
 
-      if (led.events.length > 240) {
-        led.events.splice(0, led.events.length - 240);
+      if (led.events.length > 320) {
+        led.events.splice(0, led.events.length - 320);
       }
 
       notifyLedger();
@@ -381,36 +446,41 @@
       const nextRank = stageRank(stage);
       const currentRank = stageRank(led.highestStage || led.currentStage);
 
-      if (nextRank >= currentRank) {
-        led.currentStage = stage;
-        led.highestStage = stage;
-        led.currentFibonacciStage = stage;
-        led.highestStageReached = stage;
-        state.currentStage = stage;
-        state.highestStage = stage;
-      }
-
-      if (nextRank < currentRank) {
-        ledger.push({
-          id: "LOWER_STAGE_OBSERVED",
+      if (state.completionLatched && stage !== "F21") {
+        archiveLateEvent({
+          event: `STAGE_${stage}`,
           stage,
-          lane: options.lane || "ledger",
-          status: "OBSERVED",
-          owner: options.owner || "index.js",
-          file: options.file || INDEX_FILE,
-          message: message || `${stage} observed after ${led.highestStage}; not treated as index failure.`,
-          detail: { currentHighest: led.highestStage }
+          reason: "post-f21-stage-blocked",
+          message: message || stageLabel(stage)
         });
         return led.currentStage;
       }
+
+      if (nextRank < currentRank) {
+        state.stageRegressionPrevented += 1;
+        archiveLateEvent({
+          event: `STAGE_${stage}`,
+          stage,
+          reason: "monotonic-stage-regression-blocked",
+          message: message || stageLabel(stage)
+        });
+        return led.currentStage;
+      }
+
+      led.currentStage = stage;
+      led.highestStage = stage;
+      led.currentFibonacciStage = stage;
+      led.highestStageReached = stage;
+      state.currentStage = stage;
+      state.highestStage = stage;
 
       ledger.push({
         id: `STAGE_${stage}`,
         stage,
         lane: options.lane || "ledger",
         status: options.status || "READY",
-        owner: options.owner || "index.js",
-        file: options.file || INDEX_FILE,
+        owner: options.owner || "hearth.js",
+        file: options.file || COHERENCE_FILE,
         message: message || stageLabel(stage),
         detail: options.detail || {}
       });
@@ -419,25 +489,38 @@
     };
 
     ledger.setLane = function setLane(key, next = {}) {
-      const lane = led.lanes[key] || {
-        key,
-        label: key,
-        fibonacci: next.stage || "F1B",
-        status: "PENDING",
-        message: "",
-        progress: 0,
-        latestEvent: "LANE_CREATED",
-        owner: "index.js",
-        updatedAt: nowIso()
-      };
+      const lane = led.lanes[key] || makeLane({ key, label: key, fibonacci: next.stage || "F8" });
+
+      if (state.completionLatched && key !== "completionLatch" && key !== "inspectMode") {
+        archiveLateEvent({
+          event: next.event || next.latestEvent || lane.latestEvent || "LANE_UPDATE",
+          stage: next.stage || lane.fibonacci || "F13",
+          lane: key,
+          reason: "post-f21-lane-update-archived",
+          message: next.message || lane.message || "Lane update archived after F21."
+        });
+        return lane;
+      }
+
+      if (state.canvasLaneClosed && key === "canvasAndDiagnostic" && next.event !== "CANVAS_READY") {
+        archiveLateEvent({
+          event: next.event || next.latestEvent || "CANVAS_LANE_UPDATE",
+          stage: next.stage || "F13",
+          lane: key,
+          reason: "canvas-lane-closed-after-canvas-ready",
+          message: next.message || "Canvas lane update archived after CANVAS_READY."
+        });
+        return lane;
+      }
 
       lane.status = next.status || lane.status;
       lane.message = next.message || lane.message;
       lane.progress = Math.max(Number(lane.progress || 0), Number(next.progress ?? lane.progress ?? 0));
       lane.latestEvent = next.event || next.latestEvent || lane.latestEvent;
-      lane.owner = next.owner || lane.owner || "index.js";
+      lane.owner = next.owner || lane.owner || "hearth.js";
       lane.fibonacci = next.stage || lane.fibonacci;
       lane.updatedAt = nowIso();
+
       led.lanes[key] = lane;
 
       ledger.push({
@@ -446,7 +529,7 @@
         lane: key,
         status: lane.status,
         owner: lane.owner,
-        file: next.file || INDEX_FILE,
+        file: next.file || COHERENCE_FILE,
         message: lane.message,
         progress: lane.progress,
         detail: next.detail || {}
@@ -455,50 +538,16 @@
       return lane;
     };
 
-    ledger.setScript = function setScript(key, next = {}) {
-      const script = led.scripts[key] || {
-        key,
-        src: next.src || "",
-        status: "PENDING",
-        error: "",
-        requestedAt: "",
-        loadedAt: "",
-        updatedAt: nowIso()
-      };
-
-      script.src = next.src || script.src;
-      script.status = next.status || script.status;
-      script.error = next.error || "";
-      script.globalPresent = Boolean(next.globalPresent);
-      script.requestedAt = next.requestedAt || script.requestedAt;
-      script.loadedAt = next.loadedAt || script.loadedAt;
-      script.updatedAt = nowIso();
-      led.scripts[key] = script;
-
-      ledger.push({
-        id: `SCRIPT_${String(key).toUpperCase()}_${script.status}`,
-        stage: "F3",
-        lane: "scriptOrder",
-        status: script.status,
-        owner: "index.js",
-        file: INDEX_FILE,
-        message: `${key} ${script.status}`,
-        detail: { src: script.src, error: script.error, globalPresent: script.globalPresent }
-      });
-
-      return script;
-    };
-
-    ledger.getReceipt = function getSharedReceipt() {
+    ledger.getReceipt = function getReceipt() {
       return clonePlain(led);
     };
 
-    ledger.getReceiptText = function getSharedReceiptText() {
+    ledger.getReceiptText = function getReceiptTextFromLedger() {
       return getReceiptText();
     };
 
-    ledger.copyDiagnostic = function copySharedDiagnostic() {
-      return copyText(getReceiptText());
+    ledger.copyDiagnostic = function copyDiagnosticFromLedger() {
+      return copyDiagnostic();
     };
 
     ledger.bindRenderer = function bindRenderer(fn) {
@@ -509,25 +558,13 @@
     root.HEARTH_LOAD_LEDGER = ledger;
     refs.ledger = ledger;
 
-    state.loadLedgerPresent = true;
-    state.newsProtocolInitialized = true;
-    state.fibonacciSequenceInitialized = true;
-
-    ledger.setLane("ledger", {
-      status: "READY",
-      progress: stageProgress("F1B"),
-      event: "LOAD_LEDGER_INITIALIZED",
-      stage: "F1B",
-      owner: "index.js",
-      file: INDEX_FILE,
-      message: "Shared paired-semiconductor load ledger initialized."
-    });
-
-    ledger.setStage("F1B", "Shared load ledger initialized.", {
-      lane: "ledger",
-      owner: "index.js",
-      file: INDEX_FILE
-    });
+    state.sharedLedgerHydrated = true;
+    state.indexConstraintPresent = Boolean(
+      root.HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR ||
+      root.HEARTH_INDEX_BRIDGE ||
+      root.HEARTH_INDEX_JS ||
+      led.constraintSemiconductor === INDEX_FILE
+    );
 
     return ledger;
   }
@@ -548,276 +585,124 @@
     scheduleRender();
   }
 
-  function ensureStyle() {
-    if (!doc || doc.getElementById("hearth-index-constraint-semiconductor-style")) return;
+  function setStage(stage, message = "", options = {}) {
+    const ledger = refs.ledger || ensureLedger();
+    return ledger.setStage(stage, message, {
+      owner: "hearth.js",
+      file: COHERENCE_FILE,
+      ...options
+    });
+  }
 
-    const style = doc.createElement("style");
-    style.id = "hearth-index-constraint-semiconductor-style";
-    style.textContent = `
-      #hearthCanvasMount,
-      [data-hearth-canvas-mount="true"]{
-        position:relative;
-        overflow:hidden;
-        touch-action:none;
-        user-select:none;
-        -webkit-user-select:none;
-        -webkit-touch-callout:none;
+  function setLane(key, next = {}) {
+    const ledger = refs.ledger || ensureLedger();
+    return ledger.setLane(key, {
+      owner: "hearth.js",
+      file: COHERENCE_FILE,
+      ...next
+    });
+  }
+
+  function push(event = {}) {
+    const ledger = refs.ledger || ensureLedger();
+    return ledger.push({
+      owner: "hearth.js",
+      file: COHERENCE_FILE,
+      ...event
+    });
+  }
+
+  function archiveLateEvent(event = {}) {
+    const item = {
+      at: nowIso(),
+      event: event.event || event.id || "ARCHIVED_EVENT",
+      stage: event.stage || "F13",
+      lane: event.lane || "",
+      reason: event.reason || "archived",
+      message: event.message || "",
+      detail: clonePlain(event.detail || {})
+    };
+
+    state.archivedLateEvents.push(item);
+    if (state.archivedLateEvents.length > 220) {
+      state.archivedLateEvents.splice(0, state.archivedLateEvents.length - 220);
+    }
+
+    return item;
+  }
+
+  function recordError(code, message, detail = {}) {
+    const item = {
+      code,
+      message: String(message || ""),
+      detail: clonePlain(detail),
+      at: nowIso()
+    };
+
+    state.errors.push(item);
+
+    if (state.errors.length > 70) {
+      state.errors.splice(0, state.errors.length - 70);
+    }
+
+    const ledger = refs.ledger || ensureLedger();
+
+    if (ledger.state && Array.isArray(ledger.state.errors)) {
+      ledger.state.errors.push(item);
+      if (ledger.state.errors.length > 110) {
+        ledger.state.errors.splice(0, ledger.state.errors.length - 110);
       }
+    }
 
-      .hearth-ledger-cockpit{
-        position:absolute;
-        inset:10px;
-        z-index:30;
-        display:flex;
-        flex-direction:column;
-        max-height:calc(100% - 20px);
-        min-height:170px;
-        overflow:hidden;
-        border:1px solid rgba(231,188,105,.34);
-        border-radius:24px;
-        background:
-          radial-gradient(circle at 12% 0%,rgba(231,188,105,.16),transparent 20rem),
-          radial-gradient(circle at 90% 18%,rgba(141,216,255,.12),transparent 22rem),
-          linear-gradient(180deg,rgba(7,18,33,.92),rgba(2,8,17,.82));
-        color:rgba(238,246,255,.94);
-        box-shadow:0 22px 70px rgba(0,0,0,.44), inset 0 1px 0 rgba(255,255,255,.08);
-        backdrop-filter:blur(10px);
-        font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      }
+    push({
+      id: "ERROR",
+      stage: state.currentStage,
+      lane: "errors",
+      status: "FAILED",
+      message: `${code}: ${message}`,
+      detail: item
+    });
 
-      .hearth-ledger-head{
-        display:grid;
-        gap:6px;
-        padding:14px 16px 10px;
-        border-bottom:1px solid rgba(231,188,105,.14);
-      }
+    return item;
+  }
 
-      .hearth-ledger-kicker{
-        color:#e7bc69;
-        font-weight:950;
-        font-size:.64rem;
-        letter-spacing:.15em;
-        text-transform:uppercase;
-      }
+  function emitLocal(event, detail = {}, visible = true) {
+    const item = {
+      event,
+      detail: clonePlain(detail),
+      visible,
+      at: nowIso()
+    };
 
-      .hearth-ledger-title{
-        margin:0;
-        color:rgba(255,244,216,.98);
-        font-weight:950;
-        font-size:clamp(1.08rem,3.4vw,1.65rem);
-        line-height:1;
-        letter-spacing:-.045em;
-      }
+    state.localEvents.push(item);
 
-      .hearth-ledger-meta,
-      .hearth-ledger-latest{
-        color:rgba(238,246,255,.68);
-        font-size:.72rem;
-        font-weight:760;
-        line-height:1.28;
-      }
+    if (state.localEvents.length > 220) {
+      state.localEvents.splice(0, state.localEvents.length - 220);
+    }
 
-      .hearth-ledger-progress{
-        display:grid;
-        grid-template-columns:1fr auto;
-        align-items:center;
-        gap:10px;
-        padding:10px 16px;
-        border-bottom:1px solid rgba(231,188,105,.12);
-      }
+    if (visible && !state.completionLatched) {
+      state.latestVisibleEvent = event;
+    }
 
-      .hearth-ledger-track,
-      .hearth-ledger-lane-track{
-        position:relative;
-        height:9px;
-        overflow:hidden;
-        border:1px solid rgba(141,216,255,.18);
-        border-radius:999px;
-        background:rgba(255,255,255,.055);
-      }
+    state.updatedAt = item.at;
+    return item;
+  }
 
-      .hearth-ledger-fill,
-      .hearth-ledger-lane-fill{
-        position:absolute;
-        inset:0 auto 0 0;
-        width:0%;
-        border-radius:inherit;
-        background:linear-gradient(90deg,rgba(141,216,255,.80),rgba(231,188,105,.96));
-        box-shadow:0 0 18px rgba(231,188,105,.18);
-        transition:width .24s ease;
-      }
+  function emit(event, detail = {}, options = {}) {
+    emitLocal(event, detail, options.visible !== false);
 
-      .hearth-ledger-percent{
-        min-width:44px;
-        color:#ffe8a3;
-        font-weight:950;
-        font-size:.72rem;
-        text-align:right;
-      }
+    push({
+      id: event,
+      stage: options.stage || state.currentStage,
+      lane: options.lane || "",
+      status: options.status || "",
+      message: options.message || event,
+      detail,
+      progress: options.progress ?? ""
+    });
 
-      .hearth-ledger-actions{
-        display:flex;
-        flex-wrap:wrap;
-        gap:7px;
-        padding:10px 16px;
-        border-bottom:1px solid rgba(231,188,105,.12);
-      }
-
-      .hearth-ledger-button{
-        min-height:31px;
-        border:1px solid rgba(231,188,105,.26);
-        border-radius:999px;
-        padding:7px 10px;
-        color:rgba(238,246,255,.84);
-        background:rgba(255,255,255,.045);
-        font:900 .64rem/1 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-        letter-spacing:.07em;
-        text-transform:uppercase;
-        cursor:pointer;
-      }
-
-      .hearth-ledger-button.primary{
-        color:#06101e;
-        border-color:rgba(231,188,105,.86);
-        background:linear-gradient(135deg,#ffe8a3,#e7bc69);
-      }
-
-      .hearth-ledger-button[disabled]{
-        opacity:.58;
-        cursor:not-allowed;
-      }
-
-      .hearth-ledger-scroll{
-        min-height:0;
-        overflow:auto;
-        padding:10px 16px 14px;
-      }
-
-      .hearth-ledger-lanes{
-        display:grid;
-        gap:7px;
-      }
-
-      .hearth-ledger-lane{
-        display:grid;
-        gap:5px;
-        border:1px solid rgba(255,255,255,.08);
-        border-radius:13px;
-        padding:8px;
-        background:rgba(255,255,255,.035);
-      }
-
-      .hearth-ledger-lane-top{
-        display:flex;
-        align-items:flex-start;
-        justify-content:space-between;
-        gap:8px;
-      }
-
-      .hearth-ledger-lane-title{
-        display:grid;
-        gap:2px;
-        min-width:0;
-        color:rgba(238,246,255,.64);
-        font-size:.66rem;
-        line-height:1.22;
-      }
-
-      .hearth-ledger-lane-title strong{
-        color:rgba(255,244,216,.94);
-        font-size:.70rem;
-      }
-
-      .hearth-ledger-lane-status{
-        flex:0 0 auto;
-        color:#8dd8ff;
-        font-size:.60rem;
-        font-weight:950;
-        letter-spacing:.09em;
-        text-transform:uppercase;
-      }
-
-      .hearth-ledger-receipt{
-        display:none;
-        margin-top:10px;
-        border:1px solid rgba(231,188,105,.16);
-        border-radius:14px;
-        background:rgba(0,0,0,.24);
-      }
-
-      .hearth-ledger-receipt[data-visible="true"]{
-        display:block;
-      }
-
-      .hearth-ledger-receipt pre{
-        margin:0;
-        max-height:260px;
-        overflow:auto;
-        padding:10px;
-        color:rgba(238,246,255,.72);
-        white-space:pre-wrap;
-        font:700 .66rem/1.38 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-      }
-
-      .hearth-ledger-cockpit[data-cockpit-mode="planet-inspect"]{
-        opacity:0!important;
-        visibility:hidden!important;
-        pointer-events:none!important;
-        transform:translateY(24px) scale(.985);
-        max-height:0!important;
-        min-height:0!important;
-      }
-
-      [data-hearth-index-show-diagnostic-tab]{
-        position:fixed;
-        right:max(12px,env(safe-area-inset-right));
-        bottom:max(72px,calc(env(safe-area-inset-bottom) + 72px));
-        z-index:9999;
-        display:none;
-        min-height:36px;
-        padding:9px 13px;
-        border-radius:999px;
-        border:1px solid rgba(231,188,105,.65);
-        color:#06101e;
-        background:linear-gradient(135deg,#ffe8a3,#e7bc69);
-        box-shadow:0 14px 40px rgba(0,0,0,.36);
-        font:950 .68rem/1 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-        letter-spacing:.08em;
-        text-transform:uppercase;
-        cursor:pointer;
-      }
-
-      html[data-hearth-index-inspect-reserved-active="true"] [data-hearth-index-show-diagnostic-tab]{
-        display:inline-flex;
-      }
-
-      @media (max-width:760px){
-        .hearth-ledger-cockpit{
-          inset:8px;
-          min-height:166px;
-          border-radius:20px;
-        }
-
-        .hearth-ledger-head{
-          padding:12px 12px 8px;
-        }
-
-        .hearth-ledger-progress,
-        .hearth-ledger-actions,
-        .hearth-ledger-scroll{
-          padding-left:12px;
-          padding-right:12px;
-        }
-
-        .hearth-ledger-button{
-          flex:1 1 auto;
-          min-width:30%;
-          font-size:.58rem;
-        }
-      }
-    `;
-
-    doc.head.appendChild(style);
+    publishGlobals();
+    scheduleRender();
   }
 
   function ensureMount() {
@@ -832,25 +717,21 @@
       mount = doc.createElement("section");
       mount.id = MOUNT_ID;
       mount.dataset.hearthCanvasMount = "true";
-      mount.dataset.hearthMountCreatedByIndexConstraintSemiconductor = "true";
+      mount.dataset.hearthMountCreatedByCoherenceSemiconductor = "true";
 
       const parent = doc.getElementById("hearth-main") || doc.body || doc.documentElement;
       parent.appendChild(mount);
-      state.mountCreatedByIndex = true;
     }
 
     mount.id = MOUNT_ID;
     mount.dataset.hearthCanvasMount = "true";
-    mount.dataset.hearthIndexConstraintSemiconductor = CONTRACT;
-    mount.dataset.hearthIndexReceipt = RECEIPT;
+    mount.dataset.hearthCoherenceSemiconductor = CONTRACT;
+    mount.dataset.hearthCoherenceReceipt = RECEIPT;
     mount.dataset.hearthPairedSemiconductor = "true";
     mount.dataset.hearthConstraintSemiconductor = INDEX_FILE;
-    mount.dataset.hearthCoherenceSemiconductor = COHERENCE_FILE;
+    mount.dataset.hearthCoherenceSemiconductorFile = COHERENCE_FILE;
     mount.dataset.hearthClimateRouteRetired = "true";
     mount.dataset.hearthVisibleCarrierFirst = "true";
-    mount.dataset.runtimeTableRequiredForFirstRender = "false";
-    mount.dataset.sourceStackRequiredForFirstRender = "false";
-    mount.dataset.wideProbeDeferred = "true";
     mount.dataset.generatedImage = "false";
     mount.dataset.graphicBox = "false";
     mount.dataset.webgl = "false";
@@ -864,97 +745,237 @@
     mount.style.webkitTouchCallout = "none";
 
     refs.mount = mount;
-    state.mountReady = true;
-
     return mount;
+  }
+
+  function ensureStyle() {
+    if (!doc || doc.getElementById("hearth-route-visible-content-proof-style")) return;
+
+    const style = doc.createElement("style");
+    style.id = "hearth-route-visible-content-proof-style";
+    style.textContent = `
+      .hearth-ledger-cockpit{
+        transition:max-height .24s ease, opacity .18s ease, visibility .18s ease, transform .22s ease;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"]{
+        inset:auto 10px 10px 10px!important;
+        min-height:132px!important;
+        max-height:178px!important;
+        overflow:hidden!important;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-head{
+        padding:10px 14px 7px!important;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-kicker{
+        font-size:.58rem!important;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-title{
+        font-size:.98rem!important;
+        white-space:nowrap!important;
+        overflow:hidden!important;
+        text-overflow:ellipsis!important;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-meta{
+        display:none!important;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-latest{
+        font-size:.63rem!important;
+        white-space:nowrap!important;
+        overflow:hidden!important;
+        text-overflow:ellipsis!important;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-progress{
+        padding:7px 10px!important;
+        display:grid!important;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-scroll{
+        display:none!important;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-actions{
+        padding:7px 10px 10px!important;
+        border-bottom:0!important;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-button{
+        min-height:28px!important;
+        padding:6px 9px!important;
+        font-size:.56rem!important;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="expanded-cockpit"]{
+        inset:10px!important;
+        max-height:calc(100% - 20px)!important;
+        min-height:170px!important;
+        overflow:hidden!important;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="planet-inspect"]{
+        opacity:0!important;
+        visibility:hidden!important;
+        pointer-events:none!important;
+        transform:translateY(26px) scale(.985)!important;
+        max-height:0!important;
+        min-height:0!important;
+        overflow:hidden!important;
+      }
+
+      [data-hearth-coherence-show-diagnostic-tab]{
+        position:fixed;
+        right:max(12px,env(safe-area-inset-right));
+        bottom:max(72px,calc(env(safe-area-inset-bottom) + 72px));
+        z-index:10000;
+        display:none;
+        align-items:center;
+        justify-content:center;
+        min-height:38px;
+        padding:10px 14px;
+        border-radius:999px;
+        border:1px solid rgba(231,188,105,.66);
+        color:#06101e;
+        background:linear-gradient(135deg,#ffe8a3,#e7bc69);
+        box-shadow:0 16px 44px rgba(0,0,0,.40), inset 0 1px 0 rgba(255,255,255,.28);
+        font:950 .70rem/1 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+        letter-spacing:.08em;
+        text-transform:uppercase;
+        cursor:pointer;
+      }
+
+      html[data-hearth-planet-inspect="true"] [data-hearth-coherence-show-diagnostic-tab]{
+        display:inline-flex;
+      }
+
+      html[data-hearth-planet-inspect="true"] #hearthCanvasMount,
+      html[data-hearth-planet-inspect="true"] [data-hearth-canvas-mount="true"]{
+        cursor:grab;
+      }
+
+      html[data-hearth-visible-content-proof="false"] .hearth-ledger-cockpit .hearth-ledger-title{
+        color:rgba(255,232,163,.98);
+      }
+
+      @media (max-width:760px){
+        .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"]{
+          inset:auto 8px 8px 8px!important;
+          max-height:184px!important;
+        }
+
+        .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-button{
+          flex:1 1 auto!important;
+          min-width:28%!important;
+        }
+
+        [data-hearth-coherence-show-diagnostic-tab]{
+          right:max(10px,env(safe-area-inset-right));
+          bottom:max(68px,calc(env(safe-area-inset-bottom) + 68px));
+          min-height:34px;
+          padding:9px 12px;
+          font-size:.64rem;
+        }
+      }
+    `;
+
+    doc.head.appendChild(style);
   }
 
   function ensureShowTab() {
     if (!doc) return null;
 
-    let tab = doc.querySelector("[data-hearth-index-show-diagnostic-tab]");
+    let tab =
+      doc.querySelector("[data-hearth-coherence-show-diagnostic-tab]") ||
+      doc.querySelector("[data-hearth-index-show-diagnostic-tab]");
 
     if (!tab) {
       tab = doc.createElement("button");
       tab.type = "button";
-      tab.dataset.hearthIndexShowDiagnosticTab = "true";
+      tab.dataset.hearthCoherenceShowDiagnosticTab = "true";
       tab.textContent = "Show diagnostic";
       tab.setAttribute("aria-label", "Show Hearth diagnostic");
       doc.body.appendChild(tab);
     }
 
-    tab.onclick = () => setInspectReserved(false);
+    tab.dataset.hearthCoherenceShowDiagnosticTab = "true";
+    tab.onclick = () => setCockpitMode("diagnostic-dock");
 
     refs.showTab = tab;
-    state.showDiagnosticRestoreReserved = true;
+    state.diagnosticDockRestorable = true;
 
     return tab;
   }
 
-  function ensureCockpit() {
+  function createFallbackCockpit() {
     if (!doc) return null;
 
-    const mount = ensureMount();
+    const mount = refs.mount || ensureMount();
     if (!mount) return null;
+
+    const cockpit = doc.createElement("aside");
+    cockpit.id = COCKPIT_ID;
+    cockpit.className = "hearth-ledger-cockpit";
+    cockpit.dataset.hearthLoadCockpit = "true";
+    cockpit.dataset.hearthFirstPaintCockpit = "fallback-created-by-visible-content-proof-semiconductor";
+    cockpit.dataset.hearthCoherenceSemiconductorFallbackCockpit = "true";
+    cockpit.dataset.cockpitMode = "loading-cockpit";
+    cockpit.setAttribute("aria-live", "polite");
+
+    cockpit.innerHTML = `
+      <div class="hearth-ledger-head">
+        <div class="hearth-ledger-kicker">Hearth · Paired Semiconductor Load Ledger</div>
+        <h2 class="hearth-ledger-title">FORMING HEARTH VISIBLE PLANET</h2>
+        <div class="hearth-ledger-meta" data-hearth-stage-label>F8 · Coherence semiconductor hydration</div>
+        <div class="hearth-ledger-meta" data-hearth-heartbeat-text>heartbeat=active · elapsed=00:00</div>
+        <div class="hearth-ledger-latest" data-hearth-latest-event>latest=COHERENCE_SEMICONDUCTOR_LOADED</div>
+      </div>
+
+      <div class="hearth-ledger-progress" data-hearth-index-progress-strip="true">
+        <div class="hearth-ledger-track">
+          <span class="hearth-ledger-fill" data-hearth-main-progress-fill style="width:72%"></span>
+        </div>
+        <div class="hearth-ledger-percent" data-hearth-main-progress-percent>72%</div>
+      </div>
+
+      <div class="hearth-ledger-actions">
+        <button class="hearth-ledger-button primary" type="button" data-hearth-copy-diagnostic>Copy diagnostic</button>
+        <button class="hearth-ledger-button" type="button" data-hearth-toggle-receipt>Show receipt</button>
+        <button class="hearth-ledger-button" type="button" data-hearth-inspect-planet>Inspect planet</button>
+        <button class="hearth-ledger-button" type="button" data-hearth-collapse-cockpit>Expand cockpit</button>
+      </div>
+
+      <div class="hearth-ledger-scroll">
+        <div class="hearth-ledger-lanes" data-hearth-lane-list></div>
+        <div class="hearth-ledger-receipt" data-hearth-receipt-box data-visible="false">
+          <pre data-hearth-receipt-text></pre>
+        </div>
+      </div>
+    `;
+
+    mount.appendChild(cockpit);
+    return cockpit;
+  }
+
+  function hydrateCockpit() {
+    if (!doc) return null;
 
     ensureStyle();
     ensureShowTab();
 
+    const mount = refs.mount || ensureMount();
+
     let cockpit =
-      mount.querySelector("[data-hearth-load-cockpit='true']") ||
-      mount.querySelector("[data-hearth-first-paint-cockpit='true']") ||
-      doc.getElementById("hearthLoadCockpit");
+      doc.getElementById(COCKPIT_ID) ||
+      doc.querySelector("[data-hearth-load-cockpit='true']") ||
+      doc.querySelector("[data-hearth-first-paint-cockpit='true']");
 
-    if (!cockpit) {
-      cockpit = doc.createElement("aside");
-      cockpit.id = "hearthLoadCockpit";
-      cockpit.className = "hearth-ledger-cockpit";
-      cockpit.dataset.hearthLoadCockpit = "true";
-      cockpit.dataset.hearthFirstPaintCockpit = "true";
-      cockpit.dataset.hearthCreatedByIndexConstraintSemiconductor = CONTRACT;
-      cockpit.dataset.cockpitMode = "first-paint-loading";
-      cockpit.setAttribute("aria-live", "polite");
-
-      cockpit.innerHTML = `
-        <div class="hearth-ledger-head">
-          <div class="hearth-ledger-kicker">Hearth · Paired Semiconductor Load Ledger</div>
-          <h2 class="hearth-ledger-title">STARTING HEARTH VISIBLE PROCESS</h2>
-          <div class="hearth-ledger-meta" data-hearth-stage-label>F1A · HTML shell rendered</div>
-          <div class="hearth-ledger-meta" data-hearth-heartbeat-text>heartbeat=active · elapsed=00:00</div>
-          <div class="hearth-ledger-latest" data-hearth-latest-event>latest=INDEX_CONSTRAINT_SEMICONDUCTOR_LOADED</div>
-        </div>
-
-        <div class="hearth-ledger-progress" data-hearth-index-progress-strip="true">
-          <div class="hearth-ledger-track">
-            <span class="hearth-ledger-fill" data-hearth-main-progress-fill style="width:6%"></span>
-          </div>
-          <div class="hearth-ledger-percent" data-hearth-main-progress-percent>6%</div>
-        </div>
-
-        <div class="hearth-ledger-actions">
-          <button class="hearth-ledger-button primary" type="button" data-hearth-copy-diagnostic>Copy diagnostic</button>
-          <button class="hearth-ledger-button" type="button" data-hearth-toggle-receipt>Show receipt</button>
-          <button class="hearth-ledger-button" type="button" data-hearth-inspect-planet>Inspect planet</button>
-          <button class="hearth-ledger-button" type="button" data-hearth-collapse-cockpit>Expand cockpit</button>
-        </div>
-
-        <div class="hearth-ledger-scroll">
-          <div class="hearth-ledger-lanes" data-hearth-lane-list></div>
-          <div class="hearth-ledger-receipt" data-hearth-receipt-box data-visible="false">
-            <pre data-hearth-receipt-text></pre>
-          </div>
-        </div>
-      `;
-
-      mount.appendChild(cockpit);
-    }
-
-    cockpit.dataset.hearthPairedSemiconductor = "true";
-    cockpit.dataset.hearthConstraintSemiconductor = INDEX_FILE;
-    cockpit.dataset.hearthCoherenceSemiconductor = COHERENCE_FILE;
-    cockpit.dataset.hearthIndexContract = CONTRACT;
-    cockpit.dataset.hearthIndexReceipt = RECEIPT;
-    cockpit.dataset.hearthSynchronizedLoading = "true";
+    if (!cockpit) cockpit = createFallbackCockpit();
+    if (!cockpit) return null;
 
     refs.cockpit = cockpit;
     refs.title = cockpit.querySelector(".hearth-ledger-title");
@@ -971,52 +992,47 @@
     refs.inspectButton = cockpit.querySelector("[data-hearth-inspect-planet]");
     refs.expandButton = cockpit.querySelector("[data-hearth-collapse-cockpit]");
 
-    if (refs.copyButton) {
-      refs.copyButton.onclick = copyDiagnostic;
-      state.copyPartialDiagnosticReady = true;
+    cockpit.dataset.hearthPairedSemiconductor = "true";
+    cockpit.dataset.hearthCoherenceSemiconductor = CONTRACT;
+    cockpit.dataset.hearthCoherenceReceipt = RECEIPT;
+    cockpit.dataset.hearthConstraintSemiconductor = INDEX_FILE;
+    cockpit.dataset.hearthSynchronizedLoading = "true";
+    cockpit.dataset.hearthVisibleContentProofLatch = "true";
+    cockpit.dataset.cockpitMode = cockpit.dataset.cockpitMode || "loading-cockpit";
+
+    state.copyDiagnosticArmed = Boolean(refs.copyButton);
+    state.copyDiagnosticPreserved = Boolean(refs.copyButton);
+    state.receiptToggleReady = Boolean(refs.receiptToggle);
+    state.buttonsReachable = Boolean(refs.copyButton && refs.receiptToggle && refs.inspectButton);
+    state.inspectModeAvailable = Boolean(refs.inspectButton);
+    state.inspectPlanetControlAvailable = Boolean(refs.inspectButton);
+    state.diagnosticDockRestorable = Boolean(refs.showTab);
+    state.showDiagnosticTabVisibleWhenHidden = Boolean(refs.showTab);
+
+    if (refs.copyButton) refs.copyButton.onclick = copyDiagnostic;
+    if (refs.receiptToggle) refs.receiptToggle.onclick = toggleReceipt;
+    if (refs.inspectButton) refs.inspectButton.onclick = () => setCockpitMode("planet-inspect");
+    if (refs.expandButton) refs.expandButton.onclick = toggleExpanded;
+
+    if (mount) {
+      mount.querySelectorAll("[data-hearth-mount-fallback], .mount-fallback").forEach((fallback) => {
+        fallback.hidden = true;
+        fallback.style.display = "none";
+        fallback.dataset.hiddenByVisibleContentProofSemiconductor = CONTRACT;
+      });
     }
 
-    if (refs.receiptToggle) {
-      refs.receiptToggle.onclick = toggleReceipt;
-      state.receiptToggleReady = true;
-    }
-
-    if (refs.inspectButton) {
-      refs.inspectButton.onclick = () => setInspectReserved(true);
-      state.inspectControlReserved = true;
-    }
-
-    if (refs.expandButton) {
-      refs.expandButton.onclick = toggleExpanded;
-    }
-
-    mount.querySelectorAll("[data-hearth-mount-fallback], .mount-fallback").forEach((fallback) => {
-      fallback.hidden = true;
-      fallback.style.display = "none";
-      fallback.dataset.hiddenByIndexConstraintSemiconductor = CONTRACT;
+    setLane("conductorHydration", {
+      status: "HYDRATED",
+      progress: stageProgress("F8"),
+      event: "COHERENCE_SEMICONDUCTOR_HYDRATED_COCKPIT",
+      stage: "F8",
+      message: "Coherence semiconductor hydrated shared cockpit."
     });
 
-    state.firstPaintCockpitReady = true;
-    state.loadingScreenReady = true;
-    state.visibleProgressStripReady = Boolean(refs.mainFill && refs.mainPercent);
-    state.partialReceiptAvailable = true;
-
-    const ledger = refs.ledger || ensureLedger();
-
-    ledger.setLane("staticCockpit", {
-      status: "READY",
-      progress: stageProgress("F2"),
-      event: "FIRST_PAINT_COCKPIT_VISIBLE",
-      stage: "F2",
-      owner: "index.js",
-      file: INDEX_FILE,
-      message: "First-paint cockpit visible; user is not blind."
-    });
-
-    ledger.setStage("F2", "First-paint cockpit visible.", {
-      lane: "staticCockpit",
-      owner: "index.js",
-      file: INDEX_FILE
+    setStage("F8", "Coherence semiconductor hydrated shared cockpit.", {
+      lane: "conductorHydration",
+      status: "HYDRATED"
     });
 
     return cockpit;
@@ -1032,114 +1048,200 @@
       refs.receiptToggle.textContent = visible ? "Hide receipt" : "Show receipt";
     }
 
-    render();
+    scheduleRender();
   }
 
   function toggleExpanded() {
-    if (!refs.cockpit) return;
-
-    if (state.inspectModeReservedActive) {
-      setInspectReserved(false);
+    if (state.planetInspectModeActive) {
+      setCockpitMode("diagnostic-dock");
       return;
     }
 
-    const expanded = refs.cockpit.dataset.fullExpanded !== "true";
-    refs.cockpit.dataset.fullExpanded = String(expanded);
-    refs.cockpit.dataset.cockpitMode = expanded ? "expanded-cockpit" : "first-paint-loading";
-
-    if (refs.expandButton) {
-      refs.expandButton.textContent = expanded ? "Collapse dock" : "Expand cockpit";
-    }
-
-    if (expanded) {
-      refs.cockpit.style.maxHeight = "calc(100% - 20px)";
+    if (state.cockpitMode === "expanded-cockpit") {
+      setCockpitMode("diagnostic-dock");
     } else {
-      refs.cockpit.style.maxHeight = "";
+      setCockpitMode("expanded-cockpit");
     }
   }
 
-  function setInspectReserved(active) {
-    state.inspectModeReservedActive = Boolean(active);
-    state.showDiagnosticTabVisible = Boolean(active);
+  function setCockpitMode(mode) {
+    if (!refs.cockpit) return;
 
-    if (refs.cockpit) {
-      refs.cockpit.dataset.cockpitMode = active ? "planet-inspect" : "first-paint-loading";
-      refs.cockpit.dataset.hearthIndexInspectReservedActive = String(active);
+    if (mode === "planet-inspect") {
+      if (state.cockpitMode !== "planet-inspect") {
+        state.priorDiagnosticMode = state.cockpitMode === "expanded-cockpit" ? "expanded-cockpit" : "diagnostic-dock";
+      }
+
+      state.cockpitMode = "planet-inspect";
+      state.planetInspectModeActive = true;
+      state.diagnosticDockHiddenForInspection = true;
+      state.showDiagnosticTabVisible = true;
+      state.planetNotObstructed = true;
+      state.dockVisible = false;
+      state.fullCockpitExpanded = false;
+    } else if (mode === "expanded-cockpit") {
+      state.cockpitMode = "expanded-cockpit";
+      state.planetInspectModeActive = false;
+      state.diagnosticDockHiddenForInspection = false;
+      state.showDiagnosticTabVisible = false;
+      state.planetNotObstructed = false;
+      state.dockVisible = true;
+      state.fullCockpitExpanded = true;
+      state.priorDiagnosticMode = "expanded-cockpit";
+    } else {
+      state.cockpitMode = state.completionLatched || state.canvasReady ? "diagnostic-dock" : "loading-cockpit";
+      state.planetInspectModeActive = false;
+      state.diagnosticDockHiddenForInspection = false;
+      state.showDiagnosticTabVisible = false;
+      state.planetNotObstructed = false;
+      state.dockVisible = true;
+      state.fullCockpitExpanded = false;
+      state.priorDiagnosticMode = "diagnostic-dock";
+    }
+
+    refs.cockpit.dataset.cockpitMode = state.cockpitMode;
+    refs.cockpit.dataset.fullExpanded = String(state.fullCockpitExpanded);
+    refs.cockpit.dataset.hearthPlanetInspect = String(state.planetInspectModeActive);
+    refs.cockpit.dataset.hearthDiagnosticDockHiddenForInspection = String(state.diagnosticDockHiddenForInspection);
+
+    if (refs.mount) {
+      refs.mount.dataset.hearthPlanetInspect = String(state.planetInspectModeActive);
     }
 
     if (doc && doc.documentElement) {
-      doc.documentElement.dataset.hearthIndexInspectReservedActive = String(active);
+      doc.documentElement.dataset.hearthPlanetInspect = String(state.planetInspectModeActive);
+      doc.documentElement.dataset.hearthDiagnosticDockHiddenForInspection = String(state.diagnosticDockHiddenForInspection);
     }
 
     if (refs.showTab) {
-      refs.showTab.hidden = !active;
-      refs.showTab.dataset.visible = String(active);
+      refs.showTab.hidden = !state.planetInspectModeActive;
+      refs.showTab.dataset.visible = String(state.planetInspectModeActive);
     }
 
     if (refs.inspectButton) {
-      refs.inspectButton.textContent = active ? "Show diagnostic" : "Inspect planet";
-      refs.inspectButton.onclick = () => setInspectReserved(!state.inspectModeReservedActive);
+      refs.inspectButton.textContent = state.planetInspectModeActive ? "Show diagnostic" : "Inspect planet";
+      refs.inspectButton.onclick = () => {
+        if (state.planetInspectModeActive) setCockpitMode("diagnostic-dock");
+        else setCockpitMode("planet-inspect");
+      };
     }
 
-    if (refs.mount) {
-      refs.mount.dataset.hearthIndexInspectReservedActive = String(active);
+    if (refs.expandButton) {
+      if (state.cockpitMode === "expanded-cockpit") refs.expandButton.textContent = "Collapse dock";
+      else if (state.cockpitMode === "planet-inspect") refs.expandButton.textContent = "Show diagnostic";
+      else refs.expandButton.textContent = "Expand cockpit";
     }
 
-    const ledger = refs.ledger || ensureLedger();
+    state.diagnosticCanLeavePlanetFrame = Boolean(state.inspectModeAvailable && state.diagnosticDockRestorable && refs.showTab);
+    state.showDiagnosticTabVisibleWhenHidden = Boolean(refs.showTab);
+    state.copyDiagnosticPreserved = Boolean(refs.copyButton);
+    state.receiptOverlayIndependent = true;
 
-    ledger.setLane("inspectMode", {
-      status: active ? "RESERVED_ACTIVE" : "RESERVED",
-      progress: active ? 84 : 50,
-      event: active ? "INDEX_RESERVED_INSPECT_MODE_ACTIVE" : "INDEX_RESERVED_INSPECT_MODE_READY",
+    markF13("INSPECT_MODE_READY");
+
+    setLane("inspectMode", {
+      status: state.planetInspectModeActive ? "INSPECTING" : "READY",
+      progress: state.diagnosticCanLeavePlanetFrame ? 100 : 70,
+      event: state.planetInspectModeActive ? "PLANET_INSPECT_MODE_ACTIVE" : "INSPECT_MODE_READY",
       stage: "F13",
-      owner: "index.js",
-      file: INDEX_FILE,
-      message: active
-        ? "Index reserved inspect mode active; coherence conductor will own final inspect truth."
-        : "Inspect control reserved for coherence conductor."
+      message: state.planetInspectModeActive
+        ? "Diagnostic dock hidden from planet frame; Show diagnostic tab is available."
+        : "Inspect planet and Show diagnostic restoration are available."
     });
 
-    render();
+    evaluateCompletionGates();
+    publishGlobals();
+    scheduleRender();
   }
 
-  function scanKnownScripts() {
-    if (!doc) return;
-
-    const scripts = Array.from(doc.scripts || []);
-    const ledger = refs.ledger || ensureLedger();
-
-    SCRIPT_KEYS.forEach((item) => {
-      const script = scripts.find((node) => {
-        const src = node.getAttribute("src") || "";
-        return src.includes(item.srcPart);
-      });
-
-      if (script) {
-        ledger.setScript(item.key, {
-          src: script.src || item.srcPart,
-          status: "PRESENT",
-          globalPresent: item.key === "coherenceConductor" ? Boolean(getConductorApi()) : false
-        });
-      }
-    });
-
-    state.conductorScriptPresent = Boolean(
-      scripts.find((node) => (node.getAttribute("src") || "").includes(COHERENCE_FILE))
-    );
-
-    state.canvasScriptPresent = Boolean(
-      scripts.find((node) => (node.getAttribute("src") || "").includes(CANVAS_FILE))
-    );
-  }
-
-  function getConductorApi() {
+  function getRuntimeTableApi() {
     return (
-      root.HEARTH_ROUTE_CONDUCTOR ||
-      root.HearthRouteConductor ||
-      root.HEARTH_ACTIVE_ROUTE ||
-      (root.HEARTH && root.HEARTH.routeConductor) ||
+      root.LAB_RUNTIME_TABLE ||
+      root.DexterRuntimeTable ||
+      root.RUNTIME_TABLE ||
+      root.LAB_UNIVERSAL_PLANET_RUNTIME_TABLE ||
+      (root.DEXTER_LAB && root.DEXTER_LAB.runtimeTable) ||
       null
     );
+  }
+
+  function checkRuntimeTable() {
+    const api = getRuntimeTableApi();
+
+    state.runtimeTablePresent = Boolean(api);
+    state.runtimeTableMode = api ? "RUNTIME_TABLE_READY_OR_DEGRADED" : "RUNTIME_TABLE_MISSING_ALLOWED";
+    state.runtimeTablePlanAttempted = Boolean(api);
+
+    if (!api) {
+      setLane("authorityAvailability", {
+        status: "DEGRADED_ALLOWED",
+        progress: stageProgress("F5"),
+        event: "RUNTIME_TABLE_MISSING_ALLOWED",
+        stage: "F5",
+        message: "Runtime Table missing; first visible process remains alive."
+      });
+      return null;
+    }
+
+    try {
+      let plan = null;
+
+      if (isFunction(api.createHearthVisualCarrierPlan)) {
+        plan = api.createHearthVisualCarrierPlan({
+          planetId: "hearth",
+          planetLabel: "Hearth",
+          route: ROUTE,
+          renderMetadata: {
+            pairedSemiconductor: true,
+            constraintSemiconductor: INDEX_FILE,
+            coherenceSemiconductor: COHERENCE_FILE,
+            synchronizedLoading: true,
+            visibleContentCompletionGate: true,
+            inspectModeGate: true,
+            visualPassClaimed: false
+          }
+        }, {
+          profile: "hearth-paired-semiconductor-visible-content-proof-latch",
+          planetId: "hearth",
+          planetLabel: "Hearth"
+        });
+      } else if (isFunction(api.createVisualCarrierPlan)) {
+        plan = api.createVisualCarrierPlan({
+          planetId: "hearth",
+          planetLabel: "Hearth",
+          route: ROUTE
+        });
+      }
+
+      state.runtimeTablePlanCreated = Boolean(plan);
+
+      setLane("authorityAvailability", {
+        status: "READY",
+        progress: stageProgress("F5"),
+        event: "RUNTIME_TABLE_AVAILABLE",
+        stage: "F5",
+        message: state.runtimeTablePlanCreated
+          ? "Runtime Table available and carrier plan created."
+          : "Runtime Table available."
+      });
+
+      return plan;
+    } catch (error) {
+      state.runtimeTableMode = "RUNTIME_TABLE_DEGRADED";
+      state.runtimeTablePlanError = error && error.message ? error.message : String(error);
+
+      recordError("RUNTIME_TABLE_PLAN_ERROR", state.runtimeTablePlanError);
+
+      setLane("authorityAvailability", {
+        status: "DEGRADED",
+        progress: stageProgress("F5"),
+        event: "RUNTIME_TABLE_DEGRADED",
+        stage: "F5",
+        message: state.runtimeTablePlanError
+      });
+
+      return null;
+    }
   }
 
   function getCanvasApi() {
@@ -1151,324 +1253,1236 @@
     );
   }
 
-  function conductorBootMethod(api) {
-    if (!api) return "";
-    if (isFunction(api.boot)) return "boot";
-    if (isFunction(api.start)) return "start";
-    if (isFunction(api.init)) return "init";
-    if (isFunction(api.run)) return "run";
+  function getCanvasReceipt() {
+    const api = getCanvasApi();
+
+    if (api && isFunction(api.getReceipt)) {
+      try {
+        const receipt = api.getReceipt("hearth-visible-content-proof-latch-reconcile");
+        if (receipt && isObject(receipt)) return receipt;
+      } catch (error) {
+        recordError("CANVAS_RECEIPT_READ_FAILED", error && error.message ? error.message : String(error));
+      }
+    }
+
+    return (
+      root.HEARTH_CANVAS_POSTGAME_RECEIPT ||
+      root.HEARTH_CANVAS_RECEIPT ||
+      root.HEARTH_HEX_BODY_BOUNDARY_CANVAS_RECEIPT_EXPORT ||
+      null
+    );
+  }
+
+  function selectCanvasMethod(api) {
+    if (api && isFunction(api.bootCooperative)) return "bootCooperative";
+    if (api && isFunction(api.boot)) return "boot";
+    if (api && isFunction(api.mountVisibleCarrier)) return "mountVisibleCarrier";
+    if (api && isFunction(api.bootVisibleCarrier)) return "bootVisibleCarrier";
+    if (api && isFunction(api.mount)) return "mount";
+    if (api && isFunction(api.start)) return "start";
+    if (api && isFunction(api.init)) return "init";
+    if (api && isFunction(api.render)) return "render";
     return "";
   }
 
-  function cacheKey() {
-    return `${CONTRACT}-${Date.now()}`;
-  }
-
-  function scriptAlreadyPresent(srcPart) {
-    if (!doc) return null;
-    return Array.from(doc.scripts || []).find((script) => {
-      const src = script.getAttribute("src") || "";
-      return src.includes(srcPart);
-    }) || null;
-  }
-
-  function injectConductorScript() {
-    const ledger = refs.ledger || ensureLedger();
-
-    const api = getConductorApi();
-
-    if (api) {
-      state.conductorGlobalPresent = true;
-      state.conductorScriptLoaded = true;
-      state.conductorScriptPresent = true;
-      state.conductorContract = String(api.contract || "");
-      state.conductorBootMethodPresent = Boolean(conductorBootMethod(api));
-      state.conductorDelegationAccepted = true;
-
-      ledger.setScript("coherenceConductor", {
-        src: COHERENCE_FILE,
-        status: "GLOBAL_PRESENT",
-        globalPresent: true,
-        loadedAt: nowIso()
-      });
-
-      acceptConductorIfPossible(api);
-      return Promise.resolve(api);
-    }
-
-    const existing = scriptAlreadyPresent(COHERENCE_FILE);
-
-    if (existing) {
-      state.conductorScriptPresent = true;
-      state.conductorScriptRequested = true;
-
-      ledger.setScript("coherenceConductor", {
-        src: existing.src || COHERENCE_FILE,
-        status: "PRESENT_WAITING_GLOBAL",
-        globalPresent: false,
-        requestedAt: nowIso()
-      });
-
-      return waitForConductorGlobal(4200);
-    }
-
-    if (!doc || !doc.head) {
-      state.conductorScriptError = "document.head unavailable";
-      recordError("DOCUMENT_HEAD_MISSING", state.conductorScriptError);
-      return Promise.resolve(null);
-    }
-
-    state.conductorScriptRequested = true;
-    state.conductorDelegationReady = true;
-
-    ledger.setScript("coherenceConductor", {
-      src: COHERENCE_FILE,
-      status: "REQUESTED",
-      globalPresent: false,
-      requestedAt: nowIso()
-    });
-
-    const script = doc.createElement("script");
-    script.src = `${COHERENCE_FILE}?v=${encodeURIComponent(cacheKey())}`;
-    script.defer = true;
-    script.dataset.hearthPairedSemiconductor = "true";
-    script.dataset.hearthLoadedByConstraintSemiconductor = CONTRACT;
-    script.dataset.hearthScriptKey = "coherenceConductor";
-    script.dataset.generatedImage = "false";
-    script.dataset.graphicBox = "false";
-    script.dataset.webgl = "false";
-    script.dataset.visualPassClaimed = "false";
-
-    return new Promise((resolve) => {
-      let settled = false;
-
-      function finish(status, error = "") {
-        if (settled) return;
-        settled = true;
-
-        state.conductorScriptPresent = true;
-        state.conductorScriptLoaded = status === "LOADED" || Boolean(getConductorApi());
-        state.conductorScriptError = error;
-
-        const conductor = getConductorApi();
-
-        if (conductor) {
-          state.conductorGlobalPresent = true;
-          state.conductorContract = String(conductor.contract || "");
-          state.conductorBootMethodPresent = Boolean(conductorBootMethod(conductor));
-          state.conductorDelegationAccepted = true;
-          acceptConductorIfPossible(conductor);
-        }
-
-        ledger.setScript("coherenceConductor", {
-          src: script.src,
-          status: conductor ? "GLOBAL_PRESENT" : status,
-          globalPresent: Boolean(conductor),
-          error,
-          loadedAt: status === "LOADED" ? nowIso() : ""
-        });
-
-        resolve(conductor || null);
-      }
-
-      script.onload = () => {
-        waitForConductorGlobal(1600).then((api) => {
-          finish(api ? "LOADED" : "LOADED_GLOBAL_PENDING", api ? "" : "script loaded but conductor global not yet present");
-        });
-      };
-
-      script.onerror = () => {
-        finish("LOAD_FAILED", "coherence conductor script failed to load");
-      };
-
-      doc.head.appendChild(script);
-
-      root.setTimeout(() => {
-        if (settled) return;
-        const api = getConductorApi();
-        finish(api ? "TIMEOUT_GLOBAL_PRESENT" : "LOAD_TIMEOUT", api ? "" : "coherence conductor load timeout");
-      }, 5200);
-    });
-  }
-
-  function waitForConductorGlobal(timeoutMs) {
-    const started = nowMs();
-
-    return new Promise((resolve) => {
-      const timer = root.setInterval(() => {
-        const api = getConductorApi();
-
-        if (api) {
-          root.clearInterval(timer);
-          state.conductorGlobalPresent = true;
-          state.conductorContract = String(api.contract || "");
-          state.conductorBootMethodPresent = Boolean(conductorBootMethod(api));
-          state.conductorDelegationAccepted = true;
-          acceptConductorIfPossible(api);
-          resolve(api);
-          return;
-        }
-
-        if (nowMs() - started >= timeoutMs) {
-          root.clearInterval(timer);
-          resolve(null);
-        }
-      }, 80);
-    });
-  }
-
-  function acceptConductorIfPossible(api) {
-    if (!api) return false;
-
-    const payload = {
+  function canvasPayload() {
+    return {
       calledBy: CONTRACT,
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
+      baselineContract: BASELINE_CONTRACT,
+      route: ROUTE,
+      mountId: MOUNT_ID,
+      mount: refs.mount || ensureMount(),
+      pairedSemiconductor: true,
       constraintSemiconductor: INDEX_FILE,
       coherenceSemiconductor: COHERENCE_FILE,
-      pairedSemiconductor: true,
       systematicAndSynchronized: true,
       synchronizedLoading: true,
-      sharedLedger: root.HEARTH_LOAD_LEDGER,
-      mount: refs.mount || ensureMount(),
-      cockpit: refs.cockpit || ensureCockpit(),
-      indexReceipt: getReceipt(),
+      visibleContentCompletionGate: true,
+      inspectModeGate: true,
+      sharedLedger: refs.ledger || ensureLedger(),
+      loadLedger: refs.ledger || ensureLedger(),
       visibleCarrierFirst: true,
-      runtimeTableRequiredForFirstRender: false,
-      sourceStackRequiredForFirstRender: false,
+      runtimeTableOptional: true,
+      runtimeTableMissingDoesNotBlockCarrier: true,
+      sourceAuthorityHeld: true,
       wideProbeDeferred: true,
       climateRouteRetired: true,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
-      visualPassClaimed: false
-    };
-
-    const method =
-      isFunction(api.acceptConstraintSemiconductor) ? "acceptConstraintSemiconductor" :
-        isFunction(api.hydrateIndexBridge) ? "hydrateIndexBridge" :
-          isFunction(api.attachIndexBridge) ? "attachIndexBridge" :
-            isFunction(api.receiveIndexBridge) ? "receiveIndexBridge" :
-              "";
-
-    if (method) {
-      try {
-        api[method](payload);
-        state.conductorDelegationAccepted = true;
-        state.conductorDelegationReady = true;
-
-        refs.ledger.setLane("conductorHydration", {
-          status: "ACCEPTED",
-          progress: stageProgress("F8"),
-          event: "COHERENCE_CONDUCTOR_ACCEPTED_INDEX_SEMICONDUCTOR",
-          stage: "F8",
-          owner: "index.js",
-          file: INDEX_FILE,
-          message: `Coherence conductor accepted index semiconductor through ${method}.`
-        });
-
-        return true;
-      } catch (error) {
-        recordError("CONDUCTOR_ACCEPTANCE_METHOD_FAILED", error && error.message ? error.message : String(error), { method });
+      visualPassClaimed: false,
+      callbacks: {
+        onCanvasPhase: handleCanvasPhase,
+        onCanvasProgress: handleCanvasPhase,
+        onMounted: (receipt) => handleCanvasReceipt(receipt, "onMounted"),
+        onFirstFrame: (receipt) => handleCanvasReceipt(receipt, "onFirstFrame"),
+        onRendered: (receipt) => handleCanvasReceipt(receipt, "onRendered"),
+        onDragBound: (receipt) => handleCanvasReceipt(receipt, "onDragBound"),
+        onReady: (receipt) => handleCanvasReceipt(receipt, "onReady"),
+        onError: (receipt) => handleCanvasReceipt(receipt, "onError")
       }
-    }
-
-    state.conductorDelegationAccepted = true;
-    state.conductorDelegationReady = true;
-
-    refs.ledger.setLane("conductorHydration", {
-      status: "GLOBAL_PRESENT",
-      progress: stageProgress("F8"),
-      event: "COHERENCE_CONDUCTOR_GLOBAL_PRESENT",
-      stage: "F8",
-      owner: "index.js",
-      file: INDEX_FILE,
-      message: "Coherence conductor global present; boot call suppressed to avoid duplicate conductor execution."
-    });
-
-    return true;
+    };
   }
 
-  function retireClimateRoute() {
-    root.__HEARTH_CLIMATE_ROUTE_RETIRED__ = true;
-    root.__HEARTH_RETIRED_ROUTE_FILE__ = RETIRED_CLIMATE_FILE;
-    root.__HEARTH_RETIRED_CLIMATE_ROUTE__ = RETIRED_CLIMATE_FILE;
-    root.__HEARTH_RETIRED_CLIMATE_ROUTE_ACTIVE_CARRIER__ = false;
+  function callCanvasCarrier() {
+    if (canvasBootRequested) return;
 
-    [
-      "__HEARTH_VISIBLE_RECOVERY_DISPOSE__",
-      "__HEARTH_G4_ROUTE_DISPOSE__",
-      "__HEARTH_HABITABLE_FORMING_ROUTE_DISPOSE__"
-    ].forEach((name) => {
-      try {
-        if (typeof root[name] === "function") root[name]();
-      } catch (_error) {}
+    const api = getCanvasApi();
+    state.canvasApiPresent = Boolean(api);
 
-      try {
-        root[name] = undefined;
-        delete root[name];
-      } catch (_error) {}
+    if (!api) {
+      setLane("canvasAndDiagnostic", {
+        status: "WAITING",
+        progress: 64,
+        event: "CANVAS_API_PENDING",
+        stage: "F13",
+        message: "Canvas API pending; synchronized loader remains active."
+      });
+
+      state.postgameStatus = "CANVAS_API_PENDING";
+      state.firstFailedCoordinate = "F13_CANVAS_API_PENDING";
+      state.recommendedNextRenewalTarget = CANVAS_FILE;
+
+      return;
+    }
+
+    const method = selectCanvasMethod(api);
+
+    if (!method) {
+      state.canvasCarrierHandoffError = "Canvas API present but no boot/mount method exists.";
+      state.postgameStatus = "CANVAS_METHOD_MISSING";
+      state.firstFailedCoordinate = "F13_CANVAS_METHOD_MISSING";
+      state.recommendedNextRenewalTarget = CANVAS_FILE;
+      recordError("CANVAS_METHOD_MISSING", state.canvasCarrierHandoffError);
+      return;
+    }
+
+    canvasBootRequested = true;
+    state.canvasCarrierRequested = true;
+    state.canvasCarrierMethod = method;
+    state.cooperativeBootAvailable = Boolean(isFunction(api.bootCooperative));
+    state.cooperativeBootUsed = method === "bootCooperative";
+    state.syncBootFallbackUsed = method !== "bootCooperative";
+    state.canvasBootStartedAt = nowIso();
+    state.canvasBootStartedAtMs = nowMs();
+    state.f13ProgressStreamActive = state.cooperativeBootUsed;
+    state.lastCanvasPhase = state.cooperativeBootUsed ? "CANVAS_COOPERATIVE_BOOT_STARTED" : "SYNC_BOOT_FALLBACK_SELECTED";
+    state.lastCanvasProgress = state.cooperativeBootUsed ? 78 : 76;
+    state.mainProgressCap = Math.max(state.mainProgressCap, state.lastCanvasProgress);
+
+    markF13("CANVAS_COOPERATIVE_BOOT_STARTED");
+
+    setStage("F13", "Canvas cooperative boot active.", {
+      lane: "canvasAndDiagnostic",
+      status: "LOADING"
     });
 
-    if (doc) {
-      doc.querySelectorAll("script[src*='hearth.climate.route.js']").forEach((script) => {
-        script.dataset.hearthClimateRouteRetired = "true";
-        script.dataset.retiredBy = CONTRACT;
+    setLane("canvasAndDiagnostic", {
+      status: "LOADING",
+      progress: state.lastCanvasProgress,
+      event: state.lastCanvasPhase,
+      stage: "F13",
+      message: state.cooperativeBootUsed
+        ? "Canvas cooperative boot selected; F13 remains active until visible content proof."
+        : "Canvas fallback method selected; final completion will be blocked unless visible content proof passes."
+    });
+
+    emit("CANVAS_CARRIER_METHOD_SELECTED", {
+      method,
+      cooperativeBootAvailable: state.cooperativeBootAvailable,
+      cooperativeBootUsed: state.cooperativeBootUsed,
+      syncBootFallbackUsed: state.syncBootFallbackUsed
+    }, {
+      stage: "F13",
+      lane: "canvasAndDiagnostic",
+      status: "READY",
+      progress: state.lastCanvasProgress
+    });
+
+    try {
+      const result = api[method](canvasPayload());
+
+      state.canvasCarrierHandoffOk = true;
+
+      if (result && isFunction(result.then)) {
+        result
+          .then((receipt) => handleCanvasReceipt(receipt, "canvas-promise-resolved"))
+          .catch((error) => {
+            state.canvasCarrierHandoffOk = false;
+            state.canvasCarrierHandoffError = error && error.message ? error.message : String(error);
+            state.postgameStatus = "CANVAS_BOOT_PHASE_ERROR";
+            state.firstFailedCoordinate = "F13_CANVAS_PROMISE_REJECTED";
+            recordError("CANVAS_PROMISE_REJECTED", state.canvasCarrierHandoffError);
+          });
+      } else if (result && isObject(result)) {
+        handleCanvasReceipt(result, "canvas-method-returned-receipt");
+      }
+    } catch (error) {
+      state.canvasCarrierHandoffOk = false;
+      state.canvasCarrierHandoffError = error && error.message ? error.message : String(error);
+      state.postgameStatus = "CANVAS_HANDOFF_ERROR";
+      state.firstFailedCoordinate = "F13_CANVAS_HANDOFF_ERROR";
+      state.recommendedNextRenewalTarget = CANVAS_FILE;
+      recordError("CANVAS_HANDOFF_ERROR", state.canvasCarrierHandoffError, { method });
+    }
+  }
+
+  function phaseSignature(event) {
+    const phase = String(event.phase || event.id || event.event || "CANVAS_PHASE");
+    const detail = isObject(event.detail) ? event.detail : {};
+    const chunk = detail.chunkIndex ?? "";
+    const total = detail.totalChunks ?? "";
+    const progress = event.percent ?? event.progress ?? detail.progress ?? "";
+    return `${phase}|${chunk}|${total}|${progress}`;
+  }
+
+  function markF13(phase) {
+    if (!phase) return;
+
+    state.f13Events[phase] = true;
+
+    if (!state.f13EventOrder.includes(phase)) {
+      state.f13EventOrder.push(phase);
+    }
+
+    state.f13SubsequenceComplete = F13_REQUIRED.every((name) => state.f13Events[name] === true);
+    state.f13LastRequiredEvent = state.f13EventOrder[state.f13EventOrder.length - 1] || "";
+
+    if (phase === "CANVAS_READY" && !state.fibonacciStageAtCanvasReady) {
+      state.fibonacciStageAtCanvasReady = "F13";
+    }
+
+    if (phase === "VISIBLE_CONTENT_PROOF_PASSED" && !state.fibonacciStageAtVisibleContentProof) {
+      state.fibonacciStageAtVisibleContentProof = "F13";
+    }
+  }
+
+  function handleCanvasPhase(event = {}) {
+    const phase = String(event.phase || event.id || event.event || "CANVAS_PHASE");
+    const signature = phaseSignature(event);
+    const current = nowMs();
+
+    if (state.phaseSignatures[signature] && current - state.phaseSignatures[signature] < 1800) {
+      state.ignoredDuplicateCanvasEvents += 1;
+      return event;
+    }
+
+    state.phaseSignatures[signature] = current;
+
+    const detail = isObject(event.detail) ? event.detail : {};
+    const percent = clamp(Number(event.percent ?? event.progress ?? detail.progress ?? state.lastCanvasProgress ?? 78), 0, 100);
+    const elapsedMs = Number(detail.elapsedMs ?? event.elapsedMs ?? state.canvasBootElapsedMs ?? 0);
+    const message = event.message || phaseToMessage(phase, percent, detail);
+
+    if (state.completionLatched) {
+      archiveLateEvent({
+        event: phase,
+        stage: "F13",
+        lane: "canvasAndDiagnostic",
+        reason: "post-f21-canvas-event-archived",
+        message,
+        detail
+      });
+      return event;
+    }
+
+    if (state.canvasLaneClosed && phase !== "CANVAS_READY") {
+      archiveLateEvent({
+        event: phase,
+        stage: "F13",
+        lane: "canvasAndDiagnostic",
+        reason: "canvas-lane-closed-after-canvas-ready",
+        message,
+        detail
+      });
+      return event;
+    }
+
+    state.canvasPhaseCount += 1;
+    state.lastCanvasPhase = phase;
+    state.lastCanvasProgress = Math.max(Number(state.lastCanvasProgress || 0), percent);
+    state.mainProgressCap = Math.max(state.mainProgressCap, Math.min(percent, 98));
+    state.canvasBootElapsedMs = Math.max(Number(state.canvasBootElapsedMs || 0), elapsedMs);
+    state.canvasYieldCount = Math.max(Number(state.canvasYieldCount || 0), Number(detail.canvasYieldCount || 0));
+    state.loaderRepaintDuringCanvasBoot = Boolean(state.loaderRepaintDuringCanvasBoot || detail.loaderRepaintDuringCanvasBoot || state.canvasYieldCount > 0);
+    state.f13ProgressStreamActive = true;
+    state.latestVisibleEvent = phase;
+
+    applyPhaseTruth(phase, detail);
+    markF13(phase);
+
+    state.phaseEvents.push({
+      at: nowIso(),
+      phase,
+      percent,
+      message,
+      detail: clonePlain(detail)
+    });
+
+    if (state.phaseEvents.length > 180) {
+      state.phaseEvents.splice(0, state.phaseEvents.length - 180);
+    }
+
+    if (phase === "CANVAS_READY") {
+      state.canvasLaneClosed = true;
+      setLane("canvasAndDiagnostic", {
+        status: "FINAL_READY",
+        progress: 100,
+        event: "CANVAS_READY",
+        stage: "F13",
+        message: "Canvas ready. Visible content proof still required."
+      });
+      startVisibleContentProof("canvas-ready-phase");
+    } else {
+      setStage("F13", message, {
+        lane: "canvasAndDiagnostic",
+        status: "LOADING"
+      });
+
+      setLane("canvasAndDiagnostic", {
+        status: "LOADING",
+        progress: percent,
+        event: phase,
+        stage: "F13",
+        message
       });
     }
 
-    state.climateRouteRetired = true;
+    reconcileAll(`canvas-phase-${phase}`);
+
+    if (phase === "CANVAS_READY") {
+      root.setTimeout(() => startVisibleContentProof("canvas-ready-post-frame-check"), 80);
+      root.setTimeout(() => startVisibleContentProof("canvas-ready-late-visual-check"), 320);
+      root.setTimeout(() => startVisibleContentProof("canvas-ready-later-content-check"), 900);
+    }
+
+    return event;
   }
 
-  function markVisualHints() {
-    if (!doc) return;
+  function applyPhaseTruth(phase, detail = {}) {
+    if (phase === "CANVAS_COOPERATIVE_BOOT_STARTED") {
+      state.cooperativeBootUsed = true;
+      state.canvasBootStartedAt = state.canvasBootStartedAt || nowIso();
+      state.canvasBootStartedAtMs = state.canvasBootStartedAtMs || nowMs();
+    }
 
+    if (phase === "CANVAS_MOUNT_CREATED") {
+      state.canvasCarrierMounted = true;
+      state.canvasCarrierHandoffOk = true;
+    }
+
+    if (phase === "CANVAS_CONTEXT_READY") {
+      state.canvasApiPresent = true;
+    }
+
+    if (phase === "ATLAS_BUILD_STARTED") {
+      state.atlasBuildStarted = true;
+    }
+
+    if (phase === "ATLAS_BUILD_PROGRESS") {
+      state.atlasBuildStarted = true;
+      state.atlasBuildProgress = Math.max(state.atlasBuildProgress, Number(detail.atlasBuildProgress || 0));
+    }
+
+    if (phase === "ATLAS_BUILD_COMPLETE") {
+      state.atlasBuildStarted = true;
+      state.atlasBuildComplete = true;
+      state.atlasBuildProgress = 100;
+    }
+
+    if (phase === "TEXTURE_COMPOSE_STARTED") {
+      state.textureComposeStarted = true;
+    }
+
+    if (phase === "TEXTURE_COMPOSE_PROGRESS") {
+      state.textureComposeStarted = true;
+      state.textureComposeProgress = Math.max(state.textureComposeProgress, Number(detail.textureComposeProgress || 0));
+    }
+
+    if (phase === "TEXTURE_COMPOSE_COMPLETE") {
+      state.textureComposeStarted = true;
+      state.textureComposeComplete = true;
+      state.textureComposeProgress = 100;
+    }
+
+    if (phase === "FIRST_FRAME_REQUESTED") {
+      state.firstFrameRequested = true;
+    }
+
+    if (phase === "FIRST_FRAME_DETECTED") {
+      state.firstFrameRequested = true;
+      state.firstFrameDetected = true;
+      state.imageRendered = true;
+    }
+
+    if (phase === "DRAG_INSPECTION_BOUND") {
+      state.dragInspectionBound = true;
+    }
+
+    if (phase === "CANVAS_READY") {
+      state.canvasReady = true;
+      state.canvasCarrierMounted = true;
+      state.canvasCarrierHandoffOk = true;
+      state.firstFrameRequested = true;
+      state.firstFrameDetected = true;
+      state.imageRendered = true;
+      state.dragInspectionBound = true;
+      state.atlasBuildStarted = true;
+      state.atlasBuildComplete = true;
+      state.atlasBuildProgress = 100;
+      state.textureComposeStarted = true;
+      state.textureComposeComplete = true;
+      state.textureComposeProgress = 100;
+      state.canvasBootCompletedAt = state.canvasBootCompletedAt || nowIso();
+      state.canvasBootCompletedAtMs = state.canvasBootCompletedAtMs || nowMs();
+      state.canvasBootElapsedMs = Number(detail.canvasBootElapsedMs || state.canvasBootElapsedMs || (state.canvasBootCompletedAtMs - state.canvasBootStartedAtMs));
+      state.fibonacciStageAtCanvasReady = "F13";
+      state.finalReceiptAvailable = true;
+    }
+  }
+
+  function phaseToMessage(phase, percent, detail = {}) {
+    const elapsed = formatElapsed(detail.elapsedMs || state.canvasBootElapsedMs || 0);
+
+    if (phase === "CANVAS_COOPERATIVE_BOOT_STARTED") return `Canvas cooperative boot started · elapsed ${elapsed}`;
+    if (phase === "CANVAS_MOUNT_CREATED") return `Canvas mount created · elapsed ${elapsed}`;
+    if (phase === "CANVAS_CONTEXT_READY") return `Canvas context ready · elapsed ${elapsed}`;
+    if (phase === "ATLAS_BUILD_STARTED") return `Atlas build started · elapsed ${elapsed}`;
+    if (phase === "ATLAS_BUILD_PROGRESS") {
+      const chunk = detail.chunkIndex && detail.totalChunks ? `${detail.chunkIndex}/${detail.totalChunks} chunks` : `${detail.atlasBuildProgress || percent}%`;
+      return `Atlas build active · ${chunk} · elapsed ${elapsed}`;
+    }
+    if (phase === "ATLAS_BUILD_COMPLETE") return `Atlas build complete · elapsed ${elapsed}`;
+    if (phase === "TEXTURE_COMPOSE_STARTED") return `Texture composition started · elapsed ${elapsed}`;
+    if (phase === "TEXTURE_COMPOSE_PROGRESS") return `Texture composition active · ${detail.textureComposeProgress || percent}% · elapsed ${elapsed}`;
+    if (phase === "TEXTURE_COMPOSE_COMPLETE") return `Texture composition complete · elapsed ${elapsed}`;
+    if (phase === "FIRST_FRAME_REQUESTED") return `First frame requested · elapsed ${elapsed}`;
+    if (phase === "FIRST_FRAME_DETECTED") return `First frame detected · elapsed ${elapsed}`;
+    if (phase === "DRAG_INSPECTION_BOUND") return `Drag inspection bound · elapsed ${elapsed}`;
+    if (phase === "CANVAS_READY") return `Canvas ready · visible content proof required · elapsed ${elapsed}`;
+    return `${phase} · elapsed ${elapsed}`;
+  }
+
+  function handleCanvasReceipt(receipt, reason = "canvas-receipt") {
+    const value = receipt && isObject(receipt) ? receipt : getCanvasReceipt();
+
+    if (value && isObject(value)) {
+      handleCanvasReceiptLight(value);
+
+      if (Array.isArray(value.phaseEvents)) {
+        value.phaseEvents.forEach((event) => {
+          if (!event || !event.phase) return;
+          handleCanvasPhase(event);
+        });
+      }
+    }
+
+    reconcileAll(reason);
+  }
+
+  function handleCanvasReceiptLight(value) {
+    state.cooperativeBootAvailable = Boolean(state.cooperativeBootAvailable || value.cooperativeBootAvailable);
+    state.cooperativeBootUsed = Boolean(state.cooperativeBootUsed || value.cooperativeBootUsed);
+    state.syncBootFallbackUsed = Boolean(state.syncBootFallbackUsed || value.syncBootFallbackUsed);
+
+    state.canvasCarrierMounted = Boolean(
+      state.canvasCarrierMounted ||
+      value.canvasCarrierMounted ||
+      value.visibleCarrierMounted ||
+      value.mounted ||
+      value.canvasMounted
+    );
+
+    state.canvasCarrierHandoffOk = Boolean(
+      state.canvasCarrierHandoffOk ||
+      state.canvasCarrierMounted ||
+      value.canvasCarrierHandoffOk ||
+      value.handoffOk
+    );
+
+    state.firstFrameRequested = Boolean(state.firstFrameRequested || value.firstFrameRequested);
+    state.firstFrameDetected = Boolean(state.firstFrameDetected || value.firstFrameDetected);
+    state.imageRendered = Boolean(state.imageRendered || value.imageRendered);
+    state.dragInspectionBound = Boolean(state.dragInspectionBound || value.dragInspectionBound || value.pointerControlsBound || value.controlsBound);
+    state.canvasReady = Boolean(state.canvasReady || value.canvasReady);
+
+    state.atlasBuildStarted = Boolean(state.atlasBuildStarted || value.atlasBuildStarted);
+    state.atlasBuildProgress = Math.max(Number(state.atlasBuildProgress || 0), Number(value.atlasBuildProgress || 0));
+    state.atlasBuildComplete = Boolean(state.atlasBuildComplete || value.atlasBuildComplete);
+
+    state.textureComposeStarted = Boolean(state.textureComposeStarted || value.textureComposeStarted);
+    state.textureComposeProgress = Math.max(Number(state.textureComposeProgress || 0), Number(value.textureComposeProgress || 0));
+    state.textureComposeComplete = Boolean(state.textureComposeComplete || value.textureComposeComplete);
+
+    state.visiblePlanetAvailable = Boolean(state.visiblePlanetAvailable || value.visiblePlanetAvailable);
+    state.planetCanvasPresent = Boolean(state.planetCanvasPresent || value.planetCanvasPresent);
+    state.planetCanvasNonZeroSize = Boolean(state.planetCanvasNonZeroSize || value.planetCanvasNonZeroSize);
+    state.planetFramePainted = Boolean(state.planetFramePainted || value.planetFramePainted);
+    state.nonblankPlanetVisible = Boolean(state.nonblankPlanetVisible || value.nonblankPlanetVisible);
+
+    state.canvasBootElapsedMs = Math.max(Number(state.canvasBootElapsedMs || 0), Number(value.canvasBootElapsedMs || 0));
+    state.canvasYieldCount = Math.max(Number(state.canvasYieldCount || 0), Number(value.canvasYieldCount || 0));
+    state.canvasPhaseCount = Math.max(Number(state.canvasPhaseCount || 0), Number(value.canvasPhaseCount || 0));
+    state.lastCanvasPhase = value.lastCanvasPhase || state.lastCanvasPhase;
+    state.lastCanvasProgress = Math.max(Number(state.lastCanvasProgress || 0), Number(value.lastCanvasProgress || 0));
+    state.loaderRepaintDuringCanvasBoot = Boolean(state.loaderRepaintDuringCanvasBoot || value.loaderRepaintDuringCanvasBoot || state.canvasYieldCount > 0);
+    state.f13ProgressStreamActive = Boolean(state.f13ProgressStreamActive || value.f13ProgressStreamActive);
+
+    if (state.canvasReady) {
+      markF13("CANVAS_READY");
+      state.canvasLaneClosed = true;
+    }
+
+    if (explicitReceiptContentProof(value)) {
+      state.explicitContentReceiptProof = true;
+      state.visibleContentProof = true;
+      state.visibleContentProofMethod = "explicit-canvas-receipt-content-proof";
+      state.carrierOnlyDetected = false;
+      markF13("VISIBLE_CONTENT_PROOF_STARTED");
+      markF13("VISIBLE_CONTENT_PROOF_PASSED");
+    }
+  }
+
+  function reconcileFromDataset() {
+    if (!doc || !doc.documentElement) return;
+
+    const dataset = doc.documentElement.dataset;
+
+    state.canvasApiPresent = Boolean(getCanvasApi());
+
+    state.cooperativeBootAvailable = Boolean(
+      state.cooperativeBootAvailable ||
+      bool(dataset.hearthCanvasCooperativeBootAvailable) ||
+      isFunction(getCanvasApi()?.bootCooperative)
+    );
+
+    state.cooperativeBootUsed = Boolean(
+      state.cooperativeBootUsed ||
+      bool(dataset.hearthCanvasCooperativeBootUsed)
+    );
+
+    state.syncBootFallbackUsed = Boolean(
+      state.syncBootFallbackUsed ||
+      bool(dataset.hearthCanvasSyncBootFallbackUsed)
+    );
+
+    state.canvasCarrierMounted = Boolean(
+      state.canvasCarrierMounted ||
+      bool(dataset.hearthCanvasCarrierMounted) ||
+      bool(dataset.hearthVisibleCarrierMounted)
+    );
+
+    state.canvasCarrierHandoffOk = Boolean(
+      state.canvasCarrierHandoffOk ||
+      bool(dataset.hearthCanvasCarrierHandoffOk) ||
+      state.canvasCarrierMounted
+    );
+
+    state.firstFrameRequested = Boolean(state.firstFrameRequested || bool(dataset.hearthFirstFrameRequested));
+    state.firstFrameDetected = Boolean(state.firstFrameDetected || bool(dataset.hearthFirstFrameDetected));
+    state.imageRendered = Boolean(state.imageRendered || bool(dataset.hearthImageRendered) || bool(dataset.hearthCanvasImageRendered));
+    state.dragInspectionBound = Boolean(state.dragInspectionBound || bool(dataset.hearthDragInspectionBound) || bool(dataset.hearthControlsBound));
+    state.canvasReady = Boolean(state.canvasReady || bool(dataset.hearthCanvasReady));
+
+    state.atlasBuildStarted = Boolean(state.atlasBuildStarted || bool(dataset.hearthAtlasBuildStarted));
+    state.atlasBuildProgress = Math.max(Number(state.atlasBuildProgress || 0), Number(dataset.hearthAtlasBuildProgress || 0));
+    state.atlasBuildComplete = Boolean(state.atlasBuildComplete || bool(dataset.hearthAtlasBuildComplete));
+
+    state.textureComposeStarted = Boolean(state.textureComposeStarted || bool(dataset.hearthTextureComposeStarted));
+    state.textureComposeProgress = Math.max(Number(state.textureComposeProgress || 0), Number(dataset.hearthTextureComposeProgress || 0));
+    state.textureComposeComplete = Boolean(state.textureComposeComplete || bool(dataset.hearthTextureComposeComplete));
+
+    state.visiblePlanetAvailable = Boolean(state.visiblePlanetAvailable || bool(dataset.hearthVisiblePlanetAvailable));
+    state.planetCanvasPresent = Boolean(state.planetCanvasPresent || bool(dataset.hearthPlanetCanvasPresent));
+    state.planetCanvasNonZeroSize = Boolean(state.planetCanvasNonZeroSize || bool(dataset.hearthPlanetCanvasNonZeroSize));
+    state.planetFramePainted = Boolean(state.planetFramePainted || bool(dataset.hearthPlanetFramePainted));
+    state.nonblankPlanetVisible = Boolean(state.nonblankPlanetVisible || bool(dataset.hearthNonblankPlanetVisible));
+
+    if (bool(dataset.hearthVisibleContentProof)) {
+      state.visibleContentProof = true;
+      state.visibleContentProofMethod = state.visibleContentProofMethod || "dataset-visible-content-proof";
+      state.carrierOnlyDetected = false;
+      markF13("VISIBLE_CONTENT_PROOF_STARTED");
+      markF13("VISIBLE_CONTENT_PROOF_PASSED");
+    }
+
+    if (dataset.hearthCanvasLastPhase) state.lastCanvasPhase = dataset.hearthCanvasLastPhase;
+    if (Number(dataset.hearthCanvasLastProgress || 0)) {
+      state.lastCanvasProgress = Math.max(state.lastCanvasProgress, Number(dataset.hearthCanvasLastProgress || 0));
+      state.mainProgressCap = Math.max(state.mainProgressCap, Math.min(98, state.lastCanvasProgress));
+    }
+
+    if (state.canvasReady) {
+      markF13("CANVAS_READY");
+      state.canvasLaneClosed = true;
+    }
+  }
+
+  function explicitReceiptContentProof(value) {
+    if (!isObject(value)) return false;
+
+    for (const key of EXPLICIT_CONTENT_FLAGS) {
+      if (value[key] === true || value[key] === "true") return true;
+    }
+
+    const nested = [value.state, value.receipt, value.postgame, value.canvasState, value.renderState].filter(isObject);
+
+    for (const item of nested) {
+      for (const key of EXPLICIT_CONTENT_FLAGS) {
+        if (item[key] === true || item[key] === "true") return true;
+      }
+    }
+
+    return false;
+  }
+
+  function getPlanetCanvas() {
+    if (!doc) return null;
     const mount = refs.mount || ensureMount();
-    const canvas = mount ? mount.querySelector("canvas") : null;
-    const rect = canvas && isFunction(canvas.getBoundingClientRect) ? canvas.getBoundingClientRect() : null;
-    const canvasApi = getCanvasApi();
-    const canvasState = canvasApi && canvasApi.state ? canvasApi.state : null;
-    const canvasReceipt =
-      root.HEARTH_CANVAS_POSTGAME_RECEIPT ||
-      root.HEARTH_CANVAS_RECEIPT ||
-      null;
+    return mount ? mount.querySelector("canvas") : doc.querySelector("#hearthCanvasMount canvas");
+  }
 
-    state.canvasGlobalPresent = Boolean(canvasApi);
+  function startVisibleContentProof(reason = "manual") {
+    if (state.completionLatched) return state.visibleContentProof;
+
+    state.visibleContentProofStarted = true;
+    markF13("VISIBLE_CONTENT_PROOF_STARTED");
+
+    setLane("visiblePlanetProof", {
+      status: "TESTING",
+      progress: 97,
+      event: "VISIBLE_CONTENT_PROOF_STARTED",
+      stage: "F13",
+      message: "Canvas ready · waiting for visible Hearth content."
+    });
+
+    const result = proveVisibleContent(reason);
+
+    if (result) {
+      markF13("VISIBLE_CONTENT_PROOF_PASSED");
+      setLane("visiblePlanetProof", {
+        status: "READY",
+        progress: 100,
+        event: "VISIBLE_CONTENT_PROOF_PASSED",
+        stage: "F13",
+        message: `Visible Hearth content proof passed via ${state.visibleContentProofMethod}.`
+      });
+    } else {
+      setLane("visiblePlanetProof", {
+        status: "PENDING",
+        progress: 98,
+        event: "VISIBLE_CONTENT_PROOF_PENDING",
+        stage: "F13",
+        message: "Canvas ready · waiting for visible Hearth content."
+      });
+    }
+
+    evaluateCompletionGates();
+    tryFinalize(`visible-content-proof-${reason}`);
+    scheduleRender();
+
+    return result;
+  }
+
+  function proveVisibleContent(reason = "manual") {
+    const receipt = getCanvasReceipt();
+
+    if (explicitReceiptContentProof(receipt)) {
+      state.explicitContentReceiptProof = true;
+      state.visibleContentProof = true;
+      state.visibleContentProofMethod = "explicit-canvas-receipt-content-proof";
+      state.visibleContentProofError = "";
+      state.carrierOnlyDetected = false;
+      state.visiblePlanetAvailable = true;
+      state.nonblankPlanetVisible = true;
+      state.planetFramePainted = true;
+      markF13("VISIBLE_CONTENT_PROOF_PASSED");
+      return true;
+    }
+
+    const api = getCanvasApi();
+    const apiState = api && isObject(api.state) ? api.state : null;
+
+    if (explicitReceiptContentProof(apiState)) {
+      state.explicitContentReceiptProof = true;
+      state.visibleContentProof = true;
+      state.visibleContentProofMethod = "explicit-canvas-api-state-content-proof";
+      state.visibleContentProofError = "";
+      state.carrierOnlyDetected = false;
+      state.visiblePlanetAvailable = true;
+      state.nonblankPlanetVisible = true;
+      state.planetFramePainted = true;
+      markF13("VISIBLE_CONTENT_PROOF_PASSED");
+      return true;
+    }
+
+    const pixelProof = sampleVisibleContent(reason);
+
+    if (pixelProof.passed) {
+      state.visibleContentProof = true;
+      state.visibleContentProofMethod = pixelProof.method;
+      state.visibleContentProofError = "";
+      state.visiblePlanetAvailable = true;
+      state.nonblankPlanetVisible = true;
+      state.planetFramePainted = true;
+      state.carrierOnlyDetected = false;
+      markF13("VISIBLE_CONTENT_PROOF_PASSED");
+      return true;
+    }
+
+    state.visibleContentProof = false;
+    state.visibleContentProofMethod = pixelProof.method || "pending";
+    state.visibleContentProofError = pixelProof.error || "";
+    state.visiblePlanetAvailable = false;
+    state.carrierOnlyDetected = true;
+    state.falseReadyPrevented = Boolean(state.canvasReady && state.firstFrameDetected && !state.visibleContentProof);
+    state.completionBlockedUntilVisibleContent = true;
+
+    return false;
+  }
+
+  function sampleVisibleContent(reason = "manual") {
+    const canvas = getPlanetCanvas();
+
     state.planetCanvasPresent = Boolean(canvas);
+
+    let rect = null;
+
+    try {
+      rect = canvas && isFunction(canvas.getBoundingClientRect) ? canvas.getBoundingClientRect() : null;
+    } catch (_error) {
+      rect = null;
+    }
+
     state.planetCanvasNonZeroSize = Boolean(
       canvas &&
       (
-        (canvas.width > 0 && canvas.height > 0) ||
+        (Number(canvas.width || 0) > 0 && Number(canvas.height || 0) > 0) ||
         (rect && rect.width > 0 && rect.height > 0)
       )
     );
 
-    state.visiblePlanetPossiblyAvailable = Boolean(
-      state.planetCanvasPresent &&
-      state.planetCanvasNonZeroSize &&
-      (
-        canvasState?.firstFrameDetected === true ||
-        canvasState?.imageRendered === true ||
-        canvasState?.canvasReady === true ||
-        canvasReceipt?.firstFrameDetected === true ||
-        canvasReceipt?.imageRendered === true ||
-        canvasReceipt?.canvasReady === true ||
-        doc.documentElement.dataset.hearthCanvasReady === "true" ||
-        doc.documentElement.dataset.hearthImageRendered === "true"
-      )
+    if (!canvas || !state.planetCanvasNonZeroSize) {
+      return {
+        passed: false,
+        method: "canvas-missing-or-zero-size",
+        error: "Planet canvas missing or zero size."
+      };
+    }
+
+    let ctx = null;
+    let width = 0;
+    let height = 0;
+
+    try {
+      ctx = canvas.getContext && canvas.getContext("2d", { willReadFrequently: true });
+      width = Math.max(1, Number(canvas.width || Math.floor(rect?.width || 0)));
+      height = Math.max(1, Number(canvas.height || Math.floor(rect?.height || 0)));
+    } catch (error) {
+      return {
+        passed: false,
+        method: "canvas-pixel-sample-unavailable",
+        error: error && error.message ? error.message : String(error)
+      };
+    }
+
+    if (!ctx || width <= 1 || height <= 1) {
+      return {
+        passed: false,
+        method: "canvas-context-unavailable",
+        error: "Canvas 2D context unavailable for content proof."
+      };
+    }
+
+    const cx = width / 2;
+    const cy = height / 2;
+    const radius = Math.min(width, height) * 0.42;
+    const classes = new Set();
+    const colors = [];
+
+    let sampleCount = 0;
+    let nonblank = 0;
+    let land = 0;
+    let water = 0;
+    let other = 0;
+    let carrier = 0;
+
+    const grid = 17;
+
+    try {
+      for (let gy = 0; gy < grid; gy += 1) {
+        for (let gx = 0; gx < grid; gx += 1) {
+          const nx = (gx + 0.5) / grid;
+          const ny = (gy + 0.5) / grid;
+          const x = Math.floor(width * (0.12 + nx * 0.76));
+          const y = Math.floor(height * (0.12 + ny * 0.76));
+          const dx = x - cx;
+          const dy = y - cy;
+
+          if (Math.sqrt(dx * dx + dy * dy) > radius) continue;
+
+          const data = ctx.getImageData(clamp(x, 0, width - 1), clamp(y, 0, height - 1), 1, 1).data;
+          const r = data[0] || 0;
+          const g = data[1] || 0;
+          const b = data[2] || 0;
+          const a = data[3] || 0;
+          const lum = (r + g + b) / 3;
+
+          sampleCount += 1;
+
+          if (a < 16 || lum < 16) continue;
+
+          nonblank += 1;
+          colors.push([r, g, b]);
+
+          const className = classifyContentColor(r, g, b, a);
+
+          if (className === "land") {
+            land += 1;
+            classes.add("land");
+          } else if (className === "water") {
+            water += 1;
+            classes.add("water");
+          } else if (className === "content-other") {
+            other += 1;
+            classes.add("content-other");
+          } else {
+            carrier += 1;
+          }
+        }
+      }
+    } catch (error) {
+      return {
+        passed: false,
+        method: "canvas-pixel-sample-failed",
+        error: error && error.message ? error.message : String(error)
+      };
+    }
+
+    const variance = computeColorVariance(colors);
+    const classCount = classes.size;
+
+    state.visibleContentSampleCount = sampleCount;
+    state.visibleContentVarianceScore = Math.round(variance * 100) / 100;
+    state.visibleContentClassCount = classCount;
+    state.visibleContentClasses = Array.from(classes);
+    state.visibleContentLandSampleCount = land;
+    state.visibleContentWaterSampleCount = water;
+    state.visibleContentOtherSampleCount = other;
+    state.planetFramePainted = Boolean(nonblank > 12 && (state.firstFrameDetected || state.imageRendered || state.canvasReady));
+    state.nonblankPlanetVisible = Boolean(nonblank > 12);
+
+    const hasLand = land >= 6;
+    const hasWaterOrOther = water >= 6 || other >= 6;
+    const enoughVariance = variance >= 90;
+    const enoughSamples = sampleCount >= 60 && nonblank >= 28;
+    const passed = Boolean(enoughSamples && enoughVariance && hasLand && hasWaterOrOther && state.textureComposeComplete && state.canvasReady);
+
+    state.carrierOnlyDetected = !passed;
+
+    return {
+      passed,
+      method: passed ? "canvas-pixel-content-sample" : "carrier-only-or-insufficient-content-sample",
+      error: passed ? "" : `Visible content sample failed: samples=${sampleCount}, nonblank=${nonblank}, variance=${Math.round(variance * 100) / 100}, classes=${classCount}, land=${land}, water=${water}, other=${other}, carrier=${carrier}, reason=${reason}`
+    };
+  }
+
+  function classifyContentColor(r, g, b, a) {
+    if (a < 16) return "blank";
+
+    const lum = (r + g + b) / 3;
+    if (lum < 18) return "carrier";
+
+    const blueDominant = b >= r + 10 && b >= g - 6;
+    const mutedBlueCarrier = blueDominant && b < 72 && g < 72 && r < 60;
+    if (mutedBlueCarrier) return "carrier";
+
+    const landGreen = g >= 48 && r >= 28 && b <= 118 && g >= b + 8;
+    const landBrown = r >= 52 && g >= 42 && b <= 95 && r >= b + 12 && g >= b + 4;
+    const landYellow = r >= 70 && g >= 62 && b <= 120 && Math.abs(r - g) <= 52;
+
+    if (landGreen || landBrown || landYellow) return "land";
+
+    const waterBlue = b >= 52 && b >= r + 8 && b >= g - 10 && g >= 28;
+    const waterTeal = g >= 46 && b >= 46 && r <= 62 && Math.abs(g - b) <= 45;
+
+    if (waterBlue || waterTeal) return "water";
+
+    if (lum >= 52 && Math.max(r, g, b) - Math.min(r, g, b) >= 20) return "content-other";
+
+    return "carrier";
+  }
+
+  function computeColorVariance(colors) {
+    if (!colors.length) return 0;
+
+    let r = 0;
+    let g = 0;
+    let b = 0;
+
+    colors.forEach((color) => {
+      r += color[0];
+      g += color[1];
+      b += color[2];
+    });
+
+    r /= colors.length;
+    g /= colors.length;
+    b /= colors.length;
+
+    let total = 0;
+
+    colors.forEach((color) => {
+      total += Math.pow(color[0] - r, 2);
+      total += Math.pow(color[1] - g, 2);
+      total += Math.pow(color[2] - b, 2);
+    });
+
+    return Math.sqrt(total / (colors.length * 3));
+  }
+
+  function evaluateInspectGate() {
+    state.inspectModeAvailable = Boolean(refs.inspectButton);
+    state.inspectPlanetControlAvailable = Boolean(refs.inspectButton);
+    state.showDiagnosticTabVisibleWhenHidden = Boolean(refs.showTab);
+    state.diagnosticDockRestorable = Boolean(refs.showTab);
+    state.copyDiagnosticPreserved = Boolean(refs.copyButton);
+    state.receiptOverlayIndependent = true;
+    state.diagnosticCanLeavePlanetFrame = Boolean(
+      state.inspectModeAvailable &&
+      state.inspectPlanetControlAvailable &&
+      state.showDiagnosticTabVisibleWhenHidden &&
+      state.diagnosticDockRestorable &&
+      refs.cockpit
     );
 
-    if (refs.ledger) {
-      refs.ledger.setLane("visiblePlanetProof", {
-        status: state.visiblePlanetPossiblyAvailable ? "POSSIBLY_AVAILABLE" : "PENDING_COHERENCE_PROOF",
-        progress: state.visiblePlanetPossiblyAvailable ? 88 : 45,
-        event: state.visiblePlanetPossiblyAvailable ? "INDEX_VISUAL_HINT_CANVAS_PRESENT" : "INDEX_WAITING_FOR_VISIBLE_PLANET_PROOF",
-        stage: "F13",
-        owner: "index.js",
-        file: INDEX_FILE,
-        message: state.visiblePlanetPossiblyAvailable
-          ? "Canvas present; coherence conductor must prove visible planet before completion."
-          : "Index is waiting for coherence conductor visible-planet proof."
+    if (state.diagnosticCanLeavePlanetFrame) markF13("INSPECT_MODE_READY");
+
+    setLane("inspectMode", {
+      status: state.diagnosticCanLeavePlanetFrame ? "READY" : "PENDING",
+      progress: state.diagnosticCanLeavePlanetFrame ? 100 : 60,
+      event: state.diagnosticCanLeavePlanetFrame ? "INSPECT_MODE_READY" : "INSPECT_MODE_PENDING",
+      stage: "F13",
+      message: state.diagnosticCanLeavePlanetFrame
+        ? "Inspect planet and Show diagnostic restoration are available."
+        : "Inspect mode proof pending."
+    });
+
+    return state.diagnosticCanLeavePlanetFrame;
+  }
+
+  function evaluateNewsGates() {
+    state.northGateReady = Boolean(
+      state.canvasReady &&
+      state.atlasBuildComplete &&
+      state.textureComposeComplete &&
+      state.firstFrameDetected &&
+      state.dragInspectionBound &&
+      state.visibleContentProof &&
+      state.visiblePlanetAvailable
+    );
+
+    state.eastGateReady = Boolean(
+      state.cooperativeBootUsed &&
+      !state.syncBootFallbackUsed &&
+      state.canvasCarrierMethod === "bootCooperative" &&
+      state.canvasCarrierRequested &&
+      state.canvasCarrierHandoffOk
+    );
+
+    state.westGateReady = Boolean(
+      state.copyDiagnosticPreserved &&
+      state.receiptOverlayIndependent &&
+      state.buttonsReachable &&
+      state.finalReceiptAvailable
+    );
+
+    state.southGateReady = Boolean(
+      state.canvasCarrierMounted &&
+      state.imageRendered &&
+      state.dragInspectionBound &&
+      state.visibleContentProof &&
+      state.visiblePlanetAvailable &&
+      state.diagnosticCanLeavePlanetFrame
+    );
+
+    state.newsGatePassedBeforeF21 = Boolean(
+      state.northGateReady &&
+      state.eastGateReady &&
+      state.westGateReady &&
+      state.southGateReady
+    );
+
+    state.canvasReadinessBarrierOpen = Boolean(
+      state.canvasReady &&
+      state.f13Events.CANVAS_READY === true
+    );
+
+    state.visibleContentBarrierOpen = Boolean(
+      state.visibleContentProof &&
+      state.f13Events.VISIBLE_CONTENT_PROOF_PASSED === true
+    );
+
+    state.f13SubsequenceComplete = F13_REQUIRED.every((name) => state.f13Events[name] === true);
+
+    return state.newsGatePassedBeforeF21;
+  }
+
+  function completionReady() {
+    if (state.canvasReady) startVisibleContentProof("completion-ready-check");
+    else proveVisibleContent("completion-ready-pre-canvas");
+
+    evaluateInspectGate();
+    evaluateNewsGates();
+
+    return Boolean(
+      state.canvasReady &&
+      state.canvasCarrierMounted &&
+      state.planetCanvasPresent &&
+      state.planetCanvasNonZeroSize &&
+      state.planetFramePainted &&
+      state.visibleContentProof &&
+      state.visiblePlanetAvailable &&
+      state.nonblankPlanetVisible &&
+      state.firstFrameDetected &&
+      state.imageRendered &&
+      state.dragInspectionBound &&
+      state.atlasBuildComplete &&
+      state.textureComposeComplete &&
+      state.inspectModeAvailable &&
+      state.inspectPlanetControlAvailable &&
+      state.diagnosticCanLeavePlanetFrame &&
+      state.showDiagnosticTabVisibleWhenHidden &&
+      state.diagnosticDockRestorable &&
+      state.copyDiagnosticPreserved &&
+      state.receiptOverlayIndependent &&
+      state.newsGatePassedBeforeF21 &&
+      state.visibleContentBarrierOpen
+    );
+  }
+
+  function firstMissingCompletionCoordinate() {
+    const checks = [
+      ["canvasReady", state.canvasReady],
+      ["canvasCarrierMounted", state.canvasCarrierMounted],
+      ["planetCanvasPresent", state.planetCanvasPresent],
+      ["planetCanvasNonZeroSize", state.planetCanvasNonZeroSize],
+      ["planetFramePainted", state.planetFramePainted],
+      ["visibleContentProof", state.visibleContentProof],
+      ["visiblePlanetAvailable", state.visiblePlanetAvailable],
+      ["nonblankPlanetVisible", state.nonblankPlanetVisible],
+      ["firstFrameDetected", state.firstFrameDetected],
+      ["imageRendered", state.imageRendered],
+      ["dragInspectionBound", state.dragInspectionBound],
+      ["atlasBuildComplete", state.atlasBuildComplete],
+      ["textureComposeComplete", state.textureComposeComplete],
+      ["inspectModeAvailable", state.inspectModeAvailable],
+      ["inspectPlanetControlAvailable", state.inspectPlanetControlAvailable],
+      ["diagnosticCanLeavePlanetFrame", state.diagnosticCanLeavePlanetFrame],
+      ["showDiagnosticTabVisibleWhenHidden", state.showDiagnosticTabVisibleWhenHidden],
+      ["diagnosticDockRestorable", state.diagnosticDockRestorable],
+      ["copyDiagnosticPreserved", state.copyDiagnosticPreserved],
+      ["receiptOverlayIndependent", state.receiptOverlayIndependent],
+      ["newsGatePassedBeforeF21", state.newsGatePassedBeforeF21],
+      ["visibleContentBarrierOpen", state.visibleContentBarrierOpen]
+    ];
+
+    const missing = checks.find((entry) => !entry[1]);
+    return missing ? `WAITING_${missing[0]}` : "NONE";
+  }
+
+  function derivePendingStatus() {
+    if (state.canvasReady && !state.visibleContentProof) return "VISIBLE_CONTENT_PROOF_PENDING";
+    if (state.canvasReady && state.visibleContentProof && !state.diagnosticCanLeavePlanetFrame) return "INSPECT_MODE_MISSING";
+    if (state.canvasReady && state.visibleContentProof && !state.diagnosticDockRestorable) return "DIAGNOSTIC_RESTORE_MISSING";
+    if (state.canvasReady && state.visibleContentProof && !state.copyDiagnosticPreserved) return "COPY_DIAGNOSTIC_LOST";
+    if (state.firstFrameDetected && !state.canvasReady) return "CANVAS_READY_PENDING";
+    return "VISIBLE_CONTENT_PROOF_PENDING";
+  }
+
+  function tryFinalize(reason = "manual") {
+    if (state.completionLatched) return true;
+
+    state.finalReceiptAvailable = true;
+
+    const ready = completionReady();
+
+    if (!ready) {
+      state.prematureLatchPrevented = true;
+      state.falseReadyPrevented = Boolean(state.canvasReady && state.firstFrameDetected && !state.visibleContentProof);
+      state.completionBlockedUntilVisibleContent = !state.visibleContentProof;
+      state.postgameStatus = derivePendingStatus();
+      state.firstFailedCoordinate = state.visibleContentProof ? firstMissingCompletionCoordinate() : "VISIBLE_CONTENT_PROOF_PENDING";
+      state.recommendedNextRenewalTarget = !state.visibleContentProof ? CANVAS_FILE : COHERENCE_FILE;
+      state.visibleLoadingActive = true;
+      state.diagnosticCockpitReady = false;
+
+      setLane("completionLatch", {
+        status: "BLOCKED",
+        progress: 98,
+        event: "F21_BLOCKED_VISIBLE_CONTENT_PROOF_PENDING",
+        stage: "F21",
+        message: state.visibleContentProof
+          ? `Completion blocked: ${state.firstFailedCoordinate}`
+          : "Canvas ready · waiting for visible Hearth content."
       });
+
+      emit("F21_COMPLETION_BLOCKED", {
+        reason,
+        postgameStatus: state.postgameStatus,
+        firstFailedCoordinate: state.firstFailedCoordinate,
+        visibleContentProof: state.visibleContentProof,
+        carrierOnlyDetected: state.carrierOnlyDetected,
+        visibleContentProofMethod: state.visibleContentProofMethod,
+        visibleContentVarianceScore: state.visibleContentVarianceScore,
+        visibleContentClassCount: state.visibleContentClassCount
+      }, {
+        visible: false,
+        stage: "F13",
+        lane: "completionLatch",
+        status: "BLOCKED"
+      });
+
+      publishGlobals();
+      scheduleRender();
+      return false;
     }
+
+    state.completionLatched = true;
+    state.visibleLoadingActive = false;
+    state.diagnosticCockpitReady = true;
+    state.finalReceiptAvailable = true;
+    state.currentStage = "F21";
+    state.highestStage = "F21";
+    state.fibonacciStageAtCompletionLatch = "F21";
+    state.f21AfterF13M = true;
+    state.completionLatchedAfterCanvasReady = true;
+    state.completionLatchedAfterVisibleContent = true;
+    state.completionLatchedAfterInspectModeReady = true;
+    state.completionBlockedUntilVisibleContent = false;
+    state.falseReadyPrevented = true;
+    state.postgameStatus = state.planetInspectModeActive ? "PLANET_INSPECT_MODE_ACTIVE" : "READY_PLANET_VISIBLE_DIAGNOSTIC_AVAILABLE";
+    state.firstFailedCoordinate = "NONE_VISIBLE_CONTENT_AND_INSPECT_READY";
+    state.recommendedNextRenewalTarget = "read-postgame-canvas-or-triple-g-receipt";
+    state.latestVisibleEvent = "COMPLETION_LATCHED_AFTER_VISIBLE_CONTENT_PROOF";
+    state.mainProgressCap = 100;
+    state.mainDisplayProgress = 100;
+
+    setStage("F21", "Visible content and inspect-mode proof passed; F21 latch lawful.", {
+      lane: "completionLatch",
+      status: "LATCHED"
+    });
+
+    setLane("completionLatch", {
+      status: "LATCHED",
+      progress: 100,
+      event: "COMPLETION_LATCHED_AFTER_VISIBLE_CONTENT_PROOF",
+      stage: "F21",
+      message: "READY · PLANET VISIBLE · DIAGNOSTIC AVAILABLE"
+    });
+
+    if (state.cockpitMode !== "planet-inspect") {
+      setCockpitMode("diagnostic-dock");
+    }
+
+    emitLocal("COMPLETION_LATCHED_AFTER_VISIBLE_CONTENT_PROOF", {
+      reason,
+      visibleContentProof: state.visibleContentProof,
+      visiblePlanetAvailable: state.visiblePlanetAvailable,
+      diagnosticCanLeavePlanetFrame: state.diagnosticCanLeavePlanetFrame
+    }, true);
+
+    publishGlobals();
+    scheduleRender();
+    return true;
+  }
+
+  function reconcileAll(reason = "manual") {
+    reconcileFromDataset();
+
+    const receipt = getCanvasReceipt();
+    if (receipt && isObject(receipt)) {
+      handleCanvasReceiptLight(receipt);
+    }
+
+    if (state.canvasReady) {
+      startVisibleContentProof(`reconcile-${reason}`);
+    } else {
+      proveVisibleContent(`reconcile-${reason}`);
+    }
+
+    evaluateInspectGate();
+    evaluateNewsGates();
+
+    if (state.canvasReady || state.visibleContentProof) {
+      tryFinalize(`reconcile-${reason}`);
+    } else {
+      state.postgameStatus = derivePendingStatus();
+      state.firstFailedCoordinate = firstMissingCompletionCoordinate();
+    }
+
+    publishGlobals();
+    scheduleRender();
+  }
+
+  function renderLaneMarkup() {
+    const ledger = refs.ledger || ensureLedger();
+    const lanes = ledger.state.lanes || {};
+
+    return LANES.map((def) => {
+      const lane = lanes[def.key] || makeLane(def);
+      const progress = clamp(lane.progress, 0, 100);
+      const status = lane.status || "PENDING";
+
+      return `
+        <section class="hearth-ledger-lane" data-lane="${escapeHtml(def.key)}" data-status="${escapeHtml(status)}">
+          <div class="hearth-ledger-lane-top">
+            <span class="hearth-ledger-lane-title">
+              <strong>${escapeHtml(def.label)} · ${escapeHtml(lane.fibonacci || def.fibonacci)}</strong>
+              <span>${escapeHtml(lane.message || `${def.label} pending.`)}</span>
+            </span>
+            <span class="hearth-ledger-lane-status">${escapeHtml(status)}</span>
+          </div>
+          <div class="hearth-ledger-lane-track">
+            <span class="hearth-ledger-lane-fill" style="width:${progress}%"></span>
+          </div>
+          <div class="hearth-ledger-lane-title">
+            <span>event=${escapeHtml(lane.latestEvent || "PENDING")}</span>
+          </div>
+        </section>
+      `;
+    }).join("");
+  }
+
+  function computeProgress() {
+    let progress = state.mainProgressCap || stageProgress(state.currentStage);
+
+    const ledger = refs.ledger || ensureLedger();
+    const lanes = ledger.state.lanes || {};
+
+    Object.keys(lanes).forEach((key) => {
+      if (key === "completionLatch" && !state.completionLatched) return;
+      progress = Math.max(progress, Number(lanes[key].progress || 0));
+    });
+
+    if (state.canvasReady) progress = Math.max(progress, 96);
+    if (state.canvasReady && !state.visibleContentProof) progress = Math.min(Math.max(progress, 98), 98);
+    if (state.visibleContentProof) progress = Math.max(progress, 99);
+    if (state.diagnosticCanLeavePlanetFrame && state.visibleContentProof) progress = Math.max(progress, 99);
+    if (state.completionLatched) progress = 100;
+
+    state.mainProgressCap = clamp(progress, 0, 100);
+
+    if (state.completionLatched) {
+      state.mainDisplayProgress = 100;
+    } else {
+      state.mainDisplayProgress = Math.max(state.mainDisplayProgress, Math.min(98, state.mainProgressCap));
+    }
+
+    return Math.round(state.mainDisplayProgress);
   }
 
   function scheduleRender() {
@@ -1480,94 +2494,45 @@
     }, 80);
   }
 
-  function laneMarkup() {
-    const ledger = refs.ledger || ensureLedger();
-    const lanes = ledger.state.lanes || {};
-
-    return LANES.map((def) => {
-      const lane = lanes[def.key] || makeLane(def);
-      const status = lane.status || "PENDING";
-      const progress = clamp(lane.progress, 0, 100);
-      const event = lane.latestEvent || "PENDING";
-      const message = lane.message || `${def.label} pending.`;
-
-      return `
-        <section class="hearth-ledger-lane" data-lane="${escapeHtml(def.key)}" data-status="${escapeHtml(status)}">
-          <div class="hearth-ledger-lane-top">
-            <span class="hearth-ledger-lane-title">
-              <strong>${escapeHtml(def.label)} · ${escapeHtml(lane.fibonacci || def.fibonacci)}</strong>
-              <span>${escapeHtml(message)}</span>
-            </span>
-            <span class="hearth-ledger-lane-status">${escapeHtml(status)}</span>
-          </div>
-          <div class="hearth-ledger-lane-track">
-            <span class="hearth-ledger-lane-fill" style="width:${progress}%"></span>
-          </div>
-          <div class="hearth-ledger-lane-title">
-            <span>event=${escapeHtml(event)}</span>
-          </div>
-        </section>
-      `;
-    }).join("");
-  }
-
-  function computeProgress() {
-    const ledger = refs.ledger || ensureLedger();
-    const lanes = ledger.state.lanes || {};
-    let progress = state.displayProgress || 6;
-
-    Object.keys(lanes).forEach((key) => {
-      progress = Math.max(progress, Number(lanes[key].progress || 0));
-    });
-
-    if (state.conductorGlobalPresent) progress = Math.max(progress, 48);
-    if (state.conductorDelegationAccepted) progress = Math.max(progress, 62);
-    if (state.canvasGlobalPresent) progress = Math.max(progress, 70);
-    if (state.visiblePlanetPossiblyAvailable) progress = Math.max(progress, 88);
-
-    state.displayProgress = clamp(progress, 0, 96);
-    return Math.round(state.displayProgress);
-  }
-
   function render() {
     if (!refs.cockpit) return;
 
-    markVisualHints();
-
-    const ledger = refs.ledger || ensureLedger();
-    const led = ledger.state;
     const progress = computeProgress();
-    const elapsed = state.startedAt ? nowMs() - new Date(state.startedAt).getTime() : 0;
-
-    const stage =
-      state.visiblePlanetPossiblyAvailable ? "F13" :
-        state.conductorDelegationAccepted ? "F8" :
-          state.conductorScriptRequested ? "F3" :
-            state.firstPaintCockpitReady ? "F2" :
-              "F1A";
-
-    state.currentStage = stage;
-    if (stageRank(stage) >= stageRank(state.highestStage)) {
-      state.highestStage = stage;
-    }
+    const elapsed = state.startedAtMs ? nowMs() - state.startedAtMs : 0;
+    const stage = state.completionLatched ? "F21" : (state.canvasReady ? "F13" : state.currentStage);
 
     if (refs.title) {
-      refs.title.textContent = state.visiblePlanetPossiblyAvailable
-        ? "VISIBLE PLANET PROOF PASSING TO COHERENCE CONDUCTOR"
-        : "STARTING HEARTH VISIBLE PROCESS";
+      refs.title.textContent = state.completionLatched
+        ? "READY · PLANET VISIBLE · DIAGNOSTIC AVAILABLE"
+        : (
+          state.canvasReady && !state.visibleContentProof
+            ? "VISIBLE CONTENT PROOF PENDING"
+            : (
+              state.canvasReady
+                ? "VERIFYING VISIBLE CONTENT AND INSPECT MODE"
+                : "FORMING HEARTH VISIBLE PLANET"
+            )
+        );
     }
 
     if (refs.stage) {
-      refs.stage.textContent = `${stage} · ${stageLabel(stage)}`;
+      refs.stage.textContent = state.completionLatched
+        ? "F21 · Completion latch"
+        : `${stage} · ${stageLabel(stage)}`;
     }
 
     if (refs.heartbeat) {
-      refs.heartbeat.textContent = `constraint-side=true · synchronized=true · elapsed=${formatElapsed(elapsed)}`;
+      refs.heartbeat.textContent = state.completionLatched
+        ? `visibleContent=${state.visibleContentProof} · inspect=${state.diagnosticCanLeavePlanetFrame} · elapsed=${formatElapsed(elapsed)}`
+        : (
+          state.canvasReady && !state.visibleContentProof
+            ? `Canvas ready · waiting for visible Hearth content · elapsed=${formatElapsed(elapsed)}`
+            : `coherence-side=true · phase=${state.lastCanvasPhase || "pending"} · elapsed=${formatElapsed(elapsed)}`
+        );
     }
 
     if (refs.latest) {
-      const latest = led.events && led.events.length ? led.events[led.events.length - 1].id : state.latestEvent;
-      refs.latest.textContent = `latest=${latest}`;
+      refs.latest.textContent = `latest=${state.completionLatched ? "COMPLETION_LATCHED_AFTER_VISIBLE_CONTENT_PROOF" : state.latestVisibleEvent}`;
     }
 
     if (refs.mainFill) {
@@ -1579,15 +2544,25 @@
     }
 
     if (refs.laneList) {
-      refs.laneList.innerHTML = laneMarkup();
+      refs.laneList.innerHTML = renderLaneMarkup();
     }
 
     if (refs.receiptPre) {
       refs.receiptPre.textContent = getReceiptText();
     }
 
-    publishDataset();
+    if (refs.cockpit) {
+      refs.cockpit.dataset.cockpitMode = state.cockpitMode;
+      refs.cockpit.dataset.hearthCompletionLatched = String(state.completionLatched);
+      refs.cockpit.dataset.hearthVisibleContentProof = String(state.visibleContentProof);
+      refs.cockpit.dataset.hearthVisiblePlanetAvailable = String(state.visiblePlanetAvailable);
+      refs.cockpit.dataset.hearthCarrierOnlyDetected = String(state.carrierOnlyDetected);
+      refs.cockpit.dataset.hearthDiagnosticCanLeavePlanetFrame = String(state.diagnosticCanLeavePlanetFrame);
+      refs.cockpit.dataset.hearthCoherenceSemiconductor = CONTRACT;
+    }
+
     publishStatusNode();
+    publishGlobals();
   }
 
   function publishStatusNode() {
@@ -1600,26 +2575,31 @@
     if (!node) return;
 
     node.textContent = [
-      "Hearth index constraint semiconductor active.",
+      "Hearth route coherence semiconductor visible-content proof latch active.",
       `Contract ${CONTRACT}`,
       `Receipt ${RECEIPT}`,
-      `File ${INDEX_FILE}`,
-      `Paired with ${COHERENCE_FILE}`,
-      "Index starts process true",
-      "Hearth finishes process true",
-      `First-paint cockpit ready ${state.firstPaintCockpitReady}`,
-      `Visible progress strip ready ${state.visibleProgressStripReady}`,
-      `Shared ledger present ${state.loadLedgerPresent}`,
-      `Conductor global present ${state.conductorGlobalPresent}`,
-      `Conductor delegation accepted ${state.conductorDelegationAccepted}`,
-      `Conductor boot call suppressed ${state.conductorBootCallSuppressedToPreventDuplicate}`,
+      `File ${COHERENCE_FILE}`,
+      `Paired with ${INDEX_FILE}`,
+      `Shared ledger hydrated ${state.sharedLedgerHydrated}`,
+      `Canvas API present ${state.canvasApiPresent}`,
+      `Cooperative boot used ${state.cooperativeBootUsed}`,
+      `Canvas ready ${state.canvasReady}`,
+      `Visible content proof ${state.visibleContentProof}`,
+      `Visible content method ${state.visibleContentProofMethod}`,
+      `Carrier only detected ${state.carrierOnlyDetected}`,
+      `Visible content sample count ${state.visibleContentSampleCount}`,
+      `Visible content variance score ${state.visibleContentVarianceScore}`,
+      `Visible content class count ${state.visibleContentClassCount}`,
       `Planet canvas present ${state.planetCanvasPresent}`,
       `Planet canvas nonzero size ${state.planetCanvasNonZeroSize}`,
-      `Visible planet possibly available ${state.visiblePlanetPossiblyAvailable}`,
-      "Final completion owned by hearth.js",
-      "Runtime Table required for first render false",
-      "Source stack required for first render false",
-      "Wide probe deferred true",
+      `Planet frame painted ${state.planetFramePainted}`,
+      `Nonblank planet visible ${state.nonblankPlanetVisible}`,
+      `Inspect mode available ${state.inspectModeAvailable}`,
+      `Diagnostic can leave planet frame ${state.diagnosticCanLeavePlanetFrame}`,
+      `False ready prevented ${state.falseReadyPrevented}`,
+      `Completion blocked until visible content ${state.completionBlockedUntilVisibleContent}`,
+      `Completion latched ${state.completionLatched}`,
+      `Postgame status ${state.postgameStatus}`,
       "Generated image false",
       "GraphicBox false",
       "WebGL false",
@@ -1628,75 +2608,6 @@
       `Recommended next renewal target ${state.recommendedNextRenewalTarget}`,
       `Updated ${state.updatedAt || nowIso()}`
     ].join("\n");
-  }
-
-  function publishDataset() {
-    if (!doc || !doc.documentElement) return;
-
-    const dataset = doc.documentElement.dataset;
-
-    dataset.hearthIndexConstraintSemiconductorLoaded = "true";
-    dataset.hearthIndexConstraintSemiconductorContract = CONTRACT;
-    dataset.hearthIndexConstraintSemiconductorReceipt = RECEIPT;
-    dataset.hearthIndexConstraintSemiconductorVersion = VERSION;
-    dataset.hearthPairedSemiconductor = "true";
-    dataset.hearthConstraintSemiconductor = INDEX_FILE;
-    dataset.hearthCoherenceSemiconductor = COHERENCE_FILE;
-    dataset.hearthIndexJsStartsProcess = "true";
-    dataset.hearthJsFinishesProcess = "true";
-    dataset.hearthSynchronizedLoading = "true";
-
-    dataset.hearthIndexOwnsFirstPaintSurvival = "true";
-    dataset.hearthIndexOwnsMountCertainty = "true";
-    dataset.hearthIndexOwnsLoadingScreenCertainty = "true";
-    dataset.hearthIndexOwnsEarlyLedger = "true";
-    dataset.hearthIndexOwnsScriptOrderVisibility = "true";
-    dataset.hearthIndexOwnsActiveRouteConduction = "false";
-    dataset.hearthIndexOwnsFinalCompletion = "false";
-    dataset.hearthIndexOwnsCanvasDrawing = "false";
-    dataset.hearthIndexOwnsVisiblePlanetProof = "false";
-
-    dataset.hearthFirstPaintCockpitReady = String(state.firstPaintCockpitReady);
-    dataset.hearthVisibleProgressStripReady = String(state.visibleProgressStripReady);
-    dataset.hearthLoadLedgerPresent = String(state.loadLedgerPresent);
-    dataset.hearthCopyPartialDiagnosticReady = String(state.copyPartialDiagnosticReady);
-    dataset.hearthReceiptToggleReady = String(state.receiptToggleReady);
-    dataset.hearthInspectControlReserved = String(state.inspectControlReserved);
-    dataset.hearthShowDiagnosticRestoreReserved = String(state.showDiagnosticRestoreReserved);
-
-    dataset.hearthNewsProtocolInitialized = String(state.newsProtocolInitialized);
-    dataset.hearthFibonacciSequenceInitialized = String(state.fibonacciSequenceInitialized);
-
-    dataset.hearthActiveRouteFile = COHERENCE_FILE;
-    dataset.hearthExpectedCoherenceConductor = EXPECTED_COHERENCE_CONDUCTOR;
-    dataset.hearthConductorDelegationReady = String(state.conductorDelegationReady);
-    dataset.hearthConductorDelegationAccepted = String(state.conductorDelegationAccepted);
-    dataset.hearthConductorGlobalPresent = String(state.conductorGlobalPresent);
-    dataset.hearthConductorScriptPresent = String(state.conductorScriptPresent);
-    dataset.hearthConductorScriptRequested = String(state.conductorScriptRequested);
-    dataset.hearthConductorScriptLoaded = String(state.conductorScriptLoaded);
-    dataset.hearthConductorContractObserved = state.conductorContract;
-    dataset.hearthConductorBootMethodPresent = String(state.conductorBootMethodPresent);
-    dataset.hearthConductorBootCallSuppressedToPreventDuplicate = String(state.conductorBootCallSuppressedToPreventDuplicate);
-
-    dataset.hearthPlanetCanvasPresent = String(state.planetCanvasPresent);
-    dataset.hearthPlanetCanvasNonZeroSize = String(state.planetCanvasNonZeroSize);
-    dataset.hearthVisiblePlanetPossiblyAvailable = String(state.visiblePlanetPossiblyAvailable);
-
-    dataset.hearthClimateRouteRetired = "true";
-    dataset.hearthRetiredClimateRouteFile = RETIRED_CLIMATE_FILE;
-    dataset.hearthRuntimeTableRequiredForFirstRender = "false";
-    dataset.hearthSourceStackRequiredForFirstRender = "false";
-    dataset.hearthWideProbeDeferred = "true";
-
-    dataset.generatedImage = "false";
-    dataset.graphicBox = "false";
-    dataset.webgl = "false";
-    dataset.visualPassClaimed = "false";
-
-    root.HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR_RECEIPT = getReceipt();
-    root.HEARTH_INDEX_BRIDGE_RECEIPT = root.HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR_RECEIPT;
-    root.HEARTH_INDEX_JS_RECEIPT = root.HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR_RECEIPT;
   }
 
   async function copyText(text) {
@@ -1733,26 +2644,26 @@
       refs.copyButton.textContent = ok ? "Copied" : "Copy failed";
       root.setTimeout(() => {
         refs.copyButton.textContent = original || "Copy diagnostic";
-      }, 1100);
+      }, 1200);
     }
 
-    const ledger = refs.ledger || ensureLedger();
-
-    ledger.push({
-      id: "INDEX_PARTIAL_DIAGNOSTIC_COPIED",
-      stage: state.currentStage || "F2",
+    push({
+      id: "VISIBLE_CONTENT_PROOF_DIAGNOSTIC_COPIED",
+      stage: state.currentStage,
       lane: "ledger",
       status: ok ? "COPIED" : "COPY_FAILED",
-      owner: "index.js",
-      file: INDEX_FILE,
-      message: ok ? "Partial diagnostic copied." : "Partial diagnostic copy failed."
+      message: ok ? "Visible-content proof diagnostic copied." : "Visible-content proof diagnostic copy failed."
     });
 
     return ok;
   }
 
-  function getReceipt(extra = {}) {
-    markVisualHints();
+  function getReceipt() {
+    if (!state.completionLatched) {
+      proveVisibleContent("receipt-read");
+      evaluateInspectGate();
+      evaluateNewsGates();
+    }
 
     const ledger = refs.ledger || root.HEARTH_LOAD_LEDGER || null;
 
@@ -1760,100 +2671,166 @@
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
-      expectedCoherenceConductor: EXPECTED_COHERENCE_CONDUCTOR,
+      baselineContract: BASELINE_CONTRACT,
       version: VERSION,
-      file: INDEX_FILE,
-      route: "/showroom/globe/hearth/",
-      role: "constraint-side-semiconductor",
+      file: COHERENCE_FILE,
+      route: ROUTE,
+      role: "coherence-side-semiconductor",
 
       pairedSemiconductor: true,
-      pairedWith: COHERENCE_FILE,
+      pairedWith: INDEX_FILE,
       indexJsStartsProcess: true,
       hearthJsFinishesProcess: true,
       systematicAndSynchronized: true,
       synchronizedLoading: true,
+      sharedLedgerHydrated: state.sharedLedgerHydrated,
 
-      ownsFirstPaintSurvival: true,
-      ownsMountCertainty: true,
-      ownsLoadingScreenCertainty: true,
-      ownsEarlyLedger: true,
-      ownsScriptOrderVisibility: true,
-      ownsActiveRouteConduction: false,
-      ownsFinalCompletion: false,
-      ownsCanvasDrawing: false,
-      ownsVisiblePlanetProof: false,
-      ownsFinalDiagnosticReceipt: false,
+      newsProtocolActive: true,
+      northGateReady: state.northGateReady,
+      eastGateReady: state.eastGateReady,
+      westGateReady: state.westGateReady,
+      southGateReady: state.southGateReady,
+      newsGatePassedBeforeF21: state.newsGatePassedBeforeF21,
 
-      firstPaintCockpitReady: state.firstPaintCockpitReady,
-      visibleProgressStripReady: state.visibleProgressStripReady,
-      loadLedgerPresent: Boolean(root.HEARTH_LOAD_LEDGER),
-      copyPartialDiagnosticReady: state.copyPartialDiagnosticReady,
-      receiptToggleReady: state.receiptToggleReady,
-      inspectControlReserved: state.inspectControlReserved,
-      showDiagnosticRestoreReserved: state.showDiagnosticRestoreReserved,
+      fibonacciSequenceActive: true,
+      fibonacciStageAtCanvasReady: state.fibonacciStageAtCanvasReady,
+      fibonacciStageAtVisibleContentProof: state.fibonacciStageAtVisibleContentProof,
+      fibonacciStageAtCompletionLatch: state.fibonacciStageAtCompletionLatch,
+      f13SubsequenceComplete: state.f13SubsequenceComplete,
+      f13LastRequiredEvent: state.f13LastRequiredEvent,
+      f21AfterF13M: state.f21AfterF13M,
 
-      newsProtocolInitialized: state.newsProtocolInitialized,
-      fibonacciSequenceInitialized: state.fibonacciSequenceInitialized,
+      visibleContentLatchActive: true,
+      completionReceiptRequiresVisiblePlanet: true,
+      completionReceiptRequiresVisibleContent: true,
+      completionReceiptRequiresInspectMode: true,
+      visibleContentProof: state.visibleContentProof,
+      visibleContentProofStarted: state.visibleContentProofStarted,
+      visibleContentProofMethod: state.visibleContentProofMethod,
+      visibleContentProofError: state.visibleContentProofError,
+      visibleContentSampleCount: state.visibleContentSampleCount,
+      visibleContentVarianceScore: state.visibleContentVarianceScore,
+      visibleContentClassCount: state.visibleContentClassCount,
+      visibleContentClasses: clonePlain(state.visibleContentClasses),
+      visibleContentLandSampleCount: state.visibleContentLandSampleCount,
+      visibleContentWaterSampleCount: state.visibleContentWaterSampleCount,
+      visibleContentOtherSampleCount: state.visibleContentOtherSampleCount,
+      carrierOnlyDetected: state.carrierOnlyDetected,
+      explicitContentReceiptProof: state.explicitContentReceiptProof,
+      renderedAfterTexture: state.renderedAfterTexture,
+      falseReadyPrevented: state.falseReadyPrevented,
+      completionBlockedUntilVisibleContent: state.completionBlockedUntilVisibleContent,
+      completionLatchedAfterVisibleContent: state.completionLatchedAfterVisibleContent,
 
-      mountReady: state.mountReady,
-      mountCreatedByIndex: state.mountCreatedByIndex,
-      loadingScreenReady: state.loadingScreenReady,
-      partialReceiptAvailable: state.partialReceiptAvailable,
+      visiblePlanetAvailable: state.visiblePlanetAvailable,
+      planetCanvasPresent: state.planetCanvasPresent,
+      planetCanvasNonZeroSize: state.planetCanvasNonZeroSize,
+      planetFramePainted: state.planetFramePainted,
+      nonblankPlanetVisible: state.nonblankPlanetVisible,
+      planetNotObstructed: state.planetNotObstructed,
 
-      activeRouteConductor: COHERENCE_FILE,
-      conductorDelegationReady: state.conductorDelegationReady,
-      conductorDelegationAccepted: state.conductorDelegationAccepted,
-      conductorGlobalPresent: state.conductorGlobalPresent,
-      conductorScriptPresent: state.conductorScriptPresent,
-      conductorScriptRequested: state.conductorScriptRequested,
-      conductorScriptLoaded: state.conductorScriptLoaded,
-      conductorScriptError: state.conductorScriptError,
-      conductorContract: state.conductorContract,
-      conductorBootMethodPresent: state.conductorBootMethodPresent,
-      conductorBootCallSuppressedToPreventDuplicate: state.conductorBootCallSuppressedToPreventDuplicate,
+      canvasReady: state.canvasReady,
+      canvasCarrierMounted: state.canvasCarrierMounted,
+      firstFrameDetected: state.firstFrameDetected,
+      imageRendered: state.imageRendered,
+      dragInspectionBound: state.dragInspectionBound,
+      atlasBuildComplete: state.atlasBuildComplete,
+      textureComposeComplete: state.textureComposeComplete,
 
-      canvasScriptPresent: state.canvasScriptPresent,
-      canvasGlobalPresent: state.canvasGlobalPresent,
-      canvasFallbackRequested: false,
-      canvasFallbackAllowed: false,
+      inspectModeAvailable: state.inspectModeAvailable,
+      inspectPlanetControlAvailable: state.inspectPlanetControlAvailable,
+      diagnosticCanLeavePlanetFrame: state.diagnosticCanLeavePlanetFrame,
+      diagnosticDockHiddenForInspection: state.diagnosticDockHiddenForInspection,
+      showDiagnosticTabVisible: state.showDiagnosticTabVisible,
+      showDiagnosticTabVisibleWhenHidden: state.showDiagnosticTabVisibleWhenHidden,
+      diagnosticDockRestorable: state.diagnosticDockRestorable,
+      copyDiagnosticPreserved: state.copyDiagnosticPreserved,
+      receiptOverlayIndependent: state.receiptOverlayIndependent,
 
-      climateRouteRetired: true,
-      retiredClimateRoute: RETIRED_CLIMATE_FILE,
-      runtimeTableRequiredForFirstRender: false,
-      sourceStackRequiredForFirstRender: false,
-      wideProbeDeferred: true,
+      strictCanvasReadyLatchActive: true,
+      canvasReadinessBarrierOpen: state.canvasReadinessBarrierOpen,
+      visibleContentBarrierOpen: state.visibleContentBarrierOpen,
+      f13EventsArchivedBeforeCanvasReady: state.f13EventsArchivedBeforeCanvasReady,
+      stageRegressionPrevented: state.stageRegressionPrevented,
+      ignoredDuplicateCanvasEvents: state.ignoredDuplicateCanvasEvents,
+      completionLatchedAfterCanvasReady: state.completionLatchedAfterCanvasReady,
+      completionLatchedAfterInspectModeReady: state.completionLatchedAfterInspectModeReady,
+
+      cooperativeBootAvailable: state.cooperativeBootAvailable,
+      cooperativeBootUsed: state.cooperativeBootUsed,
+      syncBootFallbackUsed: state.syncBootFallbackUsed,
+      canvasCarrierMethod: state.canvasCarrierMethod,
+      canvasCarrierRequested: state.canvasCarrierRequested,
+      canvasCarrierHandoffOk: state.canvasCarrierHandoffOk,
+      canvasCarrierHandoffError: state.canvasCarrierHandoffError,
+
+      canvasBootStartedAt: state.canvasBootStartedAt,
+      canvasBootCompletedAt: state.canvasBootCompletedAt,
+      canvasBootElapsedMs: state.canvasBootElapsedMs,
+      canvasYieldCount: state.canvasYieldCount,
+      canvasPhaseCount: state.canvasPhaseCount,
+      lastCanvasPhase: state.lastCanvasPhase,
+      lastCanvasProgress: state.lastCanvasProgress,
+      loaderRepaintDuringCanvasBoot: state.loaderRepaintDuringCanvasBoot,
+      f13ProgressStreamActive: state.f13ProgressStreamActive,
+      canvasLaneClosed: state.canvasLaneClosed,
+
+      atlasBuildStarted: state.atlasBuildStarted,
+      atlasBuildProgress: state.atlasBuildProgress,
+      textureComposeStarted: state.textureComposeStarted,
+      textureComposeProgress: state.textureComposeProgress,
+
+      runtimeTablePresent: state.runtimeTablePresent,
+      runtimeTableMode: state.runtimeTableMode,
+      runtimeTablePlanAttempted: state.runtimeTablePlanAttempted,
+      runtimeTablePlanCreated: state.runtimeTablePlanCreated,
+      runtimeTablePlanError: state.runtimeTablePlanError,
+      sourceAuthorityHeld: true,
 
       currentStage: state.currentStage,
       highestStage: state.highestStage,
-      displayProgress: state.displayProgress,
-      latestEvent: state.latestEvent,
-      status: state.status,
+      completionLatched: state.completionLatched,
+      visibleLoadingActive: state.visibleLoadingActive,
+      diagnosticCockpitReady: state.diagnosticCockpitReady,
+      cockpitMode: state.cockpitMode,
+      dockVisible: state.dockVisible,
+      fullCockpitExpanded: state.fullCockpitExpanded,
+
+      partialReceiptAvailable: state.partialReceiptAvailable,
+      finalReceiptAvailable: state.finalReceiptAvailable,
+      copyDiagnosticArmed: state.copyDiagnosticArmed,
+      receiptToggleReady: state.receiptToggleReady,
+      buttonsReachable: state.buttonsReachable,
+
+      postgameStatus: state.postgameStatus,
       firstFailedCoordinate: state.firstFailedCoordinate,
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+      latestVisibleEvent: state.latestVisibleEvent,
+      mainDisplayProgress: Math.round(state.mainDisplayProgress),
+      mainProgressCap: state.mainProgressCap,
+      heartbeatElapsedMs: state.heartbeatElapsedMs,
 
-      planetCanvasPresent: state.planetCanvasPresent,
-      planetCanvasNonZeroSize: state.planetCanvasNonZeroSize,
-      visiblePlanetPossiblyAvailable: state.visiblePlanetPossiblyAvailable,
-      inspectModeReservedActive: state.inspectModeReservedActive,
-      showDiagnosticTabVisible: state.showDiagnosticTabVisible,
-
-      sharedLedger: ledger && ledger.state ? clonePlain(ledger.state) : null,
+      f13Events: clonePlain(state.f13Events),
+      f13EventOrder: clonePlain(state.f13EventOrder),
+      phaseEvents: clonePlain(state.phaseEvents),
+      archivedLateEvents: clonePlain(state.archivedLateEvents),
+      localEvents: clonePlain(state.localEvents),
       errors: clonePlain(state.errors),
+      sharedLedger: ledger && ledger.state ? clonePlain(ledger.state) : null,
 
       generatedImage: false,
       graphicBox: false,
       webGL: false,
       visualPassClaimed: false,
 
-      updatedAt: nowIso(),
-      ...extra
+      updatedAt: nowIso()
     };
   }
 
   function getReceiptText() {
     const receipt = getReceipt();
-
     const ledger = receipt.sharedLedger || {};
+
     const lanes = Object.entries(ledger.lanes || {}).map(([key, lane]) => (
       `- ${key}: status=${lane.status}; fibonacci=${lane.fibonacci}; progress=${lane.progress}; event=${lane.latestEvent}; message=${lane.message}`
     )).join("\n") || "- none";
@@ -1862,21 +2839,31 @@
       `- ${key}: status=${script.status}; src=${script.src || ""}; globalPresent=${script.globalPresent === true}; error=${script.error || ""}`
     )).join("\n") || "- none";
 
-    const events = (ledger.events || []).slice(-80).map((event) => (
-      `- ${event.timestamp || ""} :: ${event.id || ""} :: stage=${event.stage || ""} :: lane=${event.lane || ""} :: ${event.message || ""}`
+    const f13 = receipt.f13EventOrder.map((event) => `- ${event}`).join("\n") || "- none";
+
+    const phases = receipt.phaseEvents.map((event) => (
+      `- ${event.at || ""} :: ${event.phase || ""} :: progress=${event.percent || ""} :: ${event.message || ""}`
+    )).join("\n") || "- none";
+
+    const archived = receipt.archivedLateEvents.slice(-120).map((event) => (
+      `- ${event.at || ""} :: ${event.event || ""} :: stage=${event.stage || ""} :: reason=${event.reason || ""} :: ${event.message || ""}`
+    )).join("\n") || "- none";
+
+    const local = receipt.localEvents.map((event) => (
+      `- ${event.at || ""} :: ${event.event || ""}`
     )).join("\n") || "- none";
 
     const errors = receipt.errors.map((error) => (
-      `- ${error.at} :: ${error.code} :: ${error.message}`
+      `- ${error.at || ""} :: ${error.code || ""} :: ${error.message || ""}`
     )).join("\n") || "- none";
 
     return [
-      "HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR_FIRST_PAINT_LEDGER_RECEIPT",
+      "HEARTH_ROUTE_COHERENCE_SEMICONDUCTOR_VISIBLE_CONTENT_PROOF_LATCH_RECEIPT",
       "",
       `contract=${receipt.contract}`,
       `receipt=${receipt.receipt}`,
       `previousContract=${receipt.previousContract}`,
-      `expectedCoherenceConductor=${receipt.expectedCoherenceConductor}`,
+      `baselineContract=${receipt.baselineContract}`,
       `version=${receipt.version}`,
       `file=${receipt.file}`,
       `route=${receipt.route}`,
@@ -1888,70 +2875,131 @@
       `hearthJsFinishesProcess=${receipt.hearthJsFinishesProcess}`,
       `systematicAndSynchronized=${receipt.systematicAndSynchronized}`,
       `synchronizedLoading=${receipt.synchronizedLoading}`,
+      `sharedLedgerHydrated=${receipt.sharedLedgerHydrated}`,
       "",
-      `ownsFirstPaintSurvival=${receipt.ownsFirstPaintSurvival}`,
-      `ownsMountCertainty=${receipt.ownsMountCertainty}`,
-      `ownsLoadingScreenCertainty=${receipt.ownsLoadingScreenCertainty}`,
-      `ownsEarlyLedger=${receipt.ownsEarlyLedger}`,
-      `ownsScriptOrderVisibility=${receipt.ownsScriptOrderVisibility}`,
-      `ownsActiveRouteConduction=${receipt.ownsActiveRouteConduction}`,
-      `ownsFinalCompletion=${receipt.ownsFinalCompletion}`,
-      `ownsCanvasDrawing=${receipt.ownsCanvasDrawing}`,
-      `ownsVisiblePlanetProof=${receipt.ownsVisiblePlanetProof}`,
-      `ownsFinalDiagnosticReceipt=${receipt.ownsFinalDiagnosticReceipt}`,
+      `newsProtocolActive=${receipt.newsProtocolActive}`,
+      `northGateReady=${receipt.northGateReady}`,
+      `eastGateReady=${receipt.eastGateReady}`,
+      `westGateReady=${receipt.westGateReady}`,
+      `southGateReady=${receipt.southGateReady}`,
+      `newsGatePassedBeforeF21=${receipt.newsGatePassedBeforeF21}`,
       "",
-      `firstPaintCockpitReady=${receipt.firstPaintCockpitReady}`,
-      `visibleProgressStripReady=${receipt.visibleProgressStripReady}`,
-      `loadLedgerPresent=${receipt.loadLedgerPresent}`,
-      `copyPartialDiagnosticReady=${receipt.copyPartialDiagnosticReady}`,
-      `receiptToggleReady=${receipt.receiptToggleReady}`,
-      `inspectControlReserved=${receipt.inspectControlReserved}`,
-      `showDiagnosticRestoreReserved=${receipt.showDiagnosticRestoreReserved}`,
+      `fibonacciSequenceActive=${receipt.fibonacciSequenceActive}`,
+      `fibonacciStageAtCanvasReady=${receipt.fibonacciStageAtCanvasReady}`,
+      `fibonacciStageAtVisibleContentProof=${receipt.fibonacciStageAtVisibleContentProof}`,
+      `fibonacciStageAtCompletionLatch=${receipt.fibonacciStageAtCompletionLatch}`,
+      `f13SubsequenceComplete=${receipt.f13SubsequenceComplete}`,
+      `f13LastRequiredEvent=${receipt.f13LastRequiredEvent}`,
+      `f21AfterF13M=${receipt.f21AfterF13M}`,
       "",
-      `newsProtocolInitialized=${receipt.newsProtocolInitialized}`,
-      `fibonacciSequenceInitialized=${receipt.fibonacciSequenceInitialized}`,
+      `visibleContentLatchActive=${receipt.visibleContentLatchActive}`,
+      `completionReceiptRequiresVisiblePlanet=${receipt.completionReceiptRequiresVisiblePlanet}`,
+      `completionReceiptRequiresVisibleContent=${receipt.completionReceiptRequiresVisibleContent}`,
+      `completionReceiptRequiresInspectMode=${receipt.completionReceiptRequiresInspectMode}`,
+      `visibleContentProof=${receipt.visibleContentProof}`,
+      `visibleContentProofStarted=${receipt.visibleContentProofStarted}`,
+      `visibleContentProofMethod=${receipt.visibleContentProofMethod}`,
+      `visibleContentProofError=${receipt.visibleContentProofError}`,
+      `visibleContentSampleCount=${receipt.visibleContentSampleCount}`,
+      `visibleContentVarianceScore=${receipt.visibleContentVarianceScore}`,
+      `visibleContentClassCount=${receipt.visibleContentClassCount}`,
+      `visibleContentClasses=${(receipt.visibleContentClasses || []).join(",")}`,
+      `visibleContentLandSampleCount=${receipt.visibleContentLandSampleCount}`,
+      `visibleContentWaterSampleCount=${receipt.visibleContentWaterSampleCount}`,
+      `visibleContentOtherSampleCount=${receipt.visibleContentOtherSampleCount}`,
+      `carrierOnlyDetected=${receipt.carrierOnlyDetected}`,
+      `explicitContentReceiptProof=${receipt.explicitContentReceiptProof}`,
+      `renderedAfterTexture=${receipt.renderedAfterTexture}`,
+      `falseReadyPrevented=${receipt.falseReadyPrevented}`,
+      `completionBlockedUntilVisibleContent=${receipt.completionBlockedUntilVisibleContent}`,
+      `completionLatchedAfterVisibleContent=${receipt.completionLatchedAfterVisibleContent}`,
       "",
-      `mountReady=${receipt.mountReady}`,
-      `mountCreatedByIndex=${receipt.mountCreatedByIndex}`,
-      `loadingScreenReady=${receipt.loadingScreenReady}`,
-      `partialReceiptAvailable=${receipt.partialReceiptAvailable}`,
+      `visiblePlanetAvailable=${receipt.visiblePlanetAvailable}`,
+      `planetCanvasPresent=${receipt.planetCanvasPresent}`,
+      `planetCanvasNonZeroSize=${receipt.planetCanvasNonZeroSize}`,
+      `planetFramePainted=${receipt.planetFramePainted}`,
+      `nonblankPlanetVisible=${receipt.nonblankPlanetVisible}`,
+      `planetNotObstructed=${receipt.planetNotObstructed}`,
       "",
-      `activeRouteConductor=${receipt.activeRouteConductor}`,
-      `conductorDelegationReady=${receipt.conductorDelegationReady}`,
-      `conductorDelegationAccepted=${receipt.conductorDelegationAccepted}`,
-      `conductorGlobalPresent=${receipt.conductorGlobalPresent}`,
-      `conductorScriptPresent=${receipt.conductorScriptPresent}`,
-      `conductorScriptRequested=${receipt.conductorScriptRequested}`,
-      `conductorScriptLoaded=${receipt.conductorScriptLoaded}`,
-      `conductorScriptError=${receipt.conductorScriptError}`,
-      `conductorContract=${receipt.conductorContract}`,
-      `conductorBootMethodPresent=${receipt.conductorBootMethodPresent}`,
-      `conductorBootCallSuppressedToPreventDuplicate=${receipt.conductorBootCallSuppressedToPreventDuplicate}`,
+      `canvasReady=${receipt.canvasReady}`,
+      `canvasCarrierMounted=${receipt.canvasCarrierMounted}`,
+      `firstFrameDetected=${receipt.firstFrameDetected}`,
+      `imageRendered=${receipt.imageRendered}`,
+      `dragInspectionBound=${receipt.dragInspectionBound}`,
+      `atlasBuildComplete=${receipt.atlasBuildComplete}`,
+      `textureComposeComplete=${receipt.textureComposeComplete}`,
       "",
-      `canvasScriptPresent=${receipt.canvasScriptPresent}`,
-      `canvasGlobalPresent=${receipt.canvasGlobalPresent}`,
-      `canvasFallbackRequested=${receipt.canvasFallbackRequested}`,
-      `canvasFallbackAllowed=${receipt.canvasFallbackAllowed}`,
+      `inspectModeAvailable=${receipt.inspectModeAvailable}`,
+      `inspectPlanetControlAvailable=${receipt.inspectPlanetControlAvailable}`,
+      `diagnosticCanLeavePlanetFrame=${receipt.diagnosticCanLeavePlanetFrame}`,
+      `diagnosticDockHiddenForInspection=${receipt.diagnosticDockHiddenForInspection}`,
+      `showDiagnosticTabVisible=${receipt.showDiagnosticTabVisible}`,
+      `showDiagnosticTabVisibleWhenHidden=${receipt.showDiagnosticTabVisibleWhenHidden}`,
+      `diagnosticDockRestorable=${receipt.diagnosticDockRestorable}`,
+      `copyDiagnosticPreserved=${receipt.copyDiagnosticPreserved}`,
+      `receiptOverlayIndependent=${receipt.receiptOverlayIndependent}`,
       "",
-      `climateRouteRetired=${receipt.climateRouteRetired}`,
-      `retiredClimateRoute=${receipt.retiredClimateRoute}`,
-      `runtimeTableRequiredForFirstRender=${receipt.runtimeTableRequiredForFirstRender}`,
-      `sourceStackRequiredForFirstRender=${receipt.sourceStackRequiredForFirstRender}`,
-      `wideProbeDeferred=${receipt.wideProbeDeferred}`,
+      `strictCanvasReadyLatchActive=${receipt.strictCanvasReadyLatchActive}`,
+      `canvasReadinessBarrierOpen=${receipt.canvasReadinessBarrierOpen}`,
+      `visibleContentBarrierOpen=${receipt.visibleContentBarrierOpen}`,
+      `stageRegressionPrevented=${receipt.stageRegressionPrevented}`,
+      `ignoredDuplicateCanvasEvents=${receipt.ignoredDuplicateCanvasEvents}`,
+      `completionLatchedAfterCanvasReady=${receipt.completionLatchedAfterCanvasReady}`,
+      `completionLatchedAfterInspectModeReady=${receipt.completionLatchedAfterInspectModeReady}`,
+      "",
+      `cooperativeBootAvailable=${receipt.cooperativeBootAvailable}`,
+      `cooperativeBootUsed=${receipt.cooperativeBootUsed}`,
+      `syncBootFallbackUsed=${receipt.syncBootFallbackUsed}`,
+      `canvasCarrierMethod=${receipt.canvasCarrierMethod}`,
+      `canvasCarrierRequested=${receipt.canvasCarrierRequested}`,
+      `canvasCarrierHandoffOk=${receipt.canvasCarrierHandoffOk}`,
+      `canvasCarrierHandoffError=${receipt.canvasCarrierHandoffError}`,
+      "",
+      `canvasBootStartedAt=${receipt.canvasBootStartedAt}`,
+      `canvasBootCompletedAt=${receipt.canvasBootCompletedAt}`,
+      `canvasBootElapsedMs=${receipt.canvasBootElapsedMs}`,
+      `canvasYieldCount=${receipt.canvasYieldCount}`,
+      `canvasPhaseCount=${receipt.canvasPhaseCount}`,
+      `lastCanvasPhase=${receipt.lastCanvasPhase}`,
+      `lastCanvasProgress=${receipt.lastCanvasProgress}`,
+      `loaderRepaintDuringCanvasBoot=${receipt.loaderRepaintDuringCanvasBoot}`,
+      `f13ProgressStreamActive=${receipt.f13ProgressStreamActive}`,
+      `canvasLaneClosed=${receipt.canvasLaneClosed}`,
+      "",
+      `atlasBuildStarted=${receipt.atlasBuildStarted}`,
+      `atlasBuildProgress=${receipt.atlasBuildProgress}`,
+      `textureComposeStarted=${receipt.textureComposeStarted}`,
+      `textureComposeProgress=${receipt.textureComposeProgress}`,
+      "",
+      `runtimeTablePresent=${receipt.runtimeTablePresent}`,
+      `runtimeTableMode=${receipt.runtimeTableMode}`,
+      `runtimeTablePlanAttempted=${receipt.runtimeTablePlanAttempted}`,
+      `runtimeTablePlanCreated=${receipt.runtimeTablePlanCreated}`,
+      `runtimeTablePlanError=${receipt.runtimeTablePlanError}`,
+      `sourceAuthorityHeld=${receipt.sourceAuthorityHeld}`,
       "",
       `currentStage=${receipt.currentStage}`,
       `highestStage=${receipt.highestStage}`,
-      `displayProgress=${receipt.displayProgress}`,
-      `latestEvent=${receipt.latestEvent}`,
-      `status=${receipt.status}`,
+      `completionLatched=${receipt.completionLatched}`,
+      `visibleLoadingActive=${receipt.visibleLoadingActive}`,
+      `diagnosticCockpitReady=${receipt.diagnosticCockpitReady}`,
+      `cockpitMode=${receipt.cockpitMode}`,
+      `dockVisible=${receipt.dockVisible}`,
+      `fullCockpitExpanded=${receipt.fullCockpitExpanded}`,
+      "",
+      `partialReceiptAvailable=${receipt.partialReceiptAvailable}`,
+      `finalReceiptAvailable=${receipt.finalReceiptAvailable}`,
+      `copyDiagnosticArmed=${receipt.copyDiagnosticArmed}`,
+      `receiptToggleReady=${receipt.receiptToggleReady}`,
+      `buttonsReachable=${receipt.buttonsReachable}`,
+      "",
+      `postgameStatus=${receipt.postgameStatus}`,
       `firstFailedCoordinate=${receipt.firstFailedCoordinate}`,
       `recommendedNextRenewalTarget=${receipt.recommendedNextRenewalTarget}`,
-      "",
-      `planetCanvasPresent=${receipt.planetCanvasPresent}`,
-      `planetCanvasNonZeroSize=${receipt.planetCanvasNonZeroSize}`,
-      `visiblePlanetPossiblyAvailable=${receipt.visiblePlanetPossiblyAvailable}`,
-      `inspectModeReservedActive=${receipt.inspectModeReservedActive}`,
-      `showDiagnosticTabVisible=${receipt.showDiagnosticTabVisible}`,
+      `latestVisibleEvent=${receipt.latestVisibleEvent}`,
+      `mainDisplayProgress=${receipt.mainDisplayProgress}`,
+      `mainProgressCap=${receipt.mainProgressCap}`,
+      `heartbeatElapsedMs=${receipt.heartbeatElapsedMs}`,
       "",
       "LEDGER_LANES",
       lanes,
@@ -1959,11 +3007,30 @@
       "LEDGER_SCRIPTS",
       scripts,
       "",
-      "LEDGER_EVENTS",
-      events,
+      "F13_EVENT_ORDER",
+      f13,
+      "",
+      "CANVAS_PHASE_EVENTS",
+      phases,
+      "",
+      "ARCHIVED_LATE_EVENTS",
+      archived,
+      "",
+      "LOCAL_EVENTS",
+      local,
       "",
       "ERRORS",
       errors,
+      "",
+      "SOURCE_STACK_HELD",
+      "- /assets/hearth/hearth.tectonics.js",
+      "- /assets/hearth/hearth.elevation.js",
+      "- /assets/hearth/hearth.composition.js",
+      "- /assets/hearth/hearth.hydrology.js",
+      "- /assets/hearth/hearth.materials.js",
+      "- /assets/hearth/hearth.hex.four-pair.authority.js",
+      "- /assets/hearth/hearth.hex.surface.js",
+      "- /assets/lab/runtime-table.js",
       "",
       `generatedImage=${receipt.generatedImage}`,
       `graphicBox=${receipt.graphicBox}`,
@@ -1974,153 +3041,262 @@
     ].join("\n");
   }
 
+  function publishGlobals() {
+    root.HEARTH = root.HEARTH || {};
+    root.HEARTH.routeConductor = api;
+    root.HEARTH.coherenceSemiconductor = api;
+
+    root.HEARTH_ROUTE_CONDUCTOR = api;
+    root.HearthRouteConductor = api;
+    root.HEARTH_ACTIVE_ROUTE = api;
+    root.HEARTH_ROUTE_COHERENCE_SEMICONDUCTOR = api;
+    root.HEARTH_ROUTE_CONDUCTOR_CONTRACT = CONTRACT;
+    root.HEARTH_ROUTE_COHERENCE_SEMICONDUCTOR_RECEIPT = getReceipt();
+    root.HEARTH_ROUTE_CONDUCTOR_RECEIPT = root.HEARTH_ROUTE_COHERENCE_SEMICONDUCTOR_RECEIPT;
+    root.HEARTH_ROUTE_CONDUCTOR_POSTGAME_RECEIPT = root.HEARTH_ROUTE_COHERENCE_SEMICONDUCTOR_RECEIPT;
+
+    root.__HEARTH_ACTIVE_ROUTE_FILE__ = COHERENCE_FILE;
+    root.__HEARTH_ACTIVE_ROUTE_CONDUCTOR__ = COHERENCE_FILE;
+    root.__HEARTH_ACTIVE_ROUTE_CONTRACT__ = CONTRACT;
+    root.__HEARTH_CONSTRAINT_SEMICONDUCTOR_FILE__ = INDEX_FILE;
+    root.__HEARTH_COHERENCE_SEMICONDUCTOR_FILE__ = COHERENCE_FILE;
+    root.__HEARTH_RETIRED_CLIMATE_ROUTE__ = RETIRED_CLIMATE_FILE;
+    root.__HEARTH_RETIRED_CLIMATE_ROUTE_ACTIVE_CARRIER__ = false;
+
+    if (!doc || !doc.documentElement) return;
+
+    const dataset = doc.documentElement.dataset;
+
+    dataset.hearthCoherenceSemiconductorLoaded = "true";
+    dataset.hearthCoherenceSemiconductorContract = CONTRACT;
+    dataset.hearthCoherenceSemiconductorReceipt = RECEIPT;
+    dataset.hearthPairedSemiconductor = "true";
+    dataset.hearthConstraintSemiconductor = INDEX_FILE;
+    dataset.hearthCoherenceSemiconductor = COHERENCE_FILE;
+    dataset.hearthIndexJsStartsProcess = "true";
+    dataset.hearthJsFinishesProcess = "true";
+    dataset.hearthSynchronizedLoading = "true";
+    dataset.hearthActiveRouteFile = COHERENCE_FILE;
+    dataset.hearthActiveRouteConductor = COHERENCE_FILE;
+    dataset.hearthActiveRouteContract = CONTRACT;
+
+    dataset.hearthNewsProtocolActive = "true";
+    dataset.hearthNorthGateReady = String(state.northGateReady);
+    dataset.hearthEastGateReady = String(state.eastGateReady);
+    dataset.hearthWestGateReady = String(state.westGateReady);
+    dataset.hearthSouthGateReady = String(state.southGateReady);
+    dataset.hearthNewsGatePassedBeforeF21 = String(state.newsGatePassedBeforeF21);
+
+    dataset.hearthFibonacciSequenceActive = "true";
+    dataset.hearthFibonacciStageAtCanvasReady = state.fibonacciStageAtCanvasReady;
+    dataset.hearthFibonacciStageAtVisibleContentProof = state.fibonacciStageAtVisibleContentProof;
+    dataset.hearthFibonacciStageAtCompletionLatch = state.fibonacciStageAtCompletionLatch;
+    dataset.hearthF13SubsequenceComplete = String(state.f13SubsequenceComplete);
+    dataset.hearthF13LastRequiredEvent = state.f13LastRequiredEvent;
+    dataset.hearthF21AfterF13m = String(state.f21AfterF13M);
+
+    dataset.hearthCompletionReceiptRequiresVisiblePlanet = "true";
+    dataset.hearthCompletionReceiptRequiresVisibleContent = "true";
+    dataset.hearthCompletionReceiptRequiresInspectMode = "true";
+    dataset.hearthVisibleContentProof = String(state.visibleContentProof);
+    dataset.hearthVisibleContentProofMethod = state.visibleContentProofMethod;
+    dataset.hearthVisibleContentSampleCount = String(state.visibleContentSampleCount);
+    dataset.hearthVisibleContentVarianceScore = String(state.visibleContentVarianceScore);
+    dataset.hearthVisibleContentClassCount = String(state.visibleContentClassCount);
+    dataset.hearthCarrierOnlyDetected = String(state.carrierOnlyDetected);
+    dataset.hearthFalseReadyPrevented = String(state.falseReadyPrevented);
+    dataset.hearthCompletionBlockedUntilVisibleContent = String(state.completionBlockedUntilVisibleContent);
+    dataset.hearthCompletionLatchedAfterVisibleContent = String(state.completionLatchedAfterVisibleContent);
+
+    dataset.hearthVisiblePlanetAvailable = String(state.visiblePlanetAvailable);
+    dataset.hearthPlanetCanvasPresent = String(state.planetCanvasPresent);
+    dataset.hearthPlanetCanvasNonZeroSize = String(state.planetCanvasNonZeroSize);
+    dataset.hearthPlanetFramePainted = String(state.planetFramePainted);
+    dataset.hearthNonblankPlanetVisible = String(state.nonblankPlanetVisible);
+    dataset.hearthPlanetNotObstructed = String(state.planetNotObstructed);
+
+    dataset.hearthCanvasReady = String(state.canvasReady);
+    dataset.hearthCanvasCarrierMounted = String(state.canvasCarrierMounted);
+    dataset.hearthFirstFrameDetected = String(state.firstFrameDetected);
+    dataset.hearthImageRendered = String(state.imageRendered);
+    dataset.hearthDragInspectionBound = String(state.dragInspectionBound);
+
+    dataset.hearthInspectModeAvailable = String(state.inspectModeAvailable);
+    dataset.hearthInspectPlanetControlAvailable = String(state.inspectPlanetControlAvailable);
+    dataset.hearthDiagnosticCanLeavePlanetFrame = String(state.diagnosticCanLeavePlanetFrame);
+    dataset.hearthDiagnosticDockHiddenForInspection = String(state.diagnosticDockHiddenForInspection);
+    dataset.hearthShowDiagnosticTabVisible = String(state.showDiagnosticTabVisible);
+    dataset.hearthShowDiagnosticTabVisibleWhenHidden = String(state.showDiagnosticTabVisibleWhenHidden);
+    dataset.hearthDiagnosticDockRestorable = String(state.diagnosticDockRestorable);
+    dataset.hearthCopyDiagnosticPreserved = String(state.copyDiagnosticPreserved);
+
+    dataset.hearthStrictCanvasReadyLatchActive = "true";
+    dataset.hearthVisibleContentLatchActive = "true";
+    dataset.hearthCanvasReadinessBarrierOpen = String(state.canvasReadinessBarrierOpen);
+    dataset.hearthVisibleContentBarrierOpen = String(state.visibleContentBarrierOpen);
+    dataset.hearthCompletionLatchedAfterCanvasReady = String(state.completionLatchedAfterCanvasReady);
+    dataset.hearthCompletionLatchedAfterInspectModeReady = String(state.completionLatchedAfterInspectModeReady);
+
+    dataset.hearthCooperativeBootAvailable = String(state.cooperativeBootAvailable);
+    dataset.hearthCooperativeBootUsed = String(state.cooperativeBootUsed);
+    dataset.hearthSyncBootFallbackUsed = String(state.syncBootFallbackUsed);
+    dataset.hearthCanvasCarrierMethod = state.canvasCarrierMethod;
+    dataset.hearthCanvasLaneClosed = String(state.canvasLaneClosed);
+
+    dataset.hearthCompletionLatched = String(state.completionLatched);
+    dataset.hearthVisibleLoadingActive = String(state.visibleLoadingActive);
+    dataset.hearthDiagnosticCockpitReady = String(state.diagnosticCockpitReady);
+    dataset.hearthCockpitMode = state.cockpitMode;
+    dataset.hearthPostgameStatus = state.postgameStatus;
+    dataset.hearthFirstFailedCoordinate = state.firstFailedCoordinate;
+    dataset.hearthRecommendedNextRenewalTarget = state.recommendedNextRenewalTarget;
+
+    dataset.hearthRetiredClimateRoute = RETIRED_CLIMATE_FILE;
+    dataset.hearthRetiredClimateRouteActiveCarrier = "false";
+    dataset.generatedImage = "false";
+    dataset.graphicBox = "false";
+    dataset.webgl = "false";
+    dataset.visualPassClaimed = "false";
+  }
+
+  function acceptConstraintSemiconductor(payload = {}) {
+    state.indexConstraintAccepted = true;
+    state.indexConstraintPresent = true;
+
+    if (payload.mount && payload.mount.nodeType === 1) refs.mount = payload.mount;
+    if (payload.cockpit && payload.cockpit.nodeType === 1) refs.cockpit = payload.cockpit;
+    if (payload.sharedLedger && isObject(payload.sharedLedger)) {
+      root.HEARTH_LOAD_LEDGER = payload.sharedLedger;
+      refs.ledger = payload.sharedLedger;
+    }
+
+    ensureLedger();
+    ensureMount();
+    hydrateCockpit();
+
+    emit("CONSTRAINT_SEMICONDUCTOR_ACCEPTED", {
+      calledBy: payload.calledBy || "",
+      constraintSemiconductor: INDEX_FILE,
+      coherenceSemiconductor: COHERENCE_FILE
+    }, {
+      stage: "F8",
+      lane: "conductorHydration",
+      status: "ACCEPTED"
+    });
+
+    return true;
+  }
+
+  function hydrateIndexBridge(payload = {}) {
+    return acceptConstraintSemiconductor(payload);
+  }
+
+  function attachIndexBridge(payload = {}) {
+    return acceptConstraintSemiconductor(payload);
+  }
+
+  function receiveIndexBridge(payload = {}) {
+    return acceptConstraintSemiconductor(payload);
+  }
+
+  function retireClimateRoute() {
+    root.__HEARTH_CLIMATE_ROUTE_RETIRED__ = true;
+    root.__HEARTH_RETIRED_ROUTE_FILE__ = RETIRED_CLIMATE_FILE;
+    root.__HEARTH_RETIRED_CLIMATE_ROUTE__ = RETIRED_CLIMATE_FILE;
+    root.__HEARTH_RETIRED_CLIMATE_ROUTE_ACTIVE_CARRIER__ = false;
+
+    [
+      "__HEARTH_VISIBLE_RECOVERY_DISPOSE__",
+      "__HEARTH_G4_ROUTE_DISPOSE__",
+      "__HEARTH_HABITABLE_FORMING_ROUTE_DISPOSE__"
+    ].forEach((name) => {
+      try {
+        if (typeof root[name] === "function") root[name]();
+      } catch (_error) {}
+
+      try {
+        root[name] = undefined;
+        delete root[name];
+      } catch (_error) {}
+    });
+
+    if (doc) {
+      doc.querySelectorAll("script[src*='hearth.climate.route.js']").forEach((script) => {
+        script.dataset.hearthClimateRouteRetired = "true";
+        script.dataset.retiredBy = CONTRACT;
+      });
+    }
+  }
+
   function startHeartbeat() {
     if (heartbeatTimer) root.clearInterval(heartbeatTimer);
 
     heartbeatTimer = root.setInterval(() => {
-      state.heartbeatElapsedMs = state.startedAt ? nowMs() - new Date(state.startedAt).getTime() : 0;
-      markVisualHints();
-      render();
+      state.heartbeatElapsedMs = state.startedAtMs ? nowMs() - state.startedAtMs : 0;
+
+      if (!state.completionLatched) {
+        reconcileAll("heartbeat");
+      } else {
+        publishGlobals();
+        scheduleRender();
+      }
     }, 1000);
   }
 
-  function startWatchdog() {
-    if (watchdogTimer) root.clearInterval(watchdogTimer);
+  function startReconcileLoop() {
+    if (reconcileTimer) root.clearInterval(reconcileTimer);
 
-    let ticks = 0;
-
-    watchdogTimer = root.setInterval(() => {
-      ticks += 1;
-
-      const conductor = getConductorApi();
-      const ledger = refs.ledger || ensureLedger();
-
-      if (conductor && !state.conductorGlobalPresent) {
-        state.conductorGlobalPresent = true;
-        state.conductorContract = String(conductor.contract || "");
-        state.conductorBootMethodPresent = Boolean(conductorBootMethod(conductor));
-        state.conductorDelegationAccepted = true;
-        acceptConductorIfPossible(conductor);
+    reconcileTimer = root.setInterval(() => {
+      if (!state.completionLatched) {
+        reconcileAll("interval");
       }
-
-      markVisualHints();
-
-      if (state.visiblePlanetPossiblyAvailable) {
-        state.firstFailedCoordinate = "INDEX_CONSTRAINT_COMPLETE_COHERENCE_RECEIPT_PENDING";
-        state.recommendedNextRenewalTarget = COHERENCE_FILE;
-        state.status = "VISIBLE_PLANET_HINT_PRESENT_COHERENCE_COMPLETION_PENDING";
-      } else if (state.conductorDelegationAccepted) {
-        state.firstFailedCoordinate = "COHERENCE_CONDUCTOR_ACCEPTED_VISIBLE_PLANET_PENDING";
-        state.recommendedNextRenewalTarget = COHERENCE_FILE;
-        state.status = "COHERENCE_CONDUCTOR_ACCEPTED";
-      } else if (ticks > 18) {
-        state.firstFailedCoordinate = "COHERENCE_CONDUCTOR_NOT_CONFIRMED";
-        state.recommendedNextRenewalTarget = COHERENCE_FILE;
-        state.status = "COHERENCE_CONDUCTOR_NOT_CONFIRMED";
-      }
-
-      if (ticks % 3 === 0) {
-        ledger.setLane("scriptOrder", {
-          status: state.conductorDelegationAccepted ? "ACCEPTED" : "WATCHING",
-          progress: state.conductorDelegationAccepted ? stageProgress("F8") : stageProgress("F3"),
-          event: state.conductorDelegationAccepted ? "CONDUCTOR_DELEGATION_ACCEPTED" : "SCRIPT_ORDER_WATCHDOG_ACTIVE",
-          stage: state.conductorDelegationAccepted ? "F8" : "F3",
-          owner: "index.js",
-          file: INDEX_FILE,
-          message: state.conductorDelegationAccepted
-            ? "Coherence conductor accepted or present."
-            : "Constraint semiconductor is watching script order."
-        });
-      }
-
-      if (ticks >= 80 || state.visiblePlanetPossiblyAvailable) {
-        root.clearInterval(watchdogTimer);
-        watchdogTimer = 0;
-      }
-
-      render();
-    }, 300);
+    }, 900);
   }
 
-  async function boot() {
+  function boot() {
     if (bootStarted) {
-      render();
-      return getReceipt({ status: "BOOT_ALREADY_STARTED" });
+      publishGlobals();
+      return getReceipt();
     }
 
     bootStarted = true;
     state.startedAt = nowIso();
+    state.startedAtMs = nowMs();
     state.updatedAt = state.startedAt;
-    state.status = "BOOTING";
-    state.firstFailedCoordinate = "INDEX_CONSTRAINT_BOOT_STARTED";
-    state.recommendedNextRenewalTarget = "shared-ledger-and-coherence-conductor";
 
     retireClimateRoute();
-
-    ensureMount();
     ensureLedger();
-    ensureCockpit();
+    ensureMount();
+    hydrateCockpit();
 
-    const ledger = refs.ledger;
+    checkRuntimeTable();
 
-    ledger.setLane("shell", {
-      status: "READY",
-      progress: stageProgress("F1A"),
-      event: "HTML_SHELL_RENDERED",
-      stage: "F1A",
-      owner: "index.js",
-      file: INDEX_FILE,
-      message: "HTML shell rendered and mount confirmed by index constraint semiconductor."
+    setLane("conductorHydration", {
+      status: "HYDRATED",
+      progress: stageProgress("F8"),
+      event: "COHERENCE_SEMICONDUCTOR_BOOTED",
+      stage: "F8",
+      message: "Coherence semiconductor booted and visible-content proof latch is active."
     });
 
-    ledger.setStage("F1A", "HTML shell rendered.", {
-      lane: "shell",
-      owner: "index.js",
-      file: INDEX_FILE
+    setStage("F8", "Coherence semiconductor booted.", {
+      lane: "conductorHydration",
+      status: "HYDRATED"
     });
 
-    scanKnownScripts();
-
-    ledger.setLane("scriptOrder", {
-      status: "ACTIVE",
-      progress: stageProgress("F3"),
-      event: "SCRIPT_ORDER_VISIBILITY_ACTIVE",
-      stage: "F3",
-      owner: "index.js",
-      file: INDEX_FILE,
-      message: "Script-order visibility active."
-    });
-
-    ledger.setStage("F3", "Script-order visibility active.", {
-      lane: "scriptOrder",
-      owner: "index.js",
-      file: INDEX_FILE
-    });
-
-    publishDataset();
+    publishGlobals();
     render();
 
-    const conductor = await injectConductorScript();
-
-    if (conductor) {
-      state.conductorDelegationAccepted = true;
-      state.firstFailedCoordinate = "COHERENCE_CONDUCTOR_ACCEPTED_VISIBLE_PLANET_PENDING";
-      state.recommendedNextRenewalTarget = COHERENCE_FILE;
-      state.status = "COHERENCE_CONDUCTOR_ACCEPTED";
-    } else {
-      state.conductorDelegationAccepted = false;
-      state.firstFailedCoordinate = "COHERENCE_CONDUCTOR_UNAVAILABLE";
-      state.recommendedNextRenewalTarget = COHERENCE_FILE;
-      state.status = "COHERENCE_CONDUCTOR_UNAVAILABLE";
-      recordError("COHERENCE_CONDUCTOR_UNAVAILABLE", "index.js did not find or load the coherence conductor.");
-    }
+    root.setTimeout(callCanvasCarrier, 80);
+    root.setTimeout(() => reconcileAll("post-boot-220ms"), 220);
+    root.setTimeout(() => reconcileAll("post-boot-900ms"), 900);
+    root.setTimeout(() => reconcileAll("post-boot-1800ms"), 1800);
+    root.setTimeout(() => reconcileAll("post-boot-3600ms"), 3600);
 
     startHeartbeat();
-    startWatchdog();
+    startReconcileLoop();
 
-    render();
-
-    return getReceipt({ status: state.status });
+    return getReceipt();
   }
 
   function dispose(reason = "manual-dispose") {
@@ -2129,70 +3305,76 @@
       heartbeatTimer = 0;
     }
 
-    if (watchdogTimer) {
-      root.clearInterval(watchdogTimer);
-      watchdogTimer = 0;
+    if (reconcileTimer) {
+      root.clearInterval(reconcileTimer);
+      reconcileTimer = 0;
     }
 
-    const ledger = refs.ledger || root.HEARTH_LOAD_LEDGER;
-
-    if (ledger && isFunction(ledger.push)) {
-      ledger.push({
-        id: "INDEX_CONSTRAINT_SEMICONDUCTOR_DISPOSED",
-        stage: state.currentStage,
-        lane: "ledger",
-        status: "DISPOSED",
-        owner: "index.js",
-        file: INDEX_FILE,
-        message: reason
-      });
-    }
+    push({
+      id: "VISIBLE_CONTENT_PROOF_SEMICONDUCTOR_DISPOSED",
+      stage: state.currentStage,
+      lane: "conductorHydration",
+      status: "DISPOSED",
+      message: reason
+    });
   }
 
   const api = {
     contract: CONTRACT,
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
-    expectedCoherenceConductor: EXPECTED_COHERENCE_CONDUCTOR,
+    baselineContract: BASELINE_CONTRACT,
     version: VERSION,
+    route: ROUTE,
+    file: COHERENCE_FILE,
+    role: "coherence-side-semiconductor",
 
     boot,
     start: boot,
     init: boot,
     run: boot,
     dispose,
+
+    acceptConstraintSemiconductor,
+    hydrateIndexBridge,
+    attachIndexBridge,
+    receiveIndexBridge,
+
+    handleCanvasPhase,
+    handleCanvasReceipt,
+    reconcile: reconcileAll,
+    tryFinalize,
+    setCockpitMode,
+    proveVisibleContent,
     getReceipt,
     getReceiptText,
     copyDiagnostic,
 
-    indexFile: INDEX_FILE,
-    constraintSemiconductor: INDEX_FILE,
-    coherenceSemiconductor: COHERENCE_FILE,
-    pairedWith: COHERENCE_FILE,
-
     supportsPairedSemiconductor: true,
-    supportsConstraintSideSemiconductor: true,
-    supportsFirstPaintSurvival: true,
-    supportsMountCertainty: true,
-    supportsLoadingScreenCertainty: true,
-    supportsEarlyLedger: true,
-    supportsScriptOrderVisibility: true,
+    supportsCoherenceSideSemiconductor: true,
     supportsSynchronizedLoading: true,
-    supportsPartialDiagnosticBeforeCompletion: true,
-    supportsInspectControlReservation: true,
-    supportsShowDiagnosticRestoreReservation: true,
-    supportsClimateRouteRetirement: true,
-    supportsVisibleCarrierFirst: true,
+    supportsSharedLedgerHydration: true,
+    supportsNewsProtocol: true,
+    supportsFibonacciSequence: true,
+    supportsF13PhaseIntegration: true,
+    supportsVisibleContentCompletionGate: true,
+    supportsVisibleContentProofLatch: true,
+    supportsFalseReadyPrevention: true,
+    supportsInspectModeCompletionGate: true,
+    supportsDiagnosticDockRestore: true,
+    supportsCopyDiagnosticPreservation: true,
+    supportsShowReceiptPreservation: true,
+    supportsCooperativeCanvasHandoff: true,
 
-    ownsActiveRouteConduction: false,
-    ownsFinalCompletion: false,
+    ownsFirstPaintSurvival: false,
     ownsCanvasDrawing: false,
-    ownsVisiblePlanetProof: false,
-    ownsFinalDiagnosticReceipt: false,
-
-    runtimeTableRequiredForFirstRender: false,
-    sourceStackRequiredForFirstRender: false,
-    wideProbeDeferred: true,
+    ownsAtlasGeneration: false,
+    ownsTextureGeneration: false,
+    ownsRuntimeTableImplementation: false,
+    ownsSourceStackTruth: false,
+    ownsHtmlStructure: false,
+    ownsClimateRouteRendering: false,
+    ownsFinalVisualPassClaim: false,
 
     generatedImage: false,
     graphicBox: false,
@@ -2204,32 +3386,14 @@
     }
   };
 
-  root.HEARTH = root.HEARTH || {};
-  root.HEARTH.indexConstraintSemiconductor = api;
-  root.HEARTH.indexBridge = api;
+  publishGlobals();
 
-  root.HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR = api;
-  root.HEARTH_INDEX_BRIDGE = api;
-  root.HearthIndexBridge = api;
-  root.HEARTH_INDEX_JS = api;
-  root.HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR_CONTRACT = CONTRACT;
-  root.HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR_RECEIPT = getReceipt({ status: "LOADED_NOT_BOOTED" });
-  root.__HEARTH_INDEX_BRIDGE_FILE__ = INDEX_FILE;
-  root.__HEARTH_CONSTRAINT_SEMICONDUCTOR_FILE__ = INDEX_FILE;
-  root.__HEARTH_COHERENCE_SEMICONDUCTOR_FILE__ = COHERENCE_FILE;
-  root.__HEARTH_ACTIVE_ROUTE_FILE__ = COHERENCE_FILE;
-  root.__HEARTH_CLIMATE_ROUTE_RETIRED__ = true;
-
-  publishDataset();
-
-  if (doc) {
-    if (doc.readyState === "loading") {
-      doc.addEventListener("DOMContentLoaded", () => {
-        boot();
-      }, { once: true });
-    } else {
+  if (doc && doc.readyState === "loading") {
+    doc.addEventListener("DOMContentLoaded", () => {
       boot();
-    }
+    }, { once: true });
+  } else {
+    boot();
   }
 
   if (typeof module !== "undefined" && module.exports) {

@@ -1,64 +1,65 @@
 // /assets/hearth/hearth.water.channel.js
-// HEARTH_WATER_CHILD_ACTIVE_EXPRESSION_SEMICONDUCTOR_ACTOR_TNT_v1
+// HEARTH_WATER_CHILD_SERVED_ASSET_COORDINATE_AND_WATER_ONLY_SEMICONDUCTOR_TNT_v1
 // Full-file replacement.
-// Water Child / active child-channel actor / semiconductor multiplex adapter authority only.
+// Water Child / water-only semiconductor authority.
 // Purpose:
-// - Express Water as a live Hearth child actor equal to Land and Air.
-// - Export HEARTH_WATER_CHANNEL at the exact actor name the canvas and Runtime Table expect.
-// - Preserve downstream contract HEARTH_WATER_HYDROSPHERE_SURFACE_CHANNEL_TNT_v1.
-// - Provide callable, coordinate-valid, body-bound, surface-bound hydrosphere samples.
-// - Act as a semiconductor/multiplex adapter for existing water-adjacent authorities.
-// - Emit one normalized downstream water packet.
+// - Exist and execute at /assets/hearth/hearth.water.channel.js.
+// - Export HEARTH_WATER_CHANNEL, HearthWaterChannel, and HEARTH.waterChannel.
+// - Satisfy the Runtime Table expected contract: HEARTH_WATER_HYDROSPHERE_SURFACE_CHANNEL_TNT_v1.
+// - Normalize water-only signals into one body-bound hydrosphere packet.
+// - Preserve downstream water files as optional nonblocking inputs.
 // Does not own:
-// - route orchestration
 // - canvas composition
-// - Runtime Table canonical standard
-// - Triple G diagnostic canonical standard
-// - hydrology law
-// - materials law
-// - composition law
-// - elevation law
-// - land truth
-// - air truth
+// - route orchestration
 // - runtime motion
-// - controls
+// - Runtime Table
+// - Triple G
+// - hydrology source law
+// - materials source law
 // - visual pass
 
 (() => {
   "use strict";
 
   const CONTRACT = "HEARTH_WATER_HYDROSPHERE_SURFACE_CHANNEL_TNT_v1";
-  const RECEIPT = "HEARTH_WATER_HYDROSPHERE_SURFACE_CHANNEL_RECEIPT_v1";
-  const BUILD_CONTRACT = "HEARTH_WATER_CHILD_ACTIVE_EXPRESSION_SEMICONDUCTOR_ACTOR_TNT_v1";
-  const PREVIOUS_BUILD_CONTRACT = "HEARTH_WATER_CHILD_SEMICONDUCTOR_MULTIPLEX_ADAPTER_TNT_v1";
-  const VERSION = "2026-05-29.hearth-water-child-active-expression-semiconductor-actor-v1";
-
-  const ROUTE_PARENT = "/showroom/globe/hearth/";
-  const ROUTE_CONDUCTOR = "/showroom/globe/hearth/hearth.climate.route.js";
-  const ASSET_AUTHORITY = "/assets/hearth/hearth.water.channel.js";
-  const CANVAS_AUTHORITY = "/assets/hearth/hearth.canvas.js";
-  const RUNTIME_VALIDATOR = "/assets/lab/runtime-table.js";
-
-  const HYDROLOGY_AUTHORITY = "/assets/hearth/hearth.hydrology.js";
-  const MATERIALS_AUTHORITY = "/assets/hearth/hearth.materials.js";
-  const COMPOSITION_AUTHORITY = "/assets/hearth/hearth.composition.js";
-  const ELEVATION_AUTHORITY = "/assets/hearth/hearth.elevation.js";
-  const LAND_CHANNEL_AUTHORITY = "/assets/hearth/hearth.land.channel.js";
-  const AIR_CHANNEL_AUTHORITY = "/assets/hearth/hearth.air.channel.js";
+  const BUILD_CONTRACT = "HEARTH_WATER_CHILD_SERVED_ASSET_COORDINATE_AND_WATER_ONLY_SEMICONDUCTOR_TNT_v1";
+  const RECEIPT = "HEARTH_WATER_CHILD_SERVED_ASSET_COORDINATE_AND_WATER_ONLY_SEMICONDUCTOR_RECEIPT_v1";
+  const VERSION = "2026-05-29.hearth-water-child-served-asset-coordinate-water-only-semiconductor-v1";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const DEG = Math.PI / 180;
 
-  const COLORS = Object.freeze({
-    deepOcean: [4, 14, 44],
-    openWater: [7, 36, 88],
-    shelf: [18, 70, 112],
-    coastal: [34, 94, 124],
-    waterline: [64, 124, 146],
-    lowWater: [7, 20, 38],
-    foam: [116, 160, 174],
-    shadow: [2, 6, 15]
+  const WATER_DIRECTORY = Object.freeze([
+    "hydrosphere",
+    "seaLevel",
+    "waterline",
+    "shoreline",
+    "shallowShelf",
+    "oceanContinuity",
+    "basinDepth",
+    "submergedBlock",
+    "submergedScar",
+    "beachBoundary",
+    "wetStoneBoundary",
+    "waterMaterials",
+    "waterSurfaceSeat",
+    "waterDepth"
+  ]);
+
+  const REJECTION_LAWS = Object.freeze({
+    hydrologyHintIsNotFinalColor: true,
+    wetMaterialIsNotHydrosphere: true,
+    beachShelfIsNotOpenOcean: true,
+    waterlineIsNotWholeOcean: true,
+    submergedScarIsNotActiveSurfaceWater: true,
+    seaLevelHintIsNotFinalVisualTruth: true,
+    blueColorIsNotWaterAuthority: true
   });
+
+  const WATER_RGB = Object.freeze([8, 34, 86]);
+  const DEEP_WATER_RGB = Object.freeze([4, 12, 38]);
+  const SHALLOW_WATER_RGB = Object.freeze([18, 76, 126]);
+  const WATERLINE_RGB = Object.freeze([42, 103, 142]);
 
   function clamp(value, min, max) {
     const n = Number(value);
@@ -81,7 +82,7 @@
     return a + (b - a) * k;
   }
 
-  function mixColor(a, b, t) {
+  function mixRgb(a, b, t) {
     const k = clamp01(t);
     return [
       clamp(Math.round(mixNumber(a[0], b[0], k)), 0, 255),
@@ -90,19 +91,10 @@
     ];
   }
 
-  function scaleColor(rgb, scalar) {
-    const s = Number.isFinite(Number(scalar)) ? Number(scalar) : 1;
-    return [
-      clamp(Math.round(rgb[0] * s), 0, 255),
-      clamp(Math.round(rgb[1] * s), 0, 255),
-      clamp(Math.round(rgb[2] * s), 0, 255)
-    ];
-  }
-
-  function normalize3(p) {
-    const x = Number.isFinite(Number(p && p.x)) ? Number(p.x) : 0;
-    const y = Number.isFinite(Number(p && p.y)) ? Number(p.y) : 0;
-    const z = Number.isFinite(Number(p && p.z)) ? Number(p.z) : 1;
+  function normalize3(input) {
+    const x = Number.isFinite(Number(input && input.x)) ? Number(input.x) : 0;
+    const y = Number.isFinite(Number(input && input.y)) ? Number(input.y) : 0;
+    const z = Number.isFinite(Number(input && input.z)) ? Number(input.z) : 1;
     const m = Math.hypot(x, y, z) || 1;
 
     return {
@@ -124,12 +116,12 @@
     });
   }
 
-  function vectorToLonLat(p) {
-    const n = normalize3(p);
+  function vectorToLonLat(vector) {
+    const p = normalize3(vector);
 
     return {
-      lon: Math.atan2(n.x, n.z) / DEG,
-      lat: Math.asin(clamp(n.y, -1, 1)) / DEG
+      lon: Math.atan2(p.x, p.z) / DEG,
+      lat: Math.asin(clamp(p.y, -1, 1)) / DEG
     };
   }
 
@@ -149,778 +141,433 @@
     return 90 - clamp(Number(v), 0, 1) * 180;
   }
 
-  function parseInput() {
-    const args = Array.prototype.slice.call(arguments);
-
+  function parseCoordinateInput(...args) {
     if (args.length === 1 && args[0] && typeof args[0] === "object") {
-      const p = args[0];
+      const input = args[0];
 
-      if (Number.isFinite(Number(p.u)) && Number.isFinite(Number(p.v))) {
-        return lonLatToVector(uToLon(p.u), vToLat(p.v));
+      if (Number.isFinite(Number(input.u)) && Number.isFinite(Number(input.v))) {
+        const u = wrap01(input.u);
+        const v = clamp(Number(input.v), 0, 1);
+        const lon = uToLon(u);
+        const lat = vToLat(v);
+        const vector = lonLatToVector(lon, lat);
+
+        return {
+          u,
+          v,
+          lon,
+          lat,
+          x: vector.x,
+          y: vector.y,
+          z: vector.z
+        };
       }
 
-      if (Number.isFinite(Number(p.lon)) && Number.isFinite(Number(p.lat))) {
-        return lonLatToVector(Number(p.lon), Number(p.lat));
+      if (Number.isFinite(Number(input.lon)) && Number.isFinite(Number(input.lat))) {
+        const lon = Number(input.lon);
+        const lat = clamp(Number(input.lat), -90, 90);
+        const vector = lonLatToVector(lon, lat);
+
+        return {
+          u: lonToU(lon),
+          v: latToV(lat),
+          lon,
+          lat,
+          x: vector.x,
+          y: vector.y,
+          z: vector.z
+        };
       }
 
-      if (Number.isFinite(Number(p.longitude)) && Number.isFinite(Number(p.latitude))) {
-        return lonLatToVector(Number(p.longitude), Number(p.latitude));
+      if (Number.isFinite(Number(input.longitude)) && Number.isFinite(Number(input.latitude))) {
+        const lon = Number(input.longitude);
+        const lat = clamp(Number(input.latitude), -90, 90);
+        const vector = lonLatToVector(lon, lat);
+
+        return {
+          u: lonToU(lon),
+          v: latToV(lat),
+          lon,
+          lat,
+          x: vector.x,
+          y: vector.y,
+          z: vector.z
+        };
       }
 
       if (
-        Number.isFinite(Number(p.x)) &&
-        Number.isFinite(Number(p.y)) &&
-        Number.isFinite(Number(p.z))
+        Number.isFinite(Number(input.x)) &&
+        Number.isFinite(Number(input.y)) &&
+        Number.isFinite(Number(input.z))
       ) {
-        return normalize3({
-          x: Number(p.x),
-          y: Number(p.y),
-          z: Number(p.z)
-        });
+        const vector = normalize3(input);
+        const ll = vectorToLonLat(vector);
+
+        return {
+          u: lonToU(ll.lon),
+          v: latToV(ll.lat),
+          lon: ll.lon,
+          lat: ll.lat,
+          x: vector.x,
+          y: vector.y,
+          z: vector.z
+        };
       }
     }
 
     if (args.length >= 3) {
-      return normalize3({
-        x: Number(args[0]),
-        y: Number(args[1]),
-        z: Number(args[2])
-      });
+      const vector = normalize3({ x: args[0], y: args[1], z: args[2] });
+      const ll = vectorToLonLat(vector);
+
+      return {
+        u: lonToU(ll.lon),
+        v: latToV(ll.lat),
+        lon: ll.lon,
+        lat: ll.lat,
+        x: vector.x,
+        y: vector.y,
+        z: vector.z
+      };
     }
 
     if (args.length >= 2) {
-      return lonLatToVector(Number(args[0]), Number(args[1]));
+      const lon = Number(args[0]);
+      const lat = clamp(Number(args[1]), -90, 90);
+      const vector = lonLatToVector(lon, lat);
+
+      return {
+        u: lonToU(lon),
+        v: latToV(lat),
+        lon,
+        lat,
+        x: vector.x,
+        y: vector.y,
+        z: vector.z
+      };
     }
 
-    return lonLatToVector(0, 0);
-  }
-
-  function coordinatePacket(p) {
-    const n = normalize3(p);
-    const ll = vectorToLonLat(n);
-    const magnitude = Math.hypot(n.x, n.y, n.z) || 1;
-
     return {
-      u: lonToU(ll.lon),
-      v: latToV(ll.lat),
-      lon: ll.lon,
-      lat: ll.lat,
-      x: n.x,
-      y: n.y,
-      z: n.z,
-      vectorMagnitude: magnitude,
-      vectorMagnitudeError: Math.abs(1 - magnitude),
-      uLaw: "u = wrap((lon + 180) / 360)",
-      vLaw: "v = clamp((90 - lat) / 180)",
-      coordinateBody: "shared-hearth-sphere-coordinate-body",
-      coordinateCompatible: true
+      u: 0.5,
+      v: 0.5,
+      lon: 0,
+      lat: 0,
+      x: 0,
+      y: 0,
+      z: 1
     };
   }
 
-  function getDirectory() {
-    return {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      buildContract: BUILD_CONTRACT,
-      route: {
-        routeParent: ROUTE_PARENT,
-        routeConductor: ROUTE_CONDUCTOR,
-        routeAligned: true,
-        role: "context-only"
-      },
-      self: {
-        assetAuthority: ASSET_AUTHORITY,
-        actorName: "HEARTH_WATER_CHANNEL",
-        role: "active-water-child-channel-actor",
-        downstreamContract: CONTRACT
-      },
-      peers: {
-        land: {
-          actor: "HEARTH_LAND_CHANNEL",
-          authority: LAND_CHANNEL_AUTHORITY,
-          role: "peer-child-actor"
-        },
-        air: {
-          actor: "HEARTH_AIR_CHANNEL",
-          authority: AIR_CHANNEL_AUTHORITY,
-          role: "peer-child-actor"
-        }
-      },
-      upstream: {
-        hydrology: {
-          authority: HYDROLOGY_AUTHORITY,
-          role: "where-water-belongs"
-        },
-        materials: {
-          authority: MATERIALS_AUTHORITY,
-          role: "water-adjacent-material-hints"
-        },
-        composition: {
-          authority: COMPOSITION_AUTHORITY,
-          role: "surface-class-context"
-        },
-        elevation: {
-          authority: ELEVATION_AUTHORITY,
-          role: "sea-level-and-depth-context"
-        }
-      },
-      downstream: {
-        canvas: {
-          authority: CANVAS_AUTHORITY,
-          role: "consumer-compositor"
-        },
-        runtimeTable: {
-          authority: RUNTIME_VALIDATOR,
-          role: "construction-validator"
-        },
-        tripleG: {
-          authority: RUNTIME_VALIDATOR,
-          role: "coherence-diagnostic"
-        }
-      },
-      rule: "water-child-is-the-active-actor-and-single-water-output-channel"
-    };
+  function getGlobalCandidate(name) {
+    return root[name] || null;
   }
 
-  function getAuthorityByNames(names) {
-    for (const name of names) {
-      const parts = name.split(".");
-      let node = root;
+  function getNestedCandidate(name) {
+    return root.HEARTH && root.HEARTH[name] ? root.HEARTH[name] : null;
+  }
 
-      for (const part of parts) {
-        if (!node || typeof node !== "object") {
-          node = null;
-          break;
-        }
+  function callOptionalSource(source, coordinate) {
+    if (!source || typeof source !== "object") return null;
 
-        node = node[part] || null;
-      }
+    const methods = [
+      "sampleWater",
+      "readWater",
+      "waterAt",
+      "getWater",
+      "resolveWater",
+      "sample",
+      "read"
+    ];
 
-      if (node && typeof node === "object") return node;
+    for (const method of methods) {
+      if (typeof source[method] !== "function") continue;
+
+      try {
+        const result = source[method](coordinate);
+        if (result && typeof result === "object") return result;
+      } catch (_error) {}
     }
 
     return null;
   }
 
-  function getHydrologyAuthority() {
-    return getAuthorityByNames(["HEARTH.hydrology", "HEARTH_HYDROLOGY", "HearthHydrology"]);
-  }
-
-  function getMaterialsAuthority() {
-    return getAuthorityByNames(["HEARTH.materials", "HEARTH_MATERIALS", "HearthMaterials"]);
-  }
-
-  function getCompositionAuthority() {
-    return getAuthorityByNames(["HEARTH.composition", "HEARTH_COMPOSITION", "HearthComposition"]);
-  }
-
-  function getElevationAuthority() {
-    return getAuthorityByNames(["HEARTH.elevation", "HEARTH_ELEVATION", "HearthElevation"]);
-  }
-
-  function getLandAuthority() {
-    return getAuthorityByNames(["HEARTH.landChannel", "HEARTH_LAND_CHANNEL", "HearthLandChannel"]);
-  }
-
-  function getAirAuthority() {
-    return getAuthorityByNames(["HEARTH.airChannel", "HEARTH_AIR_CHANNEL", "HearthAirChannel"]);
-  }
-
-  function callAuthority(authority, input) {
-    if (!authority || typeof authority !== "object") {
-      return {
-        present: false,
-        sampleOk: false,
-        contract: "",
-        method: "",
-        value: null,
-        error: "authority-missing"
-      };
-    }
-
-    const methods = [
-      "sample",
-      "read",
-      "resolve",
-      "get",
-      "getSample",
-      "sampleAt",
-      "readAt",
-      "at",
-      "getPixel",
-      "getMaterial",
-      "getHydrology",
-      "getElevation",
-      "getComposition"
+  function collectWaterSources(coordinate) {
+    const sources = [
+      getNestedCandidate("hydrology"),
+      getGlobalCandidate("HEARTH_HYDROLOGY"),
+      getNestedCandidate("materials"),
+      getGlobalCandidate("HEARTH_MATERIALS"),
+      getNestedCandidate("composition"),
+      getGlobalCandidate("HEARTH_COMPOSITION"),
+      getNestedCandidate("elevation"),
+      getGlobalCandidate("HEARTH_ELEVATION")
     ];
 
-    for (const method of methods) {
-      if (typeof authority[method] !== "function") continue;
-
-      try {
-        const value = authority[method].call(authority, input);
-
-        if (value && typeof value === "object") {
-          return {
-            present: true,
-            sampleOk: true,
-            contract: String(authority.contract || value.contract || ""),
-            method,
-            value,
-            error: ""
-          };
-        }
-      } catch (error) {
-        return {
-          present: true,
-          sampleOk: false,
-          contract: String(authority.contract || ""),
-          method,
-          value: null,
-          error: error && error.message ? error.message : String(error)
-        };
-      }
-    }
-
-    return {
-      present: true,
-      sampleOk: false,
-      contract: String(authority.contract || ""),
-      method: "",
-      value: null,
-      error: "no-readable-method"
-    };
+    return sources
+      .map((source) => callOptionalSource(source, coordinate))
+      .filter((source) => source && typeof source === "object");
   }
 
-  function numericField(source, keys, fallback) {
-    for (const key of keys) {
-      const value = source && source[key];
-
-      if (typeof value === "boolean") return value ? 1 : 0;
-
-      if (Number.isFinite(Number(value))) {
-        return clamp01(Number(value));
-      }
-
-      if (typeof value === "string") {
-        const lower = value.toLowerCase();
-
-        if (
-          lower.includes("ocean") ||
-          lower.includes("water") ||
-          lower.includes("shore") ||
-          lower.includes("shelf") ||
-          lower.includes("beach") ||
-          lower.includes("submerged") ||
-          lower.includes("basin") ||
-          lower.includes("wet")
-        ) {
-          return 1;
-        }
+  function numberFromAny(sources, keys, fallback) {
+    for (const source of sources) {
+      for (const key of keys) {
+        const value = Number(source && source[key]);
+        if (Number.isFinite(value)) return value;
       }
     }
 
     return fallback;
   }
 
-  function booleanField(source, keys, fallback) {
-    for (const key of keys) {
-      const value = source && source[key];
-
-      if (typeof value === "boolean") return value;
-      if (Number.isFinite(Number(value))) return Number(value) > 0.5;
-
-      if (typeof value === "string") {
-        const lower = value.toLowerCase();
-
-        if (
-          lower.includes("true") ||
-          lower.includes("yes") ||
-          lower.includes("water") ||
-          lower.includes("ocean") ||
-          lower.includes("shore") ||
-          lower.includes("shelf") ||
-          lower.includes("beach") ||
-          lower.includes("submerged")
-        ) {
-          return true;
-        }
+  function booleanFromAny(sources, keys, fallback) {
+    for (const source of sources) {
+      for (const key of keys) {
+        if (typeof source[key] === "boolean") return source[key];
       }
     }
 
     return fallback;
   }
 
-  function softBand(value, center, width) {
-    const d = Math.abs(Number(value) - Number(center));
-    return clamp01(1 - d / Math.max(0.0001, Number(width)));
+  function rgbFromAny(sources, keys, fallback) {
+    for (const source of sources) {
+      for (const key of keys) {
+        const value = source && source[key];
+
+        if (
+          Array.isArray(value) &&
+          value.length >= 3 &&
+          value.every((item) => Number.isFinite(Number(item)))
+        ) {
+          return [
+            clamp(Math.round(Number(value[0])), 0, 255),
+            clamp(Math.round(Number(value[1])), 0, 255),
+            clamp(Math.round(Number(value[2])), 0, 255)
+          ];
+        }
+      }
+    }
+
+    return fallback.slice();
   }
 
-  function fallbackPotential(coords) {
-    const lon = coords.lon * DEG;
-    const lat = coords.lat * DEG;
+  function waterBandSignal(coordinate) {
+    const equatorialBasin = Math.cos(coordinate.lat * DEG);
+    const longitudinalPulse = Math.sin((coordinate.lon * 1.7 + 34) * DEG) * 0.5 + 0.5;
+    const meridianPulse = Math.cos((coordinate.lon * 0.9 - coordinate.lat * 1.2) * DEG) * 0.5 + 0.5;
 
-    const frontalBasin = clamp01(0.42 + coords.z * 0.38);
-    const equatorialSea = clamp01(0.24 + Math.cos(lat * 1.35) * 0.22);
-    const westernBasin = clamp01(0.20 + Math.sin(lon * 1.15 - lat * 0.42) * 0.16);
-    const easternShelf = clamp01(0.16 + Math.cos(lon * 2.05 + lat * 0.62) * 0.14);
-    const polarMute = clamp01(1 - Math.abs(coords.y) * 0.24);
-
-    const straits = clamp01(
-      softBand(Math.sin(lon * 2.8 + lat * 1.1), 0.12, 0.42) * 0.13 +
-        softBand(Math.cos(lon * 1.7 - lat * 1.5), -0.08, 0.36) * 0.11
-    );
-
-    return clamp01(
-      (
-        frontalBasin * 0.47 +
-        equatorialSea * 0.20 +
-        westernBasin * 0.13 +
-        easternShelf * 0.10 +
-        straits * 0.10
-      ) * polarMute
-    );
-  }
-
-  function fallbackShelf(coords, waterValue) {
-    const lon = coords.lon * DEG;
-    const lat = coords.lat * DEG;
-
-    return clamp01(
-      softBand(waterValue, 0.42, 0.26) * 0.46 +
-        softBand(Math.sin(lon * 2.1 + lat * 0.75), 0.0, 0.52) * 0.18 +
-        softBand(Math.cos(lon * 1.3 - lat * 1.2), 0.16, 0.48) * 0.14
-    );
-  }
-
-  function fallbackShoreline(coords, waterValue) {
-    const lon = coords.lon * DEG;
-    const lat = coords.lat * DEG;
-
-    return clamp01(
-      softBand(waterValue, 0.34, 0.14) * 0.58 +
-        softBand(Math.sin(lon * 3.2 - lat * 1.4), 0.05, 0.32) * 0.16 +
-        softBand(Math.cos(lon * 2.4 + lat * 1.8), -0.14, 0.30) * 0.12
-    );
-  }
-
-  function adaptHydrology(read) {
-    const value = read.value || {};
-
-    const seaLevel = numericField(value, ["seaLevel", "seaLevelScore", "waterline", "waterlineStrength", "waterlineBoundary"], 0);
-    const shore = numericField(value, ["shore", "shoreline", "shoreStrength", "coastalBoundary", "beachBoundary"], 0);
-    const shelf = numericField(value, ["shelf", "shallowShelf", "sandShelf", "beachShelf", "continentalShelf"], 0);
-    const basin = numericField(value, ["basin", "basinDepth", "submergedPortBasin", "depthBasin"], 0);
-    const submerged = numericField(value, ["submergedBlock", "submergedScar", "submerged", "belowSeaLevel"], 0);
+    const basin = clamp01(0.34 + equatorialBasin * 0.22 + longitudinalPulse * 0.16);
+    const shelf = clamp01(1 - Math.abs(0.52 - meridianPulse) * 2.4);
+    const waterline = clamp01(1 - Math.abs(0.48 - basin) * 3.2);
 
     return {
-      source: "hydrology",
-      present: read.present,
-      sampleOk: read.sampleOk,
-      contract: read.contract,
-      signal: clamp01(seaLevel * 0.24 + shore * 0.18 + shelf * 0.18 + basin * 0.22 + submerged * 0.18),
-      seaLevel,
-      shore,
-      shelf,
       basin,
-      submerged,
-      detail: read.error || ""
-    };
-  }
-
-  function adaptMaterials(read) {
-    const value = read.value || {};
-
-    const wetStone = numericField(value, ["wetStone", "wetStoneBoundary", "wetness", "waterlineWetness"], 0);
-    const beachShelf = numericField(value, ["beachShelf", "sandShelf", "shelfMaterial", "shoreMaterial"], 0);
-    const submergedPortBasin = numericField(value, ["submergedPortBasin", "portBasin", "basinMaterial"], 0);
-    const coastalScar = numericField(value, ["coastalScar", "submergedScar", "scarMaterial"], 0);
-    const materialWater = numericField(value, ["water", "waterMaterial", "oceanMaterial", "hydrologyMaterial"], 0);
-
-    return {
-      source: "materials",
-      present: read.present,
-      sampleOk: read.sampleOk,
-      contract: read.contract,
-      signal: clamp01(wetStone * 0.16 + beachShelf * 0.18 + submergedPortBasin * 0.24 + coastalScar * 0.16 + materialWater * 0.26),
-      wetStone,
-      beachShelf,
-      submergedPortBasin,
-      coastalScar,
-      materialWater,
-      detail: read.error || ""
-    };
-  }
-
-  function adaptComposition(read) {
-    const value = read.value || {};
-    const text = String(value.terrainClass || value.className || value.kind || "").toLowerCase();
-
-    const openOcean = numericField(value, ["openOcean", "ocean", "oceanic", "waterClass", "isWater"], 0);
-    const coastalBoundary = numericField(value, ["coastalBoundary", "coast", "shore", "shoreline"], 0);
-    const basinClass = numericField(value, ["basin", "basinClass", "depression", "lowland"], 0);
-    const terrainWater = numericField(value, ["terrainWater", "waterPresence", "hydrologyPresence"], 0);
-    const textWater = text.includes("ocean") || text.includes("water") || text.includes("shore") || text.includes("basin") ? 1 : 0;
-
-    return {
-      source: "composition",
-      present: read.present,
-      sampleOk: read.sampleOk,
-      contract: read.contract,
-      signal: clamp01(openOcean * 0.30 + coastalBoundary * 0.22 + basinClass * 0.20 + terrainWater * 0.18 + textWater * 0.10),
-      openOcean,
-      coastalBoundary,
-      basinClass,
-      terrainWater,
-      textWater,
-      detail: read.error || ""
-    };
-  }
-
-  function adaptElevation(read) {
-    const value = read.value || {};
-    const elevation = Number(value.elevation);
-    const height = Number(value.height);
-    const altitude = Number(value.altitude);
-
-    let elevationSignal = 0;
-    const rawElevation = Number.isFinite(elevation)
-      ? elevation
-      : Number.isFinite(height)
-        ? height
-        : Number.isFinite(altitude)
-          ? altitude
-          : NaN;
-
-    if (Number.isFinite(rawElevation)) {
-      elevationSignal = rawElevation < 0 ? clamp01(Math.abs(rawElevation)) : clamp01(1 - rawElevation);
-    }
-
-    const belowSeaLevel = numericField(value, ["belowSeaLevel", "submerged", "underSeaLevel"], 0);
-    const nearSeaLevel = numericField(value, ["nearSeaLevel", "seaLevelBand", "waterlineBand"], 0);
-    const depth = numericField(value, ["depth", "waterDepth", "basinDepth", "negativeElevation"], 0);
-
-    return {
-      source: "elevation",
-      present: read.present,
-      sampleOk: read.sampleOk,
-      contract: read.contract,
-      signal: clamp01(belowSeaLevel * 0.34 + nearSeaLevel * 0.18 + depth * 0.28 + elevationSignal * 0.20),
-      belowSeaLevel,
-      nearSeaLevel,
-      depth,
-      elevationSignal,
-      detail: read.error || ""
-    };
-  }
-
-  function adaptLandConflict(read) {
-    const value = read.value || {};
-    const landAlpha = numericField(value, ["landAlpha", "landPresence", "alpha"], 0);
-    const bodyBinding = numericField(value, ["bodyBinding", "surfaceAttachment", "landBodyScore"], 0);
-
-    return {
-      source: "land",
-      present: read.present,
-      sampleOk: read.sampleOk,
-      contract: read.contract,
-      signal: clamp01(landAlpha * 0.70 + bodyBinding * landAlpha * 0.30),
-      landAlpha,
-      bodyBinding,
-      mayDefineWater: booleanField(value, ["mayDefineWater", "definesWaterTruth"], false),
-      detail: read.error || ""
-    };
-  }
-
-  function adaptAirConflict(read) {
-    const value = read.value || {};
-    const airAlpha = numericField(value, ["airAlpha", "airPresence", "alpha"], 0);
-    const humidity = numericField(value, ["humidity", "humiditySignal", "moisture"], 0);
-    const rimHaze = numericField(value, ["rimHaze", "limbAtmosphere", "haze"], 0);
-
-    return {
-      source: "air",
-      present: read.present,
-      sampleOk: read.sampleOk,
-      contract: read.contract,
-      signal: clamp01(airAlpha * 0.48 + humidity * 0.30 + rimHaze * 0.22),
-      airAlpha,
-      humidity,
-      rimHaze,
-      mayDefineWater: booleanField(value, ["mayDefineWater", "definesWaterTruth"], false),
-      detail: read.error || ""
-    };
-  }
-
-  function readUpstream(coords) {
-    const input = {
-      u: coords.u,
-      v: coords.v,
-      lon: coords.lon,
-      lat: coords.lat,
-      x: coords.x,
-      y: coords.y,
-      z: coords.z
-    };
-
-    const hydrology = adaptHydrology(callAuthority(getHydrologyAuthority(), input));
-    const materials = adaptMaterials(callAuthority(getMaterialsAuthority(), input));
-    const composition = adaptComposition(callAuthority(getCompositionAuthority(), input));
-    const elevation = adaptElevation(callAuthority(getElevationAuthority(), input));
-    const land = adaptLandConflict(callAuthority(getLandAuthority(), input));
-    const air = adaptAirConflict(callAuthority(getAirAuthority(), input));
-
-    const entries = [hydrology, materials, composition, elevation, land, air];
-
-    return {
-      hydrology,
-      materials,
-      composition,
-      elevation,
-      land,
-      air,
-      presentCount: entries.filter((entry) => entry.present).length,
-      sampleOkCount: entries.filter((entry) => entry.sampleOk).length,
-      fallbackMathUsed: entries.filter((entry) => entry.sampleOk).length === 0
-    };
-  }
-
-  function normalizeSignals(coords, upstream) {
-    const baseWater = fallbackPotential(coords);
-    const baseShelf = fallbackShelf(coords, baseWater);
-    const baseShoreline = fallbackShoreline(coords, baseWater);
-
-    const hydrologySignal = clamp01(upstream.hydrology.signal);
-    const materialsSignal = clamp01(upstream.materials.signal);
-    const compositionSignal = clamp01(upstream.composition.signal);
-    const elevationSignal = clamp01(upstream.elevation.signal);
-    const landConflictSignal = clamp01(upstream.land.signal);
-    const airConflictSignal = clamp01(upstream.air.signal);
-
-    const upstreamWater =
-      hydrologySignal * 0.34 +
-      compositionSignal * 0.22 +
-      elevationSignal * 0.22 +
-      materialsSignal * 0.12;
-
-    const fallbackWeight = upstream.sampleOkCount > 0 ? 0.34 : 1;
-    const upstreamWeight = upstream.sampleOkCount > 0 ? 0.66 : 0;
-
-    const landRejection = clamp01(landConflictSignal * 0.38);
-    const airRejection = clamp01(airConflictSignal * 0.24);
-
-    const rawWater = clamp01(baseWater * fallbackWeight + upstreamWater * upstreamWeight);
-    const normalizedWater = clamp01(rawWater * (1 - landRejection * 0.45) * (1 - airRejection * 0.20));
-
-    const waterSeatEvidence = clamp01(
-      elevationSignal * 0.28 +
-        hydrologySignal * 0.30 +
-        compositionSignal * 0.18 +
-        baseWater * 0.24
-    );
-
-    const shelf = clamp01(
-      baseShelf * 0.60 +
-        upstream.hydrology.shelf * 0.18 +
-        upstream.materials.beachShelf * 0.12 +
-        upstream.composition.coastalBoundary * 0.10
-    );
-
-    const shoreline = clamp01(
-      baseShoreline * 0.58 +
-        upstream.hydrology.shore * 0.20 +
-        upstream.hydrology.seaLevel * 0.12 +
-        upstream.materials.wetStone * 0.10
-    );
-
-    const basin = clamp01(
-      baseWater * 0.34 +
-        upstream.hydrology.basin * 0.24 +
-        upstream.elevation.depth * 0.24 +
-        upstream.materials.submergedPortBasin * 0.18
-    );
-
-    const causes = [
-      ["hydrology", hydrologySignal],
-      ["materials", materialsSignal],
-      ["composition", compositionSignal],
-      ["elevation", elevationSignal],
-      ["fallback", baseWater]
-    ].sort((a, b) => b[1] - a[1]);
-
-    return {
-      baseWater,
-      baseShelf,
-      baseShoreline,
-      hydrologySignal,
-      materialsSignal,
-      compositionSignal,
-      elevationSignal,
-      landConflictSignal,
-      airConflictSignal,
-      normalizedWater,
-      waterSeatEvidence,
       shelf,
-      shoreline,
-      basin,
-      multiplexScore: clamp01(
-        normalizedWater * 0.34 +
-          waterSeatEvidence * 0.24 +
-          shelf * 0.12 +
-          shoreline * 0.10 +
-          basin * 0.16 +
-          upstream.sampleOkCount * 0.02
-      ),
-      multiplexSourceCount: upstream.sampleOkCount,
-      multiplexReady: true,
-      fallbackMathUsed: upstream.fallbackMathUsed,
-      dominantWaterCause: causes[0] && causes[0][1] > 0.05 ? `${causes[0][0]}-signal` : "fallback-coordinate-waterfield"
+      waterline
     };
   }
 
-  function classifyWater(waterAlpha, waterDepth, shelf, shoreline) {
-    if (waterAlpha >= 0.72 && waterDepth >= 0.62) return "deep-ocean";
-    if (waterAlpha >= 0.52) return "open-water";
-    if (waterAlpha >= 0.32 || shelf >= 0.34) return "shallow-shelf";
-    if (waterAlpha >= 0.16 || shoreline >= 0.26) return "coastal-boundary";
-    return "low-water";
+  function classifyDepth(depth) {
+    if (depth >= 0.74) return "deep-basin";
+    if (depth >= 0.48) return "open-water";
+    if (depth >= 0.24) return "shallow-shelf";
+    if (depth >= 0.08) return "waterline-edge";
+    return "trace-water";
   }
 
-  function waterColor(depthClass, waterAlpha, shelf, shoreline, basin) {
-    let rgb = COLORS.lowWater.slice();
+  function resolveWaterSignals(coordinate) {
+    const optionalSources = collectWaterSources(coordinate);
+    const band = waterBandSignal(coordinate);
 
-    if (depthClass === "deep-ocean") {
-      rgb = mixColor(COLORS.openWater, COLORS.deepOcean, 0.72);
-    } else if (depthClass === "open-water") {
-      rgb = mixColor(COLORS.openWater, COLORS.deepOcean, basin * 0.28);
-    } else if (depthClass === "shallow-shelf") {
-      rgb = mixColor(COLORS.openWater, COLORS.shelf, clamp01(0.38 + shelf * 0.44));
-    } else if (depthClass === "coastal-boundary") {
-      rgb = mixColor(COLORS.shelf, COLORS.coastal, clamp01(0.34 + shoreline * 0.46));
-    } else {
-      rgb = mixColor(COLORS.shadow, COLORS.lowWater, clamp01(waterAlpha * 1.8));
-    }
+    const sourceWaterPresence = clamp01(numberFromAny(optionalSources, [
+      "waterPresence",
+      "waterAlpha",
+      "hydrospherePresence",
+      "oceanPresence",
+      "openOcean",
+      "surfaceWater"
+    ], band.basin));
 
-    if (shoreline > 0.22) {
-      rgb = mixColor(rgb, COLORS.waterline, shoreline * 0.10);
-      rgb = mixColor(rgb, COLORS.foam, shoreline * 0.04);
-    }
+    const sourceDepth = clamp01(numberFromAny(optionalSources, [
+      "waterDepth",
+      "depth",
+      "basinDepth",
+      "oceanDepth",
+      "hydrosphereDepth"
+    ], band.basin * 0.72 + band.shelf * 0.18));
 
-    return rgb;
-  }
+    const seaLevelRelation = clamp(numberFromAny(optionalSources, [
+      "seaLevelRelation",
+      "seaLevelDelta",
+      "relativeSeaLevel",
+      "waterlineRelation"
+    ], sourceDepth - 0.42), -1, 1);
 
-  function buildWaterSample(p) {
-    const coords = coordinatePacket(p);
-    const upstream = readUpstream(coords);
-    const multiplex = normalizeSignals(coords, upstream);
+    const waterlineStrength = clamp01(numberFromAny(optionalSources, [
+      "waterlineStrength",
+      "waterline",
+      "coastalWaterline",
+      "shorelineStrength"
+    ], band.waterline));
 
-    const waterAlpha = clamp01(
-      multiplex.normalizedWater * 0.74 +
-        multiplex.shelf * 0.12 +
-        multiplex.shoreline * 0.08 +
-        multiplex.basin * 0.06
-    );
+    const shorelineBoundaryStrength = clamp01(numberFromAny(optionalSources, [
+      "shorelineBoundaryStrength",
+      "shoreline",
+      "coastStrength",
+      "coastalBoundary"
+    ], waterlineStrength * 0.82));
+
+    const shallowShelfStrength = clamp01(numberFromAny(optionalSources, [
+      "shallowShelfStrength",
+      "shallowShelf",
+      "shelf",
+      "beachShelf"
+    ], band.shelf));
+
+    const oceanContinuity = clamp01(numberFromAny(optionalSources, [
+      "oceanContinuity",
+      "hydrologyContinuity",
+      "waterContinuity",
+      "openOceanContinuity"
+    ], sourceWaterPresence * 0.76 + sourceDepth * 0.20));
+
+    const basinDepth = clamp01(numberFromAny(optionalSources, [
+      "basinDepth",
+      "deepBasin",
+      "basin",
+      "waterBasin"
+    ], sourceDepth));
+
+    const submergedBlockSignal = clamp01(numberFromAny(optionalSources, [
+      "submergedBlockSignal",
+      "submergedBlock",
+      "underwaterBlock"
+    ], Math.max(0, sourceDepth - 0.58) * 0.70));
+
+    const submergedScarSignal = clamp01(numberFromAny(optionalSources, [
+      "submergedScarSignal",
+      "submergedScar",
+      "underwaterScar"
+    ], Math.max(0, shorelineBoundaryStrength - 0.52) * 0.65));
+
+    const wetStoneBoundarySignal = clamp01(numberFromAny(optionalSources, [
+      "wetStoneBoundarySignal",
+      "wetStoneBoundary",
+      "wetStone",
+      "waterEdgeStone"
+    ], shorelineBoundaryStrength * 0.46));
+
+    const hydrosphereBinding = clamp01(numberFromAny(optionalSources, [
+      "hydrosphereBinding",
+      "waterBinding",
+      "bodyBinding"
+    ], 0.96));
+
+    const surfaceSeat = clamp01(numberFromAny(optionalSources, [
+      "surfaceSeat",
+      "waterSurfaceSeat",
+      "surfaceBinding"
+    ], 0.96));
+
+    const depthBinding = clamp01(numberFromAny(optionalSources, [
+      "depthBinding",
+      "basinBinding",
+      "waterDepthBinding"
+    ], 0.88));
 
     const waterPresence = clamp01(
-      waterAlpha * 0.80 +
-        multiplex.waterSeatEvidence * 0.12 +
-        multiplex.shoreline * 0.08
+      sourceWaterPresence * 0.46 +
+      oceanContinuity * 0.22 +
+      basinDepth * 0.16 +
+      shallowShelfStrength * 0.08 +
+      waterlineStrength * 0.08
     );
 
-    const waterDepth = clamp01(
-      waterAlpha * 0.52 +
-        multiplex.basin * 0.26 +
-        multiplex.normalizedWater * 0.18 -
-        multiplex.shoreline * 0.04
-    );
+    const waterAlpha = clamp01(numberFromAny(optionalSources, [
+      "alpha",
+      "waterAlpha",
+      "hydrosphereAlpha"
+    ], Math.max(0.24, waterPresence * 0.82)));
 
-    const waterDepthClass = classifyWater(waterAlpha, waterDepth, multiplex.shelf, multiplex.shoreline);
-    const isVisibleWater = waterAlpha > 0.08;
-    const isMajorWater = waterAlpha > 0.24;
+    const sourceRgb = rgbFromAny(optionalSources, [
+      "waterRgb",
+      "oceanRgb",
+      "hydrosphereRgb",
+      "rgb",
+      "color"
+    ], WATER_RGB);
 
-    const hydrosphereBinding = isVisibleWater
-      ? clamp01(0.76 + multiplex.waterSeatEvidence * 0.12 + waterAlpha * 0.10)
-      : 0.64;
-
-    const surfaceSeat = isVisibleWater
-      ? clamp01(0.78 + waterPresence * 0.14 + multiplex.waterSeatEvidence * 0.08)
-      : 0.62;
-
-    const depthBinding = isVisibleWater
-      ? clamp01(0.58 + waterDepth * 0.32 + multiplex.basin * 0.10)
-      : 0.46;
-
-    let rgb = waterColor(waterDepthClass, waterAlpha, multiplex.shelf, multiplex.shoreline, multiplex.basin);
-    rgb = scaleColor(rgb, clamp01(0.72 + coords.z * 0.12 + hydrosphereBinding * 0.10));
+    const depthRgb = mixRgb(SHALLOW_WATER_RGB, DEEP_WATER_RGB, basinDepth);
+    const lineRgb = mixRgb(depthRgb, WATERLINE_RGB, waterlineStrength * 0.26);
+    const waterRgb = mixRgb(lineRgb, sourceRgb, 0.38);
 
     return {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      buildContract: BUILD_CONTRACT,
-      previousBuildContract: PREVIOUS_BUILD_CONTRACT,
-      version: VERSION,
-      authority: "hearth-water-child-active-expression-semiconductor-actor",
-
-      routeParent: ROUTE_PARENT,
-      routeAligned: true,
-      assetAuthority: ASSET_AUTHORITY,
-      expectedRouteConductor: ROUTE_CONDUCTOR,
-      expectedCanvasConsumer: CANVAS_AUTHORITY,
-      expectedRuntimeValidator: RUNTIME_VALIDATOR,
-
-      ...coords,
-
-      channel: "water",
-      channelClass: waterDepthClass,
-      isWaterChannel: true,
-
-      rgb,
-      color: rgb,
-      waterRgb: rgb,
-
-      alpha: waterAlpha,
+      optionalSourceCount: optionalSources.length,
+      sourceWaterPresence,
+      sourceDepth,
       waterAlpha,
       waterPresence,
       hydrosphereBinding,
       surfaceSeat,
       depthBinding,
+      waterDepth: sourceDepth,
+      waterDepthClass: classifyDepth(sourceDepth),
+      seaLevelRelation,
+      waterlineStrength,
+      shorelineBoundaryStrength,
+      shallowShelfStrength,
+      oceanContinuity,
+      basinDepth,
+      submergedBlockSignal,
+      submergedScarSignal,
+      wetStoneBoundarySignal,
+      waterRgb
+    };
+  }
 
-      waterDepth,
-      waterDepthClass,
-      basinDepth: clamp01(waterDepth * 0.78 + multiplex.basin * 0.18),
-      oceanContinuity: clamp01(multiplex.normalizedWater * 0.62 + waterPresence * 0.22 + multiplex.basin * 0.10),
-      surfaceTension: clamp01(0.52 + multiplex.shoreline * 0.22 + multiplex.shelf * 0.08),
+  function buildWaterPacket(...args) {
+    const coordinate = parseCoordinateInput(...args);
+    const signals = resolveWaterSignals(coordinate);
+    const waterRgb = signals.waterRgb.slice();
 
-      shorelineBoundary: multiplex.shoreline > 0.22,
-      shorelineBoundaryStrength: multiplex.shoreline,
-      shallowShelf: multiplex.shelf > 0.24,
-      shallowShelfStrength: multiplex.shelf,
+    return {
+      contract: CONTRACT,
+      buildContract: BUILD_CONTRACT,
+      receipt: RECEIPT,
+      version: VERSION,
+      authority: "hearth-water-child-served-asset-coordinate-water-only-semiconductor",
 
-      belowSeaLevel: isVisibleWater || multiplex.elevationSignal > 0.24,
-      belowSeaLevelStrength: clamp01(waterPresence * 0.60 + multiplex.elevationSignal * 0.26),
-      nearSeaLevel: multiplex.shoreline > 0.18 || multiplex.shelf > 0.22,
-      nearSeaLevelStrength: clamp01(multiplex.shoreline * 0.62 + multiplex.shelf * 0.28),
+      channel: "water",
+      isWaterChannel: true,
 
-      hydrologySignal: multiplex.hydrologySignal,
-      materialsSignal: multiplex.materialsSignal,
-      compositionSignal: multiplex.compositionSignal,
-      elevationSignal: multiplex.elevationSignal,
-      landConflictSignal: multiplex.landConflictSignal,
-      airConflictSignal: multiplex.airConflictSignal,
-      multiplexScore: multiplex.multiplexScore,
-      multiplexSourceCount: multiplex.multiplexSourceCount,
-      multiplexReady: true,
-      fallbackMathUsed: multiplex.fallbackMathUsed,
-      dominantWaterCause: multiplex.dominantWaterCause,
+      u: coordinate.u,
+      v: coordinate.v,
+      lon: coordinate.lon,
+      lat: coordinate.lat,
+      x: coordinate.x,
+      y: coordinate.y,
+      z: coordinate.z,
 
-      upstreamSignals: {
-        hydrology: upstream.hydrology,
-        materials: upstream.materials,
-        composition: upstream.composition,
-        elevation: upstream.elevation,
-        land: upstream.land,
-        air: upstream.air
-      },
+      waterAlpha: signals.waterAlpha,
+      waterPresence: signals.waterPresence,
+      hydrosphereBinding: signals.hydrosphereBinding,
+      surfaceSeat: signals.surfaceSeat,
+      depthBinding: signals.depthBinding,
+
+      waterDepth: signals.waterDepth,
+      waterDepthClass: signals.waterDepthClass,
+      seaLevelRelation: signals.seaLevelRelation,
+      waterlineStrength: signals.waterlineStrength,
+      shorelineBoundaryStrength: signals.shorelineBoundaryStrength,
+      shallowShelfStrength: signals.shallowShelfStrength,
+      oceanContinuity: signals.oceanContinuity,
+      basinDepth: signals.basinDepth,
+      submergedBlockSignal: signals.submergedBlockSignal,
+      submergedScarSignal: signals.submergedScarSignal,
+      wetStoneBoundarySignal: signals.wetStoneBoundarySignal,
+
+      rgb: waterRgb,
+      color: waterRgb,
+      waterRgb,
 
       bodyBound: true,
       surfaceBound: true,
@@ -932,99 +579,80 @@
       definesLandTruth: false,
       definesAirTruth: false,
 
-      materialWetnessIsNotHydrosphere: true,
-      airHumidityIsNotWaterBody: true,
       hydrologyHintIsNotFinalColor: true,
-      landBoundaryIsNotWaterBody: true,
+      wetMaterialIsNotHydrosphere: true,
+      beachShelfIsNotOpenOcean: true,
+      waterlineIsNotWholeOcean: true,
+      submergedScarIsNotActiveSurfaceWater: true,
+      seaLevelHintIsNotFinalVisualTruth: true,
+      blueColorIsNotWaterAuthority: true,
 
-      atmosphericRejection: clamp01(0.74 + waterAlpha * 0.18),
-      airSuppression: clamp01(0.58 + waterPresence * 0.28),
-      landRejection: clamp01(isMajorWater ? 0.62 + waterAlpha * 0.22 : 0.24 + multiplex.shoreline * 0.26),
+      optionalWaterSourceCount: signals.optionalSourceCount,
+      sourceWaterPresence: signals.sourceWaterPresence,
+      sourceDepth: signals.sourceDepth,
 
-      surfaceNormalLock: true,
-      coordinateLock: true,
-      coordinateMapReady: true,
-      activeChildActor: true,
-      semiconductorAdapter: true,
-      singleOutputChannel: true,
-
+      ownsCanvasComposition: false,
+      ownsRouteOrchestration: false,
+      ownsRuntimeMotion: false,
+      ownsRuntimeTable: false,
+      ownsTripleG: false,
+      ownsHydrologySourceLaw: false,
+      ownsMaterialsSourceLaw: false,
+      ownsVisualPass: false,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
-      routeMutation: false,
-      canvasMutation: false,
-      runtimeMutation: false,
-      controlsMutation: false,
       visualPassClaimed: false
     };
   }
 
-  function sample() {
-    return buildWaterSample(parseInput.apply(null, arguments));
+  function sample(...args) {
+    return buildWaterPacket(...args);
   }
 
-  function read() {
-    return sample.apply(null, arguments);
+  function read(...args) {
+    return buildWaterPacket(...args);
   }
 
-  function sampleWater() {
-    return sample.apply(null, arguments);
+  function sampleWater(...args) {
+    return buildWaterPacket(...args);
   }
 
-  function readWater() {
-    return sample.apply(null, arguments);
+  function readWater(...args) {
+    return buildWaterPacket(...args);
   }
 
-  function waterAt() {
-    return sample.apply(null, arguments);
+  function waterAt(...args) {
+    return buildWaterPacket(...args);
   }
 
-  function getWater() {
-    return sample.apply(null, arguments);
+  function getWater(...args) {
+    return buildWaterPacket(...args);
   }
 
-  function resolveWater() {
-    return sample.apply(null, arguments);
+  function resolveWater(...args) {
+    return buildWaterPacket(...args);
   }
 
-  function getMultiplexReceipt(input) {
-    let packet;
-
-    try {
-      packet = sample(input || { u: 0.5, v: 0.5 });
-    } catch (error) {
-      return {
-        contract: CONTRACT,
-        receipt: RECEIPT,
-        buildContract: BUILD_CONTRACT,
-        multiplexReady: false,
-        error: error && error.message ? error.message : String(error),
-        visualPassClaimed: false
-      };
-    }
-
+  function getDirectory() {
     return {
       contract: CONTRACT,
-      receipt: RECEIPT,
       buildContract: BUILD_CONTRACT,
-      activeChildActor: true,
-      routeParent: ROUTE_PARENT,
-      assetAuthority: ASSET_AUTHORITY,
-      multiplexReady: packet.multiplexReady,
-      multiplexScore: packet.multiplexScore,
-      multiplexSourceCount: packet.multiplexSourceCount,
-      fallbackMathUsed: packet.fallbackMathUsed,
-      dominantWaterCause: packet.dominantWaterCause,
-      hydrologySignal: packet.hydrologySignal,
-      materialsSignal: packet.materialsSignal,
-      compositionSignal: packet.compositionSignal,
-      elevationSignal: packet.elevationSignal,
-      landConflictSignal: packet.landConflictSignal,
-      airConflictSignal: packet.airConflictSignal,
-      bodyBound: packet.bodyBound,
-      surfaceBound: packet.surfaceBound,
-      allowedToFloat: packet.allowedToFloat,
-      singleOutputChannel: true,
+      receipt: RECEIPT,
+      authority: "water-only-semiconductor-child",
+      lanes: WATER_DIRECTORY.slice(),
+      jurisdiction: "water-only",
+      acceptsOptionalSources: [
+        "HEARTH.hydrology",
+        "HEARTH_HYDROLOGY",
+        "HEARTH.materials",
+        "HEARTH_MATERIALS",
+        "HEARTH.composition",
+        "HEARTH_COMPOSITION",
+        "HEARTH.elevation",
+        "HEARTH_ELEVATION"
+      ],
+      nonblockingOptionalSources: true,
       visualPassClaimed: false
     };
   }
@@ -1032,98 +660,35 @@
   function getCoordinateMap() {
     return {
       contract: CONTRACT,
-      receipt: RECEIPT,
       buildContract: BUILD_CONTRACT,
-      chronologicalOrder: [
-        "E0_asset_expression",
-        "E1_script_load",
-        "E2_global_actor",
-        "E3_contract_identity",
-        "E4_callable_api",
-        "E5_input_acceptance",
-        "E6_shared_coordinate_body",
-        "E7_body_bound_authority",
-        "E8_semiconductor_multiplex_role",
-        "E9_normalized_water_packet",
-        "E10_dataset_receipt",
-        "E11_runtime_table_recognition",
-        "E12_triple_g_receipt_verification",
-        "E13_calibration_handoff"
+      receipt: RECEIPT,
+      coordinateBody: "shared-hearth-planetary-body",
+      acceptedInputs: [
+        "{ u, v }",
+        "{ lon, lat }",
+        "{ longitude, latitude }",
+        "{ x, y, z }",
+        "x, y, z",
+        "lon, lat"
       ],
-      currentActor: "HEARTH_WATER_CHANNEL",
-      targetPath: ASSET_AUTHORITY,
-      expectedRequest: "/assets/hearth/hearth.water.channel.js?v=hearth-water-channel-load-export-v1",
-      expectedReceiptSequence: [
-        "waterScriptLoaded=true",
-        "waterGlobalPresent=true",
-        "waterActualContract=HEARTH_WATER_HYDROSPHERE_SURFACE_CHANNEL_TNT_v1",
-        "waterSampleProbeOk=true",
-        "waterSampleProbeCoordinatesOk=true",
-        "waterSampleProbeFlagsOk=true",
-        "water.status=READY",
-        "RECEIPT_VERIFICATION_CHECK=PASS"
-      ]
+      outputFields: ["u", "v", "lon", "lat", "x", "y", "z"],
+      laws: {
+        u: "wrap((lon + 180) / 360)",
+        v: "clamp((90 - lat) / 180)",
+        vector: "x² + y² + z² ≈ 1"
+      }
     };
   }
 
-  function getReceipt() {
+  function getWaterMultiplexReceipt() {
     return {
       contract: CONTRACT,
-      receipt: RECEIPT,
       buildContract: BUILD_CONTRACT,
-      previousBuildContract: PREVIOUS_BUILD_CONTRACT,
-      version: VERSION,
-      authority: "hearth-water-child-active-expression-semiconductor-actor",
-      primaryTarget: ASSET_AUTHORITY,
-      status: "active",
-      role: "Water Child / active child-channel actor / semiconductor multiplex adapter",
-
-      routeParent: ROUTE_PARENT,
-      routeAligned: true,
-      assetAuthority: ASSET_AUTHORITY,
-      expectedRouteConductor: ROUTE_CONDUCTOR,
-      expectedCanvasConsumer: CANVAS_AUTHORITY,
-      expectedRuntimeValidator: RUNTIME_VALIDATOR,
-
-      actorName: "HEARTH_WATER_CHANNEL",
-      activeChildActor: true,
-      peerClass: ["HEARTH_LAND_CHANNEL", "HEARTH_AIR_CHANNEL"],
-      directoryReady: true,
-      directory: getDirectory(),
-      coordinateMapReady: true,
-      coordinateMap: getCoordinateMap(),
-      multiplexReceipt: getMultiplexReceipt({ u: 0.5, v: 0.5 }),
-
-      globalExports: [
-        "HEARTH_WATER_CHANNEL",
-        "HearthWaterChannel",
-        "HEARTH.waterChannel"
-      ],
-      requiredMethods: [
-        "sample",
-        "read",
-        "getReceipt",
-        "getDirectory",
-        "getCoordinateMap",
-        "getMultiplexReceipt"
-      ],
-      aliases: [
-        "sampleWater",
-        "readWater",
-        "waterAt",
-        "getWater",
-        "resolveWater"
-      ],
-      coordinateFields: [
-        "u",
-        "v",
-        "lon",
-        "lat",
-        "x",
-        "y",
-        "z"
-      ],
-      waterFields: [
+      receipt: RECEIPT,
+      mode: "water-only-signal-normalization",
+      directory: WATER_DIRECTORY.slice(),
+      rejectionLaws: { ...REJECTION_LAWS },
+      outputPacket: [
         "waterAlpha",
         "waterPresence",
         "hydrosphereBinding",
@@ -1131,85 +696,67 @@
         "depthBinding",
         "waterDepth",
         "waterDepthClass",
-        "basinDepth",
-        "oceanContinuity",
-        "shorelineBoundary",
+        "seaLevelRelation",
+        "waterlineStrength",
         "shorelineBoundaryStrength",
-        "shallowShelf",
         "shallowShelfStrength",
-        "surfaceTension",
+        "oceanContinuity",
+        "basinDepth",
+        "submergedBlockSignal",
+        "submergedScarSignal",
+        "wetStoneBoundarySignal",
         "rgb",
         "color",
         "waterRgb"
       ],
-      semiconductorRejectionLaws: {
-        materialWetnessIsNotHydrosphere: true,
-        airHumidityIsNotWaterBody: true,
-        hydrologyHintIsNotFinalColor: true,
-        landBoundaryIsNotWaterBody: true
-      },
-      channelTruth: {
-        channel: "water",
-        isWaterChannel: true,
-        bodyBound: true,
-        surfaceBound: true,
-        floatsAboveBody: false,
-        allowedToFloat: false,
-        mayDefineLand: false,
-        mayDefineAir: false,
-        definesLandTruth: false,
-        definesAirTruth: false
-      },
-      owns: [
-        "active-water-child-actor-identity",
-        "global-export-binding",
-        "contract-identity",
-        "callable-child-api",
-        "shared-coordinate-body",
-        "body-bound-hydrosphere-authority-flags",
-        "semiconductor-multiplex-role",
-        "single-normalized-water-packet",
-        "document-root-diagnostic-receipts"
+      visualPassClaimed: false
+    };
+  }
+
+  function getReceipt() {
+    return {
+      contract: CONTRACT,
+      buildContract: BUILD_CONTRACT,
+      receipt: RECEIPT,
+      version: VERSION,
+      status: "active",
+      path: "/assets/hearth/hearth.water.channel.js",
+      role: "Water Child served asset and water-only semiconductor actor",
+      exports: [
+        "window.HEARTH_WATER_CHANNEL",
+        "window.HearthWaterChannel",
+        "window.HEARTH.waterChannel"
       ],
-      doesNotOwn: [
-        "route-orchestration",
-        "canvas-composition",
-        "Runtime Table canonical standard",
-        "Triple G diagnostic canonical standard",
-        "hydrology-law",
-        "materials-law",
-        "composition-law",
-        "elevation-law",
-        "land-truth",
-        "air-truth",
-        "runtime-motion",
-        "controls",
-        "final-visual-pass-claim"
+      methods: [
+        "sample",
+        "read",
+        "sampleWater",
+        "readWater",
+        "waterAt",
+        "getWater",
+        "resolveWater",
+        "getReceipt",
+        "getDirectory",
+        "getCoordinateMap",
+        "getWaterMultiplexReceipt"
       ],
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      routeMutation: false,
-      canvasMutation: false,
-      runtimeMutation: false,
-      controlsMutation: false,
+      directory: WATER_DIRECTORY.slice(),
+      rejectionLaws: { ...REJECTION_LAWS },
+      actorContractMustRemain: CONTRACT,
+      canvasOwnsWaterTruth: false,
+      connectorOwnsWaterTruth: false,
       visualPassClaimed: false
     };
   }
 
   const api = {
     contract: CONTRACT,
-    receipt: RECEIPT,
     buildContract: BUILD_CONTRACT,
-    previousBuildContract: PREVIOUS_BUILD_CONTRACT,
+    receipt: RECEIPT,
     version: VERSION,
 
-    routeParent: ROUTE_PARENT,
-    routeAligned: true,
-    assetAuthority: ASSET_AUTHORITY,
-    expectedRouteConductor: ROUTE_CONDUCTOR,
-    expectedCanvasConsumer: CANVAS_AUTHORITY,
-    expectedRuntimeValidator: RUNTIME_VALIDATOR,
+    channel: "water",
+    isWaterChannel: true,
 
     sample,
     read,
@@ -1218,39 +765,39 @@
     waterAt,
     getWater,
     resolveWater,
+
     getReceipt,
     getDirectory,
     getCoordinateMap,
-    getMultiplexReceipt,
+    getWaterMultiplexReceipt,
 
-    activeChildActor: true,
-    isWaterChannel: true,
+    directory: WATER_DIRECTORY.slice(),
+    rejectionLaws: { ...REJECTION_LAWS },
+
     bodyBound: true,
     surfaceBound: true,
     floatsAboveBody: false,
     allowedToFloat: false,
+
     mayDefineLand: false,
     mayDefineAir: false,
     definesLandTruth: false,
     definesAirTruth: false,
-    coordinateCompatible: true,
 
-    semiconductorAdapter: true,
-    multiplexReady: true,
-    singleOutputChannel: true,
-
-    materialWetnessIsNotHydrosphere: true,
-    airHumidityIsNotWaterBody: true,
-    hydrologyHintIsNotFinalColor: true,
-    landBoundaryIsNotWaterBody: true,
+    canvasOwnsWaterTruth: false,
+    connectorOwnsWaterTruth: false,
+    ownsCanvasComposition: false,
+    ownsRouteOrchestration: false,
+    ownsRuntimeMotion: false,
+    ownsRuntimeTable: false,
+    ownsTripleG: false,
+    ownsHydrologySourceLaw: false,
+    ownsMaterialsSourceLaw: false,
+    ownsVisualPass: false,
 
     generatedImage: false,
     graphicBox: false,
     webGL: false,
-    routeMutation: false,
-    canvasMutation: false,
-    runtimeMutation: false,
-    controlsMutation: false,
     visualPassClaimed: false
   };
 
@@ -1259,67 +806,29 @@
 
   root.HEARTH_WATER_CHANNEL = api;
   root.HearthWaterChannel = api;
-  root.HEARTH_WATER_CHANNEL_RECEIPT = getReceipt();
   root.HEARTH_WATER_CHANNEL_CONTRACT = CONTRACT;
-  root.HEARTH_WATER_CHANNEL_LOADED = true;
-  root.HEARTH_WATER_CHANNEL_ACTIVE_ACTOR = true;
-  root.HEARTH_WATER_CHANNEL_ROUTE_ALIGNED = true;
-  root.HEARTH_WATER_CHANNEL_SEMICONDUCTOR_ADAPTER = true;
-  root.HEARTH_WATER_CHANNEL_MULTIPLEX_READY = true;
+  root.HEARTH_WATER_CHANNEL_RECEIPT = getReceipt();
 
   if (root.document && root.document.documentElement) {
     const dataset = root.document.documentElement.dataset;
 
     dataset.hearthWaterChannelLoaded = "true";
     dataset.hearthWaterChannelContract = CONTRACT;
+    dataset.hearthWaterChannelBuildContract = BUILD_CONTRACT;
     dataset.hearthWaterChannelReceipt = RECEIPT;
-    dataset.hearthWaterChildBuildContract = BUILD_CONTRACT;
-    dataset.hearthWaterChildPreviousBuildContract = PREVIOUS_BUILD_CONTRACT;
-
-    dataset.hearthWaterChannelActiveActor = "true";
-    dataset.hearthWaterChannelRouteAligned = "true";
-    dataset.hearthWaterChannelRouteParent = ROUTE_PARENT;
-    dataset.hearthWaterChannelAssetAuthority = ASSET_AUTHORITY;
-    dataset.hearthWaterChannelExpectedRouteConductor = ROUTE_CONDUCTOR;
-    dataset.hearthWaterChannelExpectedCanvasConsumer = CANVAS_AUTHORITY;
-    dataset.hearthWaterChannelExpectedRuntimeValidator = RUNTIME_VALIDATOR;
-
-    dataset.hearthWaterSemiconductorAdapter = "true";
-    dataset.hearthWaterMultiplexReady = "true";
-    dataset.hearthWaterSingleOutputChannel = "true";
-    dataset.hearthWaterFailSoftUpstreamRead = "true";
-    dataset.hearthWaterSemanticOverlapRejected = "true";
-
-    dataset.hearthWaterMaterialWetnessIsNotHydrosphere = "true";
-    dataset.hearthWaterAirHumidityIsNotWaterBody = "true";
-    dataset.hearthWaterHydrologyHintIsNotFinalColor = "true";
-    dataset.hearthWaterLandBoundaryIsNotWaterBody = "true";
-
-    dataset.hearthWaterChannelCoordinates = "true";
-    dataset.hearthWaterChannelCoordinateMapReady = "true";
-    dataset.hearthWaterChannelSampleReady = "true";
-    dataset.hearthWaterChannelBodyBound = "true";
-    dataset.hearthWaterChannelSurfaceBound = "true";
-    dataset.hearthWaterChannelAllowedToFloat = "false";
-    dataset.hearthWaterChannelMayDefineLand = "false";
-    dataset.hearthWaterChannelMayDefineAir = "false";
-    dataset.hearthWaterChannelDefinesLandTruth = "false";
-    dataset.hearthWaterChannelDefinesAirTruth = "false";
-
-    dataset.hearthWaterChannelPostWaterPriority = [
-      "WATER_SURFACE_SEATING_CHECK",
-      "CHANNEL_SEPARATION_CHECK",
-      "LAND_BODY_BINDING_CHECK",
-      "DISTRIBUTION_SHAPE_CHECK"
-    ].join(",");
-
-    dataset.generatedImage = "false";
-    dataset.graphicBox = "false";
-    dataset.webgl = "false";
-    dataset.routeMutation = "false";
-    dataset.canvasMutation = "false";
-    dataset.runtimeMutation = "false";
-    dataset.controlsMutation = "false";
+    dataset.hearthWaterChannelAuthority = "water-only-semiconductor-child";
+    dataset.hearthWaterChildServedAsset = "true";
+    dataset.hearthWaterChildPath = "/assets/hearth/hearth.water.channel.js";
+    dataset.hearthWaterChildExportsGlobal = "true";
+    dataset.hearthWaterChildDiagnosticContract = CONTRACT;
+    dataset.hearthWaterChildWaterOnly = "true";
+    dataset.hearthWaterChildBodyBound = "true";
+    dataset.hearthWaterChildSurfaceBound = "true";
+    dataset.hearthWaterChildAllowedToFloat = "false";
+    dataset.hearthWaterChildFloatsAboveBody = "false";
+    dataset.hearthWaterChildMayDefineLand = "false";
+    dataset.hearthWaterChildMayDefineAir = "false";
+    dataset.hearthWaterChildVisualPassClaimed = "false";
     dataset.visualPassClaimed = "false";
   }
 

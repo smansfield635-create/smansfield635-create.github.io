@@ -2,11 +2,11 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="hearth-distributed-load-ledger-html-first-paint-cockpit"
+  data-page="hearth-load-ledger-monotonic-html-first-paint-dock"
   data-route="/showroom/globe/hearth/"
-  data-contract="HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1"
-  data-previous-contract="HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1"
-  data-baseline-contract="HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_CONDUCTOR_PAIR_PRECODE_FINAL_DRAFT_v1"
+  data-contract="HEARTH_LOAD_LEDGER_MONOTONIC_HTML_FIRST_PAINT_DOCK_TNT_v1"
+  data-previous-contract="HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1"
+  data-baseline-contract="HEARTH_LOAD_LEDGER_MONOTONIC_STAGE_AND_DIAGNOSTIC_DOCK_PAIR_PRECODE_FINAL_DRAFT_v1"
   data-body="hearth"
   data-mirrorland-door="true"
   data-map-portal-required="true"
@@ -15,13 +15,15 @@
   data-map-blip-single-entryway="true"
   data-main-menu-route="false"
 
-  data-load-architecture="distributed-load-ledger"
+  data-load-architecture="monotonic-distributed-load-ledger"
   data-one-visible-loading-cockpit="true"
   data-html-first-paint-loader="true"
   data-shared-load-ledger="true"
+  data-monotonic-stage-guard-active="true"
   data-distributed-file-status-reporting="true"
   data-conductor-hydrates-existing-cockpit="true"
   data-final-completion-latch="true"
+  data-diagnostic-dock-after-latch="true"
 
   data-active-route-file="/showroom/globe/hearth/hearth.js"
   data-active-route-conductor="/showroom/globe/hearth/hearth.js"
@@ -79,7 +81,7 @@
   <title>Hearth · Survival Becomes Shelter · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Hearth is the Mirrorland world where survival pressure becomes shelter: active planet, distributed loading ledger, first-paint diagnostic cockpit, and visible carrier handoff."
+    content="Hearth is the Mirrorland world where survival pressure becomes shelter: active planet, monotonic distributed loading ledger, first-paint diagnostic cockpit, and compact dock after planet readiness."
   >
   <link rel="canonical" href="https://diamondgatebridge.com/showroom/globe/hearth/">
   <meta name="theme-color" content="#030914">
@@ -496,6 +498,7 @@
       backdrop-filter:blur(14px);
       font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       pointer-events:auto;
+      transition:max-height .22s ease,inset .22s ease,opacity .18s ease,transform .18s ease;
     }
 
     .hearth-ledger-cockpit[data-collapsed="true"]{
@@ -505,6 +508,64 @@
     .hearth-ledger-cockpit[data-collapsed="true"] .hearth-ledger-scroll,
     .hearth-ledger-cockpit[data-collapsed="true"] .hearth-ledger-receipt{
       display:none;
+    }
+
+    .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="false"]{
+      inset:auto 10px 10px 10px;
+      max-height:128px;
+      min-height:0;
+      overflow:hidden;
+    }
+
+    .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="false"] .hearth-ledger-head{
+      padding:10px 14px 8px;
+    }
+
+    .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="false"] .hearth-ledger-kicker{
+      font-size:.58rem;
+    }
+
+    .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="false"] .hearth-ledger-title{
+      font-size:.96rem;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="false"] .hearth-ledger-meta{
+      display:none;
+    }
+
+    .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="false"] .hearth-ledger-latest{
+      font-size:.64rem;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="false"] .hearth-ledger-progress{
+      display:none;
+    }
+
+    .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="false"] .hearth-ledger-scroll{
+      display:none;
+    }
+
+    .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="false"] .hearth-ledger-actions{
+      padding:7px 10px 10px;
+      border-bottom:0;
+      position:relative;
+    }
+
+    .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="false"] .hearth-ledger-button{
+      min-height:28px;
+      padding:6px 9px;
+      font-size:.58rem;
+    }
+
+    .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="true"]{
+      inset:auto 10px 10px 10px;
+      max-height:calc(100% - 20px);
     }
 
     .hearth-ledger-head{
@@ -654,7 +715,8 @@
     }
 
     .hearth-ledger-lane[data-status="DEGRADED"],
-    .hearth-ledger-lane[data-status="HELD"]{
+    .hearth-ledger-lane[data-status="HELD"],
+    .hearth-ledger-lane[data-status="ARCHIVED"]{
       border-color:rgba(231,188,105,.30);
       background:rgba(231,188,105,.065);
     }
@@ -949,6 +1011,11 @@
         max-height:calc(100% - 16px);
       }
 
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="false"]{
+        inset:auto 8px 8px 8px;
+        max-height:132px;
+      }
+
       .hearth-ledger-actions{
         position:sticky;
         top:0;
@@ -958,6 +1025,11 @@
       .hearth-ledger-button{
         flex:1 1 auto;
         min-width:42%;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="false"] .hearth-ledger-button{
+        flex:1 1 auto;
+        min-width:30%;
       }
     }
 
@@ -977,11 +1049,11 @@
     (() => {
       "use strict";
 
-      const CONTRACT = "HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1";
-      const RECEIPT = "HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_RECEIPT_v1";
-      const PREVIOUS_CONTRACT = "HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1";
-      const BASELINE_CONTRACT = "HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_CONDUCTOR_PAIR_PRECODE_FINAL_DRAFT_v1";
-      const VERSION = "2026-05-29.hearth-distributed-load-ledger-html-first-paint-cockpit-v1";
+      const CONTRACT = "HEARTH_LOAD_LEDGER_MONOTONIC_HTML_FIRST_PAINT_DOCK_TNT_v1";
+      const RECEIPT = "HEARTH_LOAD_LEDGER_MONOTONIC_HTML_FIRST_PAINT_DOCK_RECEIPT_v1";
+      const PREVIOUS_CONTRACT = "HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1";
+      const BASELINE_CONTRACT = "HEARTH_LOAD_LEDGER_MONOTONIC_STAGE_AND_DIAGNOSTIC_DOCK_PAIR_PRECODE_FINAL_DRAFT_v1";
+      const VERSION = "2026-05-29.hearth-load-ledger-monotonic-html-first-paint-dock-v1";
       const ROUTE = "/showroom/globe/hearth/";
       const ACTIVE_CONDUCTOR = "/showroom/globe/hearth/hearth.js";
       const RETIRED_CLIMATE_ROUTE = "/showroom/globe/hearth/hearth.climate.route.js";
@@ -989,14 +1061,14 @@
       const RUNTIME_TABLE = "/assets/lab/runtime-table.js";
 
       const FIB = {
-        F1A:{id:"F1A", value:1, label:"HTML shell", progress:6},
-        F1B:{id:"F1B", value:1, label:"Load ledger", progress:12},
-        F2:{id:"F2", value:2, label:"First-paint cockpit", progress:22},
-        F3:{id:"F3", value:3, label:"Script order", progress:36},
-        F5:{id:"F5", value:5, label:"Authority availability", progress:55},
-        F8:{id:"F8", value:8, label:"Conductor hydration", progress:72},
-        F13:{id:"F13", value:13, label:"Canvas and diagnostic", progress:92},
-        F21:{id:"F21", value:21, label:"Completion latch", progress:100}
+        F1A:{id:"F1A", rank:1, value:1, label:"HTML shell", progress:6},
+        F1B:{id:"F1B", rank:2, value:1, label:"Load ledger", progress:12},
+        F2:{id:"F2", rank:3, value:2, label:"First-paint cockpit", progress:22},
+        F3:{id:"F3", rank:4, value:3, label:"Script order", progress:36},
+        F5:{id:"F5", rank:5, value:5, label:"Authority availability", progress:55},
+        F8:{id:"F8", rank:6, value:8, label:"Conductor hydration", progress:72},
+        F13:{id:"F13", rank:7, value:13, label:"Canvas and diagnostic", progress:92},
+        F21:{id:"F21", rank:8, value:21, label:"Completion latch", progress:100}
       };
 
       const STATUS = {
@@ -1013,7 +1085,26 @@
         BOUND:"BOUND",
         COPY_ARMED:"COPY_ARMED",
         FINAL_READY:"FINAL_READY",
-        LATCHED:"LATCHED"
+        LATCHED:"LATCHED",
+        ARCHIVED:"ARCHIVED"
+      };
+
+      const STATUS_RANK = {
+        REQUESTED:1,
+        LOADING:2,
+        LOADED:3,
+        READY:4,
+        DEGRADED:4,
+        HELD:4,
+        HYDRATED:5,
+        MOUNTED:6,
+        BOUND:7,
+        RENDERED:8,
+        COPY_ARMED:8,
+        FINAL_READY:9,
+        LATCHED:10,
+        FAILED:10,
+        ARCHIVED:0
       };
 
       const LANES = [
@@ -1043,11 +1134,7 @@
       ];
 
       function nowIso() {
-        try {
-          return new Date().toISOString();
-        } catch (_error) {
-          return "";
-        }
+        try { return new Date().toISOString(); } catch (_error) { return ""; }
       }
 
       function nowMs() {
@@ -1062,11 +1149,15 @@
 
       function clonePlain(value) {
         if (!value || typeof value !== "object") return value;
-        try {
-          return JSON.parse(JSON.stringify(value));
-        } catch (_error) {
-          return Array.isArray(value) ? value.slice() : { ...value };
-        }
+        try { return JSON.parse(JSON.stringify(value)); }
+        catch (_error) { return Array.isArray(value) ? value.slice() : { ...value }; }
+      }
+
+      function bool(value, fallback = false) {
+        if (typeof value === "boolean") return value;
+        if (value === "true") return true;
+        if (value === "false") return false;
+        return fallback;
       }
 
       function formatElapsed(ms) {
@@ -1074,6 +1165,22 @@
         const minutes = Math.floor(total / 60);
         const seconds = total % 60;
         return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+      }
+
+      function stageRank(stage) {
+        return FIB[stage] ? FIB[stage].rank : 0;
+      }
+
+      function stageProgress(stage) {
+        return FIB[stage] ? FIB[stage].progress : 0;
+      }
+
+      function stageLabel(stage) {
+        return FIB[stage] ? FIB[stage].label : stage;
+      }
+
+      function statusRank(status) {
+        return STATUS_RANK[status] || 0;
       }
 
       function makeLane(definition, status, message) {
@@ -1093,7 +1200,7 @@
       }
 
       const state = {
-        contract:"HEARTH_DISTRIBUTED_LOAD_LEDGER_SHARED_v1",
+        contract:"HEARTH_LOAD_LEDGER_MONOTONIC_SHARED_v1",
         htmlContract:CONTRACT,
         htmlReceipt:RECEIPT,
         previousContract:PREVIOUS_CONTRACT,
@@ -1103,22 +1210,37 @@
         startedAt:nowIso(),
         updatedAt:nowIso(),
         startedAtMs:nowMs(),
+
         currentFibonacciStage:"F1B",
+        highestStageReached:"F1B",
+        highestStageRank:stageRank("F1B"),
         completionLatched:false,
         visibleLoadingActive:true,
         diagnosticCockpitReady:false,
+        cockpitMode:"loading-cockpit",
+        dockVisible:false,
+        fullCockpitExpanded:true,
+        planetObstructionReduced:false,
+
+        monotonicStageGuardActive:true,
+        stageRegressionPrevented:0,
+        archivedLateEvents:[],
+
         partialReceiptAvailable:true,
         finalReceiptAvailable:false,
         copyDiagnosticArmed:false,
         firstPaintCockpitVisible:false,
         staticCopyDiagnosticFallbackArmed:false,
         visualPassClaimed:false,
+
         activeRouteConductor:ACTIVE_CONDUCTOR,
         retiredClimateRoute:RETIRED_CLIMATE_ROUTE,
         retiredClimateRouteActiveCarrier:false,
         runtimeTableOptional:true,
         sourceAuthorityHeld:true,
         canvasAuthority:CANVAS_AUTHORITY,
+
+        latestVisibleEvent:"HEARTH_LOAD_LEDGER_INITIALIZED",
         events:[],
         errors:[],
         scripts:{},
@@ -1143,6 +1265,25 @@
         };
       });
 
+      function archiveLateEvent(event, reason) {
+        const archived = {
+          ...clonePlain(event),
+          status:STATUS.ARCHIVED,
+          archived:true,
+          archiveReason:reason || "archive-only",
+          archivedAt:nowIso()
+        };
+
+        state.archivedLateEvents.push(archived);
+        state.stageRegressionPrevented += 1;
+
+        if (state.archivedLateEvents.length > 140) {
+          state.archivedLateEvents.splice(0, state.archivedLateEvents.length - 140);
+        }
+
+        return archived;
+      }
+
       function push(event) {
         const entry = {
           id:event.id || event.event || "LEDGER_EVENT",
@@ -1158,11 +1299,23 @@
           detail:clonePlain(event.detail || {})
         };
 
+        const eventRank = stageRank(entry.stage);
+
+        if (
+          state.completionLatched &&
+          eventRank > 0 &&
+          eventRank < stageRank("F21") &&
+          entry.lane !== "receipt" &&
+          entry.lane !== "copy"
+        ) {
+          archiveLateEvent(entry, "post-latch-lower-stage-event");
+        }
+
         state.events.push(entry);
         state.updatedAt = entry.timestamp;
 
-        if (state.events.length > 180) {
-          state.events.splice(0, state.events.length - 180);
+        if (state.events.length > 260) {
+          state.events.splice(0, state.events.length - 260);
         }
 
         renderCockpit();
@@ -1170,25 +1323,91 @@
         return entry;
       }
 
-      function setStage(stage, message) {
-        state.currentFibonacciStage = stage;
-        push({
-          id:`STAGE_${stage}`,
-          stage,
-          owner:"index.html",
+      function setStage(nextStage, message, options = {}) {
+        const nextRank = stageRank(nextStage);
+        const currentRank = Number(state.highestStageRank || stageRank(state.currentFibonacciStage));
+        const event = {
+          id:`STAGE_${nextStage}`,
+          stage:nextStage,
+          owner:options.owner || "index.html",
+          file:options.file || "/showroom/globe/hearth/index.html",
           lane:"stage",
           status:STATUS.READY,
-          message:message || (FIB[stage] ? FIB[stage].label : stage)
-        });
+          message:message || stageLabel(nextStage),
+          detail:options.detail || {}
+        };
+
+        if (!nextRank) return push(event);
+
+        if (state.completionLatched && nextStage !== "F21") {
+          return archiveLateEvent(event, "setStage-blocked-after-completion-latch");
+        }
+
+        if (nextRank < currentRank) {
+          return archiveLateEvent(event, "monotonic-stage-regression-blocked");
+        }
+
+        state.currentFibonacciStage = nextStage;
+        state.highestStageReached = nextStage;
+        state.highestStageRank = nextRank;
+        state.updatedAt = nowIso();
+
+        if (!state.completionLatched) {
+          state.latestVisibleEvent = event.id;
+        }
+
+        return push(event);
       }
 
-      function setLane(laneKey, next) {
+      function setLane(laneKey, next = {}) {
         const lane = state.lanes[laneKey];
         if (!lane) return null;
 
-        lane.status = next.status || lane.status;
+        const nextStage = next.stage || lane.fibonacci;
+        const eventRank = stageRank(nextStage);
+        const nextStatus = next.status || lane.status;
+
+        const event = {
+          id:next.event || next.latestEvent || `LANE_${String(laneKey).toUpperCase()}_${nextStatus}`,
+          stage:nextStage,
+          owner:next.owner || "index.html",
+          file:next.file || "/showroom/globe/hearth/index.html",
+          lane:laneKey,
+          status:nextStatus,
+          message:next.message || lane.message,
+          detail:next.detail || {}
+        };
+
+        if (
+          state.completionLatched &&
+          laneKey !== "completionLatch" &&
+          laneKey !== "canvasAndDiagnostic" &&
+          laneKey !== "conductorHydration" &&
+          laneKey !== "receipt" &&
+          laneKey !== "copy"
+        ) {
+          return archiveLateEvent(event, "post-latch-lane-update-archived");
+        }
+
+        if (
+          statusRank(lane.status) > statusRank(nextStatus) &&
+          lane.status !== STATUS.FAILED &&
+          nextStatus !== STATUS.FAILED
+        ) {
+          return archiveLateEvent(event, "lane-status-regression-blocked");
+        }
+
+        if (eventRank > state.highestStageRank && !state.completionLatched) {
+          setStage(nextStage, next.message || event.id, {
+            owner:next.owner || "index.html",
+            file:next.file || "/showroom/globe/hearth/index.html"
+          });
+        }
+
+        lane.status = nextStatus;
         lane.message = next.message || lane.message;
-        lane.progress = Number.isFinite(Number(next.progress)) ? clamp(Number(next.progress), 0, 100) : lane.progress;
+        lane.progress = Math.max(Number(lane.progress || 0), Number(next.progress || 0));
+        lane.progress = Number.isFinite(Number(lane.progress)) ? clamp(Number(lane.progress), 0, 100) : lane.progress;
         lane.latestEvent = next.event || next.latestEvent || lane.latestEvent;
         lane.updatedAt = nowIso();
 
@@ -1196,18 +1415,8 @@
           lane.elapsedMs = Math.max(0, new Date(lane.updatedAt).getTime() - new Date(lane.startedAt).getTime());
         }
 
-        push({
-          id:next.event || `LANE_${String(laneKey).toUpperCase()}_${lane.status}`,
-          stage:next.stage || lane.fibonacci,
-          owner:next.owner || "index.html",
-          file:next.file || "",
-          lane:laneKey,
-          status:lane.status,
-          message:lane.message,
-          detail:next.detail || {}
-        });
-
-        return lane;
+        state.lanes[laneKey] = lane;
+        return push(event);
       }
 
       function reportScript(key, status, src, error) {
@@ -1232,14 +1441,30 @@
 
         state.scripts[key] = script;
 
-        const isSource = key.indexOf("source") === 0;
+        if (state.completionLatched) {
+          archiveLateEvent({
+            id:`SCRIPT_${status}`,
+            stage:"F3",
+            owner:"index.html",
+            file:script.src,
+            lane:"scriptOrder",
+            status,
+            message:`${key} ${status}`,
+            detail:{ key, src:script.src, error:script.error }
+          }, "post-latch-script-event-archived");
+          renderCockpit();
+          publishDataset();
+          return;
+        }
+
         const scriptFailed = status === STATUS.FAILED || status === "FAILED";
+        const isSource = key.indexOf("source") === 0;
 
         setStage("F3", "Script order reporting active");
 
         setLane("scriptOrder", {
           status: scriptFailed ? STATUS.DEGRADED : STATUS.LOADING,
-          progress: FIB.F3.progress,
+          progress: stageProgress("F3"),
           event: `SCRIPT_${status}`,
           stage: "F3",
           owner: "index.html",
@@ -1250,19 +1475,19 @@
         if (key === "runtimeTable") {
           setLane("authorityAvailability", {
             status: scriptFailed ? STATUS.DEGRADED : STATUS.READY,
-            progress: FIB.F5.progress,
+            progress: stageProgress("F5"),
             event: scriptFailed ? "RUNTIME_TABLE_DEGRADED" : "RUNTIME_TABLE_AVAILABLE",
             stage: "F5",
             owner: "index.html",
             file: script.src,
-            message: scriptFailed ? "Runtime Table degraded; first paint continues." : "Runtime Table script loaded."
+            message: scriptFailed ? "Runtime Table degraded; visible carrier continues." : "Runtime Table script loaded."
           });
         }
 
         if (isSource) {
           setLane("authorityAvailability", {
             status: STATUS.HELD,
-            progress: FIB.F5.progress,
+            progress: stageProgress("F5"),
             event: "SOURCE_STACK_HELD",
             stage: "F5",
             owner: "index.html",
@@ -1274,7 +1499,7 @@
         if (key === "canvasAuthority") {
           setLane("canvasAndDiagnostic", {
             status: scriptFailed ? STATUS.DEGRADED : STATUS.LOADED,
-            progress: scriptFailed ? 40 : FIB.F13.progress - 12,
+            progress: scriptFailed ? 40 : 74,
             event: scriptFailed ? "CANVAS_AUTHORITY_DEGRADED" : "CANVAS_AUTHORITY_AVAILABLE",
             stage: "F13",
             owner: "index.html",
@@ -1286,7 +1511,7 @@
         if (key === "conductor") {
           setLane("conductorHydration", {
             status: scriptFailed ? STATUS.FAILED : STATUS.LOADED,
-            progress: scriptFailed ? 100 : FIB.F8.progress,
+            progress: scriptFailed ? 100 : stageProgress("F8"),
             event: scriptFailed ? "CONDUCTOR_SCRIPT_ERROR" : "CONDUCTOR_AVAILABLE",
             stage: "F8",
             owner: "index.html",
@@ -1294,6 +1519,64 @@
             message: scriptFailed ? "Conductor script failed." : "Conductor script loaded; hydration expected."
           });
         }
+
+        renderCockpit();
+        publishDataset();
+      }
+
+      function setCockpitMode(mode) {
+        const expanded = mode === "expanded-cockpit";
+        state.cockpitMode = expanded ? "expanded-cockpit" : "diagnostic-dock";
+        state.dockVisible = !expanded;
+        state.fullCockpitExpanded = expanded;
+        state.planetObstructionReduced = !expanded;
+
+        const cockpit = document.querySelector("[data-hearth-load-cockpit='true']");
+        if (cockpit) {
+          cockpit.dataset.cockpitMode = state.cockpitMode;
+          cockpit.dataset.fullExpanded = String(state.fullCockpitExpanded);
+          cockpit.dataset.hearthCockpitMode = state.cockpitMode;
+          cockpit.dataset.hearthDockVisible = String(state.dockVisible);
+          cockpit.dataset.hearthPlanetObstructionReduced = String(state.planetObstructionReduced);
+          cockpit.dataset.collapsed = "false";
+        }
+
+        const button = document.querySelector("[data-hearth-collapse-cockpit]");
+        if (button) button.textContent = expanded ? "Collapse dock" : "Expand cockpit";
+
+        renderCockpit();
+        publishDataset();
+      }
+
+      function latchCompletion(reason) {
+        state.completionLatched = true;
+        state.visibleLoadingActive = false;
+        state.diagnosticCockpitReady = true;
+        state.finalReceiptAvailable = true;
+        state.currentFibonacciStage = "F21";
+        state.highestStageReached = "F21";
+        state.highestStageRank = stageRank("F21");
+        state.latestVisibleEvent = "COMPLETION_LATCHED";
+        setCockpitMode("diagnostic-dock");
+
+        setLane("completionLatch", {
+          status: STATUS.LATCHED,
+          progress: 100,
+          event: "COMPLETION_LATCHED",
+          stage: "F21",
+          owner: "index.html",
+          file: ACTIVE_CONDUCTOR,
+          message: reason || "READY · Planet visible · diagnostic available"
+        });
+
+        push({
+          id: "LOADING_LOOP_SETTLED",
+          stage: "F21",
+          owner: "index.html",
+          lane: "completionLatch",
+          status: STATUS.LATCHED,
+          message: "Visible loading settled into compact diagnostic dock."
+        });
 
         renderCockpit();
         publishDataset();
@@ -1314,12 +1597,16 @@
           return `- ${key}: status=${script.status}; src=${script.src || ""}; error=${script.error || ""}`;
         }).join("\n") || "- none";
 
+        const archived = (receipt.archivedLateEvents || []).map((event) => {
+          return `- ${event.archivedAt || ""} :: ${event.id || "ARCHIVED"} :: stage=${event.stage || ""} :: reason=${event.archiveReason || ""} :: ${event.message || ""}`;
+        }).join("\n") || "- none";
+
         const events = (receipt.events || []).map((event) => {
           return `- ${event.timestamp} :: ${event.id} :: stage=${event.stage} :: lane=${event.lane} :: status=${event.status} :: ${event.message}`;
         }).join("\n") || "- none";
 
         return [
-          "HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_RECEIPT",
+          "HEARTH_LOAD_LEDGER_MONOTONIC_HTML_FIRST_PAINT_DOCK_RECEIPT",
           "",
           `contract=${CONTRACT}`,
           `receipt=${RECEIPT}`,
@@ -1329,12 +1616,20 @@
           `route=${ROUTE}`,
           "",
           `ledgerInitialized=true`,
-          `firstPaintCockpitVisible=${state.firstPaintCockpitVisible}`,
-          `staticCopyDiagnosticFallbackArmed=${state.staticCopyDiagnosticFallbackArmed}`,
-          `currentFibonacciStage=${state.currentFibonacciStage}`,
-          `completionLatched=${state.completionLatched}`,
-          `visibleLoadingActive=${state.visibleLoadingActive}`,
-          `diagnosticCockpitReady=${state.diagnosticCockpitReady}`,
+          `firstPaintCockpitVisible=${receipt.firstPaintCockpitVisible}`,
+          `staticCopyDiagnosticFallbackArmed=${receipt.staticCopyDiagnosticFallbackArmed}`,
+          `monotonicStageGuardActive=${receipt.monotonicStageGuardActive}`,
+          `stageRegressionPrevented=${receipt.stageRegressionPrevented}`,
+          `currentFibonacciStage=${receipt.currentFibonacciStage}`,
+          `highestStageReached=${receipt.highestStageReached}`,
+          `highestStageRank=${receipt.highestStageRank}`,
+          `completionLatched=${receipt.completionLatched}`,
+          `visibleLoadingActive=${receipt.visibleLoadingActive}`,
+          `diagnosticCockpitReady=${receipt.diagnosticCockpitReady}`,
+          `cockpitMode=${receipt.cockpitMode}`,
+          `dockVisible=${receipt.dockVisible}`,
+          `fullCockpitExpanded=${receipt.fullCockpitExpanded}`,
+          `planetObstructionReduced=${receipt.planetObstructionReduced}`,
           "",
           `activeRouteConductor=${ACTIVE_CONDUCTOR}`,
           `retiredClimateRoute=${RETIRED_CLIMATE_ROUTE}`,
@@ -1348,6 +1643,9 @@
           "",
           "SCRIPTS",
           scripts,
+          "",
+          "ARCHIVED_LATE_EVENTS",
+          archived,
           "",
           "EVENTS",
           events,
@@ -1395,12 +1693,12 @@
         }
 
         push({
-          id: ok ? "STATIC_COPY_DIAGNOSTIC_COPIED" : "STATIC_COPY_DIAGNOSTIC_FAILED",
+          id: ok ? "COPY_DIAGNOSTIC_COPIED" : "COPY_DIAGNOSTIC_FAILED",
           stage: state.currentFibonacciStage,
           owner: "index.html",
-          lane: "staticCockpit",
+          lane: "copy",
           status: ok ? STATUS.COPY_ARMED : STATUS.DEGRADED,
-          message: ok ? "Static diagnostic copied." : "Static diagnostic copy failed."
+          message: ok ? "Diagnostic copied." : "Diagnostic copy failed."
         });
 
         const button = document.querySelector("[data-hearth-copy-diagnostic]");
@@ -1413,68 +1711,30 @@
         return ok;
       }
 
-      function latchCompletion(reason) {
-        state.completionLatched = true;
-        state.visibleLoadingActive = false;
-        state.diagnosticCockpitReady = true;
-        state.finalReceiptAvailable = true;
-        state.currentFibonacciStage = "F21";
-
-        setLane("completionLatch", {
-          status: STATUS.LATCHED,
-          progress: 100,
-          event: "COMPLETION_LATCHED",
-          stage: "F21",
-          owner: "index.html",
-          file: ACTIVE_CONDUCTOR,
-          message: reason || "Completion latched."
-        });
-
-        push({
-          id: "LOADING_LOOP_SETTLED",
-          stage: "F21",
-          owner: "index.html",
-          lane: "completionLatch",
-          status: STATUS.LATCHED,
-          message: "Visible loading settled into diagnostic cockpit mode."
-        });
-
-        renderCockpit();
-        publishDataset();
-      }
-
-      function laneHtml(lane) {
-        const status = lane.status || STATUS.REQUESTED;
-        const progress = clamp(lane.progress, 0, 100);
-
-        return `
-          <section class="hearth-ledger-lane" data-lane="${lane.key}" data-status="${status}">
-            <div class="hearth-ledger-lane-top">
-              <span class="hearth-ledger-lane-title">
-                <strong>${lane.label} · ${lane.fibonacci}</strong>
-                <span>${lane.message || ""}</span>
-              </span>
-              <span class="hearth-ledger-lane-status">${status}</span>
-            </div>
-            <div class="hearth-ledger-lane-track">
-              <span class="hearth-ledger-lane-fill" style="width:${progress}%"></span>
-            </div>
-            <span class="hearth-ledger-lane-title">
-              <span>event=${lane.latestEvent || "PENDING"}</span>
-            </span>
-          </section>
-        `;
-      }
-
       function renderCockpit() {
         const cockpit = document.querySelector("[data-hearth-load-cockpit='true']");
         if (!cockpit) return;
 
-        const stage = state.currentFibonacciStage || "F2";
+        if (state.completionLatched) {
+          state.currentFibonacciStage = "F21";
+          state.highestStageReached = "F21";
+          state.highestStageRank = stageRank("F21");
+          state.visibleLoadingActive = false;
+          state.diagnosticCockpitReady = true;
+          if (state.cockpitMode !== "expanded-cockpit") {
+            state.cockpitMode = "diagnostic-dock";
+            state.dockVisible = true;
+            state.fullCockpitExpanded = false;
+            state.planetObstructionReduced = true;
+          }
+        }
+
+        const stage = state.completionLatched ? "F21" : state.currentFibonacciStage;
         const stageMeta = FIB[stage] || FIB.F2;
         const elapsed = nowMs() - state.startedAtMs;
-        const progress = clamp(stageMeta.progress, 0, 100);
+        const progress = state.completionLatched ? 100 : clamp(stageMeta.progress, 0, 100);
 
+        const titleNode = cockpit.querySelector(".hearth-ledger-title");
         const stageNode = cockpit.querySelector("[data-hearth-stage-label]");
         const heartbeatNode = cockpit.querySelector("[data-hearth-heartbeat-text]");
         const latestNode = cockpit.querySelector("[data-hearth-latest-event]");
@@ -1482,13 +1742,30 @@
         const percentNode = cockpit.querySelector("[data-hearth-main-progress-percent]");
         const laneList = cockpit.querySelector("[data-hearth-lane-list]");
         const receiptText = cockpit.querySelector("[data-hearth-receipt-text]");
+        const collapseButton = cockpit.querySelector("[data-hearth-collapse-cockpit]");
 
         cockpit.dataset.hearthFibonacciStage = stage;
         cockpit.dataset.hearthCompletionLatched = String(state.completionLatched);
         cockpit.dataset.hearthVisibleLoadingActive = String(state.visibleLoadingActive);
         cockpit.dataset.hearthDiagnosticCockpitReady = String(state.diagnosticCockpitReady);
+        cockpit.dataset.hearthMonotonicStageGuardActive = "true";
+        cockpit.dataset.cockpitMode = state.cockpitMode;
+        cockpit.dataset.fullExpanded = String(state.fullCockpitExpanded);
+        cockpit.dataset.hearthDockVisible = String(state.dockVisible);
+        cockpit.dataset.hearthPlanetObstructionReduced = String(state.planetObstructionReduced);
 
-        if (stageNode) stageNode.textContent = `${stage} · ${stageMeta.label}`;
+        if (titleNode) {
+          titleNode.textContent = state.completionLatched
+            ? "READY · PLANET VISIBLE · DIAGNOSTIC AVAILABLE"
+            : "FORMING HEARTH RUNTIME TABLE";
+        }
+
+        if (stageNode) {
+          stageNode.textContent = state.completionLatched
+            ? "F21 · Completion latch"
+            : `${stage} · ${stageLabel(stage)}`;
+        }
+
         if (heartbeatNode) {
           heartbeatNode.textContent = state.completionLatched
             ? `heartbeat=quiet · latched=true · elapsed=${formatElapsed(elapsed)}`
@@ -1496,20 +1773,46 @@
         }
 
         if (latestNode) {
-          const latest = state.events[state.events.length - 1];
-          latestNode.textContent = `latest=${latest ? latest.id : "FIRST_PAINT_LOADING_COCKPIT_VISIBLE"}`;
+          latestNode.textContent = state.completionLatched
+            ? "latest=COMPLETION_LATCHED · READY"
+            : `latest=${state.latestVisibleEvent || "LOADING"}`;
         }
 
         if (fillNode) fillNode.style.width = `${progress}%`;
         if (percentNode) percentNode.textContent = `${progress}%`;
 
-        if (laneList) {
-          laneList.innerHTML = LANES.map((lane) => laneHtml(state.lanes[lane.key])).join("");
+        if (collapseButton) {
+          collapseButton.textContent = state.completionLatched
+            ? (state.fullCockpitExpanded ? "Collapse dock" : "Expand cockpit")
+            : "Collapse cockpit";
         }
 
-        if (receiptText) {
-          receiptText.textContent = getReceiptText();
+        if (laneList) {
+          laneList.innerHTML = LANES.map((laneDef) => {
+            const lane = state.lanes[laneDef.key] || makeLane(laneDef);
+            const status = lane.status || STATUS.REQUESTED;
+            const laneProgress = clamp(lane.progress, 0, 100);
+            return `
+              <section class="hearth-ledger-lane" data-lane="${laneDef.key}" data-status="${status}">
+                <div class="hearth-ledger-lane-top">
+                  <span class="hearth-ledger-lane-title">
+                    <strong>${lane.label} · ${lane.fibonacci}</strong>
+                    <span>${lane.message || ""}</span>
+                  </span>
+                  <span class="hearth-ledger-lane-status">${status}</span>
+                </div>
+                <div class="hearth-ledger-lane-track">
+                  <span class="hearth-ledger-lane-fill" style="width:${laneProgress}%"></span>
+                </div>
+                <span class="hearth-ledger-lane-title">
+                  <span>event=${lane.latestEvent || "PENDING"}</span>
+                </span>
+              </section>
+            `;
+          }).join("");
         }
+
+        if (receiptText) receiptText.textContent = getReceiptText();
       }
 
       function publishDataset() {
@@ -1519,12 +1822,20 @@
         dataset.hearthHtmlReceipt = RECEIPT;
         dataset.hearthDistributedLoadLedger = "true";
         dataset.hearthLoadLedgerInitialized = "true";
+        dataset.hearthMonotonicStageGuardActive = "true";
+        dataset.hearthStageRegressionPrevented = String(state.stageRegressionPrevented);
         dataset.hearthFirstPaintCockpitVisible = String(state.firstPaintCockpitVisible);
         dataset.hearthStaticCopyDiagnosticFallbackArmed = String(state.staticCopyDiagnosticFallbackArmed);
         dataset.hearthFibonacciStage = state.currentFibonacciStage;
+        dataset.hearthCurrentFibonacciStage = state.currentFibonacciStage;
+        dataset.hearthHighestStageReached = state.highestStageReached;
         dataset.hearthCompletionLatched = String(state.completionLatched);
         dataset.hearthVisibleLoadingActive = String(state.visibleLoadingActive);
         dataset.hearthDiagnosticCockpitReady = String(state.diagnosticCockpitReady);
+        dataset.hearthCockpitMode = state.cockpitMode;
+        dataset.hearthDockVisible = String(state.dockVisible);
+        dataset.hearthFullCockpitExpanded = String(state.fullCockpitExpanded);
+        dataset.hearthPlanetObstructionReduced = String(state.planetObstructionReduced);
         dataset.hearthActiveRouteFile = ACTIVE_CONDUCTOR;
         dataset.hearthActiveRouteConductor = ACTIVE_CONDUCTOR;
         dataset.hearthRetiredClimateRoute = RETIRED_CLIMATE_ROUTE;
@@ -1543,11 +1854,13 @@
         push,
         setLane,
         setStage,
+        promoteStage:setStage,
+        archiveLateEvent,
+        setCockpitMode,
         getReceipt,
         getReceiptText,
         copyDiagnostic,
-        latchCompletion,
-        reportScript
+        latchCompletion
       };
 
       window.__HEARTH_LEDGER_REPORT_SCRIPT = reportScript;
@@ -1560,10 +1873,10 @@
         box.dataset.visible = String(visible);
         if (button) button.textContent = visible ? "Hide receipt" : "Show receipt";
         push({
-          id:"STATIC_RECEIPT_VISIBILITY_TOGGLED",
+          id:"RECEIPT_VISIBILITY_TOGGLED",
           stage:state.currentFibonacciStage,
           owner:"index.html",
-          lane:"staticCockpit",
+          lane:"receipt",
           status:STATUS.READY,
           message:`receipt visible=${visible}`
         });
@@ -1571,13 +1884,28 @@
 
       window.__HEARTH_LEDGER_COLLAPSE = () => {
         const cockpit = document.querySelector("[data-hearth-load-cockpit='true']");
-        const button = document.querySelector("[data-hearth-collapse-cockpit]");
         if (!cockpit) return;
+
+        if (state.completionLatched) {
+          const next = state.fullCockpitExpanded ? "diagnostic-dock" : "expanded-cockpit";
+          setCockpitMode(next);
+          push({
+            id:"DIAGNOSTIC_DOCK_TOGGLED",
+            stage:"F21",
+            owner:"index.html",
+            lane:"completionLatch",
+            status:STATUS.READY,
+            message:`mode=${next}`
+          });
+          return;
+        }
+
         const collapsed = cockpit.dataset.collapsed !== "true";
         cockpit.dataset.collapsed = String(collapsed);
+        const button = document.querySelector("[data-hearth-collapse-cockpit]");
         if (button) button.textContent = collapsed ? "Open cockpit" : "Collapse cockpit";
         push({
-          id:"STATIC_COCKPIT_COLLAPSE_TOGGLED",
+          id:"COCKPIT_COLLAPSE_TOGGLED",
           stage:state.currentFibonacciStage,
           owner:"index.html",
           lane:"staticCockpit",
@@ -1588,7 +1916,7 @@
 
       setLane("shell", {
         status:STATUS.READY,
-        progress:FIB.F1A.progress,
+        progress:stageProgress("F1A"),
         event:"HTML_SHELL_RENDERED",
         stage:"F1A",
         owner:"index.html",
@@ -1598,12 +1926,12 @@
 
       setLane("ledger", {
         status:STATUS.READY,
-        progress:FIB.F1B.progress,
-        event:"HEARTH_LOAD_LEDGER_INITIALIZED",
+        progress:stageProgress("F1B"),
+        event:"HEARTH_LOAD_LEDGER_MONOTONIC_INITIALIZED",
         stage:"F1B",
         owner:"index.html",
         file:"/showroom/globe/hearth/index.html",
-        message:"Shared load ledger initialized before external scripts."
+        message:"Monotonic shared load ledger initialized before external scripts."
       });
 
       SCRIPT_MANIFEST.forEach((script) => {
@@ -1615,11 +1943,22 @@
         state.staticCopyDiagnosticFallbackArmed = Boolean(document.querySelector("[data-hearth-copy-diagnostic]"));
         state.copyDiagnosticArmed = state.staticCopyDiagnosticFallbackArmed;
 
-        setStage("F2", "First-paint loading cockpit visible");
+        if (!state.completionLatched && stageRank(state.currentFibonacciStage) <= stageRank("F2")) {
+          setStage("F2", "First-paint loading cockpit visible");
+        } else {
+          archiveLateEvent({
+            id:"FIRST_PAINT_LOADING_COCKPIT_VISIBLE",
+            stage:"F2",
+            owner:"index.html",
+            lane:"staticCockpit",
+            status:STATUS.COPY_ARMED,
+            message:"Static cockpit visible; lower-stage event archived."
+          }, "dom-content-loaded-after-higher-stage");
+        }
 
         setLane("staticCockpit", {
           status:STATUS.COPY_ARMED,
-          progress:FIB.F2.progress,
+          progress:stageProgress("F2"),
           event:"FIRST_PAINT_LOADING_COCKPIT_VISIBLE",
           stage:"F2",
           owner:"index.html",
@@ -1637,94 +1976,104 @@
           if (!lane.startedAt) return;
           lane.elapsedMs = elapsed;
         });
+
+        if (state.completionLatched) {
+          state.currentFibonacciStage = "F21";
+          state.highestStageReached = "F21";
+          state.highestStageRank = stageRank("F21");
+          state.visibleLoadingActive = false;
+          state.diagnosticCockpitReady = true;
+        }
+
         renderCockpit();
+        publishDataset();
       }, 1000);
 
       publishDataset();
     })();
   </script>
 
-  <link rel="stylesheet" href="/assets/manor-blueprint/manor.blueprint.css?v=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1">
+  <link rel="stylesheet" href="/assets/manor-blueprint/manor.blueprint.css?v=HEARTH_LOAD_LEDGER_MONOTONIC_HTML_FIRST_PAINT_DOCK_TNT_v1">
 
   <script
-    src="/assets/manor-blueprint/manor.blueprint.registry.js?v=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1"
+    src="/assets/manor-blueprint/manor.blueprint.registry.js?v=HEARTH_LOAD_LEDGER_MONOTONIC_HTML_FIRST_PAINT_DOCK_TNT_v1"
     defer
     onload="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('manorRegistry','LOADED',this.src,'')"
     onerror="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('manorRegistry','FAILED',this.src,'script error')"
   ></script>
 
   <script
-    src="/assets/manor-blueprint/manor.blueprint.js?v=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1"
+    src="/assets/manor-blueprint/manor.blueprint.js?v=HEARTH_LOAD_LEDGER_MONOTONIC_HTML_FIRST_PAINT_DOCK_TNT_v1"
     defer
     onload="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('manorBlueprint','LOADED',this.src,'')"
     onerror="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('manorBlueprint','FAILED',this.src,'script error')"
   ></script>
 
   <script
-    src="/assets/lab/runtime-table.js?v=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1"
+    src="/assets/lab/runtime-table.js?v=HEARTH_LOAD_LEDGER_MONOTONIC_HTML_FIRST_PAINT_DOCK_TNT_v1"
     defer
     onload="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('runtimeTable','LOADED',this.src,'')"
     onerror="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('runtimeTable','FAILED',this.src,'script error')"
   ></script>
 
   <script
-    src="/assets/hearth/hearth.tectonics.js?v=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1"
+    src="/assets/hearth/hearth.tectonics.js?v=HEARTH_LOAD_LEDGER_MONOTONIC_HTML_FIRST_PAINT_DOCK_TNT_v1"
     defer
     onload="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('sourceTectonics','LOADED',this.src,'')"
     onerror="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('sourceTectonics','FAILED',this.src,'script error')"
   ></script>
 
   <script
-    src="/assets/hearth/hearth.elevation.js?v=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1"
+    src="/assets/hearth/hearth.elevation.js?v=HEARTH_LOAD_LEDGER_MONOTONIC_HTML_FIRST_PAINT_DOCK_TNT_v1"
     defer
     onload="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('sourceElevation','LOADED',this.src,'')"
     onerror="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('sourceElevation','FAILED',this.src,'script error')"
   ></script>
 
   <script
-    src="/assets/hearth/hearth.composition.js?v=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1"
+    src="/assets/hearth/hearth.composition.js?v=HEARTH_LOAD_LEDGER_MONOTONIC_HTML_FIRST_PAINT_DOCK_TNT_v1"
     defer
     onload="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('sourceComposition','LOADED',this.src,'')"
     onerror="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('sourceComposition','FAILED',this.src,'script error')"
   ></script>
 
   <script
-    src="/assets/hearth/hearth.hydrology.js?v=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1"
+    src="/assets/hearth/hearth.hydrology.js?v=HEARTH_LOAD_LEDGER_MONOTONIC_HTML_FIRST_PAINT_DOCK_TNT_v1"
     defer
     onload="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('sourceHydrology','LOADED',this.src,'')"
     onerror="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('sourceHydrology','FAILED',this.src,'script error')"
   ></script>
 
   <script
-    src="/assets/hearth/hearth.materials.js?v=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1"
+    src="/assets/hearth/hearth.materials.js?v=HEARTH_LOAD_LEDGER_MONOTONIC_HTML_FIRST_PAINT_DOCK_TNT_v1"
     defer
     onload="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('sourceMaterials','LOADED',this.src,'')"
     onerror="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('sourceMaterials','FAILED',this.src,'script error')"
   ></script>
 
   <script
-    src="/assets/hearth/hearth.hex.four-pair.authority.js?v=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1"
+    src="/assets/hearth/hearth.hex.four-pair.authority.js?v=HEARTH_LOAD_LEDGER_MONOTONIC_HTML_FIRST_PAINT_DOCK_TNT_v1"
     defer
     onload="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('sourceHexAuthority','LOADED',this.src,'')"
     onerror="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('sourceHexAuthority','FAILED',this.src,'script error')"
   ></script>
 
   <script
-    src="/assets/hearth/hearth.hex.surface.js?v=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1"
+    src="/assets/hearth/hearth.hex.surface.js?v=HEARTH_LOAD_LEDGER_MONOTONIC_HTML_FIRST_PAINT_DOCK_TNT_v1"
     defer
     onload="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('sourceHexSurface','LOADED',this.src,'')"
     onerror="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('sourceHexSurface','FAILED',this.src,'script error')"
   ></script>
 
   <script
-    src="/assets/hearth/hearth.canvas.js?v=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1"
+    src="/assets/hearth/hearth.canvas.js?v=HEARTH_LOAD_LEDGER_MONOTONIC_HTML_FIRST_PAINT_DOCK_TNT_v1"
     defer
     onload="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('canvasAuthority','LOADED',this.src,'')"
     onerror="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('canvasAuthority','FAILED',this.src,'script error')"
   ></script>
 
   <script
-    src="/showroom/globe/hearth/hearth.js?v=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1"
+    src="/showroom/globe/hearth/hearth.js?v=HEARTH_LOAD_LEDGER_MONOTONIC_HTML_FIRST_PAINT_DOCK_TNT_v1"
     defer
     onload="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('conductor','LOADED',this.src,'')"
     onerror="window.__HEARTH_LEDGER_REPORT_SCRIPT&&window.__HEARTH_LEDGER_REPORT_SCRIPT('conductor','FAILED',this.src,'script error')"
@@ -1759,7 +2108,7 @@
     <main id="hearth-main">
       <section class="panel hero" aria-labelledby="hearth-title">
         <div class="hero-copy">
-          <div class="eyebrow">Hearth · Distributed Load Ledger · 40 Billion Years Forward</div>
+          <div class="eyebrow">Hearth · Monotonic Load Ledger · 40 Billion Years Forward</div>
 
           <h1 id="hearth-title">Survival becomes shelter.</h1>
 
@@ -1768,7 +2117,7 @@
           </p>
 
           <p class="lede">
-            The route now first-paints one loading cockpit, initializes a shared load ledger, reports file status chronologically, and lets Hearth.js hydrate the existing cockpit instead of creating a competing screen.
+            The route now first-paints one loading cockpit, prevents Fibonacci stage regression, archives late script events after latch, and collapses into a compact diagnostic dock once the planet is visible.
           </p>
 
           <div class="world-law" aria-label="World lane roles">
@@ -1792,7 +2141,7 @@
             data-hearth-canvas-mount="true"
             data-hearth-parent-chain-aligned="true"
             data-hearth-active-visible-planet-carrier="true"
-            data-hearth-route-shell-contract="HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1"
+            data-hearth-route-shell-contract="HEARTH_LOAD_LEDGER_MONOTONIC_HTML_FIRST_PAINT_DOCK_TNT_v1"
             data-hearth-active-route-conductor="/showroom/globe/hearth/hearth.js"
             data-hearth-canvas-authority="/assets/hearth/hearth.canvas.js"
             data-hearth-retired-climate-route="/showroom/globe/hearth/hearth.climate.route.js"
@@ -1803,7 +2152,7 @@
             aria-label="Hearth active planet canvas mount"
           >
             <span class="mount-fallback" data-hearth-mount-fallback="true">
-              Hearth static carrier shell is active. Distributed load ledger is preparing.
+              Hearth static carrier shell is active. Monotonic load ledger is preparing.
             </span>
 
             <aside
@@ -1816,10 +2165,13 @@
               data-hearth-completion-latched="false"
               data-hearth-visible-loading-active="true"
               data-hearth-diagnostic-cockpit-ready="false"
-              aria-label="Hearth distributed loading cockpit"
+              data-hearth-monotonic-stage-guard-active="true"
+              data-cockpit-mode="loading-cockpit"
+              data-full-expanded="true"
+              aria-label="Hearth monotonic distributed loading cockpit"
             >
               <div class="hearth-ledger-head">
-                <div class="hearth-ledger-kicker">Hearth · Distributed Load Ledger</div>
+                <div class="hearth-ledger-kicker">Hearth · Monotonic Load Ledger</div>
                 <h2 class="hearth-ledger-title">FORMING HEARTH RUNTIME TABLE</h2>
                 <div class="hearth-ledger-meta" data-hearth-stage-label>F2 · First-paint cockpit</div>
                 <div class="hearth-ledger-meta" data-hearth-heartbeat-text>heartbeat=active · stage=F2 · elapsed=00:00</div>
@@ -1857,12 +2209,12 @@
                     <div class="hearth-ledger-lane-top">
                       <span class="hearth-ledger-lane-title">
                         <strong>Ledger · F1B</strong>
-                        <span>Shared load ledger initialized.</span>
+                        <span>Monotonic shared load ledger initialized.</span>
                       </span>
                       <span class="hearth-ledger-lane-status">READY</span>
                     </div>
                     <div class="hearth-ledger-lane-track"><span class="hearth-ledger-lane-fill" style="width:12%"></span></div>
-                    <span class="hearth-ledger-lane-title"><span>event=HEARTH_LOAD_LEDGER_INITIALIZED</span></span>
+                    <span class="hearth-ledger-lane-title"><span>event=HEARTH_LOAD_LEDGER_MONOTONIC_INITIALIZED</span></span>
                   </section>
 
                   <section class="hearth-ledger-lane" data-lane="staticCockpit" data-status="COPY_ARMED">
@@ -1879,11 +2231,12 @@
                 </div>
 
                 <div class="hearth-ledger-receipt" data-hearth-receipt-box data-visible="false">
-                  <pre data-hearth-receipt-text>HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_RECEIPT
-contract=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1
+                  <pre data-hearth-receipt-text>HEARTH_LOAD_LEDGER_MONOTONIC_HTML_FIRST_PAINT_DOCK_RECEIPT
+contract=HEARTH_LOAD_LEDGER_MONOTONIC_HTML_FIRST_PAINT_DOCK_TNT_v1
 route=/showroom/globe/hearth/
 firstPaintCockpitVisible=true
 staticCopyDiagnosticFallbackArmed=true
+monotonicStageGuardActive=true
 visualPassClaimed=false</pre>
                 </div>
               </div>
@@ -1891,9 +2244,9 @@ visualPassClaimed=false</pre>
           </section>
 
           <div class="planet-caption">
-            <b>Distributed Loading Funnel</b>
+            <b>Monotonic Loading Funnel</b>
             <span>
-              One cockpit is visible from HTML first paint. Runtime Table, source stack, canvas authority, and the Hearth conductor report into one shared ledger. Hearth.js hydrates this cockpit and latches completion.
+              One cockpit is visible from HTML first paint. Lower-stage events are archived after higher progress, and after final latch the cockpit collapses into a compact diagnostic dock.
             </span>
           </div>
         </aside>
@@ -1946,10 +2299,10 @@ visualPassClaimed=false</pre>
 
       <section class="panel section" id="proof-layer" aria-labelledby="proof-title">
         <div class="section-head">
-          <div class="section-kicker">Proof Layer · Distributed Status</div>
-          <h2 id="proof-title">The page now shows what is loading while the files load themselves.</h2>
+          <div class="section-kicker">Proof Layer · Monotonic Status</div>
+          <h2 id="proof-title">The loading process now moves forward only.</h2>
           <p>
-            Each file reports its own status into one cockpit: shell, ledger, script order, authority availability, conductor hydration, canvas diagnostics, and completion latch. The user can copy a diagnostic while loading is still active.
+            Each file reports its own status into one cockpit. Once a higher Fibonacci stage is reached, lower-stage events are preserved in the receipt but cannot visually demote the loading screen.
           </p>
         </div>
 
@@ -1957,25 +2310,25 @@ visualPassClaimed=false</pre>
           <article class="proof-card" style="--accent:var(--amber)">
             <b>HTML</b>
             <strong>First-paint cockpit</strong>
-            <p>Renders the cockpit and ledger before external scripts finish.</p>
+            <p>Renders the cockpit and monotonic ledger before external scripts finish.</p>
           </article>
 
           <article class="proof-card" style="--accent:var(--gold)">
             <b>Ledger</b>
-            <strong>Chronological reporting</strong>
+            <strong>No stage regression</strong>
             <p>Tracks the Fibonacci sequence: 1 → 1 → 2 → 3 → 5 → 8 → 13 → 21.</p>
           </article>
 
           <article class="proof-card" style="--accent:var(--blue)">
             <b>Conductor</b>
-            <strong>Hydration and latch</strong>
-            <p>Hearth.js hydrates the existing cockpit and stops visible loading after completion.</p>
+            <strong>Strict latch</strong>
+            <p>Hearth.js hydrates the existing cockpit and latches only after visible carrier proof.</p>
           </article>
 
           <article class="proof-card" style="--accent:var(--green)">
-            <b>Canvas</b>
-            <strong>Visible carrier</strong>
-            <p>Canvas remains the planet carrier. Receipt and cockpit controls do not own drawing.</p>
+            <b>Dock</b>
+            <strong>Post-render diagnostics</strong>
+            <p>After readiness, the cockpit becomes a compact dock with copy and receipt controls.</p>
           </article>
         </div>
       </section>
@@ -2016,21 +2369,23 @@ visualPassClaimed=false</pre>
         </div>
       </section>
 
-      <pre id="hearth-route-status" data-hearth-route-status="true">Hearth distributed load ledger first-paint cockpit active.</pre>
+      <pre id="hearth-route-status" data-hearth-route-status="true">Hearth monotonic load ledger first-paint dock active.</pre>
 
       <template id="hearth-route-receipt" data-route-receipt>
-HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1
+HEARTH_LOAD_LEDGER_MONOTONIC_HTML_FIRST_PAINT_DOCK_TNT_v1
 route=/showroom/globe/hearth/
-previous=HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1
-baseline=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_CONDUCTOR_PAIR_PRECODE_FINAL_DRAFT_v1
+previous=HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1
+baseline=HEARTH_LOAD_LEDGER_MONOTONIC_STAGE_AND_DIAGNOSTIC_DOCK_PAIR_PRECODE_FINAL_DRAFT_v1
 ledgerInitialized=true
 firstPaintCockpitVisible=true
 staticCopyDiagnosticFallbackArmed=true
 oneVisibleLoadingCockpit=true
 sharedLoadLedger=true
+monotonicStageGuardActive=true
 distributedFileStatusReporting=true
 conductorHydratesExistingCockpit=true
 completionLatchRequired=true
+diagnosticDockAfterLatch=true
 fibonacciLoadOrder=1→1→2→3→5→8→13→21
 activeRouteConductor=/showroom/globe/hearth/hearth.js
 retiredClimateRoute=/showroom/globe/hearth/hearth.climate.route.js
@@ -2046,7 +2401,7 @@ visualPassClaimed=false
     </main>
 
     <footer>
-      HEARTH_DISTRIBUTED_LOAD_LEDGER_HTML_FIRST_PAINT_COCKPIT_TNT_v1 · /showroom/globe/hearth/ · Hearth · Survival Becomes Shelter.
+      HEARTH_LOAD_LEDGER_MONOTONIC_HTML_FIRST_PAINT_DOCK_TNT_v1 · /showroom/globe/hearth/ · Hearth · Survival Becomes Shelter.
     </footer>
   </div>
 </body>

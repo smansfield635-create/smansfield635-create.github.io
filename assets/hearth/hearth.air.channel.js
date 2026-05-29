@@ -1,21 +1,27 @@
 // /assets/hearth/hearth.air.channel.js
-// HEARTH_AIR_PRESSURE_HUMIDITY_CHANNEL_TNT_v1
-// Full-file replacement / new file.
-// Air channel authority only.
+// HEARTH_AIR_CORE_BOUNDARY_HANDSHAKE_TNT_v1
+// Full-file replacement.
+// Air / pressure / humidity / boundary-envelope authority only.
+// Compatibility note:
+// - Public validation contract remains HEARTH_AIR_PRESSURE_HUMIDITY_CHANNEL_TNT_v1
+//   because the active canvas currently validates that exact contract.
+// - Boundary handshake contract is exposed separately as boundaryHandshakeContract.
 // Purpose:
-// - Own atmospheric / pressure / humidity / haze channel expression.
-// - Convert resolved climate, material, hydrology, ocean, composition, and elevation packets into air-layer fields.
-// - Keep air explicitly separate from land and water body channels.
-// - Allow only air to float above the planetary body.
-// - Expose a lightweight channel packet for canvas multiplexing.
+// - Let the atmosphere become Hearth's visible planetary boundary as a read-only pressure envelope.
+// - Prevent air from carrying land, water, terrain, elevation, composition, hydrology, or material truth.
+// - Add boundary-envelope fields for downstream canvas consumption.
+// - Preserve immediate Runtime Table compatibility.
 // Does not own:
+// - land truth
+// - water truth
+// - terrain truth
+// - elevation truth
 // - tectonic cause
-// - elevation generation
 // - composition classification
-// - land authority
-// - water authority
-// - material palette authority
+// - hydrology
+// - material palette
 // - canvas mounting
+// - atlas projection
 // - route orchestration
 // - runtime motion
 // - controls
@@ -24,23 +30,25 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_AIR_PRESSURE_HUMIDITY_CHANNEL_TNT_v1";
-  const RECEIPT = "HEARTH_AIR_PRESSURE_HUMIDITY_CHANNEL_RECEIPT_v1";
-  const VERSION = "2026-05-28.hearth-air-pressure-humidity-channel-v1";
-  const SEA_LEVEL = 0.0;
-  const DEG = Math.PI / 180;
+  const PUBLIC_CONTRACT = "HEARTH_AIR_PRESSURE_HUMIDITY_CHANNEL_TNT_v1";
+  const BOUNDARY_HANDSHAKE_CONTRACT = "HEARTH_AIR_CORE_BOUNDARY_HANDSHAKE_TNT_v1";
+  const RECEIPT = "HEARTH_AIR_CORE_BOUNDARY_HANDSHAKE_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "HEARTH_AIR_PRESSURE_HUMIDITY_CHANNEL_TNT_v1";
+  const VERSION = "2026-05-29.hearth-air-core-boundary-handshake-v1";
+
+  const LAND_CONTRACT = "HEARTH_LAND_SURFACE_ATTACHMENT_CHANNEL_TNT_v1";
+  const WATER_CONTRACT = "HEARTH_WATER_HYDROSPHERE_SURFACE_CHANNEL_TNT_v1";
 
   const root = typeof window !== "undefined" ? window : globalThis;
+  const DEG = Math.PI / 180;
 
-  const FALLBACK_COLORS = Object.freeze({
-    clearAir: [24, 38, 58],
-    haze: [114, 145, 164],
-    humidMist: [158, 184, 190],
-    storm: [70, 78, 96],
-    pressure: [138, 128, 176],
-    rim: [174, 216, 236],
-    transparent: [0, 0, 0]
-  });
+  function nowIso() {
+    try {
+      return new Date().toISOString();
+    } catch (_error) {
+      return "";
+    }
+  }
 
   function clamp(value, min, max) {
     const n = Number(value);
@@ -52,50 +60,21 @@
     return clamp(value, 0, 1);
   }
 
-  function mixNumber(a, b, t) {
-    const k = clamp01(t);
-    return a + (b - a) * k;
-  }
-
-  function mixColor(a, b, t) {
-    const k = clamp01(t);
-    return [
-      clamp(Math.round(mixNumber(a[0], b[0], k)), 0, 255),
-      clamp(Math.round(mixNumber(a[1], b[1], k)), 0, 255),
-      clamp(Math.round(mixNumber(a[2], b[2], k)), 0, 255)
-    ];
-  }
-
-  function scaleColor(rgb, scalar) {
-    const s = Number.isFinite(Number(scalar)) ? Number(scalar) : 1;
-    return [
-      clamp(Math.round(rgb[0] * s), 0, 255),
-      clamp(Math.round(rgb[1] * s), 0, 255),
-      clamp(Math.round(rgb[2] * s), 0, 255)
-    ];
-  }
-
-  function smoothstep(edge0, edge1, x) {
-    const d = edge1 - edge0 || 1;
-    const t = clamp01((x - edge0) / d);
-    return t * t * (3 - 2 * t);
-  }
-
-  function softBand(value, center, width) {
-    const t = 1 - clamp(Math.abs(value - center) / Math.max(0.000001, width), 0, 1);
-    return t * t * (3 - 2 * t);
-  }
-
   function wrap01(value) {
     const n = Number(value);
     if (!Number.isFinite(n)) return 0;
     return ((n % 1) + 1) % 1;
   }
 
+  function safeNumber(value, fallback = 0) {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : fallback;
+  }
+
   function normalize3(p) {
-    const x = Number.isFinite(Number(p && p.x)) ? Number(p.x) : 0;
-    const y = Number.isFinite(Number(p && p.y)) ? Number(p.y) : 0;
-    const z = Number.isFinite(Number(p && p.z)) ? Number(p.z) : 1;
+    const x = safeNumber(p && p.x, 0);
+    const y = safeNumber(p && p.y, 0);
+    const z = safeNumber(p && p.z, 1);
     const m = Math.hypot(x, y, z) || 1;
 
     return {
@@ -106,8 +85,8 @@
   }
 
   function lonLatToVector(lonDeg, latDeg) {
-    const lon = Number(lonDeg || 0) * DEG;
-    const lat = Number(latDeg || 0) * DEG;
+    const lon = safeNumber(lonDeg, 0) * DEG;
+    const lat = safeNumber(latDeg, 0) * DEG;
     const c = Math.cos(lat);
 
     return normalize3({
@@ -119,6 +98,7 @@
 
   function vectorToLonLat(p) {
     const n = normalize3(p);
+
     return {
       lon: Math.atan2(n.x, n.z) / DEG,
       lat: Math.asin(clamp(n.y, -1, 1)) / DEG
@@ -126,11 +106,11 @@
   }
 
   function lonToU(lon) {
-    return wrap01((Number(lon) + 180) / 360);
+    return wrap01((safeNumber(lon, 0) + 180) / 360);
   }
 
   function latToV(lat) {
-    return clamp((90 - Number(lat)) / 180, 0, 1);
+    return clamp((90 - safeNumber(lat, 0)) / 180, 0, 1);
   }
 
   function uToLon(u) {
@@ -138,7 +118,7 @@
   }
 
   function vToLat(v) {
-    return 90 - clamp(Number(v), 0, 1) * 180;
+    return 90 - clamp(safeNumber(v, 0), 0, 1) * 180;
   }
 
   function parseInput(...args) {
@@ -146,26 +126,15 @@
       const p = args[0];
 
       if (Number.isFinite(Number(p.u)) && Number.isFinite(Number(p.v))) {
-        const u = wrap01(p.u);
-        const v = clamp(Number(p.v), 0, 1);
-        const lon = uToLon(u);
-        const lat = vToLat(v);
-        const vector = lonLatToVector(lon, lat);
-        return { ...vector, u, v, lon, lat };
+        return lonLatToVector(uToLon(p.u), vToLat(p.v));
       }
 
       if (Number.isFinite(Number(p.lon)) && Number.isFinite(Number(p.lat))) {
-        const lon = Number(p.lon);
-        const lat = Number(p.lat);
-        const vector = lonLatToVector(lon, lat);
-        return { ...vector, u: lonToU(lon), v: latToV(lat), lon, lat };
+        return lonLatToVector(p.lon, p.lat);
       }
 
       if (Number.isFinite(Number(p.longitude)) && Number.isFinite(Number(p.latitude))) {
-        const lon = Number(p.longitude);
-        const lat = Number(p.latitude);
-        const vector = lonLatToVector(lon, lat);
-        return { ...vector, u: lonToU(lon), v: latToV(lat), lon, lat };
+        return lonLatToVector(p.longitude, p.latitude);
       }
 
       if (
@@ -173,631 +142,444 @@
         Number.isFinite(Number(p.y)) &&
         Number.isFinite(Number(p.z))
       ) {
-        const vector = normalize3(p);
-        const ll = vectorToLonLat(vector);
-        return { ...vector, u: lonToU(ll.lon), v: latToV(ll.lat), lon: ll.lon, lat: ll.lat };
+        return normalize3(p);
       }
     }
 
-    if (args.length >= 3) {
-      const vector = normalize3({ x: args[0], y: args[1], z: args[2] });
-      const ll = vectorToLonLat(vector);
-      return { ...vector, u: lonToU(ll.lon), v: latToV(ll.lat), lon: ll.lon, lat: ll.lat };
+    if (args.length >= 3) return normalize3({ x: args[0], y: args[1], z: args[2] });
+    if (args.length >= 2) return lonLatToVector(args[0], args[1]);
+
+    return lonLatToVector(0, 0);
+  }
+
+  function mixNumber(a, b, t) {
+    const k = clamp01(t);
+    return a + (b - a) * k;
+  }
+
+  function mixColor(a, b, t) {
+    const k = clamp01(t);
+
+    return [
+      clamp(Math.round(mixNumber(a[0], b[0], k)), 0, 255),
+      clamp(Math.round(mixNumber(a[1], b[1], k)), 0, 255),
+      clamp(Math.round(mixNumber(a[2], b[2], k)), 0, 255)
+    ];
+  }
+
+  function safeCall(authority, method, arg) {
+    if (!authority || typeof authority[method] !== "function") return null;
+
+    try {
+      const value = authority[method](arg);
+      return value && typeof value === "object" ? value : null;
+    } catch (_error) {
+      return null;
     }
-
-    if (args.length >= 2) {
-      const lon = Number(args[0]);
-      const lat = Number(args[1]);
-      const vector = lonLatToVector(lon, lat);
-      return { ...vector, u: lonToU(lon), v: latToV(lat), lon, lat };
-    }
-
-    const vector = lonLatToVector(0, 0);
-    return { ...vector, u: 0.5, v: 0.5, lon: 0, lat: 0 };
   }
 
-  function numberField(source, key, fallback = 0) {
-    const n = Number(source && source[key]);
-    return Number.isFinite(n) ? n : fallback;
+  function getLandChannel() {
+    return (
+      root.HEARTH_LAND_CHANNEL ||
+      root.HearthLandChannel ||
+      (root.HEARTH && root.HEARTH.landChannel) ||
+      null
+    );
   }
 
-  function boolField(source, key, fallback = false) {
-    return typeof (source && source[key]) === "boolean" ? source[key] : fallback;
-  }
-
-  function stringField(source, key, fallback = "") {
-    return typeof (source && source[key]) === "string" && source[key] ? source[key] : fallback;
-  }
-
-  function colorField(source, keys, fallback) {
-    for (const key of keys) {
-      const value = source && source[key];
-
-      if (
-        Array.isArray(value) &&
-        value.length >= 3 &&
-        value.every((v) => Number.isFinite(Number(v)))
-      ) {
-        return [
-          clamp(Math.round(Number(value[0])), 0, 255),
-          clamp(Math.round(Number(value[1])), 0, 255),
-          clamp(Math.round(Number(value[2])), 0, 255)
-        ];
-      }
-    }
-
-    return fallback.slice();
-  }
-
-  function getClimateAuthority() {
-    if (root.HEARTH && root.HEARTH.climate) return root.HEARTH.climate;
-    if (root.HEARTH_CLIMATE) return root.HEARTH_CLIMATE;
-    if (root.HearthClimate) return root.HearthClimate;
-    return null;
-  }
-
-  function getCompositionAuthority() {
-    if (root.HEARTH && root.HEARTH.composition) return root.HEARTH.composition;
-    if (root.HEARTH_COMPOSITION) return root.HEARTH_COMPOSITION;
-    if (root.HearthComposition) return root.HearthComposition;
-    return null;
+  function getWaterChannel() {
+    return (
+      root.HEARTH_WATER_CHANNEL ||
+      root.HearthWaterChannel ||
+      (root.HEARTH && root.HEARTH.waterChannel) ||
+      null
+    );
   }
 
   function getElevationAuthority() {
-    if (root.HEARTH && root.HEARTH.elevation) return root.HEARTH.elevation;
-    if (root.HEARTH_ELEVATION) return root.HEARTH_ELEVATION;
-    if (root.HearthElevation) return root.HearthElevation;
-    return null;
-  }
-
-  function getMaterialsAuthority() {
-    if (root.HEARTH && root.HEARTH.materials) return root.HEARTH.materials;
-    if (root.HEARTH_MATERIALS) return root.HEARTH_MATERIALS;
-    if (root.HearthMaterials) return root.HearthMaterials;
-    return null;
-  }
-
-  function getHydrologyAuthority() {
-    if (root.HEARTH && root.HEARTH.hydrology) return root.HEARTH.hydrology;
-    if (root.HEARTH_HYDROLOGY) return root.HEARTH_HYDROLOGY;
-    if (root.HearthHydrology) return root.HearthHydrology;
-    return null;
-  }
-
-  function getOceanAuthority() {
-    if (root.HEARTH && root.HEARTH.ocean) return root.HEARTH.ocean;
-    if (root.HEARTH_OCEAN) return root.HEARTH_OCEAN;
-    if (root.HearthOcean) return root.HearthOcean;
-    return null;
-  }
-
-  function callAuthority(authority, methods, args, fallbackArg) {
-    if (!authority) return null;
-
-    for (const method of methods) {
-      if (typeof authority[method] !== "function") continue;
-
-      try {
-        const result = authority[method].apply(authority, args);
-        if (result && typeof result === "object") return result;
-      } catch (_error) {
-        try {
-          const result = authority[method].call(authority, fallbackArg);
-          if (result && typeof result === "object") return result;
-        } catch (_error2) {}
-      }
-    }
-
-    return null;
-  }
-
-  function callClimateAuthority(p, base, terrain, elevation) {
-    const climate = getClimateAuthority();
-
-    if (!climate) return null;
-
-    if (typeof climate.sampleClimate === "function") {
-      try {
-        const result = climate.sampleClimate(p.u, p.v, base || {}, terrain || {}, elevation || {});
-        if (result && typeof result === "object") return result;
-      } catch (_error) {}
-    }
-
-    return callAuthority(
-      climate,
-      ["sample", "read", "getClimate", "sampleAir", "readAir"],
-      [{ u: p.u, v: p.v, lon: p.lon, lat: p.lat, x: p.x, y: p.y, z: p.z }],
-      { u: p.u, v: p.v, lon: p.lon, lat: p.lat, x: p.x, y: p.y, z: p.z }
+    return (
+      root.HEARTH_ELEVATION ||
+      root.HearthElevation ||
+      (root.HEARTH && root.HEARTH.elevation) ||
+      null
     );
   }
 
-  function packetFromDirectInput(input) {
-    if (!input || typeof input !== "object") return null;
-
-    if (
-      Number.isFinite(Number(input.atmosphereSeparation)) ||
-      Number.isFinite(Number(input.humidity)) ||
-      Number.isFinite(Number(input.airPressure)) ||
-      Number.isFinite(Number(input.barometricPressure)) ||
-      Number.isFinite(Number(input.cloudPotential)) ||
-      Number.isFinite(Number(input.mistPotential)) ||
-      Number.isFinite(Number(input.stormPressure)) ||
-      Number.isFinite(Number(input.rimHaze)) ||
-      Number.isFinite(Number(input.limbAtmosphere))
-    ) {
-      return input;
-    }
-
-    if (input.air && typeof input.air === "object") return input.air;
-    if (input.climate && typeof input.climate === "object") return input.climate;
-    if (input.material && typeof input.material === "object") return input.material;
-    if (input.composition && typeof input.composition === "object") return input.composition;
-    if (input.elevationSample && typeof input.elevationSample === "object") return input.elevationSample;
-
-    return null;
+  function getCompositionAuthority() {
+    return (
+      root.HEARTH_COMPOSITION ||
+      root.HearthComposition ||
+      (root.HEARTH && root.HEARTH.composition) ||
+      null
+    );
   }
 
-  function fallbackPacket(p) {
-    const latitudeCold = clamp01(Math.abs(p.lat) / 90);
-    const equatorWarm = clamp01(1 - latitudeCold);
-    const limbHint = clamp01(1 - Math.abs(p.z));
-    const humidity = clamp01(equatorWarm * 0.34 + softBand(p.lat, 0, 32) * 0.20);
-    const pressure = clamp01(0.58 + Math.cos(p.lat * DEG) * 0.14 - latitudeCold * 0.10);
-    const gradient = clamp01(Math.abs(Math.sin((p.lon + p.lat) * DEG)) * 0.42);
-    const cloud = clamp01(humidity * 0.42 + gradient * 0.18);
-    const mist = clamp01(humidity * 0.22 + limbHint * 0.18);
-    const storm = clamp01(cloud * gradient * 0.40);
+  function readAuthority(authority, arg) {
+    return (
+      safeCall(authority, "sample", arg) ||
+      safeCall(authority, "read", arg) ||
+      safeCall(authority, "get", arg) ||
+      null
+    );
+  }
 
-    return {
-      contract: "HEARTH_AIR_CHANNEL_FALLBACK_PACKET",
-      receipt: "HEARTH_AIR_CHANNEL_FALLBACK_PACKET_RECEIPT",
+  function readBodyInputs(p) {
+    const ll = vectorToLonLat(p);
+
+    const arg = {
       x: p.x,
       y: p.y,
       z: p.z,
-      u: p.u,
-      v: p.v,
-      lon: p.lon,
-      lat: p.lat,
-
-      elevation: 0,
-      isLand: false,
-      isWater: false,
-
-      temperature: equatorWarm,
-      moisture: humidity,
-      humidity,
-      airPressure: pressure,
-      barometricPressure: pressure,
-      barometricGradient: gradient,
-      cloudPotential: cloud,
-      mistPotential: mist,
-      stormPressure: storm,
-      rimHaze: limbHint,
-      limbAtmosphere: limbHint,
-      atmosphereSeparation: 0.42,
-      rgb: FALLBACK_COLORS.haze.slice(),
-      alpha: clamp01(0.10 + mist * 0.20 + cloud * 0.12)
+      u: lonToU(ll.lon),
+      v: latToV(ll.lat),
+      lon: ll.lon,
+      lat: ll.lat
     };
-  }
 
-  function readSourcePackets(args, p) {
-    const fallbackArg = { u: p.u, v: p.v, lon: p.lon, lat: p.lat, x: p.x, y: p.y, z: p.z };
-    const direct = args.length === 1 ? packetFromDirectInput(args[0]) : null;
+    const land = readAuthority(getLandChannel(), arg) || {};
+    const water = readAuthority(getWaterChannel(), arg) || {};
+    const elevation = readAuthority(getElevationAuthority(), arg) || {};
+    const composition = readAuthority(getCompositionAuthority(), arg) || {};
 
-    const composition = direct || callAuthority(
-      getCompositionAuthority(),
-      ["sample", "read", "compose", "sampleComposition", "readComposition"],
-      args,
-      fallbackArg
+    const landAlpha = clamp01(
+      safeNumber(
+        land.landAlpha ??
+          land.landPresence ??
+          land.alpha ??
+          composition.landAlpha ??
+          composition.landPresence,
+        0
+      )
     );
 
-    const elevation = direct || callAuthority(
-      getElevationAuthority(),
-      ["sample", "read", "getElevation", "sampleElevation", "readElevation"],
-      args,
-      fallbackArg
+    const landPotential = clamp01(
+      safeNumber(
+        land.landPotential ??
+          land.landPresence ??
+          composition.landPotential ??
+          composition.landPresence,
+        landAlpha
+      )
     );
 
-    const material = direct || callAuthority(
-      getMaterialsAuthority(),
-      ["sample", "read", "getMaterial", "materialAt", "getMaterialAt", "getSurfaceMaterial", "resolve", "resolveMaterial"],
-      args,
-      fallbackArg
+    const waterAlpha = clamp01(
+      safeNumber(
+        water.waterAlpha ??
+          water.waterPresence ??
+          water.alpha ??
+          composition.waterAlpha ??
+          composition.waterPresence,
+        0
+      )
     );
 
-    const hydrology = direct || callAuthority(
-      getHydrologyAuthority(),
-      ["sample", "read", "sampleHydrology", "readHydrology", "getHydrology"],
-      args,
-      fallbackArg
+    const bodyBinding = clamp01(
+      Math.max(
+        safeNumber(land.bodyBinding, 0),
+        land.bodyBound === true ? 1 : 0,
+        safeNumber(composition.bodyBinding, 0)
+      )
     );
 
-    const ocean = direct || callAuthority(
-      getOceanAuthority(),
-      ["sample", "read", "sampleOcean", "readOcean", "getOcean", "oceanAt", "getOceanAt", "resolveOcean"],
-      args,
-      fallbackArg
+    const surfaceAttachment = clamp01(
+      Math.max(
+        safeNumber(land.surfaceAttachment, 0),
+        land.surfaceBound === true ? 1 : 0,
+        safeNumber(composition.surfaceAttachment, 0)
+      )
     );
 
-    const climate = direct || callClimateAuthority(
-      p,
-      composition || {},
-      material || {},
-      elevation || {}
+    const hydrosphereBinding = clamp01(
+      Math.max(
+        safeNumber(water.hydrosphereBinding, 0),
+        water.bodyBound === true ? 1 : 0,
+        safeNumber(water.depthBinding, 0) * 0.78
+      )
+    );
+
+    const surfaceSeat = clamp01(
+      Math.max(
+        safeNumber(water.surfaceSeat, 0),
+        water.surfaceBound === true ? 1 : 0,
+        safeNumber(water.depthBinding, 0) * 0.72
+      )
+    );
+
+    const elevationValue = safeNumber(
+      land.elevation ??
+        water.elevation ??
+        elevation.elevation ??
+        composition.elevation,
+      0
+    );
+
+    const seaLevel = safeNumber(
+      water.seaLevel ??
+        land.seaLevel ??
+        elevation.seaLevel ??
+        composition.seaLevel,
+      0
+    );
+
+    const coastPotential = clamp01(
+      Math.max(
+        safeNumber(land.coastPotential, 0),
+        safeNumber(water.coastPotential, 0),
+        safeNumber(composition.coastPotential, 0),
+        safeNumber(land.shorelineContact, 0),
+        safeNumber(water.shorelineContact, 0)
+      )
+    );
+
+    const basinPotential = clamp01(
+      Math.max(
+        safeNumber(land.basinPotential, 0),
+        safeNumber(water.basinInfluence, 0),
+        safeNumber(composition.basinPotential, 0)
+      )
+    );
+
+    const isLand = Boolean(
+      land.isLand === true ||
+        composition.isLand === true ||
+        landAlpha >= 0.2 ||
+        (landPotential >= 0.28 && elevationValue > seaLevel)
+    );
+
+    const isWater = Boolean(
+      water.isWater === true ||
+        land.isWater === true ||
+        waterAlpha >= 0.2 ||
+        elevationValue <= seaLevel
     );
 
     return {
-      climate: climate && typeof climate === "object" ? climate : null,
-      composition: composition && typeof composition === "object" ? composition : null,
-      elevation: elevation && typeof elevation === "object" ? elevation : null,
-      material: material && typeof material === "object" ? material : null,
-      hydrology: hydrology && typeof hydrology === "object" ? hydrology : null,
-      ocean: ocean && typeof ocean === "object" ? ocean : null
-    };
-  }
-
-  function normalizePacket(sources, p) {
-    const fallback = fallbackPacket(p);
-    const climate = sources.climate || {};
-    const composition = sources.composition || {};
-    const elevationPacket = sources.elevation || {};
-    const material = sources.material || {};
-    const hydrology = sources.hydrology || {};
-    const ocean = sources.ocean || {};
-
-    const elevation = Number.isFinite(Number(composition.elevation))
-      ? Number(composition.elevation)
-      : Number.isFinite(Number(elevationPacket.elevation))
-        ? Number(elevationPacket.elevation)
-        : Number.isFinite(Number(material.elevation))
-          ? Number(material.elevation)
-          : fallback.elevation;
-
-    const isWater = boolField(
-      composition,
-      "isWater",
-      boolField(
-        elevationPacket,
-        "isWater",
-        boolField(hydrology, "waterFill", elevation <= SEA_LEVEL)
-      )
-    );
-
-    const isLand = boolField(composition, "isLand", boolField(elevationPacket, "isLand", elevation > SEA_LEVEL));
-
-    const latitudeCold = clamp01(Math.abs(p.lat) / 90);
-    const equatorWarm = clamp01(1 - latitudeCold);
-
-    const moisture = clamp01(
-      numberField(climate, "moisture",
-        numberField(climate, "wetness",
-          numberField(composition, "rainforestInfluence",
-            numberField(composition, "maritimeInfluence", 0) * 0.54 +
-            numberField(hydrology, "waterFillStrength", 0) * 0.24 +
-            numberField(ocean, "oceanPresence", 0) * 0.18
-          )
-        )
-      )
-    );
-
-    const temperature = clamp01(
-      numberField(climate, "temperature",
-        numberField(composition, "climatePotential", equatorWarm)
-      )
-    );
-
-    const humidity = clamp01(
-      numberField(climate, "humidity",
-        numberField(material, "humidity",
-          moisture * 0.50 +
-          numberField(hydrology, "waterFillStrength", 0) * 0.18 +
-          numberField(ocean, "oceanPresence", 0) * 0.16 +
-          equatorWarm * 0.10
-        )
-      )
-    );
-
-    const atmosphereSeparation = clamp01(
-      numberField(material, "atmosphereSeparation",
-        numberField(climate, "atmosphereSeparation",
-          humidity * 0.18 +
-          latitudeCold * 0.10 +
-          numberField(ocean, "oceanTerrainSeparationFeed", 0) * 0.10 +
-          0.22
-        )
-      )
-    );
-
-    const airPressure = clamp01(
-      numberField(climate, "airPressure",
-        numberField(climate, "pressure",
-          0.52 +
-          (1 - Math.abs(p.lat) / 110) * 0.20 +
-          humidity * 0.10 -
-          Math.max(0, elevation) * 0.12
-        )
-      )
-    );
-
-    const barometricPressure = clamp01(
-      numberField(climate, "barometricPressure",
-        airPressure * 0.76 +
-        humidity * 0.10 +
-        numberField(composition, "stormCoastInfluence", 0) * 0.08
-      )
-    );
-
-    const barometricGradient = clamp01(
-      numberField(climate, "barometricGradient",
-        Math.abs(airPressure - barometricPressure) * 1.8 +
-        numberField(composition, "stormCoastInfluence", 0) * 0.20 +
-        numberField(composition, "monsoonInfluence", 0) * 0.12 +
-        numberField(composition, "alpineInfluence", 0) * 0.10
-      )
-    );
-
-    const cloudPotential = clamp01(
-      numberField(climate, "cloudPotential",
-        humidity * 0.38 +
-        barometricGradient * 0.20 +
-        numberField(composition, "stormCoastInfluence", 0) * 0.16 +
-        numberField(composition, "monsoonInfluence", 0) * 0.10
-      )
-    );
-
-    const mistPotential = clamp01(
-      numberField(climate, "mistPotential",
-        humidity * 0.28 +
-        numberField(composition, "basinPotential", 0) * 0.12 +
-        numberField(hydrology, "nearSeaLevelStrength", 0) * 0.14 +
-        numberField(ocean, "shallowShelfBlueFeed", 0) * 0.10
-      )
-    );
-
-    const stormPressure = clamp01(
-      numberField(climate, "stormPressure",
-        cloudPotential * barometricGradient * 0.56 +
-        numberField(composition, "stormCoastInfluence", 0) * 0.22 +
-        numberField(composition, "monsoonInfluence", 0) * 0.14
-      )
-    );
-
-    const rimHaze = clamp01(numberField(climate, "rimHaze", atmosphereSeparation * 0.38 + humidity * 0.14));
-    const limbAtmosphere = clamp01(numberField(climate, "limbAtmosphere", rimHaze * 0.68 + atmosphereSeparation * 0.18));
-
-    const baseRgb = colorField(
-      climate,
-      ["airRgb", "atmosphereRgb", "rgb", "color"],
-      colorField(material, ["atmosphereRgb", "airRgb"], FALLBACK_COLORS.haze)
-    );
-
-    return {
-      contract:
-        stringField(climate, "contract", "") ||
-        stringField(material, "contract", "") ||
-        stringField(composition, "contract", "") ||
-        stringField(elevationPacket, "contract", fallback.contract),
-
-      receipt:
-        stringField(climate, "receipt", "") ||
-        stringField(material, "receipt", "") ||
-        stringField(composition, "receipt", "") ||
-        stringField(elevationPacket, "receipt", fallback.receipt),
-
-      x: p.x,
-      y: p.y,
-      z: p.z,
-      u: p.u,
-      v: p.v,
-      lon: p.lon,
-      lat: p.lat,
-
+      arg,
+      land,
+      water,
       elevation,
+      composition,
+
+      landAlpha,
+      landPotential,
+      waterAlpha,
+      bodyBinding,
+      surfaceAttachment,
+      hydrosphereBinding,
+      surfaceSeat,
+      elevation: elevationValue,
+      seaLevel,
+      coastPotential,
+      basinPotential,
       isLand,
       isWater,
 
-      temperature,
-      moisture,
-      humidity,
-      airPressure,
-      barometricPressure,
-      barometricGradient,
-      cloudPotential,
-      mistPotential,
-      stormPressure,
-      rimHaze,
-      limbAtmosphere,
-      atmosphereSeparation,
-
-      stormCoastInfluence: clamp01(numberField(composition, "stormCoastInfluence", 0)),
-      monsoonInfluence: clamp01(numberField(composition, "monsoonInfluence", 0)),
-      rainforestInfluence: clamp01(numberField(composition, "rainforestInfluence", 0)),
-      maritimeInfluence: clamp01(numberField(composition, "maritimeInfluence", 0)),
-      alpineInfluence: clamp01(numberField(composition, "alpineInfluence", 0)),
-      basinPotential: clamp01(numberField(composition, "basinPotential", 0)),
-      coastPotential: clamp01(numberField(composition, "coastPotential", 0)),
-      waterFillStrength: clamp01(numberField(hydrology, "waterFillStrength", 0)),
-      oceanPresence: clamp01(numberField(ocean, "oceanPresence", 0)),
-      nearSeaLevelStrength: clamp01(numberField(hydrology, "nearSeaLevelStrength", 0)),
-
-      rgb: baseRgb,
-      color: baseRgb,
-      alpha: clamp01(numberField(climate, "alpha", atmosphereSeparation * 0.22 + cloudPotential * 0.18 + mistPotential * 0.12))
+      landAuthorityPresent: Boolean(getLandChannel()),
+      waterAuthorityPresent: Boolean(getWaterChannel()),
+      elevationAuthorityPresent: Boolean(getElevationAuthority()),
+      compositionAuthorityPresent: Boolean(getCompositionAuthority())
     };
   }
 
-  function airClassFor(packet) {
-    if (packet.stormPressure > 0.42) return "floating-storm-pressure";
-    if (packet.cloudPotential > 0.48) return "floating-cloud-field";
-    if (packet.mistPotential > 0.38) return "floating-humid-mist";
-    if (packet.barometricGradient > 0.40) return "floating-barometric-gradient";
-    if (packet.humidity > 0.42) return "floating-humidity-field";
-    if (packet.rimHaze > 0.32 || packet.limbAtmosphere > 0.30) return "floating-rim-haze";
-    if (packet.atmosphereSeparation > 0.24) return "floating-clear-air";
-    return "thin-air-channel";
-  }
+  function localWeatherField(p, body) {
+    const ll = vectorToLonLat(p);
+    const latCurve = Math.cos(ll.lat * DEG);
+    const waveA = Math.sin((ll.lon * 1.7 + ll.lat * 0.55 + 41) * DEG) * 0.5 + 0.5;
+    const waveB = Math.cos((ll.lon * 0.85 - ll.lat * 2.2 - 12) * DEG) * 0.5 + 0.5;
+    const waveC = Math.sin((p.x * 2.4 + p.y * 3.1 + p.z * 1.8) * Math.PI) * 0.5 + 0.5;
 
-  function computeAirColor(packet, airClass, airAlpha) {
-    let rgb = packet.rgb.slice();
-
-    if (airClass === "floating-storm-pressure") {
-      rgb = mixColor(rgb, FALLBACK_COLORS.storm, 0.46);
-      rgb = mixColor(rgb, FALLBACK_COLORS.pressure, packet.barometricGradient * 0.22);
-    } else if (airClass === "floating-cloud-field") {
-      rgb = mixColor(rgb, FALLBACK_COLORS.haze, 0.42);
-    } else if (airClass === "floating-humid-mist") {
-      rgb = mixColor(rgb, FALLBACK_COLORS.humidMist, 0.46);
-    } else if (airClass === "floating-barometric-gradient") {
-      rgb = mixColor(rgb, FALLBACK_COLORS.pressure, 0.34);
-    } else if (airClass === "floating-rim-haze") {
-      rgb = mixColor(rgb, FALLBACK_COLORS.rim, 0.28);
-    } else {
-      rgb = mixColor(FALLBACK_COLORS.clearAir, rgb, 0.36);
-    }
-
-    const stormShade = clamp01(packet.stormPressure * 0.12 + packet.barometricGradient * 0.06);
-    rgb = scaleColor(rgb, 1 - stormShade);
-
-    return mixColor(FALLBACK_COLORS.transparent, rgb, airAlpha);
-  }
-
-  function sample(...args) {
-    const p = parseInput(...args);
-    const sources = readSourcePackets(args, p);
-    const packet = normalizePacket(sources, p);
-
-    const humidity = clamp01(packet.humidity);
-    const pressure = clamp01(packet.airPressure);
-    const barometricPressure = clamp01(packet.barometricPressure);
-    const barometricGradient = clamp01(packet.barometricGradient);
-    const cloudPotential = clamp01(packet.cloudPotential);
-    const mistPotential = clamp01(packet.mistPotential);
-    const stormPressure = clamp01(packet.stormPressure);
-    const atmosphereSeparation = clamp01(packet.atmosphereSeparation);
-    const rimHaze = clamp01(packet.rimHaze);
-    const limbAtmosphere = clamp01(packet.limbAtmosphere);
-
-    const airFloat = clamp01(
-      atmosphereSeparation * 0.34 +
-        cloudPotential * 0.18 +
-        mistPotential * 0.14 +
-        rimHaze * 0.12 +
-        limbAtmosphere * 0.12 +
-        stormPressure * 0.10
-    );
-
-    const pressureEnvelope = clamp01(
-      pressure * 0.30 +
-        barometricPressure * 0.28 +
-        barometricGradient * 0.18 +
-        stormPressure * 0.14 +
-        humidity * 0.10
-    );
-
-    const humidityEnvelope = clamp01(
-      humidity * 0.42 +
-        mistPotential * 0.20 +
-        cloudPotential * 0.16 +
-        packet.waterFillStrength * 0.10 +
-        packet.oceanPresence * 0.08 +
-        packet.nearSeaLevelStrength * 0.04
-    );
-
-    const cloudEnvelope = clamp01(
-      cloudPotential * 0.38 +
-        mistPotential * 0.18 +
-        stormPressure * 0.18 +
-        barometricGradient * 0.14 +
-        packet.stormCoastInfluence * 0.08 +
-        packet.monsoonInfluence * 0.04
-    );
-
-    const bodyDetachment = clamp01(
-      airFloat * 0.42 +
-        atmosphereSeparation * 0.22 +
-        cloudEnvelope * 0.14 +
-        rimHaze * 0.12 +
-        limbAtmosphere * 0.10
-    );
-
-    const landWaterRejection = clamp01(
-      bodyDetachment * 0.36 +
-        pressureEnvelope * 0.18 +
-        humidityEnvelope * 0.16 +
-        cloudEnvelope * 0.16 +
-        atmosphereSeparation * 0.14
-    );
-
-    const airAlpha = clamp01(
-      atmosphereSeparation * 0.18 +
-        humidityEnvelope * 0.16 +
-        cloudEnvelope * 0.16 +
-        rimHaze * 0.12 +
-        limbAtmosphere * 0.12 +
-        stormPressure * 0.10 +
-        mistPotential * 0.08
-    );
-
-    const airClass = airClassFor(packet);
-    const rgb = computeAirColor(packet, airClass, airAlpha);
+    const maritimeInfluence = clamp01(body.waterAlpha * 0.64 + body.coastPotential * 0.26 + waveB * 0.08);
+    const landHeatInfluence = clamp01(body.landAlpha * 0.34 + Math.max(0, body.elevation - body.seaLevel) * 0.12);
+    const humidity = clamp01(0.18 + maritimeInfluence * 0.5 + body.basinPotential * 0.16 + waveA * 0.06);
+    const temperature = clamp01(0.28 + latCurve * 0.34 + landHeatInfluence * 0.14 - Math.max(0, body.elevation) * 0.10);
+    const pressureBase = clamp01(0.66 + body.waterAlpha * 0.09 + body.coastPotential * 0.05 - Math.max(0, body.elevation) * 0.16);
+    const stormPressure = clamp01(Math.max(0, humidity - 0.58) * 0.34 + body.coastPotential * 0.08 + waveC * 0.035);
 
     return {
-      contract: CONTRACT,
+      maritimeInfluence,
+      landHeatInfluence,
+      humidity,
+      temperature,
+      airPressure: pressureBase,
+      stormPressure,
+      waveA,
+      waveB,
+      waveC
+    };
+  }
+
+  function computeBoundaryHandshake(p, body, weather) {
+    const landSeat = clamp01(body.landAlpha * Math.max(body.bodyBinding, body.surfaceAttachment));
+    const waterSeat = clamp01(body.waterAlpha * Math.max(body.hydrosphereBinding, body.surfaceSeat));
+    const shelfSeat = clamp01(body.landPotential * 0.28 + body.coastPotential * 0.34 + body.basinPotential * 0.12);
+    const bodyMassSignal = clamp01(Math.max(landSeat, waterSeat, shelfSeat, body.landAlpha * 0.25, body.waterAlpha * 0.38));
+
+    const coreContact = clamp01(bodyMassSignal);
+    const coreContactConfidence = clamp01(
+      0.36 +
+        body.landAuthorityPresent * 0.13 +
+        body.waterAuthorityPresent * 0.13 +
+        body.elevationAuthorityPresent * 0.08 +
+        body.compositionAuthorityPresent * 0.08 +
+        coreContact * 0.22
+    );
+
+    const boundaryConfidence = clamp01(coreContactConfidence + body.coastPotential * 0.10);
+    const planetaryBoundary = clamp01(0.58 + coreContact * 0.24 + body.waterAlpha * 0.07 + body.landPotential * 0.06);
+    const pressureShell = clamp01(0.42 + weather.airPressure * 0.32 + weather.humidity * 0.10 + coreContact * 0.10);
+    const boundaryEnvelope = clamp01(0.18 + planetaryBoundary * 0.20 + pressureShell * 0.22 + coreContact * 0.22);
+    const atmosphericWrap = clamp01(0.20 + boundaryEnvelope * 0.42 + weather.humidity * 0.14);
+    const rimEnvelope = clamp01(0.16 + pressureShell * 0.24 + atmosphericWrap * 0.18);
+    const horizonClamp = clamp01(0.74 + boundaryEnvelope * 0.19 + coreContactConfidence * 0.05);
+    const limbCompression = clamp01(0.48 + rimEnvelope * 0.27 + horizonClamp * 0.13);
+
+    const bodyOcclusion = clamp01(0.08 + coreContact * 0.22 + pressureShell * 0.10);
+    const innerHazeAlpha = clamp01(0.025 + weather.humidity * 0.045 + weather.stormPressure * 0.035);
+    const outerGlowAlpha = clamp01(0.045 + rimEnvelope * 0.13);
+    const visualShellAlpha = clamp01(0.050 + pressureShell * 0.055 + boundaryEnvelope * 0.060);
+    const atmosphereOnlyAlpha = clamp01(0.042 + weather.humidity * 0.055 + rimEnvelope * 0.035);
+
+    return {
+      planetaryBoundary,
+      boundaryEnvelope,
+      boundaryConfidence,
+      bodyBoundaryReadOnly: true,
+      coreContact,
+      coreContactConfidence,
+      pressureShell,
+      rimEnvelope,
+      horizonClamp,
+      limbCompression,
+      atmosphericWrap,
+      innerHazeAlpha,
+      outerGlowAlpha,
+      surfaceRejection: 1,
+      landCarryRejection: clamp01(0.88 + body.landAlpha * 0.09),
+      waterCarryRejection: clamp01(0.88 + body.waterAlpha * 0.09),
+      terrainCarryRejection: 1,
+      bodyOcclusion,
+      visualShellAlpha,
+      atmosphereOnlyAlpha,
+      boundaryMode: "read-only-core-boundary-envelope"
+    };
+  }
+
+  function computeAirColor(body, weather, boundary) {
+    const deepPressure = [8, 12, 17];
+    const maritimeBlue = [13, 22, 31];
+    const rimBlue = [46, 70, 86];
+    const humidGray = [24, 31, 36];
+
+    let rgb = mixColor(deepPressure, maritimeBlue, clamp01(weather.maritimeInfluence * 0.55));
+    rgb = mixColor(rgb, humidGray, clamp01(weather.humidity * 0.22));
+    rgb = mixColor(rgb, rimBlue, clamp01(boundary.rimEnvelope * 0.16));
+
+    if (body.isLand) {
+      rgb = mixColor(rgb, [18, 18, 16], clamp01(body.landAlpha * 0.10));
+    }
+
+    return rgb;
+  }
+
+  function sampleAir(...args) {
+    const p = parseInput(...args);
+    const ll = vectorToLonLat(p);
+    const body = readBodyInputs(p);
+    const weather = localWeatherField(p, body);
+    const boundary = computeBoundaryHandshake(p, body, weather);
+    const rgb = computeAirColor(body, weather, boundary);
+
+    const cloudPotential = clamp01(weather.humidity * 0.34 + weather.stormPressure * 0.26 + body.coastPotential * 0.08);
+    const mistPotential = clamp01(weather.humidity * 0.24 + body.coastPotential * 0.18 + body.basinPotential * 0.10);
+    const barometricPressure = clamp01(weather.airPressure * 0.72 + boundary.pressureShell * 0.18);
+    const barometricGradient = clamp01(Math.abs(weather.waveA - weather.waveB) * 0.24 + body.coastPotential * 0.10);
+
+    const airAlpha = clamp01(
+      boundary.atmosphereOnlyAlpha +
+        boundary.visualShellAlpha * 0.28 +
+        cloudPotential * 0.035
+    );
+
+    return {
+      contract: PUBLIC_CONTRACT,
+      compatibilityContract: PUBLIC_CONTRACT,
+      boundaryHandshakeContract: BOUNDARY_HANDSHAKE_CONTRACT,
       receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
-      authority: "air-pressure-humidity-channel",
+      authority: "air-core-boundary-pressure-envelope-channel",
 
       x: p.x,
       y: p.y,
       z: p.z,
-      u: p.u,
-      v: p.v,
-      lon: p.lon,
-      lat: p.lat,
-
-      sourceContract: packet.contract,
-      sourceReceipt: packet.receipt,
+      u: lonToU(ll.lon),
+      v: latToV(ll.lat),
+      lon: ll.lon,
+      lat: ll.lat,
 
       channel: "air",
-      channelClass: airClass,
-      airClass,
+      channelClass: "boundary-pressure-envelope-air-channel",
+      airClass: "boundary-pressure-envelope-air-channel",
       isLandChannel: false,
       isWaterChannel: false,
       isAirChannel: true,
 
       airPresence: airAlpha,
       airAlpha,
-      atmosphereSeparation,
-      humidity,
-      airPressure: pressure,
+      atmosphereSeparation: clamp01(boundary.surfaceRejection * 0.74 + boundary.boundaryEnvelope * 0.12),
+      humidity: weather.humidity,
+      airPressure: weather.airPressure,
       barometricPressure,
       barometricGradient,
       cloudPotential,
       mistPotential,
-      stormPressure,
-      rimHaze,
-      limbAtmosphere,
+      stormPressure: weather.stormPressure,
+      rimHaze: boundary.rimEnvelope,
+      limbAtmosphere: boundary.atmosphericWrap,
+      temperature: weather.temperature,
+      moisture: weather.humidity,
 
-      temperature: packet.temperature,
-      moisture: packet.moisture,
-      elevation: packet.elevation,
-      isLand: packet.isLand,
-      isWater: packet.isWater,
+      elevation: body.elevation,
+      seaLevel: body.seaLevel,
+      isLand: body.isLand,
+      isWater: body.isWater,
 
-      stormCoastInfluence: packet.stormCoastInfluence,
-      monsoonInfluence: packet.monsoonInfluence,
-      rainforestInfluence: packet.rainforestInfluence,
-      maritimeInfluence: packet.maritimeInfluence,
-      alpineInfluence: packet.alpineInfluence,
-      basinPotential: packet.basinPotential,
-      coastPotential: packet.coastPotential,
+      stormCoastInfluence: clamp01(weather.stormPressure * body.coastPotential),
+      monsoonInfluence: clamp01(weather.humidity * body.coastPotential * 0.34),
+      rainforestInfluence: clamp01(weather.humidity * body.landAlpha * 0.28),
+      maritimeInfluence: weather.maritimeInfluence,
+      alpineInfluence: clamp01(Math.max(0, body.elevation - body.seaLevel) * 0.26),
+      basinPotential: body.basinPotential,
+      coastPotential: body.coastPotential,
 
-      pressureEnvelope,
-      humidityEnvelope,
-      cloudEnvelope,
-      airFloat,
-      bodyDetachment,
-      landWaterRejection,
+      pressureEnvelope: boundary.pressureShell,
+      humidityEnvelope: clamp01(weather.humidity * 0.72 + boundary.innerHazeAlpha * 0.16),
+      cloudEnvelope: clamp01(cloudPotential * 0.68 + boundary.outerGlowAlpha * 0.12),
+      airFloat: clamp01(0.44 + boundary.atmosphericWrap * 0.28),
+      bodyDetachment: clamp01(0.28 - boundary.coreContact * 0.14 + boundary.outerGlowAlpha * 0.08),
+      landWaterRejection: clamp01(Math.min(boundary.landCarryRejection, boundary.waterCarryRejection)),
+
+      planetaryBoundary: boundary.planetaryBoundary,
+      boundaryEnvelope: boundary.boundaryEnvelope,
+      boundaryConfidence: boundary.boundaryConfidence,
+      bodyBoundaryReadOnly: true,
+      coreContact: boundary.coreContact,
+      coreContactConfidence: boundary.coreContactConfidence,
+      pressureShell: boundary.pressureShell,
+      rimEnvelope: boundary.rimEnvelope,
+      horizonClamp: boundary.horizonClamp,
+      limbCompression: boundary.limbCompression,
+      atmosphericWrap: boundary.atmosphericWrap,
+      innerHazeAlpha: boundary.innerHazeAlpha,
+      outerGlowAlpha: boundary.outerGlowAlpha,
+      surfaceRejection: boundary.surfaceRejection,
+      landCarryRejection: boundary.landCarryRejection,
+      waterCarryRejection: boundary.waterCarryRejection,
+      terrainCarryRejection: boundary.terrainCarryRejection,
+      bodyOcclusion: boundary.bodyOcclusion,
+      visualShellAlpha: boundary.visualShellAlpha,
+      atmosphereOnlyAlpha: boundary.atmosphereOnlyAlpha,
+      boundaryMode: boundary.boundaryMode,
 
       bodyBound: false,
       surfaceBound: false,
@@ -805,6 +587,20 @@
       allowedToFloat: true,
       mayDefineLand: false,
       mayDefineWater: false,
+      mayDefineTerrain: false,
+      mayDefineElevation: false,
+      mayDefineComposition: false,
+      mayDefineHydrology: false,
+      mayDefineMaterials: false,
+
+      landAuthorityPresent: body.landAuthorityPresent,
+      waterAuthorityPresent: body.waterAuthorityPresent,
+      elevationAuthorityPresent: body.elevationAuthorityPresent,
+      compositionAuthorityPresent: body.compositionAuthorityPresent,
+      landExpectedContract: LAND_CONTRACT,
+      waterExpectedContract: WATER_CONTRACT,
+      landActualContract: body.land && body.land.contract ? String(body.land.contract) : "",
+      waterActualContract: body.water && body.water.contract ? String(body.water.contract) : "",
 
       rgb,
       color: rgb,
@@ -816,10 +612,13 @@
       ownsCompositionClassification: false,
       ownsLand: false,
       ownsWater: false,
+      ownsTerrain: false,
+      ownsHydrology: false,
       ownsMaterialPalette: false,
       ownsCanvas: false,
       ownsRuntime: false,
       ownsControls: false,
+
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -827,32 +626,100 @@
     };
   }
 
-  const read = (...args) => sample(...args);
+  function createWideProbe(options = {}) {
+    const rows = clamp(Math.round(safeNumber(options.rows, 5)), 2, 16);
+    const columns = clamp(Math.round(safeNumber(options.columns, 9)), 3, 32);
+    const samples = [];
+
+    for (let row = 0; row < rows; row += 1) {
+      const v = rows <= 1 ? 0.5 : row / (rows - 1);
+
+      for (let column = 0; column < columns; column += 1) {
+        const u = columns <= 1 ? 0.5 : column / (columns - 1);
+        samples.push(sampleAir({ u, v }));
+      }
+    }
+
+    const total = samples.length || 1;
+    const avg = (key) => samples.reduce((sum, item) => sum + safeNumber(item[key], 0), 0) / total;
+
+    return {
+      contract: PUBLIC_CONTRACT,
+      boundaryHandshakeContract: BOUNDARY_HANDSHAKE_CONTRACT,
+      receipt: RECEIPT,
+      mode: "wide-probe",
+      rows,
+      columns,
+      total: samples.length,
+      minimumWideProbePoints: 25,
+      wideProbeReady: samples.length >= 25,
+      averages: {
+        airAlpha: avg("airAlpha"),
+        boundaryEnvelope: avg("boundaryEnvelope"),
+        boundaryConfidence: avg("boundaryConfidence"),
+        pressureShell: avg("pressureShell"),
+        atmosphericWrap: avg("atmosphericWrap"),
+        landCarryRejection: avg("landCarryRejection"),
+        waterCarryRejection: avg("waterCarryRejection"),
+        terrainCarryRejection: avg("terrainCarryRejection"),
+        bodyOcclusion: avg("bodyOcclusion")
+      },
+      samples,
+      visualPassClaimed: false
+    };
+  }
+
+  function readAir(...args) {
+    if (
+      args.length === 1 &&
+      args[0] &&
+      typeof args[0] === "object" &&
+      String(args[0].mode || "").toLowerCase() === "wide-probe"
+    ) {
+      return createWideProbe(args[0]);
+    }
+
+    return sampleAir(...args);
+  }
 
   function getReceipt() {
     return {
-      contract: CONTRACT,
+      contract: PUBLIC_CONTRACT,
+      compatibilityContract: PUBLIC_CONTRACT,
+      boundaryHandshakeContract: BOUNDARY_HANDSHAKE_CONTRACT,
       receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
-      authority: "air-pressure-humidity-channel",
+      authority: "air-core-boundary-pressure-envelope-channel",
       status: "active",
       destinationFile: "/assets/hearth/hearth.air.channel.js",
       channel: "air",
-      role: "floating-atmosphere-pressure-humidity-channel",
-      purpose: "separate air, pressure, humidity, haze, mist, and cloud-like behavior from land and water before canvas multiplexing",
-      consumes: [
-        "climate packet when available",
-        "material atmosphere fields when available",
-        "hydrology and ocean moisture fields when available",
-        "composition climate influence fields when available",
-        "elevation packet for altitude pressure only",
-        "fallback local packet only as fail-soft"
+      role: "floating-atmosphere-pressure-boundary-envelope-channel",
+      purpose:
+        "separate air, pressure, humidity, haze, mist, cloud-like behavior, and read-only planetary boundary envelope from land and water before canvas multiplexing",
+
+      compatibilityReason:
+        "Current Hearth canvas validates HEARTH_AIR_PRESSURE_HUMIDITY_CHANNEL_TNT_v1 directly. This TNT preserves that public validation contract while exposing the boundary handshake contract separately.",
+
+      consumesReadOnly: [
+        "Hearth land channel when available",
+        "Hearth water channel when available",
+        "Hearth elevation authority when available",
+        "Hearth composition authority when available",
+        "fallback local pressure/humidity packet only as fail-soft"
       ],
+
       exposedMethods: [
         "sample",
         "read",
         "getReceipt"
       ],
+
+      readModes: [
+        "sample",
+        "wide-probe"
+      ],
+
       exposedFields: [
         "airPresence",
         "airAlpha",
@@ -872,16 +739,46 @@
         "airFloat",
         "bodyDetachment",
         "landWaterRejection",
+        "planetaryBoundary",
+        "boundaryEnvelope",
+        "boundaryConfidence",
+        "bodyBoundaryReadOnly",
+        "coreContact",
+        "coreContactConfidence",
+        "pressureShell",
+        "rimEnvelope",
+        "horizonClamp",
+        "limbCompression",
+        "atmosphericWrap",
+        "innerHazeAlpha",
+        "outerGlowAlpha",
+        "surfaceRejection",
+        "landCarryRejection",
+        "waterCarryRejection",
+        "terrainCarryRejection",
+        "bodyOcclusion",
+        "visualShellAlpha",
+        "atmosphereOnlyAlpha",
+        "boundaryMode",
         "rgb",
         "alpha"
       ],
+
       renderLaw: [
         "air is the only channel allowed to float",
-        "air may haze, soften, mist, and cloud",
+        "air may wrap, haze, soften, mist, cloud, rim, and pressure-shell the planet",
+        "air may expose a read-only planetary boundary envelope",
         "air cannot define landmass",
         "air cannot define ocean boundary",
-        "air cannot override body-bound land or surface-seated water"
+        "air cannot define terrain",
+        "air cannot define elevation",
+        "air cannot define composition",
+        "air cannot define hydrology",
+        "air cannot override body-bound land or surface-seated water",
+        "canvas must composite body first and atmosphere after",
+        "boundary envelope is consumer input, not source truth"
       ],
+
       owns: [
         "air-channel-expression",
         "pressure-fields",
@@ -890,21 +787,57 @@
         "cloud-like-fields",
         "mist-fields",
         "rim-haze-fields",
-        "air-channel-color-packet"
+        "read-only-boundary-envelope-fields",
+        "core-contact-read-fields",
+        "land-carry-rejection-fields",
+        "water-carry-rejection-fields",
+        "terrain-carry-rejection-fields",
+        "air-channel-color-packet",
+        "air-channel-wide-probe-read-mode"
       ],
+
       doesNotOwn: [
         "tectonic-cause",
         "elevation-generation",
         "composition-classification",
         "land-authority",
         "water-authority",
+        "terrain-authority",
+        "hydrology-authority",
         "material-palette-authority",
         "canvas-mounting",
+        "atlas-projection",
+        "Runtime Table planning",
         "route-orchestration",
         "runtime-motion",
         "controls",
         "final-visual-pass-claim"
       ],
+
+      expectedRuntimeTableOutcome: {
+        airGlobalPresent: true,
+        airActualContract: PUBLIC_CONTRACT,
+        airSampleProbeOk: true,
+        airSampleProbeCoordinatesOk: true,
+        airSampleProbeFlagsOk: true,
+        airValidationOk: true,
+        boundaryHandshakeActive: true,
+        bodyBoundaryReadOnly: true,
+        wideProbeDiagnosticAvailable: true
+      },
+
+      loadSafety: {
+        noImports: true,
+        noRequiredFetch: true,
+        exportsImmediately: true,
+        safeWithoutDom: true,
+        safeWithoutCanvas: true,
+        safeWithoutRuntimeTable: true,
+        safeWithoutUpstreamLand: true,
+        safeWithoutUpstreamWater: true,
+        neverReturnsNullFromSample: true
+      },
+
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -913,27 +846,34 @@
   }
 
   const api = {
-    contract: CONTRACT,
+    contract: PUBLIC_CONTRACT,
+    compatibilityContract: PUBLIC_CONTRACT,
+    boundaryHandshakeContract: BOUNDARY_HANDSHAKE_CONTRACT,
     receipt: RECEIPT,
+    previousContract: PREVIOUS_CONTRACT,
     version: VERSION,
+    authority: "air-core-boundary-pressure-envelope-channel",
 
-    sample,
-    read,
+    sample: sampleAir,
+    read: readAir,
     getReceipt,
 
-    channel: "air",
-    authority: "air-pressure-humidity-channel",
+    supportsBoundaryHandshake: true,
+    supportsReadOnlyPlanetaryBoundary: true,
+    supportsPressureShell: true,
+    supportsCoreContactRead: true,
+    supportsLandCarryRejection: true,
+    supportsWaterCarryRejection: true,
+    supportsTerrainCarryRejection: true,
+    supportsWideProbeReadMode: true,
 
-    supportsAirPressureHumidity: true,
-    supportsAtmosphericSeparation: true,
-    supportsCanvasMultiplex: true,
-
-    ownsTectonicCause: false,
-    ownsElevationGeneration: false,
-    ownsCompositionClassification: false,
-    ownsLand: false,
-    ownsWater: false,
-    ownsMaterialPalette: false,
+    bodyBoundaryReadOnly: true,
+    mayDefineLand: false,
+    mayDefineWater: false,
+    mayDefineTerrain: false,
+    mayDefineElevation: false,
+    mayDefineComposition: false,
+    mayDefineHydrology: false,
     ownsCanvas: false,
     ownsRuntime: false,
     ownsControls: false,
@@ -950,20 +890,46 @@
   root.HEARTH_AIR_CHANNEL = api;
   root.HearthAirChannel = api;
   root.HEARTH_AIR_CHANNEL_RECEIPT = getReceipt();
-  root.HEARTH_AIR_CHANNEL_CONTRACT = CONTRACT;
+  root.HEARTH_AIR_CHANNEL_CONTRACT = PUBLIC_CONTRACT;
+  root.HEARTH_AIR_BOUNDARY_HANDSHAKE_CONTRACT = BOUNDARY_HANDSHAKE_CONTRACT;
+  root.HEARTH_AIR_CORE_BOUNDARY_HANDSHAKE_ACTIVE = true;
 
   if (root.document && root.document.documentElement) {
-    root.document.documentElement.dataset.hearthAirChannelLoaded = "true";
-    root.document.documentElement.dataset.hearthAirChannelContract = CONTRACT;
-    root.document.documentElement.dataset.hearthAirChannelReceipt = RECEIPT;
-    root.document.documentElement.dataset.hearthAirChannelAuthority = "air-pressure-humidity-channel";
-    root.document.documentElement.dataset.hearthAirChannelAllowedToFloat = "true";
-    root.document.documentElement.dataset.hearthAirChannelDefinesLand = "false";
-    root.document.documentElement.dataset.hearthAirChannelDefinesWater = "false";
-    root.document.documentElement.dataset.generatedImage = "false";
-    root.document.documentElement.dataset.graphicBox = "false";
-    root.document.documentElement.dataset.webgl = "false";
-    root.document.documentElement.dataset.visualPassClaimed = "false";
+    const dataset = root.document.documentElement.dataset;
+
+    dataset.hearthAirChannelLoaded = "true";
+    dataset.hearthAirChannelContract = PUBLIC_CONTRACT;
+    dataset.hearthAirChannelCompatibilityContract = PUBLIC_CONTRACT;
+    dataset.hearthAirBoundaryHandshakeContract = BOUNDARY_HANDSHAKE_CONTRACT;
+    dataset.hearthAirChannelReceipt = RECEIPT;
+    dataset.hearthAirChannelPreviousContract = PREVIOUS_CONTRACT;
+    dataset.hearthAirChannelAuthority = "air-core-boundary-pressure-envelope-channel";
+
+    dataset.hearthAirBoundaryHandshakeActive = "true";
+    dataset.hearthAirBoundaryMode = "read-only-core-boundary-envelope";
+    dataset.hearthAirBodyBoundaryReadOnly = "true";
+    dataset.hearthAirPressureShell = "true";
+    dataset.hearthAirPlanetaryBoundaryEnvelope = "true";
+    dataset.hearthAirCoreContactReadOnly = "true";
+    dataset.hearthAirLandCarryRejection = "true";
+    dataset.hearthAirWaterCarryRejection = "true";
+    dataset.hearthAirTerrainCarryRejection = "true";
+    dataset.hearthAirChannelAllowedToFloat = "true";
+    dataset.hearthAirChannelDefinesLand = "false";
+    dataset.hearthAirChannelDefinesWater = "false";
+    dataset.hearthAirChannelDefinesTerrain = "false";
+    dataset.hearthAirChannelDefinesElevation = "false";
+    dataset.hearthAirChannelDefinesComposition = "false";
+    dataset.hearthAirChannelDefinesHydrology = "false";
+
+    dataset.hearthAirCanvasConsumerPending = "true";
+    dataset.hearthAirCanvasMustCompositeBodyFirst = "true";
+    dataset.hearthAirBoundaryFirstHandshake = "true";
+
+    dataset.generatedImage = "false";
+    dataset.graphicBox = "false";
+    dataset.webgl = "false";
+    dataset.visualPassClaimed = "false";
   }
 
   if (typeof module !== "undefined" && module.exports) {

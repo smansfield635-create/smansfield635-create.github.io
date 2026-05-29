@@ -1,96 +1,109 @@
 // /showroom/globe/hearth/index.js
-// HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR_FIRST_PAINT_LEDGER_TNT_v1
+// HEARTH_INDEX_ROUTE_SOCKET_FIRST_PAINT_HANDOFF_TNT_v2
 // Full-file replacement.
-// Constraint-side semiconductor only.
+// Route socket / Step 1 authority only.
 // Purpose:
-// - Start the Hearth visible process.
-// - Guarantee first-paint loading/ledger visibility.
-// - Create shared load ledger for the paired semiconductor system.
-// - Track script order and conductor availability.
-// - Delegate coherence completion to /showroom/globe/hearth/hearth.js.
-// - Preserve partial diagnostic/copy/receipt access before final completion.
-// - Reserve Inspect planet / Show diagnostic controls for synchronized handoff.
+// - Own Step 1 only: route socket, mount certainty, first-paint cockpit, early ledger, partial diagnostic access.
+// - Publish a clean handoff packet for /showroom/globe/hearth/hearth.js.
+// - Preserve Copy diagnostic / Show receipt / Inspect planet / Show diagnostic.
+// - Prevent index.js from acting as route brain.
 // Does not own:
-// - active route coherence
-// - canvas drawing
-// - atlas pixel generation
-// - texture composition
+// - Steps 2 through 11
+// - Runtime Table session creation
+// - checkpoint governance
+// - NEWS route completion
+// - Fibonacci F3/F5/F8/F13/F21 authority
+// - canvas drawing or canvas phase truth
 // - visible planet proof
-// - final completion
-// - F21 latch
-// - final diagnostic receipt authority
-// - Runtime Table implementation
-// - source-stack truth
-// - climate-route rendering
-// - visual pass claim
+// - inspect-mode proof
+// - completion latch
+// - final diagnostic receipt
+// - final visual pass claim
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR_FIRST_PAINT_LEDGER_TNT_v1";
-  const RECEIPT = "HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR_FIRST_PAINT_LEDGER_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "HEARTH_INDEX_JS_ROUTE_BRIDGE_RECONSTRUCTION_TNT_v1";
-  const EXPECTED_COHERENCE_CONDUCTOR = "HEARTH_ROUTE_COHERENCE_SEMICONDUCTOR_VISIBLE_PLANET_COMPLETION_TNT_v1";
-  const VERSION = "2026-05-29.hearth-index-constraint-semiconductor-first-paint-ledger-v1";
+  const CONTRACT = "HEARTH_INDEX_ROUTE_SOCKET_FIRST_PAINT_HANDOFF_TNT_v2";
+  const RECEIPT = "HEARTH_INDEX_ROUTE_SOCKET_FIRST_PAINT_HANDOFF_RECEIPT_v2";
+  const PREVIOUS_CONTRACT = "HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR_FIRST_PAINT_LEDGER_TNT_v1";
+  const BASELINE_CONTRACT = "HEARTH_INDEX_ROUTE_SOCKET_FIRST_PAINT_HANDOFF_PRECODE_FINAL_DRAFT_v2";
+  const VERSION = "2026-05-29.hearth-index-route-socket-first-paint-handoff-v2";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
 
+  const ROUTE = "/showroom/globe/hearth/";
   const INDEX_FILE = "/showroom/globe/hearth/index.js";
   const COHERENCE_FILE = "/showroom/globe/hearth/hearth.js";
-  const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
   const RETIRED_CLIMATE_FILE = "/showroom/globe/hearth/hearth.climate.route.js";
+
   const MOUNT_ID = "hearthCanvasMount";
+  const COCKPIT_ID = "hearthLoadCockpit";
   const STATUS_ID = "hearth-route-status";
+  const STYLE_ID = "hearth-index-route-socket-first-paint-handoff-style";
 
-  const FIB = Object.freeze({
-    F1A: { id: "F1A", rank: 1, value: 1, label: "HTML shell rendered", progress: 6 },
-    F1B: { id: "F1B", rank: 2, value: 1, label: "Load ledger initialized", progress: 12 },
-    F2: { id: "F2", rank: 3, value: 2, label: "First-paint cockpit visible", progress: 22 },
-    F3: { id: "F3", rank: 4, value: 3, label: "Script order visible", progress: 36 },
-    F5: { id: "F5", rank: 5, value: 5, label: "Authority availability", progress: 55 },
-    F8: { id: "F8", rank: 6, value: 8, label: "Conductor hydration", progress: 72 },
-    F13: { id: "F13", rank: 7, value: 13, label: "Canvas phase stream", progress: 78 },
-    F21: { id: "F21", rank: 8, value: 21, label: "Completion latch", progress: 100 }
-  });
+  const INDEX_MAX_FIBONACCI_STAGE = "F2";
 
-  const LANES = Object.freeze([
-    { key: "shell", label: "Shell", fibonacci: "F1A" },
-    { key: "ledger", label: "Ledger", fibonacci: "F1B" },
-    { key: "staticCockpit", label: "First-paint cockpit", fibonacci: "F2" },
-    { key: "scriptOrder", label: "Script order", fibonacci: "F3" },
-    { key: "authorityAvailability", label: "Authority availability", fibonacci: "F5" },
-    { key: "conductorHydration", label: "Conductor hydration", fibonacci: "F8" },
-    { key: "canvasAndDiagnostic", label: "Canvas and diagnostic", fibonacci: "F13" },
-    { key: "visiblePlanetProof", label: "Visible planet proof", fibonacci: "F13" },
-    { key: "inspectMode", label: "Inspect mode", fibonacci: "F13" },
-    { key: "completionLatch", label: "Completion latch", fibonacci: "F21" }
+  const FIBONACCI_INDEX_SEQUENCE = Object.freeze([
+    {
+      id: "F1A_HTML_SHELL_RENDERED",
+      stage: "F1A",
+      rank: 1,
+      progress: 6,
+      lane: "shell",
+      label: "HTML shell rendered",
+      event: "HTML_SHELL_RENDERED"
+    },
+    {
+      id: "F1B_LOAD_LEDGER_INITIALIZED",
+      stage: "F1B",
+      rank: 2,
+      progress: 12,
+      lane: "ledger",
+      label: "Shared ledger seeded",
+      event: "LOAD_LEDGER_INITIALIZED"
+    },
+    {
+      id: "F2_FIRST_PAINT_COCKPIT_VISIBLE",
+      stage: "F2",
+      rank: 3,
+      progress: 22,
+      lane: "firstPaint",
+      label: "First-paint cockpit visible",
+      event: "FIRST_PAINT_COCKPIT_VISIBLE"
+    }
   ]);
 
-  const SCRIPT_KEYS = Object.freeze([
-    { key: "manorRegistry", srcPart: "/assets/manor-blueprint/manor.blueprint.registry.js" },
-    { key: "manorBlueprint", srcPart: "/assets/manor-blueprint/manor.blueprint.js" },
-    { key: "runtimeTable", srcPart: "/assets/lab/runtime-table.js" },
-    { key: "sourceTectonics", srcPart: "/assets/hearth/hearth.tectonics.js" },
-    { key: "sourceElevation", srcPart: "/assets/hearth/hearth.elevation.js" },
-    { key: "sourceComposition", srcPart: "/assets/hearth/hearth.composition.js" },
-    { key: "sourceHydrology", srcPart: "/assets/hearth/hearth.hydrology.js" },
-    { key: "sourceMaterials", srcPart: "/assets/hearth/hearth.materials.js" },
-    { key: "sourceHexAuthority", srcPart: "/assets/hearth/hearth.hex.four-pair.authority.js" },
-    { key: "sourceHexSurface", srcPart: "/assets/hearth/hearth.hex.surface.js" },
-    { key: "canvasAuthority", srcPart: "/assets/hearth/hearth.canvas.js" },
-    { key: "coherenceConductor", srcPart: "/showroom/globe/hearth/hearth.js" }
+  const FUTURE_STEPS = Object.freeze([
+    "Step 2 · Script-order authority intake · hearth.js",
+    "Step 3 · Runtime Table session consumption · hearth.js",
+    "Step 4 · NEWS checkpoint governance · hearth.js",
+    "Step 5 · Fibonacci checkpoint sequencing · hearth.js",
+    "Step 6 · Canvas carrier coordination · hearth.js",
+    "Step 7 · Atlas / texture / frame receipt consumption · hearth.js",
+    "Step 8 · Visible planet proof · hearth.js",
+    "Step 9 · Inspect mode truth · hearth.js",
+    "Step 10 · Completion latch / F21 · hearth.js",
+    "Step 11 · Final diagnostic receipt · hearth.js"
+  ]);
+
+  const RECEIVER_METHODS = Object.freeze([
+    "acceptIndexHandoff",
+    "acceptConstraintSemiconductor",
+    "hydrateIndexBridge",
+    "attachIndexBridge",
+    "receiveIndexBridge"
   ]);
 
   const state = {
     contract: CONTRACT,
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
-    expectedCoherenceConductor: EXPECTED_COHERENCE_CONDUCTOR,
+    baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     file: INDEX_FILE,
-    route: "/showroom/globe/hearth/",
-    role: "constraint-side-semiconductor",
+    route: ROUTE,
+    role: "route-socket-step-1",
 
     pairedSemiconductor: true,
     pairedWith: COHERENCE_FILE,
@@ -99,73 +112,85 @@
     systematicAndSynchronized: true,
     synchronizedLoading: true,
 
+    ownsStep1: true,
+    ownsSteps2Through11: false,
+    hearthJsOwnsSteps2Through11: true,
+
     ownsFirstPaintSurvival: true,
     ownsMountCertainty: true,
     ownsLoadingScreenCertainty: true,
     ownsEarlyLedger: true,
-    ownsScriptOrderVisibility: true,
-    ownsActiveRouteConduction: false,
-    ownsFinalCompletion: false,
-    ownsCanvasDrawing: false,
-    ownsVisiblePlanetProof: false,
-    ownsFinalDiagnosticReceipt: false,
+    ownsPartialDiagnosticAccess: true,
+    ownsRouteSocket: true,
 
-    firstPaintCockpitReady: false,
-    visibleProgressStripReady: false,
-    loadLedgerPresent: false,
-    copyPartialDiagnosticReady: false,
-    receiptToggleReady: false,
-    inspectControlReserved: false,
-    showDiagnosticRestoreReserved: false,
+    ownsActiveRouteConduction: false,
+    ownsRuntimeTableSession: false,
+    ownsCheckpointGovernor: false,
+    ownsCanvasDrawing: false,
+    ownsCanvasCoordination: false,
+    ownsVisiblePlanetProof: false,
+    ownsInspectModeTruth: false,
+    ownsFinalCompletion: false,
+    ownsFinalDiagnosticReceipt: false,
+    ownsVisualPassClaim: false,
+
+    indexMaxFibonacciStage: INDEX_MAX_FIBONACCI_STAGE,
+    currentStage: "F1A",
+    highestStage: "F1A",
+    completedIndexCheckpoints: [],
+    displayProgress: 0,
 
     newsProtocolInitialized: false,
     fibonacciSequenceInitialized: false,
+    indexNewsPassed: false,
+    northSocketReady: false,
+    eastHandoffReady: false,
+    westRecoverabilityReady: false,
+    southHandoffEmitted: false,
 
     mountReady: false,
     mountCreatedByIndex: false,
-    loadingScreenReady: false,
-    partialReceiptAvailable: false,
+    cockpitReady: false,
+    ledgerReady: false,
+    partialDiagnosticReady: false,
+    receiptToggleReady: false,
+    dockHideShowReady: false,
+    showDiagnosticReady: false,
 
-    activeRouteConductor: COHERENCE_FILE,
-    conductorDelegationReady: false,
-    conductorDelegationAccepted: false,
-    conductorGlobalPresent: false,
-    conductorScriptPresent: false,
-    conductorScriptRequested: false,
-    conductorScriptLoaded: false,
-    conductorScriptError: "",
-    conductorContract: "",
-    conductorBootMethodPresent: false,
-    conductorBootCallSuppressedToPreventDuplicate: true,
+    receiptVisible: false,
+    dockHiddenForInspection: false,
+    cockpitExpanded: false,
 
-    canvasScriptPresent: false,
-    canvasGlobalPresent: false,
-    canvasFallbackRequested: false,
-    canvasFallbackAllowed: false,
+    handoffPacketReady: false,
+    handoffPublished: false,
+    handoffCreatedAt: "",
+    handoffDeliveryAttempted: false,
+    hearthReceiverAccepted: false,
+    hearthReceiverMethod: "",
+    hearthReceiverError: "",
+
+    hearthScriptPresent: false,
+    hearthScriptInjected: false,
+    hearthScriptLoaded: false,
+    hearthScriptError: "",
+    hearthGlobalPresent: false,
 
     climateRouteRetired: true,
+    runtimeTableMutation: false,
+    canvasMutation: false,
     runtimeTableRequiredForFirstRender: false,
     sourceStackRequiredForFirstRender: false,
     wideProbeDeferred: true,
 
-    currentStage: "F1A",
-    highestStage: "F1A",
-    displayProgress: 6,
-    latestEvent: "INDEX_CONSTRAINT_SEMICONDUCTOR_LOADED",
+    latestEvent: "INDEX_ROUTE_SOCKET_LOADED",
     status: "LOADED_NOT_BOOTED",
-    firstFailedCoordinate: "INDEX_CONSTRAINT_SEMICONDUCTOR_NOT_STARTED",
-    recommendedNextRenewalTarget: "boot-index-constraint-semiconductor",
-
-    planetCanvasPresent: false,
-    planetCanvasNonZeroSize: false,
-    visiblePlanetPossiblyAvailable: false,
-    inspectModeReservedActive: false,
-    showDiagnosticTabVisible: false,
+    firstFailedCoordinate: "INDEX_ROUTE_SOCKET_NOT_STARTED",
+    recommendedNextRenewalTarget: "boot-index-route-socket",
 
     errors: [],
+    events: [],
     startedAt: "",
     updatedAt: "",
-    heartbeatElapsedMs: 0,
 
     generatedImage: false,
     graphicBox: false,
@@ -183,6 +208,7 @@
     mainFill: null,
     mainPercent: null,
     laneList: null,
+    futureList: null,
     receiptBox: null,
     receiptPre: null,
     copyButton: null,
@@ -195,8 +221,6 @@
 
   let bootStarted = false;
   let renderTimer = 0;
-  let watchdogTimer = 0;
-  let heartbeatTimer = 0;
 
   function nowIso() {
     try {
@@ -210,18 +234,18 @@
     return Date.now ? Date.now() : new Date().getTime();
   }
 
-  function clamp(value, min, max) {
-    const n = Number(value);
-    if (!Number.isFinite(n)) return min;
-    return Math.max(min, Math.min(max, n));
-  }
-
   function isObject(value) {
     return Boolean(value && typeof value === "object");
   }
 
   function isFunction(value) {
     return typeof value === "function";
+  }
+
+  function clamp(value, min, max) {
+    const n = Number(value);
+    if (!Number.isFinite(n)) return min;
+    return Math.max(min, Math.min(max, n));
   }
 
   function clonePlain(value) {
@@ -243,30 +267,51 @@
       .replaceAll("'", "&#039;");
   }
 
-  function stageRank(stage) {
-    return FIB[stage] ? FIB[stage].rank : 0;
-  }
+  function formatElapsed(startIso) {
+    if (!startIso) return "00:00";
 
-  function stageProgress(stage) {
-    return FIB[stage] ? FIB[stage].progress : 0;
-  }
-
-  function stageLabel(stage) {
-    return FIB[stage] ? FIB[stage].label : stage;
-  }
-
-  function formatElapsed(ms) {
-    const total = Math.max(0, Math.floor(Number(ms || 0) / 1000));
+    const startMs = new Date(startIso).getTime();
+    const elapsed = Number.isFinite(startMs) ? Math.max(0, nowMs() - startMs) : 0;
+    const total = Math.floor(elapsed / 1000);
     const minutes = Math.floor(total / 60);
     const seconds = total % 60;
+
     return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
   }
 
-  function getGlobal(names) {
-    for (const name of names) {
-      if (root[name]) return root[name];
+  function findIndexCheckpoint(id) {
+    return FIBONACCI_INDEX_SEQUENCE.find((checkpoint) => checkpoint.id === id || checkpoint.event === id || checkpoint.stage === id) || null;
+  }
+
+  function markEvent(event, detail = {}) {
+    const item = {
+      event,
+      detail: clonePlain(detail),
+      at: nowIso()
+    };
+
+    state.events.push(item);
+    if (state.events.length > 160) {
+      state.events.splice(0, state.events.length - 160);
     }
-    return null;
+
+    state.latestEvent = event;
+    state.updatedAt = item.at;
+
+    if (refs.ledger && isFunction(refs.ledger.push)) {
+      refs.ledger.push({
+        id: event,
+        stage: state.currentStage,
+        lane: detail.lane || "",
+        status: detail.status || "OBSERVED",
+        owner: "index.js",
+        file: INDEX_FILE,
+        message: detail.message || event,
+        detail
+      });
+    }
+
+    return item;
   }
 
   function recordError(code, message, detail = {}) {
@@ -278,274 +323,67 @@
     };
 
     state.errors.push(item);
-
-    if (state.errors.length > 40) {
-      state.errors.splice(0, state.errors.length - 40);
+    if (state.errors.length > 60) {
+      state.errors.splice(0, state.errors.length - 60);
     }
 
-    const ledger = refs.ledger || root.HEARTH_LOAD_LEDGER;
-    if (ledger && ledger.state && Array.isArray(ledger.state.errors)) {
-      ledger.state.errors.push(item);
-      if (ledger.state.errors.length > 70) {
-        ledger.state.errors.splice(0, ledger.state.errors.length - 70);
-      }
+    state.updatedAt = item.at;
+
+    if (refs.ledger && isFunction(refs.ledger.push)) {
+      refs.ledger.push({
+        id: "INDEX_ROUTE_SOCKET_ERROR",
+        stage: state.currentStage,
+        lane: "errors",
+        status: "ERROR",
+        owner: "index.js",
+        file: INDEX_FILE,
+        message: `${code}: ${message}`,
+        detail: item
+      });
     }
 
     return item;
   }
 
-  function makeLane(def) {
-    return {
-      key: def.key,
-      label: def.label,
-      fibonacci: def.fibonacci,
-      status: "PENDING",
-      message: `${def.label} pending.`,
-      progress: stageProgress(def.fibonacci),
-      latestEvent: "LANE_INITIALIZED",
-      owner: "index.js",
-      updatedAt: nowIso()
-    };
-  }
+  function completeIndexCheckpoint(id, detail = {}) {
+    const checkpoint = findIndexCheckpoint(id);
+    if (!checkpoint) return false;
 
-  function ensureLedger() {
-    const existing = root.HEARTH_LOAD_LEDGER;
-    const ledger = existing && isObject(existing) ? existing : {};
-    const led = isObject(ledger.state) ? ledger.state : ledger;
+    if (!state.completedIndexCheckpoints.includes(checkpoint.id)) {
+      state.completedIndexCheckpoints.push(checkpoint.id);
+    }
 
-    ledger.state = led;
+    state.currentStage = checkpoint.stage;
+    state.highestStage = checkpoint.stage;
+    state.displayProgress = Math.max(state.displayProgress, checkpoint.progress);
 
-    led.contract = led.contract || "HEARTH_PAIRED_SEMICONDUCTOR_SHARED_LOAD_LEDGER_v1";
-    led.createdBy = led.createdBy || CONTRACT;
-    led.ownerModel = "paired-semiconductor";
-    led.constraintSemiconductor = INDEX_FILE;
-    led.coherenceSemiconductor = COHERENCE_FILE;
-    led.route = "/showroom/globe/hearth/";
-    led.newsProtocolActive = true;
-    led.fibonacciSequenceActive = true;
-    led.synchronizedLoading = true;
-    led.startedAt = led.startedAt || nowIso();
-    led.updatedAt = nowIso();
-    led.currentStage = led.currentStage || "F1A";
-    led.highestStage = led.highestStage || "F1A";
-    led.currentFibonacciStage = led.currentFibonacciStage || led.currentStage;
-    led.highestStageReached = led.highestStageReached || led.highestStage;
-    led.completionAuthority = "hearth.js";
-    led.indexOwnsFinalCompletion = false;
-    led.visualPassClaimed = false;
-    led.events = Array.isArray(led.events) ? led.events : [];
-    led.errors = Array.isArray(led.errors) ? led.errors : [];
-    led.scripts = isObject(led.scripts) ? led.scripts : {};
-    led.lanes = isObject(led.lanes) ? led.lanes : {};
-    led.listeners = Array.isArray(led.listeners) ? led.listeners : [];
-
-    LANES.forEach((def) => {
-      if (!isObject(led.lanes[def.key])) {
-        led.lanes[def.key] = makeLane(def);
-      }
+    markEvent(checkpoint.event, {
+      ...detail,
+      lane: checkpoint.lane,
+      checkpointId: checkpoint.id,
+      stage: checkpoint.stage,
+      status: "COMPLETE",
+      message: checkpoint.label
     });
 
-    ledger.push = function push(event = {}) {
-      const evt = {
-        id: event.id || event.event || "LEDGER_EVENT",
-        stage: event.stage || led.currentStage || "F1A",
-        lane: event.lane || "",
-        status: event.status || "",
-        owner: event.owner || "index.js",
-        file: event.file || INDEX_FILE,
-        message: event.message || "",
-        detail: clonePlain(event.detail || {}),
-        progress: event.progress ?? "",
-        timestamp: nowIso()
-      };
-
-      led.events.push(evt);
-      led.updatedAt = evt.timestamp;
-
-      if (led.events.length > 240) {
-        led.events.splice(0, led.events.length - 240);
-      }
-
-      notifyLedger();
-      return evt;
-    };
-
-    ledger.setStage = function setStage(stage, message = "", options = {}) {
-      const nextRank = stageRank(stage);
-      const currentRank = stageRank(led.highestStage || led.currentStage);
-
-      if (nextRank >= currentRank) {
-        led.currentStage = stage;
-        led.highestStage = stage;
-        led.currentFibonacciStage = stage;
-        led.highestStageReached = stage;
-        state.currentStage = stage;
-        state.highestStage = stage;
-      }
-
-      if (nextRank < currentRank) {
-        ledger.push({
-          id: "LOWER_STAGE_OBSERVED",
-          stage,
-          lane: options.lane || "ledger",
-          status: "OBSERVED",
-          owner: options.owner || "index.js",
-          file: options.file || INDEX_FILE,
-          message: message || `${stage} observed after ${led.highestStage}; not treated as index failure.`,
-          detail: { currentHighest: led.highestStage }
-        });
-        return led.currentStage;
-      }
-
-      ledger.push({
-        id: `STAGE_${stage}`,
-        stage,
-        lane: options.lane || "ledger",
-        status: options.status || "READY",
-        owner: options.owner || "index.js",
-        file: options.file || INDEX_FILE,
-        message: message || stageLabel(stage),
-        detail: options.detail || {}
+    if (refs.ledger && isFunction(refs.ledger.setIndexLane)) {
+      refs.ledger.setIndexLane(checkpoint.lane, {
+        status: "COMPLETE",
+        stage: checkpoint.stage,
+        progress: checkpoint.progress,
+        event: checkpoint.event,
+        message: checkpoint.label
       });
+    }
 
-      return stage;
-    };
-
-    ledger.setLane = function setLane(key, next = {}) {
-      const lane = led.lanes[key] || {
-        key,
-        label: key,
-        fibonacci: next.stage || "F1B",
-        status: "PENDING",
-        message: "",
-        progress: 0,
-        latestEvent: "LANE_CREATED",
-        owner: "index.js",
-        updatedAt: nowIso()
-      };
-
-      lane.status = next.status || lane.status;
-      lane.message = next.message || lane.message;
-      lane.progress = Math.max(Number(lane.progress || 0), Number(next.progress ?? lane.progress ?? 0));
-      lane.latestEvent = next.event || next.latestEvent || lane.latestEvent;
-      lane.owner = next.owner || lane.owner || "index.js";
-      lane.fibonacci = next.stage || lane.fibonacci;
-      lane.updatedAt = nowIso();
-      led.lanes[key] = lane;
-
-      ledger.push({
-        id: lane.latestEvent,
-        stage: lane.fibonacci,
-        lane: key,
-        status: lane.status,
-        owner: lane.owner,
-        file: next.file || INDEX_FILE,
-        message: lane.message,
-        progress: lane.progress,
-        detail: next.detail || {}
-      });
-
-      return lane;
-    };
-
-    ledger.setScript = function setScript(key, next = {}) {
-      const script = led.scripts[key] || {
-        key,
-        src: next.src || "",
-        status: "PENDING",
-        error: "",
-        requestedAt: "",
-        loadedAt: "",
-        updatedAt: nowIso()
-      };
-
-      script.src = next.src || script.src;
-      script.status = next.status || script.status;
-      script.error = next.error || "";
-      script.globalPresent = Boolean(next.globalPresent);
-      script.requestedAt = next.requestedAt || script.requestedAt;
-      script.loadedAt = next.loadedAt || script.loadedAt;
-      script.updatedAt = nowIso();
-      led.scripts[key] = script;
-
-      ledger.push({
-        id: `SCRIPT_${String(key).toUpperCase()}_${script.status}`,
-        stage: "F3",
-        lane: "scriptOrder",
-        status: script.status,
-        owner: "index.js",
-        file: INDEX_FILE,
-        message: `${key} ${script.status}`,
-        detail: { src: script.src, error: script.error, globalPresent: script.globalPresent }
-      });
-
-      return script;
-    };
-
-    ledger.getReceipt = function getSharedReceipt() {
-      return clonePlain(led);
-    };
-
-    ledger.getReceiptText = function getSharedReceiptText() {
-      return getReceiptText();
-    };
-
-    ledger.copyDiagnostic = function copySharedDiagnostic() {
-      return copyText(getReceiptText());
-    };
-
-    ledger.bindRenderer = function bindRenderer(fn) {
-      if (isFunction(fn)) led.listeners.push(fn);
-      return led.listeners.length;
-    };
-
-    root.HEARTH_LOAD_LEDGER = ledger;
-    refs.ledger = ledger;
-
-    state.loadLedgerPresent = true;
-    state.newsProtocolInitialized = true;
-    state.fibonacciSequenceInitialized = true;
-
-    ledger.setLane("ledger", {
-      status: "READY",
-      progress: stageProgress("F1B"),
-      event: "LOAD_LEDGER_INITIALIZED",
-      stage: "F1B",
-      owner: "index.js",
-      file: INDEX_FILE,
-      message: "Shared paired-semiconductor load ledger initialized."
-    });
-
-    ledger.setStage("F1B", "Shared load ledger initialized.", {
-      lane: "ledger",
-      owner: "index.js",
-      file: INDEX_FILE
-    });
-
-    return ledger;
-  }
-
-  function notifyLedger() {
-    const led = refs.ledger && refs.ledger.state ? refs.ledger.state : null;
-    if (!led || !Array.isArray(led.listeners)) return;
-
-    led.listeners = led.listeners.filter((fn) => {
-      try {
-        fn(clonePlain(led));
-        return true;
-      } catch (_error) {
-        return false;
-      }
-    });
-
-    scheduleRender();
+    return true;
   }
 
   function ensureStyle() {
-    if (!doc || doc.getElementById("hearth-index-constraint-semiconductor-style")) return;
+    if (!doc || doc.getElementById(STYLE_ID)) return;
 
     const style = doc.createElement("style");
-    style.id = "hearth-index-constraint-semiconductor-style";
+    style.id = STYLE_ID;
     style.textContent = `
       #hearthCanvasMount,
       [data-hearth-canvas-mount="true"]{
@@ -564,18 +402,45 @@
         display:flex;
         flex-direction:column;
         max-height:calc(100% - 20px);
-        min-height:170px;
+        min-height:168px;
         overflow:hidden;
         border:1px solid rgba(231,188,105,.34);
         border-radius:24px;
         background:
           radial-gradient(circle at 12% 0%,rgba(231,188,105,.16),transparent 20rem),
           radial-gradient(circle at 90% 18%,rgba(141,216,255,.12),transparent 22rem),
-          linear-gradient(180deg,rgba(7,18,33,.92),rgba(2,8,17,.82));
+          linear-gradient(180deg,rgba(7,18,33,.92),rgba(2,8,17,.84));
         color:rgba(238,246,255,.94);
         box-shadow:0 22px 70px rgba(0,0,0,.44), inset 0 1px 0 rgba(255,255,255,.08);
         backdrop-filter:blur(10px);
         font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+        transition:max-height .22s ease,opacity .18s ease,visibility .18s ease,transform .22s ease;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="compact-dock"]{
+        inset:auto 10px 10px 10px;
+        min-height:128px;
+        max-height:182px;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="compact-dock"] .hearth-ledger-scroll{
+        display:none;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="expanded-cockpit"]{
+        inset:10px;
+        max-height:calc(100% - 20px);
+        min-height:170px;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="planet-inspect"]{
+        opacity:0!important;
+        visibility:hidden!important;
+        pointer-events:none!important;
+        transform:translateY(26px) scale(.985)!important;
+        max-height:0!important;
+        min-height:0!important;
+        overflow:hidden!important;
       }
 
       .hearth-ledger-head{
@@ -675,20 +540,20 @@
         background:linear-gradient(135deg,#ffe8a3,#e7bc69);
       }
 
-      .hearth-ledger-button[disabled]{
-        opacity:.58;
-        cursor:not-allowed;
-      }
-
       .hearth-ledger-scroll{
         min-height:0;
         overflow:auto;
         padding:10px 16px 14px;
       }
 
-      .hearth-ledger-lanes{
+      .hearth-ledger-lanes,
+      .hearth-ledger-future{
         display:grid;
         gap:7px;
+      }
+
+      .hearth-ledger-future{
+        margin-top:10px;
       }
 
       .hearth-ledger-lane{
@@ -698,6 +563,11 @@
         border-radius:13px;
         padding:8px;
         background:rgba(255,255,255,.035);
+      }
+
+      .hearth-ledger-lane[data-status="PASSIVE_HANDOFF"]{
+        border-color:rgba(141,216,255,.12);
+        background:rgba(141,216,255,.035);
       }
 
       .hearth-ledger-lane-top{
@@ -752,35 +622,28 @@
         font:700 .66rem/1.38 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
       }
 
-      .hearth-ledger-cockpit[data-cockpit-mode="planet-inspect"]{
-        opacity:0!important;
-        visibility:hidden!important;
-        pointer-events:none!important;
-        transform:translateY(24px) scale(.985);
-        max-height:0!important;
-        min-height:0!important;
-      }
-
       [data-hearth-index-show-diagnostic-tab]{
         position:fixed;
         right:max(12px,env(safe-area-inset-right));
         bottom:max(72px,calc(env(safe-area-inset-bottom) + 72px));
-        z-index:9999;
+        z-index:10000;
         display:none;
-        min-height:36px;
-        padding:9px 13px;
+        align-items:center;
+        justify-content:center;
+        min-height:38px;
+        padding:10px 14px;
         border-radius:999px;
-        border:1px solid rgba(231,188,105,.65);
+        border:1px solid rgba(231,188,105,.66);
         color:#06101e;
         background:linear-gradient(135deg,#ffe8a3,#e7bc69);
-        box-shadow:0 14px 40px rgba(0,0,0,.36);
-        font:950 .68rem/1 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+        box-shadow:0 16px 44px rgba(0,0,0,.40), inset 0 1px 0 rgba(255,255,255,.28);
+        font:950 .70rem/1 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
         letter-spacing:.08em;
         text-transform:uppercase;
         cursor:pointer;
       }
 
-      html[data-hearth-index-inspect-reserved-active="true"] [data-hearth-index-show-diagnostic-tab]{
+      html[data-hearth-index-dock-hidden-for-inspection="true"] [data-hearth-index-show-diagnostic-tab]{
         display:inline-flex;
       }
 
@@ -789,6 +652,11 @@
           inset:8px;
           min-height:166px;
           border-radius:20px;
+        }
+
+        .hearth-ledger-cockpit[data-cockpit-mode="compact-dock"]{
+          inset:auto 8px 8px 8px;
+          max-height:188px;
         }
 
         .hearth-ledger-head{
@@ -806,6 +674,14 @@
           flex:1 1 auto;
           min-width:30%;
           font-size:.58rem;
+        }
+
+        [data-hearth-index-show-diagnostic-tab]{
+          right:max(10px,env(safe-area-inset-right));
+          bottom:max(68px,calc(env(safe-area-inset-bottom) + 68px));
+          min-height:34px;
+          padding:9px 12px;
+          font-size:.64rem;
         }
       }
     `;
@@ -825,25 +701,24 @@
       mount = doc.createElement("section");
       mount.id = MOUNT_ID;
       mount.dataset.hearthCanvasMount = "true";
-      mount.dataset.hearthMountCreatedByIndexConstraintSemiconductor = "true";
+      mount.dataset.hearthMountCreatedByIndexRouteSocket = "true";
 
       const parent = doc.getElementById("hearth-main") || doc.body || doc.documentElement;
       parent.appendChild(mount);
+
       state.mountCreatedByIndex = true;
     }
 
     mount.id = MOUNT_ID;
     mount.dataset.hearthCanvasMount = "true";
-    mount.dataset.hearthIndexConstraintSemiconductor = CONTRACT;
-    mount.dataset.hearthIndexReceipt = RECEIPT;
+    mount.dataset.hearthIndexRouteSocket = CONTRACT;
+    mount.dataset.hearthIndexRouteSocketReceipt = RECEIPT;
+    mount.dataset.hearthIndexStep1Complete = String(state.completedIndexCheckpoints.includes("F2_FIRST_PAINT_COCKPIT_VISIBLE"));
+    mount.dataset.hearthIndexMaxFibonacciStage = INDEX_MAX_FIBONACCI_STAGE;
+    mount.dataset.hearthJsOwnsSteps2Through11 = "true";
     mount.dataset.hearthPairedSemiconductor = "true";
     mount.dataset.hearthConstraintSemiconductor = INDEX_FILE;
     mount.dataset.hearthCoherenceSemiconductor = COHERENCE_FILE;
-    mount.dataset.hearthClimateRouteRetired = "true";
-    mount.dataset.hearthVisibleCarrierFirst = "true";
-    mount.dataset.runtimeTableRequiredForFirstRender = "false";
-    mount.dataset.sourceStackRequiredForFirstRender = "false";
-    mount.dataset.wideProbeDeferred = "true";
     mount.dataset.generatedImage = "false";
     mount.dataset.graphicBox = "false";
     mount.dataset.webgl = "false";
@@ -852,9 +727,6 @@
     mount.style.position = mount.style.position || "relative";
     mount.style.overflow = "hidden";
     mount.style.touchAction = "none";
-    mount.style.userSelect = "none";
-    mount.style.webkitUserSelect = "none";
-    mount.style.webkitTouchCallout = "none";
 
     refs.mount = mount;
     state.mountReady = true;
@@ -862,10 +734,152 @@
     return mount;
   }
 
+  function makeIndexLane(def) {
+    return {
+      key: def.lane,
+      checkpointId: def.id,
+      stage: def.stage,
+      rank: def.rank,
+      label: def.label,
+      event: def.event,
+      status: "PENDING",
+      progress: 0,
+      message: `${def.label} pending.`,
+      owner: INDEX_FILE,
+      updatedAt: nowIso()
+    };
+  }
+
+  function ensureLedger() {
+    const ledger = {};
+    const led = {
+      contract: "HEARTH_STEP1_ROUTE_SOCKET_SHARED_LEDGER_v2",
+      createdBy: CONTRACT,
+      ownerModel: "paired-semiconductor",
+      constraintSemiconductor: INDEX_FILE,
+      coherenceSemiconductor: COHERENCE_FILE,
+      route: ROUTE,
+      indexOwnsStep1: true,
+      indexOwnsSteps2Through11: false,
+      hearthJsOwnsSteps2Through11: true,
+      indexMaxFibonacciStage: INDEX_MAX_FIBONACCI_STAGE,
+      currentIndexStage: "F1A",
+      highestIndexStage: "F1A",
+      completionAuthority: COHERENCE_FILE,
+      indexOwnsFinalCompletion: false,
+      visualPassClaimed: false,
+      newsProtocolInitialized: true,
+      fibonacciSequenceInitialized: true,
+      lanes: {},
+      events: [],
+      errors: [],
+      startedAt: state.startedAt || nowIso(),
+      updatedAt: nowIso()
+    };
+
+    FIBONACCI_INDEX_SEQUENCE.forEach((def) => {
+      led.lanes[def.lane] = makeIndexLane(def);
+    });
+
+    ledger.state = led;
+
+    ledger.push = function push(event = {}) {
+      const evt = {
+        id: event.id || event.event || "INDEX_LEDGER_EVENT",
+        stage: event.stage || state.currentStage || "F1A",
+        lane: event.lane || "",
+        status: event.status || "",
+        owner: event.owner || "index.js",
+        file: event.file || INDEX_FILE,
+        message: event.message || "",
+        detail: clonePlain(event.detail || {}),
+        progress: event.progress ?? "",
+        timestamp: nowIso()
+      };
+
+      led.events.push(evt);
+      if (led.events.length > 240) {
+        led.events.splice(0, led.events.length - 240);
+      }
+
+      led.updatedAt = evt.timestamp;
+      return evt;
+    };
+
+    ledger.setIndexLane = function setIndexLane(key, next = {}) {
+      const lane = led.lanes[key] || {
+        key,
+        checkpointId: "",
+        stage: next.stage || "F1A",
+        rank: 0,
+        label: key,
+        event: next.event || "",
+        status: "PENDING",
+        progress: 0,
+        message: "",
+        owner: INDEX_FILE,
+        updatedAt: nowIso()
+      };
+
+      lane.status = next.status || lane.status;
+      lane.stage = next.stage || lane.stage;
+      lane.progress = Math.max(Number(lane.progress || 0), Number(next.progress || 0));
+      lane.event = next.event || lane.event;
+      lane.message = next.message || lane.message;
+      lane.owner = INDEX_FILE;
+      lane.updatedAt = nowIso();
+
+      led.lanes[key] = lane;
+      led.currentIndexStage = state.currentStage;
+      led.highestIndexStage = state.highestStage;
+      led.updatedAt = lane.updatedAt;
+
+      ledger.push({
+        id: lane.event,
+        stage: lane.stage,
+        lane: key,
+        status: lane.status,
+        owner: "index.js",
+        file: INDEX_FILE,
+        message: lane.message,
+        progress: lane.progress
+      });
+
+      return lane;
+    };
+
+    ledger.getReceipt = function getReceiptFromLedger() {
+      return clonePlain(led);
+    };
+
+    ledger.getReceiptText = function getReceiptTextFromLedger() {
+      return getReceiptText();
+    };
+
+    ledger.copyDiagnostic = function copyDiagnosticFromLedger() {
+      return copyDiagnostic();
+    };
+
+    root.HEARTH_LOAD_LEDGER = ledger;
+    refs.ledger = ledger;
+
+    state.ledgerReady = true;
+    state.newsProtocolInitialized = true;
+    state.fibonacciSequenceInitialized = true;
+
+    completeIndexCheckpoint("F1B_LOAD_LEDGER_INITIALIZED", {
+      message: "Step 1 shared ledger seeded by index route socket."
+    });
+
+    return ledger;
+  }
+
   function ensureShowTab() {
     if (!doc) return null;
 
-    let tab = doc.querySelector("[data-hearth-index-show-diagnostic-tab]");
+    let tab =
+      doc.querySelector("[data-hearth-index-show-diagnostic-tab]") ||
+      doc.querySelector("[data-hearth-coherence-show-diagnostic-tab]");
 
     if (!tab) {
       tab = doc.createElement("button");
@@ -876,18 +890,18 @@
       doc.body.appendChild(tab);
     }
 
-    tab.onclick = () => setInspectReserved(false);
+    tab.dataset.hearthIndexShowDiagnosticTab = "true";
+    tab.onclick = () => setDockHiddenForInspection(false);
 
     refs.showTab = tab;
-    state.showDiagnosticRestoreReserved = true;
-
+    state.showDiagnosticReady = true;
     return tab;
   }
 
   function ensureCockpit() {
     if (!doc) return null;
 
-    const mount = ensureMount();
+    const mount = refs.mount || ensureMount();
     if (!mount) return null;
 
     ensureStyle();
@@ -896,25 +910,25 @@
     let cockpit =
       mount.querySelector("[data-hearth-load-cockpit='true']") ||
       mount.querySelector("[data-hearth-first-paint-cockpit='true']") ||
-      doc.getElementById("hearthLoadCockpit");
+      doc.getElementById(COCKPIT_ID);
 
     if (!cockpit) {
       cockpit = doc.createElement("aside");
-      cockpit.id = "hearthLoadCockpit";
+      cockpit.id = COCKPIT_ID;
       cockpit.className = "hearth-ledger-cockpit";
       cockpit.dataset.hearthLoadCockpit = "true";
       cockpit.dataset.hearthFirstPaintCockpit = "true";
-      cockpit.dataset.hearthCreatedByIndexConstraintSemiconductor = CONTRACT;
-      cockpit.dataset.cockpitMode = "first-paint-loading";
+      cockpit.dataset.hearthIndexRouteSocketCockpit = CONTRACT;
+      cockpit.dataset.cockpitMode = "compact-dock";
       cockpit.setAttribute("aria-live", "polite");
 
       cockpit.innerHTML = `
         <div class="hearth-ledger-head">
-          <div class="hearth-ledger-kicker">Hearth · Paired Semiconductor Load Ledger</div>
+          <div class="hearth-ledger-kicker">Hearth · Step 1 Route Socket</div>
           <h2 class="hearth-ledger-title">STARTING HEARTH VISIBLE PROCESS</h2>
           <div class="hearth-ledger-meta" data-hearth-stage-label>F1A · HTML shell rendered</div>
-          <div class="hearth-ledger-meta" data-hearth-heartbeat-text>heartbeat=active · elapsed=00:00</div>
-          <div class="hearth-ledger-latest" data-hearth-latest-event>latest=INDEX_CONSTRAINT_SEMICONDUCTOR_LOADED</div>
+          <div class="hearth-ledger-meta" data-hearth-heartbeat-text>Step 1 only · hearth.js owns Steps 2–11</div>
+          <div class="hearth-ledger-latest" data-hearth-latest-event>latest=INDEX_ROUTE_SOCKET_LOADED</div>
         </div>
 
         <div class="hearth-ledger-progress" data-hearth-index-progress-strip="true">
@@ -933,6 +947,7 @@
 
         <div class="hearth-ledger-scroll">
           <div class="hearth-ledger-lanes" data-hearth-lane-list></div>
+          <div class="hearth-ledger-future" data-hearth-future-list></div>
           <div class="hearth-ledger-receipt" data-hearth-receipt-box data-visible="false">
             <pre data-hearth-receipt-text></pre>
           </div>
@@ -945,9 +960,16 @@
     cockpit.dataset.hearthPairedSemiconductor = "true";
     cockpit.dataset.hearthConstraintSemiconductor = INDEX_FILE;
     cockpit.dataset.hearthCoherenceSemiconductor = COHERENCE_FILE;
-    cockpit.dataset.hearthIndexContract = CONTRACT;
+    cockpit.dataset.hearthIndexRouteSocket = CONTRACT;
     cockpit.dataset.hearthIndexReceipt = RECEIPT;
-    cockpit.dataset.hearthSynchronizedLoading = "true";
+    cockpit.dataset.hearthIndexOwnsStep1 = "true";
+    cockpit.dataset.hearthIndexOwnsSteps2Through11 = "false";
+    cockpit.dataset.hearthJsOwnsSteps2Through11 = "true";
+    cockpit.dataset.hearthIndexMaxFibonacciStage = INDEX_MAX_FIBONACCI_STAGE;
+    cockpit.dataset.generatedImage = "false";
+    cockpit.dataset.graphicBox = "false";
+    cockpit.dataset.webgl = "false";
+    cockpit.dataset.visualPassClaimed = "false";
 
     refs.cockpit = cockpit;
     refs.title = cockpit.querySelector(".hearth-ledger-title");
@@ -957,6 +979,7 @@
     refs.mainFill = cockpit.querySelector("[data-hearth-main-progress-fill]");
     refs.mainPercent = cockpit.querySelector("[data-hearth-main-progress-percent]");
     refs.laneList = cockpit.querySelector("[data-hearth-lane-list]");
+    refs.futureList = cockpit.querySelector("[data-hearth-future-list]");
     refs.receiptBox = cockpit.querySelector("[data-hearth-receipt-box]");
     refs.receiptPre = cockpit.querySelector("[data-hearth-receipt-text]");
     refs.copyButton = cockpit.querySelector("[data-hearth-copy-diagnostic]");
@@ -966,7 +989,7 @@
 
     if (refs.copyButton) {
       refs.copyButton.onclick = copyDiagnostic;
-      state.copyPartialDiagnosticReady = true;
+      state.partialDiagnosticReady = true;
     }
 
     if (refs.receiptToggle) {
@@ -975,8 +998,8 @@
     }
 
     if (refs.inspectButton) {
-      refs.inspectButton.onclick = () => setInspectReserved(true);
-      state.inspectControlReserved = true;
+      refs.inspectButton.onclick = () => setDockHiddenForInspection(!state.dockHiddenForInspection);
+      state.dockHideShowReady = true;
     }
 
     if (refs.expandButton) {
@@ -986,44 +1009,34 @@
     mount.querySelectorAll("[data-hearth-mount-fallback], .mount-fallback").forEach((fallback) => {
       fallback.hidden = true;
       fallback.style.display = "none";
-      fallback.dataset.hiddenByIndexConstraintSemiconductor = CONTRACT;
+      fallback.dataset.hiddenByIndexRouteSocket = CONTRACT;
     });
 
-    state.firstPaintCockpitReady = true;
-    state.loadingScreenReady = true;
-    state.visibleProgressStripReady = Boolean(refs.mainFill && refs.mainPercent);
-    state.partialReceiptAvailable = true;
+    state.cockpitReady = true;
 
-    const ledger = refs.ledger || ensureLedger();
-
-    ledger.setLane("staticCockpit", {
-      status: "READY",
-      progress: stageProgress("F2"),
-      event: "FIRST_PAINT_COCKPIT_VISIBLE",
-      stage: "F2",
-      owner: "index.js",
-      file: INDEX_FILE,
-      message: "First-paint cockpit visible; user is not blind."
-    });
-
-    ledger.setStage("F2", "First-paint cockpit visible.", {
-      lane: "staticCockpit",
-      owner: "index.js",
-      file: INDEX_FILE
+    completeIndexCheckpoint("F2_FIRST_PAINT_COCKPIT_VISIBLE", {
+      message: "First-paint cockpit visible. Index stops at Step 1."
     });
 
     return cockpit;
   }
 
   function toggleReceipt() {
-    if (!refs.receiptBox) return;
+    state.receiptVisible = !state.receiptVisible;
 
-    const visible = refs.receiptBox.dataset.visible !== "true";
-    refs.receiptBox.dataset.visible = String(visible);
+    if (refs.receiptBox) {
+      refs.receiptBox.dataset.visible = String(state.receiptVisible);
+    }
 
     if (refs.receiptToggle) {
-      refs.receiptToggle.textContent = visible ? "Hide receipt" : "Show receipt";
+      refs.receiptToggle.textContent = state.receiptVisible ? "Hide receipt" : "Show receipt";
     }
+
+    markEvent(state.receiptVisible ? "INDEX_RECEIPT_SHOWN" : "INDEX_RECEIPT_HIDDEN", {
+      lane: "firstPaint",
+      status: "USER_CONTROL",
+      message: state.receiptVisible ? "Partial receipt shown." : "Partial receipt hidden."
+    });
 
     render();
   }
@@ -1031,353 +1044,379 @@
   function toggleExpanded() {
     if (!refs.cockpit) return;
 
-    if (state.inspectModeReservedActive) {
-      setInspectReserved(false);
-      return;
-    }
+    state.cockpitExpanded = !state.cockpitExpanded;
+    state.dockHiddenForInspection = false;
 
-    const expanded = refs.cockpit.dataset.fullExpanded !== "true";
-    refs.cockpit.dataset.fullExpanded = String(expanded);
-    refs.cockpit.dataset.cockpitMode = expanded ? "expanded-cockpit" : "first-paint-loading";
+    refs.cockpit.dataset.cockpitMode = state.cockpitExpanded ? "expanded-cockpit" : "compact-dock";
 
     if (refs.expandButton) {
-      refs.expandButton.textContent = expanded ? "Collapse dock" : "Expand cockpit";
-    }
-
-    if (expanded) {
-      refs.cockpit.style.maxHeight = "calc(100% - 20px)";
-    } else {
-      refs.cockpit.style.maxHeight = "";
-    }
-  }
-
-  function setInspectReserved(active) {
-    state.inspectModeReservedActive = Boolean(active);
-    state.showDiagnosticTabVisible = Boolean(active);
-
-    if (refs.cockpit) {
-      refs.cockpit.dataset.cockpitMode = active ? "planet-inspect" : "first-paint-loading";
-      refs.cockpit.dataset.hearthIndexInspectReservedActive = String(active);
-    }
-
-    if (doc && doc.documentElement) {
-      doc.documentElement.dataset.hearthIndexInspectReservedActive = String(active);
-    }
-
-    if (refs.showTab) {
-      refs.showTab.hidden = !active;
-      refs.showTab.dataset.visible = String(active);
+      refs.expandButton.textContent = state.cockpitExpanded ? "Collapse dock" : "Expand cockpit";
     }
 
     if (refs.inspectButton) {
-      refs.inspectButton.textContent = active ? "Show diagnostic" : "Inspect planet";
-      refs.inspectButton.onclick = () => setInspectReserved(!state.inspectModeReservedActive);
+      refs.inspectButton.textContent = "Inspect planet";
     }
 
-    if (refs.mount) {
-      refs.mount.dataset.hearthIndexInspectReservedActive = String(active);
+    if (doc && doc.documentElement) {
+      doc.documentElement.dataset.hearthIndexDockHiddenForInspection = "false";
     }
 
-    const ledger = refs.ledger || ensureLedger();
-
-    ledger.setLane("inspectMode", {
-      status: active ? "RESERVED_ACTIVE" : "RESERVED",
-      progress: active ? 84 : 50,
-      event: active ? "INDEX_RESERVED_INSPECT_MODE_ACTIVE" : "INDEX_RESERVED_INSPECT_MODE_READY",
-      stage: "F13",
-      owner: "index.js",
-      file: INDEX_FILE,
-      message: active
-        ? "Index reserved inspect mode active; coherence conductor will own final inspect truth."
-        : "Inspect control reserved for coherence conductor."
+    markEvent(state.cockpitExpanded ? "INDEX_COCKPIT_EXPANDED" : "INDEX_COCKPIT_COLLAPSED", {
+      lane: "firstPaint",
+      status: "USER_CONTROL",
+      message: state.cockpitExpanded ? "Cockpit expanded." : "Cockpit collapsed to compact dock."
     });
 
     render();
   }
 
-  function scanKnownScripts() {
-    if (!doc) return;
+  function setDockHiddenForInspection(active) {
+    state.dockHiddenForInspection = Boolean(active);
 
-    const scripts = Array.from(doc.scripts || []);
-    const ledger = refs.ledger || ensureLedger();
+    if (state.dockHiddenForInspection) {
+      state.cockpitExpanded = false;
+    }
 
-    SCRIPT_KEYS.forEach((item) => {
-      const script = scripts.find((node) => {
-        const src = node.getAttribute("src") || "";
-        return src.includes(item.srcPart);
-      });
+    if (refs.cockpit) {
+      refs.cockpit.dataset.cockpitMode = state.dockHiddenForInspection ? "planet-inspect" : "compact-dock";
+      refs.cockpit.dataset.hearthIndexDockHiddenForInspection = String(state.dockHiddenForInspection);
+    }
 
-      if (script) {
-        ledger.setScript(item.key, {
-          src: script.src || item.srcPart,
-          status: "PRESENT",
-          globalPresent: item.key === "coherenceConductor" ? Boolean(getConductorApi()) : false
-        });
-      }
+    if (refs.mount) {
+      refs.mount.dataset.hearthIndexDockHiddenForInspection = String(state.dockHiddenForInspection);
+    }
+
+    if (doc && doc.documentElement) {
+      doc.documentElement.dataset.hearthIndexDockHiddenForInspection = String(state.dockHiddenForInspection);
+    }
+
+    if (refs.showTab) {
+      refs.showTab.hidden = !state.dockHiddenForInspection;
+      refs.showTab.dataset.visible = String(state.dockHiddenForInspection);
+    }
+
+    if (refs.inspectButton) {
+      refs.inspectButton.textContent = state.dockHiddenForInspection ? "Show diagnostic" : "Inspect planet";
+    }
+
+    markEvent(state.dockHiddenForInspection ? "INDEX_DOCK_HIDDEN_FOR_PLANET_VIEW" : "INDEX_DOCK_RESTORED", {
+      lane: "firstPaint",
+      status: "USER_CONTROL",
+      message: state.dockHiddenForInspection
+        ? "Dock hidden so the planet can be viewed."
+        : "Diagnostic dock restored."
     });
 
-    state.conductorScriptPresent = Boolean(
-      scripts.find((node) => (node.getAttribute("src") || "").includes(COHERENCE_FILE))
-    );
-
-    state.canvasScriptPresent = Boolean(
-      scripts.find((node) => (node.getAttribute("src") || "").includes(CANVAS_FILE))
-    );
+    render();
   }
 
-  function getConductorApi() {
+  function laneMarkup() {
+    const ledger = refs.ledger || root.HEARTH_LOAD_LEDGER || null;
+    const lanes = ledger && ledger.state && ledger.state.lanes ? ledger.state.lanes : {};
+
+    return FIBONACCI_INDEX_SEQUENCE.map((checkpoint) => {
+      const lane = lanes[checkpoint.lane] || makeIndexLane(checkpoint);
+      const complete = state.completedIndexCheckpoints.includes(checkpoint.id);
+      const status = complete ? "COMPLETE" : lane.status || "PENDING";
+      const progress = complete ? checkpoint.progress : clamp(lane.progress, 0, checkpoint.progress);
+
+      return `
+        <section class="hearth-ledger-lane" data-lane="${escapeHtml(checkpoint.lane)}" data-status="${escapeHtml(status)}">
+          <div class="hearth-ledger-lane-top">
+            <span class="hearth-ledger-lane-title">
+              <strong>${escapeHtml(checkpoint.stage)} · ${escapeHtml(checkpoint.label)}</strong>
+              <span>Index-owned Step 1 checkpoint.</span>
+            </span>
+            <span class="hearth-ledger-lane-status">${escapeHtml(status)}</span>
+          </div>
+          <div class="hearth-ledger-lane-track">
+            <span class="hearth-ledger-lane-fill" style="width:${progress}%"></span>
+          </div>
+          <div class="hearth-ledger-lane-title">
+            <span>event=${escapeHtml(checkpoint.event)}</span>
+          </div>
+        </section>
+      `;
+    }).join("");
+  }
+
+  function futureMarkup() {
+    return FUTURE_STEPS.map((item) => {
+      return `
+        <section class="hearth-ledger-lane" data-status="PASSIVE_HANDOFF">
+          <div class="hearth-ledger-lane-top">
+            <span class="hearth-ledger-lane-title">
+              <strong>${escapeHtml(item)}</strong>
+              <span>Not owned by index.js. Await /showroom/globe/hearth/hearth.js.</span>
+            </span>
+            <span class="hearth-ledger-lane-status">HANDOFF</span>
+          </div>
+        </section>
+      `;
+    }).join("");
+  }
+
+  function buildHandoffPacket() {
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
+      baselineContract: BASELINE_CONTRACT,
+      version: VERSION,
+      file: INDEX_FILE,
+      route: ROUTE,
+      pairedWith: COHERENCE_FILE,
+      role: "route-socket-step-1",
+
+      step1Complete: state.completedIndexCheckpoints.includes("F2_FIRST_PAINT_COCKPIT_VISIBLE"),
+      indexMaxFibonacciStage: INDEX_MAX_FIBONACCI_STAGE,
+
+      mountReady: state.mountReady,
+      mountId: MOUNT_ID,
+      cockpitReady: state.cockpitReady,
+      cockpitId: COCKPIT_ID,
+      ledgerReady: state.ledgerReady,
+      partialDiagnosticReady: state.partialDiagnosticReady,
+      receiptToggleReady: state.receiptToggleReady,
+      dockHideShowReady: state.dockHideShowReady,
+      showDiagnosticReady: state.showDiagnosticReady,
+
+      ownsStep1: true,
+      ownsSteps2Through11: false,
+      hearthJsOwnsSteps2Through11: true,
+
+      ownsRuntimeTableSession: false,
+      ownsCheckpointGovernor: false,
+      ownsCanvasDrawing: false,
+      ownsCanvasCoordination: false,
+      ownsVisiblePlanetProof: false,
+      ownsInspectModeTruth: false,
+      ownsFinalCompletion: false,
+      ownsFinalDiagnosticReceipt: false,
+      ownsVisualPassClaim: false,
+
+      newsProtocolInitialized: state.newsProtocolInitialized,
+      fibonacciSequenceInitialized: state.fibonacciSequenceInitialized,
+      northSocketReady: state.northSocketReady,
+      eastHandoffReady: state.eastHandoffReady,
+      westRecoverabilityReady: state.westRecoverabilityReady,
+      southHandoffEmitted: state.southHandoffEmitted,
+      indexNewsPassed: state.indexNewsPassed,
+
+      sharedLedger: refs.ledger || root.HEARTH_LOAD_LEDGER || null,
+      mount: refs.mount || null,
+      cockpit: refs.cockpit || null,
+
+      handoffCreatedAt: state.handoffCreatedAt || nowIso(),
+
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false
+    };
+  }
+
+  function publishHandoff() {
+    state.handoffCreatedAt = state.handoffCreatedAt || nowIso();
+    state.handoffPacketReady = true;
+
+    const packet = buildHandoffPacket();
+
+    root.HEARTH = root.HEARTH || {};
+    root.HEARTH.indexRouteSocket = api;
+    root.HEARTH.indexConstraintSemiconductor = api;
+    root.HEARTH.indexHandoff = packet;
+
+    root.HEARTH_INDEX_ROUTE_SOCKET = api;
+    root.HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR = api;
+    root.HEARTH_INDEX_BRIDGE = api;
+    root.HearthIndexBridge = api;
+    root.HEARTH_INDEX_JS = api;
+
+    root.HEARTH_INDEX_ROUTE_SOCKET_HANDOFF = packet;
+    root.HEARTH_INDEX_ROUTE_SOCKET_RECEIPT = buildReceipt();
+    root.HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR_RECEIPT = root.HEARTH_INDEX_ROUTE_SOCKET_RECEIPT;
+    root.HEARTH_INDEX_BRIDGE_RECEIPT = root.HEARTH_INDEX_ROUTE_SOCKET_RECEIPT;
+    root.HEARTH_INDEX_JS_RECEIPT = root.HEARTH_INDEX_ROUTE_SOCKET_RECEIPT;
+
+    root.__HEARTH_INDEX_ROUTE_SOCKET_FILE__ = INDEX_FILE;
+    root.__HEARTH_CONSTRAINT_SEMICONDUCTOR_FILE__ = INDEX_FILE;
+    root.__HEARTH_COHERENCE_SEMICONDUCTOR_FILE__ = COHERENCE_FILE;
+    root.__HEARTH_ACTIVE_ROUTE_FILE__ = COHERENCE_FILE;
+    root.__HEARTH_INDEX_MAX_FIBONACCI_STAGE__ = INDEX_MAX_FIBONACCI_STAGE;
+    root.__HEARTH_CLIMATE_ROUTE_RETIRED__ = true;
+
+    state.handoffPublished = true;
+    return packet;
+  }
+
+  function getCoherenceApi() {
     return (
       root.HEARTH_ROUTE_CONDUCTOR ||
       root.HearthRouteConductor ||
       root.HEARTH_ACTIVE_ROUTE ||
+      root.HEARTH_ROUTE_COHERENCE_SEMICONDUCTOR ||
+      root.HEARTH_ROUTE_RUNTIME_TABLE_CHECKPOINT_GOVERNOR_CONSUMER ||
+      root.HEARTH_ROUTE_CONSUMER_ACTIVE_MATCH_QUEUE_DRAIN ||
       (root.HEARTH && root.HEARTH.routeConductor) ||
+      (root.HEARTH && root.HEARTH.coherenceSemiconductor) ||
       null
     );
   }
 
-  function getCanvasApi() {
-    return (
-      root.HEARTH_CANVAS ||
-      root.HearthCanvas ||
-      (root.HEARTH && root.HEARTH.canvas) ||
-      null
-    );
-  }
+  function attemptReceiverHandoff(reason = "manual") {
+    if (state.hearthReceiverAccepted) return true;
 
-  function conductorBootMethod(api) {
-    if (!api) return "";
-    if (isFunction(api.boot)) return "boot";
-    if (isFunction(api.start)) return "start";
-    if (isFunction(api.init)) return "init";
-    if (isFunction(api.run)) return "run";
-    return "";
-  }
+    const apiCandidate = getCoherenceApi();
+    state.hearthGlobalPresent = Boolean(apiCandidate);
 
-  function cacheKey() {
-    return `${CONTRACT}-${Date.now()}`;
+    if (!apiCandidate) {
+      state.handoffDeliveryAttempted = true;
+      state.hearthReceiverError = "coherence-api-not-present";
+      publishDataset();
+      return false;
+    }
+
+    const packet = publishHandoff();
+
+    for (const method of RECEIVER_METHODS) {
+      if (!isFunction(apiCandidate[method])) continue;
+
+      try {
+        apiCandidate[method]({
+          ...packet,
+          handoffReason: reason
+        });
+
+        state.handoffDeliveryAttempted = true;
+        state.hearthReceiverAccepted = true;
+        state.hearthReceiverMethod = method;
+        state.hearthReceiverError = "";
+
+        markEvent("INDEX_HANDOFF_ACCEPTED_BY_HEARTH_JS", {
+          lane: "firstPaint",
+          status: "HANDOFF_ACCEPTED",
+          message: `hearth.js accepted index handoff through ${method}.`,
+          method
+        });
+
+        publishDataset();
+        scheduleRender();
+        return true;
+      } catch (error) {
+        state.handoffDeliveryAttempted = true;
+        state.hearthReceiverError = error && error.message ? error.message : String(error);
+
+        recordError("HEARTH_RECEIVER_METHOD_FAILED", state.hearthReceiverError, {
+          method,
+          reason
+        });
+      }
+    }
+
+    state.handoffDeliveryAttempted = true;
+    state.hearthReceiverMethod = "";
+    state.hearthReceiverError = "coherence-api-present-without-passive-receiver-method";
+
+    markEvent("INDEX_HANDOFF_PUBLISHED_FOR_HEARTH_JS", {
+      lane: "firstPaint",
+      status: "HANDOFF_PUBLISHED",
+      message: "Handoff published globally. No boot/start/init/run call made by index.js."
+    });
+
+    publishDataset();
+    scheduleRender();
+    return false;
   }
 
   function scriptAlreadyPresent(srcPart) {
     if (!doc) return null;
+
     return Array.from(doc.scripts || []).find((script) => {
       const src = script.getAttribute("src") || "";
       return src.includes(srcPart);
     }) || null;
   }
 
-  function injectConductorScript() {
-    const ledger = refs.ledger || ensureLedger();
+  function cacheKey() {
+    return `${CONTRACT}-${Date.now()}`;
+  }
 
-    const api = getConductorApi();
+  function injectHearthScriptOnce() {
+    const existingApi = getCoherenceApi();
 
-    if (api) {
-      state.conductorGlobalPresent = true;
-      state.conductorScriptLoaded = true;
-      state.conductorScriptPresent = true;
-      state.conductorContract = String(api.contract || "");
-      state.conductorBootMethodPresent = Boolean(conductorBootMethod(api));
-      state.conductorDelegationAccepted = true;
-
-      ledger.setScript("coherenceConductor", {
-        src: COHERENCE_FILE,
-        status: "GLOBAL_PRESENT",
-        globalPresent: true,
-        loadedAt: nowIso()
-      });
-
-      acceptConductorIfPossible(api);
-      return Promise.resolve(api);
+    if (existingApi) {
+      state.hearthGlobalPresent = true;
+      state.hearthScriptPresent = true;
+      attemptReceiverHandoff("coherence-global-present-before-injection");
+      return;
     }
 
-    const existing = scriptAlreadyPresent(COHERENCE_FILE);
+    const existingScript = scriptAlreadyPresent(COHERENCE_FILE);
 
-    if (existing) {
-      state.conductorScriptPresent = true;
-      state.conductorScriptRequested = true;
-
-      ledger.setScript("coherenceConductor", {
-        src: existing.src || COHERENCE_FILE,
-        status: "PRESENT_WAITING_GLOBAL",
-        globalPresent: false,
-        requestedAt: nowIso()
-      });
-
-      return waitForConductorGlobal(4200);
+    if (existingScript) {
+      state.hearthScriptPresent = true;
+      state.hearthScriptInjected = false;
+      state.hearthScriptLoaded = Boolean(existingScript.dataset.hearthLoaded === "true");
+      state.hearthScriptError = "";
+      publishDataset();
+      return;
     }
 
     if (!doc || !doc.head) {
-      state.conductorScriptError = "document.head unavailable";
-      recordError("DOCUMENT_HEAD_MISSING", state.conductorScriptError);
-      return Promise.resolve(null);
+      state.hearthScriptError = "document.head unavailable";
+      recordError("HEARTH_SCRIPT_INJECTION_SKIPPED", state.hearthScriptError);
+      return;
     }
-
-    state.conductorScriptRequested = true;
-    state.conductorDelegationReady = true;
-
-    ledger.setScript("coherenceConductor", {
-      src: COHERENCE_FILE,
-      status: "REQUESTED",
-      globalPresent: false,
-      requestedAt: nowIso()
-    });
 
     const script = doc.createElement("script");
     script.src = `${COHERENCE_FILE}?v=${encodeURIComponent(cacheKey())}`;
     script.defer = true;
-    script.dataset.hearthPairedSemiconductor = "true";
-    script.dataset.hearthLoadedByConstraintSemiconductor = CONTRACT;
-    script.dataset.hearthScriptKey = "coherenceConductor";
+    script.dataset.hearthLoadedByIndexRouteSocket = CONTRACT;
+    script.dataset.hearthScriptRole = "coherence-steps-2-through-11";
     script.dataset.generatedImage = "false";
     script.dataset.graphicBox = "false";
     script.dataset.webgl = "false";
     script.dataset.visualPassClaimed = "false";
 
-    return new Promise((resolve) => {
-      let settled = false;
+    state.hearthScriptPresent = true;
+    state.hearthScriptInjected = true;
+    state.hearthScriptLoaded = false;
+    state.hearthScriptError = "";
 
-      function finish(status, error = "") {
-        if (settled) return;
-        settled = true;
-
-        state.conductorScriptPresent = true;
-        state.conductorScriptLoaded = status === "LOADED" || Boolean(getConductorApi());
-        state.conductorScriptError = error;
-
-        const conductor = getConductorApi();
-
-        if (conductor) {
-          state.conductorGlobalPresent = true;
-          state.conductorContract = String(conductor.contract || "");
-          state.conductorBootMethodPresent = Boolean(conductorBootMethod(conductor));
-          state.conductorDelegationAccepted = true;
-          acceptConductorIfPossible(conductor);
-        }
-
-        ledger.setScript("coherenceConductor", {
-          src: script.src,
-          status: conductor ? "GLOBAL_PRESENT" : status,
-          globalPresent: Boolean(conductor),
-          error,
-          loadedAt: status === "LOADED" ? nowIso() : ""
-        });
-
-        resolve(conductor || null);
-      }
-
-      script.onload = () => {
-        waitForConductorGlobal(1600).then((api) => {
-          finish(api ? "LOADED" : "LOADED_GLOBAL_PENDING", api ? "" : "script loaded but conductor global not yet present");
-        });
-      };
-
-      script.onerror = () => {
-        finish("LOAD_FAILED", "coherence conductor script failed to load");
-      };
-
-      doc.head.appendChild(script);
-
-      root.setTimeout(() => {
-        if (settled) return;
-        const api = getConductorApi();
-        finish(api ? "TIMEOUT_GLOBAL_PRESENT" : "LOAD_TIMEOUT", api ? "" : "coherence conductor load timeout");
-      }, 5200);
-    });
-  }
-
-  function waitForConductorGlobal(timeoutMs) {
-    const started = nowMs();
-
-    return new Promise((resolve) => {
-      const timer = root.setInterval(() => {
-        const api = getConductorApi();
-
-        if (api) {
-          root.clearInterval(timer);
-          state.conductorGlobalPresent = true;
-          state.conductorContract = String(api.contract || "");
-          state.conductorBootMethodPresent = Boolean(conductorBootMethod(api));
-          state.conductorDelegationAccepted = true;
-          acceptConductorIfPossible(api);
-          resolve(api);
-          return;
-        }
-
-        if (nowMs() - started >= timeoutMs) {
-          root.clearInterval(timer);
-          resolve(null);
-        }
-      }, 80);
-    });
-  }
-
-  function acceptConductorIfPossible(api) {
-    if (!api) return false;
-
-    const payload = {
-      calledBy: CONTRACT,
-      constraintSemiconductor: INDEX_FILE,
-      coherenceSemiconductor: COHERENCE_FILE,
-      pairedSemiconductor: true,
-      systematicAndSynchronized: true,
-      synchronizedLoading: true,
-      sharedLedger: root.HEARTH_LOAD_LEDGER,
-      mount: refs.mount || ensureMount(),
-      cockpit: refs.cockpit || ensureCockpit(),
-      indexReceipt: getReceipt(),
-      visibleCarrierFirst: true,
-      runtimeTableRequiredForFirstRender: false,
-      sourceStackRequiredForFirstRender: false,
-      wideProbeDeferred: true,
-      climateRouteRetired: true,
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false
+    script.onload = () => {
+      script.dataset.hearthLoaded = "true";
+      state.hearthScriptLoaded = true;
+      state.hearthGlobalPresent = Boolean(getCoherenceApi());
+      markEvent("HEARTH_JS_SCRIPT_LOADED_BY_INDEX_ROUTE_SOCKET", {
+        lane: "firstPaint",
+        status: "SCRIPT_LOADED",
+        message: "hearth.js loaded. Index does not call boot/start/init/run."
+      });
+      attemptReceiverHandoff("hearth-script-onload");
+      publishDataset();
+      scheduleRender();
     };
 
-    const method =
-      isFunction(api.acceptConstraintSemiconductor) ? "acceptConstraintSemiconductor" :
-        isFunction(api.hydrateIndexBridge) ? "hydrateIndexBridge" :
-          isFunction(api.attachIndexBridge) ? "attachIndexBridge" :
-            isFunction(api.receiveIndexBridge) ? "receiveIndexBridge" :
-              "";
+    script.onerror = () => {
+      state.hearthScriptLoaded = false;
+      state.hearthScriptError = "hearth.js script failed to load";
+      recordError("HEARTH_JS_SCRIPT_LOAD_FAILED", state.hearthScriptError, {
+        src: script.src
+      });
+      publishDataset();
+      scheduleRender();
+    };
 
-    if (method) {
-      try {
-        api[method](payload);
-        state.conductorDelegationAccepted = true;
-        state.conductorDelegationReady = true;
+    doc.head.appendChild(script);
 
-        refs.ledger.setLane("conductorHydration", {
-          status: "ACCEPTED",
-          progress: stageProgress("F8"),
-          event: "COHERENCE_CONDUCTOR_ACCEPTED_INDEX_SEMICONDUCTOR",
-          stage: "F8",
-          owner: "index.js",
-          file: INDEX_FILE,
-          message: `Coherence conductor accepted index semiconductor through ${method}.`
-        });
-
-        return true;
-      } catch (error) {
-        recordError("CONDUCTOR_ACCEPTANCE_METHOD_FAILED", error && error.message ? error.message : String(error), { method });
-      }
-    }
-
-    state.conductorDelegationAccepted = true;
-    state.conductorDelegationReady = true;
-
-    refs.ledger.setLane("conductorHydration", {
-      status: "GLOBAL_PRESENT",
-      progress: stageProgress("F8"),
-      event: "COHERENCE_CONDUCTOR_GLOBAL_PRESENT",
-      stage: "F8",
-      owner: "index.js",
-      file: INDEX_FILE,
-      message: "Coherence conductor global present; boot call suppressed to avoid duplicate conductor execution."
+    markEvent("HEARTH_JS_SCRIPT_INJECTED_ONCE", {
+      lane: "firstPaint",
+      status: "SCRIPT_INJECTED",
+      message: "hearth.js requested once. No repeated injection and no boot call."
     });
 
-    return true;
+    publishDataset();
   }
 
   function retireClimateRoute() {
@@ -1411,57 +1450,71 @@
     state.climateRouteRetired = true;
   }
 
-  function markVisualHints() {
-    if (!doc) return;
+  function evaluateIndexNews() {
+    state.northSocketReady = Boolean(state.mountReady && state.cockpitReady && state.ledgerReady);
+    state.eastHandoffReady = Boolean(state.handoffPacketReady && state.handoffPublished);
+    state.westRecoverabilityReady = Boolean(
+      state.partialDiagnosticReady &&
+      state.receiptToggleReady &&
+      state.dockHideShowReady &&
+      state.showDiagnosticReady
+    );
+    state.southHandoffEmitted = Boolean(state.handoffPublished);
 
-    const mount = refs.mount || ensureMount();
-    const canvas = mount ? mount.querySelector("canvas") : null;
-    const rect = canvas && isFunction(canvas.getBoundingClientRect) ? canvas.getBoundingClientRect() : null;
-    const canvasApi = getCanvasApi();
-    const canvasState = canvasApi && canvasApi.state ? canvasApi.state : null;
-    const canvasReceipt =
-      root.HEARTH_CANVAS_POSTGAME_RECEIPT ||
-      root.HEARTH_CANVAS_RECEIPT ||
-      null;
-
-    state.canvasGlobalPresent = Boolean(canvasApi);
-    state.planetCanvasPresent = Boolean(canvas);
-    state.planetCanvasNonZeroSize = Boolean(
-      canvas &&
-      (
-        (canvas.width > 0 && canvas.height > 0) ||
-        (rect && rect.width > 0 && rect.height > 0)
-      )
+    state.indexNewsPassed = Boolean(
+      state.northSocketReady &&
+      state.eastHandoffReady &&
+      state.westRecoverabilityReady &&
+      state.southHandoffEmitted
     );
 
-    state.visiblePlanetPossiblyAvailable = Boolean(
-      state.planetCanvasPresent &&
-      state.planetCanvasNonZeroSize &&
-      (
-        canvasState?.firstFrameDetected === true ||
-        canvasState?.imageRendered === true ||
-        canvasState?.canvasReady === true ||
-        canvasReceipt?.firstFrameDetected === true ||
-        canvasReceipt?.imageRendered === true ||
-        canvasReceipt?.canvasReady === true ||
-        doc.documentElement.dataset.hearthCanvasReady === "true" ||
-        doc.documentElement.dataset.hearthImageRendered === "true"
-      )
-    );
+    return state.indexNewsPassed;
+  }
 
-    if (refs.ledger) {
-      refs.ledger.setLane("visiblePlanetProof", {
-        status: state.visiblePlanetPossiblyAvailable ? "POSSIBLY_AVAILABLE" : "PENDING_COHERENCE_PROOF",
-        progress: state.visiblePlanetPossiblyAvailable ? 88 : 45,
-        event: state.visiblePlanetPossiblyAvailable ? "INDEX_VISUAL_HINT_CANVAS_PRESENT" : "INDEX_WAITING_FOR_VISIBLE_PLANET_PROOF",
-        stage: "F13",
-        owner: "index.js",
-        file: INDEX_FILE,
-        message: state.visiblePlanetPossiblyAvailable
-          ? "Canvas present; coherence conductor must prove visible planet before completion."
-          : "Index is waiting for coherence conductor visible-planet proof."
-      });
+  function deriveFailureCoordinate() {
+    if (!state.mountReady) {
+      state.firstFailedCoordinate = "WAITING_INDEX_MOUNT_READY";
+      state.recommendedNextRenewalTarget = INDEX_FILE;
+      return;
     }
+
+    if (!state.ledgerReady) {
+      state.firstFailedCoordinate = "WAITING_INDEX_LEDGER_READY";
+      state.recommendedNextRenewalTarget = INDEX_FILE;
+      return;
+    }
+
+    if (!state.cockpitReady) {
+      state.firstFailedCoordinate = "WAITING_INDEX_FIRST_PAINT_COCKPIT";
+      state.recommendedNextRenewalTarget = INDEX_FILE;
+      return;
+    }
+
+    if (!state.handoffPublished) {
+      state.firstFailedCoordinate = "WAITING_INDEX_HANDOFF_PUBLISHED";
+      state.recommendedNextRenewalTarget = INDEX_FILE;
+      return;
+    }
+
+    if (!state.westRecoverabilityReady) {
+      state.firstFailedCoordinate = "WAITING_INDEX_RECOVERABILITY_CONTROLS";
+      state.recommendedNextRenewalTarget = INDEX_FILE;
+      return;
+    }
+
+    state.firstFailedCoordinate = "STEP1_COMPLETE_WAITING_HEARTH_JS_STEPS_2_THROUGH_11";
+    state.recommendedNextRenewalTarget = COHERENCE_FILE;
+  }
+
+  function computeProgress() {
+    const stepProgress = FIBONACCI_INDEX_SEQUENCE.reduce((max, checkpoint) => {
+      return state.completedIndexCheckpoints.includes(checkpoint.id)
+        ? Math.max(max, checkpoint.progress)
+        : max;
+    }, 0);
+
+    state.displayProgress = clamp(Math.max(state.displayProgress, stepProgress), 0, 22);
+    return Math.round(state.displayProgress);
   }
 
   function scheduleRender() {
@@ -1470,113 +1523,48 @@
     renderTimer = root.setTimeout(() => {
       renderTimer = 0;
       render();
-    }, 80);
-  }
-
-  function laneMarkup() {
-    const ledger = refs.ledger || ensureLedger();
-    const lanes = ledger.state.lanes || {};
-
-    return LANES.map((def) => {
-      const lane = lanes[def.key] || makeLane(def);
-      const status = lane.status || "PENDING";
-      const progress = clamp(lane.progress, 0, 100);
-      const event = lane.latestEvent || "PENDING";
-      const message = lane.message || `${def.label} pending.`;
-
-      return `
-        <section class="hearth-ledger-lane" data-lane="${escapeHtml(def.key)}" data-status="${escapeHtml(status)}">
-          <div class="hearth-ledger-lane-top">
-            <span class="hearth-ledger-lane-title">
-              <strong>${escapeHtml(def.label)} · ${escapeHtml(lane.fibonacci || def.fibonacci)}</strong>
-              <span>${escapeHtml(message)}</span>
-            </span>
-            <span class="hearth-ledger-lane-status">${escapeHtml(status)}</span>
-          </div>
-          <div class="hearth-ledger-lane-track">
-            <span class="hearth-ledger-lane-fill" style="width:${progress}%"></span>
-          </div>
-          <div class="hearth-ledger-lane-title">
-            <span>event=${escapeHtml(event)}</span>
-          </div>
-        </section>
-      `;
-    }).join("");
-  }
-
-  function computeProgress() {
-    const ledger = refs.ledger || ensureLedger();
-    const lanes = ledger.state.lanes || {};
-    let progress = state.displayProgress || 6;
-
-    Object.keys(lanes).forEach((key) => {
-      progress = Math.max(progress, Number(lanes[key].progress || 0));
-    });
-
-    if (state.conductorGlobalPresent) progress = Math.max(progress, 48);
-    if (state.conductorDelegationAccepted) progress = Math.max(progress, 62);
-    if (state.canvasGlobalPresent) progress = Math.max(progress, 70);
-    if (state.visiblePlanetPossiblyAvailable) progress = Math.max(progress, 88);
-
-    state.displayProgress = clamp(progress, 0, 96);
-    return Math.round(state.displayProgress);
+    }, 60);
   }
 
   function render() {
     if (!refs.cockpit) return;
 
-    markVisualHints();
+    evaluateIndexNews();
+    deriveFailureCoordinate();
 
-    const ledger = refs.ledger || ensureLedger();
-    const led = ledger.state;
     const progress = computeProgress();
-    const elapsed = state.startedAt ? nowMs() - new Date(state.startedAt).getTime() : 0;
-
-    const stage =
-      state.visiblePlanetPossiblyAvailable ? "F13" :
-        state.conductorDelegationAccepted ? "F8" :
-          state.conductorScriptRequested ? "F3" :
-            state.firstPaintCockpitReady ? "F2" :
-              "F1A";
-
-    state.currentStage = stage;
-    if (stageRank(stage) >= stageRank(state.highestStage)) {
-      state.highestStage = stage;
-    }
 
     if (refs.title) {
-      refs.title.textContent = state.visiblePlanetPossiblyAvailable
-        ? "VISIBLE PLANET PROOF PASSING TO COHERENCE CONDUCTOR"
+      refs.title.textContent = state.indexNewsPassed
+        ? "STEP 1 READY · HANDOFF TO HEARTH.JS"
         : "STARTING HEARTH VISIBLE PROCESS";
     }
 
     if (refs.stage) {
-      refs.stage.textContent = `${stage} · ${stageLabel(stage)}`;
+      refs.stage.textContent = `${state.currentStage} · index max ${INDEX_MAX_FIBONACCI_STAGE} · Step 1 only`;
     }
 
     if (refs.heartbeat) {
-      refs.heartbeat.textContent = `constraint-side=true · synchronized=true · elapsed=${formatElapsed(elapsed)}`;
+      refs.heartbeat.textContent = `route socket=true · hearth.js owns Steps 2–11 · elapsed=${formatElapsed(state.startedAt)}`;
     }
 
     if (refs.latest) {
-      const latest = led.events && led.events.length ? led.events[led.events.length - 1].id : state.latestEvent;
-      refs.latest.textContent = `latest=${latest}`;
+      refs.latest.textContent = `latest=${state.latestEvent}`;
     }
 
-    if (refs.mainFill) {
-      refs.mainFill.style.width = `${progress}%`;
-    }
+    if (refs.mainFill) refs.mainFill.style.width = `${progress}%`;
+    if (refs.mainPercent) refs.mainPercent.textContent = `${progress}%`;
+    if (refs.laneList) refs.laneList.innerHTML = laneMarkup();
+    if (refs.futureList) refs.futureList.innerHTML = futureMarkup();
+    if (refs.receiptPre) refs.receiptPre.textContent = getReceiptText();
 
-    if (refs.mainPercent) {
-      refs.mainPercent.textContent = `${progress}%`;
-    }
-
-    if (refs.laneList) {
-      refs.laneList.innerHTML = laneMarkup();
-    }
-
-    if (refs.receiptPre) {
-      refs.receiptPre.textContent = getReceiptText();
+    if (refs.cockpit) {
+      refs.cockpit.dataset.hearthIndexStep1Complete = String(state.indexNewsPassed);
+      refs.cockpit.dataset.hearthIndexMaxFibonacciStage = INDEX_MAX_FIBONACCI_STAGE;
+      refs.cockpit.dataset.hearthJsOwnsSteps2Through11 = "true";
+      refs.cockpit.dataset.hearthIndexOwnsSteps2Through11 = "false";
+      refs.cockpit.dataset.hearthFirstFailedCoordinate = state.firstFailedCoordinate;
+      refs.cockpit.dataset.hearthRecommendedNextRenewalTarget = state.recommendedNextRenewalTarget;
     }
 
     publishDataset();
@@ -1593,30 +1581,35 @@
     if (!node) return;
 
     node.textContent = [
-      "Hearth index constraint semiconductor active.",
+      "Hearth index route socket active.",
       `Contract ${CONTRACT}`,
       `Receipt ${RECEIPT}`,
       `File ${INDEX_FILE}`,
+      `Role ${state.role}`,
       `Paired with ${COHERENCE_FILE}`,
-      "Index starts process true",
-      "Hearth finishes process true",
-      `First-paint cockpit ready ${state.firstPaintCockpitReady}`,
-      `Visible progress strip ready ${state.visibleProgressStripReady}`,
-      `Shared ledger present ${state.loadLedgerPresent}`,
-      `Conductor global present ${state.conductorGlobalPresent}`,
-      `Conductor delegation accepted ${state.conductorDelegationAccepted}`,
-      `Conductor boot call suppressed ${state.conductorBootCallSuppressedToPreventDuplicate}`,
-      `Planet canvas present ${state.planetCanvasPresent}`,
-      `Planet canvas nonzero size ${state.planetCanvasNonZeroSize}`,
-      `Visible planet possibly available ${state.visiblePlanetPossiblyAvailable}`,
-      "Final completion owned by hearth.js",
-      "Runtime Table required for first render false",
-      "Source stack required for first render false",
-      "Wide probe deferred true",
-      "Generated image false",
-      "GraphicBox false",
-      "WebGL false",
-      "Visual pass claimed false",
+      `Index owns Step 1 ${state.ownsStep1}`,
+      `Index owns Steps 2 through 11 ${state.ownsSteps2Through11}`,
+      `Hearth.js owns Steps 2 through 11 ${state.hearthJsOwnsSteps2Through11}`,
+      `Index max Fibonacci stage ${INDEX_MAX_FIBONACCI_STAGE}`,
+      `Mount ready ${state.mountReady}`,
+      `Cockpit ready ${state.cockpitReady}`,
+      `Ledger ready ${state.ledgerReady}`,
+      `Partial diagnostic ready ${state.partialDiagnosticReady}`,
+      `Receipt toggle ready ${state.receiptToggleReady}`,
+      `Dock hide/show ready ${state.dockHideShowReady}`,
+      `Handoff packet ready ${state.handoffPacketReady}`,
+      `Handoff published ${state.handoffPublished}`,
+      `Hearth script present ${state.hearthScriptPresent}`,
+      `Hearth script injected ${state.hearthScriptInjected}`,
+      `Hearth script loaded ${state.hearthScriptLoaded}`,
+      `Hearth receiver accepted ${state.hearthReceiverAccepted}`,
+      `Index NEWS passed ${state.indexNewsPassed}`,
+      `Runtime Table mutation ${state.runtimeTableMutation}`,
+      `Canvas mutation ${state.canvasMutation}`,
+      `Generated image ${state.generatedImage}`,
+      `GraphicBox ${state.graphicBox}`,
+      `WebGL ${state.webGL}`,
+      `Visual pass claimed ${state.visualPassClaimed}`,
       `First failed coordinate ${state.firstFailedCoordinate}`,
       `Recommended next renewal target ${state.recommendedNextRenewalTarget}`,
       `Updated ${state.updatedAt || nowIso()}`
@@ -1626,12 +1619,18 @@
   function publishDataset() {
     if (!doc || !doc.documentElement) return;
 
+    evaluateIndexNews();
+    deriveFailureCoordinate();
+
     const dataset = doc.documentElement.dataset;
 
-    dataset.hearthIndexConstraintSemiconductorLoaded = "true";
-    dataset.hearthIndexConstraintSemiconductorContract = CONTRACT;
-    dataset.hearthIndexConstraintSemiconductorReceipt = RECEIPT;
-    dataset.hearthIndexConstraintSemiconductorVersion = VERSION;
+    dataset.hearthIndexRouteSocketLoaded = "true";
+    dataset.hearthIndexRouteSocketContract = CONTRACT;
+    dataset.hearthIndexRouteSocketReceipt = RECEIPT;
+    dataset.hearthIndexRouteSocketVersion = VERSION;
+    dataset.hearthIndexStep1Complete = String(state.indexNewsPassed);
+    dataset.hearthIndexMaxFibonacciStage = INDEX_MAX_FIBONACCI_STAGE;
+
     dataset.hearthPairedSemiconductor = "true";
     dataset.hearthConstraintSemiconductor = INDEX_FILE;
     dataset.hearthCoherenceSemiconductor = COHERENCE_FILE;
@@ -1639,57 +1638,70 @@
     dataset.hearthJsFinishesProcess = "true";
     dataset.hearthSynchronizedLoading = "true";
 
+    dataset.hearthIndexOwnsStep1 = "true";
+    dataset.hearthIndexOwnsSteps2Through11 = "false";
+    dataset.hearthJsOwnsSteps2Through11 = "true";
+
     dataset.hearthIndexOwnsFirstPaintSurvival = "true";
     dataset.hearthIndexOwnsMountCertainty = "true";
     dataset.hearthIndexOwnsLoadingScreenCertainty = "true";
     dataset.hearthIndexOwnsEarlyLedger = "true";
-    dataset.hearthIndexOwnsScriptOrderVisibility = "true";
-    dataset.hearthIndexOwnsActiveRouteConduction = "false";
-    dataset.hearthIndexOwnsFinalCompletion = "false";
+    dataset.hearthIndexOwnsPartialDiagnosticAccess = "true";
+    dataset.hearthIndexOwnsRuntimeTableSession = "false";
+    dataset.hearthIndexOwnsCheckpointGovernor = "false";
     dataset.hearthIndexOwnsCanvasDrawing = "false";
+    dataset.hearthIndexOwnsCanvasCoordination = "false";
     dataset.hearthIndexOwnsVisiblePlanetProof = "false";
+    dataset.hearthIndexOwnsInspectModeTruth = "false";
+    dataset.hearthIndexOwnsFinalCompletion = "false";
+    dataset.hearthIndexOwnsFinalDiagnosticReceipt = "false";
 
-    dataset.hearthFirstPaintCockpitReady = String(state.firstPaintCockpitReady);
-    dataset.hearthVisibleProgressStripReady = String(state.visibleProgressStripReady);
-    dataset.hearthLoadLedgerPresent = String(state.loadLedgerPresent);
-    dataset.hearthCopyPartialDiagnosticReady = String(state.copyPartialDiagnosticReady);
+    dataset.hearthMountReady = String(state.mountReady);
+    dataset.hearthFirstPaintCockpitReady = String(state.cockpitReady);
+    dataset.hearthLoadLedgerPresent = String(state.ledgerReady);
+    dataset.hearthPartialDiagnosticReady = String(state.partialDiagnosticReady);
     dataset.hearthReceiptToggleReady = String(state.receiptToggleReady);
-    dataset.hearthInspectControlReserved = String(state.inspectControlReserved);
-    dataset.hearthShowDiagnosticRestoreReserved = String(state.showDiagnosticRestoreReserved);
+    dataset.hearthDockHideShowReady = String(state.dockHideShowReady);
+    dataset.hearthShowDiagnosticReady = String(state.showDiagnosticReady);
 
-    dataset.hearthNewsProtocolInitialized = String(state.newsProtocolInitialized);
-    dataset.hearthFibonacciSequenceInitialized = String(state.fibonacciSequenceInitialized);
+    dataset.hearthIndexNewsProtocolInitialized = String(state.newsProtocolInitialized);
+    dataset.hearthIndexFibonacciSequenceInitialized = String(state.fibonacciSequenceInitialized);
+    dataset.hearthIndexNewsPassed = String(state.indexNewsPassed);
+    dataset.hearthIndexNorthSocketReady = String(state.northSocketReady);
+    dataset.hearthIndexEastHandoffReady = String(state.eastHandoffReady);
+    dataset.hearthIndexWestRecoverabilityReady = String(state.westRecoverabilityReady);
+    dataset.hearthIndexSouthHandoffEmitted = String(state.southHandoffEmitted);
 
-    dataset.hearthActiveRouteFile = COHERENCE_FILE;
-    dataset.hearthExpectedCoherenceConductor = EXPECTED_COHERENCE_CONDUCTOR;
-    dataset.hearthConductorDelegationReady = String(state.conductorDelegationReady);
-    dataset.hearthConductorDelegationAccepted = String(state.conductorDelegationAccepted);
-    dataset.hearthConductorGlobalPresent = String(state.conductorGlobalPresent);
-    dataset.hearthConductorScriptPresent = String(state.conductorScriptPresent);
-    dataset.hearthConductorScriptRequested = String(state.conductorScriptRequested);
-    dataset.hearthConductorScriptLoaded = String(state.conductorScriptLoaded);
-    dataset.hearthConductorContractObserved = state.conductorContract;
-    dataset.hearthConductorBootMethodPresent = String(state.conductorBootMethodPresent);
-    dataset.hearthConductorBootCallSuppressedToPreventDuplicate = String(state.conductorBootCallSuppressedToPreventDuplicate);
-
-    dataset.hearthPlanetCanvasPresent = String(state.planetCanvasPresent);
-    dataset.hearthPlanetCanvasNonZeroSize = String(state.planetCanvasNonZeroSize);
-    dataset.hearthVisiblePlanetPossiblyAvailable = String(state.visiblePlanetPossiblyAvailable);
+    dataset.hearthIndexHandoffPacketReady = String(state.handoffPacketReady);
+    dataset.hearthIndexHandoffPublished = String(state.handoffPublished);
+    dataset.hearthIndexHandoffCreatedAt = state.handoffCreatedAt;
+    dataset.hearthScriptPresent = String(state.hearthScriptPresent);
+    dataset.hearthScriptInjected = String(state.hearthScriptInjected);
+    dataset.hearthScriptLoaded = String(state.hearthScriptLoaded);
+    dataset.hearthReceiverAccepted = String(state.hearthReceiverAccepted);
+    dataset.hearthReceiverMethod = state.hearthReceiverMethod;
 
     dataset.hearthClimateRouteRetired = "true";
     dataset.hearthRetiredClimateRouteFile = RETIRED_CLIMATE_FILE;
     dataset.hearthRuntimeTableRequiredForFirstRender = "false";
     dataset.hearthSourceStackRequiredForFirstRender = "false";
     dataset.hearthWideProbeDeferred = "true";
+    dataset.hearthRuntimeTableMutation = "false";
+    dataset.hearthCanvasMutation = "false";
+
+    dataset.hearthIndexDockHiddenForInspection = String(state.dockHiddenForInspection);
+    dataset.hearthIndexFirstFailedCoordinate = state.firstFailedCoordinate;
+    dataset.hearthIndexRecommendedNextRenewalTarget = state.recommendedNextRenewalTarget;
 
     dataset.generatedImage = "false";
     dataset.graphicBox = "false";
     dataset.webgl = "false";
     dataset.visualPassClaimed = "false";
 
-    root.HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR_RECEIPT = getReceipt();
-    root.HEARTH_INDEX_BRIDGE_RECEIPT = root.HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR_RECEIPT;
-    root.HEARTH_INDEX_JS_RECEIPT = root.HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR_RECEIPT;
+    root.HEARTH_INDEX_ROUTE_SOCKET_RECEIPT = buildReceipt();
+    root.HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR_RECEIPT = root.HEARTH_INDEX_ROUTE_SOCKET_RECEIPT;
+    root.HEARTH_INDEX_BRIDGE_RECEIPT = root.HEARTH_INDEX_ROUTE_SOCKET_RECEIPT;
+    root.HEARTH_INDEX_JS_RECEIPT = root.HEARTH_INDEX_ROUTE_SOCKET_RECEIPT;
   }
 
   async function copyText(text) {
@@ -1729,37 +1741,30 @@
       }, 1100);
     }
 
-    const ledger = refs.ledger || ensureLedger();
-
-    ledger.push({
-      id: "INDEX_PARTIAL_DIAGNOSTIC_COPIED",
-      stage: state.currentStage || "F2",
+    markEvent(ok ? "INDEX_PARTIAL_DIAGNOSTIC_COPIED" : "INDEX_PARTIAL_DIAGNOSTIC_COPY_FAILED", {
       lane: "ledger",
       status: ok ? "COPIED" : "COPY_FAILED",
-      owner: "index.js",
-      file: INDEX_FILE,
       message: ok ? "Partial diagnostic copied." : "Partial diagnostic copy failed."
     });
 
     return ok;
   }
 
-  function getReceipt(extra = {}) {
-    markVisualHints();
-
-    const ledger = refs.ledger || root.HEARTH_LOAD_LEDGER || null;
+  function buildReceipt() {
+    evaluateIndexNews();
+    deriveFailureCoordinate();
 
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
-      expectedCoherenceConductor: EXPECTED_COHERENCE_CONDUCTOR,
+      baselineContract: BASELINE_CONTRACT,
       version: VERSION,
-      authority: "hearth-index-constraint-semiconductor",
+      authority: "hearth-index-route-socket",
       destinationFile: INDEX_FILE,
       file: INDEX_FILE,
-      route: "/showroom/globe/hearth/",
-      role: "constraint-side-semiconductor",
+      route: ROUTE,
+      role: state.role,
 
       pairedSemiconductor: true,
       pairedWith: COHERENCE_FILE,
@@ -1768,110 +1773,126 @@
       systematicAndSynchronized: true,
       synchronizedLoading: true,
 
-      ownsFirstPaintSurvival: true,
-      ownsMountCertainty: true,
-      ownsLoadingScreenCertainty: true,
-      ownsEarlyLedger: true,
-      ownsScriptOrderVisibility: true,
-      ownsActiveRouteConduction: false,
-      ownsFinalCompletion: false,
-      ownsCanvasDrawing: false,
-      ownsVisiblePlanetProof: false,
-      ownsFinalDiagnosticReceipt: false,
+      indexOwnsStep1: state.ownsStep1,
+      indexOwnsSteps2Through11: state.ownsSteps2Through11,
+      hearthJsOwnsSteps2Through11: state.hearthJsOwnsSteps2Through11,
 
-      firstPaintCockpitReady: state.firstPaintCockpitReady,
-      visibleProgressStripReady: state.visibleProgressStripReady,
-      loadLedgerPresent: Boolean(root.HEARTH_LOAD_LEDGER),
-      copyPartialDiagnosticReady: state.copyPartialDiagnosticReady,
-      receiptToggleReady: state.receiptToggleReady,
-      inspectControlReserved: state.inspectControlReserved,
-      showDiagnosticRestoreReserved: state.showDiagnosticRestoreReserved,
+      ownsFirstPaintSurvival: state.ownsFirstPaintSurvival,
+      ownsMountCertainty: state.ownsMountCertainty,
+      ownsLoadingScreenCertainty: state.ownsLoadingScreenCertainty,
+      ownsEarlyLedger: state.ownsEarlyLedger,
+      ownsPartialDiagnosticAccess: state.ownsPartialDiagnosticAccess,
+      ownsRouteSocket: state.ownsRouteSocket,
+
+      ownsActiveRouteConduction: false,
+      ownsRuntimeTableSession: false,
+      ownsCheckpointGovernor: false,
+      ownsCanvasDrawing: false,
+      ownsCanvasCoordination: false,
+      ownsVisiblePlanetProof: false,
+      ownsInspectModeTruth: false,
+      ownsFinalCompletion: false,
+      ownsFinalDiagnosticReceipt: false,
+      ownsVisualPassClaim: false,
+
+      indexMaxFibonacciStage: INDEX_MAX_FIBONACCI_STAGE,
+      currentStage: state.currentStage,
+      highestStage: state.highestStage,
+      completedIndexCheckpoints: state.completedIndexCheckpoints.join(","),
+      displayProgress: state.displayProgress,
 
       newsProtocolInitialized: state.newsProtocolInitialized,
       fibonacciSequenceInitialized: state.fibonacciSequenceInitialized,
+      indexNewsPassed: state.indexNewsPassed,
+      northSocketReady: state.northSocketReady,
+      eastHandoffReady: state.eastHandoffReady,
+      westRecoverabilityReady: state.westRecoverabilityReady,
+      southHandoffEmitted: state.southHandoffEmitted,
 
       mountReady: state.mountReady,
       mountCreatedByIndex: state.mountCreatedByIndex,
-      loadingScreenReady: state.loadingScreenReady,
-      partialReceiptAvailable: state.partialReceiptAvailable,
+      cockpitReady: state.cockpitReady,
+      ledgerReady: state.ledgerReady,
+      partialDiagnosticReady: state.partialDiagnosticReady,
+      receiptToggleReady: state.receiptToggleReady,
+      dockHideShowReady: state.dockHideShowReady,
+      showDiagnosticReady: state.showDiagnosticReady,
+      receiptVisible: state.receiptVisible,
+      dockHiddenForInspection: state.dockHiddenForInspection,
+      cockpitExpanded: state.cockpitExpanded,
 
-      activeRouteConductor: COHERENCE_FILE,
-      conductorDelegationReady: state.conductorDelegationReady,
-      conductorDelegationAccepted: state.conductorDelegationAccepted,
-      conductorGlobalPresent: state.conductorGlobalPresent,
-      conductorScriptPresent: state.conductorScriptPresent,
-      conductorScriptRequested: state.conductorScriptRequested,
-      conductorScriptLoaded: state.conductorScriptLoaded,
-      conductorScriptError: state.conductorScriptError,
-      conductorContract: state.conductorContract,
-      conductorBootMethodPresent: state.conductorBootMethodPresent,
-      conductorBootCallSuppressedToPreventDuplicate: state.conductorBootCallSuppressedToPreventDuplicate,
+      handoffPacketReady: state.handoffPacketReady,
+      handoffPublished: state.handoffPublished,
+      handoffCreatedAt: state.handoffCreatedAt,
+      handoffDeliveryAttempted: state.handoffDeliveryAttempted,
+      hearthReceiverAccepted: state.hearthReceiverAccepted,
+      hearthReceiverMethod: state.hearthReceiverMethod,
+      hearthReceiverError: state.hearthReceiverError,
 
-      canvasScriptPresent: state.canvasScriptPresent,
-      canvasGlobalPresent: state.canvasGlobalPresent,
-      canvasFallbackRequested: false,
-      canvasFallbackAllowed: false,
+      hearthScriptPresent: state.hearthScriptPresent,
+      hearthScriptInjected: state.hearthScriptInjected,
+      hearthScriptLoaded: state.hearthScriptLoaded,
+      hearthScriptError: state.hearthScriptError,
+      hearthGlobalPresent: state.hearthGlobalPresent,
 
       climateRouteRetired: true,
       retiredClimateRoute: RETIRED_CLIMATE_FILE,
+      runtimeTableMutation: false,
+      canvasMutation: false,
       runtimeTableRequiredForFirstRender: false,
       sourceStackRequiredForFirstRender: false,
       wideProbeDeferred: true,
 
-      currentStage: state.currentStage,
-      highestStage: state.highestStage,
-      displayProgress: state.displayProgress,
       latestEvent: state.latestEvent,
       status: state.status,
       firstFailedCoordinate: state.firstFailedCoordinate,
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
 
-      planetCanvasPresent: state.planetCanvasPresent,
-      planetCanvasNonZeroSize: state.planetCanvasNonZeroSize,
-      visiblePlanetPossiblyAvailable: state.visiblePlanetPossiblyAvailable,
-      inspectModeReservedActive: state.inspectModeReservedActive,
-      showDiagnosticTabVisible: state.showDiagnosticTabVisible,
-
-      sharedLedger: ledger && ledger.state ? clonePlain(ledger.state) : null,
+      sharedLedger: refs.ledger && refs.ledger.state ? clonePlain(refs.ledger.state) : null,
+      events: clonePlain(state.events),
       errors: clonePlain(state.errors),
+      futureStepsOwnedByHearthJs: FUTURE_STEPS.slice(),
 
       generatedImage: false,
       graphicBox: false,
       webGL: false,
       visualPassClaimed: false,
 
-      updatedAt: nowIso(),
-      ...extra
+      startedAt: state.startedAt,
+      updatedAt: nowIso()
     };
   }
 
+  function getReceipt() {
+    return buildReceipt();
+  }
+
   function getReceiptText() {
-    const receipt = getReceipt();
+    const receipt = buildReceipt();
 
-    const ledger = receipt.sharedLedger || {};
-    const lanes = Object.entries(ledger.lanes || {}).map(([key, lane]) => (
-      `- ${key}: status=${lane.status}; fibonacci=${lane.fibonacci}; progress=${lane.progress}; event=${lane.latestEvent}; message=${lane.message}`
-    )).join("\n") || "- none";
+    const lanes = receipt.sharedLedger && receipt.sharedLedger.lanes
+      ? Object.entries(receipt.sharedLedger.lanes).map(([key, lane]) => (
+        `- ${key}: status=${lane.status}; stage=${lane.stage}; progress=${lane.progress}; event=${lane.event}; message=${lane.message}`
+      )).join("\n")
+      : "- none";
 
-    const scripts = Object.entries(ledger.scripts || {}).map(([key, script]) => (
-      `- ${key}: status=${script.status}; src=${script.src || ""}; globalPresent=${script.globalPresent === true}; error=${script.error || ""}`
-    )).join("\n") || "- none";
-
-    const events = (ledger.events || []).slice(-80).map((event) => (
-      `- ${event.timestamp || ""} :: ${event.id || ""} :: stage=${event.stage || ""} :: lane=${event.lane || ""} :: ${event.message || ""}`
+    const events = receipt.events.map((event) => (
+      `- ${event.at || ""} :: ${event.event || ""} :: ${event.detail && event.detail.status ? event.detail.status : ""} :: ${event.detail && event.detail.message ? event.detail.message : ""}`
     )).join("\n") || "- none";
 
     const errors = receipt.errors.map((error) => (
-      `- ${error.at} :: ${error.code} :: ${error.message}`
+      `- ${error.at || ""} :: ${error.code || ""} :: ${error.message || ""}`
     )).join("\n") || "- none";
 
+    const future = receipt.futureStepsOwnedByHearthJs.map((item) => `- ${item}`).join("\n");
+
     return [
-      "HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR_FIRST_PAINT_LEDGER_RECEIPT",
+      "HEARTH_INDEX_ROUTE_SOCKET_FIRST_PAINT_HANDOFF_RECEIPT",
       "",
       `contract=${receipt.contract}`,
       `receipt=${receipt.receipt}`,
       `previousContract=${receipt.previousContract}`,
-      `expectedCoherenceConductor=${receipt.expectedCoherenceConductor}`,
+      `baselineContract=${receipt.baselineContract}`,
       `version=${receipt.version}`,
       `file=${receipt.file}`,
       `route=${receipt.route}`,
@@ -1884,77 +1905,88 @@
       `systematicAndSynchronized=${receipt.systematicAndSynchronized}`,
       `synchronizedLoading=${receipt.synchronizedLoading}`,
       "",
+      `indexOwnsStep1=${receipt.indexOwnsStep1}`,
+      `indexOwnsSteps2Through11=${receipt.indexOwnsSteps2Through11}`,
+      `hearthJsOwnsSteps2Through11=${receipt.hearthJsOwnsSteps2Through11}`,
+      "",
       `ownsFirstPaintSurvival=${receipt.ownsFirstPaintSurvival}`,
       `ownsMountCertainty=${receipt.ownsMountCertainty}`,
       `ownsLoadingScreenCertainty=${receipt.ownsLoadingScreenCertainty}`,
       `ownsEarlyLedger=${receipt.ownsEarlyLedger}`,
-      `ownsScriptOrderVisibility=${receipt.ownsScriptOrderVisibility}`,
-      `ownsActiveRouteConduction=${receipt.ownsActiveRouteConduction}`,
-      `ownsFinalCompletion=${receipt.ownsFinalCompletion}`,
-      `ownsCanvasDrawing=${receipt.ownsCanvasDrawing}`,
-      `ownsVisiblePlanetProof=${receipt.ownsVisiblePlanetProof}`,
-      `ownsFinalDiagnosticReceipt=${receipt.ownsFinalDiagnosticReceipt}`,
+      `ownsPartialDiagnosticAccess=${receipt.ownsPartialDiagnosticAccess}`,
+      `ownsRouteSocket=${receipt.ownsRouteSocket}`,
       "",
-      `firstPaintCockpitReady=${receipt.firstPaintCockpitReady}`,
-      `visibleProgressStripReady=${receipt.visibleProgressStripReady}`,
-      `loadLedgerPresent=${receipt.loadLedgerPresent}`,
-      `copyPartialDiagnosticReady=${receipt.copyPartialDiagnosticReady}`,
-      `receiptToggleReady=${receipt.receiptToggleReady}`,
-      `inspectControlReserved=${receipt.inspectControlReserved}`,
-      `showDiagnosticRestoreReserved=${receipt.showDiagnosticRestoreReserved}`,
+      `ownsActiveRouteConduction=${receipt.ownsActiveRouteConduction}`,
+      `ownsRuntimeTableSession=${receipt.ownsRuntimeTableSession}`,
+      `ownsCheckpointGovernor=${receipt.ownsCheckpointGovernor}`,
+      `ownsCanvasDrawing=${receipt.ownsCanvasDrawing}`,
+      `ownsCanvasCoordination=${receipt.ownsCanvasCoordination}`,
+      `ownsVisiblePlanetProof=${receipt.ownsVisiblePlanetProof}`,
+      `ownsInspectModeTruth=${receipt.ownsInspectModeTruth}`,
+      `ownsFinalCompletion=${receipt.ownsFinalCompletion}`,
+      `ownsFinalDiagnosticReceipt=${receipt.ownsFinalDiagnosticReceipt}`,
+      `ownsVisualPassClaim=${receipt.ownsVisualPassClaim}`,
+      "",
+      `indexMaxFibonacciStage=${receipt.indexMaxFibonacciStage}`,
+      `currentStage=${receipt.currentStage}`,
+      `highestStage=${receipt.highestStage}`,
+      `completedIndexCheckpoints=${receipt.completedIndexCheckpoints}`,
+      `displayProgress=${receipt.displayProgress}`,
       "",
       `newsProtocolInitialized=${receipt.newsProtocolInitialized}`,
       `fibonacciSequenceInitialized=${receipt.fibonacciSequenceInitialized}`,
+      `indexNewsPassed=${receipt.indexNewsPassed}`,
+      `northSocketReady=${receipt.northSocketReady}`,
+      `eastHandoffReady=${receipt.eastHandoffReady}`,
+      `westRecoverabilityReady=${receipt.westRecoverabilityReady}`,
+      `southHandoffEmitted=${receipt.southHandoffEmitted}`,
       "",
       `mountReady=${receipt.mountReady}`,
       `mountCreatedByIndex=${receipt.mountCreatedByIndex}`,
-      `loadingScreenReady=${receipt.loadingScreenReady}`,
-      `partialReceiptAvailable=${receipt.partialReceiptAvailable}`,
+      `cockpitReady=${receipt.cockpitReady}`,
+      `ledgerReady=${receipt.ledgerReady}`,
+      `partialDiagnosticReady=${receipt.partialDiagnosticReady}`,
+      `receiptToggleReady=${receipt.receiptToggleReady}`,
+      `dockHideShowReady=${receipt.dockHideShowReady}`,
+      `showDiagnosticReady=${receipt.showDiagnosticReady}`,
+      `receiptVisible=${receipt.receiptVisible}`,
+      `dockHiddenForInspection=${receipt.dockHiddenForInspection}`,
+      `cockpitExpanded=${receipt.cockpitExpanded}`,
       "",
-      `activeRouteConductor=${receipt.activeRouteConductor}`,
-      `conductorDelegationReady=${receipt.conductorDelegationReady}`,
-      `conductorDelegationAccepted=${receipt.conductorDelegationAccepted}`,
-      `conductorGlobalPresent=${receipt.conductorGlobalPresent}`,
-      `conductorScriptPresent=${receipt.conductorScriptPresent}`,
-      `conductorScriptRequested=${receipt.conductorScriptRequested}`,
-      `conductorScriptLoaded=${receipt.conductorScriptLoaded}`,
-      `conductorScriptError=${receipt.conductorScriptError}`,
-      `conductorContract=${receipt.conductorContract}`,
-      `conductorBootMethodPresent=${receipt.conductorBootMethodPresent}`,
-      `conductorBootCallSuppressedToPreventDuplicate=${receipt.conductorBootCallSuppressedToPreventDuplicate}`,
+      `handoffPacketReady=${receipt.handoffPacketReady}`,
+      `handoffPublished=${receipt.handoffPublished}`,
+      `handoffCreatedAt=${receipt.handoffCreatedAt}`,
+      `handoffDeliveryAttempted=${receipt.handoffDeliveryAttempted}`,
+      `hearthReceiverAccepted=${receipt.hearthReceiverAccepted}`,
+      `hearthReceiverMethod=${receipt.hearthReceiverMethod}`,
+      `hearthReceiverError=${receipt.hearthReceiverError}`,
       "",
-      `canvasScriptPresent=${receipt.canvasScriptPresent}`,
-      `canvasGlobalPresent=${receipt.canvasGlobalPresent}`,
-      `canvasFallbackRequested=${receipt.canvasFallbackRequested}`,
-      `canvasFallbackAllowed=${receipt.canvasFallbackAllowed}`,
+      `hearthScriptPresent=${receipt.hearthScriptPresent}`,
+      `hearthScriptInjected=${receipt.hearthScriptInjected}`,
+      `hearthScriptLoaded=${receipt.hearthScriptLoaded}`,
+      `hearthScriptError=${receipt.hearthScriptError}`,
+      `hearthGlobalPresent=${receipt.hearthGlobalPresent}`,
       "",
       `climateRouteRetired=${receipt.climateRouteRetired}`,
       `retiredClimateRoute=${receipt.retiredClimateRoute}`,
+      `runtimeTableMutation=${receipt.runtimeTableMutation}`,
+      `canvasMutation=${receipt.canvasMutation}`,
       `runtimeTableRequiredForFirstRender=${receipt.runtimeTableRequiredForFirstRender}`,
       `sourceStackRequiredForFirstRender=${receipt.sourceStackRequiredForFirstRender}`,
       `wideProbeDeferred=${receipt.wideProbeDeferred}`,
       "",
-      `currentStage=${receipt.currentStage}`,
-      `highestStage=${receipt.highestStage}`,
-      `displayProgress=${receipt.displayProgress}`,
       `latestEvent=${receipt.latestEvent}`,
       `status=${receipt.status}`,
       `firstFailedCoordinate=${receipt.firstFailedCoordinate}`,
       `recommendedNextRenewalTarget=${receipt.recommendedNextRenewalTarget}`,
       "",
-      `planetCanvasPresent=${receipt.planetCanvasPresent}`,
-      `planetCanvasNonZeroSize=${receipt.planetCanvasNonZeroSize}`,
-      `visiblePlanetPossiblyAvailable=${receipt.visiblePlanetPossiblyAvailable}`,
-      `inspectModeReservedActive=${receipt.inspectModeReservedActive}`,
-      `showDiagnosticTabVisible=${receipt.showDiagnosticTabVisible}`,
-      "",
-      "LEDGER_LANES",
+      "INDEX_LEDGER_LANES",
       lanes,
       "",
-      "LEDGER_SCRIPTS",
-      scripts,
+      "FUTURE_STEPS_OWNED_BY_HEARTH_JS",
+      future,
       "",
-      "LEDGER_EVENTS",
+      "INDEX_EVENTS",
       events,
       "",
       "ERRORS",
@@ -1965,230 +1997,122 @@
       `webGL=${receipt.webGL}`,
       `visualPassClaimed=${receipt.visualPassClaimed}`,
       "",
+      `startedAt=${receipt.startedAt}`,
       `updatedAt=${receipt.updatedAt}`
     ].join("\n");
   }
 
-  function startHeartbeat() {
-    if (heartbeatTimer) root.clearInterval(heartbeatTimer);
-
-    heartbeatTimer = root.setInterval(() => {
-      state.heartbeatElapsedMs = state.startedAt ? nowMs() - new Date(state.startedAt).getTime() : 0;
-      markVisualHints();
-      render();
-    }, 1000);
-  }
-
-  function startWatchdog() {
-    if (watchdogTimer) root.clearInterval(watchdogTimer);
-
-    let ticks = 0;
-
-    watchdogTimer = root.setInterval(() => {
-      ticks += 1;
-
-      const conductor = getConductorApi();
-      const ledger = refs.ledger || ensureLedger();
-
-      if (conductor && !state.conductorGlobalPresent) {
-        state.conductorGlobalPresent = true;
-        state.conductorContract = String(conductor.contract || "");
-        state.conductorBootMethodPresent = Boolean(conductorBootMethod(conductor));
-        state.conductorDelegationAccepted = true;
-        acceptConductorIfPossible(conductor);
-      }
-
-      markVisualHints();
-
-      if (state.visiblePlanetPossiblyAvailable) {
-        state.firstFailedCoordinate = "INDEX_CONSTRAINT_COMPLETE_COHERENCE_RECEIPT_PENDING";
-        state.recommendedNextRenewalTarget = COHERENCE_FILE;
-        state.status = "VISIBLE_PLANET_HINT_PRESENT_COHERENCE_COMPLETION_PENDING";
-      } else if (state.conductorDelegationAccepted) {
-        state.firstFailedCoordinate = "COHERENCE_CONDUCTOR_ACCEPTED_VISIBLE_PLANET_PENDING";
-        state.recommendedNextRenewalTarget = COHERENCE_FILE;
-        state.status = "COHERENCE_CONDUCTOR_ACCEPTED";
-      } else if (ticks > 18) {
-        state.firstFailedCoordinate = "COHERENCE_CONDUCTOR_NOT_CONFIRMED";
-        state.recommendedNextRenewalTarget = COHERENCE_FILE;
-        state.status = "COHERENCE_CONDUCTOR_NOT_CONFIRMED";
-      }
-
-      if (ticks % 3 === 0) {
-        ledger.setLane("scriptOrder", {
-          status: state.conductorDelegationAccepted ? "ACCEPTED" : "WATCHING",
-          progress: state.conductorDelegationAccepted ? stageProgress("F8") : stageProgress("F3"),
-          event: state.conductorDelegationAccepted ? "CONDUCTOR_DELEGATION_ACCEPTED" : "SCRIPT_ORDER_WATCHDOG_ACTIVE",
-          stage: state.conductorDelegationAccepted ? "F8" : "F3",
-          owner: "index.js",
-          file: INDEX_FILE,
-          message: state.conductorDelegationAccepted
-            ? "Coherence conductor accepted or present."
-            : "Constraint semiconductor is watching script order."
-        });
-      }
-
-      if (ticks >= 80 || state.visiblePlanetPossiblyAvailable) {
-        root.clearInterval(watchdogTimer);
-        watchdogTimer = 0;
-      }
-
-      render();
-    }, 300);
-  }
-
-  async function boot() {
+  function boot() {
     if (bootStarted) {
+      publishHandoff();
+      publishDataset();
       render();
-      return getReceipt({ status: "BOOT_ALREADY_STARTED" });
+      return buildReceipt();
     }
 
     bootStarted = true;
     state.startedAt = nowIso();
     state.updatedAt = state.startedAt;
     state.status = "BOOTING";
-    state.firstFailedCoordinate = "INDEX_CONSTRAINT_BOOT_STARTED";
-    state.recommendedNextRenewalTarget = "shared-ledger-and-coherence-conductor";
+    state.firstFailedCoordinate = "INDEX_ROUTE_SOCKET_BOOTING";
+    state.recommendedNextRenewalTarget = INDEX_FILE;
 
     retireClimateRoute();
-
+    ensureStyle();
     ensureMount();
+
+    completeIndexCheckpoint("F1A_HTML_SHELL_RENDERED", {
+      message: "HTML shell and mount confirmed by index route socket."
+    });
+
     ensureLedger();
     ensureCockpit();
 
-    const ledger = refs.ledger;
+    publishHandoff();
+    injectHearthScriptOnce();
+    attemptReceiverHandoff("index-boot");
 
-    ledger.setLane("shell", {
-      status: "READY",
-      progress: stageProgress("F1A"),
-      event: "HTML_SHELL_RENDERED",
-      stage: "F1A",
-      owner: "index.js",
-      file: INDEX_FILE,
-      message: "HTML shell rendered and mount confirmed by index constraint semiconductor."
-    });
+    evaluateIndexNews();
+    deriveFailureCoordinate();
 
-    ledger.setStage("F1A", "HTML shell rendered.", {
-      lane: "shell",
-      owner: "index.js",
-      file: INDEX_FILE
-    });
-
-    scanKnownScripts();
-
-    ledger.setLane("scriptOrder", {
-      status: "ACTIVE",
-      progress: stageProgress("F3"),
-      event: "SCRIPT_ORDER_VISIBILITY_ACTIVE",
-      stage: "F3",
-      owner: "index.js",
-      file: INDEX_FILE,
-      message: "Script-order visibility active."
-    });
-
-    ledger.setStage("F3", "Script-order visibility active.", {
-      lane: "scriptOrder",
-      owner: "index.js",
-      file: INDEX_FILE
-    });
+    state.status = state.indexNewsPassed
+      ? "STEP1_COMPLETE_HANDOFF_PUBLISHED"
+      : "STEP1_PARTIAL_HANDOFF_PENDING";
 
     publishDataset();
     render();
 
-    const conductor = await injectConductorScript();
-
-    if (conductor) {
-      state.conductorDelegationAccepted = true;
-      state.firstFailedCoordinate = "COHERENCE_CONDUCTOR_ACCEPTED_VISIBLE_PLANET_PENDING";
-      state.recommendedNextRenewalTarget = COHERENCE_FILE;
-      state.status = "COHERENCE_CONDUCTOR_ACCEPTED";
-    } else {
-      state.conductorDelegationAccepted = false;
-      state.firstFailedCoordinate = "COHERENCE_CONDUCTOR_UNAVAILABLE";
-      state.recommendedNextRenewalTarget = COHERENCE_FILE;
-      state.status = "COHERENCE_CONDUCTOR_UNAVAILABLE";
-      recordError("COHERENCE_CONDUCTOR_UNAVAILABLE", "index.js did not find or load the coherence conductor.");
-    }
-
-    startHeartbeat();
-    startWatchdog();
-
-    render();
-
-    return getReceipt({ status: state.status });
+    return buildReceipt();
   }
 
   function dispose(reason = "manual-dispose") {
-    if (heartbeatTimer) {
-      root.clearInterval(heartbeatTimer);
-      heartbeatTimer = 0;
+    if (renderTimer) {
+      root.clearTimeout(renderTimer);
+      renderTimer = 0;
     }
 
-    if (watchdogTimer) {
-      root.clearInterval(watchdogTimer);
-      watchdogTimer = 0;
-    }
-
-    const ledger = refs.ledger || root.HEARTH_LOAD_LEDGER;
-
-    if (ledger && isFunction(ledger.push)) {
-      ledger.push({
-        id: "INDEX_CONSTRAINT_SEMICONDUCTOR_DISPOSED",
-        stage: state.currentStage,
-        lane: "ledger",
-        status: "DISPOSED",
-        owner: "index.js",
-        file: INDEX_FILE,
-        message: reason
-      });
-    }
+    markEvent("INDEX_ROUTE_SOCKET_DISPOSED", {
+      lane: "firstPaint",
+      status: "DISPOSED",
+      message: reason
+    });
   }
 
   const api = {
     contract: CONTRACT,
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
-    expectedCoherenceConductor: EXPECTED_COHERENCE_CONDUCTOR,
+    baselineContract: BASELINE_CONTRACT,
     version: VERSION,
+    file: INDEX_FILE,
+    route: ROUTE,
+    role: "route-socket-step-1",
 
     boot,
     start: boot,
     init: boot,
     run: boot,
     dispose,
+
+    publishHandoff,
+    attemptReceiverHandoff,
     getReceipt,
     getReceiptText,
     copyDiagnostic,
-
-    indexFile: INDEX_FILE,
-    constraintSemiconductor: INDEX_FILE,
-    coherenceSemiconductor: COHERENCE_FILE,
-    pairedWith: COHERENCE_FILE,
+    setDockHiddenForInspection,
 
     supportsPairedSemiconductor: true,
     supportsConstraintSideSemiconductor: true,
+    supportsRouteSocket: true,
+    supportsStep1Only: true,
     supportsFirstPaintSurvival: true,
     supportsMountCertainty: true,
     supportsLoadingScreenCertainty: true,
     supportsEarlyLedger: true,
-    supportsScriptOrderVisibility: true,
-    supportsSynchronizedLoading: true,
     supportsPartialDiagnosticBeforeCompletion: true,
-    supportsInspectControlReservation: true,
-    supportsShowDiagnosticRestoreReservation: true,
+    supportsReceiptToggle: true,
+    supportsDockHideShow: true,
+    supportsPassiveHandoff: true,
     supportsClimateRouteRetirement: true,
-    supportsVisibleCarrierFirst: true,
+
+    ownsStep1: true,
+    ownsSteps2Through11: false,
+    hearthJsOwnsSteps2Through11: true,
 
     ownsActiveRouteConduction: false,
-    ownsFinalCompletion: false,
+    ownsRuntimeTableSession: false,
+    ownsCheckpointGovernor: false,
     ownsCanvasDrawing: false,
+    ownsCanvasCoordination: false,
     ownsVisiblePlanetProof: false,
+    ownsInspectModeTruth: false,
+    ownsFinalCompletion: false,
     ownsFinalDiagnosticReceipt: false,
+    ownsVisualPassClaim: false,
 
-    runtimeTableRequiredForFirstRender: false,
-    sourceStackRequiredForFirstRender: false,
-    wideProbeDeferred: true,
-
+    indexMaxFibonacciStage: INDEX_MAX_FIBONACCI_STAGE,
+    runtimeTableMutation: false,
+    canvasMutation: false,
     generatedImage: false,
     graphicBox: false,
     webGL: false,
@@ -2200,22 +2124,23 @@
   };
 
   root.HEARTH = root.HEARTH || {};
+  root.HEARTH.indexRouteSocket = api;
   root.HEARTH.indexConstraintSemiconductor = api;
-  root.HEARTH.indexBridge = api;
 
+  root.HEARTH_INDEX_ROUTE_SOCKET = api;
   root.HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR = api;
   root.HEARTH_INDEX_BRIDGE = api;
   root.HearthIndexBridge = api;
   root.HEARTH_INDEX_JS = api;
-  root.HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR_CONTRACT = CONTRACT;
-  root.HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR_RECEIPT = getReceipt({ status: "LOADED_NOT_BOOTED" });
-  root.__HEARTH_INDEX_BRIDGE_FILE__ = INDEX_FILE;
+
+  root.__HEARTH_INDEX_ROUTE_SOCKET_FILE__ = INDEX_FILE;
   root.__HEARTH_CONSTRAINT_SEMICONDUCTOR_FILE__ = INDEX_FILE;
   root.__HEARTH_COHERENCE_SEMICONDUCTOR_FILE__ = COHERENCE_FILE;
   root.__HEARTH_ACTIVE_ROUTE_FILE__ = COHERENCE_FILE;
+  root.__HEARTH_INDEX_MAX_FIBONACCI_STAGE__ = INDEX_MAX_FIBONACCI_STAGE;
   root.__HEARTH_CLIMATE_ROUTE_RETIRED__ = true;
 
-  publishDataset();
+  publishHandoff();
 
   if (doc) {
     if (doc.readyState === "loading") {

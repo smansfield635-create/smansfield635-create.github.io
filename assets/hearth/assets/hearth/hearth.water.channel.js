@@ -1,26 +1,26 @@
 // /assets/hearth/hearth.water.channel.js
-// HEARTH_WATER_CHILD_HYDROSPHERE_SURFACE_DEPTH_CHANNEL_TNT_v1
+// HEARTH_DEPLOYED_ROUTE_ALIGNED_WATER_CHILD_TNT_v1
 // Full-file replacement.
-// Water Child / hydrosphere surface-depth authority only.
+// Water Child / deployed-route-aligned hydrosphere surface-depth authority only.
 // Purpose:
-// - Create the missing served Water Child file.
-// - Export HEARTH_WATER_CHANNEL at the exact path the v4.4 canvas requests.
-// - Provide coordinate-valid, contract-valid, body-bound water samples.
-// - Satisfy Runtime Table child validation.
-// - Give Triple G a real water child to audit.
+// - Create the served Water Child at the exact deployed asset path.
+// - Align the child to /showroom/globe/hearth/ without rewriting the route.
+// - Export HEARTH_WATER_CHANNEL for canvas, Runtime Table, and Triple G validation.
+// - Provide coordinate-valid, contract-valid, body-bound, surface-bound water samples.
+// - Close the current load/export gap proven by v4.4 canvas diagnostics.
 // Does not own:
 // - canvas composition
+// - deployed route orchestration
 // - Runtime Table canonical standard
 // - Triple G diagnostic canonical standard
 // - land truth
 // - air truth
-// - route orchestration
-// - runtime motion
-// - controls
 // - materials authority
 // - hydrology parent law
 // - elevation
 // - tectonics
+// - runtime motion
+// - controls
 // - final visual pass claim
 
 (() => {
@@ -28,15 +28,22 @@
 
   const CONTRACT = "HEARTH_WATER_HYDROSPHERE_SURFACE_CHANNEL_TNT_v1";
   const RECEIPT = "HEARTH_WATER_HYDROSPHERE_SURFACE_CHANNEL_RECEIPT_v1";
-  const BUILD_CONTRACT = "HEARTH_WATER_CHILD_HYDROSPHERE_SURFACE_DEPTH_CHANNEL_TNT_v1";
-  const VERSION = "2026-05-29.hearth-water-child-hydrosphere-surface-depth-channel-v1";
+  const BUILD_CONTRACT = "HEARTH_DEPLOYED_ROUTE_ALIGNED_WATER_CHILD_TNT_v1";
+  const PREVIOUS_BUILD_CONTRACT = "HEARTH_WATER_CHILD_HYDROSPHERE_SURFACE_DEPTH_CHANNEL_TNT_v1";
+  const VERSION = "2026-05-29.hearth-deployed-route-aligned-water-child-v1";
+
+  const ROUTE_PARENT = "/showroom/globe/hearth/";
+  const EXPECTED_ROUTE_CONDUCTOR = "/showroom/globe/hearth/hearth.climate.route.js";
+  const ASSET_AUTHORITY = "/assets/hearth/hearth.water.channel.js";
+  const EXPECTED_CANVAS_CONSUMER = "/assets/hearth/hearth.canvas.js";
+  const EXPECTED_RUNTIME_VALIDATOR = "/assets/lab/runtime-table.js";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const DEG = Math.PI / 180;
 
   const COLORS = Object.freeze({
-    deepOcean: [4, 16, 48],
-    openWater: [7, 36, 88],
+    deepOcean: [4, 15, 46],
+    openWater: [7, 35, 88],
     shelf: [18, 70, 112],
     coastal: [34, 94, 124],
     lowWater: [7, 20, 38],
@@ -180,15 +187,24 @@
   function coordinatePacket(p) {
     const n = normalize3(p);
     const ll = vectorToLonLat(n);
+    const u = lonToU(ll.lon);
+    const v = latToV(ll.lat);
+    const magnitude = Math.hypot(n.x, n.y, n.z) || 1;
 
     return {
-      u: lonToU(ll.lon),
-      v: latToV(ll.lat),
+      u,
+      v,
       lon: ll.lon,
       lat: ll.lat,
       x: n.x,
       y: n.y,
-      z: n.z
+      z: n.z,
+      vectorMagnitude: magnitude,
+      vectorMagnitudeError: Math.abs(1 - magnitude),
+      uLaw: "u = wrap((lon + 180) / 360)",
+      vLaw: "v = clamp((90 - lat) / 180)",
+      coordinateBody: "shared-hearth-sphere-coordinate-body",
+      coordinateCompatible: true
     };
   }
 
@@ -316,8 +332,16 @@
       contract: CONTRACT,
       receipt: RECEIPT,
       buildContract: BUILD_CONTRACT,
+      previousBuildContract: PREVIOUS_BUILD_CONTRACT,
       version: VERSION,
-      authority: "hearth-water-child-hydrosphere-surface-depth-channel",
+      authority: "hearth-deployed-route-aligned-water-child",
+
+      routeParent: ROUTE_PARENT,
+      routeAligned: true,
+      assetAuthority: ASSET_AUTHORITY,
+      expectedRouteConductor: EXPECTED_ROUTE_CONDUCTOR,
+      expectedCanvasConsumer: EXPECTED_CANVAS_CONSUMER,
+      expectedRuntimeValidator: EXPECTED_RUNTIME_VALIDATOR,
 
       ...coords,
 
@@ -368,13 +392,13 @@
 
       surfaceNormalLock: true,
       coordinateLock: true,
-      coordinateCompatible: true,
-      vectorMagnitude: 1,
+      coordinateMapReady: true,
 
       generatedImage: false,
       graphicBox: false,
       webGL: false,
       routeMutation: false,
+      canvasMutation: false,
       runtimeMutation: false,
       controlsMutation: false,
       visualPassClaimed: false
@@ -409,16 +433,124 @@
     return sample(...args);
   }
 
+  function getCoordinateMap() {
+    return {
+      contract: CONTRACT,
+      buildContract: BUILD_CONTRACT,
+      routeParent: ROUTE_PARENT,
+      assetAuthority: ASSET_AUTHORITY,
+      coordinates: [
+        {
+          id: "COORDINATE_0_SERVED_FILE",
+          path: ASSET_AUTHORITY,
+          expectedRequest: "/assets/hearth/hearth.water.channel.js?v=hearth-water-channel-load-export-v1",
+          acceptance: "waterScriptLoaded=true"
+        },
+        {
+          id: "COORDINATE_1_ROUTE_ALIGNMENT",
+          routeParent: ROUTE_PARENT,
+          expectedRouteConductor: EXPECTED_ROUTE_CONDUCTOR,
+          acceptance: "routeAligned=true"
+        },
+        {
+          id: "COORDINATE_2_GLOBAL_EXPORT",
+          globals: ["HEARTH_WATER_CHANNEL", "HearthWaterChannel", "HEARTH.waterChannel"],
+          acceptance: "waterGlobalPresent=true"
+        },
+        {
+          id: "COORDINATE_3_API_METHODS",
+          methods: ["sample", "read", "getReceipt"],
+          aliases: ["sampleWater", "readWater", "waterAt", "getWater", "resolveWater"],
+          acceptance: "waterSampleProbeOk=true"
+        },
+        {
+          id: "COORDINATE_4_INPUT_ACCEPTANCE",
+          acceptedInputs: ["{u,v}", "{lon,lat}", "{longitude,latitude}", "{x,y,z}", "x,y,z", "lon,lat"],
+          directProbe: { u: 0.5, v: 0.5, x: 0, y: 0, z: 1 },
+          acceptance: "probe returns object"
+        },
+        {
+          id: "COORDINATE_5_PLANETARY_BODY",
+          requiredFields: ["u", "v", "lon", "lat", "x", "y", "z"],
+          laws: ["x²+y²+z²≈1", "u=(lon+180)/360", "v=(90-lat)/180"],
+          acceptance: "waterSampleProbeCoordinatesOk=true"
+        },
+        {
+          id: "COORDINATE_6_HYDROSPHERE_AUTHORITY",
+          requiredFields: [
+            "waterAlpha",
+            "waterPresence",
+            "hydrosphereBinding",
+            "surfaceSeat",
+            "depthBinding",
+            "waterDepth",
+            "waterDepthClass",
+            "basinDepth",
+            "oceanContinuity"
+          ],
+          acceptance: "packet is auditable as water"
+        },
+        {
+          id: "COORDINATE_7_BODY_SEATED_ANTI_FLOAT",
+          requiredFlags: {
+            bodyBound: true,
+            surfaceBound: true,
+            floatsAboveBody: false,
+            allowedToFloat: false,
+            mayDefineLand: false,
+            mayDefineAir: false
+          },
+          acceptance: "waterSampleProbeFlagsOk=true"
+        },
+        {
+          id: "COORDINATE_8_COLOR_PACKET",
+          requiredFields: ["rgb", "color", "waterRgb"],
+          acceptance: "canvas can consume water color without fallback"
+        },
+        {
+          id: "COORDINATE_9_DOCUMENT_DATASET",
+          acceptance: "document root receives water child load receipt"
+        },
+        {
+          id: "COORDINATE_10_RUNTIME_TABLE",
+          acceptance: "Runtime Table water.status=READY"
+        },
+        {
+          id: "COORDINATE_11_TRIPLE_G_RECEIPT",
+          acceptance: "RECEIPT_VERIFICATION_CHECK=PASS"
+        },
+        {
+          id: "COORDINATE_12_POST_WATER_PRIORITY",
+          order: [
+            "WATER_SURFACE_SEATING_CHECK",
+            "CHANNEL_SEPARATION_CHECK",
+            "LAND_BODY_BINDING_CHECK",
+            "DISTRIBUTION_SHAPE_CHECK"
+          ]
+        }
+      ]
+    };
+  }
+
   function getReceipt() {
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
       buildContract: BUILD_CONTRACT,
+      previousBuildContract: PREVIOUS_BUILD_CONTRACT,
       version: VERSION,
-      authority: "hearth-water-child-hydrosphere-surface-depth-channel",
-      primaryTarget: "/assets/hearth/hearth.water.channel.js",
+      authority: "hearth-deployed-route-aligned-water-child",
+      primaryTarget: ASSET_AUTHORITY,
       status: "active",
-      role: "Water Child / hydrosphere surface-depth authority",
+      role: "Water Child / route-aligned hydrosphere surface-depth authority",
+
+      routeParent: ROUTE_PARENT,
+      routeAligned: true,
+      assetAuthority: ASSET_AUTHORITY,
+      expectedRouteConductor: EXPECTED_ROUTE_CONDUCTOR,
+      expectedCanvasConsumer: EXPECTED_CANVAS_CONSUMER,
+      expectedRuntimeValidator: EXPECTED_RUNTIME_VALIDATOR,
+
       globalExports: [
         "HEARTH_WATER_CHANNEL",
         "HearthWaterChannel",
@@ -445,6 +577,7 @@
         "y",
         "z"
       ],
+      coordinateMap: getCoordinateMap(),
       waterFields: [
         "waterAlpha",
         "waterPresence",
@@ -492,37 +625,45 @@
         "shoreline-boundary-signal",
         "shallow-shelf-signal",
         "water-color-packet",
-        "water-coordinate-identity"
+        "water-coordinate-identity",
+        "route-aligned-water-child-identity"
       ],
       doesNotOwn: [
         "canvas-composition",
+        "deployed-route-orchestration",
         "Runtime Table canonical standard",
         "Triple G diagnostic canonical standard",
         "land-truth",
         "air-truth",
-        "route-orchestration",
-        "runtime-motion",
-        "controls",
         "materials-authority",
         "hydrology-parent-law",
         "elevation",
         "tectonics",
+        "runtime-motion",
+        "controls",
         "final-visual-pass-claim"
       ],
       acceptanceTarget: [
         "waterScriptLoaded true",
         "waterGlobalPresent true",
-        "waterActualContract matches",
+        "waterActualContract matches HEARTH_WATER_HYDROSPHERE_SURFACE_CHANNEL_TNT_v1",
         "waterSampleProbeOk true",
         "waterSampleProbeCoordinatesOk true",
         "waterSampleProbeFlagsOk true",
         "Runtime Table water record READY",
         "RECEIPT_VERIFICATION_CHECK PASS"
       ],
+      nextPostWaterPriority: [
+        "WATER_SURFACE_SEATING_CHECK",
+        "CHANNEL_SEPARATION_CHECK",
+        "LAND_BODY_BINDING_CHECK",
+        "DISTRIBUTION_SHAPE_CHECK"
+      ],
       generatedImage: false,
       graphicBox: false,
       webGL: false,
       routeMutation: false,
+      canvasMutation: false,
       runtimeMutation: false,
       controlsMutation: false,
       visualPassClaimed: false
@@ -533,7 +674,15 @@
     contract: CONTRACT,
     receipt: RECEIPT,
     buildContract: BUILD_CONTRACT,
+    previousBuildContract: PREVIOUS_BUILD_CONTRACT,
     version: VERSION,
+
+    routeParent: ROUTE_PARENT,
+    routeAligned: true,
+    assetAuthority: ASSET_AUTHORITY,
+    expectedRouteConductor: EXPECTED_ROUTE_CONDUCTOR,
+    expectedCanvasConsumer: EXPECTED_CANVAS_CONSUMER,
+    expectedRuntimeValidator: EXPECTED_RUNTIME_VALIDATOR,
 
     sample,
     read,
@@ -543,6 +692,7 @@
     getWater,
     resolveWater,
     getReceipt,
+    getCoordinateMap,
 
     isWaterChannel: true,
     bodyBound: true,
@@ -554,11 +704,13 @@
     definesLandTruth: false,
     definesAirTruth: false,
     coordinateCompatible: true,
+    routeAlignedWaterChild: true,
 
     generatedImage: false,
     graphicBox: false,
     webGL: false,
     routeMutation: false,
+    canvasMutation: false,
     runtimeMutation: false,
     controlsMutation: false,
     visualPassClaimed: false
@@ -572,26 +724,50 @@
   root.HEARTH_WATER_CHANNEL_RECEIPT = getReceipt();
   root.HEARTH_WATER_CHANNEL_CONTRACT = CONTRACT;
   root.HEARTH_WATER_CHANNEL_LOADED = true;
+  root.HEARTH_WATER_CHANNEL_ROUTE_ALIGNED = true;
 
   if (root.document && root.document.documentElement) {
-    root.document.documentElement.dataset.hearthWaterChannelLoaded = "true";
-    root.document.documentElement.dataset.hearthWaterChannelContract = CONTRACT;
-    root.document.documentElement.dataset.hearthWaterChannelReceipt = RECEIPT;
-    root.document.documentElement.dataset.hearthWaterChildBuildContract = BUILD_CONTRACT;
-    root.document.documentElement.dataset.hearthWaterChannelCoordinates = "true";
-    root.document.documentElement.dataset.hearthWaterChannelSampleReady = "true";
-    root.document.documentElement.dataset.hearthWaterChannelBodyBound = "true";
-    root.document.documentElement.dataset.hearthWaterChannelSurfaceBound = "true";
-    root.document.documentElement.dataset.hearthWaterChannelAllowedToFloat = "false";
-    root.document.documentElement.dataset.hearthWaterChannelMayDefineLand = "false";
-    root.document.documentElement.dataset.hearthWaterChannelMayDefineAir = "false";
-    root.document.documentElement.dataset.generatedImage = "false";
-    root.document.documentElement.dataset.graphicBox = "false";
-    root.document.documentElement.dataset.webgl = "false";
-    root.document.documentElement.dataset.routeMutation = "false";
-    root.document.documentElement.dataset.runtimeMutation = "false";
-    root.document.documentElement.dataset.controlsMutation = "false";
-    root.document.documentElement.dataset.visualPassClaimed = "false";
+    const dataset = root.document.documentElement.dataset;
+
+    dataset.hearthWaterChannelLoaded = "true";
+    dataset.hearthWaterChannelContract = CONTRACT;
+    dataset.hearthWaterChannelReceipt = RECEIPT;
+    dataset.hearthWaterChildBuildContract = BUILD_CONTRACT;
+    dataset.hearthWaterChildPreviousBuildContract = PREVIOUS_BUILD_CONTRACT;
+
+    dataset.hearthWaterChannelRouteAligned = "true";
+    dataset.hearthWaterChannelRouteParent = ROUTE_PARENT;
+    dataset.hearthWaterChannelAssetAuthority = ASSET_AUTHORITY;
+    dataset.hearthWaterChannelExpectedRouteConductor = EXPECTED_ROUTE_CONDUCTOR;
+    dataset.hearthWaterChannelExpectedCanvasConsumer = EXPECTED_CANVAS_CONSUMER;
+    dataset.hearthWaterChannelExpectedRuntimeValidator = EXPECTED_RUNTIME_VALIDATOR;
+
+    dataset.hearthWaterChannelCoordinates = "true";
+    dataset.hearthWaterChannelCoordinateMapReady = "true";
+    dataset.hearthWaterChannelSampleReady = "true";
+    dataset.hearthWaterChannelBodyBound = "true";
+    dataset.hearthWaterChannelSurfaceBound = "true";
+    dataset.hearthWaterChannelAllowedToFloat = "false";
+    dataset.hearthWaterChannelMayDefineLand = "false";
+    dataset.hearthWaterChannelMayDefineAir = "false";
+    dataset.hearthWaterChannelDefinesLandTruth = "false";
+    dataset.hearthWaterChannelDefinesAirTruth = "false";
+
+    dataset.hearthWaterChannelPostWaterPriority = [
+      "WATER_SURFACE_SEATING_CHECK",
+      "CHANNEL_SEPARATION_CHECK",
+      "LAND_BODY_BINDING_CHECK",
+      "DISTRIBUTION_SHAPE_CHECK"
+    ].join(",");
+
+    dataset.generatedImage = "false";
+    dataset.graphicBox = "false";
+    dataset.webgl = "false";
+    dataset.routeMutation = "false";
+    dataset.canvasMutation = "false";
+    dataset.runtimeMutation = "false";
+    dataset.controlsMutation = "false";
+    dataset.visualPassClaimed = "false";
   }
 
   if (typeof module !== "undefined" && module.exports) {

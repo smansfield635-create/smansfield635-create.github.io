@@ -2,10 +2,10 @@
 <!doctype html>
 <html
   lang="en"
-  data-page="hearth-route-shell-conductor-canvas-rebalance"
+  data-page="hearth-route-shell-loading-screen-visible-planet-rebind"
   data-route="/showroom/globe/hearth/"
-  data-contract="HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1"
-  data-previous-contract="HEARTH_ACTIVE_PLANET_PARENT_CHAIN_HTML_SYNC_TNT_v2"
+  data-contract="HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2"
+  data-previous-contract="HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1"
   data-body="hearth"
   data-mirrorland-door="true"
   data-map-portal-required="true"
@@ -23,6 +23,8 @@
   data-route-shell-loaded="true"
   data-route-shell-active="true"
   data-route-shell-owns-script-order="true"
+  data-loading-screen-required="true"
+  data-loading-screen-visible="true"
   data-canvas-mount-required="true"
   data-canvas-authority="/assets/hearth/hearth.canvas.js"
   data-visible-carrier-first="true"
@@ -48,6 +50,7 @@
   data-plate-tectonics-active="true"
   data-narrative-identity="Hearth · Survival Becomes Shelter"
   data-world-lane="survival-pressure-becomes-home"
+  data-future-earth-lens="forty-billion-years-forward"
   data-zionts-role="consequence"
   data-h-earth-role="survival-condition-pressure"
   data-audralia-role="untouched-living-possibility"
@@ -67,30 +70,56 @@
   <title>Hearth · Survival Becomes Shelter · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Hearth is the Mirrorland world where survival pressure becomes shelter: active planet, tectonic scars, hydrology, materials, and body-level endurance becoming home."
+    content="Hearth is the Mirrorland world where survival pressure becomes shelter: a future-world planet carrier with tectonic scars, hydrology, materials, and survival pressure becoming home."
   >
   <link rel="canonical" href="https://diamondgatebridge.com/showroom/globe/hearth/">
   <meta name="theme-color" content="#030914">
 
-  <link rel="stylesheet" href="/assets/manor-blueprint/manor.blueprint.css?v=HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1">
-  <script src="/assets/manor-blueprint/manor.blueprint.registry.js?v=HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1" defer></script>
-  <script src="/assets/manor-blueprint/manor.blueprint.js?v=HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1" defer></script>
+  <script>
+    (() => {
+      "use strict";
+
+      window.HEARTH_ROUTE_SCRIPT_LOADS = window.HEARTH_ROUTE_SCRIPT_LOADS || {};
+
+      window.__HEARTH_MARK_SCRIPT_LOAD__ = (key, ok, src) => {
+        const record = {
+          key,
+          ok: ok === true,
+          src: src || "",
+          at: new Date().toISOString()
+        };
+
+        window.HEARTH_ROUTE_SCRIPT_LOADS[key] = record;
+
+        try {
+          const datasetKey = `hearthScript${String(key || "")
+            .replace(/[^a-zA-Z0-9]+(.)/g, (_match, chr) => String(chr || "").toUpperCase())
+            .replace(/^[a-z]/, (chr) => chr.toUpperCase())}`;
+          document.documentElement.dataset[datasetKey] = String(record.ok);
+        } catch (_error) {}
+      };
+    })();
+  </script>
+
+  <link rel="stylesheet" href="/assets/manor-blueprint/manor.blueprint.css?v=HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2">
+  <script src="/assets/manor-blueprint/manor.blueprint.registry.js?v=HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2" defer onload="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('manorRegistry',true,this.src)" onerror="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('manorRegistry',false,this.src)"></script>
+  <script src="/assets/manor-blueprint/manor.blueprint.js?v=HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2" defer onload="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('manorBlueprint',true,this.src)" onerror="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('manorBlueprint',false,this.src)"></script>
 
   <!-- Optional diagnostic equipment. Must not block first visible render. -->
-  <script src="/assets/lab/runtime-table.js?v=HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1" defer></script>
+  <script src="/assets/lab/runtime-table.js?v=HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2" defer onload="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('runtimeTable',true,this.src)" onerror="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('runtimeTable',false,this.src)"></script>
 
-  <!-- Held source authorities. Shell loads availability; source truth remains owned by each source file. -->
-  <script src="/assets/hearth/hearth.tectonics.js?v=HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1" defer></script>
-  <script src="/assets/hearth/hearth.elevation.js?v=HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1" defer></script>
-  <script src="/assets/hearth/hearth.composition.js?v=HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1" defer></script>
-  <script src="/assets/hearth/hearth.hydrology.js?v=HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1" defer></script>
-  <script src="/assets/hearth/hearth.materials.js?v=HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1" defer></script>
-  <script src="/assets/hearth/hearth.hex.four-pair.authority.js?v=HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1" defer></script>
-  <script src="/assets/hearth/hearth.hex.surface.js?v=HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1" defer></script>
+  <!-- Held source authorities. HTML loads availability only; it does not own source truth. -->
+  <script src="/assets/hearth/hearth.tectonics.js?v=HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2" defer onload="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('tectonics',true,this.src)" onerror="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('tectonics',false,this.src)"></script>
+  <script src="/assets/hearth/hearth.elevation.js?v=HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2" defer onload="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('elevation',true,this.src)" onerror="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('elevation',false,this.src)"></script>
+  <script src="/assets/hearth/hearth.composition.js?v=HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2" defer onload="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('composition',true,this.src)" onerror="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('composition',false,this.src)"></script>
+  <script src="/assets/hearth/hearth.hydrology.js?v=HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2" defer onload="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('hydrology',true,this.src)" onerror="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('hydrology',false,this.src)"></script>
+  <script src="/assets/hearth/hearth.materials.js?v=HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2" defer onload="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('materials',true,this.src)" onerror="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('materials',false,this.src)"></script>
+  <script src="/assets/hearth/hearth.hex.four-pair.authority.js?v=HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2" defer onload="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('hexAuthority',true,this.src)" onerror="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('hexAuthority',false,this.src)"></script>
+  <script src="/assets/hearth/hearth.hex.surface.js?v=HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2" defer onload="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('hexSurface',true,this.src)" onerror="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('hexSurface',false,this.src)"></script>
 
   <!-- Visible carrier authority, then active route conductor. -->
-  <script src="/assets/hearth/hearth.canvas.js?v=HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1" defer></script>
-  <script src="/showroom/globe/hearth/hearth.js?v=HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1" defer></script>
+  <script src="/assets/hearth/hearth.canvas.js?v=HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2" defer onload="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('canvasAuthority',true,this.src)" onerror="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('canvasAuthority',false,this.src)"></script>
+  <script src="/showroom/globe/hearth/hearth.js?v=HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2" defer onload="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('routeConductor',true,this.src)" onerror="window.__HEARTH_MARK_SCRIPT_LOAD__&&window.__HEARTH_MARK_SCRIPT_LOAD__('routeConductor',false,this.src)"></script>
 
   <style>
     :root{
@@ -472,9 +501,22 @@
       box-shadow:0 0 38px rgba(231,188,105,.08);
     }
 
+    #hearthCanvasMount::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:1;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(141,216,255,.10),transparent 34%),
+        radial-gradient(circle at 50% 52%,rgba(231,188,105,.06),transparent 42%),
+        linear-gradient(135deg,rgba(255,255,255,.035),transparent 42%,rgba(0,0,0,.18));
+    }
+
     #hearthCanvasMount canvas{
       position:absolute;
       inset:0;
+      z-index:6;
       display:block;
       width:100%;
       height:100%;
@@ -485,15 +527,148 @@
       -webkit-touch-callout:none;
     }
 
-    .mount-fallback{
+    .carrier-loader{
       position:absolute;
       inset:0;
+      z-index:4;
       display:grid;
       place-items:center;
-      color:rgba(238,246,255,.68);
-      font-weight:850;
+      pointer-events:none;
+      padding:24px;
       text-align:center;
-      padding:20px;
+      background:
+        radial-gradient(circle at 50% 42%,rgba(141,216,255,.14),transparent 18rem),
+        radial-gradient(circle at 50% 52%,rgba(231,188,105,.11),transparent 21rem),
+        radial-gradient(circle at 50% 50%,rgba(0,0,0,.12),rgba(1,4,10,.58) 72%);
+    }
+
+    .loader-core{
+      position:relative;
+      display:grid;
+      place-items:center;
+      width:min(78%,340px);
+      aspect-ratio:1/1;
+      border-radius:50%;
+    }
+
+    .loader-ring,
+    .loader-ring::before,
+    .loader-ring::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:50%;
+      border:1px solid rgba(231,188,105,.20);
+      box-shadow:
+        0 0 28px rgba(231,188,105,.09),
+        inset 0 0 36px rgba(141,216,255,.06);
+    }
+
+    .loader-ring::before{
+      inset:10%;
+      border-color:rgba(141,216,255,.22);
+    }
+
+    .loader-ring::after{
+      inset:22%;
+      border-color:rgba(139,215,163,.18);
+    }
+
+    .loader-orbit{
+      position:absolute;
+      inset:5%;
+      border-radius:50%;
+      border:1px dashed rgba(231,188,105,.18);
+      animation:hearth-loader-orbit 13s linear infinite;
+    }
+
+    .loader-orbit::before{
+      content:"";
+      position:absolute;
+      top:6%;
+      left:50%;
+      width:9px;
+      height:9px;
+      border-radius:50%;
+      transform:translateX(-50%);
+      background:var(--gold);
+      box-shadow:0 0 18px rgba(231,188,105,.52);
+    }
+
+    .loader-copy{
+      position:relative;
+      z-index:2;
+      display:grid;
+      gap:10px;
+      max-width:290px;
+      padding:22px;
+      border:1px solid rgba(231,188,105,.22);
+      border-radius:24px;
+      background:
+        linear-gradient(180deg,rgba(9,22,41,.78),rgba(4,10,20,.66));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .loader-copy b{
+      color:rgba(255,244,216,.98);
+      font-size:1.02rem;
+      line-height:1.1;
+      letter-spacing:-.015em;
+    }
+
+    .loader-copy span{
+      color:rgba(238,246,255,.72);
+      font-size:.88rem;
+      line-height:1.35;
+    }
+
+    .loader-stages{
+      display:grid;
+      gap:6px;
+      margin:6px 0 0;
+      padding:0;
+      list-style:none;
+      text-align:left;
+    }
+
+    .loader-stages li{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:7px;
+      color:rgba(238,246,255,.60);
+      font-size:.72rem;
+      line-height:1.25;
+      font-weight:800;
+      letter-spacing:.035em;
+      text-transform:uppercase;
+    }
+
+    .loader-stages li::before{
+      content:"";
+      width:7px;
+      height:7px;
+      border-radius:50%;
+      border:1px solid rgba(141,216,255,.34);
+      background:rgba(141,216,255,.08);
+    }
+
+    .loader-stages li[data-state="pass"]{
+      color:rgba(139,215,163,.86);
+    }
+
+    .loader-stages li[data-state="pass"]::before{
+      border-color:rgba(139,215,163,.62);
+      background:rgba(139,215,163,.36);
+    }
+
+    .loader-stages li[data-state="warn"]{
+      color:rgba(255,180,95,.86);
+    }
+
+    .loader-stages li[data-state="warn"]::before{
+      border-color:rgba(255,180,95,.62);
+      background:rgba(255,180,95,.28);
     }
 
     .planet-caption{
@@ -665,6 +840,11 @@
       font-size:.76rem;
     }
 
+    @keyframes hearth-loader-orbit{
+      from{transform:rotate(0deg)}
+      to{transform:rotate(360deg)}
+    }
+
     @media (max-width:1080px){
       .hero{
         grid-template-columns:1fr;
@@ -715,6 +895,10 @@
       #hearthCanvasMount{
         min-height:300px;
       }
+
+      .loader-core{
+        width:min(86%,310px);
+      }
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -758,7 +942,7 @@
     <main id="hearth-main">
       <section class="panel hero" aria-labelledby="hearth-title">
         <div class="hero-copy">
-          <div class="eyebrow">Hearth · Active Planet · Conductor / Carrier Route</div>
+          <div class="eyebrow">Hearth · Active Planet · Loading Screen / Conductor / Carrier Route</div>
 
           <h1 id="hearth-title">Survival becomes shelter.</h1>
 
@@ -767,10 +951,15 @@
           </p>
 
           <p class="lede">
-            This route shell now preserves the visible mount, loads Hearth.js as conductor, keeps Runtime Table optional, and lets the canvas carrier survive degraded diagnostics.
+            This shell restores the visible loading screen first, then hands off to <code>hearth.js</code> as conductor and <code>/assets/hearth/hearth.canvas.js</code> as the visible planet carrier. Runtime Table remains optional.
+          </p>
+
+          <p class="lede">
+            Narrative lens: Hearth can be read as a forty-billion-year future survival planet — what an Earthlike civilization might resemble if it became technically advanced enough to survive deep time and turn pressure into shelter.
           </p>
 
           <div class="world-law" aria-label="World lane roles">
+            <span class="badge gold">40B-Year Future Lens</span>
             <span class="badge gold">ZIONTS · Consequence</span>
             <span class="badge blue">H-Earth · Survival Conditions</span>
             <span class="badge">Hearth · Shelter From Pressure</span>
@@ -789,9 +978,10 @@
           <section
             id="hearthCanvasMount"
             data-hearth-canvas-mount="true"
+            data-hearth-loading-screen-visible="true"
             data-hearth-parent-chain-aligned="true"
             data-hearth-active-visible-planet-carrier="true"
-            data-hearth-route-shell-contract="HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1"
+            data-hearth-route-shell-contract="HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2"
             data-hearth-active-route-conductor="/showroom/globe/hearth/hearth.js"
             data-hearth-canvas-authority="/assets/hearth/hearth.canvas.js"
             data-hearth-retired-climate-route="/showroom/globe/hearth/hearth.climate.route.js"
@@ -799,17 +989,32 @@
             data-runtime-table-optional="true"
             data-runtime-table-missing-does-not-block-carrier="true"
             data-visible-carrier-first="true"
+            data-wide-probe-deferred="true"
             aria-label="Hearth active planet canvas mount"
           >
-            <span class="mount-fallback" data-hearth-mount-fallback="true">
-              Hearth visible carrier preparing.
-            </span>
+            <div class="carrier-loader" data-hearth-loading-screen="true" aria-live="polite">
+              <div class="loader-core" aria-label="Hearth loading screen">
+                <div class="loader-ring" aria-hidden="true"></div>
+                <div class="loader-orbit" aria-hidden="true"></div>
+                <div class="loader-copy">
+                  <b>Hearth carrier loading.</b>
+                  <span>Loading screen active. Visible planet carrier preparing.</span>
+                  <ul class="loader-stages" aria-label="Hearth load stages">
+                    <li data-stage="shell" data-state="pass">Shell mounted</li>
+                    <li data-stage="runtime-table" data-state="warn">Runtime Table optional</li>
+                    <li data-stage="source-stack" data-state="warn">Source stack loading</li>
+                    <li data-stage="canvas" data-state="warn">Canvas carrier loading</li>
+                    <li data-stage="conductor" data-state="warn">Conductor handoff pending</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </section>
 
           <div class="planet-caption">
             <b>Visible Carrier Funnel</b>
             <span>
-              The page shell loads <code>hearth.js</code> as conductor and <code>/assets/hearth/hearth.canvas.js</code> as the carrier. The old climate route is retired from active drawing duty.
+              The loading screen is part of the shell and survives degraded diagnostics. The planet carrier belongs to <code>/assets/hearth/hearth.canvas.js</code>. The old climate route is retired from active drawing duty.
             </span>
           </div>
         </aside>
@@ -829,7 +1034,7 @@
             <strong>ZIONTS</strong> shows consequence after living conditions fail. <strong>H-Earth</strong> studies the pressure conditions that survival must face. <strong>Audralia</strong> shows the untouched living possibility. <strong>Hearth</strong> is the conversion room: survival pressure becoming a place where people can actually stay.
           </p>
           <p>
-            The active globe remains visible because Hearth must feel like a world, not only a report. The parent chain remains present because Hearth must prove that shelter has a material basis: tectonics, elevation, composition, hydrology, materials, and canvas authority.
+            The future-world lens places Hearth far beyond ordinary recovery: a forty-billion-year-forward survival planet where ancient technology, carved coastlines, hydrology, mineral substrate, and long-term adaptation have had enough time to become part of the terrain itself.
           </p>
         </div>
 
@@ -932,15 +1137,17 @@
         </div>
       </section>
 
-      <pre id="hearth-route-status" data-hearth-route-status="true">Hearth route shell loading conductor / carrier funnel.</pre>
+      <pre id="hearth-route-status" data-hearth-route-status="true">Hearth loading screen active. Route shell preparing conductor / carrier funnel.</pre>
 
       <template id="hearth-route-receipt" data-route-receipt>
-HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1
+HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2
 route=/showroom/globe/hearth/
-previous=HEARTH_ACTIVE_PLANET_PARENT_CHAIN_HTML_SYNC_TNT_v2
+previous=HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1
 route_shell_loaded=true
 route_shell_active=true
 route_shell_owns_script_order=true
+loading_screen_required=true
+loading_screen_visible=true
 active_route_conductor=/showroom/globe/hearth/hearth.js
 active_route_conductor_expected=true
 retired_climate_route=/showroom/globe/hearth/hearth.climate.route.js
@@ -963,6 +1170,7 @@ hex_authority=/assets/hearth/hearth.hex.four-pair.authority.js
 hex_surface=/assets/hearth/hearth.hex.surface.js
 target_land_ratio=0.30
 earth_reference_land_ratio=0.29
+future_earth_lens=forty-billion-years-forward
 rocky_means_jagged_not_gray=true
 plate_tectonics_active=true
 narrative_identity=Hearth · Survival Becomes Shelter
@@ -976,12 +1184,12 @@ generated_image=false
 graphic_box=false
 webgl=false
 visual_pass_claimed=false
-next_diagnostic_target=hearth.js-or-canvas-receipt-after-index-update
+next_diagnostic_target=postgame-conductor-canvas-receipt
       </template>
     </main>
 
     <footer>
-      HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1 · /showroom/globe/hearth/ · Hearth · Survival Becomes Shelter.
+      HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2 · /showroom/globe/hearth/ · loading screen first · visible carrier handoff.
     </footer>
   </div>
 
@@ -989,13 +1197,14 @@ next_diagnostic_target=hearth.js-or-canvas-receipt-after-index-update
     (() => {
       "use strict";
 
-      const CONTRACT = "HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1";
-      const RECEIPT = "HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_RECEIPT_v1";
-      const PREVIOUS_CONTRACT = "HEARTH_ACTIVE_PLANET_PARENT_CHAIN_HTML_SYNC_TNT_v2";
+      const CONTRACT = "HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_TNT_v2";
+      const RECEIPT = "HEARTH_ROUTE_SHELL_LOADING_SCREEN_VISIBLE_PLANET_REBIND_HTML_RECEIPT_v2";
+      const PREVIOUS_CONTRACT = "HEARTH_ROUTE_SHELL_CONDUCTOR_CANVAS_REBALANCE_HTML_TNT_v1";
       const ACTIVE_CONDUCTOR_FILE = "/showroom/globe/hearth/hearth.js";
       const RETIRED_CLIMATE_ROUTE = "/showroom/globe/hearth/hearth.climate.route.js";
       const CANVAS_AUTHORITY = "/assets/hearth/hearth.canvas.js";
       const RUNTIME_TABLE = "/assets/lab/runtime-table.js";
+      const MOUNT_ID = "hearthCanvasMount";
 
       const state = {
         contract: CONTRACT,
@@ -1004,7 +1213,11 @@ next_diagnostic_target=hearth.js-or-canvas-receipt-after-index-update
         route: "/showroom/globe/hearth/",
         routeShellLoaded: true,
         routeShellActive: true,
+        loadingScreenRequired: true,
+        loadingScreenVisible: true,
+        loadingScreenHiddenAfterCanvas: false,
         activeRouteConductor: ACTIVE_CONDUCTOR_FILE,
+        conductorConfirmed: false,
         retiredClimateRoute: RETIRED_CLIMATE_ROUTE,
         retiredClimateRouteActiveCarrier: false,
         canvasAuthority: CANVAS_AUTHORITY,
@@ -1017,7 +1230,6 @@ next_diagnostic_target=hearth.js-or-canvas-receipt-after-index-update
         wideProbeDeferred: true,
         sourceAuthorityHeld: true,
         canvasMountPresent: false,
-        conductorPresent: false,
         canvasApiPresent: false,
         canvasCarrierMounted: false,
         dragInspectionBound: false,
@@ -1025,12 +1237,14 @@ next_diagnostic_target=hearth.js-or-canvas-receipt-after-index-update
         imageRendered: false,
         coherentExpressionPass: false,
         visualPassClaimed: false,
-        firstFailedCoordinate: "A1_ATLAS_START_AUTHORIZED",
-        recommendedNextRenewalTarget: "hearth.js-or-canvas-receipt-after-index-update",
+        firstFailedCoordinate: "LOADING_SCREEN_ACTIVE_CONDUCTOR_PENDING",
+        recommendedNextRenewalTarget: "wait-for-conductor-and-canvas-receipt",
         generatedImage: false,
         graphicBox: false,
         webGL: false,
-        status: "ROUTE_SHELL_REBALANCED_CONDUCTOR_PENDING",
+        status: "LOADING_SCREEN_ACTIVE_CONDUCTOR_PENDING",
+        bootRequests: 0,
+        bootInvoked: false,
         updatedAt: ""
       };
 
@@ -1038,40 +1252,91 @@ next_diagnostic_target=hearth.js-or-canvas-receipt-after-index-update
         return value === true || value === "true";
       }
 
-      function detectRuntimeTableMode() {
-        const api =
+      function getMount() {
+        return document.getElementById(MOUNT_ID);
+      }
+
+      function markStage(stage, status) {
+        const node = document.querySelector(`[data-stage="${stage}"]`);
+        if (node) node.dataset.state = status;
+      }
+
+      function getRuntimeTableApi() {
+        return (
           window.LAB_RUNTIME_TABLE ||
           window.DexterRuntimeTable ||
           window.RUNTIME_TABLE ||
           window.LAB_UNIVERSAL_PLANET_RUNTIME_TABLE ||
           (window.DEXTER_LAB && window.DEXTER_LAB.runtimeTable) ||
-          null;
+          null
+        );
+      }
+
+      function getCanvasApi() {
+        return (
+          window.HEARTH_CANVAS ||
+          window.HearthCanvas ||
+          (window.HEARTH && window.HEARTH.canvas) ||
+          null
+        );
+      }
+
+      function getConductorApi() {
+        return (
+          window.HEARTH_ROUTE_CONDUCTOR ||
+          window.HearthRouteConductor ||
+          window.HEARTH_CONDUCTOR ||
+          (window.HEARTH && window.HEARTH.routeConductor) ||
+          (window.HEARTH && window.HEARTH.conductor) ||
+          null
+        );
+      }
+
+      function sourceStackStatus() {
+        const loads = window.HEARTH_ROUTE_SCRIPT_LOADS || {};
+        const required = ["tectonics", "elevation", "composition", "hydrology", "materials"];
+        const loaded = required.filter((key) => loads[key] && loads[key].ok === true);
+        const failed = required.filter((key) => loads[key] && loads[key].ok === false);
+
+        return {
+          required,
+          loaded,
+          failed,
+          allCoreLoaded: loaded.length === required.length,
+          anyFailed: failed.length > 0
+        };
+      }
+
+      function detectRuntimeTableMode() {
+        const api = getRuntimeTableApi();
 
         state.runtimeTablePresent = Boolean(api);
         state.runtimeTableMode = api
           ? "RUNTIME_TABLE_READY_OR_DEGRADED"
           : "RUNTIME_TABLE_MISSING_ALLOWED";
 
+        markStage("runtime-table", api ? "pass" : "warn");
+
         return api;
       }
 
       function detectConductorAndCanvas() {
         const doc = document.documentElement;
-        const mount = document.getElementById("hearthCanvasMount");
+        const mount = getMount();
+        const canvasApi = getCanvasApi();
+        const conductorApi = getConductorApi();
+        const sourceStatus = sourceStackStatus();
 
         state.canvasMountPresent = Boolean(mount);
-        state.conductorPresent = Boolean(
+        state.canvasApiPresent = Boolean(canvasApi);
+
+        state.conductorConfirmed = Boolean(
+          conductorApi ||
           window.__HEARTH_ACTIVE_ROUTE_FILE__ === ACTIVE_CONDUCTOR_FILE ||
           window.__HEARTH_ACTIVE_ROUTE_CONDUCTOR__ === ACTIVE_CONDUCTOR_FILE ||
           bool(doc.dataset.hearthConductorLoaded) ||
           bool(doc.dataset.hearthRouteConductorLoaded) ||
           bool(doc.dataset.hearthJsConductorLoaded)
-        );
-
-        state.canvasApiPresent = Boolean(
-          window.HEARTH_CANVAS ||
-          window.HearthCanvas ||
-          (window.HEARTH && window.HEARTH.canvas)
         );
 
         state.canvasCarrierMounted = Boolean(
@@ -1080,6 +1345,7 @@ next_diagnostic_target=hearth.js-or-canvas-receipt-after-index-update
             mount.querySelector("canvas") ||
             bool(mount.dataset.hearthCanvasMounted) ||
             bool(mount.dataset.hearthVisibleCarrierMounted) ||
+            bool(mount.dataset.hearthCanvasCarrierMounted) ||
             bool(doc.dataset.hearthCanvasCarrierMounted) ||
             bool(doc.dataset.hearthVisibleCarrierMounted)
           )
@@ -1098,32 +1364,143 @@ next_diagnostic_target=hearth.js-or-canvas-receipt-after-index-update
           bool(doc.dataset.hearthCanvasImageRendered)
         );
 
+        state.loadingScreenVisible = Boolean(
+          mount && mount.querySelector("[data-hearth-loading-screen]")
+        );
+
+        markStage("source-stack", sourceStatus.anyFailed ? "warn" : sourceStatus.loaded.length ? "pass" : "warn");
+        markStage("canvas", state.canvasCarrierMounted || state.canvasApiPresent ? "pass" : "warn");
+        markStage("conductor", state.conductorConfirmed ? "pass" : "warn");
+
+        if (mount) {
+          mount.dataset.hearthLoadingScreenVisible = String(state.loadingScreenVisible);
+          mount.dataset.hearthCanvasApiPresent = String(state.canvasApiPresent);
+          mount.dataset.hearthCanvasCarrierMounted = String(state.canvasCarrierMounted);
+          mount.dataset.hearthConductorConfirmed = String(state.conductorConfirmed);
+          mount.dataset.hearthDragInspectionBound = String(state.dragInspectionBound);
+        }
+
         if (state.canvasCarrierMounted) {
           state.status = state.runtimeTablePresent
-            ? "ROUTE_SHELL_REBALANCED_CANVAS_VISIBLE"
-            : "ROUTE_SHELL_REBALANCED_RUNTIME_TABLE_MISSING_ALLOWED";
+            ? "VISIBLE_CARRIER_ACTIVE_RUNTIME_TABLE_READY"
+            : "VISIBLE_CARRIER_ACTIVE_RUNTIME_TABLE_MISSING_ALLOWED";
           state.firstFailedCoordinate = "NONE_VISIBLE_CARRIER_PRESENT";
-          state.recommendedNextRenewalTarget = "read-postgame-canvas-or-triple-g-receipt";
+          state.recommendedNextRenewalTarget = "read-postgame-conductor-canvas-or-triple-g-receipt";
           return;
         }
 
-        if (state.conductorPresent) {
-          state.status = state.runtimeTablePresent
-            ? "ROUTE_SHELL_REBALANCED_CONDUCTOR_LOADED"
-            : "ROUTE_SHELL_REBALANCED_RUNTIME_TABLE_MISSING_ALLOWED";
+        if (state.conductorConfirmed || state.canvasApiPresent) {
+          state.status = "LOADING_SCREEN_ACTIVE_CANVAS_PENDING";
           state.firstFailedCoordinate = "CANVAS_CARRIER_NOT_CONFIRMED";
           state.recommendedNextRenewalTarget = "canvas-carrier-mount-verification";
           return;
         }
 
-        state.status = "ROUTE_SHELL_REBALANCED_CONDUCTOR_PENDING";
+        state.status = "LOADING_SCREEN_ACTIVE_CONDUCTOR_PENDING";
         state.firstFailedCoordinate = "CONDUCTOR_NOT_CONFIRMED";
         state.recommendedNextRenewalTarget = "hearth.js-conductor-load-verification";
+      }
+
+      function buildPayload(reason) {
+        return {
+          contract: CONTRACT,
+          receipt: RECEIPT,
+          previousContract: PREVIOUS_CONTRACT,
+          route: "/showroom/globe/hearth/",
+          reason,
+          mountId: MOUNT_ID,
+          mount: getMount(),
+          activeRouteConductor: ACTIVE_CONDUCTOR_FILE,
+          canvasAuthority: CANVAS_AUTHORITY,
+          retiredClimateRoute: RETIRED_CLIMATE_ROUTE,
+          retiredClimateRouteActiveCarrier: false,
+          runtimeTableOptional: true,
+          runtimeTableMissingDoesNotBlockCarrier: true,
+          visibleCarrierFirst: true,
+          wideProbeDeferred: true,
+          sourceAuthorityHeld: true,
+          loadingScreenVisible: state.loadingScreenVisible,
+          generatedImage: false,
+          graphicBox: false,
+          webGL: false,
+          visualPassClaimed: false,
+          requestedAt: new Date().toISOString()
+        };
+      }
+
+      function safeInvoke(authority, methods, payload) {
+        if (!authority || typeof authority !== "object") return false;
+
+        for (const method of methods) {
+          if (typeof authority[method] !== "function") continue;
+
+          try {
+            authority[method](payload);
+            return true;
+          } catch (_error) {}
+        }
+
+        return false;
+      }
+
+      function requestBoot(reason) {
+        const mount = getMount();
+        const payload = buildPayload(reason);
+
+        state.bootRequests += 1;
+
+        try {
+          window.dispatchEvent(new CustomEvent("hearth:route-shell-ready", { detail: payload }));
+        } catch (_error) {}
+
+        try {
+          if (mount) {
+            mount.dispatchEvent(new CustomEvent("hearth:visible-carrier-request", {
+              detail: payload,
+              bubbles: true
+            }));
+          }
+        } catch (_error) {}
+
+        if (state.canvasCarrierMounted) return;
+
+        const conductor = getConductorApi();
+        const canvas = getCanvasApi();
+
+        const conductorInvoked = safeInvoke(conductor, [
+          "boot",
+          "mount",
+          "start",
+          "init",
+          "run",
+          "requestBoot",
+          "conduct",
+          "mountVisibleCarrier"
+        ], payload);
+
+        const canvasInvoked = conductorInvoked
+          ? false
+          : safeInvoke(canvas, [
+            "boot",
+            "mount",
+            "start",
+            "init",
+            "run",
+            "requestBoot",
+            "attach",
+            "attachToMount",
+            "mountVisibleCarrier",
+            "createVisibleCarrier"
+          ], payload);
+
+        state.bootInvoked = state.bootInvoked || conductorInvoked || canvasInvoked;
       }
 
       function publishStatus(reason) {
         const dataset = document.documentElement.dataset;
         const statusNode = document.getElementById("hearth-route-status");
+        const loads = window.HEARTH_ROUTE_SCRIPT_LOADS || {};
+        const sourceStatus = sourceStackStatus();
 
         detectRuntimeTableMode();
         detectConductorAndCanvas();
@@ -1136,9 +1513,14 @@ next_diagnostic_target=hearth.js-or-canvas-receipt-after-index-update
         dataset.hearthRouteShellReceipt = RECEIPT;
         dataset.hearthRouteShellPreviousContract = PREVIOUS_CONTRACT;
 
+        dataset.hearthLoadingScreenRequired = "true";
+        dataset.hearthLoadingScreenVisible = String(state.loadingScreenVisible);
+
         dataset.hearthActiveRouteFile = ACTIVE_CONDUCTOR_FILE;
         dataset.hearthActiveRouteConductor = ACTIVE_CONDUCTOR_FILE;
         dataset.hearthActiveRouteConductorExpected = "true";
+        dataset.hearthConductorConfirmed = String(state.conductorConfirmed);
+
         dataset.hearthRetiredClimateRoute = RETIRED_CLIMATE_ROUTE;
         dataset.hearthRetiredClimateRouteActiveCarrier = "false";
 
@@ -1163,36 +1545,49 @@ next_diagnostic_target=hearth.js-or-canvas-receipt-after-index-update
         dataset.hearthFirstFailedCoordinate = state.firstFailedCoordinate;
         dataset.hearthRecommendedNextRenewalTarget = state.recommendedNextRenewalTarget;
         dataset.hearthRouteShellPostgameStatus = state.status;
+        dataset.hearthFutureEarthLens = "forty-billion-years-forward";
 
         dataset.generatedImage = "false";
         dataset.graphicBox = "false";
         dataset.webgl = "false";
         dataset.visualPassClaimed = "false";
 
+        window.__HEARTH_ACTIVE_ROUTE_FILE__ = ACTIVE_CONDUCTOR_FILE;
+        window.__HEARTH_ACTIVE_ROUTE_CONDUCTOR__ = ACTIVE_CONDUCTOR_FILE;
+        window.__HEARTH_RETIRED_CLIMATE_ROUTE__ = RETIRED_CLIMATE_ROUTE;
+        window.__HEARTH_RETIRED_CLIMATE_ROUTE_ACTIVE_CARRIER__ = false;
+
         window.HEARTH_ROUTE_SHELL_POSTGAME_RECEIPT = {
           ...state,
           reason,
           postgameStatus: state.status,
           routeShellLoaded: true,
+          loadingScreenVisible: state.loadingScreenVisible,
           activeRouteConductor: ACTIVE_CONDUCTOR_FILE,
+          conductorConfirmed: state.conductorConfirmed,
           retiredClimateRoute: RETIRED_CLIMATE_ROUTE,
           retiredClimateRouteActiveCarrier: false,
           runtimeTableMissingDoesNotBlockCarrier: true,
           sourceAuthorityHeld: true,
+          sourceScriptLoads: loads,
+          sourceStatus,
           visibleCarrierFirst: true,
           wideProbeDeferred: true,
+          futureEarthLens: "forty-billion-years-forward",
           visualPassClaimed: false
         };
 
         if (statusNode) {
           statusNode.textContent = [
-            "Hearth route shell conductor/canvas rebalance loaded.",
+            "Hearth loading screen / visible planet route shell active.",
             `Contract ${CONTRACT}`,
             `Receipt ${RECEIPT}`,
             `Previous ${PREVIOUS_CONTRACT}`,
             `Status ${state.status}`,
             `Reason ${reason}`,
+            `Loading screen visible ${state.loadingScreenVisible}`,
             `Active route conductor ${ACTIVE_CONDUCTOR_FILE}`,
+            `Conductor confirmed ${state.conductorConfirmed}`,
             `Retired climate route ${RETIRED_CLIMATE_ROUTE}`,
             "Retired climate route active carrier false",
             `Canvas authority ${CANVAS_AUTHORITY}`,
@@ -1207,37 +1602,70 @@ next_diagnostic_target=hearth.js-or-canvas-receipt-after-index-update
             "Visible carrier first true",
             "Wide probe deferred true",
             "Source authority held true",
+            `Source core loaded ${sourceStatus.loaded.join(", ") || "none"}`,
+            `Source core failed ${sourceStatus.failed.join(", ") || "none"}`,
             "Receipt overlay independent true",
             `Image rendered ${state.imageRendered}`,
             "Coherent expression pass false",
             "Visual pass claimed false",
             `First failed coordinate ${state.firstFailedCoordinate}`,
             `Recommended next renewal target ${state.recommendedNextRenewalTarget}`,
+            "Future Earth lens forty-billion-years-forward",
             "Generated image false",
             "GraphicBox false",
             "WebGL false",
+            `Boot requests ${state.bootRequests}`,
+            `Boot invoked ${state.bootInvoked}`,
             `Updated ${state.updatedAt}`
           ].join("\n");
         }
       }
 
-      window.__HEARTH_ACTIVE_ROUTE_FILE__ = ACTIVE_CONDUCTOR_FILE;
-      window.__HEARTH_ACTIVE_ROUTE_CONDUCTOR__ = ACTIVE_CONDUCTOR_FILE;
-      window.__HEARTH_RETIRED_CLIMATE_ROUTE__ = RETIRED_CLIMATE_ROUTE;
-      window.__HEARTH_RETIRED_CLIMATE_ROUTE_ACTIVE_CARRIER__ = false;
-
+      markStage("shell", "pass");
       publishStatus("shell-inline-pre-defer-status");
 
       window.addEventListener("DOMContentLoaded", () => {
-        publishStatus("dom-content-loaded");
+        publishStatus("dom-content-loaded-before-boot-request");
+        requestBoot("dom-content-loaded-route-shell-ready");
+        publishStatus("dom-content-loaded-after-boot-request");
       }, { once: true });
 
       window.addEventListener("load", () => {
-        publishStatus("window-load");
-        window.setTimeout(() => publishStatus("post-load-250ms"), 250);
-        window.setTimeout(() => publishStatus("post-load-1000ms"), 1000);
-        window.setTimeout(() => publishStatus("post-load-2500ms"), 2500);
+        publishStatus("window-load-before-boot-request");
+        requestBoot("window-load-route-shell-ready");
+        publishStatus("window-load-after-boot-request");
+
+        window.setTimeout(() => {
+          requestBoot("post-load-250ms-route-shell-ready");
+          publishStatus("post-load-250ms");
+        }, 250);
+
+        window.setTimeout(() => {
+          requestBoot("post-load-1000ms-route-shell-ready");
+          publishStatus("post-load-1000ms");
+        }, 1000);
+
+        window.setTimeout(() => {
+          requestBoot("post-load-2500ms-route-shell-ready");
+          publishStatus("post-load-2500ms");
+        }, 2500);
+
+        window.setTimeout(() => {
+          publishStatus("post-load-5000ms-final-html-check");
+        }, 5000);
       }, { once: true });
+
+      window.addEventListener("hearth:canvas-carrier-mounted", () => {
+        publishStatus("canvas-carrier-mounted-event");
+      });
+
+      window.addEventListener("hearth:visible-carrier-mounted", () => {
+        publishStatus("visible-carrier-mounted-event");
+      });
+
+      window.addEventListener("hearth:conductor-ready", () => {
+        publishStatus("conductor-ready-event");
+      });
     })();
   </script>
 </body>

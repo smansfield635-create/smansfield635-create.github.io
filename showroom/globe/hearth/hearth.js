@@ -1,18 +1,18 @@
 // /showroom/globe/hearth/hearth.js
-// HEARTH_ROUTE_CONDUCTOR_COOPERATIVE_CANVAS_HANDOFF_TNT_v1
+// HEARTH_CONDUCTOR_STRICT_CANVAS_READY_LATCH_AND_INSPECT_MODE_TNT_v1
 // Full-file replacement.
 // Active Hearth route conductor only.
 // Purpose:
-// - Hydrate the existing HTML first-paint cockpit.
-// - Preserve monotonic Fibonacci stage progression.
-// - Prefer /assets/hearth/hearth.canvas.js cooperative boot.
-// - Translate canvas cooperative phase events into visible F13 loading progress.
-// - Prevent F13 from appearing frozen during long canvas work.
-// - Latch F21 only after canvas ready / first-frame / drag proof.
-// - Collapse into compact diagnostic dock after readiness.
+// - Preserve cooperative canvas boot.
+// - Enforce NEWS gate before F21.
+// - Enforce Fibonacci order: F1A → F1B → F2 → F3 → F5 → F8 → F13 → F21.
+// - Keep F13 active until CANVAS_READY.
+// - Prevent premature completion latch.
+// - Preserve copyable diagnostics and receipt controls.
+// - Add true planet inspect mode so diagnostics can leave the planet frame.
 // Does not own:
 // - HTML first paint
-// - planet pixel drawing
+// - canvas pixel drawing
 // - Runtime Table source code
 // - tectonic cause
 // - elevation truth
@@ -25,11 +25,11 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_ROUTE_CONDUCTOR_COOPERATIVE_CANVAS_HANDOFF_TNT_v1";
-  const RECEIPT = "HEARTH_ROUTE_CONDUCTOR_COOPERATIVE_CANVAS_HANDOFF_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "HEARTH_LOAD_LEDGER_MONOTONIC_CONDUCTOR_DOCK_LATCH_TNT_v1";
-  const BASELINE_CONTRACT = "HEARTH_CANVAS_COOPERATIVE_BOOT_PROGRESS_HANDOFF_FINAL_DRAFT_PREWRITE_v1";
-  const VERSION = "2026-05-29.hearth-route-conductor-cooperative-canvas-handoff-v1";
+  const CONTRACT = "HEARTH_CONDUCTOR_STRICT_CANVAS_READY_LATCH_AND_INSPECT_MODE_TNT_v1";
+  const RECEIPT = "HEARTH_CONDUCTOR_STRICT_CANVAS_READY_LATCH_AND_INSPECT_MODE_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_COOPERATIVE_CANVAS_HANDOFF_TNT_v1";
+  const BASELINE_CONTRACT = "HEARTH_CONDUCTOR_STRICT_CANVAS_READY_LATCH_AND_INSPECT_MODE_PRECODE_FINAL_DRAFT_v1";
+  const VERSION = "2026-05-29.hearth-conductor-strict-canvas-ready-latch-and-inspect-mode-v1";
 
   const ROUTE = "/showroom/globe/hearth/";
   const ACTIVE_ROUTE_FILE = "/showroom/globe/hearth/hearth.js";
@@ -47,8 +47,26 @@
     F3: { id: "F3", rank: 4, value: 3, label: "Script order", progress: 36 },
     F5: { id: "F5", rank: 5, value: 5, label: "Authority availability", progress: 55 },
     F8: { id: "F8", rank: 6, value: 8, label: "Conductor hydration", progress: 72 },
-    F13: { id: "F13", rank: 7, value: 13, label: "Canvas and diagnostic", progress: 78 },
+    F13: { id: "F13", rank: 7, value: 13, label: "Canvas cooperative boot", progress: 78 },
     F21: { id: "F21", rank: 8, value: 21, label: "Completion latch", progress: 100 }
+  });
+
+  const STATUS = Object.freeze({
+    REQUESTED: "REQUESTED",
+    LOADING: "LOADING",
+    LOADED: "LOADED",
+    READY: "READY",
+    DEGRADED: "DEGRADED",
+    HELD: "HELD",
+    HYDRATED: "HYDRATED",
+    MOUNTED: "MOUNTED",
+    BOUND: "BOUND",
+    RENDERED: "RENDERED",
+    COPY_ARMED: "COPY_ARMED",
+    FINAL_READY: "FINAL_READY",
+    LATCHED: "LATCHED",
+    FAILED: "FAILED",
+    ARCHIVED: "ARCHIVED"
   });
 
   const STATUS_RANK = Object.freeze({
@@ -69,24 +87,6 @@
     ARCHIVED: 0
   });
 
-  const STATUS = Object.freeze({
-    REQUESTED: "REQUESTED",
-    LOADING: "LOADING",
-    LOADED: "LOADED",
-    READY: "READY",
-    DEGRADED: "DEGRADED",
-    HELD: "HELD",
-    FAILED: "FAILED",
-    HYDRATED: "HYDRATED",
-    MOUNTED: "MOUNTED",
-    RENDERED: "RENDERED",
-    BOUND: "BOUND",
-    COPY_ARMED: "COPY_ARMED",
-    FINAL_READY: "FINAL_READY",
-    LATCHED: "LATCHED",
-    ARCHIVED: "ARCHIVED"
-  });
-
   const LANES = Object.freeze([
     { key: "shell", label: "Shell", fib: "F1A" },
     { key: "ledger", label: "Ledger", fib: "F1B" },
@@ -96,6 +96,20 @@
     { key: "conductorHydration", label: "Conductor hydration", fib: "F8" },
     { key: "canvasAndDiagnostic", label: "Canvas and diagnostic", fib: "F13" },
     { key: "completionLatch", label: "Completion latch", fib: "F21" }
+  ]);
+
+  const F13_REQUIRED = Object.freeze([
+    "CANVAS_COOPERATIVE_BOOT_STARTED",
+    "CANVAS_MOUNT_CREATED",
+    "CANVAS_CONTEXT_READY",
+    "ATLAS_BUILD_STARTED",
+    "ATLAS_BUILD_COMPLETE",
+    "TEXTURE_COMPOSE_STARTED",
+    "TEXTURE_COMPOSE_COMPLETE",
+    "FIRST_FRAME_REQUESTED",
+    "FIRST_FRAME_DETECTED",
+    "DRAG_INSPECTION_BOUND",
+    "CANVAS_READY"
   ]);
 
   const state = {
@@ -110,12 +124,34 @@
     retiredClimateRoute: RETIRED_CLIMATE_ROUTE,
     retiredClimateRouteActiveCarrier: false,
 
+    newsProtocolActive: true,
+    northGateReady: false,
+    eastGateReady: false,
+    westGateReady: false,
+    southGateReady: false,
+    newsGatePassedBeforeF21: false,
+
+    fibonacciSequenceActive: true,
+    fibonacciStageAtCanvasReady: "",
+    fibonacciStageAtCompletionLatch: "",
+    f13SubsequenceComplete: false,
+    f13LastRequiredEvent: "",
+    f21AfterF13M: false,
+
+    strictCanvasReadyLatchActive: true,
+    canvasReadinessBarrierOpen: false,
+    prematureLatchPrevented: false,
+    completionLatchBlockedUntilCanvasReady: true,
+    completionLatchedAfterCanvasReady: false,
+    f13EventsArchivedBeforeCanvasReady: false,
+
     hydratedExistingCockpit: false,
     duplicateCockpitCreated: false,
     fallbackCockpitCreated: false,
     loadLedgerPresent: false,
-    monotonicStageGuardActive: false,
+    monotonicStageGuardActive: true,
     stageRegressionPrevented: 0,
+    ignoredDuplicateCanvasEvents: 0,
     archivedLateEvents: [],
 
     fibonacciStage: "F8",
@@ -129,9 +165,17 @@
     latestVisibleEvent: "CONDUCTOR_STARTING",
 
     cockpitMode: "loading-cockpit",
+    priorDiagnosticMode: "diagnostic-dock",
     dockVisible: false,
     fullCockpitExpanded: true,
     planetObstructionReduced: false,
+
+    inspectModeAvailable: false,
+    planetInspectModeActive: false,
+    diagnosticDockHiddenForInspection: false,
+    showDiagnosticTabVisible: false,
+    diagnosticDockRestorable: false,
+    copyDiagnosticPreserved: false,
 
     mainProgressCap: FIB.F8.progress,
     mainDisplayProgress: FIB.F8.progress,
@@ -156,6 +200,7 @@
     canvasCarrierHandoffOk: false,
     canvasCarrierHandoffError: "",
     canvasCarrierMethod: "",
+
     canvasBootStartedAt: "",
     canvasBootCompletedAt: "",
     canvasBootStartedAtMs: 0,
@@ -177,9 +222,13 @@
 
     firstFrameRequested: false,
     firstFrameDetected: false,
-    dragInspectionBound: false,
     imageRendered: false,
+    dragInspectionBound: false,
     canvasReady: false,
+
+    f13Events: Object.create(null),
+    f13EventOrder: [],
+    phaseSignatures: Object.create(null),
 
     partialReceiptAvailable: false,
     copyDiagnosticArmed: false,
@@ -189,7 +238,7 @@
 
     postgameStatus: "CONDUCTOR_HYDRATING",
     firstFailedCoordinate: "F8_CONDUCTOR_HYDRATION",
-    recommendedNextRenewalTarget: "await-cooperative-canvas-receipt",
+    recommendedNextRenewalTarget: "await-strict-canvas-ready-latch-receipt",
 
     generatedImage: false,
     graphicBox: false,
@@ -220,7 +269,9 @@
     receiptPre: null,
     copyButton: null,
     receiptToggle: null,
-    collapseButton: null
+    collapseButton: null,
+    inspectButton: null,
+    inspectTab: null
   };
 
   let heartbeatTimer = 0;
@@ -305,7 +356,23 @@
     return FIB[stage] ? FIB[stage].label : stage;
   }
 
+  function phaseSignature(event) {
+    const phase = String(event.phase || event.id || event.event || "CANVAS_PHASE");
+    const detail = isObject(event.detail) ? event.detail : {};
+    const chunk = detail.chunkIndex ?? "";
+    const total = detail.totalChunks ?? "";
+    const progress = event.percent ?? event.progress ?? detail.progress ?? "";
+    return `${phase}|${chunk}|${total}|${progress}`;
+  }
+
   function archiveLateEvent(event, reason = "archive-only") {
+    const stage = event.stage || "";
+    const isF13 = stage === "F13" || event.lane === "canvasAndDiagnostic";
+
+    if (isF13 && !state.canvasReady && !state.completionLatched) {
+      state.f13EventsArchivedBeforeCanvasReady = true;
+    }
+
     const archived = {
       ...clonePlain(event),
       archived: true,
@@ -316,15 +383,15 @@
     state.archivedLateEvents.push(archived);
     state.stageRegressionPrevented += 1;
 
-    if (state.archivedLateEvents.length > 100) {
-      state.archivedLateEvents.splice(0, state.archivedLateEvents.length - 100);
+    if (state.archivedLateEvents.length > 80) {
+      state.archivedLateEvents.splice(0, state.archivedLateEvents.length - 80);
     }
 
     const led = ledgerState();
     if (Array.isArray(led.archivedLateEvents)) {
       led.archivedLateEvents.push(archived);
-      if (led.archivedLateEvents.length > 140) {
-        led.archivedLateEvents.splice(0, led.archivedLateEvents.length - 140);
+      if (led.archivedLateEvents.length > 100) {
+        led.archivedLateEvents.splice(0, led.archivedLateEvents.length - 100);
       }
     }
 
@@ -349,41 +416,44 @@
 
   function normalizeLedger(existing) {
     const ledger = existing && isObject(existing) ? existing : {};
-    const ledgerState = isObject(ledger.state) ? ledger.state : ledger;
+    const led = isObject(ledger.state) ? ledger.state : ledger;
 
-    ledger.state = ledgerState;
-    ledgerState.contract = ledgerState.contract || "HEARTH_LOAD_LEDGER_MONOTONIC_SHARED_v1";
-    ledgerState.route = ledgerState.route || ROUTE;
-    ledgerState.startedAt = ledgerState.startedAt || nowIso();
-    ledgerState.updatedAt = nowIso();
-    ledgerState.currentFibonacciStage = ledgerState.currentFibonacciStage || "F1B";
-    ledgerState.highestStageReached = ledgerState.highestStageReached || ledgerState.currentFibonacciStage || "F1B";
-    ledgerState.highestStageRank = Math.max(
-      Number(ledgerState.highestStageRank || 0),
-      stageRank(ledgerState.highestStageReached),
-      stageRank(ledgerState.currentFibonacciStage)
+    ledger.state = led;
+    led.contract = led.contract || "HEARTH_LOAD_LEDGER_NEWS_FIBONACCI_SHARED_v1";
+    led.route = led.route || ROUTE;
+    led.startedAt = led.startedAt || nowIso();
+    led.updatedAt = nowIso();
+    led.currentFibonacciStage = led.currentFibonacciStage || "F1B";
+    led.highestStageReached = led.highestStageReached || led.currentFibonacciStage || "F1B";
+    led.highestStageRank = Math.max(
+      Number(led.highestStageRank || 0),
+      stageRank(led.highestStageReached),
+      stageRank(led.currentFibonacciStage)
     );
-    ledgerState.completionLatched = bool(ledgerState.completionLatched, false);
-    ledgerState.visibleLoadingActive = ledgerState.visibleLoadingActive !== false;
-    ledgerState.diagnosticCockpitReady = bool(ledgerState.diagnosticCockpitReady, false);
-    ledgerState.cockpitMode = ledgerState.cockpitMode || "loading-cockpit";
-    ledgerState.dockVisible = bool(ledgerState.dockVisible, false);
-    ledgerState.fullCockpitExpanded = ledgerState.fullCockpitExpanded !== false;
-    ledgerState.planetObstructionReduced = bool(ledgerState.planetObstructionReduced, false);
-    ledgerState.partialReceiptAvailable = ledgerState.partialReceiptAvailable !== false;
-    ledgerState.finalReceiptAvailable = bool(ledgerState.finalReceiptAvailable, false);
-    ledgerState.copyDiagnosticArmed = bool(ledgerState.copyDiagnosticArmed, false);
-    ledgerState.visualPassClaimed = false;
-    ledgerState.monotonicStageGuardActive = true;
-    ledgerState.events = Array.isArray(ledgerState.events) ? ledgerState.events : [];
-    ledgerState.archivedLateEvents = Array.isArray(ledgerState.archivedLateEvents) ? ledgerState.archivedLateEvents : [];
-    ledgerState.errors = Array.isArray(ledgerState.errors) ? ledgerState.errors : [];
-    ledgerState.scripts = isObject(ledgerState.scripts) ? ledgerState.scripts : {};
-    ledgerState.lanes = isObject(ledgerState.lanes) ? ledgerState.lanes : {};
+    led.completionLatched = bool(led.completionLatched, false);
+    led.visibleLoadingActive = led.visibleLoadingActive !== false;
+    led.diagnosticCockpitReady = bool(led.diagnosticCockpitReady, false);
+    led.cockpitMode = led.cockpitMode || "loading-cockpit";
+    led.dockVisible = bool(led.dockVisible, false);
+    led.fullCockpitExpanded = led.fullCockpitExpanded !== false;
+    led.planetObstructionReduced = bool(led.planetObstructionReduced, false);
+    led.partialReceiptAvailable = led.partialReceiptAvailable !== false;
+    led.finalReceiptAvailable = bool(led.finalReceiptAvailable, false);
+    led.copyDiagnosticArmed = bool(led.copyDiagnosticArmed, false);
+    led.visualPassClaimed = false;
+    led.newsProtocolActive = true;
+    led.fibonacciSequenceActive = true;
+    led.strictCanvasReadyLatchActive = true;
+    led.monotonicStageGuardActive = true;
+    led.events = Array.isArray(led.events) ? led.events : [];
+    led.archivedLateEvents = Array.isArray(led.archivedLateEvents) ? led.archivedLateEvents : [];
+    led.errors = Array.isArray(led.errors) ? led.errors : [];
+    led.scripts = isObject(led.scripts) ? led.scripts : {};
+    led.lanes = isObject(led.lanes) ? led.lanes : {};
 
     LANES.forEach((lane) => {
-      if (!isObject(ledgerState.lanes[lane.key])) {
-        ledgerState.lanes[lane.key] = makeLane(lane);
+      if (!isObject(led.lanes[lane.key])) {
+        led.lanes[lane.key] = makeLane(lane);
       }
     });
 
@@ -393,7 +463,6 @@
   function ensureLedger() {
     const existing = root.HEARTH_LOAD_LEDGER;
     const ledger = normalizeLedger(existing);
-    const originalGetReceiptText = isFunction(ledger.getReceiptText) ? ledger.getReceiptText.bind(ledger) : null;
 
     ledger.push = function push(event = {}) {
       const evt = {
@@ -406,41 +475,29 @@
         status: event.status || "",
         message: event.message || "",
         timestamp: nowIso(),
-        elapsedMs: nowMs() - state.startedAtMs,
+        elapsedMs: state.startedAtMs ? nowMs() - state.startedAtMs : 0,
         detail: clonePlain(event.detail || {}),
         progress: event.progress ?? ""
       };
 
       const eventRank = stageRank(evt.stage);
-      const currentRank = Number(ledger.state.highestStageRank || stageRank(ledger.state.currentFibonacciStage));
 
-      if (
-        ledger.state.completionLatched &&
-        eventRank > 0 &&
-        eventRank < stageRank("F21") &&
-        evt.lane !== "receipt" &&
-        evt.lane !== "copy" &&
-        evt.lane !== "canvasAndDiagnostic"
-      ) {
-        archiveLateEvent(evt, "post-latch-lower-stage-event");
+      if (ledger.state.completionLatched && eventRank > 0 && eventRank < stageRank("F21")) {
+        if (evt.stage === "F13" && state.canvasReady) {
+          state.ignoredDuplicateCanvasEvents += 1;
+          return evt;
+        }
+        return archiveLateEvent(evt, "post-latch-lower-stage-event");
       }
 
       ledger.state.events.push(evt);
       ledger.state.updatedAt = evt.timestamp;
 
-      if (eventRank > currentRank && !ledger.state.completionLatched) {
-        ledger.setStage(evt.stage, evt.message || evt.id, { fromPush: true });
-      }
-
-      if (ledger.state.events.length > 260) {
-        ledger.state.events.splice(0, ledger.state.events.length - 260);
+      if (ledger.state.events.length > 220) {
+        ledger.state.events.splice(0, ledger.state.events.length - 220);
       }
 
       return evt;
-    };
-
-    ledger.archiveLateEvent = function ledgerArchiveLateEvent(event = {}) {
-      return archiveLateEvent(event, event.archiveReason || "ledger-archive");
     };
 
     ledger.setStage = function setStage(nextStage, message = "", options = {}) {
@@ -462,11 +519,25 @@
       }
 
       if (ledger.state.completionLatched && nextStage !== "F21") {
+        if (nextStage === "F13" && state.canvasReady) {
+          state.ignoredDuplicateCanvasEvents += 1;
+          return event;
+        }
         return archiveLateEvent(event, "setStage-blocked-after-latch");
       }
 
       if (nextRank < currentRank) {
         return archiveLateEvent(event, "monotonic-stage-regression-blocked");
+      }
+
+      if (nextStage === "F21" && !canvasReadinessBarrierOpen()) {
+        state.prematureLatchPrevented = true;
+        state.completionLatchBlockedUntilCanvasReady = true;
+        return {
+          ...event,
+          blocked: true,
+          blockReason: "strict-canvas-ready-latch-closed"
+        };
       }
 
       ledger.state.currentFibonacciStage = nextStage;
@@ -507,12 +578,11 @@
         progress: nextProgress
       };
 
-      if (
-        ledger.state.completionLatched &&
-        laneKey !== "completionLatch" &&
-        laneKey !== "canvasAndDiagnostic" &&
-        laneKey !== "conductorHydration"
-      ) {
+      if (ledger.state.completionLatched && nextStage !== "F21") {
+        if (laneKey === "canvasAndDiagnostic" && state.canvasReady) {
+          state.ignoredDuplicateCanvasEvents += 1;
+          return lane;
+        }
         return archiveLateEvent(nextEvent, "post-latch-lane-update-archived");
       }
 
@@ -541,23 +611,13 @@
       return lane;
     };
 
-    ledger.setCockpitMode = function setCockpitMode(mode) {
-      ledger.state.cockpitMode = mode;
-      ledger.state.dockVisible = mode === "diagnostic-dock";
-      ledger.state.fullCockpitExpanded = mode !== "diagnostic-dock";
-      ledger.state.planetObstructionReduced = mode === "diagnostic-dock";
-      return ledger.push({
-        id: "COCKPIT_MODE_SET",
-        stage: ledger.state.currentFibonacciStage,
-        owner: "hearth.js",
-        file: ACTIVE_ROUTE_FILE,
-        lane: "completionLatch",
-        status: STATUS.READY,
-        message: mode
-      });
-    };
-
     ledger.latchCompletion = function latchCompletion(reason = "completion-latched") {
+      if (!canvasReadinessBarrierOpen()) {
+        state.prematureLatchPrevented = true;
+        state.completionLatchBlockedUntilCanvasReady = true;
+        return false;
+      }
+
       ledger.state.completionLatched = true;
       ledger.state.visibleLoadingActive = false;
       ledger.state.diagnosticCockpitReady = true;
@@ -565,8 +625,8 @@
       ledger.state.currentFibonacciStage = "F21";
       ledger.state.highestStageReached = "F21";
       ledger.state.highestStageRank = stageRank("F21");
-      ledger.state.cockpitMode = "diagnostic-dock";
-      ledger.state.dockVisible = true;
+      ledger.state.cockpitMode = state.cockpitMode === "planet-inspect" ? "planet-inspect" : "diagnostic-dock";
+      ledger.state.dockVisible = ledger.state.cockpitMode !== "planet-inspect";
       ledger.state.fullCockpitExpanded = false;
       ledger.state.planetObstructionReduced = true;
       ledger.state.updatedAt = nowIso();
@@ -588,7 +648,7 @@
         file: ACTIVE_ROUTE_FILE,
         lane: "completionLatch",
         status: STATUS.LATCHED,
-        message: "Visible loader settled into compact diagnostic dock."
+        message: "Visible loader settled after CANVAS_READY."
       });
     };
 
@@ -597,11 +657,6 @@
     };
 
     ledger.getReceiptText = function getLedgerReceiptText() {
-      if (originalGetReceiptText && !state.completionLatched) {
-        try {
-          return originalGetReceiptText();
-        } catch (_error) {}
-      }
       return getReceiptText();
     };
 
@@ -618,7 +673,7 @@
     state.highestStageReached = ledger.state.highestStageReached || state.highestStageReached;
     state.highestStageRank = Math.max(stageRank(state.highestStageReached), Number(ledger.state.highestStageRank || 0));
 
-    emitLocal("MONOTONIC_LOAD_LEDGER_ACQUIRED", {
+    emitLocal("NEWS_FIBONACCI_LOAD_LEDGER_ACQUIRED", {
       existingLedger: Boolean(existing),
       currentFibonacciStage: ledger.state.currentFibonacciStage,
       highestStageReached: ledger.state.highestStageReached
@@ -661,8 +716,8 @@
       state.latestVisibleEvent = event;
     }
 
-    if (state.events.length > 160) {
-      state.events.splice(0, state.events.length - 160);
+    if (state.events.length > 150) {
+      state.events.splice(0, state.events.length - 150);
     }
 
     return entry;
@@ -719,18 +774,23 @@
   }
 
   function ensureStyle() {
-    if (!doc || doc.getElementById("hearth-cooperative-conductor-dock-style")) return;
+    if (!doc || doc.getElementById("hearth-strict-latch-inspect-style")) return;
 
     const style = doc.createElement("style");
-    style.id = "hearth-cooperative-conductor-dock-style";
+    style.id = "hearth-strict-latch-inspect-style";
     style.textContent = `
+      html[data-hearth-planet-inspect="true"] [data-hearth-canvas-mount="true"],
+      html[data-hearth-planet-inspect="true"] #hearthCanvasMount{
+        cursor:grab;
+      }
+
       .hearth-ledger-cockpit{
-        transition:max-height .22s ease, inset .22s ease, opacity .18s ease, transform .18s ease;
+        transition:max-height .22s ease, opacity .18s ease, transform .2s ease, visibility .18s ease;
       }
 
       .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="false"]{
         inset:auto 10px 10px 10px!important;
-        max-height:128px!important;
+        max-height:132px!important;
         min-height:0!important;
         overflow:hidden!important;
       }
@@ -778,27 +838,66 @@
       .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="false"] .hearth-ledger-button{
         min-height:28px!important;
         padding:6px 9px!important;
-        font-size:.58rem!important;
+        font-size:.56rem!important;
       }
 
-      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="true"]{
+      .hearth-ledger-cockpit[data-cockpit-mode="expanded-cockpit"]{
         inset:auto 10px 10px 10px!important;
         max-height:calc(100% - 20px)!important;
       }
 
-      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] [data-hearth-main-progress-fill]{
-        width:100%!important;
+      .hearth-ledger-cockpit[data-cockpit-mode="planet-inspect"]{
+        opacity:0!important;
+        visibility:hidden!important;
+        pointer-events:none!important;
+        transform:translateY(28px) scale(.985)!important;
+        max-height:0!important;
+        min-height:0!important;
+        overflow:hidden!important;
+        border-color:transparent!important;
+      }
+
+      [data-hearth-inspect-tab]{
+        position:fixed;
+        right:max(12px,env(safe-area-inset-right));
+        bottom:max(76px,calc(env(safe-area-inset-bottom) + 76px));
+        z-index:9999;
+        display:none;
+        align-items:center;
+        justify-content:center;
+        min-height:38px;
+        padding:10px 14px;
+        border-radius:999px;
+        border:1px solid rgba(231,188,105,.62);
+        color:#06101e;
+        background:linear-gradient(135deg,#ffe8a3,#e7bc69);
+        box-shadow:0 16px 42px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.28);
+        font:950 .72rem/1 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+        letter-spacing:.09em;
+        text-transform:uppercase;
+      }
+
+      html[data-hearth-planet-inspect="true"] [data-hearth-inspect-tab]{
+        display:inline-flex;
       }
 
       @media (max-width:760px){
         .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="false"]{
           inset:auto 8px 8px 8px!important;
-          max-height:132px!important;
+          max-height:136px!important;
         }
 
         .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"][data-full-expanded="false"] .hearth-ledger-button{
           flex:1 1 auto!important;
-          min-width:30%!important;
+          min-width:28%!important;
+        }
+
+        [data-hearth-inspect-tab]{
+          right:max(10px,env(safe-area-inset-right));
+          bottom:max(70px,calc(env(safe-area-inset-bottom) + 70px));
+          min-height:34px;
+          padding:9px 12px;
+          font-size:.66rem;
         }
       }
     `;
@@ -828,6 +927,7 @@
     mount.dataset.hearthConductorContract = CONTRACT;
     mount.dataset.hearthConductorReceipt = RECEIPT;
     mount.dataset.hearthReceiptOverlayIndependent = "true";
+    mount.dataset.hearthPlanetInspect = String(state.planetInspectModeActive);
     mount.style.touchAction = "none";
     mount.style.userSelect = "none";
 
@@ -862,7 +962,7 @@
 
     cockpit.innerHTML = `
       <div class="hearth-ledger-head">
-        <div class="hearth-ledger-kicker">Hearth · Cooperative Load Ledger</div>
+        <div class="hearth-ledger-kicker">Hearth · NEWS Fibonacci Load Ledger</div>
         <h2 class="hearth-ledger-title">FORMING HEARTH RUNTIME TABLE</h2>
         <div class="hearth-ledger-meta" data-hearth-stage-label>F8 · Conductor hydration</div>
         <div class="hearth-ledger-meta" data-hearth-heartbeat-text>heartbeat=active · stage=F8 · elapsed=00:00</div>
@@ -879,6 +979,7 @@
       <div class="hearth-ledger-actions">
         <button class="hearth-ledger-button primary" type="button" data-hearth-copy-diagnostic>Copy diagnostic</button>
         <button class="hearth-ledger-button" type="button" data-hearth-toggle-receipt>Show receipt</button>
+        <button class="hearth-ledger-button" type="button" data-hearth-inspect-planet>Inspect planet</button>
         <button class="hearth-ledger-button" type="button" data-hearth-collapse-cockpit>Collapse cockpit</button>
       </div>
 
@@ -894,6 +995,68 @@
     state.fallbackCockpitCreated = true;
 
     return cockpit;
+  }
+
+  function ensureInspectTab() {
+    if (!doc) return null;
+
+    let tab = doc.querySelector("[data-hearth-inspect-tab]");
+
+    if (!tab) {
+      tab = doc.createElement("button");
+      tab.type = "button";
+      tab.dataset.hearthInspectTab = "true";
+      tab.textContent = "Show diagnostic";
+      tab.setAttribute("aria-label", "Show Hearth diagnostic cockpit");
+      doc.body.appendChild(tab);
+    }
+
+    tab.onclick = () => {
+      setCockpitMode(state.priorDiagnosticMode === "expanded-cockpit" ? "expanded-cockpit" : "diagnostic-dock");
+    };
+
+    refs.inspectTab = tab;
+    state.inspectModeAvailable = true;
+    state.diagnosticDockRestorable = true;
+
+    return tab;
+  }
+
+  function ensureInspectButton() {
+    if (!doc || !refs.cockpit) return null;
+
+    let button =
+      refs.cockpit.querySelector("[data-hearth-inspect-planet]") ||
+      refs.cockpit.querySelector("[data-hearth-hide-diagnostic]");
+
+    const actions =
+      refs.cockpit.querySelector(".hearth-ledger-actions") ||
+      refs.copyButton?.parentElement ||
+      refs.receiptToggle?.parentElement ||
+      refs.collapseButton?.parentElement;
+
+    if (!button && actions) {
+      button = doc.createElement("button");
+      button.type = "button";
+      button.className = "hearth-ledger-button";
+      button.dataset.hearthInspectPlanet = "true";
+      button.textContent = "Inspect planet";
+
+      if (refs.collapseButton && refs.collapseButton.parentElement === actions) {
+        actions.insertBefore(button, refs.collapseButton);
+      } else {
+        actions.appendChild(button);
+      }
+    }
+
+    if (button) {
+      button.onclick = () => setCockpitMode("planet-inspect");
+      refs.inspectButton = button;
+      state.inspectModeAvailable = true;
+      state.diagnosticDockRestorable = true;
+    }
+
+    return button;
   }
 
   function hydrateCockpit() {
@@ -943,14 +1106,20 @@
     cockpit.dataset.hearthHydratedByConductor = "true";
     cockpit.dataset.hearthConductorContract = CONTRACT;
     cockpit.dataset.hearthConductorReceipt = RECEIPT;
-    cockpit.dataset.hearthMonotonicStageGuardActive = "true";
-    cockpit.dataset.hearthCooperativeCanvasHandoff = "true";
+    cockpit.dataset.hearthNewsProtocolActive = "true";
+    cockpit.dataset.hearthFibonacciSequenceActive = "true";
+    cockpit.dataset.hearthStrictCanvasReadyLatchActive = "true";
+    cockpit.dataset.hearthInspectModeAvailable = "true";
 
     state.hydratedExistingCockpit = Boolean(existing);
     state.duplicateCockpitCreated = false;
     state.partialReceiptAvailable = true;
     state.copyDiagnosticArmed = Boolean(refs.copyButton);
     state.buttonsReachable = Boolean(refs.copyButton);
+    state.copyDiagnosticPreserved = Boolean(refs.copyButton);
+
+    ensureInspectTab();
+    ensureInspectButton();
 
     if (refs.copyButton) {
       refs.copyButton.onclick = copyDiagnostic;
@@ -968,19 +1137,21 @@
 
     if (refs.collapseButton) {
       refs.collapseButton.onclick = () => {
-        if (state.completionLatched) {
-          const expanded = refs.cockpit.dataset.fullExpanded !== "true";
-          setCockpitMode(expanded ? "expanded-cockpit" : "diagnostic-dock");
+        if (state.cockpitMode === "planet-inspect") {
+          setCockpitMode("diagnostic-dock");
           return;
         }
 
-        const collapsed = refs.cockpit.dataset.collapsed !== "true";
-        refs.cockpit.dataset.collapsed = String(collapsed);
-        refs.collapseButton.textContent = collapsed ? "Open cockpit" : "Collapse cockpit";
+        if (state.cockpitMode === "expanded-cockpit") {
+          setCockpitMode("diagnostic-dock");
+          return;
+        }
+
+        setCockpitMode("expanded-cockpit");
       };
     }
 
-    setLedgerStage("F8", "Cooperative conductor hydration active", {
+    setLedgerStage("F8", "Strict latch conductor hydration active", {
       owner: "hearth.js",
       file: ACTIVE_ROUTE_FILE
     });
@@ -999,7 +1170,8 @@
 
     emit("CONDUCTOR_HYDRATED_EXISTING_COCKPIT", {
       hydratedExistingCockpit: state.hydratedExistingCockpit,
-      duplicateCockpitCreated: false
+      duplicateCockpitCreated: false,
+      inspectModeAvailable: state.inspectModeAvailable
     }, {
       stage: "F8",
       lane: "conductorHydration",
@@ -1047,8 +1219,9 @@
       dataset.hearthActiveRouteContract = CONTRACT;
       dataset.hearthRetiredClimateRoute = RETIRED_CLIMATE_ROUTE;
       dataset.hearthRetiredClimateRouteActiveCarrier = "false";
-      dataset.hearthMonotonicStageGuardActive = "true";
-      dataset.hearthCooperativeCanvasHandoff = "true";
+      dataset.hearthNewsProtocolActive = "true";
+      dataset.hearthFibonacciSequenceActive = "true";
+      dataset.hearthStrictCanvasReadyLatchActive = "true";
     }
 
     emit("RETIRED_CLIMATE_ROUTE_GUARDED", {
@@ -1114,10 +1287,14 @@
             noRectangularTextureSpill: true,
             distributedLoadLedger: true,
             monotonicStageGuard: true,
-            cooperativeCanvasBoot: true
+            cooperativeCanvasBoot: true,
+            strictCanvasReadyLatch: true,
+            newsProtocol: true,
+            fibonacciSequence: true,
+            inspectMode: true
           }
         }, {
-          profile: "hearth-cooperative-loader-carrier",
+          profile: "hearth-strict-latch-inspect-carrier",
           planetId: "hearth",
           planetLabel: "Hearth"
         });
@@ -1191,11 +1368,44 @@
     return fallback || "";
   }
 
+  function markF13(phase) {
+    if (!phase) return;
+
+    state.f13Events[phase] = true;
+
+    if (!state.f13EventOrder.includes(phase)) {
+      state.f13EventOrder.push(phase);
+    }
+
+    const all = F13_REQUIRED.every((name) => state.f13Events[name] === true);
+    state.f13SubsequenceComplete = all;
+    state.f13LastRequiredEvent = state.f13EventOrder[state.f13EventOrder.length - 1] || "";
+
+    if (phase === "CANVAS_READY" && !state.fibonacciStageAtCanvasReady) {
+      state.fibonacciStageAtCanvasReady = "F13";
+    }
+  }
+
   function handleCanvasPhase(event) {
+    const signature = phaseSignature(event || {});
+    const now = nowMs();
+
+    if (state.phaseSignatures[signature] && now - state.phaseSignatures[signature] < 2500) {
+      state.ignoredDuplicateCanvasEvents += 1;
+      return event;
+    }
+
+    state.phaseSignatures[signature] = now;
+
     const phase = event && (event.phase || event.id || event.event) ? String(event.phase || event.id || event.event) : "CANVAS_PHASE";
     const percent = clamp(Number(event.percent ?? event.progress ?? state.lastCanvasProgress ?? 78), 0, 100);
     const detail = isObject(event.detail) ? event.detail : {};
     const elapsedMs = Number(detail.elapsedMs ?? event.elapsedMs ?? state.canvasBootElapsedMs ?? 0);
+
+    if (state.completionLatched && phase !== "CANVAS_READY") {
+      state.ignoredDuplicateCanvasEvents += 1;
+      return event;
+    }
 
     state.canvasPhaseCount += 1;
     state.lastCanvasPhase = phase;
@@ -1204,6 +1414,9 @@
     state.canvasYieldCount = Math.max(Number(state.canvasYieldCount || 0), Number(detail.canvasYieldCount || 0));
     state.loaderRepaintDuringCanvasBoot = Boolean(state.loaderRepaintDuringCanvasBoot || detail.loaderRepaintDuringCanvasBoot || state.canvasYieldCount > 0);
     state.f13ProgressStreamActive = true;
+    state.mainProgressCap = Math.max(state.mainProgressCap, percent);
+
+    markF13(phase);
 
     if (phase === "CANVAS_COOPERATIVE_BOOT_STARTED") {
       state.cooperativeBootUsed = true;
@@ -1268,15 +1481,24 @@
       state.canvasReady = true;
       state.canvasCarrierMounted = true;
       state.canvasCarrierHandoffOk = true;
+      state.firstFrameRequested = true;
       state.firstFrameDetected = true;
       state.imageRendered = true;
       state.dragInspectionBound = true;
+      state.atlasBuildStarted = true;
+      state.atlasBuildComplete = true;
+      state.atlasBuildProgress = 100;
+      state.textureComposeStarted = true;
+      state.textureComposeComplete = true;
+      state.textureComposeProgress = 100;
       state.canvasBootCompletedAt = state.canvasBootCompletedAt || nowIso();
       state.canvasBootCompletedAtMs = state.canvasBootCompletedAtMs || nowMs();
       state.canvasBootElapsedMs = Number(detail.canvasBootElapsedMs || state.canvasBootElapsedMs || (state.canvasBootCompletedAtMs - state.canvasBootStartedAtMs));
-      state.postgameStatus = "CANVAS_READY_DIAGNOSTIC_DOCK_ACTIVE";
-      state.firstFailedCoordinate = "NONE_CANVAS_READY";
-      state.recommendedNextRenewalTarget = "read-postgame-canvas-or-triple-g-receipt";
+      state.finalReceiptAvailable = true;
+      state.postgameStatus = "CANVAS_READY_NEWS_GATE_PENDING";
+      state.firstFailedCoordinate = "NEWS_GATE_PENDING";
+      state.recommendedNextRenewalTarget = "strict-latch-news-gate";
+      state.fibonacciStageAtCanvasReady = "F13";
     }
 
     const message = event.message || phaseToMessage(phase, percent, detail);
@@ -1289,12 +1511,11 @@
       detail: clonePlain(detail)
     });
 
-    if (state.phaseEvents.length > 180) {
-      state.phaseEvents.splice(0, state.phaseEvents.length - 180);
+    if (state.phaseEvents.length > 120) {
+      state.phaseEvents.splice(0, state.phaseEvents.length - 120);
     }
 
     state.latestVisibleEvent = phase;
-    state.mainProgressCap = Math.max(state.mainProgressCap, percent);
 
     setLedgerStage("F13", message, {
       owner: "hearth.js",
@@ -1312,12 +1533,15 @@
       detail
     });
 
+    evaluateNewsGates();
     publishGlobals();
     render();
 
-    if (phase === "CANVAS_READY" || (state.canvasCarrierMounted && state.firstFrameDetected && state.imageRendered && state.dragInspectionBound)) {
-      state.finalReceiptAvailable = true;
-      tryLatchCompletion();
+    if (phase === "CANVAS_READY") {
+      tryLatchCompletion("canvas-ready-phase");
+    } else if (!canvasReadinessBarrierOpen()) {
+      state.prematureLatchPrevented = true;
+      state.completionLatchBlockedUntilCanvasReady = true;
     }
 
     return event;
@@ -1347,9 +1571,7 @@
     }
     if (phase === "ATLAS_BUILD_COMPLETE") return `Atlas build complete · elapsed ${elapsed}`;
     if (phase === "TEXTURE_COMPOSE_STARTED") return `Texture composition started · elapsed ${elapsed}`;
-    if (phase === "TEXTURE_COMPOSE_PROGRESS") {
-      return `Texture composition active · ${detail.textureComposeProgress || percent}% · elapsed ${elapsed}`;
-    }
+    if (phase === "TEXTURE_COMPOSE_PROGRESS") return `Texture composition active · ${detail.textureComposeProgress || percent}% · elapsed ${elapsed}`;
     if (phase === "TEXTURE_COMPOSE_COMPLETE") return `Texture composition complete · elapsed ${elapsed}`;
     if (phase === "FIRST_FRAME_REQUESTED") return `First frame requested · elapsed ${elapsed}`;
     if (phase === "FIRST_FRAME_DETECTED") return `First frame detected · elapsed ${elapsed}`;
@@ -1363,7 +1585,7 @@
 
     if (api && isFunction(api.getReceipt)) {
       try {
-        const receipt = api.getReceipt("hearth-cooperative-conductor-reconcile");
+        const receipt = api.getReceipt("hearth-strict-latch-inspect-conductor-reconcile");
         if (receipt && isObject(receipt)) return receipt;
       } catch (error) {
         recordError("CANVAS_RECEIPT_READ_FAILED", error && error.message ? error.message : String(error));
@@ -1398,77 +1620,50 @@
       distributedLoadLedger: true,
       monotonicStageGuard: true,
       cooperativeCanvasBoot: true,
+      strictCanvasReadyLatch: true,
+      newsProtocol: true,
+      fibonacciSequence: true,
       diagnosticDockAfterLatch: true,
+      inspectModeAvailable: true,
       loadLedger: refs.ledger || null,
       callbacks: {
         onCanvasPhase: handleCanvasPhase,
         onCanvasProgress: handleCanvasPhase,
-        onMounted: (receipt) => {
-          state.canvasCarrierMounted = true;
-          state.canvasCarrierHandoffOk = true;
-          handleCanvasReceipt(receipt, "onMounted");
-        },
-        onFirstFrame: (receipt) => {
-          state.firstFrameRequested = true;
-          state.firstFrameDetected = true;
-          state.imageRendered = true;
-          handleCanvasReceipt(receipt, "onFirstFrame");
-        },
-        onRendered: (receipt) => {
-          state.firstFrameRequested = true;
-          state.firstFrameDetected = true;
-          state.imageRendered = true;
-          handleCanvasReceipt(receipt, "onRendered");
-        },
-        onDragBound: (receipt) => {
-          state.dragInspectionBound = true;
-          handleCanvasReceipt(receipt, "onDragBound");
-        },
-        onReady: (receipt) => {
-          state.canvasReady = true;
-          state.finalReceiptAvailable = true;
-          handleCanvasReceipt(receipt, "onReady");
-        },
-        onError: (receipt) => {
-          handleCanvasReceipt(receipt, "onError");
-        }
+        onMounted: (receipt) => handleCanvasReceipt(receipt, "onMounted"),
+        onFirstFrame: (receipt) => handleCanvasReceipt(receipt, "onFirstFrame"),
+        onRendered: (receipt) => handleCanvasReceipt(receipt, "onRendered"),
+        onDragBound: (receipt) => handleCanvasReceipt(receipt, "onDragBound"),
+        onReady: (receipt) => handleCanvasReceipt(receipt, "onReady"),
+        onError: (receipt) => handleCanvasReceipt(receipt, "onError")
       }
     };
   }
 
   function updateCanvasWaitMessage() {
-    if (!state.canvasCarrierRequested || state.canvasCarrierMounted || state.completionLatched) return;
+    if (!state.canvasCarrierRequested || state.canvasReady || state.completionLatched) return;
 
-    state.canvasBootElapsedMs = state.canvasBootStartedAtMs ? nowMs() - state.canvasBootStartedAtMs : 0;
+    state.canvasBootElapsedMs = state.canvasBootStartedAtMs ? nowMs() - state.canvasBootStartedAtMs : state.canvasBootElapsedMs;
     const elapsed = formatElapsed(state.canvasBootElapsedMs);
 
-    let message = `Canvas cooperative boot pending · elapsed ${elapsed}`;
+    let message = `Strict F13 canvas readiness barrier active · elapsed ${elapsed}`;
 
     if (state.cooperativeBootUsed) {
-      message = `Canvas cooperative boot active · ${state.lastCanvasPhase || "starting"} · elapsed ${elapsed}`;
+      message = `F13 active · ${state.lastCanvasPhase || "cooperative canvas boot"} · elapsed ${elapsed}`;
     } else if (state.syncBootFallbackUsed) {
-      message = `Synchronous fallback boot active · browser may pause · elapsed ${elapsed}`;
-    }
-
-    if (state.canvasBootElapsedMs >= 30000 && state.cooperativeBootUsed) {
-      message = `Long cooperative canvas boot · ${state.lastCanvasPhase || "active"} · receipt alive · elapsed ${elapsed}`;
-    } else if (state.canvasBootElapsedMs >= 12000 && state.cooperativeBootUsed) {
-      message = `Extended cooperative canvas boot · ${state.lastCanvasPhase || "active"} · elapsed ${elapsed}`;
-    } else if (state.canvasBootElapsedMs >= 6000 && state.cooperativeBootUsed) {
-      message = `Canvas still booting cooperatively · diagnostic alive · elapsed ${elapsed}`;
+      message = `Sync fallback detected · latch blocked · elapsed ${elapsed}`;
     }
 
     setLedgerLane("canvasAndDiagnostic", {
       status: STATUS.LOADING,
       progress: Math.max(78, Number(ledgerState().lanes?.canvasAndDiagnostic?.progress || 0)),
-      event: "CANVAS_COOPERATIVE_BOOT_WAIT_VISIBLE",
+      event: "STRICT_CANVAS_READY_BARRIER_WAIT",
       stage: "F13",
       owner: "hearth.js",
       file: CANVAS_AUTHORITY_FILE,
       message
     });
 
-    state.latestVisibleEvent = "CANVAS_COOPERATIVE_BOOT_WAIT_VISIBLE";
+    state.latestVisibleEvent = "STRICT_CANVAS_READY_BARRIER_WAIT";
   }
 
   function callCanvasCarrier() {
@@ -1538,10 +1733,10 @@
     state.lastCanvasPhase = state.cooperativeBootUsed ? "CANVAS_COOPERATIVE_BOOT_SELECTED" : "SYNC_BOOT_FALLBACK_SELECTED";
     state.lastCanvasProgress = state.cooperativeBootUsed ? 78 : 76;
     state.f13ProgressStreamActive = state.cooperativeBootUsed;
-    state.postgameStatus = state.cooperativeBootUsed ? "COOPERATIVE_CANVAS_BOOT_STARTED" : "SYNC_BOOT_FALLBACK_USED";
-    state.firstFailedCoordinate = state.cooperativeBootUsed ? "F13_CANVAS_COOPERATIVE_BOOT_STARTED" : "F13_SYNC_BOOT_FALLBACK";
+    state.postgameStatus = state.cooperativeBootUsed ? "STRICT_CANVAS_READY_BARRIER_ACTIVE" : "SYNC_BOOT_FALLBACK_USED";
+    state.firstFailedCoordinate = state.cooperativeBootUsed ? "F13_CANVAS_READY_PENDING" : "F13_SYNC_BOOT_FALLBACK";
 
-    setLedgerStage("F13", state.cooperativeBootUsed ? "Canvas cooperative boot starting" : "Canvas synchronous fallback starting", {
+    setLedgerStage("F13", state.cooperativeBootUsed ? "Strict F13 canvas readiness barrier active" : "Canvas synchronous fallback starting", {
       owner: "hearth.js",
       file: CANVAS_AUTHORITY_FILE
     });
@@ -1554,8 +1749,8 @@
       owner: "hearth.js",
       file: CANVAS_AUTHORITY_FILE,
       message: state.cooperativeBootUsed
-        ? "Canvas cooperative boot selected."
-        : "Synchronous canvas fallback selected; loader may pause."
+        ? "Canvas cooperative boot selected; F21 blocked until CANVAS_READY."
+        : "Synchronous canvas fallback selected; F21 blocked until canvas readiness."
     });
 
     emit("CANVAS_CARRIER_METHOD_SELECTED", {
@@ -1618,7 +1813,7 @@
       if (result && isFunction(result.then)) {
         result
           .then((receipt) => {
-            handleCanvasReceipt(receipt, "cooperative-promise-resolved");
+            handleCanvasReceipt(receipt, "canvas-promise-resolved");
           })
           .catch((error) => {
             state.canvasCarrierHandoffOk = false;
@@ -1698,14 +1893,11 @@
 
     state.firstFrameDetected = Boolean(
       state.firstFrameDetected ||
-      bool(dataset.hearthFirstFrameDetected) ||
-      bool(dataset.hearthImageRendered) ||
-      bool(dataset.hearthCanvasImageRendered)
+      bool(dataset.hearthFirstFrameDetected)
     );
 
     state.imageRendered = Boolean(
       state.imageRendered ||
-      state.firstFrameDetected ||
       bool(dataset.hearthImageRendered) ||
       bool(dataset.hearthCanvasImageRendered)
     );
@@ -1715,8 +1907,7 @@
       bool(dataset.hearthDragInspectionBound) ||
       bool(dataset.hearthControlsBound) ||
       (mount && bool(mount.dataset.hearthDragInspectionBound)) ||
-      (mount && bool(mount.dataset.hearthControlsBound)) ||
-      (mount && mount.style && mount.style.touchAction === "none")
+      (mount && bool(mount.dataset.hearthControlsBound))
     );
 
     state.canvasReady = Boolean(
@@ -1764,14 +1955,8 @@
     state.textureComposeProgress = Math.max(Number(state.textureComposeProgress || 0), Number(dataset.hearthTextureComposeProgress || 0));
     state.textureComposeComplete = Boolean(state.textureComposeComplete || bool(dataset.hearthTextureComposeComplete));
 
-    if (state.canvasCarrierMounted && !state.firstFrameDetected && !state.imageRendered) {
-      root.requestAnimationFrame(() => {
-        if (state.canvasCarrierMounted) {
-          state.firstFrameDetected = true;
-          state.imageRendered = true;
-          reconcileAll("request-animation-frame-first-frame-inferred");
-        }
-      });
+    if (state.canvasReady) {
+      markF13("CANVAS_READY");
     }
   }
 
@@ -1805,16 +1990,12 @@
 
       state.firstFrameDetected = Boolean(
         state.firstFrameDetected ||
-        value.firstFrameDetected ||
-        value.imageRendered ||
-        Number(value.frames || 0) > 0
+        value.firstFrameDetected
       );
 
       state.imageRendered = Boolean(
         state.imageRendered ||
-        state.firstFrameDetected ||
-        value.imageRendered ||
-        Number(value.frames || 0) > 0
+        value.imageRendered
       );
 
       state.dragInspectionBound = Boolean(
@@ -1845,20 +2026,14 @@
       if (Array.isArray(value.phaseEvents)) {
         value.phaseEvents.forEach((event) => {
           if (!event || !event.phase) return;
-          if (state.phaseEvents.some((existing) => existing.at === event.at && existing.phase === event.phase)) return;
-          state.phaseEvents.push(clonePlain(event));
+          handleCanvasPhase(event);
         });
-        if (state.phaseEvents.length > 180) {
-          state.phaseEvents.splice(0, state.phaseEvents.length - 180);
-        }
       }
 
-      if (value.postgameStatus && value.postgameStatus !== "COOPERATIVE_CANVAS_BOOT_PENDING") {
-        state.postgameStatus = value.postgameStatus;
-      }
-
-      if (value.firstFailedCoordinate) {
-        state.firstFailedCoordinate = value.firstFailedCoordinate;
+      if (state.canvasReady || value.canvasReady) {
+        markF13("CANVAS_READY");
+        state.finalReceiptAvailable = true;
+        state.postgameStatus = "CANVAS_READY_NEWS_GATE_PENDING";
       }
     }
 
@@ -1883,30 +2058,19 @@
         owner: "hearth.js",
         file: CANVAS_AUTHORITY_FILE,
         message: state.canvasReady
-          ? "Canvas ready."
-          : (state.imageRendered ? "Canvas first frame detected." : "Canvas carrier mounted; first frame proof pending.")
+          ? "Canvas ready; strict latch may evaluate NEWS gate."
+          : (state.imageRendered ? "Canvas first frame detected; strict latch still waiting for CANVAS_READY." : "Canvas carrier mounted; strict latch still closed.")
       });
     }
 
-    if (state.canvasReady || (state.canvasCarrierMounted && (state.firstFrameDetected || state.imageRendered) && state.dragInspectionBound)) {
-      state.finalReceiptAvailable = true;
-      state.postgameStatus = "CANVAS_READY_DIAGNOSTIC_DOCK_ACTIVE";
-      state.firstFailedCoordinate = "NONE_CANVAS_READY";
-      state.recommendedNextRenewalTarget = "read-postgame-canvas-or-triple-g-receipt";
+    evaluateNewsGates();
 
-      setLedgerLane("canvasAndDiagnostic", {
-        status: STATUS.FINAL_READY,
-        progress: 100,
-        event: "CANVAS_READY",
-        stage: "F13",
-        owner: "hearth.js",
-        file: ACTIVE_ROUTE_FILE,
-        message: "Canvas ready; final conductor receipt available."
-      });
-
-      tryLatchCompletion();
+    if (canvasReadinessBarrierOpen()) {
+      tryLatchCompletion(`reconcile-${reason}`);
     } else if (!state.completionLatched && state.canvasCarrierRequested) {
       updateCanvasWaitMessage();
+      state.prematureLatchPrevented = true;
+      state.completionLatchBlockedUntilCanvasReady = true;
     }
 
     if (!state.completionLatched && reason !== "heartbeat") {
@@ -1942,29 +2106,11 @@
     );
 
     state.firstFrameRequested = Boolean(state.firstFrameRequested || value.firstFrameRequested);
-
-    state.firstFrameDetected = Boolean(
-      state.firstFrameDetected ||
-      value.firstFrameDetected ||
-      value.imageRendered ||
-      Number(value.frames || 0) > 0
-    );
-
-    state.imageRendered = Boolean(
-      state.imageRendered ||
-      state.firstFrameDetected ||
-      value.imageRendered ||
-      Number(value.frames || 0) > 0
-    );
-
-    state.dragInspectionBound = Boolean(
-      state.dragInspectionBound ||
-      value.dragInspectionBound ||
-      value.pointerControlsBound ||
-      value.controlsBound
-    );
-
+    state.firstFrameDetected = Boolean(state.firstFrameDetected || value.firstFrameDetected);
+    state.imageRendered = Boolean(state.imageRendered || value.imageRendered);
+    state.dragInspectionBound = Boolean(state.dragInspectionBound || value.dragInspectionBound || value.pointerControlsBound || value.controlsBound);
     state.canvasReady = Boolean(state.canvasReady || value.canvasReady);
+
     state.canvasBootElapsedMs = Math.max(Number(state.canvasBootElapsedMs || 0), Number(value.canvasBootElapsedMs || 0));
     state.canvasYieldCount = Math.max(Number(state.canvasYieldCount || 0), Number(value.canvasYieldCount || 0));
     state.canvasPhaseCount = Math.max(Number(state.canvasPhaseCount || 0), Number(value.canvasPhaseCount || 0));
@@ -1972,46 +2118,158 @@
     state.lastCanvasProgress = Math.max(Number(state.lastCanvasProgress || 0), Number(value.lastCanvasProgress || 0));
     state.loaderRepaintDuringCanvasBoot = Boolean(state.loaderRepaintDuringCanvasBoot || value.loaderRepaintDuringCanvasBoot || state.canvasYieldCount > 0);
     state.f13ProgressStreamActive = Boolean(state.f13ProgressStreamActive || value.f13ProgressStreamActive);
+
+    state.atlasBuildStarted = Boolean(state.atlasBuildStarted || value.atlasBuildStarted);
+    state.atlasBuildProgress = Math.max(Number(state.atlasBuildProgress || 0), Number(value.atlasBuildProgress || 0));
+    state.atlasBuildComplete = Boolean(state.atlasBuildComplete || value.atlasBuildComplete);
+
+    state.textureComposeStarted = Boolean(state.textureComposeStarted || value.textureComposeStarted);
+    state.textureComposeProgress = Math.max(Number(state.textureComposeProgress || 0), Number(value.textureComposeProgress || 0));
+    state.textureComposeComplete = Boolean(state.textureComposeComplete || value.textureComposeComplete);
+
+    if (state.canvasReady) {
+      markF13("CANVAS_READY");
+      state.finalReceiptAvailable = true;
+    }
+  }
+
+  function evaluateNewsGates() {
+    state.northGateReady = Boolean(
+      state.canvasReady &&
+      state.atlasBuildComplete &&
+      state.textureComposeComplete &&
+      state.firstFrameDetected &&
+      state.dragInspectionBound
+    );
+
+    state.eastGateReady = Boolean(
+      state.cooperativeBootUsed &&
+      !state.syncBootFallbackUsed &&
+      state.canvasCarrierMethod === "bootCooperative" &&
+      state.canvasCarrierRequested &&
+      state.canvasCarrierHandoffOk
+    );
+
+    state.westGateReady = Boolean(
+      state.copyDiagnosticArmed &&
+      state.finalReceiptAvailable &&
+      state.receiptOverlayIndependent &&
+      state.buttonsReachable
+    );
+
+    state.southGateReady = Boolean(
+      state.canvasCarrierMounted &&
+      state.imageRendered &&
+      state.dragInspectionBound &&
+      state.inspectModeAvailable
+    );
+
+    state.newsGatePassedBeforeF21 = Boolean(
+      state.northGateReady &&
+      state.eastGateReady &&
+      state.westGateReady &&
+      state.southGateReady
+    );
+
+    state.f13SubsequenceComplete = F13_REQUIRED.every((name) => state.f13Events[name] === true);
+    state.canvasReadinessBarrierOpen = Boolean(
+      state.newsGatePassedBeforeF21 &&
+      state.f13SubsequenceComplete &&
+      state.f13Events.CANVAS_READY === true &&
+      state.canvasReady
+    );
+
+    if (state.canvasReadinessBarrierOpen) {
+      state.firstFailedCoordinate = "NONE_CANVAS_READY_NEWS_GATE_PASSED";
+      state.recommendedNextRenewalTarget = "read-postgame-canvas-or-triple-g-receipt";
+    }
+
+    return state.newsGatePassedBeforeF21;
+  }
+
+  function canvasReadinessBarrierOpen() {
+    evaluateNewsGates();
+    return state.canvasReadinessBarrierOpen;
   }
 
   function completionReady() {
-    return (
-      state.hydratedExistingCockpit === true &&
-      state.loadLedgerPresent === true &&
-      state.canvasApiPresent === true &&
-      state.canvasCarrierRequested === true &&
-      state.canvasCarrierMounted === true &&
-      state.canvasCarrierHandoffOk === true &&
-      (state.firstFrameDetected === true || state.imageRendered === true) &&
-      state.dragInspectionBound === true &&
-      state.copyDiagnosticArmed === true &&
-      state.buttonsReachable === true &&
-      state.partialReceiptAvailable === true &&
-      state.finalReceiptAvailable === true &&
-      (state.canvasReady === true || state.postgameStatus === "CANVAS_READY_DIAGNOSTIC_DOCK_ACTIVE")
+    return Boolean(
+      state.hydratedExistingCockpit &&
+      state.loadLedgerPresent &&
+      state.canvasApiPresent &&
+      state.cooperativeBootAvailable &&
+      state.cooperativeBootUsed &&
+      !state.syncBootFallbackUsed &&
+      state.canvasCarrierRequested &&
+      state.canvasCarrierMounted &&
+      state.canvasCarrierHandoffOk &&
+      state.atlasBuildStarted &&
+      state.atlasBuildComplete &&
+      state.textureComposeStarted &&
+      state.textureComposeComplete &&
+      state.firstFrameRequested &&
+      state.firstFrameDetected &&
+      state.imageRendered &&
+      state.dragInspectionBound &&
+      state.canvasReady &&
+      state.finalReceiptAvailable &&
+      state.copyDiagnosticArmed &&
+      state.buttonsReachable &&
+      state.inspectModeAvailable &&
+      canvasReadinessBarrierOpen()
     );
   }
 
-  function tryLatchCompletion() {
-    if (state.completionLatched || !completionReady()) return false;
+  function tryLatchCompletion(reason = "strict-latch-evaluate") {
+    if (state.completionLatched) return true;
+
+    if (!completionReady()) {
+      state.prematureLatchPrevented = true;
+      state.completionLatchBlockedUntilCanvasReady = true;
+      state.postgameStatus = "STRICT_CANVAS_READY_LATCH_BLOCKED";
+      state.firstFailedCoordinate = firstMissingReadinessCoordinate();
+
+      emit("F21_LATCH_BLOCKED_UNTIL_CANVAS_READY", {
+        reason,
+        firstMissingCoordinate: state.firstFailedCoordinate,
+        canvasReadinessBarrierOpen: state.canvasReadinessBarrierOpen,
+        northGateReady: state.northGateReady,
+        eastGateReady: state.eastGateReady,
+        westGateReady: state.westGateReady,
+        southGateReady: state.southGateReady
+      }, {
+        visible: false,
+        stage: "F13",
+        lane: "completionLatch",
+        status: STATUS.HELD
+      });
+
+      return false;
+    }
 
     state.fibonacciStage = "F21";
     state.currentFibonacciStage = "F21";
     state.highestStageReached = "F21";
     state.highestStageRank = stageRank("F21");
+    state.fibonacciStageAtCompletionLatch = "F21";
+    state.f21AfterF13M = state.f13Events.CANVAS_READY === true;
     state.completionLatched = true;
     state.visibleLoadingActive = false;
     state.diagnosticCockpitReady = true;
     state.latestVisibleEvent = "COMPLETION_LATCHED";
     state.mainProgressCap = 100;
     state.mainDisplayProgress = 100;
-    state.cockpitMode = "diagnostic-dock";
-    state.dockVisible = true;
-    state.fullCockpitExpanded = false;
-    state.planetObstructionReduced = true;
-    state.postgameStatus = "CANVAS_READY_DIAGNOSTIC_DOCK_ACTIVE";
-    state.firstFailedCoordinate = "NONE_CANVAS_READY";
+    state.completionLatchedAfterCanvasReady = true;
+    state.postgameStatus = state.planetInspectModeActive ? "PLANET_INSPECT_MODE_ACTIVE" : "CANVAS_READY_DIAGNOSTIC_DOCK_ACTIVE";
+    state.firstFailedCoordinate = "NONE_CANVAS_READY_NEWS_GATE_PASSED";
     state.recommendedNextRenewalTarget = "read-postgame-canvas-or-triple-g-receipt";
+
+    if (state.cockpitMode !== "planet-inspect") {
+      state.cockpitMode = "diagnostic-dock";
+      state.dockVisible = true;
+      state.fullCockpitExpanded = false;
+      state.planetObstructionReduced = true;
+    }
 
     const led = ledgerState();
     led.completionLatched = true;
@@ -2020,35 +2278,42 @@
     led.currentFibonacciStage = "F21";
     led.highestStageReached = "F21";
     led.highestStageRank = stageRank("F21");
-    led.cockpitMode = "diagnostic-dock";
-    led.dockVisible = true;
-    led.fullCockpitExpanded = false;
+    led.cockpitMode = state.cockpitMode;
+    led.dockVisible = state.dockVisible;
+    led.fullCockpitExpanded = state.fullCockpitExpanded;
     led.planetObstructionReduced = true;
     led.finalReceiptAvailable = true;
     led.copyDiagnosticArmed = true;
     led.partialReceiptAvailable = true;
+    led.newsGatePassedBeforeF21 = true;
 
-    if (refs.ledger && isFunction(refs.ledger.latchCompletion)) {
-      refs.ledger.latchCompletion("READY · Planet visible · diagnostic available");
-    }
+    setLedgerStage("F21", "NEWS gate passed; CANVAS_READY confirmed; F21 latch lawful.", {
+      owner: "hearth.js",
+      file: ACTIVE_ROUTE_FILE
+    });
 
     setLedgerLane("completionLatch", {
       status: STATUS.LATCHED,
       progress: 100,
-      event: "COMPLETION_LATCHED",
+      event: "COMPLETION_LATCHED_AFTER_CANVAS_READY",
       stage: "F21",
       owner: "hearth.js",
       file: ACTIVE_ROUTE_FILE,
-      message: "READY · Planet visible · diagnostic available"
+      message: "READY · Planet visible · diagnostic available · inspect mode available"
     });
 
-    emitLocal("COMPLETION_LATCHED", {
-      diagnosticCockpitReady: true,
-      cockpitMode: "diagnostic-dock",
-      planetObstructionReduced: true
+    emitLocal("COMPLETION_LATCHED_AFTER_CANVAS_READY", {
+      reason,
+      newsGatePassedBeforeF21: true,
+      f21AfterF13M: state.f21AfterF13M,
+      canvasReady: state.canvasReady,
+      inspectModeAvailable: state.inspectModeAvailable
     }, true);
 
-    setCockpitMode("diagnostic-dock");
+    if (state.cockpitMode !== "planet-inspect") {
+      setCockpitMode("diagnostic-dock");
+    }
+
     enforcePostLatchVisibleState();
     render();
     publishGlobals();
@@ -2056,25 +2321,115 @@
     return true;
   }
 
+  function firstMissingReadinessCoordinate() {
+    const checks = [
+      ["hydratedExistingCockpit", state.hydratedExistingCockpit],
+      ["loadLedgerPresent", state.loadLedgerPresent],
+      ["canvasApiPresent", state.canvasApiPresent],
+      ["cooperativeBootAvailable", state.cooperativeBootAvailable],
+      ["cooperativeBootUsed", state.cooperativeBootUsed],
+      ["syncBootFallbackUsed_false", !state.syncBootFallbackUsed],
+      ["canvasCarrierRequested", state.canvasCarrierRequested],
+      ["canvasCarrierMounted", state.canvasCarrierMounted],
+      ["canvasCarrierHandoffOk", state.canvasCarrierHandoffOk],
+      ["atlasBuildStarted", state.atlasBuildStarted],
+      ["atlasBuildComplete", state.atlasBuildComplete],
+      ["textureComposeStarted", state.textureComposeStarted],
+      ["textureComposeComplete", state.textureComposeComplete],
+      ["firstFrameRequested", state.firstFrameRequested],
+      ["firstFrameDetected", state.firstFrameDetected],
+      ["imageRendered", state.imageRendered],
+      ["dragInspectionBound", state.dragInspectionBound],
+      ["canvasReady", state.canvasReady],
+      ["finalReceiptAvailable", state.finalReceiptAvailable],
+      ["copyDiagnosticArmed", state.copyDiagnosticArmed],
+      ["buttonsReachable", state.buttonsReachable],
+      ["inspectModeAvailable", state.inspectModeAvailable],
+      ["northGateReady", state.northGateReady],
+      ["eastGateReady", state.eastGateReady],
+      ["westGateReady", state.westGateReady],
+      ["southGateReady", state.southGateReady],
+      ["f13SubsequenceComplete", state.f13SubsequenceComplete]
+    ];
+
+    const missing = checks.find((item) => !item[1]);
+    return missing ? `WAITING_${missing[0]}` : "NONE";
+  }
+
   function setCockpitMode(mode) {
     if (!refs.cockpit) return;
 
-    const expanded = mode === "expanded-cockpit";
+    const next = mode || "diagnostic-dock";
 
-    state.cockpitMode = expanded ? "expanded-cockpit" : "diagnostic-dock";
-    state.dockVisible = !expanded;
-    state.fullCockpitExpanded = expanded;
-    state.planetObstructionReduced = !expanded;
+    if (next === "planet-inspect") {
+      if (state.cockpitMode !== "planet-inspect") {
+        state.priorDiagnosticMode = state.cockpitMode === "expanded-cockpit" ? "expanded-cockpit" : "diagnostic-dock";
+      }
 
-    refs.cockpit.dataset.cockpitMode = expanded ? "expanded-cockpit" : "diagnostic-dock";
-    refs.cockpit.dataset.fullExpanded = String(expanded);
-    refs.cockpit.dataset.hearthCockpitMode = refs.cockpit.dataset.cockpitMode;
-    refs.cockpit.dataset.hearthDockVisible = String(!expanded);
-    refs.cockpit.dataset.hearthPlanetObstructionReduced = String(!expanded);
+      state.cockpitMode = "planet-inspect";
+      state.planetInspectModeActive = true;
+      state.diagnosticDockHiddenForInspection = true;
+      state.showDiagnosticTabVisible = true;
+      state.dockVisible = false;
+      state.fullCockpitExpanded = false;
+      state.planetObstructionReduced = true;
+      state.diagnosticDockRestorable = true;
+      state.postgameStatus = "PLANET_INSPECT_MODE_ACTIVE";
+    } else if (next === "expanded-cockpit") {
+      state.cockpitMode = "expanded-cockpit";
+      state.planetInspectModeActive = false;
+      state.diagnosticDockHiddenForInspection = false;
+      state.showDiagnosticTabVisible = false;
+      state.dockVisible = true;
+      state.fullCockpitExpanded = true;
+      state.planetObstructionReduced = false;
+      state.postgameStatus = state.completionLatched ? "CANVAS_READY_DIAGNOSTIC_DOCK_ACTIVE" : state.postgameStatus;
+      state.priorDiagnosticMode = "expanded-cockpit";
+    } else {
+      state.cockpitMode = "diagnostic-dock";
+      state.planetInspectModeActive = false;
+      state.diagnosticDockHiddenForInspection = false;
+      state.showDiagnosticTabVisible = false;
+      state.dockVisible = true;
+      state.fullCockpitExpanded = false;
+      state.planetObstructionReduced = true;
+      state.postgameStatus = state.completionLatched ? "CANVAS_READY_DIAGNOSTIC_DOCK_ACTIVE" : state.postgameStatus;
+      state.priorDiagnosticMode = "diagnostic-dock";
+    }
+
+    refs.cockpit.dataset.cockpitMode = state.cockpitMode;
+    refs.cockpit.dataset.fullExpanded = String(state.fullCockpitExpanded);
+    refs.cockpit.dataset.hearthCockpitMode = state.cockpitMode;
+    refs.cockpit.dataset.hearthDockVisible = String(state.dockVisible);
+    refs.cockpit.dataset.hearthPlanetObstructionReduced = String(state.planetObstructionReduced);
+    refs.cockpit.dataset.hearthPlanetInspect = String(state.planetInspectModeActive);
     refs.cockpit.dataset.collapsed = "false";
 
+    if (refs.mount) {
+      refs.mount.dataset.hearthPlanetInspect = String(state.planetInspectModeActive);
+    }
+
+    if (doc && doc.documentElement) {
+      doc.documentElement.dataset.hearthPlanetInspect = String(state.planetInspectModeActive);
+    }
+
+    if (refs.inspectTab) {
+      refs.inspectTab.hidden = !state.planetInspectModeActive;
+      refs.inspectTab.dataset.visible = String(state.planetInspectModeActive);
+    }
+
+    if (refs.inspectButton) {
+      refs.inspectButton.textContent = state.planetInspectModeActive ? "Show diagnostic" : "Inspect planet";
+      refs.inspectButton.onclick = () => {
+        if (state.planetInspectModeActive) setCockpitMode("diagnostic-dock");
+        else setCockpitMode("planet-inspect");
+      };
+    }
+
     if (refs.collapseButton) {
-      refs.collapseButton.textContent = expanded ? "Collapse dock" : "Expand cockpit";
+      if (state.cockpitMode === "expanded-cockpit") refs.collapseButton.textContent = "Collapse dock";
+      else if (state.cockpitMode === "planet-inspect") refs.collapseButton.textContent = "Show diagnostic";
+      else refs.collapseButton.textContent = "Expand cockpit";
     }
 
     const led = ledgerState();
@@ -2082,6 +2437,23 @@
     led.dockVisible = state.dockVisible;
     led.fullCockpitExpanded = state.fullCockpitExpanded;
     led.planetObstructionReduced = state.planetObstructionReduced;
+    led.planetInspectModeActive = state.planetInspectModeActive;
+    led.showDiagnosticTabVisible = state.showDiagnosticTabVisible;
+
+    emit("COCKPIT_MODE_SET", {
+      mode: state.cockpitMode,
+      planetInspectModeActive: state.planetInspectModeActive,
+      diagnosticDockHiddenForInspection: state.diagnosticDockHiddenForInspection,
+      showDiagnosticTabVisible: state.showDiagnosticTabVisible
+    }, {
+      visible: false,
+      stage: state.completionLatched ? "F21" : state.currentFibonacciStage,
+      lane: "completionLatch",
+      status: STATUS.READY
+    });
+
+    render();
+    publishGlobals();
   }
 
   function enforcePostLatchVisibleState() {
@@ -2095,7 +2467,6 @@
     state.mainDisplayProgress = 100;
     state.visibleLoadingActive = false;
     state.diagnosticCockpitReady = true;
-    state.latestVisibleEvent = "COMPLETION_LATCHED";
 
     const led = ledgerState();
     led.currentFibonacciStage = "F21";
@@ -2104,7 +2475,7 @@
     led.completionLatched = true;
     led.visibleLoadingActive = false;
     led.diagnosticCockpitReady = true;
-    led.cockpitMode = state.cockpitMode || "diagnostic-dock";
+    led.cockpitMode = state.cockpitMode;
     led.visualPassClaimed = false;
 
     if (refs.cockpit) {
@@ -2112,8 +2483,13 @@
       refs.cockpit.dataset.hearthCompletionLatched = "true";
       refs.cockpit.dataset.hearthVisibleLoadingActive = "false";
       refs.cockpit.dataset.hearthDiagnosticCockpitReady = "true";
-      refs.cockpit.dataset.cockpitMode = state.cockpitMode || "diagnostic-dock";
+      refs.cockpit.dataset.cockpitMode = state.cockpitMode;
       refs.cockpit.dataset.fullExpanded = String(state.fullCockpitExpanded);
+      refs.cockpit.dataset.hearthPlanetInspect = String(state.planetInspectModeActive);
+    }
+
+    if (doc && doc.documentElement) {
+      doc.documentElement.dataset.hearthPlanetInspect = String(state.planetInspectModeActive);
     }
   }
 
@@ -2182,10 +2558,12 @@
     refs.cockpit.dataset.hearthCompletionLatched = String(state.completionLatched);
     refs.cockpit.dataset.hearthDiagnosticCockpitReady = String(state.diagnosticCockpitReady);
     refs.cockpit.dataset.hearthVisibleLoadingActive = String(state.visibleLoadingActive);
-    refs.cockpit.dataset.hearthMonotonicStageGuardActive = "true";
-    refs.cockpit.dataset.hearthCooperativeCanvasHandoff = "true";
+    refs.cockpit.dataset.hearthStrictCanvasReadyLatchActive = "true";
+    refs.cockpit.dataset.hearthNewsProtocolActive = "true";
+    refs.cockpit.dataset.hearthFibonacciSequenceActive = "true";
     refs.cockpit.dataset.cockpitMode = state.cockpitMode;
     refs.cockpit.dataset.fullExpanded = String(state.fullCockpitExpanded);
+    refs.cockpit.dataset.hearthPlanetInspect = String(state.planetInspectModeActive);
 
     if (refs.title) {
       refs.title.textContent = state.completionLatched
@@ -2201,11 +2579,11 @@
 
     if (refs.heartbeat) {
       if (state.completionLatched) {
-        refs.heartbeat.textContent = `heartbeat=quiet · latched=true · elapsed=${formatElapsed(elapsed)}`;
+        refs.heartbeat.textContent = `NEWS=${state.newsGatePassedBeforeF21} · F13M=${state.f21AfterF13M} · elapsed=${formatElapsed(elapsed)}`;
       } else if (stage === "F13") {
-        const phase = state.lastCanvasPhase || "CANVAS_BOOT_PENDING";
+        const phase = state.lastCanvasPhase || "CANVAS_READY_PENDING";
         const canvasElapsed = state.canvasBootStartedAtMs ? nowMs() - state.canvasBootStartedAtMs : state.canvasBootElapsedMs;
-        refs.heartbeat.textContent = `cooperative=${state.cooperativeBootUsed} · phase=${phase} · elapsed=${formatElapsed(canvasElapsed)}`;
+        refs.heartbeat.textContent = `strict-latch=true · phase=${phase} · elapsed=${formatElapsed(canvasElapsed)}`;
       } else {
         refs.heartbeat.textContent = `heartbeat=active · stage=${stage} · elapsed=${formatElapsed(elapsed)}`;
       }
@@ -2213,7 +2591,7 @@
 
     if (refs.latest) {
       refs.latest.textContent = state.completionLatched
-        ? "latest=COMPLETION_LATCHED · READY"
+        ? "latest=COMPLETION_LATCHED_AFTER_CANVAS_READY · READY"
         : `latest=${state.latestVisibleEvent}`;
     }
 
@@ -2235,6 +2613,16 @@
 
     if (refs.receiptPre) {
       refs.receiptPre.textContent = getReceiptText();
+    }
+
+    if (refs.inspectButton) {
+      refs.inspectButton.textContent = state.planetInspectModeActive ? "Show diagnostic" : "Inspect planet";
+    }
+
+    if (refs.collapseButton) {
+      if (state.cockpitMode === "expanded-cockpit") refs.collapseButton.textContent = "Collapse dock";
+      else if (state.cockpitMode === "planet-inspect") refs.collapseButton.textContent = "Show diagnostic";
+      else refs.collapseButton.textContent = "Expand cockpit";
     }
 
     publishGlobals();
@@ -2267,7 +2655,17 @@
     if (enforcementTimer) root.clearInterval(enforcementTimer);
 
     enforcementTimer = root.setInterval(() => {
-      if (!state.completionLatched) return;
+      if (!state.completionLatched) {
+        if (state.currentFibonacciStage === "F21" && !canvasReadinessBarrierOpen()) {
+          state.currentFibonacciStage = "F13";
+          state.fibonacciStage = "F13";
+          state.highestStageReached = "F13";
+          state.highestStageRank = stageRank("F13");
+          state.prematureLatchPrevented = true;
+          state.completionLatchBlockedUntilCanvasReady = true;
+        }
+        return;
+      }
 
       const led = ledgerState();
       const regressed = led.currentFibonacciStage !== "F21" || state.currentFibonacciStage !== "F21";
@@ -2349,12 +2747,34 @@
       retiredClimateRoute: RETIRED_CLIMATE_ROUTE,
       retiredClimateRouteActiveCarrier: false,
 
+      newsProtocolActive: state.newsProtocolActive,
+      northGateReady: state.northGateReady,
+      eastGateReady: state.eastGateReady,
+      westGateReady: state.westGateReady,
+      southGateReady: state.southGateReady,
+      newsGatePassedBeforeF21: state.newsGatePassedBeforeF21,
+
+      fibonacciSequenceActive: state.fibonacciSequenceActive,
+      fibonacciStageAtCanvasReady: state.fibonacciStageAtCanvasReady,
+      fibonacciStageAtCompletionLatch: state.fibonacciStageAtCompletionLatch,
+      f13SubsequenceComplete: state.f13SubsequenceComplete,
+      f13LastRequiredEvent: state.f13LastRequiredEvent,
+      f21AfterF13M: state.f21AfterF13M,
+
+      strictCanvasReadyLatchActive: state.strictCanvasReadyLatchActive,
+      canvasReadinessBarrierOpen: state.canvasReadinessBarrierOpen,
+      prematureLatchPrevented: state.prematureLatchPrevented,
+      completionLatchBlockedUntilCanvasReady: state.completionLatchBlockedUntilCanvasReady,
+      completionLatchedAfterCanvasReady: state.completionLatchedAfterCanvasReady,
+      f13EventsArchivedBeforeCanvasReady: state.f13EventsArchivedBeforeCanvasReady,
+
       hydratedExistingCockpit: state.hydratedExistingCockpit,
       duplicateCockpitCreated: false,
       fallbackCockpitCreated: state.fallbackCockpitCreated,
       loadLedgerPresent: state.loadLedgerPresent,
       monotonicStageGuardActive: state.monotonicStageGuardActive,
       stageRegressionPrevented: state.stageRegressionPrevented,
+      ignoredDuplicateCanvasEvents: state.ignoredDuplicateCanvasEvents,
       archivedLateEvents: clonePlain(state.archivedLateEvents),
 
       fibonacciStage: state.fibonacciStage,
@@ -2369,6 +2789,13 @@
       dockVisible: state.dockVisible,
       fullCockpitExpanded: state.fullCockpitExpanded,
       planetObstructionReduced: state.planetObstructionReduced,
+
+      inspectModeAvailable: state.inspectModeAvailable,
+      planetInspectModeActive: state.planetInspectModeActive,
+      diagnosticDockHiddenForInspection: state.diagnosticDockHiddenForInspection,
+      showDiagnosticTabVisible: state.showDiagnosticTabVisible,
+      diagnosticDockRestorable: state.diagnosticDockRestorable,
+      copyDiagnosticPreserved: state.copyDiagnosticPreserved,
 
       runtimeTablePresent: state.runtimeTablePresent,
       runtimeTableMode: state.runtimeTableMode,
@@ -2418,7 +2845,7 @@
       buttonsReachable: state.buttonsReachable,
       receiptOverlayIndependent: true,
 
-      latestVisibleEvent: state.completionLatched ? "COMPLETION_LATCHED" : state.latestVisibleEvent,
+      latestVisibleEvent: state.completionLatched ? "COMPLETION_LATCHED_AFTER_CANVAS_READY" : state.latestVisibleEvent,
       postgameStatus: state.postgameStatus,
       firstFailedCoordinate: state.firstFailedCoordinate,
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
@@ -2427,6 +2854,8 @@
       mainDisplayProgress: Math.round(state.mainDisplayProgress),
       heartbeatElapsedMs: state.heartbeatElapsedMs,
 
+      f13Events: clonePlain(state.f13Events),
+      f13EventOrder: clonePlain(state.f13EventOrder),
       phaseEvents: clonePlain(state.phaseEvents),
       ledger: clonePlain(led),
       events: clonePlain(state.events),
@@ -2456,6 +2885,8 @@
       `- ${event.at || ""} :: ${event.phase || ""} :: progress=${event.percent || ""} :: ${event.message || ""}`
     )).join("\n") || "- none";
 
+    const f13Events = receipt.f13EventOrder.map((event) => `- ${event}`).join("\n") || "- none";
+
     const archived = receipt.archivedLateEvents.map((event) => (
       `- ${event.archivedAt || ""} :: ${event.id || event.event || "ARCHIVED"} :: stage=${event.stage || ""} :: reason=${event.archiveReason || ""} :: ${event.message || ""}`
     )).join("\n") || "- none";
@@ -2469,7 +2900,7 @@
     )).join("\n") || "- none";
 
     return [
-      "HEARTH_ROUTE_CONDUCTOR_COOPERATIVE_CANVAS_HANDOFF_RECEIPT",
+      "HEARTH_CONDUCTOR_STRICT_CANVAS_READY_LATCH_AND_INSPECT_MODE_RECEIPT",
       "",
       `contract=${receipt.contract}`,
       `receipt=${receipt.receipt}`,
@@ -2482,12 +2913,34 @@
       `retiredClimateRoute=${receipt.retiredClimateRoute}`,
       `retiredClimateRouteActiveCarrier=${receipt.retiredClimateRouteActiveCarrier}`,
       "",
+      `newsProtocolActive=${receipt.newsProtocolActive}`,
+      `northGateReady=${receipt.northGateReady}`,
+      `eastGateReady=${receipt.eastGateReady}`,
+      `westGateReady=${receipt.westGateReady}`,
+      `southGateReady=${receipt.southGateReady}`,
+      `newsGatePassedBeforeF21=${receipt.newsGatePassedBeforeF21}`,
+      "",
+      `fibonacciSequenceActive=${receipt.fibonacciSequenceActive}`,
+      `fibonacciStageAtCanvasReady=${receipt.fibonacciStageAtCanvasReady}`,
+      `fibonacciStageAtCompletionLatch=${receipt.fibonacciStageAtCompletionLatch}`,
+      `f13SubsequenceComplete=${receipt.f13SubsequenceComplete}`,
+      `f13LastRequiredEvent=${receipt.f13LastRequiredEvent}`,
+      `f21AfterF13M=${receipt.f21AfterF13M}`,
+      "",
+      `strictCanvasReadyLatchActive=${receipt.strictCanvasReadyLatchActive}`,
+      `canvasReadinessBarrierOpen=${receipt.canvasReadinessBarrierOpen}`,
+      `prematureLatchPrevented=${receipt.prematureLatchPrevented}`,
+      `completionLatchBlockedUntilCanvasReady=${receipt.completionLatchBlockedUntilCanvasReady}`,
+      `completionLatchedAfterCanvasReady=${receipt.completionLatchedAfterCanvasReady}`,
+      `f13EventsArchivedBeforeCanvasReady=${receipt.f13EventsArchivedBeforeCanvasReady}`,
+      "",
       `hydratedExistingCockpit=${receipt.hydratedExistingCockpit}`,
       `duplicateCockpitCreated=${receipt.duplicateCockpitCreated}`,
       `fallbackCockpitCreated=${receipt.fallbackCockpitCreated}`,
       `loadLedgerPresent=${receipt.loadLedgerPresent}`,
       `monotonicStageGuardActive=${receipt.monotonicStageGuardActive}`,
       `stageRegressionPrevented=${receipt.stageRegressionPrevented}`,
+      `ignoredDuplicateCanvasEvents=${receipt.ignoredDuplicateCanvasEvents}`,
       "",
       `fibonacciStage=${receipt.fibonacciStage}`,
       `currentFibonacciStage=${receipt.currentFibonacciStage}`,
@@ -2501,6 +2954,13 @@
       `dockVisible=${receipt.dockVisible}`,
       `fullCockpitExpanded=${receipt.fullCockpitExpanded}`,
       `planetObstructionReduced=${receipt.planetObstructionReduced}`,
+      "",
+      `inspectModeAvailable=${receipt.inspectModeAvailable}`,
+      `planetInspectModeActive=${receipt.planetInspectModeActive}`,
+      `diagnosticDockHiddenForInspection=${receipt.diagnosticDockHiddenForInspection}`,
+      `showDiagnosticTabVisible=${receipt.showDiagnosticTabVisible}`,
+      `diagnosticDockRestorable=${receipt.diagnosticDockRestorable}`,
+      `copyDiagnosticPreserved=${receipt.copyDiagnosticPreserved}`,
       "",
       `runtimeTablePresent=${receipt.runtimeTablePresent}`,
       `runtimeTableMode=${receipt.runtimeTableMode}`,
@@ -2563,6 +3023,9 @@
       "",
       "LEDGER_SCRIPTS",
       scripts,
+      "",
+      "F13_EVENT_ORDER",
+      f13Events,
       "",
       "CANVAS_PHASE_EVENTS",
       phases,
@@ -2630,6 +3093,27 @@
     dataset.hearthRetiredClimateRoute = RETIRED_CLIMATE_ROUTE;
     dataset.hearthRetiredClimateRouteActiveCarrier = "false";
 
+    dataset.hearthNewsProtocolActive = String(state.newsProtocolActive);
+    dataset.hearthNorthGateReady = String(state.northGateReady);
+    dataset.hearthEastGateReady = String(state.eastGateReady);
+    dataset.hearthWestGateReady = String(state.westGateReady);
+    dataset.hearthSouthGateReady = String(state.southGateReady);
+    dataset.hearthNewsGatePassedBeforeF21 = String(state.newsGatePassedBeforeF21);
+
+    dataset.hearthFibonacciSequenceActive = String(state.fibonacciSequenceActive);
+    dataset.hearthFibonacciStageAtCanvasReady = state.fibonacciStageAtCanvasReady;
+    dataset.hearthFibonacciStageAtCompletionLatch = state.fibonacciStageAtCompletionLatch;
+    dataset.hearthF13SubsequenceComplete = String(state.f13SubsequenceComplete);
+    dataset.hearthF13LastRequiredEvent = state.f13LastRequiredEvent;
+    dataset.hearthF21AfterF13m = String(state.f21AfterF13M);
+
+    dataset.hearthStrictCanvasReadyLatchActive = String(state.strictCanvasReadyLatchActive);
+    dataset.hearthCanvasReadinessBarrierOpen = String(state.canvasReadinessBarrierOpen);
+    dataset.hearthPrematureLatchPrevented = String(state.prematureLatchPrevented);
+    dataset.hearthCompletionLatchBlockedUntilCanvasReady = String(state.completionLatchBlockedUntilCanvasReady);
+    dataset.hearthCompletionLatchedAfterCanvasReady = String(state.completionLatchedAfterCanvasReady);
+    dataset.hearthF13EventsArchivedBeforeCanvasReady = String(state.f13EventsArchivedBeforeCanvasReady);
+
     dataset.hearthLoadLedgerPresent = String(state.loadLedgerPresent);
     dataset.hearthHydratedExistingCockpit = String(state.hydratedExistingCockpit);
     dataset.hearthDuplicateCockpitCreated = "false";
@@ -2646,6 +3130,14 @@
     dataset.hearthDockVisible = String(state.dockVisible);
     dataset.hearthFullCockpitExpanded = String(state.fullCockpitExpanded);
     dataset.hearthPlanetObstructionReduced = String(state.planetObstructionReduced);
+
+    dataset.hearthInspectModeAvailable = String(state.inspectModeAvailable);
+    dataset.hearthPlanetInspect = String(state.planetInspectModeActive);
+    dataset.hearthPlanetInspectModeActive = String(state.planetInspectModeActive);
+    dataset.hearthDiagnosticDockHiddenForInspection = String(state.diagnosticDockHiddenForInspection);
+    dataset.hearthShowDiagnosticTabVisible = String(state.showDiagnosticTabVisible);
+    dataset.hearthDiagnosticDockRestorable = String(state.diagnosticDockRestorable);
+    dataset.hearthCopyDiagnosticPreserved = String(state.copyDiagnosticPreserved);
 
     dataset.hearthRuntimeTablePresent = String(state.runtimeTablePresent);
     dataset.hearthRuntimeTableMode = state.runtimeTableMode;
@@ -2689,7 +3181,7 @@
     dataset.hearthButtonsReachable = String(state.buttonsReachable);
     dataset.hearthReceiptOverlayIndependent = "true";
 
-    dataset.hearthLatestVisibleEvent = state.completionLatched ? "COMPLETION_LATCHED" : state.latestVisibleEvent;
+    dataset.hearthLatestVisibleEvent = state.completionLatched ? "COMPLETION_LATCHED_AFTER_CANVAS_READY" : state.latestVisibleEvent;
     dataset.hearthPostgameStatus = state.postgameStatus;
     dataset.hearthFirstFailedCoordinate = state.firstFailedCoordinate;
     dataset.hearthRecommendedNextRenewalTarget = state.recommendedNextRenewalTarget;
@@ -2713,11 +3205,11 @@
     setLedgerLane("ledger", {
       status: STATUS.READY,
       progress: stageProgress("F1B"),
-      event: "MONOTONIC_LEDGER_GUARD_ACTIVE",
+      event: "NEWS_FIBONACCI_LEDGER_GUARD_ACTIVE",
       stage: "F1B",
       owner: "hearth.js",
       file: ACTIVE_ROUTE_FILE,
-      message: "Monotonic stage guard active."
+      message: "NEWS and Fibonacci ledger guard active."
     });
 
     setLedgerLane("authorityAvailability", {
@@ -2727,7 +3219,7 @@
       stage: "F5",
       owner: "hearth.js",
       file: ACTIVE_ROUTE_FILE,
-      message: "Source authority stack held during cooperative canvas handoff."
+      message: "Source authority stack held during strict latch handoff."
     });
 
     startHeartbeat();
@@ -2801,12 +3293,17 @@
     copyDiagnostic,
     dispose,
 
+    supportsNewsProtocol: true,
+    supportsFibonacciSequence: true,
+    supportsStrictCanvasReadyLatch: true,
+    supportsCanvasReadinessBarrier: true,
+    supportsF13Subsequence: true,
     supportsDistributedLoadLedger: true,
     supportsHtmlCockpitHydration: true,
-    supportsFibonacciLoadStages: true,
     supportsMonotonicStageGuard: true,
-    supportsStrictCompletionLatch: true,
     supportsDiagnosticDockAfterLatch: true,
+    supportsPlanetInspectMode: true,
+    supportsShowDiagnosticTab: true,
     supportsPartialReceiptDuringLoading: true,
     supportsCopyDiagnosticDuringLoading: true,
     supportsRuntimeTableOptionalMode: true,

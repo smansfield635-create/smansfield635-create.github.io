@@ -1,148 +1,163 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_CANVAS_VISIBLE_PLANET_CARRIER_LOAD_SCREEN_COMPATIBLE_TNT_v1
+// HEARTH_CANVAS_COOPERATIVE_BOOT_PROGRESS_HANDOFF_TNT_v1
 // Full-file replacement.
 // Canvas / visible-carrier authority only.
 // Purpose:
-// - Restore a functional visible Hearth planet carrier.
-// - Preserve the loading screen and diagnostic receipt layer mounted by Hearth.js.
-// - Keep canvas lifecycle independent from receipt/loading-screen lifecycle.
-// - Accept route conductor handoff from /showroom/globe/hearth/hearth.js.
-// - Draw immediately even if Runtime Table or child diagnostics are missing.
-// - Consume source authorities opportunistically when present.
-// - Preserve drag inspection.
+// - Preserve a visible Hearth planet carrier.
+// - Convert canvas boot from one long synchronous handoff into cooperative phases.
+// - Yield during atlas/texture composition so the loading cockpit can repaint.
+// - Stream F13 canvas progress into the shared Hearth load ledger.
+// - Preserve drag inspection, first-frame proof, copyable receipt support, and no visual-pass claim.
 // Does not own:
-// - route shell
-// - route orchestration
-// - Runtime Table truth
+// - HTML first paint
+// - route conduction
+// - Runtime Table source code
 // - tectonic cause
-// - elevation generation
-// - composition classification
+// - elevation truth
+// - composition truth
 // - hydrology truth
-// - material palette authority
+// - source material authority
+// - climate route authority
 // - final visual pass claim
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_VISIBLE_PLANET_CARRIER_LOAD_SCREEN_COMPATIBLE_TNT_v1";
-  const RECEIPT = "HEARTH_CANVAS_VISIBLE_PLANET_CARRIER_LOAD_SCREEN_COMPATIBLE_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_RUNTIME_TABLE_DIRECTED_VISIBLE_CARRIER_TNT_v1";
-  const CONDUCTOR_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_LOAD_SCREEN_CANVAS_HANDOFF_TNT_v1";
-  const BASELINE_CONTRACT = "HEARTH_DYNAMIC_ROUTE_CONDUCTOR_RUNTIME_TABLE_CANVAS_REBALANCE_PREGAME_TO_POSTGAME_BINDING_v1";
-  const VERSION = "2026-05-29.hearth-canvas-visible-planet-carrier-load-screen-compatible-v1";
+  const CONTRACT = "HEARTH_CANVAS_COOPERATIVE_BOOT_PROGRESS_HANDOFF_TNT_v1";
+  const RECEIPT = "HEARTH_CANVAS_COOPERATIVE_BOOT_PROGRESS_HANDOFF_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "HEARTH_LOAD_LEDGER_MONOTONIC_CONDUCTOR_DOCK_LATCH_TNT_v1";
+  const BASELINE_CONTRACT = "HEARTH_CANVAS_COOPERATIVE_BOOT_PROGRESS_HANDOFF_FINAL_DRAFT_PREWRITE_v1";
+  const VERSION = "2026-05-29.hearth-canvas-cooperative-boot-progress-handoff-v1";
 
   const ROUTE = "/showroom/globe/hearth/";
-  const DESTINATION_FILE = "/assets/hearth/hearth.canvas.js";
+  const FILE = "/assets/hearth/hearth.canvas.js";
   const CONDUCTOR_FILE = "/showroom/globe/hearth/hearth.js";
   const RETIRED_CLIMATE_ROUTE = "/showroom/globe/hearth/hearth.climate.route.js";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
 
-  const TAU = Math.PI * 2;
-  const DEG = Math.PI / 180;
-  const EPSILON = 0.000001;
+  const TWO_PI = Math.PI * 2;
+  const HALF_PI = Math.PI / 2;
 
-  const COLOR = Object.freeze({
-    space: [0, 0, 0, 0],
-    abyss: [2, 9, 22],
-    deep: [4, 23, 52],
-    ocean: [7, 54, 96],
-    shelf: [24, 112, 137],
-    waterline: [94, 166, 162],
-    foam: [130, 184, 166],
-    wetStone: [55, 69, 76],
-    beach: [190, 170, 112],
-    grass: [80, 128, 70],
-    forest: [34, 95, 60],
-    wetForest: [26, 82, 58],
-    plains: [124, 145, 86],
-    savanna: [156, 140, 78],
-    desert: [178, 142, 82],
-    steppe: [130, 120, 82],
-    highland: [114, 116, 94],
-    mountain: [92, 91, 86],
-    cliff: [50, 56, 66],
-    basalt: [38, 45, 55],
-    tundra: [132, 140, 122],
-    snow: [212, 228, 230],
-    ice: [192, 218, 226],
-    rim: [5, 16, 30],
-    glow: [141, 216, 255]
+  const PHASE_PROGRESS = Object.freeze({
+    CANVAS_COOPERATIVE_BOOT_STARTED: 78,
+    CANVAS_MOUNT_CREATED: 81,
+    CANVAS_CONTEXT_READY: 84,
+    ATLAS_BUILD_STARTED: 84,
+    ATLAS_BUILD_PROGRESS_MIN: 84,
+    ATLAS_BUILD_PROGRESS_MAX: 91,
+    ATLAS_BUILD_COMPLETE: 91,
+    TEXTURE_COMPOSE_STARTED: 91,
+    TEXTURE_COMPOSE_PROGRESS_MIN: 91,
+    TEXTURE_COMPOSE_PROGRESS_MAX: 96,
+    TEXTURE_COMPOSE_COMPLETE: 96,
+    FIRST_FRAME_REQUESTED: 97,
+    FIRST_FRAME_DETECTED: 98,
+    DRAG_INSPECTION_BOUND: 99,
+    CANVAS_READY: 100
   });
 
   const state = {
     contract: CONTRACT,
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
-    conductorContract: CONDUCTOR_CONTRACT,
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
-
     route: ROUTE,
-    destinationFile: DESTINATION_FILE,
-    activeRouteConductor: CONDUCTOR_FILE,
-    retiredClimateRoute: RETIRED_CLIMATE_ROUTE,
+    file: FILE,
 
-    mounted: false,
+    cooperativeBootAvailable: true,
+    cooperativeBootUsed: false,
+    syncBootFallbackUsed: false,
+
+    bootInProgress: false,
+    bootComplete: false,
+    bootPromise: null,
+    bootPayload: null,
+
+    canvasBootStartedAt: "",
+    canvasBootCompletedAt: "",
+    canvasBootStartedAtMs: 0,
+    canvasBootCompletedAtMs: 0,
+    canvasBootElapsedMs: 0,
+    canvasYieldCount: 0,
+    canvasPhaseCount: 0,
+    lastCanvasPhase: "",
+    lastCanvasProgress: 0,
+    loaderRepaintDuringCanvasBoot: false,
+    f13ProgressStreamActive: false,
+
     mountId: "hearthCanvasMount",
     mountPresent: false,
-    canvasCreated: false,
+    canvasElementPresent: false,
+    contextReady: false,
     canvasCarrierMounted: false,
-    visibleCarrierMounted: false,
-    loadingScreenPreserved: true,
-    receiptOverlayIndependent: true,
+    canvasCarrierHandoffOk: false,
+    canvasCarrierHandoffError: "",
+    canvasCarrierMethod: "bootCooperative",
 
+    atlasWidth: 512,
+    atlasHeight: 256,
+    atlasBuildStarted: false,
+    atlasBuildProgress: 0,
+    atlasBuildComplete: false,
+    textureComposeStarted: false,
+    textureComposeProgress: 0,
+    textureComposeComplete: false,
+
+    firstFrameRequested: false,
+    firstFrameDetected: false,
+    dragInspectionBound: false,
+    imageRendered: false,
+    canvasReady: false,
+
+    frames: 0,
+    renderLoopActive: false,
+    animationFrameId: 0,
+    lastRenderAt: 0,
+
+    rotation: 0.24,
+    tilt: -0.06,
+    spinRate: 0.000045,
+    dragging: false,
+    lastPointerX: 0,
+    lastPointerY: 0,
+    dragStartedAt: 0,
+
+    sourceAuthorityHeld: true,
     runtimeTableOptional: true,
-    runtimeTablePlanConsumed: false,
     runtimeTableMissingDoesNotBlockCarrier: true,
     visibleCarrierFirst: true,
     wideProbeDeferred: true,
-    sourceAuthorityHeld: true,
 
-    conductorPayloadReceived: false,
-    conductorReceiptPresent: false,
-
-    sourceAvailability: {
-      tectonics: false,
-      elevation: false,
-      composition: false,
-      hydrology: false,
-      materials: false,
-      hexAuthority: false,
-      hexSurface: false,
-      runtimeTable: false
-    },
-
-    textureBuilt: false,
-    textureWidth: 0,
-    textureHeight: 0,
-    textureSourceMode: "not-built",
-
-    animationActive: false,
-    frames: 0,
-    lastFrameAt: 0,
-    dragging: false,
-    dragInspectionBound: false,
-    pointerControlsBound: false,
-
-    imageRendered: false,
     coherentExpressionPass: false,
     visualPassClaimed: false,
-
-    postgameStatus: "CANVAS_NOT_MOUNTED",
-    firstFailedCoordinate: "CANVAS_NOT_MOUNTED",
-    recommendedNextRenewalTarget: "canvas-mount",
-
     generatedImage: false,
     graphicBox: false,
     webGL: false,
+
+    postgameStatus: "COOPERATIVE_CANVAS_BOOT_PENDING",
+    firstFailedCoordinate: "F13_CANVAS_BOOT_PENDING",
+    recommendedNextRenewalTarget: "execute-hearth-js-cooperative-handoff-second",
+
+    phaseEvents: [],
     errors: [],
-    events: [],
     updatedAt: ""
   };
 
-  let activeInstance = null;
+  const refs = {
+    mount: null,
+    canvas: null,
+    ctx: null,
+    bufferCanvas: null,
+    bufferCtx: null,
+    textureCanvas: null,
+    textureCtx: null,
+    textureImage: null,
+    atlas: null,
+    resizeObserver: null
+  };
 
   function nowIso() {
     try {
@@ -152,1481 +167,1508 @@
     }
   }
 
+  function nowMs() {
+    return Date.now ? Date.now() : new Date().getTime();
+  }
+
   function clamp(value, min, max) {
     const n = Number(value);
     if (!Number.isFinite(n)) return min;
     return Math.max(min, Math.min(max, n));
   }
 
-  function clamp01(value) {
-    return clamp(value, 0, 1);
-  }
-
   function lerp(a, b, t) {
-    return a + (b - a) * clamp01(t);
-  }
-
-  function mix(a, b, t) {
-    const k = clamp01(t);
-    return [
-      Math.round(lerp(a[0], b[0], k)),
-      Math.round(lerp(a[1], b[1], k)),
-      Math.round(lerp(a[2], b[2], k))
-    ];
-  }
-
-  function lift(color, amount) {
-    return [
-      clamp(Math.round(color[0] + amount), 0, 255),
-      clamp(Math.round(color[1] + amount), 0, 255),
-      clamp(Math.round(color[2] + amount), 0, 255)
-    ];
+    return a + (b - a) * t;
   }
 
   function smoothstep(edge0, edge1, x) {
-    const t = clamp((x - edge0) / Math.max(EPSILON, edge1 - edge0), 0, 1);
+    const t = clamp((x - edge0) / Math.max(0.000001, edge1 - edge0), 0, 1);
     return t * t * (3 - 2 * t);
   }
 
-  function softBand(value, center, width) {
-    const t = 1 - clamp(Math.abs(value - center) / Math.max(EPSILON, width), 0, 1);
-    return t * t * (3 - 2 * t);
-  }
-
-  function wrap01(value) {
-    const n = Number(value);
-    if (!Number.isFinite(n)) return 0;
-    return ((n % 1) + 1) % 1;
-  }
-
-  function wrapPi(value) {
-    return Math.atan2(Math.sin(value), Math.cos(value));
-  }
-
-  function bool(value, fallback = false) {
-    if (typeof value === "boolean") return value;
-    if (value === "true") return true;
-    if (value === "false") return false;
-    return fallback;
-  }
-
-  function isObject(value) {
-    return Boolean(value && typeof value === "object");
+  function ease(t) {
+    const x = clamp(t, 0, 1);
+    return x * x * (3 - 2 * x);
   }
 
   function isFunction(value) {
     return typeof value === "function";
   }
 
-  function clonePlain(value) {
-    if (!isObject(value)) return value;
+  function isObject(value) {
+    return Boolean(value && typeof value === "object");
+  }
 
+  function safeJson(value) {
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
-      if (Array.isArray(value)) return value.slice();
-      return { ...value };
+      return Array.isArray(value) ? value.slice() : { ...value };
     }
   }
 
-  function log(event, detail = {}) {
-    const entry = {
-      event,
-      detail: clonePlain(detail),
-      at: nowIso()
+  function formatElapsed(ms) {
+    const total = Math.max(0, Math.floor(Number(ms || 0) / 1000));
+    const minutes = Math.floor(total / 60);
+    const seconds = total % 60;
+    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  }
+
+  function phasePercent(name, localPercent = 0) {
+    if (name === "ATLAS_BUILD_PROGRESS") {
+      return Math.round(lerp(
+        PHASE_PROGRESS.ATLAS_BUILD_PROGRESS_MIN,
+        PHASE_PROGRESS.ATLAS_BUILD_PROGRESS_MAX,
+        clamp(localPercent, 0, 1)
+      ));
+    }
+
+    if (name === "TEXTURE_COMPOSE_PROGRESS") {
+      return Math.round(lerp(
+        PHASE_PROGRESS.TEXTURE_COMPOSE_PROGRESS_MIN,
+        PHASE_PROGRESS.TEXTURE_COMPOSE_PROGRESS_MAX,
+        clamp(localPercent, 0, 1)
+      ));
+    }
+
+    return PHASE_PROGRESS[name] || state.lastCanvasProgress || 78;
+  }
+
+  function getLedger() {
+    return root.HEARTH_LOAD_LEDGER || null;
+  }
+
+  function ledgerSetLane(eventName, percent, status, message, detail) {
+    const ledger = getLedger();
+    if (!ledger || !isFunction(ledger.setLane)) return;
+
+    try {
+      ledger.setLane("canvasAndDiagnostic", {
+        status: status || "LOADING",
+        progress: percent,
+        event: eventName,
+        stage: "F13",
+        owner: "hearth.canvas.js",
+        file: FILE,
+        message: message || eventName,
+        detail: detail || {}
+      });
+    } catch (_error) {}
+  }
+
+  function ledgerPush(eventName, percent, status, message, detail) {
+    const ledger = getLedger();
+    if (!ledger || !isFunction(ledger.push)) return;
+
+    try {
+      ledger.push({
+        id: eventName,
+        stage: "F13",
+        owner: "hearth.canvas.js",
+        file: FILE,
+        lane: "canvasAndDiagnostic",
+        status: status || "LOADING",
+        message: message || eventName,
+        detail: detail || {},
+        progress: percent
+      });
+    } catch (_error) {}
+  }
+
+  function invokeCallback(name, value) {
+    const payload = state.bootPayload || {};
+    const callbacks = payload.callbacks || {};
+
+    if (isFunction(callbacks[name])) {
+      try {
+        callbacks[name](value);
+      } catch (error) {
+        recordError(`CALLBACK_${name}_FAILED`, error && error.message ? error.message : String(error));
+      }
+    }
+  }
+
+  function reportPhase(name, options = {}) {
+    const localPercent = Number(options.localPercent || 0);
+    const percent = clamp(Number(options.percent ?? phasePercent(name, localPercent)), 0, 100);
+    const elapsedMs = state.canvasBootStartedAtMs ? nowMs() - state.canvasBootStartedAtMs : 0;
+
+    state.canvasPhaseCount += 1;
+    state.lastCanvasPhase = name;
+    state.lastCanvasProgress = percent;
+    state.canvasBootElapsedMs = elapsedMs;
+    state.f13ProgressStreamActive = true;
+    state.updatedAt = nowIso();
+
+    const detail = {
+      phase: name,
+      percent,
+      elapsedMs,
+      elapsed: formatElapsed(elapsedMs),
+      chunkIndex: options.chunkIndex ?? "",
+      totalChunks: options.totalChunks ?? "",
+      stillAlive: true,
+      cooperativeBootUsed: state.cooperativeBootUsed,
+      canvasYieldCount: state.canvasYieldCount,
+      ...safeJson(options.detail || {})
     };
 
-    state.events.push(entry);
-    state.updatedAt = entry.at;
+    const event = {
+      at: state.updatedAt,
+      phase: name,
+      percent,
+      message: options.message || name,
+      detail
+    };
 
-    if (state.events.length > 50) {
-      state.events.splice(0, state.events.length - 50);
+    state.phaseEvents.push(event);
+    if (state.phaseEvents.length > 180) {
+      state.phaseEvents.splice(0, state.phaseEvents.length - 180);
     }
 
-    return entry;
+    ledgerSetLane(name, percent, options.status || "LOADING", options.message || name, detail);
+    ledgerPush(name, percent, options.status || "LOADING", options.message || name, detail);
+
+    invokeCallback("onCanvasPhase", event);
+    invokeCallback("onCanvasProgress", event);
+
+    publishDataset();
+    publishGlobals();
+    return event;
   }
 
-  function addError(code, message, detail = {}) {
+  function recordError(code, message, detail = {}) {
     const item = {
+      at: nowIso(),
       code,
       message,
-      detail: clonePlain(detail),
-      at: nowIso()
+      detail: safeJson(detail)
     };
 
     state.errors.push(item);
-
-    if (state.errors.length > 20) {
-      state.errors.splice(0, state.errors.length - 20);
+    if (state.errors.length > 80) {
+      state.errors.splice(0, state.errors.length - 80);
     }
 
-    log("ERROR", item);
+    state.postgameStatus = "CANVAS_BOOT_PHASE_ERROR";
+    state.firstFailedCoordinate = code;
+    state.canvasCarrierHandoffError = message;
+
+    ledgerSetLane(code, 100, "FAILED", message, detail);
+    ledgerPush(code, 100, "FAILED", message, detail);
+
+    publishDataset();
+    publishGlobals();
     return item;
   }
 
-  function getDataset() {
-    return doc && doc.documentElement ? doc.documentElement.dataset : null;
+  async function yieldBrowser(reason = "yield") {
+    state.canvasYieldCount += 1;
+    state.loaderRepaintDuringCanvasBoot = state.canvasYieldCount > 0;
+
+    if (reason) {
+      const elapsedMs = state.canvasBootStartedAtMs ? nowMs() - state.canvasBootStartedAtMs : 0;
+      const detail = {
+        reason,
+        yieldCount: state.canvasYieldCount,
+        elapsedMs,
+        elapsed: formatElapsed(elapsedMs)
+      };
+      ledgerPush("CANVAS_BOOT_YIELD", state.lastCanvasProgress || 78, "LOADING", `yield · ${reason}`, detail);
+    }
+
+    await new Promise((resolve) => {
+      if (root.requestAnimationFrame) {
+        root.requestAnimationFrame(() => resolve());
+      } else {
+        root.setTimeout(resolve, 0);
+      }
+    });
+  }
+
+  function createElementCanvas(width = 1, height = 1) {
+    const canvas = doc ? doc.createElement("canvas") : null;
+    if (!canvas) return null;
+    canvas.width = width;
+    canvas.height = height;
+    return canvas;
+  }
+
+  function ensureMount(payload = {}) {
+    if (!doc) return null;
+
+    const mountId = payload.mountId || payload.mountID || state.mountId || "hearthCanvasMount";
+    state.mountId = mountId;
+
+    let mount =
+      doc.getElementById(mountId) ||
+      doc.querySelector("[data-hearth-canvas-mount='true']") ||
+      doc.querySelector("[data-hearth-canvas-mount]");
+
+    if (!mount) {
+      mount = doc.createElement("section");
+      mount.id = mountId;
+      mount.dataset.hearthCanvasMount = "true";
+      mount.dataset.hearthCanvasMountCreatedByCanvas = "true";
+
+      const parent = doc.getElementById("hearth-main") || doc.body || doc.documentElement;
+      parent.appendChild(mount);
+    }
+
+    mount.id = mount.id || mountId;
+    mount.dataset.hearthCanvasMount = "true";
+    mount.dataset.hearthCanvasContract = CONTRACT;
+    mount.dataset.hearthCanvasReceipt = RECEIPT;
+    mount.dataset.hearthCanvasCooperativeBoot = "true";
+    mount.dataset.hearthReceiptOverlayIndependent = "true";
+    mount.style.touchAction = "none";
+    mount.style.userSelect = "none";
+
+    refs.mount = mount;
+    state.mountPresent = true;
+
+    return mount;
+  }
+
+  function ensureCanvas(payload = {}) {
+    const mount = ensureMount(payload);
+    if (!mount || !doc) return null;
+
+    let canvas =
+      mount.querySelector("canvas[data-hearth-canvas='true']") ||
+      mount.querySelector("canvas");
+
+    if (!canvas) {
+      canvas = doc.createElement("canvas");
+      canvas.dataset.hearthCanvas = "true";
+      canvas.dataset.hearthCanvasContract = CONTRACT;
+      canvas.dataset.hearthCanvasCooperativeBoot = "true";
+      canvas.setAttribute("aria-label", "Hearth visible planet canvas");
+      mount.appendChild(canvas);
+    }
+
+    canvas.dataset.hearthCanvas = "true";
+    canvas.dataset.hearthCanvasContract = CONTRACT;
+    canvas.dataset.hearthCanvasReceipt = RECEIPT;
+    canvas.dataset.hearthCanvasCooperativeBoot = "true";
+    canvas.style.position = "absolute";
+    canvas.style.inset = "0";
+    canvas.style.display = "block";
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    canvas.style.pointerEvents = "auto";
+    canvas.style.touchAction = "none";
+    canvas.style.userSelect = "none";
+    canvas.style.webkitUserSelect = "none";
+
+    refs.canvas = canvas;
+    refs.ctx = canvas.getContext("2d", { alpha: true, desynchronized: true }) || canvas.getContext("2d");
+
+    state.canvasElementPresent = Boolean(canvas);
+    state.contextReady = Boolean(refs.ctx);
+
+    if (!refs.ctx) {
+      throw new Error("2D canvas context unavailable.");
+    }
+
+    sizeCanvas();
+    return canvas;
+  }
+
+  function sizeCanvas() {
+    const canvas = refs.canvas;
+    const mount = refs.mount;
+    if (!canvas || !mount) return;
+
+    const rect = mount.getBoundingClientRect ? mount.getBoundingClientRect() : { width: 360, height: 360 };
+    const cssSize = Math.max(280, Math.min(720, Math.floor(Math.min(rect.width || 360, rect.height || rect.width || 360))));
+    const dpr = clamp(root.devicePixelRatio || 1, 1, 2);
+    const pixel = Math.max(280, Math.floor(cssSize * dpr));
+
+    if (canvas.width !== pixel || canvas.height !== pixel) {
+      canvas.width = pixel;
+      canvas.height = pixel;
+    }
+
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+
+    const bufferSize = Math.max(260, Math.min(520, Math.floor(pixel)));
+    if (!refs.bufferCanvas || refs.bufferCanvas.width !== bufferSize || refs.bufferCanvas.height !== bufferSize) {
+      refs.bufferCanvas = createElementCanvas(bufferSize, bufferSize);
+      refs.bufferCtx = refs.bufferCanvas ? refs.bufferCanvas.getContext("2d", { alpha: true }) : null;
+    }
+  }
+
+  function bindResize() {
+    if (!refs.mount || !doc) return;
+
+    if (refs.resizeObserver && isFunction(refs.resizeObserver.disconnect)) {
+      try {
+        refs.resizeObserver.disconnect();
+      } catch (_error) {}
+    }
+
+    if ("ResizeObserver" in root) {
+      refs.resizeObserver = new ResizeObserver(() => {
+        sizeCanvas();
+        drawFrame(true);
+      });
+      refs.resizeObserver.observe(refs.mount);
+    } else {
+      root.addEventListener("resize", () => {
+        sizeCanvas();
+        drawFrame(true);
+      }, { passive: true });
+    }
+  }
+
+  function drawPlaceholder() {
+    const ctx = refs.ctx;
+    const canvas = refs.canvas;
+    if (!ctx || !canvas) return;
+
+    sizeCanvas();
+
+    const w = canvas.width;
+    const h = canvas.height;
+    const cx = w / 2;
+    const cy = h / 2;
+    const r = Math.min(w, h) * 0.38;
+
+    ctx.clearRect(0, 0, w, h);
+
+    const bg = ctx.createRadialGradient(cx, cy, r * 0.1, cx, cy, r * 1.8);
+    bg.addColorStop(0, "rgba(26,68,84,0.24)");
+    bg.addColorStop(0.58, "rgba(3,12,22,0.72)");
+    bg.addColorStop(1, "rgba(1,4,10,0.96)");
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, w, h);
+
+    const globe = ctx.createRadialGradient(cx - r * 0.26, cy - r * 0.28, r * 0.05, cx, cy, r);
+    globe.addColorStop(0, "rgba(76,121,126,0.35)");
+    globe.addColorStop(0.56, "rgba(17,43,51,0.82)");
+    globe.addColorStop(1, "rgba(4,13,21,0.95)");
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, TWO_PI);
+    ctx.fillStyle = globe;
+    ctx.fill();
+
+    ctx.strokeStyle = "rgba(141,216,255,0.16)";
+    ctx.lineWidth = Math.max(1, w * 0.003);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, r * 1.045, 0, TWO_PI);
+    ctx.strokeStyle = "rgba(141,216,255,0.07)";
+    ctx.lineWidth = Math.max(1, w * 0.006);
+    ctx.stroke();
+  }
+
+  function hash2(x, y, seed = 19.19) {
+    const n = Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123;
+    return n - Math.floor(n);
+  }
+
+  function noise2(x, y, seed = 11.1) {
+    const ix = Math.floor(x);
+    const iy = Math.floor(y);
+    const fx = x - ix;
+    const fy = y - iy;
+    const ux = fx * fx * (3 - 2 * fx);
+    const uy = fy * fy * (3 - 2 * fy);
+
+    const a = hash2(ix, iy, seed);
+    const b = hash2(ix + 1, iy, seed);
+    const c = hash2(ix, iy + 1, seed);
+    const d = hash2(ix + 1, iy + 1, seed);
+
+    return lerp(lerp(a, b, ux), lerp(c, d, ux), uy);
+  }
+
+  function fbm(x, y, seed = 1.0, octaves = 5) {
+    let value = 0;
+    let amp = 0.5;
+    let freq = 1;
+    let norm = 0;
+
+    for (let i = 0; i < octaves; i += 1) {
+      value += noise2(x * freq, y * freq, seed + i * 13.37) * amp;
+      norm += amp;
+      amp *= 0.5;
+      freq *= 2.03;
+    }
+
+    return norm ? value / norm : 0;
+  }
+
+  function wrapLonDelta(a, b) {
+    let d = a - b;
+    while (d > Math.PI) d -= TWO_PI;
+    while (d < -Math.PI) d += TWO_PI;
+    return d;
+  }
+
+  function ellipseInfluence(lon, lat, centerLon, centerLat, sx, sy, angle, strength) {
+    const dx = wrapLonDelta(lon, centerLon);
+    const dy = lat - centerLat;
+    const ca = Math.cos(angle);
+    const sa = Math.sin(angle);
+    const rx = dx * ca + dy * sa;
+    const ry = -dx * sa + dy * ca;
+    const q = (rx * rx) / (sx * sx) + (ry * ry) / (sy * sy);
+    return Math.exp(-q) * strength;
+  }
+
+  function terrainSample(lon, lat) {
+    const u = (lon / TWO_PI + 1) % 1;
+    const v = 0.5 - lat / Math.PI;
+
+    const continental =
+      ellipseInfluence(lon, lat, -2.45, -0.35, 0.42, 0.82, -0.28, 1.05) +
+      ellipseInfluence(lon, lat, -1.58, 0.38, 0.34, 0.56, 0.72, 0.84) +
+      ellipseInfluence(lon, lat, -0.18, -0.56, 0.68, 0.34, 0.12, 0.88) +
+      ellipseInfluence(lon, lat, 0.82, 0.30, 0.72, 0.45, -0.42, 0.98) +
+      ellipseInfluence(lon, lat, 1.72, -0.18, 0.36, 0.66, 0.16, 0.72) +
+      ellipseInfluence(lon, lat, 2.55, 0.56, 0.48, 0.32, -0.20, 0.48);
+
+    const islands =
+      ellipseInfluence(lon, lat, -2.92, 0.08, 0.16, 0.18, 0.0, 0.58) +
+      ellipseInfluence(lon, lat, 2.38, -0.55, 0.22, 0.16, 0.35, 0.52) +
+      ellipseInfluence(lon, lat, 0.10, 0.72, 0.18, 0.13, -0.2, 0.42);
+
+    const fracture =
+      (fbm(u * 7.4 + 10.2, v * 5.1 - 3.4, 21.4, 5) - 0.5) * 0.56 +
+      (fbm(u * 21.0, v * 13.0, 44.1, 3) - 0.5) * 0.22;
+
+    const ridge =
+      Math.abs(Math.sin((u * 5.0 + fbm(u * 4, v * 4, 71, 4) * 0.45) * Math.PI)) * 0.10 +
+      Math.abs(Math.sin((v * 7.0 + fbm(u * 6, v * 5, 83, 3) * 0.30) * Math.PI)) * 0.06;
+
+    const polarDamp = smoothstep(1.50, 1.06, Math.abs(lat));
+    const raw = (continental + islands + fracture + ridge - 0.78) * polarDamp;
+
+    const land = raw > 0;
+    const shelf = raw > -0.16 && raw <= 0;
+    const elevation = clamp((raw + 0.06) / 0.78, 0, 1);
+    const depth = clamp((-raw) / 0.62, 0, 1);
+
+    const materialNoise = fbm(u * 36.0, v * 20.0, 99.9, 4);
+    const wetEdge = smoothstep(-0.14, 0.10, raw) * (1 - smoothstep(0.12, 0.42, raw));
+
+    return {
+      land,
+      shelf,
+      raw,
+      elevation,
+      depth,
+      wetEdge,
+      materialNoise,
+      u,
+      v
+    };
+  }
+
+  function colorForSample(sample, lon, lat) {
+    const haze = 0.88 + fbm(sample.u * 8, sample.v * 8, 110.4, 3) * 0.12;
+    const ice = smoothstep(1.02, 1.42, Math.abs(lat));
+
+    if (sample.land) {
+      const high = sample.elevation;
+      const n = sample.materialNoise;
+      const green = smoothstep(0.10, 0.62, 1 - high) * (0.55 + n * 0.32);
+      const dry = smoothstep(0.30, 0.88, high);
+      const cliff = smoothstep(0.48, 0.86, high) * (0.45 + n * 0.38);
+
+      let r = lerp(66, 148, green);
+      let g = lerp(86, 132, green);
+      let b = lerp(64, 88, green);
+
+      r = lerp(r, 174, dry * 0.62);
+      g = lerp(g, 148, dry * 0.44);
+      b = lerp(b, 92, dry * 0.34);
+
+      r = lerp(r, 126, cliff * 0.42);
+      g = lerp(g, 119, cliff * 0.38);
+      b = lerp(b, 102, cliff * 0.46);
+
+      r = lerp(r, 218, ice * 0.55);
+      g = lerp(g, 228, ice * 0.55);
+      b = lerp(b, 220, ice * 0.58);
+
+      return [
+        Math.round(r * haze),
+        Math.round(g * haze),
+        Math.round(b * haze),
+        255
+      ];
+    }
+
+    const shallow = sample.shelf ? smoothstep(1.0, 0.0, sample.depth) : 0;
+    const waterNoise = fbm(sample.u * 18.0, sample.v * 13.0, 57.8, 3);
+    const deep = sample.depth;
+
+    let r = lerp(6, 28, shallow);
+    let g = lerp(31, 76, shallow);
+    let b = lerp(47, 82, shallow);
+
+    r = lerp(r, 10, deep * 0.36);
+    g = lerp(g, 26, deep * 0.28);
+    b = lerp(b, 39, deep * 0.20);
+
+    r += waterNoise * 8;
+    g += waterNoise * 13;
+    b += waterNoise * 15;
+
+    if (sample.wetEdge > 0) {
+      r = lerp(r, 58, sample.wetEdge * 0.34);
+      g = lerp(g, 103, sample.wetEdge * 0.32);
+      b = lerp(b, 100, sample.wetEdge * 0.30);
+    }
+
+    return [
+      Math.round(clamp(r, 0, 255)),
+      Math.round(clamp(g, 0, 255)),
+      Math.round(clamp(b, 0, 255)),
+      255
+    ];
+  }
+
+  async function buildAtlas(width, height) {
+    state.atlasWidth = width;
+    state.atlasHeight = height;
+    state.atlasBuildStarted = true;
+    state.atlasBuildProgress = 0;
+
+    reportPhase("ATLAS_BUILD_STARTED", {
+      status: "LOADING",
+      message: "Atlas build started.",
+      percent: PHASE_PROGRESS.ATLAS_BUILD_STARTED,
+      detail: { width, height }
+    });
+
+    const total = width * height;
+    const raw = new Float32Array(total);
+    const elevation = new Float32Array(total);
+    const depth = new Float32Array(total);
+    const flags = new Uint8Array(total);
+
+    const rowsPerChunk = 8;
+    const totalChunks = Math.ceil(height / rowsPerChunk);
+
+    for (let y = 0; y < height; y += rowsPerChunk) {
+      const yEnd = Math.min(height, y + rowsPerChunk);
+
+      for (let row = y; row < yEnd; row += 1) {
+        const v = row / Math.max(1, height - 1);
+        const lat = (0.5 - v) * Math.PI;
+
+        for (let x = 0; x < width; x += 1) {
+          const u = x / Math.max(1, width - 1);
+          const lon = (u - 0.5) * TWO_PI;
+          const sample = terrainSample(lon, lat);
+          const index = row * width + x;
+
+          raw[index] = sample.raw;
+          elevation[index] = sample.elevation;
+          depth[index] = sample.depth;
+          flags[index] = sample.land ? 1 : (sample.shelf ? 2 : 0);
+        }
+      }
+
+      const chunkIndex = Math.floor(y / rowsPerChunk) + 1;
+      const local = chunkIndex / totalChunks;
+      state.atlasBuildProgress = Math.round(local * 100);
+
+      reportPhase("ATLAS_BUILD_PROGRESS", {
+        status: "LOADING",
+        localPercent: local,
+        message: `Atlas build active · ${chunkIndex}/${totalChunks} chunks · elapsed ${formatElapsed(nowMs() - state.canvasBootStartedAtMs)}`,
+        chunkIndex,
+        totalChunks,
+        detail: {
+          atlasBuildProgress: state.atlasBuildProgress,
+          rowsComplete: yEnd,
+          totalRows: height
+        }
+      });
+
+      await yieldBrowser("atlas-build");
+    }
+
+    state.atlasBuildComplete = true;
+    state.atlasBuildProgress = 100;
+
+    refs.atlas = {
+      width,
+      height,
+      raw,
+      elevation,
+      depth,
+      flags
+    };
+
+    reportPhase("ATLAS_BUILD_COMPLETE", {
+      status: "READY",
+      percent: PHASE_PROGRESS.ATLAS_BUILD_COMPLETE,
+      message: "Atlas build complete.",
+      detail: { width, height }
+    });
+
+    return refs.atlas;
+  }
+
+  async function composeTexture(atlas) {
+    state.textureComposeStarted = true;
+    state.textureComposeProgress = 0;
+
+    reportPhase("TEXTURE_COMPOSE_STARTED", {
+      status: "LOADING",
+      percent: PHASE_PROGRESS.TEXTURE_COMPOSE_STARTED,
+      message: "Texture composition started.",
+      detail: { width: atlas.width, height: atlas.height }
+    });
+
+    if (!refs.textureCanvas) {
+      refs.textureCanvas = createElementCanvas(atlas.width, atlas.height);
+      refs.textureCtx = refs.textureCanvas ? refs.textureCanvas.getContext("2d", { alpha: false }) : null;
+    }
+
+    refs.textureCanvas.width = atlas.width;
+    refs.textureCanvas.height = atlas.height;
+
+    const image = refs.textureCtx.createImageData(atlas.width, atlas.height);
+    const data = image.data;
+
+    const rowsPerChunk = 8;
+    const totalChunks = Math.ceil(atlas.height / rowsPerChunk);
+
+    for (let y = 0; y < atlas.height; y += rowsPerChunk) {
+      const yEnd = Math.min(atlas.height, y + rowsPerChunk);
+
+      for (let row = y; row < yEnd; row += 1) {
+        const v = row / Math.max(1, atlas.height - 1);
+        const lat = (0.5 - v) * Math.PI;
+
+        for (let x = 0; x < atlas.width; x += 1) {
+          const u = x / Math.max(1, atlas.width - 1);
+          const lon = (u - 0.5) * TWO_PI;
+          const index = row * atlas.width + x;
+          const sample = {
+            raw: atlas.raw[index],
+            elevation: atlas.elevation[index],
+            depth: atlas.depth[index],
+            land: atlas.flags[index] === 1,
+            shelf: atlas.flags[index] === 2,
+            wetEdge: smoothstep(-0.14, 0.10, atlas.raw[index]) * (1 - smoothstep(0.12, 0.42, atlas.raw[index])),
+            materialNoise: fbm(u * 36.0, v * 20.0, 99.9, 4),
+            u,
+            v
+          };
+          const color = colorForSample(sample, lon, lat);
+          const p = index * 4;
+
+          data[p] = color[0];
+          data[p + 1] = color[1];
+          data[p + 2] = color[2];
+          data[p + 3] = color[3];
+        }
+      }
+
+      const chunkIndex = Math.floor(y / rowsPerChunk) + 1;
+      const local = chunkIndex / totalChunks;
+      state.textureComposeProgress = Math.round(local * 100);
+
+      reportPhase("TEXTURE_COMPOSE_PROGRESS", {
+        status: "LOADING",
+        localPercent: local,
+        message: `Texture composition active · ${state.textureComposeProgress}% · elapsed ${formatElapsed(nowMs() - state.canvasBootStartedAtMs)}`,
+        chunkIndex,
+        totalChunks,
+        detail: {
+          textureComposeProgress: state.textureComposeProgress,
+          rowsComplete: yEnd,
+          totalRows: atlas.height
+        }
+      });
+
+      await yieldBrowser("texture-compose");
+    }
+
+    refs.textureCtx.putImageData(image, 0, 0);
+    refs.textureImage = refs.textureCtx.getImageData(0, 0, atlas.width, atlas.height);
+
+    state.textureComposeComplete = true;
+    state.textureComposeProgress = 100;
+
+    reportPhase("TEXTURE_COMPOSE_COMPLETE", {
+      status: "READY",
+      percent: PHASE_PROGRESS.TEXTURE_COMPOSE_COMPLETE,
+      message: "Texture composition complete.",
+      detail: { width: atlas.width, height: atlas.height }
+    });
+
+    return refs.textureImage;
+  }
+
+  function sampleTexture(u, v) {
+    const texture = refs.textureImage;
+    if (!texture) return [18, 46, 56, 255];
+
+    const width = texture.width;
+    const height = texture.height;
+    const x = Math.floor(((u % 1 + 1) % 1) * (width - 1));
+    const y = Math.floor(clamp(v, 0, 1) * (height - 1));
+    const index = (y * width + x) * 4;
+    const data = texture.data;
+
+    return [data[index], data[index + 1], data[index + 2], data[index + 3]];
+  }
+
+  function drawSphereToBuffer(force = false) {
+    if (!refs.bufferCanvas || !refs.bufferCtx || !refs.textureImage) return false;
+
+    const canvas = refs.bufferCanvas;
+    const ctx = refs.bufferCtx;
+    const w = canvas.width;
+    const h = canvas.height;
+    const d = Math.min(w, h);
+    const cx = w / 2;
+    const cy = h / 2;
+    const radius = d * 0.468;
+
+    const image = ctx.createImageData(w, h);
+    const data = image.data;
+
+    const sinTilt = Math.sin(state.tilt);
+    const cosTilt = Math.cos(state.tilt);
+
+    for (let y = 0; y < h; y += 1) {
+      const ny = (y + 0.5 - cy) / radius;
+
+      for (let x = 0; x < w; x += 1) {
+        const nx = (x + 0.5 - cx) / radius;
+        const r2 = nx * nx + ny * ny;
+        const p = (y * w + x) * 4;
+
+        if (r2 > 1) {
+          data[p] = 0;
+          data[p + 1] = 0;
+          data[p + 2] = 0;
+          data[p + 3] = 0;
+          continue;
+        }
+
+        const z = Math.sqrt(1 - r2);
+
+        const yy = ny * cosTilt - z * sinTilt;
+        const zz = ny * sinTilt + z * cosTilt;
+
+        const lon = Math.atan2(nx, zz) + state.rotation;
+        const lat = Math.asin(clamp(-yy, -1, 1));
+
+        const u = (lon / TWO_PI + 1) % 1;
+        const v = 0.5 - lat / Math.PI;
+        const c = sampleTexture(u, v);
+
+        const limb = smoothstep(1.0, 0.58, Math.sqrt(r2));
+        const day = 0.34 + 0.66 * Math.pow(clamp(zz * 0.72 + 0.42, 0, 1), 0.72);
+        const atmospheric = smoothstep(0.76, 1.0, Math.sqrt(r2));
+        const shade = clamp(day * (0.58 + limb * 0.42), 0.12, 1.05);
+
+        data[p] = clamp(c[0] * shade + atmospheric * 6, 0, 255);
+        data[p + 1] = clamp(c[1] * shade + atmospheric * 18, 0, 255);
+        data[p + 2] = clamp(c[2] * shade + atmospheric * 24, 0, 255);
+        data[p + 3] = Math.round(255 * smoothstep(1.01, 0.965, Math.sqrt(r2)));
+      }
+    }
+
+    ctx.putImageData(image, 0, 0);
+
+    ctx.save();
+    ctx.globalCompositeOperation = "screen";
+    const glow = ctx.createRadialGradient(cx - radius * 0.28, cy - radius * 0.34, radius * 0.08, cx, cy, radius);
+    glow.addColorStop(0, "rgba(255,244,216,0.10)");
+    glow.addColorStop(0.44, "rgba(141,216,255,0.035)");
+    glow.addColorStop(1, "rgba(141,216,255,0)");
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, TWO_PI);
+    ctx.fill();
+    ctx.restore();
+
+    ctx.save();
+    ctx.globalCompositeOperation = "source-over";
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius * 1.006, 0, TWO_PI);
+    ctx.strokeStyle = "rgba(141,216,255,0.15)";
+    ctx.lineWidth = Math.max(1, d * 0.006);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius * 1.045, 0, TWO_PI);
+    ctx.strokeStyle = "rgba(141,216,255,0.052)";
+    ctx.lineWidth = Math.max(1, d * 0.014);
+    ctx.stroke();
+    ctx.restore();
+
+    return true;
+  }
+
+  function drawFrame(force = false) {
+    const canvas = refs.canvas;
+    const ctx = refs.ctx;
+    if (!canvas || !ctx) return false;
+
+    sizeCanvas();
+
+    const now = nowMs();
+    const shouldDraw = force || state.dragging || !state.lastRenderAt || now - state.lastRenderAt >= 42;
+    if (!shouldDraw) return false;
+
+    state.lastRenderAt = now;
+
+    if (!state.dragging) {
+      state.rotation += state.spinRate * Math.max(16, Math.min(48, now - (state.lastRenderAt || now)));
+    }
+
+    const w = canvas.width;
+    const h = canvas.height;
+    const cx = w / 2;
+    const cy = h / 2;
+    const radius = Math.min(w, h) * 0.39;
+
+    ctx.clearRect(0, 0, w, h);
+
+    const bg = ctx.createRadialGradient(cx, cy, radius * 0.1, cx, cy, radius * 1.8);
+    bg.addColorStop(0, "rgba(26,68,84,0.22)");
+    bg.addColorStop(0.62, "rgba(3,12,22,0.76)");
+    bg.addColorStop(1, "rgba(1,4,10,0.97)");
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, w, h);
+
+    if (refs.textureImage && refs.bufferCanvas) {
+      drawSphereToBuffer(force);
+      ctx.drawImage(refs.bufferCanvas, cx - radius, cy - radius, radius * 2, radius * 2);
+    } else {
+      drawPlaceholder();
+    }
+
+    state.frames += 1;
+    state.imageRendered = true;
+
+    return true;
+  }
+
+  function startRenderLoop() {
+    if (state.renderLoopActive) return;
+
+    state.renderLoopActive = true;
+
+    const loop = () => {
+      if (!state.renderLoopActive) return;
+      drawFrame(false);
+      state.animationFrameId = root.requestAnimationFrame ? root.requestAnimationFrame(loop) : root.setTimeout(loop, 42);
+    };
+
+    state.animationFrameId = root.requestAnimationFrame ? root.requestAnimationFrame(loop) : root.setTimeout(loop, 42);
+  }
+
+  function stopRenderLoop() {
+    state.renderLoopActive = false;
+
+    if (state.animationFrameId) {
+      if (root.cancelAnimationFrame) root.cancelAnimationFrame(state.animationFrameId);
+      else root.clearTimeout(state.animationFrameId);
+      state.animationFrameId = 0;
+    }
+  }
+
+  function bindDrag() {
+    const canvas = refs.canvas;
+    const mount = refs.mount;
+    const target = canvas || mount;
+    if (!target || target.dataset.hearthDragInspectionBound === "true") return;
+
+    const onDown = (event) => {
+      state.dragging = true;
+      state.lastPointerX = event.clientX ?? (event.touches && event.touches[0] ? event.touches[0].clientX : 0);
+      state.lastPointerY = event.clientY ?? (event.touches && event.touches[0] ? event.touches[0].clientY : 0);
+      state.dragStartedAt = nowMs();
+
+      try {
+        if (target.setPointerCapture && event.pointerId != null) target.setPointerCapture(event.pointerId);
+      } catch (_error) {}
+    };
+
+    const onMove = (event) => {
+      if (!state.dragging) return;
+
+      const x = event.clientX ?? (event.touches && event.touches[0] ? event.touches[0].clientX : state.lastPointerX);
+      const y = event.clientY ?? (event.touches && event.touches[0] ? event.touches[0].clientY : state.lastPointerY);
+      const dx = x - state.lastPointerX;
+      const dy = y - state.lastPointerY;
+
+      state.lastPointerX = x;
+      state.lastPointerY = y;
+      state.rotation -= dx * 0.0085;
+      state.tilt = clamp(state.tilt + dy * 0.0035, -0.72, 0.72);
+
+      drawFrame(true);
+
+      if (event.cancelable) event.preventDefault();
+    };
+
+    const onUp = (event) => {
+      state.dragging = false;
+
+      try {
+        if (target.releasePointerCapture && event.pointerId != null) target.releasePointerCapture(event.pointerId);
+      } catch (_error) {}
+    };
+
+    target.addEventListener("pointerdown", onDown, { passive: false });
+    target.addEventListener("pointermove", onMove, { passive: false });
+    target.addEventListener("pointerup", onUp, { passive: true });
+    target.addEventListener("pointercancel", onUp, { passive: true });
+    target.addEventListener("lostpointercapture", onUp, { passive: true });
+
+    target.dataset.hearthDragInspectionBound = "true";
+    if (mount) mount.dataset.hearthDragInspectionBound = "true";
+    if (doc && doc.documentElement) doc.documentElement.dataset.hearthDragInspectionBound = "true";
+
+    state.dragInspectionBound = true;
+
+    reportPhase("DRAG_INSPECTION_BOUND", {
+      status: "BOUND",
+      percent: PHASE_PROGRESS.DRAG_INSPECTION_BOUND,
+      message: "Drag inspection bound.",
+      detail: { target: target === canvas ? "canvas" : "mount" }
+    });
+
+    invokeCallback("onDragBound", getReceipt());
   }
 
   function publishDataset() {
-    const dataset = getDataset();
-    if (!dataset) return;
+    if (!doc || !doc.documentElement) return;
 
-    dataset.hearthCanvasAuthorityLoaded = "true";
+    const dataset = doc.documentElement.dataset;
+
     dataset.hearthCanvasContract = CONTRACT;
     dataset.hearthCanvasReceipt = RECEIPT;
     dataset.hearthCanvasPreviousContract = PREVIOUS_CONTRACT;
-    dataset.hearthCanvasConductorContract = CONDUCTOR_CONTRACT;
-    dataset.hearthCanvasDestinationFile = DESTINATION_FILE;
+    dataset.hearthCanvasBaselineContract = BASELINE_CONTRACT;
+    dataset.hearthCanvasVersion = VERSION;
+
+    dataset.hearthCanvasCooperativeBootAvailable = String(state.cooperativeBootAvailable);
+    dataset.hearthCanvasCooperativeBootUsed = String(state.cooperativeBootUsed);
+    dataset.hearthCanvasSyncBootFallbackUsed = String(state.syncBootFallbackUsed);
+    dataset.hearthCanvasBootInProgress = String(state.bootInProgress);
+    dataset.hearthCanvasBootComplete = String(state.bootComplete);
 
     dataset.hearthCanvasMountPresent = String(state.mountPresent);
-    dataset.hearthCanvasMounted = String(state.mounted);
+    dataset.hearthCanvasElementPresent = String(state.canvasElementPresent);
+    dataset.hearthCanvasContextReady = String(state.contextReady);
     dataset.hearthCanvasCarrierMounted = String(state.canvasCarrierMounted);
-    dataset.hearthVisibleCarrierMounted = String(state.visibleCarrierMounted);
-    dataset.hearthCanvasImageRendered = String(state.imageRendered);
+    dataset.hearthVisibleCarrierMounted = String(state.canvasCarrierMounted);
+    dataset.hearthCanvasCarrierHandoffOk = String(state.canvasCarrierHandoffOk);
+    dataset.hearthCanvasCarrierMethod = state.canvasCarrierMethod;
+
+    dataset.hearthCanvasBootStartedAt = state.canvasBootStartedAt;
+    dataset.hearthCanvasBootCompletedAt = state.canvasBootCompletedAt;
+    dataset.hearthCanvasBootElapsedMs = String(state.canvasBootElapsedMs);
+    dataset.hearthCanvasYieldCount = String(state.canvasYieldCount);
+    dataset.hearthCanvasPhaseCount = String(state.canvasPhaseCount);
+    dataset.hearthCanvasLastPhase = state.lastCanvasPhase;
+    dataset.hearthCanvasLastProgress = String(state.lastCanvasProgress);
+    dataset.hearthLoaderRepaintDuringCanvasBoot = String(state.loaderRepaintDuringCanvasBoot);
+    dataset.hearthF13ProgressStreamActive = String(state.f13ProgressStreamActive);
+
+    dataset.hearthAtlasBuildStarted = String(state.atlasBuildStarted);
+    dataset.hearthAtlasBuildProgress = String(state.atlasBuildProgress);
+    dataset.hearthAtlasBuildComplete = String(state.atlasBuildComplete);
+    dataset.hearthTextureComposeStarted = String(state.textureComposeStarted);
+    dataset.hearthTextureComposeProgress = String(state.textureComposeProgress);
+    dataset.hearthTextureComposeComplete = String(state.textureComposeComplete);
+
+    dataset.hearthFirstFrameRequested = String(state.firstFrameRequested);
+    dataset.hearthFirstFrameDetected = String(state.firstFrameDetected);
     dataset.hearthImageRendered = String(state.imageRendered);
-
     dataset.hearthDragInspectionBound = String(state.dragInspectionBound);
-    dataset.hearthControlsBound = String(state.pointerControlsBound);
-
-    dataset.hearthLoadingScreenPreserved = "true";
-    dataset.hearthReceiptOverlayIndependent = "true";
-    dataset.hearthRuntimeTableOptional = "true";
-    dataset.hearthRuntimeTableMissingDoesNotBlockCarrier = "true";
-    dataset.hearthVisibleCarrierFirst = "true";
-    dataset.hearthWideProbeDeferred = "true";
-    dataset.hearthSourceAuthorityHeld = "true";
-
-    dataset.hearthCanvasTextureBuilt = String(state.textureBuilt);
-    dataset.hearthCanvasTextureSourceMode = state.textureSourceMode;
-    dataset.hearthCanvasFrames = String(state.frames);
-
+    dataset.hearthCanvasReady = String(state.canvasReady);
     dataset.hearthCanvasPostgameStatus = state.postgameStatus;
     dataset.hearthCanvasFirstFailedCoordinate = state.firstFailedCoordinate;
     dataset.hearthCanvasRecommendedNextRenewalTarget = state.recommendedNextRenewalTarget;
 
-    dataset.hearthCoherentExpressionPass = "false";
-    dataset.hearthVisualPassClaimed = "false";
+    dataset.hearthSourceAuthorityHeld = "true";
+    dataset.hearthRuntimeTableOptional = "true";
+    dataset.hearthRuntimeTableMissingDoesNotBlockCarrier = "true";
+    dataset.hearthVisibleCarrierFirst = "true";
+    dataset.hearthWideProbeDeferred = "true";
+
     dataset.generatedImage = "false";
     dataset.graphicBox = "false";
     dataset.webgl = "false";
     dataset.visualPassClaimed = "false";
   }
 
-  function publish(reason) {
-    state.updatedAt = nowIso();
+  function publishGlobals() {
+    root.HEARTH = root.HEARTH || {};
+    root.HEARTH.canvas = api;
+
+    root.HEARTH_CANVAS = api;
+    root.HearthCanvas = api;
+    root.HEARTH_CANVAS_CONTRACT = CONTRACT;
+    root.HEARTH_CANVAS_RECEIPT = getReceipt();
+    root.HEARTH_CANVAS_POSTGAME_RECEIPT = root.HEARTH_CANVAS_RECEIPT;
+
+    root.__HEARTH_CANVAS_CONTRACT__ = CONTRACT;
+    root.__HEARTH_CANVAS_RECEIPT__ = RECEIPT;
+    root.__HEARTH_CANVAS_COOPERATIVE_BOOT_AVAILABLE__ = true;
+    root.__HEARTH_CANVAS_VISUAL_PASS_CLAIMED__ = false;
 
     publishDataset();
-
-    root.HEARTH_CANVAS_POSTGAME_RECEIPT = getReceipt(reason);
-    root.HEARTH_CANVAS_RECEIPT = root.HEARTH_CANVAS_POSTGAME_RECEIPT;
-    root.HEARTH_CANVAS_CONTRACT = CONTRACT;
-
-    const statusNode =
-      doc &&
-      (
-        doc.getElementById("hearth-route-status") ||
-        doc.querySelector("[data-hearth-route-status='true']") ||
-        doc.querySelector("[data-hearth-route-status]")
-      );
-
-    if (statusNode) {
-      const existing = statusNode.textContent || "";
-
-      if (!existing.includes(CONTRACT) || state.frames < 3 || state.frames % 120 === 0) {
-        statusNode.textContent = [
-          "Hearth canvas visible carrier active.",
-          `Canvas contract ${CONTRACT}`,
-          `Receipt ${RECEIPT}`,
-          `Previous canvas ${PREVIOUS_CONTRACT}`,
-          `Conductor expected ${CONDUCTOR_CONTRACT}`,
-          `Status ${state.postgameStatus}`,
-          `Reason ${reason}`,
-          `Mount present ${state.mountPresent}`,
-          `Canvas carrier mounted ${state.canvasCarrierMounted}`,
-          `Visible carrier mounted ${state.visibleCarrierMounted}`,
-          `Loading screen preserved ${state.loadingScreenPreserved}`,
-          `Receipt overlay independent ${state.receiptOverlayIndependent}`,
-          `Runtime Table optional ${state.runtimeTableOptional}`,
-          `Runtime Table missing does not block carrier ${state.runtimeTableMissingDoesNotBlockCarrier}`,
-          `Texture built ${state.textureBuilt}`,
-          `Texture source mode ${state.textureSourceMode}`,
-          `Drag inspection bound ${state.dragInspectionBound}`,
-          `Image rendered ${state.imageRendered}`,
-          "Coherent expression pass false",
-          "Visual pass claimed false",
-          `First failed coordinate ${state.firstFailedCoordinate}`,
-          `Recommended next renewal target ${state.recommendedNextRenewalTarget}`,
-          `Frames ${state.frames}`,
-          `Updated ${state.updatedAt}`
-        ].join("\n");
-      }
-    }
-
-    log("PUBLISH", {
-      reason,
-      postgameStatus: state.postgameStatus,
-      firstFailedCoordinate: state.firstFailedCoordinate,
-      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget
-    });
   }
 
-  function getAuthority(name) {
-    switch (name) {
-      case "runtimeTable":
-        return (
-          root.LAB_RUNTIME_TABLE ||
-          root.DexterRuntimeTable ||
-          root.RUNTIME_TABLE ||
-          root.LAB_UNIVERSAL_PLANET_RUNTIME_TABLE ||
-          (root.DEXTER_LAB && root.DEXTER_LAB.runtimeTable) ||
-          null
-        );
+  async function bootCooperative(payload = {}) {
+    if (state.bootInProgress && state.bootPromise) return state.bootPromise;
 
-      case "tectonics":
-        return root.HEARTH_TECTONICS || root.HearthTectonics || (root.HEARTH && root.HEARTH.tectonics) || null;
+    state.bootPayload = payload || {};
+    state.cooperativeBootUsed = true;
+    state.syncBootFallbackUsed = false;
+    state.canvasCarrierMethod = "bootCooperative";
+    state.bootInProgress = true;
+    state.bootComplete = false;
+    state.canvasBootStartedAt = nowIso();
+    state.canvasBootStartedAtMs = nowMs();
+    state.canvasBootCompletedAt = "";
+    state.canvasBootCompletedAtMs = 0;
+    state.canvasBootElapsedMs = 0;
+    state.canvasYieldCount = 0;
+    state.canvasPhaseCount = 0;
+    state.lastCanvasPhase = "";
+    state.lastCanvasProgress = 0;
+    state.loaderRepaintDuringCanvasBoot = false;
+    state.f13ProgressStreamActive = true;
+    state.postgameStatus = "COOPERATIVE_CANVAS_BOOT_PENDING";
+    state.firstFailedCoordinate = "F13_CANVAS_BOOT_STARTED";
+    state.recommendedNextRenewalTarget = "execute-hearth-js-cooperative-handoff-second";
+    state.phaseEvents = [];
+    state.errors = [];
 
-      case "elevation":
-        return root.HEARTH_ELEVATION || root.HearthElevation || (root.HEARTH && root.HEARTH.elevation) || null;
-
-      case "composition":
-        return root.HEARTH_COMPOSITION || root.HearthComposition || (root.HEARTH && root.HEARTH.composition) || null;
-
-      case "hydrology":
-        return root.HEARTH_HYDROLOGY || root.HearthHydrology || (root.HEARTH && root.HEARTH.hydrology) || null;
-
-      case "materials":
-        return root.HEARTH_MATERIALS || root.HearthMaterials || (root.HEARTH && root.HEARTH.materials) || null;
-
-      case "hexAuthority":
-        return root.HEARTH_HEX_FOUR_PAIR_AUTHORITY || root.HEARTH_HEX_AUTHORITY || (root.HEARTH && root.HEARTH.hexAuthority) || null;
-
-      case "hexSurface":
-        return root.HEARTH_HEX_SURFACE || root.HearthHexSurface || (root.HEARTH && root.HEARTH.hexSurface) || null;
-
-      default:
-        return null;
-    }
-  }
-
-  function updateSourceAvailability() {
-    state.sourceAvailability.runtimeTable = Boolean(getAuthority("runtimeTable"));
-    state.sourceAvailability.tectonics = Boolean(getAuthority("tectonics"));
-    state.sourceAvailability.elevation = Boolean(getAuthority("elevation"));
-    state.sourceAvailability.composition = Boolean(getAuthority("composition"));
-    state.sourceAvailability.hydrology = Boolean(getAuthority("hydrology"));
-    state.sourceAvailability.materials = Boolean(getAuthority("materials"));
-    state.sourceAvailability.hexAuthority = Boolean(getAuthority("hexAuthority"));
-    state.sourceAvailability.hexSurface = Boolean(getAuthority("hexSurface"));
-
-    return { ...state.sourceAvailability };
-  }
-
-  function normalize3(p) {
-    const x = Number.isFinite(Number(p && p.x)) ? Number(p.x) : 0;
-    const y = Number.isFinite(Number(p && p.y)) ? Number(p.y) : 0;
-    const z = Number.isFinite(Number(p && p.z)) ? Number(p.z) : 1;
-    const m = Math.hypot(x, y, z) || 1;
-
-    return {
-      x: x / m,
-      y: y / m,
-      z: z / m
-    };
-  }
-
-  function vectorFromUv(u, v) {
-    const lon = wrap01(u) * TAU - Math.PI;
-    const lat = Math.PI / 2 - clamp(v, 0, 1) * Math.PI;
-    const c = Math.cos(lat);
-
-    return normalize3({
-      x: Math.sin(lon) * c,
-      y: Math.sin(lat),
-      z: Math.cos(lon) * c
-    });
-  }
-
-  function uvFromLonLat(lon, lat) {
-    return {
-      u: wrap01((lon / DEG + 180) / 360),
-      v: clamp((90 - lat / DEG) / 180, 0, 1)
-    };
-  }
-
-  function hash(x, y, seed) {
-    let h = Math.imul((x | 0) ^ 0x9e3779b9, 0x85ebca6b);
-    h ^= Math.imul((y | 0) ^ seed ^ 0xc2b2ae35, 0x27d4eb2f);
-    h ^= h >>> 15;
-    h = Math.imul(h, 0x85ebca6b);
-    h ^= h >>> 13;
-    h = Math.imul(h, 0xc2b2ae35);
-    h ^= h >>> 16;
-    return (h >>> 0) / 4294967295;
-  }
-
-  function noise(u, v, scale, seed) {
-    const s = Math.max(1, Math.floor(scale));
-    const x = wrap01(u) * s;
-    const y = clamp(v, 0, 1) * s;
-
-    const x0 = Math.floor(x);
-    const y0 = Math.floor(y);
-    const x1 = x0 + 1;
-    const y1 = y0 + 1;
-
-    const xf = x - x0;
-    const yf = y - y0;
-    const sx = xf * xf * (3 - 2 * xf);
-    const sy = yf * yf * (3 - 2 * yf);
-
-    const ax0 = ((x0 % s) + s) % s;
-    const ax1 = ((x1 % s) + s) % s;
-
-    const n00 = hash(ax0, y0, seed);
-    const n10 = hash(ax1, y0, seed);
-    const n01 = hash(ax0, y1, seed);
-    const n11 = hash(ax1, y1, seed);
-
-    return lerp(lerp(n00, n10, sx), lerp(n01, n11, sx), sy);
-  }
-
-  function fbm(u, v, seed, octaves = 5) {
-    let total = 0;
-    let norm = 0;
-    let amp = 0.56;
-    let scale = 3;
-
-    for (let i = 0; i < octaves; i += 1) {
-      total += noise(u + i * 0.013, v - i * 0.017, scale, seed + i * 173) * amp;
-      norm += amp;
-      amp *= 0.52;
-      scale *= 2;
-    }
-
-    return total / Math.max(EPSILON, norm);
-  }
-
-  function ridged(u, v, seed, octaves = 5) {
-    let total = 0;
-    let norm = 0;
-    let amp = 0.60;
-    let scale = 7;
-
-    for (let i = 0; i < octaves; i += 1) {
-      const n = noise(u + i * 0.019, v - i * 0.011, scale, seed + i * 241);
-      total += (1 - Math.abs(n * 2 - 1)) * amp;
-      norm += amp;
-      amp *= 0.53;
-      scale *= 2;
-    }
-
-    return total / Math.max(EPSILON, norm);
-  }
-
-  const FALLBACK_MASSES = Object.freeze([
-    { key: "western-shield", lat: 18 * DEG, lon: -118 * DEG, rx: 48 * DEG, ry: 23 * DEG, angle: 20 * DEG, seed: 11 },
-    { key: "eastern-basin", lat: 6 * DEG, lon: 28 * DEG, rx: 45 * DEG, ry: 24 * DEG, angle: -10 * DEG, seed: 22 },
-    { key: "northern-cold", lat: 61 * DEG, lon: -38 * DEG, rx: 42 * DEG, ry: 18 * DEG, angle: 12 * DEG, seed: 33 },
-    { key: "southern-harsh", lat: -45 * DEG, lon: 84 * DEG, rx: 43 * DEG, ry: 20 * DEG, angle: -18 * DEG, seed: 44 },
-    { key: "equatorial-wet", lat: -10 * DEG, lon: -34 * DEG, rx: 38 * DEG, ry: 19 * DEG, angle: 28 * DEG, seed: 55 },
-    { key: "mountain-arc", lat: 21 * DEG, lon: 138 * DEG, rx: 39 * DEG, ry: 17 * DEG, angle: -24 * DEG, seed: 66 },
-    { key: "broken-archipelago", lat: -31 * DEG, lon: -164 * DEG, rx: 36 * DEG, ry: 14 * DEG, angle: 14 * DEG, seed: 77 }
-  ]);
-
-  const FALLBACK_ISLANDS = Object.freeze([
-    { lat: 69 * DEG, lon: -76 * DEG, rx: 6.5 * DEG, ry: 2.6 * DEG, angle: -20 * DEG, seed: 101 },
-    { lat: 72 * DEG, lon: 44 * DEG, rx: 5.2 * DEG, ry: 2.1 * DEG, angle: 18 * DEG, seed: 102 },
-    { lat: 21 * DEG, lon: 66 * DEG, rx: 5.8 * DEG, ry: 2.4 * DEG, angle: -26 * DEG, seed: 103 },
-    { lat: -19 * DEG, lon: 57 * DEG, rx: 6.4 * DEG, ry: 2.5 * DEG, angle: 20 * DEG, seed: 104 },
-    { lat: 44 * DEG, lon: 123 * DEG, rx: 7.4 * DEG, ry: 2.8 * DEG, angle: -18 * DEG, seed: 105 },
-    { lat: 34 * DEG, lon: 139 * DEG, rx: 5.7 * DEG, ry: 2.1 * DEG, angle: 31 * DEG, seed: 106 },
-    { lat: -9 * DEG, lon: 170 * DEG, rx: 6.6 * DEG, ry: 2.6 * DEG, angle: 34 * DEG, seed: 107 },
-    { lat: -55 * DEG, lon: -84 * DEG, rx: 5.6 * DEG, ry: 2.0 * DEG, angle: 11 * DEG, seed: 108 },
-    { lat: -70 * DEG, lon: 76 * DEG, rx: 6.2 * DEG, ry: 2.2 * DEG, angle: -20 * DEG, seed: 109 }
-  ]);
-
-  function ellipseField(lon, lat, mass) {
-    const dx = wrapPi(lon - mass.lon) * Math.cos(mass.lat);
-    const dy = lat - mass.lat;
-    const ca = Math.cos(mass.angle);
-    const sa = Math.sin(mass.angle);
-    const x = dx * ca - dy * sa;
-    const y = dx * sa + dy * ca;
-    const nx = x / mass.rx;
-    const ny = y / mass.ry;
-    const theta = Math.atan2(ny, nx);
-    const dist = Math.sqrt(nx * nx + ny * ny);
-
-    return { theta, dist, nx, ny };
-  }
-
-  function fallbackLandField(u, v) {
-    const lon = wrap01(u) * TAU - Math.PI;
-    const lat = Math.PI / 2 - clamp(v, 0, 1) * Math.PI;
-
-    let best = {
-      field: -10,
-      mass: FALLBACK_MASSES[0],
-      theta: 0,
-      island: false
-    };
-
-    FALLBACK_MASSES.forEach((mass) => {
-      const e = ellipseField(lon, lat, mass);
-      const chip =
-        Math.sin(e.theta * (7 + mass.seed % 5) + e.nx * 4.7 - e.ny * 3.8) * 0.055 +
-        Math.sin(e.theta * (11 + mass.seed % 3) - mass.seed * 0.11) * 0.045;
-
-      const fracture = (ridged(u + mass.seed * 0.011, v - mass.seed * 0.009, 19000 + mass.seed, 5) - 0.5) * 0.18;
-      const bayCut = smoothstep(0.52, 0.94, noise(u - mass.seed * 0.013, v + mass.seed * 0.017, 96, 20000 + mass.seed)) * 0.10;
-      const field = 1 - e.dist + chip + fracture - bayCut;
-
-      if (field > best.field) {
-        best = {
-          field,
-          mass,
-          theta: e.theta,
-          island: false
-        };
-      }
-    });
-
-    FALLBACK_ISLANDS.forEach((island) => {
-      const e = ellipseField(lon, lat, island);
-      const chip = Math.sin(e.theta * 6 + island.seed * 0.13) * 0.13 + Math.sin(e.theta * 10) * 0.06;
-      const field = 0.35 + chip - e.dist;
-
-      if (field > best.field) {
-        best = {
-          field,
-          mass: FALLBACK_MASSES[6],
-          theta: e.theta,
-          island: true
-        };
-      }
-    });
-
-    const coast = clamp01(1 - smoothstep(0.015, 0.16, Math.abs(best.field)));
-    const shelf = clamp01(smoothstep(-0.28, 0.04, best.field) * (best.field <= 0 ? 1 : 0));
-    const elevation = clamp(-0.42 + best.field * 0.55 + fbm(u, v, 24000, 4) * 0.10, -1, 1);
-
-    return {
-      field: best.field,
-      elevation,
-      isLand: best.field > 0,
-      isWater: best.field <= 0,
-      coast,
-      shelf,
-      mass: best.mass,
-      island: best.island,
-      lon,
-      lat
-    };
-  }
-
-  function safeSampleAuthority(authority, methods, packet) {
-    if (!authority || !isObject(authority)) return null;
-
-    for (const method of methods) {
-      if (!isFunction(authority[method])) continue;
-
+    state.bootPromise = (async () => {
       try {
-        const result = authority[method](packet);
-
-        if (result && isObject(result)) {
-          return result;
-        }
-      } catch (_error) {
-        try {
-          const result = authority[method](packet.u, packet.v);
-
-          if (result && isObject(result)) {
-            return result;
+        reportPhase("CANVAS_COOPERATIVE_BOOT_STARTED", {
+          status: "LOADING",
+          percent: PHASE_PROGRESS.CANVAS_COOPERATIVE_BOOT_STARTED,
+          message: "Canvas cooperative boot started.",
+          detail: {
+            mountId: payload.mountId || payload.mountID || state.mountId,
+            conductor: CONDUCTOR_FILE
           }
-        } catch (_error2) {}
-      }
-    }
+        });
 
-    return null;
-  }
+        await yieldBrowser("before-mount");
 
-  function sampleSourcePacket(u, v) {
-    const vector = vectorFromUv(u, v);
-    const lon = wrap01(u) * 360 - 180;
-    const lat = 90 - clamp(v, 0, 1) * 180;
+        ensureMount(payload);
+        ensureCanvas(payload);
+        bindResize();
+        drawPlaceholder();
 
-    const packet = {
-      u,
-      v,
-      lon,
-      lat,
-      longitude: lon,
-      latitude: lat,
-      x: vector.x,
-      y: vector.y,
-      z: vector.z
-    };
+        state.canvasCarrierMounted = true;
+        state.canvasCarrierHandoffOk = true;
 
-    const elevationAuthority = getAuthority("elevation");
-    const compositionAuthority = getAuthority("composition");
-    const hydrologyAuthority = getAuthority("hydrology");
-    const materialsAuthority = getAuthority("materials");
-    const hexSurfaceAuthority = getAuthority("hexSurface");
-
-    const elevation = safeSampleAuthority(elevationAuthority, ["sample", "read", "getElevation", "sampleElevation"], packet);
-    const composition = safeSampleAuthority(compositionAuthority, ["sample", "read", "compose", "sampleComposition", "readComposition"], elevation || packet);
-    const hydrology = safeSampleAuthority(hydrologyAuthority, ["sample", "read", "sampleHydrology", "readHydrology", "getHydrology"], composition || elevation || packet);
-    const materials = safeSampleAuthority(materialsAuthority, ["sample", "read", "sampleMaterial", "getMaterial", "resolve"], {
-      ...packet,
-      elevation,
-      composition,
-      hydrology
-    });
-    const hexSurface = safeSampleAuthority(hexSurfaceAuthority, ["sample", "read", "sampleSurface", "getSurface"], {
-      ...packet,
-      elevation,
-      composition,
-      hydrology,
-      materials
-    });
-
-    return {
-      packet,
-      elevation,
-      composition,
-      hydrology,
-      materials,
-      hexSurface
-    };
-  }
-
-  function extractRgb(source) {
-    if (!source || !isObject(source)) return null;
-
-    const keys = [
-      "rgb",
-      "color",
-      "materialRgb",
-      "surfaceRgb",
-      "finalRgb",
-      "finalColor",
-      "finalColorHint",
-      "baseColor",
-      "landRgb",
-      "waterRgb",
-      "oceanRgb"
-    ];
-
-    for (const key of keys) {
-      const value = source[key];
-
-      if (
-        Array.isArray(value) &&
-        value.length >= 3 &&
-        value.every((item) => Number.isFinite(Number(item)))
-      ) {
-        return [
-          clamp(Math.round(Number(value[0])), 0, 255),
-          clamp(Math.round(Number(value[1])), 0, 255),
-          clamp(Math.round(Number(value[2])), 0, 255)
-        ];
-      }
-    }
-
-    return null;
-  }
-
-  function colorFromSource(sample, u, v) {
-    const elevation = sample.elevation || {};
-    const composition = sample.composition || {};
-    const hydrology = sample.hydrology || {};
-    const materials = sample.materials || {};
-    const hexSurface = sample.hexSurface || {};
-
-    const direct =
-      extractRgb(hexSurface) ||
-      extractRgb(materials);
-
-    if (direct) return direct;
-
-    const elevationValue = Number.isFinite(Number(composition.elevation))
-      ? Number(composition.elevation)
-      : Number.isFinite(Number(elevation.elevation))
-        ? Number(elevation.elevation)
-        : 0;
-
-    const isLand =
-      composition.isLand === true ||
-      elevation.isLand === true ||
-      elevationValue > 0;
-
-    const isWater =
-      composition.isWater === true ||
-      elevation.isWater === true ||
-      elevationValue <= 0;
-
-    const hydrologyClass = hydrology.hydrologyClass || hydrology.waterBoundaryClass || "";
-    const terrainClass = composition.worldTerrainClass || composition.terrainClass || elevation.terrainClassHint || "";
-    const climateClass = composition.climateClass || elevation.climateHint || "";
-    const coast = clamp01(
-      Number(composition.coastPotential || 0) ||
-      Number(elevation.coastPotential || 0) ||
-      Number(hydrology.waterlineBoundaryStrength || 0) ||
-      Number(hydrology.beachStrength || 0)
-    );
-    const shelf = clamp01(
-      Number(hydrology.shelfGradient || 0) ||
-      Number(hydrology.shallowShelfStrength || 0) ||
-      Number(composition.shelfPotential || 0) ||
-      Number(elevation.shelfPotential || 0)
-    );
-    const relief = clamp01(
-      Number(composition.reliefStrength || 0) ||
-      Number(composition.mountainArcPotential || 0) ||
-      Number(elevation.mountainArcPotential || 0) ||
-      Number(composition.escarpmentPotential || 0)
-    );
-
-    if (isWater) {
-      let c = mix(COLOR.abyss, COLOR.deep, clamp01((Number(elevation.waterDepthPotential || 0) + Number(hydrology.waterDepth || 0)) * 0.5));
-      c = mix(c, COLOR.ocean, smoothstep(-0.36, -0.04, elevationValue) * 0.52);
-      c = mix(c, COLOR.shelf, shelf * 0.60);
-      c = mix(c, COLOR.waterline, clamp01(Number(hydrology.waterlineBoundaryStrength || 0)) * 0.38);
-      c = mix(c, COLOR.foam, coast * shelf * 0.18);
-      return c;
-    }
-
-    let c = COLOR.plains;
-
-    if (
-      terrainClass.includes("mountain") ||
-      terrainClass.includes("ridge") ||
-      terrainClass.includes("summit") ||
-      climateClass.includes("alpine")
-    ) {
-      c = mix(COLOR.highland, COLOR.mountain, clamp01(relief * 0.85 + elevationValue * 0.35));
-    } else if (terrainClass.includes("cliff") || terrainClass.includes("escarpment")) {
-      c = COLOR.cliff;
-    } else if (terrainClass.includes("canyon")) {
-      c = mix(COLOR.basalt, COLOR.desert, 0.35);
-    } else if (terrainClass.includes("basin") || climateClass.includes("rainforest") || climateClass.includes("monsoon")) {
-      c = mix(COLOR.wetForest, COLOR.forest, 0.35);
-    } else if (climateClass.includes("arid") || terrainClass.includes("plateau")) {
-      c = mix(COLOR.savanna, COLOR.desert, 0.48);
-    } else if (climateClass.includes("polar") || terrainClass.includes("ice")) {
-      c = COLOR.ice;
-    } else if (climateClass.includes("tundra")) {
-      c = COLOR.tundra;
-    } else if (climateClass.includes("temperate")) {
-      c = mix(COLOR.grass, COLOR.highland, 0.30);
-    }
-
-    if (hydrologyClass.includes("wet_stone")) c = mix(c, COLOR.wetStone, 0.36);
-    if (hydrologyClass.includes("cliff")) c = mix(c, COLOR.cliff, 0.30);
-    if (hydrologyClass.includes("beach") || hydrologyClass.includes("sand")) c = mix(c, COLOR.beach, 0.42);
-
-    c = mix(c, COLOR.beach, coast * 0.20);
-    c = lift(c, relief * 20 + fbm(u, v, 41000, 4) * 8 - 5);
-
-    return c;
-  }
-
-  function fallbackColor(u, v) {
-    const land = fallbackLandField(u, v);
-
-    if (!land.isLand) {
-      let c = mix(COLOR.abyss, COLOR.deep, noise(u, v, 12, 31000));
-      c = mix(c, COLOR.ocean, smoothstep(0.20, 0.90, land.shelf) * 0.48);
-      c = mix(c, COLOR.shelf, land.shelf * 0.58);
-      c = mix(c, COLOR.foam, land.coast * land.shelf * 0.16);
-      return c;
-    }
-
-    const latCold = Math.abs(land.lat) / (Math.PI / 2);
-    const heat = clamp01(1 - latCold + (noise(u, v, 8, 33000) - 0.5) * 0.24);
-    const moisture = clamp01(noise(u + 0.17, v - 0.11, 10, 34000) * 0.72 + land.coast * 0.22 + (land.island ? 0.08 : 0));
-    const ridge = ridged(u + land.mass.seed * 0.021, v - land.mass.seed * 0.017, 35000, 5);
-    const mountain = smoothstep(0.58, 0.92, ridge);
-    const highland = smoothstep(0.46, 0.82, ridge);
-    const ice = smoothstep(0.68, 0.95, latCold + mountain * 0.16 - heat * 0.12);
-
-    let c;
-
-    if (ice > 0.58) {
-      c = mix(COLOR.tundra, COLOR.ice, ice);
-    } else if (mountain > 0.68) {
-      c = mix(COLOR.highland, COLOR.mountain, mountain);
-    } else if (heat > 0.66 && moisture < 0.32) {
-      c = COLOR.desert;
-    } else if (heat > 0.58 && moisture < 0.48) {
-      c = COLOR.savanna;
-    } else if (moisture > 0.72 && heat > 0.46) {
-      c = COLOR.wetForest;
-    } else if (moisture > 0.56) {
-      c = COLOR.forest;
-    } else if (latCold > 0.52) {
-      c = COLOR.tundra;
-    } else if (moisture < 0.35) {
-      c = COLOR.steppe;
-    } else {
-      c = COLOR.plains;
-    }
-
-    c = mix(c, COLOR.beach, land.coast * 0.22);
-    c = mix(c, COLOR.cliff, land.coast * mountain * 0.30);
-    c = mix(c, COLOR.snow, ice * mountain * 0.34);
-
-    const fine = noise(u + 0.41, v - 0.33, 128, 36000);
-    const relief = mountain * 18 + highland * 8 + fine * 8 - land.coast * 4;
-
-    return lift(c, relief - 6);
-  }
-
-  function sourceColor(u, v) {
-    const availability = updateSourceAvailability();
-
-    if (
-      availability.elevation ||
-      availability.composition ||
-      availability.hydrology ||
-      availability.materials ||
-      availability.hexSurface
-    ) {
-      try {
-        const sample = sampleSourcePacket(u, v);
-        return colorFromSource(sample, u, v);
-      } catch (error) {
-        addError("SOURCE_SAMPLE_FAILED", error && error.message ? error.message : String(error), { u, v });
-      }
-    }
-
-    return fallbackColor(u, v);
-  }
-
-  function createTexture(width, height) {
-    const canvas = doc.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
-
-    const ctx = canvas.getContext("2d", { alpha: false });
-    const image = ctx.createImageData(width, height);
-    const data = image.data;
-
-    const availability = updateSourceAvailability();
-    const usingSources =
-      availability.elevation ||
-      availability.composition ||
-      availability.hydrology ||
-      availability.materials ||
-      availability.hexSurface;
-
-    for (let y = 0; y < height; y += 1) {
-      const v = y / Math.max(1, height - 1);
-
-      for (let x = 0; x < width; x += 1) {
-        const u = x / width;
-        const c = usingSources ? sourceColor(u, v) : fallbackColor(u, v);
-        const i = (y * width + x) * 4;
-
-        data[i] = c[0];
-        data[i + 1] = c[1];
-        data[i + 2] = c[2];
-        data[i + 3] = 255;
-      }
-    }
-
-    ctx.putImageData(image, 0, 0);
-
-    state.textureBuilt = true;
-    state.textureWidth = width;
-    state.textureHeight = height;
-    state.textureSourceMode = usingSources ? "source-authority-opportunistic" : "fallback-visible-carrier";
-    log("TEXTURE_BUILT", {
-      width,
-      height,
-      sourceMode: state.textureSourceMode,
-      availability
-    });
-
-    return {
-      width,
-      height,
-      data
-    };
-  }
-
-  function ensureMount(payload = {}) {
-    if (!doc) return null;
-
-    let mount = payload.mount && payload.mount.nodeType === 1
-      ? payload.mount
-      : null;
-
-    if (!mount && payload.mountId) {
-      mount = doc.getElementById(payload.mountId);
-    }
-
-    if (!mount) {
-      mount =
-        doc.getElementById("hearthCanvasMount") ||
-        doc.querySelector("[data-hearth-canvas-mount='true']") ||
-        doc.querySelector("[data-hearth-canvas-mount]");
-    }
-
-    if (!mount) {
-      const parent = doc.getElementById("hearth-main") || doc.body || doc.documentElement;
-      mount = doc.createElement("section");
-      mount.id = "hearthCanvasMount";
-      mount.dataset.hearthCanvasMount = "true";
-      mount.dataset.hearthCanvasCreatedByCanvasAuthority = "true";
-      mount.style.position = "relative";
-      mount.style.minHeight = "320px";
-      mount.style.aspectRatio = "1 / 1";
-      mount.style.overflow = "hidden";
-      parent.appendChild(mount);
-    }
-
-    mount.id = mount.id || "hearthCanvasMount";
-    mount.dataset.hearthCanvasMount = "true";
-    mount.dataset.hearthCanvasAuthority = CONTRACT;
-    mount.dataset.hearthCanvasAuthorityLoaded = "true";
-    mount.dataset.hearthVisibleCarrierFirst = "true";
-    mount.dataset.runtimeTableOptional = "true";
-    mount.dataset.runtimeTableMissingDoesNotBlockCarrier = "true";
-    mount.dataset.receiptOverlayIndependent = "true";
-    mount.dataset.hearthVisibleCarrierMounted = String(state.visibleCarrierMounted);
-    mount.dataset.hearthCanvasMounted = String(state.canvasCarrierMounted);
-
-    mount.style.position = mount.style.position || "relative";
-    mount.style.touchAction = "none";
-    mount.style.userSelect = "none";
-
-    state.mountPresent = true;
-    state.mountId = mount.id || "hearthCanvasMount";
-
-    return mount;
-  }
-
-  function hideFallbackOnly(mount) {
-    if (!mount) return;
-
-    mount.querySelectorAll("[data-hearth-mount-fallback], .mount-fallback").forEach((fallback) => {
-      fallback.hidden = true;
-      fallback.style.display = "none";
-    });
-  }
-
-  function removePriorCanvasOnly(mount) {
-    if (!mount) return;
-
-    mount.querySelectorAll("canvas[data-hearth-canvas-carrier='true'], canvas[data-hearth-visible-carrier='true']").forEach((canvas) => {
-      canvas.remove();
-    });
-  }
-
-  function createCarrierCanvas(mount) {
-    removePriorCanvasOnly(mount);
-
-    const canvas = doc.createElement("canvas");
-    canvas.dataset.hearthCanvasCarrier = "true";
-    canvas.dataset.hearthVisibleCarrier = "true";
-    canvas.dataset.hearthCanvasContract = CONTRACT;
-    canvas.dataset.hearthCanvasReceipt = RECEIPT;
-    canvas.dataset.hearthCanvasPreviousContract = PREVIOUS_CONTRACT;
-    canvas.dataset.generatedImage = "false";
-    canvas.dataset.graphicBox = "false";
-    canvas.dataset.webgl = "false";
-    canvas.dataset.visualPassClaimed = "false";
-
-    canvas.style.position = "absolute";
-    canvas.style.inset = "0";
-    canvas.style.zIndex = "3";
-    canvas.style.display = "block";
-    canvas.style.width = "100%";
-    canvas.style.height = "100%";
-    canvas.style.touchAction = "none";
-    canvas.style.userSelect = "none";
-    canvas.style.webkitUserSelect = "none";
-    canvas.style.webkitTouchCallout = "none";
-
-    mount.appendChild(canvas);
-    hideFallbackOnly(mount);
-
-    state.canvasCreated = true;
-    state.canvasCarrierMounted = true;
-    state.visibleCarrierMounted = true;
-    state.mounted = true;
-
-    mount.dataset.hearthCanvasMounted = "true";
-    mount.dataset.hearthVisibleCarrierMounted = "true";
-
-    log("CARRIER_CANVAS_CREATED", {
-      mountId: mount.id
-    });
-
-    return canvas;
-  }
-
-  function computeCanvasSize(mount, canvas) {
-    const box = mount.getBoundingClientRect ? mount.getBoundingClientRect() : { width: 420, height: 420 };
-    const cssSize = Math.max(280, Math.floor(Math.min(box.width || 420, box.height || box.width || 420)));
-    const dpr = Math.min(1.75, root.devicePixelRatio || 1);
-    const size = Math.min(640, Math.max(340, Math.floor(cssSize * dpr)));
-
-    if (canvas.width !== size || canvas.height !== size) {
-      canvas.width = size;
-      canvas.height = size;
-    }
-
-    return {
-      width: size,
-      height: size
-    };
-  }
-
-  function sampleTexture(texture, u, v) {
-    const tx = Math.floor(wrap01(u) * texture.width) % texture.width;
-    const ty = clamp(Math.floor(clamp(v, 0, 0.999999) * texture.height), 0, texture.height - 1);
-    const i = (ty * texture.width + tx) * 4;
-
-    return [
-      texture.data[i],
-      texture.data[i + 1],
-      texture.data[i + 2]
-    ];
-  }
-
-  function createInstance(payload = {}) {
-    const mount = ensureMount(payload);
-    const canvas = createCarrierCanvas(mount);
-    const ctx = canvas.getContext("2d", { alpha: true, willReadFrequently: false });
-
-    const textureWidth = clamp(Number(payload.textureWidth || 768), 256, 1400);
-    const textureHeight = clamp(Number(payload.textureHeight || 384), 128, 700);
-    const texture = createTexture(textureWidth, textureHeight);
-
-    const instance = {
-      mount,
-      canvas,
-      ctx,
-      texture,
-      disposed: false,
-      yaw: -0.28,
-      tilt: -0.18,
-      yawVelocity: 0.0022,
-      tiltVelocity: 0,
-      dragging: false,
-      lastX: 0,
-      lastY: 0,
-      frameHandle: 0,
-      payload: clonePlain({
-        hasRuntimeTablePlan: Boolean(payload.runtimeTablePlan),
-        conductorContract: payload.contract || "",
-        route: payload.route || ROUTE
-      })
-    };
-
-    return instance;
-  }
-
-  function renderFrame(instance) {
-    if (!instance || instance.disposed) return;
-
-    const { mount, canvas, ctx, texture } = instance;
-    const size = computeCanvasSize(mount, canvas);
-    const width = size.width;
-    const height = size.height;
-
-    const image = ctx.createImageData(width, height);
-    const data = image.data;
-
-    const cx = width / 2;
-    const cy = height / 2;
-    const radius = Math.min(width, height) * 0.44;
-    const cosT = Math.cos(instance.tilt);
-    const sinT = Math.sin(instance.tilt);
-
-    for (let y = 0; y < height; y += 1) {
-      const sy = (y - cy) / radius;
-
-      for (let x = 0; x < width; x += 1) {
-        const sx = (x - cx) / radius;
-        const rr = sx * sx + sy * sy;
-        const i = (y * width + x) * 4;
-
-        if (rr > 1) {
-          data[i] = 0;
-          data[i + 1] = 0;
-          data[i + 2] = 0;
-          data[i + 3] = 0;
-          continue;
+        if (refs.mount) {
+          refs.mount.dataset.hearthCanvasMounted = "true";
+          refs.mount.dataset.hearthVisibleCarrierMounted = "true";
         }
 
-        const z = Math.sqrt(1 - rr);
-        const yy = sy * cosT + z * sinT;
-        const zz = z * cosT - sy * sinT;
-        const lon = Math.atan2(sx, zz) + instance.yaw;
-        const lat = Math.asin(clamp(yy, -1, 1));
-        const u = lon / TAU + 0.5;
-        const v = 0.5 - lat / Math.PI;
+        reportPhase("CANVAS_MOUNT_CREATED", {
+          status: "MOUNTED",
+          percent: PHASE_PROGRESS.CANVAS_MOUNT_CREATED,
+          message: "Canvas mount created.",
+          detail: {
+            mountId: refs.mount ? refs.mount.id : "",
+            width: refs.canvas ? refs.canvas.width : 0,
+            height: refs.canvas ? refs.canvas.height : 0
+          }
+        });
 
-        let c = sampleTexture(texture, u, v);
+        invokeCallback("onMounted", getReceipt());
 
-        const light = clamp(0.42 + z * 0.58 + sx * -0.08 + sy * -0.08, 0.18, 1.08);
-        const limb = clamp(0.35 + z * 0.78, 0.2, 1);
-        const atmosphericRim = smoothstep(0.72, 1, rr);
+        await yieldBrowser("after-mount");
 
-        c = [
-          Math.round(c[0] * light * limb),
-          Math.round(c[1] * light * limb),
-          Math.round(c[2] * light * limb)
-        ];
+        reportPhase("CANVAS_CONTEXT_READY", {
+          status: "READY",
+          percent: PHASE_PROGRESS.CANVAS_CONTEXT_READY,
+          message: "Canvas context ready.",
+          detail: { context: "2d" }
+        });
 
-        c = mix(c, COLOR.rim, atmosphericRim * 0.44);
-        c = mix(c, COLOR.glow, atmosphericRim * 0.08);
+        bindDrag();
 
-        data[i] = c[0];
-        data[i + 1] = c[1];
-        data[i + 2] = c[2];
-        data[i + 3] = 255;
-      }
-    }
+        await yieldBrowser("before-atlas");
 
-    ctx.putImageData(image, 0, 0);
+        const atlasWidth = clamp(Number(payload.atlasWidth || payload.textureWidth || 512), 256, 768);
+        const atlasHeight = clamp(Number(payload.atlasHeight || payload.textureHeight || 256), 128, 384);
 
-    if (!instance.dragging) {
-      instance.yaw += instance.yawVelocity;
-      instance.tilt += instance.tiltVelocity;
-      instance.yawVelocity *= 0.992;
-      instance.tiltVelocity *= 0.93;
+        const atlas = await buildAtlas(atlasWidth, atlasHeight);
 
-      if (Math.abs(instance.yawVelocity) < 0.0014) {
-        instance.yawVelocity = instance.yawVelocity < 0 ? -0.0014 : 0.0014;
-      }
+        await yieldBrowser("before-texture-compose");
 
-      if (instance.tilt > 1.25) {
-        instance.tilt = 1.25;
-        instance.tiltVelocity *= -0.2;
-      }
+        await composeTexture(atlas);
 
-      if (instance.tilt < -1.25) {
-        instance.tilt = -1.25;
-        instance.tiltVelocity *= -0.2;
-      }
-    }
+        await yieldBrowser("before-first-frame");
 
-    state.frames += 1;
-    state.lastFrameAt = Date.now();
-    state.imageRendered = true;
-    state.animationActive = true;
-    state.canvasCarrierMounted = true;
-    state.visibleCarrierMounted = true;
-    state.postgameStatus = state.sourceAvailability.runtimeTable
-      ? "VISIBLE_CARRIER_ACTIVE_RUNTIME_TABLE_READY"
-      : "VISIBLE_CARRIER_ACTIVE_RUNTIME_TABLE_MISSING";
-    state.firstFailedCoordinate = "NONE_VISIBLE_CARRIER_PRESENT";
-    state.recommendedNextRenewalTarget = "read-postgame-canvas-or-triple-g-receipt";
+        state.firstFrameRequested = true;
 
-    if (state.frames < 4 || state.frames % 120 === 0) {
-      publish(`render-frame-${state.frames}`);
-    }
+        reportPhase("FIRST_FRAME_REQUESTED", {
+          status: "LOADING",
+          percent: PHASE_PROGRESS.FIRST_FRAME_REQUESTED,
+          message: "First frame requested.",
+          detail: {
+            framesBeforeRequest: state.frames
+          }
+        });
 
-    instance.frameHandle = root.requestAnimationFrame(() => renderFrame(instance));
-  }
+        drawFrame(true);
+        startRenderLoop();
 
-  function bindControls(instance) {
-    if (!instance || !instance.canvas || instance.controlsBound) return;
+        await yieldBrowser("first-frame-paint");
 
-    const canvas = instance.canvas;
+        state.firstFrameDetected = true;
+        state.imageRendered = true;
 
-    function pointerDown(event) {
-      instance.dragging = true;
-      state.dragging = true;
-      instance.lastX = event.clientX;
-      instance.lastY = event.clientY;
-      instance.yawVelocity = 0;
-      instance.tiltVelocity = 0;
-      canvas.setPointerCapture?.(event.pointerId);
-      event.preventDefault();
-    }
-
-    function pointerMove(event) {
-      if (!instance.dragging) return;
-
-      const dx = event.clientX - instance.lastX;
-      const dy = event.clientY - instance.lastY;
-
-      instance.lastX = event.clientX;
-      instance.lastY = event.clientY;
-
-      instance.yaw += dx * 0.009;
-      instance.tilt += dy * 0.0075;
-      instance.tilt = clamp(instance.tilt, -1.35, 1.35);
-
-      instance.yawVelocity = dx * 0.00085;
-      instance.tiltVelocity = dy * 0.00055;
-
-      event.preventDefault();
-    }
-
-    function pointerUp(event) {
-      instance.dragging = false;
-      state.dragging = false;
-      canvas.releasePointerCapture?.(event.pointerId);
-      event.preventDefault();
-    }
-
-    canvas.addEventListener("pointerdown", pointerDown, { passive: false });
-    canvas.addEventListener("pointermove", pointerMove, { passive: false });
-    canvas.addEventListener("pointerup", pointerUp, { passive: false });
-    canvas.addEventListener("pointercancel", pointerUp, { passive: false });
-
-    instance.disposeControls = () => {
-      canvas.removeEventListener("pointerdown", pointerDown);
-      canvas.removeEventListener("pointermove", pointerMove);
-      canvas.removeEventListener("pointerup", pointerUp);
-      canvas.removeEventListener("pointercancel", pointerUp);
-    };
-
-    instance.controlsBound = true;
-    state.pointerControlsBound = true;
-    state.dragInspectionBound = true;
-
-    if (instance.mount) {
-      instance.mount.dataset.hearthControlsBound = "true";
-      instance.mount.dataset.hearthDragInspectionBound = "true";
-    }
-
-    log("POINTER_CONTROLS_BOUND", {
-      canvasCarrierMounted: state.canvasCarrierMounted,
-      receiptOverlayIndependent: true
-    });
-  }
-
-  function disposeActiveInstance(reason = "manual-dispose") {
-    if (!activeInstance) return false;
-
-    try {
-      activeInstance.disposed = true;
-
-      if (activeInstance.frameHandle) {
-        root.cancelAnimationFrame(activeInstance.frameHandle);
-      }
-
-      if (isFunction(activeInstance.disposeControls)) {
-        activeInstance.disposeControls();
-      }
-
-      if (activeInstance.canvas && activeInstance.canvas.parentNode) {
-        activeInstance.canvas.parentNode.removeChild(activeInstance.canvas);
-      }
-
-      log("DISPOSE_ACTIVE_INSTANCE", { reason });
-    } catch (error) {
-      addError("DISPOSE_FAILED", error && error.message ? error.message : String(error), { reason });
-    }
-
-    activeInstance = null;
-    state.animationActive = false;
-    state.canvasCarrierMounted = false;
-    state.visibleCarrierMounted = false;
-    state.imageRendered = false;
-    state.postgameStatus = "CANVAS_DISPOSED";
-    state.firstFailedCoordinate = "CANVAS_DISPOSED";
-    state.recommendedNextRenewalTarget = "canvas-remount";
-
-    publish(`dispose-${reason}`);
-
-    return true;
-  }
-
-  function mountVisibleCarrier(payload = {}) {
-    state.conductorPayloadReceived = true;
-    state.conductorReceiptPresent = Boolean(payload.conductorReceipt || payload.contract === CONDUCTOR_CONTRACT);
-    state.runtimeTablePlanConsumed = Boolean(payload.runtimeTablePlan);
-
-    updateSourceAvailability();
-
-    if (activeInstance) {
-      disposeActiveInstance("remount");
-    }
-
-    const instance = createInstance(payload);
-    activeInstance = instance;
-
-    bindControls(instance);
-
-    state.postgameStatus = "VISIBLE_CARRIER_ACTIVE_RUNTIME_TABLE_MISSING";
-    state.firstFailedCoordinate = "NONE_VISIBLE_CARRIER_PRESENT";
-    state.recommendedNextRenewalTarget = "read-postgame-canvas-or-triple-g-receipt";
-
-    state.loadingScreenPreserved = true;
-    state.receiptOverlayIndependent = true;
-    state.canvasCarrierMounted = true;
-    state.visibleCarrierMounted = true;
-    state.imageRendered = false;
-    state.coherentExpressionPass = false;
-    state.visualPassClaimed = false;
-
-    publish("visible-carrier-mounted-before-first-frame");
-
-    if (isObject(payload.callbacks) && isFunction(payload.callbacks.onMounted)) {
-      try {
-        payload.callbacks.onMounted(getReceipt("on-mounted-callback"));
-      } catch (error) {
-        addError("ON_MOUNTED_CALLBACK_FAILED", error && error.message ? error.message : String(error));
-      }
-    }
-
-    root.requestAnimationFrame(() => {
-      renderFrame(instance);
-
-      if (isObject(payload.callbacks) && isFunction(payload.callbacks.onRendered)) {
-        try {
-          payload.callbacks.onRendered(getReceipt("on-rendered-callback"));
-        } catch (error) {
-          addError("ON_RENDERED_CALLBACK_FAILED", error && error.message ? error.message : String(error));
+        if (doc && doc.documentElement) {
+          doc.documentElement.dataset.hearthFirstFrameDetected = "true";
+          doc.documentElement.dataset.hearthImageRendered = "true";
         }
-      }
-    });
 
-    return getReceipt("mount-visible-carrier-return");
+        reportPhase("FIRST_FRAME_DETECTED", {
+          status: "RENDERED",
+          percent: PHASE_PROGRESS.FIRST_FRAME_DETECTED,
+          message: "First frame detected.",
+          detail: {
+            frames: state.frames,
+            imageRendered: true
+          }
+        });
+
+        invokeCallback("onFirstFrame", getReceipt());
+        invokeCallback("onRendered", getReceipt());
+
+        await yieldBrowser("after-first-frame");
+
+        if (!state.dragInspectionBound) bindDrag();
+
+        state.canvasReady = true;
+        state.bootComplete = true;
+        state.bootInProgress = false;
+        state.canvasBootCompletedAt = nowIso();
+        state.canvasBootCompletedAtMs = nowMs();
+        state.canvasBootElapsedMs = state.canvasBootCompletedAtMs - state.canvasBootStartedAtMs;
+        state.postgameStatus = "CANVAS_READY_DIAGNOSTIC_DOCK_ACTIVE";
+        state.firstFailedCoordinate = "NONE_CANVAS_READY";
+        state.recommendedNextRenewalTarget = "execute-hearth-js-cooperative-handoff-second";
+
+        reportPhase("CANVAS_READY", {
+          status: "FINAL_READY",
+          percent: PHASE_PROGRESS.CANVAS_READY,
+          message: "Canvas ready.",
+          detail: {
+            canvasBootElapsedMs: state.canvasBootElapsedMs,
+            canvasYieldCount: state.canvasYieldCount,
+            loaderRepaintDuringCanvasBoot: state.loaderRepaintDuringCanvasBoot,
+            frames: state.frames
+          }
+        });
+
+        invokeCallback("onReady", getReceipt());
+
+        publishGlobals();
+        return getReceipt();
+      } catch (error) {
+        state.bootInProgress = false;
+        state.bootComplete = false;
+        state.canvasCarrierHandoffOk = false;
+        state.canvasCarrierHandoffError = error && error.message ? error.message : String(error);
+        state.postgameStatus = "CANVAS_BOOT_PHASE_ERROR";
+        state.firstFailedCoordinate = "CANVAS_COOPERATIVE_BOOT_ERROR";
+        state.recommendedNextRenewalTarget = "canvas-cooperative-boot-error-receipt-review";
+
+        recordError("CANVAS_COOPERATIVE_BOOT_ERROR", state.canvasCarrierHandoffError);
+
+        invokeCallback("onError", getReceipt());
+
+        publishGlobals();
+        return getReceipt();
+      }
+    })();
+
+    return state.bootPromise;
   }
 
   function boot(payload = {}) {
-    return mountVisibleCarrier(payload);
+    state.syncBootFallbackUsed = false;
+    return bootCooperative(payload);
   }
 
-  function mount(payload = {}) {
-    return mountVisibleCarrier(payload);
+  function mountVisibleCarrier(payload = {}) {
+    return bootCooperative(payload);
   }
 
   function bootVisibleCarrier(payload = {}) {
-    return mountVisibleCarrier(payload);
+    return bootCooperative(payload);
+  }
+
+  function mount(payload = {}) {
+    return bootCooperative(payload);
   }
 
   function start(payload = {}) {
-    return mountVisibleCarrier(payload);
+    return bootCooperative(payload);
   }
 
   function init(payload = {}) {
-    return mountVisibleCarrier(payload);
+    return bootCooperative(payload);
   }
 
   function render(payload = {}) {
-    return mountVisibleCarrier(payload);
+    if (!refs.canvas) {
+      return bootCooperative(payload);
+    }
+
+    drawFrame(true);
+    return getReceipt();
   }
 
   function conduct(payload = {}) {
-    return mountVisibleCarrier(payload);
+    return bootCooperative(payload);
   }
 
-  function refresh(reason = "manual-refresh") {
-    updateSourceAvailability();
-
-    if (activeInstance) {
-      state.canvasCarrierMounted = Boolean(activeInstance.canvas && activeInstance.canvas.parentNode);
-      state.visibleCarrierMounted = state.canvasCarrierMounted;
-      state.imageRendered = state.imageRendered || state.frames > 0;
-      state.dragInspectionBound = Boolean(activeInstance.controlsBound);
-      state.pointerControlsBound = Boolean(activeInstance.controlsBound);
-    }
-
-    publish(reason);
-    return getReceipt(reason);
-  }
-
-  function getReceipt(reason = "receipt-read") {
+  function getReceipt() {
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
-      conductorContract: CONDUCTOR_CONTRACT,
       baselineContract: BASELINE_CONTRACT,
       version: VERSION,
-      authority: "hearth-canvas-visible-carrier",
-      destinationFile: DESTINATION_FILE,
       route: ROUTE,
+      file: FILE,
 
-      activeRouteConductor: CONDUCTOR_FILE,
-      retiredClimateRoute: RETIRED_CLIMATE_ROUTE,
-      retiredClimateRouteActiveCarrier: false,
+      cooperativeBootAvailable: state.cooperativeBootAvailable,
+      cooperativeBootUsed: state.cooperativeBootUsed,
+      syncBootFallbackUsed: state.syncBootFallbackUsed,
 
-      mounted: state.mounted,
+      bootInProgress: state.bootInProgress,
+      bootComplete: state.bootComplete,
+
+      canvasBootStartedAt: state.canvasBootStartedAt,
+      canvasBootCompletedAt: state.canvasBootCompletedAt,
+      canvasBootElapsedMs: state.canvasBootElapsedMs,
+      canvasYieldCount: state.canvasYieldCount,
+      canvasPhaseCount: state.canvasPhaseCount,
+      lastCanvasPhase: state.lastCanvasPhase,
+      lastCanvasProgress: state.lastCanvasProgress,
+      loaderRepaintDuringCanvasBoot: state.loaderRepaintDuringCanvasBoot,
+      f13ProgressStreamActive: state.f13ProgressStreamActive,
+
       mountId: state.mountId,
       mountPresent: state.mountPresent,
-      canvasCreated: state.canvasCreated,
+      canvasElementPresent: state.canvasElementPresent,
+      contextReady: state.contextReady,
       canvasCarrierMounted: state.canvasCarrierMounted,
-      visibleCarrierMounted: state.visibleCarrierMounted,
+      visibleCarrierMounted: state.canvasCarrierMounted,
+      canvasCarrierHandoffOk: state.canvasCarrierHandoffOk,
+      canvasCarrierHandoffError: state.canvasCarrierHandoffError,
+      canvasCarrierMethod: state.canvasCarrierMethod,
 
-      loadingScreenPreserved: true,
-      receiptOverlayIndependent: true,
-      receiptRemovalDoesNotRemoveCanvas: true,
+      atlasWidth: state.atlasWidth,
+      atlasHeight: state.atlasHeight,
+      atlasBuildStarted: state.atlasBuildStarted,
+      atlasBuildProgress: state.atlasBuildProgress,
+      atlasBuildComplete: state.atlasBuildComplete,
+      textureComposeStarted: state.textureComposeStarted,
+      textureComposeProgress: state.textureComposeProgress,
+      textureComposeComplete: state.textureComposeComplete,
 
+      firstFrameRequested: state.firstFrameRequested,
+      firstFrameDetected: state.firstFrameDetected,
+      dragInspectionBound: state.dragInspectionBound,
+      imageRendered: state.imageRendered,
+      canvasReady: state.canvasReady,
+
+      frames: state.frames,
+      renderLoopActive: state.renderLoopActive,
+
+      sourceAuthorityHeld: true,
       runtimeTableOptional: true,
-      runtimeTablePlanConsumed: state.runtimeTablePlanConsumed,
       runtimeTableMissingDoesNotBlockCarrier: true,
-
       visibleCarrierFirst: true,
       wideProbeDeferred: true,
-      sourceAuthorityHeld: true,
 
-      sourceAvailability: { ...state.sourceAvailability },
-      textureBuilt: state.textureBuilt,
-      textureWidth: state.textureWidth,
-      textureHeight: state.textureHeight,
-      textureSourceMode: state.textureSourceMode,
-
-      conductorPayloadReceived: state.conductorPayloadReceived,
-      conductorReceiptPresent: state.conductorReceiptPresent,
-
-      animationActive: state.animationActive,
-      frames: state.frames,
-      lastFrameAt: state.lastFrameAt,
-      dragging: state.dragging,
-      dragInspectionBound: state.dragInspectionBound,
-      pointerControlsBound: state.pointerControlsBound,
-
-      imageRendered: state.imageRendered,
       coherentExpressionPass: false,
       visualPassClaimed: false,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
 
       postgameStatus: state.postgameStatus,
       firstFailedCoordinate: state.firstFailedCoordinate,
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
 
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-
-      ownsRouteShell: false,
-      ownsRouteOrchestration: false,
-      ownsRuntimeTableTruth: false,
-      ownsTectonicCause: false,
-      ownsElevationGeneration: false,
-      ownsCompositionClassification: false,
-      ownsHydrologyTruth: false,
-      ownsMaterialPalette: false,
-      ownsFinalVisualPassClaim: false,
-
-      reason,
-      errors: clonePlain(state.errors),
-      events: clonePlain(state.events),
+      phaseEvents: safeJson(state.phaseEvents),
+      errors: safeJson(state.errors),
       updatedAt: nowIso()
     };
   }
 
-  function getReceiptText(reason = "receipt-text") {
-    const receipt = getReceipt(reason);
+  function getReceiptText() {
+    const receipt = getReceipt();
+
+    const phases = receipt.phaseEvents.map((event) => {
+      return `- ${event.at} :: ${event.phase} :: progress=${event.percent} :: ${event.message}`;
+    }).join("\n") || "- none";
+
+    const errors = receipt.errors.map((error) => {
+      return `- ${error.at} :: ${error.code} :: ${error.message}`;
+    }).join("\n") || "- none";
 
     return [
-      "HEARTH_CANVAS_VISIBLE_PLANET_CARRIER_LOAD_SCREEN_COMPATIBLE_RECEIPT",
+      "HEARTH_CANVAS_COOPERATIVE_BOOT_PROGRESS_HANDOFF_RECEIPT",
       "",
       `contract=${receipt.contract}`,
       `receipt=${receipt.receipt}`,
       `previousContract=${receipt.previousContract}`,
-      `conductorContract=${receipt.conductorContract}`,
       `baselineContract=${receipt.baselineContract}`,
       `version=${receipt.version}`,
-      `destinationFile=${receipt.destinationFile}`,
       `route=${receipt.route}`,
+      `file=${receipt.file}`,
       "",
-      `activeRouteConductor=${receipt.activeRouteConductor}`,
-      `retiredClimateRoute=${receipt.retiredClimateRoute}`,
-      `retiredClimateRouteActiveCarrier=${receipt.retiredClimateRouteActiveCarrier}`,
+      `cooperativeBootAvailable=${receipt.cooperativeBootAvailable}`,
+      `cooperativeBootUsed=${receipt.cooperativeBootUsed}`,
+      `syncBootFallbackUsed=${receipt.syncBootFallbackUsed}`,
+      `bootInProgress=${receipt.bootInProgress}`,
+      `bootComplete=${receipt.bootComplete}`,
       "",
+      `canvasBootStartedAt=${receipt.canvasBootStartedAt}`,
+      `canvasBootCompletedAt=${receipt.canvasBootCompletedAt}`,
+      `canvasBootElapsedMs=${receipt.canvasBootElapsedMs}`,
+      `canvasYieldCount=${receipt.canvasYieldCount}`,
+      `canvasPhaseCount=${receipt.canvasPhaseCount}`,
+      `lastCanvasPhase=${receipt.lastCanvasPhase}`,
+      `lastCanvasProgress=${receipt.lastCanvasProgress}`,
+      `loaderRepaintDuringCanvasBoot=${receipt.loaderRepaintDuringCanvasBoot}`,
+      `f13ProgressStreamActive=${receipt.f13ProgressStreamActive}`,
+      "",
+      `mountId=${receipt.mountId}`,
       `mountPresent=${receipt.mountPresent}`,
-      `mounted=${receipt.mounted}`,
-      `canvasCreated=${receipt.canvasCreated}`,
+      `canvasElementPresent=${receipt.canvasElementPresent}`,
+      `contextReady=${receipt.contextReady}`,
       `canvasCarrierMounted=${receipt.canvasCarrierMounted}`,
       `visibleCarrierMounted=${receipt.visibleCarrierMounted}`,
+      `canvasCarrierHandoffOk=${receipt.canvasCarrierHandoffOk}`,
+      `canvasCarrierHandoffError=${receipt.canvasCarrierHandoffError}`,
+      `canvasCarrierMethod=${receipt.canvasCarrierMethod}`,
       "",
-      `loadingScreenPreserved=${receipt.loadingScreenPreserved}`,
-      `receiptOverlayIndependent=${receipt.receiptOverlayIndependent}`,
-      `receiptRemovalDoesNotRemoveCanvas=${receipt.receiptRemovalDoesNotRemoveCanvas}`,
+      `atlasWidth=${receipt.atlasWidth}`,
+      `atlasHeight=${receipt.atlasHeight}`,
+      `atlasBuildStarted=${receipt.atlasBuildStarted}`,
+      `atlasBuildProgress=${receipt.atlasBuildProgress}`,
+      `atlasBuildComplete=${receipt.atlasBuildComplete}`,
+      `textureComposeStarted=${receipt.textureComposeStarted}`,
+      `textureComposeProgress=${receipt.textureComposeProgress}`,
+      `textureComposeComplete=${receipt.textureComposeComplete}`,
       "",
+      `firstFrameRequested=${receipt.firstFrameRequested}`,
+      `firstFrameDetected=${receipt.firstFrameDetected}`,
+      `dragInspectionBound=${receipt.dragInspectionBound}`,
+      `imageRendered=${receipt.imageRendered}`,
+      `canvasReady=${receipt.canvasReady}`,
+      `frames=${receipt.frames}`,
+      `renderLoopActive=${receipt.renderLoopActive}`,
+      "",
+      `sourceAuthorityHeld=${receipt.sourceAuthorityHeld}`,
       `runtimeTableOptional=${receipt.runtimeTableOptional}`,
-      `runtimeTablePlanConsumed=${receipt.runtimeTablePlanConsumed}`,
       `runtimeTableMissingDoesNotBlockCarrier=${receipt.runtimeTableMissingDoesNotBlockCarrier}`,
       `visibleCarrierFirst=${receipt.visibleCarrierFirst}`,
       `wideProbeDeferred=${receipt.wideProbeDeferred}`,
-      `sourceAuthorityHeld=${receipt.sourceAuthorityHeld}`,
-      "",
-      `textureBuilt=${receipt.textureBuilt}`,
-      `textureWidth=${receipt.textureWidth}`,
-      `textureHeight=${receipt.textureHeight}`,
-      `textureSourceMode=${receipt.textureSourceMode}`,
-      "",
-      `dragInspectionBound=${receipt.dragInspectionBound}`,
-      `pointerControlsBound=${receipt.pointerControlsBound}`,
-      `animationActive=${receipt.animationActive}`,
-      `frames=${receipt.frames}`,
-      `imageRendered=${receipt.imageRendered}`,
-      `coherentExpressionPass=${receipt.coherentExpressionPass}`,
-      `visualPassClaimed=${receipt.visualPassClaimed}`,
       "",
       `postgameStatus=${receipt.postgameStatus}`,
       `firstFailedCoordinate=${receipt.firstFailedCoordinate}`,
       `recommendedNextRenewalTarget=${receipt.recommendedNextRenewalTarget}`,
       "",
+      "PHASE_EVENTS",
+      phases,
+      "",
+      "ERRORS",
+      errors,
+      "",
       `generatedImage=${receipt.generatedImage}`,
       `graphicBox=${receipt.graphicBox}`,
       `webGL=${receipt.webGL}`,
-      "",
-      "SOURCE_AVAILABILITY",
-      ...Object.keys(receipt.sourceAvailability).map((key) => `${key}=${receipt.sourceAvailability[key]}`),
+      `visualPassClaimed=${receipt.visualPassClaimed}`,
       "",
       `updatedAt=${receipt.updatedAt}`
     ].join("\n");
+  }
+
+  function dispose(reason = "manual-dispose") {
+    stopRenderLoop();
+
+    if (refs.resizeObserver && isFunction(refs.resizeObserver.disconnect)) {
+      try {
+        refs.resizeObserver.disconnect();
+      } catch (_error) {}
+      refs.resizeObserver = null;
+    }
+
+    state.bootInProgress = false;
+    state.renderLoopActive = false;
+    state.postgameStatus = "CANVAS_DISPOSED";
+    state.recommendedNextRenewalTarget = reason;
+
+    publishGlobals();
+    return getReceipt();
   }
 
   const api = {
     contract: CONTRACT,
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
-    conductorContract: CONDUCTOR_CONTRACT,
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     route: ROUTE,
-    destinationFile: DESTINATION_FILE,
+    file: FILE,
 
+    bootCooperative,
     boot,
-    mount,
     mountVisibleCarrier,
     bootVisibleCarrier,
+    mount,
     start,
     init,
     render,
     conduct,
-    refresh,
-    dispose: disposeActiveInstance,
     getReceipt,
     getReceiptText,
+    dispose,
 
-    supportsVisibleCarrierFirst: true,
-    supportsLoadScreenCompatibility: true,
-    supportsReceiptOverlayIndependence: true,
+    supportsCooperativeBoot: true,
+    supportsCanvasProgressStream: true,
+    supportsF13ProgressStream: true,
+    supportsLedgerCallbacks: true,
     supportsDragInspection: true,
-    supportsRuntimeTableOptionalMode: true,
-    supportsRuntimeTableMissingDoesNotBlockCarrier: true,
-    supportsWideProbeDeferred: true,
-    supportsSourceAuthorityOpportunisticConsumption: true,
+    supportsVisibleCarrierFirst: true,
+    supportsReceiptIndependence: true,
 
-    runtimeTableOptional: true,
-    runtimeTableMissingDoesNotBlockCarrier: true,
-    visibleCarrierFirst: true,
-    wideProbeDeferred: true,
-    sourceAuthorityHeld: true,
-    loadingScreenPreserved: true,
-    receiptOverlayIndependent: true,
-
-    ownsRouteShell: false,
-    ownsRouteOrchestration: false,
-    ownsRuntimeTableTruth: false,
+    ownsPlanetDrawing: true,
+    ownsRuntimeMotion: false,
+    ownsRouteConduction: false,
+    ownsSourceTruth: false,
     ownsTectonicCause: false,
-    ownsElevationGeneration: false,
-    ownsCompositionClassification: false,
+    ownsElevationTruth: false,
     ownsHydrologyTruth: false,
     ownsMaterialPalette: false,
     ownsFinalVisualPassClaim: false,
@@ -1641,35 +1683,7 @@
     }
   };
 
-  root.HEARTH = root.HEARTH || {};
-  root.HEARTH.canvas = api;
-
-  root.HEARTH_CANVAS = api;
-  root.HearthCanvas = api;
-  root.HEARTH_CANVAS_CONTRACT = CONTRACT;
-  root.HEARTH_CANVAS_RECEIPT = getReceipt("initial-export");
-  root.HEARTH_CANVAS_SUPPORTS_VISIBLE_CARRIER_FIRST = true;
-  root.HEARTH_CANVAS_SUPPORTS_LOAD_SCREEN_COMPATIBILITY = true;
-  root.HEARTH_CANVAS_SUPPORTS_RECEIPT_OVERLAY_INDEPENDENCE = true;
-  root.HEARTH_CANVAS_SUPPORTS_RUNTIME_TABLE_OPTIONAL_MODE = true;
-
-  updateSourceAvailability();
-  publishDataset();
-
-  if (doc && doc.documentElement) {
-    doc.documentElement.dataset.hearthCanvasAuthorityLoaded = "true";
-    doc.documentElement.dataset.hearthCanvasContract = CONTRACT;
-    doc.documentElement.dataset.hearthCanvasReceipt = RECEIPT;
-    doc.documentElement.dataset.hearthCanvasPreviousContract = PREVIOUS_CONTRACT;
-    doc.documentElement.dataset.hearthCanvasConductorContract = CONDUCTOR_CONTRACT;
-    doc.documentElement.dataset.hearthCanvasSupportsLoadScreenCompatibility = "true";
-    doc.documentElement.dataset.hearthCanvasSupportsReceiptOverlayIndependence = "true";
-    doc.documentElement.dataset.hearthCanvasSupportsRuntimeTableOptionalMode = "true";
-    doc.documentElement.dataset.generatedImage = "false";
-    doc.documentElement.dataset.graphicBox = "false";
-    doc.documentElement.dataset.webgl = "false";
-    doc.documentElement.dataset.visualPassClaimed = "false";
-  }
+  publishGlobals();
 
   if (typeof module !== "undefined" && module.exports) {
     module.exports = api;

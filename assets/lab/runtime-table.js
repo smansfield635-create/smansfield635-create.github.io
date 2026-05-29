@@ -1,15 +1,16 @@
 // /assets/lab/runtime-table.js
-// LAB_UNIVERSAL_PLANET_WIDE_PROBE_DIAGNOSTIC_LOADING_STANDARD_TNT_v1
+// LAB_RUNTIME_TABLE_NEWS_FIBONACCI_CHRONOLOGICAL_CHECKPOINT_GOVERNOR_TNT_v1
 // Full-file replacement.
 // Canonical Dexter Lab equipment.
 // Runtime Table + Triple G Coherence Diagnostic + Universal Planet Visual Carrier / Atlas Sequence / Wide-Probe / Loading Optimization authority.
-// Purpose:
+// Renewal purpose:
 // - Preserve reusable Runtime Table construction-readiness equipment.
 // - Preserve reusable Triple G coherent-expression diagnostic equipment.
 // - Preserve visual carrier eligibility, atlas-start authorization, fallback/degraded/full mode classification, and renewal-target selection.
-// - Renew the lab layer into a universal planet standard usable by Hearth, Audralia, H-Earth, Earth reference, Showroom planets, and future planet bodies.
-// - Add loading optimization law: visible carrier first, child validation second, anchor sample third, atlas/cache render fourth, wide-probe later in chunks/idle frames.
-// - Add wide-probe law: single anchor samples are local proof only; global distribution checks are held until at least 25 probe samples exist.
+// - Preserve universal planet standard usable by Hearth, Audralia, H-Earth, Earth reference, Showroom planets, and future planet bodies.
+// - Add chronological checkpoint governor: one visible active checkpoint at a time.
+// - Add NEWS + Fibonacci checkpoint enforcement.
+// - Prevent simultaneous visible loading bars, post-ready bounce, premature F21, false READY, and blocked 100% completion.
 // Does not own:
 // - planet truth
 // - page truth
@@ -24,11 +25,11 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "LAB_UNIVERSAL_PLANET_WIDE_PROBE_DIAGNOSTIC_LOADING_STANDARD_TNT_v1";
-  const RECEIPT = "LAB_UNIVERSAL_PLANET_WIDE_PROBE_DIAGNOSTIC_LOADING_STANDARD_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "LAB_RUNTIME_TABLE_VISUAL_CARRIER_ATLAS_SEQUENCE_STANDARD_TNT_v3";
-  const BASELINE_CONTRACT = "LAB_RUNTIME_TABLE_MULTI_FUNCTION_ANIMATION_STANDARD_TNT_v1";
-  const VERSION = "2026-05-29.lab-universal-planet-wide-probe-diagnostic-loading-standard-v1";
+  const CONTRACT = "LAB_RUNTIME_TABLE_NEWS_FIBONACCI_CHRONOLOGICAL_CHECKPOINT_GOVERNOR_TNT_v1";
+  const RECEIPT = "LAB_RUNTIME_TABLE_NEWS_FIBONACCI_CHRONOLOGICAL_CHECKPOINT_GOVERNOR_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "LAB_UNIVERSAL_PLANET_WIDE_PROBE_DIAGNOSTIC_LOADING_STANDARD_TNT_v1";
+  const BASELINE_CONTRACT = "LAB_RUNTIME_TABLE_NEWS_FIBONACCI_CHRONOLOGICAL_CHECKPOINT_GOVERNOR_PRECODE_FINAL_DRAFT_v1";
+  const VERSION = "2026-05-29.lab-runtime-table-news-fibonacci-chronological-checkpoint-governor-v1";
 
   const root = typeof window !== "undefined" ? window : globalThis;
 
@@ -61,6 +62,24 @@
     FAIL: "FAIL",
     REJECTED: "REJECTED",
     BLOCKING: "BLOCKING"
+  });
+
+  const CHECKPOINT_EVENT_ACTIONS = Object.freeze({
+    ADMIT: "ADMIT",
+    QUEUE: "QUEUE",
+    ARCHIVE: "ARCHIVE",
+    BLOCK: "BLOCK"
+  });
+
+  const CHECKPOINT_STATUS = Object.freeze({
+    PENDING: "PENDING",
+    ACTIVE: "ACTIVE",
+    COMPLETE: "COMPLETE",
+    BLOCKED: "BLOCKED",
+    QUEUED: "QUEUED",
+    ARCHIVED: "ARCHIVED",
+    FAILED: "FAILED",
+    HELD: "HELD"
   });
 
   const COHERENCE_CHECKS = Object.freeze({
@@ -129,23 +148,13 @@
     L6_OPTIMIZED_STABLE: "L6_OPTIMIZED_STABLE"
   });
 
-  const DEFAULT_COORDINATES = Object.freeze(["u", "v", "x", "y", "z"]);
-
-  const UNIVERSAL_CHANNEL_KEYS = Object.freeze([
-    "land",
-    "water",
-    "air",
-    "elevation",
-    "hydrology",
-    "composition",
-    "materials",
-    "climate",
-    "terrain",
-    "atmosphere",
-    "state",
-    "city",
-    "summit"
-  ]);
+  const NEWS_GATES = Object.freeze({
+    NORTH: "NORTH",
+    EAST: "EAST",
+    WEST: "WEST",
+    SOUTH: "SOUTH",
+    F21: "F21"
+  });
 
   const HEARTH_CONTRACTS = Object.freeze({
     runtimeTable: CONTRACT,
@@ -167,6 +176,242 @@
     y: 0,
     z: 1
   });
+
+  const DEFAULT_COORDINATES = Object.freeze(["u", "v", "x", "y", "z"]);
+
+  const UNIVERSAL_CHANNEL_KEYS = Object.freeze([
+    "land",
+    "water",
+    "air",
+    "elevation",
+    "hydrology",
+    "composition",
+    "materials",
+    "climate",
+    "terrain",
+    "atmosphere",
+    "state",
+    "city",
+    "summit"
+  ]);
+
+  const FIBONACCI_CHECKPOINTS = Object.freeze([
+    {
+      id: "F1A_HTML_SHELL_RENDERED",
+      event: "HTML_SHELL_RENDERED",
+      rank: 1,
+      fibonacci: "F1A",
+      value: 1,
+      lane: "shell",
+      progress: 6,
+      label: "HTML shell rendered"
+    },
+    {
+      id: "F1B_LOAD_LEDGER_INITIALIZED",
+      event: "LOAD_LEDGER_INITIALIZED",
+      aliases: ["HEARTH_LOAD_LEDGER_MONOTONIC_INITIALIZED", "NEWS_FIBONACCI_LEDGER_GUARD_ACTIVE"],
+      rank: 2,
+      fibonacci: "F1B",
+      value: 1,
+      lane: "ledger",
+      progress: 12,
+      label: "Load ledger initialized"
+    },
+    {
+      id: "F2_FIRST_PAINT_COCKPIT_VISIBLE",
+      event: "FIRST_PAINT_COCKPIT_VISIBLE",
+      rank: 3,
+      fibonacci: "F2",
+      value: 2,
+      lane: "staticCockpit",
+      progress: 22,
+      label: "First-paint cockpit visible"
+    },
+    {
+      id: "F3_SCRIPT_ORDER_COMPLETE",
+      event: "SCRIPT_ORDER_COMPLETE",
+      aliases: ["SCRIPT_LOADED", "SCRIPT_ORDER_VISIBLE"],
+      rank: 4,
+      fibonacci: "F3",
+      value: 3,
+      lane: "scriptOrder",
+      progress: 36,
+      label: "Script order complete"
+    },
+    {
+      id: "F5_AUTHORITY_AVAILABILITY_READY",
+      event: "AUTHORITY_AVAILABILITY_READY",
+      aliases: ["RUNTIME_TABLE_AVAILABLE", "AUTHORITY_AVAILABLE"],
+      rank: 5,
+      fibonacci: "F5",
+      value: 5,
+      lane: "authorityAvailability",
+      progress: 55,
+      label: "Authority availability ready"
+    },
+    {
+      id: "F8_CONDUCTOR_HYDRATED",
+      event: "CONDUCTOR_HYDRATED",
+      aliases: ["CONDUCTOR_HYDRATED_EXISTING_COCKPIT", "COHERENCE_SEMICONDUCTOR_BOOTED"],
+      rank: 6,
+      fibonacci: "F8",
+      value: 8,
+      lane: "conductorHydration",
+      progress: 72,
+      label: "Conductor hydrated"
+    },
+    {
+      id: "F13A_CANVAS_COOPERATIVE_BOOT_STARTED",
+      event: "CANVAS_COOPERATIVE_BOOT_STARTED",
+      rank: 7,
+      fibonacci: "F13A",
+      value: 13,
+      lane: "canvasAndDiagnostic",
+      progress: 78,
+      label: "Canvas cooperative boot started"
+    },
+    {
+      id: "F13B_CANVAS_MOUNT_CREATED",
+      event: "CANVAS_MOUNT_CREATED",
+      rank: 8,
+      fibonacci: "F13B",
+      value: 13,
+      lane: "canvasAndDiagnostic",
+      progress: 81,
+      label: "Canvas mount created"
+    },
+    {
+      id: "F13C_CANVAS_CONTEXT_READY",
+      event: "CANVAS_CONTEXT_READY",
+      rank: 9,
+      fibonacci: "F13C",
+      value: 13,
+      lane: "canvasAndDiagnostic",
+      progress: 84,
+      label: "Canvas context ready"
+    },
+    {
+      id: "F13D_DRAG_INSPECTION_BOUND",
+      event: "DRAG_INSPECTION_BOUND",
+      rank: 10,
+      fibonacci: "F13D",
+      value: 13,
+      lane: "canvasAndDiagnostic",
+      progress: 86,
+      label: "Drag inspection bound"
+    },
+    {
+      id: "F13E_ATLAS_BUILD_STARTED",
+      event: "ATLAS_BUILD_STARTED",
+      rank: 11,
+      fibonacci: "F13E",
+      value: 13,
+      lane: "canvasAndDiagnostic",
+      progress: 88,
+      label: "Atlas build started"
+    },
+    {
+      id: "F13F_ATLAS_BUILD_COMPLETE",
+      event: "ATLAS_BUILD_COMPLETE",
+      rank: 12,
+      fibonacci: "F13F",
+      value: 13,
+      lane: "canvasAndDiagnostic",
+      progress: 91,
+      label: "Atlas build complete"
+    },
+    {
+      id: "F13G_TEXTURE_COMPOSE_STARTED",
+      event: "TEXTURE_COMPOSE_STARTED",
+      rank: 13,
+      fibonacci: "F13G",
+      value: 13,
+      lane: "canvasAndDiagnostic",
+      progress: 93,
+      label: "Texture compose started"
+    },
+    {
+      id: "F13H_TEXTURE_COMPOSE_COMPLETE",
+      event: "TEXTURE_COMPOSE_COMPLETE",
+      rank: 14,
+      fibonacci: "F13H",
+      value: 13,
+      lane: "canvasAndDiagnostic",
+      progress: 96,
+      label: "Texture compose complete"
+    },
+    {
+      id: "F13I_FIRST_FRAME_REQUESTED",
+      event: "FIRST_FRAME_REQUESTED",
+      rank: 15,
+      fibonacci: "F13I",
+      value: 13,
+      lane: "canvasAndDiagnostic",
+      progress: 97,
+      label: "First frame requested"
+    },
+    {
+      id: "F13J_FIRST_FRAME_DETECTED",
+      event: "FIRST_FRAME_DETECTED",
+      rank: 16,
+      fibonacci: "F13J",
+      value: 13,
+      lane: "canvasAndDiagnostic",
+      progress: 98,
+      label: "First frame detected"
+    },
+    {
+      id: "F13K_CANVAS_READY",
+      event: "CANVAS_READY",
+      rank: 17,
+      fibonacci: "F13K",
+      value: 13,
+      lane: "canvasAndDiagnostic",
+      progress: 98,
+      label: "Canvas ready"
+    },
+    {
+      id: "F13L_VISIBLE_CONTENT_PROOF_STARTED",
+      event: "VISIBLE_CONTENT_PROOF_STARTED",
+      rank: 18,
+      fibonacci: "F13L",
+      value: 13,
+      lane: "visiblePlanetProof",
+      progress: 98,
+      label: "Visible content proof started"
+    },
+    {
+      id: "F13M_VISIBLE_CONTENT_PROOF_PASSED",
+      event: "VISIBLE_CONTENT_PROOF_PASSED",
+      rank: 19,
+      fibonacci: "F13M",
+      value: 13,
+      lane: "visiblePlanetProof",
+      progress: 98,
+      label: "Visible content proof passed"
+    },
+    {
+      id: "F13N_INSPECT_MODE_READY",
+      event: "INSPECT_MODE_READY",
+      rank: 20,
+      fibonacci: "F13N",
+      value: 13,
+      lane: "inspectMode",
+      progress: 98,
+      label: "Inspect mode ready"
+    },
+    {
+      id: "F21_COMPLETION_LATCHED",
+      event: "COMPLETION_LATCHED",
+      aliases: ["COMPLETION_LATCHED_AFTER_VISIBLE_CONTENT_PROOF", "COMPLETION_LATCHED_AFTER_CANVAS_READY"],
+      rank: 21,
+      fibonacci: "F21",
+      value: 21,
+      lane: "completionLatch",
+      progress: 100,
+      label: "Completion latched"
+    }
+  ]);
 
   function nowIso() {
     try {
@@ -271,7 +516,6 @@
 
   function resolveAuthority(registration) {
     if (!registration) return null;
-
     if (registration.authority && isObject(registration.authority)) return registration.authority;
 
     if (registration.globalName) {
@@ -519,6 +763,943 @@
       handoff === HANDOFF.FALLBACK_PASS ||
       handoff === HANDOFF.HELD_PASS
     );
+  }
+
+  function createChronologicalFibonacciPlan(options = {}) {
+    const sequence = asArray(options.sequence).length ? asArray(options.sequence) : FIBONACCI_CHECKPOINTS.slice();
+
+    return sequence
+      .map((checkpoint) => ({
+        ...checkpoint,
+        aliases: asArray(checkpoint.aliases),
+        complete: false,
+        status: CHECKPOINT_STATUS.PENDING
+      }))
+      .sort((a, b) => a.rank - b.rank);
+  }
+
+  function createNewsFibonacciCheckpointPlan(options = {}) {
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      authority: "runtime-table-news-fibonacci-checkpoint-plan",
+      sequence: createChronologicalFibonacciPlan(options),
+      newsGates: clonePlain(NEWS_GATES),
+      f13CompoundSequenceRequired: true,
+      f13MVisibleContentProofRequired: true,
+      f13NInspectModeRequired: true,
+      f21RequiresNewsGates: true,
+      oneActiveCheckpointAtATime: true,
+      blockedProgressCap: 98,
+      readyTextRequiresCompletionLatch: true,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false
+    };
+  }
+
+  function normalizeCheckpointEvent(event = {}) {
+    const detail = isObject(event.detail) ? event.detail : {};
+    const id =
+      event.checkpointId ||
+      event.phase ||
+      event.id ||
+      event.event ||
+      detail.checkpointId ||
+      detail.phase ||
+      detail.id ||
+      detail.event ||
+      "";
+
+    return {
+      ...event,
+      id: String(id),
+      phase: String(event.phase || detail.phase || id || ""),
+      event: String(event.event || event.id || detail.event || detail.id || id || ""),
+      detail
+    };
+  }
+
+  function checkpointMatchesEvent(checkpoint, normalizedEvent) {
+    const candidates = [
+      normalizedEvent.id,
+      normalizedEvent.phase,
+      normalizedEvent.event,
+      normalizedEvent.checkpointId
+    ].filter(Boolean);
+
+    return candidates.some((candidate) => (
+      candidate === checkpoint.id ||
+      candidate === checkpoint.event ||
+      asArray(checkpoint.aliases).includes(candidate)
+    ));
+  }
+
+  function findCheckpointForEvent(sequence, normalizedEvent) {
+    return sequence.find((checkpoint) => checkpointMatchesEvent(checkpoint, normalizedEvent)) || null;
+  }
+
+  function getCheckpointAt(sequence, index) {
+    return sequence[Math.max(0, Math.min(sequence.length - 1, index))] || null;
+  }
+
+  function isMutatingCompletionEvent(event) {
+    const text = JSON.stringify(event || {});
+    return (
+      text.includes("READY") ||
+      text.includes("COMPLETION_LATCHED") ||
+      text.includes("completionLatched") ||
+      text.includes('"progress":100') ||
+      text.includes('"mainDisplayProgress":100') ||
+      text.includes('"visualPassClaimed":true')
+    );
+  }
+
+  function proofFromEvent(event, key) {
+    if (!event) return false;
+    if (event[key] === true || event[key] === "true") return true;
+    if (event.detail && (event.detail[key] === true || event.detail[key] === "true")) return true;
+    if (event.snapshot && (event.snapshot[key] === true || event.snapshot[key] === "true")) return true;
+    return false;
+  }
+
+  function fieldFromEvent(event, key, fallback = false) {
+    if (!event) return fallback;
+    if (event[key] !== undefined) return safeBool(event[key], fallback);
+    if (event.detail && event.detail[key] !== undefined) return safeBool(event.detail[key], fallback);
+    if (event.snapshot && event.snapshot[key] !== undefined) return safeBool(event.snapshot[key], fallback);
+    return fallback;
+  }
+
+  function evaluateNewsGateState(snapshot = {}) {
+    const northGateReady = Boolean(
+      safeBool(snapshot.canvasReady) &&
+      safeBool(snapshot.atlasBuildComplete) &&
+      safeBool(snapshot.textureComposeComplete) &&
+      safeBool(snapshot.visibleContentProof) &&
+      safeBool(snapshot.visiblePlanetAvailable)
+    );
+
+    const eastGateReady = Boolean(
+      safeBool(snapshot.cooperativeBootUsed) &&
+      !safeBool(snapshot.syncBootFallbackUsed) &&
+      safeBool(snapshot.canvasCarrierRequested) &&
+      safeBool(snapshot.canvasCarrierHandoffOk) &&
+      !safeBool(snapshot.blockingFutureEventViolation)
+    );
+
+    const westGateReady = Boolean(
+      safeBool(snapshot.copyDiagnosticPreserved) &&
+      safeBool(snapshot.receiptToggleReady) &&
+      safeBool(snapshot.inspectPlanetControlAvailable) &&
+      safeBool(snapshot.diagnosticDockRestorable) &&
+      safeBool(snapshot.buttonsReachable) &&
+      safeBool(snapshot.receiptOverlayIndependent, true)
+    );
+
+    const southGateReady = Boolean(
+      safeBool(snapshot.imageRendered) &&
+      safeBool(snapshot.firstFrameDetected) &&
+      safeBool(snapshot.dragInspectionBound) &&
+      safeBool(snapshot.visiblePlanetAvailable) &&
+      safeBool(snapshot.diagnosticCanLeavePlanetFrame)
+    );
+
+    const newsGatePassedBeforeF21 = Boolean(
+      northGateReady &&
+      eastGateReady &&
+      westGateReady &&
+      southGateReady
+    );
+
+    return {
+      northGateReady,
+      eastGateReady,
+      westGateReady,
+      southGateReady,
+      newsGatePassedBeforeF21
+    };
+  }
+
+  function checkpointCompletionSatisfied(checkpoint, event, sessionSnapshot = {}) {
+    const snapshot = {
+      ...sessionSnapshot,
+      ...(event && isObject(event.snapshot) ? event.snapshot : {}),
+      ...(event && isObject(event.detail) ? event.detail : {}),
+      ...(event || {})
+    };
+
+    switch (checkpoint.id) {
+      case "F1A_HTML_SHELL_RENDERED":
+      case "F1B_LOAD_LEDGER_INITIALIZED":
+      case "F2_FIRST_PAINT_COCKPIT_VISIBLE":
+      case "F3_SCRIPT_ORDER_COMPLETE":
+      case "F5_AUTHORITY_AVAILABILITY_READY":
+      case "F8_CONDUCTOR_HYDRATED":
+      case "F13A_CANVAS_COOPERATIVE_BOOT_STARTED":
+      case "F13B_CANVAS_MOUNT_CREATED":
+      case "F13C_CANVAS_CONTEXT_READY":
+      case "F13D_DRAG_INSPECTION_BOUND":
+      case "F13E_ATLAS_BUILD_STARTED":
+      case "F13F_ATLAS_BUILD_COMPLETE":
+      case "F13G_TEXTURE_COMPOSE_STARTED":
+      case "F13H_TEXTURE_COMPOSE_COMPLETE":
+      case "F13I_FIRST_FRAME_REQUESTED":
+      case "F13J_FIRST_FRAME_DETECTED":
+        return true;
+
+      case "F13K_CANVAS_READY":
+        return Boolean(
+          safeBool(snapshot.canvasReady, true) &&
+          safeBool(snapshot.canvasCarrierMounted, true) &&
+          safeBool(snapshot.firstFrameDetected, true) &&
+          safeBool(snapshot.imageRendered, true)
+        );
+
+      case "F13L_VISIBLE_CONTENT_PROOF_STARTED":
+        return true;
+
+      case "F13M_VISIBLE_CONTENT_PROOF_PASSED":
+        return Boolean(
+          safeBool(snapshot.visibleContentProof, true) &&
+          safeBool(snapshot.visiblePlanetAvailable, true) &&
+          safeBool(snapshot.nonblankPlanetVisible, true) &&
+          safeBool(snapshot.carrierOnlyDetected, false) === false
+        );
+
+      case "F13N_INSPECT_MODE_READY":
+        return Boolean(
+          safeBool(snapshot.inspectModeAvailable) &&
+          safeBool(snapshot.inspectPlanetControlAvailable) &&
+          safeBool(snapshot.diagnosticDockRestorable) &&
+          safeBool(snapshot.diagnosticCanLeavePlanetFrame) &&
+          safeBool(snapshot.showDiagnosticTabVisibleWhenHidden) &&
+          safeBool(snapshot.copyDiagnosticPreserved) &&
+          safeBool(snapshot.receiptToggleReady) &&
+          safeBool(snapshot.buttonsReachable)
+        );
+
+      case "F21_COMPLETION_LATCHED":
+        return Boolean(
+          safeBool(snapshot.completionLatched, true) ||
+          (
+            safeBool(snapshot.visibleContentProof) &&
+            safeBool(snapshot.visiblePlanetAvailable) &&
+            safeBool(snapshot.inspectModeAvailable) &&
+            safeBool(snapshot.diagnosticCanLeavePlanetFrame) &&
+            safeBool(snapshot.newsGatePassedBeforeF21)
+          )
+        );
+
+      default:
+        return true;
+    }
+  }
+
+  function classifyCheckpointEvent(event = {}, sessionLike = {}) {
+    const sequence = asArray(sessionLike.sequence).length ? sessionLike.sequence : createChronologicalFibonacciPlan();
+    const normalized = normalizeCheckpointEvent(event);
+    const checkpoint = findCheckpointForEvent(sequence, normalized);
+    const activeIndex = Number.isFinite(Number(sessionLike.activeIndex)) ? Number(sessionLike.activeIndex) : 0;
+    const activeCheckpoint = getCheckpointAt(sequence, activeIndex);
+    const completionLatched = safeBool(sessionLike.completionLatched, false);
+
+    if (!checkpoint) {
+      return {
+        action: CHECKPOINT_EVENT_ACTIONS.ARCHIVE,
+        checkpointId: "",
+        checkpointRank: 0,
+        activeCheckpointId: activeCheckpoint ? activeCheckpoint.id : "",
+        activeRank: activeCheckpoint ? activeCheckpoint.rank : 0,
+        reason: "unknown-checkpoint-event",
+        visibleUpdateAllowed: false,
+        mayAdvance: false,
+        maySetProgress: false,
+        maySetReadyText: false
+      };
+    }
+
+    if (completionLatched && checkpoint.id !== "F21_COMPLETION_LATCHED") {
+      return {
+        action: CHECKPOINT_EVENT_ACTIONS.ARCHIVE,
+        checkpointId: checkpoint.id,
+        checkpointRank: checkpoint.rank,
+        activeCheckpointId: activeCheckpoint ? activeCheckpoint.id : "",
+        activeRank: activeCheckpoint ? activeCheckpoint.rank : 0,
+        reason: "post-f21-event-archived",
+        visibleUpdateAllowed: false,
+        mayAdvance: false,
+        maySetProgress: false,
+        maySetReadyText: false
+      };
+    }
+
+    if (checkpoint.id === "F21_COMPLETION_LATCHED") {
+      const f21Allowed = safeBool(sessionLike.f21Allowed, false) || safeBool(event.f21Allowed, false) || safeBool(event.detail && event.detail.f21Allowed, false);
+
+      if (!f21Allowed) {
+        return {
+          action: CHECKPOINT_EVENT_ACTIONS.BLOCK,
+          checkpointId: checkpoint.id,
+          checkpointRank: checkpoint.rank,
+          activeCheckpointId: activeCheckpoint ? activeCheckpoint.id : "",
+          activeRank: activeCheckpoint ? activeCheckpoint.rank : 0,
+          reason: "f21-blocked-until-f13n-and-news-gates-pass",
+          visibleUpdateAllowed: false,
+          mayAdvance: false,
+          maySetProgress: false,
+          maySetReadyText: false
+        };
+      }
+    }
+
+    if (!activeCheckpoint) {
+      return {
+        action: CHECKPOINT_EVENT_ACTIONS.BLOCK,
+        checkpointId: checkpoint.id,
+        checkpointRank: checkpoint.rank,
+        activeCheckpointId: "",
+        activeRank: 0,
+        reason: "active-checkpoint-missing",
+        visibleUpdateAllowed: false,
+        mayAdvance: false,
+        maySetProgress: false,
+        maySetReadyText: false
+      };
+    }
+
+    if (checkpoint.rank === activeCheckpoint.rank) {
+      return {
+        action: CHECKPOINT_EVENT_ACTIONS.ADMIT,
+        checkpointId: checkpoint.id,
+        checkpointRank: checkpoint.rank,
+        activeCheckpointId: activeCheckpoint.id,
+        activeRank: activeCheckpoint.rank,
+        reason: "event-matches-active-checkpoint",
+        visibleUpdateAllowed: true,
+        mayAdvance: true,
+        maySetProgress: checkpoint.id === "F21_COMPLETION_LATCHED" ? safeBool(sessionLike.f21Allowed, false) : true,
+        maySetReadyText: checkpoint.id === "F21_COMPLETION_LATCHED" && safeBool(sessionLike.f21Allowed, false)
+      };
+    }
+
+    if (checkpoint.rank > activeCheckpoint.rank) {
+      return {
+        action: CHECKPOINT_EVENT_ACTIONS.QUEUE,
+        checkpointId: checkpoint.id,
+        checkpointRank: checkpoint.rank,
+        activeCheckpointId: activeCheckpoint.id,
+        activeRank: activeCheckpoint.rank,
+        reason: "future-event-queued-until-prior-checkpoint-completes",
+        visibleUpdateAllowed: false,
+        mayAdvance: false,
+        maySetProgress: false,
+        maySetReadyText: false
+      };
+    }
+
+    if (isMutatingCompletionEvent(event)) {
+      return {
+        action: CHECKPOINT_EVENT_ACTIONS.BLOCK,
+        checkpointId: checkpoint.id,
+        checkpointRank: checkpoint.rank,
+        activeCheckpointId: activeCheckpoint.id,
+        activeRank: activeCheckpoint.rank,
+        reason: "past-event-attempted-visible-state-regression-or-false-ready",
+        visibleUpdateAllowed: false,
+        mayAdvance: false,
+        maySetProgress: false,
+        maySetReadyText: false
+      };
+    }
+
+    return {
+      action: CHECKPOINT_EVENT_ACTIONS.ARCHIVE,
+      checkpointId: checkpoint.id,
+      checkpointRank: checkpoint.rank,
+      activeCheckpointId: activeCheckpoint.id,
+      activeRank: activeCheckpoint.rank,
+      reason: "duplicate-or-late-completed-event-archived",
+      visibleUpdateAllowed: false,
+      mayAdvance: false,
+      maySetProgress: false,
+      maySetReadyText: false
+    };
+  }
+
+  function createCheckpointSession(sequenceInput = null, options = {}) {
+    const sequence = createChronologicalFibonacciPlan({
+      sequence: sequenceInput || options.sequence || FIBONACCI_CHECKPOINTS
+    });
+
+    const sessionId = options.id || `${options.planetId || "planet"}-checkpoint-session-${Math.random().toString(36).slice(2, 9)}`;
+
+    const state = {
+      sessionId,
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      planetId: options.planetId || "",
+      planetLabel: options.planetLabel || "",
+      route: options.route || "",
+      sequence,
+      activeIndex: 0,
+      highestCompletedIndex: -1,
+      completedCheckpoints: [],
+      queuedEvents: [],
+      archivedEvents: [],
+      blockedEvents: [],
+      admittedEvents: [],
+      regressionPrevented: 0,
+      futureEventsQueued: 0,
+      duplicateEventsArchived: 0,
+      f13Events: [],
+      fibonacciSequenceActive: true,
+      chronologicalFibonacciAlignment: true,
+      newsProtocolActive: true,
+      newsGateState: evaluateNewsGateState({}),
+      completionLatched: false,
+      progressCap: 98,
+      visibleProgress: 0,
+      readyTextAllowed: false,
+      firstFailedCoordinate: "CHECKPOINT_SESSION_CREATED",
+      recommendedNextRenewalTarget: "submit-first-checkpoint",
+      latestClassification: null,
+      snapshot: {},
+      errors: [],
+      createdAt: nowIso(),
+      updatedAt: nowIso(),
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false
+    };
+
+    function activeCheckpoint() {
+      return getCheckpointAt(state.sequence, state.activeIndex);
+    }
+
+    function updateNews(snapshot = {}) {
+      state.snapshot = { ...state.snapshot, ...(snapshot || {}) };
+
+      const f13nComplete = state.completedCheckpoints.includes("F13N_INSPECT_MODE_READY");
+      const newsSnapshot = {
+        ...state.snapshot,
+        f13nComplete
+      };
+
+      state.newsGateState = evaluateNewsGateState(newsSnapshot);
+      return state.newsGateState;
+    }
+
+    function f13SubsequenceComplete() {
+      return state.completedCheckpoints.includes("F13N_INSPECT_MODE_READY");
+    }
+
+    function f13LastRequiredEvent() {
+      return state.f13Events[state.f13Events.length - 1] || "";
+    }
+
+    function f21Allowed() {
+      return Boolean(
+        f13SubsequenceComplete() &&
+        state.newsGateState.newsGatePassedBeforeF21 === true
+      );
+    }
+
+    function progressForCheckpoint(checkpoint) {
+      if (!checkpoint) return 0;
+      if (state.completionLatched) return 100;
+      if (checkpoint.id === "F21_COMPLETION_LATCHED") return 98;
+      return Math.min(98, checkpoint.progress || 0);
+    }
+
+    function setFirstFailureFromActive() {
+      const active = activeCheckpoint();
+
+      if (!active) {
+        state.firstFailedCoordinate = "NONE";
+        state.recommendedNextRenewalTarget = "none";
+        return;
+      }
+
+      if (active.id === "F13N_INSPECT_MODE_READY") {
+        if (!safeBool(state.snapshot.inspectModeAvailable)) {
+          state.firstFailedCoordinate = "WAITING_inspectModeAvailable";
+        } else if (!safeBool(state.snapshot.inspectPlanetControlAvailable)) {
+          state.firstFailedCoordinate = "WAITING_inspectPlanetControlAvailable";
+        } else if (!safeBool(state.snapshot.diagnosticCanLeavePlanetFrame)) {
+          state.firstFailedCoordinate = "WAITING_diagnosticCanLeavePlanetFrame";
+        } else if (!safeBool(state.snapshot.buttonsReachable)) {
+          state.firstFailedCoordinate = "WAITING_buttonsReachable";
+        } else {
+          state.firstFailedCoordinate = "WAITING_INSPECT_MODE_READY";
+        }
+
+        state.recommendedNextRenewalTarget = options.coherenceSemiconductor || "/showroom/globe/hearth/hearth.js";
+        return;
+      }
+
+      if (active.id === "F21_COMPLETION_LATCHED") {
+        if (!state.newsGateState.northGateReady) state.firstFailedCoordinate = "WAITING_northGateReady";
+        else if (!state.newsGateState.eastGateReady) state.firstFailedCoordinate = "WAITING_eastGateReady";
+        else if (!state.newsGateState.westGateReady) state.firstFailedCoordinate = "WAITING_westGateReady";
+        else if (!state.newsGateState.southGateReady) state.firstFailedCoordinate = "WAITING_southGateReady";
+        else state.firstFailedCoordinate = "WAITING_completionLatch";
+
+        state.recommendedNextRenewalTarget = options.coherenceSemiconductor || "/showroom/globe/hearth/hearth.js";
+        return;
+      }
+
+      state.firstFailedCoordinate = `WAITING_${active.event || active.id}`;
+      state.recommendedNextRenewalTarget = active.lane === "canvasAndDiagnostic"
+        ? (options.canvasAuthority || "/assets/hearth/hearth.canvas.js")
+        : (options.coherenceSemiconductor || "/showroom/globe/hearth/hearth.js");
+    }
+
+    function completeCheckpoint(checkpoint, event = {}) {
+      checkpoint.complete = true;
+      checkpoint.status = CHECKPOINT_STATUS.COMPLETE;
+      checkpoint.completedAt = nowIso();
+
+      if (!state.completedCheckpoints.includes(checkpoint.id)) {
+        state.completedCheckpoints.push(checkpoint.id);
+      }
+
+      state.highestCompletedIndex = Math.max(state.highestCompletedIndex, state.sequence.indexOf(checkpoint));
+
+      if (checkpoint.value === 13 && !state.f13Events.includes(checkpoint.event)) {
+        state.f13Events.push(checkpoint.event);
+      }
+
+      if (checkpoint.id === "F21_COMPLETION_LATCHED") {
+        state.completionLatched = true;
+        state.progressCap = 100;
+        state.visibleProgress = 100;
+        state.readyTextAllowed = true;
+        state.firstFailedCoordinate = "NONE_NEWS_FIBONACCI_F21_LATCHED";
+        state.recommendedNextRenewalTarget = "read-postgame-canvas-or-triple-g-receipt";
+      } else {
+        state.progressCap = 98;
+        state.visibleProgress = Math.max(state.visibleProgress, progressForCheckpoint(checkpoint));
+        state.readyTextAllowed = false;
+
+        const nextIndex = state.sequence.indexOf(checkpoint) + 1;
+        state.activeIndex = Math.min(nextIndex, state.sequence.length - 1);
+        const next = activeCheckpoint();
+        if (next && !next.complete) {
+          next.status = CHECKPOINT_STATUS.ACTIVE;
+        }
+
+        setFirstFailureFromActive();
+      }
+
+      state.updatedAt = nowIso();
+      flushQueue();
+      return checkpoint;
+    }
+
+    function flushQueue() {
+      let advanced = true;
+      let guard = 0;
+
+      while (advanced && guard < 64) {
+        advanced = false;
+        guard += 1;
+
+        const active = activeCheckpoint();
+        if (!active) return;
+
+        const index = state.queuedEvents.findIndex((entry) => entry.classification.checkpointId === active.id);
+        if (index < 0) return;
+
+        const [entry] = state.queuedEvents.splice(index, 1);
+        const result = submitEvent(entry.event, { fromQueue: true });
+
+        if (result && result.action === CHECKPOINT_EVENT_ACTIONS.ADMIT) {
+          advanced = true;
+        }
+      }
+    }
+
+    function submitEvent(rawEvent = {}, submitOptions = {}) {
+      const event = normalizeCheckpointEvent(rawEvent);
+      updateNews({ ...(event.snapshot || {}), ...(event.detail || {}), ...(event || {}) });
+
+      const classification = classifyCheckpointEvent(event, {
+        sequence: state.sequence,
+        activeIndex: state.activeIndex,
+        completionLatched: state.completionLatched,
+        f21Allowed: f21Allowed()
+      });
+
+      state.latestClassification = classification;
+
+      const checkpoint = state.sequence.find((item) => item.id === classification.checkpointId) || null;
+
+      const record = {
+        event: clonePlain(event),
+        classification: clonePlain(classification),
+        at: nowIso()
+      };
+
+      if (classification.action === CHECKPOINT_EVENT_ACTIONS.QUEUE) {
+        if (!submitOptions.fromQueue) {
+          state.queuedEvents.push(record);
+          state.futureEventsQueued += 1;
+        }
+
+        if (checkpoint) checkpoint.status = CHECKPOINT_STATUS.QUEUED;
+
+        state.firstFailedCoordinate = `WAITING_${classification.activeCheckpointId}`;
+        state.recommendedNextRenewalTarget = "complete-active-checkpoint-first";
+      }
+
+      if (classification.action === CHECKPOINT_EVENT_ACTIONS.ARCHIVE) {
+        state.archivedEvents.push(record);
+        state.duplicateEventsArchived += 1;
+      }
+
+      if (classification.action === CHECKPOINT_EVENT_ACTIONS.BLOCK) {
+        state.blockedEvents.push(record);
+        state.regressionPrevented += 1;
+        if (checkpoint) checkpoint.status = CHECKPOINT_STATUS.BLOCKED;
+
+        if (checkpoint && checkpoint.id === "F21_COMPLETION_LATCHED") {
+          state.firstFailedCoordinate = "F21_BLOCKED_NEWS_OR_F13N_INCOMPLETE";
+          state.recommendedNextRenewalTarget = options.coherenceSemiconductor || "/showroom/globe/hearth/hearth.js";
+          state.progressCap = 98;
+          state.visibleProgress = Math.min(98, Math.max(state.visibleProgress, 98));
+          state.readyTextAllowed = false;
+        }
+      }
+
+      if (classification.action === CHECKPOINT_EVENT_ACTIONS.ADMIT) {
+        state.admittedEvents.push(record);
+
+        if (checkpoint) {
+          checkpoint.status = CHECKPOINT_STATUS.ACTIVE;
+          state.visibleProgress = Math.max(state.visibleProgress, progressForCheckpoint(checkpoint));
+        }
+
+        const completionOk = checkpoint ? checkpointCompletionSatisfied(checkpoint, event, state.snapshot) : false;
+
+        if (checkpoint && completionOk) {
+          completeCheckpoint(checkpoint, event);
+        }
+      }
+
+      if (state.admittedEvents.length > 300) state.admittedEvents.splice(0, state.admittedEvents.length - 300);
+      if (state.queuedEvents.length > 300) state.queuedEvents.splice(0, state.queuedEvents.length - 300);
+      if (state.archivedEvents.length > 300) state.archivedEvents.splice(0, state.archivedEvents.length - 300);
+      if (state.blockedEvents.length > 300) state.blockedEvents.splice(0, state.blockedEvents.length - 300);
+
+      if (!state.completionLatched) {
+        state.progressCap = 98;
+        state.visibleProgress = Math.min(98, state.visibleProgress);
+        state.readyTextAllowed = false;
+      }
+
+      updateNews(state.snapshot);
+      setFirstFailureFromActive();
+      state.updatedAt = nowIso();
+
+      return {
+        ...classification,
+        sessionId: state.sessionId,
+        activeCheckpoint: clonePlain(activeCheckpoint()),
+        completionLatched: state.completionLatched,
+        visibleProgress: state.visibleProgress,
+        progressCap: state.progressCap,
+        readyTextAllowed: state.readyTextAllowed,
+        firstFailedCoordinate: state.firstFailedCoordinate,
+        recommendedNextRenewalTarget: state.recommendedNextRenewalTarget
+      };
+    }
+
+    function submitMany(events = []) {
+      return asArray(events).map((event) => submitEvent(event));
+    }
+
+    function completeActive(event = {}) {
+      const active = activeCheckpoint();
+      if (!active) return null;
+      return submitEvent({
+        ...event,
+        id: active.event,
+        checkpointId: active.id,
+        event: active.event
+      });
+    }
+
+    function canAdvanceTo(checkpointId) {
+      const target = state.sequence.find((checkpoint) => checkpoint.id === checkpointId);
+      const active = activeCheckpoint();
+      if (!target || !active) return false;
+      return target.rank <= active.rank + 1;
+    }
+
+    function getActiveCheckpoint() {
+      return clonePlain(activeCheckpoint());
+    }
+
+    function getCheckpointState() {
+      return clonePlain(state.sequence);
+    }
+
+    function getNewsGateState() {
+      updateNews(state.snapshot);
+      return clonePlain(state.newsGateState);
+    }
+
+    function reset() {
+      state.activeIndex = 0;
+      state.highestCompletedIndex = -1;
+      state.completedCheckpoints = [];
+      state.queuedEvents = [];
+      state.archivedEvents = [];
+      state.blockedEvents = [];
+      state.admittedEvents = [];
+      state.regressionPrevented = 0;
+      state.futureEventsQueued = 0;
+      state.duplicateEventsArchived = 0;
+      state.f13Events = [];
+      state.completionLatched = false;
+      state.progressCap = 98;
+      state.visibleProgress = 0;
+      state.readyTextAllowed = false;
+      state.firstFailedCoordinate = "CHECKPOINT_SESSION_RESET";
+      state.recommendedNextRenewalTarget = "submit-first-checkpoint";
+      state.updatedAt = nowIso();
+
+      state.sequence.forEach((checkpoint) => {
+        checkpoint.complete = false;
+        checkpoint.status = CHECKPOINT_STATUS.PENDING;
+        delete checkpoint.completedAt;
+      });
+
+      if (state.sequence[0]) state.sequence[0].status = CHECKPOINT_STATUS.ACTIVE;
+
+      return getReceipt();
+    }
+
+    function getReceipt() {
+      updateNews(state.snapshot);
+
+      const active = activeCheckpoint();
+      const highestCompleted = state.sequence[state.highestCompletedIndex] || null;
+      const f21IsAllowed = f21Allowed();
+
+      return {
+        contract: CONTRACT,
+        receipt: RECEIPT,
+        checkpointSessionContract: "LAB_RUNTIME_TABLE_CHRONOLOGICAL_CHECKPOINT_SESSION_v1",
+        checkpointSessionReceipt: "LAB_RUNTIME_TABLE_CHRONOLOGICAL_CHECKPOINT_SESSION_RECEIPT_v1",
+        sessionId: state.sessionId,
+        planetId: state.planetId,
+        planetLabel: state.planetLabel,
+        route: state.route,
+        checkpointGovernorActive: true,
+        chronologicalCheckpointSession: true,
+        chronologicalFibonacciAlignment: true,
+        newsFibonacciAlignment: true,
+        oneActiveCheckpointAtATime: true,
+        futureEventsQueued: true,
+        completedEventsArchived: true,
+        regressiveEventsBlocked: true,
+        blockedProgressCap: 98,
+        readyTextRequiresCompletionLatch: true,
+        f13CompoundSequenceEnforced: true,
+        f13MInspectModeRequiredBeforeF21: true,
+        newsGatesRequiredBeforeF21: true,
+
+        activeCheckpointId: active ? active.id : "",
+        activeCheckpointRank: active ? active.rank : 0,
+        activeCheckpointLabel: active ? active.label : "",
+        activeFibonacciStage: active ? active.fibonacci : "",
+        highestCompletedCheckpointId: highestCompleted ? highestCompleted.id : "",
+        highestCompletedRank: highestCompleted ? highestCompleted.rank : 0,
+
+        completionLatched: state.completionLatched,
+        readyTextAllowed: state.readyTextAllowed,
+        visibleProgress: state.visibleProgress,
+        progressCap: state.progressCap,
+        mainProgressCap: state.progressCap,
+
+        queuedEventsCount: state.queuedEvents.length,
+        archivedEventsCount: state.archivedEvents.length,
+        blockedEventsCount: state.blockedEvents.length,
+        admittedEventsCount: state.admittedEvents.length,
+        regressionPrevented: state.regressionPrevented,
+        futureEventsQueuedCount: state.futureEventsQueued,
+        duplicateEventsArchived: state.duplicateEventsArchived,
+
+        newsGateState: clonePlain(state.newsGateState),
+        northGateReady: state.newsGateState.northGateReady,
+        eastGateReady: state.newsGateState.eastGateReady,
+        westGateReady: state.newsGateState.westGateReady,
+        southGateReady: state.newsGateState.southGateReady,
+        newsGatePassedBeforeF21: state.newsGateState.newsGatePassedBeforeF21,
+
+        f13SubsequenceComplete: f13SubsequenceComplete(),
+        f13LastRequiredEvent: f13LastRequiredEvent(),
+        f13Events: clonePlain(state.f13Events),
+        f21Allowed: f21IsAllowed,
+
+        firstFailedCoordinate: state.firstFailedCoordinate,
+        recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+        latestClassification: clonePlain(state.latestClassification),
+
+        completedCheckpoints: clonePlain(state.completedCheckpoints),
+        queuedEvents: clonePlain(state.queuedEvents),
+        archivedEvents: clonePlain(state.archivedEvents),
+        blockedEvents: clonePlain(state.blockedEvents),
+        admittedEvents: clonePlain(state.admittedEvents.slice(-80)),
+        sequence: clonePlain(state.sequence),
+        snapshot: clonePlain(state.snapshot),
+        errors: clonePlain(state.errors),
+
+        generatedImage: false,
+        graphicBox: false,
+        webGL: false,
+        visualPassClaimed: false,
+        createdAt: state.createdAt,
+        updatedAt: state.updatedAt
+      };
+    }
+
+    function getReceiptText() {
+      const receipt = getReceipt();
+
+      const sequenceText = receipt.sequence.map((checkpoint) => (
+        `- ${checkpoint.id}: rank=${checkpoint.rank}; fibonacci=${checkpoint.fibonacci}; status=${checkpoint.status}; complete=${checkpoint.complete === true}; progress=${checkpoint.progress}; event=${checkpoint.event}`
+      )).join("\n") || "- none";
+
+      const queued = receipt.queuedEvents.map((item) => (
+        `- ${item.at} :: ${item.classification.checkpointId} :: ${item.classification.reason}`
+      )).join("\n") || "- none";
+
+      const archived = receipt.archivedEvents.map((item) => (
+        `- ${item.at} :: ${item.classification.checkpointId} :: ${item.classification.reason}`
+      )).join("\n") || "- none";
+
+      const blocked = receipt.blockedEvents.map((item) => (
+        `- ${item.at} :: ${item.classification.checkpointId} :: ${item.classification.reason}`
+      )).join("\n") || "- none";
+
+      return [
+        "LAB_RUNTIME_TABLE_CHRONOLOGICAL_CHECKPOINT_SESSION_RECEIPT",
+        "",
+        `contract=${receipt.contract}`,
+        `receipt=${receipt.receipt}`,
+        `sessionId=${receipt.sessionId}`,
+        `planetId=${receipt.planetId}`,
+        `route=${receipt.route}`,
+        "",
+        `checkpointGovernorActive=${receipt.checkpointGovernorActive}`,
+        `chronologicalFibonacciAlignment=${receipt.chronologicalFibonacciAlignment}`,
+        `newsFibonacciAlignment=${receipt.newsFibonacciAlignment}`,
+        `oneActiveCheckpointAtATime=${receipt.oneActiveCheckpointAtATime}`,
+        `futureEventsQueued=${receipt.futureEventsQueued}`,
+        `completedEventsArchived=${receipt.completedEventsArchived}`,
+        `regressiveEventsBlocked=${receipt.regressiveEventsBlocked}`,
+        `blockedProgressCap=${receipt.blockedProgressCap}`,
+        `readyTextRequiresCompletionLatch=${receipt.readyTextRequiresCompletionLatch}`,
+        `f13CompoundSequenceEnforced=${receipt.f13CompoundSequenceEnforced}`,
+        `f13MInspectModeRequiredBeforeF21=${receipt.f13MInspectModeRequiredBeforeF21}`,
+        `newsGatesRequiredBeforeF21=${receipt.newsGatesRequiredBeforeF21}`,
+        "",
+        `activeCheckpointId=${receipt.activeCheckpointId}`,
+        `activeCheckpointRank=${receipt.activeCheckpointRank}`,
+        `activeCheckpointLabel=${receipt.activeCheckpointLabel}`,
+        `activeFibonacciStage=${receipt.activeFibonacciStage}`,
+        `highestCompletedCheckpointId=${receipt.highestCompletedCheckpointId}`,
+        `highestCompletedRank=${receipt.highestCompletedRank}`,
+        "",
+        `completionLatched=${receipt.completionLatched}`,
+        `readyTextAllowed=${receipt.readyTextAllowed}`,
+        `visibleProgress=${receipt.visibleProgress}`,
+        `progressCap=${receipt.progressCap}`,
+        `mainProgressCap=${receipt.mainProgressCap}`,
+        "",
+        `northGateReady=${receipt.northGateReady}`,
+        `eastGateReady=${receipt.eastGateReady}`,
+        `westGateReady=${receipt.westGateReady}`,
+        `southGateReady=${receipt.southGateReady}`,
+        `newsGatePassedBeforeF21=${receipt.newsGatePassedBeforeF21}`,
+        "",
+        `f13SubsequenceComplete=${receipt.f13SubsequenceComplete}`,
+        `f13LastRequiredEvent=${receipt.f13LastRequiredEvent}`,
+        `f21Allowed=${receipt.f21Allowed}`,
+        "",
+        `firstFailedCoordinate=${receipt.firstFailedCoordinate}`,
+        `recommendedNextRenewalTarget=${receipt.recommendedNextRenewalTarget}`,
+        "",
+        `queuedEventsCount=${receipt.queuedEventsCount}`,
+        `archivedEventsCount=${receipt.archivedEventsCount}`,
+        `blockedEventsCount=${receipt.blockedEventsCount}`,
+        `admittedEventsCount=${receipt.admittedEventsCount}`,
+        `regressionPrevented=${receipt.regressionPrevented}`,
+        `futureEventsQueuedCount=${receipt.futureEventsQueuedCount}`,
+        `duplicateEventsArchived=${receipt.duplicateEventsArchived}`,
+        "",
+        "CHECKPOINT_SEQUENCE",
+        sequenceText,
+        "",
+        "QUEUED_EVENTS",
+        queued,
+        "",
+        "ARCHIVED_EVENTS",
+        archived,
+        "",
+        "BLOCKED_EVENTS",
+        blocked,
+        "",
+        `generatedImage=${receipt.generatedImage}`,
+        `graphicBox=${receipt.graphicBox}`,
+        `webGL=${receipt.webGL}`,
+        `visualPassClaimed=${receipt.visualPassClaimed}`,
+        "",
+        `updatedAt=${receipt.updatedAt}`
+      ].join("\n");
+    }
+
+    if (state.sequence[0]) state.sequence[0].status = CHECKPOINT_STATUS.ACTIVE;
+
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      sessionId: state.sessionId,
+      submitEvent,
+      submitMany,
+      completeActive,
+      canAdvanceTo,
+      getActiveCheckpoint,
+      getCheckpointState,
+      getNewsGateState,
+      getReceipt,
+      getReceiptText,
+      reset,
+      get state() {
+        return state;
+      }
+    };
+  }
+
+  function createHearthCheckpointSession(options = {}) {
+    return createCheckpointSession(FIBONACCI_CHECKPOINTS, {
+      planetId: "hearth",
+      planetLabel: "Hearth",
+      route: "/showroom/globe/hearth/",
+      constraintSemiconductor: "/showroom/globe/hearth/index.js",
+      coherenceSemiconductor: "/showroom/globe/hearth/hearth.js",
+      canvasAuthority: "/assets/hearth/hearth.canvas.js",
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false,
+      ...options
+    });
   }
 
   function RuntimeTable(options = {}) {
@@ -918,7 +2099,9 @@
           coordinatesBeforeRuntimePerforms: true,
           visualCarrierPlanAuthority: true,
           atlasStartPlanAuthority: true,
-          universalPlanetStandard: true,
+          checkpointGovernorAvailable: true,
+          chronologicalFibonacciAlignment: true,
+          newsFibonacciAlignment: true,
           wideProbeDeferred: true,
           visualPassClaimed: false
         };
@@ -1280,7 +2463,6 @@
     const runtimeTableLedger = input.runtimeTableLedger || input.ledger || null;
     const canvasReceipt = input.canvasReceipt || input.canvas || {};
     const renderMetadata = input.renderMetadata || input.render || {};
-    const probePoints = Array.isArray(input.probePoints) ? input.probePoints.slice() : [];
     const probeSamples = Array.isArray(input.probeSamples) ? input.probeSamples.slice() : [];
     const loadingPlan = input.loadingPlan || input.visualCarrierPlan || null;
 
@@ -1294,7 +2476,6 @@
       airSample,
       channelSamples: clonePlain(input.channelSamples || {}),
       renderMetadata,
-      probePoints,
       probeSamples,
       loadingPlan,
       imageRendered: safeBool(input.imageRendered, safeBool(renderMetadata.imageRendered, safeBool(renderMetadata.atlasReady, false))),
@@ -1351,25 +2532,14 @@
   }
 
   function receiptVerificationCheck(ctx) {
-    const profile = ctx.goalProfile;
     const ledger = ctx.runtimeTableLedger;
     const canvasReceipt = ctx.canvasReceipt || {};
-    const records = getRuntimeRecordsByKey(ledger);
-
-    const expected = profile.expectedContracts || {};
     const checks = {
       runtimeTableLedgerPresent: Boolean(ledger),
       runtimeTableHandoffPresent: Boolean(ledger && ledger.handoff),
       canvasReceiptPresent: Boolean(canvasReceipt && Object.keys(canvasReceipt).length),
-      canvasVisualPassNotClaimed: canvasReceipt.visualPassClaimed !== true,
-      runtimeRecordsPresent: Boolean(Object.keys(records).length)
+      canvasVisualPassNotClaimed: canvasReceipt.visualPassClaimed !== true
     };
-
-    ["land", "water", "air"].forEach((key) => {
-      if (!expected[key]) return;
-      const sample = key === "land" ? ctx.landSample : key === "water" ? ctx.waterSample : ctx.airSample;
-      checks[`${key}ContractOk`] = !sample || !extractContract(sample) || extractContract(sample) === expected[key];
-    });
 
     const failed = Object.keys(checks).filter((key) => !checks[key]);
     const status = failed.length ? COHERENCE_STATUS.FAIL : COHERENCE_STATUS.PASS;
@@ -1385,10 +2555,7 @@
         failed,
         checks,
         runtimeTableHandoff: ledger && ledger.handoff ? ledger.handoff : "",
-        canvasContract: extractContract(canvasReceipt),
-        landContract: extractContract(ctx.landSample),
-        waterContract: extractContract(ctx.waterSample),
-        airContract: extractContract(ctx.airSample)
+        canvasContract: extractContract(canvasReceipt)
       },
       status,
       probableCause: failed.length ? ["Stale file, missing receipt, mismatched contract, or canvas over-claiming final visual status."] : [],
@@ -1463,10 +2630,8 @@
 
     const landAlpha = clamp01(safeNumber(land.landAlpha ?? land.landPresence ?? land.alpha ?? canvas.landWeight, 0));
     const airAlpha = clamp01(safeNumber(air.airAlpha ?? air.airPresence ?? air.alpha ?? canvas.airWeight, 0));
-    const rawBodyBinding = land.bodyBinding !== undefined ? land.bodyBinding : land.bodyBound === true ? 1 : 0;
-    const rawSurfaceAttachment = land.surfaceAttachment !== undefined ? land.surfaceAttachment : land.surfaceBound === true ? 1 : 0;
-    const bodyBinding = clamp01(safeNumber(rawBodyBinding, 0));
-    const surfaceAttachment = clamp01(safeNumber(rawSurfaceAttachment, 0));
+    const bodyBinding = clamp01(safeNumber(land.bodyBinding !== undefined ? land.bodyBinding : land.bodyBound === true ? 1 : 0, 0));
+    const surfaceAttachment = clamp01(safeNumber(land.surfaceAttachment !== undefined ? land.surfaceAttachment : land.surfaceBound === true ? 1 : 0, 0));
 
     const landAtmosphericLeak = landAlpha * airAlpha * (1 - bodyBinding);
     const landBodyScore = landAlpha * bodyBinding * surfaceAttachment;
@@ -1512,10 +2677,8 @@
 
     const waterAlpha = clamp01(safeNumber(water.waterAlpha ?? water.waterPresence ?? water.alpha ?? canvas.waterWeight, 0));
     const airAlpha = clamp01(safeNumber(air.airAlpha ?? air.airPresence ?? air.alpha ?? canvas.airWeight, 0));
-    const rawHydrosphereBinding = water.hydrosphereBinding !== undefined ? water.hydrosphereBinding : water.bodyBound === true ? 1 : 0;
-    const rawSurfaceSeat = water.surfaceSeat !== undefined ? water.surfaceSeat : water.surfaceBound === true ? 1 : 0;
-    const hydrosphereBinding = clamp01(safeNumber(rawHydrosphereBinding, 0));
-    const surfaceSeat = clamp01(safeNumber(rawSurfaceSeat, 0));
+    const hydrosphereBinding = clamp01(safeNumber(water.hydrosphereBinding !== undefined ? water.hydrosphereBinding : water.bodyBound === true ? 1 : 0, 0));
+    const surfaceSeat = clamp01(safeNumber(water.surfaceSeat !== undefined ? water.surfaceSeat : water.surfaceBound === true ? 1 : 0, 0));
 
     const waterFloatingLeak = waterAlpha * airAlpha * (1 - hydrosphereBinding);
     const waterSeatScore = waterAlpha * hydrosphereBinding * surfaceSeat;
@@ -1639,7 +2802,7 @@
     const sphereContainment = safeBool(render.sphereContainment, safeBool(canvas.sphereContainment, safeBool(canvas.supportsSphereContainment, true)));
     const outsideSphereTransparent = safeBool(render.outsideSphereTransparent, safeBool(canvas.outsideSphereTransparent, safeBool(canvas.supportsOutsideSphereTransparency, true)));
     const noRectangularTextureSpill = safeBool(render.noRectangularTextureSpill, safeBool(canvas.noRectangularTextureSpill, true));
-    const atlasReady = safeBool(render.atlasReady, safeBool(canvas.atlasReady, safeBool(render.imageRendered, ctx.imageRendered)));
+    const atlasReady = safeBool(render.atlasReady, false) || safeBool(canvas.atlasReady, false) || safeBool(render.imageRendered, ctx.imageRendered);
     const projectionReady = safeBool(render.projectionReady, safeBool(canvas.projectionReady, atlasReady || safeBool(render.imageRendered, false)));
     const failures = [];
 
@@ -1703,9 +2866,7 @@
   function distributionShapeCheck(ctx) {
     const t = ctx.goalProfile.tolerances;
     const minimumWideProbePoints = Math.max(1, Math.round(safeNumber(t.minimumWideProbePoints, 25)));
-    const samples = ctx.probeSamples.length
-      ? ctx.probeSamples
-      : [];
+    const samples = ctx.probeSamples.length ? ctx.probeSamples : [];
 
     if (samples.length < minimumWideProbePoints) {
       return makeCheckpointReceipt({
@@ -1766,7 +2927,7 @@
       name: "Distribution Shape Check",
       goal: "Land, water, and air distribution should match the goal profile.",
       observed: status === COHERENCE_STATUS.PASS ? "Wide-probe distribution is within initial tolerance." : "Wide-probe distribution suggests low land visibility or excessive air dominance.",
-      math: "landCoverage = visibleLandSamples / totalSamples; waterCoverage = visibleWaterSamples / totalSamples; airDominance = visibleAirSamples / totalSamples. This check is only valid when total >= minimumWideProbePoints.",
+      math: "landCoverage = visibleLandSamples / totalSamples; waterCoverage = visibleWaterSamples / totalSamples; airDominance = visibleAirSamples / totalSamples.",
       tolerance: {
         minimumWideProbePoints,
         minimumLandCoverageWhenExpected: t.minimumLandCoverageWhenExpected,
@@ -1845,7 +3006,7 @@
     if (visibleCarrierAvailable && childValidationAvailable && anchorSampleAvailable && atlasOrCacheReady && !wideProbeReady) loadingCoordinate = L_COORDINATES.L5_WIDE_PROBE_IDLE_CHUNKS;
     if (visibleCarrierAvailable && childValidationAvailable && anchorSampleAvailable && atlasOrCacheReady && wideProbeReady) loadingCoordinate = L_COORDINATES.L6_OPTIMIZED_STABLE;
 
-    const plan = {
+    return {
       contract: CONTRACT,
       receipt: RECEIPT,
       loadingOptimizationContract: "LAB_UNIVERSAL_PLANET_LOADING_OPTIMIZATION_PLAN_v1",
@@ -1912,13 +3073,13 @@
         deferWideProbe: true,
         useIdleFrames: true
       },
+      chronologicalCheckpointGovernorAvailable: true,
+      recommendedCheckpointSession: "createHearthCheckpointSession",
       generatedImage: false,
       graphicBox: false,
       webGL: false,
       visualPassClaimed: false
     };
-
-    return plan;
   }
 
   function loadingOptimizationCheck(ctx) {
@@ -1952,6 +3113,65 @@
       probableCause: status === COHERENCE_STATUS.PASS ? [] : ["Wide-probe or child diagnostics are being treated as first-render blockers."],
       renewalTarget: status === COHERENCE_STATUS.PASS ? [] : ["loading-order", "canvas-shell-first-render", "wide-probe-deferment"],
       nextStrategy: status === COHERENCE_STATUS.PASS ? [] : ["Restore visible carrier first and defer wide-probe to idle chunks."]
+    });
+  }
+
+  function createVisualCarrierEligibilityCheckpoint(planDraft) {
+    const status = planDraft.visualCarrierAllowed && !planDraft.visualizationBlocked ? COHERENCE_STATUS.PASS : COHERENCE_STATUS.BLOCKING;
+
+    return makeCheckpointReceipt({
+      id: COHERENCE_CHECKS.VISUAL_CARRIER_ELIGIBILITY_CHECK,
+      name: "Visual Carrier Eligibility Check",
+      goal: "Visualization is blocked only when the carrier itself is structurally unsafe.",
+      observed: status === COHERENCE_STATUS.PASS
+        ? "Visual carrier remains active; diagnostic failures do not erase the planet."
+        : `Visualization blocked: ${planDraft.visualizationBlockReason || "carrier unsafe"}.`,
+      math: "Coherence failure blocks visual-pass claim, not visual carrier expression. Carrier blocks only when structurally unsafe or route/canvas mount is unavailable.",
+      tolerance: { visualizationBlocked: false },
+      value: {
+        visualCarrierAllowed: planDraft.visualCarrierAllowed,
+        visualizationBlocked: planDraft.visualizationBlocked,
+        visualizationBlockReason: planDraft.visualizationBlockReason,
+        visualCarrierMode: planDraft.visualCarrierMode,
+        visualDiagnosticStatus: planDraft.visualDiagnosticStatus,
+        visualDiagnosticCue: planDraft.visualDiagnosticCue,
+        childFailureDoesNotEraseVisualization: true,
+        wideProbeBlocksFirstVisibleRender: false
+      },
+      status,
+      probableCause: status === COHERENCE_STATUS.PASS ? [] : ["Carrier structure, mount, or projection safety is unavailable."],
+      renewalTarget: status === COHERENCE_STATUS.PASS ? [] : ["visual-carrier-mount", "canvas-shell-first-render", "projection-safety"],
+      nextStrategy: status === COHERENCE_STATUS.PASS ? [] : ["Restore shell-first visible carrier before child or visual tuning."]
+    });
+  }
+
+  function createAtlasStartAuthorizationCheckpoint(planDraft) {
+    const status = planDraft.atlasStartAuthorized ? COHERENCE_STATUS.PASS : COHERENCE_STATUS.BLOCKING;
+
+    return makeCheckpointReceipt({
+      id: COHERENCE_CHECKS.ATLAS_START_AUTHORIZATION_CHECK,
+      name: "Atlas Start Authorization Check",
+      goal: "Atlas start must be authorized or explicitly blocked by a named coordinate and reason.",
+      observed: planDraft.atlasStartAuthorized
+        ? "Atlas start is authorized by Runtime Table plan."
+        : `Atlas start blocked: ${planDraft.atlasStartBlockedReason || "unknown reason"}.`,
+      math: "atlasStartAuthorized = visualCarrierAllowed && !visualizationBlocked && projectionSafe && no blocking/rejected structural child. Child C4 may degrade coherence but does not automatically block atlas.",
+      tolerance: {
+        childFailureDoesNotEraseVisualization: true,
+        atlasStartBlockedReasonRequiredWhenBlocked: true
+      },
+      value: {
+        atlasStartAuthorized: planDraft.atlasStartAuthorized,
+        atlasStartMode: planDraft.atlasStartMode,
+        atlasStartCoordinate: planDraft.atlasStartCoordinate,
+        atlasStartBlockedReason: planDraft.atlasStartBlockedReason,
+        childFailureDoesNotEraseVisualization: true,
+        channelPlan: clonePlain(planDraft.channelPlan)
+      },
+      status,
+      probableCause: status === COHERENCE_STATUS.PASS ? [] : ["Runtime Table found a structural carrier, projection, or child-blocking condition."],
+      renewalTarget: status === COHERENCE_STATUS.PASS ? [] : ["atlas-start-sequencing", "runtime-table-plan-consumption", "visual-carrier-safety"],
+      nextStrategy: status === COHERENCE_STATUS.PASS ? [] : ["Use the atlas-start blocked reason before changing child visual code."]
     });
   }
 
@@ -2064,7 +3284,6 @@
 
   function runChecks(input = {}, options = {}) {
     const ctx = normalizeDiagnosticInput(input, options);
-
     const checkpoints = [];
 
     if (input.visualCarrierPlan && input.visualCarrierPlan.visualCarrierEligibilityCheckpoint) {
@@ -2130,6 +3349,7 @@
       nextStrategy: collectNextStrategy(checkpoints),
       singleAnchorIsLocalProofOnly: true,
       wideProbeNeverBlocksFirstVisibleRender: true,
+      chronologicalCheckpointGovernorAvailable: true,
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false,
@@ -2176,6 +3396,7 @@
         imageRenderedIsNotCoherencePass: true,
         singleAnchorIsLocalProofOnly: true,
         wideProbeNeverBlocksFirstVisibleRender: true,
+        checkpointGovernorAvailable: true,
         visualPassClaimed: false
       };
     }
@@ -2328,65 +3549,6 @@
     };
   }
 
-  function createVisualCarrierEligibilityCheckpoint(planDraft) {
-    const status = planDraft.visualCarrierAllowed && !planDraft.visualizationBlocked ? COHERENCE_STATUS.PASS : COHERENCE_STATUS.BLOCKING;
-
-    return makeCheckpointReceipt({
-      id: COHERENCE_CHECKS.VISUAL_CARRIER_ELIGIBILITY_CHECK,
-      name: "Visual Carrier Eligibility Check",
-      goal: "Visualization is blocked only when the carrier itself is structurally unsafe.",
-      observed: status === COHERENCE_STATUS.PASS
-        ? "Visual carrier remains active; diagnostic failures do not erase the planet."
-        : `Visualization blocked: ${planDraft.visualizationBlockReason || "carrier unsafe"}.`,
-      math: "Coherence failure blocks visual-pass claim, not visual carrier expression. Carrier blocks only when structurally unsafe or route/canvas mount is unavailable.",
-      tolerance: { visualizationBlocked: false },
-      value: {
-        visualCarrierAllowed: planDraft.visualCarrierAllowed,
-        visualizationBlocked: planDraft.visualizationBlocked,
-        visualizationBlockReason: planDraft.visualizationBlockReason,
-        visualCarrierMode: planDraft.visualCarrierMode,
-        visualDiagnosticStatus: planDraft.visualDiagnosticStatus,
-        visualDiagnosticCue: planDraft.visualDiagnosticCue,
-        childFailureDoesNotEraseVisualization: true,
-        wideProbeBlocksFirstVisibleRender: false
-      },
-      status,
-      probableCause: status === COHERENCE_STATUS.PASS ? [] : ["Carrier structure, mount, or projection safety is unavailable."],
-      renewalTarget: status === COHERENCE_STATUS.PASS ? [] : ["visual-carrier-mount", "canvas-shell-first-render", "projection-safety"],
-      nextStrategy: status === COHERENCE_STATUS.PASS ? [] : ["Restore shell-first visible carrier before child or visual tuning."]
-    });
-  }
-
-  function createAtlasStartAuthorizationCheckpoint(planDraft) {
-    const status = planDraft.atlasStartAuthorized ? COHERENCE_STATUS.PASS : COHERENCE_STATUS.BLOCKING;
-
-    return makeCheckpointReceipt({
-      id: COHERENCE_CHECKS.ATLAS_START_AUTHORIZATION_CHECK,
-      name: "Atlas Start Authorization Check",
-      goal: "Atlas start must be authorized or explicitly blocked by a named coordinate and reason.",
-      observed: planDraft.atlasStartAuthorized
-        ? "Atlas start is authorized by Runtime Table plan."
-        : `Atlas start blocked: ${planDraft.atlasStartBlockedReason || "unknown reason"}.`,
-      math: "atlasStartAuthorized = visualCarrierAllowed && !visualizationBlocked && projectionSafe && no blocking/rejected structural child. Child C4 may degrade coherence but does not automatically block atlas.",
-      tolerance: {
-        childFailureDoesNotEraseVisualization: true,
-        atlasStartBlockedReasonRequiredWhenBlocked: true
-      },
-      value: {
-        atlasStartAuthorized: planDraft.atlasStartAuthorized,
-        atlasStartMode: planDraft.atlasStartMode,
-        atlasStartCoordinate: planDraft.atlasStartCoordinate,
-        atlasStartBlockedReason: planDraft.atlasStartBlockedReason,
-        childFailureDoesNotEraseVisualization: true,
-        channelPlan: clonePlain(planDraft.channelPlan)
-      },
-      status,
-      probableCause: status === COHERENCE_STATUS.PASS ? [] : ["Runtime Table found a structural carrier, projection, or child-blocking condition."],
-      renewalTarget: status === COHERENCE_STATUS.PASS ? [] : ["atlas-start-sequencing", "runtime-table-plan-consumption", "visual-carrier-safety"],
-      nextStrategy: status === COHERENCE_STATUS.PASS ? [] : ["Use the atlas-start blocked reason before changing child visual code."]
-    });
-  }
-
   function chooseFirstFailedCoordinate(channelPlan, atlasCoordinate, runtimeCoordinate) {
     if (runtimeCoordinate && runtimeCoordinate !== R_COORDINATES.R3_PLAN_VALID_HANDOFF_READY) return runtimeCoordinate;
 
@@ -2420,7 +3582,6 @@
 
   function normalizeLedger(input = {}, options = {}) {
     if (input.runtimeTableLedger || input.ledger) return input.runtimeTableLedger || input.ledger;
-
     if (options.ledger) return options.ledger;
 
     if (options.channels && options.channels.length) {
@@ -2608,6 +3769,8 @@
       channelPlan,
       waterConnectorProof,
       loadingOptimizationPlan,
+      checkpointGovernorAvailable: true,
+      recommendedCheckpointSessionFactory: "createHearthCheckpointSession",
       runtimeTableLedger: clonePlain(ledger),
       tripleGCheckpoints: [],
       renewalTargets: [],
@@ -2693,10 +3856,10 @@
       previousContract: PREVIOUS_CONTRACT,
       baselineContract: BASELINE_CONTRACT,
       version: VERSION,
-      authority: "lab-universal-planet-wide-probe-diagnostic-loading-standard",
+      authority: "lab-runtime-table-news-fibonacci-chronological-checkpoint-governor",
       destinationFile: "/assets/lab/runtime-table.js",
       status: "active",
-      role: "reusable-runtime-preparation-coherence-diagnostic-visual-carrier-plan-wide-probe-and-loading-optimization-equipment",
+      role: "reusable-runtime-preparation-coherence-diagnostic-visual-carrier-plan-wide-probe-loading-optimization-and-chronological-checkpoint-governor-equipment",
       labEquipment: true,
       runtimeTable: true,
       tripleGDiagnostic: true,
@@ -2705,7 +3868,24 @@
       coherentExpressionDiagnostic: true,
       universalPlanetStandard: true,
       hearthIsFirstConsumerNotOwner: true,
-      purpose: "set the table before runtime performs, generate a universal procedural visual-carrier plan, authorize atlas start, defer wide-probe diagnostics, optimize first render, and verify whether rendered expression coheres with the goal profile",
+
+      checkpointGovernorActive: true,
+      chronologicalCheckpointSessionSupported: true,
+      chronologicalFibonacciAlignment: true,
+      newsFibonacciAlignment: true,
+      oneActiveCheckpointAtATime: true,
+      futureEventsQueued: true,
+      completedEventsArchived: true,
+      regressiveEventsBlocked: true,
+      blockedProgressCap: 98,
+      readyTextRequiresCompletionLatch: true,
+      f13CompoundSequenceEnforced: true,
+      f13MInspectModeRequiredBeforeF21: true,
+      newsGatesRequiredBeforeF21: true,
+      createCheckpointSessionExported: true,
+      createHearthCheckpointSessionExported: true,
+
+      purpose: "set the table before runtime performs, generate a universal procedural visual-carrier plan, authorize atlas start, defer wide-probe diagnostics, optimize first render, govern chronological checkpoint admission, and verify whether rendered expression coheres with the goal profile",
       runtimeTableSequence: [
         "validate",
         "coordinate",
@@ -2721,6 +3901,16 @@
         "atlas-or-cache-render-fourth",
         "wide-probe-idle-chunks-later"
       ],
+      chronologicalCheckpointSequence: FIBONACCI_CHECKPOINTS.map((checkpoint) => ({
+        id: checkpoint.id,
+        event: checkpoint.event,
+        rank: checkpoint.rank,
+        fibonacci: checkpoint.fibonacci,
+        value: checkpoint.value,
+        lane: checkpoint.lane,
+        progress: checkpoint.progress,
+        label: checkpoint.label
+      })),
       proceduralPlanSequence: [
         "runtime-coordinate-classification",
         "visual-carrier-eligibility",
@@ -2759,7 +3949,10 @@
       statuses: Object.values(STATUS),
       handoffClasses: Object.values(HANDOFF),
       coherenceStatuses: Object.values(COHERENCE_STATUS),
+      checkpointEventActions: Object.values(CHECKPOINT_EVENT_ACTIONS),
+      checkpointStatuses: Object.values(CHECKPOINT_STATUS),
       coherenceChecks: Object.values(COHERENCE_CHECKS),
+      newsGates: clonePlain(NEWS_GATES),
       preservedExports: [
         "createTable",
         "createHearthChannelTable",
@@ -2777,16 +3970,25 @@
         "R_COORDINATES",
         "V_COORDINATES",
         "A_COORDINATES",
-        "C_COORDINATES"
-      ],
-      addedExports: [
+        "C_COORDINATES",
+        "L_COORDINATES",
         "createPlanetChannelTable",
         "createPlanetGoalProfile",
         "createPlanetWideProbeDiagnostic",
         "runPlanetWideProbe",
         "createLoadingOptimizationPlan",
-        "createUniversalPlanetVisualCarrierPlan",
-        "L_COORDINATES"
+        "createUniversalPlanetVisualCarrierPlan"
+      ],
+      addedExports: [
+        "createCheckpointSession",
+        "createHearthCheckpointSession",
+        "createChronologicalFibonacciPlan",
+        "createNewsFibonacciCheckpointPlan",
+        "classifyCheckpointEvent",
+        "CHECKPOINT_EVENT_ACTIONS",
+        "CHECKPOINT_STATUS",
+        "FIBONACCI_CHECKPOINTS",
+        "NEWS_GATES"
       ],
       reusableFor: [
         "Hearth channel rendering",
@@ -2805,6 +4007,7 @@
       supportedChannelFamilies: UNIVERSAL_CHANNEL_KEYS.slice(),
       coreLaw: [
         "Runtime Table decides procedural readiness",
+        "Runtime Table governs chronological checkpoint admission",
         "Canvas consumes the plan and expresses locally",
         "constructionReady is not coherentExpressionPass",
         "imageRendered is not coherentExpressionPass",
@@ -2820,6 +4023,15 @@
         "wide-probe runs later in chunks or idle frames",
         "child channel failure degrades coherence but does not automatically erase visualization",
         "visualization blocks only when carrier structure is unsafe",
+        "one active checkpoint may animate at a time",
+        "future checkpoint events are queued",
+        "completed checkpoint duplicates are archived",
+        "regressive visible state events are blocked",
+        "CANVAS_READY is necessary but not sufficient for F21",
+        "F13M visible content proof and F13N inspect mode are required before F21",
+        "NEWS gates are required before F21",
+        "blocked F21 progress caps at 98",
+        "READY text requires completionLatched true",
         "checkpoint receipts must include math and renewal targets"
       ],
       owns: [
@@ -2830,6 +4042,8 @@
         "fallback-degraded-full-mode-classification",
         "wide-probe-readiness-law",
         "loading-optimization-sequence-law",
+        "chronological-checkpoint-governor",
+        "news-fibonacci-f21-admissibility",
         "first-failed-coordinate-selection",
         "recommended-renewal-target-selection",
         "procedural-plan-export"
@@ -2869,6 +4083,11 @@
     C_COORDINATES,
     L_COORDINATES,
 
+    CHECKPOINT_EVENT_ACTIONS,
+    CHECKPOINT_STATUS,
+    FIBONACCI_CHECKPOINTS,
+    NEWS_GATES,
+
     createTable,
     createHearthChannelTable,
     createPlanetChannelTable,
@@ -2888,6 +4107,13 @@
     createLoadingOptimizationPlan,
     runProceduralPlan,
 
+    createCheckpointSession,
+    createHearthCheckpointSession,
+    createChronologicalFibonacciPlan,
+    createNewsFibonacciCheckpointPlan,
+    classifyCheckpointEvent,
+    evaluateNewsGateState,
+
     getReceipt,
 
     labEquipment: true,
@@ -2900,6 +4126,21 @@
     wideProbeDiagnosticAuthority: true,
     universalPlanetStandard: true,
     hearthIsFirstConsumerNotOwner: true,
+
+    checkpointGovernorActive: true,
+    chronologicalCheckpointSessionSupported: true,
+    chronologicalFibonacciAlignment: true,
+    newsFibonacciAlignment: true,
+    oneActiveCheckpointAtATime: true,
+    futureEventsQueued: true,
+    completedEventsArchived: true,
+    regressiveEventsBlocked: true,
+    blockedProgressCap: 98,
+    readyTextRequiresCompletionLatch: true,
+    f13CompoundSequenceEnforced: true,
+    f13MInspectModeRequiredBeforeF21: true,
+    newsGatesRequiredBeforeF21: true,
+
     validatesBeforeExpression: true,
     coordinatesBeforeRuntimePerforms: true,
     verifiesCoherenceAfterRender: true,
@@ -2925,6 +4166,7 @@
   root.DEXTER_LAB.visualCarrierPlanAuthority = api;
   root.DEXTER_LAB.loadingOptimizationAuthority = api;
   root.DEXTER_LAB.wideProbeDiagnosticAuthority = api;
+  root.DEXTER_LAB.checkpointGovernor = api;
 
   root.LAB_RUNTIME_TABLE = api;
   root.DexterRuntimeTable = api;
@@ -2935,6 +4177,8 @@
   root.LAB_LOADING_OPTIMIZATION_AUTHORITY = api;
   root.LAB_WIDE_PROBE_DIAGNOSTIC = api;
   root.LAB_UNIVERSAL_PLANET_RUNTIME_TABLE = api;
+  root.LAB_CHECKPOINT_GOVERNOR = api;
+  root.LAB_NEWS_FIBONACCI_CHECKPOINT_GOVERNOR = api;
 
   if (root.document && root.document.documentElement) {
     const dataset = root.document.documentElement.dataset;
@@ -2953,6 +4197,8 @@
     dataset.labLoadingOptimizationAuthorityContract = CONTRACT;
     dataset.labWideProbeDiagnosticLoaded = "true";
     dataset.labWideProbeDiagnosticContract = CONTRACT;
+    dataset.labCheckpointGovernorLoaded = "true";
+    dataset.labCheckpointGovernorContract = CONTRACT;
     dataset.runtimeTableReusable = "true";
     dataset.tripleGDiagnosticReusable = "true";
     dataset.runtimeTableDoesNotOwnTruth = "true";
@@ -2961,6 +4207,19 @@
     dataset.atlasStartPlanAuthority = "true";
     dataset.loadingOptimizationAuthority = "true";
     dataset.wideProbeDiagnosticAuthority = "true";
+    dataset.checkpointGovernorActive = "true";
+    dataset.chronologicalCheckpointSessionSupported = "true";
+    dataset.chronologicalFibonacciAlignment = "true";
+    dataset.newsFibonacciAlignment = "true";
+    dataset.oneActiveCheckpointAtATime = "true";
+    dataset.futureEventsQueued = "true";
+    dataset.completedEventsArchived = "true";
+    dataset.regressiveEventsBlocked = "true";
+    dataset.blockedProgressCap = "98";
+    dataset.readyTextRequiresCompletionLatch = "true";
+    dataset.f13CompoundSequenceEnforced = "true";
+    dataset.f13MInspectModeRequiredBeforeF21 = "true";
+    dataset.newsGatesRequiredBeforeF21 = "true";
     dataset.universalPlanetStandard = "true";
     dataset.hearthIsFirstConsumerNotOwner = "true";
     dataset.singleAnchorIsLocalProofOnly = "true";

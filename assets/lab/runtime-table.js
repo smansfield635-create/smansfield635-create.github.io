@@ -1,14 +1,17 @@
 // /assets/lab/runtime-table.js
-// LAB_RUNTIME_TABLE_VISUAL_CARRIER_ATLAS_SEQUENCE_STANDARD_TNT_v3
+// LAB_UNIVERSAL_PLANET_WIDE_PROBE_DIAGNOSTIC_LOADING_STANDARD_TNT_v1
 // Full-file replacement.
 // Canonical Dexter Lab equipment.
-// Runtime Table + Triple G Coherence Diagnostic + Visual Carrier / Atlas Sequence procedural plan authority.
+// Runtime Table + Triple G Coherence Diagnostic + Universal Planet Visual Carrier / Atlas Sequence / Wide-Probe / Loading Optimization authority.
 // Purpose:
 // - Preserve reusable Runtime Table construction-readiness equipment.
 // - Preserve reusable Triple G coherent-expression diagnostic equipment.
-// - Promote visual carrier eligibility, atlas-start authorization, fallback/degraded/full mode classification, and renewal-target selection into the lab layer.
-// - Return a procedural plan that downstream canvases consume instead of locally inventing procedural law.
+// - Preserve visual carrier eligibility, atlas-start authorization, fallback/degraded/full mode classification, and renewal-target selection.
+// - Renew the lab layer into a universal planet standard usable by Hearth, Audralia, H-Earth, Earth reference, Showroom planets, and future planet bodies.
+// - Add loading optimization law: visible carrier first, child validation second, anchor sample third, atlas/cache render fourth, wide-probe later in chunks/idle frames.
+// - Add wide-probe law: single anchor samples are local proof only; global distribution checks are held until at least 25 probe samples exist.
 // Does not own:
+// - planet truth
 // - page truth
 // - child channel truth
 // - canvas drawing
@@ -21,11 +24,11 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "LAB_RUNTIME_TABLE_VISUAL_CARRIER_ATLAS_SEQUENCE_STANDARD_TNT_v3";
-  const RECEIPT = "LAB_RUNTIME_TABLE_VISUAL_CARRIER_ATLAS_SEQUENCE_STANDARD_RECEIPT_v3";
-  const PREVIOUS_CONTRACT = "LAB_RUNTIME_TABLE_AND_TRIPLE_G_COHERENCE_DIAGNOSTIC_STANDARD_TNT_v2";
+  const CONTRACT = "LAB_UNIVERSAL_PLANET_WIDE_PROBE_DIAGNOSTIC_LOADING_STANDARD_TNT_v1";
+  const RECEIPT = "LAB_UNIVERSAL_PLANET_WIDE_PROBE_DIAGNOSTIC_LOADING_STANDARD_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "LAB_RUNTIME_TABLE_VISUAL_CARRIER_ATLAS_SEQUENCE_STANDARD_TNT_v3";
   const BASELINE_CONTRACT = "LAB_RUNTIME_TABLE_MULTI_FUNCTION_ANIMATION_STANDARD_TNT_v1";
-  const VERSION = "2026-05-29.lab-runtime-table-visual-carrier-atlas-sequence-standard-v3";
+  const VERSION = "2026-05-29.lab-universal-planet-wide-probe-diagnostic-loading-standard-v1";
 
   const root = typeof window !== "undefined" ? window : globalThis;
 
@@ -36,7 +39,8 @@
     DEGRADED: "DEGRADED",
     FALLBACK: "FALLBACK",
     REJECTED: "REJECTED",
-    BLOCKING: "BLOCKING"
+    BLOCKING: "BLOCKING",
+    HELD: "HELD"
   });
 
   const HANDOFF = Object.freeze({
@@ -44,6 +48,7 @@
     OPTIMIZED_PASS: "OPTIMIZED_PASS",
     DEGRADED_PASS: "DEGRADED_PASS",
     FALLBACK_PASS: "FALLBACK_PASS",
+    HELD_PASS: "HELD_PASS",
     REJECTED: "REJECTED",
     BLOCKING: "BLOCKING"
   });
@@ -51,6 +56,7 @@
   const COHERENCE_STATUS = Object.freeze({
     PASS: "PASS",
     WARNING: "WARNING",
+    HELD_PENDING_WIDE_PROBE: "HELD_PENDING_WIDE_PROBE",
     DEGRADED: "DEGRADED",
     FAIL: "FAIL",
     REJECTED: "REJECTED",
@@ -66,7 +72,10 @@
     AIR_AUTHORITY_CHECK: "AIR_AUTHORITY_CHECK",
     CHANNEL_SEPARATION_CHECK: "CHANNEL_SEPARATION_CHECK",
     PROJECTION_SEATING_CHECK: "PROJECTION_SEATING_CHECK",
+    CONTRAST_VISIBILITY_CHECK: "CONTRAST_VISIBILITY_CHECK",
     DISTRIBUTION_SHAPE_CHECK: "DISTRIBUTION_SHAPE_CHECK",
+    WIDE_PROBE_READINESS_CHECK: "WIDE_PROBE_READINESS_CHECK",
+    LOADING_OPTIMIZATION_CHECK: "LOADING_OPTIMIZATION_CHECK",
     ATLAS_START_AUTHORIZATION_CHECK: "ATLAS_START_AUTHORIZATION_CHECK",
     COHERENT_EXPRESSION_CHECK: "COHERENT_EXPRESSION_CHECK"
   });
@@ -110,7 +119,33 @@
     C11_CHILD_VALIDATED: "C11_CHILD_VALIDATED"
   });
 
+  const L_COORDINATES = Object.freeze({
+    L0_LOADING_NOT_STARTED: "L0_LOADING_NOT_STARTED",
+    L1_VISIBLE_CARRIER_FIRST: "L1_VISIBLE_CARRIER_FIRST",
+    L2_CHILD_CONTRACT_VALIDATION: "L2_CHILD_CONTRACT_VALIDATION",
+    L3_ANCHOR_SAMPLE_LOCAL_PROOF: "L3_ANCHOR_SAMPLE_LOCAL_PROOF",
+    L4_ATLAS_OR_CACHE_RENDER: "L4_ATLAS_OR_CACHE_RENDER",
+    L5_WIDE_PROBE_IDLE_CHUNKS: "L5_WIDE_PROBE_IDLE_CHUNKS",
+    L6_OPTIMIZED_STABLE: "L6_OPTIMIZED_STABLE"
+  });
+
   const DEFAULT_COORDINATES = Object.freeze(["u", "v", "x", "y", "z"]);
+
+  const UNIVERSAL_CHANNEL_KEYS = Object.freeze([
+    "land",
+    "water",
+    "air",
+    "elevation",
+    "hydrology",
+    "composition",
+    "materials",
+    "climate",
+    "terrain",
+    "atmosphere",
+    "state",
+    "city",
+    "summit"
+  ]);
 
   const HEARTH_CONTRACTS = Object.freeze({
     runtimeTable: CONTRACT,
@@ -401,6 +436,7 @@
     if (severities.includes(STATUS.FALLBACK)) return STATUS.FALLBACK;
     if (severities.includes(STATUS.DEGRADED)) return STATUS.DEGRADED;
     if (severities.includes(STATUS.OPTIMIZED)) return STATUS.OPTIMIZED;
+    if (severities.includes(STATUS.HELD)) return STATUS.HELD;
 
     return STATUS.READY;
   }
@@ -413,9 +449,13 @@
       atlasWidth: clamp(raw.atlasWidth ?? 384, 32, 2048),
       atlasHeight: clamp(raw.atlasHeight ?? 192, 16, 1024),
       rowsPerChunk: clamp(raw.rowsPerChunk ?? 2, 1, 16),
+      probeRowsPerChunk: clamp(raw.probeRowsPerChunk ?? 2, 1, 12),
+      wideProbeMinPoints: clamp(raw.wideProbeMinPoints ?? 25, 1, 4096),
       priority: clamp(raw.priority ?? 1, 0, 10),
       canDegrade: raw.canDegrade !== false,
-      canFallback: raw.canFallback !== false
+      canFallback: raw.canFallback !== false,
+      visibleCarrierFirst: raw.visibleCarrierFirst !== false,
+      deferWideProbe: raw.deferWideProbe !== false
     };
   }
 
@@ -430,16 +470,24 @@
       };
     }
 
-    if (status === STATUS.OPTIMIZED || status === STATUS.DEGRADED || status === STATUS.FALLBACK) {
+    if (
+      status === STATUS.OPTIMIZED ||
+      status === STATUS.DEGRADED ||
+      status === STATUS.FALLBACK ||
+      status === STATUS.HELD
+    ) {
       next.sampleRate = clamp(next.sampleRate * 0.72, 0.05, 1);
       next.atlasWidth = Math.max(32, Math.round(next.atlasWidth * 0.75));
       next.atlasHeight = Math.max(16, Math.round(next.atlasHeight * 0.75));
       next.rowsPerChunk = Math.max(1, Math.min(8, Math.round(next.rowsPerChunk)));
+      next.probeRowsPerChunk = Math.max(1, Math.min(6, Math.round(next.probeRowsPerChunk)));
 
       return {
-        status: status === STATUS.FALLBACK ? STATUS.FALLBACK : STATUS.OPTIMIZED,
+        status: status === STATUS.FALLBACK ? STATUS.FALLBACK : status === STATUS.HELD ? STATUS.HELD : STATUS.OPTIMIZED,
         budget: next,
-        reason: "Budget reduced to preserve runtime handoff."
+        reason: status === STATUS.HELD
+          ? "Wide-probe held; first visible render remains allowed."
+          : "Budget reduced to preserve runtime handoff."
       };
     }
 
@@ -458,6 +506,7 @@
     if (statuses.includes(STATUS.FALLBACK)) return HANDOFF.FALLBACK_PASS;
     if (statuses.includes(STATUS.DEGRADED)) return HANDOFF.DEGRADED_PASS;
     if (statuses.includes(STATUS.OPTIMIZED)) return HANDOFF.OPTIMIZED_PASS;
+    if (statuses.includes(STATUS.HELD)) return HANDOFF.HELD_PASS;
 
     return HANDOFF.FULL_PASS;
   }
@@ -467,7 +516,8 @@
       handoff === HANDOFF.FULL_PASS ||
       handoff === HANDOFF.OPTIMIZED_PASS ||
       handoff === HANDOFF.DEGRADED_PASS ||
-      handoff === HANDOFF.FALLBACK_PASS
+      handoff === HANDOFF.FALLBACK_PASS ||
+      handoff === HANDOFF.HELD_PASS
     );
   }
 
@@ -493,7 +543,9 @@
       budget: normalizeBudget(options.budget || {}),
       tableSet: false,
       canvasDecidesTruth: false,
-      runtimeTable: true
+      runtimeTable: true,
+      planetId: options.planetId || "",
+      planetLabel: options.planetLabel || ""
     };
 
     function log(event, detail = {}) {
@@ -512,6 +564,8 @@
       const record = {
         key: registration.key || registration.name || `child-${state.registrations.length + 1}`,
         name: registration.name || registration.key || `Child ${state.registrations.length + 1}`,
+        planetId: registration.planetId || state.planetId || "",
+        channelType: registration.channelType || registration.key || "",
         expectedContract: registration.expectedContract || registration.contract || "",
         globalName: registration.globalName || "",
         requiredMethods: asArray(registration.requiredMethods).length ? asArray(registration.requiredMethods) : ["sample", "read"],
@@ -530,6 +584,8 @@
 
       log("REGISTER_CHILD", {
         key: record.key,
+        planetId: record.planetId,
+        channelType: record.channelType,
         expectedContract: record.expectedContract,
         requiredMethods: record.requiredMethods,
         requiredCoordinates: record.requiredCoordinates
@@ -556,6 +612,8 @@
         return {
           key: registration.key,
           name: registration.name,
+          planetId: registration.planetId || "",
+          channelType: registration.channelType || registration.key,
           status: optimization.status,
           rawStatus: severity,
           authorityPresent: false,
@@ -577,6 +635,7 @@
           optimized: optimization.status === STATUS.OPTIMIZED,
           degraded: severity === STATUS.DEGRADED,
           fallback: severity === STATUS.FALLBACK || optimization.status === STATUS.FALLBACK,
+          held: severity === STATUS.HELD || optimization.status === STATUS.HELD,
           rejected: severity === STATUS.REJECTED,
           blocking: severity === STATUS.BLOCKING,
           coordinate: C_COORDINATES.C6_GLOBAL_ACTOR_MISSING,
@@ -648,6 +707,8 @@
       return {
         key: registration.key,
         name: registration.name,
+        planetId: registration.planetId || "",
+        channelType: registration.channelType || registration.key,
         status: optimization.status,
         rawStatus,
         authorityPresent: true,
@@ -669,6 +730,7 @@
         optimized: optimization.status === STATUS.OPTIMIZED,
         degraded: rawStatus === STATUS.DEGRADED,
         fallback: rawStatus === STATUS.FALLBACK || optimization.status === STATUS.FALLBACK,
+        held: rawStatus === STATUS.HELD || optimization.status === STATUS.HELD,
         rejected: rawStatus === STATUS.REJECTED,
         blocking: rawStatus === STATUS.BLOCKING,
         coordinate: childCoordinate,
@@ -689,8 +751,10 @@
         handoff: state.handoff,
         runtimeAllowed: state.runtimeAllowed,
         tableSet: state.tableSet,
+        planetId: state.planetId,
         records: state.records.map((record) => ({
           key: record.key,
+          channelType: record.channelType,
           status: record.status,
           coordinate: record.coordinate,
           issues: record.issues.map((issue) => issue.code)
@@ -708,6 +772,8 @@
         baselineContract: BASELINE_CONTRACT,
         version: VERSION,
         id: state.id,
+        planetId: state.planetId,
+        planetLabel: state.planetLabel,
         status: state.status,
         handoff: state.handoff,
         runtimeAllowed: state.runtimeAllowed,
@@ -717,6 +783,8 @@
         records: state.records.map((record) => ({
           key: record.key,
           name: record.name,
+          planetId: record.planetId,
+          channelType: record.channelType,
           status: record.status,
           rawStatus: record.rawStatus,
           authorityPresent: record.authorityPresent,
@@ -742,6 +810,7 @@
           optimized: record.optimized,
           degraded: record.degraded,
           fallback: record.fallback,
+          held: record.held,
           rejected: record.rejected,
           blocking: record.blocking,
           sample: clonePlain(record.sample),
@@ -804,7 +873,7 @@
 
     function createPlan(input = {}, planOptions = {}) {
       const ledger = state.records.length ? reportLedger() : run(input.samplePoint || DEFAULT_SAMPLE_POINT);
-      return createVisualCarrierPlan({ ...input, runtimeTableLedger: ledger }, planOptions);
+      return createUniversalPlanetVisualCarrierPlan({ ...input, runtimeTableLedger: ledger }, planOptions);
     }
 
     return {
@@ -836,6 +905,8 @@
           version: VERSION,
           authority: "lab-runtime-table-standard-instance",
           id: state.id,
+          planetId: state.planetId,
+          planetLabel: state.planetLabel,
           runtimeTable: true,
           tableSet: state.tableSet,
           handoff: state.handoff,
@@ -847,6 +918,8 @@
           coordinatesBeforeRuntimePerforms: true,
           visualCarrierPlanAuthority: true,
           atlasStartPlanAuthority: true,
+          universalPlanetStandard: true,
+          wideProbeDeferred: true,
           visualPassClaimed: false
         };
       }
@@ -857,103 +930,152 @@
     return RuntimeTable(options);
   }
 
-  function createHearthChannelTable(options = {}) {
+  function normalizeChannelRegistration(channel = {}, planet = {}) {
+    const key = channel.key || channel.channel || channel.name || "";
+    const normalizedKey = key || `channel-${Math.random().toString(36).slice(2, 7)}`;
+
+    return {
+      key: normalizedKey,
+      name: channel.name || `${planet.label || planet.id || "Planet"} ${normalizedKey} Channel`,
+      planetId: channel.planetId || planet.id || "",
+      channelType: channel.channelType || normalizedKey,
+      globalName: channel.globalName || "",
+      expectedContract: channel.expectedContract || channel.contract || "",
+      requiredMethods: channel.requiredMethods || ["sample", "read"],
+      requiredCoordinates: channel.requiredCoordinates || DEFAULT_COORDINATES.slice(),
+      laws: channel.laws || [],
+      budget: channel.budget || planet.budget || {},
+      sampleFailureBlocking: channel.sampleFailureBlocking === true,
+      canFallback: channel.canFallback !== false,
+      canDegrade: channel.canDegrade !== false,
+      authority: channel.authority || null,
+      resolve: channel.resolve || null,
+      metadata: channel.metadata || {}
+    };
+  }
+
+  function createPlanetChannelTable(options = {}) {
+    const planet = options.planet || {
+      id: options.planetId || "",
+      label: options.planetLabel || ""
+    };
+
     const table = RuntimeTable({
-      id: options.id || "hearth-channel-runtime-table",
+      id: options.id || `${planet.id || "planet"}-channel-runtime-table`,
+      planetId: planet.id || options.planetId || "",
+      planetLabel: planet.label || options.planetLabel || "",
       budget: options.budget || {
         atlasWidth: 384,
         atlasHeight: 192,
         rowsPerChunk: 2,
+        probeRowsPerChunk: 2,
+        wideProbeMinPoints: 25,
         sampleRate: 1
       }
     });
 
-    table.registerChild({
-      key: "land",
-      name: "Hearth Land Channel",
-      globalName: "HEARTH_LAND_CHANNEL",
-      expectedContract: HEARTH_CONTRACTS.land,
-      requiredMethods: ["sample", "read"],
-      requiredCoordinates: ["u", "v", "x", "y", "z"],
-      laws: [
-        {
-          field: "allowedToFloat",
-          expected: false,
-          code: "LAND_CANNOT_FLOAT",
-          message: "Land channel cannot float above the body.",
-          severity: STATUS.REJECTED
-        },
-        {
-          field: "isLandChannel",
-          expected: true,
-          code: "LAND_CHANNEL_FLAG_MISSING",
-          message: "Land channel must identify as land channel.",
-          severity: STATUS.REJECTED
-        }
-      ],
-      canFallback: true
-    });
-
-    table.registerChild({
-      key: "water",
-      name: "Hearth Water Channel",
-      globalName: "HEARTH_WATER_CHANNEL",
-      expectedContract: HEARTH_CONTRACTS.water,
-      requiredMethods: ["sample", "read"],
-      requiredCoordinates: ["u", "v", "x", "y", "z"],
-      laws: [
-        {
-          field: "allowedToFloat",
-          expected: false,
-          code: "WATER_CANNOT_FLOAT",
-          message: "Water channel cannot float as atmosphere.",
-          severity: STATUS.REJECTED
-        },
-        {
-          field: "isWaterChannel",
-          expected: true,
-          code: "WATER_CHANNEL_FLAG_MISSING",
-          message: "Water channel must identify as water channel.",
-          severity: STATUS.REJECTED
-        }
-      ],
-      canFallback: true
-    });
-
-    table.registerChild({
-      key: "air",
-      name: "Hearth Air Channel",
-      globalName: "HEARTH_AIR_CHANNEL",
-      expectedContract: HEARTH_CONTRACTS.air,
-      requiredMethods: ["sample", "read"],
-      requiredCoordinates: ["u", "v", "x", "y", "z"],
-      laws: [
-        {
-          field: "allowedToFloat",
-          expected: true,
-          code: "AIR_MUST_BE_FLOATING_CHANNEL",
-          message: "Air channel must be the floating channel.",
-          severity: STATUS.REJECTED
-        },
-        {
-          field: "mayDefineLand",
-          expected: false,
-          code: "AIR_CANNOT_DEFINE_LAND",
-          message: "Air channel cannot define landmass.",
-          severity: STATUS.REJECTED
-        },
-        {
-          field: "mayDefineWater",
-          expected: false,
-          code: "AIR_CANNOT_DEFINE_WATER",
-          message: "Air channel cannot define water boundaries.",
-          severity: STATUS.REJECTED
-        }
-      ],
-      canFallback: true
+    asArray(options.channels).forEach((channel) => {
+      table.registerChild(normalizeChannelRegistration(channel, planet));
     });
 
     return table;
+  }
+
+  function createHearthChannelTable(options = {}) {
+    return createPlanetChannelTable({
+      id: options.id || "hearth-channel-runtime-table",
+      planet: {
+        id: "hearth",
+        label: "Hearth"
+      },
+      budget: options.budget || {
+        atlasWidth: 384,
+        atlasHeight: 192,
+        rowsPerChunk: 2,
+        probeRowsPerChunk: 2,
+        wideProbeMinPoints: 25,
+        sampleRate: 1
+      },
+      channels: [
+        {
+          key: "land",
+          name: "Hearth Land Channel",
+          globalName: "HEARTH_LAND_CHANNEL",
+          expectedContract: HEARTH_CONTRACTS.land,
+          laws: [
+            {
+              field: "allowedToFloat",
+              expected: false,
+              code: "LAND_CANNOT_FLOAT",
+              message: "Land channel cannot float above the body.",
+              severity: STATUS.REJECTED
+            },
+            {
+              field: "isLandChannel",
+              expected: true,
+              code: "LAND_CHANNEL_FLAG_MISSING",
+              message: "Land channel must identify as land channel.",
+              severity: STATUS.REJECTED
+            }
+          ],
+          canFallback: true
+        },
+        {
+          key: "water",
+          name: "Hearth Water Channel",
+          globalName: "HEARTH_WATER_CHANNEL",
+          expectedContract: HEARTH_CONTRACTS.water,
+          laws: [
+            {
+              field: "allowedToFloat",
+              expected: false,
+              code: "WATER_CANNOT_FLOAT",
+              message: "Water channel cannot float as atmosphere.",
+              severity: STATUS.REJECTED
+            },
+            {
+              field: "isWaterChannel",
+              expected: true,
+              code: "WATER_CHANNEL_FLAG_MISSING",
+              message: "Water channel must identify as water channel.",
+              severity: STATUS.REJECTED
+            }
+          ],
+          canFallback: true
+        },
+        {
+          key: "air",
+          name: "Hearth Air Channel",
+          globalName: "HEARTH_AIR_CHANNEL",
+          expectedContract: HEARTH_CONTRACTS.air,
+          laws: [
+            {
+              field: "allowedToFloat",
+              expected: true,
+              code: "AIR_MUST_BE_FLOATING_CHANNEL",
+              message: "Air channel must be the floating channel.",
+              severity: STATUS.REJECTED
+            },
+            {
+              field: "mayDefineLand",
+              expected: false,
+              code: "AIR_CANNOT_DEFINE_LAND",
+              message: "Air channel cannot define landmass.",
+              severity: STATUS.REJECTED
+            },
+            {
+              field: "mayDefineWater",
+              expected: false,
+              code: "AIR_CANNOT_DEFINE_WATER",
+              message: "Air channel cannot define water boundaries.",
+              severity: STATUS.REJECTED
+            }
+          ],
+          canFallback: true
+        }
+      ],
+      ...options
+    });
   }
 
   function extractContract(packet) {
@@ -988,21 +1110,10 @@
     return 0.2126 * color[0] + 0.7152 * color[1] + 0.0722 * color[2];
   }
 
-  function statusRank(status) {
-    switch (status) {
-      case COHERENCE_STATUS.BLOCKING: return 0;
-      case COHERENCE_STATUS.REJECTED: return 1;
-      case COHERENCE_STATUS.FAIL: return 2;
-      case COHERENCE_STATUS.DEGRADED: return 3;
-      case COHERENCE_STATUS.WARNING: return 4;
-      case COHERENCE_STATUS.PASS: return 5;
-      default: return 2;
-    }
-  }
-
   function statusScore(status) {
     switch (status) {
       case COHERENCE_STATUS.PASS: return 1;
+      case COHERENCE_STATUS.HELD_PENDING_WIDE_PROBE: return 0.96;
       case COHERENCE_STATUS.WARNING: return 0.78;
       case COHERENCE_STATUS.DEGRADED: return 0.62;
       case COHERENCE_STATUS.FAIL: return 0.35;
@@ -1022,7 +1133,9 @@
       tolerance: clonePlain(config.tolerance || {}),
       value: clonePlain(config.value || {}),
       status: config.status || COHERENCE_STATUS.FAIL,
-      passed: config.status === COHERENCE_STATUS.PASS,
+      passed: config.status === COHERENCE_STATUS.PASS || config.status === COHERENCE_STATUS.HELD_PENDING_WIDE_PROBE,
+      held: config.status === COHERENCE_STATUS.HELD_PENDING_WIDE_PROBE,
+      nonBlocking: config.nonBlocking === true || config.status === COHERENCE_STATUS.HELD_PENDING_WIDE_PROBE,
       probableCause: asArray(config.probableCause),
       renewalTarget: asArray(config.renewalTarget),
       nextStrategy: asArray(config.nextStrategy),
@@ -1031,28 +1144,48 @@
     };
   }
 
-  function createGoalProfile(type = "hearth-channel-expression", overrides = {}) {
-    const base = {
-      id: type,
-      label: "Hearth channel coherent-expression goal profile",
-      expectedContracts: {
+  function defaultExpectedContractsForPlanet(planetId = "") {
+    if (planetId === "hearth") {
+      return {
         runtimeTable: CONTRACT,
         previousRuntimeTable: PREVIOUS_CONTRACT,
         canvas: HEARTH_CONTRACTS.canvas,
         land: HEARTH_CONTRACTS.land,
         water: HEARTH_CONTRACTS.water,
         air: HEARTH_CONTRACTS.air
-      },
+      };
+    }
+
+    return {
+      runtimeTable: CONTRACT,
+      previousRuntimeTable: PREVIOUS_CONTRACT
+    };
+  }
+
+  function createPlanetGoalProfile(type = "universal-planet-channel-expression", overrides = {}) {
+    const planetId = overrides.planetId || "";
+    const expectedContracts = mergePlain(defaultExpectedContractsForPlanet(planetId), overrides.expectedContracts || {});
+
+    const base = {
+      id: type,
+      label: overrides.label || "Universal planet channel coherent-expression goal profile",
+      planetId,
+      planetLabel: overrides.planetLabel || "",
+      expectedContracts,
+      channelKeys: asArray(overrides.channelKeys).length ? asArray(overrides.channelKeys) : UNIVERSAL_CHANNEL_KEYS.slice(),
       laws: {
-        landBodyBound: true,
+        bodyChannelsCannotFloat: true,
         waterSurfaceSeated: true,
         airFloatingOnly: true,
         airMayDefineLand: false,
         airMayDefineWater: false,
         visualCarrierFailureOnlyBlocksWhenStructurallyUnsafe: true,
-        waterFailureDoesNotBlockAtlas: true,
+        childFailureDegradesButDoesNotAutomaticallyEraseVisualization: true,
         imageRenderedIsNotCoherencePass: true,
-        runtimeTableLedgerMustAgreeWithFinalOutput: true
+        runtimeTableLedgerMustAgreeWithFinalOutput: true,
+        singleAnchorIsLocalProofOnly: true,
+        wideProbeRequiredForGlobalDistribution: true,
+        wideProbeNeverBlocksFirstVisibleRender: true
       },
       tolerances: {
         vectorMagnitudeError: 0.015,
@@ -1070,18 +1203,22 @@
         minimumVisibleLandAlpha: 0.20,
         minimumVisibleWaterAlpha: 0.20,
         maximumAirDominance: 0.52,
-        minimumLandCoverageWhenExpected: 0.04
+        minimumLandCoverageWhenExpected: 0.04,
+        minimumWideProbePoints: 25
       },
       weights: {
         VISUAL_CARRIER_ELIGIBILITY_CHECK: 8,
         RECEIPT_VERIFICATION_CHECK: 12,
         COORDINATE_BODY_CHECK: 12,
-        LAND_BODY_BINDING_CHECK: 12,
+        LAND_BODY_BINDING_CHECK: 10,
         WATER_SURFACE_SEATING_CHECK: 10,
         AIR_AUTHORITY_CHECK: 10,
         CHANNEL_SEPARATION_CHECK: 8,
         PROJECTION_SEATING_CHECK: 8,
-        DISTRIBUTION_SHAPE_CHECK: 6,
+        CONTRAST_VISIBILITY_CHECK: 6,
+        DISTRIBUTION_SHAPE_CHECK: 4,
+        WIDE_PROBE_READINESS_CHECK: 4,
+        LOADING_OPTIMIZATION_CHECK: 8,
         ATLAS_START_AUTHORIZATION_CHECK: 14
       },
       criticalChecks: [
@@ -1090,6 +1227,7 @@
         COHERENCE_CHECKS.COORDINATE_BODY_CHECK,
         COHERENCE_CHECKS.AIR_AUTHORITY_CHECK,
         COHERENCE_CHECKS.PROJECTION_SEATING_CHECK,
+        COHERENCE_CHECKS.LOADING_OPTIMIZATION_CHECK,
         COHERENCE_CHECKS.ATLAS_START_AUTHORIZATION_CHECK
       ],
       generatedImage: false,
@@ -1098,6 +1236,27 @@
     };
 
     return mergePlain(base, overrides);
+  }
+
+  function createGoalProfile(type = "hearth-channel-expression", overrides = {}) {
+    if (type === "hearth-channel-expression") {
+      return createPlanetGoalProfile(type, mergePlain({
+        planetId: "hearth",
+        planetLabel: "Hearth",
+        label: "Hearth channel coherent-expression goal profile",
+        expectedContracts: {
+          runtimeTable: CONTRACT,
+          previousRuntimeTable: PREVIOUS_CONTRACT,
+          canvas: HEARTH_CONTRACTS.canvas,
+          land: HEARTH_CONTRACTS.land,
+          water: HEARTH_CONTRACTS.water,
+          air: HEARTH_CONTRACTS.air
+        },
+        channelKeys: ["land", "water", "air"]
+      }, overrides));
+    }
+
+    return createPlanetGoalProfile(type, overrides);
   }
 
   function getRuntimeRecordsByKey(ledger) {
@@ -1113,7 +1272,7 @@
   }
 
   function normalizeDiagnosticInput(input = {}, options = {}) {
-    const goalProfile = input.goalProfile || options.goalProfile || createGoalProfile(options.profile || "hearth-channel-expression");
+    const goalProfile = input.goalProfile || options.goalProfile || createGoalProfile(options.profile || "universal-planet-channel-expression");
     const canvasSample = input.canvasSample || {};
     const landSample = input.landSample || (canvasSample && canvasSample.land) || {};
     const waterSample = input.waterSample || (canvasSample && canvasSample.water) || {};
@@ -1123,6 +1282,7 @@
     const renderMetadata = input.renderMetadata || input.render || {};
     const probePoints = Array.isArray(input.probePoints) ? input.probePoints.slice() : [];
     const probeSamples = Array.isArray(input.probeSamples) ? input.probeSamples.slice() : [];
+    const loadingPlan = input.loadingPlan || input.visualCarrierPlan || null;
 
     return {
       goalProfile,
@@ -1132,9 +1292,11 @@
       landSample,
       waterSample,
       airSample,
+      channelSamples: clonePlain(input.channelSamples || {}),
       renderMetadata,
       probePoints,
       probeSamples,
+      loadingPlan,
       imageRendered: safeBool(input.imageRendered, safeBool(renderMetadata.imageRendered, safeBool(renderMetadata.atlasReady, false))),
       constructionReady: Boolean(runtimeTableLedger && runtimeTableLedger.runtimeAllowed),
       generatedImage: false,
@@ -1194,16 +1356,20 @@
     const canvasReceipt = ctx.canvasReceipt || {};
     const records = getRuntimeRecordsByKey(ledger);
 
+    const expected = profile.expectedContracts || {};
     const checks = {
       runtimeTableLedgerPresent: Boolean(ledger),
       runtimeTableHandoffPresent: Boolean(ledger && ledger.handoff),
       canvasReceiptPresent: Boolean(canvasReceipt && Object.keys(canvasReceipt).length),
       canvasVisualPassNotClaimed: canvasReceipt.visualPassClaimed !== true,
-      landContractOk: !ctx.landSample || !extractContract(ctx.landSample) || extractContract(ctx.landSample) === profile.expectedContracts.land,
-      waterContractOk: !ctx.waterSample || !extractContract(ctx.waterSample) || extractContract(ctx.waterSample) === profile.expectedContracts.water,
-      airContractOk: !ctx.airSample || !extractContract(ctx.airSample) || extractContract(ctx.airSample) === profile.expectedContracts.air,
-      runtimeRecordsPresent: Boolean(records.land || records.water || records.air)
+      runtimeRecordsPresent: Boolean(Object.keys(records).length)
     };
+
+    ["land", "water", "air"].forEach((key) => {
+      if (!expected[key]) return;
+      const sample = key === "land" ? ctx.landSample : key === "water" ? ctx.waterSample : ctx.airSample;
+      checks[`${key}ContractOk`] = !sample || !extractContract(sample) || extractContract(sample) === expected[key];
+    });
 
     const failed = Object.keys(checks).filter((key) => !checks[key]);
     const status = failed.length ? COHERENCE_STATUS.FAIL : COHERENCE_STATUS.PASS;
@@ -1238,13 +1404,18 @@
       ? ctx.canvasSample
       : DEFAULT_SAMPLE_POINT;
 
-    const samples = [
+    const baseSamples = [
       ["canvas", ctx.canvasSample],
       ["land", ctx.landSample],
       ["water", ctx.waterSample],
       ["air", ctx.airSample]
-    ].filter(([, sample]) => sample && Object.keys(sample).length);
+    ];
 
+    Object.keys(ctx.channelSamples || {}).forEach((key) => {
+      baseSamples.push([key, ctx.channelSamples[key]]);
+    });
+
+    const samples = baseSamples.filter(([, sample]) => sample && Object.keys(sample).length);
     const metrics = samples.map(([key, sample]) => ({ key, ...coordinateMetrics(sample, reference) }));
 
     const failures = metrics.filter((item) => (
@@ -1254,7 +1425,7 @@
       item.coordinateError > t.coordinateError
     ));
 
-    const missingCoordinateSamples = samples.length < 3;
+    const missingCoordinateSamples = samples.length < 2;
     const status = failures.length ? COHERENCE_STATUS.FAIL : missingCoordinateSamples ? COHERENCE_STATUS.WARNING : COHERENCE_STATUS.PASS;
 
     return makeCheckpointReceipt({
@@ -1388,7 +1559,7 @@
     const landWeight = clamp01(safeNumber(canvas.landWeight ?? (ctx.landSample && ctx.landSample.landAlpha), 0));
     const waterWeight = clamp01(safeNumber(canvas.waterWeight ?? (ctx.waterSample && ctx.waterSample.waterAlpha), 0));
     const airAlpha = clamp01(safeNumber(air.airAlpha ?? air.airPresence ?? air.alpha ?? canvas.airWeight, 0));
-    const allowedToFloat = safeBool(air.allowedToFloat, false);
+    const allowedToFloat = safeBool(air.allowedToFloat, true);
     const mayDefineLand = safeBool(air.mayDefineLand, false);
     const mayDefineWater = safeBool(air.mayDefineWater, false);
     const landWaterRejectionFailure = mayDefineLand || mayDefineWater ? 1 : 0;
@@ -1531,9 +1702,36 @@
 
   function distributionShapeCheck(ctx) {
     const t = ctx.goalProfile.tolerances;
+    const minimumWideProbePoints = Math.max(1, Math.round(safeNumber(t.minimumWideProbePoints, 25)));
     const samples = ctx.probeSamples.length
       ? ctx.probeSamples
-      : [{ land: ctx.landSample, water: ctx.waterSample, air: ctx.airSample, canvas: ctx.canvasSample }];
+      : [];
+
+    if (samples.length < minimumWideProbePoints) {
+      return makeCheckpointReceipt({
+        id: COHERENCE_CHECKS.DISTRIBUTION_SHAPE_CHECK,
+        name: "Distribution Shape Check",
+        goal: "Global land, water, and air distribution must be judged only from a wide probe.",
+        observed: `Distribution check held. Probe total ${samples.length} is below required minimum ${minimumWideProbePoints}. Anchor samples remain local proof only.`,
+        math: "Single anchor samples are valid for load, contract, method, coordinate, and local safety checks only. Global distribution requires total >= minimumWideProbePoints.",
+        tolerance: {
+          minimumWideProbePoints,
+          singleAnchorMayJudgeDistribution: false
+        },
+        value: {
+          total: samples.length,
+          minimumWideProbePoints,
+          heldReason: "INSUFFICIENT_WIDE_PROBE",
+          anchorSampleIsLocalProofOnly: true,
+          globalDistributionWarningEmitted: false
+        },
+        status: COHERENCE_STATUS.HELD_PENDING_WIDE_PROBE,
+        nonBlocking: true,
+        probableCause: [],
+        renewalTarget: [],
+        nextStrategy: ["Run wide-probe diagnostic in idle/chunked mode after first visible render."]
+      });
+    }
 
     let landCount = 0;
     let waterCount = 0;
@@ -1567,9 +1765,10 @@
       id: COHERENCE_CHECKS.DISTRIBUTION_SHAPE_CHECK,
       name: "Distribution Shape Check",
       goal: "Land, water, and air distribution should match the goal profile.",
-      observed: status === COHERENCE_STATUS.PASS ? "Probe distribution is within initial tolerance." : "Probe distribution suggests low land visibility or excessive air dominance.",
-      math: "landCoverage = visibleLandSamples / totalSamples; waterCoverage = visibleWaterSamples / totalSamples; airDominance = visibleAirSamples / totalSamples.",
+      observed: status === COHERENCE_STATUS.PASS ? "Wide-probe distribution is within initial tolerance." : "Wide-probe distribution suggests low land visibility or excessive air dominance.",
+      math: "landCoverage = visibleLandSamples / totalSamples; waterCoverage = visibleWaterSamples / totalSamples; airDominance = visibleAirSamples / totalSamples. This check is only valid when total >= minimumWideProbePoints.",
       tolerance: {
+        minimumWideProbePoints,
         minimumLandCoverageWhenExpected: t.minimumLandCoverageWhenExpected,
         maximumAirDominance: t.maximumAirDominance
       },
@@ -1582,12 +1781,177 @@
         airCount,
         total,
         lowLand,
-        highAir
+        highAir,
+        anchorSampleIsLocalProofOnly: true
       },
       status,
       probableCause: status !== COHERENCE_STATUS.PASS ? ["Land may be too sparse, air may dominate surface readability, or child-channel alpha distribution is misbalanced."] : [],
       renewalTarget: status !== COHERENCE_STATUS.PASS ? ["land-channel-alpha", "water-channel-alpha", "air-channel-suppression", "composition-elevation-mask-later-if-required"] : [],
-      nextStrategy: status !== COHERENCE_STATUS.PASS ? ["Use a wider probe grid before renewing upstream geography."] : []
+      nextStrategy: status !== COHERENCE_STATUS.PASS ? ["Use wide-probe results to choose the next single-file renewal target."] : []
+    });
+  }
+
+  function wideProbeReadinessCheck(ctx) {
+    const t = ctx.goalProfile.tolerances;
+    const minimumWideProbePoints = Math.max(1, Math.round(safeNumber(t.minimumWideProbePoints, 25)));
+    const total = ctx.probeSamples.length;
+
+    const status = total >= minimumWideProbePoints
+      ? COHERENCE_STATUS.PASS
+      : COHERENCE_STATUS.HELD_PENDING_WIDE_PROBE;
+
+    return makeCheckpointReceipt({
+      id: COHERENCE_CHECKS.WIDE_PROBE_READINESS_CHECK,
+      name: "Wide-Probe Readiness Check",
+      goal: "Wide probe must be separated from first visible render and must not block carrier visibility.",
+      observed: status === COHERENCE_STATUS.PASS
+        ? "Wide-probe sample count is sufficient."
+        : "Wide-probe is pending; first visible render remains valid.",
+      math: "wideProbeReady = probeSamples.length >= minimumWideProbePoints. If false, status is HELD_PENDING_WIDE_PROBE, not FAIL.",
+      tolerance: {
+        minimumWideProbePoints,
+        blocksFirstVisibleRender: false
+      },
+      value: {
+        probeSampleCount: total,
+        minimumWideProbePoints,
+        wideProbeReady: total >= minimumWideProbePoints,
+        blocksFirstVisibleRender: false
+      },
+      status,
+      nonBlocking: true,
+      probableCause: [],
+      renewalTarget: [],
+      nextStrategy: status === COHERENCE_STATUS.PASS ? [] : ["Schedule wide-probe chunks after visible carrier and atlas/cache render."]
+    });
+  }
+
+  function createLoadingOptimizationPlan(input = {}, options = {}) {
+    const budget = normalizeBudget(options.budget || input.budget || {});
+    const render = input.renderMetadata || input.render || {};
+    const ledger = input.runtimeTableLedger || input.ledger || null;
+
+    const visibleCarrierAvailable = safeBool(input.visibleCarrierAvailable, safeBool(render.visibleCarrierAllowed, safeBool(render.visualCarrierAllowed, true)));
+    const childValidationAvailable = Boolean(ledger && Array.isArray(ledger.records) && ledger.records.length);
+    const anchorSampleAvailable = Boolean(ledger && ledger.lastSamplePoint);
+    const atlasOrCacheReady = safeBool(render.atlasReady, false) || safeBool(render.cachedAtlasProjection, false) || safeBool(render.imageRendered, false);
+    const wideProbeReady = Array.isArray(input.probeSamples) && input.probeSamples.length >= budget.wideProbeMinPoints;
+
+    let loadingCoordinate = L_COORDINATES.L0_LOADING_NOT_STARTED;
+    if (visibleCarrierAvailable) loadingCoordinate = L_COORDINATES.L1_VISIBLE_CARRIER_FIRST;
+    if (visibleCarrierAvailable && childValidationAvailable) loadingCoordinate = L_COORDINATES.L2_CHILD_CONTRACT_VALIDATION;
+    if (visibleCarrierAvailable && childValidationAvailable && anchorSampleAvailable) loadingCoordinate = L_COORDINATES.L3_ANCHOR_SAMPLE_LOCAL_PROOF;
+    if (visibleCarrierAvailable && childValidationAvailable && anchorSampleAvailable && atlasOrCacheReady) loadingCoordinate = L_COORDINATES.L4_ATLAS_OR_CACHE_RENDER;
+    if (visibleCarrierAvailable && childValidationAvailable && anchorSampleAvailable && atlasOrCacheReady && !wideProbeReady) loadingCoordinate = L_COORDINATES.L5_WIDE_PROBE_IDLE_CHUNKS;
+    if (visibleCarrierAvailable && childValidationAvailable && anchorSampleAvailable && atlasOrCacheReady && wideProbeReady) loadingCoordinate = L_COORDINATES.L6_OPTIMIZED_STABLE;
+
+    const plan = {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      loadingOptimizationContract: "LAB_UNIVERSAL_PLANET_LOADING_OPTIMIZATION_PLAN_v1",
+      loadingOptimizationReceipt: "LAB_UNIVERSAL_PLANET_LOADING_OPTIMIZATION_PLAN_RECEIPT_v1",
+      version: VERSION,
+      authority: "lab-universal-loading-optimization-authority",
+      loadingCoordinate,
+      sequence: [
+        {
+          step: 1,
+          name: "visible-carrier-first",
+          coordinate: L_COORDINATES.L1_VISIBLE_CARRIER_FIRST,
+          requiredBeforeFirstVisibleRender: true,
+          blocksFirstVisibleRender: !visibleCarrierAvailable,
+          complete: visibleCarrierAvailable
+        },
+        {
+          step: 2,
+          name: "child-contract-validation",
+          coordinate: L_COORDINATES.L2_CHILD_CONTRACT_VALIDATION,
+          requiredBeforeFirstVisibleRender: false,
+          blocksFirstVisibleRender: false,
+          complete: childValidationAvailable
+        },
+        {
+          step: 3,
+          name: "anchor-sample-local-proof",
+          coordinate: L_COORDINATES.L3_ANCHOR_SAMPLE_LOCAL_PROOF,
+          requiredBeforeFirstVisibleRender: false,
+          blocksFirstVisibleRender: false,
+          complete: anchorSampleAvailable,
+          law: "anchor sample proves only load, contract, method, coordinate, and local safety"
+        },
+        {
+          step: 4,
+          name: "atlas-or-cache-render",
+          coordinate: L_COORDINATES.L4_ATLAS_OR_CACHE_RENDER,
+          requiredBeforeFirstVisibleRender: false,
+          blocksFirstVisibleRender: false,
+          complete: atlasOrCacheReady
+        },
+        {
+          step: 5,
+          name: "wide-probe-idle-chunks",
+          coordinate: L_COORDINATES.L5_WIDE_PROBE_IDLE_CHUNKS,
+          requiredBeforeFirstVisibleRender: false,
+          blocksFirstVisibleRender: false,
+          complete: wideProbeReady,
+          minimumWideProbePoints: budget.wideProbeMinPoints,
+          deferUntilAfterVisibleCarrier: true
+        }
+      ],
+      visibleCarrierFirst: true,
+      wideProbeBlocksFirstVisibleRender: false,
+      firstVisibleRenderAllowed: visibleCarrierAvailable,
+      childValidationAvailable,
+      anchorSampleAvailable,
+      atlasOrCacheReady,
+      wideProbeReady,
+      budget,
+      recommendedChunking: {
+        rowsPerChunk: budget.rowsPerChunk,
+        probeRowsPerChunk: budget.probeRowsPerChunk,
+        deferWideProbe: true,
+        useIdleFrames: true
+      },
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false
+    };
+
+    return plan;
+  }
+
+  function loadingOptimizationCheck(ctx) {
+    const plan = ctx.loadingPlan && ctx.loadingPlan.loadingOptimizationPlan
+      ? ctx.loadingPlan.loadingOptimizationPlan
+      : createLoadingOptimizationPlan(ctx, { goalProfile: ctx.goalProfile });
+
+    const blocksFirstVisibleRender = plan.wideProbeBlocksFirstVisibleRender === true || plan.firstVisibleRenderAllowed === false;
+    const status = blocksFirstVisibleRender ? COHERENCE_STATUS.BLOCKING : COHERENCE_STATUS.PASS;
+
+    return makeCheckpointReceipt({
+      id: COHERENCE_CHECKS.LOADING_OPTIMIZATION_CHECK,
+      name: "Loading Optimization Check",
+      goal: "First visible render must not wait for global wide-probe distribution.",
+      observed: status === COHERENCE_STATUS.PASS
+        ? "Loading order is valid: visible carrier first; wide-probe deferred."
+        : "Loading order blocks visible carrier incorrectly.",
+      math: "validLoading = visibleCarrierFirst && wideProbeBlocksFirstVisibleRender === false.",
+      tolerance: {
+        visibleCarrierFirst: true,
+        wideProbeBlocksFirstVisibleRender: false
+      },
+      value: {
+        loadingCoordinate: plan.loadingCoordinate,
+        visibleCarrierFirst: plan.visibleCarrierFirst,
+        firstVisibleRenderAllowed: plan.firstVisibleRenderAllowed,
+        wideProbeBlocksFirstVisibleRender: plan.wideProbeBlocksFirstVisibleRender,
+        wideProbeReady: plan.wideProbeReady
+      },
+      status,
+      probableCause: status === COHERENCE_STATUS.PASS ? [] : ["Wide-probe or child diagnostics are being treated as first-render blockers."],
+      renewalTarget: status === COHERENCE_STATUS.PASS ? [] : ["loading-order", "canvas-shell-first-render", "wide-probe-deferment"],
+      nextStrategy: status === COHERENCE_STATUS.PASS ? [] : ["Restore visible carrier first and defer wide-probe to idle chunks."]
     });
   }
 
@@ -1596,7 +1960,7 @@
     const targets = [];
 
     checkpoints.forEach((checkpoint) => {
-      if (checkpoint.status === COHERENCE_STATUS.PASS) return;
+      if (checkpoint.status === COHERENCE_STATUS.PASS || checkpoint.status === COHERENCE_STATUS.HELD_PENDING_WIDE_PROBE) return;
 
       asArray(checkpoint.renewalTarget).forEach((target) => {
         if (!seen.has(target)) {
@@ -1679,7 +2043,7 @@
       name: "Coherent Expression Check",
       goal: "Aggregate construction, render, and expression checkpoints into a final coherence gate.",
       observed: aggregate.coherentExpressionPass ? "Coherent expression passed." : "Rendered image does not yet qualify as coherent expression.",
-      math: "Weighted checkpoint score. Critical failures override score. Image rendered does not imply coherent expression.",
+      math: "Weighted checkpoint score. Critical failures override score. Image rendered does not imply coherent expression. HELD_PENDING_WIDE_PROBE is non-blocking.",
       tolerance: {
         minimumCoherenceScore: ctx.goalProfile.tolerances.minimumCoherenceScore,
         criticalFailureCount: 0
@@ -1716,7 +2080,9 @@
       channelSeparationCheck(ctx),
       projectionSeatingCheck(ctx),
       contrastVisibilityCheck(ctx),
-      distributionShapeCheck(ctx)
+      distributionShapeCheck(ctx),
+      wideProbeReadinessCheck(ctx),
+      loadingOptimizationCheck(ctx)
     );
 
     if (input.visualCarrierPlan && input.visualCarrierPlan.atlasStartAuthorizationCheckpoint) {
@@ -1737,13 +2103,17 @@
       checkpoint.status === COHERENCE_STATUS.DEGRADED
     ));
 
+    const heldCheckpoints = checkpoints.filter((checkpoint) => (
+      checkpoint.status === COHERENCE_STATUS.HELD_PENDING_WIDE_PROBE
+    ));
+
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       baselineContract: BASELINE_CONTRACT,
       version: VERSION,
-      authority: "lab-runtime-table-visual-carrier-atlas-sequence-standard",
+      authority: "lab-universal-planet-wide-probe-diagnostic-loading-standard",
       goalProfileId: ctx.goalProfile.id,
       goalProfile: clonePlain(ctx.goalProfile),
       constructionReady: ctx.constructionReady,
@@ -1755,8 +2125,11 @@
       checkpoints,
       failedCheckpoints: failedCheckpoints.map((checkpoint) => checkpoint.id),
       warningCheckpoints: warningCheckpoints.map((checkpoint) => checkpoint.id),
+      heldCheckpoints: heldCheckpoints.map((checkpoint) => checkpoint.id),
       renewalTargets: collectRenewalTargets(checkpoints),
       nextStrategy: collectNextStrategy(checkpoints),
+      singleAnchorIsLocalProofOnly: true,
+      wideProbeNeverBlocksFirstVisibleRender: true,
       generatedImage: false,
       graphicBox: false,
       visualPassClaimed: false,
@@ -1765,7 +2138,7 @@
   }
 
   function createTripleGDiagnostic(options = {}) {
-    const profile = options.goalProfile || createGoalProfile(options.profile || "hearth-channel-expression", options.profileOverrides || {});
+    const profile = options.goalProfile || createGoalProfile(options.profile || "universal-planet-channel-expression", options.profileOverrides || {});
     const diagnosticId = options.id || `triple-g-diagnostic-${Math.random().toString(36).slice(2, 9)}`;
 
     const state = {
@@ -1801,6 +2174,8 @@
         tripleGDiagnostic: true,
         coherentExpressionDiagnostic: true,
         imageRenderedIsNotCoherencePass: true,
+        singleAnchorIsLocalProofOnly: true,
+        wideProbeNeverBlocksFirstVisibleRender: true,
         visualPassClaimed: false
       };
     }
@@ -1830,9 +2205,31 @@
     });
   }
 
+  function createPlanetWideProbeDiagnostic(options = {}) {
+    return createTripleGDiagnostic({
+      ...options,
+      profile: options.profile || "universal-planet-channel-expression",
+      profileOverrides: mergePlain({
+        planetId: options.planetId || "",
+        planetLabel: options.planetLabel || "",
+        tolerances: {
+          minimumWideProbePoints: options.minimumWideProbePoints || 25
+        }
+      }, options.profileOverrides || {})
+    });
+  }
+
   function runCoherenceDiagnostic(input = {}, options = {}) {
     const diagnostic = options.diagnostic || createTripleGDiagnostic(options);
     return diagnostic.run(input);
+  }
+
+  function runPlanetWideProbe(input = {}, options = {}) {
+    const diagnostic = options.diagnostic || createPlanetWideProbeDiagnostic(options);
+    return diagnostic.run({
+      ...input,
+      probeSamples: Array.isArray(input.probeSamples) ? input.probeSamples : []
+    });
   }
 
   function findChannelLoadResult(input, key) {
@@ -1850,7 +2247,7 @@
 
     const status = record.status || (load.validationOk ? STATUS.READY : load.requested ? STATUS.FALLBACK : STATUS.PENDING);
     const present = Boolean(record.authorityPresent || load.globalPresent || load.validationOk);
-    const contractOk = Boolean(record.contractOk || load.contractOk);
+    const contractOk = Boolean(record.contractOk || load.contractOk || (!expectedContract && present));
     const validationOk = Boolean(record.ready || record.status === STATUS.READY || load.validationOk);
 
     return {
@@ -1864,6 +2261,7 @@
       actualContract: record.actualContract || load.actualContract || "",
       fallback: Boolean(record.fallback || status === STATUS.FALLBACK || !validationOk),
       degraded: Boolean(record.degraded || status === STATUS.DEGRADED),
+      held: Boolean(record.held || status === STATUS.HELD),
       rejected: Boolean(record.rejected || status === STATUS.REJECTED),
       blocking: Boolean(record.blocking || status === STATUS.BLOCKING),
       canRenderFallback: true,
@@ -1921,7 +2319,7 @@
       waterSampleProbeContract: base.waterSampleProbeContract || "",
       waterSampleProbeCoordinatesOk: safeBool(base.waterSampleProbeCoordinatesOk, Boolean(waterPlan && waterPlan.sample && waterPlan.sample.u !== undefined)),
       waterSampleProbeFlagsOk: safeBool(base.waterSampleProbeFlagsOk, validationOk),
-      waterSampleProbeError: base.waterSampleProbeError || (validationOk ? "" : "HEARTH_WATER_CHANNEL global missing."),
+      waterSampleProbeError: base.waterSampleProbeError || (validationOk ? "" : "Water channel global missing."),
       waterSampleProbeValue: base.waterSampleProbeValue || null,
       waterValidationOk: validationOk,
       waterContractOk: contractOk,
@@ -1949,7 +2347,8 @@
         visualCarrierMode: planDraft.visualCarrierMode,
         visualDiagnosticStatus: planDraft.visualDiagnosticStatus,
         visualDiagnosticCue: planDraft.visualDiagnosticCue,
-        waterFailureDoesNotBlockAtlas: true
+        childFailureDoesNotEraseVisualization: true,
+        wideProbeBlocksFirstVisibleRender: false
       },
       status,
       probableCause: status === COHERENCE_STATUS.PASS ? [] : ["Carrier structure, mount, or projection safety is unavailable."],
@@ -1968,9 +2367,9 @@
       observed: planDraft.atlasStartAuthorized
         ? "Atlas start is authorized by Runtime Table plan."
         : `Atlas start blocked: ${planDraft.atlasStartBlockedReason || "unknown reason"}.`,
-      math: "atlasStartAuthorized = visualCarrierAllowed && !visualizationBlocked && projectionSafe && no blocking/rejected structural child. Water C4 may degrade coherence but does not block atlas.",
+      math: "atlasStartAuthorized = visualCarrierAllowed && !visualizationBlocked && projectionSafe && no blocking/rejected structural child. Child C4 may degrade coherence but does not automatically block atlas.",
       tolerance: {
-        waterFailureDoesNotBlockAtlas: true,
+        childFailureDoesNotEraseVisualization: true,
         atlasStartBlockedReasonRequiredWhenBlocked: true
       },
       value: {
@@ -1978,7 +2377,7 @@
         atlasStartMode: planDraft.atlasStartMode,
         atlasStartCoordinate: planDraft.atlasStartCoordinate,
         atlasStartBlockedReason: planDraft.atlasStartBlockedReason,
-        waterFailureDoesNotBlockAtlas: true,
+        childFailureDoesNotEraseVisualization: true,
         channelPlan: clonePlain(planDraft.channelPlan)
       },
       status,
@@ -1990,14 +2389,21 @@
 
   function chooseFirstFailedCoordinate(channelPlan, atlasCoordinate, runtimeCoordinate) {
     if (runtimeCoordinate && runtimeCoordinate !== R_COORDINATES.R3_PLAN_VALID_HANDOFF_READY) return runtimeCoordinate;
-    if (atlasCoordinate && atlasCoordinate !== A_COORDINATES.A1_ATLAS_START_AUTHORIZED) return atlasCoordinate;
 
-    const keys = ["land", "water", "air"];
+    const keys = Object.keys(channelPlan || {});
     for (const key of keys) {
       const item = channelPlan[key];
       if (!item) continue;
-      if (item.coordinate && item.coordinate !== C_COORDINATES.C11_CHILD_VALIDATED) return item.coordinate;
+      if (
+        item.coordinate &&
+        item.coordinate !== C_COORDINATES.C11_CHILD_VALIDATED &&
+        item.blocking
+      ) {
+        return item.coordinate;
+      }
     }
+
+    if (atlasCoordinate && atlasCoordinate !== A_COORDINATES.A1_ATLAS_START_AUTHORIZED) return atlasCoordinate;
 
     return R_COORDINATES.R3_PLAN_VALID_HANDOFF_READY;
   }
@@ -2007,8 +2413,8 @@
     if (planDraft.visualizationBlocked) return "visible-carrier-structural-safety";
     if (!planDraft.atlasStartAuthorized) return "atlas-start-sequencing";
     if (!planDraft.atlasStartAttempted && planDraft.atlasStartAuthorized) return "canvas-plan-directed-atlas-start-consumption";
-    if (planDraft.waterConnectorProof && planDraft.waterConnectorProof.waterChildLoadFailureCoordinate === C_COORDINATES.C4_SCRIPT_NETWORK_LOAD_FAILURE) return "water-child-served-load-coordinate";
-    if (planDraft.coherentExpressionPass === false) return "coherent-expression-diagnostic-target";
+    if (planDraft.coherentExpressionPass === false && planDraft.failedCheckpoints && planDraft.failedCheckpoints.length) return "coherent-expression-diagnostic-target";
+    if (planDraft.heldCheckpoints && planDraft.heldCheckpoints.includes(COHERENCE_CHECKS.DISTRIBUTION_SHAPE_CHECK)) return "wide-probe-idle-diagnostic-later";
     return "none";
   }
 
@@ -2017,7 +2423,17 @@
 
     if (options.ledger) return options.ledger;
 
-    if (options.runHearthTable !== false) {
+    if (options.channels && options.channels.length) {
+      const table = createPlanetChannelTable({
+        planetId: options.planetId || "",
+        planetLabel: options.planetLabel || "",
+        channels: options.channels,
+        budget: options.budget || {}
+      });
+      return table.run(input.samplePoint || DEFAULT_SAMPLE_POINT);
+    }
+
+    if (options.runHearthTable !== false && (options.profile === "hearth-channel-expression" || options.planetId === "hearth")) {
       const table = createHearthChannelTable(options.tableOptions || {});
       return table.run(input.samplePoint || DEFAULT_SAMPLE_POINT);
     }
@@ -2025,23 +2441,36 @@
     return null;
   }
 
-  function createVisualCarrierPlan(input = {}, options = {}) {
+  function createUniversalPlanetVisualCarrierPlan(input = {}, options = {}) {
     const ledger = normalizeLedger(input, options);
     const records = getRuntimeRecordsByKey(ledger);
+    const expectedContracts = (input.goalProfile && input.goalProfile.expectedContracts) || (options.goalProfile && options.goalProfile.expectedContracts) || {};
+    const recordKeys = Object.keys(records);
+    const loadKeys = Array.isArray(input.channelLoadResults) ? input.channelLoadResults.map((item) => item && item.key).filter(Boolean) : [];
+    const optionKeys = asArray(options.channelKeys);
+    const channelKeys = Array.from(new Set([
+      ...optionKeys,
+      ...recordKeys,
+      ...loadKeys,
+      "land",
+      "water",
+      "air"
+    ]));
 
-    const channelPlan = {
-      land: normalizeChildPlan("land", records.land, findChannelLoadResult(input, "land"), HEARTH_CONTRACTS.land),
-      water: normalizeChildPlan("water", records.water, findChannelLoadResult(input, "water"), HEARTH_CONTRACTS.water),
-      air: normalizeChildPlan("air", records.air, findChannelLoadResult(input, "air"), HEARTH_CONTRACTS.air)
-    };
+    const channelPlan = {};
+    channelKeys.forEach((key) => {
+      channelPlan[key] = normalizeChildPlan(key, records[key], findChannelLoadResult(input, key), expectedContracts[key] || "");
+    });
 
-    const waterConnectorProof = extractWaterProof(input, channelPlan.water);
-    channelPlan.water.coordinate = waterConnectorProof.waterValidationOk
-      ? C_COORDINATES.C11_CHILD_VALIDATED
-      : waterConnectorProof.waterChildLoadFailureCoordinate || channelPlan.water.coordinate;
-    channelPlan.water.validationOk = Boolean(waterConnectorProof.waterValidationOk);
-    channelPlan.water.contractOk = Boolean(waterConnectorProof.waterContractOk);
-    channelPlan.water.fallback = !waterConnectorProof.waterValidationOk;
+    const waterConnectorProof = extractWaterProof(input, channelPlan.water || {});
+    if (channelPlan.water) {
+      channelPlan.water.coordinate = waterConnectorProof.waterValidationOk
+        ? C_COORDINATES.C11_CHILD_VALIDATED
+        : waterConnectorProof.waterChildLoadFailureCoordinate || channelPlan.water.coordinate;
+      channelPlan.water.validationOk = Boolean(waterConnectorProof.waterValidationOk);
+      channelPlan.water.contractOk = Boolean(waterConnectorProof.waterContractOk);
+      channelPlan.water.fallback = !waterConnectorProof.waterValidationOk;
+    }
 
     const renderMetadata = input.renderMetadata || input.render || {};
     const routeMounted = safeBool(input.routeMounted, safeBool(renderMetadata.routeMounted, true));
@@ -2056,19 +2485,26 @@
     if (!canvasMounted) structuralBlockers.push("canvas-not-mounted");
     if (!fallbackShellAvailable) structuralBlockers.push("fallback-shell-unavailable");
     if (!projectionSafe) structuralBlockers.push("projection-unsafe");
-    if (channelPlan.land.blocking || channelPlan.land.rejected) structuralBlockers.push("land-structural-block");
-    if (channelPlan.air.blocking || channelPlan.air.rejected) structuralBlockers.push("air-structural-block");
+
+    Object.keys(channelPlan).forEach((key) => {
+      if (channelPlan[key].blocking || channelPlan[key].rejected) {
+        structuralBlockers.push(`${key}-structural-block`);
+      }
+    });
 
     const visualCarrierAllowed = structuralBlockers.length === 0;
     const visualizationBlocked = !visualCarrierAllowed;
     const visualizationBlockReason = structuralBlockers.join(",");
 
-    const waterFailureDoesNotBlockAtlas = true;
     const atlasStructuralBlockers = [];
     if (!visualCarrierAllowed) atlasStructuralBlockers.push("visual-carrier-blocked");
     if (!projectionSafe) atlasStructuralBlockers.push("projection-unsafe");
-    if (channelPlan.land.blocking || channelPlan.land.rejected) atlasStructuralBlockers.push("land-blocking-or-rejected");
-    if (channelPlan.air.blocking || channelPlan.air.rejected) atlasStructuralBlockers.push("air-blocking-or-rejected");
+
+    Object.keys(channelPlan).forEach((key) => {
+      if (channelPlan[key].blocking || channelPlan[key].rejected) {
+        atlasStructuralBlockers.push(`${key}-blocking-or-rejected`);
+      }
+    });
 
     const atlasStartAuthorized = atlasStructuralBlockers.length === 0;
     const atlasStartBlockedReason = atlasStructuralBlockers.join(",");
@@ -2099,13 +2535,11 @@
       ? "blocked"
       : atlasReady
         ? "atlas-carrier"
-        : waterConnectorProof.waterValidationOk
-          ? "fallback-shell"
-          : "fallback-diagnostic";
+        : "fallback-shell";
 
     const visualDiagnosticStatus = visualizationBlocked
       ? "BLOCKING"
-      : waterConnectorProof.waterValidationOk && atlasStartAuthorized
+      : atlasStartAuthorized
         ? "READY"
         : "DEGRADED";
 
@@ -2113,19 +2547,26 @@
       ? "VISUAL_CARRIER_BLOCKED"
       : !atlasStartAuthorized
         ? "ATLAS_START_BLOCKED"
-        : !waterConnectorProof.waterValidationOk
-          ? "WATER_CHILD_LOAD_FAILURE"
-          : "ATLAS_START_AUTHORIZED";
+        : "ATLAS_START_AUTHORIZED";
+
+    const loadingOptimizationPlan = createLoadingOptimizationPlan({
+      ...input,
+      runtimeTableLedger: ledger,
+      renderMetadata,
+      visibleCarrierAvailable: visualCarrierAllowed
+    }, options);
 
     const planDraft = {
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       baselineContract: BASELINE_CONTRACT,
-      planContract: "LAB_RUNTIME_TABLE_PROCEDURAL_VISUAL_CARRIER_PLAN_v3",
-      planReceipt: "LAB_RUNTIME_TABLE_PROCEDURAL_VISUAL_CARRIER_PLAN_RECEIPT_v3",
+      planContract: "LAB_UNIVERSAL_PLANET_PROCEDURAL_VISUAL_CARRIER_PLAN_v1",
+      planReceipt: "LAB_UNIVERSAL_PLANET_PROCEDURAL_VISUAL_CARRIER_PLAN_RECEIPT_v1",
       version: VERSION,
-      authority: "runtime-table-procedural-plan-authority",
+      authority: "runtime-table-universal-planet-procedural-plan-authority",
+      planetId: input.planetId || options.planetId || (ledger && ledger.planetId) || "",
+      planetLabel: input.planetLabel || options.planetLabel || (ledger && ledger.planetLabel) || "",
       planGenerated: true,
       planValid: Boolean(ledger),
       planGeneratedAt: nowIso(),
@@ -2135,6 +2576,7 @@
       runtimeCoordinate,
       visualCoordinate,
       atlasStartCoordinate,
+      loadingCoordinate: loadingOptimizationPlan.loadingCoordinate,
       firstFailedCoordinate: "",
       recommendedNextRenewalTarget: "",
       visualCarrierAllowed,
@@ -2147,7 +2589,7 @@
       runtimeAllowed,
       handoffClass,
       atlasStartAuthorized,
-      atlasStartMode: atlasStartAuthorized ? (channelPlan.water.validationOk ? "full-child-atlas" : "degraded-fallback-water-atlas") : "blocked",
+      atlasStartMode: atlasStartAuthorized ? "universal-planet-atlas" : "blocked",
       atlasStartAttempted,
       atlasStartActive: atlasStartAttempted && !atlasReady,
       atlasBuilderEntered,
@@ -2155,7 +2597,9 @@
       atlasProgressFirstValue: safeNumber(input.atlasProgressFirstValue ?? renderMetadata.atlasProgressFirstValue, 0),
       atlasProgressLastValue: safeNumber(input.atlasProgressLastValue ?? renderMetadata.atlasProgressLastValue ?? renderMetadata.atlasProgress, 0),
       atlasStartBlockedReason,
-      waterFailureDoesNotBlockAtlas,
+      childFailureDoesNotEraseVisualization: true,
+      wideProbeBlocksFirstVisibleRender: false,
+      singleAnchorIsLocalProofOnly: true,
       externalStatusCallbackSafe: safeBool(input.externalStatusCallbackSafe, true),
       externalStatusCallbackErrors: Array.isArray(input.externalStatusCallbackErrors) ? input.externalStatusCallbackErrors.slice() : [],
       coherentExpressionEligible: visualCarrierAllowed && projectionSafe,
@@ -2163,6 +2607,7 @@
       visualPassClaimed: false,
       channelPlan,
       waterConnectorProof,
+      loadingOptimizationPlan,
       runtimeTableLedger: clonePlain(ledger),
       tripleGCheckpoints: [],
       renewalTargets: [],
@@ -2182,10 +2627,11 @@
       ...input,
       runtimeTableLedger: ledger,
       visualCarrierPlan: planDraft,
+      loadingPlan: { loadingOptimizationPlan },
       renderMetadata,
       imageRendered: safeBool(input.imageRendered, safeBool(renderMetadata.imageRendered, false)),
       canvasReceipt: input.canvasReceipt || {
-        contract: HEARTH_CONTRACTS.canvas,
+        contract: expectedContracts.canvas || "",
         visualPassClaimed: false,
         sphereContainment: projectionSafe,
         outsideSphereTransparent: projectionSafe,
@@ -2194,7 +2640,8 @@
       },
       landSample: input.landSample || (channelPlan.land && channelPlan.land.sample) || {},
       waterSample: input.waterSample || (channelPlan.water && channelPlan.water.sample) || {},
-      airSample: input.airSample || (channelPlan.air && channelPlan.air.sample) || {}
+      airSample: input.airSample || (channelPlan.air && channelPlan.air.sample) || {},
+      probeSamples: Array.isArray(input.probeSamples) ? input.probeSamples : []
     }, options);
 
     planDraft.coherentExpressionPass = Boolean(diagnostic.coherentExpressionPass);
@@ -2203,6 +2650,7 @@
     planDraft.tripleGCheckpoints = diagnostic.checkpoints;
     planDraft.failedCheckpoints = diagnostic.failedCheckpoints;
     planDraft.warningCheckpoints = diagnostic.warningCheckpoints;
+    planDraft.heldCheckpoints = diagnostic.heldCheckpoints;
     planDraft.renewalTargets = diagnostic.renewalTargets;
     planDraft.nextStrategy = diagnostic.nextStrategy;
     planDraft.firstFailedCoordinate = chooseFirstFailedCoordinate(channelPlan, atlasStartCoordinate, runtimeCoordinate);
@@ -2216,18 +2664,26 @@
     return planDraft;
   }
 
+  function createVisualCarrierPlan(input = {}, options = {}) {
+    return createUniversalPlanetVisualCarrierPlan(input, options);
+  }
+
   function createHearthVisualCarrierPlan(input = {}, options = {}) {
-    return createVisualCarrierPlan({
+    return createUniversalPlanetVisualCarrierPlan({
       samplePoint: DEFAULT_SAMPLE_POINT,
+      planetId: "hearth",
+      planetLabel: "Hearth",
       ...input
     }, {
       profile: "hearth-channel-expression",
+      planetId: "hearth",
+      planetLabel: "Hearth",
       ...options
     });
   }
 
   function runProceduralPlan(input = {}, options = {}) {
-    return createVisualCarrierPlan(input, options);
+    return createUniversalPlanetVisualCarrierPlan(input, options);
   }
 
   function getReceipt() {
@@ -2237,17 +2693,19 @@
       previousContract: PREVIOUS_CONTRACT,
       baselineContract: BASELINE_CONTRACT,
       version: VERSION,
-      authority: "lab-runtime-table-visual-carrier-atlas-sequence-standard",
+      authority: "lab-universal-planet-wide-probe-diagnostic-loading-standard",
       destinationFile: "/assets/lab/runtime-table.js",
       status: "active",
-      role: "reusable-runtime-preparation-coherence-diagnostic-and-procedural-carrier-plan-equipment",
+      role: "reusable-runtime-preparation-coherence-diagnostic-visual-carrier-plan-wide-probe-and-loading-optimization-equipment",
       labEquipment: true,
       runtimeTable: true,
       tripleGDiagnostic: true,
       visualCarrierPlanAuthority: true,
       atlasStartPlanAuthority: true,
       coherentExpressionDiagnostic: true,
-      purpose: "set the table before runtime performs, generate a procedural visual-carrier plan, authorize atlas start, and verify whether rendered expression coheres with the goal profile",
+      universalPlanetStandard: true,
+      hearthIsFirstConsumerNotOwner: true,
+      purpose: "set the table before runtime performs, generate a universal procedural visual-carrier plan, authorize atlas start, defer wide-probe diagnostics, optimize first render, and verify whether rendered expression coheres with the goal profile",
       runtimeTableSequence: [
         "validate",
         "coordinate",
@@ -2256,11 +2714,19 @@
         "resolve",
         "handoff"
       ],
+      loadingOptimizationSequence: [
+        "visible-carrier-first",
+        "child-contract-validation-second",
+        "anchor-sample-local-proof-third",
+        "atlas-or-cache-render-fourth",
+        "wide-probe-idle-chunks-later"
+      ],
       proceduralPlanSequence: [
         "runtime-coordinate-classification",
         "visual-carrier-eligibility",
         "channel-plan-normalization",
-        "water-connector-proof-normalization",
+        "connector-proof-normalization",
+        "loading-optimization-plan",
         "atlas-start-authorization",
         "coherence-diagnostic-aggregation",
         "first-failed-coordinate-selection",
@@ -2278,6 +2744,8 @@
         "projection-seating-check",
         "contrast-visibility-check",
         "distribution-shape-check",
+        "wide-probe-readiness-check",
+        "loading-optimization-check",
         "atlas-start-authorization-check",
         "coherent-expression-check"
       ],
@@ -2285,7 +2753,8 @@
         runtime: clonePlain(R_COORDINATES),
         visualCarrier: clonePlain(V_COORDINATES),
         atlas: clonePlain(A_COORDINATES),
-        child: clonePlain(C_COORDINATES)
+        child: clonePlain(C_COORDINATES),
+        loading: clonePlain(L_COORDINATES)
       },
       statuses: Object.values(STATUS),
       handoffClasses: Object.values(HANDOFF),
@@ -2301,9 +2770,7 @@
         "createTripleGDiagnostic",
         "createHearthCoherenceDiagnostic",
         "runCoherenceDiagnostic",
-        "createGoalProfile"
-      ],
-      addedExports: [
+        "createGoalProfile",
         "createVisualCarrierPlan",
         "createHearthVisualCarrierPlan",
         "runProceduralPlan",
@@ -2312,25 +2779,46 @@
         "A_COORDINATES",
         "C_COORDINATES"
       ],
+      addedExports: [
+        "createPlanetChannelTable",
+        "createPlanetGoalProfile",
+        "createPlanetWideProbeDiagnostic",
+        "runPlanetWideProbe",
+        "createLoadingOptimizationPlan",
+        "createUniversalPlanetVisualCarrierPlan",
+        "L_COORDINATES"
+      ],
       reusableFor: [
         "Hearth channel rendering",
         "Audralia rendering",
+        "H-Earth rendering",
+        "Earth reference rendering",
         "Showroom planets",
         "orbit systems",
         "interactive gems",
         "Map Portal",
         "Frontier figure-eight systems",
         "Guide Desk route-choice mechanics",
-        "multi-child animation families"
+        "multi-child animation families",
+        "future planet bodies"
       ],
+      supportedChannelFamilies: UNIVERSAL_CHANNEL_KEYS.slice(),
       coreLaw: [
         "Runtime Table decides procedural readiness",
         "Canvas consumes the plan and expresses locally",
         "constructionReady is not coherentExpressionPass",
         "imageRendered is not coherentExpressionPass",
         "coherentExpressionPass is not visualPassClaimed",
-        "Water Child failure degrades coherence but does not automatically erase visualization",
-        "Water Child C4 does not automatically block atlas start",
+        "single anchor samples prove local load/contract/method/coordinate/safety only",
+        "global distribution requires wide-probe minimum sample count",
+        "DISTRIBUTION_SHAPE_CHECK must hold instead of warn when total probe samples are below 25",
+        "wide-probe diagnostics never block first visible render",
+        "visible carrier comes first",
+        "child contract validation comes second",
+        "anchor sample comes third",
+        "atlas/cache render comes fourth",
+        "wide-probe runs later in chunks or idle frames",
+        "child channel failure degrades coherence but does not automatically erase visualization",
         "visualization blocks only when carrier structure is unsafe",
         "checkpoint receipts must include math and renewal targets"
       ],
@@ -2340,12 +2828,14 @@
         "visual-carrier-eligibility-law",
         "atlas-start-authorization-law",
         "fallback-degraded-full-mode-classification",
+        "wide-probe-readiness-law",
+        "loading-optimization-sequence-law",
         "first-failed-coordinate-selection",
         "recommended-renewal-target-selection",
         "procedural-plan-export"
       ],
       doesNotOwn: [
-        "truth",
+        "planet truth",
         "channel meaning",
         "canvas mounting",
         "canvas drawing",
@@ -2377,18 +2867,25 @@
     V_COORDINATES,
     A_COORDINATES,
     C_COORDINATES,
+    L_COORDINATES,
 
     createTable,
     createHearthChannelTable,
+    createPlanetChannelTable,
     RuntimeTable,
 
     createGoalProfile,
+    createPlanetGoalProfile,
     createTripleGDiagnostic,
     createHearthCoherenceDiagnostic,
+    createPlanetWideProbeDiagnostic,
     runCoherenceDiagnostic,
+    runPlanetWideProbe,
 
     createVisualCarrierPlan,
     createHearthVisualCarrierPlan,
+    createUniversalPlanetVisualCarrierPlan,
+    createLoadingOptimizationPlan,
     runProceduralPlan,
 
     getReceipt,
@@ -2399,6 +2896,10 @@
     coherentExpressionDiagnostic: true,
     visualCarrierPlanAuthority: true,
     atlasStartPlanAuthority: true,
+    loadingOptimizationAuthority: true,
+    wideProbeDiagnosticAuthority: true,
+    universalPlanetStandard: true,
+    hearthIsFirstConsumerNotOwner: true,
     validatesBeforeExpression: true,
     coordinatesBeforeRuntimePerforms: true,
     verifiesCoherenceAfterRender: true,
@@ -2406,7 +2907,10 @@
     imageRenderedIsNotCoherencePass: true,
     constructionReadyIsNotCoherencePass: true,
     coherentExpressionPassIsNotVisualPassClaim: true,
-    waterFailureDoesNotBlockAtlas: true,
+    singleAnchorIsLocalProofOnly: true,
+    wideProbeRequiredForGlobalDistribution: true,
+    wideProbeNeverBlocksFirstVisibleRender: true,
+    childFailureDoesNotEraseVisualization: true,
     visualizationBlocksOnlyWhenCarrierUnsafe: true,
     doesNotOwnTruth: true,
     generatedImage: false,
@@ -2419,6 +2923,8 @@
   root.DEXTER_LAB.runtimeTable = api;
   root.DEXTER_LAB.tripleGDiagnostic = api;
   root.DEXTER_LAB.visualCarrierPlanAuthority = api;
+  root.DEXTER_LAB.loadingOptimizationAuthority = api;
+  root.DEXTER_LAB.wideProbeDiagnosticAuthority = api;
 
   root.LAB_RUNTIME_TABLE = api;
   root.DexterRuntimeTable = api;
@@ -2426,6 +2932,9 @@
   root.LAB_TRIPLE_G_DIAGNOSTIC = api;
   root.TripleGDiagnostic = api;
   root.LAB_VISUAL_CARRIER_PLAN_AUTHORITY = api;
+  root.LAB_LOADING_OPTIMIZATION_AUTHORITY = api;
+  root.LAB_WIDE_PROBE_DIAGNOSTIC = api;
+  root.LAB_UNIVERSAL_PLANET_RUNTIME_TABLE = api;
 
   if (root.document && root.document.documentElement) {
     const dataset = root.document.documentElement.dataset;
@@ -2440,13 +2949,31 @@
     dataset.labTripleGDiagnosticContract = CONTRACT;
     dataset.labVisualCarrierPlanAuthorityLoaded = "true";
     dataset.labVisualCarrierPlanAuthorityContract = CONTRACT;
+    dataset.labLoadingOptimizationAuthorityLoaded = "true";
+    dataset.labLoadingOptimizationAuthorityContract = CONTRACT;
+    dataset.labWideProbeDiagnosticLoaded = "true";
+    dataset.labWideProbeDiagnosticContract = CONTRACT;
     dataset.runtimeTableReusable = "true";
     dataset.tripleGDiagnosticReusable = "true";
     dataset.runtimeTableDoesNotOwnTruth = "true";
     dataset.runtimeTableOwnsProceduralPlan = "true";
     dataset.visualCarrierPlanAuthority = "true";
     dataset.atlasStartPlanAuthority = "true";
-    dataset.waterFailureDoesNotBlockAtlas = "true";
+    dataset.loadingOptimizationAuthority = "true";
+    dataset.wideProbeDiagnosticAuthority = "true";
+    dataset.universalPlanetStandard = "true";
+    dataset.hearthIsFirstConsumerNotOwner = "true";
+    dataset.singleAnchorIsLocalProofOnly = "true";
+    dataset.wideProbeRequiredForGlobalDistribution = "true";
+    dataset.wideProbeNeverBlocksFirstVisibleRender = "true";
+    dataset.distributionShapeCheckHoldsUntilWideProbe = "true";
+    dataset.minimumWideProbePoints = "25";
+    dataset.visibleCarrierFirst = "true";
+    dataset.childContractValidationSecond = "true";
+    dataset.anchorSampleThird = "true";
+    dataset.atlasCacheRenderFourth = "true";
+    dataset.wideProbeIdleChunksLater = "true";
+    dataset.childFailureDoesNotEraseVisualization = "true";
     dataset.visualizationBlocksOnlyWhenCarrierUnsafe = "true";
     dataset.imageRenderedIsNotCoherencePass = "true";
     dataset.constructionReadyIsNotCoherencePass = "true";

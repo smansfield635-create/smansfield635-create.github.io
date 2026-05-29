@@ -1,6 +1,10 @@
 // /assets/hearth/hearth.tectonics.js
 // HEARTH_STRUCTURAL_CAUSE_TECTONICS_AUTHORITY_TNT_v2
 // Full-file replacement.
+// Renewal note:
+// - Preserves public route contract exactly.
+// - Repairs coordinate intake so sample/read/sampleTectonics accept numeric u/v, {u,v}, {lon,lat}, {longitude,latitude}, or {x,y,z}.
+// - Prevents downstream object-based calls from collapsing to u=0,v=0.
 // Structural-cause tectonics authority only.
 // Produces numeric buried planetary cause fields for elevation/composition consumers.
 // Tectonics owns cause. Elevation resolves height. Composition classifies body. Hydrology resolves water. Materials reveal surface. Canvas displays.
@@ -9,10 +13,13 @@
 (() => {
   "use strict";
 
+  const root = typeof window !== "undefined" ? window : globalThis;
+
   const CONTRACT = "HEARTH_STRUCTURAL_CAUSE_TECTONICS_AUTHORITY_TNT_v2";
   const RECEIPT = "HEARTH_STRUCTURAL_CAUSE_TECTONICS_AUTHORITY_RECEIPT_v2";
   const PREVIOUS_CONTRACT = "HEARTH_PRE_TERRAIN_DEPTH_TECTONICS_AUTHORITY_TNT_v1";
-  const VERSION = "2026-05-28.hearth-structural-cause-tectonics-authority-v2";
+  const RENEWAL_RECEIPT = "HEARTH_TECTONICS_COORDINATE_INTAKE_REPAIR_RECEIPT_v1";
+  const VERSION = "2026-05-29.hearth-structural-cause-tectonics-authority-v2-coordinate-intake-repair";
 
   const TWO_PI = Math.PI * 2;
   const HALF_PI = Math.PI / 2;
@@ -46,22 +53,40 @@
     return t * t * (3 - 2 * t);
   }
 
-  function softBand(value, center, width) {
-    const t = 1 - clamp(Math.abs(value - center) / Math.max(EPSILON, width), 0, 1);
-    return t * t * (3 - 2 * t);
-  }
-
   function wrap01(value) {
     const n = Number(value);
     if (!Number.isFinite(n)) return 0;
     return ((n % 1) + 1) % 1;
   }
 
-  function normalizeSampleInput(u, v) {
+  function normalize3(point) {
+    const x = Number.isFinite(Number(point && point.x)) ? Number(point.x) : 0;
+    const y = Number.isFinite(Number(point && point.y)) ? Number(point.y) : 0;
+    const z = Number.isFinite(Number(point && point.z)) ? Number(point.z) : 1;
+    const m = Math.hypot(x, y, z) || 1;
+
     return {
-      u: wrap01(u),
-      v: clamp(v, 0, 1)
+      x: x / m,
+      y: y / m,
+      z: z / m
     };
+  }
+
+  function vectorToLonLat(point) {
+    const p = normalize3(point);
+
+    return {
+      lonDeg: Math.atan2(p.z, p.x) / DEG,
+      latDeg: Math.asin(clamp(p.y, -1, 1)) / DEG
+    };
+  }
+
+  function lonDegToU(lonDeg) {
+    return wrap01((Number(lonDeg) + 180) / 360);
+  }
+
+  function latDegToV(latDeg) {
+    return clamp((90 - Number(latDeg)) / 180, 0, 1);
   }
 
   function lonRadFromU(u) {
@@ -89,16 +114,66 @@
     };
   }
 
-  function normalize3(point) {
-    const x = Number.isFinite(Number(point && point.x)) ? Number(point.x) : 0;
-    const y = Number.isFinite(Number(point && point.y)) ? Number(point.y) : 0;
-    const z = Number.isFinite(Number(point && point.z)) ? Number(point.z) : 1;
-    const m = Math.hypot(x, y, z) || 1;
+  function normalizeSampleInput(...args) {
+    if (args.length === 1 && args[0] && typeof args[0] === "object") {
+      const input = args[0];
+
+      if (Number.isFinite(Number(input.u)) && Number.isFinite(Number(input.v))) {
+        return {
+          u: wrap01(input.u),
+          v: clamp(input.v, 0, 1),
+          intakeMode: "object-uv"
+        };
+      }
+
+      if (Number.isFinite(Number(input.lon)) && Number.isFinite(Number(input.lat))) {
+        return {
+          u: lonDegToU(input.lon),
+          v: latDegToV(input.lat),
+          intakeMode: "object-lon-lat"
+        };
+      }
+
+      if (Number.isFinite(Number(input.longitude)) && Number.isFinite(Number(input.latitude))) {
+        return {
+          u: lonDegToU(input.longitude),
+          v: latDegToV(input.latitude),
+          intakeMode: "object-longitude-latitude"
+        };
+      }
+
+      if (
+        Number.isFinite(Number(input.x)) &&
+        Number.isFinite(Number(input.y)) &&
+        Number.isFinite(Number(input.z))
+      ) {
+        const ll = vectorToLonLat(input);
+
+        return {
+          u: lonDegToU(ll.lonDeg),
+          v: latDegToV(ll.latDeg),
+          intakeMode: "object-vector"
+        };
+      }
+    }
+
+    if (args.length >= 2) {
+      const a = args[0];
+      const b = args[1];
+
+      if (Number.isFinite(Number(a)) && Number.isFinite(Number(b))) {
+        return {
+          u: wrap01(a),
+          v: clamp(b, 0, 1),
+          intakeMode: "numeric-uv"
+        };
+      }
+    }
 
     return {
-      x: x / m,
-      y: y / m,
-      z: z / m
+      u: ANCHOR.u,
+      v: ANCHOR.v,
+      intakeMode: "fallback-anchor"
     };
   }
 
@@ -110,9 +185,9 @@
     return Math.acos(clamp(dot3(a, b), -1, 1));
   }
 
-  function sphericalInfluence(point, item, radiusOverride) {
+  function sphericalInfluence(point3, item, radiusOverride) {
     const radius = Math.max(EPSILON, Number.isFinite(radiusOverride) ? radiusOverride : item.radius);
-    const distance = angularDistance(point, item.vector);
+    const distance = angularDistance(point3, item.vector);
     const t = 1 - clamp(distance / radius, 0, 1);
     return Math.pow(smoothstep(0, 1, t), item.falloff || 1);
   }
@@ -338,6 +413,7 @@
 
   function strongestSummit(point3) {
     const strongest = strongestField(point3, SUMMIT_PRESSURE_FIELDS);
+
     if (strongest.best.value < 0.12) {
       return {
         summitPressure: 0,
@@ -402,8 +478,9 @@
     return "stable-pre-terrain-body";
   }
 
-  function sampleTectonics(uInput, vInput, context = {}) {
-    const input = normalizeSampleInput(uInput, vInput);
+  function sampleTectonics(...args) {
+    const context = args.length >= 3 && args[2] && typeof args[2] === "object" ? args[2] : {};
+    const input = normalizeSampleInput(...args);
     const u = input.u;
     const v = input.v;
 
@@ -586,8 +663,14 @@
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
+      renewalReceipt: RENEWAL_RECEIPT,
       version: VERSION,
       authority: "structural-cause-tectonics",
+
+      coordinateIntakeRepair: true,
+      coordinateIntakeMode: input.intakeMode,
+      objectCoordinateInputSupported: true,
+      numericUvInputPreserved: true,
 
       anchorId: u === ANCHOR.u && v === ANCHOR.v ? ANCHOR.id : "",
       u,
@@ -661,12 +744,25 @@
     });
   }
 
-  function sample(u, v, context = {}) {
-    return sampleTectonics(u, v, context);
+  function sample(...args) {
+    return sampleTectonics(...args);
   }
 
-  function read(u, v, context = {}) {
-    return sampleTectonics(u, v, context);
+  function read(...args) {
+    return sampleTectonics(...args);
+  }
+
+  function sampleAt(...args) {
+    return sampleTectonics(...args);
+  }
+
+  function readAt(...args) {
+    return sampleTectonics(...args);
+  }
+
+  function sampleVector(x, y, z) {
+    if (arguments.length === 1 && x && typeof x === "object") return sampleTectonics(x);
+    return sampleTectonics({ x, y, z });
   }
 
   function sampleGrid(columns = 16, rows = 16) {
@@ -683,11 +779,13 @@
     return Object.freeze({
       contract: CONTRACT,
       receipt: RECEIPT,
+      renewalReceipt: RENEWAL_RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
       columns: width,
       rows: height,
       count: cells.length,
+      coordinateIntakeRepair: true,
       cells: Object.freeze(cells)
     });
   }
@@ -701,15 +799,29 @@
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
+      renewalReceipt: RENEWAL_RECEIPT,
       version: VERSION,
       authority: "structural-cause-tectonics",
       destinationFile: "/assets/hearth/hearth.tectonics.js",
       anchor: ANCHOR,
+
       structuralCauseAuthorityLoaded: true,
       preTerrainDepthAuthorityLoaded: true,
       tectonicsBeforeElevation: true,
       numericStructuralAuthorityOnly: true,
       producesElevationInfluence: true,
+
+      coordinateIntakeRepair: true,
+      objectCoordinateInputSupported: true,
+      supportedCoordinateInputs: [
+        "sample(u,v)",
+        "sample({u,v})",
+        "sample({lon,lat})",
+        "sample({longitude,latitude})",
+        "sample({x,y,z})",
+        "sampleVector(x,y,z)"
+      ],
+
       exportedFields: [
         "depth",
         "subsurfacePressure",
@@ -737,6 +849,7 @@
         "dominantStructuralCause",
         "structuralClass"
       ],
+
       ownsElevation: false,
       ownsHydrology: false,
       ownsMaterialRendering: false,
@@ -756,15 +869,20 @@
     contract: CONTRACT,
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
+    renewalReceipt: RENEWAL_RECEIPT,
     version: VERSION,
     anchor: ANCHOR,
 
     sampleTectonics,
     sample,
     read,
+    sampleAt,
+    readAt,
+    sampleVector,
     sampleGrid,
     sampleAnchor,
     getStatus,
+    getReceipt: getStatus,
 
     supportsStructuralCauseTectonics: true,
     supportsPreTerrainDepth: true,
@@ -772,6 +890,17 @@
     supportsCrustalProvincePressure: true,
     supportsOceanBasinPressure: true,
     supportsSummitPressure: true,
+    supportsCoordinateIntakeRepair: true,
+    supportsObjectCoordinateInput: true,
+
+    ownsElevation: false,
+    ownsHydrology: false,
+    ownsMaterialRendering: false,
+    ownsFinalLandOcean: false,
+    ownsClimate: false,
+    ownsCanvas: false,
+    ownsRuntime: false,
+    ownsControls: false,
 
     generatedImage: false,
     graphicBox: false,
@@ -779,33 +908,42 @@
     visualPassClaimed: false
   });
 
-  window.HEARTH = window.HEARTH || {};
-  window.HEARTH.tectonics = api;
+  root.HEARTH = root.HEARTH || {};
+  root.HEARTH.tectonics = api;
 
-  window.HEARTH_TECTONICS = api;
-  window.HearthTectonics = api;
-  window.HEARTH_TECTONICS_RECEIPT = getStatus();
-  window.HEARTH_TECTONICS_CONTRACT = CONTRACT;
-  window.HEARTH_STRUCTURAL_CAUSE_TECTONICS_RECEIPT = getStatus();
+  root.HEARTH_TECTONICS = api;
+  root.HearthTectonics = api;
+  root.HEARTH_TECTONICS_RECEIPT = getStatus();
+  root.HEARTH_TECTONICS_CONTRACT = CONTRACT;
+  root.HEARTH_STRUCTURAL_CAUSE_TECTONICS_RECEIPT = getStatus();
 
-  if (typeof document !== "undefined" && document.documentElement) {
-    document.documentElement.dataset.hearthTectonicsAuthorityLoaded = "true";
-    document.documentElement.dataset.hearthTectonicsAuthorityContract = CONTRACT;
-    document.documentElement.dataset.hearthTectonicsAuthorityReceipt = RECEIPT;
-    document.documentElement.dataset.hearthTectonicsPreviousContract = PREVIOUS_CONTRACT;
-    document.documentElement.dataset.hearthPreTerrainDepthAuthorityLoaded = "true";
-    document.documentElement.dataset.hearthStructuralCauseAuthorityLoaded = "true";
-    document.documentElement.dataset.hearthTectonicsBeforeElevation = "true";
-    document.documentElement.dataset.hearthTectonicsNumericStructuralAuthorityOnly = "true";
-    document.documentElement.dataset.hearthTectonicsAnchor = ANCHOR.id;
-    document.documentElement.dataset.hearthTectonicsAnchorU = String(ANCHOR.u);
-    document.documentElement.dataset.hearthTectonicsAnchorV = String(ANCHOR.v);
-    document.documentElement.dataset.hearthTectonicsAnchorLon = String(ANCHOR.lonDeg);
-    document.documentElement.dataset.hearthTectonicsAnchorLat = String(ANCHOR.latDeg);
-    document.documentElement.dataset.generatedImage = "false";
-    document.documentElement.dataset.graphicBox = "false";
-    document.documentElement.dataset.webgl = "false";
-    document.documentElement.dataset.visualPassClaimed = "false";
+  if (root.document && root.document.documentElement) {
+    const dataset = root.document.documentElement.dataset;
+
+    dataset.hearthTectonicsAuthorityLoaded = "true";
+    dataset.hearthTectonicsAuthorityContract = CONTRACT;
+    dataset.hearthTectonicsAuthorityReceipt = RECEIPT;
+    dataset.hearthTectonicsRenewalReceipt = RENEWAL_RECEIPT;
+    dataset.hearthTectonicsPreviousContract = PREVIOUS_CONTRACT;
+    dataset.hearthPreTerrainDepthAuthorityLoaded = "true";
+    dataset.hearthStructuralCauseAuthorityLoaded = "true";
+    dataset.hearthTectonicsBeforeElevation = "true";
+    dataset.hearthTectonicsNumericStructuralAuthorityOnly = "true";
+
+    dataset.hearthTectonicsCoordinateIntakeRepair = "true";
+    dataset.hearthTectonicsObjectCoordinateInputSupported = "true";
+    dataset.hearthTectonicsNumericUvInputPreserved = "true";
+
+    dataset.hearthTectonicsAnchor = ANCHOR.id;
+    dataset.hearthTectonicsAnchorU = String(ANCHOR.u);
+    dataset.hearthTectonicsAnchorV = String(ANCHOR.v);
+    dataset.hearthTectonicsAnchorLon = String(ANCHOR.lonDeg);
+    dataset.hearthTectonicsAnchorLat = String(ANCHOR.latDeg);
+
+    dataset.generatedImage = "false";
+    dataset.graphicBox = "false";
+    dataset.webgl = "false";
+    dataset.visualPassClaimed = "false";
   }
 
   if (typeof module !== "undefined" && module.exports) {

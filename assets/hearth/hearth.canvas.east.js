@@ -1,19 +1,22 @@
 // /assets/hearth/hearth.canvas.east.js
-// HEARTH_CANVAS_EAST_MATERIAL_ATLAS_SOURCE_TRANSISTOR_TNT_v1
+// HEARTH_CANVAS_EAST_PARENT_ALIGNED_MATERIAL_ATLAS_SOURCE_TRANSISTOR_TNT_v2
 // Full-file replacement.
 // Canvas East / split-adapter source machine only.
 // Purpose:
 // - Serve as the East source/intake child for /assets/hearth/hearth.canvas.js.
+// - Align East with the active Canvas North parent contract:
+//   HEARTH_CANVAS_CARDINAL_SPLIT_NORTH_PARENT_TNT_v2.
 // - Consume the active materials authority and convert it into a canvas atlas packet.
-// - Preserve the parent split-adapter transistor model:
+// - Preserve the split-adapter transistor model:
 //   - East = source/material-atlas intake.
 //   - West = control/admissibility/motion/invalidation.
 //   - North = gate/sequencer/checkpoint adapter.
 //   - South = drain/output/render/proof.
 // - Preserve material truth as upstream authority; this file only samples and carries it.
 // - Preserve fallback visibility only as emergency carrier support.
-// - Expose buildAtlas(), sample(), read(), invalidateAtlas(), refreshMaterialBridge(), and getReceipt().
-// - Run NEWS/Fibonacci synchronization at F13 source stage.
+// - Remove the recursive receipt loop between refreshMaterialBridge() and getReceipt().
+// - Expose buildAtlas(), sample(), read(), invalidateAtlas(), refreshMaterialBridge(), getReceipt().
+// - Run NEWS/Fibonacci synchronization at F13E/F13F source stage.
 // Does not own:
 // - planet truth
 // - elevation truth
@@ -30,14 +33,18 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_EAST_MATERIAL_ATLAS_SOURCE_TRANSISTOR_TNT_v1";
-  const RECEIPT = "HEARTH_CANVAS_EAST_MATERIAL_ATLAS_SOURCE_TRANSISTOR_RECEIPT_v1";
-  const PARENT_SPLIT_CONTRACT = "HEARTH_CANVAS_SPLIT_ADAPTER_TRANSISTOR_GATE_NORTH_PARENT_TNT_v1";
-  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_CARDINAL_SPLIT_EAST_CHILD_TNT_v1";
-  const BASELINE_CONTRACT = "HEARTH_CANVAS_MATERIALS_RELIEF_CONSUMPTION_INVALIDATION_TNT_v1";
+  const CONTRACT = "HEARTH_CANVAS_EAST_PARENT_ALIGNED_MATERIAL_ATLAS_SOURCE_TRANSISTOR_TNT_v2";
+  const RECEIPT = "HEARTH_CANVAS_EAST_PARENT_ALIGNED_MATERIAL_ATLAS_SOURCE_TRANSISTOR_RECEIPT_v2";
+  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_EAST_MATERIAL_ATLAS_SOURCE_TRANSISTOR_TNT_v1";
+  const BASELINE_CONTRACT = "HEARTH_CANVAS_CARDINAL_SPLIT_EAST_CHILD_TNT_v1";
+
+  const PARENT_SPLIT_CONTRACT = "HEARTH_CANVAS_CARDINAL_SPLIT_NORTH_PARENT_TNT_v2";
+  const RETIRED_PARENT_SPLIT_CONTRACT = "HEARTH_CANVAS_SPLIT_ADAPTER_TRANSISTOR_GATE_NORTH_PARENT_TNT_v1";
+
   const EXPECTED_MATERIAL_CONTRACT = "HEARTH_MATERIALS_MOUNTAIN_RANGE_CANYON_RELIEF_CONSUMER_TNT_v1";
   const EXPECTED_MATERIAL_RECEIPT = "HEARTH_MATERIALS_MOUNTAIN_RANGE_CANYON_RELIEF_CONSUMER_RECEIPT_v1";
-  const VERSION = "2026-05-30.hearth-canvas-east-material-atlas-source-transistor-v1";
+
+  const VERSION = "2026-05-30.hearth-canvas-east-parent-aligned-material-atlas-source-transistor-v2";
   const FILE = "/assets/hearth/hearth.canvas.east.js";
 
   const root = typeof window !== "undefined" ? window : globalThis;
@@ -72,19 +79,24 @@
     contract: CONTRACT,
     receipt: RECEIPT,
     parentSplitContract: PARENT_SPLIT_CONTRACT,
+    retiredParentSplitContract: RETIRED_PARENT_SPLIT_CONTRACT,
     previousContract: PREVIOUS_CONTRACT,
     baselineContract: BASELINE_CONTRACT,
     expectedMaterialContract: EXPECTED_MATERIAL_CONTRACT,
     expectedMaterialReceipt: EXPECTED_MATERIAL_RECEIPT,
     version: VERSION,
     file: FILE,
-    role: "canvas-east-source-material-atlas-transistor-child",
+    role: "canvas-east-source-material-atlas-transistor-child-parent-aligned",
 
     splitAdapterChild: true,
+    parentContractAligned: true,
+    retiredParentContractSuperseded: true,
+    recursiveReceiptLoopRemoved: true,
+
     transistorAdapterActive: true,
     transistorRole: "source",
     transistorSourceRole: "east-material-atlas-source",
-    transistorGateParent: "north-split-adapter-transistor-gate",
+    transistorGateParent: "north-cardinal-split-parent-v2",
     transistorControlPeer: "west-motion-invalidation-control",
     transistorDrainPeer: "south-texture-render-visible-output-drain",
     transistorCurrentFlow: "EAST_SOURCE_TO_SOUTH_DRAIN_THROUGH_NORTH_GATE_WITH_WEST_CONTROL",
@@ -109,6 +121,11 @@
     materialVersion: "",
     materialRole: "",
     materialAtlasPrimary: false,
+    materialBridgeSignature: "",
+    previousMaterialBridgeSignature: "",
+    materialBridgeChanged: false,
+    materialBridgeSyncCount: 0,
+    materialBridgeLastSyncedAt: "",
 
     canonicalMaterialAuthorityPresent: false,
     canonicalMaterialConsumed: false,
@@ -132,8 +149,10 @@
     atlasPixelCount: 0,
 
     atlasCanonicalMaterialSampleCount: 0,
+    atlasMaterialSampleCount: 0,
     atlasElevationHydrologySampleCount: 0,
     atlasFallbackSampleCount: 0,
+    atlasUnknownUpstreamSampleCount: 0,
     atlasTotalSampleCount: 0,
     atlasLandSampleCount: 0,
     atlasWaterSampleCount: 0,
@@ -164,9 +183,6 @@
     atlasInvalidationCount: 0,
     atlasInvalidated: false,
     atlasInvalidationReason: "",
-    materialBridgeSignature: "",
-    lastMaterialBridgeSignature: "",
-    materialBridgeChanged: false,
 
     fallbackSampleAvailable: true,
     fallbackSampleUsedAtRuntime: false,
@@ -203,6 +219,11 @@
   function safeNumber(value, fallback = 0) {
     const number = Number(value);
     return Number.isFinite(number) ? number : fallback;
+  }
+
+  function safeString(value, fallback = "") {
+    if (value === undefined || value === null) return fallback;
+    return String(value);
   }
 
   function clamp(value, min, max) {
@@ -378,9 +399,7 @@
   }
 
   function readMaterialReceipt(authority = getMaterialAuthority()) {
-    if (!authority || typeof authority !== "object") {
-      return null;
-    }
+    if (!authority || typeof authority !== "object") return null;
 
     if (isFunction(authority.getReceipt)) {
       try {
@@ -394,37 +413,46 @@
       receipt: authority.receipt || "",
       previousContract: authority.previousContract || "",
       baselineContract: authority.baselineContract || "",
+      requiredElevationContract: authority.requiredElevationContract || "",
+      optionalReliefChildContract: authority.optionalReliefChildContract || "",
       version: authority.version || "",
-      authority: authority.authority || "materials"
+      authority: authority.authority || "materials",
+      role: authority.role || "materials"
     };
   }
 
   function signatureFromReceipt(receipt) {
     if (!receipt || typeof receipt !== "object") return "NONE";
+
     return [
       receipt.contract || "",
       receipt.receipt || "",
       receipt.version || "",
       receipt.requiredElevationContract || "",
-      receipt.optionalReliefChildContract || ""
+      receipt.optionalReliefChildContract || "",
+      receipt.authority || receipt.role || ""
     ].join("::");
   }
 
-  function refreshMaterialBridge(options = {}) {
-    const authority = getMaterialAuthority();
+  function syncMaterialBridge(options = {}) {
+    const authority = options.authority || getMaterialAuthority();
     const materialReceipt = readMaterialReceipt(authority);
     const signature = signatureFromReceipt(materialReceipt);
+    const previousSignature = state.materialBridgeSignature || "";
+
+    state.materialBridgeSyncCount += 1;
+    state.materialBridgeLastSyncedAt = nowIso();
 
     state.canonicalMaterialAuthorityPresent = Boolean(authority);
     state.materialNestedReceiptAvailable = Boolean(materialReceipt);
     state.materialReceiptBridgeActive = Boolean(materialReceipt);
 
-    state.materialContract = materialReceipt ? String(materialReceipt.contract || "") : "";
-    state.materialReceipt = materialReceipt ? String(materialReceipt.receipt || "") : "";
-    state.materialPreviousContract = materialReceipt ? String(materialReceipt.previousContract || "") : "";
-    state.materialBaselineContract = materialReceipt ? String(materialReceipt.baselineContract || "") : "";
-    state.materialVersion = materialReceipt ? String(materialReceipt.version || "") : "";
-    state.materialRole = materialReceipt ? String(materialReceipt.authority || materialReceipt.role || "materials") : "";
+    state.materialContract = materialReceipt ? safeString(materialReceipt.contract, "") : "";
+    state.materialReceipt = materialReceipt ? safeString(materialReceipt.receipt, "") : "";
+    state.materialPreviousContract = materialReceipt ? safeString(materialReceipt.previousContract, "") : "";
+    state.materialBaselineContract = materialReceipt ? safeString(materialReceipt.baselineContract, "") : "";
+    state.materialVersion = materialReceipt ? safeString(materialReceipt.version, "") : "";
+    state.materialRole = materialReceipt ? safeString(materialReceipt.authority || materialReceipt.role || "materials", "materials") : "";
 
     state.materialExpectedContract = EXPECTED_MATERIAL_CONTRACT;
     state.materialExpectedReceipt = EXPECTED_MATERIAL_RECEIPT;
@@ -436,27 +464,62 @@
     state.canonicalMaterialShapePrimary = Boolean(authority);
     state.materialAtlasPrimary = Boolean(authority);
 
-    state.materialBridgeChanged = Boolean(
-      state.lastMaterialBridgeSignature &&
-      state.lastMaterialBridgeSignature !== signature
-    );
-
+    state.previousMaterialBridgeSignature = previousSignature;
     state.materialBridgeSignature = signature;
-    state.lastMaterialBridgeSignature = signature;
-    state.updatedAt = nowIso();
+    state.materialBridgeChanged = Boolean(previousSignature && previousSignature !== signature);
+    state.updatedAt = state.materialBridgeLastSyncedAt;
 
     if (state.materialBridgeChanged && options.invalidate === true) {
-      invalidateAtlas("material-bridge-signature-changed");
+      invalidateAtlas("material-bridge-signature-changed", { skipDataset: true });
     }
 
-    updateDataset();
+    if (options.updateDataset !== false) {
+      updateDataset();
+    }
 
     return {
       changed: state.materialBridgeChanged,
       signature,
+      previousSignature,
       authorityPresent: Boolean(authority),
-      materialReceipt: materialReceipt || null,
-      receipt: getReceipt()
+      materialReceipt: clonePlain(materialReceipt || null),
+      materialBridgeReceipt: getMaterialBridgeReceipt({ sync: false })
+    };
+  }
+
+  function refreshMaterialBridge(options = {}) {
+    return syncMaterialBridge(options);
+  }
+
+  function getMaterialBridgeReceipt(options = {}) {
+    if (options.sync !== false) {
+      syncMaterialBridge({ updateDataset: false, invalidate: false });
+    }
+
+    return {
+      materialReceiptBridgeActive: state.materialReceiptBridgeActive,
+      materialNestedReceiptAvailable: state.materialNestedReceiptAvailable,
+      materialContract: state.materialContract,
+      materialReceipt: state.materialReceipt,
+      materialExpectedContract: state.materialExpectedContract,
+      materialExpectedReceipt: state.materialExpectedReceipt,
+      materialContractMatchesExpected: state.materialContractMatchesExpected,
+      materialReceiptMatchesExpected: state.materialReceiptMatchesExpected,
+      materialPreviousContract: state.materialPreviousContract,
+      materialBaselineContract: state.materialBaselineContract,
+      materialVersion: state.materialVersion,
+      materialRole: state.materialRole,
+      materialAtlasPrimary: state.materialAtlasPrimary,
+      canonicalMaterialAuthorityPresent: state.canonicalMaterialAuthorityPresent,
+      canonicalMaterialConsumed: state.canonicalMaterialConsumed,
+      canonicalMaterialColorPrimary: state.canonicalMaterialColorPrimary,
+      canonicalMaterialShapePrimary: state.canonicalMaterialShapePrimary,
+      materialBridgeSignature: state.materialBridgeSignature,
+      previousMaterialBridgeSignature: state.previousMaterialBridgeSignature,
+      materialBridgeChanged: state.materialBridgeChanged,
+      materialBridgeSyncCount: state.materialBridgeSyncCount,
+      materialBridgeLastSyncedAt: state.materialBridgeLastSyncedAt,
+      recursiveReceiptLoopRemoved: true
     };
   }
 
@@ -482,6 +545,7 @@
     const northMass = Math.max(0, 0.56 - Math.abs(point.v - 0.18) * 2.6);
     const southMass = Math.max(0, 0.54 - Math.abs(point.v - 0.78) * 2.4);
     const centerMass = Math.max(0, 0.48 - Math.hypot(point.u - 0.42, point.v - 0.50) * 1.4);
+
     const landSignal = clamp01(
       westMass * 0.32 +
       eastMass * 0.24 +
@@ -503,6 +567,14 @@
 
     if (coastBand > 0.35) {
       rgb = mixColor(rgb, isWater ? PALETTE.fallbackShelf : PALETTE.fallbackCoast, coastBand * 0.18);
+    }
+
+    if (isLand && n > 0.72) {
+      rgb = mixColor(rgb, PALETTE.fallbackRidge, clamp01((n - 0.72) * 0.42));
+    }
+
+    if (isLand && n < 0.22) {
+      rgb = mixColor(rgb, PALETTE.fallbackCanyon, clamp01((0.22 - n) * 0.30));
     }
 
     return {
@@ -529,6 +601,7 @@
       ridgeRelief: isLand ? clamp01(n * 0.16) : 0,
       basinShade: isWater ? clamp01((0.42 - landSignal) * 0.40) : 0,
       mountainRangeMaterialFeed: isLand ? clamp01(Math.max(0, n - 0.66) * 0.34) : 0,
+      ridgeChainMaterialFeed: isLand ? clamp01(Math.max(0, n - 0.60) * 0.24) : 0,
       canyonCarveMaterialFeed: isLand ? clamp01(Math.max(0, 0.34 - n) * 0.22) : 0,
       canyonDepthMaterialFeed: isLand ? clamp01(Math.max(0, 0.28 - n) * 0.20) : 0,
       sevenContinentFallbackUsed: true,
@@ -632,15 +705,14 @@
     rgb[1] = clamp(Math.round(rgb[1] * (1 - greenSuppression)), 0, 255);
 
     const microContrast = 1 + (n - 0.5) * (0.030 + relief * 0.030 + coast * 0.014);
-    rgb = scaleColor(rgb, microContrast);
-
-    return rgb;
+    return scaleColor(rgb, microContrast);
   }
 
   function normalizeSample(raw, point, fallbackUsed) {
     const source = raw && typeof raw === "object" ? raw : fallbackTerrain(point);
     const sourceType = classifySampleSource(source, fallbackUsed);
     const rgb = applyAtlasExpression(source, point);
+
     const terrainClass =
       stringField(source, "terrainClass") ||
       stringField(source, "worldTerrainClass") ||
@@ -657,6 +729,7 @@
       receipt: source.receipt || (fallbackUsed ? "HEARTH_CANVAS_EAST_EMERGENCY_FALLBACK_CARRIER_RECEIPT" : "UNKNOWN_MATERIAL_RECEIPT"),
       eastContract: CONTRACT,
       eastReceipt: RECEIPT,
+      parentSplitContract: PARENT_SPLIT_CONTRACT,
       sourceType,
       u: point.u,
       v: point.v,
@@ -677,10 +750,14 @@
       materialSample: sourceType === "canonical-material" || sourceType === "material",
       elevationHydrologySample: sourceType === "elevation-hydrology",
       fallbackSample: sourceType === "fallback",
+      unknownUpstreamSample: sourceType === "unknown-upstream",
       atlasExpressionApplied: true,
       canvasEastSourceOnly: true,
       canvasStillDoesNotOwnPlanetTruth: true,
       canvasEastDoesNotOwnMaterialTruth: true,
+      parentContractAligned: true,
+      retiredParentContractSuperseded: true,
+      recursiveReceiptLoopRemoved: true,
       f21ClaimedByCanvasEast: false,
       generatedImage: false,
       graphicBox: false,
@@ -689,17 +766,23 @@
     };
   }
 
-  function sample(point = {}) {
+  function sampleWithAuthority(point = {}, authority = null, options = {}) {
     const p = normalizePoint(point);
-    const authority = getMaterialAuthority();
+    const materialAuthority = authority || getMaterialAuthority();
 
-    refreshMaterialBridge({ invalidate: false });
+    if (options.syncBridge !== false) {
+      syncMaterialBridge({
+        authority: materialAuthority,
+        updateDataset: options.updateDataset !== false,
+        invalidate: false
+      });
+    }
 
     let raw = null;
     let fallbackUsed = false;
 
-    if (authority) {
-      raw = callAuthority(authority, [
+    if (materialAuthority) {
+      raw = callAuthority(materialAuthority, [
         "sample",
         "read",
         "getMaterial",
@@ -726,6 +809,14 @@
     return normalizeSample(raw, p, fallbackUsed);
   }
 
+  function sample(point = {}) {
+    const authority = getMaterialAuthority();
+    return sampleWithAuthority(point, authority, {
+      syncBridge: true,
+      updateDataset: false
+    });
+  }
+
   function read(point = {}) {
     return sample(point);
   }
@@ -743,6 +834,10 @@
     canvas.dataset.hearthCanvasEastContract = CONTRACT;
     canvas.dataset.hearthCanvasEastReceipt = RECEIPT;
     canvas.dataset.hearthCanvasEastParentSplitContract = PARENT_SPLIT_CONTRACT;
+    canvas.dataset.hearthCanvasEastRetiredParentSplitContract = RETIRED_PARENT_SPLIT_CONTRACT;
+    canvas.dataset.hearthCanvasEastParentContractAligned = "true";
+    canvas.dataset.hearthCanvasEastRetiredParentContractSuperseded = "true";
+    canvas.dataset.hearthCanvasEastRecursiveReceiptLoopRemoved = "true";
     canvas.dataset.hearthCanvasEastTransistorRole = "source";
     canvas.dataset.hearthCanvasEastMaterialAtlasPrimary = "true";
     canvas.dataset.generatedImage = "false";
@@ -777,8 +872,10 @@
     state.atlasPixelCount = width * height;
 
     state.atlasCanonicalMaterialSampleCount = 0;
+    state.atlasMaterialSampleCount = 0;
     state.atlasElevationHydrologySampleCount = 0;
     state.atlasFallbackSampleCount = 0;
+    state.atlasUnknownUpstreamSampleCount = 0;
     state.atlasTotalSampleCount = 0;
     state.atlasLandSampleCount = 0;
     state.atlasWaterSampleCount = 0;
@@ -794,533 +891,9 @@
     state.atlasTotalSampleCount += 1;
 
     if (material.canonicalMaterialSample) state.atlasCanonicalMaterialSampleCount += 1;
+    if (material.materialSample) state.atlasMaterialSampleCount += 1;
     if (material.elevationHydrologySample) state.atlasElevationHydrologySampleCount += 1;
     if (material.fallbackSample) state.atlasFallbackSampleCount += 1;
+    if (material.unknownUpstreamSample) state.atlasUnknownUpstreamSampleCount += 1;
     if (material.isLand) state.atlasLandSampleCount += 1;
-    if (material.isWater) state.atlasWaterSampleCount += 1;
-
-    if (
-      numberField(material, "waterlineMaterialFeed", 0) > 0.16 ||
-      numberField(material, "shorelineGrounding", 0) > 0.18 ||
-      numberField(material, "coastPotential", 0) > 0.20
-    ) {
-      state.atlasCoastSampleCount += 1;
-    }
-
-    if (
-      numberField(material, "terrainRelief", 0) > 0.18 ||
-      numberField(material, "mountainRangeMaterialFeed", 0) > 0.12 ||
-      numberField(material, "canyonCarveMaterialFeed", 0) > 0.12
-    ) {
-      state.atlasReliefSampleCount += 1;
-    }
-
-    if (material.terrainClass) classSet.add(material.terrainClass);
-  }
-
-  async function buildAtlas(options = {}) {
-    const width = clamp(
-      Math.round(safeNumber(options.width, DEFAULT_ATLAS_WIDTH)),
-      MIN_ATLAS_WIDTH,
-      MAX_ATLAS_WIDTH
-    );
-
-    const height = clamp(
-      Math.round(safeNumber(options.height, DEFAULT_ATLAS_HEIGHT)),
-      MIN_ATLAS_HEIGHT,
-      MAX_ATLAS_HEIGHT
-    );
-
-    const rowsPerChunk = clamp(
-      Math.round(safeNumber(options.rowsPerChunk, 8)),
-      2,
-      32
-    );
-
-    resetBuildCounters(width, height);
-    refreshMaterialBridge({ invalidate: false });
-    updateDataset();
-
-    try {
-      atlasCanvas = createAtlasCanvas(width, height);
-      const ctx = atlasCanvas.getContext("2d", { alpha: true, willReadFrequently: false });
-
-      if (!ctx) {
-        throw new Error("Canvas East atlas context unavailable.");
-      }
-
-      const image = ctx.createImageData(width, height);
-      const data = image.data;
-      const classSet = new Set();
-
-      for (let y = 0; y < height; y += rowsPerChunk) {
-        const yEnd = Math.min(height, y + rowsPerChunk);
-
-        for (let yy = y; yy < yEnd; yy += 1) {
-          const v = height <= 1 ? 0 : yy / (height - 1);
-
-          for (let x = 0; x < width; x += 1) {
-            const u = width <= 1 ? 0 : x / (width - 1);
-            const material = sample({ u, v });
-            const index = (yy * width + x) * 4;
-
-            data[index] = material.rgb[0];
-            data[index + 1] = material.rgb[1];
-            data[index + 2] = material.rgb[2];
-            data[index + 3] = Math.round(clamp01(material.alpha) * 255);
-
-            countSample(material, classSet);
-          }
-        }
-
-        state.atlasBuildProgress = Math.min(100, Math.round((yEnd / height) * 100));
-        state.atlasClassCount = classSet.size;
-        state.atlasClasses = Array.from(classSet).slice(0, 48);
-        state.updatedAt = nowIso();
-
-        if (isFunction(options.onProgress)) {
-          try {
-            options.onProgress(state.atlasBuildProgress, getReceipt());
-          } catch (_error) {}
-        }
-
-        await yieldBuildFrame();
-      }
-
-      ctx.putImageData(image, 0, 0);
-
-      lastAtlasImageData = image;
-
-      state.atlasBuildProgress = 100;
-      state.atlasBuildComplete = true;
-      state.atlasCanvasPresent = true;
-      state.atlasInvalidated = false;
-      state.atlasInvalidationReason = "";
-      state.atlasBuildCompletedAt = nowIso();
-      state.atlasBuildElapsedMs = Math.max(0, Date.parse(state.atlasBuildCompletedAt) - Date.parse(state.atlasBuildStartedAt));
-      state.lastBuildAt = state.atlasBuildCompletedAt;
-      state.updatedAt = state.atlasBuildCompletedAt;
-
-      updateDataset();
-
-      return {
-        atlasCanvas,
-        imageData: lastAtlasImageData,
-        receipt: getReceipt(),
-        contract: CONTRACT,
-        receiptId: RECEIPT,
-        generatedImage: false,
-        graphicBox: false,
-        webGL: false,
-        visualPassClaimed: false
-      };
-    } catch (error) {
-      state.atlasBuildError = error && error.message ? error.message : String(error);
-      state.atlasBuildComplete = false;
-      state.atlasCanvasPresent = false;
-      state.updatedAt = nowIso();
-
-      updateDataset();
-
-      throw error;
-    }
-  }
-
-  function invalidateAtlas(reason = "manual-atlas-invalidation") {
-    state.atlasInvalidationCount += 1;
-    state.atlasInvalidated = true;
-    state.atlasInvalidationReason = String(reason || "manual-atlas-invalidation");
-    state.atlasBuildComplete = false;
-    state.updatedAt = nowIso();
-
-    atlasCanvas = null;
-    lastAtlasImageData = null;
-
-    updateDataset();
-
-    return getReceipt();
-  }
-
-  function getAtlasCanvas() {
-    return atlasCanvas;
-  }
-
-  function getAtlasImageData() {
-    return lastAtlasImageData;
-  }
-
-  function getReceipt() {
-    refreshMaterialBridge({ invalidate: false });
-
-    return {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      parentSplitContract: PARENT_SPLIT_CONTRACT,
-      previousContract: PREVIOUS_CONTRACT,
-      baselineContract: BASELINE_CONTRACT,
-      expectedMaterialContract: EXPECTED_MATERIAL_CONTRACT,
-      expectedMaterialReceipt: EXPECTED_MATERIAL_RECEIPT,
-      version: VERSION,
-      file: FILE,
-      role: state.role,
-
-      splitAdapterChild: true,
-      transistorAdapterActive: true,
-      transistorRole: "source",
-      transistorSourceRole: state.transistorSourceRole,
-      transistorGateParent: state.transistorGateParent,
-      transistorControlPeer: state.transistorControlPeer,
-      transistorDrainPeer: state.transistorDrainPeer,
-      transistorCurrentFlow: state.transistorCurrentFlow,
-
-      newsProtocolSynchronized: true,
-      fibonacciAlignmentSynchronized: true,
-      activeFibonacciGate: state.activeFibonacciGate,
-      futureFibonacciGate: state.futureFibonacciGate,
-      oneActiveGearAtATime: true,
-      cycleOrder: CYCLE_ORDER,
-
-      materialReceiptBridgeActive: state.materialReceiptBridgeActive,
-      materialNestedReceiptAvailable: state.materialNestedReceiptAvailable,
-      materialContract: state.materialContract,
-      materialReceipt: state.materialReceipt,
-      materialExpectedContract: state.materialExpectedContract,
-      materialExpectedReceipt: state.materialExpectedReceipt,
-      materialContractMatchesExpected: state.materialContractMatchesExpected,
-      materialReceiptMatchesExpected: state.materialReceiptMatchesExpected,
-      materialPreviousContract: state.materialPreviousContract,
-      materialBaselineContract: state.materialBaselineContract,
-      materialVersion: state.materialVersion,
-      materialRole: state.materialRole,
-      materialAtlasPrimary: state.materialAtlasPrimary,
-
-      canonicalMaterialAuthorityPresent: state.canonicalMaterialAuthorityPresent,
-      canonicalMaterialConsumed: state.canonicalMaterialConsumed,
-      canonicalMaterialColorPrimary: state.canonicalMaterialColorPrimary,
-      canonicalMaterialShapePrimary: state.canonicalMaterialShapePrimary,
-      materialsPrimaryWhenValid: true,
-      rawSourceColorDemotedToPaletteInfluence: true,
-
-      upstreamFirstAtlasActive: true,
-      atlasSourceActive: true,
-      atlasBuildStarted: state.atlasBuildStarted,
-      atlasBuildProgress: state.atlasBuildProgress,
-      atlasBuildComplete: state.atlasBuildComplete,
-      atlasBuildError: state.atlasBuildError,
-      atlasBuildStartedAt: state.atlasBuildStartedAt,
-      atlasBuildCompletedAt: state.atlasBuildCompletedAt,
-      atlasBuildElapsedMs: state.atlasBuildElapsedMs,
-      atlasCanvasPresent: state.atlasCanvasPresent,
-      atlasWidth: state.atlasWidth,
-      atlasHeight: state.atlasHeight,
-      atlasPixelCount: state.atlasPixelCount,
-
-      atlasCanonicalMaterialSampleCount: state.atlasCanonicalMaterialSampleCount,
-      atlasElevationHydrologySampleCount: state.atlasElevationHydrologySampleCount,
-      atlasFallbackSampleCount: state.atlasFallbackSampleCount,
-      atlasTotalSampleCount: state.atlasTotalSampleCount,
-      atlasLandSampleCount: state.atlasLandSampleCount,
-      atlasWaterSampleCount: state.atlasWaterSampleCount,
-      atlasCoastSampleCount: state.atlasCoastSampleCount,
-      atlasReliefSampleCount: state.atlasReliefSampleCount,
-      atlasClassCount: state.atlasClassCount,
-      atlasClasses: state.atlasClasses.slice(),
-
-      sevenContinentFallbackEmergencyOnly: true,
-      sevenContinentFallbackUsed: state.sevenContinentFallbackUsed,
-      sevenContinentFallbackSuppressedByUpstream: state.sevenContinentFallbackSuppressedByUpstream,
-      sevenContinentVisualFallbackActive: true,
-      continentVisualSeedCount: 7,
-      continentBlendMode: "max-separated",
-      proceduralSixLobeAdditiveFieldRetired: true,
-      oceanChannelCutActive: true,
-      seaLineTightened: true,
-      coastlineSharpeningActive: true,
-      sourceColorDemotedToPaletteInfluence: true,
-      elevationControlsLandShape: true,
-      hydrologyControlsWaterShape: true,
-      coastlinesReadFromHydrologyAndMaterials: true,
-      landChannelStillReceiverOnly: true,
-      canvasStillDoesNotOwnPlanetTruth: true,
-      elevationHydrologyFallbackUsed: state.elevationHydrologyFallbackUsed,
-
-      cachedAtlasInvalidationAvailable: true,
-      atlasInvalidationCount: state.atlasInvalidationCount,
-      atlasInvalidated: state.atlasInvalidated,
-      atlasInvalidationReason: state.atlasInvalidationReason,
-      materialBridgeSignature: state.materialBridgeSignature,
-      materialBridgeChanged: state.materialBridgeChanged,
-
-      fallbackSampleAvailable: true,
-      fallbackSampleUsedAtRuntime: state.fallbackSampleUsedAtRuntime,
-
-      lastSampleAt: state.lastSampleAt,
-      lastBuildAt: state.lastBuildAt,
-
-      ownsMaterialTruth: false,
-      ownsPlanetTruth: false,
-      ownsElevationTruth: false,
-      ownsHydrologyTruth: false,
-      ownsRuntimeTableGovernance: false,
-      ownsRouteOrchestration: false,
-      ownsTextureComposition: false,
-      ownsSphereRendering: false,
-      ownsVisibleProof: false,
-      ownsF21: false,
-
-      f21ClaimedByCanvasEast: false,
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false,
-      updatedAt: state.updatedAt
-    };
-  }
-
-  function getReceiptText() {
-    const r = getReceipt();
-
-    return [
-      "HEARTH_CANVAS_EAST_MATERIAL_ATLAS_SOURCE_TRANSISTOR_RECEIPT",
-      "",
-      `contract=${r.contract}`,
-      `receipt=${r.receipt}`,
-      `parentSplitContract=${r.parentSplitContract}`,
-      `previousContract=${r.previousContract}`,
-      `baselineContract=${r.baselineContract}`,
-      `expectedMaterialContract=${r.expectedMaterialContract}`,
-      `expectedMaterialReceipt=${r.expectedMaterialReceipt}`,
-      `version=${r.version}`,
-      `file=${r.file}`,
-      `role=${r.role}`,
-      "",
-      `splitAdapterChild=${r.splitAdapterChild}`,
-      `transistorAdapterActive=${r.transistorAdapterActive}`,
-      `transistorRole=${r.transistorRole}`,
-      `transistorSourceRole=${r.transistorSourceRole}`,
-      `transistorGateParent=${r.transistorGateParent}`,
-      `transistorControlPeer=${r.transistorControlPeer}`,
-      `transistorDrainPeer=${r.transistorDrainPeer}`,
-      `transistorCurrentFlow=${r.transistorCurrentFlow}`,
-      "",
-      `newsProtocolSynchronized=${r.newsProtocolSynchronized}`,
-      `fibonacciAlignmentSynchronized=${r.fibonacciAlignmentSynchronized}`,
-      `activeFibonacciGate=${r.activeFibonacciGate}`,
-      `futureFibonacciGate=${r.futureFibonacciGate}`,
-      `oneActiveGearAtATime=${r.oneActiveGearAtATime}`,
-      `cycleOrder=${r.cycleOrder}`,
-      "",
-      `materialReceiptBridgeActive=${r.materialReceiptBridgeActive}`,
-      `materialNestedReceiptAvailable=${r.materialNestedReceiptAvailable}`,
-      `materialContract=${r.materialContract}`,
-      `materialReceipt=${r.materialReceipt}`,
-      `materialContractMatchesExpected=${r.materialContractMatchesExpected}`,
-      `materialReceiptMatchesExpected=${r.materialReceiptMatchesExpected}`,
-      `canonicalMaterialAuthorityPresent=${r.canonicalMaterialAuthorityPresent}`,
-      `canonicalMaterialConsumed=${r.canonicalMaterialConsumed}`,
-      `materialAtlasPrimary=${r.materialAtlasPrimary}`,
-      "",
-      `atlasBuildStarted=${r.atlasBuildStarted}`,
-      `atlasBuildProgress=${r.atlasBuildProgress}`,
-      `atlasBuildComplete=${r.atlasBuildComplete}`,
-      `atlasBuildError=${r.atlasBuildError}`,
-      `atlasWidth=${r.atlasWidth}`,
-      `atlasHeight=${r.atlasHeight}`,
-      `atlasPixelCount=${r.atlasPixelCount}`,
-      `atlasCanonicalMaterialSampleCount=${r.atlasCanonicalMaterialSampleCount}`,
-      `atlasElevationHydrologySampleCount=${r.atlasElevationHydrologySampleCount}`,
-      `atlasFallbackSampleCount=${r.atlasFallbackSampleCount}`,
-      `atlasTotalSampleCount=${r.atlasTotalSampleCount}`,
-      `atlasLandSampleCount=${r.atlasLandSampleCount}`,
-      `atlasWaterSampleCount=${r.atlasWaterSampleCount}`,
-      `atlasCoastSampleCount=${r.atlasCoastSampleCount}`,
-      `atlasReliefSampleCount=${r.atlasReliefSampleCount}`,
-      `atlasClassCount=${r.atlasClassCount}`,
-      `atlasClasses=${r.atlasClasses.join(",")}`,
-      "",
-      `sevenContinentFallbackEmergencyOnly=${r.sevenContinentFallbackEmergencyOnly}`,
-      `sevenContinentFallbackUsed=${r.sevenContinentFallbackUsed}`,
-      `sevenContinentFallbackSuppressedByUpstream=${r.sevenContinentFallbackSuppressedByUpstream}`,
-      `proceduralSixLobeAdditiveFieldRetired=${r.proceduralSixLobeAdditiveFieldRetired}`,
-      `coastlineSharpeningActive=${r.coastlineSharpeningActive}`,
-      `coastlinesReadFromHydrologyAndMaterials=${r.coastlinesReadFromHydrologyAndMaterials}`,
-      "",
-      `atlasInvalidationCount=${r.atlasInvalidationCount}`,
-      `atlasInvalidated=${r.atlasInvalidated}`,
-      `atlasInvalidationReason=${r.atlasInvalidationReason}`,
-      `materialBridgeChanged=${r.materialBridgeChanged}`,
-      "",
-      `ownsMaterialTruth=${r.ownsMaterialTruth}`,
-      `ownsPlanetTruth=${r.ownsPlanetTruth}`,
-      `ownsElevationTruth=${r.ownsElevationTruth}`,
-      `ownsHydrologyTruth=${r.ownsHydrologyTruth}`,
-      `ownsTextureComposition=${r.ownsTextureComposition}`,
-      `ownsSphereRendering=${r.ownsSphereRendering}`,
-      `ownsVisibleProof=${r.ownsVisibleProof}`,
-      `ownsF21=${r.ownsF21}`,
-      "",
-      `f21ClaimedByCanvasEast=${r.f21ClaimedByCanvasEast}`,
-      `generatedImage=${r.generatedImage}`,
-      `graphicBox=${r.graphicBox}`,
-      `webGL=${r.webGL}`,
-      `visualPassClaimed=${r.visualPassClaimed}`,
-      `updatedAt=${r.updatedAt}`
-    ].join("\n");
-  }
-
-  function updateDataset() {
-    if (!doc || !doc.documentElement) return;
-
-    const dataset = doc.documentElement.dataset;
-
-    dataset.hearthCanvasEastLoaded = "true";
-    dataset.hearthCanvasEastContract = CONTRACT;
-    dataset.hearthCanvasEastReceipt = RECEIPT;
-    dataset.hearthCanvasEastParentSplitContract = PARENT_SPLIT_CONTRACT;
-    dataset.hearthCanvasEastPreviousContract = PREVIOUS_CONTRACT;
-    dataset.hearthCanvasEastBaselineContract = BASELINE_CONTRACT;
-    dataset.hearthCanvasEastExpectedMaterialContract = EXPECTED_MATERIAL_CONTRACT;
-    dataset.hearthCanvasEastExpectedMaterialReceipt = EXPECTED_MATERIAL_RECEIPT;
-    dataset.hearthCanvasEastVersion = VERSION;
-    dataset.hearthCanvasEastRole = state.role;
-
-    dataset.hearthCanvasEastSplitAdapterChild = "true";
-    dataset.hearthCanvasEastTransistorAdapterActive = "true";
-    dataset.hearthCanvasEastTransistorRole = "source";
-    dataset.hearthCanvasEastTransistorCurrentFlow = state.transistorCurrentFlow;
-
-    dataset.hearthCanvasEastNewsProtocolSynchronized = "true";
-    dataset.hearthCanvasEastFibonacciAlignmentSynchronized = "true";
-    dataset.hearthCanvasEastActiveFibonacciGate = state.activeFibonacciGate;
-    dataset.hearthCanvasEastFutureFibonacciGate = state.futureFibonacciGate;
-    dataset.hearthCanvasEastOneActiveGearAtATime = "true";
-    dataset.hearthCanvasEastCycleOrder = CYCLE_ORDER;
-
-    dataset.hearthCanvasEastMaterialReceiptBridgeActive = String(state.materialReceiptBridgeActive);
-    dataset.hearthCanvasEastMaterialContract = state.materialContract;
-    dataset.hearthCanvasEastMaterialReceipt = state.materialReceipt;
-    dataset.hearthCanvasEastMaterialContractMatchesExpected = String(state.materialContractMatchesExpected);
-    dataset.hearthCanvasEastMaterialReceiptMatchesExpected = String(state.materialReceiptMatchesExpected);
-    dataset.hearthCanvasEastCanonicalMaterialAuthorityPresent = String(state.canonicalMaterialAuthorityPresent);
-    dataset.hearthCanvasEastCanonicalMaterialConsumed = String(state.canonicalMaterialConsumed);
-
-    dataset.hearthCanvasEastAtlasBuildStarted = String(state.atlasBuildStarted);
-    dataset.hearthCanvasEastAtlasBuildProgress = String(state.atlasBuildProgress);
-    dataset.hearthCanvasEastAtlasBuildComplete = String(state.atlasBuildComplete);
-    dataset.hearthCanvasEastAtlasBuildError = state.atlasBuildError;
-    dataset.hearthCanvasEastAtlasWidth = String(state.atlasWidth);
-    dataset.hearthCanvasEastAtlasHeight = String(state.atlasHeight);
-    dataset.hearthCanvasEastAtlasTotalSampleCount = String(state.atlasTotalSampleCount);
-    dataset.hearthCanvasEastAtlasCanonicalMaterialSampleCount = String(state.atlasCanonicalMaterialSampleCount);
-    dataset.hearthCanvasEastAtlasFallbackSampleCount = String(state.atlasFallbackSampleCount);
-
-    dataset.hearthCanvasEastSevenContinentFallbackEmergencyOnly = "true";
-    dataset.hearthCanvasEastSevenContinentFallbackUsed = String(state.sevenContinentFallbackUsed);
-    dataset.hearthCanvasEastSevenContinentFallbackSuppressedByUpstream = String(state.sevenContinentFallbackSuppressedByUpstream);
-    dataset.hearthCanvasEastProceduralSixLobeAdditiveFieldRetired = "true";
-    dataset.hearthCanvasEastCoastlinesReadFromHydrologyAndMaterials = "true";
-    dataset.hearthCanvasEastCanvasStillDoesNotOwnPlanetTruth = "true";
-
-    dataset.hearthCanvasEastAtlasInvalidated = String(state.atlasInvalidated);
-    dataset.hearthCanvasEastAtlasInvalidationCount = String(state.atlasInvalidationCount);
-    dataset.hearthCanvasEastAtlasInvalidationReason = state.atlasInvalidationReason;
-
-    dataset.hearthCanvasEastOwnsMaterialTruth = "false";
-    dataset.hearthCanvasEastOwnsPlanetTruth = "false";
-    dataset.hearthCanvasEastOwnsElevationTruth = "false";
-    dataset.hearthCanvasEastOwnsHydrologyTruth = "false";
-    dataset.hearthCanvasEastOwnsTextureComposition = "false";
-    dataset.hearthCanvasEastOwnsSphereRendering = "false";
-    dataset.hearthCanvasEastOwnsVisibleProof = "false";
-    dataset.hearthCanvasEastOwnsF21 = "false";
-
-    dataset.hearthCanvasEastF21Claimed = "false";
-    dataset.generatedImage = "false";
-    dataset.graphicBox = "false";
-    dataset.webgl = "false";
-    dataset.visualPassClaimed = "false";
-  }
-
-  function getState() {
-    return state;
-  }
-
-  const api = {
-    contract: CONTRACT,
-    receipt: RECEIPT,
-    parentSplitContract: PARENT_SPLIT_CONTRACT,
-    previousContract: PREVIOUS_CONTRACT,
-    baselineContract: BASELINE_CONTRACT,
-    expectedMaterialContract: EXPECTED_MATERIAL_CONTRACT,
-    expectedMaterialReceipt: EXPECTED_MATERIAL_RECEIPT,
-    version: VERSION,
-    file: FILE,
-
-    defaultAtlasWidth: DEFAULT_ATLAS_WIDTH,
-    defaultAtlasHeight: DEFAULT_ATLAS_HEIGHT,
-
-    buildAtlas,
-    sample,
-    read,
-    invalidateAtlas,
-    refreshMaterialBridge,
-    getAtlasCanvas,
-    getAtlasImageData,
-    getReceipt,
-    getReceiptText,
-    getState,
-
-    splitAdapterChild: true,
-    transistorAdapterActive: true,
-    transistorRole: "source",
-    transistorSourceRole: state.transistorSourceRole,
-    transistorCurrentFlow: state.transistorCurrentFlow,
-
-    newsProtocolSynchronized: true,
-    fibonacciAlignmentSynchronized: true,
-    activeFibonacciGate: state.activeFibonacciGate,
-    futureFibonacciGate: state.futureFibonacciGate,
-    oneActiveGearAtATime: true,
-    cycleOrder: CYCLE_ORDER,
-
-    materialAtlasPrimary: true,
-    materialsPrimaryWhenValid: true,
-    rawSourceColorDemotedToPaletteInfluence: true,
-    coastlinesReadFromHydrologyAndMaterials: true,
-
-    ownsMaterialTruth: false,
-    ownsPlanetTruth: false,
-    ownsElevationTruth: false,
-    ownsHydrologyTruth: false,
-    ownsRuntimeTableGovernance: false,
-    ownsRouteOrchestration: false,
-    ownsTextureComposition: false,
-    ownsSphereRendering: false,
-    ownsVisibleProof: false,
-    ownsF21: false,
-
-    generatedImage: false,
-    graphicBox: false,
-    webGL: false,
-    visualPassClaimed: false
-  };
-
-  root.HEARTH = root.HEARTH || {};
-  root.HEARTH.canvasEast = api;
-  root.HEARTH.canvasEastMaterialAtlasSourceMachine = api;
-
-  root.HEARTH_CANVAS_EAST = api;
-  root.HEARTH_CANVAS_EAST_MATERIAL_ATLAS_SOURCE = api;
-  root.HEARTH_CANVAS_EAST_TRANSISTOR_SOURCE = api;
-
-  root.DEXTER_LAB = root.DEXTER_LAB || {};
-  root.DEXTER_LAB.hearthCanvasEast = api;
-  root.DEXTER_LAB.hearthCanvasEastMaterialAtlasSourceMachine = api;
-
-  refreshMaterialBridge({ invalidate: false });
-  updateDataset();
-
-  if (typeof module !== "undefined" && module.exports) {
-    module.exports = api;
-  }
-})();
+    if (material.isWater) state.atlas

@@ -1,34 +1,54 @@
 // /assets/hearth/hearth.islands.js
-// HEARTH_G3_256_ISLAND_COASTAL_FEATURE_SPLIT_TNT_v1
+// HEARTH_ISLANDS_AUTHORITY_CONSUMPTION_BRIDGE_TNT_v1
 // Full-file replacement.
 // Family: HEARTH_G3_256_LATTICE_CHILD_ENGINE_SCOPE_v1
+// Previous baseline: HEARTH_G3_256_ISLAND_COASTAL_FEATURE_SPLIT_TNT_v1
 // Purpose:
-// - Preserve the 256-state island/coastal geometry.
-// - Split the 256 seats into four feature categories:
-//   1. peninsulas
-//   2. bays
-//   3. keys
-//   4. main islands
-// - Peninsulas attach to parent coastline; they are not detached islands.
-// - Bays are negative carved-water/coastline cuts; they are not land.
-// - Keys absorb small scattered fragments into intentional low island chains.
-// - Main islands are larger detached island bodies.
-// - Beaches/sand remain under beach authority.
-// - Terrain remains parent authority.
-// - No GraphicBox. No generated image. No active weather.
+// - Preserve the existing 256-state island/coastal geometry.
+// - Preserve sampleVector(vec).
+// - Add standard Hearth authority methods: sample(point), read(point), get(point), sampleIslandFeature(point), getReceipt().
+// - Support coordinate packets: {x,y,z}, {u,v}, {lon,lat}, {longitude,latitude}, positional (x,y,z), and positional (lon,lat).
+// - Normalize active and inactive island/coastal-feature packets for downstream elevation, hydrology, materials, canvas, and future zoom.
+// - Clarify that 4 regions x 256 seats = 1024 latent feature seats, not 1024 visible islands.
+// - Preserve peninsulas as attached coastal relationships.
+// - Preserve bays as negative water/coastline carves.
+// - Preserve keys and main islands as the only detached land candidates.
+// - Preserve beaches/sand exclusion.
+// Does not own:
+// - main continent terrain
+// - elevation generation
+// - hydrology
+// - beaches
+// - sand
+// - material palette
+// - canvas drawing
+// - zoom
+// - runtime motion
+// - controls
+// - route state
+// - final visual pass claim
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_G3_256_ISLAND_COASTAL_FEATURE_SPLIT_TNT_v1";
+  const CONTRACT = "HEARTH_ISLANDS_AUTHORITY_CONSUMPTION_BRIDGE_TNT_v1";
+  const RECEIPT = "HEARTH_ISLANDS_AUTHORITY_CONSUMPTION_BRIDGE_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "HEARTH_G3_256_ISLAND_COASTAL_FEATURE_SPLIT_TNT_v1";
   const FAMILY_CONTRACT = "HEARTH_G3_256_LATTICE_CHILD_ENGINE_SCOPE_v1";
-  const VERSION = "2026-05-09.hearth-g3-256-island-coastal-feature-split";
-  const RECEIPT = "HEARTH_G3_256_ISLAND_COASTAL_FEATURE_SPLIT_RECEIPT";
+  const VERSION = "2026-05-30.hearth-islands-authority-consumption-bridge-v1";
+
+  const root = typeof window !== "undefined" ? window : globalThis;
+  const doc = root.document || null;
 
   const TAU = Math.PI * 2;
+  const DEG = Math.PI / 180;
+  const RAD = 180 / Math.PI;
+
   const RINGS = 16;
   const SPOKES = 16;
   const SEATS_PER_REGION = RINGS * SPOKES;
+  const GENERAL_REGION_COUNT = 4;
+  const TOTAL_LATENT_FEATURE_SEATS = SEATS_PER_REGION * GENERAL_REGION_COUNT;
 
   const FEATURE_CATEGORIES = Object.freeze([
     "peninsula",
@@ -46,10 +66,13 @@
 
   const FEATURE_LAW = Object.freeze({
     geometry: "16 rings x 16 spokes = 256 seats per General Region",
-    categorySplit: "4 feature categories x 64 seats = 256 feature seats",
+    categorySplit: "4 feature categories x 64 seats = 256 feature seats per General Region",
+    generalRegionCount: GENERAL_REGION_COUNT,
+    totalLatentFeatureSeats: TOTAL_LATENT_FEATURE_SEATS,
+    latentFeatureSeatsAreNotVisibleIslandCount: true,
     categories: FEATURE_CATEGORIES,
     rule:
-      "Every seat is classified first. Only keys and main islands render as detached island land. Peninsulas and bays return coastal relationship metadata."
+      "Every seat is classified first. Only keys and main islands may render as detached island land. Peninsulas and bays return coastal relationship metadata."
   });
 
   const DIRECTION_PRECEDENCE = Object.freeze({
@@ -124,9 +147,23 @@
     }
   ];
 
-  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
-  const lerp = (a, b, t) => a + (b - a) * clamp(t, 0, 1);
-  const mix = (a, b, t) => Math.round(lerp(a, b, t));
+  function clamp(value, min, max) {
+    const n = Number(value);
+    if (!Number.isFinite(n)) return min;
+    return Math.max(min, Math.min(max, n));
+  }
+
+  function clamp01(value) {
+    return clamp(value, 0, 1);
+  }
+
+  function lerp(a, b, t) {
+    return a + (b - a) * clamp01(t);
+  }
+
+  function mix(a, b, t) {
+    return Math.round(lerp(a, b, t));
+  }
 
   function smoothstep(a, b, x) {
     const t = clamp((x - a) / ((b - a) || 1e-9), 0, 1);
@@ -146,15 +183,39 @@
   }
 
   function norm3(v) {
-    const m = Math.hypot(v[0], v[1], v[2]) || 1;
-    return [v[0] / m, v[1] / m, v[2] / m];
+    const source = Array.isArray(v)
+      ? v
+      : [
+          Number(v && v.x) || 0,
+          Number(v && v.y) || 0,
+          Number(v && v.z) || 1
+        ];
+
+    const m = Math.hypot(source[0], source[1], source[2]) || 1;
+    return [source[0] / m, source[1] / m, source[2] / m];
   }
 
   function dirFromLonLat(lonDeg, latDeg) {
-    const lon = (lonDeg * Math.PI) / 180;
-    const lat = (latDeg * Math.PI) / 180;
+    const lon = (Number(lonDeg || 0) * Math.PI) / 180;
+    const lat = (Number(latDeg || 0) * Math.PI) / 180;
     const cl = Math.cos(lat);
     return [cl * Math.sin(lon), Math.sin(lat), cl * Math.cos(lon)];
+  }
+
+  function lonLatFromDir(vec) {
+    const v = norm3(vec);
+    return {
+      lon: Math.atan2(v[0], v[2]) * RAD,
+      lat: Math.asin(clamp(v[1], -1, 1)) * RAD
+    };
+  }
+
+  function lonToU(lon) {
+    return (((Number(lon) + 180) / 360) % 1 + 1) % 1;
+  }
+
+  function latToV(lat) {
+    return clamp((90 - Number(lat)) / 180, 0, 1);
   }
 
   function makeBasis(center) {
@@ -257,11 +318,7 @@
     const spokeNorm = spoke / SPOKES;
     const ringNorm = ring / (RINGS - 1);
     const angle = spokeNorm * TAU;
-
-    const biases =
-      category === "bay"
-        ? region.bayBias
-        : region.chainBias;
+    const biases = category === "bay" ? region.bayBias : region.chainBias;
 
     let best = 0;
 
@@ -295,18 +352,9 @@
   }
 
   function radiusForSeat(category, ring, h) {
-    if (category === "peninsula") {
-      return 0.965 + ring * 0.018 + h * 0.006;
-    }
-
-    if (category === "bay") {
-      return 1.035 + (ring - 4) * 0.020 + h * 0.006;
-    }
-
-    if (category === "key") {
-      return 1.115 + (ring - 8) * 0.022 + h * 0.006;
-    }
-
+    if (category === "peninsula") return 0.965 + ring * 0.018 + h * 0.006;
+    if (category === "bay") return 1.035 + (ring - 4) * 0.020 + h * 0.006;
+    if (category === "key") return 1.115 + (ring - 8) * 0.022 + h * 0.006;
     return 1.205 + (ring - 12) * 0.030 + h * 0.010;
   }
 
@@ -331,7 +379,6 @@
     const baseAngle = (spoke / SPOKES) * TAU;
     const angle = baseAngle + (h1 - 0.5) * (TAU / SPOKES) * 0.28;
     const radius = radiusForSeat(category, ring, h2);
-
     const direction = directionFromAngle(angle);
     const precedence = DIRECTION_PRECEDENCE[direction];
 
@@ -580,6 +627,7 @@
       cliffStrength: 0,
       valleyStrength: 0,
 
+      featureDistance: distance,
       beachExcludedFromIslands: true,
       sandExcludedFromIslands: true,
       surfaceScale: "planet",
@@ -617,6 +665,11 @@
 
       region: region ? region.id : null,
       regionName: region ? region.name : null,
+
+      featureSeat: null,
+      categorySeat: null,
+      featureRing: null,
+      featureSpoke: null,
 
       peninsulaStrength: 0,
       bayCarveStrength: 0,
@@ -656,7 +709,7 @@
     };
   }
 
-  function sampleVector(vec) {
+  function sampleVectorRaw(vec) {
     const v = norm3(vec);
     const nearest = nearestRegionLocal(v);
 
@@ -729,7 +782,6 @@
     }
 
     const landform = landformForDetachedFeature(best, bestStrength, bestDistance);
-
     const isKey = best.featureCategory === "key";
     const isMainIsland = best.featureCategory === "mainIsland";
 
@@ -798,6 +850,11 @@
       islandCountForRegion: SEATS_PER_REGION,
       latentSeatCountForRegion: SEATS_PER_REGION,
 
+      featureSeat: best.seatNumber,
+      categorySeat: best.categorySeat,
+      featureRing: best.ring + 1,
+      featureSpoke: best.spoke + 1,
+
       region: region.id,
       regionName: region.name,
 
@@ -840,41 +897,364 @@
     };
   }
 
-  function receipt() {
+  function parseInputToPacket(...args) {
+    let vector;
+    let inputMode = "default";
+
+    if (args.length === 1 && Array.isArray(args[0])) {
+      vector = norm3(args[0]);
+      inputMode = "array-vector";
+    } else if (args.length === 1 && args[0] && typeof args[0] === "object") {
+      const p = args[0];
+
+      if (
+        Number.isFinite(Number(p.x)) &&
+        Number.isFinite(Number(p.y)) &&
+        Number.isFinite(Number(p.z))
+      ) {
+        vector = norm3([Number(p.x), Number(p.y), Number(p.z)]);
+        inputMode = "object-vector";
+      } else if (Number.isFinite(Number(p.lon)) && Number.isFinite(Number(p.lat))) {
+        vector = dirFromLonLat(Number(p.lon), Number(p.lat));
+        inputMode = "object-lon-lat";
+      } else if (Number.isFinite(Number(p.longitude)) && Number.isFinite(Number(p.latitude))) {
+        vector = dirFromLonLat(Number(p.longitude), Number(p.latitude));
+        inputMode = "object-longitude-latitude";
+      } else if (Number.isFinite(Number(p.u)) && Number.isFinite(Number(p.v))) {
+        const u = (((Number(p.u) % 1) + 1) % 1);
+        const v = clamp(Number(p.v), 0, 1);
+        vector = dirFromLonLat(u * 360 - 180, 90 - v * 180);
+        inputMode = "object-u-v";
+      } else {
+        vector = dirFromLonLat(0, 0);
+        inputMode = "invalid-object-fallback";
+      }
+    } else if (args.length >= 3) {
+      vector = norm3([Number(args[0]), Number(args[1]), Number(args[2])]);
+      inputMode = "positional-vector";
+    } else if (args.length >= 2) {
+      vector = dirFromLonLat(Number(args[0]), Number(args[1]));
+      inputMode = "positional-lon-lat";
+    } else {
+      vector = dirFromLonLat(0, 0);
+      inputMode = "default-fallback";
+    }
+
+    const lonLat = lonLatFromDir(vector);
+
+    return {
+      vector,
+      x: vector[0],
+      y: vector[1],
+      z: vector[2],
+      lon: lonLat.lon,
+      lat: lonLat.lat,
+      u: lonToU(lonLat.lon),
+      v: latToV(lonLat.lat),
+      inputMode
+    };
+  }
+
+  function normalizeIslandSample(raw, packet) {
+    const source = raw && typeof raw === "object" ? raw : inactiveSample();
+
+    let featureCategory = source.featureCategory || "latent";
+    if (!FEATURE_CATEGORIES.includes(featureCategory)) featureCategory = featureCategory === "main-island" ? "mainIsland" : featureCategory;
+    if (!FEATURE_CATEGORIES.includes(featureCategory)) featureCategory = "latent";
+
+    const isPeninsula = featureCategory === "peninsula";
+    const isBay = featureCategory === "bay";
+    const isKey = featureCategory === "key";
+    const isMainIsland = featureCategory === "mainIsland";
+    const isDetachedCandidate = isKey || isMainIsland;
+
+    const detachedIslandBody = Boolean(source.detachedIslandBody && isDetachedCandidate);
+    const coastalRelationOnly = Boolean(source.coastalRelationOnly || isPeninsula || isBay);
+
+    const land = Boolean(source.land && isDetachedCandidate && detachedIslandBody);
+    const island = Boolean(source.island && isDetachedCandidate && detachedIslandBody);
+    const visibleIsland = Boolean(source.visibleIsland && isDetachedCandidate && detachedIslandBody);
+
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
+      familyContract: FAMILY_CONTRACT,
+      version: VERSION,
+      authority: "island-engine-256-coastal-feature-consumption-bridge",
+      standard: "256-island-coastal-feature-split-with-authority-bridge",
+
+      x: packet.x,
+      y: packet.y,
+      z: packet.z,
+      lon: packet.lon,
+      lat: packet.lat,
+      u: packet.u,
+      v: packet.v,
+      inputMode: packet.inputMode,
+
+      active: Boolean(source.active),
+      land,
+      island,
+      visibleIsland,
+      detachedIslandBody,
+      coastalRelationOnly,
+
+      featureId: source.featureId || source.islandId || null,
+      featureCategory,
+      featureFamily: source.featureFamily || featureFamily(featureCategory),
+      parentCoastRelation: source.parentCoastRelation || null,
+      chainMembership: source.chainMembership || "latent",
+      visibleQualification: clamp01(Number(source.visibleQualification) || 0),
+      visibleQualified: Boolean(source.visibleQualified),
+
+      islandId: source.islandId || source.featureId || null,
+      islandIndex: Number.isFinite(Number(source.islandIndex)) ? Number(source.islandIndex) : null,
+      islandSeatNumber: Number.isFinite(Number(source.islandSeatNumber)) ? Number(source.islandSeatNumber) : null,
+      islandRing: Number.isFinite(Number(source.islandRing)) ? Number(source.islandRing) : null,
+      islandSpoke: Number.isFinite(Number(source.islandSpoke)) ? Number(source.islandSpoke) : null,
+
+      region: source.region || null,
+      regionName: source.regionName || null,
+      featureSeat: Number.isFinite(Number(source.featureSeat)) ? Number(source.featureSeat) : null,
+      categorySeat: Number.isFinite(Number(source.categorySeat)) ? Number(source.categorySeat) : null,
+      featureRing: Number.isFinite(Number(source.featureRing)) ? Number(source.featureRing) : null,
+      featureSpoke: Number.isFinite(Number(source.featureSpoke)) ? Number(source.featureSpoke) : null,
+
+      peninsulaStrength: isPeninsula ? clamp01(source.peninsulaStrength) : 0,
+      bayCarveStrength: isBay ? clamp01(source.bayCarveStrength) : 0,
+      keyStrength: isKey ? clamp01(source.keyStrength) : 0,
+      mainIslandStrength: isMainIsland ? clamp01(source.mainIslandStrength) : 0,
+      islandStrength: isDetachedCandidate ? clamp01(source.islandStrength) : 0,
+
+      direction: source.direction || null,
+      rockyPrecedenceRank: Number.isFinite(Number(source.rockyPrecedenceRank)) ? Number(source.rockyPrecedenceRank) : 0,
+      rockyMultiplier: clamp01(source.rockyMultiplier),
+      heightMultiplier: clamp01(source.heightMultiplier),
+
+      coast: clamp01(source.coast),
+      shelf: clamp01(source.shelf),
+      waterDepth: clamp01(source.waterDepth === undefined ? 1 : source.waterDepth),
+      ridge: clamp01(source.ridge),
+      upland: clamp01(source.upland),
+      relief: clamp01(source.relief),
+      lowland: clamp01(source.lowland),
+
+      color: Array.isArray(source.color) ? source.color.slice(0, 3) : null,
+
+      landformSeat: Number.isFinite(Number(source.landformSeat)) ? Number(source.landformSeat) : null,
+      landformRing: Number.isFinite(Number(source.landformRing)) ? Number(source.landformRing) : null,
+      landformSpoke: Number.isFinite(Number(source.landformSpoke)) ? Number(source.landformSpoke) : null,
+      landformCategory: source.landformCategory || null,
+      dominantLandform: source.dominantLandform || null,
+      hillStrength: clamp01(source.hillStrength),
+      mountainStrength: clamp01(source.mountainStrength),
+      cliffStrength: clamp01(source.cliffStrength),
+      valleyStrength: clamp01(source.valleyStrength),
+
+      seatsPerGeneralRegion: SEATS_PER_REGION,
+      generalRegionCount: GENERAL_REGION_COUNT,
+      totalLatentFeatureSeats: TOTAL_LATENT_FEATURE_SEATS,
+      latentFeatureSeatsAreNotVisibleIslandCount: true,
+      visibleDetachedLandLimitedToKeysAndMainIslands: true,
+
+      peninsulasAreAttached: true,
+      baysAreNegativeCarves: true,
+      keysAreLowIslandChains: true,
+      mainIslandsAreDetachedBodies: true,
+
+      beachExcludedFromIslands: true,
+      beachesExcludedFromIslands: true,
+      sandExcludedFromIslands: true,
+      ownsMainTerrain: false,
+      ownsElevationGeneration: false,
+      ownsHydrology: false,
+      ownsBeaches: false,
+      ownsSand: false,
+      ownsMaterials: false,
+      ownsCanvas: false,
+      ownsZoom: false,
+
+      elevationPrepared: true,
+      hydrologyPrepared: true,
+      materialsPrepared: true,
+      canvasPrepared: true,
+      zoomHeld: true,
+
+      sampleVectorPreserved: true,
+      legacyVectorApiPreserved: true,
+      standardSampleApiActive: true,
+
+      surfaceScale: "planet",
+      geometry: "256-island-coastal-feature-split",
+      lattice: "16x16-categorized",
+      f21ClaimedByIslands: false,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false
+    };
+  }
+
+  function sampleVector(vec) {
+    const packet = parseInputToPacket(vec);
+    return normalizeIslandSample(sampleVectorRaw(packet.vector), packet);
+  }
+
+  function sample(...args) {
+    const packet = parseInputToPacket(...args);
+    return normalizeIslandSample(sampleVectorRaw(packet.vector), packet);
+  }
+
+  function read(...args) {
+    return sample(...args);
+  }
+
+  function get(...args) {
+    return sample(...args);
+  }
+
+  function sampleIslandFeature(...args) {
+    return sample(...args);
+  }
+
+  function getReceipt() {
     return Object.freeze({
       receipt: RECEIPT,
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       familyContract: FAMILY_CONTRACT,
       version: VERSION,
       generation: "G3",
-      standard: "256-island-coastal-feature-split",
-      authority: "island-engine-256-coastal-feature-split",
+      standard: "256-island-coastal-feature-split-with-authority-bridge",
+      authority: "island-engine-256-coastal-feature-consumption-bridge",
+
+      newsProtocolSynchronized: true,
+      fibonacciAlignmentSynchronized: true,
+      activeFibonacciGate: "F13",
+      futureFibonacciGate: "F21",
+      oneActiveGearAtATime: true,
+      cycleOrder: "EAST_WEST_NORTH_SOUTH_CHECKPOINT_EAST",
+
+      sampleVectorPreserved: true,
+      legacyVectorApiPreserved: true,
+      standardSampleApiActive: true,
+      sampleMethodActive: true,
+      readMethodActive: true,
+      getMethodActive: true,
+      sampleIslandFeatureMethodActive: true,
+
+      coordinatePacketInputSupported: true,
+      vectorInputSupported: true,
+      lonLatInputSupported: true,
+      uvInputSupported: true,
+      positionalInputSupported: true,
+
       featureLaw: FEATURE_LAW,
-      featureCategories: FEATURE_CATEGORIES,
+      featureCategories: FEATURE_CATEGORIES.slice(),
       categoryBands: CATEGORY_BANDS,
       directionPrecedence: DIRECTION_PRECEDENCE,
+
       geometry: "16x16-categorized-256-state",
       lattice: {
         rings: RINGS,
         spokes: SPOKES,
         seatsPerGeneralRegion: SEATS_PER_REGION,
-        totalLatentSeats: SEATS_PER_REGION * 4,
-        featureCategories: FEATURE_CATEGORIES,
+        generalRegionCount: GENERAL_REGION_COUNT,
+        totalLatentFeatureSeats: TOTAL_LATENT_FEATURE_SEATS,
+        latentFeatureSeatsAreNotVisibleIslandCount: true,
+        featureCategories: FEATURE_CATEGORIES.slice(),
         seatsPerCategory: 64,
         renderRule:
-          "keys and main islands may render as detached land; peninsulas and bays return relationship metadata"
+          "Keys and main islands may render as detached land; peninsulas and bays return relationship metadata."
       },
+
+      seatsPerGeneralRegion: SEATS_PER_REGION,
+      generalRegionCount: GENERAL_REGION_COUNT,
+      totalLatentFeatureSeats: TOTAL_LATENT_FEATURE_SEATS,
+      latentFeatureSeatsAreNotVisibleIslandCount: true,
+
+      visibleDetachedLandLimitedToKeysAndMainIslands: true,
+      peninsulasAreAttached: true,
+      baysAreNegativeCarves: true,
+      keysAreLowIslandChains: true,
+      mainIslandsAreDetachedBodies: true,
+
+      beachesExcludedFromIslands: true,
+      sandExcludedFromIslands: true,
+      ownsMainTerrain: false,
+      ownsElevationGeneration: false,
+      ownsHydrology: false,
+      ownsBeaches: false,
+      ownsSand: false,
+      ownsMaterials: false,
+      ownsCanvas: false,
+      ownsZoom: false,
+
+      elevationPrepared: true,
+      hydrologyPrepared: true,
+      materialsPrepared: true,
+      canvasPrepared: true,
+      zoomHeld: true,
+
+      f21ClaimedByIslands: false,
+      visualPassClaimed: false,
+
       generalRegions: REGIONS.map((region) => ({
         id: region.id,
         name: region.name,
         seats: SEATS_PER_REGION,
-        categories: FEATURE_CATEGORIES,
+        categories: FEATURE_CATEGORIES.slice(),
         seatsPerCategory: 64,
-        chainBias: region.chainBias,
-        bayBias: region.bayBias
+        chainBias: region.chainBias.slice(),
+        bayBias: region.bayBias.slice()
       })),
+
+      normalizedOutputFields: [
+        "contract",
+        "receipt",
+        "authority",
+        "featureCategory",
+        "featureFamily",
+        "parentCoastRelation",
+        "coastalRelationOnly",
+        "detachedIslandBody",
+        "visibleIsland",
+        "active",
+        "land",
+        "island",
+        "featureId",
+        "region",
+        "regionName",
+        "featureSeat",
+        "categorySeat",
+        "featureRing",
+        "featureSpoke",
+        "chainMembership",
+        "visibleQualification",
+        "visibleQualified",
+        "peninsulaStrength",
+        "bayCarveStrength",
+        "keyStrength",
+        "mainIslandStrength",
+        "islandStrength",
+        "coast",
+        "shelf",
+        "waterDepth",
+        "ridge",
+        "upland",
+        "relief",
+        "lowland",
+        "hillStrength",
+        "mountainStrength",
+        "cliffStrength",
+        "valleyStrength"
+      ],
+
       owns: [
         "256 latent coastal/island seats per General Region",
+        "standard authority bridge",
+        "coordinate packet normalization",
         "peninsula relationship seats",
         "bay carve relationship seats",
         "key-chain island seats",
@@ -883,6 +1263,7 @@
         "chain qualification",
         "detached island visibility gating"
       ],
+
       doesNotOwn: [
         "main land body terrain",
         "country assignment",
@@ -899,57 +1280,220 @@
         "clouds",
         "humidity",
         "atmospheric moisture",
+        "elevation generation",
+        "hydrology",
+        "materials",
+        "canvas",
+        "zoom",
         "generated images",
-        "GraphicBox"
+        "GraphicBox",
+        "final visual pass"
       ],
+
       ticTacToeDynamicProtocol: TIC_TAC_TOE_DYNAMIC_PROTOCOL,
-      systemicQuadAAttack: SYSTEMIC_QUAD_A_ATTACK
+      systemicQuadAAttack: SYSTEMIC_QUAD_A_ATTACK,
+
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false
     });
   }
 
+  function receipt() {
+    return getReceipt();
+  }
+
+  function regions() {
+    return REGIONS.slice();
+  }
+
   function dispose() {
-    if (window.HEARTH_ISLANDS && window.HEARTH_ISLANDS.contract === CONTRACT) {
+    if (root.HEARTH_ISLANDS && root.HEARTH_ISLANDS.contract === CONTRACT) {
       try {
-        delete window.HEARTH_ISLANDS;
-      } catch (_) {
-        window.HEARTH_ISLANDS = null;
+        delete root.HEARTH_ISLANDS;
+      } catch (_error) {
+        root.HEARTH_ISLANDS = null;
+      }
+    }
+
+    if (root.HEARTH && root.HEARTH.islands && root.HEARTH.islands.contract === CONTRACT) {
+      try {
+        delete root.HEARTH.islands;
+      } catch (_error2) {
+        root.HEARTH.islands = null;
       }
     }
   }
 
-  window.HEARTH_ISLANDS = Object.freeze({
+  const api = Object.freeze({
     receipt,
+    getReceipt,
+
     contract: CONTRACT,
+    receiptId: RECEIPT,
+    previousContract: PREVIOUS_CONTRACT,
     familyContract: FAMILY_CONTRACT,
     version: VERSION,
-    standard: "256-island-coastal-feature-split",
-    authority: "island-engine-256-coastal-feature-split",
+    generation: "G3",
+    standard: "256-island-coastal-feature-split-with-authority-bridge",
+    authority: "island-engine-256-coastal-feature-consumption-bridge",
+
     featureLaw: FEATURE_LAW,
-    featureCategories: FEATURE_CATEGORIES,
+    featureCategories: FEATURE_CATEGORIES.slice(),
     categoryBands: CATEGORY_BANDS,
     directionPrecedence: DIRECTION_PRECEDENCE,
+
     sampleVector,
-    regions: () => REGIONS.slice()
+    sample,
+    read,
+    get,
+    sampleIslandFeature,
+
+    regions,
+
+    sampleVectorPreserved: true,
+    legacyVectorApiPreserved: true,
+    standardSampleApiActive: true,
+    sampleMethodActive: true,
+    readMethodActive: true,
+    getMethodActive: true,
+    sampleIslandFeatureMethodActive: true,
+
+    coordinatePacketInputSupported: true,
+    vectorInputSupported: true,
+    lonLatInputSupported: true,
+    uvInputSupported: true,
+    positionalInputSupported: true,
+
+    seatsPerGeneralRegion: SEATS_PER_REGION,
+    generalRegionCount: GENERAL_REGION_COUNT,
+    totalLatentFeatureSeats: TOTAL_LATENT_FEATURE_SEATS,
+    latentFeatureSeatsAreNotVisibleIslandCount: true,
+
+    visibleDetachedLandLimitedToKeysAndMainIslands: true,
+    peninsulasAreAttached: true,
+    baysAreNegativeCarves: true,
+    keysAreLowIslandChains: true,
+    mainIslandsAreDetachedBodies: true,
+
+    beachesExcludedFromIslands: true,
+    sandExcludedFromIslands: true,
+    ownsMainTerrain: false,
+    ownsElevationGeneration: false,
+    ownsHydrology: false,
+    ownsBeaches: false,
+    ownsSand: false,
+    ownsMaterials: false,
+    ownsCanvas: false,
+    ownsZoom: false,
+
+    elevationPrepared: true,
+    hydrologyPrepared: true,
+    materialsPrepared: true,
+    canvasPrepared: true,
+    zoomHeld: true,
+
+    newsProtocolSynchronized: true,
+    fibonacciAlignmentSynchronized: true,
+    activeFibonacciGate: "F13",
+    futureFibonacciGate: "F21",
+    oneActiveGearAtATime: true,
+
+    f21ClaimedByIslands: false,
+    generatedImage: false,
+    graphicBox: false,
+    webGL: false,
+    visualPassClaimed: false
   });
 
-  window.__HEARTH_ISLANDS_DISPOSE__ = dispose;
+  root.HEARTH = root.HEARTH || {};
+  root.HEARTH.islands = api;
+  root.HEARTH.islandFeatures = api;
 
-  document.documentElement.dataset.hearthIslandsLoaded = "true";
-  document.documentElement.dataset.hearthIslandsContract = CONTRACT;
-  document.documentElement.dataset.hearthIslandsFamilyContract = FAMILY_CONTRACT;
-  document.documentElement.dataset.hearthIslandsVersion = VERSION;
-  document.documentElement.dataset.hearthIslandsStandard = "256-island-coastal-feature-split";
-  document.documentElement.dataset.hearthIslandsGeometry = "16x16-categorized-256-state";
-  document.documentElement.dataset.hearthIslandsRings = String(RINGS);
-  document.documentElement.dataset.hearthIslandsSpokes = String(SPOKES);
-  document.documentElement.dataset.hearthIslandsSeatsPerRegion = String(SEATS_PER_REGION);
-  document.documentElement.dataset.hearthIslandsTotalLatentSeats = String(SEATS_PER_REGION * 4);
-  document.documentElement.dataset.hearthIslandsFeatureCategories = "peninsulas,bays,keys,main-islands";
-  document.documentElement.dataset.hearthIslandsSeatsPerCategory = "64";
-  document.documentElement.dataset.hearthIslandsRenderRule = "keys-and-main-islands-render-peninsulas-and-bays-return-metadata";
-  document.documentElement.dataset.hearthIslandsBeachesExcluded = "true";
-  document.documentElement.dataset.hearthIslandsSandExcluded = "true";
-  document.documentElement.dataset.hearthIslandsDetachedFromTerrain = "true";
-  document.documentElement.dataset.hearthIslandsGeneratedImage = "false";
-  document.documentElement.dataset.hearthIslandsGraphicBox = "false";
+  root.HEARTH_ISLANDS = api;
+  root.HEARTH_ISLANDS_RECEIPT = getReceipt();
+  root.HEARTH_ISLANDS_CONTRACT = CONTRACT;
+  root.HEARTH_ISLANDS_AUTHORITY_BRIDGE = true;
+  root.HEARTH_ISLANDS_SAMPLE_VECTOR_PRESERVED = true;
+  root.HEARTH_ISLANDS_STANDARD_SAMPLE_API_ACTIVE = true;
+
+  root.__HEARTH_ISLANDS_DISPOSE__ = dispose;
+
+  if (doc && doc.documentElement) {
+    const dataset = doc.documentElement.dataset;
+
+    dataset.hearthIslandsLoaded = "true";
+    dataset.hearthIslandsContract = CONTRACT;
+    dataset.hearthIslandsReceipt = RECEIPT;
+    dataset.hearthIslandsPreviousContract = PREVIOUS_CONTRACT;
+    dataset.hearthIslandsFamilyContract = FAMILY_CONTRACT;
+    dataset.hearthIslandsVersion = VERSION;
+    dataset.hearthIslandsStandard = "256-island-coastal-feature-split-with-authority-bridge";
+    dataset.hearthIslandsAuthority = "island-engine-256-coastal-feature-consumption-bridge";
+
+    dataset.hearthIslandsNewsProtocolSynchronized = "true";
+    dataset.hearthIslandsFibonacciAlignmentSynchronized = "true";
+    dataset.hearthIslandsActiveFibonacciGate = "F13";
+    dataset.hearthIslandsFutureFibonacciGate = "F21";
+    dataset.hearthIslandsOneActiveGearAtATime = "true";
+
+    dataset.hearthIslandsSampleVectorPreserved = "true";
+    dataset.hearthIslandsLegacyVectorApiPreserved = "true";
+    dataset.hearthIslandsStandardSampleApiActive = "true";
+    dataset.hearthIslandsSampleMethodActive = "true";
+    dataset.hearthIslandsReadMethodActive = "true";
+    dataset.hearthIslandsGetMethodActive = "true";
+    dataset.hearthIslandsSampleIslandFeatureMethodActive = "true";
+
+    dataset.hearthIslandsCoordinatePacketInputSupported = "true";
+    dataset.hearthIslandsVectorInputSupported = "true";
+    dataset.hearthIslandsLonLatInputSupported = "true";
+    dataset.hearthIslandsUvInputSupported = "true";
+    dataset.hearthIslandsPositionalInputSupported = "true";
+
+    dataset.hearthIslandsGeometry = "16x16-categorized-256-state";
+    dataset.hearthIslandsRings = String(RINGS);
+    dataset.hearthIslandsSpokes = String(SPOKES);
+    dataset.hearthIslandsSeatsPerRegion = String(SEATS_PER_REGION);
+    dataset.hearthIslandsGeneralRegionCount = String(GENERAL_REGION_COUNT);
+    dataset.hearthIslandsTotalLatentFeatureSeats = String(TOTAL_LATENT_FEATURE_SEATS);
+    dataset.hearthIslandsLatentFeatureSeatsAreNotVisibleIslandCount = "true";
+    dataset.hearthIslandsFeatureCategories = "peninsulas,bays,keys,main-islands";
+    dataset.hearthIslandsSeatsPerCategory = "64";
+    dataset.hearthIslandsRenderRule = "keys-and-main-islands-render-peninsulas-and-bays-return-metadata";
+
+    dataset.hearthIslandsVisibleDetachedLandLimitedToKeysAndMainIslands = "true";
+    dataset.hearthIslandsPeninsulasAreAttached = "true";
+    dataset.hearthIslandsBaysAreNegativeCarves = "true";
+    dataset.hearthIslandsKeysAreLowIslandChains = "true";
+    dataset.hearthIslandsMainIslandsAreDetachedBodies = "true";
+
+    dataset.hearthIslandsBeachesExcluded = "true";
+    dataset.hearthIslandsSandExcluded = "true";
+    dataset.hearthIslandsDetachedFromTerrain = "true";
+    dataset.hearthIslandsOwnsMainTerrain = "false";
+    dataset.hearthIslandsOwnsElevationGeneration = "false";
+    dataset.hearthIslandsOwnsHydrology = "false";
+    dataset.hearthIslandsOwnsMaterials = "false";
+    dataset.hearthIslandsOwnsCanvas = "false";
+    dataset.hearthIslandsOwnsZoom = "false";
+
+    dataset.hearthIslandsElevationPrepared = "true";
+    dataset.hearthIslandsHydrologyPrepared = "true";
+    dataset.hearthIslandsMaterialsPrepared = "true";
+    dataset.hearthIslandsCanvasPrepared = "true";
+    dataset.hearthIslandsZoomHeld = "true";
+
+    dataset.hearthIslandsF21Claimed = "false";
+    dataset.hearthIslandsGeneratedImage = "false";
+    dataset.hearthIslandsGraphicBox = "false";
+    dataset.generatedImage = "false";
+    dataset.graphicBox = "false";
+    dataset.webgl = "false";
+    dataset.visualPassClaimed = "false";
+  }
+
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = api;
+  }
 })();

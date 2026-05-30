@@ -1,39 +1,49 @@
 // /assets/hearth/hearth.canvas.west.js
-// HEARTH_CANVAS_WEST_INVALIDATION_INSPECTION_MACHINE_TNT_v2
+// HEARTH_CANVAS_WEST_INSPECTION_INVALIDATION_CONTROL_TNT_v1
 // Full-file replacement.
-// Canvas West / inspection, drag, zoom, receipt synchronization, and invalidation only.
+// Canvas West / inspection, drag, zoom, and invalidation control only.
 // Purpose:
-// - Preserve West ownership of drag inspection, zoom mechanics, rotation, inertia, and invalidation signaling.
-// - Preserve cached texture repaint behavior without rebuilding atlas on every interaction.
-// - Add document-level dataset synchronization on every West state change.
-// - Add receipt-level NEWS/Fibonacci synchronization proof for West’s F13D inspection lane.
-// - Keep visual interaction separate from source truth, atlas formation, drawing, and visible proof.
+// - Serve the Canvas North split parent under /assets/hearth/hearth.canvas.js.
+// - Own view-state control for drag inspection, rotation, zoom, and invalidation signaling.
+// - Preserve public methods required by Canvas North:
+//   bindInspection, getViewState, setRotation, resetRotation, setZoom, getReceipt.
+// - Keep zoom/drag as cached-texture inspection only.
+// - Do not trigger atlas rebuild from ordinary zoom or drag.
+// - Provide explicit invalidation hooks only when requested.
+// - Preserve NEWS/Fibonacci F13 synchronization.
 // Does not own:
+// - planet truth
 // - material truth
+// - hydrology truth
 // - atlas formation
-// - sphere drawing
 // - texture composition
+// - sphere rendering
 // - visible proof
-// - F21
+// - Runtime Table governance
 // - route readiness
+// - F21
 // - final visual pass claim
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_WEST_INVALIDATION_INSPECTION_MACHINE_TNT_v2";
-  const RECEIPT = "HEARTH_CANVAS_WEST_INVALIDATION_INSPECTION_MACHINE_RECEIPT_v2";
-  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_WEST_INVALIDATION_INSPECTION_MACHINE_TNT_v1";
-  const BASELINE_CONTRACT = "HEARTH_CANVAS_WEST_INVALIDATION_INSPECTION_MACHINE_TNT_v1";
-  const VERSION = "2026-05-30.hearth-canvas-west-invalidation-inspection-machine-v2";
+  const CONTRACT = "HEARTH_CANVAS_WEST_INSPECTION_INVALIDATION_CONTROL_TNT_v1";
+  const RECEIPT = "HEARTH_CANVAS_WEST_INSPECTION_INVALIDATION_CONTROL_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_CARDINAL_SPLIT_NORTH_PARENT_TNT_v2";
+  const BASELINE_CONTRACT = "HEARTH_CANVAS_MATERIALS_RELIEF_CONSUMPTION_INVALIDATION_TNT_v1";
+  const VERSION = "2026-05-30.hearth-canvas-west-inspection-invalidation-control-v1";
   const FILE = "/assets/hearth/hearth.canvas.west.js";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
 
+  const DEFAULT_YAW = -0.18;
+  const DEFAULT_PITCH = 0.05;
+  const DEFAULT_ZOOM = 1;
   const ZOOM_MIN = 0.82;
   const ZOOM_MAX = 2.8;
-  const ZOOM_DEFAULT = 1;
+  const PITCH_MIN = -1.18;
+  const PITCH_MAX = 1.18;
 
   const state = {
     contract: CONTRACT,
@@ -42,41 +52,45 @@
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     file: FILE,
-    role: "canvas-west-invalidation-inspection-machine-receipt-sync",
+    role: "canvas-west-inspection-invalidation-control",
 
     newsProtocolSynchronized: true,
     fibonacciAlignmentSynchronized: true,
-    activeFibonacciGate: "F13D",
-    parentFibonacciGate: "F13",
+    activeFibonacciGate: "F13",
     futureFibonacciGate: "F21",
     oneActiveGearAtATime: true,
     cycleOrder: "EAST_WEST_NORTH_SOUTH_CHECKPOINT_EAST",
 
-    receiptDatasetSyncActive: true,
-    documentDatasetSynchronized: false,
-    canvasDatasetSynchronized: false,
-    parentCallbackSynchronized: false,
+    canvasWestActive: true,
+    canvasWestReady: true,
+    splitAdapterRole: "WEST",
+    splitAdapterTransistorMode: true,
+    admissibilityControlActive: true,
+
+    bound: false,
+    bindAttempted: false,
+    bindCount: 0,
+    unbindCount: 0,
+    canvasPresent: false,
+    canvasNonZeroSize: false,
+    canvasTagAccepted: false,
+    canvasDatasetStamped: false,
 
     dragInspectionBound: false,
     zoomInspectionBound: false,
-    interactiveRotationActive: true,
     pointerInspectionActive: false,
     pointerInspectionPainted: false,
-    pointerDragCount: 0,
-    interactiveFrameCount: 0,
-    lastInteractionAt: "",
-    lastPointerDeltaX: 0,
-    lastPointerDeltaY: 0,
+    interactiveRotationActive: true,
 
-    rotationYaw: -0.18,
-    rotationPitch: 0.05,
-    rotationVelocityYaw: 0,
-    rotationVelocityPitch: 0,
-    inertiaActive: false,
-    inertiaFrame: 0,
+    yaw: DEFAULT_YAW,
+    pitch: DEFAULT_PITCH,
+    rotationYaw: DEFAULT_YAW,
+    rotationPitch: DEFAULT_PITCH,
+    defaultYaw: DEFAULT_YAW,
+    defaultPitch: DEFAULT_PITCH,
 
     zoomEnabled: true,
-    zoomLevel: ZOOM_DEFAULT,
+    zoomLevel: DEFAULT_ZOOM,
     zoomMin: ZOOM_MIN,
     zoomMax: ZOOM_MAX,
     zoomLodPrepared: true,
@@ -84,40 +98,78 @@
     zoomUsesCachedTexture: true,
     zoomDoesNotOwnPlanetTruth: true,
     zoomDoesNotTriggerAtlasRebuild: true,
+
+    pointerDragCount: 0,
+    pointerDownCount: 0,
+    pointerMoveCount: 0,
+    pointerUpCount: 0,
+    pointerCancelCount: 0,
+    pointerActiveCount: 0,
+    wheelZoomCount: 0,
+    keyboardControlCount: 0,
     zoomInteractionCount: 0,
+    interactionCount: 0,
+    invalidationSignalCount: 0,
+
+    activePointerId: null,
+    activePointers: 0,
+    lastPointerX: 0,
+    lastPointerY: 0,
+    pointerStartX: 0,
+    pointerStartY: 0,
+    dragStartedAt: "",
+    lastInteractionAt: "",
     lastZoomAt: "",
     lastZoomSource: "",
+    lastInvalidationAt: "",
+    lastInvalidationReason: "",
 
-    invalidationActive: true,
-    invalidated: false,
-    invalidationCount: 0,
-    invalidationReason: "",
-    staleSourceMaskProtectionActive: true,
-    interactionInvalidatesAtlas: false,
-    interactionInvalidatesTexture: false,
-    interactionUsesCachedTexture: true,
+    pinchActive: false,
+    pinchStartDistance: 0,
+    pinchStartZoom: DEFAULT_ZOOM,
 
-    boundCanvas: null,
-    boundToken: "",
-    onChange: null,
-    onInvalidate: null,
-    errors: [],
-    localEvents: [],
-    updatedAt: nowIso(),
+    canvasWidth: 0,
+    canvasHeight: 0,
+    dpr: 1,
 
-    ownsInteraction: true,
-    ownsInvalidationSignal: true,
+    onChangeAvailable: false,
+    onInvalidateAvailable: false,
+    onChangeError: "",
+    onInvalidateError: "",
+
+    ownsInvalidationControl: true,
+    ownsDragInspection: true,
+    ownsZoomInspection: true,
+    ownsViewState: true,
     ownsAtlasFormation: false,
-    ownsCanvasDrawing: false,
     ownsTextureComposition: false,
+    ownsSphereRendering: false,
     ownsVisibleProof: false,
-    ownsF21: false,
+    ownsPlanetTruth: false,
+    ownsMaterialTruth: false,
+    ownsHydrologyTruth: false,
+    ownsRuntimeTableGovernance: false,
     ownsRouteReadiness: false,
+    ownsF21: false,
 
     generatedImage: false,
     graphicBox: false,
     webGL: false,
-    visualPassClaimed: false
+    visualPassClaimed: false,
+
+    localEvents: [],
+    errors: [],
+    updatedAt: nowIso()
+  };
+
+  const runtime = {
+    canvas: null,
+    callbacks: {
+      onChange: null,
+      onInvalidate: null
+    },
+    cleanup: [],
+    activePointers: new Map()
   };
 
   function nowIso() {
@@ -126,6 +178,10 @@
     } catch (_error) {
       return "";
     }
+  }
+
+  function isObject(value) {
+    return Boolean(value && typeof value === "object");
   }
 
   function isFunction(value) {
@@ -142,19 +198,17 @@
     return Math.max(min, Math.min(max, n));
   }
 
+  function clampZoom(value) {
+    return clamp(value, state.zoomMin, state.zoomMax);
+  }
+
   function clonePlain(value) {
-    if (!value || typeof value !== "object") return value;
+    if (!isObject(value)) return value;
 
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
       return Array.isArray(value) ? value.slice() : { ...value };
-    }
-  }
-
-  function trimArray(array, max) {
-    if (Array.isArray(array) && array.length > max) {
-      array.splice(0, array.length - max);
     }
   }
 
@@ -166,8 +220,14 @@
     };
 
     state.localEvents.push(item);
-    trimArray(state.localEvents, 120);
+
+    if (state.localEvents.length > 120) {
+      state.localEvents.splice(0, state.localEvents.length - 120);
+    }
+
     state.updatedAt = item.at;
+    updateDataset();
+
     return item;
   }
 
@@ -175,66 +235,69 @@
     const item = {
       at: nowIso(),
       code,
+      event: code,
       message: error && error.message ? error.message : String(error || ""),
       detail: clonePlain(detail)
     };
 
     state.errors.push(item);
-    trimArray(state.errors, 100);
+
+    if (state.errors.length > 80) {
+      state.errors.splice(0, state.errors.length - 80);
+    }
+
     state.updatedAt = item.at;
     updateDataset();
+
     return item;
   }
 
-  function zoomLodFor(value) {
-    const z = clamp(value, ZOOM_MIN, ZOOM_MAX);
-    if (z >= 2.35) return 4;
-    if (z >= 1.85) return 3;
-    if (z >= 1.28) return 2;
-    return 1;
+  function eventPoint(event) {
+    return {
+      id: event.pointerId !== undefined ? event.pointerId : "mouse",
+      x: safeNumber(event.clientX, 0),
+      y: safeNumber(event.clientY, 0)
+    };
   }
 
-  function publishCanvasDataset() {
-    if (!state.boundCanvas) return;
+  function measureCanvas(canvas) {
+    if (!canvas) return { width: 0, height: 0, dpr: 1 };
 
-    const dataset = state.boundCanvas.dataset;
+    let width = safeNumber(canvas.width, 0);
+    let height = safeNumber(canvas.height, 0);
 
-    dataset.hearthCanvasWestContract = CONTRACT;
-    dataset.hearthCanvasWestReceipt = RECEIPT;
-    dataset.hearthCanvasWestVersion = VERSION;
-    dataset.hearthCanvasWestRole = state.role;
+    if (canvas.getBoundingClientRect) {
+      const rect = canvas.getBoundingClientRect();
+      width = width || safeNumber(rect.width, 0);
+      height = height || safeNumber(rect.height, 0);
+    }
 
-    dataset.hearthInspectDragging = String(state.pointerInspectionActive);
-    dataset.hearthZoomEnabled = "true";
-    dataset.hearthZoomLevel = String(Number(state.zoomLevel.toFixed(3)));
-    dataset.hearthZoomLodLevel = String(state.zoomLodLevel);
-    dataset.hearthZoomUsesCachedTexture = "true";
-    dataset.hearthZoomDoesNotOwnPlanetTruth = "true";
-    dataset.hearthZoomDoesNotTriggerAtlasRebuild = "true";
+    const dpr = clamp(root.devicePixelRatio || 1, 1, 3);
 
-    dataset.hearthRotationYaw = String(Number(state.rotationYaw.toFixed(4)));
-    dataset.hearthRotationPitch = String(Number(state.rotationPitch.toFixed(4)));
-    dataset.hearthInspectDeltaX = String(state.lastPointerDeltaX);
-    dataset.hearthInspectDeltaY = String(state.lastPointerDeltaY);
+    state.canvasWidth = width;
+    state.canvasHeight = height;
+    state.dpr = dpr;
+    state.canvasNonZeroSize = width > 0 && height > 0;
 
-    dataset.hearthCanvasDragInspectionBound = String(state.dragInspectionBound);
-    dataset.hearthCanvasZoomInspectionBound = String(state.zoomInspectionBound);
-    dataset.hearthCanvasWestInvalidated = String(state.invalidated);
-    dataset.hearthCanvasWestInvalidationCount = String(state.invalidationCount);
-    dataset.hearthCanvasWestInvalidationReason = state.invalidationReason;
+    return { width, height, dpr };
+  }
 
-    dataset.hearthCanvasWestNewsProtocolSynchronized = "true";
-    dataset.hearthCanvasWestFibonacciAlignmentSynchronized = "true";
-    dataset.hearthCanvasWestActiveFibonacciGate = state.activeFibonacciGate;
-    dataset.hearthCanvasWestParentFibonacciGate = state.parentFibonacciGate;
-    dataset.hearthCanvasWestFutureFibonacciGate = state.futureFibonacciGate;
+  function stampCanvas(canvas) {
+    if (!canvas || !canvas.dataset) return;
 
-    dataset.generatedImage = "false";
-    dataset.graphicBox = "false";
-    dataset.webgl = "false";
-    dataset.visualPassClaimed = "false";
+    canvas.dataset.hearthCanvasWestBound = "true";
+    canvas.dataset.hearthCanvasWestContract = CONTRACT;
+    canvas.dataset.hearthCanvasWestReceipt = RECEIPT;
+    canvas.dataset.hearthCanvasWestRole = state.role;
+    canvas.dataset.hearthCanvasWestDragInspectionBound = String(state.dragInspectionBound);
+    canvas.dataset.hearthCanvasWestZoomInspectionBound = String(state.zoomInspectionBound);
+    canvas.dataset.hearthCanvasWestZoomDoesNotTriggerAtlasRebuild = "true";
+    canvas.dataset.hearthCanvasWestOwnsPlanetTruth = "false";
+    canvas.dataset.hearthCanvasWestOwnsVisibleProof = "false";
+    canvas.dataset.hearthCanvasWestOwnsF21 = "false";
+    canvas.dataset.visualPassClaimed = "false";
 
-    state.canvasDatasetSynchronized = true;
+    state.canvasDatasetStamped = true;
   }
 
   function updateDataset() {
@@ -251,435 +314,504 @@
     dataset.hearthCanvasWestFile = FILE;
     dataset.hearthCanvasWestRole = state.role;
 
-    dataset.hearthCanvasWestReceiptDatasetSyncActive = "true";
-    dataset.hearthCanvasWestDocumentDatasetSynchronized = "true";
-    dataset.hearthCanvasWestCanvasDatasetSynchronized = String(state.canvasDatasetSynchronized);
-    dataset.hearthCanvasWestParentCallbackSynchronized = String(state.parentCallbackSynchronized);
-
     dataset.hearthCanvasWestNewsProtocolSynchronized = "true";
     dataset.hearthCanvasWestFibonacciAlignmentSynchronized = "true";
-    dataset.hearthCanvasWestActiveFibonacciGate = state.activeFibonacciGate;
-    dataset.hearthCanvasWestParentFibonacciGate = state.parentFibonacciGate;
-    dataset.hearthCanvasWestFutureFibonacciGate = state.futureFibonacciGate;
+    dataset.hearthCanvasWestActiveFibonacciGate = "F13";
+    dataset.hearthCanvasWestFutureFibonacciGate = "F21";
     dataset.hearthCanvasWestOneActiveGearAtATime = "true";
-    dataset.hearthCanvasWestCycleOrder = state.cycleOrder;
 
-    dataset.hearthCanvasDragInspectionBound = String(state.dragInspectionBound);
-    dataset.hearthCanvasZoomInspectionBound = String(state.zoomInspectionBound);
-    dataset.hearthCanvasInteractiveRotationActive = String(state.interactiveRotationActive);
-    dataset.hearthCanvasPointerInspectionActive = String(state.pointerInspectionActive);
-    dataset.hearthCanvasPointerInspectionPainted = String(state.pointerInspectionPainted);
-    dataset.hearthCanvasPointerDragCount = String(state.pointerDragCount);
-    dataset.hearthCanvasInteractiveFrameCount = String(state.interactiveFrameCount);
-    dataset.hearthCanvasLastInteractionAt = state.lastInteractionAt;
+    dataset.hearthCanvasWestActive = "true";
+    dataset.hearthCanvasWestReady = "true";
+    dataset.hearthCanvasWestBound = String(state.bound);
+    dataset.hearthCanvasWestDragInspectionBound = String(state.dragInspectionBound);
+    dataset.hearthCanvasWestZoomInspectionBound = String(state.zoomInspectionBound);
+    dataset.hearthCanvasWestPointerInspectionActive = String(state.pointerInspectionActive);
+    dataset.hearthCanvasWestPointerInspectionPainted = String(state.pointerInspectionPainted);
 
-    dataset.hearthCanvasRotationYaw = String(Number(state.rotationYaw.toFixed(4)));
-    dataset.hearthCanvasRotationPitch = String(Number(state.rotationPitch.toFixed(4)));
-    dataset.hearthCanvasInertiaActive = String(state.inertiaActive);
-    dataset.hearthCanvasInertiaFrame = String(state.inertiaFrame);
+    dataset.hearthCanvasWestYaw = String(state.yaw);
+    dataset.hearthCanvasWestPitch = String(state.pitch);
+    dataset.hearthCanvasWestZoomLevel = String(state.zoomLevel);
+    dataset.hearthCanvasWestZoomMin = String(state.zoomMin);
+    dataset.hearthCanvasWestZoomMax = String(state.zoomMax);
+    dataset.hearthCanvasWestZoomUsesCachedTexture = "true";
+    dataset.hearthCanvasWestZoomDoesNotTriggerAtlasRebuild = "true";
 
-    dataset.hearthCanvasZoomEnabled = "true";
-    dataset.hearthCanvasZoomLevel = String(Number(state.zoomLevel.toFixed(3)));
-    dataset.hearthCanvasZoomMin = String(ZOOM_MIN);
-    dataset.hearthCanvasZoomMax = String(ZOOM_MAX);
-    dataset.hearthCanvasZoomLodPrepared = "true";
-    dataset.hearthCanvasZoomLodLevel = String(state.zoomLodLevel);
-    dataset.hearthCanvasZoomUsesCachedTexture = "true";
-    dataset.hearthCanvasZoomDoesNotOwnPlanetTruth = "true";
-    dataset.hearthCanvasZoomDoesNotTriggerAtlasRebuild = "true";
-    dataset.hearthCanvasZoomInteractionCount = String(state.zoomInteractionCount);
-    dataset.hearthCanvasLastZoomAt = state.lastZoomAt;
-    dataset.hearthCanvasLastZoomSource = state.lastZoomSource;
-
-    dataset.hearthCanvasWestInvalidationActive = "true";
-    dataset.hearthCanvasWestInvalidated = String(state.invalidated);
-    dataset.hearthCanvasWestInvalidationCount = String(state.invalidationCount);
-    dataset.hearthCanvasWestInvalidationReason = state.invalidationReason;
-    dataset.hearthCanvasStaleSourceMaskProtectionActive = "true";
-    dataset.hearthCanvasInteractionInvalidatesAtlas = "false";
-    dataset.hearthCanvasInteractionInvalidatesTexture = "false";
-    dataset.hearthCanvasInteractionUsesCachedTexture = "true";
-
-    dataset.hearthCanvasWestOwnsInteraction = "true";
-    dataset.hearthCanvasWestOwnsInvalidationSignal = "true";
+    dataset.hearthCanvasWestOwnsInvalidationControl = "true";
+    dataset.hearthCanvasWestOwnsDragInspection = "true";
+    dataset.hearthCanvasWestOwnsZoomInspection = "true";
+    dataset.hearthCanvasWestOwnsViewState = "true";
     dataset.hearthCanvasWestOwnsAtlasFormation = "false";
-    dataset.hearthCanvasWestOwnsCanvasDrawing = "false";
     dataset.hearthCanvasWestOwnsTextureComposition = "false";
+    dataset.hearthCanvasWestOwnsSphereRendering = "false";
     dataset.hearthCanvasWestOwnsVisibleProof = "false";
-    dataset.hearthCanvasWestOwnsF21 = "false";
+    dataset.hearthCanvasWestOwnsPlanetTruth = "false";
+    dataset.hearthCanvasWestOwnsRuntimeTableGovernance = "false";
     dataset.hearthCanvasWestOwnsRouteReadiness = "false";
+    dataset.hearthCanvasWestOwnsF21 = "false";
 
     dataset.generatedImage = "false";
     dataset.graphicBox = "false";
     dataset.webgl = "false";
     dataset.visualPassClaimed = "false";
 
-    state.documentDatasetSynchronized = true;
-  }
-
-  function notifyChange(reason = "west-change") {
-    state.updatedAt = nowIso();
-
-    publishCanvasDataset();
-    updateDataset();
-
-    if (isFunction(state.onChange)) {
-      try {
-        state.parentCallbackSynchronized = true;
-        state.onChange(getViewState(), getReceipt());
-      } catch (error) {
-        recordError("WEST_ON_CHANGE_FAILED", error, { reason });
-      }
+    if (runtime.canvas) {
+      stampCanvas(runtime.canvas);
     }
-
-    recordLocal("WEST_CHANGE_NOTIFIED", {
-      reason,
-      zoomLevel: Number(state.zoomLevel.toFixed(3)),
-      zoomLodLevel: state.zoomLodLevel,
-      rotationYaw: Number(state.rotationYaw.toFixed(4)),
-      rotationPitch: Number(state.rotationPitch.toFixed(4))
-    });
   }
 
-  function invalidate(reason = "manual-west-invalidation") {
-    state.invalidated = true;
-    state.invalidationCount += 1;
-    state.invalidationReason = String(reason || "manual-west-invalidation");
-    state.updatedAt = nowIso();
+  function addEvent(target, type, handler, options) {
+    if (!target || !isFunction(target.addEventListener)) return;
 
-    updateDataset();
-    publishCanvasDataset();
-
-    if (isFunction(state.onInvalidate)) {
+    target.addEventListener(type, handler, options);
+    runtime.cleanup.push(() => {
       try {
-        state.onInvalidate(state.invalidationReason, getReceipt());
-      } catch (error) {
-        recordError("WEST_ON_INVALIDATE_FAILED", error, { reason: state.invalidationReason });
-      }
-    }
+        target.removeEventListener(type, handler, options);
+      } catch (_error) {}
+    });
+  }
 
-    recordLocal("WEST_INVALIDATION_SIGNAL_EMITTED", {
-      reason: state.invalidationReason,
-      invalidationCount: state.invalidationCount
+  function cleanupListeners() {
+    runtime.cleanup.splice(0).forEach((cleanup) => {
+      try {
+        cleanup();
+      } catch (_error) {}
     });
 
-    return getReceipt();
+    runtime.activePointers.clear();
+    state.activePointers = 0;
+    state.pointerActiveCount = 0;
+    state.activePointerId = null;
+    state.pointerInspectionActive = false;
+    state.pinchActive = false;
   }
 
-  function consumeInvalidation() {
-    const wasInvalidated = state.invalidated;
-    const reason = state.invalidationReason;
-
-    state.invalidated = false;
-    state.invalidationReason = "";
-    state.updatedAt = nowIso();
-
-    updateDataset();
-    publishCanvasDataset();
-
-    recordLocal("WEST_INVALIDATION_CONSUMED", {
-      wasInvalidated,
-      reason
-    });
-
-    return { wasInvalidated, reason };
-  }
-
-  function setZoom(value = ZOOM_DEFAULT, options = {}) {
-    const next = clamp(safeNumber(value, state.zoomLevel), ZOOM_MIN, ZOOM_MAX);
-    const changed = Math.abs(next - state.zoomLevel) > 0.0001;
-
-    state.zoomLevel = next;
-    state.zoomLodLevel = zoomLodFor(next);
-    state.zoomInteractionCount += changed ? 1 : 0;
-    state.lastZoomAt = nowIso();
-    state.lastZoomSource = options.source || "api";
-    state.zoomUsesCachedTexture = true;
-    state.zoomDoesNotTriggerAtlasRebuild = true;
-    state.interactionInvalidatesAtlas = false;
-    state.interactionInvalidatesTexture = false;
-    state.interactionUsesCachedTexture = true;
-
-    notifyChange(options.source || "setZoom");
-    return getReceipt();
-  }
-
-  function zoomIn(step = 0.18) {
-    return setZoom(state.zoomLevel + Math.abs(safeNumber(step, 0.18)), { source: "zoomIn" });
-  }
-
-  function zoomOut(step = 0.18) {
-    return setZoom(state.zoomLevel - Math.abs(safeNumber(step, 0.18)), { source: "zoomOut" });
-  }
-
-  function resetZoom() {
-    return setZoom(ZOOM_DEFAULT, { source: "resetZoom" });
-  }
-
-  function setRotation(yaw = 0, pitch = 0) {
-    state.rotationYaw = safeNumber(yaw, state.rotationYaw);
-    state.rotationPitch = clamp(safeNumber(pitch, state.rotationPitch), -1.05, 1.05);
-    state.rotationVelocityYaw = 0;
-    state.rotationVelocityPitch = 0;
+  function notifyChange(source = "west-change", detail = {}) {
+    state.interactionCount += 1;
     state.lastInteractionAt = nowIso();
 
-    notifyChange("setRotation");
-    return getReceipt();
-  }
-
-  function resetRotation() {
-    state.rotationYaw = -0.18;
-    state.rotationPitch = 0.05;
-    state.rotationVelocityYaw = 0;
-    state.rotationVelocityPitch = 0;
-    state.lastInteractionAt = nowIso();
-
-    notifyChange("resetRotation");
-    return getReceipt();
-  }
-
-  function startInertia() {
-    if (state.inertiaActive) return;
-
-    const minVelocity = 0.0005;
-    state.inertiaActive = true;
-
-    const step = () => {
-      if (!state.inertiaActive) return;
-
-      state.rotationVelocityYaw *= 0.92;
-      state.rotationVelocityPitch *= 0.86;
-
-      if (
-        Math.abs(state.rotationVelocityYaw) < minVelocity &&
-        Math.abs(state.rotationVelocityPitch) < minVelocity
-      ) {
-        state.inertiaActive = false;
-        updateDataset();
-        publishCanvasDataset();
-        return;
-      }
-
-      state.rotationYaw += state.rotationVelocityYaw;
-      state.rotationPitch = clamp(state.rotationPitch + state.rotationVelocityPitch, -1.05, 1.05);
-      state.inertiaFrame += 1;
-      state.interactiveFrameCount += 1;
-      state.pointerInspectionPainted = true;
-      state.lastInteractionAt = nowIso();
-
-      notifyChange("inertia-frame");
-
-      if (typeof root.requestAnimationFrame === "function") {
-        root.requestAnimationFrame(step);
-      } else {
-        root.setTimeout(step, 16);
-      }
+    const payload = {
+      source,
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      view: getViewState(),
+      detail: clonePlain(detail),
+      visualPassClaimed: false,
+      f21ClaimedByCanvasWest: false
     };
 
-    if (typeof root.requestAnimationFrame === "function") {
-      root.requestAnimationFrame(step);
-    } else {
-      root.setTimeout(step, 16);
+    if (isFunction(runtime.callbacks.onChange)) {
+      try {
+        runtime.callbacks.onChange(payload);
+        state.onChangeError = "";
+      } catch (error) {
+        state.onChangeError = error && error.message ? error.message : String(error);
+        recordError("WEST_ON_CHANGE_FAILED", error, { source });
+      }
     }
+
+    if (root.dispatchEvent && root.CustomEvent) {
+      try {
+        root.dispatchEvent(new root.CustomEvent("hearth:canvas-west-change", {
+          detail: payload
+        }));
+      } catch (_error) {}
+    }
+
+    updateDataset();
+    return payload;
   }
 
-  function bindInspection(options = {}) {
-    const canvas = options.canvas;
+  function notifyInvalidation(reason = "west-explicit-invalidation", detail = {}) {
+    state.invalidationSignalCount += 1;
+    state.lastInvalidationAt = nowIso();
+    state.lastInvalidationReason = String(reason || "west-explicit-invalidation");
 
-    if (!canvas || canvas.nodeType !== 1) {
-      throw new Error("Canvas West bindInspection requires a canvas element.");
-    }
-
-    state.boundCanvas = canvas;
-    state.onChange = isFunction(options.onChange) ? options.onChange : state.onChange;
-    state.onInvalidate = isFunction(options.onInvalidate) ? options.onInvalidate : state.onInvalidate;
-
-    if (canvas.dataset.hearthCanvasWestBound === "true") {
-      state.dragInspectionBound = true;
-      state.zoomInspectionBound = true;
-      state.boundToken = canvas.dataset.hearthCanvasWestBindToken || state.boundToken || "existing-binding";
-
-      publishCanvasDataset();
-      updateDataset();
-
-      recordLocal("WEST_BINDING_REUSED", {
-        boundToken: state.boundToken,
-        parentCallbackSynchronized: isFunction(state.onChange)
-      });
-
-      return getReceipt();
-    }
-
-    const bindToken = `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-    state.boundToken = bindToken;
-
-    const pointers = new Map();
-    let dragging = false;
-    let pointerId = null;
-    let lastX = 0;
-    let lastY = 0;
-    let pinchStartDistance = 0;
-    let pinchStartZoom = state.zoomLevel;
-
-    const distanceBetweenPointers = () => {
-      const values = Array.from(pointers.values());
-      if (values.length < 2) return 0;
-
-      const a = values[0];
-      const b = values[1];
-
-      return Math.hypot(a.x - b.x, a.y - b.y);
+    const payload = {
+      source: "hearth.canvas.west",
+      reason: state.lastInvalidationReason,
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      view: getViewState(),
+      detail: clonePlain(detail),
+      zoomDoesNotTriggerAtlasRebuild: true,
+      visualPassClaimed: false,
+      f21ClaimedByCanvasWest: false
     };
 
-    const onDown = (event) => {
-      pointers.set(event.pointerId, {
-        x: event.clientX || 0,
-        y: event.clientY || 0
-      });
-
-      if (pointers.size >= 2) {
-        dragging = false;
-        pointerId = null;
-        pinchStartDistance = distanceBetweenPointers() || 1;
-        pinchStartZoom = state.zoomLevel;
-        state.pointerInspectionActive = true;
-        canvas.dataset.hearthInspectDragging = "pinch";
-      } else {
-        dragging = true;
-        pointerId = event.pointerId;
-        lastX = event.clientX || 0;
-        lastY = event.clientY || 0;
-        state.pointerInspectionActive = true;
-        canvas.dataset.hearthInspectDragging = "true";
+    if (isFunction(runtime.callbacks.onInvalidate)) {
+      try {
+        runtime.callbacks.onInvalidate(state.lastInvalidationReason, payload);
+        state.onInvalidateError = "";
+      } catch (error) {
+        state.onInvalidateError = error && error.message ? error.message : String(error);
+        recordError("WEST_ON_INVALIDATE_FAILED", error, { reason });
       }
+    }
 
-      canvas.style.cursor = "grabbing";
+    if (root.dispatchEvent && root.CustomEvent) {
+      try {
+        root.dispatchEvent(new root.CustomEvent("hearth:canvas-west-invalidate", {
+          detail: payload
+        }));
+      } catch (_error) {}
+    }
 
-      if (isFunction(canvas.setPointerCapture)) {
-        try {
-          canvas.setPointerCapture(event.pointerId);
-        } catch (_error) {}
+    updateDataset();
+    return payload;
+  }
+
+  function setCursor(canvas, value) {
+    if (!canvas || !canvas.style) return;
+    canvas.style.cursor = value;
+  }
+
+  function getPointerDistance() {
+    const points = Array.from(runtime.activePointers.values());
+
+    if (points.length < 2) return 0;
+
+    const a = points[0];
+    const b = points[1];
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+
+    return Math.hypot(dx, dy);
+  }
+
+  function handlePointerDown(event) {
+    if (!runtime.canvas) return;
+
+    const point = eventPoint(event);
+
+    runtime.activePointers.set(point.id, point);
+    state.activePointers = runtime.activePointers.size;
+    state.pointerActiveCount = runtime.activePointers.size;
+    state.pointerDownCount += 1;
+    state.pointerInspectionActive = true;
+    state.activePointerId = point.id;
+    state.pointerStartX = point.x;
+    state.pointerStartY = point.y;
+    state.lastPointerX = point.x;
+    state.lastPointerY = point.y;
+    state.dragStartedAt = nowIso();
+
+    try {
+      if (runtime.canvas.setPointerCapture && event.pointerId !== undefined) {
+        runtime.canvas.setPointerCapture(event.pointerId);
       }
+    } catch (_error) {}
 
-      state.lastInteractionAt = nowIso();
+    if (runtime.activePointers.size >= 2) {
+      state.pinchActive = true;
+      state.pinchStartDistance = getPointerDistance();
+      state.pinchStartZoom = state.zoomLevel;
+    }
 
-      if (isFunction(event.preventDefault)) event.preventDefault();
-      notifyChange("pointerdown");
-    };
+    setCursor(runtime.canvas, "grabbing");
+    updateDataset();
 
-    const onMove = (event) => {
-      if (pointers.has(event.pointerId)) {
-        pointers.set(event.pointerId, {
-          x: event.clientX || 0,
-          y: event.clientY || 0
+    if (event.cancelable) event.preventDefault();
+  }
+
+  function handlePointerMove(event) {
+    if (!runtime.canvas) return;
+
+    const point = eventPoint(event);
+
+    if (!runtime.activePointers.has(point.id)) return;
+
+    runtime.activePointers.set(point.id, point);
+
+    state.pointerMoveCount += 1;
+    state.pointerActiveCount = runtime.activePointers.size;
+    state.activePointers = runtime.activePointers.size;
+
+    const size = measureCanvas(runtime.canvas);
+    const width = Math.max(1, size.width);
+    const height = Math.max(1, size.height);
+
+    if (state.pinchActive && runtime.activePointers.size >= 2) {
+      const distance = getPointerDistance();
+
+      if (state.pinchStartDistance > 0 && distance > 0) {
+        const factor = distance / state.pinchStartDistance;
+        setZoom(state.pinchStartZoom * factor, {
+          source: "pinch",
+          notify: true,
+          invalidate: false
         });
       }
 
-      if (pointers.size >= 2) {
-        const distance = distanceBetweenPointers() || pinchStartDistance || 1;
-        setZoom(pinchStartZoom * (distance / Math.max(1, pinchStartDistance)), { source: "pinch" });
+      if (event.cancelable) event.preventDefault();
+      return;
+    }
 
-        if (isFunction(event.preventDefault)) event.preventDefault();
-        return;
+    if (state.activePointerId !== point.id) return;
+
+    const dx = point.x - state.lastPointerX;
+    const dy = point.y - state.lastPointerY;
+
+    state.lastPointerX = point.x;
+    state.lastPointerY = point.y;
+
+    const sensitivity = 1 / Math.max(0.65, state.zoomLevel);
+    const yawDelta = (dx / width) * Math.PI * 1.38 * sensitivity;
+    const pitchDelta = (dy / height) * Math.PI * 1.05 * sensitivity;
+
+    state.yaw += yawDelta;
+    state.pitch = clamp(state.pitch + pitchDelta, PITCH_MIN, PITCH_MAX);
+    state.rotationYaw = state.yaw;
+    state.rotationPitch = state.pitch;
+
+    state.pointerDragCount += 1;
+    state.pointerInspectionPainted = true;
+
+    notifyChange("pointer-drag", {
+      dx,
+      dy,
+      yawDelta,
+      pitchDelta,
+      zoomLevel: state.zoomLevel
+    });
+
+    if (event.cancelable) event.preventDefault();
+  }
+
+  function handlePointerUp(event) {
+    if (!runtime.canvas) return;
+
+    const point = eventPoint(event);
+
+    runtime.activePointers.delete(point.id);
+
+    state.pointerUpCount += 1;
+    state.pointerActiveCount = runtime.activePointers.size;
+    state.activePointers = runtime.activePointers.size;
+
+    if (state.activePointerId === point.id) {
+      state.activePointerId = runtime.activePointers.size
+        ? Array.from(runtime.activePointers.keys())[0]
+        : null;
+    }
+
+    if (runtime.activePointers.size < 2) {
+      state.pinchActive = false;
+      state.pinchStartDistance = 0;
+      state.pinchStartZoom = state.zoomLevel;
+    }
+
+    if (runtime.activePointers.size === 0) {
+      state.pointerInspectionActive = false;
+      setCursor(runtime.canvas, "grab");
+    }
+
+    try {
+      if (runtime.canvas.releasePointerCapture && event.pointerId !== undefined) {
+        runtime.canvas.releasePointerCapture(event.pointerId);
       }
+    } catch (_error) {}
 
-      if (!dragging || event.pointerId !== pointerId) return;
-
-      const x = event.clientX || 0;
-      const y = event.clientY || 0;
-      const dx = x - lastX;
-      const dy = y - lastY;
-
-      lastX = x;
-      lastY = y;
-
-      state.pointerDragCount += 1;
-      state.pointerInspectionPainted = true;
-      state.interactiveFrameCount += 1;
-      state.lastPointerDeltaX = Math.round(dx);
-      state.lastPointerDeltaY = Math.round(dy);
-
-      state.rotationYaw += dx * 0.0085;
-      state.rotationPitch = clamp(state.rotationPitch + dy * 0.0065, -1.05, 1.05);
-      state.rotationVelocityYaw = dx * 0.0045;
-      state.rotationVelocityPitch = dy * 0.0030;
-      state.lastInteractionAt = nowIso();
-
-      notifyChange("pointermove");
-
-      if (isFunction(event.preventDefault)) event.preventDefault();
-    };
-
-    const onUp = (event) => {
-      pointers.delete(event.pointerId);
-
-      if (pointers.size >= 2) {
-        pinchStartDistance = distanceBetweenPointers() || 1;
-        pinchStartZoom = state.zoomLevel;
-      }
-
-      if (pointers.size === 1) {
-        const remaining = Array.from(pointers.entries())[0];
-        pointerId = remaining[0];
-        lastX = remaining[1].x;
-        lastY = remaining[1].y;
-        dragging = true;
-      }
-
-      if (pointers.size === 0) {
-        dragging = false;
-        pointerId = null;
-        state.pointerInspectionActive = false;
-        canvas.dataset.hearthInspectDragging = "false";
-        canvas.style.cursor = "grab";
-        startInertia();
-      }
-
-      state.lastInteractionAt = nowIso();
-
-      if (isFunction(event.preventDefault)) event.preventDefault();
-      notifyChange("pointerup");
-    };
-
-    const onWheel = (event) => {
-      const delta = safeNumber(event.deltaY, 0);
-      setZoom(state.zoomLevel * (delta < 0 ? 1.12 : 0.88), { source: "wheel" });
-
-      if (isFunction(event.preventDefault)) event.preventDefault();
-    };
-
-    const onDblClick = (event) => {
-      setZoom(state.zoomLevel < 1.45 ? 1.65 : ZOOM_DEFAULT, { source: "doubleclick" });
-
-      if (isFunction(event.preventDefault)) event.preventDefault();
-    };
-
-    canvas.addEventListener("pointerdown", onDown, { passive: false });
-    canvas.addEventListener("pointermove", onMove, { passive: false });
-    canvas.addEventListener("pointerup", onUp, { passive: false });
-    canvas.addEventListener("pointercancel", onUp, { passive: false });
-    canvas.addEventListener("lostpointercapture", onUp, { passive: false });
-    canvas.addEventListener("wheel", onWheel, { passive: false });
-    canvas.addEventListener("dblclick", onDblClick, { passive: false });
-
-    canvas.dataset.hearthCanvasWestBound = "true";
-    canvas.dataset.hearthCanvasWestBindToken = bindToken;
-    canvas.style.touchAction = "none";
-    canvas.style.cursor = "grab";
-
-    state.dragInspectionBound = true;
-    state.zoomInspectionBound = true;
-    state.updatedAt = nowIso();
-
-    publishCanvasDataset();
     updateDataset();
 
-    recordLocal("WEST_INSPECTION_BOUND", {
-      bindToken,
-      dragInspectionBound: true,
-      zoomInspectionBound: true,
-      parentCallbackSynchronized: isFunction(state.onChange)
+    if (event.cancelable) event.preventDefault();
+  }
+
+  function handlePointerCancel(event) {
+    const point = eventPoint(event);
+
+    runtime.activePointers.delete(point.id);
+
+    state.pointerCancelCount += 1;
+    state.pointerActiveCount = runtime.activePointers.size;
+    state.activePointers = runtime.activePointers.size;
+
+    if (runtime.activePointers.size === 0) {
+      state.pointerInspectionActive = false;
+      state.pinchActive = false;
+      state.activePointerId = null;
+      setCursor(runtime.canvas, "grab");
+    }
+
+    updateDataset();
+  }
+
+  function handleWheel(event) {
+    if (!state.zoomEnabled) return;
+
+    const delta = safeNumber(event.deltaY, 0);
+    const factor = Math.exp(-delta * 0.0015);
+    const nextZoom = state.zoomLevel * factor;
+
+    setZoom(nextZoom, {
+      source: "wheel",
+      notify: true,
+      invalidate: false
     });
+
+    state.wheelZoomCount += 1;
+
+    if (event.cancelable) event.preventDefault();
+  }
+
+  function handleKeyDown(event) {
+    const key = String(event.key || "");
+    const step = event.shiftKey ? 0.16 : 0.08;
+
+    let handled = false;
+
+    if (key === "ArrowLeft") {
+      state.yaw -= step;
+      handled = true;
+    } else if (key === "ArrowRight") {
+      state.yaw += step;
+      handled = true;
+    } else if (key === "ArrowUp") {
+      state.pitch = clamp(state.pitch - step, PITCH_MIN, PITCH_MAX);
+      handled = true;
+    } else if (key === "ArrowDown") {
+      state.pitch = clamp(state.pitch + step, PITCH_MIN, PITCH_MAX);
+      handled = true;
+    } else if (key === "+" || key === "=") {
+      setZoom(state.zoomLevel + 0.12, {
+        source: "keyboard-plus",
+        notify: true,
+        invalidate: false
+      });
+      handled = true;
+    } else if (key === "-" || key === "_") {
+      setZoom(state.zoomLevel - 0.12, {
+        source: "keyboard-minus",
+        notify: true,
+        invalidate: false
+      });
+      handled = true;
+    } else if (key === "0") {
+      resetZoom({ source: "keyboard-reset-zoom" });
+      handled = true;
+    } else if (key.toLowerCase() === "r") {
+      resetRotation({ source: "keyboard-reset-rotation" });
+      handled = true;
+    }
+
+    if (!handled) return;
+
+    state.rotationYaw = state.yaw;
+    state.rotationPitch = state.pitch;
+    state.keyboardControlCount += 1;
+
+    notifyChange("keyboard-control", { key });
+
+    if (event.cancelable) event.preventDefault();
+  }
+
+  function bindInspection(options = {}) {
+    state.bindAttempted = true;
+    state.bindCount += 1;
+
+    const canvas = options.canvas || options.target || options.element || runtime.canvas;
+
+    if (!canvas || !isFunction(canvas.addEventListener)) {
+      const error = new Error("Canvas West bindInspection requires a canvas element.");
+      recordError("WEST_BIND_CANVAS_MISSING", error);
+      return getReceipt();
+    }
+
+    cleanupListeners();
+
+    runtime.canvas = canvas;
+    runtime.callbacks.onChange = isFunction(options.onChange) ? options.onChange : null;
+    runtime.callbacks.onInvalidate = isFunction(options.onInvalidate) ? options.onInvalidate : null;
+
+    state.onChangeAvailable = Boolean(runtime.callbacks.onChange);
+    state.onInvalidateAvailable = Boolean(runtime.callbacks.onInvalidate);
+
+    if (Number.isFinite(Number(options.yaw))) {
+      state.yaw = Number(options.yaw);
+    }
+
+    if (Number.isFinite(Number(options.pitch))) {
+      state.pitch = clamp(Number(options.pitch), PITCH_MIN, PITCH_MAX);
+    }
+
+    if (Number.isFinite(Number(options.zoomLevel)) || Number.isFinite(Number(options.zoom))) {
+      state.zoomLevel = clampZoom(Number(options.zoomLevel !== undefined ? options.zoomLevel : options.zoom));
+    }
+
+    state.rotationYaw = state.yaw;
+    state.rotationPitch = state.pitch;
+
+    measureCanvas(canvas);
+
+    state.canvasPresent = true;
+    state.canvasTagAccepted = String(canvas.tagName || "").toLowerCase() === "canvas";
+    state.bound = true;
+    state.dragInspectionBound = true;
+    state.zoomInspectionBound = true;
+    state.pointerInspectionPainted = false;
+    state.pointerInspectionActive = false;
+
+    if (canvas.style) {
+      canvas.style.touchAction = "none";
+      canvas.style.cursor = "grab";
+      canvas.style.userSelect = "none";
+    }
+
+    if (!canvas.hasAttribute || !canvas.hasAttribute("tabindex")) {
+      try {
+        canvas.setAttribute("tabindex", "0");
+      } catch (_error) {}
+    }
+
+    stampCanvas(canvas);
+
+    addEvent(canvas, "pointerdown", handlePointerDown, { passive: false });
+    addEvent(canvas, "pointermove", handlePointerMove, { passive: false });
+    addEvent(canvas, "pointerup", handlePointerUp, { passive: false });
+    addEvent(canvas, "pointercancel", handlePointerCancel, { passive: false });
+    addEvent(canvas, "lostpointercapture", handlePointerCancel, { passive: false });
+    addEvent(canvas, "wheel", handleWheel, { passive: false });
+    addEvent(canvas, "keydown", handleKeyDown, { passive: false });
+
+    if (root && isFunction(root.addEventListener)) {
+      addEvent(root, "resize", () => {
+        measureCanvas(canvas);
+        notifyChange("resize", { width: state.canvasWidth, height: state.canvasHeight });
+      }, { passive: true });
+    }
+
+    recordLocal("WEST_BIND_INSPECTION_COMPLETE", {
+      canvasPresent: true,
+      onChangeAvailable: state.onChangeAvailable,
+      onInvalidateAvailable: state.onInvalidateAvailable,
+      zoomLevel: state.zoomLevel
+    });
+
+    updateDataset();
+
+    return getReceipt();
+  }
+
+  function unbindInspection() {
+    cleanupListeners();
+
+    state.unbindCount += 1;
+    state.bound = false;
+    state.dragInspectionBound = false;
+    state.zoomInspectionBound = false;
+    state.pointerInspectionActive = false;
+    state.pinchActive = false;
+
+    if (runtime.canvas && runtime.canvas.dataset) {
+      runtime.canvas.dataset.hearthCanvasWestBound = "false";
+    }
+
+    runtime.canvas = null;
+    runtime.callbacks.onChange = null;
+    runtime.callbacks.onInvalidate = null;
+
+    recordLocal("WEST_UNBIND_INSPECTION_COMPLETE");
+
+    updateDataset();
 
     return getReceipt();
   }
@@ -688,44 +820,151 @@
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      version: VERSION,
+      source: "hearth.canvas.west",
+      role: state.role,
 
-      yaw: state.rotationYaw,
-      pitch: state.rotationPitch,
-      rotationYaw: state.rotationYaw,
-      rotationPitch: state.rotationPitch,
-      rotationVelocityYaw: state.rotationVelocityYaw,
-      rotationVelocityPitch: state.rotationVelocityPitch,
+      yaw: state.yaw,
+      pitch: state.pitch,
+      rotationYaw: state.yaw,
+      rotationPitch: state.pitch,
 
+      zoom: state.zoomLevel,
       zoomLevel: state.zoomLevel,
+      zoomMin: state.zoomMin,
+      zoomMax: state.zoomMax,
+      zoomEnabled: state.zoomEnabled,
+      zoomLodPrepared: true,
       zoomLodLevel: state.zoomLodLevel,
-      zoomMin: ZOOM_MIN,
-      zoomMax: ZOOM_MAX,
-
-      interactive: state.pointerInspectionActive || state.inertiaActive,
-      pointerInspectionActive: state.pointerInspectionActive,
-      inertiaActive: state.inertiaActive,
-      dpr: root.devicePixelRatio || 1,
-
-      newsProtocolSynchronized: true,
-      fibonacciAlignmentSynchronized: true,
-      activeFibonacciGate: state.activeFibonacciGate,
-      parentFibonacciGate: state.parentFibonacciGate,
-      futureFibonacciGate: state.futureFibonacciGate,
-
       zoomUsesCachedTexture: true,
       zoomDoesNotOwnPlanetTruth: true,
       zoomDoesNotTriggerAtlasRebuild: true,
-      interactionInvalidatesAtlas: false,
-      interactionInvalidatesTexture: false,
 
+      pointerInspectionActive: state.pointerInspectionActive,
+      pointerInspectionPainted: state.pointerInspectionPainted,
+      dragInspectionBound: state.dragInspectionBound,
+      zoomInspectionBound: state.zoomInspectionBound,
+      interactiveRotationActive: true,
+
+      canvasWidth: state.canvasWidth,
+      canvasHeight: state.canvasHeight,
+      dpr: state.dpr,
+
+      updatedAt: state.updatedAt,
+      f21ClaimedByCanvasWest: false,
       visualPassClaimed: false
     };
   }
 
-  function getReceipt() {
-    publishCanvasDataset();
+  function setRotation(yaw = state.yaw, pitch = state.pitch, options = {}) {
+    state.yaw = safeNumber(yaw, state.yaw);
+    state.pitch = clamp(pitch, PITCH_MIN, PITCH_MAX);
+    state.rotationYaw = state.yaw;
+    state.rotationPitch = state.pitch;
+    state.pointerInspectionPainted = true;
+
+    recordLocal("WEST_SET_ROTATION", {
+      yaw: state.yaw,
+      pitch: state.pitch,
+      source: options.source || "setRotation"
+    });
+
+    if (options.notify !== false) {
+      notifyChange(options.source || "setRotation", {
+        yaw: state.yaw,
+        pitch: state.pitch
+      });
+    }
+
     updateDataset();
+
+    return getReceipt();
+  }
+
+  function resetRotation(options = {}) {
+    return setRotation(
+      Number.isFinite(Number(options.yaw)) ? Number(options.yaw) : state.defaultYaw,
+      Number.isFinite(Number(options.pitch)) ? Number(options.pitch) : state.defaultPitch,
+      {
+        ...options,
+        source: options.source || "resetRotation"
+      }
+    );
+  }
+
+  function setZoom(value = DEFAULT_ZOOM, options = {}) {
+    const previousZoom = state.zoomLevel;
+    const nextZoom = clampZoom(value);
+
+    state.zoomLevel = nextZoom;
+    state.zoomLodLevel = nextZoom >= 2.1 ? 3 : nextZoom >= 1.35 ? 2 : 1;
+    state.lastZoomAt = nowIso();
+    state.lastZoomSource = String(options.source || "setZoom");
+    state.zoomInteractionCount += previousZoom !== nextZoom ? 1 : 0;
+
+    recordLocal("WEST_SET_ZOOM", {
+      previousZoom,
+      zoomLevel: state.zoomLevel,
+      zoomLodLevel: state.zoomLodLevel,
+      source: state.lastZoomSource,
+      zoomDoesNotTriggerAtlasRebuild: true
+    });
+
+    if (options.invalidate === true) {
+      notifyInvalidation(options.reason || "explicit-west-zoom-invalidation", {
+        previousZoom,
+        zoomLevel: state.zoomLevel,
+        source: state.lastZoomSource
+      });
+    }
+
+    if (options.notify !== false) {
+      notifyChange(state.lastZoomSource, {
+        previousZoom,
+        zoomLevel: state.zoomLevel,
+        zoomLodLevel: state.zoomLodLevel,
+        zoomDoesNotTriggerAtlasRebuild: true
+      });
+    }
+
+    updateDataset();
+
+    return getReceipt();
+  }
+
+  function zoomIn(step = 0.18, options = {}) {
+    return setZoom(state.zoomLevel + Math.abs(safeNumber(step, 0.18)), {
+      ...options,
+      source: options.source || "zoomIn",
+      invalidate: false
+    });
+  }
+
+  function zoomOut(step = 0.18, options = {}) {
+    return setZoom(state.zoomLevel - Math.abs(safeNumber(step, 0.18)), {
+      ...options,
+      source: options.source || "zoomOut",
+      invalidate: false
+    });
+  }
+
+  function resetZoom(options = {}) {
+    return setZoom(DEFAULT_ZOOM, {
+      ...options,
+      source: options.source || "resetZoom",
+      invalidate: false
+    });
+  }
+
+  function requestInvalidation(reason = "west-explicit-invalidation", detail = {}) {
+    return notifyInvalidation(reason, detail);
+  }
+
+  function invalidate(reason = "west-explicit-invalidation", detail = {}) {
+    return requestInvalidation(reason, detail);
+  }
+
+  function getReceipt() {
+    measureCanvas(runtime.canvas);
 
     return {
       contract: CONTRACT,
@@ -738,65 +977,113 @@
 
       newsProtocolSynchronized: true,
       fibonacciAlignmentSynchronized: true,
-      activeFibonacciGate: state.activeFibonacciGate,
-      parentFibonacciGate: state.parentFibonacciGate,
-      futureFibonacciGate: state.futureFibonacciGate,
+      activeFibonacciGate: "F13",
+      futureFibonacciGate: "F21",
       oneActiveGearAtATime: true,
       cycleOrder: state.cycleOrder,
 
-      receiptDatasetSyncActive: true,
-      documentDatasetSynchronized: state.documentDatasetSynchronized,
-      canvasDatasetSynchronized: state.canvasDatasetSynchronized,
-      parentCallbackSynchronized: state.parentCallbackSynchronized,
+      canvasWestActive: true,
+      canvasWestReady: true,
+      splitAdapterRole: "WEST",
+      splitAdapterTransistorMode: true,
+      admissibilityControlActive: true,
+
+      bound: state.bound,
+      bindAttempted: state.bindAttempted,
+      bindCount: state.bindCount,
+      unbindCount: state.unbindCount,
+      canvasPresent: Boolean(runtime.canvas),
+      canvasNonZeroSize: state.canvasNonZeroSize,
+      canvasTagAccepted: state.canvasTagAccepted,
+      canvasDatasetStamped: state.canvasDatasetStamped,
 
       dragInspectionBound: state.dragInspectionBound,
       zoomInspectionBound: state.zoomInspectionBound,
-      interactiveRotationActive: state.interactiveRotationActive,
       pointerInspectionActive: state.pointerInspectionActive,
       pointerInspectionPainted: state.pointerInspectionPainted,
-      pointerDragCount: state.pointerDragCount,
-      interactiveFrameCount: state.interactiveFrameCount,
-      lastInteractionAt: state.lastInteractionAt,
-      lastPointerDeltaX: state.lastPointerDeltaX,
-      lastPointerDeltaY: state.lastPointerDeltaY,
+      interactiveRotationActive: true,
 
-      rotationYaw: Number(state.rotationYaw.toFixed(4)),
-      rotationPitch: Number(state.rotationPitch.toFixed(4)),
-      rotationVelocityYaw: Number(state.rotationVelocityYaw.toFixed(6)),
-      rotationVelocityPitch: Number(state.rotationVelocityPitch.toFixed(6)),
-      inertiaActive: state.inertiaActive,
-      inertiaFrame: state.inertiaFrame,
+      yaw: state.yaw,
+      pitch: state.pitch,
+      rotationYaw: state.yaw,
+      rotationPitch: state.pitch,
+      defaultYaw: state.defaultYaw,
+      defaultPitch: state.defaultPitch,
 
-      zoomEnabled: true,
-      zoomLevel: Number(state.zoomLevel.toFixed(3)),
-      zoomMin: ZOOM_MIN,
-      zoomMax: ZOOM_MAX,
+      zoomEnabled: state.zoomEnabled,
+      zoomLevel: state.zoomLevel,
+      zoomMin: state.zoomMin,
+      zoomMax: state.zoomMax,
       zoomLodPrepared: true,
       zoomLodLevel: state.zoomLodLevel,
       zoomUsesCachedTexture: true,
       zoomDoesNotOwnPlanetTruth: true,
       zoomDoesNotTriggerAtlasRebuild: true,
+
+      pointerDragCount: state.pointerDragCount,
+      pointerDownCount: state.pointerDownCount,
+      pointerMoveCount: state.pointerMoveCount,
+      pointerUpCount: state.pointerUpCount,
+      pointerCancelCount: state.pointerCancelCount,
+      pointerActiveCount: state.pointerActiveCount,
+      wheelZoomCount: state.wheelZoomCount,
+      keyboardControlCount: state.keyboardControlCount,
       zoomInteractionCount: state.zoomInteractionCount,
+      interactionCount: state.interactionCount,
+      invalidationSignalCount: state.invalidationSignalCount,
+
+      activePointerId: state.activePointerId,
+      activePointers: state.activePointers,
+      dragStartedAt: state.dragStartedAt,
+      lastInteractionAt: state.lastInteractionAt,
       lastZoomAt: state.lastZoomAt,
       lastZoomSource: state.lastZoomSource,
+      lastInvalidationAt: state.lastInvalidationAt,
+      lastInvalidationReason: state.lastInvalidationReason,
 
-      invalidationActive: true,
-      invalidated: state.invalidated,
-      invalidationCount: state.invalidationCount,
-      invalidationReason: state.invalidationReason,
-      staleSourceMaskProtectionActive: true,
-      interactionInvalidatesAtlas: false,
-      interactionInvalidatesTexture: false,
-      interactionUsesCachedTexture: true,
+      pinchActive: state.pinchActive,
+      pinchStartDistance: state.pinchStartDistance,
+      pinchStartZoom: state.pinchStartZoom,
 
-      ownsInteraction: true,
-      ownsInvalidationSignal: true,
+      canvasWidth: state.canvasWidth,
+      canvasHeight: state.canvasHeight,
+      dpr: state.dpr,
+
+      onChangeAvailable: state.onChangeAvailable,
+      onInvalidateAvailable: state.onInvalidateAvailable,
+      onChangeError: state.onChangeError,
+      onInvalidateError: state.onInvalidateError,
+
+      viewState: getViewState(),
+
+      ownsInvalidationControl: true,
+      ownsDragInspection: true,
+      ownsZoomInspection: true,
+      ownsViewState: true,
       ownsAtlasFormation: false,
-      ownsCanvasDrawing: false,
       ownsTextureComposition: false,
+      ownsSphereRendering: false,
       ownsVisibleProof: false,
-      ownsF21: false,
+      ownsPlanetTruth: false,
+      ownsMaterialTruth: false,
+      ownsHydrologyTruth: false,
+      ownsRuntimeTableGovernance: false,
       ownsRouteReadiness: false,
+      ownsF21: false,
+
+      designRules: [
+        "west owns inspection control only",
+        "drag changes view state only",
+        "zoom changes cached-texture inspection only",
+        "ordinary zoom does not trigger atlas rebuild",
+        "ordinary drag does not trigger atlas rebuild",
+        "explicit invalidation may be signaled through requestInvalidation",
+        "west does not render visible proof",
+        "west does not compose texture",
+        "west does not form atlas",
+        "west does not claim F21",
+        "west does not claim final visual pass"
+      ],
 
       localEvents: clonePlain(state.localEvents),
       errors: clonePlain(state.errors),
@@ -809,6 +1096,87 @@
     };
   }
 
+  function getReceiptText() {
+    const r = getReceipt();
+
+    const errors = r.errors.length
+      ? r.errors.map((item) => `- ${item.at} :: ${item.code} :: ${item.message}`).join("\n")
+      : "- none";
+
+    return [
+      "HEARTH_CANVAS_WEST_INSPECTION_INVALIDATION_CONTROL_RECEIPT",
+      "",
+      `contract=${r.contract}`,
+      `receipt=${r.receipt}`,
+      `previousContract=${r.previousContract}`,
+      `baselineContract=${r.baselineContract}`,
+      `version=${r.version}`,
+      `file=${r.file}`,
+      `role=${r.role}`,
+      "",
+      `newsProtocolSynchronized=${r.newsProtocolSynchronized}`,
+      `fibonacciAlignmentSynchronized=${r.fibonacciAlignmentSynchronized}`,
+      `activeFibonacciGate=${r.activeFibonacciGate}`,
+      `futureFibonacciGate=${r.futureFibonacciGate}`,
+      `oneActiveGearAtATime=${r.oneActiveGearAtATime}`,
+      `cycleOrder=${r.cycleOrder}`,
+      "",
+      `canvasWestActive=${r.canvasWestActive}`,
+      `canvasWestReady=${r.canvasWestReady}`,
+      `splitAdapterRole=${r.splitAdapterRole}`,
+      `splitAdapterTransistorMode=${r.splitAdapterTransistorMode}`,
+      `admissibilityControlActive=${r.admissibilityControlActive}`,
+      "",
+      `bound=${r.bound}`,
+      `bindAttempted=${r.bindAttempted}`,
+      `bindCount=${r.bindCount}`,
+      `canvasPresent=${r.canvasPresent}`,
+      `canvasNonZeroSize=${r.canvasNonZeroSize}`,
+      `dragInspectionBound=${r.dragInspectionBound}`,
+      `zoomInspectionBound=${r.zoomInspectionBound}`,
+      `pointerInspectionActive=${r.pointerInspectionActive}`,
+      `pointerInspectionPainted=${r.pointerInspectionPainted}`,
+      "",
+      `yaw=${r.yaw}`,
+      `pitch=${r.pitch}`,
+      `zoomLevel=${r.zoomLevel}`,
+      `zoomMin=${r.zoomMin}`,
+      `zoomMax=${r.zoomMax}`,
+      `zoomLodPrepared=${r.zoomLodPrepared}`,
+      `zoomLodLevel=${r.zoomLodLevel}`,
+      `zoomUsesCachedTexture=${r.zoomUsesCachedTexture}`,
+      `zoomDoesNotTriggerAtlasRebuild=${r.zoomDoesNotTriggerAtlasRebuild}`,
+      "",
+      `pointerDragCount=${r.pointerDragCount}`,
+      `wheelZoomCount=${r.wheelZoomCount}`,
+      `keyboardControlCount=${r.keyboardControlCount}`,
+      `zoomInteractionCount=${r.zoomInteractionCount}`,
+      `interactionCount=${r.interactionCount}`,
+      `invalidationSignalCount=${r.invalidationSignalCount}`,
+      "",
+      `ownsInvalidationControl=${r.ownsInvalidationControl}`,
+      `ownsDragInspection=${r.ownsDragInspection}`,
+      `ownsZoomInspection=${r.ownsZoomInspection}`,
+      `ownsViewState=${r.ownsViewState}`,
+      `ownsAtlasFormation=${r.ownsAtlasFormation}`,
+      `ownsTextureComposition=${r.ownsTextureComposition}`,
+      `ownsSphereRendering=${r.ownsSphereRendering}`,
+      `ownsVisibleProof=${r.ownsVisibleProof}`,
+      `ownsPlanetTruth=${r.ownsPlanetTruth}`,
+      `ownsF21=${r.ownsF21}`,
+      "",
+      "ERRORS",
+      errors,
+      "",
+      `generatedImage=${r.generatedImage}`,
+      `graphicBox=${r.graphicBox}`,
+      `webGL=${r.webGL}`,
+      `visualPassClaimed=${r.visualPassClaimed}`,
+      "",
+      `updatedAt=${r.updatedAt}`
+    ].join("\n");
+  }
+
   const api = {
     contract: CONTRACT,
     receipt: RECEIPT,
@@ -818,54 +1186,63 @@
     file: FILE,
 
     bindInspection,
+    unbindInspection,
+    getViewState,
+    setRotation,
+    resetRotation,
     setZoom,
     zoomIn,
     zoomOut,
     resetZoom,
-    setRotation,
-    resetRotation,
+    requestInvalidation,
     invalidate,
-    consumeInvalidation,
-    getViewState,
     getReceipt,
+    getReceiptText,
 
     canvasWestActive: true,
-    receiptDatasetSyncActive: true,
+    canvasWestReady: true,
+    splitAdapterRole: "WEST",
+    splitAdapterTransistorMode: true,
 
     newsProtocolSynchronized: true,
     fibonacciAlignmentSynchronized: true,
-    activeFibonacciGate: "F13D",
-    parentFibonacciGate: "F13",
+    activeFibonacciGate: "F13",
     futureFibonacciGate: "F21",
     oneActiveGearAtATime: true,
 
-    ownsInteraction: true,
-    ownsInvalidationSignal: true,
+    ownsInvalidationControl: true,
+    ownsDragInspection: true,
+    ownsZoomInspection: true,
+    ownsViewState: true,
     ownsAtlasFormation: false,
-    ownsCanvasDrawing: false,
     ownsTextureComposition: false,
+    ownsSphereRendering: false,
     ownsVisibleProof: false,
-    ownsF21: false,
+    ownsPlanetTruth: false,
+    ownsRuntimeTableGovernance: false,
     ownsRouteReadiness: false,
-
-    zoomUsesCachedTexture: true,
-    zoomDoesNotOwnPlanetTruth: true,
-    zoomDoesNotTriggerAtlasRebuild: true,
-    interactionInvalidatesAtlas: false,
-    interactionInvalidatesTexture: false,
+    ownsF21: false,
 
     generatedImage: false,
     graphicBox: false,
     webGL: false,
-    visualPassClaimed: false
+    visualPassClaimed: false,
+
+    get state() {
+      return state;
+    }
   };
 
   root.HEARTH = root.HEARTH || {};
   root.HEARTH.canvasWest = api;
+  root.HEARTH.canvasWestInspectionInvalidationControl = api;
+
   root.HEARTH_CANVAS_WEST = api;
+  root.HEARTH_CANVAS_WEST_INSPECTION_INVALIDATION_CONTROL = api;
 
   root.DEXTER_LAB = root.DEXTER_LAB || {};
   root.DEXTER_LAB.hearthCanvasWest = api;
+  root.DEXTER_LAB.hearthCanvasWestInspectionInvalidationControl = api;
 
   updateDataset();
 

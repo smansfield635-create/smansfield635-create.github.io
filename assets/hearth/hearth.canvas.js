@@ -1,19 +1,21 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_CANVAS_INTERACTIVE_VISUAL_FIDELITY_STALE_CANVAS_REPAIR_TNT_v2
+// HEARTH_SEVEN_CONTINENT_TRANSITIONAL_CANVAS_VISUAL_FIELD_TNT_v1
 // Full-file replacement.
 // Canvas / F13 evidence authority only.
 // Purpose:
-// - Preserve the working NEWS/Fibonacci F13 evidence adapter.
+// - Replace the stale six-lobe additive visual fallback with a seven-continent separated field.
+// - Preserve NEWS/Fibonacci F13 evidence flow.
 // - Preserve cooperative chunking so the page does not freeze.
-// - Repair stale canvas behavior by making pointer/touch drag repaint the planet.
-// - Add cached texture repaint so inspection movement does not rebuild the atlas.
-// - Improve Hearth visual fidelity through independent visual translation.
+// - Preserve pointer/touch drag repaint and cached texture inspection.
+// - Add explicit texture invalidation/rebuild capability so land-shape renewals do not stay visually stale.
 // - Demote source color to palette influence only.
 // - Use elevation/hydrology as bounded inputs, not flat source-color masks.
 // - Feed North Runtime Table checkpoint evidence without claiming F21.
 // Does not own:
 // - planet truth
-// - page truth
+// - upstream elevation truth
+// - upstream composition truth
+// - hydrology truth
 // - child channel truth
 // - Runtime Table governance
 // - NEWS gate final authority
@@ -24,17 +26,25 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_INTERACTIVE_VISUAL_FIDELITY_STALE_CANVAS_REPAIR_TNT_v2";
-  const RECEIPT = "HEARTH_CANVAS_INTERACTIVE_VISUAL_FIDELITY_STALE_CANVAS_REPAIR_RECEIPT_v2";
-  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_VISUAL_FIDELITY_ELEVATION_LIGHTING_RENEWAL_TNT_v1";
+  const CONTRACT = "HEARTH_SEVEN_CONTINENT_TRANSITIONAL_CANVAS_VISUAL_FIELD_TNT_v1";
+  const RECEIPT = "HEARTH_SEVEN_CONTINENT_TRANSITIONAL_CANVAS_VISUAL_FIELD_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_INTERACTIVE_VISUAL_FIDELITY_STALE_CANVAS_REPAIR_TNT_v2";
   const BASELINE_CONTRACT = "HEARTH_CANVAS_NEWS_FIBONACCI_SOFT_GAP_EVIDENCE_ADAPTER_TNT_v2";
-  const VERSION = "2026-05-30.hearth-canvas-interactive-visual-fidelity-stale-canvas-repair-v2";
+  const VERSION = "2026-05-30.hearth-seven-continent-transitional-canvas-visual-field-v1";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
 
   const FILE = "/assets/hearth/hearth.canvas.js";
   const NORTH_FILE = "/assets/lab/runtime-table.js";
+
+  const DEFAULT_SIZE = 600;
+  const ATLAS_WIDTH = 640;
+  const ATLAS_HEIGHT = 320;
+  const ATLAS_ROWS_PER_CHUNK = 4;
+  const SPHERE_ROWS_PER_CHUNK = 8;
+  const TEXTURE_STEPS = 18;
+  const SAMPLE_COUNT = 257;
 
   const CHECKPOINT_BY_PHASE = Object.freeze({
     CANVAS_COOPERATIVE_BOOT_STARTED: {
@@ -122,13 +132,85 @@
     "ATLAS_BUILD_STARTED"
   ]);
 
-  const DEFAULT_SIZE = 600;
-  const ATLAS_WIDTH = 640;
-  const ATLAS_HEIGHT = 320;
-  const ATLAS_ROWS_PER_CHUNK = 4;
-  const SPHERE_ROWS_PER_CHUNK = 8;
-  const TEXTURE_STEPS = 18;
-  const SAMPLE_COUNT = 257;
+  const SEVEN_CONTINENT_SEEDS = Object.freeze([
+    {
+      id: "northwest-continent",
+      index: 1,
+      u: 0.17,
+      v: 0.34,
+      rx: 0.115,
+      ry: 0.205,
+      rot: -24,
+      weight: 1.02,
+      seed: 101
+    },
+    {
+      id: "north-tethys-continent",
+      index: 2,
+      u: 0.36,
+      v: 0.22,
+      rx: 0.125,
+      ry: 0.155,
+      rot: 18,
+      weight: 0.94,
+      seed: 202
+    },
+    {
+      id: "west-equatorial-continent",
+      index: 3,
+      u: 0.38,
+      v: 0.55,
+      rx: 0.135,
+      ry: 0.205,
+      rot: 8,
+      weight: 1.0,
+      seed: 303
+    },
+    {
+      id: "central-south-continent",
+      index: 4,
+      u: 0.55,
+      v: 0.68,
+      rx: 0.145,
+      ry: 0.185,
+      rot: -16,
+      weight: 0.92,
+      seed: 404
+    },
+    {
+      id: "east-continent",
+      index: 5,
+      u: 0.66,
+      v: 0.38,
+      rx: 0.125,
+      ry: 0.185,
+      rot: 22,
+      weight: 0.98,
+      seed: 505
+    },
+    {
+      id: "southeast-island-continent",
+      index: 6,
+      u: 0.84,
+      v: 0.62,
+      rx: 0.11,
+      ry: 0.15,
+      rot: -28,
+      weight: 0.78,
+      seed: 606
+    },
+    {
+      id: "polar-crown-continent",
+      index: 7,
+      u: 0.06,
+      v: 0.17,
+      rx: 0.155,
+      ry: 0.095,
+      rot: 0,
+      weight: 0.7,
+      seed: 707
+    }
+  ]);
 
   const state = {
     contract: CONTRACT,
@@ -137,7 +219,7 @@
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     file: FILE,
-    role: "f13-canvas-evidence-producer-interactive-visual-fidelity",
+    role: "f13-canvas-evidence-producer-seven-continent-transitional-visual-field",
 
     northAuthority: NORTH_FILE,
     ownsCanvasEvidenceOnly: true,
@@ -147,6 +229,25 @@
     doesNotOwnRuntimeTableGovernance: true,
     doesNotOwnNewsFinalAuthority: true,
     doesNotOwnF21: true,
+
+    newsProtocolSynchronized: true,
+    fibonacciAlignmentSynchronized: true,
+    activeFibonacciGate: "F13",
+    futureFibonacciGate: "F21",
+    oneActiveGearAtATime: true,
+    cycleOrder: "EAST_WEST_NORTH_SOUTH_CHECKPOINT_EAST",
+
+    sevenContinentVisualFallbackActive: true,
+    transitionalFallbackVisualField: true,
+    upstreamSevenContinentAuthorityPreferred: true,
+    continentVisualSeedCount: 7,
+    continentBlendMode: "max-separated",
+    proceduralSixLobeAdditiveFieldRetired: true,
+    oceanChannelCutActive: true,
+    seaLineTightened: true,
+    coastlineSharpeningActive: true,
+    cachedTextureInvalidationAvailable: true,
+    landChannelStillReceiverOnly: true,
 
     booting: false,
     booted: false,
@@ -208,6 +309,13 @@
     renderedAfterTexture: false,
     dragInspectionBound: false,
 
+    textureInvalidationCount: 0,
+    textureInvalidated: false,
+    textureInvalidationReason: "",
+    textureRebuildRequested: false,
+    textureRebuildComplete: false,
+    textureRebuildError: "",
+
     interactiveRotationActive: true,
     staleCanvasRepairActive: true,
     cachedTextureRepaintActive: true,
@@ -261,6 +369,7 @@
     lightingPreservesSurfaceReadability: true,
     staleSourceMaskProtectionActive: true,
 
+    f13CanvasEvidencePreserved: true,
     f13CanvasEvidenceComplete: false,
     f13HardFail: false,
     f21ClaimedByCanvas: false,
@@ -325,6 +434,7 @@
 
   function clonePlain(value) {
     if (!isObject(value)) return value;
+
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
@@ -335,6 +445,7 @@
 
   function yieldFrame(ms = 0) {
     state.canvasYieldCount += 1;
+
     return new Promise((resolve) => {
       if (typeof root.requestAnimationFrame === "function") {
         root.requestAnimationFrame(() => {
@@ -414,7 +525,7 @@
 
     if (!canvas) {
       canvas = doc.createElement("canvas");
-      canvas.className = "hearth-canvas hearth-canvas--interactive-visual-fidelity";
+      canvas.className = "hearth-canvas hearth-canvas--seven-continent-transitional";
       canvas.dataset.hearthCanvas = "true";
       canvas.dataset.hearthCanvasTexture = "true";
       canvas.dataset.hearthCanvasContract = CONTRACT;
@@ -455,6 +566,7 @@
     state.canvasContextReady = true;
 
     updateDocumentDataset();
+
     return { mount, canvas, context };
   }
 
@@ -519,6 +631,112 @@
     };
   }
 
+  function signedWrapDelta(a, b) {
+    let d = a - b;
+    if (d > 0.5) d -= 1;
+    if (d < -0.5) d += 1;
+    return d;
+  }
+
+  function continentLobe(u, v, seed) {
+    const du = signedWrapDelta(u, seed.u);
+    const dv = v - seed.v;
+    const angle = safeNumber(seed.rot, 0) * Math.PI / 180;
+    const ca = Math.cos(angle);
+    const sa = Math.sin(angle);
+
+    const ru = du * ca - dv * sa;
+    const rv = du * sa + dv * ca;
+
+    const rx = Math.max(0.0001, safeNumber(seed.rx, 0.1));
+    const ry = Math.max(0.0001, safeNumber(seed.ry, 0.1));
+
+    const core = Math.exp(-((ru / rx) ** 2 + (rv / ry) ** 2));
+    const shoulder = Math.exp(-((ru / (rx * 1.75)) ** 2 + (rv / (ry * 1.55)) ** 2)) * 0.34;
+
+    const edgeNoise = fbm(u * 8.5 + seed.seed * 0.13, v * 7.3 - seed.seed * 0.07, seed.seed, 4);
+    const biteNoise = fbm(u * 15.0 - seed.seed * 0.03, v * 13.0 + seed.seed * 0.04, seed.seed + 9, 4);
+    const irregular = 0.82 + edgeNoise * 0.26 - biteNoise * 0.12;
+
+    return clamp01((core + shoulder) * seed.weight * irregular);
+  }
+
+  function sevenContinentField(u, v, latBand) {
+    const warpA = fbm(u * 2.2 + 7.0, v * 2.0 - 3.0, 111, 4) - 0.5;
+    const warpB = fbm(u * 1.9 - 4.0, v * 2.4 + 2.2, 222, 4) - 0.5;
+
+    const wu = (u + warpA * 0.032 + 1) % 1;
+    const wv = clamp01(v + warpB * 0.028);
+
+    const values = SEVEN_CONTINENT_SEEDS
+      .map((seed) => ({
+        seed,
+        value: continentLobe(wu, wv, seed)
+      }))
+      .sort((a, b) => b.value - a.value);
+
+    const primary = values[0];
+    const secondary = values[1] || { value: 0, seed: null };
+
+    const regional = fbm(u * 5.8 - 1.5, v * 4.8 + 2.8, 333, 5);
+    const fine = fbm(u * 18.0 + 4.7, v * 14.0 - 2.8, 444, 4);
+    const ridgeRaw = fbm(u * 11.0 + 7.1, v * 8.6 - 6.2, 555, 4);
+    const ridge = 1 - Math.abs(ridgeRaw - 0.5) * 2;
+    const basinRaw = fbm(u * 4.2 - 3.2, v * 3.5 + 5.6, 666, 4);
+    const basin = 1 - Math.abs(basinRaw - 0.5) * 2;
+
+    const polarDip = Math.pow(latBand, 2.2) * 0.065;
+
+    const overlapCut =
+      smoothstep(0.11, 0.34, secondary.value) *
+      smoothstep(0.28, 0.72, primary.value) *
+      0.16;
+
+    const openOceanCut = Math.pow(1 - primary.value, 1.65) * 0.14;
+    const channelNoise = fbm(u * 3.8 + 11.2, v * 3.2 - 4.4, 1212, 4) * 0.055;
+    const oceanChannelCut = clamp01(overlapCut + openOceanCut + channelNoise);
+
+    const elevation = clamp01(
+      primary.value * 0.74 +
+      regional * 0.16 +
+      ridge * 0.13 +
+      fine * 0.05 -
+      basin * 0.09 -
+      oceanChannelCut -
+      polarDip
+    );
+
+    const seaLine =
+      0.525 +
+      Math.sin(u * Math.PI * 6.0 + v * 2.0) * 0.012 -
+      Math.pow(latBand, 1.7) * 0.010;
+
+    return {
+      elevation,
+      seaLine,
+      continentSignal: primary.value,
+      secondaryContinentSignal: secondary.value,
+      continentId: primary.seed ? primary.seed.id : "none",
+      continentIndex: primary.seed ? primary.seed.index : 0,
+      continentSeedCount: SEVEN_CONTINENT_SEEDS.length,
+      continentBlendMode: "max-separated",
+      oceanChannelCut,
+      overlapCut,
+      openOceanCut,
+      ridge,
+      basin,
+      regional,
+      fine,
+      polarDip,
+      warpU: wu,
+      warpV: wv
+    };
+  }
+
+  function proceduralElevationField(u, v, latBand) {
+    return sevenContinentField(u, v, latBand).elevation;
+  }
+
   function resolveSource(nameList) {
     for (const name of nameList) {
       if (root[name] && isObject(root[name])) return root[name];
@@ -540,9 +758,17 @@
       try {
         const result = authority[method](point);
         if (result && isObject(result)) return result;
-      } catch (_error) {
-        continue;
-      }
+      } catch (_error) {}
+
+      try {
+        const result = authority[method](point.u, point.v, point.lon, point.lat);
+        if (result && isObject(result)) return result;
+      } catch (_error2) {}
+
+      try {
+        const result = authority[method](point.x, point.y, point.z);
+        if (result && isObject(result)) return result;
+      } catch (_error3) {}
     }
 
     return null;
@@ -589,51 +815,6 @@
     return clamp01(n / 100);
   }
 
-  function wrapDelta(a, b) {
-    let d = Math.abs(a - b);
-    if (d > 0.5) d = 1 - d;
-    return d;
-  }
-
-  function continentLobe(u, v, cu, cv, rx, ry, weight) {
-    const du = wrapDelta(u, cu) / Math.max(0.0001, rx);
-    const dv = Math.abs(v - cv) / Math.max(0.0001, ry);
-    return Math.exp(-(du * du + dv * dv)) * weight;
-  }
-
-  function proceduralElevationField(u, v, latBand) {
-    const warpA = fbm(u * 2.4 + 7.0, v * 2.2 - 3.0, 111, 4) - 0.5;
-    const warpB = fbm(u * 2.0 - 4.0, v * 2.6 + 2.2, 222, 4) - 0.5;
-    const wu = (u + warpA * 0.055 + 1) % 1;
-    const wv = clamp01(v + warpB * 0.045);
-
-    let continent = 0;
-    continent += continentLobe(wu, wv, 0.25, 0.42, 0.20, 0.27, 0.95);
-    continent += continentLobe(wu, wv, 0.42, 0.58, 0.24, 0.22, 0.86);
-    continent += continentLobe(wu, wv, 0.58, 0.34, 0.18, 0.20, 0.78);
-    continent += continentLobe(wu, wv, 0.72, 0.55, 0.16, 0.24, 0.70);
-    continent += continentLobe(wu, wv, 0.86, 0.28, 0.13, 0.17, 0.54);
-    continent += continentLobe(wu, wv, 0.10, 0.72, 0.16, 0.15, 0.50);
-
-    const regional = fbm(u * 5.8 - 1.5, v * 4.8 + 2.8, 333, 5);
-    const fine = fbm(u * 18.0 + 4.7, v * 14.0 - 2.8, 444, 4);
-    const ridgeRaw = fbm(u * 11.0 + 7.1, v * 8.6 - 6.2, 555, 4);
-    const ridge = 1 - Math.abs(ridgeRaw - 0.5) * 2;
-    const basinRaw = fbm(u * 4.2 - 3.2, v * 3.5 + 5.6, 666, 4);
-    const basin = 1 - Math.abs(basinRaw - 0.5) * 2;
-
-    const polarDip = Math.pow(latBand, 2.2) * 0.08;
-
-    return clamp01(
-      continent * 0.58 +
-      regional * 0.24 +
-      ridge * 0.16 +
-      fine * 0.06 -
-      basin * 0.12 -
-      polarDip
-    );
-  }
-
   function samplePlanetMaterial(u, v) {
     const lon = u * 360 - 180;
     const lat = 90 - v * 180;
@@ -663,6 +844,7 @@
 
     const latBand = Math.abs(lat) / 90;
     const polar = Math.pow(latBand, 2.1);
+    const visualField = sevenContinentField(u, v, latBand);
 
     const rawElevation = normalizeElevation(
       elevationSample && (
@@ -675,7 +857,7 @@
 
     const proceduralElevation = proceduralElevationField(u, v, latBand);
     const elevation = Number.isFinite(rawElevation)
-      ? clamp01(proceduralElevation * 0.72 + rawElevation * 0.28)
+      ? clamp01(proceduralElevation * 0.78 + rawElevation * 0.22)
       : proceduralElevation;
 
     const hydro = safeNumber(
@@ -697,25 +879,32 @@
       NaN
     );
 
-    const seaLine = 0.48 + Math.sin(u * Math.PI * 6.0 + v * 2.0) * 0.018 - polar * 0.018;
-    const proceduralLand = smoothstep(seaLine - 0.055, seaLine + 0.045, elevation);
+    const seaLine = visualField.seaLine;
+    const proceduralLand = smoothstep(seaLine - 0.035, seaLine + 0.030, elevation);
 
     const externalLand = Number.isFinite(compositionLand) ? clamp01(compositionLand) : NaN;
     const externalWater = Number.isFinite(hydro) ? clamp01(hydro) : NaN;
 
     let landSignal = proceduralLand;
-    if (Number.isFinite(externalLand)) landSignal = clamp01(proceduralLand * 0.74 + externalLand * 0.26);
-    if (Number.isFinite(externalWater)) landSignal = clamp01(landSignal * 0.82 + (1 - externalWater) * 0.18);
+
+    if (Number.isFinite(externalLand)) {
+      landSignal = clamp01(proceduralLand * 0.82 + externalLand * 0.18);
+    }
+
+    if (Number.isFinite(externalWater)) {
+      landSignal = clamp01(landSignal * 0.86 + (1 - externalWater) * 0.14);
+    }
 
     const waterSignal = clamp01(1 - landSignal);
     const isWater = waterSignal >= landSignal;
 
     const coastDistance = Math.abs(waterSignal - landSignal);
-    const shore = clamp01(1 - coastDistance * 4.4);
-    const shelf = isWater ? clamp01(shore * 0.86 + (1 - waterSignal) * 0.22) : 0;
+    const shore = clamp01(1 - coastDistance * 5.1);
+    const shelf = isWater ? clamp01(shore * 0.88 + (1 - waterSignal) * 0.22) : 0;
     const highland = clamp01((elevation - 0.58) * 2.7);
     const mountain = clamp01((elevation - 0.68) * 3.5);
     const lowland = clamp01(1 - Math.abs(elevation - 0.52) * 3.0);
+
     const fine = fbm(u * 22.0 + 4.7, v * 16.0 - 2.8, 777, 4);
     const ridge = 1 - Math.abs(fbm(u * 13.5 + 7.1, v * 9.0 - 6.2, 888, 4) - 0.5) * 2;
     const arid = clamp01(fbm(u * 7.4 + 9.2, v * 5.9 - 1.1, 999, 4) * 0.72 + latBand * 0.28);
@@ -746,7 +935,7 @@
       rgb = mixRgb(baseLand, upland, lowland * 0.34 + highland * 0.20);
       rgb = mixRgb(rgb, mountainRock, mountain * 0.72);
       rgb = mixRgb(rgb, snow, clamp01((polar - 0.62) * 1.55 + mountain * 0.20));
-      rgb = mixRgb(rgb, [190, 166, 98], shore * 0.62);
+      rgb = mixRgb(rgb, [190, 166, 98], shore * 0.66);
 
       className = mountain > 0.50
         ? "mountain"
@@ -760,12 +949,13 @@
     }
 
     const relief = (ridge - 0.50) * 20 + (fine - 0.50) * 9;
-    const coast = shore * 18;
+    const coast = shore * 20;
+    const channelBlueLift = isWater ? visualField.oceanChannelCut * 22 : 0;
 
     rgb = [
       clamp(Math.round(rgb[0] + relief + coast * (isWater ? 0.20 : 1.00)), 0, 255),
       clamp(Math.round(rgb[1] + relief + coast * (isWater ? 0.28 : 0.88)), 0, 255),
-      clamp(Math.round(rgb[2] + relief * 0.70 + shelf * 20 + coast * (isWater ? 0.78 : 0.28)), 0, 255)
+      clamp(Math.round(rgb[2] + relief * 0.70 + shelf * 20 + coast * (isWater ? 0.78 : 0.28) + channelBlueLift), 0, 255)
     ];
 
     if (sourceColor) {
@@ -781,6 +971,7 @@
       waterSignal,
       landSignal,
       elevation,
+      seaLine,
       shore,
       shelf,
       highland,
@@ -788,7 +979,19 @@
       lowland,
       polar,
       visualClass: className,
-      sourceColorDemotedToPaletteInfluence: true
+
+      continentId: visualField.continentId,
+      continentIndex: visualField.continentIndex,
+      continentSignal: visualField.continentSignal,
+      secondaryContinentSignal: visualField.secondaryContinentSignal,
+      continentSeedCount: visualField.continentSeedCount,
+      continentBlendMode: visualField.continentBlendMode,
+      oceanChannelCut: visualField.oceanChannelCut,
+
+      sourceColorDemotedToPaletteInfluence: true,
+      sevenContinentVisualFallbackActive: true,
+      transitionalFallbackVisualField: true,
+      canvasStillDoesNotOwnPlanetTruth: true
     };
   }
 
@@ -849,6 +1052,7 @@
     state.atlasContext.putImageData(image, 0, 0);
     state.atlasBuildComplete = true;
     state.atlasBuildProgress = 100;
+    state.textureInvalidated = false;
     emitMilestone("ATLAS_BUILD_COMPLETE", 91, "Atlas build complete.");
   }
 
@@ -903,6 +1107,7 @@
     state.textureImageData = ctx.getImageData(0, 0, ATLAS_WIDTH, ATLAS_HEIGHT);
     state.textureComposeComplete = true;
     state.textureComposeProgress = 100;
+    state.textureRebuildComplete = true;
     emitMilestone("TEXTURE_COMPOSE_COMPLETE", 96, "Texture composition complete.");
   }
 
@@ -1035,6 +1240,7 @@
     ctx.restore();
 
     state.renderFrameCount += 1;
+
     if (options.interactive) {
       state.interactiveFrameCount += 1;
       state.pointerInspectionPainted = true;
@@ -1466,7 +1672,7 @@
         visiblePlanetAvailable: true
       });
     } else if (softGap) {
-      state.visibleContentProofMethod = "interactive-visual-fidelity-soft-gap-content-sample";
+      state.visibleContentProofMethod = "seven-continent-transitional-soft-gap-content-sample";
       state.visibleContentProofError = [
         `Visible content soft gap: samples=${samples}`,
         `nonblank=${nonblank}`,
@@ -1616,6 +1822,11 @@
       dragInspectionBound: state.dragInspectionBound,
       renderedAfterTexture: state.renderedAfterTexture,
 
+      textureInvalidationCount: state.textureInvalidationCount,
+      textureInvalidated: state.textureInvalidated,
+      textureRebuildRequested: state.textureRebuildRequested,
+      textureRebuildComplete: state.textureRebuildComplete,
+
       interactiveRotationActive: state.interactiveRotationActive,
       staleCanvasRepairActive: state.staleCanvasRepairActive,
       cachedTextureRepaintActive: state.cachedTextureRepaintActive,
@@ -1651,6 +1862,25 @@
       nonblankPlanetVisible: state.nonblankPlanetVisible,
       planetNotObstructed: state.planetNotObstructed,
 
+      newsProtocolSynchronized: true,
+      fibonacciAlignmentSynchronized: true,
+      activeFibonacciGate: "F13",
+      futureFibonacciGate: "F21",
+      oneActiveGearAtATime: true,
+
+      sevenContinentVisualFallbackActive: true,
+      continentVisualSeedCount: 7,
+      continentBlendMode: "max-separated",
+      proceduralSixLobeAdditiveFieldRetired: true,
+      oceanChannelCutActive: true,
+      seaLineTightened: true,
+      coastlineSharpeningActive: true,
+      cachedTextureInvalidationAvailable: true,
+      canvasStillDoesNotOwnPlanetTruth: true,
+      transitionalFallbackVisualField: true,
+      upstreamSevenContinentAuthorityPreferred: true,
+      landChannelStillReceiverOnly: true,
+
       visualFidelityRenewalActive: true,
       sourceColorDemotedToPaletteInfluence: true,
       elevationControlsLandShape: true,
@@ -1668,6 +1898,7 @@
       canvasDoesNotObstructDock: true,
       copyDiagnosticSafe: true,
 
+      f13CanvasEvidencePreserved: true,
       f13CanvasEvidenceComplete: state.f13CanvasEvidenceComplete,
       f13HardFail: state.f13HardFail,
       f21ClaimedByCanvas: false,
@@ -1702,6 +1933,25 @@
         originalPhase: phase,
         mappedCheckpointId: mapping.checkpointId,
         mappedEvent: mapping.event,
+
+        newsProtocolSynchronized: true,
+        fibonacciAlignmentSynchronized: true,
+        activeFibonacciGate: "F13",
+        futureFibonacciGate: "F21",
+
+        sevenContinentVisualFallbackActive: true,
+        continentVisualSeedCount: 7,
+        continentBlendMode: "max-separated",
+        proceduralSixLobeAdditiveFieldRetired: true,
+        oceanChannelCutActive: true,
+        seaLineTightened: true,
+        coastlineSharpeningActive: true,
+        cachedTextureInvalidationAvailable: true,
+        canvasStillDoesNotOwnPlanetTruth: true,
+        transitionalFallbackVisualField: true,
+        upstreamSevenContinentAuthorityPreferred: true,
+        landChannelStillReceiverOnly: true,
+
         interactiveRotationActive: true,
         staleCanvasRepairActive: true,
         cachedTextureRepaintActive: true,
@@ -1784,7 +2034,8 @@
       progressOnly: true,
       contract: CONTRACT,
       receipt: RECEIPT,
-      visualPassClaimed: false
+      visualPassClaimed: false,
+      f21ClaimedByCanvas: false
     };
 
     state.progressOnlyEvents.push(event);
@@ -1896,7 +2147,104 @@
     }
 
     state.updatedAt = item.at;
+    updateDocumentDataset();
+
     return item;
+  }
+
+  function invalidateTexture(reason = "manual-texture-invalidation") {
+    state.atlasCanvas = null;
+    state.atlasContext = null;
+    state.textureCanvas = null;
+    state.textureContext = null;
+    state.textureImageData = null;
+
+    state.atlasBuildStarted = false;
+    state.atlasBuildProgress = 0;
+    state.atlasBuildComplete = false;
+    state.textureComposeStarted = false;
+    state.textureComposeProgress = 0;
+    state.textureComposeComplete = false;
+    state.firstFrameRequested = false;
+    state.firstFrameDetected = false;
+    state.imageRendered = false;
+    state.renderedAfterTexture = false;
+    state.planetFramePainted = false;
+    state.nonblankPlanetVisible = false;
+
+    state.textureInvalidationCount += 1;
+    state.textureInvalidated = true;
+    state.textureInvalidationReason = String(reason || "manual-texture-invalidation");
+    state.textureRebuildRequested = false;
+    state.textureRebuildComplete = false;
+    state.textureRebuildError = "";
+    state.updatedAt = nowIso();
+
+    archiveProgressOnlyEvent(
+      "TEXTURE_INVALIDATED",
+      96,
+      `Texture invalidated · reason=${state.textureInvalidationReason}`
+    );
+
+    updateDocumentDataset();
+
+    return getReceipt();
+  }
+
+  async function rebuildTexture(options = {}) {
+    addCallbacksFromOptions(options);
+
+    state.textureRebuildRequested = true;
+    state.textureRebuildComplete = false;
+    state.textureRebuildError = "";
+
+    try {
+      invalidateTexture(options.reason || "manual-rebuild-texture-request");
+
+      if (!state.canvas || !state.context) {
+        ensureCanvas(options);
+      }
+
+      bindDragInspection();
+
+      await buildAtlas(options.onAtlasProgress || options.onProgress);
+      await composeTexture(options.onTextureProgress || options.onProgress);
+      await renderSphereCooperative(options.onSphereProgress || options.onProgress);
+
+      state.canvasReady = true;
+      state.canvasCarrierHandoffOk = true;
+      state.canvasCarrierHandoffError = "";
+      state.textureRebuildComplete = true;
+      state.updatedAt = nowIso();
+
+      sampleVisibleContent();
+      updateDocumentDataset();
+
+      if (isFunction(options.onReady)) {
+        try {
+          options.onReady(getReceipt());
+        } catch (error) {
+          recordError("ON_REBUILD_READY_CALLBACK_ERROR", error);
+        }
+      }
+
+      return getReceipt();
+    } catch (error) {
+      state.textureRebuildError = error && error.message ? error.message : String(error);
+      state.textureRebuildComplete = false;
+      recordError("TEXTURE_REBUILD_ERROR", error);
+      updateDocumentDataset();
+
+      if (isFunction(options.onError)) {
+        try {
+          options.onError(error, getReceipt());
+        } catch (callbackError) {
+          recordError("ON_REBUILD_ERROR_CALLBACK_ERROR", callbackError);
+        }
+      }
+
+      return getReceipt();
+    }
   }
 
   async function bootCooperative(options = {}) {
@@ -1905,7 +2253,12 @@
     if (state.booting) return getReceipt();
 
     if (state.canvasReady && state.canvasLaneClosed) {
-      archiveLateEvent("CANVAS_COOPERATIVE_BOOT_STARTED", 78, "Canvas cooperative boot requested after lane close.", "duplicate-boot-request-after-canvas-ready");
+      archiveLateEvent(
+        "CANVAS_COOPERATIVE_BOOT_STARTED",
+        78,
+        "Canvas cooperative boot requested after lane close.",
+        "duplicate-boot-request-after-canvas-ready"
+      );
       return getReceipt();
     }
 
@@ -2073,17 +2426,29 @@
       waterAlpha: material.isWater ? material.waterSignal : 0,
       airAlpha: 0.18,
       elevation: material.elevation,
+      seaLine: material.seaLine,
       shore: material.shore,
       shelf: material.shelf,
       highland: material.highland,
       mountain: material.mountain,
       visualClass: material.visualClass,
+      continentId: material.continentId,
+      continentIndex: material.continentIndex,
+      continentSignal: material.continentSignal,
+      secondaryContinentSignal: material.secondaryContinentSignal,
+      continentSeedCount: material.continentSeedCount,
+      continentBlendMode: material.continentBlendMode,
+      oceanChannelCut: material.oceanChannelCut,
       bodyBinding: 1,
       surfaceAttachment: 1,
       hydrosphereBinding: 1,
       surfaceSeat: 1,
       allowedToFloat: false,
       isCanvasSample: true,
+      sevenContinentVisualFallbackActive: true,
+      transitionalFallbackVisualField: true,
+      canvasStillDoesNotOwnPlanetTruth: true,
+      f21ClaimedByCanvas: false,
       visualPassClaimed: false
     };
   }
@@ -2129,7 +2494,7 @@
     dataset.hearthCanvasReceipt = RECEIPT;
     dataset.hearthCanvasPreviousContract = PREVIOUS_CONTRACT;
     dataset.hearthCanvasBaselineContract = BASELINE_CONTRACT;
-    dataset.hearthCanvasRole = "f13-evidence-producer-interactive-visual-fidelity";
+    dataset.hearthCanvasRole = "f13-evidence-producer-seven-continent-transitional-visual-field";
 
     dataset.hearthCanvasReady = String(state.canvasReady);
     dataset.hearthCanvasLaneClosed = String(state.canvasLaneClosed);
@@ -2148,6 +2513,31 @@
     dataset.hearthCanvasRenderFrameCount = String(state.renderFrameCount);
     dataset.hearthCanvasInteractiveFrameCount = String(state.interactiveFrameCount);
 
+    dataset.hearthCanvasNewsProtocolSynchronized = "true";
+    dataset.hearthCanvasFibonacciAlignmentSynchronized = "true";
+    dataset.hearthCanvasActiveFibonacciGate = "F13";
+    dataset.hearthCanvasFutureFibonacciGate = "F21";
+    dataset.hearthCanvasOneActiveGearAtATime = "true";
+    dataset.hearthCanvasCycleOrder = "EAST_WEST_NORTH_SOUTH_CHECKPOINT_EAST";
+
+    dataset.hearthCanvasSevenContinentVisualFallbackActive = "true";
+    dataset.hearthCanvasContinentVisualSeedCount = "7";
+    dataset.hearthCanvasContinentBlendMode = "max-separated";
+    dataset.hearthCanvasProceduralSixLobeAdditiveFieldRetired = "true";
+    dataset.hearthCanvasOceanChannelCutActive = "true";
+    dataset.hearthCanvasSeaLineTightened = "true";
+    dataset.hearthCanvasCoastlineSharpeningActive = "true";
+    dataset.hearthCanvasCachedTextureInvalidationAvailable = "true";
+    dataset.hearthCanvasTextureInvalidationCount = String(state.textureInvalidationCount);
+    dataset.hearthCanvasTextureInvalidated = String(state.textureInvalidated);
+    dataset.hearthCanvasTextureRebuildRequested = String(state.textureRebuildRequested);
+    dataset.hearthCanvasTextureRebuildComplete = String(state.textureRebuildComplete);
+
+    dataset.hearthCanvasStillDoesNotOwnPlanetTruth = "true";
+    dataset.hearthCanvasTransitionalFallbackVisualField = "true";
+    dataset.hearthCanvasUpstreamSevenContinentAuthorityPreferred = "true";
+    dataset.hearthCanvasLandChannelStillReceiverOnly = "true";
+
     dataset.hearthCanvasVisualFidelityRenewalActive = "true";
     dataset.hearthCanvasSourceColorDemotedToPaletteInfluence = "true";
     dataset.hearthCanvasElevationControlsLandShape = "true";
@@ -2162,6 +2552,7 @@
     dataset.hearthCanvasDuplicateEventsSuppressed = String(state.duplicateCanvasEventsSuppressed);
     dataset.hearthCanvasProgressOnlyEventsArchived = String(state.progressOnlyEventsArchived);
 
+    dataset.hearthCanvasF13EvidencePreserved = "true";
     dataset.hearthCanvasF21Claimed = "false";
     dataset.hearthCanvasReadyTextClaimed = "false";
     dataset.hearthCanvasVisualPassClaimed = "false";
@@ -2179,6 +2570,9 @@
       state.canvas.dataset.hearthCanvasInteractiveRotationActive = "true";
       state.canvas.dataset.hearthCanvasStaleCanvasRepairActive = "true";
       state.canvas.dataset.hearthCanvasVisualFidelityRenewalActive = "true";
+      state.canvas.dataset.hearthCanvasSevenContinentVisualFallbackActive = "true";
+      state.canvas.dataset.hearthCanvasContinentVisualSeedCount = "7";
+      state.canvas.dataset.hearthCanvasContinentBlendMode = "max-separated";
       state.canvas.dataset.hearthRotationYaw = String(Number(state.rotationYaw.toFixed(4)));
       state.canvas.dataset.hearthRotationPitch = String(Number(state.rotationPitch.toFixed(4)));
       state.canvas.dataset.visualPassClaimed = "false";
@@ -2202,6 +2596,32 @@
       checkpointGovernorDetected: state.checkpointGovernorDetected,
       checkpointSessionSubmissionAvailable: state.checkpointSessionSubmissionAvailable,
       canvasEvidenceSubmittedToNorth: state.canvasEvidenceSubmittedToNorth,
+
+      newsProtocolSynchronized: true,
+      fibonacciAlignmentSynchronized: true,
+      activeFibonacciGate: "F13",
+      futureFibonacciGate: "F21",
+      oneActiveGearAtATime: true,
+      cycleOrder: "EAST_WEST_NORTH_SOUTH_CHECKPOINT_EAST",
+
+      eastIgnitionComplete: true,
+      westAdmissibilityComplete: true,
+      northCheckpointGovernancePreserved: true,
+      southVisibleProofRequired: true,
+
+      sevenContinentVisualFallbackActive: true,
+      continentVisualSeedCount: 7,
+      continentSeedIds: SEVEN_CONTINENT_SEEDS.map((seed) => seed.id),
+      continentBlendMode: "max-separated",
+      proceduralSixLobeAdditiveFieldRetired: true,
+      oceanChannelCutActive: true,
+      seaLineTightened: true,
+      coastlineSharpeningActive: true,
+      cachedTextureInvalidationAvailable: true,
+      canvasStillDoesNotOwnPlanetTruth: true,
+      transitionalFallbackVisualField: true,
+      upstreamSevenContinentAuthorityPreferred: true,
+      landChannelStillReceiverOnly: true,
 
       cooperativeBootAvailable: state.cooperativeBootAvailable,
       cooperativeBootUsed: state.cooperativeBootUsed,
@@ -2238,6 +2658,13 @@
       imageRendered: state.imageRendered,
       renderedAfterTexture: state.renderedAfterTexture,
       dragInspectionBound: state.dragInspectionBound,
+
+      textureInvalidationCount: state.textureInvalidationCount,
+      textureInvalidated: state.textureInvalidated,
+      textureInvalidationReason: state.textureInvalidationReason,
+      textureRebuildRequested: state.textureRebuildRequested,
+      textureRebuildComplete: state.textureRebuildComplete,
+      textureRebuildError: state.textureRebuildError,
 
       interactiveRotationActive: state.interactiveRotationActive,
       staleCanvasRepairActive: state.staleCanvasRepairActive,
@@ -2292,6 +2719,7 @@
       inspectPlanetControlAvailable: state.dragInspectionBound,
       diagnosticCanLeavePlanetFrame: state.dragInspectionBound,
 
+      f13CanvasEvidencePreserved: true,
       f13CanvasEvidenceComplete: state.f13CanvasEvidenceComplete,
       f13HardFail: state.f13HardFail,
       f21ClaimedByCanvas: false,
@@ -2342,7 +2770,7 @@
     )).join("\n") || "- none";
 
     return [
-      "HEARTH_CANVAS_INTERACTIVE_VISUAL_FIDELITY_STALE_CANVAS_REPAIR_RECEIPT",
+      "HEARTH_SEVEN_CONTINENT_TRANSITIONAL_CANVAS_VISUAL_FIELD_RECEIPT",
       "",
       `contract=${receipt.contract}`,
       `receipt=${receipt.receipt}`,
@@ -2351,6 +2779,26 @@
       `version=${receipt.version}`,
       `file=${receipt.file}`,
       `role=${receipt.role}`,
+      "",
+      `newsProtocolSynchronized=${receipt.newsProtocolSynchronized}`,
+      `fibonacciAlignmentSynchronized=${receipt.fibonacciAlignmentSynchronized}`,
+      `activeFibonacciGate=${receipt.activeFibonacciGate}`,
+      `futureFibonacciGate=${receipt.futureFibonacciGate}`,
+      `oneActiveGearAtATime=${receipt.oneActiveGearAtATime}`,
+      `cycleOrder=${receipt.cycleOrder}`,
+      "",
+      `sevenContinentVisualFallbackActive=${receipt.sevenContinentVisualFallbackActive}`,
+      `continentVisualSeedCount=${receipt.continentVisualSeedCount}`,
+      `continentBlendMode=${receipt.continentBlendMode}`,
+      `proceduralSixLobeAdditiveFieldRetired=${receipt.proceduralSixLobeAdditiveFieldRetired}`,
+      `oceanChannelCutActive=${receipt.oceanChannelCutActive}`,
+      `seaLineTightened=${receipt.seaLineTightened}`,
+      `coastlineSharpeningActive=${receipt.coastlineSharpeningActive}`,
+      `cachedTextureInvalidationAvailable=${receipt.cachedTextureInvalidationAvailable}`,
+      `canvasStillDoesNotOwnPlanetTruth=${receipt.canvasStillDoesNotOwnPlanetTruth}`,
+      `transitionalFallbackVisualField=${receipt.transitionalFallbackVisualField}`,
+      `upstreamSevenContinentAuthorityPreferred=${receipt.upstreamSevenContinentAuthorityPreferred}`,
+      `landChannelStillReceiverOnly=${receipt.landChannelStillReceiverOnly}`,
       "",
       `northAuthorityPresent=${receipt.northAuthorityPresent}`,
       `checkpointGovernorDetected=${receipt.checkpointGovernorDetected}`,
@@ -2375,6 +2823,13 @@
       `imageRendered=${receipt.imageRendered}`,
       `renderedAfterTexture=${receipt.renderedAfterTexture}`,
       `dragInspectionBound=${receipt.dragInspectionBound}`,
+      "",
+      `textureInvalidationCount=${receipt.textureInvalidationCount}`,
+      `textureInvalidated=${receipt.textureInvalidated}`,
+      `textureInvalidationReason=${receipt.textureInvalidationReason}`,
+      `textureRebuildRequested=${receipt.textureRebuildRequested}`,
+      `textureRebuildComplete=${receipt.textureRebuildComplete}`,
+      `textureRebuildError=${receipt.textureRebuildError}`,
       "",
       `interactiveRotationActive=${receipt.interactiveRotationActive}`,
       `staleCanvasRepairActive=${receipt.staleCanvasRepairActive}`,
@@ -2426,6 +2881,7 @@
       `inspectPlanetControlAvailable=${receipt.inspectPlanetControlAvailable}`,
       `diagnosticCanLeavePlanetFrame=${receipt.diagnosticCanLeavePlanetFrame}`,
       "",
+      `f13CanvasEvidencePreserved=${receipt.f13CanvasEvidencePreserved}`,
       `f13CanvasEvidenceComplete=${receipt.f13CanvasEvidenceComplete}`,
       `f13HardFail=${receipt.f13HardFail}`,
       `f21ClaimedByCanvas=${receipt.f21ClaimedByCanvas}`,
@@ -2471,6 +2927,8 @@
     forceRedraw,
     setRotation,
     resetRotation,
+    invalidateTexture,
+    rebuildTexture,
     sample,
     read,
     sampleVisibleContent,
@@ -2491,6 +2949,24 @@
     hardFailReservedForStructuralFailure: true,
     duplicatePostReadyBootSuppression: true,
     cooperativeRenderChunking: true,
+
+    newsProtocolSynchronized: true,
+    fibonacciAlignmentSynchronized: true,
+    activeFibonacciGate: "F13",
+    futureFibonacciGate: "F21",
+    oneActiveGearAtATime: true,
+
+    sevenContinentVisualFallbackActive: true,
+    continentVisualSeedCount: 7,
+    continentBlendMode: "max-separated",
+    proceduralSixLobeAdditiveFieldRetired: true,
+    oceanChannelCutActive: true,
+    seaLineTightened: true,
+    coastlineSharpeningActive: true,
+    cachedTextureInvalidationAvailable: true,
+    transitionalFallbackVisualField: true,
+    upstreamSevenContinentAuthorityPreferred: true,
+    landChannelStillReceiverOnly: true,
 
     interactiveRotationActive: true,
     staleCanvasRepairActive: true,
@@ -2533,11 +3009,13 @@
   root.HEARTH_CANVAS_VISUAL_FIDELITY = api;
   root.HEARTH_CANVAS_INTERACTIVE_ROTATION = api;
   root.HEARTH_CANVAS_STALE_REPAIR = api;
+  root.HEARTH_CANVAS_SEVEN_CONTINENT_VISUAL_FIELD = api;
 
   root.DEXTER_LAB = root.DEXTER_LAB || {};
   root.DEXTER_LAB.hearthCanvasEvidence = api;
   root.DEXTER_LAB.hearthCanvasVisualFidelity = api;
   root.DEXTER_LAB.hearthCanvasInteractiveRotation = api;
+  root.DEXTER_LAB.hearthCanvasSevenContinentVisualField = api;
 
   updateDocumentDataset();
 

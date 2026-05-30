@@ -1,17 +1,15 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_CANVAS_UPSTREAM_FIRST_SEVEN_CONTINENT_FALLBACK_ZOOM_LOD_TNT_v2
+// HEARTH_CANVAS_MATERIALS_RELIEF_CONSUMPTION_INVALIDATION_TNT_v1
 // Full-file replacement.
 // Canvas / F13 evidence authority only.
 // Purpose:
+// - Preserve upstream-first canvas, NEWS/Fibonacci F13 evidence flow, cooperative chunking, drag inspection, zoom/LOD, and cached texture repaint.
 // - Make canonical HEARTH_MATERIALS the primary atlas source when valid.
-// - Stop demoting canonical material color; only raw child/source colors are demoted.
+// - Bridge the active HEARTH_MATERIALS receipt into the canvas receipt.
+// - Detect HEARTH_MATERIALS contract/receipt signature changes.
+// - Invalidate cached atlas/texture when material authority changes.
+// - Rebuild texture safely without letting canvas claim F21.
 // - Keep seven-continent visual field as emergency fallback only.
-// - Preserve NEWS/Fibonacci F13 evidence flow.
-// - Preserve cooperative chunking so the page does not freeze.
-// - Preserve pointer/touch drag repaint and cached texture inspection.
-// - Add projection-only zoom / LOD without atlas rebuild.
-// - Preserve explicit texture invalidation/rebuild capability.
-// - Feed North Runtime Table checkpoint evidence without claiming F21.
 // Does not own:
 // - planet truth
 // - upstream elevation truth
@@ -28,11 +26,14 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_UPSTREAM_FIRST_SEVEN_CONTINENT_FALLBACK_ZOOM_LOD_TNT_v2";
-  const RECEIPT = "HEARTH_CANVAS_UPSTREAM_FIRST_SEVEN_CONTINENT_FALLBACK_ZOOM_LOD_RECEIPT_v2";
-  const PREVIOUS_CONTRACT = "HEARTH_SEVEN_CONTINENT_TRANSITIONAL_CANVAS_VISUAL_FIELD_TNT_v1";
-  const BASELINE_CONTRACT = "HEARTH_CANVAS_NEWS_FIBONACCI_SOFT_GAP_EVIDENCE_ADAPTER_TNT_v2";
-  const VERSION = "2026-05-30.hearth-canvas-upstream-first-seven-continent-fallback-zoom-lod-v2";
+  const CONTRACT = "HEARTH_CANVAS_MATERIALS_RELIEF_CONSUMPTION_INVALIDATION_TNT_v1";
+  const RECEIPT = "HEARTH_CANVAS_MATERIALS_RELIEF_CONSUMPTION_INVALIDATION_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_UPSTREAM_FIRST_SEVEN_CONTINENT_FALLBACK_ZOOM_LOD_TNT_v2";
+  const BASELINE_CONTRACT = "HEARTH_CANVAS_UPSTREAM_FIRST_SEVEN_CONTINENT_FALLBACK_ZOOM_LOD_TNT_v2";
+  const VERSION = "2026-05-30.hearth-canvas-materials-relief-consumption-invalidation-v1";
+
+  const EXPECTED_MATERIAL_CONTRACT = "HEARTH_MATERIALS_ISLAND_ELEVATION_BEACH_RELIEF_CONSUMER_TNT_v1";
+  const EXPECTED_MATERIAL_RECEIPT = "HEARTH_MATERIALS_ISLAND_ELEVATION_BEACH_RELIEF_CONSUMER_RECEIPT_v1";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
@@ -44,7 +45,7 @@
   const ATLAS_WIDTH = 640;
   const ATLAS_HEIGHT = 320;
   const ATLAS_ROWS_PER_CHUNK = 4;
-  const SPHERE_ROWS_PER_CHUNK = 8;
+  const SPHERE_ROWS_PER_CHUNK = 40;
   const TEXTURE_STEPS = 18;
   const SAMPLE_COUNT = 257;
 
@@ -53,86 +54,22 @@
   const ZOOM_DEFAULT = 1;
 
   const CHECKPOINT_BY_PHASE = Object.freeze({
-    CANVAS_COOPERATIVE_BOOT_STARTED: {
-      checkpointId: "F13A_CANVAS_COOPERATIVE_BOOT_STARTED",
-      event: "CANVAS_COOPERATIVE_BOOT_STARTED",
-      progress: 78
-    },
-    CANVAS_MOUNT_CREATED: {
-      checkpointId: "F13B_CANVAS_MOUNT_CREATED",
-      event: "CANVAS_MOUNT_CREATED",
-      progress: 81
-    },
-    CANVAS_CONTEXT_READY: {
-      checkpointId: "F13C_CANVAS_CONTEXT_READY",
-      event: "CANVAS_CONTEXT_READY",
-      progress: 84
-    },
-    DRAG_INSPECTION_BOUND: {
-      checkpointId: "F13D_DRAG_INSPECTION_BOUND",
-      event: "DRAG_INSPECTION_BOUND",
-      progress: 86
-    },
-    ATLAS_BUILD_STARTED: {
-      checkpointId: "F13E_ATLAS_BUILD_STARTED",
-      event: "ATLAS_BUILD_STARTED",
-      progress: 88
-    },
-    ATLAS_BUILD_COMPLETE: {
-      checkpointId: "F13F_ATLAS_BUILD_COMPLETE",
-      event: "ATLAS_BUILD_COMPLETE",
-      progress: 91
-    },
-    TEXTURE_COMPOSE_STARTED: {
-      checkpointId: "F13G_TEXTURE_COMPOSE_STARTED",
-      event: "TEXTURE_COMPOSE_STARTED",
-      progress: 93
-    },
-    TEXTURE_COMPOSE_COMPLETE: {
-      checkpointId: "F13H_TEXTURE_COMPOSE_COMPLETE",
-      event: "TEXTURE_COMPOSE_COMPLETE",
-      progress: 96
-    },
-    FIRST_FRAME_REQUESTED: {
-      checkpointId: "F13I_FIRST_FRAME_REQUESTED",
-      event: "FIRST_FRAME_REQUESTED",
-      progress: 97
-    },
-    FIRST_FRAME_DETECTED: {
-      checkpointId: "F13J_FIRST_FRAME_DETECTED",
-      event: "FIRST_FRAME_DETECTED",
-      progress: 98
-    },
-    CANVAS_READY: {
-      checkpointId: "F13K_CANVAS_READY",
-      event: "CANVAS_READY",
-      progress: 98
-    },
-    VISIBLE_CONTENT_PROOF_STARTED: {
-      checkpointId: "F13L_VISIBLE_CONTENT_PROOF_STARTED",
-      event: "VISIBLE_CONTENT_PROOF_STARTED",
-      progress: 98
-    },
-    VISIBLE_CONTENT_PROOF_PASSED: {
-      checkpointId: "F13M_VISIBLE_CONTENT_PROOF_PASSED",
-      event: "VISIBLE_CONTENT_PROOF_PASSED",
-      progress: 98
-    },
-    DEGRADED_VISIBLE_CONTENT_ACCEPTED: {
-      checkpointId: "F13M_VISIBLE_CONTENT_PROOF_PASSED",
-      event: "DEGRADED_VISIBLE_CONTENT_ACCEPTED",
-      progress: 98
-    },
-    VISIBLE_CONTENT_HARD_FAIL: {
-      checkpointId: "F13M_VISIBLE_CONTENT_PROOF_PASSED",
-      event: "VISIBLE_CONTENT_PROOF_PASSED",
-      progress: 98
-    },
-    INSPECT_MODE_READY: {
-      checkpointId: "F13N_INSPECT_MODE_READY",
-      event: "INSPECT_MODE_READY",
-      progress: 98
-    }
+    CANVAS_COOPERATIVE_BOOT_STARTED: { checkpointId: "F13A_CANVAS_COOPERATIVE_BOOT_STARTED", event: "CANVAS_COOPERATIVE_BOOT_STARTED", progress: 78 },
+    CANVAS_MOUNT_CREATED: { checkpointId: "F13B_CANVAS_MOUNT_CREATED", event: "CANVAS_MOUNT_CREATED", progress: 81 },
+    CANVAS_CONTEXT_READY: { checkpointId: "F13C_CANVAS_CONTEXT_READY", event: "CANVAS_CONTEXT_READY", progress: 84 },
+    DRAG_INSPECTION_BOUND: { checkpointId: "F13D_DRAG_INSPECTION_BOUND", event: "DRAG_INSPECTION_BOUND", progress: 86 },
+    ATLAS_BUILD_STARTED: { checkpointId: "F13E_ATLAS_BUILD_STARTED", event: "ATLAS_BUILD_STARTED", progress: 88 },
+    ATLAS_BUILD_COMPLETE: { checkpointId: "F13F_ATLAS_BUILD_COMPLETE", event: "ATLAS_BUILD_COMPLETE", progress: 91 },
+    TEXTURE_COMPOSE_STARTED: { checkpointId: "F13G_TEXTURE_COMPOSE_STARTED", event: "TEXTURE_COMPOSE_STARTED", progress: 93 },
+    TEXTURE_COMPOSE_COMPLETE: { checkpointId: "F13H_TEXTURE_COMPOSE_COMPLETE", event: "TEXTURE_COMPOSE_COMPLETE", progress: 96 },
+    FIRST_FRAME_REQUESTED: { checkpointId: "F13I_FIRST_FRAME_REQUESTED", event: "FIRST_FRAME_REQUESTED", progress: 97 },
+    FIRST_FRAME_DETECTED: { checkpointId: "F13J_FIRST_FRAME_DETECTED", event: "FIRST_FRAME_DETECTED", progress: 98 },
+    CANVAS_READY: { checkpointId: "F13K_CANVAS_READY", event: "CANVAS_READY", progress: 98 },
+    VISIBLE_CONTENT_PROOF_STARTED: { checkpointId: "F13L_VISIBLE_CONTENT_PROOF_STARTED", event: "VISIBLE_CONTENT_PROOF_STARTED", progress: 98 },
+    VISIBLE_CONTENT_PROOF_PASSED: { checkpointId: "F13M_VISIBLE_CONTENT_PROOF_PASSED", event: "VISIBLE_CONTENT_PROOF_PASSED", progress: 98 },
+    DEGRADED_VISIBLE_CONTENT_ACCEPTED: { checkpointId: "F13M_VISIBLE_CONTENT_PROOF_PASSED", event: "DEGRADED_VISIBLE_CONTENT_ACCEPTED", progress: 98 },
+    VISIBLE_CONTENT_HARD_FAIL: { checkpointId: "F13M_VISIBLE_CONTENT_PROOF_PASSED", event: "VISIBLE_CONTENT_PROOF_PASSED", progress: 98 },
+    INSPECT_MODE_READY: { checkpointId: "F13N_INSPECT_MODE_READY", event: "INSPECT_MODE_READY", progress: 98 }
   });
 
   const EARLY_CANVAS_EVENTS = new Set([
@@ -160,7 +97,7 @@
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     file: FILE,
-    role: "f13-canvas-evidence-producer-upstream-first-seven-continent-fallback-zoom-lod",
+    role: "f13-canvas-evidence-producer-materials-relief-consumption-invalidation",
 
     northAuthority: NORTH_FILE,
     ownsCanvasEvidenceOnly: true,
@@ -177,6 +114,35 @@
     futureFibonacciGate: "F21",
     oneActiveGearAtATime: true,
     cycleOrder: "EAST_WEST_NORTH_SOUTH_CHECKPOINT_EAST",
+
+    materialReceiptBridgeActive: true,
+    materialNestedReceiptAvailable: false,
+    materialContract: "",
+    materialReceipt: "",
+    materialExpectedContract: EXPECTED_MATERIAL_CONTRACT,
+    materialExpectedReceipt: EXPECTED_MATERIAL_RECEIPT,
+    materialContractMatchesExpected: false,
+    materialReceiptMatchesExpected: false,
+    materialPreviousContract: "",
+    materialBaselineContract: "",
+    materialVersion: "",
+    materialRole: "",
+    materialContractSignature: "",
+    previousMaterialContractSignature: "",
+    materialContractSignatureChanged: false,
+    materialTextureInvalidatedByContractChange: false,
+    materialTextureInvalidationReason: "",
+    materialInvalidationRebuildCount: 0,
+    materialReceiptInCanvasReceipt: true,
+    materialAtlasPrimary: false,
+    materialCreateTextureCanvasAvailable: false,
+    materialCreateTextureCanvasUsed: false,
+    materialSampleFallbackUsed: false,
+    materialSampleFailureCount: 0,
+    materialSampleSuccessCount: 0,
+    materialSampleFallbackReason: "",
+    materialReliefFeedsDetected: false,
+    materialElevationContractMatchesActive: false,
 
     upstreamFirstAtlasActive: true,
     canonicalMaterialAuthorityPresent: false,
@@ -408,18 +374,15 @@
 
   function clonePlain(value) {
     if (!isObject(value)) return value;
-
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
-      if (Array.isArray(value)) return value.slice();
-      return { ...value };
+      return Array.isArray(value) ? value.slice() : { ...value };
     }
   }
 
   function yieldFrame(ms = 0) {
     state.canvasYieldCount += 1;
-
     return new Promise((resolve) => {
       if (typeof root.requestAnimationFrame === "function") {
         root.requestAnimationFrame(() => {
@@ -499,7 +462,7 @@
 
     if (!canvas) {
       canvas = doc.createElement("canvas");
-      canvas.className = "hearth-canvas hearth-canvas--upstream-first-zoom-lod";
+      canvas.className = "hearth-canvas hearth-canvas--materials-relief-consumption";
       canvas.dataset.hearthCanvas = "true";
       canvas.dataset.hearthCanvasTexture = "true";
       canvas.dataset.hearthCanvasContract = CONTRACT;
@@ -696,10 +659,156 @@
     return null;
   }
 
+  function readMaterialAuthority() {
+    return (
+      root.HEARTH_MATERIALS ||
+      root.HearthMaterials ||
+      (root.HEARTH && root.HEARTH.materials) ||
+      (root.DEXTER_LAB && root.DEXTER_LAB.hearthMaterials) ||
+      resolveSource(["materials", "hearthMaterials"]) ||
+      null
+    );
+  }
+
+  function readAuthorityReceipt(authority) {
+    if (!authority || !isObject(authority)) return null;
+
+    if (isFunction(authority.getReceipt)) {
+      try {
+        const receipt = authority.getReceipt();
+        if (receipt && isObject(receipt)) return receipt;
+      } catch (error) {
+        recordError("MATERIAL_RECEIPT_READ_FAILED", error);
+      }
+    }
+
+    if (authority.receiptPacket && isObject(authority.receiptPacket)) return authority.receiptPacket;
+    if (authority.receiptData && isObject(authority.receiptData)) return authority.receiptData;
+    if (authority.receipt && isObject(authority.receipt)) return authority.receipt;
+
+    if (authority.contract || authority.receipt || authority.version) {
+      return {
+        contract: authority.contract || "",
+        receipt: typeof authority.receipt === "string" ? authority.receipt : "",
+        previousContract: authority.previousContract || "",
+        baselineContract: authority.baselineContract || "",
+        version: authority.version || "",
+        role: authority.role || ""
+      };
+    }
+
+    return null;
+  }
+
+  function materialSignatureFrom(authority, receipt) {
+    if (!authority && !receipt) return "";
+
+    return [
+      readString(receipt || authority, ["contract"], authority && authority.contract ? authority.contract : ""),
+      readString(receipt || authority, ["receipt"], authority && authority.receipt ? authority.receipt : ""),
+      readString(receipt || authority, ["version"], authority && authority.version ? authority.version : ""),
+      readString(receipt || authority, ["activeElevationContractRequired", "requiredElevationContract"], ""),
+      String(Boolean(readBoolean(receipt || authority, ["supportsIslandElevationMaterialConsumer"], false))),
+      String(Boolean(readBoolean(receipt || authority, ["supportsRidgeBandMaterialFeed"], false))),
+      String(Boolean(readBoolean(receipt || authority, ["supportsInlandReliefMaterialFeed"], false)))
+    ].join("|");
+  }
+
+  function refreshMaterialReceiptBridge(options = {}) {
+    const authority = readMaterialAuthority();
+    const receipt = readAuthorityReceipt(authority);
+    const source = receipt || authority || {};
+    const signature = materialSignatureFrom(authority, receipt);
+    const previousSignature = state.materialContractSignature;
+
+    state.materialReceiptBridgeActive = true;
+    state.canonicalMaterialAuthorityPresent = Boolean(authority);
+    state.materialNestedReceiptAvailable = Boolean(receipt);
+
+    state.materialContract = readString(source, ["contract"], authority && authority.contract ? authority.contract : "");
+    state.materialReceipt = readString(source, ["receipt"], authority && authority.receipt ? authority.receipt : "");
+    state.materialPreviousContract = readString(source, ["previousContract"], "");
+    state.materialBaselineContract = readString(source, ["baselineContract"], "");
+    state.materialVersion = readString(source, ["version"], authority && authority.version ? authority.version : "");
+    state.materialRole = readString(source, ["role"], "");
+
+    state.materialExpectedContract = EXPECTED_MATERIAL_CONTRACT;
+    state.materialExpectedReceipt = EXPECTED_MATERIAL_RECEIPT;
+    state.materialContractMatchesExpected = state.materialContract === EXPECTED_MATERIAL_CONTRACT;
+    state.materialReceiptMatchesExpected = state.materialReceipt === EXPECTED_MATERIAL_RECEIPT;
+    state.materialCreateTextureCanvasAvailable = Boolean(authority && isFunction(authority.createTextureCanvas));
+
+    state.materialReliefFeedsDetected = Boolean(
+      readBoolean(source, ["supportsRidgeBandMaterialFeed"], false) ||
+      readBoolean(source, ["supportsInlandReliefMaterialFeed"], false) ||
+      readBoolean(source, ["ridgeBandMaterialFeedActive"], false) ||
+      readBoolean(source, ["inlandReliefMaterialFeedActive"], false)
+    );
+
+    state.materialElevationContractMatchesActive = Boolean(
+      readBoolean(source, ["elevationContractMatchesActive"], false) ||
+      readBoolean(source, ["consumesActiveElevationContract"], false) ||
+      readString(source, ["activeElevationContractRequired", "requiredElevationContract"], "") === "HEARTH_ELEVATION_ISLAND_COASTAL_FEATURE_CONSUMPTION_TNT_v1"
+    );
+
+    if (signature && previousSignature && signature !== previousSignature) {
+      state.previousMaterialContractSignature = previousSignature;
+      state.materialContractSignature = signature;
+      state.materialContractSignatureChanged = true;
+
+      if (options.invalidate !== false) {
+        state.materialTextureInvalidatedByContractChange = true;
+        state.materialTextureInvalidationReason = options.reason || "material-contract-signature-changed";
+        invalidateTexture(state.materialTextureInvalidationReason, {
+          fromMaterialBridge: true,
+          skipMilestone: options.skipMilestone === true
+        });
+      }
+    } else if (signature) {
+      state.materialContractSignature = signature;
+      if (!previousSignature) state.previousMaterialContractSignature = "";
+    }
+
+    updateDocumentDataset();
+
+    return {
+      authority,
+      receipt,
+      signature,
+      changed: Boolean(previousSignature && signature && signature !== previousSignature),
+      materialContract: state.materialContract,
+      materialReceipt: state.materialReceipt,
+      materialContractMatchesExpected: state.materialContractMatchesExpected,
+      materialReceiptMatchesExpected: state.materialReceiptMatchesExpected
+    };
+  }
+
+  async function ensureMaterialTextureFresh(options = {}) {
+    const bridge = refreshMaterialReceiptBridge({ invalidate: true, reason: "material-contract-signature-changed" });
+
+    if (
+      bridge.changed &&
+      state.textureInvalidated &&
+      options.allowRebuild !== false &&
+      !state.booting &&
+      state.canvas &&
+      state.context
+    ) {
+      state.materialInvalidationRebuildCount += 1;
+      await rebuildTexture({
+        ...options,
+        reason: "material-contract-signature-changed",
+        materialTriggered: true
+      });
+    }
+
+    return getReceipt();
+  }
+
   function sampleExternalAuthority(authority, point) {
     if (!authority || !isObject(authority)) return null;
 
-    const methods = ["sample", "read", "get", "getCell", "sampleAt", "readAt", "getMaterial", "getSurfaceMaterial"];
+    const methods = ["sample", "read", "get", "getCell", "sampleAt", "readAt", "getMaterial", "getSurfaceMaterial", "resolve", "resolveMaterial"];
 
     for (const method of methods) {
       if (!isFunction(authority[method])) continue;
@@ -782,7 +891,9 @@
       "sea",
       "strait",
       "shallow",
-      "deep"
+      "deep",
+      "bay",
+      "inlet"
     ]);
 
     const textSaysLand = includesAny(classText, [
@@ -798,7 +909,9 @@
       "summit",
       "ridge",
       "coast",
-      "beach"
+      "beach",
+      "island",
+      "peninsula"
     ]);
 
     let isWater = Boolean(isWaterBool === true || waterFeed > 0.42 || (textSaysWater && !textSaysLand));
@@ -843,7 +956,10 @@
       readNumber(packet, ["terrainRelief"], 0),
       readNumber(packet, ["ridgeRelief"], 0),
       readNumber(packet, ["elevationReliefMaterialFeed"], 0),
-      readNumber(packet, ["coordinateSummitMaterialFeed"], 0)
+      readNumber(packet, ["coordinateSummitMaterialFeed"], 0),
+      readNumber(packet, ["ridgeBandMaterialFeed"], 0),
+      readNumber(packet, ["inlandReliefMaterialFeed"], 0),
+      readNumber(packet, ["islandReliefMaterialFeed"], 0)
     ));
 
     return {
@@ -858,7 +974,8 @@
       shore,
       shelf,
       relief,
-      visualClass: readString(packet, ["visualClass", "terrainClass", "surfaceFamily"], isWater ? "canonical-water" : "canonical-land")
+      visualClass: readString(packet, ["visualClass", "terrainClass", "surfaceFamily"], isWater ? "canonical-water" : "canonical-land"),
+      packet
     };
   }
 
@@ -893,10 +1010,7 @@
     const wv = clamp01(v + warpB * 0.028);
 
     const values = SEVEN_CONTINENT_SEEDS
-      .map((seed) => ({
-        seed,
-        value: continentLobe(wu, wv, seed)
-      }))
+      .map((seed) => ({ seed, value: continentLobe(wu, wv, seed) }))
       .sort((a, b) => b.value - a.value);
 
     const primary = values[0];
@@ -967,9 +1081,7 @@
       )
     );
 
-    const elevation = Number.isFinite(rawElevation)
-      ? rawElevation
-      : visualField.elevation;
+    const elevation = Number.isFinite(rawElevation) ? rawElevation : visualField.elevation;
 
     const hydro = readNumber(hydroSample, ["waterAlpha", "waterPresence", "hydrology", "water", "waterFillStrength"], NaN);
     const compositionLand = readNumber(compositionSample, ["landAlpha", "landPresence", "land", "landPotential"], NaN);
@@ -1008,35 +1120,25 @@
     let className;
 
     if (isWater) {
-      const deepOcean = [6, 35, 82];
-      const ocean = [12, 66, 132];
-      const shelfWater = [32, 117, 158];
-      const glacialWater = [76, 135, 166];
-
-      rgb = mixRgb(deepOcean, ocean, clamp01((1 - waterSignal) * 0.52 + fine * 0.20));
-      rgb = mixRgb(rgb, shelfWater, shelf);
-      rgb = mixRgb(rgb, glacialWater, Math.pow(latBand, 2.1) * 0.22);
+      rgb = mixRgb([6, 35, 82], [12, 66, 132], clamp01((1 - waterSignal) * 0.52 + fine * 0.20));
+      rgb = mixRgb(rgb, [32, 117, 158], shelf);
+      rgb = mixRgb(rgb, [76, 135, 166], Math.pow(latBand, 2.1) * 0.22);
       className = shelf > 0.42 ? "elevation-hydrology-shelf-water" : "elevation-hydrology-deep-water";
     } else {
-      const wetLowland = [52, 114, 72];
-      const dryLowland = [126, 106, 60];
-      const upland = [102, 123, 84];
-      const mountainRock = [150, 140, 112];
-      const snow = [208, 215, 203];
-
       const highland = clamp01((elevation - 0.58) * 2.7);
       const mountain = clamp01((elevation - 0.68) * 3.5);
       const lowland = clamp01(1 - Math.abs(elevation - 0.52) * 3.0);
+      const baseLand = mixRgb([126, 106, 60], [52, 114, 72], vegetation * (1 - arid * 0.52));
 
-      const baseLand = mixRgb(dryLowland, wetLowland, vegetation * (1 - arid * 0.52));
-      rgb = mixRgb(baseLand, upland, lowland * 0.34 + highland * 0.20);
-      rgb = mixRgb(rgb, mountainRock, mountain * 0.72);
-      rgb = mixRgb(rgb, snow, clamp01((Math.pow(latBand, 2.1) - 0.62) * 1.55 + mountain * 0.20));
+      rgb = mixRgb(baseLand, [102, 123, 84], lowland * 0.34 + highland * 0.20);
+      rgb = mixRgb(rgb, [150, 140, 112], mountain * 0.72);
+      rgb = mixRgb(rgb, [208, 215, 203], clamp01((Math.pow(latBand, 2.1) - 0.62) * 1.55 + mountain * 0.20));
       rgb = mixRgb(rgb, [190, 166, 98], shore * 0.66);
       className = mountain > 0.50 ? "elevation-hydrology-mountain" : shore > 0.42 ? "elevation-hydrology-coast-land" : "elevation-hydrology-land";
     }
 
     const relief = (ridge - 0.50) * 18 + (fine - 0.50) * 8;
+
     rgb = [
       clamp(Math.round(rgb[0] + relief + shore * (isWater ? 4 : 18)), 0, 255),
       clamp(Math.round(rgb[1] + relief + shore * (isWater ? 6 : 14)), 0, 255),
@@ -1073,14 +1175,24 @@
     const point = { u, v, lon, lat, x: vector.x, y: vector.y, z: vector.z };
     const latBand = Math.abs(lat) / 90;
 
-    const materialsAuthority = resolveSource(["HEARTH_MATERIALS", "materials", "hearthMaterials"]);
+    const materialsAuthority = readMaterialAuthority();
     const hydrologyAuthority = resolveSource(["HEARTH_HYDROLOGY", "hydrology", "hearthHydrology"]);
     const elevationAuthority = resolveSource(["HEARTH_ELEVATION", "elevation", "hearthElevation"]);
     const compositionAuthority = resolveSource(["HEARTH_COMPOSITION", "composition", "hearthComposition"]);
     const hexAuthority = resolveSource(["HEARTH_HEX_FOUR_PAIR_AUTHORITY", "hexAuthority", "hearthHexAuthority"]);
     const hexSurface = resolveSource(["HEARTH_HEX_SURFACE", "hexSurface", "hearthHexSurface"]);
 
-    const materialSample = sampleExternalAuthority(materialsAuthority, point);
+    let materialSample = null;
+
+    if (materialsAuthority) {
+      try {
+        materialSample = sampleExternalAuthority(materialsAuthority, point);
+      } catch (error) {
+        state.materialSampleFailureCount += 1;
+        state.materialSampleFallbackReason = error && error.message ? error.message : String(error);
+      }
+    }
+
     const hydroSample = sampleExternalAuthority(hydrologyAuthority, point);
     const elevationSample = sampleExternalAuthority(elevationAuthority, point);
     const compositionSample = sampleExternalAuthority(compositionAuthority, point);
@@ -1096,9 +1208,18 @@
       extractColor(hexSample) ||
       null;
 
-    let output;
-
     if (material.valid) {
+      state.materialSampleSuccessCount += 1;
+      state.materialAtlasPrimary = true;
+      state.materialSampleFallbackUsed = true;
+      state.materialSampleFallbackReason = "material-sample-method-used-for-cooperative-atlas";
+      state.canonicalMaterialAuthorityPresent = Boolean(materialsAuthority);
+      state.canonicalMaterialConsumed = true;
+      state.canonicalMaterialColorPrimary = true;
+      state.canonicalMaterialShapePrimary = true;
+      state.sevenContinentFallbackSuppressedByUpstream = true;
+
+      const packet = material.packet || {};
       const elevation = Number.isFinite(material.elevation) ? material.elevation : visualField.elevation;
       const shore = material.shore;
       const shelf = material.shelf;
@@ -1107,16 +1228,16 @@
       let rgb = material.color.slice();
 
       if (material.isWater) {
-        rgb = mixRgb(rgb, [5, 20, 42], clamp01(readNumber(materialSample, ["waterDepthShade", "waterDepth"], 0) * 0.16));
+        rgb = mixRgb(rgb, [5, 20, 42], clamp01(readNumber(packet, ["waterDepthShade", "waterDepth"], 0) * 0.16));
         rgb = mixRgb(rgb, [36, 115, 152], clamp01(shelf * 0.10));
       } else {
         rgb = mixRgb(rgb, [190, 166, 98], clamp01(shore * 0.10));
-        rgb = mixRgb(rgb, [154, 149, 123], clamp01(relief * 0.08));
+        rgb = mixRgb(rgb, [154, 149, 123], clamp01(relief * 0.12));
       }
 
-      rgb = applyRawSourceInfluence(rgb, rawSourceColor, material.isWater ? 0.035 : 0.045);
+      rgb = applyRawSourceInfluence(rgb, rawSourceColor, material.isWater ? 0.025 : 0.035);
 
-      output = {
+      return {
         ...point,
         rgb,
         className: material.visualClass || (material.isWater ? "canonical-material-water" : "canonical-material-land"),
@@ -1134,11 +1255,11 @@
         polar: Math.pow(latBand, 2.1),
         visualClass: material.visualClass,
 
-        continentId: readString(materialSample, ["continentId"], visualField.continentId),
-        continentIndex: Number.isFinite(readNumber(materialSample, ["continentIndex"], NaN))
-          ? readNumber(materialSample, ["continentIndex"], visualField.continentIndex)
+        continentId: readString(packet, ["continentId"], visualField.continentId),
+        continentIndex: Number.isFinite(readNumber(packet, ["continentIndex"], NaN))
+          ? readNumber(packet, ["continentIndex"], visualField.continentIndex)
           : visualField.continentIndex,
-        continentSignal: Math.max(readNumber(materialSample, ["continentPotential", "bodySeatPressure"], 0), visualField.continentSignal),
+        continentSignal: Math.max(readNumber(packet, ["continentPotential", "bodySeatPressure"], 0), visualField.continentSignal),
         secondaryContinentSignal: visualField.secondaryContinentSignal,
         continentSeedCount: SEVEN_CONTINENT_SEEDS.length,
         continentBlendMode: "upstream-material-primary",
@@ -1156,13 +1277,6 @@
         sourceColorDemotedToPaletteInfluence: true,
         canvasStillDoesNotOwnPlanetTruth: true
       };
-
-      state.canonicalMaterialAuthorityPresent = Boolean(materialsAuthority);
-      state.canonicalMaterialConsumed = true;
-      state.canonicalMaterialColorPrimary = true;
-      state.canonicalMaterialShapePrimary = true;
-      state.sevenContinentFallbackSuppressedByUpstream = true;
-      return output;
     }
 
     const upstreamElevationHydrologyUsable = Boolean(
@@ -1175,7 +1289,10 @@
       const fallback = sampleElevationHydrologyFallback(point, elevationSample, hydroSample, compositionSample, visualField, latBand);
       const rgb = applyRawSourceInfluence(fallback.rgb, rawSourceColor, fallback.isWater ? 0.05 : 0.06);
 
-      output = {
+      state.elevationHydrologyFallbackUsed = true;
+      state.sevenContinentFallbackSuppressedByUpstream = true;
+
+      return {
         ...point,
         ...fallback,
         rgb,
@@ -1203,11 +1320,6 @@
         sourceColorDemotedToPaletteInfluence: true,
         canvasStillDoesNotOwnPlanetTruth: true
       };
-
-      state.canonicalMaterialAuthorityPresent = Boolean(materialsAuthority);
-      state.elevationHydrologyFallbackUsed = true;
-      state.sevenContinentFallbackSuppressedByUpstream = true;
-      return output;
     }
 
     const elevation = visualField.elevation;
@@ -1296,6 +1408,8 @@
   async function buildAtlas(onProgress) {
     if (!doc) throw new Error("Document unavailable for atlas build.");
 
+    refreshMaterialReceiptBridge({ invalidate: false });
+
     if (!state.atlasCanvas || !state.atlasContext) {
       const working = createWorkingCanvas(ATLAS_WIDTH, ATLAS_HEIGHT);
       state.atlasCanvas = working.canvas;
@@ -1318,10 +1432,17 @@
     state.elevationHydrologyFallbackUsed = false;
     state.sevenContinentFallbackUsed = false;
     state.sevenContinentFallbackSuppressedByUpstream = false;
+    state.materialAtlasPrimary = false;
+    state.materialCreateTextureCanvasUsed = false;
+    state.materialSampleFallbackUsed = false;
+    state.materialSampleSuccessCount = 0;
+    state.materialSampleFailureCount = 0;
 
     emitMilestone("ATLAS_BUILD_STARTED", 88, "Atlas build started.");
 
     for (let yStart = 0; yStart < ATLAS_HEIGHT; yStart += ATLAS_ROWS_PER_CHUNK) {
+      refreshMaterialReceiptBridge({ invalidate: false });
+
       const yEnd = Math.min(ATLAS_HEIGHT, yStart + ATLAS_ROWS_PER_CHUNK);
 
       for (let y = yStart; y < yEnd; y += 1) {
@@ -1371,6 +1492,8 @@
     state.canonicalMaterialConsumed = state.atlasCanonicalMaterialSampleCount > 0;
     state.canonicalMaterialColorPrimary = state.atlasCanonicalMaterialSampleCount > 0;
     state.canonicalMaterialShapePrimary = state.atlasCanonicalMaterialSampleCount > 0;
+    state.materialAtlasPrimary = state.atlasCanonicalMaterialSampleCount > 0;
+    state.materialSampleFallbackUsed = state.atlasCanonicalMaterialSampleCount > 0 && !state.materialCreateTextureCanvasUsed;
     state.elevationHydrologyFallbackUsed = state.atlasElevationHydrologySampleCount > 0;
     state.sevenContinentFallbackUsed = state.atlasFallbackSampleCount > 0;
     state.sevenContinentFallbackSuppressedByUpstream =
@@ -1431,6 +1554,7 @@
     state.textureComposeComplete = true;
     state.textureComposeProgress = 100;
     state.textureRebuildComplete = true;
+    state.materialTextureInvalidatedByContractChange = false;
     emitMilestone("TEXTURE_COMPOSE_COMPLETE", 96, "Texture composition complete.");
   }
 
@@ -1647,6 +1771,8 @@
   function forceRedraw(options = {}) {
     if (!state.canvas || !state.context) ensureCanvas(options);
     if (!state.textureCanvas || !state.textureContext) return getReceipt();
+
+    refreshMaterialReceiptBridge({ invalidate: false });
 
     try {
       drawSphereFrame({ interactive: options.interactive !== false });
@@ -2145,7 +2271,7 @@
         visiblePlanetAvailable: true
       });
     } else if (softGap) {
-      state.visibleContentProofMethod = "upstream-first-zoom-lod-soft-gap-content-sample";
+      state.visibleContentProofMethod = "materials-relief-soft-gap-content-sample";
       state.visibleContentProofError = [
         `Visible content soft gap: samples=${samples}`,
         `nonblank=${nonblank}`,
@@ -2298,10 +2424,28 @@
 
       textureInvalidationCount: state.textureInvalidationCount,
       textureInvalidated: state.textureInvalidated,
+      textureInvalidationReason: state.textureInvalidationReason,
       textureRebuildRequested: state.textureRebuildRequested,
       textureRebuildComplete: state.textureRebuildComplete,
+      textureRebuildError: state.textureRebuildError,
       textureRebuildAfterLaneClosureSupported: true,
       postReadyTextureRebuildSafe: true,
+
+      materialReceiptBridgeActive: true,
+      materialNestedReceiptAvailable: state.materialNestedReceiptAvailable,
+      materialContract: state.materialContract,
+      materialReceipt: state.materialReceipt,
+      materialExpectedContract: state.materialExpectedContract,
+      materialExpectedReceipt: state.materialExpectedReceipt,
+      materialContractMatchesExpected: state.materialContractMatchesExpected,
+      materialReceiptMatchesExpected: state.materialReceiptMatchesExpected,
+      materialContractSignatureChanged: state.materialContractSignatureChanged,
+      materialTextureInvalidatedByContractChange: state.materialTextureInvalidatedByContractChange,
+      materialAtlasPrimary: state.materialAtlasPrimary,
+      materialCreateTextureCanvasUsed: state.materialCreateTextureCanvasUsed,
+      materialSampleFallbackUsed: state.materialSampleFallbackUsed,
+      materialReliefFeedsDetected: state.materialReliefFeedsDetected,
+      materialElevationContractMatchesActive: state.materialElevationContractMatchesActive,
 
       zoomEnabled: true,
       zoomLevel: Number(state.zoomLevel.toFixed(3)),
@@ -2442,6 +2586,20 @@
         fibonacciAlignmentSynchronized: true,
         activeFibonacciGate: "F13",
         futureFibonacciGate: "F21",
+
+        materialReceiptBridgeActive: true,
+        materialNestedReceiptAvailable: state.materialNestedReceiptAvailable,
+        materialContract: state.materialContract,
+        materialReceipt: state.materialReceipt,
+        materialExpectedContract: EXPECTED_MATERIAL_CONTRACT,
+        materialExpectedReceipt: EXPECTED_MATERIAL_RECEIPT,
+        materialContractMatchesExpected: state.materialContractMatchesExpected,
+        materialReceiptMatchesExpected: state.materialReceiptMatchesExpected,
+        materialContractSignatureChanged: state.materialContractSignatureChanged,
+        materialTextureInvalidatedByContractChange: state.materialTextureInvalidatedByContractChange,
+        materialAtlasPrimary: state.materialAtlasPrimary,
+        materialCreateTextureCanvasUsed: state.materialCreateTextureCanvasUsed,
+        materialSampleFallbackUsed: state.materialSampleFallbackUsed,
 
         upstreamFirstAtlasActive: true,
         canonicalMaterialAuthorityPresent: state.canonicalMaterialAuthorityPresent,
@@ -2660,7 +2818,7 @@
     return item;
   }
 
-  function invalidateTexture(reason = "manual-texture-invalidation") {
+  function invalidateTexture(reason = "manual-texture-invalidation", options = {}) {
     state.atlasCanvas = null;
     state.atlasContext = null;
     state.textureCanvas = null;
@@ -2688,11 +2846,18 @@
     state.textureRebuildError = "";
     state.updatedAt = nowIso();
 
-    archiveProgressOnlyEvent(
-      "TEXTURE_INVALIDATED",
-      96,
-      `Texture invalidated · reason=${state.textureInvalidationReason}`
-    );
+    if (options.fromMaterialBridge) {
+      state.materialTextureInvalidatedByContractChange = true;
+      state.materialTextureInvalidationReason = state.textureInvalidationReason;
+    }
+
+    if (!options.skipMilestone) {
+      archiveProgressOnlyEvent(
+        "TEXTURE_INVALIDATED",
+        96,
+        `Texture invalidated · reason=${state.textureInvalidationReason}`
+      );
+    }
 
     updateDocumentDataset();
 
@@ -2707,7 +2872,13 @@
     state.textureRebuildError = "";
 
     try {
-      invalidateTexture(options.reason || "manual-rebuild-texture-request");
+      if (!state.textureInvalidated) {
+        invalidateTexture(options.reason || "manual-rebuild-texture-request", {
+          fromMaterialBridge: options.materialTriggered === true
+        });
+      }
+
+      refreshMaterialReceiptBridge({ invalidate: false });
 
       if (!state.canvas || !state.context) {
         ensureCanvas(options);
@@ -2723,12 +2894,13 @@
       state.canvasCarrierHandoffOk = true;
       state.canvasCarrierHandoffError = "";
       state.textureRebuildComplete = true;
+      state.textureInvalidated = false;
       state.updatedAt = nowIso();
 
       sampleVisibleContent();
 
       if (state.dragInspectionBound) {
-        emitMilestone("INSPECT_MODE_READY", 98, "Inspect and zoom mode ready after rebuild.");
+        emitMilestone("INSPECT_MODE_READY", 98, "Inspect and zoom mode ready after material-aware rebuild.");
       }
 
       updateDocumentDataset();
@@ -2766,13 +2938,17 @@
     if (state.booting) return getReceipt();
 
     if (state.canvasReady && state.canvasLaneClosed) {
-      archiveLateEvent(
-        "CANVAS_COOPERATIVE_BOOT_STARTED",
-        78,
-        "Canvas cooperative boot requested after lane close.",
-        "duplicate-boot-request-after-canvas-ready"
-      );
-      return getReceipt();
+      await ensureMaterialTextureFresh({ allowRebuild: true, source: "duplicate-boot-material-freshness-check" });
+
+      if (!state.textureInvalidated) {
+        archiveLateEvent(
+          "CANVAS_COOPERATIVE_BOOT_STARTED",
+          78,
+          "Canvas cooperative boot requested after lane close.",
+          "duplicate-boot-request-after-canvas-ready"
+        );
+        return getReceipt();
+      }
     }
 
     state.booting = true;
@@ -2786,6 +2962,7 @@
 
     try {
       readNorthAuthority();
+      refreshMaterialReceiptBridge({ invalidate: false });
 
       emitMilestone("CANVAS_COOPERATIVE_BOOT_STARTED", 78, "Canvas cooperative boot started.");
       await yieldFrame(0);
@@ -2872,6 +3049,7 @@
   }
 
   function mount(options = {}) {
+    refreshMaterialReceiptBridge({ invalidate: false });
     ensureCanvas(options);
     bindDragInspection();
     updateDocumentDataset();
@@ -2881,7 +3059,12 @@
   async function render(options = {}) {
     if (!state.canvas || !state.context) ensureCanvas(options);
 
-    if (!state.atlasCanvas || !state.textureCanvas || !state.textureImageData) {
+    await ensureMaterialTextureFresh({
+      allowRebuild: options.allowMaterialRebuild !== false,
+      source: "render-material-freshness-check"
+    });
+
+    if (!state.atlasCanvas || !state.textureCanvas || !state.textureImageData || state.textureInvalidated) {
       return bootCooperative(options);
     }
 
@@ -2941,6 +3124,15 @@
       continentSeedCount: material.continentSeedCount,
       continentBlendMode: material.continentBlendMode,
       oceanChannelCut: material.oceanChannelCut,
+
+      materialReceiptBridgeActive: true,
+      materialContract: state.materialContract,
+      materialReceipt: state.materialReceipt,
+      materialExpectedContract: EXPECTED_MATERIAL_CONTRACT,
+      materialExpectedReceipt: EXPECTED_MATERIAL_RECEIPT,
+      materialContractMatchesExpected: state.materialContractMatchesExpected,
+      materialReceiptMatchesExpected: state.materialReceiptMatchesExpected,
+      materialAtlasPrimary: material.canonicalMaterialConsumed === true,
 
       upstreamFirstAtlasActive: true,
       canonicalMaterialAuthorityPresent: material.canonicalMaterialAuthorityPresent,
@@ -3012,7 +3204,7 @@
     dataset.hearthCanvasReceipt = RECEIPT;
     dataset.hearthCanvasPreviousContract = PREVIOUS_CONTRACT;
     dataset.hearthCanvasBaselineContract = BASELINE_CONTRACT;
-    dataset.hearthCanvasRole = "f13-evidence-producer-upstream-first-seven-continent-fallback-zoom-lod";
+    dataset.hearthCanvasRole = "f13-evidence-producer-materials-relief-consumption-invalidation";
 
     dataset.hearthCanvasReady = String(state.canvasReady);
     dataset.hearthCanvasLaneClosed = String(state.canvasLaneClosed);
@@ -3022,6 +3214,23 @@
     dataset.hearthCanvasVisibleContentHardFail = String(state.visibleContentHardFail);
     dataset.hearthCanvasVisibleForwardProgress = String(state.visibleForwardProgress);
     dataset.hearthCanvasVisiblePlanetAvailable = String(state.visiblePlanetAvailable);
+
+    dataset.hearthCanvasMaterialReceiptBridgeActive = "true";
+    dataset.hearthCanvasMaterialNestedReceiptAvailable = String(state.materialNestedReceiptAvailable);
+    dataset.hearthCanvasMaterialContract = state.materialContract;
+    dataset.hearthCanvasMaterialReceipt = state.materialReceipt;
+    dataset.hearthCanvasMaterialExpectedContract = EXPECTED_MATERIAL_CONTRACT;
+    dataset.hearthCanvasMaterialExpectedReceipt = EXPECTED_MATERIAL_RECEIPT;
+    dataset.hearthCanvasMaterialContractMatchesExpected = String(state.materialContractMatchesExpected);
+    dataset.hearthCanvasMaterialReceiptMatchesExpected = String(state.materialReceiptMatchesExpected);
+    dataset.hearthCanvasMaterialContractSignatureChanged = String(state.materialContractSignatureChanged);
+    dataset.hearthCanvasMaterialTextureInvalidatedByContractChange = String(state.materialTextureInvalidatedByContractChange);
+    dataset.hearthCanvasMaterialAtlasPrimary = String(state.materialAtlasPrimary);
+    dataset.hearthCanvasMaterialCreateTextureCanvasAvailable = String(state.materialCreateTextureCanvasAvailable);
+    dataset.hearthCanvasMaterialCreateTextureCanvasUsed = String(state.materialCreateTextureCanvasUsed);
+    dataset.hearthCanvasMaterialSampleFallbackUsed = String(state.materialSampleFallbackUsed);
+    dataset.hearthCanvasMaterialReliefFeedsDetected = String(state.materialReliefFeedsDetected);
+    dataset.hearthCanvasMaterialElevationContractMatchesActive = String(state.materialElevationContractMatchesActive);
 
     dataset.hearthCanvasInteractiveRotationActive = String(state.interactiveRotationActive);
     dataset.hearthCanvasStaleCanvasRepairActive = String(state.staleCanvasRepairActive);
@@ -3074,6 +3283,7 @@
     dataset.hearthCanvasCachedTextureInvalidationAvailable = "true";
     dataset.hearthCanvasTextureInvalidationCount = String(state.textureInvalidationCount);
     dataset.hearthCanvasTextureInvalidated = String(state.textureInvalidated);
+    dataset.hearthCanvasTextureInvalidationReason = state.textureInvalidationReason;
     dataset.hearthCanvasTextureRebuildRequested = String(state.textureRebuildRequested);
     dataset.hearthCanvasTextureRebuildComplete = String(state.textureRebuildComplete);
     dataset.hearthCanvasTextureRebuildAfterLaneClosureSupported = "true";
@@ -3112,6 +3322,8 @@
       state.canvas.dataset.hearthCanvasStaleCanvasRepairActive = "true";
       state.canvas.dataset.hearthCanvasVisualFidelityRenewalActive = "true";
       state.canvas.dataset.hearthCanvasUpstreamFirstAtlasActive = "true";
+      state.canvas.dataset.hearthCanvasMaterialReceiptBridgeActive = "true";
+      state.canvas.dataset.hearthCanvasMaterialAtlasPrimary = String(state.materialAtlasPrimary);
       state.canvas.dataset.hearthCanvasSevenContinentFallbackEmergencyOnly = "true";
       state.canvas.dataset.hearthCanvasContinentVisualSeedCount = "7";
       state.canvas.dataset.hearthCanvasZoomEnabled = "true";
@@ -3123,8 +3335,41 @@
     }
   }
 
+  function getMaterialBridgeReceipt() {
+    return {
+      materialReceiptBridgeActive: true,
+      materialNestedReceiptAvailable: state.materialNestedReceiptAvailable,
+      materialContract: state.materialContract,
+      materialReceipt: state.materialReceipt,
+      materialExpectedContract: EXPECTED_MATERIAL_CONTRACT,
+      materialExpectedReceipt: EXPECTED_MATERIAL_RECEIPT,
+      materialContractMatchesExpected: state.materialContractMatchesExpected,
+      materialReceiptMatchesExpected: state.materialReceiptMatchesExpected,
+      materialPreviousContract: state.materialPreviousContract,
+      materialBaselineContract: state.materialBaselineContract,
+      materialVersion: state.materialVersion,
+      materialRole: state.materialRole,
+      materialContractSignatureChanged: state.materialContractSignatureChanged,
+      previousMaterialContractSignature: state.previousMaterialContractSignature,
+      materialTextureInvalidatedByContractChange: state.materialTextureInvalidatedByContractChange,
+      materialTextureInvalidationReason: state.materialTextureInvalidationReason,
+      materialInvalidationRebuildCount: state.materialInvalidationRebuildCount,
+      materialReceiptInCanvasReceipt: true,
+      materialAtlasPrimary: state.materialAtlasPrimary,
+      materialCreateTextureCanvasAvailable: state.materialCreateTextureCanvasAvailable,
+      materialCreateTextureCanvasUsed: state.materialCreateTextureCanvasUsed,
+      materialSampleFallbackUsed: state.materialSampleFallbackUsed,
+      materialSampleSuccessCount: state.materialSampleSuccessCount,
+      materialSampleFailureCount: state.materialSampleFailureCount,
+      materialSampleFallbackReason: state.materialSampleFallbackReason,
+      materialReliefFeedsDetected: state.materialReliefFeedsDetected,
+      materialElevationContractMatchesActive: state.materialElevationContractMatchesActive
+    };
+  }
+
   function getReceipt() {
     readNorthAuthority();
+    refreshMaterialReceiptBridge({ invalidate: false });
 
     return {
       contract: CONTRACT,
@@ -3152,6 +3397,8 @@
       westAdmissibilityComplete: true,
       northCheckpointGovernancePreserved: true,
       southVisibleProofRequired: true,
+
+      materialReceiptBridge: getMaterialBridgeReceipt(),
 
       upstreamFirstAtlasActive: true,
       canonicalMaterialAuthorityPresent: state.canonicalMaterialAuthorityPresent,
@@ -3327,6 +3574,7 @@
 
   function getReceiptText() {
     const receipt = getReceipt();
+    const material = receipt.materialReceiptBridge || {};
 
     const progressOnlyCounts = receipt.progressOnlyEvents.reduce((map, event) => {
       const key = event.event || "UNKNOWN";
@@ -3347,7 +3595,7 @@
     )).join("\n") || "- none";
 
     return [
-      "HEARTH_CANVAS_UPSTREAM_FIRST_SEVEN_CONTINENT_FALLBACK_ZOOM_LOD_RECEIPT",
+      "HEARTH_CANVAS_MATERIALS_RELIEF_CONSUMPTION_INVALIDATION_RECEIPT",
       "",
       `contract=${receipt.contract}`,
       `receipt=${receipt.receipt}`,
@@ -3363,6 +3611,34 @@
       `futureFibonacciGate=${receipt.futureFibonacciGate}`,
       `oneActiveGearAtATime=${receipt.oneActiveGearAtATime}`,
       `cycleOrder=${receipt.cycleOrder}`,
+      "",
+      "MATERIAL_RECEIPT_BRIDGE",
+      `materialReceiptBridgeActive=${material.materialReceiptBridgeActive}`,
+      `materialNestedReceiptAvailable=${material.materialNestedReceiptAvailable}`,
+      `materialContract=${material.materialContract}`,
+      `materialReceipt=${material.materialReceipt}`,
+      `materialExpectedContract=${material.materialExpectedContract}`,
+      `materialExpectedReceipt=${material.materialExpectedReceipt}`,
+      `materialContractMatchesExpected=${material.materialContractMatchesExpected}`,
+      `materialReceiptMatchesExpected=${material.materialReceiptMatchesExpected}`,
+      `materialPreviousContract=${material.materialPreviousContract}`,
+      `materialBaselineContract=${material.materialBaselineContract}`,
+      `materialVersion=${material.materialVersion}`,
+      `materialRole=${material.materialRole}`,
+      `materialContractSignatureChanged=${material.materialContractSignatureChanged}`,
+      `materialTextureInvalidatedByContractChange=${material.materialTextureInvalidatedByContractChange}`,
+      `materialTextureInvalidationReason=${material.materialTextureInvalidationReason}`,
+      `materialInvalidationRebuildCount=${material.materialInvalidationRebuildCount}`,
+      `materialReceiptInCanvasReceipt=${material.materialReceiptInCanvasReceipt}`,
+      `materialAtlasPrimary=${material.materialAtlasPrimary}`,
+      `materialCreateTextureCanvasAvailable=${material.materialCreateTextureCanvasAvailable}`,
+      `materialCreateTextureCanvasUsed=${material.materialCreateTextureCanvasUsed}`,
+      `materialSampleFallbackUsed=${material.materialSampleFallbackUsed}`,
+      `materialSampleSuccessCount=${material.materialSampleSuccessCount}`,
+      `materialSampleFailureCount=${material.materialSampleFailureCount}`,
+      `materialSampleFallbackReason=${material.materialSampleFallbackReason}`,
+      `materialReliefFeedsDetected=${material.materialReliefFeedsDetected}`,
+      `materialElevationContractMatchesActive=${material.materialElevationContractMatchesActive}`,
       "",
       `upstreamFirstAtlasActive=${receipt.upstreamFirstAtlasActive}`,
       `canonicalMaterialAuthorityPresent=${receipt.canonicalMaterialAuthorityPresent}`,
@@ -3532,6 +3808,8 @@
     resetZoom,
     invalidateTexture,
     rebuildTexture,
+    ensureMaterialTextureFresh,
+    refreshMaterialReceiptBridge,
     sample,
     read,
     sampleVisibleContent,
@@ -3541,6 +3819,7 @@
     submitCanvasEvidence,
     getReceipt,
     getReceiptText,
+    getMaterialBridgeReceipt,
     getState,
     on,
     off,
@@ -3559,8 +3838,13 @@
     futureFibonacciGate: "F21",
     oneActiveGearAtATime: true,
 
-    upstreamFirstAtlasActive: true,
+    materialReceiptBridgeActive: true,
+    materialExpectedContract: EXPECTED_MATERIAL_CONTRACT,
+    materialExpectedReceipt: EXPECTED_MATERIAL_RECEIPT,
+    materialTextureInvalidationActive: true,
     materialsPrimaryWhenValid: true,
+
+    upstreamFirstAtlasActive: true,
     rawSourceColorDemotedToPaletteInfluence: true,
     canonicalMaterialColorPrimary: true,
 
@@ -3630,6 +3914,7 @@
   root.HEARTH_CANVAS_STALE_REPAIR = api;
   root.HEARTH_CANVAS_SEVEN_CONTINENT_VISUAL_FIELD = api;
   root.HEARTH_CANVAS_UPSTREAM_FIRST_ZOOM_LOD = api;
+  root.HEARTH_CANVAS_MATERIALS_RELIEF_CONSUMPTION_INVALIDATION = api;
 
   root.DEXTER_LAB = root.DEXTER_LAB || {};
   root.DEXTER_LAB.hearthCanvasEvidence = api;
@@ -3637,7 +3922,9 @@
   root.DEXTER_LAB.hearthCanvasInteractiveRotation = api;
   root.DEXTER_LAB.hearthCanvasSevenContinentVisualField = api;
   root.DEXTER_LAB.hearthCanvasUpstreamFirstZoomLod = api;
+  root.DEXTER_LAB.hearthCanvasMaterialsReliefConsumptionInvalidation = api;
 
+  refreshMaterialReceiptBridge({ invalidate: false });
   updateDocumentDataset();
 
   if (typeof module !== "undefined" && module.exports) {

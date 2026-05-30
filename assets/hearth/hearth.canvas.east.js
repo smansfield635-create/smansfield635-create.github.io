@@ -1,14 +1,18 @@
 // /assets/hearth/hearth.canvas.east.js
-// HEARTH_CANVAS_EAST_MATERIAL_ATLAS_SOURCE_MACHINE_TNT_v2
+// HEARTH_CANVAS_EAST_ATLAS_CLARITY_SOURCE_SHARPENING_TNT_v3
 // Full-file replacement.
 // Canvas East / source intake and atlas formation only.
 // Purpose:
-// - Preserve the v1 East split direction.
-// - Reduce runtime burden by caching upstream authorities once per atlas build.
-// - Reduce default atlas size from 768x384 to 512x256.
+// - Preserve the v2 East split direction.
+// - Keep source authority resolution cached once per atlas build.
+// - Prevent legacy North 768x384 requests from forcing heavy atlas load unless explicitly authorized.
+// - Use mobile-balanced 640x320 as the clarity-safe default.
+// - Preserve 512x256 emergency-low-load, 768x384 standard, and 1024x512 high-detail modes.
 // - Read HEARTH_MATERIALS first when available.
 // - Bridge the material receipt into the canvas system.
 // - Build one source-atlas machine packet consumed by Canvas North/South.
+// - Sharpen source classification without making the visible shore band jagged.
+// - Expose source-mode counts and atlas clarity metrics.
 // - Preserve emergency seven-continent fallback only when upstream material/elevation/hydrology are unavailable.
 // - Keep NEWS/Fibonacci synchronization metadata aligned to F13 canvas evidence flow.
 // Does not own:
@@ -22,23 +26,34 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_EAST_MATERIAL_ATLAS_SOURCE_MACHINE_TNT_v2";
-  const RECEIPT = "HEARTH_CANVAS_EAST_MATERIAL_ATLAS_SOURCE_MACHINE_RECEIPT_v2";
-  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_EAST_MATERIAL_ATLAS_SOURCE_MACHINE_TNT_v1";
-  const BASELINE_CONTRACT = "HEARTH_CANVAS_EAST_MATERIAL_ATLAS_SOURCE_MACHINE_TNT_v1";
-  const VERSION = "2026-05-30.hearth-canvas-east-material-atlas-source-machine-v2";
+  const CONTRACT = "HEARTH_CANVAS_EAST_ATLAS_CLARITY_SOURCE_SHARPENING_TNT_v3";
+  const RECEIPT = "HEARTH_CANVAS_EAST_ATLAS_CLARITY_SOURCE_SHARPENING_RECEIPT_v3";
+  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_EAST_MATERIAL_ATLAS_SOURCE_MACHINE_TNT_v2";
+  const BASELINE_CONTRACT = "HEARTH_CANVAS_EAST_MATERIAL_ATLAS_SOURCE_MACHINE_TNT_v2";
+  const VERSION = "2026-05-30.hearth-canvas-east-atlas-clarity-source-sharpening-v3";
   const FILE = "/assets/hearth/hearth.canvas.east.js";
 
   const EXPECTED_MATERIAL_CONTRACT = "HEARTH_MATERIALS_ISLAND_ELEVATION_BEACH_RELIEF_CONSUMER_TNT_v1";
   const EXPECTED_MATERIAL_RECEIPT = "HEARTH_MATERIALS_ISLAND_ELEVATION_BEACH_RELIEF_CONSUMER_RECEIPT_v1";
 
-  const DEFAULT_ATLAS_WIDTH = 512;
-  const DEFAULT_ATLAS_HEIGHT = 256;
+  const ATLAS_MODES = Object.freeze({
+    "emergency-low-load": { width: 512, height: 256 },
+    "mobile-balanced": { width: 640, height: 320 },
+    standard: { width: 768, height: 384 },
+    "high-detail": { width: 1024, height: 512 }
+  });
+
+  const DEFAULT_ATLAS_MODE = "mobile-balanced";
+  const DEFAULT_ATLAS_WIDTH = ATLAS_MODES[DEFAULT_ATLAS_MODE].width;
+  const DEFAULT_ATLAS_HEIGHT = ATLAS_MODES[DEFAULT_ATLAS_MODE].height;
   const MIN_ATLAS_WIDTH = 256;
   const MIN_ATLAS_HEIGHT = 128;
   const MAX_ATLAS_WIDTH = 1024;
   const MAX_ATLAS_HEIGHT = 512;
   const ROWS_PER_CHUNK_DEFAULT = 4;
+
+  const COASTLINE_CLASSIFIER_TRANSITION = 0.018;
+  const SHORE_VISUAL_BAND_WIDTH = 0.065;
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
@@ -60,7 +75,7 @@
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     file: FILE,
-    role: "canvas-east-material-atlas-source-machine-v2",
+    role: "canvas-east-atlas-clarity-source-sharpening-v3",
 
     newsProtocolSynchronized: true,
     fibonacciAlignmentSynchronized: true,
@@ -73,10 +88,23 @@
     materialBridgeRefreshCachedPerAtlasBuild: true,
     perPixelAuthorityResolutionRetired: true,
     perPixelMaterialBridgeRefreshRetired: true,
-    defaultAtlasReduced: true,
+
+    adaptiveAtlasResolutionActive: true,
+    defaultAtlasMode: DEFAULT_ATLAS_MODE,
+    atlasResolutionMode: "",
     defaultAtlasWidth: DEFAULT_ATLAS_WIDTH,
     defaultAtlasHeight: DEFAULT_ATLAS_HEIGHT,
     optionalHigherLodSupported: true,
+    legacyNorthDimensionRequestSoftCapped: false,
+    requestedAtlasWidth: 0,
+    requestedAtlasHeight: 0,
+    actualAtlasWidth: 0,
+    actualAtlasHeight: 0,
+
+    classificationShapeSeparationActive: true,
+    coastlineClassifierMode: "sharp-classification-soft-visual-band",
+    coastlineTransitionWidth: COASTLINE_CLASSIFIER_TRANSITION,
+    shoreVisualBandWidth: SHORE_VISUAL_BAND_WIDTH,
 
     materialReceiptBridgeActive: true,
     materialNestedReceiptAvailable: false,
@@ -138,6 +166,28 @@
     atlasBuildCompletedAt: "",
     atlasBuildElapsedMs: 0,
     atlasBuildYieldCount: 0,
+
+    sourceModeCounts: {
+      canonicalMaterial: 0,
+      elevationHydrology: 0,
+      emergencyFallback: 0
+    },
+
+    clarityStats: {
+      landLumTotal: 0,
+      landCount: 0,
+      waterLumTotal: 0,
+      waterCount: 0,
+      coastlineSampleCount: 0,
+      shoreTotal: 0,
+      transitionTotal: 0
+    },
+
+    averageLandWaterContrast: 0,
+    coastlineContrastEstimate: 0,
+    atlasSharpnessPass: false,
+    fuzzRiskDetected: false,
+    clarityMetricReady: false,
 
     sourceContextCreated: false,
     sourceContextCreatedAt: "",
@@ -207,9 +257,12 @@
     ];
   }
 
+  function luminanceRgb(rgb) {
+    return 0.2126 * safeNumber(rgb[0], 0) + 0.7152 * safeNumber(rgb[1], 0) + 0.0722 * safeNumber(rgb[2], 0);
+  }
+
   function clonePlain(value) {
     if (!isObject(value)) return value;
-
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
@@ -480,8 +533,49 @@
     };
   }
 
+  function resolveAtlasSpec(options = {}) {
+    const requestedWidth = Math.round(safeNumber(options.width, 0));
+    const requestedHeight = Math.round(safeNumber(options.height, 0));
+    const requestedMode = String(options.atlasResolutionMode || options.resolutionMode || "").trim();
+
+    let mode = DEFAULT_ATLAS_MODE;
+    let width = DEFAULT_ATLAS_WIDTH;
+    let height = DEFAULT_ATLAS_HEIGHT;
+    let legacySoftCap = false;
+
+    if (requestedMode && ATLAS_MODES[requestedMode]) {
+      mode = requestedMode;
+      width = ATLAS_MODES[mode].width;
+      height = ATLAS_MODES[mode].height;
+    } else if (options.forceDimensions === true && requestedWidth && requestedHeight) {
+      mode = "forced-custom";
+      width = clamp(requestedWidth, MIN_ATLAS_WIDTH, MAX_ATLAS_WIDTH);
+      height = clamp(requestedHeight, MIN_ATLAS_HEIGHT, MAX_ATLAS_HEIGHT);
+    } else if (requestedWidth === 768 && requestedHeight === 384) {
+      mode = DEFAULT_ATLAS_MODE;
+      width = DEFAULT_ATLAS_WIDTH;
+      height = DEFAULT_ATLAS_HEIGHT;
+      legacySoftCap = true;
+    } else if (requestedWidth && requestedHeight && options.allowExplicitDimensions === true) {
+      mode = "explicit-custom";
+      width = clamp(requestedWidth, MIN_ATLAS_WIDTH, MAX_ATLAS_WIDTH);
+      height = clamp(requestedHeight, MIN_ATLAS_HEIGHT, MAX_ATLAS_HEIGHT);
+    }
+
+    return {
+      mode,
+      width,
+      height,
+      rowsPerChunk: Math.max(1, Math.round(safeNumber(options.rowsPerChunk, ROWS_PER_CHUNK_DEFAULT))),
+      requestedWidth,
+      requestedHeight,
+      legacySoftCap
+    };
+  }
+
   function createSourceContext(options = {}) {
     const materialBridge = refreshMaterialBridge();
+    const spec = resolveAtlasSpec(options);
 
     const sourceContext = {
       createdAt: nowIso(),
@@ -492,10 +586,14 @@
       compositionAuthority: resolveSource(["HEARTH_COMPOSITION", "composition", "hearthComposition"]),
       hexAuthority: resolveSource(["HEARTH_HEX_FOUR_PAIR_AUTHORITY", "hexAuthority", "hearthHexAuthority"]),
       hexSurface: resolveSource(["HEARTH_HEX_SURFACE", "hexSurface", "hearthHexSurface"]),
-      width: Math.max(MIN_ATLAS_WIDTH, Math.min(MAX_ATLAS_WIDTH, Math.round(safeNumber(options.width, DEFAULT_ATLAS_WIDTH)))),
-      height: Math.max(MIN_ATLAS_HEIGHT, Math.min(MAX_ATLAS_HEIGHT, Math.round(safeNumber(options.height, DEFAULT_ATLAS_HEIGHT)))),
-      rowsPerChunk: Math.max(1, Math.round(safeNumber(options.rowsPerChunk, ROWS_PER_CHUNK_DEFAULT))),
-      defaultAtlasReduced: true,
+      mode: spec.mode,
+      width: spec.width,
+      height: spec.height,
+      requestedWidth: spec.requestedWidth,
+      requestedHeight: spec.requestedHeight,
+      rowsPerChunk: spec.rowsPerChunk,
+      legacyNorthDimensionRequestSoftCapped: spec.legacySoftCap,
+      adaptiveAtlasResolutionActive: true,
       authorityResolutionCachedPerAtlasBuild: true,
       perPixelAuthorityResolutionRetired: true,
       perPixelMaterialBridgeRefreshRetired: true
@@ -505,6 +603,13 @@
     state.sourceContextCreatedAt = sourceContext.createdAt;
     state.sourceContextAuthorityResolutionCount += 1;
     state.canonicalMaterialAuthorityPresent = Boolean(sourceContext.materialsAuthority);
+
+    state.atlasResolutionMode = spec.mode;
+    state.requestedAtlasWidth = spec.requestedWidth;
+    state.requestedAtlasHeight = spec.requestedHeight;
+    state.actualAtlasWidth = spec.width;
+    state.actualAtlasHeight = spec.height;
+    state.legacyNorthDimensionRequestSoftCapped = spec.legacySoftCap;
 
     return sourceContext;
   }
@@ -804,11 +909,20 @@
 
   function fallbackMaterial(point, visualField, latBand, mode = "emergency-seven-continent-fallback") {
     const elevation = visualField.elevation;
-    const landSignal = smoothstep(visualField.seaLine - 0.035, visualField.seaLine + 0.03, elevation);
+    const elevationDelta = elevation - visualField.seaLine;
+
+    const landSignal = smoothstep(
+      -COASTLINE_CLASSIFIER_TRANSITION,
+      COASTLINE_CLASSIFIER_TRANSITION,
+      elevationDelta
+    );
+
     const waterSignal = 1 - landSignal;
     const isWater = waterSignal >= landSignal;
-    const shore = clamp01(1 - Math.abs(waterSignal - landSignal) * 5.1);
+
+    const shore = 1 - smoothstep(0, SHORE_VISUAL_BAND_WIDTH, Math.abs(elevationDelta));
     const shelf = isWater ? clamp01(shore * 0.88 + (1 - waterSignal) * 0.22) : 0;
+
     const fine = fbm(point.u * 22.0 + 4.7, point.v * 16.0 - 2.8, 777, 4);
     const ridge = 1 - Math.abs(fbm(point.u * 13.5 + 7.1, point.v * 9.0 - 6.2, 888, 4) - 0.5) * 2;
 
@@ -817,7 +931,7 @@
 
     if (isWater) {
       rgb = mixRgb([5, 28, 66], [12, 70, 135], clamp01((1 - waterSignal) * 0.52 + fine * 0.20));
-      rgb = mixRgb(rgb, [30, 119, 158], shelf);
+      rgb = mixRgb(rgb, [30, 119, 158], shelf * 0.86);
       visualClass = shelf > 0.42 ? `${mode}-shelf-water` : `${mode}-deep-water`;
     } else {
       const highland = clamp01((elevation - 0.58) * 2.7);
@@ -831,7 +945,7 @@
       visualClass = mountain > 0.50 ? `${mode}-mountain` : shore > 0.42 ? `${mode}-coast-land` : `${mode}-land`;
     }
 
-    const relief = (ridge - 0.5) * 24 + (fine - 0.5) * 10;
+    const relief = (ridge - 0.5) * 26 + (fine - 0.5) * 11;
 
     rgb = [
       clamp(Math.round(rgb[0] + relief + shore * (isWater ? 2 : 20)), 0, 255),
@@ -859,6 +973,10 @@
       secondaryContinentSignal: visualField.secondaryContinentSignal,
       oceanChannelCut: visualField.oceanChannelCut,
       source: mode,
+      classificationShapeSeparationActive: true,
+      coastlineClassifierMode: "sharp-classification-soft-visual-band",
+      coastlineTransitionWidth: COASTLINE_CLASSIFIER_TRANSITION,
+      shoreVisualBandWidth: SHORE_VISUAL_BAND_WIDTH,
       canonicalMaterialConsumed: false,
       elevationHydrologyFallbackUsed: mode === "elevation-hydrology-lite-fallback",
       sevenContinentFallbackUsed: mode !== "elevation-hydrology-lite-fallback",
@@ -866,10 +984,66 @@
     };
   }
 
-  function samplePlanetMaterialWithContext(sourceContext, u, v) {
-    const context = sourceContext || createSourceContext();
+  function registerSampleMetrics(sample) {
     state.sourceContextSampleCount += 1;
 
+    if (sample.canonicalMaterialConsumed) {
+      state.sourceModeCounts.canonicalMaterial += 1;
+    } else if (sample.elevationHydrologyFallbackUsed) {
+      state.sourceModeCounts.elevationHydrology += 1;
+    } else if (sample.sevenContinentFallbackUsed) {
+      state.sourceModeCounts.emergencyFallback += 1;
+    }
+
+    const lum = luminanceRgb(sample.rgb || [0, 0, 0]);
+
+    if (sample.isLand) {
+      state.clarityStats.landLumTotal += lum;
+      state.clarityStats.landCount += 1;
+    } else if (sample.isWater) {
+      state.clarityStats.waterLumTotal += lum;
+      state.clarityStats.waterCount += 1;
+    }
+
+    if (safeNumber(sample.shore, 0) > 0.28) {
+      state.clarityStats.coastlineSampleCount += 1;
+      state.clarityStats.shoreTotal += safeNumber(sample.shore, 0);
+      state.clarityStats.transitionTotal += Math.abs(safeNumber(sample.landSignal, 0) - safeNumber(sample.waterSignal, 0));
+    }
+  }
+
+  function finalizeClarityMetrics() {
+    const landAvg = state.clarityStats.landCount
+      ? state.clarityStats.landLumTotal / state.clarityStats.landCount
+      : 0;
+
+    const waterAvg = state.clarityStats.waterCount
+      ? state.clarityStats.waterLumTotal / state.clarityStats.waterCount
+      : 0;
+
+    const avgContrast = Math.abs(landAvg - waterAvg);
+    const shoreAvg = state.clarityStats.coastlineSampleCount
+      ? state.clarityStats.shoreTotal / state.clarityStats.coastlineSampleCount
+      : 0;
+
+    const transitionAvg = state.clarityStats.coastlineSampleCount
+      ? state.clarityStats.transitionTotal / state.clarityStats.coastlineSampleCount
+      : 0;
+
+    state.averageLandWaterContrast = Number(avgContrast.toFixed(2));
+    state.coastlineContrastEstimate = Number((avgContrast * (0.65 + transitionAvg * 0.35) + shoreAvg * 18).toFixed(2));
+
+    const enoughResolution = state.atlasWidth >= 640 && state.atlasHeight >= 320;
+    const enoughContrast = state.averageLandWaterContrast >= 12 || state.coastlineContrastEstimate >= 18;
+    const enoughModes = state.sourceModeCounts.canonicalMaterial + state.sourceModeCounts.elevationHydrology + state.sourceModeCounts.emergencyFallback > 0;
+
+    state.atlasSharpnessPass = Boolean(enoughResolution && enoughContrast && enoughModes);
+    state.fuzzRiskDetected = Boolean(!state.atlasSharpnessPass || state.atlasWidth < 640 || state.atlasHeight < 320);
+    state.clarityMetricReady = true;
+  }
+
+  function samplePlanetMaterialWithContext(sourceContext, u, v) {
+    const context = sourceContext || createSourceContext();
     const lon = u * 360 - 180;
     const lat = 90 - v * 180;
     const vector = lonLatToVector(lon, lat);
@@ -927,6 +1101,10 @@
         secondaryContinentSignal: visualField.secondaryContinentSignal,
         oceanChannelCut: visualField.oceanChannelCut,
         source: "canonical-material",
+        classificationShapeSeparationActive: true,
+        coastlineClassifierMode: "sharp-classification-soft-visual-band",
+        coastlineTransitionWidth: COASTLINE_CLASSIFIER_TRANSITION,
+        shoreVisualBandWidth: SHORE_VISUAL_BAND_WIDTH,
         canonicalMaterialConsumed: true,
         elevationHydrologyFallbackUsed: false,
         sevenContinentFallbackUsed: false,
@@ -987,10 +1165,34 @@
 
     state.atlasWidth = width;
     state.atlasHeight = height;
+    state.actualAtlasWidth = width;
+    state.actualAtlasHeight = height;
     state.atlasCanonicalMaterialSampleCount = 0;
     state.atlasElevationHydrologySampleCount = 0;
     state.atlasFallbackSampleCount = 0;
     state.atlasTotalSampleCount = 0;
+
+    state.sourceModeCounts = {
+      canonicalMaterial: 0,
+      elevationHydrology: 0,
+      emergencyFallback: 0
+    };
+
+    state.clarityStats = {
+      landLumTotal: 0,
+      landCount: 0,
+      waterLumTotal: 0,
+      waterCount: 0,
+      coastlineSampleCount: 0,
+      shoreTotal: 0,
+      transitionTotal: 0
+    };
+
+    state.averageLandWaterContrast = 0;
+    state.coastlineContrastEstimate = 0;
+    state.atlasSharpnessPass = false;
+    state.fuzzRiskDetected = false;
+    state.clarityMetricReady = false;
 
     state.materialSampleSuccessCount = 0;
     state.materialSampleFailureCount = 0;
@@ -1030,6 +1232,8 @@
           } else if (sample.sevenContinentFallbackUsed) {
             state.atlasFallbackSampleCount += 1;
           }
+
+          registerSampleMetrics(sample);
         }
       }
 
@@ -1059,6 +1263,8 @@
     state.sevenContinentFallbackUsed = state.atlasFallbackSampleCount > 0;
     state.sevenContinentFallbackSuppressedByUpstream =
       state.atlasCanonicalMaterialSampleCount + state.atlasElevationHydrologySampleCount > 0;
+
+    finalizeClarityMetrics();
 
     state.atlasInvalidated = false;
     state.atlasInvalidationReason = "";
@@ -1091,11 +1297,23 @@
         materialBridgeRefreshCachedPerAtlasBuild: true,
         perPixelAuthorityResolutionRetired: true,
         perPixelMaterialBridgeRefreshRetired: true,
-        defaultAtlasReduced: true,
-        defaultAtlasWidth: DEFAULT_ATLAS_WIDTH,
-        defaultAtlasHeight: DEFAULT_ATLAS_HEIGHT,
+        adaptiveAtlasResolutionActive: true,
+        atlasResolutionMode: state.atlasResolutionMode,
+        defaultAtlasMode: DEFAULT_ATLAS_MODE,
+        requestedAtlasWidth: state.requestedAtlasWidth,
+        requestedAtlasHeight: state.requestedAtlasHeight,
         actualAtlasWidth: width,
-        actualAtlasHeight: height
+        actualAtlasHeight: height,
+        legacyNorthDimensionRequestSoftCapped: state.legacyNorthDimensionRequestSoftCapped,
+        classificationShapeSeparationActive: true,
+        coastlineClassifierMode: state.coastlineClassifierMode,
+        coastlineTransitionWidth: state.coastlineTransitionWidth,
+        shoreVisualBandWidth: state.shoreVisualBandWidth,
+        sourceModeCounts: clonePlain(state.sourceModeCounts),
+        averageLandWaterContrast: state.averageLandWaterContrast,
+        coastlineContrastEstimate: state.coastlineContrastEstimate,
+        atlasSharpnessPass: state.atlasSharpnessPass,
+        fuzzRiskDetected: state.fuzzRiskDetected
       },
 
       materialBridge: getMaterialBridgeReceipt(),
@@ -1137,8 +1355,7 @@
 
   function sample(point = {}) {
     const sourceContext = createSourceContext({
-      width: DEFAULT_ATLAS_WIDTH,
-      height: DEFAULT_ATLAS_HEIGHT
+      atlasResolutionMode: DEFAULT_ATLAS_MODE
     });
 
     const u = clamp01(safeNumber(point.u, 0.5));
@@ -1158,6 +1375,13 @@
       materialContractMatchesExpected: state.materialContractMatchesExpected,
       materialReceiptMatchesExpected: state.materialReceiptMatchesExpected,
       materialAtlasPrimary: material.canonicalMaterialConsumed === true,
+
+      adaptiveAtlasResolutionActive: true,
+      atlasResolutionMode: state.atlasResolutionMode || DEFAULT_ATLAS_MODE,
+      classificationShapeSeparationActive: true,
+      coastlineClassifierMode: state.coastlineClassifierMode,
+      coastlineTransitionWidth: state.coastlineTransitionWidth,
+      shoreVisualBandWidth: state.shoreVisualBandWidth,
 
       bodyBinding: 1,
       surfaceAttachment: 1,
@@ -1222,10 +1446,34 @@
       materialBridgeRefreshCachedPerAtlasBuild: state.materialBridgeRefreshCachedPerAtlasBuild,
       perPixelAuthorityResolutionRetired: state.perPixelAuthorityResolutionRetired,
       perPixelMaterialBridgeRefreshRetired: state.perPixelMaterialBridgeRefreshRetired,
-      defaultAtlasReduced: state.defaultAtlasReduced,
+
+      adaptiveAtlasResolutionActive: state.adaptiveAtlasResolutionActive,
+      defaultAtlasMode: state.defaultAtlasMode,
+      atlasResolutionMode: state.atlasResolutionMode,
       defaultAtlasWidth: state.defaultAtlasWidth,
       defaultAtlasHeight: state.defaultAtlasHeight,
       optionalHigherLodSupported: state.optionalHigherLodSupported,
+      legacyNorthDimensionRequestSoftCapped: state.legacyNorthDimensionRequestSoftCapped,
+      requestedAtlasWidth: state.requestedAtlasWidth,
+      requestedAtlasHeight: state.requestedAtlasHeight,
+      actualAtlasWidth: state.actualAtlasWidth,
+      actualAtlasHeight: state.actualAtlasHeight,
+
+      classificationShapeSeparationActive: true,
+      coastlineClassifierMode: state.coastlineClassifierMode,
+      coastlineTransitionWidth: state.coastlineTransitionWidth,
+      shoreVisualBandWidth: state.shoreVisualBandWidth,
+
+      sourceModeCounts: clonePlain(state.sourceModeCounts),
+      canonicalMaterialSourceModeCount: state.sourceModeCounts.canonicalMaterial,
+      elevationHydrologySourceModeCount: state.sourceModeCounts.elevationHydrology,
+      emergencyFallbackSourceModeCount: state.sourceModeCounts.emergencyFallback,
+
+      averageLandWaterContrast: state.averageLandWaterContrast,
+      coastlineContrastEstimate: state.coastlineContrastEstimate,
+      atlasSharpnessPass: state.atlasSharpnessPass,
+      fuzzRiskDetected: state.fuzzRiskDetected,
+      clarityMetricReady: state.clarityMetricReady,
 
       sourceContextCreated: state.sourceContextCreated,
       sourceContextCreatedAt: state.sourceContextCreatedAt,
@@ -1302,7 +1550,7 @@
       : "- none";
 
     return [
-      "HEARTH_CANVAS_EAST_MATERIAL_ATLAS_SOURCE_MACHINE_RECEIPT",
+      "HEARTH_CANVAS_EAST_ATLAS_CLARITY_SOURCE_SHARPENING_RECEIPT",
       "",
       `contract=${receipt.contract}`,
       `receipt=${receipt.receipt}`,
@@ -1323,10 +1571,32 @@
       `materialBridgeRefreshCachedPerAtlasBuild=${receipt.materialBridgeRefreshCachedPerAtlasBuild}`,
       `perPixelAuthorityResolutionRetired=${receipt.perPixelAuthorityResolutionRetired}`,
       `perPixelMaterialBridgeRefreshRetired=${receipt.perPixelMaterialBridgeRefreshRetired}`,
-      `defaultAtlasReduced=${receipt.defaultAtlasReduced}`,
+      "",
+      `adaptiveAtlasResolutionActive=${receipt.adaptiveAtlasResolutionActive}`,
+      `defaultAtlasMode=${receipt.defaultAtlasMode}`,
+      `atlasResolutionMode=${receipt.atlasResolutionMode}`,
       `defaultAtlasWidth=${receipt.defaultAtlasWidth}`,
       `defaultAtlasHeight=${receipt.defaultAtlasHeight}`,
       `optionalHigherLodSupported=${receipt.optionalHigherLodSupported}`,
+      `legacyNorthDimensionRequestSoftCapped=${receipt.legacyNorthDimensionRequestSoftCapped}`,
+      `requestedAtlasWidth=${receipt.requestedAtlasWidth}`,
+      `requestedAtlasHeight=${receipt.requestedAtlasHeight}`,
+      `actualAtlasWidth=${receipt.actualAtlasWidth}`,
+      `actualAtlasHeight=${receipt.actualAtlasHeight}`,
+      "",
+      `classificationShapeSeparationActive=${receipt.classificationShapeSeparationActive}`,
+      `coastlineClassifierMode=${receipt.coastlineClassifierMode}`,
+      `coastlineTransitionWidth=${receipt.coastlineTransitionWidth}`,
+      `shoreVisualBandWidth=${receipt.shoreVisualBandWidth}`,
+      "",
+      `canonicalMaterialSourceModeCount=${receipt.canonicalMaterialSourceModeCount}`,
+      `elevationHydrologySourceModeCount=${receipt.elevationHydrologySourceModeCount}`,
+      `emergencyFallbackSourceModeCount=${receipt.emergencyFallbackSourceModeCount}`,
+      `averageLandWaterContrast=${receipt.averageLandWaterContrast}`,
+      `coastlineContrastEstimate=${receipt.coastlineContrastEstimate}`,
+      `atlasSharpnessPass=${receipt.atlasSharpnessPass}`,
+      `fuzzRiskDetected=${receipt.fuzzRiskDetected}`,
+      `clarityMetricReady=${receipt.clarityMetricReady}`,
       "",
       `sourceContextCreated=${receipt.sourceContextCreated}`,
       `sourceContextCreatedAt=${receipt.sourceContextCreatedAt}`,
@@ -1437,9 +1707,22 @@
     dataset.hearthCanvasEastMaterialBridgeRefreshCachedPerAtlasBuild = String(state.materialBridgeRefreshCachedPerAtlasBuild);
     dataset.hearthCanvasEastPerPixelAuthorityResolutionRetired = String(state.perPixelAuthorityResolutionRetired);
     dataset.hearthCanvasEastPerPixelMaterialBridgeRefreshRetired = String(state.perPixelMaterialBridgeRefreshRetired);
-    dataset.hearthCanvasEastDefaultAtlasReduced = String(state.defaultAtlasReduced);
+
+    dataset.hearthCanvasEastAdaptiveAtlasResolutionActive = String(state.adaptiveAtlasResolutionActive);
+    dataset.hearthCanvasEastDefaultAtlasMode = state.defaultAtlasMode;
+    dataset.hearthCanvasEastAtlasResolutionMode = state.atlasResolutionMode;
     dataset.hearthCanvasEastDefaultAtlasWidth = String(state.defaultAtlasWidth);
     dataset.hearthCanvasEastDefaultAtlasHeight = String(state.defaultAtlasHeight);
+    dataset.hearthCanvasEastRequestedAtlasWidth = String(state.requestedAtlasWidth);
+    dataset.hearthCanvasEastRequestedAtlasHeight = String(state.requestedAtlasHeight);
+    dataset.hearthCanvasEastActualAtlasWidth = String(state.actualAtlasWidth);
+    dataset.hearthCanvasEastActualAtlasHeight = String(state.actualAtlasHeight);
+    dataset.hearthCanvasEastLegacyNorthDimensionRequestSoftCapped = String(state.legacyNorthDimensionRequestSoftCapped);
+
+    dataset.hearthCanvasEastClassificationShapeSeparationActive = "true";
+    dataset.hearthCanvasEastCoastlineClassifierMode = state.coastlineClassifierMode;
+    dataset.hearthCanvasEastCoastlineTransitionWidth = String(state.coastlineTransitionWidth);
+    dataset.hearthCanvasEastShoreVisualBandWidth = String(state.shoreVisualBandWidth);
 
     dataset.hearthCanvasEastMaterialReceiptBridgeActive = "true";
     dataset.hearthCanvasEastMaterialNestedReceiptAvailable = String(state.materialNestedReceiptAvailable);
@@ -1458,6 +1741,14 @@
     dataset.hearthCanvasEastAtlasElevationHydrologySampleCount = String(state.atlasElevationHydrologySampleCount);
     dataset.hearthCanvasEastAtlasFallbackSampleCount = String(state.atlasFallbackSampleCount);
     dataset.hearthCanvasEastAtlasTotalSampleCount = String(state.atlasTotalSampleCount);
+
+    dataset.hearthCanvasEastCanonicalMaterialSourceModeCount = String(state.sourceModeCounts.canonicalMaterial);
+    dataset.hearthCanvasEastElevationHydrologySourceModeCount = String(state.sourceModeCounts.elevationHydrology);
+    dataset.hearthCanvasEastEmergencyFallbackSourceModeCount = String(state.sourceModeCounts.emergencyFallback);
+    dataset.hearthCanvasEastAverageLandWaterContrast = String(state.averageLandWaterContrast);
+    dataset.hearthCanvasEastCoastlineContrastEstimate = String(state.coastlineContrastEstimate);
+    dataset.hearthCanvasEastAtlasSharpnessPass = String(state.atlasSharpnessPass);
+    dataset.hearthCanvasEastFuzzRiskDetected = String(state.fuzzRiskDetected);
 
     dataset.hearthCanvasEastOwnsSourceIntake = "true";
     dataset.hearthCanvasEastOwnsAtlasFormation = "true";
@@ -1494,7 +1785,7 @@
 
     canvasEastActive: true,
     materialAtlasSourceMachine: true,
-    v2CachedSourceContext: true,
+    v3AtlasClaritySourceSharpening: true,
 
     newsProtocolSynchronized: true,
     fibonacciAlignmentSynchronized: true,
@@ -1506,10 +1797,17 @@
     materialBridgeRefreshCachedPerAtlasBuild: true,
     perPixelAuthorityResolutionRetired: true,
     perPixelMaterialBridgeRefreshRetired: true,
-    defaultAtlasReduced: true,
+
+    adaptiveAtlasResolutionActive: true,
+    defaultAtlasMode: DEFAULT_ATLAS_MODE,
     defaultAtlasWidth: DEFAULT_ATLAS_WIDTH,
     defaultAtlasHeight: DEFAULT_ATLAS_HEIGHT,
     optionalHigherLodSupported: true,
+
+    classificationShapeSeparationActive: true,
+    coastlineClassifierMode: "sharp-classification-soft-visual-band",
+    coastlineTransitionWidth: COASTLINE_CLASSIFIER_TRANSITION,
+    shoreVisualBandWidth: SHORE_VISUAL_BAND_WIDTH,
 
     ownsSourceIntake: true,
     ownsAtlasFormation: true,

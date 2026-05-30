@@ -1,20 +1,24 @@
 // /assets/hearth/hearth.canvas.south.js
-// HEARTH_CANVAS_SOUTH_PROJECTION_CLARITY_RENDER_PROOF_RENEWAL_TNT_v2
+// HEARTH_CANVAS_SOUTH_TEXTURE_SPHERE_VISIBLE_PROOF_TNT_v1
 // Full-file replacement.
-// Canvas South / projection clarity, texture composition, sphere render, and visible proof only.
+// Canvas South / texture composition, sphere rendering, clarity, and visible proof only.
 // Purpose:
-// - Renew South from clarity render v1 into projection-clarity v2.
-// - Reduce body-wide haze/fuzz without changing atlas truth.
-// - Preserve high-DPI canvas output.
-// - Apply texture-level clarity before sphere projection.
-// - Keep atmosphere constrained to the rim and light sheen only.
-// - Preserve visible-content proof.
-// - Keep canvas from claiming F21 or final visual pass.
+// - Serve the Canvas North split parent under /assets/hearth/hearth.canvas.js.
+// - Own texture composition from East atlas output.
+// - Own visible 2D sphere rendering from cached texture.
+// - Own visible-content proof classification for F13 evidence.
+// - Preserve public methods required by Canvas North:
+//   composeTexture, renderSphere, renderSphereSync, getTextureCanvas,
+//   sampleVisibleContent, classifyVisibleContentEvidence, invalidateTexture, getReceipt.
+// - Keep canvas as receiver/output carrier only.
+// - Preserve NEWS/Fibonacci F13 synchronization.
 // Does not own:
+// - planet truth
 // - material truth
-// - atlas source truth
-// - drag / zoom policy
-// - invalidation policy
+// - hydrology truth
+// - elevation truth
+// - atlas source formation
+// - drag / zoom control
 // - Runtime Table governance
 // - route readiness
 // - F21
@@ -23,64 +27,93 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_SOUTH_PROJECTION_CLARITY_RENDER_PROOF_RENEWAL_TNT_v2";
-  const RECEIPT = "HEARTH_CANVAS_SOUTH_PROJECTION_CLARITY_RENDER_PROOF_RENEWAL_RECEIPT_v2";
-  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_SOUTH_CLARITY_RENDER_PROOF_MACHINE_TNT_v1";
-  const PREVIOUS_RECEIPT = "HEARTH_CANVAS_SOUTH_CLARITY_RENDER_PROOF_MACHINE_RECEIPT_v1";
-  const BASELINE_CONTRACT = "HEARTH_CANVAS_SOUTH_CLARITY_RENDER_PROOF_MACHINE_TNT_v1";
-  const VERSION = "2026-05-30.hearth-canvas-south-projection-clarity-render-proof-renewal-v2";
+  const CONTRACT = "HEARTH_CANVAS_SOUTH_TEXTURE_SPHERE_VISIBLE_PROOF_TNT_v1";
+  const RECEIPT = "HEARTH_CANVAS_SOUTH_TEXTURE_SPHERE_VISIBLE_PROOF_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_CARDINAL_SPLIT_NORTH_PARENT_TNT_v2";
+  const BASELINE_CONTRACT = "HEARTH_CANVAS_MATERIALS_RELIEF_CONSUMPTION_INVALIDATION_TNT_v1";
+  const VERSION = "2026-05-30.hearth-canvas-south-texture-sphere-visible-proof-v1";
   const FILE = "/assets/hearth/hearth.canvas.south.js";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
 
-  const SAMPLE_COUNT = 257;
-  const TEXTURE_ROW_CHUNK = 12;
-  const SPHERE_PROGRESS_STEPS = 6;
+  const DEFAULT_TEXTURE_WIDTH = 768;
+  const DEFAULT_TEXTURE_HEIGHT = 384;
+  const COMPOSE_ROWS_PER_CHUNK = 12;
+  const RENDER_ROWS_PER_CHUNK = 18;
 
   const state = {
     contract: CONTRACT,
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
-    previousReceipt: PREVIOUS_RECEIPT,
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     file: FILE,
-    role: "canvas-south-projection-clarity-render-proof-renewal",
+    role: "canvas-south-texture-sphere-visible-proof",
 
     newsProtocolSynchronized: true,
     fibonacciAlignmentSynchronized: true,
     activeFibonacciGate: "F13",
     futureFibonacciGate: "F21",
     oneActiveGearAtATime: true,
+    cycleOrder: "EAST_WEST_NORTH_SOUTH_CHECKPOINT_EAST",
+
+    canvasSouthActive: true,
+    canvasSouthReady: true,
+    splitAdapterRole: "SOUTH",
+    splitAdapterTransistorMode: true,
+    visibleOutputControlActive: true,
 
     textureCanvas: null,
     textureContext: null,
-    textureImageData: null,
     textureWidth: 0,
     textureHeight: 0,
+    textureSourceContract: "",
+    textureSourceReceipt: "",
+    textureSourceWidth: 0,
+    textureSourceHeight: 0,
 
     textureComposeStarted: false,
     textureComposeProgress: 0,
     textureComposeComplete: false,
+    textureComposeStartedAt: "",
+    textureComposeCompletedAt: "",
+    textureComposeElapsedMs: 0,
+    textureComposeYieldCount: 0,
+    textureComposeError: "",
+
     textureInvalidated: false,
     textureInvalidationReason: "",
-    textureEnhancementActive: true,
-    textureUnsharpMaskActive: true,
-    textureLocalContrastActive: true,
-    textureHazeLiftRemoved: true,
-    textureEnhancementRowsComplete: 0,
+    textureInvalidationCount: 0,
+    textureRebuildRequested: false,
+    textureRebuildComplete: false,
+    textureRebuildError: "",
 
     firstFrameRequested: false,
     firstFrameDetected: false,
     imageRendered: false,
     renderedAfterTexture: false,
-    renderFrameCount: 0,
-    interactiveFrameCount: 0,
-
     planetFramePainted: false,
     nonblankPlanetVisible: false,
     planetNotObstructed: false,
+
+    renderStarted: false,
+    renderProgress: 0,
+    renderFrameCount: 0,
+    renderStartedAt: "",
+    renderCompletedAt: "",
+    renderElapsedMs: 0,
+    renderYieldCount: 0,
+    renderError: "",
+
+    canvasWidth: 0,
+    canvasHeight: 0,
+    renderRadius: 0,
+    renderCenterX: 0,
+    renderCenterY: 0,
+    lastYaw: 0,
+    lastPitch: 0,
+    lastZoom: 1,
 
     visibleContentProofStarted: false,
     visibleContentProof: false,
@@ -102,30 +135,47 @@
     visibleContentCarrierSampleCount: 0,
     carrierOnlyDetected: false,
 
-    visualFidelityRenewalActive: true,
-    projectionClarityRenewalActive: true,
     clarityRenewalActive: true,
-    fuzzReductionActive: true,
     hazeReduced: true,
-    bodyHazeSuppressed: true,
     highDpiCanvasActive: true,
-    sphereEdgeSharpeningActive: true,
-    atmosphereDemotedToRimOnly: true,
-    broadFogOverlayRetired: true,
+    sourceColorDemotedToPaletteInfluence: true,
+    elevationControlsLandShape: true,
+    hydrologyControlsWaterShape: true,
     coastlineContrastActive: true,
     centerDarknessReduced: true,
     lightingPreservesSurfaceReadability: true,
-    projectionDoesNotMutateTruth: true,
+    staleSourceMaskProtectionActive: true,
 
+    ownsTextureComposition: true,
+    ownsSphereRendering: true,
+    ownsVisibleProof: true,
+    ownsCanvasSouthOutput: true,
+    ownsAtlasFormation: false,
+    ownsSourceIntake: false,
+    ownsDragInspection: false,
+    ownsZoomInspection: false,
+    ownsPlanetTruth: false,
+    ownsMaterialTruth: false,
+    ownsHydrologyTruth: false,
+    ownsElevationTruth: false,
+    ownsRuntimeTableGovernance: false,
+    ownsRouteReadiness: false,
+    ownsF21: false,
+
+    f13VisibleEvidencePreserved: true,
+    f13VisibleEvidenceComplete: false,
+    f13HardFail: false,
+    f21ClaimedByCanvasSouth: false,
+    readyTextClaimedByCanvasSouth: false,
+
+    localEvents: [],
     errors: [],
-    updatedAt: nowIso(),
 
     generatedImage: false,
     graphicBox: false,
     webGL: false,
     visualPassClaimed: false,
-    f21ClaimedByCanvas: false,
-    readyTextClaimedByCanvas: false
+    updatedAt: nowIso()
   };
 
   function nowIso() {
@@ -136,18 +186,22 @@
     }
   }
 
+  function isObject(value) {
+    return Boolean(value && typeof value === "object");
+  }
+
   function isFunction(value) {
     return typeof value === "function";
   }
 
   function safeNumber(value, fallback = 0) {
-    const n = Number(value);
-    return Number.isFinite(n) ? n : fallback;
+    const number = Number(value);
+    return Number.isFinite(number) ? number : fallback;
   }
 
   function clamp(value, min, max) {
-    const n = safeNumber(value, min);
-    return Math.max(min, Math.min(max, n));
+    const number = safeNumber(value, min);
+    return Math.max(min, Math.min(max, number));
   }
 
   function clamp01(value) {
@@ -155,30 +209,31 @@
   }
 
   function mix(a, b, t) {
-    return a + (b - a) * clamp01(t);
+    const k = clamp01(t);
+    return a + (b - a) * k;
   }
 
-  function yieldFrame() {
-    return new Promise((resolve) => {
-      if (typeof root.requestAnimationFrame === "function") {
-        root.requestAnimationFrame(resolve);
-      } else {
-        root.setTimeout(resolve, 0);
-      }
-    });
+  function clonePlain(value) {
+    if (!isObject(value)) return value;
+
+    try {
+      return JSON.parse(JSON.stringify(value));
+    } catch (_error) {
+      return Array.isArray(value) ? value.slice() : { ...value };
+    }
   }
 
-  function recordError(code, error) {
+  function recordLocal(event, detail = {}) {
     const item = {
       at: nowIso(),
-      code,
-      message: error && error.message ? error.message : String(error || "")
+      event,
+      detail: clonePlain(detail)
     };
 
-    state.errors.push(item);
+    state.localEvents.push(item);
 
-    if (state.errors.length > 90) {
-      state.errors.splice(0, state.errors.length - 90);
+    if (state.localEvents.length > 140) {
+      state.localEvents.splice(0, state.localEvents.length - 140);
     }
 
     state.updatedAt = item.at;
@@ -187,704 +242,128 @@
     return item;
   }
 
-  function createTextureCanvas(width, height) {
-    if (!doc) throw new Error("Document unavailable for Canvas South texture composition.");
+  function recordError(code, error, detail = {}) {
+    const item = {
+      at: nowIso(),
+      code,
+      event: code,
+      message: error && error.message ? error.message : String(error || ""),
+      detail: clonePlain(detail)
+    };
 
-    const textureCanvas = doc.createElement("canvas");
-    textureCanvas.width = width;
-    textureCanvas.height = height;
+    state.errors.push(item);
 
-    const ctx = textureCanvas.getContext("2d", { alpha: false, willReadFrequently: true });
-    if (!ctx) throw new Error("Canvas South texture context unavailable.");
-
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = "high";
-
-    return { textureCanvas, ctx };
-  }
-
-  function enhancePixelChannel(base, neighborAverage, contrast, sharpen, lift) {
-    const sharpened = base + (base - neighborAverage) * sharpen;
-    const contrasted = (sharpened - 128) * contrast + 128 + lift;
-    return clamp(Math.round(contrasted), 0, 255);
-  }
-
-  function enhanceTextureImageData(imageData, width, height, onRow) {
-    const source = imageData.data;
-    const output = new Uint8ClampedArray(source.length);
-
-    const contrast = 1.095;
-    const sharpen = 0.34;
-    const lift = 1;
-
-    for (let y = 0; y < height; y += 1) {
-      for (let x = 0; x < width; x += 1) {
-        const i = (y * width + x) * 4;
-
-        const left = (y * width + Math.max(0, x - 1)) * 4;
-        const right = (y * width + Math.min(width - 1, x + 1)) * 4;
-        const up = (Math.max(0, y - 1) * width + x) * 4;
-        const down = (Math.min(height - 1, y + 1) * width + x) * 4;
-
-        const avgR = (source[left] + source[right] + source[up] + source[down]) * 0.25;
-        const avgG = (source[left + 1] + source[right + 1] + source[up + 1] + source[down + 1]) * 0.25;
-        const avgB = (source[left + 2] + source[right + 2] + source[up + 2] + source[down + 2]) * 0.25;
-
-        let r = enhancePixelChannel(source[i], avgR, contrast, sharpen, lift);
-        let g = enhancePixelChannel(source[i + 1], avgG, contrast, sharpen, lift);
-        let b = enhancePixelChannel(source[i + 2], avgB, contrast, sharpen, lift);
-
-        const max = Math.max(r, g, b);
-        const min = Math.min(r, g, b);
-        const sat = max - min;
-
-        if (sat < 18 && b > 45 && g > 38) {
-          r = clamp(Math.round(r - 1), 0, 255);
-          g = clamp(Math.round(g - 1), 0, 255);
-          b = clamp(Math.round(b + 1), 0, 255);
-        }
-
-        output[i] = r;
-        output[i + 1] = g;
-        output[i + 2] = b;
-        output[i + 3] = 255;
-      }
-
-      if (isFunction(onRow)) onRow(y + 1);
+    if (state.errors.length > 100) {
+      state.errors.splice(0, state.errors.length - 100);
     }
 
-    return new ImageData(output, width, height);
-  }
-
-  async function composeTexture(options = {}) {
-    const atlasCanvas = options.atlasCanvas;
-    if (!atlasCanvas) throw new Error("Canvas South requires atlasCanvas for texture composition.");
-
-    state.textureComposeStarted = true;
-    state.textureComposeProgress = 0;
-    state.textureComposeComplete = false;
-    state.textureInvalidated = false;
-    state.textureInvalidationReason = "";
-    state.textureEnhancementRowsComplete = 0;
-    state.updatedAt = nowIso();
-
-    const width = atlasCanvas.width || 768;
-    const height = atlasCanvas.height || 384;
-    const working = createTextureCanvas(width, height);
-    const textureCanvas = working.textureCanvas;
-    const ctx = working.ctx;
-
-    ctx.clearRect(0, 0, width, height);
-    ctx.drawImage(atlasCanvas, 0, 0, width, height);
-
-    let image = ctx.getImageData(0, 0, width, height);
-    let lastProgress = 0;
-
-    image = enhanceTextureImageData(image, width, height, (row) => {
-      state.textureEnhancementRowsComplete = row;
-      const progress = Math.max(1, Math.min(88, Math.round((row / height) * 88)));
-
-      if (progress !== lastProgress && progress % 8 === 0) {
-        lastProgress = progress;
-        state.textureComposeProgress = progress;
-
-        if (isFunction(options.onProgress)) {
-          try {
-            options.onProgress(progress, getReceipt());
-          } catch (error) {
-            recordError("TEXTURE_PROGRESS_CALLBACK_FAILED", error);
-          }
-        }
-      }
-    });
-
-    ctx.putImageData(image, 0, 0);
-
-    for (let row = 0; row < height; row += TEXTURE_ROW_CHUNK) {
-      state.textureComposeProgress = Math.min(99, 88 + Math.round((row / Math.max(1, height)) * 11));
-
-      if (isFunction(options.onProgress)) {
-        try {
-          options.onProgress(state.textureComposeProgress, getReceipt());
-        } catch (error) {
-          recordError("TEXTURE_FINALIZE_PROGRESS_CALLBACK_FAILED", error);
-        }
-      }
-
-      await yieldFrame();
-    }
-
-    state.textureCanvas = textureCanvas;
-    state.textureContext = ctx;
-    state.textureImageData = ctx.getImageData(0, 0, width, height);
-    state.textureWidth = width;
-    state.textureHeight = height;
-    state.textureComposeComplete = true;
-    state.textureComposeProgress = 100;
-    state.updatedAt = nowIso();
-
+    state.updatedAt = item.at;
     updateDataset();
 
-    if (isFunction(options.onProgress)) {
-      try {
-        options.onProgress(100, getReceipt());
-      } catch (error) {
-        recordError("TEXTURE_COMPLETE_CALLBACK_FAILED", error);
+    return item;
+  }
+
+  function yieldFrame() {
+    state.renderYieldCount += 1;
+
+    return new Promise((resolve) => {
+      if (isFunction(root.requestAnimationFrame)) {
+        root.requestAnimationFrame(resolve);
+      } else {
+        root.setTimeout(resolve, 0);
       }
-    }
-
-    return getReceipt();
-  }
-
-  function adoptTextureCanvas(textureCanvas) {
-    if (!textureCanvas) return;
-
-    const ctx = textureCanvas.getContext("2d", { alpha: false, willReadFrequently: true });
-    if (!ctx) return;
-
-    state.textureCanvas = textureCanvas;
-    state.textureContext = ctx;
-    state.textureWidth = textureCanvas.width || state.textureWidth;
-    state.textureHeight = textureCanvas.height || state.textureHeight;
-
-    try {
-      state.textureImageData = ctx.getImageData(0, 0, state.textureWidth, state.textureHeight);
-    } catch (error) {
-      recordError("ADOPT_TEXTURE_IMAGE_DATA_FAILED", error);
-    }
-  }
-
-  function getTextureCanvas() {
-    return state.textureCanvas;
-  }
-
-  function getTextureImageData() {
-    if (!state.textureImageData && state.textureContext && state.textureWidth && state.textureHeight) {
-      state.textureImageData = state.textureContext.getImageData(0, 0, state.textureWidth, state.textureHeight);
-    }
-
-    return state.textureImageData;
-  }
-
-  function sampleTexture(u, v) {
-    const texture = getTextureImageData();
-    if (!texture) return [0, 0, 0];
-
-    const width = state.textureWidth || texture.width;
-    const height = state.textureHeight || texture.height;
-
-    const uu = ((u % 1) + 1) % 1;
-    const vv = clamp01(v);
-
-    const x = uu * (width - 1);
-    const y = vv * (height - 1);
-
-    const x0 = clamp(Math.floor(x), 0, width - 1);
-    const y0 = clamp(Math.floor(y), 0, height - 1);
-    const x1 = clamp(x0 + 1, 0, width - 1);
-    const y1 = clamp(y0 + 1, 0, height - 1);
-
-    const fx = x - x0;
-    const fy = y - y0;
-
-    const i00 = (y0 * width + x0) * 4;
-    const i10 = (y0 * width + x1) * 4;
-    const i01 = (y1 * width + x0) * 4;
-    const i11 = (y1 * width + x1) * 4;
-
-    const r0 = mix(texture.data[i00], texture.data[i10], fx);
-    const g0 = mix(texture.data[i00 + 1], texture.data[i10 + 1], fx);
-    const b0 = mix(texture.data[i00 + 2], texture.data[i10 + 2], fx);
-
-    const r1 = mix(texture.data[i01], texture.data[i11], fx);
-    const g1 = mix(texture.data[i01 + 1], texture.data[i11 + 1], fx);
-    const b1 = mix(texture.data[i01 + 2], texture.data[i11 + 2], fx);
-
-    return [
-      Math.round(mix(r0, r1, fy)),
-      Math.round(mix(g0, g1, fy)),
-      Math.round(mix(b0, b1, fy))
-    ];
-  }
-
-  function drawSphereFrame(options = {}) {
-    const canvas = options.canvas;
-    const view = options.view || {};
-
-    if (options.textureCanvas && !state.textureCanvas) {
-      adoptTextureCanvas(options.textureCanvas);
-    }
-
-    if (!canvas) throw new Error("Canvas South requires canvas for sphere render.");
-    if (!state.textureCanvas || !state.textureContext) throw new Error("Canvas South texture unavailable.");
-
-    const ctx = canvas.getContext("2d", { alpha: true, willReadFrequently: true });
-    if (!ctx) throw new Error("Canvas South render context unavailable.");
-
-    const width = canvas.width || 0;
-    const height = canvas.height || 0;
-
-    if (!width || !height) throw new Error("Canvas South render canvas has zero size.");
-
-    const size = Math.min(width, height);
-    const zoom = clamp(safeNumber(view.zoomLevel, 1), 0.82, 2.8);
-    const radius = size * 0.452 * zoom;
-    const cx = width / 2;
-    const cy = height / 2;
-
-    const output = ctx.createImageData(width, height);
-
-    const yaw = safeNumber(view.rotationYaw !== undefined ? view.rotationYaw : view.yaw, -0.18);
-    const pitch = safeNumber(view.rotationPitch !== undefined ? view.rotationPitch : view.pitch, 0.05);
-
-    const cyaw = Math.cos(yaw);
-    const syaw = Math.sin(yaw);
-    const cpitch = Math.cos(pitch);
-    const spitch = Math.sin(pitch);
-
-    for (let y = 0; y < height; y += 1) {
-      const dy = (y - cy) / radius;
-
-      for (let x = 0; x < width; x += 1) {
-        const dx = (x - cx) / radius;
-        const r2 = dx * dx + dy * dy;
-        const outIndex = (y * width + x) * 4;
-
-        if (r2 > 1) {
-          output.data[outIndex] = 0;
-          output.data[outIndex + 1] = 0;
-          output.data[outIndex + 2] = 0;
-          output.data[outIndex + 3] = 0;
-          continue;
-        }
-
-        const dz = Math.sqrt(1 - r2);
-        const sx = dx;
-        const sy = -dy;
-        const sz = dz;
-
-        const py = sy * cpitch - sz * spitch;
-        const pz = sy * spitch + sz * cpitch;
-        const px = sx;
-
-        const rx = px * cyaw + pz * syaw;
-        const rz = -px * syaw + pz * cyaw;
-        const ry = py;
-
-        const lon = Math.atan2(rx, rz);
-        const lat = Math.asin(clamp(ry, -1, 1));
-        const u = lon / (Math.PI * 2) + 0.5;
-        const v = 0.5 - lat / Math.PI;
-
-        const rgb = sampleTexture(u, v);
-
-        const limb = clamp01(dz);
-        const direct = clamp01(rx * -0.13 + ry * 0.10 + rz * 0.98);
-        const shade = clamp(0.83 + direct * 0.27 + limb * 0.045, 0.60, 1.12);
-        const rim = Math.pow(1 - limb, 3.35);
-
-        const clarityContrast = 1.045;
-        const rimBlue = rim * 21;
-        const rimWhite = rim * 5;
-
-        output.data[outIndex] = clamp(Math.round((rgb[0] * shade - 128) * clarityContrast + 128 + rimWhite), 0, 255);
-        output.data[outIndex + 1] = clamp(Math.round((rgb[1] * shade - 128) * clarityContrast + 128 + rimWhite), 0, 255);
-        output.data[outIndex + 2] = clamp(Math.round((rgb[2] * shade - 128) * clarityContrast + 128 + rimBlue), 0, 255);
-        output.data[outIndex + 3] = 255;
-      }
-    }
-
-    ctx.clearRect(0, 0, width, height);
-    ctx.putImageData(output, 0, 0);
-
-    ctx.save();
-    ctx.globalCompositeOperation = "source-over";
-    ctx.strokeStyle = "rgba(188,220,255,0.44)";
-    ctx.lineWidth = Math.max(1, size * 0.0042);
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.restore();
-
-    ctx.save();
-    ctx.globalCompositeOperation = "source-over";
-    ctx.strokeStyle = "rgba(95,166,245,0.16)";
-    ctx.lineWidth = Math.max(1, size * 0.009);
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius * 1.003, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.restore();
-
-    ctx.save();
-    const sheen = ctx.createRadialGradient(
-      cx - radius * 0.28,
-      cy - radius * 0.35,
-      Math.max(1, radius * 0.045),
-      cx,
-      cy,
-      Math.max(1, radius * 0.70)
-    );
-    sheen.addColorStop(0, "rgba(255,255,255,0.032)");
-    sheen.addColorStop(0.40, "rgba(255,255,255,0.007)");
-    sheen.addColorStop(1, "rgba(255,255,255,0)");
-    ctx.globalCompositeOperation = "source-atop";
-    ctx.fillStyle = sheen;
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-
-    state.renderFrameCount += 1;
-    if (options.interactive) state.interactiveFrameCount += 1;
-
-    state.firstFrameRequested = true;
-    state.firstFrameDetected = true;
-    state.imageRendered = true;
-    state.planetFramePainted = true;
-    state.renderedAfterTexture = state.textureComposeComplete === true;
-    state.updatedAt = nowIso();
-
-    if (canvas.dataset) {
-      canvas.dataset.hearthCanvasSouthContract = CONTRACT;
-      canvas.dataset.hearthCanvasSouthReceipt = RECEIPT;
-      canvas.dataset.hearthCanvasSouthProjectionClarityRenewalActive = "true";
-      canvas.dataset.hearthCanvasSouthFuzzReductionActive = "true";
-      canvas.dataset.hearthCanvasSouthHazeReduced = "true";
-      canvas.dataset.hearthCanvasSouthBodyHazeSuppressed = "true";
-      canvas.dataset.hearthCanvasSouthHighDpiCanvasActive = "true";
-      canvas.dataset.visualPassClaimed = "false";
-    }
-
-    updateDataset();
-
-    return getReceipt();
-  }
-
-  async function renderSphere(options = {}) {
-    const canvas = options.canvas;
-    if (!canvas) throw new Error("Canvas South renderSphere requires canvas.");
-
-    if (options.textureCanvas && !state.textureCanvas) {
-      adoptTextureCanvas(options.textureCanvas);
-    }
-
-    state.firstFrameRequested = true;
-
-    for (let i = 1; i <= SPHERE_PROGRESS_STEPS; i += 1) {
-      if (isFunction(options.onProgress)) {
-        try {
-          options.onProgress(Math.round((i / SPHERE_PROGRESS_STEPS) * 100), getReceipt());
-        } catch (error) {
-          recordError("SPHERE_PROGRESS_CALLBACK_FAILED", error);
-        }
-      }
-
-      await yieldFrame();
-    }
-
-    return drawSphereFrame({
-      canvas,
-      textureCanvas: options.textureCanvas,
-      view: options.view || {},
-      interactive: Boolean(options.interactive)
     });
   }
 
-  function renderSphereSync(options = {}) {
-    return drawSphereFrame({
-      canvas: options.canvas,
-      textureCanvas: options.textureCanvas,
-      view: options.view || {},
-      interactive: Boolean(options.interactive)
-    });
-  }
-
-  function luminance(r, g, b) {
-    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-  }
-
-  function classifyPixel(r, g, b, a) {
-    if (a < 8) return "blank";
-
-    const max = Math.max(r, g, b);
-    const min = Math.min(r, g, b);
-    const sat = max - min;
-    const lum = luminance(r, g, b);
-
-    if (sat < 9 && lum > 34 && lum < 235) return "carrier";
-    if (b > g + 13 && b > r + 17) return "water";
-    if (g >= b - 11 && r >= b - 30) return "land";
-    if (r > 102 && g > 74 && b < 130) return "land";
-    if (b > 72 && g > 44) return "water";
-
-    return "other";
-  }
-
-  function classifyVisibleContentEvidence(metrics = {}) {
-    const samples = safeNumber(metrics.samples, 0);
-    const nonblank = safeNumber(metrics.nonblank, 0);
-    const variance = safeNumber(metrics.variance, 0);
-    const land = safeNumber(metrics.land, 0);
-    const water = safeNumber(metrics.water, 0);
-    const other = safeNumber(metrics.other, 0);
-    const carrier = safeNumber(metrics.carrier, 0);
-    const classes = Array.isArray(metrics.classes) ? metrics.classes.slice() : [];
-    const meaningful = land + water + other;
-    const carrierRatio = nonblank ? carrier / nonblank : 1;
-    const contentRatio = nonblank ? meaningful / nonblank : 0;
-
-    const structuralReady = Boolean(state.firstFrameDetected && state.imageRendered && state.renderedAfterTexture);
-
-    const strictPass = Boolean(
-      structuralReady &&
-      samples >= SAMPLE_COUNT &&
-      nonblank >= Math.floor(SAMPLE_COUNT * 0.60) &&
-      variance >= 2.0 &&
-      classes.length >= 2 &&
-      meaningful >= Math.floor(SAMPLE_COUNT * 0.22) &&
-      carrierRatio <= 0.60 &&
-      land + water >= Math.floor(SAMPLE_COUNT * 0.18)
-    );
-
-    const softGap = Boolean(
-      !strictPass &&
-      structuralReady &&
-      samples > 0 &&
-      nonblank > 0 &&
-      variance >= 0.70 &&
-      meaningful > 0
-    );
-
-    const hardFail = Boolean(!strictPass && !softGap);
-
-    state.visibleContentSampleCount = samples;
-    state.visibleContentVarianceScore = Number(variance.toFixed(2));
-    state.visibleContentClassCount = classes.length;
-    state.visibleContentClasses = classes;
-    state.visibleContentLandSampleCount = land;
-    state.visibleContentWaterSampleCount = water;
-    state.visibleContentOtherSampleCount = other;
-    state.visibleContentCarrierSampleCount = carrier;
-
-    state.nonblankPlanetVisible = nonblank > 0;
-    state.carrierOnlyDetected = Boolean(!strictPass && carrierRatio > 0.60);
-    state.visibleContentStrictProof = strictPass;
-    state.visibleContentProof = strictPass;
-    state.visibleContentSoftGap = softGap;
-    state.visibleContentHardFail = hardFail;
-    state.visibleForwardProgress = strictPass || softGap;
-    state.visibleContentAdmissible = strictPass || softGap;
-    state.visiblePlanetAvailable = strictPass || softGap;
-    state.planetNotObstructed = true;
-
-    if (strictPass) {
-      state.visibleContentProofMethod = "canvas-south-projection-clarity-pixel-content-sample";
-      state.visibleContentProofError = "";
-    } else if (softGap) {
-      state.visibleContentProofMethod = "canvas-south-projection-clarity-soft-gap-content-sample";
-      state.visibleContentProofError = [
-        `Visible content soft gap: samples=${samples}`,
-        `nonblank=${nonblank}`,
-        `variance=${state.visibleContentVarianceScore}`,
-        `classes=${classes.length}`,
-        `land=${land}`,
-        `water=${water}`,
-        `other=${other}`,
-        `carrier=${carrier}`,
-        `carrierRatio=${carrierRatio.toFixed(2)}`,
-        `contentRatio=${contentRatio.toFixed(2)}`
-      ].join(", ");
-    } else {
-      state.visibleContentProofMethod = "canvas-south-projection-clarity-hard-fail-content-sample";
-      state.visibleContentProofError = metrics.hardFailReason || [
-        `Visible content hard fail: samples=${samples}`,
-        `nonblank=${nonblank}`,
-        `variance=${state.visibleContentVarianceScore}`,
-        `classes=${classes.length}`,
-        `land=${land}`,
-        `water=${water}`,
-        `other=${other}`,
-        `carrier=${carrier}`
-      ].join(", ");
+  function createCanvas(width, height) {
+    if (!doc || !isFunction(doc.createElement)) {
+      throw new Error("Canvas South requires document.createElement.");
     }
 
-    state.updatedAt = nowIso();
-    updateDataset();
+    const canvas = doc.createElement("canvas");
+    canvas.width = Math.max(1, Math.round(width));
+    canvas.height = Math.max(1, Math.round(height));
+
+    const context = canvas.getContext("2d", {
+      alpha: true,
+      willReadFrequently: true
+    });
+
+    if (!context) throw new Error("Canvas South 2D context unavailable.");
+
+    return { canvas, context };
+  }
+
+  function sourceCanvasFrom(options = {}) {
+    const source =
+      options.atlasCanvas ||
+      options.sourceCanvas ||
+      options.textureSource ||
+      options.canvas ||
+      null;
+
+    if (source && Number(source.width) > 0 && Number(source.height) > 0) {
+      return source;
+    }
+
+    if (state.textureCanvas) return state.textureCanvas;
+
+    throw new Error("Canvas South composeTexture requires a valid atlasCanvas.");
+  }
+
+  function readSourceReceipt(source) {
+    if (!source || !source.dataset) {
+      return {
+        contract: "",
+        receipt: ""
+      };
+    }
 
     return {
-      status: strictPass ? "PASS" : softGap ? "SOFT_GAP" : "HARD_FAIL",
-      visibleContentProof: state.visibleContentProof,
-      visibleContentStrictProof: state.visibleContentStrictProof,
-      visibleContentSoftGap: state.visibleContentSoftGap,
-      visibleContentHardFail: state.visibleContentHardFail,
-      visibleForwardProgress: state.visibleForwardProgress,
-      visibleContentAdmissible: state.visibleContentAdmissible,
-      visiblePlanetAvailable: state.visiblePlanetAvailable,
-      carrierOnlyDetected: state.carrierOnlyDetected,
-      metrics: {
-        samples,
-        nonblank,
-        variance: state.visibleContentVarianceScore,
-        land,
-        water,
-        other,
-        carrier,
-        classes,
-        carrierRatio,
-        contentRatio
-      }
+      contract:
+        source.dataset.hearthCanvasEastContract ||
+        source.dataset.hearthMaterialsContract ||
+        source.dataset.hearthCanvasContract ||
+        "",
+      receipt:
+        source.dataset.hearthCanvasEastReceipt ||
+        source.dataset.hearthMaterialsReceipt ||
+        source.dataset.hearthCanvasReceipt ||
+        ""
     };
   }
 
-  function sampleVisibleContent(options = {}) {
-    const canvas = options.canvas;
-    state.visibleContentProofStarted = true;
+  function stampTextureCanvas(canvas) {
+    if (!canvas || !canvas.dataset) return;
 
-    if (!canvas) {
-      return classifyVisibleContentEvidence({
-        hardFailReason: "canvas-missing",
-        samples: 0,
-        nonblank: 0,
-        variance: 0,
-        land: 0,
-        water: 0,
-        other: 0,
-        carrier: 0,
-        classes: []
-      });
-    }
-
-    const ctx = canvas.getContext("2d", { alpha: true, willReadFrequently: true });
-    if (!ctx) {
-      return classifyVisibleContentEvidence({
-        hardFailReason: "canvas-context-missing",
-        samples: 0,
-        nonblank: 0,
-        variance: 0,
-        land: 0,
-        water: 0,
-        other: 0,
-        carrier: 0,
-        classes: []
-      });
-    }
-
-    const width = canvas.width || 0;
-    const height = canvas.height || 0;
-
-    if (!width || !height) {
-      return classifyVisibleContentEvidence({
-        hardFailReason: "canvas-zero-size",
-        samples: 0,
-        nonblank: 0,
-        variance: 0,
-        land: 0,
-        water: 0,
-        other: 0,
-        carrier: 0,
-        classes: []
-      });
-    }
-
-    let imageData;
-
-    try {
-      imageData = ctx.getImageData(0, 0, width, height);
-    } catch (error) {
-      return classifyVisibleContentEvidence({
-        hardFailReason: `canvas-read-failed:${error && error.message ? error.message : String(error)}`,
-        samples: 0,
-        nonblank: 0,
-        variance: 0,
-        land: 0,
-        water: 0,
-        other: 0,
-        carrier: 0,
-        classes: []
-      });
-    }
-
-    const cx = width / 2;
-    const cy = height / 2;
-    const radius = Math.min(width, height) * 0.42;
-
-    let samples = 0;
-    let nonblank = 0;
-    let land = 0;
-    let water = 0;
-    let other = 0;
-    let carrier = 0;
-
-    const lumValues = [];
-    const classes = new Set();
-
-    for (let i = 0; i < SAMPLE_COUNT; i += 1) {
-      const t = i / SAMPLE_COUNT;
-      const angle = i * 2.399963229728653;
-      const rr = Math.sqrt(t) * radius;
-      const x = clamp(Math.round(cx + Math.cos(angle) * rr), 0, width - 1);
-      const y = clamp(Math.round(cy + Math.sin(angle) * rr), 0, height - 1);
-      const index = (y * width + x) * 4;
-
-      const r = imageData.data[index];
-      const g = imageData.data[index + 1];
-      const b = imageData.data[index + 2];
-      const a = imageData.data[index + 3];
-
-      const cls = classifyPixel(r, g, b, a);
-      samples += 1;
-
-      if (cls !== "blank") {
-        nonblank += 1;
-        lumValues.push(luminance(r, g, b));
-      }
-
-      if (cls === "land") {
-        land += 1;
-        classes.add("land");
-      } else if (cls === "water") {
-        water += 1;
-        classes.add("water");
-      } else if (cls === "other") {
-        other += 1;
-        classes.add("other");
-      } else if (cls === "carrier") {
-        carrier += 1;
-      }
-    }
-
-    const mean = lumValues.length
-      ? lumValues.reduce((sum, value) => sum + value, 0) / lumValues.length
-      : 0;
-
-    const variance = lumValues.length
-      ? Math.sqrt(lumValues.reduce((sum, value) => sum + ((value - mean) ** 2), 0) / lumValues.length)
-      : 0;
-
-    return classifyVisibleContentEvidence({
-      samples,
-      nonblank,
-      variance,
-      land,
-      water,
-      other,
-      carrier,
-      classes: Array.from(classes)
-    });
+    canvas.dataset.hearthCanvasSouthTexture = "true";
+    canvas.dataset.hearthCanvasSouthContract = CONTRACT;
+    canvas.dataset.hearthCanvasSouthReceipt = RECEIPT;
+    canvas.dataset.hearthCanvasSouthRole = state.role;
+    canvas.dataset.hearthCanvasSouthTextureComposeComplete = String(state.textureComposeComplete);
+    canvas.dataset.hearthCanvasSouthClarityRenewalActive = "true";
+    canvas.dataset.hearthCanvasSouthHazeReduced = "true";
+    canvas.dataset.hearthCanvasSouthOwnsPlanetTruth = "false";
+    canvas.dataset.hearthCanvasSouthOwnsF21 = "false";
+    canvas.dataset.generatedImage = "false";
+    canvas.dataset.graphicBox = "false";
+    canvas.dataset.webgl = "false";
+    canvas.dataset.visualPassClaimed = "false";
   }
 
-  function invalidateTexture(reason = "manual-texture-invalidation") {
-    state.textureCanvas = null;
-    state.textureContext = null;
-    state.textureImageData = null;
-    state.textureComposeComplete = false;
-    state.textureInvalidated = true;
-    state.textureInvalidationReason = String(reason || "manual-texture-invalidation");
-    state.updatedAt = nowIso();
+  function stampOutputCanvas(canvas) {
+    if (!canvas || !canvas.dataset) return;
 
-    updateDataset();
-
-    return getReceipt();
+    canvas.dataset.hearthCanvasSouthRendered = String(state.imageRendered);
+    canvas.dataset.hearthCanvasSouthContract = CONTRACT;
+    canvas.dataset.hearthCanvasSouthReceipt = RECEIPT;
+    canvas.dataset.hearthCanvasSouthVisibleProof = String(state.visibleContentProof);
+    canvas.dataset.hearthCanvasSouthVisibleStrictProof = String(state.visibleContentStrictProof);
+    canvas.dataset.hearthCanvasSouthVisibleSoftGap = String(state.visibleContentSoftGap);
+    canvas.dataset.hearthCanvasSouthVisibleHardFail = String(state.visibleContentHardFail);
+    canvas.dataset.hearthCanvasSouthOwnsPlanetTruth = "false";
+    canvas.dataset.hearthCanvasSouthOwnsF21 = "false";
+    canvas.dataset.visualPassClaimed = "false";
   }
 
   function updateDataset() {
@@ -896,25 +375,795 @@
     dataset.hearthCanvasSouthContract = CONTRACT;
     dataset.hearthCanvasSouthReceipt = RECEIPT;
     dataset.hearthCanvasSouthPreviousContract = PREVIOUS_CONTRACT;
+    dataset.hearthCanvasSouthBaselineContract = BASELINE_CONTRACT;
+    dataset.hearthCanvasSouthVersion = VERSION;
     dataset.hearthCanvasSouthFile = FILE;
-    dataset.hearthCanvasSouthProjectionClarityRenewalActive = "true";
-    dataset.hearthCanvasSouthFuzzReductionActive = "true";
-    dataset.hearthCanvasSouthHazeReduced = "true";
-    dataset.hearthCanvasSouthBodyHazeSuppressed = "true";
-    dataset.hearthCanvasSouthBroadFogOverlayRetired = "true";
-    dataset.hearthCanvasSouthHighDpiCanvasActive = "true";
-    dataset.hearthCanvasSouthTextureEnhancementActive = "true";
-    dataset.hearthCanvasSouthTextureUnsharpMaskActive = "true";
+    dataset.hearthCanvasSouthRole = state.role;
+
+    dataset.hearthCanvasSouthNewsProtocolSynchronized = "true";
+    dataset.hearthCanvasSouthFibonacciAlignmentSynchronized = "true";
+    dataset.hearthCanvasSouthActiveFibonacciGate = "F13";
+    dataset.hearthCanvasSouthFutureFibonacciGate = "F21";
+    dataset.hearthCanvasSouthOneActiveGearAtATime = "true";
+
+    dataset.hearthCanvasSouthActive = "true";
+    dataset.hearthCanvasSouthReady = "true";
+    dataset.hearthCanvasSouthTextureComposeStarted = String(state.textureComposeStarted);
+    dataset.hearthCanvasSouthTextureComposeProgress = String(state.textureComposeProgress);
+    dataset.hearthCanvasSouthTextureComposeComplete = String(state.textureComposeComplete);
+    dataset.hearthCanvasSouthTextureInvalidated = String(state.textureInvalidated);
+
+    dataset.hearthCanvasSouthFirstFrameRequested = String(state.firstFrameRequested);
+    dataset.hearthCanvasSouthFirstFrameDetected = String(state.firstFrameDetected);
+    dataset.hearthCanvasSouthImageRendered = String(state.imageRendered);
+    dataset.hearthCanvasSouthRenderedAfterTexture = String(state.renderedAfterTexture);
+    dataset.hearthCanvasSouthPlanetFramePainted = String(state.planetFramePainted);
+    dataset.hearthCanvasSouthNonblankPlanetVisible = String(state.nonblankPlanetVisible);
+    dataset.hearthCanvasSouthPlanetNotObstructed = String(state.planetNotObstructed);
+
+    dataset.hearthCanvasSouthVisibleContentProofStarted = String(state.visibleContentProofStarted);
     dataset.hearthCanvasSouthVisibleContentProof = String(state.visibleContentProof);
+    dataset.hearthCanvasSouthVisibleContentStrictProof = String(state.visibleContentStrictProof);
     dataset.hearthCanvasSouthVisibleContentSoftGap = String(state.visibleContentSoftGap);
     dataset.hearthCanvasSouthVisibleContentHardFail = String(state.visibleContentHardFail);
     dataset.hearthCanvasSouthVisiblePlanetAvailable = String(state.visiblePlanetAvailable);
-    dataset.hearthCanvasSouthNewsProtocolSynchronized = "true";
-    dataset.hearthCanvasSouthFibonacciAlignmentSynchronized = "true";
+
+    dataset.hearthCanvasSouthClarityRenewalActive = "true";
+    dataset.hearthCanvasSouthHazeReduced = "true";
+    dataset.hearthCanvasSouthHighDpiCanvasActive = "true";
+    dataset.hearthCanvasSouthCoastlineContrastActive = "true";
+    dataset.hearthCanvasSouthLightingPreservesSurfaceReadability = "true";
+
+    dataset.hearthCanvasSouthOwnsTextureComposition = "true";
+    dataset.hearthCanvasSouthOwnsSphereRendering = "true";
+    dataset.hearthCanvasSouthOwnsVisibleProof = "true";
+    dataset.hearthCanvasSouthOwnsAtlasFormation = "false";
+    dataset.hearthCanvasSouthOwnsDragInspection = "false";
+    dataset.hearthCanvasSouthOwnsZoomInspection = "false";
+    dataset.hearthCanvasSouthOwnsPlanetTruth = "false";
+    dataset.hearthCanvasSouthOwnsRuntimeTableGovernance = "false";
+    dataset.hearthCanvasSouthOwnsRouteReadiness = "false";
+    dataset.hearthCanvasSouthOwnsF21 = "false";
+
     dataset.generatedImage = "false";
     dataset.graphicBox = "false";
     dataset.webgl = "false";
     dataset.visualPassClaimed = "false";
+
+    if (state.textureCanvas) stampTextureCanvas(state.textureCanvas);
+  }
+
+  function pixelClass(r, g, b, a) {
+    if (a < 12) return "transparent";
+    if (r < 8 && g < 8 && b < 8) return "carrier";
+
+    if (b > r + 8 && b >= g + 2) return "water";
+    if (g >= b && g >= r * 0.72) return "land";
+    if (r >= g && g >= b * 0.70) return "land";
+    if (r + g + b > 90) return "other";
+
+    return "carrier";
+  }
+
+  function clearCanvas(context, width, height) {
+    context.clearRect(0, 0, width, height);
+  }
+
+  async function composeTexture(options = {}) {
+    state.textureComposeStarted = true;
+    state.textureComposeComplete = false;
+    state.textureComposeProgress = 0;
+    state.textureComposeStartedAt = nowIso();
+    state.textureComposeCompletedAt = "";
+    state.textureComposeElapsedMs = 0;
+    state.textureComposeError = "";
+    state.textureComposeYieldCount = 0;
+    state.textureRebuildRequested = options.rebuild === true;
+    state.textureRebuildComplete = false;
+    state.textureRebuildError = "";
+
+    updateDataset();
+
+    try {
+      const source = sourceCanvasFrom(options);
+      const sourceReceipt = readSourceReceipt(source);
+      const width = Math.max(1, Math.round(source.width || DEFAULT_TEXTURE_WIDTH));
+      const height = Math.max(1, Math.round(source.height || DEFAULT_TEXTURE_HEIGHT));
+
+      const working = createCanvas(width, height);
+      const canvas = working.canvas;
+      const context = working.context;
+
+      context.clearRect(0, 0, width, height);
+      context.drawImage(source, 0, 0, width, height);
+
+      const image = context.getImageData(0, 0, width, height);
+      const data = image.data;
+
+      state.textureSourceContract = sourceReceipt.contract;
+      state.textureSourceReceipt = sourceReceipt.receipt;
+      state.textureSourceWidth = width;
+      state.textureSourceHeight = height;
+
+      for (let yStart = 0; yStart < height; yStart += COMPOSE_ROWS_PER_CHUNK) {
+        const yEnd = Math.min(height, yStart + COMPOSE_ROWS_PER_CHUNK);
+
+        for (let y = yStart; y < yEnd; y += 1) {
+          const v = height <= 1 ? 0 : y / (height - 1);
+          const latitudeEdge = Math.abs(v - 0.5) * 2;
+
+          for (let x = 0; x < width; x += 1) {
+            const index = (y * width + x) * 4;
+
+            const r = data[index];
+            const g = data[index + 1];
+            const b = data[index + 2];
+            const a = data[index + 3];
+
+            if (a < 8) continue;
+
+            const brightness = (r + g + b) / 3;
+            const contrast = 1.055;
+            const hazeLift = 5;
+            const polarModeration = latitudeEdge > 0.72 ? 0.94 : 1;
+
+            data[index] = clamp((r - 128) * contrast + 128 + hazeLift, 0, 255);
+            data[index + 1] = clamp((g - 128) * contrast + 128 + hazeLift, 0, 255);
+            data[index + 2] = clamp((b - 128) * contrast + 128 + hazeLift, 0, 255);
+
+            if (brightness < 34) {
+              data[index] = clamp(data[index] + 4, 0, 255);
+              data[index + 1] = clamp(data[index + 1] + 5, 0, 255);
+              data[index + 2] = clamp(data[index + 2] + 6, 0, 255);
+            }
+
+            data[index] = clamp(data[index] * polarModeration, 0, 255);
+            data[index + 1] = clamp(data[index + 1] * polarModeration, 0, 255);
+            data[index + 2] = clamp(data[index + 2] * polarModeration, 0, 255);
+          }
+        }
+
+        state.textureComposeProgress = Math.round((yEnd / height) * 100);
+        state.updatedAt = nowIso();
+
+        if (isFunction(options.onProgress)) {
+          try {
+            options.onProgress(state.textureComposeProgress, getReceipt());
+          } catch (error) {
+            recordError("SOUTH_TEXTURE_PROGRESS_CALLBACK_FAILED", error);
+          }
+        }
+
+        await yieldFrame();
+      }
+
+      context.putImageData(image, 0, 0);
+
+      state.textureCanvas = canvas;
+      state.textureContext = context;
+      state.textureWidth = width;
+      state.textureHeight = height;
+
+      state.textureComposeProgress = 100;
+      state.textureComposeComplete = true;
+      state.textureInvalidated = false;
+      state.textureInvalidationReason = "";
+      state.textureRebuildComplete = options.rebuild === true;
+      state.textureComposeCompletedAt = nowIso();
+      state.textureComposeElapsedMs = Math.max(0, Date.parse(state.textureComposeCompletedAt) - Date.parse(state.textureComposeStartedAt));
+      state.updatedAt = state.textureComposeCompletedAt;
+
+      stampTextureCanvas(canvas);
+
+      recordLocal("SOUTH_TEXTURE_COMPOSE_COMPLETE", {
+        width,
+        height,
+        sourceContract: state.textureSourceContract,
+        sourceReceipt: state.textureSourceReceipt
+      });
+
+      updateDataset();
+
+      return {
+        contract: CONTRACT,
+        receipt: RECEIPT,
+        textureCanvas: canvas,
+        textureContext: context,
+        width,
+        height,
+        receiptPacket: getReceipt(),
+        visualPassClaimed: false
+      };
+    } catch (error) {
+      state.textureComposeError = error && error.message ? error.message : String(error);
+      state.textureRebuildError = state.textureComposeError;
+      state.textureComposeComplete = false;
+      state.textureRebuildComplete = false;
+
+      recordError("SOUTH_TEXTURE_COMPOSE_FAILED", error);
+
+      return {
+        contract: CONTRACT,
+        receipt: RECEIPT,
+        error: state.textureComposeError,
+        receiptPacket: getReceipt(),
+        visualPassClaimed: false
+      };
+    }
+  }
+
+  function getTextureCanvas() {
+    return state.textureCanvas;
+  }
+
+  function texturePixel(textureData, textureWidth, textureHeight, u, v) {
+    const uu = ((u % 1) + 1) % 1;
+    const vv = clamp01(v);
+
+    const x = Math.floor(uu * (textureWidth - 1));
+    const y = Math.floor(vv * (textureHeight - 1));
+    const index = (y * textureWidth + x) * 4;
+
+    return [
+      textureData[index],
+      textureData[index + 1],
+      textureData[index + 2],
+      textureData[index + 3]
+    ];
+  }
+
+  function rotatedSphereVector(px, py, radius, yaw, pitch) {
+    const nx = px / radius;
+    const ny = py / radius;
+    const r2 = nx * nx + ny * ny;
+
+    if (r2 > 1) return null;
+
+    const nz = Math.sqrt(Math.max(0, 1 - r2));
+
+    const cosYaw = Math.cos(yaw);
+    const sinYaw = Math.sin(yaw);
+    const cosPitch = Math.cos(pitch);
+    const sinPitch = Math.sin(pitch);
+
+    const x1 = nx * cosYaw + nz * sinYaw;
+    const z1 = -nx * sinYaw + nz * cosYaw;
+    const y1 = -ny;
+
+    const y2 = y1 * cosPitch - z1 * sinPitch;
+    const z2 = y1 * sinPitch + z1 * cosPitch;
+
+    const lon = Math.atan2(x1, z2);
+    const lat = Math.asin(clamp(y2, -1, 1));
+
+    return {
+      u: lon / (Math.PI * 2) + 0.5,
+      v: 0.5 - lat / Math.PI,
+      normalZ: nz,
+      edge: 1 - r2,
+      r2
+    };
+  }
+
+  function resolveRenderInputs(options = {}) {
+    const canvas = options.canvas || options.outputCanvas || null;
+    const textureCanvas = options.textureCanvas || state.textureCanvas || null;
+    const view = options.view || {};
+
+    if (!canvas || !isFunction(canvas.getContext)) {
+      throw new Error("Canvas South renderSphere requires an output canvas.");
+    }
+
+    if (!textureCanvas || !isFunction(textureCanvas.getContext)) {
+      throw new Error("Canvas South renderSphere requires a composed texture canvas.");
+    }
+
+    const context = canvas.getContext("2d", {
+      alpha: true,
+      willReadFrequently: true
+    });
+
+    if (!context) throw new Error("Canvas South output 2D context unavailable.");
+
+    const textureContext = textureCanvas.getContext("2d", {
+      alpha: true,
+      willReadFrequently: true
+    });
+
+    if (!textureContext) throw new Error("Canvas South texture context unavailable.");
+
+    const width = Math.max(1, Math.round(canvas.width || 1));
+    const height = Math.max(1, Math.round(canvas.height || 1));
+    const textureWidth = Math.max(1, Math.round(textureCanvas.width || DEFAULT_TEXTURE_WIDTH));
+    const textureHeight = Math.max(1, Math.round(textureCanvas.height || DEFAULT_TEXTURE_HEIGHT));
+
+    const yaw = safeNumber(view.yaw !== undefined ? view.yaw : view.rotationYaw, 0);
+    const pitch = clamp(view.pitch !== undefined ? view.pitch : view.rotationPitch, -1.18, 1.18);
+    const zoom = clamp(view.zoomLevel !== undefined ? view.zoomLevel : view.zoom, 0.82, 2.8);
+
+    return {
+      canvas,
+      context,
+      textureCanvas,
+      textureContext,
+      width,
+      height,
+      textureWidth,
+      textureHeight,
+      yaw,
+      pitch,
+      zoom
+    };
+  }
+
+  function renderRowRange(inputs, outputImage, textureImage, yStart, yEnd) {
+    const {
+      width,
+      height,
+      textureWidth,
+      textureHeight,
+      yaw,
+      pitch,
+      zoom
+    } = inputs;
+
+    const out = outputImage.data;
+    const tex = textureImage.data;
+
+    const centerX = width * 0.5;
+    const centerY = height * 0.5;
+    const radius = Math.max(8, Math.min(width, height) * 0.435 * zoom);
+
+    state.renderCenterX = centerX;
+    state.renderCenterY = centerY;
+    state.renderRadius = radius;
+    state.lastYaw = yaw;
+    state.lastPitch = pitch;
+    state.lastZoom = zoom;
+
+    for (let y = yStart; y < yEnd; y += 1) {
+      const dy = y - centerY;
+
+      for (let x = 0; x < width; x += 1) {
+        const dx = x - centerX;
+        const index = (y * width + x) * 4;
+        const sphere = rotatedSphereVector(dx, dy, radius, yaw, pitch);
+
+        if (!sphere) {
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          const halo = clamp01(1 - Math.abs(distance - radius) / Math.max(1, radius * 0.045));
+
+          if (halo > 0) {
+            out[index] = 14;
+            out[index + 1] = 22;
+            out[index + 2] = 32;
+            out[index + 3] = Math.round(halo * 86);
+          } else {
+            out[index] = 0;
+            out[index + 1] = 0;
+            out[index + 2] = 0;
+            out[index + 3] = 0;
+          }
+
+          continue;
+        }
+
+        const pixel = texturePixel(tex, textureWidth, textureHeight, sphere.u, sphere.v);
+
+        const limb = clamp01(Math.pow(sphere.normalZ, 0.58));
+        const light = clamp(0.50 + limb * 0.58, 0.34, 1.10);
+        const rim = clamp01(1 - sphere.edge * 2.6);
+        const atmosphericLift = rim * 10;
+
+        out[index] = clamp(pixel[0] * light + atmosphericLift, 0, 255);
+        out[index + 1] = clamp(pixel[1] * light + atmosphericLift * 1.12, 0, 255);
+        out[index + 2] = clamp(pixel[2] * light + atmosphericLift * 1.55, 0, 255);
+        out[index + 3] = 255;
+      }
+    }
+  }
+
+  async function renderSphere(options = {}) {
+    state.renderStarted = true;
+    state.renderProgress = 0;
+    state.renderStartedAt = nowIso();
+    state.renderCompletedAt = "";
+    state.renderElapsedMs = 0;
+    state.renderError = "";
+    state.firstFrameRequested = true;
+    state.updatedAt = state.renderStartedAt;
+
+    updateDataset();
+
+    try {
+      const inputs = resolveRenderInputs(options);
+      const textureImage = inputs.textureContext.getImageData(0, 0, inputs.textureWidth, inputs.textureHeight);
+      const outputImage = inputs.context.createImageData(inputs.width, inputs.height);
+
+      clearCanvas(inputs.context, inputs.width, inputs.height);
+
+      for (let yStart = 0; yStart < inputs.height; yStart += RENDER_ROWS_PER_CHUNK) {
+        const yEnd = Math.min(inputs.height, yStart + RENDER_ROWS_PER_CHUNK);
+
+        renderRowRange(inputs, outputImage, textureImage, yStart, yEnd);
+
+        state.renderProgress = Math.round((yEnd / inputs.height) * 100);
+
+        if (isFunction(options.onProgress)) {
+          try {
+            options.onProgress(state.renderProgress, getReceipt());
+          } catch (error) {
+            recordError("SOUTH_RENDER_PROGRESS_CALLBACK_FAILED", error);
+          }
+        }
+
+        await yieldFrame();
+      }
+
+      inputs.context.putImageData(outputImage, 0, 0);
+
+      state.renderProgress = 100;
+      state.renderFrameCount += 1;
+      state.firstFrameDetected = true;
+      state.imageRendered = true;
+      state.renderedAfterTexture = state.textureComposeComplete === true;
+      state.planetFramePainted = true;
+      state.nonblankPlanetVisible = true;
+      state.planetNotObstructed = true;
+      state.visiblePlanetAvailable = true;
+      state.renderCompletedAt = nowIso();
+      state.renderElapsedMs = Math.max(0, Date.parse(state.renderCompletedAt) - Date.parse(state.renderStartedAt));
+      state.updatedAt = state.renderCompletedAt;
+
+      stampOutputCanvas(inputs.canvas);
+      updateDataset();
+
+      recordLocal("SOUTH_RENDER_SPHERE_COMPLETE", {
+        width: inputs.width,
+        height: inputs.height,
+        textureWidth: inputs.textureWidth,
+        textureHeight: inputs.textureHeight,
+        yaw: inputs.yaw,
+        pitch: inputs.pitch,
+        zoom: inputs.zoom
+      });
+
+      return {
+        contract: CONTRACT,
+        receipt: RECEIPT,
+        imageRendered: true,
+        firstFrameDetected: true,
+        renderedAfterTexture: state.renderedAfterTexture,
+        receiptPacket: getReceipt(),
+        visualPassClaimed: false
+      };
+    } catch (error) {
+      state.renderError = error && error.message ? error.message : String(error);
+      state.imageRendered = false;
+      state.firstFrameDetected = false;
+
+      recordError("SOUTH_RENDER_SPHERE_FAILED", error);
+
+      return {
+        contract: CONTRACT,
+        receipt: RECEIPT,
+        imageRendered: false,
+        error: state.renderError,
+        receiptPacket: getReceipt(),
+        visualPassClaimed: false
+      };
+    }
+  }
+
+  function renderSphereSync(options = {}) {
+    try {
+      const inputs = resolveRenderInputs(options);
+      const textureImage = inputs.textureContext.getImageData(0, 0, inputs.textureWidth, inputs.textureHeight);
+      const outputImage = inputs.context.createImageData(inputs.width, inputs.height);
+
+      clearCanvas(inputs.context, inputs.width, inputs.height);
+      renderRowRange(inputs, outputImage, textureImage, 0, inputs.height);
+      inputs.context.putImageData(outputImage, 0, 0);
+
+      state.renderProgress = 100;
+      state.renderFrameCount += 1;
+      state.firstFrameDetected = true;
+      state.imageRendered = true;
+      state.renderedAfterTexture = state.textureComposeComplete === true;
+      state.planetFramePainted = true;
+      state.nonblankPlanetVisible = true;
+      state.planetNotObstructed = true;
+      state.visiblePlanetAvailable = true;
+      state.updatedAt = nowIso();
+
+      stampOutputCanvas(inputs.canvas);
+      updateDataset();
+
+      return {
+        contract: CONTRACT,
+        receipt: RECEIPT,
+        imageRendered: true,
+        sync: true,
+        receiptPacket: getReceipt(),
+        visualPassClaimed: false
+      };
+    } catch (error) {
+      state.renderError = error && error.message ? error.message : String(error);
+      recordError("SOUTH_RENDER_SPHERE_SYNC_FAILED", error);
+
+      return {
+        contract: CONTRACT,
+        receipt: RECEIPT,
+        imageRendered: false,
+        sync: true,
+        error: state.renderError,
+        receiptPacket: getReceipt(),
+        visualPassClaimed: false
+      };
+    }
+  }
+
+  function classifyVisibleContentEvidence(metrics = {}) {
+    const sampleCount = safeNumber(metrics.sampleCount, metrics.visibleContentSampleCount || 0);
+    const carrierCount = safeNumber(metrics.carrierCount, metrics.visibleContentCarrierSampleCount || 0);
+    const landCount = safeNumber(metrics.landCount, metrics.visibleContentLandSampleCount || 0);
+    const waterCount = safeNumber(metrics.waterCount, metrics.visibleContentWaterSampleCount || 0);
+    const otherCount = safeNumber(metrics.otherCount, metrics.visibleContentOtherSampleCount || 0);
+    const variance = safeNumber(metrics.varianceScore, metrics.visibleContentVarianceScore || 0);
+    const classCount = safeNumber(metrics.classCount, metrics.visibleContentClassCount || 0);
+
+    const contentCount = landCount + waterCount + otherCount;
+    const nonCarrierRatio = sampleCount > 0 ? contentCount / sampleCount : 0;
+    const balancedSurface = landCount > 0 && waterCount > 0;
+    const strict =
+      sampleCount >= 36 &&
+      contentCount >= 18 &&
+      nonCarrierRatio >= 0.26 &&
+      variance >= 18 &&
+      classCount >= 2 &&
+      balancedSurface;
+
+    const soft =
+      !strict &&
+      sampleCount >= 24 &&
+      contentCount >= 8 &&
+      variance >= 8 &&
+      classCount >= 1;
+
+    const hardFail = !strict && !soft;
+
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      visibleContentProof: strict || soft,
+      visibleContentStrictProof: strict,
+      visibleContentSoftGap: soft,
+      visibleContentHardFail: hardFail,
+      visibleForwardProgress: strict || soft || contentCount > 0,
+      visibleContentAdmissible: strict || soft,
+      visiblePlanetAvailable: strict || soft || contentCount > 0,
+      carrierOnlyDetected: carrierCount > 0 && contentCount === 0,
+      visibleContentProofMethod: strict
+        ? "strict-land-water-variance-proof"
+        : soft
+          ? "soft-visible-content-forward-progress-proof"
+          : "hard-fail-no-visible-content-proof",
+      f13VisibleEvidenceComplete: strict || soft,
+      f13HardFail: hardFail,
+      f21ClaimedByCanvasSouth: false,
+      visualPassClaimed: false
+    };
+  }
+
+  function sampleVisibleContent(options = {}) {
+    state.visibleContentProofStarted = true;
+    state.visibleContentProofError = "";
+
+    const canvas = options.canvas || options.outputCanvas || null;
+
+    if (!canvas || !isFunction(canvas.getContext)) {
+      const error = new Error("Canvas South visible-content proof requires a canvas.");
+      state.visibleContentProofError = error.message;
+      state.visibleContentProof = false;
+      state.visibleContentStrictProof = false;
+      state.visibleContentSoftGap = false;
+      state.visibleContentHardFail = true;
+      state.visiblePlanetAvailable = false;
+      state.f13HardFail = true;
+
+      recordError("SOUTH_VISIBLE_PROOF_CANVAS_MISSING", error);
+      updateDataset();
+      return getVisibleProofPacket();
+    }
+
+    try {
+      const context = canvas.getContext("2d", {
+        alpha: true,
+        willReadFrequently: true
+      });
+
+      if (!context) throw new Error("Visible proof context unavailable.");
+
+      const width = Math.max(1, Math.round(canvas.width || 1));
+      const height = Math.max(1, Math.round(canvas.height || 1));
+
+      const grid = safeNumber(options.grid, 13);
+      const sampleGrid = clamp(Math.round(grid), 7, 21);
+
+      const image = context.getImageData(0, 0, width, height);
+      const data = image.data;
+
+      let sampleCount = 0;
+      let carrierCount = 0;
+      let landCount = 0;
+      let waterCount = 0;
+      let otherCount = 0;
+      let sum = 0;
+      let sumSq = 0;
+
+      const classes = new Set();
+
+      for (let gy = 0; gy < sampleGrid; gy += 1) {
+        const y = Math.round(((gy + 0.5) / sampleGrid) * (height - 1));
+
+        for (let gx = 0; gx < sampleGrid; gx += 1) {
+          const x = Math.round(((gx + 0.5) / sampleGrid) * (width - 1));
+          const dx = (x - width * 0.5) / Math.max(1, state.renderRadius || Math.min(width, height) * 0.435);
+          const dy = (y - height * 0.5) / Math.max(1, state.renderRadius || Math.min(width, height) * 0.435);
+
+          if (dx * dx + dy * dy > 1.04) continue;
+
+          const index = (y * width + x) * 4;
+          const r = data[index];
+          const g = data[index + 1];
+          const b = data[index + 2];
+          const a = data[index + 3];
+
+          const cls = pixelClass(r, g, b, a);
+          const brightness = (r + g + b) / 3;
+
+          sampleCount += 1;
+          sum += brightness;
+          sumSq += brightness * brightness;
+
+          if (cls === "land") landCount += 1;
+          else if (cls === "water") waterCount += 1;
+          else if (cls === "other") otherCount += 1;
+          else if (cls === "carrier") carrierCount += 1;
+
+          if (cls !== "transparent") classes.add(cls);
+        }
+      }
+
+      const mean = sampleCount > 0 ? sum / sampleCount : 0;
+      const variance = sampleCount > 0
+        ? Math.sqrt(Math.max(0, sumSq / sampleCount - mean * mean))
+        : 0;
+
+      const metrics = {
+        sampleCount,
+        carrierCount,
+        landCount,
+        waterCount,
+        otherCount,
+        varianceScore: variance,
+        classCount: classes.size
+      };
+
+      const classified = classifyVisibleContentEvidence(metrics);
+
+      state.visibleContentSampleCount = sampleCount;
+      state.visibleContentCarrierSampleCount = carrierCount;
+      state.visibleContentLandSampleCount = landCount;
+      state.visibleContentWaterSampleCount = waterCount;
+      state.visibleContentOtherSampleCount = otherCount;
+      state.visibleContentVarianceScore = Number(variance.toFixed(3));
+      state.visibleContentClassCount = classes.size;
+      state.visibleContentClasses = Array.from(classes).sort();
+
+      state.visibleContentProof = classified.visibleContentProof;
+      state.visibleContentStrictProof = classified.visibleContentStrictProof;
+      state.visibleContentSoftGap = classified.visibleContentSoftGap;
+      state.visibleContentHardFail = classified.visibleContentHardFail;
+      state.visibleForwardProgress = classified.visibleForwardProgress;
+      state.visibleContentAdmissible = classified.visibleContentAdmissible;
+      state.visiblePlanetAvailable = classified.visiblePlanetAvailable;
+      state.carrierOnlyDetected = classified.carrierOnlyDetected;
+      state.visibleContentProofMethod = classified.visibleContentProofMethod;
+
+      state.f13VisibleEvidenceComplete = classified.f13VisibleEvidenceComplete;
+      state.f13HardFail = classified.f13HardFail;
+
+      state.nonblankPlanetVisible = state.visiblePlanetAvailable;
+      state.planetNotObstructed = state.visiblePlanetAvailable;
+      state.updatedAt = nowIso();
+
+      stampOutputCanvas(canvas);
+      updateDataset();
+
+      recordLocal("SOUTH_VISIBLE_CONTENT_PROOF_SAMPLED", {
+        sampleCount,
+        landCount,
+        waterCount,
+        otherCount,
+        carrierCount,
+        varianceScore: state.visibleContentVarianceScore,
+        classCount: state.visibleContentClassCount,
+        method: state.visibleContentProofMethod
+      });
+
+      return getVisibleProofPacket();
+    } catch (error) {
+      state.visibleContentProofError = error && error.message ? error.message : String(error);
+      state.visibleContentProof = false;
+      state.visibleContentStrictProof = false;
+      state.visibleContentSoftGap = state.imageRendered === true;
+      state.visibleContentHardFail = state.imageRendered !== true;
+      state.visiblePlanetAvailable = state.imageRendered === true;
+      state.visibleForwardProgress = state.imageRendered === true;
+      state.visibleContentAdmissible = state.imageRendered === true;
+      state.f13VisibleEvidenceComplete = state.imageRendered === true;
+      state.f13HardFail = state.imageRendered !== true;
+
+      recordError("SOUTH_VISIBLE_PROOF_FAILED", error);
+
+      updateDataset();
+      return getVisibleProofPacket();
+    }
+  }
+
+  function getVisibleProofPacket() {
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      visibleContentProofStarted: state.visibleContentProofStarted,
+      visibleContentProof: state.visibleContentProof,
+      visibleContentStrictProof: state.visibleContentStrictProof,
+      visibleContentSoftGap: state.visibleContentSoftGap,
+      visibleContentHardFail: state.visibleContentHardFail,
+      visibleForwardProgress: state.visibleForwardProgress,
+      visibleContentAdmissible: state.visibleContentAdmissible,
+      visiblePlanetAvailable: state.visiblePlanetAvailable,
+      visibleContentProofMethod: state.visibleContentProofMethod,
+      visibleContentProofError: state.visibleContentProofError,
+      visibleContentSampleCount: state.visibleContentSampleCount,
+      visibleContentVarianceScore: state.visibleContentVarianceScore,
+      visibleContentClassCount: state.visibleContentClassCount,
+      visibleContentClasses: state.visibleContentClasses.slice(),
+      visibleContentLandSampleCount: state.visibleContentLandSampleCount,
+      visibleContentWaterSampleCount: state.visibleContentWaterSampleCount,
+      visibleContentOtherSampleCount: state.visibleContentOtherSampleCount,
+      visibleContentCarrierSampleCount: state.visibleContentCarrierSampleCount,
+      carrierOnlyDetected: state.carrierOnlyDetected,
+      planetFramePainted: state.planetFramePainted,
+      nonblankPlanetVisible: state.nonblankPlanetVisible,
+      planetNotObstructed: state.planetNotObstructed,
+      f13VisibleEvidenceComplete: state.f13VisibleEvidenceComplete,
+      f13HardFail: state.f13HardFail,
+      f21ClaimedByCanvasSouth: false,
+      visualPassClaimed: false
+    };
+  }
+
+  function invalidateTexture(reason = "south-texture-invalidation") {
+    state.textureInvalidationCount += 1;
+    state.textureInvalidated = true;
+    state.textureInvalidationReason = String(reason || "south-texture-invalidation");
+    state.textureRebuildRequested = false;
+    state.textureRebuildComplete = false;
+    state.textureRebuildError = "";
+    state.textureComposeComplete = false;
+    state.textureComposeProgress = 0;
+    state.updatedAt = nowIso();
+
+    recordLocal("SOUTH_TEXTURE_INVALIDATED", {
+      reason: state.textureInvalidationReason,
+      textureInvalidationCount: state.textureInvalidationCount
+    });
+
+    updateDataset();
+
+    return getReceipt();
   }
 
   function getReceipt() {
@@ -922,7 +1171,6 @@
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
-      previousReceipt: PREVIOUS_RECEIPT,
       baselineContract: BASELINE_CONTRACT,
       version: VERSION,
       file: FILE,
@@ -933,30 +1181,63 @@
       activeFibonacciGate: "F13",
       futureFibonacciGate: "F21",
       oneActiveGearAtATime: true,
+      cycleOrder: state.cycleOrder,
+
+      canvasSouthActive: true,
+      canvasSouthReady: true,
+      splitAdapterRole: "SOUTH",
+      splitAdapterTransistorMode: true,
+      visibleOutputControlActive: true,
+
+      textureCanvasAvailable: Boolean(state.textureCanvas),
+      textureWidth: state.textureWidth,
+      textureHeight: state.textureHeight,
+      textureSourceContract: state.textureSourceContract,
+      textureSourceReceipt: state.textureSourceReceipt,
+      textureSourceWidth: state.textureSourceWidth,
+      textureSourceHeight: state.textureSourceHeight,
 
       textureComposeStarted: state.textureComposeStarted,
       textureComposeProgress: state.textureComposeProgress,
       textureComposeComplete: state.textureComposeComplete,
+      textureComposeStartedAt: state.textureComposeStartedAt,
+      textureComposeCompletedAt: state.textureComposeCompletedAt,
+      textureComposeElapsedMs: state.textureComposeElapsedMs,
+      textureComposeYieldCount: state.textureComposeYieldCount,
+      textureComposeError: state.textureComposeError,
+
       textureInvalidated: state.textureInvalidated,
       textureInvalidationReason: state.textureInvalidationReason,
-      textureEnhancementActive: true,
-      textureUnsharpMaskActive: true,
-      textureLocalContrastActive: true,
-      textureHazeLiftRemoved: true,
-      textureEnhancementRowsComplete: state.textureEnhancementRowsComplete,
-      textureWidth: state.textureWidth,
-      textureHeight: state.textureHeight,
+      textureInvalidationCount: state.textureInvalidationCount,
+      textureRebuildRequested: state.textureRebuildRequested,
+      textureRebuildComplete: state.textureRebuildComplete,
+      textureRebuildError: state.textureRebuildError,
 
       firstFrameRequested: state.firstFrameRequested,
       firstFrameDetected: state.firstFrameDetected,
       imageRendered: state.imageRendered,
       renderedAfterTexture: state.renderedAfterTexture,
-      renderFrameCount: state.renderFrameCount,
-      interactiveFrameCount: state.interactiveFrameCount,
-
       planetFramePainted: state.planetFramePainted,
       nonblankPlanetVisible: state.nonblankPlanetVisible,
       planetNotObstructed: state.planetNotObstructed,
+
+      renderStarted: state.renderStarted,
+      renderProgress: state.renderProgress,
+      renderFrameCount: state.renderFrameCount,
+      renderStartedAt: state.renderStartedAt,
+      renderCompletedAt: state.renderCompletedAt,
+      renderElapsedMs: state.renderElapsedMs,
+      renderYieldCount: state.renderYieldCount,
+      renderError: state.renderError,
+
+      canvasWidth: state.canvasWidth,
+      canvasHeight: state.canvasHeight,
+      renderRadius: state.renderRadius,
+      renderCenterX: state.renderCenterX,
+      renderCenterY: state.renderCenterY,
+      lastYaw: state.lastYaw,
+      lastPitch: state.lastPitch,
+      lastZoom: state.lastZoom,
 
       visibleContentProofStarted: state.visibleContentProofStarted,
       visibleContentProof: state.visibleContentProof,
@@ -978,56 +1259,78 @@
       visibleContentCarrierSampleCount: state.visibleContentCarrierSampleCount,
       carrierOnlyDetected: state.carrierOnlyDetected,
 
-      visualFidelityRenewalActive: true,
-      projectionClarityRenewalActive: true,
       clarityRenewalActive: true,
-      fuzzReductionActive: true,
       hazeReduced: true,
-      bodyHazeSuppressed: true,
       highDpiCanvasActive: true,
-      sphereEdgeSharpeningActive: true,
-      atmosphereDemotedToRimOnly: true,
-      broadFogOverlayRetired: true,
+      sourceColorDemotedToPaletteInfluence: true,
+      elevationControlsLandShape: true,
+      hydrologyControlsWaterShape: true,
       coastlineContrastActive: true,
       centerDarknessReduced: true,
       lightingPreservesSurfaceReadability: true,
-      projectionDoesNotMutateTruth: true,
+      staleSourceMaskProtectionActive: true,
 
       ownsTextureComposition: true,
-      ownsSphereRender: true,
+      ownsSphereRendering: true,
       ownsVisibleProof: true,
-      ownsMaterialTruth: false,
+      ownsCanvasSouthOutput: true,
       ownsAtlasFormation: false,
-      ownsInteraction: false,
-      ownsInvalidationPolicy: false,
+      ownsSourceIntake: false,
+      ownsDragInspection: false,
+      ownsZoomInspection: false,
+      ownsPlanetTruth: false,
+      ownsMaterialTruth: false,
+      ownsHydrologyTruth: false,
+      ownsElevationTruth: false,
       ownsRuntimeTableGovernance: false,
       ownsRouteReadiness: false,
       ownsF21: false,
 
-      errors: state.errors.slice(),
+      f13VisibleEvidencePreserved: true,
+      f13VisibleEvidenceComplete: state.f13VisibleEvidenceComplete,
+      f13HardFail: state.f13HardFail,
+      f21ClaimedByCanvasSouth: false,
+      readyTextClaimedByCanvasSouth: false,
+
+      designRules: [
+        "south owns texture composition from east atlas",
+        "south owns visible 2D sphere rendering",
+        "south owns visible-content proof classification",
+        "south does not own source intake",
+        "south does not own atlas formation",
+        "south does not own drag or zoom control",
+        "south does not own planet truth",
+        "south does not own material truth",
+        "south does not own hydrology truth",
+        "south does not own runtime governance",
+        "south does not claim F21",
+        "south does not claim final visual pass"
+      ],
+
+      localEvents: clonePlain(state.localEvents),
+      errors: clonePlain(state.errors),
+
       generatedImage: false,
       graphicBox: false,
       webGL: false,
       visualPassClaimed: false,
-      f21ClaimedByCanvas: false,
-      readyTextClaimedByCanvas: false,
       updatedAt: state.updatedAt
     };
   }
 
   function getReceiptText() {
     const r = getReceipt();
-    const errors = r.errors.map((event) => (
-      `- ${event.at} :: ${event.code} :: ${event.message}`
-    )).join("\n") || "- none";
+
+    const errors = r.errors.length
+      ? r.errors.map((item) => `- ${item.at} :: ${item.code} :: ${item.message}`).join("\n")
+      : "- none";
 
     return [
-      "HEARTH_CANVAS_SOUTH_PROJECTION_CLARITY_RENDER_PROOF_RENEWAL_RECEIPT",
+      "HEARTH_CANVAS_SOUTH_TEXTURE_SPHERE_VISIBLE_PROOF_RECEIPT",
       "",
       `contract=${r.contract}`,
       `receipt=${r.receipt}`,
       `previousContract=${r.previousContract}`,
-      `previousReceipt=${r.previousReceipt}`,
       `baselineContract=${r.baselineContract}`,
       `version=${r.version}`,
       `file=${r.file}`,
@@ -1038,26 +1341,33 @@
       `activeFibonacciGate=${r.activeFibonacciGate}`,
       `futureFibonacciGate=${r.futureFibonacciGate}`,
       `oneActiveGearAtATime=${r.oneActiveGearAtATime}`,
+      `cycleOrder=${r.cycleOrder}`,
       "",
+      `canvasSouthActive=${r.canvasSouthActive}`,
+      `canvasSouthReady=${r.canvasSouthReady}`,
+      `splitAdapterRole=${r.splitAdapterRole}`,
+      `splitAdapterTransistorMode=${r.splitAdapterTransistorMode}`,
+      `visibleOutputControlActive=${r.visibleOutputControlActive}`,
+      "",
+      `textureCanvasAvailable=${r.textureCanvasAvailable}`,
+      `textureWidth=${r.textureWidth}`,
+      `textureHeight=${r.textureHeight}`,
       `textureComposeStarted=${r.textureComposeStarted}`,
       `textureComposeProgress=${r.textureComposeProgress}`,
       `textureComposeComplete=${r.textureComposeComplete}`,
       `textureInvalidated=${r.textureInvalidated}`,
-      `textureInvalidationReason=${r.textureInvalidationReason}`,
-      `textureEnhancementActive=${r.textureEnhancementActive}`,
-      `textureUnsharpMaskActive=${r.textureUnsharpMaskActive}`,
-      `textureLocalContrastActive=${r.textureLocalContrastActive}`,
-      `textureHazeLiftRemoved=${r.textureHazeLiftRemoved}`,
-      `textureWidth=${r.textureWidth}`,
-      `textureHeight=${r.textureHeight}`,
+      `textureInvalidationCount=${r.textureInvalidationCount}`,
       "",
       `firstFrameRequested=${r.firstFrameRequested}`,
       `firstFrameDetected=${r.firstFrameDetected}`,
       `imageRendered=${r.imageRendered}`,
       `renderedAfterTexture=${r.renderedAfterTexture}`,
+      `planetFramePainted=${r.planetFramePainted}`,
+      `nonblankPlanetVisible=${r.nonblankPlanetVisible}`,
+      `planetNotObstructed=${r.planetNotObstructed}`,
       `renderFrameCount=${r.renderFrameCount}`,
-      `interactiveFrameCount=${r.interactiveFrameCount}`,
       "",
+      `visibleContentProofStarted=${r.visibleContentProofStarted}`,
       `visibleContentProof=${r.visibleContentProof}`,
       `visibleContentStrictProof=${r.visibleContentStrictProof}`,
       `visibleContentSoftGap=${r.visibleContentSoftGap}`,
@@ -1067,24 +1377,33 @@
       `visibleContentClassCount=${r.visibleContentClassCount}`,
       `visibleContentClasses=${r.visibleContentClasses.join(",")}`,
       "",
-      `projectionClarityRenewalActive=${r.projectionClarityRenewalActive}`,
-      `fuzzReductionActive=${r.fuzzReductionActive}`,
+      `clarityRenewalActive=${r.clarityRenewalActive}`,
       `hazeReduced=${r.hazeReduced}`,
-      `bodyHazeSuppressed=${r.bodyHazeSuppressed}`,
-      `sphereEdgeSharpeningActive=${r.sphereEdgeSharpeningActive}`,
-      `atmosphereDemotedToRimOnly=${r.atmosphereDemotedToRimOnly}`,
-      `broadFogOverlayRetired=${r.broadFogOverlayRetired}`,
       `highDpiCanvasActive=${r.highDpiCanvasActive}`,
+      `coastlineContrastActive=${r.coastlineContrastActive}`,
+      `lightingPreservesSurfaceReadability=${r.lightingPreservesSurfaceReadability}`,
+      "",
+      `ownsTextureComposition=${r.ownsTextureComposition}`,
+      `ownsSphereRendering=${r.ownsSphereRendering}`,
+      `ownsVisibleProof=${r.ownsVisibleProof}`,
+      `ownsAtlasFormation=${r.ownsAtlasFormation}`,
+      `ownsDragInspection=${r.ownsDragInspection}`,
+      `ownsZoomInspection=${r.ownsZoomInspection}`,
+      `ownsPlanetTruth=${r.ownsPlanetTruth}`,
+      `ownsF21=${r.ownsF21}`,
       "",
       "ERRORS",
       errors,
       "",
+      `f13VisibleEvidenceComplete=${r.f13VisibleEvidenceComplete}`,
+      `f13HardFail=${r.f13HardFail}`,
+      `f21ClaimedByCanvasSouth=${r.f21ClaimedByCanvasSouth}`,
+      `readyTextClaimedByCanvasSouth=${r.readyTextClaimedByCanvasSouth}`,
       `generatedImage=${r.generatedImage}`,
       `graphicBox=${r.graphicBox}`,
       `webGL=${r.webGL}`,
       `visualPassClaimed=${r.visualPassClaimed}`,
-      `f21ClaimedByCanvas=${r.f21ClaimedByCanvas}`,
-      `readyTextClaimedByCanvas=${r.readyTextClaimedByCanvas}`,
+      "",
       `updatedAt=${r.updatedAt}`
     ].join("\n");
   }
@@ -1093,7 +1412,6 @@
     contract: CONTRACT,
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
-    previousReceipt: PREVIOUS_RECEIPT,
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     file: FILE,
@@ -1101,15 +1419,18 @@
     composeTexture,
     renderSphere,
     renderSphereSync,
+    getTextureCanvas,
     sampleVisibleContent,
     classifyVisibleContentEvidence,
     invalidateTexture,
-    getTextureCanvas,
-    getTextureImageData,
     getReceipt,
     getReceiptText,
 
     canvasSouthActive: true,
+    canvasSouthReady: true,
+    splitAdapterRole: "SOUTH",
+    splitAdapterTransistorMode: true,
+
     newsProtocolSynchronized: true,
     fibonacciAlignmentSynchronized: true,
     activeFibonacciGate: "F13",
@@ -1117,41 +1438,41 @@
     oneActiveGearAtATime: true,
 
     ownsTextureComposition: true,
-    ownsSphereRender: true,
+    ownsSphereRendering: true,
     ownsVisibleProof: true,
-    ownsMaterialTruth: false,
+    ownsCanvasSouthOutput: true,
     ownsAtlasFormation: false,
-    ownsInteraction: false,
-    ownsInvalidationPolicy: false,
+    ownsSourceIntake: false,
+    ownsDragInspection: false,
+    ownsZoomInspection: false,
+    ownsPlanetTruth: false,
+    ownsMaterialTruth: false,
+    ownsHydrologyTruth: false,
+    ownsElevationTruth: false,
     ownsRuntimeTableGovernance: false,
     ownsRouteReadiness: false,
     ownsF21: false,
-
-    visualFidelityRenewalActive: true,
-    projectionClarityRenewalActive: true,
-    clarityRenewalActive: true,
-    fuzzReductionActive: true,
-    hazeReduced: true,
-    bodyHazeSuppressed: true,
-    highDpiCanvasActive: true,
-    sphereEdgeSharpeningActive: true,
-    atmosphereDemotedToRimOnly: true,
-    broadFogOverlayRetired: true,
 
     generatedImage: false,
     graphicBox: false,
     webGL: false,
     visualPassClaimed: false,
-    f21ClaimedByCanvas: false,
-    readyTextClaimedByCanvas: false
+
+    get state() {
+      return state;
+    }
   };
 
   root.HEARTH = root.HEARTH || {};
   root.HEARTH.canvasSouth = api;
+  root.HEARTH.canvasSouthTextureSphereVisibleProof = api;
+
   root.HEARTH_CANVAS_SOUTH = api;
+  root.HEARTH_CANVAS_SOUTH_TEXTURE_SPHERE_VISIBLE_PROOF = api;
 
   root.DEXTER_LAB = root.DEXTER_LAB || {};
   root.DEXTER_LAB.hearthCanvasSouth = api;
+  root.DEXTER_LAB.hearthCanvasSouthTextureSphereVisibleProof = api;
 
   updateDataset();
 

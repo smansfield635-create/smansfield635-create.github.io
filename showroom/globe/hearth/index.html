@@ -1,41 +1,33 @@
 <!-- TARGET FILE: /showroom/globe/hearth/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- HEARTH_COMPACT_MIRRORLAND_SINGLE_FOCUS_MAP_BLIP_HTML_TNT_v1 -->
+<!-- HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/globe/hearth/"
-  data-page="hearth-mirrorland-survival-path"
-  data-version="G1-MIRRORLAND-COMPACT-SINGLE-FOCUS-MAP-BLIP"
-  data-contract="HEARTH_COMPACT_MIRRORLAND_SINGLE_FOCUS_MAP_BLIP_HTML_TNT_v1"
-  data-previous-contract="HEARTH_MIRRORLAND_SURVIVAL_PLANET_STRUCTURAL_REBUILD_HTML_TNT_v1"
-  data-reference-template="AUDRALIA_COMPACT_MIRRORLAND_SINGLE_FOCUS_MAP_BLIP_HTML_TNT_v1"
-  data-route-family="HEARTH_MIRRORLAND_SURVIVAL_PATH_INTERACTIVE_TEMPLATE_ROUTE"
-  data-threshold-role="mirrorland-survival-path"
-  data-planetary-template="Hearth"
-  data-page-compact="true"
-  data-single-focus="true"
-  data-central-focus="hearth-object-stage"
-  data-hearth-narrative-primary="true"
-  data-mirrorland-context-preserved="true"
-  data-survival-path-primary="true"
+  data-page="hearth-survival-path"
+  data-version="G1-SOUTH-CONFORMANCE-FRONTEND-SHELL"
+  data-contract="HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1"
+  data-previous-contract="HEARTH_COMPACT_MIRRORLAND_SURVIVAL_PAGE_HTML_TNT_v1"
+  data-role="hearth-front-end-conformance-shell"
+  data-conforms-to-south="HEARTH_SOUTH_VISIBLE_COMPLETION_CYCLE_CONSUMER_TNT_v1"
+  data-cycle-order="EAST-WEST-NORTH-SOUTH-CHECKPOINT-EAST"
+  data-east-file="/showroom/globe/hearth/index.js"
+  data-west-file="/assets/hearth/hearth.west.index-handoff.table.js"
+  data-north-file="/assets/hearth/hearth.north.command.runtime-table.js"
+  data-south-file="/showroom/globe/hearth/hearth.js"
+  data-canvas-file="/assets/hearth/hearth.canvas.js"
+  data-runtime-table-file="/assets/lab/runtime-table.js"
+  data-mirrorland-path="survival"
   data-zionts-role="consequence"
   data-audralia-role="possibility"
-  data-hearth-role="survival"
-  data-map-blip-added="true"
-  data-floating-map-portal-active="true"
-  data-map-blip-owns-navigation="true"
-  data-renderer-runtime-held="true"
-  data-news-cycle="east-west-north-south-checkpoint-east"
-  data-fibonacci-synchronization="F1A,F1B,F2,F3,F5,F8,F13A,F13B,F13C,F13D,F13E,F13F,F13G,F21"
-  data-east-step1="/showroom/globe/hearth/index.js"
-  data-west-handoff="/assets/hearth/hearth.west.handoff.js"
-  data-north-command="/assets/hearth/hearth.north.command.runtime-table.js"
-  data-south-visible-proof="/showroom/globe/hearth/hearth.js"
-  data-blueprint-css="/assets/manor-blueprint/manor.blueprint.css"
-  data-blueprint-registry="/assets/manor-blueprint/manor.blueprint.registry.js"
-  data-blueprint-js="/assets/manor-blueprint/manor.blueprint.js"
-  data-static-page-usable-without-js="true"
+  data-hearth-role="survival-condition"
+  data-html-owns-public-shell="true"
+  data-html-owns-runtime="false"
+  data-html-owns-canvas-drawing="false"
+  data-html-owns-north="false"
+  data-html-owns-south="false"
+  data-south-loads-last="true"
   data-generated-image="false"
   data-graphic-box="false"
   data-webgl="false"
@@ -45,17 +37,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Hearth · Mirrorland Survival Planet</title>
+  <title>Hearth · Mirrorland Survival Path</title>
   <meta
     name="description"
-    content="Hearth is the survival planet inside Mirrorland: a compact object-stage route for survival, repair, inspection, visible proof, and runtime cycle coordination."
-  >
-
-  <link
-    rel="stylesheet"
-    href="/assets/manor-blueprint/manor.blueprint.css?v=MANOR_BLUEPRINT_CARDINAL_ROOM_MAP_VISUAL_CSS_TNT_v1"
-    data-mirrorland-blueprint-marker="true"
-    data-blueprint-page-scoped="true"
+    content="Hearth is the survival path inside Mirrorland: a living planet condition page for visible completion, inspection, runtime proof, and survival-readiness measurement."
   >
 
   <style>
@@ -64,12 +49,13 @@
       --bg:#030711;
       --ink:#fff3d2;
       --muted:rgba(226,235,255,.78);
-      --faint:rgba(226,235,255,.58);
+      --faint:rgba(226,235,255,.56);
       --gold:#f2c66d;
       --gold2:#ffe9a6;
       --blue:#7fd8ff;
       --green:#8ff0c3;
-      --deep-green:#1c8f73;
+      --amber:#ffbf66;
+      --red:#ff7c7c;
       --panel:rgba(11,18,34,.84);
       --line:rgba(188,208,255,.17);
       --max:1180px;
@@ -97,8 +83,7 @@
       background:
         radial-gradient(circle at 14% -8%,rgba(126,216,255,.17),transparent 26rem),
         radial-gradient(circle at 92% 16%,rgba(242,198,109,.13),transparent 30rem),
-        radial-gradient(circle at 50% 75%,rgba(143,240,195,.09),transparent 35rem),
-        radial-gradient(circle at 50% 108%,rgba(58,108,255,.10),transparent 40rem),
+        radial-gradient(circle at 50% 75%,rgba(143,240,195,.10),transparent 36rem),
         linear-gradient(180deg,#07101f 0%,#030711 54%,#01030a 100%);
       -webkit-font-smoothing:antialiased;
       text-rendering:geometricPrecision;
@@ -126,10 +111,6 @@
     summary:focus-visible{
       outline:2px solid var(--gold);
       outline-offset:4px;
-    }
-
-    button{
-      font:inherit;
     }
 
     .skip{
@@ -181,13 +162,9 @@
       font-size:1rem;
       background:
         radial-gradient(circle at 32% 18%,rgba(255,255,255,.35),transparent 26%),
-        conic-gradient(from 45deg,rgba(255,255,255,.18),rgba(42,106,118,.40),rgba(3,10,28,.92),rgba(242,198,109,.18),rgba(255,255,255,.18)),
-        linear-gradient(145deg,#143240,#061226);
-      box-shadow:
-        0 1rem 2rem rgba(0,0,0,.42),
-        0 0 1.6rem rgba(126,216,255,.15),
-        0 0 1.35rem rgba(143,240,195,.10),
-        inset 0 1px 0 rgba(255,255,255,.16);
+        conic-gradient(from 45deg,rgba(255,255,255,.18),rgba(73,100,185,.42),rgba(3,10,28,.92),rgba(242,198,109,.18),rgba(255,255,255,.18)),
+        linear-gradient(145deg,#17254a,#061226);
+      box-shadow:0 1rem 2rem rgba(0,0,0,.42),0 0 1.6rem rgba(126,216,255,.16),inset 0 1px 0 rgba(255,255,255,.16);
     }
 
     .brand-copy{
@@ -212,7 +189,7 @@
 
     .header-note{
       justify-self:end;
-      max-width:25rem;
+      max-width:26rem;
       color:rgba(226,235,255,.66);
       font-size:.76rem;
       font-weight:820;
@@ -226,7 +203,6 @@
       background:
         radial-gradient(circle at 14% 0%,rgba(126,216,255,.10),transparent 28rem),
         radial-gradient(circle at 88% 16%,rgba(242,198,109,.10),transparent 30rem),
-        radial-gradient(circle at 50% 95%,rgba(143,240,195,.065),transparent 30rem),
         linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.022)),
         var(--panel);
       box-shadow:0 26px 90px rgba(0,0,0,.46),inset 0 1px 0 rgba(255,255,255,.08);
@@ -311,8 +287,8 @@
       overflow:hidden;
       background:
         radial-gradient(circle at 50% 38%,rgba(126,216,255,.13),transparent 21rem),
-        radial-gradient(circle at 52% 62%,rgba(143,240,195,.09),transparent 25rem),
-        radial-gradient(circle at 50% 72%,rgba(38,96,255,.11),transparent 29rem),
+        radial-gradient(circle at 50% 62%,rgba(38,96,255,.12),transparent 28rem),
+        radial-gradient(circle at 50% 76%,rgba(143,240,195,.08),transparent 28rem),
         linear-gradient(180deg,rgba(0,6,18,.72),rgba(1,5,15,.96));
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
       isolation:isolate;
@@ -334,23 +310,6 @@
       pointer-events:none;
     }
 
-    .globe-stage::after{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:50%;
-      z-index:1;
-      width:min(58%,24rem);
-      aspect-ratio:1/1;
-      border:1px solid rgba(242,198,109,.10);
-      border-radius:50%;
-      transform:translate(-50%,-50%);
-      box-shadow:
-        0 0 4rem rgba(126,216,255,.08),
-        inset 0 0 3rem rgba(143,240,195,.045);
-      pointer-events:none;
-    }
-
     .globe-label{
       position:absolute;
       left:.85rem;
@@ -358,7 +317,7 @@
       z-index:5;
       display:grid;
       gap:.14rem;
-      max-width:min(31rem,calc(100% - 1.7rem));
+      max-width:min(32rem,calc(100% - 1.7rem));
       padding:.7rem .78rem;
       border:1px solid rgba(255,255,255,.12);
       border-radius:.9rem;
@@ -384,6 +343,10 @@
       position:absolute;
       inset:0;
       z-index:2;
+      min-height:100%;
+      touch-action:none;
+      user-select:none;
+      -webkit-user-select:none;
     }
 
     .globe-status{
@@ -414,62 +377,6 @@
       line-height:1.38;
     }
 
-    .runtime-dock{
-      position:absolute;
-      right:.85rem;
-      top:.85rem;
-      z-index:6;
-      width:min(21rem,calc(100% - 1.7rem));
-      display:grid;
-      gap:.58rem;
-      padding:.72rem;
-      border:1px solid rgba(242,198,109,.18);
-      border-radius:1rem;
-      background:
-        radial-gradient(circle at 15% 0%,rgba(242,198,109,.08),transparent 13rem),
-        rgba(2,6,18,.76);
-      backdrop-filter:blur(8px);
-      box-shadow:0 1rem 2.4rem rgba(0,0,0,.30);
-    }
-
-    .runtime-dock[data-collapsed="true"] .runtime-dock-body,
-    .runtime-dock[data-collapsed="true"] .runtime-actions,
-    .runtime-dock[data-collapsed="true"] .receipt-panel{
-      display:none;
-    }
-
-    .runtime-dock-head{
-      display:grid;
-      gap:.12rem;
-    }
-
-    .runtime-dock-head b{
-      color:var(--gold);
-      font-size:.56rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .runtime-dock-head strong{
-      color:rgba(255,243,210,.98);
-      font-size:.98rem;
-      line-height:1.08;
-      letter-spacing:-.025em;
-    }
-
-    .runtime-dock-body{
-      color:rgba(230,238,255,.74);
-      font-size:.78rem;
-      font-weight:760;
-      line-height:1.34;
-    }
-
-    .runtime-actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:.38rem;
-    }
-
     .side-panel{
       display:grid;
       gap:.75rem;
@@ -480,14 +387,31 @@
       background:rgba(255,255,255,.032);
     }
 
-    .lens-buttons,
-    .primary-actions,
-    .portal-links{
+    .map-portal{
       display:grid;
-      grid-template-columns:1fr;
-      gap:.48rem;
+      gap:.6rem;
+      padding:.72rem;
+      border:1px solid rgba(242,198,109,.18);
+      border-radius:1rem;
+      background:
+        radial-gradient(circle at 12% 0%,rgba(242,198,109,.10),transparent 12rem),
+        rgba(255,255,255,.03);
     }
 
+    .map-portal b{
+      color:var(--gold);
+      font-size:.56rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .portal-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:.42rem;
+    }
+
+    .portal-link,
     .button,
     button.button{
       min-height:2.5rem;
@@ -500,7 +424,7 @@
       background:rgba(255,255,255,.045);
       color:rgba(241,246,255,.88);
       font-family:inherit;
-      font-size:.7rem;
+      font-size:.68rem;
       font-weight:950;
       letter-spacing:.06em;
       text-transform:uppercase;
@@ -509,39 +433,24 @@
       text-align:center;
     }
 
+    .portal-link:hover,
+    .portal-link:focus-visible,
     .button:hover,
-    button.button:hover,
-    .button:focus-visible,
-    button.button:focus-visible{
-      border-color:rgba(242,198,109,.64);
+    button.button:hover{
+      border-color:rgba(242,198,109,.55);
       color:rgba(255,243,210,.98);
+      outline:none;
     }
 
+    .portal-link.current,
     .button.gold,
-    button.button.gold,
-    .lens-buttons button[aria-pressed="true"]{
+    button.button.gold{
       border-color:rgba(242,198,109,.9);
       color:#060811;
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
     }
 
-    .button.green,
-    button.button.green{
-      border-color:rgba(143,240,195,.46);
-      color:var(--green);
-      background:rgba(143,240,195,.065);
-    }
-
-    .button.small,
-    button.button.small{
-      min-height:2.05rem;
-      padding:.42rem .62rem;
-      font-size:.56rem;
-      letter-spacing:.08em;
-    }
-
-    .micro-card,
-    .map-portal-blip{
+    .micro-card{
       display:grid;
       gap:.22rem;
       padding:.68rem;
@@ -550,61 +459,268 @@
       background:rgba(255,255,255,.032);
     }
 
-    .micro-card b,
-    .map-portal-blip b{
+    .micro-card b{
       color:var(--gold);
       font-size:.56rem;
       letter-spacing:.12em;
       text-transform:uppercase;
     }
 
-    .micro-card span,
-    .map-portal-blip span{
+    .micro-card span{
       color:rgba(230,238,255,.76);
       font-size:.78rem;
       font-weight:760;
       line-height:1.32;
     }
 
-    .map-portal-blip{
-      border-color:rgba(126,216,255,.18);
+    .hearth-ledger-cockpit{
+      position:absolute;
+      left:.85rem;
+      right:.85rem;
+      top:auto;
+      bottom:6.8rem;
+      z-index:8;
+      display:flex;
+      flex-direction:column;
+      max-height:18rem;
+      min-height:12rem;
+      overflow:hidden;
+      border:1px solid rgba(242,198,109,.24);
+      border-radius:1rem;
       background:
-        radial-gradient(circle at 50% 0%,rgba(126,216,255,.08),transparent 70%),
-        rgba(255,255,255,.032);
+        radial-gradient(circle at 12% 0%,rgba(242,198,109,.12),transparent 14rem),
+        radial-gradient(circle at 90% 18%,rgba(126,216,255,.10),transparent 14rem),
+        linear-gradient(180deg,rgba(7,18,33,.92),rgba(2,8,17,.84));
+      color:rgba(238,246,255,.94);
+      box-shadow:0 22px 70px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.08);
+      backdrop-filter:blur(10px);
+      transition:max-height .22s ease,opacity .18s ease,visibility .18s ease,transform .22s ease;
     }
 
-    .portal-links{
-      margin-top:.38rem;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:.38rem;
+    .hearth-ledger-head{
+      display:grid;
+      gap:5px;
+      padding:.78rem .9rem .55rem;
+      border-bottom:1px solid rgba(242,198,109,.12);
     }
 
-    .portal-link{
-      min-height:2.1rem;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(188,208,255,.14);
-      border-radius:.75rem;
-      padding:.42rem .5rem;
-      color:rgba(241,246,255,.86);
-      background:rgba(255,255,255,.035);
-      font-size:.58rem;
+    .hearth-ledger-kicker{
+      color:var(--gold);
       font-weight:950;
+      font-size:.58rem;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    .hearth-ledger-title{
+      margin:0;
+      color:rgba(255,244,216,.98);
+      font-weight:950;
+      font-size:clamp(1rem,3vw,1.28rem);
+      line-height:1.02;
+      letter-spacing:-.045em;
+    }
+
+    .hearth-ledger-meta,
+    .hearth-ledger-latest{
+      color:rgba(238,246,255,.68);
+      font-size:.68rem;
+      font-weight:760;
+      line-height:1.24;
+    }
+
+    .hearth-ledger-progress{
+      display:grid;
+      grid-template-columns:1fr auto;
+      align-items:center;
+      gap:10px;
+      padding:.55rem .9rem;
+      border-bottom:1px solid rgba(242,198,109,.10);
+    }
+
+    .hearth-ledger-track,
+    .hearth-ledger-lane-track{
+      position:relative;
+      height:8px;
+      overflow:hidden;
+      border:1px solid rgba(126,216,255,.18);
+      border-radius:999px;
+      background:rgba(255,255,255,.055);
+    }
+
+    .hearth-ledger-fill,
+    .hearth-ledger-lane-fill{
+      position:absolute;
+      inset:0 auto 0 0;
+      width:0%;
+      border-radius:inherit;
+      background:linear-gradient(90deg,rgba(126,216,255,.80),rgba(242,198,109,.96));
+      box-shadow:0 0 18px rgba(242,198,109,.18);
+      transition:width .24s ease;
+    }
+
+    .hearth-ledger-percent{
+      min-width:44px;
+      color:#ffe8a3;
+      font-weight:950;
+      font-size:.7rem;
+      text-align:right;
+    }
+
+    .hearth-ledger-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:7px;
+      padding:.55rem .9rem;
+      border-bottom:1px solid rgba(242,198,109,.10);
+    }
+
+    .hearth-ledger-button{
+      min-height:30px;
+      border:1px solid rgba(242,198,109,.24);
+      border-radius:999px;
+      padding:7px 10px;
+      color:rgba(238,246,255,.84);
+      background:rgba(255,255,255,.045);
+      font:900 .58rem/1 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       letter-spacing:.07em;
       text-transform:uppercase;
-      text-align:center;
+      cursor:pointer;
     }
 
-    .portal-link:hover,
-    .portal-link:focus-visible{
-      border-color:rgba(242,198,109,.56);
-      color:rgba(255,243,210,.98);
+    .hearth-ledger-button.primary{
+      color:#06101e;
+      border-color:rgba(242,198,109,.86);
+      background:linear-gradient(135deg,#ffe8a3,#f2c66d);
+    }
+
+    .hearth-ledger-scroll{
+      min-height:0;
+      overflow:auto;
+      padding:.6rem .9rem .8rem;
+    }
+
+    .hearth-ledger-lanes{
+      display:grid;
+      gap:7px;
+    }
+
+    .hearth-ledger-lane{
+      display:grid;
+      gap:5px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:.75rem;
+      padding:.48rem;
+      background:rgba(255,255,255,.035);
+    }
+
+    .hearth-ledger-lane-top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:8px;
+    }
+
+    .hearth-ledger-lane-title{
+      display:grid;
+      gap:2px;
+      min-width:0;
+      color:rgba(238,246,255,.64);
+      font-size:.62rem;
+      line-height:1.22;
+    }
+
+    .hearth-ledger-lane-title strong{
+      color:rgba(255,244,216,.94);
+      font-size:.66rem;
+    }
+
+    .hearth-ledger-lane-status{
+      flex:0 0 auto;
+      color:var(--blue);
+      font-size:.56rem;
+      font-weight:950;
+      letter-spacing:.09em;
+      text-transform:uppercase;
+    }
+
+    .hearth-ledger-receipt{
+      display:none;
+      margin-top:10px;
+      border:1px solid rgba(242,198,109,.16);
+      border-radius:.8rem;
+      background:rgba(0,0,0,.24);
+    }
+
+    .hearth-ledger-receipt[data-visible="true"]{
+      display:block;
+    }
+
+    .hearth-ledger-receipt pre{
+      margin:0;
+      max-height:250px;
+      overflow:auto;
+      padding:10px;
+      color:rgba(238,246,255,.72);
+      white-space:pre-wrap;
+      font:700 .62rem/1.38 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+    }
+
+    .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"]{
+      inset:auto .85rem .85rem .85rem;
+      min-height:8.2rem;
+      max-height:11.6rem;
+      overflow:hidden;
+    }
+
+    .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-meta,
+    .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-scroll{
+      display:none;
+    }
+
+    .hearth-ledger-cockpit[data-cockpit-mode="expanded-cockpit"]{
+      inset:.85rem;
+      max-height:calc(100% - 1.7rem);
+      min-height:18rem;
+    }
+
+    .hearth-ledger-cockpit[data-cockpit-mode="planet-inspect"]{
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+      transform:translateY(24px) scale(.985);
+      max-height:0;
+      min-height:0;
+    }
+
+    [data-hearth-south-show-diagnostic-tab]{
+      position:fixed;
+      right:max(12px,env(safe-area-inset-right));
+      bottom:max(72px,calc(env(safe-area-inset-bottom) + 72px));
+      z-index:10000;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      min-height:38px;
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid rgba(242,198,109,.66);
+      color:#06101e;
+      background:linear-gradient(135deg,#ffe8a3,#f2c66d);
+      box-shadow:0 16px 44px rgba(0,0,0,.40),inset 0 1px 0 rgba(255,255,255,.28);
+      font:950 .70rem/1 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      cursor:pointer;
+    }
+
+    html[data-hearth-south-planet-inspect="true"] [data-hearth-south-show-diagnostic-tab]{
+      display:inline-flex;
     }
 
     .drawers{
       display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
+      grid-template-columns:repeat(3,minmax(0,1fr));
       gap:.75rem;
       margin-top:.85rem;
     }
@@ -701,32 +817,9 @@
       line-height:1.25;
     }
 
-    .receipt-panel{
-      display:none;
-      margin-top:.1rem;
-      border:1px solid rgba(255,255,255,.09);
-      border-radius:.72rem;
-      background:rgba(0,0,0,.24);
-      overflow:hidden;
-    }
-
-    .receipt-panel[data-visible="true"]{
-      display:block;
-    }
-
-    .receipt-panel pre{
-      margin:0;
-      max-height:12rem;
-      overflow:auto;
-      padding:.58rem;
-      color:rgba(226,235,255,.70);
-      white-space:pre-wrap;
-      font:700 .58rem/1.35 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-    }
-
     .receipt,
     [data-route-receipt],
-    [data-hearth-route-receipt]{
+    [data-hearth-html-receipt]{
       display:none!important;
       visibility:hidden!important;
       position:absolute!important;
@@ -739,11 +832,21 @@
       white-space:nowrap!important;
     }
 
+    [hidden]{
+      display:none!important;
+    }
+
     footer{
       padding:1rem 0 .35rem;
       color:var(--faint);
       text-align:center;
       font-size:.68rem;
+    }
+
+    @media (max-width:1080px){
+      .drawers{
+        grid-template-columns:1fr;
+      }
     }
 
     @media (max-width:980px){
@@ -757,16 +860,8 @@
         text-align:left;
       }
 
-      .drawers{
+      .side-panel{
         grid-template-columns:1fr;
-      }
-
-      .runtime-dock{
-        position:relative;
-        right:auto;
-        top:auto;
-        width:auto;
-        margin:.85rem;
       }
     }
 
@@ -775,12 +870,24 @@
       h1{font-size:clamp(2.8rem,14.5vw,5rem)}
       .hero{padding:.9rem}
       .core-layout{gap:.75rem}
-      .globe-stage{min-height:35rem}
+      .globe-stage{min-height:38rem}
       .globe-label{left:.65rem;right:.65rem;max-width:none}
       .globe-status{left:.65rem;right:.65rem}
-      .runtime-dock{margin:.65rem}
+      .hearth-ledger-cockpit{
+        left:.65rem;
+        right:.65rem;
+        bottom:7.4rem;
+        max-height:17rem;
+      }
+      .hearth-ledger-actions{
+        padding:.5rem .7rem;
+      }
+      .hearth-ledger-button{
+        flex:1 1 auto;
+        min-width:42%;
+        font-size:.54rem;
+      }
       .diagnostic-grid{grid-template-columns:1fr}
-      .portal-links{grid-template-columns:1fr}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -797,7 +904,15 @@
 </head>
 
 <body>
-  <a class="skip" href="#main">Skip to Hearth</a>
+  <a class="skip" href="#hearth-main">Skip to Hearth</a>
+
+  <button
+    type="button"
+    data-hearth-south-show-diagnostic-tab="true"
+    hidden
+  >
+    Show diagnostic
+  </button>
 
   <div class="shell">
     <header class="topbar" aria-label="Hearth Mirrorland header">
@@ -810,308 +925,375 @@
       </a>
 
       <div class="header-note">
-        Use the Map / Portal blip for movement. This page stays centered on Hearth.
+        Use the Map / Portal blip for movement. This page stays centered on Hearth and conforms to the existing South visible-completion cycle.
       </div>
     </header>
 
-    <main id="main">
+    <main id="hearth-main">
       <section class="panel hero" aria-labelledby="page-title">
         <div class="kicker">Mirrorland · Survival Path</div>
 
-        <h1 id="page-title">Hearth is the survival planet inside Mirrorland.</h1>
+        <h1 id="page-title">Hearth is the survival path inside Mirrorland.</h1>
+
+        <h2>Visible planet. Inspectable condition. Runtime proof held until the cycle completes.</h2>
 
         <p class="lead">
-          Hearth is the world-object for survival, repair, inspection, and visible proof. It carries the survival path beside ZIONTS as consequence and Audralia as possibility.
+          ZIONTS carries consequence. Audralia carries possibility. Hearth carries survival condition: the living proof field where visibility, inspection, completion, and survivability are tested without claiming a final visual pass.
         </p>
       </section>
 
       <section class="core-layout" aria-label="Hearth compact object experience">
         <section
-          id="hearthObjectStage"
+          id="hearthGlobeStage"
           class="globe-stage"
-          data-hearth-object-stage="true"
-          data-route-family="HEARTH_MIRRORLAND_SURVIVAL_PATH_INTERACTIVE_TEMPLATE_ROUTE"
-          data-news-cycle="east-west-north-south-checkpoint-east"
-          aria-label="Interactive Hearth object stage"
+          data-hearth-globe-stage="true"
+          data-hearth-survival-path-stage="true"
+          aria-label="Interactive Hearth globe stage"
         >
           <div class="globe-label">
-            <b>Hearth · Mirrorland Survival Planet</b>
-            <span data-hearth-stage-label>
-              <strong>Object View</strong> → survival carrier · visible proof planet
+            <b>Hearth · Mirrorland Survival Path</b>
+            <span>
+              <strong>Object Stage</strong> → South consumes the visible shell, canvas mount, diagnostic dock, and North permission.
             </span>
           </div>
 
-          <div
+          <section
             id="hearthCanvasMount"
             class="globe-mount"
             data-hearth-canvas-mount="true"
-            data-hearth-object-mount="true"
+            data-hearth-south-visible-completion-shell="true"
+            data-hearth-cycle-south="true"
             data-generated-image="false"
             data-graphic-box="false"
             data-webgl="false"
             data-visual-pass-claimed="false"
-            aria-hidden="true"
-          ></div>
+            aria-label="Interactive Hearth canvas mount"
+          ></section>
 
           <aside
-            id="hearthRuntimeDock"
-            class="runtime-dock"
-            data-hearth-runtime-dock="true"
-            data-collapsed="false"
-            aria-label="Hearth runtime cycle dock"
+            id="hearthLoadCockpit"
+            class="hearth-ledger-cockpit"
+            data-hearth-load-cockpit="true"
+            data-hearth-south-visible-completion-shell="true"
+            data-cockpit-mode="loading-cockpit"
+            aria-live="polite"
           >
-            <div class="runtime-dock-head">
-              <b>Runtime Cycle Held</b>
-              <strong data-hearth-runtime-title>East → West → North → South</strong>
+            <div class="hearth-ledger-head">
+              <div class="hearth-ledger-kicker">Hearth · South Visible Completion</div>
+              <h2 class="hearth-ledger-title">COORDINATING HEARTH VISIBLE COMPLETION</h2>
+              <div class="hearth-ledger-meta" data-hearth-stage-label>F13A · Canvas coordination</div>
+              <div class="hearth-ledger-meta" data-hearth-heartbeat-text>south=true · waiting for North</div>
+              <div class="hearth-ledger-latest" data-hearth-latest-event>latest=HTML_SHELL_READY</div>
             </div>
 
-            <div class="runtime-dock-body" data-hearth-runtime-copy>
-              East starts. West validates. North governs. South proves. The checkpoint returns the cycle.
+            <div class="hearth-ledger-progress" data-hearth-index-progress-strip="true">
+              <div class="hearth-ledger-track">
+                <span class="hearth-ledger-fill" data-hearth-main-progress-fill style="width:72%"></span>
+              </div>
+              <div class="hearth-ledger-percent" data-hearth-main-progress-percent>72%</div>
             </div>
 
-            <div class="runtime-actions" aria-label="Hearth runtime dock controls">
-              <button class="button small gold" type="button" data-hearth-dock-action="copy-diagnostic">
-                Copy Diagnostic
-              </button>
-              <button class="button small" type="button" data-hearth-dock-action="toggle-receipt">
-                Show Receipt
-              </button>
-              <button class="button small" type="button" data-hearth-dock-action="collapse-dock">
-                Collapse Dock
-              </button>
-              <button class="button small" type="button" data-hearth-dock-action="show-diagnostic">
-                Show Diagnostic
-              </button>
+            <div class="hearth-ledger-actions">
+              <button class="hearth-ledger-button primary" type="button" data-hearth-copy-diagnostic>Copy diagnostic</button>
+              <button class="hearth-ledger-button" type="button" data-hearth-toggle-receipt>Show receipt</button>
+              <button class="hearth-ledger-button" type="button" data-hearth-inspect-planet>Inspect planet</button>
+              <button class="hearth-ledger-button" type="button" data-hearth-collapse-cockpit>Collapse cockpit</button>
             </div>
 
-            <div
-              id="hearthReceiptPanel"
-              class="receipt-panel"
-              data-hearth-receipt-panel="true"
-              data-visible="false"
-            >
-              <pre id="hearthReceiptText" data-hearth-receipt-text>HEARTH_COMPACT_MIRRORLAND_SINGLE_FOCUS_MAP_BLIP_HTML_TNT_v1
-runtime=held
-visualPassClaimed=false
-generatedImage=false
-graphicBox=false
-webGL=false</pre>
+            <div class="hearth-ledger-scroll">
+              <div class="hearth-ledger-lanes" data-hearth-lane-list>
+                <section class="hearth-ledger-lane" data-lane="North" data-status="WAITING">
+                  <div class="hearth-ledger-lane-top">
+                    <span class="hearth-ledger-lane-title">
+                      <strong>North</strong>
+                      <span>command runtime table pending</span>
+                    </span>
+                    <span class="hearth-ledger-lane-status">WAITING</span>
+                  </div>
+                  <div class="hearth-ledger-lane-track">
+                    <span class="hearth-ledger-lane-fill" style="width:42%"></span>
+                  </div>
+                </section>
+
+                <section class="hearth-ledger-lane" data-lane="Canvas" data-status="WAITING">
+                  <div class="hearth-ledger-lane-top">
+                    <span class="hearth-ledger-lane-title">
+                      <strong>Canvas</strong>
+                      <span>carrier handoff pending</span>
+                    </span>
+                    <span class="hearth-ledger-lane-status">WAITING</span>
+                  </div>
+                  <div class="hearth-ledger-lane-track">
+                    <span class="hearth-ledger-lane-fill" style="width:42%"></span>
+                  </div>
+                </section>
+
+                <section class="hearth-ledger-lane" data-lane="Proof" data-status="PENDING">
+                  <div class="hearth-ledger-lane-top">
+                    <span class="hearth-ledger-lane-title">
+                      <strong>Proof</strong>
+                      <span>visible content proof pending</span>
+                    </span>
+                    <span class="hearth-ledger-lane-status">PENDING</span>
+                  </div>
+                  <div class="hearth-ledger-lane-track">
+                    <span class="hearth-ledger-lane-fill" style="width:42%"></span>
+                  </div>
+                </section>
+              </div>
+
+              <div
+                id="hearthReceiptPanel"
+                class="hearth-ledger-receipt"
+                data-hearth-receipt-box
+                data-visible="false"
+              >
+                <pre data-hearth-receipt-text>HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1
+receipt=waiting_for_south_runtime
+route=/showroom/globe/hearth/
+mount=#hearthCanvasMount
+cockpit=#hearthLoadCockpit</pre>
+              </div>
             </div>
           </aside>
 
           <div class="globe-status">
-            <strong data-hearth-lens-title>Object View</strong>
-            <span data-hearth-lens-copy>
-              Object View preserves the observable Hearth carrier. The directional runtime owns cycle, inspection, proof, and completion behavior after the static page survives first paint.
+            <strong>Survival Path · Shell Ready</strong>
+            <span>
+              The HTML provides the mount, diagnostic dock, receipt panel, status node, and script order. East, West, North, South, Canvas, and Runtime Table retain their own authority.
             </span>
           </div>
         </section>
 
-        <aside id="hearthControls" class="side-panel" aria-label="Hearth controls">
-          <div class="kicker">Object Controls</div>
-
-          <div class="lens-buttons" role="group" aria-label="Hearth object view controls">
-            <button class="button gold" type="button" data-hearth-lens-button="object" aria-pressed="true">
-              Object View
-            </button>
-            <button class="button" type="button" data-hearth-lens-button="cycle" aria-pressed="false">
-              Cycle View
-            </button>
-            <button class="button" type="button" data-hearth-lens-button="scope" aria-pressed="false">
-              Scope
-            </button>
-          </div>
-
-          <div class="primary-actions" aria-label="Hearth primary actions">
-            <button class="button green" type="button" data-hearth-action="inspect">
-              Inspect Hearth
-            </button>
-            <button class="button" type="button" data-hearth-action="runtime-cycle">
-              View Runtime Cycle
-            </button>
-            <a class="button" href="/showroom/globe/" data-hearth-action="return-globe">
-              Return to Globe
-            </a>
-            <a class="button" href="/explore/frontier/" data-hearth-action="frontier">
-              Open Frontier
-            </a>
+        <aside class="side-panel" aria-label="Hearth controls and Map Portal">
+          <div
+            id="hearthMapPortal"
+            class="map-portal"
+            data-hearth-map-portal="true"
+            data-map-portal-owns-navigation="true"
+          >
+            <b>Map / Portal</b>
+            <div class="portal-grid">
+              <a class="portal-link" href="/showroom/globe/">Return to Globe</a>
+              <a class="portal-link" href="/showroom/globe/earth/">ZIONTS · Consequence</a>
+              <a class="portal-link" href="/showroom/globe/audralia/">Audralia · Possibility</a>
+              <a class="portal-link current" href="/showroom/globe/hearth/">Hearth · Survival</a>
+              <a class="portal-link" href="/explore/frontier/">Frontier</a>
+              <a class="portal-link" href="/gauges/">Gauges</a>
+              <a class="portal-link" href="/showroom/">Showroom</a>
+            </div>
           </div>
 
           <div class="micro-card">
-            <b>Interaction</b>
-            <span>Finger drag and inspection behavior are runtime-bound. Static controls remain visible before the cycle completes.</span>
+            <b>Cycle</b>
+            <span>East → West → North → South → Checkpoint → East.</span>
           </div>
 
           <div class="micro-card">
             <b>Boundary</b>
-            <span>Visible planet route. Runtime held. No final visual pass claimed.</span>
+            <span>HTML owns the shell. Runtime owns the proof. Canvas owns drawing. North owns permission. South owns visible completion.</span>
           </div>
 
-          <nav
-            id="hearthMapPortalBlip"
-            class="map-portal-blip"
-            aria-label="Hearth Map Portal"
-            data-hearth-map-portal-blip="true"
-            data-map-blip-owns-navigation="true"
-          >
-            <b>Map / Portal</b>
-            <span>Movement stays in this fitted page instrument.</span>
-
-            <div class="portal-links">
-              <a class="portal-link" href="/showroom/globe/">Globe</a>
-              <a class="portal-link" href="/showroom/globe/audralia/">Audralia</a>
-              <a class="portal-link" href="/showroom/globe/earth/">ZIONTS</a>
-              <a class="portal-link" href="/explore/frontier/">Frontier</a>
-            </div>
-          </nav>
+          <div class="micro-card">
+            <b>No-JS fallback</b>
+            <span>Runtime proof requires JavaScript. Navigation and narrative remain readable without it.</span>
+          </div>
         </aside>
       </section>
 
-      <section id="runtime-cycle" class="drawers" aria-label="Hearth condensed support drawers">
+      <section class="drawers" aria-label="Hearth support drawers">
         <details class="drawer" open>
           <summary>About Hearth</summary>
           <div class="drawer-body">
-            <strong>Hearth gives survival a planet.</strong>
+            <strong>Hearth gives survival a visible condition.</strong>
             <p>
-              Inside Mirrorland, Hearth is the survival path: a visible world-object for repair, persistence, inspection, and proof under pressure.
+              Hearth is not a decorative planet page. It is the survival-path field where the visible planet, inspection controls, completion latch, and route diagnostics must survive together.
             </p>
             <p>
-              ZIONTS shows consequence. Audralia opens possibility. Hearth carries survival, where the system must keep functioning while the visitor inspects what is actually visible.
+              The page is built around the existing Hearth cycle. It does not rename the backend and does not ask the already-built files to conform to a new HTML invention.
             </p>
           </div>
         </details>
 
-        <details
-          id="hearthTechnicalScope"
-          class="drawer"
-          data-hearth-technical-scope="true"
-        >
-          <summary>Runtime Scope</summary>
-          <div id="hearthDiagnosticsDrawer" class="drawer-body" data-hearth-diagnostics-drawer="true">
-            <strong>Directional runtime is held underneath the page architecture.</strong>
+        <details class="drawer">
+          <summary>Runtime Cycle</summary>
+          <div class="drawer-body">
+            <strong>The cycle is directional and checkpoint-governed.</strong>
             <p>
-              East starts. West validates. North governs. South proves. The checkpoint returns the cycle. These fields are update targets, not a public diagnostic takeover.
+              East starts the visible process. West normalizes handoff admissibility. North governs command runtime-table checkpoints. South consumes the shell and proves visible completion.
             </p>
+            <p>
+              This HTML provides the shell before those files run, then loads South last so South hydrates existing hooks instead of creating fallback structure.
+            </p>
+          </div>
+        </details>
+
+        <details class="drawer">
+          <summary>Diagnostic Scope</summary>
+          <div class="drawer-body">
+            <strong>Readable placeholders remain visible before runtime proof.</strong>
 
             <div class="diagnostic-grid">
-              <div class="diagnostic"><b>Route</b><span data-hearth-diagnostic-route>static route ready · runtime pending</span></div>
-              <div class="diagnostic"><b>Carrier</b><span data-hearth-diagnostic-carrier>carrier held</span></div>
-              <div class="diagnostic"><b>Lens</b><span data-hearth-diagnostic-lens>object</span></div>
-              <div class="diagnostic"><b>Canvas</b><span data-hearth-diagnostic-canvas>canvas pending</span></div>
-              <div class="diagnostic"><b>Loop</b><span data-hearth-diagnostic-loop>cycle held</span></div>
-              <div class="diagnostic"><b>NEWS</b><span data-hearth-diagnostic-news>east-west-north-south-checkpoint-east</span></div>
-              <div class="diagnostic"><b>Scope</b><span data-hearth-diagnostic-scope>Fibonacci sequence held</span></div>
-              <div class="diagnostic"><b>Runtime Table</b><span data-hearth-diagnostic-runtime-table>north command pending</span></div>
-              <div class="diagnostic"><b>East</b><span data-hearth-diagnostic-east>Step 1 pending</span></div>
-              <div class="diagnostic"><b>West</b><span data-hearth-diagnostic-west>handoff pending</span></div>
-              <div class="diagnostic"><b>North</b><span data-hearth-diagnostic-north>command pending</span></div>
-              <div class="diagnostic"><b>South</b><span data-hearth-diagnostic-south>visible proof pending</span></div>
-              <div class="diagnostic"><b>Checkpoint</b><span data-hearth-diagnostic-checkpoint>checkpoint pending</span></div>
-              <div class="diagnostic"><b>F21</b><span data-hearth-diagnostic-f21>locked · no completion claim</span></div>
-              <div class="diagnostic"><b>Map Portal</b><span data-hearth-diagnostic-map-portal>fitted · static links active</span></div>
-              <div class="diagnostic"><b>Receipt</b><span data-hearth-diagnostic-receipt>hidden receipt present</span></div>
+              <div class="diagnostic"><b>Route</b><span data-hearth-diagnostic-route>/showroom/globe/hearth/</span></div>
+              <div class="diagnostic"><b>Cycle</b><span data-hearth-diagnostic-cycle>E → W → N → S → checkpoint</span></div>
+              <div class="diagnostic"><b>East</b><span data-hearth-diagnostic-east>Step 1 ignition held by index.js</span></div>
+              <div class="diagnostic"><b>West</b><span data-hearth-diagnostic-west>handoff admissibility pending</span></div>
+              <div class="diagnostic"><b>North</b><span data-hearth-diagnostic-north>command runtime-table pending</span></div>
+              <div class="diagnostic"><b>South</b><span data-hearth-diagnostic-south>visible completion consumer pending</span></div>
+              <div class="diagnostic"><b>Canvas</b><span data-hearth-diagnostic-canvas>canvas carrier pending</span></div>
+              <div class="diagnostic"><b>Visible Proof</b><span data-hearth-diagnostic-visible-proof>waiting</span></div>
+              <div class="diagnostic"><b>Inspect Mode</b><span data-hearth-diagnostic-inspect>dock controls present</span></div>
+              <div class="diagnostic"><b>F21</b><span data-hearth-diagnostic-f21>requires North permission</span></div>
+              <div class="diagnostic"><b>Receipt</b><span data-hearth-diagnostic-receipt>hidden until requested</span></div>
+              <div class="diagnostic"><b>Visual Pass</b><span data-hearth-diagnostic-visual-pass>false</span></div>
             </div>
           </div>
         </details>
 
         <template
-          id="hearth-compact-single-focus-map-blip-receipt"
+          id="hearth-html-south-conformance-receipt"
           class="receipt"
-          data-hearth-route-receipt
+          data-route-receipt
+          data-hearth-html-receipt
         >
-HEARTH_COMPACT_MIRRORLAND_SINGLE_FOCUS_MAP_BLIP_HTML_TNT_v1
+HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1
 route=/showroom/globe/hearth/
-targetFile=/showroom/globe/hearth/index.html
-routeFamily=HEARTH_MIRRORLAND_SURVIVAL_PATH_INTERACTIVE_TEMPLATE_ROUTE
-referenceTemplate=AUDRALIA_COMPACT_MIRRORLAND_SINGLE_FOCUS_MAP_BLIP_HTML_TNT_v1
-previousHtml=HEARTH_MIRRORLAND_SURVIVAL_PLANET_STRUCTURAL_REBUILD_HTML_TNT_v1
-pageCompact=true
-singleFocus=true
-centralFocus=hearth_object_stage
-hearthNarrativePrimary=true
-mirrorlandContextPreserved=true
-survivalPathPrimary=true
-ziontsRole=consequence
-audraliaRole=possibility
-hearthRole=survival
-mapBlipAdded=true
-floatingMapPortalActive=true
-mapBlipOwnsNavigation=true
-navigationOwner=Map_Portal_Blip
-requiredStage=#hearthObjectStage
-requiredMount=#hearthCanvasMount
-requiredControls=#hearthControls
-requiredRuntimeDock=#hearthRuntimeDock
-requiredMapPortal=#hearthMapPortalBlip
-requiredDiagnosticsDrawer=#hearthDiagnosticsDrawer
-lensButtons=object,cycle,scope
-primaryActions=inspect,runtime-cycle,return-globe,frontier
-dockActions=copy-diagnostic,toggle-receipt,collapse-dock,show-diagnostic
-diagnosticSlots=16
-newsCycle=east-west-north-south-checkpoint-east
-fibonacciSynchronization=F1A,F1B,F2,F3,F5,F8,F13A,F13B,F13C,F13D,F13E,F13F,F13G,F21
-eastStep1=/showroom/globe/hearth/index.js
-westHandoff=/assets/hearth/hearth.west.handoff.js
-northCommand=/assets/hearth/hearth.north.command.runtime-table.js
-southVisibleProof=/showroom/globe/hearth/hearth.js
-rendererRuntimeHeld=true
-runtimeTouched=false
+target=/showroom/globe/hearth/index.html
+conformsToSouth=HEARTH_SOUTH_VISIBLE_COMPLETION_CYCLE_CONSUMER_TNT_v1
+east=/showroom/globe/hearth/index.js
+west=/assets/hearth/hearth.west.index-handoff.table.js
+north=/assets/hearth/hearth.north.command.runtime-table.js
+south=/showroom/globe/hearth/hearth.js
+canvas=/assets/hearth/hearth.canvas.js
+runtimeTable=/assets/lab/runtime-table.js
+mount=#hearthCanvasMount
+cockpit=#hearthLoadCockpit
+status=#hearth-route-status
+receiptPanel=#hearthReceiptPanel
+showDiagnosticTab=[data-hearth-south-show-diagnostic-tab]
+htmlOwnsPublicShell=true
+htmlOwnsRuntime=false
+htmlOwnsCanvasDrawing=false
+htmlOwnsNorth=false
+htmlOwnsSouth=false
+southLoadsLast=true
+cycleOrder=EAST-WEST-NORTH-SOUTH-CHECKPOINT-EAST
+mapPortal=#hearthMapPortal
 visualPassClaimed=false
 generatedImage=false
 graphicBox=false
 webGL=false
-staticPageUsableWithoutJs=true
         </template>
       </section>
+
+      <pre id="hearth-route-status" data-hearth-route-status hidden>Hearth HTML shell ready. Runtime status pending.</pre>
+
+      <noscript>
+        <section class="panel hero" aria-label="JavaScript required notice">
+          <div class="kicker">Runtime Held</div>
+          <h2>Runtime proof requires JavaScript.</h2>
+          <p>
+            The Hearth narrative, Map Portal, and survival-path page remain readable. Canvas rendering, inspection mode, copy diagnostic, receipt toggling, and F21 completion require JavaScript.
+          </p>
+        </section>
+      </noscript>
     </main>
 
     <footer>
-      HEARTH_COMPACT_MIRRORLAND_SINGLE_FOCUS_MAP_BLIP_HTML_TNT_v1 · Hearth · Compact Mirrorland survival object page · Runtime held · No visual pass claim.
+      HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1 · Hearth · Survival Path · South conformance shell · Visual pass not claimed.
     </footer>
   </div>
 
   <script
-    src="/showroom/globe/hearth/index.js?v=HEARTH_EAST_STEP1_STATIC_CONTROL_BINDING_EXPECTED_OR_CURRENT_STEP1"
+    src="/assets/lab/runtime-table.js?v=HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1"
     defer
-    data-hearth-direction="east"
-    data-contract-expected="HEARTH_EAST_STEP1_STATIC_CONTROL_BINDING_TNT_v1"
-    data-current-compatible-contract="HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR_FIRST_PAINT_LEDGER_TNT_v1"
+    data-role="universal-runtime-table"
+    data-runtime-table-file="/assets/lab/runtime-table.js"
   ></script>
 
   <script
-    src="/assets/hearth/hearth.west.handoff.js?v=HEARTH_WEST_HANDOFF_ADMISSIBILITY_EXPECTED"
+    src="/assets/hearth/hearth.tectonics.js?v=HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1"
     defer
-    data-hearth-direction="west"
-    data-contract-expected="HEARTH_WEST_HANDOFF_ADMISSIBILITY_TNT_v1"
+    data-role="hearth-source-stack"
+    data-source-file="/assets/hearth/hearth.tectonics.js"
   ></script>
 
   <script
-    src="/assets/hearth/hearth.north.command.runtime-table.js?v=HEARTH_NORTH_COMMAND_RUNTIME_TABLE_EXPECTED"
+    src="/assets/hearth/hearth.elevation.js?v=HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1"
     defer
-    data-hearth-direction="north"
-    data-contract-expected="HEARTH_NORTH_COMMAND_RUNTIME_TABLE_TNT_v1"
+    data-role="hearth-source-stack"
+    data-source-file="/assets/hearth/hearth.elevation.js"
   ></script>
 
   <script
-    src="/showroom/globe/hearth/hearth.js?v=HEARTH_SOUTH_VISIBLE_COMPLETION_EXPECTED_OR_CURRENT"
+    src="/assets/hearth/hearth.composition.js?v=HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1"
     defer
-    data-hearth-direction="south"
-    data-contract-expected="HEARTH_SOUTH_VISIBLE_COMPLETION_TNT_v1"
-    data-current-compatible-contract="HEARTH_ROUTE_COMMAND_BRAIN_STEPS_2_11_TNT_v7"
+    data-role="hearth-source-stack"
+    data-source-file="/assets/hearth/hearth.composition.js"
   ></script>
 
   <script
-    src="/assets/manor-blueprint/manor.blueprint.registry.js?v=MANOR_BLUEPRINT_VISITOR_ORIENTATION_REGISTRY_TNT_v1"
+    src="/assets/hearth/hearth.hydrology.js?v=HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1"
     defer
-    data-mirrorland-blueprint-marker="true"
-    data-blueprint-page-scoped="true"
+    data-role="hearth-source-stack"
+    data-source-file="/assets/hearth/hearth.hydrology.js"
   ></script>
 
   <script
-    src="/assets/manor-blueprint/manor.blueprint.js?v=MANOR_BLUEPRINT_VISITOR_ORIENTATION_RUNTIME_TNT_v1"
+    src="/assets/hearth/hearth.materials.js?v=HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1"
     defer
-    data-mirrorland-blueprint-marker="true"
-    data-blueprint-page-scoped="true"
+    data-role="hearth-source-stack"
+    data-source-file="/assets/hearth/hearth.materials.js"
+  ></script>
+
+  <script
+    src="/assets/hearth/hearth.hex.four-pair.authority.js?v=HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1"
+    defer
+    data-role="hearth-source-stack"
+    data-source-file="/assets/hearth/hearth.hex.four-pair.authority.js"
+  ></script>
+
+  <script
+    src="/assets/hearth/hearth.hex.surface.js?v=HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1"
+    defer
+    data-role="hearth-source-stack"
+    data-source-file="/assets/hearth/hearth.hex.surface.js"
+  ></script>
+
+  <script
+    src="/assets/hearth/hearth.canvas.js?v=HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1"
+    defer
+    data-role="hearth-canvas-authority"
+    data-canvas-file="/assets/hearth/hearth.canvas.js"
+  ></script>
+
+  <script
+    src="/showroom/globe/hearth/index.js?v=HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1"
+    defer
+    data-role="east-step1-ignition"
+    data-east-file="/showroom/globe/hearth/index.js"
+  ></script>
+
+  <script
+    src="/assets/hearth/hearth.west.index-handoff.table.js?v=HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1"
+    defer
+    data-role="west-handoff-admissibility"
+    data-west-file="/assets/hearth/hearth.west.index-handoff.table.js"
+  ></script>
+
+  <script
+    src="/assets/hearth/hearth.north.command.runtime-table.js?v=HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1"
+    defer
+    data-role="north-command-runtime-table"
+    data-north-file="/assets/hearth/hearth.north.command.runtime-table.js"
+  ></script>
+
+  <script
+    src="/showroom/globe/hearth/hearth.js?v=HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1"
+    defer
+    data-role="south-visible-completion-cycle-consumer"
+    data-south-file="/showroom/globe/hearth/hearth.js"
+    data-contract="HEARTH_SOUTH_VISIBLE_COMPLETION_CYCLE_CONSUMER_TNT_v1"
   ></script>
 </body>
 </html>

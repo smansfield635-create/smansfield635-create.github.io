@@ -1,13 +1,14 @@
 // /assets/hearth/hearth.west.index-handoff.table.js
-// HEARTH_WEST_INDEX_HANDOFF_ADMISSIBILITY_TABLE_TNT_v1
+// HEARTH_WEST_INDEX_HANDOFF_QUIET_REGISTRATION_NORTH_INTAKE_TNT_v2
 // Full-file replacement.
 // West authority only.
 // Purpose:
+// - Register West handoff capability quietly.
 // - Receive East Step 1 handoff.
-// - Validate admissibility without mutating East, North, South, Runtime Table, canvas, or source-stack truth.
-// - Normalize East / West / North / South receipts into a cycle-ready handoff record.
-// - Publish West-to-North intake for the North command runtime table.
-// - Preserve soft-gap forward progress while hard-blocking only kill conditions.
+// - Validate and normalize East handoff once.
+// - Publish durable North-readable intake receipts.
+// - Attempt North intake once when requested or when North is already present.
+// - Expose retryNorthIntake() without heartbeat/watchdog loops.
 // Does not own:
 // - East Step 1 ignition / first paint / mount / cockpit creation
 // - North command runtime table / checkpoint law / NEWS Fibonacci governance
@@ -20,11 +21,11 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_WEST_INDEX_HANDOFF_ADMISSIBILITY_TABLE_TNT_v1";
-  const RECEIPT = "HEARTH_WEST_INDEX_HANDOFF_ADMISSIBILITY_TABLE_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "HEARTH_EAST_STEP1_IGNITION_FIRST_PAINT_CYCLE_TNT_v1";
+  const CONTRACT = "HEARTH_WEST_INDEX_HANDOFF_QUIET_REGISTRATION_NORTH_INTAKE_TNT_v2";
+  const RECEIPT = "HEARTH_WEST_INDEX_HANDOFF_QUIET_REGISTRATION_NORTH_INTAKE_RECEIPT_v2";
+  const PREVIOUS_CONTRACT = "HEARTH_WEST_INDEX_HANDOFF_ADMISSIBILITY_TABLE_TNT_v1";
   const BASELINE_CONTRACT = "HEARTH_DIRECTIONAL_CYCLICAL_CHECKPOINT_GOVERNANCE_PRECODE_FINAL_DRAFT_v1";
-  const VERSION = "2026-05-29.hearth-west-index-handoff-admissibility-table-v1";
+  const VERSION = "2026-05-29.hearth-west-quiet-registration-north-intake-v2";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
@@ -38,20 +39,23 @@
   const STATUS_ID = "hearth-route-status";
 
   const CYCLE_ORDER = "EAST -> WEST -> NORTH -> SOUTH -> CHECKPOINT -> EAST";
+  const CHECKPOINT_EVENT = "INDEX_HANDOFF_ACCEPTED";
+  const CHECKPOINT_CANDIDATE = "S2_INDEX_HANDOFF_ACCEPTED";
+  const CHECKPOINT_STAGE = "F8";
 
   const ADMISSIBILITY_CHECKS = Object.freeze([
-    { key: "eastReceiptPresent", label: "East Step 1 receipt present", required: true },
-    { key: "eastOwnsStep1", label: "East owns Step 1", required: true },
-    { key: "step1Ignited", label: "Step 1 ignited", required: true },
-    { key: "step1Ready", label: "Step 1 ready", required: true },
-    { key: "mountReady", label: "Mount ready", required: true },
-    { key: "firstPaintReady", label: "First paint ready", required: true },
-    { key: "cockpitReady", label: "Cockpit ready", required: true },
-    { key: "sharedLedgerPresent", label: "Shared ledger present", required: true },
-    { key: "scriptOrderVisible", label: "Script order visible", required: true },
-    { key: "noForbiddenVisualClaims", label: "No forbidden visual claims", required: true },
-    { key: "noRuntimeTableMutation", label: "No Runtime Table mutation by West", required: true },
-    { key: "noCanvasMutation", label: "No canvas mutation by West", required: true }
+    "eastReceiptPresent",
+    "eastOwnsStep1",
+    "step1Ignited",
+    "step1Ready",
+    "mountReady",
+    "firstPaintReady",
+    "cockpitReady",
+    "sharedLedgerPresent",
+    "scriptOrderVisible",
+    "noForbiddenVisualClaims",
+    "noRuntimeTableMutation",
+    "noCanvasMutation"
   ]);
 
   const state = {
@@ -62,7 +66,7 @@
     version: VERSION,
     file: WEST_FILE,
     route: ROUTE,
-    role: "west-index-handoff-admissibility-table",
+    role: "west-index-handoff-quiet-registration-north-intake",
 
     cycleOrder: CYCLE_ORDER,
     direction: "WEST",
@@ -99,6 +103,14 @@
     ownsFinalDiagnosticReceipt: false,
     ownsFinalVisualPassClaim: false,
 
+    quietRegistration: true,
+    autoBoot: false,
+    heartbeatLoop: false,
+    watchdogLoop: false,
+    repeatedNorthRetry: false,
+    oneShotNorthIntake: true,
+    manualRetryAvailable: true,
+
     eastReceiptPresent: false,
     eastReceiptSource: "",
     eastContract: "",
@@ -114,15 +126,27 @@
     eastScriptOrderVisible: false,
     eastPartialReceiptAvailable: false,
 
+    westAccepted: false,
+    eastStep1Accepted: false,
     step1Accepted: false,
     step1HandoffAccepted: false,
     handoffAdmissible: false,
     westGateReady: false,
+    northIntakeReady: false,
     step1HandoffAcceptedAt: "",
+
+    recommendedNextOwner: "EAST",
+    recommendedNextFile: EAST_FILE,
+    checkpointCandidate: CHECKPOINT_CANDIDATE,
+    checkpointEvent: CHECKPOINT_EVENT,
+    checkpointStage: CHECKPOINT_STAGE,
+    northExpectedAction: "ACCEPT_INDEX_HANDOFF",
 
     northIntakePublished: false,
     northIntakeAccepted: false,
     northIntakeAcceptedAt: "",
+    northIntakeMethod: "",
+    northAcceptMethodPresent: false,
     northGlobalPresent: false,
     northReceiptPresent: false,
     northContract: "",
@@ -164,10 +188,10 @@
     highestStage: "F5",
     fibonacciStage: "F5",
     displayProgress: 48,
-    latestEvent: "WEST_HANDOFF_TABLE_LOADED",
-    postgameStatus: "WEST_LOADED_NOT_BOOTED",
-    firstFailedCoordinate: "WEST_HANDOFF_NOT_STARTED",
-    recommendedNextRenewalTarget: WEST_FILE,
+    latestEvent: "WEST_QUIET_REGISTRATION_READY",
+    postgameStatus: "WEST_REGISTERED_QUIET",
+    firstFailedCoordinate: "WAITING_EAST_STEP1_HANDOFF",
+    recommendedNextRenewalTarget: EAST_FILE,
 
     localEvents: [],
     softGapEvents: [],
@@ -179,13 +203,12 @@
     webGL: false,
     visualPassClaimed: false,
 
-    startedAt: "",
+    registeredAt: "",
     updatedAt: ""
   };
 
-  let bootStarted = false;
-  let heartbeatTimer = 0;
-  let watchdogTimer = 0;
+  let northAttemptedForCurrentHandoff = false;
+  let disposed = false;
 
   function nowIso() {
     try {
@@ -193,10 +216,6 @@
     } catch (_error) {
       return "";
     }
-  }
-
-  function nowMs() {
-    return Date.now ? Date.now() : new Date().getTime();
   }
 
   function isObject(value) {
@@ -231,54 +250,6 @@
     return null;
   }
 
-  function getLedger() {
-    return root.HEARTH_LOAD_LEDGER || null;
-  }
-
-  function getEastReceipt() {
-    return (
-      root.HEARTH_EAST_STEP1_HANDOFF_RECEIPT ||
-      root.HEARTH_INDEX_STEP1_HANDOFF_RECEIPT ||
-      root.HEARTH_EAST_STEP1_IGNITION_RECEIPT ||
-      root.HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR_RECEIPT ||
-      null
-    );
-  }
-
-  function getNorthApi() {
-    return getGlobal([
-      "HEARTH_NORTH_COMMAND_RUNTIME_TABLE",
-      "HEARTH_NORTH_COMMAND_TABLE",
-      "HEARTH_NORTH_COMMAND"
-    ]);
-  }
-
-  function getNorthReceipt() {
-    return (
-      root.HEARTH_NORTH_COMMAND_RUNTIME_TABLE_RECEIPT ||
-      root.HEARTH_NORTH_CYCLICAL_CHECKPOINT_RECEIPT ||
-      null
-    );
-  }
-
-  function getSouthApi() {
-    return getGlobal([
-      "HEARTH_SOUTH_VISIBLE_COMPLETION",
-      "HEARTH_SOUTH_VISIBLE_COMPLETION_CYCLE_CONSUMER",
-      "HEARTH_ROUTE_CONDUCTOR",
-      "HearthRouteConductor"
-    ]);
-  }
-
-  function getSouthReceipt() {
-    return (
-      root.HEARTH_SOUTH_VISIBLE_COMPLETION_RECEIPT ||
-      root.HEARTH_ROUTE_COHERENCE_SEMICONDUCTOR_RECEIPT ||
-      root.HEARTH_ROUTE_CONDUCTOR_RECEIPT ||
-      null
-    );
-  }
-
   function recordLocal(event, detail = {}) {
     const item = {
       at: nowIso(),
@@ -287,8 +258,8 @@
     };
 
     state.localEvents.push(item);
-    if (state.localEvents.length > 220) {
-      state.localEvents.splice(0, state.localEvents.length - 220);
+    if (state.localEvents.length > 160) {
+      state.localEvents.splice(0, state.localEvents.length - 160);
     }
 
     state.latestEvent = event;
@@ -307,8 +278,8 @@
     };
 
     state.softGapEvents.push(item);
-    if (state.softGapEvents.length > 160) {
-      state.softGapEvents.splice(0, state.softGapEvents.length - 160);
+    if (state.softGapEvents.length > 100) {
+      state.softGapEvents.splice(0, state.softGapEvents.length - 100);
     }
 
     state.softGapCount += 1;
@@ -331,8 +302,8 @@
     };
 
     state.hardBlockEvents.push(item);
-    if (state.hardBlockEvents.length > 80) {
-      state.hardBlockEvents.splice(0, state.hardBlockEvents.length - 80);
+    if (state.hardBlockEvents.length > 60) {
+      state.hardBlockEvents.splice(0, state.hardBlockEvents.length - 60);
     }
 
     state.hardBlockCount += 1;
@@ -340,6 +311,11 @@
     state.hardBlockMode = true;
     state.hardBlockReason = `${code}: ${message}`;
     state.forwardProgressAllowedWithGaps = false;
+    state.firstFailedCoordinate = `WEST_HARD_BLOCK_${code}`;
+    state.recommendedNextOwner = "WEST";
+    state.recommendedNextFile = WEST_FILE;
+    state.recommendedNextRenewalTarget = WEST_FILE;
+    state.postgameStatus = "WEST_HARD_BLOCKED";
     state.latestEvent = code;
     state.updatedAt = item.at;
 
@@ -359,54 +335,55 @@
       state.errors.splice(0, state.errors.length - 80);
     }
 
+    state.updatedAt = item.at;
     return item;
   }
 
-  function ledgerPush(event = {}) {
-    const ledger = getLedger();
-
-    state.sharedLedgerPresent = Boolean(ledger);
-    if (!ledger || !isFunction(ledger.push)) return null;
-
-    try {
-      return ledger.push({
-        id: event.id || event.event || "WEST_EVENT",
-        stage: event.stage || "F5",
-        lane: event.lane || "westHandoff",
-        status: event.status || "",
-        owner: "WEST",
-        file: WEST_FILE,
-        message: event.message || "",
-        detail: clonePlain(event.detail || {}),
-        progress: event.progress ?? 48
-      });
-    } catch (error) {
-      recordError("WEST_LEDGER_PUSH_FAILED", error && error.message ? error.message : String(error));
-      return null;
-    }
+  function getEastReceipt() {
+    return (
+      root.HEARTH_EAST_STEP1_HANDOFF_RECEIPT ||
+      root.HEARTH_INDEX_STEP1_HANDOFF_RECEIPT ||
+      root.HEARTH_EAST_STEP1_IGNITION_RECEIPT ||
+      root.HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR_RECEIPT ||
+      root.HEARTH_INDEX_BRIDGE_RECEIPT ||
+      root.HEARTH_INDEX_JS_RECEIPT ||
+      null
+    );
   }
 
-  function ledgerSetLane(key, next = {}) {
-    const ledger = getLedger();
+  function getNorthApi() {
+    return getGlobal([
+      "HEARTH_NORTH_COMMAND_RUNTIME_TABLE",
+      "HEARTH_NORTH_COMMAND_TABLE",
+      "HEARTH_NORTH_COMMAND",
+      "HEARTH_LOCAL_COMMAND_RUNTIME_TABLE"
+    ]) || (root.HEARTH && root.HEARTH.northCommandRuntimeTable) || null;
+  }
 
-    state.sharedLedgerPresent = Boolean(ledger);
-    if (!ledger || !isFunction(ledger.setLane)) return null;
+  function getNorthReceipt() {
+    return (
+      root.HEARTH_NORTH_COMMAND_RUNTIME_TABLE_RECEIPT ||
+      root.HEARTH_NORTH_CYCLICAL_CHECKPOINT_RECEIPT ||
+      null
+    );
+  }
 
-    try {
-      return ledger.setLane(key, {
-        status: next.status || "READY",
-        progress: next.progress ?? 48,
-        event: next.event || "WEST_HANDOFF_EVENT",
-        stage: next.stage || "F5",
-        owner: "WEST",
-        file: WEST_FILE,
-        message: next.message || "",
-        detail: clonePlain(next.detail || {})
-      });
-    } catch (error) {
-      recordError("WEST_LEDGER_SET_LANE_FAILED", error && error.message ? error.message : String(error), { key });
-      return null;
-    }
+  function getSouthApi() {
+    return getGlobal([
+      "HEARTH_SOUTH_VISIBLE_COMPLETION",
+      "HEARTH_SOUTH_VISIBLE_COMPLETION_CYCLE_CONSUMER",
+      "HEARTH_ROUTE_CONDUCTOR",
+      "HearthRouteConductor"
+    ]) || (root.HEARTH && root.HEARTH.southVisibleCompletion) || null;
+  }
+
+  function getSouthReceipt() {
+    return (
+      root.HEARTH_SOUTH_VISIBLE_COMPLETION_RECEIPT ||
+      root.HEARTH_ROUTE_COHERENCE_SEMICONDUCTOR_RECEIPT ||
+      root.HEARTH_ROUTE_CONDUCTOR_RECEIPT ||
+      null
+    );
   }
 
   function normalizeReceipt(source, receipt) {
@@ -444,34 +421,90 @@
     );
   }
 
+  function readEastTruth(receipt) {
+    const eastOwnsStep1 =
+      bool(receipt.eastOwnsStep1, false) ||
+      bool(receipt.ownsStep1, false) ||
+      receipt.owner === "EAST" ||
+      receipt.direction === "EAST" ||
+      receipt.role === "east-step1-ignition-first-paint-cycle";
+
+    const step1Ignited =
+      bool(receipt.step1Ignited, false) ||
+      bool(receipt.indexJsStartsProcess, false) ||
+      bool(receipt.firstPaintReady, false) ||
+      bool(receipt.firstPaintCockpitReady, false);
+
+    const step1Ready =
+      bool(receipt.step1Ready, false) ||
+      bool(receipt.firstPaintReady, false) ||
+      bool(receipt.firstPaintCockpitReady, false) ||
+      bool(receipt.loadingScreenReady, false) ||
+      bool(receipt.mountReady, false);
+
+    const mountReady =
+      bool(receipt.mountReady, false) ||
+      bool(receipt.mountCreatedByIndex, false) ||
+      bool(receipt.firstPaintCockpitReady, false);
+
+    const firstPaintReady =
+      bool(receipt.firstPaintReady, false) ||
+      bool(receipt.firstPaintCockpitReady, false) ||
+      bool(receipt.loadingScreenReady, false);
+
+    const cockpitReady =
+      bool(receipt.cockpitReady, false) ||
+      bool(receipt.firstPaintCockpitReady, false) ||
+      bool(receipt.loadingScreenReady, false);
+
+    const sharedLedgerPresent =
+      bool(receipt.sharedLedgerPresent, false) ||
+      bool(receipt.loadLedgerPresent, false) ||
+      Boolean(root.HEARTH_LOAD_LEDGER);
+
+    const scriptOrderVisible =
+      bool(receipt.scriptOrderVisible, true) !== false;
+
+    return {
+      eastOwnsStep1,
+      step1Ignited,
+      step1Ready,
+      mountReady,
+      firstPaintReady,
+      cockpitReady,
+      sharedLedgerPresent,
+      scriptOrderVisible
+    };
+  }
+
   function validateEastHandoff(receipt) {
     state.admissibilityChecksPassed = [];
     state.admissibilityChecksFailed = [];
     state.admissibilityScore = 0;
 
+    const truth = readEastTruth(receipt);
+
     const checks = {
       eastReceiptPresent: Boolean(receipt && isObject(receipt)),
-      eastOwnsStep1: bool(receipt?.eastOwnsStep1, bool(receipt?.ownsStep1, false)) || receipt?.owner === "EAST",
-      step1Ignited: bool(receipt?.step1Ignited, false),
-      step1Ready: bool(receipt?.step1Ready, false),
-      mountReady: bool(receipt?.mountReady, false),
-      firstPaintReady: bool(receipt?.firstPaintReady, false),
-      cockpitReady: bool(receipt?.cockpitReady, bool(receipt?.loadingScreenReady, false)),
-      sharedLedgerPresent: bool(receipt?.sharedLedgerPresent, false),
-      scriptOrderVisible: bool(receipt?.scriptOrderVisible, true),
+      eastOwnsStep1: truth.eastOwnsStep1,
+      step1Ignited: truth.step1Ignited,
+      step1Ready: truth.step1Ready,
+      mountReady: truth.mountReady,
+      firstPaintReady: truth.firstPaintReady,
+      cockpitReady: truth.cockpitReady,
+      sharedLedgerPresent: truth.sharedLedgerPresent,
+      scriptOrderVisible: truth.scriptOrderVisible,
       noForbiddenVisualClaims: !hasForbiddenVisualClaim(receipt),
       noRuntimeTableMutation: state.runtimeTableMutation === false,
       noCanvasMutation: state.canvasMutation === false
     };
 
-    ADMISSIBILITY_CHECKS.forEach((check) => {
-      const passed = Boolean(checks[check.key]);
-
-      if (passed) {
-        state.admissibilityChecksPassed.push(check.key);
+    ADMISSIBILITY_CHECKS.forEach((key) => {
+      if (checks[key]) {
+        state.admissibilityChecksPassed.push(key);
         state.admissibilityScore += 1;
       } else {
-        state.admissibilityChecksFailed.push(check.key);
+        state.admissibilityChecksFailed.push(key);
       }
     });
 
@@ -500,9 +533,19 @@
       return false;
     }
 
-    if (state.admissibilityChecksFailed.length > 0) {
+    const killMissing = [
+      "eastReceiptPresent",
+      "eastOwnsStep1",
+      "step1Ignited",
+      "mountReady",
+      "firstPaintReady",
+      "cockpitReady"
+    ].filter((key) => !checks[key]);
+
+    if (killMissing.length > 0) {
       recordSoftGap("EAST_STEP1_HANDOFF_INCOMPLETE", "East Step 1 handoff is present but not fully admissible yet.", {
-        failed: state.admissibilityChecksFailed.slice()
+        failed: state.admissibilityChecksFailed.slice(),
+        killMissing
       });
       return false;
     }
@@ -510,117 +553,149 @@
     return true;
   }
 
-  function ingestEastReceipt(receipt, source = "method") {
+  function applyEastReceipt(receipt, source = "method") {
     const eastReceipt = receipt && isObject(receipt) ? receipt : getEastReceipt();
 
     state.eastReceiptPresent = Boolean(eastReceipt);
     state.eastReceiptSource = source;
 
     if (!eastReceipt || !isObject(eastReceipt)) {
+      state.westAccepted = false;
+      state.eastStep1Accepted = false;
       state.step1Accepted = false;
       state.step1HandoffAccepted = false;
       state.handoffAdmissible = false;
       state.westGateReady = false;
+      state.northIntakeReady = false;
       deriveFailureCoordinate();
       publishGlobals();
       return false;
     }
 
+    const truth = readEastTruth(eastReceipt);
+
     state.eastContract = String(eastReceipt.contract || "");
     state.eastReceiptName = String(eastReceipt.receipt || "");
     state.eastStep = String(eastReceipt.step || "");
     state.eastStepName = String(eastReceipt.stepName || "");
-    state.eastStep1Ignited = bool(eastReceipt.step1Ignited, false);
-    state.eastStep1Ready = bool(eastReceipt.step1Ready, false);
-    state.eastFirstPaintReady = bool(eastReceipt.firstPaintReady, false);
-    state.eastMountReady = bool(eastReceipt.mountReady, false);
-    state.eastCockpitReady = bool(eastReceipt.cockpitReady, bool(eastReceipt.loadingScreenReady, false));
-    state.eastSharedLedgerPresent = bool(eastReceipt.sharedLedgerPresent, false);
-    state.eastScriptOrderVisible = bool(eastReceipt.scriptOrderVisible, true);
+    state.eastStep1Ignited = truth.step1Ignited;
+    state.eastStep1Ready = truth.step1Ready;
+    state.eastFirstPaintReady = truth.firstPaintReady;
+    state.eastMountReady = truth.mountReady;
+    state.eastCockpitReady = truth.cockpitReady;
+    state.eastSharedLedgerPresent = truth.sharedLedgerPresent;
+    state.eastScriptOrderVisible = truth.scriptOrderVisible;
     state.eastPartialReceiptAvailable = bool(eastReceipt.partialReceiptAvailable, false);
-
     state.normalizedEastReceipt = normalizeReceipt("EAST", eastReceipt);
 
     const admissible = validateEastHandoff(eastReceipt);
 
-    state.handoffAdmissible = admissible;
+    state.westAccepted = admissible;
+    state.eastStep1Accepted = admissible;
     state.step1Accepted = admissible;
     state.step1HandoffAccepted = admissible;
+    state.handoffAdmissible = admissible;
     state.westGateReady = admissible;
+    state.northIntakeReady = admissible;
 
     if (admissible && !state.step1HandoffAcceptedAt) {
       state.step1HandoffAcceptedAt = nowIso();
     }
 
     if (admissible) {
+      state.currentStage = "F5";
+      state.highestStage = "F5";
+      state.fibonacciStage = "F5";
+      state.displayProgress = Math.max(state.displayProgress, 55);
       state.postgameStatus = "WEST_HANDOFF_ADMISSIBLE";
-      state.firstFailedCoordinate = "NONE_WEST_HANDOFF_ADMISSIBLE";
+      state.firstFailedCoordinate = "WEST_READY_FOR_NORTH_INTAKE";
+      state.recommendedNextOwner = "NORTH";
+      state.recommendedNextFile = NORTH_FILE;
       state.recommendedNextRenewalTarget = NORTH_FILE;
-
-      ledgerSetLane("westHandoff", {
-        status: "ADMISSIBLE",
-        progress: 55,
-        event: "WEST_ACCEPTED_EAST_STEP1_HANDOFF",
-        stage: "F5",
-        message: "West accepted East Step 1 handoff and normalized receipt for North."
+      recordLocal("WEST_ACCEPTED_EAST_STEP1_HANDOFF", {
+        source,
+        eastContract: state.eastContract,
+        acceptedAt: state.step1HandoffAcceptedAt
       });
 
-      ledgerPush({
-        id: "WEST_ACCEPTED_EAST_STEP1_HANDOFF",
-        stage: "F5",
-        lane: "westHandoff",
-        status: "ADMISSIBLE",
-        message: "East Step 1 handoff accepted by West.",
-        progress: 55,
-        detail: {
-          eastContract: state.eastContract,
-          acceptedAt: state.step1HandoffAcceptedAt
-        }
-      });
-
-      publishNorthIntake();
+      publishNorthIntake({ reason: "east-handoff-accepted", force: false });
     } else {
       deriveFailureCoordinate();
-
-      ledgerSetLane("westHandoff", {
-        status: state.hardBlocked ? "HARD_BLOCKED" : "SOFT_GAP",
-        progress: 48,
-        event: state.hardBlocked ? "WEST_HARD_BLOCKED_EAST_HANDOFF" : "WEST_WAITING_EAST_HANDOFF",
-        stage: "F5",
-        message: state.hardBlocked
-          ? state.hardBlockReason
-          : "West is waiting for a complete East Step 1 handoff."
-      });
     }
 
     publishGlobals();
     return admissible;
   }
 
-  function acceptStep1Handoff(receipt) {
-    const accepted = ingestEastReceipt(receipt, "acceptStep1Handoff");
-    return accepted ? getReceiptLight() : false;
+  function checkpointPayload(intake) {
+    return {
+      event: CHECKPOINT_EVENT,
+      id: CHECKPOINT_EVENT,
+      checkpointEvent: CHECKPOINT_EVENT,
+      checkpointCandidate: CHECKPOINT_CANDIDATE,
+      checkpointStage: CHECKPOINT_STAGE,
+      fibonacciStage: CHECKPOINT_STAGE,
+
+      owner: "WEST",
+      from: "WEST",
+      to: "NORTH",
+      route: ROUTE,
+      file: WEST_FILE,
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      cycleOrder: CYCLE_ORDER,
+
+      westAccepted: true,
+      eastStep1Accepted: true,
+      step1Accepted: true,
+      step1HandoffAccepted: true,
+      handoffAdmissible: true,
+      westGateReady: true,
+      northIntakeReady: true,
+
+      recommendedNextOwner: "NORTH",
+      recommendedNextFile: NORTH_FILE,
+      detail: clonePlain(intake || getWestToNorthIntakeReceipt())
+    };
   }
 
-  function receiveEastStep1(receipt) {
-    const accepted = ingestEastReceipt(receipt, "receiveEastStep1");
-    return accepted ? getReceiptLight() : false;
+  function tryNorthMethod(north, method, payload) {
+    if (!north || !isFunction(north[method])) return { tried: false, accepted: false, result: null };
+
+    try {
+      const result = north[method](payload);
+      const accepted = result !== false && !(isObject(result) && result.action === "HARD_BLOCK");
+      return { tried: true, accepted, result };
+    } catch (error) {
+      const message = error && error.message ? error.message : String(error);
+      recordError("NORTH_INTAKE_METHOD_FAILED", message, { method });
+      return { tried: true, accepted: false, result: null, error: message };
+    }
   }
 
-  function publishNorthIntake() {
+  function attemptNorthIntake(reason = "one-shot") {
+    if (disposed) return false;
+
     const intake = getWestToNorthIntakeReceipt();
-
-    root.HEARTH_WEST_TO_NORTH_HANDOFF_RECEIPT = intake;
-    root.HEARTH_WEST_TO_NORTH_INTAKE_RECEIPT = intake;
-
-    state.northIntakePublished = true;
-
     const north = getNorthApi();
 
     state.northGlobalPresent = Boolean(north);
 
+    if (!state.northIntakePublished) {
+      state.northIntakePublished = true;
+    }
+
     if (!north) {
+      state.northAcceptMethodPresent = false;
+      state.northIntakeAccepted = false;
+      state.northIntakeMethod = "";
+      state.firstFailedCoordinate = "WAITING_NORTH_COMMAND_RUNTIME_TABLE";
+      state.recommendedNextOwner = "NORTH";
+      state.recommendedNextFile = NORTH_FILE;
+      state.recommendedNextRenewalTarget = NORTH_FILE;
+      state.postgameStatus = "WEST_SOFT_FAIL_NORTH_NOT_PRESENT";
       recordSoftGap("NORTH_COMMAND_TABLE_NOT_PRESENT", "West intake is published; North command table is not present yet.", {
+        reason,
         northFile: NORTH_FILE
       });
       publishGlobals();
@@ -628,65 +703,184 @@
     }
 
     state.northContract = String(north.contract || "");
+    state.northReceiptPresent = Boolean(getNorthReceipt());
     state.normalizedNorthReceipt = normalizeReceipt("NORTH", getNorthReceipt());
-    state.northReceiptPresent = Boolean(state.normalizedNorthReceipt);
 
-    const method =
-      isFunction(north.acceptWestHandoff) ? "acceptWestHandoff" :
-        isFunction(north.receiveWestHandoff) ? "receiveWestHandoff" :
-          isFunction(north.acceptWestIntake) ? "acceptWestIntake" :
-            isFunction(north.receiveWestIntake) ? "receiveWestIntake" :
-              "";
+    const directMethods = [
+      ["acceptWestHandoff", intake],
+      ["receiveWestHandoff", intake],
+      ["acceptWestIntake", intake],
+      ["receiveWestIntake", intake],
+      ["acceptCheckpointEvent", checkpointPayload(intake)],
+      ["receiveCheckpointEvent", checkpointPayload(intake)],
+      ["submitEvent", checkpointPayload(intake)],
+      ["receiveEvent", checkpointPayload(intake)]
+    ];
 
-    if (!method) {
-      recordSoftGap("NORTH_ACCEPT_METHOD_NOT_PRESENT", "North is present, but no West-intake method is exposed yet.", {
-        northContract: state.northContract
-      });
-      publishGlobals();
-      return false;
-    }
+    for (const [method, payload] of directMethods) {
+      const attempt = tryNorthMethod(north, method, payload);
 
-    try {
-      const result = north[method](intake);
-      state.northIntakeAccepted = Boolean(result !== false);
-      state.northIntakeAcceptedAt = state.northIntakeAccepted ? nowIso() : "";
+      if (!attempt.tried) continue;
 
-      recordLocal("WEST_TO_NORTH_INTAKE_SENT", {
+      state.northAcceptMethodPresent = true;
+      state.northIntakeMethod = method;
+
+      if (attempt.accepted) {
+        markNorthAccepted(method, attempt.result, reason);
+        return true;
+      }
+
+      state.northIntakeAccepted = false;
+      state.firstFailedCoordinate = "WAITING_NORTH_INTAKE_ACCEPTANCE";
+      state.recommendedNextOwner = "NORTH";
+      state.recommendedNextFile = NORTH_FILE;
+      state.recommendedNextRenewalTarget = NORTH_FILE;
+      state.postgameStatus = "WEST_SOFT_FAIL_NORTH_REJECTED_OR_HELD";
+      recordSoftGap("NORTH_INTAKE_NOT_ACCEPTED", "North intake method was present but did not accept the intake.", {
         method,
-        accepted: state.northIntakeAccepted,
-        result: clonePlain(result)
+        result: clonePlain(attempt.result),
+        reason
       });
-
-      ledgerSetLane("northCommand", {
-        status: state.northIntakeAccepted ? "INTAKE_ACCEPTED" : "INTAKE_SENT",
-        progress: state.northIntakeAccepted ? 62 : 55,
-        event: state.northIntakeAccepted ? "NORTH_ACCEPTED_WEST_INTAKE" : "WEST_SENT_NORTH_INTAKE",
-        stage: "F8",
-        message: state.northIntakeAccepted
-          ? "North accepted West normalized intake."
-          : "West sent normalized intake to North."
-      });
-
-      publishGlobals();
-      return state.northIntakeAccepted;
-    } catch (error) {
-      const message = error && error.message ? error.message : String(error);
-      state.northReceiptError = message;
-      recordError("NORTH_INTAKE_METHOD_FAILED", message, { method });
       publishGlobals();
       return false;
     }
+
+    if (isFunction(north.createHearthCheckpointSession)) {
+      state.northAcceptMethodPresent = true;
+      state.northIntakeMethod = "createHearthCheckpointSession.submitEvent";
+
+      try {
+        const session = north.createHearthCheckpointSession({
+          sessionId: "HEARTH-WEST-TO-NORTH-HANDOFF-SESSION",
+          requestedBy: CONTRACT,
+          westFile: WEST_FILE,
+          northFile: NORTH_FILE,
+          isolatedSession: false
+        });
+
+        if (session && isFunction(session.submitEvent)) {
+          const result = session.submitEvent(checkpointPayload(intake));
+          const accepted = result !== false && !(isObject(result) && result.action === "HARD_BLOCK");
+
+          if (accepted) {
+            markNorthAccepted("createHearthCheckpointSession.submitEvent", result, reason);
+            return true;
+          }
+
+          state.northIntakeAccepted = false;
+          state.firstFailedCoordinate = "WAITING_NORTH_INTAKE_ACCEPTANCE";
+          state.recommendedNextOwner = "NORTH";
+          state.recommendedNextFile = NORTH_FILE;
+          state.recommendedNextRenewalTarget = NORTH_FILE;
+          state.postgameStatus = "WEST_SOFT_FAIL_NORTH_SESSION_HELD";
+          recordSoftGap("NORTH_SESSION_INTAKE_NOT_ACCEPTED", "North session accepted creation but did not accept the West checkpoint event.", {
+            result: clonePlain(result),
+            reason
+          });
+          publishGlobals();
+          return false;
+        }
+      } catch (error) {
+        const message = error && error.message ? error.message : String(error);
+        state.northReceiptError = message;
+        recordError("NORTH_SESSION_INTAKE_FAILED", message, { reason });
+        publishGlobals();
+        return false;
+      }
+    }
+
+    state.northAcceptMethodPresent = false;
+    state.northIntakeAccepted = false;
+    state.northIntakeMethod = "";
+    state.firstFailedCoordinate = "WAITING_NORTH_ACCEPT_METHOD";
+    state.recommendedNextOwner = "NORTH";
+    state.recommendedNextFile = NORTH_FILE;
+    state.recommendedNextRenewalTarget = NORTH_FILE;
+    state.postgameStatus = "WEST_SOFT_FAIL_NORTH_ACCEPT_METHOD_MISSING";
+    recordSoftGap("NORTH_ACCEPT_METHOD_NOT_PRESENT", "North is present, but no compatible West-intake method is exposed.", {
+      northContract: state.northContract,
+      reason
+    });
+    publishGlobals();
+    return false;
+  }
+
+  function markNorthAccepted(method, result, reason) {
+    state.northAcceptMethodPresent = true;
+    state.northIntakeAccepted = true;
+    state.northIntakeAcceptedAt = nowIso();
+    state.northIntakeMethod = method;
+    state.currentStage = "F8";
+    state.highestStage = "F8";
+    state.fibonacciStage = "F8";
+    state.displayProgress = Math.max(state.displayProgress, 68);
+    state.firstFailedCoordinate = "NONE_WEST_HANDOFF_NORMALIZED_NORTH_ACCEPTED";
+    state.recommendedNextOwner = "NORTH";
+    state.recommendedNextFile = NORTH_FILE;
+    state.recommendedNextRenewalTarget = NORTH_FILE;
+    state.postgameStatus = "WEST_PASS_NORTH_ACCEPTED";
+
+    recordLocal("NORTH_ACCEPTED_WEST_INTAKE", {
+      method,
+      reason,
+      result: clonePlain(result)
+    });
+
+    publishGlobals();
+  }
+
+  function publishNorthIntake(options = {}) {
+    if (disposed) return false;
+
+    const force = Boolean(options.force);
+    const reason = options.reason || "publishNorthIntake";
+
+    if (!state.handoffAdmissible) {
+      deriveFailureCoordinate();
+      publishGlobals();
+      return false;
+    }
+
+    state.northIntakePublished = true;
+    state.northIntakeReady = true;
+    state.recommendedNextOwner = "NORTH";
+    state.recommendedNextFile = NORTH_FILE;
+    state.recommendedNextRenewalTarget = NORTH_FILE;
+    state.postgameStatus = "WEST_TO_NORTH_INTAKE_PUBLISHED";
+    state.displayProgress = Math.max(state.displayProgress, 58);
+
+    root.HEARTH_WEST_TO_NORTH_HANDOFF_RECEIPT = getWestToNorthIntakeReceipt();
+    root.HEARTH_WEST_TO_NORTH_INTAKE_RECEIPT = root.HEARTH_WEST_TO_NORTH_HANDOFF_RECEIPT;
+
+    recordLocal("WEST_TO_NORTH_INTAKE_PUBLISHED", {
+      reason,
+      force
+    });
+
+    if (force || !northAttemptedForCurrentHandoff) {
+      northAttemptedForCurrentHandoff = true;
+      return attemptNorthIntake(reason);
+    }
+
+    publishGlobals();
+    return state.northIntakeAccepted;
+  }
+
+  function retryNorthIntake(reason = "manual-retry") {
+    northAttemptedForCurrentHandoff = false;
+    return publishNorthIntake({ reason, force: true });
   }
 
   function getWestToNorthIntakeReceipt() {
     return {
       contract: CONTRACT,
-      receipt: "HEARTH_WEST_TO_NORTH_HANDOFF_RECEIPT_v1",
+      receipt: "HEARTH_WEST_TO_NORTH_HANDOFF_RECEIPT_v2",
       sourceReceipt: RECEIPT,
       version: VERSION,
       owner: "WEST",
       file: WEST_FILE,
       route: ROUTE,
+      role: state.role,
       cycleOrder: CYCLE_ORDER,
 
       previousDirection: "EAST",
@@ -697,11 +891,29 @@
       stepNormalized: 2,
       nextStep: 3,
 
+      westAccepted: state.westAccepted,
+      eastStep1Accepted: state.eastStep1Accepted,
       step1Accepted: state.step1Accepted,
       step1HandoffAccepted: state.step1HandoffAccepted,
       handoffAdmissible: state.handoffAdmissible,
       westGateReady: state.westGateReady,
+      northIntakeReady: state.northIntakeReady,
       step1HandoffAcceptedAt: state.step1HandoffAcceptedAt,
+
+      recommendedNextOwner: "NORTH",
+      recommendedNextFile: NORTH_FILE,
+      checkpointCandidate: CHECKPOINT_CANDIDATE,
+      checkpointEvent: CHECKPOINT_EVENT,
+      checkpointStage: CHECKPOINT_STAGE,
+      northExpectedAction: "ACCEPT_INDEX_HANDOFF",
+
+      northIntakePublished: state.northIntakePublished,
+      northIntakeAccepted: state.northIntakeAccepted,
+      northIntakeAcceptedAt: state.northIntakeAcceptedAt,
+      northIntakeMethod: state.northIntakeMethod,
+      northAcceptMethodPresent: state.northAcceptMethodPresent,
+      northGlobalPresent: state.northGlobalPresent,
+      northReceiptPresent: state.northReceiptPresent,
 
       eastFile: EAST_FILE,
       westFile: WEST_FILE,
@@ -722,6 +934,14 @@
       forwardProgressAllowedWithGaps: state.forwardProgressAllowedWithGaps,
       softGapGovernor: state.softGapGovernor,
 
+      quietRegistration: true,
+      autoBoot: false,
+      heartbeatLoop: false,
+      watchdogLoop: false,
+      repeatedNorthRetry: false,
+      oneShotNorthIntake: true,
+      manualRetryAvailable: true,
+
       westOwnsReceiptNormalization: true,
       westOwnsHandoffAdmissibility: true,
       westOwnsNorthRuntimeTable: false,
@@ -730,6 +950,7 @@
 
       runtimeTableMutation: false,
       canvasMutation: false,
+      sharedLedgerMutation: false,
       sourceAuthorityHeld: true,
       climateRouteRetired: true,
 
@@ -742,44 +963,65 @@
     };
   }
 
-  function reconcileReceipts() {
-    const east = getEastReceipt();
-    const north = getNorthReceipt();
-    const south = getSouthReceipt();
-    const northApi = getNorthApi();
-    const southApi = getSouthApi();
+  function acceptStep1Handoff(receipt) {
+    const accepted = applyEastReceipt(receipt, "acceptStep1Handoff");
+    return accepted ? getWestToNorthIntakeReceipt() : false;
+  }
 
-    if (east && isObject(east) && !state.step1Accepted) {
-      ingestEastReceipt(east, "reconcileReceipts");
-    } else if (east && isObject(east)) {
-      state.normalizedEastReceipt = normalizeReceipt("EAST", east);
-    }
+  function receiveEastStep1(receipt) {
+    const accepted = applyEastReceipt(receipt, "receiveEastStep1");
+    return accepted ? getWestToNorthIntakeReceipt() : false;
+  }
 
-    state.northGlobalPresent = Boolean(northApi);
-    state.southGlobalPresent = Boolean(southApi);
+  function acceptEastStep1(receipt) {
+    const accepted = applyEastReceipt(receipt, "acceptEastStep1");
+    return accepted ? getWestToNorthIntakeReceipt() : false;
+  }
 
-    if (northApi) state.northContract = String(northApi.contract || "");
-    if (southApi) state.southContract = String(southApi.contract || "");
+  function normalizeEastHandoff(receipt) {
+    const accepted = applyEastReceipt(receipt, "normalizeEastHandoff");
+    return accepted ? getWestToNorthIntakeReceipt() : false;
+  }
 
-    state.normalizedNorthReceipt = normalizeReceipt("NORTH", north);
-    state.normalizedSouthReceipt = normalizeReceipt("SOUTH", south);
+  function refreshPassiveReceipts() {
+    const north = getNorthApi();
+    const south = getSouthApi();
 
-    state.northReceiptPresent = Boolean(state.normalizedNorthReceipt);
-    state.southReceiptPresent = Boolean(state.normalizedSouthReceipt);
+    state.northGlobalPresent = Boolean(north);
+    state.southGlobalPresent = Boolean(south);
 
+    if (north) state.northContract = String(north.contract || "");
+    if (south) state.southContract = String(south.contract || "");
+
+    state.northReceiptPresent = Boolean(getNorthReceipt());
+    state.southReceiptPresent = Boolean(getSouthReceipt());
+
+    state.normalizedNorthReceipt = normalizeReceipt("NORTH", getNorthReceipt());
+    state.normalizedSouthReceipt = normalizeReceipt("SOUTH", getSouthReceipt());
     state.normalizedWestReceipt = normalizeReceipt("WEST", getReceiptLight());
     state.normalizedReceiptsReady = Boolean(state.normalizedEastReceipt && state.normalizedWestReceipt);
+  }
 
-    if (state.step1Accepted && !state.northIntakePublished) {
-      publishNorthIntake();
+  function passiveScanExistingEastOnce(reason = "passive-existing-east-scan") {
+    if (disposed) return false;
+
+    const east = getEastReceipt();
+
+    if (!east || !isObject(east)) {
+      state.eastReceiptPresent = false;
+      deriveFailureCoordinate();
+      publishGlobals();
+      return false;
     }
 
-    deriveFailureCoordinate();
+    return applyEastReceipt(east, reason);
   }
 
   function deriveFailureCoordinate() {
     if (state.hardBlocked) {
       state.firstFailedCoordinate = state.hardBlockReason || "WEST_HARD_BLOCKED";
+      state.recommendedNextOwner = "WEST";
+      state.recommendedNextFile = WEST_FILE;
       state.recommendedNextRenewalTarget = WEST_FILE;
       state.postgameStatus = "WEST_HARD_BLOCKED";
       return;
@@ -787,20 +1029,26 @@
 
     if (!state.eastReceiptPresent) {
       state.firstFailedCoordinate = "WAITING_EAST_STEP1_HANDOFF";
+      state.recommendedNextOwner = "EAST";
+      state.recommendedNextFile = EAST_FILE;
       state.recommendedNextRenewalTarget = EAST_FILE;
-      state.postgameStatus = "WEST_WAITING_EAST_HANDOFF";
+      state.postgameStatus = "WEST_REGISTERED_WAITING_EAST";
       return;
     }
 
     if (!state.handoffAdmissible) {
       state.firstFailedCoordinate = "WAITING_EAST_HANDOFF_ADMISSIBILITY";
+      state.recommendedNextOwner = "EAST";
+      state.recommendedNextFile = EAST_FILE;
       state.recommendedNextRenewalTarget = EAST_FILE;
-      state.postgameStatus = "WEST_HANDOFF_SOFT_GAP";
+      state.postgameStatus = "WEST_SOFT_FAIL_EAST_HANDOFF_INCOMPLETE";
       return;
     }
 
     if (!state.northIntakePublished) {
       state.firstFailedCoordinate = "WAITING_WEST_TO_NORTH_INTAKE_PUBLICATION";
+      state.recommendedNextOwner = "WEST";
+      state.recommendedNextFile = WEST_FILE;
       state.recommendedNextRenewalTarget = WEST_FILE;
       state.postgameStatus = "WEST_READY_TO_PUBLISH_NORTH_INTAKE";
       return;
@@ -808,21 +1056,36 @@
 
     if (!state.northGlobalPresent) {
       state.firstFailedCoordinate = "WAITING_NORTH_COMMAND_RUNTIME_TABLE";
+      state.recommendedNextOwner = "NORTH";
+      state.recommendedNextFile = NORTH_FILE;
       state.recommendedNextRenewalTarget = NORTH_FILE;
-      state.postgameStatus = "WEST_INTAKE_PUBLISHED_NORTH_PENDING";
+      state.postgameStatus = "WEST_SOFT_FAIL_NORTH_NOT_PRESENT";
+      return;
+    }
+
+    if (!state.northAcceptMethodPresent) {
+      state.firstFailedCoordinate = "WAITING_NORTH_ACCEPT_METHOD";
+      state.recommendedNextOwner = "NORTH";
+      state.recommendedNextFile = NORTH_FILE;
+      state.recommendedNextRenewalTarget = NORTH_FILE;
+      state.postgameStatus = "WEST_SOFT_FAIL_NORTH_ACCEPT_METHOD_MISSING";
       return;
     }
 
     if (!state.northIntakeAccepted) {
       state.firstFailedCoordinate = "WAITING_NORTH_INTAKE_ACCEPTANCE";
+      state.recommendedNextOwner = "NORTH";
+      state.recommendedNextFile = NORTH_FILE;
       state.recommendedNextRenewalTarget = NORTH_FILE;
-      state.postgameStatus = "WEST_WAITING_NORTH_ACCEPTANCE";
+      state.postgameStatus = "WEST_SOFT_FAIL_NORTH_INTAKE_HELD";
       return;
     }
 
-    state.firstFailedCoordinate = "NONE_WEST_HANDOFF_NORMALIZED";
+    state.firstFailedCoordinate = "NONE_WEST_HANDOFF_NORMALIZED_NORTH_ACCEPTED";
+    state.recommendedNextOwner = "NORTH";
+    state.recommendedNextFile = NORTH_FILE;
     state.recommendedNextRenewalTarget = NORTH_FILE;
-    state.postgameStatus = "WEST_HANDOFF_NORMALIZED_NORTH_ACCEPTED";
+    state.postgameStatus = "WEST_PASS_NORTH_ACCEPTED";
   }
 
   function computeProgress() {
@@ -832,6 +1095,7 @@
     if (state.handoffAdmissible) progress = Math.max(progress, 55);
     if (state.northIntakePublished) progress = Math.max(progress, 58);
     if (state.northGlobalPresent) progress = Math.max(progress, 62);
+    if (state.northAcceptMethodPresent) progress = Math.max(progress, 64);
     if (state.northIntakeAccepted) progress = Math.max(progress, 68);
     if (state.southGlobalPresent) progress = Math.max(progress, 72);
 
@@ -849,19 +1113,34 @@
     if (!node) return;
 
     node.textContent = [
-      "Hearth West handoff admissibility table active.",
+      "Hearth West quiet handoff registration active.",
       `Contract ${CONTRACT}`,
       `Receipt ${RECEIPT}`,
+      `Previous ${PREVIOUS_CONTRACT}`,
       `File ${WEST_FILE}`,
       `Cycle ${CYCLE_ORDER}`,
+      `Quiet registration true`,
+      `Auto boot false`,
+      `Heartbeat loop false`,
+      `Watchdog loop false`,
+      `Repeated North retry false`,
       `East receipt present ${state.eastReceiptPresent}`,
+      `West accepted ${state.westAccepted}`,
+      `East Step 1 accepted ${state.eastStep1Accepted}`,
       `Handoff admissible ${state.handoffAdmissible}`,
       `West gate ready ${state.westGateReady}`,
+      `North intake ready ${state.northIntakeReady}`,
       `North intake published ${state.northIntakePublished}`,
+      `North global present ${state.northGlobalPresent}`,
+      `North accept method present ${state.northAcceptMethodPresent}`,
       `North intake accepted ${state.northIntakeAccepted}`,
+      `North intake method ${state.northIntakeMethod}`,
+      `Checkpoint event ${CHECKPOINT_EVENT}`,
+      `Checkpoint candidate ${CHECKPOINT_CANDIDATE}`,
       `Hard blocked ${state.hardBlocked}`,
       `First failed coordinate ${state.firstFailedCoordinate}`,
-      `Recommended next renewal target ${state.recommendedNextRenewalTarget}`,
+      `Recommended next owner ${state.recommendedNextOwner}`,
+      `Recommended next file ${state.recommendedNextFile}`,
       "Runtime Table mutation false",
       "Canvas mutation false",
       "Generated image false",
@@ -889,22 +1168,38 @@
     dataset.hearthNorthFile = NORTH_FILE;
     dataset.hearthSouthFile = SOUTH_FILE;
 
+    dataset.hearthWestQuietRegistration = "true";
+    dataset.hearthWestAutoBoot = "false";
+    dataset.hearthWestHeartbeatLoop = "false";
+    dataset.hearthWestWatchdogLoop = "false";
+    dataset.hearthWestRepeatedNorthRetry = "false";
+    dataset.hearthWestOneShotNorthIntake = "true";
+    dataset.hearthWestManualRetryAvailable = "true";
+
     dataset.hearthWestOwnsHandoffAdmissibility = "true";
     dataset.hearthWestOwnsReceiptNormalization = "true";
     dataset.hearthWestOwnsNorthRuntimeTable = "false";
     dataset.hearthWestOwnsCanvas = "false";
     dataset.hearthWestOwnsFinalCompletion = "false";
 
-    dataset.hearthEastReceiptPresent = String(state.eastReceiptPresent);
+    dataset.hearthWestAccepted = String(state.westAccepted);
+    dataset.hearthEastStep1Accepted = String(state.eastStep1Accepted);
     dataset.hearthStep1Accepted = String(state.step1Accepted);
     dataset.hearthStep1HandoffAccepted = String(state.step1HandoffAccepted);
     dataset.hearthHandoffAdmissible = String(state.handoffAdmissible);
     dataset.hearthWestGateReady = String(state.westGateReady);
+    dataset.hearthNorthIntakeReady = String(state.northIntakeReady);
 
     dataset.hearthNorthIntakePublished = String(state.northIntakePublished);
     dataset.hearthNorthIntakeAccepted = String(state.northIntakeAccepted);
+    dataset.hearthNorthAcceptMethodPresent = String(state.northAcceptMethodPresent);
+    dataset.hearthNorthIntakeMethod = state.northIntakeMethod;
     dataset.hearthNorthGlobalPresent = String(state.northGlobalPresent);
     dataset.hearthSouthGlobalPresent = String(state.southGlobalPresent);
+
+    dataset.hearthCheckpointEvent = CHECKPOINT_EVENT;
+    dataset.hearthCheckpointCandidate = CHECKPOINT_CANDIDATE;
+    dataset.hearthCheckpointStage = CHECKPOINT_STAGE;
 
     dataset.hearthWestHardBlocked = String(state.hardBlocked);
     dataset.hearthWestHardBlockReason = state.hardBlockReason;
@@ -912,10 +1207,13 @@
     dataset.hearthWestSoftGapGovernor = String(state.softGapGovernor);
 
     dataset.hearthWestFirstFailedCoordinate = state.firstFailedCoordinate;
+    dataset.hearthWestRecommendedNextOwner = state.recommendedNextOwner;
+    dataset.hearthWestRecommendedNextFile = state.recommendedNextFile;
     dataset.hearthWestRecommendedNextRenewalTarget = state.recommendedNextRenewalTarget;
 
     dataset.hearthRuntimeTableMutation = "false";
     dataset.hearthCanvasMutation = "false";
+    dataset.hearthSharedLedgerMutation = "false";
     dataset.generatedImage = "false";
     dataset.graphicBox = "false";
     dataset.webgl = "false";
@@ -923,7 +1221,7 @@
   }
 
   function publishGlobals() {
-    state.normalizedWestReceipt = normalizeReceipt("WEST", getReceiptLight());
+    refreshPassiveReceipts();
 
     root.HEARTH = root.HEARTH || {};
     root.HEARTH.westIndexHandoffTable = api;
@@ -948,6 +1246,8 @@
   }
 
   function getReceiptLight() {
+    deriveFailureCoordinate();
+
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
@@ -963,14 +1263,34 @@
       previousDirection: "EAST",
       nextDirection: "NORTH",
 
+      quietRegistration: true,
+      autoBoot: false,
+      heartbeatLoop: false,
+      watchdogLoop: false,
+      repeatedNorthRetry: false,
+      oneShotNorthIntake: true,
+      manualRetryAvailable: true,
+
+      westAccepted: state.westAccepted,
+      eastStep1Accepted: state.eastStep1Accepted,
       step1Accepted: state.step1Accepted,
       step1HandoffAccepted: state.step1HandoffAccepted,
       handoffAdmissible: state.handoffAdmissible,
       westGateReady: state.westGateReady,
+      northIntakeReady: state.northIntakeReady,
       step1HandoffAcceptedAt: state.step1HandoffAcceptedAt,
 
+      recommendedNextOwner: state.recommendedNextOwner,
+      recommendedNextFile: state.recommendedNextFile,
+      checkpointCandidate: CHECKPOINT_CANDIDATE,
+      checkpointEvent: CHECKPOINT_EVENT,
+      checkpointStage: CHECKPOINT_STAGE,
+      northExpectedAction: "ACCEPT_INDEX_HANDOFF",
+
       eastReceiptPresent: state.eastReceiptPresent,
+      eastReceiptSource: state.eastReceiptSource,
       eastContract: state.eastContract,
+      eastReceiptName: state.eastReceiptName,
       eastStep1Ignited: state.eastStep1Ignited,
       eastStep1Ready: state.eastStep1Ready,
       eastFirstPaintReady: state.eastFirstPaintReady,
@@ -982,6 +1302,8 @@
       northIntakePublished: state.northIntakePublished,
       northIntakeAccepted: state.northIntakeAccepted,
       northIntakeAcceptedAt: state.northIntakeAcceptedAt,
+      northIntakeMethod: state.northIntakeMethod,
+      northAcceptMethodPresent: state.northAcceptMethodPresent,
       northGlobalPresent: state.northGlobalPresent,
       northReceiptPresent: state.northReceiptPresent,
       northContract: state.northContract,
@@ -1006,7 +1328,7 @@
       softGapCount: state.softGapCount,
       hardBlockCount: state.hardBlockCount,
 
-      sharedLedgerPresent: state.sharedLedgerPresent,
+      sharedLedgerPresent: Boolean(root.HEARTH_LOAD_LEDGER),
       sharedLedgerMutation: false,
       runtimeTableMutation: false,
       canvasMutation: false,
@@ -1027,14 +1349,12 @@
       webGL: false,
       visualPassClaimed: false,
 
-      startedAt: state.startedAt,
+      registeredAt: state.registeredAt,
       updatedAt: nowIso()
     };
   }
 
   function getReceipt() {
-    reconcileReceipts();
-
     return {
       ...getReceiptLight(),
 
@@ -1104,7 +1424,7 @@
     )).join("\n") || "- none";
 
     return [
-      "HEARTH_WEST_INDEX_HANDOFF_ADMISSIBILITY_TABLE_RECEIPT",
+      "HEARTH_WEST_INDEX_HANDOFF_QUIET_REGISTRATION_NORTH_INTAKE_RECEIPT",
       "",
       `contract=${receipt.contract}`,
       `receipt=${receipt.receipt}`,
@@ -1115,6 +1435,14 @@
       `route=${receipt.route}`,
       `role=${receipt.role}`,
       `cycleOrder=${receipt.cycleOrder}`,
+      "",
+      `quietRegistration=${receipt.quietRegistration}`,
+      `autoBoot=${receipt.autoBoot}`,
+      `heartbeatLoop=${receipt.heartbeatLoop}`,
+      `watchdogLoop=${receipt.watchdogLoop}`,
+      `repeatedNorthRetry=${receipt.repeatedNorthRetry}`,
+      `oneShotNorthIntake=${receipt.oneShotNorthIntake}`,
+      `manualRetryAvailable=${receipt.manualRetryAvailable}`,
       "",
       `direction=${receipt.direction}`,
       `previousDirection=${receipt.previousDirection}`,
@@ -1129,19 +1457,11 @@
       `ownsStep1HandoffAdmissibility=${receipt.ownsStep1HandoffAdmissibility}`,
       `ownsReceiptNormalization=${receipt.ownsReceiptNormalization}`,
       `ownsWestToNorthIntakePublication=${receipt.ownsWestToNorthIntakePublication}`,
-      "",
-      `ownsFirstPaintSurvival=${receipt.ownsFirstPaintSurvival}`,
-      `ownsMountCreation=${receipt.ownsMountCreation}`,
-      `ownsInitialCockpitCreation=${receipt.ownsInitialCockpitCreation}`,
       `ownsNorthRuntimeTable=${receipt.ownsNorthRuntimeTable}`,
       `ownsCheckpointLaw=${receipt.ownsCheckpointLaw}`,
-      `ownsNewsFibonacciGovernance=${receipt.ownsNewsFibonacciGovernance}`,
-      `ownsCanvasCoordination=${receipt.ownsCanvasCoordination}`,
       `ownsCanvasDrawing=${receipt.ownsCanvasDrawing}`,
       `ownsVisiblePlanetProof=${receipt.ownsVisiblePlanetProof}`,
-      `ownsInspectModeTruth=${receipt.ownsInspectModeTruth}`,
       `ownsCompletionLatch=${receipt.ownsCompletionLatch}`,
-      `ownsFinalDiagnosticReceipt=${receipt.ownsFinalDiagnosticReceipt}`,
       `ownsFinalVisualPassClaim=${receipt.ownsFinalVisualPassClaim}`,
       "",
       `eastFile=${receipt.eastFile}`,
@@ -1151,7 +1471,9 @@
       `canvasFile=${receipt.canvasFile}`,
       "",
       `eastReceiptPresent=${receipt.eastReceiptPresent}`,
+      `eastReceiptSource=${receipt.eastReceiptSource}`,
       `eastContract=${receipt.eastContract}`,
+      `eastReceiptName=${receipt.eastReceiptName}`,
       `eastStep1Ignited=${receipt.eastStep1Ignited}`,
       `eastStep1Ready=${receipt.eastStep1Ready}`,
       `eastFirstPaintReady=${receipt.eastFirstPaintReady}`,
@@ -1160,15 +1482,27 @@
       `eastSharedLedgerPresent=${receipt.eastSharedLedgerPresent}`,
       `eastScriptOrderVisible=${receipt.eastScriptOrderVisible}`,
       "",
+      `westAccepted=${receipt.westAccepted}`,
+      `eastStep1Accepted=${receipt.eastStep1Accepted}`,
       `step1Accepted=${receipt.step1Accepted}`,
       `step1HandoffAccepted=${receipt.step1HandoffAccepted}`,
       `handoffAdmissible=${receipt.handoffAdmissible}`,
       `westGateReady=${receipt.westGateReady}`,
+      `northIntakeReady=${receipt.northIntakeReady}`,
       `step1HandoffAcceptedAt=${receipt.step1HandoffAcceptedAt}`,
+      "",
+      `recommendedNextOwner=${receipt.recommendedNextOwner}`,
+      `recommendedNextFile=${receipt.recommendedNextFile}`,
+      `checkpointCandidate=${receipt.checkpointCandidate}`,
+      `checkpointEvent=${receipt.checkpointEvent}`,
+      `checkpointStage=${receipt.checkpointStage}`,
+      `northExpectedAction=${receipt.northExpectedAction}`,
       "",
       `northIntakePublished=${receipt.northIntakePublished}`,
       `northIntakeAccepted=${receipt.northIntakeAccepted}`,
       `northIntakeAcceptedAt=${receipt.northIntakeAcceptedAt}`,
+      `northIntakeMethod=${receipt.northIntakeMethod}`,
+      `northAcceptMethodPresent=${receipt.northAcceptMethodPresent}`,
       `northGlobalPresent=${receipt.northGlobalPresent}`,
       `northReceiptPresent=${receipt.northReceiptPresent}`,
       `northContract=${receipt.northContract}`,
@@ -1230,105 +1564,16 @@
       `webGL=${receipt.webGL}`,
       `visualPassClaimed=${receipt.visualPassClaimed}`,
       "",
-      `startedAt=${receipt.startedAt}`,
+      `registeredAt=${receipt.registeredAt}`,
       `updatedAt=${receipt.updatedAt}`
     ].join("\n");
   }
 
-  function boot() {
-    if (bootStarted) {
-      publishGlobals();
-      return getReceipt();
-    }
-
-    bootStarted = true;
-    state.startedAt = nowIso();
-    state.updatedAt = state.startedAt;
-    state.postgameStatus = "WEST_BOOTING";
-    state.firstFailedCoordinate = "WEST_CHECKING_EAST_HANDOFF";
-    state.recommendedNextRenewalTarget = EAST_FILE;
-
-    state.sharedLedgerPresent = Boolean(getLedger());
-
-    ledgerSetLane("westHandoff", {
-      status: "ACTIVE",
-      progress: 48,
-      event: "WEST_HANDOFF_ADMISSIBILITY_ACTIVE",
-      stage: "F5",
-      message: "West handoff admissibility table active."
-    });
-
-    const eastReceipt = getEastReceipt();
-    if (eastReceipt) {
-      ingestEastReceipt(eastReceipt, "boot-existing-east-receipt");
-    } else {
-      recordSoftGap("EAST_STEP1_HANDOFF_NOT_PRESENT", "West booted before East Step 1 handoff was available.", {
-        expectedReceipt: "HEARTH_EAST_STEP1_HANDOFF_RECEIPT"
-      });
-      deriveFailureCoordinate();
-    }
-
-    reconcileReceipts();
-    publishGlobals();
-
-    startHeartbeat();
-    startWatchdog();
-
-    return getReceipt();
-  }
-
-  function startHeartbeat() {
-    if (heartbeatTimer) root.clearInterval(heartbeatTimer);
-
-    heartbeatTimer = root.setInterval(() => {
-      reconcileReceipts();
-      if (state.step1Accepted) publishNorthIntake();
-      publishGlobals();
-    }, 1000);
-  }
-
-  function startWatchdog() {
-    if (watchdogTimer) root.clearInterval(watchdogTimer);
-
-    let ticks = 0;
-
-    watchdogTimer = root.setInterval(() => {
-      ticks += 1;
-
-      reconcileReceipts();
-
-      if (!state.eastReceiptPresent) {
-        recordSoftGap("WEST_WAITING_FOR_EAST_HANDOFF", "West remains ready; East handoff is still pending.", {
-          ticks
-        });
-      }
-
-      if (state.step1Accepted && !state.northIntakeAccepted) {
-        publishNorthIntake();
-      }
-
-      publishGlobals();
-
-      if (ticks >= 80 || state.northIntakeAccepted) {
-        root.clearInterval(watchdogTimer);
-        watchdogTimer = 0;
-      }
-    }, 500);
-  }
-
   function dispose(reason = "manual-dispose") {
-    if (heartbeatTimer) {
-      root.clearInterval(heartbeatTimer);
-      heartbeatTimer = 0;
-    }
-
-    if (watchdogTimer) {
-      root.clearInterval(watchdogTimer);
-      watchdogTimer = 0;
-    }
-
-    recordLocal("WEST_HANDOFF_TABLE_DISPOSED", { reason });
+    disposed = true;
+    recordLocal("WEST_QUIET_HANDOFF_DISPOSED", { reason });
     publishGlobals();
+    return getReceiptLight();
   }
 
   const api = {
@@ -1339,21 +1584,24 @@
     version: VERSION,
     route: ROUTE,
     file: WEST_FILE,
-    role: "west-index-handoff-admissibility-table",
-
-    boot,
-    start: boot,
-    init: boot,
-    run: boot,
-    dispose,
+    role: "west-index-handoff-quiet-registration-north-intake",
 
     acceptStep1Handoff,
     receiveEastStep1,
+    acceptEastStep1,
+    normalizeEastHandoff,
+
     publishNorthIntake,
-    reconcileReceipts,
+    retryNorthIntake,
     getWestToNorthIntakeReceipt,
     getReceipt,
     getReceiptText,
+    dispose,
+
+    boot: passiveScanExistingEastOnce,
+    start: passiveScanExistingEastOnce,
+    init: passiveScanExistingEastOnce,
+    run: passiveScanExistingEastOnce,
 
     supportsDirectionalCycle: true,
     supportsWestHandoffAdmissibility: true,
@@ -1361,6 +1609,9 @@
     supportsWestToNorthIntakePublication: true,
     supportsSoftGapGovernor: true,
     supportsHardBlockKillConditions: true,
+    supportsQuietRegistration: true,
+    supportsOneShotNorthIntake: true,
+    supportsManualRetry: true,
 
     ownsEast: false,
     ownsWest: true,
@@ -1383,8 +1634,17 @@
     southFile: SOUTH_FILE,
     canvasFile: CANVAS_FILE,
 
+    quietRegistration: true,
+    autoBoot: false,
+    heartbeatLoop: false,
+    watchdogLoop: false,
+    repeatedNorthRetry: false,
+    oneShotNorthIntake: true,
+    manualRetryAvailable: true,
+
     runtimeTableMutation: false,
     canvasMutation: false,
+    sharedLedgerMutation: false,
     generatedImage: false,
     graphicBox: false,
     webGL: false,
@@ -1395,19 +1655,19 @@
     }
   };
 
-  publishGlobals();
+  state.registeredAt = nowIso();
+  state.updatedAt = state.registeredAt;
 
-  if (doc) {
-    if (doc.readyState === "loading") {
-      doc.addEventListener("DOMContentLoaded", () => {
-        boot();
-      }, { once: true });
-    } else {
-      boot();
-    }
-  } else {
-    boot();
-  }
+  root.HEARTH = root.HEARTH || {};
+  root.HEARTH.westIndexHandoffTable = api;
+  root.HEARTH.westHandoffAdmissibility = api;
+
+  root.HEARTH_WEST_INDEX_HANDOFF_TABLE = api;
+  root.HEARTH_WEST_HANDOFF_ADMISSIBILITY = api;
+  root.HEARTH_WEST_CYCLE_HANDOFF = api;
+
+  publishGlobals();
+  passiveScanExistingEastOnce("quiet-registration-existing-east-receipt-scan");
 
   if (typeof module !== "undefined" && module.exports) {
     module.exports = api;

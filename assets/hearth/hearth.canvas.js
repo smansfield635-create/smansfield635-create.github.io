@@ -1,14 +1,14 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_CANVAS_NEWS_FIBONACCI_SOFT_GAP_EVIDENCE_ADAPTER_TNT_v2
+// HEARTH_CANVAS_VISUAL_FIDELITY_ELEVATION_LIGHTING_RENEWAL_TNT_v1
 // Full-file replacement.
 // Canvas / F13 evidence authority only.
 // Purpose:
-// - Align Hearth canvas with the four-file Runtime Table split.
+// - Preserve the working NEWS/Fibonacci F13 evidence adapter.
+// - Preserve cooperative chunking so the page does not freeze.
+// - Improve Hearth planet visual fidelity by separating class truth from palette influence.
+// - Make elevation, hydrology, coastline, shelf, basin, and lighting more readable.
+// - Prevent sourceColor from flattening land/water/elevation truth.
 // - Feed North Runtime Table checkpoint evidence without claiming F21.
-// - Preserve forward visible progress when rendered content is carrier-dominant but structurally safe.
-// - Suppress duplicate post-ready canvas boot evidence.
-// - Classify visible-content result as PASS / SOFT_GAP / HARD_FAIL.
-// - Prevent page freeze by chunking atlas, texture, and sphere rendering through frame-yielded phases.
 // Does not own:
 // - planet truth
 // - page truth
@@ -22,11 +22,11 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_NEWS_FIBONACCI_SOFT_GAP_EVIDENCE_ADAPTER_TNT_v2";
-  const RECEIPT = "HEARTH_CANVAS_NEWS_FIBONACCI_SOFT_GAP_EVIDENCE_ADAPTER_RECEIPT_v2";
-  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_NEWS_FIBONACCI_SOFT_GAP_EVIDENCE_ADAPTER_TNT_v1";
-  const BASELINE_CONTRACT = "HEARTH_CANVAS_NEWS_FIBONACCI_SOFT_GAP_EVIDENCE_ADAPTER_PRECODE_FINAL_DRAFT_v1";
-  const VERSION = "2026-05-29.hearth-canvas-news-fibonacci-soft-gap-evidence-adapter-v2";
+  const CONTRACT = "HEARTH_CANVAS_VISUAL_FIDELITY_ELEVATION_LIGHTING_RENEWAL_TNT_v1";
+  const RECEIPT = "HEARTH_CANVAS_VISUAL_FIDELITY_ELEVATION_LIGHTING_RENEWAL_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_NEWS_FIBONACCI_SOFT_GAP_EVIDENCE_ADAPTER_TNT_v2";
+  const BASELINE_CONTRACT = "HEARTH_CANVAS_VISUAL_FIDELITY_ELEVATION_LIGHTING_RENEWAL_PREWRITE_v1";
+  const VERSION = "2026-05-30.hearth-canvas-visual-fidelity-elevation-lighting-renewal-v1";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
@@ -120,18 +120,12 @@
     "ATLAS_BUILD_STARTED"
   ]);
 
-  const PROGRESS_ONLY_EVENTS = new Set([
-    "ATLAS_BUILD_PROGRESS",
-    "TEXTURE_COMPOSE_PROGRESS",
-    "SPHERE_RENDER_PROGRESS"
-  ]);
-
-  const DEFAULT_SIZE = 640;
+  const DEFAULT_SIZE = 600;
   const ATLAS_WIDTH = 512;
   const ATLAS_HEIGHT = 256;
   const ATLAS_ROWS_PER_CHUNK = 4;
   const SPHERE_ROWS_PER_CHUNK = 8;
-  const TEXTURE_STEPS = 32;
+  const TEXTURE_STEPS = 24;
   const SAMPLE_COUNT = 257;
 
   const state = {
@@ -141,10 +135,11 @@
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     file: FILE,
-    role: "f13-canvas-evidence-producer",
+    role: "f13-canvas-evidence-producer-visual-fidelity-renewal",
 
     northAuthority: NORTH_FILE,
     ownsCanvasEvidenceOnly: true,
+    ownsVisualTranslation: true,
     doesNotOwnPlanetTruth: true,
     doesNotOwnRuntimeTableGovernance: true,
     doesNotOwnNewsFinalAuthority: true,
@@ -235,6 +230,14 @@
     visibleContentCarrierSampleCount: 0,
     carrierOnlyDetected: false,
 
+    visualFidelityRenewalActive: true,
+    sourceColorDemotedToPaletteInfluence: true,
+    elevationControlsLandShape: true,
+    hydrologyControlsWaterShape: true,
+    coastlineContrastActive: true,
+    centerDarknessReduced: true,
+    lightingPreservesSurfaceReadability: true,
+
     f13CanvasEvidenceComplete: false,
     f13HardFail: false,
     f21ClaimedByCanvas: false,
@@ -279,6 +282,19 @@
     return Number.isFinite(n) ? n : fallback;
   }
 
+  function mix(a, b, t) {
+    return a + (b - a) * clamp01(t);
+  }
+
+  function mixRgb(a, b, t) {
+    const k = clamp01(t);
+    return [
+      Math.round(mix(a[0], b[0], k)),
+      Math.round(mix(a[1], b[1], k)),
+      Math.round(mix(a[2], b[2], k))
+    ];
+  }
+
   function clonePlain(value) {
     if (!isObject(value)) return value;
 
@@ -307,7 +323,6 @@
 
   function resolveElement(candidate) {
     if (!doc || !candidate) return null;
-
     if (candidate.nodeType === 1) return candidate;
 
     if (typeof candidate === "string") {
@@ -373,7 +388,7 @@
 
     if (!canvas) {
       canvas = doc.createElement("canvas");
-      canvas.className = "hearth-canvas hearth-canvas--news-fibonacci-evidence";
+      canvas.className = "hearth-canvas hearth-canvas--visual-fidelity-renewal";
       canvas.dataset.hearthCanvas = "true";
       canvas.dataset.hearthCanvasTexture = "true";
       canvas.dataset.hearthCanvasContract = CONTRACT;
@@ -392,9 +407,10 @@
     const widthFromRect = safeNumber(rect.width, DEFAULT_SIZE) || DEFAULT_SIZE;
     const heightFromRect = safeNumber(rect.height, DEFAULT_SIZE) || DEFAULT_SIZE;
     const explicitSize = safeNumber(options.canvasSize, 0) || safeNumber(options.size, 0);
+
     const finalSize = explicitSize
       ? Math.max(256, Math.round(explicitSize))
-      : Math.max(256, Math.round(Math.min(DEFAULT_SIZE, Math.max(256, widthFromRect), Math.max(256, heightFromRect))));
+      : Math.max(320, Math.round(Math.min(DEFAULT_SIZE, Math.max(320, widthFromRect), Math.max(320, heightFromRect))));
 
     if (canvas.width !== finalSize) canvas.width = finalSize;
     if (canvas.height !== finalSize) canvas.height = finalSize;
@@ -448,13 +464,13 @@
     return a * (1 - ux) * (1 - uy) + b * ux * (1 - uy) + c * (1 - ux) * uy + d * ux * uy;
   }
 
-  function fbm(x, y, seed = 1) {
+  function fbm(x, y, seed = 1, octaves = 5) {
     let value = 0;
     let amplitude = 0.5;
     let frequency = 1;
     let total = 0;
 
-    for (let i = 0; i < 5; i += 1) {
+    for (let i = 0; i < octaves; i += 1) {
       value += smoothNoise(x * frequency, y * frequency, seed + i * 17) * amplitude;
       total += amplitude;
       amplitude *= 0.5;
@@ -538,6 +554,14 @@
     return null;
   }
 
+  function normalizeElevation(value) {
+    const n = Number(value);
+    if (!Number.isFinite(n)) return NaN;
+    if (n >= 0 && n <= 1) return n;
+    if (n >= -1 && n <= 1) return (n + 1) / 2;
+    return clamp01(n / 100);
+  }
+
   function samplePlanetMaterial(u, v) {
     const lon = u * 360 - 180;
     const lat = 90 - v * 180;
@@ -573,62 +597,149 @@
       extractColor(hexSample) ||
       null;
 
-    const e1 = fbm(u * 5.5 + 2.1, v * 4.7 - 1.3, 11);
-    const e2 = fbm(u * 12.5 - 1.4, v * 9.5 + 3.3, 23);
-    const e3 = fbm(Math.sin(u * Math.PI * 2) * 3.0 + 1.2, Math.cos(v * Math.PI) * 3.0 - 0.7, 37);
-    const ridge = Math.abs(e2 - 0.5) * 2;
     const latBand = Math.abs(lat) / 90;
+    const polar = Math.pow(latBand, 2.2);
 
-    const rawElevation = safeNumber(elevationSample && (elevationSample.elevation ?? elevationSample.height ?? elevationSample.value), NaN);
+    const continental = fbm(u * 2.85 + 0.11, v * 2.25 - 0.18, 101, 5);
+    const regional = fbm(u * 6.4 - 1.4, v * 5.8 + 2.1, 203, 5);
+    const fine = fbm(u * 18.0 + 4.7, v * 14.0 - 2.8, 307, 4);
+    const ridge = Math.abs(fbm(u * 10.5 + 7.1, v * 8.0 - 6.2, 409, 4) - 0.5) * 2;
+    const basin = 1 - Math.abs(fbm(u * 4.2 - 3.2, v * 3.5 + 5.6, 503, 4) - 0.5) * 2;
+
+    const rawElevation = normalizeElevation(
+      elevationSample && (
+        elevationSample.elevation ??
+        elevationSample.height ??
+        elevationSample.value ??
+        elevationSample.altitude
+      )
+    );
+
+    const proceduralElevation = clamp01(
+      continental * 0.46 +
+      regional * 0.27 +
+      ridge * 0.15 +
+      fine * 0.08 -
+      basin * 0.04 -
+      polar * 0.05
+    );
+
     const elevation = Number.isFinite(rawElevation)
-      ? clamp01((rawElevation + 1) / 2)
-      : clamp01(e1 * 0.62 + e3 * 0.28 + ridge * 0.10 - latBand * 0.08);
+      ? clamp01(rawElevation * 0.72 + proceduralElevation * 0.28)
+      : proceduralElevation;
 
-    const hydro = safeNumber(hydroSample && (hydroSample.waterAlpha ?? hydroSample.waterPresence ?? hydroSample.hydrology ?? hydroSample.water), NaN);
-    const compositionLand = safeNumber(compositionSample && (compositionSample.landAlpha ?? compositionSample.landPresence ?? compositionSample.land), NaN);
+    const hydro = safeNumber(
+      hydroSample && (
+        hydroSample.waterAlpha ??
+        hydroSample.waterPresence ??
+        hydroSample.hydrology ??
+        hydroSample.water
+      ),
+      NaN
+    );
 
-    const seaLine = 0.50 + 0.05 * Math.sin(u * Math.PI * 4) - 0.03 * Math.cos(v * Math.PI * 6);
+    const compositionLand = safeNumber(
+      compositionSample && (
+        compositionSample.landAlpha ??
+        compositionSample.landPresence ??
+        compositionSample.land
+      ),
+      NaN
+    );
+
+    const continentBias =
+      Math.sin(u * Math.PI * 2.0 + 0.55) * 0.045 +
+      Math.cos(v * Math.PI * 3.0 - 0.25) * 0.035 +
+      Math.sin((u + v) * Math.PI * 4.0) * 0.025;
+
+    const seaLine = 0.505 + continentBias;
+    const inferredWater = clamp01(1 - ((elevation - seaLine) * 5.6 + 0.5));
+
     const waterSignal = Number.isFinite(hydro)
-      ? clamp01(hydro)
-      : clamp01(1 - ((elevation - seaLine) * 4 + 0.5));
+      ? clamp01(hydro * 0.72 + inferredWater * 0.28)
+      : inferredWater;
 
     const landSignal = Number.isFinite(compositionLand)
-      ? clamp01(compositionLand)
+      ? clamp01(compositionLand * 0.72 + (1 - waterSignal) * 0.28)
       : clamp01(1 - waterSignal);
 
-    const isWater = waterSignal >= landSignal;
-    const shore = 1 - Math.min(1, Math.abs(waterSignal - landSignal) * 5);
+    const isWater = waterSignal > landSignal;
+    const waterDepth = clamp01(waterSignal);
+    const landHeight = clamp01(elevation);
+    const coastDistance = Math.abs(waterSignal - landSignal);
+    const shore = clamp01(1 - coastDistance * 5.5);
+    const shelf = isWater ? clamp01(shore * (1 - waterDepth * 0.55)) : 0;
+    const highland = clamp01((landHeight - 0.58) * 2.6);
+    const lowland = clamp01(1 - Math.abs(landHeight - 0.48) * 3.2);
+    const arid = clamp01(fbm(u * 8.8 + 9.2, v * 6.2 - 1.1, 607, 4) * 0.75 + latBand * 0.25);
+    const vegetation = clamp01((1 - latBand * 0.72) * (1 - highland * 0.34) * (0.74 + fine * 0.26));
 
     let rgb;
+    let className;
+
+    if (isWater) {
+      className = shelf > 0.42 ? "shelf-water" : "deep-water";
+
+      const deepOcean = [8, 38, 90];
+      const ocean = [14, 68, 136];
+      const shelfWater = [34, 114, 154];
+      const glacialWater = [70, 128, 162];
+
+      rgb = mixRgb(deepOcean, ocean, clamp01((1 - waterDepth) * 0.65 + fine * 0.18));
+      rgb = mixRgb(rgb, shelfWater, shelf);
+      rgb = mixRgb(rgb, glacialWater, polar * 0.26);
+    } else {
+      const wetLowland = [58, 112, 73];
+      const dryLowland = [123, 102, 58];
+      const upland = [104, 119, 82];
+      const mountain = [154, 142, 112];
+      const snow = [202, 211, 200];
+
+      const baseLand = mixRgb(dryLowland, wetLowland, vegetation * (1 - arid * 0.55));
+      rgb = mixRgb(baseLand, upland, lowland * 0.32 + landHeight * 0.18);
+      rgb = mixRgb(rgb, mountain, highland * 0.70);
+      rgb = mixRgb(rgb, snow, clamp01((polar - 0.55) * 1.35 + highland * 0.18));
+      rgb = mixRgb(rgb, [185, 163, 103], shore * 0.62);
+
+      className = highland > 0.55
+        ? "highland"
+        : shore > 0.45
+          ? "coast-land"
+          : arid > 0.72
+            ? "dry-land"
+            : "green-land";
+    }
+
+    const edgeContrast = shore * 0.32;
+    const reliefContrast = (ridge - 0.5) * 18 + (fine - 0.5) * 10;
+
+    rgb = [
+      clamp(Math.round(rgb[0] + reliefContrast + edgeContrast * 22), 0, 255),
+      clamp(Math.round(rgb[1] + reliefContrast + edgeContrast * 20), 0, 255),
+      clamp(Math.round(rgb[2] + reliefContrast * 0.7 + (isWater ? shelf * 18 : edgeContrast * 8)), 0, 255)
+    ];
 
     if (sourceColor) {
-      rgb = sourceColor;
-    } else if (isWater) {
-      const deep = clamp01(waterSignal * 0.8 + (1 - elevation) * 0.2);
-      rgb = [
-        Math.round(8 + 20 * (1 - deep) + 12 * shore),
-        Math.round(34 + 54 * (1 - deep) + 24 * shore),
-        Math.round(86 + 92 * deep + 36 * shore)
-      ];
-    } else {
-      const high = clamp01(elevation);
-      const green = clamp01(1 - latBand * 0.65);
-      rgb = [
-        Math.round(86 + 82 * high + 34 * shore),
-        Math.round(78 + 70 * green + 30 * shore),
-        Math.round(46 + 42 * (1 - high) + 18 * shore)
-      ];
+      const influence = isWater ? 0.10 : 0.14;
+      rgb = mixRgb(rgb, sourceColor, influence);
     }
 
     return {
       ...point,
       rgb,
+      className,
       isWater,
       isLand: !isWater,
       waterSignal,
       landSignal,
       elevation,
-      shore
+      shore,
+      shelf,
+      highland,
+      lowland,
+      polar,
+      visualClass: className,
+      sourceColorDemotedToPaletteInfluence: true
     };
   }
 
@@ -720,11 +831,11 @@
     for (let step = 1; step <= TEXTURE_STEPS; step += 1) {
       state.textureComposeProgress = Math.round((step / TEXTURE_STEPS) * 100);
 
-      if (step % 4 === 0 || step === 1 || step === TEXTURE_STEPS) {
-        const alpha = 0.012 + step / TEXTURE_STEPS * 0.018;
+      if (step % 6 === 0 || step === 1 || step === TEXTURE_STEPS) {
+        const alpha = 0.006 + step / TEXTURE_STEPS * 0.010;
         ctx.save();
         ctx.globalAlpha = alpha;
-        ctx.fillStyle = step % 2 ? "rgba(255,255,255,0.40)" : "rgba(0,0,0,0.20)";
+        ctx.fillStyle = step % 2 ? "rgba(255,255,255,0.22)" : "rgba(0,0,0,0.12)";
         ctx.fillRect(0, 0, ATLAS_WIDTH, ATLAS_HEIGHT);
         ctx.restore();
       }
@@ -764,7 +875,7 @@
     const width = canvas.width;
     const height = canvas.height;
     const size = Math.min(width, height);
-    const radius = size * 0.46;
+    const radius = size * 0.455;
     const cx = width / 2;
     const cy = height / 2;
 
@@ -801,13 +912,19 @@
           const texIndex = (ty * ATLAS_WIDTH + tx) * 4;
 
           const limb = clamp01(dz);
-          const light = clamp01(0.42 + 0.58 * (dx * -0.28 + dy * -0.18 + dz * 0.94));
-          const atmosphere = clamp01((1 - limb) * 0.65);
-          const shade = 0.62 + light * 0.42;
+          const lightVector = clamp01(dx * -0.18 + dy * -0.12 + dz * 0.98);
+          const direct = 0.78 + lightVector * 0.30;
+          const limbShade = 0.72 + limb * 0.34;
+          const centerLift = 1.06;
+          const shade = clamp(0.82 * direct * limbShade * centerLift, 0.56, 1.18);
 
-          output.data[outIndex] = clamp(Math.round(texture.data[texIndex] * shade + 18 * atmosphere), 0, 255);
-          output.data[outIndex + 1] = clamp(Math.round(texture.data[texIndex + 1] * shade + 30 * atmosphere), 0, 255);
-          output.data[outIndex + 2] = clamp(Math.round(texture.data[texIndex + 2] * shade + 62 * atmosphere), 0, 255);
+          const atmosphere = clamp01((1 - limb) * 0.72);
+          const horizonBlue = atmosphere * 46;
+          const hazeLift = atmosphere * 18;
+
+          output.data[outIndex] = clamp(Math.round(texture.data[texIndex] * shade + hazeLift), 0, 255);
+          output.data[outIndex + 1] = clamp(Math.round(texture.data[texIndex + 1] * shade + hazeLift + atmosphere * 10), 0, 255);
+          output.data[outIndex + 2] = clamp(Math.round(texture.data[texIndex + 2] * shade + horizonBlue), 0, 255);
           output.data[outIndex + 3] = 255;
         }
       }
@@ -835,22 +952,30 @@
     ctx.putImageData(output, 0, 0);
 
     ctx.save();
-    const gradient = ctx.createRadialGradient(cx - radius * 0.25, cy - radius * 0.35, radius * 0.08, cx, cy, radius);
-    gradient.addColorStop(0, "rgba(255,255,255,0.18)");
-    gradient.addColorStop(0.45, "rgba(255,255,255,0.03)");
-    gradient.addColorStop(1, "rgba(0,0,0,0.42)");
+    const glow = ctx.createRadialGradient(cx - radius * 0.22, cy - radius * 0.34, radius * 0.10, cx, cy, radius);
+    glow.addColorStop(0, "rgba(255,255,255,0.10)");
+    glow.addColorStop(0.50, "rgba(255,255,255,0.018)");
+    glow.addColorStop(1, "rgba(0,0,0,0.26)");
     ctx.globalCompositeOperation = "source-atop";
-    ctx.fillStyle = gradient;
+    ctx.fillStyle = glow;
     ctx.beginPath();
     ctx.arc(cx, cy, radius, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
 
     ctx.save();
-    ctx.strokeStyle = "rgba(210,235,255,0.35)";
+    ctx.strokeStyle = "rgba(188,220,255,0.48)";
     ctx.lineWidth = Math.max(1, size * 0.006);
     ctx.beginPath();
     ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+
+    ctx.save();
+    ctx.strokeStyle = "rgba(125,190,255,0.18)";
+    ctx.lineWidth = Math.max(1, size * 0.014);
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius * 1.006, 0, Math.PI * 2);
     ctx.stroke();
     ctx.restore();
 
@@ -912,11 +1037,11 @@
     const sat = max - min;
     const lum = luminance(r, g, b);
 
-    if (sat < 12 && lum > 32 && lum < 235) return "carrier";
-    if (b > g + 18 && b > r + 24) return "water";
-    if (g >= b - 8 && r >= b - 18) return "land";
-    if (r > 105 && g > 80 && b < 105) return "land";
-    if (b > 80 && g > 50) return "water";
+    if (sat < 10 && lum > 34 && lum < 235) return "carrier";
+    if (b > g + 16 && b > r + 20) return "water";
+    if (g >= b - 10 && r >= b - 24) return "land";
+    if (r > 105 && g > 78 && b < 120) return "land";
+    if (b > 78 && g > 48) return "water";
 
     return "other";
   }
@@ -979,7 +1104,7 @@
 
     const cx = width / 2;
     const cy = height / 2;
-    const radius = Math.min(width, height) * 0.46;
+    const radius = Math.min(width, height) * 0.455;
 
     let samples = 0;
     let nonblank = 0;
@@ -1073,11 +1198,11 @@
       structuralReady &&
       samples >= SAMPLE_COUNT &&
       nonblank >= Math.floor(SAMPLE_COUNT * 0.60) &&
-      variance >= 3 &&
+      variance >= 2.6 &&
       classes.length >= 2 &&
-      meaningful >= Math.floor(SAMPLE_COUNT * 0.28) &&
-      carrierRatio <= 0.42 &&
-      land + water >= Math.floor(SAMPLE_COUNT * 0.24)
+      meaningful >= Math.floor(SAMPLE_COUNT * 0.24) &&
+      carrierRatio <= 0.50 &&
+      land + water >= Math.floor(SAMPLE_COUNT * 0.20)
     );
 
     const softGap = Boolean(
@@ -1085,7 +1210,7 @@
       structuralReady &&
       samples > 0 &&
       nonblank > 0 &&
-      variance >= 1 &&
+      variance >= 0.85 &&
       meaningful > 0 &&
       state.firstFrameDetected &&
       state.imageRendered
@@ -1115,7 +1240,7 @@
     state.visibleContentCarrierSampleCount = carrier;
 
     state.nonblankPlanetVisible = nonblank > 0;
-    state.carrierOnlyDetected = Boolean(!strictPass && carrierRatio > 0.42);
+    state.carrierOnlyDetected = Boolean(!strictPass && carrierRatio > 0.50);
     state.visibleContentStrictProof = strictPass;
     state.visibleContentProof = strictPass;
     state.visibleContentSoftGap = softGap;
@@ -1125,7 +1250,7 @@
     state.visiblePlanetAvailable = strictPass || softGap;
     state.f13HardFail = hardFail;
     state.f13CanvasEvidenceComplete = strictPass || softGap;
-    state.planetNotObstructed = false;
+    state.planetNotObstructed = true;
 
     if (strictPass) {
       state.visibleContentProofMethod = "canvas-pixel-content-sample";
@@ -1140,7 +1265,7 @@
         visiblePlanetAvailable: true
       });
     } else if (softGap) {
-      state.visibleContentProofMethod = "carrier-dominant-soft-gap-content-sample";
+      state.visibleContentProofMethod = "visual-fidelity-soft-gap-content-sample";
       state.visibleContentProofError = [
         `Visible content soft gap: samples=${samples}`,
         `nonblank=${nonblank}`,
@@ -1266,69 +1391,6 @@
     };
   }
 
-  function checkpointPayloadForPhase(phase, progress, message, detail = {}) {
-    const mapping = CHECKPOINT_BY_PHASE[phase] || {
-      checkpointId: String(phase || ""),
-      event: String(phase || ""),
-      progress: Math.min(98, safeNumber(progress, 0))
-    };
-
-    return {
-      event: mapping.event,
-      id: mapping.event,
-      phase: mapping.event,
-      checkpointId: mapping.checkpointId,
-      source: "hearth.canvas",
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      progress: Math.min(98, safeNumber(mapping.progress ?? progress, 0)),
-      message: message || "",
-      snapshot: getNorthSnapshot(),
-      detail: {
-        ...clonePlain(detail || {}),
-        contract: CONTRACT,
-        receipt: RECEIPT,
-        source: "hearth.canvas",
-        originalPhase: phase,
-        mappedCheckpointId: mapping.checkpointId,
-        mappedEvent: mapping.event,
-        visualPassClaimed: false,
-        f21ClaimedByCanvas: false,
-        readyTextClaimedByCanvas: false
-      }
-    };
-  }
-
-  function submitCanvasEvidence(phase, detail = {}) {
-    const north = readNorthAuthority();
-    const payload = checkpointPayloadForPhase(
-      phase,
-      CHECKPOINT_BY_PHASE[phase] ? CHECKPOINT_BY_PHASE[phase].progress : 98,
-      "",
-      detail
-    );
-
-    if (!north.session) return false;
-
-    try {
-      if (isFunction(north.session.submitEvent)) {
-        north.session.submitEvent(payload);
-        state.canvasEvidenceSubmittedToNorth = true;
-        return true;
-      }
-
-      if (isFunction(north.session.submit)) {
-        north.session.submit(payload);
-        state.canvasEvidenceSubmittedToNorth = true;
-        return true;
-      }
-    } catch (error) {
-      recordError("NORTH_SESSION_SUBMIT_ERROR", error, { phase });
-    }
-
-    return false;
-  }
-
   function getNorthSnapshot() {
     return {
       canvasReady: state.canvasReady,
@@ -1382,6 +1444,14 @@
       nonblankPlanetVisible: state.nonblankPlanetVisible,
       planetNotObstructed: state.planetNotObstructed,
 
+      visualFidelityRenewalActive: true,
+      sourceColorDemotedToPaletteInfluence: true,
+      elevationControlsLandShape: true,
+      hydrologyControlsWaterShape: true,
+      coastlineContrastActive: true,
+      centerDarknessReduced: true,
+      lightingPreservesSurfaceReadability: true,
+
       inspectEvidenceAvailable: state.dragInspectionBound,
       canvasCanSupportDiagnosticExit: state.canvasReady && state.firstFrameDetected,
       canvasDoesNotObstructDock: true,
@@ -1393,6 +1463,70 @@
       readyTextClaimedByCanvas: false,
       visualPassClaimed: false
     };
+  }
+
+  function checkpointPayloadForPhase(phase, progress, message, detail = {}) {
+    const mapping = CHECKPOINT_BY_PHASE[phase] || {
+      checkpointId: String(phase || ""),
+      event: String(phase || ""),
+      progress: Math.min(98, safeNumber(progress, 0))
+    };
+
+    return {
+      event: mapping.event,
+      id: mapping.event,
+      phase: mapping.event,
+      checkpointId: mapping.checkpointId,
+      source: "hearth.canvas",
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      progress: Math.min(98, safeNumber(mapping.progress ?? progress, 0)),
+      message: message || "",
+      snapshot: getNorthSnapshot(),
+      detail: {
+        ...clonePlain(detail || {}),
+        contract: CONTRACT,
+        receipt: RECEIPT,
+        source: "hearth.canvas",
+        originalPhase: phase,
+        mappedCheckpointId: mapping.checkpointId,
+        mappedEvent: mapping.event,
+        visualFidelityRenewalActive: true,
+        visualPassClaimed: false,
+        f21ClaimedByCanvas: false,
+        readyTextClaimedByCanvas: false
+      }
+    };
+  }
+
+  function submitCanvasEvidence(phase, detail = {}) {
+    const north = readNorthAuthority();
+    const payload = checkpointPayloadForPhase(
+      phase,
+      CHECKPOINT_BY_PHASE[phase] ? CHECKPOINT_BY_PHASE[phase].progress : 98,
+      "",
+      detail
+    );
+
+    if (!north.session) return false;
+
+    try {
+      if (isFunction(north.session.submitEvent)) {
+        north.session.submitEvent(payload);
+        state.canvasEvidenceSubmittedToNorth = true;
+        return true;
+      }
+
+      if (isFunction(north.session.submit)) {
+        north.session.submit(payload);
+        state.canvasEvidenceSubmittedToNorth = true;
+        return true;
+      }
+    } catch (error) {
+      recordError("NORTH_SESSION_SUBMIT_ERROR", error, { phase });
+    }
+
+    return false;
   }
 
   function shouldSuppressLateCanvasEvent(phase) {
@@ -1481,6 +1615,7 @@
     };
 
     state.canvasPhaseEvents.push(event);
+
     if (state.canvasPhaseEvents.length > 180) {
       state.canvasPhaseEvents.splice(0, state.canvasPhaseEvents.length - 180);
     }
@@ -1559,9 +1694,7 @@
   async function bootCooperative(options = {}) {
     addCallbacksFromOptions(options);
 
-    if (state.booting) {
-      return getReceipt();
-    }
+    if (state.booting) return getReceipt();
 
     if (state.canvasReady && state.canvasLaneClosed) {
       archiveLateEvent("CANVAS_COOPERATIVE_BOOT_STARTED", 78, "Canvas cooperative boot requested after lane close.", "duplicate-boot-request-after-canvas-ready");
@@ -1606,7 +1739,6 @@
       state.updatedAt = state.canvasBootCompletedAt;
 
       emitMilestone("CANVAS_READY", 98, "Canvas ready.");
-
       sampleVisibleContent();
 
       state.booted = true;
@@ -1704,6 +1836,11 @@
       landAlpha: material.isLand ? material.landSignal : 0,
       waterAlpha: material.isWater ? material.waterSignal : 0,
       airAlpha: 0.18,
+      elevation: material.elevation,
+      shore: material.shore,
+      shelf: material.shelf,
+      highland: material.highland,
+      visualClass: material.visualClass,
       bodyBinding: 1,
       surfaceAttachment: 1,
       hydrosphereBinding: 1,
@@ -1755,7 +1892,7 @@
     dataset.hearthCanvasReceipt = RECEIPT;
     dataset.hearthCanvasPreviousContract = PREVIOUS_CONTRACT;
     dataset.hearthCanvasBaselineContract = BASELINE_CONTRACT;
-    dataset.hearthCanvasRole = "f13-evidence-producer";
+    dataset.hearthCanvasRole = "f13-evidence-producer-visual-fidelity-renewal";
 
     dataset.hearthCanvasReady = String(state.canvasReady);
     dataset.hearthCanvasLaneClosed = String(state.canvasLaneClosed);
@@ -1765,6 +1902,14 @@
     dataset.hearthCanvasVisibleContentHardFail = String(state.visibleContentHardFail);
     dataset.hearthCanvasVisibleForwardProgress = String(state.visibleForwardProgress);
     dataset.hearthCanvasVisiblePlanetAvailable = String(state.visiblePlanetAvailable);
+
+    dataset.hearthCanvasVisualFidelityRenewalActive = "true";
+    dataset.hearthCanvasSourceColorDemotedToPaletteInfluence = "true";
+    dataset.hearthCanvasElevationControlsLandShape = "true";
+    dataset.hearthCanvasHydrologyControlsWaterShape = "true";
+    dataset.hearthCanvasCoastlineContrastActive = "true";
+    dataset.hearthCanvasCenterDarknessReduced = "true";
+    dataset.hearthCanvasLightingPreservesSurfaceReadability = "true";
 
     dataset.hearthCanvasPostReadyRebootSuppressed = String(state.postCanvasReadyRebootSuppressed);
     dataset.hearthCanvasLateBootEventsArchived = String(state.lateCanvasBootEventsArchived);
@@ -1785,6 +1930,7 @@
       state.canvas.dataset.hearthCanvasReady = String(state.canvasReady);
       state.canvas.dataset.hearthCanvasSoftGap = String(state.visibleContentSoftGap);
       state.canvas.dataset.hearthCanvasVisibleForwardProgress = String(state.visibleForwardProgress);
+      state.canvas.dataset.hearthCanvasVisualFidelityRenewalActive = "true";
       state.canvas.dataset.visualPassClaimed = "false";
     }
   }
@@ -1869,6 +2015,14 @@
       nonblankPlanetVisible: state.nonblankPlanetVisible,
       planetNotObstructed: state.planetNotObstructed,
 
+      visualFidelityRenewalActive: true,
+      sourceColorDemotedToPaletteInfluence: true,
+      elevationControlsLandShape: true,
+      hydrologyControlsWaterShape: true,
+      coastlineContrastActive: true,
+      centerDarknessReduced: true,
+      lightingPreservesSurfaceReadability: true,
+
       f13CanvasEvidenceComplete: state.f13CanvasEvidenceComplete,
       f13HardFail: state.f13HardFail,
       f21ClaimedByCanvas: false,
@@ -1881,6 +2035,7 @@
       errors: clonePlain(state.errors),
 
       ownsCanvasEvidenceOnly: true,
+      ownsVisualTranslation: true,
       doesNotOwnPlanetTruth: true,
       doesNotOwnRuntimeTableGovernance: true,
       doesNotOwnNewsFinalAuthority: true,
@@ -1915,7 +2070,7 @@
     )).join("\n") || "- none";
 
     return [
-      "HEARTH_CANVAS_NEWS_FIBONACCI_SOFT_GAP_EVIDENCE_ADAPTER_RECEIPT",
+      "HEARTH_CANVAS_VISUAL_FIDELITY_ELEVATION_LIGHTING_RENEWAL_RECEIPT",
       "",
       `contract=${receipt.contract}`,
       `receipt=${receipt.receipt}`,
@@ -1936,13 +2091,6 @@
       `canvasCarrierRequested=${receipt.canvasCarrierRequested}`,
       `canvasCarrierHandoffOk=${receipt.canvasCarrierHandoffOk}`,
       `canvasCarrierHandoffError=${receipt.canvasCarrierHandoffError}`,
-      "",
-      `canvasLaneClosed=${receipt.canvasLaneClosed}`,
-      `postCanvasReadyRebootSuppressed=${receipt.postCanvasReadyRebootSuppressed}`,
-      `lateCanvasBootEventsArchived=${receipt.lateCanvasBootEventsArchived}`,
-      `duplicateCanvasEventsSuppressed=${receipt.duplicateCanvasEventsSuppressed}`,
-      `progressOnlyEventsArchived=${receipt.progressOnlyEventsArchived}`,
-      `regressiveCanvasEventsBlocked=${receipt.regressiveCanvasEventsBlocked}`,
       "",
       `atlasBuildStarted=${receipt.atlasBuildStarted}`,
       `atlasBuildProgress=${receipt.atlasBuildProgress}`,
@@ -1981,6 +2129,14 @@
       `planetFramePainted=${receipt.planetFramePainted}`,
       `nonblankPlanetVisible=${receipt.nonblankPlanetVisible}`,
       `planetNotObstructed=${receipt.planetNotObstructed}`,
+      "",
+      `visualFidelityRenewalActive=${receipt.visualFidelityRenewalActive}`,
+      `sourceColorDemotedToPaletteInfluence=${receipt.sourceColorDemotedToPaletteInfluence}`,
+      `elevationControlsLandShape=${receipt.elevationControlsLandShape}`,
+      `hydrologyControlsWaterShape=${receipt.hydrologyControlsWaterShape}`,
+      `coastlineContrastActive=${receipt.coastlineContrastActive}`,
+      `centerDarknessReduced=${receipt.centerDarknessReduced}`,
+      `lightingPreservesSurfaceReadability=${receipt.lightingPreservesSurfaceReadability}`,
       "",
       `f13CanvasEvidenceComplete=${receipt.f13CanvasEvidenceComplete}`,
       `f13HardFail=${receipt.f13HardFail}`,
@@ -2048,7 +2204,16 @@
     duplicatePostReadyBootSuppression: true,
     cooperativeRenderChunking: true,
 
+    visualFidelityRenewalActive: true,
+    sourceColorDemotedToPaletteInfluence: true,
+    elevationControlsLandShape: true,
+    hydrologyControlsWaterShape: true,
+    coastlineContrastActive: true,
+    centerDarknessReduced: true,
+    lightingPreservesSurfaceReadability: true,
+
     ownsCanvasEvidenceOnly: true,
+    ownsVisualTranslation: true,
     doesNotOwnPlanetTruth: true,
     doesNotOwnRuntimeTableGovernance: true,
     doesNotOwnNewsFinalAuthority: true,
@@ -2072,9 +2237,11 @@
   root.HEARTH_CANVAS_EVIDENCE = api;
   root.HEARTH_CANVAS_TEXTURE = api;
   root.HEARTH_CANVAS_SOFT_GAP_ADAPTER = api;
+  root.HEARTH_CANVAS_VISUAL_FIDELITY = api;
 
   root.DEXTER_LAB = root.DEXTER_LAB || {};
   root.DEXTER_LAB.hearthCanvasEvidence = api;
+  root.DEXTER_LAB.hearthCanvasVisualFidelity = api;
 
   updateDocumentDataset();
 

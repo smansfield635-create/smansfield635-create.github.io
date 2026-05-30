@@ -1,15 +1,15 @@
 <!-- TARGET FILE: /showroom/globe/hearth/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1 -->
+<!-- HEARTH_HTML_PAGE_LOAD_SUPREMACY_RUNTIME_ENTRY_SHELL_TNT_v1 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/globe/hearth/"
   data-page="hearth-survival-path"
-  data-version="G1-SOUTH-CONFORMANCE-FRONTEND-SHELL"
-  data-contract="HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1"
-  data-previous-contract="HEARTH_COMPACT_MIRRORLAND_SURVIVAL_PAGE_HTML_TNT_v1"
-  data-role="hearth-front-end-conformance-shell"
+  data-version="G1-PAGE-LOAD-SUPREMACY-RUNTIME-ENTRY-SHELL"
+  data-contract="HEARTH_HTML_PAGE_LOAD_SUPREMACY_RUNTIME_ENTRY_SHELL_TNT_v1"
+  data-previous-contract="HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1"
+  data-role="hearth-page-load-supremacy-runtime-entry-shell"
   data-conforms-to-south="HEARTH_SOUTH_VISIBLE_COMPLETION_CYCLE_CONSUMER_TNT_v1"
   data-cycle-order="EAST-WEST-NORTH-SOUTH-CHECKPOINT-EAST"
   data-east-file="/showroom/globe/hearth/index.js"
@@ -18,10 +18,9 @@
   data-south-file="/showroom/globe/hearth/hearth.js"
   data-canvas-file="/assets/hearth/hearth.canvas.js"
   data-runtime-table-file="/assets/lab/runtime-table.js"
-  data-mirrorland-path="survival"
-  data-zionts-role="consequence"
-  data-audralia-role="possibility"
-  data-hearth-role="survival-condition"
+  data-page-load-supremacy="true"
+  data-runtime-attachment-after-browser-load="true"
+  data-initial-runtime-stack-frontloaded="false"
   data-html-owns-public-shell="true"
   data-html-owns-runtime="false"
   data-html-owns-canvas-drawing="false"
@@ -40,7 +39,7 @@
   <title>Hearth · Mirrorland Survival Path</title>
   <meta
     name="description"
-    content="Hearth is the survival path inside Mirrorland: a living planet condition page for visible completion, inspection, runtime proof, and survival-readiness measurement."
+    content="Hearth is the survival path inside Mirrorland. The static shell loads first; runtime proof attaches only after browser page load completes."
   >
 
   <style>
@@ -54,8 +53,6 @@
       --gold2:#ffe9a6;
       --blue:#7fd8ff;
       --green:#8ff0c3;
-      --amber:#ffbf66;
-      --red:#ff7c7c;
       --panel:rgba(11,18,34,.84);
       --line:rgba(188,208,255,.17);
       --max:1180px;
@@ -594,6 +591,10 @@
       background:linear-gradient(135deg,#ffe8a3,#f2c66d);
     }
 
+    .hearth-ledger-button[data-shell-pending="true"]{
+      opacity:.64;
+    }
+
     .hearth-ledger-scroll{
       min-height:0;
       overflow:auto;
@@ -925,7 +926,7 @@
       </a>
 
       <div class="header-note">
-        Use the Map / Portal blip for movement. This page stays centered on Hearth and conforms to the existing South visible-completion cycle.
+        Static route first. Runtime attaches only after the browser page load completes.
       </div>
     </header>
 
@@ -935,10 +936,10 @@
 
         <h1 id="page-title">Hearth is the survival path inside Mirrorland.</h1>
 
-        <h2>Visible planet. Inspectable condition. Runtime proof held until the cycle completes.</h2>
+        <h2>Browser load first. Static shell second. Runtime proof third.</h2>
 
         <p class="lead">
-          ZIONTS carries consequence. Audralia carries possibility. Hearth carries survival condition: the living proof field where visibility, inspection, completion, and survivability are tested without claiming a final visual pass.
+          ZIONTS carries consequence. Audralia carries possibility. Hearth carries survival condition: the living proof field where visibility, inspection, completion, and survivability are tested only after the page itself has stabilized.
         </p>
       </section>
 
@@ -951,9 +952,9 @@
           aria-label="Interactive Hearth globe stage"
         >
           <div class="globe-label">
-            <b>Hearth · Mirrorland Survival Path</b>
+            <b>Hearth · Page Load Supremacy</b>
             <span>
-              <strong>Object Stage</strong> → South consumes the visible shell, canvas mount, diagnostic dock, and North permission.
+              <strong>Shell First</strong> → runtime attachment waits until browser load completes.
             </span>
           </div>
 
@@ -963,6 +964,7 @@
             data-hearth-canvas-mount="true"
             data-hearth-south-visible-completion-shell="true"
             data-hearth-cycle-south="true"
+            data-runtime-attachment-pending="true"
             data-generated-image="false"
             data-graphic-box="false"
             data-webgl="false"
@@ -976,68 +978,69 @@
             data-hearth-load-cockpit="true"
             data-hearth-south-visible-completion-shell="true"
             data-cockpit-mode="loading-cockpit"
+            data-runtime-attachment-pending="true"
             aria-live="polite"
           >
             <div class="hearth-ledger-head">
-              <div class="hearth-ledger-kicker">Hearth · South Visible Completion</div>
-              <h2 class="hearth-ledger-title">COORDINATING HEARTH VISIBLE COMPLETION</h2>
-              <div class="hearth-ledger-meta" data-hearth-stage-label>F13A · Canvas coordination</div>
-              <div class="hearth-ledger-meta" data-hearth-heartbeat-text>south=true · waiting for North</div>
-              <div class="hearth-ledger-latest" data-hearth-latest-event>latest=HTML_SHELL_READY</div>
+              <div class="hearth-ledger-kicker">Hearth · Shell Loader</div>
+              <h2 class="hearth-ledger-title">HEARTH SHELL READY</h2>
+              <div class="hearth-ledger-meta" data-hearth-stage-label>F1B · Static shell painted</div>
+              <div class="hearth-ledger-meta" data-hearth-heartbeat-text>browser-load=pending · runtime=pending</div>
+              <div class="hearth-ledger-latest" data-hearth-latest-event>latest=HTML_SHELL_READY_RUNTIME_PENDING</div>
             </div>
 
             <div class="hearth-ledger-progress" data-hearth-index-progress-strip="true">
               <div class="hearth-ledger-track">
-                <span class="hearth-ledger-fill" data-hearth-main-progress-fill style="width:72%"></span>
+                <span class="hearth-ledger-fill" data-hearth-main-progress-fill style="width:22%"></span>
               </div>
-              <div class="hearth-ledger-percent" data-hearth-main-progress-percent>72%</div>
+              <div class="hearth-ledger-percent" data-hearth-main-progress-percent>22%</div>
             </div>
 
             <div class="hearth-ledger-actions">
-              <button class="hearth-ledger-button primary" type="button" data-hearth-copy-diagnostic>Copy diagnostic</button>
-              <button class="hearth-ledger-button" type="button" data-hearth-toggle-receipt>Show receipt</button>
-              <button class="hearth-ledger-button" type="button" data-hearth-inspect-planet>Inspect planet</button>
-              <button class="hearth-ledger-button" type="button" data-hearth-collapse-cockpit>Collapse cockpit</button>
+              <button class="hearth-ledger-button primary" type="button" data-hearth-copy-diagnostic data-shell-pending="true">Copy diagnostic</button>
+              <button class="hearth-ledger-button" type="button" data-hearth-toggle-receipt data-shell-pending="true">Show receipt</button>
+              <button class="hearth-ledger-button" type="button" data-hearth-inspect-planet data-shell-pending="true">Inspect planet</button>
+              <button class="hearth-ledger-button" type="button" data-hearth-collapse-cockpit data-shell-pending="true">Collapse cockpit</button>
             </div>
 
             <div class="hearth-ledger-scroll">
               <div class="hearth-ledger-lanes" data-hearth-lane-list>
-                <section class="hearth-ledger-lane" data-lane="North" data-status="WAITING">
+                <section class="hearth-ledger-lane" data-lane="Browser" data-status="WAITING">
                   <div class="hearth-ledger-lane-top">
                     <span class="hearth-ledger-lane-title">
-                      <strong>North</strong>
-                      <span>command runtime table pending</span>
+                      <strong>Browser load</strong>
+                      <span>waiting for page load completion</span>
                     </span>
                     <span class="hearth-ledger-lane-status">WAITING</span>
                   </div>
                   <div class="hearth-ledger-lane-track">
-                    <span class="hearth-ledger-lane-fill" style="width:42%"></span>
+                    <span class="hearth-ledger-lane-fill" style="width:22%"></span>
                   </div>
                 </section>
 
-                <section class="hearth-ledger-lane" data-lane="Canvas" data-status="WAITING">
+                <section class="hearth-ledger-lane" data-lane="Hooks" data-status="PENDING">
                   <div class="hearth-ledger-lane-top">
                     <span class="hearth-ledger-lane-title">
-                      <strong>Canvas</strong>
-                      <span>carrier handoff pending</span>
-                    </span>
-                    <span class="hearth-ledger-lane-status">WAITING</span>
-                  </div>
-                  <div class="hearth-ledger-lane-track">
-                    <span class="hearth-ledger-lane-fill" style="width:42%"></span>
-                  </div>
-                </section>
-
-                <section class="hearth-ledger-lane" data-lane="Proof" data-status="PENDING">
-                  <div class="hearth-ledger-lane-top">
-                    <span class="hearth-ledger-lane-title">
-                      <strong>Proof</strong>
-                      <span>visible content proof pending</span>
+                      <strong>Hook validation</strong>
+                      <span>runtime hooks validate after browser load</span>
                     </span>
                     <span class="hearth-ledger-lane-status">PENDING</span>
                   </div>
                   <div class="hearth-ledger-lane-track">
-                    <span class="hearth-ledger-lane-fill" style="width:42%"></span>
+                    <span class="hearth-ledger-lane-fill" style="width:22%"></span>
+                  </div>
+                </section>
+
+                <section class="hearth-ledger-lane" data-lane="Runtime" data-status="PENDING">
+                  <div class="hearth-ledger-lane-top">
+                    <span class="hearth-ledger-lane-title">
+                      <strong>Runtime attachment</strong>
+                      <span>East / West / North / South attach after load</span>
+                    </span>
+                    <span class="hearth-ledger-lane-status">PENDING</span>
+                  </div>
+                  <div class="hearth-ledger-lane-track">
+                    <span class="hearth-ledger-lane-fill" style="width:22%"></span>
                   </div>
                 </section>
               </div>
@@ -1048,19 +1051,21 @@
                 data-hearth-receipt-box
                 data-visible="false"
               >
-                <pre data-hearth-receipt-text>HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1
-receipt=waiting_for_south_runtime
+                <pre data-hearth-receipt-text>HEARTH_HTML_PAGE_LOAD_SUPREMACY_RUNTIME_ENTRY_SHELL_TNT_v1
+receipt=static_shell_ready_runtime_pending
 route=/showroom/globe/hearth/
 mount=#hearthCanvasMount
-cockpit=#hearthLoadCockpit</pre>
+cockpit=#hearthLoadCockpit
+browserLoadSupremacy=true
+runtimeAttachmentAfterBrowserLoad=true</pre>
               </div>
             </div>
           </aside>
 
           <div class="globe-status">
-            <strong>Survival Path · Shell Ready</strong>
+            <strong>Static Hearth Shell Ready</strong>
             <span>
-              The HTML provides the mount, diagnostic dock, receipt panel, status node, and script order. East, West, North, South, Canvas, and Runtime Table retain their own authority.
+              The page itself must load before the Hearth cycle becomes authoritative. The runtime stack is attached after browser load and hook validation.
             </span>
           </div>
         </section>
@@ -1085,6 +1090,11 @@ cockpit=#hearthLoadCockpit</pre>
           </div>
 
           <div class="micro-card">
+            <b>Lifecycle</b>
+            <span>Browser load → shell paint → hook validation → runtime attachment → directional cycle.</span>
+          </div>
+
+          <div class="micro-card">
             <b>Cycle</b>
             <span>East → West → North → South → Checkpoint → East.</span>
           </div>
@@ -1092,11 +1102,6 @@ cockpit=#hearthLoadCockpit</pre>
           <div class="micro-card">
             <b>Boundary</b>
             <span>HTML owns the shell. Runtime owns the proof. Canvas owns drawing. North owns permission. South owns visible completion.</span>
-          </div>
-
-          <div class="micro-card">
-            <b>No-JS fallback</b>
-            <span>Runtime proof requires JavaScript. Navigation and narrative remain readable without it.</span>
           </div>
         </aside>
       </section>
@@ -1110,7 +1115,7 @@ cockpit=#hearthLoadCockpit</pre>
               Hearth is not a decorative planet page. It is the survival-path field where the visible planet, inspection controls, completion latch, and route diagnostics must survive together.
             </p>
             <p>
-              The page is built around the existing Hearth cycle. It does not rename the backend and does not ask the already-built files to conform to a new HTML invention.
+              The page now respects browser load supremacy: no in-page diagnostic bar is authoritative while the browser itself is still loading.
             </p>
           </div>
         </details>
@@ -1118,12 +1123,12 @@ cockpit=#hearthLoadCockpit</pre>
         <details class="drawer">
           <summary>Runtime Cycle</summary>
           <div class="drawer-body">
-            <strong>The cycle is directional and checkpoint-governed.</strong>
+            <strong>The cycle attaches after page load.</strong>
             <p>
               East starts the visible process. West normalizes handoff admissibility. North governs command runtime-table checkpoints. South consumes the shell and proves visible completion.
             </p>
             <p>
-              This HTML provides the shell before those files run, then loads South last so South hydrates existing hooks instead of creating fallback structure.
+              This HTML provides the shell first, then attaches the runtime stack after the browser load event and hook validation.
             </p>
           </div>
         </details>
@@ -1135,31 +1140,35 @@ cockpit=#hearthLoadCockpit</pre>
 
             <div class="diagnostic-grid">
               <div class="diagnostic"><b>Route</b><span data-hearth-diagnostic-route>/showroom/globe/hearth/</span></div>
+              <div class="diagnostic"><b>Lifecycle</b><span data-hearth-diagnostic-lifecycle>browser load first</span></div>
               <div class="diagnostic"><b>Cycle</b><span data-hearth-diagnostic-cycle>E → W → N → S → checkpoint</span></div>
-              <div class="diagnostic"><b>East</b><span data-hearth-diagnostic-east>Step 1 ignition held by index.js</span></div>
-              <div class="diagnostic"><b>West</b><span data-hearth-diagnostic-west>handoff admissibility pending</span></div>
-              <div class="diagnostic"><b>North</b><span data-hearth-diagnostic-north>command runtime-table pending</span></div>
-              <div class="diagnostic"><b>South</b><span data-hearth-diagnostic-south>visible completion consumer pending</span></div>
-              <div class="diagnostic"><b>Canvas</b><span data-hearth-diagnostic-canvas>canvas carrier pending</span></div>
+              <div class="diagnostic"><b>East</b><span data-hearth-diagnostic-east>pending after load</span></div>
+              <div class="diagnostic"><b>West</b><span data-hearth-diagnostic-west>pending after load</span></div>
+              <div class="diagnostic"><b>North</b><span data-hearth-diagnostic-north>pending after load</span></div>
+              <div class="diagnostic"><b>South</b><span data-hearth-diagnostic-south>loads last</span></div>
+              <div class="diagnostic"><b>Canvas</b><span data-hearth-diagnostic-canvas>pending after load</span></div>
               <div class="diagnostic"><b>Visible Proof</b><span data-hearth-diagnostic-visible-proof>waiting</span></div>
               <div class="diagnostic"><b>Inspect Mode</b><span data-hearth-diagnostic-inspect>dock controls present</span></div>
               <div class="diagnostic"><b>F21</b><span data-hearth-diagnostic-f21>requires North permission</span></div>
-              <div class="diagnostic"><b>Receipt</b><span data-hearth-diagnostic-receipt>hidden until requested</span></div>
               <div class="diagnostic"><b>Visual Pass</b><span data-hearth-diagnostic-visual-pass>false</span></div>
             </div>
           </div>
         </details>
 
         <template
-          id="hearth-html-south-conformance-receipt"
+          id="hearth-html-page-load-supremacy-receipt"
           class="receipt"
           data-route-receipt
           data-hearth-html-receipt
         >
-HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1
+HEARTH_HTML_PAGE_LOAD_SUPREMACY_RUNTIME_ENTRY_SHELL_TNT_v1
 route=/showroom/globe/hearth/
 target=/showroom/globe/hearth/index.html
+previous=HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1
 conformsToSouth=HEARTH_SOUTH_VISIBLE_COMPLETION_CYCLE_CONSUMER_TNT_v1
+pageLoadSupremacy=true
+initialRuntimeStackFrontloaded=false
+runtimeAttachmentAfterBrowserLoad=true
 east=/showroom/globe/hearth/index.js
 west=/assets/hearth/hearth.west.index-handoff.table.js
 north=/assets/hearth/hearth.north.command.runtime-table.js
@@ -1186,7 +1195,7 @@ webGL=false
         </template>
       </section>
 
-      <pre id="hearth-route-status" data-hearth-route-status hidden>Hearth HTML shell ready. Runtime status pending.</pre>
+      <pre id="hearth-route-status" data-hearth-route-status hidden>Hearth HTML shell ready. Runtime attachment pending until browser page load completes.</pre>
 
       <noscript>
         <section class="panel hero" aria-label="JavaScript required notice">
@@ -1200,100 +1209,362 @@ webGL=false
     </main>
 
     <footer>
-      HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1 · Hearth · Survival Path · South conformance shell · Visual pass not claimed.
+      HEARTH_HTML_PAGE_LOAD_SUPREMACY_RUNTIME_ENTRY_SHELL_TNT_v1 · Hearth · Browser load first · Runtime attaches after load · Visual pass not claimed.
     </footer>
   </div>
 
-  <script
-    src="/assets/lab/runtime-table.js?v=HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1"
-    defer
-    data-role="universal-runtime-table"
-    data-runtime-table-file="/assets/lab/runtime-table.js"
-  ></script>
+  <script>
+    (() => {
+      "use strict";
 
-  <script
-    src="/assets/hearth/hearth.tectonics.js?v=HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1"
-    defer
-    data-role="hearth-source-stack"
-    data-source-file="/assets/hearth/hearth.tectonics.js"
-  ></script>
+      const CONTRACT = "HEARTH_HTML_PAGE_LOAD_SUPREMACY_RUNTIME_ENTRY_SHELL_TNT_v1";
+      const root = window;
+      const doc = document;
 
-  <script
-    src="/assets/hearth/hearth.elevation.js?v=HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1"
-    defer
-    data-role="hearth-source-stack"
-    data-source-file="/assets/hearth/hearth.elevation.js"
-  ></script>
+      const scriptQueue = [
+        {
+          src: "/assets/lab/runtime-table.js",
+          role: "universal-runtime-table"
+        },
+        {
+          src: "/assets/hearth/hearth.tectonics.js",
+          role: "hearth-source-stack"
+        },
+        {
+          src: "/assets/hearth/hearth.elevation.js",
+          role: "hearth-source-stack"
+        },
+        {
+          src: "/assets/hearth/hearth.composition.js",
+          role: "hearth-source-stack"
+        },
+        {
+          src: "/assets/hearth/hearth.hydrology.js",
+          role: "hearth-source-stack"
+        },
+        {
+          src: "/assets/hearth/hearth.materials.js",
+          role: "hearth-source-stack"
+        },
+        {
+          src: "/assets/hearth/hearth.hex.four-pair.authority.js",
+          role: "hearth-source-stack"
+        },
+        {
+          src: "/assets/hearth/hearth.hex.surface.js",
+          role: "hearth-source-stack"
+        },
+        {
+          src: "/assets/hearth/hearth.canvas.js",
+          role: "hearth-canvas-authority"
+        },
+        {
+          src: "/showroom/globe/hearth/index.js",
+          role: "east-step1-ignition"
+        },
+        {
+          src: "/assets/hearth/hearth.west.index-handoff.table.js",
+          role: "west-handoff-admissibility"
+        },
+        {
+          src: "/assets/hearth/hearth.north.command.runtime-table.js",
+          role: "north-command-runtime-table"
+        },
+        {
+          src: "/showroom/globe/hearth/hearth.js",
+          role: "south-visible-completion-cycle-consumer",
+          contract: "HEARTH_SOUTH_VISIBLE_COMPLETION_CYCLE_CONSUMER_TNT_v1"
+        }
+      ];
 
-  <script
-    src="/assets/hearth/hearth.composition.js?v=HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1"
-    defer
-    data-role="hearth-source-stack"
-    data-source-file="/assets/hearth/hearth.composition.js"
-  ></script>
+      const requiredHooks = [
+        "#hearth-main",
+        "#hearthCanvasMount",
+        "#hearthLoadCockpit",
+        "#hearth-route-status",
+        "#hearthReceiptPanel",
+        "#hearthMapPortal",
+        "[data-hearth-stage-label]",
+        "[data-hearth-heartbeat-text]",
+        "[data-hearth-latest-event]",
+        "[data-hearth-main-progress-fill]",
+        "[data-hearth-main-progress-percent]",
+        "[data-hearth-lane-list]",
+        "[data-hearth-receipt-box]",
+        "[data-hearth-receipt-text]",
+        "[data-hearth-copy-diagnostic]",
+        "[data-hearth-toggle-receipt]",
+        "[data-hearth-inspect-planet]",
+        "[data-hearth-collapse-cockpit]",
+        "[data-hearth-south-show-diagnostic-tab]"
+      ];
 
-  <script
-    src="/assets/hearth/hearth.hydrology.js?v=HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1"
-    defer
-    data-role="hearth-source-stack"
-    data-source-file="/assets/hearth/hearth.hydrology.js"
-  ></script>
+      const state = {
+        contract: CONTRACT,
+        browserLoadComplete: false,
+        hooksValidated: false,
+        runtimeAttachmentStarted: false,
+        runtimeAttachmentComplete: false,
+        currentScript: "",
+        failedScript: "",
+        errors: [],
+        loadedScripts: [],
+        startedAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
 
-  <script
-    src="/assets/hearth/hearth.materials.js?v=HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1"
-    defer
-    data-role="hearth-source-stack"
-    data-source-file="/assets/hearth/hearth.materials.js"
-  ></script>
+      function qs(selector) {
+        return doc.querySelector(selector);
+      }
 
-  <script
-    src="/assets/hearth/hearth.hex.four-pair.authority.js?v=HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1"
-    defer
-    data-role="hearth-source-stack"
-    data-source-file="/assets/hearth/hearth.hex.four-pair.authority.js"
-  ></script>
+      function setText(selector, text) {
+        const node = qs(selector);
+        if (node) node.textContent = text;
+      }
 
-  <script
-    src="/assets/hearth/hearth.hex.surface.js?v=HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1"
-    defer
-    data-role="hearth-source-stack"
-    data-source-file="/assets/hearth/hearth.hex.surface.js"
-  ></script>
+      function setProgress(percent) {
+        const fill = qs("[data-hearth-main-progress-fill]");
+        const label = qs("[data-hearth-main-progress-percent]");
+        const value = Math.max(0, Math.min(100, Number(percent) || 0));
 
-  <script
-    src="/assets/hearth/hearth.canvas.js?v=HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1"
-    defer
-    data-role="hearth-canvas-authority"
-    data-canvas-file="/assets/hearth/hearth.canvas.js"
-  ></script>
+        if (fill) fill.style.width = `${value}%`;
+        if (label) label.textContent = `${Math.round(value)}%`;
+      }
 
-  <script
-    src="/showroom/globe/hearth/index.js?v=HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1"
-    defer
-    data-role="east-step1-ignition"
-    data-east-file="/showroom/globe/hearth/index.js"
-  ></script>
+      function setStatus(text) {
+        const node = qs("#hearth-route-status");
+        state.updatedAt = new Date().toISOString();
 
-  <script
-    src="/assets/hearth/hearth.west.index-handoff.table.js?v=HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1"
-    defer
-    data-role="west-handoff-admissibility"
-    data-west-file="/assets/hearth/hearth.west.index-handoff.table.js"
-  ></script>
+        if (node) {
+          node.textContent = [
+            text,
+            "",
+            `contract=${CONTRACT}`,
+            `browserLoadComplete=${state.browserLoadComplete}`,
+            `hooksValidated=${state.hooksValidated}`,
+            `runtimeAttachmentStarted=${state.runtimeAttachmentStarted}`,
+            `runtimeAttachmentComplete=${state.runtimeAttachmentComplete}`,
+            `currentScript=${state.currentScript}`,
+            `failedScript=${state.failedScript}`,
+            `loadedScripts=${state.loadedScripts.join(",")}`,
+            `errors=${state.errors.join(" | ")}`,
+            `updatedAt=${state.updatedAt}`
+          ].join("\n");
+        }
 
-  <script
-    src="/assets/hearth/hearth.north.command.runtime-table.js?v=HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1"
-    defer
-    data-role="north-command-runtime-table"
-    data-north-file="/assets/hearth/hearth.north.command.runtime-table.js"
-  ></script>
+        root.HEARTH_HTML_PAGE_LOAD_SUPREMACY_RECEIPT = {
+          ...state,
+          message: text,
+          updatedAt: state.updatedAt
+        };
 
-  <script
-    src="/showroom/globe/hearth/hearth.js?v=HEARTH_HTML_SOUTH_CONFORMANCE_FRONTEND_SHELL_TNT_v1"
-    defer
-    data-role="south-visible-completion-cycle-consumer"
-    data-south-file="/showroom/globe/hearth/hearth.js"
-    data-contract="HEARTH_SOUTH_VISIBLE_COMPLETION_CYCLE_CONSUMER_TNT_v1"
-  ></script>
+        if (doc.documentElement) {
+          doc.documentElement.dataset.hearthBrowserLoadComplete = String(state.browserLoadComplete);
+          doc.documentElement.dataset.hearthHooksValidated = String(state.hooksValidated);
+          doc.documentElement.dataset.hearthRuntimeAttachmentStarted = String(state.runtimeAttachmentStarted);
+          doc.documentElement.dataset.hearthRuntimeAttachmentComplete = String(state.runtimeAttachmentComplete);
+          doc.documentElement.dataset.hearthRuntimeCurrentScript = state.currentScript;
+          doc.documentElement.dataset.hearthRuntimeFailedScript = state.failedScript;
+        }
+      }
+
+      function shellNotice(message, progress = 22) {
+        setText(".hearth-ledger-title", "HEARTH SHELL READY");
+        setText("[data-hearth-stage-label]", "F2 · Browser load supremacy");
+        setText("[data-hearth-heartbeat-text]", message);
+        setText("[data-hearth-latest-event]", `latest=${message.replaceAll(" ", "_").replaceAll("=", "_").toUpperCase()}`);
+        setProgress(progress);
+        setStatus(message);
+      }
+
+      function validateHooks() {
+        const missing = requiredHooks.filter((selector) => !qs(selector));
+
+        if (missing.length) {
+          state.hooksValidated = false;
+          state.errors.push(`missing hooks: ${missing.join(", ")}`);
+          shellNotice(`hook validation failed · missing=${missing.length}`, 22);
+          return false;
+        }
+
+        state.hooksValidated = true;
+        shellNotice("hooks validated · runtime attachment beginning", 28);
+        return true;
+      }
+
+      function existingScript(src) {
+        return Array.from(doc.scripts || []).find((script) => {
+          const current = script.getAttribute("src") || "";
+          return current.includes(src);
+        });
+      }
+
+      function loadScript(item, index, total) {
+        return new Promise((resolve, reject) => {
+          if (existingScript(item.src)) {
+            state.currentScript = item.src;
+            state.loadedScripts.push(`${item.src}:existing`);
+            setStatus(`runtime script already present · ${item.src}`);
+            resolve();
+            return;
+          }
+
+          const script = doc.createElement("script");
+          const separator = item.src.includes("?") ? "&" : "?";
+
+          state.currentScript = item.src;
+          setText("[data-hearth-heartbeat-text]", `runtime-loading=${index + 1}/${total}`);
+          setText("[data-hearth-latest-event]", `latest=LOADING_${item.role.toUpperCase().replaceAll("-", "_")}`);
+          setProgress(28 + Math.round(((index + 1) / total) * 22));
+          setStatus(`runtime stack loading after page load · ${item.src}`);
+
+          script.src = `${item.src}${separator}v=${encodeURIComponent(CONTRACT)}`;
+          script.defer = true;
+          script.async = false;
+          script.dataset.loadedBy = CONTRACT;
+          script.dataset.role = item.role || "runtime";
+          script.dataset.runtimeAttachmentAfterBrowserLoad = "true";
+
+          if (item.contract) {
+            script.dataset.contract = item.contract;
+          }
+
+          script.onload = () => {
+            state.loadedScripts.push(item.src);
+            resolve();
+          };
+
+          script.onerror = () => {
+            state.failedScript = item.src;
+            state.errors.push(`failed script: ${item.src}`);
+            reject(new Error(`Runtime attachment failed at ${item.src}`));
+          };
+
+          doc.body.appendChild(script);
+        });
+      }
+
+      async function attachRuntimeAfterLoad() {
+        if (state.runtimeAttachmentStarted) return;
+
+        state.runtimeAttachmentStarted = true;
+        state.browserLoadComplete = true;
+
+        shellNotice("browser load complete · validating Hearth shell hooks", 24);
+
+        await new Promise((resolve) => {
+          root.requestAnimationFrame(() => {
+            root.setTimeout(resolve, 120);
+          });
+        });
+
+        if (!validateHooks()) return;
+
+        try {
+          for (let i = 0; i < scriptQueue.length; i += 1) {
+            await loadScript(scriptQueue[i], i, scriptQueue.length);
+          }
+
+          state.runtimeAttachmentComplete = true;
+          state.currentScript = "";
+          setText("[data-hearth-heartbeat-text]", "runtime stack attached · East may begin cycle");
+          setText("[data-hearth-latest-event]", "latest=RUNTIME_STACK_ATTACHED_AFTER_PAGE_LOAD");
+          setProgress(52);
+          setStatus("runtime stack attached after browser load · authority handed to East/West/North/South");
+
+          doc.querySelectorAll("[data-shell-pending='true']").forEach((node) => {
+            node.dataset.shellPending = "false";
+            node.removeAttribute("aria-disabled");
+          });
+
+          const mount = qs("#hearthCanvasMount");
+          const cockpit = qs("#hearthLoadCockpit");
+
+          if (mount) mount.dataset.runtimeAttachmentPending = "false";
+          if (cockpit) cockpit.dataset.runtimeAttachmentPending = "false";
+        } catch (error) {
+          const message = error && error.message ? error.message : String(error);
+          setText(".hearth-ledger-title", "RUNTIME ATTACHMENT HELD");
+          setText("[data-hearth-stage-label]", "F2 · Static shell remains available");
+          setText("[data-hearth-heartbeat-text]", "runtime-attachment=failed");
+          setText("[data-hearth-latest-event]", `latest=${message}`);
+          setProgress(22);
+          setStatus(message);
+        }
+      }
+
+      function bindShellOnlyControls() {
+        const receiptBox = qs("[data-hearth-receipt-box]");
+        const receiptText = qs("[data-hearth-receipt-text]");
+
+        const showReceipt = qs("[data-hearth-toggle-receipt]");
+        const collapse = qs("[data-hearth-collapse-cockpit]");
+        const copy = qs("[data-hearth-copy-diagnostic]");
+        const inspect = qs("[data-hearth-inspect-planet]");
+        const cockpit = qs("#hearthLoadCockpit");
+
+        if (showReceipt && receiptBox) {
+          showReceipt.addEventListener("click", () => {
+            const visible = receiptBox.dataset.visible !== "true";
+            receiptBox.dataset.visible = String(visible);
+            showReceipt.textContent = visible ? "Hide receipt" : "Show receipt";
+            if (receiptText) {
+              receiptText.textContent = qs("#hearth-route-status")?.textContent || "Static shell receipt pending.";
+            }
+          }, { once: false });
+        }
+
+        if (collapse && cockpit) {
+          collapse.addEventListener("click", () => {
+            const expanded = cockpit.dataset.cockpitMode !== "expanded-cockpit";
+            cockpit.dataset.cockpitMode = expanded ? "expanded-cockpit" : "loading-cockpit";
+            collapse.textContent = expanded ? "Collapse cockpit" : "Expand cockpit";
+          }, { once: false });
+        }
+
+        if (copy) {
+          copy.addEventListener("click", async () => {
+            const text = qs("#hearth-route-status")?.textContent || "Hearth shell receipt pending.";
+            try {
+              await navigator.clipboard.writeText(text);
+              copy.textContent = "Copied";
+              root.setTimeout(() => {
+                copy.textContent = "Copy diagnostic";
+              }, 900);
+            } catch (_error) {
+              copy.textContent = "Copy pending";
+              root.setTimeout(() => {
+                copy.textContent = "Copy diagnostic";
+              }, 900);
+            }
+          }, { once: false });
+        }
+
+        if (inspect) {
+          inspect.addEventListener("click", () => {
+            shellNotice("inspect pending · runtime attaches after browser load", 22);
+          }, { once: false });
+        }
+      }
+
+      root.HEARTH_HTML_PAGE_LOAD_SUPREMACY = {
+        contract: CONTRACT,
+        state,
+        validateHooks,
+        attachRuntimeAfterLoad
+      };
+
+      bindShellOnlyControls();
+      shellNotice("browser-load=pending · runtime=pending", 22);
+
+      if (doc.readyState === "complete") {
+        root.setTimeout(attachRuntimeAfterLoad, 180);
+      } else {
+        root.addEventListener("load", () => {
+          root.setTimeout(attachRuntimeAfterLoad, 180);
+        }, { once: true });
+      }
+    })();
+  </script>
 </body>
 </html>

@@ -1,13 +1,15 @@
 // /assets/hearth/hearth.hydrology.js
-// HEARTH_SEA_LEVEL_WATERLINE_BEACH_BOUNDARY_HYDROLOGY_TNT_v1
+// HEARTH_HYDROLOGY_DIRECT_ELEVATION_WATERLINE_BEACH_ALIGNMENT_TNT_v1
 // Full-file replacement.
 // Hydrology authority only.
 // Purpose:
-// - Consume Hearth composition + tectonics.
-// - Preserve existing hydrology API and downstream material feeds.
-// - Add explicit sea-level, waterline, beach, submerged-block, submerged-scar, wet-stone, sand-shelf, and cliff-water-edge classification.
-// - Treat visible coastal blocks/scars as low or near-sea-level terrain evidence.
-// - Prepare materials to render water fill, beaches, shallow shelves, wet stone, hard coasts, cliff-water contacts, submerged blocks, and submerged scars.
+// - Preserve HEARTH_SEA_LEVEL_WATERLINE_BEACH_BOUNDARY_HYDROLOGY_TNT_v1 behavior.
+// - Directly consume HEARTH_ELEVATION even when HEARTH_COMPOSITION exists.
+// - Merge current elevation truth into the hydrology input packet before sea-level classification.
+// - Normalize climate aliases so rainforest/desert/coastal hydrology logic fires correctly.
+// - Preserve sea-level, waterline, beach, sand-shelf, wet-stone, cliff-water-edge, submerged-block, and submerged-scar fields.
+// - Preserve downstream material feeds.
+// - Preserve public API and fallback behavior.
 // Does not own:
 // - elevation generation
 // - composition classification
@@ -18,21 +20,25 @@
 // - controls
 // - route orchestration
 // - teleports
+// - islands bridge
+// - zoom
 // - final visual pass claim
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_SEA_LEVEL_WATERLINE_BEACH_BOUNDARY_HYDROLOGY_TNT_v1";
-  const RECEIPT = "HEARTH_SEA_LEVEL_WATERLINE_BEACH_BOUNDARY_HYDROLOGY_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "HEARTH_COASTAL_BOUNDARY_NATURAL_HYDROLOGY_TNT_v1";
-  const VERSION = "2026-05-28.hearth-sea-level-waterline-beach-boundary-hydrology-v1";
+  const CONTRACT = "HEARTH_HYDROLOGY_DIRECT_ELEVATION_WATERLINE_BEACH_ALIGNMENT_TNT_v1";
+  const RECEIPT = "HEARTH_HYDROLOGY_DIRECT_ELEVATION_WATERLINE_BEACH_ALIGNMENT_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "HEARTH_SEA_LEVEL_WATERLINE_BEACH_BOUNDARY_HYDROLOGY_TNT_v1";
+  const BASELINE_CONTRACT = "HEARTH_COASTAL_BOUNDARY_NATURAL_HYDROLOGY_TNT_v1";
+  const VERSION = "2026-05-30.hearth-hydrology-direct-elevation-waterline-beach-alignment-v1";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const DEG = Math.PI / 180;
+  const RAD = 180 / Math.PI;
   const SEA_LEVEL = 0;
 
-  const HYDROLOGY_CLASSES = [
+  const HYDROLOGY_CLASSES = Object.freeze([
     "deep_ocean_body",
     "open_ocean_basin",
     "continental_shelf_gradient",
@@ -62,9 +68,9 @@
     "sand_shelf_transition",
     "hard_cliff_water_edge",
     "none"
-  ];
+  ]);
 
-  const WATER_BOUNDARY_CLASSES = [
+  const WATER_BOUNDARY_CLASSES = Object.freeze([
     "deep_ocean_body",
     "open_ocean_basin",
     "continental_shelf_gradient",
@@ -78,9 +84,9 @@
     "submerged_block_field",
     "submerged_coastal_scar",
     "none"
-  ];
+  ]);
 
-  const COAST_BOUNDARY_CLASSES = [
+  const COAST_BOUNDARY_CLASSES = Object.freeze([
     "coastal_transition_zone",
     "cliff_coast_boundary",
     "beach_shelf_boundary",
@@ -99,7 +105,61 @@
     "hard_cliff_water_edge",
     "sea_level_waterline",
     "none"
-  ];
+  ]);
+
+  const ELEVATION_OVERRIDE_FIELDS = Object.freeze([
+    "elevation",
+    "seaLevel",
+    "isLand",
+    "isWater",
+    "isShallowWater",
+    "isDeepWater",
+    "landPotential",
+    "waterDepthPotential",
+    "oceanBasinPotential",
+    "continentShelfPotential",
+    "shelfPotential",
+    "coastPotential",
+    "continentId",
+    "continentName",
+    "continentIndex",
+    "continentPotential",
+    "continentSeparation",
+    "nearestContinentDistance",
+    "mountainArcPotential",
+    "plateauPotential",
+    "canyonPotential",
+    "escarpmentPotential",
+    "waterfallCandidate",
+    "archipelagoPotential",
+    "basinPotential",
+    "ridgePotential",
+    "saddlePotential",
+    "islandPotential",
+    "scarPotential",
+    "terrainClassHint",
+    "climateHint",
+    "climateClass"
+  ]);
+
+  const PRIMARY_ELEVATION_OVERRIDE_FIELDS = Object.freeze([
+    "elevation",
+    "seaLevel",
+    "isLand",
+    "isWater",
+    "terrainClassHint"
+  ]);
+
+  const COASTAL_ELEVATION_OVERRIDE_FIELDS = Object.freeze([
+    "isShallowWater",
+    "isDeepWater",
+    "waterDepthPotential",
+    "oceanBasinPotential",
+    "continentShelfPotential",
+    "shelfPotential",
+    "coastPotential",
+    "relativeSeaElevation"
+  ]);
 
   const CONTINENT_HYDROLOGY_BIAS = Object.freeze({
     western_shield: {
@@ -178,20 +238,40 @@
     }
   });
 
-  const clamp = (value, min, max) => {
+  const runtimeState = {
+    elevationSampleAttemptedAtRuntime: false,
+    elevationAuthorityDetectedAtRuntime: false,
+    elevationSampleValidAtRuntime: false,
+    elevationSampleError: "",
+    elevationMergedIntoHydrologyInputAtRuntime: false,
+    compositionFallbackUsedAtRuntime: false,
+    lastUpdatedAt: nowIso()
+  };
+
+  function nowIso() {
+    try {
+      return new Date().toISOString();
+    } catch (_error) {
+      return "";
+    }
+  }
+
+  function clamp(value, min, max) {
     const n = Number(value);
     if (!Number.isFinite(n)) return min;
     return Math.max(min, Math.min(max, n));
-  };
+  }
 
-  const clamp01 = (value) => clamp(value, 0, 1);
+  function clamp01(value) {
+    return clamp(value, 0, 1);
+  }
 
-  const smoothstep = (edge0, edge1, x) => {
+  function smoothstep(edge0, edge1, x) {
     const t = clamp((x - edge0) / Math.max(0.000001, edge1 - edge0), 0, 1);
     return t * t * (3 - 2 * t);
-  };
+  }
 
-  const normalize3 = (p) => {
+  function normalize3(p) {
     const x = Number.isFinite(Number(p && p.x)) ? Number(p.x) : 0;
     const y = Number.isFinite(Number(p && p.y)) ? Number(p.y) : 0;
     const z = Number.isFinite(Number(p && p.z)) ? Number(p.z) : 1;
@@ -202,9 +282,9 @@
       y: y / m,
       z: z / m
     };
-  };
+  }
 
-  const lonLatToVector = (lonDeg, latDeg) => {
+  function lonLatToVector(lonDeg, latDeg) {
     const lon = Number(lonDeg || 0) * DEG;
     const lat = Number(latDeg || 0) * DEG;
     const c = Math.cos(lat);
@@ -214,9 +294,40 @@
       y: Math.sin(lat),
       z: Math.cos(lon) * c
     });
-  };
+  }
 
-  const parseInput = (...args) => {
+  function vectorToLonLat(p) {
+    const n = normalize3(p);
+
+    return {
+      lon: Math.atan2(n.x, n.z) * RAD,
+      lat: Math.asin(clamp(n.y, -1, 1)) * RAD
+    };
+  }
+
+  function lonToU(lon) {
+    return (((Number(lon) + 180) / 360) % 1 + 1) % 1;
+  }
+
+  function latToV(lat) {
+    return clamp((90 - Number(lat)) / 180, 0, 1);
+  }
+
+  function coordinatePacketFromVector(vector) {
+    const ll = vectorToLonLat(vector);
+
+    return {
+      x: vector.x,
+      y: vector.y,
+      z: vector.z,
+      lon: ll.lon,
+      lat: ll.lat,
+      u: lonToU(ll.lon),
+      v: latToV(ll.lat)
+    };
+  }
+
+  function parseInput(...args) {
     if (args.length === 1 && args[0] && typeof args[0] === "object") {
       const p = args[0];
 
@@ -225,83 +336,186 @@
         Number.isFinite(Number(p.y)) &&
         Number.isFinite(Number(p.z))
       ) {
-        return normalize3(p);
+        return coordinatePacketFromVector(normalize3(p));
       }
 
       if (Number.isFinite(Number(p.lon)) && Number.isFinite(Number(p.lat))) {
-        return lonLatToVector(Number(p.lon), Number(p.lat));
+        const vector = lonLatToVector(Number(p.lon), Number(p.lat));
+
+        return {
+          ...coordinatePacketFromVector(vector),
+          lon: Number(p.lon),
+          lat: Number(p.lat),
+          u: lonToU(Number(p.lon)),
+          v: latToV(Number(p.lat))
+        };
       }
 
       if (Number.isFinite(Number(p.longitude)) && Number.isFinite(Number(p.latitude))) {
-        return lonLatToVector(Number(p.longitude), Number(p.latitude));
+        const lon = Number(p.longitude);
+        const lat = Number(p.latitude);
+        const vector = lonLatToVector(lon, lat);
+
+        return {
+          ...coordinatePacketFromVector(vector),
+          lon,
+          lat,
+          u: lonToU(lon),
+          v: latToV(lat)
+        };
       }
 
       if (Number.isFinite(Number(p.u)) && Number.isFinite(Number(p.v))) {
-        return lonLatToVector(Number(p.u) * 360 - 180, 90 - Number(p.v) * 180);
+        const u = ((Number(p.u) % 1) + 1) % 1;
+        const v = clamp(Number(p.v), 0, 1);
+        const lon = u * 360 - 180;
+        const lat = 90 - v * 180;
+        const vector = lonLatToVector(lon, lat);
+
+        return {
+          ...coordinatePacketFromVector(vector),
+          lon,
+          lat,
+          u,
+          v
+        };
       }
     }
 
     if (args.length >= 3) {
-      return normalize3({ x: args[0], y: args[1], z: args[2] });
+      return coordinatePacketFromVector(normalize3({ x: args[0], y: args[1], z: args[2] }));
     }
 
     if (args.length >= 2) {
-      return lonLatToVector(Number(args[0]), Number(args[1]));
+      const lon = Number(args[0]);
+      const lat = Number(args[1]);
+      const vector = lonLatToVector(lon, lat);
+
+      return {
+        ...coordinatePacketFromVector(vector),
+        lon,
+        lat,
+        u: lonToU(lon),
+        v: latToV(lat)
+      };
     }
 
-    return lonLatToVector(0, 0);
-  };
+    return {
+      ...coordinatePacketFromVector(lonLatToVector(0, 0)),
+      lon: 0,
+      lat: 0,
+      u: 0.5,
+      v: 0.5
+    };
+  }
 
-  const hashNoise = (x, y, z, salt = 0) => {
+  function hashNoise(x, y, z, salt = 0) {
     const n = Math.sin(x * 127.1 + y * 311.7 + z * 74.7 + salt * 53.19) * 43758.5453123;
     return n - Math.floor(n);
-  };
+  }
 
-  const waterNoise = (p, salt = 0) => {
+  function waterNoise(p, salt = 0) {
     const n1 = hashNoise(p.x, p.y, p.z, salt);
     const n2 = hashNoise(p.y + n1, p.z - n1, p.x + n1, salt + 17);
     const n3 = hashNoise(p.z - n2, p.x + n2, p.y - n2, salt + 37);
     return clamp01(n1 * 0.48 + n2 * 0.34 + n3 * 0.18);
-  };
+  }
 
-  const numberField = (source, key, fallback = 0) => {
+  function numberField(source, key, fallback = 0) {
     const n = Number(source && source[key]);
     return Number.isFinite(n) ? n : fallback;
-  };
+  }
 
-  const boolField = (source, key, fallback = false) => {
+  function boolField(source, key, fallback = false) {
     return typeof (source && source[key]) === "boolean" ? source[key] : fallback;
-  };
+  }
 
-  const stringField = (source, key, fallback = "") => {
+  function stringField(source, key, fallback = "") {
     return typeof (source && source[key]) === "string" && source[key] ? source[key] : fallback;
-  };
+  }
 
-  const getCompositionAuthority = () => {
+  function normalizeClimateAlias(value) {
+    const raw = String(value || "").toLowerCase().trim();
+
+    if (!raw) return "open_ocean";
+    if (raw === "tropical_rainforest_wet_basin") return "rainforest_wet_basin";
+    if (raw.includes("rainforest") && raw.includes("wet")) return "rainforest_wet_basin";
+    if (raw === "arid_desert_dry_plateau") return "arid_dry_plateau";
+    if (raw.includes("arid") && raw.includes("desert")) return "arid_dry_plateau";
+    if (raw.includes("dry") && raw.includes("plateau")) return "arid_dry_plateau";
+    if (raw === "temperate_coastal_storm") return "temperate_coastal_storm";
+    if (raw.includes("coastal") && raw.includes("storm")) return "temperate_coastal_storm";
+    if (raw === "monsoon_floodplain") return "monsoon_floodplain";
+    if (raw.includes("monsoon") || raw.includes("floodplain")) return "monsoon_floodplain";
+    if (raw === "polar_icefield") return "polar_icefield";
+    if (raw.includes("polar") || raw.includes("icefield")) return "polar_icefield";
+    if (raw === "tundra_subpolar") return "tundra_subpolar";
+    if (raw.includes("tundra") || raw.includes("subpolar")) return "tundra_subpolar";
+    if (raw === "temperate_highland") return "temperate_highland";
+    if (raw.includes("temperate") && raw.includes("highland")) return "temperate_highland";
+    if (raw.includes("alpine") || raw.includes("mountain_arc")) return "alpine_mountain_arc";
+    if (raw.includes("maritime") || raw.includes("archipelago")) return "maritime_archipelago_subtropical_shelf";
+    if (raw.includes("ocean")) return "open_ocean";
+
+    return raw;
+  }
+
+  function getCompositionAuthority() {
     if (root.HEARTH && root.HEARTH.composition) return root.HEARTH.composition;
     if (root.HEARTH_COMPOSITION) return root.HEARTH_COMPOSITION;
     if (root.HearthComposition) return root.HearthComposition;
     return null;
-  };
+  }
 
-  const getTectonicsAuthority = () => {
+  function getTectonicsAuthority() {
     if (root.HEARTH && root.HEARTH.tectonics) return root.HEARTH.tectonics;
     if (root.HEARTH_TECTONICS) return root.HEARTH_TECTONICS;
     if (root.HearthTectonics) return root.HearthTectonics;
     return null;
-  };
+  }
 
-  const getElevationAuthority = () => {
+  function getElevationAuthority() {
     if (root.HEARTH && root.HEARTH.elevation) return root.HEARTH.elevation;
     if (root.HEARTH_ELEVATION) return root.HEARTH_ELEVATION;
     if (root.HearthElevation) return root.HearthElevation;
     return null;
-  };
+  }
 
-  const fallbackComposition = (p) => {
+  function callAuthority(authority, methods, packet, originalArgs = []) {
+    if (!authority || typeof authority !== "object") return null;
+
+    for (const method of methods) {
+      if (typeof authority[method] !== "function") continue;
+
+      try {
+        const result = authority[method](packet);
+        if (result && typeof result === "object") return result;
+      } catch (_error) {}
+
+      try {
+        const result = authority[method](packet.u, packet.v, packet.lon, packet.lat);
+        if (result && typeof result === "object") return result;
+      } catch (_error2) {}
+
+      try {
+        const result = authority[method](packet.x, packet.y, packet.z);
+        if (result && typeof result === "object") return result;
+      } catch (_error3) {}
+
+      try {
+        const result = authority[method].apply(authority, originalArgs);
+        if (result && typeof result === "object") return result;
+      } catch (_error4) {}
+    }
+
+    return null;
+  }
+
+  function fallbackComposition(p) {
     const n = waterNoise(p, 5);
     const landSignal = smoothstep(0.06, 0.80, p.z) * (0.56 + n * 0.44);
     const isLand = landSignal > 0.46;
+    const elevation = isLand ? 0.20 : -0.44;
 
     return {
       contract: "HEARTH_SEA_LEVEL_HYDROLOGY_FALLBACK_COMPOSITION",
@@ -311,16 +525,20 @@
       semanticTerrainClass: isLand ? "continent_mass" : "ocean_basin",
       terrainClass: isLand ? "continent_mass" : "ocean_basin",
       compatibilityTerrainClass: isLand ? "raised_shield" : "deep_water",
+      terrainClassHint: isLand ? "continent_mass" : "ocean_basin",
       continentId: isLand ? "western_shield" : "open_ocean",
       continentName: isLand ? "Western Shield Continent" : "Open Ocean",
       continentClass: isLand ? "western_shield_mass" : "open_ocean",
       continentIndex: isLand ? 0 : -1,
       climateClass: isLand ? "temperate_highland" : "open_ocean",
+      normalizedClimateClass: isLand ? "temperate_highland" : "open_ocean",
       summitClass: "none",
       summitRegionHint: "none",
       summitTerrainHint: "none",
       summitPotential: 0,
-      elevation: isLand ? 0.20 : -0.44,
+      elevation,
+      seaLevel: SEA_LEVEL,
+      relativeSeaElevation: elevation - SEA_LEVEL,
       isLand,
       isWater: !isLand,
       isShallowWater: !isLand && n > 0.64,
@@ -352,11 +570,12 @@
       reliefStrength: isLand ? 0.22 : 0,
       slopePressure: 0.08,
       materialDensity: isLand ? 0.68 : 0,
-      surfaceAttachment: isLand ? 0.72 : 0.42
+      surfaceAttachment: isLand ? 0.72 : 0.42,
+      compositionFallbackUsed: true
     };
-  };
+  }
 
-  const normalizeComposition = (raw, p) => {
+  function normalizeComposition(raw, p) {
     const source = raw && typeof raw === "object" ? raw : fallbackComposition(p);
 
     const terrainClass =
@@ -364,33 +583,45 @@
       stringField(source, "expandedTerrainClass") ||
       stringField(source, "semanticTerrainClass") ||
       stringField(source, "terrainClass") ||
+      stringField(source, "terrainClassHint") ||
       stringField(source, "compatibilityTerrainClass", "ocean_basin");
 
     const elevation = numberField(source, "elevation", 0);
+    const seaLevel = numberField(source, "seaLevel", SEA_LEVEL);
     const continentId = stringField(source, "continentId", "open_ocean");
+    const climateClass = normalizeClimateAlias(
+      stringField(source, "climateClass") ||
+      stringField(source, "climateHint") ||
+      stringField(source, "climate")
+    );
 
     return {
       ...source,
       terrainClass,
       worldTerrainClass: terrainClass,
+      terrainClassHint: stringField(source, "terrainClassHint", terrainClass),
       continentId,
       continentName: stringField(source, "continentName", continentId === "open_ocean" ? "Open Ocean" : continentId.replace(/_/g, " ")),
       continentIndex: Number.isFinite(Number(source.continentIndex)) ? Number(source.continentIndex) : -1,
       continentClass: stringField(source, "continentClass", continentId === "open_ocean" ? "open_ocean" : `${continentId}_mass`),
-      climateClass: stringField(source, "climateClass", stringField(source, "climateHint", "open_ocean")),
+      climateClass,
+      normalizedClimateClass: climateClass,
+      climateHint: stringField(source, "climateHint", climateClass),
       summitClass: stringField(source, "summitClass", "none"),
       summitRegionHint: stringField(source, "summitRegionHint", "none"),
       summitTerrainHint: stringField(source, "summitTerrainHint", "none"),
       summitPotential: clamp01(numberField(source, "summitPotential", 0)),
 
       elevation,
-      isLand: boolField(source, "isLand", elevation > 0),
-      isWater: boolField(source, "isWater", elevation <= 0),
-      isShallowWater: boolField(source, "isShallowWater", elevation <= 0 && elevation > -0.18),
-      isDeepWater: boolField(source, "isDeepWater", elevation <= -0.18),
+      seaLevel,
+      relativeSeaElevation: numberField(source, "relativeSeaElevation", elevation - seaLevel),
+      isLand: boolField(source, "isLand", elevation > seaLevel),
+      isWater: boolField(source, "isWater", elevation <= seaLevel),
+      isShallowWater: boolField(source, "isShallowWater", elevation <= seaLevel && elevation > seaLevel - 0.18),
+      isDeepWater: boolField(source, "isDeepWater", elevation <= seaLevel - 0.18),
 
-      landPotential: clamp01(numberField(source, "landPotential", 0)),
-      waterDepthPotential: clamp01(numberField(source, "waterDepthPotential", 0)),
+      landPotential: clamp01(numberField(source, "landPotential", elevation > seaLevel ? 0.56 : 0)),
+      waterDepthPotential: clamp01(numberField(source, "waterDepthPotential", elevation <= seaLevel ? Math.min(1, Math.abs(elevation - seaLevel)) : 0)),
       oceanBasinPotential: clamp01(numberField(source, "oceanBasinPotential", 0)),
       continentShelfPotential: clamp01(numberField(source, "continentShelfPotential", 0)),
       shelfPotential: clamp01(numberField(source, "shelfPotential", 0)),
@@ -420,11 +651,208 @@
       materialDensity: clamp01(numberField(source, "materialDensity", 0)),
       surfaceAttachment: clamp01(numberField(source, "surfaceAttachment", 0))
     };
-  };
+  }
 
-  const readComposition = (...args) => {
-    const p = parseInput(...args);
-    const composition = getCompositionAuthority();
+  function readElevationAuthority(packet, originalArgs = []) {
+    runtimeState.elevationSampleAttemptedAtRuntime = true;
+    runtimeState.elevationAuthorityDetectedAtRuntime = false;
+    runtimeState.elevationSampleValidAtRuntime = false;
+    runtimeState.elevationSampleError = "";
+
+    const elevation = getElevationAuthority();
+
+    if (!elevation) {
+      runtimeState.lastUpdatedAt = nowIso();
+      return null;
+    }
+
+    runtimeState.elevationAuthorityDetectedAtRuntime = true;
+
+    try {
+      const raw = callAuthority(
+        elevation,
+        ["sample", "read", "get", "getElevation", "sampleElevation", "readElevation"],
+        packet,
+        originalArgs
+      );
+
+      const normalized = normalizeElevationForHydrology(raw, packet);
+
+      if (normalized && normalized.elevationSampleValid) {
+        runtimeState.elevationSampleValidAtRuntime = true;
+        runtimeState.lastUpdatedAt = nowIso();
+        return normalized;
+      }
+    } catch (error) {
+      runtimeState.elevationSampleError = error && error.message ? error.message : String(error);
+    }
+
+    runtimeState.lastUpdatedAt = nowIso();
+    return null;
+  }
+
+  function normalizeElevationForHydrology(raw, p) {
+    if (!raw || typeof raw !== "object") return null;
+
+    const elevation = Number(raw.elevation);
+    if (!Number.isFinite(elevation)) return null;
+
+    const seaLevel = Number.isFinite(Number(raw.seaLevel)) ? Number(raw.seaLevel) : SEA_LEVEL;
+    const terrainClassHint =
+      stringField(raw, "terrainClassHint") ||
+      stringField(raw, "terrainClass") ||
+      (elevation > seaLevel ? "continent_mass" : "ocean_basin");
+
+    const climateClass = normalizeClimateAlias(
+      stringField(raw, "climateClass") ||
+      stringField(raw, "climateHint") ||
+      stringField(raw, "climate")
+    );
+
+    return {
+      contract: raw.contract || "UNKNOWN_ELEVATION_CONTRACT",
+      receipt: raw.receipt || "UNKNOWN_ELEVATION_RECEIPT",
+      elevationSampleValid: true,
+      elevationAuthoritySource: "HEARTH_ELEVATION",
+      elevation,
+      seaLevel,
+      relativeSeaElevation: elevation - seaLevel,
+
+      isLand: boolField(raw, "isLand", elevation > seaLevel),
+      isWater: boolField(raw, "isWater", elevation <= seaLevel),
+      isShallowWater: boolField(raw, "isShallowWater", elevation <= seaLevel && elevation > seaLevel - 0.20),
+      isDeepWater: boolField(raw, "isDeepWater", elevation <= seaLevel - 0.20),
+
+      landPotential: clamp01(numberField(raw, "landPotential", elevation > seaLevel ? 0.56 : 0)),
+      waterDepthPotential: clamp01(numberField(raw, "waterDepthPotential", elevation <= seaLevel ? Math.abs(elevation - seaLevel) * 1.75 : 0)),
+      oceanBasinPotential: clamp01(numberField(raw, "oceanBasinPotential", 0)),
+      continentShelfPotential: clamp01(numberField(raw, "continentShelfPotential", numberField(raw, "shelfPotential", 0))),
+      shelfPotential: clamp01(numberField(raw, "shelfPotential", 0)),
+      coastPotential: clamp01(numberField(raw, "coastPotential", 0)),
+
+      continentId: stringField(raw, "continentId", elevation > seaLevel ? "unresolved_continent" : "open_ocean"),
+      continentName: stringField(raw, "continentName", elevation > seaLevel ? "Unresolved Continent" : "Open Ocean"),
+      continentIndex: Number.isFinite(Number(raw.continentIndex)) ? Number(raw.continentIndex) : -1,
+      continentPotential: clamp01(numberField(raw, "continentPotential", elevation > seaLevel ? 0.5 : 0)),
+      continentSeparation: clamp01(numberField(raw, "continentSeparation", 0)),
+      nearestContinentDistance: clamp01(numberField(raw, "nearestContinentDistance", elevation > seaLevel ? 0.18 : 0.82)),
+
+      mountainArcPotential: clamp01(numberField(raw, "mountainArcPotential", 0)),
+      plateauPotential: clamp01(numberField(raw, "plateauPotential", 0)),
+      canyonPotential: clamp01(numberField(raw, "canyonPotential", 0)),
+      escarpmentPotential: clamp01(numberField(raw, "escarpmentPotential", 0)),
+      waterfallCandidate: clamp01(numberField(raw, "waterfallCandidate", 0)),
+      archipelagoPotential: clamp01(numberField(raw, "archipelagoPotential", 0)),
+      basinPotential: clamp01(numberField(raw, "basinPotential", 0)),
+      ridgePotential: clamp01(numberField(raw, "ridgePotential", 0)),
+      saddlePotential: clamp01(numberField(raw, "saddlePotential", 0)),
+      islandPotential: clamp01(numberField(raw, "islandPotential", 0)),
+      scarPotential: clamp01(numberField(raw, "scarPotential", 0)),
+
+      terrainClassHint,
+      worldTerrainClass: terrainClassHint,
+      terrainClass: terrainClassHint,
+      climateHint: climateClass,
+      climateClass,
+      normalizedClimateClass: climateClass,
+
+      summitRegionHint: stringField(raw, "summitRegionHint", "none"),
+      summitTerrainHint: stringField(raw, "summitTerrainHint", "none"),
+      summitBookSummit: stringField(raw, "summitBookSummit", "none"),
+      summitPotential: clamp01(numberField(raw, "summitPotential", 0)),
+
+      sourceElevationPacket: raw
+    };
+  }
+
+  function mergeElevationIntoComposition(composition, elevation) {
+    if (!elevation || !elevation.elevationSampleValid) {
+      runtimeState.elevationMergedIntoHydrologyInputAtRuntime = false;
+      return {
+        ...composition,
+        directElevationConsumptionActive: true,
+        elevationAuthorityDetectedAtSampleTime: runtimeState.elevationAuthorityDetectedAtRuntime,
+        elevationSampleAttempted: true,
+        elevationSampleValid: false,
+        elevationMergedIntoHydrologyInput: false
+      };
+    }
+
+    const merged = {
+      ...composition,
+
+      elevation: elevation.elevation,
+      seaLevel: elevation.seaLevel,
+      relativeSeaElevation: elevation.relativeSeaElevation,
+      isLand: elevation.isLand,
+      isWater: elevation.isWater,
+      isShallowWater: elevation.isShallowWater,
+      isDeepWater: elevation.isDeepWater,
+
+      landPotential: elevation.landPotential,
+      waterDepthPotential: elevation.waterDepthPotential,
+      oceanBasinPotential: elevation.oceanBasinPotential,
+      continentShelfPotential: elevation.continentShelfPotential,
+      shelfPotential: elevation.shelfPotential,
+      coastPotential: elevation.coastPotential,
+
+      continentId: elevation.continentId,
+      continentName: elevation.continentName,
+      continentIndex: elevation.continentIndex,
+      continentPotential: elevation.continentPotential,
+      continentSeparation: elevation.continentSeparation,
+      nearestContinentDistance: elevation.nearestContinentDistance,
+
+      mountainArcPotential: elevation.mountainArcPotential,
+      plateauPotential: elevation.plateauPotential,
+      canyonPotential: elevation.canyonPotential,
+      escarpmentPotential: elevation.escarpmentPotential,
+      waterfallCandidate: elevation.waterfallCandidate,
+      archipelagoPotential: elevation.archipelagoPotential,
+      basinPotential: elevation.basinPotential,
+      ridgePotential: elevation.ridgePotential,
+      saddlePotential: elevation.saddlePotential,
+      islandPotential: elevation.islandPotential,
+      scarPotential: elevation.scarPotential,
+
+      terrainClassHint: elevation.terrainClassHint,
+      terrainClass: elevation.terrainClassHint,
+      worldTerrainClass: elevation.terrainClassHint,
+
+      climateHint: elevation.climateHint,
+      climateClass: elevation.climateClass,
+      normalizedClimateClass: normalizeClimateAlias(elevation.climateClass),
+
+      summitRegionHint: elevation.summitRegionHint || composition.summitRegionHint || "none",
+      summitTerrainHint: elevation.summitTerrainHint || composition.summitTerrainHint || "none",
+      summitBookSummit: elevation.summitBookSummit || composition.summitBookSummit || "none",
+      summitPotential: elevation.summitPotential,
+
+      elevationContract: elevation.contract,
+      elevationReceipt: elevation.receipt,
+      directElevationConsumptionActive: true,
+      elevationAuthorityDetectedAtSampleTime: true,
+      elevationSampleAttempted: true,
+      elevationSampleValid: true,
+      elevationMergedIntoHydrologyInput: true,
+      elevationOverrideFields: ELEVATION_OVERRIDE_FIELDS.slice()
+    };
+
+    runtimeState.elevationMergedIntoHydrologyInputAtRuntime = true;
+    runtimeState.lastUpdatedAt = nowIso();
+
+    return normalizeComposition(merged, {
+      x: composition.x || 0,
+      y: composition.y || 0,
+      z: composition.z || 1
+    });
+  }
+
+  function readComposition(...args) {
+    const packet = parseInput(...args);
+    const compositionAuthority = getCompositionAuthority();
+
+    let rawComposition = null;
 
     if (args.length === 1 && args[0] && typeof args[0] === "object") {
       const candidate = args[0];
@@ -432,113 +860,82 @@
       if (
         typeof candidate.worldTerrainClass === "string" ||
         typeof candidate.terrainClass === "string" ||
-        typeof candidate.expandedTerrainClass === "string"
+        typeof candidate.expandedTerrainClass === "string" ||
+        Number.isFinite(Number(candidate.elevation))
       ) {
-        return normalizeComposition(candidate, p);
+        rawComposition = candidate;
       }
     }
 
-    if (composition) {
-      const fn =
-        typeof composition.sample === "function"
-          ? composition.sample
-          : typeof composition.read === "function"
-            ? composition.read
-            : typeof composition.sampleComposition === "function"
-              ? composition.sampleComposition
-              : typeof composition.compose === "function"
-                ? composition.compose
-                : null;
-
-      if (fn) {
-        try {
-          return normalizeComposition(fn.apply(composition, args), p);
-        } catch (_error) {
-          try {
-            return normalizeComposition(fn.call(composition, p), p);
-          } catch (_error2) {
-            return fallbackComposition(p);
-          }
-        }
-      }
+    if (!rawComposition && compositionAuthority) {
+      rawComposition = callAuthority(
+        compositionAuthority,
+        ["sample", "read", "get", "sampleComposition", "compose"],
+        packet,
+        args
+      );
     }
 
-    const elevation = getElevationAuthority();
-
-    if (elevation) {
-      const fn =
-        typeof elevation.sample === "function"
-          ? elevation.sample
-          : typeof elevation.read === "function"
-            ? elevation.read
-            : typeof elevation.getElevation === "function"
-              ? elevation.getElevation
-              : null;
-
-      if (fn) {
-        try {
-          const raw = fn.apply(elevation, args);
-          return normalizeComposition(
-            {
-              ...raw,
-              worldTerrainClass:
-                raw && raw.terrainClassHint
-                  ? raw.terrainClassHint
-                  : raw && raw.isLand
-                    ? "continent_mass"
-                    : "ocean_basin",
-              terrainClass:
-                raw && raw.terrainClassHint
-                  ? raw.terrainClassHint
-                  : raw && raw.isLand
-                    ? "continent_mass"
-                    : "ocean_basin"
-            },
-            p
-          );
-        } catch (_error) {}
-      }
+    if (!rawComposition) {
+      runtimeState.compositionFallbackUsedAtRuntime = true;
+      rawComposition = fallbackComposition(packet);
+    } else {
+      runtimeState.compositionFallbackUsedAtRuntime = false;
     }
 
-    return fallbackComposition(p);
-  };
+    const normalizedComposition = normalizeComposition(rawComposition, packet);
+    const elevation = readElevationAuthority(packet, args);
+    const merged = mergeElevationIntoComposition(normalizedComposition, elevation);
 
-  const fallbackTectonics = (composition) => ({
-    contract: "HEARTH_SEA_LEVEL_HYDROLOGY_FALLBACK_TECTONICS",
-    receipt: "FALLBACK_TECTONICS_USED",
-    tectonicClass: composition.isWater ? "open_ocean_basin" : "stable_continental_craton",
-    plateClass: composition.isWater ? "oceanic_basin_plate" : "continental_plate",
-    platePressure: composition.isLand ? 0.42 : 0.18,
-    continentalBodyPressure: composition.isLand ? 0.58 : 0,
-    continentEdgeCompression: composition.coastPotential * 0.44,
-    continentDivideStress: composition.continentSeparation * 0.44,
-    canyonCutPressure: composition.canyonPotential * 0.52,
-    faultCutPressure: composition.scarPotential * 0.48,
-    faultLinePressure: composition.scarPotential * 0.38,
-    fractureDensity: composition.scarPotential * 0.18 + composition.archipelagoPotential * 0.22,
-    scarPressure: composition.scarPotential * 0.38,
-    cliffPressure: composition.escarpmentPotential * 0.52,
-    escarpmentPressure: composition.escarpmentPotential * 0.58,
-    shelfDropPressure: Math.max(composition.shelfDrop, composition.shelfPotential) * 0.48,
-    coastalCompression: composition.coastPotential * 0.42,
-    basinCompression: composition.basinPotential * 0.38,
-    basinSubsidence: composition.basinPotential * 0.52,
-    lowlandStress: composition.basinPotential * 0.40,
-    archipelagoFracture: composition.archipelagoPotential * 0.58,
-    islandArcPressure: composition.islandPotential * 0.52,
-    brokenShelfStress: composition.archipelagoPotential * 0.40,
-    summitTectonicPressure: composition.summitPotential * 0.40,
-    summitTectonicClass: "none",
-    hydrologyFeedPressure: Math.max(composition.coastPotential, composition.shelfPotential, composition.basinPotential) * 0.48,
-    waterfallDropPressure: composition.waterfallCandidate * 0.56,
-    drainageCutPotential: Math.max(composition.canyonPotential, composition.basinPotential) * 0.42,
-    materialBodyFeed: composition.massAnchor * 0.44,
-    materialReliefFeed: composition.reliefStrength * 0.44,
-    materialShadowFeed: composition.underlandShadow * 0.44,
-    materialDensityFeed: composition.materialDensity * 0.44
-  });
+    merged.x = packet.x;
+    merged.y = packet.y;
+    merged.z = packet.z;
+    merged.u = packet.u;
+    merged.v = packet.v;
+    merged.lon = packet.lon;
+    merged.lat = packet.lat;
 
-  const normalizeTectonics = (raw, composition) => {
+    return merged;
+  }
+
+  function fallbackTectonics(composition) {
+    return {
+      contract: "HEARTH_SEA_LEVEL_HYDROLOGY_FALLBACK_TECTONICS",
+      receipt: "FALLBACK_TECTONICS_USED",
+      tectonicClass: composition.isWater ? "open_ocean_basin" : "stable_continental_craton",
+      plateClass: composition.isWater ? "oceanic_basin_plate" : "continental_plate",
+      platePressure: composition.isLand ? 0.42 : 0.18,
+      continentalBodyPressure: composition.isLand ? 0.58 : 0,
+      continentEdgeCompression: composition.coastPotential * 0.44,
+      continentDivideStress: composition.continentSeparation * 0.44,
+      canyonCutPressure: composition.canyonPotential * 0.52,
+      faultCutPressure: composition.scarPotential * 0.48,
+      faultLinePressure: composition.scarPotential * 0.38,
+      fractureDensity: composition.scarPotential * 0.18 + composition.archipelagoPotential * 0.22,
+      scarPressure: composition.scarPotential * 0.38,
+      cliffPressure: composition.escarpmentPotential * 0.52,
+      escarpmentPressure: composition.escarpmentPotential * 0.58,
+      shelfDropPressure: Math.max(composition.shelfDrop || 0, composition.shelfPotential || 0) * 0.48,
+      coastalCompression: composition.coastPotential * 0.42,
+      basinCompression: composition.basinPotential * 0.38,
+      basinSubsidence: composition.basinPotential * 0.52,
+      lowlandStress: composition.basinPotential * 0.40,
+      archipelagoFracture: composition.archipelagoPotential * 0.58,
+      islandArcPressure: composition.islandPotential * 0.52,
+      brokenShelfStress: composition.archipelagoPotential * 0.40,
+      summitTectonicPressure: composition.summitPotential * 0.40,
+      summitTectonicClass: "none",
+      hydrologyFeedPressure: Math.max(composition.coastPotential, composition.shelfPotential, composition.basinPotential) * 0.48,
+      waterfallDropPressure: composition.waterfallCandidate * 0.56,
+      drainageCutPotential: Math.max(composition.canyonPotential, composition.basinPotential) * 0.42,
+      materialBodyFeed: composition.massAnchor * 0.44,
+      materialReliefFeed: composition.reliefStrength * 0.44,
+      materialShadowFeed: composition.underlandShadow * 0.44,
+      materialDensityFeed: composition.materialDensity * 0.44
+    };
+  }
+
+  function normalizeTectonics(raw, composition) {
     const source = raw && typeof raw === "object" ? raw : fallbackTectonics(composition);
 
     return {
@@ -582,53 +979,41 @@
       materialShadowFeed: clamp01(numberField(source, "materialShadowFeed", 0)),
       materialDensityFeed: clamp01(numberField(source, "materialDensityFeed", 0))
     };
-  };
+  }
 
-  const readTectonics = (composition, p) => {
+  function readTectonics(composition, packet) {
     const tectonics = getTectonicsAuthority();
 
     if (tectonics) {
-      const fn =
-        typeof tectonics.sample === "function"
-          ? tectonics.sample
-          : typeof tectonics.read === "function"
-            ? tectonics.read
-            : typeof tectonics.sampleTectonics === "function"
-              ? tectonics.sampleTectonics
-              : typeof tectonics.getTectonics === "function"
-                ? tectonics.getTectonics
-                : null;
+      const raw = callAuthority(
+        tectonics,
+        ["sample", "read", "get", "sampleTectonics", "getTectonics"],
+        packet,
+        [composition]
+      );
 
-      if (fn) {
-        try {
-          return normalizeTectonics(fn.call(tectonics, composition), composition);
-        } catch (_error) {
-          try {
-            return normalizeTectonics(fn.call(tectonics, p), composition);
-          } catch (_error2) {
-            return fallbackTectonics(composition);
-          }
-        }
-      }
+      if (raw) return normalizeTectonics(raw, composition);
     }
 
     return fallbackTectonics(composition);
-  };
+  }
 
-  const biasFor = (continentId) => CONTINENT_HYDROLOGY_BIAS[continentId] || CONTINENT_HYDROLOGY_BIAS.open_ocean;
+  function biasFor(continentId) {
+    return CONTINENT_HYDROLOGY_BIAS[continentId] || CONTINENT_HYDROLOGY_BIAS.open_ocean;
+  }
 
-  const computeBaseHydrologyFields = (composition, tectonics, p) => {
+  function computeBaseHydrologyFields(composition, tectonics, p) {
     const bias = biasFor(composition.continentId);
     const n = waterNoise(p, (composition.continentIndex || 0) + 23);
+    const climate = normalizeClimateAlias(composition.normalizedClimateClass || composition.climateClass || composition.climateHint);
 
     const isWater = composition.isWater ? 1 : 0;
-    const isLand = composition.isLand ? 1 : 0;
-    const isRainforest = composition.climateClass === "rainforest_wet_basin" ? 1 : 0;
-    const isMonsoon = composition.climateClass === "monsoon_floodplain" ? 1 : 0;
-    const isTemperateStorm = composition.climateClass === "temperate_coastal_storm" ? 1 : 0;
-    const isPolar = composition.climateClass === "polar_icefield" ? 1 : 0;
-    const isTundra = composition.climateClass === "tundra_subpolar" ? 1 : 0;
-    const isArid = composition.climateClass === "arid_dry_plateau" ? 1 : 0;
+    const isRainforest = climate === "rainforest_wet_basin" ? 1 : 0;
+    const isMonsoon = climate === "monsoon_floodplain" ? 1 : 0;
+    const isTemperateStorm = climate === "temperate_coastal_storm" ? 1 : 0;
+    const isPolar = climate === "polar_icefield" ? 1 : 0;
+    const isTundra = climate === "tundra_subpolar" ? 1 : 0;
+    const isArid = climate === "arid_dry_plateau" ? 1 : 0;
     const isBrokenArchipelago = composition.continentId === "broken_archipelago" ? 1 : 0;
     const isNorthernCold = composition.continentId === "northern_cold" ? 1 : 0;
     const deepOceanStable = tectonics.tectonicClass === "deep_ocean_stable" ? 1 : 0;
@@ -902,10 +1287,10 @@
       deepOceanDrop,
       coastNaturalizationFeed
     };
-  };
+  }
 
-  const computeSeaLevelFields = (composition, tectonics, h) => {
-    const seaLevel = SEA_LEVEL;
+  function computeSeaLevelFields(composition, tectonics, h) {
+    const seaLevel = Number.isFinite(Number(composition.seaLevel)) ? Number(composition.seaLevel) : SEA_LEVEL;
     const elevation = numberField(composition, "elevation", composition.isWater ? -0.28 : 0.18);
     const relativeSeaElevation = elevation - seaLevel;
 
@@ -1103,135 +1488,111 @@
       oldCoastalTechSubmerged: oldCoastalTechSubmergedStrength > 0.36,
       oldCoastalTechSubmergedStrength
     };
-  };
+  }
 
-  const computeMaterialFeeds = (composition, tectonics, h, sea) => {
-    const materialWaterFeed = clamp01(
-      h.oceanContinuity * 0.20 +
-      h.oceanDepth * 0.20 +
-      h.surfaceWaterPotential * 0.14 +
-      h.shelfGradient * 0.10 +
-      h.straitPotential * 0.06 +
-      sea.waterFillStrength * 0.20 +
-      sea.waterDepth * 0.10
-    );
-
-    const materialShelfFeed = clamp01(
-      h.shelfGradient * 0.28 +
-      h.coastalBlendWidth * 0.15 +
-      h.reefShelfPotential * 0.10 +
-      h.islandWaterGap * 0.08 +
-      h.deepOceanDrop * 0.06 +
-      sea.shallowShelfStrength * 0.22 +
-      sea.sandShelfStrength * 0.11
-    );
-
-    const materialShoreFeed = clamp01(
-      h.isCoastal * 0.20 +
-      h.coastNaturalizationFeed * 0.20 +
-      h.shorelineSoftness * 0.12 +
-      h.shorelineRoughness * 0.08 +
-      h.bayPotential * 0.06 +
-      h.inletPotential * 0.06 +
-      sea.waterlineBoundaryStrength * 0.18 +
-      sea.wetStoneStrength * 0.10
-    );
-
-    const materialWetlandFeed = clamp01(
-      h.wetlandPotential * 0.30 +
-      h.marshPotential * 0.22 +
-      h.floodplainPotential * 0.20 +
-      h.deltaPotential * 0.14 +
-      sea.nearSeaLevelStrength * 0.08
-    );
-
-    const materialRiverFeed = clamp01(
-      h.riverPotential * 0.30 +
-      h.drainagePotential * 0.20 +
-      h.estuaryPotential * 0.13 +
-      h.canyonOutflowPotential * 0.11 +
-      h.waterfallFlowPotential * 0.09 +
-      sea.submergedScarStrength * 0.07
-    );
-
-    const materialBeachFeed = clamp01(
-      sea.beachStrength * 0.50 +
-      sea.sandShelfStrength * 0.24 +
-      h.shorelineSoftness * 0.12 +
-      h.bayPotential * 0.06
-    );
-
-    const materialSandShelfFeed = clamp01(
-      sea.sandShelfStrength * 0.52 +
-      sea.shallowShelfStrength * 0.22 +
-      h.reefShelfPotential * 0.08 +
-      h.coastalBlendWidth * 0.08
-    );
-
-    const materialWetStoneFeed = clamp01(
-      sea.wetStoneStrength * 0.46 +
-      sea.hardCoastStrength * 0.18 +
-      sea.cliffWaterEdgeStrength * 0.16 +
-      h.shorelineRoughness * 0.10
-    );
-
-    const materialSubmergedBlockFeed = clamp01(
-      sea.submergedBlockStrength * 0.52 +
-      sea.waterFillStrength * 0.16 +
-      sea.shallowShelfStrength * 0.10 +
-      h.archipelagoChannelPotential * 0.08
-    );
-
-    const materialSubmergedScarFeed = clamp01(
-      sea.submergedScarStrength * 0.50 +
-      sea.oldCoastalTechSubmergedStrength * 0.18 +
-      h.straitPotential * 0.08 +
-      h.canyonOutflowPotential * 0.08
-    );
-
-    const materialCliffWaterEdgeFeed = clamp01(
-      sea.cliffWaterEdgeStrength * 0.52 +
-      sea.hardCoastStrength * 0.20 +
-      tectonics.cliffPressure * 0.12 +
-      tectonics.shelfDropPressure * 0.08
-    );
-
-    const materialWaterlineFeed = clamp01(
-      sea.waterlineBoundaryStrength * 0.52 +
-      sea.nearSeaLevelStrength * 0.18 +
-      h.isCoastal * 0.12 +
-      h.coastalBlendWidth * 0.08
-    );
-
+  function computeMaterialFeeds(composition, tectonics, h, sea) {
     return {
-      materialWaterFeed,
-      materialShelfFeed,
-      materialShoreFeed,
-      materialWetlandFeed,
-      materialRiverFeed,
-      materialBeachFeed,
-      materialSandShelfFeed,
-      materialWetStoneFeed,
-      materialSubmergedBlockFeed,
-      materialSubmergedScarFeed,
-      materialCliffWaterEdgeFeed,
-      materialWaterlineFeed
+      materialWaterFeed: clamp01(
+        h.oceanContinuity * 0.20 +
+        h.oceanDepth * 0.20 +
+        h.surfaceWaterPotential * 0.14 +
+        h.shelfGradient * 0.10 +
+        h.straitPotential * 0.06 +
+        sea.waterFillStrength * 0.20 +
+        sea.waterDepth * 0.10
+      ),
+      materialShelfFeed: clamp01(
+        h.shelfGradient * 0.28 +
+        h.coastalBlendWidth * 0.15 +
+        h.reefShelfPotential * 0.10 +
+        h.islandWaterGap * 0.08 +
+        h.deepOceanDrop * 0.06 +
+        sea.shallowShelfStrength * 0.22 +
+        sea.sandShelfStrength * 0.11
+      ),
+      materialShoreFeed: clamp01(
+        h.isCoastal * 0.20 +
+        h.coastNaturalizationFeed * 0.20 +
+        h.shorelineSoftness * 0.12 +
+        h.shorelineRoughness * 0.08 +
+        h.bayPotential * 0.06 +
+        h.inletPotential * 0.06 +
+        sea.waterlineBoundaryStrength * 0.18 +
+        sea.wetStoneStrength * 0.10
+      ),
+      materialWetlandFeed: clamp01(
+        h.wetlandPotential * 0.30 +
+        h.marshPotential * 0.22 +
+        h.floodplainPotential * 0.20 +
+        h.deltaPotential * 0.14 +
+        sea.nearSeaLevelStrength * 0.08
+      ),
+      materialRiverFeed: clamp01(
+        h.riverPotential * 0.30 +
+        h.drainagePotential * 0.20 +
+        h.estuaryPotential * 0.13 +
+        h.canyonOutflowPotential * 0.11 +
+        h.waterfallFlowPotential * 0.09 +
+        sea.submergedScarStrength * 0.07
+      ),
+      materialBeachFeed: clamp01(
+        sea.beachStrength * 0.50 +
+        sea.sandShelfStrength * 0.24 +
+        h.shorelineSoftness * 0.12 +
+        h.bayPotential * 0.06
+      ),
+      materialSandShelfFeed: clamp01(
+        sea.sandShelfStrength * 0.52 +
+        sea.shallowShelfStrength * 0.22 +
+        h.reefShelfPotential * 0.08 +
+        h.coastalBlendWidth * 0.08
+      ),
+      materialWetStoneFeed: clamp01(
+        sea.wetStoneStrength * 0.46 +
+        sea.hardCoastStrength * 0.18 +
+        sea.cliffWaterEdgeStrength * 0.16 +
+        h.shorelineRoughness * 0.10
+      ),
+      materialSubmergedBlockFeed: clamp01(
+        sea.submergedBlockStrength * 0.52 +
+        sea.waterFillStrength * 0.16 +
+        sea.shallowShelfStrength * 0.10 +
+        h.archipelagoChannelPotential * 0.08
+      ),
+      materialSubmergedScarFeed: clamp01(
+        sea.submergedScarStrength * 0.50 +
+        sea.oldCoastalTechSubmergedStrength * 0.18 +
+        h.straitPotential * 0.08 +
+        h.canyonOutflowPotential * 0.08
+      ),
+      materialCliffWaterEdgeFeed: clamp01(
+        sea.cliffWaterEdgeStrength * 0.52 +
+        sea.hardCoastStrength * 0.20 +
+        tectonics.cliffPressure * 0.12 +
+        tectonics.shelfDropPressure * 0.08
+      ),
+      materialWaterlineFeed: clamp01(
+        sea.waterlineBoundaryStrength * 0.52 +
+        sea.nearSeaLevelStrength * 0.18 +
+        h.isCoastal * 0.12 +
+        h.coastalBlendWidth * 0.08
+      )
     };
-  };
+  }
 
-  const computeHydrologyFields = (composition, tectonics, p) => {
-    const h = computeBaseHydrologyFields(composition, tectonics, p);
-    const sea = computeSeaLevelFields(composition, tectonics, h);
-    const feeds = computeMaterialFeeds(composition, tectonics, h, sea);
+  function computeHydrologyFields(composition, tectonics, p) {
+    const base = computeBaseHydrologyFields(composition, tectonics, p);
+    const sea = computeSeaLevelFields(composition, tectonics, base);
+    const feeds = computeMaterialFeeds(composition, tectonics, base, sea);
 
     return {
-      ...h,
+      ...base,
       ...sea,
       ...feeds
     };
-  };
+  }
 
-  const classifyWaterBoundary = (composition, tectonics, h) => {
+  function classifyWaterBoundary(composition, tectonics, h) {
     if (h.submergedScarStrength > 0.62 && h.waterFillStrength > 0.42) return "submerged_coastal_scar";
     if (h.submergedBlockStrength > 0.62 && h.waterFillStrength > 0.42) return "submerged_block_field";
     if (h.waterlineBoundaryStrength > 0.62 && h.waterFillStrength > 0.36) return "sea_level_waterline";
@@ -1245,9 +1606,9 @@
     if (composition.isDeepWater && h.oceanDepth > 0.64) return "deep_ocean_body";
     if (composition.isWater || h.waterFillStrength > 0.48) return "open_ocean_basin";
     return "none";
-  };
+  }
 
-  const classifyCoastBoundary = (composition, tectonics, h) => {
+  function classifyCoastBoundary(composition, tectonics, h) {
     if (h.cliffWaterEdgeStrength > 0.62) return "hard_cliff_water_edge";
     if (h.wetStoneStrength > 0.60) return "wet_stone_boundary";
     if (h.sandShelfStrength > 0.60) return "sand_shelf_transition";
@@ -1262,13 +1623,13 @@
     if (h.riverPotential > 0.52) return "river_mouth_boundary";
     if (h.wetlandPotential > 0.50) return "wetland_lowland";
     if (h.floodplainPotential > 0.50) return "floodplain_basin";
-    if (composition.climateClass === "arid_dry_plateau" && h.isCoastal > 0.28) return "dry_rocky_coast";
+    if (composition.normalizedClimateClass === "arid_dry_plateau" && h.isCoastal > 0.28) return "dry_rocky_coast";
     if (h.beachStrength > 0.42 || (h.isCoastal > 0.32 && h.shorelineSoftness > h.shorelineRoughness)) return "beach_shelf_boundary";
     if (h.isCoastal > 0.22 || h.waterlineBoundaryStrength > 0.34) return "coastal_transition_zone";
     return "none";
-  };
+  }
 
-  const classifyHydrology = (composition, tectonics, h) => {
+  function classifyHydrology(composition, tectonics, h) {
     if (h.submergedScarStrength > 0.66) return "submerged_coastal_scar";
     if (h.submergedBlockStrength > 0.66) return "submerged_block_field";
     if (h.cliffWaterEdgeStrength > 0.64) return "hard_cliff_water_edge";
@@ -1284,9 +1645,9 @@
     if (h.oceanContinuity > 0.52) return "open_ocean_basin";
     if (h.surfaceWaterPotential > 0.42) return "coastal_transition_zone";
     return "none";
-  };
+  }
 
-  const shorelineTypeFor = (composition, tectonics, h, coastBoundaryClass) => {
+  function shorelineTypeFor(composition, tectonics, h, coastBoundaryClass) {
     if (coastBoundaryClass === "hard_cliff_water_edge") return "hard_cliff_water_edge";
     if (coastBoundaryClass === "wet_stone_boundary") return "wet_stone_boundary";
     if (coastBoundaryClass === "sand_shelf_transition") return "sand_shelf_transition";
@@ -1304,9 +1665,9 @@
     if (h.shorelineSoftness > h.shorelineRoughness) return "soft_shelf_shoreline";
     if (h.shorelineRoughness > 0.48) return "rough_rocky_shoreline";
     return "coastal_transition";
-  };
+  }
 
-  const shelfTypeFor = (composition, h, waterBoundaryClass) => {
+  function shelfTypeFor(composition, h, waterBoundaryClass) {
     if (h.sandShelf) return "sand_shelf_transition";
     if (h.shallowShelf) return "shallow_shelf";
     if (waterBoundaryClass === "submerged_coastal_scar") return "submerged_scar_shelf";
@@ -1319,18 +1680,18 @@
     if (h.shelfGradient > 0.50) return "continental_shelf_gradient";
     if (composition.isShallowWater) return "shallow_shelf";
     return "none";
-  };
+  }
 
-  const basinTypeFor = (composition, h) => {
+  function basinTypeFor(composition, h) {
     if (h.waterDepthClass === "deep") return "deep_ocean_basin";
     if (h.oceanContinuity > 0.46) return "open_ocean_basin";
     if (h.bayPotential > 0.44) return "coastal_bay_basin";
     if (h.wetlandPotential > 0.44) return "wetland_lowland_basin";
     if (h.floodplainPotential > 0.44) return "floodplain_basin";
     return "none";
-  };
+  }
 
-  const drainageTypeFor = (composition, h, coastBoundaryClass) => {
+  function drainageTypeFor(composition, h, coastBoundaryClass) {
     if (coastBoundaryClass === "waterfall_drainage_edge") return "waterfall_drainage_edge";
     if (coastBoundaryClass === "canyon_outflow_boundary") return "canyon_outflow_boundary";
     if (coastBoundaryClass === "estuary_cut_boundary") return "estuary_cut_boundary";
@@ -1340,13 +1701,13 @@
     if (h.wetlandPotential > 0.48) return "wetland_drainage";
     if (h.drainagePotential > 0.44) return "general_drainage";
     return "none";
-  };
+  }
 
-  const sample = (...args) => {
-    const p = parseInput(...args);
+  function sample(...args) {
+    const packet = parseInput(...args);
     const composition = readComposition(...args);
-    const tectonics = readTectonics(composition, p);
-    const h = computeHydrologyFields(composition, tectonics, p);
+    const tectonics = readTectonics(composition, packet);
+    const h = computeHydrologyFields(composition, tectonics, packet);
 
     const waterBoundaryClass = classifyWaterBoundary(composition, tectonics, h);
     const coastBoundaryClass = classifyCoastBoundary(composition, tectonics, h);
@@ -1360,13 +1721,36 @@
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
+      baselineContract: BASELINE_CONTRACT,
       version: VERSION,
       authority: "hydrology",
-      sourceAuthority: "hearth.composition.js + hearth.tectonics.js",
+      sourceAuthority: "hearth.elevation.js + hearth.composition.js + hearth.tectonics.js",
 
-      x: p.x,
-      y: p.y,
-      z: p.z,
+      x: packet.x,
+      y: packet.y,
+      z: packet.z,
+      u: packet.u,
+      v: packet.v,
+      lon: packet.lon,
+      lat: packet.lat,
+
+      newsProtocolSynchronized: true,
+      fibonacciAlignmentSynchronized: true,
+      activeFibonacciGate: "F13",
+      futureFibonacciGate: "F21",
+      oneActiveGearAtATime: true,
+      cycleOrder: "EAST_WEST_NORTH_SOUTH_CHECKPOINT_EAST",
+
+      directElevationConsumptionActive: true,
+      elevationAuthoritySupported: true,
+      elevationSampleAttemptedAtRuntime: true,
+      elevationAuthorityDetectedAtSampleTime: Boolean(composition.elevationAuthorityDetectedAtSampleTime),
+      elevationSampleValid: Boolean(composition.elevationSampleValid),
+      elevationMergedIntoHydrologyInput: Boolean(composition.elevationMergedIntoHydrologyInput),
+      compositionStillSupported: true,
+      compositionFallbackPreserved: true,
+      compositionFallbackUsed: Boolean(composition.compositionFallbackUsed),
+      climateAliasNormalizationActive: true,
 
       hydrologyClass,
       waterBoundaryClass,
@@ -1375,6 +1759,16 @@
       shelfType,
       basinType,
       drainageType,
+
+      elevation: composition.elevation,
+      seaLevel: h.seaLevel,
+      relativeSeaElevation: h.relativeSeaElevation,
+
+      waterlineUsesCurrentElevation: Boolean(composition.elevationSampleValid),
+      beachUsesCurrentElevation: Boolean(composition.elevationSampleValid),
+      shelfUsesCurrentElevation: Boolean(composition.elevationSampleValid),
+      cliffWaterEdgeUsesCurrentElevation: Boolean(composition.elevationSampleValid),
+      submergedStructureUsesCurrentElevation: Boolean(composition.elevationSampleValid),
 
       waterPresence: clamp01(
         (composition.isWater ? 0.34 : 0) +
@@ -1414,9 +1808,6 @@
       bayPotential: h.bayPotential,
       inletPotential: h.inletPotential,
       peninsulaEdgePotential: h.peninsulaEdgePotential,
-
-      seaLevel: h.seaLevel,
-      relativeSeaElevation: h.relativeSeaElevation,
 
       belowSeaLevel: h.belowSeaLevel,
       nearSeaLevel: h.nearSeaLevel,
@@ -1476,16 +1867,28 @@
       materialCliffWaterEdgeFeed: h.materialCliffWaterEdgeFeed,
       materialWaterlineFeed: h.materialWaterlineFeed,
 
+      materialFeedsPreserved: true,
+      beachStillHydrologyBoundary: true,
+      canvasHeld: true,
+      islandsHeld: true,
+      materialsHeld: true,
+      zoomHeld: true,
+
       compositionContract: composition.contract || "UNKNOWN_COMPOSITION_CONTRACT",
       compositionReceipt: composition.receipt || "UNKNOWN_COMPOSITION_RECEIPT",
+      elevationContract: composition.elevationContract || "NONE",
+      elevationReceipt: composition.elevationReceipt || "NONE",
       tectonicsContract: tectonics.contract || "UNKNOWN_TECTONICS_CONTRACT",
       tectonicsReceipt: tectonics.receipt || "UNKNOWN_TECTONICS_RECEIPT",
 
-      terrainClass: composition.worldTerrainClass || composition.terrainClass || "unknown",
+      terrainClass: composition.worldTerrainClass || composition.terrainClass || composition.terrainClassHint || "unknown",
+      terrainClassHint: composition.terrainClassHint || composition.terrainClass || "unknown",
       continentId: composition.continentId,
       continentName: composition.continentName,
       continentClass: composition.continentClass,
+      continentIndex: composition.continentIndex,
       climateClass: composition.climateClass,
+      normalizedClimateClass: composition.normalizedClimateClass,
       summitClass: composition.summitClass,
       tectonicClass: tectonics.tectonicClass,
 
@@ -1494,12 +1897,18 @@
       isShallowWater: composition.isShallowWater,
       isDeepWater: composition.isDeepWater,
 
+      hydrologyOwnsElevationGeneration: false,
+      hydrologyOwnsCompositionClassification: false,
+      hydrologyOwnsMaterialPalette: false,
+      hydrologyOwnsCanvas: false,
+      f21ClaimedByHydrology: false,
+
       generatedImage: false,
       graphicBox: false,
       webGL: false,
       visualPassClaimed: false
     };
-  };
+  }
 
   const read = (...args) => sample(...args);
   const sampleHydrology = (...args) => sample(...args);
@@ -1509,151 +1918,230 @@
   const getWaterBoundaryClass = (...args) => sample(...args).waterBoundaryClass;
   const getCoastBoundaryClass = (...args) => sample(...args).coastBoundaryClass;
 
-  const getReceipt = () => ({
-    contract: CONTRACT,
-    receipt: RECEIPT,
-    previousContract: PREVIOUS_CONTRACT,
-    version: VERSION,
-    authority: "hydrology",
-    status: "active",
-    sourceAuthority: "hearth.composition.js + hearth.tectonics.js",
-    purpose: "sea-level-waterline-beach-boundary-and-submerged-structure-classification",
-    requiredUpstream: [
-      "hearth.composition.js",
-      "hearth.tectonics.js"
-    ],
-    preparedDownstream: [
-      "hearth.materials.js",
-      "hearth.canvas.js"
-    ],
-    hydrologyClasses: HYDROLOGY_CLASSES.slice(),
-    waterBoundaryClasses: WATER_BOUNDARY_CLASSES.slice(),
-    coastBoundaryClasses: COAST_BOUNDARY_CLASSES.slice(),
-    seaLevel: SEA_LEVEL,
-    exposedFields: [
-      "hydrologyClass",
-      "waterBoundaryClass",
-      "coastBoundaryClass",
-      "shorelineType",
-      "shelfType",
-      "basinType",
-      "drainageType",
-      "waterPresence",
-      "surfaceWaterPotential",
-      "subsurfaceWaterPotential",
-      "oceanContinuity",
-      "oceanDepth",
-      "shelfGradient",
-      "shorelineSoftness",
-      "shorelineRoughness",
-      "coastalBlendWidth",
-      "riverPotential",
-      "drainagePotential",
-      "deltaPotential",
-      "estuaryPotential",
-      "wetlandPotential",
-      "marshPotential",
-      "floodplainPotential",
-      "waterfallFlowPotential",
-      "canyonOutflowPotential",
-      "fjordCutPotential",
-      "stormSurgePotential",
-      "reefShelfPotential",
-      "archipelagoChannelPotential",
-      "islandWaterGap",
-      "straitPotential",
-      "bayPotential",
-      "inletPotential",
-      "peninsulaEdgePotential",
-      "seaLevel",
-      "relativeSeaElevation",
-      "belowSeaLevel",
-      "nearSeaLevel",
-      "aboveSeaLevel",
-      "belowSeaLevelStrength",
-      "nearSeaLevelStrength",
-      "aboveSeaLevelStrength",
-      "waterFill",
-      "waterFillStrength",
-      "waterDepth",
-      "waterDepthClass",
-      "waterlineBoundary",
-      "waterlineBoundaryStrength",
-      "shallowShelf",
-      "shallowShelfStrength",
-      "beachCandidate",
-      "beachStrength",
-      "sandShelf",
-      "sandShelfStrength",
-      "hardCoastCandidate",
-      "hardCoastStrength",
-      "cliffWaterEdge",
-      "cliffWaterEdgeStrength",
-      "submergedBlock",
-      "submergedBlockStrength",
-      "submergedScar",
-      "submergedScarStrength",
-      "wetStoneEdge",
-      "wetStoneStrength",
-      "oldCoastalTechSubmerged",
-      "oldCoastalTechSubmergedStrength",
-      "coastNaturalizationFeed",
-      "materialWaterFeed",
-      "materialShelfFeed",
-      "materialShoreFeed",
-      "materialWetlandFeed",
-      "materialRiverFeed",
-      "materialBeachFeed",
-      "materialSandShelfFeed",
-      "materialWetStoneFeed",
-      "materialSubmergedBlockFeed",
-      "materialSubmergedScarFeed",
-      "materialCliffWaterEdgeFeed",
-      "materialWaterlineFeed"
-    ],
-    designRules: [
-      "hydrology classifies sea-level truth",
-      "water defines the true coast",
-      "coastal blocks may be below sea level",
-      "visible scars may be submerged evidence",
-      "beaches derive from waterline plus shallow shelf plus shoreline softness",
-      "cliff water edges derive from waterline plus tectonic hardness",
-      "materials render later",
-      "canvas held",
-      "route held",
-      "no final visual pass claim"
-    ],
-    supportsCoastalBoundaryNaturalization: true,
-    supportsMaterialWaterFeed: true,
-    supportsMaterialShelfFeed: true,
-    supportsMaterialShoreFeed: true,
-    supportsHydrologyBoundaryClasses: true,
-    supportsSeaLevelWaterlineBoundary: true,
-    supportsBeachBoundaryClassification: true,
-    supportsSubmergedBlockClassification: true,
-    supportsSubmergedScarClassification: true,
-    forbiddenOwnership: [
-      "elevation-generation",
-      "composition-classification",
-      "tectonic-pressure-generation",
-      "material-palette",
-      "canvas-drawing",
-      "runtime-motion",
-      "controls",
-      "route-orchestration",
-      "teleports",
-      "final-visual-pass-claim"
-    ],
-    generatedImage: false,
-    graphicBox: false,
-    webGL: false,
-    visualPassClaimed: false
-  });
+  function getRuntimeState() {
+    return {
+      ...runtimeState,
+      directElevationConsumptionActive: true,
+      elevationAuthoritySupported: true,
+      elevationMergedIntoHydrologyInput: runtimeState.elevationMergedIntoHydrologyInputAtRuntime,
+      compositionStillSupported: true,
+      compositionFallbackPreserved: true,
+      climateAliasNormalizationActive: true
+    };
+  }
+
+  function getReceipt() {
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
+      baselineContract: BASELINE_CONTRACT,
+      version: VERSION,
+      authority: "hydrology",
+      status: "active",
+      sourceAuthority: "hearth.elevation.js + hearth.composition.js + hearth.tectonics.js",
+      purpose: "direct-elevation-driven-sea-level-waterline-beach-boundary-and-submerged-structure-classification",
+
+      newsProtocolSynchronized: true,
+      fibonacciAlignmentSynchronized: true,
+      activeFibonacciGate: "F13",
+      futureFibonacciGate: "F21",
+      oneActiveGearAtATime: true,
+      cycleOrder: "EAST_WEST_NORTH_SOUTH_CHECKPOINT_EAST",
+
+      directElevationConsumptionActive: true,
+      elevationAuthoritySupported: true,
+      elevationSampleAttemptedAtRuntime: true,
+      elevationMergedIntoHydrologyInput: true,
+      compositionStillSupported: true,
+      compositionFallbackPreserved: true,
+      climateAliasNormalizationActive: true,
+
+      primaryElevationOverrideFields: PRIMARY_ELEVATION_OVERRIDE_FIELDS.slice(),
+      coastalElevationOverrideFields: COASTAL_ELEVATION_OVERRIDE_FIELDS.slice(),
+      hydrologyElevationOverrideFields: ELEVATION_OVERRIDE_FIELDS.slice(),
+
+      waterlineUsesCurrentElevation: true,
+      beachUsesCurrentElevation: true,
+      shelfUsesCurrentElevation: true,
+      cliffWaterEdgeUsesCurrentElevation: true,
+      submergedStructureUsesCurrentElevation: true,
+
+      beachStillHydrologyBoundary: true,
+      materialFeedsPreserved: true,
+      canvasHeld: true,
+      islandsHeld: true,
+      materialsHeld: true,
+      zoomHeld: true,
+
+      hydrologyOwnsElevationGeneration: false,
+      hydrologyOwnsCompositionClassification: false,
+      hydrologyOwnsMaterialPalette: false,
+      hydrologyOwnsCanvas: false,
+      f21ClaimedByHydrology: false,
+
+      runtimeState: getRuntimeState(),
+
+      requiredUpstream: [
+        "hearth.elevation.js",
+        "hearth.composition.js",
+        "hearth.tectonics.js"
+      ],
+      preparedDownstream: [
+        "hearth.materials.js",
+        "hearth.canvas.js"
+      ],
+      hydrologyClasses: HYDROLOGY_CLASSES.slice(),
+      waterBoundaryClasses: WATER_BOUNDARY_CLASSES.slice(),
+      coastBoundaryClasses: COAST_BOUNDARY_CLASSES.slice(),
+      seaLevel: SEA_LEVEL,
+      exposedFields: [
+        "hydrologyClass",
+        "waterBoundaryClass",
+        "coastBoundaryClass",
+        "shorelineType",
+        "shelfType",
+        "basinType",
+        "drainageType",
+        "elevation",
+        "seaLevel",
+        "relativeSeaElevation",
+        "waterPresence",
+        "surfaceWaterPotential",
+        "subsurfaceWaterPotential",
+        "oceanContinuity",
+        "oceanDepth",
+        "shelfGradient",
+        "shorelineSoftness",
+        "shorelineRoughness",
+        "coastalBlendWidth",
+        "riverPotential",
+        "drainagePotential",
+        "deltaPotential",
+        "estuaryPotential",
+        "wetlandPotential",
+        "marshPotential",
+        "floodplainPotential",
+        "waterfallFlowPotential",
+        "canyonOutflowPotential",
+        "fjordCutPotential",
+        "stormSurgePotential",
+        "reefShelfPotential",
+        "archipelagoChannelPotential",
+        "islandWaterGap",
+        "straitPotential",
+        "bayPotential",
+        "inletPotential",
+        "peninsulaEdgePotential",
+        "belowSeaLevel",
+        "nearSeaLevel",
+        "aboveSeaLevel",
+        "belowSeaLevelStrength",
+        "nearSeaLevelStrength",
+        "aboveSeaLevelStrength",
+        "waterFill",
+        "waterFillStrength",
+        "waterDepth",
+        "waterDepthClass",
+        "waterlineBoundary",
+        "waterlineBoundaryStrength",
+        "shallowShelf",
+        "shallowShelfStrength",
+        "beachCandidate",
+        "beachStrength",
+        "sandShelf",
+        "sandShelfStrength",
+        "hardCoastCandidate",
+        "hardCoastStrength",
+        "cliffWaterEdge",
+        "cliffWaterEdgeStrength",
+        "submergedBlock",
+        "submergedBlockStrength",
+        "submergedScar",
+        "submergedScarStrength",
+        "wetStoneEdge",
+        "wetStoneStrength",
+        "oldCoastalTechSubmerged",
+        "oldCoastalTechSubmergedStrength",
+        "coastNaturalizationFeed",
+        "materialWaterFeed",
+        "materialShelfFeed",
+        "materialShoreFeed",
+        "materialWetlandFeed",
+        "materialRiverFeed",
+        "materialBeachFeed",
+        "materialSandShelfFeed",
+        "materialWetStoneFeed",
+        "materialSubmergedBlockFeed",
+        "materialSubmergedScarFeed",
+        "materialCliffWaterEdgeFeed",
+        "materialWaterlineFeed",
+        "directElevationConsumptionActive",
+        "elevationMergedIntoHydrologyInput",
+        "climateAliasNormalizationActive"
+      ],
+      climateAliasRules: {
+        tropical_rainforest_wet_basin: "rainforest_wet_basin",
+        rainforest_wet_basin: "rainforest_wet_basin",
+        arid_desert_dry_plateau: "arid_dry_plateau",
+        arid_dry_plateau: "arid_dry_plateau",
+        temperate_coastal_storm: "temperate_coastal_storm",
+        monsoon_floodplain: "monsoon_floodplain",
+        polar_icefield: "polar_icefield",
+        tundra_subpolar: "tundra_subpolar"
+      },
+      designRules: [
+        "hydrology classifies sea-level truth",
+        "hydrology consumes elevation directly when available",
+        "composition remains supported",
+        "composition fallback remains preserved",
+        "waterline derives from current elevation",
+        "beaches derive from waterline plus shallow shelf plus shoreline softness",
+        "cliff water edges derive from waterline plus tectonic hardness",
+        "submerged structures derive from current near/below sea-level state",
+        "materials render later",
+        "canvas held",
+        "islands held",
+        "zoom held",
+        "no final visual pass claim"
+      ],
+      supportsCoastalBoundaryNaturalization: true,
+      supportsMaterialWaterFeed: true,
+      supportsMaterialShelfFeed: true,
+      supportsMaterialShoreFeed: true,
+      supportsHydrologyBoundaryClasses: true,
+      supportsSeaLevelWaterlineBoundary: true,
+      supportsBeachBoundaryClassification: true,
+      supportsSubmergedBlockClassification: true,
+      supportsSubmergedScarClassification: true,
+      supportsDirectElevationConsumption: true,
+      supportsClimateAliasNormalization: true,
+      forbiddenOwnership: [
+        "elevation-generation",
+        "composition-classification",
+        "tectonic-pressure-generation",
+        "material-palette",
+        "canvas-drawing",
+        "runtime-motion",
+        "controls",
+        "route-orchestration",
+        "teleports",
+        "islands-bridge",
+        "zoom",
+        "final-visual-pass-claim"
+      ],
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false
+    };
+  }
 
   const api = {
     contract: CONTRACT,
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
+    baselineContract: BASELINE_CONTRACT,
     version: VERSION,
 
     sample,
@@ -1665,10 +2153,35 @@
     getWaterBoundaryClass,
     getCoastBoundaryClass,
     getReceipt,
+    getRuntimeState,
 
     hydrologyClasses: HYDROLOGY_CLASSES.slice(),
     waterBoundaryClasses: WATER_BOUNDARY_CLASSES.slice(),
     coastBoundaryClasses: COAST_BOUNDARY_CLASSES.slice(),
+
+    normalizeClimateAlias,
+    readElevationAuthority,
+    normalizeElevationForHydrology,
+    mergeElevationIntoComposition,
+
+    newsProtocolSynchronized: true,
+    fibonacciAlignmentSynchronized: true,
+    activeFibonacciGate: "F13",
+    futureFibonacciGate: "F21",
+    oneActiveGearAtATime: true,
+
+    directElevationConsumptionActive: true,
+    elevationAuthoritySupported: true,
+    elevationMergedIntoHydrologyInput: true,
+    compositionStillSupported: true,
+    compositionFallbackPreserved: true,
+    climateAliasNormalizationActive: true,
+
+    waterlineUsesCurrentElevation: true,
+    beachUsesCurrentElevation: true,
+    shelfUsesCurrentElevation: true,
+    cliffWaterEdgeUsesCurrentElevation: true,
+    submergedStructureUsesCurrentElevation: true,
 
     supportsCoastalBoundaryNaturalization: true,
     supportsMaterialWaterFeed: true,
@@ -1679,6 +2192,14 @@
     supportsBeachBoundaryClassification: true,
     supportsSubmergedBlockClassification: true,
     supportsSubmergedScarClassification: true,
+    supportsDirectElevationConsumption: true,
+    supportsClimateAliasNormalization: true,
+
+    hydrologyOwnsElevationGeneration: false,
+    hydrologyOwnsCompositionClassification: false,
+    hydrologyOwnsMaterialPalette: false,
+    hydrologyOwnsCanvas: false,
+    f21ClaimedByHydrology: false,
 
     generatedImage: false,
     graphicBox: false,
@@ -1698,31 +2219,70 @@
   root.HEARTH_HYDROLOGY_SUPPORTS_BEACH_BOUNDARY_CLASSIFICATION = true;
   root.HEARTH_HYDROLOGY_SUPPORTS_SUBMERGED_BLOCK_CLASSIFICATION = true;
   root.HEARTH_HYDROLOGY_SUPPORTS_SUBMERGED_SCAR_CLASSIFICATION = true;
+  root.HEARTH_HYDROLOGY_SUPPORTS_DIRECT_ELEVATION_CONSUMPTION = true;
+  root.HEARTH_HYDROLOGY_SUPPORTS_CLIMATE_ALIAS_NORMALIZATION = true;
 
   if (root.document && root.document.documentElement) {
-    root.document.documentElement.dataset.hearthHydrologyAuthorityLoaded = "true";
-    root.document.documentElement.dataset.hearthHydrologyContract = CONTRACT;
-    root.document.documentElement.dataset.hearthHydrologyReceipt = RECEIPT;
-    root.document.documentElement.dataset.hearthHydrologyPreviousContract = PREVIOUS_CONTRACT;
-    root.document.documentElement.dataset.hearthHydrologyCoastalBoundaryNaturalization = "true";
-    root.document.documentElement.dataset.hearthHydrologySeaLevelWaterlineBoundary = "true";
-    root.document.documentElement.dataset.hearthHydrologyBeachBoundaryClassification = "true";
-    root.document.documentElement.dataset.hearthHydrologySubmergedBlockClassification = "true";
-    root.document.documentElement.dataset.hearthHydrologySubmergedScarClassification = "true";
-    root.document.documentElement.dataset.hearthHydrologyMaterialWaterFeed = "true";
-    root.document.documentElement.dataset.hearthHydrologyMaterialShelfFeed = "true";
-    root.document.documentElement.dataset.hearthHydrologyMaterialShoreFeed = "true";
-    root.document.documentElement.dataset.hearthHydrologyMaterialBeachFeed = "true";
-    root.document.documentElement.dataset.hearthHydrologyMaterialSandShelfFeed = "true";
-    root.document.documentElement.dataset.hearthHydrologyMaterialWetStoneFeed = "true";
-    root.document.documentElement.dataset.hearthHydrologyMaterialSubmergedBlockFeed = "true";
-    root.document.documentElement.dataset.hearthHydrologyMaterialSubmergedScarFeed = "true";
-    root.document.documentElement.dataset.hearthHydrologyMaterialCliffWaterEdgeFeed = "true";
-    root.document.documentElement.dataset.hearthHydrologyMaterialWaterlineFeed = "true";
-    root.document.documentElement.dataset.generatedImage = "false";
-    root.document.documentElement.dataset.graphicBox = "false";
-    root.document.documentElement.dataset.webgl = "false";
-    root.document.documentElement.dataset.visualPassClaimed = "false";
+    const dataset = root.document.documentElement.dataset;
+
+    dataset.hearthHydrologyAuthorityLoaded = "true";
+    dataset.hearthHydrologyContract = CONTRACT;
+    dataset.hearthHydrologyReceipt = RECEIPT;
+    dataset.hearthHydrologyPreviousContract = PREVIOUS_CONTRACT;
+    dataset.hearthHydrologyBaselineContract = BASELINE_CONTRACT;
+
+    dataset.hearthHydrologyNewsProtocolSynchronized = "true";
+    dataset.hearthHydrologyFibonacciAlignmentSynchronized = "true";
+    dataset.hearthHydrologyActiveFibonacciGate = "F13";
+    dataset.hearthHydrologyFutureFibonacciGate = "F21";
+    dataset.hearthHydrologyOneActiveGearAtATime = "true";
+
+    dataset.hearthHydrologyDirectElevationConsumptionActive = "true";
+    dataset.hearthHydrologyElevationAuthoritySupported = "true";
+    dataset.hearthHydrologyElevationMergedIntoInput = "true";
+    dataset.hearthHydrologyCompositionStillSupported = "true";
+    dataset.hearthHydrologyCompositionFallbackPreserved = "true";
+    dataset.hearthHydrologyClimateAliasNormalizationActive = "true";
+
+    dataset.hearthHydrologyWaterlineUsesCurrentElevation = "true";
+    dataset.hearthHydrologyBeachUsesCurrentElevation = "true";
+    dataset.hearthHydrologyShelfUsesCurrentElevation = "true";
+    dataset.hearthHydrologyCliffWaterEdgeUsesCurrentElevation = "true";
+    dataset.hearthHydrologySubmergedStructureUsesCurrentElevation = "true";
+
+    dataset.hearthHydrologyCoastalBoundaryNaturalization = "true";
+    dataset.hearthHydrologySeaLevelWaterlineBoundary = "true";
+    dataset.hearthHydrologyBeachBoundaryClassification = "true";
+    dataset.hearthHydrologySubmergedBlockClassification = "true";
+    dataset.hearthHydrologySubmergedScarClassification = "true";
+
+    dataset.hearthHydrologyMaterialWaterFeed = "true";
+    dataset.hearthHydrologyMaterialShelfFeed = "true";
+    dataset.hearthHydrologyMaterialShoreFeed = "true";
+    dataset.hearthHydrologyMaterialBeachFeed = "true";
+    dataset.hearthHydrologyMaterialSandShelfFeed = "true";
+    dataset.hearthHydrologyMaterialWetStoneFeed = "true";
+    dataset.hearthHydrologyMaterialSubmergedBlockFeed = "true";
+    dataset.hearthHydrologyMaterialSubmergedScarFeed = "true";
+    dataset.hearthHydrologyMaterialCliffWaterEdgeFeed = "true";
+    dataset.hearthHydrologyMaterialWaterlineFeed = "true";
+    dataset.hearthHydrologyMaterialFeedsPreserved = "true";
+
+    dataset.hearthHydrologyCanvasHeld = "true";
+    dataset.hearthHydrologyIslandsHeld = "true";
+    dataset.hearthHydrologyMaterialsHeld = "true";
+    dataset.hearthHydrologyZoomHeld = "true";
+
+    dataset.hearthHydrologyOwnsElevationGeneration = "false";
+    dataset.hearthHydrologyOwnsCompositionClassification = "false";
+    dataset.hearthHydrologyOwnsMaterialPalette = "false";
+    dataset.hearthHydrologyOwnsCanvas = "false";
+    dataset.hearthHydrologyF21Claimed = "false";
+
+    dataset.generatedImage = "false";
+    dataset.graphicBox = "false";
+    dataset.webgl = "false";
+    dataset.visualPassClaimed = "false";
   }
 
   if (typeof module !== "undefined" && module.exports) {

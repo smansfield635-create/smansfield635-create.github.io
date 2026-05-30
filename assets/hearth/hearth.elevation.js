@@ -1,39 +1,52 @@
 // /assets/hearth/hearth.elevation.js
-// HEARTH_ELEVATION_NEWS_FIBONACCI_COORDINATE_BODY_RESOLVER_TNT_v3
+// HEARTH_ELEVATION_ISLAND_COASTAL_FEATURE_CONSUMPTION_TNT_v1
 // Full-file replacement.
 // Elevation resolver authority only.
 // Purpose:
-// - Preserve HEARTH_TECTONICS_SEATED_ELEVATION_RESOLVER_TNT_v2 behavior.
+// - Preserve HEARTH_ELEVATION_NEWS_FIBONACCI_COORDINATE_BODY_RESOLVER_TNT_v3 behavior.
 // - Consume HEARTH_STRUCTURAL_CAUSE_TECTONICS_AUTHORITY_TNT_v2 when present.
-// - Add definitive NEWS/Fibonacci coordinate body seats.
-// - Resolve land-body breadth, interior, edge, channel, ocean-basin, and summit pressure by coordinate.
-// - Convert tectonic structural cause + coordinate seats into physical height/depth.
+// - Consume HEARTH_ISLANDS_AUTHORITY_CONSUMPTION_BRIDGE_TNT_v1 when present.
+// - Add bounded height/depth influence for peninsulas, bays, keys, and main islands.
+// - Preserve seven-continent body seats as primary.
 // - Preserve downstream compatibility fields for composition, hydrology, materials, and canvas.
 // Does not own:
 // - tectonic origin cause
+// - island geometry
 // - climate authority
 // - biome authority
+// - hydrology
+// - beach authority
+// - sand authority
 // - material palette
 // - canvas drawing
 // - runtime motion
 // - controls
 // - route orchestration
+// - zoom
 // - final visual pass claim
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_ELEVATION_NEWS_FIBONACCI_COORDINATE_BODY_RESOLVER_TNT_v3";
-  const RECEIPT = "HEARTH_ELEVATION_NEWS_FIBONACCI_COORDINATE_BODY_RESOLVER_RECEIPT_v3";
-  const PREVIOUS_CONTRACT = "HEARTH_TECTONICS_SEATED_ELEVATION_RESOLVER_TNT_v2";
+  const CONTRACT = "HEARTH_ELEVATION_ISLAND_COASTAL_FEATURE_CONSUMPTION_TNT_v1";
+  const RECEIPT = "HEARTH_ELEVATION_ISLAND_COASTAL_FEATURE_CONSUMPTION_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "HEARTH_ELEVATION_NEWS_FIBONACCI_COORDINATE_BODY_RESOLVER_TNT_v3";
   const REQUIRED_TECTONICS_CONTRACT = "HEARTH_STRUCTURAL_CAUSE_TECTONICS_AUTHORITY_TNT_v2";
-  const VERSION = "2026-05-30.hearth-elevation-news-fibonacci-coordinate-body-resolver-v3";
+  const EXPECTED_ISLANDS_CONTRACT = "HEARTH_ISLANDS_AUTHORITY_CONSUMPTION_BRIDGE_TNT_v1";
+  const VERSION = "2026-05-30.hearth-elevation-island-coastal-feature-consumption-v1";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const DEG = Math.PI / 180;
   const RAD = 180 / Math.PI;
   const SEA_LEVEL = 0.0;
   const EPSILON = 0.000001;
+
+  const ISLAND_INFLUENCE_LIMITS = Object.freeze({
+    peninsulaMax: 0.08,
+    bayCarveMax: 0.16,
+    keyMax: 0.12,
+    mainIslandMax: 0.22
+  });
 
   const ANCHOR = Object.freeze({
     id: "HEARTH_COORDINATE_ANCHOR_0_0",
@@ -694,6 +707,343 @@
     );
   }
 
+  function getIslandsAuthority() {
+    return (
+      (root.HEARTH && root.HEARTH.islands) ||
+      root.HEARTH_ISLANDS ||
+      root.HearthIslands ||
+      null
+    );
+  }
+
+  function fallbackIslandFeature() {
+    return {
+      contract: "HEARTH_ELEVATION_ISLAND_FEATURE_NOOP_FALLBACK",
+      receipt: "HEARTH_ELEVATION_ISLAND_FEATURE_NOOP_FALLBACK_RECEIPT",
+      authority: "island-feature-noop-fallback",
+      active: false,
+      land: false,
+      island: false,
+      visibleIsland: false,
+      detachedIslandBody: false,
+      coastalRelationOnly: false,
+      featureId: null,
+      featureCategory: "latent",
+      featureFamily: "latent",
+      parentCoastRelation: null,
+      region: null,
+      regionName: null,
+      peninsulaStrength: 0,
+      bayCarveStrength: 0,
+      keyStrength: 0,
+      mainIslandStrength: 0,
+      islandStrength: 0,
+      coast: 0,
+      shelf: 0,
+      waterDepth: 1,
+      ridge: 0,
+      upland: 0,
+      relief: 0,
+      lowland: 0,
+      hillStrength: 0,
+      mountainStrength: 0,
+      cliffStrength: 0,
+      valleyStrength: 0,
+      beachExcludedFromIslands: true,
+      sandExcludedFromIslands: true,
+      visualPassClaimed: false
+    };
+  }
+
+  function callIslandAuthority(authority, packet) {
+    if (!authority || typeof authority !== "object") return null;
+
+    const methods = ["sampleIslandFeature", "sample", "read", "get"];
+
+    for (const method of methods) {
+      if (typeof authority[method] !== "function") continue;
+
+      try {
+        const result = authority[method](packet);
+        if (result && typeof result === "object") return result;
+      } catch (_error) {}
+
+      try {
+        const result = authority[method](packet.u, packet.v, packet.lon, packet.lat);
+        if (result && typeof result === "object") return result;
+      } catch (_error2) {}
+
+      try {
+        const result = authority[method](packet.x, packet.y, packet.z);
+        if (result && typeof result === "object") return result;
+      } catch (_error3) {}
+    }
+
+    return null;
+  }
+
+  function normalizeIslandFeatureForElevation(raw, detected) {
+    const source = raw && typeof raw === "object" ? raw : fallbackIslandFeature();
+
+    const featureCategory = String(source.featureCategory || "latent");
+    const active = Boolean(source.active);
+    const detachedIslandBody = Boolean(source.detachedIslandBody);
+    const visibleIsland = Boolean(source.visibleIsland);
+    const coastalRelationOnly = Boolean(source.coastalRelationOnly);
+
+    const peninsulaStrength = featureCategory === "peninsula" ? clamp01(source.peninsulaStrength) : 0;
+    const bayCarveStrength = featureCategory === "bay" ? clamp01(source.bayCarveStrength) : 0;
+    const keyStrength = featureCategory === "key" ? clamp01(source.keyStrength || source.islandStrength) : 0;
+    const mainIslandStrength = featureCategory === "mainIsland" ? clamp01(source.mainIslandStrength || source.islandStrength) : 0;
+    const islandStrength = clamp01(source.islandStrength || Math.max(keyStrength, mainIslandStrength));
+
+    const valid = Boolean(
+      detected &&
+      source &&
+      typeof source === "object" &&
+      typeof source.featureCategory === "string"
+    );
+
+    return {
+      islandsSampleValid: valid,
+      islandsContract: source.contract || "",
+      islandsReceipt: source.receipt || source.receiptId || "",
+      islandFeatureCategory: featureCategory,
+      islandFeatureFamily: source.featureFamily || "latent",
+      islandParentCoastRelation: source.parentCoastRelation || "",
+      islandCoastalRelationOnly: coastalRelationOnly,
+      islandDetachedBody: detachedIslandBody,
+      islandVisibleIsland: visibleIsland,
+      islandFeatureId: source.featureId || source.islandId || "",
+      islandRegion: source.region || "",
+      islandRegionName: source.regionName || "",
+
+      islandActive: active,
+      islandLand: Boolean(source.land),
+      islandIsIsland: Boolean(source.island),
+      peninsulaStrength,
+      bayCarveStrength,
+      keyStrength,
+      mainIslandStrength,
+      islandStrength,
+
+      islandCoast: clamp01(source.coast),
+      islandShelf: clamp01(source.shelf),
+      islandWaterDepth: clamp01(source.waterDepth === undefined ? 1 : source.waterDepth),
+      islandRidge: clamp01(source.ridge),
+      islandUpland: clamp01(source.upland),
+      islandRelief: clamp01(source.relief),
+      islandLowland: clamp01(source.lowland),
+
+      islandHillStrength: clamp01(source.hillStrength),
+      islandMountainStrength: clamp01(source.mountainStrength),
+      islandCliffStrength: clamp01(source.cliffStrength),
+      islandValleyStrength: clamp01(source.valleyStrength),
+
+      beachExcludedFromIslands: source.beachExcludedFromIslands !== false && source.beachesExcludedFromIslands !== false,
+      sandExcludedFromIslands: source.sandExcludedFromIslands !== false,
+      rawIslandFeature: source
+    };
+  }
+
+  function readIslandFeature(packet) {
+    const authority = getIslandsAuthority();
+    const detected = Boolean(authority);
+    const raw = detected ? callIslandAuthority(authority, packet) : null;
+    const normalized = normalizeIslandFeatureForElevation(raw, detected);
+
+    return {
+      islandsAuthorityDetected: detected,
+      islandsSampleAttempted: true,
+      ...normalized
+    };
+  }
+
+  function applyIslandFeatureToElevation(base, island) {
+    const category = island.islandFeatureCategory;
+    const active = Boolean(island.islandActive);
+    const valid = Boolean(island.islandsSampleValid);
+    const noOp = !valid || !active || category === "latent";
+
+    const peninsulaElevationInfluence = noOp
+      ? 0
+      : category === "peninsula"
+        ? clamp01(island.peninsulaStrength) * ISLAND_INFLUENCE_LIMITS.peninsulaMax
+        : 0;
+
+    const bayCarveElevationInfluence = noOp
+      ? 0
+      : category === "bay"
+        ? clamp01(island.bayCarveStrength) * ISLAND_INFLUENCE_LIMITS.bayCarveMax
+        : 0;
+
+    const keyIslandElevationInfluence = noOp
+      ? 0
+      : category === "key" && island.islandVisibleIsland && island.islandDetachedBody
+        ? clamp01(island.keyStrength) * ISLAND_INFLUENCE_LIMITS.keyMax
+        : 0;
+
+    const mainIslandElevationInfluence = noOp
+      ? 0
+      : category === "mainIsland" && island.islandVisibleIsland && island.islandDetachedBody
+        ? clamp01(island.mainIslandStrength) * ISLAND_INFLUENCE_LIMITS.mainIslandMax
+        : 0;
+
+    const detachedIslandElevationInfluence = keyIslandElevationInfluence + mainIslandElevationInfluence;
+
+    const attachedCoastPressure = category === "peninsula"
+      ? clamp01(island.peninsulaStrength * 0.72 + island.islandCoast * 0.18 + island.islandShelf * 0.10)
+      : 0;
+
+    const coastalCutPressure = category === "bay"
+      ? clamp01(island.bayCarveStrength * 0.72 + island.islandShelf * 0.14 + (1 - island.islandWaterDepth) * 0.04)
+      : 0;
+
+    const islandCoastPressure = clamp01(
+      (category === "key" || category === "mainIsland" ? island.islandCoast * 0.50 : 0) +
+      attachedCoastPressure * 0.24 +
+      coastalCutPressure * 0.18
+    );
+
+    const islandShelfPressure = clamp01(
+      (category === "key" || category === "mainIsland" ? island.islandShelf * 0.48 : 0) +
+      attachedCoastPressure * 0.22 +
+      coastalCutPressure * 0.24
+    );
+
+    const islandReliefPressure = clamp01(
+      island.islandRelief * 0.34 +
+      island.islandRidge * 0.24 +
+      island.islandMountainStrength * 0.22 +
+      island.islandCliffStrength * 0.14
+    );
+
+    let elevation = base.elevation;
+    elevation += peninsulaElevationInfluence;
+    elevation -= bayCarveElevationInfluence;
+    elevation += keyIslandElevationInfluence;
+    elevation += mainIslandElevationInfluence;
+
+    if (category === "bay" && coastalCutPressure > 0.18) {
+      elevation = Math.min(elevation, SEA_LEVEL - coastalCutPressure * 0.08);
+    }
+
+    elevation = clamp(elevation, -1, 1);
+
+    const isLand = elevation > SEA_LEVEL;
+    const isWater = !isLand;
+    const isShallowWater = elevation <= SEA_LEVEL && elevation > -0.20;
+    const isDeepWater = elevation <= -0.20;
+
+    const waterDepthPotential = isWater
+      ? clamp01(Math.max(-elevation / 0.72, base.waterDepthPotential + coastalCutPressure * 0.20))
+      : 0;
+
+    const landPotential = clamp01(
+      smoothstep(-0.08, 0.20, elevation) * 0.56 +
+      base.continentalMassPressure * 0.18 +
+      base.coordinateLandPressure * 0.14 +
+      detachedIslandElevationInfluence * 2.2 +
+      peninsulaElevationInfluence * 1.1 -
+      coastalCutPressure * 0.12
+    );
+
+    const coastPotential = clamp01(
+      base.coastPotential +
+      attachedCoastPressure * 0.30 +
+      coastalCutPressure * 0.26 +
+      islandCoastPressure * 0.22
+    );
+
+    const shelfPotential = clamp01(
+      base.shelfPotential +
+      islandShelfPressure * 0.32 +
+      attachedCoastPressure * 0.14 +
+      coastalCutPressure * 0.18
+    );
+
+    const islandPotential = clamp01(
+      base.islandPotential +
+      detachedIslandElevationInfluence * 2.6 +
+      (category === "key" ? island.keyStrength * 0.28 : 0) +
+      (category === "mainIsland" ? island.mainIslandStrength * 0.34 : 0)
+    );
+
+    const archipelagoPotential = clamp01(
+      base.archipelagoPotential +
+      (category === "key" ? island.keyStrength * 0.34 : 0) +
+      (category === "mainIsland" ? island.mainIslandStrength * 0.10 : 0) +
+      islandShelfPressure * 0.12
+    );
+
+    const ridgePotential = clamp01(
+      base.ridgePotential +
+      (category === "mainIsland" ? islandReliefPressure * 0.26 : 0) +
+      (category === "key" ? islandReliefPressure * 0.10 : 0)
+    );
+
+    const plateauPotential = clamp01(
+      base.plateauPotential +
+      (category === "mainIsland" ? island.islandUpland * 0.16 : 0)
+    );
+
+    const basinPotential = clamp01(
+      base.basinPotential +
+      coastalCutPressure * 0.28 +
+      (category === "bay" ? island.bayCarveStrength * 0.18 : 0)
+    );
+
+    const channelCutPressure = clamp01(
+      base.channelCutPressure +
+      coastalCutPressure * 0.36 +
+      (category === "bay" ? island.bayCarveStrength * 0.18 : 0)
+    );
+
+    let terrainClassHint = base.terrainClassHint;
+
+    if (category === "bay" && coastalCutPressure > 0.16) {
+      terrainClassHint = elevation <= SEA_LEVEL ? "bay_cut" : "coastal_inlet_cut";
+    } else if (category === "peninsula" && attachedCoastPressure > 0.16) {
+      terrainClassHint = "attached_peninsula_coast";
+    } else if (category === "key" && detachedIslandElevationInfluence > 0.015 && isLand) {
+      terrainClassHint = "key_island_chain";
+    } else if (category === "mainIsland" && detachedIslandElevationInfluence > 0.025 && isLand) {
+      terrainClassHint = "detached_island_body";
+    }
+
+    return {
+      ...base,
+      elevation,
+      isLand,
+      isWater,
+      isShallowWater,
+      isDeepWater,
+      landPotential,
+      waterDepthPotential,
+      coastPotential,
+      shelfPotential,
+      islandPotential,
+      archipelagoPotential,
+      ridgePotential,
+      plateauPotential,
+      basinPotential,
+      channelCutPressure,
+      terrainClassHint,
+
+      peninsulaElevationInfluence,
+      bayCarveElevationInfluence,
+      keyIslandElevationInfluence,
+      mainIslandElevationInfluence,
+      detachedIslandElevationInfluence,
+      attachedCoastPressure,
+      coastalCutPressure,
+      islandCoastPressure,
+      islandShelfPressure,
+      islandReliefPressure,
+      inactiveIslandFeatureNoOp: noOp
+    };
+  }
+
   function fallbackTectonics(p) {
     const oldBody = valueNoise(p, 701);
     const folded = valueNoise({ x: p.y, y: p.z, z: p.x }, 709);
@@ -1086,6 +1436,11 @@
   }
 
   function terrainClassHintFor(sample) {
+    if (sample.islandFeatureCategory === "bay" && sample.coastalCutPressure > 0.16) return sample.elevation <= SEA_LEVEL ? "bay_cut" : "coastal_inlet_cut";
+    if (sample.islandFeatureCategory === "peninsula" && sample.attachedCoastPressure > 0.16) return "attached_peninsula_coast";
+    if (sample.islandFeatureCategory === "key" && sample.detachedIslandElevationInfluence > 0.015 && sample.isLand) return "key_island_chain";
+    if (sample.islandFeatureCategory === "mainIsland" && sample.detachedIslandElevationInfluence > 0.025 && sample.isLand) return "detached_island_body";
+
     if (sample.elevation <= -0.42 || sample.oceanBasinPotential > 0.68) return "ocean_basin";
     if (sample.elevation <= -0.20) return "deep_ocean";
     if (sample.archipelagoPotential > 0.42 && sample.elevation <= SEA_LEVEL) return "archipelago_shelf";
@@ -1117,6 +1472,7 @@
     const tectonicResult = sampleTectonicsFor(p);
     const tectonics = tectonicResult.tectonics;
     const coordinates = resolveCoordinatePressures(p, tectonics);
+    const islandFeature = readIslandFeature(p);
 
     const structuralNoise = valueNoise(p, 811);
     const surfaceNoise = valueNoise({ x: p.y, y: p.z, z: p.x }, 823);
@@ -1200,7 +1556,7 @@
       0.10
     );
 
-    let elevation =
+    let baseElevation =
       -0.32 +
       elevationInfluence * 0.42 +
       continentalMassPressure * 0.46 +
@@ -1219,66 +1575,108 @@
       (structuralNoise - 0.5) * 0.050 +
       (surfaceNoise - 0.5) * 0.032;
 
-    elevation = clamp(elevation, -1, 1);
+    baseElevation = clamp(baseElevation, -1, 1);
 
-    const isLand = elevation > SEA_LEVEL;
-    const isWater = !isLand;
-    const isShallowWater = elevation <= SEA_LEVEL && elevation > -0.20;
-    const isDeepWater = elevation <= -0.20;
+    const baseIsLand = baseElevation > SEA_LEVEL;
+    const baseIsWater = !baseIsLand;
 
-    const landPotential = clamp01(
-      smoothstep(-0.08, 0.20, elevation) * 0.56 +
+    const baseLandPotential = clamp01(
+      smoothstep(-0.08, 0.20, baseElevation) * 0.56 +
       continentalMassPressure * 0.22 +
       coordinates.coordinateLandPressure * 0.18 +
       plateauUpliftPressure * 0.04
     );
 
-    const waterDepthPotential = isWater
-      ? clamp01(Math.max(-elevation / 0.72, oceanBasinPressure * 0.64 + basinSinkPressure * 0.22 + coordinates.oceanDepthPressure * 0.14))
+    const baseWaterDepthPotential = baseIsWater
+      ? clamp01(Math.max(-baseElevation / 0.72, oceanBasinPressure * 0.64 + basinSinkPressure * 0.22 + coordinates.oceanDepthPressure * 0.14))
       : 0;
 
-    const oceanBasinPotential = oceanBasinPressure;
-    const shelfPotential = clamp01(shelfCutPressure * 0.40 + coastBoundaryMemory * 0.30 + softBand(elevation, -0.035, 0.18) * 0.24 + coordinates.coordinateShelfPressure * 0.06);
-    const continentShelfPotential = shelfPotential;
-    const coastPotential = clamp01(coastBoundaryMemory * 0.34 + shelfCutPressure * 0.26 + softBand(elevation, SEA_LEVEL, 0.135) * 0.30 + coordinates.bodyEdgePressure * 0.10);
+    const baseOceanBasinPotential = oceanBasinPressure;
+    const baseShelfPotential = clamp01(shelfCutPressure * 0.40 + coastBoundaryMemory * 0.30 + softBand(baseElevation, -0.035, 0.18) * 0.24 + coordinates.coordinateShelfPressure * 0.06);
+    const baseCoastPotential = clamp01(coastBoundaryMemory * 0.34 + shelfCutPressure * 0.26 + softBand(baseElevation, SEA_LEVEL, 0.135) * 0.30 + coordinates.bodyEdgePressure * 0.10);
+    const baseMountainArcPotential = ridgeCollisionPressure;
+    const basePlateauPotential = plateauUpliftPressure;
+    const baseCanyonPotential = clamp01(fractureCutPressure * 0.44 + ancientChannelCut * 0.34 + cutNoise * 0.10 + coordinates.channelCutPressure * 0.12);
+    const baseEscarpmentPotential = clamp01(escarpmentPressure * 0.58 + baseCoastPotential * 0.14 + ridgeCollisionPressure * 0.12 + fractureCutPressure * 0.10 + coordinates.bodyEdgePressure * 0.06);
+    const baseWaterfallCandidate = clamp01(baseEscarpmentPotential * (baseCoastPotential * 0.28 + basinSinkPressure * 0.18 + ridgeCollisionPressure * 0.16 + ancientChannelCut * 0.14));
+    const baseArchipelagoPotential = archipelagoFracturePressure;
+    const baseBasinPotential = basinSinkPressure;
+    const baseRidgePotential = ridgeCollisionPressure;
+    const baseSaddlePotential = clamp01((1 - Math.abs(continentalMassPressure - oceanBasinPressure)) * 0.28 + fractureCutPressure * 0.18 + baseShelfPotential * 0.16);
+    const baseIslandPotential = clamp01(baseArchipelagoPotential * 0.64 + baseShelfPotential * 0.2 + baseCoastPotential * 0.16);
+    const baseScarPotential = clamp01(fractureCutPressure * 0.38 + ancientChannelCut * 0.32 + buriedStructure * 0.14);
 
-    const mountainArcPotential = ridgeCollisionPressure;
-    const plateauPotential = plateauUpliftPressure;
-    const canyonPotential = clamp01(fractureCutPressure * 0.44 + ancientChannelCut * 0.34 + cutNoise * 0.10 + coordinates.channelCutPressure * 0.12);
-    const escarpmentPotential = clamp01(escarpmentPressure * 0.58 + coastPotential * 0.14 + ridgeCollisionPressure * 0.12 + fractureCutPressure * 0.10 + coordinates.bodyEdgePressure * 0.06);
-    const waterfallCandidate = clamp01(escarpmentPotential * (coastPotential * 0.28 + basinSinkPressure * 0.18 + ridgeCollisionPressure * 0.16 + ancientChannelCut * 0.14));
-    const archipelagoPotential = archipelagoFracturePressure;
-    const basinPotential = basinSinkPressure;
-    const ridgePotential = ridgeCollisionPressure;
-    const saddlePotential = clamp01((1 - Math.abs(continentalMassPressure - oceanBasinPressure)) * 0.28 + fractureCutPressure * 0.18 + shelfPotential * 0.16);
-    const islandPotential = clamp01(archipelagoPotential * 0.64 + shelfPotential * 0.2 + coastPotential * 0.16);
-    const scarPotential = clamp01(fractureCutPressure * 0.38 + ancientChannelCut * 0.32 + buriedStructure * 0.14);
+    const baseFields = {
+      elevation: baseElevation,
+      terrainClassHint: "unresolved",
+      continentalMassPressure,
+      oceanBasinPressure,
+      coordinateLandPressure: coordinates.coordinateLandPressure,
+      coordinateWaterPressure: coordinates.coordinateWaterPressure,
+      waterDepthPotential: baseWaterDepthPotential,
+      landPotential: baseLandPotential,
+      oceanBasinPotential: baseOceanBasinPotential,
+      continentShelfPotential: baseShelfPotential,
+      shelfPotential: baseShelfPotential,
+      coastPotential: baseCoastPotential,
+      mountainArcPotential: baseMountainArcPotential,
+      plateauPotential: basePlateauPotential,
+      canyonPotential: baseCanyonPotential,
+      escarpmentPotential: baseEscarpmentPotential,
+      waterfallCandidate: baseWaterfallCandidate,
+      archipelagoPotential: baseArchipelagoPotential,
+      basinPotential: baseBasinPotential,
+      ridgePotential: baseRidgePotential,
+      saddlePotential: baseSaddlePotential,
+      islandPotential: baseIslandPotential,
+      scarPotential: baseScarPotential,
+      channelCutPressure: coordinates.channelCutPressure
+    };
 
-    const province = provinceCompatibility(tectonics, coordinates, isDeepWater);
+    baseFields.terrainClassHint = terrainClassHintFor({
+      ...baseFields,
+      elevation: baseElevation,
+      isLand: baseIsLand,
+      isWater: baseIsWater,
+      isShallowWater: baseElevation <= SEA_LEVEL && baseElevation > -0.20,
+      isDeepWater: baseElevation <= -0.20,
+      bodyInteriorPressure: coordinates.bodyInteriorPressure,
+      bodyEdgePressure: coordinates.bodyEdgePressure,
+      summitPotential: summitPressure,
+      islandFeatureCategory: "latent",
+      attachedCoastPressure: 0,
+      coastalCutPressure: 0,
+      detachedIslandElevationInfluence: 0
+    });
+
+    const adjusted = applyIslandFeatureToElevation(baseFields, islandFeature);
+
+    const province = provinceCompatibility(tectonics, coordinates, adjusted.isDeepWater);
     const summit = summitCompatibility(tectonics, coordinates);
 
     const physicalFields = {
-      landPotential,
-      waterDepthPotential,
-      coastPotential,
-      ridgePotential,
-      basinPotential,
-      shelfPotential,
-      plateauPotential,
-      archipelagoPotential
+      landPotential: adjusted.landPotential,
+      waterDepthPotential: adjusted.waterDepthPotential,
+      coastPotential: adjusted.coastPotential,
+      ridgePotential: adjusted.ridgePotential,
+      basinPotential: adjusted.basinPotential,
+      shelfPotential: adjusted.shelfPotential,
+      plateauPotential: adjusted.plateauPotential,
+      archipelagoPotential: adjusted.archipelagoPotential
     };
 
-    const climate = climateCompatibility(p, elevation, physicalFields);
+    const climate = climateCompatibility(p, adjusted.elevation, physicalFields);
 
     const continentPotential = continentalMassPressure;
     const nearestContinentDistance = clamp01(1 - continentPotential);
-    const continentSeparation = clamp01(shelfPotential * 0.42 + fractureCutPressure * 0.18 + coastBoundaryMemory * 0.18);
+    const continentSeparation = clamp01(adjusted.shelfPotential * 0.42 + fractureCutPressure * 0.18 + coastBoundaryMemory * 0.18);
 
     const output = {
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       requiredTectonicsContract: REQUIRED_TECTONICS_CONTRACT,
+      islandsBridgeContractExpected: EXPECTED_ISLANDS_CONTRACT,
       version: VERSION,
       authority: "elevation-resolver",
 
@@ -1291,20 +1689,20 @@
       v: p.v,
       anchorId: isAnchorCoordinate(p) ? ANCHOR.id : "",
 
-      elevation,
+      elevation: adjusted.elevation,
       seaLevel: SEA_LEVEL,
 
-      isLand,
-      isWater,
-      isShallowWater,
-      isDeepWater,
+      isLand: adjusted.isLand,
+      isWater: adjusted.isWater,
+      isShallowWater: adjusted.isShallowWater,
+      isDeepWater: adjusted.isDeepWater,
 
-      landPotential,
-      waterDepthPotential,
-      oceanBasinPotential,
-      continentShelfPotential,
-      shelfPotential,
-      coastPotential,
+      landPotential: adjusted.landPotential,
+      waterDepthPotential: adjusted.waterDepthPotential,
+      oceanBasinPotential: adjusted.oceanBasinPotential,
+      continentShelfPotential: adjusted.shelfPotential,
+      shelfPotential: adjusted.shelfPotential,
+      coastPotential: adjusted.coastPotential,
 
       continentId: province.id,
       continentName: province.name,
@@ -1315,9 +1713,64 @@
 
       newsProtocolActive: true,
       fibonacciAlignmentActive: true,
+      newsProtocolSynchronized: true,
+      fibonacciAlignmentSynchronized: true,
+      activeFibonacciGate: "F13",
+      futureFibonacciGate: "F21",
+      oneActiveGearAtATime: true,
+      cycleOrder: "EAST_WEST_NORTH_SOUTH_CHECKPOINT_EAST",
+
       coordinateBodyResolverActive: true,
       coordinateMapRole: coordinates.coordinateMapRole,
       coordinateMapIsTectonicOrigin: false,
+
+      elevationConsumesIslands: true,
+      islandsAuthoritySupported: true,
+      islandFeatureConsumptionActive: true,
+      islandsAuthorityDetected: islandFeature.islandsAuthorityDetected,
+      islandsSampleAttempted: islandFeature.islandsSampleAttempted,
+      islandsSampleValid: islandFeature.islandsSampleValid,
+      islandsContract: islandFeature.islandsContract,
+      islandsReceipt: islandFeature.islandsReceipt,
+
+      islandFeatureCategory: islandFeature.islandFeatureCategory,
+      islandFeatureFamily: islandFeature.islandFeatureFamily,
+      islandParentCoastRelation: islandFeature.islandParentCoastRelation,
+      islandCoastalRelationOnly: islandFeature.islandCoastalRelationOnly,
+      islandDetachedBody: islandFeature.islandDetachedBody,
+      islandVisibleIsland: islandFeature.islandVisibleIsland,
+      islandFeatureId: islandFeature.islandFeatureId,
+      islandRegion: islandFeature.islandRegion,
+      islandRegionName: islandFeature.islandRegionName,
+
+      peninsulaStrength: islandFeature.peninsulaStrength,
+      bayCarveStrength: islandFeature.bayCarveStrength,
+      keyStrength: islandFeature.keyStrength,
+      mainIslandStrength: islandFeature.mainIslandStrength,
+      islandStrength: islandFeature.islandStrength,
+
+      peninsulaElevationInfluence: adjusted.peninsulaElevationInfluence,
+      bayCarveElevationInfluence: adjusted.bayCarveElevationInfluence,
+      keyIslandElevationInfluence: adjusted.keyIslandElevationInfluence,
+      mainIslandElevationInfluence: adjusted.mainIslandElevationInfluence,
+      detachedIslandElevationInfluence: adjusted.detachedIslandElevationInfluence,
+      attachedCoastPressure: adjusted.attachedCoastPressure,
+      coastalCutPressure: adjusted.coastalCutPressure,
+      islandCoastPressure: adjusted.islandCoastPressure,
+      islandShelfPressure: adjusted.islandShelfPressure,
+      islandReliefPressure: adjusted.islandReliefPressure,
+      channelCutPressure: adjusted.channelCutPressure,
+
+      peninsulaElevationInfluenceActive: true,
+      bayCarveElevationInfluenceActive: true,
+      keyIslandElevationInfluenceActive: true,
+      mainIslandElevationInfluenceActive: true,
+      detachedIslandElevationInfluenceActive: true,
+      attachedCoastPressureActive: true,
+      coastalCutPressureActive: true,
+      inactiveIslandFeatureNoOp: adjusted.inactiveIslandFeatureNoOp,
+      sevenContinentBodySeatsPreserved: true,
+      islandsDoNotReplaceBodySeats: true,
 
       bodySeatId: coordinates.bodySeatId,
       bodySeatName: coordinates.bodySeatName,
@@ -1344,7 +1797,6 @@
       channelSeatNews: coordinates.channelSeatNews,
       channelSeatFibonacci: coordinates.channelSeatFibonacci,
       channelSeatPressure: coordinates.channelSeatPressure,
-      channelCutPressure: coordinates.channelCutPressure,
 
       climateHint: climate.climateHint,
       climatePotential: climate.climatePotential,
@@ -1370,21 +1822,21 @@
       summitNews: summit.summitNews,
       summitFibonacci: summit.summitFibonacci,
 
-      mountainArcPotential,
-      plateauPotential,
-      canyonPotential,
-      escarpmentPotential,
-      waterfallCandidate,
-      archipelagoPotential,
-      basinPotential,
-      ridgePotential,
-      saddlePotential,
-      islandPotential,
-      scarPotential,
+      mountainArcPotential: adjusted.ridgePotential,
+      plateauPotential: adjusted.plateauPotential,
+      canyonPotential: adjusted.canyonPotential,
+      escarpmentPotential: adjusted.escarpmentPotential,
+      waterfallCandidate: adjusted.waterfallCandidate,
+      archipelagoPotential: adjusted.archipelagoPotential,
+      basinPotential: adjusted.basinPotential,
+      ridgePotential: adjusted.ridgePotential,
+      saddlePotential: adjusted.saddlePotential,
+      islandPotential: adjusted.islandPotential,
+      scarPotential: adjusted.scarPotential,
 
       corePotential: continentPotential,
       shieldPotential: clamp01(continentalMassPressure * 0.52 + plateauUpliftPressure * 0.28 + buriedStructure * 0.16),
-      bridgePotential: clamp01(continentSeparation * 0.22 + scarPotential * 0.22 + coastBoundaryMemory * 0.12),
+      bridgePotential: clamp01(continentSeparation * 0.22 + adjusted.scarPotential * 0.22 + coastBoundaryMemory * 0.12),
 
       dominantCoreId: province.id,
 
@@ -1428,13 +1880,22 @@
       tectonicSummitPressureId: tectonics.summitPressureId || coordinates.summitSeatPressureId || "none",
       tectonicSummitPressureLabel: tectonics.summitPressureLabel || coordinates.summitSeatLabel || "None",
 
+      elevationOwnsHeightDepth: true,
+      islandsOwnGeometry: true,
+      elevationOwnsIslandGeometry: false,
       ownsTectonicCause: false,
       ownsComposition: false,
       ownsHydrology: false,
+      elevationOwnsHydrology: false,
       ownsMaterialRendering: false,
+      elevationOwnsMaterials: false,
       ownsCanvas: false,
+      elevationOwnsCanvas: false,
       ownsRuntime: false,
       ownsControls: false,
+      beachesRemainDownstream: true,
+      sandRemainsDownstream: true,
+      f21ClaimedByElevation: false,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -1466,7 +1927,19 @@
       bodySeats: BODY_SEATS.map(({ vector, ...seat }) => ({ ...seat })),
       oceanBasinSeats: OCEAN_BASIN_SEATS.map(({ vector, ...seat }) => ({ ...seat })),
       summitSeats: SUMMIT_SEATS.map(({ vector, ...seat }) => ({ ...seat })),
-      channelSeats: CHANNEL_SEATS.map(({ vector, ...seat }) => ({ ...seat }))
+      channelSeats: CHANNEL_SEATS.map(({ vector, ...seat }) => ({ ...seat })),
+      islandFeatureConsumption: {
+        active: true,
+        expectedContract: EXPECTED_ISLANDS_CONTRACT,
+        influenceLimits: ISLAND_INFLUENCE_LIMITS,
+        categoryLaw: {
+          peninsula: "attached-coast-positive-bounded",
+          bay: "negative-coastal-carve-bounded",
+          key: "low-detached-island-positive-bounded",
+          mainIsland: "larger-detached-island-positive-bounded",
+          latent: "no-op"
+        }
+      }
     };
   }
 
@@ -1476,22 +1949,56 @@
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       requiredTectonicsContract: REQUIRED_TECTONICS_CONTRACT,
+      islandsBridgeContractExpected: EXPECTED_ISLANDS_CONTRACT,
       version: VERSION,
       authority: "elevation-resolver",
       status: "active",
       destinationFile: "/assets/hearth/hearth.elevation.js",
       anchor: ANCHOR,
-      purpose: "consume-structural-cause-tectonics-and-resolve-news-fibonacci-coordinate-height-depth",
+      purpose: "consume-structural-cause-tectonics-and-island-coastal-feature-authority-to-resolve-height-depth",
       tectonicsSeated: true,
       tectonicsConsumedAtSampleTime: true,
       elevationResolvedFromTectonics: true,
       causeLayerOwnedByTectonics: true,
       elevationOwnsStructuralCause: false,
+
       coordinateBodyResolverActive: true,
       coordinateMapRole: "ELEVATION_BODY_SEAT_RESOLVER",
       coordinateMapIsTectonicOrigin: false,
+
       newsProtocolActive: true,
       fibonacciAlignmentActive: true,
+      newsProtocolSynchronized: true,
+      fibonacciAlignmentSynchronized: true,
+      activeFibonacciGate: "F13",
+      futureFibonacciGate: "F21",
+      oneActiveGearAtATime: true,
+      cycleOrder: "EAST_WEST_NORTH_SOUTH_CHECKPOINT_EAST",
+
+      elevationConsumesIslands: true,
+      islandsAuthoritySupported: true,
+      islandFeatureConsumptionActive: true,
+      peninsulaElevationInfluenceActive: true,
+      bayCarveElevationInfluenceActive: true,
+      keyIslandElevationInfluenceActive: true,
+      mainIslandElevationInfluenceActive: true,
+      detachedIslandElevationInfluenceActive: true,
+      attachedCoastPressureActive: true,
+      coastalCutPressureActive: true,
+      inactiveIslandFeatureNoOp: true,
+      islandInfluenceLimits: ISLAND_INFLUENCE_LIMITS,
+
+      sevenContinentBodySeatsPreserved: true,
+      islandsDoNotReplaceBodySeats: true,
+      elevationOwnsHeightDepth: true,
+      islandsOwnGeometry: true,
+      elevationOwnsIslandGeometry: false,
+      elevationOwnsHydrology: false,
+      elevationOwnsMaterials: false,
+      elevationOwnsCanvas: false,
+      beachesRemainDownstream: true,
+      sandRemainsDownstream: true,
+
       bodySeatCount: BODY_SEATS.length,
       oceanBasinSeatCount: OCEAN_BASIN_SEATS.length,
       summitSeatCount: SUMMIT_SEATS.length,
@@ -1555,16 +2062,49 @@
         "dominantCoreId",
         "tectonicsConsumed",
         "tectonicsContract",
-        "elevationResolvedFromTectonics"
+        "elevationResolvedFromTectonics",
+        "islandsAuthorityDetected",
+        "islandsSampleAttempted",
+        "islandsSampleValid",
+        "islandsContract",
+        "islandsReceipt",
+        "islandFeatureCategory",
+        "islandFeatureFamily",
+        "islandParentCoastRelation",
+        "islandCoastalRelationOnly",
+        "islandDetachedBody",
+        "islandVisibleIsland",
+        "islandFeatureId",
+        "islandRegion",
+        "islandRegionName",
+        "peninsulaStrength",
+        "bayCarveStrength",
+        "keyStrength",
+        "mainIslandStrength",
+        "islandStrength",
+        "peninsulaElevationInfluence",
+        "bayCarveElevationInfluence",
+        "keyIslandElevationInfluence",
+        "mainIslandElevationInfluence",
+        "detachedIslandElevationInfluence",
+        "attachedCoastPressure",
+        "coastalCutPressure",
+        "islandCoastPressure",
+        "islandShelfPressure",
+        "islandReliefPressure"
       ],
       designRules: [
         "tectonics owns structural cause",
+        "islands owns coastal feature geometry",
         "elevation resolves height and depth only",
-        "coordinate seats stabilize body placement inside elevation",
-        "NEWS protocol stores directional alignment metadata",
-        "Fibonacci alignment stores deterministic sequence metadata",
-        "land and water booleans are elevation consequences",
-        "climate remains downstream and is not owned here",
+        "island influence is bounded and local",
+        "seven-continent body seats remain primary",
+        "peninsulas add attached coast pressure only",
+        "bays carve/subtract and do not become land by island logic",
+        "keys add low detached island elevation only when visible-qualified",
+        "main islands add stronger detached island elevation only when visible-qualified",
+        "beaches remain downstream",
+        "sand remains downstream",
         "materials remain downstream and are not owned here",
         "canvas remains downstream and is not owned here",
         "no final visual pass claim"
@@ -1572,6 +2112,7 @@
       generatedImage: false,
       graphicBox: false,
       webGL: false,
+      f21ClaimedByElevation: false,
       visualPassClaimed: false
     };
   }
@@ -1581,6 +2122,7 @@
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     requiredTectonicsContract: REQUIRED_TECTONICS_CONTRACT,
+    islandsBridgeContractExpected: EXPECTED_ISLANDS_CONTRACT,
     version: VERSION,
     seaLevel: SEA_LEVEL,
     anchor: ANCHOR,
@@ -1604,21 +2146,33 @@
     supportsCoordinateOceanBasinSeats: true,
     supportsCoordinateSummitSeats: true,
     supportsCoordinateChannelSeats: true,
+    supportsIslandCoastalFeatureConsumption: true,
 
     supportsSevenContinentRealPlanetElevation: true,
     supportsNineClimateFamilies: false,
     supportsNonlinearSummitRegions: true,
 
+    elevationConsumesIslands: true,
+    islandsAuthoritySupported: true,
+    islandFeatureConsumptionActive: true,
+    sevenContinentBodySeatsPreserved: true,
+    islandsDoNotReplaceBodySeats: true,
+    inactiveIslandFeatureNoOp: true,
+
     ownsTectonicCause: false,
+    ownsIslandGeometry: false,
     ownsClimate: false,
+    ownsHydrology: false,
     ownsMaterialRendering: false,
     ownsCanvas: false,
     ownsRuntime: false,
     ownsControls: false,
+    ownsZoom: false,
 
     generatedImage: false,
     graphicBox: false,
     webGL: false,
+    f21ClaimedByElevation: false,
     visualPassClaimed: false
   };
 
@@ -1633,36 +2187,72 @@
   root.HEARTH_ELEVATION_SUPPORTS_TECTONICS_SEATED_RESOLVER = true;
   root.HEARTH_ELEVATION_SUPPORTS_SEVEN_CONTINENT_REAL_PLANET = true;
   root.HEARTH_ELEVATION_SUPPORTS_NEWS_FIBONACCI_COORDINATE_BODY_RESOLVER = true;
+  root.HEARTH_ELEVATION_SUPPORTS_ISLAND_COASTAL_FEATURE_CONSUMPTION = true;
 
   if (typeof document !== "undefined" && document.documentElement) {
-    document.documentElement.dataset.hearthElevationAuthorityLoaded = "true";
-    document.documentElement.dataset.hearthElevationContract = CONTRACT;
-    document.documentElement.dataset.hearthElevationReceipt = RECEIPT;
-    document.documentElement.dataset.hearthElevationPreviousContract = PREVIOUS_CONTRACT;
-    document.documentElement.dataset.hearthElevationRequiredTectonicsContract = REQUIRED_TECTONICS_CONTRACT;
-    document.documentElement.dataset.hearthElevationTectonicsSeated = "true";
-    document.documentElement.dataset.hearthElevationResolvedFromTectonics = "true";
-    document.documentElement.dataset.hearthElevationCoordinateBodyResolverActive = "true";
-    document.documentElement.dataset.hearthElevationCoordinateMapRole = "ELEVATION_BODY_SEAT_RESOLVER";
-    document.documentElement.dataset.hearthElevationCoordinateMapIsTectonicOrigin = "false";
-    document.documentElement.dataset.hearthElevationNewsProtocolActive = "true";
-    document.documentElement.dataset.hearthElevationFibonacciAlignmentActive = "true";
-    document.documentElement.dataset.hearthElevationBodySeatCount = String(BODY_SEATS.length);
-    document.documentElement.dataset.hearthElevationOceanBasinSeatCount = String(OCEAN_BASIN_SEATS.length);
-    document.documentElement.dataset.hearthElevationSummitSeatCount = String(SUMMIT_SEATS.length);
-    document.documentElement.dataset.hearthElevationChannelSeatCount = String(CHANNEL_SEATS.length);
-    document.documentElement.dataset.hearthElevationOwnsStructuralCause = "false";
-    document.documentElement.dataset.hearthElevationOwnsClimate = "false";
-    document.documentElement.dataset.hearthElevationClimateCompatibilityHintOnly = "true";
-    document.documentElement.dataset.hearthElevationAnchor = ANCHOR.id;
-    document.documentElement.dataset.hearthElevationAnchorU = String(ANCHOR.u);
-    document.documentElement.dataset.hearthElevationAnchorV = String(ANCHOR.v);
-    document.documentElement.dataset.hearthElevationAnchorLon = String(ANCHOR.lon);
-    document.documentElement.dataset.hearthElevationAnchorLat = String(ANCHOR.lat);
-    document.documentElement.dataset.generatedImage = "false";
-    document.documentElement.dataset.graphicBox = "false";
-    document.documentElement.dataset.webgl = "false";
-    document.documentElement.dataset.visualPassClaimed = "false";
+    const dataset = document.documentElement.dataset;
+
+    dataset.hearthElevationAuthorityLoaded = "true";
+    dataset.hearthElevationContract = CONTRACT;
+    dataset.hearthElevationReceipt = RECEIPT;
+    dataset.hearthElevationPreviousContract = PREVIOUS_CONTRACT;
+    dataset.hearthElevationRequiredTectonicsContract = REQUIRED_TECTONICS_CONTRACT;
+    dataset.hearthElevationIslandsBridgeContractExpected = EXPECTED_ISLANDS_CONTRACT;
+
+    dataset.hearthElevationTectonicsSeated = "true";
+    dataset.hearthElevationResolvedFromTectonics = "true";
+    dataset.hearthElevationCoordinateBodyResolverActive = "true";
+    dataset.hearthElevationCoordinateMapRole = "ELEVATION_BODY_SEAT_RESOLVER";
+    dataset.hearthElevationCoordinateMapIsTectonicOrigin = "false";
+    dataset.hearthElevationNewsProtocolActive = "true";
+    dataset.hearthElevationFibonacciAlignmentActive = "true";
+    dataset.hearthElevationNewsProtocolSynchronized = "true";
+    dataset.hearthElevationFibonacciAlignmentSynchronized = "true";
+    dataset.hearthElevationActiveFibonacciGate = "F13";
+    dataset.hearthElevationFutureFibonacciGate = "F21";
+    dataset.hearthElevationOneActiveGearAtATime = "true";
+
+    dataset.hearthElevationConsumesIslands = "true";
+    dataset.hearthElevationIslandsAuthoritySupported = "true";
+    dataset.hearthElevationIslandFeatureConsumptionActive = "true";
+    dataset.hearthElevationPeninsulaInfluenceActive = "true";
+    dataset.hearthElevationBayCarveInfluenceActive = "true";
+    dataset.hearthElevationKeyIslandInfluenceActive = "true";
+    dataset.hearthElevationMainIslandInfluenceActive = "true";
+    dataset.hearthElevationDetachedIslandInfluenceActive = "true";
+    dataset.hearthElevationAttachedCoastPressureActive = "true";
+    dataset.hearthElevationCoastalCutPressureActive = "true";
+    dataset.hearthElevationInactiveIslandFeatureNoOp = "true";
+
+    dataset.hearthElevationSevenContinentBodySeatsPreserved = "true";
+    dataset.hearthElevationIslandsDoNotReplaceBodySeats = "true";
+    dataset.hearthElevationBodySeatCount = String(BODY_SEATS.length);
+    dataset.hearthElevationOceanBasinSeatCount = String(OCEAN_BASIN_SEATS.length);
+    dataset.hearthElevationSummitSeatCount = String(SUMMIT_SEATS.length);
+    dataset.hearthElevationChannelSeatCount = String(CHANNEL_SEATS.length);
+
+    dataset.hearthElevationOwnsStructuralCause = "false";
+    dataset.hearthElevationOwnsIslandGeometry = "false";
+    dataset.hearthElevationOwnsHydrology = "false";
+    dataset.hearthElevationOwnsMaterials = "false";
+    dataset.hearthElevationOwnsCanvas = "false";
+    dataset.hearthElevationOwnsZoom = "false";
+    dataset.hearthElevationOwnsClimate = "false";
+    dataset.hearthElevationClimateCompatibilityHintOnly = "true";
+    dataset.hearthElevationBeachesRemainDownstream = "true";
+    dataset.hearthElevationSandRemainsDownstream = "true";
+
+    dataset.hearthElevationAnchor = ANCHOR.id;
+    dataset.hearthElevationAnchorU = String(ANCHOR.u);
+    dataset.hearthElevationAnchorV = String(ANCHOR.v);
+    dataset.hearthElevationAnchorLon = String(ANCHOR.lon);
+    dataset.hearthElevationAnchorLat = String(ANCHOR.lat);
+
+    dataset.hearthElevationF21Claimed = "false";
+    dataset.generatedImage = "false";
+    dataset.graphicBox = "false";
+    dataset.webgl = "false";
+    dataset.visualPassClaimed = "false";
   }
 
   if (typeof module !== "undefined" && module.exports) {

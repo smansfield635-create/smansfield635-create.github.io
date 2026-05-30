@@ -1,16 +1,21 @@
 // /assets/hearth/hearth.canvas.south.js
-// HEARTH_CANVAS_SOUTH_TEXTURE_SPHERE_VISIBLE_PROOF_TNT_v1
+// HEARTH_CANVAS_SOUTH_SPLIT_ADAPTER_DRAIN_VISIBLE_PROOF_HARDENING_TNT_v1
 // Full-file replacement.
-// Canvas South / texture composition, sphere rendering, clarity, and visible proof only.
+// Canvas South / split-adapter drain, texture composition, sphere rendering, visible proof hardening only.
 // Purpose:
-// - Serve the Canvas North split parent under /assets/hearth/hearth.canvas.js.
+// - Preserve the Canvas North child API required by /assets/hearth/hearth.canvas.js.
+// - Harden South under the split-adapter transistor model:
+//   - East = source/material-atlas intake.
+//   - West = control/admissibility/motion/invalidation.
+//   - North = gate/sequencer/checkpoint adapter.
+//   - South = drain/output/render/proof.
 // - Own texture composition from East atlas output.
-// - Own visible 2D sphere rendering from cached texture.
+// - Own cached-texture sphere rendering.
 // - Own visible-content proof classification for F13 evidence.
-// - Preserve public methods required by Canvas North:
-//   composeTexture, renderSphere, renderSphereSync, getTextureCanvas,
-//   sampleVisibleContent, classifyVisibleContentEvidence, invalidateTexture, getReceipt.
-// - Keep canvas as receiver/output carrier only.
+// - Throw fatal compose/render failures after receipt state is updated, so Canvas North cannot accidentally admit failed stages.
+// - Separate current proof from historical proof.
+// - Mark stale frame/proof state after invalidation.
+// - Preserve ordered visible-proof binning: strict supersedes soft, soft supersedes hard fail.
 // - Preserve NEWS/Fibonacci F13 synchronization.
 // Does not own:
 // - planet truth
@@ -27,11 +32,16 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_SOUTH_TEXTURE_SPHERE_VISIBLE_PROOF_TNT_v1";
-  const RECEIPT = "HEARTH_CANVAS_SOUTH_TEXTURE_SPHERE_VISIBLE_PROOF_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_CARDINAL_SPLIT_NORTH_PARENT_TNT_v2";
+  const CONTRACT = "HEARTH_CANVAS_SOUTH_SPLIT_ADAPTER_DRAIN_VISIBLE_PROOF_HARDENING_TNT_v1";
+  const RECEIPT = "HEARTH_CANVAS_SOUTH_SPLIT_ADAPTER_DRAIN_VISIBLE_PROOF_HARDENING_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_SOUTH_TEXTURE_SPHERE_VISIBLE_PROOF_TNT_v1";
   const BASELINE_CONTRACT = "HEARTH_CANVAS_MATERIALS_RELIEF_CONSUMPTION_INVALIDATION_TNT_v1";
-  const VERSION = "2026-05-30.hearth-canvas-south-texture-sphere-visible-proof-v1";
+  const PARENT_SPLIT_CONTRACT = "HEARTH_CANVAS_CARDINAL_SPLIT_NORTH_PARENT_TNT_v2";
+  const ACCEPTED_PARENT_SPLIT_CONTRACTS = Object.freeze([
+    "HEARTH_CANVAS_CARDINAL_SPLIT_NORTH_PARENT_TNT_v2",
+    "HEARTH_CANVAS_SPLIT_ADAPTER_TRANSISTOR_GATE_NORTH_PARENT_TNT_v1"
+  ]);
+  const VERSION = "2026-05-30.hearth-canvas-south-split-adapter-drain-visible-proof-hardening-v1";
   const FILE = "/assets/hearth/hearth.canvas.south.js";
 
   const root = typeof window !== "undefined" ? window : globalThis;
@@ -47,9 +57,11 @@
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     baselineContract: BASELINE_CONTRACT,
+    parentSplitContract: PARENT_SPLIT_CONTRACT,
+    acceptedParentSplitContracts: ACCEPTED_PARENT_SPLIT_CONTRACTS.slice(),
     version: VERSION,
     file: FILE,
-    role: "canvas-south-texture-sphere-visible-proof",
+    role: "canvas-south-split-adapter-drain-visible-proof-hardening",
 
     newsProtocolSynchronized: true,
     fibonacciAlignmentSynchronized: true,
@@ -62,7 +74,15 @@
     canvasSouthReady: true,
     splitAdapterRole: "SOUTH",
     splitAdapterTransistorMode: true,
-    visibleOutputControlActive: true,
+    transistorAdapterActive: true,
+    transistorRole: "drain",
+    transistorDrainRole: "south-texture-render-visible-proof-drain",
+    transistorSourcePeer: "east-material-atlas-source",
+    transistorControlPeer: "west-motion-invalidation-control",
+    transistorGateParent: "north-split-adapter-gate",
+    transistorCurrentFlow: "EAST_SOURCE_TO_SOUTH_DRAIN_THROUGH_NORTH_GATE_WITH_WEST_CONTROL",
+    splitAdapterParentAligned: true,
+    fatalErrorBoundaryActive: true,
 
     textureCanvas: null,
     textureContext: null,
@@ -76,6 +96,8 @@
     textureComposeStarted: false,
     textureComposeProgress: 0,
     textureComposeComplete: false,
+    textureProofComplete: false,
+    textureHardFail: false,
     textureComposeStartedAt: "",
     textureComposeCompletedAt: "",
     textureComposeElapsedMs: 0,
@@ -93,6 +115,7 @@
     firstFrameDetected: false,
     imageRendered: false,
     renderedAfterTexture: false,
+    renderedFromCachedTexture: false,
     planetFramePainted: false,
     nonblankPlanetVisible: false,
     planetNotObstructed: false,
@@ -105,6 +128,10 @@
     renderElapsedMs: 0,
     renderYieldCount: 0,
     renderError: "",
+    renderHardFail: false,
+    renderFrameStale: false,
+    sphereProjectionComplete: false,
+    currentSphereProofAt: "",
 
     canvasWidth: 0,
     canvasHeight: 0,
@@ -134,6 +161,14 @@
     visibleContentOtherSampleCount: 0,
     visibleContentCarrierSampleCount: 0,
     carrierOnlyDetected: false,
+
+    proofBin: "NONE",
+    currentVisibleProofValid: false,
+    currentVisibleProofAt: "",
+    lastValidVisibleProofAt: "",
+    visibleProofStale: false,
+    staleProofSuppressed: false,
+    currentTextureProofAt: "",
 
     clarityRenewalActive: true,
     hazeReduced: true,
@@ -208,11 +243,6 @@
     return clamp(value, 0, 1);
   }
 
-  function mix(a, b, t) {
-    const k = clamp01(t);
-    return a + (b - a) * k;
-  }
-
   function clonePlain(value) {
     if (!isObject(value)) return value;
 
@@ -263,8 +293,9 @@
     return item;
   }
 
-  function yieldFrame() {
-    state.renderYieldCount += 1;
+  function yieldFrame(kind = "render") {
+    if (kind === "compose") state.textureComposeYieldCount += 1;
+    else state.renderYieldCount += 1;
 
     return new Promise((resolve) => {
       if (isFunction(root.requestAnimationFrame)) {
@@ -306,7 +337,9 @@
       return source;
     }
 
-    if (state.textureCanvas) return state.textureCanvas;
+    if (state.textureCanvas && options.allowCachedTexture === true) {
+      return state.textureCanvas;
+    }
 
     throw new Error("Canvas South composeTexture requires a valid atlasCanvas.");
   }
@@ -339,8 +372,12 @@
     canvas.dataset.hearthCanvasSouthTexture = "true";
     canvas.dataset.hearthCanvasSouthContract = CONTRACT;
     canvas.dataset.hearthCanvasSouthReceipt = RECEIPT;
+    canvas.dataset.hearthCanvasSouthParentSplitContract = PARENT_SPLIT_CONTRACT;
     canvas.dataset.hearthCanvasSouthRole = state.role;
+    canvas.dataset.hearthCanvasSouthTransistorRole = "drain";
     canvas.dataset.hearthCanvasSouthTextureComposeComplete = String(state.textureComposeComplete);
+    canvas.dataset.hearthCanvasSouthTextureProofComplete = String(state.textureProofComplete);
+    canvas.dataset.hearthCanvasSouthTextureHardFail = String(state.textureHardFail);
     canvas.dataset.hearthCanvasSouthClarityRenewalActive = "true";
     canvas.dataset.hearthCanvasSouthHazeReduced = "true";
     canvas.dataset.hearthCanvasSouthOwnsPlanetTruth = "false";
@@ -357,13 +394,84 @@
     canvas.dataset.hearthCanvasSouthRendered = String(state.imageRendered);
     canvas.dataset.hearthCanvasSouthContract = CONTRACT;
     canvas.dataset.hearthCanvasSouthReceipt = RECEIPT;
+    canvas.dataset.hearthCanvasSouthParentSplitContract = PARENT_SPLIT_CONTRACT;
+    canvas.dataset.hearthCanvasSouthSphereProjectionComplete = String(state.sphereProjectionComplete);
+    canvas.dataset.hearthCanvasSouthRenderHardFail = String(state.renderHardFail);
+    canvas.dataset.hearthCanvasSouthRenderFrameStale = String(state.renderFrameStale);
     canvas.dataset.hearthCanvasSouthVisibleProof = String(state.visibleContentProof);
     canvas.dataset.hearthCanvasSouthVisibleStrictProof = String(state.visibleContentStrictProof);
     canvas.dataset.hearthCanvasSouthVisibleSoftGap = String(state.visibleContentSoftGap);
     canvas.dataset.hearthCanvasSouthVisibleHardFail = String(state.visibleContentHardFail);
+    canvas.dataset.hearthCanvasSouthCurrentVisibleProofValid = String(state.currentVisibleProofValid);
+    canvas.dataset.hearthCanvasSouthVisibleProofStale = String(state.visibleProofStale);
+    canvas.dataset.hearthCanvasSouthProofBin = state.proofBin;
     canvas.dataset.hearthCanvasSouthOwnsPlanetTruth = "false";
     canvas.dataset.hearthCanvasSouthOwnsF21 = "false";
     canvas.dataset.visualPassClaimed = "false";
+  }
+
+  function clearCurrentProof(reason = "current-proof-cleared") {
+    state.visibleContentProof = false;
+    state.visibleContentStrictProof = false;
+    state.visibleContentSoftGap = false;
+    state.visibleContentHardFail = false;
+    state.visibleForwardProgress = false;
+    state.visibleContentAdmissible = false;
+    state.currentVisibleProofValid = false;
+    state.visibleProofStale = true;
+    state.staleProofSuppressed = true;
+    state.proofBin = "STALE";
+    state.visibleContentProofMethod = reason;
+    state.f13VisibleEvidenceComplete = false;
+    state.f13HardFail = false;
+  }
+
+  function markFatalCompose(error) {
+    state.textureComposeError = error && error.message ? error.message : String(error || "");
+    state.textureComposeComplete = false;
+    state.textureProofComplete = false;
+    state.textureHardFail = true;
+    state.textureRebuildComplete = false;
+    state.textureRebuildError = state.textureComposeError;
+    state.textureInvalidated = true;
+    state.renderFrameStale = true;
+    state.visibleProofStale = true;
+    state.currentVisibleProofValid = false;
+    state.sphereProjectionComplete = false;
+    state.renderedFromCachedTexture = false;
+    state.updatedAt = nowIso();
+
+    clearCurrentProof("fatal-compose-failure-current-proof-cleared");
+    recordError("SOUTH_TEXTURE_COMPOSE_FATAL", error);
+    updateDataset();
+  }
+
+  function markFatalRender(error) {
+    state.renderError = error && error.message ? error.message : String(error || "");
+    state.renderHardFail = true;
+    state.renderStarted = true;
+    state.renderProgress = 0;
+    state.firstFrameDetected = false;
+    state.imageRendered = false;
+    state.renderedAfterTexture = false;
+    state.renderedFromCachedTexture = false;
+    state.planetFramePainted = false;
+    state.nonblankPlanetVisible = false;
+    state.planetNotObstructed = false;
+    state.visiblePlanetAvailable = false;
+    state.sphereProjectionComplete = false;
+    state.renderFrameStale = true;
+    state.visibleProofStale = true;
+    state.currentVisibleProofValid = false;
+    state.updatedAt = nowIso();
+
+    clearCurrentProof("fatal-render-failure-current-proof-cleared");
+    state.visibleContentHardFail = true;
+    state.f13HardFail = true;
+    state.proofBin = "HARD_FAIL";
+
+    recordError("SOUTH_RENDER_SPHERE_FATAL", error);
+    updateDataset();
   }
 
   function updateDataset() {
@@ -376,6 +484,7 @@
     dataset.hearthCanvasSouthReceipt = RECEIPT;
     dataset.hearthCanvasSouthPreviousContract = PREVIOUS_CONTRACT;
     dataset.hearthCanvasSouthBaselineContract = BASELINE_CONTRACT;
+    dataset.hearthCanvasSouthParentSplitContract = PARENT_SPLIT_CONTRACT;
     dataset.hearthCanvasSouthVersion = VERSION;
     dataset.hearthCanvasSouthFile = FILE;
     dataset.hearthCanvasSouthRole = state.role;
@@ -388,15 +497,26 @@
 
     dataset.hearthCanvasSouthActive = "true";
     dataset.hearthCanvasSouthReady = "true";
+    dataset.hearthCanvasSouthSplitAdapterTransistorMode = "true";
+    dataset.hearthCanvasSouthTransistorRole = "drain";
+    dataset.hearthCanvasSouthSplitAdapterParentAligned = "true";
+    dataset.hearthCanvasSouthFatalErrorBoundaryActive = "true";
+
     dataset.hearthCanvasSouthTextureComposeStarted = String(state.textureComposeStarted);
     dataset.hearthCanvasSouthTextureComposeProgress = String(state.textureComposeProgress);
     dataset.hearthCanvasSouthTextureComposeComplete = String(state.textureComposeComplete);
+    dataset.hearthCanvasSouthTextureProofComplete = String(state.textureProofComplete);
+    dataset.hearthCanvasSouthTextureHardFail = String(state.textureHardFail);
     dataset.hearthCanvasSouthTextureInvalidated = String(state.textureInvalidated);
 
     dataset.hearthCanvasSouthFirstFrameRequested = String(state.firstFrameRequested);
     dataset.hearthCanvasSouthFirstFrameDetected = String(state.firstFrameDetected);
     dataset.hearthCanvasSouthImageRendered = String(state.imageRendered);
     dataset.hearthCanvasSouthRenderedAfterTexture = String(state.renderedAfterTexture);
+    dataset.hearthCanvasSouthRenderedFromCachedTexture = String(state.renderedFromCachedTexture);
+    dataset.hearthCanvasSouthSphereProjectionComplete = String(state.sphereProjectionComplete);
+    dataset.hearthCanvasSouthRenderHardFail = String(state.renderHardFail);
+    dataset.hearthCanvasSouthRenderFrameStale = String(state.renderFrameStale);
     dataset.hearthCanvasSouthPlanetFramePainted = String(state.planetFramePainted);
     dataset.hearthCanvasSouthNonblankPlanetVisible = String(state.nonblankPlanetVisible);
     dataset.hearthCanvasSouthPlanetNotObstructed = String(state.planetNotObstructed);
@@ -407,6 +527,9 @@
     dataset.hearthCanvasSouthVisibleContentSoftGap = String(state.visibleContentSoftGap);
     dataset.hearthCanvasSouthVisibleContentHardFail = String(state.visibleContentHardFail);
     dataset.hearthCanvasSouthVisiblePlanetAvailable = String(state.visiblePlanetAvailable);
+    dataset.hearthCanvasSouthCurrentVisibleProofValid = String(state.currentVisibleProofValid);
+    dataset.hearthCanvasSouthVisibleProofStale = String(state.visibleProofStale);
+    dataset.hearthCanvasSouthProofBin = state.proofBin;
 
     dataset.hearthCanvasSouthClarityRenewalActive = "true";
     dataset.hearthCanvasSouthHazeReduced = "true";
@@ -452,6 +575,8 @@
   async function composeTexture(options = {}) {
     state.textureComposeStarted = true;
     state.textureComposeComplete = false;
+    state.textureProofComplete = false;
+    state.textureHardFail = false;
     state.textureComposeProgress = 0;
     state.textureComposeStartedAt = nowIso();
     state.textureComposeCompletedAt = "";
@@ -461,6 +586,11 @@
     state.textureRebuildRequested = options.rebuild === true;
     state.textureRebuildComplete = false;
     state.textureRebuildError = "";
+    state.renderFrameStale = true;
+    state.visibleProofStale = true;
+    state.currentVisibleProofValid = false;
+    state.currentTextureProofAt = "";
+    state.updatedAt = state.textureComposeStartedAt;
 
     updateDataset();
 
@@ -534,7 +664,7 @@
           }
         }
 
-        await yieldFrame();
+        await yieldFrame("compose");
       }
 
       context.putImageData(image, 0, 0);
@@ -546,11 +676,18 @@
 
       state.textureComposeProgress = 100;
       state.textureComposeComplete = true;
+      state.textureProofComplete = true;
+      state.textureHardFail = false;
       state.textureInvalidated = false;
       state.textureInvalidationReason = "";
       state.textureRebuildComplete = options.rebuild === true;
       state.textureComposeCompletedAt = nowIso();
       state.textureComposeElapsedMs = Math.max(0, Date.parse(state.textureComposeCompletedAt) - Date.parse(state.textureComposeStartedAt));
+      state.currentTextureProofAt = state.textureComposeCompletedAt;
+      state.renderFrameStale = true;
+      state.visibleProofStale = true;
+      state.currentVisibleProofValid = false;
+      state.sphereProjectionComplete = false;
       state.updatedAt = state.textureComposeCompletedAt;
 
       stampTextureCanvas(canvas);
@@ -559,7 +696,8 @@
         width,
         height,
         sourceContract: state.textureSourceContract,
-        sourceReceipt: state.textureSourceReceipt
+        sourceReceipt: state.textureSourceReceipt,
+        textureProofComplete: true
       });
 
       updateDataset();
@@ -571,24 +709,14 @@
         textureContext: context,
         width,
         height,
+        textureProofComplete: true,
+        textureHardFail: false,
         receiptPacket: getReceipt(),
         visualPassClaimed: false
       };
     } catch (error) {
-      state.textureComposeError = error && error.message ? error.message : String(error);
-      state.textureRebuildError = state.textureComposeError;
-      state.textureComposeComplete = false;
-      state.textureRebuildComplete = false;
-
-      recordError("SOUTH_TEXTURE_COMPOSE_FAILED", error);
-
-      return {
-        contract: CONTRACT,
-        receipt: RECEIPT,
-        error: state.textureComposeError,
-        receiptPacket: getReceipt(),
-        visualPassClaimed: false
-      };
+      markFatalCompose(error);
+      throw error;
     }
   }
 
@@ -658,6 +786,10 @@
       throw new Error("Canvas South renderSphere requires a composed texture canvas.");
     }
 
+    if (state.textureInvalidated === true || state.textureProofComplete !== true) {
+      throw new Error("Canvas South renderSphere blocked: texture is invalidated or texture proof is incomplete.");
+    }
+
     const context = canvas.getContext("2d", {
       alpha: true,
       willReadFrequently: true
@@ -680,6 +812,12 @@
     const yaw = safeNumber(view.yaw !== undefined ? view.yaw : view.rotationYaw, 0);
     const pitch = clamp(view.pitch !== undefined ? view.pitch : view.rotationPitch, -1.18, 1.18);
     const zoom = clamp(view.zoomLevel !== undefined ? view.zoomLevel : view.zoom, 0.82, 2.8);
+
+    state.canvasWidth = width;
+    state.canvasHeight = height;
+    state.lastYaw = yaw;
+    state.lastPitch = pitch;
+    state.lastZoom = zoom;
 
     return {
       canvas,
@@ -717,9 +855,6 @@
     state.renderCenterX = centerX;
     state.renderCenterY = centerY;
     state.renderRadius = radius;
-    state.lastYaw = yaw;
-    state.lastPitch = pitch;
-    state.lastZoom = zoom;
 
     for (let y = yStart; y < yEnd; y += 1) {
       const dy = y - centerY;
@@ -770,7 +905,13 @@
     state.renderCompletedAt = "";
     state.renderElapsedMs = 0;
     state.renderError = "";
+    state.renderHardFail = false;
     state.firstFrameRequested = true;
+    state.sphereProjectionComplete = false;
+    state.renderedFromCachedTexture = false;
+    state.renderFrameStale = true;
+    state.visibleProofStale = true;
+    state.currentVisibleProofValid = false;
     state.updatedAt = state.renderStartedAt;
 
     updateDataset();
@@ -797,7 +938,7 @@
           }
         }
 
-        await yieldFrame();
+        await yieldFrame("render");
       }
 
       inputs.context.putImageData(outputImage, 0, 0);
@@ -807,11 +948,18 @@
       state.firstFrameDetected = true;
       state.imageRendered = true;
       state.renderedAfterTexture = state.textureComposeComplete === true;
+      state.renderedFromCachedTexture = true;
       state.planetFramePainted = true;
       state.nonblankPlanetVisible = true;
       state.planetNotObstructed = true;
       state.visiblePlanetAvailable = true;
-      state.renderCompletedAt = nowIso();
+      state.sphereProjectionComplete = true;
+      state.renderHardFail = false;
+      state.renderFrameStale = false;
+      state.visibleProofStale = true;
+      state.currentVisibleProofValid = false;
+      state.currentSphereProofAt = nowIso();
+      state.renderCompletedAt = state.currentSphereProofAt;
       state.renderElapsedMs = Math.max(0, Date.parse(state.renderCompletedAt) - Date.parse(state.renderStartedAt));
       state.updatedAt = state.renderCompletedAt;
 
@@ -825,7 +973,8 @@
         textureHeight: inputs.textureHeight,
         yaw: inputs.yaw,
         pitch: inputs.pitch,
-        zoom: inputs.zoom
+        zoom: inputs.zoom,
+        sphereProjectionComplete: true
       });
 
       return {
@@ -834,24 +983,15 @@
         imageRendered: true,
         firstFrameDetected: true,
         renderedAfterTexture: state.renderedAfterTexture,
+        renderedFromCachedTexture: true,
+        sphereProjectionComplete: true,
+        renderHardFail: false,
         receiptPacket: getReceipt(),
         visualPassClaimed: false
       };
     } catch (error) {
-      state.renderError = error && error.message ? error.message : String(error);
-      state.imageRendered = false;
-      state.firstFrameDetected = false;
-
-      recordError("SOUTH_RENDER_SPHERE_FAILED", error);
-
-      return {
-        contract: CONTRACT,
-        receipt: RECEIPT,
-        imageRendered: false,
-        error: state.renderError,
-        receiptPacket: getReceipt(),
-        visualPassClaimed: false
-      };
+      markFatalRender(error);
+      throw error;
     }
   }
 
@@ -870,11 +1010,18 @@
       state.firstFrameDetected = true;
       state.imageRendered = true;
       state.renderedAfterTexture = state.textureComposeComplete === true;
+      state.renderedFromCachedTexture = true;
       state.planetFramePainted = true;
       state.nonblankPlanetVisible = true;
       state.planetNotObstructed = true;
       state.visiblePlanetAvailable = true;
-      state.updatedAt = nowIso();
+      state.sphereProjectionComplete = true;
+      state.renderHardFail = false;
+      state.renderFrameStale = false;
+      state.visibleProofStale = true;
+      state.currentVisibleProofValid = false;
+      state.currentSphereProofAt = nowIso();
+      state.updatedAt = state.currentSphereProofAt;
 
       stampOutputCanvas(inputs.canvas);
       updateDataset();
@@ -884,11 +1031,20 @@
         receipt: RECEIPT,
         imageRendered: true,
         sync: true,
+        renderedFromCachedTexture: true,
+        sphereProjectionComplete: true,
         receiptPacket: getReceipt(),
         visualPassClaimed: false
       };
     } catch (error) {
       state.renderError = error && error.message ? error.message : String(error);
+      state.renderHardFail = true;
+      state.sphereProjectionComplete = false;
+      state.renderFrameStale = true;
+      state.visibleProofStale = true;
+      state.currentVisibleProofValid = false;
+      state.updatedAt = nowIso();
+
       recordError("SOUTH_RENDER_SPHERE_SYNC_FAILED", error);
 
       return {
@@ -897,6 +1053,8 @@
         imageRendered: false,
         sync: true,
         error: state.renderError,
+        renderHardFail: true,
+        sphereProjectionComplete: false,
         receiptPacket: getReceipt(),
         visualPassClaimed: false
       };
@@ -915,26 +1073,30 @@
     const contentCount = landCount + waterCount + otherCount;
     const nonCarrierRatio = sampleCount > 0 ? contentCount / sampleCount : 0;
     const balancedSurface = landCount > 0 && waterCount > 0;
-    const strict =
+
+    const strict = Boolean(
       sampleCount >= 36 &&
       contentCount >= 18 &&
       nonCarrierRatio >= 0.26 &&
       variance >= 18 &&
       classCount >= 2 &&
-      balancedSurface;
+      balancedSurface
+    );
 
-    const soft =
+    const soft = Boolean(
       !strict &&
       sampleCount >= 24 &&
       contentCount >= 8 &&
       variance >= 8 &&
-      classCount >= 1;
+      classCount >= 1
+    );
 
-    const hardFail = !strict && !soft;
+    const hardFail = Boolean(!strict && !soft);
 
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
+      proofBin: strict ? "STRICT" : soft ? "SOFT_GAP" : "HARD_FAIL",
       visibleContentProof: strict || soft,
       visibleContentStrictProof: strict,
       visibleContentSoftGap: soft,
@@ -963,16 +1125,21 @@
 
     if (!canvas || !isFunction(canvas.getContext)) {
       const error = new Error("Canvas South visible-content proof requires a canvas.");
+
       state.visibleContentProofError = error.message;
       state.visibleContentProof = false;
       state.visibleContentStrictProof = false;
       state.visibleContentSoftGap = false;
       state.visibleContentHardFail = true;
       state.visiblePlanetAvailable = false;
+      state.currentVisibleProofValid = false;
+      state.visibleProofStale = false;
+      state.proofBin = "HARD_FAIL";
       state.f13HardFail = true;
 
       recordError("SOUTH_VISIBLE_PROOF_CANVAS_MISSING", error);
       updateDataset();
+
       return getVisibleProofPacket();
     }
 
@@ -1070,13 +1237,22 @@
       state.visiblePlanetAvailable = classified.visiblePlanetAvailable;
       state.carrierOnlyDetected = classified.carrierOnlyDetected;
       state.visibleContentProofMethod = classified.visibleContentProofMethod;
+      state.proofBin = classified.proofBin;
 
       state.f13VisibleEvidenceComplete = classified.f13VisibleEvidenceComplete;
       state.f13HardFail = classified.f13HardFail;
 
+      state.currentVisibleProofValid = classified.visibleContentProof === true;
+      state.visibleProofStale = false;
+      state.staleProofSuppressed = false;
+      state.currentVisibleProofAt = nowIso();
+      if (classified.visibleContentProof === true) {
+        state.lastValidVisibleProofAt = state.currentVisibleProofAt;
+      }
+
       state.nonblankPlanetVisible = state.visiblePlanetAvailable;
       state.planetNotObstructed = state.visiblePlanetAvailable;
-      state.updatedAt = nowIso();
+      state.updatedAt = state.currentVisibleProofAt;
 
       stampOutputCanvas(canvas);
       updateDataset();
@@ -1089,7 +1265,9 @@
         carrierCount,
         varianceScore: state.visibleContentVarianceScore,
         classCount: state.visibleContentClassCount,
-        method: state.visibleContentProofMethod
+        proofBin: state.proofBin,
+        method: state.visibleContentProofMethod,
+        currentVisibleProofValid: state.currentVisibleProofValid
       });
 
       return getVisibleProofPacket();
@@ -1097,13 +1275,18 @@
       state.visibleContentProofError = error && error.message ? error.message : String(error);
       state.visibleContentProof = false;
       state.visibleContentStrictProof = false;
-      state.visibleContentSoftGap = state.imageRendered === true;
-      state.visibleContentHardFail = state.imageRendered !== true;
-      state.visiblePlanetAvailable = state.imageRendered === true;
-      state.visibleForwardProgress = state.imageRendered === true;
-      state.visibleContentAdmissible = state.imageRendered === true;
-      state.f13VisibleEvidenceComplete = state.imageRendered === true;
-      state.f13HardFail = state.imageRendered !== true;
+      state.visibleContentSoftGap = state.imageRendered === true && state.sphereProjectionComplete === true;
+      state.visibleContentHardFail = !(state.imageRendered === true && state.sphereProjectionComplete === true);
+      state.visiblePlanetAvailable = state.imageRendered === true && state.sphereProjectionComplete === true;
+      state.visibleForwardProgress = state.visiblePlanetAvailable;
+      state.visibleContentAdmissible = state.visiblePlanetAvailable;
+      state.currentVisibleProofValid = state.visibleContentSoftGap;
+      state.visibleProofStale = false;
+      state.proofBin = state.visibleContentSoftGap ? "SOFT_GAP" : "HARD_FAIL";
+      state.f13VisibleEvidenceComplete = state.visibleContentSoftGap;
+      state.f13HardFail = state.visibleContentHardFail;
+      state.currentVisibleProofAt = nowIso();
+      if (state.currentVisibleProofValid) state.lastValidVisibleProofAt = state.currentVisibleProofAt;
 
       recordError("SOUTH_VISIBLE_PROOF_FAILED", error);
 
@@ -1138,6 +1321,12 @@
       planetFramePainted: state.planetFramePainted,
       nonblankPlanetVisible: state.nonblankPlanetVisible,
       planetNotObstructed: state.planetNotObstructed,
+      proofBin: state.proofBin,
+      currentVisibleProofValid: state.currentVisibleProofValid,
+      currentVisibleProofAt: state.currentVisibleProofAt,
+      lastValidVisibleProofAt: state.lastValidVisibleProofAt,
+      visibleProofStale: state.visibleProofStale,
+      staleProofSuppressed: state.staleProofSuppressed,
       f13VisibleEvidenceComplete: state.f13VisibleEvidenceComplete,
       f13HardFail: state.f13HardFail,
       f21ClaimedByCanvasSouth: false,
@@ -1153,12 +1342,33 @@
     state.textureRebuildComplete = false;
     state.textureRebuildError = "";
     state.textureComposeComplete = false;
+    state.textureProofComplete = false;
+    state.textureHardFail = false;
     state.textureComposeProgress = 0;
+
+    state.firstFrameDetected = false;
+    state.imageRendered = false;
+    state.renderedAfterTexture = false;
+    state.renderedFromCachedTexture = false;
+    state.planetFramePainted = false;
+    state.nonblankPlanetVisible = false;
+    state.planetNotObstructed = false;
+    state.visiblePlanetAvailable = false;
+    state.sphereProjectionComplete = false;
+    state.renderFrameStale = true;
+    state.visibleProofStale = true;
+    state.currentVisibleProofValid = false;
+    state.staleProofSuppressed = true;
+
+    clearCurrentProof("texture-invalidated-current-proof-cleared");
+
     state.updatedAt = nowIso();
 
     recordLocal("SOUTH_TEXTURE_INVALIDATED", {
       reason: state.textureInvalidationReason,
-      textureInvalidationCount: state.textureInvalidationCount
+      textureInvalidationCount: state.textureInvalidationCount,
+      renderFrameStale: true,
+      visibleProofStale: true
     });
 
     updateDataset();
@@ -1172,6 +1382,8 @@
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       baselineContract: BASELINE_CONTRACT,
+      parentSplitContract: PARENT_SPLIT_CONTRACT,
+      acceptedParentSplitContracts: ACCEPTED_PARENT_SPLIT_CONTRACTS.slice(),
       version: VERSION,
       file: FILE,
       role: state.role,
@@ -1187,7 +1399,15 @@
       canvasSouthReady: true,
       splitAdapterRole: "SOUTH",
       splitAdapterTransistorMode: true,
-      visibleOutputControlActive: true,
+      transistorAdapterActive: true,
+      transistorRole: "drain",
+      transistorDrainRole: state.transistorDrainRole,
+      transistorSourcePeer: state.transistorSourcePeer,
+      transistorControlPeer: state.transistorControlPeer,
+      transistorGateParent: state.transistorGateParent,
+      transistorCurrentFlow: state.transistorCurrentFlow,
+      splitAdapterParentAligned: true,
+      fatalErrorBoundaryActive: true,
 
       textureCanvasAvailable: Boolean(state.textureCanvas),
       textureWidth: state.textureWidth,
@@ -1200,11 +1420,14 @@
       textureComposeStarted: state.textureComposeStarted,
       textureComposeProgress: state.textureComposeProgress,
       textureComposeComplete: state.textureComposeComplete,
+      textureProofComplete: state.textureProofComplete,
+      textureHardFail: state.textureHardFail,
       textureComposeStartedAt: state.textureComposeStartedAt,
       textureComposeCompletedAt: state.textureComposeCompletedAt,
       textureComposeElapsedMs: state.textureComposeElapsedMs,
       textureComposeYieldCount: state.textureComposeYieldCount,
       textureComposeError: state.textureComposeError,
+      currentTextureProofAt: state.currentTextureProofAt,
 
       textureInvalidated: state.textureInvalidated,
       textureInvalidationReason: state.textureInvalidationReason,
@@ -1217,6 +1440,7 @@
       firstFrameDetected: state.firstFrameDetected,
       imageRendered: state.imageRendered,
       renderedAfterTexture: state.renderedAfterTexture,
+      renderedFromCachedTexture: state.renderedFromCachedTexture,
       planetFramePainted: state.planetFramePainted,
       nonblankPlanetVisible: state.nonblankPlanetVisible,
       planetNotObstructed: state.planetNotObstructed,
@@ -1229,6 +1453,10 @@
       renderElapsedMs: state.renderElapsedMs,
       renderYieldCount: state.renderYieldCount,
       renderError: state.renderError,
+      renderHardFail: state.renderHardFail,
+      renderFrameStale: state.renderFrameStale,
+      sphereProjectionComplete: state.sphereProjectionComplete,
+      currentSphereProofAt: state.currentSphereProofAt,
 
       canvasWidth: state.canvasWidth,
       canvasHeight: state.canvasHeight,
@@ -1258,6 +1486,13 @@
       visibleContentOtherSampleCount: state.visibleContentOtherSampleCount,
       visibleContentCarrierSampleCount: state.visibleContentCarrierSampleCount,
       carrierOnlyDetected: state.carrierOnlyDetected,
+
+      proofBin: state.proofBin,
+      currentVisibleProofValid: state.currentVisibleProofValid,
+      currentVisibleProofAt: state.currentVisibleProofAt,
+      lastValidVisibleProofAt: state.lastValidVisibleProofAt,
+      visibleProofStale: state.visibleProofStale,
+      staleProofSuppressed: state.staleProofSuppressed,
 
       clarityRenewalActive: true,
       hazeReduced: true,
@@ -1294,8 +1529,14 @@
 
       designRules: [
         "south owns texture composition from east atlas",
-        "south owns visible 2D sphere rendering",
+        "south owns visible 2D sphere rendering from cached texture",
         "south owns visible-content proof classification",
+        "strict proof supersedes soft proof",
+        "soft proof supersedes hard fail",
+        "fatal compose failure throws after receipt update",
+        "fatal render failure throws after receipt update",
+        "stale current proof cannot be treated as current valid proof",
+        "historical proof may remain as lastValidVisibleProofAt only",
         "south does not own source intake",
         "south does not own atlas formation",
         "south does not own drag or zoom control",
@@ -1326,12 +1567,13 @@
       : "- none";
 
     return [
-      "HEARTH_CANVAS_SOUTH_TEXTURE_SPHERE_VISIBLE_PROOF_RECEIPT",
+      "HEARTH_CANVAS_SOUTH_SPLIT_ADAPTER_DRAIN_VISIBLE_PROOF_HARDENING_RECEIPT",
       "",
       `contract=${r.contract}`,
       `receipt=${r.receipt}`,
       `previousContract=${r.previousContract}`,
       `baselineContract=${r.baselineContract}`,
+      `parentSplitContract=${r.parentSplitContract}`,
       `version=${r.version}`,
       `file=${r.file}`,
       `role=${r.role}`,
@@ -1347,7 +1589,9 @@
       `canvasSouthReady=${r.canvasSouthReady}`,
       `splitAdapterRole=${r.splitAdapterRole}`,
       `splitAdapterTransistorMode=${r.splitAdapterTransistorMode}`,
-      `visibleOutputControlActive=${r.visibleOutputControlActive}`,
+      `transistorRole=${r.transistorRole}`,
+      `splitAdapterParentAligned=${r.splitAdapterParentAligned}`,
+      `fatalErrorBoundaryActive=${r.fatalErrorBoundaryActive}`,
       "",
       `textureCanvasAvailable=${r.textureCanvasAvailable}`,
       `textureWidth=${r.textureWidth}`,
@@ -1355,17 +1599,27 @@
       `textureComposeStarted=${r.textureComposeStarted}`,
       `textureComposeProgress=${r.textureComposeProgress}`,
       `textureComposeComplete=${r.textureComposeComplete}`,
+      `textureProofComplete=${r.textureProofComplete}`,
+      `textureHardFail=${r.textureHardFail}`,
       `textureInvalidated=${r.textureInvalidated}`,
       `textureInvalidationCount=${r.textureInvalidationCount}`,
+      `textureComposeYieldCount=${r.textureComposeYieldCount}`,
       "",
       `firstFrameRequested=${r.firstFrameRequested}`,
       `firstFrameDetected=${r.firstFrameDetected}`,
       `imageRendered=${r.imageRendered}`,
       `renderedAfterTexture=${r.renderedAfterTexture}`,
+      `renderedFromCachedTexture=${r.renderedFromCachedTexture}`,
+      `sphereProjectionComplete=${r.sphereProjectionComplete}`,
+      `renderHardFail=${r.renderHardFail}`,
+      `renderFrameStale=${r.renderFrameStale}`,
       `planetFramePainted=${r.planetFramePainted}`,
       `nonblankPlanetVisible=${r.nonblankPlanetVisible}`,
       `planetNotObstructed=${r.planetNotObstructed}`,
       `renderFrameCount=${r.renderFrameCount}`,
+      `renderYieldCount=${r.renderYieldCount}`,
+      `canvasWidth=${r.canvasWidth}`,
+      `canvasHeight=${r.canvasHeight}`,
       "",
       `visibleContentProofStarted=${r.visibleContentProofStarted}`,
       `visibleContentProof=${r.visibleContentProof}`,
@@ -1376,6 +1630,12 @@
       `visibleContentVarianceScore=${r.visibleContentVarianceScore}`,
       `visibleContentClassCount=${r.visibleContentClassCount}`,
       `visibleContentClasses=${r.visibleContentClasses.join(",")}`,
+      `proofBin=${r.proofBin}`,
+      `currentVisibleProofValid=${r.currentVisibleProofValid}`,
+      `visibleProofStale=${r.visibleProofStale}`,
+      `staleProofSuppressed=${r.staleProofSuppressed}`,
+      `currentVisibleProofAt=${r.currentVisibleProofAt}`,
+      `lastValidVisibleProofAt=${r.lastValidVisibleProofAt}`,
       "",
       `clarityRenewalActive=${r.clarityRenewalActive}`,
       `hazeReduced=${r.hazeReduced}`,
@@ -1413,6 +1673,7 @@
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     baselineContract: BASELINE_CONTRACT,
+    parentSplitContract: PARENT_SPLIT_CONTRACT,
     version: VERSION,
     file: FILE,
 
@@ -1430,6 +1691,10 @@
     canvasSouthReady: true,
     splitAdapterRole: "SOUTH",
     splitAdapterTransistorMode: true,
+    transistorAdapterActive: true,
+    transistorRole: "drain",
+    splitAdapterParentAligned: true,
+    fatalErrorBoundaryActive: true,
 
     newsProtocolSynchronized: true,
     fibonacciAlignmentSynchronized: true,
@@ -1466,13 +1731,16 @@
   root.HEARTH = root.HEARTH || {};
   root.HEARTH.canvasSouth = api;
   root.HEARTH.canvasSouthTextureSphereVisibleProof = api;
+  root.HEARTH.canvasSouthSplitAdapterDrainVisibleProofHardening = api;
 
   root.HEARTH_CANVAS_SOUTH = api;
   root.HEARTH_CANVAS_SOUTH_TEXTURE_SPHERE_VISIBLE_PROOF = api;
+  root.HEARTH_CANVAS_SOUTH_SPLIT_ADAPTER_DRAIN_VISIBLE_PROOF_HARDENING = api;
 
   root.DEXTER_LAB = root.DEXTER_LAB || {};
   root.DEXTER_LAB.hearthCanvasSouth = api;
   root.DEXTER_LAB.hearthCanvasSouthTextureSphereVisibleProof = api;
+  root.DEXTER_LAB.hearthCanvasSouthSplitAdapterDrainVisibleProofHardening = api;
 
   updateDataset();
 

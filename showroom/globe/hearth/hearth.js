@@ -1,17 +1,17 @@
 // /showroom/globe/hearth/hearth.js
-// HEARTH_SOUTH_ROUTE_CONDUCTOR_POSTGAME_DEDUP_INSPECT_GATE_TNT_v2
+// HEARTH_SOUTH_ROUTE_CONDUCTOR_STRICT_PROOF_DEGRADE_RECONCILIATION_TNT_v3
 // Full-file replacement.
 // South route conductor / visible completion authority only.
 // Purpose:
-// - Preserve the successful Gear Admission Translator baseline.
-// - Stop postgame duplicate canvas-receipt replay after F21.
-// - Deduplicate canvas receipt reconciliation by checkpoint and receipt signature.
-// - Treat progress-only canvas events as count-only telemetry, not archived-event spam.
-// - Reduce page lag by avoiding full receipt text generation during normal render.
-// - Build full receipt only when Copy Diagnostic or visible receipt panel requests it.
-// - Freeze lane DOM after F21 unless checkpoint/degraded/queue signature changes.
-// - Report inspect availability from real controls instead of hard-coded false.
-// - Allow short canvas API retry if South boots before canvas authority is available.
+// - Preserve the successful postgame dedup + inspect gate baseline.
+// - Correct false degradation of strict F13M visible proof.
+// - Correct false degradation of F13N when real inspect controls exist.
+// - Preserve one-active-gear transmission semantics.
+// - Preserve progress-only telemetry compaction.
+// - Preserve lazy receipt generation.
+// - Preserve Copy Diagnostic, Show/Hide Receipt, Inspect Planet, and diagnostic dock restoration.
+// - Preserve canvas API retry and canvas receipt reconciliation.
+// - Latch full F21 when strict NEWS gates pass.
 // Does not own:
 // - North checkpoint truth
 // - East first-paint shell
@@ -24,11 +24,11 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_SOUTH_ROUTE_CONDUCTOR_POSTGAME_DEDUP_INSPECT_GATE_TNT_v2";
-  const RECEIPT = "HEARTH_SOUTH_ROUTE_CONDUCTOR_POSTGAME_DEDUP_INSPECT_GATE_RECEIPT_v2";
-  const PREVIOUS_CONTRACT = "HEARTH_SOUTH_ROUTE_CONDUCTOR_GEAR_ADMISSION_TRANSLATOR_TNT_v1";
-  const BASELINE_CONTRACT = "HEARTH_SOUTH_ROUTE_CONDUCTOR_GEAR_ADMISSION_TRANSLATOR_TNT_v1";
-  const VERSION = "2026-05-30.hearth-south-route-conductor-postgame-dedup-inspect-gate-v2";
+  const CONTRACT = "HEARTH_SOUTH_ROUTE_CONDUCTOR_STRICT_PROOF_DEGRADE_RECONCILIATION_TNT_v3";
+  const RECEIPT = "HEARTH_SOUTH_ROUTE_CONDUCTOR_STRICT_PROOF_DEGRADE_RECONCILIATION_RECEIPT_v3";
+  const PREVIOUS_CONTRACT = "HEARTH_SOUTH_ROUTE_CONDUCTOR_POSTGAME_DEDUP_INSPECT_GATE_TNT_v2";
+  const BASELINE_CONTRACT = "HEARTH_SOUTH_ROUTE_CONDUCTOR_POSTGAME_DEDUP_INSPECT_GATE_TNT_v2";
+  const VERSION = "2026-05-30.hearth-south-route-conductor-strict-proof-degrade-reconciliation-v3";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
@@ -210,7 +210,12 @@
       fibonacci: "F13M",
       event: "VISIBLE_CONTENT_PROOF_PASSED",
       label: "Visible proof passed",
-      aliases: ["DEGRADED_VISIBLE_CONTENT_ACCEPTED", "VISIBLE_CONTENT_SOFT_GAP", "VISIBLE_CONTENT_ADMISSIBLE", "VISIBLE_FORWARD_PROGRESS"]
+      aliases: [
+        "DEGRADED_VISIBLE_CONTENT_ACCEPTED",
+        "VISIBLE_CONTENT_SOFT_GAP",
+        "VISIBLE_CONTENT_ADMISSIBLE",
+        "VISIBLE_FORWARD_PROGRESS"
+      ]
     },
     {
       id: "F13N_INSPECT_MODE_READY",
@@ -252,7 +257,7 @@
     version: VERSION,
     file: FILE,
     route: ROUTE,
-    role: "south-route-conductor-postgame-dedup-inspect-gate",
+    role: "south-route-conductor-strict-proof-degrade-reconciliation",
 
     cycleOrder: "EAST -> WEST -> NORTH -> SOUTH -> CHECKPOINT -> EAST",
     transmissionMode: true,
@@ -317,8 +322,15 @@
     buttonsReachable: true,
     receiptOverlayIndependent: true,
 
-    latestEvent: "SOUTH_POSTGAME_DEDUP_INSPECT_GATE_LOADED",
-    postgameStatus: "SOUTH_DEDUP_GATE_LOADED",
+    strictVisibleProof: false,
+    softGapVisibleProof: false,
+    hardFailVisibleProof: false,
+    strictInspectReady: false,
+    fallbackInspectReady: false,
+    f21LatchMode: "WAITING",
+
+    latestEvent: "SOUTH_STRICT_PROOF_DEGRADE_RECONCILIATION_LOADED",
+    postgameStatus: "SOUTH_STRICT_PROOF_DEGRADE_RECONCILIATION_LOADED",
     firstFailedCoordinate: "WAITING_BOOT",
     recommendedNextRenewalTarget: FILE,
 
@@ -760,6 +772,105 @@
     bindControls();
   }
 
+  function classifyVisibleProof(eventName, detail = {}) {
+    const key = safeString(eventName);
+    const hard = Boolean(
+      key === "VISIBLE_CONTENT_HARD_FAIL" ||
+      safeBool(detail.visibleContentHardFail, false)
+    );
+
+    const explicitSoft = Boolean(
+      key === "VISIBLE_CONTENT_SOFT_GAP" ||
+      key === "DEGRADED_VISIBLE_CONTENT_ACCEPTED" ||
+      safeBool(detail.visibleContentSoftGap, false)
+    );
+
+    const strict = Boolean(
+      !hard &&
+      !explicitSoft &&
+      (
+        safeBool(detail.visibleContentProof, false) ||
+        key === "VISIBLE_CONTENT_PROOF_PASSED"
+      )
+    );
+
+    const admissibleOnlySoft = Boolean(
+      !strict &&
+      !hard &&
+      (
+        safeBool(detail.visibleForwardProgress, false) ||
+        safeBool(detail.visibleContentAdmissible, false)
+      )
+    );
+
+    const soft = Boolean(!hard && !strict && (explicitSoft || admissibleOnlySoft));
+
+    state.strictVisibleProof = strict;
+    state.softGapVisibleProof = soft;
+    state.hardFailVisibleProof = hard;
+
+    return {
+      strict,
+      soft,
+      hard,
+      mode: hard ? "HARD_FAIL" : strict ? "STRICT" : soft ? "SOFT_GAP" : "UNKNOWN"
+    };
+  }
+
+  function hasVisibleSurfaceSignal(snapshot = buildSnapshot()) {
+    const classCount = safeNumber(snapshot.visibleContentClassCount, 0);
+    const land = safeNumber(snapshot.visibleContentLandSampleCount, 0);
+    const water = safeNumber(snapshot.visibleContentWaterSampleCount, 0);
+    const other = safeNumber(snapshot.visibleContentOtherSampleCount, 0);
+
+    return Boolean(
+      safeBool(snapshot.canvasReady, false) &&
+      safeBool(snapshot.firstFrameDetected, false) &&
+      safeBool(snapshot.imageRendered, false) &&
+      safeBool(snapshot.textureComposeComplete, false) &&
+      safeBool(snapshot.nonblankPlanetVisible, false) &&
+      (
+        classCount > 0 ||
+        land > 0 ||
+        water > 0 ||
+        other > 0 ||
+        safeBool(snapshot.visibleForwardProgress, false)
+      )
+    );
+  }
+
+  function hasStrictInspectSignal(snapshot = buildSnapshot()) {
+    const strict = Boolean(
+      safeBool(snapshot.inspectModeAvailable, false) &&
+      safeBool(snapshot.inspectPlanetControlAvailable, false) &&
+      safeBool(snapshot.diagnosticCanLeavePlanetFrame, false) &&
+      safeBool(snapshot.copyDiagnosticPreserved, true) &&
+      safeBool(snapshot.receiptToggleReady, true) &&
+      safeBool(snapshot.diagnosticDockRestorable, true) &&
+      safeBool(snapshot.buttonsReachable, true)
+    );
+
+    state.strictInspectReady = strict;
+    return strict;
+  }
+
+  function hasFallbackInspectSignal(snapshot = buildSnapshot()) {
+    const fallback = Boolean(
+      safeBool(snapshot.copyDiagnosticPreserved, true) &&
+      safeBool(snapshot.receiptToggleReady, true) &&
+      safeBool(snapshot.diagnosticDockRestorable, true) &&
+      safeBool(snapshot.buttonsReachable, true) &&
+      (
+        safeBool(snapshot.receiptOverlayIndependent, true) ||
+        safeBool(snapshot.partialReceiptAvailable, true) ||
+        safeBool(snapshot.finalReceiptAvailable, false)
+      )
+    );
+
+    state.fallbackInspectReady = fallback;
+    return fallback;
+  }
+
   function buildSnapshot(extra = {}) {
     const canvas = readCanvasReceipt();
     const active = activeCheckpoint();
@@ -832,6 +943,7 @@
 
       visibleContentProofStarted: safeBool(canvas.visibleContentProofStarted, false),
       visibleContentProof: safeBool(canvas.visibleContentProof, false),
+      visibleContentStrictProof: safeBool(canvas.visibleContentStrictProof, safeBool(canvas.visibleContentProof, false)),
       visibleContentSoftGap: safeBool(canvas.visibleContentSoftGap, false),
       visibleContentHardFail: safeBool(canvas.visibleContentHardFail, false),
       visibleForwardProgress: safeBool(canvas.visibleForwardProgress, false),
@@ -868,6 +980,13 @@
       receiptOverlayIndependent: true,
       partialReceiptAvailable: true,
       finalReceiptAvailable: state.completionLatched,
+
+      strictVisibleProof: state.strictVisibleProof,
+      softGapVisibleProof: state.softGapVisibleProof,
+      hardFailVisibleProof: state.hardFailVisibleProof,
+      strictInspectReady: state.strictInspectReady,
+      fallbackInspectReady: state.fallbackInspectReady,
+      f21LatchMode: state.f21LatchMode,
 
       completionLatched: state.completionLatched,
       degradedCompletionLatched: state.degradedCompletionLatched,
@@ -939,7 +1058,7 @@
       event: gear.event,
       phase: gear.event,
       checkpointId: gear.id,
-      source: "hearth.south.postgameDedupInspectGate",
+      source: "hearth.south.strictProofDegradeReconciliation",
       contract: CONTRACT,
       receipt: RECEIPT,
       detail: {
@@ -949,7 +1068,8 @@
         targetCheckpointEvent: gear.event,
         fibonacci: gear.fibonacci,
         legacyArchiveForbiddenForActiveGear: true,
-        postgameDedupActive: true
+        postgameDedupActive: true,
+        strictProofDegradeReconciliationActive: true
       },
       snapshot: buildSnapshot(detail)
     };
@@ -1021,13 +1141,14 @@
 
     if (gear.id === "F21_COMPLETION_LATCHED") {
       state.completionLatched = true;
-      state.degradedCompletionLatched = degraded || state.degradedCheckpoints.length > 0;
+      state.degradedCompletionLatched = degraded === true;
       state.readyTextAllowed = true;
       state.completionClosed = true;
-      state.postgameStatus = state.degradedCompletionLatched
+      state.f21LatchMode = degraded ? "DEGRADED" : "FULL";
+      state.postgameStatus = degraded
         ? "READY_DEGRADED_PLANET_VISIBLE_DIAGNOSTIC_AVAILABLE"
         : "READY_PLANET_VISIBLE_DIAGNOSTIC_AVAILABLE";
-      state.firstFailedCoordinate = state.degradedCompletionLatched
+      state.firstFailedCoordinate = degraded
         ? "DEGRADED_F21_LATCHED_WITH_GAP_RECEIPT"
         : "NONE_F21_FULL_LATCHED";
       state.recommendedNextRenewalTarget = "read-postgame-canvas-or-triple-g-receipt";
@@ -1108,24 +1229,13 @@
     state.postgameStatus = "BLOCKED_BY_TRANSMISSION_CHECKPOINT";
     state.firstFailedCoordinate = reason || "BLOCKED";
     state.recommendedNextRenewalTarget = FILE;
+    state.f21LatchMode = gear && gear.id === "F21_COMPLETION_LATCHED" ? "BLOCKED" : state.f21LatchMode;
     scheduleRender();
     return item;
   }
 
-  function isSoftGapVisibleEvent(eventName, detail = {}) {
-    return (
-      eventName === "VISIBLE_CONTENT_SOFT_GAP" ||
-      eventName === "DEGRADED_VISIBLE_CONTENT_ACCEPTED" ||
-      safeBool(detail.visibleContentSoftGap, false) ||
-      safeBool(detail.visibleForwardProgress, false) ||
-      safeBool(detail.visibleContentAdmissible, false)
-    );
-  }
-
   function submitEventRecord(eventName, gear, detail = {}) {
-    if (PROGRESS_ONLY_EVENTS.has(eventName)) {
-      return;
-    }
+    if (PROGRESS_ONLY_EVENTS.has(eventName)) return;
 
     state.submittedEvents.push({
       at: nowIso(),
@@ -1136,10 +1246,41 @@
     trimArray(state.submittedEvents, MAX_SUBMITTED_EVENTS);
   }
 
+  function degradedForGearEvent(eventKey, gear, detail = {}) {
+    if (!gear) return false;
+
+    if (gear.id === "F13M_VISIBLE_CONTENT_PROOF_PASSED") {
+      const proof = classifyVisibleProof(eventKey, detail);
+      return proof.soft === true;
+    }
+
+    if (gear.id === "F13N_INSPECT_MODE_READY") {
+      if (eventKey === "INSPECT_MODE_READY") return false;
+      if (
+        eventKey === "INSPECT_FALLBACK_READY" ||
+        eventKey === "DEGRADED_INSPECT_MODE_ACCEPTED" ||
+        eventKey === "RECEIPT_FALLBACK_READY"
+      ) {
+        return true;
+      }
+      return safeBool(detail.degraded, false);
+    }
+
+    if (gear.id === "F21_COMPLETION_LATCHED") {
+      return (
+        eventKey === "F21_DEGRADED_COMPLETION_LATCHED" ||
+        safeBool(detail.degraded, false)
+      );
+    }
+
+    return safeBool(detail.degraded, false);
+  }
+
   function admitGearEvent(eventName, detail = {}) {
     refreshAuthorityPresence();
 
     const eventKey = safeString(eventName);
+
     if (PROGRESS_ONLY_EVENTS.has(eventKey)) {
       return countProgressOnlyEvent(eventKey, detail);
     }
@@ -1204,8 +1345,9 @@
     }
 
     if (gear.id === "F13M_VISIBLE_CONTENT_PROOF_PASSED") {
-      const hardFail = safeBool(detail.visibleContentHardFail, false) || eventKey === "VISIBLE_CONTENT_HARD_FAIL";
-      if (hardFail) {
+      const proof = classifyVisibleProof(eventKey, detail);
+
+      if (proof.hard) {
         blockEvent(eventKey, gear, "VISIBLE_CONTENT_HARD_FAIL", detail);
         return {
           accepted: false,
@@ -1214,10 +1356,21 @@
           checkpointId: gear.id
         };
       }
+
+      if (!proof.strict && !proof.soft && !hasVisibleSurfaceSignal(buildSnapshot(detail))) {
+        blockEvent(eventKey, gear, "VISIBLE_CONTENT_PROOF_UNCLASSIFIED", detail);
+        return {
+          accepted: false,
+          action: "BLOCK",
+          reason: "VISIBLE_CONTENT_PROOF_UNCLASSIFIED",
+          checkpointId: gear.id
+        };
+      }
     }
 
     if (gear.id === "F21_COMPLETION_LATCHED") {
       const latch = canLatchF21();
+
       if (!latch.allowed) {
         blockEvent(eventKey, gear, latch.reason, detail);
         return {
@@ -1227,15 +1380,16 @@
           checkpointId: gear.id
         };
       }
+
+      detail = {
+        ...detail,
+        degraded: latch.degraded,
+        f21LatchMode: latch.degraded ? "DEGRADED" : "FULL",
+        f21LatchReason: latch.reason
+      };
     }
 
-    const degraded =
-      safeBool(detail.degraded, false) ||
-      isSoftGapVisibleEvent(eventKey, detail) ||
-      eventKey === "DEGRADED_INSPECT_MODE_ACCEPTED" ||
-      eventKey === "INSPECT_FALLBACK_READY" ||
-      eventKey === "F21_DEGRADED_COMPLETION_LATCHED";
-
+    const degraded = degradedForGearEvent(eventKey, gear, detail);
     const northResult = submitToNorth(gear, detail);
 
     if (northResult.blocked) {
@@ -1257,7 +1411,7 @@
     return {
       accepted: true,
       action: degraded ? "DEGRADED_FORWARD" : "ADMIT",
-      reason: "translated-active-gear-admitted",
+      reason: degraded ? "active-gear-admitted-with-explicit-degrade" : "strict-active-gear-admitted",
       checkpointId: gear.id,
       checkpointEvent: gear.event,
       fibonacci: gear.fibonacci,
@@ -1290,40 +1444,14 @@
     }
   }
 
-  function hasVisibleSurfaceSignal(snapshot = buildSnapshot()) {
-    const classCount = safeNumber(snapshot.visibleContentClassCount, 0);
-    const land = safeNumber(snapshot.visibleContentLandSampleCount, 0);
-    const water = safeNumber(snapshot.visibleContentWaterSampleCount, 0);
-    const other = safeNumber(snapshot.visibleContentOtherSampleCount, 0);
-
-    return Boolean(
-      safeBool(snapshot.canvasReady, false) &&
-      safeBool(snapshot.firstFrameDetected, false) &&
-      safeBool(snapshot.imageRendered, false) &&
-      safeBool(snapshot.textureComposeComplete, false) &&
-      safeBool(snapshot.nonblankPlanetVisible, false) &&
-      (classCount > 0 || land > 0 || water > 0 || other > 0 || safeBool(snapshot.visibleForwardProgress, false))
-    );
-  }
-
-  function hasInspectFallbackSignal(snapshot = buildSnapshot()) {
-    return Boolean(
-      safeBool(snapshot.inspectModeAvailable, false) &&
-      safeBool(snapshot.inspectPlanetControlAvailable, false) &&
-      safeBool(snapshot.diagnosticCanLeavePlanetFrame, false) &&
-      safeBool(snapshot.copyDiagnosticPreserved, true) &&
-      safeBool(snapshot.receiptToggleReady, true) &&
-      safeBool(snapshot.diagnosticDockRestorable, true) &&
-      safeBool(snapshot.buttonsReachable, true)
-    );
-  }
-
   function evaluateNewsGates(snapshot = buildSnapshot()) {
     const northGateReady = Boolean(
       safeBool(snapshot.canvasReady, false) &&
       safeBool(snapshot.atlasBuildComplete, false) &&
       safeBool(snapshot.textureComposeComplete, false) &&
       safeBool(snapshot.visibleContentProof, false) &&
+      !safeBool(snapshot.visibleContentSoftGap, false) &&
+      !safeBool(snapshot.visibleContentHardFail, false) &&
       safeBool(snapshot.visiblePlanetAvailable, false)
     );
 
@@ -1353,7 +1481,7 @@
       safeBool(snapshot.receiptOverlayIndependent, true)
     );
 
-    const westGateDegradedReady = Boolean(westGateReady || hasInspectFallbackSignal(snapshot));
+    const westGateDegradedReady = Boolean(westGateReady || hasFallbackInspectSignal(snapshot));
 
     const southGateReady = Boolean(
       safeBool(snapshot.imageRendered, false) &&
@@ -1392,6 +1520,7 @@
     const f13nComplete = isCompleted("F13N_INSPECT_MODE_READY");
 
     if (f13nComplete && gates.newsGatePassedBeforeF21) {
+      state.f21LatchMode = "FULL";
       return {
         allowed: true,
         degraded: false,
@@ -1400,6 +1529,7 @@
     }
 
     if (f13nComplete && gates.newsGateDegradedBeforeF21) {
+      state.f21LatchMode = "DEGRADED";
       return {
         allowed: true,
         degraded: true,
@@ -1407,6 +1537,7 @@
       };
     }
 
+    state.f21LatchMode = "BLOCKED";
     return {
       allowed: false,
       degraded: false,
@@ -1420,17 +1551,34 @@
     const active = activeCheckpoint();
     const snapshot = buildSnapshot();
 
-    if (active && active.id === "F13N_INSPECT_MODE_READY" && hasInspectFallbackSignal(snapshot)) {
-      admitGearEvent("INSPECT_FALLBACK_READY", {
-        degraded: false,
-        inspectModeAvailable: safeBool(snapshot.inspectModeAvailable, false),
-        inspectPlanetControlAvailable: safeBool(snapshot.inspectPlanetControlAvailable, false),
-        diagnosticCanLeavePlanetFrame: safeBool(snapshot.diagnosticCanLeavePlanetFrame, false),
-        copyDiagnosticPreserved: true,
-        receiptToggleReady: true,
-        diagnosticDockRestorable: true,
-        buttonsReachable: true
-      });
+    if (active && active.id === "F13N_INSPECT_MODE_READY") {
+      if (hasStrictInspectSignal(snapshot)) {
+        admitGearEvent("INSPECT_MODE_READY", {
+          degraded: false,
+          inspectModeAvailable: true,
+          inspectPlanetControlAvailable: true,
+          diagnosticCanLeavePlanetFrame: true,
+          copyDiagnosticPreserved: true,
+          receiptToggleReady: true,
+          diagnosticDockRestorable: true,
+          buttonsReachable: true,
+          strictInspectReady: true,
+          fallbackInspectReady: false
+        });
+      } else if (hasFallbackInspectSignal(snapshot)) {
+        admitGearEvent("INSPECT_FALLBACK_READY", {
+          degraded: true,
+          inspectModeAvailable: safeBool(snapshot.inspectModeAvailable, false),
+          inspectPlanetControlAvailable: safeBool(snapshot.inspectPlanetControlAvailable, false),
+          diagnosticCanLeavePlanetFrame: safeBool(snapshot.diagnosticCanLeavePlanetFrame, false),
+          copyDiagnosticPreserved: true,
+          receiptToggleReady: true,
+          diagnosticDockRestorable: true,
+          buttonsReachable: true,
+          strictInspectReady: false,
+          fallbackInspectReady: true
+        });
+      }
     }
 
     const f21 = canLatchF21();
@@ -1439,6 +1587,7 @@
     if (next && next.id === "F21_COMPLETION_LATCHED" && f21.allowed) {
       admitGearEvent(f21.degraded ? "F21_DEGRADED_COMPLETION_LATCHED" : "COMPLETION_LATCHED", {
         degraded: f21.degraded,
+        f21LatchMode: f21.degraded ? "DEGRADED" : "FULL",
         ...evaluateNewsGates(buildSnapshot())
       });
     }
@@ -1461,6 +1610,7 @@
       "canvasReady",
       "visibleContentProofStarted",
       "visibleContentProof",
+      "visibleContentStrictProof",
       "visibleContentSoftGap",
       "visibleForwardProgress",
       "visibleContentAdmissible",
@@ -1522,16 +1672,26 @@
     reconcileOneCanvasCheckpoint(receipt, "canvasReady", "CANVAS_READY");
     reconcileOneCanvasCheckpoint(receipt, "visibleContentProofStarted", "VISIBLE_CONTENT_PROOF_STARTED");
 
-    if (safeBool(receipt.visibleContentProof, false)) {
+    if (safeBool(receipt.visibleContentProof, false) && !safeBool(receipt.visibleContentHardFail, false)) {
       reconcileOneCanvasCheckpoint(receipt, "visibleContentProof", "VISIBLE_CONTENT_PROOF_PASSED", {
         visibleContentProof: true,
+        visibleContentStrictProof: safeBool(receipt.visibleContentStrictProof, true),
+        visibleContentSoftGap: false,
+        visibleContentHardFail: false,
+        visibleForwardProgress: safeBool(receipt.visibleForwardProgress, true),
+        visibleContentAdmissible: safeBool(receipt.visibleContentAdmissible, true),
         visiblePlanetAvailable: safeBool(receipt.visiblePlanetAvailable, false)
       });
     } else if (
       safeBool(receipt.visibleContentSoftGap, false) ||
-      safeBool(receipt.visibleForwardProgress, false) ||
-      safeBool(receipt.visibleContentAdmissible, false) ||
-      hasVisibleSurfaceSignal(buildSnapshot())
+      (
+        !safeBool(receipt.visibleContentProof, false) &&
+        (
+          safeBool(receipt.visibleForwardProgress, false) ||
+          safeBool(receipt.visibleContentAdmissible, false) ||
+          hasVisibleSurfaceSignal(buildSnapshot())
+        )
+      )
     ) {
       const gear = checkpointFrom("VISIBLE_CONTENT_SOFT_GAP");
       const reconcileKey = `${gear.id}:visibleContentSoftGap`;
@@ -1542,6 +1702,7 @@
           source: "canvasReceiptReconcile",
           degraded: true,
           visibleContentProof: false,
+          visibleContentStrictProof: false,
           visibleContentSoftGap: true,
           visibleForwardProgress: safeBool(receipt.visibleForwardProgress, true),
           visibleContentAdmissible: safeBool(receipt.visibleContentAdmissible, true),
@@ -1671,6 +1832,11 @@
     state.diagnosticDockHiddenForInspection = Boolean(active);
     state.showDiagnosticTabVisible = Boolean(active);
     state.diagnosticDockRestorable = Boolean(refs.cockpit);
+    state.strictInspectReady = hasStrictInspectSignal(buildSnapshot({
+      inspectModeAvailable: state.inspectModeAvailable,
+      inspectPlanetControlAvailable: state.inspectPlanetControlAvailable,
+      diagnosticCanLeavePlanetFrame: state.diagnosticCanLeavePlanetFrame
+    }));
 
     recordLocal(active ? "SOUTH_INSPECT_MODE_REQUESTED" : "SOUTH_DIAGNOSTIC_DOCK_RESTORED", {
       diagnosticDockRestorable: true,
@@ -1713,6 +1879,70 @@
     }
 
     return ok;
+  }
+
+  function localProgressForActive(snapshot = buildSnapshot()) {
+    const active = activeCheckpoint();
+
+    if (state.completionLatched) return 100;
+    if (isCompleted(active.id)) return 100;
+
+    switch (active.id) {
+      case "F1A_HTML_SHELL_RENDERED":
+        return 80;
+      case "F1B_LOAD_LEDGER_INITIALIZED":
+        return safeBool(snapshot.sharedLedgerPresent, false) ? 90 : 40;
+      case "F2_FIRST_PAINT_COCKPIT_VISIBLE":
+        return safeBool(snapshot.cockpitReady, false) ? 90 : 45;
+      case "F3_SCRIPT_ORDER_COMPLETE":
+        return safeBool(snapshot.scriptOrderComplete, false) ? 90 : 50;
+      case "F5_AUTHORITY_AVAILABILITY_READY":
+        return state.northPresent ? 90 : 45;
+      case "F8_CONDUCTOR_HYDRATED":
+        return 90;
+      case "F13A_CANVAS_COOPERATIVE_BOOT_STARTED":
+        return safeBool(snapshot.canvasCarrierRequested, false) ? 80 : 24;
+      case "F13B_CANVAS_MOUNT_CREATED":
+        return safeBool(snapshot.canvasCarrierMounted, false) ? 90 : 35;
+      case "F13C_CANVAS_CONTEXT_READY":
+        return safeBool(snapshot.canvasContextReady, false) ? 90 : 35;
+      case "F13D_DRAG_INSPECTION_BOUND":
+        return safeBool(snapshot.dragInspectionBound, false) ? 90 : 35;
+      case "F13E_ATLAS_BUILD_STARTED":
+        return safeBool(snapshot.atlasBuildStarted, false) ? 90 : 30;
+      case "F13F_ATLAS_BUILD_COMPLETE":
+        return clamp(snapshot.atlasBuildProgress, 0, 99);
+      case "F13G_TEXTURE_COMPOSE_STARTED":
+        return safeBool(snapshot.textureComposeStarted, false) ? 90 : 30;
+      case "F13H_TEXTURE_COMPOSE_COMPLETE":
+        return clamp(snapshot.textureComposeProgress, 0, 99);
+      case "F13I_FIRST_FRAME_REQUESTED":
+        return safeBool(snapshot.firstFrameRequested, false) ? 90 : 40;
+      case "F13J_FIRST_FRAME_DETECTED":
+        return safeBool(snapshot.firstFrameDetected, false) ? 90 : 40;
+      case "F13K_CANVAS_READY":
+        return safeBool(snapshot.canvasReady, false) ? 90 : 50;
+      case "F13L_VISIBLE_CONTENT_PROOF_STARTED":
+        return safeBool(snapshot.visibleContentProofStarted, false) ? 90 : 40;
+      case "F13M_VISIBLE_CONTENT_PROOF_PASSED":
+        if (
+          safeBool(snapshot.visibleContentProof, false) &&
+          !safeBool(snapshot.visibleContentSoftGap, false) &&
+          !safeBool(snapshot.visibleContentHardFail, false)
+        ) {
+          return 90;
+        }
+        if (hasVisibleSurfaceSignal(snapshot)) return 78;
+        return safeBool(snapshot.nonblankPlanetVisible, false) ? 58 : 28;
+      case "F13N_INSPECT_MODE_READY":
+        if (hasStrictInspectSignal(snapshot)) return 90;
+        if (hasFallbackInspectSignal(snapshot)) return 72;
+        return 42;
+      case "F21_COMPLETION_LATCHED":
+        return canLatchF21().allowed ? 92 : 55;
+      default:
+        return 20;
+    }
   }
 
   function composeVisiblePacket() {
@@ -1763,6 +1993,7 @@
       state.degradedCompletionLatched,
       snapshot.visiblePlanetAvailable,
       snapshot.visibleContentProof,
+      snapshot.visibleContentSoftGap,
       snapshot.inspectModeAvailable,
       snapshot.inspectPlanetControlAvailable,
       snapshot.diagnosticCanLeavePlanetFrame,
@@ -1834,82 +2065,6 @@
     return packet;
   }
 
-  function localProgressForActive(snapshot = buildSnapshot()) {
-    const active = activeCheckpoint();
-
-    if (state.completionLatched) return 100;
-    if (isCompleted(active.id)) return 100;
-
-    switch (active.id) {
-      case "F1A_HTML_SHELL_RENDERED":
-        return 80;
-
-      case "F1B_LOAD_LEDGER_INITIALIZED":
-        return safeBool(snapshot.sharedLedgerPresent, false) ? 90 : 40;
-
-      case "F2_FIRST_PAINT_COCKPIT_VISIBLE":
-        return safeBool(snapshot.cockpitReady, false) ? 90 : 45;
-
-      case "F3_SCRIPT_ORDER_COMPLETE":
-        return safeBool(snapshot.scriptOrderComplete, false) ? 90 : 50;
-
-      case "F5_AUTHORITY_AVAILABILITY_READY":
-        return state.northPresent ? 90 : 45;
-
-      case "F8_CONDUCTOR_HYDRATED":
-        return 90;
-
-      case "F13A_CANVAS_COOPERATIVE_BOOT_STARTED":
-        return safeBool(snapshot.canvasCarrierRequested, false) ? 80 : 24;
-
-      case "F13B_CANVAS_MOUNT_CREATED":
-        return safeBool(snapshot.canvasCarrierMounted, false) ? 90 : 35;
-
-      case "F13C_CANVAS_CONTEXT_READY":
-        return safeBool(snapshot.canvasContextReady, false) ? 90 : 35;
-
-      case "F13D_DRAG_INSPECTION_BOUND":
-        return safeBool(snapshot.dragInspectionBound, false) ? 90 : 35;
-
-      case "F13E_ATLAS_BUILD_STARTED":
-        return safeBool(snapshot.atlasBuildStarted, false) ? 90 : 30;
-
-      case "F13F_ATLAS_BUILD_COMPLETE":
-        return clamp(snapshot.atlasBuildProgress, 0, 99);
-
-      case "F13G_TEXTURE_COMPOSE_STARTED":
-        return safeBool(snapshot.textureComposeStarted, false) ? 90 : 30;
-
-      case "F13H_TEXTURE_COMPOSE_COMPLETE":
-        return clamp(snapshot.textureComposeProgress, 0, 99);
-
-      case "F13I_FIRST_FRAME_REQUESTED":
-        return safeBool(snapshot.firstFrameRequested, false) ? 90 : 40;
-
-      case "F13J_FIRST_FRAME_DETECTED":
-        return safeBool(snapshot.firstFrameDetected, false) ? 90 : 40;
-
-      case "F13K_CANVAS_READY":
-        return safeBool(snapshot.canvasReady, false) ? 90 : 50;
-
-      case "F13L_VISIBLE_CONTENT_PROOF_STARTED":
-        return safeBool(snapshot.visibleContentProofStarted, false) ? 90 : 40;
-
-      case "F13M_VISIBLE_CONTENT_PROOF_PASSED":
-        if (safeBool(snapshot.visibleContentProof, false) || hasVisibleSurfaceSignal(snapshot)) return 90;
-        return safeBool(snapshot.nonblankPlanetVisible, false) ? 58 : 28;
-
-      case "F13N_INSPECT_MODE_READY":
-        return hasInspectFallbackSignal(snapshot) ? 90 : 42;
-
-      case "F21_COMPLETION_LATCHED":
-        return canLatchF21().allowed ? 92 : 55;
-
-      default:
-        return 20;
-    }
-  }
-
   function laneSignature(packet) {
     const active = activeCheckpoint();
     return [
@@ -1918,6 +2073,7 @@
       state.degradedCheckpoints.join(","),
       state.queuedEvents.map((item) => item.checkpointId).join(","),
       state.completionLatched,
+      state.degradedCompletionLatched,
       packet.activeGearLocalProgress || packet.mainDisplayProgress || 0
     ].join("|");
   }
@@ -1977,6 +2133,11 @@
       `highestCompletedCheckpointId=${light.highestCompletedCheckpointId}`,
       `completionLatched=${light.completionLatched}`,
       `degradedCompletionLatched=${light.degradedCompletionLatched}`,
+      `strictVisibleProof=${light.strictVisibleProof}`,
+      `softGapVisibleProof=${light.softGapVisibleProof}`,
+      `strictInspectReady=${light.strictInspectReady}`,
+      `fallbackInspectReady=${light.fallbackInspectReady}`,
+      `f21LatchMode=${light.f21LatchMode}`,
       `visiblePlanetAvailable=${light.visiblePlanetAvailable}`,
       `visibleContentProof=${light.visibleContentProof}`,
       `inspectModeAvailable=${light.inspectModeAvailable}`,
@@ -2043,7 +2204,7 @@
     dataset.hearthSouthRouteConductorLoaded = "true";
     dataset.hearthSouthRouteConductorContract = CONTRACT;
     dataset.hearthSouthRouteConductorReceipt = RECEIPT;
-    dataset.hearthSouthPostgameDedupInspectGate = "true";
+    dataset.hearthSouthStrictProofDegradeReconciliation = "true";
 
     dataset.hearthTransmissionMode = "true";
     dataset.oneActiveGearAtATime = "true";
@@ -2061,6 +2222,13 @@
     dataset.hearthDegradedCompletionLatched = String(state.degradedCompletionLatched);
     dataset.hearthReadyTextAllowed = String(state.readyTextAllowed);
     dataset.hearthCompletionClosed = String(state.completionClosed);
+
+    dataset.hearthStrictVisibleProof = String(state.strictVisibleProof);
+    dataset.hearthSoftGapVisibleProof = String(state.softGapVisibleProof);
+    dataset.hearthHardFailVisibleProof = String(state.hardFailVisibleProof);
+    dataset.hearthStrictInspectReady = String(state.strictInspectReady);
+    dataset.hearthFallbackInspectReady = String(state.fallbackInspectReady);
+    dataset.hearthF21LatchMode = state.f21LatchMode;
 
     dataset.hearthQueuedEventsCount = String(state.queuedEvents.length);
     dataset.hearthArchivedEventsCount = String(state.archivedEvents.length);
@@ -2097,11 +2265,13 @@
     root.HEARTH_SOUTH_ROUTE_CONDUCTOR = api;
     root.HEARTH_SOUTH_GEAR_ADMISSION_TRANSLATOR = api;
     root.HEARTH_SOUTH_POSTGAME_DEDUP_INSPECT_GATE = api;
+    root.HEARTH_SOUTH_STRICT_PROOF_DEGRADE_RECONCILIATION = api;
 
     root.HEARTH_SOUTH_VISIBLE_COMPLETION_RECEIPT = getReceiptLight();
     root.HEARTH_ROUTE_CONDUCTOR_RECEIPT = root.HEARTH_SOUTH_VISIBLE_COMPLETION_RECEIPT;
     root.HEARTH_SOUTH_GEAR_ADMISSION_TRANSLATOR_RECEIPT = root.HEARTH_SOUTH_VISIBLE_COMPLETION_RECEIPT;
     root.HEARTH_SOUTH_POSTGAME_DEDUP_INSPECT_GATE_RECEIPT = root.HEARTH_SOUTH_VISIBLE_COMPLETION_RECEIPT;
+    root.HEARTH_SOUTH_STRICT_PROOF_DEGRADE_RECONCILIATION_RECEIPT = root.HEARTH_SOUTH_VISIBLE_COMPLETION_RECEIPT;
   }
 
   function bootEarlyGearSequence() {
@@ -2262,8 +2432,8 @@
       state.booting = true;
       state.startedAt = nowIso();
       state.updatedAt = state.startedAt;
-      state.postgameStatus = "SOUTH_DEDUP_GATE_BOOTING";
-      state.firstFailedCoordinate = "BOOTING_POSTGAME_DEDUP_INSPECT_GATE";
+      state.postgameStatus = "SOUTH_STRICT_PROOF_DEGRADE_RECONCILIATION_BOOTING";
+      state.firstFailedCoordinate = "BOOTING_STRICT_PROOF_DEGRADE_RECONCILIATION";
       state.recommendedNextRenewalTarget = FILE;
 
       ensureRefs();
@@ -2292,7 +2462,8 @@
         sessionPresent: state.sessionPresent,
         canvasPresent: state.canvasPresent,
         postgameDedupActive: true,
-        inspectGateActive: true
+        inspectGateActive: true,
+        strictProofDegradeReconciliationActive: true
       });
 
       render();
@@ -2307,6 +2478,8 @@
     const active = activeCheckpoint();
     const highest = highestCompletedCheckpoint();
     const canvas = readCanvasReceipt();
+    const snapshot = buildSnapshot();
+    const gates = evaluateNewsGates(snapshot);
 
     return {
       contract: CONTRACT,
@@ -2321,6 +2494,7 @@
       postgameDedupActive: true,
       inspectGateActive: true,
       receiptCompactionActive: true,
+      strictProofDegradeReconciliationActive: true,
 
       transmissionMode: true,
       oneActiveGearAtATime: true,
@@ -2331,7 +2505,7 @@
       activeCheckpointRank: active.rank,
       activeFibonacciStage: active.fibonacci,
       activeGearLabel: active.label,
-      activeGearProgress: localProgressForActive(buildSnapshot()),
+      activeGearProgress: localProgressForActive(snapshot),
 
       highestCompletedCheckpointId: highest ? highest.id : "",
       highestCompletedRank: highest ? highest.rank : 0,
@@ -2351,6 +2525,13 @@
       degradedCompletionLatched: state.degradedCompletionLatched,
       completionClosed: state.completionClosed,
       readyTextAllowed: state.readyTextAllowed,
+
+      strictVisibleProof: state.strictVisibleProof,
+      softGapVisibleProof: state.softGapVisibleProof,
+      hardFailVisibleProof: state.hardFailVisibleProof,
+      strictInspectReady: state.strictInspectReady,
+      fallbackInspectReady: state.fallbackInspectReady,
+      f21LatchMode: state.f21LatchMode,
 
       canvasBootRequested: state.canvasBootRequested,
       canvasBootStarted: state.canvasBootStarted,
@@ -2373,6 +2554,13 @@
       receiptToggleReady: state.receiptToggleReady,
       buttonsReachable: state.buttonsReachable,
       receiptOverlayIndependent: state.receiptOverlayIndependent,
+
+      northGateReady: gates.northGateReady,
+      eastGateReady: gates.eastGateReady,
+      westGateReady: gates.westGateReady,
+      southGateReady: gates.southGateReady,
+      newsGatePassedBeforeF21: gates.newsGatePassedBeforeF21,
+      newsGateDegradedBeforeF21: gates.newsGateDegradedBeforeF21,
 
       latestEvent: state.latestEvent,
       postgameStatus: state.postgameStatus,
@@ -2407,6 +2595,7 @@
       postgameDedupActive: true,
       inspectGateActive: true,
       receiptCompactionActive: true,
+      strictProofDegradeReconciliationActive: true,
 
       cycleOrder: state.cycleOrder,
       transmissionMode: true,
@@ -2458,6 +2647,13 @@
       completionClosed: state.completionClosed,
       readyTextAllowed: state.readyTextAllowed,
 
+      strictVisibleProof: state.strictVisibleProof,
+      softGapVisibleProof: state.softGapVisibleProof,
+      hardFailVisibleProof: state.hardFailVisibleProof,
+      strictInspectReady: state.strictInspectReady,
+      fallbackInspectReady: state.fallbackInspectReady,
+      f21LatchMode: state.f21LatchMode,
+
       canvasBootRequested: state.canvasBootRequested,
       canvasBootStarted: state.canvasBootStarted,
       canvasBootComplete: state.canvasBootComplete,
@@ -2468,6 +2664,7 @@
       visiblePlanetAvailable: safeBool(canvas.visiblePlanetAvailable, false),
       visibleContentProof: safeBool(canvas.visibleContentProof, false),
       visibleContentSoftGap: safeBool(canvas.visibleContentSoftGap, false),
+      visibleContentHardFail: safeBool(canvas.visibleContentHardFail, false),
 
       inspectModeAvailable: state.inspectModeAvailable,
       inspectPlanetControlAvailable: state.inspectPlanetControlAvailable,
@@ -2528,7 +2725,7 @@
     const receipt = getReceipt();
 
     return [
-      "HEARTH_SOUTH_ROUTE_CONDUCTOR_POSTGAME_DEDUP_INSPECT_GATE_RECEIPT",
+      "HEARTH_SOUTH_ROUTE_CONDUCTOR_STRICT_PROOF_DEGRADE_RECONCILIATION_RECEIPT",
       "",
       `contract=${receipt.contract}`,
       `receipt=${receipt.receipt}`,
@@ -2542,6 +2739,7 @@
       `postgameDedupActive=${receipt.postgameDedupActive}`,
       `inspectGateActive=${receipt.inspectGateActive}`,
       `receiptCompactionActive=${receipt.receiptCompactionActive}`,
+      `strictProofDegradeReconciliationActive=${receipt.strictProofDegradeReconciliationActive}`,
       "",
       `cycleOrder=${receipt.cycleOrder}`,
       `transmissionMode=${receipt.transmissionMode}`,
@@ -2599,6 +2797,13 @@
       `completionClosed=${receipt.completionClosed}`,
       `readyTextAllowed=${receipt.readyTextAllowed}`,
       "",
+      `strictVisibleProof=${receipt.strictVisibleProof}`,
+      `softGapVisibleProof=${receipt.softGapVisibleProof}`,
+      `hardFailVisibleProof=${receipt.hardFailVisibleProof}`,
+      `strictInspectReady=${receipt.strictInspectReady}`,
+      `fallbackInspectReady=${receipt.fallbackInspectReady}`,
+      `f21LatchMode=${receipt.f21LatchMode}`,
+      "",
       `canvasBootRequested=${receipt.canvasBootRequested}`,
       `canvasBootStarted=${receipt.canvasBootStarted}`,
       `canvasBootComplete=${receipt.canvasBootComplete}`,
@@ -2608,6 +2813,7 @@
       `visiblePlanetAvailable=${receipt.visiblePlanetAvailable}`,
       `visibleContentProof=${receipt.visibleContentProof}`,
       `visibleContentSoftGap=${receipt.visibleContentSoftGap}`,
+      `visibleContentHardFail=${receipt.visibleContentHardFail}`,
       "",
       `inspectModeAvailable=${receipt.inspectModeAvailable}`,
       `inspectPlanetControlAvailable=${receipt.inspectPlanetControlAvailable}`,
@@ -2682,7 +2888,7 @@
       root.removeEventListener("hearth:canvas-phase", onCanvasPhase);
     }
 
-    recordLocal("SOUTH_POSTGAME_DEDUP_INSPECT_GATE_DISPOSED", { reason });
+    recordLocal("SOUTH_STRICT_PROOF_DEGRADE_RECONCILIATION_DISPOSED", { reason });
     render();
   }
 
@@ -2694,7 +2900,7 @@
     version: VERSION,
     file: FILE,
     route: ROUTE,
-    role: "south-route-conductor-postgame-dedup-inspect-gate",
+    role: "south-route-conductor-strict-proof-degrade-reconciliation",
 
     boot,
     start: boot,
@@ -2706,6 +2912,11 @@
     submitGearEvent: admitGearEvent,
     reconcileCanvasReceipt,
     bootCanvasOnce,
+    classifyVisibleProof,
+    hasStrictInspectSignal,
+    hasFallbackInspectSignal,
+    evaluateNewsGates,
+    canLatchF21,
     getReceipt,
     getReceiptLight,
     getReceiptText,
@@ -2729,6 +2940,10 @@
     supportsInspectGateTruth: true,
     supportsProgressOnlyCountTelemetry: true,
     supportsCanvasApiRetry: true,
+    supportsStrictProofDegradeReconciliation: true,
+    supportsStrictVisibleProofWithoutFalseDegrade: true,
+    supportsStrictInspectModeWithoutFallbackDegrade: true,
+    supportsFullF21WhenStrictNewsPasses: true,
 
     ownsSouthRouteConductor: true,
     ownsVisibleCompletionCoordination: true,

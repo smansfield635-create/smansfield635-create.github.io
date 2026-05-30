@@ -1,67 +1,152 @@
-// /showroom/globe/hearth/hearth.js
-// HEARTH_SOUTH_VISIBLE_COMPLETION_CYCLE_CONSUMER_TNT_v1
+// /showroom/globe/hearth/index.js
+// HEARTH_EAST_STEP1_IGNITION_FIRST_PAINT_CYCLE_TNT_v2
 // Full-file replacement.
-// South authority only.
+// East route ignition authority only.
 // Purpose:
-// - Consume North command runtime-table cycle authority.
-// - Own visible completion through canvas coordination intake.
-// - Own visible planet proof, inspect-mode truth, diagnostic dock restoration, and final diagnostic receipt.
-// - Request F21 completion only when North permits it.
-// - Preserve East Step 1 and West handoff as upstream authorities.
-// - Preserve North as checkpoint law / runtime-table authority.
+// - Own Step 1 ignition, first paint, mount certainty, loading cockpit, early shared ledger, and route-safe script-order visibility.
+// - Start the Hearth directional cycle without freezing the page.
+// - Preserve the cardinal split: North is /assets/lab/runtime-table.js; East/West/South branch files are lab runtime-table branch files.
+// - Keep render(), getReceipt(), and getReceiptText() read-only.
+// - Prevent render -> ledger -> render recursion.
+// - Publish East Step 1 handoff only when packet changes or West has not accepted it.
+// - Use idempotent ledger writes and narrow timers.
 // Does not own:
-// - East Step 1 ignition / first paint / shared early ledger
-// - West handoff admissibility / Step 1 normalization
-// - North checkpoint law / command runtime-table governance
-// - universal /assets/lab/runtime-table.js
-// - source-stack truth
-// - canvas pixel drawing
+// - North Runtime Table public precedent
+// - East checkpoint-motion branch truth
+// - West gap classification truth
+// - South visible-state composition truth
+// - canvas drawing
+// - atlas painting
+// - route conductor runtime
+// - source/channel truth
 // - final visual pass claim
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_SOUTH_VISIBLE_COMPLETION_CYCLE_CONSUMER_TNT_v1";
-  const RECEIPT = "HEARTH_SOUTH_VISIBLE_COMPLETION_CYCLE_CONSUMER_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "HEARTH_ROUTE_COMMAND_BRAIN_STEPS_2_11_TNT_v7";
+  const CONTRACT = "HEARTH_EAST_STEP1_IGNITION_FIRST_PAINT_CYCLE_TNT_v2";
+  const RECEIPT = "HEARTH_EAST_STEP1_IGNITION_FIRST_PAINT_CYCLE_RECEIPT_v2";
+  const PREVIOUS_CONTRACT = "HEARTH_EAST_STEP1_IGNITION_FIRST_PAINT_CYCLE_TNT_v1";
   const BASELINE_CONTRACT = "HEARTH_DIRECTIONAL_CYCLICAL_CHECKPOINT_GOVERNANCE_PRECODE_FINAL_DRAFT_v1";
-  const VERSION = "2026-05-29.hearth-south-visible-completion-cycle-consumer-v1";
+  const VERSION = "2026-05-29.hearth-east-step1-ignition-first-paint-cycle-v2";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
 
   const ROUTE = "/showroom/globe/hearth/";
-  const EAST_FILE = "/showroom/globe/hearth/index.js";
-  const WEST_FILE = "/assets/hearth/hearth.west.index-handoff.table.js";
-  const NORTH_FILE = "/assets/hearth/hearth.north.command.runtime-table.js";
-  const SOUTH_FILE = "/showroom/globe/hearth/hearth.js";
+  const EAST_ROUTE_FILE = "/showroom/globe/hearth/index.js";
+  const NORTH_FILE = "/assets/lab/runtime-table.js";
+  const EAST_BRANCH_FILE = "/assets/lab/runtime-table.east.js";
+  const WEST_BRANCH_FILE = "/assets/lab/runtime-table.west.js";
+  const SOUTH_BRANCH_FILE = "/assets/lab/runtime-table.south.js";
   const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
+  const ROUTE_CONDUCTOR_FILE = "/showroom/globe/hearth/hearth.js";
+  const RETIRED_CLIMATE_FILE = "/showroom/globe/hearth/hearth.climate.route.js";
 
   const MOUNT_ID = "hearthCanvasMount";
   const COCKPIT_ID = "hearthLoadCockpit";
   const STATUS_ID = "hearth-route-status";
+  const STYLE_ID = "hearth-east-step1-cycle-style-v2";
 
-  const SOURCE_STACK_HELD = Object.freeze([
-    "/assets/hearth/hearth.tectonics.js",
-    "/assets/hearth/hearth.elevation.js",
-    "/assets/hearth/hearth.composition.js",
-    "/assets/hearth/hearth.hydrology.js",
-    "/assets/hearth/hearth.materials.js",
-    "/assets/hearth/hearth.hex.four-pair.authority.js",
-    "/assets/hearth/hearth.hex.surface.js",
-    "/assets/lab/runtime-table.js"
+  const CYCLE_ORDER = "EAST_ROUTE -> NORTH -> EAST_BRANCH -> WEST -> SOUTH -> CANVAS -> ROUTE_CONDUCTOR -> CHECKPOINT -> NORTH";
+
+  const SCRIPT_DEFS = Object.freeze([
+    {
+      key: "north",
+      label: "North Runtime Table",
+      direction: "NORTH",
+      file: NORTH_FILE,
+      required: true,
+      globals: [
+        "LAB_RUNTIME_TABLE",
+        "LAB_RUNTIME_TABLE_NORTH",
+        "LAB_CARDINAL_RUNTIME_TABLE_NORTH",
+        "LAB_CHECKPOINT_GOVERNOR",
+        "LAB_NEWS_FIBONACCI_CHECKPOINT_GOVERNOR",
+        "DexterRuntimeTable",
+        "RUNTIME_TABLE"
+      ]
+    },
+    {
+      key: "eastBranch",
+      label: "East Checkpoint Motion",
+      direction: "EAST_BRANCH",
+      file: EAST_BRANCH_FILE,
+      required: false,
+      globals: [
+        "LAB_RUNTIME_TABLE_EAST",
+        "LAB_CARDINAL_RUNTIME_TABLE_EAST",
+        "LAB_CHECKPOINT_GOVERNOR_EAST",
+        "RUNTIME_TABLE_EAST",
+        "DEXTER_LAB_RUNTIME_TABLE_EAST"
+      ]
+    },
+    {
+      key: "west",
+      label: "West Gap Classifier",
+      direction: "WEST",
+      file: WEST_BRANCH_FILE,
+      required: false,
+      globals: [
+        "LAB_RUNTIME_TABLE_WEST",
+        "LAB_CARDINAL_RUNTIME_TABLE_WEST",
+        "LAB_GAP_CLASSIFIER_WEST",
+        "RUNTIME_TABLE_WEST",
+        "DEXTER_LAB_RUNTIME_TABLE_WEST"
+      ]
+    },
+    {
+      key: "south",
+      label: "South Visible-State Composer",
+      direction: "SOUTH",
+      file: SOUTH_BRANCH_FILE,
+      required: false,
+      globals: [
+        "LAB_RUNTIME_TABLE_SOUTH",
+        "LAB_VISIBLE_STATE_COMPOSER_SOUTH",
+        "HEARTH_RUNTIME_TABLE_SOUTH",
+        "HEARTH_VISIBLE_STATE_COMPOSER"
+      ]
+    },
+    {
+      key: "canvas",
+      label: "Hearth Canvas Evidence",
+      direction: "CANVAS",
+      file: CANVAS_FILE,
+      required: false,
+      globals: [
+        "HEARTH_CANVAS",
+        "HEARTH_CANVAS_AUTHORITY",
+        "HEARTH_CANVAS_EVIDENCE",
+        "HEARTH_CANVAS_TEXTURE",
+        "HEARTH_CANVAS_SOFT_GAP_ADAPTER"
+      ]
+    },
+    {
+      key: "routeConductor",
+      label: "Hearth Route Conductor",
+      direction: "ROUTE_CONDUCTOR",
+      file: ROUTE_CONDUCTOR_FILE,
+      required: false,
+      globals: [
+        "HEARTH_ROUTE_CONDUCTOR",
+        "HearthRouteConductor",
+        "HEARTH_SOUTH_VISIBLE_COMPLETION",
+        "HEARTH_SOUTH_VISIBLE_COMPLETION_CYCLE_CONSUMER"
+      ]
+    }
   ]);
 
-  const SOUTH_EVENTS = Object.freeze({
-    CANVAS_COORDINATION_STARTED: "CANVAS_COORDINATION_STARTED",
-    CANVAS_MOUNT_CONFIRMED: "CANVAS_MOUNT_CONFIRMED",
-    CANVAS_CONTEXT_READY: "CANVAS_CONTEXT_READY",
-    DRAG_INSPECTION_BOUND: "DRAG_INSPECTION_BOUND",
-    ATLAS_TEXTURE_FRAME_READY: "ATLAS_TEXTURE_FRAME_READY",
-    VISIBLE_CONTENT_PROOF_PASSED: "VISIBLE_CONTENT_PROOF_PASSED",
-    INSPECT_MODE_READY: "INSPECT_MODE_READY",
-    COMPLETION_LATCHED: "COMPLETION_LATCHED"
-  });
+  const LANE_DEFS = Object.freeze([
+    { key: "eastRoute", label: "East route ignition", owner: "EAST_ROUTE" },
+    { key: "north", label: "North Runtime Table", owner: "NORTH" },
+    { key: "eastBranch", label: "East checkpoint motion", owner: "EAST_BRANCH" },
+    { key: "west", label: "West gap classifier", owner: "WEST" },
+    { key: "south", label: "South visible composer", owner: "SOUTH" },
+    { key: "canvas", label: "Canvas evidence", owner: "CANVAS" },
+    { key: "routeConductor", label: "Route conductor", owner: "ROUTE_CONDUCTOR" },
+    { key: "checkpoint", label: "Cycle checkpoint", owner: "NORTH" }
+  ]);
 
   const state = {
     contract: CONTRACT,
@@ -69,143 +154,104 @@
     previousContract: PREVIOUS_CONTRACT,
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
-    file: SOUTH_FILE,
+    file: EAST_ROUTE_FILE,
     route: ROUTE,
-    role: "south-visible-completion-cycle-consumer",
+    role: "east-route-step1-ignition-first-paint-cycle",
 
-    pairedSemiconductor: true,
-    pairedWith: EAST_FILE,
-    cycleOrder: "EAST -> WEST -> NORTH -> SOUTH -> CHECKPOINT -> EAST",
+    cycleOrder: CYCLE_ORDER,
+    currentGear: "EAST_ROUTE",
+    currentGearLabel: "East route ignition",
+    currentGearProgress: 0,
+    latestEvent: "EAST_ROUTE_FILE_LOADED",
 
-    ownsSouth: true,
-    ownsEast: false,
-    ownsWest: false,
-    ownsNorth: false,
-    ownsStep1: false,
-    ownsStep1Handoff: false,
-    ownsNorthRuntimeTable: false,
-    ownsCanvasDrawing: false,
-    ownsVisibleCompletion: true,
-    ownsVisiblePlanetProof: true,
-    ownsInspectModeTruth: true,
-    ownsFinalDiagnosticReceipt: true,
-    ownsFinalVisualPassClaim: false,
-
-    eastFile: EAST_FILE,
-    westFile: WEST_FILE,
-    northFile: NORTH_FILE,
-    southFile: SOUTH_FILE,
-    canvasFile: CANVAS_FILE,
-
-    northAvailable: false,
-    northContract: "",
-    northSessionCreated: false,
-    northSessionId: "",
-    northReceiptAvailable: false,
-    northReceiptError: "",
-    northF21Allowed: false,
-    northNewsGatePassedBeforeF21: false,
-    northActiveCheckpointId: "",
-    northRecommendedNextOwner: "",
-    northRecommendedNextFile: "",
-
-    step1AcceptedBySouth: false,
-    handoffAdmissibleByWest: false,
+    bootStarted: false,
+    bootComplete: false,
+    disposed: false,
 
     mountReady: false,
-    cockpitFound: false,
-    cockpitHydrated: false,
-    diagnosticDockReady: false,
-    showDiagnosticTabReady: false,
-    copyDiagnosticReady: false,
+    mountCreatedByEast: false,
+    cockpitReady: false,
+    cockpitCreatedByEast: false,
+    firstPaintReady: false,
+    loadingScreenReady: false,
+    visibleProgressStripReady: false,
+
+    sharedLedgerPresent: false,
+    sharedLedgerCreatedByEast: false,
+    partialReceiptAvailable: false,
+    copyPartialDiagnosticReady: false,
     receiptToggleReady: false,
-    inspectPlanetControlReady: false,
-    collapseExpandControlReady: false,
-    buttonsReachable: false,
-    receiptVisible: false,
-    cockpitMode: "loading-cockpit",
-    cockpitExpanded: false,
-    dockHiddenForInspection: false,
-    diagnosticCanLeavePlanetFrame: false,
-    planetNotObstructed: false,
+    inspectControlReserved: false,
+    inspectModeReservedActive: false,
+    showDiagnosticRestoreReserved: false,
+    showDiagnosticTabVisible: false,
 
-    canvasApiPresent: false,
-    canvasCarrierRequested: false,
-    canvasCarrierMethod: "",
-    canvasCarrierHandoffOk: false,
-    canvasCarrierHandoffError: "",
-    cooperativeBootAvailable: false,
-    cooperativeBootUsed: false,
-    syncBootFallbackUsed: false,
+    step1Ignited: false,
+    step1Ready: false,
+    step1HandoffPublished: false,
+    step1HandoffHash: "",
+    step1HandoffAcceptedByNorth: false,
+    step1HandoffAcceptedByWest: false,
+    step1HandoffAcceptedAt: "",
 
-    canvasReady: false,
-    canvasCarrierMounted: false,
-    canvasContextReady: false,
-    dragInspectionBound: false,
-    atlasBuildStarted: false,
-    atlasBuildProgress: 0,
-    atlasBuildComplete: false,
-    textureComposeStarted: false,
-    textureComposeProgress: 0,
-    textureComposeComplete: false,
-    firstFrameRequested: false,
-    firstFrameDetected: false,
-    imageRendered: false,
+    scriptOrderStarted: false,
+    scriptOrderComplete: false,
+    scriptOrderSettled: false,
+    downstreamRequiredReady: false,
+    downstreamOptionalReady: false,
 
-    visibleContentProofStarted: false,
-    visibleContentProof: false,
-    visibleContentProofMethod: "",
-    visibleContentProofError: "",
-    visibleContentSampleCount: 0,
-    visibleContentVarianceScore: 0,
-    visibleContentClassCount: 0,
-    visibleContentClasses: [],
-    visibleContentLandSampleCount: 0,
-    visibleContentWaterSampleCount: 0,
-    visibleContentOtherSampleCount: 0,
-    carrierOnlyDetected: true,
-    explicitContentReceiptProof: false,
-    renderedAfterTexture: false,
+    scriptStatus: {},
+    scriptErrors: [],
 
-    visiblePlanetAvailable: false,
+    northPresent: false,
+    northContract: "",
+    northReceiptPresent: false,
+    eastBranchPresent: false,
+    eastBranchContract: "",
+    westPresent: false,
+    westContract: "",
+    westReceiptPresent: false,
+    southPresent: false,
+    southContract: "",
+    southReceiptPresent: false,
+    canvasPresent: false,
+    canvasContract: "",
+    canvasReceiptPresent: false,
+    routeConductorPresent: false,
+    routeConductorContract: "",
+    routeConductorReceiptPresent: false,
+
     planetCanvasPresent: false,
     planetCanvasNonZeroSize: false,
-    planetFramePainted: false,
-    nonblankPlanetVisible: false,
+    visiblePlanetHintPresent: false,
 
-    southGateReady: false,
-    completionRequestedFromNorth: false,
-    completionLatched: false,
-    f21AfterNorthPermission: false,
-    finalReceiptAvailable: false,
-
-    mainDisplayProgress: 72,
-    mainProgressCap: 98,
-    currentStage: "F13A",
-    highestStage: "F13A",
-    latestVisibleEvent: "SOUTH_VISIBLE_COMPLETION_LOADED",
-    postgameStatus: "SOUTH_BOOTING",
-    firstFailedCoordinate: "WAITING_NORTH_COMMAND_RUNTIME_TABLE",
-    recommendedNextRenewalTarget: NORTH_FILE,
-
-    sourceAuthorityHeld: true,
     climateRouteRetired: true,
-    northRuntimeTableMutation: false,
-    canvasMutation: false,
+    runtimeTableRequiredForFirstRender: false,
+    sourceStackRequiredForFirstRender: false,
+    wideProbeDeferred: true,
 
-    phaseEvents: [],
-    progressOnlyEvents: [],
+    firstFailedCoordinate: "EAST_ROUTE_NOT_BOOTED",
+    recommendedNextRenewalTarget: EAST_ROUTE_FILE,
+    postgameStatus: "EAST_ROUTE_LOADED_NOT_BOOTED",
+
+    renderCount: 0,
+    ledgerWriteCount: 0,
+    ledgerNoopCount: 0,
+    handoffPublishCount: 0,
+    scanCount: 0,
+    commitCount: 0,
+
     localEvents: [],
-    northEvents: [],
+    scriptEvents: [],
     errors: [],
+
+    startedAt: "",
+    updatedAt: "",
 
     generatedImage: false,
     graphicBox: false,
     webGL: false,
-    visualPassClaimed: false,
-
-    startedAt: "",
-    updatedAt: ""
+    visualPassClaimed: false
   };
 
   const refs = {
@@ -225,15 +271,19 @@
     inspectButton: null,
     expandButton: null,
     showTab: null,
-    north: null,
-    northSession: null,
     ledger: null
   };
 
-  let bootStarted = false;
-  let canvasBootRequested = false;
+  const guards = {
+    rendering: false,
+    committingScan: false,
+    publishingHandoff: false,
+    renderingScheduled: false,
+    loadingScripts: false
+  };
+
   let heartbeatTimer = 0;
-  let reconcileTimer = 0;
+  let watchdogTimer = 0;
   let renderTimer = 0;
 
   function nowIso() {
@@ -256,22 +306,27 @@
     return typeof value === "function";
   }
 
-  function bool(value, fallback = false) {
+  function safeString(value, fallback = "") {
+    if (value === undefined || value === null) return fallback;
+    return String(value);
+  }
+
+  function safeNumber(value, fallback = 0) {
+    const number = Number(value);
+    return Number.isFinite(number) ? number : fallback;
+  }
+
+  function safeBool(value, fallback = false) {
     if (typeof value === "boolean") return value;
     if (value === "true") return true;
     if (value === "false") return false;
+    if (value === 1 || value === "1") return true;
+    if (value === 0 || value === "0") return false;
     return fallback;
   }
 
-  function number(value, fallback = 0) {
-    const n = Number(value);
-    return Number.isFinite(n) ? n : fallback;
-  }
-
   function clamp(value, min, max) {
-    const n = Number(value);
-    if (!Number.isFinite(n)) return min;
-    return Math.max(min, Math.min(max, n));
+    return Math.max(min, Math.min(max, safeNumber(value, min)));
   }
 
   function clonePlain(value) {
@@ -280,8 +335,46 @@
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
-      return Array.isArray(value) ? value.slice() : { ...value };
+      if (Array.isArray(value)) return value.slice();
+      return { ...value };
     }
+  }
+
+  function stableStringify(value) {
+    if (!isObject(value)) return JSON.stringify(value);
+
+    const seen = new WeakSet();
+
+    function sort(input) {
+      if (!isObject(input)) return input;
+      if (seen.has(input)) return "[Circular]";
+      seen.add(input);
+
+      if (Array.isArray(input)) return input.map(sort);
+
+      return Object.keys(input).sort().reduce((output, key) => {
+        output[key] = sort(input[key]);
+        return output;
+      }, {});
+    }
+
+    try {
+      return JSON.stringify(sort(value));
+    } catch (_error) {
+      return JSON.stringify(String(value));
+    }
+  }
+
+  function simpleHash(value) {
+    const text = typeof value === "string" ? value : stableStringify(value);
+    let hash = 5381;
+
+    for (let i = 0; i < text.length; i += 1) {
+      hash = ((hash << 5) + hash) + text.charCodeAt(i);
+      hash |= 0;
+    }
+
+    return String(hash);
   }
 
   function escapeHtml(value) {
@@ -294,7 +387,7 @@
   }
 
   function formatElapsed(ms) {
-    const total = Math.max(0, Math.floor(number(ms, 0) / 1000));
+    const total = Math.max(0, Math.floor(Number(ms || 0) / 1000));
     const minutes = Math.floor(total / 60);
     const seconds = total % 60;
     return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
@@ -308,26 +401,29 @@
     };
 
     state.localEvents.push(item);
-    if (state.localEvents.length > 220) {
-      state.localEvents.splice(0, state.localEvents.length - 220);
+    if (state.localEvents.length > 160) {
+      state.localEvents.splice(0, state.localEvents.length - 160);
     }
 
+    state.latestEvent = event;
     state.updatedAt = item.at;
     return item;
   }
 
-  function recordNorth(event, detail = {}) {
+  function recordScript(event, detail = {}) {
     const item = {
       at: nowIso(),
       event,
       detail: clonePlain(detail)
     };
 
-    state.northEvents.push(item);
-    if (state.northEvents.length > 220) {
-      state.northEvents.splice(0, state.northEvents.length - 220);
+    state.scriptEvents.push(item);
+    if (state.scriptEvents.length > 180) {
+      state.scriptEvents.splice(0, state.scriptEvents.length - 180);
     }
 
+    state.latestEvent = event;
+    state.updatedAt = item.at;
     return item;
   }
 
@@ -344,86 +440,337 @@
       state.errors.splice(0, state.errors.length - 80);
     }
 
+    state.updatedAt = item.at;
     return item;
   }
 
-  function getDataset() {
-    return doc && doc.documentElement ? doc.documentElement.dataset : {};
-  }
+  function getGlobal(names) {
+    for (const name of names || []) {
+      if (root[name]) return root[name];
+    }
 
-  function getNorthApi() {
-    return (
-      root.HEARTH_NORTH_COMMAND_RUNTIME_TABLE ||
-      root.HEARTH_NORTH_COMMAND_TABLE ||
-      root.HEARTH_NORTH_COMMAND ||
-      root.HEARTH_LOCAL_COMMAND_RUNTIME_TABLE ||
-      (root.HEARTH && root.HEARTH.northCommandRuntimeTable) ||
-      null
-    );
-  }
+    if (root.DEXTER_LAB) {
+      for (const name of names || []) {
+        const shortName = name
+          .replace(/^LAB_/, "")
+          .replace(/^HEARTH_/, "")
+          .replace(/^DEXTER_LAB_/, "")
+          .toLowerCase();
 
-  function getCanvasApi() {
-    return (
-      root.HEARTH_CANVAS ||
-      root.HearthCanvas ||
-      (root.HEARTH && root.HEARTH.canvas) ||
-      null
-    );
-  }
-
-  function getCanvasReceipt() {
-    const api = getCanvasApi();
-
-    if (api && isFunction(api.getReceipt)) {
-      try {
-        const receipt = api.getReceipt("hearth-south-visible-completion-cycle-consumer");
-        if (receipt && isObject(receipt)) return receipt;
-      } catch (error) {
-        recordError("CANVAS_RECEIPT_READ_FAILED", error && error.message ? error.message : String(error));
+        if (root.DEXTER_LAB[shortName]) return root.DEXTER_LAB[shortName];
       }
     }
 
-    return (
-      root.HEARTH_CANVAS_POSTGAME_RECEIPT ||
-      root.HEARTH_CANVAS_RECEIPT ||
-      root.HEARTH_HEX_BODY_BOUNDARY_CANVAS_RECEIPT_EXPORT ||
-      null
-    );
+    return null;
   }
 
-  function getNorthReceipt() {
-    const north = refs.north || getNorthApi();
+  function readAuthorityReceipt(authority) {
+    if (!authority || !isObject(authority)) return null;
 
-    if (north && isFunction(north.getReceipt)) {
+    if (isFunction(authority.getReceipt)) {
       try {
-        const receipt = north.getReceipt();
-        if (receipt && isObject(receipt)) return receipt;
-      } catch (error) {
-        state.northReceiptError = error && error.message ? error.message : String(error);
-        recordError("NORTH_RECEIPT_READ_FAILED", state.northReceiptError);
+        const receipt = authority.getReceipt();
+        return isObject(receipt) ? receipt : null;
+      } catch (_error) {
+        return null;
       }
     }
 
-    return root.HEARTH_NORTH_COMMAND_RUNTIME_TABLE_RECEIPT || root.HEARTH_NORTH_CYCLICAL_CHECKPOINT_RECEIPT || null;
+    if (isObject(authority.receipt)) return authority.receipt;
+    if (isObject(authority.receiptPacket)) return authority.receiptPacket;
+
+    return null;
   }
 
-  function getEastReceipt() {
-    return (
-      root.HEARTH_EAST_STEP1_HANDOFF_RECEIPT ||
-      root.HEARTH_INDEX_STEP1_HANDOFF_RECEIPT ||
-      root.HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR_RECEIPT ||
-      root.HEARTH_INDEX_BRIDGE_RECEIPT ||
-      root.HEARTH_INDEX_JS_RECEIPT ||
-      null
-    );
+  function scriptAlreadyPresent(srcPart) {
+    if (!doc) return null;
+    return Array.from(doc.scripts || []).find((script) => {
+      const src = script.getAttribute("src") || "";
+      return src.includes(srcPart);
+    }) || null;
   }
 
-  function getWestReceipt() {
-    return (
-      root.HEARTH_WEST_HANDOFF_ADMISSIBILITY_RECEIPT ||
-      root.HEARTH_WEST_INDEX_HANDOFF_TABLE_RECEIPT ||
-      null
-    );
+  function cacheKey() {
+    return encodeURIComponent(`${CONTRACT}-${VERSION}`);
+  }
+
+  function ensureStyle() {
+    if (!doc || doc.getElementById(STYLE_ID)) return;
+
+    const style = doc.createElement("style");
+    style.id = STYLE_ID;
+    style.textContent = `
+      #hearthCanvasMount,
+      [data-hearth-canvas-mount="true"]{
+        position:relative;
+        overflow:hidden;
+        touch-action:none;
+        user-select:none;
+        -webkit-user-select:none;
+        -webkit-touch-callout:none;
+      }
+
+      .hearth-ledger-cockpit{
+        position:absolute;
+        inset:10px;
+        z-index:30;
+        display:flex;
+        flex-direction:column;
+        max-height:calc(100% - 20px);
+        min-height:170px;
+        overflow:hidden;
+        border:1px solid rgba(231,188,105,.34);
+        border-radius:24px;
+        background:
+          radial-gradient(circle at 12% 0%,rgba(231,188,105,.16),transparent 20rem),
+          radial-gradient(circle at 90% 18%,rgba(141,216,255,.12),transparent 22rem),
+          linear-gradient(180deg,rgba(7,18,33,.92),rgba(2,8,17,.82));
+        color:rgba(238,246,255,.94);
+        box-shadow:0 22px 70px rgba(0,0,0,.44), inset 0 1px 0 rgba(255,255,255,.08);
+        backdrop-filter:blur(10px);
+        font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+        transition:max-height .22s ease,opacity .18s ease,visibility .18s ease,transform .22s ease;
+      }
+
+      .hearth-ledger-head{
+        display:grid;
+        gap:6px;
+        padding:14px 16px 10px;
+        border-bottom:1px solid rgba(231,188,105,.14);
+      }
+
+      .hearth-ledger-kicker{
+        color:#e7bc69;
+        font-weight:950;
+        font-size:.64rem;
+        letter-spacing:.15em;
+        text-transform:uppercase;
+      }
+
+      .hearth-ledger-title{
+        margin:0;
+        color:rgba(255,244,216,.98);
+        font-weight:950;
+        font-size:clamp(1.08rem,3.4vw,1.65rem);
+        line-height:1;
+        letter-spacing:-.045em;
+      }
+
+      .hearth-ledger-meta,
+      .hearth-ledger-latest{
+        color:rgba(238,246,255,.68);
+        font-size:.72rem;
+        font-weight:760;
+        line-height:1.28;
+      }
+
+      .hearth-ledger-progress{
+        display:grid;
+        grid-template-columns:1fr auto;
+        align-items:center;
+        gap:10px;
+        padding:10px 16px;
+        border-bottom:1px solid rgba(231,188,105,.12);
+      }
+
+      .hearth-ledger-track,
+      .hearth-ledger-lane-track{
+        position:relative;
+        height:9px;
+        overflow:hidden;
+        border:1px solid rgba(141,216,255,.18);
+        border-radius:999px;
+        background:rgba(255,255,255,.055);
+      }
+
+      .hearth-ledger-fill,
+      .hearth-ledger-lane-fill{
+        position:absolute;
+        inset:0 auto 0 0;
+        width:0%;
+        border-radius:inherit;
+        background:linear-gradient(90deg,rgba(141,216,255,.80),rgba(231,188,105,.96));
+        box-shadow:0 0 18px rgba(231,188,105,.18);
+        transition:width .24s ease;
+      }
+
+      .hearth-ledger-percent{
+        min-width:44px;
+        color:#ffe8a3;
+        font-weight:950;
+        font-size:.72rem;
+        text-align:right;
+      }
+
+      .hearth-ledger-actions{
+        display:flex;
+        flex-wrap:wrap;
+        gap:7px;
+        padding:10px 16px;
+        border-bottom:1px solid rgba(231,188,105,.12);
+      }
+
+      .hearth-ledger-button{
+        min-height:31px;
+        border:1px solid rgba(231,188,105,.26);
+        border-radius:999px;
+        padding:7px 10px;
+        color:rgba(238,246,255,.84);
+        background:rgba(255,255,255,.045);
+        font:900 .64rem/1 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+        letter-spacing:.07em;
+        text-transform:uppercase;
+        cursor:pointer;
+      }
+
+      .hearth-ledger-button.primary{
+        color:#06101e;
+        border-color:rgba(231,188,105,.86);
+        background:linear-gradient(135deg,#ffe8a3,#e7bc69);
+      }
+
+      .hearth-ledger-scroll{
+        min-height:0;
+        overflow:auto;
+        padding:10px 16px 14px;
+      }
+
+      .hearth-ledger-lanes{
+        display:grid;
+        gap:7px;
+      }
+
+      .hearth-ledger-lane{
+        display:grid;
+        gap:5px;
+        border:1px solid rgba(255,255,255,.08);
+        border-radius:13px;
+        padding:8px;
+        background:rgba(255,255,255,.035);
+      }
+
+      .hearth-ledger-lane-top{
+        display:flex;
+        align-items:flex-start;
+        justify-content:space-between;
+        gap:8px;
+      }
+
+      .hearth-ledger-lane-title{
+        display:grid;
+        gap:2px;
+        min-width:0;
+        color:rgba(238,246,255,.64);
+        font-size:.66rem;
+        line-height:1.22;
+      }
+
+      .hearth-ledger-lane-title strong{
+        color:rgba(255,244,216,.94);
+        font-size:.70rem;
+      }
+
+      .hearth-ledger-lane-status{
+        flex:0 0 auto;
+        color:#8dd8ff;
+        font-size:.60rem;
+        font-weight:950;
+        letter-spacing:.09em;
+        text-transform:uppercase;
+      }
+
+      .hearth-ledger-receipt{
+        display:none;
+        margin-top:10px;
+        border:1px solid rgba(231,188,105,.16);
+        border-radius:14px;
+        background:rgba(0,0,0,.24);
+      }
+
+      .hearth-ledger-receipt[data-visible="true"]{
+        display:block;
+      }
+
+      .hearth-ledger-receipt pre{
+        margin:0;
+        max-height:260px;
+        overflow:auto;
+        padding:10px;
+        color:rgba(238,246,255,.72);
+        white-space:pre-wrap;
+        font:700 .66rem/1.38 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="planet-inspect"]{
+        opacity:0!important;
+        visibility:hidden!important;
+        pointer-events:none!important;
+        transform:translateY(24px) scale(.985);
+        max-height:0!important;
+        min-height:0!important;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"]{
+        inset:auto 10px 10px 10px!important;
+        min-height:132px!important;
+        max-height:186px!important;
+        overflow:hidden!important;
+      }
+
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-scroll{
+        display:none!important;
+      }
+
+      [data-hearth-east-show-diagnostic-tab]{
+        position:fixed;
+        right:max(12px,env(safe-area-inset-right));
+        bottom:max(72px,calc(env(safe-area-inset-bottom) + 72px));
+        z-index:9999;
+        display:none;
+        min-height:36px;
+        padding:9px 13px;
+        border-radius:999px;
+        border:1px solid rgba(231,188,105,.65);
+        color:#06101e;
+        background:linear-gradient(135deg,#ffe8a3,#e7bc69);
+        box-shadow:0 14px 40px rgba(0,0,0,.36);
+        font:950 .68rem/1 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+        letter-spacing:.08em;
+        text-transform:uppercase;
+        cursor:pointer;
+      }
+
+      html[data-hearth-east-inspect-reserved-active="true"] [data-hearth-east-show-diagnostic-tab]{
+        display:inline-flex;
+      }
+
+      @media (max-width:760px){
+        .hearth-ledger-cockpit{
+          inset:8px;
+          min-height:166px;
+          border-radius:20px;
+        }
+
+        .hearth-ledger-head{
+          padding:12px 12px 8px;
+        }
+
+        .hearth-ledger-progress,
+        .hearth-ledger-actions,
+        .hearth-ledger-scroll{
+          padding-left:12px;
+          padding-right:12px;
+        }
+
+        .hearth-ledger-button{
+          flex:1 1 auto;
+          min-width:30%;
+          font-size:.58rem;
+        }
+      }
+    `;
+
+    doc.head.appendChild(style);
   }
 
   function ensureMount() {
@@ -432,25 +779,36 @@
     let mount =
       doc.getElementById(MOUNT_ID) ||
       doc.querySelector("[data-hearth-canvas-mount='true']") ||
-      doc.querySelector("[data-hearth-canvas-mount]");
+      doc.querySelector("[data-hearth-canvas-mount]") ||
+      doc.querySelector("[data-hearth-planet-frame]") ||
+      doc.querySelector("#hearth-planet-frame");
 
     if (!mount) {
       mount = doc.createElement("section");
       mount.id = MOUNT_ID;
       mount.dataset.hearthCanvasMount = "true";
-      const parent = doc.getElementById("hearth-main") || doc.body || doc.documentElement;
+      mount.dataset.hearthMountCreatedByEast = CONTRACT;
+
+      const parent = doc.getElementById("hearth-main") || doc.querySelector("main") || doc.body || doc.documentElement;
       parent.appendChild(mount);
+      state.mountCreatedByEast = true;
     }
 
     mount.id = MOUNT_ID;
     mount.dataset.hearthCanvasMount = "true";
-    mount.dataset.hearthSouthVisibleCompletion = CONTRACT;
-    mount.dataset.hearthSouthReceipt = RECEIPT;
-    mount.dataset.hearthCycleSouth = "true";
+    mount.dataset.hearthEastStep1Ignition = CONTRACT;
+    mount.dataset.hearthEastReceipt = RECEIPT;
+    mount.dataset.hearthCycleEast = "true";
+    mount.dataset.hearthCycleOrder = CYCLE_ORDER;
     mount.dataset.hearthNorthFile = NORTH_FILE;
-    mount.dataset.hearthEastFile = EAST_FILE;
-    mount.dataset.hearthWestFile = WEST_FILE;
-    mount.dataset.hearthSouthFile = SOUTH_FILE;
+    mount.dataset.hearthEastBranchFile = EAST_BRANCH_FILE;
+    mount.dataset.hearthWestFile = WEST_BRANCH_FILE;
+    mount.dataset.hearthSouthFile = SOUTH_BRANCH_FILE;
+    mount.dataset.hearthCanvasFile = CANVAS_FILE;
+    mount.dataset.hearthRouteConductorFile = ROUTE_CONDUCTOR_FILE;
+    mount.dataset.runtimeTableRequiredForFirstRender = "false";
+    mount.dataset.sourceStackRequiredForFirstRender = "false";
+    mount.dataset.wideProbeDeferred = "true";
     mount.dataset.generatedImage = "false";
     mount.dataset.graphicBox = "false";
     mount.dataset.webgl = "false";
@@ -459,6 +817,9 @@
     mount.style.position = mount.style.position || "relative";
     mount.style.overflow = "hidden";
     mount.style.touchAction = "none";
+    mount.style.userSelect = "none";
+    mount.style.webkitUserSelect = "none";
+    mount.style.webkitTouchCallout = "none";
 
     refs.mount = mount;
     state.mountReady = true;
@@ -466,129 +827,99 @@
     return mount;
   }
 
-  function ensureStyle() {
-    if (!doc || doc.getElementById("hearth-south-visible-completion-style")) return;
-
-    const style = doc.createElement("style");
-    style.id = "hearth-south-visible-completion-style";
-    style.textContent = `
-      .hearth-ledger-cockpit{transition:max-height .22s ease,opacity .18s ease,visibility .18s ease,transform .22s ease;}
-      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"]{inset:auto 10px 10px 10px!important;min-height:132px!important;max-height:186px!important;overflow:hidden!important;}
-      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-head{padding:10px 14px 7px!important;}
-      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-kicker{font-size:.58rem!important;}
-      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-title{font-size:1rem!important;line-height:1.02!important;}
-      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-meta{display:none!important;}
-      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-latest{font-size:.63rem!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;}
-      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-progress{padding:7px 10px!important;}
-      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-scroll{display:none!important;}
-      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-actions{padding:7px 10px 10px!important;border-bottom:0!important;}
-      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-button{min-height:28px!important;padding:6px 9px!important;font-size:.56rem!important;}
-      .hearth-ledger-cockpit[data-cockpit-mode="expanded-cockpit"]{inset:10px!important;max-height:calc(100% - 20px)!important;min-height:170px!important;overflow:hidden!important;}
-      .hearth-ledger-cockpit[data-cockpit-mode="planet-inspect"]{opacity:0!important;visibility:hidden!important;pointer-events:none!important;transform:translateY(26px) scale(.985)!important;max-height:0!important;min-height:0!important;overflow:hidden!important;}
-      [data-hearth-south-show-diagnostic-tab]{position:fixed;right:max(12px,env(safe-area-inset-right));bottom:max(72px,calc(env(safe-area-inset-bottom) + 72px));z-index:10000;display:none;align-items:center;justify-content:center;min-height:38px;padding:10px 14px;border-radius:999px;border:1px solid rgba(231,188,105,.66);color:#06101e;background:linear-gradient(135deg,#ffe8a3,#e7bc69);box-shadow:0 16px 44px rgba(0,0,0,.40), inset 0 1px 0 rgba(255,255,255,.28);font:950 .70rem/1 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;}
-      html[data-hearth-south-planet-inspect="true"] [data-hearth-south-show-diagnostic-tab]{display:inline-flex;}
-      html[data-hearth-south-planet-inspect="true"] #hearthCanvasMount,html[data-hearth-south-planet-inspect="true"] [data-hearth-canvas-mount="true"]{cursor:grab;}
-      @media (max-width:760px){
-        .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"]{inset:auto 8px 8px 8px!important;max-height:190px!important;}
-        .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-button{flex:1 1 auto!important;min-width:28%!important;}
-        [data-hearth-south-show-diagnostic-tab]{right:max(10px,env(safe-area-inset-right));bottom:max(68px,calc(env(safe-area-inset-bottom) + 68px));min-height:34px;padding:9px 12px;font-size:.64rem;}
-      }
-    `;
-
-    doc.head.appendChild(style);
-  }
-
   function ensureShowTab() {
     if (!doc) return null;
 
     let tab =
-      doc.querySelector("[data-hearth-south-show-diagnostic-tab]") ||
-      doc.querySelector("[data-hearth-coherence-show-diagnostic-tab]") ||
-      doc.querySelector("[data-hearth-index-show-diagnostic-tab]");
+      doc.querySelector("[data-hearth-east-show-diagnostic-tab]") ||
+      doc.querySelector("[data-hearth-index-show-diagnostic-tab]") ||
+      doc.querySelector("[data-hearth-south-show-diagnostic-tab]");
 
     if (!tab) {
       tab = doc.createElement("button");
       tab.type = "button";
-      tab.dataset.hearthSouthShowDiagnosticTab = "true";
+      tab.dataset.hearthEastShowDiagnosticTab = "true";
       tab.textContent = "Show diagnostic";
       tab.setAttribute("aria-label", "Show Hearth diagnostic");
       doc.body.appendChild(tab);
     }
 
-    tab.dataset.hearthSouthShowDiagnosticTab = "true";
-    tab.onclick = () => setCockpitMode("diagnostic-dock");
+    tab.dataset.hearthEastShowDiagnosticTab = "true";
+    tab.onclick = () => setInspectReserved(false);
 
     refs.showTab = tab;
-    state.showDiagnosticTabReady = true;
+    state.showDiagnosticRestoreReserved = true;
 
     return tab;
   }
 
-  function createFallbackCockpit() {
-    if (!doc) return null;
-
-    const mount = refs.mount || ensureMount();
-    if (!mount) return null;
-
-    const cockpit = doc.createElement("aside");
-    cockpit.id = COCKPIT_ID;
-    cockpit.className = "hearth-ledger-cockpit";
-    cockpit.dataset.hearthLoadCockpit = "true";
-    cockpit.dataset.hearthSouthCreatedFallbackCockpit = CONTRACT;
-    cockpit.dataset.cockpitMode = "loading-cockpit";
-    cockpit.setAttribute("aria-live", "polite");
-
-    cockpit.innerHTML = `
-      <div class="hearth-ledger-head">
-        <div class="hearth-ledger-kicker">Hearth · South Visible Completion</div>
-        <h2 class="hearth-ledger-title">COORDINATING HEARTH VISIBLE COMPLETION</h2>
-        <div class="hearth-ledger-meta" data-hearth-stage-label>F13A · Canvas coordination</div>
-        <div class="hearth-ledger-meta" data-hearth-heartbeat-text>south=true · waiting for North</div>
-        <div class="hearth-ledger-latest" data-hearth-latest-event>latest=SOUTH_VISIBLE_COMPLETION_LOADED</div>
-      </div>
-
-      <div class="hearth-ledger-progress" data-hearth-index-progress-strip="true">
-        <div class="hearth-ledger-track">
-          <span class="hearth-ledger-fill" data-hearth-main-progress-fill style="width:72%"></span>
-        </div>
-        <div class="hearth-ledger-percent" data-hearth-main-progress-percent>72%</div>
-      </div>
-
-      <div class="hearth-ledger-actions">
-        <button class="hearth-ledger-button primary" type="button" data-hearth-copy-diagnostic>Copy diagnostic</button>
-        <button class="hearth-ledger-button" type="button" data-hearth-toggle-receipt>Show receipt</button>
-        <button class="hearth-ledger-button" type="button" data-hearth-inspect-planet>Inspect planet</button>
-        <button class="hearth-ledger-button" type="button" data-hearth-collapse-cockpit>Collapse cockpit</button>
-      </div>
-
-      <div class="hearth-ledger-scroll">
-        <div class="hearth-ledger-lanes" data-hearth-lane-list></div>
-        <div class="hearth-ledger-receipt" data-hearth-receipt-box data-visible="false">
-          <pre data-hearth-receipt-text></pre>
-        </div>
-      </div>
-    `;
-
-    mount.appendChild(cockpit);
-    return cockpit;
-  }
-
-  function hydrateCockpit() {
+  function ensureCockpit() {
     if (!doc) return null;
 
     ensureStyle();
+    const mount = ensureMount();
+    if (!mount) return null;
+
     ensureShowTab();
 
-    const mount = refs.mount || ensureMount();
-
     let cockpit =
-      doc.getElementById(COCKPIT_ID) ||
-      doc.querySelector("[data-hearth-load-cockpit='true']") ||
-      doc.querySelector("[data-hearth-first-paint-cockpit='true']") ||
-      doc.querySelector(".hearth-ledger-cockpit");
+      mount.querySelector("[data-hearth-load-cockpit='true']") ||
+      mount.querySelector("[data-hearth-first-paint-cockpit='true']") ||
+      doc.getElementById(COCKPIT_ID);
 
-    if (!cockpit) cockpit = createFallbackCockpit();
-    if (!cockpit) return null;
+    if (!cockpit) {
+      cockpit = doc.createElement("aside");
+      cockpit.id = COCKPIT_ID;
+      cockpit.className = "hearth-ledger-cockpit";
+      cockpit.dataset.hearthLoadCockpit = "true";
+      cockpit.dataset.hearthFirstPaintCockpit = "true";
+      cockpit.dataset.hearthCreatedByEastStep1Ignition = CONTRACT;
+      cockpit.dataset.cockpitMode = "first-paint-loading";
+      cockpit.setAttribute("aria-live", "polite");
+
+      cockpit.innerHTML = `
+        <div class="hearth-ledger-head">
+          <div class="hearth-ledger-kicker">Hearth · East Route Ignition</div>
+          <h2 class="hearth-ledger-title">STARTING HEARTH DIRECTIONAL CYCLE</h2>
+          <div class="hearth-ledger-meta" data-hearth-stage-label>Gear · East route ignition</div>
+          <div class="hearth-ledger-meta" data-hearth-heartbeat-text>timing=true · sequence=true · cycle=true</div>
+          <div class="hearth-ledger-latest" data-hearth-latest-event>latest=EAST_ROUTE_FILE_LOADED</div>
+        </div>
+
+        <div class="hearth-ledger-progress" data-hearth-index-progress-strip="true">
+          <div class="hearth-ledger-track">
+            <span class="hearth-ledger-fill" data-hearth-main-progress-fill style="width:0%"></span>
+          </div>
+          <div class="hearth-ledger-percent" data-hearth-main-progress-percent>0%</div>
+        </div>
+
+        <div class="hearth-ledger-actions">
+          <button class="hearth-ledger-button primary" type="button" data-hearth-copy-diagnostic>Copy diagnostic</button>
+          <button class="hearth-ledger-button" type="button" data-hearth-toggle-receipt>Show receipt</button>
+          <button class="hearth-ledger-button" type="button" data-hearth-inspect-planet>Inspect planet</button>
+          <button class="hearth-ledger-button" type="button" data-hearth-collapse-cockpit>Expand cockpit</button>
+        </div>
+
+        <div class="hearth-ledger-scroll">
+          <div class="hearth-ledger-lanes" data-hearth-lane-list></div>
+          <div class="hearth-ledger-receipt" data-hearth-receipt-box data-visible="false">
+            <pre data-hearth-receipt-text></pre>
+          </div>
+        </div>
+      `;
+
+      mount.appendChild(cockpit);
+      state.cockpitCreatedByEast = true;
+    }
+
+    cockpit.dataset.hearthEastStep1Ignition = CONTRACT;
+    cockpit.dataset.hearthEastReceipt = RECEIPT;
+    cockpit.dataset.hearthCycleEast = "true";
+    cockpit.dataset.hearthCycleOrder = CYCLE_ORDER;
+    cockpit.dataset.generatedImage = "false";
+    cockpit.dataset.graphicBox = "false";
+    cockpit.dataset.webgl = "false";
+    cockpit.dataset.visualPassClaimed = "false";
 
     refs.cockpit = cockpit;
     refs.title = cockpit.querySelector(".hearth-ledger-title");
@@ -605,1294 +936,1243 @@
     refs.inspectButton = cockpit.querySelector("[data-hearth-inspect-planet]");
     refs.expandButton = cockpit.querySelector("[data-hearth-collapse-cockpit]");
 
-    cockpit.dataset.hearthSouthVisibleCompletion = CONTRACT;
-    cockpit.dataset.hearthSouthReceipt = RECEIPT;
-    cockpit.dataset.hearthCycleSouth = "true";
-    cockpit.dataset.hearthNorthRuntimeTable = NORTH_FILE;
-    cockpit.dataset.hearthGeneratedImage = "false";
-    cockpit.dataset.hearthGraphicBox = "false";
-    cockpit.dataset.hearthWebgl = "false";
-    cockpit.dataset.hearthVisualPassClaimed = "false";
-    cockpit.dataset.cockpitMode = cockpit.dataset.cockpitMode || "loading-cockpit";
-
-    if (refs.copyButton) refs.copyButton.onclick = copyDiagnostic;
-    if (refs.receiptToggle) refs.receiptToggle.onclick = toggleReceipt;
-    if (refs.inspectButton) refs.inspectButton.onclick = () => setCockpitMode(state.dockHiddenForInspection ? "diagnostic-dock" : "planet-inspect");
-    if (refs.expandButton) refs.expandButton.onclick = toggleExpanded;
-
-    if (mount) {
-      mount.querySelectorAll("[data-hearth-mount-fallback], .mount-fallback").forEach((fallback) => {
-        fallback.hidden = true;
-        fallback.style.display = "none";
-        fallback.dataset.hiddenBySouthVisibleCompletion = CONTRACT;
-      });
+    if (refs.copyButton) {
+      refs.copyButton.onclick = copyDiagnostic;
+      state.copyPartialDiagnosticReady = true;
     }
 
-    state.cockpitFound = true;
-    state.cockpitHydrated = true;
-    state.copyDiagnosticReady = Boolean(refs.copyButton);
-    state.receiptToggleReady = Boolean(refs.receiptToggle);
-    state.inspectPlanetControlReady = Boolean(refs.inspectButton);
-    state.collapseExpandControlReady = Boolean(refs.expandButton);
-    state.buttonsReachable = Boolean(refs.copyButton && refs.receiptToggle && refs.inspectButton && refs.expandButton);
+    if (refs.receiptToggle) {
+      refs.receiptToggle.onclick = toggleReceipt;
+      state.receiptToggleReady = true;
+    }
 
-    evaluateInspectTruth();
+    if (refs.inspectButton) {
+      refs.inspectButton.onclick = () => setInspectReserved(!state.inspectModeReservedActive);
+      state.inspectControlReserved = true;
+    }
+
+    if (refs.expandButton) {
+      refs.expandButton.onclick = toggleExpanded;
+    }
+
+    mount.querySelectorAll("[data-hearth-mount-fallback], .mount-fallback").forEach((fallback) => {
+      fallback.hidden = true;
+      fallback.style.display = "none";
+      fallback.dataset.hiddenByEastStep1Ignition = CONTRACT;
+    });
+
+    state.cockpitReady = true;
+    state.loadingScreenReady = true;
+    state.firstPaintReady = true;
+    state.visibleProgressStripReady = Boolean(refs.mainFill && refs.mainPercent);
+    state.partialReceiptAvailable = true;
 
     return cockpit;
   }
 
-  function toggleReceipt() {
-    if (!refs.receiptBox) return;
+  function ensureLedger() {
+    const existing = root.HEARTH_LOAD_LEDGER;
+    const ledger = existing && isObject(existing) ? existing : {};
+    const led = isObject(ledger.state) ? ledger.state : ledger;
 
-    const visible = refs.receiptBox.dataset.visible !== "true";
-    refs.receiptBox.dataset.visible = String(visible);
-    state.receiptVisible = visible;
+    ledger.state = led;
+    led.contract = led.contract || "HEARTH_DIRECTIONAL_CYCLE_SHARED_LOAD_LEDGER_v2";
+    led.createdBy = led.createdBy || CONTRACT;
+    led.ownerModel = "cardinal-cycle";
+    led.cycleOrder = CYCLE_ORDER;
+    led.route = ROUTE;
+    led.eastRouteFile = EAST_ROUTE_FILE;
+    led.northFile = NORTH_FILE;
+    led.eastBranchFile = EAST_BRANCH_FILE;
+    led.westFile = WEST_BRANCH_FILE;
+    led.southFile = SOUTH_BRANCH_FILE;
+    led.canvasFile = CANVAS_FILE;
+    led.routeConductorFile = ROUTE_CONDUCTOR_FILE;
+    led.startedAt = led.startedAt || nowIso();
+    led.updatedAt = led.updatedAt || nowIso();
+    led.currentGear = led.currentGear || "EAST_ROUTE";
+    led.currentGearProgress = safeNumber(led.currentGearProgress, 0);
+    led.visualPassClaimed = false;
+    led.events = Array.isArray(led.events) ? led.events : [];
+    led.errors = Array.isArray(led.errors) ? led.errors : [];
+    led.scripts = isObject(led.scripts) ? led.scripts : {};
+    led.lanes = isObject(led.lanes) ? led.lanes : {};
+    led.listeners = Array.isArray(led.listeners) ? led.listeners : [];
 
-    if (refs.receiptToggle) {
-      refs.receiptToggle.textContent = visible ? "Hide receipt" : "Show receipt";
-    }
-
-    scheduleRender();
-  }
-
-  function toggleExpanded() {
-    if (state.cockpitMode === "expanded-cockpit") {
-      setCockpitMode("diagnostic-dock");
-    } else {
-      setCockpitMode("expanded-cockpit");
-    }
-  }
-
-  function setCockpitMode(mode) {
-    if (!refs.cockpit) return;
-
-    if (mode === "planet-inspect") {
-      state.cockpitMode = "planet-inspect";
-      state.dockHiddenForInspection = true;
-      state.planetNotObstructed = true;
-      state.cockpitExpanded = false;
-    } else if (mode === "expanded-cockpit") {
-      state.cockpitMode = "expanded-cockpit";
-      state.dockHiddenForInspection = false;
-      state.planetNotObstructed = false;
-      state.cockpitExpanded = true;
-    } else {
-      state.cockpitMode = state.completionLatched || state.visibleContentProof ? "diagnostic-dock" : "loading-cockpit";
-      state.dockHiddenForInspection = false;
-      state.planetNotObstructed = false;
-      state.cockpitExpanded = false;
-    }
-
-    refs.cockpit.dataset.cockpitMode = state.cockpitMode;
-    refs.cockpit.dataset.hearthSouthPlanetInspect = String(state.dockHiddenForInspection);
-
-    if (refs.mount) {
-      refs.mount.dataset.hearthSouthPlanetInspect = String(state.dockHiddenForInspection);
-    }
-
-    if (doc && doc.documentElement) {
-      doc.documentElement.dataset.hearthSouthPlanetInspect = String(state.dockHiddenForInspection);
-      doc.documentElement.dataset.hearthDiagnosticDockHiddenForInspection = String(state.dockHiddenForInspection);
-    }
-
-    if (refs.showTab) {
-      refs.showTab.hidden = !state.dockHiddenForInspection;
-      refs.showTab.dataset.visible = String(state.dockHiddenForInspection);
-    }
-
-    if (refs.inspectButton) {
-      refs.inspectButton.textContent = state.dockHiddenForInspection ? "Show diagnostic" : "Inspect planet";
-    }
-
-    if (refs.expandButton) {
-      refs.expandButton.textContent = state.cockpitMode === "expanded-cockpit" ? "Collapse dock" : "Collapse cockpit";
-    }
-
-    evaluateInspectTruth();
-    reportSouthEvent(SOUTH_EVENTS.INSPECT_MODE_READY, {
-      reason: "cockpit-mode-update",
-      diagnosticCanLeavePlanetFrame: state.diagnosticCanLeavePlanetFrame
+    LANE_DEFS.forEach((lane) => {
+      if (!isObject(led.lanes[lane.key])) {
+        led.lanes[lane.key] = {
+          key: lane.key,
+          label: lane.label,
+          owner: lane.owner,
+          status: "PENDING",
+          message: `${lane.label} pending.`,
+          progress: 0,
+          latestEvent: "LANE_INITIALIZED",
+          updatedAt: nowIso()
+        };
+      }
     });
 
-    scheduleRender();
-    publishGlobals();
-  }
+    ledger.push = function push(event = {}) {
+      const evt = {
+        id: event.id || event.event || "LEDGER_EVENT",
+        gear: event.gear || led.currentGear || state.currentGear,
+        lane: event.lane || "",
+        status: event.status || "",
+        owner: event.owner || "EAST_ROUTE",
+        file: event.file || EAST_ROUTE_FILE,
+        message: event.message || "",
+        detail: clonePlain(event.detail || {}),
+        progress: event.progress ?? "",
+        timestamp: nowIso()
+      };
 
-  function connectNorth() {
-    const north = getNorthApi();
+      const last = led.events[led.events.length - 1];
+      const sameAsLast = last && (
+        last.id === evt.id &&
+        last.gear === evt.gear &&
+        last.lane === evt.lane &&
+        last.status === evt.status &&
+        last.message === evt.message &&
+        String(last.progress) === String(evt.progress) &&
+        stableStringify(last.detail) === stableStringify(evt.detail)
+      );
 
-    refs.north = north;
-    state.northAvailable = Boolean(north);
-    state.northContract = north && north.contract ? String(north.contract) : "";
-
-    if (!north) {
-      state.firstFailedCoordinate = "WAITING_NORTH_COMMAND_RUNTIME_TABLE";
-      state.recommendedNextRenewalTarget = NORTH_FILE;
-      return null;
-    }
-
-    if (!refs.northSession && isFunction(north.createHearthCheckpointSession)) {
-      try {
-        refs.northSession = north.createHearthCheckpointSession({
-          sessionId: "HEARTH-SOUTH-CYCLE-CONSUMER-SESSION",
-          requestedBy: CONTRACT,
-          southFile: SOUTH_FILE,
-          isolatedSession: false
-        });
-
-        state.northSessionCreated = Boolean(refs.northSession);
-        state.northSessionId = refs.northSession && refs.northSession.sessionId ? refs.northSession.sessionId : "";
-      } catch (error) {
-        state.northReceiptError = error && error.message ? error.message : String(error);
-        recordError("NORTH_SESSION_CREATE_FAILED", state.northReceiptError);
+      if (sameAsLast) {
+        state.ledgerNoopCount += 1;
+        return last;
       }
-    }
 
-    return north;
-  }
-
-  function submitToNorth(eventName, detail = {}) {
-    const north = refs.north || connectNorth();
-    const session = refs.northSession;
-
-    if (!north && !session) {
-      recordNorth("NORTH_NOT_AVAILABLE", { eventName });
-      return null;
-    }
-
-    const payload = {
-      event: eventName,
-      id: eventName,
-      phase: eventName,
-      owner: "SOUTH",
-      file: SOUTH_FILE,
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      detail: {
-        ...buildSouthSnapshot(),
-        ...clonePlain(detail || {})
+      led.events.push(evt);
+      if (led.events.length > 260) {
+        led.events.splice(0, led.events.length - 260);
       }
+
+      led.updatedAt = evt.timestamp;
+      state.ledgerWriteCount += 1;
+      notifyLedger(false);
+
+      return evt;
     };
 
-    try {
-      let result = null;
+    ledger.setLane = function setLane(key, next = {}) {
+      const lane = led.lanes[key] || {
+        key,
+        label: key,
+        owner: next.owner || "",
+        status: "PENDING",
+        message: "",
+        progress: 0,
+        latestEvent: "LANE_CREATED",
+        updatedAt: nowIso()
+      };
 
-      if (session && isFunction(session.submitEvent)) {
-        result = session.submitEvent(payload);
-      } else if (north && isFunction(north.submitEvent)) {
-        result = north.submitEvent(payload);
-      } else if (north && isFunction(north.receiveEvent)) {
-        result = north.receiveEvent(payload);
+      const candidate = {
+        key,
+        label: lane.label || next.label || key,
+        owner: next.owner || lane.owner || "",
+        status: next.status || lane.status || "PENDING",
+        message: next.message || lane.message || "",
+        progress: clamp(next.progress ?? lane.progress ?? 0, 0, 100),
+        latestEvent: next.event || next.latestEvent || lane.latestEvent || "LANE_EVENT",
+        updatedAt: lane.updatedAt || nowIso()
+      };
+
+      const changed = (
+        lane.status !== candidate.status ||
+        lane.message !== candidate.message ||
+        safeNumber(lane.progress, 0) !== candidate.progress ||
+        lane.latestEvent !== candidate.latestEvent ||
+        lane.owner !== candidate.owner
+      );
+
+      if (!changed) {
+        state.ledgerNoopCount += 1;
+        return lane;
       }
 
-      recordNorth(eventName, {
-        result: clonePlain(result)
+      candidate.updatedAt = nowIso();
+      led.lanes[key] = candidate;
+      state.ledgerWriteCount += 1;
+
+      ledger.push({
+        id: candidate.latestEvent,
+        gear: state.currentGear,
+        lane: key,
+        status: candidate.status,
+        owner: candidate.owner,
+        file: next.file || EAST_ROUTE_FILE,
+        message: candidate.message,
+        progress: candidate.progress,
+        detail: next.detail || {}
       });
 
-      reconcileNorthReceipt();
+      return candidate;
+    };
 
-      return result;
-    } catch (error) {
-      const message = error && error.message ? error.message : String(error);
-      recordError("NORTH_SUBMIT_FAILED", message, { eventName });
-      return null;
+    ledger.setScript = function setScript(key, next = {}) {
+      const current = led.scripts[key] || {
+        key,
+        src: "",
+        direction: "",
+        status: "PENDING",
+        error: "",
+        requestedAt: "",
+        loadedAt: "",
+        globalPresent: false,
+        updatedAt: nowIso()
+      };
+
+      const candidate = {
+        key,
+        src: next.src || current.src,
+        direction: next.direction || current.direction,
+        status: next.status || current.status,
+        error: next.error || "",
+        requestedAt: next.requestedAt || current.requestedAt,
+        loadedAt: next.loadedAt || current.loadedAt,
+        globalPresent: Boolean(next.globalPresent),
+        updatedAt: current.updatedAt || nowIso()
+      };
+
+      const changed = stableStringify(current) !== stableStringify(candidate);
+
+      if (!changed) {
+        state.ledgerNoopCount += 1;
+        return current;
+      }
+
+      candidate.updatedAt = nowIso();
+      led.scripts[key] = candidate;
+      state.ledgerWriteCount += 1;
+
+      ledger.push({
+        id: `SCRIPT_${String(key).toUpperCase()}_${candidate.status}`,
+        gear: state.currentGear,
+        lane: key,
+        status: candidate.status,
+        owner: "EAST_ROUTE",
+        file: EAST_ROUTE_FILE,
+        message: `${key} ${candidate.status}`,
+        detail: { src: candidate.src, direction: candidate.direction, error: candidate.error, globalPresent: candidate.globalPresent }
+      });
+
+      return candidate;
+    };
+
+    ledger.setCurrentGear = function setCurrentGear(gear, progress = 0, message = "") {
+      const normalizedProgress = clamp(progress, 0, 100);
+      const changed = led.currentGear !== gear || safeNumber(led.currentGearProgress, 0) !== normalizedProgress;
+
+      if (!changed) {
+        state.ledgerNoopCount += 1;
+        return { gear: led.currentGear, progress: led.currentGearProgress };
+      }
+
+      led.currentGear = gear;
+      led.currentGearProgress = normalizedProgress;
+      led.updatedAt = nowIso();
+
+      ledger.push({
+        id: `GEAR_${gear}_${normalizedProgress}`,
+        gear,
+        lane: "",
+        status: "ACTIVE",
+        owner: gear,
+        file: EAST_ROUTE_FILE,
+        message: message || `Gear ${gear} progress ${normalizedProgress}%.`,
+        progress: normalizedProgress
+      });
+
+      return { gear, progress: normalizedProgress };
+    };
+
+    ledger.bindRenderer = function bindRenderer(fn) {
+      if (isFunction(fn) && !led.listeners.includes(fn)) led.listeners.push(fn);
+      return led.listeners.length;
+    };
+
+    ledger.getReceipt = function getSharedReceipt() {
+      return clonePlain(led);
+    };
+
+    ledger.getReceiptText = function getSharedReceiptText() {
+      return getReceiptText();
+    };
+
+    root.HEARTH_LOAD_LEDGER = ledger;
+    refs.ledger = ledger;
+
+    state.sharedLedgerPresent = true;
+    state.sharedLedgerCreatedByEast = led.createdBy === CONTRACT;
+
+    return ledger;
+  }
+
+  function notifyLedger(schedule = true) {
+    const led = refs.ledger && refs.ledger.state ? refs.ledger.state : null;
+    if (!led || !Array.isArray(led.listeners)) return;
+
+    led.listeners = led.listeners.filter((fn) => {
+      try {
+        fn(clonePlain(led));
+        return true;
+      } catch (_error) {
+        return false;
+      }
+    });
+
+    if (schedule) scheduleRender();
+  }
+
+  function scanDownstreamReadOnly() {
+    state.scanCount += 1;
+
+    const scan = {
+      at: nowIso(),
+      scripts: {},
+      globals: {},
+      receipts: {},
+      canvasHints: {}
+    };
+
+    SCRIPT_DEFS.forEach((def) => {
+      const api = getGlobal(def.globals);
+      const script = scriptAlreadyPresent(def.file);
+      const receipt = readAuthorityReceipt(api);
+
+      scan.scripts[def.key] = {
+        key: def.key,
+        file: def.file,
+        present: Boolean(script),
+        src: script ? script.getAttribute("src") || script.src || def.file : "",
+        requested: Boolean(script),
+        loaded: Boolean(api),
+        required: def.required
+      };
+
+      scan.globals[def.key] = {
+        present: Boolean(api),
+        contract: api && api.contract ? String(api.contract) : ""
+      };
+
+      scan.receipts[def.key] = {
+        present: Boolean(receipt),
+        contract: receipt && receipt.contract ? String(receipt.contract) : "",
+        receipt: receipt && receipt.receipt ? String(receipt.receipt) : "",
+        raw: receipt ? clonePlain(receipt) : null
+      };
+    });
+
+    if (doc) {
+      const mount = refs.mount || doc.getElementById(MOUNT_ID) || doc.querySelector("[data-hearth-canvas-mount]");
+      const canvas = mount ? mount.querySelector("canvas") : doc.querySelector("canvas[data-hearth-canvas='true'],canvas[data-hearth-canvas-texture='true']");
+      const rect = canvas && isFunction(canvas.getBoundingClientRect) ? canvas.getBoundingClientRect() : null;
+      const canvasApi = getGlobal(["HEARTH_CANVAS", "HEARTH_CANVAS_EVIDENCE", "HEARTH_CANVAS_TEXTURE"]);
+      const canvasReceipt = readAuthorityReceipt(canvasApi);
+
+      scan.canvasHints = {
+        planetCanvasPresent: Boolean(canvas),
+        planetCanvasNonZeroSize: Boolean(
+          canvas &&
+          (
+            (safeNumber(canvas.width, 0) > 0 && safeNumber(canvas.height, 0) > 0) ||
+            (rect && safeNumber(rect.width, 0) > 0 && safeNumber(rect.height, 0) > 0)
+          )
+        ),
+        canvasReady: safeBool(canvasReceipt && canvasReceipt.canvasReady, false) || (doc.documentElement && doc.documentElement.dataset.hearthCanvasReady === "true"),
+        imageRendered: safeBool(canvasReceipt && canvasReceipt.imageRendered, false) || (doc.documentElement && doc.documentElement.dataset.hearthImageRendered === "true"),
+        firstFrameDetected: safeBool(canvasReceipt && canvasReceipt.firstFrameDetected, false),
+        visiblePlanetAvailable: safeBool(canvasReceipt && canvasReceipt.visiblePlanetAvailable, false),
+        visibleContentSoftGap: safeBool(canvasReceipt && canvasReceipt.visibleContentSoftGap, false),
+        visibleContentProof: safeBool(canvasReceipt && canvasReceipt.visibleContentProof, false)
+      };
+    }
+
+    return scan;
+  }
+
+  function applyScanCommit(scan, reason = "commit-scan") {
+    if (!scan || guards.committingScan) return false;
+
+    guards.committingScan = true;
+
+    try {
+      const before = stableStringify({
+        northPresent: state.northPresent,
+        eastBranchPresent: state.eastBranchPresent,
+        westPresent: state.westPresent,
+        southPresent: state.southPresent,
+        canvasPresent: state.canvasPresent,
+        routeConductorPresent: state.routeConductorPresent,
+        planetCanvasPresent: state.planetCanvasPresent,
+        visiblePlanetHintPresent: state.visiblePlanetHintPresent,
+        scriptStatus: state.scriptStatus
+      });
+
+      function copyScriptStatus(key) {
+        const script = scan.scripts[key] || {};
+        const global = scan.globals[key] || {};
+        const receipt = scan.receipts[key] || {};
+
+        state.scriptStatus[key] = {
+          key,
+          file: script.file || "",
+          present: script.present === true,
+          requested: script.requested === true,
+          loaded: global.present === true,
+          globalPresent: global.present === true,
+          contract: global.contract || receipt.contract || "",
+          receiptPresent: receipt.present === true,
+          required: script.required === true,
+          updatedAt: scan.at
+        };
+      }
+
+      SCRIPT_DEFS.forEach((def) => copyScriptStatus(def.key));
+
+      state.northPresent = Boolean(scan.globals.north && scan.globals.north.present);
+      state.northContract = scan.globals.north ? scan.globals.north.contract : "";
+      state.northReceiptPresent = Boolean(scan.receipts.north && scan.receipts.north.present);
+
+      state.eastBranchPresent = Boolean(scan.globals.eastBranch && scan.globals.eastBranch.present);
+      state.eastBranchContract = scan.globals.eastBranch ? scan.globals.eastBranch.contract : "";
+
+      state.westPresent = Boolean(scan.globals.west && scan.globals.west.present);
+      state.westContract = scan.globals.west ? scan.globals.west.contract : "";
+      state.westReceiptPresent = Boolean(scan.receipts.west && scan.receipts.west.present);
+
+      state.southPresent = Boolean(scan.globals.south && scan.globals.south.present);
+      state.southContract = scan.globals.south ? scan.globals.south.contract : "";
+      state.southReceiptPresent = Boolean(scan.receipts.south && scan.receipts.south.present);
+
+      state.canvasPresent = Boolean(scan.globals.canvas && scan.globals.canvas.present);
+      state.canvasContract = scan.globals.canvas ? scan.globals.canvas.contract : "";
+      state.canvasReceiptPresent = Boolean(scan.receipts.canvas && scan.receipts.canvas.present);
+
+      state.routeConductorPresent = Boolean(scan.globals.routeConductor && scan.globals.routeConductor.present);
+      state.routeConductorContract = scan.globals.routeConductor ? scan.globals.routeConductor.contract : "";
+      state.routeConductorReceiptPresent = Boolean(scan.receipts.routeConductor && scan.receipts.routeConductor.present);
+
+      state.planetCanvasPresent = Boolean(scan.canvasHints.planetCanvasPresent);
+      state.planetCanvasNonZeroSize = Boolean(scan.canvasHints.planetCanvasNonZeroSize);
+      state.visiblePlanetHintPresent = Boolean(
+        scan.canvasHints.planetCanvasPresent &&
+        scan.canvasHints.planetCanvasNonZeroSize &&
+        (
+          scan.canvasHints.canvasReady ||
+          scan.canvasHints.imageRendered ||
+          scan.canvasHints.firstFrameDetected ||
+          scan.canvasHints.visiblePlanetAvailable ||
+          scan.canvasHints.visibleContentSoftGap ||
+          scan.canvasHints.visibleContentProof
+        )
+      );
+
+      state.downstreamRequiredReady = state.northPresent;
+      state.downstreamOptionalReady = Boolean(
+        state.eastBranchPresent &&
+        state.westPresent &&
+        state.southPresent &&
+        state.canvasPresent
+      );
+
+      state.scriptOrderComplete = Boolean(
+        state.northPresent &&
+        state.eastBranchPresent &&
+        state.westPresent &&
+        state.southPresent &&
+        state.canvasPresent
+      );
+
+      state.scriptOrderSettled = Boolean(
+        state.scriptOrderComplete ||
+        state.scriptErrors.length > 0 ||
+        Object.keys(state.scriptStatus).length >= SCRIPT_DEFS.length
+      );
+
+      deriveCycleStateReadOnly();
+
+      const after = stableStringify({
+        northPresent: state.northPresent,
+        eastBranchPresent: state.eastBranchPresent,
+        westPresent: state.westPresent,
+        southPresent: state.southPresent,
+        canvasPresent: state.canvasPresent,
+        routeConductorPresent: state.routeConductorPresent,
+        planetCanvasPresent: state.planetCanvasPresent,
+        visiblePlanetHintPresent: state.visiblePlanetHintPresent,
+        scriptStatus: state.scriptStatus
+      });
+
+      const changed = before !== after;
+
+      if (changed) {
+        state.commitCount += 1;
+        updateLedgerFromState(reason);
+        publishStep1HandoffIfChanged(reason);
+        publishGlobals();
+      }
+
+      return changed;
+    } finally {
+      guards.committingScan = false;
     }
   }
 
-  function reportSouthEvent(eventName, detail = {}) {
-    const result = submitToNorth(eventName, detail);
+  function updateLedgerFromState(reason = "state-update") {
+    const ledger = refs.ledger || ensureLedger();
 
-    state.latestVisibleEvent = eventName;
+    ledger.setLane("eastRoute", {
+      status: state.step1Ready ? "READY" : "ACTIVE",
+      progress: state.step1Ready ? 100 : state.currentGearProgress,
+      event: state.step1Ready ? "EAST_ROUTE_STEP1_READY" : "EAST_ROUTE_STEP1_ACTIVE",
+      owner: "EAST_ROUTE",
+      file: EAST_ROUTE_FILE,
+      message: state.step1Ready ? "East route Step 1 is ready." : "East route Step 1 is active.",
+      detail: { reason }
+    });
 
-    if (eventName === SOUTH_EVENTS.CANVAS_COORDINATION_STARTED) {
-      state.currentStage = "F13A";
-      state.highestStage = "F13A";
-      state.mainDisplayProgress = Math.max(state.mainDisplayProgress, 78);
-    }
+    ledger.setLane("north", {
+      status: state.northPresent ? "READY" : "WAITING",
+      progress: state.northPresent ? 100 : 0,
+      event: state.northPresent ? "NORTH_RUNTIME_TABLE_PRESENT" : "NORTH_RUNTIME_TABLE_WAITING",
+      owner: "NORTH",
+      file: NORTH_FILE,
+      message: state.northPresent ? "North Runtime Table is present." : "Waiting for North Runtime Table.",
+      detail: { reason }
+    });
 
-    if (eventName === SOUTH_EVENTS.CANVAS_MOUNT_CONFIRMED) {
-      state.currentStage = "F13B";
-      state.highestStage = "F13B";
-      state.mainDisplayProgress = Math.max(state.mainDisplayProgress, 81);
-    }
+    ledger.setLane("eastBranch", {
+      status: state.eastBranchPresent ? "READY" : "OPTIONAL_WAITING",
+      progress: state.eastBranchPresent ? 100 : 0,
+      event: state.eastBranchPresent ? "EAST_BRANCH_PRESENT" : "EAST_BRANCH_WAITING",
+      owner: "EAST_BRANCH",
+      file: EAST_BRANCH_FILE,
+      message: state.eastBranchPresent ? "East checkpoint-motion branch is present." : "East checkpoint-motion branch pending.",
+      detail: { reason }
+    });
 
-    if (eventName === SOUTH_EVENTS.CANVAS_CONTEXT_READY) {
-      state.currentStage = "F13C";
-      state.highestStage = "F13C";
-      state.mainDisplayProgress = Math.max(state.mainDisplayProgress, 84);
-    }
+    ledger.setLane("west", {
+      status: state.westPresent ? "READY" : "OPTIONAL_WAITING",
+      progress: state.westPresent ? 100 : 0,
+      event: state.westPresent ? "WEST_GAP_CLASSIFIER_PRESENT" : "WEST_GAP_CLASSIFIER_WAITING",
+      owner: "WEST",
+      file: WEST_BRANCH_FILE,
+      message: state.westPresent ? "West gap classifier is present." : "West gap classifier pending.",
+      detail: { reason }
+    });
 
-    if (eventName === SOUTH_EVENTS.DRAG_INSPECTION_BOUND) {
-      state.currentStage = "F13D";
-      state.highestStage = "F13D";
-      state.mainDisplayProgress = Math.max(state.mainDisplayProgress, 86);
-    }
+    ledger.setLane("south", {
+      status: state.southPresent ? "READY" : "OPTIONAL_WAITING",
+      progress: state.southPresent ? 100 : 0,
+      event: state.southPresent ? "SOUTH_VISIBLE_COMPOSER_PRESENT" : "SOUTH_VISIBLE_COMPOSER_WAITING",
+      owner: "SOUTH",
+      file: SOUTH_BRANCH_FILE,
+      message: state.southPresent ? "South visible-state composer is present." : "South visible-state composer pending.",
+      detail: { reason }
+    });
 
-    if (eventName === SOUTH_EVENTS.ATLAS_TEXTURE_FRAME_READY) {
-      state.currentStage = "F13E";
-      state.highestStage = "F13E";
-      state.mainDisplayProgress = Math.max(state.mainDisplayProgress, 93);
-    }
+    ledger.setLane("canvas", {
+      status: state.canvasPresent ? "READY" : "OPTIONAL_WAITING",
+      progress: state.canvasPresent ? 100 : 0,
+      event: state.canvasPresent ? "CANVAS_EVIDENCE_PRESENT" : "CANVAS_EVIDENCE_WAITING",
+      owner: "CANVAS",
+      file: CANVAS_FILE,
+      message: state.canvasPresent ? "Canvas evidence authority is present." : "Canvas evidence authority pending.",
+      detail: { reason }
+    });
 
-    if (eventName === SOUTH_EVENTS.VISIBLE_CONTENT_PROOF_PASSED) {
-      state.currentStage = "F13F";
-      state.highestStage = "F13F";
-      state.mainDisplayProgress = Math.max(state.mainDisplayProgress, 98);
-    }
+    ledger.setLane("routeConductor", {
+      status: state.routeConductorPresent ? "READY" : "OPTIONAL_WAITING",
+      progress: state.routeConductorPresent ? 100 : 0,
+      event: state.routeConductorPresent ? "ROUTE_CONDUCTOR_PRESENT" : "ROUTE_CONDUCTOR_WAITING",
+      owner: "ROUTE_CONDUCTOR",
+      file: ROUTE_CONDUCTOR_FILE,
+      message: state.routeConductorPresent ? "Route conductor is present." : "Route conductor pending.",
+      detail: { reason }
+    });
 
-    if (eventName === SOUTH_EVENTS.INSPECT_MODE_READY) {
-      state.currentStage = "F13G";
-      state.highestStage = "F13G";
-      state.mainDisplayProgress = Math.max(state.mainDisplayProgress, 98);
-    }
+    ledger.setLane("checkpoint", {
+      status: state.downstreamRequiredReady ? "CYCLE_CAN_CONTINUE" : "WAITING",
+      progress: state.downstreamRequiredReady ? 100 : 0,
+      event: state.downstreamRequiredReady ? "CHECKPOINT_CAN_RETURN_TO_NORTH" : "CHECKPOINT_WAITING_FOR_NORTH",
+      owner: "NORTH",
+      file: NORTH_FILE,
+      message: state.downstreamRequiredReady ? "Cycle can continue through North." : "Checkpoint waiting for North.",
+      detail: { reason }
+    });
 
-    if (eventName === SOUTH_EVENTS.COMPLETION_LATCHED) {
-      state.currentStage = "F21";
-      state.highestStage = "F21";
-      state.mainDisplayProgress = 100;
-      state.mainProgressCap = 100;
-      state.completionLatched = true;
-      state.finalReceiptAvailable = true;
-    }
-
-    if (result && result.action === "HARD_BLOCK") {
-      state.firstFailedCoordinate = `NORTH_HARD_BLOCK_${String(result.reason || "UNKNOWN").toUpperCase()}`;
-      state.recommendedNextRenewalTarget = result.recommendedNextFile || state.recommendedNextRenewalTarget;
-    }
-
-    publishGlobals();
-    scheduleRender();
-    return result;
+    ledger.setCurrentGear(state.currentGear, state.currentGearProgress, state.currentGearLabel);
   }
 
-  function reconcileNorthReceipt() {
-    const receipt = getNorthReceipt();
-
-    state.northReceiptAvailable = Boolean(receipt);
-
-    if (!receipt || !isObject(receipt)) return null;
-
-    state.northF21Allowed = bool(receipt.f21Allowed, state.northF21Allowed);
-    state.northNewsGatePassedBeforeF21 = bool(receipt.newsGatePassedBeforeF21, state.northNewsGatePassedBeforeF21);
-    state.northActiveCheckpointId = receipt.activeCheckpointId || state.northActiveCheckpointId;
-    state.northRecommendedNextOwner = receipt.recommendedNextOwner || state.northRecommendedNextOwner;
-    state.northRecommendedNextFile = receipt.recommendedNextFile || state.northRecommendedNextFile;
-    state.step1AcceptedBySouth = bool(receipt.eastGateReady, state.step1AcceptedBySouth);
-    state.handoffAdmissibleByWest = bool(receipt.westGateReady, state.handoffAdmissibleByWest);
-
-    if (!state.completionLatched && receipt.recommendedNextFile) {
-      state.recommendedNextRenewalTarget = receipt.recommendedNextFile;
+  function deriveCycleStateReadOnly() {
+    if (!state.step1Ignited) {
+      state.currentGear = "EAST_ROUTE";
+      state.currentGearLabel = "East route ignition";
+      state.currentGearProgress = 0;
+      state.firstFailedCoordinate = "WAITING_EAST_ROUTE_IGNITION";
+      state.recommendedNextRenewalTarget = EAST_ROUTE_FILE;
+      state.postgameStatus = "EAST_ROUTE_NOT_BOOTED";
+      return;
     }
 
-    return receipt;
+    if (!state.mountReady || !state.cockpitReady || !state.sharedLedgerPresent || !state.firstPaintReady) {
+      state.currentGear = "EAST_ROUTE";
+      state.currentGearLabel = "East route first-paint setup";
+      state.currentGearProgress = state.mountReady ? state.cockpitReady ? 82 : 55 : 25;
+      state.firstFailedCoordinate = !state.mountReady
+        ? "WAITING_EAST_MOUNT_READY"
+        : !state.cockpitReady
+          ? "WAITING_EAST_COCKPIT_READY"
+          : !state.sharedLedgerPresent
+            ? "WAITING_EAST_SHARED_LEDGER"
+            : "WAITING_EAST_FIRST_PAINT_READY";
+      state.recommendedNextRenewalTarget = EAST_ROUTE_FILE;
+      state.postgameStatus = "EAST_ROUTE_FIRST_PAINT_ACTIVE";
+      return;
+    }
+
+    state.step1Ready = true;
+
+    if (!state.northPresent) {
+      state.currentGear = "NORTH";
+      state.currentGearLabel = "North Runtime Table";
+      state.currentGearProgress = state.scriptStatus.north && state.scriptStatus.north.requested ? 48 : 12;
+      state.firstFailedCoordinate = "WAITING_NORTH_RUNTIME_TABLE";
+      state.recommendedNextRenewalTarget = NORTH_FILE;
+      state.postgameStatus = "WAITING_NORTH_RUNTIME_TABLE";
+      return;
+    }
+
+    if (!state.eastBranchPresent) {
+      state.currentGear = "EAST_BRANCH";
+      state.currentGearLabel = "East checkpoint-motion branch";
+      state.currentGearProgress = state.scriptStatus.eastBranch && state.scriptStatus.eastBranch.requested ? 48 : 12;
+      state.firstFailedCoordinate = "WAITING_EAST_BRANCH_CHECKPOINT_MOTION";
+      state.recommendedNextRenewalTarget = EAST_BRANCH_FILE;
+      state.postgameStatus = "WAITING_EAST_BRANCH";
+      return;
+    }
+
+    if (!state.westPresent) {
+      state.currentGear = "WEST";
+      state.currentGearLabel = "West gap classifier";
+      state.currentGearProgress = state.scriptStatus.west && state.scriptStatus.west.requested ? 48 : 12;
+      state.firstFailedCoordinate = "WAITING_WEST_GAP_CLASSIFIER";
+      state.recommendedNextRenewalTarget = WEST_BRANCH_FILE;
+      state.postgameStatus = "WAITING_WEST";
+      return;
+    }
+
+    if (!state.southPresent) {
+      state.currentGear = "SOUTH";
+      state.currentGearLabel = "South visible-state composer";
+      state.currentGearProgress = state.scriptStatus.south && state.scriptStatus.south.requested ? 48 : 12;
+      state.firstFailedCoordinate = "WAITING_SOUTH_VISIBLE_COMPOSER";
+      state.recommendedNextRenewalTarget = SOUTH_BRANCH_FILE;
+      state.postgameStatus = "WAITING_SOUTH";
+      return;
+    }
+
+    if (!state.canvasPresent) {
+      state.currentGear = "CANVAS";
+      state.currentGearLabel = "Canvas evidence authority";
+      state.currentGearProgress = state.scriptStatus.canvas && state.scriptStatus.canvas.requested ? 48 : 12;
+      state.firstFailedCoordinate = "WAITING_CANVAS_EVIDENCE_AUTHORITY";
+      state.recommendedNextRenewalTarget = CANVAS_FILE;
+      state.postgameStatus = "WAITING_CANVAS";
+      return;
+    }
+
+    if (!state.routeConductorPresent) {
+      state.currentGear = "ROUTE_CONDUCTOR";
+      state.currentGearLabel = "Route conductor";
+      state.currentGearProgress = state.scriptStatus.routeConductor && state.scriptStatus.routeConductor.requested ? 48 : 12;
+      state.firstFailedCoordinate = "WAITING_ROUTE_CONDUCTOR";
+      state.recommendedNextRenewalTarget = ROUTE_CONDUCTOR_FILE;
+      state.postgameStatus = "WAITING_ROUTE_CONDUCTOR";
+      return;
+    }
+
+    state.currentGear = "CHECKPOINT";
+    state.currentGearLabel = "Checkpoint return to North";
+    state.currentGearProgress = 100;
+    state.firstFailedCoordinate = "NONE_EAST_ROUTE_STEP1_COMPLETE";
+    state.recommendedNextRenewalTarget = NORTH_FILE;
+    state.postgameStatus = "EAST_ROUTE_STEP1_COMPLETE_RETURN_TO_NORTH";
+    state.bootComplete = true;
   }
 
-  function selectCanvasMethod(api) {
-    if (api && isFunction(api.bootCooperative)) return "bootCooperative";
-    if (api && isFunction(api.boot)) return "boot";
-    if (api && isFunction(api.mountVisibleCarrier)) return "mountVisibleCarrier";
-    if (api && isFunction(api.bootVisibleCarrier)) return "bootVisibleCarrier";
-    if (api && isFunction(api.mount)) return "mount";
-    if (api && isFunction(api.start)) return "start";
-    if (api && isFunction(api.init)) return "init";
-    if (api && isFunction(api.render)) return "render";
-    return "";
+  function retireClimateRoute() {
+    root.__HEARTH_CLIMATE_ROUTE_RETIRED__ = true;
+    root.__HEARTH_RETIRED_ROUTE_FILE__ = RETIRED_CLIMATE_FILE;
+    root.__HEARTH_RETIRED_CLIMATE_ROUTE__ = RETIRED_CLIMATE_FILE;
+    root.__HEARTH_RETIRED_CLIMATE_ROUTE_ACTIVE_CARRIER__ = false;
+
+    [
+      "__HEARTH_VISIBLE_RECOVERY_DISPOSE__",
+      "__HEARTH_G4_ROUTE_DISPOSE__",
+      "__HEARTH_HABITABLE_FORMING_ROUTE_DISPOSE__"
+    ].forEach((name) => {
+      try {
+        if (typeof root[name] === "function") root[name]();
+      } catch (_error) {}
+
+      try {
+        root[name] = undefined;
+        delete root[name];
+      } catch (_error) {}
+    });
+
+    if (doc) {
+      doc.querySelectorAll("script[src*='hearth.climate.route.js']").forEach((script) => {
+        script.dataset.hearthClimateRouteRetired = "true";
+        script.dataset.retiredBy = CONTRACT;
+      });
+    }
+
+    state.climateRouteRetired = true;
   }
 
-  function canvasPayload() {
+  function updateDocumentDataset() {
+    if (!doc || !doc.documentElement) return;
+
+    const dataset = doc.documentElement.dataset;
+
+    dataset.hearthEastStep1IgnitionLoaded = "true";
+    dataset.hearthEastStep1IgnitionContract = CONTRACT;
+    dataset.hearthEastStep1IgnitionReceipt = RECEIPT;
+    dataset.hearthEastStep1IgnitionVersion = VERSION;
+    dataset.hearthCycleOrder = CYCLE_ORDER;
+
+    dataset.hearthEastRouteFile = EAST_ROUTE_FILE;
+    dataset.hearthNorthFile = NORTH_FILE;
+    dataset.hearthEastBranchFile = EAST_BRANCH_FILE;
+    dataset.hearthWestFile = WEST_BRANCH_FILE;
+    dataset.hearthSouthFile = SOUTH_BRANCH_FILE;
+    dataset.hearthCanvasFile = CANVAS_FILE;
+    dataset.hearthRouteConductorFile = ROUTE_CONDUCTOR_FILE;
+
+    dataset.hearthCurrentGear = state.currentGear;
+    dataset.hearthCurrentGearProgress = String(state.currentGearProgress);
+    dataset.hearthCurrentGearLabel = state.currentGearLabel;
+
+    dataset.hearthStep1Ignited = String(state.step1Ignited);
+    dataset.hearthStep1Ready = String(state.step1Ready);
+    dataset.hearthStep1HandoffPublished = String(state.step1HandoffPublished);
+    dataset.hearthStep1HandoffAcceptedByNorth = String(state.step1HandoffAcceptedByNorth);
+    dataset.hearthStep1HandoffAcceptedByWest = String(state.step1HandoffAcceptedByWest);
+
+    dataset.hearthMountReady = String(state.mountReady);
+    dataset.hearthFirstPaintCockpitReady = String(state.cockpitReady);
+    dataset.hearthVisibleProgressStripReady = String(state.visibleProgressStripReady);
+    dataset.hearthLoadLedgerPresent = String(state.sharedLedgerPresent);
+
+    dataset.hearthNorthPresent = String(state.northPresent);
+    dataset.hearthEastBranchPresent = String(state.eastBranchPresent);
+    dataset.hearthWestPresent = String(state.westPresent);
+    dataset.hearthSouthPresent = String(state.southPresent);
+    dataset.hearthCanvasPresent = String(state.canvasPresent);
+    dataset.hearthRouteConductorPresent = String(state.routeConductorPresent);
+
+    dataset.hearthPlanetCanvasPresent = String(state.planetCanvasPresent);
+    dataset.hearthPlanetCanvasNonZeroSize = String(state.planetCanvasNonZeroSize);
+    dataset.hearthVisiblePlanetHintPresent = String(state.visiblePlanetHintPresent);
+
+    dataset.hearthClimateRouteRetired = "true";
+    dataset.hearthRetiredClimateRouteFile = RETIRED_CLIMATE_FILE;
+    dataset.hearthRuntimeTableRequiredForFirstRender = "false";
+    dataset.hearthSourceStackRequiredForFirstRender = "false";
+    dataset.hearthWideProbeDeferred = "true";
+
+    dataset.hearthFirstFailedCoordinate = state.firstFailedCoordinate;
+    dataset.hearthRecommendedNextRenewalTarget = state.recommendedNextRenewalTarget;
+
+    dataset.hearthRenderReadOnly = "true";
+    dataset.hearthReceiptReadOnly = "true";
+    dataset.hearthLedgerIdempotent = "true";
+    dataset.hearthHandoffIdempotent = "true";
+
+    dataset.generatedImage = "false";
+    dataset.graphicBox = "false";
+    dataset.webgl = "false";
+    dataset.visualPassClaimed = "false";
+  }
+
+  function publishGlobals() {
+    root.HEARTH = root.HEARTH || {};
+    root.HEARTH.eastStep1Ignition = api;
+    root.HEARTH.indexBridge = api;
+    root.HEARTH.indexConstraintSemiconductor = api;
+
+    root.HEARTH_EAST_STEP1_IGNITION = api;
+    root.HEARTH_EAST_STEP1_IGNITION_CYCLE = api;
+    root.HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR = api;
+    root.HEARTH_INDEX_BRIDGE = api;
+    root.HearthIndexBridge = api;
+    root.HEARTH_INDEX_JS = api;
+
+    root.HEARTH_EAST_STEP1_IGNITION_RECEIPT = getReceiptLightReadOnly();
+    root.HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR_RECEIPT = root.HEARTH_EAST_STEP1_IGNITION_RECEIPT;
+    root.HEARTH_INDEX_BRIDGE_RECEIPT = root.HEARTH_EAST_STEP1_IGNITION_RECEIPT;
+    root.HEARTH_INDEX_JS_RECEIPT = root.HEARTH_EAST_STEP1_IGNITION_RECEIPT;
+    root.HEARTH_EAST_STEP1_HANDOFF_RECEIPT = getStep1HandoffReceipt();
+    root.HEARTH_INDEX_STEP1_HANDOFF_RECEIPT = root.HEARTH_EAST_STEP1_HANDOFF_RECEIPT;
+
+    root.__HEARTH_EAST_ROUTE_FILE__ = EAST_ROUTE_FILE;
+    root.__HEARTH_NORTH_RUNTIME_TABLE_FILE__ = NORTH_FILE;
+    root.__HEARTH_EAST_BRANCH_FILE__ = EAST_BRANCH_FILE;
+    root.__HEARTH_WEST_BRANCH_FILE__ = WEST_BRANCH_FILE;
+    root.__HEARTH_SOUTH_BRANCH_FILE__ = SOUTH_BRANCH_FILE;
+    root.__HEARTH_CANVAS_FILE__ = CANVAS_FILE;
+    root.__HEARTH_ROUTE_CONDUCTOR_FILE__ = ROUTE_CONDUCTOR_FILE;
+    root.__HEARTH_ACTIVE_ROUTE_FILE__ = ROUTE_CONDUCTOR_FILE;
+    root.__HEARTH_CLIMATE_ROUTE_RETIRED__ = true;
+
+    updateDocumentDataset();
+  }
+
+  function getStep1HandoffReceipt() {
     return {
-      calledBy: CONTRACT,
       contract: CONTRACT,
-      receipt: RECEIPT,
-      previousContract: PREVIOUS_CONTRACT,
-      baselineContract: BASELINE_CONTRACT,
+      receipt: "HEARTH_EAST_STEP1_HANDOFF_RECEIPT_v2",
+      sourceReceipt: RECEIPT,
+      version: VERSION,
+      owner: "EAST_ROUTE",
+      file: EAST_ROUTE_FILE,
       route: ROUTE,
-      mountId: MOUNT_ID,
-      mount: refs.mount || ensureMount(),
-      pairedSemiconductor: true,
-      eastFile: EAST_FILE,
-      westFile: WEST_FILE,
+      cycleOrder: CYCLE_ORDER,
+
+      step: 1,
+      stepName: "EAST_ROUTE_STEP1_IGNITION_FIRST_PAINT",
+      step1Ignited: state.step1Ignited,
+      step1Ready: state.step1Ready,
+      firstPaintReady: state.firstPaintReady,
+      mountReady: state.mountReady,
+      cockpitReady: state.cockpitReady,
+      loadingScreenReady: state.loadingScreenReady,
+      sharedLedgerPresent: state.sharedLedgerPresent,
+      scriptOrderStarted: state.scriptOrderStarted,
+      scriptOrderComplete: state.scriptOrderComplete,
+      scriptOrderSettled: state.scriptOrderSettled,
+      partialReceiptAvailable: state.partialReceiptAvailable,
+
       northFile: NORTH_FILE,
-      southFile: SOUTH_FILE,
-      southVisibleCompletionConsumer: true,
-      northCheckpointAuthority: NORTH_FILE,
-      visibleContentCompletionGate: true,
-      inspectModeGate: true,
-      sourceAuthorityHeld: true,
+      eastBranchFile: EAST_BRANCH_FILE,
+      westFile: WEST_BRANCH_FILE,
+      southFile: SOUTH_BRANCH_FILE,
+      canvasFile: CANVAS_FILE,
+      routeConductorFile: ROUTE_CONDUCTOR_FILE,
+
+      northPresent: state.northPresent,
+      eastBranchPresent: state.eastBranchPresent,
+      westPresent: state.westPresent,
+      southPresent: state.southPresent,
+      canvasPresent: state.canvasPresent,
+      routeConductorPresent: state.routeConductorPresent,
+
+      currentGear: state.currentGear,
+      currentGearProgress: state.currentGearProgress,
+      firstFailedCoordinate: state.firstFailedCoordinate,
+      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+
+      renderReadOnly: true,
+      receiptReadOnly: true,
+      ledgerIdempotent: true,
+      handoffIdempotent: true,
+      runtimeTableRequiredForFirstRender: false,
+      sourceStackRequiredForFirstRender: false,
+      wideProbeDeferred: true,
       climateRouteRetired: true,
+
+      eastRouteOwnsStep1: true,
+      northOwnsRuntimeTable: true,
+      eastBranchOwnsCheckpointMotion: true,
+      westOwnsGapClassification: true,
+      southOwnsVisibleStateComposition: true,
+      canvasOwnsDrawingAndF13Evidence: true,
+      routeConductorOwnsRouteRuntime: true,
+
       generatedImage: false,
       graphicBox: false,
       webGL: false,
       visualPassClaimed: false,
-      callbacks: {
-        onCanvasPhase: handleCanvasPhase,
-        onCanvasProgress: handleCanvasPhase,
-        onMounted: (receipt) => handleCanvasReceipt(receipt, "onMounted"),
-        onFirstFrame: (receipt) => handleCanvasReceipt(receipt, "onFirstFrame"),
-        onRendered: (receipt) => handleCanvasReceipt(receipt, "onRendered"),
-        onDragBound: (receipt) => handleCanvasReceipt(receipt, "onDragBound"),
-        onReady: (receipt) => handleCanvasReceipt(receipt, "onReady"),
-        onError: (receipt) => handleCanvasReceipt(receipt, "onError")
-      }
+
+      publishedAt: nowIso()
     };
   }
 
-  function callCanvasCarrier() {
-    if (canvasBootRequested || state.completionLatched) return;
+  function publishStep1HandoffIfChanged(reason = "handoff-check") {
+    if (guards.publishingHandoff) return false;
 
-    const api = getCanvasApi();
-    state.canvasApiPresent = Boolean(api);
-
-    if (!api) {
-      deriveFailureCoordinate();
-      scheduleRender();
-      return;
-    }
-
-    const method = selectCanvasMethod(api);
-
-    if (!method) {
-      state.canvasCarrierHandoffError = "Canvas API present but no boot/mount method exists.";
-      recordError("CANVAS_METHOD_MISSING", state.canvasCarrierHandoffError);
-      deriveFailureCoordinate();
-      return;
-    }
-
-    canvasBootRequested = true;
-    state.canvasCarrierRequested = true;
-    state.canvasCarrierMethod = method;
-    state.cooperativeBootAvailable = Boolean(isFunction(api.bootCooperative));
-    state.cooperativeBootUsed = method === "bootCooperative";
-    state.syncBootFallbackUsed = method !== "bootCooperative";
-
-    reportSouthEvent(SOUTH_EVENTS.CANVAS_COORDINATION_STARTED, {
-      canvasCarrierRequested: true,
-      method,
-      cooperativeBootUsed: state.cooperativeBootUsed
-    });
+    guards.publishingHandoff = true;
 
     try {
-      const result = api[method](canvasPayload());
-      state.canvasCarrierHandoffOk = true;
+      const receipt = getStep1HandoffReceipt();
+      const nextHash = simpleHash(receipt);
+      const changed = nextHash !== state.step1HandoffHash;
 
-      if (result && isFunction(result.then)) {
-        result
-          .then((receipt) => handleCanvasReceipt(receipt, "canvas-promise-resolved"))
-          .catch((error) => {
-            state.canvasCarrierHandoffOk = false;
-            state.canvasCarrierHandoffError = error && error.message ? error.message : String(error);
-            recordError("CANVAS_PROMISE_REJECTED", state.canvasCarrierHandoffError);
-          });
-      } else if (result && isObject(result)) {
-        handleCanvasReceipt(result, "canvas-method-returned-receipt");
+      root.HEARTH_EAST_STEP1_HANDOFF_RECEIPT = receipt;
+      root.HEARTH_INDEX_STEP1_HANDOFF_RECEIPT = receipt;
+
+      if (!changed && state.step1HandoffAcceptedByNorth && state.step1HandoffAcceptedByWest) {
+        return false;
       }
-    } catch (error) {
-      state.canvasCarrierHandoffOk = false;
-      state.canvasCarrierHandoffError = error && error.message ? error.message : String(error);
-      recordError("CANVAS_HANDOFF_ERROR", state.canvasCarrierHandoffError, { method });
-    }
-  }
 
-  function handleCanvasPhase(event = {}) {
-    const phase = String(event.phase || event.id || event.event || "CANVAS_PHASE");
-    const detail = isObject(event.detail) ? event.detail : {};
-    const percent = clamp(number(event.percent ?? event.progress ?? detail.progress ?? 0, 0), 0, 100);
-    const message = event.message || phase;
-
-    if (state.completionLatched) {
-      state.phaseEvents.push({
-        at: nowIso(),
-        phase,
-        percent,
-        message: `${message} archived after F21`,
-        detail: clonePlain(detail)
-      });
-      return event;
-    }
-
-    state.phaseEvents.push({
-      at: nowIso(),
-      phase,
-      percent,
-      message,
-      detail: clonePlain(detail)
-    });
-
-    if (state.phaseEvents.length > 180) {
-      state.phaseEvents.splice(0, state.phaseEvents.length - 180);
-    }
-
-    applyCanvasTruth(phase, detail);
-
-    if (phase === "CANVAS_MOUNT_CREATED") {
-      reportSouthEvent(SOUTH_EVENTS.CANVAS_MOUNT_CONFIRMED, detail);
-    }
-
-    if (phase === "CANVAS_CONTEXT_READY") {
-      reportSouthEvent(SOUTH_EVENTS.CANVAS_CONTEXT_READY, detail);
-    }
-
-    if (phase === "DRAG_INSPECTION_BOUND") {
-      reportSouthEvent(SOUTH_EVENTS.DRAG_INSPECTION_BOUND, detail);
-    }
-
-    if (
-      phase === "ATLAS_BUILD_COMPLETE" ||
-      phase === "TEXTURE_COMPOSE_COMPLETE" ||
-      phase === "FIRST_FRAME_DETECTED" ||
-      phase === "CANVAS_READY"
-    ) {
-      if (state.atlasBuildComplete || state.textureComposeComplete || state.firstFrameDetected || state.canvasReady) {
-        reportSouthEvent(SOUTH_EVENTS.ATLAS_TEXTURE_FRAME_READY, detail);
-      }
-    }
-
-    if (phase === "CANVAS_READY") {
-      startVisibleContentProof("canvas-ready");
-      root.setTimeout(() => startVisibleContentProof("canvas-ready-post-frame"), 120);
-      root.setTimeout(() => startVisibleContentProof("canvas-ready-late-frame"), 360);
-    }
-
-    evaluateSouthGate();
-    maybeRequestCompletion(`canvas-phase-${phase}`);
-    scheduleRender();
-
-    return event;
-  }
-
-  function applyCanvasTruth(phase, detail = {}) {
-    if (phase === "CANVAS_MOUNT_CREATED") {
-      state.canvasCarrierMounted = true;
-      state.canvasCarrierHandoffOk = true;
-    }
-
-    if (phase === "CANVAS_CONTEXT_READY") {
-      state.canvasContextReady = true;
-    }
-
-    if (phase === "DRAG_INSPECTION_BOUND") {
-      state.dragInspectionBound = true;
-    }
-
-    if (phase === "ATLAS_BUILD_STARTED") {
-      state.atlasBuildStarted = true;
-    }
-
-    if (phase === "ATLAS_BUILD_PROGRESS") {
-      state.atlasBuildStarted = true;
-      state.atlasBuildProgress = Math.max(state.atlasBuildProgress, number(detail.atlasBuildProgress || detail.progress, 0));
-      state.progressOnlyEvents.push({
-        at: nowIso(),
-        phase,
-        progress: state.atlasBuildProgress,
-        detail: clonePlain(detail)
-      });
-    }
-
-    if (phase === "ATLAS_BUILD_COMPLETE") {
-      state.atlasBuildStarted = true;
-      state.atlasBuildComplete = true;
-      state.atlasBuildProgress = 100;
-    }
-
-    if (phase === "TEXTURE_COMPOSE_STARTED") {
-      state.textureComposeStarted = true;
-    }
-
-    if (phase === "TEXTURE_COMPOSE_PROGRESS") {
-      state.textureComposeStarted = true;
-      state.textureComposeProgress = Math.max(state.textureComposeProgress, number(detail.textureComposeProgress || detail.progress, 0));
-      state.progressOnlyEvents.push({
-        at: nowIso(),
-        phase,
-        progress: state.textureComposeProgress,
-        detail: clonePlain(detail)
-      });
-    }
-
-    if (phase === "TEXTURE_COMPOSE_COMPLETE") {
-      state.textureComposeStarted = true;
-      state.textureComposeComplete = true;
-      state.textureComposeProgress = 100;
-      state.renderedAfterTexture = true;
-    }
-
-    if (phase === "FIRST_FRAME_REQUESTED") {
-      state.firstFrameRequested = true;
-    }
-
-    if (phase === "FIRST_FRAME_DETECTED") {
-      state.firstFrameRequested = true;
-      state.firstFrameDetected = true;
-      state.imageRendered = true;
-    }
-
-    if (phase === "CANVAS_READY") {
-      state.canvasReady = true;
-      state.canvasCarrierMounted = true;
-      state.canvasContextReady = true;
-      state.canvasCarrierHandoffOk = true;
-      state.firstFrameRequested = true;
-      state.firstFrameDetected = true;
-      state.imageRendered = true;
-      state.dragInspectionBound = true;
-      state.atlasBuildStarted = true;
-      state.atlasBuildComplete = true;
-      state.atlasBuildProgress = 100;
-      state.textureComposeStarted = true;
-      state.textureComposeComplete = true;
-      state.textureComposeProgress = 100;
-      state.renderedAfterTexture = true;
-    }
-  }
-
-  function handleCanvasReceipt(receipt, reason = "canvas-receipt") {
-    const value = receipt && isObject(receipt) ? receipt : getCanvasReceipt();
-
-    if (value && isObject(value)) {
-      handleCanvasReceiptLight(value);
-
-      if (Array.isArray(value.phaseEvents)) {
-        value.phaseEvents.forEach((event) => {
-          if (event && event.phase) handleCanvasPhase(event);
-        });
-      }
-    }
-
-    if (state.canvasReady || state.imageRendered || state.firstFrameDetected) {
-      startVisibleContentProof(`receipt-${reason}`);
-    }
-
-    evaluateSouthGate();
-    maybeRequestCompletion(`receipt-${reason}`);
-    scheduleRender();
-  }
-
-  function handleCanvasReceiptLight(value) {
-    state.cooperativeBootAvailable = Boolean(state.cooperativeBootAvailable || value.cooperativeBootAvailable);
-    state.cooperativeBootUsed = Boolean(state.cooperativeBootUsed || value.cooperativeBootUsed);
-    state.syncBootFallbackUsed = Boolean(state.syncBootFallbackUsed || value.syncBootFallbackUsed);
-
-    state.canvasCarrierMounted = Boolean(
-      state.canvasCarrierMounted ||
-      value.canvasCarrierMounted ||
-      value.visibleCarrierMounted ||
-      value.mounted ||
-      value.canvasMounted
-    );
-
-    state.canvasContextReady = Boolean(state.canvasContextReady || value.canvasContextReady || value.contextReady || value.canvasReady);
-    state.canvasCarrierHandoffOk = Boolean(state.canvasCarrierHandoffOk || state.canvasCarrierMounted || value.canvasCarrierHandoffOk || value.handoffOk);
-    state.firstFrameRequested = Boolean(state.firstFrameRequested || value.firstFrameRequested);
-    state.firstFrameDetected = Boolean(state.firstFrameDetected || value.firstFrameDetected);
-    state.imageRendered = Boolean(state.imageRendered || value.imageRendered);
-    state.dragInspectionBound = Boolean(state.dragInspectionBound || value.dragInspectionBound || value.pointerControlsBound || value.controlsBound);
-    state.canvasReady = Boolean(state.canvasReady || value.canvasReady);
-
-    state.atlasBuildStarted = Boolean(state.atlasBuildStarted || value.atlasBuildStarted);
-    state.atlasBuildProgress = Math.max(number(state.atlasBuildProgress, 0), number(value.atlasBuildProgress, 0));
-    state.atlasBuildComplete = Boolean(state.atlasBuildComplete || value.atlasBuildComplete);
-
-    state.textureComposeStarted = Boolean(state.textureComposeStarted || value.textureComposeStarted);
-    state.textureComposeProgress = Math.max(number(state.textureComposeProgress, 0), number(value.textureComposeProgress, 0));
-    state.textureComposeComplete = Boolean(state.textureComposeComplete || value.textureComposeComplete);
-    state.renderedAfterTexture = Boolean(state.renderedAfterTexture || state.textureComposeComplete || value.renderedAfterTexture);
-
-    state.visiblePlanetAvailable = Boolean(state.visiblePlanetAvailable || value.visiblePlanetAvailable);
-    state.planetCanvasPresent = Boolean(state.planetCanvasPresent || value.planetCanvasPresent);
-    state.planetCanvasNonZeroSize = Boolean(state.planetCanvasNonZeroSize || value.planetCanvasNonZeroSize);
-    state.planetFramePainted = Boolean(state.planetFramePainted || value.planetFramePainted);
-    state.nonblankPlanetVisible = Boolean(state.nonblankPlanetVisible || value.nonblankPlanetVisible);
-
-    if (explicitReceiptContentProof(value)) {
-      state.explicitContentReceiptProof = true;
-      state.visibleContentProof = true;
-      state.visibleContentProofStarted = true;
-      state.visibleContentProofMethod = "explicit-canvas-receipt-content-proof";
-      state.carrierOnlyDetected = false;
-      state.visiblePlanetAvailable = true;
-      state.nonblankPlanetVisible = true;
-      state.planetFramePainted = true;
-    }
-  }
-
-  function explicitReceiptContentProof(value) {
-    if (!isObject(value)) return false;
-
-    const keys = [
-      "atlasPainted",
-      "textureApplied",
-      "surfaceTextureApplied",
-      "planetTexturePainted",
-      "visibleContentPainted",
-      "visibleContentProof",
-      "visibleHearthContentPainted",
-      "atlasAppliedToPlanet",
-      "textureAppliedToPlanet",
-      "surfaceAtlasPainted",
-      "landWaterTexturePainted",
-      "nonblankPlanetVisible",
-      "visiblePlanetAvailable"
-    ];
-
-    for (const key of keys) {
-      if (value[key] === true || value[key] === "true") return true;
-    }
-
-    const nested = [value.state, value.receipt, value.postgame, value.canvasState, value.renderState].filter(isObject);
-
-    for (const item of nested) {
-      for (const key of keys) {
-        if (item[key] === true || item[key] === "true") return true;
-      }
-    }
-
-    return false;
-  }
-
-  function getPlanetCanvas() {
-    if (!doc) return null;
-
-    const mount = refs.mount || ensureMount();
-
-    return (
-      (mount && mount.querySelector("canvas")) ||
-      doc.querySelector("#hearthCanvasMount canvas") ||
-      doc.querySelector("[data-hearth-canvas-mount='true'] canvas")
-    );
-  }
-
-  function startVisibleContentProof(reason = "manual") {
-    if (state.completionLatched) return true;
-
-    state.visibleContentProofStarted = true;
-
-    const passed = proveVisibleContent(reason);
-
-    if (passed) {
-      reportSouthEvent(SOUTH_EVENTS.VISIBLE_CONTENT_PROOF_PASSED, {
-        reason,
-        visibleContentProof: true,
-        visiblePlanetAvailable: true,
-        nonblankPlanetVisible: true,
-        carrierOnlyDetected: false
-      });
-    }
-
-    evaluateInspectTruth();
-    evaluateSouthGate();
-    maybeRequestCompletion(`visible-content-proof-${reason}`);
-
-    return passed;
-  }
-
-  function proveVisibleContent(reason = "manual") {
-    const receipt = getCanvasReceipt();
-
-    if (explicitReceiptContentProof(receipt)) {
-      state.explicitContentReceiptProof = true;
-      state.visibleContentProof = true;
-      state.visibleContentProofMethod = "explicit-canvas-receipt-content-proof";
-      state.visibleContentProofError = "";
-      state.carrierOnlyDetected = false;
-      state.visiblePlanetAvailable = true;
-      state.nonblankPlanetVisible = true;
-      state.planetFramePainted = true;
-      return true;
-    }
-
-    const pixelProof = sampleVisibleContent(reason);
-
-    if (pixelProof.passed) {
-      state.visibleContentProof = true;
-      state.visibleContentProofMethod = pixelProof.method;
-      state.visibleContentProofError = "";
-      state.visiblePlanetAvailable = true;
-      state.nonblankPlanetVisible = true;
-      state.planetFramePainted = true;
-      state.carrierOnlyDetected = false;
-      return true;
-    }
-
-    state.visibleContentProof = false;
-    state.visibleContentProofMethod = pixelProof.method || "pending";
-    state.visibleContentProofError = pixelProof.error || "";
-    state.visiblePlanetAvailable = false;
-    state.carrierOnlyDetected = true;
-    return false;
-  }
-
-  function sampleVisibleContent(reason = "manual") {
-    const canvas = getPlanetCanvas();
-    state.planetCanvasPresent = Boolean(canvas);
-
-    let rect = null;
-
-    try {
-      rect = canvas && isFunction(canvas.getBoundingClientRect) ? canvas.getBoundingClientRect() : null;
-    } catch (_error) {
-      rect = null;
-    }
-
-    state.planetCanvasNonZeroSize = Boolean(
-      canvas &&
-      (
-        (number(canvas.width, 0) > 0 && number(canvas.height, 0) > 0) ||
-        (rect && rect.width > 0 && rect.height > 0)
-      )
-    );
-
-    if (!canvas || !state.planetCanvasNonZeroSize) {
-      return {
-        passed: false,
-        method: "canvas-missing-or-zero-size",
-        error: "Planet canvas missing or zero size."
-      };
-    }
-
-    let ctx = null;
-    let width = 0;
-    let height = 0;
-
-    try {
-      ctx = canvas.getContext && canvas.getContext("2d", { willReadFrequently: true });
-      width = Math.max(1, number(canvas.width || Math.floor(rect?.width || 0), 0));
-      height = Math.max(1, number(canvas.height || Math.floor(rect?.height || 0), 0));
-    } catch (error) {
-      return {
-        passed: false,
-        method: "canvas-pixel-sample-unavailable",
-        error: error && error.message ? error.message : String(error)
-      };
-    }
-
-    if (!ctx || width <= 1 || height <= 1) {
-      return {
-        passed: false,
-        method: "canvas-context-unavailable",
-        error: "Canvas 2D context unavailable for content proof."
-      };
-    }
-
-    const cx = width / 2;
-    const cy = height / 2;
-    const radius = Math.min(width, height) * 0.42;
-    const classes = new Set();
-    const colors = [];
-
-    let sampleCount = 0;
-    let nonblank = 0;
-    let land = 0;
-    let water = 0;
-    let other = 0;
-    let carrier = 0;
-
-    const grid = 17;
-
-    try {
-      for (let gy = 0; gy < grid; gy += 1) {
-        for (let gx = 0; gx < grid; gx += 1) {
-          const nx = (gx + 0.5) / grid;
-          const ny = (gy + 0.5) / grid;
-          const x = Math.floor(width * (0.12 + nx * 0.76));
-          const y = Math.floor(height * (0.12 + ny * 0.76));
-          const dx = x - cx;
-          const dy = y - cy;
-
-          if (Math.sqrt(dx * dx + dy * dy) > radius) continue;
-
-          const data = ctx.getImageData(clamp(x, 0, width - 1), clamp(y, 0, height - 1), 1, 1).data;
-          const r = data[0] || 0;
-          const g = data[1] || 0;
-          const b = data[2] || 0;
-          const a = data[3] || 0;
-          const lum = (r + g + b) / 3;
-
-          sampleCount += 1;
-
-          if (a < 16 || lum < 16) continue;
-
-          nonblank += 1;
-          colors.push([r, g, b]);
-
-          const className = classifyContentColor(r, g, b, a);
-
-          if (className === "land") {
-            land += 1;
-            classes.add("land");
-          } else if (className === "water") {
-            water += 1;
-            classes.add("water");
-          } else if (className === "content-other") {
-            other += 1;
-            classes.add("content-other");
-          } else {
-            carrier += 1;
-          }
+      state.step1HandoffHash = nextHash;
+      state.step1HandoffPublished = true;
+      state.handoffPublishCount += 1;
+
+      const north = getGlobal(["LAB_RUNTIME_TABLE", "LAB_RUNTIME_TABLE_NORTH", "LAB_CHECKPOINT_GOVERNOR", "DexterRuntimeTable", "RUNTIME_TABLE"]);
+      if (north && isFunction(north.acceptEastHandoff)) {
+        try {
+          const result = north.acceptEastHandoff(receipt);
+          state.step1HandoffAcceptedByNorth = Boolean(result !== false);
+          state.step1HandoffAcceptedAt = nowIso();
+        } catch (error) {
+          recordError("NORTH_ACCEPT_EAST_HANDOFF_FAILED", error && error.message ? error.message : String(error), { reason });
         }
+      } else if (north && isFunction(north.receiveEastHandoff)) {
+        try {
+          const result = north.receiveEastHandoff(receipt);
+          state.step1HandoffAcceptedByNorth = Boolean(result !== false);
+          state.step1HandoffAcceptedAt = nowIso();
+        } catch (error) {
+          recordError("NORTH_RECEIVE_EAST_HANDOFF_FAILED", error && error.message ? error.message : String(error), { reason });
+        }
+      } else if (north) {
+        state.step1HandoffAcceptedByNorth = true;
       }
-    } catch (error) {
-      return {
-        passed: false,
-        method: "canvas-pixel-sample-failed",
-        error: error && error.message ? error.message : String(error)
-      };
-    }
 
-    const variance = computeColorVariance(colors);
-    const classCount = classes.size;
+      const west = getGlobal(["LAB_RUNTIME_TABLE_WEST", "LAB_CARDINAL_RUNTIME_TABLE_WEST", "LAB_GAP_CLASSIFIER_WEST", "RUNTIME_TABLE_WEST"]);
+      if (west && isFunction(west.acceptEastHandoff)) {
+        try {
+          const result = west.acceptEastHandoff(receipt);
+          state.step1HandoffAcceptedByWest = Boolean(result !== false);
+          state.step1HandoffAcceptedAt = nowIso();
+        } catch (error) {
+          recordError("WEST_ACCEPT_EAST_HANDOFF_FAILED", error && error.message ? error.message : String(error), { reason });
+        }
+      } else if (west && isFunction(west.receiveEastHandoff)) {
+        try {
+          const result = west.receiveEastHandoff(receipt);
+          state.step1HandoffAcceptedByWest = Boolean(result !== false);
+          state.step1HandoffAcceptedAt = nowIso();
+        } catch (error) {
+          recordError("WEST_RECEIVE_EAST_HANDOFF_FAILED", error && error.message ? error.message : String(error), { reason });
+        }
+      } else if (west) {
+        state.step1HandoffAcceptedByWest = true;
+      }
 
-    state.visibleContentSampleCount = sampleCount;
-    state.visibleContentVarianceScore = Math.round(variance * 100) / 100;
-    state.visibleContentClassCount = classCount;
-    state.visibleContentClasses = Array.from(classes);
-    state.visibleContentLandSampleCount = land;
-    state.visibleContentWaterSampleCount = water;
-    state.visibleContentOtherSampleCount = other;
-    state.planetFramePainted = Boolean(nonblank > 12 && (state.firstFrameDetected || state.imageRendered || state.canvasReady));
-    state.nonblankPlanetVisible = Boolean(nonblank > 12);
-
-    const hasLand = land >= 4;
-    const hasWaterOrOther = water >= 6 || other >= 6;
-    const enoughVariance = variance >= 12;
-    const enoughSamples = sampleCount >= 60 && nonblank >= 28;
-    const passed = Boolean(enoughSamples && enoughVariance && hasLand && hasWaterOrOther && (state.textureComposeComplete || state.canvasReady || state.imageRendered));
-
-    state.carrierOnlyDetected = !passed;
-
-    return {
-      passed,
-      method: passed ? "canvas-pixel-content-sample" : "carrier-only-or-insufficient-content-sample",
-      error: passed ? "" : `Visible content sample failed: samples=${sampleCount}, nonblank=${nonblank}, variance=${Math.round(variance * 100) / 100}, classes=${classCount}, land=${land}, water=${water}, other=${other}, carrier=${carrier}, reason=${reason}`
-    };
-  }
-
-  function classifyContentColor(r, g, b, a) {
-    if (a < 16) return "blank";
-
-    const lum = (r + g + b) / 3;
-    if (lum < 18) return "carrier";
-
-    const blueDominant = b >= r + 10 && b >= g - 6;
-    const mutedBlueCarrier = blueDominant && b < 72 && g < 72 && r < 60;
-    if (mutedBlueCarrier) return "carrier";
-
-    const landGreen = g >= 48 && r >= 28 && b <= 118 && g >= b + 8;
-    const landBrown = r >= 52 && g >= 42 && b <= 95 && r >= b + 12 && g >= b + 4;
-    const landYellow = r >= 70 && g >= 62 && b <= 120 && Math.abs(r - g) <= 52;
-
-    if (landGreen || landBrown || landYellow) return "land";
-
-    const waterBlue = b >= 52 && b >= r + 8 && b >= g - 10 && g >= 28;
-    const waterTeal = g >= 46 && b >= 46 && r <= 62 && Math.abs(g - b) <= 45;
-
-    if (waterBlue || waterTeal) return "water";
-
-    if (lum >= 52 && Math.max(r, g, b) - Math.min(r, g, b) >= 20) return "content-other";
-
-    return "carrier";
-  }
-
-  function computeColorVariance(colors) {
-    if (!colors.length) return 0;
-
-    let r = 0;
-    let g = 0;
-    let b = 0;
-
-    colors.forEach((color) => {
-      r += color[0];
-      g += color[1];
-      b += color[2];
-    });
-
-    r /= colors.length;
-    g /= colors.length;
-    b /= colors.length;
-
-    let total = 0;
-
-    colors.forEach((color) => {
-      total += Math.pow(color[0] - r, 2);
-      total += Math.pow(color[1] - g, 2);
-      total += Math.pow(color[2] - b, 2);
-    });
-
-    return Math.sqrt(total / (colors.length * 3));
-  }
-
-  function evaluateInspectTruth() {
-    state.showDiagnosticTabReady = Boolean(refs.showTab);
-    state.copyDiagnosticReady = Boolean(refs.copyButton);
-    state.receiptToggleReady = Boolean(refs.receiptToggle);
-    state.inspectPlanetControlReady = Boolean(refs.inspectButton);
-    state.collapseExpandControlReady = Boolean(refs.expandButton);
-    state.buttonsReachable = Boolean(refs.copyButton && refs.receiptToggle && refs.inspectButton && refs.expandButton);
-    state.diagnosticDockReady = Boolean(refs.cockpit && refs.showTab);
-
-    state.diagnosticCanLeavePlanetFrame = Boolean(
-      state.diagnosticDockReady &&
-      state.showDiagnosticTabReady &&
-      state.copyDiagnosticReady &&
-      state.receiptToggleReady &&
-      state.inspectPlanetControlReady &&
-      state.collapseExpandControlReady &&
-      state.buttonsReachable
-    );
-
-    return state.diagnosticCanLeavePlanetFrame;
-  }
-
-  function evaluateSouthGate() {
-    evaluateInspectTruth();
-
-    state.southGateReady = Boolean(
-      state.visibleContentProof &&
-      state.visiblePlanetAvailable &&
-      state.nonblankPlanetVisible &&
-      state.imageRendered &&
-      state.firstFrameDetected &&
-      state.dragInspectionBound &&
-      state.diagnosticCanLeavePlanetFrame
-    );
-
-    if (state.southGateReady) {
-      reportSouthEvent(SOUTH_EVENTS.INSPECT_MODE_READY, {
-        reason: "south-gate-ready",
-        southGateReady: true
+      recordLocal("EAST_STEP1_HANDOFF_PUBLISHED", {
+        reason,
+        changed,
+        hash: nextHash,
+        acceptedByNorth: state.step1HandoffAcceptedByNorth,
+        acceptedByWest: state.step1HandoffAcceptedByWest
       });
-    }
 
-    return state.southGateReady;
+      return true;
+    } finally {
+      guards.publishingHandoff = false;
+    }
   }
 
-  function maybeRequestCompletion(reason = "manual") {
-    reconcileNorthReceipt();
-    evaluateSouthGate();
+  function loadScriptDef(def) {
+    const existingApi = getGlobal(def.globals);
+    const ledger = refs.ledger || ensureLedger();
 
-    if (state.completionLatched) return true;
+    if (existingApi) {
+      ledger.setScript(def.key, {
+        src: def.file,
+        direction: def.direction,
+        status: "GLOBAL_PRESENT",
+        globalPresent: true,
+        loadedAt: nowIso()
+      });
 
-    if (!state.southGateReady) {
-      deriveFailureCoordinate();
-      return false;
+      return Promise.resolve(existingApi);
     }
 
-    if (!state.northF21Allowed && !state.northNewsGatePassedBeforeF21) {
-      state.firstFailedCoordinate = "WAITING_NORTH_F21_PERMISSION";
-      state.recommendedNextRenewalTarget = state.northRecommendedNextFile || NORTH_FILE;
-      return false;
+    const existingScript = scriptAlreadyPresent(def.file);
+
+    if (existingScript) {
+      ledger.setScript(def.key, {
+        src: existingScript.src || def.file,
+        direction: def.direction,
+        status: "SCRIPT_PRESENT_WAITING_GLOBAL",
+        globalPresent: false,
+        requestedAt: nowIso()
+      });
+
+      return waitForGlobal(def, 2400);
     }
 
-    state.completionRequestedFromNorth = true;
+    if (!doc || !doc.head) {
+      const message = "document.head unavailable";
+      state.scriptErrors.push({ key: def.key, file: def.file, message, at: nowIso() });
+      recordError("DOCUMENT_HEAD_MISSING", message, { file: def.file, key: def.key });
+      return Promise.resolve(null);
+    }
 
-    const result = reportSouthEvent(SOUTH_EVENTS.COMPLETION_LATCHED, {
-      reason,
-      southGateReady: true,
-      northF21Allowed: state.northF21Allowed,
-      northNewsGatePassedBeforeF21: state.northNewsGatePassedBeforeF21
+    ledger.setScript(def.key, {
+      src: def.file,
+      direction: def.direction,
+      status: "REQUESTED",
+      globalPresent: false,
+      requestedAt: nowIso()
     });
 
-    if (result && result.action === "ADMIT") {
-      state.completionLatched = true;
-      state.f21AfterNorthPermission = true;
-      state.finalReceiptAvailable = true;
-      state.mainDisplayProgress = 100;
-      state.mainProgressCap = 100;
-      state.currentStage = "F21";
-      state.highestStage = "F21";
-      state.postgameStatus = "READY_PLANET_VISIBLE_DIAGNOSTIC_AVAILABLE";
-      state.firstFailedCoordinate = "NONE_F21_LATCHED_BY_NORTH_PERMISSION";
-      state.recommendedNextRenewalTarget = "read-south-final-receipt";
-      setCockpitMode("diagnostic-dock");
-      return true;
-    }
+    const script = doc.createElement("script");
+    script.src = `${def.file}?v=${cacheKey()}`;
+    script.defer = true;
+    script.async = false;
+    script.dataset.hearthDirectionalCycle = "true";
+    script.dataset.hearthLoadedByEastRoute = CONTRACT;
+    script.dataset.hearthDirection = def.direction;
+    script.dataset.hearthScriptKey = def.key;
+    script.dataset.generatedImage = "false";
+    script.dataset.graphicBox = "false";
+    script.dataset.webgl = "false";
+    script.dataset.visualPassClaimed = "false";
 
-    reconcileNorthReceipt();
+    recordScript(`SCRIPT_${def.key}_REQUESTED`, { file: def.file, direction: def.direction });
 
-    if (state.northF21Allowed || state.northNewsGatePassedBeforeF21) {
-      state.completionLatched = true;
-      state.f21AfterNorthPermission = true;
-      state.finalReceiptAvailable = true;
-      state.mainDisplayProgress = 100;
-      state.mainProgressCap = 100;
-      state.currentStage = "F21";
-      state.highestStage = "F21";
-      state.postgameStatus = "READY_PLANET_VISIBLE_DIAGNOSTIC_AVAILABLE";
-      state.firstFailedCoordinate = "NONE_F21_LATCHED_BY_NORTH_PERMISSION";
-      state.recommendedNextRenewalTarget = "read-south-final-receipt";
-      setCockpitMode("diagnostic-dock");
-      return true;
-    }
+    return new Promise((resolve) => {
+      let settled = false;
 
-    deriveFailureCoordinate();
-    return false;
+      function finish(status, api = null, error = "") {
+        if (settled) return;
+        settled = true;
+
+        ledger.setScript(def.key, {
+          src: script.src,
+          direction: def.direction,
+          status: api ? "GLOBAL_PRESENT" : status,
+          globalPresent: Boolean(api),
+          error,
+          loadedAt: api ? nowIso() : ""
+        });
+
+        if (error) {
+          state.scriptErrors.push({ key: def.key, file: def.file, message: error, at: nowIso() });
+          recordError(`SCRIPT_${def.key}_ERROR`, error, { file: def.file, direction: def.direction });
+        } else {
+          recordScript(`SCRIPT_${def.key}_${api ? "GLOBAL_PRESENT" : status}`, { file: def.file, direction: def.direction });
+        }
+
+        const scan = scanDownstreamReadOnly();
+        applyScanCommit(scan, `script-${def.key}-${status}`);
+
+        resolve(api || null);
+      }
+
+      script.onload = () => {
+        waitForGlobal(def, 1400).then((api) => {
+          finish(api ? "LOADED" : "LOADED_GLOBAL_PENDING", api, api ? "" : "script loaded but global not present");
+        });
+      };
+
+      script.onerror = () => {
+        finish("LOAD_FAILED", null, `${def.direction} file failed to load`);
+      };
+
+      doc.head.appendChild(script);
+
+      root.setTimeout(() => {
+        if (settled) return;
+        const api = getGlobal(def.globals);
+        finish(api ? "TIMEOUT_GLOBAL_PRESENT" : "LOAD_TIMEOUT", api, api ? "" : `${def.direction} load timeout`);
+      }, 3600);
+    });
   }
 
-  function deriveFailureCoordinate() {
-    if (state.completionLatched) {
-      state.firstFailedCoordinate = "NONE_F21_LATCHED_BY_NORTH_PERMISSION";
-      state.recommendedNextRenewalTarget = "read-south-final-receipt";
-      return;
-    }
+  function waitForGlobal(def, timeoutMs) {
+    const started = nowMs();
 
-    if (!state.northAvailable) {
-      state.firstFailedCoordinate = "WAITING_NORTH_COMMAND_RUNTIME_TABLE";
-      state.recommendedNextRenewalTarget = NORTH_FILE;
-      return;
-    }
+    return new Promise((resolve) => {
+      const timer = root.setInterval(() => {
+        const api = getGlobal(def.globals);
 
-    if (!state.canvasApiPresent) {
-      state.firstFailedCoordinate = "WAITING_CANVAS_API";
-      state.recommendedNextRenewalTarget = CANVAS_FILE;
-      return;
-    }
+        if (api) {
+          root.clearInterval(timer);
+          resolve(api);
+          return;
+        }
 
-    if (!state.canvasCarrierMounted) {
-      state.firstFailedCoordinate = "WAITING_CANVAS_MOUNT_CONFIRMED";
-      state.recommendedNextRenewalTarget = SOUTH_FILE;
-      return;
-    }
-
-    if (!state.canvasContextReady) {
-      state.firstFailedCoordinate = "WAITING_CANVAS_CONTEXT_READY";
-      state.recommendedNextRenewalTarget = SOUTH_FILE;
-      return;
-    }
-
-    if (!state.dragInspectionBound) {
-      state.firstFailedCoordinate = "WAITING_DRAG_INSPECTION_BOUND";
-      state.recommendedNextRenewalTarget = SOUTH_FILE;
-      return;
-    }
-
-    if (!(state.atlasBuildComplete || state.textureComposeComplete || state.firstFrameDetected || state.imageRendered)) {
-      state.firstFailedCoordinate = "WAITING_ATLAS_TEXTURE_FRAME_READY";
-      state.recommendedNextRenewalTarget = CANVAS_FILE;
-      return;
-    }
-
-    if (!state.visibleContentProof) {
-      state.firstFailedCoordinate = "WAITING_VISIBLE_CONTENT_PROOF";
-      state.recommendedNextRenewalTarget = SOUTH_FILE;
-      return;
-    }
-
-    if (!state.diagnosticCanLeavePlanetFrame) {
-      state.firstFailedCoordinate = "WAITING_INSPECT_MODE_READY";
-      state.recommendedNextRenewalTarget = SOUTH_FILE;
-      return;
-    }
-
-    if (!state.northF21Allowed && !state.northNewsGatePassedBeforeF21) {
-      state.firstFailedCoordinate = "WAITING_NORTH_F21_PERMISSION";
-      state.recommendedNextRenewalTarget = state.northRecommendedNextFile || NORTH_FILE;
-      return;
-    }
-
-    state.firstFailedCoordinate = "WAITING_COMPLETION_LATCH";
-    state.recommendedNextRenewalTarget = SOUTH_FILE;
+        if (nowMs() - started >= timeoutMs) {
+          root.clearInterval(timer);
+          resolve(null);
+        }
+      }, 80);
+    });
   }
 
-  function buildSouthSnapshot() {
-    return {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      file: SOUTH_FILE,
-      owner: "SOUTH",
+  async function loadScriptsSequentially() {
+    if (guards.loadingScripts) return;
 
-      canvasApiPresent: state.canvasApiPresent,
-      canvasCarrierRequested: state.canvasCarrierRequested,
-      canvasCarrierMethod: state.canvasCarrierMethod,
-      canvasCarrierHandoffOk: state.canvasCarrierHandoffOk,
-      cooperativeBootUsed: state.cooperativeBootUsed,
-      syncBootFallbackUsed: state.syncBootFallbackUsed,
+    guards.loadingScripts = true;
+    state.scriptOrderStarted = true;
+    recordLocal("EAST_ROUTE_SCRIPT_ORDER_STARTED");
 
-      canvasReady: state.canvasReady,
-      canvasCarrierMounted: state.canvasCarrierMounted,
-      canvasContextReady: state.canvasContextReady,
-      dragInspectionBound: state.dragInspectionBound,
-      atlasBuildComplete: state.atlasBuildComplete,
-      textureComposeComplete: state.textureComposeComplete,
-      firstFrameDetected: state.firstFrameDetected,
-      imageRendered: state.imageRendered,
+    try {
+      for (const def of SCRIPT_DEFS) {
+        if (state.disposed) return;
 
-      visibleContentProof: state.visibleContentProof,
-      visiblePlanetAvailable: state.visiblePlanetAvailable,
-      nonblankPlanetVisible: state.nonblankPlanetVisible,
-      carrierOnlyDetected: state.carrierOnlyDetected,
+        state.currentGear = def.direction;
+        state.currentGearLabel = def.label;
+        state.currentGearProgress = 15;
+        updateLedgerFromState(`before-load-${def.key}`);
+        scheduleRender();
 
-      inspectModeAvailable: state.inspectPlanetControlReady,
-      inspectPlanetControlAvailable: state.inspectPlanetControlReady,
-      diagnosticCanLeavePlanetFrame: state.diagnosticCanLeavePlanetFrame,
-      diagnosticDockRestorable: state.showDiagnosticTabReady,
-      showDiagnosticTabVisibleWhenHidden: state.showDiagnosticTabReady,
-      copyDiagnosticPreserved: state.copyDiagnosticReady,
-      receiptToggleReady: state.receiptToggleReady,
-      buttonsReachable: state.buttonsReachable,
-      receiptOverlayIndependent: true,
+        await loadScriptDef(def);
 
-      southGateReady: state.southGateReady,
-      completionLatched: state.completionLatched,
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false
-    };
-  }
+        const scan = scanDownstreamReadOnly();
+        applyScanCommit(scan, `after-load-${def.key}`);
 
-  function reconcileFromDataset() {
-    const dataset = getDataset();
+        state.currentGearProgress = state.scriptStatus[def.key] && state.scriptStatus[def.key].globalPresent ? 100 : 68;
+        updateLedgerFromState(`after-load-${def.key}-gear`);
+        scheduleRender();
 
-    state.canvasReady = Boolean(state.canvasReady || bool(dataset.hearthCanvasReady));
-    state.canvasCarrierMounted = Boolean(state.canvasCarrierMounted || bool(dataset.hearthCanvasCarrierMounted));
-    state.canvasContextReady = Boolean(state.canvasContextReady || bool(dataset.hearthCanvasContextReady));
-    state.firstFrameDetected = Boolean(state.firstFrameDetected || bool(dataset.hearthFirstFrameDetected));
-    state.imageRendered = Boolean(state.imageRendered || bool(dataset.hearthImageRendered) || bool(dataset.hearthCanvasImageRendered));
-    state.dragInspectionBound = Boolean(state.dragInspectionBound || bool(dataset.hearthDragInspectionBound) || bool(dataset.hearthControlsBound));
+        await sleep(40);
+      }
 
-    state.visibleContentProof = Boolean(state.visibleContentProof || bool(dataset.hearthVisibleContentProof));
-    state.visiblePlanetAvailable = Boolean(state.visiblePlanetAvailable || bool(dataset.hearthVisiblePlanetAvailable));
-    state.planetCanvasPresent = Boolean(state.planetCanvasPresent || bool(dataset.hearthPlanetCanvasPresent));
-    state.planetCanvasNonZeroSize = Boolean(state.planetCanvasNonZeroSize || bool(dataset.hearthPlanetCanvasNonZeroSize));
-    state.planetFramePainted = Boolean(state.planetFramePainted || bool(dataset.hearthPlanetFramePainted));
-    state.nonblankPlanetVisible = Boolean(state.nonblankPlanetVisible || bool(dataset.hearthNonblankPlanetVisible));
-
-    state.diagnosticCanLeavePlanetFrame = Boolean(state.diagnosticCanLeavePlanetFrame || bool(dataset.hearthDiagnosticCanLeavePlanetFrame));
-    state.northF21Allowed = Boolean(state.northF21Allowed || bool(dataset.hearthF21Allowed));
-    state.northNewsGatePassedBeforeF21 = Boolean(state.northNewsGatePassedBeforeF21 || bool(dataset.hearthNewsGatePassedBeforeF21));
-  }
-
-  function reconcileAll(reason = "manual") {
-    connectNorth();
-    reconcileFromDataset();
-
-    const canvasReceipt = getCanvasReceipt();
-    if (canvasReceipt && isObject(canvasReceipt)) {
-      handleCanvasReceiptLight(canvasReceipt);
+      state.scriptOrderSettled = true;
+      state.scriptOrderComplete = Boolean(state.northPresent && state.eastBranchPresent && state.westPresent && state.southPresent && state.canvasPresent);
+      deriveCycleStateReadOnly();
+      updateLedgerFromState("script-order-settled");
+      publishStep1HandoffIfChanged("script-order-settled");
+      publishGlobals();
+      render();
+    } finally {
+      guards.loadingScripts = false;
     }
-
-    if (state.canvasReady || state.imageRendered || state.firstFrameDetected) {
-      startVisibleContentProof(`reconcile-${reason}`);
-    }
-
-    evaluateInspectTruth();
-    evaluateSouthGate();
-    reconcileNorthReceipt();
-    maybeRequestCompletion(`reconcile-${reason}`);
-    deriveFailureCoordinate();
-    publishGlobals();
-    scheduleRender();
   }
 
-  function renderLaneMarkup() {
-    const lanes = [
-      ["North", state.northAvailable ? "READY" : "WAITING", state.northActiveCheckpointId || "north-command-runtime-table"],
-      ["Canvas", state.canvasReady ? "READY" : state.canvasCarrierRequested ? "ACTIVE" : "WAITING", state.canvasCarrierMethod || "canvas coordination"],
-      ["Frame", state.imageRendered ? "READY" : "PENDING", "atlas · texture · first frame"],
-      ["Proof", state.visibleContentProof ? "READY" : "PENDING", state.visibleContentProofMethod || "visible content proof"],
-      ["Inspect", state.diagnosticCanLeavePlanetFrame ? "READY" : "PENDING", "dock hide/show · copy · receipt"],
-      ["F21", state.completionLatched ? "LATCHED" : state.northF21Allowed ? "ALLOWED" : "WAITING", state.firstFailedCoordinate]
-    ];
+  function sleep(ms = 0) {
+    return new Promise((resolve) => root.setTimeout(resolve, Math.max(0, ms)));
+  }
 
-    return lanes.map((lane) => {
-      const progress =
-        lane[1] === "LATCHED" ? 100 :
-        lane[1] === "READY" ? 98 :
-        lane[1] === "ALLOWED" ? 98 :
-        lane[1] === "ACTIVE" ? 86 :
-        42;
+  function laneMarkupReadOnly() {
+    const ledger = refs.ledger || root.HEARTH_LOAD_LEDGER || null;
+    const lanes = ledger && ledger.state && ledger.state.lanes ? ledger.state.lanes : {};
+
+    return LANE_DEFS.map((def) => {
+      const lane = lanes[def.key] || {
+        label: def.label,
+        owner: def.owner,
+        status: "PENDING",
+        message: `${def.label} pending.`,
+        progress: 0,
+        latestEvent: "PENDING"
+      };
+
+      const status = lane.status || "PENDING";
+      const progress = clamp(lane.progress, 0, 100);
+      const event = lane.latestEvent || "PENDING";
+      const message = lane.message || `${def.label} pending.`;
 
       return `
-        <section class="hearth-ledger-lane" data-lane="${escapeHtml(lane[0])}" data-status="${escapeHtml(lane[1])}">
+        <section class="hearth-ledger-lane" data-lane="${escapeHtml(def.key)}" data-status="${escapeHtml(status)}">
           <div class="hearth-ledger-lane-top">
             <span class="hearth-ledger-lane-title">
-              <strong>${escapeHtml(lane[0])}</strong>
-              <span>${escapeHtml(lane[2])}</span>
+              <strong>${escapeHtml(def.label)} · ${escapeHtml(lane.owner || def.owner)}</strong>
+              <span>${escapeHtml(message)}</span>
             </span>
-            <span class="hearth-ledger-lane-status">${escapeHtml(lane[1])}</span>
+            <span class="hearth-ledger-lane-status">${escapeHtml(status)}</span>
           </div>
           <div class="hearth-ledger-lane-track">
             <span class="hearth-ledger-lane-fill" style="width:${progress}%"></span>
+          </div>
+          <div class="hearth-ledger-lane-title">
+            <span>event=${escapeHtml(event)}</span>
           </div>
         </section>
       `;
     }).join("");
   }
 
-  function computeProgress() {
-    if (state.completionLatched) {
-      state.mainDisplayProgress = 100;
-      state.mainProgressCap = 100;
-      return 100;
-    }
-
-    let progress = 72;
-
-    if (state.canvasCarrierRequested) progress = Math.max(progress, 78);
-    if (state.canvasCarrierMounted) progress = Math.max(progress, 81);
-    if (state.canvasContextReady) progress = Math.max(progress, 84);
-    if (state.dragInspectionBound) progress = Math.max(progress, 86);
-    if (state.atlasBuildComplete || state.textureComposeComplete || state.firstFrameDetected || state.imageRendered) progress = Math.max(progress, 93);
-    if (state.visibleContentProof) progress = Math.max(progress, 98);
-    if (state.diagnosticCanLeavePlanetFrame) progress = Math.max(progress, 98);
-
-    state.mainDisplayProgress = Math.min(98, progress);
-    state.mainProgressCap = 98;
-
-    return Math.round(state.mainDisplayProgress);
-  }
-
   function scheduleRender() {
-    if (renderTimer) return;
+    if (guards.renderingScheduled || state.disposed) return;
+
+    guards.renderingScheduled = true;
 
     renderTimer = root.setTimeout(() => {
-      renderTimer = 0;
+      guards.renderingScheduled = false;
       render();
     }, 80);
   }
 
   function render() {
-    if (!refs.cockpit) return;
+    if (guards.rendering || state.disposed) return getReceiptLightReadOnly();
 
-    const progress = computeProgress();
-    const elapsed = state.startedAt ? nowMs() - new Date(state.startedAt).getTime() : 0;
+    guards.rendering = true;
 
-    if (refs.title) {
-      refs.title.textContent = state.completionLatched
-        ? "READY · PLANET VISIBLE · DIAGNOSTIC AVAILABLE"
-        : state.visibleContentProof
-          ? "VISIBLE PROOF HELD · WAITING FOR F21"
-          : "COORDINATING HEARTH VISIBLE COMPLETION";
+    try {
+      state.renderCount += 1;
+
+      const scan = scanDownstreamReadOnly();
+      state.planetCanvasPresent = Boolean(scan.canvasHints.planetCanvasPresent);
+      state.planetCanvasNonZeroSize = Boolean(scan.canvasHints.planetCanvasNonZeroSize);
+      state.visiblePlanetHintPresent = Boolean(
+        scan.canvasHints.planetCanvasPresent &&
+        scan.canvasHints.planetCanvasNonZeroSize &&
+        (
+          scan.canvasHints.canvasReady ||
+          scan.canvasHints.imageRendered ||
+          scan.canvasHints.firstFrameDetected ||
+          scan.canvasHints.visiblePlanetAvailable ||
+          scan.canvasHints.visibleContentSoftGap ||
+          scan.canvasHints.visibleContentProof
+        )
+      );
+
+      deriveCycleStateReadOnly();
+
+      if (!refs.cockpit) return getReceiptLightReadOnly();
+
+      const progress = clamp(state.currentGearProgress, 0, 100);
+      const elapsed = state.startedAt ? nowMs() - new Date(state.startedAt).getTime() : 0;
+
+      if (refs.title) {
+        refs.title.textContent = state.bootComplete
+          ? "EAST STEP 1 COMPLETE · RETURNING THROUGH NORTH"
+          : "STARTING HEARTH DIRECTIONAL CYCLE";
+      }
+
+      if (refs.stage) {
+        refs.stage.textContent = `${state.currentGear} · ${state.currentGearLabel}`;
+      }
+
+      if (refs.heartbeat) {
+        refs.heartbeat.textContent = `timing=true · sequence=true · cycle=true · elapsed=${formatElapsed(elapsed)}`;
+      }
+
+      if (refs.latest) {
+        refs.latest.textContent = `latest=${state.latestEvent}`;
+      }
+
+      if (refs.mainFill) refs.mainFill.style.width = `${progress}%`;
+      if (refs.mainPercent) refs.mainPercent.textContent = `${Math.round(progress)}%`;
+      if (refs.laneList) refs.laneList.innerHTML = laneMarkupReadOnly();
+
+      if (refs.receiptPre && refs.receiptBox && refs.receiptBox.dataset.visible === "true") {
+        refs.receiptPre.textContent = getReceiptText();
+      }
+
+      publishStatusNodeReadOnly();
+      updateDocumentDataset();
+
+      return getReceiptLightReadOnly();
+    } finally {
+      guards.rendering = false;
     }
-
-    if (refs.stage) {
-      refs.stage.textContent = `${state.currentStage} · South visible completion`;
-    }
-
-    if (refs.heartbeat) {
-      refs.heartbeat.textContent = `south=true · north=${state.northAvailable} · elapsed=${formatElapsed(elapsed)}`;
-    }
-
-    if (refs.latest) {
-      refs.latest.textContent = `latest=${state.latestVisibleEvent}`;
-    }
-
-    if (refs.mainFill) refs.mainFill.style.width = `${progress}%`;
-    if (refs.mainPercent) refs.mainPercent.textContent = `${progress}%`;
-    if (refs.laneList) refs.laneList.innerHTML = renderLaneMarkup();
-    if (refs.receiptPre) refs.receiptPre.textContent = getReceiptText();
-
-    refs.cockpit.dataset.cockpitMode = state.cockpitMode;
-    refs.cockpit.dataset.hearthSouthVisibleContentProof = String(state.visibleContentProof);
-    refs.cockpit.dataset.hearthSouthGateReady = String(state.southGateReady);
-    refs.cockpit.dataset.hearthSouthCompletionLatched = String(state.completionLatched);
-    refs.cockpit.dataset.hearthSouthFirstFailedCoordinate = state.firstFailedCoordinate;
-
-    publishStatusNode();
-    publishGlobals();
   }
 
-  function publishStatusNode() {
+  function publishStatusNodeReadOnly() {
     if (!doc) return;
 
     const node =
@@ -1902,28 +2182,100 @@
     if (!node) return;
 
     node.textContent = [
-      "Hearth South visible completion cycle consumer active.",
+      "Hearth East Route Step 1 ignition active.",
       `Contract ${CONTRACT}`,
       `Receipt ${RECEIPT}`,
-      `File ${SOUTH_FILE}`,
-      `North file ${NORTH_FILE}`,
-      `South owns visible completion true`,
-      `South owns North runtime table false`,
-      `South owns canvas drawing false`,
-      `North available ${state.northAvailable}`,
-      `North F21 allowed ${state.northF21Allowed}`,
-      `South gate ready ${state.southGateReady}`,
-      `Visible content proof ${state.visibleContentProof}`,
-      `Inspect ready ${state.diagnosticCanLeavePlanetFrame}`,
-      `Completion latched ${state.completionLatched}`,
+      `File ${EAST_ROUTE_FILE}`,
+      `Cycle ${CYCLE_ORDER}`,
+      `Current gear ${state.currentGear}`,
+      `Gear progress ${state.currentGearProgress}`,
+      `Mount ready ${state.mountReady}`,
+      `Cockpit ready ${state.cockpitReady}`,
+      `Shared ledger present ${state.sharedLedgerPresent}`,
+      `North present ${state.northPresent}`,
+      `East branch present ${state.eastBranchPresent}`,
+      `West present ${state.westPresent}`,
+      `South present ${state.southPresent}`,
+      `Canvas present ${state.canvasPresent}`,
+      `Route conductor present ${state.routeConductorPresent}`,
       `First failed coordinate ${state.firstFailedCoordinate}`,
       `Recommended next renewal target ${state.recommendedNextRenewalTarget}`,
-      `Generated image false`,
-      `GraphicBox false`,
-      `WebGL false`,
-      `Visual pass claimed false`,
+      `Render count ${state.renderCount}`,
+      `Ledger writes ${state.ledgerWriteCount}`,
+      `Ledger noops ${state.ledgerNoopCount}`,
+      "Render read-only true",
+      "Receipt read-only true",
+      "Generated image false",
+      "GraphicBox false",
+      "WebGL false",
+      "Visual pass claimed false",
       `Updated ${state.updatedAt || nowIso()}`
     ].join("\n");
+  }
+
+  function toggleReceipt() {
+    if (!refs.receiptBox) return;
+
+    const visible = refs.receiptBox.dataset.visible !== "true";
+    refs.receiptBox.dataset.visible = String(visible);
+
+    if (refs.receiptToggle) {
+      refs.receiptToggle.textContent = visible ? "Hide receipt" : "Show receipt";
+    }
+
+    render();
+  }
+
+  function toggleExpanded() {
+    if (!refs.cockpit) return;
+
+    if (state.inspectModeReservedActive) {
+      setInspectReserved(false);
+      return;
+    }
+
+    const expanded = refs.cockpit.dataset.fullExpanded !== "true";
+    refs.cockpit.dataset.fullExpanded = String(expanded);
+    refs.cockpit.dataset.cockpitMode = expanded ? "expanded-cockpit" : "first-paint-loading";
+
+    if (refs.expandButton) {
+      refs.expandButton.textContent = expanded ? "Collapse dock" : "Expand cockpit";
+    }
+  }
+
+  function setInspectReserved(active) {
+    state.inspectModeReservedActive = Boolean(active);
+    state.showDiagnosticTabVisible = Boolean(active);
+
+    if (refs.cockpit) {
+      refs.cockpit.dataset.cockpitMode = active ? "planet-inspect" : "first-paint-loading";
+      refs.cockpit.dataset.hearthEastInspectReservedActive = String(active);
+    }
+
+    if (doc && doc.documentElement) {
+      doc.documentElement.dataset.hearthEastInspectReservedActive = String(active);
+    }
+
+    if (refs.showTab) {
+      refs.showTab.hidden = !active;
+      refs.showTab.dataset.visible = String(active);
+    }
+
+    if (refs.inspectButton) {
+      refs.inspectButton.textContent = active ? "Show diagnostic" : "Inspect planet";
+    }
+
+    if (refs.mount) {
+      refs.mount.dataset.hearthEastInspectReservedActive = String(active);
+    }
+
+    recordLocal(active ? "EAST_ROUTE_INSPECT_RESERVATION_ACTIVE" : "EAST_ROUTE_INSPECT_RESERVATION_RELEASED", {
+      reservedOnly: true,
+      southOwnsFinalInspectTruth: true
+    });
+
+    publishGlobals();
+    render();
   }
 
   async function copyText(text) {
@@ -1960,160 +2312,288 @@
       refs.copyButton.textContent = ok ? "Copied" : "Copy failed";
       root.setTimeout(() => {
         refs.copyButton.textContent = original || "Copy diagnostic";
-      }, 1200);
+      }, 1100);
     }
 
-    recordLocal("SOUTH_DIAGNOSTIC_COPIED", { ok });
+    recordLocal("EAST_ROUTE_PARTIAL_DIAGNOSTIC_COPIED", { ok });
     return ok;
   }
 
-  function getReceipt() {
-    reconcileNorthReceipt();
-    evaluateInspectTruth();
-    evaluateSouthGate();
-    deriveFailureCoordinate();
+  function startHeartbeat() {
+    if (heartbeatTimer) root.clearInterval(heartbeatTimer);
 
+    let ticks = 0;
+
+    heartbeatTimer = root.setInterval(() => {
+      if (state.disposed) {
+        root.clearInterval(heartbeatTimer);
+        heartbeatTimer = 0;
+        return;
+      }
+
+      ticks += 1;
+
+      const scan = scanDownstreamReadOnly();
+      const changed = applyScanCommit(scan, "heartbeat");
+
+      if (changed) scheduleRender();
+
+      if (ticks >= 40 || state.bootComplete) {
+        root.clearInterval(heartbeatTimer);
+        heartbeatTimer = 0;
+      }
+    }, 1000);
+  }
+
+  function startWatchdog() {
+    if (watchdogTimer) root.clearInterval(watchdogTimer);
+
+    let ticks = 0;
+
+    watchdogTimer = root.setInterval(() => {
+      if (state.disposed) {
+        root.clearInterval(watchdogTimer);
+        watchdogTimer = 0;
+        return;
+      }
+
+      ticks += 1;
+
+      const scan = scanDownstreamReadOnly();
+      const changed = applyScanCommit(scan, "watchdog");
+
+      if (changed) scheduleRender();
+
+      if (ticks >= 36 || state.bootComplete) {
+        root.clearInterval(watchdogTimer);
+        watchdogTimer = 0;
+      }
+    }, 500);
+  }
+
+  async function boot() {
+    if (state.bootStarted) {
+      render();
+      return getReceipt();
+    }
+
+    state.bootStarted = true;
+    state.startedAt = nowIso();
+    state.updatedAt = state.startedAt;
+    state.step1Ignited = true;
+    state.currentGear = "EAST_ROUTE";
+    state.currentGearLabel = "East route ignition";
+    state.currentGearProgress = 10;
+    state.postgameStatus = "EAST_ROUTE_BOOTING";
+    state.firstFailedCoordinate = "EAST_ROUTE_BOOT_STARTED";
+    state.recommendedNextRenewalTarget = NORTH_FILE;
+
+    retireClimateRoute();
+
+    ensureMount();
+    ensureLedger();
+    ensureCockpit();
+
+    state.currentGearProgress = 45;
+    updateLedgerFromState("boot-first-paint");
+    publishStep1HandoffIfChanged("boot-first-paint");
+    publishGlobals();
+    render();
+
+    state.step1Ready = Boolean(
+      state.step1Ignited &&
+      state.mountReady &&
+      state.cockpitReady &&
+      state.sharedLedgerPresent &&
+      state.firstPaintReady
+    );
+
+    state.currentGearProgress = state.step1Ready ? 100 : 72;
+    deriveCycleStateReadOnly();
+    updateLedgerFromState("boot-step1-ready");
+    publishStep1HandoffIfChanged("boot-step1-ready");
+    publishGlobals();
+    render();
+
+    root.setTimeout(() => {
+      loadScriptsSequentially();
+    }, 80);
+
+    startHeartbeat();
+    startWatchdog();
+
+    return getReceipt();
+  }
+
+  function dispose(reason = "manual-dispose") {
+    state.disposed = true;
+
+    if (heartbeatTimer) {
+      root.clearInterval(heartbeatTimer);
+      heartbeatTimer = 0;
+    }
+
+    if (watchdogTimer) {
+      root.clearInterval(watchdogTimer);
+      watchdogTimer = 0;
+    }
+
+    if (renderTimer) {
+      root.clearTimeout(renderTimer);
+      renderTimer = 0;
+    }
+
+    recordLocal("EAST_ROUTE_STEP1_IGNITION_DISPOSED", { reason });
+    publishGlobals();
+
+    return getReceipt();
+  }
+
+  function getReceiptLightReadOnly() {
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       baselineContract: BASELINE_CONTRACT,
       version: VERSION,
-      file: SOUTH_FILE,
+      file: EAST_ROUTE_FILE,
       route: ROUTE,
       role: state.role,
+      cycleOrder: CYCLE_ORDER,
 
-      pairedSemiconductor: true,
-      pairedWith: EAST_FILE,
-      cycleOrder: state.cycleOrder,
+      currentGear: state.currentGear,
+      currentGearLabel: state.currentGearLabel,
+      currentGearProgress: state.currentGearProgress,
+      latestEvent: state.latestEvent,
 
-      ownsSouth: true,
-      ownsEast: false,
-      ownsWest: false,
-      ownsNorth: false,
-      ownsStep1: false,
-      ownsStep1Handoff: false,
-      ownsNorthRuntimeTable: false,
-      ownsCanvasDrawing: false,
-      ownsVisibleCompletion: true,
-      ownsVisiblePlanetProof: true,
-      ownsInspectModeTruth: true,
-      ownsFinalDiagnosticReceipt: true,
-      ownsFinalVisualPassClaim: false,
-
-      eastFile: EAST_FILE,
-      westFile: WEST_FILE,
-      northFile: NORTH_FILE,
-      southFile: SOUTH_FILE,
-      canvasFile: CANVAS_FILE,
-
-      northAvailable: state.northAvailable,
-      northContract: state.northContract,
-      northSessionCreated: state.northSessionCreated,
-      northSessionId: state.northSessionId,
-      northReceiptAvailable: state.northReceiptAvailable,
-      northReceiptError: state.northReceiptError,
-      northF21Allowed: state.northF21Allowed,
-      northNewsGatePassedBeforeF21: state.northNewsGatePassedBeforeF21,
-      northActiveCheckpointId: state.northActiveCheckpointId,
-      northRecommendedNextOwner: state.northRecommendedNextOwner,
-      northRecommendedNextFile: state.northRecommendedNextFile,
-
-      step1AcceptedBySouth: state.step1AcceptedBySouth,
-      handoffAdmissibleByWest: state.handoffAdmissibleByWest,
-
+      step1Ignited: state.step1Ignited,
+      step1Ready: state.step1Ready,
+      firstPaintReady: state.firstPaintReady,
       mountReady: state.mountReady,
-      cockpitFound: state.cockpitFound,
-      cockpitHydrated: state.cockpitHydrated,
-      diagnosticDockReady: state.diagnosticDockReady,
-      showDiagnosticTabReady: state.showDiagnosticTabReady,
-      copyDiagnosticReady: state.copyDiagnosticReady,
-      receiptToggleReady: state.receiptToggleReady,
-      inspectPlanetControlReady: state.inspectPlanetControlReady,
-      collapseExpandControlReady: state.collapseExpandControlReady,
-      buttonsReachable: state.buttonsReachable,
-      receiptVisible: state.receiptVisible,
-      cockpitMode: state.cockpitMode,
-      cockpitExpanded: state.cockpitExpanded,
-      dockHiddenForInspection: state.dockHiddenForInspection,
-      diagnosticCanLeavePlanetFrame: state.diagnosticCanLeavePlanetFrame,
-      planetNotObstructed: state.planetNotObstructed,
+      cockpitReady: state.cockpitReady,
+      sharedLedgerPresent: state.sharedLedgerPresent,
+      step1HandoffPublished: state.step1HandoffPublished,
+      step1HandoffAcceptedByNorth: state.step1HandoffAcceptedByNorth,
+      step1HandoffAcceptedByWest: state.step1HandoffAcceptedByWest,
 
-      canvasApiPresent: state.canvasApiPresent,
-      canvasCarrierRequested: state.canvasCarrierRequested,
-      canvasCarrierMethod: state.canvasCarrierMethod,
-      canvasCarrierHandoffOk: state.canvasCarrierHandoffOk,
-      canvasCarrierHandoffError: state.canvasCarrierHandoffError,
-      cooperativeBootAvailable: state.cooperativeBootAvailable,
-      cooperativeBootUsed: state.cooperativeBootUsed,
-      syncBootFallbackUsed: state.syncBootFallbackUsed,
+      northPresent: state.northPresent,
+      eastBranchPresent: state.eastBranchPresent,
+      westPresent: state.westPresent,
+      southPresent: state.southPresent,
+      canvasPresent: state.canvasPresent,
+      routeConductorPresent: state.routeConductorPresent,
 
-      canvasReady: state.canvasReady,
-      canvasCarrierMounted: state.canvasCarrierMounted,
-      canvasContextReady: state.canvasContextReady,
-      dragInspectionBound: state.dragInspectionBound,
-      atlasBuildStarted: state.atlasBuildStarted,
-      atlasBuildProgress: state.atlasBuildProgress,
-      atlasBuildComplete: state.atlasBuildComplete,
-      textureComposeStarted: state.textureComposeStarted,
-      textureComposeProgress: state.textureComposeProgress,
-      textureComposeComplete: state.textureComposeComplete,
-      firstFrameRequested: state.firstFrameRequested,
-      firstFrameDetected: state.firstFrameDetected,
-      imageRendered: state.imageRendered,
-
-      visibleContentProofStarted: state.visibleContentProofStarted,
-      visibleContentProof: state.visibleContentProof,
-      visibleContentProofMethod: state.visibleContentProofMethod,
-      visibleContentProofError: state.visibleContentProofError,
-      visibleContentSampleCount: state.visibleContentSampleCount,
-      visibleContentVarianceScore: state.visibleContentVarianceScore,
-      visibleContentClassCount: state.visibleContentClassCount,
-      visibleContentClasses: state.visibleContentClasses.join(","),
-      visibleContentLandSampleCount: state.visibleContentLandSampleCount,
-      visibleContentWaterSampleCount: state.visibleContentWaterSampleCount,
-      visibleContentOtherSampleCount: state.visibleContentOtherSampleCount,
-      carrierOnlyDetected: state.carrierOnlyDetected,
-      explicitContentReceiptProof: state.explicitContentReceiptProof,
-      renderedAfterTexture: state.renderedAfterTexture,
-
-      visiblePlanetAvailable: state.visiblePlanetAvailable,
       planetCanvasPresent: state.planetCanvasPresent,
       planetCanvasNonZeroSize: state.planetCanvasNonZeroSize,
-      planetFramePainted: state.planetFramePainted,
-      nonblankPlanetVisible: state.nonblankPlanetVisible,
+      visiblePlanetHintPresent: state.visiblePlanetHintPresent,
 
-      southGateReady: state.southGateReady,
-      completionRequestedFromNorth: state.completionRequestedFromNorth,
-      completionLatched: state.completionLatched,
-      f21AfterNorthPermission: state.f21AfterNorthPermission,
-      finalReceiptAvailable: state.finalReceiptAvailable,
-
-      mainDisplayProgress: state.mainDisplayProgress,
-      mainProgressCap: state.mainProgressCap,
-      currentStage: state.currentStage,
-      highestStage: state.highestStage,
-      latestVisibleEvent: state.latestVisibleEvent,
-      postgameStatus: state.postgameStatus,
       firstFailedCoordinate: state.firstFailedCoordinate,
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+      postgameStatus: state.postgameStatus,
 
-      sourceAuthorityHeld: true,
-      climateRouteRetired: true,
-      northRuntimeTableMutation: false,
-      canvasMutation: false,
-
-      phaseEvents: clonePlain(state.phaseEvents),
-      progressOnlyEvents: clonePlain(state.progressOnlyEvents),
-      localEvents: clonePlain(state.localEvents),
-      northEvents: clonePlain(state.northEvents),
-      sourceStackHeld: SOURCE_STACK_HELD.slice(),
-      errors: clonePlain(state.errors),
+      renderReadOnly: true,
+      receiptReadOnly: true,
+      ledgerIdempotent: true,
+      handoffIdempotent: true,
 
       generatedImage: false,
       graphicBox: false,
       webGL: false,
       visualPassClaimed: false,
+
+      updatedAt: nowIso()
+    };
+  }
+
+  function getReceipt() {
+    const ledger = refs.ledger || root.HEARTH_LOAD_LEDGER || null;
+
+    return {
+      ...getReceiptLightReadOnly(),
+
+      destinationFile: EAST_ROUTE_FILE,
+
+      ownsEastRouteStep1: true,
+      ownsFirstPaintSurvival: true,
+      ownsMountCertainty: true,
+      ownsLoadingScreenCertainty: true,
+      ownsEarlyLedger: true,
+      ownsScriptOrderVisibility: true,
+      ownsStep1HandoffPublication: true,
+
+      ownsNorthRuntimeTable: false,
+      ownsEastBranchCheckpointMotion: false,
+      ownsWestGapClassification: false,
+      ownsSouthVisibleStateComposition: false,
+      ownsCanvasDrawing: false,
+      ownsAtlasPainting: false,
+      ownsRouteConductorRuntime: false,
+      ownsSourceChannelTruth: false,
+      ownsFinalVisualPassClaim: false,
+
+      northFile: NORTH_FILE,
+      eastBranchFile: EAST_BRANCH_FILE,
+      westFile: WEST_BRANCH_FILE,
+      southFile: SOUTH_BRANCH_FILE,
+      canvasFile: CANVAS_FILE,
+      routeConductorFile: ROUTE_CONDUCTOR_FILE,
+
+      mountCreatedByEast: state.mountCreatedByEast,
+      cockpitCreatedByEast: state.cockpitCreatedByEast,
+      loadingScreenReady: state.loadingScreenReady,
+      visibleProgressStripReady: state.visibleProgressStripReady,
+
+      sharedLedgerCreatedByEast: state.sharedLedgerCreatedByEast,
+      partialReceiptAvailable: state.partialReceiptAvailable,
+      copyPartialDiagnosticReady: state.copyPartialDiagnosticReady,
+      receiptToggleReady: state.receiptToggleReady,
+      inspectControlReserved: state.inspectControlReserved,
+      inspectModeReservedActive: state.inspectModeReservedActive,
+      showDiagnosticRestoreReserved: state.showDiagnosticRestoreReserved,
+      showDiagnosticTabVisible: state.showDiagnosticTabVisible,
+
+      step1HandoffHash: state.step1HandoffHash,
+      step1HandoffAcceptedAt: state.step1HandoffAcceptedAt,
+      handoffPublishCount: state.handoffPublishCount,
+
+      scriptOrderStarted: state.scriptOrderStarted,
+      scriptOrderComplete: state.scriptOrderComplete,
+      scriptOrderSettled: state.scriptOrderSettled,
+      downstreamRequiredReady: state.downstreamRequiredReady,
+      downstreamOptionalReady: state.downstreamOptionalReady,
+
+      northContract: state.northContract,
+      northReceiptPresent: state.northReceiptPresent,
+      eastBranchContract: state.eastBranchContract,
+      westContract: state.westContract,
+      westReceiptPresent: state.westReceiptPresent,
+      southContract: state.southContract,
+      southReceiptPresent: state.southReceiptPresent,
+      canvasContract: state.canvasContract,
+      canvasReceiptPresent: state.canvasReceiptPresent,
+      routeConductorContract: state.routeConductorContract,
+      routeConductorReceiptPresent: state.routeConductorReceiptPresent,
+
+      scriptStatus: clonePlain(state.scriptStatus),
+      scriptErrors: clonePlain(state.scriptErrors),
+
+      climateRouteRetired: true,
+      runtimeTableRequiredForFirstRender: false,
+      sourceStackRequiredForFirstRender: false,
+      wideProbeDeferred: true,
+
+      renderCount: state.renderCount,
+      ledgerWriteCount: state.ledgerWriteCount,
+      ledgerNoopCount: state.ledgerNoopCount,
+      scanCount: state.scanCount,
+      commitCount: state.commitCount,
+
+      sharedLedger: ledger && ledger.state ? clonePlain(ledger.state) : null,
+      step1HandoffReceipt: getStep1HandoffReceipt(),
+
+      localEvents: clonePlain(state.localEvents),
+      scriptEvents: clonePlain(state.scriptEvents),
+      errors: clonePlain(state.errors),
 
       startedAt: state.startedAt,
       updatedAt: nowIso()
@@ -2122,31 +2602,34 @@
 
   function getReceiptText() {
     const receipt = getReceipt();
+    const ledger = receipt.sharedLedger || {};
 
-    const phaseText = receipt.phaseEvents.map((event) => (
-      `- ${event.at || ""} :: ${event.phase || ""} :: progress=${event.percent || ""} :: ${event.message || ""}`
+    const lanes = Object.entries(ledger.lanes || {}).map(([key, lane]) => (
+      `- ${key}: owner=${lane.owner || ""}; status=${lane.status}; progress=${lane.progress}; event=${lane.latestEvent}; message=${lane.message}`
     )).join("\n") || "- none";
 
-    const progressText = receipt.progressOnlyEvents.map((event) => (
-      `- ${event.at || ""} :: ${event.phase || ""} :: progress=${event.progress || ""}`
+    const scripts = Object.entries(ledger.scripts || {}).map(([key, script]) => (
+      `- ${key}: direction=${script.direction || ""}; status=${script.status}; src=${script.src || ""}; globalPresent=${script.globalPresent === true}; error=${script.error || ""}`
     )).join("\n") || "- none";
 
-    const localText = receipt.localEvents.map((event) => (
+    const scriptStatus = Object.entries(receipt.scriptStatus || {}).map(([key, script]) => (
+      `- ${key}: present=${script.present}; requested=${script.requested}; loaded=${script.loaded}; globalPresent=${script.globalPresent}; contract=${script.contract}; receiptPresent=${script.receiptPresent}; required=${script.required}`
+    )).join("\n") || "- none";
+
+    const localEvents = receipt.localEvents.map((event) => (
       `- ${event.at || ""} :: ${event.event || ""} :: ${JSON.stringify(event.detail || {})}`
     )).join("\n") || "- none";
 
-    const northText = receipt.northEvents.map((event) => (
+    const scriptEvents = receipt.scriptEvents.map((event) => (
       `- ${event.at || ""} :: ${event.event || ""} :: ${JSON.stringify(event.detail || {})}`
     )).join("\n") || "- none";
 
-    const errorsText = receipt.errors.map((error) => (
+    const errors = receipt.errors.map((error) => (
       `- ${error.at || ""} :: ${error.code || ""} :: ${error.message || ""}`
     )).join("\n") || "- none";
 
-    const sourceStackText = receipt.sourceStackHeld.map((file) => `- ${file}`).join("\n");
-
     return [
-      "HEARTH_SOUTH_VISIBLE_COMPLETION_CYCLE_CONSUMER_RECEIPT",
+      "HEARTH_EAST_STEP1_IGNITION_FIRST_PAINT_CYCLE_RECEIPT",
       "",
       `contract=${receipt.contract}`,
       `receipt=${receipt.receipt}`,
@@ -2156,144 +2639,127 @@
       `file=${receipt.file}`,
       `route=${receipt.route}`,
       `role=${receipt.role}`,
-      "",
-      `pairedSemiconductor=${receipt.pairedSemiconductor}`,
-      `pairedWith=${receipt.pairedWith}`,
       `cycleOrder=${receipt.cycleOrder}`,
       "",
-      `ownsSouth=${receipt.ownsSouth}`,
-      `ownsEast=${receipt.ownsEast}`,
-      `ownsWest=${receipt.ownsWest}`,
-      `ownsNorth=${receipt.ownsNorth}`,
-      `ownsStep1=${receipt.ownsStep1}`,
-      `ownsStep1Handoff=${receipt.ownsStep1Handoff}`,
+      `currentGear=${receipt.currentGear}`,
+      `currentGearLabel=${receipt.currentGearLabel}`,
+      `currentGearProgress=${receipt.currentGearProgress}`,
+      `latestEvent=${receipt.latestEvent}`,
+      "",
+      `ownsEastRouteStep1=${receipt.ownsEastRouteStep1}`,
+      `ownsFirstPaintSurvival=${receipt.ownsFirstPaintSurvival}`,
+      `ownsMountCertainty=${receipt.ownsMountCertainty}`,
+      `ownsLoadingScreenCertainty=${receipt.ownsLoadingScreenCertainty}`,
+      `ownsEarlyLedger=${receipt.ownsEarlyLedger}`,
+      `ownsScriptOrderVisibility=${receipt.ownsScriptOrderVisibility}`,
+      `ownsStep1HandoffPublication=${receipt.ownsStep1HandoffPublication}`,
+      "",
       `ownsNorthRuntimeTable=${receipt.ownsNorthRuntimeTable}`,
+      `ownsEastBranchCheckpointMotion=${receipt.ownsEastBranchCheckpointMotion}`,
+      `ownsWestGapClassification=${receipt.ownsWestGapClassification}`,
+      `ownsSouthVisibleStateComposition=${receipt.ownsSouthVisibleStateComposition}`,
       `ownsCanvasDrawing=${receipt.ownsCanvasDrawing}`,
-      `ownsVisibleCompletion=${receipt.ownsVisibleCompletion}`,
-      `ownsVisiblePlanetProof=${receipt.ownsVisiblePlanetProof}`,
-      `ownsInspectModeTruth=${receipt.ownsInspectModeTruth}`,
-      `ownsFinalDiagnosticReceipt=${receipt.ownsFinalDiagnosticReceipt}`,
+      `ownsAtlasPainting=${receipt.ownsAtlasPainting}`,
+      `ownsRouteConductorRuntime=${receipt.ownsRouteConductorRuntime}`,
+      `ownsSourceChannelTruth=${receipt.ownsSourceChannelTruth}`,
       `ownsFinalVisualPassClaim=${receipt.ownsFinalVisualPassClaim}`,
       "",
-      `eastFile=${receipt.eastFile}`,
-      `westFile=${receipt.westFile}`,
       `northFile=${receipt.northFile}`,
+      `eastBranchFile=${receipt.eastBranchFile}`,
+      `westFile=${receipt.westFile}`,
       `southFile=${receipt.southFile}`,
       `canvasFile=${receipt.canvasFile}`,
+      `routeConductorFile=${receipt.routeConductorFile}`,
       "",
-      `northAvailable=${receipt.northAvailable}`,
-      `northContract=${receipt.northContract}`,
-      `northSessionCreated=${receipt.northSessionCreated}`,
-      `northSessionId=${receipt.northSessionId}`,
-      `northReceiptAvailable=${receipt.northReceiptAvailable}`,
-      `northReceiptError=${receipt.northReceiptError}`,
-      `northF21Allowed=${receipt.northF21Allowed}`,
-      `northNewsGatePassedBeforeF21=${receipt.northNewsGatePassedBeforeF21}`,
-      `northActiveCheckpointId=${receipt.northActiveCheckpointId}`,
-      `northRecommendedNextOwner=${receipt.northRecommendedNextOwner}`,
-      `northRecommendedNextFile=${receipt.northRecommendedNextFile}`,
-      "",
-      `step1AcceptedBySouth=${receipt.step1AcceptedBySouth}`,
-      `handoffAdmissibleByWest=${receipt.handoffAdmissibleByWest}`,
-      "",
+      `step1Ignited=${receipt.step1Ignited}`,
+      `step1Ready=${receipt.step1Ready}`,
+      `firstPaintReady=${receipt.firstPaintReady}`,
       `mountReady=${receipt.mountReady}`,
-      `cockpitFound=${receipt.cockpitFound}`,
-      `cockpitHydrated=${receipt.cockpitHydrated}`,
-      `diagnosticDockReady=${receipt.diagnosticDockReady}`,
-      `showDiagnosticTabReady=${receipt.showDiagnosticTabReady}`,
-      `copyDiagnosticReady=${receipt.copyDiagnosticReady}`,
+      `cockpitReady=${receipt.cockpitReady}`,
+      `loadingScreenReady=${receipt.loadingScreenReady}`,
+      `visibleProgressStripReady=${receipt.visibleProgressStripReady}`,
+      "",
+      `sharedLedgerPresent=${receipt.sharedLedgerPresent}`,
+      `sharedLedgerCreatedByEast=${receipt.sharedLedgerCreatedByEast}`,
+      `partialReceiptAvailable=${receipt.partialReceiptAvailable}`,
+      `copyPartialDiagnosticReady=${receipt.copyPartialDiagnosticReady}`,
       `receiptToggleReady=${receipt.receiptToggleReady}`,
-      `inspectPlanetControlReady=${receipt.inspectPlanetControlReady}`,
-      `collapseExpandControlReady=${receipt.collapseExpandControlReady}`,
-      `buttonsReachable=${receipt.buttonsReachable}`,
-      `receiptVisible=${receipt.receiptVisible}`,
-      `cockpitMode=${receipt.cockpitMode}`,
-      `cockpitExpanded=${receipt.cockpitExpanded}`,
-      `dockHiddenForInspection=${receipt.dockHiddenForInspection}`,
-      `diagnosticCanLeavePlanetFrame=${receipt.diagnosticCanLeavePlanetFrame}`,
-      `planetNotObstructed=${receipt.planetNotObstructed}`,
+      `inspectControlReserved=${receipt.inspectControlReserved}`,
+      `inspectModeReservedActive=${receipt.inspectModeReservedActive}`,
+      `showDiagnosticRestoreReserved=${receipt.showDiagnosticRestoreReserved}`,
+      `showDiagnosticTabVisible=${receipt.showDiagnosticTabVisible}`,
       "",
-      `canvasApiPresent=${receipt.canvasApiPresent}`,
-      `canvasCarrierRequested=${receipt.canvasCarrierRequested}`,
-      `canvasCarrierMethod=${receipt.canvasCarrierMethod}`,
-      `canvasCarrierHandoffOk=${receipt.canvasCarrierHandoffOk}`,
-      `canvasCarrierHandoffError=${receipt.canvasCarrierHandoffError}`,
-      `cooperativeBootAvailable=${receipt.cooperativeBootAvailable}`,
-      `cooperativeBootUsed=${receipt.cooperativeBootUsed}`,
-      `syncBootFallbackUsed=${receipt.syncBootFallbackUsed}`,
+      `step1HandoffPublished=${receipt.step1HandoffPublished}`,
+      `step1HandoffHash=${receipt.step1HandoffHash}`,
+      `step1HandoffAcceptedByNorth=${receipt.step1HandoffAcceptedByNorth}`,
+      `step1HandoffAcceptedByWest=${receipt.step1HandoffAcceptedByWest}`,
+      `step1HandoffAcceptedAt=${receipt.step1HandoffAcceptedAt}`,
+      `handoffPublishCount=${receipt.handoffPublishCount}`,
       "",
-      `canvasReady=${receipt.canvasReady}`,
-      `canvasCarrierMounted=${receipt.canvasCarrierMounted}`,
-      `canvasContextReady=${receipt.canvasContextReady}`,
-      `dragInspectionBound=${receipt.dragInspectionBound}`,
-      `atlasBuildStarted=${receipt.atlasBuildStarted}`,
-      `atlasBuildProgress=${receipt.atlasBuildProgress}`,
-      `atlasBuildComplete=${receipt.atlasBuildComplete}`,
-      `textureComposeStarted=${receipt.textureComposeStarted}`,
-      `textureComposeProgress=${receipt.textureComposeProgress}`,
-      `textureComposeComplete=${receipt.textureComposeComplete}`,
-      `firstFrameRequested=${receipt.firstFrameRequested}`,
-      `firstFrameDetected=${receipt.firstFrameDetected}`,
-      `imageRendered=${receipt.imageRendered}`,
+      `scriptOrderStarted=${receipt.scriptOrderStarted}`,
+      `scriptOrderComplete=${receipt.scriptOrderComplete}`,
+      `scriptOrderSettled=${receipt.scriptOrderSettled}`,
+      `downstreamRequiredReady=${receipt.downstreamRequiredReady}`,
+      `downstreamOptionalReady=${receipt.downstreamOptionalReady}`,
       "",
-      `visibleContentProofStarted=${receipt.visibleContentProofStarted}`,
-      `visibleContentProof=${receipt.visibleContentProof}`,
-      `visibleContentProofMethod=${receipt.visibleContentProofMethod}`,
-      `visibleContentProofError=${receipt.visibleContentProofError}`,
-      `visibleContentSampleCount=${receipt.visibleContentSampleCount}`,
-      `visibleContentVarianceScore=${receipt.visibleContentVarianceScore}`,
-      `visibleContentClassCount=${receipt.visibleContentClassCount}`,
-      `visibleContentClasses=${receipt.visibleContentClasses}`,
-      `visibleContentLandSampleCount=${receipt.visibleContentLandSampleCount}`,
-      `visibleContentWaterSampleCount=${receipt.visibleContentWaterSampleCount}`,
-      `visibleContentOtherSampleCount=${receipt.visibleContentOtherSampleCount}`,
-      `carrierOnlyDetected=${receipt.carrierOnlyDetected}`,
-      `explicitContentReceiptProof=${receipt.explicitContentReceiptProof}`,
-      `renderedAfterTexture=${receipt.renderedAfterTexture}`,
+      `northPresent=${receipt.northPresent}`,
+      `northContract=${receipt.northContract}`,
+      `northReceiptPresent=${receipt.northReceiptPresent}`,
+      `eastBranchPresent=${receipt.eastBranchPresent}`,
+      `eastBranchContract=${receipt.eastBranchContract}`,
+      `westPresent=${receipt.westPresent}`,
+      `westContract=${receipt.westContract}`,
+      `westReceiptPresent=${receipt.westReceiptPresent}`,
+      `southPresent=${receipt.southPresent}`,
+      `southContract=${receipt.southContract}`,
+      `southReceiptPresent=${receipt.southReceiptPresent}`,
+      `canvasPresent=${receipt.canvasPresent}`,
+      `canvasContract=${receipt.canvasContract}`,
+      `canvasReceiptPresent=${receipt.canvasReceiptPresent}`,
+      `routeConductorPresent=${receipt.routeConductorPresent}`,
+      `routeConductorContract=${receipt.routeConductorContract}`,
+      `routeConductorReceiptPresent=${receipt.routeConductorReceiptPresent}`,
       "",
-      `visiblePlanetAvailable=${receipt.visiblePlanetAvailable}`,
       `planetCanvasPresent=${receipt.planetCanvasPresent}`,
       `planetCanvasNonZeroSize=${receipt.planetCanvasNonZeroSize}`,
-      `planetFramePainted=${receipt.planetFramePainted}`,
-      `nonblankPlanetVisible=${receipt.nonblankPlanetVisible}`,
+      `visiblePlanetHintPresent=${receipt.visiblePlanetHintPresent}`,
       "",
-      `southGateReady=${receipt.southGateReady}`,
-      `completionRequestedFromNorth=${receipt.completionRequestedFromNorth}`,
-      `completionLatched=${receipt.completionLatched}`,
-      `f21AfterNorthPermission=${receipt.f21AfterNorthPermission}`,
-      `finalReceiptAvailable=${receipt.finalReceiptAvailable}`,
+      `climateRouteRetired=${receipt.climateRouteRetired}`,
+      `runtimeTableRequiredForFirstRender=${receipt.runtimeTableRequiredForFirstRender}`,
+      `sourceStackRequiredForFirstRender=${receipt.sourceStackRequiredForFirstRender}`,
+      `wideProbeDeferred=${receipt.wideProbeDeferred}`,
       "",
-      `mainDisplayProgress=${receipt.mainDisplayProgress}`,
-      `mainProgressCap=${receipt.mainProgressCap}`,
-      `currentStage=${receipt.currentStage}`,
-      `highestStage=${receipt.highestStage}`,
-      `latestVisibleEvent=${receipt.latestVisibleEvent}`,
-      `postgameStatus=${receipt.postgameStatus}`,
       `firstFailedCoordinate=${receipt.firstFailedCoordinate}`,
       `recommendedNextRenewalTarget=${receipt.recommendedNextRenewalTarget}`,
+      `postgameStatus=${receipt.postgameStatus}`,
       "",
-      `sourceAuthorityHeld=${receipt.sourceAuthorityHeld}`,
-      `climateRouteRetired=${receipt.climateRouteRetired}`,
-      `northRuntimeTableMutation=${receipt.northRuntimeTableMutation}`,
-      `canvasMutation=${receipt.canvasMutation}`,
+      `renderReadOnly=${receipt.renderReadOnly}`,
+      `receiptReadOnly=${receipt.receiptReadOnly}`,
+      `ledgerIdempotent=${receipt.ledgerIdempotent}`,
+      `handoffIdempotent=${receipt.handoffIdempotent}`,
+      `renderCount=${receipt.renderCount}`,
+      `ledgerWriteCount=${receipt.ledgerWriteCount}`,
+      `ledgerNoopCount=${receipt.ledgerNoopCount}`,
+      `scanCount=${receipt.scanCount}`,
+      `commitCount=${receipt.commitCount}`,
       "",
-      "CANVAS_PHASE_EVENTS",
-      phaseText,
+      "LEDGER_LANES",
+      lanes,
       "",
-      "PROGRESS_ONLY_EVENTS",
-      progressText,
+      "LEDGER_SCRIPTS",
+      scripts,
+      "",
+      "SCRIPT_STATUS",
+      scriptStatus,
       "",
       "LOCAL_EVENTS",
-      localText,
+      localEvents,
       "",
-      "NORTH_EVENTS",
-      northText,
+      "SCRIPT_EVENTS",
+      scriptEvents,
       "",
       "ERRORS",
-      errorsText,
-      "",
-      "SOURCE_STACK_HELD",
-      sourceStackText,
+      errors,
       "",
       `generatedImage=${receipt.generatedImage}`,
       `graphicBox=${receipt.graphicBox}`,
@@ -2305,213 +2771,6 @@
     ].join("\n");
   }
 
-  function publishDataset() {
-    if (!doc || !doc.documentElement) return;
-
-    const dataset = doc.documentElement.dataset;
-
-    dataset.hearthSouthVisibleCompletionLoaded = "true";
-    dataset.hearthSouthVisibleCompletionContract = CONTRACT;
-    dataset.hearthSouthVisibleCompletionReceipt = RECEIPT;
-    dataset.hearthSouthVisibleCompletionVersion = VERSION;
-    dataset.hearthCycleSouth = "true";
-    dataset.hearthSouthFile = SOUTH_FILE;
-    dataset.hearthNorthFile = NORTH_FILE;
-    dataset.hearthEastFile = EAST_FILE;
-    dataset.hearthWestFile = WEST_FILE;
-
-    dataset.hearthSouthOwnsVisibleCompletion = "true";
-    dataset.hearthSouthOwnsNorthRuntimeTable = "false";
-    dataset.hearthSouthOwnsCanvasDrawing = "false";
-    dataset.hearthSouthOwnsStep1 = "false";
-    dataset.hearthSouthOwnsFinalVisualPassClaim = "false";
-
-    dataset.hearthNorthAvailable = String(state.northAvailable);
-    dataset.hearthNorthF21Allowed = String(state.northF21Allowed);
-    dataset.hearthNorthNewsGatePassedBeforeF21 = String(state.northNewsGatePassedBeforeF21);
-    dataset.hearthNorthActiveCheckpointId = state.northActiveCheckpointId;
-
-    dataset.hearthSouthGateReady = String(state.southGateReady);
-    dataset.hearthDiagnosticCanLeavePlanetFrame = String(state.diagnosticCanLeavePlanetFrame);
-    dataset.hearthVisibleContentProof = String(state.visibleContentProof);
-    dataset.hearthVisiblePlanetAvailable = String(state.visiblePlanetAvailable);
-    dataset.hearthNonblankPlanetVisible = String(state.nonblankPlanetVisible);
-    dataset.hearthCompletionLatched = String(state.completionLatched);
-
-    dataset.hearthCanvasReady = String(state.canvasReady);
-    dataset.hearthCanvasCarrierMounted = String(state.canvasCarrierMounted);
-    dataset.hearthCanvasContextReady = String(state.canvasContextReady);
-    dataset.hearthDragInspectionBound = String(state.dragInspectionBound);
-    dataset.hearthFirstFrameDetected = String(state.firstFrameDetected);
-    dataset.hearthImageRendered = String(state.imageRendered);
-
-    dataset.hearthFirstFailedCoordinate = state.firstFailedCoordinate;
-    dataset.hearthRecommendedNextRenewalTarget = state.recommendedNextRenewalTarget;
-
-    dataset.hearthNorthRuntimeTableMutation = "false";
-    dataset.hearthCanvasMutation = "false";
-    dataset.generatedImage = "false";
-    dataset.graphicBox = "false";
-    dataset.webgl = "false";
-    dataset.visualPassClaimed = "false";
-  }
-
-  function publishGlobals() {
-    root.HEARTH = root.HEARTH || {};
-    root.HEARTH.southVisibleCompletion = api;
-    root.HEARTH.routeConductor = api;
-    root.HEARTH.coherenceSemiconductor = api;
-
-    root.HEARTH_SOUTH_VISIBLE_COMPLETION = api;
-    root.HEARTH_SOUTH_VISIBLE_COMPLETION_CYCLE_CONSUMER = api;
-    root.HEARTH_ROUTE_CONDUCTOR = api;
-    root.HearthRouteConductor = api;
-    root.HEARTH_ACTIVE_ROUTE = api;
-    root.HEARTH_ROUTE_COHERENCE_SEMICONDUCTOR = api;
-
-    root.HEARTH_SOUTH_VISIBLE_COMPLETION_RECEIPT = getReceiptLight();
-    root.HEARTH_ROUTE_COHERENCE_SEMICONDUCTOR_RECEIPT = root.HEARTH_SOUTH_VISIBLE_COMPLETION_RECEIPT;
-    root.HEARTH_ROUTE_CONDUCTOR_RECEIPT = root.HEARTH_SOUTH_VISIBLE_COMPLETION_RECEIPT;
-    root.HEARTH_ROUTE_CONDUCTOR_POSTGAME_RECEIPT = root.HEARTH_SOUTH_VISIBLE_COMPLETION_RECEIPT;
-
-    root.__HEARTH_ACTIVE_ROUTE_FILE__ = SOUTH_FILE;
-    root.__HEARTH_ACTIVE_ROUTE_CONTRACT__ = CONTRACT;
-    root.__HEARTH_SOUTH_VISIBLE_COMPLETION_FILE__ = SOUTH_FILE;
-    root.__HEARTH_SOUTH_OWNS_NORTH_RUNTIME_TABLE__ = false;
-    root.__HEARTH_SOUTH_OWNS_CANVAS_DRAWING__ = false;
-    root.__HEARTH_SOUTH_VISUAL_PASS_CLAIMED__ = false;
-
-    publishDataset();
-  }
-
-  function getReceiptLight() {
-    return {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      previousContract: PREVIOUS_CONTRACT,
-      version: VERSION,
-      file: SOUTH_FILE,
-      route: ROUTE,
-      role: "south-visible-completion-cycle-consumer",
-      northAvailable: state.northAvailable,
-      northF21Allowed: state.northF21Allowed,
-      northNewsGatePassedBeforeF21: state.northNewsGatePassedBeforeF21,
-      southGateReady: state.southGateReady,
-      visibleContentProof: state.visibleContentProof,
-      visiblePlanetAvailable: state.visiblePlanetAvailable,
-      diagnosticCanLeavePlanetFrame: state.diagnosticCanLeavePlanetFrame,
-      completionLatched: state.completionLatched,
-      f21AfterNorthPermission: state.f21AfterNorthPermission,
-      firstFailedCoordinate: state.firstFailedCoordinate,
-      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
-      northRuntimeTableMutation: false,
-      canvasMutation: false,
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false,
-      updatedAt: nowIso()
-    };
-  }
-
-  function retireClimateRoute() {
-    root.__HEARTH_CLIMATE_ROUTE_RETIRED__ = true;
-    root.__HEARTH_RETIRED_ROUTE_FILE__ = "/showroom/globe/hearth/hearth.climate.route.js";
-    root.__HEARTH_RETIRED_CLIMATE_ROUTE_ACTIVE_CARRIER__ = false;
-
-    [
-      "__HEARTH_VISIBLE_RECOVERY_DISPOSE__",
-      "__HEARTH_G4_ROUTE_DISPOSE__",
-      "__HEARTH_HABITABLE_FORMING_ROUTE_DISPOSE__"
-    ].forEach((name) => {
-      try {
-        if (typeof root[name] === "function") root[name]();
-      } catch (_error) {}
-
-      try {
-        root[name] = undefined;
-        delete root[name];
-      } catch (_error) {}
-    });
-
-    if (doc) {
-      doc.querySelectorAll("script[src*='hearth.climate.route.js']").forEach((script) => {
-        script.dataset.hearthClimateRouteRetired = "true";
-        script.dataset.retiredBy = CONTRACT;
-      });
-    }
-
-    state.climateRouteRetired = true;
-  }
-
-  function startHeartbeat() {
-    if (heartbeatTimer) root.clearInterval(heartbeatTimer);
-
-    heartbeatTimer = root.setInterval(() => {
-      if (!state.completionLatched) {
-        reconcileAll("heartbeat");
-      } else {
-        publishGlobals();
-        scheduleRender();
-      }
-    }, 1000);
-  }
-
-  function startReconcileLoop() {
-    if (reconcileTimer) root.clearInterval(reconcileTimer);
-
-    reconcileTimer = root.setInterval(() => {
-      if (!state.completionLatched) {
-        reconcileAll("interval");
-      }
-    }, 1400);
-  }
-
-  function boot() {
-    if (bootStarted) {
-      publishGlobals();
-      return getReceipt();
-    }
-
-    bootStarted = true;
-    state.startedAt = nowIso();
-    state.updatedAt = state.startedAt;
-
-    retireClimateRoute();
-    ensureMount();
-    hydrateCockpit();
-    connectNorth();
-    reconcileNorthReceipt();
-
-    publishGlobals();
-    render();
-
-    root.setTimeout(callCanvasCarrier, 80);
-    root.setTimeout(() => reconcileAll("post-boot-220ms"), 220);
-    root.setTimeout(() => reconcileAll("post-boot-900ms"), 900);
-    root.setTimeout(() => reconcileAll("post-boot-1800ms"), 1800);
-    root.setTimeout(() => reconcileAll("post-boot-3600ms"), 3600);
-
-    startHeartbeat();
-    startReconcileLoop();
-
-    return getReceipt();
-  }
-
-  function dispose(reason = "manual-dispose") {
-    if (heartbeatTimer) {
-      root.clearInterval(heartbeatTimer);
-      heartbeatTimer = 0;
-    }
-
-    if (reconcileTimer) {
-      root.clearInterval(reconcileTimer);
-      reconcileTimer = 0;
-    }
-
-    recordLocal("SOUTH_VISIBLE_COMPLETION_DISPOSED", { reason });
-  }
-
   const api = {
     contract: CONTRACT,
     receipt: RECEIPT,
@@ -2519,8 +2778,8 @@
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     route: ROUTE,
-    file: SOUTH_FILE,
-    role: "south-visible-completion-cycle-consumer",
+    file: EAST_ROUTE_FILE,
+    role: "east-route-step1-ignition-first-paint-cycle",
 
     boot,
     start: boot,
@@ -2528,44 +2787,53 @@
     run: boot,
     dispose,
 
-    handleCanvasPhase,
-    handleCanvasReceipt,
-    reconcile: reconcileAll,
-    tryFinalize: maybeRequestCompletion,
-    setCockpitMode,
-    proveVisibleContent,
-    startVisibleContentProof,
-    evaluateSouthGate,
-    reportSouthEvent,
+    scanDownstreamReadOnly,
+    applyScanCommit,
+    publishStep1HandoffIfChanged,
+    getStep1HandoffReceipt,
+    loadScriptsSequentially,
+    setInspectReserved,
     getReceipt,
     getReceiptText,
     copyDiagnostic,
 
     supportsDirectionalCycle: true,
-    supportsSouthVisibleCompletion: true,
-    supportsNorthRuntimeTableConsumption: true,
-    supportsVisibleContentCompletionGate: true,
-    supportsInspectModeCompletionGate: true,
-    supportsDiagnosticDockRestore: true,
-    supportsCopyDiagnosticPreservation: true,
-    supportsShowReceiptPreservation: true,
-    supportsCooperativeCanvasHandoff: true,
+    supportsCardinalRuntimeSplit: true,
+    supportsEastRouteStep1Ignition: true,
+    supportsFirstPaintSurvival: true,
+    supportsMountCertainty: true,
+    supportsLoadingScreenCertainty: true,
+    supportsEarlyLedger: true,
+    supportsScriptOrderVisibility: true,
+    supportsStep1HandoffPublication: true,
+    supportsPartialDiagnosticBeforeCompletion: true,
+    supportsInspectControlReservation: true,
+    supportsShowDiagnosticRestoreReservation: true,
 
-    ownsSouth: true,
-    ownsEast: false,
-    ownsWest: false,
-    ownsNorth: false,
-    ownsStep1: false,
+    renderReadOnly: true,
+    receiptReadOnly: true,
+    ledgerIdempotent: true,
+    handoffIdempotent: true,
+
+    ownsEastRouteStep1: true,
     ownsNorthRuntimeTable: false,
+    ownsEastBranchCheckpointMotion: false,
+    ownsWestGapClassification: false,
+    ownsSouthVisibleStateComposition: false,
     ownsCanvasDrawing: false,
-    ownsVisibleCompletion: true,
+    ownsRouteConductorRuntime: false,
     ownsFinalVisualPassClaim: false,
 
-    eastFile: EAST_FILE,
-    westFile: WEST_FILE,
     northFile: NORTH_FILE,
-    southFile: SOUTH_FILE,
+    eastBranchFile: EAST_BRANCH_FILE,
+    westFile: WEST_BRANCH_FILE,
+    southFile: SOUTH_BRANCH_FILE,
     canvasFile: CANVAS_FILE,
+    routeConductorFile: ROUTE_CONDUCTOR_FILE,
+
+    runtimeTableRequiredForFirstRender: false,
+    sourceStackRequiredForFirstRender: false,
+    wideProbeDeferred: true,
 
     generatedImage: false,
     graphicBox: false,
@@ -2579,12 +2847,14 @@
 
   publishGlobals();
 
-  if (doc && doc.readyState === "loading") {
-    doc.addEventListener("DOMContentLoaded", () => {
+  if (doc) {
+    if (doc.readyState === "loading") {
+      doc.addEventListener("DOMContentLoaded", () => {
+        boot();
+      }, { once: true });
+    } else {
       boot();
-    }, { once: true });
-  } else {
-    boot();
+    }
   }
 
   if (typeof module !== "undefined" && module.exports) {

@@ -1,11 +1,12 @@
 // /assets/hearth/hearth.canvas.south.js
-// HEARTH_CANVAS_SOUTH_CLARITY_RENDER_PROOF_MACHINE_TNT_v1
+// HEARTH_CANVAS_SOUTH_CLARITY_RENDER_PROOF_MACHINE_TNT_v2
 // Full-file replacement.
 // Canvas South / visual composition, clarity render, and proof only.
 // Purpose:
-// - Compose atlas into texture.
+// - Renew the South contract from v1 into a stronger clarity-render proof machine.
+// - Compose atlas into a sharper texture without changing planet truth.
 // - Render the sphere with clearer high-DPI output.
-// - Reduce haze and blur without changing planet truth.
+// - Reduce center haze, lower surface wash, sharpen rim discipline, and improve land/water readability.
 // - Preserve visible-content proof.
 // - Keep canvas from claiming F21 or final visual pass.
 // Does not own:
@@ -20,22 +21,27 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_SOUTH_CLARITY_RENDER_PROOF_MACHINE_TNT_v1";
-  const RECEIPT = "HEARTH_CANVAS_SOUTH_CLARITY_RENDER_PROOF_MACHINE_RECEIPT_v1";
-  const VERSION = "2026-05-30.hearth-canvas-south-clarity-render-proof-machine-v1";
+  const CONTRACT = "HEARTH_CANVAS_SOUTH_CLARITY_RENDER_PROOF_MACHINE_TNT_v2";
+  const RECEIPT = "HEARTH_CANVAS_SOUTH_CLARITY_RENDER_PROOF_MACHINE_RECEIPT_v2";
+  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_SOUTH_CLARITY_RENDER_PROOF_MACHINE_TNT_v1";
+  const BASELINE_CONTRACT = "HEARTH_CANVAS_SOUTH_CLARITY_RENDER_PROOF_MACHINE_TNT_v1";
+  const VERSION = "2026-05-30.hearth-canvas-south-clarity-render-proof-machine-v2";
   const FILE = "/assets/hearth/hearth.canvas.south.js";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
 
   const SAMPLE_COUNT = 257;
+  const TEXTURE_STEPS = 8;
 
   const state = {
     contract: CONTRACT,
     receipt: RECEIPT,
+    previousContract: PREVIOUS_CONTRACT,
+    baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     file: FILE,
-    role: "canvas-south-clarity-render-proof-machine",
+    role: "canvas-south-clarity-render-proof-machine-v2",
 
     textureCanvas: null,
     textureContext: null,
@@ -48,6 +54,9 @@
     textureComposeComplete: false,
     textureInvalidated: false,
     textureInvalidationReason: "",
+    textureClarityPassApplied: false,
+    textureSharpenPassApplied: false,
+    textureContrastLiftApplied: false,
 
     firstFrameRequested: false,
     firstFrameDetected: false,
@@ -82,11 +91,18 @@
 
     visualFidelityRenewalActive: true,
     clarityRenewalActive: true,
+    clarityRenewalVersion: "v2",
     hazeReduced: true,
+    centerHazeReduced: true,
     highDpiCanvasActive: true,
+    highDpiRenderSupported: true,
     sphereEdgeSharpeningActive: true,
+    textureDetailSharpeningActive: true,
     atmosphereDemotedToRimOnly: true,
+    rimAtmosphereReduced: true,
+    centerSheenReduced: true,
     coastlineContrastActive: true,
+    landWaterReadabilityIncreased: true,
     centerDarknessReduced: true,
     lightingPreservesSurfaceReadability: true,
 
@@ -100,7 +116,11 @@
   };
 
   function nowIso() {
-    try { return new Date().toISOString(); } catch (_error) { return ""; }
+    try {
+      return new Date().toISOString();
+    } catch (_error) {
+      return "";
+    }
   }
 
   function isFunction(value) {
@@ -131,70 +151,141 @@
       code,
       message: error && error.message ? error.message : String(error || "")
     };
+
     state.errors.push(item);
-    if (state.errors.length > 80) state.errors.splice(0, state.errors.length - 80);
+
+    if (state.errors.length > 80) {
+      state.errors.splice(0, state.errors.length - 80);
+    }
+
     state.updatedAt = item.at;
+    updateDataset();
+
     return item;
   }
 
   function yieldFrame() {
     return new Promise((resolve) => {
-      if (typeof root.requestAnimationFrame === "function") root.requestAnimationFrame(resolve);
-      else root.setTimeout(resolve, 0);
+      if (typeof root.requestAnimationFrame === "function") {
+        root.requestAnimationFrame(resolve);
+      } else {
+        root.setTimeout(resolve, 0);
+      }
     });
+  }
+
+  function luminance(r, g, b) {
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  }
+
+  function applyTextureClarityPass(ctx, width, height) {
+    const image = ctx.getImageData(0, 0, width, height);
+    const src = new Uint8ClampedArray(image.data);
+    const dst = image.data;
+
+    const contrast = 1.105;
+    const saturation = 1.075;
+    const lift = 1.5;
+    const sharpen = 0.34;
+
+    for (let y = 0; y < height; y += 1) {
+      const ym = Math.max(0, y - 1);
+      const yp = Math.min(height - 1, y + 1);
+
+      for (let x = 0; x < width; x += 1) {
+        const xm = Math.max(0, x - 1);
+        const xp = Math.min(width - 1, x + 1);
+
+        const i = (y * width + x) * 4;
+        const il = (y * width + xm) * 4;
+        const ir = (y * width + xp) * 4;
+        const iu = (ym * width + x) * 4;
+        const id = (yp * width + x) * 4;
+
+        let r = src[i];
+        let g = src[i + 1];
+        let b = src[i + 2];
+
+        const nr = (src[il] + src[ir] + src[iu] + src[id]) * 0.25;
+        const ng = (src[il + 1] + src[ir + 1] + src[iu + 1] + src[id + 1]) * 0.25;
+        const nb = (src[il + 2] + src[ir + 2] + src[iu + 2] + src[id + 2]) * 0.25;
+
+        r = r + (r - nr) * sharpen;
+        g = g + (g - ng) * sharpen;
+        b = b + (b - nb) * sharpen;
+
+        r = (r - 128) * contrast + 128 + lift;
+        g = (g - 128) * contrast + 128 + lift;
+        b = (b - 128) * contrast + 128 + lift;
+
+        const lum = luminance(r, g, b);
+
+        r = lum + (r - lum) * saturation;
+        g = lum + (g - lum) * saturation;
+        b = lum + (b - lum) * saturation;
+
+        dst[i] = clamp(Math.round(r), 0, 255);
+        dst[i + 1] = clamp(Math.round(g), 0, 255);
+        dst[i + 2] = clamp(Math.round(b), 0, 255);
+        dst[i + 3] = 255;
+      }
+    }
+
+    ctx.putImageData(image, 0, 0);
+
+    state.textureClarityPassApplied = true;
+    state.textureSharpenPassApplied = true;
+    state.textureContrastLiftApplied = true;
   }
 
   async function composeTexture(options = {}) {
     const atlasCanvas = options.atlasCanvas;
-    if (!atlasCanvas) throw new Error("Canvas South requires atlasCanvas for texture composition.");
+
+    if (!atlasCanvas) {
+      throw new Error("Canvas South requires atlasCanvas for texture composition.");
+    }
 
     state.textureComposeStarted = true;
     state.textureComposeProgress = 0;
     state.textureComposeComplete = false;
+    state.textureClarityPassApplied = false;
+    state.textureSharpenPassApplied = false;
+    state.textureContrastLiftApplied = false;
 
     const width = atlasCanvas.width || 768;
     const height = atlasCanvas.height || 384;
 
     const textureCanvas = doc ? doc.createElement("canvas") : null;
-    if (!textureCanvas) throw new Error("Document unavailable for texture composition.");
+    if (!textureCanvas) {
+      throw new Error("Document unavailable for texture composition.");
+    }
 
     textureCanvas.width = width;
     textureCanvas.height = height;
 
     const ctx = textureCanvas.getContext("2d", { alpha: false, willReadFrequently: true });
-    if (!ctx) throw new Error("Texture context unavailable.");
+    if (!ctx) {
+      throw new Error("Texture context unavailable.");
+    }
 
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = "high";
     ctx.clearRect(0, 0, width, height);
     ctx.drawImage(atlasCanvas, 0, 0, width, height);
 
-    for (let step = 1; step <= 8; step += 1) {
-      state.textureComposeProgress = Math.round((step / 8) * 100);
+    for (let step = 1; step <= TEXTURE_STEPS; step += 1) {
+      state.textureComposeProgress = Math.round((step / TEXTURE_STEPS) * 100);
 
       if (step === 4) {
-        const image = ctx.getImageData(0, 0, width, height);
-        const data = image.data;
-
-        for (let i = 0; i < data.length; i += 4) {
-          const r = data[i];
-          const g = data[i + 1];
-          const b = data[i + 2];
-
-          const contrast = 1.075;
-          const lift = 2;
-
-          data[i] = clamp(Math.round((r - 128) * contrast + 128 + lift), 0, 255);
-          data[i + 1] = clamp(Math.round((g - 128) * contrast + 128 + lift), 0, 255);
-          data[i + 2] = clamp(Math.round((b - 128) * contrast + 128 + lift), 0, 255);
-        }
-
-        ctx.putImageData(image, 0, 0);
+        applyTextureClarityPass(ctx, width, height);
       }
 
       if (isFunction(options.onProgress)) {
-        try { options.onProgress(state.textureComposeProgress, getReceipt()); }
-        catch (error) { recordError("TEXTURE_PROGRESS_CALLBACK_FAILED", error); }
+        try {
+          options.onProgress(state.textureComposeProgress, getReceipt());
+        } catch (error) {
+          recordError("TEXTURE_PROGRESS_CALLBACK_FAILED", error);
+        }
       }
 
       await yieldFrame();
@@ -208,7 +299,10 @@
     state.textureComposeComplete = true;
     state.textureComposeProgress = 100;
     state.textureInvalidated = false;
+    state.textureInvalidationReason = "";
     state.updatedAt = nowIso();
+
+    updateDataset();
 
     return getReceipt();
   }
@@ -221,6 +315,7 @@
     if (!state.textureImageData && state.textureContext) {
       state.textureImageData = state.textureContext.getImageData(0, 0, state.textureWidth, state.textureHeight);
     }
+
     return state.textureImageData;
   }
 
@@ -230,6 +325,7 @@
 
     const width = state.textureWidth || texture.width;
     const height = state.textureHeight || texture.height;
+
     const uu = ((u % 1) + 1) % 1;
     const vv = clamp01(v);
 
@@ -240,6 +336,9 @@
     const y0 = clamp(Math.floor(y), 0, height - 1);
     const x1 = clamp(x0 + 1, 0, width - 1);
     const y1 = clamp(y0 + 1, 0, height - 1);
+    const xn = clamp(Math.round(x), 0, width - 1);
+    const yn = clamp(Math.round(y), 0, height - 1);
+
     const fx = x - x0;
     const fy = y - y0;
 
@@ -247,6 +346,7 @@
     const i10 = (y0 * width + x1) * 4;
     const i01 = (y1 * width + x0) * 4;
     const i11 = (y1 * width + x1) * 4;
+    const inn = (yn * width + xn) * 4;
 
     const r0 = mix(texture.data[i00], texture.data[i10], fx);
     const g0 = mix(texture.data[i00 + 1], texture.data[i10 + 1], fx);
@@ -256,10 +356,16 @@
     const g1 = mix(texture.data[i01 + 1], texture.data[i11 + 1], fx);
     const b1 = mix(texture.data[i01 + 2], texture.data[i11 + 2], fx);
 
+    const rb = mix(r0, r1, fy);
+    const gb = mix(g0, g1, fy);
+    const bb = mix(b0, b1, fy);
+
+    const nearestWeight = 0.18;
+
     return [
-      Math.round(mix(r0, r1, fy)),
-      Math.round(mix(g0, g1, fy)),
-      Math.round(mix(b0, b1, fy))
+      Math.round(mix(rb, texture.data[inn], nearestWeight)),
+      Math.round(mix(gb, texture.data[inn + 1], nearestWeight)),
+      Math.round(mix(bb, texture.data[inn + 2], nearestWeight))
     ];
   }
 
@@ -267,16 +373,24 @@
     const canvas = options.canvas;
     const view = options.view || {};
 
-    if (!canvas) throw new Error("Canvas South requires canvas for sphere render.");
-    if (!state.textureCanvas || !state.textureContext) throw new Error("Canvas South texture unavailable.");
+    if (!canvas) {
+      throw new Error("Canvas South requires canvas for sphere render.");
+    }
+
+    if (!state.textureCanvas || !state.textureContext) {
+      throw new Error("Canvas South texture unavailable.");
+    }
 
     const ctx = canvas.getContext("2d", { alpha: true, willReadFrequently: true });
-    if (!ctx) throw new Error("Canvas South render context unavailable.");
+    if (!ctx) {
+      throw new Error("Canvas South render context unavailable.");
+    }
 
     const width = canvas.width;
     const height = canvas.height;
     const size = Math.min(width, height);
     const zoom = clamp(safeNumber(view.zoomLevel, 1), 0.82, 2.8);
+
     const radius = size * 0.452 * zoom;
     const cx = width / 2;
     const cy = height / 2;
@@ -285,6 +399,7 @@
 
     const yaw = safeNumber(view.rotationYaw ?? view.yaw, -0.18);
     const pitch = safeNumber(view.rotationPitch ?? view.pitch, 0.05);
+
     const cyaw = Math.cos(yaw);
     const syaw = Math.sin(yaw);
     const cpitch = Math.cos(pitch);
@@ -321,19 +436,20 @@
 
         const lon = Math.atan2(rx, rz);
         const lat = Math.asin(clamp(ry, -1, 1));
+
         const u = lon / (Math.PI * 2) + 0.5;
         const v = 0.5 - lat / Math.PI;
 
         const rgb = sampleTexture(u, v);
 
         const limb = clamp01(dz);
-        const direct = clamp01(rx * -0.14 + ry * 0.10 + rz * 0.98);
-        const shade = clamp(0.82 + direct * 0.28 + limb * 0.05, 0.58, 1.12);
-        const rim = Math.pow(1 - limb, 2.8);
+        const direct = clamp01(rx * -0.15 + ry * 0.11 + rz * 0.985);
+        const shade = clamp(0.84 + direct * 0.30 + limb * 0.04, 0.60, 1.13);
+        const rim = Math.pow(1 - limb, 3.55);
 
-        const clarityContrast = 1.03;
-        const rimBlue = rim * 24;
-        const rimWhite = rim * 7;
+        const clarityContrast = 1.055;
+        const rimBlue = rim * 14;
+        const rimWhite = rim * 4;
 
         output.data[outIndex] = clamp(Math.round((rgb[0] * shade - 128) * clarityContrast + 128 + rimWhite), 0, 255);
         output.data[outIndex + 1] = clamp(Math.round((rgb[1] * shade - 128) * clarityContrast + 128 + rimWhite), 0, 255);
@@ -347,17 +463,33 @@
 
     ctx.save();
     ctx.globalCompositeOperation = "source-over";
-    ctx.strokeStyle = "rgba(188,220,255,0.42)";
-    ctx.lineWidth = Math.max(1, size * 0.0048);
+    ctx.strokeStyle = "rgba(188,220,255,0.46)";
+    ctx.lineWidth = Math.max(1, size * 0.0046);
     ctx.beginPath();
     ctx.arc(cx, cy, radius, 0, Math.PI * 2);
     ctx.stroke();
     ctx.restore();
 
     ctx.save();
-    const sheen = ctx.createRadialGradient(cx - radius * 0.28, cy - radius * 0.34, Math.max(1, radius * 0.05), cx, cy, Math.max(1, radius * 0.72));
-    sheen.addColorStop(0, "rgba(255,255,255,0.055)");
-    sheen.addColorStop(0.42, "rgba(255,255,255,0.012)");
+    ctx.globalCompositeOperation = "source-over";
+    ctx.strokeStyle = "rgba(104,176,255,0.14)";
+    ctx.lineWidth = Math.max(1, size * 0.010);
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius * 1.004, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+
+    ctx.save();
+    const sheen = ctx.createRadialGradient(
+      cx - radius * 0.30,
+      cy - radius * 0.35,
+      Math.max(1, radius * 0.045),
+      cx,
+      cy,
+      Math.max(1, radius * 0.66)
+    );
+    sheen.addColorStop(0, "rgba(255,255,255,0.030)");
+    sheen.addColorStop(0.38, "rgba(255,255,255,0.007)");
     sheen.addColorStop(1, "rgba(255,255,255,0)");
     ctx.globalCompositeOperation = "source-atop";
     ctx.fillStyle = sheen;
@@ -367,7 +499,9 @@
     ctx.restore();
 
     state.renderFrameCount += 1;
-    if (options.interactive) state.interactiveFrameCount += 1;
+    if (options.interactive) {
+      state.interactiveFrameCount += 1;
+    }
 
     state.firstFrameDetected = true;
     state.imageRendered = true;
@@ -377,29 +511,44 @@
 
     if (canvas.dataset) {
       canvas.dataset.hearthCanvasSouthContract = CONTRACT;
+      canvas.dataset.hearthCanvasSouthReceipt = RECEIPT;
+      canvas.dataset.hearthCanvasSouthPreviousContract = PREVIOUS_CONTRACT;
       canvas.dataset.hearthCanvasSouthClarityRenewalActive = "true";
+      canvas.dataset.hearthCanvasSouthClarityRenewalVersion = "v2";
       canvas.dataset.hearthCanvasSouthHazeReduced = "true";
+      canvas.dataset.hearthCanvasSouthCenterHazeReduced = "true";
       canvas.dataset.hearthCanvasSouthHighDpiCanvasActive = "true";
+      canvas.dataset.hearthCanvasSouthTextureSharpenPassApplied = String(state.textureSharpenPassApplied);
       canvas.dataset.visualPassClaimed = "false";
     }
+
+    updateDataset();
 
     return getReceipt();
   }
 
   async function renderSphere(options = {}) {
     const canvas = options.canvas;
-    if (!canvas) throw new Error("Canvas South renderSphere requires canvas.");
 
-    if (!state.firstFrameRequested) state.firstFrameRequested = true;
+    if (!canvas) {
+      throw new Error("Canvas South renderSphere requires canvas.");
+    }
 
-    const height = canvas.height || 600;
+    if (!state.firstFrameRequested) {
+      state.firstFrameRequested = true;
+    }
+
     const rows = 6;
 
     for (let i = 1; i <= rows; i += 1) {
       if (isFunction(options.onProgress)) {
-        try { options.onProgress(Math.round((i / rows) * 100), getReceipt()); }
-        catch (error) { recordError("SPHERE_PROGRESS_CALLBACK_FAILED", error); }
+        try {
+          options.onProgress(Math.round((i / rows) * 100), getReceipt());
+        } catch (error) {
+          recordError("SPHERE_PROGRESS_CALLBACK_FAILED", error);
+        }
       }
+
       await yieldFrame();
     }
 
@@ -418,10 +567,6 @@
     });
   }
 
-  function luminance(r, g, b) {
-    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-  }
-
   function classifyPixel(r, g, b, a) {
     if (a < 8) return "blank";
 
@@ -431,10 +576,10 @@
     const lum = luminance(r, g, b);
 
     if (sat < 10 && lum > 34 && lum < 235) return "carrier";
-    if (b > g + 14 && b > r + 18) return "water";
-    if (g >= b - 12 && r >= b - 28) return "land";
-    if (r > 105 && g > 76 && b < 126) return "land";
-    if (b > 74 && g > 46) return "water";
+    if (b > g + 13 && b > r + 17) return "water";
+    if (g >= b - 14 && r >= b - 30) return "land";
+    if (r > 102 && g > 74 && b < 130) return "land";
+    if (b > 72 && g > 44) return "water";
 
     return "other";
   }
@@ -448,11 +593,16 @@
     const other = safeNumber(metrics.other, 0);
     const carrier = safeNumber(metrics.carrier, 0);
     const classes = Array.isArray(metrics.classes) ? metrics.classes.slice() : [];
+
     const meaningful = land + water + other;
     const carrierRatio = nonblank ? carrier / nonblank : 1;
     const contentRatio = nonblank ? meaningful / nonblank : 0;
 
-    const structuralReady = Boolean(state.firstFrameDetected && state.imageRendered && state.renderedAfterTexture);
+    const structuralReady = Boolean(
+      state.firstFrameDetected &&
+      state.imageRendered &&
+      state.renderedAfterTexture
+    );
 
     const strictPass = Boolean(
       structuralReady &&
@@ -497,10 +647,10 @@
     state.planetNotObstructed = true;
 
     if (strictPass) {
-      state.visibleContentProofMethod = "canvas-south-clarity-pixel-content-sample";
+      state.visibleContentProofMethod = "canvas-south-clarity-v2-pixel-content-sample";
       state.visibleContentProofError = "";
     } else if (softGap) {
-      state.visibleContentProofMethod = "canvas-south-clarity-soft-gap-content-sample";
+      state.visibleContentProofMethod = "canvas-south-clarity-v2-soft-gap-content-sample";
       state.visibleContentProofError = [
         `Visible content soft gap: samples=${samples}`,
         `nonblank=${nonblank}`,
@@ -514,7 +664,7 @@
         `contentRatio=${contentRatio.toFixed(2)}`
       ].join(", ");
     } else {
-      state.visibleContentProofMethod = "canvas-south-clarity-hard-fail-content-sample";
+      state.visibleContentProofMethod = "canvas-south-clarity-v2-hard-fail-content-sample";
       state.visibleContentProofError = metrics.hardFailReason || [
         `Visible content hard fail: samples=${samples}`,
         `nonblank=${nonblank}`,
@@ -528,6 +678,7 @@
     }
 
     state.updatedAt = nowIso();
+    updateDataset();
 
     return {
       status: strictPass ? "PASS" : softGap ? "SOFT_GAP" : "HARD_FAIL",
@@ -605,6 +756,7 @@
     }
 
     let imageData;
+
     try {
       imageData = ctx.getImageData(0, 0, width, height);
     } catch (error) {
@@ -631,6 +783,7 @@
     let water = 0;
     let other = 0;
     let carrier = 0;
+
     const lumValues = [];
     const classes = new Set();
 
@@ -669,7 +822,10 @@
       }
     }
 
-    const mean = lumValues.length ? lumValues.reduce((sum, value) => sum + value, 0) / lumValues.length : 0;
+    const mean = lumValues.length
+      ? lumValues.reduce((sum, value) => sum + value, 0) / lumValues.length
+      : 0;
+
     const variance = lumValues.length
       ? Math.sqrt(lumValues.reduce((sum, value) => sum + ((value - mean) ** 2), 0) / lumValues.length)
       : 0;
@@ -694,13 +850,49 @@
     state.textureInvalidated = true;
     state.textureInvalidationReason = String(reason || "manual-texture-invalidation");
     state.updatedAt = nowIso();
+
+    updateDataset();
+
     return getReceipt();
+  }
+
+  function updateDataset() {
+    if (!doc || !doc.documentElement) return;
+
+    const dataset = doc.documentElement.dataset;
+
+    dataset.hearthCanvasSouthLoaded = "true";
+    dataset.hearthCanvasSouthContract = CONTRACT;
+    dataset.hearthCanvasSouthReceipt = RECEIPT;
+    dataset.hearthCanvasSouthPreviousContract = PREVIOUS_CONTRACT;
+    dataset.hearthCanvasSouthBaselineContract = BASELINE_CONTRACT;
+    dataset.hearthCanvasSouthFile = FILE;
+    dataset.hearthCanvasSouthRole = state.role;
+    dataset.hearthCanvasSouthClarityRenewalActive = "true";
+    dataset.hearthCanvasSouthClarityRenewalVersion = "v2";
+    dataset.hearthCanvasSouthHazeReduced = "true";
+    dataset.hearthCanvasSouthCenterHazeReduced = "true";
+    dataset.hearthCanvasSouthRimAtmosphereReduced = "true";
+    dataset.hearthCanvasSouthCenterSheenReduced = "true";
+    dataset.hearthCanvasSouthHighDpiCanvasActive = "true";
+    dataset.hearthCanvasSouthTextureClarityPassApplied = String(state.textureClarityPassApplied);
+    dataset.hearthCanvasSouthTextureSharpenPassApplied = String(state.textureSharpenPassApplied);
+    dataset.hearthCanvasSouthTextureContrastLiftApplied = String(state.textureContrastLiftApplied);
+    dataset.hearthCanvasSouthVisibleContentProof = String(state.visibleContentProof);
+    dataset.hearthCanvasSouthVisibleContentSoftGap = String(state.visibleContentSoftGap);
+    dataset.hearthCanvasSouthVisibleContentHardFail = String(state.visibleContentHardFail);
+    dataset.generatedImage = "false";
+    dataset.graphicBox = "false";
+    dataset.webgl = "false";
+    dataset.visualPassClaimed = "false";
   }
 
   function getReceipt() {
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
+      baselineContract: BASELINE_CONTRACT,
       version: VERSION,
       file: FILE,
       role: state.role,
@@ -710,6 +902,9 @@
       textureComposeComplete: state.textureComposeComplete,
       textureInvalidated: state.textureInvalidated,
       textureInvalidationReason: state.textureInvalidationReason,
+      textureClarityPassApplied: state.textureClarityPassApplied,
+      textureSharpenPassApplied: state.textureSharpenPassApplied,
+      textureContrastLiftApplied: state.textureContrastLiftApplied,
 
       firstFrameRequested: state.firstFrameRequested,
       firstFrameDetected: state.firstFrameDetected,
@@ -744,11 +939,18 @@
 
       visualFidelityRenewalActive: true,
       clarityRenewalActive: true,
+      clarityRenewalVersion: "v2",
       hazeReduced: true,
+      centerHazeReduced: true,
       highDpiCanvasActive: true,
+      highDpiRenderSupported: true,
       sphereEdgeSharpeningActive: true,
+      textureDetailSharpeningActive: true,
       atmosphereDemotedToRimOnly: true,
+      rimAtmosphereReduced: true,
+      centerSheenReduced: true,
       coastlineContrastActive: true,
+      landWaterReadabilityIncreased: true,
       centerDarknessReduced: true,
       lightingPreservesSurfaceReadability: true,
 
@@ -772,6 +974,8 @@
   const api = {
     contract: CONTRACT,
     receipt: RECEIPT,
+    previousContract: PREVIOUS_CONTRACT,
+    baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     file: FILE,
 
@@ -795,8 +999,17 @@
 
     visualFidelityRenewalActive: true,
     clarityRenewalActive: true,
+    clarityRenewalVersion: "v2",
     hazeReduced: true,
+    centerHazeReduced: true,
     highDpiCanvasActive: true,
+    highDpiRenderSupported: true,
+    sphereEdgeSharpeningActive: true,
+    textureDetailSharpeningActive: true,
+    atmosphereDemotedToRimOnly: true,
+    rimAtmosphereReduced: true,
+    centerSheenReduced: true,
+    landWaterReadabilityIncreased: true,
 
     generatedImage: false,
     graphicBox: false,
@@ -811,19 +1024,7 @@
   root.DEXTER_LAB = root.DEXTER_LAB || {};
   root.DEXTER_LAB.hearthCanvasSouth = api;
 
-  if (doc && doc.documentElement) {
-    const dataset = doc.documentElement.dataset;
-    dataset.hearthCanvasSouthLoaded = "true";
-    dataset.hearthCanvasSouthContract = CONTRACT;
-    dataset.hearthCanvasSouthReceipt = RECEIPT;
-    dataset.hearthCanvasSouthFile = FILE;
-    dataset.hearthCanvasSouthClarityRenewalActive = "true";
-    dataset.hearthCanvasSouthHazeReduced = "true";
-    dataset.generatedImage = "false";
-    dataset.graphicBox = "false";
-    dataset.webgl = "false";
-    dataset.visualPassClaimed = "false";
-  }
+  updateDataset();
 
   if (typeof module !== "undefined" && module.exports) {
     module.exports = api;

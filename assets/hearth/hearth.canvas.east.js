@@ -1,19 +1,17 @@
 // /assets/hearth/hearth.canvas.east.js
-// HEARTH_CANVAS_EAST_ATLAS_CLARITY_SOURCE_SHARPENING_TNT_v3
+// HEARTH_CANVAS_EAST_OLD_TERRAIN_MATERIAL_LANGUAGE_DEGOLFING_TNT_v4
 // Full-file replacement.
 // Canvas East / source intake and atlas formation only.
 // Purpose:
-// - Preserve the v2 East split direction.
-// - Keep source authority resolution cached once per atlas build.
-// - Prevent legacy North 768x384 requests from forcing heavy atlas load unless explicitly authorized.
-// - Use mobile-balanced 640x320 as the clarity-safe default.
-// - Preserve 512x256 emergency-low-load, 768x384 standard, and 1024x512 high-detail modes.
-// - Read HEARTH_MATERIALS first when available.
-// - Bridge the material receipt into the canvas system.
-// - Build one source-atlas machine packet consumed by Canvas North/South.
-// - Sharpen source classification without making the visible shore band jagged.
-// - Expose source-mode counts and atlas clarity metrics.
-// - Preserve emergency seven-continent fallback only when upstream material/elevation/hydrology are unavailable.
+// - Preserve East v2 load-reduction mechanics.
+// - Keep authority resolution cached once per atlas build.
+// - Keep material bridge refresh cached once per atlas build.
+// - Preserve 512x256 default atlas pressure reduction.
+// - Retire golf-course material language from Hearth.
+// - Suppress manicured green fairway interiors.
+// - Convert pale round “sand trap” highlands into irregular exposed mineral / stone / dry basin residues.
+// - Convert smooth coast rings into ancient waterline scars, shelf drops, eroded shore traces, and dried hydrosphere boundaries.
+// - Preserve detail growth without moving truth ownership into canvas.
 // - Keep NEWS/Fibonacci synchronization metadata aligned to F13 canvas evidence flow.
 // Does not own:
 // - canvas drawing
@@ -26,34 +24,23 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_EAST_ATLAS_CLARITY_SOURCE_SHARPENING_TNT_v3";
-  const RECEIPT = "HEARTH_CANVAS_EAST_ATLAS_CLARITY_SOURCE_SHARPENING_RECEIPT_v3";
+  const CONTRACT = "HEARTH_CANVAS_EAST_OLD_TERRAIN_MATERIAL_LANGUAGE_DEGOLFING_TNT_v4";
+  const RECEIPT = "HEARTH_CANVAS_EAST_OLD_TERRAIN_MATERIAL_LANGUAGE_DEGOLFING_RECEIPT_v4";
   const PREVIOUS_CONTRACT = "HEARTH_CANVAS_EAST_MATERIAL_ATLAS_SOURCE_MACHINE_TNT_v2";
   const BASELINE_CONTRACT = "HEARTH_CANVAS_EAST_MATERIAL_ATLAS_SOURCE_MACHINE_TNT_v2";
-  const VERSION = "2026-05-30.hearth-canvas-east-atlas-clarity-source-sharpening-v3";
+  const VERSION = "2026-05-30.hearth-canvas-east-old-terrain-material-language-degolfing-v4";
   const FILE = "/assets/hearth/hearth.canvas.east.js";
 
   const EXPECTED_MATERIAL_CONTRACT = "HEARTH_MATERIALS_ISLAND_ELEVATION_BEACH_RELIEF_CONSUMER_TNT_v1";
   const EXPECTED_MATERIAL_RECEIPT = "HEARTH_MATERIALS_ISLAND_ELEVATION_BEACH_RELIEF_CONSUMER_RECEIPT_v1";
 
-  const ATLAS_MODES = Object.freeze({
-    "emergency-low-load": { width: 512, height: 256 },
-    "mobile-balanced": { width: 640, height: 320 },
-    standard: { width: 768, height: 384 },
-    "high-detail": { width: 1024, height: 512 }
-  });
-
-  const DEFAULT_ATLAS_MODE = "mobile-balanced";
-  const DEFAULT_ATLAS_WIDTH = ATLAS_MODES[DEFAULT_ATLAS_MODE].width;
-  const DEFAULT_ATLAS_HEIGHT = ATLAS_MODES[DEFAULT_ATLAS_MODE].height;
+  const DEFAULT_ATLAS_WIDTH = 512;
+  const DEFAULT_ATLAS_HEIGHT = 256;
   const MIN_ATLAS_WIDTH = 256;
   const MIN_ATLAS_HEIGHT = 128;
   const MAX_ATLAS_WIDTH = 1024;
   const MAX_ATLAS_HEIGHT = 512;
   const ROWS_PER_CHUNK_DEFAULT = 4;
-
-  const COASTLINE_CLASSIFIER_TRANSITION = 0.018;
-  const SHORE_VISUAL_BAND_WIDTH = 0.065;
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
@@ -68,6 +55,23 @@
     { id: "polar-crown-continent", index: 7, u: 0.06, v: 0.17, rx: 0.155, ry: 0.095, rot: 0, weight: 0.70, seed: 707 }
   ]);
 
+  const OLD_TERRAIN_PALETTE = Object.freeze({
+    deepWater: [4, 18, 38],
+    basinWater: [7, 31, 58],
+    shelfWater: [21, 72, 92],
+    scarWater: [18, 48, 52],
+    wetStone: [47, 62, 54],
+    oldMoss: [45, 75, 48],
+    scrub: [75, 89, 52],
+    oxidizedLowland: [91, 78, 49],
+    drySoil: [112, 92, 57],
+    weatheredStone: [132, 119, 86],
+    mineralScar: [153, 139, 102],
+    saltChalk: [172, 162, 132],
+    darkRidge: [33, 42, 37],
+    shadowCut: [13, 24, 28]
+  });
+
   const state = {
     contract: CONTRACT,
     receipt: RECEIPT,
@@ -75,7 +79,7 @@
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     file: FILE,
-    role: "canvas-east-atlas-clarity-source-sharpening-v3",
+    role: "canvas-east-old-terrain-material-language-degolfing",
 
     newsProtocolSynchronized: true,
     fibonacciAlignmentSynchronized: true,
@@ -88,23 +92,31 @@
     materialBridgeRefreshCachedPerAtlasBuild: true,
     perPixelAuthorityResolutionRetired: true,
     perPixelMaterialBridgeRefreshRetired: true,
-
-    adaptiveAtlasResolutionActive: true,
-    defaultAtlasMode: DEFAULT_ATLAS_MODE,
-    atlasResolutionMode: "",
+    defaultAtlasReduced: true,
     defaultAtlasWidth: DEFAULT_ATLAS_WIDTH,
     defaultAtlasHeight: DEFAULT_ATLAS_HEIGHT,
     optionalHigherLodSupported: true,
-    legacyNorthDimensionRequestSoftCapped: false,
-    requestedAtlasWidth: 0,
-    requestedAtlasHeight: 0,
-    actualAtlasWidth: 0,
-    actualAtlasHeight: 0,
 
-    classificationShapeSeparationActive: true,
-    coastlineClassifierMode: "sharp-classification-soft-visual-band",
-    coastlineTransitionWidth: COASTLINE_CLASSIFIER_TRANSITION,
-    shoreVisualBandWidth: SHORE_VISUAL_BAND_WIDTH,
+    oldTerrainMaterialLanguageActive: true,
+    golfCourseGreenSuppressed: true,
+    manicuredGrassReadRetired: true,
+    flatFairwayInteriorSuppressed: true,
+    materialColorComesFromTerrain: true,
+    irregularHighlandMaterialActive: true,
+    roundSandTrapHighlandsRetired: true,
+    mineralScarHighlandsActive: true,
+    highlandEdgeBreakupActive: true,
+    coastalScarMaterialActive: true,
+    ancientWaterlineTraceActive: true,
+    shelfDropShadowActive: true,
+    coastlineRingReadSuppressed: true,
+    materialEdgeBreakupActive: true,
+    deterministicTerrainNoiseActive: true,
+    smoothConcentricBandingReduced: true,
+    atlasFrameStable: true,
+    terrainVeiningActive: true,
+    dryScarThreadsActive: true,
+    mineralSeamVariationActive: true,
 
     materialReceiptBridgeActive: true,
     materialNestedReceiptAvailable: false,
@@ -167,27 +179,12 @@
     atlasBuildElapsedMs: 0,
     atlasBuildYieldCount: 0,
 
-    sourceModeCounts: {
-      canonicalMaterial: 0,
-      elevationHydrology: 0,
-      emergencyFallback: 0
-    },
-
-    clarityStats: {
-      landLumTotal: 0,
-      landCount: 0,
-      waterLumTotal: 0,
-      waterCount: 0,
-      coastlineSampleCount: 0,
-      shoreTotal: 0,
-      transitionTotal: 0
-    },
-
-    averageLandWaterContrast: 0,
-    coastlineContrastEstimate: 0,
-    atlasSharpnessPass: false,
-    fuzzRiskDetected: false,
-    clarityMetricReady: false,
+    oldTerrainSampleCount: 0,
+    golfSuppressionSampleCount: 0,
+    mineralScarSampleCount: 0,
+    coastalScarSampleCount: 0,
+    dryScarThreadSampleCount: 0,
+    terrainVeinSampleCount: 0,
 
     sourceContextCreated: false,
     sourceContextCreatedAt: "",
@@ -215,11 +212,7 @@
   };
 
   function nowIso() {
-    try {
-      return new Date().toISOString();
-    } catch (_error) {
-      return "";
-    }
+    try { return new Date().toISOString(); } catch (_error) { return ""; }
   }
 
   function isObject(value) {
@@ -257,17 +250,10 @@
     ];
   }
 
-  function luminanceRgb(rgb) {
-    return 0.2126 * safeNumber(rgb[0], 0) + 0.7152 * safeNumber(rgb[1], 0) + 0.0722 * safeNumber(rgb[2], 0);
-  }
-
   function clonePlain(value) {
     if (!isObject(value)) return value;
-    try {
-      return JSON.parse(JSON.stringify(value));
-    } catch (_error) {
-      return Array.isArray(value) ? value.slice() : { ...value };
-    }
+    try { return JSON.parse(JSON.stringify(value)); }
+    catch (_error) { return Array.isArray(value) ? value.slice() : { ...value }; }
   }
 
   function hashNoise(x, y, seed = 1) {
@@ -308,6 +294,11 @@
     return total ? value / total : value;
   }
 
+  function ridgeNoise(x, y, seed = 1, octaves = 4) {
+    const n = fbm(x, y, seed, octaves);
+    return 1 - Math.abs(n - 0.5) * 2;
+  }
+
   function smoothstep(edge0, edge1, x) {
     const t = clamp01((x - edge0) / Math.max(0.000001, edge1 - edge0));
     return t * t * (3 - 2 * t);
@@ -324,7 +315,6 @@
     const radLon = lon * Math.PI / 180;
     const radLat = lat * Math.PI / 180;
     const cosLat = Math.cos(radLat);
-
     return {
       x: cosLat * Math.cos(radLon),
       y: Math.sin(radLat),
@@ -339,11 +329,7 @@
     canvas.width = width;
     canvas.height = height;
 
-    const context = canvas.getContext("2d", {
-      alpha: false,
-      willReadFrequently: true
-    });
-
+    const context = canvas.getContext("2d", { alpha: false, willReadFrequently: true });
     if (!context) throw new Error("Atlas 2D context unavailable.");
 
     return { canvas, context };
@@ -351,13 +337,9 @@
 
   function yieldFrame() {
     state.atlasBuildYieldCount += 1;
-
     return new Promise((resolve) => {
-      if (typeof root.requestAnimationFrame === "function") {
-        root.requestAnimationFrame(resolve);
-      } else {
-        root.setTimeout(resolve, 0);
-      }
+      if (typeof root.requestAnimationFrame === "function") root.requestAnimationFrame(resolve);
+      else root.setTimeout(resolve, 0);
     });
   }
 
@@ -370,10 +352,7 @@
     };
 
     state.errors.push(item);
-
-    if (state.errors.length > 80) {
-      state.errors.splice(0, state.errors.length - 80);
-    }
+    if (state.errors.length > 80) state.errors.splice(0, state.errors.length - 80);
 
     state.updatedAt = item.at;
     updateDocumentDataset();
@@ -386,7 +365,6 @@
       if (root.HEARTH && root.HEARTH[name] && isObject(root.HEARTH[name])) return root.HEARTH[name];
       if (root.DEXTER_LAB && root.DEXTER_LAB[name] && isObject(root.DEXTER_LAB[name])) return root.DEXTER_LAB[name];
     }
-
     return null;
   }
 
@@ -433,42 +411,35 @@
 
   function readString(source, keys, fallback = "") {
     if (!source || !isObject(source)) return fallback;
-
     for (const key of keys) {
       const value = source[key];
       if (value !== undefined && value !== null && String(value).length) return String(value);
     }
-
     return fallback;
   }
 
   function readNumber(source, keys, fallback = NaN) {
     if (!source || !isObject(source)) return fallback;
-
     for (const key of keys) {
       const n = Number(source[key]);
       if (Number.isFinite(n)) return n;
     }
-
     return fallback;
   }
 
   function readBoolean(source, keys, fallback = null) {
     if (!source || !isObject(source)) return fallback;
-
     for (const key of keys) {
       const value = source[key];
       if (typeof value === "boolean") return value;
       if (value === "true") return true;
       if (value === "false") return false;
     }
-
     return fallback;
   }
 
   function materialSignatureFrom(authority, receipt) {
     const source = receipt || authority || {};
-
     return [
       readString(source, ["contract"], authority && authority.contract ? authority.contract : ""),
       readString(source, ["receipt"], authority && authority.receipt ? authority.receipt : ""),
@@ -476,7 +447,8 @@
       readString(source, ["activeElevationContractRequired", "requiredElevationContract"], ""),
       String(Boolean(readBoolean(source, ["supportsIslandElevationMaterialConsumer"], false))),
       String(Boolean(readBoolean(source, ["supportsRidgeBandMaterialFeed"], false))),
-      String(Boolean(readBoolean(source, ["supportsInlandReliefMaterialFeed"], false)))
+      String(Boolean(readBoolean(source, ["supportsInlandReliefMaterialFeed"], false))),
+      CONTRACT
     ].join("|");
   }
 
@@ -533,49 +505,8 @@
     };
   }
 
-  function resolveAtlasSpec(options = {}) {
-    const requestedWidth = Math.round(safeNumber(options.width, 0));
-    const requestedHeight = Math.round(safeNumber(options.height, 0));
-    const requestedMode = String(options.atlasResolutionMode || options.resolutionMode || "").trim();
-
-    let mode = DEFAULT_ATLAS_MODE;
-    let width = DEFAULT_ATLAS_WIDTH;
-    let height = DEFAULT_ATLAS_HEIGHT;
-    let legacySoftCap = false;
-
-    if (requestedMode && ATLAS_MODES[requestedMode]) {
-      mode = requestedMode;
-      width = ATLAS_MODES[mode].width;
-      height = ATLAS_MODES[mode].height;
-    } else if (options.forceDimensions === true && requestedWidth && requestedHeight) {
-      mode = "forced-custom";
-      width = clamp(requestedWidth, MIN_ATLAS_WIDTH, MAX_ATLAS_WIDTH);
-      height = clamp(requestedHeight, MIN_ATLAS_HEIGHT, MAX_ATLAS_HEIGHT);
-    } else if (requestedWidth === 768 && requestedHeight === 384) {
-      mode = DEFAULT_ATLAS_MODE;
-      width = DEFAULT_ATLAS_WIDTH;
-      height = DEFAULT_ATLAS_HEIGHT;
-      legacySoftCap = true;
-    } else if (requestedWidth && requestedHeight && options.allowExplicitDimensions === true) {
-      mode = "explicit-custom";
-      width = clamp(requestedWidth, MIN_ATLAS_WIDTH, MAX_ATLAS_WIDTH);
-      height = clamp(requestedHeight, MIN_ATLAS_HEIGHT, MAX_ATLAS_HEIGHT);
-    }
-
-    return {
-      mode,
-      width,
-      height,
-      rowsPerChunk: Math.max(1, Math.round(safeNumber(options.rowsPerChunk, ROWS_PER_CHUNK_DEFAULT))),
-      requestedWidth,
-      requestedHeight,
-      legacySoftCap
-    };
-  }
-
   function createSourceContext(options = {}) {
     const materialBridge = refreshMaterialBridge();
-    const spec = resolveAtlasSpec(options);
 
     const sourceContext = {
       createdAt: nowIso(),
@@ -586,15 +517,12 @@
       compositionAuthority: resolveSource(["HEARTH_COMPOSITION", "composition", "hearthComposition"]),
       hexAuthority: resolveSource(["HEARTH_HEX_FOUR_PAIR_AUTHORITY", "hexAuthority", "hearthHexAuthority"]),
       hexSurface: resolveSource(["HEARTH_HEX_SURFACE", "hexSurface", "hearthHexSurface"]),
-      mode: spec.mode,
-      width: spec.width,
-      height: spec.height,
-      requestedWidth: spec.requestedWidth,
-      requestedHeight: spec.requestedHeight,
-      rowsPerChunk: spec.rowsPerChunk,
-      legacyNorthDimensionRequestSoftCapped: spec.legacySoftCap,
-      adaptiveAtlasResolutionActive: true,
+      width: Math.max(MIN_ATLAS_WIDTH, Math.min(MAX_ATLAS_WIDTH, Math.round(safeNumber(options.width, DEFAULT_ATLAS_WIDTH)))),
+      height: Math.max(MIN_ATLAS_HEIGHT, Math.min(MAX_ATLAS_HEIGHT, Math.round(safeNumber(options.height, DEFAULT_ATLAS_HEIGHT)))),
+      rowsPerChunk: Math.max(1, Math.round(safeNumber(options.rowsPerChunk, ROWS_PER_CHUNK_DEFAULT))),
+      oldTerrainMaterialLanguageActive: true,
       authorityResolutionCachedPerAtlasBuild: true,
+      materialBridgeRefreshCachedPerAtlasBuild: true,
       perPixelAuthorityResolutionRetired: true,
       perPixelMaterialBridgeRefreshRetired: true
     };
@@ -603,13 +531,6 @@
     state.sourceContextCreatedAt = sourceContext.createdAt;
     state.sourceContextAuthorityResolutionCount += 1;
     state.canonicalMaterialAuthorityPresent = Boolean(sourceContext.materialsAuthority);
-
-    state.atlasResolutionMode = spec.mode;
-    state.requestedAtlasWidth = spec.requestedWidth;
-    state.requestedAtlasHeight = spec.requestedHeight;
-    state.actualAtlasWidth = spec.width;
-    state.actualAtlasHeight = spec.height;
-    state.legacyNorthDimensionRequestSoftCapped = spec.legacySoftCap;
 
     return sourceContext;
   }
@@ -668,7 +589,6 @@
 
     for (const key of keys) {
       const value = packet[key];
-
       if (
         Array.isArray(value) &&
         value.length >= 3 &&
@@ -740,36 +660,14 @@
     ));
 
     const textSaysWater = includesAny(classText, [
-      "water",
-      "ocean",
-      "shelf",
-      "submerged",
-      "hydro",
-      "marine",
-      "sea",
-      "strait",
-      "shallow",
-      "deep",
-      "bay",
-      "inlet"
+      "water", "ocean", "shelf", "submerged", "hydro", "marine", "sea", "strait",
+      "shallow", "deep", "bay", "inlet"
     ]);
 
     const textSaysLand = includesAny(classText, [
-      "land",
-      "continent",
-      "mountain",
-      "plateau",
-      "canyon",
-      "cliff",
-      "rainforest",
-      "tundra",
-      "desert",
-      "summit",
-      "ridge",
-      "coast",
-      "beach",
-      "island",
-      "peninsula"
+      "land", "continent", "mountain", "plateau", "canyon", "cliff", "rainforest",
+      "tundra", "desert", "summit", "ridge", "coast", "beach", "island", "peninsula",
+      "stone", "mineral", "soil", "moss", "scrub"
     ]);
 
     let isWater = Boolean(isWaterBool === true || waterFeed > 0.42 || (textSaysWater && !textSaysLand));
@@ -859,10 +757,8 @@
 
     const regional = fbm(u * 5.8 - 1.5, v * 4.8 + 2.8, 333, 5);
     const fine = fbm(u * 18.0 + 4.7, v * 14.0 - 2.8, 444, 4);
-    const ridgeRaw = fbm(u * 11.0 + 7.1, v * 8.6 - 6.2, 555, 4);
-    const ridge = 1 - Math.abs(ridgeRaw - 0.5) * 2;
-    const basinRaw = fbm(u * 4.2 - 3.2, v * 3.5 + 5.6, 666, 4);
-    const basin = 1 - Math.abs(basinRaw - 0.5) * 2;
+    const ridge = ridgeNoise(u * 11.0 + 7.1, v * 8.6 - 6.2, 555, 4);
+    const basin = ridgeNoise(u * 4.2 - 3.2, v * 3.5 + 5.6, 666, 4);
 
     const overlapCut =
       smoothstep(0.11, 0.34, secondary.value) *
@@ -907,56 +803,133 @@
     };
   }
 
-  function fallbackMaterial(point, visualField, latBand, mode = "emergency-seven-continent-fallback") {
-    const elevation = visualField.elevation;
-    const elevationDelta = elevation - visualField.seaLine;
+  function oldTerrainMaterialize(point, source) {
+    const p = OLD_TERRAIN_PALETTE;
 
-    const landSignal = smoothstep(
-      -COASTLINE_CLASSIFIER_TRANSITION,
-      COASTLINE_CLASSIFIER_TRANSITION,
-      elevationDelta
-    );
+    const u = point.u;
+    const v = point.v;
+    const latBand = Math.abs(point.lat) / 90;
+    const elevation = clamp01(source.elevation);
+    const landSignal = clamp01(source.landSignal);
+    const waterSignal = clamp01(source.waterSignal);
+    const shore = clamp01(source.shore);
+    const shelf = clamp01(source.shelf);
+    const highland = clamp01(source.highland);
+    const mountain = clamp01(source.mountain);
 
-    const waterSignal = 1 - landSignal;
-    const isWater = waterSignal >= landSignal;
-
-    const shore = 1 - smoothstep(0, SHORE_VISUAL_BAND_WIDTH, Math.abs(elevationDelta));
-    const shelf = isWater ? clamp01(shore * 0.88 + (1 - waterSignal) * 0.22) : 0;
-
-    const fine = fbm(point.u * 22.0 + 4.7, point.v * 16.0 - 2.8, 777, 4);
-    const ridge = 1 - Math.abs(fbm(point.u * 13.5 + 7.1, point.v * 9.0 - 6.2, 888, 4) - 0.5) * 2;
+    const broad = fbm(u * 6.7 + 19.2, v * 5.3 - 4.8, 2401, 5);
+    const grain = fbm(u * 38.0 - 11.4, v * 29.0 + 3.2, 2402, 4);
+    const mineral = ridgeNoise(u * 22.0 + 2.1, v * 17.0 - 8.4, 2403, 4);
+    const scar = ridgeNoise(u * 34.0 - 1.9, v * 21.0 + 7.5, 2404, 4);
+    const vein = ridgeNoise(u * 54.0 + 8.8, v * 39.0 - 10.2, 2405, 3);
+    const dryThread = smoothstep(0.67, 0.92, vein) * smoothstep(0.24, 0.88, landSignal);
+    const highlandBreak = smoothstep(0.45, 0.92, mineral) * smoothstep(0.34, 0.98, highland + mountain * 0.58);
+    const coastalScar = shore * (0.48 + scar * 0.52);
+    const shelfDrop = shelf * smoothstep(0.38, 0.92, scar);
 
     let rgb;
     let visualClass;
 
-    if (isWater) {
-      rgb = mixRgb([5, 28, 66], [12, 70, 135], clamp01((1 - waterSignal) * 0.52 + fine * 0.20));
-      rgb = mixRgb(rgb, [30, 119, 158], shelf * 0.86);
-      visualClass = shelf > 0.42 ? `${mode}-shelf-water` : `${mode}-deep-water`;
+    if (source.isWater) {
+      const depth = clamp01(waterSignal * 0.76 + (1 - shelf) * 0.24);
+      rgb = mixRgb(p.shelfWater, p.deepWater, depth);
+      rgb = mixRgb(rgb, p.basinWater, source.oceanChannelCut * 0.62);
+      rgb = mixRgb(rgb, p.scarWater, shelfDrop * 0.55);
+      rgb = mixRgb(rgb, p.shadowCut, Math.max(source.oceanChannelCut, 1 - landSignal) * 0.22);
+      visualClass = shelfDrop > 0.35 ? "old-hydrosphere-shelf-drop-water" : "old-basin-water";
+      if (shelfDrop > 0.18) state.coastalScarSampleCount += 1;
     } else {
-      const highland = clamp01((elevation - 0.58) * 2.7);
-      const mountain = clamp01((elevation - 0.68) * 3.5);
-      const arid = clamp01(fbm(point.u * 7.4 + 9.2, point.v * 5.9 - 1.1, 999, 4) * 0.72 + latBand * 0.28);
-      const vegetation = clamp01((1 - latBand * 0.70) * (1 - mountain * 0.42) * (0.70 + fine * 0.30));
+      const mossWeight = clamp01((1 - highland * 0.75) * (1 - latBand * 0.52) * (0.26 + broad * 0.34));
+      const scrubWeight = clamp01((1 - highland * 0.45) * (0.32 + grain * 0.28));
+      const oxidizedWeight = clamp01(0.28 + broad * 0.34 + latBand * 0.18);
+      const stoneWeight = clamp01(highland * 0.62 + mountain * 0.72 + mineral * 0.24);
+      const scarWeight = clamp01(highlandBreak * 0.72 + coastalScar * 0.38 + dryThread * 0.26);
 
-      rgb = mixRgb([126, 106, 60], [52, 114, 72], vegetation * (1 - arid * 0.52));
-      rgb = mixRgb(rgb, [150, 140, 112], mountain * 0.72);
-      rgb = mixRgb(rgb, [190, 166, 98], shore * 0.66);
-      visualClass = mountain > 0.50 ? `${mode}-mountain` : shore > 0.42 ? `${mode}-coast-land` : `${mode}-land`;
+      rgb = mixRgb(p.oxidizedLowland, p.oldMoss, mossWeight * 0.42);
+      rgb = mixRgb(rgb, p.scrub, scrubWeight * 0.36);
+      rgb = mixRgb(rgb, p.drySoil, oxidizedWeight * 0.40);
+      rgb = mixRgb(rgb, p.weatheredStone, stoneWeight * 0.52);
+      rgb = mixRgb(rgb, p.mineralScar, scarWeight * 0.48);
+      rgb = mixRgb(rgb, p.saltChalk, mountain * highlandBreak * 0.34);
+      rgb = mixRgb(rgb, p.darkRidge, source.oceanChannelCut * 0.20 + scar * 0.08);
+      rgb = mixRgb(rgb, p.mineralScar, coastalScar * 0.36);
+
+      if (highlandBreak > 0.30) state.mineralScarSampleCount += 1;
+      if (coastalScar > 0.28) state.coastalScarSampleCount += 1;
+      if (dryThread > 0.25) state.dryScarThreadSampleCount += 1;
+      if (vein > 0.64) state.terrainVeinSampleCount += 1;
+
+      if (mountain > 0.42 || highlandBreak > 0.45) visualClass = "old-exposed-mineral-highland";
+      else if (coastalScar > 0.32) visualClass = "old-waterline-scar-land";
+      else if (dryThread > 0.28) visualClass = "old-dry-scar-thread-land";
+      else visualClass = "old-scrub-stone-lowland";
     }
 
-    const relief = (ridge - 0.5) * 26 + (fine - 0.5) * 11;
+    const nonManicuredJitter = (grain - 0.5) * 18 + (mineral - 0.5) * 13 + dryThread * 16 - coastalScar * 8;
+    const greenSuppression = source.isWater ? 0 : clamp01((rgb[1] - Math.max(rgb[0], rgb[2])) / 80);
+    const fairwaySuppression = greenSuppression * smoothstep(0.22, 0.92, landSignal) * (1 - highland * 0.34);
+
+    if (fairwaySuppression > 0.08) {
+      state.golfSuppressionSampleCount += 1;
+      rgb = mixRgb(rgb, p.oxidizedLowland, fairwaySuppression * 0.48);
+      rgb = mixRgb(rgb, p.weatheredStone, fairwaySuppression * 0.20);
+    }
 
     rgb = [
-      clamp(Math.round(rgb[0] + relief + shore * (isWater ? 2 : 20)), 0, 255),
-      clamp(Math.round(rgb[1] + relief + shore * (isWater ? 4 : 16)), 0, 255),
-      clamp(Math.round(rgb[2] + relief * 0.72 + shelf * 18 + shore * (isWater ? 12 : 4)), 0, 255)
+      clamp(Math.round(rgb[0] + nonManicuredJitter * 0.66), 0, 255),
+      clamp(Math.round(rgb[1] + nonManicuredJitter * 0.42 - fairwaySuppression * 18), 0, 255),
+      clamp(Math.round(rgb[2] + nonManicuredJitter * 0.34 - fairwaySuppression * 6), 0, 255)
     ];
+
+    state.oldTerrainSampleCount += 1;
+
+    return {
+      rgb,
+      visualClass,
+      oldTerrainMaterialLanguageActive: true,
+      golfCourseGreenSuppressed: true,
+      manicuredGrassReadRetired: true,
+      flatFairwayInteriorSuppressed: true,
+      irregularHighlandMaterialActive: true,
+      mineralScarHighlandsActive: true,
+      coastalScarMaterialActive: true,
+      ancientWaterlineTraceActive: true,
+      shelfDropShadowActive: true,
+      terrainVeiningActive: vein > 0.64,
+      dryScarThreadsActive: dryThread > 0.25,
+      materialEdgeBreakupActive: true
+    };
+  }
+
+  function fallbackMaterial(point, visualField, latBand, mode = "emergency-seven-continent-fallback") {
+    const elevation = visualField.elevation;
+    const landSignal = smoothstep(visualField.seaLine - 0.035, visualField.seaLine + 0.03, elevation);
+    const waterSignal = 1 - landSignal;
+    const isWater = waterSignal >= landSignal;
+    const shore = clamp01(1 - Math.abs(waterSignal - landSignal) * 5.1);
+    const shelf = isWater ? clamp01(shore * 0.88 + (1 - waterSignal) * 0.22) : 0;
+    const highland = clamp01((elevation - 0.56) * 2.4);
+    const mountain = clamp01((elevation - 0.67) * 3.8);
+
+    const source = {
+      isWater,
+      isLand: !isWater,
+      waterSignal,
+      landSignal,
+      elevation,
+      shore,
+      shelf,
+      highland,
+      mountain,
+      oceanChannelCut: visualField.oceanChannelCut
+    };
+
+    const terrain = oldTerrainMaterialize(point, source);
 
     return {
       ...point,
-      rgb,
-      visualClass,
+      rgb: terrain.rgb,
+      visualClass: `${mode}-${terrain.visualClass}`,
       isWater,
       isLand: !isWater,
       waterSignal,
@@ -965,85 +938,29 @@
       seaLine: visualField.seaLine,
       shore,
       shelf,
-      highland: clamp01((elevation - 0.58) * 2.7),
-      mountain: clamp01((elevation - 0.68) * 3.5),
+      highland,
+      mountain,
       continentId: visualField.continentId,
       continentIndex: visualField.continentIndex,
       continentSignal: visualField.continentSignal,
       secondaryContinentSignal: visualField.secondaryContinentSignal,
       oceanChannelCut: visualField.oceanChannelCut,
       source: mode,
-      classificationShapeSeparationActive: true,
-      coastlineClassifierMode: "sharp-classification-soft-visual-band",
-      coastlineTransitionWidth: COASTLINE_CLASSIFIER_TRANSITION,
-      shoreVisualBandWidth: SHORE_VISUAL_BAND_WIDTH,
       canonicalMaterialConsumed: false,
       elevationHydrologyFallbackUsed: mode === "elevation-hydrology-lite-fallback",
       sevenContinentFallbackUsed: mode !== "elevation-hydrology-lite-fallback",
-      sevenContinentFallbackSuppressedByUpstream: mode === "elevation-hydrology-lite-fallback"
+      sevenContinentFallbackSuppressedByUpstream: mode === "elevation-hydrology-lite-fallback",
+      oldTerrainMaterialLanguageActive: terrain.oldTerrainMaterialLanguageActive,
+      golfCourseGreenSuppressed: terrain.golfCourseGreenSuppressed,
+      mineralScarHighlandsActive: terrain.mineralScarHighlandsActive,
+      coastalScarMaterialActive: terrain.coastalScarMaterialActive
     };
-  }
-
-  function registerSampleMetrics(sample) {
-    state.sourceContextSampleCount += 1;
-
-    if (sample.canonicalMaterialConsumed) {
-      state.sourceModeCounts.canonicalMaterial += 1;
-    } else if (sample.elevationHydrologyFallbackUsed) {
-      state.sourceModeCounts.elevationHydrology += 1;
-    } else if (sample.sevenContinentFallbackUsed) {
-      state.sourceModeCounts.emergencyFallback += 1;
-    }
-
-    const lum = luminanceRgb(sample.rgb || [0, 0, 0]);
-
-    if (sample.isLand) {
-      state.clarityStats.landLumTotal += lum;
-      state.clarityStats.landCount += 1;
-    } else if (sample.isWater) {
-      state.clarityStats.waterLumTotal += lum;
-      state.clarityStats.waterCount += 1;
-    }
-
-    if (safeNumber(sample.shore, 0) > 0.28) {
-      state.clarityStats.coastlineSampleCount += 1;
-      state.clarityStats.shoreTotal += safeNumber(sample.shore, 0);
-      state.clarityStats.transitionTotal += Math.abs(safeNumber(sample.landSignal, 0) - safeNumber(sample.waterSignal, 0));
-    }
-  }
-
-  function finalizeClarityMetrics() {
-    const landAvg = state.clarityStats.landCount
-      ? state.clarityStats.landLumTotal / state.clarityStats.landCount
-      : 0;
-
-    const waterAvg = state.clarityStats.waterCount
-      ? state.clarityStats.waterLumTotal / state.clarityStats.waterCount
-      : 0;
-
-    const avgContrast = Math.abs(landAvg - waterAvg);
-    const shoreAvg = state.clarityStats.coastlineSampleCount
-      ? state.clarityStats.shoreTotal / state.clarityStats.coastlineSampleCount
-      : 0;
-
-    const transitionAvg = state.clarityStats.coastlineSampleCount
-      ? state.clarityStats.transitionTotal / state.clarityStats.coastlineSampleCount
-      : 0;
-
-    state.averageLandWaterContrast = Number(avgContrast.toFixed(2));
-    state.coastlineContrastEstimate = Number((avgContrast * (0.65 + transitionAvg * 0.35) + shoreAvg * 18).toFixed(2));
-
-    const enoughResolution = state.atlasWidth >= 640 && state.atlasHeight >= 320;
-    const enoughContrast = state.averageLandWaterContrast >= 12 || state.coastlineContrastEstimate >= 18;
-    const enoughModes = state.sourceModeCounts.canonicalMaterial + state.sourceModeCounts.elevationHydrology + state.sourceModeCounts.emergencyFallback > 0;
-
-    state.atlasSharpnessPass = Boolean(enoughResolution && enoughContrast && enoughModes);
-    state.fuzzRiskDetected = Boolean(!state.atlasSharpnessPass || state.atlasWidth < 640 || state.atlasHeight < 320);
-    state.clarityMetricReady = true;
   }
 
   function samplePlanetMaterialWithContext(sourceContext, u, v) {
     const context = sourceContext || createSourceContext();
+    state.sourceContextSampleCount += 1;
+
     const lon = u * 360 - 180;
     const lat = 90 - v * 180;
     const vector = lonLatToVector(lon, lat);
@@ -1071,45 +988,52 @@
       state.sevenContinentFallbackSuppressedByUpstream = true;
 
       const elevation = Number.isFinite(material.elevation) ? material.elevation : visualField.elevation;
-      let rgb = material.color.slice();
+      const landSignal = material.isWater ? clamp01(1 - Math.max(0.58, material.waterFeed)) : Math.max(0.58, material.landFeed);
+      const waterSignal = material.isWater ? Math.max(0.58, material.waterFeed) : clamp01(1 - Math.max(0.58, material.landFeed));
+      const highland = clamp01(Math.max(material.relief, (elevation - 0.56) * 2.4));
+      const mountain = clamp01((elevation - 0.67) * 3.8 + material.relief * 0.28);
 
-      if (material.isWater) {
-        rgb = mixRgb(rgb, [3, 16, 34], readNumber(material.packet, ["waterDepthShade", "waterDepth"], 0) * 0.10);
-        rgb = mixRgb(rgb, [30, 108, 148], material.shelf * 0.08);
-      } else {
-        rgb = mixRgb(rgb, [156, 146, 112], material.relief * 0.10);
-        rgb = mixRgb(rgb, [190, 166, 98], material.shore * 0.06);
-      }
+      const terrain = oldTerrainMaterialize(point, {
+        isWater: material.isWater,
+        isLand: !material.isWater,
+        waterSignal,
+        landSignal,
+        elevation,
+        shore: material.shore,
+        shelf: material.shelf,
+        highland,
+        mountain,
+        oceanChannelCut: visualField.oceanChannelCut
+      });
 
       return {
         ...point,
-        rgb,
-        visualClass: material.visualClass,
+        rgb: terrain.rgb,
+        visualClass: `canonical-${terrain.visualClass}`,
         isWater: material.isWater,
         isLand: !material.isWater,
-        waterSignal: material.isWater ? Math.max(0.58, material.waterFeed) : clamp01(1 - Math.max(0.58, material.landFeed)),
-        landSignal: material.isWater ? clamp01(1 - Math.max(0.58, material.waterFeed)) : Math.max(0.58, material.landFeed),
+        waterSignal,
+        landSignal,
         elevation,
         seaLine: visualField.seaLine,
         shore: material.shore,
         shelf: material.shelf,
-        highland: clamp01((elevation - 0.58) * 2.7),
-        mountain: clamp01((elevation - 0.68) * 3.5),
+        highland,
+        mountain,
         continentId: readString(material.packet, ["continentId"], visualField.continentId),
         continentIndex: readNumber(material.packet, ["continentIndex"], visualField.continentIndex),
         continentSignal: Math.max(readNumber(material.packet, ["continentPotential", "bodySeatPressure"], 0), visualField.continentSignal),
         secondaryContinentSignal: visualField.secondaryContinentSignal,
         oceanChannelCut: visualField.oceanChannelCut,
-        source: "canonical-material",
-        classificationShapeSeparationActive: true,
-        coastlineClassifierMode: "sharp-classification-soft-visual-band",
-        coastlineTransitionWidth: COASTLINE_CLASSIFIER_TRANSITION,
-        shoreVisualBandWidth: SHORE_VISUAL_BAND_WIDTH,
+        source: "canonical-material-old-terrain-translation",
         canonicalMaterialConsumed: true,
         elevationHydrologyFallbackUsed: false,
         sevenContinentFallbackUsed: false,
         sevenContinentFallbackSuppressedByUpstream: true,
-        upstreamSampleAvailable: Boolean(materialSample || hydroSample || elevationSample || compositionSample || hexSample)
+        upstreamSampleAvailable: Boolean(materialSample || hydroSample || elevationSample || compositionSample || hexSample),
+        oldTerrainMaterialLanguageActive: true,
+        golfCourseGreenSuppressed: true,
+        materialColorComesFromTerrain: true
       };
     }
 
@@ -1165,34 +1089,10 @@
 
     state.atlasWidth = width;
     state.atlasHeight = height;
-    state.actualAtlasWidth = width;
-    state.actualAtlasHeight = height;
     state.atlasCanonicalMaterialSampleCount = 0;
     state.atlasElevationHydrologySampleCount = 0;
     state.atlasFallbackSampleCount = 0;
     state.atlasTotalSampleCount = 0;
-
-    state.sourceModeCounts = {
-      canonicalMaterial: 0,
-      elevationHydrology: 0,
-      emergencyFallback: 0
-    };
-
-    state.clarityStats = {
-      landLumTotal: 0,
-      landCount: 0,
-      waterLumTotal: 0,
-      waterCount: 0,
-      coastlineSampleCount: 0,
-      shoreTotal: 0,
-      transitionTotal: 0
-    };
-
-    state.averageLandWaterContrast = 0;
-    state.coastlineContrastEstimate = 0;
-    state.atlasSharpnessPass = false;
-    state.fuzzRiskDetected = false;
-    state.clarityMetricReady = false;
 
     state.materialSampleSuccessCount = 0;
     state.materialSampleFailureCount = 0;
@@ -1204,6 +1104,13 @@
     state.sevenContinentFallbackSuppressedByUpstream = false;
     state.materialAtlasPrimary = false;
     state.sourceContextSampleCount = 0;
+
+    state.oldTerrainSampleCount = 0;
+    state.golfSuppressionSampleCount = 0;
+    state.mineralScarSampleCount = 0;
+    state.coastalScarSampleCount = 0;
+    state.dryScarThreadSampleCount = 0;
+    state.terrainVeinSampleCount = 0;
 
     updateDocumentDataset();
 
@@ -1225,15 +1132,9 @@
 
           state.atlasTotalSampleCount += 1;
 
-          if (sample.canonicalMaterialConsumed) {
-            state.atlasCanonicalMaterialSampleCount += 1;
-          } else if (sample.elevationHydrologyFallbackUsed) {
-            state.atlasElevationHydrologySampleCount += 1;
-          } else if (sample.sevenContinentFallbackUsed) {
-            state.atlasFallbackSampleCount += 1;
-          }
-
-          registerSampleMetrics(sample);
+          if (sample.canonicalMaterialConsumed) state.atlasCanonicalMaterialSampleCount += 1;
+          else if (sample.elevationHydrologyFallbackUsed) state.atlasElevationHydrologySampleCount += 1;
+          else if (sample.sevenContinentFallbackUsed) state.atlasFallbackSampleCount += 1;
         }
       }
 
@@ -1263,8 +1164,6 @@
     state.sevenContinentFallbackUsed = state.atlasFallbackSampleCount > 0;
     state.sevenContinentFallbackSuppressedByUpstream =
       state.atlasCanonicalMaterialSampleCount + state.atlasElevationHydrologySampleCount > 0;
-
-    finalizeClarityMetrics();
 
     state.atlasInvalidated = false;
     state.atlasInvalidationReason = "";
@@ -1297,23 +1196,14 @@
         materialBridgeRefreshCachedPerAtlasBuild: true,
         perPixelAuthorityResolutionRetired: true,
         perPixelMaterialBridgeRefreshRetired: true,
-        adaptiveAtlasResolutionActive: true,
-        atlasResolutionMode: state.atlasResolutionMode,
-        defaultAtlasMode: DEFAULT_ATLAS_MODE,
-        requestedAtlasWidth: state.requestedAtlasWidth,
-        requestedAtlasHeight: state.requestedAtlasHeight,
+        defaultAtlasReduced: true,
+        defaultAtlasWidth: DEFAULT_ATLAS_WIDTH,
+        defaultAtlasHeight: DEFAULT_ATLAS_HEIGHT,
         actualAtlasWidth: width,
         actualAtlasHeight: height,
-        legacyNorthDimensionRequestSoftCapped: state.legacyNorthDimensionRequestSoftCapped,
-        classificationShapeSeparationActive: true,
-        coastlineClassifierMode: state.coastlineClassifierMode,
-        coastlineTransitionWidth: state.coastlineTransitionWidth,
-        shoreVisualBandWidth: state.shoreVisualBandWidth,
-        sourceModeCounts: clonePlain(state.sourceModeCounts),
-        averageLandWaterContrast: state.averageLandWaterContrast,
-        coastlineContrastEstimate: state.coastlineContrastEstimate,
-        atlasSharpnessPass: state.atlasSharpnessPass,
-        fuzzRiskDetected: state.fuzzRiskDetected
+        oldTerrainMaterialLanguageActive: true,
+        golfCourseGreenSuppressed: true,
+        materialColorComesFromTerrain: true
       },
 
       materialBridge: getMaterialBridgeReceipt(),
@@ -1355,7 +1245,8 @@
 
   function sample(point = {}) {
     const sourceContext = createSourceContext({
-      atlasResolutionMode: DEFAULT_ATLAS_MODE
+      width: DEFAULT_ATLAS_WIDTH,
+      height: DEFAULT_ATLAS_HEIGHT
     });
 
     const u = clamp01(safeNumber(point.u, 0.5));
@@ -1375,13 +1266,6 @@
       materialContractMatchesExpected: state.materialContractMatchesExpected,
       materialReceiptMatchesExpected: state.materialReceiptMatchesExpected,
       materialAtlasPrimary: material.canonicalMaterialConsumed === true,
-
-      adaptiveAtlasResolutionActive: true,
-      atlasResolutionMode: state.atlasResolutionMode || DEFAULT_ATLAS_MODE,
-      classificationShapeSeparationActive: true,
-      coastlineClassifierMode: state.coastlineClassifierMode,
-      coastlineTransitionWidth: state.coastlineTransitionWidth,
-      shoreVisualBandWidth: state.shoreVisualBandWidth,
 
       bodyBinding: 1,
       surfaceAttachment: 1,
@@ -1442,38 +1326,42 @@
       oneActiveGearAtATime: true,
       cycleOrder: state.cycleOrder,
 
-      authorityResolutionCachedPerAtlasBuild: state.authorityResolutionCachedPerAtlasBuild,
-      materialBridgeRefreshCachedPerAtlasBuild: state.materialBridgeRefreshCachedPerAtlasBuild,
-      perPixelAuthorityResolutionRetired: state.perPixelAuthorityResolutionRetired,
-      perPixelMaterialBridgeRefreshRetired: state.perPixelMaterialBridgeRefreshRetired,
+      authorityResolutionCachedPerAtlasBuild: true,
+      materialBridgeRefreshCachedPerAtlasBuild: true,
+      perPixelAuthorityResolutionRetired: true,
+      perPixelMaterialBridgeRefreshRetired: true,
+      defaultAtlasReduced: true,
+      defaultAtlasWidth: DEFAULT_ATLAS_WIDTH,
+      defaultAtlasHeight: DEFAULT_ATLAS_HEIGHT,
+      optionalHigherLodSupported: true,
 
-      adaptiveAtlasResolutionActive: state.adaptiveAtlasResolutionActive,
-      defaultAtlasMode: state.defaultAtlasMode,
-      atlasResolutionMode: state.atlasResolutionMode,
-      defaultAtlasWidth: state.defaultAtlasWidth,
-      defaultAtlasHeight: state.defaultAtlasHeight,
-      optionalHigherLodSupported: state.optionalHigherLodSupported,
-      legacyNorthDimensionRequestSoftCapped: state.legacyNorthDimensionRequestSoftCapped,
-      requestedAtlasWidth: state.requestedAtlasWidth,
-      requestedAtlasHeight: state.requestedAtlasHeight,
-      actualAtlasWidth: state.actualAtlasWidth,
-      actualAtlasHeight: state.actualAtlasHeight,
+      oldTerrainMaterialLanguageActive: true,
+      golfCourseGreenSuppressed: true,
+      manicuredGrassReadRetired: true,
+      flatFairwayInteriorSuppressed: true,
+      materialColorComesFromTerrain: true,
+      irregularHighlandMaterialActive: true,
+      roundSandTrapHighlandsRetired: true,
+      mineralScarHighlandsActive: true,
+      highlandEdgeBreakupActive: true,
+      coastalScarMaterialActive: true,
+      ancientWaterlineTraceActive: true,
+      shelfDropShadowActive: true,
+      coastlineRingReadSuppressed: true,
+      materialEdgeBreakupActive: true,
+      deterministicTerrainNoiseActive: true,
+      smoothConcentricBandingReduced: true,
+      atlasFrameStable: true,
+      terrainVeiningActive: true,
+      dryScarThreadsActive: true,
+      mineralSeamVariationActive: true,
 
-      classificationShapeSeparationActive: true,
-      coastlineClassifierMode: state.coastlineClassifierMode,
-      coastlineTransitionWidth: state.coastlineTransitionWidth,
-      shoreVisualBandWidth: state.shoreVisualBandWidth,
-
-      sourceModeCounts: clonePlain(state.sourceModeCounts),
-      canonicalMaterialSourceModeCount: state.sourceModeCounts.canonicalMaterial,
-      elevationHydrologySourceModeCount: state.sourceModeCounts.elevationHydrology,
-      emergencyFallbackSourceModeCount: state.sourceModeCounts.emergencyFallback,
-
-      averageLandWaterContrast: state.averageLandWaterContrast,
-      coastlineContrastEstimate: state.coastlineContrastEstimate,
-      atlasSharpnessPass: state.atlasSharpnessPass,
-      fuzzRiskDetected: state.fuzzRiskDetected,
-      clarityMetricReady: state.clarityMetricReady,
+      oldTerrainSampleCount: state.oldTerrainSampleCount,
+      golfSuppressionSampleCount: state.golfSuppressionSampleCount,
+      mineralScarSampleCount: state.mineralScarSampleCount,
+      coastalScarSampleCount: state.coastalScarSampleCount,
+      dryScarThreadSampleCount: state.dryScarThreadSampleCount,
+      terrainVeinSampleCount: state.terrainVeinSampleCount,
 
       sourceContextCreated: state.sourceContextCreated,
       sourceContextCreatedAt: state.sourceContextCreatedAt,
@@ -1550,7 +1438,7 @@
       : "- none";
 
     return [
-      "HEARTH_CANVAS_EAST_ATLAS_CLARITY_SOURCE_SHARPENING_RECEIPT",
+      "HEARTH_CANVAS_EAST_OLD_TERRAIN_MATERIAL_LANGUAGE_DEGOLFING_RECEIPT",
       "",
       `contract=${receipt.contract}`,
       `receipt=${receipt.receipt}`,
@@ -1571,38 +1459,38 @@
       `materialBridgeRefreshCachedPerAtlasBuild=${receipt.materialBridgeRefreshCachedPerAtlasBuild}`,
       `perPixelAuthorityResolutionRetired=${receipt.perPixelAuthorityResolutionRetired}`,
       `perPixelMaterialBridgeRefreshRetired=${receipt.perPixelMaterialBridgeRefreshRetired}`,
-      "",
-      `adaptiveAtlasResolutionActive=${receipt.adaptiveAtlasResolutionActive}`,
-      `defaultAtlasMode=${receipt.defaultAtlasMode}`,
-      `atlasResolutionMode=${receipt.atlasResolutionMode}`,
+      `defaultAtlasReduced=${receipt.defaultAtlasReduced}`,
       `defaultAtlasWidth=${receipt.defaultAtlasWidth}`,
       `defaultAtlasHeight=${receipt.defaultAtlasHeight}`,
       `optionalHigherLodSupported=${receipt.optionalHigherLodSupported}`,
-      `legacyNorthDimensionRequestSoftCapped=${receipt.legacyNorthDimensionRequestSoftCapped}`,
-      `requestedAtlasWidth=${receipt.requestedAtlasWidth}`,
-      `requestedAtlasHeight=${receipt.requestedAtlasHeight}`,
-      `actualAtlasWidth=${receipt.actualAtlasWidth}`,
-      `actualAtlasHeight=${receipt.actualAtlasHeight}`,
       "",
-      `classificationShapeSeparationActive=${receipt.classificationShapeSeparationActive}`,
-      `coastlineClassifierMode=${receipt.coastlineClassifierMode}`,
-      `coastlineTransitionWidth=${receipt.coastlineTransitionWidth}`,
-      `shoreVisualBandWidth=${receipt.shoreVisualBandWidth}`,
+      `oldTerrainMaterialLanguageActive=${receipt.oldTerrainMaterialLanguageActive}`,
+      `golfCourseGreenSuppressed=${receipt.golfCourseGreenSuppressed}`,
+      `manicuredGrassReadRetired=${receipt.manicuredGrassReadRetired}`,
+      `flatFairwayInteriorSuppressed=${receipt.flatFairwayInteriorSuppressed}`,
+      `materialColorComesFromTerrain=${receipt.materialColorComesFromTerrain}`,
+      `irregularHighlandMaterialActive=${receipt.irregularHighlandMaterialActive}`,
+      `roundSandTrapHighlandsRetired=${receipt.roundSandTrapHighlandsRetired}`,
+      `mineralScarHighlandsActive=${receipt.mineralScarHighlandsActive}`,
+      `highlandEdgeBreakupActive=${receipt.highlandEdgeBreakupActive}`,
+      `coastalScarMaterialActive=${receipt.coastalScarMaterialActive}`,
+      `ancientWaterlineTraceActive=${receipt.ancientWaterlineTraceActive}`,
+      `shelfDropShadowActive=${receipt.shelfDropShadowActive}`,
+      `coastlineRingReadSuppressed=${receipt.coastlineRingReadSuppressed}`,
+      `materialEdgeBreakupActive=${receipt.materialEdgeBreakupActive}`,
+      `deterministicTerrainNoiseActive=${receipt.deterministicTerrainNoiseActive}`,
+      `smoothConcentricBandingReduced=${receipt.smoothConcentricBandingReduced}`,
+      `atlasFrameStable=${receipt.atlasFrameStable}`,
+      `terrainVeiningActive=${receipt.terrainVeiningActive}`,
+      `dryScarThreadsActive=${receipt.dryScarThreadsActive}`,
+      `mineralSeamVariationActive=${receipt.mineralSeamVariationActive}`,
       "",
-      `canonicalMaterialSourceModeCount=${receipt.canonicalMaterialSourceModeCount}`,
-      `elevationHydrologySourceModeCount=${receipt.elevationHydrologySourceModeCount}`,
-      `emergencyFallbackSourceModeCount=${receipt.emergencyFallbackSourceModeCount}`,
-      `averageLandWaterContrast=${receipt.averageLandWaterContrast}`,
-      `coastlineContrastEstimate=${receipt.coastlineContrastEstimate}`,
-      `atlasSharpnessPass=${receipt.atlasSharpnessPass}`,
-      `fuzzRiskDetected=${receipt.fuzzRiskDetected}`,
-      `clarityMetricReady=${receipt.clarityMetricReady}`,
-      "",
-      `sourceContextCreated=${receipt.sourceContextCreated}`,
-      `sourceContextCreatedAt=${receipt.sourceContextCreatedAt}`,
-      `sourceContextAuthorityResolutionCount=${receipt.sourceContextAuthorityResolutionCount}`,
-      `sourceContextMaterialBridgeRefreshCount=${receipt.sourceContextMaterialBridgeRefreshCount}`,
-      `sourceContextSampleCount=${receipt.sourceContextSampleCount}`,
+      `oldTerrainSampleCount=${receipt.oldTerrainSampleCount}`,
+      `golfSuppressionSampleCount=${receipt.golfSuppressionSampleCount}`,
+      `mineralScarSampleCount=${receipt.mineralScarSampleCount}`,
+      `coastalScarSampleCount=${receipt.coastalScarSampleCount}`,
+      `dryScarThreadSampleCount=${receipt.dryScarThreadSampleCount}`,
+      `terrainVeinSampleCount=${receipt.terrainVeinSampleCount}`,
       "",
       "MATERIAL_RECEIPT_BRIDGE",
       `materialReceiptBridgeActive=${material.materialReceiptBridgeActive}`,
@@ -1624,43 +1512,17 @@
       `materialReliefFeedsDetected=${material.materialReliefFeedsDetected}`,
       `materialElevationContractMatchesActive=${material.materialElevationContractMatchesActive}`,
       "",
-      `upstreamFirstAtlasActive=${receipt.upstreamFirstAtlasActive}`,
-      `canonicalMaterialAuthorityPresent=${receipt.canonicalMaterialAuthorityPresent}`,
-      `canonicalMaterialConsumed=${receipt.canonicalMaterialConsumed}`,
-      `canonicalMaterialColorPrimary=${receipt.canonicalMaterialColorPrimary}`,
-      `canonicalMaterialShapePrimary=${receipt.canonicalMaterialShapePrimary}`,
-      `materialsPrimaryWhenValid=${receipt.materialsPrimaryWhenValid}`,
-      `rawSourceColorDemotedToPaletteInfluence=${receipt.rawSourceColorDemotedToPaletteInfluence}`,
-      "",
-      `sevenContinentFallbackEmergencyOnly=${receipt.sevenContinentFallbackEmergencyOnly}`,
-      `sevenContinentFallbackUsed=${receipt.sevenContinentFallbackUsed}`,
-      `sevenContinentFallbackSuppressedByUpstream=${receipt.sevenContinentFallbackSuppressedByUpstream}`,
-      `sevenContinentVisualFallbackActive=${receipt.sevenContinentVisualFallbackActive}`,
-      `continentVisualSeedCount=${receipt.continentVisualSeedCount}`,
-      `continentBlendMode=${receipt.continentBlendMode}`,
-      `proceduralSixLobeAdditiveFieldRetired=${receipt.proceduralSixLobeAdditiveFieldRetired}`,
-      `oceanChannelCutActive=${receipt.oceanChannelCutActive}`,
-      `seaLineTightened=${receipt.seaLineTightened}`,
-      `coastlineSharpeningActive=${receipt.coastlineSharpeningActive}`,
-      `landChannelStillReceiverOnly=${receipt.landChannelStillReceiverOnly}`,
-      `elevationHydrologyFallbackUsed=${receipt.elevationHydrologyFallbackUsed}`,
-      "",
       `atlasWidth=${receipt.atlasWidth}`,
       `atlasHeight=${receipt.atlasHeight}`,
       `atlasBuildStarted=${receipt.atlasBuildStarted}`,
       `atlasBuildComplete=${receipt.atlasBuildComplete}`,
       `atlasBuildProgress=${receipt.atlasBuildProgress}`,
       `atlasBuildRowsPerChunk=${receipt.atlasBuildRowsPerChunk}`,
-      `atlasBuildStartedAt=${receipt.atlasBuildStartedAt}`,
-      `atlasBuildCompletedAt=${receipt.atlasBuildCompletedAt}`,
       `atlasBuildElapsedMs=${receipt.atlasBuildElapsedMs}`,
-      `atlasBuildYieldCount=${receipt.atlasBuildYieldCount}`,
       `atlasCanonicalMaterialSampleCount=${receipt.atlasCanonicalMaterialSampleCount}`,
       `atlasElevationHydrologySampleCount=${receipt.atlasElevationHydrologySampleCount}`,
       `atlasFallbackSampleCount=${receipt.atlasFallbackSampleCount}`,
       `atlasTotalSampleCount=${receipt.atlasTotalSampleCount}`,
-      `atlasInvalidated=${receipt.atlasInvalidated}`,
-      `atlasInvalidationReason=${receipt.atlasInvalidationReason}`,
       `latestMachinePacketAvailable=${receipt.latestMachinePacketAvailable}`,
       "",
       `ownsSourceIntake=${receipt.ownsSourceIntake}`,
@@ -1703,26 +1565,26 @@
     dataset.hearthCanvasEastFutureFibonacciGate = "F21";
     dataset.hearthCanvasEastOneActiveGearAtATime = "true";
 
-    dataset.hearthCanvasEastAuthorityResolutionCachedPerAtlasBuild = String(state.authorityResolutionCachedPerAtlasBuild);
-    dataset.hearthCanvasEastMaterialBridgeRefreshCachedPerAtlasBuild = String(state.materialBridgeRefreshCachedPerAtlasBuild);
-    dataset.hearthCanvasEastPerPixelAuthorityResolutionRetired = String(state.perPixelAuthorityResolutionRetired);
-    dataset.hearthCanvasEastPerPixelMaterialBridgeRefreshRetired = String(state.perPixelMaterialBridgeRefreshRetired);
+    dataset.hearthCanvasEastAuthorityResolutionCachedPerAtlasBuild = "true";
+    dataset.hearthCanvasEastMaterialBridgeRefreshCachedPerAtlasBuild = "true";
+    dataset.hearthCanvasEastPerPixelAuthorityResolutionRetired = "true";
+    dataset.hearthCanvasEastPerPixelMaterialBridgeRefreshRetired = "true";
+    dataset.hearthCanvasEastDefaultAtlasReduced = "true";
+    dataset.hearthCanvasEastDefaultAtlasWidth = String(DEFAULT_ATLAS_WIDTH);
+    dataset.hearthCanvasEastDefaultAtlasHeight = String(DEFAULT_ATLAS_HEIGHT);
 
-    dataset.hearthCanvasEastAdaptiveAtlasResolutionActive = String(state.adaptiveAtlasResolutionActive);
-    dataset.hearthCanvasEastDefaultAtlasMode = state.defaultAtlasMode;
-    dataset.hearthCanvasEastAtlasResolutionMode = state.atlasResolutionMode;
-    dataset.hearthCanvasEastDefaultAtlasWidth = String(state.defaultAtlasWidth);
-    dataset.hearthCanvasEastDefaultAtlasHeight = String(state.defaultAtlasHeight);
-    dataset.hearthCanvasEastRequestedAtlasWidth = String(state.requestedAtlasWidth);
-    dataset.hearthCanvasEastRequestedAtlasHeight = String(state.requestedAtlasHeight);
-    dataset.hearthCanvasEastActualAtlasWidth = String(state.actualAtlasWidth);
-    dataset.hearthCanvasEastActualAtlasHeight = String(state.actualAtlasHeight);
-    dataset.hearthCanvasEastLegacyNorthDimensionRequestSoftCapped = String(state.legacyNorthDimensionRequestSoftCapped);
-
-    dataset.hearthCanvasEastClassificationShapeSeparationActive = "true";
-    dataset.hearthCanvasEastCoastlineClassifierMode = state.coastlineClassifierMode;
-    dataset.hearthCanvasEastCoastlineTransitionWidth = String(state.coastlineTransitionWidth);
-    dataset.hearthCanvasEastShoreVisualBandWidth = String(state.shoreVisualBandWidth);
+    dataset.hearthCanvasEastOldTerrainMaterialLanguageActive = "true";
+    dataset.hearthCanvasEastGolfCourseGreenSuppressed = "true";
+    dataset.hearthCanvasEastManicuredGrassReadRetired = "true";
+    dataset.hearthCanvasEastFlatFairwayInteriorSuppressed = "true";
+    dataset.hearthCanvasEastMaterialColorComesFromTerrain = "true";
+    dataset.hearthCanvasEastIrregularHighlandMaterialActive = "true";
+    dataset.hearthCanvasEastMineralScarHighlandsActive = "true";
+    dataset.hearthCanvasEastCoastalScarMaterialActive = "true";
+    dataset.hearthCanvasEastAncientWaterlineTraceActive = "true";
+    dataset.hearthCanvasEastShelfDropShadowActive = "true";
+    dataset.hearthCanvasEastMaterialEdgeBreakupActive = "true";
+    dataset.hearthCanvasEastDeterministicTerrainNoiseActive = "true";
 
     dataset.hearthCanvasEastMaterialReceiptBridgeActive = "true";
     dataset.hearthCanvasEastMaterialNestedReceiptAvailable = String(state.materialNestedReceiptAvailable);
@@ -1741,14 +1603,6 @@
     dataset.hearthCanvasEastAtlasElevationHydrologySampleCount = String(state.atlasElevationHydrologySampleCount);
     dataset.hearthCanvasEastAtlasFallbackSampleCount = String(state.atlasFallbackSampleCount);
     dataset.hearthCanvasEastAtlasTotalSampleCount = String(state.atlasTotalSampleCount);
-
-    dataset.hearthCanvasEastCanonicalMaterialSourceModeCount = String(state.sourceModeCounts.canonicalMaterial);
-    dataset.hearthCanvasEastElevationHydrologySourceModeCount = String(state.sourceModeCounts.elevationHydrology);
-    dataset.hearthCanvasEastEmergencyFallbackSourceModeCount = String(state.sourceModeCounts.emergencyFallback);
-    dataset.hearthCanvasEastAverageLandWaterContrast = String(state.averageLandWaterContrast);
-    dataset.hearthCanvasEastCoastlineContrastEstimate = String(state.coastlineContrastEstimate);
-    dataset.hearthCanvasEastAtlasSharpnessPass = String(state.atlasSharpnessPass);
-    dataset.hearthCanvasEastFuzzRiskDetected = String(state.fuzzRiskDetected);
 
     dataset.hearthCanvasEastOwnsSourceIntake = "true";
     dataset.hearthCanvasEastOwnsAtlasFormation = "true";
@@ -1785,7 +1639,9 @@
 
     canvasEastActive: true,
     materialAtlasSourceMachine: true,
-    v3AtlasClaritySourceSharpening: true,
+    oldTerrainMaterialLanguageActive: true,
+    golfCourseGreenSuppressed: true,
+    v4DegolfingActive: true,
 
     newsProtocolSynchronized: true,
     fibonacciAlignmentSynchronized: true,
@@ -1797,17 +1653,10 @@
     materialBridgeRefreshCachedPerAtlasBuild: true,
     perPixelAuthorityResolutionRetired: true,
     perPixelMaterialBridgeRefreshRetired: true,
-
-    adaptiveAtlasResolutionActive: true,
-    defaultAtlasMode: DEFAULT_ATLAS_MODE,
+    defaultAtlasReduced: true,
     defaultAtlasWidth: DEFAULT_ATLAS_WIDTH,
     defaultAtlasHeight: DEFAULT_ATLAS_HEIGHT,
     optionalHigherLodSupported: true,
-
-    classificationShapeSeparationActive: true,
-    coastlineClassifierMode: "sharp-classification-soft-visual-band",
-    coastlineTransitionWidth: COASTLINE_CLASSIFIER_TRANSITION,
-    shoreVisualBandWidth: SHORE_VISUAL_BAND_WIDTH,
 
     ownsSourceIntake: true,
     ownsAtlasFormation: true,
@@ -1831,13 +1680,16 @@
   root.HEARTH = root.HEARTH || {};
   root.HEARTH.canvasEast = api;
   root.HEARTH.canvasEastMaterialAtlasSourceMachine = api;
+  root.HEARTH.canvasEastOldTerrainMaterialLanguage = api;
 
   root.HEARTH_CANVAS_EAST = api;
   root.HEARTH_CANVAS_EAST_MATERIAL_ATLAS_SOURCE_MACHINE = api;
+  root.HEARTH_CANVAS_EAST_OLD_TERRAIN_MATERIAL_LANGUAGE_DEGOLFING = api;
 
   root.DEXTER_LAB = root.DEXTER_LAB || {};
   root.DEXTER_LAB.hearthCanvasEast = api;
   root.DEXTER_LAB.hearthCanvasEastMaterialAtlasSourceMachine = api;
+  root.DEXTER_LAB.hearthCanvasEastOldTerrainMaterialLanguageDegolfing = api;
 
   refreshMaterialBridge();
   updateDocumentDataset();

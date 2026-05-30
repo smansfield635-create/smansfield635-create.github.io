@@ -3,23 +3,14 @@
   lang="en"
   data-route="/showroom/globe/hearth/"
   data-page="hearth"
-  data-planet="hearth"
-  data-contract="HEARTH_ROUTE_HTML_FOUR_DIRECTION_CYCLE_SHELL_TNT_v1"
-  data-receipt="HEARTH_ROUTE_HTML_FOUR_DIRECTION_CYCLE_SHELL_RECEIPT_v1"
-  data-previous-hard-block="ROUTE_DOCUMENT_SERVING_RAW_JS"
-  data-role="hearth-route-html-shell"
-  data-four-file-cycle="true"
-  data-cycle-order="EAST_TO_WEST_TO_NORTH_TO_SOUTH_TO_CHECKPOINT_TO_EAST"
-  data-east-file="/showroom/globe/hearth/index.js"
-  data-west-file="/assets/hearth/hearth.index-handoff.table.js"
-  data-north-file="/assets/hearth/hearth.north.command.runtime-table.js"
-  data-south-file="/showroom/globe/hearth/hearth.js"
-  data-step1-owner="/showroom/globe/hearth/index.js"
-  data-steps2-through-11-owner="/showroom/globe/hearth/hearth.js"
-  data-runtime-table-split="hearth-route-dedicated"
-  data-news-protocol="active"
-  data-fibonacci-sequence="F1A-F1B-F2-F3-F5-F8-F13-F21"
-  data-checkpoint-cycle="active"
+  data-contract="HEARTH_INDEX_HTML_MIRRORLAND_SURVIVAL_STRUCTURAL_REBUILD_TNT_v1"
+  data-receipt="HEARTH_INDEX_HTML_MIRRORLAND_SURVIVAL_STRUCTURAL_REBUILD_RECEIPT_v1"
+  data-previous-contract="HEARTH_ROUTE_COMMAND_BRAIN_STEPS_2_11_TNT_v7"
+  data-role="mirrorland-survival-route-public-shell"
+  data-mirrorland-route="survival"
+  data-hearth-survival-path="true"
+  data-directional-cycle="east-west-north-south-checkpoint"
+  data-news-fibonacci-alignment="true"
   data-generated-image="false"
   data-graphic-box="false"
   data-webgl="false"
@@ -28,627 +19,1232 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#071221" />
-
-  <title>Hearth · Future Earth Shelter Route</title>
+  <meta name="theme-color" content="#050b16" />
+  <title>Hearth · Mirrorland Survival Path</title>
+  <meta
+    name="description"
+    content="Hearth is the Survival Path inside Mirrorland: future Earth surviving long enough to become shelter."
+  />
 
   <style>
-    :root {
-      color-scheme: dark;
-      --hearth-bg: #06101d;
-      --hearth-panel: rgba(11, 25, 43, .88);
-      --hearth-panel-strong: rgba(16, 34, 56, .94);
-      --hearth-line: rgba(231, 188, 105, .28);
-      --hearth-line-soft: rgba(231, 188, 105, .14);
-      --hearth-gold: #e7bc69;
-      --hearth-gold-strong: #ffe8a3;
-      --hearth-blue: #8dd8ff;
-      --hearth-text: rgba(238, 246, 255, .94);
-      --hearth-muted: rgba(238, 246, 255, .68);
-      --hearth-shadow: 0 24px 80px rgba(0,0,0,.44);
-      --hearth-radius: 28px;
-      --hearth-font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      --hearth-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    :root{
+      color-scheme:dark;
+      --void:#050b16;
+      --void-2:#081424;
+      --panel:rgba(8,20,36,.78);
+      --panel-2:rgba(11,28,49,.62);
+      --line:rgba(231,188,105,.24);
+      --line-soft:rgba(141,216,255,.16);
+      --gold:#e7bc69;
+      --gold-soft:#ffe8a3;
+      --blue:#8dd8ff;
+      --blue-soft:#c8efff;
+      --text:#eef6ff;
+      --muted:rgba(238,246,255,.68);
+      --dim:rgba(238,246,255,.48);
+      --danger:#ff9a9a;
+      --radius:28px;
+      --shadow:0 28px 90px rgba(0,0,0,.48);
+      --font:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    *{box-sizing:border-box}
 
-    html {
-      min-height: 100%;
+    html{
+      min-height:100%;
       background:
-        radial-gradient(circle at 18% 0%, rgba(231,188,105,.12), transparent 18rem),
-        radial-gradient(circle at 92% 10%, rgba(141,216,255,.10), transparent 21rem),
-        linear-gradient(180deg, #071221 0%, #050b14 52%, #02060d 100%);
-      color: var(--hearth-text);
-      font-family: var(--hearth-font);
-      scroll-behavior: smooth;
+        radial-gradient(circle at 50% -20%,rgba(231,188,105,.12),transparent 28rem),
+        radial-gradient(circle at 10% 20%,rgba(141,216,255,.10),transparent 30rem),
+        linear-gradient(180deg,#050b16,#030711 52%,#02050b);
+      scroll-behavior:smooth;
     }
 
-    body {
-      margin: 0;
-      min-height: 100%;
-      background: transparent;
+    body{
+      min-height:100%;
+      margin:0;
+      color:var(--text);
+      background:transparent;
+      font-family:var(--font);
+      line-height:1.45;
+      overflow-x:hidden;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
+    a{
+      color:inherit;
+      text-decoration:none;
     }
 
-    .hearth-shell {
-      width: min(1180px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: max(18px, env(safe-area-inset-top)) 0 max(36px, env(safe-area-inset-bottom));
+    a:hover{
+      color:var(--gold-soft);
     }
 
-    .skip-link {
-      position: absolute;
-      left: 14px;
-      top: 12px;
-      z-index: 1000;
-      transform: translateY(-180%);
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: var(--hearth-gold-strong);
-      color: #06101d;
-      font-weight: 950;
+    .skip-link{
+      position:absolute;
+      left:12px;
+      top:12px;
+      z-index:10000;
+      transform:translateY(-150%);
+      padding:10px 14px;
+      border-radius:999px;
+      color:#06101e;
+      background:linear-gradient(135deg,var(--gold-soft),var(--gold));
+      font-weight:950;
+      letter-spacing:.04em;
     }
 
-    .skip-link:focus {
-      transform: translateY(0);
+    .skip-link:focus{
+      transform:translateY(0);
     }
 
-    .hearth-orbit-nav {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
-      margin: 0 0 18px;
+    .hearth-shell{
+      position:relative;
+      isolation:isolate;
+      min-height:100vh;
+      padding:18px clamp(14px,3vw,34px) 52px;
     }
 
-    .hearth-route-pill {
-      min-height: 54px;
-      display: grid;
-      place-items: center;
-      padding: 12px 16px;
-      border: 1px solid var(--hearth-line);
-      border-radius: 999px;
+    .hearth-shell::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:-2;
+      pointer-events:none;
       background:
-        linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.025)),
-        rgba(8, 18, 31, .68);
-      color: rgba(238,246,255,.86);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
-      font-size: .78rem;
-      font-weight: 950;
-      letter-spacing: .09em;
-      text-transform: uppercase;
-      text-align: center;
+        radial-gradient(circle at 50% 10%,rgba(141,216,255,.10),transparent 34rem),
+        radial-gradient(circle at 70% 28%,rgba(231,188,105,.08),transparent 28rem),
+        linear-gradient(180deg,rgba(9,20,34,.34),rgba(2,5,11,.64));
     }
 
-    .hearth-route-pill[aria-current="page"] {
-      color: #06101d;
-      border-color: rgba(231,188,105,.88);
-      background: linear-gradient(135deg, var(--hearth-gold-strong), var(--hearth-gold));
+    .hearth-shell::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:-1;
+      pointer-events:none;
+      opacity:.30;
+      background-image:
+        linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+      background-size:72px 72px;
+      mask-image:radial-gradient(circle at 50% 34%,black,transparent 74%);
     }
 
-    .hearth-hero {
-      position: relative;
-      overflow: hidden;
-      border: 1px solid var(--hearth-line);
-      border-radius: var(--hearth-radius);
+    .hearth-routebar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      max-width:1220px;
+      margin:0 auto 22px;
+      padding:12px 14px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:999px;
+      background:rgba(3,7,15,.58);
+      box-shadow:0 12px 38px rgba(0,0,0,.30);
+      backdrop-filter:blur(10px);
+    }
+
+    .hearth-brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+      font-weight:950;
+      letter-spacing:.045em;
+      text-transform:uppercase;
+      color:var(--gold-soft);
+      font-size:.78rem;
+    }
+
+    .hearth-brand-mark{
+      width:18px;
+      height:18px;
+      flex:0 0 auto;
+      transform:rotate(45deg);
+      border:1px solid rgba(231,188,105,.72);
       background:
-        radial-gradient(circle at 14% 0%, rgba(231,188,105,.13), transparent 22rem),
-        radial-gradient(circle at 86% 16%, rgba(141,216,255,.10), transparent 24rem),
-        linear-gradient(180deg, rgba(13,32,52,.94), rgba(6,16,29,.86));
-      box-shadow: var(--hearth-shadow), inset 0 1px 0 rgba(255,255,255,.08);
+        radial-gradient(circle at 30% 25%,rgba(255,255,255,.60),transparent 22%),
+        linear-gradient(135deg,rgba(141,216,255,.48),rgba(231,188,105,.88));
+      box-shadow:0 0 24px rgba(231,188,105,.26);
     }
 
-    .hearth-hero-inner {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
-      gap: 24px;
-      align-items: center;
-      padding: clamp(22px, 5vw, 52px);
+    .hearth-nav{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+      gap:8px;
     }
 
-    .hearth-kicker,
-    .hearth-section-kicker {
-      margin: 0 0 10px;
-      color: var(--hearth-gold);
-      font-weight: 950;
-      font-size: .75rem;
-      letter-spacing: .18em;
-      text-transform: uppercase;
+    .hearth-nav a{
+      display:inline-flex;
+      align-items:center;
+      min-height:34px;
+      padding:8px 12px;
+      border:1px solid rgba(231,188,105,.18);
+      border-radius:999px;
+      color:rgba(238,246,255,.76);
+      background:rgba(255,255,255,.035);
+      font-size:.70rem;
+      font-weight:850;
+      letter-spacing:.075em;
+      text-transform:uppercase;
     }
 
-    .hearth-title {
-      margin: 0;
-      color: rgba(255,244,216,.98);
-      font-size: clamp(2.15rem, 7vw, 5.8rem);
-      line-height: .88;
-      letter-spacing: -.075em;
-      font-weight: 1000;
-      max-width: 10ch;
+    .hearth-nav a[aria-current="page"]{
+      color:#06101e;
+      border-color:rgba(231,188,105,.90);
+      background:linear-gradient(135deg,var(--gold-soft),var(--gold));
     }
 
-    .hearth-subtitle {
-      margin: 18px 0 0;
-      max-width: 62ch;
-      color: rgba(238,246,255,.74);
-      font-size: clamp(1rem, 2vw, 1.22rem);
-      line-height: 1.55;
-      font-weight: 650;
+    #hearth-main{
+      max-width:1220px;
+      margin:0 auto;
     }
 
-    .hearth-proof-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 18px;
+    .hearth-hero{
+      display:grid;
+      grid-template-columns:minmax(0,1.08fr) minmax(300px,.92fr);
+      gap:24px;
+      align-items:stretch;
+      margin-bottom:24px;
     }
 
-    .hearth-proof-chip {
-      border: 1px solid rgba(141,216,255,.22);
-      border-radius: 999px;
-      padding: 8px 10px;
-      background: rgba(255,255,255,.045);
-      color: rgba(238,246,255,.72);
-      font-size: .68rem;
-      font-weight: 900;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-    }
-
-    .hearth-map-gem {
-      position: relative;
-      min-height: 260px;
-      display: grid;
-      place-items: center;
-      isolation: isolate;
-    }
-
-    .hearth-map-gem::before {
-      content: "";
-      position: absolute;
-      width: min(74vw, 340px);
-      aspect-ratio: 1;
-      border-radius: 50%;
+    .hero-card,
+    .mirror-card,
+    .hearth-section,
+    .hearth-cycle,
+    .hearth-route-card{
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:var(--radius);
       background:
-        radial-gradient(circle at 35% 28%, rgba(255,232,163,.92), rgba(231,188,105,.32) 32%, transparent 62%),
-        radial-gradient(circle at 70% 72%, rgba(141,216,255,.28), transparent 58%);
-      filter: blur(10px);
-      opacity: .74;
-      z-index: -2;
+        radial-gradient(circle at 15% 0%,rgba(231,188,105,.14),transparent 22rem),
+        radial-gradient(circle at 88% 8%,rgba(141,216,255,.10),transparent 24rem),
+        linear-gradient(180deg,rgba(8,20,36,.78),rgba(4,10,20,.74));
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
     }
 
-    .hearth-map-gem::after {
-      content: "";
-      position: absolute;
-      width: min(60vw, 244px);
-      aspect-ratio: 1;
-      border-radius: 50%;
-      border: 1px solid rgba(231,188,105,.42);
+    .hero-card{
+      min-height:390px;
+      padding:clamp(22px,4vw,42px);
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      overflow:hidden;
+      position:relative;
+    }
+
+    .hero-card::after{
+      content:"";
+      position:absolute;
+      right:-110px;
+      bottom:-130px;
+      width:320px;
+      height:320px;
+      border-radius:50%;
+      border:1px solid rgba(141,216,255,.22);
       background:
-        radial-gradient(circle at 38% 24%, rgba(255,255,255,.25), transparent 16%),
-        radial-gradient(circle at 50% 58%, rgba(4,10,19,.88), rgba(8,22,38,.95) 55%, rgba(231,188,105,.55) 100%);
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.22),
-        inset 0 -22px 50px rgba(0,0,0,.42),
-        0 24px 72px rgba(0,0,0,.40);
-      z-index: -1;
+        radial-gradient(circle at 40% 35%,rgba(141,216,255,.22),transparent 20%),
+        radial-gradient(circle at 50% 50%,rgba(231,188,105,.10),transparent 42%),
+        transparent;
+      opacity:.72;
     }
 
-    .hearth-map-gem span {
-      display: grid;
-      gap: 2px;
-      text-align: center;
-      color: rgba(255,244,216,.98);
-      font-weight: 1000;
-      line-height: .9;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      text-shadow: 0 2px 10px rgba(0,0,0,.58);
+    .kicker{
+      margin:0 0 12px;
+      color:var(--gold);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.18em;
+      text-transform:uppercase;
     }
 
-    .hearth-map-gem small {
-      display: block;
-      color: rgba(141,216,255,.82);
-      font-size: .62rem;
-      letter-spacing: .16em;
+    h1{
+      max-width:780px;
+      margin:0;
+      color:var(--gold-soft);
+      font-size:clamp(2.5rem,7.5vw,6.4rem);
+      line-height:.86;
+      letter-spacing:-.075em;
     }
 
-    .hearth-panel {
-      margin-top: 18px;
-      border: 1px solid var(--hearth-line);
-      border-radius: var(--hearth-radius);
+    .hero-copy{
+      max-width:720px;
+      margin:22px 0 0;
+      color:rgba(238,246,255,.82);
+      font-size:clamp(1rem,2vw,1.28rem);
+      font-weight:620;
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:24px;
+    }
+
+    .hero-actions a,
+    .hearth-link-button{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:42px;
+      padding:11px 15px;
+      border-radius:999px;
+      border:1px solid rgba(231,188,105,.32);
+      color:rgba(238,246,255,.86);
+      background:rgba(255,255,255,.045);
+      font-size:.74rem;
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .hero-actions a.primary{
+      color:#06101e;
+      border-color:rgba(231,188,105,.95);
+      background:linear-gradient(135deg,var(--gold-soft),var(--gold));
+    }
+
+    .mirror-card{
+      padding:24px;
+      display:grid;
+      align-content:space-between;
+      gap:18px;
+      min-height:390px;
+    }
+
+    .mirror-card h2,
+    .hearth-section h2,
+    .hearth-cycle h2{
+      margin:0;
+      color:var(--gold-soft);
+      font-size:clamp(1.28rem,2.8vw,2rem);
+      line-height:1;
+      letter-spacing:-.045em;
+    }
+
+    .mirror-card p,
+    .hearth-section p,
+    .hearth-cycle p{
+      margin:10px 0 0;
+      color:var(--muted);
+      font-weight:620;
+    }
+
+    .path-grid{
+      display:grid;
+      gap:10px;
+    }
+
+    .path-pill{
+      display:grid;
+      gap:2px;
+      padding:12px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      background:rgba(255,255,255,.04);
+    }
+
+    .path-pill strong{
+      color:var(--blue-soft);
+      font-size:.78rem;
+      letter-spacing:.09em;
+      text-transform:uppercase;
+    }
+
+    .path-pill span{
+      color:var(--muted);
+      font-size:.82rem;
+      font-weight:650;
+    }
+
+    .hearth-viewport-wrap{
+      margin:0 0 24px;
+      border:1px solid rgba(231,188,105,.18);
+      border-radius:calc(var(--radius) + 4px);
       background:
-        radial-gradient(circle at 12% 0%, rgba(231,188,105,.08), transparent 18rem),
-        linear-gradient(180deg, rgba(11,25,43,.86), rgba(5,12,22,.82));
-      box-shadow: var(--hearth-shadow), inset 0 1px 0 rgba(255,255,255,.06);
+        radial-gradient(circle at 50% 25%,rgba(141,216,255,.14),transparent 26rem),
+        radial-gradient(circle at 50% 65%,rgba(231,188,105,.10),transparent 30rem),
+        linear-gradient(180deg,rgba(3,8,17,.92),rgba(1,3,8,.94));
+      box-shadow:0 34px 110px rgba(0,0,0,.56);
+      overflow:hidden;
     }
 
-    .hearth-panel-inner {
-      padding: clamp(18px, 4vw, 34px);
+    .viewport-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:18px;
+      padding:18px clamp(16px,3vw,26px);
+      border-bottom:1px solid rgba(231,188,105,.13);
     }
 
-    .hearth-main-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.25fr) minmax(300px, .75fr);
-      gap: 18px;
-      align-items: start;
+    .viewport-head h2{
+      margin:0;
+      color:var(--gold-soft);
+      font-size:clamp(1.25rem,3vw,2.2rem);
+      letter-spacing:-.045em;
+      line-height:1;
+    }
+
+    .viewport-head p{
+      margin:7px 0 0;
+      color:var(--muted);
+      font-weight:640;
+    }
+
+    .viewport-status{
+      flex:0 0 auto;
+      display:grid;
+      gap:4px;
+      min-width:160px;
+      padding:10px 12px;
+      border:1px solid rgba(141,216,255,.18);
+      border-radius:18px;
+      background:rgba(255,255,255,.04);
+      color:var(--muted);
+      font-size:.72rem;
+      font-weight:760;
+    }
+
+    .viewport-status strong{
+      color:var(--blue-soft);
+      letter-spacing:.09em;
+      text-transform:uppercase;
+      font-size:.66rem;
     }
 
     #hearthCanvasMount,
-    [data-hearth-canvas-mount="true"] {
-      position: relative;
-      min-height: clamp(480px, 72vh, 860px);
-      overflow: hidden;
-      border: 1px solid rgba(231,188,105,.24);
-      border-radius: 30px;
+    [data-hearth-canvas-mount="true"]{
+      position:relative;
+      min-height:clamp(560px,72vh,860px);
+      overflow:hidden;
+      touch-action:none;
+      user-select:none;
+      -webkit-user-select:none;
+      -webkit-touch-callout:none;
       background:
-        radial-gradient(circle at 50% 42%, rgba(141,216,255,.09), transparent 21rem),
-        radial-gradient(circle at 50% 60%, rgba(231,188,105,.08), transparent 18rem),
-        linear-gradient(180deg, rgba(5,14,26,.96), rgba(1,5,12,.96));
+        radial-gradient(circle at 50% 46%,rgba(141,216,255,.14),transparent 17rem),
+        radial-gradient(circle at 50% 56%,rgba(231,188,105,.09),transparent 25rem),
+        radial-gradient(circle at 50% 50%,rgba(255,255,255,.04),transparent 34rem),
+        linear-gradient(180deg,#020611,#01030a);
+    }
+
+    .hearth-static-fallback{
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      padding:22px;
+      text-align:center;
+      pointer-events:none;
+    }
+
+    .hearth-static-fallback-inner{
+      max-width:680px;
+      padding:22px;
+      border:1px solid rgba(231,188,105,.18);
+      border-radius:26px;
+      background:rgba(3,8,17,.64);
+      box-shadow:0 22px 70px rgba(0,0,0,.38);
+    }
+
+    .hearth-static-fallback-inner h3{
+      margin:0;
+      color:var(--gold-soft);
+      font-size:clamp(1.35rem,3vw,2.35rem);
+      line-height:1;
+      letter-spacing:-.04em;
+    }
+
+    .hearth-static-fallback-inner p{
+      margin:10px 0 0;
+      color:var(--muted);
+      font-weight:640;
+    }
+
+    .hearth-orbital-ring{
+      width:min(48vw,360px);
+      height:min(48vw,360px);
+      min-width:220px;
+      min-height:220px;
+      margin:0 auto 18px;
+      border-radius:50%;
+      border:1px solid rgba(141,216,255,.18);
+      background:
+        radial-gradient(circle at 44% 38%,rgba(141,216,255,.22),transparent 10%),
+        radial-gradient(circle at 52% 52%,rgba(25,85,80,.70),transparent 29%),
+        radial-gradient(circle at 50% 50%,rgba(231,188,105,.16),transparent 42%),
+        transparent;
       box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.08),
-        0 24px 70px rgba(0,0,0,.42);
-      touch-action: none;
-      user-select: none;
-      -webkit-user-select: none;
-      -webkit-touch-callout: none;
+        inset 0 0 54px rgba(141,216,255,.09),
+        0 0 72px rgba(141,216,255,.08);
     }
 
-    .hearth-mount-fallback {
-      position: absolute;
-      inset: 14px;
-      display: grid;
-      place-items: center;
-      text-align: center;
-      border: 1px dashed rgba(141,216,255,.22);
-      border-radius: 24px;
+    .hearth-ledger-cockpit{
+      position:absolute;
+      inset:10px;
+      z-index:30;
+      display:flex;
+      flex-direction:column;
+      max-height:calc(100% - 20px);
+      min-height:170px;
+      overflow:hidden;
+      border:1px solid rgba(231,188,105,.34);
+      border-radius:24px;
       background:
-        radial-gradient(circle at 50% 30%, rgba(141,216,255,.09), transparent 18rem),
-        rgba(255,255,255,.025);
-      padding: 24px;
+        radial-gradient(circle at 12% 0%,rgba(231,188,105,.16),transparent 20rem),
+        radial-gradient(circle at 90% 18%,rgba(141,216,255,.12),transparent 22rem),
+        linear-gradient(180deg,rgba(7,18,33,.92),rgba(2,8,17,.82));
+      color:rgba(238,246,255,.94);
+      box-shadow:0 22px 70px rgba(0,0,0,.44), inset 0 1px 0 rgba(255,255,255,.08);
+      backdrop-filter:blur(10px);
+      transition:max-height .22s ease,opacity .18s ease,visibility .18s ease,transform .22s ease;
     }
 
-    .hearth-mount-fallback strong {
-      display: block;
-      color: rgba(255,244,216,.98);
-      font-size: clamp(1.15rem, 3vw, 2.2rem);
-      line-height: 1.02;
-      letter-spacing: -.045em;
-      margin-bottom: 10px;
+    .hearth-ledger-head{
+      display:grid;
+      gap:6px;
+      padding:14px 16px 10px;
+      border-bottom:1px solid rgba(231,188,105,.14);
     }
 
-    .hearth-mount-fallback span {
-      display: block;
-      max-width: 42rem;
-      color: var(--hearth-muted);
-      font-weight: 700;
-      line-height: 1.5;
+    .hearth-ledger-kicker{
+      color:var(--gold);
+      font-weight:950;
+      font-size:.64rem;
+      letter-spacing:.15em;
+      text-transform:uppercase;
     }
 
-    .hearth-side-stack {
-      display: grid;
-      gap: 14px;
+    .hearth-ledger-title{
+      margin:0;
+      color:rgba(255,244,216,.98);
+      font-weight:950;
+      font-size:clamp(1.08rem,3.4vw,1.65rem);
+      line-height:1;
+      letter-spacing:-.045em;
     }
 
-    .hearth-info-card {
-      border: 1px solid var(--hearth-line-soft);
-      border-radius: 22px;
-      background: rgba(255,255,255,.035);
-      padding: 18px;
+    .hearth-ledger-meta,
+    .hearth-ledger-latest{
+      color:rgba(238,246,255,.68);
+      font-size:.72rem;
+      font-weight:760;
+      line-height:1.28;
     }
 
-    .hearth-info-card h2,
-    .hearth-info-card h3 {
-      margin: 0;
-      color: rgba(255,244,216,.96);
-      font-size: clamp(1.2rem, 2.6vw, 2rem);
-      line-height: 1.05;
-      letter-spacing: -.045em;
+    .hearth-ledger-progress{
+      display:grid;
+      grid-template-columns:1fr auto;
+      align-items:center;
+      gap:10px;
+      padding:10px 16px;
+      border-bottom:1px solid rgba(231,188,105,.12);
     }
 
-    .hearth-info-card p {
-      margin: 10px 0 0;
-      color: var(--hearth-muted);
-      font-size: .96rem;
-      line-height: 1.5;
-      font-weight: 650;
+    .hearth-ledger-track,
+    .hearth-ledger-lane-track{
+      position:relative;
+      height:9px;
+      overflow:hidden;
+      border:1px solid rgba(141,216,255,.18);
+      border-radius:999px;
+      background:rgba(255,255,255,.055);
     }
 
-    .hearth-cycle-list {
-      display: grid;
-      gap: 8px;
-      margin-top: 14px;
+    .hearth-ledger-fill,
+    .hearth-ledger-lane-fill{
+      position:absolute;
+      inset:0 auto 0 0;
+      width:6%;
+      border-radius:inherit;
+      background:linear-gradient(90deg,rgba(141,216,255,.80),rgba(231,188,105,.96));
+      box-shadow:0 0 18px rgba(231,188,105,.18);
+      transition:width .24s ease;
     }
 
-    .hearth-cycle-row {
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      align-items: center;
-      gap: 10px;
-      padding: 10px;
-      border: 1px solid rgba(141,216,255,.14);
-      border-radius: 16px;
-      background: rgba(0,0,0,.16);
+    .hearth-ledger-percent{
+      min-width:44px;
+      color:var(--gold-soft);
+      font-weight:950;
+      font-size:.72rem;
+      text-align:right;
     }
 
-    .hearth-cycle-dot {
-      width: 34px;
-      aspect-ratio: 1;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      border: 1px solid rgba(231,188,105,.42);
-      color: var(--hearth-gold-strong);
-      background: rgba(231,188,105,.08);
-      font-weight: 950;
-      font-size: .75rem;
+    .hearth-ledger-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:7px;
+      padding:10px 16px;
+      border-bottom:1px solid rgba(231,188,105,.12);
     }
 
-    .hearth-cycle-row strong {
-      display: block;
-      color: rgba(238,246,255,.88);
-      font-size: .82rem;
-      letter-spacing: .04em;
-      text-transform: uppercase;
+    .hearth-ledger-button{
+      min-height:31px;
+      border:1px solid rgba(231,188,105,.26);
+      border-radius:999px;
+      padding:7px 10px;
+      color:rgba(238,246,255,.84);
+      background:rgba(255,255,255,.045);
+      font:900 .64rem/1 var(--font);
+      letter-spacing:.07em;
+      text-transform:uppercase;
+      cursor:pointer;
     }
 
-    .hearth-cycle-row span {
-      color: rgba(238,246,255,.58);
-      font-size: .76rem;
-      font-weight: 700;
+    .hearth-ledger-button.primary{
+      color:#06101e;
+      border-color:rgba(231,188,105,.86);
+      background:linear-gradient(135deg,var(--gold-soft),var(--gold));
     }
 
-    .hearth-cycle-row code {
-      color: var(--hearth-blue);
-      font-family: var(--hearth-mono);
-      font-size: .68rem;
-      white-space: nowrap;
+    .hearth-ledger-scroll{
+      min-height:0;
+      overflow:auto;
+      padding:10px 16px 14px;
     }
 
-    .hearth-status-pre {
-      max-height: 320px;
-      overflow: auto;
-      margin: 0;
-      border: 1px solid rgba(231,188,105,.16);
-      border-radius: 18px;
-      background: rgba(0,0,0,.22);
-      padding: 14px;
-      color: rgba(238,246,255,.66);
-      white-space: pre-wrap;
-      font: 750 .72rem/1.42 var(--hearth-mono);
+    .hearth-ledger-lanes{
+      display:grid;
+      gap:7px;
     }
 
-    .hearth-footer-nav {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 18px;
+    .hearth-ledger-lane{
+      display:grid;
+      gap:5px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:13px;
+      padding:8px;
+      background:rgba(255,255,255,.035);
     }
 
-    @media (max-width: 900px) {
-      .hearth-orbit-nav {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    .hearth-ledger-lane-top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:8px;
+    }
+
+    .hearth-ledger-lane-title{
+      display:grid;
+      gap:2px;
+      min-width:0;
+      color:rgba(238,246,255,.64);
+      font-size:.66rem;
+      line-height:1.22;
+    }
+
+    .hearth-ledger-lane-title strong{
+      color:rgba(255,244,216,.94);
+      font-size:.70rem;
+    }
+
+    .hearth-ledger-lane-status{
+      flex:0 0 auto;
+      color:var(--blue);
+      font-size:.60rem;
+      font-weight:950;
+      letter-spacing:.09em;
+      text-transform:uppercase;
+    }
+
+    .hearth-ledger-receipt{
+      display:none;
+      margin-top:10px;
+      border:1px solid rgba(231,188,105,.16);
+      border-radius:14px;
+      background:rgba(0,0,0,.24);
+    }
+
+    .hearth-ledger-receipt[data-visible="true"]{
+      display:block;
+    }
+
+    .hearth-ledger-receipt pre{
+      margin:0;
+      max-height:260px;
+      overflow:auto;
+      padding:10px;
+      color:rgba(238,246,255,.72);
+      white-space:pre-wrap;
+      font:700 .66rem/1.38 var(--mono);
+    }
+
+    .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"]{
+      inset:auto 10px 10px 10px;
+      min-height:132px;
+      max-height:186px;
+      overflow:hidden;
+    }
+
+    .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-scroll{
+      display:none;
+    }
+
+    .hearth-ledger-cockpit[data-cockpit-mode="planet-inspect"]{
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+      transform:translateY(24px) scale(.985);
+      max-height:0;
+      min-height:0;
+    }
+
+    [data-hearth-index-show-diagnostic-tab],
+    [data-hearth-coherence-show-diagnostic-tab]{
+      position:fixed;
+      right:max(12px,env(safe-area-inset-right));
+      bottom:max(72px,calc(env(safe-area-inset-bottom) + 72px));
+      z-index:10000;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      min-height:38px;
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid rgba(231,188,105,.66);
+      color:#06101e;
+      background:linear-gradient(135deg,var(--gold-soft),var(--gold));
+      box-shadow:0 16px 44px rgba(0,0,0,.40), inset 0 1px 0 rgba(255,255,255,.28);
+      font:950 .70rem/1 var(--font);
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      cursor:pointer;
+    }
+
+    html[data-hearth-index-inspect-reserved-active="true"] [data-hearth-index-show-diagnostic-tab],
+    html[data-hearth-planet-inspect="true"] [data-hearth-coherence-show-diagnostic-tab],
+    html[data-hearth-planet-inspect="true"] [data-hearth-index-show-diagnostic-tab]{
+      display:inline-flex;
+    }
+
+    .hearth-cycle{
+      padding:24px;
+      margin-bottom:24px;
+    }
+
+    .cycle-grid{
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:10px;
+      margin-top:18px;
+    }
+
+    .cycle-node{
+      min-height:128px;
+      padding:14px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:22px;
+      background:rgba(255,255,255,.04);
+    }
+
+    .cycle-node strong{
+      display:block;
+      color:var(--gold-soft);
+      font-size:.82rem;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+    }
+
+    .cycle-node span{
+      display:block;
+      margin-top:8px;
+      color:var(--muted);
+      font-size:.82rem;
+      font-weight:640;
+    }
+
+    .hearth-sections{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+      margin-bottom:24px;
+    }
+
+    .hearth-section{
+      padding:24px;
+    }
+
+    .hearth-route-family{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
+      margin-bottom:24px;
+    }
+
+    .hearth-route-card{
+      padding:20px;
+      min-height:180px;
+    }
+
+    .hearth-route-card strong{
+      display:block;
+      color:var(--gold-soft);
+      font-size:1.08rem;
+      letter-spacing:-.02em;
+    }
+
+    .hearth-route-card span{
+      display:block;
+      margin-top:8px;
+      color:var(--muted);
+      font-weight:640;
+    }
+
+    .hearth-status-panel{
+      margin-top:24px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:22px;
+      background:rgba(0,0,0,.28);
+      overflow:hidden;
+    }
+
+    .hearth-status-panel summary{
+      cursor:pointer;
+      padding:14px 16px;
+      color:var(--gold-soft);
+      font-weight:950;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      font-size:.74rem;
+    }
+
+    #hearth-route-status,
+    [data-hearth-route-status]{
+      min-height:72px;
+      margin:0;
+      padding:14px 16px;
+      overflow:auto;
+      color:rgba(238,246,255,.66);
+      white-space:pre-wrap;
+      font:700 .70rem/1.45 var(--mono);
+      border-top:1px solid rgba(255,255,255,.06);
+    }
+
+    .no-script{
+      margin:16px 0 0;
+      padding:14px 16px;
+      border:1px solid rgba(255,154,154,.32);
+      border-radius:18px;
+      color:rgba(255,230,230,.86);
+      background:rgba(80,12,18,.22);
+      font-weight:700;
+    }
+
+    @media (max-width:980px){
+      .hearth-hero,
+      .hearth-sections,
+      .hearth-route-family{
+        grid-template-columns:1fr;
       }
 
-      .hearth-hero-inner,
-      .hearth-main-grid {
-        grid-template-columns: 1fr;
+      .cycle-grid{
+        grid-template-columns:1fr 1fr;
       }
 
-      .hearth-map-gem {
-        min-height: 190px;
+      .viewport-head{
+        display:grid;
+      }
+
+      .viewport-status{
+        width:100%;
       }
     }
 
-    @media (max-width: 560px) {
-      .hearth-shell {
-        width: min(100% - 20px, 1180px);
+    @media (max-width:640px){
+      .hearth-routebar{
+        align-items:flex-start;
+        border-radius:24px;
+        flex-direction:column;
       }
 
-      .hearth-orbit-nav,
-      .hearth-footer-nav {
-        grid-template-columns: 1fr;
+      .hearth-nav{
+        justify-content:flex-start;
       }
 
-      .hearth-route-pill {
-        min-height: 50px;
+      .hearth-nav a{
+        min-height:32px;
+        padding:7px 10px;
+        font-size:.64rem;
+      }
+
+      .hero-card,
+      .mirror-card,
+      .hearth-section,
+      .hearth-cycle{
+        border-radius:22px;
+        padding:18px;
+      }
+
+      .cycle-grid{
+        grid-template-columns:1fr;
       }
 
       #hearthCanvasMount,
-      [data-hearth-canvas-mount="true"] {
-        min-height: 620px;
-        border-radius: 24px;
+      [data-hearth-canvas-mount="true"]{
+        min-height:680px;
+      }
+
+      .hearth-ledger-cockpit{
+        inset:8px;
+        min-height:166px;
+        border-radius:20px;
+      }
+
+      .hearth-ledger-head{
+        padding:12px 12px 8px;
+      }
+
+      .hearth-ledger-progress,
+      .hearth-ledger-actions,
+      .hearth-ledger-scroll{
+        padding-left:12px;
+        padding-right:12px;
+      }
+
+      .hearth-ledger-button{
+        flex:1 1 auto;
+        min-width:30%;
+        font-size:.58rem;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip-link" href="#hearth-main">Skip to Hearth route</a>
+  <a class="skip-link" href="#hearth-main">Skip to Hearth</a>
 
   <div class="hearth-shell">
-    <nav class="hearth-orbit-nav" aria-label="Hearth route navigation">
-      <a class="hearth-route-pill" href="/showroom/globe/">Return to Globe</a>
-      <a class="hearth-route-pill" href="/showroom/globe/hearth/" aria-current="page">Hearth</a>
-      <a class="hearth-route-pill" href="/showroom/globe/hearth/atlas/">Return to Atlas Study</a>
-      <a class="hearth-route-pill" href="/explore/frontier/">Open Frontier</a>
-    </nav>
+    <header class="hearth-routebar" aria-label="Hearth route navigation">
+      <a class="hearth-brand" href="/showroom/globe/" aria-label="Return to Mirrorland globe">
+        <span class="hearth-brand-mark" aria-hidden="true"></span>
+        <span>Mirrorland · Hearth</span>
+      </a>
 
-    <header class="hearth-hero">
-      <div class="hearth-hero-inner">
-        <section aria-labelledby="hearth-title">
-          <p class="hearth-kicker">Hearth · Future Earth Survival Route</p>
-          <h1 id="hearth-title" class="hearth-title">Hearth is future Earth surviving long enough to become shelter.</h1>
-          <p class="hearth-subtitle">
-            This route is the public shell for Hearth’s visible planet system. The HTML carries the route, the mount,
-            and the readable public premise. The four-file cycle conducts the live process.
-          </p>
-
-          <div class="hearth-proof-row" aria-label="Route constraints">
-            <span class="hearth-proof-chip">HTML shell only</span>
-            <span class="hearth-proof-chip">East owns Step 1</span>
-            <span class="hearth-proof-chip">West validates handoff</span>
-            <span class="hearth-proof-chip">North governs checkpoint</span>
-            <span class="hearth-proof-chip">South completes visible proof</span>
-          </div>
-        </section>
-
-        <a class="hearth-map-gem" href="/showroom/globe/hearth/atlas/" aria-label="Open Hearth map portal">
-          <span>
-            MAP
-            <small>PORTAL</small>
-          </span>
-        </a>
-      </div>
+      <nav class="hearth-nav" aria-label="Primary Hearth navigation">
+        <a href="/">Compass</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/showroom/globe/">Globe</a>
+        <a href="/showroom/globe/zionts/">ZIONTS</a>
+        <a href="/showroom/globe/audralia/">Audralia</a>
+        <a href="/showroom/globe/hearth/" aria-current="page">Hearth</a>
+        <a href="/gauges/">Gauges</a>
+      </nav>
     </header>
 
-    <main id="hearth-main" class="hearth-panel" tabindex="-1">
-      <div class="hearth-panel-inner">
-        <section class="hearth-main-grid" aria-label="Hearth live route">
-          <div
-            id="hearthCanvasMount"
-            data-hearth-canvas-mount="true"
-            data-hearth-html-shell-mount="true"
-            data-hearth-route="/showroom/globe/hearth/"
-            data-east-step1-target="true"
-            data-west-handoff-target="true"
-            data-north-command-target="true"
-            data-south-visible-completion-target="true"
-            data-generated-image="false"
-            data-graphic-box="false"
-            data-webgl="false"
-            data-visual-pass-claimed="false"
-          >
-            <div class="hearth-mount-fallback" data-hearth-mount-fallback="true">
-              <div>
-                <strong>Preparing Hearth route shell.</strong>
-                <span>
-                  The route document is now HTML. East starts the first-paint ledger, West validates handoff,
-                  North governs the checkpoint cycle, and South completes visible planet proof.
-                </span>
-              </div>
+    <main
+      id="hearth-main"
+      data-hearth-main="true"
+      data-mirrorland-survival-shell="true"
+      data-hearth-html-shell-ready="true"
+    >
+      <section id="hearth-hero" class="hearth-hero" aria-labelledby="hearth-title">
+        <article class="hero-card">
+          <div>
+            <p class="kicker">Mirrorland · Survival Path</p>
+            <h1 id="hearth-title">Hearth</h1>
+            <p class="hero-copy">
+              Hearth is future Earth surviving long enough to become shelter. This route watches
+              whether the world can stay coherent long enough to become livable, inspectable, and defensible.
+            </p>
+          </div>
+
+          <div class="hero-actions" aria-label="Hearth actions">
+            <a class="primary" href="#hearth-viewport">Inspect Hearth</a>
+            <a href="#hearth-cycle">View the cycle</a>
+            <a href="/showroom/globe/">Return to Globe</a>
+          </div>
+        </article>
+
+        <aside class="mirror-card" aria-label="Mirrorland route frame">
+          <div>
+            <p class="kicker">The website is not the portal</p>
+            <h2>It is the window.</h2>
+            <p>
+              Mirrorland is the future-facing one-way threshold. Hearth is the Survival route:
+              the path where Earth is not replaced, but tested for endurance.
+            </p>
+          </div>
+
+          <div class="path-grid" aria-label="Mirrorland path triad">
+            <div class="path-pill">
+              <strong>ZIONTS</strong>
+              <span>Consequence: the warning path.</span>
+            </div>
+            <div class="path-pill">
+              <strong>Audralia</strong>
+              <span>Possibility: the clean-slate path.</span>
+            </div>
+            <div class="path-pill">
+              <strong>Hearth</strong>
+              <span>Survival: the Earth endurance path.</span>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section
+        id="hearth-viewport"
+        class="hearth-viewport-wrap"
+        aria-labelledby="hearth-viewport-title"
+        data-hearth-viewport-shell="true"
+      >
+        <div class="viewport-head">
+          <div>
+            <p class="kicker">Planet inspection viewport</p>
+            <h2 id="hearth-viewport-title">Survival must become visible.</h2>
+            <p>
+              The planet field loads as an instrumented survival viewport. The cockpit can report progress,
+              but the cockpit is not the world.
+            </p>
+          </div>
+
+          <div class="viewport-status" aria-label="Hearth route status summary">
+            <strong>Route state</strong>
+            <span data-hearth-public-route-state>Shell ready · runtime pending</span>
+            <span data-hearth-public-cycle-state>Cycle: East → West → North → South</span>
+          </div>
+        </div>
+
+        <section
+          id="hearthCanvasMount"
+          data-hearth-canvas-mount="true"
+          data-hearth-html-mount="true"
+          data-hearth-survival-viewport="true"
+          data-hearth-paired-semiconductor="true"
+          data-hearth-directional-cycle="east-west-north-south-checkpoint"
+          data-generated-image="false"
+          data-graphic-box="false"
+          data-webgl="false"
+          data-visual-pass-claimed="false"
+          aria-label="Hearth planet viewport"
+        >
+          <div class="hearth-static-fallback" data-hearth-mount-fallback="true">
+            <div class="hearth-static-fallback-inner">
+              <div class="hearth-orbital-ring" aria-hidden="true"></div>
+              <h3>Hearth survival viewport preparing.</h3>
+              <p>
+                The page shell is active. The planet render and diagnostic cycle will attach here
+                without replacing the public Mirrorland structure.
+              </p>
             </div>
           </div>
 
-          <aside class="hearth-side-stack" aria-label="Hearth route controls and status">
-            <section class="hearth-info-card">
-              <p class="hearth-section-kicker">Four-direction runtime cycle</p>
-              <h2>East → West → North → South → Checkpoint → East.</h2>
-              <p>
-                This page does not paste JavaScript into the route body. It loads each file as a script and lets the
-                four-direction cycle conduct the route in order.
-              </p>
-
-              <div class="hearth-cycle-list">
-                <div class="hearth-cycle-row">
-                  <span class="hearth-cycle-dot">E</span>
-                  <div>
-                    <strong>East · Step 1 ignition</strong>
-                    <span>First paint, mount certainty, loading cockpit, early ledger.</span>
-                  </div>
-                  <code>F1A-F2</code>
-                </div>
-
-                <div class="hearth-cycle-row">
-                  <span class="hearth-cycle-dot">W</span>
-                  <div>
-                    <strong>West · Handoff admissibility</strong>
-                    <span>Accepts or rejects the East handoff before command governance.</span>
-                  </div>
-                  <code>F3-F5</code>
-                </div>
-
-                <div class="hearth-cycle-row">
-                  <span class="hearth-cycle-dot">N</span>
-                  <div>
-                    <strong>North · Checkpoint command table</strong>
-                    <span>Owns the local command runtime table and NEWS/Fibonacci checkpoint law.</span>
-                  </div>
-                  <code>F8-F13</code>
-                </div>
-
-                <div class="hearth-cycle-row">
-                  <span class="hearth-cycle-dot">S</span>
-                  <div>
-                    <strong>South · Visible completion</strong>
-                    <span>Coordinates canvas intake, visible proof, inspect mode, and F21 latch.</span>
-                  </div>
-                  <code>F13-F21</code>
-                </div>
+          <aside
+            id="hearthLoadCockpit"
+            class="hearth-ledger-cockpit"
+            data-hearth-load-cockpit="true"
+            data-hearth-first-paint-cockpit="true"
+            data-hearth-html-cockpit-shell="true"
+            data-cockpit-mode="first-paint-loading"
+            aria-live="polite"
+          >
+            <div class="hearth-ledger-head">
+              <div class="hearth-ledger-kicker">Hearth · Directional Runtime Cycle</div>
+              <h2 class="hearth-ledger-title">STARTING HEARTH SURVIVAL VIEWPORT</h2>
+              <div class="hearth-ledger-meta" data-hearth-stage-label>
+                F1A · HTML shell restored
               </div>
-            </section>
+              <div class="hearth-ledger-meta" data-hearth-heartbeat-text>
+                heartbeat=reserved · waiting for East ignition
+              </div>
+              <div class="hearth-ledger-latest" data-hearth-latest-event>
+                latest=HTML_SHELL_READY
+              </div>
+            </div>
 
-            <section class="hearth-info-card">
-              <p class="hearth-section-kicker">Route status</p>
-              <pre id="hearth-route-status" class="hearth-status-pre" data-hearth-route-status="true">HEARTH_ROUTE_HTML_FOUR_DIRECTION_CYCLE_SHELL_RECEIPT
+            <div class="hearth-ledger-progress" data-hearth-index-progress-strip="true">
+              <div class="hearth-ledger-track">
+                <span class="hearth-ledger-fill" data-hearth-main-progress-fill style="width:6%"></span>
+              </div>
+              <div class="hearth-ledger-percent" data-hearth-main-progress-percent>6%</div>
+            </div>
 
-contract=HEARTH_ROUTE_HTML_FOUR_DIRECTION_CYCLE_SHELL_TNT_v1
-file=/showroom/globe/hearth/index.html
-route=/showroom/globe/hearth/
-htmlShell=true
-rawJsInBody=false
-fourFileCycle=true
-cycleOrder=EAST_TO_WEST_TO_NORTH_TO_SOUTH_TO_CHECKPOINT_TO_EAST
-step1Owner=/showroom/globe/hearth/index.js
-steps2Through11Owner=/showroom/globe/hearth/hearth.js
-westHandoff=/assets/hearth/hearth.index-handoff.table.js
-northCommand=/assets/hearth/hearth.north.command.runtime-table.js
+            <div class="hearth-ledger-actions">
+              <button class="hearth-ledger-button primary" type="button" data-hearth-copy-diagnostic>
+                Copy Diagnostic
+              </button>
+              <button class="hearth-ledger-button" type="button" data-hearth-toggle-receipt>
+                Show Receipt
+              </button>
+              <button class="hearth-ledger-button" type="button" data-hearth-inspect-planet>
+                Inspect Planet
+              </button>
+              <button class="hearth-ledger-button" type="button" data-hearth-collapse-cockpit>
+                Expand Cockpit
+              </button>
+            </div>
+
+            <div class="hearth-ledger-scroll">
+              <div class="hearth-ledger-lanes" data-hearth-lane-list>
+                <section class="hearth-ledger-lane" data-lane="shell" data-status="READY">
+                  <div class="hearth-ledger-lane-top">
+                    <span class="hearth-ledger-lane-title">
+                      <strong>Shell · F1A</strong>
+                      <span>HTML shell restored. Runtime has not claimed completion.</span>
+                    </span>
+                    <span class="hearth-ledger-lane-status">READY</span>
+                  </div>
+                  <div class="hearth-ledger-lane-track">
+                    <span class="hearth-ledger-lane-fill" style="width:6%"></span>
+                  </div>
+                  <div class="hearth-ledger-lane-title">
+                    <span>event=HTML_SHELL_READY</span>
+                  </div>
+                </section>
+              </div>
+
+              <div class="hearth-ledger-receipt" data-hearth-receipt-box data-visible="false">
+                <pre data-hearth-receipt-text></pre>
+              </div>
+            </div>
+          </aside>
+        </section>
+      </section>
+
+      <button
+        type="button"
+        data-hearth-index-show-diagnostic-tab="true"
+        data-visible="false"
+        hidden
+      >
+        Show Diagnostic
+      </button>
+
+      <button
+        type="button"
+        data-hearth-coherence-show-diagnostic-tab="true"
+        data-visible="false"
+        hidden
+      >
+        Show Diagnostic
+      </button>
+
+      <section id="hearth-cycle" class="hearth-cycle" aria-labelledby="hearth-cycle-title">
+        <p class="kicker">Cycle governance</p>
+        <h2 id="hearth-cycle-title">The runtime moves in cycles.</h2>
+        <p>
+          The route does not run as a single overloaded file. East starts, West admits, North governs,
+          South completes, and the checkpoint decides whether the cycle passes, warns, retries, queues,
+          degrades, or blocks.
+        </p>
+
+        <div class="cycle-grid" aria-label="Directional runtime cycle">
+          <div class="cycle-node">
+            <strong>East</strong>
+            <span>Step 1 ignition, first paint, mount certainty, early ledger.</span>
+          </div>
+          <div class="cycle-node">
+            <strong>West</strong>
+            <span>Handoff admissibility, receipt normalization, malformed packet rejection.</span>
+          </div>
+          <div class="cycle-node">
+            <strong>North</strong>
+            <span>Route-local command runtime table, NEWS/Fibonacci checkpoint law.</span>
+          </div>
+          <div class="cycle-node">
+            <strong>South</strong>
+            <span>Visible completion, canvas proof, inspect truth, final diagnostic receipt.</span>
+          </div>
+          <div class="cycle-node">
+            <strong>Checkpoint</strong>
+            <span>Pass, warn, queue, retry, degrade, or hard-block only on kill conditions.</span>
+          </div>
+        </div>
+      </section>
+
+      <div class="hearth-sections">
+        <section class="hearth-section" aria-labelledby="hearth-survival-title">
+          <p class="kicker">Survival standard</p>
+          <h2 id="hearth-survival-title">The world must remain inspectable.</h2>
+          <p>
+            Hearth is not a blank planet and not a decorative globe. It is the survival proof lane:
+            a visible Earth-condition field that must remain readable while the system tests coherence,
+            load, motion, land, water, atmosphere, and inspection.
+          </p>
+        </section>
+
+        <section class="hearth-section" aria-labelledby="hearth-diagnostic-title">
+          <p class="kicker">Diagnostic boundary</p>
+          <h2 id="hearth-diagnostic-title">The cockpit is an instrument.</h2>
+          <p>
+            The cockpit may report progress, copy diagnostics, and show receipts. It must also leave
+            the planet frame when inspection is required. The user must be able to view Hearth without
+            the diagnostic layer blocking the world.
+          </p>
+        </section>
+      </div>
+
+      <section class="hearth-route-family" aria-label="Mirrorland route family">
+        <article class="hearth-route-card">
+          <strong>ZIONTS · Consequence</strong>
+          <span>The route that shows what happens when the warning is ignored.</span>
+        </article>
+
+        <article class="hearth-route-card">
+          <strong>Audralia · Possibility</strong>
+          <span>The route that tests the clean-slate world and preparation field.</span>
+        </article>
+
+        <article class="hearth-route-card">
+          <strong>Hearth · Survival</strong>
+          <span>The route that keeps Earth in view and asks whether shelter can be preserved.</span>
+        </article>
+      </section>
+
+      <details class="hearth-status-panel">
+        <summary>Route receipt shell</summary>
+        <pre
+          id="hearth-route-status"
+          data-hearth-route-status="true"
+        >HEARTH_INDEX_HTML_MIRRORLAND_SURVIVAL_STRUCTURAL_REBUILD_RECEIPT
+contract=HEARTH_INDEX_HTML_MIRRORLAND_SURVIVAL_STRUCTURAL_REBUILD_TNT_v1
+htmlShellReady=true
+mirrorlandNarrativeRestored=true
+hearthSurvivalPathRestored=true
+rawJavaScriptVisible=false
+scriptTagsContained=true
+hearthCanvasMountPresent=true
+hearthLoadCockpitPresent=true
+showDiagnosticTabPresent=true
+routeStatusNodePresent=true
+directionalCycleDeclared=true
+newsFibonacciAlignmentDeclared=true
+checkpointCycleDeclared=true
 generatedImage=false
 graphicBox=false
 webGL=false
-visualPassClaimed=false
-status=HTML_SHELL_READY_WAITING_FOR_EAST_STEP1</pre>
-            </section>
-          </aside>
-        </section>
-      </div>
+visualPassClaimed=false</pre>
+      </details>
+
+      <noscript>
+        <div class="no-script">
+          Hearth’s public shell is available, but the planet viewport and diagnostic cockpit require JavaScript.
+        </div>
+      </noscript>
     </main>
-
-    <section class="hearth-panel" aria-label="Narrative construct">
-      <div class="hearth-panel-inner">
-        <p class="hearth-section-kicker">Narrative construct</p>
-        <div class="hearth-info-card">
-          <h2>Hearth is not a generic planet.</h2>
-          <p>
-            Hearth is the survival-facing Earth path: a future world being tested through route truth, canvas proof,
-            runtime checkpoints, and inspectable visible state. The cockpit can shrink or leave the frame so the planet
-            can be inspected directly.
-          </p>
-        </div>
-
-        <div class="hearth-footer-nav">
-          <a class="hearth-route-pill" href="/showroom/globe/hearth/atlas/">Return to Atlas Study</a>
-          <a class="hearth-route-pill" href="/explore/frontier/">Open Frontier</a>
-        </div>
-      </div>
-    </section>
   </div>
 
-  <!-- Core route dependencies: support files only. They do not own the four-direction cycle. -->
-  <script defer src="/assets/lab/runtime-table.js" data-support-file="runtime-table-core"></script>
+  <script src="/assets/manor-blueprint/manor.blueprint.registry.js" defer></script>
+  <script src="/assets/manor-blueprint/manor.blueprint.js" defer></script>
+  <script src="/assets/lab/runtime-table.js" defer></script>
 
-  <script defer src="/assets/hearth/hearth.tectonics.js" data-source-stack="hearth-tectonics"></script>
-  <script defer src="/assets/hearth/hearth.elevation.js" data-source-stack="hearth-elevation"></script>
-  <script defer src="/assets/hearth/hearth.composition.js" data-source-stack="hearth-composition"></script>
-  <script defer src="/assets/hearth/hearth.hydrology.js" data-source-stack="hearth-hydrology"></script>
-  <script defer src="/assets/hearth/hearth.materials.js" data-source-stack="hearth-materials"></script>
-  <script defer src="/assets/hearth/hearth.hex.four-pair.authority.js" data-source-stack="hearth-hex-four-pair-authority"></script>
-  <script defer src="/assets/hearth/hearth.hex.surface.js" data-source-stack="hearth-hex-surface"></script>
-  <script defer src="/assets/hearth/hearth.canvas.js" data-canvas-authority="hearth-canvas"></script>
+  <script src="/assets/hearth/hearth.tectonics.js" defer></script>
+  <script src="/assets/hearth/hearth.elevation.js" defer></script>
+  <script src="/assets/hearth/hearth.composition.js" defer></script>
+  <script src="/assets/hearth/hearth.hydrology.js" defer></script>
+  <script src="/assets/hearth/hearth.materials.js" defer></script>
+  <script src="/assets/hearth/hearth.hex.four-pair.authority.js" defer></script>
+  <script src="/assets/hearth/hearth.hex.surface.js" defer></script>
+  <script src="/assets/hearth/hearth.canvas.js" defer></script>
 
-  <!-- Four-direction Hearth cycle. Do not paste these files into the HTML body. -->
-  <script defer src="/showroom/globe/hearth/index.js" data-cycle-direction="EAST" data-cycle-step="1" data-cycle-role="ignition-first-paint"></script>
-  <script defer src="/assets/hearth/hearth.index-handoff.table.js" data-cycle-direction="WEST" data-cycle-step="2" data-cycle-role="handoff-admissibility"></script>
-  <script defer src="/assets/hearth/hearth.north.command.runtime-table.js" data-cycle-direction="NORTH" data-cycle-step="3" data-cycle-role="checkpoint-command-runtime-table"></script>
-  <script defer src="/showroom/globe/hearth/hearth.js" data-cycle-direction="SOUTH" data-cycle-step="4" data-cycle-role="visible-completion-consumer"></script>
-
-  <!-- Retired by current route law:
-       /showroom/globe/hearth/hearth.climate.route.js
-  -->
+  <script src="/showroom/globe/hearth/index.js" defer></script>
+  <script src="/assets/hearth/hearth.west.index-handoff.js" defer></script>
+  <script src="/assets/hearth/hearth.north.command.runtime-table.js" defer></script>
+  <script src="/showroom/globe/hearth/hearth.js" defer></script>
 </body>
 </html>

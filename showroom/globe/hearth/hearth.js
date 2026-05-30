@@ -1,175 +1,45 @@
 // /showroom/globe/hearth/hearth.js
-// HEARTH_ROUTE_COMMAND_BRAIN_STEPS_2_11_TNT_v7
+// HEARTH_SOUTH_VISIBLE_COMPLETION_CYCLE_CONSUMER_TNT_v1
 // Full-file replacement.
-// Central command brain for Steps 2 through 11 only.
+// South authority only.
 // Purpose:
-// - Consume Step 1 from /showroom/globe/hearth/index.js.
-// - Own Steps 2 through 11: script-order intake, authority assessment, Runtime Table session, NEWS/Fibonacci governance,
-//   canvas coordination, atlas/texture/frame receipt, visible content proof, inspect-mode truth, F21 latch, final diagnostic.
-// - Assess gaps quickly without hard-blocking lawful forward progress.
-// - Preserve Copy diagnostic / Show receipt / Inspect planet / Show diagnostic.
-// - Keep Runtime Table as North authority, but use a soft-gap governor so visual progress can continue when evidence exists.
+// - Consume North command runtime-table cycle authority.
+// - Own visible completion through canvas coordination intake.
+// - Own visible planet proof, inspect-mode truth, diagnostic dock restoration, and final diagnostic receipt.
+// - Request F21 completion only when North permits it.
+// - Preserve East Step 1 and West handoff as upstream authorities.
+// - Preserve North as checkpoint law / runtime-table authority.
 // Does not own:
-// - Step 1 first paint
-// - HTML shell creation
-// - initial mount creation
-// - first-paint cockpit creation
-// - canvas pixel drawing
-// - atlas generation
-// - texture generation
+// - East Step 1 ignition / first paint / shared early ledger
+// - West handoff admissibility / Step 1 normalization
+// - North checkpoint law / command runtime-table governance
+// - universal /assets/lab/runtime-table.js
 // - source-stack truth
-// - Runtime Table implementation
+// - canvas pixel drawing
 // - final visual pass claim
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_ROUTE_COMMAND_BRAIN_STEPS_2_11_TNT_v7";
-  const RECEIPT = "HEARTH_ROUTE_COMMAND_BRAIN_STEPS_2_11_RECEIPT_v7";
-  const PREVIOUS_CONTRACT = "HEARTH_ROUTE_CONSUMER_ACTIVE_MATCH_QUEUE_DRAIN_TNT_v6";
-  const BASELINE_CONTRACT = "HEARTH_ROUTE_COMMAND_BRAIN_STEPS_2_11_PRECODE_FINAL_DRAFT_v7";
-  const VERSION = "2026-05-29.hearth-route-command-brain-steps-2-11-v7";
+  const CONTRACT = "HEARTH_SOUTH_VISIBLE_COMPLETION_CYCLE_CONSUMER_TNT_v1";
+  const RECEIPT = "HEARTH_SOUTH_VISIBLE_COMPLETION_CYCLE_CONSUMER_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "HEARTH_ROUTE_COMMAND_BRAIN_STEPS_2_11_TNT_v7";
+  const BASELINE_CONTRACT = "HEARTH_DIRECTIONAL_CYCLICAL_CHECKPOINT_GOVERNANCE_PRECODE_FINAL_DRAFT_v1";
+  const VERSION = "2026-05-29.hearth-south-visible-completion-cycle-consumer-v1";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
 
   const ROUTE = "/showroom/globe/hearth/";
-  const INDEX_FILE = "/showroom/globe/hearth/index.js";
-  const COHERENCE_FILE = "/showroom/globe/hearth/hearth.js";
+  const EAST_FILE = "/showroom/globe/hearth/index.js";
+  const WEST_FILE = "/assets/hearth/hearth.west.index-handoff.table.js";
+  const NORTH_FILE = "/assets/hearth/hearth.north.command.runtime-table.js";
+  const SOUTH_FILE = "/showroom/globe/hearth/hearth.js";
   const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
-  const RUNTIME_TABLE_FILE = "/assets/lab/runtime-table.js";
-  const RETIRED_CLIMATE_FILE = "/showroom/globe/hearth/hearth.climate.route.js";
 
   const MOUNT_ID = "hearthCanvasMount";
   const COCKPIT_ID = "hearthLoadCockpit";
   const STATUS_ID = "hearth-route-status";
-  const STYLE_ID = "hearth-route-command-brain-v7-style";
-
-  const CHECKPOINTS = Object.freeze([
-    {
-      id: "S2_INDEX_HANDOFF_ACCEPTED",
-      event: "INDEX_HANDOFF_ACCEPTED",
-      step: 2,
-      rank: 1,
-      fibonacci: "F3",
-      progress: 36,
-      lane: "scriptOrder",
-      label: "Index handoff accepted"
-    },
-    {
-      id: "S3_AUTHORITY_AVAILABILITY_READY",
-      event: "AUTHORITY_AVAILABILITY_READY",
-      step: 3,
-      rank: 2,
-      fibonacci: "F5",
-      progress: 55,
-      lane: "authorityAvailability",
-      label: "Authority availability assessed"
-    },
-    {
-      id: "S4_RUNTIME_TABLE_SESSION_READY",
-      event: "RUNTIME_TABLE_SESSION_READY",
-      step: 4,
-      rank: 3,
-      fibonacci: "F8",
-      progress: 72,
-      lane: "runtimeTable",
-      label: "Runtime Table session ready or degraded"
-    },
-    {
-      id: "S5_CANVAS_COORDINATION_STARTED",
-      event: "CANVAS_COORDINATION_STARTED",
-      step: 5,
-      rank: 4,
-      fibonacci: "F13A",
-      progress: 78,
-      lane: "canvasAndDiagnostic",
-      label: "Canvas coordination started"
-    },
-    {
-      id: "S6_CANVAS_MOUNT_CONFIRMED",
-      event: "CANVAS_MOUNT_CONFIRMED",
-      step: 6,
-      rank: 5,
-      fibonacci: "F13B",
-      progress: 81,
-      lane: "canvasAndDiagnostic",
-      label: "Canvas mount confirmed"
-    },
-    {
-      id: "S7_CANVAS_CONTEXT_READY",
-      event: "CANVAS_CONTEXT_READY",
-      step: 7,
-      rank: 6,
-      fibonacci: "F13C",
-      progress: 84,
-      lane: "canvasAndDiagnostic",
-      label: "Canvas context ready"
-    },
-    {
-      id: "S8_DRAG_INSPECTION_BOUND",
-      event: "DRAG_INSPECTION_BOUND",
-      step: 8,
-      rank: 7,
-      fibonacci: "F13D",
-      progress: 86,
-      lane: "canvasAndDiagnostic",
-      label: "Drag inspection bound"
-    },
-    {
-      id: "S9_ATLAS_TEXTURE_FRAME_READY",
-      event: "ATLAS_TEXTURE_FRAME_READY",
-      step: 9,
-      rank: 8,
-      fibonacci: "F13E",
-      progress: 93,
-      lane: "canvasAndDiagnostic",
-      label: "Atlas, texture, and first frame ready"
-    },
-    {
-      id: "S10_VISIBLE_CONTENT_PROOF_PASSED",
-      event: "VISIBLE_CONTENT_PROOF_PASSED",
-      step: 10,
-      rank: 9,
-      fibonacci: "F13F",
-      progress: 98,
-      lane: "visiblePlanetProof",
-      label: "Visible content proof passed"
-    },
-    {
-      id: "S11_INSPECT_MODE_READY",
-      event: "INSPECT_MODE_READY",
-      step: 11,
-      rank: 10,
-      fibonacci: "F13G",
-      progress: 98,
-      lane: "inspectMode",
-      label: "Inspect mode ready"
-    },
-    {
-      id: "F21_COMPLETION_LATCHED",
-      event: "COMPLETION_LATCHED",
-      step: 11,
-      rank: 11,
-      fibonacci: "F21",
-      progress: 100,
-      lane: "completionLatch",
-      label: "Completion latched"
-    }
-  ]);
-
-  const CHECKPOINT_MAP = Object.freeze(
-    CHECKPOINTS.reduce((map, checkpoint) => {
-      map[checkpoint.id] = checkpoint;
-      map[checkpoint.event] = checkpoint;
-      return map;
-    }, Object.create(null))
-  );
-
-  const CANVAS_PROGRESS_EVENTS = Object.freeze([
-    "ATLAS_BUILD_PROGRESS",
-    "TEXTURE_COMPOSE_PROGRESS"
-  ]);
 
   const SOURCE_STACK_HELD = Object.freeze([
     "/assets/hearth/hearth.tectonics.js",
@@ -179,8 +49,19 @@
     "/assets/hearth/hearth.materials.js",
     "/assets/hearth/hearth.hex.four-pair.authority.js",
     "/assets/hearth/hearth.hex.surface.js",
-    RUNTIME_TABLE_FILE
+    "/assets/lab/runtime-table.js"
   ]);
+
+  const SOUTH_EVENTS = Object.freeze({
+    CANVAS_COORDINATION_STARTED: "CANVAS_COORDINATION_STARTED",
+    CANVAS_MOUNT_CONFIRMED: "CANVAS_MOUNT_CONFIRMED",
+    CANVAS_CONTEXT_READY: "CANVAS_CONTEXT_READY",
+    DRAG_INSPECTION_BOUND: "DRAG_INSPECTION_BOUND",
+    ATLAS_TEXTURE_FRAME_READY: "ATLAS_TEXTURE_FRAME_READY",
+    VISIBLE_CONTENT_PROOF_PASSED: "VISIBLE_CONTENT_PROOF_PASSED",
+    INSPECT_MODE_READY: "INSPECT_MODE_READY",
+    COMPLETION_LATCHED: "COMPLETION_LATCHED"
+  });
 
   const state = {
     contract: CONTRACT,
@@ -188,113 +69,67 @@
     previousContract: PREVIOUS_CONTRACT,
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
-    file: COHERENCE_FILE,
+    file: SOUTH_FILE,
     route: ROUTE,
-    role: "central-command-brain-steps-2-through-11",
+    role: "south-visible-completion-cycle-consumer",
 
     pairedSemiconductor: true,
-    pairedWith: INDEX_FILE,
-    indexJsStartsProcess: true,
-    hearthJsFinishesProcess: true,
-    systematicAndSynchronized: true,
-    synchronizedLoading: true,
+    pairedWith: EAST_FILE,
+    cycleOrder: "EAST -> WEST -> NORTH -> SOUTH -> CHECKPOINT -> EAST",
 
+    ownsSouth: true,
+    ownsEast: false,
+    ownsWest: false,
+    ownsNorth: false,
     ownsStep1: false,
-    ownsSteps2Through11: true,
-    step1Source: INDEX_FILE,
-    step1Accepted: false,
-    step1ReceiptPresent: false,
-    step1Contract: "",
-    step1HandoffAcceptedAt: "",
-
-    ownsFirstPaintSurvival: false,
-    ownsMountCreation: false,
-    ownsInitialCockpitCreation: false,
-    ownsRouteBrain: true,
-    ownsScriptOrderIntake: true,
-    ownsAuthorityAssessment: true,
-    ownsRuntimeTableSession: true,
-    ownsCheckpointGovernorConsumer: true,
-    ownsNewsFibonacciGovernance: true,
-    ownsCanvasCoordination: true,
+    ownsStep1Handoff: false,
+    ownsNorthRuntimeTable: false,
+    ownsCanvasDrawing: false,
+    ownsVisibleCompletion: true,
     ownsVisiblePlanetProof: true,
     ownsInspectModeTruth: true,
-    ownsCompletionLatch: true,
     ownsFinalDiagnosticReceipt: true,
     ownsFinalVisualPassClaim: false,
 
-    gapAssessmentFast: true,
-    hardBlockMode: false,
-    softGapGovernor: true,
-    forwardProgressAllowedWithGaps: true,
-    blockedProgressCap: 98,
-    readyTextRequiresF21: true,
+    eastFile: EAST_FILE,
+    westFile: WEST_FILE,
+    northFile: NORTH_FILE,
+    southFile: SOUTH_FILE,
+    canvasFile: CANVAS_FILE,
 
-    checkpointBrainActive: true,
-    chronologicalFibonacciAlignment: true,
-    newsFibonacciAlignment: true,
-    oneActiveCheckpointAtATime: true,
-    futureEventsQueued: true,
-    completedEventsArchived: true,
-    regressiveEventsBlocked: true,
+    northAvailable: false,
+    northContract: "",
+    northSessionCreated: false,
+    northSessionId: "",
+    northReceiptAvailable: false,
+    northReceiptError: "",
+    northF21Allowed: false,
+    northNewsGatePassedBeforeF21: false,
+    northActiveCheckpointId: "",
+    northRecommendedNextOwner: "",
+    northRecommendedNextFile: "",
 
-    activeCheckpointId: "S2_INDEX_HANDOFF_ACCEPTED",
-    activeCheckpointRank: 1,
-    activeFibonacciStage: "F3",
-    completedCheckpoints: [],
-    highestCompletedCheckpointId: "",
-    highestCompletedRank: 0,
-    queuedEvents: [],
-    admittedEvents: [],
-    archivedEvents: [],
-    blockedEvents: [],
-    gapEvents: [],
-
-    currentStage: "F3",
-    highestStage: "F3",
-    mainDisplayProgress: 0,
-    mainProgressCap: 98,
-    completionLatched: false,
-    f21Allowed: false,
-    f21AfterS11: false,
-    finalReceiptAvailable: false,
-
-    northGateReady: false,
-    eastGateReady: false,
-    westGateReady: false,
-    southGateReady: false,
-    newsGatePassedBeforeF21: false,
+    step1AcceptedBySouth: false,
+    handoffAdmissibleByWest: false,
 
     mountReady: false,
     cockpitFound: false,
     cockpitHydrated: false,
+    diagnosticDockReady: false,
     showDiagnosticTabReady: false,
     copyDiagnosticReady: false,
     receiptToggleReady: false,
     inspectPlanetControlReady: false,
     collapseExpandControlReady: false,
     buttonsReachable: false,
-    dockHiddenForInspection: false,
-    cockpitExpanded: false,
     receiptVisible: false,
+    cockpitMode: "loading-cockpit",
+    cockpitExpanded: false,
+    dockHiddenForInspection: false,
     diagnosticCanLeavePlanetFrame: false,
-
-    runtimeTablePresent: false,
-    runtimeTableSessionAttempted: false,
-    runtimeTableSessionCreated: false,
-    runtimeTableSessionError: "",
-    runtimeTableMode: "RUNTIME_TABLE_PENDING",
-    runtimeTablePlanAttempted: false,
-    runtimeTablePlanCreated: false,
-    runtimeTablePlanError: "",
-    runtimeTableReceiptAvailable: false,
-    runtimeTableReceiptError: "",
+    planetNotObstructed: false,
 
     canvasApiPresent: false,
-    canvasScriptPresent: false,
-    canvasScriptInjected: false,
-    canvasScriptLoaded: false,
-    canvasScriptError: "",
     canvasCarrierRequested: false,
     canvasCarrierMethod: "",
     canvasCarrierHandoffOk: false,
@@ -337,32 +172,40 @@
     planetCanvasNonZeroSize: false,
     planetFramePainted: false,
     nonblankPlanetVisible: false,
-    planetNotObstructed: false,
+
+    southGateReady: false,
+    completionRequestedFromNorth: false,
+    completionLatched: false,
+    f21AfterNorthPermission: false,
+    finalReceiptAvailable: false,
+
+    mainDisplayProgress: 72,
+    mainProgressCap: 98,
+    currentStage: "F13A",
+    highestStage: "F13A",
+    latestVisibleEvent: "SOUTH_VISIBLE_COMPLETION_LOADED",
+    postgameStatus: "SOUTH_BOOTING",
+    firstFailedCoordinate: "WAITING_NORTH_COMMAND_RUNTIME_TABLE",
+    recommendedNextRenewalTarget: NORTH_FILE,
 
     sourceAuthorityHeld: true,
     climateRouteRetired: true,
-    runtimeTableMutation: false,
+    northRuntimeTableMutation: false,
     canvasMutation: false,
 
-    latestVisibleEvent: "COMMAND_BRAIN_LOADED",
-    postgameStatus: "COMMAND_BRAIN_LOADED",
-    firstFailedCoordinate: "WAITING_INDEX_HANDOFF",
-    recommendedNextRenewalTarget: INDEX_FILE,
-
-    canvasPhaseEvents: [],
+    phaseEvents: [],
     progressOnlyEvents: [],
     localEvents: [],
+    northEvents: [],
     errors: [],
-    phaseSignatures: Object.create(null),
-
-    startedAt: "",
-    startedAtMs: 0,
-    updatedAt: "",
 
     generatedImage: false,
     graphicBox: false,
     webGL: false,
-    visualPassClaimed: false
+    visualPassClaimed: false,
+
+    startedAt: "",
+    updatedAt: ""
   };
 
   const refs = {
@@ -382,15 +225,16 @@
     inspectButton: null,
     expandButton: null,
     showTab: null,
-    ledger: null,
-    runtimeSession: null
+    north: null,
+    northSession: null,
+    ledger: null
   };
 
   let bootStarted = false;
-  let renderTimer = 0;
+  let canvasBootRequested = false;
   let heartbeatTimer = 0;
   let reconcileTimer = 0;
-  let canvasBootRequested = false;
+  let renderTimer = 0;
 
   function nowIso() {
     try {
@@ -419,6 +263,11 @@
     return fallback;
   }
 
+  function number(value, fallback = 0) {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : fallback;
+  }
+
   function clamp(value, min, max) {
     const n = Number(value);
     if (!Number.isFinite(n)) return min;
@@ -445,23 +294,70 @@
   }
 
   function formatElapsed(ms) {
-    const total = Math.max(0, Math.floor(Number(ms || 0) / 1000));
+    const total = Math.max(0, Math.floor(number(ms, 0) / 1000));
     const minutes = Math.floor(total / 60);
     const seconds = total % 60;
     return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
   }
 
-  function checkpointBy(idOrEvent) {
-    return CHECKPOINT_MAP[idOrEvent] || null;
+  function recordLocal(event, detail = {}) {
+    const item = {
+      at: nowIso(),
+      event,
+      detail: clonePlain(detail)
+    };
+
+    state.localEvents.push(item);
+    if (state.localEvents.length > 220) {
+      state.localEvents.splice(0, state.localEvents.length - 220);
+    }
+
+    state.updatedAt = item.at;
+    return item;
   }
 
-  function getRuntimeTableApi() {
+  function recordNorth(event, detail = {}) {
+    const item = {
+      at: nowIso(),
+      event,
+      detail: clonePlain(detail)
+    };
+
+    state.northEvents.push(item);
+    if (state.northEvents.length > 220) {
+      state.northEvents.splice(0, state.northEvents.length - 220);
+    }
+
+    return item;
+  }
+
+  function recordError(code, message, detail = {}) {
+    const item = {
+      at: nowIso(),
+      code,
+      message: String(message || ""),
+      detail: clonePlain(detail)
+    };
+
+    state.errors.push(item);
+    if (state.errors.length > 80) {
+      state.errors.splice(0, state.errors.length - 80);
+    }
+
+    return item;
+  }
+
+  function getDataset() {
+    return doc && doc.documentElement ? doc.documentElement.dataset : {};
+  }
+
+  function getNorthApi() {
     return (
-      root.LAB_RUNTIME_TABLE ||
-      root.DexterRuntimeTable ||
-      root.RUNTIME_TABLE ||
-      root.LAB_UNIVERSAL_PLANET_RUNTIME_TABLE ||
-      (root.DEXTER_LAB && root.DEXTER_LAB.runtimeTable) ||
+      root.HEARTH_NORTH_COMMAND_RUNTIME_TABLE ||
+      root.HEARTH_NORTH_COMMAND_TABLE ||
+      root.HEARTH_NORTH_COMMAND ||
+      root.HEARTH_LOCAL_COMMAND_RUNTIME_TABLE ||
+      (root.HEARTH && root.HEARTH.northCommandRuntimeTable) ||
       null
     );
   }
@@ -475,23 +371,12 @@
     );
   }
 
-  function getIndexHandoff() {
-    return (
-      root.HEARTH_INDEX_ROUTE_SOCKET_HANDOFF ||
-      (root.HEARTH && root.HEARTH.indexHandoff) ||
-      root.HEARTH_INDEX_ROUTE_SOCKET_RECEIPT ||
-      root.HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR_RECEIPT ||
-      root.HEARTH_INDEX_BRIDGE_RECEIPT ||
-      null
-    );
-  }
-
   function getCanvasReceipt() {
     const api = getCanvasApi();
 
     if (api && isFunction(api.getReceipt)) {
       try {
-        const receipt = api.getReceipt("hearth-route-command-brain-v7");
+        const receipt = api.getReceipt("hearth-south-visible-completion-cycle-consumer");
         if (receipt && isObject(receipt)) return receipt;
       } catch (error) {
         recordError("CANVAS_RECEIPT_READ_FAILED", error && error.message ? error.message : String(error));
@@ -506,165 +391,206 @@
     );
   }
 
+  function getNorthReceipt() {
+    const north = refs.north || getNorthApi();
+
+    if (north && isFunction(north.getReceipt)) {
+      try {
+        const receipt = north.getReceipt();
+        if (receipt && isObject(receipt)) return receipt;
+      } catch (error) {
+        state.northReceiptError = error && error.message ? error.message : String(error);
+        recordError("NORTH_RECEIPT_READ_FAILED", state.northReceiptError);
+      }
+    }
+
+    return root.HEARTH_NORTH_COMMAND_RUNTIME_TABLE_RECEIPT || root.HEARTH_NORTH_CYCLICAL_CHECKPOINT_RECEIPT || null;
+  }
+
+  function getEastReceipt() {
+    return (
+      root.HEARTH_EAST_STEP1_HANDOFF_RECEIPT ||
+      root.HEARTH_INDEX_STEP1_HANDOFF_RECEIPT ||
+      root.HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR_RECEIPT ||
+      root.HEARTH_INDEX_BRIDGE_RECEIPT ||
+      root.HEARTH_INDEX_JS_RECEIPT ||
+      null
+    );
+  }
+
+  function getWestReceipt() {
+    return (
+      root.HEARTH_WEST_HANDOFF_ADMISSIBILITY_RECEIPT ||
+      root.HEARTH_WEST_INDEX_HANDOFF_TABLE_RECEIPT ||
+      null
+    );
+  }
+
+  function ensureMount() {
+    if (!doc) return null;
+
+    let mount =
+      doc.getElementById(MOUNT_ID) ||
+      doc.querySelector("[data-hearth-canvas-mount='true']") ||
+      doc.querySelector("[data-hearth-canvas-mount]");
+
+    if (!mount) {
+      mount = doc.createElement("section");
+      mount.id = MOUNT_ID;
+      mount.dataset.hearthCanvasMount = "true";
+      const parent = doc.getElementById("hearth-main") || doc.body || doc.documentElement;
+      parent.appendChild(mount);
+    }
+
+    mount.id = MOUNT_ID;
+    mount.dataset.hearthCanvasMount = "true";
+    mount.dataset.hearthSouthVisibleCompletion = CONTRACT;
+    mount.dataset.hearthSouthReceipt = RECEIPT;
+    mount.dataset.hearthCycleSouth = "true";
+    mount.dataset.hearthNorthFile = NORTH_FILE;
+    mount.dataset.hearthEastFile = EAST_FILE;
+    mount.dataset.hearthWestFile = WEST_FILE;
+    mount.dataset.hearthSouthFile = SOUTH_FILE;
+    mount.dataset.generatedImage = "false";
+    mount.dataset.graphicBox = "false";
+    mount.dataset.webgl = "false";
+    mount.dataset.visualPassClaimed = "false";
+
+    mount.style.position = mount.style.position || "relative";
+    mount.style.overflow = "hidden";
+    mount.style.touchAction = "none";
+
+    refs.mount = mount;
+    state.mountReady = true;
+
+    return mount;
+  }
+
   function ensureStyle() {
-    if (!doc || doc.getElementById(STYLE_ID)) return;
+    if (!doc || doc.getElementById("hearth-south-visible-completion-style")) return;
 
     const style = doc.createElement("style");
-    style.id = STYLE_ID;
+    style.id = "hearth-south-visible-completion-style";
     style.textContent = `
-      .hearth-ledger-cockpit{
-        transition:max-height .22s ease,opacity .18s ease,visibility .18s ease,transform .22s ease;
-      }
-
-      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"]{
-        inset:auto 10px 10px 10px!important;
-        min-height:132px!important;
-        max-height:188px!important;
-        overflow:hidden!important;
-      }
-
-      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-scroll{
-        display:none!important;
-      }
-
-      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-head{
-        padding:10px 14px 7px!important;
-      }
-
-      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-title{
-        font-size:1rem!important;
-        line-height:1.02!important;
-      }
-
-      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-meta{
-        display:none!important;
-      }
-
-      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-button{
-        min-height:28px!important;
-        padding:6px 9px!important;
-        font-size:.56rem!important;
-      }
-
-      .hearth-ledger-cockpit[data-cockpit-mode="expanded-cockpit"]{
-        inset:10px!important;
-        max-height:calc(100% - 20px)!important;
-        min-height:170px!important;
-        overflow:hidden!important;
-      }
-
-      .hearth-ledger-cockpit[data-cockpit-mode="planet-inspect"]{
-        opacity:0!important;
-        visibility:hidden!important;
-        pointer-events:none!important;
-        transform:translateY(26px) scale(.985)!important;
-        max-height:0!important;
-        min-height:0!important;
-        overflow:hidden!important;
-      }
-
-      [data-hearth-command-brain-show-diagnostic-tab]{
-        position:fixed;
-        right:max(12px,env(safe-area-inset-right));
-        bottom:max(72px,calc(env(safe-area-inset-bottom) + 72px));
-        z-index:10000;
-        display:none;
-        align-items:center;
-        justify-content:center;
-        min-height:38px;
-        padding:10px 14px;
-        border-radius:999px;
-        border:1px solid rgba(231,188,105,.66);
-        color:#06101e;
-        background:linear-gradient(135deg,#ffe8a3,#e7bc69);
-        box-shadow:0 16px 44px rgba(0,0,0,.40), inset 0 1px 0 rgba(255,255,255,.28);
-        font:950 .70rem/1 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-        letter-spacing:.08em;
-        text-transform:uppercase;
-        cursor:pointer;
-      }
-
-      html[data-hearth-command-brain-inspect="true"] [data-hearth-command-brain-show-diagnostic-tab]{
-        display:inline-flex;
-      }
-
-      html[data-hearth-command-brain-inspect="true"] #hearthCanvasMount,
-      html[data-hearth-command-brain-inspect="true"] [data-hearth-canvas-mount="true"]{
-        cursor:grab;
-      }
-
+      .hearth-ledger-cockpit{transition:max-height .22s ease,opacity .18s ease,visibility .18s ease,transform .22s ease;}
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"]{inset:auto 10px 10px 10px!important;min-height:132px!important;max-height:186px!important;overflow:hidden!important;}
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-head{padding:10px 14px 7px!important;}
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-kicker{font-size:.58rem!important;}
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-title{font-size:1rem!important;line-height:1.02!important;}
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-meta{display:none!important;}
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-latest{font-size:.63rem!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;}
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-progress{padding:7px 10px!important;}
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-scroll{display:none!important;}
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-actions{padding:7px 10px 10px!important;border-bottom:0!important;}
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-button{min-height:28px!important;padding:6px 9px!important;font-size:.56rem!important;}
+      .hearth-ledger-cockpit[data-cockpit-mode="expanded-cockpit"]{inset:10px!important;max-height:calc(100% - 20px)!important;min-height:170px!important;overflow:hidden!important;}
+      .hearth-ledger-cockpit[data-cockpit-mode="planet-inspect"]{opacity:0!important;visibility:hidden!important;pointer-events:none!important;transform:translateY(26px) scale(.985)!important;max-height:0!important;min-height:0!important;overflow:hidden!important;}
+      [data-hearth-south-show-diagnostic-tab]{position:fixed;right:max(12px,env(safe-area-inset-right));bottom:max(72px,calc(env(safe-area-inset-bottom) + 72px));z-index:10000;display:none;align-items:center;justify-content:center;min-height:38px;padding:10px 14px;border-radius:999px;border:1px solid rgba(231,188,105,.66);color:#06101e;background:linear-gradient(135deg,#ffe8a3,#e7bc69);box-shadow:0 16px 44px rgba(0,0,0,.40), inset 0 1px 0 rgba(255,255,255,.28);font:950 .70rem/1 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;}
+      html[data-hearth-south-planet-inspect="true"] [data-hearth-south-show-diagnostic-tab]{display:inline-flex;}
+      html[data-hearth-south-planet-inspect="true"] #hearthCanvasMount,html[data-hearth-south-planet-inspect="true"] [data-hearth-canvas-mount="true"]{cursor:grab;}
       @media (max-width:760px){
-        .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"]{
-          inset:auto 8px 8px 8px!important;
-          max-height:190px!important;
-        }
-
-        .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-button{
-          flex:1 1 auto!important;
-          min-width:28%!important;
-        }
-
-        [data-hearth-command-brain-show-diagnostic-tab]{
-          right:max(10px,env(safe-area-inset-right));
-          bottom:max(68px,calc(env(safe-area-inset-bottom) + 68px));
-          min-height:34px;
-          padding:9px 12px;
-          font-size:.64rem;
-        }
+        .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"]{inset:auto 8px 8px 8px!important;max-height:190px!important;}
+        .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-button{flex:1 1 auto!important;min-width:28%!important;}
+        [data-hearth-south-show-diagnostic-tab]{right:max(10px,env(safe-area-inset-right));bottom:max(68px,calc(env(safe-area-inset-bottom) + 68px));min-height:34px;padding:9px 12px;font-size:.64rem;}
       }
     `;
 
     doc.head.appendChild(style);
   }
 
-  function resolveMount() {
+  function ensureShowTab() {
     if (!doc) return null;
 
-    const handoff = getIndexHandoff();
+    let tab =
+      doc.querySelector("[data-hearth-south-show-diagnostic-tab]") ||
+      doc.querySelector("[data-hearth-coherence-show-diagnostic-tab]") ||
+      doc.querySelector("[data-hearth-index-show-diagnostic-tab]");
 
-    let mount =
-      refs.mount ||
-      (handoff && handoff.mount) ||
-      doc.getElementById(MOUNT_ID) ||
-      doc.querySelector("[data-hearth-canvas-mount='true']") ||
-      doc.querySelector("[data-hearth-canvas-mount]");
-
-    refs.mount = mount || null;
-    state.mountReady = Boolean(mount);
-
-    if (mount) {
-      mount.dataset.hearthCommandBrain = CONTRACT;
-      mount.dataset.hearthCommandBrainReceipt = RECEIPT;
-      mount.dataset.hearthCommandBrainOwnsStep1 = "false";
-      mount.dataset.hearthCommandBrainOwnsSteps2Through11 = "true";
-      mount.dataset.hearthRuntimeTableMutation = "false";
-      mount.dataset.hearthCanvasMutation = "false";
-      mount.dataset.generatedImage = "false";
-      mount.dataset.graphicBox = "false";
-      mount.dataset.webgl = "false";
-      mount.dataset.visualPassClaimed = "false";
+    if (!tab) {
+      tab = doc.createElement("button");
+      tab.type = "button";
+      tab.dataset.hearthSouthShowDiagnosticTab = "true";
+      tab.textContent = "Show diagnostic";
+      tab.setAttribute("aria-label", "Show Hearth diagnostic");
+      doc.body.appendChild(tab);
     }
 
-    return mount;
+    tab.dataset.hearthSouthShowDiagnosticTab = "true";
+    tab.onclick = () => setCockpitMode("diagnostic-dock");
+
+    refs.showTab = tab;
+    state.showDiagnosticTabReady = true;
+
+    return tab;
   }
 
-  function resolveCockpit() {
+  function createFallbackCockpit() {
     if (!doc) return null;
 
-    const handoff = getIndexHandoff();
+    const mount = refs.mount || ensureMount();
+    if (!mount) return null;
 
-    const cockpit =
-      refs.cockpit ||
-      (handoff && handoff.cockpit) ||
+    const cockpit = doc.createElement("aside");
+    cockpit.id = COCKPIT_ID;
+    cockpit.className = "hearth-ledger-cockpit";
+    cockpit.dataset.hearthLoadCockpit = "true";
+    cockpit.dataset.hearthSouthCreatedFallbackCockpit = CONTRACT;
+    cockpit.dataset.cockpitMode = "loading-cockpit";
+    cockpit.setAttribute("aria-live", "polite");
+
+    cockpit.innerHTML = `
+      <div class="hearth-ledger-head">
+        <div class="hearth-ledger-kicker">Hearth · South Visible Completion</div>
+        <h2 class="hearth-ledger-title">COORDINATING HEARTH VISIBLE COMPLETION</h2>
+        <div class="hearth-ledger-meta" data-hearth-stage-label>F13A · Canvas coordination</div>
+        <div class="hearth-ledger-meta" data-hearth-heartbeat-text>south=true · waiting for North</div>
+        <div class="hearth-ledger-latest" data-hearth-latest-event>latest=SOUTH_VISIBLE_COMPLETION_LOADED</div>
+      </div>
+
+      <div class="hearth-ledger-progress" data-hearth-index-progress-strip="true">
+        <div class="hearth-ledger-track">
+          <span class="hearth-ledger-fill" data-hearth-main-progress-fill style="width:72%"></span>
+        </div>
+        <div class="hearth-ledger-percent" data-hearth-main-progress-percent>72%</div>
+      </div>
+
+      <div class="hearth-ledger-actions">
+        <button class="hearth-ledger-button primary" type="button" data-hearth-copy-diagnostic>Copy diagnostic</button>
+        <button class="hearth-ledger-button" type="button" data-hearth-toggle-receipt>Show receipt</button>
+        <button class="hearth-ledger-button" type="button" data-hearth-inspect-planet>Inspect planet</button>
+        <button class="hearth-ledger-button" type="button" data-hearth-collapse-cockpit>Collapse cockpit</button>
+      </div>
+
+      <div class="hearth-ledger-scroll">
+        <div class="hearth-ledger-lanes" data-hearth-lane-list></div>
+        <div class="hearth-ledger-receipt" data-hearth-receipt-box data-visible="false">
+          <pre data-hearth-receipt-text></pre>
+        </div>
+      </div>
+    `;
+
+    mount.appendChild(cockpit);
+    return cockpit;
+  }
+
+  function hydrateCockpit() {
+    if (!doc) return null;
+
+    ensureStyle();
+    ensureShowTab();
+
+    const mount = refs.mount || ensureMount();
+
+    let cockpit =
       doc.getElementById(COCKPIT_ID) ||
       doc.querySelector("[data-hearth-load-cockpit='true']") ||
-      doc.querySelector("[data-hearth-first-paint-cockpit='true']");
+      doc.querySelector("[data-hearth-first-paint-cockpit='true']") ||
+      doc.querySelector(".hearth-ledger-cockpit");
 
-    refs.cockpit = cockpit || null;
-    state.cockpitFound = Boolean(cockpit);
-
+    if (!cockpit) cockpit = createFallbackCockpit();
     if (!cockpit) return null;
 
+    refs.cockpit = cockpit;
     refs.title = cockpit.querySelector(".hearth-ledger-title");
     refs.stage = cockpit.querySelector("[data-hearth-stage-label]");
     refs.heartbeat = cockpit.querySelector("[data-hearth-heartbeat-text]");
@@ -679,526 +605,58 @@
     refs.inspectButton = cockpit.querySelector("[data-hearth-inspect-planet]");
     refs.expandButton = cockpit.querySelector("[data-hearth-collapse-cockpit]");
 
-    cockpit.dataset.hearthCommandBrain = CONTRACT;
-    cockpit.dataset.hearthCommandBrainReceipt = RECEIPT;
-    cockpit.dataset.hearthCommandBrainOwnsStep1 = "false";
-    cockpit.dataset.hearthCommandBrainOwnsSteps2Through11 = "true";
+    cockpit.dataset.hearthSouthVisibleCompletion = CONTRACT;
+    cockpit.dataset.hearthSouthReceipt = RECEIPT;
+    cockpit.dataset.hearthCycleSouth = "true";
+    cockpit.dataset.hearthNorthRuntimeTable = NORTH_FILE;
+    cockpit.dataset.hearthGeneratedImage = "false";
+    cockpit.dataset.hearthGraphicBox = "false";
+    cockpit.dataset.hearthWebgl = "false";
+    cockpit.dataset.hearthVisualPassClaimed = "false";
+    cockpit.dataset.cockpitMode = cockpit.dataset.cockpitMode || "loading-cockpit";
 
     if (refs.copyButton) refs.copyButton.onclick = copyDiagnostic;
     if (refs.receiptToggle) refs.receiptToggle.onclick = toggleReceipt;
     if (refs.inspectButton) refs.inspectButton.onclick = () => setCockpitMode(state.dockHiddenForInspection ? "diagnostic-dock" : "planet-inspect");
     if (refs.expandButton) refs.expandButton.onclick = toggleExpanded;
 
+    if (mount) {
+      mount.querySelectorAll("[data-hearth-mount-fallback], .mount-fallback").forEach((fallback) => {
+        fallback.hidden = true;
+        fallback.style.display = "none";
+        fallback.dataset.hiddenBySouthVisibleCompletion = CONTRACT;
+      });
+    }
+
+    state.cockpitFound = true;
+    state.cockpitHydrated = true;
     state.copyDiagnosticReady = Boolean(refs.copyButton);
     state.receiptToggleReady = Boolean(refs.receiptToggle);
     state.inspectPlanetControlReady = Boolean(refs.inspectButton);
     state.collapseExpandControlReady = Boolean(refs.expandButton);
     state.buttonsReachable = Boolean(refs.copyButton && refs.receiptToggle && refs.inspectButton && refs.expandButton);
-    state.cockpitHydrated = true;
+
+    evaluateInspectTruth();
 
     return cockpit;
   }
 
-  function ensureShowTab() {
-    if (!doc) return null;
-
-    let tab =
-      refs.showTab ||
-      doc.querySelector("[data-hearth-command-brain-show-diagnostic-tab]") ||
-      doc.querySelector("[data-hearth-index-show-diagnostic-tab]") ||
-      doc.querySelector("[data-hearth-coherence-show-diagnostic-tab]");
-
-    if (!tab) {
-      tab = doc.createElement("button");
-      tab.type = "button";
-      tab.dataset.hearthCommandBrainShowDiagnosticTab = "true";
-      tab.textContent = "Show diagnostic";
-      tab.setAttribute("aria-label", "Show Hearth diagnostic");
-      doc.body.appendChild(tab);
-    }
-
-    tab.dataset.hearthCommandBrainShowDiagnosticTab = "true";
-    tab.onclick = () => setCockpitMode("diagnostic-dock");
-
-    refs.showTab = tab;
-    state.showDiagnosticTabReady = true;
-
-    return tab;
-  }
-
-  function ensureLedger() {
-    const existing = root.HEARTH_LOAD_LEDGER;
-    const ledger = existing && isObject(existing) ? existing : {};
-    const led = isObject(ledger.state) ? ledger.state : ledger;
-
-    ledger.state = led;
-    led.contract = led.contract || "HEARTH_SHARED_COMMAND_BRAIN_LEDGER_v7";
-    led.createdOrHydratedBy = CONTRACT;
-    led.ownerModel = "paired-semiconductor";
-    led.constraintSemiconductor = INDEX_FILE;
-    led.coherenceSemiconductor = COHERENCE_FILE;
-    led.route = ROUTE;
-    led.indexOwnsStep1 = true;
-    led.commandBrainOwnsSteps2Through11 = true;
-    led.visualPassClaimed = false;
-    led.startedAt = led.startedAt || nowIso();
-    led.updatedAt = nowIso();
-    led.events = Array.isArray(led.events) ? led.events : [];
-    led.errors = Array.isArray(led.errors) ? led.errors : [];
-    led.lanes = isObject(led.lanes) ? led.lanes : {};
-
-    CHECKPOINTS.forEach((checkpoint) => {
-      if (!isObject(led.lanes[checkpoint.lane])) {
-        led.lanes[checkpoint.lane] = {
-          key: checkpoint.lane,
-          label: checkpoint.label,
-          fibonacci: checkpoint.fibonacci,
-          status: "PENDING",
-          message: `${checkpoint.label} pending.`,
-          progress: 0,
-          latestEvent: "PENDING",
-          owner: COHERENCE_FILE,
-          updatedAt: nowIso()
-        };
-      }
-    });
-
-    ledger.push = isFunction(ledger.push) ? ledger.push : function push(event = {}) {
-      const evt = {
-        id: event.id || event.event || "COMMAND_BRAIN_EVENT",
-        stage: event.stage || state.currentStage || "F3",
-        lane: event.lane || "",
-        status: event.status || "",
-        owner: event.owner || "hearth.js",
-        file: event.file || COHERENCE_FILE,
-        message: event.message || "",
-        detail: clonePlain(event.detail || {}),
-        progress: event.progress ?? "",
-        timestamp: nowIso()
-      };
-
-      led.events.push(evt);
-      if (led.events.length > 420) led.events.splice(0, led.events.length - 420);
-      led.updatedAt = evt.timestamp;
-      return evt;
-    };
-
-    ledger.setLane = isFunction(ledger.setLane) ? ledger.setLane : function setLane(key, next = {}) {
-      const lane = led.lanes[key] || {
-        key,
-        label: key,
-        fibonacci: next.stage || "",
-        status: "PENDING",
-        message: "",
-        progress: 0,
-        latestEvent: "PENDING",
-        owner: COHERENCE_FILE,
-        updatedAt: nowIso()
-      };
-
-      lane.status = next.status || lane.status;
-      lane.message = next.message || lane.message;
-      lane.progress = Math.max(Number(lane.progress || 0), Number(next.progress ?? lane.progress ?? 0));
-      lane.latestEvent = next.event || next.latestEvent || lane.latestEvent;
-      lane.fibonacci = next.stage || lane.fibonacci;
-      lane.owner = COHERENCE_FILE;
-      lane.updatedAt = nowIso();
-
-      led.lanes[key] = lane;
-
-      ledger.push({
-        id: lane.latestEvent,
-        stage: lane.fibonacci,
-        lane: key,
-        status: lane.status,
-        owner: "hearth.js",
-        file: COHERENCE_FILE,
-        message: lane.message,
-        progress: lane.progress,
-        detail: next.detail || {}
-      });
-
-      return lane;
-    };
-
-    ledger.getReceipt = function getReceiptFromLedger() {
-      return clonePlain(led);
-    };
-
-    ledger.getReceiptText = function getReceiptTextFromLedger() {
-      return getReceiptText();
-    };
-
-    ledger.copyDiagnostic = function copyDiagnosticFromLedger() {
-      return copyDiagnostic();
-    };
-
-    root.HEARTH_LOAD_LEDGER = ledger;
-    refs.ledger = ledger;
-    return ledger;
-  }
-
-  function ledgerPush(event = {}) {
-    const ledger = refs.ledger || ensureLedger();
-    return ledger.push({
-      owner: "hearth.js",
-      file: COHERENCE_FILE,
-      ...event
-    });
-  }
-
-  function setLane(key, next = {}) {
-    const ledger = refs.ledger || ensureLedger();
-    return ledger.setLane(key, {
-      owner: "hearth.js",
-      file: COHERENCE_FILE,
-      ...next
-    });
-  }
-
-  function recordLocal(event, detail = {}) {
-    const item = {
-      at: nowIso(),
-      event,
-      detail: clonePlain(detail)
-    };
-
-    state.localEvents.push(item);
-    if (state.localEvents.length > 260) {
-      state.localEvents.splice(0, state.localEvents.length - 260);
-    }
-
-    state.latestVisibleEvent = event;
-    state.updatedAt = item.at;
-
-    ledgerPush({
-      id: event,
-      stage: state.currentStage,
-      lane: detail.lane || "",
-      status: detail.status || "OBSERVED",
-      message: detail.message || event,
-      detail
-    });
-
-    return item;
-  }
-
-  function recordError(code, message, detail = {}) {
-    const item = {
-      at: nowIso(),
-      code,
-      message: String(message || ""),
-      detail: clonePlain(detail)
-    };
-
-    state.errors.push(item);
-    if (state.errors.length > 90) {
-      state.errors.splice(0, state.errors.length - 90);
-    }
-
-    ledgerPush({
-      id: "COMMAND_BRAIN_ERROR",
-      stage: state.currentStage,
-      lane: "errors",
-      status: "ERROR",
-      message: `${code}: ${message}`,
-      detail: item
-    });
-
-    return item;
-  }
-
-  function recordGap(code, message, detail = {}) {
-    const item = {
-      at: nowIso(),
-      code,
-      message: String(message || ""),
-      detail: clonePlain(detail),
-      hardBlocked: false,
-      forwardProgressAllowed: true
-    };
-
-    state.gapEvents.push(item);
-    if (state.gapEvents.length > 120) {
-      state.gapEvents.splice(0, state.gapEvents.length - 120);
-    }
-
-    ledgerPush({
-      id: "SOFT_GAP_ASSESSED",
-      stage: state.currentStage,
-      lane: "gapGovernor",
-      status: "SOFT_GAP",
-      message: `${code}: ${message}`,
-      detail: item
-    });
-
-    return item;
-  }
-
-  function acceptIndexHandoff(packet = {}) {
-    const handoff = isObject(packet) ? packet : {};
-    const receipt = handoff.receipt || handoff.contract ? handoff : getIndexHandoff();
-
-    state.step1ReceiptPresent = Boolean(receipt);
-    state.step1Contract = String((receipt && receipt.contract) || (receipt && receipt.indexContract) || "");
-    state.step1Accepted = Boolean(
-      receipt &&
-      (
-        receipt.step1Complete === true ||
-        receipt.indexNewsPassed === true ||
-        receipt.firstPaintCockpitReady === true ||
-        receipt.cockpitReady === true ||
-        receipt.mountReady === true ||
-        receipt.indexOwnsStep1 === true
-      )
-    );
-
-    if (!state.step1Accepted && doc && doc.documentElement) {
-      const dataset = doc.documentElement.dataset;
-      state.step1Accepted = Boolean(
-        dataset.hearthIndexStep1Complete === "true" ||
-        dataset.hearthFirstPaintCockpitReady === "true" ||
-        dataset.hearthIndexOwnsStep1 === "true"
-      );
-      state.step1Contract = state.step1Contract || dataset.hearthIndexRouteSocketContract || dataset.hearthIndexConstraintSemiconductorContract || "";
-    }
-
-    if (receipt && receipt.mount && !refs.mount) refs.mount = receipt.mount;
-    if (receipt && receipt.cockpit && !refs.cockpit) refs.cockpit = receipt.cockpit;
-    if (receipt && receipt.sharedLedger && !refs.ledger && root.HEARTH_LOAD_LEDGER) refs.ledger = root.HEARTH_LOAD_LEDGER;
-
-    resolveMount();
-    resolveCockpit();
-    ensureShowTab();
-
-    if (state.step1Accepted) {
-      state.step1HandoffAcceptedAt = state.step1HandoffAcceptedAt || nowIso();
-      completeCheckpoint("INDEX_HANDOFF_ACCEPTED", {
-        step1Contract: state.step1Contract,
-        step1ReceiptPresent: state.step1ReceiptPresent,
-        mountReady: state.mountReady,
-        cockpitFound: state.cockpitFound
-      });
-      return true;
-    }
-
-    recordGap("INDEX_HANDOFF_NOT_CONFIRMED", "Step 1 handoff is not confirmed yet. Command brain is waiting but not mutating Step 1.", {
-      receiptPresent: Boolean(receipt)
-    });
-
-    return false;
-  }
-
-  function activeCheckpoint() {
-    return checkpointBy(state.activeCheckpointId) || CHECKPOINTS[0];
-  }
-
-  function nextCheckpointAfter(rank) {
-    return CHECKPOINTS.find((checkpoint) => checkpoint.rank === rank + 1) || CHECKPOINTS[CHECKPOINTS.length - 1];
-  }
-
-  function isCompleted(id) {
-    return state.completedCheckpoints.includes(id);
-  }
-
-  function setActiveCheckpoint(checkpoint) {
-    if (!checkpoint) return;
-
-    state.activeCheckpointId = checkpoint.id;
-    state.activeCheckpointRank = checkpoint.rank;
-    state.activeFibonacciStage = checkpoint.fibonacci;
-    state.currentStage = checkpoint.fibonacci;
-
-    if (checkpoint.rank >= state.highestCompletedRank) {
-      state.highestStage = checkpoint.fibonacci;
-    }
-  }
-
-  function completeCheckpoint(idOrEvent, detail = {}) {
-    const checkpoint = checkpointBy(idOrEvent);
-    if (!checkpoint) return false;
-
-    if (state.completionLatched && checkpoint.id !== "F21_COMPLETION_LATCHED") {
-      state.archivedEvents.push({
-        at: nowIso(),
-        event: checkpoint.event,
-        checkpointId: checkpoint.id,
-        reason: "post-f21-event-archived",
-        detail: clonePlain(detail)
-      });
-      return false;
-    }
-
-    if (isCompleted(checkpoint.id)) {
-      state.archivedEvents.push({
-        at: nowIso(),
-        event: checkpoint.event,
-        checkpointId: checkpoint.id,
-        reason: "duplicate-completed-event-archived",
-        detail: clonePlain(detail)
-      });
-      return true;
-    }
-
-    const active = activeCheckpoint();
-
-    if (checkpoint.rank > active.rank) {
-      const exists = state.queuedEvents.some((item) => item.checkpointId === checkpoint.id);
-      if (!exists) {
-        state.queuedEvents.push({
-          at: nowIso(),
-          event: checkpoint.event,
-          checkpointId: checkpoint.id,
-          rank: checkpoint.rank,
-          detail: clonePlain(detail),
-          reason: "future-event-queued-until-active"
-        });
-      }
-
-      state.futureEventsQueued = true;
-      return false;
-    }
-
-    if (checkpoint.rank < active.rank) {
-      state.archivedEvents.push({
-        at: nowIso(),
-        event: checkpoint.event,
-        checkpointId: checkpoint.id,
-        reason: "late-regressive-event-archived",
-        detail: clonePlain(detail)
-      });
-      state.regressiveEventsBlocked = true;
-      return true;
-    }
-
-    if (checkpoint.id === "F21_COMPLETION_LATCHED" && !state.newsGatePassedBeforeF21) {
-      state.blockedEvents.push({
-        at: nowIso(),
-        event: checkpoint.event,
-        checkpointId: checkpoint.id,
-        reason: "f21-soft-blocked-until-news-gates-pass",
-        detail: clonePlain(detail)
-      });
-
-      deriveFailureCoordinate();
-      return false;
-    }
-
-    state.completedCheckpoints.push(checkpoint.id);
-    state.highestCompletedCheckpointId = checkpoint.id;
-    state.highestCompletedRank = checkpoint.rank;
-    state.currentStage = checkpoint.fibonacci;
-    state.highestStage = checkpoint.fibonacci;
-    state.mainDisplayProgress = Math.max(state.mainDisplayProgress, checkpoint.progress);
-    state.latestVisibleEvent = checkpoint.event;
-
-    state.admittedEvents.push({
-      at: nowIso(),
-      event: checkpoint.event,
-      checkpointId: checkpoint.id,
-      rank: checkpoint.rank,
-      detail: clonePlain(detail)
-    });
-
-    setLane(checkpoint.lane, {
-      status: checkpoint.id === "F21_COMPLETION_LATCHED" ? "LATCHED" : "READY",
-      progress: checkpoint.progress,
-      event: checkpoint.event,
-      stage: checkpoint.fibonacci,
-      message: checkpoint.label,
-      detail
-    });
-
-    if (checkpoint.id === "F21_COMPLETION_LATCHED") {
-      forceCompletionLatch();
-    } else {
-      setActiveCheckpoint(nextCheckpointAfter(checkpoint.rank));
-      drainQueuedEvents(`after-${checkpoint.event}`);
-    }
-
-    evaluateNewsGates();
-    deriveFailureCoordinate();
-    publishGlobals();
-    scheduleRender();
-    return true;
-  }
-
-  function drainQueuedEvents(reason = "manual") {
-    let moved = false;
-    let guard = 0;
-
-    while (guard < 16) {
-      guard += 1;
-
-      const active = activeCheckpoint();
-      const index = state.queuedEvents.findIndex((item) => item.checkpointId === active.id);
-
-      if (index < 0) break;
-
-      const packet = state.queuedEvents.splice(index, 1)[0];
-      completeCheckpoint(packet.checkpointId, {
-        ...(packet.detail || {}),
-        replayedFromQueue: true,
-        queueDrainReason: reason
-      });
-      moved = true;
-    }
-
-    return moved;
-  }
-
-  function hydrateControls() {
-    ensureStyle();
-    resolveMount();
-    resolveCockpit();
-    ensureShowTab();
-
-    state.copyDiagnosticReady = Boolean(refs.copyButton);
-    state.receiptToggleReady = Boolean(refs.receiptToggle);
-    state.inspectPlanetControlReady = Boolean(refs.inspectButton);
-    state.collapseExpandControlReady = Boolean(refs.expandButton);
-    state.showDiagnosticTabReady = Boolean(refs.showTab);
-    state.buttonsReachable = Boolean(refs.copyButton && refs.receiptToggle && refs.inspectButton && refs.expandButton);
-    state.diagnosticCanLeavePlanetFrame = Boolean(
-      state.copyDiagnosticReady &&
-      state.receiptToggleReady &&
-      state.inspectPlanetControlReady &&
-      state.collapseExpandControlReady &&
-      state.showDiagnosticTabReady
-    );
-
-    if (state.diagnosticCanLeavePlanetFrame && state.visibleContentProof) {
-      completeCheckpoint("INSPECT_MODE_READY", {
-        diagnosticCanLeavePlanetFrame: true,
-        buttonsReachable: true
-      });
-    }
-
-    evaluateNewsGates();
-    return state.diagnosticCanLeavePlanetFrame;
-  }
-
   function toggleReceipt() {
-    state.receiptVisible = !state.receiptVisible;
+    if (!refs.receiptBox) return;
 
-    if (refs.receiptBox) {
-      refs.receiptBox.dataset.visible = String(state.receiptVisible);
-    }
+    const visible = refs.receiptBox.dataset.visible !== "true";
+    refs.receiptBox.dataset.visible = String(visible);
+    state.receiptVisible = visible;
 
     if (refs.receiptToggle) {
-      refs.receiptToggle.textContent = state.receiptVisible ? "Hide receipt" : "Show receipt";
+      refs.receiptToggle.textContent = visible ? "Hide receipt" : "Show receipt";
     }
-
-    recordLocal(state.receiptVisible ? "COMMAND_BRAIN_RECEIPT_SHOWN" : "COMMAND_BRAIN_RECEIPT_HIDDEN", {
-      lane: "inspectMode",
-      status: "USER_CONTROL"
-    });
 
     scheduleRender();
   }
 
   function toggleExpanded() {
-    if (state.cockpitExpanded) {
+    if (state.cockpitMode === "expanded-cockpit") {
       setCockpitMode("diagnostic-dock");
     } else {
       setCockpitMode("expanded-cockpit");
@@ -1206,35 +664,35 @@
   }
 
   function setCockpitMode(mode) {
-    hydrateControls();
-
     if (!refs.cockpit) return;
 
     if (mode === "planet-inspect") {
+      state.cockpitMode = "planet-inspect";
       state.dockHiddenForInspection = true;
-      state.cockpitExpanded = false;
       state.planetNotObstructed = true;
-      refs.cockpit.dataset.cockpitMode = "planet-inspect";
-    } else if (mode === "expanded-cockpit") {
-      state.dockHiddenForInspection = false;
-      state.cockpitExpanded = true;
-      state.planetNotObstructed = false;
-      refs.cockpit.dataset.cockpitMode = "expanded-cockpit";
-    } else {
-      state.dockHiddenForInspection = false;
       state.cockpitExpanded = false;
+    } else if (mode === "expanded-cockpit") {
+      state.cockpitMode = "expanded-cockpit";
+      state.dockHiddenForInspection = false;
       state.planetNotObstructed = false;
-      refs.cockpit.dataset.cockpitMode = state.completionLatched || state.canvasReady ? "diagnostic-dock" : "expanded-cockpit";
+      state.cockpitExpanded = true;
+    } else {
+      state.cockpitMode = state.completionLatched || state.visibleContentProof ? "diagnostic-dock" : "loading-cockpit";
+      state.dockHiddenForInspection = false;
+      state.planetNotObstructed = false;
+      state.cockpitExpanded = false;
     }
 
-    refs.cockpit.dataset.hearthCommandBrainInspect = String(state.dockHiddenForInspection);
+    refs.cockpit.dataset.cockpitMode = state.cockpitMode;
+    refs.cockpit.dataset.hearthSouthPlanetInspect = String(state.dockHiddenForInspection);
 
     if (refs.mount) {
-      refs.mount.dataset.hearthCommandBrainInspect = String(state.dockHiddenForInspection);
+      refs.mount.dataset.hearthSouthPlanetInspect = String(state.dockHiddenForInspection);
     }
 
     if (doc && doc.documentElement) {
-      doc.documentElement.dataset.hearthCommandBrainInspect = String(state.dockHiddenForInspection);
+      doc.documentElement.dataset.hearthSouthPlanetInspect = String(state.dockHiddenForInspection);
+      doc.documentElement.dataset.hearthDiagnosticDockHiddenForInspection = String(state.dockHiddenForInspection);
     }
 
     if (refs.showTab) {
@@ -1247,244 +705,186 @@
     }
 
     if (refs.expandButton) {
-      refs.expandButton.textContent = state.cockpitExpanded ? "Collapse dock" : "Expand cockpit";
+      refs.expandButton.textContent = state.cockpitMode === "expanded-cockpit" ? "Collapse dock" : "Collapse cockpit";
     }
 
-    hydrateControls();
+    evaluateInspectTruth();
+    reportSouthEvent(SOUTH_EVENTS.INSPECT_MODE_READY, {
+      reason: "cockpit-mode-update",
+      diagnosticCanLeavePlanetFrame: state.diagnosticCanLeavePlanetFrame
+    });
+
+    scheduleRender();
+    publishGlobals();
+  }
+
+  function connectNorth() {
+    const north = getNorthApi();
+
+    refs.north = north;
+    state.northAvailable = Boolean(north);
+    state.northContract = north && north.contract ? String(north.contract) : "";
+
+    if (!north) {
+      state.firstFailedCoordinate = "WAITING_NORTH_COMMAND_RUNTIME_TABLE";
+      state.recommendedNextRenewalTarget = NORTH_FILE;
+      return null;
+    }
+
+    if (!refs.northSession && isFunction(north.createHearthCheckpointSession)) {
+      try {
+        refs.northSession = north.createHearthCheckpointSession({
+          sessionId: "HEARTH-SOUTH-CYCLE-CONSUMER-SESSION",
+          requestedBy: CONTRACT,
+          southFile: SOUTH_FILE,
+          isolatedSession: false
+        });
+
+        state.northSessionCreated = Boolean(refs.northSession);
+        state.northSessionId = refs.northSession && refs.northSession.sessionId ? refs.northSession.sessionId : "";
+      } catch (error) {
+        state.northReceiptError = error && error.message ? error.message : String(error);
+        recordError("NORTH_SESSION_CREATE_FAILED", state.northReceiptError);
+      }
+    }
+
+    return north;
+  }
+
+  function submitToNorth(eventName, detail = {}) {
+    const north = refs.north || connectNorth();
+    const session = refs.northSession;
+
+    if (!north && !session) {
+      recordNorth("NORTH_NOT_AVAILABLE", { eventName });
+      return null;
+    }
+
+    const payload = {
+      event: eventName,
+      id: eventName,
+      phase: eventName,
+      owner: "SOUTH",
+      file: SOUTH_FILE,
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      detail: {
+        ...buildSouthSnapshot(),
+        ...clonePlain(detail || {})
+      }
+    };
+
+    try {
+      let result = null;
+
+      if (session && isFunction(session.submitEvent)) {
+        result = session.submitEvent(payload);
+      } else if (north && isFunction(north.submitEvent)) {
+        result = north.submitEvent(payload);
+      } else if (north && isFunction(north.receiveEvent)) {
+        result = north.receiveEvent(payload);
+      }
+
+      recordNorth(eventName, {
+        result: clonePlain(result)
+      });
+
+      reconcileNorthReceipt();
+
+      return result;
+    } catch (error) {
+      const message = error && error.message ? error.message : String(error);
+      recordError("NORTH_SUBMIT_FAILED", message, { eventName });
+      return null;
+    }
+  }
+
+  function reportSouthEvent(eventName, detail = {}) {
+    const result = submitToNorth(eventName, detail);
+
+    state.latestVisibleEvent = eventName;
+
+    if (eventName === SOUTH_EVENTS.CANVAS_COORDINATION_STARTED) {
+      state.currentStage = "F13A";
+      state.highestStage = "F13A";
+      state.mainDisplayProgress = Math.max(state.mainDisplayProgress, 78);
+    }
+
+    if (eventName === SOUTH_EVENTS.CANVAS_MOUNT_CONFIRMED) {
+      state.currentStage = "F13B";
+      state.highestStage = "F13B";
+      state.mainDisplayProgress = Math.max(state.mainDisplayProgress, 81);
+    }
+
+    if (eventName === SOUTH_EVENTS.CANVAS_CONTEXT_READY) {
+      state.currentStage = "F13C";
+      state.highestStage = "F13C";
+      state.mainDisplayProgress = Math.max(state.mainDisplayProgress, 84);
+    }
+
+    if (eventName === SOUTH_EVENTS.DRAG_INSPECTION_BOUND) {
+      state.currentStage = "F13D";
+      state.highestStage = "F13D";
+      state.mainDisplayProgress = Math.max(state.mainDisplayProgress, 86);
+    }
+
+    if (eventName === SOUTH_EVENTS.ATLAS_TEXTURE_FRAME_READY) {
+      state.currentStage = "F13E";
+      state.highestStage = "F13E";
+      state.mainDisplayProgress = Math.max(state.mainDisplayProgress, 93);
+    }
+
+    if (eventName === SOUTH_EVENTS.VISIBLE_CONTENT_PROOF_PASSED) {
+      state.currentStage = "F13F";
+      state.highestStage = "F13F";
+      state.mainDisplayProgress = Math.max(state.mainDisplayProgress, 98);
+    }
+
+    if (eventName === SOUTH_EVENTS.INSPECT_MODE_READY) {
+      state.currentStage = "F13G";
+      state.highestStage = "F13G";
+      state.mainDisplayProgress = Math.max(state.mainDisplayProgress, 98);
+    }
+
+    if (eventName === SOUTH_EVENTS.COMPLETION_LATCHED) {
+      state.currentStage = "F21";
+      state.highestStage = "F21";
+      state.mainDisplayProgress = 100;
+      state.mainProgressCap = 100;
+      state.completionLatched = true;
+      state.finalReceiptAvailable = true;
+    }
+
+    if (result && result.action === "HARD_BLOCK") {
+      state.firstFailedCoordinate = `NORTH_HARD_BLOCK_${String(result.reason || "UNKNOWN").toUpperCase()}`;
+      state.recommendedNextRenewalTarget = result.recommendedNextFile || state.recommendedNextRenewalTarget;
+    }
+
     publishGlobals();
     scheduleRender();
+    return result;
   }
 
-  function scanScriptPresence() {
-    if (!doc) return;
+  function reconcileNorthReceipt() {
+    const receipt = getNorthReceipt();
 
-    const scripts = Array.from(doc.scripts || []);
+    state.northReceiptAvailable = Boolean(receipt);
 
-    state.canvasScriptPresent = Boolean(
-      scripts.find((script) => (script.getAttribute("src") || "").includes(CANVAS_FILE))
-    );
+    if (!receipt || !isObject(receipt)) return null;
 
-    state.runtimeTablePresent = Boolean(getRuntimeTableApi());
-    state.canvasApiPresent = Boolean(getCanvasApi());
+    state.northF21Allowed = bool(receipt.f21Allowed, state.northF21Allowed);
+    state.northNewsGatePassedBeforeF21 = bool(receipt.newsGatePassedBeforeF21, state.northNewsGatePassedBeforeF21);
+    state.northActiveCheckpointId = receipt.activeCheckpointId || state.northActiveCheckpointId;
+    state.northRecommendedNextOwner = receipt.recommendedNextOwner || state.northRecommendedNextOwner;
+    state.northRecommendedNextFile = receipt.recommendedNextFile || state.northRecommendedNextFile;
+    state.step1AcceptedBySouth = bool(receipt.eastGateReady, state.step1AcceptedBySouth);
+    state.handoffAdmissibleByWest = bool(receipt.westGateReady, state.handoffAdmissibleByWest);
 
-    completeCheckpoint("AUTHORITY_AVAILABILITY_READY", {
-      runtimeTablePresent: state.runtimeTablePresent,
-      canvasApiPresent: state.canvasApiPresent,
-      canvasScriptPresent: state.canvasScriptPresent,
-      sourceAuthorityHeld: state.sourceAuthorityHeld
-    });
-  }
-
-  function scriptAlreadyPresent(srcPart) {
-    if (!doc) return null;
-
-    return Array.from(doc.scripts || []).find((script) => {
-      const src = script.getAttribute("src") || "";
-      return src.includes(srcPart);
-    }) || null;
-  }
-
-  function injectCanvasScriptOnce() {
-    if (getCanvasApi()) {
-      state.canvasApiPresent = true;
-      state.canvasScriptPresent = true;
-      return Promise.resolve(true);
+    if (!state.completionLatched && receipt.recommendedNextFile) {
+      state.recommendedNextRenewalTarget = receipt.recommendedNextFile;
     }
 
-    const existing = scriptAlreadyPresent(CANVAS_FILE);
-
-    if (existing) {
-      state.canvasScriptPresent = true;
-      return waitForCanvasApi(2600);
-    }
-
-    if (!doc || !doc.head) {
-      state.canvasScriptError = "document.head unavailable";
-      recordGap("CANVAS_SCRIPT_INJECTION_SKIPPED", state.canvasScriptError);
-      return Promise.resolve(false);
-    }
-
-    const script = doc.createElement("script");
-    script.src = `${CANVAS_FILE}?v=${encodeURIComponent(`${CONTRACT}-${Date.now()}`)}`;
-    script.defer = true;
-    script.dataset.hearthLoadedByCommandBrain = CONTRACT;
-    script.dataset.hearthScriptRole = "canvas-authority";
-    script.dataset.generatedImage = "false";
-    script.dataset.graphicBox = "false";
-    script.dataset.webgl = "false";
-    script.dataset.visualPassClaimed = "false";
-
-    state.canvasScriptPresent = true;
-    state.canvasScriptInjected = true;
-
-    return new Promise((resolve) => {
-      let settled = false;
-
-      function finish(ok, error = "") {
-        if (settled) return;
-        settled = true;
-        state.canvasScriptLoaded = ok;
-        state.canvasScriptError = error;
-        state.canvasApiPresent = Boolean(getCanvasApi());
-        resolve(Boolean(getCanvasApi()));
-      }
-
-      script.onload = () => {
-        waitForCanvasApi(1600).then((ok) => finish(ok, ok ? "" : "canvas script loaded but API missing"));
-      };
-
-      script.onerror = () => {
-        finish(false, "canvas script failed to load");
-      };
-
-      doc.head.appendChild(script);
-
-      root.setTimeout(() => {
-        if (settled) return;
-        finish(Boolean(getCanvasApi()), getCanvasApi() ? "" : "canvas API timeout");
-      }, 4200);
-    });
-  }
-
-  function waitForCanvasApi(timeoutMs) {
-    const started = nowMs();
-
-    return new Promise((resolve) => {
-      const timer = root.setInterval(() => {
-        if (getCanvasApi()) {
-          root.clearInterval(timer);
-          state.canvasApiPresent = true;
-          resolve(true);
-          return;
-        }
-
-        if (nowMs() - started >= timeoutMs) {
-          root.clearInterval(timer);
-          resolve(false);
-        }
-      }, 80);
-    });
-  }
-
-  function createRuntimeTableSession() {
-    const api = getRuntimeTableApi();
-
-    state.runtimeTablePresent = Boolean(api);
-    state.runtimeTableSessionAttempted = true;
-    state.runtimeTableMode = api ? "RUNTIME_TABLE_READY_OR_DEGRADED" : "RUNTIME_TABLE_MISSING_SOFT_GAP";
-
-    if (!api) {
-      recordGap("RUNTIME_TABLE_MISSING", "Runtime Table is missing. Brain will continue with local soft-gap governance.", {
-        file: RUNTIME_TABLE_FILE
-      });
-
-      completeCheckpoint("RUNTIME_TABLE_SESSION_READY", {
-        runtimeTablePresent: false,
-        runtimeTableMode: state.runtimeTableMode,
-        softGap: true
-      });
-      return null;
-    }
-
-    try {
-      if (isFunction(api.createHearthCheckpointSession)) {
-        refs.runtimeSession = api.createHearthCheckpointSession({
-          planetId: "hearth",
-          planetLabel: "Hearth",
-          route: ROUTE,
-          constraintSemiconductor: INDEX_FILE,
-          coherenceSemiconductor: COHERENCE_FILE,
-          canvasAuthority: CANVAS_FILE,
-          commandBrainContract: CONTRACT,
-          softGapGovernor: true,
-          hardBlockMode: false
-        });
-
-        state.runtimeTableSessionCreated = Boolean(refs.runtimeSession);
-      }
-
-      if (!refs.runtimeSession && isFunction(api.createCheckpointSession)) {
-        refs.runtimeSession = api.createCheckpointSession({
-          planetId: "hearth",
-          route: ROUTE,
-          commandBrainContract: CONTRACT
-        });
-
-        state.runtimeTableSessionCreated = Boolean(refs.runtimeSession);
-      }
-
-      state.runtimeTableSessionError = "";
-
-      completeCheckpoint("RUNTIME_TABLE_SESSION_READY", {
-        runtimeTablePresent: true,
-        runtimeTableSessionCreated: state.runtimeTableSessionCreated,
-        runtimeTableMode: state.runtimeTableMode
-      });
-
-      return refs.runtimeSession;
-    } catch (error) {
-      state.runtimeTableSessionError = error && error.message ? error.message : String(error);
-
-      recordGap("RUNTIME_TABLE_SESSION_CREATE_FAILED", state.runtimeTableSessionError, {
-        forwardProgressAllowed: true
-      });
-
-      completeCheckpoint("RUNTIME_TABLE_SESSION_READY", {
-        runtimeTablePresent: true,
-        runtimeTableSessionCreated: false,
-        runtimeTableSessionError: state.runtimeTableSessionError,
-        softGap: true
-      });
-
-      return null;
-    }
-  }
-
-  function createRuntimeTablePlan() {
-    const api = getRuntimeTableApi();
-
-    state.runtimeTablePlanAttempted = Boolean(api);
-
-    if (!api) return null;
-
-    try {
-      let plan = null;
-
-      if (isFunction(api.createHearthVisualCarrierPlan)) {
-        plan = api.createHearthVisualCarrierPlan({
-          planetId: "hearth",
-          planetLabel: "Hearth",
-          route: ROUTE,
-          renderMetadata: {
-            commandBrainContract: CONTRACT,
-            pairedSemiconductor: true,
-            constraintSemiconductor: INDEX_FILE,
-            coherenceSemiconductor: COHERENCE_FILE,
-            synchronizedLoading: true,
-            softGapGovernor: true,
-            visualPassClaimed: false
-          }
-        }, {
-          profile: "hearth-command-brain-visible-carrier",
-          planetId: "hearth",
-          planetLabel: "Hearth"
-        });
-      } else if (isFunction(api.createVisualCarrierPlan)) {
-        plan = api.createVisualCarrierPlan({
-          planetId: "hearth",
-          planetLabel: "Hearth",
-          route: ROUTE
-        });
-      }
-
-      state.runtimeTablePlanCreated = Boolean(plan);
-      state.runtimeTablePlanError = "";
-      return plan;
-    } catch (error) {
-      state.runtimeTablePlanError = error && error.message ? error.message : String(error);
-      recordGap("RUNTIME_TABLE_PLAN_ERROR", state.runtimeTablePlanError);
-      return null;
-    }
+    return receipt;
   }
 
   function selectCanvasMethod(api) {
@@ -1508,21 +908,18 @@
       baselineContract: BASELINE_CONTRACT,
       route: ROUTE,
       mountId: MOUNT_ID,
-      mount: refs.mount || resolveMount(),
+      mount: refs.mount || ensureMount(),
       pairedSemiconductor: true,
-      constraintSemiconductor: INDEX_FILE,
-      coherenceSemiconductor: COHERENCE_FILE,
-      commandBrain: true,
-      commandBrainContract: CONTRACT,
-      indexStep1OwnedExternally: true,
-      ownsStep1: false,
-      ownsSteps2Through11: true,
-      softGapGovernor: true,
-      hardBlockMode: false,
-      runtimeTableOptional: true,
-      visibleCarrierFirst: true,
-      sharedLedger: refs.ledger || ensureLedger(),
-      indexHandoff: getIndexHandoff(),
+      eastFile: EAST_FILE,
+      westFile: WEST_FILE,
+      northFile: NORTH_FILE,
+      southFile: SOUTH_FILE,
+      southVisibleCompletionConsumer: true,
+      northCheckpointAuthority: NORTH_FILE,
+      visibleContentCompletionGate: true,
+      inspectModeGate: true,
+      sourceAuthorityHeld: true,
+      climateRouteRetired: true,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -1540,43 +937,25 @@
     };
   }
 
-  async function callCanvasCarrier() {
-    if (canvasBootRequested || state.completionLatched) return false;
+  function callCanvasCarrier() {
+    if (canvasBootRequested || state.completionLatched) return;
 
-    resolveMount();
-
-    if (!state.mountReady) {
-      recordGap("MOUNT_NOT_READY", "Step 1 mount is not available. Canvas coordination is held until index.js provides the mount.", {
-        owner: INDEX_FILE
-      });
-      deriveFailureCoordinate();
-      return false;
-    }
-
-    let api = getCanvasApi();
-
-    if (!api) {
-      await injectCanvasScriptOnce();
-      api = getCanvasApi();
-    }
-
+    const api = getCanvasApi();
     state.canvasApiPresent = Boolean(api);
 
     if (!api) {
-      recordGap("CANVAS_API_MISSING", "Canvas API is missing. Command brain cannot start canvas coordination yet.", {
-        file: CANVAS_FILE
-      });
       deriveFailureCoordinate();
-      return false;
+      scheduleRender();
+      return;
     }
 
     const method = selectCanvasMethod(api);
 
     if (!method) {
       state.canvasCarrierHandoffError = "Canvas API present but no boot/mount method exists.";
-      recordGap("CANVAS_METHOD_MISSING", state.canvasCarrierHandoffError);
+      recordError("CANVAS_METHOD_MISSING", state.canvasCarrierHandoffError);
       deriveFailureCoordinate();
-      return false;
+      return;
     }
 
     canvasBootRequested = true;
@@ -1586,11 +965,10 @@
     state.cooperativeBootUsed = method === "bootCooperative";
     state.syncBootFallbackUsed = method !== "bootCooperative";
 
-    completeCheckpoint("CANVAS_COORDINATION_STARTED", {
-      canvasCarrierMethod: method,
-      cooperativeBootAvailable: state.cooperativeBootAvailable,
-      cooperativeBootUsed: state.cooperativeBootUsed,
-      syncBootFallbackUsed: state.syncBootFallbackUsed
+    reportSouthEvent(SOUTH_EVENTS.CANVAS_COORDINATION_STARTED, {
+      canvasCarrierRequested: true,
+      method,
+      cooperativeBootUsed: state.cooperativeBootUsed
     });
 
     try {
@@ -1603,98 +981,86 @@
           .catch((error) => {
             state.canvasCarrierHandoffOk = false;
             state.canvasCarrierHandoffError = error && error.message ? error.message : String(error);
-            recordGap("CANVAS_PROMISE_REJECTED", state.canvasCarrierHandoffError);
+            recordError("CANVAS_PROMISE_REJECTED", state.canvasCarrierHandoffError);
           });
       } else if (result && isObject(result)) {
         handleCanvasReceipt(result, "canvas-method-returned-receipt");
       }
-
-      return true;
     } catch (error) {
       state.canvasCarrierHandoffOk = false;
       state.canvasCarrierHandoffError = error && error.message ? error.message : String(error);
-      recordGap("CANVAS_HANDOFF_ERROR", state.canvasCarrierHandoffError, {
-        method
-      });
-      return false;
+      recordError("CANVAS_HANDOFF_ERROR", state.canvasCarrierHandoffError, { method });
     }
-  }
-
-  function phaseSignature(event) {
-    const phase = String(event.phase || event.id || event.event || "CANVAS_PHASE");
-    const detail = isObject(event.detail) ? event.detail : {};
-    const chunk = detail.chunkIndex ?? "";
-    const total = detail.totalChunks ?? "";
-    const progress = event.percent ?? event.progress ?? detail.progress ?? "";
-    return `${phase}|${chunk}|${total}|${progress}`;
   }
 
   function handleCanvasPhase(event = {}) {
     const phase = String(event.phase || event.id || event.event || "CANVAS_PHASE");
     const detail = isObject(event.detail) ? event.detail : {};
-    const signature = phaseSignature(event);
-    const current = nowMs();
+    const percent = clamp(number(event.percent ?? event.progress ?? detail.progress ?? 0, 0), 0, 100);
+    const message = event.message || phase;
 
-    if (state.phaseSignatures[signature] && current - state.phaseSignatures[signature] < 1500) {
+    if (state.completionLatched) {
+      state.phaseEvents.push({
+        at: nowIso(),
+        phase,
+        percent,
+        message: `${message} archived after F21`,
+        detail: clonePlain(detail)
+      });
       return event;
     }
 
-    state.phaseSignatures[signature] = current;
+    state.phaseEvents.push({
+      at: nowIso(),
+      phase,
+      percent,
+      message,
+      detail: clonePlain(detail)
+    });
 
-    const percent = clamp(Number(event.percent ?? event.progress ?? detail.progress ?? 0), 0, 100);
-
-    if (CANVAS_PROGRESS_EVENTS.includes(phase)) {
-      state.progressOnlyEvents.push({
-        at: nowIso(),
-        phase,
-        percent,
-        detail: clonePlain(detail)
-      });
-
-      if (state.progressOnlyEvents.length > 160) {
-        state.progressOnlyEvents.splice(0, state.progressOnlyEvents.length - 160);
-      }
-    } else {
-      state.canvasPhaseEvents.push({
-        at: nowIso(),
-        phase,
-        percent,
-        detail: clonePlain(detail)
-      });
-
-      if (state.canvasPhaseEvents.length > 200) {
-        state.canvasPhaseEvents.splice(0, state.canvasPhaseEvents.length - 200);
-      }
+    if (state.phaseEvents.length > 180) {
+      state.phaseEvents.splice(0, state.phaseEvents.length - 180);
     }
 
-    applyCanvasTruth(phase, detail, percent);
+    applyCanvasTruth(phase, detail);
 
     if (phase === "CANVAS_MOUNT_CREATED") {
-      completeCheckpoint("CANVAS_MOUNT_CONFIRMED", detail);
+      reportSouthEvent(SOUTH_EVENTS.CANVAS_MOUNT_CONFIRMED, detail);
     }
 
     if (phase === "CANVAS_CONTEXT_READY") {
-      completeCheckpoint("CANVAS_CONTEXT_READY", detail);
+      reportSouthEvent(SOUTH_EVENTS.CANVAS_CONTEXT_READY, detail);
     }
 
     if (phase === "DRAG_INSPECTION_BOUND") {
-      completeCheckpoint("DRAG_INSPECTION_BOUND", detail);
+      reportSouthEvent(SOUTH_EVENTS.DRAG_INSPECTION_BOUND, detail);
+    }
+
+    if (
+      phase === "ATLAS_BUILD_COMPLETE" ||
+      phase === "TEXTURE_COMPOSE_COMPLETE" ||
+      phase === "FIRST_FRAME_DETECTED" ||
+      phase === "CANVAS_READY"
+    ) {
+      if (state.atlasBuildComplete || state.textureComposeComplete || state.firstFrameDetected || state.canvasReady) {
+        reportSouthEvent(SOUTH_EVENTS.ATLAS_TEXTURE_FRAME_READY, detail);
+      }
     }
 
     if (phase === "CANVAS_READY") {
-      state.canvasReady = true;
       startVisibleContentProof("canvas-ready");
+      root.setTimeout(() => startVisibleContentProof("canvas-ready-post-frame"), 120);
+      root.setTimeout(() => startVisibleContentProof("canvas-ready-late-frame"), 360);
     }
 
-    maybeCompleteAtlasTextureFrame(`phase-${phase}`);
-    maybeFinalize(`phase-${phase}`);
-
+    evaluateSouthGate();
+    maybeRequestCompletion(`canvas-phase-${phase}`);
     scheduleRender();
-    publishGlobals();
+
     return event;
   }
 
-  function applyCanvasTruth(phase, detail = {}, percent = 0) {
+  function applyCanvasTruth(phase, detail = {}) {
     if (phase === "CANVAS_MOUNT_CREATED") {
       state.canvasCarrierMounted = true;
       state.canvasCarrierHandoffOk = true;
@@ -1714,7 +1080,13 @@
 
     if (phase === "ATLAS_BUILD_PROGRESS") {
       state.atlasBuildStarted = true;
-      state.atlasBuildProgress = Math.max(state.atlasBuildProgress, Number(detail.atlasBuildProgress || detail.progress || percent || 0));
+      state.atlasBuildProgress = Math.max(state.atlasBuildProgress, number(detail.atlasBuildProgress || detail.progress, 0));
+      state.progressOnlyEvents.push({
+        at: nowIso(),
+        phase,
+        progress: state.atlasBuildProgress,
+        detail: clonePlain(detail)
+      });
     }
 
     if (phase === "ATLAS_BUILD_COMPLETE") {
@@ -1729,7 +1101,13 @@
 
     if (phase === "TEXTURE_COMPOSE_PROGRESS") {
       state.textureComposeStarted = true;
-      state.textureComposeProgress = Math.max(state.textureComposeProgress, Number(detail.textureComposeProgress || detail.progress || percent || 0));
+      state.textureComposeProgress = Math.max(state.textureComposeProgress, number(detail.textureComposeProgress || detail.progress, 0));
+      state.progressOnlyEvents.push({
+        at: nowIso(),
+        phase,
+        progress: state.textureComposeProgress,
+        detail: clonePlain(detail)
+      });
     }
 
     if (phase === "TEXTURE_COMPOSE_COMPLETE") {
@@ -1753,17 +1131,19 @@
       state.canvasReady = true;
       state.canvasCarrierMounted = true;
       state.canvasContextReady = true;
+      state.canvasCarrierHandoffOk = true;
+      state.firstFrameRequested = true;
       state.firstFrameDetected = true;
       state.imageRendered = true;
       state.dragInspectionBound = true;
+      state.atlasBuildStarted = true;
       state.atlasBuildComplete = true;
       state.atlasBuildProgress = 100;
+      state.textureComposeStarted = true;
       state.textureComposeComplete = true;
       state.textureComposeProgress = 100;
       state.renderedAfterTexture = true;
     }
-
-    evaluateNewsGates();
   }
 
   function handleCanvasReceipt(receipt, reason = "canvas-receipt") {
@@ -1774,21 +1154,18 @@
 
       if (Array.isArray(value.phaseEvents)) {
         value.phaseEvents.forEach((event) => {
-          if (event && (event.phase || event.event || event.id)) {
-            handleCanvasPhase(event);
-          }
+          if (event && event.phase) handleCanvasPhase(event);
         });
       }
     }
 
-    maybeCompleteAtlasTextureFrame(`receipt-${reason}`);
-
-    if (state.canvasReady || state.firstFrameDetected || state.imageRendered) {
+    if (state.canvasReady || state.imageRendered || state.firstFrameDetected) {
       startVisibleContentProof(`receipt-${reason}`);
     }
 
-    hydrateControls();
-    maybeFinalize(`receipt-${reason}`);
+    evaluateSouthGate();
+    maybeRequestCompletion(`receipt-${reason}`);
+    scheduleRender();
   }
 
   function handleCanvasReceiptLight(value) {
@@ -1804,39 +1181,28 @@
       value.canvasMounted
     );
 
-    state.canvasCarrierHandoffOk = Boolean(
-      state.canvasCarrierHandoffOk ||
-      value.canvasCarrierHandoffOk ||
-      value.handoffOk ||
-      state.canvasCarrierMounted
-    );
-
-    state.canvasContextReady = Boolean(state.canvasContextReady || value.canvasContextReady || value.contextReady);
-    state.canvasReady = Boolean(state.canvasReady || value.canvasReady);
-    state.dragInspectionBound = Boolean(state.dragInspectionBound || value.dragInspectionBound || value.pointerControlsBound || value.controlsBound);
-
-    state.atlasBuildStarted = Boolean(state.atlasBuildStarted || value.atlasBuildStarted);
-    state.atlasBuildProgress = Math.max(Number(state.atlasBuildProgress || 0), Number(value.atlasBuildProgress || 0));
-    state.atlasBuildComplete = Boolean(state.atlasBuildComplete || value.atlasBuildComplete);
-
-    state.textureComposeStarted = Boolean(state.textureComposeStarted || value.textureComposeStarted);
-    state.textureComposeProgress = Math.max(Number(state.textureComposeProgress || 0), Number(value.textureComposeProgress || 0));
-    state.textureComposeComplete = Boolean(state.textureComposeComplete || value.textureComposeComplete);
-    state.renderedAfterTexture = Boolean(state.renderedAfterTexture || value.renderedAfterTexture || state.textureComposeComplete);
-
+    state.canvasContextReady = Boolean(state.canvasContextReady || value.canvasContextReady || value.contextReady || value.canvasReady);
+    state.canvasCarrierHandoffOk = Boolean(state.canvasCarrierHandoffOk || state.canvasCarrierMounted || value.canvasCarrierHandoffOk || value.handoffOk);
     state.firstFrameRequested = Boolean(state.firstFrameRequested || value.firstFrameRequested);
     state.firstFrameDetected = Boolean(state.firstFrameDetected || value.firstFrameDetected);
     state.imageRendered = Boolean(state.imageRendered || value.imageRendered);
+    state.dragInspectionBound = Boolean(state.dragInspectionBound || value.dragInspectionBound || value.pointerControlsBound || value.controlsBound);
+    state.canvasReady = Boolean(state.canvasReady || value.canvasReady);
+
+    state.atlasBuildStarted = Boolean(state.atlasBuildStarted || value.atlasBuildStarted);
+    state.atlasBuildProgress = Math.max(number(state.atlasBuildProgress, 0), number(value.atlasBuildProgress, 0));
+    state.atlasBuildComplete = Boolean(state.atlasBuildComplete || value.atlasBuildComplete);
+
+    state.textureComposeStarted = Boolean(state.textureComposeStarted || value.textureComposeStarted);
+    state.textureComposeProgress = Math.max(number(state.textureComposeProgress, 0), number(value.textureComposeProgress, 0));
+    state.textureComposeComplete = Boolean(state.textureComposeComplete || value.textureComposeComplete);
+    state.renderedAfterTexture = Boolean(state.renderedAfterTexture || state.textureComposeComplete || value.renderedAfterTexture);
 
     state.visiblePlanetAvailable = Boolean(state.visiblePlanetAvailable || value.visiblePlanetAvailable);
     state.planetCanvasPresent = Boolean(state.planetCanvasPresent || value.planetCanvasPresent);
     state.planetCanvasNonZeroSize = Boolean(state.planetCanvasNonZeroSize || value.planetCanvasNonZeroSize);
     state.planetFramePainted = Boolean(state.planetFramePainted || value.planetFramePainted);
     state.nonblankPlanetVisible = Boolean(state.nonblankPlanetVisible || value.nonblankPlanetVisible);
-
-    if (state.canvasCarrierMounted) completeCheckpoint("CANVAS_MOUNT_CONFIRMED", { receipt: true });
-    if (state.canvasContextReady || state.canvasReady) completeCheckpoint("CANVAS_CONTEXT_READY", { receipt: true });
-    if (state.dragInspectionBound) completeCheckpoint("DRAG_INSPECTION_BOUND", { receipt: true });
 
     if (explicitReceiptContentProof(value)) {
       state.explicitContentReceiptProof = true;
@@ -1848,8 +1214,6 @@
       state.nonblankPlanetVisible = true;
       state.planetFramePainted = true;
     }
-
-    evaluateNewsGates();
   }
 
   function explicitReceiptContentProof(value) {
@@ -1866,7 +1230,9 @@
       "atlasAppliedToPlanet",
       "textureAppliedToPlanet",
       "surfaceAtlasPainted",
-      "landWaterTexturePainted"
+      "landWaterTexturePainted",
+      "nonblankPlanetVisible",
+      "visiblePlanetAvailable"
     ];
 
     for (const key of keys) {
@@ -1884,31 +1250,16 @@
     return false;
   }
 
-  function maybeCompleteAtlasTextureFrame(reason = "manual") {
-    const ready = Boolean(
-      state.atlasBuildComplete &&
-      state.textureComposeComplete &&
-      (state.firstFrameDetected || state.imageRendered || state.canvasReady)
-    );
-
-    if (ready) {
-      completeCheckpoint("ATLAS_TEXTURE_FRAME_READY", {
-        reason,
-        atlasBuildComplete: state.atlasBuildComplete,
-        textureComposeComplete: state.textureComposeComplete,
-        firstFrameDetected: state.firstFrameDetected,
-        imageRendered: state.imageRendered
-      });
-    }
-
-    return ready;
-  }
-
   function getPlanetCanvas() {
     if (!doc) return null;
 
-    const mount = refs.mount || resolveMount();
-    return mount ? mount.querySelector("canvas") : doc.querySelector(`#${MOUNT_ID} canvas`);
+    const mount = refs.mount || ensureMount();
+
+    return (
+      (mount && mount.querySelector("canvas")) ||
+      doc.querySelector("#hearthCanvasMount canvas") ||
+      doc.querySelector("[data-hearth-canvas-mount='true'] canvas")
+    );
   }
 
   function startVisibleContentProof(reason = "manual") {
@@ -1919,17 +1270,19 @@
     const passed = proveVisibleContent(reason);
 
     if (passed) {
-      completeCheckpoint("VISIBLE_CONTENT_PROOF_PASSED", {
+      reportSouthEvent(SOUTH_EVENTS.VISIBLE_CONTENT_PROOF_PASSED, {
         reason,
-        visibleContentProofMethod: state.visibleContentProofMethod,
-        visibleContentSampleCount: state.visibleContentSampleCount,
-        visibleContentVarianceScore: state.visibleContentVarianceScore
+        visibleContentProof: true,
+        visiblePlanetAvailable: true,
+        nonblankPlanetVisible: true,
+        carrierOnlyDetected: false
       });
     }
 
-    hydrateControls();
-    evaluateNewsGates();
-    maybeFinalize(`visible-proof-${reason}`);
+    evaluateInspectTruth();
+    evaluateSouthGate();
+    maybeRequestCompletion(`visible-content-proof-${reason}`);
+
     return passed;
   }
 
@@ -1964,6 +1317,7 @@
     state.visibleContentProof = false;
     state.visibleContentProofMethod = pixelProof.method || "pending";
     state.visibleContentProofError = pixelProof.error || "";
+    state.visiblePlanetAvailable = false;
     state.carrierOnlyDetected = true;
     return false;
   }
@@ -1983,7 +1337,7 @@
     state.planetCanvasNonZeroSize = Boolean(
       canvas &&
       (
-        (Number(canvas.width || 0) > 0 && Number(canvas.height || 0) > 0) ||
+        (number(canvas.width, 0) > 0 && number(canvas.height, 0) > 0) ||
         (rect && rect.width > 0 && rect.height > 0)
       )
     );
@@ -2002,8 +1356,8 @@
 
     try {
       ctx = canvas.getContext && canvas.getContext("2d", { willReadFrequently: true });
-      width = Math.max(1, Number(canvas.width || Math.floor(rect?.width || 0)));
-      height = Math.max(1, Number(canvas.height || Math.floor(rect?.height || 0)));
+      width = Math.max(1, number(canvas.width || Math.floor(rect?.width || 0), 0));
+      height = Math.max(1, number(canvas.height || Math.floor(rect?.height || 0), 0));
     } catch (error) {
       return {
         passed: false,
@@ -2102,7 +1456,9 @@
     const hasWaterOrOther = water >= 6 || other >= 6;
     const enoughVariance = variance >= 12;
     const enoughSamples = sampleCount >= 60 && nonblank >= 28;
-    const passed = Boolean(enoughSamples && enoughVariance && hasLand && hasWaterOrOther && state.textureComposeComplete);
+    const passed = Boolean(enoughSamples && enoughVariance && hasLand && hasWaterOrOther && (state.textureComposeComplete || state.canvasReady || state.imageRendered));
+
+    state.carrierOnlyDetected = !passed;
 
     return {
       passed,
@@ -2165,146 +1521,151 @@
     return Math.sqrt(total / (colors.length * 3));
   }
 
-  function evaluateNewsGates() {
-    state.northGateReady = Boolean(
-      state.step1Accepted &&
-      state.runtimeTableSessionAttempted &&
-      state.checkpointBrainActive &&
-      isCompleted("S4_RUNTIME_TABLE_SESSION_READY")
-    );
+  function evaluateInspectTruth() {
+    state.showDiagnosticTabReady = Boolean(refs.showTab);
+    state.copyDiagnosticReady = Boolean(refs.copyButton);
+    state.receiptToggleReady = Boolean(refs.receiptToggle);
+    state.inspectPlanetControlReady = Boolean(refs.inspectButton);
+    state.collapseExpandControlReady = Boolean(refs.expandButton);
+    state.buttonsReachable = Boolean(refs.copyButton && refs.receiptToggle && refs.inspectButton && refs.expandButton);
+    state.diagnosticDockReady = Boolean(refs.cockpit && refs.showTab);
 
-    state.eastGateReady = Boolean(
-      state.canvasCarrierRequested &&
-      state.canvasCarrierHandoffOk &&
-      state.canvasCarrierMounted &&
-      (state.canvasContextReady || state.canvasReady)
-    );
-
-    state.westGateReady = Boolean(
+    state.diagnosticCanLeavePlanetFrame = Boolean(
+      state.diagnosticDockReady &&
+      state.showDiagnosticTabReady &&
       state.copyDiagnosticReady &&
       state.receiptToggleReady &&
       state.inspectPlanetControlReady &&
       state.collapseExpandControlReady &&
-      state.showDiagnosticTabReady &&
       state.buttonsReachable
     );
+
+    return state.diagnosticCanLeavePlanetFrame;
+  }
+
+  function evaluateSouthGate() {
+    evaluateInspectTruth();
 
     state.southGateReady = Boolean(
       state.visibleContentProof &&
       state.visiblePlanetAvailable &&
       state.nonblankPlanetVisible &&
+      state.imageRendered &&
+      state.firstFrameDetected &&
       state.dragInspectionBound &&
       state.diagnosticCanLeavePlanetFrame
     );
 
-    state.newsGatePassedBeforeF21 = Boolean(
-      state.northGateReady &&
-      state.eastGateReady &&
-      state.westGateReady &&
-      state.southGateReady
-    );
-
-    state.f21Allowed = Boolean(
-      isCompleted("S11_INSPECT_MODE_READY") &&
-      state.newsGatePassedBeforeF21
-    );
-
-    return state.newsGatePassedBeforeF21;
-  }
-
-  function maybeFinalize(reason = "manual") {
-    hydrateControls();
-    maybeCompleteAtlasTextureFrame(`finalize-${reason}`);
-
-    if (state.canvasReady && !state.visibleContentProof) {
-      startVisibleContentProof(`finalize-${reason}`);
+    if (state.southGateReady) {
+      reportSouthEvent(SOUTH_EVENTS.INSPECT_MODE_READY, {
+        reason: "south-gate-ready",
+        southGateReady: true
+      });
     }
 
-    evaluateNewsGates();
+    return state.southGateReady;
+  }
 
-    if (!state.newsGatePassedBeforeF21 || !state.f21Allowed) {
+  function maybeRequestCompletion(reason = "manual") {
+    reconcileNorthReceipt();
+    evaluateSouthGate();
+
+    if (state.completionLatched) return true;
+
+    if (!state.southGateReady) {
       deriveFailureCoordinate();
-      scheduleRender();
       return false;
     }
 
-    completeCheckpoint("COMPLETION_LATCHED", {
-      reason,
-      newsGatePassedBeforeF21: state.newsGatePassedBeforeF21,
-      f21Allowed: state.f21Allowed
-    });
-
-    return true;
-  }
-
-  function forceCompletionLatch() {
-    state.completionLatched = true;
-    state.finalReceiptAvailable = true;
-    state.f21Allowed = true;
-    state.f21AfterS11 = true;
-    state.currentStage = "F21";
-    state.highestStage = "F21";
-    state.mainDisplayProgress = 100;
-    state.mainProgressCap = 100;
-    state.postgameStatus = "READY_PLANET_VISIBLE_DIAGNOSTIC_AVAILABLE";
-    state.firstFailedCoordinate = "NONE_NEWS_FIBONACCI_F21_LATCHED";
-    state.recommendedNextRenewalTarget = "read-postgame-canvas-or-triple-g-receipt";
-    state.latestVisibleEvent = "COMPLETION_LATCHED";
-
-    if (refs.ledger && refs.ledger.state) {
-      refs.ledger.state.completionLatched = true;
-      refs.ledger.state.currentStage = "F21";
-      refs.ledger.state.highestStage = "F21";
-      refs.ledger.state.updatedAt = nowIso();
+    if (!state.northF21Allowed && !state.northNewsGatePassedBeforeF21) {
+      state.firstFailedCoordinate = "WAITING_NORTH_F21_PERMISSION";
+      state.recommendedNextRenewalTarget = state.northRecommendedNextFile || NORTH_FILE;
+      return false;
     }
 
-    setCockpitMode("diagnostic-dock");
+    state.completionRequestedFromNorth = true;
+
+    const result = reportSouthEvent(SOUTH_EVENTS.COMPLETION_LATCHED, {
+      reason,
+      southGateReady: true,
+      northF21Allowed: state.northF21Allowed,
+      northNewsGatePassedBeforeF21: state.northNewsGatePassedBeforeF21
+    });
+
+    if (result && result.action === "ADMIT") {
+      state.completionLatched = true;
+      state.f21AfterNorthPermission = true;
+      state.finalReceiptAvailable = true;
+      state.mainDisplayProgress = 100;
+      state.mainProgressCap = 100;
+      state.currentStage = "F21";
+      state.highestStage = "F21";
+      state.postgameStatus = "READY_PLANET_VISIBLE_DIAGNOSTIC_AVAILABLE";
+      state.firstFailedCoordinate = "NONE_F21_LATCHED_BY_NORTH_PERMISSION";
+      state.recommendedNextRenewalTarget = "read-south-final-receipt";
+      setCockpitMode("diagnostic-dock");
+      return true;
+    }
+
+    reconcileNorthReceipt();
+
+    if (state.northF21Allowed || state.northNewsGatePassedBeforeF21) {
+      state.completionLatched = true;
+      state.f21AfterNorthPermission = true;
+      state.finalReceiptAvailable = true;
+      state.mainDisplayProgress = 100;
+      state.mainProgressCap = 100;
+      state.currentStage = "F21";
+      state.highestStage = "F21";
+      state.postgameStatus = "READY_PLANET_VISIBLE_DIAGNOSTIC_AVAILABLE";
+      state.firstFailedCoordinate = "NONE_F21_LATCHED_BY_NORTH_PERMISSION";
+      state.recommendedNextRenewalTarget = "read-south-final-receipt";
+      setCockpitMode("diagnostic-dock");
+      return true;
+    }
+
+    deriveFailureCoordinate();
+    return false;
   }
 
   function deriveFailureCoordinate() {
     if (state.completionLatched) {
-      state.firstFailedCoordinate = "NONE_NEWS_FIBONACCI_F21_LATCHED";
-      state.recommendedNextRenewalTarget = "read-postgame-canvas-or-triple-g-receipt";
+      state.firstFailedCoordinate = "NONE_F21_LATCHED_BY_NORTH_PERMISSION";
+      state.recommendedNextRenewalTarget = "read-south-final-receipt";
       return;
     }
 
-    if (!state.step1Accepted) {
-      state.firstFailedCoordinate = "WAITING_INDEX_STEP1_HANDOFF";
-      state.recommendedNextRenewalTarget = INDEX_FILE;
+    if (!state.northAvailable) {
+      state.firstFailedCoordinate = "WAITING_NORTH_COMMAND_RUNTIME_TABLE";
+      state.recommendedNextRenewalTarget = NORTH_FILE;
       return;
     }
 
-    if (!state.mountReady) {
-      state.firstFailedCoordinate = "WAITING_INDEX_MOUNT";
-      state.recommendedNextRenewalTarget = INDEX_FILE;
-      return;
-    }
-
-    if (!state.runtimeTableSessionAttempted) {
-      state.firstFailedCoordinate = "WAITING_RUNTIME_TABLE_SESSION_ATTEMPT";
-      state.recommendedNextRenewalTarget = COHERENCE_FILE;
-      return;
-    }
-
-    if (!state.canvasCarrierRequested) {
-      state.firstFailedCoordinate = "WAITING_CANVAS_COORDINATION_START";
-      state.recommendedNextRenewalTarget = COHERENCE_FILE;
-      return;
-    }
-
-    if (!state.canvasCarrierHandoffOk) {
-      state.firstFailedCoordinate = "WAITING_CANVAS_CARRIER_HANDOFF";
-      state.recommendedNextRenewalTarget = state.canvasApiPresent ? COHERENCE_FILE : CANVAS_FILE;
+    if (!state.canvasApiPresent) {
+      state.firstFailedCoordinate = "WAITING_CANVAS_API";
+      state.recommendedNextRenewalTarget = CANVAS_FILE;
       return;
     }
 
     if (!state.canvasCarrierMounted) {
       state.firstFailedCoordinate = "WAITING_CANVAS_MOUNT_CONFIRMED";
-      state.recommendedNextRenewalTarget = CANVAS_FILE;
+      state.recommendedNextRenewalTarget = SOUTH_FILE;
       return;
     }
 
-    if (!state.atlasBuildComplete || !state.textureComposeComplete || !state.firstFrameDetected) {
+    if (!state.canvasContextReady) {
+      state.firstFailedCoordinate = "WAITING_CANVAS_CONTEXT_READY";
+      state.recommendedNextRenewalTarget = SOUTH_FILE;
+      return;
+    }
+
+    if (!state.dragInspectionBound) {
+      state.firstFailedCoordinate = "WAITING_DRAG_INSPECTION_BOUND";
+      state.recommendedNextRenewalTarget = SOUTH_FILE;
+      return;
+    }
+
+    if (!(state.atlasBuildComplete || state.textureComposeComplete || state.firstFrameDetected || state.imageRendered)) {
       state.firstFailedCoordinate = "WAITING_ATLAS_TEXTURE_FRAME_READY";
       state.recommendedNextRenewalTarget = CANVAS_FILE;
       return;
@@ -2312,43 +1673,79 @@
 
     if (!state.visibleContentProof) {
       state.firstFailedCoordinate = "WAITING_VISIBLE_CONTENT_PROOF";
-      state.recommendedNextRenewalTarget = CANVAS_FILE;
+      state.recommendedNextRenewalTarget = SOUTH_FILE;
       return;
     }
 
     if (!state.diagnosticCanLeavePlanetFrame) {
-      state.firstFailedCoordinate = "WAITING_INSPECT_MODE_CONTROLS";
-      state.recommendedNextRenewalTarget = COHERENCE_FILE;
+      state.firstFailedCoordinate = "WAITING_INSPECT_MODE_READY";
+      state.recommendedNextRenewalTarget = SOUTH_FILE;
       return;
     }
 
-    if (!state.newsGatePassedBeforeF21) {
-      if (!state.northGateReady) state.firstFailedCoordinate = "WAITING_NEWS_NORTH_GATE";
-      else if (!state.eastGateReady) state.firstFailedCoordinate = "WAITING_NEWS_EAST_GATE";
-      else if (!state.westGateReady) state.firstFailedCoordinate = "WAITING_NEWS_WEST_GATE";
-      else if (!state.southGateReady) state.firstFailedCoordinate = "WAITING_NEWS_SOUTH_GATE";
-      else state.firstFailedCoordinate = "WAITING_NEWS_GATE";
-      state.recommendedNextRenewalTarget = COHERENCE_FILE;
+    if (!state.northF21Allowed && !state.northNewsGatePassedBeforeF21) {
+      state.firstFailedCoordinate = "WAITING_NORTH_F21_PERMISSION";
+      state.recommendedNextRenewalTarget = state.northRecommendedNextFile || NORTH_FILE;
       return;
     }
 
-    state.firstFailedCoordinate = "WAITING_F21_COMPLETION_LATCH";
-    state.recommendedNextRenewalTarget = COHERENCE_FILE;
+    state.firstFailedCoordinate = "WAITING_COMPLETION_LATCH";
+    state.recommendedNextRenewalTarget = SOUTH_FILE;
+  }
+
+  function buildSouthSnapshot() {
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      file: SOUTH_FILE,
+      owner: "SOUTH",
+
+      canvasApiPresent: state.canvasApiPresent,
+      canvasCarrierRequested: state.canvasCarrierRequested,
+      canvasCarrierMethod: state.canvasCarrierMethod,
+      canvasCarrierHandoffOk: state.canvasCarrierHandoffOk,
+      cooperativeBootUsed: state.cooperativeBootUsed,
+      syncBootFallbackUsed: state.syncBootFallbackUsed,
+
+      canvasReady: state.canvasReady,
+      canvasCarrierMounted: state.canvasCarrierMounted,
+      canvasContextReady: state.canvasContextReady,
+      dragInspectionBound: state.dragInspectionBound,
+      atlasBuildComplete: state.atlasBuildComplete,
+      textureComposeComplete: state.textureComposeComplete,
+      firstFrameDetected: state.firstFrameDetected,
+      imageRendered: state.imageRendered,
+
+      visibleContentProof: state.visibleContentProof,
+      visiblePlanetAvailable: state.visiblePlanetAvailable,
+      nonblankPlanetVisible: state.nonblankPlanetVisible,
+      carrierOnlyDetected: state.carrierOnlyDetected,
+
+      inspectModeAvailable: state.inspectPlanetControlReady,
+      inspectPlanetControlAvailable: state.inspectPlanetControlReady,
+      diagnosticCanLeavePlanetFrame: state.diagnosticCanLeavePlanetFrame,
+      diagnosticDockRestorable: state.showDiagnosticTabReady,
+      showDiagnosticTabVisibleWhenHidden: state.showDiagnosticTabReady,
+      copyDiagnosticPreserved: state.copyDiagnosticReady,
+      receiptToggleReady: state.receiptToggleReady,
+      buttonsReachable: state.buttonsReachable,
+      receiptOverlayIndependent: true,
+
+      southGateReady: state.southGateReady,
+      completionLatched: state.completionLatched,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false
+    };
   }
 
   function reconcileFromDataset() {
-    if (!doc || !doc.documentElement) return;
-
-    const dataset = doc.documentElement.dataset;
-
-    state.step1Accepted = Boolean(
-      state.step1Accepted ||
-      dataset.hearthIndexStep1Complete === "true" ||
-      dataset.hearthFirstPaintCockpitReady === "true"
-    );
+    const dataset = getDataset();
 
     state.canvasReady = Boolean(state.canvasReady || bool(dataset.hearthCanvasReady));
     state.canvasCarrierMounted = Boolean(state.canvasCarrierMounted || bool(dataset.hearthCanvasCarrierMounted));
+    state.canvasContextReady = Boolean(state.canvasContextReady || bool(dataset.hearthCanvasContextReady));
     state.firstFrameDetected = Boolean(state.firstFrameDetected || bool(dataset.hearthFirstFrameDetected));
     state.imageRendered = Boolean(state.imageRendered || bool(dataset.hearthImageRendered) || bool(dataset.hearthCanvasImageRendered));
     state.dragInspectionBound = Boolean(state.dragInspectionBound || bool(dataset.hearthDragInspectionBound) || bool(dataset.hearthControlsBound));
@@ -2360,34 +1757,66 @@
     state.planetFramePainted = Boolean(state.planetFramePainted || bool(dataset.hearthPlanetFramePainted));
     state.nonblankPlanetVisible = Boolean(state.nonblankPlanetVisible || bool(dataset.hearthNonblankPlanetVisible));
 
-    state.completionLatched = Boolean(state.completionLatched || bool(dataset.hearthCompletionLatched));
-
-    if (state.completionLatched) forceCompletionLatch();
+    state.diagnosticCanLeavePlanetFrame = Boolean(state.diagnosticCanLeavePlanetFrame || bool(dataset.hearthDiagnosticCanLeavePlanetFrame));
+    state.northF21Allowed = Boolean(state.northF21Allowed || bool(dataset.hearthF21Allowed));
+    state.northNewsGatePassedBeforeF21 = Boolean(state.northNewsGatePassedBeforeF21 || bool(dataset.hearthNewsGatePassedBeforeF21));
   }
 
   function reconcileAll(reason = "manual") {
+    connectNorth();
     reconcileFromDataset();
 
-    acceptIndexHandoff(getIndexHandoff() || {});
-    hydrateControls();
-
-    const receipt = getCanvasReceipt();
-    if (receipt && isObject(receipt)) {
-      handleCanvasReceiptLight(receipt);
+    const canvasReceipt = getCanvasReceipt();
+    if (canvasReceipt && isObject(canvasReceipt)) {
+      handleCanvasReceiptLight(canvasReceipt);
     }
 
-    maybeCompleteAtlasTextureFrame(`reconcile-${reason}`);
-
-    if ((state.canvasReady || state.firstFrameDetected || state.imageRendered) && !state.visibleContentProof) {
+    if (state.canvasReady || state.imageRendered || state.firstFrameDetected) {
       startVisibleContentProof(`reconcile-${reason}`);
     }
 
-    evaluateNewsGates();
-    maybeFinalize(`reconcile-${reason}`);
+    evaluateInspectTruth();
+    evaluateSouthGate();
+    reconcileNorthReceipt();
+    maybeRequestCompletion(`reconcile-${reason}`);
     deriveFailureCoordinate();
-
     publishGlobals();
     scheduleRender();
+  }
+
+  function renderLaneMarkup() {
+    const lanes = [
+      ["North", state.northAvailable ? "READY" : "WAITING", state.northActiveCheckpointId || "north-command-runtime-table"],
+      ["Canvas", state.canvasReady ? "READY" : state.canvasCarrierRequested ? "ACTIVE" : "WAITING", state.canvasCarrierMethod || "canvas coordination"],
+      ["Frame", state.imageRendered ? "READY" : "PENDING", "atlas · texture · first frame"],
+      ["Proof", state.visibleContentProof ? "READY" : "PENDING", state.visibleContentProofMethod || "visible content proof"],
+      ["Inspect", state.diagnosticCanLeavePlanetFrame ? "READY" : "PENDING", "dock hide/show · copy · receipt"],
+      ["F21", state.completionLatched ? "LATCHED" : state.northF21Allowed ? "ALLOWED" : "WAITING", state.firstFailedCoordinate]
+    ];
+
+    return lanes.map((lane) => {
+      const progress =
+        lane[1] === "LATCHED" ? 100 :
+        lane[1] === "READY" ? 98 :
+        lane[1] === "ALLOWED" ? 98 :
+        lane[1] === "ACTIVE" ? 86 :
+        42;
+
+      return `
+        <section class="hearth-ledger-lane" data-lane="${escapeHtml(lane[0])}" data-status="${escapeHtml(lane[1])}">
+          <div class="hearth-ledger-lane-top">
+            <span class="hearth-ledger-lane-title">
+              <strong>${escapeHtml(lane[0])}</strong>
+              <span>${escapeHtml(lane[2])}</span>
+            </span>
+            <span class="hearth-ledger-lane-status">${escapeHtml(lane[1])}</span>
+          </div>
+          <div class="hearth-ledger-lane-track">
+            <span class="hearth-ledger-lane-fill" style="width:${progress}%"></span>
+          </div>
+        </section>
+      `;
+    }).join("");
   }
 
   function computeProgress() {
@@ -2397,41 +1826,20 @@
       return 100;
     }
 
-    const active = activeCheckpoint();
-    state.mainProgressCap = 98;
-    state.mainDisplayProgress = Math.min(98, Math.max(state.mainDisplayProgress, active ? active.progress : 0));
+    let progress = 72;
 
-    if (state.visibleContentProof) state.mainDisplayProgress = Math.max(state.mainDisplayProgress, 98);
+    if (state.canvasCarrierRequested) progress = Math.max(progress, 78);
+    if (state.canvasCarrierMounted) progress = Math.max(progress, 81);
+    if (state.canvasContextReady) progress = Math.max(progress, 84);
+    if (state.dragInspectionBound) progress = Math.max(progress, 86);
+    if (state.atlasBuildComplete || state.textureComposeComplete || state.firstFrameDetected || state.imageRendered) progress = Math.max(progress, 93);
+    if (state.visibleContentProof) progress = Math.max(progress, 98);
+    if (state.diagnosticCanLeavePlanetFrame) progress = Math.max(progress, 98);
+
+    state.mainDisplayProgress = Math.min(98, progress);
+    state.mainProgressCap = 98;
 
     return Math.round(state.mainDisplayProgress);
-  }
-
-  function renderLaneMarkup() {
-    return CHECKPOINTS.map((checkpoint) => {
-      const complete = isCompleted(checkpoint.id);
-      const active = state.activeCheckpointId === checkpoint.id;
-      const queued = state.queuedEvents.some((event) => event.checkpointId === checkpoint.id);
-      const status = complete ? "COMPLETE" : active ? "ACTIVE" : queued ? "QUEUED" : checkpoint.rank < state.activeCheckpointRank ? "ARCHIVED" : "PENDING";
-      const progress = complete ? checkpoint.progress : active ? Math.min(98, checkpoint.progress) : 0;
-
-      return `
-        <section class="hearth-ledger-lane" data-lane="${escapeHtml(checkpoint.lane)}" data-status="${escapeHtml(status)}">
-          <div class="hearth-ledger-lane-top">
-            <span class="hearth-ledger-lane-title">
-              <strong>Step ${checkpoint.step} · ${escapeHtml(checkpoint.label)} · ${escapeHtml(checkpoint.fibonacci)}</strong>
-              <span>${escapeHtml(checkpoint.event)}</span>
-            </span>
-            <span class="hearth-ledger-lane-status">${escapeHtml(status)}</span>
-          </div>
-          <div class="hearth-ledger-lane-track">
-            <span class="hearth-ledger-lane-fill" style="width:${progress}%"></span>
-          </div>
-          <div class="hearth-ledger-lane-title">
-            <span>checkpoint=${escapeHtml(checkpoint.id)}</span>
-          </div>
-        </section>
-      `;
-    }).join("");
   }
 
   function scheduleRender() {
@@ -2447,24 +1855,22 @@
     if (!refs.cockpit) return;
 
     const progress = computeProgress();
-    const elapsed = state.startedAtMs ? nowMs() - state.startedAtMs : 0;
+    const elapsed = state.startedAt ? nowMs() - new Date(state.startedAt).getTime() : 0;
 
     if (refs.title) {
       refs.title.textContent = state.completionLatched
         ? "READY · PLANET VISIBLE · DIAGNOSTIC AVAILABLE"
-        : "HEARTH COMMAND BRAIN · STEPS 2–11";
+        : state.visibleContentProof
+          ? "VISIBLE PROOF HELD · WAITING FOR F21"
+          : "COORDINATING HEARTH VISIBLE COMPLETION";
     }
 
     if (refs.stage) {
-      refs.stage.textContent = state.completionLatched
-        ? "F21 · Completion latch"
-        : `${state.activeFibonacciStage || state.currentStage} · ${activeCheckpoint().label}`;
+      refs.stage.textContent = `${state.currentStage} · South visible completion`;
     }
 
     if (refs.heartbeat) {
-      refs.heartbeat.textContent = state.completionLatched
-        ? `F21 latched · elapsed=${formatElapsed(elapsed)}`
-        : `soft-gap governor=true · step1=index.js · elapsed=${formatElapsed(elapsed)}`;
+      refs.heartbeat.textContent = `south=true · north=${state.northAvailable} · elapsed=${formatElapsed(elapsed)}`;
     }
 
     if (refs.latest) {
@@ -2476,14 +1882,11 @@
     if (refs.laneList) refs.laneList.innerHTML = renderLaneMarkup();
     if (refs.receiptPre) refs.receiptPre.textContent = getReceiptText();
 
-    refs.cockpit.dataset.hearthCommandBrain = CONTRACT;
-    refs.cockpit.dataset.hearthCompletionLatched = String(state.completionLatched);
-    refs.cockpit.dataset.hearthVisibleContentProof = String(state.visibleContentProof);
-    refs.cockpit.dataset.hearthVisiblePlanetAvailable = String(state.visiblePlanetAvailable);
-    refs.cockpit.dataset.hearthDiagnosticCanLeavePlanetFrame = String(state.diagnosticCanLeavePlanetFrame);
-    refs.cockpit.dataset.hearthSoftGapGovernor = String(state.softGapGovernor);
-    refs.cockpit.dataset.hearthFirstFailedCoordinate = state.firstFailedCoordinate;
-    refs.cockpit.dataset.hearthRecommendedNextRenewalTarget = state.recommendedNextRenewalTarget;
+    refs.cockpit.dataset.cockpitMode = state.cockpitMode;
+    refs.cockpit.dataset.hearthSouthVisibleContentProof = String(state.visibleContentProof);
+    refs.cockpit.dataset.hearthSouthGateReady = String(state.southGateReady);
+    refs.cockpit.dataset.hearthSouthCompletionLatched = String(state.completionLatched);
+    refs.cockpit.dataset.hearthSouthFirstFailedCoordinate = state.firstFailedCoordinate;
 
     publishStatusNode();
     publishGlobals();
@@ -2499,36 +1902,26 @@
     if (!node) return;
 
     node.textContent = [
-      "Hearth command brain active.",
+      "Hearth South visible completion cycle consumer active.",
       `Contract ${CONTRACT}`,
       `Receipt ${RECEIPT}`,
-      `File ${COHERENCE_FILE}`,
-      `Owns Step 1 ${state.ownsStep1}`,
-      `Owns Steps 2 through 11 ${state.ownsSteps2Through11}`,
-      `Step 1 accepted ${state.step1Accepted}`,
-      `Runtime Table present ${state.runtimeTablePresent}`,
-      `Runtime Table session attempted ${state.runtimeTableSessionAttempted}`,
-      `Runtime Table session created ${state.runtimeTableSessionCreated}`,
-      `Soft gap governor ${state.softGapGovernor}`,
-      `Hard block mode ${state.hardBlockMode}`,
-      `Forward progress allowed with gaps ${state.forwardProgressAllowedWithGaps}`,
-      `Active checkpoint ${state.activeCheckpointId}`,
-      `Highest completed checkpoint ${state.highestCompletedCheckpointId}`,
-      `North gate ${state.northGateReady}`,
-      `East gate ${state.eastGateReady}`,
-      `West gate ${state.westGateReady}`,
-      `South gate ${state.southGateReady}`,
-      `NEWS passed before F21 ${state.newsGatePassedBeforeF21}`,
-      `F21 allowed ${state.f21Allowed}`,
-      `Completion latched ${state.completionLatched}`,
+      `File ${SOUTH_FILE}`,
+      `North file ${NORTH_FILE}`,
+      `South owns visible completion true`,
+      `South owns North runtime table false`,
+      `South owns canvas drawing false`,
+      `North available ${state.northAvailable}`,
+      `North F21 allowed ${state.northF21Allowed}`,
+      `South gate ready ${state.southGateReady}`,
       `Visible content proof ${state.visibleContentProof}`,
-      `Diagnostic can leave planet frame ${state.diagnosticCanLeavePlanetFrame}`,
+      `Inspect ready ${state.diagnosticCanLeavePlanetFrame}`,
+      `Completion latched ${state.completionLatched}`,
+      `First failed coordinate ${state.firstFailedCoordinate}`,
+      `Recommended next renewal target ${state.recommendedNextRenewalTarget}`,
       `Generated image false`,
       `GraphicBox false`,
       `WebGL false`,
       `Visual pass claimed false`,
-      `First failed coordinate ${state.firstFailedCoordinate}`,
-      `Recommended next renewal target ${state.recommendedNextRenewalTarget}`,
       `Updated ${state.updatedAt || nowIso()}`
     ].join("\n");
   }
@@ -2570,34 +1963,15 @@
       }, 1200);
     }
 
-    recordLocal(ok ? "COMMAND_BRAIN_DIAGNOSTIC_COPIED" : "COMMAND_BRAIN_DIAGNOSTIC_COPY_FAILED", {
-      lane: "inspectMode",
-      status: ok ? "COPIED" : "COPY_FAILED"
-    });
-
+    recordLocal("SOUTH_DIAGNOSTIC_COPIED", { ok });
     return ok;
   }
 
-  function getRuntimeTableReceipt() {
-    if (!refs.runtimeSession || !isFunction(refs.runtimeSession.getReceipt)) return null;
-
-    try {
-      const receipt = refs.runtimeSession.getReceipt();
-      state.runtimeTableReceiptAvailable = Boolean(receipt);
-      state.runtimeTableReceiptError = "";
-      return receipt;
-    } catch (error) {
-      state.runtimeTableReceiptError = error && error.message ? error.message : String(error);
-      recordGap("RUNTIME_TABLE_RECEIPT_READ_FAILED", state.runtimeTableReceiptError);
-      return null;
-    }
-  }
-
-  function buildReceipt() {
-    evaluateNewsGates();
+  function getReceipt() {
+    reconcileNorthReceipt();
+    evaluateInspectTruth();
+    evaluateSouthGate();
     deriveFailureCoordinate();
-
-    const runtimeReceipt = getRuntimeTableReceipt();
 
     return {
       contract: CONTRACT,
@@ -2605,113 +1979,67 @@
       previousContract: PREVIOUS_CONTRACT,
       baselineContract: BASELINE_CONTRACT,
       version: VERSION,
-      file: COHERENCE_FILE,
+      file: SOUTH_FILE,
       route: ROUTE,
       role: state.role,
 
       pairedSemiconductor: true,
-      pairedWith: INDEX_FILE,
-      indexJsStartsProcess: true,
-      hearthJsFinishesProcess: true,
-      systematicAndSynchronized: true,
-      synchronizedLoading: true,
+      pairedWith: EAST_FILE,
+      cycleOrder: state.cycleOrder,
 
-      ownsStep1: state.ownsStep1,
-      ownsSteps2Through11: state.ownsSteps2Through11,
-      step1Source: state.step1Source,
-      step1Accepted: state.step1Accepted,
-      step1ReceiptPresent: state.step1ReceiptPresent,
-      step1Contract: state.step1Contract,
-      step1HandoffAcceptedAt: state.step1HandoffAcceptedAt,
+      ownsSouth: true,
+      ownsEast: false,
+      ownsWest: false,
+      ownsNorth: false,
+      ownsStep1: false,
+      ownsStep1Handoff: false,
+      ownsNorthRuntimeTable: false,
+      ownsCanvasDrawing: false,
+      ownsVisibleCompletion: true,
+      ownsVisiblePlanetProof: true,
+      ownsInspectModeTruth: true,
+      ownsFinalDiagnosticReceipt: true,
+      ownsFinalVisualPassClaim: false,
 
-      ownsFirstPaintSurvival: state.ownsFirstPaintSurvival,
-      ownsMountCreation: state.ownsMountCreation,
-      ownsInitialCockpitCreation: state.ownsInitialCockpitCreation,
-      ownsRouteBrain: state.ownsRouteBrain,
-      ownsScriptOrderIntake: state.ownsScriptOrderIntake,
-      ownsAuthorityAssessment: state.ownsAuthorityAssessment,
-      ownsRuntimeTableSession: state.ownsRuntimeTableSession,
-      ownsCheckpointGovernorConsumer: state.ownsCheckpointGovernorConsumer,
-      ownsNewsFibonacciGovernance: state.ownsNewsFibonacciGovernance,
-      ownsCanvasCoordination: state.ownsCanvasCoordination,
-      ownsVisiblePlanetProof: state.ownsVisiblePlanetProof,
-      ownsInspectModeTruth: state.ownsInspectModeTruth,
-      ownsCompletionLatch: state.ownsCompletionLatch,
-      ownsFinalDiagnosticReceipt: state.ownsFinalDiagnosticReceipt,
-      ownsFinalVisualPassClaim: state.ownsFinalVisualPassClaim,
+      eastFile: EAST_FILE,
+      westFile: WEST_FILE,
+      northFile: NORTH_FILE,
+      southFile: SOUTH_FILE,
+      canvasFile: CANVAS_FILE,
 
-      gapAssessmentFast: state.gapAssessmentFast,
-      hardBlockMode: state.hardBlockMode,
-      softGapGovernor: state.softGapGovernor,
-      forwardProgressAllowedWithGaps: state.forwardProgressAllowedWithGaps,
-      blockedProgressCap: state.blockedProgressCap,
-      readyTextRequiresF21: state.readyTextRequiresF21,
+      northAvailable: state.northAvailable,
+      northContract: state.northContract,
+      northSessionCreated: state.northSessionCreated,
+      northSessionId: state.northSessionId,
+      northReceiptAvailable: state.northReceiptAvailable,
+      northReceiptError: state.northReceiptError,
+      northF21Allowed: state.northF21Allowed,
+      northNewsGatePassedBeforeF21: state.northNewsGatePassedBeforeF21,
+      northActiveCheckpointId: state.northActiveCheckpointId,
+      northRecommendedNextOwner: state.northRecommendedNextOwner,
+      northRecommendedNextFile: state.northRecommendedNextFile,
 
-      checkpointBrainActive: state.checkpointBrainActive,
-      chronologicalFibonacciAlignment: state.chronologicalFibonacciAlignment,
-      newsFibonacciAlignment: state.newsFibonacciAlignment,
-      oneActiveCheckpointAtATime: state.oneActiveCheckpointAtATime,
-      futureEventsQueued: state.futureEventsQueued,
-      completedEventsArchived: state.completedEventsArchived,
-      regressiveEventsBlocked: state.regressiveEventsBlocked,
-
-      activeCheckpointId: state.activeCheckpointId,
-      activeCheckpointRank: state.activeCheckpointRank,
-      activeFibonacciStage: state.activeFibonacciStage,
-      completedCheckpoints: state.completedCheckpoints.join(","),
-      highestCompletedCheckpointId: state.highestCompletedCheckpointId,
-      highestCompletedRank: state.highestCompletedRank,
-      queuedEventsCount: state.queuedEvents.length,
-      admittedEventsCount: state.admittedEvents.length,
-      archivedEventsCount: state.archivedEvents.length,
-      blockedEventsCount: state.blockedEvents.length,
-      gapEventsCount: state.gapEvents.length,
-
-      currentStage: state.currentStage,
-      highestStage: state.highestStage,
-      mainDisplayProgress: state.mainDisplayProgress,
-      mainProgressCap: state.mainProgressCap,
-      completionLatched: state.completionLatched,
-      f21Allowed: state.f21Allowed,
-      f21AfterS11: state.f21AfterS11,
-      finalReceiptAvailable: state.finalReceiptAvailable,
-
-      northGateReady: state.northGateReady,
-      eastGateReady: state.eastGateReady,
-      westGateReady: state.westGateReady,
-      southGateReady: state.southGateReady,
-      newsGatePassedBeforeF21: state.newsGatePassedBeforeF21,
+      step1AcceptedBySouth: state.step1AcceptedBySouth,
+      handoffAdmissibleByWest: state.handoffAdmissibleByWest,
 
       mountReady: state.mountReady,
       cockpitFound: state.cockpitFound,
       cockpitHydrated: state.cockpitHydrated,
+      diagnosticDockReady: state.diagnosticDockReady,
       showDiagnosticTabReady: state.showDiagnosticTabReady,
       copyDiagnosticReady: state.copyDiagnosticReady,
       receiptToggleReady: state.receiptToggleReady,
       inspectPlanetControlReady: state.inspectPlanetControlReady,
       collapseExpandControlReady: state.collapseExpandControlReady,
       buttonsReachable: state.buttonsReachable,
-      dockHiddenForInspection: state.dockHiddenForInspection,
-      cockpitExpanded: state.cockpitExpanded,
       receiptVisible: state.receiptVisible,
+      cockpitMode: state.cockpitMode,
+      cockpitExpanded: state.cockpitExpanded,
+      dockHiddenForInspection: state.dockHiddenForInspection,
       diagnosticCanLeavePlanetFrame: state.diagnosticCanLeavePlanetFrame,
-
-      runtimeTablePresent: state.runtimeTablePresent,
-      runtimeTableSessionAttempted: state.runtimeTableSessionAttempted,
-      runtimeTableSessionCreated: state.runtimeTableSessionCreated,
-      runtimeTableSessionError: state.runtimeTableSessionError,
-      runtimeTableMode: state.runtimeTableMode,
-      runtimeTablePlanAttempted: state.runtimeTablePlanAttempted,
-      runtimeTablePlanCreated: state.runtimeTablePlanCreated,
-      runtimeTablePlanError: state.runtimeTablePlanError,
-      runtimeTableReceiptAvailable: state.runtimeTableReceiptAvailable,
-      runtimeTableReceiptError: state.runtimeTableReceiptError,
+      planetNotObstructed: state.planetNotObstructed,
 
       canvasApiPresent: state.canvasApiPresent,
-      canvasScriptPresent: state.canvasScriptPresent,
-      canvasScriptInjected: state.canvasScriptInjected,
-      canvasScriptLoaded: state.canvasScriptLoaded,
-      canvasScriptError: state.canvasScriptError,
       canvasCarrierRequested: state.canvasCarrierRequested,
       canvasCarrierMethod: state.canvasCarrierMethod,
       canvasCarrierHandoffOk: state.canvasCarrierHandoffOk,
@@ -2754,30 +2082,33 @@
       planetCanvasNonZeroSize: state.planetCanvasNonZeroSize,
       planetFramePainted: state.planetFramePainted,
       nonblankPlanetVisible: state.nonblankPlanetVisible,
-      planetNotObstructed: state.planetNotObstructed,
 
-      sourceAuthorityHeld: state.sourceAuthorityHeld,
-      climateRouteRetired: state.climateRouteRetired,
-      runtimeTableMutation: state.runtimeTableMutation,
-      canvasMutation: state.canvasMutation,
+      southGateReady: state.southGateReady,
+      completionRequestedFromNorth: state.completionRequestedFromNorth,
+      completionLatched: state.completionLatched,
+      f21AfterNorthPermission: state.f21AfterNorthPermission,
+      finalReceiptAvailable: state.finalReceiptAvailable,
 
+      mainDisplayProgress: state.mainDisplayProgress,
+      mainProgressCap: state.mainProgressCap,
+      currentStage: state.currentStage,
+      highestStage: state.highestStage,
       latestVisibleEvent: state.latestVisibleEvent,
       postgameStatus: state.postgameStatus,
       firstFailedCoordinate: state.firstFailedCoordinate,
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
 
-      runtimeTableReceipt: runtimeReceipt ? clonePlain(runtimeReceipt) : null,
-      checkpointSequence: CHECKPOINTS.map(clonePlain),
-      queuedEvents: clonePlain(state.queuedEvents),
-      admittedEvents: clonePlain(state.admittedEvents),
-      archivedEvents: clonePlain(state.archivedEvents),
-      blockedEvents: clonePlain(state.blockedEvents),
-      gapEvents: clonePlain(state.gapEvents),
-      canvasPhaseEvents: clonePlain(state.canvasPhaseEvents),
+      sourceAuthorityHeld: true,
+      climateRouteRetired: true,
+      northRuntimeTableMutation: false,
+      canvasMutation: false,
+
+      phaseEvents: clonePlain(state.phaseEvents),
       progressOnlyEvents: clonePlain(state.progressOnlyEvents),
       localEvents: clonePlain(state.localEvents),
-      errors: clonePlain(state.errors),
+      northEvents: clonePlain(state.northEvents),
       sourceStackHeld: SOURCE_STACK_HELD.slice(),
+      errors: clonePlain(state.errors),
 
       generatedImage: false,
       graphicBox: false,
@@ -2789,45 +2120,33 @@
     };
   }
 
-  function getReceipt() {
-    return buildReceipt();
-  }
-
   function getReceiptText() {
-    const receipt = buildReceipt();
+    const receipt = getReceipt();
 
-    const sequenceText = receipt.checkpointSequence.map((checkpoint) => {
-      const complete = state.completedCheckpoints.includes(checkpoint.id);
-      const active = state.activeCheckpointId === checkpoint.id;
-      const queued = state.queuedEvents.some((event) => event.checkpointId === checkpoint.id);
-      const status = complete ? "COMPLETE" : active ? "ACTIVE" : queued ? "QUEUED" : "PENDING";
-      return `- ${checkpoint.id}: step=${checkpoint.step}; rank=${checkpoint.rank}; fibonacci=${checkpoint.fibonacci}; status=${status}; complete=${complete}; progress=${checkpoint.progress}; event=${checkpoint.event}`;
-    }).join("\n");
-
-    const gapsText = receipt.gapEvents.map((gap) => (
-      `- ${gap.at || ""} :: ${gap.code || ""} :: hardBlocked=${gap.hardBlocked}; forwardProgressAllowed=${gap.forwardProgressAllowed}; ${gap.message || ""}`
-    )).join("\n") || "- none";
-
-    const canvasText = receipt.canvasPhaseEvents.map((event) => (
-      `- ${event.at || ""} :: ${event.phase || ""} :: progress=${event.percent || 0}`
+    const phaseText = receipt.phaseEvents.map((event) => (
+      `- ${event.at || ""} :: ${event.phase || ""} :: progress=${event.percent || ""} :: ${event.message || ""}`
     )).join("\n") || "- none";
 
     const progressText = receipt.progressOnlyEvents.map((event) => (
-      `- ${event.at || ""} :: ${event.phase || ""} :: progress=${event.percent || 0}`
+      `- ${event.at || ""} :: ${event.phase || ""} :: progress=${event.progress || ""}`
     )).join("\n") || "- none";
 
     const localText = receipt.localEvents.map((event) => (
-      `- ${event.at || ""} :: ${event.event || ""} :: ${event.detail && event.detail.status ? event.detail.status : ""}`
+      `- ${event.at || ""} :: ${event.event || ""} :: ${JSON.stringify(event.detail || {})}`
+    )).join("\n") || "- none";
+
+    const northText = receipt.northEvents.map((event) => (
+      `- ${event.at || ""} :: ${event.event || ""} :: ${JSON.stringify(event.detail || {})}`
     )).join("\n") || "- none";
 
     const errorsText = receipt.errors.map((error) => (
       `- ${error.at || ""} :: ${error.code || ""} :: ${error.message || ""}`
     )).join("\n") || "- none";
 
-    const sourceStackText = receipt.sourceStackHeld.map((item) => `- ${item}`).join("\n");
+    const sourceStackText = receipt.sourceStackHeld.map((file) => `- ${file}`).join("\n");
 
     return [
-      "HEARTH_ROUTE_COMMAND_BRAIN_STEPS_2_11_RECEIPT",
+      "HEARTH_SOUTH_VISIBLE_COMPLETION_CYCLE_CONSUMER_RECEIPT",
       "",
       `contract=${receipt.contract}`,
       `receipt=${receipt.receipt}`,
@@ -2840,107 +2159,61 @@
       "",
       `pairedSemiconductor=${receipt.pairedSemiconductor}`,
       `pairedWith=${receipt.pairedWith}`,
-      `indexJsStartsProcess=${receipt.indexJsStartsProcess}`,
-      `hearthJsFinishesProcess=${receipt.hearthJsFinishesProcess}`,
-      `systematicAndSynchronized=${receipt.systematicAndSynchronized}`,
-      `synchronizedLoading=${receipt.synchronizedLoading}`,
+      `cycleOrder=${receipt.cycleOrder}`,
       "",
+      `ownsSouth=${receipt.ownsSouth}`,
+      `ownsEast=${receipt.ownsEast}`,
+      `ownsWest=${receipt.ownsWest}`,
+      `ownsNorth=${receipt.ownsNorth}`,
       `ownsStep1=${receipt.ownsStep1}`,
-      `ownsSteps2Through11=${receipt.ownsSteps2Through11}`,
-      `step1Source=${receipt.step1Source}`,
-      `step1Accepted=${receipt.step1Accepted}`,
-      `step1ReceiptPresent=${receipt.step1ReceiptPresent}`,
-      `step1Contract=${receipt.step1Contract}`,
-      `step1HandoffAcceptedAt=${receipt.step1HandoffAcceptedAt}`,
-      "",
-      `ownsFirstPaintSurvival=${receipt.ownsFirstPaintSurvival}`,
-      `ownsMountCreation=${receipt.ownsMountCreation}`,
-      `ownsInitialCockpitCreation=${receipt.ownsInitialCockpitCreation}`,
-      `ownsRouteBrain=${receipt.ownsRouteBrain}`,
-      `ownsScriptOrderIntake=${receipt.ownsScriptOrderIntake}`,
-      `ownsAuthorityAssessment=${receipt.ownsAuthorityAssessment}`,
-      `ownsRuntimeTableSession=${receipt.ownsRuntimeTableSession}`,
-      `ownsCheckpointGovernorConsumer=${receipt.ownsCheckpointGovernorConsumer}`,
-      `ownsNewsFibonacciGovernance=${receipt.ownsNewsFibonacciGovernance}`,
-      `ownsCanvasCoordination=${receipt.ownsCanvasCoordination}`,
+      `ownsStep1Handoff=${receipt.ownsStep1Handoff}`,
+      `ownsNorthRuntimeTable=${receipt.ownsNorthRuntimeTable}`,
+      `ownsCanvasDrawing=${receipt.ownsCanvasDrawing}`,
+      `ownsVisibleCompletion=${receipt.ownsVisibleCompletion}`,
       `ownsVisiblePlanetProof=${receipt.ownsVisiblePlanetProof}`,
       `ownsInspectModeTruth=${receipt.ownsInspectModeTruth}`,
-      `ownsCompletionLatch=${receipt.ownsCompletionLatch}`,
       `ownsFinalDiagnosticReceipt=${receipt.ownsFinalDiagnosticReceipt}`,
       `ownsFinalVisualPassClaim=${receipt.ownsFinalVisualPassClaim}`,
       "",
-      `gapAssessmentFast=${receipt.gapAssessmentFast}`,
-      `hardBlockMode=${receipt.hardBlockMode}`,
-      `softGapGovernor=${receipt.softGapGovernor}`,
-      `forwardProgressAllowedWithGaps=${receipt.forwardProgressAllowedWithGaps}`,
-      `blockedProgressCap=${receipt.blockedProgressCap}`,
-      `readyTextRequiresF21=${receipt.readyTextRequiresF21}`,
+      `eastFile=${receipt.eastFile}`,
+      `westFile=${receipt.westFile}`,
+      `northFile=${receipt.northFile}`,
+      `southFile=${receipt.southFile}`,
+      `canvasFile=${receipt.canvasFile}`,
       "",
-      `checkpointBrainActive=${receipt.checkpointBrainActive}`,
-      `chronologicalFibonacciAlignment=${receipt.chronologicalFibonacciAlignment}`,
-      `newsFibonacciAlignment=${receipt.newsFibonacciAlignment}`,
-      `oneActiveCheckpointAtATime=${receipt.oneActiveCheckpointAtATime}`,
-      `futureEventsQueued=${receipt.futureEventsQueued}`,
-      `completedEventsArchived=${receipt.completedEventsArchived}`,
-      `regressiveEventsBlocked=${receipt.regressiveEventsBlocked}`,
+      `northAvailable=${receipt.northAvailable}`,
+      `northContract=${receipt.northContract}`,
+      `northSessionCreated=${receipt.northSessionCreated}`,
+      `northSessionId=${receipt.northSessionId}`,
+      `northReceiptAvailable=${receipt.northReceiptAvailable}`,
+      `northReceiptError=${receipt.northReceiptError}`,
+      `northF21Allowed=${receipt.northF21Allowed}`,
+      `northNewsGatePassedBeforeF21=${receipt.northNewsGatePassedBeforeF21}`,
+      `northActiveCheckpointId=${receipt.northActiveCheckpointId}`,
+      `northRecommendedNextOwner=${receipt.northRecommendedNextOwner}`,
+      `northRecommendedNextFile=${receipt.northRecommendedNextFile}`,
       "",
-      `activeCheckpointId=${receipt.activeCheckpointId}`,
-      `activeCheckpointRank=${receipt.activeCheckpointRank}`,
-      `activeFibonacciStage=${receipt.activeFibonacciStage}`,
-      `completedCheckpoints=${receipt.completedCheckpoints}`,
-      `highestCompletedCheckpointId=${receipt.highestCompletedCheckpointId}`,
-      `highestCompletedRank=${receipt.highestCompletedRank}`,
-      `queuedEventsCount=${receipt.queuedEventsCount}`,
-      `admittedEventsCount=${receipt.admittedEventsCount}`,
-      `archivedEventsCount=${receipt.archivedEventsCount}`,
-      `blockedEventsCount=${receipt.blockedEventsCount}`,
-      `gapEventsCount=${receipt.gapEventsCount}`,
-      "",
-      `currentStage=${receipt.currentStage}`,
-      `highestStage=${receipt.highestStage}`,
-      `mainDisplayProgress=${receipt.mainDisplayProgress}`,
-      `mainProgressCap=${receipt.mainProgressCap}`,
-      `completionLatched=${receipt.completionLatched}`,
-      `f21Allowed=${receipt.f21Allowed}`,
-      `f21AfterS11=${receipt.f21AfterS11}`,
-      `finalReceiptAvailable=${receipt.finalReceiptAvailable}`,
-      "",
-      `northGateReady=${receipt.northGateReady}`,
-      `eastGateReady=${receipt.eastGateReady}`,
-      `westGateReady=${receipt.westGateReady}`,
-      `southGateReady=${receipt.southGateReady}`,
-      `newsGatePassedBeforeF21=${receipt.newsGatePassedBeforeF21}`,
+      `step1AcceptedBySouth=${receipt.step1AcceptedBySouth}`,
+      `handoffAdmissibleByWest=${receipt.handoffAdmissibleByWest}`,
       "",
       `mountReady=${receipt.mountReady}`,
       `cockpitFound=${receipt.cockpitFound}`,
       `cockpitHydrated=${receipt.cockpitHydrated}`,
+      `diagnosticDockReady=${receipt.diagnosticDockReady}`,
       `showDiagnosticTabReady=${receipt.showDiagnosticTabReady}`,
       `copyDiagnosticReady=${receipt.copyDiagnosticReady}`,
       `receiptToggleReady=${receipt.receiptToggleReady}`,
       `inspectPlanetControlReady=${receipt.inspectPlanetControlReady}`,
       `collapseExpandControlReady=${receipt.collapseExpandControlReady}`,
       `buttonsReachable=${receipt.buttonsReachable}`,
-      `dockHiddenForInspection=${receipt.dockHiddenForInspection}`,
-      `cockpitExpanded=${receipt.cockpitExpanded}`,
       `receiptVisible=${receipt.receiptVisible}`,
+      `cockpitMode=${receipt.cockpitMode}`,
+      `cockpitExpanded=${receipt.cockpitExpanded}`,
+      `dockHiddenForInspection=${receipt.dockHiddenForInspection}`,
       `diagnosticCanLeavePlanetFrame=${receipt.diagnosticCanLeavePlanetFrame}`,
-      "",
-      `runtimeTablePresent=${receipt.runtimeTablePresent}`,
-      `runtimeTableSessionAttempted=${receipt.runtimeTableSessionAttempted}`,
-      `runtimeTableSessionCreated=${receipt.runtimeTableSessionCreated}`,
-      `runtimeTableSessionError=${receipt.runtimeTableSessionError}`,
-      `runtimeTableMode=${receipt.runtimeTableMode}`,
-      `runtimeTablePlanAttempted=${receipt.runtimeTablePlanAttempted}`,
-      `runtimeTablePlanCreated=${receipt.runtimeTablePlanCreated}`,
-      `runtimeTablePlanError=${receipt.runtimeTablePlanError}`,
-      `runtimeTableReceiptAvailable=${receipt.runtimeTableReceiptAvailable}`,
-      `runtimeTableReceiptError=${receipt.runtimeTableReceiptError}`,
+      `planetNotObstructed=${receipt.planetNotObstructed}`,
       "",
       `canvasApiPresent=${receipt.canvasApiPresent}`,
-      `canvasScriptPresent=${receipt.canvasScriptPresent}`,
-      `canvasScriptInjected=${receipt.canvasScriptInjected}`,
-      `canvasScriptLoaded=${receipt.canvasScriptLoaded}`,
-      `canvasScriptError=${receipt.canvasScriptError}`,
       `canvasCarrierRequested=${receipt.canvasCarrierRequested}`,
       `canvasCarrierMethod=${receipt.canvasCarrierMethod}`,
       `canvasCarrierHandoffOk=${receipt.canvasCarrierHandoffOk}`,
@@ -2983,32 +2256,38 @@
       `planetCanvasNonZeroSize=${receipt.planetCanvasNonZeroSize}`,
       `planetFramePainted=${receipt.planetFramePainted}`,
       `nonblankPlanetVisible=${receipt.nonblankPlanetVisible}`,
-      `planetNotObstructed=${receipt.planetNotObstructed}`,
       "",
-      `sourceAuthorityHeld=${receipt.sourceAuthorityHeld}`,
-      `climateRouteRetired=${receipt.climateRouteRetired}`,
-      `runtimeTableMutation=${receipt.runtimeTableMutation}`,
-      `canvasMutation=${receipt.canvasMutation}`,
+      `southGateReady=${receipt.southGateReady}`,
+      `completionRequestedFromNorth=${receipt.completionRequestedFromNorth}`,
+      `completionLatched=${receipt.completionLatched}`,
+      `f21AfterNorthPermission=${receipt.f21AfterNorthPermission}`,
+      `finalReceiptAvailable=${receipt.finalReceiptAvailable}`,
       "",
+      `mainDisplayProgress=${receipt.mainDisplayProgress}`,
+      `mainProgressCap=${receipt.mainProgressCap}`,
+      `currentStage=${receipt.currentStage}`,
+      `highestStage=${receipt.highestStage}`,
       `latestVisibleEvent=${receipt.latestVisibleEvent}`,
       `postgameStatus=${receipt.postgameStatus}`,
       `firstFailedCoordinate=${receipt.firstFailedCoordinate}`,
       `recommendedNextRenewalTarget=${receipt.recommendedNextRenewalTarget}`,
       "",
-      "CHECKPOINT_SEQUENCE",
-      sequenceText,
-      "",
-      "SOFT_GAP_EVENTS",
-      gapsText,
+      `sourceAuthorityHeld=${receipt.sourceAuthorityHeld}`,
+      `climateRouteRetired=${receipt.climateRouteRetired}`,
+      `northRuntimeTableMutation=${receipt.northRuntimeTableMutation}`,
+      `canvasMutation=${receipt.canvasMutation}`,
       "",
       "CANVAS_PHASE_EVENTS",
-      canvasText,
+      phaseText,
       "",
       "PROGRESS_ONLY_EVENTS",
       progressText,
       "",
       "LOCAL_EVENTS",
       localText,
+      "",
+      "NORTH_EVENTS",
+      northText,
       "",
       "ERRORS",
       errorsText,
@@ -3026,90 +2305,50 @@
     ].join("\n");
   }
 
-  function publishGlobals() {
-    root.HEARTH = root.HEARTH || {};
-    root.HEARTH.routeConductor = api;
-    root.HEARTH.coherenceSemiconductor = api;
-    root.HEARTH.commandBrain = api;
-
-    root.HEARTH_ROUTE_CONDUCTOR = api;
-    root.HearthRouteConductor = api;
-    root.HEARTH_ACTIVE_ROUTE = api;
-    root.HEARTH_ROUTE_COHERENCE_SEMICONDUCTOR = api;
-    root.HEARTH_ROUTE_COMMAND_BRAIN = api;
-    root.HEARTH_ROUTE_CONDUCTOR_CONTRACT = CONTRACT;
-
-    root.__HEARTH_ACTIVE_ROUTE_FILE__ = COHERENCE_FILE;
-    root.__HEARTH_ACTIVE_ROUTE_CONTRACT__ = CONTRACT;
-    root.__HEARTH_CONSTRAINT_SEMICONDUCTOR_FILE__ = INDEX_FILE;
-    root.__HEARTH_COHERENCE_SEMICONDUCTOR_FILE__ = COHERENCE_FILE;
-    root.__HEARTH_RETIRED_CLIMATE_ROUTE__ = RETIRED_CLIMATE_FILE;
-    root.__HEARTH_RETIRED_CLIMATE_ROUTE_ACTIVE_CARRIER__ = false;
-
-    const receipt = getReceiptLight();
-
-    root.HEARTH_ROUTE_COMMAND_BRAIN_RECEIPT = receipt;
-    root.HEARTH_ROUTE_COHERENCE_SEMICONDUCTOR_RECEIPT = receipt;
-    root.HEARTH_ROUTE_CONDUCTOR_RECEIPT = receipt;
-    root.HEARTH_ROUTE_CONDUCTOR_POSTGAME_RECEIPT = receipt;
-
+  function publishDataset() {
     if (!doc || !doc.documentElement) return;
 
     const dataset = doc.documentElement.dataset;
 
-    dataset.hearthCommandBrainLoaded = "true";
-    dataset.hearthCommandBrainContract = CONTRACT;
-    dataset.hearthCommandBrainReceipt = RECEIPT;
-    dataset.hearthCommandBrainOwnsStep1 = "false";
-    dataset.hearthCommandBrainOwnsSteps2Through11 = "true";
-    dataset.hearthStep1Source = INDEX_FILE;
-    dataset.hearthStep1Accepted = String(state.step1Accepted);
+    dataset.hearthSouthVisibleCompletionLoaded = "true";
+    dataset.hearthSouthVisibleCompletionContract = CONTRACT;
+    dataset.hearthSouthVisibleCompletionReceipt = RECEIPT;
+    dataset.hearthSouthVisibleCompletionVersion = VERSION;
+    dataset.hearthCycleSouth = "true";
+    dataset.hearthSouthFile = SOUTH_FILE;
+    dataset.hearthNorthFile = NORTH_FILE;
+    dataset.hearthEastFile = EAST_FILE;
+    dataset.hearthWestFile = WEST_FILE;
 
-    dataset.hearthPairedSemiconductor = "true";
-    dataset.hearthConstraintSemiconductor = INDEX_FILE;
-    dataset.hearthCoherenceSemiconductor = COHERENCE_FILE;
-    dataset.hearthActiveRouteFile = COHERENCE_FILE;
-    dataset.hearthActiveRouteContract = CONTRACT;
+    dataset.hearthSouthOwnsVisibleCompletion = "true";
+    dataset.hearthSouthOwnsNorthRuntimeTable = "false";
+    dataset.hearthSouthOwnsCanvasDrawing = "false";
+    dataset.hearthSouthOwnsStep1 = "false";
+    dataset.hearthSouthOwnsFinalVisualPassClaim = "false";
 
-    dataset.hearthSoftGapGovernor = String(state.softGapGovernor);
-    dataset.hearthHardBlockMode = String(state.hardBlockMode);
-    dataset.hearthForwardProgressAllowedWithGaps = String(state.forwardProgressAllowedWithGaps);
+    dataset.hearthNorthAvailable = String(state.northAvailable);
+    dataset.hearthNorthF21Allowed = String(state.northF21Allowed);
+    dataset.hearthNorthNewsGatePassedBeforeF21 = String(state.northNewsGatePassedBeforeF21);
+    dataset.hearthNorthActiveCheckpointId = state.northActiveCheckpointId;
 
-    dataset.hearthChronologicalFibonacciAlignment = "true";
-    dataset.hearthNewsFibonacciAlignment = "true";
-    dataset.hearthOneActiveCheckpointAtATime = "true";
-    dataset.hearthActiveCheckpointId = state.activeCheckpointId;
-    dataset.hearthHighestCompletedCheckpointId = state.highestCompletedCheckpointId;
-
-    dataset.hearthNorthGateReady = String(state.northGateReady);
-    dataset.hearthEastGateReady = String(state.eastGateReady);
-    dataset.hearthWestGateReady = String(state.westGateReady);
     dataset.hearthSouthGateReady = String(state.southGateReady);
-    dataset.hearthNewsGatePassedBeforeF21 = String(state.newsGatePassedBeforeF21);
-    dataset.hearthF21Allowed = String(state.f21Allowed);
+    dataset.hearthDiagnosticCanLeavePlanetFrame = String(state.diagnosticCanLeavePlanetFrame);
+    dataset.hearthVisibleContentProof = String(state.visibleContentProof);
+    dataset.hearthVisiblePlanetAvailable = String(state.visiblePlanetAvailable);
+    dataset.hearthNonblankPlanetVisible = String(state.nonblankPlanetVisible);
     dataset.hearthCompletionLatched = String(state.completionLatched);
 
     dataset.hearthCanvasReady = String(state.canvasReady);
     dataset.hearthCanvasCarrierMounted = String(state.canvasCarrierMounted);
+    dataset.hearthCanvasContextReady = String(state.canvasContextReady);
+    dataset.hearthDragInspectionBound = String(state.dragInspectionBound);
     dataset.hearthFirstFrameDetected = String(state.firstFrameDetected);
     dataset.hearthImageRendered = String(state.imageRendered);
-    dataset.hearthDragInspectionBound = String(state.dragInspectionBound);
 
-    dataset.hearthVisibleContentProof = String(state.visibleContentProof);
-    dataset.hearthVisibleContentProofMethod = state.visibleContentProofMethod;
-    dataset.hearthVisiblePlanetAvailable = String(state.visiblePlanetAvailable);
-    dataset.hearthPlanetCanvasPresent = String(state.planetCanvasPresent);
-    dataset.hearthPlanetCanvasNonZeroSize = String(state.planetCanvasNonZeroSize);
-    dataset.hearthPlanetFramePainted = String(state.planetFramePainted);
-    dataset.hearthNonblankPlanetVisible = String(state.nonblankPlanetVisible);
-
-    dataset.hearthDiagnosticCanLeavePlanetFrame = String(state.diagnosticCanLeavePlanetFrame);
-    dataset.hearthCommandBrainInspect = String(state.dockHiddenForInspection);
-    dataset.hearthPostgameStatus = state.postgameStatus;
     dataset.hearthFirstFailedCoordinate = state.firstFailedCoordinate;
     dataset.hearthRecommendedNextRenewalTarget = state.recommendedNextRenewalTarget;
 
-    dataset.hearthRuntimeTableMutation = "false";
+    dataset.hearthNorthRuntimeTableMutation = "false";
     dataset.hearthCanvasMutation = "false";
     dataset.generatedImage = "false";
     dataset.graphicBox = "false";
@@ -3117,35 +2356,56 @@
     dataset.visualPassClaimed = "false";
   }
 
+  function publishGlobals() {
+    root.HEARTH = root.HEARTH || {};
+    root.HEARTH.southVisibleCompletion = api;
+    root.HEARTH.routeConductor = api;
+    root.HEARTH.coherenceSemiconductor = api;
+
+    root.HEARTH_SOUTH_VISIBLE_COMPLETION = api;
+    root.HEARTH_SOUTH_VISIBLE_COMPLETION_CYCLE_CONSUMER = api;
+    root.HEARTH_ROUTE_CONDUCTOR = api;
+    root.HearthRouteConductor = api;
+    root.HEARTH_ACTIVE_ROUTE = api;
+    root.HEARTH_ROUTE_COHERENCE_SEMICONDUCTOR = api;
+
+    root.HEARTH_SOUTH_VISIBLE_COMPLETION_RECEIPT = getReceiptLight();
+    root.HEARTH_ROUTE_COHERENCE_SEMICONDUCTOR_RECEIPT = root.HEARTH_SOUTH_VISIBLE_COMPLETION_RECEIPT;
+    root.HEARTH_ROUTE_CONDUCTOR_RECEIPT = root.HEARTH_SOUTH_VISIBLE_COMPLETION_RECEIPT;
+    root.HEARTH_ROUTE_CONDUCTOR_POSTGAME_RECEIPT = root.HEARTH_SOUTH_VISIBLE_COMPLETION_RECEIPT;
+
+    root.__HEARTH_ACTIVE_ROUTE_FILE__ = SOUTH_FILE;
+    root.__HEARTH_ACTIVE_ROUTE_CONTRACT__ = CONTRACT;
+    root.__HEARTH_SOUTH_VISIBLE_COMPLETION_FILE__ = SOUTH_FILE;
+    root.__HEARTH_SOUTH_OWNS_NORTH_RUNTIME_TABLE__ = false;
+    root.__HEARTH_SOUTH_OWNS_CANVAS_DRAWING__ = false;
+    root.__HEARTH_SOUTH_VISUAL_PASS_CLAIMED__ = false;
+
+    publishDataset();
+  }
+
   function getReceiptLight() {
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
-      baselineContract: BASELINE_CONTRACT,
       version: VERSION,
-      file: COHERENCE_FILE,
+      file: SOUTH_FILE,
       route: ROUTE,
-      ownsStep1: false,
-      ownsSteps2Through11: true,
-      step1Accepted: state.step1Accepted,
-      softGapGovernor: state.softGapGovernor,
-      hardBlockMode: state.hardBlockMode,
-      forwardProgressAllowedWithGaps: state.forwardProgressAllowedWithGaps,
-      chronologicalFibonacciAlignment: true,
-      newsFibonacciAlignment: true,
-      oneActiveCheckpointAtATime: true,
-      activeCheckpointId: state.activeCheckpointId,
-      highestCompletedCheckpointId: state.highestCompletedCheckpointId,
-      newsGatePassedBeforeF21: state.newsGatePassedBeforeF21,
-      f21Allowed: state.f21Allowed,
-      completionLatched: state.completionLatched,
+      role: "south-visible-completion-cycle-consumer",
+      northAvailable: state.northAvailable,
+      northF21Allowed: state.northF21Allowed,
+      northNewsGatePassedBeforeF21: state.northNewsGatePassedBeforeF21,
+      southGateReady: state.southGateReady,
       visibleContentProof: state.visibleContentProof,
       visiblePlanetAvailable: state.visiblePlanetAvailable,
       diagnosticCanLeavePlanetFrame: state.diagnosticCanLeavePlanetFrame,
-      postgameStatus: state.postgameStatus,
+      completionLatched: state.completionLatched,
+      f21AfterNorthPermission: state.f21AfterNorthPermission,
       firstFailedCoordinate: state.firstFailedCoordinate,
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+      northRuntimeTableMutation: false,
+      canvasMutation: false,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -3156,8 +2416,7 @@
 
   function retireClimateRoute() {
     root.__HEARTH_CLIMATE_ROUTE_RETIRED__ = true;
-    root.__HEARTH_RETIRED_ROUTE_FILE__ = RETIRED_CLIMATE_FILE;
-    root.__HEARTH_RETIRED_CLIMATE_ROUTE__ = RETIRED_CLIMATE_FILE;
+    root.__HEARTH_RETIRED_ROUTE_FILE__ = "/showroom/globe/hearth/hearth.climate.route.js";
     root.__HEARTH_RETIRED_CLIMATE_ROUTE_ACTIVE_CARRIER__ = false;
 
     [
@@ -3192,7 +2451,6 @@
       if (!state.completionLatched) {
         reconcileAll("heartbeat");
       } else {
-        forceCompletionLatch();
         publishGlobals();
         scheduleRender();
       }
@@ -3205,44 +2463,31 @@
     reconcileTimer = root.setInterval(() => {
       if (!state.completionLatched) {
         reconcileAll("interval");
-      } else {
-        forceCompletionLatch();
       }
     }, 1400);
   }
 
-  async function boot() {
+  function boot() {
     if (bootStarted) {
       publishGlobals();
-      return buildReceipt();
+      return getReceipt();
     }
 
     bootStarted = true;
     state.startedAt = nowIso();
-    state.startedAtMs = nowMs();
     state.updatedAt = state.startedAt;
-    state.postgameStatus = "COMMAND_BRAIN_BOOTING";
 
     retireClimateRoute();
-    ensureLedger();
-    ensureStyle();
-    resolveMount();
-    resolveCockpit();
-    ensureShowTab();
-    acceptIndexHandoff(getIndexHandoff() || {});
-    hydrateControls();
-    scanScriptPresence();
-    createRuntimeTableSession();
-    createRuntimeTablePlan();
+    ensureMount();
+    hydrateCockpit();
+    connectNorth();
+    reconcileNorthReceipt();
 
     publishGlobals();
     render();
 
-    root.setTimeout(() => {
-      callCanvasCarrier();
-    }, 80);
-
-    root.setTimeout(() => reconcileAll("post-boot-240ms"), 240);
+    root.setTimeout(callCanvasCarrier, 80);
+    root.setTimeout(() => reconcileAll("post-boot-220ms"), 220);
     root.setTimeout(() => reconcileAll("post-boot-900ms"), 900);
     root.setTimeout(() => reconcileAll("post-boot-1800ms"), 1800);
     root.setTimeout(() => reconcileAll("post-boot-3600ms"), 3600);
@@ -3250,7 +2495,7 @@
     startHeartbeat();
     startReconcileLoop();
 
-    return buildReceipt();
+    return getReceipt();
   }
 
   function dispose(reason = "manual-dispose") {
@@ -3264,16 +2509,7 @@
       reconcileTimer = 0;
     }
 
-    if (renderTimer) {
-      root.clearTimeout(renderTimer);
-      renderTimer = 0;
-    }
-
-    recordLocal("COMMAND_BRAIN_DISPOSED", {
-      lane: "completionLatch",
-      status: "DISPOSED",
-      message: reason
-    });
+    recordLocal("SOUTH_VISIBLE_COMPLETION_DISPOSED", { reason });
   }
 
   const api = {
@@ -3283,8 +2519,8 @@
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     route: ROUTE,
-    file: COHERENCE_FILE,
-    role: "central-command-brain-steps-2-through-11",
+    file: SOUTH_FILE,
+    role: "south-visible-completion-cycle-consumer",
 
     boot,
     start: boot,
@@ -3292,26 +2528,22 @@
     run: boot,
     dispose,
 
-    acceptIndexHandoff,
     handleCanvasPhase,
     handleCanvasReceipt,
     reconcile: reconcileAll,
-    tryFinalize: maybeFinalize,
+    tryFinalize: maybeRequestCompletion,
     setCockpitMode,
     proveVisibleContent,
+    startVisibleContentProof,
+    evaluateSouthGate,
+    reportSouthEvent,
     getReceipt,
     getReceiptText,
     copyDiagnostic,
 
-    supportsIndexHandoff: true,
-    supportsStep1Externalization: true,
-    supportsSteps2Through11Brain: true,
-    supportsSoftGapGovernor: true,
-    supportsForwardProgressWithGaps: true,
-    supportsRuntimeTableCheckpointConsumer: true,
-    supportsChronologicalFibonacciAlignment: true,
-    supportsNewsFibonacciAlignment: true,
-    supportsOneActiveCheckpointAtATime: true,
+    supportsDirectionalCycle: true,
+    supportsSouthVisibleCompletion: true,
+    supportsNorthRuntimeTableConsumption: true,
     supportsVisibleContentCompletionGate: true,
     supportsInspectModeCompletionGate: true,
     supportsDiagnosticDockRestore: true,
@@ -3319,22 +2551,21 @@
     supportsShowReceiptPreservation: true,
     supportsCooperativeCanvasHandoff: true,
 
+    ownsSouth: true,
+    ownsEast: false,
+    ownsWest: false,
+    ownsNorth: false,
     ownsStep1: false,
-    ownsSteps2Through11: true,
-    ownsFirstPaintSurvival: false,
-    ownsMountCreation: false,
-    ownsInitialCockpitCreation: false,
-    ownsRouteBrain: true,
+    ownsNorthRuntimeTable: false,
     ownsCanvasDrawing: false,
-    ownsAtlasGeneration: false,
-    ownsTextureGeneration: false,
-    ownsRuntimeTableImplementation: false,
-    ownsRuntimeTableMutation: false,
-    ownsCanvasMutation: false,
-    ownsSourceStackTruth: false,
-    ownsHtmlStructure: false,
-    ownsClimateRouteRendering: false,
+    ownsVisibleCompletion: true,
     ownsFinalVisualPassClaim: false,
+
+    eastFile: EAST_FILE,
+    westFile: WEST_FILE,
+    northFile: NORTH_FILE,
+    southFile: SOUTH_FILE,
+    canvasFile: CANVAS_FILE,
 
     generatedImage: false,
     graphicBox: false,

@@ -1,16 +1,18 @@
 // /showroom/globe/hearth/hearth.js
-// HEARTH_SOUTH_ROUTE_CONDUCTOR_STRICT_PROOF_DEGRADE_RECONCILIATION_TNT_v3
+// HEARTH_SOUTH_CANVAS_NESTED_RECEIPT_BRIDGE_TNT_v1
 // Full-file replacement.
 // South route conductor / visible completion authority only.
 // Purpose:
-// - Preserve the successful postgame dedup + inspect gate baseline.
-// - Correct false degradation of strict F13M visible proof.
-// - Correct false degradation of F13N when real inspect controls exist.
+// - Preserve the successful strict proof degrade reconciliation baseline.
+// - Preserve postgame dedup + inspect gate behavior.
 // - Preserve one-active-gear transmission semantics.
 // - Preserve progress-only telemetry compaction.
-// - Preserve lazy receipt generation.
 // - Preserve Copy Diagnostic, Show/Hide Receipt, Inspect Planet, and diagnostic dock restoration.
 // - Preserve canvas API retry and canvas receipt reconciliation.
+// - Add nested canvas receipt bridge into South diagnostic.
+// - Prove which canvas contract South consumed.
+// - Export NEWS/Fibonacci canvas synchronization.
+// - Export seven-continent canvas renewal evidence.
 // - Latch full F21 when strict NEWS gates pass.
 // Does not own:
 // - North checkpoint truth
@@ -24,11 +26,11 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_SOUTH_ROUTE_CONDUCTOR_STRICT_PROOF_DEGRADE_RECONCILIATION_TNT_v3";
-  const RECEIPT = "HEARTH_SOUTH_ROUTE_CONDUCTOR_STRICT_PROOF_DEGRADE_RECONCILIATION_RECEIPT_v3";
-  const PREVIOUS_CONTRACT = "HEARTH_SOUTH_ROUTE_CONDUCTOR_POSTGAME_DEDUP_INSPECT_GATE_TNT_v2";
-  const BASELINE_CONTRACT = "HEARTH_SOUTH_ROUTE_CONDUCTOR_POSTGAME_DEDUP_INSPECT_GATE_TNT_v2";
-  const VERSION = "2026-05-30.hearth-south-route-conductor-strict-proof-degrade-reconciliation-v3";
+  const CONTRACT = "HEARTH_SOUTH_CANVAS_NESTED_RECEIPT_BRIDGE_TNT_v1";
+  const RECEIPT = "HEARTH_SOUTH_CANVAS_NESTED_RECEIPT_BRIDGE_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "HEARTH_SOUTH_ROUTE_CONDUCTOR_STRICT_PROOF_DEGRADE_RECONCILIATION_TNT_v3";
+  const BASELINE_CONTRACT = "HEARTH_SOUTH_ROUTE_CONDUCTOR_STRICT_PROOF_DEGRADE_RECONCILIATION_TNT_v3";
+  const VERSION = "2026-05-30.hearth-south-canvas-nested-receipt-bridge-v1";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
@@ -40,6 +42,8 @@
   const WEST_BRANCH_FILE = "/assets/lab/runtime-table.west.js";
   const SOUTH_BRANCH_FILE = "/assets/lab/runtime-table.south.js";
   const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
+  const EXPECTED_CANVAS_CONTRACT = "HEARTH_SEVEN_CONTINENT_TRANSITIONAL_CANVAS_VISUAL_FIELD_TNT_v1";
+  const EXPECTED_CANVAS_RECEIPT = "HEARTH_SEVEN_CONTINENT_TRANSITIONAL_CANVAS_VISUAL_FIELD_RECEIPT_v1";
 
   const MAX_SUBMITTED_EVENTS = 120;
   const MAX_ADMITTED_EVENTS = 80;
@@ -257,7 +261,7 @@
     version: VERSION,
     file: FILE,
     route: ROUTE,
-    role: "south-route-conductor-strict-proof-degrade-reconciliation",
+    role: "south-canvas-nested-receipt-bridge",
 
     cycleOrder: "EAST -> WEST -> NORTH -> SOUTH -> CHECKPOINT -> EAST",
     transmissionMode: true,
@@ -329,8 +333,8 @@
     fallbackInspectReady: false,
     f21LatchMode: "WAITING",
 
-    latestEvent: "SOUTH_STRICT_PROOF_DEGRADE_RECONCILIATION_LOADED",
-    postgameStatus: "SOUTH_STRICT_PROOF_DEGRADE_RECONCILIATION_LOADED",
+    latestEvent: "SOUTH_CANVAS_NESTED_RECEIPT_BRIDGE_LOADED",
+    postgameStatus: "SOUTH_CANVAS_NESTED_RECEIPT_BRIDGE_LOADED",
     firstFailedCoordinate: "WAITING_BOOT",
     recommendedNextRenewalTarget: FILE,
 
@@ -606,6 +610,99 @@
     return {};
   }
 
+  function datasetField(key, fallback = "") {
+    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return fallback;
+    const value = doc.documentElement.dataset[key];
+    return value === undefined || value === null || value === "" ? fallback : value;
+  }
+
+  function buildCanvasReceiptBridge(canvas = readCanvasReceipt()) {
+    const source = isObject(canvas) ? canvas : {};
+
+    const canvasContract = safeString(
+      source.contract || datasetField("hearthCanvasContract", ""),
+      ""
+    );
+
+    const canvasReceipt = safeString(
+      source.receipt || datasetField("hearthCanvasReceipt", ""),
+      ""
+    );
+
+    return {
+      canvasReceiptBridgeActive: true,
+      canvasNestedReceiptAvailable: Boolean(canvasContract || canvasReceipt),
+
+      canvasContract,
+      canvasReceipt,
+      canvasExpectedContract: EXPECTED_CANVAS_CONTRACT,
+      canvasExpectedReceipt: EXPECTED_CANVAS_RECEIPT,
+      canvasContractMatchesExpected: canvasContract === EXPECTED_CANVAS_CONTRACT,
+      canvasReceiptMatchesExpected: canvasReceipt === EXPECTED_CANVAS_RECEIPT,
+
+      canvasPreviousContract: safeString(source.previousContract || datasetField("hearthCanvasPreviousContract", ""), ""),
+      canvasBaselineContract: safeString(source.baselineContract || datasetField("hearthCanvasBaselineContract", ""), ""),
+      canvasVersion: safeString(source.version || "", ""),
+      canvasFile: safeString(source.file || CANVAS_FILE, CANVAS_FILE),
+      canvasRole: safeString(source.role || datasetField("hearthCanvasRole", ""), ""),
+
+      canvasNewsProtocolSynchronized: safeBool(source.newsProtocolSynchronized, safeBool(datasetField("hearthCanvasNewsProtocolSynchronized", ""), false)),
+      canvasFibonacciAlignmentSynchronized: safeBool(source.fibonacciAlignmentSynchronized, safeBool(datasetField("hearthCanvasFibonacciAlignmentSynchronized", ""), false)),
+      canvasActiveFibonacciGate: safeString(source.activeFibonacciGate || datasetField("hearthCanvasActiveFibonacciGate", ""), ""),
+      canvasFutureFibonacciGate: safeString(source.futureFibonacciGate || datasetField("hearthCanvasFutureFibonacciGate", ""), ""),
+      canvasOneActiveGearAtATime: safeBool(source.oneActiveGearAtATime, safeBool(datasetField("hearthCanvasOneActiveGearAtATime", ""), false)),
+
+      canvasSevenContinentVisualFallbackActive: safeBool(source.sevenContinentVisualFallbackActive, safeBool(datasetField("hearthCanvasSevenContinentVisualFallbackActive", ""), false)),
+      canvasContinentVisualSeedCount: safeNumber(source.continentVisualSeedCount, safeNumber(datasetField("hearthCanvasContinentVisualSeedCount", ""), 0)),
+      canvasContinentBlendMode: safeString(source.continentBlendMode || datasetField("hearthCanvasContinentBlendMode", ""), ""),
+      canvasProceduralSixLobeAdditiveFieldRetired: safeBool(source.proceduralSixLobeAdditiveFieldRetired, safeBool(datasetField("hearthCanvasProceduralSixLobeAdditiveFieldRetired", ""), false)),
+      canvasOceanChannelCutActive: safeBool(source.oceanChannelCutActive, safeBool(datasetField("hearthCanvasOceanChannelCutActive", ""), false)),
+      canvasSeaLineTightened: safeBool(source.seaLineTightened, safeBool(datasetField("hearthCanvasSeaLineTightened", ""), false)),
+      canvasCoastlineSharpeningActive: safeBool(source.coastlineSharpeningActive, safeBool(datasetField("hearthCanvasCoastlineSharpeningActive", ""), false)),
+
+      canvasCachedTextureInvalidationAvailable: safeBool(source.cachedTextureInvalidationAvailable, safeBool(datasetField("hearthCanvasCachedTextureInvalidationAvailable", ""), false)),
+      canvasTextureInvalidationCount: safeNumber(source.textureInvalidationCount, safeNumber(datasetField("hearthCanvasTextureInvalidationCount", ""), 0)),
+      canvasTextureInvalidated: safeBool(source.textureInvalidated, safeBool(datasetField("hearthCanvasTextureInvalidated", ""), false)),
+      canvasTextureRebuildRequested: safeBool(source.textureRebuildRequested, safeBool(datasetField("hearthCanvasTextureRebuildRequested", ""), false)),
+      canvasTextureRebuildComplete: safeBool(source.textureRebuildComplete, safeBool(datasetField("hearthCanvasTextureRebuildComplete", ""), false)),
+      canvasTextureRebuildError: safeString(source.textureRebuildError || "", ""),
+
+      canvasVisualFidelityRenewalActive: safeBool(source.visualFidelityRenewalActive, safeBool(datasetField("hearthCanvasVisualFidelityRenewalActive", ""), false)),
+      canvasSourceColorDemotedToPaletteInfluence: safeBool(source.sourceColorDemotedToPaletteInfluence, safeBool(datasetField("hearthCanvasSourceColorDemotedToPaletteInfluence", ""), false)),
+      canvasElevationControlsLandShape: safeBool(source.elevationControlsLandShape, safeBool(datasetField("hearthCanvasElevationControlsLandShape", ""), false)),
+      canvasHydrologyControlsWaterShape: safeBool(source.hydrologyControlsWaterShape, safeBool(datasetField("hearthCanvasHydrologyControlsWaterShape", ""), false)),
+      canvasCoastlineContrastActive: safeBool(source.coastlineContrastActive, safeBool(datasetField("hearthCanvasCoastlineContrastActive", ""), false)),
+      canvasCenterDarknessReduced: safeBool(source.centerDarknessReduced, safeBool(datasetField("hearthCanvasCenterDarknessReduced", ""), false)),
+      canvasLightingPreservesSurfaceReadability: safeBool(source.lightingPreservesSurfaceReadability, safeBool(datasetField("hearthCanvasLightingPreservesSurfaceReadability", ""), false)),
+      canvasStaleSourceMaskProtectionActive: safeBool(source.staleSourceMaskProtectionActive, safeBool(datasetField("hearthCanvasStaleSourceMaskProtectionActive", ""), false)),
+
+      canvasStillDoesNotOwnPlanetTruth: safeBool(source.canvasStillDoesNotOwnPlanetTruth, safeBool(datasetField("hearthCanvasStillDoesNotOwnPlanetTruth", ""), false)),
+      canvasTransitionalFallbackVisualField: safeBool(source.transitionalFallbackVisualField, safeBool(datasetField("hearthCanvasTransitionalFallbackVisualField", ""), false)),
+      canvasUpstreamSevenContinentAuthorityPreferred: safeBool(source.upstreamSevenContinentAuthorityPreferred, safeBool(datasetField("hearthCanvasUpstreamSevenContinentAuthorityPreferred", ""), false)),
+      canvasLandChannelStillReceiverOnly: safeBool(source.landChannelStillReceiverOnly, safeBool(datasetField("hearthCanvasLandChannelStillReceiverOnly", ""), false)),
+
+      canvasF13EvidencePreserved: safeBool(source.f13CanvasEvidencePreserved, safeBool(datasetField("hearthCanvasF13EvidencePreserved", ""), false)),
+      canvasF13EvidenceComplete: safeBool(source.f13CanvasEvidenceComplete, false),
+      canvasF13HardFail: safeBool(source.f13HardFail, false),
+      canvasF21ClaimedByCanvas: safeBool(source.f21ClaimedByCanvas, false),
+      canvasReadyTextClaimedByCanvas: safeBool(source.readyTextClaimedByCanvas, false),
+
+      canvasReady: safeBool(source.canvasReady, safeBool(datasetField("hearthCanvasReady", ""), false)),
+      canvasImageRendered: safeBool(source.imageRendered, false),
+      canvasVisiblePlanetAvailable: safeBool(source.visiblePlanetAvailable, safeBool(datasetField("hearthCanvasVisiblePlanetAvailable", ""), false)),
+      canvasVisibleContentProof: safeBool(source.visibleContentProof, safeBool(datasetField("hearthCanvasVisibleContentProof", ""), false)),
+      canvasVisibleContentStrictProof: safeBool(source.visibleContentStrictProof, false),
+      canvasVisibleContentSoftGap: safeBool(source.visibleContentSoftGap, safeBool(datasetField("hearthCanvasVisibleContentSoftGap", ""), false)),
+      canvasVisibleContentHardFail: safeBool(source.visibleContentHardFail, safeBool(datasetField("hearthCanvasVisibleContentHardFail", ""), false)),
+      canvasVisibleForwardProgress: safeBool(source.visibleForwardProgress, safeBool(datasetField("hearthCanvasVisibleForwardProgress", ""), false)),
+
+      canvasGeneratedImage: safeBool(source.generatedImage, false),
+      canvasGraphicBox: safeBool(source.graphicBox, false),
+      canvasWebGL: safeBool(source.webGL, false),
+      canvasVisualPassClaimed: safeBool(source.visualPassClaimed, false)
+    };
+  }
+
   function readSouthComposer() {
     return getByNames([
       "LAB_RUNTIME_TABLE_SOUTH",
@@ -873,6 +970,7 @@
 
   function buildSnapshot(extra = {}) {
     const canvas = readCanvasReceipt();
+    const canvasBridge = buildCanvasReceiptBridge(canvas);
     const active = activeCheckpoint();
     const highest = highestCompletedCheckpoint();
 
@@ -918,6 +1016,8 @@
       northAvailable: state.northPresent,
       conductorHydrated: true,
       southGlobalPresent: true,
+
+      ...canvasBridge,
 
       canvasReady: safeBool(canvas.canvasReady, false),
       canvasCarrierMounted: safeBool(canvas.canvasCarrierMounted, false),
@@ -1058,7 +1158,7 @@
       event: gear.event,
       phase: gear.event,
       checkpointId: gear.id,
-      source: "hearth.south.strictProofDegradeReconciliation",
+      source: "hearth.south.canvasNestedReceiptBridge",
       contract: CONTRACT,
       receipt: RECEIPT,
       detail: {
@@ -1069,7 +1169,8 @@
         fibonacci: gear.fibonacci,
         legacyArchiveForbiddenForActiveGear: true,
         postgameDedupActive: true,
-        strictProofDegradeReconciliationActive: true
+        strictProofDegradeReconciliationActive: true,
+        canvasNestedReceiptBridgeActive: true
       },
       snapshot: buildSnapshot(detail)
     };
@@ -1597,6 +1698,9 @@
     if (!isObject(receipt)) return "";
 
     const keys = [
+      "contract",
+      "receipt",
+      "version",
       "canvasCarrierRequested",
       "canvasCarrierMounted",
       "canvasContextReady",
@@ -1617,7 +1721,9 @@
       "visibleContentHardFail",
       "visiblePlanetAvailable",
       "canvasCarrierHandoffOk",
-      "imageRendered"
+      "imageRendered",
+      "sevenContinentVisualFallbackActive",
+      "textureInvalidationCount"
     ];
 
     return keys.map((key) => `${key}:${safeString(receipt[key], "")}`).join("|");
@@ -1641,6 +1747,7 @@
       source: "canvasReceiptReconcile",
       canvasReceipt: true,
       [key]: true,
+      ...buildCanvasReceiptBridge(receipt),
       ...detail
     });
   }
@@ -1706,7 +1813,8 @@
           visibleContentSoftGap: true,
           visibleForwardProgress: safeBool(receipt.visibleForwardProgress, true),
           visibleContentAdmissible: safeBool(receipt.visibleContentAdmissible, true),
-          visiblePlanetAvailable: safeBool(receipt.visiblePlanetAvailable, true)
+          visiblePlanetAvailable: safeBool(receipt.visiblePlanetAvailable, true),
+          ...buildCanvasReceiptBridge(receipt)
         });
       }
     } else if (safeBool(receipt.visibleContentHardFail, false)) {
@@ -1716,7 +1824,8 @@
         arrayPushUnique(state.reconciledCanvasKeys, reconcileKey);
         admitGearEvent("VISIBLE_CONTENT_HARD_FAIL", {
           source: "canvasReceiptReconcile",
-          visibleContentHardFail: true
+          visibleContentHardFail: true,
+          ...buildCanvasReceiptBridge(receipt)
         });
       }
     }
@@ -1757,7 +1866,8 @@
     admitGearEvent(phase, {
       source: "hearth:canvas-phase",
       ...clonePlain(snapshot),
-      ...clonePlain(phaseEvent.detail || {})
+      ...clonePlain(phaseEvent.detail || {}),
+      ...buildCanvasReceiptBridge()
     });
 
     reconcileCanvasReceipt();
@@ -1997,6 +2107,9 @@
       snapshot.inspectModeAvailable,
       snapshot.inspectPlanetControlAvailable,
       snapshot.diagnosticCanLeavePlanetFrame,
+      snapshot.canvasContract,
+      snapshot.canvasReceipt,
+      snapshot.canvasTextureInvalidationCount,
       localProgressForActive(snapshot)
     ].join("|");
 
@@ -2142,6 +2255,11 @@
       `visibleContentProof=${light.visibleContentProof}`,
       `inspectModeAvailable=${light.inspectModeAvailable}`,
       `diagnosticCanLeavePlanetFrame=${light.diagnosticCanLeavePlanetFrame}`,
+      `canvasReceiptBridgeActive=${light.canvasReceiptBridgeActive}`,
+      `canvasContract=${light.canvasContract}`,
+      `canvasContractMatchesExpected=${light.canvasContractMatchesExpected}`,
+      `canvasReceiptMatchesExpected=${light.canvasReceiptMatchesExpected}`,
+      `canvasSevenContinentVisualFallbackActive=${light.canvasSevenContinentVisualFallbackActive}`,
       `archivedEventsCount=${light.archivedEventsCount}`,
       `compactArchiveCount=${light.compactArchiveCount}`,
       `duplicatePostgameEventCount=${light.duplicatePostgameEventCount}`,
@@ -2200,11 +2318,12 @@
     const active = activeCheckpoint();
     const highest = highestCompletedCheckpoint();
     const dataset = doc.documentElement.dataset;
+    const canvasBridge = buildCanvasReceiptBridge();
 
     dataset.hearthSouthRouteConductorLoaded = "true";
     dataset.hearthSouthRouteConductorContract = CONTRACT;
     dataset.hearthSouthRouteConductorReceipt = RECEIPT;
-    dataset.hearthSouthStrictProofDegradeReconciliation = "true";
+    dataset.hearthSouthCanvasNestedReceiptBridge = "true";
 
     dataset.hearthTransmissionMode = "true";
     dataset.oneActiveGearAtATime = "true";
@@ -2246,6 +2365,24 @@
     dataset.hearthFirstFailedCoordinate = state.firstFailedCoordinate;
     dataset.hearthRecommendedNextRenewalTarget = state.recommendedNextRenewalTarget;
 
+    dataset.hearthSouthCanvasReceiptBridgeActive = String(canvasBridge.canvasReceiptBridgeActive);
+    dataset.hearthSouthCanvasNestedReceiptAvailable = String(canvasBridge.canvasNestedReceiptAvailable);
+    dataset.hearthSouthCanvasContract = canvasBridge.canvasContract;
+    dataset.hearthSouthCanvasReceipt = canvasBridge.canvasReceipt;
+    dataset.hearthSouthCanvasExpectedContract = canvasBridge.canvasExpectedContract;
+    dataset.hearthSouthCanvasExpectedReceipt = canvasBridge.canvasExpectedReceipt;
+    dataset.hearthSouthCanvasContractMatchesExpected = String(canvasBridge.canvasContractMatchesExpected);
+    dataset.hearthSouthCanvasReceiptMatchesExpected = String(canvasBridge.canvasReceiptMatchesExpected);
+    dataset.hearthSouthCanvasNewsProtocolSynchronized = String(canvasBridge.canvasNewsProtocolSynchronized);
+    dataset.hearthSouthCanvasFibonacciAlignmentSynchronized = String(canvasBridge.canvasFibonacciAlignmentSynchronized);
+    dataset.hearthSouthCanvasActiveFibonacciGate = canvasBridge.canvasActiveFibonacciGate;
+    dataset.hearthSouthCanvasFutureFibonacciGate = canvasBridge.canvasFutureFibonacciGate;
+    dataset.hearthSouthCanvasSevenContinentVisualFallbackActive = String(canvasBridge.canvasSevenContinentVisualFallbackActive);
+    dataset.hearthSouthCanvasProceduralSixLobeAdditiveFieldRetired = String(canvasBridge.canvasProceduralSixLobeAdditiveFieldRetired);
+    dataset.hearthSouthCanvasTextureInvalidationCount = String(canvasBridge.canvasTextureInvalidationCount);
+    dataset.hearthSouthCanvasF21ClaimedByCanvas = String(canvasBridge.canvasF21ClaimedByCanvas);
+    dataset.hearthSouthCanvasVisualPassClaimed = String(canvasBridge.canvasVisualPassClaimed);
+
     dataset.generatedImage = "false";
     dataset.graphicBox = "false";
     dataset.webgl = "false";
@@ -2257,6 +2394,7 @@
     root.HEARTH.southRouteConductor = api;
     root.HEARTH.southVisibleCompletion = api;
     root.HEARTH.routeConductor = api;
+    root.HEARTH.canvasNestedReceiptBridge = api;
 
     root.HEARTH_SOUTH_VISIBLE_COMPLETION = api;
     root.HEARTH_SOUTH_VISIBLE_COMPLETION_CYCLE_CONSUMER = api;
@@ -2266,12 +2404,14 @@
     root.HEARTH_SOUTH_GEAR_ADMISSION_TRANSLATOR = api;
     root.HEARTH_SOUTH_POSTGAME_DEDUP_INSPECT_GATE = api;
     root.HEARTH_SOUTH_STRICT_PROOF_DEGRADE_RECONCILIATION = api;
+    root.HEARTH_SOUTH_CANVAS_NESTED_RECEIPT_BRIDGE = api;
 
     root.HEARTH_SOUTH_VISIBLE_COMPLETION_RECEIPT = getReceiptLight();
     root.HEARTH_ROUTE_CONDUCTOR_RECEIPT = root.HEARTH_SOUTH_VISIBLE_COMPLETION_RECEIPT;
     root.HEARTH_SOUTH_GEAR_ADMISSION_TRANSLATOR_RECEIPT = root.HEARTH_SOUTH_VISIBLE_COMPLETION_RECEIPT;
     root.HEARTH_SOUTH_POSTGAME_DEDUP_INSPECT_GATE_RECEIPT = root.HEARTH_SOUTH_VISIBLE_COMPLETION_RECEIPT;
     root.HEARTH_SOUTH_STRICT_PROOF_DEGRADE_RECONCILIATION_RECEIPT = root.HEARTH_SOUTH_VISIBLE_COMPLETION_RECEIPT;
+    root.HEARTH_SOUTH_CANVAS_NESTED_RECEIPT_BRIDGE_RECEIPT = root.HEARTH_SOUTH_VISIBLE_COMPLETION_RECEIPT;
   }
 
   function bootEarlyGearSequence() {
@@ -2432,8 +2572,8 @@
       state.booting = true;
       state.startedAt = nowIso();
       state.updatedAt = state.startedAt;
-      state.postgameStatus = "SOUTH_STRICT_PROOF_DEGRADE_RECONCILIATION_BOOTING";
-      state.firstFailedCoordinate = "BOOTING_STRICT_PROOF_DEGRADE_RECONCILIATION";
+      state.postgameStatus = "SOUTH_CANVAS_NESTED_RECEIPT_BRIDGE_BOOTING";
+      state.firstFailedCoordinate = "BOOTING_CANVAS_NESTED_RECEIPT_BRIDGE";
       state.recommendedNextRenewalTarget = FILE;
 
       ensureRefs();
@@ -2457,13 +2597,14 @@
       state.booting = false;
       state.booted = true;
 
-      recordLocal("SOUTH_ROUTE_CONDUCTOR_BOOTED", {
+      recordLocal("SOUTH_CANVAS_NESTED_RECEIPT_BRIDGE_BOOTED", {
         northPresent: state.northPresent,
         sessionPresent: state.sessionPresent,
         canvasPresent: state.canvasPresent,
         postgameDedupActive: true,
         inspectGateActive: true,
-        strictProofDegradeReconciliationActive: true
+        strictProofDegradeReconciliationActive: true,
+        canvasNestedReceiptBridgeActive: true
       });
 
       render();
@@ -2478,6 +2619,7 @@
     const active = activeCheckpoint();
     const highest = highestCompletedCheckpoint();
     const canvas = readCanvasReceipt();
+    const canvasBridge = buildCanvasReceiptBridge(canvas);
     const snapshot = buildSnapshot();
     const gates = evaluateNewsGates(snapshot);
 
@@ -2495,11 +2637,14 @@
       inspectGateActive: true,
       receiptCompactionActive: true,
       strictProofDegradeReconciliationActive: true,
+      canvasNestedReceiptBridgeActive: true,
 
       transmissionMode: true,
       oneActiveGearAtATime: true,
       activeGearProgressResets: true,
       visibleProgressRepresentsCurrentGearOnly: true,
+
+      ...canvasBridge,
 
       activeCheckpointId: active.id,
       activeCheckpointRank: active.rank,
@@ -2580,6 +2725,7 @@
     const active = activeCheckpoint();
     const highest = highestCompletedCheckpoint();
     const canvas = readCanvasReceipt();
+    const canvasBridge = buildCanvasReceiptBridge(canvas);
     const gates = evaluateNewsGates(buildSnapshot());
 
     return {
@@ -2596,6 +2742,7 @@
       inspectGateActive: true,
       receiptCompactionActive: true,
       strictProofDegradeReconciliationActive: true,
+      canvasNestedReceiptBridgeActive: true,
 
       cycleOrder: state.cycleOrder,
       transmissionMode: true,
@@ -2608,6 +2755,8 @@
       westBranchFile: WEST_BRANCH_FILE,
       southBranchFile: SOUTH_BRANCH_FILE,
       canvasFile: CANVAS_FILE,
+
+      ...canvasBridge,
 
       northPresent: state.northPresent,
       eastBranchPresent: state.eastBranchPresent,
@@ -2725,7 +2874,7 @@
     const receipt = getReceipt();
 
     return [
-      "HEARTH_SOUTH_ROUTE_CONDUCTOR_STRICT_PROOF_DEGRADE_RECONCILIATION_RECEIPT",
+      "HEARTH_SOUTH_CANVAS_NESTED_RECEIPT_BRIDGE_RECEIPT",
       "",
       `contract=${receipt.contract}`,
       `receipt=${receipt.receipt}`,
@@ -2740,6 +2889,7 @@
       `inspectGateActive=${receipt.inspectGateActive}`,
       `receiptCompactionActive=${receipt.receiptCompactionActive}`,
       `strictProofDegradeReconciliationActive=${receipt.strictProofDegradeReconciliationActive}`,
+      `canvasNestedReceiptBridgeActive=${receipt.canvasNestedReceiptBridgeActive}`,
       "",
       `cycleOrder=${receipt.cycleOrder}`,
       `transmissionMode=${receipt.transmissionMode}`,
@@ -2752,6 +2902,67 @@
       `westBranchFile=${receipt.westBranchFile}`,
       `southBranchFile=${receipt.southBranchFile}`,
       `canvasFile=${receipt.canvasFile}`,
+      "",
+      "CANVAS_RECEIPT_BRIDGE",
+      `canvasReceiptBridgeActive=${receipt.canvasReceiptBridgeActive}`,
+      `canvasNestedReceiptAvailable=${receipt.canvasNestedReceiptAvailable}`,
+      `canvasContract=${receipt.canvasContract}`,
+      `canvasReceipt=${receipt.canvasReceipt}`,
+      `canvasExpectedContract=${receipt.canvasExpectedContract}`,
+      `canvasExpectedReceipt=${receipt.canvasExpectedReceipt}`,
+      `canvasContractMatchesExpected=${receipt.canvasContractMatchesExpected}`,
+      `canvasReceiptMatchesExpected=${receipt.canvasReceiptMatchesExpected}`,
+      `canvasPreviousContract=${receipt.canvasPreviousContract}`,
+      `canvasBaselineContract=${receipt.canvasBaselineContract}`,
+      `canvasVersion=${receipt.canvasVersion}`,
+      `canvasRole=${receipt.canvasRole}`,
+      `canvasNewsProtocolSynchronized=${receipt.canvasNewsProtocolSynchronized}`,
+      `canvasFibonacciAlignmentSynchronized=${receipt.canvasFibonacciAlignmentSynchronized}`,
+      `canvasActiveFibonacciGate=${receipt.canvasActiveFibonacciGate}`,
+      `canvasFutureFibonacciGate=${receipt.canvasFutureFibonacciGate}`,
+      `canvasOneActiveGearAtATime=${receipt.canvasOneActiveGearAtATime}`,
+      `canvasSevenContinentVisualFallbackActive=${receipt.canvasSevenContinentVisualFallbackActive}`,
+      `canvasContinentVisualSeedCount=${receipt.canvasContinentVisualSeedCount}`,
+      `canvasContinentBlendMode=${receipt.canvasContinentBlendMode}`,
+      `canvasProceduralSixLobeAdditiveFieldRetired=${receipt.canvasProceduralSixLobeAdditiveFieldRetired}`,
+      `canvasOceanChannelCutActive=${receipt.canvasOceanChannelCutActive}`,
+      `canvasSeaLineTightened=${receipt.canvasSeaLineTightened}`,
+      `canvasCoastlineSharpeningActive=${receipt.canvasCoastlineSharpeningActive}`,
+      `canvasCachedTextureInvalidationAvailable=${receipt.canvasCachedTextureInvalidationAvailable}`,
+      `canvasTextureInvalidationCount=${receipt.canvasTextureInvalidationCount}`,
+      `canvasTextureInvalidated=${receipt.canvasTextureInvalidated}`,
+      `canvasTextureRebuildRequested=${receipt.canvasTextureRebuildRequested}`,
+      `canvasTextureRebuildComplete=${receipt.canvasTextureRebuildComplete}`,
+      `canvasTextureRebuildError=${receipt.canvasTextureRebuildError}`,
+      `canvasVisualFidelityRenewalActive=${receipt.canvasVisualFidelityRenewalActive}`,
+      `canvasSourceColorDemotedToPaletteInfluence=${receipt.canvasSourceColorDemotedToPaletteInfluence}`,
+      `canvasElevationControlsLandShape=${receipt.canvasElevationControlsLandShape}`,
+      `canvasHydrologyControlsWaterShape=${receipt.canvasHydrologyControlsWaterShape}`,
+      `canvasCoastlineContrastActive=${receipt.canvasCoastlineContrastActive}`,
+      `canvasCenterDarknessReduced=${receipt.canvasCenterDarknessReduced}`,
+      `canvasLightingPreservesSurfaceReadability=${receipt.canvasLightingPreservesSurfaceReadability}`,
+      `canvasStaleSourceMaskProtectionActive=${receipt.canvasStaleSourceMaskProtectionActive}`,
+      `canvasStillDoesNotOwnPlanetTruth=${receipt.canvasStillDoesNotOwnPlanetTruth}`,
+      `canvasTransitionalFallbackVisualField=${receipt.canvasTransitionalFallbackVisualField}`,
+      `canvasUpstreamSevenContinentAuthorityPreferred=${receipt.canvasUpstreamSevenContinentAuthorityPreferred}`,
+      `canvasLandChannelStillReceiverOnly=${receipt.canvasLandChannelStillReceiverOnly}`,
+      `canvasF13EvidencePreserved=${receipt.canvasF13EvidencePreserved}`,
+      `canvasF13EvidenceComplete=${receipt.canvasF13EvidenceComplete}`,
+      `canvasF13HardFail=${receipt.canvasF13HardFail}`,
+      `canvasF21ClaimedByCanvas=${receipt.canvasF21ClaimedByCanvas}`,
+      `canvasReadyTextClaimedByCanvas=${receipt.canvasReadyTextClaimedByCanvas}`,
+      `canvasReady=${receipt.canvasReady}`,
+      `canvasImageRendered=${receipt.canvasImageRendered}`,
+      `canvasVisiblePlanetAvailable=${receipt.canvasVisiblePlanetAvailable}`,
+      `canvasVisibleContentProof=${receipt.canvasVisibleContentProof}`,
+      `canvasVisibleContentStrictProof=${receipt.canvasVisibleContentStrictProof}`,
+      `canvasVisibleContentSoftGap=${receipt.canvasVisibleContentSoftGap}`,
+      `canvasVisibleContentHardFail=${receipt.canvasVisibleContentHardFail}`,
+      `canvasVisibleForwardProgress=${receipt.canvasVisibleForwardProgress}`,
+      `canvasGeneratedImage=${receipt.canvasGeneratedImage}`,
+      `canvasGraphicBox=${receipt.canvasGraphicBox}`,
+      `canvasWebGL=${receipt.canvasWebGL}`,
+      `canvasVisualPassClaimed=${receipt.canvasVisualPassClaimed}`,
       "",
       `northPresent=${receipt.northPresent}`,
       `eastBranchPresent=${receipt.eastBranchPresent}`,
@@ -2888,7 +3099,7 @@
       root.removeEventListener("hearth:canvas-phase", onCanvasPhase);
     }
 
-    recordLocal("SOUTH_STRICT_PROOF_DEGRADE_RECONCILIATION_DISPOSED", { reason });
+    recordLocal("SOUTH_CANVAS_NESTED_RECEIPT_BRIDGE_DISPOSED", { reason });
     render();
   }
 
@@ -2900,7 +3111,7 @@
     version: VERSION,
     file: FILE,
     route: ROUTE,
-    role: "south-route-conductor-strict-proof-degrade-reconciliation",
+    role: "south-canvas-nested-receipt-bridge",
 
     boot,
     start: boot,
@@ -2917,6 +3128,7 @@
     hasFallbackInspectSignal,
     evaluateNewsGates,
     canLatchF21,
+    buildCanvasReceiptBridge,
     getReceipt,
     getReceiptLight,
     getReceiptText,
@@ -2944,9 +3156,17 @@
     supportsStrictVisibleProofWithoutFalseDegrade: true,
     supportsStrictInspectModeWithoutFallbackDegrade: true,
     supportsFullF21WhenStrictNewsPasses: true,
+    supportsCanvasNestedReceiptBridge: true,
+    supportsCanvasContractProofExport: true,
+    supportsCanvasNewsFibonacciSyncExport: true,
+    supportsSevenContinentCanvasRenewalProofExport: true,
+
+    expectedCanvasContract: EXPECTED_CANVAS_CONTRACT,
+    expectedCanvasReceipt: EXPECTED_CANVAS_RECEIPT,
 
     ownsSouthRouteConductor: true,
     ownsVisibleCompletionCoordination: true,
+    ownsCanvasReceiptBridge: true,
     ownsNorthCheckpointTruth: false,
     ownsEastFirstPaint: false,
     ownsWestGapTaxonomy: false,

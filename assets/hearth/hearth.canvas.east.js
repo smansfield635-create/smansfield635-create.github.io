@@ -1,17 +1,13 @@
 // /assets/hearth/hearth.canvas.east.js
-// HEARTH_CANVAS_EAST_PARENT_ALIGNED_MATERIAL_ATLAS_SOURCE_TRANSISTOR_TNT_v3
+// HEARTH_CANVAS_EAST_GOVERNED_F13_ATLAS_SOURCE_AFTER_WEST_RELEASE_TNT_v1
 // Full-file replacement.
-// Canvas East / material-atlas source child only.
+// Canvas East / governed F13 atlas source child only.
 // Purpose:
-// - Repair the parent-reported East child gap: buildAtlas,sample,read,getReceipt.
-// - Publish the exact aliases required by /assets/hearth/hearth.canvas.js.
-// - Align East child to the active Canvas North parent:
-//   HEARTH_CANVAS_PHYSICAL_OBJECT_BOOTSTRAP_F13_CARRIER_TNT_v1.
-// - Consume upstream material authority when available.
-// - Build a valid atlas canvas packet for the Canvas North parent.
-// - Preserve fallback atlas support only as emergency F13 carrier support.
+// - Renew Canvas East as governed F13 atlas/source evidence after West release.
+// - Preserve buildAtlas, sample, read, getReceipt, material bridge, atlas cache, and parent-required aliases.
+// - Hold atlas builds unless a governed Canvas parent request after West release, lawful parent release, lawful West release, or explicit emergency F13 request exists.
 // - Keep East as source/intake only.
-// - Preserve NEWS + Fibonacci synchronization at F13E / F13F.
+// - Keep F13E/F13F synchronized without promoting atlas readiness into visible proof, Canvas readiness, F21, ready text, or final visual pass.
 // Does not own:
 // - planet truth
 // - elevation truth
@@ -20,23 +16,33 @@
 // - texture composition
 // - sphere rendering
 // - visible proof
+// - Canvas release
+// - West admissibility audit
 // - runtime-table governance
 // - route orchestration
+// - NEWS finalization
 // - F21
+// - ready text
 // - final visual pass claim
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_EAST_PARENT_ALIGNED_MATERIAL_ATLAS_SOURCE_TRANSISTOR_TNT_v3";
-  const RECEIPT = "HEARTH_CANVAS_EAST_PARENT_ALIGNED_MATERIAL_ATLAS_SOURCE_TRANSISTOR_RECEIPT_v3";
-  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_EAST_PARENT_ALIGNED_MATERIAL_ATLAS_SOURCE_TRANSISTOR_TNT_v2";
-  const BASELINE_CONTRACT = "HEARTH_CANVAS_CARDINAL_SPLIT_EAST_CHILD_TNT_v1";
+  const CONTRACT = "HEARTH_CANVAS_EAST_GOVERNED_F13_ATLAS_SOURCE_AFTER_WEST_RELEASE_TNT_v1";
+  const RECEIPT = "HEARTH_CANVAS_EAST_GOVERNED_F13_ATLAS_SOURCE_AFTER_WEST_RELEASE_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_EAST_PARENT_ALIGNED_MATERIAL_ATLAS_SOURCE_TRANSISTOR_TNT_v3";
+  const BASELINE_CONTRACT = "HEARTH_CANVAS_EAST_PARENT_ALIGNED_MATERIAL_ATLAS_SOURCE_TRANSISTOR_TNT_v3";
 
-  const ACTIVE_PARENT_SPLIT_CONTRACT = "HEARTH_CANVAS_PHYSICAL_OBJECT_BOOTSTRAP_F13_CARRIER_TNT_v1";
-  const ACTIVE_PARENT_SPLIT_RECEIPT = "HEARTH_CANVAS_PHYSICAL_OBJECT_BOOTSTRAP_F13_CARRIER_RECEIPT_v1";
+  const GOVERNED_PARENT_CONTRACT = "HEARTH_CANVAS_PARENT_GOVERNED_F13_EVIDENCE_RECEIVER_AFTER_WEST_RELEASE_TNT_v1";
+  const GOVERNED_PARENT_RECEIPT = "HEARTH_CANVAS_PARENT_GOVERNED_F13_EVIDENCE_RECEIVER_AFTER_WEST_RELEASE_RECEIPT_v1";
 
   const RETIRED_PARENT_SPLIT_CONTRACTS = Object.freeze([
+    "HEARTH_CANVAS_PHYSICAL_OBJECT_BOOTSTRAP_F13_CARRIER_TNT_v1",
+    "HEARTH_CANVAS_PHYSICAL_OBJECT_BOOTSTRAP_F13_CARRIER_RECEIPT_v1",
+    "HEARTH_CANVAS_PARENT_IDENTITY_BOOT_HANDSHAKE_STALE_CONSUMPTION_GUARD_TNT_v4",
+    "HEARTH_CANVAS_PARENT_IDENTITY_BOOT_HANDSHAKE_STALE_CONSUMPTION_GUARD_RECEIPT_v4",
+    "HEARTH_CANVAS_SINGLE_FILE_INTERNAL_NEWS_F13_TEXTURE_FRAME_PROOF_CLOSURE_TNT_v3",
+    "HEARTH_CANVAS_SINGLE_FILE_INTERNAL_NEWS_F13_SCHEMATIC_TNT_v2",
     "HEARTH_CANVAS_CARDINAL_SPLIT_NORTH_PARENT_TNT_v2",
     "HEARTH_CANVAS_SPLIT_ADAPTER_TRANSISTOR_GATE_NORTH_PARENT_TNT_v1"
   ]);
@@ -44,12 +50,9 @@
   const EXPECTED_MATERIAL_CONTRACT = "HEARTH_MATERIALS_MOUNTAIN_RANGE_CANYON_RELIEF_CONSUMER_TNT_v1";
   const EXPECTED_MATERIAL_RECEIPT = "HEARTH_MATERIALS_MOUNTAIN_RANGE_CANYON_RELIEF_CONSUMER_RECEIPT_v1";
 
-  const VERSION = "2026-05-31.hearth-canvas-east-parent-aligned-material-atlas-source-transistor-v3";
+  const VERSION = "2026-05-31.hearth-canvas-east-governed-f13-atlas-source-after-west-release-v1";
   const FILE = "/assets/hearth/hearth.canvas.east.js";
   const PARENT_FILE = "/assets/hearth/hearth.canvas.js";
-
-  const root = typeof window !== "undefined" ? window : globalThis;
-  const doc = root.document || null;
 
   const DEFAULT_ATLAS_WIDTH = 512;
   const DEFAULT_ATLAS_HEIGHT = 256;
@@ -58,9 +61,12 @@
   const MAX_ATLAS_WIDTH = 1024;
   const MAX_ATLAS_HEIGHT = 512;
 
-  const CYCLE_ORDER = "NORTH_PARENT_F13 -> EAST_SOURCE_F13E -> EAST_ATLAS_F13F -> SOUTH_TEXTURE -> SOUTH_FRAME -> CHECKPOINT_RETURN";
   const ACTIVE_FIBONACCI_GATE = "F13E_F13F";
   const FUTURE_FIBONACCI_GATE = "F21";
+  const CYCLE_ORDER = "GOVERNED_PARENT_AFTER_WEST_RELEASE -> EAST_SOURCE_F13E -> EAST_ATLAS_F13F -> PARENT_F13_RECEIPT";
+
+  const root = typeof window !== "undefined" ? window : globalThis;
+  const doc = root.document || null;
 
   const PALETTE = Object.freeze({
     void: [0, 0, 0],
@@ -82,32 +88,21 @@
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     baselineContract: BASELINE_CONTRACT,
-    activeParentSplitContract: ACTIVE_PARENT_SPLIT_CONTRACT,
-    activeParentSplitReceipt: ACTIVE_PARENT_SPLIT_RECEIPT,
+    governedParentContract: GOVERNED_PARENT_CONTRACT,
+    governedParentReceipt: GOVERNED_PARENT_RECEIPT,
     retiredParentSplitContracts: RETIRED_PARENT_SPLIT_CONTRACTS.slice(),
     expectedMaterialContract: EXPECTED_MATERIAL_CONTRACT,
     expectedMaterialReceipt: EXPECTED_MATERIAL_RECEIPT,
     version: VERSION,
     file: FILE,
     parentFile: PARENT_FILE,
-    role: "canvas-east-source-material-atlas-transistor-child-parent-aligned",
+    role: "canvas-east-governed-f13-atlas-source-after-west-release",
 
-    splitAdapterChild: true,
-    parentContractAligned: true,
-    parentPhysicalBootstrapAligned: true,
-    retiredParentContractSuperseded: true,
-    recursiveReceiptLoopRemoved: true,
-
+    governedCanvasParentAligned: true,
+    afterWestReleaseOnly: true,
+    canvasEastSourceOnly: true,
     requiredApiSurfaceComplete: true,
     requiredMethods: ["buildAtlas", "sample", "read", "getReceipt"],
-
-    transistorAdapterActive: true,
-    transistorRole: "source",
-    transistorSourceRole: "east-material-atlas-source",
-    transistorGateParent: "canvas-north-physical-object-bootstrap-f13-carrier",
-    transistorControlPeer: "west-motion-invalidation-control",
-    transistorDrainPeer: "south-texture-render-visible-output-drain",
-    transistorCurrentFlow: "EAST_SOURCE_TO_SOUTH_DRAIN_THROUGH_NORTH_PARENT_GATE_WITH_WEST_CONTROL",
 
     newsProtocolSynchronized: true,
     fibonacciAlignmentSynchronized: true,
@@ -115,6 +110,52 @@
     futureFibonacciGate: FUTURE_FIBONACCI_GATE,
     oneActiveGearAtATime: true,
     cycleOrder: CYCLE_ORDER,
+    newsFinalizedByCanvasEast: false,
+
+    canvasEastMayBuildAtlas: false,
+    f13BuildLawful: false,
+    f13BuildBlockedReason: "WAITING_GOVERNED_PARENT_WEST_RELEASE",
+    f13PermissionSource: "NONE",
+    heldAtlasPacketReturned: false,
+
+    westReleaseObserved: false,
+    westReleaseRequired: true,
+    westAuditObserved: false,
+    westAuditPassed: false,
+    westAuditDegraded: false,
+    westAuditBlocked: false,
+    canvasParentRequestObserved: false,
+    canvasParentReleaseObserved: false,
+    parentRequestLawful: false,
+    parentReleaseLawful: false,
+    staleParentContractDetected: false,
+    emergencyF13Requested: false,
+    emergencyF13Reason: "",
+    emergencyF13AtlasPacket: false,
+
+    sourceFile: "",
+    destinationFile: PARENT_FILE,
+    receivedFrom: "",
+    requestedBy: "",
+    requestSource: "",
+    activeCycleNumber: 2,
+    activeCycleRoute: "NORTH_EAST_SOUTH_WEST_CANVAS",
+    activeCardinal: "EAST",
+    activeStageId: "F13E_F13F_ATLAS_SOURCE",
+    activeGearId: "F13E_F13F_ATLAS_SOURCE",
+    activeNewsGate: "F13_CANVAS_EVIDENCE",
+
+    northGateReady: false,
+    eastGateReady: false,
+    westGateReady: false,
+    southGateReady: false,
+    canvasGateReady: false,
+    newsGatePassedBeforeF21: false,
+    newsGateDegradedBeforeF21: false,
+
+    f21EligibleForNorth: false,
+    f21ClaimedByCanvasEast: false,
+    readyTextClaimedByCanvasEast: false,
 
     materialReceiptBridgeActive: false,
     materialNestedReceiptAvailable: false,
@@ -145,6 +186,7 @@
 
     atlasSourceActive: true,
     upstreamFirstAtlasActive: true,
+    atlasBuildRequested: false,
     atlasBuildStarted: false,
     atlasBuildProgress: 0,
     atlasBuildComplete: false,
@@ -173,6 +215,7 @@
     sevenContinentFallbackEmergencyOnly: true,
     sevenContinentFallbackUsed: false,
     sevenContinentFallbackSuppressedByUpstream: false,
+    emergencyFallbackUsed: false,
     elevationControlsLandShape: true,
     hydrologyControlsWaterShape: true,
     coastlinesReadFromHydrologyAndMaterials: true,
@@ -189,9 +232,15 @@
     f13SourceStageStarted: false,
     f13SourceStageComplete: false,
     f13AtlasPacketReady: false,
-    f21ClaimedByCanvasEast: false,
-    readyTextClaimedByCanvasEast: false,
 
+    firstFailedCoordinate: "WAITING_GOVERNED_PARENT_WEST_RELEASE",
+    recommendedNextFile: PARENT_FILE,
+    recommendedNextRenewalTarget: PARENT_FILE,
+
+    lastNormalizedInput: null,
+    lastPermissionPacket: null,
+    lastAtlasPacket: null,
+    lastHeldAtlasPacket: null,
     lastSampleAt: "",
     lastBuildAt: "",
     publishedAt: "",
@@ -218,7 +267,7 @@
   }
 
   function isObject(value) {
-    return Boolean(value && typeof value === "object");
+    return Boolean(value && typeof value === "object" && !Array.isArray(value));
   }
 
   function isFunction(value) {
@@ -228,6 +277,13 @@
   function safeNumber(value, fallback = 0) {
     const number = Number(value);
     return Number.isFinite(number) ? number : fallback;
+  }
+
+  function safeBool(value, fallback = false) {
+    if (typeof value === "boolean") return value;
+    if (value === "true" || value === "1" || value === 1) return true;
+    if (value === "false" || value === "0" || value === 0) return false;
+    return fallback;
   }
 
   function safeString(value, fallback = "") {
@@ -278,7 +334,7 @@
   }
 
   function clonePlain(value) {
-    if (!isObject(value)) return value;
+    if (!isObject(value) && !Array.isArray(value)) return value;
 
     try {
       return JSON.parse(JSON.stringify(value));
@@ -303,6 +359,7 @@
     state.localEvents.push(item);
     trimArray(state.localEvents, 160);
     state.updatedAt = item.at;
+    updateDataset();
 
     return item;
   }
@@ -333,6 +390,723 @@
     }
 
     return cursor || null;
+  }
+
+  function objectValue(source, path, fallback = undefined) {
+    if (!source || typeof source !== "object") return fallback;
+
+    const parts = String(path || "").split(".");
+    let cursor = source;
+
+    for (const part of parts) {
+      if (!cursor || typeof cursor !== "object" || cursor[part] === undefined || cursor[part] === null) return fallback;
+      cursor = cursor[part];
+    }
+
+    return cursor;
+  }
+
+  function firstDefined(...values) {
+    for (const value of values) {
+      if (value !== undefined && value !== null && value !== "") return value;
+    }
+    return undefined;
+  }
+
+  function firstString(...values) {
+    const value = firstDefined(...values);
+    return value === undefined ? "" : String(value);
+  }
+
+  function firstBool(fallback, ...values) {
+    for (const value of values) {
+      if (value !== undefined && value !== null && value !== "") return safeBool(value, fallback);
+    }
+    return fallback;
+  }
+
+  function readReceipt(authority) {
+    if (!authority || !isObject(authority)) return null;
+
+    if (isFunction(authority.getReceipt)) {
+      try {
+        const receipt = authority.getReceipt();
+        return isObject(receipt) ? receipt : null;
+      } catch (_error) {
+        return null;
+      }
+    }
+
+    if (isObject(authority.receiptPacket)) return authority.receiptPacket;
+    if (isObject(authority.receipt)) return authority.receipt;
+    if (authority.contract || authority.receipt || authority.version || authority.splitContract) return authority;
+
+    return null;
+  }
+
+  function datasetValue(key, fallback = "") {
+    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return fallback;
+    const value = doc.documentElement.dataset[key];
+    return value === undefined || value === null || value === "" ? fallback : value;
+  }
+
+  function findNestedReceipt(source, names) {
+    if (!isObject(source)) return {};
+    for (const name of names || []) {
+      const direct = objectValue(source, name);
+      if (isObject(direct)) return direct;
+    }
+    return {};
+  }
+
+  function firstGlobal(names) {
+    for (const name of names || []) {
+      const found = pathRead(name);
+      if (found) return found;
+    }
+    return null;
+  }
+
+  function readGovernedParentState(input = {}) {
+    const directParent = findNestedReceipt(input, [
+      "parent",
+      "parentReceipt",
+      "canvasParent",
+      "canvasParentReceipt",
+      "governedParent",
+      "governedParentReceipt"
+    ]);
+
+    const parentApi = firstGlobal([
+      "HEARTH_CANVAS",
+      "HEARTH_CANVAS_PARENT_GOVERNED_F13_EVIDENCE_RECEIVER",
+      "HEARTH_CANVAS_PARENT_IDENTITY_BOOT_HANDSHAKE",
+      "HEARTH.canvas",
+      "HEARTH.canvasParentGovernedF13EvidenceReceiver",
+      "HEARTH.canvasParentIdentityBootHandshake",
+      "DEXTER_LAB.hearthCanvasEvidence",
+      "DEXTER_LAB.hearthCanvasParentGovernedF13EvidenceReceiver"
+    ]);
+
+    const parentReceipt = isObject(directParent) && Object.keys(directParent).length
+      ? directParent
+      : (readReceipt(parentApi) || {});
+
+    const contract = firstString(
+      input.parentContract,
+      input.parentSplitContract,
+      parentReceipt.contract,
+      parentReceipt.splitContract,
+      parentApi && parentApi.contract,
+      parentApi && parentApi.splitContract,
+      datasetValue("hearthCanvasContract", ""),
+      datasetValue("hearthCanvasSplitContract", "")
+    );
+
+    const receipt = firstString(
+      input.parentReceipt,
+      input.parentSplitReceipt,
+      parentReceipt.receipt,
+      parentReceipt.splitReceipt,
+      parentApi && parentApi.receipt,
+      parentApi && parentApi.splitReceipt,
+      datasetValue("hearthCanvasReceipt", ""),
+      datasetValue("hearthCanvasSplitReceipt", "")
+    );
+
+    const stale = Boolean(
+      RETIRED_PARENT_SPLIT_CONTRACTS.includes(contract) ||
+      RETIRED_PARENT_SPLIT_CONTRACTS.includes(receipt) ||
+      firstBool(false, input.staleParentContractDetected, parentReceipt.staleParentDetected, parentReceipt.currentParentIdentityMismatch)
+    );
+
+    const parentObserved = Boolean(
+      parentApi ||
+      parentReceipt.contract ||
+      parentReceipt.splitContract ||
+      datasetValue("hearthCanvasLoaded", "") === "true" ||
+      datasetValue("hearthCanvasParentMarkerPresent", "") === "true"
+    );
+
+    const parentRequestObserved = firstBool(
+      false,
+      input.canvasParentRequestObserved,
+      input.parentRequestObserved,
+      input.atlasBuildRequested,
+      input.f13AtlasBuildRequested,
+      parentReceipt.canvasEastRequestObserved,
+      parentReceipt.canvasEastBuildRequested,
+      parentReceipt.f13AtlasBuildRequested,
+      parentReceipt.f13SourceRequestToEast,
+      parentReceipt.requestEastAtlas,
+      parentReceipt.handoffTo === "EAST",
+      parentReceipt.requestedChild === "east",
+      parentReceipt.activeCardinal === "EAST",
+      datasetValue("hearthCanvasEastRequestObserved", ""),
+      datasetValue("hearthCanvasF13AtlasBuildRequested", "")
+    );
+
+    const parentReleaseObserved = firstBool(
+      false,
+      input.canvasParentReleaseObserved,
+      input.parentReleaseObserved,
+      input.parentReleaseLawful,
+      parentReceipt.canvasParentReleaseObserved,
+      parentReceipt.parentReleaseLawful,
+      parentReceipt.eastAtlasReleaseAuthorized,
+      parentReceipt.canvasEastMayBuildAtlas,
+      parentReceipt.f13EastAtlasReleaseAuthorized,
+      datasetValue("hearthCanvasEastParentReleaseObserved", "")
+    );
+
+    const parentLaw = Boolean(parentObserved && !stale);
+    const parentRequestLawful = Boolean(parentLaw && parentRequestObserved);
+    const parentReleaseLawful = Boolean(parentLaw && parentReleaseObserved);
+
+    return {
+      parentApiPresent: Boolean(parentApi),
+      parentObserved,
+      parentReceipt: clonePlain(parentReceipt),
+      parentContract: contract,
+      parentReceiptId: receipt,
+      staleParentContractDetected: stale,
+      governedParentContract: GOVERNED_PARENT_CONTRACT,
+      governedParentReceipt: GOVERNED_PARENT_RECEIPT,
+      governedCanvasParentAligned: true,
+      canvasParentRequestObserved: parentRequestObserved,
+      canvasParentReleaseObserved: parentReleaseObserved,
+      parentRequestLawful,
+      parentReleaseLawful
+    };
+  }
+
+  function readWestReleaseState(input = {}) {
+    const directWest = findNestedReceipt(input, [
+      "west",
+      "westReceipt",
+      "westRelease",
+      "westReleaseReceipt",
+      "westAudit",
+      "westAuditReceipt"
+    ]);
+
+    const westApi = firstGlobal([
+      "LAB_RUNTIME_TABLE_WEST",
+      "RUNTIME_TABLE_WEST",
+      "DEXTER_LAB_RUNTIME_TABLE_WEST",
+      "LAB_CARDINAL_RUNTIME_TABLE_WEST",
+      "LAB_TRANSMISSION_GAP_CLASSIFIER_WEST",
+      "HEARTH_CANVAS_WEST",
+      "HEARTH.canvasWest",
+      "DEXTER_LAB.runtimeTableWest",
+      "DEXTER_LAB.cardinalRuntimeTableWest",
+      "DEXTER_LAB.hearthCanvasWest"
+    ]);
+
+    const westReceipt = isObject(directWest) && Object.keys(directWest).length
+      ? directWest
+      : (readReceipt(westApi) || {});
+
+    const westAuditObserved = firstBool(
+      false,
+      input.westAuditObserved,
+      input.westReleaseObserved,
+      westReceipt.westAuditObserved,
+      westReceipt.westReviewRecommended,
+      westReceipt.gapAssessed,
+      westReceipt.westAuthority,
+      datasetValue("hearthCanvasWestReleaseObserved", ""),
+      datasetValue("westGateReady", "")
+    );
+
+    const westAuditPassed = firstBool(
+      false,
+      input.westAuditPassed,
+      input.westReleasePassed,
+      westReceipt.westAuditPassed,
+      westReceipt.westGateReady,
+      westReceipt.gapClass === "NONE",
+      westReceipt.decision === "FULL_PASS",
+      westReceipt.forwardAllowed === true && westReceipt.hardBlock !== true,
+      datasetValue("hearthCanvasWestAuditPassed", "")
+    );
+
+    const westAuditDegraded = firstBool(
+      false,
+      input.westAuditDegraded,
+      input.westReleaseDegraded,
+      westReceipt.westAuditDegraded,
+      westReceipt.westGateDegradedReady,
+      westReceipt.canDegradeForward,
+      westReceipt.decision === "DEGRADED_FORWARD",
+      datasetValue("hearthCanvasWestAuditDegraded", "")
+    );
+
+    const westAuditBlocked = firstBool(
+      false,
+      input.westAuditBlocked,
+      westReceipt.westAuditBlocked,
+      westReceipt.hardBlock,
+      westReceipt.decision === "HARD_BLOCK",
+      datasetValue("hearthCanvasWestAuditBlocked", "")
+    );
+
+    const westReleaseObserved = firstBool(
+      Boolean(westAuditObserved && (westAuditPassed || westAuditDegraded) && !westAuditBlocked),
+      input.westReleaseObserved,
+      input.westReleaseLawful,
+      input.canvasReleaseAuthorized,
+      westReceipt.westReleaseObserved,
+      westReceipt.westReleaseLawful,
+      westReceipt.canvasReleaseAuthorized,
+      westReceipt.releaseToCanvas,
+      westReceipt.handoffTo === "CANVAS",
+      westReceipt.handoffTo === "EAST",
+      westReceipt.releasedTo === "CANVAS",
+      westReceipt.releasedTo === "EAST",
+      datasetValue("hearthCanvasWestReleaseObserved", "")
+    );
+
+    return {
+      westApiPresent: Boolean(westApi),
+      westReceipt: clonePlain(westReceipt),
+      westReleaseObserved: Boolean(westReleaseObserved && !westAuditBlocked),
+      westReleaseRequired: true,
+      westAuditObserved,
+      westAuditPassed,
+      westAuditDegraded,
+      westAuditBlocked
+    };
+  }
+
+  function detectFalsePromotion(input = {}) {
+    const text = (() => {
+      try {
+        return JSON.stringify(input || {});
+      } catch (_error) {
+        return String(input || "");
+      }
+    })();
+
+    return Boolean(
+      safeBool(input.visibleProof, false) ||
+      safeBool(input.visibleContentProof, false) ||
+      safeBool(input.visiblePlanetAvailable, false) ||
+      safeBool(input.canvasReady, false) ||
+      safeBool(input.readyTextAllowed, false) ||
+      safeBool(input.f21Allowed, false) ||
+      safeBool(input.completionLatched, false) ||
+      safeBool(input.f21ClaimedByCanvasEast, false) ||
+      safeBool(input.readyTextClaimedByCanvasEast, false) ||
+      safeBool(input.visualPassClaimed, false) ||
+      text.includes('"visualPassClaimed":true') ||
+      text.includes("visualPassClaimed=true") ||
+      text.includes('"completionLatched":true') ||
+      text.includes("completionLatched=true") ||
+      text.includes('"readyTextAllowed":true') ||
+      text.includes("readyTextAllowed=true")
+    );
+  }
+
+  function normalizeCanvasEastInput(input = {}) {
+    const source = isObject(input) ? input : {};
+    const parent = readGovernedParentState(source);
+    const west = readWestReleaseState(source);
+
+    const emergencyF13Requested = firstBool(
+      false,
+      source.emergencyF13Requested,
+      source.allowEmergencyF13,
+      source.emergency === true,
+      source.f13EmergencyCarrierSupport,
+      source.degradedEmergencyF13,
+      datasetValue("hearthCanvasEastEmergencyF13Requested", "")
+    );
+
+    const atlasBuildRequested = firstBool(
+      true,
+      source.atlasBuildRequested,
+      source.f13AtlasBuildRequested,
+      source.buildAtlasRequested,
+      parent.canvasParentRequestObserved,
+      parent.canvasParentReleaseObserved
+    );
+
+    const receivedFrom = firstString(
+      source.receivedFrom,
+      source.sourceCardinal,
+      source.requestedBy,
+      parent.parentReleaseLawful ? "PARENT" : "",
+      west.westReleaseObserved ? "WEST" : ""
+    );
+
+    const falsePromotionDetected = detectFalsePromotion(source);
+
+    const normalized = {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      file: FILE,
+      sourceFile: firstString(source.sourceFile, source.file, FILE),
+      destinationFile: firstString(source.destinationFile, source.handoffToFile, PARENT_FILE),
+      parentFile: PARENT_FILE,
+
+      receivedFrom,
+      requestedBy: firstString(source.requestedBy, source.requestSource, "canvas-parent"),
+      requestSource: firstString(source.requestSource, receivedFrom, "unknown"),
+
+      activeCycleNumber: safeNumber(firstDefined(source.activeCycleNumber, source.cycleNumber), 2),
+      activeCycleRoute: firstString(source.activeCycleRoute, source.cycleRoute, "NORTH_EAST_SOUTH_WEST_CANVAS"),
+      activeCardinal: "EAST",
+      activeFibonacci: ACTIVE_FIBONACCI_GATE,
+      activeStageId: firstString(source.activeStageId, source.activeGearId, "F13E_F13F_ATLAS_SOURCE"),
+      activeGearId: firstString(source.activeGearId, source.activeStageId, "F13E_F13F_ATLAS_SOURCE"),
+      activeNewsGate: firstString(source.activeNewsGate, "F13_CANVAS_EVIDENCE"),
+
+      parent,
+      west,
+
+      westReleaseObserved: west.westReleaseObserved,
+      westReleaseRequired: true,
+      westAuditObserved: west.westAuditObserved,
+      westAuditPassed: west.westAuditPassed,
+      westAuditDegraded: west.westAuditDegraded,
+      westAuditBlocked: west.westAuditBlocked,
+
+      canvasParentRequestObserved: parent.canvasParentRequestObserved,
+      canvasParentReleaseObserved: parent.canvasParentReleaseObserved,
+      parentRequestLawful: parent.parentRequestLawful,
+      parentReleaseLawful: parent.parentReleaseLawful,
+      staleParentContractDetected: parent.staleParentContractDetected,
+
+      emergencyF13Requested,
+      emergencyF13Reason: firstString(source.emergencyF13Reason, source.reason, parent.staleParentContractDetected ? "stale-parent-contract" : ""),
+      atlasBuildRequested,
+      atlasBuildPermissionRequired: true,
+
+      materialAuthorityObserved: Boolean(getMaterialAuthority()),
+      materialBridgeActive: state.materialReceiptBridgeActive,
+      materialBridgeChanged: state.materialBridgeChanged,
+      canonicalMaterialConsumed: state.canonicalMaterialConsumed,
+
+      newsGatePassedBeforeF21: firstBool(false, source.newsGatePassedBeforeF21, objectValue(parent.parentReceipt, "newsGatePassedBeforeF21")),
+      newsGateDegradedBeforeF21: firstBool(false, source.newsGateDegradedBeforeF21, objectValue(parent.parentReceipt, "newsGateDegradedBeforeF21")),
+      northGateReady: firstBool(false, source.northGateReady, objectValue(parent.parentReceipt, "northGateReady")),
+      eastGateReady: firstBool(false, source.eastGateReady, true),
+      westGateReady: firstBool(false, source.westGateReady, west.westAuditPassed || west.westAuditDegraded),
+      southGateReady: firstBool(false, source.southGateReady, objectValue(parent.parentReceipt, "southGateReady")),
+      canvasGateReady: firstBool(false, source.canvasGateReady, objectValue(parent.parentReceipt, "canvasGateReady")),
+
+      f21EligibleForNorth: firstBool(false, source.f21EligibleForNorth, objectValue(parent.parentReceipt, "f21EligibleForNorth")),
+      falsePromotionDetected,
+
+      firstFailedCoordinate: firstString(source.firstFailedCoordinate, "WAITING_GOVERNED_PARENT_WEST_RELEASE"),
+      recommendedNextFile: firstString(source.recommendedNextFile, PARENT_FILE),
+      recommendedNextRenewalTarget: firstString(source.recommendedNextRenewalTarget, PARENT_FILE),
+
+      raw: clonePlain(source),
+      normalizedAt: nowIso()
+    };
+
+    state.lastNormalizedInput = clonePlain(normalized);
+    applyNormalizedState(normalized);
+
+    return normalized;
+  }
+
+  function resolveParentRequest(input = {}) {
+    const normalized = isObject(input) && input.parent ? input : normalizeCanvasEastInput(input);
+    return Boolean(normalized.canvasParentRequestObserved && normalized.parentRequestLawful && !normalized.staleParentContractDetected);
+  }
+
+  function resolveWestRelease(input = {}) {
+    const normalized = isObject(input) && input.west ? input : normalizeCanvasEastInput(input);
+    return Boolean(normalized.westReleaseObserved && !normalized.westAuditBlocked);
+  }
+
+  function resolveAtlasBuildPermission(input = {}) {
+    const normalized = isObject(input) && input.parent && input.west ? input : normalizeCanvasEastInput(input);
+
+    let allowed = false;
+    let source = "NONE";
+    let reason = "WAITING_GOVERNED_PARENT_WEST_RELEASE";
+
+    if (normalized.falsePromotionDetected) {
+      allowed = false;
+      source = "NONE";
+      reason = "FALSE_PROMOTION_BLOCKED";
+    } else if (normalized.staleParentContractDetected) {
+      allowed = false;
+      source = "NONE";
+      reason = "STALE_PARENT_CONTRACT_DETECTED";
+    } else if (normalized.emergencyF13Requested) {
+      allowed = true;
+      source = "EMERGENCY_F13";
+      reason = "NONE_EMERGENCY_F13_ATLAS_ALLOWED";
+    } else if (normalized.parentReleaseLawful) {
+      allowed = true;
+      source = "PARENT_RELEASE";
+      reason = "NONE_PARENT_RELEASE_LAWFUL";
+    } else if (normalized.parentRequestLawful && normalized.westReleaseObserved) {
+      allowed = true;
+      source = "PARENT_REQUEST_AFTER_WEST_RELEASE";
+      reason = "NONE_PARENT_REQUEST_AFTER_WEST_RELEASE";
+    } else if (normalized.westReleaseObserved && normalized.destinationFile === PARENT_FILE) {
+      allowed = true;
+      source = "WEST_RELEASE";
+      reason = "NONE_WEST_RELEASE_TO_GOVERNED_PARENT";
+    }
+
+    const packet = {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      file: FILE,
+      parentFile: PARENT_FILE,
+      governedCanvasParentAligned: true,
+      afterWestReleaseOnly: true,
+      canvasEastSourceOnly: true,
+
+      canvasEastMayBuildAtlas: allowed,
+      f13BuildLawful: allowed,
+      f13BuildBlockedReason: allowed ? "" : reason,
+      f13PermissionSource: source,
+
+      westReleaseObserved: normalized.westReleaseObserved,
+      westAuditObserved: normalized.westAuditObserved,
+      westAuditPassed: normalized.westAuditPassed,
+      westAuditDegraded: normalized.westAuditDegraded,
+      westAuditBlocked: normalized.westAuditBlocked,
+      canvasParentRequestObserved: normalized.canvasParentRequestObserved,
+      canvasParentReleaseObserved: normalized.canvasParentReleaseObserved,
+      parentRequestLawful: normalized.parentRequestLawful,
+      parentReleaseLawful: normalized.parentReleaseLawful,
+      emergencyF13Requested: normalized.emergencyF13Requested,
+      emergencyF13Reason: normalized.emergencyF13Reason,
+      falsePromotionDetected: normalized.falsePromotionDetected,
+      staleParentContractDetected: normalized.staleParentContractDetected,
+
+      firstFailedCoordinate: allowed ? "NONE_F13_ATLAS_BUILD_PERMISSION_GRANTED" : reason,
+      recommendedNextFile: allowed ? FILE : PARENT_FILE,
+      recommendedNextRenewalTarget: allowed ? FILE : PARENT_FILE,
+
+      f21ClaimedByCanvasEast: false,
+      readyTextClaimedByCanvasEast: false,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false,
+      createdAt: nowIso()
+    };
+
+    state.canvasEastMayBuildAtlas = allowed;
+    state.f13BuildLawful = allowed;
+    state.f13BuildBlockedReason = allowed ? "" : reason;
+    state.f13PermissionSource = source;
+    state.firstFailedCoordinate = packet.firstFailedCoordinate;
+    state.recommendedNextFile = packet.recommendedNextFile;
+    state.recommendedNextRenewalTarget = packet.recommendedNextRenewalTarget;
+    state.lastPermissionPacket = clonePlain(packet);
+
+    updateDataset();
+    return packet;
+  }
+
+  function composeAtlasBuildPermissionPacket(input = {}) {
+    return resolveAtlasBuildPermission(input);
+  }
+
+  function applyNormalizedState(normalized) {
+    state.sourceFile = normalized.sourceFile;
+    state.destinationFile = normalized.destinationFile;
+    state.receivedFrom = normalized.receivedFrom;
+    state.requestedBy = normalized.requestedBy;
+    state.requestSource = normalized.requestSource;
+    state.activeCycleNumber = normalized.activeCycleNumber;
+    state.activeCycleRoute = normalized.activeCycleRoute;
+    state.activeCardinal = "EAST";
+    state.activeStageId = normalized.activeStageId;
+    state.activeGearId = normalized.activeGearId;
+    state.activeNewsGate = normalized.activeNewsGate;
+
+    state.westReleaseObserved = normalized.westReleaseObserved;
+    state.westReleaseRequired = true;
+    state.westAuditObserved = normalized.westAuditObserved;
+    state.westAuditPassed = normalized.westAuditPassed;
+    state.westAuditDegraded = normalized.westAuditDegraded;
+    state.westAuditBlocked = normalized.westAuditBlocked;
+
+    state.canvasParentRequestObserved = normalized.canvasParentRequestObserved;
+    state.canvasParentReleaseObserved = normalized.canvasParentReleaseObserved;
+    state.parentRequestLawful = normalized.parentRequestLawful;
+    state.parentReleaseLawful = normalized.parentReleaseLawful;
+    state.staleParentContractDetected = normalized.staleParentContractDetected;
+
+    state.emergencyF13Requested = normalized.emergencyF13Requested;
+    state.emergencyF13Reason = normalized.emergencyF13Reason;
+    state.atlasBuildRequested = normalized.atlasBuildRequested;
+
+    state.northGateReady = normalized.northGateReady;
+    state.eastGateReady = true;
+    state.westGateReady = normalized.westGateReady;
+    state.southGateReady = normalized.southGateReady;
+    state.canvasGateReady = normalized.canvasGateReady;
+    state.newsGatePassedBeforeF21 = normalized.newsGatePassedBeforeF21;
+    state.newsGateDegradedBeforeF21 = normalized.newsGateDegradedBeforeF21;
+    state.f21EligibleForNorth = normalized.f21EligibleForNorth;
+
+    state.f21ClaimedByCanvasEast = false;
+    state.readyTextClaimedByCanvasEast = false;
+    state.visualPassClaimed = false;
+  }
+
+  function composeHeldAtlasPacket(input = {}, permission = null) {
+    const normalized = isObject(input) && input.parent && input.west ? input : normalizeCanvasEastInput(input);
+    const gate = permission || resolveAtlasBuildPermission(normalized);
+
+    state.heldAtlasPacketReturned = true;
+    state.canvasEastMayBuildAtlas = false;
+    state.f13BuildLawful = false;
+    state.f13BuildBlockedReason = gate.f13BuildBlockedReason || "WAITING_GOVERNED_PARENT_WEST_RELEASE";
+    state.f13PermissionSource = "NONE";
+    state.atlasBuildStarted = false;
+    state.atlasBuildComplete = false;
+    state.f13SourceStageStarted = false;
+    state.f13SourceStageComplete = false;
+    state.f13AtlasPacketReady = false;
+    state.firstFailedCoordinate = state.f13BuildBlockedReason;
+    state.recommendedNextFile = PARENT_FILE;
+    state.recommendedNextRenewalTarget = PARENT_FILE;
+    state.f21ClaimedByCanvasEast = false;
+    state.readyTextClaimedByCanvasEast = false;
+    state.visualPassClaimed = false;
+
+    const packet = {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      file: FILE,
+      parentFile: PARENT_FILE,
+      governedCanvasParentAligned: true,
+      afterWestReleaseOnly: true,
+      canvasEastSourceOnly: true,
+
+      heldAtlasPacketReturned: true,
+      atlasCanvas: null,
+      canvas: null,
+      width: safeNumber(normalized.raw && (normalized.raw.width || normalized.raw.atlasWidth), DEFAULT_ATLAS_WIDTH),
+      height: safeNumber(normalized.raw && (normalized.raw.height || normalized.raw.atlasHeight), DEFAULT_ATLAS_HEIGHT),
+      atlasReady: false,
+      atlasBuildComplete: false,
+
+      canvasEastMayBuildAtlas: false,
+      f13BuildLawful: false,
+      f13BuildBlockedReason: state.f13BuildBlockedReason,
+      f13PermissionSource: "NONE",
+      f13SourceStageStarted: false,
+      f13SourceStageComplete: false,
+      f13AtlasPacketReady: false,
+
+      westReleaseObserved: normalized.westReleaseObserved,
+      canvasParentRequestObserved: normalized.canvasParentRequestObserved,
+      canvasParentReleaseObserved: normalized.canvasParentReleaseObserved,
+      emergencyF13Requested: normalized.emergencyF13Requested,
+
+      visibleProof: false,
+      visibleContentProof: false,
+      visiblePlanetAvailable: false,
+      canvasReady: false,
+      f21EligibleForNorth: false,
+      f21ClaimedByCanvasEast: false,
+      readyTextClaimedByCanvasEast: false,
+      firstFailedCoordinate: state.firstFailedCoordinate,
+      recommendedNextFile: state.recommendedNextFile,
+      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false,
+      createdAt: nowIso()
+    };
+
+    state.lastHeldAtlasPacket = clonePlain(packet);
+    updateDataset();
+    publishGlobals();
+
+    return packet;
+  }
+
+  function composeEmergencyF13AtlasPacket(packet = {}) {
+    return {
+      ...packet,
+      emergencyF13Requested: true,
+      emergencyF13AtlasPacket: true,
+      emergencyFallbackUsed: true,
+      sevenContinentFallbackEmergencyOnly: true,
+      sevenContinentFallbackUsed: true,
+      f13PermissionSource: "EMERGENCY_F13",
+      visibleProof: false,
+      visibleContentProof: false,
+      visiblePlanetAvailable: false,
+      canvasReady: false,
+      f21ClaimedByCanvasEast: false,
+      readyTextClaimedByCanvasEast: false,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false
+    };
+  }
+
+  function composeAtlasEvidencePacket(config = {}) {
+    const packet = {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      file: FILE,
+      parentFile: PARENT_FILE,
+      governedCanvasParentAligned: true,
+      afterWestReleaseOnly: true,
+      canvasEastSourceOnly: true,
+
+      canvasEastMayBuildAtlas: state.canvasEastMayBuildAtlas,
+      f13BuildLawful: state.f13BuildLawful,
+      f13BuildBlockedReason: state.f13BuildBlockedReason,
+      f13PermissionSource: state.f13PermissionSource,
+
+      atlasCanvas: config.atlasCanvas || atlasCanvas || null,
+      canvas: config.atlasCanvas || atlasCanvas || null,
+      width: safeNumber(config.width, state.atlasWidth),
+      height: safeNumber(config.height, state.atlasHeight),
+      atlasWidth: safeNumber(config.width, state.atlasWidth),
+      atlasHeight: safeNumber(config.height, state.atlasHeight),
+      atlasReady: Boolean(config.atlasCanvas || atlasCanvas),
+      atlasBuildComplete: state.atlasBuildComplete,
+      sourceRole: "east-material-atlas-source",
+      materialBridgeReceipt: getMaterialBridgeReceipt({ sync: false }),
+
+      f13SourceStageStarted: state.f13SourceStageStarted,
+      f13SourceStageComplete: state.f13SourceStageComplete,
+      f13AtlasPacketReady: state.f13AtlasPacketReady,
+
+      visibleProof: false,
+      visibleContentProof: false,
+      visiblePlanetAvailable: false,
+      canvasReady: false,
+      f21EligibleForNorth: false,
+      f21ClaimedByCanvasEast: false,
+      readyTextClaimedByCanvasEast: false,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false,
+      getReceipt,
+      createdAt: nowIso()
+    };
+
+    state.lastAtlasPacket = clonePlain({
+      ...packet,
+      atlasCanvas: packet.atlasCanvas ? "[canvas]" : null,
+      canvas: packet.canvas ? "[canvas]" : null
+    });
+
+    return state.emergencyF13Requested ? composeEmergencyF13AtlasPacket(packet) : packet;
   }
 
   function hashNoise(x, y, z, salt = 0) {
@@ -584,8 +1358,7 @@
       previousMaterialBridgeSignature: state.previousMaterialBridgeSignature,
       materialBridgeChanged: state.materialBridgeChanged,
       materialBridgeSyncCount: state.materialBridgeSyncCount,
-      materialBridgeLastSyncedAt: state.materialBridgeLastSyncedAt,
-      recursiveReceiptLoopRemoved: true
+      materialBridgeLastSyncedAt: state.materialBridgeLastSyncedAt
     };
   }
 
@@ -808,7 +1581,7 @@
       receipt: source.receipt || (fallbackUsed ? "HEARTH_CANVAS_EAST_EMERGENCY_F13_ATLAS_CARRIER_RECEIPT" : "UNKNOWN_MATERIAL_RECEIPT"),
       eastContract: CONTRACT,
       eastReceipt: RECEIPT,
-      parentSplitContract: ACTIVE_PARENT_SPLIT_CONTRACT,
+      governedParentContract: GOVERNED_PARENT_CONTRACT,
       sourceType,
       u: point.u,
       v: point.v,
@@ -836,11 +1609,10 @@
       canvasEastSourceOnly: true,
       canvasStillDoesNotOwnPlanetTruth: true,
       canvasEastDoesNotOwnMaterialTruth: true,
-      parentContractAligned: true,
-      parentPhysicalBootstrapAligned: true,
-      retiredParentContractSuperseded: true,
-      recursiveReceiptLoopRemoved: true,
+      governedCanvasParentAligned: true,
+      afterWestReleaseOnly: true,
       f21ClaimedByCanvasEast: false,
+      readyTextClaimedByCanvasEast: false,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -881,6 +1653,7 @@
       fallbackUsed = true;
       state.fallbackSampleUsedAtRuntime = true;
       state.sevenContinentFallbackUsed = true;
+      state.emergencyFallbackUsed = Boolean(state.emergencyF13Requested);
       state.sevenContinentFallbackSuppressedByUpstream = false;
     } else {
       state.sevenContinentFallbackSuppressedByUpstream = true;
@@ -892,10 +1665,15 @@
   }
 
   function sample(point = {}) {
-    return sampleWithAuthority(point, getMaterialAuthority(), {
-      syncBridge: true,
-      updateDataset: false
-    });
+    try {
+      return sampleWithAuthority(point, getMaterialAuthority(), {
+        syncBridge: true,
+        updateDataset: false
+      });
+    } catch (error) {
+      recordError("SAMPLE_FAILED_USING_FALLBACK", error);
+      return normalizeSample(fallbackTerrain(normalizePoint(point)), normalizePoint(point), true);
+    }
   }
 
   function read(point = {}) {
@@ -914,13 +1692,17 @@
     canvas.dataset.hearthCanvasEastAtlas = "true";
     canvas.dataset.hearthCanvasEastContract = CONTRACT;
     canvas.dataset.hearthCanvasEastReceipt = RECEIPT;
-    canvas.dataset.hearthCanvasEastParentSplitContract = ACTIVE_PARENT_SPLIT_CONTRACT;
-    canvas.dataset.hearthCanvasEastParentContractAligned = "true";
-    canvas.dataset.hearthCanvasEastPhysicalBootstrapAligned = "true";
-    canvas.dataset.hearthCanvasEastRetiredParentContractSuperseded = "true";
-    canvas.dataset.hearthCanvasEastRecursiveReceiptLoopRemoved = "true";
+    canvas.dataset.hearthCanvasEastGovernedParentContract = GOVERNED_PARENT_CONTRACT;
+    canvas.dataset.hearthCanvasEastGovernedParentAligned = "true";
+    canvas.dataset.hearthCanvasEastAfterWestReleaseOnly = "true";
+    canvas.dataset.hearthCanvasEastSourceOnly = "true";
+    canvas.dataset.hearthCanvasEastF13Only = "true";
     canvas.dataset.hearthCanvasEastTransistorRole = "source";
     canvas.dataset.hearthCanvasEastMaterialAtlasPrimary = "true";
+    canvas.dataset.hearthCanvasEastVisibleProof = "false";
+    canvas.dataset.hearthCanvasEastCanvasReady = "false";
+    canvas.dataset.hearthCanvasEastF21Claimed = "false";
+    canvas.dataset.hearthCanvasEastReadyTextClaimed = "false";
     canvas.dataset.generatedImage = "false";
     canvas.dataset.graphicBox = "false";
     canvas.dataset.webgl = "false";
@@ -940,6 +1722,7 @@
   }
 
   function resetBuildCounters(width, height) {
+    state.heldAtlasPacketReturned = false;
     state.atlasBuildStarted = true;
     state.atlasBuildProgress = 0;
     state.atlasBuildComplete = false;
@@ -968,6 +1751,9 @@
     state.f13SourceStageStarted = true;
     state.f13SourceStageComplete = false;
     state.f13AtlasPacketReady = false;
+    state.f21ClaimedByCanvasEast = false;
+    state.readyTextClaimedByCanvasEast = false;
+    state.visualPassClaimed = false;
 
     state.updatedAt = state.atlasBuildStartedAt;
 
@@ -975,7 +1761,8 @@
       width,
       height,
       activeFibonacciGate: ACTIVE_FIBONACCI_GATE,
-      parentSplitContract: ACTIVE_PARENT_SPLIT_CONTRACT
+      permissionSource: state.f13PermissionSource,
+      governedParentContract: GOVERNED_PARENT_CONTRACT
     });
   }
 
@@ -1005,11 +1792,15 @@
         options.onProgress(state.atlasBuildProgress, {
           contract: CONTRACT,
           receipt: RECEIPT,
-          parentSplitContract: ACTIVE_PARENT_SPLIT_CONTRACT,
+          governedParentContract: GOVERNED_PARENT_CONTRACT,
           event: "ATLAS_BUILD_PROGRESS",
           fibonacci: ACTIVE_FIBONACCI_GATE,
           progress: state.atlasBuildProgress,
           detail: clonePlain(detail),
+          visibleProof: false,
+          canvasReady: false,
+          f21ClaimedByCanvasEast: false,
+          readyTextClaimedByCanvasEast: false,
           visualPassClaimed: false
         });
       } catch (error) {
@@ -1021,6 +1812,13 @@
   }
 
   async function buildAtlas(options = {}) {
+    const normalized = normalizeCanvasEastInput(options);
+    const permission = resolveAtlasBuildPermission(normalized);
+
+    if (!permission.canvasEastMayBuildAtlas || !permission.f13BuildLawful) {
+      return composeHeldAtlasPacket(normalized, permission);
+    }
+
     const width = clamp(
       Math.round(safeNumber(options.width || options.atlasWidth, DEFAULT_ATLAS_WIDTH)),
       MIN_ATLAS_WIDTH,
@@ -1034,7 +1832,7 @@
     );
 
     const rowsPerChunk = clamp(Math.round(safeNumber(options.rowsPerChunk, 8)), 1, 32);
-    const materialAuthority = getMaterialAuthority();
+    const materialAuthority = normalized.emergencyF13Requested ? null : getMaterialAuthority();
 
     resetBuildCounters(width, height);
     syncMaterialBridge({
@@ -1069,7 +1867,7 @@
 
           const offset = (y * width + x) * 4;
           const rgb = normalizeRgb(material.rgb || material.color, PALETTE.void);
-          const alpha = clamp(Math.round(clamp01(material.alpha ?? 1) * 255), 0, 255);
+          const alpha = clamp(Math.round(clamp01(material.alpha === undefined ? 1 : material.alpha) * 255), 0, 255);
 
           data[offset] = rgb[0];
           data[offset + 1] = rgb[1];
@@ -1102,6 +1900,12 @@
       state.lastBuildAt = state.atlasBuildCompletedAt;
       state.f13SourceStageComplete = true;
       state.f13AtlasPacketReady = true;
+      state.firstFailedCoordinate = "NONE_F13F_ATLAS_PACKET_READY";
+      state.recommendedNextFile = PARENT_FILE;
+      state.recommendedNextRenewalTarget = PARENT_FILE;
+      state.f21ClaimedByCanvasEast = false;
+      state.readyTextClaimedByCanvasEast = false;
+      state.visualPassClaimed = false;
       state.updatedAt = state.atlasBuildCompletedAt;
 
       recordLocal("F13F_ATLAS_BUILD_COMPLETE", {
@@ -1112,36 +1916,22 @@
         fallbackSamples: state.atlasFallbackSampleCount,
         materialSamples: state.atlasMaterialSampleCount,
         canonicalMaterialSamples: state.atlasCanonicalMaterialSampleCount,
-        activeFibonacciGate: ACTIVE_FIBONACCI_GATE
+        activeFibonacciGate: ACTIVE_FIBONACCI_GATE,
+        permissionSource: state.f13PermissionSource,
+        visibleProof: false,
+        canvasReady: false,
+        f21ClaimedByCanvasEast: false,
+        visualPassClaimed: false
       });
 
       updateDataset();
       publishGlobals();
 
-      const packet = {
-        contract: CONTRACT,
-        receipt: RECEIPT,
-        parentSplitContract: ACTIVE_PARENT_SPLIT_CONTRACT,
-        parentSplitReceipt: ACTIVE_PARENT_SPLIT_RECEIPT,
+      const packet = composeAtlasEvidencePacket({
         atlasCanvas,
-        canvas: atlasCanvas,
         width,
-        height,
-        atlasWidth: width,
-        atlasHeight: height,
-        atlasReady: true,
-        atlasBuildComplete: true,
-        sourceRole: "east-material-atlas-source",
-        materialBridgeReceipt: getMaterialBridgeReceipt({ sync: false }),
-        getReceipt,
-        f13SourceStageComplete: true,
-        f13AtlasPacketReady: true,
-        f21ClaimedByCanvasEast: false,
-        generatedImage: false,
-        graphicBox: false,
-        webGL: false,
-        visualPassClaimed: false
-      };
+        height
+      });
 
       if (isFunction(options.onComplete)) {
         try {
@@ -1157,17 +1947,49 @@
       state.atlasBuildComplete = false;
       state.f13SourceStageComplete = false;
       state.f13AtlasPacketReady = false;
+      state.firstFailedCoordinate = "WAITING_CANVAS_EAST_ATLAS_BUILD";
+      state.recommendedNextFile = FILE;
+      state.recommendedNextRenewalTarget = FILE;
+      state.f21ClaimedByCanvasEast = false;
+      state.readyTextClaimedByCanvasEast = false;
+      state.visualPassClaimed = false;
       state.updatedAt = nowIso();
 
       recordError("ATLAS_BUILD_FAILED", error, {
         width,
-        height
+        height,
+        permissionSource: state.f13PermissionSource
       });
 
       updateDataset();
       publishGlobals();
 
-      throw error;
+      return {
+        contract: CONTRACT,
+        receipt: RECEIPT,
+        file: FILE,
+        parentFile: PARENT_FILE,
+        governedCanvasParentAligned: true,
+        afterWestReleaseOnly: true,
+        canvasEastSourceOnly: true,
+        atlasBuildStarted: true,
+        atlasBuildComplete: false,
+        atlasBuildError: state.atlasBuildError,
+        f13SourceStageStarted: true,
+        f13SourceStageComplete: false,
+        f13AtlasPacketReady: false,
+        firstFailedCoordinate: "WAITING_CANVAS_EAST_ATLAS_BUILD",
+        recommendedNextFile: FILE,
+        recommendedNextRenewalTarget: FILE,
+        visibleProof: false,
+        canvasReady: false,
+        f21ClaimedByCanvasEast: false,
+        readyTextClaimedByCanvasEast: false,
+        generatedImage: false,
+        graphicBox: false,
+        webGL: false,
+        visualPassClaimed: false
+      };
     }
   }
 
@@ -1177,6 +1999,9 @@
     state.atlasInvalidationReason = safeString(reason, "manual-invalidation");
     state.atlasBuildComplete = false;
     state.f13AtlasPacketReady = false;
+    state.f21ClaimedByCanvasEast = false;
+    state.readyTextClaimedByCanvasEast = false;
+    state.visualPassClaimed = false;
     state.updatedAt = nowIso();
 
     atlasCanvas = null;
@@ -1200,6 +2025,313 @@
     return lastAtlasImageData;
   }
 
+  function composeCanvasEastReceipt() {
+    return getReceipt();
+  }
+
+  function getCanvasEastGateReceipt() {
+    return getReceipt();
+  }
+
+  function getReceipt() {
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
+      baselineContract: BASELINE_CONTRACT,
+      governedParentContract: GOVERNED_PARENT_CONTRACT,
+      governedParentReceipt: GOVERNED_PARENT_RECEIPT,
+      retiredParentSplitContracts: RETIRED_PARENT_SPLIT_CONTRACTS.slice(),
+      expectedMaterialContract: EXPECTED_MATERIAL_CONTRACT,
+      expectedMaterialReceipt: EXPECTED_MATERIAL_RECEIPT,
+      version: VERSION,
+      file: FILE,
+      parentFile: PARENT_FILE,
+      role: state.role,
+
+      governedCanvasParentAligned: true,
+      afterWestReleaseOnly: true,
+      canvasEastSourceOnly: true,
+
+      requiredApiSurfaceComplete: true,
+      requiredMethods: state.requiredMethods.slice(),
+      buildAtlasAvailable: true,
+      sampleAvailable: true,
+      readAvailable: true,
+      getReceiptAvailable: true,
+
+      canvasEastMayBuildAtlas: state.canvasEastMayBuildAtlas,
+      f13BuildLawful: state.f13BuildLawful,
+      f13BuildBlockedReason: state.f13BuildBlockedReason,
+      f13PermissionSource: state.f13PermissionSource,
+
+      westReleaseObserved: state.westReleaseObserved,
+      westReleaseRequired: state.westReleaseRequired,
+      westAuditObserved: state.westAuditObserved,
+      westAuditPassed: state.westAuditPassed,
+      westAuditDegraded: state.westAuditDegraded,
+      westAuditBlocked: state.westAuditBlocked,
+      canvasParentRequestObserved: state.canvasParentRequestObserved,
+      canvasParentReleaseObserved: state.canvasParentReleaseObserved,
+      parentRequestLawful: state.parentRequestLawful,
+      parentReleaseLawful: state.parentReleaseLawful,
+      staleParentContractDetected: state.staleParentContractDetected,
+      emergencyF13Requested: state.emergencyF13Requested,
+      emergencyF13Reason: state.emergencyF13Reason,
+      emergencyF13AtlasPacket: state.emergencyF13AtlasPacket,
+
+      newsProtocolSynchronized: true,
+      newsFinalizedByCanvasEast: false,
+      northGateReady: state.northGateReady,
+      eastGateReady: true,
+      westGateReady: state.westGateReady,
+      southGateReady: state.southGateReady,
+      canvasGateReady: state.canvasGateReady,
+      newsGatePassedBeforeF21: state.newsGatePassedBeforeF21,
+      newsGateDegradedBeforeF21: state.newsGateDegradedBeforeF21,
+
+      fibonacciAlignmentSynchronized: true,
+      activeFibonacciGate: ACTIVE_FIBONACCI_GATE,
+      futureFibonacciGate: FUTURE_FIBONACCI_GATE,
+      oneActiveGearAtATime: true,
+      activeStageId: state.activeStageId,
+      activeGearId: state.activeGearId,
+      cycleOrder: CYCLE_ORDER,
+
+      materialReceiptBridge: getMaterialBridgeReceipt({ sync: false }),
+      materialReceiptBridgeActive: state.materialReceiptBridgeActive,
+      materialNestedReceiptAvailable: state.materialNestedReceiptAvailable,
+      materialContract: state.materialContract,
+      materialReceipt: state.materialReceipt,
+      materialExpectedContract: state.materialExpectedContract,
+      materialExpectedReceipt: state.materialExpectedReceipt,
+      materialContractMatchesExpected: state.materialContractMatchesExpected,
+      materialReceiptMatchesExpected: state.materialReceiptMatchesExpected,
+      materialPreviousContract: state.materialPreviousContract,
+      materialBaselineContract: state.materialBaselineContract,
+      materialVersion: state.materialVersion,
+      materialRole: state.materialRole,
+      canonicalMaterialAuthorityPresent: state.canonicalMaterialAuthorityPresent,
+      canonicalMaterialConsumed: state.canonicalMaterialConsumed,
+      canonicalMaterialColorPrimary: state.canonicalMaterialColorPrimary,
+      canonicalMaterialShapePrimary: state.canonicalMaterialShapePrimary,
+      canvasStillDoesNotOwnPlanetTruth: true,
+      canvasEastDoesNotOwnMaterialTruth: true,
+
+      atlasSourceActive: true,
+      upstreamFirstAtlasActive: true,
+      atlasBuildRequested: state.atlasBuildRequested,
+      atlasBuildStarted: state.atlasBuildStarted,
+      atlasBuildProgress: state.atlasBuildProgress,
+      atlasBuildComplete: state.atlasBuildComplete,
+      atlasBuildError: state.atlasBuildError,
+      atlasBuildStartedAt: state.atlasBuildStartedAt,
+      atlasBuildCompletedAt: state.atlasBuildCompletedAt,
+      atlasBuildElapsedMs: state.atlasBuildElapsedMs,
+      atlasCanvasPresent: state.atlasCanvasPresent,
+      atlasWidth: state.atlasWidth,
+      atlasHeight: state.atlasHeight,
+      atlasPixelCount: state.atlasPixelCount,
+
+      atlasCanonicalMaterialSampleCount: state.atlasCanonicalMaterialSampleCount,
+      atlasMaterialSampleCount: state.atlasMaterialSampleCount,
+      atlasElevationHydrologySampleCount: state.atlasElevationHydrologySampleCount,
+      atlasFallbackSampleCount: state.atlasFallbackSampleCount,
+      atlasUnknownUpstreamSampleCount: state.atlasUnknownUpstreamSampleCount,
+      atlasTotalSampleCount: state.atlasTotalSampleCount,
+      atlasLandSampleCount: state.atlasLandSampleCount,
+      atlasWaterSampleCount: state.atlasWaterSampleCount,
+      atlasCoastSampleCount: state.atlasCoastSampleCount,
+      atlasReliefSampleCount: state.atlasReliefSampleCount,
+      atlasClassCount: state.atlasClassCount,
+      atlasClasses: state.atlasClasses.slice(),
+
+      sevenContinentFallbackEmergencyOnly: true,
+      sevenContinentFallbackUsed: state.sevenContinentFallbackUsed,
+      sevenContinentFallbackSuppressedByUpstream: state.sevenContinentFallbackSuppressedByUpstream,
+      emergencyFallbackUsed: state.emergencyFallbackUsed,
+      elevationControlsLandShape: true,
+      hydrologyControlsWaterShape: true,
+      coastlinesReadFromHydrologyAndMaterials: true,
+      landChannelStillReceiverOnly: true,
+
+      cachedAtlasInvalidationAvailable: true,
+      atlasInvalidationCount: state.atlasInvalidationCount,
+      atlasInvalidated: state.atlasInvalidated,
+      atlasInvalidationReason: state.atlasInvalidationReason,
+
+      fallbackSampleAvailable: true,
+      fallbackSampleUsedAtRuntime: state.fallbackSampleUsedAtRuntime,
+
+      f13SourceStageStarted: state.f13SourceStageStarted,
+      f13SourceStageComplete: state.f13SourceStageComplete,
+      f13AtlasPacketReady: state.f13AtlasPacketReady,
+      f21EligibleForNorth: false,
+      f21ClaimedByCanvasEast: false,
+      readyTextClaimedByCanvasEast: false,
+
+      heldAtlasPacketReturned: state.heldAtlasPacketReturned,
+      firstFailedCoordinate: state.firstFailedCoordinate,
+      recommendedNextFile: state.recommendedNextFile,
+      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+
+      localEvents: clonePlain(state.localEvents),
+      errors: clonePlain(state.errors),
+
+      ownsSourceMaterialAtlas: true,
+      ownsBuildAtlasMethod: true,
+      ownsSampleMethod: true,
+      ownsReadMethod: true,
+      ownsReceiptSurface: true,
+
+      ownsPlanetTruth: false,
+      ownsElevationTruth: false,
+      ownsHydrologyTruth: false,
+      ownsMaterialTruth: false,
+      ownsTextureComposition: false,
+      ownsSphereRendering: false,
+      ownsVisibleProof: false,
+      ownsRuntimeTableGovernance: false,
+      ownsRouteOrchestration: false,
+      ownsNewsFinalization: false,
+      ownsCanvasRelease: false,
+      ownsWestAudit: false,
+      ownsF21: false,
+      ownsReadyText: false,
+      ownsFinalVisualPassClaim: false,
+
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false,
+
+      publishedAt: state.publishedAt,
+      updatedAt: state.updatedAt || nowIso()
+    };
+  }
+
+  function getReceiptText() {
+    const r = getReceipt();
+
+    const classes = (r.atlasClasses || []).join(",");
+    const events = (r.localEvents || [])
+      .slice(-32)
+      .map((event) => `- ${event.at} :: ${event.event} :: ${JSON.stringify(event.detail || {})}`)
+      .join("\n") || "- none";
+
+    const errors = (r.errors || [])
+      .map((error) => `- ${error.at} :: ${error.code} :: ${error.message}`)
+      .join("\n") || "- none";
+
+    return [
+      "HEARTH_CANVAS_EAST_GOVERNED_F13_ATLAS_SOURCE_AFTER_WEST_RELEASE_RECEIPT",
+      "",
+      `contract=${r.contract}`,
+      `receipt=${r.receipt}`,
+      `previousContract=${r.previousContract}`,
+      `baselineContract=${r.baselineContract}`,
+      `governedParentContract=${r.governedParentContract}`,
+      `governedParentReceipt=${r.governedParentReceipt}`,
+      `version=${r.version}`,
+      `file=${r.file}`,
+      `parentFile=${r.parentFile}`,
+      `role=${r.role}`,
+      "",
+      `governedCanvasParentAligned=${r.governedCanvasParentAligned}`,
+      `afterWestReleaseOnly=${r.afterWestReleaseOnly}`,
+      `canvasEastSourceOnly=${r.canvasEastSourceOnly}`,
+      "",
+      `requiredApiSurfaceComplete=${r.requiredApiSurfaceComplete}`,
+      `buildAtlasAvailable=${r.buildAtlasAvailable}`,
+      `sampleAvailable=${r.sampleAvailable}`,
+      `readAvailable=${r.readAvailable}`,
+      `getReceiptAvailable=${r.getReceiptAvailable}`,
+      "",
+      `canvasEastMayBuildAtlas=${r.canvasEastMayBuildAtlas}`,
+      `f13BuildLawful=${r.f13BuildLawful}`,
+      `f13BuildBlockedReason=${r.f13BuildBlockedReason}`,
+      `f13PermissionSource=${r.f13PermissionSource}`,
+      `westReleaseObserved=${r.westReleaseObserved}`,
+      `canvasParentRequestObserved=${r.canvasParentRequestObserved}`,
+      `canvasParentReleaseObserved=${r.canvasParentReleaseObserved}`,
+      `emergencyF13Requested=${r.emergencyF13Requested}`,
+      "",
+      `newsProtocolSynchronized=${r.newsProtocolSynchronized}`,
+      `newsFinalizedByCanvasEast=${r.newsFinalizedByCanvasEast}`,
+      `northGateReady=${r.northGateReady}`,
+      `eastGateReady=${r.eastGateReady}`,
+      `westGateReady=${r.westGateReady}`,
+      `southGateReady=${r.southGateReady}`,
+      `canvasGateReady=${r.canvasGateReady}`,
+      `newsGatePassedBeforeF21=${r.newsGatePassedBeforeF21}`,
+      `newsGateDegradedBeforeF21=${r.newsGateDegradedBeforeF21}`,
+      "",
+      `fibonacciAlignmentSynchronized=${r.fibonacciAlignmentSynchronized}`,
+      `activeFibonacciGate=${r.activeFibonacciGate}`,
+      `futureFibonacciGate=${r.futureFibonacciGate}`,
+      `oneActiveGearAtATime=${r.oneActiveGearAtATime}`,
+      `activeStageId=${r.activeStageId}`,
+      `activeGearId=${r.activeGearId}`,
+      "",
+      `materialReceiptBridgeActive=${r.materialReceiptBridgeActive}`,
+      `materialNestedReceiptAvailable=${r.materialNestedReceiptAvailable}`,
+      `materialContract=${r.materialContract}`,
+      `materialReceipt=${r.materialReceipt}`,
+      `materialContractMatchesExpected=${r.materialContractMatchesExpected}`,
+      `materialReceiptMatchesExpected=${r.materialReceiptMatchesExpected}`,
+      `canonicalMaterialAuthorityPresent=${r.canonicalMaterialAuthorityPresent}`,
+      `canonicalMaterialConsumed=${r.canonicalMaterialConsumed}`,
+      "",
+      `atlasBuildStarted=${r.atlasBuildStarted}`,
+      `atlasBuildProgress=${r.atlasBuildProgress}`,
+      `atlasBuildComplete=${r.atlasBuildComplete}`,
+      `atlasBuildError=${r.atlasBuildError}`,
+      `atlasCanvasPresent=${r.atlasCanvasPresent}`,
+      `atlasWidth=${r.atlasWidth}`,
+      `atlasHeight=${r.atlasHeight}`,
+      `atlasPixelCount=${r.atlasPixelCount}`,
+      `atlasClassCount=${r.atlasClassCount}`,
+      `atlasClasses=${classes}`,
+      "",
+      `f13SourceStageStarted=${r.f13SourceStageStarted}`,
+      `f13SourceStageComplete=${r.f13SourceStageComplete}`,
+      `f13AtlasPacketReady=${r.f13AtlasPacketReady}`,
+      `f21EligibleForNorth=${r.f21EligibleForNorth}`,
+      `f21ClaimedByCanvasEast=${r.f21ClaimedByCanvasEast}`,
+      `readyTextClaimedByCanvasEast=${r.readyTextClaimedByCanvasEast}`,
+      "",
+      `firstFailedCoordinate=${r.firstFailedCoordinate}`,
+      `recommendedNextFile=${r.recommendedNextFile}`,
+      `recommendedNextRenewalTarget=${r.recommendedNextRenewalTarget}`,
+      "",
+      `ownsSourceMaterialAtlas=${r.ownsSourceMaterialAtlas}`,
+      `ownsPlanetTruth=${r.ownsPlanetTruth}`,
+      `ownsMaterialTruth=${r.ownsMaterialTruth}`,
+      `ownsTextureComposition=${r.ownsTextureComposition}`,
+      `ownsSphereRendering=${r.ownsSphereRendering}`,
+      `ownsVisibleProof=${r.ownsVisibleProof}`,
+      `ownsCanvasRelease=${r.ownsCanvasRelease}`,
+      `ownsWestAudit=${r.ownsWestAudit}`,
+      `ownsF21=${r.ownsF21}`,
+      `ownsReadyText=${r.ownsReadyText}`,
+      `ownsFinalVisualPassClaim=${r.ownsFinalVisualPassClaim}`,
+      "",
+      "LOCAL_EVENTS",
+      events,
+      "",
+      "ERRORS",
+      errors,
+      "",
+      `generatedImage=${r.generatedImage}`,
+      `graphicBox=${r.graphicBox}`,
+      `webGL=${r.webGL}`,
+      `visualPassClaimed=${r.visualPassClaimed}`,
+      "",
+      `publishedAt=${r.publishedAt}`,
+      `updatedAt=${r.updatedAt}`
+    ].join("\n");
+  }
+
   function updateDataset() {
     if (!doc || !doc.documentElement) return;
 
@@ -1211,12 +2343,10 @@
     dataset.hearthCanvasEastReceipt = RECEIPT;
     dataset.hearthCanvasEastVersion = VERSION;
 
-    dataset.hearthCanvasEastParentSplitContract = ACTIVE_PARENT_SPLIT_CONTRACT;
-    dataset.hearthCanvasEastParentSplitReceipt = ACTIVE_PARENT_SPLIT_RECEIPT;
-    dataset.hearthCanvasEastParentContractAligned = "true";
-    dataset.hearthCanvasEastPhysicalBootstrapAligned = "true";
-    dataset.hearthCanvasEastRetiredParentContractSuperseded = "true";
-    dataset.hearthCanvasEastRecursiveReceiptLoopRemoved = "true";
+    dataset.hearthCanvasEastGovernedParentAligned = "true";
+    dataset.hearthCanvasEastAfterWestReleaseOnly = "true";
+    dataset.hearthCanvasEastSourceOnly = "true";
+    dataset.hearthCanvasEastGovernedParentContract = GOVERNED_PARENT_CONTRACT;
 
     dataset.hearthCanvasEastRequiredApiSurfaceComplete = "true";
     dataset.hearthCanvasEastBuildAtlasAvailable = "true";
@@ -1224,10 +2354,17 @@
     dataset.hearthCanvasEastReadAvailable = "true";
     dataset.hearthCanvasEastGetReceiptAvailable = "true";
 
-    dataset.hearthCanvasEastSplitAdapterChild = "true";
-    dataset.hearthCanvasEastTransistorAdapterActive = "true";
-    dataset.hearthCanvasEastTransistorRole = "source";
+    dataset.hearthCanvasEastMayBuildAtlas = String(state.canvasEastMayBuildAtlas);
+    dataset.hearthCanvasEastF13BuildLawful = String(state.f13BuildLawful);
+    dataset.hearthCanvasEastF13BuildBlockedReason = state.f13BuildBlockedReason;
+    dataset.hearthCanvasEastF13PermissionSource = state.f13PermissionSource;
+    dataset.hearthCanvasEastWestReleaseObserved = String(state.westReleaseObserved);
+    dataset.hearthCanvasEastCanvasParentRequestObserved = String(state.canvasParentRequestObserved);
+    dataset.hearthCanvasEastCanvasParentReleaseObserved = String(state.canvasParentReleaseObserved);
+    dataset.hearthCanvasEastEmergencyF13Requested = String(state.emergencyF13Requested);
+
     dataset.hearthCanvasEastNewsProtocolSynchronized = "true";
+    dataset.hearthCanvasEastNewsFinalized = "false";
     dataset.hearthCanvasEastFibonacciAlignmentSynchronized = "true";
     dataset.hearthCanvasEastActiveFibonacciGate = ACTIVE_FIBONACCI_GATE;
     dataset.hearthCanvasEastFutureFibonacciGate = FUTURE_FIBONACCI_GATE;
@@ -1257,258 +2394,13 @@
 
     dataset.hearthCanvasEastF21Claimed = "false";
     dataset.hearthCanvasEastReadyTextClaimed = "false";
+    dataset.hearthCanvasEastVisibleProof = "false";
+    dataset.hearthCanvasEastCanvasReady = "false";
+
     dataset.generatedImage = "false";
     dataset.graphicBox = "false";
     dataset.webgl = "false";
     dataset.visualPassClaimed = "false";
-  }
-
-  function getReceipt() {
-    return {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      previousContract: PREVIOUS_CONTRACT,
-      baselineContract: BASELINE_CONTRACT,
-      activeParentSplitContract: ACTIVE_PARENT_SPLIT_CONTRACT,
-      activeParentSplitReceipt: ACTIVE_PARENT_SPLIT_RECEIPT,
-      retiredParentSplitContracts: RETIRED_PARENT_SPLIT_CONTRACTS.slice(),
-      expectedMaterialContract: EXPECTED_MATERIAL_CONTRACT,
-      expectedMaterialReceipt: EXPECTED_MATERIAL_RECEIPT,
-      version: VERSION,
-      file: FILE,
-      parentFile: PARENT_FILE,
-      role: state.role,
-
-      splitAdapterChild: true,
-      parentContractAligned: true,
-      parentPhysicalBootstrapAligned: true,
-      retiredParentContractSuperseded: true,
-      recursiveReceiptLoopRemoved: true,
-
-      requiredApiSurfaceComplete: true,
-      requiredMethods: state.requiredMethods.slice(),
-      buildAtlasAvailable: true,
-      sampleAvailable: true,
-      readAvailable: true,
-      getReceiptAvailable: true,
-
-      transistorAdapterActive: true,
-      transistorRole: "source",
-      transistorSourceRole: state.transistorSourceRole,
-      transistorGateParent: state.transistorGateParent,
-      transistorControlPeer: state.transistorControlPeer,
-      transistorDrainPeer: state.transistorDrainPeer,
-      transistorCurrentFlow: state.transistorCurrentFlow,
-
-      newsProtocolSynchronized: true,
-      fibonacciAlignmentSynchronized: true,
-      activeFibonacciGate: ACTIVE_FIBONACCI_GATE,
-      futureFibonacciGate: FUTURE_FIBONACCI_GATE,
-      oneActiveGearAtATime: true,
-      cycleOrder: CYCLE_ORDER,
-
-      materialReceiptBridge: getMaterialBridgeReceipt({ sync: false }),
-      materialReceiptBridgeActive: state.materialReceiptBridgeActive,
-      materialNestedReceiptAvailable: state.materialNestedReceiptAvailable,
-      materialContract: state.materialContract,
-      materialReceipt: state.materialReceipt,
-      materialExpectedContract: state.materialExpectedContract,
-      materialExpectedReceipt: state.materialExpectedReceipt,
-      materialContractMatchesExpected: state.materialContractMatchesExpected,
-      materialReceiptMatchesExpected: state.materialReceiptMatchesExpected,
-      canonicalMaterialAuthorityPresent: state.canonicalMaterialAuthorityPresent,
-      canonicalMaterialConsumed: state.canonicalMaterialConsumed,
-      canonicalMaterialColorPrimary: state.canonicalMaterialColorPrimary,
-      canonicalMaterialShapePrimary: state.canonicalMaterialShapePrimary,
-      canvasStillDoesNotOwnPlanetTruth: true,
-      canvasEastDoesNotOwnMaterialTruth: true,
-
-      atlasSourceActive: true,
-      upstreamFirstAtlasActive: true,
-      atlasBuildStarted: state.atlasBuildStarted,
-      atlasBuildProgress: state.atlasBuildProgress,
-      atlasBuildComplete: state.atlasBuildComplete,
-      atlasBuildError: state.atlasBuildError,
-      atlasBuildStartedAt: state.atlasBuildStartedAt,
-      atlasBuildCompletedAt: state.atlasBuildCompletedAt,
-      atlasBuildElapsedMs: state.atlasBuildElapsedMs,
-      atlasCanvasPresent: state.atlasCanvasPresent,
-      atlasWidth: state.atlasWidth,
-      atlasHeight: state.atlasHeight,
-      atlasPixelCount: state.atlasPixelCount,
-
-      atlasCanonicalMaterialSampleCount: state.atlasCanonicalMaterialSampleCount,
-      atlasMaterialSampleCount: state.atlasMaterialSampleCount,
-      atlasElevationHydrologySampleCount: state.atlasElevationHydrologySampleCount,
-      atlasFallbackSampleCount: state.atlasFallbackSampleCount,
-      atlasUnknownUpstreamSampleCount: state.atlasUnknownUpstreamSampleCount,
-      atlasTotalSampleCount: state.atlasTotalSampleCount,
-      atlasLandSampleCount: state.atlasLandSampleCount,
-      atlasWaterSampleCount: state.atlasWaterSampleCount,
-      atlasCoastSampleCount: state.atlasCoastSampleCount,
-      atlasReliefSampleCount: state.atlasReliefSampleCount,
-      atlasClassCount: state.atlasClassCount,
-      atlasClasses: state.atlasClasses.slice(),
-
-      sevenContinentFallbackEmergencyOnly: true,
-      sevenContinentFallbackUsed: state.sevenContinentFallbackUsed,
-      sevenContinentFallbackSuppressedByUpstream: state.sevenContinentFallbackSuppressedByUpstream,
-      elevationControlsLandShape: true,
-      hydrologyControlsWaterShape: true,
-      coastlinesReadFromHydrologyAndMaterials: true,
-      landChannelStillReceiverOnly: true,
-
-      cachedAtlasInvalidationAvailable: true,
-      atlasInvalidationCount: state.atlasInvalidationCount,
-      atlasInvalidated: state.atlasInvalidated,
-      atlasInvalidationReason: state.atlasInvalidationReason,
-
-      fallbackSampleAvailable: true,
-      fallbackSampleUsedAtRuntime: state.fallbackSampleUsedAtRuntime,
-
-      f13SourceStageStarted: state.f13SourceStageStarted,
-      f13SourceStageComplete: state.f13SourceStageComplete,
-      f13AtlasPacketReady: state.f13AtlasPacketReady,
-      f21ClaimedByCanvasEast: false,
-      readyTextClaimedByCanvasEast: false,
-
-      localEvents: clonePlain(state.localEvents),
-      errors: clonePlain(state.errors),
-
-      ownsSourceMaterialAtlas: true,
-      ownsBuildAtlasMethod: true,
-      ownsSampleMethod: true,
-      ownsReadMethod: true,
-      ownsReceiptSurface: true,
-
-      ownsPlanetTruth: false,
-      ownsElevationTruth: false,
-      ownsHydrologyTruth: false,
-      ownsMaterialTruth: false,
-      ownsTextureComposition: false,
-      ownsSphereRendering: false,
-      ownsVisibleProof: false,
-      ownsRuntimeTableGovernance: false,
-      ownsRouteOrchestration: false,
-      ownsF21: false,
-      ownsFinalVisualPassClaim: false,
-
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false,
-
-      publishedAt: state.publishedAt,
-      updatedAt: state.updatedAt || nowIso()
-    };
-  }
-
-  function getReceiptText() {
-    const r = getReceipt();
-
-    const classes = (r.atlasClasses || []).join(",");
-    const events = (r.localEvents || [])
-      .slice(-32)
-      .map((event) => `- ${event.at} :: ${event.event} :: ${JSON.stringify(event.detail || {})}`)
-      .join("\n") || "- none";
-
-    const errors = (r.errors || [])
-      .map((error) => `- ${error.at} :: ${error.code} :: ${error.message}`)
-      .join("\n") || "- none";
-
-    return [
-      "HEARTH_CANVAS_EAST_PARENT_ALIGNED_MATERIAL_ATLAS_SOURCE_TRANSISTOR_RECEIPT",
-      "",
-      `contract=${r.contract}`,
-      `receipt=${r.receipt}`,
-      `previousContract=${r.previousContract}`,
-      `baselineContract=${r.baselineContract}`,
-      `activeParentSplitContract=${r.activeParentSplitContract}`,
-      `activeParentSplitReceipt=${r.activeParentSplitReceipt}`,
-      `version=${r.version}`,
-      `file=${r.file}`,
-      `parentFile=${r.parentFile}`,
-      `role=${r.role}`,
-      "",
-      `splitAdapterChild=${r.splitAdapterChild}`,
-      `parentContractAligned=${r.parentContractAligned}`,
-      `parentPhysicalBootstrapAligned=${r.parentPhysicalBootstrapAligned}`,
-      `retiredParentContractSuperseded=${r.retiredParentContractSuperseded}`,
-      `recursiveReceiptLoopRemoved=${r.recursiveReceiptLoopRemoved}`,
-      "",
-      `requiredApiSurfaceComplete=${r.requiredApiSurfaceComplete}`,
-      `buildAtlasAvailable=${r.buildAtlasAvailable}`,
-      `sampleAvailable=${r.sampleAvailable}`,
-      `readAvailable=${r.readAvailable}`,
-      `getReceiptAvailable=${r.getReceiptAvailable}`,
-      "",
-      `newsProtocolSynchronized=${r.newsProtocolSynchronized}`,
-      `fibonacciAlignmentSynchronized=${r.fibonacciAlignmentSynchronized}`,
-      `activeFibonacciGate=${r.activeFibonacciGate}`,
-      `futureFibonacciGate=${r.futureFibonacciGate}`,
-      `oneActiveGearAtATime=${r.oneActiveGearAtATime}`,
-      `cycleOrder=${r.cycleOrder}`,
-      "",
-      `materialReceiptBridgeActive=${r.materialReceiptBridgeActive}`,
-      `materialNestedReceiptAvailable=${r.materialNestedReceiptAvailable}`,
-      `materialContract=${r.materialContract}`,
-      `materialReceipt=${r.materialReceipt}`,
-      `materialContractMatchesExpected=${r.materialContractMatchesExpected}`,
-      `materialReceiptMatchesExpected=${r.materialReceiptMatchesExpected}`,
-      `canonicalMaterialAuthorityPresent=${r.canonicalMaterialAuthorityPresent}`,
-      `canonicalMaterialConsumed=${r.canonicalMaterialConsumed}`,
-      "",
-      `atlasBuildStarted=${r.atlasBuildStarted}`,
-      `atlasBuildProgress=${r.atlasBuildProgress}`,
-      `atlasBuildComplete=${r.atlasBuildComplete}`,
-      `atlasBuildError=${r.atlasBuildError}`,
-      `atlasCanvasPresent=${r.atlasCanvasPresent}`,
-      `atlasWidth=${r.atlasWidth}`,
-      `atlasHeight=${r.atlasHeight}`,
-      `atlasPixelCount=${r.atlasPixelCount}`,
-      "",
-      `atlasCanonicalMaterialSampleCount=${r.atlasCanonicalMaterialSampleCount}`,
-      `atlasMaterialSampleCount=${r.atlasMaterialSampleCount}`,
-      `atlasElevationHydrologySampleCount=${r.atlasElevationHydrologySampleCount}`,
-      `atlasFallbackSampleCount=${r.atlasFallbackSampleCount}`,
-      `atlasUnknownUpstreamSampleCount=${r.atlasUnknownUpstreamSampleCount}`,
-      `atlasTotalSampleCount=${r.atlasTotalSampleCount}`,
-      `atlasLandSampleCount=${r.atlasLandSampleCount}`,
-      `atlasWaterSampleCount=${r.atlasWaterSampleCount}`,
-      `atlasCoastSampleCount=${r.atlasCoastSampleCount}`,
-      `atlasReliefSampleCount=${r.atlasReliefSampleCount}`,
-      `atlasClassCount=${r.atlasClassCount}`,
-      `atlasClasses=${classes}`,
-      "",
-      `f13SourceStageStarted=${r.f13SourceStageStarted}`,
-      `f13SourceStageComplete=${r.f13SourceStageComplete}`,
-      `f13AtlasPacketReady=${r.f13AtlasPacketReady}`,
-      `f21ClaimedByCanvasEast=${r.f21ClaimedByCanvasEast}`,
-      `readyTextClaimedByCanvasEast=${r.readyTextClaimedByCanvasEast}`,
-      "",
-      `ownsSourceMaterialAtlas=${r.ownsSourceMaterialAtlas}`,
-      `ownsPlanetTruth=${r.ownsPlanetTruth}`,
-      `ownsMaterialTruth=${r.ownsMaterialTruth}`,
-      `ownsTextureComposition=${r.ownsTextureComposition}`,
-      `ownsSphereRendering=${r.ownsSphereRendering}`,
-      `ownsVisibleProof=${r.ownsVisibleProof}`,
-      `ownsF21=${r.ownsF21}`,
-      `ownsFinalVisualPassClaim=${r.ownsFinalVisualPassClaim}`,
-      "",
-      "LOCAL_EVENTS",
-      events,
-      "",
-      "ERRORS",
-      errors,
-      "",
-      `generatedImage=${r.generatedImage}`,
-      `graphicBox=${r.graphicBox}`,
-      `webGL=${r.webGL}`,
-      `visualPassClaimed=${r.visualPassClaimed}`,
-      "",
-      `publishedAt=${r.publishedAt}`,
-      `updatedAt=${r.updatedAt}`
-    ].join("\n");
   }
 
   function publishGlobals() {
@@ -1518,14 +2410,17 @@
     root.HEARTH.canvasEast = api;
     root.HEARTH.canvasEastMaterialAtlasSourceMachine = api;
     root.HEARTH.canvasEastSource = api;
+    root.HEARTH.canvasEastGovernedF13AtlasSource = api;
 
     root.HEARTH_CANVAS_EAST = api;
     root.HEARTH_CANVAS_EAST_MATERIAL_ATLAS_SOURCE_MACHINE = api;
     root.HEARTH_CANVAS_EAST_SOURCE = api;
+    root.HEARTH_CANVAS_EAST_GOVERNED_F13_ATLAS_SOURCE = api;
 
     root.DEXTER_LAB.hearthCanvasEast = api;
     root.DEXTER_LAB.hearthCanvasEastMaterialAtlasSourceMachine = api;
     root.DEXTER_LAB.hearthCanvasEastSource = api;
+    root.DEXTER_LAB.hearthCanvasEastGovernedF13AtlasSource = api;
 
     const receipt = getReceipt();
 
@@ -1539,8 +2434,10 @@
     root.__HEARTH_CANVAS_EAST_FILE__ = FILE;
     root.__HEARTH_CANVAS_EAST_CONTRACT__ = CONTRACT;
     root.__HEARTH_CANVAS_EAST_RECEIPT__ = RECEIPT;
-    root.__HEARTH_CANVAS_EAST_PARENT_SPLIT_CONTRACT__ = ACTIVE_PARENT_SPLIT_CONTRACT;
+    root.__HEARTH_CANVAS_EAST_GOVERNED_PARENT_CONTRACT__ = GOVERNED_PARENT_CONTRACT;
     root.__HEARTH_CANVAS_EAST_REQUIRED_API_SURFACE_COMPLETE__ = true;
+    root.__HEARTH_CANVAS_EAST_F21_CLAIMED__ = false;
+    root.__HEARTH_CANVAS_EAST_VISUAL_PASS_CLAIMED__ = false;
 
     state.publishedAt = state.publishedAt || nowIso();
     state.updatedAt = nowIso();
@@ -1553,8 +2450,8 @@
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     baselineContract: BASELINE_CONTRACT,
-    activeParentSplitContract: ACTIVE_PARENT_SPLIT_CONTRACT,
-    activeParentSplitReceipt: ACTIVE_PARENT_SPLIT_RECEIPT,
+    governedParentContract: GOVERNED_PARENT_CONTRACT,
+    governedParentReceipt: GOVERNED_PARENT_RECEIPT,
     version: VERSION,
     file: FILE,
     parentFile: PARENT_FILE,
@@ -1563,6 +2460,19 @@
     sample,
     read,
     getReceipt,
+
+    normalizeCanvasEastInput,
+    readGovernedParentState,
+    readWestReleaseState,
+    resolveParentRequest,
+    resolveWestRelease,
+    resolveAtlasBuildPermission,
+    composeAtlasBuildPermissionPacket,
+    composeHeldAtlasPacket,
+    composeAtlasEvidencePacket,
+    composeEmergencyF13AtlasPacket,
+    composeCanvasEastReceipt,
+    getCanvasEastGateReceipt,
 
     invalidateAtlas,
     refreshMaterialBridge,
@@ -1577,17 +2487,12 @@
     readAvailable: true,
     getReceiptAvailable: true,
 
-    splitAdapterChild: true,
-    parentContractAligned: true,
-    parentPhysicalBootstrapAligned: true,
-    retiredParentContractSuperseded: true,
-    recursiveReceiptLoopRemoved: true,
-
-    transistorAdapterActive: true,
-    transistorRole: "source",
-    transistorSourceRole: "east-material-atlas-source",
+    governedCanvasParentAligned: true,
+    afterWestReleaseOnly: true,
+    canvasEastSourceOnly: true,
 
     newsProtocolSynchronized: true,
+    newsFinalizedByCanvasEast: false,
     fibonacciAlignmentSynchronized: true,
     activeFibonacciGate: ACTIVE_FIBONACCI_GATE,
     futureFibonacciGate: FUTURE_FIBONACCI_GATE,
@@ -1609,7 +2514,11 @@
     ownsVisibleProof: false,
     ownsRuntimeTableGovernance: false,
     ownsRouteOrchestration: false,
+    ownsNewsFinalization: false,
+    ownsCanvasRelease: false,
+    ownsWestAudit: false,
     ownsF21: false,
+    ownsReadyText: false,
     ownsFinalVisualPassClaim: false,
 
     generatedImage: false,
@@ -1629,9 +2538,10 @@
     invalidate: false
   });
 
-  recordLocal("CANVAS_EAST_PARENT_ALIGNED_API_SURFACE_PUBLISHED", {
+  recordLocal("CANVAS_EAST_GOVERNED_F13_ATLAS_SOURCE_PUBLISHED", {
     requiredMethods: state.requiredMethods.slice(),
-    activeParentSplitContract: ACTIVE_PARENT_SPLIT_CONTRACT,
+    governedParentContract: GOVERNED_PARENT_CONTRACT,
+    afterWestReleaseOnly: true,
     aliasSet: [
       "HEARTH_CANVAS_EAST",
       "HEARTH.canvasEast",

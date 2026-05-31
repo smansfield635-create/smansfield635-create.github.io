@@ -1,5 +1,5 @@
 // /showroom/globe/hearth/hearth.js
-// HEARTH_SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_NEWS_FIBONACCI_HANDOFF_TNT_v1
+// HEARTH_SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_NEWS_FIBONACCI_HANDOFF_TNT_v2
 // Full-file replacement.
 // South route conductor / self-duty handoff authority only.
 // Purpose:
@@ -9,10 +9,13 @@
 // - Seat the handoff in NEWS order with Fibonacci synchronization.
 // - Keep Canvas as F13 evidence only.
 // - Keep F21 completion under North / NEWS latch authority.
+// - Submit F21 eligibility to North without locally latching completion.
+// - Avoid watchdog hash churn by republishing globals only when missing, stale, mismatched, or overwritten.
 // Does not own:
 // - East first paint
 // - East script loading
 // - North checkpoint truth
+// - North F21 completion latch
 // - West gap taxonomy
 // - Lab South visible-state composition
 // - canvas drawing
@@ -26,11 +29,11 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_NEWS_FIBONACCI_HANDOFF_TNT_v1";
-  const RECEIPT = "HEARTH_SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_NEWS_FIBONACCI_HANDOFF_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "HEARTH_SOUTH_CARDINAL_FIBONACCI_THIN_CONDUCTOR_TNT_v1";
+  const CONTRACT = "HEARTH_SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_NEWS_FIBONACCI_HANDOFF_TNT_v2";
+  const RECEIPT = "HEARTH_SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_NEWS_FIBONACCI_HANDOFF_RECEIPT_v2";
+  const PREVIOUS_CONTRACT = "HEARTH_SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_NEWS_FIBONACCI_HANDOFF_TNT_v1";
   const BASELINE_CONTRACT = "HEARTH_DIRECTIONAL_CYCLICAL_CHECKPOINT_GOVERNANCE_PRECODE_FINAL_DRAFT_v1";
-  const VERSION = "2026-05-31.hearth-south-route-conductor-self-duty-news-fibonacci-handoff-v1";
+  const VERSION = "2026-05-31.hearth-south-route-conductor-self-duty-news-fibonacci-handoff-v2";
 
   const ROUTE = "/showroom/globe/hearth/";
   const FILE = "/showroom/globe/hearth/hearth.js";
@@ -64,7 +67,7 @@
     { id: "F13D_CANVAS_FRAME", fib: "F13D", cardinal: "SOUTH", label: "Visible frame" },
     { id: "F13E_VISIBLE_PROOF", fib: "F13E", cardinal: "SOUTH", label: "Visible planet proof" },
     { id: "F13N_INSPECT_GATE", fib: "F13N", cardinal: "WEST", label: "Inspect gate" },
-    { id: "F21_COMPLETION_LATCH", fib: "F21", cardinal: "NORTH", label: "NEWS completion latch" }
+    { id: "F21_COMPLETION_LATCH", fib: "F21", cardinal: "NORTH", label: "North NEWS completion latch eligibility" }
   ]);
 
   const CANVAS_PARENT_GLOBALS = Object.freeze([
@@ -146,12 +149,15 @@
     visibleProofRequiredForF13: true,
     visibleProofRequiredForF21: true,
     canvasOwnsF13Only: true,
+    f21NorthLatchOnly: true,
+    southMayOnlySubmitF21Eligibility: true,
+    conditionalWatchdogRepublishActive: true,
 
     jobs: {
       north: ["checkpoint-session-read", "F21-latch-admission"],
       east: ["route-conductor-recognition", "handoff-classification"],
       west: ["inspect-gate", "receipt-access", "gap-classification-read"],
-      south: ["self-duty-publication", "route-conductor-runtime", "canvas-boot-request", "canvas-receipt-reconciliation", "visible-proof-governance"]
+      south: ["self-duty-publication", "route-conductor-runtime", "canvas-boot-request", "canvas-receipt-reconciliation", "visible-proof-governance", "F21-eligibility-submission"]
     },
 
     files: {
@@ -172,7 +178,11 @@
       receiptPresent: false,
       runtimeActive: false,
       hydrated: false,
-      recognitionStatus: "MARKER_PENDING"
+      recognitionStatus: "MARKER_PENDING",
+      lastPublishedAt: "",
+      republishCount: 0,
+      skippedRepublishCount: 0,
+      lastRepublishReason: ""
     },
 
     authorities: {
@@ -266,6 +276,10 @@
     activeCardinal: GATES[0].cardinal,
     activeProgress: 0,
 
+    f21EligibleForNorth: false,
+    f21EligibilitySubmittedToNorth: false,
+    f21EligibilitySubmittedAt: "",
+    f21EligibilitySubmissionCount: 0,
     completionLatched: false,
     degradedCompletionLatched: false,
     readyTextAllowed: false,
@@ -460,7 +474,61 @@
     updateDataset();
   }
 
-  function publishGlobals(reason = "publish-globals") {
+  function globalsNeedRepublish() {
+    const apiPresent = Boolean(
+      root.HEARTH_ROUTE_CONDUCTOR === api &&
+      root.HearthRouteConductor === api &&
+      root.HEARTH_SOUTH_ROUTE_CONDUCTOR === api
+    );
+
+    const nestedApiPresent = Boolean(
+      root.HEARTH &&
+      root.HEARTH.routeConductor === api &&
+      root.HEARTH.southRouteConductor === api
+    );
+
+    const dexterApiPresent = Boolean(
+      root.DEXTER_LAB &&
+      root.DEXTER_LAB.hearthRouteConductor === api &&
+      root.DEXTER_LAB.hearthSouthRouteConductor === api
+    );
+
+    const receiptPresent = Boolean(
+      root.HEARTH_ROUTE_CONDUCTOR_RECEIPT &&
+      root.HEARTH_ROUTE_CONDUCTOR_RECEIPT.contract === CONTRACT &&
+      root.HEARTH_SOUTH_ROUTE_CONDUCTOR_RECEIPT &&
+      root.HEARTH_SOUTH_ROUTE_CONDUCTOR_RECEIPT.receipt === RECEIPT
+    );
+
+    const nestedReceiptPresent = Boolean(
+      root.HEARTH &&
+      root.HEARTH.routeConductorReceipt &&
+      root.HEARTH.routeConductorReceipt.contract === CONTRACT &&
+      root.HEARTH.southRouteConductorReceipt &&
+      root.HEARTH.southRouteConductorReceipt.receipt === RECEIPT
+    );
+
+    const markerValid = Boolean(
+      root.__HEARTH_ROUTE_CONDUCTOR_MARKER__ === true &&
+      root.__HEARTH_ROUTE_CONDUCTOR_MARKER_IS_HYDRATION_PROOF__ === false &&
+      root.__HEARTH_ROUTE_CONDUCTOR_CONTRACT__ === CONTRACT
+    );
+
+    return !(apiPresent && nestedApiPresent && dexterApiPresent && receiptPresent && nestedReceiptPresent && markerValid);
+  }
+
+  function publishGlobals(reason = "publish-globals", force = false) {
+    if (!force && !globalsNeedRepublish()) {
+      state.routeConductor.skippedRepublishCount += 1;
+      state.routeConductor.apiPresent = true;
+      state.routeConductor.receiptPresent = true;
+      state.routeConductor.runtimeActive = true;
+      state.routeConductor.hydrated = true;
+      state.routeConductor.recognitionStatus = "API_RECEIPT_RUNTIME_PRESENT";
+      updateDataset();
+      return false;
+    }
+
     root.HEARTH = root.HEARTH || {};
     root.DEXTER_LAB = root.DEXTER_LAB || {};
 
@@ -487,6 +555,9 @@
     state.routeConductor.runtimeActive = true;
     state.routeConductor.hydrated = true;
     state.routeConductor.recognitionStatus = "API_RECEIPT_RUNTIME_PRESENT";
+    state.routeConductor.lastPublishedAt = nowIso();
+    state.routeConductor.republishCount += 1;
+    state.routeConductor.lastRepublishReason = reason;
 
     const receiptLight = getReceiptLight(false);
 
@@ -510,8 +581,11 @@
     record(reason, {
       routeConductorApiPresent: true,
       routeConductorReceiptPresent: true,
-      routeConductorHydrated: true
+      routeConductorHydrated: true,
+      force: force === true
     });
+
+    return true;
   }
 
   function readIndexApi() {
@@ -652,15 +726,34 @@
         routeConductorReceiptPresent: state.routeConductor.receiptPresent,
         routeConductorHydrated: state.routeConductor.hydrated,
         canvasOwnsF13Only: true,
-        visualProofRequiredForF21: true,
+        visibleProofRequiredForF21: true,
+        f21NorthLatchOnly: true,
+        f21EligibleForNorth: state.f21EligibleForNorth,
+        southMayOnlySubmitF21Eligibility: true,
+        completionLatchedBySouth: false,
         visualPassClaimed: false
       }
     };
 
     try {
-      if (isFunction(session.submitEvent)) return session.submitEvent(payload);
-      if (isFunction(session.submit)) return session.submit(payload);
-      if (isFunction(session.completeActive)) return session.completeActive(payload);
+      let result = false;
+
+      if (isFunction(session.submitEvent)) result = session.submitEvent(payload);
+      else if (isFunction(session.submit)) result = session.submit(payload);
+      else if (isFunction(session.completeActive)) result = session.completeActive(payload);
+
+      if (gate.id === "F21_COMPLETION_LATCH") {
+        state.f21EligibilitySubmittedToNorth = true;
+        state.f21EligibilitySubmittedAt = nowIso();
+        state.f21EligibilitySubmissionCount += 1;
+        record("F21_ELIGIBILITY_SUBMITTED_TO_NORTH", {
+          acceptedByNorthMethod: Boolean(result),
+          f21EligibleForNorth: state.f21EligibleForNorth,
+          completionLatchedBySouth: false
+        });
+      }
+
+      return result;
     } catch (error) {
       recordError("NORTH_GATE_SUBMIT_FAILED", error, {
         gate: gate.id
@@ -970,8 +1063,20 @@
 
       case "F21_COMPLETION_LATCH": {
         const news = evaluateNews();
-        if (!c.visiblePlanetProofValid) return { ok: false, hard: true, progress: 0, reason: "F21_BLOCKED_VISIBLE_PLANET_PROOF_MISSING" };
-        return { ok: news.passed || news.degraded, degraded: news.degraded && !news.passed, progress: news.passed || news.degraded ? 100 : 70, reason: news.passed ? "news-gates-passed" : news.degraded ? "news-gates-degraded" : "news-gates-pending" };
+        if (!c.visiblePlanetProofValid) {
+          return { ok: false, hard: true, progress: 0, reason: "F21_BLOCKED_VISIBLE_PLANET_PROOF_MISSING" };
+        }
+
+        if (state.f21EligibleForNorth) {
+          return {
+            ok: true,
+            degraded: news.degraded && !news.passed,
+            progress: 100,
+            reason: news.passed ? "F21_FULL_ELIGIBLE_FOR_NORTH_NEWS_LATCH" : "F21_DEGRADED_ELIGIBLE_FOR_NORTH_NEWS_LATCH"
+          };
+        }
+
+        return { ok: false, progress: 70, reason: "F21_WAITING_NEWS_ELIGIBILITY" };
       }
 
       default:
@@ -999,11 +1104,13 @@
 
     state.newsGatePassed = passed;
     state.newsGateDegraded = degraded && !passed;
-    state.completionLatched = Boolean(degraded && state.canvas.visiblePlanetProofValid);
-    state.degradedCompletionLatched = Boolean(state.completionLatched && !passed);
-    state.readyTextAllowed = state.completionLatched;
-    state.f21LatchMode = state.completionLatched
-      ? state.degradedCompletionLatched ? "DEGRADED" : "FULL"
+    state.f21EligibleForNorth = Boolean(degraded && state.canvas.visiblePlanetProofValid);
+
+    state.completionLatched = false;
+    state.degradedCompletionLatched = false;
+    state.readyTextAllowed = false;
+    state.f21LatchMode = state.f21EligibleForNorth
+      ? "READY_FOR_NORTH_NEWS_LATCH"
       : "WAITING";
 
     return { passed, degraded: degraded && !passed, north, east, west, south };
@@ -1058,14 +1165,16 @@
     state.activeCardinal = active.cardinal;
     state.activeProgress = active.progress;
 
-    if (state.completionLatched) {
-      state.postgameStatus = state.degradedCompletionLatched
-        ? "READY_DEGRADED_VISIBLE_PLANET_NEWS_SYNCHRONIZED"
-        : "READY_VISIBLE_PLANET_NEWS_SYNCHRONIZED";
-      state.firstFailedCoordinate = state.degradedCompletionLatched
-        ? "DEGRADED_F21_LATCHED"
-        : "NONE_F21_LATCHED";
-      state.recommendedNextRenewalTarget = "read-postgame-receipt";
+    if (state.f21EligibleForNorth) {
+      state.postgameStatus = state.newsGateDegraded
+        ? "F21_DEGRADED_ELIGIBLE_AWAITING_NORTH_NEWS_LATCH"
+        : "F21_FULL_ELIGIBLE_AWAITING_NORTH_NEWS_LATCH";
+      state.firstFailedCoordinate = state.f21EligibilitySubmittedToNorth
+        ? "NONE_F21_ELIGIBILITY_SUBMITTED_TO_NORTH"
+        : "NONE_F21_ELIGIBLE_AWAITING_NORTH_SUBMISSION";
+      state.recommendedNextRenewalTarget = NORTH_FILE;
+      state.completionLatched = false;
+      state.readyTextAllowed = false;
     } else {
       state.postgameStatus = active.hard ? "BLOCKED_BY_ACTIVE_GATE" : "WAITING_ACTIVE_GATE";
       state.firstFailedCoordinate = `WAITING_${active.id}`;
@@ -1122,7 +1231,7 @@
   }
 
   function bootCanvas(reason = "south-self-duty-boot") {
-    if (canvasBootPromise || state.canvas.bootComplete || state.completionLatched) {
+    if (canvasBootPromise || state.canvas.bootComplete || state.f21EligibleForNorth) {
       return canvasBootPromise || Promise.resolve(readCanvasReceipt());
     }
 
@@ -1361,7 +1470,9 @@
     state.renderCount += 1;
 
     const active = state.gates[state.gates.findIndex((gate) => gate.id === state.activeGateId)] || GATES[0];
-    const visibleStatus = state.completionLatched ? "Ready" : `${state.activeFibonacci} · ${active.label || state.activeGateId}`;
+    const visibleStatus = state.f21EligibleForNorth
+      ? "Ready for North latch"
+      : `${state.activeFibonacci} · ${active.label || state.activeGateId}`;
 
     if (refs.stage) refs.stage.textContent = `${state.activeCardinal} · ${state.activeFibonacci}`;
     if (refs.heartbeat) refs.heartbeat.textContent = visibleStatus;
@@ -1395,15 +1506,21 @@
 
       refresh();
 
-      if (state.routeConductor.hydrated && !state.canvas.bootComplete && state.canvas.bootAttempts < 3) {
+      if (state.routeConductor.hydrated && !state.canvas.bootComplete && state.canvas.bootAttempts < 3 && !state.f21EligibleForNorth) {
         bootCanvas("watchdog");
       }
 
       reconcileCanvas();
       render();
-      publishGlobals("watchdog-self-duty-republish");
 
-      if (state.completionLatched || state.watchdogTicks >= WATCHDOG_LIMIT) {
+      if (globalsNeedRepublish()) {
+        publishGlobals("watchdog-conditional-self-duty-republish", false);
+      } else {
+        state.routeConductor.skippedRepublishCount += 1;
+        updateDataset();
+      }
+
+      if (state.f21EligibleForNorth || state.watchdogTicks >= WATCHDOG_LIMIT) {
         root.clearInterval(watchdogTimer);
         watchdogTimer = 0;
       }
@@ -1421,7 +1538,7 @@
       state.updatedAt = state.startedAt;
       state.postgameStatus = "BOOTING_SELF_DUTY_NEWS_FIBONACCI_HANDOFF";
 
-      publishGlobals("boot-early-api-receipt-publication");
+      publishGlobals("boot-early-api-receipt-publication", true);
       refresh();
       ensureSession();
 
@@ -1434,7 +1551,7 @@
       state.booted = true;
       state.routeConductor.runtimeActive = true;
 
-      publishGlobals("boot-complete-api-receipt-publication");
+      publishGlobals("boot-complete-api-receipt-publication", true);
       refresh();
       render();
 
@@ -1447,7 +1564,8 @@
         markerPresent: state.routeConductor.markerPresent,
         apiPresent: state.routeConductor.apiPresent,
         receiptPresent: state.routeConductor.receiptPresent,
-        hydrated: state.routeConductor.hydrated
+        hydrated: state.routeConductor.hydrated,
+        f21NorthLatchOnly: true
       });
 
       return getReceipt();
@@ -1500,6 +1618,9 @@
       visibleProofRequiredForF13: state.visibleProofRequiredForF13,
       visibleProofRequiredForF21: state.visibleProofRequiredForF21,
       canvasOwnsF13Only: state.canvasOwnsF13Only,
+      f21NorthLatchOnly: state.f21NorthLatchOnly,
+      southMayOnlySubmitF21Eligibility: state.southMayOnlySubmitF21Eligibility,
+      conditionalWatchdogRepublishActive: state.conditionalWatchdogRepublishActive,
 
       activeGateId: state.activeGateId,
       activeFibonacci: state.activeFibonacci,
@@ -1523,6 +1644,9 @@
       routeConductorRuntimeActive: state.routeConductor.runtimeActive,
       routeConductorHydrated: state.routeConductor.hydrated,
       routeConductorRecognitionStatus: state.routeConductor.recognitionStatus,
+      routeConductorRepublishCount: state.routeConductor.republishCount,
+      routeConductorSkippedRepublishCount: state.routeConductor.skippedRepublishCount,
+      routeConductorLastRepublishReason: state.routeConductor.lastRepublishReason,
 
       canvasParentPresent: state.canvas.parentPresent,
       canvasParentBootMethodAvailable: state.canvas.parentBootMethodAvailable,
@@ -1583,9 +1707,13 @@
       inspectStrictReady: state.inspect.strictReady,
       inspectFallbackReady: state.inspect.fallbackReady,
 
-      completionLatched: state.completionLatched,
-      degradedCompletionLatched: state.degradedCompletionLatched,
-      readyTextAllowed: state.readyTextAllowed,
+      f21EligibleForNorth: state.f21EligibleForNorth,
+      f21EligibilitySubmittedToNorth: state.f21EligibilitySubmittedToNorth,
+      f21EligibilitySubmittedAt: state.f21EligibilitySubmittedAt,
+      f21EligibilitySubmissionCount: state.f21EligibilitySubmissionCount,
+      completionLatched: false,
+      degradedCompletionLatched: false,
+      readyTextAllowed: false,
       f21LatchMode: state.f21LatchMode,
       newsGatePassed: state.newsGatePassed,
       newsGateDegraded: state.newsGateDegraded,
@@ -1637,13 +1765,18 @@
       `routeConductorReceiptPresent=${r.routeConductorReceiptPresent}`,
       `routeConductorHydrated=${r.routeConductorHydrated}`,
       `routeConductorRecognitionStatus=${r.routeConductorRecognitionStatus}`,
+      `routeConductorRepublishCount=${r.routeConductorRepublishCount}`,
+      `routeConductorSkippedRepublishCount=${r.routeConductorSkippedRepublishCount}`,
       `canvasParentPresent=${r.canvasParentPresent}`,
       `canvasBootRequested=${r.canvasBootRequested}`,
       `allCanvasChildrenReady=${r.allCanvasChildrenReady}`,
       `textureComposeComplete=${r.textureComposeComplete}`,
       `firstFrameDetected=${r.firstFrameDetected}`,
       `visiblePlanetProofValid=${r.visiblePlanetProofValid}`,
+      `f21EligibleForNorth=${r.f21EligibleForNorth}`,
+      `f21EligibilitySubmittedToNorth=${r.f21EligibilitySubmittedToNorth}`,
       `completionLatched=${r.completionLatched}`,
+      `readyTextAllowed=${r.readyTextAllowed}`,
       `f21LatchMode=${r.f21LatchMode}`,
       `postgameStatus=${r.postgameStatus}`,
       `firstFailedCoordinate=${r.firstFailedCoordinate}`,
@@ -1691,6 +1824,9 @@
       `visibleProofRequiredForF13=${r.visibleProofRequiredForF13}`,
       `visibleProofRequiredForF21=${r.visibleProofRequiredForF21}`,
       `canvasOwnsF13Only=${r.canvasOwnsF13Only}`,
+      `f21NorthLatchOnly=${r.f21NorthLatchOnly}`,
+      `southMayOnlySubmitF21Eligibility=${r.southMayOnlySubmitF21Eligibility}`,
+      `conditionalWatchdogRepublishActive=${r.conditionalWatchdogRepublishActive}`,
       "",
       `activeGateId=${r.activeGateId}`,
       `activeFibonacci=${r.activeFibonacci}`,
@@ -1714,6 +1850,9 @@
       `routeConductorRuntimeActive=${r.routeConductorRuntimeActive}`,
       `routeConductorHydrated=${r.routeConductorHydrated}`,
       `routeConductorRecognitionStatus=${r.routeConductorRecognitionStatus}`,
+      `routeConductorRepublishCount=${r.routeConductorRepublishCount}`,
+      `routeConductorSkippedRepublishCount=${r.routeConductorSkippedRepublishCount}`,
+      `routeConductorLastRepublishReason=${r.routeConductorLastRepublishReason}`,
       "",
       `canvasParentPresent=${r.canvasParentPresent}`,
       `canvasParentBootMethodAvailable=${r.canvasParentBootMethodAvailable}`,
@@ -1754,6 +1893,10 @@
       `inspectStrictReady=${r.inspectStrictReady}`,
       `inspectFallbackReady=${r.inspectFallbackReady}`,
       "",
+      `f21EligibleForNorth=${r.f21EligibleForNorth}`,
+      `f21EligibilitySubmittedToNorth=${r.f21EligibilitySubmittedToNorth}`,
+      `f21EligibilitySubmittedAt=${r.f21EligibilitySubmittedAt}`,
+      `f21EligibilitySubmissionCount=${r.f21EligibilitySubmissionCount}`,
       `completionLatched=${r.completionLatched}`,
       `degradedCompletionLatched=${r.degradedCompletionLatched}`,
       `readyTextAllowed=${r.readyTextAllowed}`,
@@ -1807,6 +1950,8 @@
     dataset.hearthSouthRouteConductorRuntimeActive = String(state.routeConductor.runtimeActive);
     dataset.hearthSouthRouteConductorHydrated = String(state.routeConductor.hydrated);
     dataset.hearthSouthRouteConductorRecognitionStatus = state.routeConductor.recognitionStatus;
+    dataset.hearthSouthRouteConductorRepublishCount = String(state.routeConductor.republishCount);
+    dataset.hearthSouthRouteConductorSkippedRepublishCount = String(state.routeConductor.skippedRepublishCount);
 
     dataset.hearthSouthActiveGateId = state.activeGateId;
     dataset.hearthSouthActiveFibonacci = state.activeFibonacci;
@@ -1821,8 +1966,13 @@
     dataset.hearthSouthAllCanvasChildrenReady = String(state.canvas.allChildrenReady);
     dataset.hearthSouthVisiblePlanetProofValid = String(state.canvas.visiblePlanetProofValid);
 
-    dataset.hearthSouthCompletionLatched = String(state.completionLatched);
+    dataset.hearthSouthF21EligibleForNorth = String(state.f21EligibleForNorth);
+    dataset.hearthSouthF21EligibilitySubmittedToNorth = String(state.f21EligibilitySubmittedToNorth);
+    dataset.hearthSouthCompletionLatched = "false";
+    dataset.hearthSouthReadyTextAllowed = "false";
     dataset.hearthSouthF21LatchMode = state.f21LatchMode;
+    dataset.hearthSouthF21NorthLatchOnly = "true";
+
     dataset.hearthSouthPostgameStatus = state.postgameStatus;
     dataset.hearthSouthFirstFailedCoordinate = state.firstFailedCoordinate;
     dataset.hearthSouthRecommendedNextRenewalTarget = state.recommendedNextRenewalTarget;
@@ -1860,6 +2010,8 @@
     getStatusText,
     readCanvasApi,
     readCanvasReceipt,
+    globalsNeedRepublish,
+    publishGlobals,
 
     supportsSelfDutyPublication: true,
     supportsEarlyApiPublication: true,
@@ -1869,12 +2021,15 @@
     supportsFibonacciSynchronization: true,
     supportsCanvasF13EvidenceOnly: true,
     supportsF21NorthNewsLatchOnly: true,
+    supportsF21EligibilitySubmissionOnly: true,
+    supportsConditionalWatchdogRepublish: true,
 
     ownsRouteConductorRuntime: true,
     ownsSelfDutyPublication: true,
     ownsCanvasBootRequest: true,
     ownsCanvasReceiptReconciliation: true,
     ownsVisibleProofGovernance: true,
+    ownsF21EligibilitySubmission: true,
     ownsCanvasDrawing: false,
     ownsCanvasChildren: false,
     ownsNorthCheckpointTruth: false,
@@ -1892,7 +2047,7 @@
   };
 
   publishEarlyMarker();
-  publishGlobals("immediate-self-duty-api-receipt-publication");
+  publishGlobals("immediate-self-duty-api-receipt-publication", true);
 
   if (doc) {
     if (doc.readyState === "loading") {

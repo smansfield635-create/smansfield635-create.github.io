@@ -1,21 +1,18 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_CANVAS_PARENT_RELEASE_PACKET_TO_EAST_STALE_CLEARANCE_TNT_v3
+// HEARTH_CANVAS_PARENT_PRE_RELEASE_STRUCTURAL_CARRIER_THEN_WEST_RELEASE_TO_EAST_TNT_v4
 // Full-file replacement.
-// Canvas parent / governed F13 evidence receiver / parent-child reconciliation gate.
+// Canvas parent / governed F13 evidence receiver / pre-release structural carrier / post-release child render chain.
 // Purpose:
-// - Preserve Canvas as one physical parent file.
-// - Preserve governed release, parent identity guard, boot handshake, stale-consumption guard,
-//   physical carrier mount, child consumption, render chain, and upstream return packet.
-// - Repair current stale-parent poisoning by separating historical preexisting stale evidence
-//   from current parent identity/stale state.
-// - Pass the accepted Cycle 2 / West-governed release packet into Canvas East buildAtlas()
-//   so East can lawfully build after West release.
-// - Read renewed child receipts directly:
-//   East = atlas/source readiness.
-//   West = F13N inspection/view/invalidation readiness.
-//   South = F13S texture/render/visible-proof readiness.
+// - Break the circular lock where Macro West requires a safe Canvas carrier before release,
+//   while Canvas previously required West release before mounting the carrier.
+// - Allow pre-release structural carrier proof only:
+//   parent identity guard, stale clearance, physical carrier mount, 2D context, nonzero size,
+//   safe containment fields, and structural receipt.
+// - Keep child work gated behind lawful Cycle 2 / Macro West release:
+//   East buildAtlas, West inspection binding, South texture/render/visible proof.
+// - Pass accepted West release packet into East buildAtlas().
+// - Preserve current-parent stale clearance while treating old parent evidence as historical only.
 // - Split child API readiness from child evidence readiness.
-// - Expose current NEWS fields and Fibonacci fields.
 // - Keep Canvas strictly F13 evidence only.
 // - Never claim F21, READY text, completion latch, or final visual pass.
 // Does not own:
@@ -25,7 +22,7 @@
 // - hydrology truth
 // - runtime-table governance
 // - route orchestration
-// - West admissibility
+// - Macro West admissibility
 // - North NEWS finalization
 // - F21 completion latch
 // - ready text
@@ -34,18 +31,17 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_PARENT_RELEASE_PACKET_TO_EAST_STALE_CLEARANCE_TNT_v3";
-  const RECEIPT = "HEARTH_CANVAS_PARENT_RELEASE_PACKET_TO_EAST_STALE_CLEARANCE_RECEIPT_v3";
+  const CONTRACT = "HEARTH_CANVAS_PARENT_PRE_RELEASE_STRUCTURAL_CARRIER_THEN_WEST_RELEASE_TO_EAST_TNT_v4";
+  const RECEIPT = "HEARTH_CANVAS_PARENT_PRE_RELEASE_STRUCTURAL_CARRIER_THEN_WEST_RELEASE_TO_EAST_RECEIPT_v4";
 
-  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_PARENT_CHILD_RECONCILIATION_F13_EVIDENCE_RECEIVER_TNT_v2";
-  const PREVIOUS_RECEIPT = "HEARTH_CANVAS_PARENT_CHILD_RECONCILIATION_F13_EVIDENCE_RECEIVER_RECEIPT_v2";
-  const BASELINE_CONTRACT = "HEARTH_CANVAS_PARENT_CHILD_RECONCILIATION_F13_EVIDENCE_RECEIVER_TNT_v2";
-  const BASELINE_RECEIPT = "HEARTH_CANVAS_PARENT_CHILD_RECONCILIATION_F13_EVIDENCE_RECEIVER_RECEIPT_v2";
+  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_PARENT_RELEASE_PACKET_TO_EAST_STALE_CLEARANCE_TNT_v3";
+  const PREVIOUS_RECEIPT = "HEARTH_CANVAS_PARENT_RELEASE_PACKET_TO_EAST_STALE_CLEARANCE_RECEIPT_v3";
+  const BASELINE_CONTRACT = "HEARTH_CANVAS_PARENT_RELEASE_PACKET_TO_EAST_STALE_CLEARANCE_TNT_v3";
+  const BASELINE_RECEIPT = "HEARTH_CANVAS_PARENT_RELEASE_PACKET_TO_EAST_STALE_CLEARANCE_RECEIPT_v3";
 
   const SPLIT_CONTRACT = CONTRACT;
   const SPLIT_RECEIPT = RECEIPT;
-
-  const VERSION = "2026-05-31.hearth-canvas-parent-release-packet-to-east-stale-clearance-v3";
+  const VERSION = "2026-05-31.hearth-canvas-parent-pre-release-structural-carrier-then-west-release-to-east-v4";
 
   const FILE = "/assets/hearth/hearth.canvas.js";
   const NORTH_FILE = "/assets/lab/runtime-table.js";
@@ -53,8 +49,10 @@
   const WEST_FILE = "/assets/hearth/hearth.canvas.west.js";
   const SOUTH_FILE = "/assets/hearth/hearth.canvas.south.js";
 
-  const root = typeof window !== "undefined" ? window : globalThis;
-  const doc = root.document || null;
+  const MACRO_CYCLE_1 = "NORTH_EAST_WEST_SOUTH_NORTH";
+  const MACRO_CYCLE_2 = "NORTH_EAST_SOUTH_WEST_CANVAS";
+  const CANVAS_CHILD_SEQUENCE = "CANVAS_PRE_RELEASE_CARRIER__MACRO_WEST_RELEASE__CANVAS_EAST_ATLAS__CANVAS_WEST_INSPECTION__CANVAS_SOUTH_RENDER__CANVAS_PARENT_F13_RETURN";
+  const DEPRECATED_CYCLE_ORDER = "EAST_WEST_NORTH_SOUTH_CHECKPOINT_EAST";
 
   const DEFAULT_SIZE = 600;
   const MIN_SIZE = 360;
@@ -64,12 +62,11 @@
   const CHILD_METHOD_TIMEOUT_MS = 9000;
   const MAX_LOG = 180;
 
-  const MACRO_CYCLE_1 = "NORTH_EAST_WEST_SOUTH_NORTH";
-  const MACRO_CYCLE_2 = "NORTH_EAST_SOUTH_WEST_CANVAS";
-  const CANVAS_CHILD_SEQUENCE = "CANVAS_EAST_ATLAS_SOURCE__CANVAS_WEST_INSPECTION_VIEW__CANVAS_SOUTH_TEXTURE_RENDER__CANVAS_PARENT_F13_EVIDENCE";
-  const DEPRECATED_CYCLE_ORDER = "EAST_WEST_NORTH_SOUTH_CHECKPOINT_EAST";
+  const root = typeof window !== "undefined" ? window : globalThis;
+  const doc = root.document || null;
 
   const RELEASE_STATUS = Object.freeze({
+    WAITING: "WAITING_MACRO_WEST_RELEASE",
     ACCEPTED: "RELEASE_ACCEPTED",
     HELD_CYCLE_ONE: "RELEASE_HELD_CYCLE_ONE",
     HELD_UNKNOWN_CYCLE: "RELEASE_HELD_UNKNOWN_CYCLE",
@@ -77,6 +74,7 @@
     HELD_SOUTH_ONLY_PACKET: "RELEASE_HELD_SOUTH_ONLY_PACKET",
     HELD_PARENT_IDENTITY_MISMATCH: "RELEASE_HELD_PARENT_IDENTITY_MISMATCH",
     HELD_CURRENT_STALE_PARENT: "RELEASE_HELD_CURRENT_STALE_PARENT",
+    HELD_STRUCTURAL_CARRIER: "RELEASE_HELD_STRUCTURAL_CARRIER",
     HELD_FALLBACK: "RELEASE_HELD_FALLBACK"
   });
 
@@ -87,7 +85,8 @@
     "HEARTH_CANVAS_SINGLE_FILE_INTERNAL_NEWS_F13_TEXTURE_FRAME_PROOF_CLOSURE_TNT_v3",
     "HEARTH_CANVAS_PARENT_IDENTITY_BOOT_HANDSHAKE_STALE_CONSUMPTION_GUARD_TNT_v4",
     "HEARTH_CANVAS_PARENT_GOVERNED_F13_EVIDENCE_RECEIVER_AFTER_WEST_RELEASE_TNT_v1",
-    "HEARTH_CANVAS_PARENT_CHILD_RECONCILIATION_F13_EVIDENCE_RECEIVER_TNT_v2"
+    "HEARTH_CANVAS_PARENT_CHILD_RECONCILIATION_F13_EVIDENCE_RECEIVER_TNT_v2",
+    "HEARTH_CANVAS_PARENT_RELEASE_PACKET_TO_EAST_STALE_CLEARANCE_TNT_v3"
   ]);
 
   const CHILDREN = Object.freeze({
@@ -108,7 +107,7 @@
         "DEXTER_LAB.hearthCanvasEastF13AtlasSourceChild",
         "DEXTER_LAB.hearthCanvasEastGovernedF13AtlasSource"
       ],
-      requiredMethods: ["buildAtlas", "sample", "read", "getReceipt"]
+      methods: ["buildAtlas", "sample", "read", "getReceipt"]
     },
     west: {
       file: WEST_FILE,
@@ -123,7 +122,7 @@
         "DEXTER_LAB.hearthCanvasWestInspectionInvalidationControl",
         "DEXTER_LAB.hearthCanvasWestF13NInspectionViewInvalidationChild"
       ],
-      requiredMethods: ["bindInspection", "getViewState", "setRotation", "resetRotation", "setZoom", "getReceipt"]
+      methods: ["bindInspection", "getViewState", "setRotation", "resetRotation", "setZoom", "getReceipt"]
     },
     south: {
       file: SOUTH_FILE,
@@ -141,7 +140,7 @@
         "DEXTER_LAB.hearthCanvasSouthSplitAdapterDrainVisibleProofHardening",
         "DEXTER_LAB.hearthCanvasSouthF13STextureRenderVisibleProofChild"
       ],
-      requiredMethods: [
+      methods: [
         "composeTexture",
         "renderSphere",
         "renderSphereSync",
@@ -153,6 +152,142 @@
       ]
     }
   });
+
+  function nowIso() {
+    try { return new Date().toISOString(); } catch (_error) { return ""; }
+  }
+
+  function isObject(value) {
+    return Boolean(value && typeof value === "object");
+  }
+
+  function isFunction(value) {
+    return typeof value === "function";
+  }
+
+  function safeString(value, fallback = "") {
+    if (value === undefined || value === null) return fallback;
+    return String(value);
+  }
+
+  function safeNumber(value, fallback = 0) {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : fallback;
+  }
+
+  function safeBool(value, fallback = false) {
+    if (typeof value === "boolean") return value;
+    if (value === true || value === 1 || value === "1" || value === "true") return true;
+    if (value === false || value === 0 || value === "0" || value === "false") return false;
+    return fallback;
+  }
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, safeNumber(value, min)));
+  }
+
+  function clonePlain(value) {
+    if (!isObject(value) && !Array.isArray(value)) return value;
+    try { return JSON.parse(JSON.stringify(value)); }
+    catch (_error) { return Array.isArray(value) ? value.slice() : { ...value }; }
+  }
+
+  function trimArray(array, max = MAX_LOG) {
+    if (Array.isArray(array) && array.length > max) {
+      array.splice(0, array.length - max);
+    }
+  }
+
+  function readPath(path) {
+    const parts = String(path || "").split(".");
+    let cursor = root;
+
+    for (const part of parts) {
+      if (!cursor || cursor[part] === undefined || cursor[part] === null) return null;
+      cursor = cursor[part];
+    }
+
+    return cursor || null;
+  }
+
+  function readDataset(key, fallback = "") {
+    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return fallback;
+    const value = doc.documentElement.dataset[key];
+    return value === undefined || value === null || value === "" ? fallback : value;
+  }
+
+  function setDataset(key, value) {
+    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
+    doc.documentElement.dataset[key] = value === undefined || value === null ? "" : String(value);
+  }
+
+  function asArray(value) {
+    if (Array.isArray(value)) return value.slice();
+    if (value === undefined || value === null || value === "") return [];
+    return [value];
+  }
+
+  function fieldDeep(input, names, maxDepth = 7) {
+    const wanted = new Set(asArray(names));
+    const queue = [{ value: input, depth: 0 }];
+    const seen = typeof WeakSet !== "undefined" ? new WeakSet() : null;
+
+    while (queue.length) {
+      const current = queue.shift();
+      const value = current.value;
+
+      if (!isObject(value) || current.depth > maxDepth) continue;
+      if (seen && seen.has(value)) continue;
+      if (seen) seen.add(value);
+
+      for (const key of Object.keys(value)) {
+        if (wanted.has(key)) return value[key];
+      }
+
+      for (const key of Object.keys(value)) {
+        if (isObject(value[key])) queue.push({ value: value[key], depth: current.depth + 1 });
+      }
+    }
+
+    return undefined;
+  }
+
+  function getAnyString(input, names, fallback = "") {
+    const value = fieldDeep(input, names);
+    return value === undefined || value === null ? fallback : String(value);
+  }
+
+  function getAnyBool(input, names, fallback = false) {
+    return safeBool(fieldDeep(input, names), fallback);
+  }
+
+  function getAnyNumber(input, names, fallback = 0) {
+    return safeNumber(fieldDeep(input, names), fallback);
+  }
+
+  function withTimeout(promise, timeoutMs, label) {
+    return new Promise((resolve, reject) => {
+      let settled = false;
+
+      const timer = root.setTimeout(() => {
+        if (settled) return;
+        settled = true;
+        reject(new Error(`${label || "operation"} timed out after ${timeoutMs}ms`));
+      }, timeoutMs);
+
+      Promise.resolve(promise).then((value) => {
+        if (settled) return;
+        settled = true;
+        root.clearTimeout(timer);
+        resolve(value);
+      }).catch((error) => {
+        if (settled) return;
+        settled = true;
+        root.clearTimeout(timer);
+        reject(error);
+      });
+    });
+  }
 
   const preexisting = (() => {
     const prior =
@@ -184,7 +319,7 @@
       splitContract: priorSplit,
       splitReceipt: priorSplitReceipt,
       stale: Boolean(
-        priorSplit && priorSplit !== SPLIT_CONTRACT ||
+        (priorSplit && priorSplit !== SPLIT_CONTRACT) ||
         STALE_PARENT_CONTRACTS.includes(priorContract) ||
         STALE_PARENT_CONTRACTS.includes(priorSplit)
       )
@@ -202,10 +337,12 @@
     splitReceipt: SPLIT_RECEIPT,
     version: VERSION,
     file: FILE,
-    role: "canvas-parent-release-packet-to-east-stale-clearance",
+    role: "canvas-parent-pre-release-structural-carrier-then-west-release-to-east",
 
     governedF13EvidenceReceiverActive: true,
     parentChildReconciliationActive: true,
+    preReleaseStructuralCarrierActive: true,
+    postReleaseChildRenderChainActive: true,
     eastReleasePacketBridgeActive: true,
     waitsForWestRelease: true,
     cycleOneHeld: true,
@@ -229,37 +366,149 @@
     preexistingParentSplitReceipt: preexisting.splitReceipt,
     preexistingStaleParentDetected: preexisting.stale,
     preexistingStaleParentPreservedAsHistoricalEvidence: true,
-
     currentParentStaleDetected: false,
     staleParentDetected: false,
     staleParentDetectedMeansCurrentParentOnly: true,
 
-    release: {
-      releaseAccepted: false,
-      releaseStatus: RELEASE_STATUS.HELD_UNKNOWN_CYCLE,
-      releaseReason: "waiting-governed-release-packet",
-      receivedFrom: "",
-      returnTo: "",
-      handoffTo: "",
-      cycleNumber: 0,
-      cycleRoute: "",
-      westAuditObserved: false,
-      westAuditAccepted: false,
-      westCanvasReleaseApproved: false,
-      westAuditRequired: true,
-      northCanvasReleaseAuthorized: false,
-      canvasReleaseAuthorized: false,
-      canvasReleaseReceived: false,
-      sourceFile: "",
-      destinationFile: FILE,
-      acceptedAt: "",
-      lastInput: null
-    },
+    releaseAccepted: false,
+    releaseStatus: RELEASE_STATUS.WAITING,
+    releaseReason: "waiting-macro-west-release",
+    releasePacket: null,
+    receivedFrom: "",
+    cycleNumber: 0,
+    cycleRoute: "",
+    westAuditObserved: false,
+    westAuditAccepted: false,
+    westCanvasReleaseApproved: false,
+    northCanvasReleaseAuthorized: false,
+    canvasReleaseAuthorized: false,
+
+    routeMounted: false,
+    canvasTargetPresent: false,
+    canvasCarrierRequested: false,
+    canvasCarrierMounted: false,
+    canvasContextReady: false,
+    carrierReady: false,
+    canvasCarrierReady: false,
+    canvasCarrierHandoffOk: false,
+    canvasCarrierHandoffError: "",
+    structuralCarrierSafeForCanvasRelease: false,
+    sphereContainment: true,
+    outsideSphereTransparent: true,
+    noRectangularTextureSpill: true,
+
+    mount: null,
+    canvas: null,
+    context: null,
+    cssSize: 0,
+    dpr: 1,
+    carrierPhysicalWidth: 0,
+    carrierPhysicalHeight: 0,
+    planetCanvasPresent: false,
+    planetCanvasNonZeroSize: false,
+
+    canvasEastPresent: false,
+    canvasWestPresent: false,
+    canvasSouthPresent: false,
+    canvasEastApiReady: false,
+    canvasWestApiReady: false,
+    canvasSouthApiReady: false,
+    allCanvasChildrenApiReady: false,
+    canvasEastEvidenceReady: false,
+    canvasWestInspectionReady: false,
+    canvasSouthVisibleProofReady: false,
+    allCanvasChildrenEvidenceReady: false,
+    canvasEastReady: false,
+    canvasWestReady: false,
+    canvasSouthReady: false,
+    allCanvasChildrenReady: false,
+    canvasEastMissingMethods: "",
+    canvasWestMissingMethods: "",
+    canvasSouthMissingMethods: "",
+
+    childLoadAttempted: false,
+    childLoadComplete: false,
+    childLoadError: "",
+    nextAuditTarget: WEST_FILE,
+
+    eastReceipt: {},
+    westReceipt: {},
+    southReceipt: {},
 
     lastEastBuildRequest: null,
     eastBuildRequestIncludesReleasePacket: false,
     eastBuildRequestIncludesCurrentParentClearance: false,
     eastBuildRequestIncludesWestRelease: false,
+
+    atlasCanvas: null,
+    textureCanvas: null,
+    atlasWidth: DEFAULT_ATLAS_WIDTH,
+    atlasHeight: DEFAULT_ATLAS_HEIGHT,
+    atlasBuildStarted: false,
+    atlasBuildProgress: 0,
+    atlasBuildComplete: false,
+    atlasBuildError: "",
+    textureComposeStarted: false,
+    textureComposeProgress: 0,
+    textureComposeComplete: false,
+    textureReady: false,
+    textureComposeError: "",
+    firstFrameRequested: false,
+    firstFrameDetected: false,
+    imageRendered: false,
+    imageRenderedMeansFrameDrawnOnly: true,
+    imageRenderedDoesNotMeanVisualPass: true,
+    imageRenderedDoesNotMeanF21: true,
+    renderedAfterTexture: false,
+    renderReady: false,
+    renderFrameCount: 0,
+    interactiveFrameCount: 0,
+
+    dragInspectionBound: false,
+    zoomInspectionBound: false,
+    inspectModeAvailable: false,
+    inspectPlanetControlAvailable: false,
+    diagnosticCanLeavePlanetFrame: false,
+    rotationYaw: -0.18,
+    rotationPitch: 0.05,
+    zoomLevel: 1,
+    zoomMin: 0.82,
+    zoomMax: 2.8,
+    pointerDragCount: 0,
+
+    visibleContentProofStarted: false,
+    visibleContentProof: false,
+    visibleContentStrictProof: false,
+    visibleContentSoftGap: false,
+    visibleContentHardFail: false,
+    visibleForwardProgress: false,
+    visibleContentAdmissible: false,
+    visiblePlanetAvailable: false,
+    nonblankPlanetVisible: false,
+    planetFramePainted: false,
+    planetNotObstructed: false,
+    carrierOnlyDetected: false,
+    visibleContentProofMethod: "",
+    visibleContentProofError: "",
+    visibleContentSampleCount: 0,
+    visibleContentVarianceScore: 0,
+    visibleContentClassCount: 0,
+    visibleContentClasses: [],
+    visibleContentLandSampleCount: 0,
+    visibleContentWaterSampleCount: 0,
+    visibleContentOtherSampleCount: 0,
+    visibleContentCarrierSampleCount: 0,
+    visibleProofReady: false,
+    emergencyF13DiagnosticPlanetAllowed: true,
+    emergencyF13DiagnosticPlanetUsed: false,
+
+    materialReceiptBridgeActive: false,
+    materialNestedReceiptAvailable: false,
+    materialContract: "",
+    materialReceipt: "",
+    materialContractMatchesExpected: false,
+    materialReceiptMatchesExpected: false,
+    canonicalMaterialConsumed: false,
 
     newsProtocolSynchronized: true,
     northGateReady: false,
@@ -288,7 +537,6 @@
     activeFibonacciGate: "F13",
     futureFibonacciGate: "F21",
     oneActiveGearAtATime: true,
-    f8SelfDutySatisfied: false,
 
     f13ReleaseReceived: false,
     f13ParentIdentityAccepted: false,
@@ -310,39 +558,11 @@
     f13CanvasEvidenceComplete: false,
     f13HardFail: false,
 
-    f21EligibleForNorth: false,
-    f21SubmittedToNorth: false,
-    f21ClaimedByCanvas: false,
-    readyTextClaimedByCanvas: false,
-    completionLatched: false,
-    degradedCompletionLatched: false,
-    f21LatchMode: "north-only",
-
-    canvasNorthActive: true,
-    physicalObjectBootstrapActive: true,
-    physicalCarrierProofActive: true,
-    carrierReadyIsNotPlanetReady: true,
-    canvasReadyRequiresTextureFrameAndProof: true,
-    f13PhysicalProofRequired: true,
-    emergencyF13DiagnosticPlanetAllowed: true,
-    emergencyF13DiagnosticPlanetUsed: false,
-
-    mount: null,
-    canvas: null,
-    context: null,
-    cssSize: 0,
-    dpr: 1,
-    carrierPhysicalWidth: 0,
-    carrierPhysicalHeight: 0,
-
-    canvasCarrierRequested: false,
-    canvasCarrierMounted: false,
-    canvasContextReady: false,
-    carrierReady: false,
-    canvasCarrierReady: false,
-    canvasCarrierHandoffOk: false,
-    canvasCarrierHandoffError: "",
-    canvasCarrierMethod: "parent-release-packet-to-east-stale-clearance",
+    northAuthorityPresent: false,
+    checkpointSessionSubmissionAvailable: false,
+    canvasEvidenceBodyComposed: false,
+    canvasReturnPacketReady: false,
+    canvasEvidenceSubmittedToNorth: false,
 
     physicalBootRequested: false,
     physicalBootStarted: false,
@@ -353,137 +573,14 @@
     canvasBootStarted: false,
     canvasBootResolved: false,
     canvasBootRejected: false,
-    canvasBootAttempts: 0,
     canvasBootError: "",
     canvasBootComplete: false,
-
-    canvasReady: false,
-    visibleCanvasReady: false,
-    canvasLaneClosed: false,
-
-    planetCanvasPresent: false,
-    planetCanvasNonZeroSize: false,
-    planetFramePainted: false,
-    nonblankPlanetVisible: false,
-    planetNotObstructed: false,
-    visiblePlanetAvailable: false,
-    visiblePlanetHintPresent: false,
-
-    childLoadAttempted: false,
-    childLoadComplete: false,
-    childLoadError: "",
-
-    canvasEastPresent: false,
-    canvasWestPresent: false,
-    canvasSouthPresent: false,
-
-    canvasEastApiReady: false,
-    canvasWestApiReady: false,
-    canvasSouthApiReady: false,
-    allCanvasChildrenApiReady: false,
-
-    canvasEastEvidenceReady: false,
-    canvasWestInspectionReady: false,
-    canvasSouthVisibleProofReady: false,
-    allCanvasChildrenEvidenceReady: false,
-
-    canvasEastReady: false,
-    canvasWestReady: false,
-    canvasSouthReady: false,
-    allCanvasChildrenReady: false,
-
-    canvasEastMissingMethods: "",
-    canvasWestMissingMethods: "",
-    canvasSouthMissingMethods: "",
-    nextAuditTarget: "",
-
-    eastReceipt: {},
-    westReceipt: {},
-    southReceipt: {},
-
-    atlasCanvas: null,
-    textureCanvas: null,
-    atlasWidth: DEFAULT_ATLAS_WIDTH,
-    atlasHeight: DEFAULT_ATLAS_HEIGHT,
-
-    atlasBuildStarted: false,
-    atlasBuildProgress: 0,
-    atlasBuildComplete: false,
-    atlasBuildError: "",
-
-    textureComposeStarted: false,
-    textureComposeProgress: 0,
-    textureComposeComplete: false,
-    textureComposeError: "",
-    textureReady: false,
-
-    firstFrameRequested: false,
-    firstFrameDetected: false,
-    imageRendered: false,
-    imageRenderedMeansFrameDrawnOnly: true,
-    imageRenderedDoesNotMeanVisualPass: true,
-    imageRenderedDoesNotMeanF21: true,
-    renderedAfterTexture: false,
-    renderReady: false,
-
-    dragInspectionBound: false,
-    zoomInspectionBound: false,
-    inspectModeAvailable: false,
-    inspectPlanetControlAvailable: false,
-    diagnosticCanLeavePlanetFrame: false,
-
-    rotationYaw: -0.18,
-    rotationPitch: 0.05,
-    zoomLevel: 1,
-    zoomMin: 0.82,
-    zoomMax: 2.8,
-    pointerDragCount: 0,
-    renderFrameCount: 0,
-    interactiveFrameCount: 0,
-
-    visibleContentProofStarted: false,
-    visibleContentProof: false,
-    visibleContentStrictProof: false,
-    visibleContentSoftGap: false,
-    visibleContentHardFail: false,
-    visibleForwardProgress: false,
-    visibleContentAdmissible: false,
-    visibleContentProofMethod: "",
-    visibleContentProofError: "",
-    visibleContentSampleCount: 0,
-    visibleContentVarianceScore: 0,
-    visibleContentClassCount: 0,
-    visibleContentClasses: [],
-    visibleContentLandSampleCount: 0,
-    visibleContentWaterSampleCount: 0,
-    visibleContentOtherSampleCount: 0,
-    visibleContentCarrierSampleCount: 0,
-    carrierOnlyDetected: false,
-    visibleProofReady: false,
-
-    materialReceiptBridgeActive: false,
-    materialNestedReceiptAvailable: false,
-    materialContract: "",
-    materialReceipt: "",
-    materialContractMatchesExpected: false,
-    materialReceiptMatchesExpected: false,
-    canonicalMaterialConsumed: false,
-
-    northAuthorityPresent: false,
-    checkpointSessionSubmissionAvailable: false,
-    canvasEvidenceSubmittedToNorth: false,
-    canvasEvidenceBodyComposed: false,
-    canvasReturnPacketReady: false,
-
     booting: false,
     booted: false,
-    bootStartedAt: "",
-    bootCompletedAt: "",
-    bootElapsedMs: 0,
 
-    firstFailedCoordinate: "WAITING_CANVAS_GOVERNED_RELEASE_PACKET",
-    recommendedNextFile: FILE,
-    recommendedNextRenewalTarget: FILE,
+    firstFailedCoordinate: "WAITING_MACRO_WEST_RELEASE_AFTER_PRE_RELEASE_STRUCTURAL_CARRIER",
+    recommendedNextFile: WEST_FILE,
+    recommendedNextRenewalTarget: WEST_FILE,
 
     callbacks: [],
     canvasPhaseEvents: [],
@@ -492,6 +589,7 @@
     errors: [],
 
     ownsCanvasEvidenceOnly: true,
+    ownsPreReleaseStructuralCarrier: true,
     ownsGovernedF13EvidenceReceiver: true,
     ownsParentChildReconciliation: true,
     ownsEastReleasePacketBridge: true,
@@ -511,157 +609,23 @@
     ownsReadyText: false,
     ownsF21: false,
 
+    f21EligibleForNorth: false,
+    f21SubmittedToNorth: false,
+    f21ClaimedByCanvas: false,
+    readyTextClaimedByCanvas: false,
+    completionLatched: false,
+    degradedCompletionLatched: false,
+    f21LatchMode: "north-only",
+
     generatedImage: false,
     graphicBox: false,
     webGL: false,
     visualPassClaimed: false,
-    updatedAt: ""
+    updatedAt: nowIso()
   };
 
   let bootPromise = null;
   let childrenPromise = null;
-
-  function nowIso() {
-    try {
-      return new Date().toISOString();
-    } catch (_error) {
-      return "";
-    }
-  }
-
-  function isObject(value) {
-    return Boolean(value && typeof value === "object");
-  }
-
-  function isFunction(value) {
-    return typeof value === "function";
-  }
-
-  function safeString(value, fallback = "") {
-    if (value === undefined || value === null) return fallback;
-    return String(value);
-  }
-
-  function safeNumber(value, fallback = 0) {
-    const n = Number(value);
-    return Number.isFinite(n) ? n : fallback;
-  }
-
-  function safeBool(value, fallback = false) {
-    if (typeof value === "boolean") return value;
-    if (value === "true" || value === "1" || value === 1) return true;
-    if (value === "false" || value === "0" || value === 0) return false;
-    return fallback;
-  }
-
-  function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, safeNumber(value, min)));
-  }
-
-  function asArray(value) {
-    if (Array.isArray(value)) return value.slice();
-    if (value === undefined || value === null || value === "") return [];
-    return [value];
-  }
-
-  function clonePlain(value) {
-    if (!isObject(value) && !Array.isArray(value)) return value;
-
-    try {
-      return JSON.parse(JSON.stringify(value));
-    } catch (_error) {
-      return Array.isArray(value) ? value.slice() : { ...value };
-    }
-  }
-
-  function trimArray(array, max = MAX_LOG) {
-    if (Array.isArray(array) && array.length > max) {
-      array.splice(0, array.length - max);
-    }
-  }
-
-  function pathRead(path) {
-    const parts = String(path || "").split(".");
-    let cursor = root;
-
-    for (const part of parts) {
-      if (!cursor || cursor[part] === undefined || cursor[part] === null) return null;
-      cursor = cursor[part];
-    }
-
-    return cursor || null;
-  }
-
-  function readDataset(key, fallback = "") {
-    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return fallback;
-    const value = doc.documentElement.dataset[key];
-    return value === undefined || value === null || value === "" ? fallback : value;
-  }
-
-  function fieldDeep(input, names, maxDepth = 7) {
-    const wanted = new Set(asArray(names));
-    const queue = [{ value: input, depth: 0 }];
-    const seen = typeof WeakSet !== "undefined" ? new WeakSet() : null;
-
-    while (queue.length) {
-      const current = queue.shift();
-      const value = current.value;
-
-      if (!isObject(value) || current.depth > maxDepth) continue;
-      if (seen && seen.has(value)) continue;
-      if (seen) seen.add(value);
-
-      for (const key of Object.keys(value)) {
-        if (wanted.has(key)) return value[key];
-      }
-
-      for (const key of Object.keys(value)) {
-        const next = value[key];
-        if (isObject(next)) queue.push({ value: next, depth: current.depth + 1 });
-      }
-    }
-
-    return undefined;
-  }
-
-  function getAnyString(input, names, fallback = "") {
-    const value = fieldDeep(input, names);
-    return value === undefined || value === null ? fallback : String(value);
-  }
-
-  function getAnyBool(input, names, fallback = false) {
-    return safeBool(fieldDeep(input, names), fallback);
-  }
-
-  function getAnyNumber(input, names, fallback = 0) {
-    return safeNumber(fieldDeep(input, names), fallback);
-  }
-
-  function withTimeout(promise, timeoutMs, label) {
-    return new Promise((resolve, reject) => {
-      let settled = false;
-
-      const timer = root.setTimeout(() => {
-        if (settled) return;
-        settled = true;
-        reject(new Error(`${label || "operation"} timed out after ${timeoutMs}ms`));
-      }, timeoutMs);
-
-      Promise.resolve(promise)
-        .then((value) => {
-          if (settled) return;
-          settled = true;
-          root.clearTimeout(timer);
-          resolve(value);
-        })
-        .catch((error) => {
-          if (settled) return;
-          settled = true;
-          root.clearTimeout(timer);
-          reject(error);
-        });
-    });
-  }
 
   function recordLocal(event, detail = {}) {
     const item = {
@@ -695,23 +659,17 @@
     return item;
   }
 
-  function safeChildReceipt(child) {
-    if (!child || !isObject(child)) return {};
+  function normalizeCycleRoute(value = "") {
+    const text = safeString(value).toUpperCase().replace(/\s+/g, "");
+    if (text.includes("NORTH_EAST_WEST_SOUTH_NORTH") || text.includes("NORTH→EAST→WEST→SOUTH→NORTH") || text.includes("NORTH->EAST->WEST->SOUTH->NORTH")) return MACRO_CYCLE_1;
+    if (text.includes("NORTH_EAST_SOUTH_WEST_CANVAS") || text.includes("NORTH→EAST→SOUTH→WEST→CANVAS") || text.includes("NORTH->EAST->SOUTH->WEST->CANVAS")) return MACRO_CYCLE_2;
+    return safeString(value, "");
+  }
 
-    if (isFunction(child.getReceipt)) {
-      try {
-        const receipt = child.getReceipt();
-        return isObject(receipt) ? receipt : {};
-      } catch (_error) {
-        return {};
-      }
-    }
-
-    if (isObject(child.receiptPacket)) return child.receiptPacket;
-    if (isObject(child.receipt)) return child.receipt;
-    if (child.contract || child.version) return child;
-
-    return {};
+  function normalizeCardinal(value = "") {
+    const text = safeString(value).trim().toUpperCase();
+    if (["NORTH", "EAST", "SOUTH", "WEST", "CANVAS", "PARENT"].includes(text)) return text;
+    return text;
   }
 
   function publishEarlyMarker() {
@@ -723,6 +681,7 @@
     root.__HEARTH_CANVAS_PARENT_SPLIT_RECEIPT__ = SPLIT_RECEIPT;
     root.__HEARTH_CANVAS_PARENT_CHILD_RECONCILIATION__ = true;
     root.__HEARTH_CANVAS_PARENT_GOVERNED_F13_EVIDENCE_RECEIVER__ = true;
+    root.__HEARTH_CANVAS_PARENT_PRE_RELEASE_STRUCTURAL_CARRIER__ = true;
     root.__HEARTH_CANVAS_PARENT_RELEASE_PACKET_TO_EAST__ = true;
     root.__HEARTH_CANVAS_STALE_PARENT_DETECTED_BEFORE_RECONCILIATION__ = state.preexistingStaleParentDetected;
     root.__HEARTH_CANVAS_CURRENT_STALE_PARENT_DETECTED__ = state.currentParentStaleDetected;
@@ -733,12 +692,8 @@
     const markerSplit = safeString(root.__HEARTH_CANVAS_PARENT_SPLIT_CONTRACT__, "");
     const datasetContract = readDataset("hearthCanvasContract", "");
     const datasetSplit = readDataset("hearthCanvasSplitContract", "");
-    const globalContract = root.HEARTH_CANVAS && root.HEARTH_CANVAS.contract
-      ? safeString(root.HEARTH_CANVAS.contract)
-      : "";
-    const globalSplit = root.HEARTH_CANVAS && root.HEARTH_CANVAS.splitContract
-      ? safeString(root.HEARTH_CANVAS.splitContract)
-      : "";
+    const globalContract = root.HEARTH_CANVAS && root.HEARTH_CANVAS.contract ? safeString(root.HEARTH_CANVAS.contract) : "";
+    const globalSplit = root.HEARTH_CANVAS && root.HEARTH_CANVAS.splitContract ? safeString(root.HEARTH_CANVAS.splitContract) : "";
 
     const mismatch = Boolean(
       (markerContract && markerContract !== CONTRACT) ||
@@ -756,14 +711,7 @@
     if (!mismatch) {
       state.currentParentStaleDetected = false;
       state.staleParentDetected = false;
-      state.firstFailedCoordinate =
-        state.firstFailedCoordinate === "WAITING_CANVAS_PARENT_IDENTITY_MATCH" ||
-        state.firstFailedCoordinate === "WAITING_CANVAS_STALE_PARENT_CLEARANCE"
-          ? "WAITING_CANVAS_GOVERNED_RELEASE_PACKET"
-          : state.firstFailedCoordinate;
-
       root.__HEARTH_CANVAS_CURRENT_STALE_PARENT_DETECTED__ = false;
-
       return true;
     }
 
@@ -773,7 +721,7 @@
     state.recommendedNextFile = FILE;
     state.recommendedNextRenewalTarget = FILE;
 
-    recordError("PARENT_IDENTITY_MISMATCH", "Live parent identity does not match parent release-packet-to-East stale-clearance identity.", {
+    recordError("PARENT_IDENTITY_MISMATCH", "Live parent identity does not match v4 parent identity.", {
       reason,
       expectedContract: CONTRACT,
       expectedSplit: SPLIT_CONTRACT,
@@ -788,405 +736,241 @@
     return false;
   }
 
-  function normalizeCycleRoute(value = "") {
-    const text = safeString(value).toUpperCase().replace(/\s+/g, "");
+  function resolveMount(options = {}) {
+    if (!doc) return null;
 
-    if (
-      text.includes("NORTH_EAST_WEST_SOUTH_NORTH") ||
-      text.includes("NORTH→EAST→WEST→SOUTH→NORTH") ||
-      text.includes("NORTH->EAST->WEST->SOUTH->NORTH")
-    ) {
-      return MACRO_CYCLE_1;
+    const candidate = options.mount || options.mountEl || options.container || options.target;
+
+    if (candidate && candidate.nodeType === 1) return candidate;
+
+    if (typeof candidate === "string") {
+      try {
+        const found = doc.querySelector(candidate);
+        if (found) return found;
+      } catch (_error) {}
     }
 
-    if (
-      text.includes("NORTH_EAST_SOUTH_WEST_CANVAS") ||
-      text.includes("NORTH→EAST→SOUTH→WEST→CANVAS") ||
-      text.includes("NORTH->EAST->SOUTH->WEST->CANVAS")
-    ) {
-      return MACRO_CYCLE_2;
+    const selectors = [
+      "#hearthCanvasMount",
+      "[data-hearth-canvas-mount='true']",
+      "[data-hearth-canvas-mount]",
+      "[data-hearth-planet-mount]",
+      "[data-hearth-planet-frame]",
+      "#hearth-canvas-mount",
+      "#hearth-planet-canvas-mount",
+      "#hearth-planet-frame",
+      ".hearth-canvas-mount",
+      ".hearth-planet-frame",
+      "[data-planet-frame]"
+    ];
+
+    for (const selector of selectors) {
+      const found = doc.querySelector(selector);
+      if (found) return found;
     }
 
-    return safeString(value, "");
+    return null;
   }
 
-  function normalizeCardinal(value = "") {
-    const text = safeString(value).trim().toUpperCase();
-    if (["NORTH", "EAST", "SOUTH", "WEST", "CANVAS", "PARENT"].includes(text)) return text;
-    return text;
+  function ensureMountFrame(mount) {
+    if (!mount || !mount.style) return;
+
+    const rect = mount.getBoundingClientRect ? mount.getBoundingClientRect() : { width: 0, height: 0 };
+    const width = safeNumber(rect.width, 0);
+    const height = safeNumber(rect.height, 0);
+
+    if (!mount.style.position) mount.style.position = "relative";
+    if (!mount.style.display) mount.style.display = "grid";
+    if (!mount.style.placeItems) mount.style.placeItems = "center";
+    if (width < MIN_SIZE && !mount.style.minWidth) mount.style.minWidth = `${MIN_SIZE}px`;
+    if (height < MIN_SIZE && !mount.style.minHeight) mount.style.minHeight = `${MIN_SIZE}px`;
+    if (!mount.style.overflow) mount.style.overflow = "hidden";
   }
 
-  function normalizeCanvasReleaseInput(input = {}) {
-    const source = isObject(input) ? input : {};
-    const detail = isObject(source.detail) ? source.detail : {};
-    const snapshot = isObject(source.snapshot) ? source.snapshot : {};
-    const release = isObject(source.release) ? source.release : {};
-    const receipt = isObject(source.receiptPacket) ? source.receiptPacket : {};
-    const flat = {
-      ...snapshot,
-      ...detail,
-      ...release,
-      ...receipt,
-      ...source
-    };
+  function ensurePreReleaseStructuralCarrier(options = {}) {
+    if (!doc) {
+      state.canvasCarrierHandoffOk = false;
+      state.canvasCarrierHandoffError = "document-unavailable";
+      state.structuralCarrierSafeForCanvasRelease = false;
+      updateDataset();
+      return getReceiptLight();
+    }
 
-    const receivedFrom = normalizeCardinal(
-      getAnyString(flat, ["receivedFrom", "sourceCardinal", "activeCardinal", "sender"], "") ||
-      readDataset("hearthCanvasReceivedFrom", "")
+    verifyCurrentParentIdentity("ensurePreReleaseStructuralCarrier");
+
+    if (!state.currentParentIdentityAccepted || state.currentParentStaleDetected) {
+      state.canvasCarrierHandoffOk = false;
+      state.canvasCarrierHandoffError = "parent-identity-or-current-stale-state-not-clear";
+      state.structuralCarrierSafeForCanvasRelease = false;
+      updateDataset();
+      return getReceiptLight();
+    }
+
+    const mount = resolveMount(options);
+
+    if (!mount) {
+      state.routeMounted = false;
+      state.canvasTargetPresent = false;
+      state.canvasCarrierHandoffOk = false;
+      state.canvasCarrierHandoffError = "canvas-mount-unavailable";
+      state.structuralCarrierSafeForCanvasRelease = false;
+      state.firstFailedCoordinate = "WAITING_CANVAS_MOUNT_TARGET";
+      state.recommendedNextFile = FILE;
+      state.recommendedNextRenewalTarget = FILE;
+      updateDataset();
+      return getReceiptLight();
+    }
+
+    ensureMountFrame(mount);
+
+    let canvas =
+      safeString(mount.tagName).toLowerCase() === "canvas"
+        ? mount
+        : mount.querySelector("canvas[data-hearth-canvas-texture='true'],canvas[data-hearth-canvas='true'],canvas.hearth-canvas");
+
+    if (!canvas) {
+      canvas = doc.createElement("canvas");
+      canvas.className = "hearth-canvas hearth-canvas--pre-release-structural-carrier";
+      canvas.dataset.hearthCanvas = "true";
+      canvas.dataset.hearthCanvasTexture = "true";
+      canvas.dataset.hearthCanvasPreReleaseStructuralCarrier = "true";
+      canvas.dataset.hearthCanvasF13Only = "true";
+      canvas.setAttribute("aria-label", "Hearth pre-release structural carrier canvas");
+      mount.appendChild(canvas);
+    }
+
+    const rect = mount.getBoundingClientRect ? mount.getBoundingClientRect() : { width: DEFAULT_SIZE, height: DEFAULT_SIZE };
+    const explicitSize = safeNumber(options.canvasSize || options.size, 0);
+    const widthFromRect = Math.max(0, safeNumber(rect.width, 0));
+    const heightFromRect = Math.max(0, safeNumber(rect.height, 0));
+    const basis = explicitSize || Math.max(MIN_SIZE, Math.min(DEFAULT_SIZE, widthFromRect || DEFAULT_SIZE, heightFromRect || DEFAULT_SIZE));
+    const cssSize = Math.max(MIN_SIZE, Math.round(basis));
+    const dpr = clamp(root.devicePixelRatio || 1, 1, 2);
+    const physicalSize = Math.max(MIN_SIZE, Math.round(cssSize * dpr));
+
+    canvas.style.display = "block";
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    canvas.style.maxWidth = "100%";
+    canvas.style.maxHeight = "100%";
+    canvas.style.objectFit = "contain";
+    canvas.style.touchAction = "none";
+    canvas.style.cursor = state.releaseAccepted ? "grab" : "default";
+
+    if (canvas.width !== physicalSize) canvas.width = physicalSize;
+    if (canvas.height !== physicalSize) canvas.height = physicalSize;
+
+    const context = canvas.getContext("2d", { alpha: true, willReadFrequently: true });
+
+    if (!context) {
+      state.canvasCarrierHandoffOk = false;
+      state.canvasCarrierHandoffError = "2d-context-unavailable";
+      state.structuralCarrierSafeForCanvasRelease = false;
+      updateDataset();
+      return getReceiptLight();
+    }
+
+    state.mount = mount;
+    state.canvas = canvas;
+    state.context = context;
+    state.cssSize = cssSize;
+    state.dpr = dpr;
+    state.carrierPhysicalWidth = canvas.width;
+    state.carrierPhysicalHeight = canvas.height;
+
+    state.routeMounted = true;
+    state.canvasTargetPresent = true;
+    state.canvasCarrierRequested = true;
+    state.canvasCarrierMounted = true;
+    state.canvasContextReady = true;
+    state.carrierReady = true;
+    state.canvasCarrierReady = true;
+    state.canvasCarrierHandoffOk = true;
+    state.canvasCarrierHandoffError = "";
+    state.planetCanvasPresent = true;
+    state.planetCanvasNonZeroSize = Boolean(canvas.width > 0 && canvas.height > 0);
+    state.sphereContainment = true;
+    state.outsideSphereTransparent = true;
+    state.noRectangularTextureSpill = true;
+    state.structuralCarrierSafeForCanvasRelease = Boolean(
+      state.routeMounted &&
+      state.canvasTargetPresent &&
+      state.canvasCarrierMounted &&
+      state.canvasContextReady &&
+      state.planetCanvasPresent &&
+      state.planetCanvasNonZeroSize &&
+      state.canvasCarrierHandoffOk &&
+      state.sphereContainment &&
+      state.outsideSphereTransparent &&
+      state.noRectangularTextureSpill
     );
 
-    const cycleRoute = normalizeCycleRoute(
-      getAnyString(flat, ["cycleRoute", "activeCycleRoute", "routeCycle"], "") ||
-      readDataset("hearthCanvasCycleRoute", "")
-    );
+    canvas.dataset.hearthCanvasContract = CONTRACT;
+    canvas.dataset.hearthCanvasReceipt = RECEIPT;
+    canvas.dataset.hearthCanvasSplitContract = SPLIT_CONTRACT;
+    canvas.dataset.hearthCanvasSplitReceipt = SPLIT_RECEIPT;
+    canvas.dataset.hearthCanvasVersion = VERSION;
+    canvas.dataset.hearthCanvasPreReleaseStructuralCarrier = "true";
+    canvas.dataset.hearthCanvasGovernedF13EvidenceReceiver = "true";
+    canvas.dataset.hearthCanvasParentChildReconciliation = "true";
+    canvas.dataset.hearthCanvasCarrierReady = String(state.carrierReady);
+    canvas.dataset.hearthCanvasCarrierStructuralSafeForWest = String(state.structuralCarrierSafeForCanvasRelease);
+    canvas.dataset.hearthCanvasReady = String(state.f13CanvasEvidenceComplete);
+    canvas.dataset.hearthCanvasF13Only = "true";
+    canvas.dataset.hearthCanvasF21Claimed = "false";
+    canvas.dataset.hearthCanvasReadyTextClaimed = "false";
+    canvas.dataset.visualPassClaimed = "false";
 
-    let cycleNumber = getAnyNumber(flat, ["cycleNumber", "activeCycleNumber"], 0);
-    if (!cycleNumber && cycleRoute === MACRO_CYCLE_1) cycleNumber = 1;
-    if (!cycleNumber && cycleRoute === MACRO_CYCLE_2) cycleNumber = 2;
-
-    const cycleOneDetected = Boolean(
-      cycleNumber === 1 ||
-      cycleRoute === MACRO_CYCLE_1 ||
-      getAnyBool(flat, ["cycleOneDetected", "cycle1Detected"], false)
-    );
-
-    const cycleTwoDetected = Boolean(
-      cycleNumber === 2 ||
-      cycleRoute === MACRO_CYCLE_2 ||
-      getAnyBool(flat, ["cycleTwoDetected", "cycle2Detected"], false)
-    );
-
-    const westAuditObserved = Boolean(
-      getAnyBool(flat, ["westAuditObserved", "westAuditPresent", "westReviewObserved"], false) ||
-      readDataset("hearthCanvasWestAuditObserved", "") === "true" ||
-      receivedFrom === "WEST"
-    );
-
-    const westAuditAccepted = Boolean(
-      getAnyBool(flat, ["westAuditAccepted", "westAccepted", "westHandoffAccepted", "auditAccepted", "westAuditApproved", "westAuditPassed"], false) ||
-      readDataset("hearthCanvasWestAuditAccepted", "") === "true"
-    );
-
-    const westCanvasReleaseApproved = Boolean(
-      getAnyBool(flat, ["westCanvasReleaseApproved", "canvasReleaseApprovedByWest", "westReleaseApproved", "westReleaseObserved", "westReleaseLawful"], false) ||
-      readDataset("hearthCanvasWestReleaseApproved", "") === "true"
-    );
-
-    const northCanvasReleaseAuthorized = Boolean(
-      getAnyBool(flat, ["northCanvasReleaseAuthorized", "canvasReleaseAuthorizedByNorth", "northReleaseAuthorized"], false) ||
-      readDataset("hearthCanvasNorthReleaseAuthorized", "") === "true"
-    );
-
-    const canvasReleaseAuthorized = Boolean(
-      getAnyBool(flat, ["canvasReleaseAuthorized", "releaseAuthorized", "canvasRelease"], false) ||
-      readDataset("hearthCanvasReleaseAuthorized", "") === "true"
-    );
-
-    const canvasReleaseReceived = Boolean(
-      getAnyBool(flat, ["canvasReleaseReceived", "releaseReceived"], false) ||
-      westCanvasReleaseApproved ||
-      canvasReleaseAuthorized ||
-      northCanvasReleaseAuthorized ||
-      receivedFrom === "WEST"
-    );
-
-    const explicitCurrentStale = getAnyBool(flat, ["currentParentStaleDetected", "currentStaleParentDetected"], false);
-    const legacyStaleFlag = getAnyBool(flat, ["staleParentDetected", "staleConsumptionDetected"], false);
-    const currentParentIdentityMismatch = getAnyBool(flat, ["currentParentIdentityMismatch", "parentIdentityMismatch"], state.currentParentIdentityMismatch);
-    const currentParentIdentityAccepted = getAnyBool(flat, ["currentParentIdentityAccepted", "parentIdentityAccepted"], state.currentParentIdentityAccepted);
-
-    return {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      splitContract: SPLIT_CONTRACT,
-      splitReceipt: SPLIT_RECEIPT,
-
-      sourceFile: getAnyString(flat, ["sourceFile", "file", "fromFile"], ""),
-      destinationFile: getAnyString(flat, ["destinationFile", "targetFile", "toFile"], FILE),
-      activeCycleNumber: cycleNumber,
-      cycleNumber,
-      activeCycleRoute: cycleRoute,
-      cycleRoute,
-      receivedFrom,
-      returnTo: normalizeCardinal(getAnyString(flat, ["returnTo"], "")),
-      handoffTo: normalizeCardinal(getAnyString(flat, ["handoffTo"], "")),
-      activeCardinal: "CANVAS",
-      activeFileGate: FILE,
-
-      activeFibonacci: getAnyNumber(flat, ["activeFibonacci"], 13),
-      activeFibonacciRank: getAnyString(flat, ["activeFibonacciRank"], "F13P"),
-      activeStageId: getAnyString(flat, ["activeStageId"], "canvas-parent-f13-evidence-receiver"),
-      activeGearId: getAnyString(flat, ["activeGearId"], "hearth-canvas-parent-f13"),
-      activeNewsGate: getAnyString(flat, ["activeNewsGate", "activeNEWSGate"], "CANVAS"),
-
-      westAuditObserved,
-      westAuditAccepted,
-      westCanvasReleaseApproved,
-      westAuditRequired: getAnyBool(flat, ["westAuditRequired"], true),
-      northCanvasReleaseAuthorized,
-      canvasReleaseAuthorized,
-      canvasReleaseReceived,
-      cycleOneDetected,
-      cycleTwoDetected,
-
-      preexistingStaleParentDetected: state.preexistingStaleParentDetected,
-      currentParentStaleDetected: Boolean(explicitCurrentStale || (legacyStaleFlag && currentParentIdentityMismatch)),
-      staleParentDetected: Boolean(explicitCurrentStale || (legacyStaleFlag && currentParentIdentityMismatch)),
-      currentParentIdentityAccepted,
-      currentParentIdentityMismatch,
-
-      firstFailedCoordinate: getAnyString(flat, ["firstFailedCoordinate"], state.firstFailedCoordinate),
-      recommendedNextFile: getAnyString(flat, ["recommendedNextFile"], state.recommendedNextFile),
-      recommendedNextRenewalTarget: getAnyString(flat, ["recommendedNextRenewalTarget"], state.recommendedNextRenewalTarget),
-
-      raw: clonePlain(source),
-      normalizedAt: nowIso()
-    };
-  }
-
-  function applyHeldRelease(status, reason, normalized = {}) {
-    state.release.releaseAccepted = false;
-    state.release.releaseStatus = status;
-    state.release.releaseReason = reason;
-    state.release.receivedFrom = normalized.receivedFrom || "";
-    state.release.returnTo = normalized.returnTo || "";
-    state.release.handoffTo = normalized.handoffTo || "";
-    state.release.cycleNumber = normalized.cycleNumber || 0;
-    state.release.cycleRoute = normalized.cycleRoute || "";
-    state.release.westAuditObserved = normalized.westAuditObserved === true;
-    state.release.westAuditAccepted = normalized.westAuditAccepted === true;
-    state.release.westCanvasReleaseApproved = normalized.westCanvasReleaseApproved === true;
-    state.release.westAuditRequired = normalized.westAuditRequired !== false;
-    state.release.northCanvasReleaseAuthorized = normalized.northCanvasReleaseAuthorized === true;
-    state.release.canvasReleaseAuthorized = normalized.canvasReleaseAuthorized === true;
-    state.release.canvasReleaseReceived = normalized.canvasReleaseReceived === true;
-    state.release.sourceFile = normalized.sourceFile || "";
-    state.release.destinationFile = FILE;
-    state.release.acceptedAt = "";
-    state.release.lastInput = clonePlain(normalized);
-
-    state.f13ReleaseReceived = false;
-    state.canvasEvidenceBodyComposed = false;
-    state.canvasReturnPacketReady = false;
-
-    state.firstFailedCoordinate =
-      status === RELEASE_STATUS.HELD_CYCLE_ONE ? "WAITING_CYCLE_TWO_WEST_RELEASE" :
-      status === RELEASE_STATUS.HELD_SOUTH_ONLY_PACKET ? "WAITING_WEST_RELEASE_AFTER_SOUTH" :
-      status === RELEASE_STATUS.HELD_PARENT_IDENTITY_MISMATCH ? "WAITING_CANVAS_PARENT_IDENTITY_MATCH" :
-      status === RELEASE_STATUS.HELD_CURRENT_STALE_PARENT ? "WAITING_CANVAS_CURRENT_STALE_PARENT_CLEARANCE" :
-      status === RELEASE_STATUS.HELD_WEST_AUDIT_REQUIRED ? "WAITING_WEST_CANVAS_RELEASE" :
-      "WAITING_CANVAS_GOVERNED_RELEASE_PACKET";
-
-    state.recommendedNextFile = status === RELEASE_STATUS.HELD_WEST_AUDIT_REQUIRED ? WEST_FILE : FILE;
-    state.recommendedNextRenewalTarget = state.recommendedNextFile;
+    if (state.structuralCarrierSafeForCanvasRelease && !state.releaseAccepted) {
+      state.firstFailedCoordinate = "WAITING_MACRO_WEST_RELEASE";
+      state.recommendedNextFile = WEST_FILE;
+      state.recommendedNextRenewalTarget = WEST_FILE;
+    }
 
     updateDataset();
 
-    return {
-      accepted: false,
-      releaseAccepted: false,
-      releaseStatus: status,
-      reason,
-      canvasMayBoot: false,
-      canvasMayMount: false,
-      canvasMayRender: false,
-      canvasMayCallChildren: false,
-      firstFailedCoordinate: state.firstFailedCoordinate,
-      recommendedNextFile: state.recommendedNextFile,
-      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
-      normalized: clonePlain(normalized),
-      preexistingStaleParentDetected: state.preexistingStaleParentDetected,
-      currentParentStaleDetected: state.currentParentStaleDetected,
-      f21ClaimedByCanvas: false,
-      readyTextClaimedByCanvas: false,
-      visualPassClaimed: false
-    };
+    return getReceiptLight();
   }
 
-  function applyAcceptedRelease(normalized = {}) {
-    state.release.releaseAccepted = true;
-    state.release.releaseStatus = RELEASE_STATUS.ACCEPTED;
-    state.release.releaseReason = "lawful-cycle-two-west-release-accepted";
-    state.release.receivedFrom = normalized.receivedFrom || "WEST";
-    state.release.returnTo = "NORTH";
-    state.release.handoffTo = "CANVAS";
-    state.release.cycleNumber = 2;
-    state.release.cycleRoute = MACRO_CYCLE_2;
-    state.release.westAuditObserved = normalized.westAuditObserved === true || normalized.receivedFrom === "WEST";
-    state.release.westAuditAccepted = normalized.westAuditAccepted === true || normalized.westCanvasReleaseApproved === true;
-    state.release.westCanvasReleaseApproved = normalized.westCanvasReleaseApproved === true || normalized.canvasReleaseAuthorized === true;
-    state.release.westAuditRequired = true;
-    state.release.northCanvasReleaseAuthorized = normalized.northCanvasReleaseAuthorized === true;
-    state.release.canvasReleaseAuthorized = true;
-    state.release.canvasReleaseReceived = true;
-    state.release.sourceFile = normalized.sourceFile || WEST_FILE;
-    state.release.destinationFile = FILE;
-    state.release.acceptedAt = nowIso();
-    state.release.lastInput = clonePlain({
-      ...normalized,
-      releaseAccepted: true,
-      canvasReleaseAuthorized: true,
-      westReleaseObserved: true,
-      westReleaseLawful: true,
-      currentParentIdentityAccepted: true,
-      currentParentIdentityMismatch: false,
-      currentParentStaleDetected: false,
-      staleParentDetected: false
-    });
-
-    state.f13ReleaseReceived = true;
-    state.currentParentStaleDetected = false;
-    state.staleParentDetected = false;
-    state.firstFailedCoordinate = "NONE_CANVAS_RELEASE_ACCEPTED";
-    state.recommendedNextFile = FILE;
-    state.recommendedNextRenewalTarget = FILE;
-
-    recordLocal("CANVAS_GOVERNED_RELEASE_ACCEPTED", {
-      cycleNumber: 2,
-      cycleRoute: MACRO_CYCLE_2,
-      receivedFrom: state.release.receivedFrom,
-      westAuditObserved: state.release.westAuditObserved,
-      westCanvasReleaseApproved: state.release.westCanvasReleaseApproved,
-      northCanvasReleaseAuthorized: state.release.northCanvasReleaseAuthorized,
-      preexistingStaleParentDetected: state.preexistingStaleParentDetected,
-      currentParentStaleDetected: false
-    });
-
-    updateDataset();
-
-    return {
-      accepted: true,
-      releaseAccepted: true,
-      releaseStatus: RELEASE_STATUS.ACCEPTED,
-      reason: "lawful-cycle-two-west-release-accepted",
-      canvasMayBoot: true,
-      canvasMayMount: true,
-      canvasMayRender: true,
-      canvasMayCallChildren: true,
-      firstFailedCoordinate: state.firstFailedCoordinate,
-      recommendedNextFile: state.recommendedNextFile,
-      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
-      normalized: clonePlain(state.release.lastInput),
-      f21ClaimedByCanvas: false,
-      readyTextClaimedByCanvas: false,
-      visualPassClaimed: false
-    };
-  }
-
-  function resolveCanvasRelease(input = {}) {
-    let normalized;
-
-    try {
-      verifyCurrentParentIdentity("resolveCanvasRelease");
-      normalized = normalizeCanvasReleaseInput(input);
-    } catch (error) {
-      recordError("CANVAS_RELEASE_NORMALIZATION_FAILED", error);
-      return applyHeldRelease(RELEASE_STATUS.HELD_FALLBACK, "release-normalization-failed", {});
-    }
-
-    if (normalized.currentParentIdentityMismatch || !state.currentParentIdentityAccepted) {
-      return applyHeldRelease(RELEASE_STATUS.HELD_PARENT_IDENTITY_MISMATCH, "parent-identity-mismatch", normalized);
-    }
-
-    if (normalized.currentParentStaleDetected || state.currentParentStaleDetected) {
-      return applyHeldRelease(RELEASE_STATUS.HELD_CURRENT_STALE_PARENT, "current-parent-stale-detected", normalized);
-    }
-
-    if (normalized.cycleOneDetected) {
-      return applyHeldRelease(RELEASE_STATUS.HELD_CYCLE_ONE, "cycle-one-does-not-act-canvas", normalized);
-    }
-
-    if (!normalized.cycleTwoDetected && normalized.receivedFrom !== "WEST") {
-      return applyHeldRelease(RELEASE_STATUS.HELD_UNKNOWN_CYCLE, "unknown-cycle-held", normalized);
-    }
-
-    if (normalized.receivedFrom === "SOUTH" && !normalized.westCanvasReleaseApproved && !normalized.northCanvasReleaseAuthorized && !normalized.westAuditObserved) {
-      return applyHeldRelease(RELEASE_STATUS.HELD_SOUTH_ONLY_PACKET, "south-only-packet-without-west-release", normalized);
-    }
-
-    const directWestRelease = normalized.westCanvasReleaseApproved === true;
-    const westAcceptedCanvasRelease = normalized.westAuditAccepted === true && normalized.canvasReleaseAuthorized === true;
-    const northWithWestObserved = normalized.northCanvasReleaseAuthorized === true && normalized.westAuditObserved === true;
-    const cycleTwoFromWest = normalized.cycleNumber === 2 && normalized.cycleRoute === MACRO_CYCLE_2 && normalized.receivedFrom === "WEST";
-    const authorizedFromWest = normalized.canvasReleaseAuthorized === true && normalized.receivedFrom === "WEST";
-
-    const releaseOk = Boolean(
-      directWestRelease ||
-      westAcceptedCanvasRelease ||
-      northWithWestObserved ||
-      cycleTwoFromWest ||
-      authorizedFromWest
-    );
-
-    if (!releaseOk) {
-      return applyHeldRelease(RELEASE_STATUS.HELD_WEST_AUDIT_REQUIRED, "west-release-evidence-required", normalized);
-    }
-
-    return applyAcceptedRelease(normalized);
-  }
-
-  function holdCanvasUntilRelease(input = {}) {
-    return resolveCanvasRelease(input);
-  }
-
-  function acceptCanvasReleasePacket(packet = {}) {
-    return resolveCanvasRelease(packet);
-  }
-
-  function guardReleaseOrReturn(options = {}) {
-    const existingAccepted = state.release.releaseAccepted === true;
-
-    if (existingAccepted && !options.releasePacket && !options.release && !options.canvasReleaseAuthorized && !options.receivedFrom) {
-      return {
-        held: false,
-        release: {
-          accepted: true,
-          releaseAccepted: true,
-          releaseStatus: RELEASE_STATUS.ACCEPTED,
-          reason: "existing-release-accepted"
-        }
-      };
-    }
-
-    const release = resolveCanvasRelease(options.releasePacket || options.release || options);
-
-    if (!release.releaseAccepted) {
-      return {
-        held: true,
-        receipt: getReceipt(),
-        release
-      };
-    }
-
-    return {
-      held: false,
-      release
-    };
-  }
-
-  function resolveChild(key) {
+  function readChild(key) {
     const spec = CHILDREN[key];
     if (!spec) return null;
 
-    for (const globalName of spec.globals) {
-      const found = pathRead(globalName);
+    for (const name of spec.globals) {
+      const found = readPath(name);
       if (found && isObject(found)) return found;
     }
 
     return null;
   }
 
-  function childMissingMethods(key, child = resolveChild(key)) {
+  function childMissingMethods(key, child = readChild(key)) {
     const spec = CHILDREN[key];
     if (!spec) return [];
-    if (!child) return spec.requiredMethods.slice();
-    return spec.requiredMethods.filter((method) => !isFunction(child[method]));
+    if (!child) return spec.methods.slice();
+    return spec.methods.filter((method) => !isFunction(child[method]));
+  }
+
+  function safeChildReceipt(child) {
+    if (!child || !isObject(child)) return {};
+    if (isFunction(child.getReceipt)) {
+      try {
+        const receipt = child.getReceipt();
+        return isObject(receipt) ? receipt : {};
+      } catch (_error) {
+        return {};
+      }
+    }
+    if (isObject(child.receiptPacket)) return child.receiptPacket;
+    if (isObject(child.receipt)) return child.receipt;
+    if (child.contract || child.version) return child;
+    return {};
   }
 
   function markChildrenPresence() {
-    const east = resolveChild("east");
-    const west = resolveChild("west");
-    const south = resolveChild("south");
+    const east = readChild("east");
+    const west = readChild("west");
+    const south = readChild("south");
 
     const eastMissing = childMissingMethods("east", east);
     const westMissing = childMissingMethods("west", west);
@@ -1211,9 +995,7 @@
 
     deriveParentReadiness();
 
-    if (!state.release.releaseAccepted) state.nextAuditTarget = WEST_FILE;
-    else if (state.currentParentIdentityMismatch) state.nextAuditTarget = FILE;
-    else if (state.currentParentStaleDetected) state.nextAuditTarget = FILE;
+    if (!state.releaseAccepted) state.nextAuditTarget = WEST_FILE;
     else if (!state.canvasEastApiReady) state.nextAuditTarget = EAST_FILE;
     else if (!state.canvasWestApiReady) state.nextAuditTarget = WEST_FILE;
     else if (!state.canvasSouthApiReady) state.nextAuditTarget = SOUTH_FILE;
@@ -1221,7 +1003,9 @@
     else if (!state.canvasWestInspectionReady) state.nextAuditTarget = WEST_FILE;
     else if (!state.canvasSouthVisibleProofReady) state.nextAuditTarget = SOUTH_FILE;
     else if (!state.f13CanvasEvidenceComplete) state.nextAuditTarget = FILE;
-    else state.nextAuditTarget = "read-canvas-return-packet-or-north-receipt-after-f13";
+    else state.nextAuditTarget = NORTH_FILE;
+
+    updateDataset();
 
     return { east, west, south };
   }
@@ -1244,19 +1028,21 @@
       safeBool(west.f13InspectEvidenceAvailable, false) ||
       safeBool(west.f13nInspectionReady, false) ||
       safeBool(west.inspectionReady, false) ||
-      safeBool(west.canvasWestReady, false) && safeBool(west.westGateReady, false)
+      (safeBool(west.canvasWestReady, false) && safeBool(west.westGateReady, false))
     );
 
     const southTextureReady = Boolean(
       safeBool(south.textureReady, false) ||
       safeBool(south.textureComposeComplete, false) ||
-      safeBool(south.textureProofComplete, false)
+      safeBool(south.textureProofComplete, false) ||
+      state.textureComposeComplete
     );
 
     const southRenderReady = Boolean(
       safeBool(south.renderReady, false) ||
       (safeBool(south.imageRendered, false) && safeBool(south.firstFrameDetected, false)) ||
-      safeBool(south.sphereProjectionComplete, false)
+      safeBool(south.sphereProjectionComplete, false) ||
+      state.renderReady
     );
 
     const southVisibleReady = Boolean(
@@ -1266,55 +1052,56 @@
       safeBool(south.visibleContentProof, false) ||
       safeBool(south.visibleContentSoftGap, false) ||
       safeBool(south.visibleForwardProgress, false) ||
-      safeBool(south.visibleContentAdmissible, false)
+      safeBool(south.visibleContentAdmissible, false) ||
+      state.visibleContentProof ||
+      state.visibleContentSoftGap ||
+      state.visibleForwardProgress ||
+      state.visibleContentAdmissible
     );
 
     const southVisibleStrict = Boolean(
       safeBool(south.visibleContentStrictProof, false) ||
-      (safeBool(south.f13VisibleEvidenceAvailable, false) && !safeBool(south.f13VisibleEvidenceDegraded, false))
+      (safeBool(south.f13VisibleEvidenceAvailable, false) && !safeBool(south.f13VisibleEvidenceDegraded, false)) ||
+      state.visibleContentStrictProof
     );
 
     const southVisibleDegraded = Boolean(
       safeBool(south.f13VisibleEvidenceDegraded, false) ||
       safeBool(south.visibleContentSoftGap, false) ||
       safeBool(south.visibleForwardProgress, false) ||
-      safeBool(south.visibleContentAdmissible, false)
+      safeBool(south.visibleContentAdmissible, false) ||
+      state.visibleContentSoftGap ||
+      state.visibleForwardProgress ||
+      state.visibleContentAdmissible
     );
 
     state.canvasEastEvidenceReady = eastAtlasReady;
     state.canvasWestInspectionReady = westInspectReady;
     state.canvasSouthVisibleProofReady = southVisibleReady;
 
-    state.canvasEastReady = state.canvasEastApiReady && state.canvasEastEvidenceReady;
-    state.canvasWestReady = state.canvasWestApiReady && state.canvasWestInspectionReady;
-    state.canvasSouthReady = state.canvasSouthApiReady && state.canvasSouthVisibleProofReady;
-
-    state.allCanvasChildrenReady = Boolean(state.canvasEastReady && state.canvasWestReady && state.canvasSouthReady);
+    state.canvasEastReady = Boolean(state.canvasEastApiReady && state.canvasEastEvidenceReady);
+    state.canvasWestReady = Boolean(state.canvasWestApiReady && state.canvasWestInspectionReady);
+    state.canvasSouthReady = Boolean(state.canvasSouthApiReady && state.canvasSouthVisibleProofReady);
     state.allCanvasChildrenEvidenceReady = Boolean(eastAtlasReady && westInspectReady && southVisibleReady);
+    state.allCanvasChildrenReady = Boolean(state.canvasEastReady && state.canvasWestReady && state.canvasSouthReady);
 
-    state.atlasBuildComplete = Boolean(state.atlasBuildComplete || eastAtlasReady);
-    state.textureComposeComplete = Boolean(state.textureComposeComplete || southTextureReady);
-    state.textureReady = southTextureReady || state.textureComposeComplete;
-    state.firstFrameDetected = Boolean(state.firstFrameDetected || safeBool(south.firstFrameDetected, false));
-    state.imageRendered = Boolean(state.imageRendered || safeBool(south.imageRendered, false));
-    state.renderReady = southRenderReady || state.renderReady;
-    state.visibleProofReady = southVisibleReady || state.visibleProofReady;
-
+    state.f13ReleaseReceived = state.releaseAccepted;
+    state.f13ParentIdentityAccepted = state.currentParentIdentityAccepted;
     state.f13PhysicalCarrierMounted = Boolean(state.canvasCarrierMounted && state.canvasContextReady);
     state.f13ChildrenApiReady = state.allCanvasChildrenApiReady;
     state.f13ChildrenEvidenceReady = state.allCanvasChildrenEvidenceReady;
     state.f13ChildrenReady = state.allCanvasChildrenReady;
     state.f13AtlasReady = eastAtlasReady || state.atlasBuildComplete;
-    state.f13InspectReady = westInspectReady;
+    state.f13InspectReady = westInspectReady || state.inspectModeAvailable;
     state.f13TextureReady = southTextureReady || state.textureComposeComplete;
     state.f13RenderReady = southRenderReady || state.renderReady;
     state.f13FrameReady = Boolean(state.firstFrameDetected && state.imageRendered);
-    state.f13VisibleEvidenceAvailable = southVisibleReady || state.visibleContentProof || state.visibleContentSoftGap || state.visibleForwardProgress || state.visibleContentAdmissible;
-    state.f13VisibleEvidenceStrict = southVisibleStrict || state.visibleContentStrictProof;
-    state.f13VisibleEvidenceDegraded = southVisibleDegraded || state.visibleContentSoftGap || state.visibleForwardProgress || state.visibleContentAdmissible;
+    state.f13VisibleEvidenceAvailable = southVisibleReady;
+    state.f13VisibleEvidenceStrict = southVisibleStrict;
+    state.f13VisibleEvidenceDegraded = southVisibleDegraded;
 
     state.f13CanvasEvidenceStrict = Boolean(
-      state.release.releaseAccepted &&
+      state.releaseAccepted &&
       state.currentParentIdentityAccepted &&
       !state.currentParentStaleDetected &&
       state.f13PhysicalCarrierMounted &&
@@ -1322,26 +1109,30 @@
       state.f13AtlasReady &&
       state.f13InspectReady &&
       state.f13TextureReady &&
+      state.f13RenderReady &&
       state.f13FrameReady &&
       state.f13VisibleEvidenceStrict
     );
 
     state.f13CanvasEvidenceDegraded = Boolean(
       !state.f13CanvasEvidenceStrict &&
-      state.release.releaseAccepted &&
+      state.releaseAccepted &&
       state.currentParentIdentityAccepted &&
       !state.currentParentStaleDetected &&
       state.f13PhysicalCarrierMounted &&
       state.f13ChildrenApiReady &&
       state.f13AtlasReady &&
       state.f13TextureReady &&
+      state.f13RenderReady &&
       state.f13FrameReady &&
       state.f13VisibleEvidenceAvailable
     );
 
     state.f13CanvasEvidenceComplete = Boolean(state.f13CanvasEvidenceStrict || state.f13CanvasEvidenceDegraded);
+
     state.f13HardFail = Boolean(
       !state.f13CanvasEvidenceComplete &&
+      state.releaseAccepted &&
       (
         safeBool(south.f13HardFail, false) ||
         safeBool(south.visibleContentHardFail, false) ||
@@ -1350,20 +1141,13 @@
       )
     );
 
-    state.canvasReady = state.f13CanvasEvidenceComplete;
-    state.visibleCanvasReady = state.f13CanvasEvidenceComplete;
-    state.canvasLaneClosed = state.f13CanvasEvidenceComplete;
-
+    state.canvasGateReady = state.f13CanvasEvidenceComplete;
     state.northGateReady = false;
     state.eastGateReady = state.canvasEastReady;
     state.westGateReady = state.canvasWestReady;
     state.southGateReady = state.canvasSouthReady;
-    state.canvasGateReady = state.f13CanvasEvidenceComplete;
     state.newsGatePassedBeforeF21 = false;
     state.newsGateDegradedBeforeF21 = true;
-
-    state.f13ProofBodyAvailable = state.f13CanvasEvidenceComplete;
-    state.f13InspectEvidenceAvailable = state.f13InspectReady;
 
     state.f21EligibleForNorth = false;
     state.f21SubmittedToNorth = false;
@@ -1373,10 +1157,19 @@
     state.degradedCompletionLatched = false;
     state.f21LatchMode = "north-only";
 
-    state.generatedImage = false;
-    state.graphicBox = false;
-    state.webGL = false;
-    state.visualPassClaimed = false;
+    if (state.f13CanvasEvidenceComplete) {
+      state.firstFailedCoordinate = "NONE_CANVAS_F13_EVIDENCE_COMPLETE";
+      state.recommendedNextFile = NORTH_FILE;
+      state.recommendedNextRenewalTarget = NORTH_FILE;
+    } else if (state.releaseAccepted) {
+      state.firstFailedCoordinate = state.f13HardFail ? "CANVAS_F13_HARD_FAIL" : "WAITING_POST_RELEASE_CHILD_F13_EVIDENCE";
+      state.recommendedNextFile = state.nextAuditTarget || FILE;
+      state.recommendedNextRenewalTarget = state.recommendedNextFile;
+    } else if (state.structuralCarrierSafeForCanvasRelease) {
+      state.firstFailedCoordinate = "WAITING_MACRO_WEST_RELEASE";
+      state.recommendedNextFile = WEST_FILE;
+      state.recommendedNextRenewalTarget = WEST_FILE;
+    }
 
     return {
       eastAtlasReady,
@@ -1390,9 +1183,258 @@
     };
   }
 
+  function normalizeCanvasReleaseInput(input = {}) {
+    const source = isObject(input) ? input : {};
+    const detail = isObject(source.detail) ? source.detail : {};
+    const snapshot = isObject(source.snapshot) ? source.snapshot : {};
+    const release = isObject(source.release) ? source.release : {};
+    const gap = isObject(source.gap) ? source.gap : {};
+    const admissibility = isObject(source.admissibility) ? source.admissibility : {};
+    const releasePacket = isObject(source.releasePacket) ? source.releasePacket : {};
+    const flat = { ...snapshot, ...detail, ...gap, ...admissibility, ...release, ...releasePacket, ...source };
+
+    const cycleRoute = normalizeCycleRoute(
+      getAnyString(flat, ["cycleRoute", "activeCycleRoute", "routeCycle"], "") ||
+      readDataset("hearthCanvasCycleRoute", "")
+    );
+
+    let cycleNumber = getAnyNumber(flat, ["cycleNumber", "activeCycleNumber"], 0);
+    if (!cycleNumber && cycleRoute === MACRO_CYCLE_1) cycleNumber = 1;
+    if (!cycleNumber && cycleRoute === MACRO_CYCLE_2) cycleNumber = 2;
+
+    const receivedFrom = normalizeCardinal(
+      getAnyString(flat, ["receivedFrom", "sourceCardinal", "activeCardinal", "sender", "source"], "") ||
+      readDataset("hearthCanvasReceivedFrom", "")
+    );
+
+    const handoffTo = normalizeCardinal(getAnyString(flat, ["handoffTo", "target", "destination", "destinationCardinal"], ""));
+
+    const decision = getAnyString(flat, ["decision", "westDecision", "gapDecision"], "");
+    const gapClass = getAnyString(flat, ["gapClass", "westGapClass"], "");
+    const hardBlock = getAnyBool(flat, ["hardBlock", "westHardBlock"], false);
+
+    const westAuditObserved = Boolean(
+      getAnyBool(flat, ["westAuditObserved", "westAuditPresent", "westReviewObserved", "macroWestAdmissibilityObserved"], false) ||
+      receivedFrom === "WEST" ||
+      decision !== ""
+    );
+
+    const westAuditAccepted = Boolean(
+      getAnyBool(flat, ["westAuditAccepted", "westAccepted", "westHandoffAccepted", "auditAccepted", "westAuditApproved", "westAuditPassed"], false) ||
+      decision === "RELEASE_TO_CANVAS" ||
+      decision === "FULL_PASS"
+    );
+
+    const westCanvasReleaseApproved = Boolean(
+      getAnyBool(flat, ["westCanvasReleaseApproved", "canvasReleaseApprovedByWest", "westReleaseApproved", "westReleaseObserved", "westReleaseLawful"], false) ||
+      decision === "RELEASE_TO_CANVAS"
+    );
+
+    const northCanvasReleaseAuthorized = Boolean(
+      getAnyBool(flat, ["northCanvasReleaseAuthorized", "canvasReleaseAuthorizedByNorth", "northReleaseAuthorized"], false)
+    );
+
+    const canvasReleaseAuthorized = Boolean(
+      getAnyBool(flat, ["canvasReleaseAuthorized", "releaseAuthorized", "canvasRelease"], false) ||
+      decision === "RELEASE_TO_CANVAS" ||
+      (handoffTo === "CANVAS" && westAuditAccepted)
+    );
+
+    return {
+      raw: clonePlain(source),
+      sourceFile: getAnyString(flat, ["sourceFile", "file", "fromFile"], ""),
+      destinationFile: getAnyString(flat, ["destinationFile", "targetFile", "toFile"], FILE),
+      cycleNumber,
+      cycleRoute,
+      receivedFrom,
+      handoffTo,
+      decision,
+      gapClass,
+      hardBlock,
+      westAuditObserved,
+      westAuditAccepted,
+      westCanvasReleaseApproved,
+      northCanvasReleaseAuthorized,
+      canvasReleaseAuthorized,
+      cycleOneDetected: Boolean(cycleNumber === 1 || cycleRoute === MACRO_CYCLE_1),
+      cycleTwoDetected: Boolean(cycleNumber === 2 || cycleRoute === MACRO_CYCLE_2),
+      currentParentIdentityAccepted: getAnyBool(flat, ["currentParentIdentityAccepted", "parentIdentityAccepted"], state.currentParentIdentityAccepted),
+      currentParentIdentityMismatch: getAnyBool(flat, ["currentParentIdentityMismatch", "parentIdentityMismatch"], state.currentParentIdentityMismatch),
+      currentParentStaleDetected: getAnyBool(flat, ["currentParentStaleDetected", "currentStaleParentDetected"], false),
+      normalizedAt: nowIso()
+    };
+  }
+
+  function holdRelease(status, reason, normalized = {}) {
+    state.releaseAccepted = false;
+    state.releaseStatus = status;
+    state.releaseReason = reason;
+    state.releasePacket = clonePlain(normalized);
+    state.receivedFrom = normalized.receivedFrom || "";
+    state.cycleNumber = normalized.cycleNumber || 0;
+    state.cycleRoute = normalized.cycleRoute || "";
+    state.westAuditObserved = normalized.westAuditObserved === true;
+    state.westAuditAccepted = normalized.westAuditAccepted === true;
+    state.westCanvasReleaseApproved = normalized.westCanvasReleaseApproved === true;
+    state.northCanvasReleaseAuthorized = normalized.northCanvasReleaseAuthorized === true;
+    state.canvasReleaseAuthorized = normalized.canvasReleaseAuthorized === true;
+
+    state.f13ReleaseReceived = false;
+    state.canvasEvidenceBodyComposed = false;
+    state.canvasReturnPacketReady = false;
+
+    state.firstFailedCoordinate =
+      status === RELEASE_STATUS.HELD_CYCLE_ONE ? "WAITING_CYCLE_TWO_WEST_RELEASE" :
+      status === RELEASE_STATUS.HELD_PARENT_IDENTITY_MISMATCH ? "WAITING_CANVAS_PARENT_IDENTITY_MATCH" :
+      status === RELEASE_STATUS.HELD_CURRENT_STALE_PARENT ? "WAITING_CANVAS_CURRENT_STALE_PARENT_CLEARANCE" :
+      status === RELEASE_STATUS.HELD_STRUCTURAL_CARRIER ? "WAITING_PRE_RELEASE_STRUCTURAL_CARRIER" :
+      status === RELEASE_STATUS.HELD_WEST_AUDIT_REQUIRED ? "WAITING_MACRO_WEST_RELEASE" :
+      "WAITING_MACRO_WEST_RELEASE";
+
+    state.recommendedNextFile = status === RELEASE_STATUS.HELD_STRUCTURAL_CARRIER ? FILE : WEST_FILE;
+    state.recommendedNextRenewalTarget = state.recommendedNextFile;
+
+    updateDataset();
+
+    return {
+      accepted: false,
+      releaseAccepted: false,
+      releaseStatus: status,
+      reason,
+      canvasMayBoot: false,
+      canvasMayCallChildren: false,
+      preReleaseStructuralCarrierSafe: state.structuralCarrierSafeForCanvasRelease,
+      firstFailedCoordinate: state.firstFailedCoordinate,
+      recommendedNextFile: state.recommendedNextFile,
+      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+      f21ClaimedByCanvas: false,
+      readyTextClaimedByCanvas: false,
+      visualPassClaimed: false
+    };
+  }
+
+  function acceptRelease(normalized = {}) {
+    state.releaseAccepted = true;
+    state.releaseStatus = RELEASE_STATUS.ACCEPTED;
+    state.releaseReason = "lawful-cycle-two-macro-west-release-accepted";
+    state.releasePacket = clonePlain({
+      ...normalized,
+      releaseAccepted: true,
+      canvasReleaseAuthorized: true,
+      westReleaseObserved: true,
+      westReleaseLawful: true,
+      currentParentIdentityAccepted: true,
+      currentParentIdentityMismatch: false,
+      currentParentStaleDetected: false,
+      staleParentDetected: false
+    });
+
+    state.receivedFrom = normalized.receivedFrom || "WEST";
+    state.cycleNumber = 2;
+    state.cycleRoute = MACRO_CYCLE_2;
+    state.westAuditObserved = true;
+    state.westAuditAccepted = true;
+    state.westCanvasReleaseApproved = true;
+    state.northCanvasReleaseAuthorized = normalized.northCanvasReleaseAuthorized === true;
+    state.canvasReleaseAuthorized = true;
+    state.f13ReleaseReceived = true;
+
+    state.firstFailedCoordinate = "NONE_MACRO_WEST_RELEASE_ACCEPTED";
+    state.recommendedNextFile = EAST_FILE;
+    state.recommendedNextRenewalTarget = EAST_FILE;
+
+    recordLocal("MACRO_WEST_RELEASE_ACCEPTED_BY_CANVAS_PARENT", {
+      cycleNumber: 2,
+      cycleRoute: MACRO_CYCLE_2,
+      preReleaseStructuralCarrierSafe: state.structuralCarrierSafeForCanvasRelease,
+      receivedFrom: state.receivedFrom
+    });
+
+    updateDataset();
+
+    return {
+      accepted: true,
+      releaseAccepted: true,
+      releaseStatus: RELEASE_STATUS.ACCEPTED,
+      reason: state.releaseReason,
+      canvasMayBoot: true,
+      canvasMayCallChildren: true,
+      firstFailedCoordinate: state.firstFailedCoordinate,
+      recommendedNextFile: state.recommendedNextFile,
+      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+      f21ClaimedByCanvas: false,
+      readyTextClaimedByCanvas: false,
+      visualPassClaimed: false
+    };
+  }
+
+  function resolveCanvasRelease(input = {}) {
+    ensurePreReleaseStructuralCarrier(input);
+
+    let normalized;
+
+    try {
+      normalized = normalizeCanvasReleaseInput(input);
+    } catch (error) {
+      recordError("CANVAS_RELEASE_NORMALIZATION_FAILED", error);
+      return holdRelease(RELEASE_STATUS.HELD_FALLBACK, "release-normalization-failed", {});
+    }
+
+    if (normalized.currentParentIdentityMismatch || !state.currentParentIdentityAccepted) {
+      return holdRelease(RELEASE_STATUS.HELD_PARENT_IDENTITY_MISMATCH, "parent-identity-mismatch", normalized);
+    }
+
+    if (normalized.currentParentStaleDetected || state.currentParentStaleDetected) {
+      return holdRelease(RELEASE_STATUS.HELD_CURRENT_STALE_PARENT, "current-parent-stale-detected", normalized);
+    }
+
+    if (!state.structuralCarrierSafeForCanvasRelease) {
+      return holdRelease(RELEASE_STATUS.HELD_STRUCTURAL_CARRIER, "pre-release-structural-carrier-not-safe", normalized);
+    }
+
+    if (normalized.cycleOneDetected) {
+      return holdRelease(RELEASE_STATUS.HELD_CYCLE_ONE, "cycle-one-does-not-act-canvas", normalized);
+    }
+
+    if (!normalized.cycleTwoDetected && normalized.receivedFrom !== "WEST" && !normalized.canvasReleaseAuthorized) {
+      return holdRelease(RELEASE_STATUS.HELD_UNKNOWN_CYCLE, "unknown-cycle-held", normalized);
+    }
+
+    if (normalized.receivedFrom === "SOUTH" && !normalized.westCanvasReleaseApproved && !normalized.northCanvasReleaseAuthorized && !normalized.westAuditObserved) {
+      return holdRelease(RELEASE_STATUS.HELD_SOUTH_ONLY_PACKET, "south-only-packet-without-west-release", normalized);
+    }
+
+    if (normalized.hardBlock) {
+      return holdRelease(RELEASE_STATUS.HELD_WEST_AUDIT_REQUIRED, "macro-west-hard-block", normalized);
+    }
+
+    const releaseOk = Boolean(
+      normalized.westCanvasReleaseApproved ||
+      (normalized.westAuditAccepted && normalized.canvasReleaseAuthorized) ||
+      (normalized.northCanvasReleaseAuthorized && normalized.westAuditObserved) ||
+      (normalized.cycleNumber === 2 && normalized.cycleRoute === MACRO_CYCLE_2 && normalized.receivedFrom === "WEST") ||
+      (normalized.canvasReleaseAuthorized && normalized.receivedFrom === "WEST") ||
+      (normalized.canvasReleaseAuthorized && normalized.handoffTo === "CANVAS" && normalized.westAuditObserved)
+    );
+
+    if (!releaseOk) {
+      return holdRelease(RELEASE_STATUS.HELD_WEST_AUDIT_REQUIRED, "macro-west-release-evidence-required", normalized);
+    }
+
+    return acceptRelease(normalized);
+  }
+
+  function guardReleaseOrReturn(options = {}) {
+    if (state.releaseAccepted && !options.releasePacket && !options.release && !options.canvasReleaseAuthorized && !options.receivedFrom) {
+      return { held: false, release: { accepted: true, releaseAccepted: true, releaseStatus: RELEASE_STATUS.ACCEPTED } };
+    }
+
+    const release = resolveCanvasRelease(options.releasePacket || options.release || options);
+    return release.releaseAccepted ? { held: false, release } : { held: true, release, receipt: getReceipt() };
+  }
+
   function scriptAlreadyPresent(file) {
     if (!doc || !file) return null;
-
     return Array.from(doc.scripts || []).find((script) => {
       const src = script.getAttribute("src") || script.src || "";
       return src.includes(file);
@@ -1446,7 +1488,7 @@
 
     return new Promise((resolve) => {
       const timer = root.setInterval(() => {
-        const child = resolveChild(key);
+        const child = readChild(key);
 
         if (child) {
           root.clearInterval(timer);
@@ -1466,7 +1508,10 @@
 
   async function ensureChildren(options = {}) {
     const gate = guardReleaseOrReturn(options);
-    if (gate.held) return markChildrenPresence();
+    if (gate.held) {
+      markChildrenPresence();
+      return { east: null, west: null, south: null };
+    }
 
     if (childrenPromise) return childrenPromise;
 
@@ -1477,7 +1522,7 @@
       markChildrenPresence();
 
       for (const key of Object.keys(CHILDREN)) {
-        if (!resolveChild(key)) {
+        if (!readChild(key)) {
           await loadScriptOnce(CHILDREN[key].file);
           await waitForChild(key);
         }
@@ -1530,6 +1575,7 @@
     if (westReceipt.f13nInspectionReady !== undefined) {
       state.inspectModeAvailable = safeBool(westReceipt.f13nInspectionReady, state.inspectModeAvailable);
       state.inspectPlanetControlAvailable = safeBool(westReceipt.f13nInspectionReady, state.inspectPlanetControlAvailable);
+      state.diagnosticCanLeavePlanetFrame = safeBool(westReceipt.f13nInspectionReady, state.diagnosticCanLeavePlanetFrame);
     }
 
     [
@@ -1578,178 +1624,10 @@
     return { children, eastReceipt, westReceipt, southReceipt };
   }
 
-  function normalizeCanvasResult(result, fallbackMethod) {
-    if (!result) return null;
-    if (result.nodeType === 1 && safeString(result.tagName).toLowerCase() === "canvas") return result;
-    if (result.atlasCanvas) return result.atlasCanvas;
-    if (result.textureCanvas) return result.textureCanvas;
-    if (result.canvas) return result.canvas;
-    if (isFunction(fallbackMethod)) return fallbackMethod();
-    return null;
-  }
-
   function resolveAtlasSize(options = {}) {
     state.atlasWidth = clamp(options.atlasWidth || options.width || DEFAULT_ATLAS_WIDTH, 256, 1024);
     state.atlasHeight = clamp(options.atlasHeight || options.height || DEFAULT_ATLAS_HEIGHT, 128, 512);
-
-    return {
-      width: state.atlasWidth,
-      height: state.atlasHeight
-    };
-  }
-
-  function resolveMount(options = {}) {
-    if (!doc) return null;
-
-    const candidate = options.mount || options.mountEl || options.container || options.target;
-
-    if (candidate && candidate.nodeType === 1) return candidate;
-
-    if (typeof candidate === "string") {
-      try {
-        const found = doc.querySelector(candidate);
-        if (found) return found;
-      } catch (_error) {}
-    }
-
-    const selectors = [
-      "#hearthCanvasMount",
-      "[data-hearth-canvas-mount='true']",
-      "[data-hearth-canvas-mount]",
-      "[data-hearth-planet-mount]",
-      "[data-hearth-planet-frame]",
-      "#hearth-canvas-mount",
-      "#hearth-planet-canvas-mount",
-      "#hearth-planet-frame",
-      ".hearth-canvas-mount",
-      ".hearth-planet-frame",
-      "[data-planet-frame]",
-      "main",
-      "body"
-    ];
-
-    for (const selector of selectors) {
-      const found = doc.querySelector(selector);
-      if (found) return found;
-    }
-
-    return doc.body || doc.documentElement;
-  }
-
-  function ensureMountFrame(mount) {
-    if (!mount || !mount.style) return;
-
-    const rect = mount.getBoundingClientRect ? mount.getBoundingClientRect() : { width: 0, height: 0 };
-    const width = safeNumber(rect.width, 0);
-    const height = safeNumber(rect.height, 0);
-
-    if (width < MIN_SIZE || height < MIN_SIZE) {
-      if (!mount.style.minWidth) mount.style.minWidth = `${MIN_SIZE}px`;
-      if (!mount.style.minHeight) mount.style.minHeight = `${MIN_SIZE}px`;
-      if (!mount.style.position) mount.style.position = "relative";
-      if (!mount.style.display) mount.style.display = "grid";
-      if (!mount.style.placeItems) mount.style.placeItems = "center";
-    }
-  }
-
-  function ensureCarrier(options = {}) {
-    const gate = guardReleaseOrReturn(options);
-    if (gate.held) return gate.receipt;
-    if (!doc) throw new Error("Document unavailable for Hearth canvas.");
-
-    const mount = resolveMount(options);
-    if (!mount) throw new Error("Hearth canvas mount unavailable.");
-
-    ensureMountFrame(mount);
-
-    let canvas =
-      safeString(mount.tagName).toLowerCase() === "canvas"
-        ? mount
-        : mount.querySelector("canvas[data-hearth-canvas-texture='true'], canvas[data-hearth-canvas='true'], canvas.hearth-canvas");
-
-    if (!canvas) {
-      canvas = doc.createElement("canvas");
-      canvas.className = "hearth-canvas hearth-canvas--parent-release-packet-to-east-stale-clearance";
-      canvas.dataset.hearthCanvas = "true";
-      canvas.dataset.hearthCanvasTexture = "true";
-      canvas.dataset.hearthPhysicalObjectBootstrap = "true";
-      canvas.dataset.hearthParentIdentityGuard = "true";
-      canvas.dataset.hearthParentChildReconciliation = "true";
-      canvas.dataset.hearthGovernedF13EvidenceReceiver = "true";
-      canvas.dataset.hearthCanvasEastReleasePacketBridge = "true";
-      canvas.setAttribute("aria-label", "Hearth parent release packet to East stale-clearance F13 evidence canvas");
-      mount.appendChild(canvas);
-    }
-
-    const rect = mount.getBoundingClientRect ? mount.getBoundingClientRect() : { width: DEFAULT_SIZE, height: DEFAULT_SIZE };
-    const explicitSize = safeNumber(options.canvasSize, 0) || safeNumber(options.size, 0);
-    const widthFromRect = Math.max(0, safeNumber(rect.width, 0));
-    const heightFromRect = Math.max(0, safeNumber(rect.height, 0));
-    const basis = explicitSize || Math.max(MIN_SIZE, Math.min(DEFAULT_SIZE, widthFromRect || DEFAULT_SIZE, heightFromRect || DEFAULT_SIZE));
-
-    const cssSize = Math.max(MIN_SIZE, Math.round(basis));
-    const dpr = clamp(root.devicePixelRatio || 1, 1, 2);
-    const physicalSize = Math.max(MIN_SIZE, Math.round(cssSize * dpr));
-
-    canvas.style.display = "block";
-    canvas.style.width = "100%";
-    canvas.style.height = "100%";
-    canvas.style.maxWidth = "100%";
-    canvas.style.maxHeight = "100%";
-    canvas.style.objectFit = "contain";
-    canvas.style.touchAction = "none";
-    canvas.style.cursor = "grab";
-
-    if (canvas.width !== physicalSize) canvas.width = physicalSize;
-    if (canvas.height !== physicalSize) canvas.height = physicalSize;
-
-    const context = canvas.getContext("2d", { alpha: true, willReadFrequently: true });
-    if (!context) throw new Error("2D canvas context unavailable.");
-
-    state.mount = mount;
-    state.canvas = canvas;
-    state.context = context;
-    state.cssSize = cssSize;
-    state.dpr = dpr;
-    state.carrierPhysicalWidth = canvas.width;
-    state.carrierPhysicalHeight = canvas.height;
-
-    state.canvasCarrierRequested = true;
-    state.canvasCarrierMounted = true;
-    state.canvasContextReady = true;
-    state.carrierReady = true;
-    state.canvasCarrierReady = true;
-    state.canvasCarrierHandoffOk = true;
-    state.canvasCarrierHandoffError = "";
-    state.planetCanvasPresent = true;
-    state.planetCanvasNonZeroSize = Boolean(canvas.width > 0 && canvas.height > 0);
-    state.visiblePlanetHintPresent = state.planetCanvasNonZeroSize;
-
-    if (!state.planetCanvasNonZeroSize) {
-      throw new Error("Hearth canvas carrier has zero physical size.");
-    }
-
-    canvas.dataset.hearthCanvasContract = CONTRACT;
-    canvas.dataset.hearthCanvasReceipt = RECEIPT;
-    canvas.dataset.hearthCanvasSplitContract = SPLIT_CONTRACT;
-    canvas.dataset.hearthCanvasSplitReceipt = SPLIT_RECEIPT;
-    canvas.dataset.hearthCanvasVersion = VERSION;
-    canvas.dataset.hearthCanvasNorthActive = "true";
-    canvas.dataset.hearthCanvasParentChildReconciliation = "true";
-    canvas.dataset.hearthCanvasGovernedF13EvidenceReceiver = "true";
-    canvas.dataset.hearthCanvasEastReleasePacketBridge = "true";
-    canvas.dataset.hearthCanvasCarrierReady = "true";
-    canvas.dataset.hearthCanvasReady = "false";
-    canvas.dataset.hearthCanvasBootComplete = String(state.canvasBootComplete);
-    canvas.dataset.hearthCanvasF13Only = "true";
-    canvas.dataset.hearthCanvasF21Claimed = "false";
-    canvas.dataset.hearthCanvasReadyTextClaimed = "false";
-    canvas.dataset.visualPassClaimed = "false";
-
-    deriveParentReadiness();
-    updateDataset();
-
-    return { mount, canvas, context, cssSize, dpr };
+    return { width: state.atlasWidth, height: state.atlasHeight };
   }
 
   function composeCurrentParentReceiptForChild() {
@@ -1762,40 +1640,30 @@
       role: state.role,
       governedF13EvidenceReceiverActive: true,
       parentChildReconciliationActive: true,
+      preReleaseStructuralCarrierActive: true,
       eastReleasePacketBridgeActive: true,
-      canvasEastRequestObserved: true,
-      canvasEastBuildRequested: true,
-      f13AtlasBuildRequested: true,
-      f13SourceRequestToEast: true,
-      requestEastAtlas: true,
-      requestedChild: "east",
-      handoffTo: "EAST",
-      activeCardinal: "EAST",
-      canvasParentReleaseObserved: state.release.releaseAccepted,
-      parentReleaseLawful: state.release.releaseAccepted,
-      eastAtlasReleaseAuthorized: state.release.releaseAccepted,
-      canvasEastMayBuildAtlas: state.release.releaseAccepted,
-      f13EastAtlasReleaseAuthorized: state.release.releaseAccepted,
-      westAuditObserved: state.release.westAuditObserved,
-      westReleaseObserved: state.release.releaseAccepted,
+      canvasParentReleaseObserved: state.releaseAccepted,
+      parentReleaseLawful: state.releaseAccepted,
+      eastAtlasReleaseAuthorized: state.releaseAccepted,
+      canvasEastMayBuildAtlas: state.releaseAccepted,
+      f13EastAtlasReleaseAuthorized: state.releaseAccepted,
+      westAuditObserved: state.westAuditObserved,
+      westReleaseObserved: state.releaseAccepted,
       staleParentDetected: false,
       currentParentStaleDetected: false,
       currentParentIdentityAccepted: true,
       currentParentIdentityMismatch: false,
       preexistingStaleParentDetected: state.preexistingStaleParentDetected,
+      preexistingStaleParentPreservedAsHistoricalEvidence: true,
       visualPassClaimed: false,
       updatedAt: nowIso()
     };
   }
 
   function composeEastBuildRequest(options = {}, atlasSize = resolveAtlasSize(options), reason = "east-build") {
-    const releaseInput = state.release.lastInput || {};
-    const westPassed = Boolean(
-      state.release.westAuditAccepted ||
-      state.release.westCanvasReleaseApproved ||
-      state.release.northCanvasReleaseAuthorized ||
-      state.release.canvasReleaseAuthorized
-    );
+    const parentReceiptPacket = composeCurrentParentReceiptForChild();
+    const releasePacket = clonePlain(state.releasePacket || {});
+    const westPassed = Boolean(state.westAuditAccepted || state.westCanvasReleaseApproved || state.northCanvasReleaseAuthorized || state.canvasReleaseAuthorized);
 
     const request = {
       width: atlasSize.width,
@@ -1803,17 +1671,25 @@
       atlasWidth: atlasSize.width,
       atlasHeight: atlasSize.height,
       rowsPerChunk: options.rowsPerChunk,
-      releasePacket: clonePlain(releaseInput),
-      parent: composeCurrentParentReceiptForChild(),
-      parentReceipt: composeCurrentParentReceiptForChild(),
-      canvasParent: composeCurrentParentReceiptForChild(),
-      canvasParentReceipt: composeCurrentParentReceiptForChild(),
+
+      releasePacket,
+      parent: parentReceiptPacket,
+      parentReceiptPacket,
+      canvasParent: parentReceiptPacket,
+      canvasParentReceiptPacket: parentReceiptPacket,
+
+      parentContract: CONTRACT,
+      parentReceiptId: RECEIPT,
+      parentSplitContract: SPLIT_CONTRACT,
+      parentSplitReceiptId: SPLIT_RECEIPT,
+      governedParentContract: CONTRACT,
+      governedParentReceiptId: RECEIPT,
 
       sourceFile: FILE,
-      destinationFile: FILE,
+      destinationFile: EAST_FILE,
       parentFile: FILE,
       requestedBy: "canvas-parent",
-      requestSource: "canvas-parent-release-packet-to-east-stale-clearance",
+      requestSource: "canvas-parent-pre-release-structural-carrier-then-west-release-to-east",
       receivedFrom: "PARENT",
 
       activeCycleNumber: 2,
@@ -1821,32 +1697,27 @@
       activeCycleRoute: MACRO_CYCLE_2,
       cycleRoute: MACRO_CYCLE_2,
       activeCardinal: "EAST",
-      activeFibonacci: "F13E_F13F",
-      activeStageId: "F13E_F13F_ATLAS_SOURCE",
-      activeGearId: "F13E_F13F_ATLAS_SOURCE",
+      activeFibonacci: "F13E",
+      activeFibonacciRank: "F13E",
+      activeStageId: "F13E_ATLAS_SOURCE",
+      activeGearId: "F13E_ATLAS_SOURCE",
       activeNewsGate: "F13_CANVAS_EVIDENCE",
 
-      parentContract: CONTRACT,
-      parentReceipt: RECEIPT,
-      parentSplitContract: SPLIT_CONTRACT,
-      parentSplitReceipt: SPLIT_RECEIPT,
-      governedParentContract: CONTRACT,
-      governedParentReceipt: RECEIPT,
       governedCanvasParentAligned: true,
       canvasParentRequestObserved: true,
       parentRequestObserved: true,
-      canvasParentReleaseObserved: state.release.releaseAccepted,
-      parentReleaseObserved: state.release.releaseAccepted,
-      parentReleaseLawful: state.release.releaseAccepted,
+      canvasParentReleaseObserved: state.releaseAccepted,
+      parentReleaseObserved: state.releaseAccepted,
+      parentReleaseLawful: state.releaseAccepted,
 
-      westReleaseObserved: state.release.releaseAccepted,
-      westReleaseLawful: state.release.releaseAccepted,
-      westAuditObserved: state.release.westAuditObserved || state.release.releaseAccepted,
+      westReleaseObserved: state.releaseAccepted,
+      westReleaseLawful: state.releaseAccepted,
+      westAuditObserved: state.westAuditObserved || state.releaseAccepted,
       westAuditPassed: westPassed,
-      westAuditDegraded: Boolean(state.release.releaseAccepted && !westPassed),
+      westAuditDegraded: Boolean(state.releaseAccepted && !westPassed),
       westAuditBlocked: false,
-      westCanvasReleaseApproved: state.release.westCanvasReleaseApproved,
-      canvasReleaseAuthorized: state.release.canvasReleaseAuthorized,
+      westCanvasReleaseApproved: state.westCanvasReleaseApproved,
+      canvasReleaseAuthorized: state.canvasReleaseAuthorized,
 
       staleParentContractDetected: false,
       staleParentDetected: false,
@@ -1863,7 +1734,7 @@
 
       northGateReady: false,
       eastGateReady: true,
-      westGateReady: state.westGateReady || state.release.releaseAccepted,
+      westGateReady: state.westGateReady || state.releaseAccepted,
       southGateReady: state.southGateReady,
       canvasGateReady: false,
       newsGatePassedBeforeF21: false,
@@ -1879,11 +1750,8 @@
         state.atlasBuildProgress = clamp(progress, 0, 100);
         emitProgressOnly("ATLAS_BUILD_PROGRESS", 88 + (state.atlasBuildProgress * 0.03), `East atlas progress ${state.atlasBuildProgress}%`, receipt || {});
         if (isFunction(options.onProgress)) {
-          try {
-            options.onProgress(progress, receipt);
-          } catch (error) {
-            recordError("EAST_BUILD_PROGRESS_CALLBACK_ERROR", error);
-          }
+          try { options.onProgress(progress, receipt); }
+          catch (error) { recordError("EAST_BUILD_PROGRESS_CALLBACK_ERROR", error); }
         }
       }
     };
@@ -1891,11 +1759,12 @@
     state.lastEastBuildRequest = clonePlain({
       ...request,
       onProgress: "[function]",
-      parent: "[parent-receipt]",
-      parentReceipt: "[parent-receipt]",
-      canvasParent: "[parent-receipt]",
-      canvasParentReceipt: "[parent-receipt]"
+      parent: "[parent-receipt-packet]",
+      parentReceiptPacket: "[parent-receipt-packet]",
+      canvasParent: "[parent-receipt-packet]",
+      canvasParentReceiptPacket: "[parent-receipt-packet]"
     });
+
     state.eastBuildRequestIncludesReleasePacket = true;
     state.eastBuildRequestIncludesCurrentParentClearance = true;
     state.eastBuildRequestIncludesWestRelease = true;
@@ -1905,40 +1774,14 @@
     return request;
   }
 
-  function getNorthSession() {
-    const candidates = [
-      root.HEARTH_CHECKPOINT_SESSION,
-      root.HEARTH_RUNTIME_CHECKPOINT_SESSION,
-      root.LAB_HEARTH_CHECKPOINT_SESSION,
-      root.LAB_CHECKPOINT_SESSION,
-      root.DEXTER_LAB && root.DEXTER_LAB.hearthCheckpointSession,
-      root.DEXTER_LAB && root.DEXTER_LAB.checkpointSession
-    ].filter(Boolean);
-
-    for (const candidate of candidates) {
-      if (candidate && isFunction(candidate.submitEvent)) return candidate;
-      if (candidate && isFunction(candidate.submit)) return candidate;
-    }
-
+  function normalizeCanvasResult(result, fallbackMethod) {
+    if (!result) return null;
+    if (result.nodeType === 1 && safeString(result.tagName).toLowerCase() === "canvas") return result;
+    if (result.atlasCanvas) return result.atlasCanvas;
+    if (result.textureCanvas) return result.textureCanvas;
+    if (result.canvas) return result.canvas;
+    if (isFunction(fallbackMethod)) return fallbackMethod();
     return null;
-  }
-
-  function readNorthAuthority() {
-    const authority =
-      root.LAB_RUNTIME_TABLE ||
-      root.LAB_RUNTIME_TABLE_NORTH ||
-      root.LAB_UNIVERSAL_PLANET_RUNTIME_TABLE ||
-      root.RUNTIME_TABLE ||
-      root.DexterRuntimeTable ||
-      (root.DEXTER_LAB && root.DEXTER_LAB.runtimeTable) ||
-      null;
-
-    const session = getNorthSession();
-
-    state.northAuthorityPresent = Boolean(authority);
-    state.checkpointSessionSubmissionAvailable = Boolean(session);
-
-    return { authority, session };
   }
 
   function sampleCanvasPixels() {
@@ -1963,7 +1806,7 @@
       visibleContentWaterSampleCount: 0,
       visibleContentOtherSampleCount: 0,
       visibleContentCarrierSampleCount: 0,
-      visibleContentProofMethod: "canvas-parent-pixel-sampling-release-packet-to-east-v3"
+      visibleContentProofMethod: "canvas-parent-pixel-sampling-v4"
     };
 
     if (!canvas || !ctx || !canvas.width || !canvas.height) {
@@ -2076,7 +1919,7 @@
     state.nonblankPlanetVisible = safeBool(merged.nonblankPlanetVisible, state.visiblePlanetAvailable);
     state.planetNotObstructed = safeBool(merged.planetNotObstructed, state.visiblePlanetAvailable);
     state.carrierOnlyDetected = safeBool(merged.carrierOnlyDetected, false);
-    state.visibleContentProofMethod = merged.visibleContentProofMethod || "south-child-plus-parent-pixel-sampling-release-packet-to-east-v3";
+    state.visibleContentProofMethod = merged.visibleContentProofMethod || "south-child-plus-parent-pixel-sampling-v4";
     state.visibleContentProofError = merged.visibleContentProofError || "";
     state.visibleContentSampleCount = safeNumber(merged.visibleContentSampleCount, state.visibleContentSampleCount);
     state.visibleContentVarianceScore = safeNumber(merged.visibleContentVarianceScore, state.visibleContentVarianceScore);
@@ -2094,7 +1937,9 @@
   }
 
   function drawEmergencyF13DiagnosticPlanet(reason = "child-output-unavailable") {
-    if (!state.release.releaseAccepted) return getReceipt();
+    if (!state.releaseAccepted) return getReceipt();
+
+    ensurePreReleaseStructuralCarrier({});
 
     const canvas = state.canvas;
     const ctx = state.context;
@@ -2118,15 +1963,6 @@
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, w, h);
 
-    const halo = ctx.createRadialGradient(cx, cy, radius * 0.86, cx, cy, radius * 1.34);
-    halo.addColorStop(0, "rgba(38, 156, 255, 0.16)");
-    halo.addColorStop(0.62, "rgba(55, 210, 255, 0.08)");
-    halo.addColorStop(1, "rgba(55, 210, 255, 0)");
-    ctx.fillStyle = halo;
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius * 1.36, 0, Math.PI * 2);
-    ctx.fill();
-
     const globe = ctx.createRadialGradient(cx - radius * 0.34, cy - radius * 0.42, radius * 0.05, cx, cy, radius);
     globe.addColorStop(0, "rgb(91, 196, 220)");
     globe.addColorStop(0.38, "rgb(34, 118, 174)");
@@ -2142,7 +1978,7 @@
     ctx.arc(cx, cy, radius * 0.985, 0, Math.PI * 2);
     ctx.clip();
 
-    const continents = [
+    [
       [-0.52, -0.18, 0.28, 0.18, -0.08],
       [-0.16, 0.12, 0.34, 0.2, 0.22],
       [0.28, -0.24, 0.26, 0.17, 0.08],
@@ -2150,9 +1986,7 @@
       [-0.36, 0.42, 0.22, 0.11, 0.14],
       [0.05, -0.48, 0.18, 0.09, -0.08],
       [0.08, 0.46, 0.24, 0.09, 0.02]
-    ];
-
-    continents.forEach(([x, y, rx, ry, turn], index) => {
+    ].forEach(([x, y, rx, ry, turn], index) => {
       ctx.save();
       ctx.translate(cx + x * radius, cy + y * radius);
       ctx.rotate(turn + state.rotationYaw * 0.22);
@@ -2163,7 +1997,6 @@
         const jitter = 1 + 0.14 * Math.sin(i * 2.13 + index) + 0.08 * Math.cos(i * 3.7);
         const px = Math.cos(a) * rx * radius * jitter;
         const py = Math.sin(a) * ry * radius * jitter;
-
         if (i === 0) ctx.moveTo(px, py);
         else ctx.lineTo(px, py);
       }
@@ -2171,9 +2004,6 @@
       ctx.closePath();
       ctx.fillStyle = index % 2 === 0 ? "rgba(86, 156, 91, 0.96)" : "rgba(139, 126, 77, 0.92)";
       ctx.fill();
-      ctx.strokeStyle = "rgba(210, 235, 190, 0.35)";
-      ctx.lineWidth = Math.max(1, radius * 0.01);
-      ctx.stroke();
       ctx.restore();
     });
 
@@ -2200,21 +2030,17 @@
     state.nonblankPlanetVisible = true;
     state.planetNotObstructed = true;
     state.visiblePlanetAvailable = true;
-    state.visiblePlanetHintPresent = true;
-
     state.atlasBuildStarted = true;
     state.atlasBuildComplete = true;
     state.textureComposeStarted = true;
     state.textureComposeComplete = true;
     state.textureReady = true;
     state.textureComposeError = reason;
-
     state.firstFrameRequested = true;
     state.firstFrameDetected = true;
     state.imageRendered = true;
     state.renderedAfterTexture = false;
     state.renderReady = true;
-
     state.visibleContentProofStarted = true;
     state.visibleContentProof = false;
     state.visibleContentStrictProof = false;
@@ -2223,7 +2049,7 @@
     state.visibleForwardProgress = true;
     state.visibleContentAdmissible = true;
     state.visibleProofReady = true;
-    state.visibleContentProofMethod = "emergency-f13-diagnostic-planet-governed-parent-carrier-v3";
+    state.visibleContentProofMethod = "emergency-f13-diagnostic-planet-governed-parent-carrier-v4";
     state.visibleContentProofError = reason;
     state.visibleContentSampleCount = 1;
     state.visibleContentVarianceScore = 1;
@@ -2247,209 +2073,84 @@
     });
 
     emitMilestone("DEGRADED_VISIBLE_CONTENT_ACCEPTED", 98, "Visible object present through emergency F13 diagnostic carrier.", {
-      checkpointId: "F13M_VISIBLE_CONTENT_PROOF_ACCEPTED",
-      fibonacci: "F13M",
+      checkpointId: "F13_VISIBLE_CONTENT_PROOF_DEGRADED",
+      fibonacci: "F13",
       emergency: true,
-      reason,
-      nextAuditTarget: state.nextAuditTarget
+      reason
     });
 
     updateDataset();
+
     return getReceipt();
   }
 
-  function getNorthSnapshot() {
-    mergeChildReceipts();
-    deriveParentReadiness();
-    computeStrictBootComplete();
-
-    return {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      splitContract: SPLIT_CONTRACT,
-      splitReceipt: SPLIT_RECEIPT,
-
-      governedF13EvidenceReceiverActive: true,
-      parentChildReconciliationActive: true,
-      eastReleasePacketBridgeActive: true,
-      waitsForWestRelease: true,
-      releaseAccepted: state.release.releaseAccepted,
-      releaseStatus: state.release.releaseStatus,
-      cycleNumber: state.release.cycleNumber,
-      cycleRoute: state.release.cycleRoute,
-      receivedFrom: state.release.receivedFrom,
-      westAuditObserved: state.release.westAuditObserved,
-      westCanvasReleaseApproved: state.release.westCanvasReleaseApproved,
-      northCanvasReleaseAuthorized: state.release.northCanvasReleaseAuthorized,
-
-      northGateReady: false,
-      eastGateReady: state.eastGateReady,
-      westGateReady: state.westGateReady,
-      southGateReady: state.southGateReady,
-      canvasGateReady: state.canvasGateReady,
-      newsGatePassedBeforeF21: false,
-      newsGateDegradedBeforeF21: true,
-
-      activeFibonacci: 13,
-      activeFibonacciRank: "F13P",
-      activeStageId: state.activeStageId,
-      activeGearId: state.activeGearId,
-
-      parentIdentityGuardActive: true,
-      bootHandshakeGuardActive: true,
-      staleConsumptionGuardActive: true,
-      currentParentIdentityAccepted: state.currentParentIdentityAccepted,
-      currentParentIdentityMismatch: state.currentParentIdentityMismatch,
-      preexistingStaleParentDetected: state.preexistingStaleParentDetected,
-      currentParentStaleDetected: state.currentParentStaleDetected,
-      staleParentDetected: state.staleParentDetected,
-
-      eastBuildRequestIncludesReleasePacket: state.eastBuildRequestIncludesReleasePacket,
-      eastBuildRequestIncludesCurrentParentClearance: state.eastBuildRequestIncludesCurrentParentClearance,
-      eastBuildRequestIncludesWestRelease: state.eastBuildRequestIncludesWestRelease,
-
-      physicalBootComplete: state.physicalBootComplete,
-      canvasBootComplete: state.canvasBootComplete,
-      carrierReady: state.carrierReady,
-      canvasCarrierReady: state.canvasCarrierReady,
-      canvasReady: state.canvasReady,
-      visibleCanvasReady: state.visibleCanvasReady,
-
-      canvasCarrierMounted: state.canvasCarrierMounted,
-      canvasContextReady: state.canvasContextReady,
-      planetCanvasPresent: state.planetCanvasPresent,
-      planetCanvasNonZeroSize: state.planetCanvasNonZeroSize,
-      carrierPhysicalWidth: state.carrierPhysicalWidth,
-      carrierPhysicalHeight: state.carrierPhysicalHeight,
-
-      canvasEastApiReady: state.canvasEastApiReady,
-      canvasWestApiReady: state.canvasWestApiReady,
-      canvasSouthApiReady: state.canvasSouthApiReady,
-      allCanvasChildrenApiReady: state.allCanvasChildrenApiReady,
-      canvasEastEvidenceReady: state.canvasEastEvidenceReady,
-      canvasWestInspectionReady: state.canvasWestInspectionReady,
-      canvasSouthVisibleProofReady: state.canvasSouthVisibleProofReady,
-      allCanvasChildrenEvidenceReady: state.allCanvasChildrenEvidenceReady,
-      canvasEastReady: state.canvasEastReady,
-      canvasWestReady: state.canvasWestReady,
-      canvasSouthReady: state.canvasSouthReady,
-      allCanvasChildrenReady: state.allCanvasChildrenReady,
-      childLoadError: state.childLoadError,
-      nextAuditTarget: state.nextAuditTarget,
-
-      atlasBuildComplete: state.atlasBuildComplete,
-      textureComposeComplete: state.textureComposeComplete,
-      firstFrameDetected: state.firstFrameDetected,
-      imageRendered: state.imageRendered,
-      visiblePlanetAvailable: state.visiblePlanetAvailable,
-      visibleContentProof: state.visibleContentProof,
-      visibleContentStrictProof: state.visibleContentStrictProof,
-      visibleContentSoftGap: state.visibleContentSoftGap,
-      visibleContentHardFail: state.visibleContentHardFail,
-      visibleForwardProgress: state.visibleForwardProgress,
-      visibleContentAdmissible: state.visibleContentAdmissible,
-
-      emergencyF13DiagnosticPlanetUsed: state.emergencyF13DiagnosticPlanetUsed,
-      f13CanvasEvidencePreserved: true,
-      f13CanvasEvidenceStrict: state.f13CanvasEvidenceStrict,
-      f13CanvasEvidenceDegraded: state.f13CanvasEvidenceDegraded,
-      f13CanvasEvidenceComplete: state.f13CanvasEvidenceComplete,
-      f13HardFail: state.f13HardFail,
-
-      f21EligibleForNorth: false,
-      f21SubmittedToNorth: false,
-      f21ClaimedByCanvas: false,
-      readyTextClaimedByCanvas: false,
-      visualPassClaimed: false
-    };
+  function yieldFrame(ms = 0) {
+    return new Promise((resolve) => {
+      if (isFunction(root.requestAnimationFrame)) {
+        root.requestAnimationFrame(() => {
+          if (ms > 0) root.setTimeout(resolve, ms);
+          else resolve();
+        });
+      } else {
+        root.setTimeout(resolve, Math.max(0, ms));
+      }
+    });
   }
 
-  function checkpointPayloadForPhase(phase, progress, message, detail = {}) {
-    return {
-      event: safeString(phase || "CANVAS_EVENT"),
-      id: safeString(phase || "CANVAS_EVENT"),
-      phase: safeString(phase || "CANVAS_EVENT"),
-      checkpointId: safeString(detail.checkpointId || "F13_CANVAS_PARENT_RECONCILIATION"),
-      fibonacci: safeString(detail.fibonacci || "F13P"),
-      source: "hearth.canvas.parent-release-packet-to-east-stale-clearance",
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      splitContract: SPLIT_CONTRACT,
-      splitReceipt: SPLIT_RECEIPT,
-      progress: Math.min(98, safeNumber(progress, 0)),
-      message: message || "",
-      snapshot: getNorthSnapshot(),
-      detail: {
-        ...clonePlain(detail),
-        governedF13EvidenceReceiverActive: true,
-        parentChildReconciliationActive: true,
-        eastReleasePacketBridgeActive: true,
-        waitsForWestRelease: true,
-        releaseAccepted: state.release.releaseAccepted,
-        releaseStatus: state.release.releaseStatus,
-        singlePhysicalFile: true,
-        parentIdentityGuardActive: true,
-        bootHandshakeGuardActive: true,
-        staleConsumptionGuardActive: true,
-        preexistingStaleParentDetected: state.preexistingStaleParentDetected,
-        currentParentStaleDetected: state.currentParentStaleDetected,
-        carrierReadyIsNotPlanetReady: true,
-        canvasReadyRequiresTextureFrameAndProof: true,
-        f13Only: true,
-        f21ClaimedByCanvas: false,
-        readyTextClaimedByCanvas: false,
-        visualPassClaimed: false
-      }
-    };
+  function addCallbacksFromOptions(options = {}) {
+    [options.onPhase, options.onEvent, options.onStatus, options.statusCallback, options.onReceipt].filter(isFunction).forEach((callback) => on(callback));
   }
 
-  function submitCanvasEvidence(phase, detail = {}) {
-    const north = readNorthAuthority();
-    const payload = checkpointPayloadForPhase(phase, 98, "", detail);
+  function on(callback) {
+    if (isFunction(callback) && !state.callbacks.includes(callback)) state.callbacks.push(callback);
+    return () => off(callback);
+  }
 
-    if (!north.session) return false;
-
-    try {
-      if (isFunction(north.session.submitEvent)) {
-        north.session.submitEvent(payload);
-        state.canvasEvidenceSubmittedToNorth = true;
-        return true;
-      }
-
-      if (isFunction(north.session.submit)) {
-        north.session.submit(payload);
-        state.canvasEvidenceSubmittedToNorth = true;
-        return true;
-      }
-    } catch (error) {
-      recordError("NORTH_SESSION_SUBMIT_ERROR", error, { phase });
-    }
-
-    return false;
+  function off(callback) {
+    const index = state.callbacks.indexOf(callback);
+    if (index >= 0) state.callbacks.splice(index, 1);
   }
 
   function dispatchPhase(event) {
-    const receipt = getReceipt();
+    const receipt = getReceiptLight();
 
     state.callbacks.slice().forEach((callback) => {
-      try {
-        callback(event, receipt);
-      } catch (error) {
-        recordError("CANVAS_CALLBACK_ERROR", error, { event: event.event || event.phase || "" });
-      }
+      try { callback(event, receipt); }
+      catch (error) { recordError("CANVAS_CALLBACK_ERROR", error, { event: event.event || event.phase || "" }); }
     });
 
     if (isFunction(root.dispatchEvent) && isFunction(root.CustomEvent)) {
-      try {
-        root.dispatchEvent(new root.CustomEvent("hearth:canvas-phase", { detail: { event, receipt } }));
-      } catch (_error) {}
+      try { root.dispatchEvent(new root.CustomEvent("hearth:canvas-phase", { detail: { event, receipt } })); }
+      catch (_error) {}
     }
   }
 
   function emitMilestone(phase, progress, message, detail = {}) {
     const event = {
       at: nowIso(),
-      ...checkpointPayloadForPhase(phase, progress, message, detail),
+      event: safeString(phase || "CANVAS_EVENT"),
+      phase: safeString(phase || "CANVAS_EVENT"),
+      checkpointId: safeString(detail.checkpointId || "F13_CANVAS_PARENT_RECONCILIATION"),
+      fibonacci: safeString(detail.fibonacci || "F13P"),
+      source: "hearth.canvas.parent-pre-release-structural-carrier-then-west-release-to-east",
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      splitContract: SPLIT_CONTRACT,
+      splitReceipt: SPLIT_RECEIPT,
+      progress: Math.min(98, safeNumber(progress, 0)),
+      message: message || "",
+      detail: {
+        ...clonePlain(detail),
+        preReleaseStructuralCarrierActive: true,
+        releaseAccepted: state.releaseAccepted,
+        releaseStatus: state.releaseStatus,
+        carrierReadyIsNotPlanetReady: true,
+        canvasReadyRequiresTextureFrameAndProof: true,
+        f13Only: true,
+        f21ClaimedByCanvas: false,
+        readyTextClaimedByCanvas: false,
+        visualPassClaimed: false
+      },
       f21ClaimedByCanvas: false,
       readyTextClaimedByCanvas: false,
       visualPassClaimed: false
@@ -2459,7 +2160,6 @@
     trimArray(state.canvasPhaseEvents, 260);
     state.updatedAt = event.at;
 
-    submitCanvasEvidence(phase, detail);
     dispatchPhase(event);
     updateDataset();
 
@@ -2494,61 +2194,62 @@
     return item;
   }
 
-  function yieldFrame(ms = 0) {
-    return new Promise((resolve) => {
-      if (isFunction(root.requestAnimationFrame)) {
-        root.requestAnimationFrame(() => {
-          if (ms > 0) root.setTimeout(resolve, ms);
-          else resolve();
-        });
-      } else {
-        root.setTimeout(resolve, Math.max(0, ms));
-      }
-    });
-  }
+  function getNorthSession() {
+    const candidates = [
+      root.HEARTH_CHECKPOINT_SESSION,
+      root.HEARTH_RUNTIME_CHECKPOINT_SESSION,
+      root.LAB_HEARTH_CHECKPOINT_SESSION,
+      root.LAB_CHECKPOINT_SESSION,
+      root.DEXTER_LAB && root.DEXTER_LAB.hearthCheckpointSession,
+      root.DEXTER_LAB && root.DEXTER_LAB.checkpointSession
+    ].filter(Boolean);
 
-  function addCallbacksFromOptions(options = {}) {
-    [
-      options.onPhase,
-      options.onEvent,
-      options.onStatus,
-      options.statusCallback,
-      options.onReceipt
-    ].filter(isFunction).forEach((callback) => on(callback));
-  }
-
-  function on(callback) {
-    if (isFunction(callback) && !state.callbacks.includes(callback)) {
-      state.callbacks.push(callback);
+    for (const candidate of candidates) {
+      if (candidate && isFunction(candidate.submitEvent)) return candidate;
+      if (candidate && isFunction(candidate.submit)) return candidate;
     }
 
-    return () => off(callback);
+    return null;
   }
 
-  function off(callback) {
-    const index = state.callbacks.indexOf(callback);
-    if (index >= 0) state.callbacks.splice(index, 1);
+  function readNorthAuthority() {
+    const authority =
+      root.LAB_RUNTIME_TABLE ||
+      root.LAB_RUNTIME_TABLE_NORTH ||
+      root.LAB_UNIVERSAL_PLANET_RUNTIME_TABLE ||
+      root.RUNTIME_TABLE ||
+      root.DexterRuntimeTable ||
+      (root.DEXTER_LAB && root.DEXTER_LAB.runtimeTable) ||
+      null;
+
+    const session = getNorthSession();
+
+    state.northAuthorityPresent = Boolean(authority);
+    state.checkpointSessionSubmissionAvailable = Boolean(session);
+
+    return { authority, session };
   }
 
-  function computeStrictBootComplete() {
-    const strict = Boolean(
+  function computeBootComplete() {
+    const complete = Boolean(
+      state.releaseAccepted &&
       state.currentParentIdentityAccepted &&
-      !state.currentParentIdentityMismatch &&
       !state.currentParentStaleDetected &&
-      state.release.releaseAccepted &&
       state.physicalBootRequested &&
       state.physicalBootStarted &&
       state.physicalBootResolved &&
       !state.physicalBootRejected &&
+      state.canvasCarrierMounted &&
+      state.canvasContextReady &&
       !state.canvasBootRejected &&
       !state.canvasBootError
     );
 
-    state.physicalBootComplete = strict;
-    state.canvasBootComplete = strict;
-    state.booted = strict;
+    state.physicalBootComplete = complete;
+    state.canvasBootComplete = complete;
+    state.booted = complete;
 
-    return strict;
+    return complete;
   }
 
   async function bootCooperative(options = {}) {
@@ -2564,63 +2265,34 @@
       state.physicalBootStarted = true;
       state.physicalBootResolved = false;
       state.physicalBootRejected = false;
-      state.physicalBootComplete = false;
-
       state.canvasBootRequested = true;
       state.canvasBootStarted = true;
       state.canvasBootResolved = false;
       state.canvasBootRejected = false;
       state.canvasBootError = "";
-      state.canvasBootAttempts += 1;
-
       state.booting = true;
-      state.booted = false;
-      state.bootStartedAt = nowIso();
-      state.canvasCarrierRequested = true;
-      state.canvasCarrierHandoffError = "";
-      state.updatedAt = state.bootStartedAt;
 
       updateDataset();
 
       try {
         publishGlobals();
-        verifyCurrentParentIdentity("bootCooperative-start");
+        ensurePreReleaseStructuralCarrier(options);
 
-        if (!state.currentParentIdentityAccepted) {
-          throw new Error("Parent identity mismatch: active file is not the release-packet-to-East stale-clearance identity.");
-        }
-
-        if (state.currentParentStaleDetected) {
-          throw new Error("Current parent stale detected after identity verification.");
-        }
-
-        emitMilestone("CANVAS_GOVERNED_RELEASE_ACCEPTED", 76, "Canvas governed release accepted.", {
+        emitMilestone("CANVAS_GOVERNED_RELEASE_ACCEPTED", 76, "Canvas governed release accepted after pre-release carrier proof.", {
           checkpointId: "F13_RELEASE_ACCEPTED",
           fibonacci: "F13",
           cycleNumber: 2,
-          cycleRoute: MACRO_CYCLE_2,
-          receivedFrom: state.release.receivedFrom,
-          preexistingStaleParentDetected: state.preexistingStaleParentDetected,
-          currentParentStaleDetected: false
+          cycleRoute: MACRO_CYCLE_2
         });
 
         await yieldFrame();
 
-        ensureCarrier(options);
-
-        emitMilestone("CANVAS_MOUNT_CREATED", 81, "Physical carrier mounted.", {
-          checkpointId: "F13B_PHYSICAL_CARRIER_MOUNTED",
+        emitMilestone("CANVAS_PRE_RELEASE_STRUCTURAL_CARRIER_CONFIRMED", 81, "Physical carrier already mounted before West release.", {
+          checkpointId: "F13B_STRUCTURAL_CARRIER_CONFIRMED",
           fibonacci: "F13B",
           carrierPhysicalWidth: state.carrierPhysicalWidth,
           carrierPhysicalHeight: state.carrierPhysicalHeight
         });
-
-        emitMilestone("CANVAS_CONTEXT_READY", 84, "Canvas context ready.", {
-          checkpointId: "F13C_CONTEXT_READY",
-          fibonacci: "F13C"
-        });
-
-        await yieldFrame();
 
         const children = await ensureChildren(options);
 
@@ -2635,8 +2307,8 @@
         if (children.west && isFunction(children.west.bindInspection)) {
           children.west.bindInspection({
             canvas: state.canvas,
-            releasePacket: state.release.lastInput || {},
-            onChange: () => forceRedraw({ ...options, interactive: true, sampleProof: false, releasePacket: state.release.lastInput || {} }),
+            releasePacket: state.releasePacket || {},
+            onChange: () => forceRedraw({ ...options, interactive: true, sampleProof: false, releasePacket: state.releasePacket || {} }),
             onInvalidate: (reason) => invalidateTexture(reason || "west-control-invalidation")
           });
 
@@ -2648,15 +2320,16 @@
           state.inspectPlanetControlAvailable = true;
           state.diagnosticCanLeavePlanetFrame = true;
 
-          emitMilestone("DRAG_INSPECTION_BOUND", 86, "West control bound.", {
+          emitMilestone("DRAG_INSPECTION_BOUND", 86, "West inspection control bound after release.", {
             checkpointId: "F13N_WEST_INSPECTION_BOUND",
             fibonacci: "F13N"
           });
         }
 
         const atlasSize = resolveAtlasSize(options);
+        const east = children.east;
 
-        if (!children.east || !isFunction(children.east.buildAtlas)) {
+        if (!east || !isFunction(east.buildAtlas)) {
           drawEmergencyF13DiagnosticPlanet("east-buildAtlas-unavailable");
           state.physicalBootResolved = true;
           state.canvasBootResolved = true;
@@ -2668,7 +2341,7 @@
         state.atlasBuildProgress = 0;
         state.atlasBuildError = "";
 
-        emitMilestone("ATLAS_BUILD_STARTED", 88, "East atlas build started with parent release packet.", {
+        emitMilestone("ATLAS_BUILD_STARTED", 88, "East atlas build started with accepted Macro West release packet.", {
           checkpointId: "F13E_EAST_ATLAS_BUILD_STARTED",
           fibonacci: "F13E",
           eastBuildRequestIncludesReleasePacket: true,
@@ -2679,12 +2352,7 @@
 
         const eastRequest = composeEastBuildRequest(options, atlasSize, "bootCooperative");
 
-        const atlasResult = await withTimeout(
-          children.east.buildAtlas(eastRequest),
-          CHILD_METHOD_TIMEOUT_MS,
-          "east.buildAtlas"
-        );
-
+        const atlasResult = await withTimeout(east.buildAtlas(eastRequest), CHILD_METHOD_TIMEOUT_MS, "east.buildAtlas");
         state.atlasCanvas = normalizeCanvasResult(atlasResult);
         state.atlasBuildProgress = 100;
         state.atlasBuildComplete = Boolean(state.atlasCanvas);
@@ -2701,12 +2369,13 @@
         mergeChildReceipts();
 
         emitMilestone("ATLAS_BUILD_COMPLETE", 91, "East atlas build complete.", {
-          checkpointId: "F13F_EAST_ATLAS_BUILD_COMPLETE",
-          fibonacci: "F13F",
-          eastBuildRequestIncludesReleasePacket: true
+          checkpointId: "F13E_EAST_ATLAS_BUILD_COMPLETE",
+          fibonacci: "F13E"
         });
 
-        if (!children.south || !isFunction(children.south.composeTexture)) {
+        const south = children.south;
+
+        if (!south || !isFunction(south.composeTexture)) {
           drawEmergencyF13DiagnosticPlanet("south-composeTexture-unavailable");
           state.physicalBootResolved = true;
           state.canvasBootResolved = true;
@@ -2723,21 +2392,17 @@
           fibonacci: "F13S"
         });
 
-        const textureResult = await withTimeout(children.south.composeTexture({
+        const textureResult = await withTimeout(south.composeTexture({
           atlasCanvas: state.atlasCanvas,
-          releasePacket: state.release.lastInput || {},
-          parentReceipt: composeCurrentParentReceiptForChild(),
+          releasePacket: state.releasePacket || {},
+          parentReceiptPacket: composeCurrentParentReceiptForChild(),
           onProgress: (progress, receipt) => {
             state.textureComposeProgress = clamp(progress, 0, 100);
             emitProgressOnly("TEXTURE_COMPOSE_PROGRESS", 93 + (state.textureComposeProgress * 0.03), `South texture progress ${state.textureComposeProgress}%`, receipt || {});
           }
         }), CHILD_METHOD_TIMEOUT_MS, "south.composeTexture");
 
-        state.textureCanvas = normalizeCanvasResult(
-          textureResult,
-          isFunction(children.south.getTextureCanvas) ? () => children.south.getTextureCanvas() : null
-        );
-
+        state.textureCanvas = normalizeCanvasResult(textureResult, isFunction(south.getTextureCanvas) ? () => south.getTextureCanvas() : null);
         state.textureComposeProgress = 100;
         state.textureComposeComplete = Boolean(state.textureCanvas);
         state.textureReady = state.textureComposeComplete;
@@ -2758,13 +2423,15 @@
           fibonacci: "F13S"
         });
 
-        if (!isFunction(children.south.renderSphere)) {
+        if (!isFunction(south.renderSphere)) {
           drawEmergencyF13DiagnosticPlanet("south-renderSphere-unavailable");
           state.physicalBootResolved = true;
           state.canvasBootResolved = true;
           finishBoot();
           return getReceipt();
         }
+
+        const west = children.west;
 
         state.firstFrameRequested = true;
 
@@ -2773,12 +2440,12 @@
           fibonacci: "F13S"
         });
 
-        await withTimeout(children.south.renderSphere({
+        await withTimeout(south.renderSphere({
           canvas: state.canvas,
           textureCanvas: state.textureCanvas,
-          releasePacket: state.release.lastInput || {},
-          parentReceipt: composeCurrentParentReceiptForChild(),
-          view: children.west && isFunction(children.west.getViewState) ? children.west.getViewState() : {},
+          releasePacket: state.releasePacket || {},
+          parentReceiptPacket: composeCurrentParentReceiptForChild(),
+          view: west && isFunction(west.getViewState) ? west.getViewState() : {},
           onProgress: (progress, receipt) => {
             emitProgressOnly("SPHERE_RENDER_PROGRESS", 97, `South sphere render progress ${progress}%`, receipt || {});
           }
@@ -2798,18 +2465,11 @@
           fibonacci: "F13S"
         });
 
-        state.visibleContentProofStarted = true;
-
-        emitMilestone("VISIBLE_CONTENT_PROOF_STARTED", 98, "Visible content proof started.", {
-          checkpointId: "F13S_VISIBLE_PROOF_STARTED",
-          fibonacci: "F13S"
-        });
-
         let proof = {};
 
-        if (isFunction(children.south.sampleVisibleContent)) {
+        if (isFunction(south.sampleVisibleContent)) {
           try {
-            proof = children.south.sampleVisibleContent({ canvas: state.canvas, releasePacket: state.release.lastInput || {} }) || {};
+            proof = south.sampleVisibleContent({ canvas: state.canvas, releasePacket: state.releasePacket || {} }) || {};
           } catch (error) {
             recordError("SOUTH_VISIBLE_CONTENT_SAMPLE_FAILED", error);
           }
@@ -2850,11 +2510,8 @@
         submitCanvasEvidenceUpstream();
 
         if (isFunction(options.onReady)) {
-          try {
-            options.onReady(getReceipt());
-          } catch (error) {
-            recordError("ON_READY_CALLBACK_ERROR", error);
-          }
+          try { options.onReady(getReceipt()); }
+          catch (error) { recordError("ON_READY_CALLBACK_ERROR", error); }
         }
 
         return getReceipt();
@@ -2864,10 +2521,9 @@
         state.canvasBootError = error && error.message ? error.message : String(error);
         state.canvasCarrierHandoffOk = false;
         state.canvasCarrierHandoffError = state.canvasBootError;
-        recordError("CANVAS_PARENT_RELEASE_PACKET_TO_EAST_BOOT_FAILED", error);
+        recordError("CANVAS_PARENT_V4_BOOT_FAILED", error);
 
         try {
-          if (!state.canvas || !state.context) ensureCarrier(options);
           drawEmergencyF13DiagnosticPlanet(state.canvasBootError);
           state.physicalBootRejected = false;
           state.canvasBootRejected = false;
@@ -2878,18 +2534,13 @@
           recordError("EMERGENCY_F13_DIAGNOSTIC_PLANET_FAILED", fallbackError);
           state.f13HardFail = true;
           state.visibleContentHardFail = true;
-          state.canvasReady = false;
-          state.visibleCanvasReady = false;
         }
 
         finishBoot();
 
         if (isFunction(options.onError)) {
-          try {
-            options.onError(error, getReceipt());
-          } catch (callbackError) {
-            recordError("ON_ERROR_CALLBACK_ERROR", callbackError);
-          }
+          try { options.onError(error, getReceipt()); }
+          catch (callbackError) { recordError("ON_ERROR_CALLBACK_ERROR", callbackError); }
         }
 
         return getReceipt();
@@ -2905,21 +2556,10 @@
     verifyCurrentParentIdentity("finishBoot");
     mergeChildReceipts();
     deriveParentReadiness();
-    computeStrictBootComplete();
+    computeBootComplete();
 
     state.booting = false;
-    state.bootCompletedAt = nowIso();
-    state.bootElapsedMs = state.bootStartedAt
-      ? Math.max(0, Date.parse(state.bootCompletedAt) - Date.parse(state.bootStartedAt))
-      : 0;
-    state.updatedAt = state.bootCompletedAt;
-
-    if (!state.canvasBootComplete && state.release.releaseAccepted) {
-      state.nextAuditTarget = FILE;
-      state.firstFailedCoordinate = "WAITING_CANVAS_PHYSICAL_BOOT_COMPLETE";
-      state.recommendedNextFile = FILE;
-      state.recommendedNextRenewalTarget = FILE;
-    }
+    state.updatedAt = nowIso();
 
     updateDataset();
     publishGlobals();
@@ -2934,16 +2574,16 @@
     if (gate.held) return gate.receipt;
 
     addCallbacksFromOptions(options);
-    ensureCarrier(options);
+    ensurePreReleaseStructuralCarrier(options);
     await ensureChildren(options);
 
-    const west = resolveChild("west");
+    const west = readChild("west");
 
     if (west && isFunction(west.bindInspection)) {
       west.bindInspection({
         canvas: state.canvas,
-        releasePacket: state.release.lastInput || {},
-        onChange: () => forceRedraw({ ...options, interactive: true, sampleProof: false, releasePacket: state.release.lastInput || {} }),
+        releasePacket: state.releasePacket || {},
+        onChange: () => forceRedraw({ ...options, interactive: true, sampleProof: false, releasePacket: state.releasePacket || {} }),
         onInvalidate: (reason) => invalidateTexture(reason || "west-control-invalidation")
       });
 
@@ -2966,9 +2606,7 @@
 
     addCallbacksFromOptions(options);
 
-    if (!state.canvas || !state.context) {
-      await mount(options);
-    }
+    if (!state.canvas || !state.context) await mount(options);
 
     const children = await ensureChildren(options);
 
@@ -2977,8 +2615,8 @@
       return getReceipt();
     }
 
-    const south = children.south || resolveChild("south");
-    const west = children.west || resolveChild("west");
+    const south = children.south || readChild("south");
+    const west = children.west || readChild("west");
 
     if (!south || !isFunction(south.renderSphere)) {
       drawEmergencyF13DiagnosticPlanet("south-renderSphere-unavailable");
@@ -2994,8 +2632,8 @@
     await south.renderSphere({
       canvas: state.canvas,
       textureCanvas,
-      releasePacket: state.release.lastInput || {},
-      parentReceipt: composeCurrentParentReceiptForChild(),
+      releasePacket: state.releasePacket || {},
+      parentReceiptPacket: composeCurrentParentReceiptForChild(),
       view: west && isFunction(west.getViewState) ? west.getViewState() : {},
       onProgress: options.onProgress
     });
@@ -3008,7 +2646,7 @@
     state.renderFrameCount += 1;
 
     if (isFunction(south.sampleVisibleContent)) {
-      applyVisibleProof(south.sampleVisibleContent({ canvas: state.canvas, releasePacket: state.release.lastInput || {} }));
+      applyVisibleProof(south.sampleVisibleContent({ canvas: state.canvas, releasePacket: state.releasePacket || {} }));
     } else {
       applyVisibleProof(sampleCanvasPixels());
     }
@@ -3025,8 +2663,8 @@
     const gate = guardReleaseOrReturn(options);
     if (gate.held) return gate.receipt;
 
-    const south = resolveChild("south");
-    const west = resolveChild("west");
+    const south = readChild("south");
+    const west = readChild("west");
 
     if (!state.canvas || !state.context) return getReceipt();
 
@@ -3036,8 +2674,8 @@
           south.renderSphereSync({
             canvas: state.canvas,
             textureCanvas: south.getTextureCanvas(),
-            releasePacket: state.release.lastInput || {},
-            parentReceipt: composeCurrentParentReceiptForChild(),
+            releasePacket: state.releasePacket || {},
+            parentReceiptPacket: composeCurrentParentReceiptForChild(),
             view: west && isFunction(west.getViewState) ? west.getViewState() : {},
             interactive: options.interactive !== false
           });
@@ -3049,7 +2687,7 @@
         state.renderReady = true;
 
         if (options.sampleProof === true && isFunction(south.sampleVisibleContent)) {
-          applyVisibleProof(south.sampleVisibleContent({ canvas: state.canvas, releasePacket: state.release.lastInput || {} }));
+          applyVisibleProof(south.sampleVisibleContent({ canvas: state.canvas, releasePacket: state.releasePacket || {} }));
         }
 
         mergeChildReceipts();
@@ -3071,8 +2709,6 @@
     state.textureReady = false;
     state.renderReady = false;
     state.visibleProofReady = false;
-    state.canvasReady = false;
-    state.visibleCanvasReady = false;
     state.visibleContentProof = false;
     state.visibleContentStrictProof = false;
     state.visibleContentSoftGap = false;
@@ -3081,14 +2717,11 @@
     state.f13CanvasEvidenceDegraded = false;
     state.updatedAt = nowIso();
 
-    const south = resolveChild("south");
+    const south = readChild("south");
 
     if (south && isFunction(south.invalidateTexture)) {
-      try {
-        south.invalidateTexture(reason);
-      } catch (error) {
-        recordError("SOUTH_INVALIDATE_TEXTURE_FAILED", error);
-      }
+      try { south.invalidateTexture(reason); }
+      catch (error) { recordError("SOUTH_INVALIDATE_TEXTURE_FAILED", error); }
     }
 
     mergeChildReceipts();
@@ -3111,21 +2744,19 @@
       return getReceipt();
     }
 
-    const east = children.east || resolveChild("east");
-    const west = children.west || resolveChild("west");
-    const south = children.south || resolveChild("south");
+    const east = children.east || readChild("east");
+    const west = children.west || readChild("west");
+    const south = children.south || readChild("south");
 
-    if (!state.canvas || !state.context) ensureCarrier(options);
+    if (!state.canvas || !state.context) ensurePreReleaseStructuralCarrier(options);
 
     const atlasSize = resolveAtlasSize(options);
+    const eastRequest = composeEastBuildRequest(options, atlasSize, "rebuildTexture");
 
     state.atlasBuildStarted = true;
     state.atlasBuildProgress = 0;
 
-    const eastRequest = composeEastBuildRequest(options, atlasSize, "rebuildTexture");
-
     const atlasResult = await east.buildAtlas(eastRequest);
-
     state.atlasCanvas = normalizeCanvasResult(atlasResult);
     state.atlasBuildProgress = 100;
     state.atlasBuildComplete = Boolean(state.atlasCanvas);
@@ -3140,8 +2771,8 @@
 
     const textureResult = await south.composeTexture({
       atlasCanvas: state.atlasCanvas,
-      releasePacket: state.release.lastInput || {},
-      parentReceipt: composeCurrentParentReceiptForChild(),
+      releasePacket: state.releasePacket || {},
+      parentReceiptPacket: composeCurrentParentReceiptForChild(),
       onProgress: (progress, receipt) => {
         state.textureComposeProgress = clamp(progress, 0, 100);
         emitProgressOnly("TEXTURE_COMPOSE_PROGRESS", 93 + (state.textureComposeProgress * 0.03), `Texture rebuild progress ${state.textureComposeProgress}%`, receipt || {});
@@ -3161,8 +2792,8 @@
     await south.renderSphere({
       canvas: state.canvas,
       textureCanvas: state.textureCanvas,
-      releasePacket: state.release.lastInput || {},
-      parentReceipt: composeCurrentParentReceiptForChild(),
+      releasePacket: state.releasePacket || {},
+      parentReceiptPacket: composeCurrentParentReceiptForChild(),
       view: west && isFunction(west.getViewState) ? west.getViewState() : {}
     });
 
@@ -3174,7 +2805,7 @@
     state.renderFrameCount += 1;
 
     if (isFunction(south.sampleVisibleContent)) {
-      applyVisibleProof(south.sampleVisibleContent({ canvas: state.canvas, releasePacket: state.release.lastInput || {} }));
+      applyVisibleProof(south.sampleVisibleContent({ canvas: state.canvas, releasePacket: state.releasePacket || {} }));
     } else {
       applyVisibleProof(sampleCanvasPixels());
     }
@@ -3191,7 +2822,7 @@
     const gate = guardReleaseOrReturn(options);
     if (gate.held) return Promise.resolve(gate.receipt);
 
-    const east = resolveChild("east");
+    const east = readChild("east");
 
     if (east && isFunction(east.refreshMaterialBridge)) {
       try {
@@ -3210,55 +2841,60 @@
   }
 
   function setRotation(yaw = 0, pitch = 0) {
-    const west = resolveChild("west");
+    const west = readChild("west");
 
     state.rotationYaw = safeNumber(yaw, state.rotationYaw);
     state.rotationPitch = safeNumber(pitch, state.rotationPitch);
 
     if (west && isFunction(west.setRotation)) west.setRotation({ yaw: state.rotationYaw, pitch: state.rotationPitch });
 
-    return forceRedraw({ releasePacket: state.release.lastInput || {}, interactive: true, sampleProof: false });
+    return forceRedraw({ releasePacket: state.releasePacket || {}, interactive: true, sampleProof: false });
   }
 
   function resetRotation() {
-    const west = resolveChild("west");
+    const west = readChild("west");
 
     state.rotationYaw = -0.18;
     state.rotationPitch = 0.05;
 
     if (west && isFunction(west.resetRotation)) west.resetRotation();
 
-    return forceRedraw({ releasePacket: state.release.lastInput || {}, interactive: true, sampleProof: false });
+    return forceRedraw({ releasePacket: state.releasePacket || {}, interactive: true, sampleProof: false });
   }
 
   function setZoom(value = 1, options = {}) {
-    const west = resolveChild("west");
+    const west = readChild("west");
 
     state.zoomLevel = clamp(value, state.zoomMin, state.zoomMax);
 
     if (west && isFunction(west.setZoom)) {
-      west.setZoom({ zoomLevel: state.zoomLevel, source: options.source || "canvas-parent-setZoom", notify: options.notify, invalidate: options.invalidate });
+      west.setZoom({
+        zoomLevel: state.zoomLevel,
+        source: options.source || "canvas-parent-setZoom",
+        notify: options.notify,
+        invalidate: options.invalidate
+      });
     }
 
-    return forceRedraw({ ...options, releasePacket: options.releasePacket || state.release.lastInput || {}, interactive: true, sampleProof: options.sampleProof === true });
+    return forceRedraw({ ...options, releasePacket: options.releasePacket || state.releasePacket || {}, interactive: true, sampleProof: options.sampleProof === true });
   }
 
   function zoomIn(step = 0.18) {
-    return setZoom(state.zoomLevel + Math.abs(safeNumber(step, 0.18)), { source: "zoomIn", releasePacket: state.release.lastInput || {} });
+    return setZoom(state.zoomLevel + Math.abs(safeNumber(step, 0.18)), { source: "zoomIn", releasePacket: state.releasePacket || {} });
   }
 
   function zoomOut(step = 0.18) {
-    return setZoom(state.zoomLevel - Math.abs(safeNumber(step, 0.18)), { source: "zoomOut", releasePacket: state.release.lastInput || {} });
+    return setZoom(state.zoomLevel - Math.abs(safeNumber(step, 0.18)), { source: "zoomOut", releasePacket: state.releasePacket || {} });
   }
 
   function resetZoom() {
-    return setZoom(1, { source: "resetZoom", releasePacket: state.release.lastInput || {} });
+    return setZoom(1, { source: "resetZoom", releasePacket: state.releasePacket || {} });
   }
 
   function sample(point = {}) {
-    const east = resolveChild("east");
+    const east = readChild("east");
 
-    if (east && isFunction(east.sample)) return east.sample(point);
+    if (state.releaseAccepted && east && isFunction(east.sample)) return east.sample(point);
 
     return {
       contract: CONTRACT,
@@ -3266,6 +2902,7 @@
       u: safeNumber(point.u, 0.5),
       v: safeNumber(point.v, 0.5),
       rgb: [0, 0, 0],
+      preReleaseStructuralCarrierOnly: !state.releaseAccepted,
       canvasStillDoesNotOwnPlanetTruth: true,
       f21ClaimedByCanvas: false,
       readyTextClaimedByCanvas: false,
@@ -3278,17 +2915,14 @@
   }
 
   function sampleVisibleContent() {
-    if (!state.release.releaseAccepted) return sampleCanvasPixels();
+    if (!state.releaseAccepted) return sampleCanvasPixels();
 
-    const south = resolveChild("south");
+    const south = readChild("south");
     let proof = {};
 
     if (south && isFunction(south.sampleVisibleContent)) {
-      try {
-        proof = south.sampleVisibleContent({ canvas: state.canvas, releasePacket: state.release.lastInput || {} }) || {};
-      } catch (error) {
-        recordError("SOUTH_SAMPLE_VISIBLE_CONTENT_FAILED", error);
-      }
+      try { proof = south.sampleVisibleContent({ canvas: state.canvas, releasePacket: state.releasePacket || {} }) || {}; }
+      catch (error) { recordError("SOUTH_SAMPLE_VISIBLE_CONTENT_FAILED", error); }
     }
 
     const applied = applyVisibleProof(proof);
@@ -3301,16 +2935,13 @@
   }
 
   function classifyVisibleContentEvidence(metrics = {}) {
-    if (!state.release.releaseAccepted) return applyVisibleProof({ visibleContentHardFail: false });
+    if (!state.releaseAccepted) return applyVisibleProof({ visibleContentHardFail: false });
 
-    const south = resolveChild("south");
+    const south = readChild("south");
 
     if (south && isFunction(south.classifyVisibleContentEvidence)) {
-      try {
-        return applyVisibleProof(south.classifyVisibleContentEvidence(metrics));
-      } catch (error) {
-        recordError("SOUTH_CLASSIFY_VISIBLE_CONTENT_FAILED", error);
-      }
+      try { return applyVisibleProof(south.classifyVisibleContentEvidence(metrics)); }
+      catch (error) { recordError("SOUTH_CLASSIFY_VISIBLE_CONTENT_FAILED", error); }
     }
 
     return applyVisibleProof(metrics);
@@ -3333,10 +2964,11 @@
   function composeCanvasEvidenceBody(input = {}) {
     mergeChildReceipts();
     deriveParentReadiness();
-    computeStrictBootComplete();
+    computeBootComplete();
 
     const proofChannels = [
-      state.release.releaseAccepted,
+      state.structuralCarrierSafeForCanvasRelease,
+      state.releaseAccepted,
       state.currentParentIdentityAccepted,
       !state.currentParentStaleDetected,
       state.eastBuildRequestIncludesReleasePacket,
@@ -3369,16 +3001,33 @@
       canvasEvidenceBodyComposed: state.canvasEvidenceBodyComposed,
       proofChannels,
 
+      preReleaseStructuralCarrierProof: {
+        preReleaseStructuralCarrierActive: true,
+        routeMounted: state.routeMounted,
+        canvasTargetPresent: state.canvasTargetPresent,
+        canvasCarrierMounted: state.canvasCarrierMounted,
+        canvasContextReady: state.canvasContextReady,
+        planetCanvasPresent: state.planetCanvasPresent,
+        planetCanvasNonZeroSize: state.planetCanvasNonZeroSize,
+        canvasCarrierHandoffOk: state.canvasCarrierHandoffOk,
+        canvasCarrierHandoffError: state.canvasCarrierHandoffError,
+        sphereContainment: state.sphereContainment,
+        outsideSphereTransparent: state.outsideSphereTransparent,
+        noRectangularTextureSpill: state.noRectangularTextureSpill,
+        structuralCarrierSafeForCanvasRelease: state.structuralCarrierSafeForCanvasRelease
+      },
+
       releaseProof: {
-        releaseAccepted: state.release.releaseAccepted,
-        releaseStatus: state.release.releaseStatus,
-        receivedFrom: state.release.receivedFrom,
-        cycleNumber: state.release.cycleNumber,
-        cycleRoute: state.release.cycleRoute,
-        westAuditObserved: state.release.westAuditObserved,
-        westAuditAccepted: state.release.westAuditAccepted,
-        westCanvasReleaseApproved: state.release.westCanvasReleaseApproved,
-        northCanvasReleaseAuthorized: state.release.northCanvasReleaseAuthorized
+        releaseAccepted: state.releaseAccepted,
+        releaseStatus: state.releaseStatus,
+        releaseReason: state.releaseReason,
+        receivedFrom: state.receivedFrom,
+        cycleNumber: state.cycleNumber,
+        cycleRoute: state.cycleRoute,
+        westAuditObserved: state.westAuditObserved,
+        westAuditAccepted: state.westAuditAccepted,
+        westCanvasReleaseApproved: state.westCanvasReleaseApproved,
+        northCanvasReleaseAuthorized: state.northCanvasReleaseAuthorized
       },
 
       eastBuildBridgeProof: {
@@ -3386,54 +3035,6 @@
         eastBuildRequestIncludesReleasePacket: state.eastBuildRequestIncludesReleasePacket,
         eastBuildRequestIncludesCurrentParentClearance: state.eastBuildRequestIncludesCurrentParentClearance,
         eastBuildRequestIncludesWestRelease: state.eastBuildRequestIncludesWestRelease
-      },
-
-      newsObservation: {
-        northGateReady: false,
-        eastGateReady: state.eastGateReady,
-        westGateReady: state.westGateReady,
-        southGateReady: state.southGateReady,
-        canvasGateReady: state.canvasGateReady,
-        newsGatePassedBeforeF21: false,
-        newsGateDegradedBeforeF21: true,
-        canvasFinalizesNews: false
-      },
-
-      fibonacciObservation: {
-        activeFibonacci: 13,
-        activeFibonacciRank: "F13P",
-        activeStageId: state.activeStageId,
-        activeGearId: state.activeGearId,
-        futureFibonacciGate: "F21",
-        f21ClaimedByCanvas: false,
-        f21LatchMode: "north-only"
-      },
-
-      parentIdentityProof: {
-        parentIdentityGuardActive: true,
-        currentParentIdentityAccepted: state.currentParentIdentityAccepted,
-        currentParentIdentityMismatch: state.currentParentIdentityMismatch,
-        preexistingStaleParentDetected: state.preexistingStaleParentDetected,
-        preexistingStaleParentPreservedAsHistoricalEvidence: true,
-        currentParentStaleDetected: state.currentParentStaleDetected,
-        staleParentDetected: state.staleParentDetected,
-        staleParentDetectedMeansCurrentParentOnly: true
-      },
-
-      bootHandshakeProof: {
-        physicalBootRequested: state.physicalBootRequested,
-        physicalBootStarted: state.physicalBootStarted,
-        physicalBootResolved: state.physicalBootResolved,
-        physicalBootRejected: state.physicalBootRejected,
-        physicalBootComplete: state.physicalBootComplete,
-        canvasBootComplete: state.canvasBootComplete
-      },
-
-      carrierProof: {
-        canvasCarrierMounted: state.canvasCarrierMounted,
-        canvasContextReady: state.canvasContextReady,
-        planetCanvasPresent: state.planetCanvasPresent,
-        planetCanvasNonZeroSize: state.planetCanvasNonZeroSize
       },
 
       childReadinessProof: {
@@ -3497,6 +3098,8 @@
       recommendedNextFile: state.recommendedNextFile,
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
 
+      f21ClaimedByCanvas: false,
+      readyTextClaimedByCanvas: false,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -3518,7 +3121,8 @@
       role: state.role,
       canvasEvidenceReceipt: true,
       canvasEvidenceBody: composeCanvasEvidenceBody(input),
-      release: clonePlain(state.release),
+      releaseAccepted: state.releaseAccepted,
+      releaseStatus: state.releaseStatus,
       f13CanvasEvidenceStrict: state.f13CanvasEvidenceStrict,
       f13CanvasEvidenceDegraded: state.f13CanvasEvidenceDegraded,
       f13CanvasEvidenceComplete: state.f13CanvasEvidenceComplete,
@@ -3545,7 +3149,7 @@
 
       cycleNumber: 2,
       cycleRoute: MACRO_CYCLE_2,
-      receivedFrom: state.release.receivedFrom || "WEST",
+      receivedFrom: state.receivedFrom || "WEST",
       returnTo: "NORTH",
       handoffTo: "",
       activeCardinal: "CANVAS",
@@ -3563,8 +3167,9 @@
       newsGatePassedBeforeF21: false,
       newsGateDegradedBeforeF21: true,
 
-      canvasReleaseAccepted: state.release.releaseAccepted,
-      canvasReleaseStatus: state.release.releaseStatus,
+      preReleaseStructuralCarrierSafe: state.structuralCarrierSafeForCanvasRelease,
+      canvasReleaseAccepted: state.releaseAccepted,
+      canvasReleaseStatus: state.releaseStatus,
       canvasEvidenceBodyComposed: body.canvasEvidenceBodyComposed,
       canvasEvidenceReceiptComposed: true,
       physicalBootComplete: state.physicalBootComplete,
@@ -3636,12 +3241,13 @@
       splitContract: SPLIT_CONTRACT,
       splitReceipt: SPLIT_RECEIPT,
       file: FILE,
-      release: clonePlain(state.release),
-      releaseAccepted: state.release.releaseAccepted,
-      releaseStatus: state.release.releaseStatus,
+      releaseAccepted: state.releaseAccepted,
+      releaseStatus: state.releaseStatus,
+      releaseReason: state.releaseReason,
       waitsForWestRelease: true,
       cycleOneHeld: true,
       cycleTwoReleaseRequired: true,
+      preReleaseStructuralCarrierSafe: state.structuralCarrierSafeForCanvasRelease,
       preexistingStaleParentDetected: state.preexistingStaleParentDetected,
       currentParentStaleDetected: state.currentParentStaleDetected,
       firstFailedCoordinate: state.firstFailedCoordinate,
@@ -3662,20 +3268,14 @@
     return state;
   }
 
-  function getReceipt() {
+  function getReceiptLight() {
     readNorthAuthority();
-    markChildrenPresence();
-    mergeChildReceipts();
     deriveParentReadiness();
-    computeStrictBootComplete();
+    computeBootComplete();
 
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      previousContract: PREVIOUS_CONTRACT,
-      previousReceipt: PREVIOUS_RECEIPT,
-      baselineContract: BASELINE_CONTRACT,
-      baselineReceipt: BASELINE_RECEIPT,
       splitContract: SPLIT_CONTRACT,
       splitReceipt: SPLIT_RECEIPT,
       version: VERSION,
@@ -3684,61 +3284,109 @@
 
       governedF13EvidenceReceiverActive: true,
       parentChildReconciliationActive: true,
+      preReleaseStructuralCarrierActive: true,
+      postReleaseChildRenderChainActive: true,
       eastReleasePacketBridgeActive: true,
       waitsForWestRelease: true,
-      cycleOneHeld: true,
-      cycleTwoReleaseRequired: true,
-      singlePhysicalFile: true,
-      internalNewsZonesActive: true,
-      noAdditionalCanvasFileSplit: true,
+      releaseAccepted: state.releaseAccepted,
+      releaseStatus: state.releaseStatus,
+      releaseReason: state.releaseReason,
+      cycleNumber: state.cycleNumber,
+      cycleRoute: state.cycleRoute,
+      receivedFrom: state.receivedFrom,
 
-      releaseAccepted: state.release.releaseAccepted,
-      releaseStatus: state.release.releaseStatus,
-      releaseReason: state.release.releaseReason,
-      cycleNumber: state.release.cycleNumber,
-      cycleRoute: state.release.cycleRoute,
-      receivedFrom: state.release.receivedFrom,
-      returnTo: state.release.returnTo,
-      handoffTo: state.release.handoffTo,
-      westAuditObserved: state.release.westAuditObserved,
-      westAuditAccepted: state.release.westAuditAccepted,
-      westReleaseApproved: state.release.westCanvasReleaseApproved,
-      northReleaseAuthorized: state.release.northCanvasReleaseAuthorized,
-      canvasReleaseAuthorized: state.release.canvasReleaseAuthorized,
+      routeMounted: state.routeMounted,
+      canvasTargetPresent: state.canvasTargetPresent,
+      canvasCarrierMounted: state.canvasCarrierMounted,
+      canvasContextReady: state.canvasContextReady,
+      planetCanvasPresent: state.planetCanvasPresent,
+      planetCanvasNonZeroSize: state.planetCanvasNonZeroSize,
+      canvasCarrierHandoffOk: state.canvasCarrierHandoffOk,
+      canvasCarrierHandoffError: state.canvasCarrierHandoffError,
+      sphereContainment: state.sphereContainment,
+      outsideSphereTransparent: state.outsideSphereTransparent,
+      noRectangularTextureSpill: state.noRectangularTextureSpill,
+      structuralCarrierSafeForCanvasRelease: state.structuralCarrierSafeForCanvasRelease,
 
       parentIdentityGuardActive: true,
       bootHandshakeGuardActive: true,
       staleConsumptionGuardActive: true,
-      expectedParentContract: CONTRACT,
-      expectedParentSplitContract: SPLIT_CONTRACT,
       currentParentIdentityAccepted: state.currentParentIdentityAccepted,
       currentParentIdentityMismatch: state.currentParentIdentityMismatch,
-      preexistingParentDetected: state.preexistingParentDetected,
-      preexistingParentContract: state.preexistingParentContract,
-      preexistingParentReceipt: state.preexistingParentReceipt,
-      preexistingParentSplitContract: state.preexistingParentSplitContract,
-      preexistingParentSplitReceipt: state.preexistingParentSplitReceipt,
       preexistingStaleParentDetected: state.preexistingStaleParentDetected,
-      preexistingStaleParentPreservedAsHistoricalEvidence: true,
       currentParentStaleDetected: state.currentParentStaleDetected,
       staleParentDetected: state.staleParentDetected,
-      staleParentDetectedMeansCurrentParentOnly: true,
-      staleParentContracts: STALE_PARENT_CONTRACTS.slice(),
 
       eastBuildRequestIncludesReleasePacket: state.eastBuildRequestIncludesReleasePacket,
       eastBuildRequestIncludesCurrentParentClearance: state.eastBuildRequestIncludesCurrentParentClearance,
       eastBuildRequestIncludesWestRelease: state.eastBuildRequestIncludesWestRelease,
-      lastEastBuildRequest: clonePlain(state.lastEastBuildRequest),
 
-      newsProtocolSynchronized: true,
       northGateReady: false,
       eastGateReady: state.eastGateReady,
       westGateReady: state.westGateReady,
       southGateReady: state.southGateReady,
       canvasGateReady: state.canvasGateReady,
-      newsGatePassedBeforeF21: false,
-      newsGateDegradedBeforeF21: true,
-      canvasFinalizesNews: false,
+
+      activeFibonacci: 13,
+      activeFibonacciRank: "F13P",
+      activeStageId: state.activeStageId,
+      activeGearId: state.activeGearId,
+
+      physicalBootComplete: state.physicalBootComplete,
+      canvasBootComplete: state.canvasBootComplete,
+      carrierReady: state.carrierReady,
+      canvasCarrierReady: state.canvasCarrierReady,
+
+      allCanvasChildrenApiReady: state.allCanvasChildrenApiReady,
+      allCanvasChildrenEvidenceReady: state.allCanvasChildrenEvidenceReady,
+      allCanvasChildrenReady: state.allCanvasChildrenReady,
+
+      atlasBuildComplete: state.atlasBuildComplete,
+      textureComposeComplete: state.textureComposeComplete,
+      firstFrameDetected: state.firstFrameDetected,
+      imageRendered: state.imageRendered,
+      visibleContentProof: state.visibleContentProof,
+      visibleContentSoftGap: state.visibleContentSoftGap,
+      visibleContentHardFail: state.visibleContentHardFail,
+
+      f13CanvasEvidenceStrict: state.f13CanvasEvidenceStrict,
+      f13CanvasEvidenceDegraded: state.f13CanvasEvidenceDegraded,
+      f13CanvasEvidenceComplete: state.f13CanvasEvidenceComplete,
+      f13HardFail: state.f13HardFail,
+
+      nextAuditTarget: state.nextAuditTarget,
+      firstFailedCoordinate: state.firstFailedCoordinate,
+      recommendedNextFile: state.recommendedNextFile,
+      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+
+      f21ClaimedByCanvas: false,
+      readyTextClaimedByCanvas: false,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false,
+      updatedAt: state.updatedAt || nowIso()
+    };
+  }
+
+  function getReceipt() {
+    readNorthAuthority();
+    markChildrenPresence();
+    mergeChildReceipts();
+    deriveParentReadiness();
+    computeBootComplete();
+
+    return {
+      ...getReceiptLight(),
+
+      previousContract: PREVIOUS_CONTRACT,
+      previousReceipt: PREVIOUS_RECEIPT,
+      baselineContract: BASELINE_CONTRACT,
+      baselineReceipt: BASELINE_RECEIPT,
+
+      singlePhysicalFile: true,
+      internalNewsZonesActive: true,
+      noAdditionalCanvasFileSplit: true,
 
       macroCycle1: state.macroCycle1,
       macroCycle2: state.macroCycle2,
@@ -3749,107 +3397,68 @@
       canvasParentDoesNotAuthorizeRelease: true,
       canvasParentDoesNotLatchF21: true,
 
+      newsProtocolSynchronized: true,
+      newsGatePassedBeforeF21: false,
+      newsGateDegradedBeforeF21: true,
+      canvasFinalizesNews: false,
+
       fibonacciAlignmentSynchronized: true,
-      activeFibonacci: 13,
-      activeFibonacciRank: "F13P",
-      activeStageId: state.activeStageId,
-      activeGearId: state.activeGearId,
       activeFibonacciGate: "F13",
       futureFibonacciGate: "F21",
       oneActiveGearAtATime: true,
-      f8SelfDutySatisfied: false,
 
-      canvasNorthActive: true,
-      physicalObjectBootstrapActive: true,
-      physicalCarrierProofActive: true,
-      carrierReadyIsNotPlanetReady: true,
-      canvasReadyRequiresTextureFrameAndProof: true,
-      f13PhysicalProofRequired: true,
-      emergencyF13DiagnosticPlanetAllowed: true,
-      emergencyF13DiagnosticPlanetUsed: state.emergencyF13DiagnosticPlanetUsed,
+      expectedParentContract: CONTRACT,
+      expectedParentSplitContract: SPLIT_CONTRACT,
+      preexistingParentDetected: state.preexistingParentDetected,
+      preexistingParentContract: state.preexistingParentContract,
+      preexistingParentReceipt: state.preexistingParentReceipt,
+      preexistingParentSplitContract: state.preexistingParentSplitContract,
+      preexistingParentSplitReceipt: state.preexistingParentSplitReceipt,
+      preexistingStaleParentPreservedAsHistoricalEvidence: true,
+      staleParentDetectedMeansCurrentParentOnly: true,
+      staleParentContracts: STALE_PARENT_CONTRACTS.slice(),
 
-      physicalBootRequested: state.physicalBootRequested,
-      physicalBootStarted: state.physicalBootStarted,
-      physicalBootResolved: state.physicalBootResolved,
-      physicalBootRejected: state.physicalBootRejected,
-      physicalBootComplete: state.physicalBootComplete,
+      westAuditObserved: state.westAuditObserved,
+      westAuditAccepted: state.westAuditAccepted,
+      westReleaseApproved: state.westCanvasReleaseApproved,
+      northReleaseAuthorized: state.northCanvasReleaseAuthorized,
+      canvasReleaseAuthorized: state.canvasReleaseAuthorized,
 
-      canvasBootRequested: state.canvasBootRequested,
-      canvasBootStarted: state.canvasBootStarted,
-      canvasBootResolved: state.canvasBootResolved,
-      canvasBootRejected: state.canvasBootRejected,
-      canvasBootAttempts: state.canvasBootAttempts,
-      canvasBootError: state.canvasBootError,
-      canvasBootComplete: state.canvasBootComplete,
-
-      canvasCarrierRequested: state.canvasCarrierRequested,
-      canvasCarrierMounted: state.canvasCarrierMounted,
-      canvasContextReady: state.canvasContextReady,
-      carrierReady: state.carrierReady,
-      canvasCarrierReady: state.canvasCarrierReady,
-      canvasCarrierHandoffOk: state.canvasCarrierHandoffOk,
-      canvasCarrierHandoffError: state.canvasCarrierHandoffError,
-      canvasCarrierMethod: state.canvasCarrierMethod,
-
-      canvasReady: state.canvasReady,
-      visibleCanvasReady: state.visibleCanvasReady,
-      canvasLaneClosed: state.canvasLaneClosed,
-
-      planetCanvasPresent: state.planetCanvasPresent,
-      planetCanvasNonZeroSize: state.planetCanvasNonZeroSize,
-      carrierPhysicalWidth: state.carrierPhysicalWidth,
-      carrierPhysicalHeight: state.carrierPhysicalHeight,
-      planetFramePainted: state.planetFramePainted,
-      nonblankPlanetVisible: state.nonblankPlanetVisible,
-      planetNotObstructed: state.planetNotObstructed,
-      visiblePlanetAvailable: state.visiblePlanetAvailable,
-      visiblePlanetHintPresent: state.visiblePlanetHintPresent,
+      lastEastBuildRequest: clonePlain(state.lastEastBuildRequest),
 
       canvasEastPresent: state.canvasEastPresent,
       canvasWestPresent: state.canvasWestPresent,
       canvasSouthPresent: state.canvasSouthPresent,
-
       canvasEastApiReady: state.canvasEastApiReady,
       canvasWestApiReady: state.canvasWestApiReady,
       canvasSouthApiReady: state.canvasSouthApiReady,
       allCanvasChildrenApiReady: state.allCanvasChildrenApiReady,
-
       canvasEastEvidenceReady: state.canvasEastEvidenceReady,
       canvasWestInspectionReady: state.canvasWestInspectionReady,
       canvasSouthVisibleProofReady: state.canvasSouthVisibleProofReady,
       allCanvasChildrenEvidenceReady: state.allCanvasChildrenEvidenceReady,
-
       canvasEastReady: state.canvasEastReady,
       canvasWestReady: state.canvasWestReady,
       canvasSouthReady: state.canvasSouthReady,
       allCanvasChildrenReady: state.allCanvasChildrenReady,
-
       canvasEastMissingMethods: state.canvasEastMissingMethods,
       canvasWestMissingMethods: state.canvasWestMissingMethods,
       canvasSouthMissingMethods: state.canvasSouthMissingMethods,
       childLoadAttempted: state.childLoadAttempted,
       childLoadComplete: state.childLoadComplete,
       childLoadError: state.childLoadError,
-      nextAuditTarget: state.nextAuditTarget,
 
-      atlasBuildStarted: state.atlasBuildStarted,
-      atlasBuildProgress: state.atlasBuildProgress,
-      atlasBuildComplete: state.atlasBuildComplete,
-      atlasBuildError: state.atlasBuildError,
-      textureComposeStarted: state.textureComposeStarted,
-      textureComposeProgress: state.textureComposeProgress,
-      textureComposeComplete: state.textureComposeComplete,
+      carrierPhysicalWidth: state.carrierPhysicalWidth,
+      carrierPhysicalHeight: state.carrierPhysicalHeight,
+      cssSize: state.cssSize,
+      dpr: state.dpr,
+
       textureReady: state.textureReady,
-      textureComposeError: state.textureComposeError,
-      firstFrameRequested: state.firstFrameRequested,
-      firstFrameDetected: state.firstFrameDetected,
-      imageRendered: state.imageRendered,
+      renderReady: state.renderReady,
+      renderFrameCount: state.renderFrameCount,
       imageRenderedMeansFrameDrawnOnly: true,
       imageRenderedDoesNotMeanVisualPass: true,
       imageRenderedDoesNotMeanF21: true,
-      renderedAfterTexture: state.renderedAfterTexture,
-      renderReady: state.renderReady,
-      renderFrameCount: state.renderFrameCount,
 
       dragInspectionBound: state.dragInspectionBound,
       zoomInspectionBound: state.zoomInspectionBound,
@@ -3866,10 +3475,7 @@
       canonicalMaterialConsumed: state.canonicalMaterialConsumed,
 
       visibleContentProofStarted: state.visibleContentProofStarted,
-      visibleContentProof: state.visibleContentProof,
       visibleContentStrictProof: state.visibleContentStrictProof,
-      visibleContentSoftGap: state.visibleContentSoftGap,
-      visibleContentHardFail: state.visibleContentHardFail,
       visibleForwardProgress: state.visibleForwardProgress,
       visibleContentAdmissible: state.visibleContentAdmissible,
       visibleContentProofMethod: state.visibleContentProofMethod,
@@ -3884,11 +3490,15 @@
       visibleContentCarrierSampleCount: state.visibleContentCarrierSampleCount,
       carrierOnlyDetected: state.carrierOnlyDetected,
 
+      emergencyF13DiagnosticPlanetAllowed: state.emergencyF13DiagnosticPlanetAllowed,
+      emergencyF13DiagnosticPlanetUsed: state.emergencyF13DiagnosticPlanetUsed,
+
       f13ReleaseReceived: state.f13ReleaseReceived,
       f13ParentIdentityAccepted: state.f13ParentIdentityAccepted,
       f13PhysicalCarrierMounted: state.f13PhysicalCarrierMounted,
       f13ChildrenApiReady: state.f13ChildrenApiReady,
       f13ChildrenEvidenceReady: state.f13ChildrenEvidenceReady,
+      f13ChildrenReady: state.f13ChildrenReady,
       f13AtlasReady: state.f13AtlasReady,
       f13InspectReady: state.f13InspectReady,
       f13TextureReady: state.f13TextureReady,
@@ -3898,10 +3508,6 @@
       f13VisibleEvidenceStrict: state.f13VisibleEvidenceStrict,
       f13VisibleEvidenceDegraded: state.f13VisibleEvidenceDegraded,
       f13CanvasEvidencePreserved: true,
-      f13CanvasEvidenceStrict: state.f13CanvasEvidenceStrict,
-      f13CanvasEvidenceDegraded: state.f13CanvasEvidenceDegraded,
-      f13CanvasEvidenceComplete: state.f13CanvasEvidenceComplete,
-      f13HardFail: state.f13HardFail,
 
       northAuthorityPresent: state.northAuthorityPresent,
       checkpointSessionSubmissionAvailable: state.checkpointSessionSubmissionAvailable,
@@ -3917,22 +3523,13 @@
       degradedCompletionLatched: false,
       f21LatchMode: "north-only",
 
-      firstFailedCoordinate: state.firstFailedCoordinate,
-      recommendedNextFile: state.recommendedNextFile,
-      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
-
-      booting: state.booting,
-      booted: state.booted,
-      bootStartedAt: state.bootStartedAt,
-      bootCompletedAt: state.bootCompletedAt,
-      bootElapsedMs: state.bootElapsedMs,
-
       canvasPhaseEvents: clonePlain(state.canvasPhaseEvents),
       progressOnlyEvents: clonePlain(state.progressOnlyEvents),
       localEvents: clonePlain(state.localEvents),
       errors: clonePlain(state.errors),
 
       ownsCanvasEvidenceOnly: true,
+      ownsPreReleaseStructuralCarrier: true,
       ownsGovernedF13EvidenceReceiver: true,
       ownsParentChildReconciliation: true,
       ownsEastReleasePacketBridge: true,
@@ -3950,13 +3547,7 @@
       ownsWestAdmissibility: false,
       ownsNewsFinalAuthority: false,
       ownsReadyText: false,
-      ownsF21: false,
-
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false,
-      updatedAt: state.updatedAt || nowIso()
+      ownsF21: false
     };
   }
 
@@ -3973,7 +3564,7 @@
       .join("\n") || "- none";
 
     return [
-      "HEARTH_CANVAS_PARENT_RELEASE_PACKET_TO_EAST_STALE_CLEARANCE_RECEIPT",
+      "HEARTH_CANVAS_PARENT_PRE_RELEASE_STRUCTURAL_CARRIER_THEN_WEST_RELEASE_TO_EAST_RECEIPT",
       "",
       "IDENTITY",
       `contract=${r.contract}`,
@@ -3987,51 +3578,36 @@
       `file=${r.file}`,
       `role=${r.role}`,
       "",
+      "PRE_RELEASE_STRUCTURAL_CARRIER",
+      `preReleaseStructuralCarrierActive=${r.preReleaseStructuralCarrierActive}`,
+      `routeMounted=${r.routeMounted}`,
+      `canvasTargetPresent=${r.canvasTargetPresent}`,
+      `canvasCarrierMounted=${r.canvasCarrierMounted}`,
+      `canvasContextReady=${r.canvasContextReady}`,
+      `planetCanvasPresent=${r.planetCanvasPresent}`,
+      `planetCanvasNonZeroSize=${r.planetCanvasNonZeroSize}`,
+      `canvasCarrierHandoffOk=${r.canvasCarrierHandoffOk}`,
+      `canvasCarrierHandoffError=${r.canvasCarrierHandoffError}`,
+      `sphereContainment=${r.sphereContainment}`,
+      `outsideSphereTransparent=${r.outsideSphereTransparent}`,
+      `noRectangularTextureSpill=${r.noRectangularTextureSpill}`,
+      `structuralCarrierSafeForCanvasRelease=${r.structuralCarrierSafeForCanvasRelease}`,
+      "",
       "RELEASE",
-      `governedF13EvidenceReceiverActive=${r.governedF13EvidenceReceiverActive}`,
-      `parentChildReconciliationActive=${r.parentChildReconciliationActive}`,
-      `eastReleasePacketBridgeActive=${r.eastReleasePacketBridgeActive}`,
       `waitsForWestRelease=${r.waitsForWestRelease}`,
+      `releaseAccepted=${r.releaseAccepted}`,
+      `releaseStatus=${r.releaseStatus}`,
+      `releaseReason=${r.releaseReason}`,
       `cycleNumber=${r.cycleNumber}`,
       `cycleRoute=${r.cycleRoute}`,
       `receivedFrom=${r.receivedFrom}`,
-      `returnTo=${r.returnTo}`,
-      `releaseAccepted=${r.releaseAccepted}`,
-      `releaseStatus=${r.releaseStatus}`,
       `westAuditObserved=${r.westAuditObserved}`,
+      `westAuditAccepted=${r.westAuditAccepted}`,
       `westReleaseApproved=${r.westReleaseApproved}`,
       `northReleaseAuthorized=${r.northReleaseAuthorized}`,
-      "",
-      "NEWS",
-      `northGateReady=${r.northGateReady}`,
-      `eastGateReady=${r.eastGateReady}`,
-      `westGateReady=${r.westGateReady}`,
-      `southGateReady=${r.southGateReady}`,
-      `canvasGateReady=${r.canvasGateReady}`,
-      `newsGatePassedBeforeF21=${r.newsGatePassedBeforeF21}`,
-      `newsGateDegradedBeforeF21=${r.newsGateDegradedBeforeF21}`,
-      `canvasFinalizesNews=${r.canvasFinalizesNews}`,
-      "",
-      "CYCLE",
-      `macroCycle1=${r.macroCycle1}`,
-      `macroCycle2=${r.macroCycle2}`,
-      `canvasChildSequence=${r.canvasChildSequence}`,
-      `deprecatedCycleOrder=${r.deprecatedCycleOrder}`,
-      `canvasParentMacroNorth=${r.canvasParentMacroNorth}`,
-      `canvasParentChildParent=${r.canvasParentChildParent}`,
-      `canvasParentDoesNotAuthorizeRelease=${r.canvasParentDoesNotAuthorizeRelease}`,
-      `canvasParentDoesNotLatchF21=${r.canvasParentDoesNotLatchF21}`,
-      "",
-      "FIBONACCI",
-      `activeFibonacci=${r.activeFibonacci}`,
-      `activeFibonacciRank=${r.activeFibonacciRank}`,
-      `activeStageId=${r.activeStageId}`,
-      `activeGearId=${r.activeGearId}`,
-      `activeFibonacciGate=${r.activeFibonacciGate}`,
-      `futureFibonacciGate=${r.futureFibonacciGate}`,
+      `canvasReleaseAuthorized=${r.canvasReleaseAuthorized}`,
       "",
       "IDENTITY_GUARD",
-      `parentIdentityGuardActive=${r.parentIdentityGuardActive}`,
       `currentParentIdentityAccepted=${r.currentParentIdentityAccepted}`,
       `currentParentIdentityMismatch=${r.currentParentIdentityMismatch}`,
       `preexistingStaleParentDetected=${r.preexistingStaleParentDetected}`,
@@ -4039,26 +3615,11 @@
       `currentParentStaleDetected=${r.currentParentStaleDetected}`,
       `staleParentDetected=${r.staleParentDetected}`,
       `staleParentDetectedMeansCurrentParentOnly=${r.staleParentDetectedMeansCurrentParentOnly}`,
-      `preexistingParentContract=${r.preexistingParentContract}`,
-      `preexistingParentSplitContract=${r.preexistingParentSplitContract}`,
       "",
       "EAST_RELEASE_PACKET_BRIDGE",
       `eastBuildRequestIncludesReleasePacket=${r.eastBuildRequestIncludesReleasePacket}`,
       `eastBuildRequestIncludesCurrentParentClearance=${r.eastBuildRequestIncludesCurrentParentClearance}`,
       `eastBuildRequestIncludesWestRelease=${r.eastBuildRequestIncludesWestRelease}`,
-      "",
-      "BOOT_AND_CARRIER",
-      `physicalBootComplete=${r.physicalBootComplete}`,
-      `canvasBootComplete=${r.canvasBootComplete}`,
-      `carrierReady=${r.carrierReady}`,
-      `canvasCarrierMounted=${r.canvasCarrierMounted}`,
-      `canvasContextReady=${r.canvasContextReady}`,
-      `canvasReady=${r.canvasReady}`,
-      `visibleCanvasReady=${r.visibleCanvasReady}`,
-      `planetCanvasPresent=${r.planetCanvasPresent}`,
-      `planetCanvasNonZeroSize=${r.planetCanvasNonZeroSize}`,
-      `carrierPhysicalWidth=${r.carrierPhysicalWidth}`,
-      `carrierPhysicalHeight=${r.carrierPhysicalHeight}`,
       "",
       "CHILD_RECONCILIATION",
       `canvasEastApiReady=${r.canvasEastApiReady}`,
@@ -4069,9 +3630,6 @@
       `canvasWestInspectionReady=${r.canvasWestInspectionReady}`,
       `canvasSouthVisibleProofReady=${r.canvasSouthVisibleProofReady}`,
       `allCanvasChildrenEvidenceReady=${r.allCanvasChildrenEvidenceReady}`,
-      `canvasEastReady=${r.canvasEastReady}`,
-      `canvasWestReady=${r.canvasWestReady}`,
-      `canvasSouthReady=${r.canvasSouthReady}`,
       `allCanvasChildrenReady=${r.allCanvasChildrenReady}`,
       `childLoadError=${r.childLoadError}`,
       `nextAuditTarget=${r.nextAuditTarget}`,
@@ -4079,19 +3637,15 @@
       "F13_EVIDENCE",
       `atlasBuildComplete=${r.atlasBuildComplete}`,
       `textureComposeComplete=${r.textureComposeComplete}`,
-      `textureReady=${r.textureReady}`,
       `firstFrameDetected=${r.firstFrameDetected}`,
       `imageRendered=${r.imageRendered}`,
       `imageRenderedMeansFrameDrawnOnly=${r.imageRenderedMeansFrameDrawnOnly}`,
       `imageRenderedDoesNotMeanVisualPass=${r.imageRenderedDoesNotMeanVisualPass}`,
       `imageRenderedDoesNotMeanF21=${r.imageRenderedDoesNotMeanF21}`,
-      `renderReady=${r.renderReady}`,
       `visibleContentProof=${r.visibleContentProof}`,
       `visibleContentStrictProof=${r.visibleContentStrictProof}`,
       `visibleContentSoftGap=${r.visibleContentSoftGap}`,
       `visibleContentHardFail=${r.visibleContentHardFail}`,
-      `visibleForwardProgress=${r.visibleForwardProgress}`,
-      `visibleContentAdmissible=${r.visibleContentAdmissible}`,
       `visibleContentProofMethod=${r.visibleContentProofMethod}`,
       "",
       "F13_PARENT_CLASSIFICATION",
@@ -4112,11 +3666,6 @@
       `f13CanvasEvidenceDegraded=${r.f13CanvasEvidenceDegraded}`,
       `f13CanvasEvidenceComplete=${r.f13CanvasEvidenceComplete}`,
       `f13HardFail=${r.f13HardFail}`,
-      "",
-      "UPSTREAM_RETURN",
-      `canvasEvidenceBodyComposed=${r.canvasEvidenceBodyComposed}`,
-      `canvasReturnPacketReady=${r.canvasReturnPacketReady}`,
-      `canvasEvidenceSubmittedToNorth=${r.canvasEvidenceSubmittedToNorth}`,
       "",
       "F21_BOUNDARY",
       `f21EligibleForNorth=${r.f21EligibleForNorth}`,
@@ -4147,90 +3696,6 @@
     ].join("\n");
   }
 
-  function getReceiptLight() {
-    deriveParentReadiness();
-    computeStrictBootComplete();
-
-    return {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      splitContract: SPLIT_CONTRACT,
-      splitReceipt: SPLIT_RECEIPT,
-      version: VERSION,
-      file: FILE,
-      role: state.role,
-
-      governedF13EvidenceReceiverActive: true,
-      parentChildReconciliationActive: true,
-      eastReleasePacketBridgeActive: true,
-      waitsForWestRelease: true,
-      releaseAccepted: state.release.releaseAccepted,
-      releaseStatus: state.release.releaseStatus,
-      cycleNumber: state.release.cycleNumber,
-      cycleRoute: state.release.cycleRoute,
-      receivedFrom: state.release.receivedFrom,
-
-      parentIdentityGuardActive: true,
-      bootHandshakeGuardActive: true,
-      staleConsumptionGuardActive: true,
-      currentParentIdentityAccepted: state.currentParentIdentityAccepted,
-      currentParentIdentityMismatch: state.currentParentIdentityMismatch,
-      preexistingStaleParentDetected: state.preexistingStaleParentDetected,
-      currentParentStaleDetected: state.currentParentStaleDetected,
-      staleParentDetected: state.staleParentDetected,
-
-      eastBuildRequestIncludesReleasePacket: state.eastBuildRequestIncludesReleasePacket,
-      eastBuildRequestIncludesCurrentParentClearance: state.eastBuildRequestIncludesCurrentParentClearance,
-      eastBuildRequestIncludesWestRelease: state.eastBuildRequestIncludesWestRelease,
-
-      northGateReady: false,
-      eastGateReady: state.eastGateReady,
-      westGateReady: state.westGateReady,
-      southGateReady: state.southGateReady,
-      canvasGateReady: state.canvasGateReady,
-
-      activeFibonacci: 13,
-      activeFibonacciRank: "F13P",
-
-      physicalBootComplete: state.physicalBootComplete,
-      canvasBootComplete: state.canvasBootComplete,
-      carrierReady: state.carrierReady,
-      canvasCarrierReady: state.canvasCarrierReady,
-      canvasReady: state.canvasReady,
-      visibleCanvasReady: state.visibleCanvasReady,
-
-      allCanvasChildrenApiReady: state.allCanvasChildrenApiReady,
-      allCanvasChildrenEvidenceReady: state.allCanvasChildrenEvidenceReady,
-      allCanvasChildrenReady: state.allCanvasChildrenReady,
-
-      atlasBuildComplete: state.atlasBuildComplete,
-      textureComposeComplete: state.textureComposeComplete,
-      firstFrameDetected: state.firstFrameDetected,
-      imageRendered: state.imageRendered,
-      visibleContentProof: state.visibleContentProof,
-      visibleContentSoftGap: state.visibleContentSoftGap,
-      visibleContentHardFail: state.visibleContentHardFail,
-
-      f13CanvasEvidenceStrict: state.f13CanvasEvidenceStrict,
-      f13CanvasEvidenceDegraded: state.f13CanvasEvidenceDegraded,
-      f13CanvasEvidenceComplete: state.f13CanvasEvidenceComplete,
-      f13HardFail: state.f13HardFail,
-
-      nextAuditTarget: state.nextAuditTarget,
-      firstFailedCoordinate: state.firstFailedCoordinate,
-      recommendedNextFile: state.recommendedNextFile,
-      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
-
-      f21ClaimedByCanvas: false,
-      readyTextClaimedByCanvas: false,
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false,
-      updatedAt: state.updatedAt || nowIso()
-    };
-  }
-
   function updateDataset() {
     if (!doc || !doc.documentElement) return;
 
@@ -4248,19 +3713,36 @@
 
     dataset.hearthCanvasGovernedF13EvidenceReceiverActive = "true";
     dataset.hearthCanvasParentChildReconciliationActive = "true";
+    dataset.hearthCanvasPreReleaseStructuralCarrierActive = "true";
+    dataset.hearthCanvasPostReleaseChildRenderChainActive = "true";
     dataset.hearthCanvasEastReleasePacketBridgeActive = "true";
     dataset.hearthCanvasWaitsForWestRelease = "true";
     dataset.hearthCanvasCycleOneHeld = "true";
     dataset.hearthCanvasCycleTwoReleaseRequired = "true";
-    dataset.hearthCanvasReleaseAccepted = String(state.release.releaseAccepted);
-    dataset.hearthCanvasReleaseStatus = state.release.releaseStatus;
-    dataset.hearthCanvasReceivedFrom = state.release.receivedFrom;
-    dataset.hearthCanvasCycleNumber = String(state.release.cycleNumber);
-    dataset.hearthCanvasCycleRoute = state.release.cycleRoute;
-    dataset.hearthCanvasWestAuditObserved = String(state.release.westAuditObserved);
-    dataset.hearthCanvasWestReleaseApproved = String(state.release.westCanvasReleaseApproved);
-    dataset.hearthCanvasNorthReleaseAuthorized = String(state.release.northCanvasReleaseAuthorized);
-    dataset.hearthCanvasReleaseAuthorized = String(state.release.canvasReleaseAuthorized);
+
+    dataset.hearthCanvasRouteMounted = String(state.routeMounted);
+    dataset.hearthCanvasTargetPresent = String(state.canvasTargetPresent);
+    dataset.hearthCanvasCarrierMounted = String(state.canvasCarrierMounted);
+    dataset.hearthCanvasContextReady = String(state.canvasContextReady);
+    dataset.hearthPlanetCanvasPresent = String(state.planetCanvasPresent);
+    dataset.hearthPlanetCanvasNonZeroSize = String(state.planetCanvasNonZeroSize);
+    dataset.hearthCanvasCarrierHandoffOk = String(state.canvasCarrierHandoffOk);
+    dataset.hearthCanvasCarrierHandoffError = state.canvasCarrierHandoffError;
+    dataset.hearthCanvasSphereContainment = String(state.sphereContainment);
+    dataset.hearthCanvasOutsideSphereTransparent = String(state.outsideSphereTransparent);
+    dataset.hearthCanvasNoRectangularTextureSpill = String(state.noRectangularTextureSpill);
+    dataset.hearthCanvasStructuralCarrierSafeForCanvasRelease = String(state.structuralCarrierSafeForCanvasRelease);
+
+    dataset.hearthCanvasReleaseAccepted = String(state.releaseAccepted);
+    dataset.hearthCanvasReleaseStatus = state.releaseStatus;
+    dataset.hearthCanvasReleaseReason = state.releaseReason;
+    dataset.hearthCanvasReceivedFrom = state.receivedFrom;
+    dataset.hearthCanvasCycleNumber = String(state.cycleNumber);
+    dataset.hearthCanvasCycleRoute = state.cycleRoute;
+    dataset.hearthCanvasWestAuditObserved = String(state.westAuditObserved);
+    dataset.hearthCanvasWestReleaseApproved = String(state.westCanvasReleaseApproved);
+    dataset.hearthCanvasNorthReleaseAuthorized = String(state.northCanvasReleaseAuthorized);
+    dataset.hearthCanvasReleaseAuthorized = String(state.canvasReleaseAuthorized);
 
     dataset.hearthCanvasNewsProtocolSynchronized = "true";
     dataset.hearthCanvasNorthGateReady = "false";
@@ -4300,65 +3782,23 @@
     dataset.hearthCanvasCurrentParentStaleDetected = String(state.currentParentStaleDetected);
     dataset.hearthCanvasStaleParentDetected = String(state.staleParentDetected);
     dataset.hearthCanvasStaleParentDetectedMeansCurrentParentOnly = "true";
-    dataset.hearthCanvasPreexistingParentContract = state.preexistingParentContract || "";
-    dataset.hearthCanvasPreexistingParentSplitContract = state.preexistingParentSplitContract || "";
 
     dataset.hearthCanvasEastBuildRequestIncludesReleasePacket = String(state.eastBuildRequestIncludesReleasePacket);
     dataset.hearthCanvasEastBuildRequestIncludesCurrentParentClearance = String(state.eastBuildRequestIncludesCurrentParentClearance);
     dataset.hearthCanvasEastBuildRequestIncludesWestRelease = String(state.eastBuildRequestIncludesWestRelease);
 
-    dataset.hearthCanvasPhysicalBootRequested = String(state.physicalBootRequested);
-    dataset.hearthCanvasPhysicalBootStarted = String(state.physicalBootStarted);
-    dataset.hearthCanvasPhysicalBootResolved = String(state.physicalBootResolved);
-    dataset.hearthCanvasPhysicalBootRejected = String(state.physicalBootRejected);
-    dataset.hearthCanvasPhysicalBootComplete = String(state.physicalBootComplete);
-
-    dataset.hearthCanvasBootRequested = String(state.canvasBootRequested);
-    dataset.hearthCanvasBootStarted = String(state.canvasBootStarted);
-    dataset.hearthCanvasBootResolved = String(state.canvasBootResolved);
-    dataset.hearthCanvasBootRejected = String(state.canvasBootRejected);
-    dataset.hearthCanvasBootAttempts = String(state.canvasBootAttempts);
-    dataset.hearthCanvasBootError = state.canvasBootError;
-    dataset.hearthCanvasBootComplete = String(state.canvasBootComplete);
-
-    dataset.hearthCanvasCarrierRequested = String(state.canvasCarrierRequested);
-    dataset.hearthCanvasCarrierMounted = String(state.canvasCarrierMounted);
-    dataset.hearthCanvasContextReady = String(state.canvasContextReady);
-    dataset.hearthCanvasCarrierReady = String(state.carrierReady);
-    dataset.hearthCanvasCarrierHandoffOk = String(state.canvasCarrierHandoffOk);
-    dataset.hearthCanvasCarrierHandoffError = state.canvasCarrierHandoffError;
-    dataset.hearthCanvasReady = String(state.canvasReady);
-    dataset.hearthCanvasVisibleReady = String(state.visibleCanvasReady);
-
-    dataset.hearthPlanetCanvasPresent = String(state.planetCanvasPresent);
-    dataset.hearthPlanetCanvasNonZeroSize = String(state.planetCanvasNonZeroSize);
-    dataset.hearthCanvasPlanetFramePainted = String(state.planetFramePainted);
-    dataset.hearthCanvasVisiblePlanetAvailable = String(state.visiblePlanetAvailable);
-    dataset.hearthCanvasVisiblePlanetHintPresent = String(state.visiblePlanetHintPresent);
-    dataset.hearthCanvasNonblankPlanetVisible = String(state.nonblankPlanetVisible);
-
     dataset.hearthCanvasEastPresent = String(state.canvasEastPresent);
     dataset.hearthCanvasWestPresent = String(state.canvasWestPresent);
     dataset.hearthCanvasSouthPresent = String(state.canvasSouthPresent);
-
     dataset.hearthCanvasEastApiReady = String(state.canvasEastApiReady);
     dataset.hearthCanvasWestApiReady = String(state.canvasWestApiReady);
     dataset.hearthCanvasSouthApiReady = String(state.canvasSouthApiReady);
     dataset.hearthCanvasAllChildrenApiReady = String(state.allCanvasChildrenApiReady);
-
     dataset.hearthCanvasEastEvidenceReady = String(state.canvasEastEvidenceReady);
     dataset.hearthCanvasWestInspectionReady = String(state.canvasWestInspectionReady);
     dataset.hearthCanvasSouthVisibleProofReady = String(state.canvasSouthVisibleProofReady);
     dataset.hearthCanvasAllChildrenEvidenceReady = String(state.allCanvasChildrenEvidenceReady);
-
-    dataset.hearthCanvasEastReady = String(state.canvasEastReady);
-    dataset.hearthCanvasWestReady = String(state.canvasWestReady);
-    dataset.hearthCanvasSouthReady = String(state.canvasSouthReady);
     dataset.hearthCanvasAllChildrenReady = String(state.allCanvasChildrenReady);
-
-    dataset.hearthCanvasEastMissingMethods = state.canvasEastMissingMethods;
-    dataset.hearthCanvasWestMissingMethods = state.canvasWestMissingMethods;
-    dataset.hearthCanvasSouthMissingMethods = state.canvasSouthMissingMethods;
     dataset.hearthCanvasChildLoadAttempted = String(state.childLoadAttempted);
     dataset.hearthCanvasChildLoadComplete = String(state.childLoadComplete);
     dataset.hearthCanvasChildLoadError = state.childLoadError;
@@ -4441,13 +3881,10 @@
       state.canvas.dataset.hearthCanvasSplitContract = SPLIT_CONTRACT;
       state.canvas.dataset.hearthCanvasSplitReceipt = SPLIT_RECEIPT;
       state.canvas.dataset.hearthCanvasVersion = VERSION;
-      state.canvas.dataset.hearthCanvasNorthActive = "true";
-      state.canvas.dataset.hearthCanvasParentChildReconciliation = "true";
-      state.canvas.dataset.hearthCanvasGovernedF13EvidenceReceiver = "true";
-      state.canvas.dataset.hearthCanvasEastReleasePacketBridge = "true";
+      state.canvas.dataset.hearthCanvasPreReleaseStructuralCarrier = "true";
       state.canvas.dataset.hearthCanvasCarrierReady = String(state.carrierReady);
-      state.canvas.dataset.hearthCanvasBootComplete = String(state.canvasBootComplete);
-      state.canvas.dataset.hearthCanvasReady = String(state.canvasReady);
+      state.canvas.dataset.hearthCanvasCarrierStructuralSafeForWest = String(state.structuralCarrierSafeForCanvasRelease);
+      state.canvas.dataset.hearthCanvasReady = String(state.f13CanvasEvidenceComplete);
       state.canvas.dataset.hearthCanvasVisiblePlanetAvailable = String(state.visiblePlanetAvailable);
       state.canvas.dataset.hearthCanvasF13Only = "true";
       state.canvas.dataset.hearthCanvasF21Claimed = "false";
@@ -4467,11 +3904,11 @@
     root.HEARTH.canvasSplitAdapter = api;
     root.HEARTH.canvasTransistorGate = api;
     root.HEARTH.canvasPhysicalObjectBootstrap = api;
-    root.HEARTH.canvasSingleFileInternalNews = api;
+    root.HEARTH.canvasPreReleaseStructuralCarrier = api;
     root.HEARTH.canvasParentIdentityBootHandshake = api;
     root.HEARTH.canvasParentGovernedF13EvidenceReceiver = api;
     root.HEARTH.canvasParentChildReconciliationF13EvidenceReceiver = api;
-    root.HEARTH.canvasParentReleasePacketToEastStaleClearance = api;
+    root.HEARTH.canvasParentPreReleaseStructuralCarrierThenWestReleaseToEast = api;
 
     root.HEARTH_CANVAS = api;
     root.HEARTH_CANVAS_AUTHORITY = api;
@@ -4482,19 +3919,19 @@
     root.HEARTH_CANVAS_VISUAL_FIDELITY = api;
     root.HEARTH_CANVAS_INTERACTIVE_ROTATION = api;
     root.HEARTH_CANVAS_STALE_PROTECTION = api;
-    root.HEARTH_CANVAS_MATERIALS_RELIEF_CONSUMPTION_INVALIDATION = api;
+    root.HEARTH_CANVAS_PRE_RELEASE_STRUCTURAL_CARRIER = api;
     root.HEARTH_CANVAS_PARENT_GOVERNED_F13_EVIDENCE_RECEIVER = api;
     root.HEARTH_CANVAS_PARENT_CHILD_RECONCILIATION_F13_EVIDENCE_RECEIVER = api;
-    root.HEARTH_CANVAS_PARENT_RELEASE_PACKET_TO_EAST_STALE_CLEARANCE = api;
+    root.HEARTH_CANVAS_PARENT_PRE_RELEASE_STRUCTURAL_CARRIER_THEN_WEST_RELEASE_TO_EAST = api;
 
     root.DEXTER_LAB.hearthCanvasEvidence = api;
     root.DEXTER_LAB.hearthCanvasNorth = api;
     root.DEXTER_LAB.hearthCanvasSplitAdapter = api;
     root.DEXTER_LAB.hearthCanvasTransistorGate = api;
-    root.DEXTER_LAB.hearthCanvasMaterialsReliefConsumptionInvalidation = api;
+    root.DEXTER_LAB.hearthCanvasPreReleaseStructuralCarrier = api;
     root.DEXTER_LAB.hearthCanvasParentGovernedF13EvidenceReceiver = api;
     root.DEXTER_LAB.hearthCanvasParentChildReconciliationF13EvidenceReceiver = api;
-    root.DEXTER_LAB.hearthCanvasParentReleasePacketToEastStaleClearance = api;
+    root.DEXTER_LAB.hearthCanvasParentPreReleaseStructuralCarrierThenWestReleaseToEast = api;
 
     const light = getReceiptLight();
 
@@ -4508,34 +3945,12 @@
     root.__HEARTH_CANVAS_PARENT_RECEIPT__ = RECEIPT;
     root.__HEARTH_CANVAS_PARENT_SPLIT_CONTRACT__ = SPLIT_CONTRACT;
     root.__HEARTH_CANVAS_PARENT_SPLIT_RECEIPT__ = SPLIT_RECEIPT;
+    root.__HEARTH_CANVAS_PARENT_PRE_RELEASE_STRUCTURAL_CARRIER__ = true;
     root.__HEARTH_CANVAS_PARENT_RELEASE_PACKET_TO_EAST__ = true;
     root.__HEARTH_CANVAS_STALE_PARENT_DETECTED_BEFORE_RECONCILIATION__ = state.preexistingStaleParentDetected;
     root.__HEARTH_CANVAS_CURRENT_STALE_PARENT_DETECTED__ = state.currentParentStaleDetected;
 
     updateDataset();
-  }
-
-  function fallbackReceipt(error = null) {
-    const message = error && error.message ? error.message : safeString(error, "Canvas fallback used.");
-
-    state.firstFailedCoordinate = "WAITING_CANVAS_GOVERNED_RELEASE_PACKET";
-    state.recommendedNextFile = FILE;
-    state.recommendedNextRenewalTarget = FILE;
-    state.release.releaseAccepted = false;
-    state.release.releaseStatus = RELEASE_STATUS.HELD_FALLBACK;
-    state.release.releaseReason = message;
-    state.physicalBootComplete = false;
-    state.canvasBootComplete = false;
-    state.canvasEvidenceBodyComposed = false;
-    state.f13CanvasEvidenceComplete = false;
-    state.f13HardFail = false;
-    state.f21ClaimedByCanvas = false;
-    state.readyTextClaimedByCanvas = false;
-    state.visualPassClaimed = false;
-
-    recordError("CANVAS_FALLBACK_USED", message);
-
-    return getReceipt();
   }
 
   const api = {
@@ -4549,10 +3964,12 @@
     version: VERSION,
     file: FILE,
 
+    ensurePreReleaseStructuralCarrier,
     normalizeCanvasReleaseInput,
     resolveCanvasRelease,
-    holdCanvasUntilRelease,
-    acceptCanvasReleasePacket,
+    holdCanvasUntilRelease: resolveCanvasRelease,
+    acceptCanvasReleasePacket: resolveCanvasRelease,
+
     composeCanvasEvidenceBody,
     composeCanvasEvidenceReceipt,
     composeCanvasReturnPacket,
@@ -4582,16 +3999,16 @@
     classifyVisibleContentEvidence,
     exportCanvasEvidenceReceipt: getReceipt,
     readNorthAuthority,
-    submitCanvasEvidence,
     getReceipt,
+    getReceiptLight,
     getReceiptText,
     getMaterialBridgeReceipt,
     getState,
     on,
     off,
     ensureChildren,
-    resolveChild,
-    ensureCarrier,
+    resolveChild: readChild,
+    ensureCarrier: ensurePreReleaseStructuralCarrier,
     drawEmergencyF13DiagnosticPlanet,
     verifyCurrentParentIdentity,
     deriveParentReadiness,
@@ -4605,6 +4022,8 @@
 
     governedF13EvidenceReceiverActive: true,
     parentChildReconciliationActive: true,
+    preReleaseStructuralCarrierActive: true,
+    postReleaseChildRenderChainActive: true,
     eastReleasePacketBridgeActive: true,
     waitsForWestRelease: true,
     cycleOneHeld: true,
@@ -4639,6 +4058,7 @@
     oneActiveGearAtATime: true,
 
     ownsCanvasEvidenceOnly: true,
+    ownsPreReleaseStructuralCarrier: true,
     ownsGovernedF13EvidenceReceiver: true,
     ownsParentChildReconciliation: true,
     ownsEastReleasePacketBridge: true,
@@ -4681,21 +4101,41 @@
     markChildrenPresence();
     updateDataset();
 
-    recordLocal("CANVAS_PARENT_RELEASE_PACKET_TO_EAST_STALE_CLEARANCE_LOADED", {
-      file: FILE,
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      waitsForWestRelease: true,
-      autoBootSuppressed: true,
-      parentChildReconciliationActive: true,
-      eastReleasePacketBridgeActive: true,
-      preexistingStaleParentDetected: state.preexistingStaleParentDetected,
-      currentParentStaleDetected: state.currentParentStaleDetected,
-      staleParentDetectedMeansCurrentParentOnly: true,
-      visualPassClaimed: false
-    });
+    const preflight = () => {
+      ensurePreReleaseStructuralCarrier({});
+      publishGlobals();
+      recordLocal("CANVAS_PARENT_PRE_RELEASE_STRUCTURAL_CARRIER_THEN_WEST_RELEASE_TO_EAST_LOADED", {
+        file: FILE,
+        contract: CONTRACT,
+        receipt: RECEIPT,
+        preReleaseStructuralCarrierActive: true,
+        structuralCarrierSafeForCanvasRelease: state.structuralCarrierSafeForCanvasRelease,
+        waitsForWestRelease: true,
+        autoChildBootSuppressed: true,
+        parentChildReconciliationActive: true,
+        eastReleasePacketBridgeActive: true,
+        preexistingStaleParentDetected: state.preexistingStaleParentDetected,
+        currentParentStaleDetected: state.currentParentStaleDetected,
+        staleParentDetectedMeansCurrentParentOnly: true,
+        visualPassClaimed: false
+      });
+    };
+
+    if (doc) {
+      if (doc.readyState === "loading") {
+        doc.addEventListener("DOMContentLoaded", preflight, { once: true });
+      } else {
+        preflight();
+      }
+    } else {
+      recordLocal("CANVAS_PARENT_V4_LOADED_WITHOUT_DOCUMENT", {
+        file: FILE,
+        contract: CONTRACT,
+        receipt: RECEIPT
+      });
+    }
   } catch (error) {
-    fallbackReceipt(error);
+    recordError("CANVAS_PARENT_V4_INITIALIZATION_FAILED", error);
   }
 
   if (typeof module !== "undefined" && module.exports) {

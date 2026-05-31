@@ -1,11 +1,19 @@
 // /showroom/globe/hearth/hearth.js
-// HEARTH_SOUTH_PARENT_FIRST_CANVAS_BOOT_GATE_RECONCILIATION_TNT_v1
+// HEARTH_SOUTH_ROUTE_CONDUCTOR_ALIAS_PUBLISHED_PARENT_FIRST_BOOT_TNT_v1
 // Full-file replacement.
 // South route conductor / visible completion authority only.
 // Purpose:
 // - Preserve South route conductor baseline, postgame dedup, inspect gate, receipt compaction,
 //   strict proof/degrade reconciliation, active canvas expectation, split adapter proof bridge,
 //   and transistor gate read.
+// - Split responsibility cleanly with /showroom/globe/hearth/index.js:
+//   - index.js owns East Step 1, first paint, script order, mount/cockpit, shared ledger,
+//     route-safe recognition, and handoff publication.
+//   - hearth.js owns South route-conductor runtime, Canvas parent boot request,
+//     Canvas receipt reconciliation, visible completion governance, inspect gate,
+//     and F21 latch attempt through North/NEWS gates.
+// - Publish route-conductor aliases and receipt markers immediately so East can recognize
+//   this file after load.
 // - Correct the hard-stop inversion: South may not demand Canvas child proof before the Canvas
 //   North parent has been allowed to boot and load its own children.
 // - Classify Canvas split-child readiness in phases:
@@ -16,6 +24,7 @@
 // Does not own:
 // - North checkpoint truth
 // - East first-paint shell
+// - East script loading
 // - West gap taxonomy
 // - Lab South visible-state composer
 // - canvas drawing
@@ -28,11 +37,11 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_SOUTH_PARENT_FIRST_CANVAS_BOOT_GATE_RECONCILIATION_TNT_v1";
-  const RECEIPT = "HEARTH_SOUTH_PARENT_FIRST_CANVAS_BOOT_GATE_RECONCILIATION_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "HEARTH_SOUTH_ROUTE_CONDUCTOR_SPLIT_CHILD_LOADER_GATE_RECONCILIATION_TNT_v1";
+  const CONTRACT = "HEARTH_SOUTH_ROUTE_CONDUCTOR_ALIAS_PUBLISHED_PARENT_FIRST_BOOT_TNT_v1";
+  const RECEIPT = "HEARTH_SOUTH_ROUTE_CONDUCTOR_ALIAS_PUBLISHED_PARENT_FIRST_BOOT_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "HEARTH_SOUTH_PARENT_FIRST_CANVAS_BOOT_GATE_RECONCILIATION_TNT_v1";
   const BASELINE_CONTRACT = "HEARTH_SOUTH_ROUTE_CONDUCTOR_SPLIT_CHILD_LOADER_GATE_RECONCILIATION_TNT_v1";
-  const VERSION = "2026-05-30.hearth-south-parent-first-canvas-boot-gate-reconciliation-v1";
+  const VERSION = "2026-05-30.hearth-south-route-conductor-alias-published-parent-first-boot-v1";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
@@ -40,6 +49,7 @@
   const ROUTE = "/showroom/globe/hearth/";
   const FILE = "/showroom/globe/hearth/hearth.js";
 
+  const INDEX_FILE = "/showroom/globe/hearth/index.js";
   const NORTH_FILE = "/assets/lab/runtime-table.js";
   const EAST_BRANCH_FILE = "/assets/lab/runtime-table.east.js";
   const WEST_BRANCH_FILE = "/assets/lab/runtime-table.west.js";
@@ -90,8 +100,8 @@
   const CANVAS_RETRY_LIMIT = 26;
   const CANVAS_RETRY_DELAY_MS = 180;
 
-  const MAX_EVENTS = 150;
-  const MAX_LOCAL_EVENTS = 120;
+  const MAX_EVENTS = 160;
+  const MAX_LOCAL_EVENTS = 140;
   const MAX_ERRORS = 100;
 
   const CHILD_METHODS = Object.freeze({
@@ -166,7 +176,13 @@
     version: VERSION,
     file: FILE,
     route: ROUTE,
-    role: "south-parent-first-canvas-boot-gate-reconciliation",
+    role: "south-route-conductor-alias-published-parent-first-boot",
+
+    indexOwnsEastStep1: true,
+    indexOwnsScriptOrder: true,
+    indexOwnsRouteSafeRecognition: true,
+    southPublishesRouteConductorAliases: true,
+    southOwnsRouteConductorRuntime: true,
 
     postgameDedupActive: true,
     inspectGateActive: true,
@@ -179,6 +195,7 @@
     parentFirstCanvasBootGateActive: true,
     preBootChildHardBlockRetired: true,
     transistorGateReadActive: true,
+    aliasPublicationActive: true,
 
     cycleOrder: "EAST -> WEST -> NORTH -> SOUTH -> CHECKPOINT -> EAST",
     transmissionMode: true,
@@ -186,6 +203,7 @@
     activeGearProgressResets: true,
     visibleProgressRepresentsCurrentGearOnly: true,
 
+    indexFile: INDEX_FILE,
     northFile: NORTH_FILE,
     eastBranchFile: EAST_BRANCH_FILE,
     westBranchFile: WEST_BRANCH_FILE,
@@ -200,6 +218,7 @@
     westBranchPresent: false,
     southBranchPresent: false,
     canvasPresent: false,
+    indexPresent: false,
     sessionPresent: false,
     sessionCreatedBySouth: false,
 
@@ -275,8 +294,8 @@
     readyTextAllowed: false,
     f21LatchMode: "WAITING",
 
-    latestEvent: "SOUTH_PARENT_FIRST_CANVAS_BOOT_GATE_RECONCILIATION_LOADED",
-    postgameStatus: "SOUTH_PARENT_FIRST_CANVAS_BOOT_GATE_RECONCILIATION_LOADED",
+    latestEvent: "SOUTH_ROUTE_CONDUCTOR_ALIAS_PUBLISHED_PARENT_FIRST_BOOT_LOADED",
+    postgameStatus: "SOUTH_ROUTE_CONDUCTOR_ALIAS_PUBLISHED_PARENT_FIRST_BOOT_LOADED",
     firstFailedCoordinate: "WAITING_BOOT",
     recommendedNextRenewalTarget: FILE,
 
@@ -285,7 +304,6 @@
     latestCanvasReceipt: null,
 
     renderCount: 0,
-    ledgerWriteCount: 0,
     watchdogTicks: 0,
     booted: false,
     booting: false,
@@ -381,22 +399,24 @@
     if (!array.includes(value)) array.push(value);
   }
 
+  function readPath(path) {
+    if (!path) return null;
+
+    const parts = String(path).split(".");
+    let cursor = root;
+
+    for (const part of parts) {
+      if (!cursor || cursor[part] === undefined || cursor[part] === null) return null;
+      cursor = cursor[part];
+    }
+
+    return cursor || null;
+  }
+
   function getByNames(names) {
     for (const name of names) {
-      if (!name) continue;
-
-      const parts = String(name).split(".");
-      let cursor = root;
-
-      for (const part of parts) {
-        if (!cursor || cursor[part] === undefined || cursor[part] === null) {
-          cursor = null;
-          break;
-        }
-        cursor = cursor[part];
-      }
-
-      if (cursor) return cursor;
+      const found = readPath(name);
+      if (found) return found;
     }
 
     return null;
@@ -515,6 +535,8 @@
     if (isObject(authority.receipt)) return authority.receipt;
     if (isObject(authority.receiptPacket)) return authority.receiptPacket;
 
+    if (authority.contract || authority.receipt || authority.version || authority.file) return authority;
+
     return null;
   }
 
@@ -522,6 +544,16 @@
     if (!doc || !doc.documentElement || !doc.documentElement.dataset) return fallback;
     const value = doc.documentElement.dataset[key];
     return value === undefined || value === null || value === "" ? fallback : value;
+  }
+
+  function readIndexApi() {
+    return getByNames([
+      "HEARTH_EAST_STEP1_IGNITION",
+      "HEARTH_INDEX_BRIDGE",
+      "HEARTH_INDEX_JS",
+      "HEARTH.indexBridge",
+      "HEARTH.eastStep1Ignition"
+    ]);
   }
 
   function readCanvasApi() {
@@ -893,7 +925,10 @@
     state.canvasParentBootMethodAvailable = bridge.canvasParentBootMethodAvailable;
     state.canvasParentBootMethod = bridge.canvasParentBootMethod;
 
-    state.preParentChildMissingObservation = !state.canvasParentBootAttempted ? missing : state.preParentChildMissingObservation;
+    if (!state.canvasParentBootAttempted) {
+      state.preParentChildMissingObservation = missing;
+    }
+
     state.preParentChildMissingIsHardBlock = false;
 
     if (!bridge.canvasParentPresent) {
@@ -1065,21 +1100,10 @@
     };
   }
 
-  function refreshAuthorityPresence() {
-    state.northPresent = Boolean(readNorthFacade());
-    state.eastBranchPresent = Boolean(readEastBranch());
-    state.westBranchPresent = Boolean(readWestBranch());
-    state.southBranchPresent = Boolean(readSouthComposer());
-    state.canvasPresent = Boolean(readCanvasApi());
-    state.sessionPresent = Boolean(getExistingSession());
-
-    const bridge = buildCanvasReceiptBridge();
-    classifyParentFirstChildGate(bridge);
-  }
-
   function readNorthFacade() {
     return getByNames([
       "LAB_RUNTIME_TABLE",
+      "LAB_RUNTIME_TABLE_NORTH",
       "LAB_UNIVERSAL_PLANET_RUNTIME_TABLE",
       "RUNTIME_TABLE",
       "DexterRuntimeTable",
@@ -1188,6 +1212,19 @@
     return null;
   }
 
+  function refreshAuthorityPresence() {
+    state.indexPresent = Boolean(readIndexApi());
+    state.northPresent = Boolean(readNorthFacade());
+    state.eastBranchPresent = Boolean(readEastBranch());
+    state.westBranchPresent = Boolean(readWestBranch());
+    state.southBranchPresent = Boolean(readSouthComposer());
+    state.canvasPresent = Boolean(readCanvasApi());
+    state.sessionPresent = Boolean(getExistingSession());
+
+    const bridge = buildCanvasReceiptBridge();
+    classifyParentFirstChildGate(bridge);
+  }
+
   function ensureRefs() {
     if (!doc) return;
 
@@ -1215,7 +1252,8 @@
     refs.collapseButton = doc.querySelector("[data-hearth-collapse-cockpit]");
     refs.showTab =
       doc.querySelector("[data-hearth-south-show-diagnostic-tab]") ||
-      doc.querySelector("[data-hearth-east-show-diagnostic-tab]");
+      doc.querySelector("[data-hearth-east-show-diagnostic-tab]") ||
+      doc.querySelector("[data-hearth-index-show-diagnostic-tab]");
     refs.status =
       doc.getElementById("hearth-route-status") ||
       doc.querySelector("[data-hearth-route-status]");
@@ -1353,6 +1391,12 @@
       contract: CONTRACT,
       receipt: RECEIPT,
       route: ROUTE,
+
+      indexPresent: state.indexPresent,
+      indexOwnsEastStep1: true,
+      indexOwnsScriptOrder: true,
+      indexOwnsRouteSafeRecognition: true,
+      southOwnsRouteConductorRuntime: true,
 
       activeGear: active.id,
       activeCheckpointId: active.id,
@@ -1525,6 +1569,7 @@
     );
 
     const eastGateReady = Boolean(
+      safeBool(snapshot.indexPresent, false) &&
       safeBool(snapshot.canvasParentBootAttempted, false) &&
       safeBool(snapshot.canvasBootRequested, false) &&
       safeBool(snapshot.canvasBootStarted, false) &&
@@ -1558,7 +1603,8 @@
         safeBool(snapshot.dragInspectionBound, false) &&
         (
           safeBool(snapshot.nonblankPlanetVisible, false) ||
-          safeBool(snapshot.visiblePlanetAvailable, false)
+          safeBool(snapshot.visiblePlanetAvailable, false) ||
+          safeBool(snapshot.visibleForwardProgress, false)
         )
       )
     );
@@ -1599,7 +1645,7 @@
       event: gear.event,
       phase: gear.event,
       checkpointId: gear.id,
-      source: "hearth.south.parentFirstCanvasBootGateReconciliation",
+      source: "hearth.south.routeConductor.aliasPublishedParentFirstBoot",
       contract: CONTRACT,
       receipt: RECEIPT,
       detail: {
@@ -1616,7 +1662,9 @@
         splitChildLoaderGateActive: true,
         parentFirstCanvasBootGateActive: true,
         preBootChildHardBlockRetired: true,
-        transistorGateReadActive: true
+        transistorGateReadActive: true,
+        indexOwnsScriptOrder: true,
+        southOwnsRouteConductorRuntime: true
       },
       snapshot: buildSnapshot(detail)
     };
@@ -1716,6 +1764,8 @@
 
     flushQueue();
     scheduleRender();
+    publishGlobals();
+
     return true;
   }
 
@@ -1760,6 +1810,8 @@
     state.f21LatchMode = gear && gear.id === "F21_COMPLETION_LATCHED" ? "BLOCKED" : state.f21LatchMode;
 
     scheduleRender();
+    publishGlobals();
+
     return item;
   }
 
@@ -2235,6 +2287,7 @@
     state.canvasBootError = safeString(receipt.canvasCarrierHandoffError || receipt.childLoadError, state.canvasBootError);
 
     maybeCompleteInspectAndF21();
+    publishGlobals();
   }
 
   function onCanvasPhase(event) {
@@ -2274,13 +2327,13 @@
   }
 
   function bindControls() {
-    if (refs.copyButton && !refs.copyButton.dataset.hearthSouthParentFirstCanvasBootGateBound) {
-      refs.copyButton.dataset.hearthSouthParentFirstCanvasBootGateBound = "true";
+    if (refs.copyButton && !refs.copyButton.dataset.hearthSouthAliasParentBootBound) {
+      refs.copyButton.dataset.hearthSouthAliasParentBootBound = "true";
       refs.copyButton.addEventListener("click", copyDiagnostic);
     }
 
-    if (refs.toggleButton && refs.receiptBox && !refs.toggleButton.dataset.hearthSouthParentFirstCanvasBootGateBound) {
-      refs.toggleButton.dataset.hearthSouthParentFirstCanvasBootGateBound = "true";
+    if (refs.toggleButton && refs.receiptBox && !refs.toggleButton.dataset.hearthSouthAliasParentBootBound) {
+      refs.toggleButton.dataset.hearthSouthAliasParentBootBound = "true";
       refs.toggleButton.addEventListener("click", () => {
         const visible = refs.receiptBox.dataset.visible !== "true";
         refs.receiptBox.dataset.visible = String(visible);
@@ -2289,27 +2342,30 @@
       });
     }
 
-    if (refs.inspectButton && !refs.inspectButton.dataset.hearthSouthParentFirstCanvasBootGateBound) {
-      refs.inspectButton.dataset.hearthSouthParentFirstCanvasBootGateBound = "true";
+    if (refs.inspectButton && !refs.inspectButton.dataset.hearthSouthAliasParentBootBound) {
+      refs.inspectButton.dataset.hearthSouthAliasParentBootBound = "true";
       refs.inspectButton.addEventListener("click", () => {
         const currentlyInspecting = Boolean(
           doc &&
           doc.documentElement &&
-          doc.documentElement.dataset.hearthSouthPlanetInspect === "true"
+          (
+            doc.documentElement.dataset.hearthSouthPlanetInspect === "true" ||
+            doc.documentElement.dataset.hearthEastInspectReservedActive === "true"
+          )
         );
         setInspectMode(!currentlyInspecting);
       });
     }
 
-    if (refs.showTab && !refs.showTab.dataset.hearthSouthParentFirstCanvasBootGateBound) {
-      refs.showTab.dataset.hearthSouthParentFirstCanvasBootGateBound = "true";
+    if (refs.showTab && !refs.showTab.dataset.hearthSouthAliasParentBootBound) {
+      refs.showTab.dataset.hearthSouthAliasParentBootBound = "true";
       refs.showTab.addEventListener("click", () => {
         setInspectMode(false);
       });
     }
 
-    if (refs.collapseButton && refs.cockpit && !refs.collapseButton.dataset.hearthSouthParentFirstCanvasBootGateBound) {
-      refs.collapseButton.dataset.hearthSouthParentFirstCanvasBootGateBound = "true";
+    if (refs.collapseButton && refs.cockpit && !refs.collapseButton.dataset.hearthSouthAliasParentBootCollapseBound) {
+      refs.collapseButton.dataset.hearthSouthAliasParentBootCollapseBound = "true";
       refs.collapseButton.addEventListener("click", () => {
         const expanded = refs.cockpit.dataset.cockpitMode !== "expanded-cockpit";
         refs.cockpit.dataset.cockpitMode = expanded ? "expanded-cockpit" : "loading-cockpit";
@@ -2359,6 +2415,7 @@
     });
 
     scheduleRender();
+    publishGlobals();
   }
 
   async function copyDiagnostic() {
@@ -2454,8 +2511,10 @@
         if (hasStrictInspectSignal(snapshot)) return 90;
         if (hasFallbackInspectSignal(snapshot)) return 72;
         return 42;
-      case "F21_COMPLETION_LATCHED":
-        return canLatchF21().allowed ? 92 : 55;
+      case "F21_COMPLETION_LATCHED": {
+        const gates = evaluateNewsGates(snapshot);
+        return gates.newsGatePassedBeforeF21 || gates.newsGateDegradedBeforeF21 ? 92 : 55;
+      }
       default:
         return 20;
     }
@@ -2646,7 +2705,10 @@
       admitGearEvent(eventName, {
         source: "southBootEarlyGearSequence",
         pageResponsive: true,
-        hardBlock: false
+        hardBlock: false,
+        indexOwnsEastStep1: true,
+        indexOwnsScriptOrder: true,
+        southPublishesAliases: true
       });
     });
   }
@@ -2817,6 +2879,7 @@
           reconcileCanvasReceipt({ force: true });
           maybeCompleteInspectAndF21();
           scheduleRender();
+          publishGlobals();
 
           return result;
         })
@@ -2850,6 +2913,7 @@
 
           reconcileCanvasReceipt({ force: true });
           scheduleRender();
+          publishGlobals();
 
           return null;
         });
@@ -2883,6 +2947,7 @@
       canvasBootPromise = null;
       reconcileCanvasReceipt({ force: true });
       scheduleRender();
+      publishGlobals();
 
       return Promise.resolve(null);
     }
@@ -2925,10 +2990,11 @@
       state.booting = true;
       state.startedAt = nowIso();
       state.updatedAt = state.startedAt;
-      state.postgameStatus = "SOUTH_PARENT_FIRST_CANVAS_BOOT_GATE_RECONCILIATION_BOOTING";
+      state.postgameStatus = "SOUTH_ROUTE_CONDUCTOR_ALIAS_PUBLISHED_PARENT_FIRST_BOOT_BOOTING";
       state.firstFailedCoordinate = "BOOTING_PARENT_FIRST_CANVAS_BOOT_GATE";
       state.recommendedNextRenewalTarget = FILE;
 
+      publishGlobals();
       ensureRefs();
       refreshAuthorityPresence();
       ensureNorthSession();
@@ -2950,7 +3016,8 @@
       state.booting = false;
       state.booted = true;
 
-      recordLocal("SOUTH_PARENT_FIRST_CANVAS_BOOT_GATE_RECONCILIATION_BOOTED", {
+      recordLocal("SOUTH_ROUTE_CONDUCTOR_ALIAS_PUBLISHED_PARENT_FIRST_BOOT_BOOTED", {
+        indexPresent: state.indexPresent,
         northPresent: state.northPresent,
         sessionPresent: state.sessionPresent,
         canvasPresent: state.canvasPresent,
@@ -2962,10 +3029,12 @@
         canvasActiveExpectationBridgeRenewalActive: true,
         canvasSplitAdapterProofBridgeActive: true,
         expectedCanvasContract: EXPECTED_CANVAS_CONTRACT,
-        expectedCanvasSplitContract: EXPECTED_CANVAS_SPLIT_CONTRACT
+        expectedCanvasSplitContract: EXPECTED_CANVAS_SPLIT_CONTRACT,
+        aliasesPublished: true
       });
 
       render();
+      publishGlobals();
       return getReceipt();
     })();
 
@@ -2987,7 +3056,7 @@
       root.removeEventListener("hearth:canvas-phase", onCanvasPhase);
     }
 
-    recordLocal("SOUTH_PARENT_FIRST_CANVAS_BOOT_GATE_RECONCILIATION_DISPOSED", { reason });
+    recordLocal("SOUTH_ROUTE_CONDUCTOR_ALIAS_PUBLISHED_PARENT_FIRST_BOOT_DISPOSED", { reason });
     render();
   }
 
@@ -3064,6 +3133,12 @@
       route: ROUTE,
       role: state.role,
 
+      indexOwnsEastStep1: true,
+      indexOwnsScriptOrder: true,
+      indexOwnsRouteSafeRecognition: true,
+      southPublishesRouteConductorAliases: true,
+      southOwnsRouteConductorRuntime: true,
+
       postgameDedupActive: true,
       inspectGateActive: true,
       receiptCompactionActive: true,
@@ -3075,6 +3150,7 @@
       parentFirstCanvasBootGateActive: true,
       preBootChildHardBlockRetired: true,
       transistorGateReadActive: true,
+      aliasPublicationActive: true,
 
       transmissionMode: true,
       oneActiveGearAtATime: true,
@@ -3183,12 +3259,528 @@
   }
 
   function getReceipt() {
-    refreshAuthorityPresence();
+    const light = getReceiptLight();
 
+    return {
+      ...light,
+
+      indexFile: INDEX_FILE,
+      northFile: NORTH_FILE,
+      eastBranchFile: EAST_BRANCH_FILE,
+      westBranchFile: WEST_BRANCH_FILE,
+      southBranchFile: SOUTH_BRANCH_FILE,
+      canvasFile: CANVAS_FILE,
+      canvasEastFile: CANVAS_EAST_FILE,
+      canvasWestFile: CANVAS_WEST_FILE,
+      canvasSouthFile: CANVAS_SOUTH_FILE,
+
+      indexPresent: state.indexPresent,
+      northPresent: state.northPresent,
+      eastBranchPresent: state.eastBranchPresent,
+      westBranchPresent: state.westBranchPresent,
+      southBranchPresent: state.southBranchPresent,
+      canvasPresent: state.canvasPresent,
+      sessionPresent: state.sessionPresent,
+      sessionCreatedBySouth: state.sessionCreatedBySouth,
+
+      canvasParentPresent: state.canvasParentPresent,
+      canvasParentBootMethodAvailable: state.canvasParentBootMethodAvailable,
+      canvasParentBootMethod: state.canvasParentBootMethod,
+
+      submittedEvents: clonePlain(state.submittedEvents),
+      admittedEvents: clonePlain(state.admittedEvents),
+      queuedEvents: clonePlain(state.queuedEvents),
+      archivedEvents: clonePlain(state.archivedEvents),
+      blockedEvents: clonePlain(state.blockedEvents),
+      reconciledCheckpointIds: clonePlain(state.reconciledCheckpointIds),
+      reconciledCanvasKeys: clonePlain(state.reconciledCanvasKeys),
+      progressOnlyEventLast: clonePlain(state.progressOnlyEventLast),
+      localEvents: clonePlain(state.localEvents),
+      errors: clonePlain(state.errors),
+
+      latestNorthResult: clonePlain(state.latestNorthResult),
+      latestComposerPacket: clonePlain(state.latestComposerPacket),
+      latestCanvasReceipt: clonePlain(state.latestCanvasReceipt),
+
+      renderCount: state.renderCount,
+      watchdogTicks: state.watchdogTicks,
+      booted: state.booted,
+      booting: state.booting,
+      startedAt: state.startedAt,
+      updatedAt: nowIso()
+    };
+  }
+
+  function getReceiptText() {
+    const r = getReceipt();
+
+    const completed = (r.completedCheckpoints || []).join(" > ") || "none";
+    const degraded = (r.degradedCheckpoints || []).join(" > ") || "none";
+
+    const queued = (r.queuedEvents || [])
+      .map((event) => `- ${event.at} :: ${event.checkpointId} :: ${event.reason}`)
+      .join("\n") || "- none";
+
+    const admitted = (r.admittedEvents || [])
+      .map((event) => `- ${event.at} :: ${event.checkpointId} :: degraded=${event.degraded}`)
+      .join("\n") || "- none";
+
+    const blocked = (r.blockedEvents || [])
+      .map((event) => `- ${event.at} :: ${event.checkpointId} :: ${event.reason}`)
+      .join("\n") || "- none";
+
+    const errors = (r.errors || [])
+      .map((event) => `- ${event.at} :: ${event.code || event.event} :: ${event.message}`)
+      .join("\n") || "- none";
+
+    const progressOnlyCounts = Object.keys(r.progressOnlyEventCounts || {})
+      .map((key) => `- ${key}: ${r.progressOnlyEventCounts[key]}`)
+      .join("\n") || "- none";
+
+    const localEvents = (r.localEvents || [])
+      .map((event) => `- ${event.at} :: ${event.event} :: ${JSON.stringify(event.detail || {})}`)
+      .join("\n") || "- none";
+
+    return [
+      "HEARTH_SOUTH_ROUTE_CONDUCTOR_ALIAS_PUBLISHED_PARENT_FIRST_BOOT_RECEIPT",
+      "",
+      `contract=${r.contract}`,
+      `receipt=${r.receipt}`,
+      `previousContract=${r.previousContract}`,
+      `baselineContract=${r.baselineContract}`,
+      `version=${r.version}`,
+      `file=${r.file}`,
+      `route=${r.route}`,
+      `role=${r.role}`,
+      "",
+      `indexOwnsEastStep1=${r.indexOwnsEastStep1}`,
+      `indexOwnsScriptOrder=${r.indexOwnsScriptOrder}`,
+      `indexOwnsRouteSafeRecognition=${r.indexOwnsRouteSafeRecognition}`,
+      `southPublishesRouteConductorAliases=${r.southPublishesRouteConductorAliases}`,
+      `southOwnsRouteConductorRuntime=${r.southOwnsRouteConductorRuntime}`,
+      "",
+      `postgameDedupActive=${r.postgameDedupActive}`,
+      `inspectGateActive=${r.inspectGateActive}`,
+      `receiptCompactionActive=${r.receiptCompactionActive}`,
+      `strictProofDegradeReconciliationActive=${r.strictProofDegradeReconciliationActive}`,
+      `canvasNestedReceiptBridgeActive=${r.canvasNestedReceiptBridgeActive}`,
+      `canvasActiveExpectationBridgeRenewalActive=${r.canvasActiveExpectationBridgeRenewalActive}`,
+      `canvasSplitAdapterProofBridgeActive=${r.canvasSplitAdapterProofBridgeActive}`,
+      `splitChildLoaderGateActive=${r.splitChildLoaderGateActive}`,
+      `parentFirstCanvasBootGateActive=${r.parentFirstCanvasBootGateActive}`,
+      `preBootChildHardBlockRetired=${r.preBootChildHardBlockRetired}`,
+      `transistorGateReadActive=${r.transistorGateReadActive}`,
+      `aliasPublicationActive=${r.aliasPublicationActive}`,
+      "",
+      `transmissionMode=${r.transmissionMode}`,
+      `oneActiveGearAtATime=${r.oneActiveGearAtATime}`,
+      `activeGearProgressResets=${r.activeGearProgressResets}`,
+      `visibleProgressRepresentsCurrentGearOnly=${r.visibleProgressRepresentsCurrentGearOnly}`,
+      "",
+      `activeCheckpointId=${r.activeCheckpointId}`,
+      `activeCheckpointRank=${r.activeCheckpointRank}`,
+      `activeFibonacciStage=${r.activeFibonacciStage}`,
+      `activeGearLabel=${r.activeGearLabel}`,
+      `activeGearProgress=${r.activeGearProgress}`,
+      `highestCompletedCheckpointId=${r.highestCompletedCheckpointId}`,
+      `highestCompletedRank=${r.highestCompletedRank}`,
+      `completedCheckpoints=${completed}`,
+      `degradedCheckpoints=${degraded}`,
+      "",
+      `indexPresent=${r.indexPresent}`,
+      `northPresent=${r.northPresent}`,
+      `eastBranchPresent=${r.eastBranchPresent}`,
+      `westBranchPresent=${r.westBranchPresent}`,
+      `southBranchPresent=${r.southBranchPresent}`,
+      `canvasPresent=${r.canvasPresent}`,
+      `sessionPresent=${r.sessionPresent}`,
+      `sessionCreatedBySouth=${r.sessionCreatedBySouth}`,
+      "",
+      `canvasParentPresent=${r.canvasParentPresent}`,
+      `canvasParentBootMethodAvailable=${r.canvasParentBootMethodAvailable}`,
+      `canvasParentBootMethod=${r.canvasParentBootMethod}`,
+      `canvasParentBootGatePhase=${r.canvasParentBootGatePhase}`,
+      `canvasParentBootAllowed=${r.canvasParentBootAllowed}`,
+      `canvasParentBootAttempted=${r.canvasParentBootAttempted}`,
+      `canvasParentBootResolved=${r.canvasParentBootResolved}`,
+      `canvasParentBootRejected=${r.canvasParentBootRejected}`,
+      `canvasParentBootResultReceived=${r.canvasParentBootResultReceived}`,
+      `canvasChildGatePhase=${r.canvasChildGatePhase}`,
+      `canvasBootBlockedByChildGate=${r.canvasBootBlockedByChildGate}`,
+      `canvasChildGateWaiting=${r.canvasChildGateWaiting}`,
+      `canvasChildGatePostParentFailure=${r.canvasChildGatePostParentFailure}`,
+      `canvasChildGatePostParentDegraded=${r.canvasChildGatePostParentDegraded}`,
+      `canvasChildGateLastMissing=${r.canvasChildGateLastMissing}`,
+      `preParentChildMissingObservation=${r.preParentChildMissingObservation}`,
+      `preParentChildMissingIsHardBlock=${r.preParentChildMissingIsHardBlock}`,
+      `childGateReason=${r.childGateReason}`,
+      "",
+      `canvasContract=${r.canvasContract}`,
+      `canvasReceipt=${r.canvasReceipt}`,
+      `canvasExpectedContract=${r.canvasExpectedContract}`,
+      `canvasExpectedReceipt=${r.canvasExpectedReceipt}`,
+      `canvasContractMatchesExpected=${r.canvasContractMatchesExpected}`,
+      `canvasReceiptMatchesExpected=${r.canvasReceiptMatchesExpected}`,
+      `canvasContractAcceptedLineage=${r.canvasContractAcceptedLineage}`,
+      `canvasReceiptAcceptedLineage=${r.canvasReceiptAcceptedLineage}`,
+      "",
+      `canvasSplitContract=${r.canvasSplitContract}`,
+      `canvasSplitReceipt=${r.canvasSplitReceipt}`,
+      `canvasExpectedSplitContract=${r.canvasExpectedSplitContract}`,
+      `canvasExpectedSplitReceipt=${r.canvasExpectedSplitReceipt}`,
+      `canvasSplitContractMatchesExpected=${r.canvasSplitContractMatchesExpected}`,
+      `canvasSplitReceiptMatchesExpected=${r.canvasSplitReceiptMatchesExpected}`,
+      `canvasSplitContractAcceptedLineage=${r.canvasSplitContractAcceptedLineage}`,
+      `canvasSplitReceiptAcceptedLineage=${r.canvasSplitReceiptAcceptedLineage}`,
+      `canvasSplitAdapterRecognized=${r.canvasSplitAdapterRecognized}`,
+      `canvasSplitAdapterStrictProof=${r.canvasSplitAdapterStrictProof}`,
+      `canvasSplitAdapterSoftProof=${r.canvasSplitAdapterSoftProof}`,
+      "",
+      `canvasEastPresent=${r.canvasEastPresent}`,
+      `canvasWestPresent=${r.canvasWestPresent}`,
+      `canvasSouthPresent=${r.canvasSouthPresent}`,
+      `canvasEastReady=${r.canvasEastReady}`,
+      `canvasWestReady=${r.canvasWestReady}`,
+      `canvasSouthReady=${r.canvasSouthReady}`,
+      `allCanvasChildrenReady=${r.allCanvasChildrenReady}`,
+      `childLoadAttempted=${r.childLoadAttempted}`,
+      `childLoadComplete=${r.childLoadComplete}`,
+      `childLoadError=${r.childLoadError}`,
+      `canvasChildGateMissingText=${r.canvasChildGateMissingText}`,
+      "",
+      `canvasBootRequested=${r.canvasBootRequested}`,
+      `canvasBootStarted=${r.canvasBootStarted}`,
+      `canvasBootComplete=${r.canvasBootComplete}`,
+      `canvasBootAttempts=${r.canvasBootAttempts}`,
+      `canvasBootError=${r.canvasBootError}`,
+      `canvasReady=${r.canvasReady}`,
+      `canvasCarrierMounted=${r.canvasCarrierMounted}`,
+      `canvasContextReady=${r.canvasContextReady}`,
+      `canvasCarrierRequested=${r.canvasCarrierRequested}`,
+      `canvasCarrierHandoffOk=${r.canvasCarrierHandoffOk}`,
+      `canvasCarrierHandoffError=${r.canvasCarrierHandoffError}`,
+      "",
+      `atlasBuildStarted=${r.atlasBuildStarted}`,
+      `atlasBuildProgress=${r.atlasBuildProgress}`,
+      `atlasBuildComplete=${r.atlasBuildComplete}`,
+      `textureComposeStarted=${r.textureComposeStarted}`,
+      `textureComposeProgress=${r.textureComposeProgress}`,
+      `textureComposeComplete=${r.textureComposeComplete}`,
+      `firstFrameRequested=${r.firstFrameRequested}`,
+      `firstFrameDetected=${r.firstFrameDetected}`,
+      `imageRendered=${r.imageRendered}`,
+      `dragInspectionBound=${r.dragInspectionBound}`,
+      `zoomInspectionBound=${r.zoomInspectionBound}`,
+      "",
+      `visibleContentProofStarted=${r.visibleContentProofStarted}`,
+      `visibleContentProof=${r.visibleContentProof}`,
+      `visibleContentStrictProof=${r.visibleContentStrictProof}`,
+      `visibleContentSoftGap=${r.visibleContentSoftGap}`,
+      `visibleContentHardFail=${r.visibleContentHardFail}`,
+      `visibleForwardProgress=${r.visibleForwardProgress}`,
+      `visibleContentAdmissible=${r.visibleContentAdmissible}`,
+      `visiblePlanetAvailable=${r.visiblePlanetAvailable}`,
+      `nonblankPlanetVisible=${r.nonblankPlanetVisible}`,
+      "",
+      `inspectModeAvailable=${r.inspectModeAvailable}`,
+      `inspectPlanetControlAvailable=${r.inspectPlanetControlAvailable}`,
+      `diagnosticCanLeavePlanetFrame=${r.diagnosticCanLeavePlanetFrame}`,
+      `diagnosticDockHiddenForInspection=${r.diagnosticDockHiddenForInspection}`,
+      `showDiagnosticTabVisible=${r.showDiagnosticTabVisible}`,
+      `diagnosticDockRestorable=${r.diagnosticDockRestorable}`,
+      `copyDiagnosticPreserved=${r.copyDiagnosticPreserved}`,
+      `receiptToggleReady=${r.receiptToggleReady}`,
+      `buttonsReachable=${r.buttonsReachable}`,
+      `receiptOverlayIndependent=${r.receiptOverlayIndependent}`,
+      "",
+      `northGateReady=${r.northGateReady}`,
+      `eastGateReady=${r.eastGateReady}`,
+      `westGateReady=${r.westGateReady}`,
+      `southGateReady=${r.southGateReady}`,
+      `newsGatePassedBeforeF21=${r.newsGatePassedBeforeF21}`,
+      `northGateDegradedReady=${r.northGateDegradedReady}`,
+      `westGateDegradedReady=${r.westGateDegradedReady}`,
+      `southGateDegradedReady=${r.southGateDegradedReady}`,
+      `newsGateDegradedBeforeF21=${r.newsGateDegradedBeforeF21}`,
+      "",
+      `completionLatched=${r.completionLatched}`,
+      `degradedCompletionLatched=${r.degradedCompletionLatched}`,
+      `completionClosed=${r.completionClosed}`,
+      `readyTextAllowed=${r.readyTextAllowed}`,
+      `strictVisibleProof=${r.strictVisibleProof}`,
+      `softGapVisibleProof=${r.softGapVisibleProof}`,
+      `hardFailVisibleProof=${r.hardFailVisibleProof}`,
+      `strictInspectReady=${r.strictInspectReady}`,
+      `fallbackInspectReady=${r.fallbackInspectReady}`,
+      `f21LatchMode=${r.f21LatchMode}`,
+      "",
+      `queuedEventsCount=${r.queuedEventsCount}`,
+      `archivedEventsCount=${r.archivedEventsCount}`,
+      `compactArchiveCount=${r.compactArchiveCount}`,
+      `duplicateCompletedEventCount=${r.duplicateCompletedEventCount}`,
+      `duplicatePostgameEventCount=${r.duplicatePostgameEventCount}`,
+      `blockedEventsCount=${r.blockedEventsCount}`,
+      `admittedEventsCount=${r.admittedEventsCount}`,
+      "",
+      "PROGRESS_ONLY_EVENT_COUNTS",
+      progressOnlyCounts,
+      "",
+      "ADMITTED_EVENTS",
+      admitted,
+      "",
+      "QUEUED_EVENTS",
+      queued,
+      "",
+      "BLOCKED_EVENTS",
+      blocked,
+      "",
+      "LOCAL_EVENTS",
+      localEvents,
+      "",
+      "ERRORS",
+      errors,
+      "",
+      `latestEvent=${r.latestEvent}`,
+      `postgameStatus=${r.postgameStatus}`,
+      `firstFailedCoordinate=${r.firstFailedCoordinate}`,
+      `recommendedNextRenewalTarget=${r.recommendedNextRenewalTarget}`,
+      "",
+      `renderCount=${r.renderCount}`,
+      `watchdogTicks=${r.watchdogTicks}`,
+      `booted=${r.booted}`,
+      `booting=${r.booting}`,
+      "",
+      `generatedImage=${r.generatedImage}`,
+      `graphicBox=${r.graphicBox}`,
+      `webGL=${r.webGL}`,
+      `visualPassClaimed=${r.visualPassClaimed}`,
+      "",
+      `startedAt=${r.startedAt}`,
+      `updatedAt=${r.updatedAt}`
+    ].join("\n");
+  }
+
+  function publishDataset() {
+    if (!doc || !doc.documentElement) return;
+
+    const dataset = doc.documentElement.dataset;
+    const light = getReceiptLight();
+
+    dataset.hearthRouteConductorLoaded = "true";
+    dataset.hearthRouteConductorPresent = "true";
+    dataset.hearthRouteConductorContract = CONTRACT;
+    dataset.hearthRouteConductorReceipt = RECEIPT;
+    dataset.hearthRouteConductorVersion = VERSION;
+
+    dataset.hearthSouthRouteConductorLoaded = "true";
+    dataset.hearthSouthRouteConductorPresent = "true";
+    dataset.hearthSouthRouteConductorContract = CONTRACT;
+    dataset.hearthSouthRouteConductorReceipt = RECEIPT;
+
+    dataset.hearthSouthParentFirstCanvasBootGateLoaded = "true";
+    dataset.hearthSouthParentFirstCanvasBootGateContract = CONTRACT;
+    dataset.hearthSouthParentFirstCanvasBootGateReceipt = RECEIPT;
+    dataset.hearthSouthParentFirstCanvasBootGateReconciliationLoaded = "true";
+    dataset.hearthSouthParentFirstCanvasBootGateReconciliationContract = CONTRACT;
+    dataset.hearthSouthParentFirstCanvasBootGateReconciliationReceipt = RECEIPT;
+
+    dataset.hearthSouthAliasesPublished = "true";
+    dataset.hearthIndexOwnsScriptOrder = "true";
+    dataset.hearthSouthOwnsRouteConductorRuntime = "true";
+
+    dataset.hearthSouthActiveCheckpointId = light.activeCheckpointId;
+    dataset.hearthSouthActiveFibonacciStage = light.activeFibonacciStage;
+    dataset.hearthSouthActiveGearProgress = String(light.activeGearProgress);
+    dataset.hearthSouthHighestCompletedCheckpointId = light.highestCompletedCheckpointId;
+
+    dataset.hearthSouthCanvasParentBootGatePhase = light.canvasParentBootGatePhase;
+    dataset.hearthSouthCanvasParentBootAttempted = String(light.canvasParentBootAttempted);
+    dataset.hearthSouthCanvasChildGatePhase = light.canvasChildGatePhase;
+    dataset.hearthSouthCanvasBootBlockedByChildGate = String(light.canvasBootBlockedByChildGate);
+    dataset.hearthSouthPreParentChildMissingIsHardBlock = "false";
+
+    dataset.hearthSouthCompletionLatched = String(light.completionLatched);
+    dataset.hearthSouthDegradedCompletionLatched = String(light.degradedCompletionLatched);
+    dataset.hearthSouthReadyTextAllowed = String(light.readyTextAllowed);
+    dataset.hearthSouthF21LatchMode = light.f21LatchMode;
+
+    dataset.hearthSouthVisiblePlanetAvailable = String(light.visiblePlanetAvailable);
+    dataset.hearthSouthVisibleContentProof = String(light.visibleContentProof);
+    dataset.hearthSouthVisibleContentSoftGap = String(light.visibleContentSoftGap);
+    dataset.hearthSouthVisibleContentHardFail = String(light.visibleContentHardFail);
+
+    dataset.hearthSouthInspectModeAvailable = String(light.inspectModeAvailable);
+    dataset.hearthSouthDiagnosticCanLeavePlanetFrame = String(light.diagnosticCanLeavePlanetFrame);
+
+    dataset.hearthSouthPostgameStatus = light.postgameStatus;
+    dataset.hearthSouthFirstFailedCoordinate = light.firstFailedCoordinate;
+    dataset.hearthSouthRecommendedNextRenewalTarget = light.recommendedNextRenewalTarget;
+
+    dataset.generatedImage = "false";
+    dataset.graphicBox = "false";
+    dataset.webgl = "false";
+    dataset.visualPassClaimed = "false";
+  }
+
+  function publishGlobals() {
+    root.HEARTH = root.HEARTH || {};
+    root.DEXTER_LAB = root.DEXTER_LAB || {};
+
+    root.HEARTH_ROUTE_CONDUCTOR = api;
+    root.HearthRouteConductor = api;
+    root.HEARTH_SOUTH_ROUTE_CONDUCTOR = api;
+    root.HEARTH_SOUTH_VISIBLE_COMPLETION = api;
+    root.HEARTH_SOUTH_VISIBLE_COMPLETION_CYCLE_CONSUMER = api;
+    root.HEARTH_SOUTH_PARENT_FIRST_CANVAS_BOOT_GATE_RECONCILIATION = api;
+    root.HEARTH_SOUTH_PARENT_FIRST_CANVAS_BOOT_GATE = api;
+
+    root.HEARTH.routeConductor = api;
+    root.HEARTH.southRouteConductor = api;
+    root.HEARTH.southVisibleCompletion = api;
+    root.HEARTH.southParentFirstCanvasBootGate = api;
+    root.HEARTH.southParentFirstCanvasBootGateReconciliation = api;
+
+    root.DEXTER_LAB.hearthRouteConductor = api;
+    root.DEXTER_LAB.hearthSouthRouteConductor = api;
+    root.DEXTER_LAB.hearthSouthParentFirstCanvasBootGate = api;
+    root.DEXTER_LAB.hearthSouthParentFirstCanvasBootGateReconciliation = api;
+
+    const light = getReceiptLightNoRefresh();
+
+    root.HEARTH_ROUTE_CONDUCTOR_RECEIPT = light;
+    root.HEARTH_SOUTH_ROUTE_CONDUCTOR_RECEIPT = light;
+    root.HEARTH_SOUTH_VISIBLE_COMPLETION_RECEIPT = light;
+    root.HEARTH_SOUTH_PARENT_FIRST_CANVAS_BOOT_GATE_RECONCILIATION_RECEIPT = light;
+    root.HEARTH_SOUTH_PARENT_FIRST_CANVAS_BOOT_GATE_RECEIPT = light;
+
+    root.HEARTH.routeConductorReceipt = light;
+    root.HEARTH.southRouteConductorReceipt = light;
+    root.HEARTH.southParentFirstCanvasBootGateReceipt = light;
+
+    root.DEXTER_LAB.hearthRouteConductorReceipt = light;
+    root.DEXTER_LAB.hearthSouthRouteConductorReceipt = light;
+    root.DEXTER_LAB.hearthSouthParentFirstCanvasBootGateReceipt = light;
+
+    publishDataset();
+  }
+
+  function getReceiptLightNoRefresh() {
     const active = activeCheckpoint();
     const highest = highestCompletedCheckpoint();
-    const canvas = readCanvasReceipt();
-    const bridge = buildCanvasReceiptBridge(canvas);
-    const childGate = classifyParentFirstChildGate(bridge);
-    const snapshot = buildSnapshot();
-    const gates = evaluate
+
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
+      baselineContract: BASELINE_CONTRACT,
+      version: VERSION,
+      file: FILE,
+      route: ROUTE,
+      role: state.role,
+      southPublishesRouteConductorAliases: true,
+      southOwnsRouteConductorRuntime: true,
+      parentFirstCanvasBootGateActive: true,
+      preBootChildHardBlockRetired: true,
+      activeCheckpointId: active.id,
+      activeCheckpointRank: active.rank,
+      activeFibonacciStage: active.fibonacci,
+      activeGearLabel: active.label,
+      activeGearProgress: 0,
+      highestCompletedCheckpointId: highest ? highest.id : "",
+      highestCompletedRank: highest ? highest.rank : 0,
+      completionLatched: state.completionLatched,
+      degradedCompletionLatched: state.degradedCompletionLatched,
+      f21LatchMode: state.f21LatchMode,
+      latestEvent: state.latestEvent,
+      postgameStatus: state.postgameStatus,
+      firstFailedCoordinate: state.firstFailedCoordinate,
+      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false,
+      updatedAt: nowIso()
+    };
+  }
+
+  const api = {
+    contract: CONTRACT,
+    receipt: RECEIPT,
+    previousContract: PREVIOUS_CONTRACT,
+    baselineContract: BASELINE_CONTRACT,
+    version: VERSION,
+    file: FILE,
+    route: ROUTE,
+    role: "south-route-conductor-alias-published-parent-first-boot",
+
+    boot,
+    start: boot,
+    init: boot,
+    run: boot,
+    dispose,
+
+    admitGearEvent,
+    reconcileCanvasReceipt,
+    bootCanvasOnce,
+    canLatchF21,
+    maybeCompleteInspectAndF21,
+    setInspectMode,
+    composeVisiblePacket,
+    render,
+    getReceipt,
+    getReceiptLight,
+    getReceiptText,
+    copyDiagnostic,
+
+    readCanvasApi,
+    readCanvasReceipt,
+    buildCanvasReceiptBridge,
+    classifyParentFirstChildGate,
+    evaluateNewsGates,
+
+    supportsAliasPublication: true,
+    supportsIndexSouthResponsibilitySplit: true,
+    supportsParentFirstCanvasBootGate: true,
+    supportsPreBootChildHardBlockRetirement: true,
+    supportsCanvasSplitAdapterProofBridge: true,
+    supportsTransistorGateRead: true,
+    supportsStrictProofDegradeReconciliation: true,
+    supportsReceiptCompaction: true,
+    supportsInspectGate: true,
+    supportsF21NorthNewsLatchOnly: true,
+
+    indexOwnsEastStep1: true,
+    indexOwnsScriptOrder: true,
+    indexOwnsRouteSafeRecognition: true,
+    ownsRouteConductorRuntime: true,
+    ownsCanvasDrawing: false,
+    ownsCanvasChildFiles: false,
+    ownsNorthCheckpointTruth: false,
+    ownsFinalVisualPassClaim: false,
+
+    generatedImage: false,
+    graphicBox: false,
+    webGL: false,
+    visualPassClaimed: false,
+
+    get state() {
+      return state;
+    }
+  };
+
+  publishGlobals();
+
+  if (doc) {
+    if (doc.readyState === "loading") {
+      doc.addEventListener("DOMContentLoaded", () => {
+        boot();
+      }, { once: true });
+    } else {
+      boot();
+    }
+  }
+
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = api;
+  }
+})();

@@ -1,21 +1,20 @@
 // /showroom/globe/hearth/index.js
-// HEARTH_EAST_ROUTE_CONDUCTOR_ALIAS_STABLE_HANDOFF_RECOGNITION_TNT_v1
+// HEARTH_EAST_ROUTE_CONDUCTOR_REQUEST_HYDRATION_ADMISSION_TNT_v1
 // Full-file replacement.
-// East route ignition authority only.
+// East route ignition / route-conductor request-admission authority only.
 // Purpose:
 // - Preserve Step 1 ignition, first paint, mount certainty, loading cockpit, early shared ledger, and route-safe script-order visibility.
-// - Correct route-conductor recognition after the renewed South file loads.
-// - Expand South route-conductor aliases without taking South runtime ownership.
-// - Support dotted global-path recognition such as HEARTH.routeConductor and DEXTER_LAB.hearthRouteConductor.
-// - Recognize route-conductor receipt markers when the API alias is still publishing.
-// - Treat a loaded route conductor without a recognized alias as LOADED_ALIAS_PENDING, not a hard script error.
-// - Stabilize East Step 1 handoff hashing by excluding volatile timestamp/event fields.
-// - Keep render(), getReceipt(), and getReceiptText() read-only.
+// - Correct the marker-only route-conductor false-loaded state.
+// - Separate marker observation from script request, script presence, script load, API publication, receipt publication, and hydration.
+// - Force /showroom/globe/hearth/hearth.js to be requested when only the route-conductor marker exists.
+// - Prevent marker-only recognition from satisfying F8 route-conductor hydration.
+// - Preserve NEWS order and Fibonacci synchronization.
+// - Keep render(), getReceipt(), and getReceiptText() read-only relative to downstream truth.
 // - Prevent render -> ledger -> render recursion.
 // - Use idempotent ledger writes and narrow timers.
 // Does not own:
 // - North Runtime Table public precedent
-// - East checkpoint-motion branch truth
+// - East branch magnifier/checkpoint-motion truth
 // - West gap classification truth
 // - South visible-state composition truth
 // - South route-conductor runtime
@@ -23,15 +22,16 @@
 // - atlas painting
 // - source/channel truth
 // - final visual pass claim
+// - F21 completion latch
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_EAST_ROUTE_CONDUCTOR_ALIAS_STABLE_HANDOFF_RECOGNITION_TNT_v1";
-  const RECEIPT = "HEARTH_EAST_ROUTE_CONDUCTOR_ALIAS_STABLE_HANDOFF_RECOGNITION_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "HEARTH_EAST_STEP1_IGNITION_FIRST_PAINT_CYCLE_TNT_v2";
+  const CONTRACT = "HEARTH_EAST_ROUTE_CONDUCTOR_REQUEST_HYDRATION_ADMISSION_TNT_v1";
+  const RECEIPT = "HEARTH_EAST_ROUTE_CONDUCTOR_REQUEST_HYDRATION_ADMISSION_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "HEARTH_EAST_ROUTE_CONDUCTOR_ALIAS_STABLE_HANDOFF_RECOGNITION_TNT_v1";
   const BASELINE_CONTRACT = "HEARTH_DIRECTIONAL_CYCLICAL_CHECKPOINT_GOVERNANCE_PRECODE_FINAL_DRAFT_v1";
-  const VERSION = "2026-05-30.hearth-east-route-conductor-alias-stable-handoff-recognition-v1";
+  const VERSION = "2026-05-31.hearth-east-route-conductor-request-hydration-admission-v1";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
@@ -49,9 +49,12 @@
   const MOUNT_ID = "hearthCanvasMount";
   const COCKPIT_ID = "hearthLoadCockpit";
   const STATUS_ID = "hearth-route-status";
-  const STYLE_ID = "hearth-east-route-conductor-alias-stable-handoff-style-v1";
+  const STYLE_ID = "hearth-east-route-conductor-request-hydration-admission-style-v1";
 
   const CYCLE_ORDER = "EAST_ROUTE -> NORTH -> EAST_BRANCH -> WEST -> SOUTH -> CANVAS -> ROUTE_CONDUCTOR -> CHECKPOINT -> NORTH";
+
+  const REQUESTED = Object.create(null);
+  const SCRIPT_LOADED = Object.create(null);
 
   const SCRIPT_DEFS = Object.freeze([
     {
@@ -73,7 +76,7 @@
     },
     {
       key: "eastBranch",
-      label: "East Checkpoint Motion",
+      label: "East Branch",
       direction: "EAST_BRANCH",
       file: EAST_BRANCH_FILE,
       required: false,
@@ -81,11 +84,12 @@
         "LAB_RUNTIME_TABLE_EAST",
         "LAB_CARDINAL_RUNTIME_TABLE_EAST",
         "LAB_CHECKPOINT_GOVERNOR_EAST",
+        "LAB_TRANSMISSION_MOTION_EAST",
         "RUNTIME_TABLE_EAST",
         "DEXTER_LAB_RUNTIME_TABLE_EAST",
         "DEXTER_LAB.runtimeTableEast",
         "DEXTER_LAB.cardinalRuntimeTableEast",
-        "DEXTER_LAB.checkpointGovernorEast"
+        "DEXTER_LAB.transmissionMotionEast"
       ]
     },
     {
@@ -113,9 +117,12 @@
       required: false,
       globals: [
         "LAB_RUNTIME_TABLE_SOUTH",
+        "LAB_CARDINAL_RUNTIME_TABLE_SOUTH",
         "LAB_VISIBLE_STATE_COMPOSER_SOUTH",
         "HEARTH_RUNTIME_TABLE_SOUTH",
         "HEARTH_VISIBLE_STATE_COMPOSER",
+        "RUNTIME_TABLE_SOUTH",
+        "DEXTER_LAB_RUNTIME_TABLE_SOUTH",
         "DEXTER_LAB.runtimeTableSouth",
         "DEXTER_LAB.cardinalRuntimeTableSouth",
         "DEXTER_LAB.visibleStateComposer",
@@ -133,11 +140,21 @@
         "HEARTH_CANVAS_AUTHORITY",
         "HEARTH_CANVAS_EVIDENCE",
         "HEARTH_CANVAS_TEXTURE",
-        "HEARTH_CANVAS_SOFT_GAP_ADAPTER",
+        "HEARTH_CANVAS_MATERIALS_RELIEF_CONSUMPTION_INVALIDATION",
+        "HEARTH_CANVAS_PHYSICAL_CARRIER_F13_PROOF_PARENT",
         "HEARTH.canvas",
         "HEARTH.canvasAuthority",
         "HEARTH.canvasEvidence",
-        "DEXTER_LAB.hearthCanvasEvidence"
+        "HEARTH.canvasNorth",
+        "DEXTER_LAB.hearthCanvasEvidence",
+        "DEXTER_LAB.hearthCanvasPhysicalCarrierF13ProofParent"
+      ],
+      receiptGlobals: [
+        "HEARTH_CANVAS_RECEIPT",
+        "HEARTH_CANVAS_EVIDENCE_RECEIPT",
+        "HEARTH_CANVAS_POSTGAME_RECEIPT",
+        "HEARTH.canvasReceipt",
+        "HEARTH.canvasEvidenceReceipt"
       ]
     },
     {
@@ -151,32 +168,35 @@
         "HearthRouteConductor",
         "HEARTH_SOUTH_ROUTE_CONDUCTOR",
         "HEARTH_SOUTH_VISIBLE_COMPLETION",
-        "HEARTH_SOUTH_VISIBLE_COMPLETION_CYCLE_CONSUMER",
-        "HEARTH_SOUTH_PARENT_FIRST_CANVAS_BOOT_GATE_RECONCILIATION",
-        "HEARTH_SOUTH_PARENT_FIRST_CANVAS_BOOT_GATE",
+        "HEARTH_SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_HANDOFF",
+        "HEARTH_SOUTH_SELF_DUTY_NEWS_FIBONACCI_HANDOFF",
         "HEARTH.southRouteConductor",
         "HEARTH.routeConductor",
-        "HEARTH.southParentFirstCanvasBootGate",
-        "HEARTH.southParentFirstCanvasBootGateReconciliation",
+        "HEARTH.southVisibleCompletion",
+        "HEARTH.southRouteConductorSelfDutyHandoff",
+        "HEARTH.southSelfDutyNewsFibonacciHandoff",
         "DEXTER_LAB.hearthRouteConductor",
         "DEXTER_LAB.hearthSouthRouteConductor",
-        "DEXTER_LAB.hearthSouthParentFirstCanvasBootGate",
-        "DEXTER_LAB.hearthSouthParentFirstCanvasBootGateReconciliation"
+        "DEXTER_LAB.hearthSouthVisibleCompletion",
+        "DEXTER_LAB.hearthSouthRouteConductorSelfDutyHandoff"
       ],
       receiptGlobals: [
         "HEARTH_ROUTE_CONDUCTOR_RECEIPT",
         "HEARTH_SOUTH_ROUTE_CONDUCTOR_RECEIPT",
         "HEARTH_SOUTH_VISIBLE_COMPLETION_RECEIPT",
-        "HEARTH_SOUTH_PARENT_FIRST_CANVAS_BOOT_GATE_RECONCILIATION_RECEIPT",
-        "HEARTH_SOUTH_PARENT_FIRST_CANVAS_BOOT_GATE_RECEIPT",
+        "HEARTH_SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_HANDOFF_RECEIPT",
+        "HEARTH_SOUTH_SELF_DUTY_NEWS_FIBONACCI_HANDOFF_RECEIPT",
         "HEARTH.routeConductorReceipt",
         "HEARTH.southRouteConductorReceipt",
-        "HEARTH.southParentFirstCanvasBootGateReceipt",
+        "HEARTH.southVisibleCompletionReceipt",
+        "HEARTH.southRouteConductorSelfDutyHandoffReceipt",
         "DEXTER_LAB.hearthRouteConductorReceipt",
         "DEXTER_LAB.hearthSouthRouteConductorReceipt",
-        "DEXTER_LAB.hearthSouthParentFirstCanvasBootGateReceipt"
+        "DEXTER_LAB.hearthSouthVisibleCompletionReceipt",
+        "DEXTER_LAB.hearthSouthRouteConductorSelfDutyHandoffReceipt"
       ],
       datasetMarkers: [
+        "hearthRouteConductorMarkerPresent",
         "hearthRouteConductorLoaded",
         "hearthRouteConductorPresent",
         "hearthRouteConductorContract",
@@ -185,12 +205,8 @@
         "hearthSouthRouteConductorPresent",
         "hearthSouthRouteConductorContract",
         "hearthSouthRouteConductorReceipt",
-        "hearthSouthParentFirstCanvasBootGateLoaded",
-        "hearthSouthParentFirstCanvasBootGateContract",
-        "hearthSouthParentFirstCanvasBootGateReceipt",
-        "hearthSouthParentFirstCanvasBootGateReconciliationLoaded",
-        "hearthSouthParentFirstCanvasBootGateReconciliationContract",
-        "hearthSouthParentFirstCanvasBootGateReconciliationReceipt"
+        "hearthSouthSelfDutyNewsFibonacciHandoff",
+        "hearthSouthRouteConductorHydrated"
       ]
     }
   ]);
@@ -198,7 +214,7 @@
   const LANE_DEFS = Object.freeze([
     { key: "eastRoute", label: "East route ignition", owner: "EAST_ROUTE" },
     { key: "north", label: "North Runtime Table", owner: "NORTH" },
-    { key: "eastBranch", label: "East checkpoint motion", owner: "EAST_BRANCH" },
+    { key: "eastBranch", label: "East branch", owner: "EAST_BRANCH" },
     { key: "west", label: "West gap classifier", owner: "WEST" },
     { key: "south", label: "South visible composer", owner: "SOUTH" },
     { key: "canvas", label: "Canvas evidence", owner: "CANVAS" },
@@ -214,12 +230,15 @@
     version: VERSION,
     file: EAST_ROUTE_FILE,
     route: ROUTE,
-    role: "east-route-conductor-alias-stable-handoff-recognition",
+    role: "east-route-conductor-request-hydration-admission",
 
-    routeConductorAliasRecognitionActive: true,
+    routeConductorRequestHydrationAdmissionActive: true,
+    markerOnlyRequestRequiredActive: true,
+    markerIsNotLoadedProof: true,
+    markerIsNotHydrationProof: true,
+    routeConductorHydrationRequiresApiAndReceipt: true,
     dottedGlobalPathRecognitionActive: true,
     receiptFallbackRecognitionActive: true,
-    conductorMarkerRecognitionActive: true,
     stableHandoffHashActive: true,
     loadedAliasPendingNotHardError: true,
 
@@ -258,6 +277,7 @@
     step1HandoffAcceptedByNorth: false,
     step1HandoffAcceptedByWest: false,
     step1HandoffAcceptedAt: "",
+    handoffPublishCount: 0,
 
     scriptOrderStarted: false,
     scriptOrderComplete: false,
@@ -271,22 +291,33 @@
     northPresent: false,
     northContract: "",
     northReceiptPresent: false,
+
     eastBranchPresent: false,
     eastBranchContract: "",
+    eastBranchReceiptPresent: false,
+
     westPresent: false,
     westContract: "",
     westReceiptPresent: false,
+
     southPresent: false,
     southContract: "",
     southReceiptPresent: false,
+
     canvasPresent: false,
     canvasContract: "",
     canvasReceiptPresent: false,
+
     routeConductorPresent: false,
-    routeConductorContract: "",
-    routeConductorReceiptPresent: false,
+    routeConductorRequested: false,
+    routeConductorScriptPresent: false,
+    routeConductorScriptLoaded: false,
     routeConductorApiPresent: false,
+    routeConductorReceiptPresent: false,
     routeConductorMarkerPresent: false,
+    routeConductorHydrated: false,
+    routeConductorContract: "",
+    routeConductorReceiptName: "",
     routeConductorRecognitionStatus: "UNSEEN",
 
     planetCanvasPresent: false,
@@ -305,7 +336,6 @@
     renderCount: 0,
     ledgerWriteCount: 0,
     ledgerNoopCount: 0,
-    handoffPublishCount: 0,
     scanCount: 0,
     commitCount: 0,
 
@@ -386,10 +416,8 @@
 
   function safeBool(value, fallback = false) {
     if (typeof value === "boolean") return value;
-    if (value === "true") return true;
-    if (value === "false") return false;
-    if (value === 1 || value === "1") return true;
-    if (value === 0 || value === "0") return false;
+    if (value === "true" || value === "1" || value === 1) return true;
+    if (value === "false" || value === "0" || value === 0) return false;
     return fallback;
   }
 
@@ -399,18 +427,15 @@
 
   function clonePlain(value) {
     if (!isObject(value)) return value;
-
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
-      if (Array.isArray(value)) return value.slice();
-      return { ...value };
+      return Array.isArray(value) ? value.slice() : { ...value };
     }
   }
 
   function stableStringify(value) {
     if (!isObject(value)) return JSON.stringify(value);
-
     const seen = new WeakSet();
 
     function sort(input) {
@@ -447,11 +472,11 @@
 
   function escapeHtml(value) {
     return String(value ?? "")
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
   }
 
   function formatElapsed(ms) {
@@ -462,11 +487,7 @@
   }
 
   function recordLocal(event, detail = {}) {
-    const item = {
-      at: nowIso(),
-      event,
-      detail: clonePlain(detail)
-    };
+    const item = { at: nowIso(), event, detail: clonePlain(detail) };
 
     state.localEvents.push(item);
     if (state.localEvents.length > 160) {
@@ -479,11 +500,7 @@
   }
 
   function recordScript(event, detail = {}) {
-    const item = {
-      at: nowIso(),
-      event,
-      detail: clonePlain(detail)
-    };
+    const item = { at: nowIso(), event, detail: clonePlain(detail) };
 
     state.scriptEvents.push(item);
     if (state.scriptEvents.length > 180) {
@@ -514,7 +531,6 @@
 
   function readPath(path) {
     if (!path) return null;
-
     const parts = String(path).split(".");
     let cursor = root;
 
@@ -531,20 +547,6 @@
       const found = readPath(name);
       if (found) return found;
     }
-
-    if (root.DEXTER_LAB) {
-      for (const name of names || []) {
-        const shortName = String(name)
-          .replace(/^LAB_/, "")
-          .replace(/^HEARTH_/, "")
-          .replace(/^DEXTER_LAB_/, "")
-          .replace(/^DEXTER_LAB\./, "")
-          .toLowerCase();
-
-        if (root.DEXTER_LAB[shortName]) return root.DEXTER_LAB[shortName];
-      }
-    }
-
     return null;
   }
 
@@ -563,13 +565,7 @@
     if (isObject(authority.receipt)) return authority.receipt;
     if (isObject(authority.receiptPacket)) return authority.receiptPacket;
 
-    if (
-      authority.contract ||
-      authority.receipt ||
-      authority.file ||
-      authority.route ||
-      authority.version
-    ) {
+    if (authority.contract || authority.receipt || authority.file || authority.route || authority.version) {
       return authority;
     }
 
@@ -600,15 +596,13 @@
           contract: String(
             dataset.hearthRouteConductorContract ||
             dataset.hearthSouthRouteConductorContract ||
-            dataset.hearthSouthParentFirstCanvasBootGateContract ||
-            dataset.hearthSouthParentFirstCanvasBootGateReconciliationContract ||
+            dataset.hearthSouthRouteConductorSelfDutyContract ||
             ""
           ),
           receipt: String(
             dataset.hearthRouteConductorReceipt ||
             dataset.hearthSouthRouteConductorReceipt ||
-            dataset.hearthSouthParentFirstCanvasBootGateReceipt ||
-            dataset.hearthSouthParentFirstCanvasBootGateReconciliationReceipt ||
+            dataset.hearthSouthRouteConductorSelfDutyReceipt ||
             ""
           )
         };
@@ -618,27 +612,102 @@
     return null;
   }
 
+  function readRouteConductorMarker(def) {
+    const datasetMarker = readDatasetMarker(def.datasetMarkers || []);
+    if (datasetMarker) return datasetMarker;
+
+    if (root.__HEARTH_ROUTE_CONDUCTOR_MARKER__ === true) {
+      return {
+        key: "__HEARTH_ROUTE_CONDUCTOR_MARKER__",
+        value: "true",
+        contract: safeString(root.__HEARTH_ROUTE_CONDUCTOR_CONTRACT__, ""),
+        receipt: safeString(root.__HEARTH_ROUTE_CONDUCTOR_RECEIPT__, "")
+      };
+    }
+
+    return null;
+  }
+
+  function scriptAlreadyPresent(srcPart) {
+    if (!doc) return null;
+
+    return Array.from(doc.scripts || []).find((script) => {
+      const src = script.getAttribute("src") || "";
+      return src.includes(srcPart);
+    }) || null;
+  }
+
+  function cacheKey() {
+    return encodeURIComponent(`${CONTRACT}-${VERSION}`);
+  }
+
+  function isRouteConductorDef(def) {
+    return Boolean(def && def.key === "routeConductor");
+  }
+
   function recognizeScriptDef(def) {
-    const api = getGlobal(def.globals);
+    const api = getGlobal(def.globals || []);
     const apiReceipt = readAuthorityReceipt(api);
     const receipt = apiReceipt || readReceiptByNames(def.receiptGlobals || []);
-    const marker = readDatasetMarker(def.datasetMarkers || []);
+    const marker = isRouteConductorDef(def)
+      ? readRouteConductorMarker(def)
+      : readDatasetMarker(def.datasetMarkers || []);
     const script = scriptAlreadyPresent(def.file);
 
-    const apiPresent = Boolean(api && !def.receiptGlobals?.includes(api));
+    const apiPresent = Boolean(api);
     const receiptPresent = Boolean(receipt);
     const markerPresent = Boolean(marker);
+    const scriptPresent = Boolean(script);
+    const scriptRequested = Boolean(REQUESTED[def.key] || scriptPresent);
+    const scriptLoaded = Boolean(
+      SCRIPT_LOADED[def.key] ||
+      apiPresent ||
+      receiptPresent ||
+      (script && script.dataset && script.dataset.hearthScriptLoaded === "true")
+    );
 
     let recognitionStatus = "UNSEEN";
+    let present = false;
+    let loaded = false;
+    let hydrated = false;
 
-    if (apiPresent) {
-      recognitionStatus = "GLOBAL_PRESENT";
-    } else if (receiptPresent) {
-      recognitionStatus = "RECEIPT_PRESENT";
-    } else if (markerPresent) {
-      recognitionStatus = "CONDUCTOR_MARKER_PRESENT";
-    } else if (script) {
-      recognitionStatus = def.key === "routeConductor" ? "LOADED_ALIAS_PENDING" : "SCRIPT_PRESENT_WAITING_GLOBAL";
+    if (isRouteConductorDef(def)) {
+      hydrated = Boolean(apiPresent && receiptPresent);
+      present = Boolean(apiPresent || receiptPresent || scriptPresent);
+      loaded = Boolean(apiPresent || receiptPresent || scriptLoaded);
+
+      if (hydrated) {
+        recognitionStatus = "API_RECEIPT_RUNTIME_PRESENT";
+      } else if (apiPresent) {
+        recognitionStatus = "GLOBAL_PRESENT_RECEIPT_PENDING";
+      } else if (receiptPresent) {
+        recognitionStatus = "RECEIPT_PRESENT_API_PENDING";
+      } else if (scriptLoaded) {
+        recognitionStatus = "LOADED_ALIAS_PENDING";
+      } else if (scriptPresent || scriptRequested) {
+        recognitionStatus = "REQUESTED_WAITING_LOAD";
+      } else if (markerPresent) {
+        recognitionStatus = "MARKER_ONLY_REQUEST_REQUIRED";
+      } else {
+        recognitionStatus = "UNSEEN";
+      }
+    } else {
+      present = Boolean(apiPresent || receiptPresent || scriptPresent);
+      loaded = Boolean(apiPresent || receiptPresent || scriptLoaded);
+
+      if (apiPresent) {
+        recognitionStatus = "GLOBAL_PRESENT";
+      } else if (receiptPresent) {
+        recognitionStatus = "RECEIPT_PRESENT";
+      } else if (scriptLoaded) {
+        recognitionStatus = "LOADED_GLOBAL_PENDING";
+      } else if (scriptPresent || scriptRequested) {
+        recognitionStatus = "REQUESTED_WAITING_LOAD";
+      } else if (markerPresent) {
+        recognitionStatus = "MARKER_PRESENT";
+      } else {
+        recognitionStatus = "UNSEEN";
+      }
     }
 
     const contract = safeString(
@@ -663,29 +732,23 @@
       receipt,
       marker,
       script,
+
       apiPresent,
       receiptPresent,
       markerPresent,
-      present: Boolean(script),
-      requested: Boolean(script),
-      loaded: Boolean(apiPresent || receiptPresent || markerPresent),
-      globalPresent: Boolean(apiPresent),
+      scriptPresent,
+      scriptRequested,
+      scriptLoaded,
+      hydrated,
+
+      present,
+      requested: scriptRequested,
+      loaded,
+      globalPresent: apiPresent,
       contract,
       receiptName,
       recognitionStatus
     };
-  }
-
-  function scriptAlreadyPresent(srcPart) {
-    if (!doc) return null;
-    return Array.from(doc.scripts || []).find((script) => {
-      const src = script.getAttribute("src") || "";
-      return src.includes(srcPart);
-    }) || null;
-  }
-
-  function cacheKey() {
-    return encodeURIComponent(`${CONTRACT}-${VERSION}`);
   }
 
   function ensureStyle() {
@@ -904,17 +967,6 @@
         min-height:0!important;
       }
 
-      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"]{
-        inset:auto 10px 10px 10px!important;
-        min-height:132px!important;
-        max-height:186px!important;
-        overflow:hidden!important;
-      }
-
-      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-scroll{
-        display:none!important;
-      }
-
       [data-hearth-east-show-diagnostic-tab]{
         position:fixed;
         right:max(12px,env(safe-area-inset-right));
@@ -994,12 +1046,9 @@
     mount.dataset.hearthEastReceipt = RECEIPT;
     mount.dataset.hearthCycleEast = "true";
     mount.dataset.hearthCycleOrder = CYCLE_ORDER;
-    mount.dataset.hearthNorthFile = NORTH_FILE;
-    mount.dataset.hearthEastBranchFile = EAST_BRANCH_FILE;
-    mount.dataset.hearthWestFile = WEST_BRANCH_FILE;
-    mount.dataset.hearthSouthFile = SOUTH_BRANCH_FILE;
-    mount.dataset.hearthCanvasFile = CANVAS_FILE;
     mount.dataset.hearthRouteConductorFile = ROUTE_CONDUCTOR_FILE;
+    mount.dataset.hearthRouteConductorMarkerIsLoadedProof = "false";
+    mount.dataset.hearthRouteConductorMarkerIsHydrationProof = "false";
     mount.dataset.runtimeTableRequiredForFirstRender = "false";
     mount.dataset.sourceStackRequiredForFirstRender = "false";
     mount.dataset.wideProbeDeferred = "true";
@@ -1051,6 +1100,7 @@
     if (!doc) return null;
 
     ensureStyle();
+
     const mount = ensureMount();
     if (!mount) return null;
 
@@ -1170,7 +1220,7 @@
     const led = isObject(ledger.state) ? ledger.state : ledger;
 
     ledger.state = led;
-    led.contract = led.contract || "HEARTH_DIRECTIONAL_CYCLE_SHARED_LOAD_LEDGER_v3";
+    led.contract = led.contract || "HEARTH_DIRECTIONAL_CYCLE_SHARED_LOAD_LEDGER_v4";
     led.createdBy = led.createdBy || CONTRACT;
     led.ownerModel = "cardinal-cycle";
     led.cycleOrder = CYCLE_ORDER;
@@ -1187,6 +1237,8 @@
     led.currentGear = led.currentGear || "EAST_ROUTE";
     led.currentGearProgress = safeNumber(led.currentGearProgress, 0);
     led.visualPassClaimed = false;
+    led.markerIsNotLoadedProof = true;
+    led.markerIsNotHydrationProof = true;
     led.events = Array.isArray(led.events) ? led.events : [];
     led.errors = Array.isArray(led.errors) ? led.errors : [];
     led.scripts = isObject(led.scripts) ? led.scripts : {};
@@ -1314,9 +1366,13 @@
         error: "",
         requestedAt: "",
         loadedAt: "",
+        scriptPresent: false,
+        scriptRequested: false,
+        scriptLoaded: false,
         globalPresent: false,
         receiptPresent: false,
         markerPresent: false,
+        hydrated: false,
         recognitionStatus: "",
         updatedAt: nowIso()
       };
@@ -1329,9 +1385,13 @@
         error: next.error || "",
         requestedAt: next.requestedAt || current.requestedAt,
         loadedAt: next.loadedAt || current.loadedAt,
+        scriptPresent: Boolean(next.scriptPresent),
+        scriptRequested: Boolean(next.scriptRequested),
+        scriptLoaded: Boolean(next.scriptLoaded),
         globalPresent: Boolean(next.globalPresent),
         receiptPresent: Boolean(next.receiptPresent),
         markerPresent: Boolean(next.markerPresent),
+        hydrated: Boolean(next.hydrated),
         recognitionStatus: next.recognitionStatus || current.recognitionStatus || "",
         updatedAt: current.updatedAt || nowIso()
       };
@@ -1359,9 +1419,13 @@
           src: candidate.src,
           direction: candidate.direction,
           error: candidate.error,
+          scriptPresent: candidate.scriptPresent,
+          scriptRequested: candidate.scriptRequested,
+          scriptLoaded: candidate.scriptLoaded,
           globalPresent: candidate.globalPresent,
           receiptPresent: candidate.receiptPresent,
           markerPresent: candidate.markerPresent,
+          hydrated: candidate.hydrated,
           recognitionStatus: candidate.recognitionStatus
         }
       });
@@ -1453,9 +1517,11 @@
         key: def.key,
         file: def.file,
         present: recognition.present,
-        src: recognition.script ? recognition.script.getAttribute("src") || recognition.script.src || def.file : "",
         requested: recognition.requested,
         loaded: recognition.loaded,
+        scriptPresent: recognition.scriptPresent,
+        scriptRequested: recognition.scriptRequested,
+        scriptLoaded: recognition.scriptLoaded,
         required: def.required,
         recognitionStatus: recognition.recognitionStatus
       };
@@ -1477,6 +1543,10 @@
         apiPresent: recognition.apiPresent,
         receiptPresent: recognition.receiptPresent,
         markerPresent: recognition.markerPresent,
+        scriptPresent: recognition.scriptPresent,
+        scriptRequested: recognition.scriptRequested,
+        scriptLoaded: recognition.scriptLoaded,
+        hydrated: recognition.hydrated,
         contract: recognition.contract,
         receipt: recognition.receiptName
       };
@@ -1484,9 +1554,10 @@
 
     if (doc) {
       const mount = refs.mount || doc.getElementById(MOUNT_ID) || doc.querySelector("[data-hearth-canvas-mount]");
-      const canvas = mount ? mount.querySelector("canvas") : doc.querySelector("canvas[data-hearth-canvas='true'],canvas[data-hearth-canvas-texture='true']");
+      const canvas = mount ? mount.querySelector("canvas") : doc.querySelector("canvas[data-hearth-canvas='true'],canvas[data-hearth-canvas-texture='true'],canvas[data-hearth-planet-canvas='true']");
       const rect = canvas && isFunction(canvas.getBoundingClientRect) ? canvas.getBoundingClientRect() : null;
-      const canvasRecognition = recognizeScriptDef(SCRIPT_DEFS.find((def) => def.key === "canvas"));
+      const canvasDef = SCRIPT_DEFS.find((def) => def.key === "canvas");
+      const canvasRecognition = recognizeScriptDef(canvasDef);
       const canvasReceipt = canvasRecognition.receipt || readAuthorityReceipt(canvasRecognition.api);
 
       scan.canvasHints = {
@@ -1499,7 +1570,7 @@
           )
         ),
         canvasReady: safeBool(canvasReceipt && canvasReceipt.canvasReady, false) || (doc.documentElement && doc.documentElement.dataset.hearthCanvasReady === "true"),
-        imageRendered: safeBool(canvasReceipt && canvasReceipt.imageRendered, false) || (doc.documentElement && doc.documentElement.dataset.hearthImageRendered === "true"),
+        imageRendered: safeBool(canvasReceipt && canvasReceipt.imageRendered, false) || (doc.documentElement && doc.documentElement.dataset.hearthCanvasImageRendered === "true"),
         firstFrameDetected: safeBool(canvasReceipt && canvasReceipt.firstFrameDetected, false),
         visiblePlanetAvailable: safeBool(canvasReceipt && canvasReceipt.visiblePlanetAvailable, false),
         visibleContentSoftGap: safeBool(canvasReceipt && canvasReceipt.visibleContentSoftGap, false),
@@ -1523,39 +1594,45 @@
         southPresent: state.southPresent,
         canvasPresent: state.canvasPresent,
         routeConductorPresent: state.routeConductorPresent,
+        routeConductorRequested: state.routeConductorRequested,
+        routeConductorScriptPresent: state.routeConductorScriptPresent,
+        routeConductorScriptLoaded: state.routeConductorScriptLoaded,
         routeConductorApiPresent: state.routeConductorApiPresent,
         routeConductorReceiptPresent: state.routeConductorReceiptPresent,
         routeConductorMarkerPresent: state.routeConductorMarkerPresent,
+        routeConductorHydrated: state.routeConductorHydrated,
         routeConductorRecognitionStatus: state.routeConductorRecognitionStatus,
         planetCanvasPresent: state.planetCanvasPresent,
         visiblePlanetHintPresent: state.visiblePlanetHintPresent,
         scriptStatus: state.scriptStatus
       });
 
-      function copyScriptStatus(key) {
-        const script = scan.scripts[key] || {};
-        const global = scan.globals[key] || {};
-        const receipt = scan.receipts[key] || {};
-        const recognition = scan.recognitions[key] || {};
+      SCRIPT_DEFS.forEach((def) => {
+        const script = scan.scripts[def.key] || {};
+        const global = scan.globals[def.key] || {};
+        const receipt = scan.receipts[def.key] || {};
+        const recognition = scan.recognitions[def.key] || {};
 
-        state.scriptStatus[key] = {
-          key,
+        state.scriptStatus[def.key] = {
+          key: def.key,
           file: script.file || "",
           present: script.present === true,
           requested: script.requested === true,
           loaded: script.loaded === true,
+          scriptPresent: script.scriptPresent === true,
+          scriptRequested: script.scriptRequested === true,
+          scriptLoaded: script.scriptLoaded === true,
           globalPresent: global.present === true,
           receiptPresent: receipt.present === true,
           markerPresent: recognition.markerPresent === true,
+          hydrated: recognition.hydrated === true,
           recognitionStatus: recognition.status || script.recognitionStatus || "",
           contract: global.contract || receipt.contract || recognition.contract || "",
           receipt: receipt.receipt || recognition.receipt || "",
           required: script.required === true,
           updatedAt: scan.at
         };
-      }
-
-      SCRIPT_DEFS.forEach((def) => copyScriptStatus(def.key));
+      });
 
       state.northPresent = Boolean(scan.globals.north && scan.globals.north.present);
       state.northContract = scan.globals.north ? scan.globals.north.contract : "";
@@ -1563,6 +1640,7 @@
 
       state.eastBranchPresent = Boolean(scan.globals.eastBranch && scan.globals.eastBranch.present);
       state.eastBranchContract = scan.globals.eastBranch ? scan.globals.eastBranch.contract : "";
+      state.eastBranchReceiptPresent = Boolean(scan.receipts.eastBranch && scan.receipts.eastBranch.present);
 
       state.westPresent = Boolean(scan.globals.west && scan.globals.west.present);
       state.westContract = scan.globals.west ? scan.globals.west.contract : "";
@@ -1584,19 +1662,17 @@
       const routeReceipt = scan.receipts.routeConductor || {};
       const routeGlobal = scan.globals.routeConductor || {};
 
+      state.routeConductorRequested = Boolean(routeRecognition.scriptRequested || routeScript.requested);
+      state.routeConductorScriptPresent = Boolean(routeRecognition.scriptPresent || routeScript.scriptPresent);
+      state.routeConductorScriptLoaded = Boolean(routeRecognition.scriptLoaded || routeScript.scriptLoaded);
       state.routeConductorApiPresent = Boolean(routeRecognition.apiPresent || routeGlobal.present);
       state.routeConductorReceiptPresent = Boolean(routeRecognition.receiptPresent || routeReceipt.present);
       state.routeConductorMarkerPresent = Boolean(routeRecognition.markerPresent);
+      state.routeConductorHydrated = Boolean(routeRecognition.hydrated || (state.routeConductorApiPresent && state.routeConductorReceiptPresent));
       state.routeConductorRecognitionStatus = routeRecognition.status || routeScript.recognitionStatus || "UNSEEN";
 
-      state.routeConductorPresent = Boolean(
-        state.routeConductorApiPresent ||
-        state.routeConductorReceiptPresent ||
-        state.routeConductorMarkerPresent
-      );
-
+      state.routeConductorPresent = Boolean(state.routeConductorHydrated || state.routeConductorApiPresent || state.routeConductorReceiptPresent);
       state.routeConductorContract = routeGlobal.contract || routeReceipt.contract || routeRecognition.contract || "";
-      state.routeConductorReceiptPresent = Boolean(state.routeConductorReceiptPresent || routeReceipt.present);
       state.routeConductorReceiptName = routeReceipt.receipt || routeRecognition.receipt || "";
 
       state.planetCanvasPresent = Boolean(scan.canvasHints.planetCanvasPresent);
@@ -1645,9 +1721,13 @@
         southPresent: state.southPresent,
         canvasPresent: state.canvasPresent,
         routeConductorPresent: state.routeConductorPresent,
+        routeConductorRequested: state.routeConductorRequested,
+        routeConductorScriptPresent: state.routeConductorScriptPresent,
+        routeConductorScriptLoaded: state.routeConductorScriptLoaded,
         routeConductorApiPresent: state.routeConductorApiPresent,
         routeConductorReceiptPresent: state.routeConductorReceiptPresent,
         routeConductorMarkerPresent: state.routeConductorMarkerPresent,
+        routeConductorHydrated: state.routeConductorHydrated,
         routeConductorRecognitionStatus: state.routeConductorRecognitionStatus,
         planetCanvasPresent: state.planetCanvasPresent,
         visiblePlanetHintPresent: state.visiblePlanetHintPresent,
@@ -1698,7 +1778,7 @@
       event: state.eastBranchPresent ? "EAST_BRANCH_PRESENT" : "EAST_BRANCH_WAITING",
       owner: "EAST_BRANCH",
       file: EAST_BRANCH_FILE,
-      message: state.eastBranchPresent ? "East checkpoint-motion branch is present." : "East checkpoint-motion branch pending.",
+      message: state.eastBranchPresent ? "East branch is present." : "East branch pending.",
       detail: { reason }
     });
 
@@ -1732,23 +1812,25 @@
       detail: { reason }
     });
 
+    const rc = routeConductorLaneState();
+
     ledger.setLane("routeConductor", {
-      status: state.routeConductorPresent ? "READY" : state.routeConductorRecognitionStatus === "LOADED_ALIAS_PENDING" ? "ALIAS_PENDING" : "OPTIONAL_WAITING",
-      progress: state.routeConductorPresent ? 100 : state.routeConductorRecognitionStatus === "LOADED_ALIAS_PENDING" ? 68 : 0,
-      event: state.routeConductorPresent ? "ROUTE_CONDUCTOR_PRESENT" : state.routeConductorRecognitionStatus === "LOADED_ALIAS_PENDING" ? "ROUTE_CONDUCTOR_ALIAS_PENDING" : "ROUTE_CONDUCTOR_WAITING",
+      status: rc.status,
+      progress: rc.progress,
+      event: rc.event,
       owner: "ROUTE_CONDUCTOR",
       file: ROUTE_CONDUCTOR_FILE,
-      message: state.routeConductorPresent
-        ? "Route conductor is recognized."
-        : state.routeConductorRecognitionStatus === "LOADED_ALIAS_PENDING"
-          ? "Route conductor script loaded; waiting for South alias, receipt, or marker."
-          : "Route conductor pending.",
+      message: rc.message,
       detail: {
         reason,
         recognitionStatus: state.routeConductorRecognitionStatus,
+        requested: state.routeConductorRequested,
+        scriptPresent: state.routeConductorScriptPresent,
+        scriptLoaded: state.routeConductorScriptLoaded,
         apiPresent: state.routeConductorApiPresent,
         receiptPresent: state.routeConductorReceiptPresent,
-        markerPresent: state.routeConductorMarkerPresent
+        markerPresent: state.routeConductorMarkerPresent,
+        hydrated: state.routeConductorHydrated
       }
     });
 
@@ -1763,6 +1845,69 @@
     });
 
     ledger.setCurrentGear(state.currentGear, state.currentGearProgress, state.currentGearLabel);
+  }
+
+  function routeConductorLaneState() {
+    if (state.routeConductorHydrated) {
+      return {
+        status: "READY",
+        progress: 100,
+        event: "ROUTE_CONDUCTOR_API_RECEIPT_PRESENT",
+        message: "Route conductor API and receipt are present."
+      };
+    }
+
+    if (state.routeConductorApiPresent && !state.routeConductorReceiptPresent) {
+      return {
+        status: "RECEIPT_PENDING",
+        progress: 86,
+        event: "ROUTE_CONDUCTOR_GLOBAL_PRESENT_RECEIPT_PENDING",
+        message: "Route conductor API is present; receipt is pending."
+      };
+    }
+
+    if (state.routeConductorReceiptPresent && !state.routeConductorApiPresent) {
+      return {
+        status: "API_PENDING",
+        progress: 84,
+        event: "ROUTE_CONDUCTOR_RECEIPT_PRESENT_API_PENDING",
+        message: "Route conductor receipt is present; API alias is pending."
+      };
+    }
+
+    if (state.routeConductorScriptLoaded) {
+      return {
+        status: "ALIAS_PENDING",
+        progress: 72,
+        event: "ROUTE_CONDUCTOR_LOADED_ALIAS_PENDING",
+        message: "Route conductor script loaded; waiting for API and receipt."
+      };
+    }
+
+    if (state.routeConductorScriptPresent || state.routeConductorRequested) {
+      return {
+        status: "REQUESTED_WAITING_LOAD",
+        progress: 58,
+        event: "ROUTE_CONDUCTOR_REQUESTED_WAITING_LOAD",
+        message: "Route conductor request exists; waiting for script load."
+      };
+    }
+
+    if (state.routeConductorMarkerPresent) {
+      return {
+        status: "MARKER_ONLY",
+        progress: 35,
+        event: "ROUTE_CONDUCTOR_MARKER_ONLY_REQUEST_REQUIRED",
+        message: "Route conductor marker observed; script request still required."
+      };
+    }
+
+    return {
+      status: "WAITING",
+      progress: 0,
+      event: "ROUTE_CONDUCTOR_WAITING",
+      message: "Route conductor pending."
+    };
   }
 
   function deriveCycleStateReadOnly() {
@@ -1806,9 +1951,9 @@
 
     if (!state.eastBranchPresent) {
       state.currentGear = "EAST_BRANCH";
-      state.currentGearLabel = "East checkpoint-motion branch";
+      state.currentGearLabel = "East branch";
       state.currentGearProgress = state.scriptStatus.eastBranch && state.scriptStatus.eastBranch.requested ? 48 : 12;
-      state.firstFailedCoordinate = "WAITING_EAST_BRANCH_CHECKPOINT_MOTION";
+      state.firstFailedCoordinate = "WAITING_EAST_BRANCH";
       state.recommendedNextRenewalTarget = EAST_BRANCH_FILE;
       state.postgameStatus = "WAITING_EAST_BRANCH";
       return;
@@ -1844,17 +1989,19 @@
       return;
     }
 
-    if (!state.routeConductorPresent) {
+    if (!state.routeConductorHydrated) {
       state.currentGear = "ROUTE_CONDUCTOR";
-      state.currentGearLabel = "Route conductor";
-      state.currentGearProgress = state.routeConductorRecognitionStatus === "LOADED_ALIAS_PENDING" ? 68 : state.scriptStatus.routeConductor && state.scriptStatus.routeConductor.requested ? 48 : 12;
-      state.firstFailedCoordinate = state.routeConductorRecognitionStatus === "LOADED_ALIAS_PENDING"
-        ? "WAITING_ROUTE_CONDUCTOR_ALIAS_OR_RECEIPT"
-        : "WAITING_ROUTE_CONDUCTOR";
+      state.currentGearLabel = "Route conductor request/hydration";
+      state.currentGearProgress = routeConductorLaneState().progress;
+      state.firstFailedCoordinate = state.routeConductorRecognitionStatus === "MARKER_ONLY_REQUEST_REQUIRED"
+        ? "MARKER_OBSERVED_BUT_SCRIPT_NOT_REQUESTED"
+        : state.routeConductorRecognitionStatus === "REQUESTED_WAITING_LOAD"
+          ? "WAITING_ROUTE_CONDUCTOR_SCRIPT_LOAD"
+          : state.routeConductorRecognitionStatus === "LOADED_ALIAS_PENDING"
+            ? "WAITING_ROUTE_CONDUCTOR_API_RECEIPT"
+            : "WAITING_ROUTE_CONDUCTOR_HYDRATION";
       state.recommendedNextRenewalTarget = ROUTE_CONDUCTOR_FILE;
-      state.postgameStatus = state.routeConductorRecognitionStatus === "LOADED_ALIAS_PENDING"
-        ? "ROUTE_CONDUCTOR_LOADED_ALIAS_PENDING"
-        : "WAITING_ROUTE_CONDUCTOR";
+      state.postgameStatus = `ROUTE_CONDUCTOR_${state.routeConductorRecognitionStatus}`;
       return;
     }
 
@@ -1917,10 +2064,13 @@
     dataset.hearthCanvasFile = CANVAS_FILE;
     dataset.hearthRouteConductorFile = ROUTE_CONDUCTOR_FILE;
 
-    dataset.hearthRouteConductorAliasRecognitionActive = "true";
+    dataset.hearthRouteConductorRequestHydrationAdmissionActive = "true";
+    dataset.hearthMarkerOnlyRequestRequiredActive = "true";
+    dataset.hearthRouteConductorMarkerIsLoadedProof = "false";
+    dataset.hearthRouteConductorMarkerIsHydrationProof = "false";
+    dataset.hearthRouteConductorHydrationRequiresApiAndReceipt = "true";
     dataset.hearthDottedGlobalPathRecognitionActive = "true";
     dataset.hearthReceiptFallbackRecognitionActive = "true";
-    dataset.hearthConductorMarkerRecognitionActive = "true";
     dataset.hearthStableHandoffHashActive = "true";
     dataset.hearthLoadedAliasPendingNotHardError = "true";
 
@@ -1944,10 +2094,15 @@
     dataset.hearthWestPresent = String(state.westPresent);
     dataset.hearthSouthPresent = String(state.southPresent);
     dataset.hearthCanvasPresent = String(state.canvasPresent);
+
     dataset.hearthRouteConductorPresent = String(state.routeConductorPresent);
+    dataset.hearthRouteConductorRequested = String(state.routeConductorRequested);
+    dataset.hearthRouteConductorScriptPresent = String(state.routeConductorScriptPresent);
+    dataset.hearthRouteConductorScriptLoaded = String(state.routeConductorScriptLoaded);
     dataset.hearthRouteConductorApiPresent = String(state.routeConductorApiPresent);
     dataset.hearthRouteConductorReceiptPresent = String(state.routeConductorReceiptPresent);
     dataset.hearthRouteConductorMarkerPresent = String(state.routeConductorMarkerPresent);
+    dataset.hearthRouteConductorHydrated = String(state.routeConductorHydrated);
     dataset.hearthRouteConductorRecognitionStatus = state.routeConductorRecognitionStatus;
     dataset.hearthRouteConductorContract = state.routeConductorContract || "";
 
@@ -1980,13 +2135,13 @@
     root.HEARTH.eastStep1Ignition = api;
     root.HEARTH.indexBridge = api;
     root.HEARTH.indexConstraintSemiconductor = api;
-    root.HEARTH.eastRouteConductorAliasRecognition = api;
+    root.HEARTH.eastRouteConductorRequestHydrationAdmission = api;
 
     root.HEARTH_EAST_STEP1_IGNITION = api;
     root.HEARTH_EAST_STEP1_IGNITION_CYCLE = api;
     root.HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR = api;
     root.HEARTH_INDEX_BRIDGE = api;
-    root.HEARTH_EAST_ROUTE_CONDUCTOR_ALIAS_RECOGNITION = api;
+    root.HEARTH_EAST_ROUTE_CONDUCTOR_REQUEST_HYDRATION_ADMISSION = api;
     root.HearthIndexBridge = api;
     root.HEARTH_INDEX_JS = api;
 
@@ -1994,7 +2149,7 @@
     root.HEARTH_INDEX_CONSTRAINT_SEMICONDUCTOR_RECEIPT = root.HEARTH_EAST_STEP1_IGNITION_RECEIPT;
     root.HEARTH_INDEX_BRIDGE_RECEIPT = root.HEARTH_EAST_STEP1_IGNITION_RECEIPT;
     root.HEARTH_INDEX_JS_RECEIPT = root.HEARTH_EAST_STEP1_IGNITION_RECEIPT;
-    root.HEARTH_EAST_ROUTE_CONDUCTOR_ALIAS_RECOGNITION_RECEIPT = root.HEARTH_EAST_STEP1_IGNITION_RECEIPT;
+    root.HEARTH_EAST_ROUTE_CONDUCTOR_REQUEST_HYDRATION_ADMISSION_RECEIPT = root.HEARTH_EAST_STEP1_IGNITION_RECEIPT;
     root.HEARTH_EAST_STEP1_HANDOFF_RECEIPT = getStep1HandoffReceipt();
     root.HEARTH_INDEX_STEP1_HANDOFF_RECEIPT = root.HEARTH_EAST_STEP1_HANDOFF_RECEIPT;
 
@@ -2014,7 +2169,7 @@
   function getStep1HandoffStableHashMaterial() {
     return {
       contract: CONTRACT,
-      receipt: "HEARTH_EAST_STEP1_HANDOFF_RECEIPT_v3",
+      receipt: "HEARTH_EAST_STEP1_HANDOFF_RECEIPT_v4",
       sourceReceipt: RECEIPT,
       version: VERSION,
       owner: "EAST_ROUTE",
@@ -2048,10 +2203,15 @@
       westPresent: state.westPresent,
       southPresent: state.southPresent,
       canvasPresent: state.canvasPresent,
+
       routeConductorPresent: state.routeConductorPresent,
+      routeConductorRequested: state.routeConductorRequested,
+      routeConductorScriptPresent: state.routeConductorScriptPresent,
+      routeConductorScriptLoaded: state.routeConductorScriptLoaded,
       routeConductorApiPresent: state.routeConductorApiPresent,
       routeConductorReceiptPresent: state.routeConductorReceiptPresent,
       routeConductorMarkerPresent: state.routeConductorMarkerPresent,
+      routeConductorHydrated: state.routeConductorHydrated,
       routeConductorRecognitionStatus: state.routeConductorRecognitionStatus,
       routeConductorContract: state.routeConductorContract,
 
@@ -2060,6 +2220,9 @@
       firstFailedCoordinate: state.firstFailedCoordinate,
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
 
+      markerIsNotLoadedProof: true,
+      markerIsNotHydrationProof: true,
+      routeConductorHydrationRequiresApiAndReceipt: true,
       renderReadOnly: true,
       receiptReadOnly: true,
       ledgerIdempotent: true,
@@ -2071,12 +2234,13 @@
       climateRouteRetired: true,
 
       eastRouteOwnsStep1: true,
+      eastRouteOwnsRouteConductorRequest: true,
       northOwnsRuntimeTable: true,
-      eastBranchOwnsCheckpointMotion: true,
+      eastBranchOwnsMagnifier: true,
       westOwnsGapClassification: true,
       southOwnsVisibleStateComposition: true,
       canvasOwnsDrawingAndF13Evidence: true,
-      routeConductorOwnsRouteRuntime: true,
+      routeConductorOwnsRouteRuntimeAfterHydration: true,
 
       generatedImage: false,
       graphicBox: false,
@@ -2114,7 +2278,15 @@
       state.step1HandoffPublished = true;
       state.handoffPublishCount += 1;
 
-      const north = getGlobal(["LAB_RUNTIME_TABLE", "LAB_RUNTIME_TABLE_NORTH", "LAB_CHECKPOINT_GOVERNOR", "DexterRuntimeTable", "RUNTIME_TABLE", "DEXTER_LAB.runtimeTable"]);
+      const north = getGlobal([
+        "LAB_RUNTIME_TABLE",
+        "LAB_RUNTIME_TABLE_NORTH",
+        "LAB_CHECKPOINT_GOVERNOR",
+        "DexterRuntimeTable",
+        "RUNTIME_TABLE",
+        "DEXTER_LAB.runtimeTable"
+      ]);
+
       if (north && isFunction(north.acceptEastHandoff)) {
         try {
           const result = north.acceptEastHandoff(receipt);
@@ -2135,7 +2307,14 @@
         state.step1HandoffAcceptedByNorth = true;
       }
 
-      const west = getGlobal(["LAB_RUNTIME_TABLE_WEST", "LAB_CARDINAL_RUNTIME_TABLE_WEST", "LAB_GAP_CLASSIFIER_WEST", "RUNTIME_TABLE_WEST", "DEXTER_LAB.runtimeTableWest"]);
+      const west = getGlobal([
+        "LAB_RUNTIME_TABLE_WEST",
+        "LAB_CARDINAL_RUNTIME_TABLE_WEST",
+        "LAB_GAP_CLASSIFIER_WEST",
+        "RUNTIME_TABLE_WEST",
+        "DEXTER_LAB.runtimeTableWest"
+      ]);
+
       if (west && isFunction(west.acceptEastHandoff)) {
         try {
           const result = west.acceptEastHandoff(receipt);
@@ -2178,22 +2357,27 @@
       src: recognition && recognition.script ? recognition.script.src || recognition.script.getAttribute("src") || def.file : def.file,
       direction: def.direction,
       status,
+      scriptPresent: Boolean(recognition && recognition.scriptPresent),
+      scriptRequested: Boolean(recognition && recognition.scriptRequested),
+      scriptLoaded: Boolean(recognition && recognition.scriptLoaded),
       globalPresent: Boolean(recognition && recognition.apiPresent),
       receiptPresent: Boolean(recognition && recognition.receiptPresent),
       markerPresent: Boolean(recognition && recognition.markerPresent),
+      hydrated: Boolean(recognition && recognition.hydrated),
       recognitionStatus: recognition ? recognition.recognitionStatus : status,
       error,
       loadedAt: recognition && recognition.loaded ? nowIso() : ""
     });
 
-    if (error && def.key !== "routeConductor") {
-      state.scriptErrors.push({ key: def.key, file: def.file, message: error, at: nowIso() });
-      recordError(`SCRIPT_${def.key}_ERROR`, error, { file: def.file, direction: def.direction });
-    } else if (error && def.key === "routeConductor" && status !== "LOADED_ALIAS_PENDING") {
+    if (error && !(def.key === "routeConductor" && status === "LOADED_ALIAS_PENDING")) {
       state.scriptErrors.push({ key: def.key, file: def.file, message: error, at: nowIso() });
       recordError(`SCRIPT_${def.key}_ERROR`, error, { file: def.file, direction: def.direction });
     } else {
-      recordScript(`SCRIPT_${def.key}_${status}`, { file: def.file, direction: def.direction, recognitionStatus: recognition ? recognition.recognitionStatus : status });
+      recordScript(`SCRIPT_${def.key}_${status}`, {
+        file: def.file,
+        direction: def.direction,
+        recognitionStatus: recognition ? recognition.recognitionStatus : status
+      });
     }
 
     const scan = scanDownstreamReadOnly();
@@ -2204,36 +2388,88 @@
     const recognitionBefore = recognizeScriptDef(def);
     const ledger = refs.ledger || ensureLedger();
 
-    if (recognitionBefore.loaded) {
-      const status = recognitionBefore.recognitionStatus || "GLOBAL_PRESENT";
-      ledger.setScript(def.key, {
-        src: def.file,
-        direction: def.direction,
-        status,
-        globalPresent: recognitionBefore.apiPresent,
-        receiptPresent: recognitionBefore.receiptPresent,
-        markerPresent: recognitionBefore.markerPresent,
-        recognitionStatus: recognitionBefore.recognitionStatus,
-        loadedAt: nowIso()
-      });
+    if (!isRouteConductorDef(def)) {
+      if (recognitionBefore.loaded) {
+        finishScriptRecognitionStatus(def, recognitionBefore.recognitionStatus || "GLOBAL_PRESENT", recognitionBefore, "");
+        return Promise.resolve(recognitionBefore.api || recognitionBefore.receipt || null);
+      }
 
-      return Promise.resolve(recognitionBefore.api || recognitionBefore.receipt || recognitionBefore.marker);
+      if (recognitionBefore.scriptPresent || recognitionBefore.scriptRequested) {
+        ledger.setScript(def.key, {
+          src: recognitionBefore.script ? recognitionBefore.script.src || def.file : def.file,
+          direction: def.direction,
+          status: recognitionBefore.recognitionStatus || "REQUESTED_WAITING_LOAD",
+          scriptPresent: recognitionBefore.scriptPresent,
+          scriptRequested: true,
+          scriptLoaded: recognitionBefore.scriptLoaded,
+          globalPresent: recognitionBefore.apiPresent,
+          receiptPresent: recognitionBefore.receiptPresent,
+          markerPresent: recognitionBefore.markerPresent,
+          hydrated: recognitionBefore.hydrated,
+          recognitionStatus: recognitionBefore.recognitionStatus,
+          requestedAt: nowIso()
+        });
+
+        return waitForRecognition(def, 2400).then((recognition) => {
+          if (recognition && recognition.loaded) {
+            finishScriptRecognitionStatus(def, recognition.recognitionStatus || "GLOBAL_PRESENT", recognition, "");
+            return recognition.api || recognition.receipt || null;
+          }
+
+          finishScriptRecognitionStatus(def, "LOADED_GLOBAL_PENDING", recognition, "script loaded or requested but global not present");
+          return null;
+        });
+      }
+
+      return appendScriptAndWait(def);
     }
 
-    if (recognitionBefore.script) {
-      ledger.setScript(def.key, {
-        src: recognitionBefore.script.src || def.file,
-        direction: def.direction,
-        status: recognitionBefore.recognitionStatus || "SCRIPT_PRESENT_WAITING_GLOBAL",
-        globalPresent: false,
-        receiptPresent: false,
-        markerPresent: false,
-        recognitionStatus: recognitionBefore.recognitionStatus || "SCRIPT_PRESENT_WAITING_GLOBAL",
-        requestedAt: nowIso()
-      });
-
-      return waitForRecognition(def, 2400);
+    if (recognitionBefore.hydrated || recognitionBefore.apiPresent || recognitionBefore.receiptPresent) {
+      finishScriptRecognitionStatus(def, recognitionBefore.recognitionStatus, recognitionBefore, "");
+      return Promise.resolve(recognitionBefore.api || recognitionBefore.receipt || null);
     }
+
+    if (recognitionBefore.scriptPresent || recognitionBefore.scriptRequested) {
+      REQUESTED[def.key] = true;
+
+      finishScriptRecognitionStatus(
+        def,
+        recognitionBefore.recognitionStatus === "UNSEEN" ? "REQUESTED_WAITING_LOAD" : recognitionBefore.recognitionStatus,
+        recognitionBefore,
+        ""
+      );
+
+      return waitForRecognition(def, 2200).then((recognition) => {
+        if (recognition && recognition.hydrated) {
+          finishScriptRecognitionStatus(def, "API_RECEIPT_RUNTIME_PRESENT", recognition, "");
+          return recognition.api || recognition.receipt || null;
+        }
+
+        if (recognition && recognition.apiPresent) {
+          finishScriptRecognitionStatus(def, "GLOBAL_PRESENT_RECEIPT_PENDING", recognition, "");
+          return recognition.api || null;
+        }
+
+        if (recognition && recognition.receiptPresent) {
+          finishScriptRecognitionStatus(def, "RECEIPT_PRESENT_API_PENDING", recognition, "");
+          return recognition.receipt || null;
+        }
+
+        finishScriptRecognitionStatus(def, "LOADED_ALIAS_PENDING", recognition, "");
+        return null;
+      });
+    }
+
+    if (recognitionBefore.markerPresent && !recognitionBefore.scriptPresent && !recognitionBefore.apiPresent && !recognitionBefore.receiptPresent) {
+      finishScriptRecognitionStatus(def, "MARKER_ONLY_REQUEST_REQUIRED", recognitionBefore, "");
+      return appendScriptAndWait(def);
+    }
+
+    return appendScriptAndWait(def);
+  }
+
+  function appendScriptAndWait(def) {
+    const ledger = refs.ledger || ensureLedger();
 
     if (!doc || !doc.head) {
       const message = "document.head unavailable";
@@ -2242,13 +2478,39 @@
       return Promise.resolve(null);
     }
 
+    const existing = scriptAlreadyPresent(def.file);
+    if (existing) {
+      REQUESTED[def.key] = true;
+
+      return waitForRecognition(def, 2400).then((recognition) => {
+        const status = recognition && recognition.hydrated
+          ? "API_RECEIPT_RUNTIME_PRESENT"
+          : recognition && recognition.apiPresent
+            ? "GLOBAL_PRESENT_RECEIPT_PENDING"
+            : recognition && recognition.receiptPresent
+              ? "RECEIPT_PRESENT_API_PENDING"
+              : recognition && recognition.scriptLoaded
+                ? "LOADED_ALIAS_PENDING"
+                : "REQUESTED_WAITING_LOAD";
+
+        finishScriptRecognitionStatus(def, status, recognition, "");
+        return recognition ? recognition.api || recognition.receipt || null : null;
+      });
+    }
+
+    REQUESTED[def.key] = true;
+
     ledger.setScript(def.key, {
       src: def.file,
       direction: def.direction,
       status: "REQUESTED",
+      scriptPresent: false,
+      scriptRequested: true,
+      scriptLoaded: false,
       globalPresent: false,
       receiptPresent: false,
       markerPresent: false,
+      hydrated: false,
       recognitionStatus: "REQUESTED",
       requestedAt: nowIso()
     });
@@ -2261,6 +2523,8 @@
     script.dataset.hearthLoadedByEastRoute = CONTRACT;
     script.dataset.hearthDirection = def.direction;
     script.dataset.hearthScriptKey = def.key;
+    script.dataset.hearthScriptRequested = "true";
+    script.dataset.hearthScriptLoaded = "false";
     script.dataset.generatedImage = "false";
     script.dataset.graphicBox = "false";
     script.dataset.webgl = "false";
@@ -2274,21 +2538,37 @@
       function finish(status, recognition = null, error = "") {
         if (settled) return;
         settled = true;
-
         finishScriptRecognitionStatus(def, status, recognition, error);
         resolve(recognition ? recognition.api || recognition.receipt || recognition.marker || null : null);
       }
 
       script.onload = () => {
-        waitForRecognition(def, 1400).then((recognition) => {
-          if (recognition && recognition.loaded) {
-            finish(recognition.recognitionStatus || "GLOBAL_PRESENT", recognition, "");
+        script.dataset.hearthScriptLoaded = "true";
+        SCRIPT_LOADED[def.key] = true;
+
+        waitForRecognition(def, isRouteConductorDef(def) ? 1800 : 1200).then((recognition) => {
+          if (isRouteConductorDef(def)) {
+            if (recognition && recognition.hydrated) {
+              finish("API_RECEIPT_RUNTIME_PRESENT", recognition, "");
+              return;
+            }
+
+            if (recognition && recognition.apiPresent) {
+              finish("GLOBAL_PRESENT_RECEIPT_PENDING", recognition, "");
+              return;
+            }
+
+            if (recognition && recognition.receiptPresent) {
+              finish("RECEIPT_PRESENT_API_PENDING", recognition, "");
+              return;
+            }
+
+            finish("LOADED_ALIAS_PENDING", recognition, "");
             return;
           }
 
-          if (def.key === "routeConductor") {
-            const lateRecognition = recognizeScriptDef(def);
-            finish("LOADED_ALIAS_PENDING", lateRecognition, "");
+          if (recognition && recognition.loaded) {
+            finish(recognition.recognitionStatus || "GLOBAL_PRESENT", recognition, "");
             return;
           }
 
@@ -2307,18 +2587,38 @@
 
         const recognition = recognizeScriptDef(def);
 
+        if (isRouteConductorDef(def)) {
+          if (recognition && recognition.hydrated) {
+            finish("API_RECEIPT_RUNTIME_PRESENT", recognition, "");
+            return;
+          }
+
+          if (recognition && recognition.apiPresent) {
+            finish("GLOBAL_PRESENT_RECEIPT_PENDING", recognition, "");
+            return;
+          }
+
+          if (recognition && recognition.receiptPresent) {
+            finish("RECEIPT_PRESENT_API_PENDING", recognition, "");
+            return;
+          }
+
+          if (recognition && recognition.scriptPresent) {
+            finish("LOADED_ALIAS_PENDING", recognition, "");
+            return;
+          }
+
+          finish("REQUESTED_WAITING_LOAD", recognition, "");
+          return;
+        }
+
         if (recognition && recognition.loaded) {
           finish(recognition.recognitionStatus || "TIMEOUT_GLOBAL_PRESENT", recognition, "");
           return;
         }
 
-        if (def.key === "routeConductor" && recognition && recognition.script) {
-          finish("LOADED_ALIAS_PENDING", recognition, "");
-          return;
-        }
-
         finish("LOAD_TIMEOUT", recognition, `${def.direction} load timeout`);
-      }, 3600);
+      }, isRouteConductorDef(def) ? 4200 : 3600);
     });
   }
 
@@ -2329,7 +2629,13 @@
       const timer = root.setInterval(() => {
         const recognition = recognizeScriptDef(def);
 
-        if (recognition && recognition.loaded) {
+        if (isRouteConductorDef(def)) {
+          if (recognition && (recognition.hydrated || recognition.apiPresent || recognition.receiptPresent)) {
+            root.clearInterval(timer);
+            resolve(recognition);
+            return;
+          }
+        } else if (recognition && recognition.loaded) {
           root.clearInterval(timer);
           resolve(recognition);
           return;
@@ -2357,6 +2663,7 @@
         state.currentGear = def.direction;
         state.currentGearLabel = def.label;
         state.currentGearProgress = 15;
+
         updateLedgerFromState(`before-load-${def.key}`);
         scheduleRender();
 
@@ -2366,7 +2673,13 @@
         applyScanCommit(scan, `after-load-${def.key}`);
 
         const status = state.scriptStatus[def.key] || {};
-        state.currentGearProgress = status.loaded || status.globalPresent || status.receiptPresent || status.markerPresent ? 100 : status.recognitionStatus === "LOADED_ALIAS_PENDING" ? 68 : 48;
+        state.currentGearProgress =
+          status.hydrated ? 100 :
+            status.globalPresent || status.receiptPresent ? 86 :
+              status.loaded || status.scriptLoaded ? 72 :
+                status.requested || status.scriptRequested ? 58 :
+                  status.markerPresent ? 35 : 12;
+
         updateLedgerFromState(`after-load-${def.key}-gear`);
         scheduleRender();
 
@@ -2374,7 +2687,14 @@
       }
 
       state.scriptOrderSettled = true;
-      state.scriptOrderComplete = Boolean(state.northPresent && state.eastBranchPresent && state.westPresent && state.southPresent && state.canvasPresent);
+      state.scriptOrderComplete = Boolean(
+        state.northPresent &&
+        state.eastBranchPresent &&
+        state.westPresent &&
+        state.southPresent &&
+        state.canvasPresent
+      );
+
       deriveCycleStateReadOnly();
       updateLedgerFromState("script-order-settled");
       publishStep1HandoffIfChanged("script-order-settled");
@@ -2448,6 +2768,7 @@
       state.renderCount += 1;
 
       const scan = scanDownstreamReadOnly();
+
       state.planetCanvasPresent = Boolean(scan.canvasHints.planetCanvasPresent);
       state.planetCanvasNonZeroSize = Boolean(scan.canvasHints.planetCanvasNonZeroSize);
       state.visiblePlanetHintPresent = Boolean(
@@ -2515,7 +2836,7 @@
     if (!node) return;
 
     node.textContent = [
-      "Hearth East route-conductor alias-stable handoff recognition active.",
+      "Hearth East route-conductor request-hydration admission active.",
       `Contract ${CONTRACT}`,
       `Receipt ${RECEIPT}`,
       `File ${EAST_ROUTE_FILE}`,
@@ -2531,18 +2852,23 @@
       `South present ${state.southPresent}`,
       `Canvas present ${state.canvasPresent}`,
       `Route conductor present ${state.routeConductorPresent}`,
+      `Route conductor requested ${state.routeConductorRequested}`,
+      `Route conductor script present ${state.routeConductorScriptPresent}`,
+      `Route conductor script loaded ${state.routeConductorScriptLoaded}`,
       `Route conductor API present ${state.routeConductorApiPresent}`,
       `Route conductor receipt present ${state.routeConductorReceiptPresent}`,
       `Route conductor marker present ${state.routeConductorMarkerPresent}`,
+      `Route conductor hydrated ${state.routeConductorHydrated}`,
       `Route conductor recognition status ${state.routeConductorRecognitionStatus}`,
       `Route conductor contract ${state.routeConductorContract}`,
       `First failed coordinate ${state.firstFailedCoordinate}`,
       `Recommended next renewal target ${state.recommendedNextRenewalTarget}`,
+      `Marker is loaded proof false`,
+      `Marker is hydration proof false`,
       `Render count ${state.renderCount}`,
       `Ledger writes ${state.ledgerWriteCount}`,
       `Ledger noops ${state.ledgerNoopCount}`,
       "Stable handoff hash true",
-      "Loaded alias pending not hard error true",
       "Render read-only true",
       "Receipt read-only true",
       "Generated image false",
@@ -2678,7 +3004,7 @@
 
       if (changed) scheduleRender();
 
-      if (ticks >= 40 || state.bootComplete) {
+      if (ticks >= 44 || state.bootComplete) {
         root.clearInterval(heartbeatTimer);
         heartbeatTimer = 0;
       }
@@ -2704,7 +3030,18 @@
 
       if (changed) scheduleRender();
 
-      if (ticks >= 36 || state.bootComplete) {
+      if (
+        state.routeConductorMarkerPresent &&
+        !state.routeConductorRequested &&
+        !state.routeConductorScriptPresent &&
+        !state.routeConductorApiPresent &&
+        !state.routeConductorReceiptPresent
+      ) {
+        const def = SCRIPT_DEFS.find((item) => item.key === "routeConductor");
+        if (def) loadScriptDef(def);
+      }
+
+      if (ticks >= 40 || state.bootComplete) {
         root.clearInterval(watchdogTimer);
         watchdogTimer = 0;
       }
@@ -2783,7 +3120,7 @@
       renderTimer = 0;
     }
 
-    recordLocal("EAST_ROUTE_CONDUCTOR_ALIAS_STABLE_HANDOFF_RECOGNITION_DISPOSED", { reason });
+    recordLocal("EAST_ROUTE_CONDUCTOR_REQUEST_HYDRATION_ADMISSION_DISPOSED", { reason });
     publishGlobals();
 
     return getReceipt();
@@ -2800,10 +3137,13 @@
       route: ROUTE,
       role: state.role,
 
-      routeConductorAliasRecognitionActive: true,
+      routeConductorRequestHydrationAdmissionActive: true,
+      markerOnlyRequestRequiredActive: true,
+      markerIsNotLoadedProof: true,
+      markerIsNotHydrationProof: true,
+      routeConductorHydrationRequiresApiAndReceipt: true,
       dottedGlobalPathRecognitionActive: true,
       receiptFallbackRecognitionActive: true,
-      conductorMarkerRecognitionActive: true,
       stableHandoffHashActive: true,
       loadedAliasPendingNotHardError: true,
 
@@ -2829,10 +3169,15 @@
       westPresent: state.westPresent,
       southPresent: state.southPresent,
       canvasPresent: state.canvasPresent,
+
       routeConductorPresent: state.routeConductorPresent,
+      routeConductorRequested: state.routeConductorRequested,
+      routeConductorScriptPresent: state.routeConductorScriptPresent,
+      routeConductorScriptLoaded: state.routeConductorScriptLoaded,
       routeConductorApiPresent: state.routeConductorApiPresent,
       routeConductorReceiptPresent: state.routeConductorReceiptPresent,
       routeConductorMarkerPresent: state.routeConductorMarkerPresent,
+      routeConductorHydrated: state.routeConductorHydrated,
       routeConductorRecognitionStatus: state.routeConductorRecognitionStatus,
       routeConductorContract: state.routeConductorContract,
 
@@ -2873,6 +3218,7 @@
       ownsEarlyLedger: true,
       ownsScriptOrderVisibility: true,
       ownsStep1HandoffPublication: true,
+      ownsRouteConductorRequest: true,
       ownsRouteConductorRecognition: true,
 
       ownsNorthRuntimeTable: false,
@@ -2885,6 +3231,7 @@
       ownsRouteConductorRuntime: false,
       ownsSourceChannelTruth: false,
       ownsFinalVisualPassClaim: false,
+      ownsF21CompletionLatch: false,
 
       northFile: NORTH_FILE,
       eastBranchFile: EAST_BRANCH_FILE,
@@ -2920,17 +3267,16 @@
       northContract: state.northContract,
       northReceiptPresent: state.northReceiptPresent,
       eastBranchContract: state.eastBranchContract,
+      eastBranchReceiptPresent: state.eastBranchReceiptPresent,
       westContract: state.westContract,
       westReceiptPresent: state.westReceiptPresent,
       southContract: state.southContract,
       southReceiptPresent: state.southReceiptPresent,
       canvasContract: state.canvasContract,
       canvasReceiptPresent: state.canvasReceiptPresent,
+
       routeConductorContract: state.routeConductorContract,
-      routeConductorReceiptPresent: state.routeConductorReceiptPresent,
-      routeConductorApiPresent: state.routeConductorApiPresent,
-      routeConductorMarkerPresent: state.routeConductorMarkerPresent,
-      routeConductorRecognitionStatus: state.routeConductorRecognitionStatus,
+      routeConductorReceiptName: state.routeConductorReceiptName,
 
       scriptStatus: clonePlain(state.scriptStatus),
       scriptErrors: clonePlain(state.scriptErrors),
@@ -2968,11 +3314,11 @@
     )).join("\n") || "- none";
 
     const scripts = Object.entries(ledger.scripts || {}).map(([key, script]) => (
-      `- ${key}: direction=${script.direction || ""}; status=${script.status}; src=${script.src || ""}; globalPresent=${script.globalPresent === true}; receiptPresent=${script.receiptPresent === true}; markerPresent=${script.markerPresent === true}; recognitionStatus=${script.recognitionStatus || ""}; error=${script.error || ""}`
+      `- ${key}: direction=${script.direction || ""}; status=${script.status}; src=${script.src || ""}; scriptPresent=${script.scriptPresent === true}; scriptRequested=${script.scriptRequested === true}; scriptLoaded=${script.scriptLoaded === true}; globalPresent=${script.globalPresent === true}; receiptPresent=${script.receiptPresent === true}; markerPresent=${script.markerPresent === true}; hydrated=${script.hydrated === true}; recognitionStatus=${script.recognitionStatus || ""}; error=${script.error || ""}`
     )).join("\n") || "- none";
 
     const scriptStatus = Object.entries(receipt.scriptStatus || {}).map(([key, script]) => (
-      `- ${key}: present=${script.present}; requested=${script.requested}; loaded=${script.loaded}; globalPresent=${script.globalPresent}; receiptPresent=${script.receiptPresent}; markerPresent=${script.markerPresent}; recognitionStatus=${script.recognitionStatus}; contract=${script.contract}; receiptPresent=${script.receiptPresent}; required=${script.required}`
+      `- ${key}: present=${script.present}; requested=${script.requested}; loaded=${script.loaded}; scriptPresent=${script.scriptPresent}; scriptRequested=${script.scriptRequested}; scriptLoaded=${script.scriptLoaded}; globalPresent=${script.globalPresent}; receiptPresent=${script.receiptPresent}; markerPresent=${script.markerPresent}; hydrated=${script.hydrated}; recognitionStatus=${script.recognitionStatus}; contract=${script.contract}; receipt=${script.receipt}; required=${script.required}`
     )).join("\n") || "- none";
 
     const localEvents = receipt.localEvents.map((event) => (
@@ -2988,7 +3334,7 @@
     )).join("\n") || "- none";
 
     return [
-      "HEARTH_EAST_ROUTE_CONDUCTOR_ALIAS_STABLE_HANDOFF_RECOGNITION_RECEIPT",
+      "HEARTH_EAST_ROUTE_CONDUCTOR_REQUEST_HYDRATION_ADMISSION_RECEIPT",
       "",
       `contract=${receipt.contract}`,
       `receipt=${receipt.receipt}`,
@@ -2999,10 +3345,13 @@
       `route=${receipt.route}`,
       `role=${receipt.role}`,
       "",
-      `routeConductorAliasRecognitionActive=${receipt.routeConductorAliasRecognitionActive}`,
+      `routeConductorRequestHydrationAdmissionActive=${receipt.routeConductorRequestHydrationAdmissionActive}`,
+      `markerOnlyRequestRequiredActive=${receipt.markerOnlyRequestRequiredActive}`,
+      `markerIsNotLoadedProof=${receipt.markerIsNotLoadedProof}`,
+      `markerIsNotHydrationProof=${receipt.markerIsNotHydrationProof}`,
+      `routeConductorHydrationRequiresApiAndReceipt=${receipt.routeConductorHydrationRequiresApiAndReceipt}`,
       `dottedGlobalPathRecognitionActive=${receipt.dottedGlobalPathRecognitionActive}`,
       `receiptFallbackRecognitionActive=${receipt.receiptFallbackRecognitionActive}`,
-      `conductorMarkerRecognitionActive=${receipt.conductorMarkerRecognitionActive}`,
       `stableHandoffHashActive=${receipt.stableHandoffHashActive}`,
       `loadedAliasPendingNotHardError=${receipt.loadedAliasPendingNotHardError}`,
       "",
@@ -3020,6 +3369,7 @@
       `ownsEarlyLedger=${receipt.ownsEarlyLedger}`,
       `ownsScriptOrderVisibility=${receipt.ownsScriptOrderVisibility}`,
       `ownsStep1HandoffPublication=${receipt.ownsStep1HandoffPublication}`,
+      `ownsRouteConductorRequest=${receipt.ownsRouteConductorRequest}`,
       `ownsRouteConductorRecognition=${receipt.ownsRouteConductorRecognition}`,
       "",
       `ownsNorthRuntimeTable=${receipt.ownsNorthRuntimeTable}`,
@@ -3032,6 +3382,7 @@
       `ownsRouteConductorRuntime=${receipt.ownsRouteConductorRuntime}`,
       `ownsSourceChannelTruth=${receipt.ownsSourceChannelTruth}`,
       `ownsFinalVisualPassClaim=${receipt.ownsFinalVisualPassClaim}`,
+      `ownsF21CompletionLatch=${receipt.ownsF21CompletionLatch}`,
       "",
       `northFile=${receipt.northFile}`,
       `eastBranchFile=${receipt.eastBranchFile}`,
@@ -3076,6 +3427,7 @@
       `northReceiptPresent=${receipt.northReceiptPresent}`,
       `eastBranchPresent=${receipt.eastBranchPresent}`,
       `eastBranchContract=${receipt.eastBranchContract}`,
+      `eastBranchReceiptPresent=${receipt.eastBranchReceiptPresent}`,
       `westPresent=${receipt.westPresent}`,
       `westContract=${receipt.westContract}`,
       `westReceiptPresent=${receipt.westReceiptPresent}`,
@@ -3085,12 +3437,18 @@
       `canvasPresent=${receipt.canvasPresent}`,
       `canvasContract=${receipt.canvasContract}`,
       `canvasReceiptPresent=${receipt.canvasReceiptPresent}`,
+      "",
       `routeConductorPresent=${receipt.routeConductorPresent}`,
+      `routeConductorRequested=${receipt.routeConductorRequested}`,
+      `routeConductorScriptPresent=${receipt.routeConductorScriptPresent}`,
+      `routeConductorScriptLoaded=${receipt.routeConductorScriptLoaded}`,
       `routeConductorApiPresent=${receipt.routeConductorApiPresent}`,
       `routeConductorReceiptPresent=${receipt.routeConductorReceiptPresent}`,
       `routeConductorMarkerPresent=${receipt.routeConductorMarkerPresent}`,
+      `routeConductorHydrated=${receipt.routeConductorHydrated}`,
       `routeConductorRecognitionStatus=${receipt.routeConductorRecognitionStatus}`,
       `routeConductorContract=${receipt.routeConductorContract}`,
+      `routeConductorReceiptName=${receipt.routeConductorReceiptName}`,
       "",
       `planetCanvasPresent=${receipt.planetCanvasPresent}`,
       `planetCanvasNonZeroSize=${receipt.planetCanvasNonZeroSize}`,
@@ -3151,7 +3509,7 @@
     version: VERSION,
     route: ROUTE,
     file: EAST_ROUTE_FILE,
-    role: "east-route-conductor-alias-stable-handoff-recognition",
+    role: "east-route-conductor-request-hydration-admission",
 
     boot,
     start: boot,
@@ -3182,10 +3540,15 @@
     supportsEarlyLedger: true,
     supportsScriptOrderVisibility: true,
     supportsStep1HandoffPublication: true,
-    supportsRouteConductorAliasRecognition: true,
+    supportsRouteConductorRequest: true,
+    supportsRouteConductorRecognition: true,
+    supportsRouteConductorRequestHydrationAdmission: true,
+    supportsMarkerOnlyRequestRequired: true,
+    supportsMarkerNotLoadedProof: true,
+    supportsMarkerNotHydrationProof: true,
+    supportsRouteConductorHydrationRequiresApiAndReceipt: true,
     supportsDottedGlobalPathRecognition: true,
     supportsReceiptFallbackRecognition: true,
-    supportsConductorMarkerRecognition: true,
     supportsStableHandoffHash: true,
     supportsLoadedAliasPendingNotHardError: true,
     supportsPartialDiagnosticBeforeCompletion: true,
@@ -3198,6 +3561,7 @@
     handoffIdempotent: true,
 
     ownsEastRouteStep1: true,
+    ownsRouteConductorRequest: true,
     ownsRouteConductorRecognition: true,
     ownsNorthRuntimeTable: false,
     ownsEastBranchCheckpointMotion: false,
@@ -3207,6 +3571,7 @@
     ownsCanvasDrawing: false,
     ownsRouteConductorRuntime: false,
     ownsFinalVisualPassClaim: false,
+    ownsF21CompletionLatch: false,
 
     northFile: NORTH_FILE,
     eastBranchFile: EAST_BRANCH_FILE,

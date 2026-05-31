@@ -1,25 +1,40 @@
 // /assets/lab/runtime-table.west.js
-// LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_TNT_v1
+// LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_TNT_v2
 // Full-file replacement.
 // Cardinal West authority.
 // Purpose:
-// - Establish West as the cycle-aware admissibility clutch for the Lab Runtime Table stream.
+// - Repair Cycle 2 West intake and Canvas release recognition.
+// - Parse cycleNumber, cycleRoute, activeCycleNumber, activeCycleRoute directly.
+// - Parse handoffTo, receivedFrom, returnTo, sourceFile, destinationFile directly.
+// - Treat Cycle 2 + handoffTo=WEST as macro West audit intake.
+// - Produce the exact top-level Canvas release packet shape required by route conductor and Canvas parent.
 // - Preserve file-name gates as primary routing gates.
-// - Audit Cycle 1 and Cycle 2 order.
-// - Audit NEWS alignment and Fibonacci synchronization.
-// - Classify gaps, holds, degraded-forward conditions, false completion, and Canvas release.
-// - Release to Canvas only in Cycle 2 after South output passes West admissibility.
+// - Preserve NEWS alignment, Fibonacci synchronization, false-completion firewall, and legacy West exports.
+// - Release to Canvas only in Cycle 2 after South / route-conductor output is admissible.
 // - Return Cycle 1 South packets to North.
-// - Preserve legacy West exports while renewing the authority model.
+// Does not own:
+// - Canvas child West inspection logic
+// - Canvas parent boot
+// - planet truth
+// - material truth
+// - hydrology truth
+// - atlas source
+// - texture composition
+// - sphere rendering
+// - visible proof
+// - route readiness
+// - F21 latch
+// - ready text
+// - final visual pass claim
 
 (() => {
   "use strict";
 
-  const CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_TNT_v1";
-  const RECEIPT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_TRANSMISSION_GAP_CLASSIFIER_TNT_v1";
-  const BASELINE_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_TRANSMISSION_GAP_CLASSIFIER_TNT_v1";
-  const VERSION = "2026-05-31.lab-runtime-table-west-cycle-aware-admissibility-clutch-v1";
+  const CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_TNT_v2";
+  const RECEIPT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_RECEIPT_v2";
+  const PREVIOUS_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_TNT_v1";
+  const BASELINE_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_TNT_v1";
+  const VERSION = "2026-05-31.lab-runtime-table-west-cycle-aware-admissibility-clutch-v2";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
@@ -33,13 +48,21 @@
     south: "/assets/lab/runtime-table.south.js",
     routeConductor: "/showroom/globe/hearth/hearth.js",
     hearthIndex: "/showroom/globe/hearth/index.js",
-    canvas: "/assets/hearth/hearth.canvas.js"
+    canvas: "/assets/hearth/hearth.canvas.js",
+    canvasEast: "/assets/hearth/hearth.canvas.east.js",
+    canvasWest: "/assets/hearth/hearth.canvas.west.js",
+    canvasSouth: "/assets/hearth/hearth.canvas.south.js"
   });
 
   const CYCLES = Object.freeze({
     CYCLE_1: "CYCLE_1",
     CYCLE_2: "CYCLE_2",
     UNKNOWN: "UNKNOWN"
+  });
+
+  const CYCLE_ROUTES = Object.freeze({
+    CYCLE_1: "NORTH_EAST_WEST_SOUTH_NORTH",
+    CYCLE_2: "NORTH_EAST_SOUTH_WEST_CANVAS"
   });
 
   const CYCLE_PATHS = Object.freeze({
@@ -112,13 +135,17 @@
     F21: "F21_COMPLETION_LATCH"
   });
 
+  function checkpoint(id, rank, fibonacci, owner, label) {
+    return Object.freeze({ id, rank, fibonacci, owner, label });
+  }
+
   const CHECKPOINT_SEQUENCE = Object.freeze([
     checkpoint(CHECKPOINT_IDS.F1, 1, "F1", "NORTH", "macro distribution"),
     checkpoint(CHECKPOINT_IDS.F2, 2, "F2", "EAST", "route alignment"),
     checkpoint(CHECKPOINT_IDS.F3, 3, "F3", "EAST", "script order"),
     checkpoint(CHECKPOINT_IDS.F5, 5, "F5", "NORTH", "authority availability"),
     checkpoint(CHECKPOINT_IDS.F8, 8, "F8", "SOUTH", "route conductor self-duty"),
-    checkpoint(CHECKPOINT_IDS.F13A, 13.1, "F13A", "NORTH", "canvas parent"),
+    checkpoint(CHECKPOINT_IDS.F13A, 13.1, "F13A", "CANVAS", "canvas parent"),
     checkpoint(CHECKPOINT_IDS.F13B, 13.2, "F13B", "EAST", "canvas children"),
     checkpoint(CHECKPOINT_IDS.F13C, 13.3, "F13C", "SOUTH", "canvas texture"),
     checkpoint(CHECKPOINT_IDS.F13D, 13.4, "F13D", "SOUTH", "canvas frame"),
@@ -131,6 +158,7 @@
     CHECKPOINT_SEQUENCE.reduce((acc, item) => {
       acc[item.id] = item;
       acc[item.fibonacci] = item;
+      acc[String(item.rank)] = item;
       return acc;
     }, {})
   );
@@ -143,6 +171,8 @@
     AUTHORITY_AVAILABILITY_READY: CHECKPOINT_IDS.F5,
     SOUTH_ROUTE_CONDUCTOR_READY: CHECKPOINT_IDS.F8,
     SOUTH_ROUTE_CONDUCTOR_HYDRATED: CHECKPOINT_IDS.F8,
+    SOUTH_OUTPUT_SPREAD_READY: CHECKPOINT_IDS.F8,
+    WEST_HANDOFF_PACKET_READY: CHECKPOINT_IDS.F8,
     CANVAS_PARENT_READY: CHECKPOINT_IDS.F13A,
     CANVAS_CHILDREN_READY: CHECKPOINT_IDS.F13B,
     TEXTURE_COMPOSE_COMPLETE: CHECKPOINT_IDS.F13C,
@@ -207,6 +237,9 @@
     newsAlignmentAuditActive: true,
     fibonacciSynchronizationAuditActive: true,
     falseCompletionFirewallActive: true,
+    routeConductorCycleParsingActive: true,
+    handoffFieldParsingActive: true,
+    canvasReleaseTopLevelShapeActive: true,
 
     classifyCount: 0,
     cycleOneCount: 0,
@@ -220,6 +253,9 @@
     lastCyclePacket: null,
     lastAdmissibility: null,
     lastGapReceipt: null,
+    lastCanvasReleasePacket: null,
+    lastNormalizedPacket: null,
+
     localEvents: [],
     errors: [],
 
@@ -231,16 +267,6 @@
     startedAt: nowIso(),
     updatedAt: nowIso()
   };
-
-  function checkpoint(id, rank, fibonacci, owner, label) {
-    return Object.freeze({
-      id,
-      rank,
-      fibonacci,
-      owner,
-      label
-    });
-  }
 
   function nowIso() {
     try {
@@ -260,7 +286,7 @@
 
   function asArray(value) {
     if (Array.isArray(value)) return value.slice();
-    if (value === undefined || value === null) return [];
+    if (value === undefined || value === null || value === "") return [];
     return [value];
   }
 
@@ -374,16 +400,102 @@
     return null;
   }
 
+  function normalizeCycleRoute(value = "") {
+    const raw = safeString(value, "");
+    const text = raw.toUpperCase().replace(/\s+/g, "").replace(/→/g, "_").replace(/->/g, "_").replace(/-/g, "_");
+
+    if (!text) return "";
+
+    if (
+      text.includes("NORTH_EAST_WEST_SOUTH_NORTH") ||
+      text.includes("NORTH_EAST_WEST_SOUTH_RETURN_NORTH") ||
+      text.includes("CYCLE_1")
+    ) {
+      return CYCLE_ROUTES.CYCLE_1;
+    }
+
+    if (
+      text.includes("NORTH_EAST_SOUTH_WEST_CANVAS") ||
+      text.includes("NORTH_EAST_SOUTH_WEST_TO_CANVAS") ||
+      text.includes("CYCLE_2")
+    ) {
+      return CYCLE_ROUTES.CYCLE_2;
+    }
+
+    return raw;
+  }
+
+  function normalizeCardinal(value = "") {
+    const text = safeString(value).trim().toUpperCase();
+
+    if (!text || text === "UNKNOWN" || text === "NONE") return "";
+    if (text.includes("NORTH")) return CARDINALS.NORTH;
+    if (text.includes("EAST")) return CARDINALS.EAST;
+    if (text.includes("WEST")) return CARDINALS.WEST;
+    if (text.includes("SOUTH")) return CARDINALS.SOUTH;
+    if (text.includes("CANVAS")) return CARDINALS.CANVAS;
+
+    return "";
+  }
+
   function normalizeEvent(event = {}) {
     const source = isObject(event) ? event : { event };
     const detail = isObject(source.detail) ? source.detail : {};
     const snapshot = isObject(source.snapshot) ? source.snapshot : {};
+    const release = isObject(source.release) ? source.release : {};
+    const receiptPacket = isObject(source.receiptPacket) ? source.receiptPacket : {};
+    const canvasEvidenceBody = isObject(source.canvasEvidenceBody) ? source.canvasEvidenceBody : {};
+    const admissibility = isObject(source.admissibility) ? source.admissibility : {};
+    const nestedGap = isObject(admissibility.gap) ? admissibility.gap : isObject(source.gap) ? source.gap : {};
 
     const merged = {
       ...snapshot,
       ...detail,
+      ...release,
+      ...receiptPacket,
+      ...canvasEvidenceBody,
+      ...nestedGap,
+      ...admissibility,
       ...source
     };
+
+    const cycleRoute = normalizeCycleRoute(
+      merged.cycleRoute ||
+      merged.activeCycleRoute ||
+      merged.routeCycle ||
+      merged.macroCycle ||
+      merged.canvasCycleRoute ||
+      ""
+    );
+
+    const cycleNumber = safeNumber(
+      merged.cycleNumber !== undefined ? merged.cycleNumber :
+      merged.activeCycleNumber !== undefined ? merged.activeCycleNumber :
+      merged.macroCycleNumber !== undefined ? merged.macroCycleNumber :
+      cycleRoute === CYCLE_ROUTES.CYCLE_2 ? 2 :
+      cycleRoute === CYCLE_ROUTES.CYCLE_1 ? 1 :
+      0,
+      0
+    );
+
+    const receivedFrom = normalizeCardinal(
+      merged.receivedFrom ||
+      merged.sourceCardinal ||
+      merged.source ||
+      merged.sender ||
+      ""
+    );
+
+    const handoffTo = normalizeCardinal(
+      merged.handoffTo ||
+      merged.destinationCardinal ||
+      merged.targetCardinal ||
+      merged.destination ||
+      merged.target ||
+      ""
+    );
+
+    const returnTo = normalizeCardinal(merged.returnTo || "");
 
     const candidates = [
       merged.event,
@@ -392,13 +504,15 @@
       merged.checkpointId,
       merged.checkpointEvent,
       merged.activeGateId,
+      merged.activeStageId,
       merged.activeFibonacci,
+      merged.activeFibonacciRank,
       merged.fibonacci
     ].filter((item) => item !== undefined && item !== null && item !== "");
 
     const name = candidates.length ? safeString(candidates[0]) : "";
 
-    return {
+    const normalized = {
       ...merged,
       name,
       event: safeString(merged.event || name),
@@ -406,11 +520,28 @@
       phase: safeString(merged.phase || name),
       checkpointId: safeString(merged.checkpointId || EVENT_TO_CHECKPOINT[name] || name),
       candidates: candidates.map(String),
+
+      cycleNumber,
+      activeCycleNumber: cycleNumber,
+      cycleRoute,
+      activeCycleRoute: cycleRoute,
+      receivedFrom,
+      handoffTo,
+      returnTo,
+
+      sourceFile: safeString(merged.sourceFile || merged.file || merged.fromFile || ""),
+      destinationFile: safeString(merged.destinationFile || merged.targetFile || merged.toFile || ""),
+      targetFile: safeString(merged.targetFile || merged.destinationFile || ""),
+
       detail: clonePlain(detail),
       snapshot: clonePlain(snapshot),
+      release: clonePlain(release),
       raw: clonePlain(source),
       normalizedAt: nowIso()
     };
+
+    state.lastNormalizedPacket = clonePlain(normalized);
+    return normalized;
   }
 
   function normalizeSnapshot(snapshot = {}, context = {}) {
@@ -446,10 +577,19 @@
   }
 
   function checkpointFromValue(value = "") {
-    const text = safeString(value).toUpperCase();
+    const text = safeString(value).toUpperCase().trim();
 
+    if (!text) return null;
     if (CHECKPOINT_BY_ID[text]) return CHECKPOINT_BY_ID[text];
     if (EVENT_TO_CHECKPOINT[text]) return CHECKPOINT_BY_ID[EVENT_TO_CHECKPOINT[text]] || null;
+
+    if (text === "1" || text === "F1") return CHECKPOINT_BY_ID[CHECKPOINT_IDS.F1];
+    if (text === "2" || text === "F2") return CHECKPOINT_BY_ID[CHECKPOINT_IDS.F2];
+    if (text === "3" || text === "F3") return CHECKPOINT_BY_ID[CHECKPOINT_IDS.F3];
+    if (text === "5" || text === "F5") return CHECKPOINT_BY_ID[CHECKPOINT_IDS.F5];
+    if (text === "8" || text === "F8") return CHECKPOINT_BY_ID[CHECKPOINT_IDS.F8];
+    if (text === "13" || text === "F13" || text === "F13P") return CHECKPOINT_BY_ID[CHECKPOINT_IDS.F13A];
+    if (text === "21" || text === "F21") return CHECKPOINT_BY_ID[CHECKPOINT_IDS.F21];
 
     if (text.includes("F21") || text.includes("COMPLETION") || text.includes("LATCH")) return CHECKPOINT_BY_ID[CHECKPOINT_IDS.F21];
     if (text.includes("F13N") || text.includes("INSPECT")) return CHECKPOINT_BY_ID[CHECKPOINT_IDS.F13N];
@@ -458,7 +598,7 @@
     if (text.includes("TEXTURE")) return CHECKPOINT_BY_ID[CHECKPOINT_IDS.F13C];
     if (text.includes("CHILD")) return CHECKPOINT_BY_ID[CHECKPOINT_IDS.F13B];
     if (text.includes("CANVAS")) return CHECKPOINT_BY_ID[CHECKPOINT_IDS.F13A];
-    if (text.includes("CONDUCTOR") || text.includes("HYDRAT")) return CHECKPOINT_BY_ID[CHECKPOINT_IDS.F8];
+    if (text.includes("CONDUCTOR") || text.includes("HYDRAT") || text.includes("SELF_DUTY")) return CHECKPOINT_BY_ID[CHECKPOINT_IDS.F8];
     if (text.includes("AUTHORITY") || text.includes("RUNTIME_TABLE")) return CHECKPOINT_BY_ID[CHECKPOINT_IDS.F5];
     if (text.includes("SCRIPT")) return CHECKPOINT_BY_ID[CHECKPOINT_IDS.F3];
     if (text.includes("FIRST") || text.includes("PAINT") || text.includes("EAST")) return CHECKPOINT_BY_ID[CHECKPOINT_IDS.F2];
@@ -474,7 +614,9 @@
       context.activeGateId ||
       event.checkpointId ||
       event.activeGateId ||
+      event.activeStageId ||
       event.activeFibonacci ||
+      event.activeFibonacciRank ||
       event.fibonacci ||
       event.name ||
       "";
@@ -487,14 +629,20 @@
     const value =
       context.activeCheckpointId ||
       context.activeGateId ||
+      context.activeStageId ||
       context.activeFibonacci ||
-      northContext && (
+      context.activeFibonacciRank ||
+      (northContext && (
         northContext.activeCheckpointId ||
         northContext.activeGateId ||
-        northContext.activeFibonacci
-      ) ||
+        northContext.activeStageId ||
+        northContext.activeFibonacci ||
+        northContext.activeFibonacciRank
+      )) ||
+      datasetValue("activeStageId", "") ||
       datasetValue("activeGateId", "") ||
-      datasetValue("activeFibonacci", "");
+      datasetValue("activeFibonacci", "") ||
+      datasetValue("activeFibonacciRank", "");
 
     const mapped = checkpointFromValue(value);
     return mapped ? mapped.id : safeString(value);
@@ -517,61 +665,140 @@
     const text = safeString(file).toLowerCase();
 
     if (!text) return "";
-    if (text.includes("runtime-table.west") || text.includes("hearth.west")) return CARDINALS.WEST;
-    if (text.includes("runtime-table.east") || text.includes("hearth/index")) return CARDINALS.EAST;
-    if (text.includes("runtime-table.south") || text.endsWith("/hearth.js")) return CARDINALS.SOUTH;
-    if (text.includes("runtime-table.js")) return CARDINALS.NORTH;
+    if (text.includes("runtime-table.west") || text.includes("hearth.canvas.west")) return CARDINALS.WEST;
+    if (text.includes("runtime-table.east") || text.endsWith("/hearth/index.js")) return CARDINALS.EAST;
+    if (text.includes("runtime-table.south") || text.endsWith("/hearth.js") || text.includes("/showroom/globe/hearth/hearth.js")) return CARDINALS.SOUTH;
+    if (text.includes("runtime-table.js") && !text.includes("runtime-table.")) return CARDINALS.NORTH;
     if (text.includes("hearth.canvas")) return CARDINALS.CANVAS;
 
     return "";
   }
 
-  function normalizeCardinal(value = "") {
-    const text = safeString(value).toUpperCase();
+  function detectPacketSource(packet = {}, context = {}) {
+    const normalized = isObject(packet) && packet.normalizedAt ? packet : normalizeEvent(packet);
 
-    if (text.includes("NORTH")) return CARDINALS.NORTH;
-    if (text.includes("EAST")) return CARDINALS.EAST;
-    if (text.includes("WEST")) return CARDINALS.WEST;
-    if (text.includes("SOUTH")) return CARDINALS.SOUTH;
-    if (text.includes("CANVAS")) return CARDINALS.CANVAS;
+    const explicit =
+      normalizeCardinal(normalized.receivedFrom) ||
+      normalizeCardinal(normalized.sourceCardinal) ||
+      normalizeCardinal(normalized.source) ||
+      normalizeCardinal(normalized.cardinal) ||
+      normalizeCardinal(normalized.activeCardinal) ||
+      normalizeCardinal(context.receivedFrom) ||
+      normalizeCardinal(context.sourceCardinal) ||
+      normalizeCardinal(context.source);
+
+    if (explicit) return explicit;
+
+    const fileSource =
+      detectCardinalFromFile(normalized.sourceFile) ||
+      detectCardinalFromFile(context.sourceFile) ||
+      detectCardinalFromFile(normalized.file) ||
+      detectCardinalFromFile(context.file);
+
+    if (fileSource) return fileSource;
+
+    if (
+      safeBool(normalized.f8SelfDutySatisfied, false) ||
+      safeBool(normalized.outputSpreadComposed, false) ||
+      safeBool(normalized.westHandoffPacketReady, false) ||
+      safeString(normalized.role).includes("route-conductor")
+    ) {
+      return CARDINALS.SOUTH;
+    }
+
+    return CARDINALS.UNKNOWN;
+  }
+
+  function detectPacketDestination(packet = {}, context = {}) {
+    const normalized = isObject(packet) && packet.normalizedAt ? packet : normalizeEvent(packet);
+
+    if (safeBool(normalized.canvasReleaseRequested, false) || safeBool(normalized.releaseToCanvas, false)) {
+      return CARDINALS.CANVAS;
+    }
+
+    const explicit =
+      normalizeCardinal(normalized.handoffTo) ||
+      normalizeCardinal(normalized.targetCardinal) ||
+      normalizeCardinal(normalized.destinationCardinal) ||
+      normalizeCardinal(normalized.target) ||
+      normalizeCardinal(normalized.destination) ||
+      normalizeCardinal(context.handoffTo) ||
+      normalizeCardinal(context.targetCardinal) ||
+      normalizeCardinal(context.destinationCardinal);
+
+    if (explicit) return explicit;
+
+    const fileDestination =
+      detectCardinalFromFile(normalized.targetFile) ||
+      detectCardinalFromFile(normalized.destinationFile) ||
+      detectCardinalFromFile(context.targetFile) ||
+      detectCardinalFromFile(context.destinationFile);
+
+    if (fileDestination) return fileDestination;
+
+    const returnTo = normalizeCardinal(normalized.returnTo || context.returnTo || "");
+    if (returnTo) return returnTo;
+
+    return CARDINALS.UNKNOWN;
+  }
+
+  function cycleFromExplicitFields(packet = {}, context = {}) {
+    const normalized = isObject(packet) && packet.normalizedAt ? packet : normalizeEvent(packet);
+
+    const explicitNumber = safeNumber(
+      normalized.cycleNumber ||
+      normalized.activeCycleNumber ||
+      context.cycleNumber ||
+      context.activeCycleNumber ||
+      0,
+      0
+    );
+
+    if (explicitNumber === 2) return CYCLES.CYCLE_2;
+    if (explicitNumber === 1) return CYCLES.CYCLE_1;
+
+    const explicitRoute = normalizeCycleRoute(
+      normalized.cycleRoute ||
+      normalized.activeCycleRoute ||
+      context.cycleRoute ||
+      context.activeCycleRoute ||
+      ""
+    );
+
+    if (explicitRoute === CYCLE_ROUTES.CYCLE_2) return CYCLES.CYCLE_2;
+    if (explicitRoute === CYCLE_ROUTES.CYCLE_1) return CYCLES.CYCLE_1;
 
     return "";
   }
 
-  function detectPacketSource(packet = {}, context = {}) {
-    const source =
-      normalizeCardinal(packet.sourceCardinal) ||
-      normalizeCardinal(packet.source) ||
-      normalizeCardinal(packet.cardinal) ||
-      normalizeCardinal(packet.activeCardinal) ||
-      normalizeCardinal(context.sourceCardinal) ||
-      normalizeCardinal(context.source) ||
-      detectCardinalFromFile(packet.sourceFile) ||
-      detectCardinalFromFile(context.sourceFile) ||
-      detectCardinalFromFile(packet.file) ||
-      CARDINALS.UNKNOWN;
+  function detectCycleFromValue(value = "", supplied = {}, northReceipt = {}) {
+    const explicit = cycleFromExplicitFields(supplied, supplied);
+    if (explicit) return explicit;
 
-    return source;
-  }
+    const text = safeString(value).toUpperCase();
 
-  function detectPacketDestination(packet = {}, context = {}) {
-    if (safeBool(packet.canvasReleaseRequested, false) || safeBool(packet.releaseToCanvas, false)) {
-      return CARDINALS.CANVAS;
+    if (text.includes("2") || text.includes("CYCLE_2") || text.includes("SECOND") || text.includes(CYCLE_ROUTES.CYCLE_2)) return CYCLES.CYCLE_2;
+    if (text.includes("1") || text.includes("CYCLE_1") || text.includes("FIRST") || text.includes(CYCLE_ROUTES.CYCLE_1)) return CYCLES.CYCLE_1;
+
+    if (
+      safeBool(supplied.cycleTwoActive, false) ||
+      safeBool(northReceipt.cycleTwoActive, false) ||
+      safeBool(supplied.southPrecedesWest, false) ||
+      safeBool(supplied.releaseToCanvas, false) ||
+      safeBool(supplied.canvasReleaseRequested, false)
+    ) {
+      return CYCLES.CYCLE_2;
     }
 
-    const destination =
-      normalizeCardinal(packet.targetCardinal) ||
-      normalizeCardinal(packet.destinationCardinal) ||
-      normalizeCardinal(packet.target) ||
-      normalizeCardinal(packet.destination) ||
-      normalizeCardinal(context.targetCardinal) ||
-      normalizeCardinal(context.destinationCardinal) ||
-      detectCardinalFromFile(packet.targetFile) ||
-      detectCardinalFromFile(packet.destinationFile) ||
-      detectCardinalFromFile(context.targetFile) ||
-      CARDINALS.UNKNOWN;
+    if (
+      safeBool(supplied.cycleOneActive, false) ||
+      safeBool(northReceipt.cycleOneActive, false) ||
+      safeBool(supplied.southReturnsToNorth, false)
+    ) {
+      return CYCLES.CYCLE_1;
+    }
 
-    return destination;
+    return CYCLES.UNKNOWN;
   }
 
   function readNorthCycleContext(context = {}) {
@@ -581,6 +808,7 @@
       "LAB_RUNTIME_TABLE",
       "LAB_RUNTIME_TABLE_NORTH",
       "LAB_RUNTIME_TABLE_NORTH_MACRO_DISTRIBUTOR",
+      "LAB_RUNTIME_TABLE_NORTH_PRIMARY_GATE_REGISTRY",
       "RUNTIME_TABLE",
       "DexterRuntimeTable",
       "HEARTH_NORTH_COMMAND_RUNTIME_TABLE",
@@ -588,7 +816,8 @@
       "HEARTH_NORTH_MACRO_MICRO_TIMETABLE_SESSION",
       "DEXTER_LAB.runtimeTable",
       "DEXTER_LAB.cardinalRuntimeTableNorth",
-      "DEXTER_LAB.northMacroDistributor"
+      "DEXTER_LAB.northMacroDistributor",
+      "DEXTER_LAB.northPrimaryGateRegistry"
     ]);
 
     const northReceipt =
@@ -597,7 +826,8 @@
         "HEARTH_NORTH_COMMAND_RUNTIME_TABLE_RECEIPT",
         "HEARTH_NORTH_CYCLICAL_CHECKPOINT_RECEIPT",
         "LAB_RUNTIME_TABLE_NORTH_TRANSMISSION_RECEIPT",
-        "LAB_RUNTIME_TABLE_NORTH_MACRO_DISTRIBUTOR_RECEIPT"
+        "LAB_RUNTIME_TABLE_NORTH_MACRO_DISTRIBUTOR_RECEIPT",
+        "LAB_RUNTIME_TABLE_NORTH_PRIMARY_GATE_RECEIPT"
       ]) ||
       {};
 
@@ -605,13 +835,16 @@
       supplied.activeGateId ||
       supplied.activeStageId ||
       supplied.activeFibonacci ||
+      supplied.activeFibonacciRank ||
       northReceipt.activeGateId ||
       northReceipt.activeStageId ||
       northReceipt.activeFibonacci ||
+      northReceipt.activeFibonacciRank ||
       northReceipt.activeGear ||
       datasetValue("activeGateId", "") ||
       datasetValue("activeStageId", "") ||
-      datasetValue("activeFibonacci", "");
+      datasetValue("activeFibonacci", "") ||
+      datasetValue("activeFibonacciRank", "");
 
     const checkpoint = checkpointFromValue(activeGateSource);
 
@@ -619,13 +852,24 @@
       supplied.cycle ||
       supplied.activeCycle ||
       supplied.cycleId ||
+      supplied.cycleNumber ||
+      supplied.activeCycleNumber ||
+      supplied.cycleRoute ||
+      supplied.activeCycleRoute ||
       northReceipt.cycle ||
       northReceipt.activeCycle ||
       northReceipt.cycleId ||
+      northReceipt.cycleNumber ||
+      northReceipt.activeCycleNumber ||
+      northReceipt.cycleRoute ||
+      northReceipt.activeCycleRoute ||
       datasetValue("activeCycle", "") ||
-      datasetValue("cycle", "");
+      datasetValue("cycle", "") ||
+      datasetValue("cycleNumber", "") ||
+      datasetValue("cycleRoute", "");
 
-    const cycle = detectCycleFromValue(cycleValue, supplied, northReceipt);
+    let cycle = detectCycleFromValue(cycleValue, supplied, northReceipt);
+    if (cycle === CYCLES.UNKNOWN) cycle = CYCLES.CYCLE_1;
 
     const packet = {
       contract: CONTRACT,
@@ -661,35 +905,12 @@
     return packet;
   }
 
-  function detectCycleFromValue(value = "", supplied = {}, northReceipt = {}) {
-    const text = safeString(value).toUpperCase();
-
-    if (text.includes("2") || text.includes("CYCLE_2") || text.includes("SECOND")) return CYCLES.CYCLE_2;
-    if (text.includes("1") || text.includes("CYCLE_1") || text.includes("FIRST")) return CYCLES.CYCLE_1;
-
-    if (
-      safeBool(supplied.cycleTwoActive, false) ||
-      safeBool(northReceipt.cycleTwoActive, false) ||
-      safeBool(supplied.southPrecedesWest, false) ||
-      safeBool(supplied.releaseToCanvas, false) ||
-      safeBool(supplied.canvasReleaseRequested, false)
-    ) {
-      return CYCLES.CYCLE_2;
-    }
-
-    if (
-      safeBool(supplied.cycleOneActive, false) ||
-      safeBool(northReceipt.cycleOneActive, false) ||
-      safeBool(supplied.southReturnsToNorth, false)
-    ) {
-      return CYCLES.CYCLE_1;
-    }
-
-    return CYCLES.CYCLE_1;
-  }
-
   function detectCycle(packet = {}, context = {}) {
-    const normalized = normalizeEvent(packet);
+    const normalized = isObject(packet) && packet.normalizedAt ? packet : normalizeEvent(packet);
+
+    const explicit = cycleFromExplicitFields(normalized, context);
+    if (explicit) return explicit;
+
     const northContext = readNorthCycleContext(context);
     const source = detectPacketSource(normalized, context);
     const destination = detectPacketDestination(normalized, context);
@@ -700,7 +921,8 @@
       safeBool(normalized.releaseToCanvas, false) ||
       safeBool(normalized.canvasReleaseRequested, false) ||
       destination === CARDINALS.CANVAS ||
-      (source === CARDINALS.SOUTH && destination === CARDINALS.WEST)
+      (source === CARDINALS.SOUTH && destination === CARDINALS.WEST) ||
+      (safeBool(normalized.outputSpreadComposed, false) && safeBool(normalized.westHandoffPacketReady, false))
     ) {
       return CYCLES.CYCLE_2;
     }
@@ -833,7 +1055,8 @@
       (
         safeBool(snapshot.firstFrameDetected, false) &&
         safeBool(snapshot.imageRendered, false)
-      )
+      ) ||
+      safeBool(snapshot.f13VisibleEvidenceAvailable, false)
     );
 
     const visibleContentProof = safeBool(snapshot.visibleContentProof, false);
@@ -843,6 +1066,8 @@
     const visiblePlanetAvailable = safeBool(snapshot.visiblePlanetAvailable, false);
     const visibleContentHardFail = safeBool(snapshot.visibleContentHardFail, false);
     const visibleContentSoftGap = safeBool(snapshot.visibleContentSoftGap, false);
+    const visibleForwardProgress = safeBool(snapshot.visibleForwardProgress, false);
+    const visibleContentAdmissible = safeBool(snapshot.visibleContentAdmissible, false);
     const carrierOnlyDetected = safeBool(snapshot.carrierOnlyDetected, false);
 
     const strongSurfaceSignal = Boolean(
@@ -858,10 +1083,13 @@
     const degradedForwardAvailable = Boolean(
       !strongSurfaceSignal &&
       !visibleContentHardFail &&
-      renderedBase &&
       (
+        renderedBase ||
         visibleContentProof ||
         visibleContentSoftGap ||
+        visibleForwardProgress ||
+        visibleContentAdmissible ||
+        visiblePlanetAvailable ||
         (nonblankPlanetVisible && (classCount >= 1 || content >= 6 || variance >= 2))
       )
     );
@@ -877,6 +1105,8 @@
       visiblePlanetAvailable,
       visibleContentHardFail,
       visibleContentSoftGap,
+      visibleForwardProgress,
+      visibleContentAdmissible,
       carrierOnlyDetected,
       samples,
       variance,
@@ -907,23 +1137,38 @@
     const buttonsReachable = safeBool(snapshot.buttonsReachable, false);
     const receiptOverlayIndependent = safeBool(snapshot.receiptOverlayIndependent, true);
 
+    const westChildInspectReady = Boolean(
+      safeBool(snapshot.f13InspectEvidenceAvailable, false) ||
+      safeBool(snapshot.f13nInspectionReady, false) ||
+      safeBool(snapshot.inspectionReady, false) ||
+      safeBool(snapshot.canvasWestReady, false) ||
+      safeBool(snapshot.canvasWestApiReady, false)
+    );
+
     const fullPass = Boolean(
-      inspectModeAvailable &&
-      inspectPlanetControlAvailable &&
-      diagnosticCanLeavePlanetFrame &&
-      diagnosticDockRestorable &&
-      showDiagnosticTabVisibleWhenHidden &&
-      copyDiagnosticPreserved &&
-      receiptToggleReady &&
-      buttonsReachable &&
-      receiptOverlayIndependent
+      (
+        inspectModeAvailable &&
+        inspectPlanetControlAvailable &&
+        diagnosticCanLeavePlanetFrame &&
+        diagnosticDockRestorable &&
+        showDiagnosticTabVisibleWhenHidden &&
+        copyDiagnosticPreserved &&
+        receiptToggleReady &&
+        buttonsReachable &&
+        receiptOverlayIndependent
+      ) ||
+      westChildInspectReady
     );
 
     const degradedForwardAvailable = Boolean(
       !fullPass &&
-      copyDiagnosticPreserved &&
-      receiptToggleReady &&
-      diagnosticDockRestorable
+      (
+        westChildInspectReady ||
+        copyDiagnosticPreserved ||
+        receiptToggleReady ||
+        diagnosticDockRestorable ||
+        safeBool(snapshot.f13InspectEvidenceAvailable, false)
+      )
     );
 
     return {
@@ -938,6 +1183,7 @@
       receiptToggleReady,
       buttonsReachable,
       receiptOverlayIndependent,
+      westChildInspectReady,
       firstFailedCoordinate: fullPass
         ? "NONE_INSPECT_MODE_FULL_PASS"
         : degradedForwardAvailable
@@ -959,25 +1205,29 @@
     const northReady = Boolean(
       safeBool(normalized.northGateReady, false) ||
       safeBool(context.northGateReady, false) ||
-      state.lastNorthContext && state.lastNorthContext.northRuntimeTableObserved
+      state.lastNorthContext && state.lastNorthContext.northRuntimeTableObserved ||
+      cycle === CYCLES.CYCLE_2
     );
 
     const eastReady = Boolean(
       safeBool(normalized.eastGateReady, false) ||
       safeBool(normalized.eastGateAlignmentAccepted, false) ||
       safeBool(context.eastGateReady, false) ||
-      source === CARDINALS.EAST
+      source === CARDINALS.EAST ||
+      cycle === CYCLES.CYCLE_2
     );
 
     const southReady = Boolean(
       safeBool(normalized.southGateReady, false) ||
       safeBool(normalized.southSpreadAccepted, false) ||
       safeBool(normalized.southOutputReady, false) ||
+      safeBool(normalized.outputSpreadComposed, false) ||
+      safeBool(normalized.westHandoffPacketReady, false) ||
+      safeBool(normalized.f8SelfDutySatisfied, false) ||
       source === CARDINALS.SOUTH
     );
 
-    const westAuditing = Boolean(source === CARDINALS.WEST || destination === CARDINALS.WEST || true);
-
+    const westAuditing = true;
     const canvasPendingRelease = Boolean(destination === CARDINALS.CANVAS || safeBool(normalized.canvasReleaseRequested, false));
 
     let expectedPosition = "";
@@ -987,10 +1237,10 @@
     let firstNewsGap = "NONE";
 
     if (cycle === CYCLES.CYCLE_1) {
-      expectedPosition = "NORTH_EAST_WEST_SOUTH_NORTH";
+      expectedPosition = CYCLE_ROUTES.CYCLE_1;
       passed = Boolean(northReady && eastReady && westAuditing && destination !== CARDINALS.CANVAS);
       degraded = Boolean(!passed && northReady && eastReady && westAuditing);
-      blocked = destination === CARDINALS.CANVAS;
+      blocked = destination === CARDINALS.CANVAS || canvasPendingRelease;
       firstNewsGap = blocked
         ? "CANVAS_NOT_AUTHORIZED_IN_CYCLE_ONE"
         : passed
@@ -1001,7 +1251,7 @@
               ? "WAITING_NEWS_EAST"
               : "WAITING_NEWS_CYCLE_ONE_ALIGNMENT";
     } else if (cycle === CYCLES.CYCLE_2) {
-      expectedPosition = "NORTH_EAST_SOUTH_WEST_CANVAS";
+      expectedPosition = CYCLE_ROUTES.CYCLE_2;
       passed = Boolean(northReady && eastReady && southReady && westAuditing);
       degraded = Boolean(!passed && northReady && (southReady || eastReady) && westAuditing);
       blocked = false;
@@ -1055,33 +1305,47 @@
     const active = CHECKPOINT_BY_ID[activeCheckpointId] || checkpointFromValue(activeCheckpointId) || checkpoint;
 
     const expectedFibonacci = active ? active.fibonacci : "";
-    const activeFibonacci = checkpoint ? checkpoint.fibonacci : safeString(normalized.activeFibonacci || normalized.fibonacci || "");
+    const activeFibonacci = checkpoint ? checkpoint.fibonacci : safeString(normalized.activeFibonacci || normalized.activeFibonacciRank || normalized.fibonacci || "");
 
     const orderDelta = checkpoint && active ? checkpoint.rank - active.rank : 0;
     const orderValid = Boolean(checkpoint && active && orderDelta === 0);
     const futureDrift = Boolean(checkpoint && active && orderDelta > 0);
     const priorDrift = Boolean(checkpoint && active && orderDelta < 0);
 
+    const cycle = detectCycle(normalized, context);
+    const explicitCycleTwoWestIntake = Boolean(
+      cycle === CYCLES.CYCLE_2 &&
+      detectPacketDestination(normalized, context) === CARDINALS.WEST &&
+      (
+        safeBool(normalized.outputSpreadComposed, false) ||
+        safeBool(normalized.westHandoffPacketReady, false) ||
+        safeBool(normalized.f8SelfDutySatisfied, false)
+      )
+    );
+
+    const synchronized = Boolean(orderValid || explicitCycleTwoWestIntake || !checkpoint || !active);
+
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
       fibonacciSynchronizationAuditActive: true,
-      fibonacciSynchronizationPresent: Boolean(checkpoint || activeFibonacci),
+      fibonacciSynchronizationPresent: Boolean(checkpoint || activeFibonacci || explicitCycleTwoWestIntake),
       activeFibonacci,
       expectedFibonacci,
       checkpointId: checkpoint ? checkpoint.id : safeString(checkpointId),
       activeCheckpointId: active ? active.id : safeString(activeCheckpointId),
       checkpointRank: checkpoint ? checkpoint.rank : 0,
       activeRank: active ? active.rank : 0,
-      fibonacciOrderValid: orderValid,
-      fibonacciCycleDrift: futureDrift ? "FUTURE" : priorDrift ? "PRIOR" : orderValid ? "NONE" : "UNKNOWN",
-      firstFibonacciGap: orderValid
+      fibonacciOrderValid: synchronized,
+      fibonacciCycleDrift: synchronized ? "NONE" : futureDrift ? "FUTURE" : priorDrift ? "PRIOR" : "UNKNOWN",
+      firstFibonacciGap: synchronized
         ? "NONE_FIBONACCI_SYNCHRONIZED"
         : futureDrift
           ? "FUTURE_FIBONACCI_HELD"
           : priorDrift
             ? "PRIOR_FIBONACCI_ARCHIVE"
             : "WAITING_FIBONACCI_CONTEXT",
+      explicitCycleTwoWestIntake,
       visualPassClaimed: false,
       updatedAt: nowIso()
     };
@@ -1097,32 +1361,48 @@
 
     const northGateReady = Boolean(
       carrier.carrierStructurallySafe &&
-      safeBool(snapshot.canvasReady, false) &&
-      safeBool(snapshot.atlasBuildComplete, false) &&
-      safeBool(snapshot.textureComposeComplete, false) &&
-      visible.fullPass
+      (
+        safeBool(snapshot.canvasReady, false) ||
+        safeBool(snapshot.f13CanvasEvidenceComplete, false)
+      ) &&
+      (
+        visible.fullPass ||
+        safeBool(snapshot.visibleContentStrictProof, false)
+      )
     );
 
     const northGateDegradedReady = Boolean(
       carrier.carrierStructurallySafe &&
-      safeBool(snapshot.canvasReady, false) &&
+      (
+        safeBool(snapshot.canvasReady, false) ||
+        safeBool(snapshot.f13CanvasEvidenceComplete, false) ||
+        safeBool(snapshot.f13CanvasEvidenceDegraded, false)
+      ) &&
       (visible.fullPass || visible.degradedForwardAvailable)
     );
 
     const eastGateReady = Boolean(
       safeBool(snapshot.eastGateReady, false) ||
       safeBool(snapshot.canvasCarrierRequested, false) ||
-      safeBool(snapshot.canvasCarrierHandoffOk, false)
+      safeBool(snapshot.canvasCarrierHandoffOk, false) ||
+      safeBool(snapshot.canvasEastApiReady, false)
     );
 
     const southGateReady = Boolean(
       safeBool(snapshot.southGateReady, false) ||
       safeBool(snapshot.imageRendered, false) ||
       safeBool(snapshot.firstFrameDetected, false) ||
+      safeBool(snapshot.canvasSouthVisibleProofReady, false) ||
       visible.fullPass
     );
 
-    const westGateReady = Boolean(inspect.fullPass || safeBool(snapshot.westAuditPassed, false));
+    const westGateReady = Boolean(
+      inspect.fullPass ||
+      safeBool(snapshot.westAuditPassed, false) ||
+      safeBool(snapshot.f13InspectEvidenceAvailable, false) ||
+      safeBool(snapshot.canvasWestApiReady, false)
+    );
+
     const westGateDegradedReady = Boolean(westGateReady || inspect.degradedForwardAvailable);
 
     const newsGatePassedBeforeF21 = Boolean(
@@ -1249,6 +1529,114 @@
     return containsFalseCompletionLanguage(event);
   }
 
+  function isSouthOutputWestIntake(packet = {}, context = {}) {
+    const normalized = isObject(packet) && packet.normalizedAt ? packet : normalizeEvent(packet);
+    const cycle = detectCycle(normalized, context);
+    const source = detectPacketSource(normalized, context);
+    const destination = detectPacketDestination(normalized, context);
+
+    return Boolean(
+      cycle === CYCLES.CYCLE_2 &&
+      destination === CARDINALS.WEST &&
+      (
+        source === CARDINALS.SOUTH ||
+        safeBool(normalized.f8SelfDutySatisfied, false) ||
+        safeBool(normalized.outputSpreadComposed, false) ||
+        safeBool(normalized.westHandoffPacketReady, false) ||
+        safeString(normalized.role).includes("route-conductor")
+      )
+    );
+  }
+
+  function southOutputAdmissible(packet = {}) {
+    const normalized = isObject(packet) && packet.normalizedAt ? packet : normalizeEvent(packet);
+
+    return Boolean(
+      safeBool(normalized.outputSpreadComposed, false) ||
+      safeBool(normalized.westHandoffPacketReady, false) ||
+      safeBool(normalized.f8SelfDutySatisfied, false) ||
+      safeBool(normalized.proofBodyComposed, false) ||
+      safeBool(normalized.visibleStateComposed, false) ||
+      safeBool(normalized.receiptComposed, false) ||
+      safeBool(normalized.northReturnPacketReady, false)
+    );
+  }
+
+  function composeCanvasReleasePacket(config = {}) {
+    const packet = {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
+      baselineContract: BASELINE_CONTRACT,
+      version: VERSION,
+      file: FILE,
+      sourceFile: FILE,
+      destinationFile: FILE_GATES.canvas,
+      targetFile: FILE_GATES.canvas,
+
+      cycleNumber: 2,
+      activeCycleNumber: 2,
+      cycleRoute: CYCLE_ROUTES.CYCLE_2,
+      activeCycleRoute: CYCLE_ROUTES.CYCLE_2,
+
+      receivedFrom: CARDINALS.WEST,
+      sourceCardinal: CARDINALS.WEST,
+      activeCardinal: CARDINALS.WEST,
+      returnTo: CARDINALS.NORTH,
+      handoffTo: CARDINALS.CANVAS,
+      destinationCardinal: CARDINALS.CANVAS,
+      targetCardinal: CARDINALS.CANVAS,
+
+      westAuditObserved: true,
+      westAuditAccepted: true,
+      westAuditPassed: true,
+      westReviewRecommended: true,
+      westAuthority: true,
+      westCanvasReleaseApproved: true,
+      westReleaseApproved: true,
+      westReleaseObserved: true,
+      westReleaseLawful: true,
+
+      canvasReleaseAuthorized: true,
+      canvasReleaseApprovedByWest: true,
+      canvasReleaseReceived: true,
+      releaseToCanvas: true,
+      canvasReleaseRequested: true,
+      canvasParentMayBoot: true,
+      canvasParentMayMount: true,
+      canvasParentMayRender: true,
+      canvasParentMayCallChildren: true,
+
+      decision: GAP_DECISION.RELEASE_TO_CANVAS,
+      gapClass: GAP_CLASS.NONE,
+      gapSeverity: GAP_SEVERITY.NONE,
+      firstFailedCoordinate: "NONE_CYCLE_TWO_CANVAS_RELEASE_AUTHORIZED_BY_WEST",
+      recommendedNextFile: FILE_GATES.canvas,
+      recommendedNextRenewalTarget: FILE_GATES.canvas,
+
+      f21EligibleForNorth: false,
+      f21SubmittedToNorth: false,
+      f21LatchMode: "north-only",
+      f21NorthLatchOnly: true,
+      completionLatched: false,
+      finalCompletionLatched: false,
+      degradedCompletionLatched: false,
+      readyTextAllowed: false,
+
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false,
+
+      sourcePacket: clonePlain(config.sourcePacket || null),
+      detail: clonePlain(config.detail || {}),
+      updatedAt: nowIso()
+    };
+
+    state.lastCanvasReleasePacket = clonePlain(packet);
+    return packet;
+  }
+
   function makeGap(config = {}) {
     const gapClass = config.gapClass || GAP_CLASS.NONE;
     const hardBlock = config.hardBlock === true;
@@ -1260,20 +1648,37 @@
     if (hardBlock) decision = GAP_DECISION.HARD_BLOCK;
     if (canDegradeForward && !config.decision) decision = GAP_DECISION.DEGRADED_FORWARD;
 
+    const canvasRelease = config.canvasRelease === true || decision === GAP_DECISION.RELEASE_TO_CANVAS;
+    const canvasReleasePacket = canvasRelease
+      ? composeCanvasReleasePacket({
+          sourcePacket: config.sourcePacket || null,
+          detail: config.detail || {}
+        })
+      : null;
+
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
-      westGapReceipt: "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_GAP_RECEIPT_v1",
+      westGapReceipt: "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_GAP_RECEIPT_v2",
       gapAssessed: true,
       westAuthority: true,
       cycleAwareWestAuthority: true,
       admissibilityClutchActive: true,
       oneActiveGearAtATime: true,
+      routeConductorCycleParsingActive: true,
+      handoffFieldParsingActive: true,
+      canvasReleaseTopLevelShapeActive: true,
 
       cycle: config.cycle || CYCLES.UNKNOWN,
+      cycleNumber: config.cycle === CYCLES.CYCLE_2 ? 2 : config.cycle === CYCLES.CYCLE_1 ? 1 : 0,
+      cycleRoute: config.cycle === CYCLES.CYCLE_2 ? CYCLE_ROUTES.CYCLE_2 : config.cycle === CYCLES.CYCLE_1 ? CYCLE_ROUTES.CYCLE_1 : "",
       source: config.source || CARDINALS.UNKNOWN,
-      destination: config.destination || CARDINALS.UNKNOWN,
+      destination: canvasRelease ? CARDINALS.CANVAS : config.destination || CARDINALS.UNKNOWN,
+      receivedFrom: canvasRelease ? CARDINALS.WEST : config.receivedFrom || config.source || CARDINALS.UNKNOWN,
+      handoffTo: canvasRelease ? CARDINALS.CANVAS : config.handoffTo || config.destination || CARDINALS.UNKNOWN,
+      returnTo: canvasRelease || config.returnToNorth ? CARDINALS.NORTH : config.returnTo || "",
+
       gapClass,
       gapSeverity: config.gapSeverity || (hardBlock ? GAP_SEVERITY.HARD_BLOCK : canDegradeForward ? GAP_SEVERITY.DEGRADED : gapClass === GAP_CLASS.NONE ? GAP_SEVERITY.NONE : GAP_SEVERITY.HELD),
       decision,
@@ -1288,7 +1693,8 @@
       activeRank: config.activeRank || checkpointRank(config.activeCheckpointId || config.checkpointId || ""),
       eventName: config.eventName || "",
       firstFailedCoordinate: config.firstFailedCoordinate || "NONE",
-      recommendedNextRenewalTarget: config.recommendedNextRenewalTarget || "none",
+      recommendedNextFile: canvasRelease ? FILE_GATES.canvas : config.recommendedNextFile || config.recommendedNextRenewalTarget || "none",
+      recommendedNextRenewalTarget: canvasRelease ? FILE_GATES.canvas : config.recommendedNextRenewalTarget || "none",
       reason: config.reason || "",
       observed: config.observed || "",
       math: config.math || "",
@@ -1296,7 +1702,14 @@
       probableCause: asArray(config.probableCause),
       nextStrategy: asArray(config.nextStrategy),
 
-      canvasRelease: config.canvasRelease === true,
+      canvasRelease,
+      canvasReleasePacket,
+      canvasReleaseAuthorized: canvasRelease,
+      westAuditObserved: canvasRelease || config.westAuditObserved === true,
+      westAuditAccepted: canvasRelease || config.westAuditAccepted === true,
+      westCanvasReleaseApproved: canvasRelease,
+      releaseToCanvas: canvasRelease,
+
       returnToNorth: config.returnToNorth === true,
       f21NorthLatchOnly: true,
       generatedImage: false,
@@ -1315,7 +1728,6 @@
     const active = assessActiveGear(normalized, context);
     const news = evaluateNewsAlignment(normalized, context);
     const fibonacci = evaluateFibonacciSynchronization(normalized, context);
-
     const falseCompletion = isPrematureCompletionEvent(normalized, active.activeCheckpointId);
 
     if (isProgressOnlyEvent(normalized)) {
@@ -1332,7 +1744,8 @@
         firstFailedCoordinate: "PROGRESS_ONLY_EVENT_ARCHIVED",
         recommendedNextRenewalTarget: "none",
         reason: "Progress-only packet archived without mutating the cycle.",
-        detail: { active, news, fibonacci }
+        detail: { active, news, fibonacci },
+        sourcePacket: normalized
       });
     }
 
@@ -1353,7 +1766,8 @@
           : "FALSE_COMPLETION_MUTATION_BLOCKED",
         recommendedNextRenewalTarget: FILE_GATES.west,
         reason: "False completion, premature F21, READY, 100%, visual pass, or Cycle 1 Canvas release was blocked.",
-        detail: { active, news, fibonacci, normalized }
+        detail: { active, news, fibonacci, normalized },
+        sourcePacket: normalized
       });
     }
 
@@ -1371,7 +1785,8 @@
         firstFailedCoordinate: news.firstNewsGap,
         recommendedNextRenewalTarget: FILE_GATES.west,
         reason: "NEWS alignment blocked this packet for the current cycle.",
-        detail: { active, news, fibonacci }
+        detail: { active, news, fibonacci },
+        sourcePacket: normalized
       });
     }
 
@@ -1389,7 +1804,8 @@
         firstFailedCoordinate: fibonacci.firstFibonacciGap,
         recommendedNextRenewalTarget: FILE_GATES.north,
         reason: "Future Fibonacci packet held until North advances the active gate.",
-        detail: { active, news, fibonacci }
+        detail: { active, news, fibonacci },
+        sourcePacket: normalized
       });
     }
 
@@ -1407,7 +1823,8 @@
         firstFailedCoordinate: fibonacci.firstFibonacciGap,
         recommendedNextRenewalTarget: "none",
         reason: "Prior Fibonacci packet archived without mutating the cycle.",
-        detail: { active, news, fibonacci }
+        detail: { active, news, fibonacci },
+        sourcePacket: normalized
       });
     }
 
@@ -1426,7 +1843,8 @@
           firstFailedCoordinate: "CANVAS_NOT_AUTHORIZED_IN_CYCLE_ONE",
           recommendedNextRenewalTarget: FILE_GATES.west,
           reason: "Canvas release is reserved for Cycle 2 after South output passes West admissibility.",
-          detail: { active, news, fibonacci }
+          detail: { active, news, fibonacci },
+          sourcePacket: normalized
         });
       }
 
@@ -1445,7 +1863,8 @@
           recommendedNextRenewalTarget: FILE_GATES.north,
           reason: "Cycle 1 South packet returns to North.",
           returnToNorth: true,
-          detail: { active, news, fibonacci }
+          detail: { active, news, fibonacci },
+          sourcePacket: normalized
         });
       }
 
@@ -1465,7 +1884,8 @@
         reason: news.newsGatePassed
           ? "Cycle 1 packet admitted to South."
           : "Cycle 1 packet held or degraded while NEWS alignment settles.",
-        detail: { active, news, fibonacci }
+        detail: { active, news, fibonacci },
+        sourcePacket: normalized
       });
     }
 
@@ -1473,6 +1893,8 @@
       const carrier = assessStructuralCarrier(normalized, context);
       const visible = assessVisibleContent(normalized);
       const inspect = assessInspectMode(normalized);
+      const westAuditIntake = isSouthOutputWestIntake(normalized, context);
+      const outputAdmissible = southOutputAdmissible(normalized);
 
       if (active.checkpointId === CHECKPOINT_IDS.F21 || safeBool(normalized.f21EligibleForNorth, false) || safeBool(normalized.f21EligibilitySubmittedToNorth, false)) {
         return makeGap({
@@ -1489,7 +1911,49 @@
           recommendedNextRenewalTarget: FILE_GATES.north,
           reason: "F21 eligibility returned to North. West audits eligibility but does not latch.",
           returnToNorth: true,
-          detail: { active, news, fibonacci, carrier, visible, inspect }
+          detail: { active, news, fibonacci, carrier, visible, inspect },
+          sourcePacket: normalized
+        });
+      }
+
+      if (westAuditIntake && outputAdmissible) {
+        return makeGap({
+          gapClass: GAP_CLASS.NONE,
+          gapSeverity: GAP_SEVERITY.NONE,
+          decision: GAP_DECISION.RELEASE_TO_CANVAS,
+          cycle,
+          source,
+          destination: CARDINALS.CANVAS,
+          checkpointId: active.checkpointId || CHECKPOINT_IDS.F8,
+          activeCheckpointId: active.activeCheckpointId || CHECKPOINT_IDS.F8,
+          eventName: active.eventName || "CYCLE_TWO_WEST_AUDIT_INTAKE",
+          firstFailedCoordinate: "NONE_CYCLE_TWO_CANVAS_RELEASE_AUTHORIZED_BY_WEST",
+          recommendedNextRenewalTarget: FILE_GATES.canvas,
+          reason: "Cycle 2 South/route-conductor output reached West; West audit accepted and released to Canvas.",
+          canvasRelease: true,
+          westAuditObserved: true,
+          westAuditAccepted: true,
+          detail: { active, news, fibonacci, carrier, visible, inspect, westAuditIntake, outputAdmissible },
+          sourcePacket: normalized
+        });
+      }
+
+      if (westAuditIntake && !outputAdmissible) {
+        return makeGap({
+          gapClass: GAP_CLASS.CANVAS_RELEASE_HELD,
+          gapSeverity: GAP_SEVERITY.HELD,
+          decision: GAP_DECISION.HOLD_ACTIVE,
+          cycle,
+          source,
+          destination: CARDINALS.WEST,
+          checkpointId: active.checkpointId,
+          activeCheckpointId: active.activeCheckpointId,
+          eventName: active.eventName,
+          firstFailedCoordinate: "WAITING_SOUTH_OUTPUT_SPREAD_FOR_WEST_AUDIT",
+          recommendedNextRenewalTarget: FILE_GATES.south,
+          reason: "Cycle 2 reached West but South output spread is not yet admissible.",
+          detail: { active, news, fibonacci, carrier, visible, inspect, westAuditIntake, outputAdmissible },
+          sourcePacket: normalized
         });
       }
 
@@ -1507,7 +1971,8 @@
           firstFailedCoordinate: "CANVAS_RELEASE_REQUIRES_SOUTH_SOURCE_IN_CYCLE_TWO",
           recommendedNextRenewalTarget: FILE_GATES.south,
           reason: "Cycle 2 Canvas release requires South output before West releases to Canvas.",
-          detail: { active, news, fibonacci, carrier, visible, inspect }
+          detail: { active, news, fibonacci, carrier, visible, inspect },
+          sourcePacket: normalized
         });
       }
 
@@ -1528,7 +1993,8 @@
           reason: carrier.carrierStructurallySafe
             ? "Canvas release target is not fully present yet."
             : "Structural carrier is unsafe for Canvas release.",
-          detail: { active, news, fibonacci, carrier, visible, inspect }
+          detail: { active, news, fibonacci, carrier, visible, inspect },
+          sourcePacket: normalized
         });
       }
 
@@ -1545,9 +2011,12 @@
           eventName: active.eventName,
           firstFailedCoordinate: "NONE_CYCLE_TWO_CANVAS_RELEASE_AUTHORIZED_BY_WEST",
           recommendedNextRenewalTarget: FILE_GATES.canvas,
-          reason: "Cycle 2 South output passed West admissibility and may release to Canvas.",
+          reason: "Cycle 2 packet passed West admissibility and may release to Canvas.",
           canvasRelease: true,
-          detail: { active, news, fibonacci, carrier, visible, inspect }
+          westAuditObserved: true,
+          westAuditAccepted: true,
+          detail: { active, news, fibonacci, carrier, visible, inspect },
+          sourcePacket: normalized
         });
       }
 
@@ -1564,7 +2033,8 @@
         firstFailedCoordinate: "WAITING_CYCLE_TWO_CANVAS_RELEASE_PACKET",
         recommendedNextRenewalTarget: FILE_GATES.south,
         reason: "Cycle 2 is active; West is waiting for South output release packet.",
-        detail: { active, news, fibonacci, carrier, visible, inspect }
+        detail: { active, news, fibonacci, carrier, visible, inspect },
+        sourcePacket: normalized
       });
     }
 
@@ -1581,17 +2051,20 @@
       firstFailedCoordinate: "UNKNOWN_CYCLE_PACKET_ARCHIVED",
       recommendedNextRenewalTarget: "none",
       reason: "Unknown cycle packet archived without mutation.",
-      detail: { active, news, fibonacci }
+      detail: { active, news, fibonacci },
+      sourcePacket: normalized
     });
   }
 
   function classifyWestAdmissibility(packet = {}, context = {}) {
-    const gap = classifyCyclePacket(packet, context);
+    const normalized = normalizeEvent(packet);
+    const gap = classifyCyclePacket(normalized, context);
+    const release = gap.canvasReleasePacket || null;
 
     const admissibility = {
       contract: CONTRACT,
       receipt: RECEIPT,
-      westAdmissibilityReceipt: "LAB_RUNTIME_TABLE_CARDINAL_WEST_ADMISSIBILITY_RECEIPT_v1",
+      westAdmissibilityReceipt: "LAB_RUNTIME_TABLE_CARDINAL_WEST_ADMISSIBILITY_RECEIPT_v2",
       cycleAwareWestAuthority: true,
       admissibilityClutchActive: true,
       packetAdmissible: [
@@ -1605,9 +2078,24 @@
       decision: gap.decision,
       gap,
       cycle: gap.cycle,
+      cycleNumber: gap.cycleNumber,
+      cycleRoute: gap.cycleRoute,
       source: gap.source,
       destination: gap.destination,
+
+      receivedFrom: release ? CARDINALS.WEST : gap.receivedFrom,
+      returnTo: release ? CARDINALS.NORTH : gap.returnTo,
+      handoffTo: release ? CARDINALS.CANVAS : gap.handoffTo,
+
       canvasReleaseAuthorized: gap.decision === GAP_DECISION.RELEASE_TO_CANVAS,
+      canvasReleaseApprovedByWest: gap.decision === GAP_DECISION.RELEASE_TO_CANVAS,
+      westCanvasReleaseApproved: gap.decision === GAP_DECISION.RELEASE_TO_CANVAS,
+      westAuditObserved: gap.westAuditObserved === true,
+      westAuditAccepted: gap.westAuditAccepted === true,
+      westAuditPassed: gap.decision === GAP_DECISION.RELEASE_TO_CANVAS,
+      releaseToCanvas: gap.decision === GAP_DECISION.RELEASE_TO_CANVAS,
+      canvasReleasePacket: release,
+
       returnToNorthRequired: gap.decision === GAP_DECISION.RETURN_TO_NORTH || gap.decision === GAP_DECISION.RETURN_TO_NORTH_FOR_F21,
       southAdmitted: gap.decision === GAP_DECISION.ADMIT_TO_SOUTH,
       degradedForward: gap.decision === GAP_DECISION.DEGRADED_FORWARD,
@@ -1633,9 +2121,13 @@
 
     record("WEST_ADMISSIBILITY_CLASSIFIED", {
       cycle: admissibility.cycle,
+      cycleNumber: admissibility.cycleNumber,
+      cycleRoute: admissibility.cycleRoute,
       decision: admissibility.decision,
       gapClass: gap.gapClass,
-      firstFailedCoordinate: gap.firstFailedCoordinate
+      firstFailedCoordinate: gap.firstFailedCoordinate,
+      canvasReleaseAuthorized: admissibility.canvasReleaseAuthorized,
+      handoffTo: admissibility.handoffTo
     });
 
     publishAll();
@@ -1658,6 +2150,7 @@
     const carrier = assessStructuralCarrier(normalized, context);
     const visible = assessVisibleContent(normalized);
     const inspect = assessInspectMode(normalized);
+    const release = admissibility.canvasReleasePacket || null;
 
     const receipt = {
       contract: CONTRACT,
@@ -1665,8 +2158,9 @@
       previousContract: PREVIOUS_CONTRACT,
       baselineContract: BASELINE_CONTRACT,
       version: VERSION,
+      file: FILE,
       destinationFile: FILE,
-      westCycleReceipt: "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_RECEIPT_v1",
+      westCycleReceipt: "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_RECEIPT_v2",
 
       cycleAwareWestAuthority: true,
       cycleOneLawActive: true,
@@ -1677,6 +2171,28 @@
       southPrecedesWestInCycleTwo: true,
       f21NorthLatchOnly: true,
 
+      cycleNumber: admissibility.cycleNumber,
+      activeCycleNumber: admissibility.cycleNumber,
+      cycleRoute: admissibility.cycleRoute,
+      activeCycleRoute: admissibility.cycleRoute,
+      receivedFrom: release ? CARDINALS.WEST : admissibility.receivedFrom,
+      returnTo: release ? CARDINALS.NORTH : admissibility.returnTo,
+      handoffTo: release ? CARDINALS.CANVAS : admissibility.handoffTo,
+
+      westAuditObserved: admissibility.westAuditObserved,
+      westAuditAccepted: admissibility.westAuditAccepted,
+      westAuditPassed: admissibility.westAuditPassed,
+      westCanvasReleaseApproved: admissibility.westCanvasReleaseApproved,
+      westReleaseApproved: admissibility.westCanvasReleaseApproved,
+      canvasReleaseAuthorized: admissibility.canvasReleaseAuthorized,
+      canvasReleaseApprovedByWest: admissibility.canvasReleaseApprovedByWest,
+      releaseToCanvas: admissibility.releaseToCanvas,
+      canvasParentMayBoot: admissibility.canvasReleaseAuthorized,
+      canvasParentMayMount: admissibility.canvasReleaseAuthorized,
+      canvasParentMayRender: admissibility.canvasReleaseAuthorized,
+      canvasParentMayCallChildren: admissibility.canvasReleaseAuthorized,
+      canvasReleasePacket: release,
+
       admissibility,
       newsAlignment: news,
       fibonacciSynchronization: fibonacci,
@@ -1685,7 +2201,16 @@
       inspectMode: inspect,
 
       firstFailedCoordinate: admissibility.gap.firstFailedCoordinate,
+      recommendedNextFile: admissibility.gap.recommendedNextFile,
       recommendedNextRenewalTarget: admissibility.gap.recommendedNextRenewalTarget,
+
+      f21EligibleForNorth: false,
+      f21SubmittedToNorth: false,
+      f21LatchMode: "north-only",
+      completionLatched: false,
+      finalCompletionLatched: false,
+      degradedCompletionLatched: false,
+      readyTextAllowed: false,
 
       generatedImage: false,
       graphicBox: false,
@@ -1704,9 +2229,10 @@
   function createGapReceipt(snapshot = {}, context = {}) {
     const receipt = createWestCycleReceipt(snapshot, context);
     state.lastGapReceipt = clonePlain(receipt);
+
     return {
       ...receipt,
-      westGapReceipt: "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_GAP_RECEIPT_v1",
+      westGapReceipt: "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_GAP_RECEIPT_v2",
       gap: receipt.admissibility.gap
     };
   }
@@ -1719,6 +2245,7 @@
       baselineContract: BASELINE_CONTRACT,
       version: VERSION,
       destinationFile: FILE,
+      file: FILE,
       status: "active",
       role: state.role,
 
@@ -1728,6 +2255,7 @@
       westFallbackUsed: false,
 
       fileGates: clonePlain(FILE_GATES),
+      cycleRoutes: clonePlain(CYCLE_ROUTES),
       cyclePaths: clonePlain(CYCLE_PATHS),
 
       cycleOneLawActive: true,
@@ -1740,6 +2268,9 @@
       newsAlignmentAuditActive: true,
       fibonacciSynchronizationAuditActive: true,
       falseCompletionFirewallActive: true,
+      routeConductorCycleParsingActive: true,
+      handoffFieldParsingActive: true,
+      canvasReleaseTopLevelShapeActive: true,
 
       classifyCount: state.classifyCount,
       cycleOneCount: state.cycleOneCount,
@@ -1768,6 +2299,7 @@
         "classifyWestAdmissibility",
         "createGapReceipt",
         "createWestCycleReceipt",
+        "composeCanvasReleasePacket",
         "assessActiveGear",
         "evidenceForGear",
         "assessStructuralCarrier",
@@ -1778,6 +2310,9 @@
         "evaluateFibonacciSynchronization",
         "detectCycle",
         "readNorthCycleContext",
+        "normalizeEvent",
+        "isProgressOnlyEvent",
+        "isPrematureCompletionEvent",
         "getReceipt",
         "getReceiptText"
       ],
@@ -1785,18 +2320,23 @@
       governingLaw: [
         "Cycle 1 route is North to East to West to South to North.",
         "Cycle 2 route is North to East to South to West to Canvas.",
+        "cycleNumber and cycleRoute are primary cycle evidence when present.",
+        "handoffTo=WEST in Cycle 2 is macro West audit intake.",
         "Canvas release is blocked in Cycle 1.",
         "South returns to North in Cycle 1.",
         "South precedes West in Cycle 2.",
         "West releases to Canvas only in Cycle 2 after South output passes admissibility.",
+        "West Canvas release must publish top-level receivedFrom=WEST, handoffTo=CANVAS, cycleNumber=2, cycleRoute=NORTH_EAST_SOUTH_WEST_CANVAS, westAuditObserved=true, westAuditAccepted=true, westCanvasReleaseApproved=true, canvasReleaseAuthorized=true, releaseToCanvas=true.",
         "F21 latch remains North-owned.",
         "West audits NEWS alignment and Fibonacci synchronization."
       ],
 
       lastNorthContext: clonePlain(state.lastNorthContext),
+      lastNormalizedPacket: clonePlain(state.lastNormalizedPacket),
       lastCyclePacket: clonePlain(state.lastCyclePacket),
       lastAdmissibility: clonePlain(state.lastAdmissibility),
       lastGapReceipt: clonePlain(state.lastGapReceipt),
+      lastCanvasReleasePacket: clonePlain(state.lastCanvasReleasePacket),
       localEvents: clonePlain(state.localEvents),
       errors: clonePlain(state.errors),
 
@@ -1824,11 +2364,33 @@
       ? [
           `lastDecision=${r.lastAdmissibility.decision}`,
           `lastCycle=${r.lastAdmissibility.cycle}`,
+          `lastCycleNumber=${r.lastAdmissibility.cycleNumber}`,
+          `lastCycleRoute=${r.lastAdmissibility.cycleRoute}`,
+          `lastReceivedFrom=${r.lastAdmissibility.receivedFrom}`,
+          `lastHandoffTo=${r.lastAdmissibility.handoffTo}`,
+          `lastCanvasReleaseAuthorized=${r.lastAdmissibility.canvasReleaseAuthorized}`,
+          `lastWestAuditObserved=${r.lastAdmissibility.westAuditObserved}`,
+          `lastWestAuditAccepted=${r.lastAdmissibility.westAuditAccepted}`,
+          `lastWestCanvasReleaseApproved=${r.lastAdmissibility.westCanvasReleaseApproved}`,
           `lastGapClass=${r.lastAdmissibility.gap ? r.lastAdmissibility.gap.gapClass : ""}`,
           `lastFirstFailedCoordinate=${r.lastAdmissibility.gap ? r.lastAdmissibility.gap.firstFailedCoordinate : ""}`,
           `lastRecommendedNextRenewalTarget=${r.lastAdmissibility.gap ? r.lastAdmissibility.gap.recommendedNextRenewalTarget : ""}`
         ].join("\n")
-      : "lastDecision=\nlastCycle=\nlastGapClass=\nlastFirstFailedCoordinate=\nlastRecommendedNextRenewalTarget=";
+      : [
+          "lastDecision=",
+          "lastCycle=",
+          "lastCycleNumber=",
+          "lastCycleRoute=",
+          "lastReceivedFrom=",
+          "lastHandoffTo=",
+          "lastCanvasReleaseAuthorized=",
+          "lastWestAuditObserved=",
+          "lastWestAuditAccepted=",
+          "lastWestCanvasReleaseApproved=",
+          "lastGapClass=",
+          "lastFirstFailedCoordinate=",
+          "lastRecommendedNextRenewalTarget="
+        ].join("\n");
 
     return [
       "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_RECEIPT",
@@ -1853,6 +2415,9 @@
       `newsAlignmentAuditActive=${r.newsAlignmentAuditActive}`,
       `fibonacciSynchronizationAuditActive=${r.fibonacciSynchronizationAuditActive}`,
       `falseCompletionFirewallActive=${r.falseCompletionFirewallActive}`,
+      `routeConductorCycleParsingActive=${r.routeConductorCycleParsingActive}`,
+      `handoffFieldParsingActive=${r.handoffFieldParsingActive}`,
+      `canvasReleaseTopLevelShapeActive=${r.canvasReleaseTopLevelShapeActive}`,
       "",
       `classifyCount=${r.classifyCount}`,
       `cycleOneCount=${r.cycleOneCount}`,
@@ -1888,6 +2453,7 @@
 
     FILE_GATES,
     CYCLES,
+    CYCLE_ROUTES,
     CYCLE_PATHS,
     CARDINALS,
     GAP_CLASS,
@@ -1897,12 +2463,16 @@
     CHECKPOINT_SEQUENCE,
     PROGRESS_ONLY_EVENTS,
 
+    normalizeEvent,
+    normalizeCycleRoute,
+    normalizeCardinal,
     classifyGap,
     classifyTransmissionGap,
     classifyCyclePacket,
     classifyWestAdmissibility,
     createGapReceipt,
     createWestCycleReceipt,
+    composeCanvasReleasePacket,
 
     assessActiveGear,
     evidenceForGear,
@@ -1914,6 +2484,8 @@
     evaluateFibonacciSynchronization,
 
     detectCycle,
+    detectPacketSource,
+    detectPacketDestination,
     readNorthCycleContext,
     isProgressOnlyEvent,
     isPrematureCompletionEvent,
@@ -1935,6 +2507,9 @@
     newsAlignmentAuditActive: true,
     fibonacciSynchronizationAuditActive: true,
     falseCompletionFirewallActive: true,
+    routeConductorCycleParsingActive: true,
+    handoffFieldParsingActive: true,
+    canvasReleaseTopLevelShapeActive: true,
 
     generatedImage: false,
     graphicBox: false,
@@ -1954,6 +2529,8 @@
     dataset.labRuntimeTableWestLoaded = "true";
     dataset.labRuntimeTableWestContract = CONTRACT;
     dataset.labRuntimeTableWestReceipt = RECEIPT;
+    dataset.labRuntimeTableWestPreviousContract = PREVIOUS_CONTRACT;
+    dataset.labRuntimeTableWestBaselineContract = BASELINE_CONTRACT;
     dataset.labRuntimeTableWestVersion = VERSION;
 
     dataset.westCycleAwareAdmissibilityClutch = "true";
@@ -1967,6 +2544,9 @@
     dataset.newsAlignmentAuditActive = "true";
     dataset.fibonacciSynchronizationAuditActive = "true";
     dataset.falseCompletionFirewallActive = "true";
+    dataset.routeConductorCycleParsingActive = "true";
+    dataset.westHandoffFieldParsingActive = "true";
+    dataset.westCanvasReleaseTopLevelShapeActive = "true";
 
     dataset.westClassifyCount = String(state.classifyCount);
     dataset.westCycleOneCount = String(state.cycleOneCount);
@@ -1975,6 +2555,18 @@
     dataset.westReturnNorthCount = String(state.returnNorthCount);
     dataset.westFalseCompletionBlockCount = String(state.falseCompletionBlockCount);
     dataset.westDegradedForwardCount = String(state.degradedForwardCount);
+
+    if (state.lastCanvasReleasePacket) {
+      dataset.westCanvasReleaseAuthorized = "true";
+      dataset.westCanvasReleaseApprovedByWest = "true";
+      dataset.westCanvasReleaseReceivedFrom = CARDINALS.WEST;
+      dataset.westCanvasReleaseHandoffTo = CARDINALS.CANVAS;
+      dataset.westCanvasReleaseCycleNumber = "2";
+      dataset.westCanvasReleaseCycleRoute = CYCLE_ROUTES.CYCLE_2;
+    } else {
+      dataset.westCanvasReleaseAuthorized = "false";
+      dataset.westCanvasReleaseApprovedByWest = "false";
+    }
 
     dataset.generatedImage = "false";
     dataset.graphicBox = "false";
@@ -2003,6 +2595,14 @@
     root.HEARTH.westCycleAwareAdmissibilityClutch = api;
     root.HEARTH_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH = api;
 
+    root.LAB_RUNTIME_TABLE_WEST_RECEIPT = getReceipt();
+    root.HEARTH_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_RECEIPT = root.LAB_RUNTIME_TABLE_WEST_RECEIPT;
+
+    if (state.lastCanvasReleasePacket) {
+      root.HEARTH_WEST_CANVAS_RELEASE_PACKET = clonePlain(state.lastCanvasReleasePacket);
+      root.LAB_RUNTIME_TABLE_WEST_CANVAS_RELEASE_PACKET = clonePlain(state.lastCanvasReleasePacket);
+    }
+
     publishDataset();
   }
 
@@ -2011,10 +2611,14 @@
   record("WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_LOADED", {
     file: FILE,
     contract: CONTRACT,
+    receipt: RECEIPT,
     cycleOneLawActive: true,
     cycleTwoLawActive: true,
     canvasCycleOneBlocked: true,
-    canvasCycleTwoReleaseSupported: true
+    canvasCycleTwoReleaseSupported: true,
+    routeConductorCycleParsingActive: true,
+    handoffFieldParsingActive: true,
+    canvasReleaseTopLevelShapeActive: true
   });
 
   if (typeof module !== "undefined" && module.exports) {

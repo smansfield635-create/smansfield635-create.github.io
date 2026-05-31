@@ -1,35 +1,34 @@
 <!-- TARGET FILE: /showroom/globe/hearth/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- HEARTH_HTML_PAGE_LOAD_SUPREMACY_EAST_HANDOFF_RUNTIME_SHELL_TNT_v2 -->
+<!-- HEARTH_HTML_NON_BLOCKING_EAST_BOOT_TWO_CYCLE_RUNTIME_SHELL_TNT_v3 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/globe/hearth/"
   data-page="hearth-survival-path"
-  data-version="G2-PAGE-LOAD-SUPREMACY-EAST-HANDOFF-RUNTIME-SHELL"
-  data-contract="HEARTH_HTML_PAGE_LOAD_SUPREMACY_EAST_HANDOFF_RUNTIME_SHELL_TNT_v2"
-  data-previous-contract="HEARTH_HTML_PAGE_LOAD_SUPREMACY_RUNTIME_ENTRY_SHELL_TNT_v1"
-  data-role="hearth-page-load-supremacy-east-handoff-runtime-shell"
-  data-conforms-to-south="HEARTH_SOUTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_GEAR_CYCLE_TNT_v1"
-  data-cycle-order="EAST-WEST-NORTH-SOUTH-CHECKPOINT-EAST"
+  data-version="G2-NON-BLOCKING-EAST-BOOT-TWO-CYCLE-RUNTIME-SHELL"
+  data-contract="HEARTH_HTML_NON_BLOCKING_EAST_BOOT_TWO_CYCLE_RUNTIME_SHELL_TNT_v3"
+  data-previous-contract="HEARTH_HTML_PAGE_LOAD_SUPREMACY_EAST_HANDOFF_RUNTIME_SHELL_TNT_v2"
+  data-role="hearth-html-non-blocking-east-boot-two-cycle-runtime-shell"
+  data-cycle-one-route="NORTH_EAST_WEST_SOUTH_NORTH"
+  data-cycle-two-route="NORTH_EAST_SOUTH_WEST_CANVAS"
   data-east-file="/showroom/globe/hearth/index.js"
-  data-west-file="/assets/hearth/hearth.west.index-handoff.table.js"
-  data-north-file="/assets/hearth/hearth.north.command.runtime-table.js"
-  data-south-file="/showroom/globe/hearth/hearth.js"
-  data-canvas-file="/assets/hearth/hearth.canvas.js"
-  data-runtime-table-file="/assets/lab/runtime-table.js"
-  data-page-load-supremacy="true"
-  data-runtime-attachment-after-browser-load="true"
-  data-initial-runtime-stack-frontloaded="false"
-  data-html-loads-downstream-cycle="false"
-  data-east-loads-downstream-cycle="true"
-  data-html-loads-east-only-after-source-stack="true"
+  data-html-loads-east-entry-only="true"
+  data-html-loads-runtime-table="false"
+  data-html-loads-source-stack="false"
+  data-html-loads-canvas="false"
+  data-html-loads-west="false"
+  data-html-loads-north="false"
+  data-html-loads-south="false"
+  data-east-owns-staged-boot="true"
+  data-canvas-f13-delegated="true"
+  data-f21-north-only="true"
   data-html-owns-public-shell="true"
   data-html-owns-runtime="false"
   data-html-owns-canvas-drawing="false"
   data-html-owns-north="false"
+  data-html-owns-west="false"
   data-html-owns-south="false"
-  data-south-loads-last-through-east="true"
   data-generated-image="false"
   data-graphic-box="false"
   data-webgl="false"
@@ -42,7 +41,7 @@
   <title>Hearth · Mirrorland Survival Path</title>
   <meta
     name="description"
-    content="Hearth is the survival path inside Mirrorland. The static shell loads first; runtime proof attaches only after browser page load completes, then East owns downstream cycle loading."
+    content="Hearth is the survival path inside Mirrorland. HTML paints the shell, then attaches East as the only non-blocking staged boot entry."
   >
 
   <style>
@@ -189,7 +188,7 @@
 
     .header-note{
       justify-self:end;
-      max-width:26rem;
+      max-width:28rem;
       color:rgba(226,235,255,.66);
       font-size:.76rem;
       font-weight:820;
@@ -317,7 +316,7 @@
       z-index:5;
       display:grid;
       gap:.14rem;
-      max-width:min(32rem,calc(100% - 1.7rem));
+      max-width:min(35rem,calc(100% - 1.7rem));
       padding:.7rem .78rem;
       border:1px solid rgba(255,255,255,.12);
       border-radius:.9rem;
@@ -398,7 +397,8 @@
         rgba(255,255,255,.03);
     }
 
-    .map-portal b{
+    .map-portal b,
+    .micro-card b{
       color:var(--gold);
       font-size:.56rem;
       letter-spacing:.12em;
@@ -411,9 +411,7 @@
       gap:.42rem;
     }
 
-    .portal-link,
-    .button,
-    button.button{
+    .portal-link{
       min-height:2.5rem;
       display:inline-flex;
       align-items:center;
@@ -423,28 +421,22 @@
       padding:.58rem .86rem;
       background:rgba(255,255,255,.045);
       color:rgba(241,246,255,.88);
-      font-family:inherit;
       font-size:.68rem;
       font-weight:950;
       letter-spacing:.06em;
       text-transform:uppercase;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
-      cursor:pointer;
       text-align:center;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
     }
 
     .portal-link:hover,
-    .portal-link:focus-visible,
-    .button:hover,
-    button.button:hover{
+    .portal-link:focus-visible{
       border-color:rgba(242,198,109,.55);
       color:rgba(255,243,210,.98);
       outline:none;
     }
 
-    .portal-link.current,
-    .button.gold,
-    button.button.gold{
+    .portal-link.current{
       border-color:rgba(242,198,109,.9);
       color:#060811;
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
@@ -459,13 +451,6 @@
       background:rgba(255,255,255,.032);
     }
 
-    .micro-card b{
-      color:var(--gold);
-      font-size:.56rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
     .micro-card span{
       color:rgba(230,238,255,.76);
       font-size:.78rem;
@@ -477,7 +462,6 @@
       position:absolute;
       left:.85rem;
       right:.85rem;
-      top:auto;
       bottom:6.8rem;
       z-index:8;
       display:flex;
@@ -592,10 +576,6 @@
       color:#06101e;
       border-color:rgba(242,198,109,.86);
       background:linear-gradient(135deg,#ffe8a3,#f2c66d);
-    }
-
-    .hearth-ledger-button[data-shell-pending="true"]{
-      opacity:.64;
     }
 
     .hearth-ledger-scroll{
@@ -718,6 +698,7 @@
       cursor:pointer;
     }
 
+    html[data-hearth-shell-inspect-placeholder="true"] [data-hearth-south-show-diagnostic-tab],
     html[data-hearth-south-planet-inspect="true"] [data-hearth-south-show-diagnostic-tab],
     html[data-hearth-east-inspect-reserved-active="true"] [data-hearth-south-show-diagnostic-tab]{
       display:inline-flex;
@@ -837,9 +818,7 @@
       white-space:nowrap!important;
     }
 
-    [hidden]{
-      display:none!important;
-    }
+    [hidden]{display:none!important}
 
     footer{
       padding:1rem 0 .35rem;
@@ -849,24 +828,16 @@
     }
 
     @media (max-width:1080px){
-      .drawers{
-        grid-template-columns:1fr;
-      }
+      .drawers{grid-template-columns:1fr}
     }
 
     @media (max-width:980px){
       .topbar,
-      .core-layout{
-        grid-template-columns:1fr;
-      }
+      .core-layout{grid-template-columns:1fr}
 
       .header-note{
         justify-self:start;
         text-align:left;
-      }
-
-      .side-panel{
-        grid-template-columns:1fr;
       }
     }
 
@@ -884,9 +855,7 @@
         bottom:7.4rem;
         max-height:17rem;
       }
-      .hearth-ledger-actions{
-        padding:.5rem .7rem;
-      }
+      .hearth-ledger-actions{padding:.5rem .7rem}
       .hearth-ledger-button{
         flex:1 1 auto;
         min-width:42%;
@@ -930,7 +899,7 @@
       </a>
 
       <div class="header-note">
-        Static route first. Runtime entry attaches after browser load. East owns downstream cycle loading.
+        HTML paints the shell only. East starts staged boot. North governs the macro cycle.
       </div>
     </header>
 
@@ -940,7 +909,7 @@
 
         <h1 id="page-title">Hearth is the survival path inside Mirrorland.</h1>
 
-        <h2>Browser load first. Static shell second. Runtime entry third. East downstream fourth.</h2>
+        <h2>Shell first. East boot second. Runtime proof downstream.</h2>
 
         <p class="lead">
           ZIONTS carries consequence. Audralia carries possibility. Hearth carries survival condition: the living proof field where visibility, inspection, completion, and survivability are tested only after the page itself has stabilized.
@@ -956,9 +925,9 @@
           aria-label="Interactive Hearth globe stage"
         >
           <div class="globe-label">
-            <b>Hearth · Page Load Supremacy</b>
+            <b>Hearth · Non-Blocking East Boot</b>
             <span>
-              <strong>Shell First</strong> → runtime entry waits until browser load completes. East then loads West, North, and South.
+              <strong>HTML shell</strong> → East staged boot → Cycle 1: North/East/West/South/North → Cycle 2: North/East/South/West/Canvas.
             </span>
           </div>
 
@@ -966,10 +935,9 @@
             id="hearthCanvasMount"
             class="globe-mount"
             data-hearth-canvas-mount="true"
-            data-hearth-south-visible-completion-shell="true"
-            data-hearth-cycle-south="true"
-            data-runtime-attachment-pending="true"
-            data-east-downstream-cycle-pending="true"
+            data-hearth-shell-first="true"
+            data-east-boot-pending="true"
+            data-canvas-f13-delegated="true"
             data-generated-image="false"
             data-graphic-box="false"
             data-webgl="false"
@@ -981,85 +949,97 @@
             id="hearthLoadCockpit"
             class="hearth-ledger-cockpit"
             data-hearth-load-cockpit="true"
-            data-hearth-south-visible-completion-shell="true"
             data-cockpit-mode="loading-cockpit"
-            data-runtime-attachment-pending="true"
-            data-east-downstream-cycle-pending="true"
+            data-hearth-shell-first="true"
+            data-east-boot-pending="true"
             aria-live="polite"
           >
             <div class="hearth-ledger-head">
               <div class="hearth-ledger-kicker">Hearth · Shell Loader</div>
               <h2 class="hearth-ledger-title">HEARTH SHELL READY</h2>
-              <div class="hearth-ledger-meta" data-hearth-stage-label>F1B · Static shell painted</div>
-              <div class="hearth-ledger-meta" data-hearth-heartbeat-text>browser-load=pending · runtime-entry=pending</div>
-              <div class="hearth-ledger-latest" data-hearth-latest-event>latest=HTML_SHELL_READY_RUNTIME_PENDING</div>
+              <div class="hearth-ledger-meta" data-hearth-stage-label>F1 · Static shell painted</div>
+              <div class="hearth-ledger-meta" data-hearth-heartbeat-text>hook-validation=pending · east-boot=pending</div>
+              <div class="hearth-ledger-latest" data-hearth-latest-event>latest=HTML_SHELL_READY</div>
             </div>
 
             <div class="hearth-ledger-progress" data-hearth-index-progress-strip="true">
               <div class="hearth-ledger-track">
-                <span class="hearth-ledger-fill" data-hearth-main-progress-fill style="width:22%"></span>
+                <span class="hearth-ledger-fill" data-hearth-main-progress-fill style="width:12%"></span>
               </div>
-              <div class="hearth-ledger-percent" data-hearth-main-progress-percent>22%</div>
+              <div class="hearth-ledger-percent" data-hearth-main-progress-percent>12%</div>
             </div>
 
             <div class="hearth-ledger-actions">
-              <button class="hearth-ledger-button primary" type="button" data-hearth-copy-diagnostic data-shell-pending="true">Copy diagnostic</button>
-              <button class="hearth-ledger-button" type="button" data-hearth-toggle-receipt data-shell-pending="true">Show receipt</button>
-              <button class="hearth-ledger-button" type="button" data-hearth-inspect-planet data-shell-pending="true">Inspect planet</button>
-              <button class="hearth-ledger-button" type="button" data-hearth-collapse-cockpit data-shell-pending="true">Collapse cockpit</button>
+              <button class="hearth-ledger-button primary" type="button" data-hearth-copy-diagnostic>Copy diagnostic</button>
+              <button class="hearth-ledger-button" type="button" data-hearth-toggle-receipt>Show receipt</button>
+              <button class="hearth-ledger-button" type="button" data-hearth-inspect-planet>Inspect planet</button>
+              <button class="hearth-ledger-button" type="button" data-hearth-collapse-cockpit>Collapse cockpit</button>
             </div>
 
             <div class="hearth-ledger-scroll">
               <div class="hearth-ledger-lanes" data-hearth-lane-list>
-                <section class="hearth-ledger-lane" data-lane="Browser" data-status="WAITING">
+                <section class="hearth-ledger-lane" data-lane="F1" data-status="ACTIVE">
                   <div class="hearth-ledger-lane-top">
                     <span class="hearth-ledger-lane-title">
-                      <strong>Browser load</strong>
-                      <span>waiting for page load completion</span>
+                      <strong>F1 · Static shell paint</strong>
+                      <span>public shell visible before runtime</span>
                     </span>
-                    <span class="hearth-ledger-lane-status">WAITING</span>
+                    <span class="hearth-ledger-lane-status">ACTIVE</span>
                   </div>
                   <div class="hearth-ledger-lane-track">
-                    <span class="hearth-ledger-lane-fill" style="width:22%"></span>
+                    <span class="hearth-ledger-lane-fill" style="width:12%"></span>
                   </div>
                 </section>
 
-                <section class="hearth-ledger-lane" data-lane="Hooks" data-status="PENDING">
+                <section class="hearth-ledger-lane" data-lane="F2" data-status="PENDING">
                   <div class="hearth-ledger-lane-top">
                     <span class="hearth-ledger-lane-title">
-                      <strong>Hook validation</strong>
-                      <span>runtime hooks validate after browser load</span>
+                      <strong>F2 · Hook validation</strong>
+                      <span>shell anchors checked without runtime scan</span>
                     </span>
                     <span class="hearth-ledger-lane-status">PENDING</span>
                   </div>
                   <div class="hearth-ledger-lane-track">
-                    <span class="hearth-ledger-lane-fill" style="width:22%"></span>
+                    <span class="hearth-ledger-lane-fill" style="width:0%"></span>
                   </div>
                 </section>
 
-                <section class="hearth-ledger-lane" data-lane="Runtime" data-status="PENDING">
+                <section class="hearth-ledger-lane" data-lane="F5" data-status="PENDING">
                   <div class="hearth-ledger-lane-top">
                     <span class="hearth-ledger-lane-title">
-                      <strong>Runtime entry</strong>
-                      <span>runtime table, source stack, canvas, and East attach after load</span>
+                      <strong>F5 · East boot request</strong>
+                      <span>HTML appends East only, then stops</span>
                     </span>
                     <span class="hearth-ledger-lane-status">PENDING</span>
                   </div>
                   <div class="hearth-ledger-lane-track">
-                    <span class="hearth-ledger-lane-fill" style="width:22%"></span>
+                    <span class="hearth-ledger-lane-fill" style="width:0%"></span>
                   </div>
                 </section>
 
-                <section class="hearth-ledger-lane" data-lane="East" data-status="PENDING">
+                <section class="hearth-ledger-lane" data-lane="F13" data-status="DELEGATED">
                   <div class="hearth-ledger-lane-top">
                     <span class="hearth-ledger-lane-title">
-                      <strong>East downstream cycle</strong>
-                      <span>West, North, and South load through East, not HTML</span>
+                      <strong>F13 · Canvas evidence</strong>
+                      <span>delegated downstream; not claimed by HTML</span>
                     </span>
-                    <span class="hearth-ledger-lane-status">PENDING</span>
+                    <span class="hearth-ledger-lane-status">DELEGATED</span>
                   </div>
                   <div class="hearth-ledger-lane-track">
-                    <span class="hearth-ledger-lane-fill" style="width:22%"></span>
+                    <span class="hearth-ledger-lane-fill" style="width:0%"></span>
+                  </div>
+                </section>
+
+                <section class="hearth-ledger-lane" data-lane="F21" data-status="NORTH ONLY">
+                  <div class="hearth-ledger-lane-top">
+                    <span class="hearth-ledger-lane-title">
+                      <strong>F21 · North latch</strong>
+                      <span>North-only completion; never claimed by HTML</span>
+                    </span>
+                    <span class="hearth-ledger-lane-status">NORTH ONLY</span>
+                  </div>
+                  <div class="hearth-ledger-lane-track">
+                    <span class="hearth-ledger-lane-fill" style="width:0%"></span>
                   </div>
                 </section>
               </div>
@@ -1070,15 +1050,19 @@
                 data-hearth-receipt-box
                 data-visible="false"
               >
-                <pre data-hearth-receipt-text>HEARTH_HTML_PAGE_LOAD_SUPREMACY_EAST_HANDOFF_RUNTIME_SHELL_TNT_v2
-receipt=static_shell_ready_runtime_pending
+                <pre data-hearth-receipt-text>HEARTH_HTML_NON_BLOCKING_EAST_BOOT_TWO_CYCLE_RUNTIME_SHELL_TNT_v3
+receipt=static_shell_ready
 route=/showroom/globe/hearth/
-mount=#hearthCanvasMount
-cockpit=#hearthLoadCockpit
-browserLoadSupremacy=true
-runtimeAttachmentAfterBrowserLoad=true
-htmlLoadsDownstreamCycle=false
-eastLoadsDownstreamCycle=true</pre>
+htmlLoadsEastEntryOnly=true
+htmlLoadsRuntimeTable=false
+htmlLoadsSourceStack=false
+htmlLoadsCanvas=false
+eastOwnsStagedBoot=true
+cycleOneRoute=NORTH_EAST_WEST_SOUTH_NORTH
+cycleTwoRoute=NORTH_EAST_SOUTH_WEST_CANVAS
+canvasF13Delegated=true
+f21NorthOnly=true
+visualPassClaimed=false</pre>
               </div>
             </div>
           </aside>
@@ -1086,7 +1070,7 @@ eastLoadsDownstreamCycle=true</pre>
           <div class="globe-status">
             <strong>Static Hearth Shell Ready</strong>
             <span>
-              The page itself must load before the Hearth cycle becomes authoritative. HTML attaches only the runtime entry stack; East owns downstream West, North, and South loading.
+              HTML paints the page and attaches East only. East stages runtime discovery. North governs permission, West audits release, South proves visibility, and Canvas returns F13 evidence only.
             </span>
           </div>
         </section>
@@ -1112,17 +1096,22 @@ eastLoadsDownstreamCycle=true</pre>
 
           <div class="micro-card">
             <b>Lifecycle</b>
-            <span>Browser load → shell paint → hook validation → runtime entry → East downstream cycle.</span>
+            <span>Shell paint → hook validation → shell controls → East boot request → downstream staged runtime.</span>
           </div>
 
           <div class="micro-card">
-            <b>Cycle</b>
-            <span>East → West → North → South → Checkpoint → East.</span>
+            <b>Cycle 1</b>
+            <span>North → East → West → South → North.</span>
+          </div>
+
+          <div class="micro-card">
+            <b>Cycle 2</b>
+            <span>North → East → South → West → Canvas.</span>
           </div>
 
           <div class="micro-card">
             <b>Boundary</b>
-            <span>HTML owns the shell. East owns downstream loading. Runtime owns proof. Canvas owns drawing. North owns permission. South owns visible completion.</span>
+            <span>HTML owns the shell. East starts staged boot. Runtime owns proof. Canvas owns F13 evidence. North owns F21.</span>
           </div>
         </aside>
       </section>
@@ -1136,7 +1125,7 @@ eastLoadsDownstreamCycle=true</pre>
               Hearth is not a decorative planet page. It is the survival-path field where the visible planet, inspection controls, completion latch, and route diagnostics must survive together.
             </p>
             <p>
-              The page respects browser load supremacy: no in-page diagnostic bar is authoritative while the browser itself is still loading.
+              The page now obeys shell-first architecture: HTML paints public structure first and avoids blocking the browser with runtime orchestration.
             </p>
           </div>
         </details>
@@ -1144,12 +1133,12 @@ eastLoadsDownstreamCycle=true</pre>
         <details class="drawer">
           <summary>Runtime Cycle</summary>
           <div class="drawer-body">
-            <strong>The runtime entry attaches after page load.</strong>
+            <strong>The HTML file does not conduct the runtime.</strong>
             <p>
-              HTML loads the runtime table, source stack, canvas authority, and East entry only. East then loads West, North, and South. This prevents duplicate downstream script loading.
+              HTML loads only the East entry after shell stability. East then stages downstream runtime discovery without allowing HTML to serially load Runtime Table, source stack, Canvas, West, North, or South.
             </p>
             <p>
-              East starts the visible process. West normalizes handoff admissibility. North governs command runtime-table checkpoints. South consumes the shell and proves visible completion.
+              Cycle 1 returns proof to North. Cycle 2 reaches Canvas only after North, East, South, and West complete the lawful release path.
             </p>
           </div>
         </details>
@@ -1161,55 +1150,65 @@ eastLoadsDownstreamCycle=true</pre>
 
             <div class="diagnostic-grid">
               <div class="diagnostic"><b>Route</b><span data-hearth-diagnostic-route>/showroom/globe/hearth/</span></div>
-              <div class="diagnostic"><b>Lifecycle</b><span data-hearth-diagnostic-lifecycle>browser load first</span></div>
-              <div class="diagnostic"><b>Cycle</b><span data-hearth-diagnostic-cycle>E → W → N → S → checkpoint</span></div>
-              <div class="diagnostic"><b>East</b><span data-hearth-diagnostic-east>loaded by HTML after load</span></div>
-              <div class="diagnostic"><b>West</b><span data-hearth-diagnostic-west>loaded by East</span></div>
-              <div class="diagnostic"><b>North</b><span data-hearth-diagnostic-north>loaded by East</span></div>
-              <div class="diagnostic"><b>South</b><span data-hearth-diagnostic-south>loaded last through East</span></div>
-              <div class="diagnostic"><b>Canvas</b><span data-hearth-diagnostic-canvas>entry loaded by HTML</span></div>
-              <div class="diagnostic"><b>Visible Proof</b><span data-hearth-diagnostic-visible-proof>waiting</span></div>
-              <div class="diagnostic"><b>Inspect Mode</b><span data-hearth-diagnostic-inspect>dock controls present</span></div>
-              <div class="diagnostic"><b>F21</b><span data-hearth-diagnostic-f21>requires North permission</span></div>
+              <div class="diagnostic"><b>Lifecycle</b><span data-hearth-diagnostic-lifecycle>shell painted</span></div>
+              <div class="diagnostic"><b>Cycle 1</b><span data-hearth-diagnostic-cycle-one>NORTH_EAST_WEST_SOUTH_NORTH</span></div>
+              <div class="diagnostic"><b>Cycle 2</b><span data-hearth-diagnostic-cycle-two>NORTH_EAST_SOUTH_WEST_CANVAS</span></div>
+              <div class="diagnostic"><b>East</b><span data-hearth-diagnostic-east>boot pending</span></div>
+              <div class="diagnostic"><b>West</b><span data-hearth-diagnostic-west>downstream delegated</span></div>
+              <div class="diagnostic"><b>North</b><span data-hearth-diagnostic-north>F21 authority only</span></div>
+              <div class="diagnostic"><b>South</b><span data-hearth-diagnostic-south>visible proof downstream</span></div>
+              <div class="diagnostic"><b>Canvas</b><span data-hearth-diagnostic-canvas>F13 delegated</span></div>
+              <div class="diagnostic"><b>Inspect Mode</b><span data-hearth-diagnostic-inspect>shell placeholder active</span></div>
+              <div class="diagnostic"><b>F21</b><span data-hearth-diagnostic-f21>North-only latch</span></div>
               <div class="diagnostic"><b>Visual Pass</b><span data-hearth-diagnostic-visual-pass>false</span></div>
             </div>
           </div>
         </details>
 
         <template
-          id="hearth-html-page-load-supremacy-receipt"
+          id="hearth-html-non-blocking-east-boot-receipt"
           class="receipt"
           data-route-receipt
           data-hearth-html-receipt
         >
-HEARTH_HTML_PAGE_LOAD_SUPREMACY_EAST_HANDOFF_RUNTIME_SHELL_TNT_v2
+HEARTH_HTML_NON_BLOCKING_EAST_BOOT_TWO_CYCLE_RUNTIME_SHELL_TNT_v3
 route=/showroom/globe/hearth/
 target=/showroom/globe/hearth/index.html
-previous=HEARTH_HTML_PAGE_LOAD_SUPREMACY_RUNTIME_ENTRY_SHELL_TNT_v1
-conformsToSouth=HEARTH_SOUTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_GEAR_CYCLE_TNT_v1
-pageLoadSupremacy=true
-initialRuntimeStackFrontloaded=false
-runtimeAttachmentAfterBrowserLoad=true
-htmlLoadsDownstreamCycle=false
-eastLoadsDownstreamCycle=true
-runtimeTable=/assets/lab/runtime-table.js
-canvas=/assets/hearth/hearth.canvas.js
+previous=HEARTH_HTML_PAGE_LOAD_SUPREMACY_EAST_HANDOFF_RUNTIME_SHELL_TNT_v2
+htmlOwnsPublicShell=true
+htmlOwnsRuntime=false
+htmlOwnsCanvasDrawing=false
+htmlOwnsNorth=false
+htmlOwnsWest=false
+htmlOwnsSouth=false
+htmlLoadsEastEntryOnly=true
+htmlLoadsRuntimeTable=false
+htmlLoadsSourceStack=false
+htmlLoadsCanvas=false
+htmlLoadsWest=false
+htmlLoadsNorth=false
+htmlLoadsSouth=false
 east=/showroom/globe/hearth/index.js
-west=/assets/hearth/hearth.west.index-handoff.table.js
-north=/assets/hearth/hearth.north.command.runtime-table.js
-south=/showroom/globe/hearth/hearth.js
+eastOwnsStagedBoot=true
+cycleOneRoute=NORTH_EAST_WEST_SOUTH_NORTH
+cycleTwoRoute=NORTH_EAST_SOUTH_WEST_CANVAS
+newsNorth=macro law / permission / F21 latch
+newsEast=staged boot loader after shell stability
+newsWest=admissibility and Canvas release audit
+newsSouth=visible completion and proof body
+newsCanvas=F13 evidence only
+f1=static shell paint
+f2=hook validation
+f3=shell controls active
+f5=east boot requested
+f8=east boot acknowledged
+f13=Canvas evidence delegated downstream
+f21=North-only latch
 mount=#hearthCanvasMount
 cockpit=#hearthLoadCockpit
 status=#hearth-route-status
 receiptPanel=#hearthReceiptPanel
 showDiagnosticTab=[data-hearth-south-show-diagnostic-tab]
-htmlOwnsPublicShell=true
-htmlOwnsRuntime=false
-htmlOwnsCanvasDrawing=false
-htmlOwnsNorth=false
-htmlOwnsSouth=false
-southLoadsLastThroughEast=true
-cycleOrder=EAST-WEST-NORTH-SOUTH-CHECKPOINT-EAST
 mapPortal=#hearthMapPortal
 visualPassClaimed=false
 generatedImage=false
@@ -1218,7 +1217,7 @@ webGL=false
         </template>
       </section>
 
-      <pre id="hearth-route-status" data-hearth-route-status hidden>Hearth HTML shell ready. Runtime entry pending until browser page load completes. Downstream cycle will be loaded by East only.</pre>
+      <pre id="hearth-route-status" data-hearth-route-status hidden>Hearth HTML shell ready. East boot pending. HTML will attach only /showroom/globe/hearth/index.js after shell stability.</pre>
 
       <noscript>
         <section class="panel hero" aria-label="JavaScript required notice">
@@ -1232,7 +1231,7 @@ webGL=false
     </main>
 
     <footer>
-      HEARTH_HTML_PAGE_LOAD_SUPREMACY_EAST_HANDOFF_RUNTIME_SHELL_TNT_v2 · Hearth · Browser load first · HTML loads runtime entry only · East loads downstream · Visual pass not claimed.
+      HEARTH_HTML_NON_BLOCKING_EAST_BOOT_TWO_CYCLE_RUNTIME_SHELL_TNT_v3 · HTML loads East entry only · Canvas F13 delegated · F21 North-only · Visual pass not claimed.
     </footer>
   </div>
 
@@ -1240,70 +1239,14 @@ webGL=false
     (() => {
       "use strict";
 
-      const CONTRACT = "HEARTH_HTML_PAGE_LOAD_SUPREMACY_EAST_HANDOFF_RUNTIME_SHELL_TNT_v2";
+      const CONTRACT = "HEARTH_HTML_NON_BLOCKING_EAST_BOOT_TWO_CYCLE_RUNTIME_SHELL_TNT_v3";
+      const PREVIOUS_CONTRACT = "HEARTH_HTML_PAGE_LOAD_SUPREMACY_EAST_HANDOFF_RUNTIME_SHELL_TNT_v2";
+      const EAST_ENTRY = "/showroom/globe/hearth/index.js";
+      const CYCLE_ONE = "NORTH_EAST_WEST_SOUTH_NORTH";
+      const CYCLE_TWO = "NORTH_EAST_SOUTH_WEST_CANVAS";
+
       const root = window;
       const doc = document;
-
-      const scriptQueue = [
-        {
-          src: "/assets/lab/runtime-table.js",
-          role: "universal-runtime-table"
-        },
-        {
-          src: "/assets/hearth/hearth.tectonics.js",
-          role: "hearth-source-stack"
-        },
-        {
-          src: "/assets/hearth/hearth.elevation.js",
-          role: "hearth-source-stack"
-        },
-        {
-          src: "/assets/hearth/hearth.composition.js",
-          role: "hearth-source-stack"
-        },
-        {
-          src: "/assets/hearth/hearth.hydrology.js",
-          role: "hearth-source-stack"
-        },
-        {
-          src: "/assets/hearth/hearth.materials.js",
-          role: "hearth-source-stack"
-        },
-        {
-          src: "/assets/hearth/hearth.hex.four-pair.authority.js",
-          role: "hearth-source-stack"
-        },
-        {
-          src: "/assets/hearth/hearth.hex.surface.js",
-          role: "hearth-source-stack"
-        },
-        {
-          src: "/assets/hearth/hearth.canvas.js",
-          role: "hearth-canvas-authority"
-        },
-        {
-          src: "/showroom/globe/hearth/index.js",
-          role: "east-step1-ignition"
-        }
-      ];
-
-      const downstreamDelegatedToEast = [
-        {
-          src: "/assets/hearth/hearth.west.index-handoff.table.js",
-          role: "west-handoff-admissibility",
-          delegatedTo: "/showroom/globe/hearth/index.js"
-        },
-        {
-          src: "/assets/hearth/hearth.north.command.runtime-table.js",
-          role: "north-command-runtime-table",
-          delegatedTo: "/showroom/globe/hearth/index.js"
-        },
-        {
-          src: "/showroom/globe/hearth/hearth.js",
-          role: "south-visible-completion-cycle-consumer",
-          delegatedTo: "/showroom/globe/hearth/index.js"
-        }
-      ];
 
       const requiredHooks = [
         "#hearth-main",
@@ -1329,23 +1272,66 @@ webGL=false
 
       const state = {
         contract: CONTRACT,
-        browserLoadComplete: false,
+        previousContract: PREVIOUS_CONTRACT,
+        route: "/showroom/globe/hearth/",
+        file: "/showroom/globe/hearth/index.html",
+        eastEntry: EAST_ENTRY,
+        cycleOneRoute: CYCLE_ONE,
+        cycleTwoRoute: CYCLE_TWO,
+
+        shellPainted: false,
         hooksValidated: false,
-        runtimeAttachmentStarted: false,
-        runtimeEntryAttachmentComplete: false,
-        downstreamDelegatedToEast: true,
-        htmlLoadsDownstreamCycle: false,
-        currentScript: "",
-        failedScript: "",
+        shellControlsBound: false,
+        eastBootScheduled: false,
+        eastBootRequested: false,
+        eastBootAttached: false,
+        eastBootExisting: false,
+        eastBootFailed: false,
+
+        htmlLoadsEastEntryOnly: true,
+        htmlLoadsRuntimeTable: false,
+        htmlLoadsSourceStack: false,
+        htmlLoadsCanvas: false,
+        htmlLoadsWest: false,
+        htmlLoadsNorth: false,
+        htmlLoadsSouth: false,
+        eastOwnsStagedBoot: true,
+        canvasF13Delegated: true,
+        f21NorthOnly: true,
+
+        activeFibonacci: "F1",
+        activeStage: "F1_STATIC_SHELL_PAINT",
+        activeProgress: 12,
+        latestEvent: "HTML_SHELL_READY",
+        missingHooks: [],
         errors: [],
-        loadedScripts: [],
-        delegatedScripts: downstreamDelegatedToEast.map((item) => item.src),
         startedAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+
+        generatedImage: false,
+        graphicBox: false,
+        webGL: false,
+        visualPassClaimed: false
       };
 
       function qs(selector) {
         return doc.querySelector(selector);
+      }
+
+      function qsa(selector) {
+        return Array.from(doc.querySelectorAll(selector));
+      }
+
+      function nowIso() {
+        try {
+          return new Date().toISOString();
+        } catch (_error) {
+          return "";
+        }
+      }
+
+      function safeText(value) {
+        return String(value || "").replace(/[<>&]/g, "");
       }
 
       function setText(selector, text) {
@@ -1354,284 +1340,441 @@ webGL=false
       }
 
       function setProgress(percent) {
+        const value = Math.max(0, Math.min(100, Number(percent) || 0));
         const fill = qs("[data-hearth-main-progress-fill]");
         const label = qs("[data-hearth-main-progress-percent]");
-        const value = Math.max(0, Math.min(100, Number(percent) || 0));
+
+        state.activeProgress = value;
 
         if (fill) fill.style.width = `${value}%`;
         if (label) label.textContent = `${Math.round(value)}%`;
       }
 
-      function updateDiagnostics() {
-        setText("[data-hearth-diagnostic-lifecycle]", state.browserLoadComplete ? "browser load complete" : "browser load pending");
-        setText("[data-hearth-diagnostic-east]", state.runtimeEntryAttachmentComplete ? "East loaded by HTML" : "pending after load");
-        setText("[data-hearth-diagnostic-west]", "delegated to East");
-        setText("[data-hearth-diagnostic-north]", "delegated to East");
-        setText("[data-hearth-diagnostic-south]", "delegated to East, loads last");
-        setText("[data-hearth-diagnostic-canvas]", state.loadedScripts.some((src) => src.includes("hearth.canvas.js")) ? "canvas entry loaded" : "pending after load");
+      function updateDiagnosticText() {
+        setText("[data-hearth-diagnostic-lifecycle]", state.eastBootAttached ? "East boot attached" : state.hooksValidated ? "hooks validated" : "shell painted");
+        setText("[data-hearth-diagnostic-east]", state.eastBootAttached ? "boot attached" : state.eastBootFailed ? "boot failed" : state.eastBootRequested ? "boot requested" : "boot pending");
+        setText("[data-hearth-diagnostic-west]", "downstream delegated");
+        setText("[data-hearth-diagnostic-north]", "F21 authority only");
+        setText("[data-hearth-diagnostic-south]", "visible proof downstream");
+        setText("[data-hearth-diagnostic-canvas]", "F13 delegated");
+        setText("[data-hearth-diagnostic-inspect]", state.eastBootAttached ? "runtime may enhance" : "shell placeholder active");
+        setText("[data-hearth-diagnostic-f21]", "North-only latch");
+        setText("[data-hearth-diagnostic-visual-pass]", "false");
       }
 
-      function setStatus(text) {
-        const node = qs("#hearth-route-status");
-        state.updatedAt = new Date().toISOString();
+      function composeShellReceipt() {
+        return [
+          "HEARTH_HTML_NON_BLOCKING_EAST_BOOT_TWO_CYCLE_RUNTIME_SHELL_RECEIPT",
+          "",
+          `contract=${CONTRACT}`,
+          `previousContract=${PREVIOUS_CONTRACT}`,
+          "file=/showroom/globe/hearth/index.html",
+          "route=/showroom/globe/hearth/",
+          `eastEntry=${EAST_ENTRY}`,
+          "",
+          `shellPainted=${state.shellPainted}`,
+          `hooksValidated=${state.hooksValidated}`,
+          `shellControlsBound=${state.shellControlsBound}`,
+          `eastBootScheduled=${state.eastBootScheduled}`,
+          `eastBootRequested=${state.eastBootRequested}`,
+          `eastBootAttached=${state.eastBootAttached}`,
+          `eastBootExisting=${state.eastBootExisting}`,
+          `eastBootFailed=${state.eastBootFailed}`,
+          "",
+          "SCRIPT_OWNERSHIP",
+          "htmlLoadsEastEntryOnly=true",
+          "htmlLoadsRuntimeTable=false",
+          "htmlLoadsSourceStack=false",
+          "htmlLoadsCanvas=false",
+          "htmlLoadsWest=false",
+          "htmlLoadsNorth=false",
+          "htmlLoadsSouth=false",
+          "eastOwnsStagedBoot=true",
+          "",
+          "TWO_CYCLE_LAW",
+          `cycleOneRoute=${CYCLE_ONE}`,
+          `cycleTwoRoute=${CYCLE_TWO}`,
+          "",
+          "NEWS_ALIGNMENT",
+          "north=macro law / permission / F21 latch",
+          "east=staged boot loader after shell stability",
+          "west=admissibility and Canvas release audit",
+          "south=visible completion and proof body",
+          "canvas=F13 evidence only",
+          "",
+          "FIBONACCI_SYNCHRONIZATION",
+          "F1=static shell paint",
+          "F2=hook validation",
+          "F3=shell controls active",
+          "F5=east boot requested",
+          "F8=east boot acknowledged",
+          "F13=Canvas evidence delegated downstream",
+          "F21=North-only latch",
+          "",
+          `activeFibonacci=${state.activeFibonacci}`,
+          `activeStage=${state.activeStage}`,
+          `activeProgress=${state.activeProgress}`,
+          `latestEvent=${state.latestEvent}`,
+          `missingHooks=${state.missingHooks.join(",")}`,
+          `errors=${state.errors.join(" | ")}`,
+          "",
+          "FINAL_CLAIMS",
+          "generatedImage=false",
+          "graphicBox=false",
+          "webGL=false",
+          "visualPassClaimed=false",
+          `updatedAt=${state.updatedAt}`
+        ].join("\n");
+      }
 
-        if (node) {
-          node.textContent = [
-            text,
-            "",
-            `contract=${CONTRACT}`,
-            `browserLoadComplete=${state.browserLoadComplete}`,
-            `hooksValidated=${state.hooksValidated}`,
-            `runtimeAttachmentStarted=${state.runtimeAttachmentStarted}`,
-            `runtimeEntryAttachmentComplete=${state.runtimeEntryAttachmentComplete}`,
-            `htmlLoadsDownstreamCycle=${state.htmlLoadsDownstreamCycle}`,
-            `downstreamDelegatedToEast=${state.downstreamDelegatedToEast}`,
-            `currentScript=${state.currentScript}`,
-            `failedScript=${state.failedScript}`,
-            `loadedScripts=${state.loadedScripts.join(",")}`,
-            `delegatedScripts=${state.delegatedScripts.join(",")}`,
-            `errors=${state.errors.join(" | ")}`,
-            `updatedAt=${state.updatedAt}`
-          ].join("\n");
-        }
+      function publishState(message) {
+        state.updatedAt = nowIso();
 
-        root.HEARTH_HTML_PAGE_LOAD_SUPREMACY_RECEIPT = {
+        const dataset = doc.documentElement.dataset;
+
+        dataset.hearthHtmlShellPainted = String(state.shellPainted);
+        dataset.hearthHtmlHooksValidated = String(state.hooksValidated);
+        dataset.hearthHtmlShellControlsBound = String(state.shellControlsBound);
+        dataset.hearthHtmlEastBootScheduled = String(state.eastBootScheduled);
+        dataset.hearthHtmlEastBootRequested = String(state.eastBootRequested);
+        dataset.hearthHtmlEastBootAttached = String(state.eastBootAttached);
+        dataset.hearthHtmlEastBootExisting = String(state.eastBootExisting);
+        dataset.hearthHtmlEastBootFailed = String(state.eastBootFailed);
+
+        dataset.hearthHtmlLoadsEastEntryOnly = "true";
+        dataset.hearthHtmlLoadsRuntimeTable = "false";
+        dataset.hearthHtmlLoadsSourceStack = "false";
+        dataset.hearthHtmlLoadsCanvas = "false";
+        dataset.hearthHtmlLoadsWest = "false";
+        dataset.hearthHtmlLoadsNorth = "false";
+        dataset.hearthHtmlLoadsSouth = "false";
+        dataset.hearthEastOwnsStagedBoot = "true";
+        dataset.hearthCanvasF13Delegated = "true";
+        dataset.hearthF21NorthOnly = "true";
+
+        dataset.hearthCycleOneRoute = CYCLE_ONE;
+        dataset.hearthCycleTwoRoute = CYCLE_TWO;
+        dataset.hearthActiveFibonacci = state.activeFibonacci;
+        dataset.hearthActiveStage = state.activeStage;
+        dataset.hearthActiveProgress = String(state.activeProgress);
+        dataset.hearthLatestEvent = state.latestEvent;
+
+        dataset.generatedImage = "false";
+        dataset.graphicBox = "false";
+        dataset.webgl = "false";
+        dataset.visualPassClaimed = "false";
+
+        root.HEARTH_HTML_NON_BLOCKING_EAST_BOOT_RECEIPT = {
           ...state,
-          message: text,
-          updatedAt: state.updatedAt
+          message: message || "",
+          receiptText: composeShellReceipt()
         };
 
-        root.HEARTH_HTML_PAGE_LOAD_SUPREMACY_EAST_HANDOFF_RECEIPT = root.HEARTH_HTML_PAGE_LOAD_SUPREMACY_RECEIPT;
+        root.HEARTH_HTML_PAGE_LOAD_SUPREMACY_RECEIPT = root.HEARTH_HTML_NON_BLOCKING_EAST_BOOT_RECEIPT;
 
-        if (doc.documentElement) {
-          const dataset = doc.documentElement.dataset;
+        const status = qs("#hearth-route-status");
+        if (status) status.textContent = composeShellReceipt();
 
-          dataset.hearthBrowserLoadComplete = String(state.browserLoadComplete);
-          dataset.hearthHooksValidated = String(state.hooksValidated);
-          dataset.hearthRuntimeAttachmentStarted = String(state.runtimeAttachmentStarted);
-          dataset.hearthRuntimeEntryAttachmentComplete = String(state.runtimeEntryAttachmentComplete);
-          dataset.hearthRuntimeCurrentScript = state.currentScript;
-          dataset.hearthRuntimeFailedScript = state.failedScript;
-          dataset.hearthHtmlLoadsDownstreamCycle = "false";
-          dataset.hearthEastLoadsDownstreamCycle = "true";
-          dataset.hearthDownstreamDelegatedToEast = "true";
-          dataset.generatedImage = "false";
-          dataset.graphicBox = "false";
-          dataset.webgl = "false";
-          dataset.visualPassClaimed = "false";
+        const receiptText = qs("[data-hearth-receipt-text]");
+        const receiptBox = qs("[data-hearth-receipt-box]");
+        if (receiptText && receiptBox && receiptBox.dataset.visible === "true") {
+          receiptText.textContent = composeShellReceipt();
         }
 
-        updateDiagnostics();
+        updateDiagnosticText();
       }
 
-      function shellNotice(message, progress = 22) {
+      function shellNotice(stage, message, progress, latest) {
+        state.activeStage = stage;
+        state.activeProgress = progress;
+        state.latestEvent = latest || stage;
+
         setText(".hearth-ledger-title", "HEARTH SHELL READY");
-        setText("[data-hearth-stage-label]", "F2 · Browser load supremacy");
+        setText("[data-hearth-stage-label]", `${state.activeFibonacci} · ${stage}`);
         setText("[data-hearth-heartbeat-text]", message);
-        setText("[data-hearth-latest-event]", `latest=${message.replace(/[^A-Za-z0-9]+/g, "_").replace(/^_+|_+$/g, "").toUpperCase()}`);
+        setText("[data-hearth-latest-event]", `latest=${safeText(state.latestEvent)}`);
         setProgress(progress);
-        setStatus(message);
+        publishState(message);
       }
 
       function validateHooks() {
         const missing = requiredHooks.filter((selector) => !qs(selector));
 
-        if (missing.length) {
-          state.hooksValidated = false;
+        state.missingHooks = missing;
+        state.hooksValidated = missing.length === 0;
+
+        if (!state.hooksValidated) {
           state.errors.push(`missing hooks: ${missing.join(", ")}`);
-          shellNotice(`hook validation failed · missing=${missing.length}`, 22);
+          state.activeFibonacci = "F2";
+          shellNotice("F2_HOOK_VALIDATION_HELD", `hook validation held · missing=${missing.length}`, 18, "HOOK_VALIDATION_HELD");
           return false;
         }
 
-        state.hooksValidated = true;
-        shellNotice("hooks validated · runtime entry attachment beginning", 28);
+        state.activeFibonacci = "F2";
+        shellNotice("F2_HOOK_VALIDATION_COMPLETE", "hooks validated · shell controls ready", 24, "HOOK_VALIDATION_COMPLETE");
         return true;
       }
 
-      function existingScript(src) {
-        return Array.from(doc.scripts || []).find((script) => {
-          const current = script.getAttribute("src") || "";
-          return current.includes(src);
-        });
+      async function copyShellDiagnostic(button) {
+        const text = composeShellReceipt();
+
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(text);
+          } else {
+            const area = doc.createElement("textarea");
+            area.value = text;
+            area.setAttribute("readonly", "readonly");
+            area.style.position = "fixed";
+            area.style.left = "-9999px";
+            doc.body.appendChild(area);
+            area.select();
+            doc.execCommand("copy");
+            area.remove();
+          }
+
+          if (button) {
+            button.textContent = "Copied";
+            root.setTimeout(() => {
+              button.textContent = "Copy diagnostic";
+            }, 900);
+          }
+        } catch (_error) {
+          if (button) {
+            button.textContent = "Copy held";
+            root.setTimeout(() => {
+              button.textContent = "Copy diagnostic";
+            }, 900);
+          }
+        }
       }
 
-      function loadScript(item, index, total) {
+      function bindShellControls() {
+        const receiptBox = qs("[data-hearth-receipt-box]");
+        const receiptText = qs("[data-hearth-receipt-text]");
+        const showReceipt = qs("[data-hearth-toggle-receipt]");
+        const collapse = qs("[data-hearth-collapse-cockpit]");
+        const copy = qs("[data-hearth-copy-diagnostic]");
+        const inspect = qs("[data-hearth-inspect-planet]");
+        const cockpit = qs("#hearthLoadCockpit");
+        const showTab = qs("[data-hearth-south-show-diagnostic-tab]");
+
+        if (showReceipt && receiptBox && !showReceipt.dataset.hearthHtmlBound) {
+          showReceipt.dataset.hearthHtmlBound = "true";
+          showReceipt.addEventListener("click", () => {
+            const visible = receiptBox.dataset.visible !== "true";
+            receiptBox.dataset.visible = String(visible);
+            showReceipt.textContent = visible ? "Hide receipt" : "Show receipt";
+            if (receiptText) receiptText.textContent = composeShellReceipt();
+          });
+        }
+
+        if (collapse && cockpit && !collapse.dataset.hearthHtmlBound) {
+          collapse.dataset.hearthHtmlBound = "true";
+          collapse.addEventListener("click", () => {
+            const expanded = cockpit.dataset.cockpitMode !== "expanded-cockpit";
+            cockpit.dataset.cockpitMode = expanded ? "expanded-cockpit" : "diagnostic-dock";
+            collapse.textContent = expanded ? "Collapse cockpit" : "Expand cockpit";
+          });
+        }
+
+        if (copy && !copy.dataset.hearthHtmlBound) {
+          copy.dataset.hearthHtmlBound = "true";
+          copy.addEventListener("click", () => copyShellDiagnostic(copy));
+        }
+
+        if (inspect && cockpit && !inspect.dataset.hearthHtmlBound) {
+          inspect.dataset.hearthHtmlBound = "true";
+          inspect.addEventListener("click", () => {
+            const active = doc.documentElement.dataset.hearthShellInspectPlaceholder !== "true";
+
+            doc.documentElement.dataset.hearthShellInspectPlaceholder = String(active);
+            cockpit.dataset.cockpitMode = active ? "planet-inspect" : "diagnostic-dock";
+            inspect.textContent = active ? "Show diagnostic" : "Inspect planet";
+
+            if (showTab) {
+              showTab.hidden = !active;
+              showTab.dataset.visible = String(active);
+            }
+
+            state.activeFibonacci = state.eastBootAttached ? "F8" : "F3";
+            shellNotice(
+              active ? "SHELL_INSPECT_PLACEHOLDER_ACTIVE" : "SHELL_DIAGNOSTIC_DOCK_RESTORED",
+              active ? "inspect placeholder active · runtime may enhance after East boot" : "diagnostic dock restored",
+              state.eastBootAttached ? 34 : 30,
+              active ? "SHELL_INSPECT_PLACEHOLDER_ACTIVE" : "SHELL_DIAGNOSTIC_DOCK_RESTORED"
+            );
+          });
+        }
+
+        if (showTab && cockpit && !showTab.dataset.hearthHtmlBound) {
+          showTab.dataset.hearthHtmlBound = "true";
+          showTab.addEventListener("click", () => {
+            doc.documentElement.dataset.hearthShellInspectPlaceholder = "false";
+            showTab.hidden = true;
+            cockpit.dataset.cockpitMode = "diagnostic-dock";
+            if (inspect) inspect.textContent = "Inspect planet";
+            shellNotice("SHELL_DIAGNOSTIC_DOCK_RESTORED", "diagnostic dock restored", state.eastBootAttached ? 34 : 30, "SHELL_DIAGNOSTIC_DOCK_RESTORED");
+          });
+        }
+
+        state.shellControlsBound = true;
+        state.activeFibonacci = "F3";
+        shellNotice("F3_SHELL_CONTROLS_ACTIVE", "shell controls active · East boot may be scheduled", 30, "SHELL_CONTROLS_ACTIVE");
+      }
+
+      function existingEastScript() {
+        return Array.from(doc.scripts || []).find((script) => {
+          const src = script.getAttribute("src") || script.src || "";
+          return src.includes(EAST_ENTRY);
+        }) || null;
+      }
+
+      function loadEastEntryOnce() {
         return new Promise((resolve, reject) => {
-          if (existingScript(item.src)) {
-            state.currentScript = item.src;
-            state.loadedScripts.push(`${item.src}:existing`);
-            setStatus(`runtime script already present · ${item.src}`);
-            resolve();
+          const existing = existingEastScript();
+
+          state.eastBootRequested = true;
+          state.activeFibonacci = "F5";
+          shellNotice("F5_EAST_BOOT_REQUESTED", "East boot requested · HTML will attach East only", 32, "EAST_BOOT_REQUESTED");
+
+          if (existing) {
+            state.eastBootExisting = true;
+            state.eastBootAttached = true;
+            state.eastBootFailed = false;
+            state.activeFibonacci = "F8";
+            shellNotice("F8_EAST_BOOT_EXISTING", "East boot entry already present · downstream delegated", 34, "EAST_BOOT_EXISTING");
+            resolve(existing);
             return;
           }
 
           const script = doc.createElement("script");
-          const separator = item.src.includes("?") ? "&" : "?";
+          const separator = EAST_ENTRY.includes("?") ? "&" : "?";
 
-          state.currentScript = item.src;
-          setText("[data-hearth-heartbeat-text]", `runtime-entry-loading=${index + 1}/${total}`);
-          setText("[data-hearth-latest-event]", `latest=LOADING_${String(item.role || "runtime").toUpperCase().replace(/[^A-Z0-9]+/g, "_")}`);
-          setProgress(28 + Math.round(((index + 1) / total) * 22));
-          setStatus(`runtime entry stack loading after page load · ${item.src}`);
-
-          script.src = `${item.src}${separator}v=${encodeURIComponent(CONTRACT)}`;
-          script.defer = true;
+          script.src = `${EAST_ENTRY}${separator}v=${encodeURIComponent(CONTRACT)}`;
           script.async = false;
+          script.defer = true;
           script.dataset.loadedBy = CONTRACT;
-          script.dataset.role = item.role || "runtime";
-          script.dataset.runtimeAttachmentAfterBrowserLoad = "true";
-          script.dataset.htmlLoadsDownstreamCycle = "false";
-          script.dataset.eastLoadsDownstreamCycle = "true";
+          script.dataset.role = "east-staged-boot-entry";
+          script.dataset.htmlLoadsEastEntryOnly = "true";
+          script.dataset.eastOwnsStagedBoot = "true";
+          script.dataset.htmlLoadsRuntimeTable = "false";
+          script.dataset.htmlLoadsSourceStack = "false";
+          script.dataset.htmlLoadsCanvas = "false";
+          script.dataset.htmlLoadsWest = "false";
+          script.dataset.htmlLoadsNorth = "false";
+          script.dataset.htmlLoadsSouth = "false";
+          script.dataset.canvasF13Delegated = "true";
+          script.dataset.f21NorthOnly = "true";
+          script.dataset.generatedImage = "false";
+          script.dataset.graphicBox = "false";
+          script.dataset.webgl = "false";
           script.dataset.visualPassClaimed = "false";
 
-          if (item.contract) {
-            script.dataset.contract = item.contract;
-          }
-
           script.onload = () => {
-            state.loadedScripts.push(item.src);
-            resolve();
+            state.eastBootAttached = true;
+            state.eastBootFailed = false;
+            state.activeFibonacci = "F8";
+
+            qsa("[data-east-boot-pending='true']").forEach((node) => {
+              node.dataset.eastBootPending = "false";
+            });
+
+            shellNotice("F8_EAST_BOOT_ATTACHED", "East boot attached · downstream staged boot delegated", 34, "EAST_BOOT_ATTACHED");
+            resolve(script);
           };
 
           script.onerror = () => {
-            state.failedScript = item.src;
-            state.errors.push(`failed script: ${item.src}`);
-            reject(new Error(`Runtime entry attachment failed at ${item.src}`));
+            state.eastBootAttached = false;
+            state.eastBootFailed = true;
+            state.errors.push(`failed East entry: ${EAST_ENTRY}`);
+            shellNotice("F5_EAST_BOOT_FAILED", "East boot failed · shell remains available", 30, "EAST_BOOT_FAILED");
+            reject(new Error(`Failed to load ${EAST_ENTRY}`));
           };
 
           doc.body.appendChild(script);
         });
       }
 
-      async function attachRuntimeAfterLoad() {
-        if (state.runtimeAttachmentStarted) return;
+      function afterIdle(callback) {
+        const run = () => {
+          if ("requestIdleCallback" in root) {
+            root.requestIdleCallback(callback, { timeout: 1200 });
+          } else {
+            root.setTimeout(callback, 120);
+          }
+        };
 
-        state.runtimeAttachmentStarted = true;
-        state.browserLoadComplete = true;
+        if (root.requestAnimationFrame) {
+          root.requestAnimationFrame(() => root.setTimeout(run, 60));
+        } else {
+          root.setTimeout(run, 120);
+        }
+      }
 
-        shellNotice("browser load complete · validating Hearth shell hooks", 24);
+      function scheduleEastBoot() {
+        if (state.eastBootScheduled) return;
 
-        await new Promise((resolve) => {
-          root.requestAnimationFrame(() => {
-            root.setTimeout(resolve, 120);
+        state.eastBootScheduled = true;
+        publishState("East boot scheduled after shell stability.");
+
+        afterIdle(() => {
+          loadEastEntryOnce().catch(() => {
+            publishState("East boot failed. Shell remains available.");
           });
         });
-
-        if (!validateHooks()) return;
-
-        try {
-          for (let i = 0; i < scriptQueue.length; i += 1) {
-            await loadScript(scriptQueue[i], i, scriptQueue.length);
-          }
-
-          state.runtimeEntryAttachmentComplete = true;
-          state.currentScript = "";
-
-          setText("[data-hearth-heartbeat-text]", "runtime entry attached · East owns downstream cycle");
-          setText("[data-hearth-latest-event]", "latest=RUNTIME_ENTRY_ATTACHED_EAST_DOWNSTREAM_DELEGATED");
-          setProgress(52);
-          setStatus("runtime entry attached after browser load · downstream West/North/South delegated to East only");
-
-          doc.querySelectorAll("[data-shell-pending='true']").forEach((node) => {
-            node.dataset.shellPending = "false";
-            node.removeAttribute("aria-disabled");
-          });
-
-          const mount = qs("#hearthCanvasMount");
-          const cockpit = qs("#hearthLoadCockpit");
-
-          if (mount) {
-            mount.dataset.runtimeAttachmentPending = "false";
-            mount.dataset.eastDownstreamCyclePending = "true";
-          }
-
-          if (cockpit) {
-            cockpit.dataset.runtimeAttachmentPending = "false";
-            cockpit.dataset.eastDownstreamCyclePending = "true";
-          }
-        } catch (error) {
-          const message = error && error.message ? error.message : String(error);
-          setText(".hearth-ledger-title", "RUNTIME ENTRY ATTACHMENT HELD");
-          setText("[data-hearth-stage-label]", "F2 · Static shell remains available");
-          setText("[data-hearth-heartbeat-text]", "runtime-entry-attachment=failed");
-          setText("[data-hearth-latest-event]", `latest=${message}`);
-          setProgress(22);
-          setStatus(message);
-        }
       }
 
-      function bindShellOnlyControls() {
-        const receiptBox = qs("[data-hearth-receipt-box]");
-        const receiptText = qs("[data-hearth-receipt-text]");
+      function initShell() {
+        state.shellPainted = true;
+        state.activeFibonacci = "F1";
+        shellNotice("F1_STATIC_SHELL_PAINT", "static shell painted · hook validation pending", 12, "HTML_SHELL_READY");
 
-        const showReceipt = qs("[data-hearth-toggle-receipt]");
-        const collapse = qs("[data-hearth-collapse-cockpit]");
-        const copy = qs("[data-hearth-copy-diagnostic]");
-        const inspect = qs("[data-hearth-inspect-planet]");
-        const cockpit = qs("#hearthLoadCockpit");
+        bindShellControls();
 
-        if (showReceipt && receiptBox) {
-          showReceipt.addEventListener("click", () => {
-            const visible = receiptBox.dataset.visible !== "true";
-            receiptBox.dataset.visible = String(visible);
-            showReceipt.textContent = visible ? "Hide receipt" : "Show receipt";
-            if (receiptText) {
-              receiptText.textContent = qs("#hearth-route-status")?.textContent || "Static shell receipt pending.";
-            }
-          }, { once: false });
+        if (!validateHooks()) {
+          publishState("Hook validation held.");
+          return;
         }
 
-        if (collapse && cockpit) {
-          collapse.addEventListener("click", () => {
-            const expanded = cockpit.dataset.cockpitMode !== "expanded-cockpit";
-            cockpit.dataset.cockpitMode = expanded ? "expanded-cockpit" : "loading-cockpit";
-            collapse.textContent = expanded ? "Collapse cockpit" : "Expand cockpit";
-          }, { once: false });
-        }
-
-        if (copy) {
-          copy.addEventListener("click", async () => {
-            const text = qs("#hearth-route-status")?.textContent || "Hearth shell receipt pending.";
-            try {
-              await navigator.clipboard.writeText(text);
-              copy.textContent = "Copied";
-              root.setTimeout(() => {
-                copy.textContent = "Copy diagnostic";
-              }, 900);
-            } catch (_error) {
-              copy.textContent = "Copy pending";
-              root.setTimeout(() => {
-                copy.textContent = "Copy diagnostic";
-              }, 900);
-            }
-          }, { once: false });
-        }
-
-        if (inspect) {
-          inspect.addEventListener("click", () => {
-            shellNotice("inspect pending · runtime entry attaches after browser load", 22);
-          }, { once: false });
-        }
+        scheduleEastBoot();
       }
 
-      root.HEARTH_HTML_PAGE_LOAD_SUPREMACY = {
+      root.HEARTH_HTML_NON_BLOCKING_EAST_BOOT = {
         contract: CONTRACT,
+        previousContract: PREVIOUS_CONTRACT,
+        eastEntry: EAST_ENTRY,
+        cycleOneRoute: CYCLE_ONE,
+        cycleTwoRoute: CYCLE_TWO,
         state,
         validateHooks,
-        attachRuntimeAfterLoad
+        bindShellControls,
+        scheduleEastBoot,
+        loadEastEntryOnce,
+        getShellReceipt: () => ({ ...state, receiptText: composeShellReceipt() }),
+        getReceiptText: composeShellReceipt,
+        htmlLoadsEastEntryOnly: true,
+        htmlLoadsRuntimeTable: false,
+        htmlLoadsSourceStack: false,
+        htmlLoadsCanvas: false,
+        htmlLoadsWest: false,
+        htmlLoadsNorth: false,
+        htmlLoadsSouth: false,
+        eastOwnsStagedBoot: true,
+        canvasF13Delegated: true,
+        f21NorthOnly: true,
+        generatedImage: false,
+        graphicBox: false,
+        webGL: false,
+        visualPassClaimed: false
       };
 
-      root.HEARTH_HTML_EAST_HANDOFF_RUNTIME_SHELL = root.HEARTH_HTML_PAGE_LOAD_SUPREMACY;
+      root.HEARTH_HTML_EAST_HANDOFF_RUNTIME_SHELL = root.HEARTH_HTML_NON_BLOCKING_EAST_BOOT;
 
-      bindShellOnlyControls();
-      shellNotice("browser-load=pending · runtime-entry=pending · downstream=delegated-to-east", 22);
-
-      if (doc.readyState === "complete") {
-        root.setTimeout(attachRuntimeAfterLoad, 180);
+      if (doc.readyState === "loading") {
+        doc.addEventListener("DOMContentLoaded", initShell, { once: true });
       } else {
-        root.addEventListener("load", () => {
-          root.setTimeout(attachRuntimeAfterLoad, 180);
-        }, { once: true });
+        initShell();
       }
     })();
   </script>

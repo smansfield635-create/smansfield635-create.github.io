@@ -1,17 +1,16 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_CANVAS_PARENT_IDENTITY_BOOT_HANDSHAKE_STALE_CONSUMPTION_GUARD_TNT_v4
+// HEARTH_CANVAS_PARENT_GOVERNED_F13_EVIDENCE_RECEIVER_AFTER_WEST_RELEASE_TNT_v1
 // Full-file replacement.
-// Canvas North parent / single-file internal NEWS F13 schematic / identity + boot handshake guard.
+// Canvas parent / governed F13 evidence receiver after West release.
 // Purpose:
 // - Keep Canvas as one physical file.
-// - Expose unmistakable v4 parent identity.
-// - Detect stale v1/v2/v3 parent consumption.
-// - Prevent canvasBootComplete=true unless this exact parent identity booted.
-// - Prevent carrier-only readiness from outrunning texture, frame, and visible proof.
-// - Preserve existing HEARTH_CANVAS aliases expected by /showroom/globe/hearth/index.js and /showroom/globe/hearth/hearth.js.
-// - Consume East/West/South canvas children without splitting this parent file.
-// - Close F13 only through atlas + texture + frame + visible proof, or explicit degraded emergency F13 diagnostic output.
+// - Preserve parent identity, boot handshake, and stale consumption guards.
+// - Convert Canvas from self-starting F13 boot authority into governed F13 evidence receiver.
+// - Hold Cycle 1 and unknown-cycle packets.
+// - Accept Cycle 2 only after West/North release evidence.
+// - Mount physical carrier, consume child evidence, render F13 evidence, and return evidence upstream only after release.
 // - Keep Canvas strictly F13 evidence only.
+// - Never claim F21, READY text, or final visual pass.
 // Does not own:
 // - planet truth
 // - material truth
@@ -19,7 +18,9 @@
 // - hydrology truth
 // - runtime-table governance
 // - route orchestration
-// - F21 completion
+// - West admissibility
+// - North NEWS finalization
+// - F21 completion latch
 // - ready text
 // - final visual pass claim
 
@@ -29,13 +30,13 @@
   const CONTRACT = "HEARTH_CANVAS_MATERIALS_RELIEF_CONSUMPTION_INVALIDATION_TNT_v1";
   const RECEIPT = "HEARTH_CANVAS_MATERIALS_RELIEF_CONSUMPTION_INVALIDATION_RECEIPT_v1";
 
-  const SPLIT_CONTRACT = "HEARTH_CANVAS_PARENT_IDENTITY_BOOT_HANDSHAKE_STALE_CONSUMPTION_GUARD_TNT_v4";
-  const SPLIT_RECEIPT = "HEARTH_CANVAS_PARENT_IDENTITY_BOOT_HANDSHAKE_STALE_CONSUMPTION_GUARD_RECEIPT_v4";
+  const SPLIT_CONTRACT = "HEARTH_CANVAS_PARENT_GOVERNED_F13_EVIDENCE_RECEIVER_AFTER_WEST_RELEASE_TNT_v1";
+  const SPLIT_RECEIPT = "HEARTH_CANVAS_PARENT_GOVERNED_F13_EVIDENCE_RECEIVER_AFTER_WEST_RELEASE_RECEIPT_v1";
 
-  const PREVIOUS_SPLIT_CONTRACT = "HEARTH_CANVAS_SINGLE_FILE_INTERNAL_NEWS_F13_TEXTURE_FRAME_PROOF_CLOSURE_TNT_v3";
-  const PREVIOUS_SPLIT_RECEIPT = "HEARTH_CANVAS_SINGLE_FILE_INTERNAL_NEWS_F13_TEXTURE_FRAME_PROOF_CLOSURE_RECEIPT_v3";
+  const PREVIOUS_SPLIT_CONTRACT = "HEARTH_CANVAS_PARENT_IDENTITY_BOOT_HANDSHAKE_STALE_CONSUMPTION_GUARD_TNT_v4";
+  const PREVIOUS_SPLIT_RECEIPT = "HEARTH_CANVAS_PARENT_IDENTITY_BOOT_HANDSHAKE_STALE_CONSUMPTION_GUARD_RECEIPT_v4";
   const BASELINE_CONTRACT = "HEARTH_CANVAS_MATERIALS_RELIEF_CONSUMPTION_INVALIDATION_TNT_v1";
-  const VERSION = "2026-05-31.hearth-canvas-parent-identity-boot-handshake-stale-consumption-guard-v4";
+  const VERSION = "2026-05-31.hearth-canvas-parent-governed-f13-evidence-receiver-after-west-release-v1";
 
   const FILE = "/assets/hearth/hearth.canvas.js";
   const NORTH_FILE = "/assets/lab/runtime-table.js";
@@ -52,15 +53,31 @@
   const DEFAULT_ATLAS_HEIGHT = 256;
   const CHILD_LOAD_TIMEOUT_MS = 2600;
   const CHILD_METHOD_TIMEOUT_MS = 9000;
+  const MAX_LOG = 180;
+
+  const CYCLE = Object.freeze({
+    CYCLE_1: "NORTH_EAST_WEST_SOUTH_NORTH",
+    CYCLE_2: "NORTH_EAST_SOUTH_WEST_CANVAS"
+  });
+
+  const RELEASE_STATUS = Object.freeze({
+    ACCEPTED: "RELEASE_ACCEPTED",
+    HELD_CYCLE_ONE: "RELEASE_HELD_CYCLE_ONE",
+    HELD_UNKNOWN_CYCLE: "RELEASE_HELD_UNKNOWN_CYCLE",
+    HELD_WEST_AUDIT_REQUIRED: "RELEASE_HELD_WEST_AUDIT_REQUIRED",
+    HELD_SOUTH_ONLY_PACKET: "RELEASE_HELD_SOUTH_ONLY_PACKET",
+    HELD_PARENT_IDENTITY_MISMATCH: "RELEASE_HELD_PARENT_IDENTITY_MISMATCH",
+    HELD_STALE_PARENT: "RELEASE_HELD_STALE_PARENT",
+    HELD_FALLBACK: "RELEASE_HELD_FALLBACK"
+  });
 
   const STALE_SPLIT_CONTRACTS = Object.freeze([
     "HEARTH_CANVAS_PHYSICAL_CARRIER_F13_PROOF_PARENT_RENEWAL_TNT_v1",
     "HEARTH_CANVAS_PHYSICAL_OBJECT_BOOTSTRAP_F13_CARRIER_TNT_v1",
     "HEARTH_CANVAS_SINGLE_FILE_INTERNAL_NEWS_F13_SCHEMATIC_TNT_v2",
-    "HEARTH_CANVAS_SINGLE_FILE_INTERNAL_NEWS_F13_TEXTURE_FRAME_PROOF_CLOSURE_TNT_v3"
+    "HEARTH_CANVAS_SINGLE_FILE_INTERNAL_NEWS_F13_TEXTURE_FRAME_PROOF_CLOSURE_TNT_v3",
+    "HEARTH_CANVAS_PARENT_IDENTITY_BOOT_HANDSHAKE_STALE_CONSUMPTION_GUARD_TNT_v4"
   ]);
-
-  const CYCLE_ORDER = "NORTH_IDENTITY -> NORTH_BOOT_HANDSHAKE -> EAST_ATLAS -> WEST_CONTROL -> SOUTH_TEXTURE -> SOUTH_FRAME -> SOUTH_VISIBLE_PROOF -> CHECKPOINT_RETURN";
 
   const CHILDREN = Object.freeze({
     east: {
@@ -142,16 +159,14 @@
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     file: FILE,
-    role: "canvas-north-parent-identity-boot-handshake-stale-consumption-guard",
+    role: "canvas-parent-governed-f13-evidence-receiver-after-west-release",
 
-    northFile: NORTH_FILE,
-    eastFile: EAST_FILE,
-    westFile: WEST_FILE,
-    southFile: SOUTH_FILE,
-
+    governedF13EvidenceReceiverActive: true,
+    waitsForWestRelease: true,
+    cycleOneHeld: true,
+    cycleTwoReleaseRequired: true,
     singlePhysicalFile: true,
     internalNewsZonesActive: true,
-    internalFourZoneSchematicActive: true,
     noAdditionalCanvasFileSplit: true,
 
     parentIdentityGuardActive: true,
@@ -165,6 +180,28 @@
     preexistingParentSplitContract: preexisting.splitContract,
     preexistingParentReceipt: preexisting.splitReceipt,
 
+    release: {
+      releaseAccepted: false,
+      releaseStatus: RELEASE_STATUS.HELD_UNKNOWN_CYCLE,
+      releaseReason: "waiting-governed-release-packet",
+      receivedFrom: "",
+      returnTo: "",
+      handoffTo: "",
+      cycleNumber: 0,
+      cycleRoute: "",
+      westAuditObserved: false,
+      westAuditAccepted: false,
+      westCanvasReleaseApproved: false,
+      westAuditRequired: true,
+      northCanvasReleaseAuthorized: false,
+      canvasReleaseAuthorized: false,
+      canvasReleaseReceived: false,
+      sourceFile: "",
+      destinationFile: FILE,
+      acceptedAt: "",
+      lastInput: null
+    },
+
     canvasNorthActive: true,
     physicalObjectBootstrapActive: true,
     physicalCarrierProofActive: true,
@@ -176,10 +213,13 @@
 
     newsProtocolSynchronized: true,
     fibonacciAlignmentSynchronized: true,
-    activeFibonacciGate: "F13A",
+    activeFibonacci: "F13",
+    activeFibonacciRank: 13,
+    activeStageId: "F13_CANVAS_EVIDENCE_RECEIVER",
+    activeGearId: "F13_CANVAS_EVIDENCE_RECEIVER",
+    activeNewsGate: "CANVAS",
     futureFibonacciGate: "F21",
     oneActiveGearAtATime: true,
-    cycleOrder: CYCLE_ORDER,
 
     mount: null,
     canvas: null,
@@ -196,8 +236,13 @@
     canvasCarrierReady: false,
     canvasCarrierHandoffOk: false,
     canvasCarrierHandoffError: "",
-    canvasCarrierMethod: "parent-identity-boot-handshake-stale-consumption-guard",
+    canvasCarrierMethod: "governed-f13-evidence-receiver-after-west-release",
 
+    physicalBootRequested: false,
+    physicalBootStarted: false,
+    physicalBootResolved: false,
+    physicalBootRejected: false,
+    physicalBootComplete: false,
     canvasBootRequested: false,
     canvasBootStarted: false,
     canvasBootResolved: false,
@@ -292,21 +337,43 @@
     materialReceiptMatchesExpected: false,
     canonicalMaterialConsumed: false,
 
+    f13ReleaseReceived: false,
+    f13ParentIdentityAccepted: false,
+    f13PhysicalCarrierMounted: false,
+    f13ChildrenReady: false,
+    f13AtlasReady: false,
+    f13TextureReady: false,
+    f13FrameReady: false,
+    f13VisibleEvidenceAvailable: false,
+    f13VisibleEvidenceStrict: false,
+    f13VisibleEvidenceDegraded: false,
     f13CanvasEvidencePreserved: true,
     f13CanvasEvidenceComplete: false,
     f13HardFail: false,
-    f21ClaimedByCanvas: false,
-    readyTextClaimedByCanvas: false,
 
     northAuthorityPresent: false,
     checkpointSessionSubmissionAvailable: false,
     canvasEvidenceSubmittedToNorth: false,
+    canvasEvidenceBodyComposed: false,
+    canvasReturnPacketReady: false,
+
+    f21EligibleForNorth: false,
+    f21SubmittedToNorth: false,
+    f21ClaimedByCanvas: false,
+    readyTextClaimedByCanvas: false,
+    completionLatched: false,
+    degradedCompletionLatched: false,
+    f21LatchMode: "CANVAS_DOES_NOT_LATCH",
 
     booting: false,
     booted: false,
     bootStartedAt: "",
     bootCompletedAt: "",
     bootElapsedMs: 0,
+
+    firstFailedCoordinate: "WAITING_CANVAS_GOVERNED_RELEASE_PACKET",
+    recommendedNextFile: FILE,
+    recommendedNextRenewalTarget: FILE,
 
     callbacks: [],
     canvasPhaseEvents: [],
@@ -340,6 +407,11 @@
     return typeof value === "function";
   }
 
+  function safeString(value, fallback = "") {
+    if (value === undefined || value === null) return fallback;
+    return String(value);
+  }
+
   function safeNumber(value, fallback = 0) {
     const n = Number(value);
     return Number.isFinite(n) ? n : fallback;
@@ -356,6 +428,12 @@
     return Math.max(min, Math.min(max, safeNumber(value, min)));
   }
 
+  function asArray(value) {
+    if (Array.isArray(value)) return value.slice();
+    if (value === undefined || value === null || value === "") return [];
+    return [value];
+  }
+
   function clonePlain(value) {
     if (!isObject(value) && !Array.isArray(value)) return value;
     try {
@@ -365,7 +443,7 @@
     }
   }
 
-  function trimArray(array, max) {
+  function trimArray(array, max = MAX_LOG) {
     if (Array.isArray(array) && array.length > max) {
       array.splice(0, array.length - max);
     }
@@ -381,6 +459,51 @@
     }
 
     return cursor || null;
+  }
+
+  function readDataset(key, fallback = "") {
+    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return fallback;
+    const value = doc.documentElement.dataset[key];
+    return value === undefined || value === null || value === "" ? fallback : value;
+  }
+
+  function fieldDeep(input, names, maxDepth = 7) {
+    const wanted = new Set(asArray(names));
+    const queue = [{ value: input, depth: 0 }];
+    const seen = typeof WeakSet !== "undefined" ? new WeakSet() : null;
+
+    while (queue.length) {
+      const current = queue.shift();
+      const value = current.value;
+
+      if (!isObject(value) || current.depth > maxDepth) continue;
+      if (seen && seen.has(value)) continue;
+      if (seen) seen.add(value);
+
+      for (const key of Object.keys(value)) {
+        if (wanted.has(key)) return value[key];
+      }
+
+      for (const key of Object.keys(value)) {
+        const next = value[key];
+        if (isObject(next)) queue.push({ value: next, depth: current.depth + 1 });
+      }
+    }
+
+    return undefined;
+  }
+
+  function getAnyString(input, names, fallback = "") {
+    const value = fieldDeep(input, names);
+    return value === undefined || value === null ? fallback : String(value);
+  }
+
+  function getAnyBool(input, names, fallback = false) {
+    return safeBool(fieldDeep(input, names), fallback);
+  }
+
+  function getAnyNumber(input, names, fallback = 0) {
+    return safeNumber(fieldDeep(input, names), fallback);
   }
 
   function withTimeout(promise, timeoutMs, label) {
@@ -412,12 +535,12 @@
   function recordLocal(event, detail = {}) {
     const item = {
       at: nowIso(),
-      event: String(event || "LOCAL_EVENT"),
+      event: safeString(event, "LOCAL_EVENT"),
       detail: clonePlain(detail)
     };
 
     state.localEvents.push(item);
-    trimArray(state.localEvents, 180);
+    trimArray(state.localEvents);
     state.updatedAt = item.at;
     updateDataset();
 
@@ -427,34 +550,75 @@
   function recordError(code, error, detail = {}) {
     const item = {
       at: nowIso(),
-      event: String(code || "CANVAS_ERROR"),
-      code: String(code || "CANVAS_ERROR"),
-      message: error && error.message ? String(error.message) : String(error || ""),
+      event: safeString(code, "CANVAS_ERROR"),
+      code: safeString(code, "CANVAS_ERROR"),
+      message: error && error.message ? String(error.message) : safeString(error),
       detail: clonePlain(detail)
     };
 
     state.errors.push(item);
-    trimArray(state.errors, 140);
+    trimArray(state.errors);
     state.updatedAt = item.at;
     updateDataset();
 
     return item;
   }
 
-  function verifyCurrentParentIdentity(reason = "identity-check") {
-    const markerSplit = String(root.__HEARTH_CANVAS_PARENT_SPLIT_CONTRACT__ || "");
-    const datasetSplit = doc && doc.documentElement ? String(doc.documentElement.dataset.hearthCanvasSplitContract || "") : "";
-    const globalSplit = root.HEARTH_CANVAS && root.HEARTH_CANVAS.splitContract ? String(root.HEARTH_CANVAS.splitContract) : "";
+  function readReceipt(authority) {
+    if (!authority || !isObject(authority)) return null;
 
-    const values = [SPLIT_CONTRACT, markerSplit || SPLIT_CONTRACT, datasetSplit || SPLIT_CONTRACT, globalSplit || SPLIT_CONTRACT];
-    const mismatch = values.some((value) => value !== SPLIT_CONTRACT);
+    if (isFunction(authority.getReceipt)) {
+      try {
+        const receipt = authority.getReceipt();
+        return isObject(receipt) ? receipt : null;
+      } catch (_error) {
+        return null;
+      }
+    }
+
+    if (isObject(authority.receiptPacket)) return authority.receiptPacket;
+    if (isObject(authority.receipt)) return authority.receipt;
+    if (authority.contract || authority.receipt || authority.version) return authority;
+
+    return null;
+  }
+
+  function publishEarlyMarker() {
+    root.__HEARTH_CANVAS_PARENT_MARKER__ = true;
+    root.__HEARTH_CANVAS_PARENT_FILE__ = FILE;
+    root.__HEARTH_CANVAS_PARENT_CONTRACT__ = CONTRACT;
+    root.__HEARTH_CANVAS_PARENT_RECEIPT__ = RECEIPT;
+    root.__HEARTH_CANVAS_PARENT_SPLIT_CONTRACT__ = SPLIT_CONTRACT;
+    root.__HEARTH_CANVAS_PARENT_SPLIT_RECEIPT__ = SPLIT_RECEIPT;
+    root.__HEARTH_CANVAS_PARENT_GOVERNED_F13_EVIDENCE_RECEIVER__ = true;
+    root.__HEARTH_CANVAS_STALE_PARENT_DETECTED_BEFORE_GOVERNED_F13__ = state.staleParentDetected;
+
+    updateDataset();
+  }
+
+  function verifyCurrentParentIdentity(reason = "identity-check") {
+    const markerSplit = safeString(root.__HEARTH_CANVAS_PARENT_SPLIT_CONTRACT__, "");
+    const datasetSplit = readDataset("hearthCanvasSplitContract", "");
+    const globalSplit = root.HEARTH_CANVAS && root.HEARTH_CANVAS.splitContract
+      ? safeString(root.HEARTH_CANVAS.splitContract)
+      : "";
+
+    const mismatch = Boolean(
+      (markerSplit && markerSplit !== SPLIT_CONTRACT) ||
+      (datasetSplit && datasetSplit !== SPLIT_CONTRACT) ||
+      (globalSplit && globalSplit !== SPLIT_CONTRACT)
+    );
 
     state.currentParentIdentityAccepted = !mismatch;
     state.currentParentIdentityMismatch = mismatch;
+    state.f13ParentIdentityAccepted = !mismatch;
 
     if (mismatch) {
-      state.nextAuditTarget = FILE;
-      recordError("PARENT_IDENTITY_MISMATCH", "Live parent identity does not match the active v4 split contract.", {
+      state.firstFailedCoordinate = "WAITING_CANVAS_PARENT_IDENTITY_MATCH";
+      state.recommendedNextFile = FILE;
+      state.recommendedNextRenewalTarget = FILE;
+
+      recordError("PARENT_IDENTITY_MISMATCH", "Live parent identity does not match governed F13 parent identity.", {
         reason,
         expected: SPLIT_CONTRACT,
         markerSplit,
@@ -474,17 +638,396 @@
     return !mismatch;
   }
 
+  function normalizeCycleRoute(value = "") {
+    const text = safeString(value).toUpperCase().replace(/\s+/g, "");
+
+    if (
+      text.includes("NORTH_EAST_WEST_SOUTH_NORTH") ||
+      text.includes("NORTH→EAST→WEST→SOUTH→NORTH") ||
+      text.includes("NORTH->EAST->WEST->SOUTH->NORTH")
+    ) {
+      return CYCLE.CYCLE_1;
+    }
+
+    if (
+      text.includes("NORTH_EAST_SOUTH_WEST_CANVAS") ||
+      text.includes("NORTH→EAST→SOUTH→WEST→CANVAS") ||
+      text.includes("NORTH->EAST->SOUTH->WEST->CANVAS")
+    ) {
+      return CYCLE.CYCLE_2;
+    }
+
+    return safeString(value, "");
+  }
+
+  function normalizeCardinal(value = "") {
+    const text = safeString(value).trim().toUpperCase();
+
+    if (["NORTH", "EAST", "SOUTH", "WEST", "CANVAS"].includes(text)) return text;
+
+    return text;
+  }
+
+  function normalizeCanvasReleaseInput(input = {}) {
+    const source = isObject(input) ? input : {};
+    const detail = isObject(source.detail) ? source.detail : {};
+    const snapshot = isObject(source.snapshot) ? source.snapshot : {};
+    const release = isObject(source.release) ? source.release : {};
+    const receipt = isObject(source.receiptPacket) ? source.receiptPacket : {};
+    const flat = {
+      ...snapshot,
+      ...detail,
+      ...release,
+      ...receipt,
+      ...source
+    };
+
+    const receivedFrom = normalizeCardinal(
+      getAnyString(flat, ["receivedFrom", "sourceCardinal", "activeCardinal", "sender"], "") ||
+      readDataset("hearthCanvasReceivedFrom", "")
+    );
+
+    const cycleRoute = normalizeCycleRoute(
+      getAnyString(flat, ["cycleRoute", "activeCycleRoute", "routeCycle"], "") ||
+      readDataset("hearthCanvasCycleRoute", "")
+    );
+
+    let cycleNumber = getAnyNumber(flat, ["cycleNumber", "activeCycleNumber"], 0);
+    if (!cycleNumber && cycleRoute === CYCLE.CYCLE_1) cycleNumber = 1;
+    if (!cycleNumber && cycleRoute === CYCLE.CYCLE_2) cycleNumber = 2;
+
+    const cycleOneDetected = Boolean(
+      cycleNumber === 1 ||
+      cycleRoute === CYCLE.CYCLE_1 ||
+      getAnyBool(flat, ["cycleOneDetected", "cycle1Detected"], false)
+    );
+
+    const cycleTwoDetected = Boolean(
+      cycleNumber === 2 ||
+      cycleRoute === CYCLE.CYCLE_2 ||
+      getAnyBool(flat, ["cycleTwoDetected", "cycle2Detected"], false)
+    );
+
+    const westAuditObserved = Boolean(
+      getAnyBool(flat, ["westAuditObserved", "westAuditPresent", "westReviewObserved"], false) ||
+      readDataset("hearthCanvasWestAuditObserved", "") === "true" ||
+      receivedFrom === "WEST"
+    );
+
+    const westAuditAccepted = Boolean(
+      getAnyBool(flat, ["westAuditAccepted", "westAccepted", "westHandoffAccepted", "auditAccepted"], false) ||
+      readDataset("hearthCanvasWestAuditAccepted", "") === "true"
+    );
+
+    const westCanvasReleaseApproved = Boolean(
+      getAnyBool(flat, ["westCanvasReleaseApproved", "canvasReleaseApprovedByWest", "westReleaseApproved"], false) ||
+      readDataset("hearthCanvasWestReleaseApproved", "") === "true"
+    );
+
+    const northCanvasReleaseAuthorized = Boolean(
+      getAnyBool(flat, ["northCanvasReleaseAuthorized", "canvasReleaseAuthorizedByNorth", "northReleaseAuthorized"], false) ||
+      readDataset("hearthCanvasNorthReleaseAuthorized", "") === "true"
+    );
+
+    const canvasReleaseAuthorized = Boolean(
+      getAnyBool(flat, ["canvasReleaseAuthorized", "releaseAuthorized", "canvasRelease"], false) ||
+      readDataset("hearthCanvasReleaseAuthorized", "") === "true"
+    );
+
+    const canvasReleaseReceived = Boolean(
+      getAnyBool(flat, ["canvasReleaseReceived", "releaseReceived"], false) ||
+      westCanvasReleaseApproved ||
+      canvasReleaseAuthorized ||
+      northCanvasReleaseAuthorized ||
+      receivedFrom === "WEST"
+    );
+
+    const currentParentIdentityAccepted = Boolean(
+      getAnyBool(flat, ["currentParentIdentityAccepted", "parentIdentityAccepted"], state.currentParentIdentityAccepted) &&
+      !getAnyBool(flat, ["currentParentIdentityMismatch", "parentIdentityMismatch"], state.currentParentIdentityMismatch)
+    );
+
+    const currentParentIdentityMismatch = Boolean(
+      getAnyBool(flat, ["currentParentIdentityMismatch", "parentIdentityMismatch"], state.currentParentIdentityMismatch)
+    );
+
+    const staleParentDetected = Boolean(
+      getAnyBool(flat, ["staleParentDetected", "staleConsumptionDetected"], state.staleParentDetected)
+    );
+
+    const westAuditRequired = getAnyBool(flat, ["westAuditRequired"], true);
+
+    const output = {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      splitContract: SPLIT_CONTRACT,
+      splitReceipt: SPLIT_RECEIPT,
+
+      sourceFile: getAnyString(flat, ["sourceFile", "file", "fromFile"], ""),
+      destinationFile: getAnyString(flat, ["destinationFile", "targetFile", "toFile"], FILE),
+      activeCycleNumber: cycleNumber,
+      cycleNumber,
+      activeCycleRoute: cycleRoute,
+      cycleRoute,
+      receivedFrom,
+      returnTo: normalizeCardinal(getAnyString(flat, ["returnTo"], "")),
+      handoffTo: normalizeCardinal(getAnyString(flat, ["handoffTo"], "")),
+      activeCardinal: "CANVAS",
+      activeFileGate: FILE,
+      activeFibonacci: getAnyString(flat, ["activeFibonacci", "fibonacci"], "F13"),
+      activeFibonacciRank: getAnyNumber(flat, ["activeFibonacciRank", "fibonacciRank"], 13),
+      activeNEWSGate: getAnyString(flat, ["activeNEWSGate", "activeNewsGate"], "CANVAS"),
+      activeNewsGate: getAnyString(flat, ["activeNewsGate", "activeNEWSGate"], "CANVAS"),
+
+      westAuditObserved,
+      westAuditAccepted,
+      westCanvasReleaseApproved,
+      westAuditRequired,
+      northCanvasReleaseAuthorized,
+      canvasReleaseAuthorized,
+      canvasReleaseReceived,
+      cycleOneDetected,
+      cycleTwoDetected,
+
+      staleParentDetected,
+      currentParentIdentityAccepted,
+      currentParentIdentityMismatch,
+
+      physicalCarrierRequested: getAnyBool(flat, ["physicalCarrierRequested", "canvasCarrierRequested"], state.canvasCarrierRequested),
+      physicalCarrierMounted: getAnyBool(flat, ["physicalCarrierMounted", "canvasCarrierMounted"], state.canvasCarrierMounted),
+      canvasContextReady: getAnyBool(flat, ["canvasContextReady"], state.canvasContextReady),
+
+      canvasEastReady: getAnyBool(flat, ["canvasEastReady"], state.canvasEastReady),
+      canvasWestReady: getAnyBool(flat, ["canvasWestReady"], state.canvasWestReady),
+      canvasSouthReady: getAnyBool(flat, ["canvasSouthReady"], state.canvasSouthReady),
+      allCanvasChildrenReady: getAnyBool(flat, ["allCanvasChildrenReady"], state.allCanvasChildrenReady),
+
+      atlasReady: getAnyBool(flat, ["atlasReady", "atlasBuildComplete"], state.atlasBuildComplete),
+      textureReady: getAnyBool(flat, ["textureReady", "textureComposeComplete"], state.textureComposeComplete),
+      frameReady: getAnyBool(flat, ["frameReady", "firstFrameDetected"], state.firstFrameDetected),
+
+      visibleEvidenceAvailable: getAnyBool(flat, ["visibleEvidenceAvailable", "visiblePlanetAvailable", "visibleContentProof", "visibleContentSoftGap"], state.visiblePlanetAvailable),
+      visibleEvidenceStrict: getAnyBool(flat, ["visibleEvidenceStrict", "visibleContentStrictProof"], state.visibleContentStrictProof),
+      visibleEvidenceDegraded: getAnyBool(flat, ["visibleEvidenceDegraded", "visibleContentSoftGap", "visibleForwardProgress", "visibleContentAdmissible"], state.visibleContentSoftGap),
+      visibleEvidenceHardFail: getAnyBool(flat, ["visibleEvidenceHardFail", "visibleContentHardFail"], state.visibleContentHardFail),
+
+      inspectEvidenceAvailable: getAnyBool(flat, ["inspectEvidenceAvailable", "inspectModeAvailable", "inspectPlanetControlAvailable"], state.inspectModeAvailable),
+
+      f13EvidenceAvailable: getAnyBool(flat, ["f13EvidenceAvailable", "f13CanvasEvidenceComplete"], state.f13CanvasEvidenceComplete),
+      f21EligibleForNorth: getAnyBool(flat, ["f21EligibleForNorth"], state.f21EligibleForNorth),
+      f21SubmittedToNorth: getAnyBool(flat, ["f21SubmittedToNorth", "f21EligibilitySubmittedToNorth"], state.f21SubmittedToNorth),
+      f21LatchMode: getAnyString(flat, ["f21LatchMode"], state.f21LatchMode),
+
+      firstFailedCoordinate: getAnyString(flat, ["firstFailedCoordinate"], state.firstFailedCoordinate),
+      recommendedNextFile: getAnyString(flat, ["recommendedNextFile"], state.recommendedNextFile),
+      recommendedNextRenewalTarget: getAnyString(flat, ["recommendedNextRenewalTarget"], state.recommendedNextRenewalTarget),
+
+      raw: clonePlain(source),
+      normalizedAt: nowIso()
+    };
+
+    return output;
+  }
+
+  function applyHeldRelease(status, reason, normalized = {}) {
+    state.release.releaseAccepted = false;
+    state.release.releaseStatus = status;
+    state.release.releaseReason = reason;
+    state.release.receivedFrom = normalized.receivedFrom || "";
+    state.release.returnTo = normalized.returnTo || "";
+    state.release.handoffTo = normalized.handoffTo || "";
+    state.release.cycleNumber = normalized.cycleNumber || 0;
+    state.release.cycleRoute = normalized.cycleRoute || "";
+    state.release.westAuditObserved = normalized.westAuditObserved === true;
+    state.release.westAuditAccepted = normalized.westAuditAccepted === true;
+    state.release.westCanvasReleaseApproved = normalized.westCanvasReleaseApproved === true;
+    state.release.westAuditRequired = normalized.westAuditRequired !== false;
+    state.release.northCanvasReleaseAuthorized = normalized.northCanvasReleaseAuthorized === true;
+    state.release.canvasReleaseAuthorized = normalized.canvasReleaseAuthorized === true;
+    state.release.canvasReleaseReceived = normalized.canvasReleaseReceived === true;
+    state.release.sourceFile = normalized.sourceFile || "";
+    state.release.destinationFile = FILE;
+    state.release.acceptedAt = "";
+    state.release.lastInput = clonePlain(normalized);
+
+    state.f13ReleaseReceived = false;
+    state.canvasEvidenceBodyComposed = false;
+    state.canvasReturnPacketReady = false;
+    state.firstFailedCoordinate =
+      status === RELEASE_STATUS.HELD_CYCLE_ONE ? "WAITING_CYCLE_TWO_WEST_RELEASE" :
+      status === RELEASE_STATUS.HELD_SOUTH_ONLY_PACKET ? "WAITING_WEST_RELEASE_AFTER_SOUTH" :
+      status === RELEASE_STATUS.HELD_PARENT_IDENTITY_MISMATCH ? "WAITING_CANVAS_PARENT_IDENTITY_MATCH" :
+      status === RELEASE_STATUS.HELD_STALE_PARENT ? "WAITING_CANVAS_STALE_PARENT_CLEARANCE" :
+      status === RELEASE_STATUS.HELD_WEST_AUDIT_REQUIRED ? "WAITING_WEST_CANVAS_RELEASE" :
+      "WAITING_CANVAS_GOVERNED_RELEASE_PACKET";
+
+    state.recommendedNextFile = status === RELEASE_STATUS.HELD_WEST_AUDIT_REQUIRED ? "/assets/lab/runtime-table.west.js" : FILE;
+    state.recommendedNextRenewalTarget = state.recommendedNextFile;
+
+    updateDataset();
+
+    return {
+      accepted: false,
+      releaseAccepted: false,
+      releaseStatus: status,
+      reason,
+      canvasMayBoot: false,
+      canvasMayMount: false,
+      canvasMayRender: false,
+      canvasMayCallChildren: false,
+      firstFailedCoordinate: state.firstFailedCoordinate,
+      recommendedNextFile: state.recommendedNextFile,
+      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+      normalized: clonePlain(normalized),
+      visualPassClaimed: false
+    };
+  }
+
+  function applyAcceptedRelease(normalized = {}) {
+    state.release.releaseAccepted = true;
+    state.release.releaseStatus = RELEASE_STATUS.ACCEPTED;
+    state.release.releaseReason = "lawful-cycle-two-west-release-accepted";
+    state.release.receivedFrom = normalized.receivedFrom || "WEST";
+    state.release.returnTo = "NORTH";
+    state.release.handoffTo = "CANVAS";
+    state.release.cycleNumber = 2;
+    state.release.cycleRoute = CYCLE.CYCLE_2;
+    state.release.westAuditObserved = normalized.westAuditObserved === true;
+    state.release.westAuditAccepted = normalized.westAuditAccepted === true;
+    state.release.westCanvasReleaseApproved = normalized.westCanvasReleaseApproved === true;
+    state.release.westAuditRequired = true;
+    state.release.northCanvasReleaseAuthorized = normalized.northCanvasReleaseAuthorized === true;
+    state.release.canvasReleaseAuthorized = true;
+    state.release.canvasReleaseReceived = true;
+    state.release.sourceFile = normalized.sourceFile || "/assets/lab/runtime-table.west.js";
+    state.release.destinationFile = FILE;
+    state.release.acceptedAt = nowIso();
+    state.release.lastInput = clonePlain(normalized);
+
+    state.f13ReleaseReceived = true;
+    state.firstFailedCoordinate = "NONE_CANVAS_RELEASE_ACCEPTED";
+    state.recommendedNextFile = FILE;
+    state.recommendedNextRenewalTarget = FILE;
+
+    recordLocal("CANVAS_GOVERNED_RELEASE_ACCEPTED", {
+      cycleNumber: 2,
+      cycleRoute: CYCLE.CYCLE_2,
+      receivedFrom: state.release.receivedFrom,
+      westAuditObserved: state.release.westAuditObserved,
+      westCanvasReleaseApproved: state.release.westCanvasReleaseApproved,
+      northCanvasReleaseAuthorized: state.release.northCanvasReleaseAuthorized
+    });
+
+    updateDataset();
+
+    return {
+      accepted: true,
+      releaseAccepted: true,
+      releaseStatus: RELEASE_STATUS.ACCEPTED,
+      reason: "lawful-cycle-two-west-release-accepted",
+      canvasMayBoot: true,
+      canvasMayMount: true,
+      canvasMayRender: true,
+      canvasMayCallChildren: true,
+      firstFailedCoordinate: state.firstFailedCoordinate,
+      recommendedNextFile: state.recommendedNextFile,
+      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+      normalized: clonePlain(normalized),
+      visualPassClaimed: false
+    };
+  }
+
+  function resolveCanvasRelease(input = {}) {
+    let normalized;
+
+    try {
+      verifyCurrentParentIdentity("resolveCanvasRelease");
+      normalized = normalizeCanvasReleaseInput(input);
+    } catch (error) {
+      recordError("CANVAS_RELEASE_NORMALIZATION_FAILED", error);
+      return applyHeldRelease(RELEASE_STATUS.HELD_FALLBACK, "release-normalization-failed", {});
+    }
+
+    if (normalized.currentParentIdentityMismatch || !normalized.currentParentIdentityAccepted) {
+      return applyHeldRelease(RELEASE_STATUS.HELD_PARENT_IDENTITY_MISMATCH, "parent-identity-mismatch", normalized);
+    }
+
+    if (normalized.staleParentDetected && !normalized.westCanvasReleaseApproved && !normalized.northCanvasReleaseAuthorized) {
+      return applyHeldRelease(RELEASE_STATUS.HELD_STALE_PARENT, "stale-parent-detected-without-release-override", normalized);
+    }
+
+    if (normalized.cycleOneDetected) {
+      return applyHeldRelease(RELEASE_STATUS.HELD_CYCLE_ONE, "cycle-one-does-not-act-canvas", normalized);
+    }
+
+    if (!normalized.cycleTwoDetected && normalized.receivedFrom !== "WEST") {
+      return applyHeldRelease(RELEASE_STATUS.HELD_UNKNOWN_CYCLE, "unknown-cycle-held", normalized);
+    }
+
+    if (normalized.receivedFrom === "SOUTH" && !normalized.westCanvasReleaseApproved && !normalized.northCanvasReleaseAuthorized && !normalized.westAuditObserved) {
+      return applyHeldRelease(RELEASE_STATUS.HELD_SOUTH_ONLY_PACKET, "south-only-packet-without-west-release", normalized);
+    }
+
+    const directWestRelease = normalized.westCanvasReleaseApproved === true;
+    const westAcceptedCanvasRelease = normalized.westAuditAccepted === true && normalized.canvasReleaseAuthorized === true;
+    const northWithWestObserved = normalized.northCanvasReleaseAuthorized === true && normalized.westAuditObserved === true;
+    const cycleTwoFromWest = normalized.cycleNumber === 2 && normalized.cycleRoute === CYCLE.CYCLE_2 && normalized.receivedFrom === "WEST";
+    const authorizedFromWest = normalized.canvasReleaseAuthorized === true && normalized.receivedFrom === "WEST";
+
+    const releaseOk = Boolean(
+      directWestRelease ||
+      westAcceptedCanvasRelease ||
+      northWithWestObserved ||
+      cycleTwoFromWest ||
+      authorizedFromWest
+    );
+
+    if (!releaseOk) {
+      return applyHeldRelease(RELEASE_STATUS.HELD_WEST_AUDIT_REQUIRED, "west-release-evidence-required", normalized);
+    }
+
+    return applyAcceptedRelease(normalized);
+  }
+
+  function holdCanvasUntilRelease(input = {}) {
+    return resolveCanvasRelease(input);
+  }
+
+  function acceptCanvasReleasePacket(packet = {}) {
+    return resolveCanvasRelease(packet);
+  }
+
+  function guardReleaseOrReturn(options = {}) {
+    const release = resolveCanvasRelease(options.releasePacket || options.release || options);
+
+    if (!release.releaseAccepted) {
+      return {
+        held: true,
+        receipt: getReceipt(),
+        release
+      };
+    }
+
+    return {
+      held: false,
+      release
+    };
+  }
+
   function computeStrictBootComplete() {
     const strict = Boolean(
       state.currentParentIdentityAccepted &&
       !state.currentParentIdentityMismatch &&
-      state.canvasBootRequested &&
-      state.canvasBootStarted &&
-      state.canvasBootResolved &&
+      state.release.releaseAccepted &&
+      state.physicalBootRequested &&
+      state.physicalBootStarted &&
+      state.physicalBootResolved &&
+      !state.physicalBootRejected &&
       !state.canvasBootRejected &&
       !state.canvasBootError
     );
 
+    state.physicalBootComplete = strict;
     state.canvasBootComplete = strict;
     state.booted = strict;
 
@@ -493,60 +1036,41 @@
 
   function computeVisibleReady() {
     const visibleReady = Boolean(
+      state.release.releaseAccepted &&
       state.textureComposeComplete &&
       state.firstFrameDetected &&
       state.imageRendered &&
-      (state.visibleContentProof || state.visibleContentSoftGap || state.visibleForwardProgress || state.visibleContentAdmissible)
+      (
+        state.visibleContentProof ||
+        state.visibleContentSoftGap ||
+        state.visibleForwardProgress ||
+        state.visibleContentAdmissible
+      )
     );
 
     state.canvasReady = visibleReady;
     state.visibleCanvasReady = visibleReady;
     state.canvasLaneClosed = visibleReady;
+
+    state.f13PhysicalCarrierMounted = state.canvasCarrierMounted;
+    state.f13ChildrenReady = state.allCanvasChildrenReady;
+    state.f13AtlasReady = state.atlasBuildComplete;
+    state.f13TextureReady = state.textureComposeComplete;
+    state.f13FrameReady = state.firstFrameDetected && state.imageRendered;
+    state.f13VisibleEvidenceAvailable = Boolean(
+      state.visibleContentProof ||
+      state.visibleContentSoftGap ||
+      state.visibleForwardProgress ||
+      state.visibleContentAdmissible ||
+      state.visiblePlanetAvailable
+    );
+    state.f13VisibleEvidenceStrict = state.visibleContentStrictProof;
+    state.f13VisibleEvidenceDegraded = Boolean(state.visibleContentSoftGap || state.visibleForwardProgress || state.visibleContentAdmissible);
     state.f13CanvasEvidenceComplete = visibleReady;
     state.f13HardFail = Boolean(state.visibleContentHardFail && !visibleReady);
 
     return visibleReady;
   }
-
-  function publishEarlyMarker() {
-    root.__HEARTH_CANVAS_PARENT_MARKER__ = true;
-    root.__HEARTH_CANVAS_PARENT_FILE__ = FILE;
-    root.__HEARTH_CANVAS_PARENT_CONTRACT__ = CONTRACT;
-    root.__HEARTH_CANVAS_PARENT_RECEIPT__ = RECEIPT;
-    root.__HEARTH_CANVAS_PARENT_SPLIT_CONTRACT__ = SPLIT_CONTRACT;
-    root.__HEARTH_CANVAS_PARENT_SPLIT_RECEIPT__ = SPLIT_RECEIPT;
-    root.__HEARTH_CANVAS_PARENT_IDENTITY_V4__ = true;
-    root.__HEARTH_CANVAS_STALE_PARENT_DETECTED_BEFORE_V4__ = state.staleParentDetected;
-
-    if (doc && doc.documentElement) {
-      const dataset = doc.documentElement.dataset;
-      dataset.hearthCanvasParentMarkerPresent = "true";
-      dataset.hearthCanvasLoaded = "true";
-      dataset.hearthCanvasContract = CONTRACT;
-      dataset.hearthCanvasReceipt = RECEIPT;
-      dataset.hearthCanvasSplitContract = SPLIT_CONTRACT;
-      dataset.hearthCanvasSplitReceipt = SPLIT_RECEIPT;
-      dataset.hearthCanvasVersion = VERSION;
-      dataset.hearthCanvasParentIdentityGuardActive = "true";
-      dataset.hearthCanvasBootHandshakeGuardActive = "true";
-      dataset.hearthCanvasStaleConsumptionGuardActive = "true";
-      dataset.hearthCanvasExpectedParentSplitContract = SPLIT_CONTRACT;
-      dataset.hearthCanvasPreexistingParentSplitContract = state.preexistingParentSplitContract;
-      dataset.hearthCanvasStaleParentDetected = String(state.staleParentDetected);
-      dataset.hearthCanvasCurrentParentIdentityAccepted = "false";
-      dataset.hearthCanvasCurrentParentIdentityMismatch = "true";
-      dataset.hearthCanvasBootComplete = "false";
-      dataset.hearthCanvasReady = "false";
-      dataset.hearthCanvasF21Claimed = "false";
-      dataset.hearthCanvasReadyTextClaimed = "false";
-      dataset.generatedImage = "false";
-      dataset.graphicBox = "false";
-      dataset.webgl = "false";
-      dataset.visualPassClaimed = "false";
-    }
-  }
-
-  publishEarlyMarker();
 
   function resolveMount(options = {}) {
     if (!doc) return null;
@@ -603,6 +1127,8 @@
   }
 
   function ensureCarrier(options = {}) {
+    const gate = guardReleaseOrReturn(options);
+    if (gate.held) return gate.receipt;
     if (!doc) throw new Error("Document unavailable for Hearth canvas.");
 
     const mount = resolveMount(options);
@@ -611,18 +1137,19 @@
     ensureMountFrame(mount);
 
     let canvas =
-      String(mount.tagName || "").toLowerCase() === "canvas"
+      safeString(mount.tagName).toLowerCase() === "canvas"
         ? mount
         : mount.querySelector("canvas[data-hearth-canvas-texture='true'], canvas[data-hearth-canvas='true'], canvas.hearth-canvas");
 
     if (!canvas) {
       canvas = doc.createElement("canvas");
-      canvas.className = "hearth-canvas hearth-canvas--parent-identity-boot-handshake-v4";
+      canvas.className = "hearth-canvas hearth-canvas--governed-f13-evidence-receiver";
       canvas.dataset.hearthCanvas = "true";
       canvas.dataset.hearthCanvasTexture = "true";
       canvas.dataset.hearthPhysicalObjectBootstrap = "true";
       canvas.dataset.hearthParentIdentityGuard = "true";
-      canvas.setAttribute("aria-label", "Hearth visible planet canvas");
+      canvas.dataset.hearthGovernedF13EvidenceReceiver = "true";
+      canvas.setAttribute("aria-label", "Hearth governed F13 evidence canvas");
       mount.appendChild(canvas);
     }
 
@@ -659,10 +1186,13 @@
     state.carrierPhysicalWidth = canvas.width;
     state.carrierPhysicalHeight = canvas.height;
 
+    state.canvasCarrierRequested = true;
     state.canvasCarrierMounted = true;
     state.canvasContextReady = true;
     state.carrierReady = true;
     state.canvasCarrierReady = true;
+    state.canvasCarrierHandoffOk = true;
+    state.canvasCarrierHandoffError = "";
     state.planetCanvasPresent = true;
     state.planetCanvasNonZeroSize = Boolean(canvas.width > 0 && canvas.height > 0);
     state.visiblePlanetHintPresent = state.planetCanvasNonZeroSize;
@@ -677,11 +1207,13 @@
     canvas.dataset.hearthCanvasSplitReceipt = SPLIT_RECEIPT;
     canvas.dataset.hearthCanvasVersion = VERSION;
     canvas.dataset.hearthCanvasNorthActive = "true";
+    canvas.dataset.hearthCanvasGovernedF13EvidenceReceiver = "true";
     canvas.dataset.hearthCanvasCarrierReady = "true";
     canvas.dataset.hearthCanvasReady = "false";
-    canvas.dataset.hearthCanvasBootComplete = "false";
+    canvas.dataset.hearthCanvasBootComplete = String(state.canvasBootComplete);
     canvas.dataset.hearthCanvasF13Only = "true";
     canvas.dataset.hearthCanvasF21Claimed = "false";
+    canvas.dataset.hearthCanvasReadyTextClaimed = "false";
     canvas.dataset.visualPassClaimed = "false";
 
     updateDataset();
@@ -730,15 +1262,15 @@
     state.canvasWestMissingMethods = westMissing.join(",");
     state.canvasSouthMissingMethods = southMissing.join(",");
 
-    if (state.currentParentIdentityMismatch) state.nextAuditTarget = FILE;
-    else if (!state.canvasBootRequested || !state.canvasBootStarted) state.nextAuditTarget = FILE;
+    if (!state.release.releaseAccepted) state.nextAuditTarget = "/assets/lab/runtime-table.west.js";
+    else if (state.currentParentIdentityMismatch) state.nextAuditTarget = FILE;
     else if (!state.canvasEastReady) state.nextAuditTarget = EAST_FILE;
     else if (!state.canvasWestReady) state.nextAuditTarget = WEST_FILE;
     else if (!state.canvasSouthReady) state.nextAuditTarget = SOUTH_FILE;
     else if (!state.textureComposeComplete) state.nextAuditTarget = SOUTH_FILE;
     else if (!state.firstFrameDetected) state.nextAuditTarget = SOUTH_FILE;
     else if (!state.visibleContentProof && !state.visibleContentSoftGap) state.nextAuditTarget = SOUTH_FILE;
-    else state.nextAuditTarget = "read-route-or-north-receipt-after-f13";
+    else state.nextAuditTarget = "read-canvas-return-packet-or-north-receipt-after-f13";
 
     updateDataset();
     return { east, west, south };
@@ -818,7 +1350,10 @@
     });
   }
 
-  async function ensureChildren() {
+  async function ensureChildren(options = {}) {
+    const gate = guardReleaseOrReturn(options);
+    if (gate.held) return markChildrenPresence();
+
     if (childrenPromise) return childrenPromise;
 
     childrenPromise = (async () => {
@@ -876,8 +1411,8 @@
     const westReceipt = safeChildReceipt(children.west);
     const southReceipt = safeChildReceipt(children.south);
 
-    if (eastReceipt.materialContract !== undefined) state.materialContract = String(eastReceipt.materialContract || "");
-    if (eastReceipt.materialReceipt !== undefined) state.materialReceipt = String(eastReceipt.materialReceipt || "");
+    if (eastReceipt.materialContract !== undefined) state.materialContract = safeString(eastReceipt.materialContract);
+    if (eastReceipt.materialReceipt !== undefined) state.materialReceipt = safeString(eastReceipt.materialReceipt);
     if (eastReceipt.materialReceiptBridgeActive !== undefined) state.materialReceiptBridgeActive = safeBool(eastReceipt.materialReceiptBridgeActive, state.materialReceiptBridgeActive);
     if (eastReceipt.materialNestedReceiptAvailable !== undefined) state.materialNestedReceiptAvailable = safeBool(eastReceipt.materialNestedReceiptAvailable, state.materialNestedReceiptAvailable);
     if (eastReceipt.materialContractMatchesExpected !== undefined) state.materialContractMatchesExpected = safeBool(eastReceipt.materialContractMatchesExpected, state.materialContractMatchesExpected);
@@ -932,7 +1467,7 @@
 
   function normalizeCanvasResult(result, fallbackMethod) {
     if (!result) return null;
-    if (result.nodeType === 1 && String(result.tagName || "").toLowerCase() === "canvas") return result;
+    if (result.nodeType === 1 && safeString(result.tagName).toLowerCase() === "canvas") return result;
     if (result.atlasCanvas) return result.atlasCanvas;
     if (result.textureCanvas) return result.textureCanvas;
     if (result.canvas) return result.canvas;
@@ -997,22 +1532,26 @@
       splitContract: SPLIT_CONTRACT,
       splitReceipt: SPLIT_RECEIPT,
 
+      governedF13EvidenceReceiverActive: true,
+      waitsForWestRelease: true,
+      releaseAccepted: state.release.releaseAccepted,
+      releaseStatus: state.release.releaseStatus,
+      cycleNumber: state.release.cycleNumber,
+      cycleRoute: state.release.cycleRoute,
+      receivedFrom: state.release.receivedFrom,
+      westAuditObserved: state.release.westAuditObserved,
+      westCanvasReleaseApproved: state.release.westCanvasReleaseApproved,
+      northCanvasReleaseAuthorized: state.release.northCanvasReleaseAuthorized,
+
       parentIdentityGuardActive: true,
       bootHandshakeGuardActive: true,
       staleConsumptionGuardActive: true,
       currentParentIdentityAccepted: state.currentParentIdentityAccepted,
       currentParentIdentityMismatch: state.currentParentIdentityMismatch,
       staleParentDetected: state.staleParentDetected,
-      preexistingParentSplitContract: state.preexistingParentSplitContract,
 
-      canvasBootRequested: state.canvasBootRequested,
-      canvasBootStarted: state.canvasBootStarted,
-      canvasBootResolved: state.canvasBootResolved,
-      canvasBootRejected: state.canvasBootRejected,
-      canvasBootAttempts: state.canvasBootAttempts,
-      canvasBootError: state.canvasBootError,
+      physicalBootComplete: state.physicalBootComplete,
       canvasBootComplete: state.canvasBootComplete,
-
       carrierReady: state.carrierReady,
       canvasCarrierReady: state.canvasCarrierReady,
       canvasReady: state.canvasReady,
@@ -1031,6 +1570,7 @@
       imageRendered: state.imageRendered,
       visiblePlanetAvailable: state.visiblePlanetAvailable,
       visibleContentProof: state.visibleContentProof,
+      visibleContentStrictProof: state.visibleContentStrictProof,
       visibleContentSoftGap: state.visibleContentSoftGap,
       visibleContentHardFail: state.visibleContentHardFail,
       visibleForwardProgress: state.visibleForwardProgress,
@@ -1044,8 +1584,12 @@
       nextAuditTarget: state.nextAuditTarget,
 
       emergencyF13DiagnosticPlanetUsed: state.emergencyF13DiagnosticPlanetUsed,
+      f13CanvasEvidencePreserved: true,
       f13CanvasEvidenceComplete: state.f13CanvasEvidenceComplete,
       f13HardFail: state.f13HardFail,
+
+      f21EligibleForNorth: state.f21EligibleForNorth,
+      f21SubmittedToNorth: state.f21SubmittedToNorth,
       f21ClaimedByCanvas: false,
       readyTextClaimedByCanvas: false,
       visualPassClaimed: false
@@ -1054,12 +1598,12 @@
 
   function checkpointPayloadForPhase(phase, progress, message, detail = {}) {
     return {
-      event: String(phase || "CANVAS_EVENT"),
-      id: String(phase || "CANVAS_EVENT"),
-      phase: String(phase || "CANVAS_EVENT"),
-      checkpointId: String(detail.checkpointId || "F13_CANVAS_EVIDENCE"),
-      fibonacci: String(detail.fibonacci || "F13"),
-      source: "hearth.canvas.parent-identity-boot-handshake-stale-consumption-guard",
+      event: safeString(phase || "CANVAS_EVENT"),
+      id: safeString(phase || "CANVAS_EVENT"),
+      phase: safeString(phase || "CANVAS_EVENT"),
+      checkpointId: safeString(detail.checkpointId || "F13_CANVAS_EVIDENCE_RECEIVER"),
+      fibonacci: safeString(detail.fibonacci || "F13"),
+      source: "hearth.canvas.parent-governed-f13-evidence-receiver-after-west-release",
       contract: CONTRACT,
       receipt: RECEIPT,
       splitContract: SPLIT_CONTRACT,
@@ -1069,6 +1613,10 @@
       snapshot: getNorthSnapshot(),
       detail: {
         ...clonePlain(detail),
+        governedF13EvidenceReceiverActive: true,
+        waitsForWestRelease: true,
+        releaseAccepted: state.release.releaseAccepted,
+        releaseStatus: state.release.releaseStatus,
         singlePhysicalFile: true,
         parentIdentityGuardActive: true,
         bootHandshakeGuardActive: true,
@@ -1149,8 +1697,8 @@
   function emitProgressOnly(phase, progress, message, detail = {}) {
     const item = {
       at: nowIso(),
-      event: String(phase || "CANVAS_PROGRESS"),
-      phase: String(phase || "CANVAS_PROGRESS"),
+      event: safeString(phase || "CANVAS_PROGRESS"),
+      phase: safeString(phase || "CANVAS_PROGRESS"),
       progress: Math.min(98, safeNumber(progress, 0)),
       message: message || "",
       detail: clonePlain(detail),
@@ -1160,6 +1708,7 @@
       splitContract: SPLIT_CONTRACT,
       splitReceipt: SPLIT_RECEIPT,
       f21ClaimedByCanvas: false,
+      readyTextClaimedByCanvas: false,
       visualPassClaimed: false
     };
 
@@ -1231,7 +1780,7 @@
       visibleContentWaterSampleCount: 0,
       visibleContentOtherSampleCount: 0,
       visibleContentCarrierSampleCount: 0,
-      visibleContentProofMethod: "canvas-parent-pixel-sampling-v4"
+      visibleContentProofMethod: "canvas-parent-pixel-sampling-governed-f13-v1"
     };
 
     if (!canvas || !ctx || !canvas.width || !canvas.height) {
@@ -1344,7 +1893,7 @@
     state.nonblankPlanetVisible = safeBool(merged.nonblankPlanetVisible, state.visiblePlanetAvailable);
     state.planetNotObstructed = safeBool(merged.planetNotObstructed, state.visiblePlanetAvailable);
     state.carrierOnlyDetected = safeBool(merged.carrierOnlyDetected, false);
-    state.visibleContentProofMethod = merged.visibleContentProofMethod || "south-child-plus-parent-pixel-sampling-v4";
+    state.visibleContentProofMethod = merged.visibleContentProofMethod || "south-child-plus-parent-pixel-sampling-governed-f13-v1";
     state.visibleContentProofError = merged.visibleContentProofError || "";
     state.visibleContentSampleCount = safeNumber(merged.visibleContentSampleCount, state.visibleContentSampleCount);
     state.visibleContentVarianceScore = safeNumber(merged.visibleContentVarianceScore, state.visibleContentVarianceScore);
@@ -1362,6 +1911,8 @@
   }
 
   function drawEmergencyF13DiagnosticPlanet(reason = "child-output-unavailable") {
+    if (!state.release.releaseAccepted) return getReceipt();
+
     const canvas = state.canvas;
     const ctx = state.context;
 
@@ -1470,7 +2021,7 @@
     state.visiblePlanetHintPresent = true;
 
     state.atlasBuildStarted = true;
-    state.atlasBuildComplete = state.atlasBuildComplete || true;
+    state.atlasBuildComplete = true;
     state.textureComposeStarted = true;
     state.textureComposeComplete = true;
     state.textureComposeError = reason;
@@ -1487,7 +2038,7 @@
     state.visibleContentHardFail = false;
     state.visibleForwardProgress = true;
     state.visibleContentAdmissible = true;
-    state.visibleContentProofMethod = "emergency-f13-diagnostic-planet-parent-carrier-v4";
+    state.visibleContentProofMethod = "emergency-f13-diagnostic-planet-governed-parent-carrier-v1";
     state.visibleContentProofError = reason;
     state.visibleContentSampleCount = 1;
     state.visibleContentVarianceScore = 1;
@@ -1506,6 +2057,7 @@
       reason,
       f13Only: true,
       f21ClaimedByCanvas: false,
+      readyTextClaimedByCanvas: false,
       visualPassClaimed: false
     });
 
@@ -1524,18 +2076,27 @@
   async function bootCooperative(options = {}) {
     addCallbacksFromOptions(options);
 
+    const gate = guardReleaseOrReturn(options);
+    if (gate.held) return gate.receipt;
+
     if (bootPromise) return bootPromise;
 
     bootPromise = (async () => {
+      state.physicalBootRequested = true;
+      state.physicalBootStarted = true;
+      state.physicalBootResolved = false;
+      state.physicalBootRejected = false;
+      state.physicalBootComplete = false;
+
       state.canvasBootRequested = true;
       state.canvasBootStarted = true;
       state.canvasBootResolved = false;
       state.canvasBootRejected = false;
       state.canvasBootError = "";
       state.canvasBootAttempts += 1;
+
       state.booting = true;
       state.booted = false;
-      state.canvasBootComplete = false;
       state.bootStartedAt = nowIso();
       state.canvasCarrierRequested = true;
       state.canvasCarrierHandoffError = "";
@@ -1548,10 +2109,18 @@
         verifyCurrentParentIdentity("bootCooperative-start");
 
         if (!state.currentParentIdentityAccepted) {
-          throw new Error("Parent identity mismatch: active v4 file is not the consumed parent identity.");
+          throw new Error("Parent identity mismatch: governed F13 file is not the consumed parent identity.");
         }
 
-        emitMilestone("CANVAS_PARENT_IDENTITY_ACCEPTED", 76, "Canvas parent identity accepted.", {
+        emitMilestone("CANVAS_GOVERNED_RELEASE_ACCEPTED", 76, "Canvas governed release accepted.", {
+          checkpointId: "F13_RELEASE_ACCEPTED",
+          fibonacci: "F13",
+          cycleNumber: 2,
+          cycleRoute: CYCLE.CYCLE_2,
+          receivedFrom: state.release.receivedFrom
+        });
+
+        emitMilestone("CANVAS_PARENT_IDENTITY_ACCEPTED", 78, "Canvas parent identity accepted.", {
           checkpointId: "F13A_PARENT_IDENTITY_ACCEPTED",
           fibonacci: "F13A",
           splitContract: SPLIT_CONTRACT
@@ -1575,10 +2144,11 @@
 
         await yieldFrame();
 
-        const children = await ensureChildren();
+        const children = await ensureChildren(options);
 
         if (!state.allCanvasChildrenReady) {
           drawEmergencyF13DiagnosticPlanet(state.childLoadError || "canvas-child-readiness-incomplete");
+          state.physicalBootResolved = true;
           state.canvasBootResolved = true;
           finishBoot();
           return getReceipt();
@@ -1587,7 +2157,7 @@
         if (children.west && isFunction(children.west.bindInspection)) {
           children.west.bindInspection({
             canvas: state.canvas,
-            onChange: () => forceRedraw({ interactive: true, sampleProof: false }),
+            onChange: () => forceRedraw({ ...options, interactive: true, sampleProof: false }),
             onInvalidate: (reason) => invalidateTexture(reason || "west-control-invalidation")
           });
 
@@ -1607,6 +2177,7 @@
 
         if (!children.east || !isFunction(children.east.buildAtlas)) {
           drawEmergencyF13DiagnosticPlanet("east-buildAtlas-unavailable");
+          state.physicalBootResolved = true;
           state.canvasBootResolved = true;
           finishBoot();
           return getReceipt();
@@ -1639,6 +2210,7 @@
         if (!state.atlasBuildComplete) {
           state.atlasBuildError = "east-atlas-result-unusable";
           drawEmergencyF13DiagnosticPlanet(state.atlasBuildError);
+          state.physicalBootResolved = true;
           state.canvasBootResolved = true;
           finishBoot();
           return getReceipt();
@@ -1651,6 +2223,7 @@
 
         if (!children.south || !isFunction(children.south.composeTexture)) {
           drawEmergencyF13DiagnosticPlanet("south-composeTexture-unavailable");
+          state.physicalBootResolved = true;
           state.canvasBootResolved = true;
           finishBoot();
           return getReceipt();
@@ -1684,6 +2257,7 @@
         if (!state.textureComposeComplete) {
           state.textureComposeError = "south-texture-result-unusable";
           drawEmergencyF13DiagnosticPlanet(state.textureComposeError);
+          state.physicalBootResolved = true;
           state.canvasBootResolved = true;
           finishBoot();
           return getReceipt();
@@ -1696,6 +2270,7 @@
 
         if (!isFunction(children.south.renderSphere)) {
           drawEmergencyF13DiagnosticPlanet("south-renderSphere-unavailable");
+          state.physicalBootResolved = true;
           state.canvasBootResolved = true;
           finishBoot();
           return getReceipt();
@@ -1771,8 +2346,13 @@
           fibonacci: "F13N"
         });
 
+        state.physicalBootResolved = true;
         state.canvasBootResolved = true;
         finishBoot();
+
+        composeCanvasEvidenceBody();
+        composeCanvasReturnPacket();
+        submitCanvasEvidenceUpstream();
 
         if (isFunction(options.onReady)) {
           try {
@@ -1784,16 +2364,19 @@
 
         return getReceipt();
       } catch (error) {
+        state.physicalBootRejected = true;
         state.canvasBootRejected = true;
         state.canvasBootError = error && error.message ? error.message : String(error);
         state.canvasCarrierHandoffOk = false;
         state.canvasCarrierHandoffError = state.canvasBootError;
-        recordError("CANVAS_PARENT_IDENTITY_BOOT_HANDSHAKE_FAILED", error);
+        recordError("CANVAS_GOVERNED_F13_BOOT_FAILED", error);
 
         try {
           if (!state.canvas || !state.context) ensureCarrier(options);
           drawEmergencyF13DiagnosticPlanet(state.canvasBootError);
+          state.physicalBootRejected = false;
           state.canvasBootRejected = false;
+          state.physicalBootResolved = true;
           state.canvasBootResolved = true;
           state.canvasBootError = "";
         } catch (fallbackError) {
@@ -1835,8 +2418,11 @@
       : 0;
     state.updatedAt = state.bootCompletedAt;
 
-    if (!state.canvasBootComplete) {
+    if (!state.canvasBootComplete && state.release.releaseAccepted) {
       state.nextAuditTarget = FILE;
+      state.firstFailedCoordinate = "WAITING_CANVAS_PHYSICAL_BOOT_COMPLETE";
+      state.recommendedNextFile = FILE;
+      state.recommendedNextRenewalTarget = FILE;
     }
 
     updateDataset();
@@ -1848,16 +2434,19 @@
   }
 
   async function mount(options = {}) {
+    const gate = guardReleaseOrReturn(options);
+    if (gate.held) return gate.receipt;
+
     addCallbacksFromOptions(options);
     ensureCarrier(options);
-    await ensureChildren();
+    await ensureChildren(options);
 
     const west = resolveChild("west");
 
     if (west && isFunction(west.bindInspection)) {
       west.bindInspection({
         canvas: state.canvas,
-        onChange: () => forceRedraw({ interactive: true, sampleProof: false }),
+        onChange: () => forceRedraw({ ...options, interactive: true, sampleProof: false }),
         onInvalidate: (reason) => invalidateTexture(reason || "west-control-invalidation")
       });
 
@@ -1873,13 +2462,16 @@
   }
 
   async function render(options = {}) {
+    const gate = guardReleaseOrReturn(options);
+    if (gate.held) return gate.receipt;
+
     addCallbacksFromOptions(options);
 
     if (!state.canvas || !state.context) {
       await mount(options);
     }
 
-    const children = await ensureChildren();
+    const children = await ensureChildren(options);
 
     if (!state.allCanvasChildrenReady) {
       drawEmergencyF13DiagnosticPlanet(state.childLoadError || "render-request-child-incomplete");
@@ -1919,11 +2511,17 @@
       applyVisibleProof(sampleCanvasPixels());
     }
 
+    composeCanvasEvidenceBody();
+    composeCanvasReturnPacket();
     updateDataset();
+
     return getReceipt();
   }
 
   function forceRedraw(options = {}) {
+    const gate = guardReleaseOrReturn(options);
+    if (gate.held) return gate.receipt;
+
     const south = resolveChild("south");
     const west = resolveChild("west");
 
@@ -1987,9 +2585,12 @@
   }
 
   async function rebuildTexture(options = {}) {
+    const gate = guardReleaseOrReturn(options);
+    if (gate.held) return gate.receipt;
+
     addCallbacksFromOptions(options);
 
-    const children = await ensureChildren();
+    const children = await ensureChildren(options);
 
     if (!state.allCanvasChildrenReady) {
       drawEmergencyF13DiagnosticPlanet(state.childLoadError || "rebuild-child-incomplete");
@@ -2064,11 +2665,17 @@
       applyVisibleProof(sampleCanvasPixels());
     }
 
+    composeCanvasEvidenceBody();
+    composeCanvasReturnPacket();
     updateDataset();
+
     return getReceipt();
   }
 
   function ensureMaterialTextureFresh(options = {}) {
+    const gate = guardReleaseOrReturn(options);
+    if (gate.held) return Promise.resolve(gate.receipt);
+
     const east = resolveChild("east");
 
     if (east && isFunction(east.refreshMaterialBridge)) {
@@ -2095,7 +2702,7 @@
 
     if (west && isFunction(west.setRotation)) west.setRotation(state.rotationYaw, state.rotationPitch);
 
-    return forceRedraw({ interactive: true, sampleProof: false });
+    return forceRedraw({ releasePacket: state.release.lastInput || {}, interactive: true, sampleProof: false });
   }
 
   function resetRotation() {
@@ -2106,7 +2713,7 @@
 
     if (west && isFunction(west.resetRotation)) west.resetRotation();
 
-    return forceRedraw({ interactive: true, sampleProof: false });
+    return forceRedraw({ releasePacket: state.release.lastInput || {}, interactive: true, sampleProof: false });
   }
 
   function setZoom(value = 1, options = {}) {
@@ -2116,19 +2723,19 @@
 
     if (west && isFunction(west.setZoom)) west.setZoom(state.zoomLevel, options);
 
-    return forceRedraw({ interactive: true, sampleProof: options.sampleProof === true });
+    return forceRedraw({ ...options, releasePacket: options.releasePacket || state.release.lastInput || {}, interactive: true, sampleProof: options.sampleProof === true });
   }
 
   function zoomIn(step = 0.18) {
-    return setZoom(state.zoomLevel + Math.abs(safeNumber(step, 0.18)), { source: "zoomIn" });
+    return setZoom(state.zoomLevel + Math.abs(safeNumber(step, 0.18)), { source: "zoomIn", releasePacket: state.release.lastInput || {} });
   }
 
   function zoomOut(step = 0.18) {
-    return setZoom(state.zoomLevel - Math.abs(safeNumber(step, 0.18)), { source: "zoomOut" });
+    return setZoom(state.zoomLevel - Math.abs(safeNumber(step, 0.18)), { source: "zoomOut", releasePacket: state.release.lastInput || {} });
   }
 
   function resetZoom() {
-    return setZoom(1, { source: "resetZoom" });
+    return setZoom(1, { source: "resetZoom", releasePacket: state.release.lastInput || {} });
   }
 
   function sample(point = {}) {
@@ -2146,6 +2753,7 @@
       rgb: [0, 0, 0],
       canvasStillDoesNotOwnPlanetTruth: true,
       f21ClaimedByCanvas: false,
+      readyTextClaimedByCanvas: false,
       visualPassClaimed: false
     };
   }
@@ -2155,6 +2763,8 @@
   }
 
   function sampleVisibleContent() {
+    if (!state.release.releaseAccepted) return sampleCanvasPixels();
+
     const south = resolveChild("south");
     let proof = {};
 
@@ -2167,11 +2777,16 @@
     }
 
     const applied = applyVisibleProof(proof);
+    composeCanvasEvidenceBody();
+    composeCanvasReturnPacket();
     updateDataset();
+
     return applied;
   }
 
   function classifyVisibleContentEvidence(metrics = {}) {
+    if (!state.release.releaseAccepted) return applyVisibleProof({ visibleContentHardFail: false });
+
     const south = resolveChild("south");
 
     if (south && isFunction(south.classifyVisibleContentEvidence)) {
@@ -2199,6 +2814,283 @@
     };
   }
 
+  function composeCanvasEvidenceBody(input = {}) {
+    mergeChildReceipts();
+    computeVisibleReady();
+    computeStrictBootComplete();
+
+    const proofChannels = [
+      state.release.releaseAccepted,
+      state.currentParentIdentityAccepted,
+      state.canvasCarrierMounted,
+      state.canvasContextReady,
+      state.allCanvasChildrenReady,
+      state.atlasBuildComplete,
+      state.textureComposeComplete,
+      state.firstFrameDetected,
+      state.visibleContentProof,
+      state.visibleContentSoftGap,
+      state.visibleForwardProgress,
+      state.visibleContentAdmissible,
+      state.inspectModeAvailable,
+      state.materialReceiptBridgeActive
+    ].filter(Boolean).length;
+
+    state.canvasEvidenceBodyComposed = proofChannels > 0;
+
+    const body = {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      splitContract: SPLIT_CONTRACT,
+      splitReceipt: SPLIT_RECEIPT,
+      file: FILE,
+
+      canvasEvidenceBodyComposed: state.canvasEvidenceBodyComposed,
+      proofChannels,
+
+      releaseProof: {
+        releaseAccepted: state.release.releaseAccepted,
+        releaseStatus: state.release.releaseStatus,
+        receivedFrom: state.release.receivedFrom,
+        cycleNumber: state.release.cycleNumber,
+        cycleRoute: state.release.cycleRoute,
+        westAuditObserved: state.release.westAuditObserved,
+        westAuditAccepted: state.release.westAuditAccepted,
+        westCanvasReleaseApproved: state.release.westCanvasReleaseApproved,
+        northCanvasReleaseAuthorized: state.release.northCanvasReleaseAuthorized
+      },
+
+      parentIdentityProof: {
+        parentIdentityGuardActive: true,
+        currentParentIdentityAccepted: state.currentParentIdentityAccepted,
+        currentParentIdentityMismatch: state.currentParentIdentityMismatch,
+        staleParentDetected: state.staleParentDetected
+      },
+
+      bootHandshakeProof: {
+        physicalBootRequested: state.physicalBootRequested,
+        physicalBootStarted: state.physicalBootStarted,
+        physicalBootResolved: state.physicalBootResolved,
+        physicalBootRejected: state.physicalBootRejected,
+        physicalBootComplete: state.physicalBootComplete,
+        canvasBootComplete: state.canvasBootComplete
+      },
+
+      carrierProof: {
+        canvasCarrierMounted: state.canvasCarrierMounted,
+        canvasContextReady: state.canvasContextReady,
+        planetCanvasPresent: state.planetCanvasPresent,
+        planetCanvasNonZeroSize: state.planetCanvasNonZeroSize
+      },
+
+      childReadinessProof: {
+        canvasEastReady: state.canvasEastReady,
+        canvasWestReady: state.canvasWestReady,
+        canvasSouthReady: state.canvasSouthReady,
+        allCanvasChildrenReady: state.allCanvasChildrenReady,
+        childLoadError: state.childLoadError
+      },
+
+      f13Proof: {
+        f13ReleaseReceived: state.f13ReleaseReceived,
+        f13ParentIdentityAccepted: state.f13ParentIdentityAccepted,
+        f13PhysicalCarrierMounted: state.f13PhysicalCarrierMounted,
+        f13ChildrenReady: state.f13ChildrenReady,
+        f13AtlasReady: state.f13AtlasReady,
+        f13TextureReady: state.f13TextureReady,
+        f13FrameReady: state.f13FrameReady,
+        f13VisibleEvidenceAvailable: state.f13VisibleEvidenceAvailable,
+        f13VisibleEvidenceStrict: state.f13VisibleEvidenceStrict,
+        f13VisibleEvidenceDegraded: state.f13VisibleEvidenceDegraded,
+        f13CanvasEvidenceComplete: state.f13CanvasEvidenceComplete,
+        f13HardFail: state.f13HardFail
+      },
+
+      visibleProof: {
+        visibleContentProof: state.visibleContentProof,
+        visibleContentStrictProof: state.visibleContentStrictProof,
+        visibleContentSoftGap: state.visibleContentSoftGap,
+        visibleContentHardFail: state.visibleContentHardFail,
+        visibleForwardProgress: state.visibleForwardProgress,
+        visibleContentAdmissible: state.visibleContentAdmissible,
+        visibleContentProofMethod: state.visibleContentProofMethod,
+        visibleContentProofError: state.visibleContentProofError
+      },
+
+      inspectProof: {
+        dragInspectionBound: state.dragInspectionBound,
+        zoomInspectionBound: state.zoomInspectionBound,
+        inspectModeAvailable: state.inspectModeAvailable,
+        inspectPlanetControlAvailable: state.inspectPlanetControlAvailable,
+        diagnosticCanLeavePlanetFrame: state.diagnosticCanLeavePlanetFrame
+      },
+
+      materialBridgeProof: getMaterialBridgeReceipt(),
+
+      newsObservation: {
+        canvasNewsObserved: true,
+        canvasNewsComposed: true,
+        canvasNewsReceivedFromWest: state.release.receivedFrom === "WEST",
+        canvasNewsSubmittedUpstream: state.canvasEvidenceSubmittedToNorth,
+        canvasGateReady: state.f13CanvasEvidenceComplete,
+        newsGatePassedBeforeF21: getAnyBool(input, ["newsGatePassedBeforeF21"], false),
+        newsGateDegradedBeforeF21: getAnyBool(input, ["newsGateDegradedBeforeF21"], false),
+        canvasFinalizesNews: false
+      },
+
+      fibonacciObservation: {
+        activeFibonacci: "F13",
+        activeFibonacciRank: 13,
+        activeStageId: "F13_CANVAS_EVIDENCE_RECEIVER",
+        activeGearId: "F13_CANVAS_EVIDENCE_RECEIVER",
+        futureFibonacciGate: "F21",
+        f21ClaimedByCanvas: false,
+        f21LatchMode: "CANVAS_DOES_NOT_LATCH"
+      },
+
+      firstFailedCoordinate: state.firstFailedCoordinate,
+      recommendedNextFile: state.recommendedNextFile,
+      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false,
+      composedAt: nowIso()
+    };
+
+    updateDataset();
+    return body;
+  }
+
+  function composeCanvasEvidenceReceipt(input = {}) {
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      splitContract: SPLIT_CONTRACT,
+      splitReceipt: SPLIT_RECEIPT,
+      file: FILE,
+      role: state.role,
+      canvasEvidenceReceipt: true,
+      canvasEvidenceBody: composeCanvasEvidenceBody(input),
+      release: clonePlain(state.release),
+      f13CanvasEvidenceComplete: state.f13CanvasEvidenceComplete,
+      f13HardFail: state.f13HardFail,
+      f21ClaimedByCanvas: false,
+      readyTextClaimedByCanvas: false,
+      completionLatched: state.completionLatched,
+      degradedCompletionLatched: state.degradedCompletionLatched,
+      visualPassClaimed: false,
+      updatedAt: nowIso()
+    };
+  }
+
+  function composeCanvasReturnPacket(input = {}) {
+    const body = composeCanvasEvidenceBody(input);
+
+    const packet = {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      splitContract: SPLIT_CONTRACT,
+      splitReceipt: SPLIT_RECEIPT,
+      sourceFile: FILE,
+      targetFile: NORTH_FILE,
+
+      cycleNumber: 2,
+      cycleRoute: CYCLE.CYCLE_2,
+      receivedFrom: state.release.receivedFrom || "WEST",
+      returnTo: "NORTH",
+      handoffTo: "",
+      activeCardinal: "CANVAS",
+      activeFibonacci: "F13",
+      activeFibonacciRank: 13,
+      activeNewsGate: "CANVAS",
+
+      canvasReleaseAccepted: state.release.releaseAccepted,
+      canvasReleaseStatus: state.release.releaseStatus,
+      canvasEvidenceBodyComposed: body.canvasEvidenceBodyComposed,
+      canvasEvidenceReceiptComposed: true,
+      physicalBootComplete: state.physicalBootComplete,
+      canvasBootComplete: state.canvasBootComplete,
+      f13CanvasEvidenceComplete: state.f13CanvasEvidenceComplete,
+      f13HardFail: state.f13HardFail,
+
+      f21EligibleForNorth: state.f21EligibleForNorth,
+      f21SubmittedToNorth: state.f21SubmittedToNorth,
+      f21ClaimedByCanvas: false,
+      readyTextClaimedByCanvas: false,
+      completionLatched: state.completionLatched,
+      degradedCompletionLatched: state.degradedCompletionLatched,
+      visualPassClaimed: false,
+
+      firstFailedCoordinate: state.firstFailedCoordinate,
+      recommendedNextFile: state.recommendedNextFile,
+      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+
+      canvasEvidenceBody: body,
+      composedAt: nowIso()
+    };
+
+    state.canvasReturnPacketReady = true;
+    updateDataset();
+
+    return packet;
+  }
+
+  function submitCanvasEvidenceUpstream(input = {}) {
+    const packet = composeCanvasReturnPacket(input);
+    const north = readNorthAuthority();
+
+    if (!north.session) return false;
+
+    try {
+      if (isFunction(north.session.submitEvent)) {
+        north.session.submitEvent(packet);
+        state.canvasEvidenceSubmittedToNorth = true;
+        updateDataset();
+        return true;
+      }
+
+      if (isFunction(north.session.submit)) {
+        north.session.submit(packet);
+        state.canvasEvidenceSubmittedToNorth = true;
+        updateDataset();
+        return true;
+      }
+    } catch (error) {
+      recordError("SUBMIT_CANVAS_RETURN_PACKET_FAILED", error);
+    }
+
+    return false;
+  }
+
+  function getCanvasReleaseReceipt() {
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      splitContract: SPLIT_CONTRACT,
+      splitReceipt: SPLIT_RECEIPT,
+      file: FILE,
+      release: clonePlain(state.release),
+      releaseAccepted: state.release.releaseAccepted,
+      releaseStatus: state.release.releaseStatus,
+      waitsForWestRelease: true,
+      cycleOneHeld: true,
+      cycleTwoReleaseRequired: true,
+      firstFailedCoordinate: state.firstFailedCoordinate,
+      recommendedNextFile: state.recommendedNextFile,
+      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+      f21ClaimedByCanvas: false,
+      readyTextClaimedByCanvas: false,
+      visualPassClaimed: false,
+      updatedAt: nowIso()
+    };
+  }
+
+  function getCanvasPrimaryGateReceipt() {
+    return getReceipt();
+  }
+
   function getReceipt() {
     readNorthAuthority();
     markChildrenPresence();
@@ -2217,10 +3109,27 @@
       file: FILE,
       role: state.role,
 
+      governedF13EvidenceReceiverActive: true,
+      waitsForWestRelease: true,
+      cycleOneHeld: true,
+      cycleTwoReleaseRequired: true,
       singlePhysicalFile: true,
       internalNewsZonesActive: true,
-      internalFourZoneSchematicActive: true,
       noAdditionalCanvasFileSplit: true,
+
+      releaseAccepted: state.release.releaseAccepted,
+      releaseStatus: state.release.releaseStatus,
+      releaseReason: state.release.releaseReason,
+      cycleNumber: state.release.cycleNumber,
+      cycleRoute: state.release.cycleRoute,
+      receivedFrom: state.release.receivedFrom,
+      returnTo: state.release.returnTo,
+      handoffTo: state.release.handoffTo,
+      westAuditObserved: state.release.westAuditObserved,
+      westAuditAccepted: state.release.westAuditAccepted,
+      westReleaseApproved: state.release.westCanvasReleaseApproved,
+      northReleaseAuthorized: state.release.northCanvasReleaseAuthorized,
+      canvasReleaseAuthorized: state.release.canvasReleaseAuthorized,
 
       parentIdentityGuardActive: true,
       bootHandshakeGuardActive: true,
@@ -2245,15 +3154,19 @@
 
       newsProtocolSynchronized: true,
       fibonacciAlignmentSynchronized: true,
-      activeFibonacciGate: "F13",
+      activeFibonacci: "F13",
+      activeFibonacciRank: 13,
+      activeStageId: "F13_CANVAS_EVIDENCE_RECEIVER",
+      activeGearId: "F13_CANVAS_EVIDENCE_RECEIVER",
+      activeNewsGate: "CANVAS",
       futureFibonacciGate: "F21",
       oneActiveGearAtATime: true,
-      cycleOrder: CYCLE_ORDER,
 
-      northFile: NORTH_FILE,
-      eastFile: EAST_FILE,
-      westFile: WEST_FILE,
-      southFile: SOUTH_FILE,
+      physicalBootRequested: state.physicalBootRequested,
+      physicalBootStarted: state.physicalBootStarted,
+      physicalBootResolved: state.physicalBootResolved,
+      physicalBootRejected: state.physicalBootRejected,
+      physicalBootComplete: state.physicalBootComplete,
 
       canvasBootRequested: state.canvasBootRequested,
       canvasBootStarted: state.canvasBootStarted,
@@ -2348,15 +3261,44 @@
       visibleContentCarrierSampleCount: state.visibleContentCarrierSampleCount,
       carrierOnlyDetected: state.carrierOnlyDetected,
 
-      northAuthorityPresent: state.northAuthorityPresent,
-      checkpointSessionSubmissionAvailable: state.checkpointSessionSubmissionAvailable,
-      canvasEvidenceSubmittedToNorth: state.canvasEvidenceSubmittedToNorth,
+      canvasNewsObserved: true,
+      canvasNewsComposed: true,
+      canvasNewsReceivedFromWest: state.release.receivedFrom === "WEST",
+      canvasNewsSubmittedUpstream: state.canvasEvidenceSubmittedToNorth,
+      canvasGateReady: state.f13CanvasEvidenceComplete,
+      canvasFinalizesNews: false,
 
+      f13ReleaseReceived: state.f13ReleaseReceived,
+      f13ParentIdentityAccepted: state.f13ParentIdentityAccepted,
+      f13PhysicalCarrierMounted: state.f13PhysicalCarrierMounted,
+      f13ChildrenReady: state.f13ChildrenReady,
+      f13AtlasReady: state.f13AtlasReady,
+      f13TextureReady: state.f13TextureReady,
+      f13FrameReady: state.f13FrameReady,
+      f13VisibleEvidenceAvailable: state.f13VisibleEvidenceAvailable,
+      f13VisibleEvidenceStrict: state.f13VisibleEvidenceStrict,
+      f13VisibleEvidenceDegraded: state.f13VisibleEvidenceDegraded,
       f13CanvasEvidencePreserved: true,
       f13CanvasEvidenceComplete: state.f13CanvasEvidenceComplete,
       f13HardFail: state.f13HardFail,
+
+      northAuthorityPresent: state.northAuthorityPresent,
+      checkpointSessionSubmissionAvailable: state.checkpointSessionSubmissionAvailable,
+      canvasEvidenceSubmittedToNorth: state.canvasEvidenceSubmittedToNorth,
+      canvasEvidenceBodyComposed: state.canvasEvidenceBodyComposed,
+      canvasReturnPacketReady: state.canvasReturnPacketReady,
+
+      f21EligibleForNorth: state.f21EligibleForNorth,
+      f21SubmittedToNorth: state.f21SubmittedToNorth,
       f21ClaimedByCanvas: false,
       readyTextClaimedByCanvas: false,
+      completionLatched: state.completionLatched,
+      degradedCompletionLatched: state.degradedCompletionLatched,
+      f21LatchMode: "CANVAS_DOES_NOT_LATCH",
+
+      firstFailedCoordinate: state.firstFailedCoordinate,
+      recommendedNextFile: state.recommendedNextFile,
+      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
 
       booting: state.booting,
       booted: state.booted,
@@ -2370,6 +3312,7 @@
       errors: clonePlain(state.errors),
 
       ownsCanvasEvidenceOnly: true,
+      ownsGovernedF13EvidenceReceiver: true,
       ownsCanvasNorthGate: true,
       ownsParentIdentityGuard: true,
       ownsBootHandshakeGuard: true,
@@ -2381,6 +3324,7 @@
       ownsElevationTruth: false,
       ownsHydrologyTruth: false,
       ownsRuntimeTableGovernance: false,
+      ownsWestAdmissibility: false,
       ownsNewsFinalAuthority: false,
       ownsF21: false,
 
@@ -2405,7 +3349,7 @@
       .join("\n") || "- none";
 
     return [
-      "HEARTH_CANVAS_PARENT_IDENTITY_BOOT_HANDSHAKE_STALE_CONSUMPTION_GUARD_RECEIPT",
+      "HEARTH_CANVAS_PARENT_GOVERNED_F13_EVIDENCE_RECEIVER_AFTER_WEST_RELEASE_RECEIPT",
       "",
       `contract=${r.contract}`,
       `receipt=${r.receipt}`,
@@ -2418,31 +3362,30 @@
       `file=${r.file}`,
       `role=${r.role}`,
       "",
+      `governedF13EvidenceReceiverActive=${r.governedF13EvidenceReceiverActive}`,
+      `waitsForWestRelease=${r.waitsForWestRelease}`,
+      `cycleNumber=${r.cycleNumber}`,
+      `cycleRoute=${r.cycleRoute}`,
+      `receivedFrom=${r.receivedFrom}`,
+      `returnTo=${r.returnTo}`,
+      `releaseAccepted=${r.releaseAccepted}`,
+      `releaseStatus=${r.releaseStatus}`,
+      `westAuditObserved=${r.westAuditObserved}`,
+      `westReleaseApproved=${r.westReleaseApproved}`,
+      `northReleaseAuthorized=${r.northReleaseAuthorized}`,
+      "",
       `parentIdentityGuardActive=${r.parentIdentityGuardActive}`,
-      `bootHandshakeGuardActive=${r.bootHandshakeGuardActive}`,
-      `staleConsumptionGuardActive=${r.staleConsumptionGuardActive}`,
-      `expectedParentSplitContract=${r.expectedParentSplitContract}`,
       `currentParentIdentityAccepted=${r.currentParentIdentityAccepted}`,
       `currentParentIdentityMismatch=${r.currentParentIdentityMismatch}`,
       `staleParentDetected=${r.staleParentDetected}`,
       `preexistingParentDetected=${r.preexistingParentDetected}`,
       `preexistingParentSplitContract=${r.preexistingParentSplitContract}`,
       "",
-      `canvasBootRequested=${r.canvasBootRequested}`,
-      `canvasBootStarted=${r.canvasBootStarted}`,
-      `canvasBootResolved=${r.canvasBootResolved}`,
-      `canvasBootRejected=${r.canvasBootRejected}`,
-      `canvasBootAttempts=${r.canvasBootAttempts}`,
-      `canvasBootError=${r.canvasBootError}`,
+      `physicalBootComplete=${r.physicalBootComplete}`,
       `canvasBootComplete=${r.canvasBootComplete}`,
-      "",
-      `canvasCarrierRequested=${r.canvasCarrierRequested}`,
+      `carrierReady=${r.carrierReady}`,
       `canvasCarrierMounted=${r.canvasCarrierMounted}`,
       `canvasContextReady=${r.canvasContextReady}`,
-      `carrierReady=${r.carrierReady}`,
-      `canvasCarrierReady=${r.canvasCarrierReady}`,
-      `canvasCarrierHandoffOk=${r.canvasCarrierHandoffOk}`,
-      `canvasCarrierHandoffError=${r.canvasCarrierHandoffError}`,
       `canvasReady=${r.canvasReady}`,
       `visibleCanvasReady=${r.visibleCanvasReady}`,
       "",
@@ -2467,7 +3410,6 @@
       `imageRendered=${r.imageRendered}`,
       `renderedAfterTexture=${r.renderedAfterTexture}`,
       "",
-      `visibleContentProofStarted=${r.visibleContentProofStarted}`,
       `visibleContentProof=${r.visibleContentProof}`,
       `visibleContentStrictProof=${r.visibleContentStrictProof}`,
       `visibleContentSoftGap=${r.visibleContentSoftGap}`,
@@ -2477,22 +3419,63 @@
       `visibleContentProofMethod=${r.visibleContentProofMethod}`,
       `visibleContentProofError=${r.visibleContentProofError}`,
       "",
+      `canvasNewsObserved=${r.canvasNewsObserved}`,
+      `canvasNewsComposed=${r.canvasNewsComposed}`,
+      `canvasNewsReceivedFromWest=${r.canvasNewsReceivedFromWest}`,
+      `canvasNewsSubmittedUpstream=${r.canvasNewsSubmittedUpstream}`,
+      `canvasGateReady=${r.canvasGateReady}`,
+      "",
+      `activeFibonacci=${r.activeFibonacci}`,
+      `activeFibonacciRank=${r.activeFibonacciRank}`,
+      `activeStageId=${r.activeStageId}`,
+      `activeGearId=${r.activeGearId}`,
+      `futureFibonacciGate=${r.futureFibonacciGate}`,
+      "",
+      `f13ReleaseReceived=${r.f13ReleaseReceived}`,
+      `f13ParentIdentityAccepted=${r.f13ParentIdentityAccepted}`,
+      `f13PhysicalCarrierMounted=${r.f13PhysicalCarrierMounted}`,
+      `f13ChildrenReady=${r.f13ChildrenReady}`,
+      `f13AtlasReady=${r.f13AtlasReady}`,
+      `f13TextureReady=${r.f13TextureReady}`,
+      `f13FrameReady=${r.f13FrameReady}`,
+      `f13VisibleEvidenceAvailable=${r.f13VisibleEvidenceAvailable}`,
+      `f13VisibleEvidenceStrict=${r.f13VisibleEvidenceStrict}`,
+      `f13VisibleEvidenceDegraded=${r.f13VisibleEvidenceDegraded}`,
+      `f13CanvasEvidenceComplete=${r.f13CanvasEvidenceComplete}`,
+      `f13HardFail=${r.f13HardFail}`,
+      "",
+      `canvasEvidenceBodyComposed=${r.canvasEvidenceBodyComposed}`,
+      `canvasReturnPacketReady=${r.canvasReturnPacketReady}`,
+      `canvasEvidenceSubmittedToNorth=${r.canvasEvidenceSubmittedToNorth}`,
+      "",
+      `f21EligibleForNorth=${r.f21EligibleForNorth}`,
+      `f21SubmittedToNorth=${r.f21SubmittedToNorth}`,
+      `f21ClaimedByCanvas=${r.f21ClaimedByCanvas}`,
+      `readyTextClaimedByCanvas=${r.readyTextClaimedByCanvas}`,
+      `completionLatched=${r.completionLatched}`,
+      `degradedCompletionLatched=${r.degradedCompletionLatched}`,
+      `f21LatchMode=${r.f21LatchMode}`,
+      "",
+      `firstFailedCoordinate=${r.firstFailedCoordinate}`,
+      `recommendedNextFile=${r.recommendedNextFile}`,
+      `recommendedNextRenewalTarget=${r.recommendedNextRenewalTarget}`,
+      "",
       "CANVAS_PHASE_EVENTS",
       phases,
       "",
       "ERRORS",
       errors,
       "",
-      `f13CanvasEvidenceComplete=${r.f13CanvasEvidenceComplete}`,
-      `f13HardFail=${r.f13HardFail}`,
-      `f21ClaimedByCanvas=${r.f21ClaimedByCanvas}`,
-      `readyTextClaimedByCanvas=${r.readyTextClaimedByCanvas}`,
       `generatedImage=${r.generatedImage}`,
       `graphicBox=${r.graphicBox}`,
       `webGL=${r.webGL}`,
       `visualPassClaimed=${r.visualPassClaimed}`,
       `updatedAt=${r.updatedAt}`
     ].join("\n");
+  }
+
+  function getState() {
+    return state;
   }
 
   function updateDataset() {
@@ -2508,9 +3491,22 @@
     dataset.hearthCanvasVersion = VERSION;
     dataset.hearthCanvasRole = state.role;
 
+    dataset.hearthCanvasGovernedF13EvidenceReceiverActive = "true";
+    dataset.hearthCanvasWaitsForWestRelease = "true";
+    dataset.hearthCanvasCycleOneHeld = "true";
+    dataset.hearthCanvasCycleTwoReleaseRequired = "true";
+    dataset.hearthCanvasReleaseAccepted = String(state.release.releaseAccepted);
+    dataset.hearthCanvasReleaseStatus = state.release.releaseStatus;
+    dataset.hearthCanvasReceivedFrom = state.release.receivedFrom;
+    dataset.hearthCanvasCycleNumber = String(state.release.cycleNumber);
+    dataset.hearthCanvasCycleRoute = state.release.cycleRoute;
+    dataset.hearthCanvasWestAuditObserved = String(state.release.westAuditObserved);
+    dataset.hearthCanvasWestReleaseApproved = String(state.release.westCanvasReleaseApproved);
+    dataset.hearthCanvasNorthReleaseAuthorized = String(state.release.northCanvasReleaseAuthorized);
+    dataset.hearthCanvasReleaseAuthorized = String(state.release.canvasReleaseAuthorized);
+
     dataset.hearthCanvasSinglePhysicalFile = "true";
     dataset.hearthCanvasInternalNewsZonesActive = "true";
-    dataset.hearthCanvasInternalFourZoneSchematicActive = "true";
     dataset.hearthCanvasNoAdditionalFileSplit = "true";
 
     dataset.hearthCanvasParentIdentityGuardActive = "true";
@@ -2535,7 +3531,12 @@
     dataset.hearthCanvasActiveFibonacciGate = "F13";
     dataset.hearthCanvasFutureFibonacciGate = "F21";
     dataset.hearthCanvasOneActiveGearAtATime = "true";
-    dataset.hearthCanvasCycleOrder = CYCLE_ORDER;
+
+    dataset.hearthCanvasPhysicalBootRequested = String(state.physicalBootRequested);
+    dataset.hearthCanvasPhysicalBootStarted = String(state.physicalBootStarted);
+    dataset.hearthCanvasPhysicalBootResolved = String(state.physicalBootResolved);
+    dataset.hearthCanvasPhysicalBootRejected = String(state.physicalBootRejected);
+    dataset.hearthCanvasPhysicalBootComplete = String(state.physicalBootComplete);
 
     dataset.hearthCanvasBootRequested = String(state.canvasBootRequested);
     dataset.hearthCanvasBootStarted = String(state.canvasBootStarted);
@@ -2602,12 +3603,32 @@
     dataset.hearthCanvasInspectPlanetControlAvailable = String(state.inspectPlanetControlAvailable);
     dataset.hearthCanvasDiagnosticCanLeavePlanetFrame = String(state.diagnosticCanLeavePlanetFrame);
 
+    dataset.hearthCanvasF13ReleaseReceived = String(state.f13ReleaseReceived);
+    dataset.hearthCanvasF13ParentIdentityAccepted = String(state.f13ParentIdentityAccepted);
+    dataset.hearthCanvasF13PhysicalCarrierMounted = String(state.f13PhysicalCarrierMounted);
+    dataset.hearthCanvasF13ChildrenReady = String(state.f13ChildrenReady);
+    dataset.hearthCanvasF13AtlasReady = String(state.f13AtlasReady);
+    dataset.hearthCanvasF13TextureReady = String(state.f13TextureReady);
+    dataset.hearthCanvasF13FrameReady = String(state.f13FrameReady);
+    dataset.hearthCanvasF13VisibleEvidenceAvailable = String(state.f13VisibleEvidenceAvailable);
+    dataset.hearthCanvasF13VisibleEvidenceStrict = String(state.f13VisibleEvidenceStrict);
+    dataset.hearthCanvasF13VisibleEvidenceDegraded = String(state.f13VisibleEvidenceDegraded);
     dataset.hearthCanvasF13EvidencePreserved = "true";
     dataset.hearthCanvasF13EvidenceComplete = String(state.f13CanvasEvidenceComplete);
     dataset.hearthCanvasF13HardFail = String(state.f13HardFail);
+
+    dataset.hearthCanvasEvidenceBodyComposed = String(state.canvasEvidenceBodyComposed);
+    dataset.hearthCanvasReturnPacketReady = String(state.canvasReturnPacketReady);
+    dataset.hearthCanvasEvidenceSubmittedToNorth = String(state.canvasEvidenceSubmittedToNorth);
+
     dataset.hearthCanvasF21Claimed = "false";
     dataset.hearthCanvasReadyTextClaimed = "false";
+    dataset.hearthCanvasF21LatchMode = "CANVAS_DOES_NOT_LATCH";
     dataset.hearthCanvasVisualPassClaimed = "false";
+
+    dataset.hearthCanvasFirstFailedCoordinate = state.firstFailedCoordinate;
+    dataset.hearthCanvasRecommendedNextFile = state.recommendedNextFile;
+    dataset.hearthCanvasRecommendedNextRenewalTarget = state.recommendedNextRenewalTarget;
 
     dataset.generatedImage = "false";
     dataset.graphicBox = "false";
@@ -2621,17 +3642,16 @@
       state.canvas.dataset.hearthCanvasSplitReceipt = SPLIT_RECEIPT;
       state.canvas.dataset.hearthCanvasVersion = VERSION;
       state.canvas.dataset.hearthCanvasNorthActive = "true";
+      state.canvas.dataset.hearthCanvasGovernedF13EvidenceReceiver = "true";
       state.canvas.dataset.hearthCanvasCarrierReady = String(state.carrierReady);
       state.canvas.dataset.hearthCanvasBootComplete = String(state.canvasBootComplete);
       state.canvas.dataset.hearthCanvasReady = String(state.canvasReady);
       state.canvas.dataset.hearthCanvasVisiblePlanetAvailable = String(state.visiblePlanetAvailable);
       state.canvas.dataset.hearthCanvasF13Only = "true";
+      state.canvas.dataset.hearthCanvasF21Claimed = "false";
+      state.canvas.dataset.hearthCanvasReadyTextClaimed = "false";
       state.canvas.dataset.visualPassClaimed = "false";
     }
-  }
-
-  function getState() {
-    return state;
   }
 
   function publishGlobals() {
@@ -2647,6 +3667,7 @@
     root.HEARTH.canvasPhysicalObjectBootstrap = api;
     root.HEARTH.canvasSingleFileInternalNews = api;
     root.HEARTH.canvasParentIdentityBootHandshake = api;
+    root.HEARTH.canvasParentGovernedF13EvidenceReceiver = api;
 
     root.HEARTH_CANVAS = api;
     root.HEARTH_CANVAS_AUTHORITY = api;
@@ -2665,7 +3686,7 @@
     root.HEARTH_CANVAS_PHYSICAL_OBJECT_BOOTSTRAP = api;
     root.HEARTH_CANVAS_SINGLE_FILE_INTERNAL_NEWS = api;
     root.HEARTH_CANVAS_PARENT_IDENTITY_BOOT_HANDSHAKE = api;
-    root.HEARTH_CANVAS_PARENT_IDENTITY_BOOT_HANDSHAKE_STALE_CONSUMPTION_GUARD = api;
+    root.HEARTH_CANVAS_PARENT_GOVERNED_F13_EVIDENCE_RECEIVER = api;
 
     root.DEXTER_LAB.hearthCanvasEvidence = api;
     root.DEXTER_LAB.hearthCanvasNorth = api;
@@ -2679,6 +3700,7 @@
     root.DEXTER_LAB.hearthCanvasPhysicalObjectBootstrap = api;
     root.DEXTER_LAB.hearthCanvasSingleFileInternalNews = api;
     root.DEXTER_LAB.hearthCanvasParentIdentityBootHandshake = api;
+    root.DEXTER_LAB.hearthCanvasParentGovernedF13EvidenceReceiver = api;
 
     const light = getReceiptLight();
 
@@ -2707,6 +3729,14 @@
       file: FILE,
       role: state.role,
 
+      governedF13EvidenceReceiverActive: true,
+      waitsForWestRelease: true,
+      releaseAccepted: state.release.releaseAccepted,
+      releaseStatus: state.release.releaseStatus,
+      cycleNumber: state.release.cycleNumber,
+      cycleRoute: state.release.cycleRoute,
+      receivedFrom: state.release.receivedFrom,
+
       parentIdentityGuardActive: true,
       bootHandshakeGuardActive: true,
       staleConsumptionGuardActive: true,
@@ -2715,14 +3745,8 @@
       staleParentDetected: state.staleParentDetected,
       preexistingParentSplitContract: state.preexistingParentSplitContract,
 
-      canvasBootRequested: state.canvasBootRequested,
-      canvasBootStarted: state.canvasBootStarted,
-      canvasBootResolved: state.canvasBootResolved,
-      canvasBootRejected: state.canvasBootRejected,
-      canvasBootAttempts: state.canvasBootAttempts,
-      canvasBootError: state.canvasBootError,
+      physicalBootComplete: state.physicalBootComplete,
       canvasBootComplete: state.canvasBootComplete,
-
       carrierReady: state.carrierReady,
       canvasCarrierReady: state.canvasCarrierReady,
       canvasReady: state.canvasReady,
@@ -2742,6 +3766,9 @@
       f13CanvasEvidenceComplete: state.f13CanvasEvidenceComplete,
       f13HardFail: state.f13HardFail,
       nextAuditTarget: state.nextAuditTarget,
+      firstFailedCoordinate: state.firstFailedCoordinate,
+      recommendedNextFile: state.recommendedNextFile,
+      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
       f21ClaimedByCanvas: false,
       readyTextClaimedByCanvas: false,
       generatedImage: false,
@@ -2750,6 +3777,29 @@
       visualPassClaimed: false,
       updatedAt: state.updatedAt || nowIso()
     };
+  }
+
+  function fallbackReceipt(error = null) {
+    const message = error && error.message ? error.message : safeString(error, "Canvas fallback used.");
+
+    state.firstFailedCoordinate = "WAITING_CANVAS_GOVERNED_RELEASE_PACKET";
+    state.recommendedNextFile = FILE;
+    state.recommendedNextRenewalTarget = FILE;
+    state.release.releaseAccepted = false;
+    state.release.releaseStatus = RELEASE_STATUS.HELD_FALLBACK;
+    state.release.releaseReason = message;
+    state.physicalBootComplete = false;
+    state.canvasBootComplete = false;
+    state.canvasEvidenceBodyComposed = false;
+    state.f13CanvasEvidenceComplete = false;
+    state.f13HardFail = false;
+    state.f21ClaimedByCanvas = false;
+    state.readyTextClaimedByCanvas = false;
+    state.visualPassClaimed = false;
+
+    recordError("CANVAS_FALLBACK_USED", message);
+
+    return getReceipt();
   }
 
   const api = {
@@ -2762,6 +3812,17 @@
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     file: FILE,
+
+    normalizeCanvasReleaseInput,
+    resolveCanvasRelease,
+    holdCanvasUntilRelease,
+    acceptCanvasReleasePacket,
+    composeCanvasEvidenceBody,
+    composeCanvasEvidenceReceipt,
+    composeCanvasReturnPacket,
+    submitCanvasEvidenceUpstream,
+    getCanvasReleaseReceipt,
+    getCanvasPrimaryGateReceipt,
 
     bootCooperative,
     boot,
@@ -2802,9 +3863,12 @@
     splitAdapterActive: true,
     transistorAdapterActive: true,
 
+    governedF13EvidenceReceiverActive: true,
+    waitsForWestRelease: true,
+    cycleOneHeld: true,
+    cycleTwoReleaseRequired: true,
     singlePhysicalFile: true,
     internalNewsZonesActive: true,
-    internalFourZoneSchematicActive: true,
     noAdditionalCanvasFileSplit: true,
 
     parentIdentityGuardActive: true,
@@ -2814,12 +3878,16 @@
 
     newsProtocolSynchronized: true,
     fibonacciAlignmentSynchronized: true,
-    activeFibonacciGate: "F13",
+    activeFibonacci: "F13",
+    activeFibonacciRank: 13,
+    activeStageId: "F13_CANVAS_EVIDENCE_RECEIVER",
+    activeGearId: "F13_CANVAS_EVIDENCE_RECEIVER",
+    activeNewsGate: "CANVAS",
     futureFibonacciGate: "F21",
     oneActiveGearAtATime: true,
-    cycleOrder: CYCLE_ORDER,
 
     ownsCanvasEvidenceOnly: true,
+    ownsGovernedF13EvidenceReceiver: true,
     ownsCanvasNorthGate: true,
     ownsParentIdentityGuard: true,
     ownsBootHandshakeGuard: true,
@@ -2831,9 +3899,12 @@
     ownsElevationTruth: false,
     ownsHydrologyTruth: false,
     ownsRuntimeTableGovernance: false,
+    ownsWestAdmissibility: false,
     ownsNewsFinalAuthority: false,
     ownsF21: false,
 
+    f21ClaimedByCanvas: false,
+    readyTextClaimedByCanvas: false,
     generatedImage: false,
     graphicBox: false,
     webGL: false,
@@ -2844,27 +3915,22 @@
     }
   };
 
-  state.updatedAt = nowIso();
-  publishGlobals();
-  verifyCurrentParentIdentity("initial-publish");
-  markChildrenPresence();
-  updateDataset();
-
-  if (doc) {
-    const autoBoot = () => {
-      root.setTimeout(() => {
-        const alreadyBooted = Boolean(state.canvasBootComplete || state.booting);
-        if (!alreadyBooted) {
-          bootCooperative({ mount: "#hearthCanvasMount" });
-        }
-      }, 120);
-    };
-
-    if (doc.readyState === "loading") {
-      doc.addEventListener("DOMContentLoaded", autoBoot, { once: true });
-    } else {
-      autoBoot();
-    }
+  try {
+    state.updatedAt = nowIso();
+    publishEarlyMarker();
+    publishGlobals();
+    verifyCurrentParentIdentity("initial-publish");
+    markChildrenPresence();
+    updateDataset();
+    recordLocal("CANVAS_PARENT_GOVERNED_F13_EVIDENCE_RECEIVER_LOADED", {
+      file: FILE,
+      splitContract: SPLIT_CONTRACT,
+      waitsForWestRelease: true,
+      autoBootSuppressed: true,
+      visualPassClaimed: false
+    });
+  } catch (error) {
+    fallbackReceipt(error);
   }
 
   if (typeof module !== "undefined" && module.exports) {

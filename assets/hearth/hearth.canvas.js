@@ -1,14 +1,16 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_CANVAS_SINGLE_FILE_INTERNAL_NEWS_F13_SCHEMATIC_TNT_v2
+// HEARTH_CANVAS_SINGLE_FILE_INTERNAL_NEWS_F13_TEXTURE_FRAME_PROOF_CLOSURE_TNT_v3
 // Full-file replacement.
-// Canvas North parent / single-file internal NEWS schematic / F13 carrier.
+// Canvas North parent / single-file internal NEWS schematic / F13 texture-frame-proof closure.
 // Purpose:
 // - Keep Canvas as one physical file while organizing internal NEWS zones.
-// - Separate carrier readiness from visible planet readiness.
-// - Prevent carrier-only canvasReady from outrunning atlas, texture, frame, and proof.
-// - Preserve existing HEARTH_CANVAS aliases expected by /showroom/globe/hearth/index.js and /showroom/globe/hearth/hearth.js.
-// - Consume East/West/South canvas children without splitting this parent file.
-// - Close F13 only through real atlas/texture/frame/proof, or through explicit degraded emergency F13 diagnostic output.
+// - Preserve all HEARTH_CANVAS aliases consumed by the Hearth route.
+// - Separate physical carrier readiness from visible planet readiness.
+// - Prevent canvasReady from outrunning atlas, texture, frame, and visible proof.
+// - Correct the South continuation after East atlas completion.
+// - Accept lawful South texture return shapes: canvas, textureCanvas, atlasCanvas, result.canvas, result.textureCanvas, or getTextureCanvas() delayed fallback.
+// - Add post-compose recovery before degrading.
+// - Close F13 through strict visible proof or explicit degraded emergency diagnostic proof.
 // - Keep Canvas strictly F13 evidence only.
 // Does not own:
 // - planet truth
@@ -27,13 +29,13 @@
   const CONTRACT = "HEARTH_CANVAS_MATERIALS_RELIEF_CONSUMPTION_INVALIDATION_TNT_v1";
   const RECEIPT = "HEARTH_CANVAS_MATERIALS_RELIEF_CONSUMPTION_INVALIDATION_RECEIPT_v1";
 
-  const SPLIT_CONTRACT = "HEARTH_CANVAS_SINGLE_FILE_INTERNAL_NEWS_F13_SCHEMATIC_TNT_v2";
-  const SPLIT_RECEIPT = "HEARTH_CANVAS_SINGLE_FILE_INTERNAL_NEWS_F13_SCHEMATIC_RECEIPT_v2";
+  const SPLIT_CONTRACT = "HEARTH_CANVAS_SINGLE_FILE_INTERNAL_NEWS_F13_TEXTURE_FRAME_PROOF_CLOSURE_TNT_v3";
+  const SPLIT_RECEIPT = "HEARTH_CANVAS_SINGLE_FILE_INTERNAL_NEWS_F13_TEXTURE_FRAME_PROOF_CLOSURE_RECEIPT_v3";
 
-  const PREVIOUS_SPLIT_CONTRACT = "HEARTH_CANVAS_PHYSICAL_OBJECT_BOOTSTRAP_F13_CARRIER_TNT_v1";
-  const PREVIOUS_SPLIT_RECEIPT = "HEARTH_CANVAS_PHYSICAL_OBJECT_BOOTSTRAP_F13_CARRIER_RECEIPT_v1";
+  const PREVIOUS_SPLIT_CONTRACT = "HEARTH_CANVAS_SINGLE_FILE_INTERNAL_NEWS_F13_SCHEMATIC_TNT_v2";
+  const PREVIOUS_SPLIT_RECEIPT = "HEARTH_CANVAS_SINGLE_FILE_INTERNAL_NEWS_F13_SCHEMATIC_RECEIPT_v2";
   const BASELINE_CONTRACT = "HEARTH_CANVAS_MATERIALS_RELIEF_CONSUMPTION_INVALIDATION_TNT_v1";
-  const VERSION = "2026-05-31.hearth-canvas-single-file-internal-news-f13-schematic-v2";
+  const VERSION = "2026-05-31.hearth-canvas-single-file-internal-news-f13-texture-frame-proof-closure-v3";
 
   const FILE = "/assets/hearth/hearth.canvas.js";
   const NORTH_FILE = "/assets/lab/runtime-table.js";
@@ -49,71 +51,17 @@
   const DEFAULT_ATLAS_WIDTH = 512;
   const DEFAULT_ATLAS_HEIGHT = 256;
   const CHILD_LOAD_TIMEOUT_MS = 2600;
-  const CHILD_METHOD_TIMEOUT_MS = 9000;
+  const CHILD_METHOD_TIMEOUT_MS = 11000;
+  const POST_TEXTURE_RECOVERY_MS = 650;
 
   const CYCLE_ORDER = "NORTH_CARRIER -> EAST_ATLAS -> WEST_CONTROL -> SOUTH_TEXTURE -> SOUTH_FRAME -> SOUTH_VISIBLE_PROOF -> CHECKPOINT_RETURN";
 
   const INTERNAL_ZONES = Object.freeze({
-    NORTH: {
-      id: "NORTH",
-      label: "Carrier / gate / receipt",
-      owns: [
-        "physical carrier",
-        "nonzero canvas",
-        "context",
-        "gate sequencing",
-        "receipt publication",
-        "F13 evidence carrier"
-      ]
-    },
-    EAST: {
-      id: "EAST",
-      label: "Source / atlas intake",
-      owns: [
-        "child recognition",
-        "atlas request",
-        "atlas result validation",
-        "source sample bridge"
-      ]
-    },
-    WEST: {
-      id: "WEST",
-      label: "Control / inspection / invalidation",
-      owns: [
-        "drag inspection",
-        "zoom inspection",
-        "view state",
-        "texture invalidation request"
-      ]
-    },
-    SOUTH: {
-      id: "SOUTH",
-      label: "Texture / frame / visible proof",
-      owns: [
-        "texture composition request",
-        "sphere render request",
-        "visible-content sampling",
-        "F13 proof classification"
-      ]
-    }
+    NORTH: "carrier-gate-receipt",
+    EAST: "source-atlas-intake",
+    WEST: "control-inspection-invalidation",
+    SOUTH: "texture-frame-visible-proof"
   });
-
-  const FIBONACCI_GATES = Object.freeze([
-    { id: "F13A_CANVAS_PARENT_BOOT_STARTED", fib: "F13A", cardinal: "NORTH", label: "Canvas parent boot started" },
-    { id: "F13B_PHYSICAL_CARRIER_MOUNTED", fib: "F13B", cardinal: "NORTH", label: "Physical carrier mounted" },
-    { id: "F13C_CONTEXT_READY", fib: "F13C", cardinal: "NORTH", label: "2D context ready" },
-    { id: "F13D_WEST_CONTROL_BOUND", fib: "F13D", cardinal: "WEST", label: "Control and inspection bound" },
-    { id: "F13E_EAST_ATLAS_BUILD_STARTED", fib: "F13E", cardinal: "EAST", label: "Atlas build started" },
-    { id: "F13F_EAST_ATLAS_BUILD_COMPLETE", fib: "F13F", cardinal: "EAST", label: "Atlas build complete" },
-    { id: "F13G_SOUTH_TEXTURE_COMPOSE_STARTED", fib: "F13G", cardinal: "SOUTH", label: "Texture composition started" },
-    { id: "F13H_SOUTH_TEXTURE_COMPOSE_COMPLETE", fib: "F13H", cardinal: "SOUTH", label: "Texture composition complete" },
-    { id: "F13I_FIRST_FRAME_REQUESTED", fib: "F13I", cardinal: "SOUTH", label: "First frame requested" },
-    { id: "F13J_FIRST_FRAME_DETECTED", fib: "F13J", cardinal: "SOUTH", label: "First frame detected" },
-    { id: "F13K_CANVAS_VISIBLE_READY", fib: "F13K", cardinal: "SOUTH", label: "Visible canvas ready" },
-    { id: "F13L_VISIBLE_CONTENT_PROOF_STARTED", fib: "F13L", cardinal: "SOUTH", label: "Visible proof started" },
-    { id: "F13M_VISIBLE_CONTENT_PROOF_ACCEPTED", fib: "F13M", cardinal: "SOUTH", label: "Visible proof accepted" },
-    { id: "F13N_INSPECT_MODE_READY", fib: "F13N", cardinal: "WEST", label: "Inspect mode ready" }
-  ]);
 
   const CHILDREN = Object.freeze({
     east: {
@@ -156,6 +104,23 @@
     }
   });
 
+  const FIBONACCI_GATES = Object.freeze([
+    { id: "F13A_CANVAS_PARENT_BOOT_STARTED", fib: "F13A", cardinal: "NORTH", label: "Canvas parent boot started" },
+    { id: "F13B_PHYSICAL_CARRIER_MOUNTED", fib: "F13B", cardinal: "NORTH", label: "Physical carrier mounted" },
+    { id: "F13C_CONTEXT_READY", fib: "F13C", cardinal: "NORTH", label: "2D context ready" },
+    { id: "F13D_WEST_CONTROL_BOUND", fib: "F13D", cardinal: "WEST", label: "Control and inspection bound" },
+    { id: "F13E_EAST_ATLAS_BUILD_STARTED", fib: "F13E", cardinal: "EAST", label: "Atlas build started" },
+    { id: "F13F_EAST_ATLAS_BUILD_COMPLETE", fib: "F13F", cardinal: "EAST", label: "Atlas build complete" },
+    { id: "F13G_SOUTH_TEXTURE_COMPOSE_STARTED", fib: "F13G", cardinal: "SOUTH", label: "Texture composition started" },
+    { id: "F13H_SOUTH_TEXTURE_COMPOSE_COMPLETE", fib: "F13H", cardinal: "SOUTH", label: "Texture composition complete" },
+    { id: "F13I_FIRST_FRAME_REQUESTED", fib: "F13I", cardinal: "SOUTH", label: "First frame requested" },
+    { id: "F13J_FIRST_FRAME_DETECTED", fib: "F13J", cardinal: "SOUTH", label: "First frame detected" },
+    { id: "F13K_CANVAS_VISIBLE_READY", fib: "F13K", cardinal: "SOUTH", label: "Visible canvas ready" },
+    { id: "F13L_VISIBLE_CONTENT_PROOF_STARTED", fib: "F13L", cardinal: "SOUTH", label: "Visible proof started" },
+    { id: "F13M_VISIBLE_CONTENT_PROOF_ACCEPTED", fib: "F13M", cardinal: "SOUTH", label: "Visible proof accepted" },
+    { id: "F13N_INSPECT_MODE_READY", fib: "F13N", cardinal: "WEST", label: "Inspect mode ready" }
+  ]);
+
   const state = {
     contract: CONTRACT,
     receipt: RECEIPT,
@@ -166,7 +131,7 @@
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     file: FILE,
-    role: "canvas-north-single-file-internal-news-f13-schematic",
+    role: "canvas-north-single-file-internal-news-f13-texture-frame-proof-closure",
 
     northFile: NORTH_FILE,
     eastFile: EAST_FILE,
@@ -189,7 +154,7 @@
 
     newsProtocolSynchronized: true,
     fibonacciAlignmentSynchronized: true,
-    activeFibonacciGate: "F13",
+    activeFibonacciGate: "F13A",
     futureFibonacciGate: "F21",
     oneActiveGearAtATime: true,
     cycleOrder: CYCLE_ORDER,
@@ -225,7 +190,7 @@
     canvasCarrierReady: false,
     canvasCarrierHandoffOk: false,
     canvasCarrierHandoffError: "",
-    canvasCarrierMethod: "single-file-internal-news-f13-schematic",
+    canvasCarrierMethod: "single-file-internal-news-f13-texture-frame-proof-closure",
 
     canvasReady: false,
     visibleCanvasReady: false,
@@ -266,6 +231,8 @@
     textureComposeProgress: 0,
     textureComposeComplete: false,
     textureComposeError: "",
+    texturePostComposeRecoveryUsed: false,
+    textureReturnShape: "",
     firstFrameRequested: false,
     firstFrameDetected: false,
     imageRendered: false,
@@ -361,6 +328,14 @@
     return typeof value === "function";
   }
 
+  function isCanvas(value) {
+    return Boolean(
+      value &&
+      value.nodeType === 1 &&
+      String(value.tagName || "").toLowerCase() === "canvas"
+    );
+  }
+
   function safeNumber(value, fallback = 0) {
     const n = Number(value);
     return Number.isFinite(n) ? n : fallback;
@@ -404,6 +379,23 @@
     return cursor || null;
   }
 
+  function wait(ms) {
+    return new Promise((resolve) => root.setTimeout(resolve, Math.max(0, ms || 0)));
+  }
+
+  function yieldFrame(ms = 0) {
+    return new Promise((resolve) => {
+      if (isFunction(root.requestAnimationFrame)) {
+        root.requestAnimationFrame(() => {
+          if (ms > 0) root.setTimeout(resolve, ms);
+          else resolve();
+        });
+      } else {
+        root.setTimeout(resolve, Math.max(0, ms));
+      }
+    });
+  }
+
   function withTimeout(promise, timeoutMs, label) {
     return new Promise((resolve, reject) => {
       let settled = false;
@@ -428,6 +420,53 @@
           reject(error);
         });
     });
+  }
+
+  function updateZone(zone, status, progress, event, complete = false) {
+    const key = String(zone || "").toLowerCase();
+
+    if (!state.zones[key]) return;
+
+    state.zones[key].status = status || state.zones[key].status;
+    state.zones[key].progress = clamp(progress, 0, 100);
+    state.zones[key].latestEvent = event || state.zones[key].latestEvent;
+    state.zones[key].complete = Boolean(complete);
+    state.updatedAt = nowIso();
+
+    updateDataset();
+  }
+
+  function completeGate(gateId, degraded = false, detail = {}) {
+    const gate = FIBONACCI_GATES.find((item) => item.id === gateId);
+    if (!gate) return;
+
+    if (!state.completedGates.includes(gateId)) state.completedGates.push(gateId);
+    if (degraded && !state.degradedGates.includes(gateId)) state.degradedGates.push(gateId);
+
+    state.gateLedger = FIBONACCI_GATES.map((item) => {
+      const complete = state.completedGates.includes(item.id);
+      return {
+        id: item.id,
+        fib: item.fib,
+        cardinal: item.cardinal,
+        label: item.label,
+        complete,
+        degraded: state.degradedGates.includes(item.id),
+        blocked: state.blockedGates.includes(item.id),
+        active: item.id === gateId,
+        detail: item.id === gateId ? clonePlain(detail) : {}
+      };
+    });
+
+    const nextGate = FIBONACCI_GATES.find((item) => !state.completedGates.includes(item.id)) || gate;
+    state.activeGateId = nextGate.id;
+    state.activeFibonacci = nextGate.fib;
+    state.activeFibonacciGate = nextGate.fib;
+    state.activeCardinal = nextGate.cardinal;
+    state.activeProgress = state.completedGates.includes(nextGate.id) ? 100 : 0;
+    state.updatedAt = nowIso();
+
+    updateDataset();
   }
 
   function recordLocal(event, detail = {}) {
@@ -460,53 +499,6 @@
     updateDataset();
 
     return item;
-  }
-
-  function updateZone(zone, status, progress, event, complete = false) {
-    const key = String(zone || "").toLowerCase();
-
-    if (!state.zones[key]) return;
-
-    state.zones[key].status = status || state.zones[key].status;
-    state.zones[key].progress = clamp(progress, 0, 100);
-    state.zones[key].latestEvent = event || state.zones[key].latestEvent;
-    state.zones[key].complete = Boolean(complete);
-
-    updateDataset();
-  }
-
-  function completeGate(gateId, degraded = false, detail = {}) {
-    const gate = FIBONACCI_GATES.find((item) => item.id === gateId);
-
-    if (!gate) return;
-
-    if (!state.completedGates.includes(gateId)) {
-      state.completedGates.push(gateId);
-      if (degraded && !state.degradedGates.includes(gateId)) state.degradedGates.push(gateId);
-    }
-
-    state.gateLedger = FIBONACCI_GATES.map((item) => {
-      const done = state.completedGates.includes(item.id);
-      const itemDegraded = state.degradedGates.includes(item.id);
-      return {
-        id: item.id,
-        fib: item.fib,
-        cardinal: item.cardinal,
-        label: item.label,
-        complete: done,
-        degraded: itemDegraded,
-        active: item.id === gateId,
-        detail: item.id === gateId ? clonePlain(detail) : {}
-      };
-    });
-
-    const nextGate = FIBONACCI_GATES.find((item) => !state.completedGates.includes(item.id)) || gate;
-    state.activeGateId = nextGate.id;
-    state.activeFibonacci = nextGate.fib;
-    state.activeCardinal = nextGate.cardinal;
-    state.activeProgress = state.completedGates.includes(nextGate.id) ? 100 : 0;
-
-    updateDataset();
   }
 
   function publishEarlyMarker() {
@@ -610,7 +602,7 @@
 
     if (!canvas) {
       canvas = doc.createElement("canvas");
-      canvas.className = "hearth-canvas hearth-canvas--single-file-internal-news-f13";
+      canvas.className = "hearth-canvas hearth-canvas--single-file-internal-news-f13-texture-frame-proof";
       canvas.dataset.hearthCanvas = "true";
       canvas.dataset.hearthCanvasTexture = "true";
       canvas.dataset.hearthPhysicalObjectBootstrap = "true";
@@ -671,7 +663,7 @@
     canvas.dataset.hearthCanvasSplitReceipt = SPLIT_RECEIPT;
     canvas.dataset.hearthCanvasNorthActive = "true";
     canvas.dataset.hearthCanvasCarrierReady = "true";
-    canvas.dataset.hearthCanvasReady = "false";
+    canvas.dataset.hearthCanvasReady = String(state.canvasReady);
     canvas.dataset.hearthCanvasF13Only = "true";
     canvas.dataset.hearthCanvasF21Claimed = "false";
     canvas.dataset.visualPassClaimed = "false";
@@ -933,13 +925,61 @@
   }
 
   function normalizeCanvasResult(result, fallbackMethod) {
-    if (!result) return null;
-    if (result.nodeType === 1 && String(result.tagName || "").toLowerCase() === "canvas") return result;
-    if (result.atlasCanvas) return result.atlasCanvas;
-    if (result.textureCanvas) return result.textureCanvas;
-    if (result.canvas) return result.canvas;
-    if (isFunction(fallbackMethod)) return fallbackMethod();
+    if (isCanvas(result)) return result;
+    if (result && isCanvas(result.textureCanvas)) return result.textureCanvas;
+    if (result && isCanvas(result.canvas)) return result.canvas;
+    if (result && isCanvas(result.atlasCanvas)) return result.atlasCanvas;
+
+    if (isFunction(fallbackMethod)) {
+      try {
+        const fallback = fallbackMethod();
+        if (isCanvas(fallback)) return fallback;
+        if (fallback && isCanvas(fallback.textureCanvas)) return fallback.textureCanvas;
+        if (fallback && isCanvas(fallback.canvas)) return fallback.canvas;
+        if (fallback && isCanvas(fallback.atlasCanvas)) return fallback.atlasCanvas;
+      } catch (_error) {}
+    }
+
     return null;
+  }
+
+  function describeCanvasResult(result) {
+    if (isCanvas(result)) return "direct-canvas";
+    if (result && isCanvas(result.textureCanvas)) return "result.textureCanvas";
+    if (result && isCanvas(result.canvas)) return "result.canvas";
+    if (result && isCanvas(result.atlasCanvas)) return "result.atlasCanvas";
+    if (result === undefined) return "undefined";
+    if (result === null) return "null";
+    return typeof result;
+  }
+
+  async function resolveTextureCanvasAfterCompose(south, textureResult) {
+    let textureCanvas = normalizeCanvasResult(
+      textureResult,
+      isFunction(south && south.getTextureCanvas) ? () => south.getTextureCanvas() : null
+    );
+
+    state.textureReturnShape = describeCanvasResult(textureResult);
+
+    if (textureCanvas) return textureCanvas;
+
+    state.texturePostComposeRecoveryUsed = true;
+
+    await yieldFrame();
+    textureCanvas = normalizeCanvasResult(
+      null,
+      isFunction(south && south.getTextureCanvas) ? () => south.getTextureCanvas() : null
+    );
+
+    if (textureCanvas) return textureCanvas;
+
+    await wait(POST_TEXTURE_RECOVERY_MS);
+    textureCanvas = normalizeCanvasResult(
+      null,
+      isFunction(south && south.getTextureCanvas) ? () => south.getTextureCanvas() : null
+    );
+
+    return textureCanvas;
   }
 
   function resolveAtlasSize(options = {}) {
@@ -956,6 +996,7 @@
     const candidates = [
       root.HEARTH_CHECKPOINT_SESSION,
       root.HEARTH_RUNTIME_CHECKPOINT_SESSION,
+      root.HEARTH_NORTH_TRANSMISSION_SESSION,
       root.LAB_HEARTH_CHECKPOINT_SESSION,
       root.LAB_CHECKPOINT_SESSION,
       root.DEXTER_LAB && root.DEXTER_LAB.hearthCheckpointSession,
@@ -965,6 +1006,7 @@
     for (const candidate of candidates) {
       if (candidate && isFunction(candidate.submitEvent)) return candidate;
       if (candidate && isFunction(candidate.submit)) return candidate;
+      if (candidate && isFunction(candidate.receiveEvent)) return candidate;
     }
 
     return null;
@@ -1011,6 +1053,8 @@
 
       atlasBuildComplete: state.atlasBuildComplete,
       textureComposeComplete: state.textureComposeComplete,
+      texturePostComposeRecoveryUsed: state.texturePostComposeRecoveryUsed,
+      textureReturnShape: state.textureReturnShape,
       firstFrameDetected: state.firstFrameDetected,
       imageRendered: state.imageRendered,
       visiblePlanetAvailable: state.visiblePlanetAvailable,
@@ -1043,7 +1087,7 @@
       phase: String(phase || "CANVAS_EVENT"),
       checkpointId: String(detail.checkpointId || "F13_CANVAS_EVIDENCE"),
       fibonacci: String(detail.fibonacci || "F13"),
-      source: "hearth.canvas.single-file-internal-news-f13-schematic",
+      source: "hearth.canvas.single-file-internal-news-f13-texture-frame-proof-closure",
       contract: CONTRACT,
       receipt: RECEIPT,
       splitContract: SPLIT_CONTRACT,
@@ -1057,6 +1101,7 @@
         internalNewsZonesActive: true,
         carrierReadyIsNotPlanetReady: true,
         canvasReadyRequiresTextureFrameAndProof: true,
+        textureFrameProofClosureActive: true,
         f13Only: true,
         f21ClaimedByCanvas: false,
         readyTextClaimedByCanvas: false,
@@ -1080,6 +1125,12 @@
 
       if (isFunction(north.session.submit)) {
         north.session.submit(payload);
+        state.canvasEvidenceSubmittedToNorth = true;
+        return true;
+      }
+
+      if (isFunction(north.session.receiveEvent)) {
+        north.session.receiveEvent(payload);
         state.canvasEvidenceSubmittedToNorth = true;
         return true;
       }
@@ -1155,19 +1206,6 @@
     return item;
   }
 
-  function yieldFrame(ms = 0) {
-    return new Promise((resolve) => {
-      if (isFunction(root.requestAnimationFrame)) {
-        root.requestAnimationFrame(() => {
-          if (ms > 0) root.setTimeout(resolve, ms);
-          else resolve();
-        });
-      } else {
-        root.setTimeout(resolve, Math.max(0, ms));
-      }
-    });
-  }
-
   function addCallbacksFromOptions(options = {}) {
     [
       options.onPhase,
@@ -1213,7 +1251,8 @@
       visibleContentWaterSampleCount: 0,
       visibleContentOtherSampleCount: 0,
       visibleContentCarrierSampleCount: 0,
-      visibleContentProofMethod: "canvas-parent-pixel-sampling"
+      visibleContentProofMethod: "canvas-parent-pixel-sampling",
+      visibleContentProofError: ""
     };
 
     if (!canvas || !ctx || !canvas.width || !canvas.height) {
@@ -1482,8 +1521,8 @@
     state.visiblePlanetAvailable = true;
     state.visiblePlanetHintPresent = true;
 
-    state.atlasBuildStarted = state.atlasBuildStarted || true;
-    state.atlasBuildComplete = state.atlasBuildComplete || true;
+    state.atlasBuildStarted = true;
+    state.atlasBuildComplete = true;
     state.textureComposeStarted = true;
     state.textureComposeComplete = true;
     state.textureComposeError = reason;
@@ -1561,6 +1600,236 @@
     return getReceipt();
   }
 
+  async function bindWestControl(children) {
+    const west = children.west || resolveChild("west");
+
+    if (west && isFunction(west.bindInspection)) {
+      west.bindInspection({
+        canvas: state.canvas,
+        onChange: () => forceRedraw({ interactive: true, sampleProof: false }),
+        onInvalidate: (reason) => invalidateTexture(reason || "west-control-invalidation")
+      });
+
+      state.dragInspectionBound = true;
+      state.zoomInspectionBound = true;
+      state.inspectModeAvailable = true;
+      state.inspectPlanetControlAvailable = true;
+      state.diagnosticCanLeavePlanetFrame = true;
+
+      updateZone("west", "READY", 100, "WEST_CONTROL_BOUND", true);
+      completeGate("F13D_WEST_CONTROL_BOUND", false, { control: "bound" });
+
+      emitMilestone("DRAG_INSPECTION_BOUND", 86, "West control bound.", {
+        checkpointId: "F13D_WEST_CONTROL_BOUND",
+        fibonacci: "F13D"
+      });
+    }
+  }
+
+  async function buildAtlasThroughEast(east, options = {}) {
+    const atlasSize = resolveAtlasSize(options);
+
+    if (!east || !isFunction(east.buildAtlas)) {
+      throw new Error("east-buildAtlas-unavailable");
+    }
+
+    state.atlasBuildStarted = true;
+    state.atlasBuildProgress = 0;
+    state.atlasBuildError = "";
+
+    updateZone("east", "ACTIVE", 15, "EAST_ATLAS_BUILD_STARTED", false);
+    completeGate("F13E_EAST_ATLAS_BUILD_STARTED", false, atlasSize);
+
+    emitMilestone("ATLAS_BUILD_STARTED", 88, "East atlas build started.", {
+      checkpointId: "F13E_EAST_ATLAS_BUILD_STARTED",
+      fibonacci: "F13E",
+      ...atlasSize
+    });
+
+    const atlasResult = await withTimeout(east.buildAtlas({
+      width: atlasSize.width,
+      height: atlasSize.height,
+      rowsPerChunk: options.rowsPerChunk,
+      onProgress: (progress, receipt) => {
+        state.atlasBuildProgress = clamp(progress, 0, 100);
+        updateZone("east", "ACTIVE", state.atlasBuildProgress, "ATLAS_BUILD_PROGRESS", false);
+        emitProgressOnly("ATLAS_BUILD_PROGRESS", 88 + (state.atlasBuildProgress * 0.03), `East atlas progress ${state.atlasBuildProgress}%`, receipt || {});
+      }
+    }), CHILD_METHOD_TIMEOUT_MS, "east.buildAtlas");
+
+    state.atlasCanvas = normalizeCanvasResult(atlasResult);
+    state.atlasBuildProgress = 100;
+    state.atlasBuildComplete = Boolean(state.atlasCanvas);
+
+    if (!state.atlasBuildComplete) {
+      state.atlasBuildError = "east-atlas-result-unusable";
+      throw new Error(state.atlasBuildError);
+    }
+
+    updateZone("east", "READY", 100, "EAST_ATLAS_BUILD_COMPLETE", true);
+    completeGate("F13F_EAST_ATLAS_BUILD_COMPLETE", false, {
+      width: state.atlasCanvas.width || atlasSize.width,
+      height: state.atlasCanvas.height || atlasSize.height
+    });
+
+    emitMilestone("ATLAS_BUILD_COMPLETE", 91, "East atlas build complete.", {
+      checkpointId: "F13F_EAST_ATLAS_BUILD_COMPLETE",
+      fibonacci: "F13F"
+    });
+
+    return state.atlasCanvas;
+  }
+
+  async function composeTextureThroughSouth(south, atlasCanvas, options = {}) {
+    if (!south || !isFunction(south.composeTexture)) {
+      throw new Error("south-composeTexture-unavailable");
+    }
+
+    state.textureComposeStarted = true;
+    state.textureComposeProgress = 0;
+    state.textureComposeError = "";
+    state.texturePostComposeRecoveryUsed = false;
+    state.textureReturnShape = "";
+
+    updateZone("south", "ACTIVE", 20, "SOUTH_TEXTURE_COMPOSE_STARTED", false);
+    completeGate("F13G_SOUTH_TEXTURE_COMPOSE_STARTED", false, {});
+
+    emitMilestone("TEXTURE_COMPOSE_STARTED", 93, "South texture composition started.", {
+      checkpointId: "F13G_SOUTH_TEXTURE_COMPOSE_STARTED",
+      fibonacci: "F13G"
+    });
+
+    const textureResult = await withTimeout(south.composeTexture({
+      atlasCanvas,
+      canvas: state.canvas,
+      sourceCanvas: atlasCanvas,
+      onProgress: (progress, receipt) => {
+        state.textureComposeProgress = clamp(progress, 0, 100);
+        updateZone("south", "ACTIVE", 20 + state.textureComposeProgress * 0.35, "TEXTURE_COMPOSE_PROGRESS", false);
+        emitProgressOnly("TEXTURE_COMPOSE_PROGRESS", 93 + (state.textureComposeProgress * 0.03), `South texture progress ${state.textureComposeProgress}%`, receipt || {});
+      }
+    }), CHILD_METHOD_TIMEOUT_MS, "south.composeTexture");
+
+    state.textureCanvas = await resolveTextureCanvasAfterCompose(south, textureResult);
+    state.textureComposeProgress = 100;
+    state.textureComposeComplete = Boolean(state.textureCanvas);
+
+    if (!state.textureComposeComplete) {
+      state.textureComposeError = `south-texture-result-unusable:${state.textureReturnShape || "unknown-return"}`;
+      throw new Error(state.textureComposeError);
+    }
+
+    updateZone("south", "ACTIVE", 58, "SOUTH_TEXTURE_COMPOSE_COMPLETE", false);
+    completeGate("F13H_SOUTH_TEXTURE_COMPOSE_COMPLETE", false, {
+      textureCanvas: true,
+      returnShape: state.textureReturnShape,
+      recoveryUsed: state.texturePostComposeRecoveryUsed
+    });
+
+    emitMilestone("TEXTURE_COMPOSE_COMPLETE", 96, "South texture composition complete.", {
+      checkpointId: "F13H_SOUTH_TEXTURE_COMPOSE_COMPLETE",
+      fibonacci: "F13H",
+      returnShape: state.textureReturnShape,
+      recoveryUsed: state.texturePostComposeRecoveryUsed
+    });
+
+    return state.textureCanvas;
+  }
+
+  async function renderFrameThroughSouth(south, west, textureCanvas) {
+    if (!south || !isFunction(south.renderSphere)) {
+      throw new Error("south-renderSphere-unavailable");
+    }
+
+    state.firstFrameRequested = true;
+    completeGate("F13I_FIRST_FRAME_REQUESTED", false, {});
+
+    emitMilestone("FIRST_FRAME_REQUESTED", 97, "South sphere frame requested.", {
+      checkpointId: "F13I_FIRST_FRAME_REQUESTED",
+      fibonacci: "F13I"
+    });
+
+    await withTimeout(south.renderSphere({
+      canvas: state.canvas,
+      textureCanvas,
+      view: west && isFunction(west.getViewState) ? west.getViewState() : {},
+      onProgress: (progress, receipt) => {
+        emitProgressOnly("SPHERE_RENDER_PROGRESS", 97, `South sphere render progress ${progress}%`, receipt || {});
+      }
+    }), CHILD_METHOD_TIMEOUT_MS, "south.renderSphere");
+
+    state.firstFrameDetected = true;
+    state.imageRendered = true;
+    state.renderedAfterTexture = true;
+    state.planetFramePainted = true;
+    state.renderFrameCount += 1;
+
+    completeGate("F13J_FIRST_FRAME_DETECTED", false, {});
+    updateZone("south", "ACTIVE", 75, "FIRST_FRAME_DETECTED", false);
+
+    emitMilestone("FIRST_FRAME_DETECTED", 98, "First frame detected.", {
+      checkpointId: "F13J_FIRST_FRAME_DETECTED",
+      fibonacci: "F13J"
+    });
+
+    state.canvasReady = true;
+    state.visibleCanvasReady = true;
+    state.canvasLaneClosed = true;
+    state.canvasCarrierHandoffOk = true;
+
+    completeGate("F13K_CANVAS_VISIBLE_READY", false, {});
+    updateZone("south", "ACTIVE", 86, "CANVAS_VISIBLE_READY", false);
+
+    emitMilestone("CANVAS_READY", 98, "Canvas visible F13 ready.", {
+      checkpointId: "F13K_CANVAS_VISIBLE_READY",
+      fibonacci: "F13K"
+    });
+  }
+
+  async function proveVisibleContentThroughSouth(south) {
+    state.visibleContentProofStarted = true;
+    completeGate("F13L_VISIBLE_CONTENT_PROOF_STARTED", false, {});
+
+    emitMilestone("VISIBLE_CONTENT_PROOF_STARTED", 98, "Visible content proof started.", {
+      checkpointId: "F13L_VISIBLE_CONTENT_PROOF_STARTED",
+      fibonacci: "F13L"
+    });
+
+    let proof = {};
+
+    if (south && isFunction(south.sampleVisibleContent)) {
+      try {
+        proof = south.sampleVisibleContent({ canvas: state.canvas }) || {};
+      } catch (error) {
+        recordError("SOUTH_VISIBLE_CONTENT_SAMPLE_FAILED", error);
+      }
+    }
+
+    applyVisibleProof(proof);
+    mergeChildReceipts();
+
+    if (state.visibleContentProof) {
+      emitMilestone("VISIBLE_CONTENT_PROOF_PASSED", 98, "Visible content proof passed.", {
+        checkpointId: "F13M_VISIBLE_CONTENT_PROOF_ACCEPTED",
+        fibonacci: "F13M"
+      });
+      return;
+    }
+
+    if (state.visibleContentSoftGap || state.visibleForwardProgress || state.visibleContentAdmissible) {
+      state.visibleContentSoftGap = true;
+      state.visibleContentHardFail = false;
+
+      emitMilestone("DEGRADED_VISIBLE_CONTENT_ACCEPTED", 98, "Visible content soft gap accepted.", {
+        checkpointId: "F13M_VISIBLE_CONTENT_PROOF_ACCEPTED",
+        fibonacci: "F13M"
+      });
+      return;
+    }
+
+    drawEmergencyF13DiagnosticPlanet("child-render-produced-no-visible-object");
+  }
+
   async function bootCooperative(options = {}) {
     addCallbacksFromOptions(options);
 
@@ -1611,220 +1880,17 @@
           return getReceipt();
         }
 
-        if (children.west && isFunction(children.west.bindInspection)) {
-          children.west.bindInspection({
-            canvas: state.canvas,
-            onChange: () => forceRedraw({ interactive: true, sampleProof: false }),
-            onInvalidate: (reason) => invalidateTexture(reason || "west-control-invalidation")
-          });
+        await bindWestControl(children);
 
-          state.dragInspectionBound = true;
-          state.zoomInspectionBound = true;
-          state.inspectModeAvailable = true;
-          state.inspectPlanetControlAvailable = true;
-          state.diagnosticCanLeavePlanetFrame = true;
+        const east = children.east || resolveChild("east");
+        const west = children.west || resolveChild("west");
+        const south = children.south || resolveChild("south");
 
-          updateZone("west", "READY", 100, "WEST_CONTROL_BOUND", true);
-          completeGate("F13D_WEST_CONTROL_BOUND", false, { control: "bound" });
+        const atlasCanvas = await buildAtlasThroughEast(east, options);
+        const textureCanvas = await composeTextureThroughSouth(south, atlasCanvas, options);
 
-          emitMilestone("DRAG_INSPECTION_BOUND", 86, "West control bound.", {
-            checkpointId: "F13D_WEST_CONTROL_BOUND",
-            fibonacci: "F13D"
-          });
-        }
-
-        const atlasSize = resolveAtlasSize(options);
-
-        if (!children.east || !isFunction(children.east.buildAtlas)) {
-          drawEmergencyF13DiagnosticPlanet("east-buildAtlas-unavailable");
-          finishBoot();
-          return getReceipt();
-        }
-
-        state.atlasBuildStarted = true;
-        state.atlasBuildProgress = 0;
-        state.atlasBuildError = "";
-
-        updateZone("east", "ACTIVE", 15, "EAST_ATLAS_BUILD_STARTED", false);
-        completeGate("F13E_EAST_ATLAS_BUILD_STARTED", false, atlasSize);
-
-        emitMilestone("ATLAS_BUILD_STARTED", 88, "East atlas build started.", {
-          checkpointId: "F13E_EAST_ATLAS_BUILD_STARTED",
-          fibonacci: "F13E",
-          ...atlasSize
-        });
-
-        const atlasResult = await withTimeout(children.east.buildAtlas({
-          width: atlasSize.width,
-          height: atlasSize.height,
-          rowsPerChunk: options.rowsPerChunk,
-          onProgress: (progress, receipt) => {
-            state.atlasBuildProgress = clamp(progress, 0, 100);
-            updateZone("east", "ACTIVE", state.atlasBuildProgress, "ATLAS_BUILD_PROGRESS", false);
-            emitProgressOnly("ATLAS_BUILD_PROGRESS", 88 + (state.atlasBuildProgress * 0.03), `East atlas progress ${state.atlasBuildProgress}%`, receipt || {});
-          }
-        }), CHILD_METHOD_TIMEOUT_MS, "east.buildAtlas");
-
-        state.atlasCanvas = normalizeCanvasResult(atlasResult);
-        state.atlasBuildProgress = 100;
-        state.atlasBuildComplete = Boolean(state.atlasCanvas);
-
-        if (!state.atlasBuildComplete) {
-          state.atlasBuildError = "east-atlas-result-unusable";
-          drawEmergencyF13DiagnosticPlanet(state.atlasBuildError);
-          finishBoot();
-          return getReceipt();
-        }
-
-        updateZone("east", "READY", 100, "EAST_ATLAS_BUILD_COMPLETE", true);
-        completeGate("F13F_EAST_ATLAS_BUILD_COMPLETE", false, {
-          width: state.atlasCanvas.width || atlasSize.width,
-          height: state.atlasCanvas.height || atlasSize.height
-        });
-
-        emitMilestone("ATLAS_BUILD_COMPLETE", 91, "East atlas build complete.", {
-          checkpointId: "F13F_EAST_ATLAS_BUILD_COMPLETE",
-          fibonacci: "F13F"
-        });
-
-        if (!children.south || !isFunction(children.south.composeTexture)) {
-          drawEmergencyF13DiagnosticPlanet("south-composeTexture-unavailable");
-          finishBoot();
-          return getReceipt();
-        }
-
-        state.textureComposeStarted = true;
-        state.textureComposeProgress = 0;
-        state.textureComposeError = "";
-
-        updateZone("south", "ACTIVE", 20, "SOUTH_TEXTURE_COMPOSE_STARTED", false);
-        completeGate("F13G_SOUTH_TEXTURE_COMPOSE_STARTED", false, {});
-
-        emitMilestone("TEXTURE_COMPOSE_STARTED", 93, "South texture composition started.", {
-          checkpointId: "F13G_SOUTH_TEXTURE_COMPOSE_STARTED",
-          fibonacci: "F13G"
-        });
-
-        const textureResult = await withTimeout(children.south.composeTexture({
-          atlasCanvas: state.atlasCanvas,
-          onProgress: (progress, receipt) => {
-            state.textureComposeProgress = clamp(progress, 0, 100);
-            updateZone("south", "ACTIVE", 20 + state.textureComposeProgress * 0.35, "TEXTURE_COMPOSE_PROGRESS", false);
-            emitProgressOnly("TEXTURE_COMPOSE_PROGRESS", 93 + (state.textureComposeProgress * 0.03), `South texture progress ${state.textureComposeProgress}%`, receipt || {});
-          }
-        }), CHILD_METHOD_TIMEOUT_MS, "south.composeTexture");
-
-        state.textureCanvas = normalizeCanvasResult(
-          textureResult,
-          isFunction(children.south.getTextureCanvas) ? () => children.south.getTextureCanvas() : null
-        );
-
-        state.textureComposeProgress = 100;
-        state.textureComposeComplete = Boolean(state.textureCanvas);
-
-        if (!state.textureComposeComplete) {
-          state.textureComposeError = "south-texture-result-unusable";
-          drawEmergencyF13DiagnosticPlanet(state.textureComposeError);
-          finishBoot();
-          return getReceipt();
-        }
-
-        updateZone("south", "ACTIVE", 58, "SOUTH_TEXTURE_COMPOSE_COMPLETE", false);
-        completeGate("F13H_SOUTH_TEXTURE_COMPOSE_COMPLETE", false, {
-          textureCanvas: true
-        });
-
-        emitMilestone("TEXTURE_COMPOSE_COMPLETE", 96, "South texture composition complete.", {
-          checkpointId: "F13H_SOUTH_TEXTURE_COMPOSE_COMPLETE",
-          fibonacci: "F13H"
-        });
-
-        if (!isFunction(children.south.renderSphere)) {
-          drawEmergencyF13DiagnosticPlanet("south-renderSphere-unavailable");
-          finishBoot();
-          return getReceipt();
-        }
-
-        state.firstFrameRequested = true;
-        completeGate("F13I_FIRST_FRAME_REQUESTED", false, {});
-
-        emitMilestone("FIRST_FRAME_REQUESTED", 97, "South sphere frame requested.", {
-          checkpointId: "F13I_FIRST_FRAME_REQUESTED",
-          fibonacci: "F13I"
-        });
-
-        await withTimeout(children.south.renderSphere({
-          canvas: state.canvas,
-          textureCanvas: state.textureCanvas,
-          view: children.west && isFunction(children.west.getViewState) ? children.west.getViewState() : {},
-          onProgress: (progress, receipt) => {
-            emitProgressOnly("SPHERE_RENDER_PROGRESS", 97, `South sphere render progress ${progress}%`, receipt || {});
-          }
-        }), CHILD_METHOD_TIMEOUT_MS, "south.renderSphere");
-
-        state.firstFrameDetected = true;
-        state.imageRendered = true;
-        state.renderedAfterTexture = true;
-        state.planetFramePainted = true;
-        state.renderFrameCount += 1;
-
-        completeGate("F13J_FIRST_FRAME_DETECTED", false, {});
-        updateZone("south", "ACTIVE", 75, "FIRST_FRAME_DETECTED", false);
-
-        emitMilestone("FIRST_FRAME_DETECTED", 98, "First frame detected.", {
-          checkpointId: "F13J_FIRST_FRAME_DETECTED",
-          fibonacci: "F13J"
-        });
-
-        state.canvasReady = true;
-        state.visibleCanvasReady = true;
-        state.canvasLaneClosed = true;
-        state.canvasCarrierHandoffOk = true;
-
-        completeGate("F13K_CANVAS_VISIBLE_READY", false, {});
-        updateZone("south", "ACTIVE", 86, "CANVAS_VISIBLE_READY", false);
-
-        emitMilestone("CANVAS_READY", 98, "Canvas visible F13 ready.", {
-          checkpointId: "F13K_CANVAS_VISIBLE_READY",
-          fibonacci: "F13K"
-        });
-
-        state.visibleContentProofStarted = true;
-        completeGate("F13L_VISIBLE_CONTENT_PROOF_STARTED", false, {});
-
-        emitMilestone("VISIBLE_CONTENT_PROOF_STARTED", 98, "Visible content proof started.", {
-          checkpointId: "F13L_VISIBLE_CONTENT_PROOF_STARTED",
-          fibonacci: "F13L"
-        });
-
-        let proof = {};
-
-        if (isFunction(children.south.sampleVisibleContent)) {
-          try {
-            proof = children.south.sampleVisibleContent({ canvas: state.canvas }) || {};
-          } catch (error) {
-            recordError("SOUTH_VISIBLE_CONTENT_SAMPLE_FAILED", error);
-          }
-        }
-
-        applyVisibleProof(proof);
-        mergeChildReceipts();
-
-        if (state.visibleContentProof) {
-          emitMilestone("VISIBLE_CONTENT_PROOF_PASSED", 98, "Visible content proof passed.", {
-            checkpointId: "F13M_VISIBLE_CONTENT_PROOF_ACCEPTED",
-            fibonacci: "F13M"
-          });
-        } else if (state.visibleContentSoftGap || state.visibleForwardProgress || state.visibleContentAdmissible) {
-          state.visibleContentSoftGap = true;
-          state.visibleContentHardFail = false;
-          emitMilestone("DEGRADED_VISIBLE_CONTENT_ACCEPTED", 98, "Visible content soft gap accepted.", {
-            checkpointId: "F13M_VISIBLE_CONTENT_PROOF_ACCEPTED",
-            fibonacci: "F13M"
-          });
-        } else {
-          drawEmergencyF13DiagnosticPlanet("child-render-produced-no-visible-object");
-        }
+        await renderFrameThroughSouth(south, west, textureCanvas);
+        await proveVisibleContentThroughSouth(south);
 
         completeGate("F13N_INSPECT_MODE_READY", false, {});
         emitMilestone("INSPECT_MODE_READY", 98, "Inspect mode ready.", {
@@ -1846,7 +1912,7 @@
       } catch (error) {
         state.canvasCarrierHandoffOk = false;
         state.canvasCarrierHandoffError = error && error.message ? error.message : String(error);
-        recordError("CANVAS_SINGLE_FILE_INTERNAL_NEWS_BOOT_FAILED", error);
+        recordError("CANVAS_SINGLE_FILE_INTERNAL_NEWS_TEXTURE_FRAME_PROOF_BOOT_FAILED", error);
 
         try {
           if (!state.canvas || !state.context) ensureCarrier(options);
@@ -1897,26 +1963,9 @@
   async function mount(options = {}) {
     addCallbacksFromOptions(options);
     ensureCarrier(options);
-    await ensureChildren();
 
-    const west = resolveChild("west");
-
-    if (west && isFunction(west.bindInspection)) {
-      west.bindInspection({
-        canvas: state.canvas,
-        onChange: () => forceRedraw({ interactive: true, sampleProof: false }),
-        onInvalidate: (reason) => invalidateTexture(reason || "west-control-invalidation")
-      });
-
-      state.dragInspectionBound = true;
-      state.zoomInspectionBound = true;
-      state.inspectModeAvailable = true;
-      state.inspectPlanetControlAvailable = true;
-      state.diagnosticCanLeavePlanetFrame = true;
-
-      updateZone("west", "READY", 100, "WEST_CONTROL_BOUND", true);
-      completeGate("F13D_WEST_CONTROL_BOUND", false, {});
-    }
+    const children = await ensureChildren();
+    await bindWestControl(children);
 
     updateDataset();
     return getReceipt();
@@ -1944,7 +1993,10 @@
       return getReceipt();
     }
 
-    const textureCanvas = state.textureCanvas || (isFunction(south.getTextureCanvas) ? south.getTextureCanvas() : null);
+    const textureCanvas = state.textureCanvas || normalizeCanvasResult(
+      null,
+      isFunction(south.getTextureCanvas) ? () => south.getTextureCanvas() : null
+    );
 
     if (!textureCanvas) {
       return rebuildTexture(options);
@@ -1985,15 +2037,17 @@
     if (!state.canvas || !state.context) return getReceipt();
 
     try {
-      if (south && isFunction(south.getTextureCanvas) && south.getTextureCanvas()) {
-        if (isFunction(south.renderSphereSync)) {
-          south.renderSphereSync({
-            canvas: state.canvas,
-            textureCanvas: south.getTextureCanvas(),
-            view: west && isFunction(west.getViewState) ? west.getViewState() : {},
-            interactive: options.interactive !== false
-          });
-        }
+      const textureCanvas = state.textureCanvas || (
+        south && isFunction(south.getTextureCanvas) ? south.getTextureCanvas() : null
+      );
+
+      if (south && isFunction(south.renderSphereSync) && textureCanvas) {
+        south.renderSphereSync({
+          canvas: state.canvas,
+          textureCanvas,
+          view: west && isFunction(west.getViewState) ? west.getViewState() : {},
+          interactive: options.interactive !== false
+        });
 
         state.interactiveFrameCount += 1;
         state.imageRendered = true;
@@ -2059,84 +2113,20 @@
 
     if (!state.canvas || !state.context) ensureCarrier(options);
 
-    const atlasSize = resolveAtlasSize(options);
+    try {
+      const atlasCanvas = await buildAtlasThroughEast(east, options);
+      const textureCanvas = await composeTextureThroughSouth(south, atlasCanvas, options);
 
-    state.atlasBuildStarted = true;
-    state.atlasBuildProgress = 0;
-    updateZone("east", "ACTIVE", 15, "REBUILD_ATLAS_STARTED", false);
-    completeGate("F13E_EAST_ATLAS_BUILD_STARTED", false, atlasSize);
+      await renderFrameThroughSouth(south, west, textureCanvas);
+      await proveVisibleContentThroughSouth(south);
 
-    const atlasResult = await east.buildAtlas({
-      width: atlasSize.width,
-      height: atlasSize.height,
-      rowsPerChunk: options.rowsPerChunk,
-      onProgress: (progress, receipt) => {
-        state.atlasBuildProgress = clamp(progress, 0, 100);
-        emitProgressOnly("ATLAS_BUILD_PROGRESS", 88 + (state.atlasBuildProgress * 0.03), `Atlas rebuild progress ${state.atlasBuildProgress}%`, receipt || {});
-      }
-    });
-
-    state.atlasCanvas = normalizeCanvasResult(atlasResult);
-    state.atlasBuildProgress = 100;
-    state.atlasBuildComplete = Boolean(state.atlasCanvas);
-
-    if (!state.atlasBuildComplete) {
-      drawEmergencyF13DiagnosticPlanet("rebuild-atlas-result-unusable");
+      updateDataset();
+      return getReceipt();
+    } catch (error) {
+      recordError("REBUILD_TEXTURE_FAILED", error);
+      drawEmergencyF13DiagnosticPlanet(error && error.message ? error.message : String(error));
       return getReceipt();
     }
-
-    updateZone("east", "READY", 100, "REBUILD_ATLAS_COMPLETE", true);
-    completeGate("F13F_EAST_ATLAS_BUILD_COMPLETE", false, { rebuild: true });
-
-    state.textureComposeStarted = true;
-    state.textureComposeProgress = 0;
-    completeGate("F13G_SOUTH_TEXTURE_COMPOSE_STARTED", false, { rebuild: true });
-
-    const textureResult = await south.composeTexture({
-      atlasCanvas: state.atlasCanvas,
-      onProgress: (progress, receipt) => {
-        state.textureComposeProgress = clamp(progress, 0, 100);
-        emitProgressOnly("TEXTURE_COMPOSE_PROGRESS", 93 + (state.textureComposeProgress * 0.03), `Texture rebuild progress ${state.textureComposeProgress}%`, receipt || {});
-      }
-    });
-
-    state.textureCanvas = normalizeCanvasResult(textureResult, isFunction(south.getTextureCanvas) ? () => south.getTextureCanvas() : null);
-    state.textureComposeProgress = 100;
-    state.textureComposeComplete = Boolean(state.textureCanvas);
-
-    if (!state.textureComposeComplete) {
-      drawEmergencyF13DiagnosticPlanet("rebuild-texture-result-unusable");
-      return getReceipt();
-    }
-
-    completeGate("F13H_SOUTH_TEXTURE_COMPOSE_COMPLETE", false, { rebuild: true });
-
-    await south.renderSphere({
-      canvas: state.canvas,
-      textureCanvas: state.textureCanvas,
-      view: west && isFunction(west.getViewState) ? west.getViewState() : {}
-    });
-
-    state.imageRendered = true;
-    state.firstFrameRequested = true;
-    state.firstFrameDetected = true;
-    state.renderedAfterTexture = true;
-    state.renderFrameCount += 1;
-    state.canvasReady = true;
-    state.visibleCanvasReady = true;
-
-    completeGate("F13I_FIRST_FRAME_REQUESTED", false, { rebuild: true });
-    completeGate("F13J_FIRST_FRAME_DETECTED", false, { rebuild: true });
-    completeGate("F13K_CANVAS_VISIBLE_READY", false, { rebuild: true });
-
-    if (isFunction(south.sampleVisibleContent)) {
-      applyVisibleProof(south.sampleVisibleContent({ canvas: state.canvas }));
-    } else {
-      applyVisibleProof(sampleCanvasPixels());
-    }
-
-    updateDataset();
-    return getReceipt();
   }
 
   function ensureMaterialTextureFresh(options = {}) {
@@ -2289,6 +2279,7 @@
       singlePhysicalFile: true,
       internalNewsZonesActive: true,
       internalFourZoneSchematicActive: true,
+      internalZonesDefinition: clonePlain(INTERNAL_ZONES),
       noAdditionalCanvasFileSplit: true,
 
       canvasNorthActive: true,
@@ -2296,6 +2287,7 @@
       physicalCarrierProofActive: true,
       carrierReadyIsNotPlanetReady: true,
       canvasReadyRequiresTextureFrameAndProof: true,
+      textureFrameProofClosureActive: true,
       f13PhysicalProofRequired: true,
       emergencyF13DiagnosticPlanetAllowed: true,
       emergencyF13DiagnosticPlanetUsed: state.emergencyF13DiagnosticPlanetUsed,
@@ -2364,6 +2356,8 @@
       textureComposeProgress: state.textureComposeProgress,
       textureComposeComplete: state.textureComposeComplete,
       textureComposeError: state.textureComposeError,
+      texturePostComposeRecoveryUsed: state.texturePostComposeRecoveryUsed,
+      textureReturnShape: state.textureReturnShape,
       firstFrameRequested: state.firstFrameRequested,
       firstFrameDetected: state.firstFrameDetected,
       imageRendered: state.imageRendered,
@@ -2465,7 +2459,7 @@
       .join("\n") || "- none";
 
     return [
-      "HEARTH_CANVAS_SINGLE_FILE_INTERNAL_NEWS_F13_SCHEMATIC_RECEIPT",
+      "HEARTH_CANVAS_SINGLE_FILE_INTERNAL_NEWS_F13_TEXTURE_FRAME_PROOF_CLOSURE_RECEIPT",
       "",
       `contract=${r.contract}`,
       `receipt=${r.receipt}`,
@@ -2488,6 +2482,7 @@
       `physicalCarrierProofActive=${r.physicalCarrierProofActive}`,
       `carrierReadyIsNotPlanetReady=${r.carrierReadyIsNotPlanetReady}`,
       `canvasReadyRequiresTextureFrameAndProof=${r.canvasReadyRequiresTextureFrameAndProof}`,
+      `textureFrameProofClosureActive=${r.textureFrameProofClosureActive}`,
       `f13PhysicalProofRequired=${r.f13PhysicalProofRequired}`,
       `emergencyF13DiagnosticPlanetAllowed=${r.emergencyF13DiagnosticPlanetAllowed}`,
       `emergencyF13DiagnosticPlanetUsed=${r.emergencyF13DiagnosticPlanetUsed}`,
@@ -2548,6 +2543,8 @@
       `textureComposeProgress=${r.textureComposeProgress}`,
       `textureComposeComplete=${r.textureComposeComplete}`,
       `textureComposeError=${r.textureComposeError}`,
+      `texturePostComposeRecoveryUsed=${r.texturePostComposeRecoveryUsed}`,
+      `textureReturnShape=${r.textureReturnShape}`,
       `firstFrameRequested=${r.firstFrameRequested}`,
       `firstFrameDetected=${r.firstFrameDetected}`,
       `imageRendered=${r.imageRendered}`,
@@ -2619,6 +2616,7 @@
     dataset.hearthCanvasPhysicalCarrierProofActive = "true";
     dataset.hearthCanvasCarrierReadyIsNotPlanetReady = "true";
     dataset.hearthCanvasReadyRequiresTextureFrameAndProof = "true";
+    dataset.hearthCanvasTextureFrameProofClosureActive = "true";
     dataset.hearthCanvasF13PhysicalProofRequired = "true";
     dataset.hearthCanvasEmergencyF13DiagnosticPlanetUsed = String(state.emergencyF13DiagnosticPlanetUsed);
 
@@ -2668,6 +2666,8 @@
     dataset.hearthCanvasTextureComposeProgress = String(state.textureComposeProgress);
     dataset.hearthCanvasTextureComposeComplete = String(state.textureComposeComplete);
     dataset.hearthCanvasTextureComposeError = state.textureComposeError;
+    dataset.hearthCanvasTexturePostComposeRecoveryUsed = String(state.texturePostComposeRecoveryUsed);
+    dataset.hearthCanvasTextureReturnShape = state.textureReturnShape;
     dataset.hearthCanvasFirstFrameRequested = String(state.firstFrameRequested);
     dataset.hearthCanvasFirstFrameDetected = String(state.firstFrameDetected);
     dataset.hearthCanvasImageRendered = String(state.imageRendered);
@@ -2745,6 +2745,7 @@
     root.HEARTH_CANVAS_TRANSISTOR_GATE = api;
     root.HEARTH_CANVAS_PHYSICAL_OBJECT_BOOTSTRAP = api;
     root.HEARTH_CANVAS_SINGLE_FILE_INTERNAL_NEWS = api;
+    root.HEARTH_CANVAS_TEXTURE_FRAME_PROOF_CLOSURE = api;
 
     root.DEXTER_LAB.hearthCanvasEvidence = api;
     root.DEXTER_LAB.hearthCanvasNorth = api;
@@ -2757,6 +2758,7 @@
     root.DEXTER_LAB.hearthCanvasMaterialsReliefConsumptionInvalidation = api;
     root.DEXTER_LAB.hearthCanvasPhysicalObjectBootstrap = api;
     root.DEXTER_LAB.hearthCanvasSingleFileInternalNews = api;
+    root.DEXTER_LAB.hearthCanvasTextureFrameProofClosure = api;
 
     const light = getReceiptLight();
 
@@ -2788,6 +2790,8 @@
       planetCanvasNonZeroSize: state.planetCanvasNonZeroSize,
       atlasBuildComplete: state.atlasBuildComplete,
       textureComposeComplete: state.textureComposeComplete,
+      texturePostComposeRecoveryUsed: state.texturePostComposeRecoveryUsed,
+      textureReturnShape: state.textureReturnShape,
       firstFrameDetected: state.firstFrameDetected,
       imageRendered: state.imageRendered,
       visiblePlanetAvailable: state.visiblePlanetAvailable,

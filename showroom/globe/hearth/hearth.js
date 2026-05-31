@@ -414,7 +414,7 @@
   }
 
   function getByNames(names) {
-    for (const name of names) {
+    for (const name of names || []) {
       const found = readPath(name);
       if (found) return found;
     }
@@ -545,6 +545,33 @@
     const value = doc.documentElement.dataset[key];
     return value === undefined || value === null || value === "" ? fallback : value;
   }
+
+  function publishEarlyMarker() {
+    root.__HEARTH_ROUTE_CONDUCTOR_MARKER__ = true;
+    root.__HEARTH_ROUTE_CONDUCTOR_FILE__ = FILE;
+    root.__HEARTH_ROUTE_CONDUCTOR_CONTRACT__ = CONTRACT;
+    root.__HEARTH_ROUTE_CONDUCTOR_RECEIPT__ = RECEIPT;
+
+    if (doc && doc.documentElement) {
+      const dataset = doc.documentElement.dataset;
+      dataset.hearthRouteConductorMarkerPresent = "true";
+      dataset.hearthRouteConductorLoaded = "true";
+      dataset.hearthRouteConductorPresent = "true";
+      dataset.hearthRouteConductorContract = CONTRACT;
+      dataset.hearthRouteConductorReceipt = RECEIPT;
+      dataset.hearthSouthRouteConductorLoaded = "true";
+      dataset.hearthSouthRouteConductorPresent = "true";
+      dataset.hearthSouthRouteConductorContract = CONTRACT;
+      dataset.hearthSouthRouteConductorReceipt = RECEIPT;
+      dataset.hearthSouthAliasesPublished = "true";
+      dataset.generatedImage = "false";
+      dataset.graphicBox = "false";
+      dataset.webgl = "false";
+      dataset.visualPassClaimed = "false";
+    }
+  }
+
+  publishEarlyMarker();
 
   function readIndexApi() {
     return getByNames([
@@ -3564,8 +3591,9 @@
     if (!doc || !doc.documentElement) return;
 
     const dataset = doc.documentElement.dataset;
-    const light = getReceiptLight();
+    const light = getReceiptLightNoRefresh();
 
+    dataset.hearthRouteConductorMarkerPresent = "true";
     dataset.hearthRouteConductorLoaded = "true";
     dataset.hearthRouteConductorPresent = "true";
     dataset.hearthRouteConductorContract = CONTRACT;
@@ -3593,28 +3621,28 @@
     dataset.hearthSouthActiveGearProgress = String(light.activeGearProgress);
     dataset.hearthSouthHighestCompletedCheckpointId = light.highestCompletedCheckpointId;
 
-    dataset.hearthSouthCanvasParentBootGatePhase = light.canvasParentBootGatePhase;
-    dataset.hearthSouthCanvasParentBootAttempted = String(light.canvasParentBootAttempted);
-    dataset.hearthSouthCanvasChildGatePhase = light.canvasChildGatePhase;
-    dataset.hearthSouthCanvasBootBlockedByChildGate = String(light.canvasBootBlockedByChildGate);
+    dataset.hearthSouthCanvasParentBootGatePhase = state.canvasParentBootGatePhase;
+    dataset.hearthSouthCanvasParentBootAttempted = String(state.canvasParentBootAttempted);
+    dataset.hearthSouthCanvasChildGatePhase = state.canvasChildGatePhase;
+    dataset.hearthSouthCanvasBootBlockedByChildGate = String(state.canvasBootBlockedByChildGate);
     dataset.hearthSouthPreParentChildMissingIsHardBlock = "false";
 
-    dataset.hearthSouthCompletionLatched = String(light.completionLatched);
-    dataset.hearthSouthDegradedCompletionLatched = String(light.degradedCompletionLatched);
-    dataset.hearthSouthReadyTextAllowed = String(light.readyTextAllowed);
-    dataset.hearthSouthF21LatchMode = light.f21LatchMode;
+    dataset.hearthSouthCompletionLatched = String(state.completionLatched);
+    dataset.hearthSouthDegradedCompletionLatched = String(state.degradedCompletionLatched);
+    dataset.hearthSouthReadyTextAllowed = String(state.readyTextAllowed);
+    dataset.hearthSouthF21LatchMode = state.f21LatchMode;
 
-    dataset.hearthSouthVisiblePlanetAvailable = String(light.visiblePlanetAvailable);
-    dataset.hearthSouthVisibleContentProof = String(light.visibleContentProof);
-    dataset.hearthSouthVisibleContentSoftGap = String(light.visibleContentSoftGap);
-    dataset.hearthSouthVisibleContentHardFail = String(light.visibleContentHardFail);
+    dataset.hearthSouthVisiblePlanetAvailable = String(state.latestCanvasReceipt && state.latestCanvasReceipt.visiblePlanetAvailable === true);
+    dataset.hearthSouthVisibleContentProof = String(state.strictVisibleProof);
+    dataset.hearthSouthVisibleContentSoftGap = String(state.softGapVisibleProof);
+    dataset.hearthSouthVisibleContentHardFail = String(state.hardFailVisibleProof);
 
-    dataset.hearthSouthInspectModeAvailable = String(light.inspectModeAvailable);
-    dataset.hearthSouthDiagnosticCanLeavePlanetFrame = String(light.diagnosticCanLeavePlanetFrame);
+    dataset.hearthSouthInspectModeAvailable = String(state.inspectModeAvailable);
+    dataset.hearthSouthDiagnosticCanLeavePlanetFrame = String(state.diagnosticCanLeavePlanetFrame);
 
-    dataset.hearthSouthPostgameStatus = light.postgameStatus;
-    dataset.hearthSouthFirstFailedCoordinate = light.firstFailedCoordinate;
-    dataset.hearthSouthRecommendedNextRenewalTarget = light.recommendedNextRenewalTarget;
+    dataset.hearthSouthPostgameStatus = state.postgameStatus;
+    dataset.hearthSouthFirstFailedCoordinate = state.firstFailedCoordinate;
+    dataset.hearthSouthRecommendedNextRenewalTarget = state.recommendedNextRenewalTarget;
 
     dataset.generatedImage = "false";
     dataset.graphicBox = "false";
@@ -3685,7 +3713,7 @@
       activeCheckpointRank: active.rank,
       activeFibonacciStage: active.fibonacci,
       activeGearLabel: active.label,
-      activeGearProgress: 0,
+      activeGearProgress: state.completionLatched ? 100 : 0,
       highestCompletedCheckpointId: highest ? highest.id : "",
       highestCompletedRank: highest ? highest.rank : 0,
       completionLatched: state.completionLatched,

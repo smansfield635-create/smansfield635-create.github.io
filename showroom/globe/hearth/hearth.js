@@ -1,36 +1,36 @@
 // /showroom/globe/hearth/hearth.js
-// HEARTH_SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_NEWS_FIBONACCI_REASSIGNMENT_TNT_v1
+// HEARTH_SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_NEWS_FIBONACCI_HANDOFF_TNT_v1
 // Full-file replacement.
-// South route conductor / visible completion conductor only.
+// South route conductor / self-duty handoff authority only.
 // Purpose:
-// - Restore South self-duty after marker-only recognition.
-// - Publish route-conductor API and receipt immediately.
-// - Prevent marker-only recognition from satisfying F8.
-// - Assign responsibilities through NEWS cardinal protocol.
-// - Sequence route readiness through Fibonacci gates.
-// - Boot Canvas parent only after F8 conductor hydration.
-// - Reconcile Canvas F13 visible-proof evidence.
-// - Request F21 through North/NEWS only.
+// - Restore the route conductor’s self-duty after marker-only recognition.
+// - Publish marker, API, and receipt early enough for East to read all three.
+// - Prevent marker-only recognition from satisfying F8 hydration.
+// - Seat the handoff in NEWS order with Fibonacci synchronization.
+// - Keep Canvas as F13 evidence only.
+// - Keep F21 completion under North / NEWS latch authority.
 // Does not own:
-// - East first paint or script loading
+// - East first paint
+// - East script loading
 // - North checkpoint truth
 // - West gap taxonomy
 // - Lab South visible-state composition
-// - Canvas drawing
-// - Canvas child files
-// - terrain/source truth
-// - hydrology
-// - materials
+// - canvas drawing
+// - canvas child files
+// - source truth
+// - terrain truth
+// - hydrology truth
+// - materials truth
 // - final visual pass claim
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_NEWS_FIBONACCI_REASSIGNMENT_TNT_v1";
-  const RECEIPT = "HEARTH_SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_NEWS_FIBONACCI_REASSIGNMENT_RECEIPT_v1";
+  const CONTRACT = "HEARTH_SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_NEWS_FIBONACCI_HANDOFF_TNT_v1";
+  const RECEIPT = "HEARTH_SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_NEWS_FIBONACCI_HANDOFF_RECEIPT_v1";
   const PREVIOUS_CONTRACT = "HEARTH_SOUTH_CARDINAL_FIBONACCI_THIN_CONDUCTOR_TNT_v1";
   const BASELINE_CONTRACT = "HEARTH_DIRECTIONAL_CYCLICAL_CHECKPOINT_GOVERNANCE_PRECODE_FINAL_DRAFT_v1";
-  const VERSION = "2026-05-31.hearth-south-route-conductor-self-duty-news-fibonacci-reassignment-v1";
+  const VERSION = "2026-05-31.hearth-south-route-conductor-self-duty-news-fibonacci-handoff-v1";
 
   const ROUTE = "/showroom/globe/hearth/";
   const FILE = "/showroom/globe/hearth/hearth.js";
@@ -48,12 +48,26 @@
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
 
+  const MAX_LOG = 120;
   const WATCHDOG_MS = 500;
   const WATCHDOG_LIMIT = 120;
-  const CANVAS_BOOT_RETRY_LIMIT = 5;
-  const MAX_LOG = 120;
 
-  const CANVAS_PARENT_NAMES = Object.freeze([
+  const GATES = Object.freeze([
+    { id: "F1_EAST_ROUTE_SHELL", fib: "F1", cardinal: "EAST", label: "Route shell" },
+    { id: "F2_EAST_FIRST_PAINT", fib: "F2", cardinal: "EAST", label: "First paint" },
+    { id: "F3_EAST_SCRIPT_ORDER", fib: "F3", cardinal: "EAST", label: "Script order" },
+    { id: "F5_NORTH_AUTHORITY", fib: "F5", cardinal: "NORTH", label: "North authority" },
+    { id: "F8_SOUTH_SELF_DUTY", fib: "F8", cardinal: "SOUTH", label: "South self-duty hydration" },
+    { id: "F13A_CANVAS_PARENT", fib: "F13A", cardinal: "NORTH", label: "Canvas parent" },
+    { id: "F13B_CANVAS_CHILDREN", fib: "F13B", cardinal: "EAST", label: "Canvas children" },
+    { id: "F13C_CANVAS_TEXTURE", fib: "F13C", cardinal: "SOUTH", label: "Texture evidence" },
+    { id: "F13D_CANVAS_FRAME", fib: "F13D", cardinal: "SOUTH", label: "Visible frame" },
+    { id: "F13E_VISIBLE_PROOF", fib: "F13E", cardinal: "SOUTH", label: "Visible planet proof" },
+    { id: "F13N_INSPECT_GATE", fib: "F13N", cardinal: "WEST", label: "Inspect gate" },
+    { id: "F21_COMPLETION_LATCH", fib: "F21", cardinal: "NORTH", label: "NEWS completion latch" }
+  ]);
+
+  const CANVAS_PARENT_GLOBALS = Object.freeze([
     "HEARTH_CANVAS_PHYSICAL_CARRIER_F13_PROOF_PARENT",
     "HEARTH_CANVAS_MATERIALS_RELIEF_CONSUMPTION_INVALIDATION",
     "HEARTH_CANVAS_TRANSISTOR_GATE",
@@ -72,11 +86,10 @@
     "DEXTER_LAB.hearthCanvasTransistorGate",
     "DEXTER_LAB.hearthCanvasSplitAdapter",
     "DEXTER_LAB.hearthCanvasNorth",
-    "DEXTER_LAB.hearthCanvasEvidence",
-    "DEXTER_LAB.hearthCanvas"
+    "DEXTER_LAB.hearthCanvasEvidence"
   ]);
 
-  const CANVAS_CHILD_NAMES = Object.freeze({
+  const CANVAS_CHILD_GLOBALS = Object.freeze({
     east: [
       "HEARTH_CANVAS_EAST",
       "HEARTH.canvasEast",
@@ -111,21 +124,6 @@
     ]
   });
 
-  const GATES = Object.freeze([
-    { id: "F1_EAST_ROUTE_SHELL", fib: "F1", cardinal: "EAST", label: "Route shell" },
-    { id: "F2_EAST_FIRST_PAINT", fib: "F2", cardinal: "EAST", label: "First paint" },
-    { id: "F3_EAST_SCRIPT_ORDER", fib: "F3", cardinal: "EAST", label: "Script order" },
-    { id: "F5_NORTH_AUTHORITY", fib: "F5", cardinal: "NORTH", label: "North authority" },
-    { id: "F8_SOUTH_CONDUCTOR_HYDRATED", fib: "F8", cardinal: "SOUTH", label: "South conductor hydrated" },
-    { id: "F13A_CANVAS_PARENT_BOOT", fib: "F13A", cardinal: "NORTH", label: "Canvas parent boot" },
-    { id: "F13B_CANVAS_CHILDREN", fib: "F13B", cardinal: "EAST", label: "Canvas children" },
-    { id: "F13C_TEXTURE_READY", fib: "F13C", cardinal: "SOUTH", label: "Texture ready" },
-    { id: "F13D_FRAME_READY", fib: "F13D", cardinal: "SOUTH", label: "Frame ready" },
-    { id: "F13E_VISIBLE_PROOF", fib: "F13E", cardinal: "SOUTH", label: "Visible planet proof" },
-    { id: "F13N_INSPECT_GATE", fib: "F13N", cardinal: "WEST", label: "Inspect gate" },
-    { id: "F21_NEWS_LATCH_REQUEST", fib: "F21", cardinal: "NORTH", label: "NEWS latch request" }
-  ]);
-
   const state = {
     contract: CONTRACT,
     receipt: RECEIPT,
@@ -134,38 +132,26 @@
     version: VERSION,
     file: FILE,
     route: ROUTE,
-    role: "south-route-conductor-self-duty-news-fibonacci-reassignment",
+    role: "south-route-conductor-self-duty-news-fibonacci-handoff",
 
-    cardinalCircuitActive: true,
     newsProtocolSynchronized: true,
     fibonacciSynchronizationActive: true,
-    transmissionMode: true,
+    cycleOrder: "EAST -> NORTH -> EAST_BRANCH -> WEST -> SOUTH -> CANVAS -> ROUTE_CONDUCTOR -> CHECKPOINT -> NORTH",
     oneActiveGearAtATime: true,
 
     markerIsNotHydrationProof: true,
     apiRequiredForF8: true,
     receiptRequiredForF8: true,
     runtimeRequiredForF8: true,
-    visualProofRequiredForF13: true,
-    visualProofRequiredForF21: true,
-
-    ownsRouteConductorRuntime: true,
-    ownsApiPublication: true,
-    ownsReceiptPublication: true,
-    ownsCanvasBootRequest: true,
-    ownsCanvasReceiptReconciliation: true,
-    ownsVisibleProofGovernance: true,
-    ownsCanvasDrawing: false,
-    ownsCanvasChildren: false,
-    ownsNorthCheckpointTruth: false,
-    ownsF21: false,
-    ownsFinalVisualPassClaim: false,
+    visibleProofRequiredForF13: true,
+    visibleProofRequiredForF21: true,
+    canvasOwnsF13Only: true,
 
     jobs: {
-      north: ["checkpoint-session-read", "authority-presence-read", "f21-request-submission"],
-      east: ["index-recognition-read", "script-order-read", "canvas-source-child-read"],
-      west: ["inspect-control-read", "diagnostic-dock-read", "receipt-access-read"],
-      south: ["api-publication", "receipt-publication", "runtime-hydration", "canvas-parent-boot-request", "canvas-receipt-reconciliation", "visible-proof-governance"]
+      north: ["checkpoint-session-read", "F21-latch-admission"],
+      east: ["route-conductor-recognition", "handoff-classification"],
+      west: ["inspect-gate", "receipt-access", "gap-classification-read"],
+      south: ["self-duty-publication", "route-conductor-runtime", "canvas-boot-request", "canvas-receipt-reconciliation", "visible-proof-governance"]
     },
 
     files: {
@@ -180,25 +166,23 @@
       canvasSouth: CANVAS_SOUTH_FILE
     },
 
-    authorities: {
-      indexPresent: false,
-      northPresent: false,
-      eastBranchPresent: false,
-      westBranchPresent: false,
-      southBranchPresent: false,
-      sessionPresent: false,
-      sessionCreatedBySouth: false
-    },
-
     routeConductor: {
       markerPresent: false,
       apiPresent: false,
       receiptPresent: false,
       runtimeActive: false,
       hydrated: false,
-      recognitionStatus: "MARKER_PENDING",
-      contract: CONTRACT,
-      receipt: RECEIPT
+      recognitionStatus: "MARKER_PENDING"
+    },
+
+    authorities: {
+      indexPresent: false,
+      northPresent: false,
+      eastBranchPresent: false,
+      westPresent: false,
+      southPresent: false,
+      sessionPresent: false,
+      sessionCreatedBySouth: false
     },
 
     canvas: {
@@ -210,8 +194,8 @@
       bootResolved: false,
       bootRejected: false,
       bootAttempts: 0,
-      bootError: "",
       bootComplete: false,
+      bootError: "",
 
       contract: "",
       receipt: "",
@@ -231,7 +215,6 @@
       carrierMounted: false,
       contextReady: false,
       dragInspectionBound: false,
-      zoomInspectionBound: false,
       atlasBuildStarted: false,
       atlasBuildComplete: false,
       textureComposeStarted: false,
@@ -250,62 +233,58 @@
       visibleContentAdmissible: false,
       visiblePlanetAvailable: false,
       visiblePlanetProofValid: false,
+
       latestSignature: ""
     },
 
     dom: {
       mountPresent: false,
       cockpitPresent: false,
-      canvasPresent: false,
-      canvasNonZeroSize: false,
+      planetCanvasPresent: false,
+      planetCanvasNonZeroSize: false,
       visiblePlanetHintPresent: false
     },
 
     inspect: {
-      inspectModeAvailable: false,
-      inspectPlanetControlAvailable: false,
-      diagnosticCanLeavePlanetFrame: false,
-      diagnosticDockHidden: false,
-      diagnosticDockRestorable: false,
-      receiptToggleReady: false,
       copyDiagnosticReady: false,
+      receiptToggleReady: false,
+      inspectPlanetControlAvailable: false,
+      inspectModeAvailable: false,
+      diagnosticCanLeavePlanetFrame: false,
+      diagnosticDockRestorable: false,
       showTabVisible: false,
-      fallbackReady: false,
-      strictReady: false
+      strictReady: false,
+      fallbackReady: false
     },
 
-    gates: {
-      activeIndex: 0,
-      activeGateId: GATES[0].id,
-      activeFibonacci: GATES[0].fib,
-      activeCardinal: GATES[0].cardinal,
-      activeProgress: 0,
-      completed: [],
-      degraded: [],
-      blocked: [],
-      ledger: []
-    },
+    gates: [],
+    completedGates: [],
+    degradedGates: [],
+    blockedGates: [],
+    activeGateId: GATES[0].id,
+    activeFibonacci: GATES[0].fib,
+    activeCardinal: GATES[0].cardinal,
+    activeProgress: 0,
 
-    completion: {
-      f21RequestPublished: false,
-      f21RequestSubmittedToNorth: false,
-      f21RequestMode: "WAITING",
-      newsGatePassed: false,
-      newsGateDegraded: false,
-      readyTextAllowed: false
-    },
+    completionLatched: false,
+    degradedCompletionLatched: false,
+    readyTextAllowed: false,
+    f21LatchMode: "WAITING",
+    newsGatePassed: false,
+    newsGateDegraded: false,
 
     refsBound: false,
     booted: false,
     booting: false,
-    renderCount: 0,
     watchdogTicks: 0,
-    latestEvent: "SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_NEWS_FIBONACCI_REASSIGNMENT_LOADED",
+    renderCount: 0,
+    latestEvent: "SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_HANDOFF_LOADED",
     postgameStatus: "LOADED",
     firstFailedCoordinate: "WAITING_BOOT",
     recommendedNextRenewalTarget: FILE,
     startedAt: "",
     updatedAt: "",
+
     localEvents: [],
     errors: [],
 
@@ -384,43 +363,14 @@
     }
   }
 
-  function trim(array, max = MAX_LOG) {
-    if (Array.isArray(array) && array.length > max) {
-      array.splice(0, array.length - max);
+  function trimLog(array) {
+    if (Array.isArray(array) && array.length > MAX_LOG) {
+      array.splice(0, array.length - MAX_LOG);
     }
   }
 
-  function record(event, detail = {}) {
-    const item = {
-      at: nowIso(),
-      event: safeString(event),
-      detail: clonePlain(detail)
-    };
-
-    state.localEvents.push(item);
-    trim(state.localEvents);
-    state.latestEvent = item.event;
-    state.updatedAt = item.at;
-    return item;
-  }
-
-  function recordError(code, error, detail = {}) {
-    const item = {
-      at: nowIso(),
-      code: safeString(code, "ERROR"),
-      message: error && error.message ? String(error.message) : safeString(error),
-      detail: clonePlain(detail)
-    };
-
-    state.errors.push(item);
-    trim(state.errors);
-    state.latestEvent = item.code;
-    state.updatedAt = item.at;
-    return item;
-  }
-
   function readPath(path) {
-    const parts = safeString(path).split(".");
+    const parts = String(path || "").split(".");
     let cursor = root;
 
     for (const part of parts) {
@@ -436,7 +386,6 @@
       const found = readPath(name);
       if (found) return found;
     }
-
     return null;
   }
 
@@ -444,6 +393,39 @@
     if (!doc || !doc.documentElement || !doc.documentElement.dataset) return fallback;
     const value = doc.documentElement.dataset[key];
     return value === undefined || value === null || value === "" ? fallback : value;
+  }
+
+  function record(event, detail = {}) {
+    const item = {
+      at: nowIso(),
+      event: safeString(event),
+      detail: clonePlain(detail)
+    };
+
+    state.localEvents.push(item);
+    trimLog(state.localEvents);
+
+    state.latestEvent = item.event;
+    state.updatedAt = item.at;
+
+    return item;
+  }
+
+  function recordError(code, error, detail = {}) {
+    const item = {
+      at: nowIso(),
+      code: safeString(code, "ERROR"),
+      message: error && error.message ? String(error.message) : safeString(error),
+      detail: clonePlain(detail)
+    };
+
+    state.errors.push(item);
+    trimLog(state.errors);
+
+    state.latestEvent = item.code;
+    state.updatedAt = item.at;
+
+    return item;
   }
 
   function readReceipt(authority) {
@@ -463,6 +445,73 @@
     if (authority.contract || authority.receipt || authority.version) return authority;
 
     return null;
+  }
+
+  function publishEarlyMarker() {
+    root.__HEARTH_ROUTE_CONDUCTOR_MARKER__ = true;
+    root.__HEARTH_ROUTE_CONDUCTOR_FILE__ = FILE;
+    root.__HEARTH_ROUTE_CONDUCTOR_CONTRACT__ = CONTRACT;
+    root.__HEARTH_ROUTE_CONDUCTOR_RECEIPT__ = RECEIPT;
+    root.__HEARTH_ROUTE_CONDUCTOR_MARKER_IS_HYDRATION_PROOF__ = false;
+
+    state.routeConductor.markerPresent = true;
+    state.routeConductor.recognitionStatus = "MARKER_PRESENT_API_PENDING";
+
+    updateDataset();
+  }
+
+  function publishGlobals(reason = "publish-globals") {
+    root.HEARTH = root.HEARTH || {};
+    root.DEXTER_LAB = root.DEXTER_LAB || {};
+
+    root.HEARTH_ROUTE_CONDUCTOR = api;
+    root.HearthRouteConductor = api;
+    root.HEARTH_SOUTH_ROUTE_CONDUCTOR = api;
+    root.HEARTH_SOUTH_VISIBLE_COMPLETION = api;
+    root.HEARTH_SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_HANDOFF = api;
+    root.HEARTH_SOUTH_SELF_DUTY_NEWS_FIBONACCI_HANDOFF = api;
+
+    root.HEARTH.routeConductor = api;
+    root.HEARTH.southRouteConductor = api;
+    root.HEARTH.southVisibleCompletion = api;
+    root.HEARTH.southRouteConductorSelfDutyHandoff = api;
+    root.HEARTH.southSelfDutyNewsFibonacciHandoff = api;
+
+    root.DEXTER_LAB.hearthRouteConductor = api;
+    root.DEXTER_LAB.hearthSouthRouteConductor = api;
+    root.DEXTER_LAB.hearthSouthVisibleCompletion = api;
+    root.DEXTER_LAB.hearthSouthRouteConductorSelfDutyHandoff = api;
+
+    state.routeConductor.apiPresent = true;
+    state.routeConductor.receiptPresent = true;
+    state.routeConductor.runtimeActive = true;
+    state.routeConductor.hydrated = true;
+    state.routeConductor.recognitionStatus = "API_RECEIPT_RUNTIME_PRESENT";
+
+    const receiptLight = getReceiptLight(false);
+
+    root.HEARTH_ROUTE_CONDUCTOR_RECEIPT = receiptLight;
+    root.HEARTH_SOUTH_ROUTE_CONDUCTOR_RECEIPT = receiptLight;
+    root.HEARTH_SOUTH_VISIBLE_COMPLETION_RECEIPT = receiptLight;
+    root.HEARTH_SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_HANDOFF_RECEIPT = receiptLight;
+    root.HEARTH_SOUTH_SELF_DUTY_NEWS_FIBONACCI_HANDOFF_RECEIPT = receiptLight;
+
+    root.HEARTH.routeConductorReceipt = receiptLight;
+    root.HEARTH.southRouteConductorReceipt = receiptLight;
+    root.HEARTH.southVisibleCompletionReceipt = receiptLight;
+    root.HEARTH.southRouteConductorSelfDutyHandoffReceipt = receiptLight;
+
+    root.DEXTER_LAB.hearthRouteConductorReceipt = receiptLight;
+    root.DEXTER_LAB.hearthSouthRouteConductorReceipt = receiptLight;
+    root.DEXTER_LAB.hearthSouthVisibleCompletionReceipt = receiptLight;
+    root.DEXTER_LAB.hearthSouthRouteConductorSelfDutyHandoffReceipt = receiptLight;
+
+    updateDataset();
+    record(reason, {
+      routeConductorApiPresent: true,
+      routeConductorReceiptPresent: true,
+      routeConductorHydrated: true
+    });
   }
 
   function readIndexApi() {
@@ -511,7 +560,6 @@
         "LAB_CARDINAL_RUNTIME_TABLE_SOUTH",
         "HEARTH_VISIBLE_STATE_COMPOSER",
         "DEXTER_LAB.runtimeTableSouth",
-        "DEXTER_LAB.cardinalRuntimeTableSouth",
         "DEXTER_LAB.visibleStateComposer"
       ]
     };
@@ -566,7 +614,11 @@
 
           state.authorities.sessionPresent = true;
           state.authorities.sessionCreatedBySouth = true;
-          record("SOUTH_CREATED_CHECKPOINT_SESSION", { source: creator.name || "north-or-east" });
+
+          record("SOUTH_CREATED_CHECKPOINT_SESSION", {
+            source: creator.name || "north-or-east"
+          });
+
           return session;
         }
       } catch (error) {
@@ -578,30 +630,69 @@
     return null;
   }
 
+  function submitToNorth(gate) {
+    const session = ensureSession();
+
+    if (!session || !gate) return false;
+
+    const payload = {
+      event: gate.id,
+      phase: gate.id,
+      id: gate.id,
+      checkpointId: gate.id,
+      fibonacci: gate.fib,
+      cardinal: gate.cardinal,
+      source: "hearth.south.routeConductor.selfDutyNewsFibonacciHandoff",
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      detail: {
+        gate: clonePlain(gate),
+        markerIsNotHydrationProof: true,
+        routeConductorApiPresent: state.routeConductor.apiPresent,
+        routeConductorReceiptPresent: state.routeConductor.receiptPresent,
+        routeConductorHydrated: state.routeConductor.hydrated,
+        canvasOwnsF13Only: true,
+        visualProofRequiredForF21: true,
+        visualPassClaimed: false
+      }
+    };
+
+    try {
+      if (isFunction(session.submitEvent)) return session.submitEvent(payload);
+      if (isFunction(session.submit)) return session.submit(payload);
+      if (isFunction(session.completeActive)) return session.completeActive(payload);
+    } catch (error) {
+      recordError("NORTH_GATE_SUBMIT_FAILED", error, {
+        gate: gate.id
+      });
+    }
+
+    return false;
+  }
+
   function readCanvasApi() {
-    return firstGlobal(CANVAS_PARENT_NAMES);
+    return firstGlobal(CANVAS_PARENT_GLOBALS);
   }
 
   function readCanvasReceipt() {
-    const apiObject = readCanvasApi();
-    const apiReceipt = readReceipt(apiObject);
+    const canvas = readCanvasApi();
+    const receipt = readReceipt(canvas);
 
-    if (apiReceipt) return apiReceipt;
+    if (receipt) return receipt;
 
     const fallback = firstGlobal([
       "HEARTH_CANVAS_RECEIPT",
       "HEARTH_CANVAS_EVIDENCE_RECEIPT",
       "HEARTH_CANVAS_POSTGAME_RECEIPT",
       "HEARTH.canvasReceipt",
-      "HEARTH.canvasEvidenceReceipt",
-      "DEXTER_LAB.hearthCanvasReceipt"
+      "HEARTH.canvasEvidenceReceipt"
     ]);
 
     return isObject(fallback) ? fallback : {};
   }
 
   function readCanvasChild(key) {
-    return firstGlobal(CANVAS_CHILD_NAMES[key] || []);
+    return firstGlobal(CANVAS_CHILD_GLOBALS[key] || []);
   }
 
   function missingMethods(key, authority) {
@@ -620,7 +711,7 @@
   }
 
   function scanDom() {
-    if (!doc) return state.dom;
+    if (!doc) return;
 
     refs.mount =
       doc.getElementById("hearthCanvasMount") ||
@@ -647,10 +738,7 @@
       doc.querySelector("[data-hearth-south-show-diagnostic-tab]") ||
       doc.querySelector("[data-hearth-east-show-diagnostic-tab]") ||
       doc.querySelector("[data-hearth-index-show-diagnostic-tab]");
-
-    refs.status =
-      doc.getElementById("hearth-route-status") ||
-      doc.querySelector("[data-hearth-route-status]");
+    refs.status = doc.getElementById("hearth-route-status") || doc.querySelector("[data-hearth-route-status]");
 
     const canvas = refs.mount
       ? refs.mount.querySelector("canvas")
@@ -668,10 +756,8 @@
       )
     );
 
-    const datasetVisible = Boolean(
+    const visibleHint = Boolean(
       data("hearthCanvasReady") === "true" ||
-      data("hearthImageRendered") === "true" ||
-      data("hearthCanvasImageRendered") === "true" ||
       data("hearthCanvasVisiblePlanetAvailable") === "true" ||
       data("hearthCanvasVisibleContentProof") === "true" ||
       data("hearthCanvasSouthVisibleContentProof") === "true" ||
@@ -681,18 +767,17 @@
 
     state.dom.mountPresent = Boolean(refs.mount);
     state.dom.cockpitPresent = Boolean(refs.cockpit);
-    state.dom.canvasPresent = Boolean(canvas);
-    state.dom.canvasNonZeroSize = nonZero;
-    state.dom.visiblePlanetHintPresent = Boolean(canvas && nonZero && datasetVisible);
+    state.dom.planetCanvasPresent = Boolean(canvas);
+    state.dom.planetCanvasNonZeroSize = nonZero;
+    state.dom.visiblePlanetHintPresent = Boolean(canvas && nonZero && visibleHint);
 
     state.inspect.copyDiagnosticReady = Boolean(refs.copyButton);
     state.inspect.receiptToggleReady = Boolean(refs.toggleButton || refs.receiptText || refs.receiptBox);
     state.inspect.inspectPlanetControlAvailable = Boolean(refs.inspectButton);
     state.inspect.inspectModeAvailable = Boolean(refs.inspectButton && refs.cockpit);
-    state.inspect.diagnosticDockRestorable = Boolean(refs.cockpit);
     state.inspect.diagnosticCanLeavePlanetFrame = Boolean(refs.inspectButton && refs.cockpit && refs.showTab);
+    state.inspect.diagnosticDockRestorable = Boolean(refs.cockpit);
     state.inspect.showTabVisible = Boolean(refs.showTab && refs.showTab.hidden === false);
-    state.inspect.diagnosticDockHidden = Boolean(refs.cockpit && refs.cockpit.dataset.cockpitMode === "planet-inspect");
     state.inspect.strictReady = Boolean(
       state.inspect.inspectModeAvailable &&
       state.inspect.diagnosticCanLeavePlanetFrame &&
@@ -706,7 +791,6 @@
     );
 
     bindControls();
-    return state.dom;
   }
 
   function summarizeCanvas(receipt = readCanvasReceipt()) {
@@ -739,8 +823,7 @@
     c.eastReady = safeBool(receipt.canvasEastReady, Boolean(east && eastMissing.length === 0));
     c.westReady = safeBool(receipt.canvasWestReady, Boolean(west && westMissing.length === 0));
     c.southReady = safeBool(receipt.canvasSouthReady, Boolean(south && southMissing.length === 0));
-
-    c.allChildrenReady = safeBool(receipt.allCanvasChildrenReady, c.eastReady && c.westReady && c.southReady);
+    c.allChildrenReady = safeBool(receipt.allCanvasChildrenReady, Boolean(c.eastReady && c.westReady && c.southReady));
 
     c.childGap = [
       eastMissing.length ? `east:${eastMissing.join(",")}` : "",
@@ -748,78 +831,29 @@
       southMissing.length ? `south:${southMissing.join(",")}` : ""
     ].filter(Boolean).join("; ");
 
-    c.carrierRequested = safeBool(receipt.canvasCarrierRequested, safeBool(data("hearthCanvasCarrierRequested"), c.bootRequested));
+    c.carrierRequested = safeBool(receipt.canvasCarrierRequested, c.bootRequested);
     c.carrierMounted = safeBool(receipt.canvasCarrierMounted, safeBool(data("hearthCanvasCarrierMounted"), false));
     c.contextReady = safeBool(receipt.canvasContextReady, safeBool(data("hearthCanvasContextReady"), false));
     c.dragInspectionBound = safeBool(receipt.dragInspectionBound, safeBool(data("hearthCanvasDragInspectionBound"), false));
-    c.zoomInspectionBound = safeBool(receipt.zoomInspectionBound, safeBool(data("hearthCanvasZoomInspectionBound"), false));
 
     c.atlasBuildStarted = safeBool(receipt.atlasBuildStarted, safeBool(data("hearthCanvasAtlasBuildStarted"), false));
     c.atlasBuildComplete = safeBool(receipt.atlasBuildComplete, safeBool(data("hearthCanvasAtlasBuildComplete"), false));
+    c.textureComposeStarted = safeBool(receipt.textureComposeStarted, safeBool(data("hearthCanvasTextureComposeStarted"), false));
+    c.textureComposeComplete = safeBool(receipt.textureComposeComplete, safeBool(data("hearthCanvasTextureComposeComplete"), false));
 
-    c.textureComposeStarted = safeBool(
-      receipt.textureComposeStarted,
-      safeBool(data("hearthCanvasTextureComposeStarted"), safeBool(data("hearthCanvasSouthTextureComposeStarted"), false))
-    );
-
-    c.textureComposeComplete = safeBool(
-      receipt.textureComposeComplete,
-      safeBool(data("hearthCanvasTextureComposeComplete"), safeBool(data("hearthCanvasSouthTextureComposeComplete"), false))
-    );
-
-    c.firstFrameRequested = safeBool(
-      receipt.firstFrameRequested,
-      safeBool(data("hearthCanvasFirstFrameRequested"), safeBool(data("hearthCanvasSouthFirstFrameRequested"), false))
-    );
-
-    c.firstFrameDetected = safeBool(
-      receipt.firstFrameDetected,
-      safeBool(data("hearthCanvasFirstFrameDetected"), safeBool(data("hearthCanvasSouthFirstFrameDetected"), false))
-    );
-
+    c.firstFrameRequested = safeBool(receipt.firstFrameRequested, safeBool(data("hearthCanvasFirstFrameRequested"), false));
+    c.firstFrameDetected = safeBool(receipt.firstFrameDetected, safeBool(data("hearthCanvasFirstFrameDetected"), false));
     c.canvasReady = safeBool(receipt.canvasReady, safeBool(data("hearthCanvasReady"), false));
+    c.imageRendered = safeBool(receipt.imageRendered, safeBool(data("hearthCanvasImageRendered"), false));
 
-    c.imageRendered = safeBool(
-      receipt.imageRendered,
-      safeBool(data("hearthCanvasImageRendered"), safeBool(data("hearthCanvasSouthImageRendered"), false))
-    );
-
-    c.visibleContentProofStarted = safeBool(
-      receipt.visibleContentProofStarted,
-      safeBool(data("hearthCanvasVisibleContentProofStarted"), safeBool(data("hearthCanvasSouthVisibleContentProofStarted"), false))
-    );
-
-    c.visibleContentProof = safeBool(
-      receipt.visibleContentProof,
-      safeBool(data("hearthCanvasVisibleContentProof"), safeBool(data("hearthCanvasSouthVisibleContentProof"), false))
-    );
-
-    c.visibleContentStrictProof = safeBool(
-      receipt.visibleContentStrictProof,
-      safeBool(data("hearthCanvasVisibleContentStrictProof"), safeBool(data("hearthCanvasSouthVisibleContentStrictProof"), false))
-    );
-
-    c.visibleContentSoftGap = safeBool(
-      receipt.visibleContentSoftGap,
-      safeBool(data("hearthCanvasVisibleContentSoftGap"), safeBool(data("hearthCanvasSouthVisibleContentSoftGap"), false))
-    );
-
-    c.visibleContentHardFail = safeBool(
-      receipt.visibleContentHardFail,
-      safeBool(data("hearthCanvasVisibleContentHardFail"), safeBool(data("hearthCanvasSouthVisibleContentHardFail"), false))
-    );
-
-    c.visibleForwardProgress = safeBool(
-      receipt.visibleForwardProgress,
-      safeBool(data("hearthCanvasVisibleForwardProgress"), false)
-    );
-
+    c.visibleContentProofStarted = safeBool(receipt.visibleContentProofStarted, safeBool(data("hearthCanvasVisibleContentProofStarted"), false));
+    c.visibleContentProof = safeBool(receipt.visibleContentProof, safeBool(data("hearthCanvasVisibleContentProof"), false));
+    c.visibleContentStrictProof = safeBool(receipt.visibleContentStrictProof, safeBool(data("hearthCanvasVisibleContentStrictProof"), false));
+    c.visibleContentSoftGap = safeBool(receipt.visibleContentSoftGap, safeBool(data("hearthCanvasVisibleContentSoftGap"), false));
+    c.visibleContentHardFail = safeBool(receipt.visibleContentHardFail, safeBool(data("hearthCanvasVisibleContentHardFail"), false));
+    c.visibleForwardProgress = safeBool(receipt.visibleForwardProgress, safeBool(data("hearthCanvasVisibleForwardProgress"), false));
     c.visibleContentAdmissible = safeBool(receipt.visibleContentAdmissible, false);
-
-    c.visiblePlanetAvailable = safeBool(
-      receipt.visiblePlanetAvailable,
-      safeBool(data("hearthCanvasVisiblePlanetAvailable"), safeBool(data("hearthCanvasSouthVisiblePlanetAvailable"), false))
-    );
+    c.visiblePlanetAvailable = safeBool(receipt.visiblePlanetAvailable, safeBool(data("hearthCanvasVisiblePlanetAvailable"), false));
 
     const visibleCounts = Boolean(
       safeNumber(receipt.visibleContentClassCount, 0) > 0 ||
@@ -829,8 +863,8 @@
     );
 
     c.visiblePlanetProofValid = Boolean(
-      state.dom.canvasPresent &&
-      state.dom.canvasNonZeroSize &&
+      state.dom.planetCanvasPresent &&
+      state.dom.planetCanvasNonZeroSize &&
       !c.visibleContentHardFail &&
       (
         c.visibleContentProof ||
@@ -840,13 +874,12 @@
         c.visibleContentAdmissible ||
         c.visiblePlanetAvailable ||
         visibleCounts ||
-        state.dom.visiblePlanetHintPresent ||
         (c.canvasReady && c.firstFrameDetected) ||
         (c.imageRendered && c.firstFrameDetected)
       )
     );
 
-    c.bootComplete = Boolean(c.bootComplete || c.canvasReady || c.visiblePlanetProofValid || c.firstFrameDetected || c.imageRendered);
+    c.bootComplete = Boolean(c.bootComplete || c.canvasReady || c.visiblePlanetProofValid || c.firstFrameDetected);
 
     return c;
   }
@@ -857,49 +890,35 @@
     state.authorities.indexPresent = Boolean(readIndexApi());
     state.authorities.northPresent = Boolean(readNorth());
     state.authorities.eastBranchPresent = Boolean(readBranch("east"));
-    state.authorities.westBranchPresent = Boolean(readBranch("west"));
-    state.authorities.southBranchPresent = Boolean(readBranch("south"));
+    state.authorities.westPresent = Boolean(readBranch("west"));
+    state.authorities.southPresent = Boolean(readBranch("south"));
     state.authorities.sessionPresent = Boolean(readSession());
 
-    state.routeConductor.markerPresent = Boolean(
-      root.__HEARTH_ROUTE_CONDUCTOR_MARKER__ ||
-      data("hearthRouteConductorMarkerPresent") === "true"
-    );
-
-    state.routeConductor.apiPresent = Boolean(
-      firstGlobal([
-        "HEARTH_ROUTE_CONDUCTOR",
-        "HearthRouteConductor",
-        "HEARTH_SOUTH_ROUTE_CONDUCTOR",
-        "HEARTH.routeConductor",
-        "HEARTH.southRouteConductor",
-        "DEXTER_LAB.hearthRouteConductor",
-        "DEXTER_LAB.hearthSouthRouteConductor"
-      ])
-    );
-
-    state.routeConductor.receiptPresent = Boolean(
-      firstGlobal([
-        "HEARTH_ROUTE_CONDUCTOR_RECEIPT",
-        "HEARTH_SOUTH_ROUTE_CONDUCTOR_RECEIPT",
-        "HEARTH.routeConductorReceipt",
-        "HEARTH.southRouteConductorReceipt",
-        "DEXTER_LAB.hearthRouteConductorReceipt",
-        "DEXTER_LAB.hearthSouthRouteConductorReceipt"
-      ])
-    );
-
-    state.routeConductor.runtimeActive = Boolean(state.booting || state.booted || state.routeConductor.apiPresent);
+    state.routeConductor.markerPresent = Boolean(root.__HEARTH_ROUTE_CONDUCTOR_MARKER__ || data("hearthRouteConductorMarkerPresent") === "true");
+    state.routeConductor.apiPresent = Boolean(firstGlobal([
+      "HEARTH_ROUTE_CONDUCTOR",
+      "HearthRouteConductor",
+      "HEARTH_SOUTH_ROUTE_CONDUCTOR",
+      "HEARTH.southRouteConductor",
+      "DEXTER_LAB.hearthSouthRouteConductor"
+    ]));
+    state.routeConductor.receiptPresent = Boolean(firstGlobal([
+      "HEARTH_ROUTE_CONDUCTOR_RECEIPT",
+      "HEARTH_SOUTH_ROUTE_CONDUCTOR_RECEIPT",
+      "HEARTH.southRouteConductorReceipt",
+      "DEXTER_LAB.hearthSouthRouteConductorReceipt"
+    ]));
+    state.routeConductor.runtimeActive = true;
     state.routeConductor.hydrated = Boolean(
+      state.routeConductor.markerPresent &&
       state.routeConductor.apiPresent &&
       state.routeConductor.receiptPresent &&
       state.routeConductor.runtimeActive
     );
-
     state.routeConductor.recognitionStatus = state.routeConductor.hydrated
       ? "API_RECEIPT_RUNTIME_PRESENT"
       : state.routeConductor.markerPresent
-        ? "MARKER_PRESENT_API_PENDING"
+        ? "MARKER_RECEIVED_API_OR_RECEIPT_PENDING"
         : "MARKER_PENDING";
 
     summarizeCanvas(readCanvasReceipt());
@@ -916,157 +935,78 @@
 
     switch (gate.id) {
       case "F1_EAST_ROUTE_SHELL":
-        return {
-          ok: Boolean(doc),
-          progress: doc ? 100 : 20,
-          reason: doc ? "document-present" : "document-missing"
-        };
+        return { ok: Boolean(doc), progress: doc ? 100 : 20, reason: doc ? "document-present" : "document-missing" };
 
       case "F2_EAST_FIRST_PAINT":
-        return {
-          ok: Boolean(doc && (state.dom.cockpitPresent || doc.body || doc.documentElement)),
-          degraded: Boolean(doc && !state.dom.cockpitPresent),
-          progress: state.dom.cockpitPresent ? 100 : doc ? 80 : 20,
-          reason: state.dom.cockpitPresent ? "cockpit-present" : "document-shell-present"
-        };
+        return { ok: Boolean(doc && (state.dom.cockpitPresent || doc.body || doc.documentElement)), progress: state.dom.cockpitPresent ? 100 : doc ? 80 : 20, reason: state.dom.cockpitPresent ? "cockpit-present" : "document-shell-present" };
 
       case "F3_EAST_SCRIPT_ORDER":
-        return {
-          ok: Boolean(a.indexPresent || doc),
-          degraded: !a.indexPresent,
-          progress: a.indexPresent ? 100 : 75,
-          reason: a.indexPresent ? "index-api-present" : "page-shell-script-order-fallback"
-        };
+        return { ok: Boolean(a.indexPresent || doc), degraded: !a.indexPresent, progress: a.indexPresent ? 100 : 75, reason: a.indexPresent ? "index-api-present" : "document-script-fallback" };
 
       case "F5_NORTH_AUTHORITY":
-        return {
-          ok: Boolean(a.northPresent || a.sessionPresent || ensureSession()),
-          degraded: !a.northPresent,
-          progress: a.northPresent ? 100 : 70,
-          reason: a.northPresent ? "north-present" : "north-session-fallback"
-        };
+        return { ok: Boolean(a.northPresent || a.sessionPresent), degraded: !a.northPresent, progress: a.northPresent ? 100 : a.sessionPresent ? 80 : 35, reason: a.northPresent ? "north-present" : a.sessionPresent ? "session-present" : "north-pending" };
 
-      case "F8_SOUTH_CONDUCTOR_HYDRATED":
-        return {
-          ok: state.routeConductor.hydrated,
-          progress: state.routeConductor.hydrated ? 100 : state.routeConductor.markerPresent ? 45 : 20,
-          reason: state.routeConductor.recognitionStatus
-        };
+      case "F8_SOUTH_SELF_DUTY":
+        return { ok: state.routeConductor.hydrated, progress: state.routeConductor.hydrated ? 100 : state.routeConductor.markerPresent ? 45 : 20, reason: state.routeConductor.recognitionStatus };
 
-      case "F13A_CANVAS_PARENT_BOOT":
-        return {
-          ok: Boolean(c.parentPresent && c.parentBootMethodAvailable && c.bootRequested),
-          progress: c.bootRequested ? 100 : c.parentPresent ? 75 : 20,
-          reason: c.parentPresent ? `parent-method=${c.parentBootMethod || "missing"}` : "canvas-parent-missing"
-        };
+      case "F13A_CANVAS_PARENT":
+        return { ok: Boolean(c.parentPresent && c.parentBootMethodAvailable && c.bootRequested), progress: c.bootRequested ? 100 : c.parentPresent ? 75 : 20, reason: c.parentPresent ? `parent-method=${c.parentBootMethod || "missing"}` : "canvas-parent-missing" };
 
       case "F13B_CANVAS_CHILDREN":
-        return {
-          ok: Boolean(c.allChildrenReady || (c.eastPresent && c.westPresent && c.southPresent)),
-          degraded: !c.allChildrenReady,
-          progress: c.allChildrenReady ? 100 : (c.eastPresent || c.westPresent || c.southPresent) ? 70 : 25,
-          reason: c.allChildrenReady ? "all-canvas-children-ready" : c.childGap || "canvas-children-pending"
-        };
+        return { ok: Boolean(c.allChildrenReady || (c.eastPresent && c.westPresent && c.southPresent)), degraded: !c.allChildrenReady, progress: c.allChildrenReady ? 100 : (c.eastPresent || c.westPresent || c.southPresent) ? 70 : 25, reason: c.allChildrenReady ? "all-canvas-children-ready" : c.childGap || "canvas-children-pending" };
 
-      case "F13C_TEXTURE_READY":
-        return {
-          ok: Boolean(c.textureComposeComplete || c.firstFrameDetected || c.imageRendered || c.visiblePlanetProofValid),
-          degraded: !c.textureComposeComplete,
-          progress: c.textureComposeComplete ? 100 : c.atlasBuildComplete ? 85 : c.textureComposeStarted ? 55 : c.visiblePlanetProofValid ? 90 : 25,
-          reason: c.textureComposeComplete ? "texture-complete" : c.visiblePlanetProofValid ? "visible-proof-substitutes-texture-gap" : "texture-pending"
-        };
+      case "F13C_CANVAS_TEXTURE":
+        return { ok: Boolean(c.textureComposeComplete || c.atlasBuildComplete), degraded: !c.textureComposeComplete, progress: c.textureComposeComplete ? 100 : c.atlasBuildComplete ? 85 : c.textureComposeStarted ? 55 : 25, reason: c.textureComposeComplete ? "texture-complete" : "texture-pending" };
 
-      case "F13D_FRAME_READY":
-        return {
-          ok: Boolean(c.firstFrameDetected || c.imageRendered || c.visiblePlanetProofValid || (state.dom.canvasPresent && state.dom.canvasNonZeroSize && c.canvasReady)),
-          degraded: !(c.firstFrameDetected || c.imageRendered),
-          progress: c.firstFrameDetected ? 100 : c.imageRendered ? 95 : state.dom.canvasNonZeroSize ? 70 : 25,
-          reason: c.firstFrameDetected ? "first-frame-detected" : c.imageRendered ? "image-rendered" : "frame-pending"
-        };
+      case "F13D_CANVAS_FRAME":
+        return { ok: Boolean(c.firstFrameDetected || c.imageRendered || (state.dom.planetCanvasPresent && state.dom.planetCanvasNonZeroSize && c.canvasReady)), degraded: !(c.firstFrameDetected || c.imageRendered), progress: c.firstFrameDetected ? 100 : c.imageRendered ? 95 : state.dom.planetCanvasNonZeroSize ? 70 : 25, reason: c.firstFrameDetected ? "first-frame-detected" : "frame-pending" };
 
       case "F13E_VISIBLE_PROOF":
-        if (c.visibleContentHardFail) {
-          return {
-            ok: false,
-            hard: true,
-            progress: 0,
-            reason: "visible-content-hard-fail"
-          };
-        }
-
-        return {
-          ok: c.visiblePlanetProofValid,
-          degraded: c.visibleContentSoftGap || !c.visibleContentStrictProof,
-          progress: c.visiblePlanetProofValid ? 100 : state.dom.canvasNonZeroSize ? 60 : 20,
-          reason: c.visiblePlanetProofValid
-            ? c.visibleContentStrictProof
-              ? "strict-visible-proof"
-              : "visible-proof-soft-or-dom-reconciled"
-            : "visible-proof-pending"
-        };
+        if (c.visibleContentHardFail) return { ok: false, hard: true, progress: 0, reason: "visible-content-hard-fail" };
+        return { ok: c.visiblePlanetProofValid, degraded: c.visibleContentSoftGap || !c.visibleContentStrictProof, progress: c.visiblePlanetProofValid ? 100 : state.dom.planetCanvasNonZeroSize ? 60 : 20, reason: c.visiblePlanetProofValid ? (c.visibleContentStrictProof ? "strict-visible-proof" : "visible-proof-soft-or-dom-reconciled") : "visible-proof-pending" };
 
       case "F13N_INSPECT_GATE":
-        return {
-          ok: Boolean(i.strictReady || i.fallbackReady),
-          degraded: !i.strictReady,
-          progress: i.strictReady ? 100 : i.fallbackReady ? 80 : 35,
-          reason: i.strictReady ? "strict-inspect-ready" : i.fallbackReady ? "receipt-inspect-fallback-ready" : "inspect-pending"
-        };
+        return { ok: Boolean(i.strictReady || i.fallbackReady), degraded: !i.strictReady, progress: i.strictReady ? 100 : i.fallbackReady ? 80 : 35, reason: i.strictReady ? "strict-inspect-ready" : i.fallbackReady ? "receipt-inspect-fallback-ready" : "inspect-pending" };
 
-      case "F21_NEWS_LATCH_REQUEST": {
+      case "F21_COMPLETION_LATCH": {
         const news = evaluateNews();
-
-        if (!c.visiblePlanetProofValid) {
-          return {
-            ok: false,
-            hard: true,
-            progress: 0,
-            reason: "F21_BLOCKED_VISIBLE_PLANET_PROOF_MISSING"
-          };
-        }
-
-        return {
-          ok: news.passed || news.degraded,
-          degraded: news.degraded && !news.passed,
-          progress: news.passed || news.degraded ? 100 : 70,
-          reason: news.passed ? "news-gates-passed" : news.degraded ? "news-gates-degraded" : "news-gates-pending"
-        };
+        if (!c.visiblePlanetProofValid) return { ok: false, hard: true, progress: 0, reason: "F21_BLOCKED_VISIBLE_PLANET_PROOF_MISSING" };
+        return { ok: news.passed || news.degraded, degraded: news.degraded && !news.passed, progress: news.passed || news.degraded ? 100 : 70, reason: news.passed ? "news-gates-passed" : news.degraded ? "news-gates-degraded" : "news-gates-pending" };
       }
 
       default:
-        return {
-          ok: false,
-          progress: 0,
-          reason: "unknown-gate"
-        };
+        return { ok: false, progress: 0, reason: "unknown-gate" };
     }
   }
 
   function evaluateNews() {
-    const c = state.canvas;
-    const a = state.authorities;
-    const i = state.inspect;
-
-    const north = Boolean(a.northPresent || a.sessionPresent || readSession());
-    const east = Boolean(a.indexPresent || doc);
-    const west = Boolean(i.strictReady || i.fallbackReady);
-    const south = Boolean(state.routeConductor.hydrated && c.visiblePlanetProofValid && !c.visibleContentHardFail);
+    const north = Boolean(state.authorities.northPresent || state.authorities.sessionPresent);
+    const east = Boolean(state.authorities.indexPresent || doc);
+    const west = Boolean(state.inspect.strictReady || state.inspect.fallbackReady);
+    const south = Boolean(state.routeConductor.hydrated && state.canvas.visiblePlanetProofValid && !state.canvas.visibleContentHardFail);
 
     const passed = Boolean(
       north &&
       east &&
-      i.strictReady &&
+      west &&
       south &&
-      c.visibleContentStrictProof &&
-      c.allChildrenReady
+      state.inspect.strictReady &&
+      state.canvas.visibleContentStrictProof &&
+      state.canvas.allChildrenReady
     );
 
-    const degraded = Boolean(!passed && north && east && west && south);
+    const degraded = Boolean(passed || (north && east && west && south));
 
-    state.completion.newsGatePassed = passed;
-    state.completion.newsGateDegraded = degraded;
+    state.newsGatePassed = passed;
+    state.newsGateDegraded = degraded && !passed;
+    state.completionLatched = Boolean(degraded && state.canvas.visiblePlanetProofValid);
+    state.degradedCompletionLatched = Boolean(state.completionLatched && !passed);
+    state.readyTextAllowed = state.completionLatched;
+    state.f21LatchMode = state.completionLatched
+      ? state.degradedCompletionLatched ? "DEGRADED" : "FULL"
+      : "WAITING";
 
-    return { passed, degraded, north, east, west, south };
+    return { passed, degraded: degraded && !passed, north, east, west, south };
   }
 
   function evaluateGates() {
@@ -1088,140 +1028,49 @@
       });
     });
 
-    state.gates.ledger = ledger;
+    state.gates = ledger;
 
-    let nextIndex = 0;
+    let activeIndex = 0;
 
     for (let i = 0; i < ledger.length; i += 1) {
-      const item = ledger[i];
+      const gate = ledger[i];
 
-      if (item.ok) {
-        if (!state.gates.completed.includes(item.id)) {
-          state.gates.completed.push(item.id);
-          if (item.degraded && !state.gates.degraded.includes(item.id)) state.gates.degraded.push(item.id);
-          record("GATE_COMPLETED", {
-            id: item.id,
-            fib: item.fib,
-            cardinal: item.cardinal,
-            degraded: item.degraded,
-            reason: item.reason
-          });
-
-          if (item.id === "F21_NEWS_LATCH_REQUEST") {
-            publishF21Request(item);
-          } else {
-            submitToNorth(item);
-          }
+      if (gate.ok) {
+        if (!state.completedGates.includes(gate.id)) {
+          state.completedGates.push(gate.id);
+          if (gate.degraded && !state.degradedGates.includes(gate.id)) state.degradedGates.push(gate.id);
+          record("GATE_COMPLETED", gate);
+          submitToNorth(gate);
         }
 
-        nextIndex = Math.min(i + 1, GATES.length - 1);
+        activeIndex = Math.min(i + 1, ledger.length - 1);
       } else {
-        nextIndex = i;
-        if (item.hard && !state.gates.blocked.includes(item.id)) state.gates.blocked.push(item.id);
+        activeIndex = i;
+        if (gate.hard && !state.blockedGates.includes(gate.id)) state.blockedGates.push(gate.id);
         break;
       }
     }
 
-    const active = ledger[nextIndex] || ledger[ledger.length - 1] || GATES[0];
+    const active = ledger[activeIndex] || ledger[0];
 
-    state.gates.activeIndex = nextIndex;
-    state.gates.activeGateId = active.id;
-    state.gates.activeFibonacci = active.fib;
-    state.gates.activeCardinal = active.cardinal;
-    state.gates.activeProgress = active.progress;
+    state.activeGateId = active.id;
+    state.activeFibonacci = active.fib;
+    state.activeCardinal = active.cardinal;
+    state.activeProgress = active.progress;
 
-    if (state.completion.f21RequestPublished) {
-      state.completion.readyTextAllowed = false;
-      state.completion.f21RequestMode = state.completion.newsGatePassed ? "FULL_REQUESTED" : "DEGRADED_REQUESTED";
-      state.postgameStatus = state.completion.newsGatePassed
-        ? "F21_REQUEST_PUBLISHED_NEWS_SYNCHRONIZED"
-        : "F21_DEGRADED_REQUEST_PUBLISHED_NEWS_SYNCHRONIZED";
-      state.firstFailedCoordinate = "NONE_ROUTE_CONDUCTOR_DUTY_COMPLETE";
-      state.recommendedNextRenewalTarget = "read-north-or-canvas-postgame-receipt";
+    if (state.completionLatched) {
+      state.postgameStatus = state.degradedCompletionLatched
+        ? "READY_DEGRADED_VISIBLE_PLANET_NEWS_SYNCHRONIZED"
+        : "READY_VISIBLE_PLANET_NEWS_SYNCHRONIZED";
+      state.firstFailedCoordinate = state.degradedCompletionLatched
+        ? "DEGRADED_F21_LATCHED"
+        : "NONE_F21_LATCHED";
+      state.recommendedNextRenewalTarget = "read-postgame-receipt";
     } else {
-      state.completion.readyTextAllowed = false;
-      state.completion.f21RequestMode = active && active.id === "F21_NEWS_LATCH_REQUEST" ? "WAITING_OR_BLOCKED" : "WAITING";
-      state.postgameStatus = active && active.hard ? "BLOCKED_BY_ACTIVE_GATE" : "WAITING_ACTIVE_GATE";
-      state.firstFailedCoordinate = active ? `WAITING_${active.id}` : "WAITING_GATE";
-      state.recommendedNextRenewalTarget = active && active.id && active.id.startsWith("F13") ? CANVAS_FILE : FILE;
+      state.postgameStatus = active.hard ? "BLOCKED_BY_ACTIVE_GATE" : "WAITING_ACTIVE_GATE";
+      state.firstFailedCoordinate = `WAITING_${active.id}`;
+      state.recommendedNextRenewalTarget = active.id.startsWith("F13") ? CANVAS_FILE : FILE;
     }
-  }
-
-  function submitToNorth(gate) {
-    const session = ensureSession();
-    if (!session || !gate) return false;
-
-    const payload = {
-      event: gate.id,
-      phase: gate.id,
-      id: gate.id,
-      checkpointId: gate.id,
-      fibonacci: gate.fib,
-      cardinal: gate.cardinal,
-      source: "hearth.south.routeConductorSelfDutyNewsFibonacciReassignment",
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      detail: {
-        gate: clonePlain(gate),
-        markerIsNotHydrationProof: true,
-        apiRequiredForF8: true,
-        receiptRequiredForF8: true,
-        runtimeRequiredForF8: true,
-        visualProofRequiredForF13: true,
-        visualProofRequiredForF21: true,
-        canvasOwnsF13Only: true,
-        southOwnsRouteConductorRuntime: true,
-        visualPassClaimed: false
-      }
-    };
-
-    try {
-      if (isFunction(session.submitEvent)) return session.submitEvent(payload);
-      if (isFunction(session.submit)) return session.submit(payload);
-      if (isFunction(session.completeActive)) return session.completeActive(payload);
-    } catch (error) {
-      recordError("NORTH_GATE_SUBMIT_FAILED", error, { gate: gate.id });
-    }
-
-    return false;
-  }
-
-  function publishF21Request(gate) {
-    if (state.completion.f21RequestPublished) return true;
-
-    const news = evaluateNews();
-
-    state.completion.f21RequestPublished = true;
-    state.completion.f21RequestMode = news.passed ? "FULL_REQUESTED" : "DEGRADED_REQUESTED";
-    state.completion.readyTextAllowed = false;
-
-    root.HEARTH_F21_NEWS_LATCH_REQUEST = {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      route: ROUTE,
-      gate: clonePlain(gate),
-      news: clonePlain(news),
-      visualProofRequiredForF21: true,
-      ownsF21: false,
-      visualPassClaimed: false,
-      requestedAt: nowIso()
-    };
-
-    root.HEARTH = root.HEARTH || {};
-    root.HEARTH.f21NewsLatchRequest = root.HEARTH_F21_NEWS_LATCH_REQUEST;
-
-    const result = submitToNorth({
-      ...gate,
-      reason: news.passed ? "F21_FULL_REQUEST_NEWS_SYNCHRONIZED" : "F21_DEGRADED_REQUEST_NEWS_SYNCHRONIZED"
-    });
-
-    state.completion.f21RequestSubmittedToNorth = Boolean(result);
-    record("F21_NEWS_LATCH_REQUEST_PUBLISHED", {
-      mode: state.completion.f21RequestMode,
-      submittedToNorth: state.completion.f21RequestSubmittedToNorth
-    });
-
-    return true;
   }
 
   function canvasSignature(receipt) {
@@ -1262,6 +1111,7 @@
     if (!force && signature && signature === state.canvas.latestSignature) return getReceiptLight(false);
 
     state.canvas.latestSignature = signature;
+
     scanDom();
     summarizeCanvas(receipt);
     evaluateGates();
@@ -1272,16 +1122,14 @@
   }
 
   function bootCanvas(reason = "south-self-duty-boot") {
-    refresh();
-
-    if (canvasBootPromise || state.canvas.bootComplete || state.completion.f21RequestPublished) {
+    if (canvasBootPromise || state.canvas.bootComplete || state.completionLatched) {
       return canvasBootPromise || Promise.resolve(readCanvasReceipt());
     }
 
     if (!state.routeConductor.hydrated) {
-      state.canvas.bootError = "waiting-f8-route-conductor-hydration";
+      state.canvas.bootError = "waiting-f8-route-conductor-self-duty-hydration";
       state.postgameStatus = "CANVAS_BOOT_WAITING_FOR_F8";
-      state.firstFailedCoordinate = "WAITING_F8_SOUTH_CONDUCTOR_HYDRATED";
+      state.firstFailedCoordinate = "WAITING_F8_SOUTH_SELF_DUTY";
       updateDataset();
       return Promise.resolve(null);
     }
@@ -1294,7 +1142,7 @@
     if (!canvas || !method) {
       state.canvas.bootError = !canvas ? "canvas-parent-api-missing" : "canvas-parent-boot-method-missing";
       state.postgameStatus = !canvas ? "WAITING_FOR_CANVAS_PARENT_API" : "WAITING_FOR_CANVAS_PARENT_BOOT_METHOD";
-      state.firstFailedCoordinate = !canvas ? "WAITING_CANVAS_PARENT_API" : "WAITING_CANVAS_PARENT_BOOT_METHOD";
+      state.firstFailedCoordinate = state.canvas.bootError;
       state.recommendedNextRenewalTarget = CANVAS_FILE;
 
       record("CANVAS_PARENT_WAITING", {
@@ -1320,7 +1168,6 @@
     const options = {
       mount: refs.mount || "#hearthCanvasMount",
       route: ROUTE,
-      source: "hearth.south.routeConductorSelfDutyNewsFibonacciReassignment",
       onReady: () => {
         state.canvas.bootResolved = true;
         state.canvas.bootRejected = false;
@@ -1340,15 +1187,14 @@
         .then((result) => {
           canvasBootPromise = null;
           state.canvas.bootResolved = true;
-          state.canvas.bootRejected = false;
 
           summarizeCanvas(isObject(result) ? result : readCanvasReceipt());
+
           state.canvas.bootComplete = Boolean(
             state.canvas.bootComplete ||
             state.canvas.canvasReady ||
             state.canvas.visiblePlanetProofValid ||
-            state.canvas.firstFrameDetected ||
-            state.canvas.imageRendered
+            state.canvas.firstFrameDetected
           );
 
           reconcileCanvas(true);
@@ -1385,7 +1231,7 @@
   }
 
   function bindControls() {
-    if (!doc) return;
+    if (state.refsBound || !doc) return;
 
     if (refs.copyButton && !refs.copyButton.dataset.hearthSouthSelfDutyBound) {
       refs.copyButton.dataset.hearthSouthSelfDutyBound = "true";
@@ -1396,8 +1242,10 @@
       refs.toggleButton.dataset.hearthSouthSelfDutyBound = "true";
       refs.toggleButton.addEventListener("click", () => {
         const visible = refs.receiptBox ? refs.receiptBox.dataset.visible !== "true" : true;
+
         if (refs.receiptBox) refs.receiptBox.dataset.visible = String(visible);
         if (refs.receiptText) refs.receiptText.textContent = visible ? getReceiptText() : "";
+
         refs.toggleButton.textContent = visible ? "Hide receipt" : "Show receipt";
       });
     }
@@ -1405,8 +1253,7 @@
     if (refs.inspectButton && !refs.inspectButton.dataset.hearthSouthSelfDutyBound) {
       refs.inspectButton.dataset.hearthSouthSelfDutyBound = "true";
       refs.inspectButton.addEventListener("click", () => {
-        const active = !(doc.documentElement.dataset.hearthSouthPlanetInspect === "true");
-        setInspectMode(active);
+        setInspectMode(!(doc.documentElement.dataset.hearthSouthPlanetInspect === "true"));
       });
     }
 
@@ -1414,6 +1261,8 @@
       refs.showTab.dataset.hearthSouthSelfDutyBound = "true";
       refs.showTab.addEventListener("click", () => setInspectMode(false));
     }
+
+    state.refsBound = true;
   }
 
   function setInspectMode(active) {
@@ -1431,7 +1280,9 @@
       refs.showTab.dataset.visible = String(active);
     }
 
-    if (refs.inspectButton) refs.inspectButton.textContent = active ? "Show diagnostic" : "Inspect planet";
+    if (refs.inspectButton) {
+      refs.inspectButton.textContent = active ? "Show diagnostic" : "Inspect planet";
+    }
 
     record(active ? "SOUTH_INSPECT_MODE_ACTIVE" : "SOUTH_INSPECT_MODE_RELEASED", { active });
 
@@ -1475,12 +1326,12 @@
   }
 
   function renderLanes() {
-    return (state.gates.ledger || []).map((gate) => {
-      const status = state.gates.completed.includes(gate.id)
-        ? state.gates.degraded.includes(gate.id)
+    return (state.gates || []).map((gate) => {
+      const status = state.completedGates.includes(gate.id)
+        ? state.degradedGates.includes(gate.id)
           ? "DEGRADED"
           : "COMPLETE"
-        : gate.id === state.gates.activeGateId
+        : gate.id === state.activeGateId
           ? gate.hard
             ? "BLOCKED"
             : "ACTIVE"
@@ -1488,7 +1339,7 @@
 
       const progress = status === "COMPLETE" || status === "DEGRADED"
         ? 100
-        : gate.id === state.gates.activeGateId
+        : gate.id === state.activeGateId
           ? gate.progress
           : 0;
 
@@ -1509,17 +1360,14 @@
 
     state.renderCount += 1;
 
-    const gate = state.gates.ledger[state.gates.activeIndex] || GATES[state.gates.activeIndex] || GATES[0];
-    const progress = clamp(state.gates.activeProgress, 0, 100);
-    const status = state.completion.f21RequestPublished
-      ? state.completion.f21RequestMode
-      : `${gate.fib} · ${gate.label}`;
+    const active = state.gates[state.gates.findIndex((gate) => gate.id === state.activeGateId)] || GATES[0];
+    const visibleStatus = state.completionLatched ? "Ready" : `${state.activeFibonacci} · ${active.label || state.activeGateId}`;
 
-    if (refs.stage) refs.stage.textContent = `${gate.cardinal} · ${gate.fib}`;
-    if (refs.heartbeat) refs.heartbeat.textContent = status;
+    if (refs.stage) refs.stage.textContent = `${state.activeCardinal} · ${state.activeFibonacci}`;
+    if (refs.heartbeat) refs.heartbeat.textContent = visibleStatus;
     if (refs.latest) refs.latest.textContent = `latest=${state.latestEvent}`;
-    if (refs.fill) refs.fill.style.width = `${progress}%`;
-    if (refs.percent) refs.percent.textContent = `${Math.round(progress)}%`;
+    if (refs.fill) refs.fill.style.width = `${clamp(state.activeProgress, 0, 100)}%`;
+    if (refs.percent) refs.percent.textContent = `${Math.round(clamp(state.activeProgress, 0, 100))}%`;
     if (refs.lanes) refs.lanes.innerHTML = renderLanes();
     if (refs.status) refs.status.textContent = getStatusText();
 
@@ -1547,18 +1395,15 @@
 
       refresh();
 
-      if (
-        state.routeConductor.hydrated &&
-        !state.canvas.bootComplete &&
-        state.canvas.bootAttempts < CANVAS_BOOT_RETRY_LIMIT
-      ) {
+      if (state.routeConductor.hydrated && !state.canvas.bootComplete && state.canvas.bootAttempts < 3) {
         bootCanvas("watchdog");
       }
 
       reconcileCanvas();
       render();
+      publishGlobals("watchdog-self-duty-republish");
 
-      if (state.completion.f21RequestPublished || state.watchdogTicks >= WATCHDOG_LIMIT) {
+      if (state.completionLatched || state.watchdogTicks >= WATCHDOG_LIMIT) {
         root.clearInterval(watchdogTimer);
         watchdogTimer = 0;
       }
@@ -1574,9 +1419,9 @@
       state.booting = true;
       state.startedAt = nowIso();
       state.updatedAt = state.startedAt;
-      state.postgameStatus = "BOOTING_SELF_DUTY_NEWS_FIBONACCI_REASSIGNMENT";
+      state.postgameStatus = "BOOTING_SELF_DUTY_NEWS_FIBONACCI_HANDOFF";
 
-      publishGlobals();
+      publishGlobals("boot-early-api-receipt-publication");
       refresh();
       ensureSession();
 
@@ -1589,18 +1434,20 @@
       state.booted = true;
       state.routeConductor.runtimeActive = true;
 
-      publishGlobals();
+      publishGlobals("boot-complete-api-receipt-publication");
       refresh();
       render();
 
       root.setTimeout(() => bootCanvas("initial"), 80);
+
       startWatchdog();
 
-      record("SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_BOOTED", {
+      record("SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_HANDOFF_BOOTED", {
         route: ROUTE,
-        apiPublished: true,
-        receiptPublished: true,
-        markerIsNotHydrationProof: true
+        markerPresent: state.routeConductor.markerPresent,
+        apiPresent: state.routeConductor.apiPresent,
+        receiptPresent: state.routeConductor.receiptPresent,
+        hydrated: state.routeConductor.hydrated
       });
 
       return getReceipt();
@@ -1620,9 +1467,11 @@
       renderTimer = 0;
     }
 
-    if (root.removeEventListener) root.removeEventListener("hearth:canvas-phase", onCanvasPhase);
+    if (root.removeEventListener) {
+      root.removeEventListener("hearth:canvas-phase", onCanvasPhase);
+    }
 
-    record("SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_DISPOSED", { reason });
+    record("SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_HANDOFF_DISPOSED", { reason });
     render();
   }
 
@@ -1639,44 +1488,32 @@
       route: ROUTE,
       role: state.role,
 
-      cardinalCircuitActive: true,
-      newsProtocolSynchronized: true,
-      fibonacciSynchronizationActive: true,
-      transmissionMode: true,
-      oneActiveGearAtATime: true,
+      newsProtocolSynchronized: state.newsProtocolSynchronized,
+      fibonacciSynchronizationActive: state.fibonacciSynchronizationActive,
+      cycleOrder: state.cycleOrder,
+      oneActiveGearAtATime: state.oneActiveGearAtATime,
 
-      markerIsNotHydrationProof: true,
-      apiRequiredForF8: true,
-      receiptRequiredForF8: true,
-      runtimeRequiredForF8: true,
-      visualProofRequiredForF13: true,
-      visualProofRequiredForF21: true,
+      markerIsNotHydrationProof: state.markerIsNotHydrationProof,
+      apiRequiredForF8: state.apiRequiredForF8,
+      receiptRequiredForF8: state.receiptRequiredForF8,
+      runtimeRequiredForF8: state.runtimeRequiredForF8,
+      visibleProofRequiredForF13: state.visibleProofRequiredForF13,
+      visibleProofRequiredForF21: state.visibleProofRequiredForF21,
+      canvasOwnsF13Only: state.canvasOwnsF13Only,
 
-      ownsRouteConductorRuntime: true,
-      ownsApiPublication: true,
-      ownsReceiptPublication: true,
-      ownsCanvasBootRequest: true,
-      ownsCanvasReceiptReconciliation: true,
-      ownsVisibleProofGovernance: true,
-      ownsCanvasDrawing: false,
-      ownsCanvasChildren: false,
-      ownsNorthCheckpointTruth: false,
-      ownsF21: false,
-      ownsFinalVisualPassClaim: false,
-
-      activeGateId: state.gates.activeGateId,
-      activeFibonacci: state.gates.activeFibonacci,
-      activeCardinal: state.gates.activeCardinal,
-      activeProgress: state.gates.activeProgress,
-      completedGates: state.gates.completed.slice(),
-      degradedGates: state.gates.degraded.slice(),
-      blockedGates: state.gates.blocked.slice(),
+      activeGateId: state.activeGateId,
+      activeFibonacci: state.activeFibonacci,
+      activeCardinal: state.activeCardinal,
+      activeProgress: state.activeProgress,
+      completedGates: state.completedGates.slice(),
+      degradedGates: state.degradedGates.slice(),
+      blockedGates: state.blockedGates.slice(),
 
       indexPresent: state.authorities.indexPresent,
       northPresent: state.authorities.northPresent,
       eastBranchPresent: state.authorities.eastBranchPresent,
-      westBranchPresent: state.authorities.westBranchPresent,
-      southBranchPresent: state.authorities.southBranchPresent,
+      westPresent: state.authorities.westPresent,
+      southPresent: state.authorities.southPresent,
       sessionPresent: state.authorities.sessionPresent,
       sessionCreatedBySouth: state.authorities.sessionCreatedBySouth,
 
@@ -1686,7 +1523,6 @@
       routeConductorRuntimeActive: state.routeConductor.runtimeActive,
       routeConductorHydrated: state.routeConductor.hydrated,
       routeConductorRecognitionStatus: state.routeConductor.recognitionStatus,
-      routeConductorContract: CONTRACT,
 
       canvasParentPresent: state.canvas.parentPresent,
       canvasParentBootMethodAvailable: state.canvas.parentBootMethodAvailable,
@@ -1717,7 +1553,6 @@
       canvasCarrierMounted: state.canvas.carrierMounted,
       canvasContextReady: state.canvas.contextReady,
       dragInspectionBound: state.canvas.dragInspectionBound,
-      zoomInspectionBound: state.canvas.zoomInspectionBound,
       atlasBuildStarted: state.canvas.atlasBuildStarted,
       atlasBuildComplete: state.canvas.atlasBuildComplete,
       textureComposeStarted: state.canvas.textureComposeStarted,
@@ -1727,8 +1562,8 @@
       canvasReady: state.canvas.canvasReady,
       imageRendered: state.canvas.imageRendered,
 
-      planetCanvasPresent: state.dom.canvasPresent,
-      planetCanvasNonZeroSize: state.dom.canvasNonZeroSize,
+      planetCanvasPresent: state.dom.planetCanvasPresent,
+      planetCanvasNonZeroSize: state.dom.planetCanvasNonZeroSize,
       visiblePlanetHintPresent: state.dom.visiblePlanetHintPresent,
       visibleContentProofStarted: state.canvas.visibleContentProofStarted,
       visibleContentProof: state.canvas.visibleContentProof,
@@ -1748,12 +1583,12 @@
       inspectStrictReady: state.inspect.strictReady,
       inspectFallbackReady: state.inspect.fallbackReady,
 
-      f21RequestPublished: state.completion.f21RequestPublished,
-      f21RequestSubmittedToNorth: state.completion.f21RequestSubmittedToNorth,
-      f21RequestMode: state.completion.f21RequestMode,
-      readyTextAllowed: false,
-      newsGatePassed: state.completion.newsGatePassed,
-      newsGateDegraded: state.completion.newsGateDegraded,
+      completionLatched: state.completionLatched,
+      degradedCompletionLatched: state.degradedCompletionLatched,
+      readyTextAllowed: state.readyTextAllowed,
+      f21LatchMode: state.f21LatchMode,
+      newsGatePassed: state.newsGatePassed,
+      newsGateDegraded: state.newsGateDegraded,
 
       latestEvent: state.latestEvent,
       postgameStatus: state.postgameStatus,
@@ -1779,7 +1614,7 @@
       ...light,
       files: clonePlain(state.files),
       jobs: clonePlain(state.jobs),
-      gateLedger: clonePlain(state.gates.ledger),
+      gateLedger: clonePlain(state.gates),
       localEvents: clonePlain(state.localEvents),
       errors: clonePlain(state.errors),
       startedAt: state.startedAt
@@ -1790,13 +1625,14 @@
     const r = getReceiptLight(false);
 
     return [
-      "HEARTH_SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_NEWS_FIBONACCI_REASSIGNMENT_STATUS",
+      "HEARTH_SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_NEWS_FIBONACCI_HANDOFF_STATUS",
       `contract=${r.contract}`,
       `receipt=${r.receipt}`,
       `activeGateId=${r.activeGateId}`,
       `activeFibonacci=${r.activeFibonacci}`,
       `activeCardinal=${r.activeCardinal}`,
       `activeProgress=${r.activeProgress}`,
+      `routeConductorMarkerPresent=${r.routeConductorMarkerPresent}`,
       `routeConductorApiPresent=${r.routeConductorApiPresent}`,
       `routeConductorReceiptPresent=${r.routeConductorReceiptPresent}`,
       `routeConductorHydrated=${r.routeConductorHydrated}`,
@@ -1807,8 +1643,8 @@
       `textureComposeComplete=${r.textureComposeComplete}`,
       `firstFrameDetected=${r.firstFrameDetected}`,
       `visiblePlanetProofValid=${r.visiblePlanetProofValid}`,
-      `f21RequestPublished=${r.f21RequestPublished}`,
-      `f21RequestMode=${r.f21RequestMode}`,
+      `completionLatched=${r.completionLatched}`,
+      `f21LatchMode=${r.f21LatchMode}`,
       `postgameStatus=${r.postgameStatus}`,
       `firstFailedCoordinate=${r.firstFailedCoordinate}`,
       `recommendedNextRenewalTarget=${r.recommendedNextRenewalTarget}`,
@@ -1823,20 +1659,16 @@
     const degraded = r.degradedGates.join(" > ") || "none";
     const blocked = r.blockedGates.join(" > ") || "none";
 
-    const gates = r.gateLedger.map((g) => (
-      `- ${g.id} :: ${g.cardinal} :: ${g.fib} :: ok=${g.ok} :: degraded=${g.degraded} :: hard=${g.hard} :: progress=${g.progress} :: ${g.reason}`
-    )).join("\n") || "- none";
+    const gates = r.gateLedger.map((gate) => {
+      return `- ${gate.id} :: ${gate.cardinal} :: ${gate.fib} :: ok=${gate.ok} :: degraded=${gate.degraded} :: progress=${gate.progress} :: ${gate.reason}`;
+    }).join("\n") || "- none";
 
-    const events = r.localEvents.map((e) => (
-      `- ${e.at} :: ${e.event} :: ${JSON.stringify(e.detail || {})}`
-    )).join("\n") || "- none";
-
-    const errors = r.errors.map((e) => (
-      `- ${e.at} :: ${e.code} :: ${e.message}`
-    )).join("\n") || "- none";
+    const errors = r.errors.map((error) => {
+      return `- ${error.at} :: ${error.code} :: ${error.message}`;
+    }).join("\n") || "- none";
 
     return [
-      "HEARTH_SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_NEWS_FIBONACCI_REASSIGNMENT_RECEIPT",
+      "HEARTH_SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_NEWS_FIBONACCI_HANDOFF_RECEIPT",
       "",
       `contract=${r.contract}`,
       `receipt=${r.receipt}`,
@@ -1847,29 +1679,18 @@
       `route=${r.route}`,
       `role=${r.role}`,
       "",
-      `cardinalCircuitActive=${r.cardinalCircuitActive}`,
       `newsProtocolSynchronized=${r.newsProtocolSynchronized}`,
       `fibonacciSynchronizationActive=${r.fibonacciSynchronizationActive}`,
+      `cycleOrder=${r.cycleOrder}`,
       `oneActiveGearAtATime=${r.oneActiveGearAtATime}`,
       "",
       `markerIsNotHydrationProof=${r.markerIsNotHydrationProof}`,
       `apiRequiredForF8=${r.apiRequiredForF8}`,
       `receiptRequiredForF8=${r.receiptRequiredForF8}`,
       `runtimeRequiredForF8=${r.runtimeRequiredForF8}`,
-      `visualProofRequiredForF13=${r.visualProofRequiredForF13}`,
-      `visualProofRequiredForF21=${r.visualProofRequiredForF21}`,
-      "",
-      `ownsRouteConductorRuntime=${r.ownsRouteConductorRuntime}`,
-      `ownsApiPublication=${r.ownsApiPublication}`,
-      `ownsReceiptPublication=${r.ownsReceiptPublication}`,
-      `ownsCanvasBootRequest=${r.ownsCanvasBootRequest}`,
-      `ownsCanvasReceiptReconciliation=${r.ownsCanvasReceiptReconciliation}`,
-      `ownsVisibleProofGovernance=${r.ownsVisibleProofGovernance}`,
-      `ownsCanvasDrawing=${r.ownsCanvasDrawing}`,
-      `ownsCanvasChildren=${r.ownsCanvasChildren}`,
-      `ownsNorthCheckpointTruth=${r.ownsNorthCheckpointTruth}`,
-      `ownsF21=${r.ownsF21}`,
-      `ownsFinalVisualPassClaim=${r.ownsFinalVisualPassClaim}`,
+      `visibleProofRequiredForF13=${r.visibleProofRequiredForF13}`,
+      `visibleProofRequiredForF21=${r.visibleProofRequiredForF21}`,
+      `canvasOwnsF13Only=${r.canvasOwnsF13Only}`,
       "",
       `activeGateId=${r.activeGateId}`,
       `activeFibonacci=${r.activeFibonacci}`,
@@ -1882,8 +1703,8 @@
       `indexPresent=${r.indexPresent}`,
       `northPresent=${r.northPresent}`,
       `eastBranchPresent=${r.eastBranchPresent}`,
-      `westBranchPresent=${r.westBranchPresent}`,
-      `southBranchPresent=${r.southBranchPresent}`,
+      `westPresent=${r.westPresent}`,
+      `southPresent=${r.southPresent}`,
       `sessionPresent=${r.sessionPresent}`,
       `sessionCreatedBySouth=${r.sessionCreatedBySouth}`,
       "",
@@ -1893,7 +1714,6 @@
       `routeConductorRuntimeActive=${r.routeConductorRuntimeActive}`,
       `routeConductorHydrated=${r.routeConductorHydrated}`,
       `routeConductorRecognitionStatus=${r.routeConductorRecognitionStatus}`,
-      `routeConductorContract=${r.routeConductorContract}`,
       "",
       `canvasParentPresent=${r.canvasParentPresent}`,
       `canvasParentBootMethodAvailable=${r.canvasParentBootMethodAvailable}`,
@@ -1916,48 +1736,33 @@
       `allCanvasChildrenReady=${r.allCanvasChildrenReady}`,
       `canvasChildGap=${r.canvasChildGap}`,
       "",
-      `atlasBuildStarted=${r.atlasBuildStarted}`,
       `atlasBuildComplete=${r.atlasBuildComplete}`,
-      `textureComposeStarted=${r.textureComposeStarted}`,
       `textureComposeComplete=${r.textureComposeComplete}`,
-      `firstFrameRequested=${r.firstFrameRequested}`,
       `firstFrameDetected=${r.firstFrameDetected}`,
       `canvasReady=${r.canvasReady}`,
       `imageRendered=${r.imageRendered}`,
-      "",
       `planetCanvasPresent=${r.planetCanvasPresent}`,
       `planetCanvasNonZeroSize=${r.planetCanvasNonZeroSize}`,
-      `visiblePlanetHintPresent=${r.visiblePlanetHintPresent}`,
       `visiblePlanetProofValid=${r.visiblePlanetProofValid}`,
-      `visibleContentProofStarted=${r.visibleContentProofStarted}`,
       `visibleContentProof=${r.visibleContentProof}`,
       `visibleContentStrictProof=${r.visibleContentStrictProof}`,
       `visibleContentSoftGap=${r.visibleContentSoftGap}`,
       `visibleContentHardFail=${r.visibleContentHardFail}`,
-      `visibleForwardProgress=${r.visibleForwardProgress}`,
-      `visibleContentAdmissible=${r.visibleContentAdmissible}`,
-      `visiblePlanetAvailable=${r.visiblePlanetAvailable}`,
       "",
       `inspectModeAvailable=${r.inspectModeAvailable}`,
-      `inspectPlanetControlAvailable=${r.inspectPlanetControlAvailable}`,
       `diagnosticCanLeavePlanetFrame=${r.diagnosticCanLeavePlanetFrame}`,
-      `receiptToggleReady=${r.receiptToggleReady}`,
-      `copyDiagnosticReady=${r.copyDiagnosticReady}`,
       `inspectStrictReady=${r.inspectStrictReady}`,
       `inspectFallbackReady=${r.inspectFallbackReady}`,
       "",
-      `f21RequestPublished=${r.f21RequestPublished}`,
-      `f21RequestSubmittedToNorth=${r.f21RequestSubmittedToNorth}`,
-      `f21RequestMode=${r.f21RequestMode}`,
+      `completionLatched=${r.completionLatched}`,
+      `degradedCompletionLatched=${r.degradedCompletionLatched}`,
       `readyTextAllowed=${r.readyTextAllowed}`,
+      `f21LatchMode=${r.f21LatchMode}`,
       `newsGatePassed=${r.newsGatePassed}`,
       `newsGateDegraded=${r.newsGateDegraded}`,
       "",
       "GATE_LEDGER",
       gates,
-      "",
-      "LOCAL_EVENTS",
-      events,
       "",
       "ERRORS",
       errors,
@@ -1966,10 +1771,6 @@
       `postgameStatus=${r.postgameStatus}`,
       `firstFailedCoordinate=${r.firstFailedCoordinate}`,
       `recommendedNextRenewalTarget=${r.recommendedNextRenewalTarget}`,
-      `renderCount=${r.renderCount}`,
-      `watchdogTicks=${r.watchdogTicks}`,
-      `booted=${r.booted}`,
-      `booting=${r.booting}`,
       "",
       `generatedImage=${r.generatedImage}`,
       `graphicBox=${r.graphicBox}`,
@@ -1998,37 +1799,30 @@
     dataset.hearthSouthRouteConductorPresent = "true";
     dataset.hearthSouthRouteConductorContract = CONTRACT;
     dataset.hearthSouthRouteConductorReceipt = RECEIPT;
-    dataset.hearthSouthRouteConductorSelfDutyNewsFibonacciReassignment = "true";
+    dataset.hearthSouthSelfDutyNewsFibonacciHandoff = "true";
 
+    dataset.hearthSouthRouteConductorMarkerPresent = String(state.routeConductor.markerPresent);
     dataset.hearthSouthRouteConductorApiPresent = String(state.routeConductor.apiPresent);
     dataset.hearthSouthRouteConductorReceiptPresent = String(state.routeConductor.receiptPresent);
     dataset.hearthSouthRouteConductorRuntimeActive = String(state.routeConductor.runtimeActive);
     dataset.hearthSouthRouteConductorHydrated = String(state.routeConductor.hydrated);
     dataset.hearthSouthRouteConductorRecognitionStatus = state.routeConductor.recognitionStatus;
 
-    dataset.hearthSouthActiveGateId = state.gates.activeGateId;
-    dataset.hearthSouthActiveFibonacci = state.gates.activeFibonacci;
-    dataset.hearthSouthActiveCardinal = state.gates.activeCardinal;
-    dataset.hearthSouthActiveProgress = String(state.gates.activeProgress);
-    dataset.hearthSouthCompletedGates = state.gates.completed.join(",");
-    dataset.hearthSouthDegradedGates = state.gates.degraded.join(",");
-    dataset.hearthSouthBlockedGates = state.gates.blocked.join(",");
+    dataset.hearthSouthActiveGateId = state.activeGateId;
+    dataset.hearthSouthActiveFibonacci = state.activeFibonacci;
+    dataset.hearthSouthActiveCardinal = state.activeCardinal;
+    dataset.hearthSouthActiveProgress = String(state.activeProgress);
+    dataset.hearthSouthCompletedGates = state.completedGates.join(",");
+    dataset.hearthSouthDegradedGates = state.degradedGates.join(",");
+    dataset.hearthSouthBlockedGates = state.blockedGates.join(",");
 
     dataset.hearthSouthCanvasBootRequested = String(state.canvas.bootRequested);
-    dataset.hearthSouthCanvasBootStarted = String(state.canvas.bootStarted);
     dataset.hearthSouthCanvasBootComplete = String(state.canvas.bootComplete);
     dataset.hearthSouthAllCanvasChildrenReady = String(state.canvas.allChildrenReady);
-
     dataset.hearthSouthVisiblePlanetProofValid = String(state.canvas.visiblePlanetProofValid);
-    dataset.hearthSouthVisibleContentProof = String(state.canvas.visibleContentProof);
-    dataset.hearthSouthVisibleContentStrictProof = String(state.canvas.visibleContentStrictProof);
-    dataset.hearthSouthVisibleContentSoftGap = String(state.canvas.visibleContentSoftGap);
-    dataset.hearthSouthVisibleContentHardFail = String(state.canvas.visibleContentHardFail);
 
-    dataset.hearthSouthF21RequestPublished = String(state.completion.f21RequestPublished);
-    dataset.hearthSouthF21RequestMode = state.completion.f21RequestMode;
-    dataset.hearthSouthReadyTextAllowed = "false";
-
+    dataset.hearthSouthCompletionLatched = String(state.completionLatched);
+    dataset.hearthSouthF21LatchMode = state.f21LatchMode;
     dataset.hearthSouthPostgameStatus = state.postgameStatus;
     dataset.hearthSouthFirstFailedCoordinate = state.firstFailedCoordinate;
     dataset.hearthSouthRecommendedNextRenewalTarget = state.recommendedNextRenewalTarget;
@@ -2039,63 +1833,6 @@
     dataset.visualPassClaimed = "false";
   }
 
-  function publishEarlyMarker() {
-    root.__HEARTH_ROUTE_CONDUCTOR_MARKER__ = true;
-    root.__HEARTH_ROUTE_CONDUCTOR_FILE__ = FILE;
-    root.__HEARTH_ROUTE_CONDUCTOR_CONTRACT__ = CONTRACT;
-    root.__HEARTH_ROUTE_CONDUCTOR_RECEIPT__ = RECEIPT;
-    root.__HEARTH_ROUTE_CONDUCTOR_MARKER_IS_HYDRATION_PROOF__ = false;
-
-    state.routeConductor.markerPresent = true;
-    state.routeConductor.recognitionStatus = "MARKER_PRESENT_API_PENDING";
-
-    updateDataset();
-  }
-
-  function publishGlobals() {
-    root.HEARTH = root.HEARTH || {};
-    root.DEXTER_LAB = root.DEXTER_LAB || {};
-
-    root.HEARTH_ROUTE_CONDUCTOR = api;
-    root.HearthRouteConductor = api;
-    root.HEARTH_SOUTH_ROUTE_CONDUCTOR = api;
-    root.HEARTH_SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_NEWS_FIBONACCI_REASSIGNMENT = api;
-    root.HEARTH_SOUTH_VISIBLE_COMPLETION = api;
-
-    root.HEARTH.routeConductor = api;
-    root.HEARTH.southRouteConductor = api;
-    root.HEARTH.southRouteConductorSelfDutyNewsFibonacciReassignment = api;
-    root.HEARTH.southVisibleCompletion = api;
-
-    root.DEXTER_LAB.hearthRouteConductor = api;
-    root.DEXTER_LAB.hearthSouthRouteConductor = api;
-    root.DEXTER_LAB.hearthSouthRouteConductorSelfDutyNewsFibonacciReassignment = api;
-
-    state.routeConductor.apiPresent = true;
-    state.routeConductor.receiptPresent = true;
-    state.routeConductor.runtimeActive = true;
-    state.routeConductor.hydrated = true;
-    state.routeConductor.recognitionStatus = "API_RECEIPT_RUNTIME_PRESENT";
-
-    const light = getReceiptLight(false);
-
-    root.HEARTH_ROUTE_CONDUCTOR_RECEIPT = light;
-    root.HEARTH_SOUTH_ROUTE_CONDUCTOR_RECEIPT = light;
-    root.HEARTH_SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_NEWS_FIBONACCI_REASSIGNMENT_RECEIPT = light;
-    root.HEARTH_SOUTH_VISIBLE_COMPLETION_RECEIPT = light;
-
-    root.HEARTH.routeConductorReceipt = light;
-    root.HEARTH.southRouteConductorReceipt = light;
-    root.HEARTH.southRouteConductorSelfDutyNewsFibonacciReassignmentReceipt = light;
-    root.HEARTH.southVisibleCompletionReceipt = light;
-
-    root.DEXTER_LAB.hearthRouteConductorReceipt = light;
-    root.DEXTER_LAB.hearthSouthRouteConductorReceipt = light;
-    root.DEXTER_LAB.hearthSouthRouteConductorSelfDutyNewsFibonacciReassignmentReceipt = light;
-
-    updateDataset();
-  }
-
   const api = {
     contract: CONTRACT,
     receipt: RECEIPT,
@@ -2104,7 +1841,7 @@
     version: VERSION,
     file: FILE,
     route: ROUTE,
-    role: "south-route-conductor-self-duty-news-fibonacci-reassignment",
+    role: "south-route-conductor-self-duty-news-fibonacci-handoff",
 
     boot,
     start: boot,
@@ -2125,25 +1862,24 @@
     readCanvasReceipt,
 
     supportsSelfDutyPublication: true,
-    supportsApiPublication: true,
-    supportsReceiptPublication: true,
-    supportsCardinalCircuit: true,
-    supportsNewsProtocol: true,
-    supportsFibonacciSynchronization: true,
-    supportsParentCanvasBoot: true,
-    supportsVisibleProofRequiredForF13: true,
-    supportsVisibleProofRequiredForF21: true,
+    supportsEarlyApiPublication: true,
+    supportsEarlyReceiptPublication: true,
     supportsMarkerNotHydrationProof: true,
+    supportsNewsProtocolSynchronization: true,
+    supportsFibonacciSynchronization: true,
+    supportsCanvasF13EvidenceOnly: true,
+    supportsF21NorthNewsLatchOnly: true,
 
     ownsRouteConductorRuntime: true,
+    ownsSelfDutyPublication: true,
     ownsCanvasBootRequest: true,
     ownsCanvasReceiptReconciliation: true,
     ownsVisibleProofGovernance: true,
     ownsCanvasDrawing: false,
     ownsCanvasChildren: false,
     ownsNorthCheckpointTruth: false,
-    ownsF21: false,
     ownsFinalVisualPassClaim: false,
+    ownsF21: false,
 
     generatedImage: false,
     graphicBox: false,
@@ -2156,7 +1892,7 @@
   };
 
   publishEarlyMarker();
-  publishGlobals();
+  publishGlobals("immediate-self-duty-api-receipt-publication");
 
   if (doc) {
     if (doc.readyState === "loading") {

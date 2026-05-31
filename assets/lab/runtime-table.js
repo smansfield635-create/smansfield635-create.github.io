@@ -1,19 +1,18 @@
 // /assets/lab/runtime-table.js
-// LAB_RUNTIME_TABLE_NORTH_TRANSMISSION_GOVERNOR_FIBONACCI_COMBUSTION_TNT_v1
+// LAB_RUNTIME_TABLE_NORTH_F21_NEWS_LATCH_CONSUMER_ALIGNMENT_PLUS_FIBONACCI_SYNC_TNT_v2
 // Full-file replacement.
 // North facade authority.
 // Purpose:
 // - Preserve /assets/lab/runtime-table.js as the public Lab Runtime Table authority.
-// - Preserve Runtime Table, Triple G, Visual Carrier Plan, Loading Optimization, Wide Probe, and checkpoint exports.
-// - Add Hearth-facing North aliases without creating a new North file.
-// - Add direct West intake methods.
-// - Recognize INDEX_HANDOFF_ACCEPTED / S2_INDEX_HANDOFF_ACCEPTED.
-// - Govern Hearth as a transmission: one active gear at a time.
-// - Convert visible loader semantics to active-gear 0→100 progress while preserving legacy Fibonacci labels internally.
+// - Preserve Runtime Table, Triple G, Visual Carrier Plan, Loading Optimization, Wide Probe, checkpoint, and transmission exports.
+// - Add North F21 NEWS latch consumption after South submits eligibility.
+// - Convert f21EligibleForNorth into North-owned completionLatched only after North validation.
+// - Preserve active-gear 0→100 loader semantics while preserving Fibonacci labels internally.
+// - Preserve Hearth-facing North aliases without creating a new North file.
 // Does not own:
 // - East first paint
 // - West handoff validation
-// - South visible proof
+// - South visible proof generation
 // - canvas drawing
 // - source-stack truth
 // - child-channel truth
@@ -24,11 +23,11 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "LAB_RUNTIME_TABLE_NORTH_TRANSMISSION_GOVERNOR_FIBONACCI_COMBUSTION_TNT_v1";
-  const RECEIPT = "LAB_RUNTIME_TABLE_NORTH_TRANSMISSION_GOVERNOR_FIBONACCI_COMBUSTION_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_NORTH_PRECEDENT_FACADE_TNT_v1";
+  const CONTRACT = "LAB_RUNTIME_TABLE_NORTH_F21_NEWS_LATCH_CONSUMER_ALIGNMENT_PLUS_FIBONACCI_SYNC_TNT_v2";
+  const RECEIPT = "LAB_RUNTIME_TABLE_NORTH_F21_NEWS_LATCH_CONSUMER_ALIGNMENT_PLUS_FIBONACCI_SYNC_RECEIPT_v2";
+  const PREVIOUS_CONTRACT = "LAB_RUNTIME_TABLE_NORTH_TRANSMISSION_GOVERNOR_FIBONACCI_COMBUSTION_TNT_v1";
   const BASELINE_CONTRACT = "RUNTIME_TABLE_NEWS_CARDINAL_FOUR_FILE_SPLIT_FINAL_DRAFT_PREWRITE_v1";
-  const VERSION = "2026-05-29.lab-runtime-table-north-transmission-governor-fibonacci-combustion-v1";
+  const VERSION = "2026-05-31.lab-runtime-table-north-f21-news-latch-consumer-alignment-plus-fibonacci-sync-v2";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
@@ -227,7 +226,7 @@
     { id: "F13_SOUTH_OUTPUT_AUTHORIZED", event: "SOUTH_OUTPUT_AUTHORIZED", aliases: ["SOUTH_PROOF_LANE_OPENED"], rank: 8, fibonacci: "F13", value: 13, legacyProgress: 86, label: "South output authorized", combustion: "output stroke / torque transfer" },
     { id: "F13_VISIBLE_CONTENT_PROOF_PASSED", event: "VISIBLE_CONTENT_PROOF_PASSED", aliases: ["DEGRADED_VISIBLE_CONTENT_ACCEPTED", "SOUTH_VISIBLE_COMPLETION_READY"], rank: 9, fibonacci: "F13", value: 13, legacyProgress: 94, label: "Visible content proof passed", combustion: "visible drivetrain motion" },
     { id: "F13_INSPECT_MODE_READY", event: "INSPECT_MODE_READY", aliases: ["DEGRADED_INSPECT_MODE_ACCEPTED"], rank: 10, fibonacci: "F13", value: 13, legacyProgress: 98, label: "Inspect mode ready", combustion: "output proof stabilized" },
-    { id: "F21_COMPLETION_LATCHED", event: "COMPLETION_LATCHED", aliases: ["COMPLETION_LATCHED_AFTER_VISIBLE_CONTENT_PROOF", "COMPLETION_LATCHED_AFTER_CANVAS_READY", "F21_DEGRADED_COMPLETION_LATCHED"], rank: 11, fibonacci: "F21", value: 21, legacyProgress: 100, label: "Completion latched", combustion: "checkpoint closure / next gear authorization" }
+    { id: "F21_COMPLETION_LATCHED", event: "COMPLETION_LATCHED", aliases: ["COMPLETION_LATCHED_AFTER_VISIBLE_CONTENT_PROOF", "COMPLETION_LATCHED_AFTER_CANVAS_READY", "F21_DEGRADED_COMPLETION_LATCHED", "F21_FULL_ELIGIBLE_FOR_NORTH_NEWS_LATCH"], rank: 11, fibonacci: "F21", value: 21, legacyProgress: 100, label: "Completion latched", combustion: "checkpoint closure / next gear authorization" }
   ]);
 
   const WEST_HANDOFF_EVENTS = Object.freeze([
@@ -235,7 +234,9 @@
     "S2_INDEX_HANDOFF_ACCEPTED",
     "EAST_STEP1_HANDOFF_ACCEPTED_BY_WEST_METHOD",
     "WEST_HANDOFF_ACCEPTED",
-    "WEST_ACCEPTED_EAST_STEP1_HANDOFF"
+    "WEST_ACCEPTED_EAST_STEP1_HANDOFF",
+    "EAST_STEP1_HANDOFF_RECEIVED",
+    "EAST_STEP1_HANDOFF_ACCEPTED"
   ]);
 
   const SOUTH_OUTPUT_EVENTS = Object.freeze([
@@ -246,6 +247,22 @@
     "DEGRADED_INSPECT_MODE_ACCEPTED",
     "CANVAS_READY",
     "FIRST_FRAME_DETECTED"
+  ]);
+
+  const F21_ELIGIBILITY_EVENTS = Object.freeze([
+    "F21_COMPLETION_LATCH",
+    "F21_COMPLETION_LATCHED",
+    "F21_FULL_ELIGIBLE_FOR_NORTH_NEWS_LATCH",
+    "F21_ELIGIBLE_FOR_NORTH_NEWS_LATCH",
+    "F21_ELIGIBILITY_SUBMITTED_TO_NORTH",
+    "F21_ELIGIBILITY_READY_FOR_NORTH",
+    "F21_NEWS_LATCH_READY",
+    "SOUTH_F21_ELIGIBILITY_SUBMITTED",
+    "COMPLETION_LATCH_ELIGIBLE",
+    "COMPLETION_LATCHED",
+    "COMPLETION_LATCHED_AFTER_VISIBLE_CONTENT_PROOF",
+    "COMPLETION_LATCHED_AFTER_CANVAS_READY",
+    "F21_DEGRADED_COMPLETION_LATCHED"
   ]);
 
   const COMPLETION_EVENTS = Object.freeze([
@@ -274,7 +291,7 @@
     file: FILE,
     route: ROUTE,
 
-    sessionId: "HEARTH-NORTH-TRANSMISSION-GOVERNOR",
+    sessionId: "HEARTH-NORTH-F21-NEWS-LATCH-CONSUMER",
     cardinalRole: "NORTH",
 
     activeGear: TRANSMISSION_GEARS.EAST_IGNITION,
@@ -289,23 +306,34 @@
 
     transmissionGovernorActive: true,
     fibonacciCombustionScaleActive: true,
+    alignmentPlusFibonacciSynchronizationActive: true,
+    f21NorthNewsLatchConsumerActive: true,
     oneActiveGearAtATime: true,
     northFacadeCompatibilityActive: true,
     hearthNorthAliasesActive: true,
     westIntakeMethodsActive: true,
-    westHandoffRecognized: true,
-    indexHandoffAcceptedRecognized: true,
-    s2IndexHandoffAcceptedRecognized: true,
+    eastHandoffMethodsActive: true,
 
     visibleProgressMode: "ACTIVE_GEAR_0_TO_100",
     legacyFibonacciProgressPreservedForCompatibility: true,
     cumulativeProgressControlsVisibleLoader: false,
 
+    eastHandoffAcceptedByNorth: false,
     westHandoffAcceptedByNorth: false,
     northAdmissionComplete: false,
     southOutputAuthorized: false,
     southOutputComplete: false,
     northReturnComplete: false,
+
+    f21EligibilityReceived: false,
+    f21EligibilityAccepted: false,
+    f21EligibilityRejected: false,
+    f21EligibilitySource: "",
+    f21EligibilityReceivedAt: "",
+    f21EligibilityAcceptedAt: "",
+    f21EligibilityValidation: null,
+    f21LatchMode: "WAITING",
+    completionLatched: false,
     finalCompletionLatched: false,
     degradedCompletionLatched: false,
 
@@ -313,7 +341,7 @@
     recommendedNextOwner: "EAST",
     recommendedNextFile: EAST_FILE,
     recommendedNextRenewalTarget: EAST_FILE,
-    postgameStatus: "NORTH_TRANSMISSION_GOVERNOR_READY",
+    postgameStatus: "NORTH_F21_NEWS_LATCH_CONSUMER_READY",
 
     queue: [],
     archivedEvents: [],
@@ -368,14 +396,19 @@
 
   function safeBool(value, fallback = false) {
     if (typeof value === "boolean") return value;
-    if (value === "true") return true;
-    if (value === "false") return false;
+    if (value === "true" || value === "1" || value === 1) return true;
+    if (value === "false" || value === "0" || value === 0) return false;
     return fallback;
   }
 
   function safeNumber(value, fallback = 0) {
     const n = Number(value);
     return Number.isFinite(n) ? n : fallback;
+  }
+
+  function safeString(value, fallback = "") {
+    if (value === undefined || value === null) return fallback;
+    return String(value);
   }
 
   function clonePlain(value) {
@@ -404,6 +437,10 @@
     return output;
   }
 
+  function trim(list, max) {
+    if (Array.isArray(list) && list.length > max) list.splice(0, list.length - max);
+  }
+
   function recordTransmission(kind, event, detail = {}) {
     const item = {
       at: nowIso(),
@@ -420,8 +457,7 @@
       transmissionState.receipts;
 
     list.push(item);
-    if (list.length > 160) list.splice(0, list.length - 160);
-
+    trim(list, 160);
     transmissionState.updatedAt = item.at;
     return item;
   }
@@ -434,48 +470,53 @@
       detail: clonePlain(detail)
     };
     transmissionState.errors.push(item);
-    if (transmissionState.errors.length > 80) {
-      transmissionState.errors.splice(0, transmissionState.errors.length - 80);
-    }
+    trim(transmissionState.errors, 80);
     transmissionState.updatedAt = item.at;
     return item;
   }
 
-  function eventName(input = {}) {
-    const detail = isObject(input.detail) ? input.detail : {};
-    return String(
-      input.checkpointEvent ||
-      input.checkpointCandidate ||
-      input.event ||
-      input.id ||
-      input.phase ||
-      input.checkpointId ||
-      detail.checkpointEvent ||
-      detail.checkpointCandidate ||
-      detail.event ||
-      detail.id ||
-      detail.phase ||
-      detail.checkpointId ||
-      ""
-    );
+  function normalizePayload(input = {}) {
+    const base = isObject(input) ? input : {};
+    const detail = isObject(base.detail) ? base.detail : {};
+    const snapshot = isObject(base.snapshot) ? base.snapshot : isObject(detail.snapshot) ? detail.snapshot : {};
+    return {
+      ...snapshot,
+      ...detail,
+      ...base,
+      detail,
+      snapshot
+    };
   }
 
   function allEventNames(input = {}) {
-    const detail = isObject(input.detail) ? input.detail : {};
+    const packet = normalizePayload(input);
+    const detail = isObject(packet.detail) ? packet.detail : {};
+    const snapshot = isObject(packet.snapshot) ? packet.snapshot : {};
     return [
-      input.checkpointEvent,
-      input.checkpointCandidate,
-      input.event,
-      input.id,
-      input.phase,
-      input.checkpointId,
+      packet.checkpointEvent,
+      packet.checkpointCandidate,
+      packet.event,
+      packet.id,
+      packet.phase,
+      packet.checkpointId,
+      packet.activeGateId,
       detail.checkpointEvent,
       detail.checkpointCandidate,
       detail.event,
       detail.id,
       detail.phase,
-      detail.checkpointId
+      detail.checkpointId,
+      detail.activeGateId,
+      snapshot.checkpointEvent,
+      snapshot.event,
+      snapshot.phase,
+      snapshot.checkpointId,
+      snapshot.activeGateId
     ].filter(Boolean).map(String);
+  }
+
+  function eventName(input = {}) {
+    return allEventNames(input)[0] || "";
   }
 
   function hasEvent(input, names) {
@@ -483,40 +524,45 @@
     return candidates.some((name) => names.includes(name));
   }
 
-  function normalizePayload(input = {}) {
-    const detail = isObject(input.detail) ? input.detail : {};
-    return {
-      ...detail,
-      ...input,
-      detail
-    };
+  function scanFieldDeep(input, fields, maxDepth = 7) {
+    const wanted = new Set(asArray(fields));
+    const seen = new WeakSet();
+    const queue = [{ value: input, depth: 0 }];
+
+    while (queue.length) {
+      const current = queue.shift();
+      const value = current.value;
+
+      if (!isObject(value) || current.depth > maxDepth) continue;
+      if (seen.has(value)) continue;
+      seen.add(value);
+
+      for (const key of Object.keys(value)) {
+        if (wanted.has(key)) return value[key];
+      }
+
+      for (const key of Object.keys(value)) {
+        const next = value[key];
+        if (isObject(next)) queue.push({ value: next, depth: current.depth + 1 });
+      }
+    }
+
+    return undefined;
   }
 
-  function westHandoffTruth(input = {}) {
-    const packet = normalizePayload(input);
-    const names = allEventNames(packet);
-    const eventMatched = names.some((name) => WEST_HANDOFF_EVENTS.includes(name));
+  function getAnyBool(input, fields, fallback = false) {
+    const value = scanFieldDeep(input, fields);
+    return safeBool(value, fallback);
+  }
 
-    const acceptedFlags = [
-      "westAccepted",
-      "eastStep1Accepted",
-      "step1Accepted",
-      "step1HandoffAccepted",
-      "handoffAdmissible",
-      "westGateReady",
-      "northIntakeReady"
-    ];
+  function getAnyNumber(input, fields, fallback = 0) {
+    const value = scanFieldDeep(input, fields);
+    return safeNumber(value, fallback);
+  }
 
-    const passedFlags = acceptedFlags.filter((key) => safeBool(packet[key], false));
-    const minimumByEvent = eventMatched && passedFlags.length >= 2;
-    const fullByFlags = passedFlags.length >= 5;
-
-    return {
-      eventMatched,
-      passedFlags,
-      accepted: Boolean(eventMatched && (minimumByEvent || fullByFlags)),
-      packet
-    };
+  function getAnyString(input, fields, fallback = "") {
+    const value = scanFieldDeep(input, fields);
+    return value === undefined || value === null ? fallback : String(value);
   }
 
   function gearIndex(gear) {
@@ -584,9 +630,7 @@
       at: nowIso()
     });
 
-    if (transmissionState.gearHistory.length > 120) {
-      transmissionState.gearHistory.splice(0, transmissionState.gearHistory.length - 120);
-    }
+    trim(transmissionState.gearHistory, 120);
 
     recordTransmission("gear", "GEAR_CLOSED", {
       gearClosed: current,
@@ -630,7 +674,7 @@
     transmissionState.activeGearLabel = GEAR_LABELS[closedGear] || closedGear;
     transmissionState.activeGearProgress = 100;
     transmissionState.lastClosedCheckpoint = `${closedGear}_CLOSED`;
-    transmissionState.completedCycleCount += 1;
+    transmissionState.completedCycleCount += closedGear === TRANSMISSION_GEARS.COMPLETE ? 0 : 1;
     transmissionState.shiftAuthorized = true;
 
     transmissionState.gearHistory.push({
@@ -639,6 +683,8 @@
       reason,
       at: nowIso()
     });
+
+    trim(transmissionState.gearHistory, 120);
 
     setActiveGear(nextGear, reason);
     transmissionState.shiftAuthorized = true;
@@ -658,9 +704,9 @@
       action: CHECKPOINT_EVENT_ACTIONS.HELD,
       reason,
       firstFailedCoordinate,
-      recommendedNextRenewalTarget: NORTH_FILE,
-      recommendedNextOwner: "NORTH",
-      recommendedNextFile: NORTH_FILE,
+      recommendedNextRenewalTarget: extra.recommendedNextRenewalTarget || NORTH_FILE,
+      recommendedNextOwner: extra.recommendedNextOwner || "NORTH",
+      recommendedNextFile: extra.recommendedNextFile || NORTH_FILE,
       pageResponsive: true,
       hardBlock: false,
       activeGear: transmissionState.activeGear,
@@ -670,9 +716,9 @@
     };
 
     transmissionState.firstFailedCoordinate = firstFailedCoordinate;
-    transmissionState.recommendedNextOwner = "NORTH";
-    transmissionState.recommendedNextFile = NORTH_FILE;
-    transmissionState.recommendedNextRenewalTarget = NORTH_FILE;
+    transmissionState.recommendedNextOwner = response.recommendedNextOwner;
+    transmissionState.recommendedNextFile = response.recommendedNextFile;
+    transmissionState.recommendedNextRenewalTarget = response.recommendedNextRenewalTarget;
     transmissionState.postgameStatus = firstFailedCoordinate;
     recordTransmission("held", "TRANSMISSION_HELD", response);
     publishAll();
@@ -728,10 +774,112 @@
     return response;
   }
 
+  function eastHandoffTruth(input = {}) {
+    const packet = normalizePayload(input);
+    const eventMatched = hasEvent(packet, WEST_HANDOFF_EVENTS) || Boolean(packet.step1Ready || packet.step1Ignited || packet.firstPaintReady);
+    const passedFlags = [
+      "step1Ready",
+      "step1Ignited",
+      "firstPaintReady",
+      "mountReady",
+      "cockpitReady",
+      "sharedLedgerPresent",
+      "scriptOrderStarted"
+    ].filter((key) => getAnyBool(packet, key, false));
+
+    return {
+      eventMatched,
+      passedFlags,
+      accepted: Boolean(eventMatched && passedFlags.length >= 2),
+      packet
+    };
+  }
+
+  function westHandoffTruth(input = {}) {
+    const packet = normalizePayload(input);
+    const eventMatched = hasEvent(packet, WEST_HANDOFF_EVENTS);
+
+    const passedFlags = [
+      "westAccepted",
+      "eastStep1Accepted",
+      "step1Accepted",
+      "step1HandoffAccepted",
+      "handoffAdmissible",
+      "westGateReady",
+      "northIntakeReady",
+      "step1Ready",
+      "firstPaintReady"
+    ].filter((key) => getAnyBool(packet, key, false));
+
+    const minimumByEvent = eventMatched && passedFlags.length >= 1;
+    const fullByFlags = passedFlags.length >= 4;
+
+    return {
+      eventMatched,
+      passedFlags,
+      accepted: Boolean(eventMatched && (minimumByEvent || fullByFlags)),
+      packet
+    };
+  }
+
+  function acceptEastHandoff(input = {}) {
+    const truth = eastHandoffTruth(input);
+
+    if (!truth.accepted) {
+      return getHeldResponse("WAITING_EAST_STEP1_HANDOFF", "east-handoff-flags-incomplete", {
+        source: "acceptEastHandoff",
+        passedFlags: truth.passedFlags,
+        recommendedNextOwner: "EAST",
+        recommendedNextFile: EAST_FILE,
+        recommendedNextRenewalTarget: EAST_FILE
+      });
+    }
+
+    transmissionState.eastHandoffAcceptedByNorth = true;
+
+    if (gearIndex(transmissionState.activeGear) <= gearIndex(TRANSMISSION_GEARS.EAST_IGNITION)) {
+      closeGearAndShift(
+        TRANSMISSION_GEARS.EAST_IGNITION,
+        TRANSMISSION_GEARS.WEST_SYNCHRONIZER,
+        "acceptEastHandoff"
+      );
+    }
+
+    transmissionState.firstFailedCoordinate = "NONE_EAST_HANDOFF_ACCEPTED_BY_NORTH";
+    transmissionState.recommendedNextOwner = "WEST";
+    transmissionState.recommendedNextFile = WEST_FILE;
+    transmissionState.recommendedNextRenewalTarget = WEST_FILE;
+    transmissionState.postgameStatus = "WEST_SYNCHRONIZER_ACTIVE";
+
+    const response = {
+      accepted: true,
+      action: CHECKPOINT_EVENT_ACTIONS.ADMIT,
+      source: "acceptEastHandoff",
+      event: eventName(input) || "EAST_STEP1_HANDOFF_ACCEPTED",
+      activeGear: transmissionState.activeGear,
+      activeGearProgress: transmissionState.activeGearProgress,
+      nextGear: transmissionState.nextGear,
+      firstFailedCoordinate: transmissionState.firstFailedCoordinate,
+      recommendedNextOwner: transmissionState.recommendedNextOwner,
+      recommendedNextFile: transmissionState.recommendedNextFile,
+      recommendedNextRenewalTarget: transmissionState.recommendedNextRenewalTarget,
+      pageResponsive: true,
+      hardBlock: false
+    };
+
+    recordTransmission("admit", "EAST_HANDOFF_ACCEPTED_BY_NORTH", response);
+    publishAll();
+    return response;
+  }
+
+  function receiveEastHandoff(input = {}) {
+    return acceptEastHandoff(input);
+  }
+
   function admitWestHandoff(input = {}, source = "acceptWestHandoff") {
     const truth = westHandoffTruth(input);
 
-    if (!truth.eventMatched) {
+    if (!truth.eventMatched && !truth.accepted) {
       return getArchiveResponse("not-west-handoff-event", {
         source,
         event: eventName(input)
@@ -741,7 +889,10 @@
     if (!truth.accepted) {
       return getHeldResponse("WAITING_WEST_HANDOFF_ADMISSIBILITY", "west-handoff-flags-incomplete", {
         source,
-        passedFlags: truth.passedFlags
+        passedFlags: truth.passedFlags,
+        recommendedNextOwner: "WEST",
+        recommendedNextFile: WEST_FILE,
+        recommendedNextRenewalTarget: WEST_FILE
       });
     }
 
@@ -757,9 +908,6 @@
     transmissionState.recommendedNextFile = NORTH_FILE;
     transmissionState.recommendedNextRenewalTarget = NORTH_FILE;
     transmissionState.postgameStatus = "NORTH_ADMISSION_ACTIVE";
-    transmissionState.indexHandoffAcceptedRecognized = true;
-    transmissionState.s2IndexHandoffAcceptedRecognized = true;
-    transmissionState.westHandoffRecognized = true;
 
     const response = {
       accepted: true,
@@ -781,6 +929,7 @@
       hardBlock: false,
       transmissionGovernorActive: true,
       fibonacciCombustionScaleActive: true,
+      alignmentPlusFibonacciSynchronizationActive: true,
       oneActiveGearAtATime: true,
       shift
     };
@@ -870,54 +1019,282 @@
     return response;
   }
 
-  function admitCompletion(input = {}, source = "completion") {
-    const shift = closeGearAndShift(
-      TRANSMISSION_GEARS.NORTH_RETURN,
-      TRANSMISSION_GEARS.COMPLETE,
-      source
+  function validateF21Eligibility(input = {}) {
+    const packet = normalizePayload(input);
+
+    const f8SouthSelfDuty = Boolean(
+      getAnyBool(packet, ["routeConductorHydrated"], false) ||
+      (
+        getAnyBool(packet, ["routeConductorApiPresent"], false) &&
+        getAnyBool(packet, ["routeConductorReceiptPresent"], false) &&
+        getAnyBool(packet, ["routeConductorRuntimeActive"], true)
+      )
     );
 
+    const f13AParent = Boolean(
+      getAnyBool(packet, ["canvasParentPresent"], false) &&
+      (
+        getAnyBool(packet, ["canvasParentBootMethodAvailable"], false) ||
+        safeString(getAnyString(packet, ["canvasParentBootMethod"], "")).length > 0
+      )
+    );
+
+    const f13BChildren = Boolean(getAnyBool(packet, ["allCanvasChildrenReady"], false));
+
+    const f13CTexture = Boolean(
+      getAnyBool(packet, ["textureComposeComplete"], false) &&
+      getAnyBool(packet, ["atlasBuildComplete"], true)
+    );
+
+    const f13DFrame = Boolean(
+      getAnyBool(packet, ["firstFrameDetected"], false) &&
+      getAnyBool(packet, ["imageRendered"], false)
+    );
+
+    const f13EVisibleProof = Boolean(
+      (
+        getAnyBool(packet, ["visiblePlanetProofValid"], false) ||
+        getAnyBool(packet, ["visibleContentProof"], false) ||
+        getAnyBool(packet, ["visibleContentStrictProof"], false)
+      ) &&
+      !getAnyBool(packet, ["visibleContentHardFail"], false)
+    );
+
+    const f13EVisibleStrict = Boolean(
+      getAnyBool(packet, ["visibleContentStrictProof"], false) ||
+      (
+        getAnyBool(packet, ["visibleContentProof"], false) &&
+        !getAnyBool(packet, ["visibleContentSoftGap"], false)
+      )
+    );
+
+    const f13NInspect = Boolean(
+      getAnyBool(packet, ["inspectStrictReady"], false) ||
+      (
+        getAnyBool(packet, ["inspectModeAvailable"], false) &&
+        getAnyBool(packet, ["diagnosticCanLeavePlanetFrame"], false)
+      )
+    );
+
+    const newsGatePassed = Boolean(
+      getAnyBool(packet, ["newsGatePassed"], false) ||
+      (
+        f8SouthSelfDuty &&
+        f13AParent &&
+        f13BChildren &&
+        f13CTexture &&
+        f13DFrame &&
+        f13EVisibleProof &&
+        f13NInspect
+      )
+    );
+
+    const explicitEligibility = Boolean(
+      getAnyBool(packet, ["f21EligibleForNorth"], false) ||
+      getAnyBool(packet, ["f21EligibilitySubmittedToNorth"], false) ||
+      hasEvent(packet, F21_ELIGIBILITY_EVENTS)
+    );
+
+    const degradedAllowed = Boolean(
+      getAnyBool(packet, ["newsGateDegraded"], false) ||
+      getAnyBool(packet, ["visibleContentSoftGap"], false) ||
+      getAnyBool(packet, ["degradedCompletionLatched"], false)
+    );
+
+    const evidence = {
+      explicitEligibility,
+      f8SouthSelfDuty,
+      f13AParent,
+      f13BChildren,
+      f13CTexture,
+      f13DFrame,
+      f13EVisibleProof,
+      f13EVisibleStrict,
+      f13NInspect,
+      newsGatePassed,
+      degradedAllowed,
+      visibleContentHardFail: getAnyBool(packet, ["visibleContentHardFail"], false),
+      activeGateId: getAnyString(packet, ["activeGateId"], ""),
+      activeFibonacci: getAnyString(packet, ["activeFibonacci"], ""),
+      activeCardinal: getAnyString(packet, ["activeCardinal"], ""),
+      event: eventName(packet)
+    };
+
+    const required = [
+      "explicitEligibility",
+      "f8SouthSelfDuty",
+      "f13AParent",
+      "f13BChildren",
+      "f13CTexture",
+      "f13DFrame",
+      "f13EVisibleProof",
+      "f13NInspect",
+      "newsGatePassed"
+    ];
+
+    const missing = required.filter((key) => !evidence[key]);
+    const full = missing.length === 0 && evidence.f13EVisibleStrict && !evidence.visibleContentHardFail;
+    const degraded = missing.length === 0 && !full && degradedAllowed && !evidence.visibleContentHardFail;
+    const ok = full || degraded;
+
+    let firstFailedCoordinate = "NONE_F21_FULL_ELIGIBLE";
+    if (!explicitEligibility) firstFailedCoordinate = "WAITING_F21_ELIGIBILITY_SUBMISSION";
+    else if (!f8SouthSelfDuty) firstFailedCoordinate = "WAITING_F8_SOUTH_SELF_DUTY";
+    else if (!f13AParent) firstFailedCoordinate = "WAITING_F13A_CANVAS_PARENT";
+    else if (!f13BChildren) firstFailedCoordinate = "WAITING_F13B_CANVAS_CHILDREN";
+    else if (!f13CTexture) firstFailedCoordinate = "WAITING_F13C_CANVAS_TEXTURE";
+    else if (!f13DFrame) firstFailedCoordinate = "WAITING_F13D_CANVAS_FRAME";
+    else if (!f13EVisibleProof) firstFailedCoordinate = "WAITING_F13E_VISIBLE_PROOF";
+    else if (!f13NInspect) firstFailedCoordinate = "WAITING_F13N_INSPECT_GATE";
+    else if (!newsGatePassed) firstFailedCoordinate = "WAITING_NEWS_GATE_PASSED";
+    else if (degraded) firstFailedCoordinate = "NONE_F21_DEGRADED_ELIGIBLE";
+
+    return {
+      ok,
+      full,
+      degraded,
+      missing,
+      evidence,
+      firstFailedCoordinate,
+      latchMode: full ? "FULL" : degraded ? "DEGRADED" : "WAITING",
+      acceptedAt: ok ? nowIso() : ""
+    };
+  }
+
+  function latchF21FromSouthEligibility(input = {}, source = "latchF21FromSouthEligibility") {
+    const validation = validateF21Eligibility(input);
+    const packet = normalizePayload(input);
+
+    transmissionState.f21EligibilityReceived = true;
+    transmissionState.f21EligibilityReceivedAt = nowIso();
+    transmissionState.f21EligibilitySource = source;
+    transmissionState.f21EligibilityValidation = validation;
+
+    if (!validation.ok) {
+      transmissionState.f21EligibilityRejected = true;
+      transmissionState.f21EligibilityAccepted = false;
+      transmissionState.f21LatchMode = "WAITING";
+      return getHeldResponse(validation.firstFailedCoordinate, "f21-eligibility-not-yet-valid", {
+        source,
+        event: eventName(packet),
+        validation,
+        recommendedNextOwner: validation.firstFailedCoordinate.includes("F13") ? "CANVAS" : "NORTH",
+        recommendedNextFile: validation.firstFailedCoordinate.includes("F13") ? CANVAS_FILE : NORTH_FILE,
+        recommendedNextRenewalTarget: validation.firstFailedCoordinate.includes("F13") ? CANVAS_FILE : NORTH_FILE
+      });
+    }
+
+    if (gearIndex(transmissionState.activeGear) < gearIndex(TRANSMISSION_GEARS.NORTH_RETURN)) {
+      transmissionState.gearHistory.push({
+        gear: transmissionState.activeGear,
+        closedCheckpoint: `${transmissionState.activeGear}_INFERRED_CLOSED_BEFORE_F21`,
+        inferred: true,
+        reason: source,
+        at: nowIso()
+      });
+    }
+
+    transmissionState.southOutputComplete = true;
     transmissionState.northReturnComplete = true;
+    transmissionState.f21EligibilityAccepted = true;
+    transmissionState.f21EligibilityRejected = false;
+    transmissionState.f21EligibilityAcceptedAt = nowIso();
+    transmissionState.f21LatchMode = validation.full ? "FULL" : "DEGRADED";
+    transmissionState.completionLatched = true;
     transmissionState.finalCompletionLatched = true;
+    transmissionState.degradedCompletionLatched = validation.degraded === true;
+
+    transmissionState.activeGear = TRANSMISSION_GEARS.COMPLETE;
+    transmissionState.activeGearLabel = GEAR_LABELS.COMPLETE;
+    transmissionState.activeGearMechanicalRole = GEAR_MECHANICS.COMPLETE;
     transmissionState.activeGearProgress = 100;
-    transmissionState.firstFailedCoordinate = "NONE_F21_FULL_LATCHED_BY_NORTH_TRANSMISSION";
+    transmissionState.lastClosedCheckpoint = validation.full ? "F21_FULL_LATCHED_BY_NORTH_NEWS" : "F21_DEGRADED_LATCHED_BY_NORTH_NEWS";
+    transmissionState.nextGear = TRANSMISSION_GEARS.COMPLETE;
+    transmissionState.shiftAuthorized = false;
+
+    transmissionState.firstFailedCoordinate = validation.full
+      ? "NONE_F21_FULL_LATCHED_BY_NORTH_NEWS"
+      : "NONE_F21_DEGRADED_LATCHED_BY_NORTH_NEWS";
     transmissionState.recommendedNextOwner = "NONE";
     transmissionState.recommendedNextFile = "read-postgame-receipt";
     transmissionState.recommendedNextRenewalTarget = "read-postgame-receipt";
-    transmissionState.postgameStatus = "READY_PLANET_VISIBLE_DIAGNOSTIC_AVAILABLE";
+    transmissionState.postgameStatus = validation.full
+      ? "READY_PLANET_VISIBLE_DIAGNOSTIC_AVAILABLE"
+      : "READY_DEGRADED_PLANET_VISIBLE_DIAGNOSTIC_AVAILABLE";
+
+    transmissionState.gearHistory.push({
+      gear: TRANSMISSION_GEARS.NORTH_RETURN,
+      closedCheckpoint: transmissionState.lastClosedCheckpoint,
+      inferred: gearIndex(transmissionState.activeGear) !== gearIndex(TRANSMISSION_GEARS.NORTH_RETURN),
+      reason: source,
+      at: nowIso()
+    });
+    trim(transmissionState.gearHistory, 120);
 
     const response = {
       accepted: true,
-      action: CHECKPOINT_EVENT_ACTIONS.ADMIT,
+      action: validation.full ? CHECKPOINT_EVENT_ACTIONS.ADMIT : CHECKPOINT_EVENT_ACTIONS.DEGRADED_FORWARD,
       source,
-      event: eventName(input),
+      event: eventName(packet) || "F21_FULL_ELIGIBLE_FOR_NORTH_NEWS_LATCH",
       gearClosed: TRANSMISSION_GEARS.NORTH_RETURN,
-      checkpointClosed: "NORTH_RETURN_COMPLETE",
-      nextGear: TRANSMISSION_GEARS.COMPLETE,
+      checkpointClosed: transmissionState.lastClosedCheckpoint,
       activeGear: TRANSMISSION_GEARS.COMPLETE,
       activeGearProgress: 100,
-      shiftAuthorized: true,
       completionLatched: true,
+      finalCompletionLatched: true,
+      degradedCompletionLatched: validation.degraded === true,
+      f21LatchMode: transmissionState.f21LatchMode,
       firstFailedCoordinate: transmissionState.firstFailedCoordinate,
       recommendedNextOwner: transmissionState.recommendedNextOwner,
       recommendedNextFile: transmissionState.recommendedNextFile,
       recommendedNextRenewalTarget: transmissionState.recommendedNextRenewalTarget,
       pageResponsive: true,
       hardBlock: false,
-      shift
+      validation,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false
     };
 
-    recordTransmission("admit", "COMPLETION_LATCHED_BY_NORTH_TRANSMISSION", response);
+    recordTransmission("admit", "F21_LATCHED_BY_NORTH_NEWS", response);
     publishAll();
     return response;
+  }
+
+  function acceptF21Eligibility(input = {}) {
+    return latchF21FromSouthEligibility(input, "acceptF21Eligibility");
+  }
+
+  function receiveF21Eligibility(input = {}) {
+    return latchF21FromSouthEligibility(input, "receiveF21Eligibility");
+  }
+
+  function submitF21Eligibility(input = {}) {
+    return latchF21FromSouthEligibility(input, "submitF21Eligibility");
+  }
+
+  function admitCompletion(input = {}, source = "completion") {
+    if (hasEvent(input, F21_ELIGIBILITY_EVENTS) || getAnyBool(input, ["f21EligibleForNorth"], false)) {
+      return latchF21FromSouthEligibility(input, source);
+    }
+
+    return getHeldResponse("WAITING_F21_ELIGIBILITY_SUBMISSION", "completion-event-without-eligibility-packet", {
+      source,
+      event: eventName(input)
+    });
   }
 
   function receiveTransmissionEvent(input = {}, source = "receiveEvent") {
     const packet = normalizePayload(input);
     const name = eventName(packet);
 
-    if (!name) {
+    if (!name && !getAnyBool(packet, ["f21EligibleForNorth"], false)) {
       return getArchiveResponse("missing-event-name", { source });
+    }
+
+    if (hasEvent(packet, F21_ELIGIBILITY_EVENTS) || getAnyBool(packet, ["f21EligibleForNorth"], false)) {
+      return latchF21FromSouthEligibility(packet, source);
     }
 
     if (hasEvent(packet, WEST_HANDOFF_EVENTS)) {
@@ -963,8 +1340,8 @@
       return admitSouthOutput(input, source);
     }
 
-    if (checkpoint.event === "COMPLETION_LATCHED") {
-      return admitCompletion(input, source);
+    if (checkpoint.event === "COMPLETION_LATCHED" || asArray(checkpoint.aliases).some((item) => F21_ELIGIBILITY_EVENTS.includes(item))) {
+      return latchF21FromSouthEligibility(input, source);
     }
 
     const response = {
@@ -1017,8 +1394,16 @@
     return receiveTransmissionEvent(event || {}, "submitEvent");
   }
 
+  function submit(event) {
+    return submitEvent(event || {});
+  }
+
   function receiveEvent(event) {
     return receiveTransmissionEvent(event || {}, "receiveEvent");
+  }
+
+  function completeActive(event = {}) {
+    return submitEvent(event);
   }
 
   function getActiveGearState() {
@@ -1038,6 +1423,8 @@
       oneActiveGearAtATime: true,
       transmissionGovernorActive: true,
       fibonacciCombustionScaleActive: true,
+      alignmentPlusFibonacciSynchronizationActive: true,
+      f21NorthNewsLatchConsumerActive: true,
       visibleProgressMode: "ACTIVE_GEAR_0_TO_100",
       cumulativeProgressControlsVisibleLoader: false,
       updatedAt: nowIso()
@@ -1054,18 +1441,22 @@
       file: FILE,
       route: ROUTE,
       cardinalRole: "NORTH",
-      authority: "lab-runtime-table-north-transmission-governor-facade",
+      authority: "lab-runtime-table-north-f21-news-latch-consumer-facade",
 
       northFacadeCompatibilityActive: true,
       hearthNorthAliasesActive: true,
       transmissionGovernorActive: true,
       fibonacciCombustionScaleActive: true,
+      alignmentPlusFibonacciSynchronizationActive: true,
+      f21NorthNewsLatchConsumerActive: true,
       oneActiveGearAtATime: true,
       visibleProgressMode: "ACTIVE_GEAR_0_TO_100",
       cumulativeProgressControlsVisibleLoader: false,
       legacyFibonacciProgressPreservedForCompatibility: true,
 
+      eastHandoffMethodsActive: true,
       westIntakeMethodsActive: true,
+      f21EligibilityMethodsActive: true,
       indexHandoffAcceptedRecognized: true,
       s2IndexHandoffAcceptedRecognized: true,
       westHandoffRecognized: true,
@@ -1080,11 +1471,22 @@
       nextGear: transmissionState.nextGear,
       shiftAuthorized: transmissionState.shiftAuthorized,
 
+      eastHandoffAcceptedByNorth: transmissionState.eastHandoffAcceptedByNorth,
       westHandoffAcceptedByNorth: transmissionState.westHandoffAcceptedByNorth,
       northAdmissionComplete: transmissionState.northAdmissionComplete,
       southOutputAuthorized: transmissionState.southOutputAuthorized,
       southOutputComplete: transmissionState.southOutputComplete,
       northReturnComplete: transmissionState.northReturnComplete,
+
+      f21EligibilityReceived: transmissionState.f21EligibilityReceived,
+      f21EligibilityAccepted: transmissionState.f21EligibilityAccepted,
+      f21EligibilityRejected: transmissionState.f21EligibilityRejected,
+      f21EligibilitySource: transmissionState.f21EligibilitySource,
+      f21EligibilityReceivedAt: transmissionState.f21EligibilityReceivedAt,
+      f21EligibilityAcceptedAt: transmissionState.f21EligibilityAcceptedAt,
+      f21EligibilityValidation: clonePlain(transmissionState.f21EligibilityValidation),
+      f21LatchMode: transmissionState.f21LatchMode,
+      completionLatched: transmissionState.completionLatched,
       finalCompletionLatched: transmissionState.finalCompletionLatched,
       degradedCompletionLatched: transmissionState.degradedCompletionLatched,
 
@@ -1133,8 +1535,10 @@
       ownsActiveGearState: true,
       ownsGearShiftAuthorization: true,
       ownsWestIntakeAcceptance: true,
+      ownsF21NewsLatchConsumption: true,
       ownsSouthProofClosure: true,
       ownsReturnToEastAuthorization: true,
+
       ownsEastFirstPaint: false,
       ownsWestHandoffValidation: false,
       ownsSouthCanvasProof: false,
@@ -1179,7 +1583,7 @@
     )).join("\n") || "- none";
 
     return [
-      "LAB_RUNTIME_TABLE_NORTH_TRANSMISSION_GOVERNOR_FIBONACCI_COMBUSTION_RECEIPT",
+      "LAB_RUNTIME_TABLE_NORTH_F21_NEWS_LATCH_CONSUMER_ALIGNMENT_PLUS_FIBONACCI_SYNC_RECEIPT",
       "",
       `contract=${receipt.contract}`,
       `receipt=${receipt.receipt}`,
@@ -1194,12 +1598,16 @@
       `hearthNorthAliasesActive=${receipt.hearthNorthAliasesActive}`,
       `transmissionGovernorActive=${receipt.transmissionGovernorActive}`,
       `fibonacciCombustionScaleActive=${receipt.fibonacciCombustionScaleActive}`,
+      `alignmentPlusFibonacciSynchronizationActive=${receipt.alignmentPlusFibonacciSynchronizationActive}`,
+      `f21NorthNewsLatchConsumerActive=${receipt.f21NorthNewsLatchConsumerActive}`,
       `oneActiveGearAtATime=${receipt.oneActiveGearAtATime}`,
       `visibleProgressMode=${receipt.visibleProgressMode}`,
       `cumulativeProgressControlsVisibleLoader=${receipt.cumulativeProgressControlsVisibleLoader}`,
       `legacyFibonacciProgressPreservedForCompatibility=${receipt.legacyFibonacciProgressPreservedForCompatibility}`,
       "",
+      `eastHandoffMethodsActive=${receipt.eastHandoffMethodsActive}`,
       `westIntakeMethodsActive=${receipt.westIntakeMethodsActive}`,
+      `f21EligibilityMethodsActive=${receipt.f21EligibilityMethodsActive}`,
       `indexHandoffAcceptedRecognized=${receipt.indexHandoffAcceptedRecognized}`,
       `s2IndexHandoffAcceptedRecognized=${receipt.s2IndexHandoffAcceptedRecognized}`,
       `westHandoffRecognized=${receipt.westHandoffRecognized}`,
@@ -1214,11 +1622,21 @@
       `nextGear=${receipt.nextGear}`,
       `shiftAuthorized=${receipt.shiftAuthorized}`,
       "",
+      `eastHandoffAcceptedByNorth=${receipt.eastHandoffAcceptedByNorth}`,
       `westHandoffAcceptedByNorth=${receipt.westHandoffAcceptedByNorth}`,
       `northAdmissionComplete=${receipt.northAdmissionComplete}`,
       `southOutputAuthorized=${receipt.southOutputAuthorized}`,
       `southOutputComplete=${receipt.southOutputComplete}`,
       `northReturnComplete=${receipt.northReturnComplete}`,
+      "",
+      `f21EligibilityReceived=${receipt.f21EligibilityReceived}`,
+      `f21EligibilityAccepted=${receipt.f21EligibilityAccepted}`,
+      `f21EligibilityRejected=${receipt.f21EligibilityRejected}`,
+      `f21EligibilitySource=${receipt.f21EligibilitySource}`,
+      `f21EligibilityReceivedAt=${receipt.f21EligibilityReceivedAt}`,
+      `f21EligibilityAcceptedAt=${receipt.f21EligibilityAcceptedAt}`,
+      `f21LatchMode=${receipt.f21LatchMode}`,
+      `completionLatched=${receipt.completionLatched}`,
       `finalCompletionLatched=${receipt.finalCompletionLatched}`,
       `degradedCompletionLatched=${receipt.degradedCompletionLatched}`,
       "",
@@ -1255,6 +1673,7 @@
       `ownsActiveGearState=${receipt.ownsActiveGearState}`,
       `ownsGearShiftAuthorization=${receipt.ownsGearShiftAuthorization}`,
       `ownsWestIntakeAcceptance=${receipt.ownsWestIntakeAcceptance}`,
+      `ownsF21NewsLatchConsumption=${receipt.ownsF21NewsLatchConsumption}`,
       `ownsSouthProofClosure=${receipt.ownsSouthProofClosure}`,
       `ownsReturnToEastAuthorization=${receipt.ownsReturnToEastAuthorization}`,
       "",
@@ -1303,18 +1722,28 @@
     transmissionState.lastClosedCheckpoint = "";
     transmissionState.nextGear = TRANSMISSION_GEARS.WEST_SYNCHRONIZER;
     transmissionState.shiftAuthorized = false;
+    transmissionState.eastHandoffAcceptedByNorth = false;
     transmissionState.westHandoffAcceptedByNorth = false;
     transmissionState.northAdmissionComplete = false;
     transmissionState.southOutputAuthorized = false;
     transmissionState.southOutputComplete = false;
     transmissionState.northReturnComplete = false;
+    transmissionState.f21EligibilityReceived = false;
+    transmissionState.f21EligibilityAccepted = false;
+    transmissionState.f21EligibilityRejected = false;
+    transmissionState.f21EligibilitySource = "";
+    transmissionState.f21EligibilityReceivedAt = "";
+    transmissionState.f21EligibilityAcceptedAt = "";
+    transmissionState.f21EligibilityValidation = null;
+    transmissionState.f21LatchMode = "WAITING";
+    transmissionState.completionLatched = false;
     transmissionState.finalCompletionLatched = false;
     transmissionState.degradedCompletionLatched = false;
     transmissionState.firstFailedCoordinate = "WAITING_EAST_OR_WEST_HANDOFF";
     transmissionState.recommendedNextOwner = "EAST";
     transmissionState.recommendedNextFile = EAST_FILE;
     transmissionState.recommendedNextRenewalTarget = EAST_FILE;
-    transmissionState.postgameStatus = "NORTH_TRANSMISSION_GOVERNOR_READY";
+    transmissionState.postgameStatus = "NORTH_F21_NEWS_LATCH_CONSUMER_READY";
     transmissionState.queue = [];
     transmissionState.updatedAt = nowIso();
 
@@ -1331,14 +1760,26 @@
     file: FILE,
     cardinalRole: "NORTH",
 
+    acceptEastHandoff,
+    receiveEastHandoff,
+
     acceptWestHandoff,
     receiveWestHandoff,
     acceptWestIntake,
     receiveWestIntake,
+
+    acceptF21Eligibility,
+    receiveF21Eligibility,
+    submitF21Eligibility,
+    validateF21Eligibility,
+    latchF21FromSouthEligibility,
+
     acceptCheckpointEvent,
     receiveCheckpointEvent,
     submitEvent,
+    submit,
     receiveEvent,
+    completeActive,
 
     closeActiveGear,
     authorizeNextGear,
@@ -1362,20 +1803,30 @@
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      checkpointSessionContract: "LAB_RUNTIME_TABLE_NORTH_TRANSMISSION_SESSION_WRAPPER_v1",
-      checkpointSessionReceipt: "LAB_RUNTIME_TABLE_NORTH_TRANSMISSION_SESSION_WRAPPER_RECEIPT_v1",
+      checkpointSessionContract: "LAB_RUNTIME_TABLE_NORTH_F21_NEWS_LATCH_SESSION_WRAPPER_v2",
+      checkpointSessionReceipt: "LAB_RUNTIME_TABLE_NORTH_F21_NEWS_LATCH_SESSION_WRAPPER_RECEIPT_v2",
       sessionId,
       route: options.route || ROUTE,
       transmissionWrapped: true,
       persistentNorthSession: true,
+      f21NorthNewsLatchConsumerActive: true,
+
+      acceptEastHandoff,
+      receiveEastHandoff,
+      acceptWestHandoff,
+      receiveWestHandoff,
+      acceptF21Eligibility,
+      receiveF21Eligibility,
+      submitF21Eligibility,
+      validateF21Eligibility,
+      latchF21FromSouthEligibility,
 
       submitEvent,
+      submit,
       submitMany(events = []) {
         return asArray(events).map((event) => submitEvent(event));
       },
-      completeActive(event = {}) {
-        return submitEvent(event);
-      },
+      completeActive,
       canAdvanceTo() {
         return true;
       },
@@ -1384,7 +1835,9 @@
           activeGear: transmissionState.activeGear,
           activeGearLabel: transmissionState.activeGearLabel,
           activeGearProgress: transmissionState.activeGearProgress,
-          activeCycleId: transmissionState.activeCycleId
+          activeCycleId: transmissionState.activeCycleId,
+          completionLatched: transmissionState.completionLatched,
+          f21LatchMode: transmissionState.f21LatchMode
         };
       },
       getCheckpointState() {
@@ -1432,11 +1885,13 @@
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      authority: "north-transmission-fibonacci-combustion-plan",
+      authority: "north-f21-news-latch-fibonacci-combustion-plan",
       sequence: createChronologicalFibonacciPlan(options),
       newsGates: clonePlain(NEWS_GATES),
       transmissionGovernorActive: true,
       fibonacciCombustionScaleActive: true,
+      alignmentPlusFibonacciSynchronizationActive: true,
+      f21NorthNewsLatchConsumerActive: true,
       oneActiveGearAtATime: true,
       visibleProgressMode: "ACTIVE_GEAR_0_TO_100",
       cumulativeProgressControlsVisibleLoader: false,
@@ -1457,6 +1912,22 @@
         action: CHECKPOINT_EVENT_ACTIONS.ARCHIVE,
         gapClass: GAP_CLASS.DUPLICATE_ARCHIVE,
         reason: "missing-event-name",
+        activeGear: transmissionState.activeGear,
+        activeGearProgress: transmissionState.activeGearProgress
+      };
+    }
+
+    if (F21_ELIGIBILITY_EVENTS.includes(name)) {
+      const validation = validateF21Eligibility(event);
+      return {
+        action: validation.ok ? CHECKPOINT_EVENT_ACTIONS.ADMIT : CHECKPOINT_EVENT_ACTIONS.HELD,
+        gapClass: validation.ok ? GAP_CLASS.NONE : GAP_CLASS.HELD_GAP,
+        checkpointId: "F21_NORTH_NEWS_LATCH",
+        checkpointEvent: name,
+        gear: TRANSMISSION_GEARS.NORTH_RETURN,
+        nextGear: TRANSMISSION_GEARS.COMPLETE,
+        reason: validation.ok ? "f21-eligibility-valid" : "f21-eligibility-held",
+        validation,
         activeGear: transmissionState.activeGear,
         activeGearProgress: transmissionState.activeGearProgress
       };
@@ -1491,12 +1962,12 @@
 
     if (COMPLETION_EVENTS.includes(name)) {
       return {
-        action: CHECKPOINT_EVENT_ACTIONS.ADMIT,
-        gapClass: GAP_CLASS.NONE,
+        action: CHECKPOINT_EVENT_ACTIONS.HELD,
+        gapClass: GAP_CLASS.HELD_GAP,
         checkpointId: "F21_COMPLETION_LATCHED",
         gear: TRANSMISSION_GEARS.NORTH_RETURN,
         nextGear: TRANSMISSION_GEARS.COMPLETE,
-        reason: "completion-event-recognized",
+        reason: "completion-event-requires-f21-eligibility-fields",
         activeGear: transmissionState.activeGear,
         activeGearProgress: transmissionState.activeGearProgress
       };
@@ -1532,26 +2003,34 @@
     const northGateReady = Boolean(
       transmissionState.westHandoffAcceptedByNorth ||
       transmissionState.northAdmissionComplete ||
-      safeBool(packet.northGateReady, false)
+      getAnyBool(packet, ["northGateReady"], false)
     );
 
     const eastGateReady = Boolean(
-      safeBool(packet.eastGateReady, false) ||
-      safeBool(packet.step1Ready, false) ||
-      safeBool(packet.firstPaintReady, false) ||
-      safeBool(packet.mountReady, false)
+      getAnyBool(packet, ["eastGateReady"], false) ||
+      getAnyBool(packet, ["step1Ready"], false) ||
+      getAnyBool(packet, ["firstPaintReady"], false) ||
+      getAnyBool(packet, ["mountReady"], false)
     );
 
     const westGateReady = Boolean(
-      safeBool(packet.westGateReady, false) ||
-      transmissionState.westHandoffAcceptedByNorth
+      getAnyBool(packet, ["westGateReady"], false) ||
+      transmissionState.westHandoffAcceptedByNorth ||
+      getAnyBool(packet, ["inspectStrictReady"], false)
     );
 
     const southGateReady = Boolean(
-      safeBool(packet.southGateReady, false) ||
-      safeBool(packet.visibleContentProof, false) ||
-      safeBool(packet.diagnosticCanLeavePlanetFrame, false) ||
+      getAnyBool(packet, ["southGateReady"], false) ||
+      getAnyBool(packet, ["visibleContentProof"], false) ||
+      getAnyBool(packet, ["visibleContentStrictProof"], false) ||
+      getAnyBool(packet, ["diagnosticCanLeavePlanetFrame"], false) ||
       transmissionState.southOutputComplete
+    );
+
+    const f21GateReady = Boolean(
+      transmissionState.completionLatched ||
+      getAnyBool(packet, ["f21EligibleForNorth"], false) ||
+      getAnyBool(packet, ["f21EligibilitySubmittedToNorth"], false)
     );
 
     const newsGatePassedBeforeF21 = Boolean(northGateReady && eastGateReady && westGateReady && southGateReady);
@@ -1562,8 +2041,8 @@
         westGateReady &&
         (
           southGateReady ||
-          safeBool(packet.imageRendered, false) ||
-          safeBool(packet.nonblankPlanetVisible, false)
+          getAnyBool(packet, ["imageRendered"], false) ||
+          getAnyBool(packet, ["nonblankPlanetVisible"], false)
         )
       )
     );
@@ -1573,12 +2052,15 @@
       eastGateReady,
       westGateReady,
       southGateReady,
+      f21GateReady,
       newsGatePassedBeforeF21,
       northGateDegradedReady: northGateReady,
       westGateDegradedReady: westGateReady,
       southGateDegradedReady: newsGateDegradedBeforeF21,
       newsGateDegradedBeforeF21,
-      degradedForwardAvailable: newsGateDegradedBeforeF21 && !newsGatePassedBeforeF21
+      degradedForwardAvailable: newsGateDegradedBeforeF21 && !newsGatePassedBeforeF21,
+      completionLatched: transmissionState.completionLatched,
+      f21LatchMode: transmissionState.f21LatchMode
     };
   }
 
@@ -1785,7 +2267,7 @@
     function log(event, detail = {}) {
       const entry = { event, detail: clonePlain(detail), at: nowIso() };
       state.ledger.push(entry);
-      if (state.ledger.length > 160) state.ledger.splice(0, state.ledger.length - 160);
+      trim(state.ledger, 160);
       state.updatedAt = entry.at;
       return entry;
     }
@@ -1950,6 +2432,7 @@
         northPrecedent: true,
         cardinalSplitActive: true,
         transmissionGovernorAvailable: true,
+        f21NorthNewsLatchConsumerAvailable: true,
         visualPassClaimed: false,
         updatedAt: state.updatedAt
       };
@@ -2040,6 +2523,7 @@
           childCount: state.registrations.length,
           northPrecedent: true,
           transmissionGovernorAvailable: true,
+          f21NorthNewsLatchConsumerAvailable: true,
           visualPassClaimed: false,
           updatedAt: nowIso()
         };
@@ -2155,7 +2639,8 @@
         imageRenderedIsNotCoherencePass: true,
         cardinalSplitActive: true,
         northPrecedent: true,
-        transmissionGovernorActive: true
+        transmissionGovernorActive: true,
+        f21NorthNewsLatchConsumerActive: true
       },
       generatedImage: false,
       graphicBox: false,
@@ -2230,7 +2715,7 @@
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      authority: "lab-triple-g-coherence-diagnostic-north-transmission-facade",
+      authority: "lab-triple-g-coherence-diagnostic-north-f21-news-latch-facade",
       goalProfileId: goalProfile.id,
       goalProfile: clonePlain(goalProfile),
       constructionReady: true,
@@ -2243,10 +2728,11 @@
       warningCheckpoints: checkpoints.filter((item) => item.status === COHERENCE_STATUS.WARNING).map((item) => item.id),
       heldCheckpoints: heldCheckpoints.map((item) => item.id),
       renewalTargets: failedCheckpoints.map((item) => item.renewalTarget).flat(),
-      nextStrategy: ["Use North transmission receipt before renewing downstream visual files."],
+      nextStrategy: ["Use North F21 NEWS latch receipt before renewing downstream visual files."],
       singleAnchorIsLocalProofOnly: true,
       wideProbeNeverBlocksFirstVisibleRender: true,
       transmissionGovernorActive: true,
+      f21NorthNewsLatchConsumerActive: true,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -2267,7 +2753,7 @@
     function run(input = {}) {
       const report = runChecks({ ...input, goalProfile: input.goalProfile || state.profile }, { ...options, goalProfile: input.goalProfile || state.profile });
       state.reports.push(report);
-      if (state.reports.length > 80) state.reports.splice(0, state.reports.length - 80);
+      trim(state.reports, 80);
       state.updatedAt = nowIso();
       return report;
     }
@@ -2290,6 +2776,7 @@
           reportCount: state.reports.length,
           tripleGDiagnostic: true,
           transmissionGovernorAvailable: true,
+          f21NorthNewsLatchConsumerAvailable: true,
           visualPassClaimed: false,
           updatedAt: nowIso()
         };
@@ -2333,8 +2820,8 @@
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      loadingOptimizationContract: "LAB_UNIVERSAL_PLANET_LOADING_OPTIMIZATION_PLAN_v1",
-      loadingOptimizationReceipt: "LAB_UNIVERSAL_PLANET_LOADING_OPTIMIZATION_PLAN_RECEIPT_v1",
+      loadingOptimizationContract: "LAB_UNIVERSAL_PLANET_LOADING_OPTIMIZATION_PLAN_v2",
+      loadingOptimizationReceipt: "LAB_UNIVERSAL_PLANET_LOADING_OPTIMIZATION_PLAN_RECEIPT_v2",
       authority: "lab-runtime-table-north-loading-optimization-authority",
       loadingCoordinate: wideProbeReady ? L_COORDINATES.L6_OPTIMIZED_STABLE : L_COORDINATES.L5_WIDE_PROBE_IDLE_CHUNKS,
       visibleCarrierFirst: true,
@@ -2349,6 +2836,7 @@
         useIdleFrames: true
       },
       transmissionGovernorActive: true,
+      f21NorthNewsLatchConsumerActive: true,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -2366,8 +2854,8 @@
     const plan = {
       contract: CONTRACT,
       receipt: RECEIPT,
-      planContract: "LAB_UNIVERSAL_PLANET_PROCEDURAL_VISUAL_CARRIER_PLAN_v1",
-      planReceipt: "LAB_UNIVERSAL_PLANET_PROCEDURAL_VISUAL_CARRIER_PLAN_RECEIPT_v1",
+      planContract: "LAB_UNIVERSAL_PLANET_PROCEDURAL_VISUAL_CARRIER_PLAN_v2",
+      planReceipt: "LAB_UNIVERSAL_PLANET_PROCEDURAL_VISUAL_CARRIER_PLAN_RECEIPT_v2",
       authority: "runtime-table-north-universal-planet-procedural-plan-authority",
       planetId: input.planetId || options.planetId || "",
       planetLabel: input.planetLabel || options.planetLabel || "",
@@ -2395,6 +2883,7 @@
       loadingOptimizationPlan,
       checkpointGovernorAvailable: true,
       transmissionGovernorActive: true,
+      f21NorthNewsLatchConsumerActive: true,
       recommendedCheckpointSessionFactory: "createHearthTransmissionSession",
       firstFailedCoordinate: imageRendered ? "IMAGE_RENDERED_COHERENCE_PROOF_STILL_SEPARATE" : A_COORDINATES.A1_ATLAS_START_AUTHORIZED,
       recommendedNextRenewalTarget: imageRendered ? "run-triple-g-diagnostic" : "canvas-plan-directed-atlas-start-consumption",
@@ -2465,7 +2954,7 @@
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      authority: "lab-runtime-table-cardinal-north-transmission-facade",
+      authority: "lab-runtime-table-cardinal-north-f21-news-latch-facade",
       northLoaded: true,
       eastLoaded: branchState.eastLoaded,
       westLoaded: branchState.westLoaded,
@@ -2477,6 +2966,7 @@
       northPrecedent: true,
       cardinalSplitActive: true,
       transmissionGovernorActive: true,
+      f21NorthNewsLatchConsumerActive: true,
       oneActiveGearAtATime: true,
       visibleProgressMode: "ACTIVE_GEAR_0_TO_100",
       visualPassClaimed: false,
@@ -2493,10 +2983,10 @@
       previousContract: PREVIOUS_CONTRACT,
       baselineContract: BASELINE_CONTRACT,
       version: VERSION,
-      authority: "lab-runtime-table-north-transmission-governor-facade",
+      authority: "lab-runtime-table-north-f21-news-latch-consumer-facade",
       destinationFile: FILE,
       status: "active",
-      role: "north-public-runtime-table-facade-with-hearth-transmission-governor",
+      role: "north-public-runtime-table-facade-with-f21-news-latch-consumer",
       cardinalRole: "NORTH",
 
       labEquipment: true,
@@ -2523,12 +3013,16 @@
 
       northFacadeCompatibilityActive: true,
       hearthNorthAliasesActive: true,
+      eastHandoffMethodsActive: true,
       westIntakeMethodsActive: true,
+      f21EligibilityMethodsActive: true,
       indexHandoffAcceptedRecognized: true,
       s2IndexHandoffAcceptedRecognized: true,
 
       transmissionGovernorActive: true,
       fibonacciCombustionScaleActive: true,
+      alignmentPlusFibonacciSynchronizationActive: true,
+      f21NorthNewsLatchConsumerActive: true,
       oneActiveGearAtATime: true,
       activeGear: transmissionState.activeGear,
       activeGearLabel: transmissionState.activeGearLabel,
@@ -2541,6 +3035,14 @@
       visibleProgressMode: "ACTIVE_GEAR_0_TO_100",
       cumulativeProgressControlsVisibleLoader: false,
       legacyFibonacciProgressPreservedForCompatibility: true,
+
+      completionLatched: transmissionState.completionLatched,
+      finalCompletionLatched: transmissionState.finalCompletionLatched,
+      degradedCompletionLatched: transmissionState.degradedCompletionLatched,
+      f21LatchMode: transmissionState.f21LatchMode,
+      f21EligibilityReceived: transmissionState.f21EligibilityReceived,
+      f21EligibilityAccepted: transmissionState.f21EligibilityAccepted,
+      f21EligibilityRejected: transmissionState.f21EligibilityRejected,
 
       checkpointGovernorActive: true,
       chronologicalCheckpointSessionSupported: true,
@@ -2601,10 +3103,17 @@
         "getHearthTransmissionSession",
         "getTransmissionReceipt",
         "getTransmissionReceiptText",
+        "acceptEastHandoff",
+        "receiveEastHandoff",
         "acceptWestHandoff",
         "receiveWestHandoff",
         "acceptWestIntake",
         "receiveWestIntake",
+        "acceptF21Eligibility",
+        "receiveF21Eligibility",
+        "submitF21Eligibility",
+        "validateF21Eligibility",
+        "latchF21FromSouthEligibility",
         "acceptCheckpointEvent",
         "receiveCheckpointEvent",
         "submitEvent",
@@ -2618,6 +3127,7 @@
         "active-gear-state",
         "gear-shift-authorization",
         "west-intake-acceptance",
+        "f21-news-latch-consumption",
         "south-proof-closure",
         "return-to-east-authorization",
         "fibonacci-combustion-synchronization",
@@ -2707,14 +3217,26 @@
     setActiveGear,
     updateActiveGearProgress,
 
+    acceptEastHandoff,
+    receiveEastHandoff,
+
     acceptWestHandoff,
     receiveWestHandoff,
     acceptWestIntake,
     receiveWestIntake,
+
+    acceptF21Eligibility,
+    receiveF21Eligibility,
+    submitF21Eligibility,
+    validateF21Eligibility,
+    latchF21FromSouthEligibility,
+
     acceptCheckpointEvent,
     receiveCheckpointEvent,
     submitEvent,
+    submit,
     receiveEvent,
+    completeActive,
 
     bindCardinalBranches,
     loadCardinalBranchScripts,
@@ -2739,9 +3261,13 @@
 
     northFacadeCompatibilityActive: true,
     hearthNorthAliasesActive: true,
+    eastHandoffMethodsActive: true,
     westIntakeMethodsActive: true,
+    f21EligibilityMethodsActive: true,
     transmissionGovernorActive: true,
     fibonacciCombustionScaleActive: true,
+    alignmentPlusFibonacciSynchronizationActive: true,
+    f21NorthNewsLatchConsumerActive: true,
     oneActiveGearAtATime: true,
     visibleProgressMode: "ACTIVE_GEAR_0_TO_100",
     cumulativeProgressControlsVisibleLoader: false,
@@ -2783,6 +3309,12 @@
     get activeGearProgress() {
       return transmissionState.activeGearProgress;
     },
+    get completionLatched() {
+      return transmissionState.completionLatched;
+    },
+    get f21LatchMode() {
+      return transmissionState.f21LatchMode;
+    },
     get transmissionState() {
       return transmissionState;
     }
@@ -2802,7 +3334,7 @@
 
     dataset.labRuntimeTableNorthLoaded = "true";
     dataset.labRuntimeTableNorthContract = CONTRACT;
-    dataset.labRuntimeTableNorthTransmissionGovernor = "true";
+    dataset.labRuntimeTableNorthF21NewsLatchConsumer = "true";
     dataset.northPrecedent = "true";
     dataset.cardinalSplitActive = "true";
     dataset.hearthConsumesNorthOnly = "true";
@@ -2811,12 +3343,16 @@
     dataset.hearthNorthCommandRuntimeTableContract = CONTRACT;
     dataset.hearthNorthAliasesActive = "true";
     dataset.northFacadeCompatibilityActive = "true";
+    dataset.eastHandoffMethodsActive = "true";
     dataset.westIntakeMethodsActive = "true";
+    dataset.f21EligibilityMethodsActive = "true";
     dataset.indexHandoffAcceptedRecognized = "true";
     dataset.s2IndexHandoffAcceptedRecognized = "true";
 
     dataset.transmissionGovernorActive = "true";
     dataset.fibonacciCombustionScaleActive = "true";
+    dataset.alignmentPlusFibonacciSynchronizationActive = "true";
+    dataset.f21NorthNewsLatchConsumerActive = "true";
     dataset.oneActiveGearAtATime = "true";
     dataset.activeGear = transmissionState.activeGear;
     dataset.activeGearProgress = String(transmissionState.activeGearProgress);
@@ -2828,6 +3364,14 @@
     dataset.visibleProgressMode = "ACTIVE_GEAR_0_TO_100";
     dataset.cumulativeProgressControlsVisibleLoader = "false";
     dataset.legacyFibonacciProgressPreservedForCompatibility = "true";
+
+    dataset.f21EligibilityReceived = String(transmissionState.f21EligibilityReceived);
+    dataset.f21EligibilityAccepted = String(transmissionState.f21EligibilityAccepted);
+    dataset.f21EligibilityRejected = String(transmissionState.f21EligibilityRejected);
+    dataset.f21LatchMode = transmissionState.f21LatchMode;
+    dataset.completionLatched = String(transmissionState.completionLatched);
+    dataset.finalCompletionLatched = String(transmissionState.finalCompletionLatched);
+    dataset.degradedCompletionLatched = String(transmissionState.degradedCompletionLatched);
 
     dataset.tripleGDiagnosticReusable = "true";
     dataset.runtimeTableDoesNotOwnTruth = "true";
@@ -2851,6 +3395,7 @@
     dataset.recommendedNextOwner = transmissionState.recommendedNextOwner;
     dataset.recommendedNextFile = transmissionState.recommendedNextFile;
     dataset.recommendedNextRenewalTarget = transmissionState.recommendedNextRenewalTarget;
+    dataset.postgameStatus = transmissionState.postgameStatus;
 
     dataset.generatedImage = "false";
     dataset.graphicBox = "false";
@@ -2870,6 +3415,8 @@
     root.DEXTER_LAB.checkpointGovernor = api;
     root.DEXTER_LAB.cardinalRuntimeTableNorth = api;
     root.DEXTER_LAB.northTransmissionGovernor = api;
+    root.DEXTER_LAB.hearthCheckpointSession = transmissionSession;
+    root.DEXTER_LAB.checkpointSession = transmissionSession;
 
     root.LAB_RUNTIME_TABLE = api;
     root.DexterRuntimeTable = api;
@@ -2891,12 +3438,20 @@
     root.HEARTH_LOCAL_COMMAND_RUNTIME_TABLE = api;
     root.HEARTH.northCommandRuntimeTable = api;
     root.HEARTH.northTransmissionGovernor = api;
+    root.HEARTH.f21NewsLatchConsumer = api;
+
+    root.HEARTH_CHECKPOINT_SESSION = transmissionSession;
+    root.HEARTH_RUNTIME_CHECKPOINT_SESSION = transmissionSession;
+    root.LAB_HEARTH_CHECKPOINT_SESSION = transmissionSession;
+    root.LAB_CHECKPOINT_SESSION = transmissionSession;
 
     root.HEARTH_NORTH_TRANSMISSION_SESSION = transmissionSession;
     root.HEARTH_NORTH_TRANSMISSION_GOVERNOR = api;
+    root.HEARTH_NORTH_F21_NEWS_LATCH_CONSUMER = api;
     root.HEARTH_NORTH_COMMAND_RUNTIME_TABLE_RECEIPT = getTransmissionReceipt();
     root.HEARTH_NORTH_CYCLICAL_CHECKPOINT_RECEIPT = root.HEARTH_NORTH_COMMAND_RUNTIME_TABLE_RECEIPT;
     root.LAB_RUNTIME_TABLE_NORTH_TRANSMISSION_RECEIPT = root.HEARTH_NORTH_COMMAND_RUNTIME_TABLE_RECEIPT;
+    root.LAB_RUNTIME_TABLE_NORTH_F21_NEWS_LATCH_RECEIPT = root.HEARTH_NORTH_COMMAND_RUNTIME_TABLE_RECEIPT;
 
     publishDatasets();
   }

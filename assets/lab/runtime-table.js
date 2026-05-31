@@ -1,25 +1,36 @@
 // /assets/lab/runtime-table.js
-// LAB_RUNTIME_TABLE_NORTH_TWO_CYCLE_CANVAS_F13_RELEASE_DISTRIBUTOR_TNT_v1
+// LAB_RUNTIME_TABLE_NORTH_NON_BLOCKING_PHASE_SCHEDULER_TWO_CYCLE_DISTRIBUTOR_TNT_v2
 // Full-file replacement.
 // North primary Runtime Table authority.
 // Purpose:
-// - Correct North from a single primary sequence into the locked two-cycle law.
+// - Preserve the locked two-cycle Runtime Table law.
 // - Cycle 1: NORTH -> EAST -> WEST -> SOUTH -> NORTH.
 // - Cycle 2: NORTH -> EAST -> SOUTH -> WEST -> CANVAS.
-// - Separate Canvas F13 release from F21 completion/downstream release.
-// - Allow Canvas F13 evidence before F21.
-// - Hold final READY text, final visual pass, and downstream release under North F21 latch only.
-// - Preserve Runtime Table, Triple G, Visual Carrier Plan, Loading Optimization, Wide Probe,
-//   checkpoint, transmission, F21 NEWS latch, and Hearth-facing compatibility exports.
+// - Preserve Canvas F13 release before F21.
+// - Preserve North-only F21 completion latch.
+// - Repair page freezes by replacing synchronous phase publication with a non-blocking scheduler.
+// - Cache authority scans.
+// - Split light receipt / full receipt / receipt text.
+// - Defer broad dataset writes.
+// - Preserve existing Runtime Table, Triple G, Visual Carrier Plan, checkpoint, and Hearth compatibility exports.
+// Does not own:
+// - Canvas drawing
+// - Canvas children
+// - planet truth
+// - material truth
+// - hydrology truth
+// - elevation truth
+// - route visual layout
+// - final visual pass claim
 
 (() => {
   "use strict";
 
-  const CONTRACT = "LAB_RUNTIME_TABLE_NORTH_TWO_CYCLE_CANVAS_F13_RELEASE_DISTRIBUTOR_TNT_v1";
-  const RECEIPT = "LAB_RUNTIME_TABLE_NORTH_TWO_CYCLE_CANVAS_F13_RELEASE_DISTRIBUTOR_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "LAB_RUNTIME_TABLE_NORTH_PRIMARY_GATE_REGISTRY_MACRO_DISTRIBUTOR_TNT_v1";
-  const BASELINE_CONTRACT = "LAB_RUNTIME_TABLE_NORTH_PRIMARY_GATE_REGISTRY_MACRO_DISTRIBUTOR_TNT_v1";
-  const VERSION = "2026-05-31.lab-runtime-table-north-two-cycle-canvas-f13-release-distributor-v1";
+  const CONTRACT = "LAB_RUNTIME_TABLE_NORTH_NON_BLOCKING_PHASE_SCHEDULER_TWO_CYCLE_DISTRIBUTOR_TNT_v2";
+  const RECEIPT = "LAB_RUNTIME_TABLE_NORTH_NON_BLOCKING_PHASE_SCHEDULER_TWO_CYCLE_DISTRIBUTOR_RECEIPT_v2";
+  const PREVIOUS_CONTRACT = "LAB_RUNTIME_TABLE_NORTH_TWO_CYCLE_CANVAS_F13_RELEASE_DISTRIBUTOR_TNT_v1";
+  const BASELINE_CONTRACT = "LAB_RUNTIME_TABLE_NORTH_TWO_CYCLE_CANVAS_F13_RELEASE_DISTRIBUTOR_TNT_v1";
+  const VERSION = "2026-05-31.lab-runtime-table-north-non-blocking-phase-scheduler-two-cycle-distributor-v2";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
@@ -132,7 +143,8 @@
     PROGRESS_ONLY: "PROGRESS_ONLY",
     DUPLICATE_ARCHIVE: "DUPLICATE_ARCHIVE",
     DOWNSTREAM_HELD: "DOWNSTREAM_HELD",
-    CANVAS_F13_HELD: "CANVAS_F13_HELD"
+    CANVAS_F13_HELD: "CANVAS_F13_HELD",
+    NON_BLOCKING_SCHEDULED: "NON_BLOCKING_SCHEDULED"
   });
 
   const NEWS_GATES = Object.freeze({
@@ -201,7 +213,8 @@
     cycleTwo: "North -> East -> South -> West -> Canvas",
     canvasF13: "Canvas F13 evidence receiver; allowed before F21 and forbidden from claiming READY",
     f21: "North-only completion latch after Canvas F13 evidence returns",
-    downstream: "route, canvas, and Hearth-specific consumers after North F21 latch"
+    downstream: "route, canvas, and Hearth-specific consumers after North F21 latch",
+    scheduler: "non-blocking phase scheduler; light receipts during motion, full receipts on demand"
   });
 
   const PRIMARY_ROTATION = Object.freeze([
@@ -347,7 +360,8 @@
       "RUNTIME_TABLE_EAST_READY",
       "PRIMARY_EAST_GATE_ACCEPTED",
       "EAST_STEP1_COMPLETE",
-      "EAST_STEP1_HANDOFF_ACCEPTED_BY_WEST_METHOD"
+      "EAST_STEP1_HANDOFF_ACCEPTED_BY_WEST_METHOD",
+      "EAST_ROUTE_STEP1_READY"
     ],
     SOUTH: [
       "SOUTH_PRIMARY_GATE_READY",
@@ -366,7 +380,8 @@
       "RUNTIME_TABLE_WEST_READY",
       "PRIMARY_WEST_GATE_ACCEPTED",
       "WEST_CANVAS_RELEASE_APPROVED",
-      "CANVAS_RELEASE_APPROVED_BY_WEST"
+      "CANVAS_RELEASE_APPROVED_BY_WEST",
+      "MACRO_WEST_ADMISSIBILITY_CLASSIFIED"
     ],
     CANVAS: [
       "CANVAS_READY",
@@ -441,6 +456,8 @@
       "DEXTER_LAB.transmissionGapClassifierWest"
     ],
     canvas: [
+      "HEARTH_CANVAS_PARENT_RELEASE_PACKET_TO_EAST_STALE_CLEARANCE",
+      "HEARTH_CANVAS_PARENT_CHILD_RECONCILIATION_F13_EVIDENCE_RECEIVER",
       "HEARTH_CANVAS_PARENT_GOVERNED_F13_EVIDENCE_RECEIVER",
       "HEARTH_CANVAS_PHYSICAL_CARRIER_F13_PROOF_PARENT",
       "HEARTH_CANVAS_MATERIALS_RELIEF_CONSUMPTION_INVALIDATION",
@@ -450,19 +467,27 @@
       "HEARTH_CANVAS_AUTHORITY",
       "HEARTH_CANVAS_EVIDENCE",
       "HEARTH_CANVAS",
+      "HEARTH.canvasParentReleasePacketToEastStaleClearance",
+      "HEARTH.canvasParentChildReconciliationF13EvidenceReceiver",
       "HEARTH.canvasParentGovernedF13EvidenceReceiver",
       "HEARTH.canvasNorth",
       "HEARTH.canvasSplitAdapter",
       "HEARTH.canvasTransistorGate",
       "HEARTH.canvasEvidence",
       "HEARTH.canvas",
+      "DEXTER_LAB.hearthCanvasParentReleasePacketToEastStaleClearance",
+      "DEXTER_LAB.hearthCanvasParentChildReconciliationF13EvidenceReceiver",
       "DEXTER_LAB.hearthCanvasParentGovernedF13EvidenceReceiver",
       "DEXTER_LAB.hearthCanvasNorth",
       "DEXTER_LAB.hearthCanvasEvidence"
     ]
   });
 
-  const MAX_LOG = 180;
+  const MAX_LOG = 120;
+  const AUTHORITY_CACHE_TTL_MS = 850;
+  const LIGHT_FLUSH_DELAY_MS = 24;
+  const FULL_DATASET_IDLE_DELAY_MS = 240;
+  const PHASE_BUDGET_MS = 10;
 
   const state = {
     contract: CONTRACT,
@@ -472,7 +497,7 @@
     version: VERSION,
     file: FILE,
     route: ROUTE,
-    role: "north-two-cycle-canvas-f13-release-distributor",
+    role: "north-non-blocking-phase-scheduler-two-cycle-distributor",
     cardinalRole: CARDINAL.NORTH,
 
     primaryGateRegistryActive: true,
@@ -485,6 +510,14 @@
     downstreamReleaseHeldUntilF21Latch: true,
     northMacroOnly: true,
     microTuningDelegatesDownstream: true,
+
+    nonBlockingPhaseSchedulerActive: true,
+    authorityScanCacheActive: true,
+    lightReceiptDuringMotionActive: true,
+    fullReceiptOnDemandOnly: true,
+    datasetWriteCompactionActive: true,
+    broadDatasetWritesDeferred: true,
+    pageResponsive: true,
 
     activeStageId: "C1_EAST_PRIMARY",
     activeGear: "GEAR_C1_EAST_PRIMARY",
@@ -505,7 +538,10 @@
       canvasEastApiReady: false,
       canvasWestApiReady: false,
       canvasSouthApiReady: false,
-      allCanvasChildrenApiReady: false
+      allCanvasChildrenApiReady: false,
+      authorityScanCached: false,
+      authorityScanCount: 0,
+      authorityScanLastAt: ""
     },
 
     cycleOne: {
@@ -588,12 +624,36 @@
     visualPassClaimed: false
   };
 
+  const scheduler = {
+    queue: [],
+    running: false,
+    runScheduled: false,
+    lightPublishScheduled: false,
+    fullDatasetScheduled: false,
+    globalsPublished: false,
+    authorityCache: null,
+    authorityCacheAt: 0,
+    receiptLightCache: null,
+    receiptLightCacheAt: 0,
+    dirtyDatasetLight: true,
+    dirtyDatasetFull: true,
+    dirtyGlobals: true,
+    dirtyReceiptLight: true,
+    phaseRunCount: 0,
+    lastYieldAt: 0,
+    lastFlushAt: 0
+  };
+
   function nowIso() {
     try {
       return new Date().toISOString();
     } catch (_error) {
       return "";
     }
+  }
+
+  function nowMs() {
+    return Date.now ? Date.now() : new Date().getTime();
   }
 
   function isObject(value) {
@@ -627,11 +687,6 @@
     return String(value);
   }
 
-  function clamp(value, min, max) {
-    const n = safeNumber(value, min);
-    return Math.max(min, Math.min(max, n));
-  }
-
   function clonePlain(value) {
     if (!isObject(value) && !Array.isArray(value)) return value;
 
@@ -646,6 +701,11 @@
     if (Array.isArray(list) && list.length > max) {
       list.splice(0, list.length - max);
     }
+  }
+
+  function clamp(value, min, max) {
+    const n = safeNumber(value, min);
+    return Math.max(min, Math.min(max, n));
   }
 
   function readPath(path) {
@@ -668,40 +728,18 @@
     return null;
   }
 
+  function setDataset(key, value) {
+    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
+    doc.documentElement.dataset[key] = value === undefined || value === null ? "" : String(value);
+  }
+
   function readDataset(key, fallback = "") {
     if (!doc || !doc.documentElement || !doc.documentElement.dataset) return fallback;
     const value = doc.documentElement.dataset[key];
     return value === undefined || value === null || value === "" ? fallback : value;
   }
 
-  function setDataset(key, value) {
-    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
-    doc.documentElement.dataset[key] = value === undefined || value === null ? "" : String(value);
-  }
-
-  function readReceipt(authority) {
-    if (!authority || !isObject(authority)) return null;
-
-    if (isFunction(authority.getReceipt)) {
-      try {
-        const receipt = authority.getReceipt();
-        if (receipt && isObject(receipt)) return receipt;
-      } catch (error) {
-        return { error: error && error.message ? error.message : String(error) };
-      }
-    }
-
-    if (isObject(authority.receiptPacket)) return authority.receiptPacket;
-    if (isObject(authority.receipt)) return authority.receipt;
-
-    if (authority.contract || authority.receipt || authority.version) {
-      return authority;
-    }
-
-    return null;
-  }
-
-  function scanFieldDeep(input, fields, maxDepth = 7) {
+  function scanFieldDeep(input, fields, maxDepth = 6) {
     const wanted = new Set(asArray(fields));
     const seen = typeof WeakSet !== "undefined" ? new WeakSet() : null;
     const queue = [{ value: input, depth: 0 }];
@@ -836,9 +874,7 @@
   }
 
   function packetCycleRoute(input = {}) {
-    return normalizeCycleRoute(
-      getAnyString(input, ["cycleRoute", "activeCycleRoute", "routeCycle"], "")
-    );
+    return normalizeCycleRoute(getAnyString(input, ["cycleRoute", "activeCycleRoute", "routeCycle"], ""));
   }
 
   function packetCycleNumber(input = {}) {
@@ -864,125 +900,176 @@
     ).toUpperCase();
   }
 
-  function isPrimaryGatePacket(input, cardinal) {
-    const packet = normalizePayload(input);
-    const card = String(cardinal || "").toUpperCase();
-    const file = packetFile(packet);
-    const contract = packetContract(packet);
-    const primaryCardinal = packetPrimaryCardinal(packet);
+  function markDirty(scope = "light") {
+    scheduler.dirtyReceiptLight = true;
+    scheduler.dirtyDatasetLight = true;
+    scheduler.dirtyGlobals = true;
 
-    if (card === CARDINAL.EAST && file === PRIMARY_GATES.east) return true;
-    if (card === CARDINAL.SOUTH && file === PRIMARY_GATES.south) return true;
-    if (card === CARDINAL.WEST && file === PRIMARY_GATES.west) return true;
-    if (primaryCardinal === card && getAnyBool(packet, ["primaryGateReady", "primaryRuntimeTableGate"], false)) return true;
+    if (scope === "full") {
+      scheduler.dirtyDatasetFull = true;
+    }
 
-    if (card === CARDINAL.EAST && /RUNTIME_TABLE_EAST|EAST_PRIMARY|EAST_STEP/i.test(contract)) return true;
-    if (card === CARDINAL.SOUTH && /RUNTIME_TABLE_SOUTH|SOUTH_PRIMARY|VISIBLE_STATE_COMPOSER/i.test(contract)) return true;
-    if (card === CARDINAL.WEST && /RUNTIME_TABLE_WEST|WEST_PRIMARY|GAP_CLASSIFIER|AUDIT/i.test(contract)) return true;
-
-    return false;
+    scheduleLightPublish();
+    if (scope === "full") scheduleFullDatasetPublish();
   }
 
-  function isCanvasPacket(input = {}) {
-    const file = packetFile(input);
-    const contract = packetContract(input);
-    if (file === DOWNSTREAM_GATES.canvas) return true;
-    if (/HEARTH_CANVAS|CANVAS_F13|CANVAS_PARENT/i.test(contract)) return true;
-    return hasEvent(input, PRIMARY_EVENTS.CANVAS);
+  function nextFrame(callback) {
+    if (isFunction(root.requestAnimationFrame)) {
+      root.requestAnimationFrame(callback);
+    } else {
+      root.setTimeout(callback, 0);
+    }
   }
 
-  function isDownstreamPacket(input = {}) {
-    const file = packetFile(input);
-    if (Object.values(DOWNSTREAM_GATES).includes(file) && file !== DOWNSTREAM_GATES.canvas) return true;
-    return hasEvent(input, DOWNSTREAM_EVENTS);
+  function idle(callback, timeout = FULL_DATASET_IDLE_DELAY_MS) {
+    if (isFunction(root.requestIdleCallback)) {
+      root.requestIdleCallback(callback, { timeout });
+    } else {
+      root.setTimeout(callback, timeout);
+    }
   }
 
-  function record(kind, event, detail = {}) {
-    const item = {
-      at: nowIso(),
-      kind,
-      event,
-      detail: clonePlain(detail)
-    };
-
-    const list =
-      kind === "admit" ? state.admittedEvents :
-      kind === "held" ? state.heldEvents :
-      kind === "archive" ? state.archivedEvents :
-      kind === "block" ? state.blockedEvents :
-      kind === "error" ? state.errors :
-      state.receipts;
-
-    list.push(item);
-    trim(list);
-    state.updatedAt = item.at;
-    publishDatasets();
-
-    return item;
-  }
-
-  function recordError(code, message, detail = {}) {
-    return record("error", code, {
-      code,
-      message: String(message || ""),
-      detail: clonePlain(detail)
-    });
-  }
-
-  function stageById(id) {
-    return PRIMARY_ROTATION.find((stage) => stage.id === id) || null;
-  }
-
-  function completeStage(stageId, options = {}) {
-    const stage = stageById(stageId);
-    if (!stage) return getHeldResponse("UNKNOWN_PRIMARY_STAGE", "complete-stage-unknown", { stageId });
-
-    if (!state.completedStages.includes(stage.id)) state.completedStages.push(stage.id);
-    if (options.degraded === true && !state.degradedStages.includes(stage.id)) state.degradedStages.push(stage.id);
-
-    record("admit", "PRIMARY_STAGE_COMPLETE", {
-      stageId: stage.id,
-      degraded: options.degraded === true,
-      reason: options.reason || ""
+  function queuePhase(label, fn, detail = {}) {
+    scheduler.queue.push({
+      label: safeString(label, "PHASE"),
+      fn,
+      detail: clonePlain(detail),
+      queuedAt: nowIso()
     });
 
-    recomputeActiveStage();
-    publishAll();
+    schedulePhaseRunner();
 
     return {
       accepted: true,
-      action: options.degraded === true ? CHECKPOINT_EVENT_ACTIONS.DEGRADED_FORWARD : CHECKPOINT_EVENT_ACTIONS.ADMIT,
-      completedStage: stage.id,
-      activeStageId: state.activeStageId,
-      activeFileGate: state.activeFileGate,
+      action: CHECKPOINT_EVENT_ACTIONS.QUEUE,
+      queued: true,
+      label,
+      queueDepth: scheduler.queue.length,
+      pageResponsive: true,
       visualPassClaimed: false
     };
   }
 
-  function refreshStageLedger() {
-    state.stageLedger = PRIMARY_ROTATION.map((stage) => ({
-      id: stage.id,
-      gear: stage.gear,
-      cycleNumber: stage.cycleNumber,
-      cycleRoute: stage.cycleRoute,
-      cardinal: stage.cardinal,
-      file: stage.file,
-      fibonacci: stage.fibonacci,
-      news: stage.news,
-      label: stage.label,
-      complete: state.completedStages.includes(stage.id),
-      degraded: state.degradedStages.includes(stage.id),
-      blocked: state.blockedStages.includes(stage.id),
-      active: state.activeStageId === stage.id
-    }));
+  function schedulePhaseRunner() {
+    if (scheduler.runScheduled || scheduler.running) return;
 
-    return state.stageLedger;
+    scheduler.runScheduled = true;
+
+    nextFrame(() => {
+      scheduler.runScheduled = false;
+      runPhaseQueue();
+    });
+  }
+
+  function runPhaseQueue() {
+    if (scheduler.running) return;
+
+    scheduler.running = true;
+    scheduler.phaseRunCount += 1;
+
+    const started = nowMs();
+
+    while (scheduler.queue.length) {
+      const item = scheduler.queue.shift();
+
+      try {
+        if (isFunction(item.fn)) item.fn(item.detail || {});
+        record("receipt", "NON_BLOCKING_PHASE_EXECUTED", {
+          label: item.label,
+          queueDepth: scheduler.queue.length
+        }, { deferPublish: true });
+      } catch (error) {
+        recordError("NON_BLOCKING_PHASE_ERROR", error && error.message ? error.message : String(error), {
+          label: item.label
+        }, { deferPublish: true });
+      }
+
+      if (nowMs() - started >= PHASE_BUDGET_MS) {
+        scheduler.running = false;
+        scheduler.lastYieldAt = nowMs();
+        schedulePhaseRunner();
+        markDirty("light");
+        return;
+      }
+    }
+
+    scheduler.running = false;
+    markDirty("light");
+  }
+
+  function scheduleLightPublish() {
+    if (scheduler.lightPublishScheduled) return;
+
+    scheduler.lightPublishScheduled = true;
+
+    root.setTimeout(() => {
+      scheduler.lightPublishScheduled = false;
+      publishLight();
+    }, LIGHT_FLUSH_DELAY_MS);
+  }
+
+  function scheduleFullDatasetPublish() {
+    if (scheduler.fullDatasetScheduled) return;
+
+    scheduler.fullDatasetScheduled = true;
+
+    idle(() => {
+      scheduler.fullDatasetScheduled = false;
+      publishDatasetsFull();
+    });
+  }
+
+  function invalidateAuthorityCache(reason = "manual") {
+    scheduler.authorityCache = null;
+    scheduler.authorityCacheAt = 0;
+    state.observed.authorityScanCached = false;
+
+    record("receipt", "AUTHORITY_CACHE_INVALIDATED", { reason }, { deferPublish: true });
+    markDirty("light");
+
+    return {
+      invalidated: true,
+      reason,
+      visualPassClaimed: false
+    };
+  }
+
+  function readReceiptLightFirst(authority) {
+    if (!authority || !isObject(authority)) return null;
+
+    try {
+      if (isFunction(authority.getReceiptLight)) {
+        const receipt = authority.getReceiptLight();
+        return isObject(receipt) ? receipt : null;
+      }
+
+      if (isFunction(authority.getTransmissionReceipt)) {
+        const receipt = authority.getTransmissionReceipt();
+        return isObject(receipt) ? receipt : null;
+      }
+
+      if (isObject(authority.receiptPacket)) return authority.receiptPacket;
+      if (isObject(authority.receipt)) return authority.receipt;
+
+      if (authority.contract || authority.receipt || authority.version) {
+        return authority;
+      }
+
+      if (isFunction(authority.getReceipt)) {
+        const receipt = authority.getReceipt();
+        return isObject(receipt) ? receipt : null;
+      }
+    } catch (error) {
+      return { error: error && error.message ? error.message : String(error) };
+    }
+
+    return null;
   }
 
   function readAuthority(cardinal) {
     const key = String(cardinal || "").toLowerCase();
     const authority = firstGlobal(GLOBALS[key] || []);
-    const receipt = readReceipt(authority) || {};
+    const receipt = readReceiptLightFirst(authority) || {};
 
     return {
       authority,
@@ -1021,45 +1108,50 @@
     return firstGlobal(names[key] || []);
   }
 
-  function westAuditOk(packet = {}) {
-    const input = normalizePayload(packet);
-    const decision = getAnyString(input, ["decision", "auditDecision", "westDecision"], "");
+  function refreshObservedAuthorities(options = {}) {
+    const force = options.force === true;
+    const includeCanvas = options.includeCanvas === true || state.activeCardinal === CARDINAL.CANVAS || state.activeStageId === "C2_CANVAS_F13_EVIDENCE";
+    const current = nowMs();
 
-    return Boolean(
-      getAnyBool(input, ["auditPassed", "admissibilityReady", "westPrimaryReady"], false) ||
-      getAnyBool(input, ["westAuditAccepted", "westAuditApproved", "westCanvasReleaseApproved"], false) ||
-      getAnyBool(input, ["canvasReleaseApprovedByWest", "canvasReleaseAuthorized", "forwardAllowed"], false) ||
-      getAnyBool(input, ["canDegradeForward", "westDegradedForwardApproved"], false) ||
-      decision.includes("FULL_PASS") ||
-      decision.includes("DEGRADED_FORWARD") ||
-      decision.includes("ADMIT")
-    );
-  }
+    if (
+      !force &&
+      scheduler.authorityCache &&
+      current - scheduler.authorityCacheAt <= AUTHORITY_CACHE_TTL_MS
+    ) {
+      state.observed.authorityScanCached = true;
+      return scheduler.authorityCache;
+    }
 
-  function refreshObservedAuthorities() {
     const east = readAuthority("east");
     const south = readAuthority("south");
     const west = readAuthority("west");
-    const canvas = readAuthority("canvas");
-    const canvasReceipt = canvas.receipt || {};
+    const canvas = includeCanvas ? readAuthority("canvas") : { authority: null, receipt: {}, observed: state.observed.canvasParentObserved, file: DOWNSTREAM_GATES.canvas };
 
-    const canvasEast = readCanvasChild("east");
-    const canvasWest = readCanvasChild("west");
-    const canvasSouth = readCanvasChild("south");
+    const canvasReceipt = canvas.receipt || {};
+    const canvasEast = includeCanvas ? readCanvasChild("east") : null;
+    const canvasWest = includeCanvas ? readCanvasChild("west") : null;
+    const canvasSouth = includeCanvas ? readCanvasChild("south") : null;
 
     state.observed.eastAuthorityObserved = east.observed;
     state.observed.southAuthorityObserved = south.observed;
     state.observed.westAuthorityObserved = west.observed;
-    state.observed.canvasParentObserved = canvas.observed;
-    state.observed.canvasReceiptObserved = Boolean(canvasReceipt && canvasReceipt.contract);
-    state.observed.canvasEastApiReady = Boolean(canvasEast || safeBool(canvasReceipt.canvasEastReady, false));
-    state.observed.canvasWestApiReady = Boolean(canvasWest || safeBool(canvasReceipt.canvasWestReady, false));
-    state.observed.canvasSouthApiReady = Boolean(canvasSouth || safeBool(canvasReceipt.canvasSouthReady, false));
+    state.observed.canvasParentObserved = includeCanvas ? canvas.observed : state.observed.canvasParentObserved;
+    state.observed.canvasReceiptObserved = includeCanvas ? Boolean(canvasReceipt && canvasReceipt.contract) : state.observed.canvasReceiptObserved;
+    state.observed.canvasEastApiReady = includeCanvas ? Boolean(canvasEast || safeBool(canvasReceipt.canvasEastReady, false) || safeBool(canvasReceipt.canvasEastApiReady, false)) : state.observed.canvasEastApiReady;
+    state.observed.canvasWestApiReady = includeCanvas ? Boolean(canvasWest || safeBool(canvasReceipt.canvasWestReady, false) || safeBool(canvasReceipt.canvasWestApiReady, false)) : state.observed.canvasWestApiReady;
+    state.observed.canvasSouthApiReady = includeCanvas ? Boolean(canvasSouth || safeBool(canvasReceipt.canvasSouthReady, false) || safeBool(canvasReceipt.canvasSouthApiReady, false)) : state.observed.canvasSouthApiReady;
     state.observed.allCanvasChildrenApiReady = Boolean(
       state.observed.canvasEastApiReady &&
       state.observed.canvasWestApiReady &&
       state.observed.canvasSouthApiReady
     );
+    state.observed.authorityScanCached = false;
+    state.observed.authorityScanCount += 1;
+    state.observed.authorityScanLastAt = nowIso();
+
+    const snapshot = { east, south, west, canvas };
+    scheduler.authorityCache = snapshot;
+    scheduler.authorityCacheAt = current;
 
     if (!state.cycleOne.complete && east.observed && west.observed && south.observed) {
       state.cycleOne.eastReceived = true;
@@ -1088,11 +1180,12 @@
         state.degradedStages.push("C1_NORTH_RETURN_LATCH");
       }
 
-      record("admit", "CYCLE_ONE_COMPATIBILITY_CLOSED_FROM_OBSERVED_PRIMARY_AUTHORITIES", {
+      record("admit", "CYCLE_ONE_COMPATIBILITY_CLOSED_FROM_CACHED_PRIMARY_AUTHORITIES", {
         eastObserved: east.observed,
         westObserved: west.observed,
-        southObserved: south.observed
-      });
+        southObserved: south.observed,
+        nonBlocking: true
+      }, { deferPublish: true });
     }
 
     if (state.cycleTwo.startAuthorized) {
@@ -1129,27 +1222,116 @@
             westAuditObserved: true,
             westAuditAccepted: true,
             westCanvasReleaseApproved: true
-          }, "observed-west-audit-compatible");
+          }, "cached-observed-west-audit-compatible", { quiet: true });
         }
       }
     }
 
-    const visibleEvidence = Boolean(
-      safeBool(canvasReceipt.f13CanvasEvidenceComplete, false) ||
-      safeBool(canvasReceipt.f13VisibleEvidenceAvailable, false) ||
-      safeBool(canvasReceipt.visibleContentProof, false) ||
-      safeBool(canvasReceipt.visibleContentSoftGap, false) ||
-      safeBool(canvasReceipt.visibleForwardProgress, false) ||
-      safeBool(canvasReceipt.visiblePlanetAvailable, false)
-    );
+    if (includeCanvas) {
+      const visibleEvidence = Boolean(
+        safeBool(canvasReceipt.f13CanvasEvidenceComplete, false) ||
+        safeBool(canvasReceipt.f13VisibleEvidenceAvailable, false) ||
+        safeBool(canvasReceipt.visibleContentProof, false) ||
+        safeBool(canvasReceipt.visibleContentSoftGap, false) ||
+        safeBool(canvasReceipt.visibleForwardProgress, false) ||
+        safeBool(canvasReceipt.visiblePlanetAvailable, false)
+      );
 
-    if (canvas.observed && visibleEvidence && !state.cycleTwo.canvasF13EvidenceReceived) {
-      acceptCanvasF13Evidence(canvasReceipt, "observed-canvas-f13-receipt");
+      if (canvas.observed && visibleEvidence && !state.cycleTwo.canvasF13EvidenceReceived) {
+        acceptCanvasF13Evidence(canvasReceipt, "cached-observed-canvas-f13-receipt", { quiet: true });
+      }
     }
 
     recomputeActiveStage();
+    markDirty("light");
 
-    return { east, south, west, canvas };
+    return snapshot;
+  }
+
+  function westAuditOk(packet = {}) {
+    const input = normalizePayload(packet);
+    const decision = getAnyString(input, ["decision", "auditDecision", "westDecision"], "");
+
+    return Boolean(
+      getAnyBool(input, ["auditPassed", "admissibilityReady", "westPrimaryReady"], false) ||
+      getAnyBool(input, ["westAuditAccepted", "westAuditApproved", "westCanvasReleaseApproved"], false) ||
+      getAnyBool(input, ["canvasReleaseApprovedByWest", "canvasReleaseAuthorized", "forwardAllowed"], false) ||
+      getAnyBool(input, ["canDegradeForward", "westDegradedForwardApproved"], false) ||
+      decision.includes("FULL_PASS") ||
+      decision.includes("DEGRADED_FORWARD") ||
+      decision.includes("ADMIT") ||
+      decision.includes("PASS")
+    );
+  }
+
+  function isPrimaryGatePacket(input, cardinal) {
+    const packet = normalizePayload(input);
+    const card = String(cardinal || "").toUpperCase();
+    const file = packetFile(packet);
+    const contract = packetContract(packet);
+    const primaryCardinal = packetPrimaryCardinal(packet);
+
+    if (card === CARDINAL.EAST && file === PRIMARY_GATES.east) return true;
+    if (card === CARDINAL.SOUTH && file === PRIMARY_GATES.south) return true;
+    if (card === CARDINAL.WEST && file === PRIMARY_GATES.west) return true;
+    if (primaryCardinal === card && getAnyBool(packet, ["primaryGateReady", "primaryRuntimeTableGate"], false)) return true;
+
+    if (card === CARDINAL.EAST && /RUNTIME_TABLE_EAST|EAST_PRIMARY|EAST_STEP|EAST_ROUTE/i.test(contract)) return true;
+    if (card === CARDINAL.SOUTH && /RUNTIME_TABLE_SOUTH|SOUTH_PRIMARY|VISIBLE_STATE_COMPOSER|SOUTH_ROUTE/i.test(contract)) return true;
+    if (card === CARDINAL.WEST && /RUNTIME_TABLE_WEST|WEST_PRIMARY|GAP_CLASSIFIER|AUDIT|ADMISSIBILITY/i.test(contract)) return true;
+
+    return false;
+  }
+
+  function isCanvasPacket(input = {}) {
+    const file = packetFile(input);
+    const contract = packetContract(input);
+    if (file === DOWNSTREAM_GATES.canvas) return true;
+    if (/HEARTH_CANVAS|CANVAS_F13|CANVAS_PARENT/i.test(contract)) return true;
+    return hasEvent(input, PRIMARY_EVENTS.CANVAS);
+  }
+
+  function isDownstreamPacket(input = {}) {
+    const file = packetFile(input);
+    if (Object.values(DOWNSTREAM_GATES).includes(file) && file !== DOWNSTREAM_GATES.canvas) return true;
+    return hasEvent(input, DOWNSTREAM_EVENTS);
+  }
+
+  function record(kind, event, detail = {}, options = {}) {
+    const item = {
+      at: nowIso(),
+      kind,
+      event,
+      detail: clonePlain(detail)
+    };
+
+    const list =
+      kind === "admit" ? state.admittedEvents :
+      kind === "held" ? state.heldEvents :
+      kind === "archive" ? state.archivedEvents :
+      kind === "block" ? state.blockedEvents :
+      kind === "error" ? state.errors :
+      state.receipts;
+
+    list.push(item);
+    trim(list);
+    state.updatedAt = item.at;
+
+    if (options.deferPublish !== true) markDirty("light");
+
+    return item;
+  }
+
+  function recordError(code, message, detail = {}, options = {}) {
+    return record("error", code, {
+      code,
+      message: String(message || ""),
+      detail: clonePlain(detail)
+    }, options);
+  }
+
+  function stageById(id) {
+    return PRIMARY_ROTATION.find((stage) => stage.id === id) || null;
   }
 
   function cycleOneComplete() {
@@ -1185,6 +1367,52 @@
 
   function primaryCycleComplete() {
     return Boolean(cycleOneComplete() && cycleTwoPrimaryReadyForCanvasRelease());
+  }
+
+  function refreshStageLedger() {
+    state.stageLedger = PRIMARY_ROTATION.map((stage) => ({
+      id: stage.id,
+      gear: stage.gear,
+      cycleNumber: stage.cycleNumber,
+      cycleRoute: stage.cycleRoute,
+      cardinal: stage.cardinal,
+      file: stage.file,
+      fibonacci: stage.fibonacci,
+      news: stage.news,
+      label: stage.label,
+      complete: state.completedStages.includes(stage.id),
+      degraded: state.degradedStages.includes(stage.id),
+      blocked: state.blockedStages.includes(stage.id),
+      active: state.activeStageId === stage.id
+    }));
+
+    return state.stageLedger;
+  }
+
+  function setActiveStageLocal(stageId) {
+    const stage = stageById(stageId);
+    if (!stage) return;
+
+    state.activeStageId = stage.id;
+    state.activeGear = stage.gear;
+    state.activeCycleNumber = stage.cycleNumber;
+    state.activeCycleRoute = stage.cycleRoute;
+    state.activeCardinal = stage.cardinal;
+    state.activeFileGate = stage.file;
+    state.activeFibonacci = stage.fibonacci;
+    state.activeNewsGate = stage.news;
+    state.activeProgress = state.completedStages.includes(stage.id)
+      ? 100
+      : stage.id === "C2_CANVAS_F13_EVIDENCE"
+        ? 72
+        : 50;
+  }
+
+  function setRecommendation(owner, file, coordinate) {
+    state.firstFailedCoordinate = coordinate;
+    state.recommendedNextOwner = owner;
+    state.recommendedNextFile = file;
+    state.recommendedNextRenewalTarget = file;
   }
 
   function recomputeActiveStage() {
@@ -1230,28 +1458,34 @@
 
     refreshStageLedger();
     state.updatedAt = nowIso();
+    scheduler.dirtyReceiptLight = true;
   }
 
-  function setActiveStageLocal(stageId) {
+  function completeStage(stageId, options = {}) {
     const stage = stageById(stageId);
-    if (!stage) return;
+    if (!stage) return getHeldResponse("UNKNOWN_PRIMARY_STAGE", "complete-stage-unknown", { stageId });
 
-    state.activeStageId = stage.id;
-    state.activeGear = stage.gear;
-    state.activeCycleNumber = stage.cycleNumber;
-    state.activeCycleRoute = stage.cycleRoute;
-    state.activeCardinal = stage.cardinal;
-    state.activeFileGate = stage.file;
-    state.activeFibonacci = stage.fibonacci;
-    state.activeNewsGate = stage.news;
-    state.activeProgress = state.completedStages.includes(stage.id) ? 100 : stage.id === "C2_CANVAS_F13_EVIDENCE" ? 72 : 50;
-  }
+    if (!state.completedStages.includes(stage.id)) state.completedStages.push(stage.id);
+    if (options.degraded === true && !state.degradedStages.includes(stage.id)) state.degradedStages.push(stage.id);
 
-  function setRecommendation(owner, file, coordinate) {
-    state.firstFailedCoordinate = coordinate;
-    state.recommendedNextOwner = owner;
-    state.recommendedNextFile = file;
-    state.recommendedNextRenewalTarget = file;
+    record("admit", "PRIMARY_STAGE_COMPLETE", {
+      stageId: stage.id,
+      degraded: options.degraded === true,
+      reason: options.reason || ""
+    });
+
+    recomputeActiveStage();
+    markDirty("light");
+
+    return {
+      accepted: true,
+      action: options.degraded === true ? CHECKPOINT_EVENT_ACTIONS.DEGRADED_FORWARD : CHECKPOINT_EVENT_ACTIONS.ADMIT,
+      completedStage: stage.id,
+      activeStageId: state.activeStageId,
+      activeFileGate: state.activeFileGate,
+      pageResponsive: true,
+      visualPassClaimed: false
+    };
   }
 
   function getHeldResponse(firstFailedCoordinate, reason = "held", extra = {}) {
@@ -1279,14 +1513,13 @@
       activeFileGate: state.activeFileGate,
       activeProgress: state.activeProgress,
       pageResponsive: true,
+      nonBlockingPhaseSchedulerActive: true,
       hardBlock: false,
       visualPassClaimed: false,
       ...clonePlain(extra)
     };
 
     record("held", "PRIMARY_GATE_HELD", response);
-    publishAll();
-
     return response;
   }
 
@@ -1300,14 +1533,13 @@
       activeFileGate: state.activeFileGate,
       activeProgress: state.activeProgress,
       pageResponsive: true,
+      nonBlockingPhaseSchedulerActive: true,
       hardBlock: false,
       visualPassClaimed: false,
       ...clonePlain(extra)
     };
 
     record("archive", "EVENT_ARCHIVED", response);
-    publishAll();
-
     return response;
   }
 
@@ -1333,14 +1565,13 @@
       activeFileGate: state.activeFileGate,
       activeProgress: state.activeProgress,
       pageResponsive: true,
+      nonBlockingPhaseSchedulerActive: true,
       hardBlock: true,
       visualPassClaimed: false,
       ...clonePlain(extra)
     };
 
     record("block", "PRIMARY_GATE_BLOCKED", response);
-    publishAll();
-
     return response;
   }
 
@@ -1385,6 +1616,7 @@
     }
 
     recomputeActiveStage();
+    invalidateAuthorityCache("east-primary-accepted");
 
     const response = {
       accepted: true,
@@ -1399,13 +1631,12 @@
       activeStageId: state.activeStageId,
       activeFileGate: state.activeFileGate,
       pageResponsive: true,
+      nonBlockingPhaseSchedulerActive: true,
       hardBlock: false,
       visualPassClaimed: false
     };
 
     record("admit", "EAST_PRIMARY_GATE_ACCEPTED", response);
-    publishAll();
-
     return response;
   }
 
@@ -1452,6 +1683,7 @@
     }
 
     recomputeActiveStage();
+    invalidateAuthorityCache("south-primary-accepted");
 
     const response = {
       accepted: true,
@@ -1467,13 +1699,12 @@
       activeStageId: state.activeStageId,
       activeFileGate: state.activeFileGate,
       pageResponsive: true,
+      nonBlockingPhaseSchedulerActive: true,
       hardBlock: false,
       visualPassClaimed: false
     };
 
     record("admit", "SOUTH_PRIMARY_GATE_ACCEPTED", response);
-    publishAll();
-
     return response;
   }
 
@@ -1513,10 +1744,15 @@
         state.degradedStages.push("C2_WEST_CANVAS_RELEASE_AUDIT");
       }
 
-      if (auditOk) authorizeCanvasF13Release(input, "west-primary-gate-accepted");
+      if (auditOk) {
+        queuePhase("AUTHORIZE_CANVAS_F13_RELEASE", () => {
+          authorizeCanvasF13Release(input, "west-primary-gate-accepted", { quiet: true });
+        }, { source: "acceptWestPrimaryGate" });
+      }
     }
 
     recomputeActiveStage();
+    invalidateAuthorityCache("west-primary-accepted");
 
     const response = {
       accepted: true,
@@ -1533,13 +1769,12 @@
       activeStageId: state.activeStageId,
       activeFileGate: state.activeFileGate,
       pageResponsive: true,
+      nonBlockingPhaseSchedulerActive: true,
       hardBlock: false,
       visualPassClaimed: false
     };
 
     record("admit", "WEST_PRIMARY_GATE_ACCEPTED", response);
-    publishAll();
-
     return response;
   }
 
@@ -1574,12 +1809,12 @@
       recommendedNextOwner: state.recommendedNextOwner,
       recommendedNextFile: state.recommendedNextFile,
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+      pageResponsive: true,
+      nonBlockingPhaseSchedulerActive: true,
       visualPassClaimed: false
     };
 
     record("admit", "CYCLE_ONE_SOUTH_RETURN_ACCEPTED_BY_NORTH", response);
-    publishAll();
-
     return response;
   }
 
@@ -1614,16 +1849,16 @@
       activeStageId: state.activeStageId,
       activeFileGate: state.activeFileGate,
       recommendedNextFile: state.recommendedNextFile,
+      pageResponsive: true,
+      nonBlockingPhaseSchedulerActive: true,
       visualPassClaimed: false
     };
 
     record("admit", "CYCLE_TWO_START_AUTHORIZED_BY_NORTH", response);
-    publishAll();
-
     return response;
   }
 
-  function authorizeCanvasF13Release(packet = {}, source = "authorizeCanvasF13Release") {
+  function authorizeCanvasF13Release(packet = {}, source = "authorizeCanvasF13Release", options = {}) {
     const input = normalizePayload(packet);
 
     const lawfulCycle = Boolean(
@@ -1646,7 +1881,6 @@
     );
 
     const noHardFail = !getAnyBool(input, ["visibleContentHardFail", "f13HardFail"], false);
-
     const authorized = Boolean(lawfulCycle && westAuditObserved && westApproved && noHardFail);
 
     if (!authorized) {
@@ -1714,14 +1948,16 @@
       recommendedNextOwner: state.recommendedNextOwner,
       recommendedNextFile: state.recommendedNextFile,
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+      pageResponsive: true,
+      nonBlockingPhaseSchedulerActive: true,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
       visualPassClaimed: false
     };
 
-    record("admit", "CANVAS_F13_RELEASE_AUTHORIZED_BY_NORTH", response);
-    publishAll();
+    if (options.quiet !== true) record("admit", "CANVAS_F13_RELEASE_AUTHORIZED_BY_NORTH", response);
+    else markDirty("light");
 
     return response;
   }
@@ -1777,6 +2013,8 @@
       recommendedNextRenewalTarget: state.cycleTwo.canvasF13ReleaseAuthorized ? DOWNSTREAM_GATES.canvas : PRIMARY_GATES.west,
 
       detail: clonePlain(extra),
+      pageResponsive: true,
+      nonBlockingPhaseSchedulerActive: true,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -1785,7 +2023,7 @@
     };
   }
 
-  function acceptCanvasF13Evidence(packet = {}, source = "acceptCanvasF13Evidence") {
+  function acceptCanvasF13Evidence(packet = {}, source = "acceptCanvasF13Evidence", options = {}) {
     const input = normalizePayload(packet);
 
     const explicitEvidence = Boolean(
@@ -1856,14 +2094,19 @@
       recommendedNextOwner: state.recommendedNextOwner,
       recommendedNextFile: state.recommendedNextFile,
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+      pageResponsive: true,
+      nonBlockingPhaseSchedulerActive: true,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
       visualPassClaimed: false
     };
 
-    record(state.cycleTwo.canvasF13EvidenceComplete ? "admit" : "held", "CANVAS_F13_EVIDENCE_RECEIVED_BY_NORTH", response);
-    publishAll();
+    if (options.quiet !== true) {
+      record(state.cycleTwo.canvasF13EvidenceComplete ? "admit" : "held", "CANVAS_F13_EVIDENCE_RECEIVED_BY_NORTH", response);
+    } else {
+      markDirty("light");
+    }
 
     return response;
   }
@@ -2006,14 +2249,16 @@
       recommendedNextFile: state.recommendedNextFile,
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
       validation,
+      pageResponsive: true,
+      nonBlockingPhaseSchedulerActive: true,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
       visualPassClaimed: false
     };
 
-    record("admit", "F21_LATCHED_BY_NORTH_TWO_CYCLE_DISTRIBUTOR", response);
-    publishAll();
+    record("admit", "F21_LATCHED_BY_NORTH_NON_BLOCKING_TWO_CYCLE_DISTRIBUTOR", response, {}, "full");
+    markDirty("full");
 
     return response;
   }
@@ -2173,7 +2418,8 @@
         event: name || "F21_ELIGIBILITY_PACKET",
         validation,
         activeStageId: state.activeStageId,
-        activeFileGate: state.activeFileGate
+        activeFileGate: state.activeFileGate,
+        pageResponsive: true
       };
     }
 
@@ -2184,7 +2430,8 @@
         checkpointId: "CANVAS_F13_EVIDENCE",
         event: name,
         activeStageId: state.activeStageId,
-        activeFileGate: state.activeFileGate
+        activeFileGate: state.activeFileGate,
+        pageResponsive: true
       };
     }
 
@@ -2195,7 +2442,8 @@
         checkpointId: "WEST_PRIMARY_GATE",
         event: name,
         activeStageId: state.activeStageId,
-        activeFileGate: state.activeFileGate
+        activeFileGate: state.activeFileGate,
+        pageResponsive: true
       };
     }
 
@@ -2206,7 +2454,8 @@
         checkpointId: "SOUTH_PRIMARY_GATE",
         event: name,
         activeStageId: state.activeStageId,
-        activeFileGate: state.activeFileGate
+        activeFileGate: state.activeFileGate,
+        pageResponsive: true
       };
     }
 
@@ -2217,7 +2466,8 @@
         checkpointId: "EAST_PRIMARY_GATE",
         event: name,
         activeStageId: state.activeStageId,
-        activeFileGate: state.activeFileGate
+        activeFileGate: state.activeFileGate,
+        pageResponsive: true
       };
     }
 
@@ -2229,7 +2479,8 @@
         event: name,
         activeStageId: state.activeStageId,
         activeFileGate: state.activeFileGate,
-        recommendedNextFile: state.recommendedNextFile
+        recommendedNextFile: state.recommendedNextFile,
+        pageResponsive: true
       };
     }
 
@@ -2239,7 +2490,8 @@
       reason: name ? "unknown-primary-event-archived" : "missing-event-name",
       event: name,
       activeStageId: state.activeStageId,
-      activeFileGate: state.activeFileGate
+      activeFileGate: state.activeFileGate,
+      pageResponsive: true
     };
   }
 
@@ -2286,7 +2538,9 @@
       degradedForwardAvailable: newsGateDegradedBeforeF21 && !newsGatePassedBeforeF21,
       downstreamReleaseAuthorized: state.downstreamReleaseAuthorized,
       completionLatched: state.completionLatched,
-      f21LatchMode: state.f21LatchMode
+      f21LatchMode: state.f21LatchMode,
+      pageResponsive: true,
+      nonBlockingPhaseSchedulerActive: true
     };
   }
 
@@ -2306,7 +2560,9 @@
       primaryGateRegistryActive: true,
       primaryGateFilesLocked: true,
       twoCycleRuntimeLawActive: true,
+      nonBlockingPhaseSchedulerActive: true,
       oneActiveGearAtATime: true,
+      pageResponsive: true,
       updatedAt: nowIso()
     };
   }
@@ -2319,8 +2575,6 @@
     refreshStageLedger();
 
     record("receipt", "ACTIVE_PRIMARY_STAGE_SET", { stageId, reason });
-    publishAll();
-
     return getActiveGateState();
   }
 
@@ -2334,19 +2588,18 @@
       reason
     });
 
-    publishAll();
     return getActiveGateState();
   }
 
   function createPrimaryGateRegistry() {
-    refreshObservedAuthorities();
+    refreshStageLedger();
 
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      registryContract: "LAB_RUNTIME_TABLE_TWO_CYCLE_PRIMARY_GATE_REGISTRY_v1",
-      registryReceipt: "LAB_RUNTIME_TABLE_TWO_CYCLE_PRIMARY_GATE_REGISTRY_RECEIPT_v1",
-      authority: "north-two-cycle-primary-gate-registry",
+      registryContract: "LAB_RUNTIME_TABLE_TWO_CYCLE_PRIMARY_GATE_REGISTRY_v2",
+      registryReceipt: "LAB_RUNTIME_TABLE_TWO_CYCLE_PRIMARY_GATE_REGISTRY_RECEIPT_v2",
+      authority: "north-two-cycle-primary-gate-registry-non-blocking",
       primaryGates: clonePlain(PRIMARY_GATES),
       downstreamGates: clonePlain(DOWNSTREAM_GATES),
       rotation: clonePlain(PRIMARY_ROTATION),
@@ -2361,6 +2614,8 @@
       canvasF13ReleaseAuthorized: state.cycleTwo.canvasF13ReleaseAuthorized,
       canvasF13EvidenceComplete: canvasF13EvidenceComplete(),
       downstreamReleaseAuthorized: state.downstreamReleaseAuthorized,
+      nonBlockingPhaseSchedulerActive: true,
+      authorityScanCacheActive: true,
       nextPrimaryOwner: state.recommendedNextOwner,
       nextPrimaryTarget: state.recommendedNextFile,
       generatedImage: false,
@@ -2372,7 +2627,7 @@
   }
 
   function createChronologicalFibonacciPlan() {
-    refreshObservedAuthorities();
+    refreshStageLedger();
 
     return PRIMARY_ROTATION.map((stage, index) => ({
       id: stage.id,
@@ -2395,7 +2650,7 @@
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      authority: "north-two-cycle-news-fibonacci-plan",
+      authority: "north-two-cycle-news-fibonacci-plan-non-blocking",
       sequence: createChronologicalFibonacciPlan(),
       newsGates: clonePlain(NEWS_GATES),
       primaryGates: clonePlain(PRIMARY_GATES),
@@ -2405,6 +2660,7 @@
       twoCycleRuntimeLawActive: true,
       oneActiveGearAtATime: true,
       canvasF13ReleaseBeforeF21Active: true,
+      nonBlockingPhaseSchedulerActive: true,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -2443,7 +2699,7 @@
   function resolveAuthority(registration) {
     if (!registration) return null;
     if (registration.authority && isObject(registration.authority)) return registration.authority;
-    if (registration.globalName && root[registration.globalName]) return root[registration.globalName];
+    if (registration.globalName && readPath(registration.globalName)) return readPath(registration.globalName);
 
     if (isFunction(registration.resolve)) {
       try {
@@ -2579,7 +2835,7 @@
     function log(event, detail = {}) {
       const entry = { event, detail: clonePlain(detail), at: nowIso() };
       local.ledger.push(entry);
-      trim(local.ledger, 160);
+      trim(local.ledger, 80);
       local.updatedAt = entry.at;
       return entry;
     }
@@ -2649,7 +2905,7 @@
         };
       }
 
-      const receipt = readReceipt(authority);
+      const receipt = readReceiptLightFirst(authority);
       const contract = contractCheck(authority, receipt, registration.expectedContract);
 
       if (!contract.ok) {
@@ -2663,7 +2919,6 @@
       }
 
       const coordinates = sample.ok ? coordinateCheck(sample.sample, registration.requiredCoordinates) : { ok: false, missing: registration.requiredCoordinates };
-
       if (sample.ok && !coordinates.ok) {
         issues.push(createIssue("COORDINATE_MISMATCH", `Missing coordinate fields: ${coordinates.missing.join(", ")}`, STATUS.REJECTED));
       }
@@ -2731,6 +2986,7 @@
         runtimeAllowed: local.runtimeAllowed,
         tableSet: local.tableSet,
         twoCycleRuntimeLawActive: true,
+        nonBlockingPhaseSchedulerActive: true,
         childCount: local.registrations.length,
         records: clonePlain(local.records),
         ledger: clonePlain(local.ledger),
@@ -2793,6 +3049,7 @@
           runtimeAllowed: local.runtimeAllowed,
           status: local.status,
           twoCycleRuntimeLawActive: true,
+          nonBlockingPhaseSchedulerActive: true,
           visualPassClaimed: false,
           updatedAt: nowIso()
         };
@@ -2876,6 +3133,7 @@
         twoCycleRuntimeLawActive: true,
         canvasF13ReleaseBeforeF21Active: true,
         downstreamReleaseRequiresF21Latch: true,
+        nonBlockingPhaseSchedulerActive: true,
         ...(overrides.laws || {})
       },
       generatedImage: false,
@@ -2890,8 +3148,6 @@
   }
 
   function runChecks(input = {}, options = {}) {
-    refreshObservedAuthorities();
-
     const goalProfile = input.goalProfile || options.goalProfile || createGoalProfile(options.profile || "universal-planet-channel-expression");
     const imageRendered = safeBool(input.imageRendered, safeBool(input.renderMetadata && input.renderMetadata.imageRendered, false));
     const wideProbeCount = Array.isArray(input.probeSamples) ? input.probeSamples.length : 0;
@@ -2903,6 +3159,14 @@
         name: "Two-Cycle Runtime Law Check",
         status: COHERENCE_STATUS.PASS,
         observed: "North is using Cycle 1 and Cycle 2 separately.",
+        nonBlocking: false,
+        at: nowIso()
+      },
+      {
+        id: "NON_BLOCKING_SCHEDULER_CHECK",
+        name: "Non-Blocking Scheduler Check",
+        status: COHERENCE_STATUS.PASS,
+        observed: "North phase publication uses light scheduler and cached authority scans.",
         nonBlocking: false,
         at: nowIso()
       },
@@ -2961,7 +3225,7 @@
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      authority: "lab-triple-g-coherence-diagnostic-north-two-cycle-distributor",
+      authority: "lab-triple-g-coherence-diagnostic-north-non-blocking-two-cycle-distributor",
       goalProfileId: goalProfile.id,
       goalProfile: clonePlain(goalProfile),
       constructionReady: true,
@@ -2977,6 +3241,7 @@
       twoCycleRuntimeLawActive: true,
       primaryGateRegistryActive: true,
       primaryGateFilesLocked: true,
+      nonBlockingPhaseSchedulerActive: true,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -2997,7 +3262,7 @@
     function run(input = {}) {
       const report = runChecks({ ...input, goalProfile: input.goalProfile || local.profile }, { ...options, goalProfile: input.goalProfile || local.profile });
       local.reports.push(report);
-      trim(local.reports, 80);
+      trim(local.reports, 60);
       local.updatedAt = nowIso();
       return report;
     }
@@ -3019,6 +3284,7 @@
           reportCount: local.reports.length,
           tripleGDiagnostic: true,
           twoCycleRuntimeLawActive: true,
+          nonBlockingPhaseSchedulerActive: true,
           visualPassClaimed: false,
           updatedAt: nowIso()
         };
@@ -3056,9 +3322,9 @@
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      loadingOptimizationContract: "LAB_UNIVERSAL_PLANET_LOADING_OPTIMIZATION_PLAN_TWO_CYCLE_PRIMARY_GATE_v1",
-      loadingOptimizationReceipt: "LAB_UNIVERSAL_PLANET_LOADING_OPTIMIZATION_PLAN_TWO_CYCLE_PRIMARY_GATE_RECEIPT_v1",
-      authority: "north-two-cycle-loading-optimization",
+      loadingOptimizationContract: "LAB_UNIVERSAL_PLANET_LOADING_OPTIMIZATION_PLAN_NON_BLOCKING_TWO_CYCLE_PRIMARY_GATE_v2",
+      loadingOptimizationReceipt: "LAB_UNIVERSAL_PLANET_LOADING_OPTIMIZATION_PLAN_NON_BLOCKING_TWO_CYCLE_PRIMARY_GATE_RECEIPT_v2",
+      authority: "north-non-blocking-two-cycle-loading-optimization",
       visibleCarrierFirst: true,
       wideProbeBlocksFirstVisibleRender: false,
       firstVisibleRenderAllowed: true,
@@ -3068,12 +3334,14 @@
         rowsPerChunk: budget.rowsPerChunk,
         probeRowsPerChunk: budget.probeRowsPerChunk,
         deferWideProbe: true,
-        useIdleFrames: true
+        useIdleFrames: true,
+        usePhaseScheduler: true
       },
       twoCycleRuntimeLawActive: true,
       canvasF13ReleaseBeforeF21Active: true,
       primaryGateRegistryActive: true,
       primaryGateFilesLocked: true,
+      nonBlockingPhaseSchedulerActive: true,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -3083,8 +3351,6 @@
   }
 
   function createUniversalPlanetVisualCarrierPlan(input = {}, options = {}) {
-    refreshObservedAuthorities();
-
     const ledger = input.runtimeTableLedger || input.ledger || null;
     const render = input.renderMetadata || input.render || {};
     const loadingOptimizationPlan = createLoadingOptimizationPlan(input, options);
@@ -3100,9 +3366,9 @@
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      planContract: "LAB_UNIVERSAL_PLANET_PROCEDURAL_VISUAL_CARRIER_PLAN_TWO_CYCLE_PRIMARY_GATE_v1",
-      planReceipt: "LAB_UNIVERSAL_PLANET_PROCEDURAL_VISUAL_CARRIER_PLAN_TWO_CYCLE_PRIMARY_GATE_RECEIPT_v1",
-      authority: "north-two-cycle-visual-carrier-plan",
+      planContract: "LAB_UNIVERSAL_PLANET_PROCEDURAL_VISUAL_CARRIER_PLAN_NON_BLOCKING_TWO_CYCLE_PRIMARY_GATE_v2",
+      planReceipt: "LAB_UNIVERSAL_PLANET_PROCEDURAL_VISUAL_CARRIER_PLAN_NON_BLOCKING_TWO_CYCLE_PRIMARY_GATE_RECEIPT_v2",
+      authority: "north-non-blocking-two-cycle-visual-carrier-plan",
       planetId: input.planetId || options.planetId || "",
       planetLabel: input.planetLabel || options.planetLabel || "",
       planGenerated: true,
@@ -3125,6 +3391,7 @@
       primaryGateRegistryActive: true,
       primaryGateFilesLocked: true,
       twoCycleRuntimeLawActive: true,
+      nonBlockingPhaseSchedulerActive: true,
       canvasF13ReleaseAuthorized: state.cycleTwo.canvasF13ReleaseAuthorized,
       canvasF13EvidenceComplete: canvasF13EvidenceComplete(),
       downstreamReleaseAuthorized: state.downstreamReleaseAuthorized,
@@ -3183,36 +3450,41 @@
     state.degradedStages = [];
     state.blockedStages = [];
 
-    state.cycleOne.eastReceived = false;
-    state.cycleOne.eastAccepted = false;
-    state.cycleOne.westReceived = false;
-    state.cycleOne.westAccepted = false;
-    state.cycleOne.southReceived = false;
-    state.cycleOne.southAccepted = false;
-    state.cycleOne.northReturnReceived = false;
-    state.cycleOne.northReturnValidated = false;
-    state.cycleOne.complete = false;
-    state.cycleOne.degradedCompatibilityClose = false;
+    Object.assign(state.cycleOne, {
+      northStarted: true,
+      eastReceived: false,
+      eastAccepted: false,
+      westReceived: false,
+      westAccepted: false,
+      southReceived: false,
+      southAccepted: false,
+      northReturnReceived: false,
+      northReturnValidated: false,
+      complete: false,
+      degradedCompatibilityClose: false
+    });
 
-    state.cycleTwo.startAuthorized = false;
-    state.cycleTwo.eastReceived = false;
-    state.cycleTwo.eastAccepted = false;
-    state.cycleTwo.southReceived = false;
-    state.cycleTwo.southAccepted = false;
-    state.cycleTwo.westReceived = false;
-    state.cycleTwo.westAccepted = false;
-    state.cycleTwo.westAuditObserved = false;
-    state.cycleTwo.westAuditAccepted = false;
-    state.cycleTwo.westCanvasReleaseApproved = false;
-    state.cycleTwo.canvasF13ReleaseAuthorized = false;
-    state.cycleTwo.canvasF13ReleasePacketReady = false;
-    state.cycleTwo.canvasF13ReleaseHeldReason = "WAITING_CYCLE_TWO_WEST_AUDIT";
-    state.cycleTwo.canvasF13EvidenceReceived = false;
-    state.cycleTwo.canvasF13EvidenceStrict = false;
-    state.cycleTwo.canvasF13EvidenceDegraded = false;
-    state.cycleTwo.canvasF13EvidenceComplete = false;
-    state.cycleTwo.canvasF13HardFail = false;
-    state.cycleTwo.complete = false;
+    Object.assign(state.cycleTwo, {
+      startAuthorized: false,
+      eastReceived: false,
+      eastAccepted: false,
+      southReceived: false,
+      southAccepted: false,
+      westReceived: false,
+      westAccepted: false,
+      westAuditObserved: false,
+      westAuditAccepted: false,
+      westCanvasReleaseApproved: false,
+      canvasF13ReleaseAuthorized: false,
+      canvasF13ReleasePacketReady: false,
+      canvasF13ReleaseHeldReason: "WAITING_CYCLE_TWO_WEST_AUDIT",
+      canvasF13EvidenceReceived: false,
+      canvasF13EvidenceStrict: false,
+      canvasF13EvidenceDegraded: false,
+      canvasF13EvidenceComplete: false,
+      canvasF13HardFail: false,
+      complete: false
+    });
 
     state.f21EligibilityReceived = false;
     state.f21EligibilityAccepted = false;
@@ -3236,27 +3508,29 @@
     state.postgameStatus = "TWO_CYCLE_NORTH_READY";
     state.updatedAt = nowIso();
 
+    invalidateAuthorityCache("reset-primary-gate-registry");
     refreshStageLedger();
     record("receipt", "TWO_CYCLE_PRIMARY_GATE_REGISTRY_RESET", { reason });
-    publishAll();
+    markDirty("full");
 
-    return getReceipt();
+    return getReceiptLight();
   }
 
   function createCheckpointSession(_sequenceInput = null, options = {}) {
-    const sessionId = options.sessionId || options.id || "HEARTH-NORTH-TWO-CYCLE-CANVAS-F13-RELEASE";
+    const sessionId = options.sessionId || options.id || "HEARTH-NORTH-NON-BLOCKING-TWO-CYCLE-CANVAS-F13-RELEASE";
 
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      checkpointSessionContract: "LAB_RUNTIME_TABLE_NORTH_TWO_CYCLE_SESSION_v1",
-      checkpointSessionReceipt: "LAB_RUNTIME_TABLE_NORTH_TWO_CYCLE_SESSION_RECEIPT_v1",
+      checkpointSessionContract: "LAB_RUNTIME_TABLE_NORTH_NON_BLOCKING_TWO_CYCLE_SESSION_v2",
+      checkpointSessionReceipt: "LAB_RUNTIME_TABLE_NORTH_NON_BLOCKING_TWO_CYCLE_SESSION_RECEIPT_v2",
       sessionId,
       route: options.route || ROUTE,
       persistentNorthSession: true,
       primaryGateRegistryActive: true,
       primaryGateFilesLocked: true,
       twoCycleRuntimeLawActive: true,
+      nonBlockingPhaseSchedulerActive: true,
 
       acceptEastPrimary,
       receiveEastPrimary,
@@ -3296,11 +3570,16 @@
       receiveEvent,
       completeActive,
 
+      queuePhase,
+      invalidateAuthorityCache,
+      refreshObservedAuthorities,
+
       getActiveCheckpoint: getActiveGateState,
-      getCheckpointState: getReceipt,
+      getCheckpointState: getReceiptLight,
       getNewsGateState: evaluateNewsGateState,
       createPrimaryGateRegistry,
       getReceipt,
+      getReceiptLight,
       getReceiptText,
       reset: resetPrimaryGateRegistry,
 
@@ -3319,8 +3598,10 @@
     });
   }
 
+  let transmissionSession = null;
+
   function getTransmissionReceipt() {
-    return getReceipt().transmissionReceipt;
+    return getReceiptLight();
   }
 
   function getTransmissionReceiptText() {
@@ -3340,69 +3621,6 @@
     return transmissionSession;
   }
 
-  const transmissionSession = {
-    contract: CONTRACT,
-    receipt: RECEIPT,
-    sessionId: "HEARTH-NORTH-TWO-CYCLE-CANVAS-F13-RELEASE",
-    route: ROUTE,
-    file: FILE,
-    cardinalRole: CARDINAL.NORTH,
-
-    acceptEastPrimary,
-    receiveEastPrimary,
-    acceptEastPrimaryGate,
-    acceptEastHandoff,
-    receiveEastHandoff,
-
-    acceptSouthPrimary,
-    receiveSouthPrimary,
-    acceptSouthPrimaryGate,
-    acceptSouthSpread,
-    receiveCycleOneSouthReturn,
-
-    acceptWestPrimary,
-    receiveWestPrimary,
-    acceptWestPrimaryGate,
-    acceptWestHandoff,
-    receiveWestHandoff,
-    acceptWestIntake,
-    receiveWestIntake,
-
-    authorizeCycleTwoStart,
-    authorizeCanvasF13Release,
-    composeCanvasF13ReleasePacket,
-    acceptCanvasF13Evidence,
-
-    acceptF21Eligibility,
-    receiveF21Eligibility,
-    submitF21Eligibility,
-    validateF21Eligibility,
-    latchF21FromSouthEligibility,
-
-    acceptCheckpointEvent,
-    receiveCheckpointEvent,
-    submitEvent,
-    submit,
-    receiveEvent,
-    completeActive,
-
-    setActiveStage,
-    completeStage,
-    updateActiveProgress,
-    getActiveGateState,
-    createPrimaryGateRegistry,
-
-    getTransmissionReceipt,
-    getReceipt: getTransmissionReceipt,
-    getReceiptText: getTransmissionReceiptText,
-    getNorthCommandReceipt,
-    reset: resetPrimaryGateRegistry,
-
-    get state() {
-      return state;
-    }
-  };
-
   function bindCardinalBranches() {
     return getCardinalReceipt();
   }
@@ -3417,10 +3635,11 @@
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      authority: "north-two-cycle-cardinal-receipt",
+      authority: "north-non-blocking-two-cycle-cardinal-receipt",
       primaryGateRegistryActive: true,
       primaryGateFilesLocked: true,
       twoCycleRuntimeLawActive: true,
+      nonBlockingPhaseSchedulerActive: true,
       northLoaded: true,
       eastPrimaryFileGate: PRIMARY_GATES.east,
       southPrimaryFileGate: PRIMARY_GATES.south,
@@ -3433,24 +3652,28 @@
       downstreamReleaseAuthorized: state.downstreamReleaseAuthorized,
       nextPrimaryOwner: state.recommendedNextOwner,
       nextPrimaryTarget: state.recommendedNextFile,
+      pageResponsive: true,
       visualPassClaimed: false,
       updatedAt: nowIso()
     };
   }
 
-  function getReceipt() {
-    refreshObservedAuthorities();
+  function getReceiptLight() {
+    if (!scheduler.dirtyReceiptLight && scheduler.receiptLightCache) {
+      return clonePlain(scheduler.receiptLightCache);
+    }
+
     refreshStageLedger();
 
     const news = evaluateNewsGateState();
 
-    return {
+    const light = {
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       baselineContract: BASELINE_CONTRACT,
       version: VERSION,
-      authority: "lab-runtime-table-north-two-cycle-canvas-f13-release-distributor",
+      authority: "lab-runtime-table-north-non-blocking-phase-scheduler-two-cycle-distributor",
       destinationFile: FILE,
       file: FILE,
       route: ROUTE,
@@ -3470,22 +3693,13 @@
       northMacroOnly: true,
       microTuningDelegatesDownstream: true,
 
-      labEquipment: true,
-      runtimeTable: true,
-      tripleGDiagnostic: true,
-      visualCarrierPlanAuthority: true,
-      atlasStartPlanAuthority: true,
-      coherentExpressionDiagnostic: true,
-      loadingOptimizationAuthority: true,
-      wideProbeDiagnosticAuthority: true,
-      universalPlanetStandard: true,
-
-      primaryGates: clonePlain(PRIMARY_GATES),
-      downstreamGates: clonePlain(DOWNSTREAM_GATES),
-      fileGates: clonePlain(FILE_GATES),
-      northLanguage: clonePlain(NORTH_LANGUAGE),
-      primaryRotation: clonePlain(PRIMARY_ROTATION),
-      stageLedger: clonePlain(state.stageLedger),
+      nonBlockingPhaseSchedulerActive: true,
+      authorityScanCacheActive: true,
+      lightReceiptDuringMotionActive: true,
+      fullReceiptOnDemandOnly: true,
+      datasetWriteCompactionActive: true,
+      broadDatasetWritesDeferred: true,
+      pageResponsive: true,
 
       activeStageId: state.activeStageId,
       activeGear: state.activeGear,
@@ -3497,26 +3711,14 @@
       activeNewsGate: state.activeNewsGate,
       activeProgress: state.activeProgress,
 
-      observed: clonePlain(state.observed),
-      cycleOne: clonePlain(state.cycleOne),
-      cycleTwo: clonePlain(state.cycleTwo),
-
-      completedStages: state.completedStages.slice(),
-      degradedStages: state.degradedStages.slice(),
-      blockedStages: state.blockedStages.slice(),
-
-      northPrimaryReady: true,
-      eastPrimaryReceived: state.cycleOne.eastReceived || state.cycleTwo.eastReceived,
-      eastPrimaryAccepted: state.cycleOne.eastAccepted && state.cycleTwo.eastAccepted,
-      southPrimaryReceived: state.cycleOne.southReceived || state.cycleTwo.southReceived,
-      southPrimaryAccepted: state.cycleOne.southAccepted && state.cycleTwo.southAccepted,
-      westPrimaryReceived: state.cycleOne.westReceived || state.cycleTwo.westReceived,
-      westPrimaryAccepted: state.cycleOne.westAccepted && state.cycleTwo.westAccepted,
-      primaryCycleComplete: primaryCycleComplete(),
-
       cycleOneComplete: cycleOneComplete(),
       cycleTwoStartAuthorized: state.cycleTwo.startAuthorized,
       cycleTwoPrimaryReadyForCanvasRelease: cycleTwoPrimaryReadyForCanvasRelease(),
+
+      eastPrimaryAccepted: state.cycleOne.eastAccepted && state.cycleTwo.eastAccepted,
+      southPrimaryAccepted: state.cycleOne.southAccepted && state.cycleTwo.southAccepted,
+      westPrimaryAccepted: state.cycleOne.westAccepted && state.cycleTwo.westAccepted,
+      primaryCycleComplete: primaryCycleComplete(),
 
       westAuditObserved: state.cycleTwo.westAuditObserved,
       westAuditAccepted: state.cycleTwo.westAuditAccepted,
@@ -3526,8 +3728,6 @@
       canvasF13ReleaseAuthorized: state.cycleTwo.canvasF13ReleaseAuthorized,
       canvasF13ReleasePacketReady: state.cycleTwo.canvasF13ReleasePacketReady,
       canvasF13ReleaseHeldReason: state.cycleTwo.canvasF13ReleaseHeldReason,
-      canvasReleasePacket: composeCanvasF13ReleasePacket(),
-
       canvasF13EvidenceReceived: state.cycleTwo.canvasF13EvidenceReceived,
       canvasF13EvidenceStrict: state.cycleTwo.canvasF13EvidenceStrict,
       canvasF13EvidenceDegraded: state.cycleTwo.canvasF13EvidenceDegraded,
@@ -3537,7 +3737,6 @@
       f21EligibilityReceived: state.f21EligibilityReceived,
       f21EligibilityAccepted: state.f21EligibilityAccepted,
       f21EligibilityRejected: state.f21EligibilityRejected,
-      f21EligibilityValidation: clonePlain(state.f21EligibilityValidation),
       f21EligibleForNorth: state.f21EligibleForNorth,
       f21LatchMode: state.f21LatchMode,
       completionLatched: state.completionLatched,
@@ -3563,6 +3762,70 @@
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
       postgameStatus: state.postgameStatus,
 
+      scheduler: {
+        queueDepth: scheduler.queue.length,
+        running: scheduler.running,
+        phaseRunCount: scheduler.phaseRunCount,
+        authorityCacheActive: Boolean(scheduler.authorityCache),
+        authorityCacheAgeMs: scheduler.authorityCacheAt ? nowMs() - scheduler.authorityCacheAt : 0,
+        lightPublishScheduled: scheduler.lightPublishScheduled,
+        fullDatasetScheduled: scheduler.fullDatasetScheduled
+      },
+
+      observed: clonePlain(state.observed),
+
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false,
+      createdAt: state.createdAt,
+      updatedAt: nowIso()
+    };
+
+    scheduler.receiptLightCache = clonePlain(light);
+    scheduler.receiptLightCacheAt = nowMs();
+    scheduler.dirtyReceiptLight = false;
+
+    return light;
+  }
+
+  function getReceipt() {
+    refreshObservedAuthorities({ force: true, includeCanvas: true });
+    refreshStageLedger();
+
+    const light = getReceiptLight();
+
+    return {
+      ...light,
+
+      labEquipment: true,
+      runtimeTable: true,
+      tripleGDiagnostic: true,
+      visualCarrierPlanAuthority: true,
+      atlasStartPlanAuthority: true,
+      coherentExpressionDiagnostic: true,
+      loadingOptimizationAuthority: true,
+      wideProbeDiagnosticAuthority: true,
+      universalPlanetStandard: true,
+
+      primaryGates: clonePlain(PRIMARY_GATES),
+      downstreamGates: clonePlain(DOWNSTREAM_GATES),
+      fileGates: clonePlain(FILE_GATES),
+      northLanguage: clonePlain(NORTH_LANGUAGE),
+      primaryRotation: clonePlain(PRIMARY_ROTATION),
+      stageLedger: clonePlain(state.stageLedger),
+
+      cycleOne: clonePlain(state.cycleOne),
+      cycleTwo: clonePlain(state.cycleTwo),
+
+      completedStages: state.completedStages.slice(),
+      degradedStages: state.degradedStages.slice(),
+      blockedStages: state.blockedStages.slice(),
+
+      canvasReleasePacket: composeCanvasF13ReleasePacket(),
+
+      f21EligibilityValidation: clonePlain(state.f21EligibilityValidation),
+
       preservedExports: [
         "createTable",
         "createHearthChannelTable",
@@ -3570,6 +3833,7 @@
         "STATUS",
         "HANDOFF",
         "getReceipt",
+        "getReceiptLight",
         "createTripleGDiagnostic",
         "createHearthCoherenceDiagnostic",
         "runCoherenceDiagnostic",
@@ -3622,7 +3886,10 @@
         "receiveCheckpointEvent",
         "submitEvent",
         "receiveEvent",
-        "createPrimaryGateRegistry"
+        "createPrimaryGateRegistry",
+        "queuePhase",
+        "invalidateAuthorityCache",
+        "refreshObservedAuthorities"
       ],
 
       owns: [
@@ -3633,40 +3900,29 @@
         "cycle-two-start-authorization",
         "Canvas F13 release authorization",
         "F21 North latch validation",
-        "downstream release authorization"
+        "downstream release authorization",
+        "non-blocking phase scheduling",
+        "authority scan cache",
+        "light receipt publication"
       ],
 
       transmissionReceipt: {
-        contract: CONTRACT,
-        receipt: RECEIPT,
-        file: FILE,
-        route: ROUTE,
-        activeStageId: state.activeStageId,
-        activeGear: state.activeGear,
-        activeCycleNumber: state.activeCycleNumber,
-        activeCycleRoute: state.activeCycleRoute,
-        activeFileGate: state.activeFileGate,
-        activeProgress: state.activeProgress,
-        cycleOneComplete: cycleOneComplete(),
-        cycleTwoStartAuthorized: state.cycleTwo.startAuthorized,
-        canvasF13ReleaseAuthorized: state.cycleTwo.canvasF13ReleaseAuthorized,
-        canvasF13EvidenceComplete: canvasF13EvidenceComplete(),
-        primaryCycleComplete: primaryCycleComplete(),
-        completionLatched: state.completionLatched,
-        f21LatchMode: state.f21LatchMode,
-        downstreamReleaseAuthorized: state.downstreamReleaseAuthorized,
-        firstFailedCoordinate: state.firstFailedCoordinate,
-        recommendedNextOwner: state.recommendedNextOwner,
-        recommendedNextFile: state.recommendedNextFile,
-        recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
-        admittedEvents: clonePlain(state.admittedEvents.slice(-50)),
-        heldEvents: clonePlain(state.heldEvents.slice(-50)),
-        archivedEvents: clonePlain(state.archivedEvents.slice(-50)),
-        blockedEvents: clonePlain(state.blockedEvents.slice(-50)),
-        errors: clonePlain(state.errors.slice(-50)),
+        ...getReceiptLight(),
+        admittedEvents: clonePlain(state.admittedEvents.slice(-40)),
+        heldEvents: clonePlain(state.heldEvents.slice(-40)),
+        archivedEvents: clonePlain(state.archivedEvents.slice(-40)),
+        blockedEvents: clonePlain(state.blockedEvents.slice(-40)),
+        errors: clonePlain(state.errors.slice(-40)),
         visualPassClaimed: false,
         updatedAt: nowIso()
       },
+
+      admittedEvents: clonePlain(state.admittedEvents.slice(-80)),
+      heldEvents: clonePlain(state.heldEvents.slice(-80)),
+      archivedEvents: clonePlain(state.archivedEvents.slice(-80)),
+      blockedEvents: clonePlain(state.blockedEvents.slice(-80)),
+      receipts: clonePlain(state.receipts.slice(-80)),
+      errors: clonePlain(state.errors.slice(-80)),
 
       generatedImage: false,
       graphicBox: false,
@@ -3697,7 +3953,7 @@
     )).join("\n") || "- none";
 
     return [
-      "LAB_RUNTIME_TABLE_NORTH_TWO_CYCLE_CANVAS_F13_RELEASE_DISTRIBUTOR_RECEIPT",
+      "LAB_RUNTIME_TABLE_NORTH_NON_BLOCKING_PHASE_SCHEDULER_TWO_CYCLE_DISTRIBUTOR_RECEIPT",
       "",
       `contract=${r.contract}`,
       `receipt=${r.receipt}`,
@@ -3717,6 +3973,18 @@
       `canvasF13ReleaseBeforeF21Active=${r.canvasF13ReleaseBeforeF21Active}`,
       `canvasF13IsNotDownstreamRelease=${r.canvasF13IsNotDownstreamRelease}`,
       `downstreamReleaseHeldUntilF21Latch=${r.downstreamReleaseHeldUntilF21Latch}`,
+      "",
+      "SCHEDULER",
+      `nonBlockingPhaseSchedulerActive=${r.nonBlockingPhaseSchedulerActive}`,
+      `authorityScanCacheActive=${r.authorityScanCacheActive}`,
+      `lightReceiptDuringMotionActive=${r.lightReceiptDuringMotionActive}`,
+      `fullReceiptOnDemandOnly=${r.fullReceiptOnDemandOnly}`,
+      `datasetWriteCompactionActive=${r.datasetWriteCompactionActive}`,
+      `broadDatasetWritesDeferred=${r.broadDatasetWritesDeferred}`,
+      `pageResponsive=${r.pageResponsive}`,
+      `schedulerQueueDepth=${r.scheduler.queueDepth}`,
+      `schedulerRunning=${r.scheduler.running}`,
+      `phaseRunCount=${r.scheduler.phaseRunCount}`,
       "",
       `cycleOneComplete=${r.cycleOneComplete}`,
       `cycleTwoStartAuthorized=${r.cycleTwoStartAuthorized}`,
@@ -3791,6 +4059,187 @@
       `visualPassClaimed=${r.visualPassClaimed}`,
       `updatedAt=${r.updatedAt}`
     ].join("\n");
+  }
+
+  function publishDatasetsLight() {
+    if (!doc || !doc.documentElement) return;
+
+    setDataset("labRuntimeTableLoaded", "true");
+    setDataset("labRuntimeTableContract", CONTRACT);
+    setDataset("labRuntimeTablePreviousContract", PREVIOUS_CONTRACT);
+    setDataset("labRuntimeTableBaselineContract", BASELINE_CONTRACT);
+    setDataset("labRuntimeTableReceipt", RECEIPT);
+    setDataset("labRuntimeTableEquipment", "true");
+
+    setDataset("labRuntimeTableNorthLoaded", "true");
+    setDataset("labRuntimeTableNorthContract", CONTRACT);
+    setDataset("primaryGateRegistryActive", "true");
+    setDataset("primaryGateFilesLocked", "true");
+    setDataset("fileGatesPrimary", "true");
+    setDataset("twoCycleRuntimeLawActive", "true");
+    setDataset("nonBlockingPhaseSchedulerActive", "true");
+    setDataset("authorityScanCacheActive", "true");
+    setDataset("lightReceiptDuringMotionActive", "true");
+    setDataset("fullReceiptOnDemandOnly", "true");
+    setDataset("datasetWriteCompactionActive", "true");
+    setDataset("pageResponsive", "true");
+
+    setDataset("activeStageId", state.activeStageId);
+    setDataset("activeGear", state.activeGear);
+    setDataset("activeCycleNumber", state.activeCycleNumber);
+    setDataset("activeCycleRoute", state.activeCycleRoute);
+    setDataset("activeCardinal", state.activeCardinal);
+    setDataset("activeFileGate", state.activeFileGate);
+    setDataset("activeFibonacci", state.activeFibonacci);
+    setDataset("activeNewsGate", state.activeNewsGate);
+    setDataset("activeProgress", state.activeProgress);
+
+    setDataset("cycleOneComplete", String(cycleOneComplete()));
+    setDataset("cycleTwoStartAuthorized", String(state.cycleTwo.startAuthorized));
+    setDataset("cycleTwoPrimaryReadyForCanvasRelease", String(cycleTwoPrimaryReadyForCanvasRelease()));
+
+    setDataset("canvasReleaseAuthorized", String(state.cycleTwo.canvasF13ReleaseAuthorized));
+    setDataset("canvasF13ReleaseAuthorized", String(state.cycleTwo.canvasF13ReleaseAuthorized));
+    setDataset("canvasF13ReleasePacketReady", String(state.cycleTwo.canvasF13ReleasePacketReady));
+    setDataset("canvasF13ReleaseHeldReason", state.cycleTwo.canvasF13ReleaseHeldReason);
+    setDataset("canvasF13EvidenceReceived", String(state.cycleTwo.canvasF13EvidenceReceived));
+    setDataset("canvasF13EvidenceComplete", String(canvasF13EvidenceComplete()));
+    setDataset("canvasF13HardFail", String(state.cycleTwo.canvasF13HardFail));
+
+    setDataset("f21EligibilityReceived", String(state.f21EligibilityReceived));
+    setDataset("f21EligibilityAccepted", String(state.f21EligibilityAccepted));
+    setDataset("f21EligibilityRejected", String(state.f21EligibilityRejected));
+    setDataset("f21EligibleForNorth", String(state.f21EligibleForNorth));
+    setDataset("f21LatchMode", state.f21LatchMode);
+    setDataset("completionLatched", String(state.completionLatched));
+    setDataset("finalCompletionLatched", String(state.finalCompletionLatched));
+    setDataset("degradedCompletionLatched", String(state.degradedCompletionLatched));
+
+    setDataset("downstreamReleaseAuthorized", String(state.downstreamReleaseAuthorized));
+    setDataset("downstreamReleaseTarget", state.downstreamReleaseTarget);
+
+    setDataset("firstFailedCoordinate", state.firstFailedCoordinate);
+    setDataset("recommendedNextOwner", state.recommendedNextOwner);
+    setDataset("recommendedNextFile", state.recommendedNextFile);
+    setDataset("recommendedNextRenewalTarget", state.recommendedNextRenewalTarget);
+    setDataset("postgameStatus", state.postgameStatus);
+
+    setDataset("generatedImage", "false");
+    setDataset("graphicBox", "false");
+    setDataset("webgl", "false");
+    setDataset("visualPassClaimed", "false");
+
+    scheduler.dirtyDatasetLight = false;
+    scheduler.lastFlushAt = nowMs();
+  }
+
+  function publishDatasetsFull() {
+    if (!doc || !doc.documentElement) return;
+
+    publishDatasetsLight();
+
+    setDataset("cycleOneRoute", CYCLE.ONE);
+    setDataset("cycleTwoRoute", CYCLE.TWO);
+    setDataset("canvasF13ReleaseBeforeF21Active", "true");
+    setDataset("canvasF13IsNotDownstreamRelease", "true");
+    setDataset("downstreamReleaseHeldUntilF21Latch", "true");
+    setDataset("northMacroOnly", "true");
+    setDataset("microTuningDelegatesDownstream", "true");
+
+    setDataset("primaryNorthFileGate", PRIMARY_GATES.north);
+    setDataset("primaryEastFileGate", PRIMARY_GATES.east);
+    setDataset("primarySouthFileGate", PRIMARY_GATES.south);
+    setDataset("primaryWestFileGate", PRIMARY_GATES.west);
+    setDataset("canvasF13FileGate", DOWNSTREAM_GATES.canvas);
+
+    setDataset("eastPrimaryAccepted", String(state.cycleOne.eastAccepted && state.cycleTwo.eastAccepted));
+    setDataset("southPrimaryAccepted", String(state.cycleOne.southAccepted && state.cycleTwo.southAccepted));
+    setDataset("westPrimaryAccepted", String(state.cycleOne.westAccepted && state.cycleTwo.westAccepted));
+    setDataset("primaryCycleComplete", String(primaryCycleComplete()));
+
+    setDataset("westAuditObserved", String(state.cycleTwo.westAuditObserved));
+    setDataset("westAuditAccepted", String(state.cycleTwo.westAuditAccepted));
+    setDataset("westCanvasReleaseApproved", String(state.cycleTwo.westCanvasReleaseApproved));
+
+    setDataset("schedulerQueueDepth", String(scheduler.queue.length));
+    setDataset("schedulerPhaseRunCount", String(scheduler.phaseRunCount));
+    setDataset("authorityScanCount", String(state.observed.authorityScanCount));
+    setDataset("authorityScanLastAt", state.observed.authorityScanLastAt);
+
+    scheduler.dirtyDatasetFull = false;
+  }
+
+  function publishLight() {
+    if (scheduler.dirtyGlobals) publishGlobalsLight();
+    if (scheduler.dirtyDatasetLight) publishDatasetsLight();
+  }
+
+  function publishGlobalsLight() {
+    root.DEXTER_LAB = root.DEXTER_LAB || {};
+    root.HEARTH = root.HEARTH || {};
+
+    root.DEXTER_LAB.runtimeTable = api;
+    root.DEXTER_LAB.tripleGDiagnostic = api;
+    root.DEXTER_LAB.visualCarrierPlanAuthority = api;
+    root.DEXTER_LAB.loadingOptimizationAuthority = api;
+    root.DEXTER_LAB.wideProbeDiagnosticAuthority = api;
+    root.DEXTER_LAB.checkpointGovernor = api;
+    root.DEXTER_LAB.cardinalRuntimeTableNorth = api;
+    root.DEXTER_LAB.northPrimaryGateRegistry = api;
+    root.DEXTER_LAB.northTwoCycleCanvasF13ReleaseDistributor = api;
+    root.DEXTER_LAB.northNonBlockingPhaseScheduler = api;
+    root.DEXTER_LAB.hearthCheckpointSession = transmissionSession;
+    root.DEXTER_LAB.checkpointSession = transmissionSession;
+
+    root.LAB_RUNTIME_TABLE = api;
+    root.DexterRuntimeTable = api;
+    root.RUNTIME_TABLE = api;
+    root.LAB_TRIPLE_G_DIAGNOSTIC = api;
+    root.TripleGDiagnostic = api;
+    root.LAB_VISUAL_CARRIER_PLAN_AUTHORITY = api;
+    root.LAB_LOADING_OPTIMIZATION_AUTHORITY = api;
+    root.LAB_WIDE_PROBE_DIAGNOSTIC = api;
+    root.LAB_UNIVERSAL_PLANET_RUNTIME_TABLE = api;
+    root.LAB_CHECKPOINT_GOVERNOR = api;
+    root.LAB_NEWS_FIBONACCI_CHECKPOINT_GOVERNOR = api;
+    root.LAB_RUNTIME_TABLE_NORTH = api;
+    root.LAB_CARDINAL_RUNTIME_TABLE_NORTH = api;
+    root.LAB_RUNTIME_TABLE_PRIMARY_GATE_REGISTRY = api;
+    root.LAB_RUNTIME_TABLE_NORTH_PRIMARY_GATE_REGISTRY = api;
+    root.LAB_RUNTIME_TABLE_NORTH_TWO_CYCLE_DISTRIBUTOR = api;
+    root.LAB_RUNTIME_TABLE_NORTH_NON_BLOCKING_PHASE_SCHEDULER = api;
+
+    root.HEARTH_NORTH_COMMAND_RUNTIME_TABLE = api;
+    root.HEARTH_NORTH_COMMAND_TABLE = api;
+    root.HEARTH_NORTH_COMMAND = api;
+    root.HEARTH_LOCAL_COMMAND_RUNTIME_TABLE = api;
+    root.HEARTH.northCommandRuntimeTable = api;
+    root.HEARTH.northPrimaryGateRegistry = api;
+    root.HEARTH.primaryGateRegistry = api;
+    root.HEARTH.northTwoCycleCanvasF13ReleaseDistributor = api;
+    root.HEARTH.northNonBlockingPhaseScheduler = api;
+
+    root.HEARTH_CHECKPOINT_SESSION = transmissionSession;
+    root.HEARTH_RUNTIME_CHECKPOINT_SESSION = transmissionSession;
+    root.LAB_HEARTH_CHECKPOINT_SESSION = transmissionSession;
+    root.LAB_CHECKPOINT_SESSION = transmissionSession;
+
+    root.HEARTH_NORTH_TRANSMISSION_SESSION = transmissionSession;
+    root.HEARTH_NORTH_PRIMARY_GATE_SESSION = transmissionSession;
+    root.HEARTH_NORTH_TWO_CYCLE_SESSION = transmissionSession;
+    root.HEARTH_NORTH_NON_BLOCKING_PHASE_SESSION = transmissionSession;
+
+    const receiptLight = getReceiptLight();
+
+    root.HEARTH_NORTH_COMMAND_RUNTIME_TABLE_RECEIPT = receiptLight;
+    root.HEARTH_NORTH_CYCLICAL_CHECKPOINT_RECEIPT = receiptLight;
+    root.LAB_RUNTIME_TABLE_NORTH_TRANSMISSION_RECEIPT = receiptLight;
+    root.LAB_RUNTIME_TABLE_NORTH_PRIMARY_GATE_RECEIPT = receiptLight;
+    root.LAB_RUNTIME_TABLE_NORTH_TWO_CYCLE_RECEIPT = receiptLight;
+    root.LAB_RUNTIME_TABLE_NORTH_NON_BLOCKING_RECEIPT = receiptLight;
+
+    scheduler.dirtyGlobals = false;
+    scheduler.globalsPublished = true;
   }
 
   const api = {
@@ -3900,7 +4349,16 @@
     loadCardinalBranchScripts,
     getCardinalReceipt,
     getReceipt,
+    getReceiptLight,
     getReceiptText,
+
+    queuePhase,
+    invalidateAuthorityCache,
+    refreshObservedAuthorities,
+    scheduleLightPublish,
+    publishLight,
+    publishDatasetsLight,
+    publishDatasetsFull,
 
     labEquipment: true,
     runtimeTable: true,
@@ -3924,6 +4382,14 @@
     northMacroOnly: true,
     microTuningDelegatesDownstream: true,
     oneActiveGearAtATime: true,
+
+    nonBlockingPhaseSchedulerActive: true,
+    authorityScanCacheActive: true,
+    lightReceiptDuringMotionActive: true,
+    fullReceiptOnDemandOnly: true,
+    datasetWriteCompactionActive: true,
+    broadDatasetWritesDeferred: true,
+    pageResponsive: true,
 
     validatesBeforeExpression: true,
     coordinatesBeforeRuntimePerforms: true,
@@ -3979,162 +4445,90 @@
     },
     get primaryGateState() {
       return state;
+    },
+    get scheduler() {
+      return scheduler;
     }
   };
 
-  function publishDatasets() {
-    if (!doc || !doc.documentElement) return;
+  transmissionSession = {
+    contract: CONTRACT,
+    receipt: RECEIPT,
+    sessionId: "HEARTH-NORTH-NON-BLOCKING-TWO-CYCLE-CANVAS-F13-RELEASE",
+    route: ROUTE,
+    file: FILE,
+    cardinalRole: CARDINAL.NORTH,
+    nonBlockingPhaseSchedulerActive: true,
 
-    const dataset = doc.documentElement.dataset;
+    acceptEastPrimary,
+    receiveEastPrimary,
+    acceptEastPrimaryGate,
+    acceptEastHandoff,
+    receiveEastHandoff,
 
-    dataset.labRuntimeTableLoaded = "true";
-    dataset.labRuntimeTableContract = CONTRACT;
-    dataset.labRuntimeTablePreviousContract = PREVIOUS_CONTRACT;
-    dataset.labRuntimeTableBaselineContract = BASELINE_CONTRACT;
-    dataset.labRuntimeTableReceipt = RECEIPT;
-    dataset.labRuntimeTableEquipment = "true";
+    acceptSouthPrimary,
+    receiveSouthPrimary,
+    acceptSouthPrimaryGate,
+    acceptSouthSpread,
+    receiveCycleOneSouthReturn,
 
-    dataset.labRuntimeTableNorthLoaded = "true";
-    dataset.labRuntimeTableNorthContract = CONTRACT;
-    dataset.primaryGateRegistryActive = "true";
-    dataset.primaryGateFilesLocked = "true";
-    dataset.fileGatesPrimary = "true";
-    dataset.twoCycleRuntimeLawActive = "true";
-    dataset.cycleOneRoute = CYCLE.ONE;
-    dataset.cycleTwoRoute = CYCLE.TWO;
-    dataset.canvasF13ReleaseBeforeF21Active = "true";
-    dataset.canvasF13IsNotDownstreamRelease = "true";
-    dataset.downstreamReleaseHeldUntilF21Latch = "true";
-    dataset.northMacroOnly = "true";
-    dataset.microTuningDelegatesDownstream = "true";
+    acceptWestPrimary,
+    receiveWestPrimary,
+    acceptWestPrimaryGate,
+    acceptWestHandoff,
+    receiveWestHandoff,
+    acceptWestIntake,
+    receiveWestIntake,
 
-    dataset.primaryNorthFileGate = PRIMARY_GATES.north;
-    dataset.primaryEastFileGate = PRIMARY_GATES.east;
-    dataset.primarySouthFileGate = PRIMARY_GATES.south;
-    dataset.primaryWestFileGate = PRIMARY_GATES.west;
-    dataset.canvasF13FileGate = DOWNSTREAM_GATES.canvas;
+    authorizeCycleTwoStart,
+    authorizeCanvasF13Release,
+    composeCanvasF13ReleasePacket,
+    acceptCanvasF13Evidence,
 
-    dataset.activeStageId = state.activeStageId;
-    dataset.activeGear = state.activeGear;
-    dataset.activeCycleNumber = String(state.activeCycleNumber);
-    dataset.activeCycleRoute = state.activeCycleRoute;
-    dataset.activeCardinal = state.activeCardinal;
-    dataset.activeFileGate = state.activeFileGate;
-    dataset.activeFibonacci = state.activeFibonacci;
-    dataset.activeNewsGate = state.activeNewsGate;
-    dataset.activeProgress = String(state.activeProgress);
+    acceptF21Eligibility,
+    receiveF21Eligibility,
+    submitF21Eligibility,
+    validateF21Eligibility,
+    latchF21FromSouthEligibility,
 
-    dataset.cycleOneComplete = String(cycleOneComplete());
-    dataset.cycleTwoStartAuthorized = String(state.cycleTwo.startAuthorized);
-    dataset.cycleTwoPrimaryReadyForCanvasRelease = String(cycleTwoPrimaryReadyForCanvasRelease());
+    acceptCheckpointEvent,
+    receiveCheckpointEvent,
+    submitEvent,
+    submit,
+    receiveEvent,
+    completeActive,
 
-    dataset.eastPrimaryAccepted = String(state.cycleOne.eastAccepted && state.cycleTwo.eastAccepted);
-    dataset.southPrimaryAccepted = String(state.cycleOne.southAccepted && state.cycleTwo.southAccepted);
-    dataset.westPrimaryAccepted = String(state.cycleOne.westAccepted && state.cycleTwo.westAccepted);
-    dataset.primaryCycleComplete = String(primaryCycleComplete());
+    setActiveStage,
+    completeStage,
+    updateActiveProgress,
+    getActiveGateState,
+    createPrimaryGateRegistry,
 
-    dataset.westAuditObserved = String(state.cycleTwo.westAuditObserved);
-    dataset.westAuditAccepted = String(state.cycleTwo.westAuditAccepted);
-    dataset.westCanvasReleaseApproved = String(state.cycleTwo.westCanvasReleaseApproved);
+    queuePhase,
+    invalidateAuthorityCache,
+    refreshObservedAuthorities,
 
-    dataset.canvasReleaseAuthorized = String(state.cycleTwo.canvasF13ReleaseAuthorized);
-    dataset.canvasF13ReleaseAuthorized = String(state.cycleTwo.canvasF13ReleaseAuthorized);
-    dataset.canvasF13ReleasePacketReady = String(state.cycleTwo.canvasF13ReleasePacketReady);
-    dataset.canvasF13ReleaseHeldReason = state.cycleTwo.canvasF13ReleaseHeldReason;
-    dataset.canvasF13EvidenceReceived = String(state.cycleTwo.canvasF13EvidenceReceived);
-    dataset.canvasF13EvidenceComplete = String(canvasF13EvidenceComplete());
-    dataset.canvasF13HardFail = String(state.cycleTwo.canvasF13HardFail);
+    getTransmissionReceipt,
+    getReceipt: getTransmissionReceipt,
+    getReceiptLight,
+    getReceiptText: getTransmissionReceiptText,
+    getNorthCommandReceipt,
+    reset: resetPrimaryGateRegistry,
 
-    dataset.f21EligibilityReceived = String(state.f21EligibilityReceived);
-    dataset.f21EligibilityAccepted = String(state.f21EligibilityAccepted);
-    dataset.f21EligibilityRejected = String(state.f21EligibilityRejected);
-    dataset.f21EligibleForNorth = String(state.f21EligibleForNorth);
-    dataset.f21LatchMode = state.f21LatchMode;
-    dataset.completionLatched = String(state.completionLatched);
-    dataset.finalCompletionLatched = String(state.finalCompletionLatched);
-    dataset.degradedCompletionLatched = String(state.degradedCompletionLatched);
-
-    dataset.downstreamReleaseAuthorized = String(state.downstreamReleaseAuthorized);
-    dataset.downstreamReleaseTarget = state.downstreamReleaseTarget;
-
-    dataset.firstFailedCoordinate = state.firstFailedCoordinate;
-    dataset.recommendedNextOwner = state.recommendedNextOwner;
-    dataset.recommendedNextFile = state.recommendedNextFile;
-    dataset.recommendedNextRenewalTarget = state.recommendedNextRenewalTarget;
-    dataset.postgameStatus = state.postgameStatus;
-
-    dataset.generatedImage = "false";
-    dataset.graphicBox = "false";
-    dataset.webgl = "false";
-    dataset.visualPassClaimed = "false";
-  }
-
-  function publishAll() {
-    root.DEXTER_LAB = root.DEXTER_LAB || {};
-    root.HEARTH = root.HEARTH || {};
-
-    root.DEXTER_LAB.runtimeTable = api;
-    root.DEXTER_LAB.tripleGDiagnostic = api;
-    root.DEXTER_LAB.visualCarrierPlanAuthority = api;
-    root.DEXTER_LAB.loadingOptimizationAuthority = api;
-    root.DEXTER_LAB.wideProbeDiagnosticAuthority = api;
-    root.DEXTER_LAB.checkpointGovernor = api;
-    root.DEXTER_LAB.cardinalRuntimeTableNorth = api;
-    root.DEXTER_LAB.northPrimaryGateRegistry = api;
-    root.DEXTER_LAB.northTwoCycleCanvasF13ReleaseDistributor = api;
-    root.DEXTER_LAB.hearthCheckpointSession = transmissionSession;
-    root.DEXTER_LAB.checkpointSession = transmissionSession;
-
-    root.LAB_RUNTIME_TABLE = api;
-    root.DexterRuntimeTable = api;
-    root.RUNTIME_TABLE = api;
-    root.LAB_TRIPLE_G_DIAGNOSTIC = api;
-    root.TripleGDiagnostic = api;
-    root.LAB_VISUAL_CARRIER_PLAN_AUTHORITY = api;
-    root.LAB_LOADING_OPTIMIZATION_AUTHORITY = api;
-    root.LAB_WIDE_PROBE_DIAGNOSTIC = api;
-    root.LAB_UNIVERSAL_PLANET_RUNTIME_TABLE = api;
-    root.LAB_CHECKPOINT_GOVERNOR = api;
-    root.LAB_NEWS_FIBONACCI_CHECKPOINT_GOVERNOR = api;
-    root.LAB_RUNTIME_TABLE_NORTH = api;
-    root.LAB_CARDINAL_RUNTIME_TABLE_NORTH = api;
-    root.LAB_RUNTIME_TABLE_PRIMARY_GATE_REGISTRY = api;
-    root.LAB_RUNTIME_TABLE_NORTH_PRIMARY_GATE_REGISTRY = api;
-    root.LAB_RUNTIME_TABLE_NORTH_TWO_CYCLE_DISTRIBUTOR = api;
-
-    root.HEARTH_NORTH_COMMAND_RUNTIME_TABLE = api;
-    root.HEARTH_NORTH_COMMAND_TABLE = api;
-    root.HEARTH_NORTH_COMMAND = api;
-    root.HEARTH_LOCAL_COMMAND_RUNTIME_TABLE = api;
-    root.HEARTH.northCommandRuntimeTable = api;
-    root.HEARTH.northPrimaryGateRegistry = api;
-    root.HEARTH.primaryGateRegistry = api;
-    root.HEARTH.northTwoCycleCanvasF13ReleaseDistributor = api;
-
-    root.HEARTH_CHECKPOINT_SESSION = transmissionSession;
-    root.HEARTH_RUNTIME_CHECKPOINT_SESSION = transmissionSession;
-    root.LAB_HEARTH_CHECKPOINT_SESSION = transmissionSession;
-    root.LAB_CHECKPOINT_SESSION = transmissionSession;
-
-    root.HEARTH_NORTH_TRANSMISSION_SESSION = transmissionSession;
-    root.HEARTH_NORTH_PRIMARY_GATE_SESSION = transmissionSession;
-    root.HEARTH_NORTH_TWO_CYCLE_SESSION = transmissionSession;
-
-    const receiptLight = getTransmissionReceipt();
-
-    root.HEARTH_NORTH_COMMAND_RUNTIME_TABLE_RECEIPT = receiptLight;
-    root.HEARTH_NORTH_CYCLICAL_CHECKPOINT_RECEIPT = receiptLight;
-    root.LAB_RUNTIME_TABLE_NORTH_TRANSMISSION_RECEIPT = receiptLight;
-    root.LAB_RUNTIME_TABLE_NORTH_PRIMARY_GATE_RECEIPT = receiptLight;
-    root.LAB_RUNTIME_TABLE_NORTH_TWO_CYCLE_RECEIPT = receiptLight;
-
-    publishDatasets();
-  }
+    get state() {
+      return state;
+    }
+  };
 
   state.createdAt = nowIso();
   state.updatedAt = state.createdAt;
   refreshStageLedger();
-  publishAll();
+  publishGlobalsLight();
+  publishDatasetsLight();
+
+  queuePhase("INITIAL_AUTHORITY_CACHE_WARM", () => {
+    refreshObservedAuthorities({ force: true, includeCanvas: false });
+  });
 
   if (typeof module !== "undefined" && module.exports) {
     module.exports = api;

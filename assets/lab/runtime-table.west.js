@@ -1,53 +1,76 @@
 // /assets/lab/runtime-table.west.js
-// LAB_RUNTIME_TABLE_CARDINAL_WEST_TRANSMISSION_GAP_CLASSIFIER_TNT_v1
+// LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_TNT_v1
 // Full-file replacement.
-// Cardinal split file 3 of 4.
-// West authority only.
+// Cardinal West authority.
 // Purpose:
-// - Renew West from generic checkpoint gap classification into transmission-aware gap classification.
-// - Classify gaps according to the active gear / active checkpoint only.
-// - Preserve one-active-gear-at-a-time law: no process may be in two gears/zones simultaneously.
-// - Treat waiting-for-next-gear as held/queued, not structural failure.
-// - Keep hard blocking narrow: structural carrier failure when required, false completion mutation, or premature F21.
-// - Allow degraded-forward progression when the active gear has enough safe evidence to continue.
-// - Feed East checkpoint motion and North public Runtime Table facade.
-// Consumed by:
-// - /assets/lab/runtime-table.east.js
-// - /assets/lab/runtime-table.js
-// Does not own:
-// - North public API precedent
-// - East checkpoint motion
-// - South visible-state language
-// - planet truth
-// - channel truth
-// - canvas drawing
-// - atlas painting
-// - route orchestration
-// - runtime motion
-// - final visual pass claim
+// - Establish West as the cycle-aware admissibility clutch for the Lab Runtime Table stream.
+// - Preserve file-name gates as primary routing gates.
+// - Audit Cycle 1 and Cycle 2 order.
+// - Audit NEWS alignment and Fibonacci synchronization.
+// - Classify gaps, holds, degraded-forward conditions, false completion, and Canvas release.
+// - Release to Canvas only in Cycle 2 after South output passes West admissibility.
+// - Return Cycle 1 South packets to North.
+// - Preserve legacy West exports while renewing the authority model.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_TRANSMISSION_GAP_CLASSIFIER_TNT_v1";
-  const RECEIPT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_TRANSMISSION_GAP_CLASSIFIER_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_GAP_CLASSIFIER_TNT_v1";
-  const BASELINE_CONTRACT = "RUNTIME_TABLE_NEWS_CARDINAL_FOUR_FILE_SPLIT_FINAL_DRAFT_PREWRITE_v1";
-  const VERSION = "2026-05-29.lab-runtime-table-cardinal-west-transmission-gap-classifier-v1";
+  const CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_TNT_v1";
+  const RECEIPT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_TRANSMISSION_GAP_CLASSIFIER_TNT_v1";
+  const BASELINE_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_TRANSMISSION_GAP_CLASSIFIER_TNT_v1";
+  const VERSION = "2026-05-31.lab-runtime-table-west-cycle-aware-admissibility-clutch-v1";
 
   const root = typeof window !== "undefined" ? window : globalThis;
+  const doc = root.document || null;
+
+  const FILE = "/assets/lab/runtime-table.west.js";
+
+  const FILE_GATES = Object.freeze({
+    north: "/assets/lab/runtime-table.js",
+    east: "/assets/lab/runtime-table.east.js",
+    west: "/assets/lab/runtime-table.west.js",
+    south: "/assets/lab/runtime-table.south.js",
+    routeConductor: "/showroom/globe/hearth/hearth.js",
+    hearthIndex: "/showroom/globe/hearth/index.js",
+    canvas: "/assets/hearth/hearth.canvas.js"
+  });
+
+  const CYCLES = Object.freeze({
+    CYCLE_1: "CYCLE_1",
+    CYCLE_2: "CYCLE_2",
+    UNKNOWN: "UNKNOWN"
+  });
+
+  const CYCLE_PATHS = Object.freeze({
+    CYCLE_1: Object.freeze(["NORTH", "EAST", "WEST", "SOUTH", "NORTH"]),
+    CYCLE_2: Object.freeze(["NORTH", "EAST", "SOUTH", "WEST", "CANVAS"])
+  });
+
+  const CARDINALS = Object.freeze({
+    NORTH: "NORTH",
+    EAST: "EAST",
+    WEST: "WEST",
+    SOUTH: "SOUTH",
+    CANVAS: "CANVAS",
+    UNKNOWN: "UNKNOWN"
+  });
 
   const GAP_CLASS = Object.freeze({
     NONE: "NONE",
+    CYCLE_ORDER_HELD: "CYCLE_ORDER_HELD",
+    ACTIVE_GATE_WAIT: "ACTIVE_GATE_WAIT",
+    FUTURE_CYCLE_HELD: "FUTURE_CYCLE_HELD",
+    PRIOR_PACKET_ARCHIVE: "PRIOR_PACKET_ARCHIVE",
+    DUPLICATE_ARCHIVE: "DUPLICATE_ARCHIVE",
+    PROGRESS_ONLY_ARCHIVE: "PROGRESS_ONLY_ARCHIVE",
+    DEGRADED_GAP: "DEGRADED_GAP",
     STRUCTURAL_BLOCK: "STRUCTURAL_BLOCK",
     FALSE_COMPLETION_BLOCK: "FALSE_COMPLETION_BLOCK",
-    DIAGNOSTIC_BLOCK: "DIAGNOSTIC_BLOCK",
-    DEGRADED_GAP: "DEGRADED_GAP",
-    HELD_GAP: "HELD_GAP",
-    GEAR_SHIFT_HELD: "GEAR_SHIFT_HELD",
-    ACTIVE_GEAR_WAIT: "ACTIVE_GEAR_WAIT",
-    PROGRESS_ONLY: "PROGRESS_ONLY",
-    DUPLICATE_ARCHIVE: "DUPLICATE_ARCHIVE",
+    NEWS_ALIGNMENT_HELD: "NEWS_ALIGNMENT_HELD",
+    FIBONACCI_SYNC_HELD: "FIBONACCI_SYNC_HELD",
+    CANVAS_RELEASE_HELD: "CANVAS_RELEASE_HELD",
+    F21_NORTH_REVIEW_REQUIRED: "F21_NORTH_REVIEW_REQUIRED",
     UNKNOWN_ARCHIVE: "UNKNOWN_ARCHIVE"
   });
 
@@ -63,65 +86,75 @@
 
   const GAP_DECISION = Object.freeze({
     FULL_PASS: "FULL_PASS",
+    ADMIT_TO_SOUTH: "ADMIT_TO_SOUTH",
+    RETURN_TO_NORTH: "RETURN_TO_NORTH",
+    RELEASE_TO_CANVAS: "RELEASE_TO_CANVAS",
+    RETURN_TO_NORTH_FOR_F21: "RETURN_TO_NORTH_FOR_F21",
     DEGRADED_FORWARD: "DEGRADED_FORWARD",
     HOLD_ACTIVE: "HOLD_ACTIVE",
-    HOLD_FOR_GEAR_SHIFT: "HOLD_FOR_GEAR_SHIFT",
+    HOLD_FOR_CYCLE: "HOLD_FOR_CYCLE",
     ARCHIVE: "ARCHIVE",
     HARD_BLOCK: "HARD_BLOCK"
   });
 
   const CHECKPOINT_IDS = Object.freeze({
-    F1A: "F1A_HTML_SHELL_RENDERED",
-    F1B: "F1B_LOAD_LEDGER_INITIALIZED",
-    F2: "F2_FIRST_PAINT_COCKPIT_VISIBLE",
-    F3: "F3_SCRIPT_ORDER_COMPLETE",
-    F5: "F5_AUTHORITY_AVAILABILITY_READY",
-    F8: "F8_CONDUCTOR_HYDRATED",
-    F13A: "F13A_CANVAS_COOPERATIVE_BOOT_STARTED",
-    F13B: "F13B_CANVAS_MOUNT_CREATED",
-    F13C: "F13C_CANVAS_CONTEXT_READY",
-    F13D: "F13D_DRAG_INSPECTION_BOUND",
-    F13E: "F13E_ATLAS_BUILD_STARTED",
-    F13F: "F13F_ATLAS_BUILD_COMPLETE",
-    F13G: "F13G_TEXTURE_COMPOSE_STARTED",
-    F13H: "F13H_TEXTURE_COMPOSE_COMPLETE",
-    F13I: "F13I_FIRST_FRAME_REQUESTED",
-    F13J: "F13J_FIRST_FRAME_DETECTED",
-    F13K: "F13K_CANVAS_READY",
-    F13L: "F13L_VISIBLE_CONTENT_PROOF_STARTED",
-    F13M: "F13M_VISIBLE_CONTENT_PROOF_PASSED",
-    F13N: "F13N_INSPECT_MODE_READY",
-    F21: "F21_COMPLETION_LATCHED"
+    F1: "F1_NORTH_MACRO_DISTRIBUTION",
+    F2: "F2_EAST_ROUTE_ALIGNMENT",
+    F3: "F3_EAST_SCRIPT_ORDER",
+    F5: "F5_NORTH_AUTHORITY",
+    F8: "F8_SOUTH_ROUTE_CONDUCTOR",
+    F13A: "F13A_CANVAS_PARENT",
+    F13B: "F13B_CANVAS_CHILDREN",
+    F13C: "F13C_CANVAS_TEXTURE",
+    F13D: "F13D_CANVAS_FRAME",
+    F13E: "F13E_VISIBLE_PROOF",
+    F13N: "F13N_INSPECT_GATE",
+    F21: "F21_COMPLETION_LATCH"
   });
 
   const CHECKPOINT_SEQUENCE = Object.freeze([
-    { id: CHECKPOINT_IDS.F1A, rank: 1, gear: "IGNITION", fibonacci: "F1A", progress: 6, requiredEvidence: ["htmlShell"] },
-    { id: CHECKPOINT_IDS.F1B, rank: 2, gear: "IGNITION_LEDGER", fibonacci: "F1B", progress: 12, requiredEvidence: ["loadLedger"] },
-    { id: CHECKPOINT_IDS.F2, rank: 3, gear: "FIRST_PAINT", fibonacci: "F2", progress: 22, requiredEvidence: ["firstPaint"] },
-    { id: CHECKPOINT_IDS.F3, rank: 4, gear: "SCRIPT_ORDER", fibonacci: "F3", progress: 36, requiredEvidence: ["scriptOrder"] },
-    { id: CHECKPOINT_IDS.F5, rank: 5, gear: "AUTHORITY_AVAILABILITY", fibonacci: "F5", progress: 55, requiredEvidence: ["authority"] },
-    { id: CHECKPOINT_IDS.F8, rank: 6, gear: "CONDUCTOR_HYDRATION", fibonacci: "F8", progress: 72, requiredEvidence: ["conductor"] },
-    { id: CHECKPOINT_IDS.F13A, rank: 7, gear: "CANVAS_BOOT", fibonacci: "F13A", progress: 78, requiredEvidence: ["canvasCarrierRequested"] },
-    { id: CHECKPOINT_IDS.F13B, rank: 8, gear: "CANVAS_MOUNT", fibonacci: "F13B", progress: 81, requiredEvidence: ["canvasCarrierMounted"] },
-    { id: CHECKPOINT_IDS.F13C, rank: 9, gear: "CANVAS_CONTEXT", fibonacci: "F13C", progress: 84, requiredEvidence: ["canvasContextReady"] },
-    { id: CHECKPOINT_IDS.F13D, rank: 10, gear: "DRAG_INSPECTION", fibonacci: "F13D", progress: 86, requiredEvidence: ["dragInspectionBound"] },
-    { id: CHECKPOINT_IDS.F13E, rank: 11, gear: "ATLAS_START", fibonacci: "F13E", progress: 88, requiredEvidence: ["atlasBuildStarted"] },
-    { id: CHECKPOINT_IDS.F13F, rank: 12, gear: "ATLAS_COMPLETE", fibonacci: "F13F", progress: 91, requiredEvidence: ["atlasBuildComplete"] },
-    { id: CHECKPOINT_IDS.F13G, rank: 13, gear: "TEXTURE_START", fibonacci: "F13G", progress: 93, requiredEvidence: ["textureComposeStarted"] },
-    { id: CHECKPOINT_IDS.F13H, rank: 14, gear: "TEXTURE_COMPLETE", fibonacci: "F13H", progress: 96, requiredEvidence: ["textureComposeComplete"] },
-    { id: CHECKPOINT_IDS.F13I, rank: 15, gear: "FIRST_FRAME_REQUEST", fibonacci: "F13I", progress: 97, requiredEvidence: ["firstFrameRequested"] },
-    { id: CHECKPOINT_IDS.F13J, rank: 16, gear: "FIRST_FRAME_DETECT", fibonacci: "F13J", progress: 98, requiredEvidence: ["firstFrameDetected"] },
-    { id: CHECKPOINT_IDS.F13K, rank: 17, gear: "CANVAS_READY", fibonacci: "F13K", progress: 98, requiredEvidence: ["canvasReady"] },
-    { id: CHECKPOINT_IDS.F13L, rank: 18, gear: "VISIBLE_PROOF_START", fibonacci: "F13L", progress: 98, requiredEvidence: ["visibleContentProofStarted"] },
-    { id: CHECKPOINT_IDS.F13M, rank: 19, gear: "VISIBLE_PROOF_PASS", fibonacci: "F13M", progress: 98, requiredEvidence: ["visibleContentProof"] },
-    { id: CHECKPOINT_IDS.F13N, rank: 20, gear: "INSPECT_MODE", fibonacci: "F13N", progress: 98, requiredEvidence: ["inspectMode"] },
-    { id: CHECKPOINT_IDS.F21, rank: 21, gear: "COMPLETION_LATCH", fibonacci: "F21", progress: 100, requiredEvidence: ["f21Allowed"] }
+    checkpoint(CHECKPOINT_IDS.F1, 1, "F1", "NORTH", "macro distribution"),
+    checkpoint(CHECKPOINT_IDS.F2, 2, "F2", "EAST", "route alignment"),
+    checkpoint(CHECKPOINT_IDS.F3, 3, "F3", "EAST", "script order"),
+    checkpoint(CHECKPOINT_IDS.F5, 5, "F5", "NORTH", "authority availability"),
+    checkpoint(CHECKPOINT_IDS.F8, 8, "F8", "SOUTH", "route conductor self-duty"),
+    checkpoint(CHECKPOINT_IDS.F13A, 13.1, "F13A", "NORTH", "canvas parent"),
+    checkpoint(CHECKPOINT_IDS.F13B, 13.2, "F13B", "EAST", "canvas children"),
+    checkpoint(CHECKPOINT_IDS.F13C, 13.3, "F13C", "SOUTH", "canvas texture"),
+    checkpoint(CHECKPOINT_IDS.F13D, 13.4, "F13D", "SOUTH", "canvas frame"),
+    checkpoint(CHECKPOINT_IDS.F13E, 13.5, "F13E", "SOUTH", "visible proof"),
+    checkpoint(CHECKPOINT_IDS.F13N, 13.9, "F13N", "WEST", "inspect gate"),
+    checkpoint(CHECKPOINT_IDS.F21, 21, "F21", "NORTH", "completion latch")
   ]);
 
-  const CHECKPOINT_BY_ID = CHECKPOINT_SEQUENCE.reduce((map, item) => {
-    map[item.id] = item;
-    return map;
-  }, {});
+  const CHECKPOINT_BY_ID = Object.freeze(
+    CHECKPOINT_SEQUENCE.reduce((acc, item) => {
+      acc[item.id] = item;
+      acc[item.fibonacci] = item;
+      return acc;
+    }, {})
+  );
+
+  const EVENT_TO_CHECKPOINT = Object.freeze({
+    NORTH_MACRO_DISTRIBUTION_READY: CHECKPOINT_IDS.F1,
+    EAST_ROUTE_ALIGNMENT_READY: CHECKPOINT_IDS.F2,
+    EAST_GATE_ALIGNMENT_READY: CHECKPOINT_IDS.F2,
+    SCRIPT_ORDER_COMPLETE: CHECKPOINT_IDS.F3,
+    AUTHORITY_AVAILABILITY_READY: CHECKPOINT_IDS.F5,
+    SOUTH_ROUTE_CONDUCTOR_READY: CHECKPOINT_IDS.F8,
+    SOUTH_ROUTE_CONDUCTOR_HYDRATED: CHECKPOINT_IDS.F8,
+    CANVAS_PARENT_READY: CHECKPOINT_IDS.F13A,
+    CANVAS_CHILDREN_READY: CHECKPOINT_IDS.F13B,
+    TEXTURE_COMPOSE_COMPLETE: CHECKPOINT_IDS.F13C,
+    FIRST_FRAME_DETECTED: CHECKPOINT_IDS.F13D,
+    IMAGE_RENDERED: CHECKPOINT_IDS.F13D,
+    VISIBLE_CONTENT_PROOF_PASSED: CHECKPOINT_IDS.F13E,
+    VISIBLE_PLANET_PROOF_VALID: CHECKPOINT_IDS.F13E,
+    INSPECT_MODE_READY: CHECKPOINT_IDS.F13N,
+    F21_COMPLETION_LATCH: CHECKPOINT_IDS.F21,
+    F21_ELIGIBILITY_SUBMITTED_TO_NORTH: CHECKPOINT_IDS.F21,
+    COMPLETION_LATCHED: CHECKPOINT_IDS.F21
+  });
 
   const PROGRESS_ONLY_EVENTS = Object.freeze([
     "ATLAS_BUILD_PROGRESS",
@@ -129,29 +162,85 @@
     "WIDE_PROBE_PROGRESS",
     "RECONCILE_PROGRESS",
     "CANVAS_PROGRESS",
-    "PHASE_PROGRESS"
+    "PHASE_PROGRESS",
+    "GEAR_PROGRESS_TICK",
+    "LOADING_PROGRESS",
+    "RENDER_PROGRESS"
   ]);
 
-  const HARD_FALSE_COMPLETION_TOKENS = Object.freeze([
+  const FALSE_COMPLETION_TOKENS = Object.freeze([
     "\"visualPassClaimed\":true",
     "visualPassClaimed=true",
     "\"readyTextAllowed\":true",
     "readyTextAllowed=true",
+    "\"completionLatched\":true",
+    "completionLatched=true",
+    "\"finalCompletionLatched\":true",
+    "finalCompletionLatched=true",
+    "\"mainDisplayProgress\":100",
+    "mainDisplayProgress=100",
+    "\"visibleProgress\":100",
+    "visibleProgress=100",
     "READY_PLANET_VISIBLE_DIAGNOSTIC_AVAILABLE",
-    "COMPLETION_LATCHED",
-    "F21_COMPLETION_LATCHED"
+    "READY_DEGRADED_PLANET_VISIBLE_DIAGNOSTIC_AVAILABLE",
+    "F21_COMPLETION_LATCHED",
+    "F21_DEGRADED_COMPLETION_LATCHED"
   ]);
 
-  const ROUTE_TARGETS = Object.freeze({
-    NORTH: "/assets/lab/runtime-table.js",
-    EAST: "/assets/lab/runtime-table.east.js",
-    WEST: "/assets/lab/runtime-table.west.js",
-    SOUTH: "/assets/lab/runtime-table.south.js",
-    HEARTH_ROUTE: "/showroom/globe/hearth/hearth.js",
-    HEARTH_INDEX: "/showroom/globe/hearth/index.js",
-    HEARTH_CANVAS: "/assets/hearth/hearth.canvas.js",
-    RUNTIME_TABLE: "/assets/lab/runtime-table.js"
-  });
+  const state = {
+    contract: CONTRACT,
+    receipt: RECEIPT,
+    previousContract: PREVIOUS_CONTRACT,
+    baselineContract: BASELINE_CONTRACT,
+    version: VERSION,
+    file: FILE,
+    role: "west-cycle-aware-admissibility-clutch",
+
+    cycleAwareWestAuthority: true,
+    cycleOneLawActive: true,
+    cycleTwoLawActive: true,
+    canvasCycleOneBlocked: true,
+    canvasCycleTwoReleaseSupported: true,
+    southReturnsToNorthInCycleOne: true,
+    southPrecedesWestInCycleTwo: true,
+    f21NorthLatchOnly: true,
+    newsAlignmentAuditActive: true,
+    fibonacciSynchronizationAuditActive: true,
+    falseCompletionFirewallActive: true,
+
+    classifyCount: 0,
+    cycleOneCount: 0,
+    cycleTwoCount: 0,
+    canvasReleaseCount: 0,
+    returnNorthCount: 0,
+    falseCompletionBlockCount: 0,
+    degradedForwardCount: 0,
+
+    lastNorthContext: null,
+    lastCyclePacket: null,
+    lastAdmissibility: null,
+    lastGapReceipt: null,
+    localEvents: [],
+    errors: [],
+
+    generatedImage: false,
+    graphicBox: false,
+    webGL: false,
+    visualPassClaimed: false,
+
+    startedAt: nowIso(),
+    updatedAt: nowIso()
+  };
+
+  function checkpoint(id, rank, fibonacci, owner, label) {
+    return Object.freeze({
+      id,
+      rank,
+      fibonacci,
+      owner,
+      label
+    });
+  }
 
   function nowIso() {
     try {
@@ -162,7 +251,11 @@
   }
 
   function isObject(value) {
-    return Boolean(value && typeof value === "object");
+    return Boolean(value && typeof value === "object" && !Array.isArray(value));
+  }
+
+  function isFunction(value) {
+    return typeof value === "function";
   }
 
   function asArray(value) {
@@ -171,103 +264,245 @@
     return [value];
   }
 
-  function safeNumber(value, fallback = 0) {
-    const n = Number(value);
-    return Number.isFinite(n) ? n : fallback;
-  }
-
-  function safeBool(value, fallback = false) {
-    if (typeof value === "boolean") return value;
-    if (value === "true") return true;
-    if (value === "false") return false;
-    if (value === 1 || value === "1") return true;
-    if (value === 0 || value === "0") return false;
-    return fallback;
-  }
-
   function safeString(value, fallback = "") {
     if (value === undefined || value === null) return fallback;
     return String(value);
   }
 
+  function safeBool(value, fallback = false) {
+    if (typeof value === "boolean") return value;
+    if (value === 1 || value === "1" || value === "true") return true;
+    if (value === 0 || value === "0" || value === "false") return false;
+    return fallback;
+  }
+
+  function safeNumber(value, fallback = 0) {
+    const number = Number(value);
+    return Number.isFinite(number) ? number : fallback;
+  }
+
   function clonePlain(value) {
-    if (!isObject(value)) return value;
+    if (!isObject(value) && !Array.isArray(value)) return value;
 
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
-      if (Array.isArray(value)) return value.slice();
-      return { ...value };
+      return Array.isArray(value) ? value.slice() : { ...value };
     }
   }
 
+  function trim(list, max = 160) {
+    if (Array.isArray(list) && list.length > max) {
+      list.splice(0, list.length - max);
+    }
+  }
+
+  function record(event, detail = {}) {
+    const item = {
+      at: nowIso(),
+      event: safeString(event),
+      detail: clonePlain(detail)
+    };
+
+    state.localEvents.push(item);
+    trim(state.localEvents);
+    state.updatedAt = item.at;
+    publishDataset();
+
+    return item;
+  }
+
+  function recordError(code, error, detail = {}) {
+    const item = {
+      at: nowIso(),
+      code: safeString(code, "ERROR"),
+      message: error && error.message ? String(error.message) : safeString(error),
+      detail: clonePlain(detail)
+    };
+
+    state.errors.push(item);
+    trim(state.errors);
+    state.updatedAt = item.at;
+    publishDataset();
+
+    return item;
+  }
+
+  function readPath(path) {
+    const parts = safeString(path).split(".");
+    let cursor = root;
+
+    for (const part of parts) {
+      if (!cursor || cursor[part] === undefined || cursor[part] === null) return null;
+      cursor = cursor[part];
+    }
+
+    return cursor || null;
+  }
+
+  function firstGlobal(names) {
+    for (const name of asArray(names)) {
+      const value = readPath(name);
+      if (value) return value;
+    }
+    return null;
+  }
+
+  function datasetValue(key, fallback = "") {
+    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return fallback;
+    const value = doc.documentElement.dataset[key];
+    return value === undefined || value === null || value === "" ? fallback : value;
+  }
+
+  function readReceipt(authority) {
+    if (!authority || !isObject(authority)) return null;
+
+    if (isFunction(authority.getReceipt)) {
+      try {
+        const receipt = authority.getReceipt();
+        return isObject(receipt) ? receipt : null;
+      } catch (error) {
+        recordError("READ_RECEIPT_FAILED", error);
+        return null;
+      }
+    }
+
+    if (isObject(authority.receiptPacket)) return authority.receiptPacket;
+    if (isObject(authority.receipt)) return authority.receipt;
+    if (authority.contract || authority.receipt || authority.version) return authority;
+
+    return null;
+  }
+
   function normalizeEvent(event = {}) {
-    const detail = isObject(event.detail) ? event.detail : {};
-    const snapshot = isObject(event.snapshot) ? event.snapshot : {};
+    const source = isObject(event) ? event : { event };
+    const detail = isObject(source.detail) ? source.detail : {};
+    const snapshot = isObject(source.snapshot) ? source.snapshot : {};
 
-    const id =
-      event.checkpointId ||
-      event.phase ||
-      event.id ||
-      event.event ||
-      detail.checkpointId ||
-      detail.phase ||
-      detail.id ||
-      detail.event ||
-      "";
-
-    return {
+    const merged = {
       ...snapshot,
       ...detail,
-      ...event,
-      checkpointId: safeString(event.checkpointId || detail.checkpointId || id),
-      id: safeString(id),
-      phase: safeString(event.phase || detail.phase || id),
-      event: safeString(event.event || event.id || detail.event || detail.id || id),
-      detail,
-      snapshot
+      ...source
+    };
+
+    const candidates = [
+      merged.event,
+      merged.id,
+      merged.phase,
+      merged.checkpointId,
+      merged.checkpointEvent,
+      merged.activeGateId,
+      merged.activeFibonacci,
+      merged.fibonacci
+    ].filter((item) => item !== undefined && item !== null && item !== "");
+
+    const name = candidates.length ? safeString(candidates[0]) : "";
+
+    return {
+      ...merged,
+      name,
+      event: safeString(merged.event || name),
+      id: safeString(merged.id || merged.checkpointId || name),
+      phase: safeString(merged.phase || name),
+      checkpointId: safeString(merged.checkpointId || EVENT_TO_CHECKPOINT[name] || name),
+      candidates: candidates.map(String),
+      detail: clonePlain(detail),
+      snapshot: clonePlain(snapshot),
+      raw: clonePlain(source),
+      normalizedAt: nowIso()
     };
   }
 
   function normalizeSnapshot(snapshot = {}, context = {}) {
-    const eventSnapshot = context && context.event ? normalizeEvent(context.event) : {};
+    const event = context && context.event ? normalizeEvent(context.event) : {};
     return {
-      ...eventSnapshot,
+      ...event,
       ...(isObject(snapshot) ? snapshot : {})
     };
   }
 
+  function stringifyForSafety(value) {
+    try {
+      return JSON.stringify(value || {});
+    } catch (_error) {
+      return String(value || "");
+    }
+  }
+
+  function containsFalseCompletionLanguage(value = {}) {
+    const text = stringifyForSafety(value);
+    return FALSE_COMPLETION_TOKENS.some((token) => text.includes(token));
+  }
+
   function eventNameFromContext(context = {}) {
     const event = normalizeEvent(context.event || {});
-    return safeString(event.event || event.id || event.phase || context.eventName || "");
+    return safeString(
+      context.eventName ||
+      event.event ||
+      event.id ||
+      event.phase ||
+      ""
+    );
+  }
+
+  function checkpointFromValue(value = "") {
+    const text = safeString(value).toUpperCase();
+
+    if (CHECKPOINT_BY_ID[text]) return CHECKPOINT_BY_ID[text];
+    if (EVENT_TO_CHECKPOINT[text]) return CHECKPOINT_BY_ID[EVENT_TO_CHECKPOINT[text]] || null;
+
+    if (text.includes("F21") || text.includes("COMPLETION") || text.includes("LATCH")) return CHECKPOINT_BY_ID[CHECKPOINT_IDS.F21];
+    if (text.includes("F13N") || text.includes("INSPECT")) return CHECKPOINT_BY_ID[CHECKPOINT_IDS.F13N];
+    if (text.includes("VISIBLE") || text.includes("PROOF")) return CHECKPOINT_BY_ID[CHECKPOINT_IDS.F13E];
+    if (text.includes("FRAME") || text.includes("IMAGE_RENDERED")) return CHECKPOINT_BY_ID[CHECKPOINT_IDS.F13D];
+    if (text.includes("TEXTURE")) return CHECKPOINT_BY_ID[CHECKPOINT_IDS.F13C];
+    if (text.includes("CHILD")) return CHECKPOINT_BY_ID[CHECKPOINT_IDS.F13B];
+    if (text.includes("CANVAS")) return CHECKPOINT_BY_ID[CHECKPOINT_IDS.F13A];
+    if (text.includes("CONDUCTOR") || text.includes("HYDRAT")) return CHECKPOINT_BY_ID[CHECKPOINT_IDS.F8];
+    if (text.includes("AUTHORITY") || text.includes("RUNTIME_TABLE")) return CHECKPOINT_BY_ID[CHECKPOINT_IDS.F5];
+    if (text.includes("SCRIPT")) return CHECKPOINT_BY_ID[CHECKPOINT_IDS.F3];
+    if (text.includes("FIRST") || text.includes("PAINT") || text.includes("EAST")) return CHECKPOINT_BY_ID[CHECKPOINT_IDS.F2];
+    if (text.includes("NORTH") || text.includes("MACRO")) return CHECKPOINT_BY_ID[CHECKPOINT_IDS.F1];
+
+    return null;
   }
 
   function checkpointIdFromContext(context = {}) {
     const event = normalizeEvent(context.event || {});
-    return safeString(
+    const value =
       context.checkpointId ||
+      context.activeGateId ||
       event.checkpointId ||
-      event.id ||
+      event.activeGateId ||
+      event.activeFibonacci ||
+      event.fibonacci ||
+      event.name ||
+      "";
+
+    const mapped = checkpointFromValue(value);
+    return mapped ? mapped.id : safeString(value);
+  }
+
+  function activeCheckpointIdFromContext(context = {}, northContext = null) {
+    const value =
       context.activeCheckpointId ||
-      ""
-    );
+      context.activeGateId ||
+      context.activeFibonacci ||
+      northContext && (
+        northContext.activeCheckpointId ||
+        northContext.activeGateId ||
+        northContext.activeFibonacci
+      ) ||
+      datasetValue("activeGateId", "") ||
+      datasetValue("activeFibonacci", "");
+
+    const mapped = checkpointFromValue(value);
+    return mapped ? mapped.id : safeString(value);
   }
 
-  function activeCheckpointIdFromContext(context = {}) {
-    return safeString(
-      context.activeCheckpointId ||
-      context.checkpointId ||
-      checkpointIdFromContext(context) ||
-      ""
-    );
-  }
-
-  function checkpointRank(checkpointId) {
-    return CHECKPOINT_BY_ID[checkpointId] ? CHECKPOINT_BY_ID[checkpointId].rank : 0;
-  }
-
-  function checkpointGear(checkpointId) {
-    return CHECKPOINT_BY_ID[checkpointId] ? CHECKPOINT_BY_ID[checkpointId].gear : "";
+  function checkpointRank(id) {
+    const item = CHECKPOINT_BY_ID[id] || checkpointFromValue(id);
+    return item ? item.rank : 0;
   }
 
   function isProgressOnlyEvent(eventOrName = "") {
@@ -278,90 +513,235 @@
     return PROGRESS_ONLY_EVENTS.includes(safeString(name));
   }
 
-  function isPrematureCompletionEvent(eventOrContext = {}, checkpointId = "") {
-    const event = eventOrContext && eventOrContext.event
-      ? normalizeEvent(eventOrContext.event)
-      : normalizeEvent(eventOrContext);
+  function detectCardinalFromFile(file = "") {
+    const text = safeString(file).toLowerCase();
 
-    const activeCheckpointId = safeString(checkpointId || event.checkpointId || event.id || "");
-    const eventName = safeString(event.event || event.id || event.phase || "");
-    const text = JSON.stringify(event || {});
+    if (!text) return "";
+    if (text.includes("runtime-table.west") || text.includes("hearth.west")) return CARDINALS.WEST;
+    if (text.includes("runtime-table.east") || text.includes("hearth/index")) return CARDINALS.EAST;
+    if (text.includes("runtime-table.south") || text.endsWith("/hearth.js")) return CARDINALS.SOUTH;
+    if (text.includes("runtime-table.js")) return CARDINALS.NORTH;
+    if (text.includes("hearth.canvas")) return CARDINALS.CANVAS;
 
-    if (activeCheckpointId === CHECKPOINT_IDS.F21 || eventName === "COMPLETION_LATCHED") {
-      return false;
-    }
-
-    if (safeBool(event.visualPassClaimed, false)) return true;
-    if (safeBool(event.readyTextAllowed, false)) return true;
-    if (safeString(event.postgameStatus).includes("READY_PLANET_VISIBLE_DIAGNOSTIC_AVAILABLE")) return true;
-    if (safeNumber(event.mainDisplayProgress, 0) >= 100 && activeCheckpointId !== CHECKPOINT_IDS.F21) return true;
-
-    return HARD_FALSE_COMPLETION_TOKENS.some((token) => text.includes(token));
+    return "";
   }
 
-  function explicitFalseCompletionAttempt(snapshot = {}, context = {}) {
-    const checkpointId = checkpointIdFromContext(context);
-    const eventName = eventNameFromContext(context);
-    const event = normalizeEvent(context.event || {});
+  function normalizeCardinal(value = "") {
+    const text = safeString(value).toUpperCase();
 
-    if (checkpointId === CHECKPOINT_IDS.F21 || eventName === "COMPLETION_LATCHED") {
-      return false;
-    }
+    if (text.includes("NORTH")) return CARDINALS.NORTH;
+    if (text.includes("EAST")) return CARDINALS.EAST;
+    if (text.includes("WEST")) return CARDINALS.WEST;
+    if (text.includes("SOUTH")) return CARDINALS.SOUTH;
+    if (text.includes("CANVAS")) return CARDINALS.CANVAS;
 
-    if (isPrematureCompletionEvent(event, checkpointId)) return true;
-    if (safeBool(snapshot.visualPassClaimed, false)) return true;
-    if (safeBool(snapshot.readyTextAllowed, false) && checkpointId !== CHECKPOINT_IDS.F21) return true;
-
-    return false;
+    return "";
   }
 
-  function fieldPresent(snapshot, key) {
-    return snapshot && Object.prototype.hasOwnProperty.call(snapshot, key);
+  function detectPacketSource(packet = {}, context = {}) {
+    const source =
+      normalizeCardinal(packet.sourceCardinal) ||
+      normalizeCardinal(packet.source) ||
+      normalizeCardinal(packet.cardinal) ||
+      normalizeCardinal(packet.activeCardinal) ||
+      normalizeCardinal(context.sourceCardinal) ||
+      normalizeCardinal(context.source) ||
+      detectCardinalFromFile(packet.sourceFile) ||
+      detectCardinalFromFile(context.sourceFile) ||
+      detectCardinalFromFile(packet.file) ||
+      CARDINALS.UNKNOWN;
+
+    return source;
   }
 
-  function requiredBoolean(snapshot, key) {
-    if (!fieldPresent(snapshot, key)) {
-      return {
-        present: false,
-        ok: false,
-        value: false,
-        missing: true
-      };
+  function detectPacketDestination(packet = {}, context = {}) {
+    if (safeBool(packet.canvasReleaseRequested, false) || safeBool(packet.releaseToCanvas, false)) {
+      return CARDINALS.CANVAS;
     }
 
-    return {
-      present: true,
-      ok: safeBool(snapshot[key], false) === true,
-      value: safeBool(snapshot[key], false),
-      missing: false
+    const destination =
+      normalizeCardinal(packet.targetCardinal) ||
+      normalizeCardinal(packet.destinationCardinal) ||
+      normalizeCardinal(packet.target) ||
+      normalizeCardinal(packet.destination) ||
+      normalizeCardinal(context.targetCardinal) ||
+      normalizeCardinal(context.destinationCardinal) ||
+      detectCardinalFromFile(packet.targetFile) ||
+      detectCardinalFromFile(packet.destinationFile) ||
+      detectCardinalFromFile(context.targetFile) ||
+      CARDINALS.UNKNOWN;
+
+    return destination;
+  }
+
+  function readNorthCycleContext(context = {}) {
+    const supplied = isObject(context) ? context : {};
+
+    const northApi = firstGlobal([
+      "LAB_RUNTIME_TABLE",
+      "LAB_RUNTIME_TABLE_NORTH",
+      "LAB_RUNTIME_TABLE_NORTH_MACRO_DISTRIBUTOR",
+      "RUNTIME_TABLE",
+      "DexterRuntimeTable",
+      "HEARTH_NORTH_COMMAND_RUNTIME_TABLE",
+      "HEARTH_NORTH_COMMAND_TABLE",
+      "HEARTH_NORTH_MACRO_MICRO_TIMETABLE_SESSION",
+      "DEXTER_LAB.runtimeTable",
+      "DEXTER_LAB.cardinalRuntimeTableNorth",
+      "DEXTER_LAB.northMacroDistributor"
+    ]);
+
+    const northReceipt =
+      readReceipt(northApi) ||
+      firstGlobal([
+        "HEARTH_NORTH_COMMAND_RUNTIME_TABLE_RECEIPT",
+        "HEARTH_NORTH_CYCLICAL_CHECKPOINT_RECEIPT",
+        "LAB_RUNTIME_TABLE_NORTH_TRANSMISSION_RECEIPT",
+        "LAB_RUNTIME_TABLE_NORTH_MACRO_DISTRIBUTOR_RECEIPT"
+      ]) ||
+      {};
+
+    const activeGateSource =
+      supplied.activeGateId ||
+      supplied.activeStageId ||
+      supplied.activeFibonacci ||
+      northReceipt.activeGateId ||
+      northReceipt.activeStageId ||
+      northReceipt.activeFibonacci ||
+      northReceipt.activeGear ||
+      datasetValue("activeGateId", "") ||
+      datasetValue("activeStageId", "") ||
+      datasetValue("activeFibonacci", "");
+
+    const checkpoint = checkpointFromValue(activeGateSource);
+
+    const cycleValue =
+      supplied.cycle ||
+      supplied.activeCycle ||
+      supplied.cycleId ||
+      northReceipt.cycle ||
+      northReceipt.activeCycle ||
+      northReceipt.cycleId ||
+      datasetValue("activeCycle", "") ||
+      datasetValue("cycle", "");
+
+    const cycle = detectCycleFromValue(cycleValue, supplied, northReceipt);
+
+    const packet = {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      northRuntimeTableObserved: Boolean(northApi || northReceipt.contract),
+      northContract: safeString(northReceipt.contract || northApi && northApi.contract || ""),
+      northReceipt: safeString(northReceipt.receipt || northApi && northApi.receipt || ""),
+      activeGateId: safeString(activeGateSource),
+      activeCheckpointId: checkpoint ? checkpoint.id : safeString(activeGateSource),
+      activeFibonacci: checkpoint ? checkpoint.fibonacci : safeString(activeGateSource),
+      activeRank: checkpoint ? checkpoint.rank : checkpointRank(activeGateSource),
+      activeCycle: cycle,
+      cycleOneLawActive: true,
+      cycleTwoLawActive: true,
+      canvasCycleOneBlocked: true,
+      canvasCycleTwoReleaseSupported: true,
+      southReturnsToNorthInCycleOne: true,
+      southPrecedesWestInCycleTwo: true,
+      f21NorthLatchOnly: true,
+      completionLatchedByNorth: Boolean(
+        safeBool(supplied.completionLatchedByNorth, false) ||
+        safeBool(northReceipt.completionLatched, false) ||
+        safeBool(northReceipt.finalCompletionLatched, false)
+      ),
+      downstreamReleaseAuthorized: Boolean(
+        safeBool(supplied.downstreamReleaseAuthorized, false) ||
+        safeBool(northReceipt.downstreamReleaseAuthorized, false)
+      ),
+      readAt: nowIso()
     };
+
+    state.lastNorthContext = clonePlain(packet);
+    return packet;
+  }
+
+  function detectCycleFromValue(value = "", supplied = {}, northReceipt = {}) {
+    const text = safeString(value).toUpperCase();
+
+    if (text.includes("2") || text.includes("CYCLE_2") || text.includes("SECOND")) return CYCLES.CYCLE_2;
+    if (text.includes("1") || text.includes("CYCLE_1") || text.includes("FIRST")) return CYCLES.CYCLE_1;
+
+    if (
+      safeBool(supplied.cycleTwoActive, false) ||
+      safeBool(northReceipt.cycleTwoActive, false) ||
+      safeBool(supplied.southPrecedesWest, false) ||
+      safeBool(supplied.releaseToCanvas, false) ||
+      safeBool(supplied.canvasReleaseRequested, false)
+    ) {
+      return CYCLES.CYCLE_2;
+    }
+
+    if (
+      safeBool(supplied.cycleOneActive, false) ||
+      safeBool(northReceipt.cycleOneActive, false) ||
+      safeBool(supplied.southReturnsToNorth, false)
+    ) {
+      return CYCLES.CYCLE_1;
+    }
+
+    return CYCLES.CYCLE_1;
+  }
+
+  function detectCycle(packet = {}, context = {}) {
+    const normalized = normalizeEvent(packet);
+    const northContext = readNorthCycleContext(context);
+    const source = detectPacketSource(normalized, context);
+    const destination = detectPacketDestination(normalized, context);
+
+    if (
+      safeBool(normalized.cycleTwoActive, false) ||
+      safeBool(context.cycleTwoActive, false) ||
+      safeBool(normalized.releaseToCanvas, false) ||
+      safeBool(normalized.canvasReleaseRequested, false) ||
+      destination === CARDINALS.CANVAS ||
+      (source === CARDINALS.SOUTH && destination === CARDINALS.WEST)
+    ) {
+      return CYCLES.CYCLE_2;
+    }
+
+    if (
+      safeBool(normalized.cycleOneActive, false) ||
+      safeBool(context.cycleOneActive, false) ||
+      (source === CARDINALS.SOUTH && destination === CARDINALS.NORTH) ||
+      (source === CARDINALS.WEST && destination === CARDINALS.SOUTH)
+    ) {
+      return CYCLES.CYCLE_1;
+    }
+
+    return northContext.activeCycle || CYCLES.CYCLE_1;
   }
 
   function assessActiveGear(snapshotInput = {}, context = {}) {
     const snapshot = normalizeSnapshot(snapshotInput, context);
-    const checkpointId = checkpointIdFromContext(context);
-    const activeCheckpointId = activeCheckpointIdFromContext(context) || checkpointId;
-    const checkpoint = CHECKPOINT_BY_ID[checkpointId] || null;
-    const active = CHECKPOINT_BY_ID[activeCheckpointId] || checkpoint || null;
-    const eventName = eventNameFromContext(context);
+    const northContext = readNorthCycleContext(context);
+    const checkpointId = checkpointIdFromContext({ ...context, event: snapshot });
+    const activeCheckpointId = activeCheckpointIdFromContext(context, northContext) || checkpointId;
+    const checkpoint = CHECKPOINT_BY_ID[checkpointId] || checkpointFromValue(checkpointId);
+    const active = CHECKPOINT_BY_ID[activeCheckpointId] || checkpointFromValue(activeCheckpointId) || checkpoint || null;
 
     const requestedRank = checkpoint ? checkpoint.rank : 0;
     const activeRank = active ? active.rank : 0;
     const rankDelta = requestedRank - activeRank;
 
     return {
-      transmissionGapClassifier: true,
+      cycleAwareWestAuthority: true,
       activeGearGapAssessment: true,
       oneActiveGearAtATime: true,
-      eventName,
-      checkpointId,
-      activeCheckpointId: active ? active.id : activeCheckpointId,
+      eventName: eventNameFromContext({ event: snapshot }),
+      checkpointId: checkpoint ? checkpoint.id : safeString(checkpointId),
+      activeCheckpointId: active ? active.id : safeString(activeCheckpointId),
       checkpointRank: requestedRank,
       activeRank,
-      checkpointGear: checkpoint ? checkpoint.gear : "",
-      activeGear: active ? active.gear : "",
       checkpointFibonacci: checkpoint ? checkpoint.fibonacci : "",
       activeFibonacci: active ? active.fibonacci : "",
+      checkpointOwner: checkpoint ? checkpoint.owner : "",
+      activeOwner: active ? active.owner : "",
       rankDelta,
       sameGear: Boolean(checkpoint && active && checkpoint.id === active.id),
       futureGear: Boolean(checkpoint && active && requestedRank > activeRank),
@@ -371,165 +751,8 @@
     };
   }
 
-  function evidenceForGear(snapshotInput = {}, checkpointId = "") {
-    const snapshot = normalizeSnapshot(snapshotInput, {});
-    const checkpoint = CHECKPOINT_BY_ID[checkpointId] || null;
-
-    if (!checkpoint) {
-      return {
-        evidenceRequired: false,
-        complete: false,
-        degraded: false,
-        missing: ["unknownCheckpoint"],
-        values: {}
-      };
-    }
-
-    const values = {};
-    const missing = [];
-    let complete = true;
-
-    function requireKey(key, aliases = []) {
-      const keys = [key, ...aliases];
-      const found = keys.find((candidate) => fieldPresent(snapshot, candidate));
-
-      if (!found) {
-        missing.push(key);
-        complete = false;
-        values[key] = false;
-        return false;
-      }
-
-      const ok = safeBool(snapshot[found], false);
-      values[key] = ok;
-      if (!ok) complete = false;
-      return ok;
-    }
-
-    switch (checkpointId) {
-      case CHECKPOINT_IDS.F1A:
-      case CHECKPOINT_IDS.F1B:
-      case CHECKPOINT_IDS.F2:
-      case CHECKPOINT_IDS.F3:
-      case CHECKPOINT_IDS.F5:
-      case CHECKPOINT_IDS.F8:
-        return {
-          evidenceRequired: false,
-          complete: true,
-          degraded: false,
-          missing: [],
-          values: {
-            earlyGear: true,
-            assumedByLoadedRoute: true
-          }
-        };
-
-      case CHECKPOINT_IDS.F13A:
-        requireKey("canvasCarrierRequested", ["canvasBootStarted", "cooperativeBootUsed"]);
-        break;
-
-      case CHECKPOINT_IDS.F13B:
-        requireKey("canvasCarrierMounted", ["planetCanvasPresent", "canvasMounted"]);
-        break;
-
-      case CHECKPOINT_IDS.F13C:
-        requireKey("canvasContextReady");
-        break;
-
-      case CHECKPOINT_IDS.F13D:
-        requireKey("dragInspectionBound");
-        break;
-
-      case CHECKPOINT_IDS.F13E:
-        requireKey("atlasBuildStarted");
-        break;
-
-      case CHECKPOINT_IDS.F13F:
-        requireKey("atlasBuildComplete");
-        break;
-
-      case CHECKPOINT_IDS.F13G:
-        requireKey("textureComposeStarted");
-        break;
-
-      case CHECKPOINT_IDS.F13H:
-        requireKey("textureComposeComplete");
-        break;
-
-      case CHECKPOINT_IDS.F13I:
-        requireKey("firstFrameRequested");
-        break;
-
-      case CHECKPOINT_IDS.F13J:
-        requireKey("firstFrameDetected");
-        break;
-
-      case CHECKPOINT_IDS.F13K:
-        requireKey("canvasReady");
-        requireKey("canvasCarrierMounted", ["planetCanvasPresent", "canvasMounted"]);
-        requireKey("firstFrameDetected");
-        requireKey("imageRendered");
-        break;
-
-      case CHECKPOINT_IDS.F13L:
-        requireKey("visibleContentProofStarted");
-        break;
-
-      case CHECKPOINT_IDS.F13M: {
-        const visible = assessVisibleContent(snapshot);
-        return {
-          evidenceRequired: true,
-          complete: visible.fullPass,
-          degraded: visible.degradedForwardAvailable,
-          missing: visible.fullPass || visible.degradedForwardAvailable ? [] : [visible.firstFailedCoordinate],
-          values: visible
-        };
-      }
-
-      case CHECKPOINT_IDS.F13N: {
-        const inspect = assessInspectMode(snapshot);
-        return {
-          evidenceRequired: true,
-          complete: inspect.fullPass,
-          degraded: inspect.degradedForwardAvailable,
-          missing: inspect.fullPass || inspect.degradedForwardAvailable ? [] : [inspect.firstFailedCoordinate],
-          values: inspect
-        };
-      }
-
-      case CHECKPOINT_IDS.F21: {
-        const completed = asArray(snapshot.completedCheckpoints);
-        const news = evaluateNewsGateState(snapshot);
-        const f13nComplete = completed.includes(CHECKPOINT_IDS.F13N) || safeBool(snapshot.f13SubsequenceComplete, false);
-        const completeF21 = Boolean(f13nComplete && news.newsGatePassedBeforeF21);
-        const degradedF21 = Boolean(f13nComplete && news.newsGateDegradedBeforeF21);
-
-        return {
-          evidenceRequired: true,
-          complete: completeF21,
-          degraded: degradedF21,
-          missing: completeF21 || degradedF21 ? [] : [!f13nComplete ? "F13N_INCOMPLETE" : "NEWS_GATE_INCOMPLETE"],
-          values: {
-            f13nComplete,
-            newsGatePassedBeforeF21: news.newsGatePassedBeforeF21,
-            newsGateDegradedBeforeF21: news.newsGateDegradedBeforeF21,
-            news
-          }
-        };
-      }
-
-      default:
-        complete = false;
-        missing.push("unknownCheckpoint");
-    }
-
-    return {
-      evidenceRequired: true,
-      complete,
-      degraded: false,
-      missing,
-      values
-    };
+  function fieldPresent(snapshot, key) {
+    return snapshot && Object.prototype.hasOwnProperty.call(snapshot, key);
   }
 
   function assessStructuralCarrier(snapshot = {}, context = {}) {
@@ -537,7 +760,7 @@
     const failures = [];
     const heldUnknown = [];
 
-    function requireWhen(key, defaultValue, requireForRank = 7) {
+    function requireWhen(key, defaultValue, requireForRank = 13) {
       const requiredNow = active.activeRank >= requireForRank;
 
       if (!fieldPresent(snapshot, key)) {
@@ -551,26 +774,22 @@
     }
 
     const routeMounted = requireWhen("routeMounted", true, 1);
-    const canvasMounted = requireWhen("canvasMounted", true, 7);
-    const fallbackShellAvailable = requireWhen("fallbackShellAvailable", true, 1);
-    const planetCanvasPresent = requireWhen("planetCanvasPresent", true, 8);
-    const planetCanvasNonZeroSize = requireWhen("planetCanvasNonZeroSize", true, 8);
-    const canvasCarrierMounted = requireWhen("canvasCarrierMounted", true, 8);
-    const canvasCarrierHandoffOk = requireWhen("canvasCarrierHandoffOk", true, 7);
+    const planetCanvasPresent = requireWhen("planetCanvasPresent", true, 13);
+    const planetCanvasNonZeroSize = requireWhen("planetCanvasNonZeroSize", true, 13);
+    const canvasCarrierMounted = requireWhen("canvasCarrierMounted", true, 13);
+    const canvasCarrierHandoffOk = requireWhen("canvasCarrierHandoffOk", true, 13);
+    const canvasTargetPresent = requireWhen("canvasTargetPresent", true, 13);
     const sphereContainment = requireWhen("sphereContainment", true, 13);
     const outsideSphereTransparent = requireWhen("outsideSphereTransparent", true, 13);
     const noRectangularTextureSpill = requireWhen("noRectangularTextureSpill", true, 13);
 
     const canvasCarrierHandoffError = safeString(snapshot.canvasCarrierHandoffError, "");
-    if (active.activeRank >= 7 && canvasCarrierHandoffError) {
+    if (active.activeRank >= 13 && canvasCarrierHandoffError) {
       failures.push(`canvasCarrierHandoffError=${canvasCarrierHandoffError}`);
     }
 
-    const projectionSafe = Boolean(sphereContainment && outsideSphereTransparent && noRectangularTextureSpill);
-
     return {
-      transmissionAware: true,
-      activeGear: active.activeGear,
+      cycleAwareWestAuthority: true,
       activeCheckpointId: active.activeCheckpointId,
       activeRank: active.activeRank,
       carrierStructurallySafe: failures.length === 0,
@@ -578,18 +797,24 @@
       heldUnknown,
       failures,
       routeMounted,
-      canvasMounted,
-      fallbackShellAvailable,
       planetCanvasPresent,
       planetCanvasNonZeroSize,
       canvasCarrierMounted,
       canvasCarrierHandoffOk,
+      canvasTargetPresent,
       canvasCarrierHandoffError,
       sphereContainment,
       outsideSphereTransparent,
       noRectangularTextureSpill,
-      projectionSafe,
-      missingEvidenceIsHeldUnlessActiveGearRequiresIt: true
+      projectionSafe: Boolean(sphereContainment && outsideSphereTransparent && noRectangularTextureSpill),
+      structuralCarrierSafeForCanvasRelease: Boolean(
+        failures.length === 0 &&
+        planetCanvasPresent &&
+        planetCanvasNonZeroSize &&
+        canvasCarrierMounted &&
+        canvasCarrierHandoffOk &&
+        canvasTargetPresent
+      )
     };
   }
 
@@ -602,75 +827,57 @@
     const other = safeNumber(snapshot.visibleContentOtherSampleCount, 0);
     const carrier = safeNumber(snapshot.visibleContentCarrierSampleCount ?? snapshot.carrierSampleCount, 0);
     const content = land + water + other;
-    const contentRatio = samples > 0 ? content / samples : 0;
-    const carrierRatio = samples > 0 ? carrier / samples : 0;
 
     const renderedBase = Boolean(
-      safeBool(snapshot.canvasReady, false) &&
-      safeBool(snapshot.firstFrameDetected, false) &&
-      safeBool(snapshot.imageRendered, false) &&
-      safeBool(snapshot.textureComposeComplete, false)
+      safeBool(snapshot.canvasReady, false) ||
+      (
+        safeBool(snapshot.firstFrameDetected, false) &&
+        safeBool(snapshot.imageRendered, false)
+      )
     );
 
     const visibleContentProof = safeBool(snapshot.visibleContentProof, false);
-    const explicitContentReceiptProof = safeBool(snapshot.explicitContentReceiptProof, false);
+    const visibleContentStrictProof = safeBool(snapshot.visibleContentStrictProof, false);
+    const visiblePlanetProofValid = safeBool(snapshot.visiblePlanetProofValid, false);
     const nonblankPlanetVisible = safeBool(snapshot.nonblankPlanetVisible, false);
     const visiblePlanetAvailable = safeBool(snapshot.visiblePlanetAvailable, false);
+    const visibleContentHardFail = safeBool(snapshot.visibleContentHardFail, false);
+    const visibleContentSoftGap = safeBool(snapshot.visibleContentSoftGap, false);
     const carrierOnlyDetected = safeBool(snapshot.carrierOnlyDetected, false);
 
     const strongSurfaceSignal = Boolean(
       renderedBase &&
-      nonblankPlanetVisible &&
-      classCount >= 2 &&
-      content >= 16 &&
-      variance >= 6
-    );
-
-    const weakSurfaceSignal = Boolean(
-      renderedBase &&
-      nonblankPlanetVisible &&
+      !visibleContentHardFail &&
       (
-        classCount >= 1 ||
-        content >= 8 ||
-        variance >= 4
+        visiblePlanetProofValid ||
+        visibleContentStrictProof ||
+        (nonblankPlanetVisible && classCount >= 2 && content >= 12 && variance >= 4)
       )
     );
 
-    const carrierHeavyButUsable = Boolean(
-      renderedBase &&
-      nonblankPlanetVisible &&
-      carrierOnlyDetected &&
-      weakSurfaceSignal
-    );
-
-    const fullPass = Boolean(
-      visibleContentProof &&
-      visiblePlanetAvailable &&
-      nonblankPlanetVisible &&
-      !carrierOnlyDetected
-    );
-
     const degradedForwardAvailable = Boolean(
-      !fullPass &&
+      !strongSurfaceSignal &&
+      !visibleContentHardFail &&
+      renderedBase &&
       (
-        strongSurfaceSignal ||
-        carrierHeavyButUsable ||
-        explicitContentReceiptProof
+        visibleContentProof ||
+        visibleContentSoftGap ||
+        (nonblankPlanetVisible && (classCount >= 1 || content >= 6 || variance >= 2))
       )
     );
 
     return {
-      fullPass,
+      fullPass: strongSurfaceSignal,
       degradedForwardAvailable,
       renderedBase,
       visibleContentProof,
-      explicitContentReceiptProof,
+      visibleContentStrictProof,
+      visiblePlanetProofValid,
       nonblankPlanetVisible,
       visiblePlanetAvailable,
+      visibleContentHardFail,
+      visibleContentSoftGap,
       carrierOnlyDetected,
-      strongSurfaceSignal,
-      weakSurfaceSignal,
-      carrierHeavyButUsable,
       samples,
       variance,
       classCount,
@@ -679,15 +886,13 @@
       other,
       carrier,
       content,
-      contentRatio,
-      carrierRatio,
-      firstFailedCoordinate: fullPass
+      firstFailedCoordinate: strongSurfaceSignal
         ? "NONE_VISIBLE_CONTENT_FULL_PASS"
         : degradedForwardAvailable
-          ? "DEGRADED_VISIBLE_CONTENT_SURFACE_SIGNAL_AVAILABLE"
-          : renderedBase
-            ? "WAITING_VISIBLE_CONTENT_PROOF_PASSED"
-            : "WAITING_RENDERED_BASE_FOR_VISIBLE_CONTENT"
+          ? "DEGRADED_VISIBLE_CONTENT_FORWARD_AVAILABLE"
+          : visibleContentHardFail
+            ? "VISIBLE_CONTENT_HARD_FAIL"
+            : "WAITING_VISIBLE_CONTENT_PROOF"
     };
   }
 
@@ -701,8 +906,6 @@
     const receiptToggleReady = safeBool(snapshot.receiptToggleReady, false);
     const buttonsReachable = safeBool(snapshot.buttonsReachable, false);
     const receiptOverlayIndependent = safeBool(snapshot.receiptOverlayIndependent, true);
-    const finalReceiptAvailable = safeBool(snapshot.finalReceiptAvailable, false);
-    const partialReceiptAvailable = safeBool(snapshot.partialReceiptAvailable, false);
 
     const fullPass = Boolean(
       inspectModeAvailable &&
@@ -716,15 +919,11 @@
       receiptOverlayIndependent
     );
 
-    const receiptFallbackAvailable = Boolean(
+    const degradedForwardAvailable = Boolean(
+      !fullPass &&
       copyDiagnosticPreserved &&
       receiptToggleReady &&
       diagnosticDockRestorable
-    );
-
-    const degradedForwardAvailable = Boolean(
-      !fullPass &&
-      receiptFallbackAvailable
     );
 
     return {
@@ -739,23 +938,152 @@
       receiptToggleReady,
       buttonsReachable,
       receiptOverlayIndependent,
-      finalReceiptAvailable,
-      partialReceiptAvailable,
-      receiptFallbackAvailable,
-      showDiagnosticTabIsFullPassRequirementNotDegradedRequirement: true,
       firstFailedCoordinate: fullPass
         ? "NONE_INSPECT_MODE_FULL_PASS"
         : degradedForwardAvailable
           ? "DEGRADED_INSPECT_MODE_RECEIPT_FALLBACK_AVAILABLE"
           : !inspectModeAvailable
-            ? "WAITING_inspectModeAvailable"
-            : !inspectPlanetControlAvailable
-              ? "WAITING_inspectPlanetControlAvailable"
-              : !diagnosticCanLeavePlanetFrame
-                ? "WAITING_diagnosticCanLeavePlanetFrame"
-                : !buttonsReachable
-                  ? "WAITING_buttonsReachable"
-                  : "WAITING_INSPECT_MODE_READY"
+            ? "WAITING_INSPECT_MODE_AVAILABLE"
+            : !diagnosticCanLeavePlanetFrame
+              ? "WAITING_DIAGNOSTIC_CAN_LEAVE_PLANET_FRAME"
+              : "WAITING_INSPECT_GATE"
+    };
+  }
+
+  function evaluateNewsAlignment(packet = {}, context = {}) {
+    const normalized = normalizeEvent(packet);
+    const cycle = detectCycle(normalized, context);
+    const source = detectPacketSource(normalized, context);
+    const destination = detectPacketDestination(normalized, context);
+
+    const northReady = Boolean(
+      safeBool(normalized.northGateReady, false) ||
+      safeBool(context.northGateReady, false) ||
+      state.lastNorthContext && state.lastNorthContext.northRuntimeTableObserved
+    );
+
+    const eastReady = Boolean(
+      safeBool(normalized.eastGateReady, false) ||
+      safeBool(normalized.eastGateAlignmentAccepted, false) ||
+      safeBool(context.eastGateReady, false) ||
+      source === CARDINALS.EAST
+    );
+
+    const southReady = Boolean(
+      safeBool(normalized.southGateReady, false) ||
+      safeBool(normalized.southSpreadAccepted, false) ||
+      safeBool(normalized.southOutputReady, false) ||
+      source === CARDINALS.SOUTH
+    );
+
+    const westAuditing = Boolean(source === CARDINALS.WEST || destination === CARDINALS.WEST || true);
+
+    const canvasPendingRelease = Boolean(destination === CARDINALS.CANVAS || safeBool(normalized.canvasReleaseRequested, false));
+
+    let expectedPosition = "";
+    let passed = false;
+    let degraded = false;
+    let blocked = false;
+    let firstNewsGap = "NONE";
+
+    if (cycle === CYCLES.CYCLE_1) {
+      expectedPosition = "NORTH_EAST_WEST_SOUTH_NORTH";
+      passed = Boolean(northReady && eastReady && westAuditing && destination !== CARDINALS.CANVAS);
+      degraded = Boolean(!passed && northReady && eastReady && westAuditing);
+      blocked = destination === CARDINALS.CANVAS;
+      firstNewsGap = blocked
+        ? "CANVAS_NOT_AUTHORIZED_IN_CYCLE_ONE"
+        : passed
+          ? "NONE_NEWS_CYCLE_ONE_ALIGNED"
+          : !northReady
+            ? "WAITING_NEWS_NORTH"
+            : !eastReady
+              ? "WAITING_NEWS_EAST"
+              : "WAITING_NEWS_CYCLE_ONE_ALIGNMENT";
+    } else if (cycle === CYCLES.CYCLE_2) {
+      expectedPosition = "NORTH_EAST_SOUTH_WEST_CANVAS";
+      passed = Boolean(northReady && eastReady && southReady && westAuditing);
+      degraded = Boolean(!passed && northReady && (southReady || eastReady) && westAuditing);
+      blocked = false;
+      firstNewsGap = passed
+        ? "NONE_NEWS_CYCLE_TWO_ALIGNED"
+        : !northReady
+          ? "WAITING_NEWS_NORTH"
+          : !eastReady
+            ? "WAITING_NEWS_EAST"
+            : !southReady
+              ? "WAITING_NEWS_SOUTH"
+              : "WAITING_NEWS_CYCLE_TWO_ALIGNMENT";
+    } else {
+      expectedPosition = "UNKNOWN";
+      passed = false;
+      degraded = false;
+      blocked = false;
+      firstNewsGap = "WAITING_CYCLE_DETECTION";
+    }
+
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      newsAlignmentAuditActive: true,
+      newsAlignmentPresent: true,
+      cycle,
+      source,
+      destination,
+      expectedPosition,
+      northReady,
+      eastReady,
+      southReady,
+      westAuditing,
+      canvasPendingRelease,
+      newsGatePassed: passed,
+      newsGateDegraded: degraded,
+      newsGateBlocked: blocked,
+      firstNewsGap,
+      visualPassClaimed: false,
+      updatedAt: nowIso()
+    };
+  }
+
+  function evaluateFibonacciSynchronization(packet = {}, context = {}) {
+    const normalized = normalizeEvent(packet);
+    const northContext = readNorthCycleContext(context);
+    const checkpointId = checkpointIdFromContext({ ...context, event: normalized });
+    const activeCheckpointId = activeCheckpointIdFromContext(context, northContext) || checkpointId;
+
+    const checkpoint = CHECKPOINT_BY_ID[checkpointId] || checkpointFromValue(checkpointId);
+    const active = CHECKPOINT_BY_ID[activeCheckpointId] || checkpointFromValue(activeCheckpointId) || checkpoint;
+
+    const expectedFibonacci = active ? active.fibonacci : "";
+    const activeFibonacci = checkpoint ? checkpoint.fibonacci : safeString(normalized.activeFibonacci || normalized.fibonacci || "");
+
+    const orderDelta = checkpoint && active ? checkpoint.rank - active.rank : 0;
+    const orderValid = Boolean(checkpoint && active && orderDelta === 0);
+    const futureDrift = Boolean(checkpoint && active && orderDelta > 0);
+    const priorDrift = Boolean(checkpoint && active && orderDelta < 0);
+
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      fibonacciSynchronizationAuditActive: true,
+      fibonacciSynchronizationPresent: Boolean(checkpoint || activeFibonacci),
+      activeFibonacci,
+      expectedFibonacci,
+      checkpointId: checkpoint ? checkpoint.id : safeString(checkpointId),
+      activeCheckpointId: active ? active.id : safeString(activeCheckpointId),
+      checkpointRank: checkpoint ? checkpoint.rank : 0,
+      activeRank: active ? active.rank : 0,
+      fibonacciOrderValid: orderValid,
+      fibonacciCycleDrift: futureDrift ? "FUTURE" : priorDrift ? "PRIOR" : orderValid ? "NONE" : "UNKNOWN",
+      firstFibonacciGap: orderValid
+        ? "NONE_FIBONACCI_SYNCHRONIZED"
+        : futureDrift
+          ? "FUTURE_FIBONACCI_HELD"
+          : priorDrift
+            ? "PRIOR_FIBONACCI_ARCHIVE"
+            : "WAITING_FIBONACCI_CONTEXT",
+      visualPassClaimed: false,
+      updatedAt: nowIso()
     };
   }
 
@@ -764,7 +1092,6 @@
       checkpointId: CHECKPOINT_IDS.F21,
       activeCheckpointId: CHECKPOINT_IDS.F21
     });
-
     const visible = assessVisibleContent(snapshot);
     const inspect = assessInspectMode(snapshot);
 
@@ -779,70 +1106,147 @@
     const northGateDegradedReady = Boolean(
       carrier.carrierStructurallySafe &&
       safeBool(snapshot.canvasReady, false) &&
-      safeBool(snapshot.atlasBuildComplete, false) &&
-      safeBool(snapshot.textureComposeComplete, false) &&
       (visible.fullPass || visible.degradedForwardAvailable)
     );
 
     const eastGateReady = Boolean(
-      safeBool(snapshot.cooperativeBootUsed, false) &&
-      !safeBool(snapshot.syncBootFallbackUsed, false) &&
-      safeBool(snapshot.canvasCarrierRequested, false) &&
+      safeBool(snapshot.eastGateReady, false) ||
+      safeBool(snapshot.canvasCarrierRequested, false) ||
       safeBool(snapshot.canvasCarrierHandoffOk, false)
     );
 
-    const westGateReady = Boolean(inspect.fullPass);
-    const westGateDegradedReady = Boolean(inspect.fullPass || inspect.degradedForwardAvailable);
-
     const southGateReady = Boolean(
-      safeBool(snapshot.imageRendered, false) &&
-      safeBool(snapshot.firstFrameDetected, false) &&
-      safeBool(snapshot.dragInspectionBound, false) &&
-      safeBool(snapshot.visiblePlanetAvailable, false) &&
-      safeBool(snapshot.diagnosticCanLeavePlanetFrame, false)
+      safeBool(snapshot.southGateReady, false) ||
+      safeBool(snapshot.imageRendered, false) ||
+      safeBool(snapshot.firstFrameDetected, false) ||
+      visible.fullPass
     );
 
-    const southGateDegradedReady = Boolean(
-      southGateReady ||
-      (
-        safeBool(snapshot.imageRendered, false) &&
-        safeBool(snapshot.firstFrameDetected, false) &&
-        safeBool(snapshot.dragInspectionBound, false) &&
-        safeBool(snapshot.nonblankPlanetVisible, false)
-      )
-    );
+    const westGateReady = Boolean(inspect.fullPass || safeBool(snapshot.westAuditPassed, false));
+    const westGateDegradedReady = Boolean(westGateReady || inspect.degradedForwardAvailable);
 
     const newsGatePassedBeforeF21 = Boolean(
       northGateReady &&
       eastGateReady &&
-      westGateReady &&
-      southGateReady
+      southGateReady &&
+      westGateReady
     );
 
     const newsGateDegradedBeforeF21 = Boolean(
       northGateDegradedReady &&
       eastGateReady &&
-      westGateDegradedReady &&
-      southGateDegradedReady
+      southGateReady &&
+      westGateDegradedReady
     );
 
     return {
       northGateReady,
       eastGateReady,
-      westGateReady,
       southGateReady,
+      westGateReady,
       newsGatePassedBeforeF21,
       northGateDegradedReady,
       westGateDegradedReady,
-      southGateDegradedReady,
+      southGateDegradedReady: southGateReady || visible.degradedForwardAvailable,
       newsGateDegradedBeforeF21,
       degradedForwardAvailable: newsGateDegradedBeforeF21 && !newsGatePassedBeforeF21,
       structuralCarrierSafe: carrier.carrierStructurallySafe,
       visibleContentFullPass: visible.fullPass,
       visibleContentDegradedForwardAvailable: visible.degradedForwardAvailable,
       inspectModeFullPass: inspect.fullPass,
-      inspectModeDegradedForwardAvailable: inspect.degradedForwardAvailable
+      inspectModeDegradedForwardAvailable: inspect.degradedForwardAvailable,
+      f21NorthLatchOnly: true
     };
+  }
+
+  function evidenceForGear(snapshotInput = {}, checkpointId = "") {
+    const snapshot = normalizeSnapshot(snapshotInput, {});
+    const checkpoint = CHECKPOINT_BY_ID[checkpointId] || checkpointFromValue(checkpointId);
+
+    if (!checkpoint) {
+      return {
+        evidenceRequired: false,
+        complete: false,
+        degraded: false,
+        missing: ["unknownCheckpoint"],
+        values: {}
+      };
+    }
+
+    if (checkpoint.rank < 13) {
+      return {
+        evidenceRequired: false,
+        complete: true,
+        degraded: false,
+        missing: [],
+        values: { earlyGateAcceptedByRuntimeTable: true }
+      };
+    }
+
+    if (checkpoint.id === CHECKPOINT_IDS.F13E) {
+      const visible = assessVisibleContent(snapshot);
+      return {
+        evidenceRequired: true,
+        complete: visible.fullPass,
+        degraded: visible.degradedForwardAvailable,
+        missing: visible.fullPass || visible.degradedForwardAvailable ? [] : [visible.firstFailedCoordinate],
+        values: visible
+      };
+    }
+
+    if (checkpoint.id === CHECKPOINT_IDS.F13N) {
+      const inspect = assessInspectMode(snapshot);
+      return {
+        evidenceRequired: true,
+        complete: inspect.fullPass,
+        degraded: inspect.degradedForwardAvailable,
+        missing: inspect.fullPass || inspect.degradedForwardAvailable ? [] : [inspect.firstFailedCoordinate],
+        values: inspect
+      };
+    }
+
+    if (checkpoint.id === CHECKPOINT_IDS.F21) {
+      const news = evaluateNewsGateState(snapshot);
+      return {
+        evidenceRequired: true,
+        complete: news.newsGatePassedBeforeF21,
+        degraded: news.newsGateDegradedBeforeF21,
+        missing: news.newsGatePassedBeforeF21 || news.newsGateDegradedBeforeF21 ? [] : ["NEWS_GATE_INCOMPLETE"],
+        values: news
+      };
+    }
+
+    return {
+      evidenceRequired: true,
+      complete: true,
+      degraded: false,
+      missing: [],
+      values: { checkpoint: checkpoint.id }
+    };
+  }
+
+  function isPrematureCompletionEvent(eventOrContext = {}, checkpointId = "") {
+    const event = eventOrContext && eventOrContext.event
+      ? normalizeEvent(eventOrContext.event)
+      : normalizeEvent(eventOrContext);
+
+    const activeCheckpointId = safeString(checkpointId || event.checkpointId || event.id || "");
+    const source = detectPacketSource(event, {});
+    const destination = detectPacketDestination(event, {});
+    const cycle = detectCycle(event, {});
+
+    if (activeCheckpointId === CHECKPOINT_IDS.F21 && source === CARDINALS.NORTH) {
+      return false;
+    }
+
+    if (safeBool(event.visualPassClaimed, false)) return true;
+    if (safeBool(event.readyTextAllowed, false) && activeCheckpointId !== CHECKPOINT_IDS.F21) return true;
+    if (safeBool(event.completionLatched, false) && source !== CARDINALS.NORTH) return true;
+    if (safeBool(event.finalCompletionLatched, false) && source !== CARDINALS.NORTH) return true;
+    if (safeNumber(event.mainDisplayProgress, 0) >= 100 && activeCheckpointId !== CHECKPOINT_IDS.F21) return true;
+    if (cycle === CYCLES.CYCLE_1 && destination === CARDINALS.CANVAS) return true;
+
+    return containsFalseCompletionLanguage(event);
   }
 
   function makeGap(config = {}) {
@@ -852,55 +1256,49 @@
 
     let decision = config.decision || GAP_DECISION.HOLD_ACTIVE;
 
-    if (gapClass === GAP_CLASS.NONE) decision = GAP_DECISION.FULL_PASS;
-    else if (
-      gapClass === GAP_CLASS.PROGRESS_ONLY ||
-      gapClass === GAP_CLASS.DUPLICATE_ARCHIVE ||
-      gapClass === GAP_CLASS.UNKNOWN_ARCHIVE
-    ) {
-      decision = GAP_DECISION.ARCHIVE;
-    } else if (gapClass === GAP_CLASS.GEAR_SHIFT_HELD) {
-      decision = GAP_DECISION.HOLD_FOR_GEAR_SHIFT;
-    } else if (hardBlock) {
-      decision = GAP_DECISION.HARD_BLOCK;
-    } else if (canDegradeForward) {
-      decision = GAP_DECISION.DEGRADED_FORWARD;
-    }
+    if (gapClass === GAP_CLASS.NONE && !config.decision) decision = GAP_DECISION.FULL_PASS;
+    if (hardBlock) decision = GAP_DECISION.HARD_BLOCK;
+    if (canDegradeForward && !config.decision) decision = GAP_DECISION.DEGRADED_FORWARD;
 
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
-      westGapReceipt: "LAB_RUNTIME_TABLE_CARDINAL_WEST_TRANSMISSION_GAP_RECEIPT_v1",
+      westGapReceipt: "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_GAP_RECEIPT_v1",
       gapAssessed: true,
       westAuthority: true,
-      transmissionGapClassifier: true,
-      gearShiftGapClassification: true,
+      cycleAwareWestAuthority: true,
+      admissibilityClutchActive: true,
       oneActiveGearAtATime: true,
+
+      cycle: config.cycle || CYCLES.UNKNOWN,
+      source: config.source || CARDINALS.UNKNOWN,
+      destination: config.destination || CARDINALS.UNKNOWN,
       gapClass,
-      gapSeverity: config.gapSeverity || (hardBlock ? GAP_SEVERITY.HARD_BLOCK : canDegradeForward ? GAP_SEVERITY.DEGRADED : GAP_SEVERITY.HELD),
+      gapSeverity: config.gapSeverity || (hardBlock ? GAP_SEVERITY.HARD_BLOCK : canDegradeForward ? GAP_SEVERITY.DEGRADED : gapClass === GAP_CLASS.NONE ? GAP_SEVERITY.NONE : GAP_SEVERITY.HELD),
       decision,
       hardBlock,
-      softBlock: !hardBlock && gapClass !== GAP_CLASS.NONE && gapClass !== GAP_CLASS.PROGRESS_ONLY && gapClass !== GAP_CLASS.DUPLICATE_ARCHIVE,
-      blockSuggested: config.blockSuggested === true,
       canDegradeForward,
-      forwardAllowed: !hardBlock && (canDegradeForward || gapClass === GAP_CLASS.NONE),
+      forwardAllowed: !hardBlock && (canDegradeForward || gapClass === GAP_CLASS.NONE || decision === GAP_DECISION.ADMIT_TO_SOUTH || decision === GAP_DECISION.RELEASE_TO_CANVAS || decision === GAP_DECISION.RETURN_TO_NORTH),
       shouldArchive: decision === GAP_DECISION.ARCHIVE,
+
       checkpointId: config.checkpointId || "",
       activeCheckpointId: config.activeCheckpointId || config.checkpointId || "",
       checkpointRank: config.checkpointRank || checkpointRank(config.checkpointId || ""),
       activeRank: config.activeRank || checkpointRank(config.activeCheckpointId || config.checkpointId || ""),
-      checkpointGear: config.checkpointGear || checkpointGear(config.checkpointId || ""),
-      activeGear: config.activeGear || checkpointGear(config.activeCheckpointId || config.checkpointId || ""),
       eventName: config.eventName || "",
       firstFailedCoordinate: config.firstFailedCoordinate || "NONE",
       recommendedNextRenewalTarget: config.recommendedNextRenewalTarget || "none",
       reason: config.reason || "",
-      math: config.math || "",
       observed: config.observed || "",
+      math: config.math || "",
       detail: clonePlain(config.detail || {}),
       probableCause: asArray(config.probableCause),
       nextStrategy: asArray(config.nextStrategy),
+
+      canvasRelease: config.canvasRelease === true,
+      returnToNorth: config.returnToNorth === true,
+      f21NorthLatchOnly: true,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -909,483 +1307,407 @@
     };
   }
 
-  function classifyTransmissionGap(snapshotInput = {}, context = {}) {
-    const snapshot = normalizeSnapshot(snapshotInput, context);
-    const active = assessActiveGear(snapshot, context);
-    const eventName = active.eventName;
-    const checkpointId = active.checkpointId;
-    const activeCheckpointId = active.activeCheckpointId || checkpointId;
+  function classifyCyclePacket(packet = {}, context = {}) {
+    const normalized = normalizeEvent(packet);
+    const cycle = detectCycle(normalized, context);
+    const source = detectPacketSource(normalized, context);
+    const destination = detectPacketDestination(normalized, context);
+    const active = assessActiveGear(normalized, context);
+    const news = evaluateNewsAlignment(normalized, context);
+    const fibonacci = evaluateFibonacciSynchronization(normalized, context);
 
-    if (isProgressOnlyEvent(eventName)) {
+    const falseCompletion = isPrematureCompletionEvent(normalized, active.activeCheckpointId);
+
+    if (isProgressOnlyEvent(normalized)) {
       return makeGap({
-        gapClass: GAP_CLASS.PROGRESS_ONLY,
+        gapClass: GAP_CLASS.PROGRESS_ONLY_ARCHIVE,
         gapSeverity: GAP_SEVERITY.INFO,
         decision: GAP_DECISION.ARCHIVE,
-        checkpointId,
-        activeCheckpointId,
-        eventName,
+        cycle,
+        source,
+        destination,
+        checkpointId: active.checkpointId,
+        activeCheckpointId: active.activeCheckpointId,
+        eventName: active.eventName,
         firstFailedCoordinate: "PROGRESS_ONLY_EVENT_ARCHIVED",
         recommendedNextRenewalTarget: "none",
-        reason: "Progress-only event does not mutate active gear truth.",
-        math: "Progress events are subordinate to their active gear; they are archived after parent gear truth is accepted.",
-        observed: eventName,
-        detail: { active }
+        reason: "Progress-only packet archived without mutating the cycle.",
+        detail: { active, news, fibonacci }
       });
     }
 
-    if (active.unknownGear) {
-      return makeGap({
-        gapClass: GAP_CLASS.UNKNOWN_ARCHIVE,
-        gapSeverity: GAP_SEVERITY.INFO,
-        decision: GAP_DECISION.ARCHIVE,
-        checkpointId,
-        activeCheckpointId,
-        eventName,
-        firstFailedCoordinate: "UNKNOWN_CHECKPOINT_EVENT_ARCHIVED",
-        recommendedNextRenewalTarget: "none",
-        reason: "Unknown checkpoint event archived without mutating the active gear.",
-        detail: { active }
-      });
-    }
-
-    if (active.futureGear) {
-      return makeGap({
-        gapClass: GAP_CLASS.GEAR_SHIFT_HELD,
-        gapSeverity: GAP_SEVERITY.HELD,
-        decision: GAP_DECISION.HOLD_FOR_GEAR_SHIFT,
-        checkpointId,
-        activeCheckpointId,
-        eventName,
-        firstFailedCoordinate: `WAITING_${activeCheckpointId}`,
-        recommendedNextRenewalTarget: "complete-active-gear-first",
-        reason: "Future gear event held until the active gear completes and North authorizes shift.",
-        math: "futureGear = checkpoint.rank > activeCheckpoint.rank; one transmission gear may run at a time.",
-        observed: `activeGear=${active.activeGear}; requestedGear=${active.checkpointGear}`,
-        detail: { active },
-        nextStrategy: [
-          "Do not hard-block future gear.",
-          "Queue the event through East.",
-          "Complete the active gear from 0 to 100 before shifting."
-        ]
-      });
-    }
-
-    if (active.pastGear) {
-      if (explicitFalseCompletionAttempt(snapshot, context)) {
-        return makeGap({
-          gapClass: GAP_CLASS.FALSE_COMPLETION_BLOCK,
-          gapSeverity: GAP_SEVERITY.HARD_BLOCK,
-          hardBlock: true,
-          checkpointId,
-          activeCheckpointId,
-          eventName,
-          firstFailedCoordinate: "PAST_GEAR_FALSE_COMPLETION_MUTATION_BLOCKED",
-          recommendedNextRenewalTarget: ROUTE_TARGETS.HEARTH_ROUTE,
-          reason: "A past gear attempted false READY, 100%, F21, or visual-pass mutation.",
-          math: "pastGear && falseCompletionMutation => hardBlock.",
-          detail: { active }
-        });
-      }
-
-      return makeGap({
-        gapClass: GAP_CLASS.DUPLICATE_ARCHIVE,
-        gapSeverity: GAP_SEVERITY.INFO,
-        decision: GAP_DECISION.ARCHIVE,
-        checkpointId,
-        activeCheckpointId,
-        eventName,
-        firstFailedCoordinate: "PAST_GEAR_DUPLICATE_ARCHIVED",
-        recommendedNextRenewalTarget: "none",
-        reason: "Past gear duplicate archived without mutating the active gear.",
-        detail: { active }
-      });
-    }
-
-    if (explicitFalseCompletionAttempt(snapshot, context)) {
+    if (falseCompletion) {
       return makeGap({
         gapClass: GAP_CLASS.FALSE_COMPLETION_BLOCK,
         gapSeverity: GAP_SEVERITY.HARD_BLOCK,
+        decision: GAP_DECISION.HARD_BLOCK,
         hardBlock: true,
-        checkpointId,
-        activeCheckpointId,
-        eventName,
-        firstFailedCoordinate: "FALSE_COMPLETION_MUTATION_BLOCKED",
-        recommendedNextRenewalTarget: ROUTE_TARGETS.HEARTH_ROUTE,
-        reason: "Event attempted READY, 100%, F21, or visual-pass state before lawful completion.",
-        math: "hardBlock = falseCompletionMutation && activeGear !== F21.",
-        observed: "False completion mutation detected before F21.",
-        detail: { active },
-        probableCause: [
-          "Late event tried to promote visible state.",
-          "Duplicate canvas event carried completion-like fields.",
-          "Route text/state was promoted before F21."
-        ],
-        nextStrategy: [
-          "Archive duplicate progress events.",
-          "Permit degraded-forward only through F13M/F13N/F21 gates.",
-          "Do not set READY text before completionLatched."
-        ]
+        cycle,
+        source,
+        destination,
+        checkpointId: active.checkpointId,
+        activeCheckpointId: active.activeCheckpointId,
+        eventName: active.eventName,
+        firstFailedCoordinate: cycle === CYCLES.CYCLE_1 && destination === CARDINALS.CANVAS
+          ? "CANVAS_NOT_AUTHORIZED_IN_CYCLE_ONE"
+          : "FALSE_COMPLETION_MUTATION_BLOCKED",
+        recommendedNextRenewalTarget: FILE_GATES.west,
+        reason: "False completion, premature F21, READY, 100%, visual pass, or Cycle 1 Canvas release was blocked.",
+        detail: { active, news, fibonacci, normalized }
       });
     }
 
-    const carrier = assessStructuralCarrier(snapshot, {
-      checkpointId,
-      activeCheckpointId
-    });
-
-    if (!carrier.carrierStructurallySafe) {
+    if (!news.newsGatePassed && news.newsGateBlocked) {
       return makeGap({
-        gapClass: GAP_CLASS.STRUCTURAL_BLOCK,
-        gapSeverity: GAP_SEVERITY.HARD_BLOCK,
-        hardBlock: true,
-        checkpointId,
-        activeCheckpointId,
-        eventName,
-        firstFailedCoordinate: "STRUCTURAL_CARRIER_MISSING_OR_UNSAFE",
-        recommendedNextRenewalTarget: carrier.failures.some((item) => item.includes("routeMounted") || item.includes("canvasMounted"))
-          ? ROUTE_TARGETS.HEARTH_INDEX
-          : ROUTE_TARGETS.HEARTH_CANVAS,
-        reason: "Active gear requires structural carrier proof and the carrier is unsafe.",
-        math: "hardBlock = activeGearRequiresCarrier && route/canvas/carrier/projection structural failure.",
-        observed: carrier.failures.join(", "),
-        detail: { active, carrier },
-        probableCause: [
-          "Mount is unavailable.",
-          "Canvas carrier handoff failed.",
-          "Projection safety flags are false."
-        ],
-        nextStrategy: [
-          "Repair structural carrier before allowing active gear completion."
-        ]
-      });
-    }
-
-    if (!carrier.carrierStructurallyKnown && active.activeRank >= 8) {
-      return makeGap({
-        gapClass: GAP_CLASS.HELD_GAP,
+        gapClass: GAP_CLASS.NEWS_ALIGNMENT_HELD,
         gapSeverity: GAP_SEVERITY.HELD,
-        checkpointId,
-        activeCheckpointId,
-        eventName,
-        firstFailedCoordinate: "WAITING_ACTIVE_GEAR_CARRIER_EVIDENCE",
-        recommendedNextRenewalTarget: ROUTE_TARGETS.HEARTH_ROUTE,
-        reason: "Carrier evidence is missing for the active gear; missing evidence is held, not hard-blocked.",
-        math: "missing structural evidence becomes held unless explicitly false for the active gear.",
-        observed: carrier.heldUnknown.join(", "),
-        detail: { active, carrier },
-        nextStrategy: [
-          "Wait for the active gear receipt.",
-          "Do not infer structural failure from missing evidence alone."
-        ]
+        decision: GAP_DECISION.HOLD_FOR_CYCLE,
+        cycle,
+        source,
+        destination,
+        checkpointId: active.checkpointId,
+        activeCheckpointId: active.activeCheckpointId,
+        eventName: active.eventName,
+        firstFailedCoordinate: news.firstNewsGap,
+        recommendedNextRenewalTarget: FILE_GATES.west,
+        reason: "NEWS alignment blocked this packet for the current cycle.",
+        detail: { active, news, fibonacci }
       });
     }
 
-    if (checkpointId === CHECKPOINT_IDS.F13M) {
-      const visible = assessVisibleContent(snapshot);
-
-      if (visible.fullPass) {
-        return makeGap({
-          gapClass: GAP_CLASS.NONE,
-          gapSeverity: GAP_SEVERITY.NONE,
-          checkpointId,
-          activeCheckpointId,
-          eventName,
-          firstFailedCoordinate: "NONE_VISIBLE_CONTENT_PROOF_PASSED",
-          recommendedNextRenewalTarget: "none",
-          reason: "Visible content proof passed.",
-          math: "fullPass = visibleContentProof && visiblePlanetAvailable && nonblankPlanetVisible && !carrierOnlyDetected.",
-          detail: { active, visible }
-        });
-      }
-
-      if (visible.degradedForwardAvailable) {
-        return makeGap({
-          gapClass: GAP_CLASS.DEGRADED_GAP,
-          gapSeverity: GAP_SEVERITY.DEGRADED,
-          canDegradeForward: true,
-          blockSuggested: true,
-          checkpointId,
-          activeCheckpointId,
-          eventName,
-          firstFailedCoordinate: visible.firstFailedCoordinate,
-          recommendedNextRenewalTarget: ROUTE_TARGETS.HEARTH_ROUTE,
-          reason: "Visible proof is not full-pass, but lawful surface signal exists.",
-          math: "degradedForward = renderedBase && nonblankPlanetVisible && surface samples/content variance exist.",
-          observed: `samples=${visible.samples}, content=${visible.content}, classCount=${visible.classCount}, variance=${visible.variance}, carrierOnly=${visible.carrierOnlyDetected}`,
-          detail: { active, visible },
-          probableCause: [
-            "Visible content sample is carrier-heavy.",
-            "Surface signal exists but proof threshold is too strict.",
-            "Reconcile interval sampled before final content settled."
-          ],
-          nextStrategy: [
-            "Allow degraded F13M forward.",
-            "Record visible-content gap for later refinement.",
-            "Do not block F13N if receipt/inspect fallback remains available."
-          ]
-        });
-      }
-
+    if (fibonacci.fibonacciCycleDrift === "FUTURE") {
       return makeGap({
-        gapClass: GAP_CLASS.ACTIVE_GEAR_WAIT,
+        gapClass: GAP_CLASS.FUTURE_CYCLE_HELD,
         gapSeverity: GAP_SEVERITY.HELD,
-        checkpointId,
-        activeCheckpointId,
-        eventName,
-        firstFailedCoordinate: visible.firstFailedCoordinate,
-        recommendedNextRenewalTarget: ROUTE_TARGETS.HEARTH_CANVAS,
-        reason: "Active visible-content gear is waiting for sufficient proof.",
-        math: "hold active gear until full visible proof or degraded surface signal exists.",
-        observed: `samples=${visible.samples}, content=${visible.content}, classCount=${visible.classCount}, variance=${visible.variance}`,
-        detail: { active, visible },
-        nextStrategy: [
-          "Keep transmission in F13M.",
-          "Continue sampling or repair canvas proof thresholds."
-        ]
+        decision: GAP_DECISION.HOLD_FOR_CYCLE,
+        cycle,
+        source,
+        destination,
+        checkpointId: active.checkpointId,
+        activeCheckpointId: active.activeCheckpointId,
+        eventName: active.eventName,
+        firstFailedCoordinate: fibonacci.firstFibonacciGap,
+        recommendedNextRenewalTarget: FILE_GATES.north,
+        reason: "Future Fibonacci packet held until North advances the active gate.",
+        detail: { active, news, fibonacci }
       });
     }
 
-    if (checkpointId === CHECKPOINT_IDS.F13N) {
-      const inspect = assessInspectMode(snapshot);
-
-      if (inspect.fullPass) {
-        return makeGap({
-          gapClass: GAP_CLASS.NONE,
-          gapSeverity: GAP_SEVERITY.NONE,
-          checkpointId,
-          activeCheckpointId,
-          eventName,
-          firstFailedCoordinate: "NONE_INSPECT_MODE_READY",
-          recommendedNextRenewalTarget: "none",
-          reason: "Inspect mode is fully ready.",
-          math: "fullPass = inspect controls + dock restore + hidden tab + copy + receipt + reachable buttons.",
-          detail: { active, inspect }
-        });
-      }
-
-      if (inspect.degradedForwardAvailable) {
-        return makeGap({
-          gapClass: GAP_CLASS.DEGRADED_GAP,
-          gapSeverity: GAP_SEVERITY.DEGRADED,
-          canDegradeForward: true,
-          blockSuggested: true,
-          checkpointId,
-          activeCheckpointId,
-          eventName,
-          firstFailedCoordinate: inspect.firstFailedCoordinate,
-          recommendedNextRenewalTarget: ROUTE_TARGETS.HEARTH_ROUTE,
-          reason: "Inspect mode is incomplete, but receipt/copy diagnostic fallback is available.",
-          math: "degradedForward = copyDiagnosticPreserved && receiptToggleReady && diagnosticDockRestorable.",
-          detail: { active, inspect },
-          probableCause: [
-            "Inspect control is missing or not fully detached.",
-            "Diagnostic dock still preserves receipt/copy function.",
-            "User can continue with degraded diagnostic access."
-          ],
-          nextStrategy: [
-            "Allow degraded F13N forward.",
-            "Preserve receipt export.",
-            "Renew inspect control separately later."
-          ]
-        });
-      }
-
+    if (fibonacci.fibonacciCycleDrift === "PRIOR") {
       return makeGap({
-        gapClass: GAP_CLASS.DIAGNOSTIC_BLOCK,
-        gapSeverity: GAP_SEVERITY.SOFT_BLOCK,
-        hardBlock: false,
-        checkpointId,
-        activeCheckpointId,
-        eventName,
-        firstFailedCoordinate: inspect.firstFailedCoordinate,
-        recommendedNextRenewalTarget: ROUTE_TARGETS.HEARTH_ROUTE,
-        reason: "Active inspect gear is waiting for inspect proof or diagnostic fallback.",
-        math: "softHold = !inspectFull && !receiptFallback.",
-        detail: { active, inspect },
-        nextStrategy: [
-          "Keep transmission in F13N.",
-          "Restore receipt fallback first, then inspect control."
-        ]
-      });
-    }
-
-    if (checkpointId === CHECKPOINT_IDS.F21) {
-      const completedCheckpoints = asArray(context.completedCheckpoints || snapshot.completedCheckpoints);
-      const newsGateState = context.newsGateState && isObject(context.newsGateState)
-        ? context.newsGateState
-        : evaluateNewsGateState(snapshot);
-
-      const f13nComplete = completedCheckpoints.includes(CHECKPOINT_IDS.F13N) || safeBool(snapshot.f13SubsequenceComplete, false);
-      const fullNews = Boolean(newsGateState.newsGatePassedBeforeF21);
-      const degradedNews = Boolean(newsGateState.newsGateDegradedBeforeF21);
-
-      if (f13nComplete && fullNews) {
-        return makeGap({
-          gapClass: GAP_CLASS.NONE,
-          gapSeverity: GAP_SEVERITY.NONE,
-          checkpointId,
-          activeCheckpointId,
-          eventName,
-          firstFailedCoordinate: "NONE_F21_FULL_LATCH_READY",
-          recommendedNextRenewalTarget: "read-postgame-canvas-or-triple-g-receipt",
-          reason: "F21 completion latch is fully lawful.",
-          math: "F21 full = F13N complete && NEWS full-pass gates all true.",
-          detail: { active, newsGateState, completedCheckpoints }
-        });
-      }
-
-      if (f13nComplete && degradedNews) {
-        return makeGap({
-          gapClass: GAP_CLASS.DEGRADED_GAP,
-          gapSeverity: GAP_SEVERITY.DEGRADED,
-          canDegradeForward: true,
-          blockSuggested: true,
-          checkpointId,
-          activeCheckpointId,
-          eventName,
-          firstFailedCoordinate: "DEGRADED_F21_NEWS_GATE_FORWARD_ALLOWED",
-          recommendedNextRenewalTarget: ROUTE_TARGETS.HEARTH_ROUTE,
-          reason: "F21 is not full-pass, but degraded NEWS gates permit forward completion with gap receipt.",
-          math: "F21 degraded = F13N complete && NEWS degraded gates true && structural carrier safe.",
-          observed: `fullNews=${fullNews}, degradedNews=${degradedNews}, f13nComplete=${f13nComplete}`,
-          detail: { active, newsGateState, completedCheckpoints },
-          probableCause: [
-            "One or more NEWS gates is degraded rather than full-pass.",
-            "Visible proof or inspect proof accepted degraded-forward.",
-            "Postgame may continue with explicit gap receipt."
-          ],
-          nextStrategy: [
-            "Allow degraded F21 completion.",
-            "Keep visualPassClaimed=false.",
-            "Use West/South receipt to identify the next refinement target."
-          ]
-        });
-      }
-
-      return makeGap({
-        gapClass: GAP_CLASS.GEAR_SHIFT_HELD,
-        gapSeverity: GAP_SEVERITY.HELD,
-        decision: GAP_DECISION.HOLD_FOR_GEAR_SHIFT,
-        hardBlock: false,
-        checkpointId,
-        activeCheckpointId,
-        eventName,
-        firstFailedCoordinate: !f13nComplete ? "F21_WAITING_F13N_GEAR_COMPLETION" : "F21_WAITING_NEWS_GATE_ALIGNMENT",
-        recommendedNextRenewalTarget: ROUTE_TARGETS.HEARTH_ROUTE,
-        reason: "F21 is waiting for North-authorized transmission shift; this is held state, not structural failure.",
-        math: "F21 held = F13N/NEWS not resolved; no false completion or structural carrier failure.",
-        observed: `fullNews=${fullNews}, degradedNews=${degradedNews}, f13nComplete=${f13nComplete}`,
-        detail: { active, newsGateState, completedCheckpoints },
-        nextStrategy: [
-          "Do not latch F21 yet.",
-          "Do not hard-block unless false completion or structural failure occurs.",
-          "Resolve active F13M/F13N or NEWS gate gap first."
-        ]
-      });
-    }
-
-    const evidence = evidenceForGear(snapshot, checkpointId);
-
-    if (evidence.complete) {
-      return makeGap({
-        gapClass: GAP_CLASS.NONE,
-        gapSeverity: GAP_SEVERITY.NONE,
-        checkpointId,
-        activeCheckpointId,
-        eventName,
-        firstFailedCoordinate: `NONE_${checkpointId}`,
+        gapClass: GAP_CLASS.PRIOR_PACKET_ARCHIVE,
+        gapSeverity: GAP_SEVERITY.INFO,
+        decision: GAP_DECISION.ARCHIVE,
+        cycle,
+        source,
+        destination,
+        checkpointId: active.checkpointId,
+        activeCheckpointId: active.activeCheckpointId,
+        eventName: active.eventName,
+        firstFailedCoordinate: fibonacci.firstFibonacciGap,
         recommendedNextRenewalTarget: "none",
-        reason: "Active transmission gear has sufficient completion evidence.",
-        math: "activeGearEvidenceComplete = true.",
-        detail: { active, evidence }
+        reason: "Prior Fibonacci packet archived without mutating the cycle.",
+        detail: { active, news, fibonacci }
       });
     }
 
-    if (evidence.degraded) {
+    if (cycle === CYCLES.CYCLE_1) {
+      if (destination === CARDINALS.CANVAS || safeBool(normalized.canvasReleaseRequested, false)) {
+        return makeGap({
+          gapClass: GAP_CLASS.CANVAS_RELEASE_HELD,
+          gapSeverity: GAP_SEVERITY.HELD,
+          decision: GAP_DECISION.HOLD_FOR_CYCLE,
+          cycle,
+          source,
+          destination,
+          checkpointId: active.checkpointId,
+          activeCheckpointId: active.activeCheckpointId,
+          eventName: active.eventName,
+          firstFailedCoordinate: "CANVAS_NOT_AUTHORIZED_IN_CYCLE_ONE",
+          recommendedNextRenewalTarget: FILE_GATES.west,
+          reason: "Canvas release is reserved for Cycle 2 after South output passes West admissibility.",
+          detail: { active, news, fibonacci }
+        });
+      }
+
+      if (source === CARDINALS.SOUTH || destination === CARDINALS.NORTH || safeBool(normalized.southReturnToNorth, false)) {
+        return makeGap({
+          gapClass: GAP_CLASS.NONE,
+          gapSeverity: GAP_SEVERITY.NONE,
+          decision: GAP_DECISION.RETURN_TO_NORTH,
+          cycle,
+          source,
+          destination: CARDINALS.NORTH,
+          checkpointId: active.checkpointId,
+          activeCheckpointId: active.activeCheckpointId,
+          eventName: active.eventName,
+          firstFailedCoordinate: "NONE_CYCLE_ONE_SOUTH_RETURN_TO_NORTH",
+          recommendedNextRenewalTarget: FILE_GATES.north,
+          reason: "Cycle 1 South packet returns to North.",
+          returnToNorth: true,
+          detail: { active, news, fibonacci }
+        });
+      }
+
       return makeGap({
-        gapClass: GAP_CLASS.DEGRADED_GAP,
-        gapSeverity: GAP_SEVERITY.DEGRADED,
-        canDegradeForward: true,
-        checkpointId,
-        activeCheckpointId,
-        eventName,
-        firstFailedCoordinate: `DEGRADED_${checkpointId}`,
-        recommendedNextRenewalTarget: ROUTE_TARGETS.HEARTH_ROUTE,
-        reason: "Active gear has degraded-forward evidence.",
-        math: "activeGearEvidenceDegraded = true.",
-        detail: { active, evidence }
+        gapClass: news.newsGatePassed || news.newsGateDegraded ? GAP_CLASS.NONE : GAP_CLASS.NEWS_ALIGNMENT_HELD,
+        gapSeverity: news.newsGatePassed ? GAP_SEVERITY.NONE : news.newsGateDegraded ? GAP_SEVERITY.DEGRADED : GAP_SEVERITY.HELD,
+        decision: news.newsGatePassed ? GAP_DECISION.ADMIT_TO_SOUTH : news.newsGateDegraded ? GAP_DECISION.DEGRADED_FORWARD : GAP_DECISION.HOLD_ACTIVE,
+        canDegradeForward: news.newsGateDegraded && !news.newsGatePassed,
+        cycle,
+        source,
+        destination: CARDINALS.SOUTH,
+        checkpointId: active.checkpointId,
+        activeCheckpointId: active.activeCheckpointId,
+        eventName: active.eventName,
+        firstFailedCoordinate: news.newsGatePassed ? "NONE_CYCLE_ONE_ADMIT_TO_SOUTH" : news.firstNewsGap,
+        recommendedNextRenewalTarget: news.newsGatePassed ? FILE_GATES.south : FILE_GATES.west,
+        reason: news.newsGatePassed
+          ? "Cycle 1 packet admitted to South."
+          : "Cycle 1 packet held or degraded while NEWS alignment settles.",
+        detail: { active, news, fibonacci }
+      });
+    }
+
+    if (cycle === CYCLES.CYCLE_2) {
+      const carrier = assessStructuralCarrier(normalized, context);
+      const visible = assessVisibleContent(normalized);
+      const inspect = assessInspectMode(normalized);
+
+      if (active.checkpointId === CHECKPOINT_IDS.F21 || safeBool(normalized.f21EligibleForNorth, false) || safeBool(normalized.f21EligibilitySubmittedToNorth, false)) {
+        return makeGap({
+          gapClass: GAP_CLASS.F21_NORTH_REVIEW_REQUIRED,
+          gapSeverity: GAP_SEVERITY.HELD,
+          decision: GAP_DECISION.RETURN_TO_NORTH_FOR_F21,
+          cycle,
+          source,
+          destination: CARDINALS.NORTH,
+          checkpointId: active.checkpointId,
+          activeCheckpointId: active.activeCheckpointId,
+          eventName: active.eventName,
+          firstFailedCoordinate: "F21_RETURN_TO_NORTH_FOR_LATCH",
+          recommendedNextRenewalTarget: FILE_GATES.north,
+          reason: "F21 eligibility returned to North. West audits eligibility but does not latch.",
+          returnToNorth: true,
+          detail: { active, news, fibonacci, carrier, visible, inspect }
+        });
+      }
+
+      if (source !== CARDINALS.SOUTH && destination === CARDINALS.CANVAS) {
+        return makeGap({
+          gapClass: GAP_CLASS.CANVAS_RELEASE_HELD,
+          gapSeverity: GAP_SEVERITY.HELD,
+          decision: GAP_DECISION.HOLD_FOR_CYCLE,
+          cycle,
+          source,
+          destination,
+          checkpointId: active.checkpointId,
+          activeCheckpointId: active.activeCheckpointId,
+          eventName: active.eventName,
+          firstFailedCoordinate: "CANVAS_RELEASE_REQUIRES_SOUTH_SOURCE_IN_CYCLE_TWO",
+          recommendedNextRenewalTarget: FILE_GATES.south,
+          reason: "Cycle 2 Canvas release requires South output before West releases to Canvas.",
+          detail: { active, news, fibonacci, carrier, visible, inspect }
+        });
+      }
+
+      if (!carrier.structuralCarrierSafeForCanvasRelease && destination === CARDINALS.CANVAS) {
+        return makeGap({
+          gapClass: carrier.carrierStructurallySafe ? GAP_CLASS.CANVAS_RELEASE_HELD : GAP_CLASS.STRUCTURAL_BLOCK,
+          gapSeverity: carrier.carrierStructurallySafe ? GAP_SEVERITY.HELD : GAP_SEVERITY.HARD_BLOCK,
+          decision: carrier.carrierStructurallySafe ? GAP_DECISION.HOLD_ACTIVE : GAP_DECISION.HARD_BLOCK,
+          hardBlock: !carrier.carrierStructurallySafe,
+          cycle,
+          source,
+          destination,
+          checkpointId: active.checkpointId,
+          activeCheckpointId: active.activeCheckpointId,
+          eventName: active.eventName,
+          firstFailedCoordinate: carrier.carrierStructurallySafe ? "WAITING_CANVAS_RELEASE_TARGET" : "STRUCTURAL_CARRIER_UNSAFE_FOR_CANVAS",
+          recommendedNextRenewalTarget: FILE_GATES.canvas,
+          reason: carrier.carrierStructurallySafe
+            ? "Canvas release target is not fully present yet."
+            : "Structural carrier is unsafe for Canvas release.",
+          detail: { active, news, fibonacci, carrier, visible, inspect }
+        });
+      }
+
+      if (destination === CARDINALS.CANVAS || safeBool(normalized.canvasReleaseRequested, false) || safeBool(normalized.releaseToCanvas, false)) {
+        return makeGap({
+          gapClass: GAP_CLASS.NONE,
+          gapSeverity: GAP_SEVERITY.NONE,
+          decision: GAP_DECISION.RELEASE_TO_CANVAS,
+          cycle,
+          source,
+          destination: CARDINALS.CANVAS,
+          checkpointId: active.checkpointId,
+          activeCheckpointId: active.activeCheckpointId,
+          eventName: active.eventName,
+          firstFailedCoordinate: "NONE_CYCLE_TWO_CANVAS_RELEASE_AUTHORIZED_BY_WEST",
+          recommendedNextRenewalTarget: FILE_GATES.canvas,
+          reason: "Cycle 2 South output passed West admissibility and may release to Canvas.",
+          canvasRelease: true,
+          detail: { active, news, fibonacci, carrier, visible, inspect }
+        });
+      }
+
+      return makeGap({
+        gapClass: GAP_CLASS.ACTIVE_GATE_WAIT,
+        gapSeverity: GAP_SEVERITY.HELD,
+        decision: GAP_DECISION.HOLD_ACTIVE,
+        cycle,
+        source,
+        destination,
+        checkpointId: active.checkpointId,
+        activeCheckpointId: active.activeCheckpointId,
+        eventName: active.eventName,
+        firstFailedCoordinate: "WAITING_CYCLE_TWO_CANVAS_RELEASE_PACKET",
+        recommendedNextRenewalTarget: FILE_GATES.south,
+        reason: "Cycle 2 is active; West is waiting for South output release packet.",
+        detail: { active, news, fibonacci, carrier, visible, inspect }
       });
     }
 
     return makeGap({
-      gapClass: GAP_CLASS.ACTIVE_GEAR_WAIT,
-      gapSeverity: GAP_SEVERITY.HELD,
-      checkpointId,
-      activeCheckpointId,
-      eventName,
-      firstFailedCoordinate: `WAITING_${checkpointId}`,
-      recommendedNextRenewalTarget: ROUTE_TARGETS.HEARTH_ROUTE,
-      reason: "Active transmission gear is waiting for its own required evidence.",
-      math: "oneActiveGearAtATime && !activeGearEvidenceComplete.",
-      observed: evidence.missing.join(", "),
-      detail: { active, evidence },
-      nextStrategy: [
-        "Keep the same active gear.",
-        "Do not start the next gear until North authorizes shift."
-      ]
+      gapClass: GAP_CLASS.UNKNOWN_ARCHIVE,
+      gapSeverity: GAP_SEVERITY.INFO,
+      decision: GAP_DECISION.ARCHIVE,
+      cycle,
+      source,
+      destination,
+      checkpointId: active.checkpointId,
+      activeCheckpointId: active.activeCheckpointId,
+      eventName: active.eventName,
+      firstFailedCoordinate: "UNKNOWN_CYCLE_PACKET_ARCHIVED",
+      recommendedNextRenewalTarget: "none",
+      reason: "Unknown cycle packet archived without mutation.",
+      detail: { active, news, fibonacci }
     });
+  }
+
+  function classifyWestAdmissibility(packet = {}, context = {}) {
+    const gap = classifyCyclePacket(packet, context);
+
+    const admissibility = {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      westAdmissibilityReceipt: "LAB_RUNTIME_TABLE_CARDINAL_WEST_ADMISSIBILITY_RECEIPT_v1",
+      cycleAwareWestAuthority: true,
+      admissibilityClutchActive: true,
+      packetAdmissible: [
+        GAP_DECISION.ADMIT_TO_SOUTH,
+        GAP_DECISION.RELEASE_TO_CANVAS,
+        GAP_DECISION.RETURN_TO_NORTH,
+        GAP_DECISION.RETURN_TO_NORTH_FOR_F21,
+        GAP_DECISION.FULL_PASS,
+        GAP_DECISION.DEGRADED_FORWARD
+      ].includes(gap.decision),
+      decision: gap.decision,
+      gap,
+      cycle: gap.cycle,
+      source: gap.source,
+      destination: gap.destination,
+      canvasReleaseAuthorized: gap.decision === GAP_DECISION.RELEASE_TO_CANVAS,
+      returnToNorthRequired: gap.decision === GAP_DECISION.RETURN_TO_NORTH || gap.decision === GAP_DECISION.RETURN_TO_NORTH_FOR_F21,
+      southAdmitted: gap.decision === GAP_DECISION.ADMIT_TO_SOUTH,
+      degradedForward: gap.decision === GAP_DECISION.DEGRADED_FORWARD,
+      hardBlock: gap.hardBlock,
+      f21NorthLatchOnly: true,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false,
+      updatedAt: nowIso()
+    };
+
+    state.classifyCount += 1;
+    if (gap.cycle === CYCLES.CYCLE_1) state.cycleOneCount += 1;
+    if (gap.cycle === CYCLES.CYCLE_2) state.cycleTwoCount += 1;
+    if (admissibility.canvasReleaseAuthorized) state.canvasReleaseCount += 1;
+    if (admissibility.returnToNorthRequired) state.returnNorthCount += 1;
+    if (gap.gapClass === GAP_CLASS.FALSE_COMPLETION_BLOCK) state.falseCompletionBlockCount += 1;
+    if (admissibility.degradedForward) state.degradedForwardCount += 1;
+
+    state.lastAdmissibility = clonePlain(admissibility);
+    state.updatedAt = nowIso();
+
+    record("WEST_ADMISSIBILITY_CLASSIFIED", {
+      cycle: admissibility.cycle,
+      decision: admissibility.decision,
+      gapClass: gap.gapClass,
+      firstFailedCoordinate: gap.firstFailedCoordinate
+    });
+
+    publishAll();
+    return admissibility;
+  }
+
+  function classifyTransmissionGap(snapshotInput = {}, context = {}) {
+    return classifyCyclePacket(snapshotInput, context);
   }
 
   function classifyGap(snapshotInput = {}, context = {}) {
     return classifyTransmissionGap(snapshotInput, context);
   }
 
-  function createGapReceipt(snapshot = {}, context = {}) {
-    const normalized = normalizeSnapshot(snapshot, context);
-    const gap = classifyTransmissionGap(normalized, context);
+  function createWestCycleReceipt(packet = {}, context = {}) {
+    const normalized = normalizeEvent(packet);
+    const admissibility = classifyWestAdmissibility(normalized, context);
+    const news = evaluateNewsAlignment(normalized, context);
+    const fibonacci = evaluateFibonacciSynchronization(normalized, context);
+    const carrier = assessStructuralCarrier(normalized, context);
     const visible = assessVisibleContent(normalized);
     const inspect = assessInspectMode(normalized);
-    const carrier = assessStructuralCarrier(normalized, context);
-    const newsGateState = evaluateNewsGateState(normalized);
-    const activeGear = assessActiveGear(normalized, context);
 
-    return {
+    const receipt = {
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
-      westGapReceipt: "LAB_RUNTIME_TABLE_CARDINAL_WEST_TRANSMISSION_GAP_CLASSIFIER_RECEIPT_v1",
+      baselineContract: BASELINE_CONTRACT,
       version: VERSION,
-      westAuthority: true,
-      westLoaded: true,
-      westFallbackUsed: false,
-      northPrecedentRequired: true,
-      consumedByNorthFacade: true,
-      consumedByEastMotion: true,
+      destinationFile: FILE,
+      westCycleReceipt: "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_RECEIPT_v1",
 
-      transmissionGapClassifier: true,
-      oneActiveGearAtATime: true,
-      activeGearGapAssessment: true,
-      gearShiftGapClassification: true,
-      missingEvidenceHeldUnlessActiveGearRequiresIt: true,
+      cycleAwareWestAuthority: true,
+      cycleOneLawActive: true,
+      cycleTwoLawActive: true,
+      canvasCycleOneBlocked: true,
+      canvasCycleTwoReleaseSupported: true,
+      southReturnsToNorthInCycleOne: true,
+      southPrecedesWestInCycleTwo: true,
+      f21NorthLatchOnly: true,
 
-      activeGear,
-      gap,
-      carrier,
+      admissibility,
+      newsAlignment: news,
+      fibonacciSynchronization: fibonacci,
+      structuralCarrier: carrier,
       visibleContent: visible,
       inspectMode: inspect,
-      newsGateState,
 
-      hardBlock: gap.hardBlock,
-      canDegradeForward: gap.canDegradeForward,
-      forwardAllowed: gap.forwardAllowed,
-      firstFailedCoordinate: gap.firstFailedCoordinate,
-      recommendedNextRenewalTarget: gap.recommendedNextRenewalTarget,
+      firstFailedCoordinate: admissibility.gap.firstFailedCoordinate,
+      recommendedNextRenewalTarget: admissibility.gap.recommendedNextRenewalTarget,
 
       generatedImage: false,
       graphicBox: false,
       webGL: false,
       visualPassClaimed: false,
       updatedAt: nowIso()
+    };
+
+    state.lastCyclePacket = clonePlain(receipt);
+    state.updatedAt = receipt.updatedAt;
+    publishAll();
+
+    return receipt;
+  }
+
+  function createGapReceipt(snapshot = {}, context = {}) {
+    const receipt = createWestCycleReceipt(snapshot, context);
+    state.lastGapReceipt = clonePlain(receipt);
+    return {
+      ...receipt,
+      westGapReceipt: "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_GAP_RECEIPT_v1",
+      gap: receipt.admissibility.gap
     };
   }
 
@@ -1396,114 +1718,164 @@
       previousContract: PREVIOUS_CONTRACT,
       baselineContract: BASELINE_CONTRACT,
       version: VERSION,
-      destinationFile: "/assets/lab/runtime-table.west.js",
+      destinationFile: FILE,
       status: "active",
-      role: "west-cardinal-transmission-gap-classifier-authority",
+      role: state.role,
 
+      cycleAwareWestAuthority: true,
       westAuthority: true,
       westLoaded: true,
       westFallbackUsed: false,
-      northPrecedentRequired: true,
-      consumedByNorthFacade: true,
-      consumedByEastMotion: true,
 
-      transmissionGapClassifier: true,
-      activeGearGapAssessment: true,
-      gearShiftGapClassification: true,
-      oneActiveGearAtATime: true,
-      localGearProgressZeroToOneHundred: true,
-      waitingForNextGearIsHeldNotStructuralFailure: true,
-      missingEvidenceHeldUnlessActiveGearRequiresIt: true,
+      fileGates: clonePlain(FILE_GATES),
+      cyclePaths: clonePlain(CYCLE_PATHS),
 
-      gapClassifierActive: true,
-      fastGapAssessment: true,
-      hardBlockNarrowed: true,
-      degradedForwardSupported: true,
-      diagnosticGapDoesNotAutomaticallyHardBlock: true,
-      progressOnlyEventsArchiveOnly: true,
-      duplicateEventsArchiveOnly: true,
-      structuralFailureHardBlocksOnlyWhenActiveGearRequiresIt: true,
-      falseCompletionHardBlocks: true,
-      f13mCarrierHeavyCanDegradeForward: true,
-      f13nReceiptFallbackCanDegradeForward: true,
-      f13nShowDiagnosticTabIsFullPassNotDegradedRequirement: true,
-      f21CanDegradeCompleteWithGapReceipt: true,
-      f21WaitingForNorthShiftIsHeldNotHardBlock: true,
-      visualPassClaimed: false,
+      cycleOneLawActive: true,
+      cycleTwoLawActive: true,
+      canvasCycleOneBlocked: true,
+      canvasCycleTwoReleaseSupported: true,
+      southReturnsToNorthInCycleOne: true,
+      southPrecedesWestInCycleTwo: true,
+      f21NorthLatchOnly: true,
+      newsAlignmentAuditActive: true,
+      fibonacciSynchronizationAuditActive: true,
+      falseCompletionFirewallActive: true,
+
+      classifyCount: state.classifyCount,
+      cycleOneCount: state.cycleOneCount,
+      cycleTwoCount: state.cycleTwoCount,
+      canvasReleaseCount: state.canvasReleaseCount,
+      returnNorthCount: state.returnNorthCount,
+      falseCompletionBlockCount: state.falseCompletionBlockCount,
+      degradedForwardCount: state.degradedForwardCount,
+
+      gapClasses: Object.values(GAP_CLASS),
+      gapSeverities: Object.values(GAP_SEVERITY),
+      gapDecisions: Object.values(GAP_DECISION),
+
+      checkpointSequence: CHECKPOINT_SEQUENCE.map((item) => ({
+        id: item.id,
+        rank: item.rank,
+        fibonacci: item.fibonacci,
+        owner: item.owner,
+        label: item.label
+      })),
 
       exports: [
         "classifyGap",
         "classifyTransmissionGap",
+        "classifyCyclePacket",
+        "classifyWestAdmissibility",
         "createGapReceipt",
+        "createWestCycleReceipt",
         "assessActiveGear",
         "evidenceForGear",
         "assessStructuralCarrier",
         "assessVisibleContent",
         "assessInspectMode",
         "evaluateNewsGateState",
-        "isProgressOnlyEvent",
-        "isPrematureCompletionEvent",
-        "getReceipt"
+        "evaluateNewsAlignment",
+        "evaluateFibonacciSynchronization",
+        "detectCycle",
+        "readNorthCycleContext",
+        "getReceipt",
+        "getReceiptText"
       ],
 
-      checkpointSequence: CHECKPOINT_SEQUENCE.map((checkpoint) => ({
-        id: checkpoint.id,
-        rank: checkpoint.rank,
-        gear: checkpoint.gear,
-        fibonacci: checkpoint.fibonacci,
-        progress: checkpoint.progress,
-        requiredEvidence: checkpoint.requiredEvidence.slice()
-      })),
-
-      gapClasses: Object.values(GAP_CLASS),
-      gapSeverities: Object.values(GAP_SEVERITY),
-      gapDecisions: Object.values(GAP_DECISION),
-
-      transmissionLaw: [
-        "Each checkpoint is a transmission gear.",
-        "Only one gear may be active at a time.",
-        "Future gear events are held or queued, not treated as structural failure.",
-        "Past gear duplicates are archived unless they attempt false completion.",
-        "Each active gear completes locally before North authorizes the next gear shift.",
-        "The loading bar should represent the active gear cycle from 0 to 100, not cumulative multi-gear percentage.",
-        "Waiting for F21 is a North gear-shift condition, not automatically a hard block."
+      governingLaw: [
+        "Cycle 1 route is North to East to West to South to North.",
+        "Cycle 2 route is North to East to South to West to Canvas.",
+        "Canvas release is blocked in Cycle 1.",
+        "South returns to North in Cycle 1.",
+        "South precedes West in Cycle 2.",
+        "West releases to Canvas only in Cycle 2 after South output passes admissibility.",
+        "F21 latch remains North-owned.",
+        "West audits NEWS alignment and Fibonacci synchronization."
       ],
 
-      hardBlockLaw: [
-        "Hard block only active-gear structural carrier failure, projection safety failure, false completion mutation, or premature F21 false-completion mutation.",
-        "Carrier-heavy visible content is a degraded gap, not an automatic hard block, when surface signal exists.",
-        "Inspect mode is a degraded gap, not an automatic hard block, when copy/receipt/dock fallback exists.",
-        "Progress-only and duplicate events are archived, not treated as failure.",
-        "READY text and 100% progress require lawful F21 completion latch.",
-        "visualPassClaimed remains false."
-      ],
-
-      forwardLaw: [
-        "Assess the active gear immediately.",
-        "Record firstFailedCoordinate and recommendedNextRenewalTarget.",
-        "Allow degraded-forward when carrier structure is safe and enough active-gear proof exists.",
-        "Defer refinement to postgame receipts instead of blocking lawful motion."
-      ],
-
-      doesNotOwn: [
-        "North public Runtime Table facade",
-        "East checkpoint motion",
-        "South visible-state and receipt wording",
-        "planet truth",
-        "canvas drawing",
-        "atlas pixel painting",
-        "touch drag controls",
-        "route orchestration",
-        "runtime motion",
-        "final visual pass claim"
-      ],
+      lastNorthContext: clonePlain(state.lastNorthContext),
+      lastCyclePacket: clonePlain(state.lastCyclePacket),
+      lastAdmissibility: clonePlain(state.lastAdmissibility),
+      lastGapReceipt: clonePlain(state.lastGapReceipt),
+      localEvents: clonePlain(state.localEvents),
+      errors: clonePlain(state.errors),
 
       generatedImage: false,
       graphicBox: false,
       webGL: false,
       visualPassClaimed: false,
+      startedAt: state.startedAt,
       updatedAt: nowIso()
     };
+  }
+
+  function getReceiptText() {
+    const r = getReceipt();
+
+    const events = r.localEvents.length
+      ? r.localEvents.map((item) => `- ${item.at} :: ${item.event} :: ${JSON.stringify(item.detail || {})}`).join("\n")
+      : "- none";
+
+    const errors = r.errors.length
+      ? r.errors.map((item) => `- ${item.at} :: ${item.code} :: ${item.message}`).join("\n")
+      : "- none";
+
+    const last = r.lastAdmissibility
+      ? [
+          `lastDecision=${r.lastAdmissibility.decision}`,
+          `lastCycle=${r.lastAdmissibility.cycle}`,
+          `lastGapClass=${r.lastAdmissibility.gap ? r.lastAdmissibility.gap.gapClass : ""}`,
+          `lastFirstFailedCoordinate=${r.lastAdmissibility.gap ? r.lastAdmissibility.gap.firstFailedCoordinate : ""}`,
+          `lastRecommendedNextRenewalTarget=${r.lastAdmissibility.gap ? r.lastAdmissibility.gap.recommendedNextRenewalTarget : ""}`
+        ].join("\n")
+      : "lastDecision=\nlastCycle=\nlastGapClass=\nlastFirstFailedCoordinate=\nlastRecommendedNextRenewalTarget=";
+
+    return [
+      "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_RECEIPT",
+      "",
+      `contract=${r.contract}`,
+      `receipt=${r.receipt}`,
+      `previousContract=${r.previousContract}`,
+      `baselineContract=${r.baselineContract}`,
+      `version=${r.version}`,
+      `destinationFile=${r.destinationFile}`,
+      `status=${r.status}`,
+      `role=${r.role}`,
+      "",
+      `cycleAwareWestAuthority=${r.cycleAwareWestAuthority}`,
+      `cycleOneLawActive=${r.cycleOneLawActive}`,
+      `cycleTwoLawActive=${r.cycleTwoLawActive}`,
+      `canvasCycleOneBlocked=${r.canvasCycleOneBlocked}`,
+      `canvasCycleTwoReleaseSupported=${r.canvasCycleTwoReleaseSupported}`,
+      `southReturnsToNorthInCycleOne=${r.southReturnsToNorthInCycleOne}`,
+      `southPrecedesWestInCycleTwo=${r.southPrecedesWestInCycleTwo}`,
+      `f21NorthLatchOnly=${r.f21NorthLatchOnly}`,
+      `newsAlignmentAuditActive=${r.newsAlignmentAuditActive}`,
+      `fibonacciSynchronizationAuditActive=${r.fibonacciSynchronizationAuditActive}`,
+      `falseCompletionFirewallActive=${r.falseCompletionFirewallActive}`,
+      "",
+      `classifyCount=${r.classifyCount}`,
+      `cycleOneCount=${r.cycleOneCount}`,
+      `cycleTwoCount=${r.cycleTwoCount}`,
+      `canvasReleaseCount=${r.canvasReleaseCount}`,
+      `returnNorthCount=${r.returnNorthCount}`,
+      `falseCompletionBlockCount=${r.falseCompletionBlockCount}`,
+      `degradedForwardCount=${r.degradedForwardCount}`,
+      "",
+      last,
+      "",
+      "LOCAL_EVENTS",
+      events,
+      "",
+      "ERRORS",
+      errors,
+      "",
+      `generatedImage=${r.generatedImage}`,
+      `graphicBox=${r.graphicBox}`,
+      `webGL=${r.webGL}`,
+      `visualPassClaimed=${r.visualPassClaimed}`,
+      `updatedAt=${r.updatedAt}`
+    ].join("\n");
   }
 
   const api = {
@@ -1512,7 +1884,12 @@
     previousContract: PREVIOUS_CONTRACT,
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
+    file: FILE,
 
+    FILE_GATES,
+    CYCLES,
+    CYCLE_PATHS,
+    CARDINALS,
     GAP_CLASS,
     GAP_SEVERITY,
     GAP_DECISION,
@@ -1522,103 +1899,123 @@
 
     classifyGap,
     classifyTransmissionGap,
+    classifyCyclePacket,
+    classifyWestAdmissibility,
     createGapReceipt,
+    createWestCycleReceipt,
+
     assessActiveGear,
     evidenceForGear,
     assessStructuralCarrier,
     assessVisibleContent,
     assessInspectMode,
     evaluateNewsGateState,
+    evaluateNewsAlignment,
+    evaluateFibonacciSynchronization,
+
+    detectCycle,
+    readNorthCycleContext,
     isProgressOnlyEvent,
     isPrematureCompletionEvent,
-    getReceipt,
 
+    getReceipt,
+    getReceiptText,
+
+    cycleAwareWestAuthority: true,
     westAuthority: true,
     westLoaded: true,
     westFallbackUsed: false,
-    northPrecedentRequired: true,
-    consumedByNorthFacade: true,
-    consumedByEastMotion: true,
-
-    transmissionGapClassifier: true,
-    activeGearGapAssessment: true,
-    gearShiftGapClassification: true,
-    oneActiveGearAtATime: true,
-    localGearProgressZeroToOneHundred: true,
-    waitingForNextGearIsHeldNotStructuralFailure: true,
-    missingEvidenceHeldUnlessActiveGearRequiresIt: true,
-
-    gapClassifierActive: true,
-    fastGapAssessment: true,
-    hardBlockNarrowed: true,
-    degradedForwardSupported: true,
-    diagnosticGapDoesNotAutomaticallyHardBlock: true,
-    progressOnlyEventsArchiveOnly: true,
-    duplicateEventsArchiveOnly: true,
-    structuralFailureHardBlocksOnlyWhenActiveGearRequiresIt: true,
-    falseCompletionHardBlocks: true,
-    f13mCarrierHeavyCanDegradeForward: true,
-    f13nReceiptFallbackCanDegradeForward: true,
-    f13nShowDiagnosticTabIsFullPassNotDegradedRequirement: true,
-    f21CanDegradeCompleteWithGapReceipt: true,
-    f21WaitingForNorthShiftIsHeldNotHardBlock: true,
+    cycleOneLawActive: true,
+    cycleTwoLawActive: true,
+    canvasCycleOneBlocked: true,
+    canvasCycleTwoReleaseSupported: true,
+    southReturnsToNorthInCycleOne: true,
+    southPrecedesWestInCycleTwo: true,
+    f21NorthLatchOnly: true,
+    newsAlignmentAuditActive: true,
+    fibonacciSynchronizationAuditActive: true,
+    falseCompletionFirewallActive: true,
 
     generatedImage: false,
     graphicBox: false,
     webGL: false,
-    visualPassClaimed: false
+    visualPassClaimed: false,
+
+    get state() {
+      return state;
+    }
   };
 
-  root.DEXTER_LAB = root.DEXTER_LAB || {};
-  root.DEXTER_LAB.runtimeTableWest = api;
-  root.DEXTER_LAB.cardinalRuntimeTableWest = api;
-  root.DEXTER_LAB.gapClassifierWest = api;
-  root.DEXTER_LAB.transmissionGapClassifierWest = api;
+  function publishDataset() {
+    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
 
-  root.LAB_RUNTIME_TABLE_WEST = api;
-  root.RUNTIME_TABLE_WEST = api;
-  root.DEXTER_LAB_RUNTIME_TABLE_WEST = api;
-  root.LAB_CARDINAL_RUNTIME_TABLE_WEST = api;
-  root.LAB_GAP_CLASSIFIER_WEST = api;
-  root.LAB_TRANSMISSION_GAP_CLASSIFIER_WEST = api;
-
-  if (root.document && root.document.documentElement) {
-    const dataset = root.document.documentElement.dataset;
+    const dataset = doc.documentElement.dataset;
 
     dataset.labRuntimeTableWestLoaded = "true";
     dataset.labRuntimeTableWestContract = CONTRACT;
     dataset.labRuntimeTableWestReceipt = RECEIPT;
-    dataset.labRuntimeTableWestAuthority = "true";
-    dataset.westGapClassifierAuthority = "true";
-    dataset.westTransmissionGapClassifierAuthority = "true";
-    dataset.northPrecedentRequired = "true";
-    dataset.westConsumedByNorthFacade = "true";
-    dataset.westConsumedByEastMotion = "true";
-    dataset.transmissionGapClassifier = "true";
-    dataset.activeGearGapAssessment = "true";
-    dataset.gearShiftGapClassification = "true";
-    dataset.oneActiveGearAtATime = "true";
-    dataset.localGearProgressZeroToOneHundred = "true";
-    dataset.waitingForNextGearIsHeldNotStructuralFailure = "true";
-    dataset.missingEvidenceHeldUnlessActiveGearRequiresIt = "true";
-    dataset.fastGapAssessment = "true";
-    dataset.hardBlockNarrowed = "true";
-    dataset.degradedForwardSupported = "true";
-    dataset.diagnosticGapDoesNotAutomaticallyHardBlock = "true";
-    dataset.progressOnlyEventsArchiveOnly = "true";
-    dataset.duplicateEventsArchiveOnly = "true";
-    dataset.structuralFailureHardBlocksOnlyWhenActiveGearRequiresIt = "true";
-    dataset.falseCompletionHardBlocks = "true";
-    dataset.f13mCarrierHeavyCanDegradeForward = "true";
-    dataset.f13nReceiptFallbackCanDegradeForward = "true";
-    dataset.f13nShowDiagnosticTabIsFullPassNotDegradedRequirement = "true";
-    dataset.f21CanDegradeCompleteWithGapReceipt = "true";
-    dataset.f21WaitingForNorthShiftIsHeldNotHardBlock = "true";
+    dataset.labRuntimeTableWestVersion = VERSION;
+
+    dataset.westCycleAwareAdmissibilityClutch = "true";
+    dataset.westCycleOneAuditActive = "true";
+    dataset.westCycleTwoAuditActive = "true";
+    dataset.canvasCycleOneBlocked = "true";
+    dataset.canvasCycleTwoReleaseSupported = "true";
+    dataset.southReturnsToNorthInCycleOne = "true";
+    dataset.southPrecedesWestInCycleTwo = "true";
+    dataset.f21NorthLatchOnly = "true";
+    dataset.newsAlignmentAuditActive = "true";
+    dataset.fibonacciSynchronizationAuditActive = "true";
+    dataset.falseCompletionFirewallActive = "true";
+
+    dataset.westClassifyCount = String(state.classifyCount);
+    dataset.westCycleOneCount = String(state.cycleOneCount);
+    dataset.westCycleTwoCount = String(state.cycleTwoCount);
+    dataset.westCanvasReleaseCount = String(state.canvasReleaseCount);
+    dataset.westReturnNorthCount = String(state.returnNorthCount);
+    dataset.westFalseCompletionBlockCount = String(state.falseCompletionBlockCount);
+    dataset.westDegradedForwardCount = String(state.degradedForwardCount);
+
     dataset.generatedImage = "false";
     dataset.graphicBox = "false";
     dataset.webgl = "false";
     dataset.visualPassClaimed = "false";
   }
+
+  function publishAll() {
+    root.DEXTER_LAB = root.DEXTER_LAB || {};
+    root.HEARTH = root.HEARTH || {};
+
+    root.DEXTER_LAB.runtimeTableWest = api;
+    root.DEXTER_LAB.cardinalRuntimeTableWest = api;
+    root.DEXTER_LAB.gapClassifierWest = api;
+    root.DEXTER_LAB.transmissionGapClassifierWest = api;
+    root.DEXTER_LAB.cycleAwareAdmissibilityClutchWest = api;
+
+    root.LAB_RUNTIME_TABLE_WEST = api;
+    root.RUNTIME_TABLE_WEST = api;
+    root.DEXTER_LAB_RUNTIME_TABLE_WEST = api;
+    root.LAB_CARDINAL_RUNTIME_TABLE_WEST = api;
+    root.LAB_GAP_CLASSIFIER_WEST = api;
+    root.LAB_TRANSMISSION_GAP_CLASSIFIER_WEST = api;
+    root.LAB_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_WEST = api;
+
+    root.HEARTH.westCycleAwareAdmissibilityClutch = api;
+    root.HEARTH_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH = api;
+
+    publishDataset();
+  }
+
+  publishAll();
+
+  record("WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_LOADED", {
+    file: FILE,
+    contract: CONTRACT,
+    cycleOneLawActive: true,
+    cycleTwoLawActive: true,
+    canvasCycleOneBlocked: true,
+    canvasCycleTwoReleaseSupported: true
+  });
 
   if (typeof module !== "undefined" && module.exports) {
     module.exports = api;

@@ -1,37 +1,19 @@
 // /assets/lab/runtime-table.east.js
-// LAB_RUNTIME_TABLE_CARDINAL_EAST_NORTH_DIALECT_FIBONACCI_MAGNIFIER_TNT_v1
+// LAB_RUNTIME_TABLE_EAST_PRIMARY_GATE_LINEUP_NEWS_FIBONACCI_TNT_v1
 // Full-file replacement.
-// Cardinal East authority only.
-// Purpose:
-// - Keep North Runtime Table / NEWS / Fibonacci language visible and governing.
-// - Preserve useful under-the-hood timing / sequence / cycle structure without publicly reframing this file as a transmission map.
-// - Make East a North-permitted Fibonacci micro-stage magnifier.
-// - Classify event motion, aliases, false completion, future-stage pressure, duplicate-stage pressure, and progress-only telemetry.
-// - Return North-compatible, West-compatible, and South-compatible packets.
-// - Preserve legacy exports as non-governing compatibility wrappers.
-// Does not own:
-// - North public Runtime Table authority
-// - active gate cursor
-// - visible loader percentage
-// - checkpoint closure
-// - F21 latch
-// - ready text
-// - South visible proof
-// - West admissibility judgment
-// - canvas drawing
-// - canvas child truth
-// - route conductor runtime
-// - planet truth
-// - final visual pass claim
+// East primary gate line-up authority.
+// North owns macro runtime-table order.
+// East reads North, magnifies incoming event motion into Fibonacci/NEWS micro-stage classification,
+// and returns clean packets for North, West, and South.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_EAST_NORTH_DIALECT_FIBONACCI_MAGNIFIER_TNT_v1";
-  const RECEIPT = "LAB_RUNTIME_TABLE_CARDINAL_EAST_NORTH_DIALECT_FIBONACCI_MAGNIFIER_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_EAST_TRANSMISSION_MOTION_TNT_v1";
-  const BASELINE_CONTRACT = "RUNTIME_TABLE_NEWS_CARDINAL_FOUR_FILE_SPLIT_FINAL_DRAFT_PREWRITE_v1";
-  const VERSION = "2026-05-31.lab-runtime-table-cardinal-east-north-dialect-fibonacci-magnifier-v1";
+  const CONTRACT = "LAB_RUNTIME_TABLE_EAST_PRIMARY_GATE_LINEUP_NEWS_FIBONACCI_TNT_v1";
+  const RECEIPT = "LAB_RUNTIME_TABLE_EAST_PRIMARY_GATE_LINEUP_NEWS_FIBONACCI_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_EAST_NORTH_DIALECT_FIBONACCI_MAGNIFIER_TNT_v1";
+  const BASELINE_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_EAST_NORTH_DIALECT_FIBONACCI_MAGNIFIER_TNT_v1";
+  const VERSION = "2026-05-31.lab-runtime-table-east-primary-gate-lineup-news-fibonacci-v1";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
@@ -42,6 +24,18 @@
   const SOUTH_FILE = "/assets/lab/runtime-table.south.js";
   const ROUTE_CONDUCTOR_FILE = "/showroom/globe/hearth/hearth.js";
   const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
+
+  const FILE_GATES = Object.freeze({
+    north: NORTH_FILE,
+    east: FILE,
+    west: WEST_FILE,
+    south: SOUTH_FILE,
+    routeConductor: ROUTE_CONDUCTOR_FILE,
+    canvas: CANVAS_FILE,
+    canvasEast: "/assets/hearth/hearth.canvas.east.js",
+    canvasWest: "/assets/hearth/hearth.canvas.west.js",
+    canvasSouth: "/assets/hearth/hearth.canvas.south.js"
+  });
 
   const ACTIONS = Object.freeze({
     ADMIT_FOR_NORTH_REVIEW: "ADMIT_FOR_NORTH_REVIEW",
@@ -55,13 +49,14 @@
     F21_PROPOSED_FOR_NORTH_REVIEW: "F21_PROPOSED_FOR_NORTH_REVIEW"
   });
 
-  const LEGACY_ACTIONS = Object.freeze({
+  const CHECKPOINT_EVENT_ACTIONS = Object.freeze({
     ADMIT: "ADMIT",
     QUEUE: "QUEUE",
     ARCHIVE: "ARCHIVE",
     BLOCK: "BLOCK",
     HELD: "HELD",
-    DEGRADED_FORWARD: "DEGRADED_FORWARD"
+    DEGRADED_FORWARD: "DEGRADED_FORWARD",
+    LATCH_REVIEW: "LATCH_REVIEW"
   });
 
   const GAP_CLASS = Object.freeze({
@@ -94,6 +89,16 @@
     F21: 21
   });
 
+  const EAST_LANGUAGE = Object.freeze({
+    north: "macro runtime-table distributor",
+    east: "primary gate line-up authority",
+    west: "admissibility audit receiver",
+    south: "proof/body/output receiver",
+    f21: "North latch review lane",
+    fileGateRule: "file paths are primary distribution gates",
+    eastMotionRule: "East classifies motion and returns packets; North admits the gate"
+  });
+
   const PROGRESS_ONLY_EVENTS = Object.freeze([
     "ATLAS_BUILD_PROGRESS",
     "TEXTURE_COMPOSE_PROGRESS",
@@ -103,7 +108,9 @@
     "LOADING_PROGRESS",
     "GEAR_PROGRESS_TICK",
     "RENDER_PROGRESS",
-    "SPHERE_RENDER_PROGRESS"
+    "SPHERE_RENDER_PROGRESS",
+    "BOOT_PROGRESS",
+    "CHECKPOINT_PROGRESS"
   ]);
 
   const FALSE_COMPLETION_TOKENS = Object.freeze([
@@ -120,116 +127,142 @@
     "READY_PLANET_VISIBLE",
     "READY_DEGRADED_PLANET_VISIBLE",
     "COMPLETION_LATCHED",
+    "F21_DEGRADED_COMPLETION_LATCHED",
+    "FINAL_VISUAL_PASS",
+    "VISUAL_PASS_CLAIMED"
+  ]);
+
+  const F21_EVENTS = Object.freeze([
+    "F21_COMPLETION_LATCH",
+    "F21_COMPLETION_LATCHED",
+    "F21_FULL_ELIGIBLE_FOR_NORTH_NEWS_LATCH",
+    "F21_ELIGIBLE_FOR_NORTH_NEWS_LATCH",
+    "F21_ELIGIBILITY_SUBMITTED_TO_NORTH",
+    "F21_ELIGIBILITY_READY_FOR_NORTH",
+    "F21_NEWS_LATCH_READY",
+    "SOUTH_F21_ELIGIBILITY_SUBMITTED",
+    "COMPLETION_LATCH_ELIGIBLE",
+    "COMPLETION_LATCHED",
+    "COMPLETION_LATCHED_AFTER_VISIBLE_CONTENT_PROOF",
+    "COMPLETION_LATCHED_AFTER_CANVAS_READY",
     "F21_DEGRADED_COMPLETION_LATCHED"
   ]);
 
+  function stage(id, macroGate, rank, owner, label, fileGate, events) {
+    return Object.freeze({
+      id,
+      microStageId: id,
+      macroGate,
+      macroRank: MACRO_RANK[macroGate] || 0,
+      rank,
+      owner,
+      label,
+      fileGate,
+      events: events.slice(),
+      northAdmissionRequired: true,
+      eastCanClassify: true,
+      westReviewAvailable: true,
+      southProofAvailable: owner === "SOUTH",
+      f21NorthReviewOnly: macroGate === "F21",
+      visualPassClaimed: false
+    });
+  }
+
   const MICRO_STAGES = Object.freeze([
-    stage("F1_EAST_ROUTE_SHELL", "F1", 1, "EAST", "Route shell", [
+    stage("F1_EAST_ROUTE_SHELL", "F1", 1, "EAST", "Route shell", FILE, [
       "HTML_SHELL_RENDERED",
       "EAST_HTML_SHELL_RENDERED",
       "SHELL_READY",
-      "HTML_READY"
+      "HTML_READY",
+      "DOCUMENT_PRESENT"
     ]),
-
-    stage("F2_EAST_FIRST_PAINT", "F2", 2, "EAST", "First paint", [
+    stage("F2_EAST_FIRST_PAINT", "F2", 2, "EAST", "First paint", FILE, [
       "FIRST_PAINT_COCKPIT_VISIBLE",
       "EAST_FIRST_PAINT_COCKPIT_VISIBLE",
       "COCKPIT_VISIBLE",
       "FIRST_PAINT_READY"
     ]),
-
-    stage("F3_EAST_SCRIPT_ORDER", "F3", 3, "EAST", "Script order", [
+    stage("F3_EAST_SCRIPT_ORDER", "F3", 3, "EAST", "Script order", FILE, [
       "SCRIPT_ORDER_COMPLETE",
       "SCRIPT_LOADED",
       "SCRIPT_ORDER_VISIBLE",
-      "EAST_SCRIPT_ORDER_VISIBILITY_ACTIVE"
+      "EAST_SCRIPT_ORDER_VISIBILITY_ACTIVE",
+      "INDEX_API_PRESENT"
     ]),
-
-    stage("F5_NORTH_AUTHORITY", "F5", 5, "NORTH", "Authority availability", [
+    stage("F5_NORTH_AUTHORITY", "F5", 5, "NORTH", "North authority recognition", NORTH_FILE, [
       "AUTHORITY_AVAILABILITY_READY",
       "RUNTIME_TABLE_AVAILABLE",
       "AUTHORITY_AVAILABLE",
       "NORTH_RUNTIME_TABLE_PRESENT",
-      "WEST_HANDOFF_TABLE_PRESENT"
+      "NORTH_PRESENT"
     ]),
-
-    stage("F8_ROUTE_CONDUCTOR_HYDRATION", "F8", 8, "SOUTH", "Route conductor hydration", [
+    stage("F8_ROUTE_CONDUCTOR_HYDRATION", "F8", 8, "SOUTH", "Route conductor hydration", ROUTE_CONDUCTOR_FILE, [
       "CONDUCTOR_HYDRATED",
       "SOUTH_ROUTE_CONDUCTOR_BOOTED",
       "COHERENCE_SEMICONDUCTOR_BOOTED",
       "ROUTE_CONDUCTOR_PRESENT",
-      "CONDUCTOR_MARKER_PRESENT"
+      "CONDUCTOR_MARKER_PRESENT",
+      "API_RECEIPT_RUNTIME_PRESENT"
     ]),
-
-    stage("F13A_CANVAS_PARENT_BOOT_REQUESTED", "F13", 13.01, "NORTH", "Canvas parent boot requested", [
+    stage("F13A_CANVAS_PARENT_BOOT_REQUESTED", "F13", 13.01, "NORTH", "Canvas parent boot requested", CANVAS_FILE, [
       "CANVAS_COOPERATIVE_BOOT_STARTED",
       "CANVAS_BOOT_STARTED",
-      "CANVAS_CARRIER_REQUESTED"
+      "CANVAS_CARRIER_REQUESTED",
+      "CANVAS_PARENT_PRESENT"
     ]),
-
-    stage("F13B_CANVAS_CHILDREN_OBSERVED", "F13", 13.02, "EAST", "Canvas children observed", [
+    stage("F13B_CANVAS_CHILDREN_OBSERVED", "F13", 13.02, "EAST", "Canvas children observed", CANVAS_FILE, [
       "CANVAS_CHILDREN_READY",
       "ALL_CANVAS_CHILDREN_READY",
       "CANVAS_EAST_READY",
       "CANVAS_WEST_READY",
       "CANVAS_SOUTH_READY"
     ]),
-
-    stage("F13C_CANVAS_CONTEXT_READY", "F13", 13.03, "SOUTH", "Canvas context ready", [
+    stage("F13C_CANVAS_CONTEXT_READY", "F13", 13.03, "SOUTH", "Canvas context ready", CANVAS_FILE, [
       "CANVAS_CONTEXT_READY",
       "CANVAS_2D_CONTEXT_READY",
       "CONTEXT_READY"
     ]),
-
-    stage("F13D_INSPECTION_BOUND", "F13", 13.04, "WEST", "Inspection bound", [
+    stage("F13D_INSPECTION_BOUND", "F13", 13.04, "WEST", "Inspection bound", WEST_FILE, [
       "DRAG_INSPECTION_BOUND",
       "INSPECT_DRAG_BOUND",
       "POINTER_INSPECTION_BOUND",
-      "ZOOM_INSPECTION_BOUND"
+      "ZOOM_INSPECTION_BOUND",
+      "INSPECT_MODE_AVAILABLE"
     ]),
-
-    stage("F13E_ATLAS_BUILD_STARTED", "F13", 13.05, "EAST", "Atlas build started", [
+    stage("F13E_ATLAS_BUILD_STARTED", "F13", 13.05, "EAST", "Atlas build started", CANVAS_FILE, [
       "ATLAS_BUILD_STARTED",
       "ATLAS_STARTED"
     ]),
-
-    stage("F13F_ATLAS_BUILD_COMPLETE", "F13", 13.06, "EAST", "Atlas build complete", [
+    stage("F13F_ATLAS_BUILD_COMPLETE", "F13", 13.06, "EAST", "Atlas build complete", CANVAS_FILE, [
       "ATLAS_BUILD_COMPLETE",
       "ATLAS_COMPLETE"
     ]),
-
-    stage("F13G_TEXTURE_COMPOSE_STARTED", "F13", 13.07, "SOUTH", "Texture compose started", [
+    stage("F13G_TEXTURE_COMPOSE_STARTED", "F13", 13.07, "SOUTH", "Texture compose started", CANVAS_FILE, [
       "TEXTURE_COMPOSE_STARTED",
       "TEXTURE_STARTED"
     ]),
-
-    stage("F13H_TEXTURE_COMPOSE_COMPLETE", "F13", 13.08, "SOUTH", "Texture compose complete", [
+    stage("F13H_TEXTURE_COMPOSE_COMPLETE", "F13", 13.08, "SOUTH", "Texture compose complete", CANVAS_FILE, [
       "TEXTURE_COMPOSE_COMPLETE",
       "TEXTURE_COMPLETE"
     ]),
-
-    stage("F13I_FIRST_FRAME_REQUESTED", "F13", 13.09, "SOUTH", "First frame requested", [
+    stage("F13I_FIRST_FRAME_REQUESTED", "F13", 13.09, "SOUTH", "First frame requested", CANVAS_FILE, [
       "FIRST_FRAME_REQUESTED",
       "FRAME_REQUESTED"
     ]),
-
-    stage("F13J_FIRST_FRAME_DETECTED", "F13", 13.10, "SOUTH", "First frame detected", [
+    stage("F13J_FIRST_FRAME_DETECTED", "F13", 13.10, "SOUTH", "First frame detected", CANVAS_FILE, [
       "FIRST_FRAME_DETECTED",
       "FRAME_DETECTED",
       "IMAGE_RENDERED"
     ]),
-
-    stage("F13K_CANVAS_READY", "F13", 13.11, "SOUTH", "Canvas ready", [
+    stage("F13K_CANVAS_READY", "F13", 13.11, "SOUTH", "Canvas ready", CANVAS_FILE, [
       "CANVAS_READY",
       "CANVAS_COMPLETE"
     ]),
-
-    stage("F13L_VISIBLE_PROOF_STARTED", "F13", 13.12, "SOUTH", "Visible proof started", [
+    stage("F13L_VISIBLE_PROOF_STARTED", "F13", 13.12, "SOUTH", "Visible proof started", CANVAS_FILE, [
       "VISIBLE_CONTENT_PROOF_STARTED",
       "VISIBLE_PROOF_STARTED"
     ]),
-
-    stage("F13M_VISIBLE_PROOF_PASSED", "F13", 13.13, "SOUTH", "Visible proof passed", [
+    stage("F13M_VISIBLE_PROOF_PASSED", "F13", 13.13, "SOUTH", "Visible proof passed", CANVAS_FILE, [
       "VISIBLE_CONTENT_PROOF_PASSED",
       "DEGRADED_VISIBLE_CONTENT_ACCEPTED",
       "VISIBLE_CONTENT_SOFT_GAP",
@@ -237,20 +270,13 @@
       "VISIBLE_FORWARD_PROGRESS",
       "SOUTH_VISIBLE_COMPLETION_READY"
     ]),
-
-    stage("F13N_INSPECT_GATE_READY", "F13", 13.14, "WEST", "Inspect gate ready", [
+    stage("F13N_INSPECT_GATE_READY", "F13", 13.14, "WEST", "Inspect gate ready", WEST_FILE, [
       "INSPECT_MODE_READY",
       "DEGRADED_INSPECT_MODE_ACCEPTED",
       "INSPECT_FALLBACK_READY",
       "RECEIPT_FALLBACK_READY"
     ]),
-
-    stage("F21_COMPLETION_LATCH_REQUESTED", "F21", 21, "NORTH", "Completion latch requested", [
-      "COMPLETION_LATCHED",
-      "COMPLETION_LATCHED_AFTER_VISIBLE_CONTENT_PROOF",
-      "COMPLETION_LATCHED_AFTER_CANVAS_READY",
-      "F21_DEGRADED_COMPLETION_LATCHED"
-    ])
+    stage("F21_COMPLETION_LATCH_REQUESTED", "F21", 21, "NORTH", "Completion latch review", NORTH_FILE, F21_EVENTS)
   ]);
 
   const STAGE_BY_EVENT = new Map();
@@ -269,15 +295,22 @@
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     file: FILE,
-    role: "east-cardinal-fibonacci-magnifier-under-north-runtime-table",
+    role: "east-primary-gate-lineup-news-fibonacci",
 
+    fileGatesPrimary: true,
     eastAuthority: true,
+    eastPrimaryGateLineup: true,
     eastUsesNorthDialect: true,
     eastFibonacciMagnifier: true,
     eastMicroStageClassifier: true,
-    eastPublicTransmissionMapLanguage: false,
+    eastPacketDistributor: true,
     northPermissionRequired: true,
     macroRuntimeTableOwnedByNorth: true,
+
+    newsAlignmentProtocolPresent: true,
+    fibonacciSynchronizationPresent: true,
+    primaryGateStreamActive: true,
+    f21FirewallActive: true,
 
     lastNorthContext: null,
     lastClassification: null,
@@ -289,7 +322,10 @@
     progressOnlyCount: 0,
     falseCompletionBlockCount: 0,
     markerOnlyHoldCount: 0,
+    futureQueueCount: 0,
+    duplicateArchiveCount: 0,
     unknownArchiveCount: 0,
+    f21ReviewCount: 0,
 
     localEvents: [],
     errors: [],
@@ -298,28 +334,10 @@
     graphicBox: false,
     webGL: false,
     visualPassClaimed: false,
+
     startedAt: nowIso(),
     updatedAt: nowIso()
   };
-
-  function stage(id, macroGate, rank, owner, label, events) {
-    return {
-      id,
-      microStageId: id,
-      macroGate,
-      macroRank: MACRO_RANK[macroGate] || 0,
-      rank,
-      owner,
-      label,
-      events: events.slice(),
-      requiresNorthMacroPermission: true,
-      maySuggestCompletion: true,
-      mayCloseGate: false,
-      maySetVisibleProgress: false,
-      maySetReadyText: false,
-      mayClaimFinalVisualPass: false
-    };
-  }
 
   function nowIso() {
     try {
@@ -369,7 +387,7 @@
     }
   }
 
-  function trim(array, max = 120) {
+  function trim(array, max = 160) {
     if (Array.isArray(array) && array.length > max) {
       array.splice(0, array.length - max);
     }
@@ -465,6 +483,7 @@
       source.event,
       source.checkpointEvent,
       source.checkpointCandidate,
+      source.activeGateId,
       detail.microStageId,
       detail.checkpointId,
       detail.phase,
@@ -472,11 +491,13 @@
       detail.event,
       detail.checkpointEvent,
       detail.checkpointCandidate,
+      detail.activeGateId,
       snapshot.microStageId,
       snapshot.checkpointId,
       snapshot.phase,
       snapshot.id,
-      snapshot.event
+      snapshot.event,
+      snapshot.activeGateId
     ].filter((item) => item !== undefined && item !== null && item !== "");
 
     const name = candidates.length ? safeString(candidates[0]) : "";
@@ -489,6 +510,7 @@
       id: safeString(source.id || detail.id || source.checkpointId || detail.checkpointId || name),
       phase: safeString(source.phase || detail.phase || name),
       checkpointId: safeString(source.checkpointId || detail.checkpointId || name),
+      activeGateId: safeString(source.activeGateId || detail.activeGateId || snapshot.activeGateId || ""),
       candidates: candidates.map(String),
       detail: clonePlain(detail),
       snapshot: clonePlain(snapshot),
@@ -499,6 +521,7 @@
 
   function mergeEvidence(event = {}, context = {}) {
     const normalized = normalizeEvent(event);
+
     return {
       ...clonePlain(context || {}),
       ...clonePlain(normalized.snapshot || {}),
@@ -511,17 +534,21 @@
     const text = safeString(value).toUpperCase();
 
     if (text.includes("F21") || text.includes("COMPLETION") || text.includes("LATCH")) return "F21";
-    if (text.includes("F13") || text.includes("CANVAS") || text.includes("VISIBLE") || text.includes("ATLAS") || text.includes("TEXTURE") || text.includes("FRAME") || text.includes("INSPECT")) return "F13";
-    if (text.includes("F8") || text.includes("CONDUCTOR") || text.includes("HYDRAT")) return "F8";
-    if (text.includes("F5") || text.includes("AUTHORITY") || text.includes("RUNTIME_TABLE")) return "F5";
-    if (text.includes("F3") || text.includes("SCRIPT")) return "F3";
+    if (
+      text.includes("F13") ||
+      text.includes("CANVAS") ||
+      text.includes("VISIBLE") ||
+      text.includes("ATLAS") ||
+      text.includes("TEXTURE") ||
+      text.includes("FRAME") ||
+      text.includes("INSPECT") ||
+      text.includes("IMAGE_RENDERED")
+    ) return "F13";
+    if (text.includes("F8") || text.includes("CONDUCTOR") || text.includes("HYDRAT") || text.includes("API_RECEIPT_RUNTIME")) return "F8";
+    if (text.includes("F5") || text.includes("AUTHORITY") || text.includes("RUNTIME_TABLE") || text.includes("NORTH_PRESENT")) return "F5";
+    if (text.includes("F3") || text.includes("SCRIPT") || text.includes("INDEX_API")) return "F3";
     if (text.includes("F2") || text.includes("FIRST_PAINT") || text.includes("COCKPIT")) return "F2";
-    if (text.includes("F1") || text.includes("SHELL") || text.includes("LEDGER")) return "F1";
-
-    if (text.includes("SOUTH_OUTPUT") || text.includes("OUTPUT")) return "F13";
-    if (text.includes("NORTH_RETURN") || text.includes("COMPLETE")) return "F21";
-    if (text.includes("NORTH_ADMISSION") || text.includes("WEST_SYNCHRONIZER")) return "F8";
-    if (text.includes("EAST_IGNITION")) return "F1";
+    if (text.includes("F1") || text.includes("SHELL") || text.includes("LEDGER") || text.includes("DOCUMENT")) return "F1";
 
     return "";
   }
@@ -537,10 +564,10 @@
       "DexterRuntimeTable",
       "HEARTH_NORTH_COMMAND_RUNTIME_TABLE",
       "HEARTH_NORTH_COMMAND_TABLE",
-      "HEARTH_NORTH_TRANSMISSION_GOVERNOR",
+      "HEARTH_NORTH_MACRO_DISTRIBUTOR",
       "DEXTER_LAB.runtimeTable",
       "DEXTER_LAB.cardinalRuntimeTableNorth",
-      "DEXTER_LAB.northTransmissionGovernor"
+      "DEXTER_LAB.northMacroDistributor"
     ]);
 
     const northReceipt =
@@ -548,7 +575,8 @@
       firstGlobal([
         "HEARTH_NORTH_COMMAND_RUNTIME_TABLE_RECEIPT",
         "HEARTH_NORTH_CYCLICAL_CHECKPOINT_RECEIPT",
-        "LAB_RUNTIME_TABLE_NORTH_TRANSMISSION_RECEIPT"
+        "LAB_RUNTIME_TABLE_NORTH_TRANSMISSION_RECEIPT",
+        "LAB_RUNTIME_TABLE_NORTH_MACRO_DISTRIBUTOR_RECEIPT"
       ]) ||
       {};
 
@@ -558,12 +586,17 @@
       supplied.activeCheckpointId ||
       supplied.activeFibonacci ||
       supplied.activeGear ||
+      supplied.activeStageId ||
       northReceipt.activeGateId ||
       northReceipt.activeCheckpointId ||
       northReceipt.activeFibonacci ||
       northReceipt.activeGear ||
-      datasetValue("hearthSouthActiveFibonacci", "") ||
-      datasetValue("activeGear", "");
+      northReceipt.activeStageId ||
+      northReceipt.activeFileGate ||
+      datasetValue("activeGateId", "") ||
+      datasetValue("activeFibonacci", "") ||
+      datasetValue("activeGear", "") ||
+      datasetValue("activeStageId", "");
 
     const activeMacroGate =
       supplied.northActiveMacroGate ||
@@ -572,6 +605,7 @@
       deriveMacroGate(supplied.activeGateId) ||
       deriveMacroGate(supplied.activeCheckpointId) ||
       deriveMacroGate(northReceipt.activeGateId) ||
+      deriveMacroGate(northReceipt.activeStageId) ||
       "";
 
     const contextPresent = Boolean(
@@ -588,20 +622,25 @@
       safeBool(supplied.f21AllowedByNorth, false) ||
       safeBool(supplied.newsGatePassedBeforeF21, false) ||
       safeBool(supplied.newsGateDegradedBeforeF21, false) ||
+      safeBool(supplied.downstreamReleaseAuthorized, false) ||
       safeBool(northReceipt.f21Allowed, false) ||
       safeBool(northReceipt.newsGatePassedBeforeF21, false) ||
-      safeBool(northReceipt.newsGateDegradedBeforeF21, false)
+      safeBool(northReceipt.newsGateDegradedBeforeF21, false) ||
+      safeBool(northReceipt.downstreamReleaseAuthorized, false)
     );
 
     const packet = {
       contract: CONTRACT,
       receipt: RECEIPT,
+      northFile: NORTH_FILE,
       northRuntimeTableObserved: Boolean(northApi || northReceipt.contract),
       northContextPresent: contextPresent,
-      northContract: safeString(northReceipt.contract || northApi && northApi.contract || ""),
-      northReceipt: safeString(northReceipt.receipt || northApi && northApi.receipt || ""),
+      northContract: safeString(northReceipt.contract || (northApi && northApi.contract) || ""),
+      northReceipt: safeString(northReceipt.receipt || (northApi && northApi.receipt) || ""),
       northActiveGateId: safeString(northReceipt.activeGateId || supplied.activeGateId || supplied.northActiveGateId || ""),
       northActiveCheckpointId: safeString(northReceipt.activeCheckpointId || supplied.activeCheckpointId || ""),
+      northActiveStageId: safeString(northReceipt.activeStageId || supplied.activeStageId || ""),
+      northActiveFileGate: safeString(northReceipt.activeFileGate || supplied.activeFileGate || ""),
       northActiveFibonacci: safeString(northReceipt.activeFibonacci || supplied.activeFibonacci || supplied.northActiveFibonacci || activeMacroGate),
       northActiveMacroGate: activeMacroGate,
       northActiveSource: safeString(activeSource),
@@ -633,7 +672,10 @@
       if (STAGE_BY_EVENT.has(key)) return STAGE_BY_EVENT.get(key);
     }
 
-    return null;
+    const derived = deriveMacroGate(candidates.join(" "));
+    if (!derived) return null;
+
+    return MICRO_STAGES.find((item) => item.macroGate === derived) || null;
   }
 
   function isProgressOnlyEvent(event = {}) {
@@ -655,34 +697,39 @@
   }
 
   function classifyRouteConductorEvidence(evidence = {}) {
+    const conductorApi = firstGlobal([
+      "HEARTH_ROUTE_CONDUCTOR",
+      "HearthRouteConductor",
+      "HEARTH_SOUTH_ROUTE_CONDUCTOR",
+      "HEARTH.southRouteConductor",
+      "DEXTER_LAB.hearthSouthRouteConductor"
+    ]);
+
+    const conductorReceipt = firstGlobal([
+      "HEARTH_ROUTE_CONDUCTOR_RECEIPT",
+      "HEARTH_SOUTH_ROUTE_CONDUCTOR_RECEIPT",
+      "HEARTH.southRouteConductorReceipt",
+      "DEXTER_LAB.hearthSouthRouteConductorReceipt"
+    ]);
+
     const markerPresent = Boolean(
       safeBool(evidence.routeConductorMarkerPresent, false) ||
       safeBool(evidence.conductorMarkerPresent, false) ||
       safeBool(evidence.hearthRouteConductorMarkerPresent, false) ||
       root.__HEARTH_ROUTE_CONDUCTOR_MARKER__ === true ||
-      datasetValue("hearthRouteConductorMarkerPresent", "") === "true"
+      datasetValue("hearthRouteConductorMarkerPresent", "") === "true" ||
+      datasetValue("routeConductorMarkerPresent", "") === "true"
     );
 
     const apiPresent = Boolean(
       safeBool(evidence.routeConductorApiPresent, false) ||
       safeBool(evidence.routeConductorGlobalPresent, false) ||
-      firstGlobal([
-        "HEARTH_ROUTE_CONDUCTOR",
-        "HearthRouteConductor",
-        "HEARTH_SOUTH_ROUTE_CONDUCTOR",
-        "HEARTH.southRouteConductor",
-        "DEXTER_LAB.hearthSouthRouteConductor"
-      ])
+      conductorApi
     );
 
     const receiptPresent = Boolean(
       safeBool(evidence.routeConductorReceiptPresent, false) ||
-      firstGlobal([
-        "HEARTH_ROUTE_CONDUCTOR_RECEIPT",
-        "HEARTH_SOUTH_ROUTE_CONDUCTOR_RECEIPT",
-        "HEARTH.southRouteConductorReceipt",
-        "DEXTER_LAB.hearthSouthRouteConductorReceipt"
-      ])
+      conductorReceipt
     );
 
     const runtimeActive = Boolean(
@@ -694,6 +741,7 @@
     const hydrated = Boolean(markerPresent && apiPresent && receiptPresent && runtimeActive);
 
     return {
+      routeConductorFile: ROUTE_CONDUCTOR_FILE,
       routeConductorMarkerPresent: markerPresent,
       routeConductorApiPresent: apiPresent,
       routeConductorReceiptPresent: receiptPresent,
@@ -710,40 +758,47 @@
     const canvasPresent = Boolean(
       safeBool(evidence.planetCanvasPresent, false) ||
       safeBool(evidence.canvasPresent, false) ||
+      datasetValue("hearthPlanetCanvasPresent", "") === "true" ||
       datasetValue("hearthSouthPlanetCanvasPresent", "") === "true"
     );
 
     const canvasNonZeroSize = Boolean(
       safeBool(evidence.planetCanvasNonZeroSize, false) ||
       safeBool(evidence.canvasNonZeroSize, false) ||
+      datasetValue("hearthPlanetCanvasNonZeroSize", "") === "true" ||
       datasetValue("hearthSouthPlanetCanvasNonZeroSize", "") === "true"
     );
 
     const visibleHint = Boolean(
       safeBool(evidence.visiblePlanetHintPresent, false) ||
+      datasetValue("hearthCanvasVisiblePlanetHintPresent", "") === "true" ||
       datasetValue("hearthSouthVisiblePlanetHintPresent", "") === "true"
     );
 
     const contentProof = Boolean(
       safeBool(evidence.visibleContentProof, false) ||
       safeBool(evidence.canvasVisibleContentProof, false) ||
+      datasetValue("hearthCanvasVisibleContentProof", "") === "true" ||
       datasetValue("hearthSouthVisibleContentProof", "") === "true"
     );
 
     const strictProof = Boolean(
       safeBool(evidence.visibleContentStrictProof, false) ||
-      safeBool(evidence.canvasVisibleContentStrictProof, false)
+      safeBool(evidence.canvasVisibleContentStrictProof, false) ||
+      datasetValue("hearthCanvasVisibleContentStrictProof", "") === "true"
     );
 
     const softProof = Boolean(
       safeBool(evidence.visibleContentSoftGap, false) ||
       safeBool(evidence.visibleForwardProgress, false) ||
       safeBool(evidence.visibleContentAdmissible, false) ||
+      datasetValue("hearthCanvasVisibleContentSoftGap", "") === "true" ||
       datasetValue("hearthSouthVisibleContentSoftGap", "") === "true"
     );
 
     const hardFail = Boolean(
       safeBool(evidence.visibleContentHardFail, false) ||
+      datasetValue("hearthCanvasVisibleContentHardFail", "") === "true" ||
       datasetValue("hearthSouthVisibleContentHardFail", "") === "true"
     );
 
@@ -771,6 +826,7 @@
     );
 
     return {
+      canvasFile: CANVAS_FILE,
       planetCanvasPresent: canvasPresent,
       planetCanvasNonZeroSize: canvasNonZeroSize,
       visiblePlanetHintPresent: visibleHint,
@@ -783,6 +839,7 @@
       visiblePlanetProofValid,
       visibleHintIsProof: false,
       canvasPresenceIsProof: false,
+      imageRenderedIsCoherencePass: false,
       classification: visiblePlanetProofValid ? "F13_VISIBLE_PLANET_PROOF_VALID" : hardFail ? "F13_VISIBLE_PROOF_HARD_FAIL" : "F13_VISIBLE_PROOF_PENDING",
       firstFailedCoordinate: visiblePlanetProofValid ? "NONE_F13_VISIBLE_PLANET_PROOF_VALID" : hardFail ? "F13_VISIBLE_PROOF_HARD_FAIL" : "WAITING_F13_VISIBLE_PLANET_PROOF",
       recommendedNextRenewalTarget: visiblePlanetProofValid ? NORTH_FILE : CANVAS_FILE
@@ -818,23 +875,30 @@
       contract: CONTRACT,
       receipt: RECEIPT,
       file: FILE,
+      sourceFile: FILE,
       role: state.role,
 
+      fileGatesPrimary: true,
       eastAuthority: true,
+      eastPrimaryGateLineup: true,
       eastUsesNorthDialect: true,
       eastFibonacciMagnifier: true,
       eastMicroStageClassifier: true,
-      eastPublicTransmissionMapLanguage: false,
       northPermissionRequired: true,
       macroRuntimeTableOwnedByNorth: true,
+
+      newsAlignmentProtocolPresent: true,
+      fibonacciSynchronizationPresent: true,
 
       normalizedEvent: clonePlain(normalized),
       targetStage: clonePlain(stageItem),
       targetMicroStageId: stageItem ? stageItem.id : "",
       targetMacroGate: stageItem ? stageItem.macroGate : "",
+      targetMacroRank: stageItem ? stageItem.macroRank : 0,
       targetOwner: stageItem ? stageItem.owner : "",
-      northContext: clonePlain(northContext),
+      targetFileGate: stageItem ? stageItem.fileGate : "",
 
+      northContext: clonePlain(northContext),
       routeConductor: route,
       visibleProof: visible,
 
@@ -843,6 +907,7 @@
       eastOwnsVisibleProgress: false,
       eastOwnsCheckpointClosure: false,
       eastOwnsF21Latch: false,
+      eastOwnsReadyText: false,
       eastOwnsFinalVisualPassClaim: false,
 
       generatedImage: false,
@@ -850,246 +915,6 @@
       webGL: false,
       visualPassClaimed: false,
       classifiedAt: nowIso()
-    };
-  }
-
-  function finalizeClassification(packet) {
-    state.classifyCount += 1;
-    state.lastClassification = clonePlain(packet);
-    state.updatedAt = nowIso();
-
-    if (packet.action === ACTIONS.ARCHIVE_PROGRESS_ONLY) state.progressOnlyCount += 1;
-    if (packet.action === ACTIONS.BLOCK_FALSE_COMPLETION) state.falseCompletionBlockCount += 1;
-    if (packet.action === ACTIONS.HELD_FOR_SOUTH_CONDUCTOR_BODY) state.markerOnlyHoldCount += 1;
-    if (packet.action === ACTIONS.UNKNOWN_EVENT_ARCHIVE) state.unknownArchiveCount += 1;
-
-    state.lastWestPacket = classifyForWest(packet);
-    state.lastSouthPacket = classifyForSouth(packet);
-    state.lastNorthPacket = classifyForNorth(packet);
-
-    record("EAST_FIBONACCI_CLASSIFICATION", {
-      action: packet.action,
-      microStage: packet.targetMicroStageId,
-      macroGate: packet.targetMacroGate,
-      reason: packet.reason
-    });
-
-    publishDataset();
-    return packet;
-  }
-
-  function createNewsFibonacciClassification(event = {}, context = {}) {
-    const normalized = normalizeEvent(event);
-    const evidence = mergeEvidence(event, context);
-    const northContext = readNorthContext(evidence);
-    const stageItem = mapEventToStage(normalized);
-    const packet = basePacket(normalized, stageItem, northContext, evidence);
-
-    if (isProgressOnlyEvent(normalized)) {
-      return finalizeClassification({
-        ...packet,
-        action: ACTIONS.ARCHIVE_PROGRESS_ONLY,
-        legacyAction: LEGACY_ACTIONS.ARCHIVE,
-        gapClass: GAP_CLASS.PROGRESS_ONLY,
-        reason: "progress-only-telemetry-archived-without-mutating-north-state",
-        visibleUpdateAllowed: false,
-        westReviewRecommended: false,
-        southProofRequired: false,
-        firstFailedCoordinate: "NONE_PROGRESS_ONLY_ARCHIVED",
-        recommendedNextRenewalTarget: NORTH_FILE
-      });
-    }
-
-    if (!stageItem) {
-      const falseCompletion = isFalseCompletionMutation(event, context);
-
-      return finalizeClassification({
-        ...packet,
-        action: falseCompletion ? ACTIONS.BLOCK_FALSE_COMPLETION : ACTIONS.UNKNOWN_EVENT_ARCHIVE,
-        legacyAction: falseCompletion ? LEGACY_ACTIONS.BLOCK : LEGACY_ACTIONS.ARCHIVE,
-        gapClass: falseCompletion ? GAP_CLASS.FALSE_COMPLETION_BLOCK : GAP_CLASS.UNKNOWN_NEUTRAL,
-        reason: falseCompletion ? "unknown-event-contained-false-completion-language" : "unknown-event-archived-neutral",
-        falseCompletionDetected: falseCompletion,
-        visibleUpdateAllowed: false,
-        westReviewRecommended: falseCompletion,
-        southProofRequired: false,
-        firstFailedCoordinate: falseCompletion ? "FALSE_COMPLETION_LANGUAGE_BLOCKED" : "NONE_UNKNOWN_EVENT_ARCHIVED",
-        recommendedNextRenewalTarget: falseCompletion ? NORTH_FILE : FILE
-      });
-    }
-
-    if (stageItem.macroGate === "F21") {
-      if (!f21Allowed(northContext)) {
-        return finalizeClassification({
-          ...packet,
-          action: ACTIONS.BLOCK_FALSE_COMPLETION,
-          legacyAction: LEGACY_ACTIONS.BLOCK,
-          gapClass: GAP_CLASS.FALSE_COMPLETION_BLOCK,
-          reason: "f21-requires-north-news-latch-permission",
-          f21Proposed: true,
-          f21AllowedByNorth: false,
-          f21BlockedByEastSafety: true,
-          f21RequiresNorthNewsLatch: true,
-          completionLatchedByEast: false,
-          visibleUpdateAllowed: false,
-          westReviewRecommended: true,
-          southProofRequired: true,
-          firstFailedCoordinate: "F21_BLOCKED_NORTH_PERMISSION_MISSING",
-          recommendedNextRenewalTarget: NORTH_FILE
-        });
-      }
-
-      return finalizeClassification({
-        ...packet,
-        action: ACTIONS.F21_PROPOSED_FOR_NORTH_REVIEW,
-        legacyAction: LEGACY_ACTIONS.HELD,
-        gapClass: GAP_CLASS.F21_NORTH_REVIEW_REQUIRED,
-        reason: "f21-proposed-for-north-review-east-does-not-latch",
-        f21Proposed: true,
-        f21AllowedByNorth: true,
-        f21BlockedByEastSafety: false,
-        f21RequiresNorthNewsLatch: true,
-        completionLatchedByEast: false,
-        visibleUpdateAllowed: false,
-        westReviewRecommended: true,
-        southProofRequired: false,
-        firstFailedCoordinate: "F21_READY_FOR_NORTH_NEWS_REVIEW",
-        recommendedNextRenewalTarget: NORTH_FILE
-      });
-    }
-
-    if (isFalseCompletionMutation(event, context)) {
-      return finalizeClassification({
-        ...packet,
-        action: ACTIONS.BLOCK_FALSE_COMPLETION,
-        legacyAction: LEGACY_ACTIONS.BLOCK,
-        gapClass: GAP_CLASS.FALSE_COMPLETION_BLOCK,
-        reason: "false-ready-100-f21-or-visual-pass-language-blocked-before-north-latch",
-        falseCompletionDetected: true,
-        visibleUpdateAllowed: false,
-        westReviewRecommended: true,
-        southProofRequired: false,
-        firstFailedCoordinate: "FALSE_COMPLETION_LANGUAGE_BLOCKED",
-        recommendedNextRenewalTarget: NORTH_FILE
-      });
-    }
-
-    if (stageItem.macroGate === "F8" && packet.routeConductor.routeConductorMarkerOnly) {
-      return finalizeClassification({
-        ...packet,
-        action: ACTIONS.HELD_FOR_SOUTH_CONDUCTOR_BODY,
-        legacyAction: LEGACY_ACTIONS.HELD,
-        gapClass: GAP_CLASS.SOUTH_CONDUCTOR_BODY_REQUIRED,
-        reason: "route-conductor-marker-observed-but-api-receipt-runtime-body-missing",
-        southMarkerObservedOnly: true,
-        southRuntimeBodyObserved: false,
-        southReceiptObserved: false,
-        visibleUpdateAllowed: false,
-        westReviewRecommended: true,
-        southProofRequired: true,
-        firstFailedCoordinate: "WAITING_ROUTE_CONDUCTOR_API_RECEIPT_RUNTIME",
-        recommendedNextRenewalTarget: ROUTE_CONDUCTOR_FILE
-      });
-    }
-
-    if (!northContext.northContextPresent || !northContext.northPermissionConfirmed) {
-      return finalizeClassification({
-        ...packet,
-        action: ACTIONS.HELD_FOR_NORTH_CONTEXT,
-        legacyAction: LEGACY_ACTIONS.HELD,
-        gapClass: GAP_CLASS.NORTH_CONTEXT_REQUIRED,
-        reason: "north-runtime-table-context-required-before-east-magnification-can-admit",
-        northContextPresent: false,
-        northPermissionConfirmed: false,
-        classificationAdvisoryOnly: true,
-        visibleUpdateAllowed: false,
-        westReviewRecommended: true,
-        southProofRequired: stageItem.owner === "SOUTH",
-        firstFailedCoordinate: "WAITING_NORTH_RUNTIME_TABLE_ACTIVE_GATE_CONTEXT",
-        recommendedNextRenewalTarget: NORTH_FILE
-      });
-    }
-
-    const compare = macroCompare(stageItem.macroGate, northContext.northActiveMacroGate);
-
-    if (compare > 0) {
-      return finalizeClassification({
-        ...packet,
-        action: ACTIONS.QUEUE_FOR_ACTIVE_GATE,
-        legacyAction: LEGACY_ACTIONS.QUEUE,
-        gapClass: GAP_CLASS.FUTURE_STAGE,
-        reason: "event-belongs-to-future-fibonacci-lane-under-north-runtime-table",
-        futureStageDetected: true,
-        visibleUpdateAllowed: false,
-        westReviewRecommended: true,
-        southProofRequired: stageItem.owner === "SOUTH",
-        firstFailedCoordinate: `WAITING_NORTH_ACTIVE_GATE_${northContext.northActiveMacroGate || "UNKNOWN"}`,
-        recommendedNextRenewalTarget: NORTH_FILE
-      });
-    }
-
-    if (compare < 0) {
-      return finalizeClassification({
-        ...packet,
-        action: ACTIONS.ARCHIVE_DUPLICATE_OR_PRIOR,
-        legacyAction: LEGACY_ACTIONS.ARCHIVE,
-        gapClass: GAP_CLASS.DUPLICATE_OR_PRIOR_STAGE,
-        reason: "event-belongs-to-prior-fibonacci-lane-and-is-archived-without-mutation",
-        duplicateStageDetected: true,
-        visibleUpdateAllowed: false,
-        westReviewRecommended: false,
-        southProofRequired: false,
-        firstFailedCoordinate: "NONE_PRIOR_STAGE_ARCHIVED",
-        recommendedNextRenewalTarget: NORTH_FILE
-      });
-    }
-
-    return finalizeClassification({
-      ...packet,
-      action: ACTIONS.ADMIT_FOR_NORTH_REVIEW,
-      legacyAction: LEGACY_ACTIONS.ADMIT,
-      gapClass: GAP_CLASS.NONE,
-      reason: "event-belongs-inside-north-permitted-fibonacci-lane",
-      northPermissionConfirmed: true,
-      visibleUpdateAllowed: false,
-      westReviewRecommended: true,
-      southProofRequired: stageItem.owner === "SOUTH",
-      firstFailedCoordinate: "NONE_EAST_CLASSIFICATION_READY_FOR_NORTH_REVIEW",
-      recommendedNextRenewalTarget: stageItem.owner === "SOUTH" ? SOUTH_FILE : NORTH_FILE
-    });
-  }
-
-  function classifyFibonacciStage(event = {}, context = {}) {
-    return createNewsFibonacciClassification(event, context);
-  }
-
-  function classifyTransmissionEvent(event = {}, context = {}) {
-    return createNewsFibonacciClassification(event, context);
-  }
-
-  function classifyCheckpointEvent(event = {}, sessionLike = {}) {
-    const result = createNewsFibonacciClassification(event, sessionLike);
-
-    return {
-      action: result.legacyAction,
-      eastAction: result.action,
-      gapClass: result.gapClass,
-      checkpointId: result.targetMicroStageId,
-      checkpointRank: result.targetStage ? result.targetStage.rank : 0,
-      activeCheckpointId: result.northContext ? result.northContext.northActiveGateId : "",
-      activeFibonacci: result.northContext ? result.northContext.northActiveFibonacci : "",
-      reason: result.reason,
-      mayAdvance: result.action === ACTIONS.ADMIT_FOR_NORTH_REVIEW,
-      maySetProgress: false,
-      maySetReadyText: false,
-      eastOwnsProgress: false,
-      northMustDecide: true,
-      visualUpdateAllowed: false,
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false,
-      rawClassification: result
     };
   }
 
@@ -1124,6 +949,8 @@
       northMustDecide: true,
       eastOwnsAdmissibilityJudgment: false,
       westOwnsAdmissibilityJudgment: true,
+      recommendedNextRenewalTarget: packet.recommendedNextRenewalTarget,
+      firstFailedCoordinate: packet.firstFailedCoordinate,
       visualPassClaimed: false,
       generatedAt: nowIso()
     };
@@ -1141,6 +968,7 @@
       contract: CONTRACT,
       receipt: RECEIPT,
       targetFile: packet.targetMacroGate === "F8" ? ROUTE_CONDUCTOR_FILE : SOUTH_FILE,
+      routeConductorFile: ROUTE_CONDUCTOR_FILE,
       canvasFile: CANVAS_FILE,
       sourceFile: FILE,
       southProofRequired: packet.southProofRequired === true,
@@ -1189,6 +1017,7 @@
       f21ReviewRequest: packet.action === ACTIONS.F21_PROPOSED_FOR_NORTH_REVIEW,
       microStageId: packet.targetMicroStageId,
       macroGate: packet.targetMacroGate,
+      macroRank: packet.targetMacroRank,
       reason: packet.reason,
       firstFailedCoordinate: packet.firstFailedCoordinate,
       recommendedNextRenewalTarget: packet.recommendedNextRenewalTarget,
@@ -1203,6 +1032,250 @@
     return northPacket;
   }
 
+  function finalizeClassification(packet) {
+    state.classifyCount += 1;
+    state.lastClassification = clonePlain(packet);
+    state.updatedAt = nowIso();
+
+    if (packet.action === ACTIONS.ARCHIVE_PROGRESS_ONLY) state.progressOnlyCount += 1;
+    if (packet.action === ACTIONS.BLOCK_FALSE_COMPLETION) state.falseCompletionBlockCount += 1;
+    if (packet.action === ACTIONS.HELD_FOR_SOUTH_CONDUCTOR_BODY) state.markerOnlyHoldCount += 1;
+    if (packet.action === ACTIONS.QUEUE_FOR_ACTIVE_GATE) state.futureQueueCount += 1;
+    if (packet.action === ACTIONS.ARCHIVE_DUPLICATE_OR_PRIOR) state.duplicateArchiveCount += 1;
+    if (packet.action === ACTIONS.UNKNOWN_EVENT_ARCHIVE) state.unknownArchiveCount += 1;
+    if (packet.action === ACTIONS.F21_PROPOSED_FOR_NORTH_REVIEW) state.f21ReviewCount += 1;
+
+    state.lastWestPacket = classifyForWest(packet);
+    state.lastSouthPacket = classifyForSouth(packet);
+    state.lastNorthPacket = classifyForNorth(packet);
+
+    record("EAST_PRIMARY_GATE_LINEUP_CLASSIFICATION", {
+      action: packet.action,
+      microStage: packet.targetMicroStageId,
+      macroGate: packet.targetMacroGate,
+      reason: packet.reason,
+      recommendedNextRenewalTarget: packet.recommendedNextRenewalTarget
+    });
+
+    publishDataset();
+    return packet;
+  }
+
+  function createNewsFibonacciClassification(event = {}, context = {}) {
+    const normalized = normalizeEvent(event);
+    const evidence = mergeEvidence(event, context);
+    const northContext = readNorthContext(evidence);
+    const stageItem = mapEventToStage(normalized);
+    const packet = basePacket(normalized, stageItem, northContext, evidence);
+
+    if (isProgressOnlyEvent(normalized)) {
+      return finalizeClassification({
+        ...packet,
+        action: ACTIONS.ARCHIVE_PROGRESS_ONLY,
+        legacyAction: CHECKPOINT_EVENT_ACTIONS.ARCHIVE,
+        gapClass: GAP_CLASS.PROGRESS_ONLY,
+        reason: "progress-only-telemetry-archived-without-mutating-north-state",
+        visibleUpdateAllowed: false,
+        westReviewRecommended: false,
+        southProofRequired: false,
+        firstFailedCoordinate: "NONE_PROGRESS_ONLY_ARCHIVED",
+        recommendedNextRenewalTarget: NORTH_FILE
+      });
+    }
+
+    if (!stageItem) {
+      const falseCompletion = isFalseCompletionMutation(event, context);
+
+      return finalizeClassification({
+        ...packet,
+        action: falseCompletion ? ACTIONS.BLOCK_FALSE_COMPLETION : ACTIONS.UNKNOWN_EVENT_ARCHIVE,
+        legacyAction: falseCompletion ? CHECKPOINT_EVENT_ACTIONS.BLOCK : CHECKPOINT_EVENT_ACTIONS.ARCHIVE,
+        gapClass: falseCompletion ? GAP_CLASS.FALSE_COMPLETION_BLOCK : GAP_CLASS.UNKNOWN_NEUTRAL,
+        reason: falseCompletion ? "unknown-event-contained-false-completion-pressure" : "unknown-event-archived-neutral",
+        falseCompletionDetected: falseCompletion,
+        visibleUpdateAllowed: false,
+        westReviewRecommended: falseCompletion,
+        southProofRequired: false,
+        firstFailedCoordinate: falseCompletion ? "FALSE_COMPLETION_LANGUAGE_BLOCKED" : "NONE_UNKNOWN_EVENT_ARCHIVED",
+        recommendedNextRenewalTarget: falseCompletion ? NORTH_FILE : FILE
+      });
+    }
+
+    if (stageItem.macroGate === "F21") {
+      if (!f21Allowed(northContext)) {
+        return finalizeClassification({
+          ...packet,
+          action: ACTIONS.BLOCK_FALSE_COMPLETION,
+          legacyAction: CHECKPOINT_EVENT_ACTIONS.BLOCK,
+          gapClass: GAP_CLASS.FALSE_COMPLETION_BLOCK,
+          reason: "f21-pressure-requires-north-permission-before-review",
+          f21Proposed: true,
+          f21AllowedByNorth: false,
+          f21BlockedByEastSafety: true,
+          f21RequiresNorthReview: true,
+          completionLatchedByEast: false,
+          visibleUpdateAllowed: false,
+          westReviewRecommended: true,
+          southProofRequired: true,
+          firstFailedCoordinate: "F21_BLOCKED_NORTH_PERMISSION_MISSING",
+          recommendedNextRenewalTarget: NORTH_FILE
+        });
+      }
+
+      return finalizeClassification({
+        ...packet,
+        action: ACTIONS.F21_PROPOSED_FOR_NORTH_REVIEW,
+        legacyAction: CHECKPOINT_EVENT_ACTIONS.LATCH_REVIEW,
+        gapClass: GAP_CLASS.F21_NORTH_REVIEW_REQUIRED,
+        reason: "f21-proposed-for-north-review-east-does-not-latch",
+        f21Proposed: true,
+        f21AllowedByNorth: true,
+        f21BlockedByEastSafety: false,
+        f21RequiresNorthReview: true,
+        completionLatchedByEast: false,
+        visibleUpdateAllowed: false,
+        westReviewRecommended: true,
+        southProofRequired: false,
+        firstFailedCoordinate: "F21_READY_FOR_NORTH_REVIEW",
+        recommendedNextRenewalTarget: NORTH_FILE
+      });
+    }
+
+    if (isFalseCompletionMutation(event, context)) {
+      return finalizeClassification({
+        ...packet,
+        action: ACTIONS.BLOCK_FALSE_COMPLETION,
+        legacyAction: CHECKPOINT_EVENT_ACTIONS.BLOCK,
+        gapClass: GAP_CLASS.FALSE_COMPLETION_BLOCK,
+        reason: "false-ready-100-f21-or-visual-pass-pressure-blocked-before-north-admission",
+        falseCompletionDetected: true,
+        visibleUpdateAllowed: false,
+        westReviewRecommended: true,
+        southProofRequired: false,
+        firstFailedCoordinate: "FALSE_COMPLETION_LANGUAGE_BLOCKED",
+        recommendedNextRenewalTarget: NORTH_FILE
+      });
+    }
+
+    if (stageItem.macroGate === "F8" && packet.routeConductor.routeConductorMarkerOnly) {
+      return finalizeClassification({
+        ...packet,
+        action: ACTIONS.HELD_FOR_SOUTH_CONDUCTOR_BODY,
+        legacyAction: CHECKPOINT_EVENT_ACTIONS.HELD,
+        gapClass: GAP_CLASS.SOUTH_CONDUCTOR_BODY_REQUIRED,
+        reason: "route-conductor-marker-observed-api-receipt-runtime-body-required",
+        southMarkerObservedOnly: true,
+        southRuntimeBodyObserved: false,
+        southReceiptObserved: false,
+        visibleUpdateAllowed: false,
+        westReviewRecommended: true,
+        southProofRequired: true,
+        firstFailedCoordinate: "WAITING_ROUTE_CONDUCTOR_API_RECEIPT_RUNTIME",
+        recommendedNextRenewalTarget: ROUTE_CONDUCTOR_FILE
+      });
+    }
+
+    if (!northContext.northContextPresent || !northContext.northPermissionConfirmed) {
+      return finalizeClassification({
+        ...packet,
+        action: ACTIONS.HELD_FOR_NORTH_CONTEXT,
+        legacyAction: CHECKPOINT_EVENT_ACTIONS.HELD,
+        gapClass: GAP_CLASS.NORTH_CONTEXT_REQUIRED,
+        reason: "north-runtime-table-active-macro-context-required",
+        northContextPresent: false,
+        northPermissionConfirmed: false,
+        classificationAdvisoryOnly: true,
+        visibleUpdateAllowed: false,
+        westReviewRecommended: true,
+        southProofRequired: stageItem.owner === "SOUTH",
+        firstFailedCoordinate: "WAITING_NORTH_RUNTIME_TABLE_ACTIVE_GATE_CONTEXT",
+        recommendedNextRenewalTarget: NORTH_FILE
+      });
+    }
+
+    const compare = macroCompare(stageItem.macroGate, northContext.northActiveMacroGate);
+
+    if (compare > 0) {
+      return finalizeClassification({
+        ...packet,
+        action: ACTIONS.QUEUE_FOR_ACTIVE_GATE,
+        legacyAction: CHECKPOINT_EVENT_ACTIONS.QUEUE,
+        gapClass: GAP_CLASS.FUTURE_STAGE,
+        reason: "event-belongs-to-future-fibonacci-lane-under-north-runtime-table",
+        futureStageDetected: true,
+        visibleUpdateAllowed: false,
+        westReviewRecommended: true,
+        southProofRequired: stageItem.owner === "SOUTH",
+        firstFailedCoordinate: `WAITING_NORTH_ACTIVE_GATE_${northContext.northActiveMacroGate || "UNKNOWN"}`,
+        recommendedNextRenewalTarget: NORTH_FILE
+      });
+    }
+
+    if (compare < 0) {
+      return finalizeClassification({
+        ...packet,
+        action: ACTIONS.ARCHIVE_DUPLICATE_OR_PRIOR,
+        legacyAction: CHECKPOINT_EVENT_ACTIONS.ARCHIVE,
+        gapClass: GAP_CLASS.DUPLICATE_OR_PRIOR_STAGE,
+        reason: "event-belongs-to-prior-fibonacci-lane-and-is-archived-without-mutation",
+        duplicateStageDetected: true,
+        visibleUpdateAllowed: false,
+        westReviewRecommended: false,
+        southProofRequired: false,
+        firstFailedCoordinate: "NONE_PRIOR_STAGE_ARCHIVED",
+        recommendedNextRenewalTarget: NORTH_FILE
+      });
+    }
+
+    return finalizeClassification({
+      ...packet,
+      action: ACTIONS.ADMIT_FOR_NORTH_REVIEW,
+      legacyAction: CHECKPOINT_EVENT_ACTIONS.ADMIT,
+      gapClass: GAP_CLASS.NONE,
+      reason: "event-belongs-inside-north-permitted-fibonacci-lane",
+      northPermissionConfirmed: true,
+      visibleUpdateAllowed: false,
+      westReviewRecommended: true,
+      southProofRequired: stageItem.owner === "SOUTH",
+      firstFailedCoordinate: "NONE_EAST_CLASSIFICATION_READY_FOR_NORTH_REVIEW",
+      recommendedNextRenewalTarget: stageItem.owner === "SOUTH" ? SOUTH_FILE : NORTH_FILE
+    });
+  }
+
+  function classifyFibonacciStage(event = {}, context = {}) {
+    return createNewsFibonacciClassification(event, context);
+  }
+
+  function classifyTransmissionEvent(event = {}, context = {}) {
+    return createNewsFibonacciClassification(event, context);
+  }
+
+  function classifyCheckpointEvent(event = {}, sessionLike = {}) {
+    const result = createNewsFibonacciClassification(event, sessionLike);
+
+    return {
+      action: result.legacyAction,
+      eastAction: result.action,
+      gapClass: result.gapClass,
+      checkpointId: result.targetMicroStageId,
+      checkpointRank: result.targetStage ? result.targetStage.rank : 0,
+      activeCheckpointId: result.northContext ? result.northContext.northActiveGateId : "",
+      activeFibonacci: result.northContext ? result.northContext.northActiveFibonacci : "",
+      reason: result.reason,
+      mayAdvance: result.action === ACTIONS.ADMIT_FOR_NORTH_REVIEW,
+      maySetProgress: false,
+      maySetReadyText: false,
+      eastOwnsProgress: false,
+      northMustDecide: true,
+      visualUpdateAllowed: false,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false,
+      rawClassification: result
+    };
+  }
+
   function createChronologicalFibonacciPlan() {
     return MICRO_STAGES.map((item) => ({
       id: item.id,
@@ -1213,8 +1286,9 @@
       rank: item.rank,
       owner: item.owner,
       label: item.label,
+      fileGate: item.fileGate,
       events: item.events.slice(),
-      requiresNorthMacroPermission: true,
+      northAdmissionRequired: true,
       eastOwnsCompletion: false,
       northMustAdmit: true,
       status: "PENDING",
@@ -1226,15 +1300,17 @@
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      authority: "east-north-dialect-fibonacci-magnifier-plan",
+      authority: "east-primary-gate-lineup-news-fibonacci-plan",
       runtimeTableLanguagePreserved: true,
-      newsProtocolSynchronized: true,
-      fibonacciSynchronizationActive: true,
-      eastFibonacciMagnifier: true,
-      eastPublicTransmissionMapLanguage: false,
+      newsAlignmentProtocolPresent: true,
+      fibonacciSynchronizationPresent: true,
+      eastPrimaryGateLineup: true,
       northOwnsActiveGate: true,
       northOwnsCheckpointAdmission: true,
       northOwnsF21Latch: true,
+      fileGates: clonePlain(FILE_GATES),
+      newsGates: clonePlain(NEWS_GATES),
+      eastLanguage: clonePlain(EAST_LANGUAGE),
       sequence: createChronologicalFibonacciPlan(),
       generatedImage: false,
       graphicBox: false,
@@ -1246,7 +1322,7 @@
 
   function createCheckpointSession(_sequenceInput = null, options = {}) {
     const sessionState = {
-      sessionId: options.id || options.sessionId || `east-fibonacci-magnifier-${Math.random().toString(36).slice(2, 9)}`,
+      sessionId: options.id || options.sessionId || `east-primary-lineup-${Math.random().toString(36).slice(2, 9)}`,
       route: options.route || "/showroom/globe/hearth/",
       planetId: options.planetId || "hearth",
       planetLabel: options.planetLabel || "Hearth",
@@ -1258,6 +1334,7 @@
 
     function submitEvent(event = {}, context = {}) {
       sessionState.submittedCount += 1;
+
       const classification = createNewsFibonacciClassification(event, {
         ...options,
         ...context
@@ -1292,13 +1369,13 @@
       return {
         contract: CONTRACT,
         receipt: RECEIPT,
-        checkpointSessionContract: "LAB_RUNTIME_TABLE_CARDINAL_EAST_NORTH_DIALECT_NON_GOVERNING_SESSION_v1",
-        checkpointSessionReceipt: "LAB_RUNTIME_TABLE_CARDINAL_EAST_NORTH_DIALECT_NON_GOVERNING_SESSION_RECEIPT_v1",
+        checkpointSessionContract: "LAB_RUNTIME_TABLE_EAST_PRIMARY_GATE_LINEUP_SESSION_v1",
+        checkpointSessionReceipt: "LAB_RUNTIME_TABLE_EAST_PRIMARY_GATE_LINEUP_SESSION_RECEIPT_v1",
         sessionId: sessionState.sessionId,
         route: sessionState.route,
         planetId: sessionState.planetId,
         planetLabel: sessionState.planetLabel,
-        nonGoverningCompatibilityShell: true,
+        eastPrimaryGateLineup: true,
         eastFibonacciMagnifier: true,
         eastUsesNorthDialect: true,
         northOwnsActiveGate: true,
@@ -1325,6 +1402,7 @@
       sessionId: sessionState.sessionId,
       submitEvent,
       submitMany,
+      submit: submitEvent,
       completeActive: submitEvent,
       canAdvanceTo() {
         return false;
@@ -1351,13 +1429,13 @@
       getReceiptText() {
         const r = getReceipt();
         return [
-          "LAB_RUNTIME_TABLE_CARDINAL_EAST_NORTH_DIALECT_NON_GOVERNING_SESSION_RECEIPT",
+          "LAB_RUNTIME_TABLE_EAST_PRIMARY_GATE_LINEUP_SESSION_RECEIPT",
           "",
           `contract=${r.contract}`,
           `receipt=${r.receipt}`,
           `sessionId=${r.sessionId}`,
           `route=${r.route}`,
-          `nonGoverningCompatibilityShell=${r.nonGoverningCompatibilityShell}`,
+          `eastPrimaryGateLineup=${r.eastPrimaryGateLineup}`,
           `eastFibonacciMagnifier=${r.eastFibonacciMagnifier}`,
           `eastUsesNorthDialect=${r.eastUsesNorthDialect}`,
           `northOwnsActiveGate=${r.northOwnsActiveGate}`,
@@ -1394,6 +1472,7 @@
       baselineContract: BASELINE_CONTRACT,
       version: VERSION,
       destinationFile: FILE,
+      file: FILE,
       northFile: NORTH_FILE,
       westFile: WEST_FILE,
       southFile: SOUTH_FILE,
@@ -1402,15 +1481,24 @@
       status: "active",
       role: state.role,
 
+      fileGatesPrimary: true,
+      fileGates: clonePlain(FILE_GATES),
+      eastLanguage: clonePlain(EAST_LANGUAGE),
+
       eastAuthority: true,
       eastLoaded: true,
       eastFallbackUsed: false,
+      eastPrimaryGateLineup: true,
       eastUsesNorthDialect: true,
       eastFibonacciMagnifier: true,
       eastMicroStageClassifier: true,
-      eastPublicTransmissionMapLanguage: false,
+      eastPacketDistributor: true,
       northPermissionRequired: true,
       macroRuntimeTableOwnedByNorth: true,
+
+      newsAlignmentProtocolPresent: true,
+      fibonacciSynchronizationPresent: true,
+      primaryGateStreamActive: true,
 
       ownsEventNormalization: true,
       ownsEventAliasRecognition: true,
@@ -1421,20 +1509,28 @@
       ownsFutureStageQueueClassification: true,
       ownsDuplicateStageArchiveClassification: true,
       ownsProgressOnlyArchiveClassification: true,
+      ownsPacketDistribution: true,
 
-      ownsNorthRuntimeTableAuthority: false,
-      ownsActiveGateCursor: false,
-      ownsVisibleLoaderPercentage: false,
-      ownsCheckpointClosure: false,
-      ownsF21Latch: false,
-      ownsReadyText: false,
-      ownsSouthVisibleProof: false,
-      ownsWestAdmissibilityJudgment: false,
-      ownsCanvasDrawing: false,
-      ownsCanvasChildTruth: false,
-      ownsRouteConductorRuntime: false,
-      ownsPlanetTruth: false,
-      ownsFinalVisualPassClaim: false,
+      northOwnsRuntimeTableAuthority: true,
+      northOwnsActiveGateCursor: true,
+      northOwnsVisibleLoaderPercentage: true,
+      northOwnsCheckpointClosure: true,
+      northOwnsF21Latch: true,
+      northOwnsReadyText: true,
+
+      eastOwnsNorthRuntimeTableAuthority: false,
+      eastOwnsActiveGateCursor: false,
+      eastOwnsVisibleLoaderPercentage: false,
+      eastOwnsCheckpointClosure: false,
+      eastOwnsF21Latch: false,
+      eastOwnsReadyText: false,
+      eastOwnsSouthVisibleProof: false,
+      eastOwnsWestAdmissibilityJudgment: false,
+      eastOwnsCanvasDrawing: false,
+      eastOwnsCanvasChildTruth: false,
+      eastOwnsRouteConductorRuntime: false,
+      eastOwnsPlanetTruth: false,
+      eastOwnsFinalVisualPassClaim: false,
 
       northContextPresent: Boolean(state.lastNorthContext && state.lastNorthContext.northContextPresent),
       northActiveMacroGate: state.lastNorthContext ? state.lastNorthContext.northActiveMacroGate : "",
@@ -1446,13 +1542,18 @@
       progressOnlyCount: state.progressOnlyCount,
       falseCompletionBlockCount: state.falseCompletionBlockCount,
       markerOnlyHoldCount: state.markerOnlyHoldCount,
+      futureQueueCount: state.futureQueueCount,
+      duplicateArchiveCount: state.duplicateArchiveCount,
       unknownArchiveCount: state.unknownArchiveCount,
+      f21ReviewCount: state.f21ReviewCount,
 
       f21FirewallActive: true,
       completionLatchedByEast: false,
       visualPassClaimed: false,
 
       microFibonacciStageMap: createChronologicalFibonacciPlan(),
+      newsFibonacciCheckpointPlan: createNewsFibonacciCheckpointPlan(),
+
       exports: [
         "normalizeEvent",
         "readNorthContext",
@@ -1460,6 +1561,8 @@
         "classifyRouteConductorEvidence",
         "classifyVisibleProofEvidence",
         "isFalseCompletionMutation",
+        "isProgressOnlyEvent",
+        "mapEventToStage",
         "classifyForWest",
         "classifyForSouth",
         "classifyForNorth",
@@ -1470,7 +1573,8 @@
         "createNewsFibonacciCheckpointPlan",
         "createCheckpointSession",
         "createHearthCheckpointSession",
-        "getReceipt"
+        "getReceipt",
+        "getReceiptText"
       ],
 
       lastNorthContext: clonePlain(state.lastNorthContext),
@@ -1500,7 +1604,7 @@
       : "- none";
 
     return [
-      "LAB_RUNTIME_TABLE_CARDINAL_EAST_NORTH_DIALECT_FIBONACCI_MAGNIFIER_RECEIPT",
+      "LAB_RUNTIME_TABLE_EAST_PRIMARY_GATE_LINEUP_NEWS_FIBONACCI_RECEIPT",
       "",
       `contract=${r.contract}`,
       `receipt=${r.receipt}`,
@@ -1508,34 +1612,52 @@
       `baselineContract=${r.baselineContract}`,
       `version=${r.version}`,
       `destinationFile=${r.destinationFile}`,
+      `northFile=${r.northFile}`,
+      `westFile=${r.westFile}`,
+      `southFile=${r.southFile}`,
+      `routeConductorFile=${r.routeConductorFile}`,
+      `canvasFile=${r.canvasFile}`,
       `role=${r.role}`,
       "",
+      `fileGatesPrimary=${r.fileGatesPrimary}`,
       `eastAuthority=${r.eastAuthority}`,
       `eastLoaded=${r.eastLoaded}`,
+      `eastPrimaryGateLineup=${r.eastPrimaryGateLineup}`,
       `eastUsesNorthDialect=${r.eastUsesNorthDialect}`,
       `eastFibonacciMagnifier=${r.eastFibonacciMagnifier}`,
       `eastMicroStageClassifier=${r.eastMicroStageClassifier}`,
-      `eastPublicTransmissionMapLanguage=${r.eastPublicTransmissionMapLanguage}`,
+      `eastPacketDistributor=${r.eastPacketDistributor}`,
       `northPermissionRequired=${r.northPermissionRequired}`,
       `macroRuntimeTableOwnedByNorth=${r.macroRuntimeTableOwnedByNorth}`,
+      "",
+      `newsAlignmentProtocolPresent=${r.newsAlignmentProtocolPresent}`,
+      `fibonacciSynchronizationPresent=${r.fibonacciSynchronizationPresent}`,
+      `primaryGateStreamActive=${r.primaryGateStreamActive}`,
       "",
       `ownsEventNormalization=${r.ownsEventNormalization}`,
       `ownsEventAliasRecognition=${r.ownsEventAliasRecognition}`,
       `ownsFibonacciMicroStageMapping=${r.ownsFibonacciMicroStageMapping}`,
       `ownsNorthContextReading=${r.ownsNorthContextReading}`,
       `ownsMicroStageClassification=${r.ownsMicroStageClassification}`,
+      `ownsPacketDistribution=${r.ownsPacketDistribution}`,
       "",
-      `ownsNorthRuntimeTableAuthority=${r.ownsNorthRuntimeTableAuthority}`,
-      `ownsActiveGateCursor=${r.ownsActiveGateCursor}`,
-      `ownsVisibleLoaderPercentage=${r.ownsVisibleLoaderPercentage}`,
-      `ownsCheckpointClosure=${r.ownsCheckpointClosure}`,
-      `ownsF21Latch=${r.ownsF21Latch}`,
-      `ownsReadyText=${r.ownsReadyText}`,
-      `ownsSouthVisibleProof=${r.ownsSouthVisibleProof}`,
-      `ownsWestAdmissibilityJudgment=${r.ownsWestAdmissibilityJudgment}`,
-      `ownsCanvasDrawing=${r.ownsCanvasDrawing}`,
-      `ownsRouteConductorRuntime=${r.ownsRouteConductorRuntime}`,
-      `ownsFinalVisualPassClaim=${r.ownsFinalVisualPassClaim}`,
+      `northOwnsRuntimeTableAuthority=${r.northOwnsRuntimeTableAuthority}`,
+      `northOwnsActiveGateCursor=${r.northOwnsActiveGateCursor}`,
+      `northOwnsVisibleLoaderPercentage=${r.northOwnsVisibleLoaderPercentage}`,
+      `northOwnsCheckpointClosure=${r.northOwnsCheckpointClosure}`,
+      `northOwnsF21Latch=${r.northOwnsF21Latch}`,
+      `northOwnsReadyText=${r.northOwnsReadyText}`,
+      "",
+      `eastOwnsActiveGateCursor=${r.eastOwnsActiveGateCursor}`,
+      `eastOwnsVisibleLoaderPercentage=${r.eastOwnsVisibleLoaderPercentage}`,
+      `eastOwnsCheckpointClosure=${r.eastOwnsCheckpointClosure}`,
+      `eastOwnsF21Latch=${r.eastOwnsF21Latch}`,
+      `eastOwnsReadyText=${r.eastOwnsReadyText}`,
+      `eastOwnsSouthVisibleProof=${r.eastOwnsSouthVisibleProof}`,
+      `eastOwnsWestAdmissibilityJudgment=${r.eastOwnsWestAdmissibilityJudgment}`,
+      `eastOwnsCanvasDrawing=${r.eastOwnsCanvasDrawing}`,
+      `eastOwnsRouteConductorRuntime=${r.eastOwnsRouteConductorRuntime}`,
+      `eastOwnsFinalVisualPassClaim=${r.eastOwnsFinalVisualPassClaim}`,
       "",
       `northContextPresent=${r.northContextPresent}`,
       `northActiveMacroGate=${r.northActiveMacroGate}`,
@@ -1547,7 +1669,10 @@
       `progressOnlyCount=${r.progressOnlyCount}`,
       `falseCompletionBlockCount=${r.falseCompletionBlockCount}`,
       `markerOnlyHoldCount=${r.markerOnlyHoldCount}`,
+      `futureQueueCount=${r.futureQueueCount}`,
+      `duplicateArchiveCount=${r.duplicateArchiveCount}`,
       `unknownArchiveCount=${r.unknownArchiveCount}`,
+      `f21ReviewCount=${r.f21ReviewCount}`,
       `f21FirewallActive=${r.f21FirewallActive}`,
       `completionLatchedByEast=${r.completionLatchedByEast}`,
       "",
@@ -1575,11 +1700,18 @@
     dataset.labRuntimeTableEastReceipt = RECEIPT;
     dataset.labRuntimeTableEastVersion = VERSION;
 
+    dataset.fileGatesPrimary = "true";
+    dataset.eastPrimaryGateLineup = "true";
     dataset.eastUsesNorthDialect = "true";
     dataset.eastFibonacciMagnifier = "true";
     dataset.eastMicroStageClassifier = "true";
-    dataset.eastPublicTransmissionMapLanguage = "false";
+    dataset.eastPacketDistributor = "true";
     dataset.eastNorthPermissionRequired = "true";
+
+    dataset.newsAlignmentProtocolPresent = "true";
+    dataset.fibonacciSynchronizationPresent = "true";
+    dataset.primaryGateStreamActive = "true";
+
     dataset.northOwnsRuntimeTable = "true";
     dataset.northOwnsCheckpointAdmission = "true";
     dataset.northOwnsF21Latch = "true";
@@ -1587,6 +1719,7 @@
     dataset.eastOwnsActiveGate = "false";
     dataset.eastOwnsVisibleProgress = "false";
     dataset.eastOwnsF21Latch = "false";
+    dataset.eastOwnsReadyText = "false";
     dataset.eastOwnsFinalVisualPassClaim = "false";
 
     dataset.eastF21FirewallActive = "true";
@@ -1611,9 +1744,11 @@
     file: FILE,
 
     ACTIONS,
-    CHECKPOINT_EVENT_ACTIONS: LEGACY_ACTIONS,
+    CHECKPOINT_EVENT_ACTIONS,
     GAP_CLASS,
     NEWS_GATES,
+    FILE_GATES,
+    EAST_LANGUAGE,
     MICRO_STAGES,
     FIBONACCI_CHECKPOINTS: MICRO_STAGES,
 
@@ -1641,15 +1776,21 @@
     getReceipt,
     getReceiptText,
 
+    fileGatesPrimary: true,
     eastAuthority: true,
     eastLoaded: true,
     eastFallbackUsed: false,
+    eastPrimaryGateLineup: true,
     eastUsesNorthDialect: true,
     eastFibonacciMagnifier: true,
     eastMicroStageClassifier: true,
-    eastPublicTransmissionMapLanguage: false,
+    eastPacketDistributor: true,
     northPermissionRequired: true,
     macroRuntimeTableOwnedByNorth: true,
+
+    newsAlignmentProtocolPresent: true,
+    fibonacciSynchronizationPresent: true,
+    primaryGateStreamActive: true,
 
     ownsActiveGateCursor: false,
     ownsVisibleProgress: false,
@@ -1679,6 +1820,7 @@
   root.DEXTER_LAB.cardinalRuntimeTableEast = api;
   root.DEXTER_LAB.checkpointGovernorEast = api;
   root.DEXTER_LAB.hearthEastFibonacciMagnifier = api;
+  root.DEXTER_LAB.hearthEastPrimaryGateLineup = api;
 
   root.LAB_RUNTIME_TABLE_EAST = api;
   root.RUNTIME_TABLE_EAST = api;
@@ -1686,14 +1828,17 @@
   root.LAB_CARDINAL_RUNTIME_TABLE_EAST = api;
   root.LAB_CHECKPOINT_GOVERNOR_EAST = api;
   root.HEARTH_EAST_FIBONACCI_MAGNIFIER = api;
+  root.HEARTH_EAST_PRIMARY_GATE_LINEUP = api;
   root.HEARTH.eastFibonacciMagnifier = api;
+  root.HEARTH.eastPrimaryGateLineup = api;
 
   publishDataset();
-  record("EAST_NORTH_DIALECT_FIBONACCI_MAGNIFIER_LOADED", {
+  record("EAST_PRIMARY_GATE_LINEUP_NEWS_FIBONACCI_LOADED", {
     file: FILE,
     contract: CONTRACT,
-    eastUsesNorthDialect: true,
-    eastPublicTransmissionMapLanguage: false
+    fileGatesPrimary: true,
+    newsAlignmentProtocolPresent: true,
+    fibonacciSynchronizationPresent: true
   });
 
   if (typeof module !== "undefined" && module.exports) {

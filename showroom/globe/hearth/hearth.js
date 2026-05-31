@@ -1,28 +1,8 @@
 // /showroom/globe/hearth/hearth.js
 // HEARTH_SOUTH_CARDINAL_FIBONACCI_THIN_CONDUCTOR_TNT_v1
 // Full-file replacement.
-// South route conductor / visible completion authority only.
-// Purpose:
-// - Replace the overloaded South route conductor with a thin cardinal/Fibonacci conductor.
-// - Keep every responsibility seated in one of four named cardinal circuits.
-// - Preserve the split with /showroom/globe/hearth/index.js.
-// - Publish route-conductor API and receipt early enough for East recognition.
-// - Prevent marker-only recognition from satisfying F8 hydration.
-// - Boot Canvas parent only after F8 is hydrated.
-// - Reconcile Canvas F13 receipt evidence without owning canvas drawing or child files.
-// - Require visible planet proof before F21 completion.
-// - Keep Canvas as F13 evidence only; F21 remains North/NEWS latch authority.
-// Does not own:
-// - East first-paint shell or script loading
-// - North checkpoint truth
-// - West gap taxonomy
-// - Lab South visible-state composer
-// - canvas drawing
-// - canvas child files
-// - terrain/source truth
-// - hydrology
-// - materials
-// - final visual pass claim
+// South route conductor / thin cardinal-Fibonacci conductor only.
+// Canvas remains F13 evidence. F21 remains North/NEWS latch authority.
 
 (() => {
   "use strict";
@@ -35,22 +15,26 @@
 
   const ROUTE = "/showroom/globe/hearth/";
   const FILE = "/showroom/globe/hearth/hearth.js";
-  const INDEX_FILE = "/showroom/globe/hearth/index.js";
-  const NORTH_FILE = "/assets/lab/runtime-table.js";
-  const EAST_BRANCH_FILE = "/assets/lab/runtime-table.east.js";
-  const WEST_BRANCH_FILE = "/assets/lab/runtime-table.west.js";
-  const SOUTH_BRANCH_FILE = "/assets/lab/runtime-table.south.js";
-  const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
-  const CANVAS_EAST_FILE = "/assets/hearth/hearth.canvas.east.js";
-  const CANVAS_WEST_FILE = "/assets/hearth/hearth.canvas.west.js";
-  const CANVAS_SOUTH_FILE = "/assets/hearth/hearth.canvas.south.js";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
 
-  const MAX_LOG = 120;
+  const MAX_LOG = 80;
   const WATCHDOG_MS = 500;
   const WATCHDOG_LIMIT = 120;
+  const CANVAS_BOOT_LIMIT = 6;
+
+  const FILES = Object.freeze({
+    index: "/showroom/globe/hearth/index.js",
+    north: "/assets/lab/runtime-table.js",
+    eastBranch: "/assets/lab/runtime-table.east.js",
+    westBranch: "/assets/lab/runtime-table.west.js",
+    southBranch: "/assets/lab/runtime-table.south.js",
+    canvas: "/assets/hearth/hearth.canvas.js",
+    canvasEast: "/assets/hearth/hearth.canvas.east.js",
+    canvasWest: "/assets/hearth/hearth.canvas.west.js",
+    canvasSouth: "/assets/hearth/hearth.canvas.south.js"
+  });
 
   const CANVAS_PARENT_NAMES = Object.freeze([
     "HEARTH_CANVAS_PHYSICAL_CARRIER_F13_PROOF_PARENT",
@@ -74,7 +58,7 @@
     "DEXTER_LAB.hearthCanvasEvidence"
   ]);
 
-  const CANVAS_CHILD_NAMES = Object.freeze({
+  const CHILD_NAMES = Object.freeze({
     east: [
       "HEARTH_CANVAS_EAST",
       "HEARTH.canvasEast",
@@ -101,19 +85,19 @@
   });
 
   const GATES = Object.freeze([
-    { id: "F1_EAST_ROUTE_SHELL", fib: "F1", cardinal: "EAST", label: "Route shell", weight: 1 },
-    { id: "F2_EAST_FIRST_PAINT", fib: "F2", cardinal: "EAST", label: "First paint", weight: 2 },
-    { id: "F3_EAST_SCRIPT_ORDER", fib: "F3", cardinal: "EAST", label: "Script order", weight: 3 },
-    { id: "F5_NORTH_AUTHORITY", fib: "F5", cardinal: "NORTH", label: "Authority availability", weight: 5 },
-    { id: "F8_SOUTH_CONDUCTOR", fib: "F8", cardinal: "SOUTH", label: "Route conductor hydration", weight: 8 },
-    { id: "F13A_CANVAS_PARENT", fib: "F13A", cardinal: "NORTH", label: "Canvas parent boot", weight: 13 },
-    { id: "F13B_CANVAS_CHILDREN", fib: "F13B", cardinal: "EAST", label: "Canvas children", weight: 13 },
-    { id: "F13C_CANVAS_TEXTURE", fib: "F13C", cardinal: "SOUTH", label: "Texture composition", weight: 13 },
-    { id: "F13D_CANVAS_FRAME", fib: "F13D", cardinal: "SOUTH", label: "First visible frame", weight: 13 },
-    { id: "F13E_VISIBLE_PROOF", fib: "F13E", cardinal: "SOUTH", label: "Visible planet proof", weight: 13 },
-    { id: "F13N_INSPECT_GATE", fib: "F13N", cardinal: "WEST", label: "Inspect gate", weight: 13 },
-    { id: "F21_COMPLETION_LATCH", fib: "F21", cardinal: "NORTH", label: "NEWS completion latch", weight: 21 }
-  ]);
+    ["F1_EAST_ROUTE_SHELL", "F1", "EAST", "Route shell"],
+    ["F2_EAST_FIRST_PAINT", "F2", "EAST", "First paint"],
+    ["F3_EAST_SCRIPT_ORDER", "F3", "EAST", "Script order"],
+    ["F5_NORTH_AUTHORITY", "F5", "NORTH", "Authority availability"],
+    ["F8_SOUTH_CONDUCTOR", "F8", "SOUTH", "Route conductor hydration"],
+    ["F13A_CANVAS_PARENT", "F13A", "NORTH", "Canvas parent boot"],
+    ["F13B_CANVAS_CHILDREN", "F13B", "EAST", "Canvas child readiness"],
+    ["F13C_CANVAS_TEXTURE", "F13C", "SOUTH", "Texture composition"],
+    ["F13D_CANVAS_FRAME", "F13D", "SOUTH", "First visible frame"],
+    ["F13E_VISIBLE_PROOF", "F13E", "SOUTH", "Visible planet proof"],
+    ["F13N_INSPECT_GATE", "F13N", "WEST", "Inspect gate"],
+    ["F21_COMPLETION_LATCH", "F21", "NORTH", "NEWS completion latch"]
+  ].map(([id, fib, cardinal, label], index) => ({ id, fib, cardinal, label, index })));
 
   const state = {
     contract: CONTRACT,
@@ -128,11 +112,10 @@
     cardinalCircuitActive: true,
     newsProtocolSynchronized: true,
     fibonacciSynchronizationActive: true,
-    transmissionMode: true,
     oneActiveGearAtATime: true,
+    markerIsNotHydrationProof: true,
     visualProofRequiredForF13: true,
     visualProofRequiredForF21: true,
-    markerIsNotHydrationProof: true,
 
     jobs: {
       north: ["checkpoint-session-read", "gate-order", "f21-latch-request"],
@@ -141,19 +124,6 @@
       south: ["route-conductor-runtime", "canvas-parent-boot-request", "canvas-receipt-reconciliation", "visible-proof-governance"]
     },
 
-    files: {
-      index: INDEX_FILE,
-      north: NORTH_FILE,
-      eastBranch: EAST_BRANCH_FILE,
-      westBranch: WEST_BRANCH_FILE,
-      southBranch: SOUTH_BRANCH_FILE,
-      canvas: CANVAS_FILE,
-      canvasEast: CANVAS_EAST_FILE,
-      canvasWest: CANVAS_WEST_FILE,
-      canvasSouth: CANVAS_SOUTH_FILE
-    },
-
-    activeGateIndex: 0,
     activeGateId: GATES[0].id,
     activeFibonacci: GATES[0].fib,
     activeCardinal: GATES[0].cardinal,
@@ -161,30 +131,31 @@
     completedGates: [],
     degradedGates: [],
     blockedGates: [],
+    gateLedger: [],
 
-    authorities: {
-      indexPresent: false,
-      northPresent: false,
-      eastBranchPresent: false,
-      westBranchPresent: false,
-      southBranchPresent: false,
-      sessionPresent: false,
+    auth: {
+      index: false,
+      north: false,
+      east: false,
+      west: false,
+      south: false,
+      session: false,
       sessionCreatedBySouth: false
     },
 
-    routeConductor: {
-      markerPresent: false,
-      apiPresent: false,
-      receiptPresent: false,
-      runtimeActive: false,
+    conductor: {
+      marker: false,
+      api: false,
+      receipt: false,
+      runtime: false,
       hydrated: false,
-      recognitionStatus: "MARKER_PENDING"
+      status: "MARKER_PENDING"
     },
 
     canvas: {
-      parentPresent: false,
-      parentBootMethod: "",
-      parentBootMethodAvailable: false,
+      parent: false,
+      method: "",
+      methodReady: false,
       bootRequested: false,
       bootStarted: false,
       bootResolved: false,
@@ -192,12 +163,10 @@
       bootAttempts: 0,
       bootError: "",
       bootComplete: false,
-
       contract: "",
       receipt: "",
       splitContract: "",
       splitReceipt: "",
-
       eastPresent: false,
       westPresent: false,
       southPresent: false,
@@ -206,7 +175,6 @@
       southReady: false,
       allChildrenReady: false,
       childGap: "",
-
       carrierRequested: false,
       carrierMounted: false,
       contextReady: false,
@@ -229,28 +197,26 @@
       visibleContentAdmissible: false,
       visiblePlanetAvailable: false,
       visiblePlanetProofValid: false,
-      latestSignature: ""
+      signature: ""
     },
 
     dom: {
-      mountPresent: false,
-      cockpitPresent: false,
-      canvasPresent: false,
-      canvasNonZeroSize: false,
-      visiblePlanetHintPresent: false
+      mount: false,
+      cockpit: false,
+      planetCanvas: false,
+      planetCanvasNonZero: false,
+      visibleHint: false
     },
 
     inspect: {
-      inspectModeAvailable: false,
-      inspectPlanetControlAvailable: false,
-      diagnosticCanLeavePlanetFrame: false,
-      diagnosticDockHidden: false,
-      diagnosticDockRestorable: false,
-      receiptToggleReady: false,
-      copyDiagnosticReady: false,
-      showTabVisible: false,
-      fallbackReady: false,
-      strictReady: false
+      available: false,
+      control: false,
+      canLeaveFrame: false,
+      dockRestorable: false,
+      receiptReady: false,
+      copyReady: false,
+      strictReady: false,
+      fallbackReady: false
     },
 
     completion: {
@@ -258,11 +224,10 @@
       degraded: false,
       readyTextAllowed: false,
       f21LatchMode: "WAITING",
-      newsGatePassed: false,
-      newsGateDegraded: false
+      newsStrict: false,
+      newsDegraded: false
     },
 
-    refsBound: false,
     booted: false,
     booting: false,
     renderCount: 0,
@@ -275,7 +240,6 @@
     updatedAt: "",
     localEvents: [],
     errors: [],
-    gateLedger: [],
 
     generatedImage: false,
     graphicBox: false,
@@ -283,84 +247,41 @@
     visualPassClaimed: false
   };
 
-  const refs = {
-    mount: null,
-    cockpit: null,
-    stage: null,
-    heartbeat: null,
-    latest: null,
-    fill: null,
-    percent: null,
-    lanes: null,
-    receiptBox: null,
-    receiptText: null,
-    copyButton: null,
-    toggleButton: null,
-    inspectButton: null,
-    showTab: null,
-    status: null
-  };
-
+  const refs = {};
   let bootPromise = null;
   let canvasBootPromise = null;
   let watchdogTimer = 0;
   let renderTimer = 0;
 
   function nowIso() {
-    try { return new Date().toISOString(); } catch (_error) { return ""; }
+    try { return new Date().toISOString(); } catch (_) { return ""; }
   }
 
-  function isObject(value) {
-    return Boolean(value && typeof value === "object" && !Array.isArray(value));
+  function fn(v) { return typeof v === "function"; }
+  function obj(v) { return Boolean(v && typeof v === "object" && !Array.isArray(v)); }
+  function str(v, f = "") { return v === undefined || v === null ? f : String(v); }
+  function num(v, f = 0) { const n = Number(v); return Number.isFinite(n) ? n : f; }
+  function bool(v, f = false) {
+    if (typeof v === "boolean") return v;
+    if (v === "true" || v === "1" || v === 1) return true;
+    if (v === "false" || v === "0" || v === 0) return false;
+    return f;
   }
-
-  function isFunction(value) {
-    return typeof value === "function";
-  }
-
-  function safeString(value, fallback = "") {
-    if (value === undefined || value === null) return fallback;
-    return String(value);
-  }
-
-  function safeNumber(value, fallback = 0) {
-    const number = Number(value);
-    return Number.isFinite(number) ? number : fallback;
-  }
-
-  function safeBool(value, fallback = false) {
-    if (typeof value === "boolean") return value;
-    if (value === "true" || value === "1" || value === 1) return true;
-    if (value === "false" || value === "0" || value === 0) return false;
-    return fallback;
-  }
-
-  function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, safeNumber(value, min)));
-  }
-
-  function clonePlain(value) {
-    if (!isObject(value) && !Array.isArray(value)) return value;
-    try { return JSON.parse(JSON.stringify(value)); } catch (_error) {
-      return Array.isArray(value) ? value.slice() : { ...value };
-    }
-  }
-
-  function trim(array, max = MAX_LOG) {
-    if (Array.isArray(array) && array.length > max) array.splice(0, array.length - max);
-  }
+  function clamp(v, a, b) { return Math.max(a, Math.min(b, num(v, a))); }
+  function copy(v) { try { return JSON.parse(JSON.stringify(v)); } catch (_) { return v; } }
+  function trim(a) { if (Array.isArray(a) && a.length > MAX_LOG) a.splice(0, a.length - MAX_LOG); }
+  function addOnce(a, v) { if (!a.includes(v)) a.push(v); }
 
   function readPath(path) {
-    const parts = String(path || "").split(".");
-    let cursor = root;
-    for (const part of parts) {
-      if (!cursor || cursor[part] === undefined || cursor[part] === null) return null;
-      cursor = cursor[part];
+    let cur = root;
+    for (const part of str(path).split(".")) {
+      if (!cur || cur[part] === undefined || cur[part] === null) return null;
+      cur = cur[part];
     }
-    return cursor || null;
+    return cur || null;
   }
 
-  function firstGlobal(names) {
+  function first(names) {
     for (const name of names || []) {
       const found = readPath(name);
       if (found) return found;
@@ -374,8 +295,8 @@
     return value === undefined || value === null || value === "" ? fallback : value;
   }
 
-  function record(event, detail = {}) {
-    const item = { at: nowIso(), event: safeString(event), detail: clonePlain(detail) };
+  function log(event, detail = {}) {
+    const item = { at: nowIso(), event: str(event), detail: copy(detail) };
     state.localEvents.push(item);
     trim(state.localEvents);
     state.latestEvent = item.event;
@@ -383,81 +304,61 @@
     return item;
   }
 
-  function recordError(code, error, detail = {}) {
+  function err(code, error, detail = {}) {
     const item = {
       at: nowIso(),
-      code: safeString(code, "ERROR"),
-      message: error && error.message ? String(error.message) : safeString(error),
-      detail: clonePlain(detail)
+      code: str(code, "ERROR"),
+      message: error && error.message ? String(error.message) : str(error),
+      detail: copy(detail)
     };
     state.errors.push(item);
     trim(state.errors);
-    state.updatedAt = item.at;
     state.latestEvent = item.code;
+    state.updatedAt = item.at;
     return item;
   }
 
   function readReceipt(authority) {
-    if (!authority || !isObject(authority)) return null;
-    if (isFunction(authority.getReceipt)) {
+    if (!obj(authority)) return null;
+    if (fn(authority.getReceipt)) {
       try {
-        const receipt = authority.getReceipt();
-        return isObject(receipt) ? receipt : null;
-      } catch (_error) {
+        const r = authority.getReceipt();
+        return obj(r) ? r : null;
+      } catch (_) {
         return null;
       }
     }
-    if (isObject(authority.receiptPacket)) return authority.receiptPacket;
-    if (isObject(authority.receipt)) return authority.receipt;
+    if (obj(authority.receiptPacket)) return authority.receiptPacket;
+    if (obj(authority.receipt)) return authority.receipt;
     if (authority.contract || authority.receipt || authority.version) return authority;
     return null;
   }
 
-  function readIndexApi() {
-    return firstGlobal([
-      "HEARTH_EAST_STEP1_IGNITION",
-      "HEARTH_INDEX_BRIDGE",
-      "HEARTH_INDEX_JS",
-      "HEARTH.indexBridge",
-      "HEARTH.eastStep1Ignition"
-    ]);
+  function readIndex() {
+    return first(["HEARTH_EAST_STEP1_IGNITION", "HEARTH_INDEX_BRIDGE", "HEARTH_INDEX_JS", "HEARTH.indexBridge", "HEARTH.eastStep1Ignition"]);
   }
 
   function readNorth() {
-    return firstGlobal([
-      "LAB_RUNTIME_TABLE",
-      "LAB_RUNTIME_TABLE_NORTH",
-      "LAB_UNIVERSAL_PLANET_RUNTIME_TABLE",
-      "RUNTIME_TABLE",
-      "DexterRuntimeTable",
-      "DEXTER_LAB.runtimeTable"
-    ]);
+    return first(["LAB_RUNTIME_TABLE", "LAB_RUNTIME_TABLE_NORTH", "LAB_UNIVERSAL_PLANET_RUNTIME_TABLE", "RUNTIME_TABLE", "DexterRuntimeTable", "DEXTER_LAB.runtimeTable"]);
   }
 
-  function readBranch(direction) {
-    const map = {
-      east: ["LAB_RUNTIME_TABLE_EAST", "RUNTIME_TABLE_EAST", "DEXTER_LAB_RUNTIME_TABLE_EAST", "DEXTER_LAB.runtimeTableEast", "DEXTER_LAB.cardinalRuntimeTableEast"],
-      west: ["LAB_RUNTIME_TABLE_WEST", "RUNTIME_TABLE_WEST", "DEXTER_LAB_RUNTIME_TABLE_WEST", "DEXTER_LAB.runtimeTableWest", "DEXTER_LAB.cardinalRuntimeTableWest"],
-      south: ["LAB_RUNTIME_TABLE_SOUTH", "RUNTIME_TABLE_SOUTH", "DEXTER_LAB_RUNTIME_TABLE_SOUTH", "HEARTH_VISIBLE_STATE_COMPOSER", "DEXTER_LAB.runtimeTableSouth", "DEXTER_LAB.visibleStateComposer"]
+  function readBranch(side) {
+    const names = {
+      east: ["LAB_RUNTIME_TABLE_EAST", "RUNTIME_TABLE_EAST", "DEXTER_LAB_RUNTIME_TABLE_EAST", "LAB_CARDINAL_RUNTIME_TABLE_EAST", "DEXTER_LAB.runtimeTableEast", "DEXTER_LAB.cardinalRuntimeTableEast"],
+      west: ["LAB_RUNTIME_TABLE_WEST", "RUNTIME_TABLE_WEST", "DEXTER_LAB_RUNTIME_TABLE_WEST", "LAB_CARDINAL_RUNTIME_TABLE_WEST", "DEXTER_LAB.runtimeTableWest", "DEXTER_LAB.cardinalRuntimeTableWest"],
+      south: ["LAB_RUNTIME_TABLE_SOUTH", "RUNTIME_TABLE_SOUTH", "DEXTER_LAB_RUNTIME_TABLE_SOUTH", "LAB_CARDINAL_RUNTIME_TABLE_SOUTH", "HEARTH_VISIBLE_STATE_COMPOSER", "DEXTER_LAB.runtimeTableSouth", "DEXTER_LAB.visibleStateComposer"]
     };
-    return firstGlobal(map[direction] || []);
+    return first(names[side] || []);
   }
 
   function readSession() {
-    return firstGlobal([
-      "HEARTH_CHECKPOINT_SESSION",
-      "HEARTH_RUNTIME_CHECKPOINT_SESSION",
-      "LAB_HEARTH_CHECKPOINT_SESSION",
-      "LAB_CHECKPOINT_SESSION",
-      "DEXTER_LAB.hearthCheckpointSession",
-      "DEXTER_LAB.checkpointSession"
-    ]);
+    return first(["HEARTH_CHECKPOINT_SESSION", "HEARTH_RUNTIME_CHECKPOINT_SESSION", "LAB_HEARTH_CHECKPOINT_SESSION", "LAB_CHECKPOINT_SESSION", "DEXTER_LAB.hearthCheckpointSession", "DEXTER_LAB.checkpointSession"]);
   }
 
   function ensureSession() {
     const existing = readSession();
-    if (existing && (isFunction(existing.submitEvent) || isFunction(existing.submit) || isFunction(existing.completeActive))) {
-      state.authorities.sessionPresent = true;
+    if (existing && (fn(existing.submitEvent) || fn(existing.submit) || fn(existing.completeActive))) {
+      state.auth.session = true;
       return existing;
     }
 
@@ -468,72 +369,65 @@
       north && north.createCheckpointSession,
       east && east.createHearthCheckpointSession,
       east && east.createCheckpointSession
-    ].filter(isFunction);
+    ].filter(fn);
 
-    for (const creator of creators) {
+    for (const create of creators) {
       try {
-        const session = creator({ planetId: "hearth", planetLabel: "Hearth", route: ROUTE });
-        if (session && (isFunction(session.submitEvent) || isFunction(session.submit) || isFunction(session.completeActive))) {
+        const session = create({ planetId: "hearth", planetLabel: "Hearth", route: ROUTE });
+        if (session && (fn(session.submitEvent) || fn(session.submit) || fn(session.completeActive))) {
           root.HEARTH_CHECKPOINT_SESSION = session;
           root.HEARTH_RUNTIME_CHECKPOINT_SESSION = session;
           root.LAB_HEARTH_CHECKPOINT_SESSION = session;
           root.DEXTER_LAB = root.DEXTER_LAB || {};
           root.DEXTER_LAB.hearthCheckpointSession = session;
           root.DEXTER_LAB.checkpointSession = session;
-          state.authorities.sessionPresent = true;
-          state.authorities.sessionCreatedBySouth = true;
-          record("SOUTH_CREATED_CHECKPOINT_SESSION", { source: creator.name || "north-or-east" });
+          state.auth.session = true;
+          state.auth.sessionCreatedBySouth = true;
+          log("SOUTH_CREATED_CHECKPOINT_SESSION", {});
           return session;
         }
       } catch (error) {
-        recordError("CREATE_CHECKPOINT_SESSION_FAILED", error);
+        err("CREATE_CHECKPOINT_SESSION_FAILED", error);
       }
     }
 
-    state.authorities.sessionPresent = false;
+    state.auth.session = false;
     return null;
   }
 
   function readCanvasApi() {
-    return firstGlobal(CANVAS_PARENT_NAMES);
+    return first(CANVAS_PARENT_NAMES);
   }
 
   function readCanvasReceipt() {
     const apiObject = readCanvasApi();
     const apiReceipt = readReceipt(apiObject);
     if (apiReceipt) return apiReceipt;
-
-    const fallback = firstGlobal([
-      "HEARTH_CANVAS_RECEIPT",
-      "HEARTH_CANVAS_EVIDENCE_RECEIPT",
-      "HEARTH_CANVAS_POSTGAME_RECEIPT",
-      "HEARTH.canvasReceipt",
-      "HEARTH.canvasEvidenceReceipt"
-    ]);
-    return isObject(fallback) ? fallback : {};
+    const fallback = first(["HEARTH_CANVAS_RECEIPT", "HEARTH_CANVAS_EVIDENCE_RECEIPT", "HEARTH_CANVAS_POSTGAME_RECEIPT", "HEARTH.canvasReceipt", "HEARTH.canvasEvidenceReceipt"]);
+    return obj(fallback) ? fallback : {};
   }
 
-  function readCanvasChild(key) {
-    return firstGlobal(CANVAS_CHILD_NAMES[key] || []);
+  function readChild(key) {
+    return first(CHILD_NAMES[key] || []);
   }
 
   function missingMethods(key, authority) {
     const required = CHILD_METHODS[key] || [];
     if (!authority) return required.slice();
-    return required.filter((method) => !isFunction(authority[method]));
+    return required.filter((method) => !fn(authority[method]));
   }
 
-  function selectCanvasMethod(canvas) {
-    if (!canvas || !isObject(canvas)) return "";
-    if (isFunction(canvas.bootCooperative)) return "bootCooperative";
-    if (isFunction(canvas.boot)) return "boot";
-    if (isFunction(canvas.render)) return "render";
-    if (isFunction(canvas.mount)) return "mount";
+  function canvasMethod(canvas) {
+    if (!obj(canvas)) return "";
+    if (fn(canvas.bootCooperative)) return "bootCooperative";
+    if (fn(canvas.boot)) return "boot";
+    if (fn(canvas.render)) return "render";
+    if (fn(canvas.mount)) return "mount";
     return "";
   }
 
   function scanDom() {
-    if (!doc) return state.dom;
+    if (!doc) return;
 
     refs.mount = doc.getElementById("hearthCanvasMount") || doc.querySelector("[data-hearth-canvas-mount='true']") || doc.querySelector("[data-hearth-canvas-mount]");
     refs.cockpit = doc.getElementById("hearthLoadCockpit") || doc.querySelector("[data-hearth-load-cockpit='true']") || doc.querySelector("[data-hearth-first-paint-cockpit='true']");
@@ -555,104 +449,99 @@
       ? refs.mount.querySelector("canvas")
       : doc.querySelector("canvas[data-hearth-canvas='true'],canvas[data-hearth-canvas-texture='true'],canvas[data-hearth-planet-canvas='true']");
 
-    const rect = canvas && isFunction(canvas.getBoundingClientRect) ? canvas.getBoundingClientRect() : null;
-    const nonZero = Boolean(canvas && ((safeNumber(canvas.width, 0) > 0 && safeNumber(canvas.height, 0) > 0) || (rect && safeNumber(rect.width, 0) > 0 && safeNumber(rect.height, 0) > 0)));
+    const rect = canvas && fn(canvas.getBoundingClientRect) ? canvas.getBoundingClientRect() : null;
+    const nonZero = Boolean(canvas && ((num(canvas.width) > 0 && num(canvas.height) > 0) || (rect && num(rect.width) > 0 && num(rect.height) > 0)));
 
-    const datasetVisible = Boolean(
-      data("hearthCanvasReady") === "true" ||
+    const visible = data("hearthCanvasReady") === "true" ||
       data("hearthCanvasVisiblePlanetAvailable") === "true" ||
       data("hearthCanvasVisibleContentProof") === "true" ||
       data("hearthCanvasSouthVisibleContentProof") === "true" ||
       data("hearthCanvasSouthImageRendered") === "true" ||
-      data("hearthSouthVisiblePlanetAvailable") === "true"
-    );
+      data("hearthSouthVisiblePlanetAvailable") === "true";
 
-    state.dom.mountPresent = Boolean(refs.mount);
-    state.dom.cockpitPresent = Boolean(refs.cockpit);
-    state.dom.canvasPresent = Boolean(canvas);
-    state.dom.canvasNonZeroSize = nonZero;
-    state.dom.visiblePlanetHintPresent = Boolean(canvas && nonZero && datasetVisible);
+    state.dom.mount = Boolean(refs.mount);
+    state.dom.cockpit = Boolean(refs.cockpit);
+    state.dom.planetCanvas = Boolean(canvas);
+    state.dom.planetCanvasNonZero = nonZero;
+    state.dom.visibleHint = Boolean(canvas && nonZero && visible);
 
-    state.inspect.copyDiagnosticReady = Boolean(refs.copyButton);
-    state.inspect.receiptToggleReady = Boolean(refs.toggleButton || refs.receiptText || refs.receiptBox);
-    state.inspect.inspectPlanetControlAvailable = Boolean(refs.inspectButton);
-    state.inspect.inspectModeAvailable = Boolean(refs.inspectButton && refs.cockpit);
-    state.inspect.diagnosticDockRestorable = Boolean(refs.cockpit);
-    state.inspect.diagnosticCanLeavePlanetFrame = Boolean(refs.inspectButton && refs.cockpit && refs.showTab);
-    state.inspect.showTabVisible = Boolean(refs.showTab && refs.showTab.hidden === false);
-    state.inspect.diagnosticDockHidden = Boolean(refs.cockpit && refs.cockpit.dataset.cockpitMode === "planet-inspect");
-    state.inspect.strictReady = Boolean(state.inspect.inspectModeAvailable && state.inspect.diagnosticCanLeavePlanetFrame && state.inspect.copyDiagnosticReady && state.inspect.receiptToggleReady);
-    state.inspect.fallbackReady = Boolean(state.inspect.copyDiagnosticReady || state.inspect.receiptToggleReady || state.inspect.diagnosticDockRestorable);
+    state.inspect.copyReady = Boolean(refs.copyButton);
+    state.inspect.receiptReady = Boolean(refs.toggleButton || refs.receiptText || refs.receiptBox);
+    state.inspect.control = Boolean(refs.inspectButton);
+    state.inspect.available = Boolean(refs.inspectButton && refs.cockpit);
+    state.inspect.dockRestorable = Boolean(refs.cockpit);
+    state.inspect.canLeaveFrame = Boolean(refs.inspectButton && refs.cockpit && refs.showTab);
+    state.inspect.strictReady = Boolean(state.inspect.available && state.inspect.canLeaveFrame && state.inspect.copyReady && state.inspect.receiptReady);
+    state.inspect.fallbackReady = Boolean(state.inspect.copyReady || state.inspect.receiptReady || state.inspect.dockRestorable);
 
     bindControls();
-    return state.dom;
   }
 
   function summarizeCanvas(receipt = readCanvasReceipt()) {
-    const canvas = readCanvasApi();
-    const method = selectCanvasMethod(canvas);
-    const east = readCanvasChild("east");
-    const west = readCanvasChild("west");
-    const south = readCanvasChild("south");
+    const c = state.canvas;
+    const parent = readCanvasApi();
+    const east = readChild("east");
+    const west = readChild("west");
+    const south = readChild("south");
 
     const eastMissing = missingMethods("east", east);
     const westMissing = missingMethods("west", west);
     const southMissing = missingMethods("south", south);
 
-    const c = state.canvas;
-    c.parentPresent = Boolean(canvas);
-    c.parentBootMethod = method;
-    c.parentBootMethodAvailable = Boolean(method);
+    c.parent = Boolean(parent);
+    c.method = canvasMethod(parent);
+    c.methodReady = Boolean(c.method);
 
-    c.contract = safeString(receipt.contract || data("hearthCanvasContract"), "");
-    c.receipt = safeString(receipt.receipt || data("hearthCanvasReceipt"), "");
-    c.splitContract = safeString(receipt.splitContract || data("hearthCanvasSplitContract"), "");
-    c.splitReceipt = safeString(receipt.splitReceipt || data("hearthCanvasSplitReceipt"), "");
+    c.contract = str(receipt.contract || data("hearthCanvasContract"), "");
+    c.receipt = str(receipt.receipt || data("hearthCanvasReceipt"), "");
+    c.splitContract = str(receipt.splitContract || data("hearthCanvasSplitContract"), "");
+    c.splitReceipt = str(receipt.splitReceipt || data("hearthCanvasSplitReceipt"), "");
 
-    c.eastPresent = safeBool(receipt.canvasEastPresent, Boolean(east));
-    c.westPresent = safeBool(receipt.canvasWestPresent, Boolean(west));
-    c.southPresent = safeBool(receipt.canvasSouthPresent, Boolean(south));
-    c.eastReady = safeBool(receipt.canvasEastReady, Boolean(east && eastMissing.length === 0));
-    c.westReady = safeBool(receipt.canvasWestReady, Boolean(west && westMissing.length === 0));
-    c.southReady = safeBool(receipt.canvasSouthReady, Boolean(south && southMissing.length === 0));
-    c.allChildrenReady = safeBool(receipt.allCanvasChildrenReady, c.eastReady && c.westReady && c.southReady);
+    c.eastPresent = bool(receipt.canvasEastPresent, Boolean(east));
+    c.westPresent = bool(receipt.canvasWestPresent, Boolean(west));
+    c.southPresent = bool(receipt.canvasSouthPresent, Boolean(south));
+    c.eastReady = bool(receipt.canvasEastReady, Boolean(east && eastMissing.length === 0));
+    c.westReady = bool(receipt.canvasWestReady, Boolean(west && westMissing.length === 0));
+    c.southReady = bool(receipt.canvasSouthReady, Boolean(south && southMissing.length === 0));
+    c.allChildrenReady = bool(receipt.allCanvasChildrenReady, c.eastReady && c.westReady && c.southReady);
+
     c.childGap = [
       eastMissing.length ? `east:${eastMissing.join(",")}` : "",
       westMissing.length ? `west:${westMissing.join(",")}` : "",
       southMissing.length ? `south:${southMissing.join(",")}` : ""
     ].filter(Boolean).join("; ");
 
-    c.carrierRequested = safeBool(receipt.canvasCarrierRequested, safeBool(data("hearthCanvasCarrierRequested"), c.bootRequested));
-    c.carrierMounted = safeBool(receipt.canvasCarrierMounted, safeBool(data("hearthCanvasCarrierMounted"), false));
-    c.contextReady = safeBool(receipt.canvasContextReady, safeBool(data("hearthCanvasContextReady"), false));
-    c.dragInspectionBound = safeBool(receipt.dragInspectionBound, safeBool(data("hearthCanvasDragInspectionBound"), false));
-    c.zoomInspectionBound = safeBool(receipt.zoomInspectionBound, safeBool(data("hearthCanvasZoomInspectionBound"), false));
-    c.atlasBuildStarted = safeBool(receipt.atlasBuildStarted, safeBool(data("hearthCanvasAtlasBuildStarted"), false));
-    c.atlasBuildComplete = safeBool(receipt.atlasBuildComplete, safeBool(data("hearthCanvasAtlasBuildComplete"), false));
-    c.textureComposeStarted = safeBool(receipt.textureComposeStarted, safeBool(data("hearthCanvasTextureComposeStarted"), false));
-    c.textureComposeComplete = safeBool(receipt.textureComposeComplete, safeBool(data("hearthCanvasTextureComposeComplete"), false));
-    c.firstFrameRequested = safeBool(receipt.firstFrameRequested, safeBool(data("hearthCanvasFirstFrameRequested"), false));
-    c.firstFrameDetected = safeBool(receipt.firstFrameDetected, safeBool(data("hearthCanvasFirstFrameDetected"), false));
-    c.canvasReady = safeBool(receipt.canvasReady, safeBool(data("hearthCanvasReady"), false));
-    c.imageRendered = safeBool(receipt.imageRendered, safeBool(data("hearthCanvasImageRendered"), false));
-    c.visibleContentProofStarted = safeBool(receipt.visibleContentProofStarted, safeBool(data("hearthCanvasVisibleContentProofStarted"), false));
-    c.visibleContentProof = safeBool(receipt.visibleContentProof, safeBool(data("hearthCanvasVisibleContentProof"), false));
-    c.visibleContentStrictProof = safeBool(receipt.visibleContentStrictProof, safeBool(data("hearthCanvasVisibleContentStrictProof"), false));
-    c.visibleContentSoftGap = safeBool(receipt.visibleContentSoftGap, safeBool(data("hearthCanvasVisibleContentSoftGap"), false));
-    c.visibleContentHardFail = safeBool(receipt.visibleContentHardFail, safeBool(data("hearthCanvasVisibleContentHardFail"), false));
-    c.visibleForwardProgress = safeBool(receipt.visibleForwardProgress, safeBool(data("hearthCanvasVisibleForwardProgress"), false));
-    c.visibleContentAdmissible = safeBool(receipt.visibleContentAdmissible, false);
-    c.visiblePlanetAvailable = safeBool(receipt.visiblePlanetAvailable, safeBool(data("hearthCanvasVisiblePlanetAvailable"), false));
+    c.carrierRequested = bool(receipt.canvasCarrierRequested, bool(data("hearthCanvasCarrierRequested"), c.bootRequested));
+    c.carrierMounted = bool(receipt.canvasCarrierMounted, bool(data("hearthCanvasCarrierMounted"), false));
+    c.contextReady = bool(receipt.canvasContextReady, bool(data("hearthCanvasContextReady"), false));
+    c.dragInspectionBound = bool(receipt.dragInspectionBound, bool(data("hearthCanvasDragInspectionBound"), false));
+    c.zoomInspectionBound = bool(receipt.zoomInspectionBound, bool(data("hearthCanvasZoomInspectionBound"), false));
+    c.atlasBuildStarted = bool(receipt.atlasBuildStarted, bool(data("hearthCanvasAtlasBuildStarted"), false));
+    c.atlasBuildComplete = bool(receipt.atlasBuildComplete, bool(data("hearthCanvasAtlasBuildComplete"), false));
+    c.textureComposeStarted = bool(receipt.textureComposeStarted, bool(data("hearthCanvasTextureComposeStarted"), false));
+    c.textureComposeComplete = bool(receipt.textureComposeComplete, bool(data("hearthCanvasTextureComposeComplete"), false));
+    c.firstFrameRequested = bool(receipt.firstFrameRequested, bool(data("hearthCanvasFirstFrameRequested"), false));
+    c.firstFrameDetected = bool(receipt.firstFrameDetected, bool(data("hearthCanvasFirstFrameDetected"), false));
+    c.canvasReady = bool(receipt.canvasReady, bool(data("hearthCanvasReady"), false));
+    c.imageRendered = bool(receipt.imageRendered, bool(data("hearthCanvasImageRendered"), false));
 
-    const visibleCounts =
-      safeNumber(receipt.visibleContentClassCount, 0) > 0 ||
-      safeNumber(receipt.visibleContentLandSampleCount, 0) > 0 ||
-      safeNumber(receipt.visibleContentWaterSampleCount, 0) > 0 ||
-      safeNumber(receipt.visibleContentOtherSampleCount, 0) > 0;
+    c.visibleContentProofStarted = bool(receipt.visibleContentProofStarted, bool(data("hearthCanvasVisibleContentProofStarted"), false));
+    c.visibleContentProof = bool(receipt.visibleContentProof, bool(data("hearthCanvasVisibleContentProof"), false));
+    c.visibleContentStrictProof = bool(receipt.visibleContentStrictProof, bool(data("hearthCanvasVisibleContentStrictProof"), false));
+    c.visibleContentSoftGap = bool(receipt.visibleContentSoftGap, bool(data("hearthCanvasVisibleContentSoftGap"), false));
+    c.visibleContentHardFail = bool(receipt.visibleContentHardFail, bool(data("hearthCanvasVisibleContentHardFail"), false));
+    c.visibleForwardProgress = bool(receipt.visibleForwardProgress, bool(data("hearthCanvasVisibleForwardProgress"), false));
+    c.visibleContentAdmissible = bool(receipt.visibleContentAdmissible, false);
+    c.visiblePlanetAvailable = bool(receipt.visiblePlanetAvailable, bool(data("hearthCanvasVisiblePlanetAvailable"), false));
+
+    const countProof = num(receipt.visibleContentClassCount) > 0 ||
+      num(receipt.visibleContentLandSampleCount) > 0 ||
+      num(receipt.visibleContentWaterSampleCount) > 0 ||
+      num(receipt.visibleContentOtherSampleCount) > 0;
 
     c.visiblePlanetProofValid = Boolean(
-      state.dom.canvasPresent &&
-      state.dom.canvasNonZeroSize &&
+      state.dom.planetCanvas &&
+      state.dom.planetCanvasNonZero &&
       !c.visibleContentHardFail &&
       (
         c.visibleContentProof ||
@@ -661,130 +550,146 @@
         c.visibleForwardProgress ||
         c.visibleContentAdmissible ||
         c.visiblePlanetAvailable ||
-        visibleCounts ||
+        countProof ||
         (c.canvasReady && c.firstFrameDetected) ||
         (c.imageRendered && c.firstFrameDetected)
       )
     );
 
     c.bootComplete = Boolean(c.bootComplete || c.canvasReady || c.visiblePlanetProofValid || c.firstFrameDetected);
-    return c;
   }
 
   function refresh() {
     scanDom();
 
-    state.authorities.indexPresent = Boolean(readIndexApi());
-    state.authorities.northPresent = Boolean(readNorth());
-    state.authorities.eastBranchPresent = Boolean(readBranch("east"));
-    state.authorities.westBranchPresent = Boolean(readBranch("west"));
-    state.authorities.southBranchPresent = Boolean(readBranch("south"));
-    state.authorities.sessionPresent = Boolean(readSession());
+    state.auth.index = Boolean(readIndex());
+    state.auth.north = Boolean(readNorth());
+    state.auth.east = Boolean(readBranch("east"));
+    state.auth.west = Boolean(readBranch("west"));
+    state.auth.south = Boolean(readBranch("south"));
+    state.auth.session = Boolean(readSession());
 
-    state.routeConductor.markerPresent = Boolean(root.__HEARTH_ROUTE_CONDUCTOR_MARKER__ || data("hearthRouteConductorMarkerPresent") === "true");
-    state.routeConductor.apiPresent = Boolean(firstGlobal(["HEARTH_ROUTE_CONDUCTOR", "HearthRouteConductor", "HEARTH.southRouteConductor", "DEXTER_LAB.hearthSouthRouteConductor"]));
-    state.routeConductor.receiptPresent = Boolean(firstGlobal(["HEARTH_ROUTE_CONDUCTOR_RECEIPT", "HEARTH_SOUTH_ROUTE_CONDUCTOR_RECEIPT", "HEARTH.southRouteConductorReceipt", "DEXTER_LAB.hearthSouthRouteConductorReceipt"]));
-    state.routeConductor.runtimeActive = Boolean(state.booting || state.booted || state.routeConductor.apiPresent);
-    state.routeConductor.hydrated = Boolean(state.routeConductor.apiPresent && state.routeConductor.receiptPresent && state.routeConductor.runtimeActive);
-    state.routeConductor.recognitionStatus = state.routeConductor.hydrated ? "API_RECEIPT_RUNTIME_PRESENT" : state.routeConductor.markerPresent ? "MARKER_PRESENT_API_PENDING" : "MARKER_PENDING";
+    state.conductor.marker = Boolean(root.__HEARTH_ROUTE_CONDUCTOR_MARKER__ || data("hearthRouteConductorMarkerPresent") === "true");
+    state.conductor.api = Boolean(first(["HEARTH_ROUTE_CONDUCTOR", "HearthRouteConductor", "HEARTH_SOUTH_ROUTE_CONDUCTOR", "HEARTH_SOUTH_CARDINAL_FIBONACCI_THIN_CONDUCTOR", "HEARTH.southRouteConductor", "HEARTH.southCardinalFibonacciThinConductor", "DEXTER_LAB.hearthSouthRouteConductor"]));
+    state.conductor.receipt = Boolean(first(["HEARTH_ROUTE_CONDUCTOR_RECEIPT", "HEARTH_SOUTH_ROUTE_CONDUCTOR_RECEIPT", "HEARTH_SOUTH_CARDINAL_FIBONACCI_THIN_CONDUCTOR_RECEIPT", "HEARTH.southRouteConductorReceipt", "HEARTH.southCardinalFibonacciThinConductorReceipt", "DEXTER_LAB.hearthSouthRouteConductorReceipt"]));
+    state.conductor.runtime = Boolean(state.booting || state.booted || state.conductor.api);
+    state.conductor.hydrated = Boolean(state.conductor.api && state.conductor.receipt && state.conductor.runtime);
+    state.conductor.status = state.conductor.hydrated ? "API_RECEIPT_RUNTIME_PRESENT" : state.conductor.marker ? "MARKER_PRESENT_API_PENDING" : "MARKER_PENDING";
 
     summarizeCanvas(readCanvasReceipt());
     evaluateGates();
     updateDataset();
+
     return getReceiptLight(false);
+  }
+
+  function evaluateNews() {
+    const c = state.canvas;
+    const north = Boolean(state.auth.north || state.auth.session);
+    const east = Boolean(state.auth.index || doc);
+    const west = Boolean(state.inspect.strictReady || state.inspect.fallbackReady);
+    const south = Boolean(state.conductor.hydrated && c.visiblePlanetProofValid && !c.visibleContentHardFail);
+
+    const strict = Boolean(north && east && west && south && state.inspect.strictReady && c.visibleContentStrictProof && c.allChildrenReady);
+    const degraded = Boolean(strict || (north && east && west && south));
+
+    state.completion.newsStrict = strict;
+    state.completion.newsDegraded = degraded && !strict;
+
+    return { strict, degraded: degraded && !strict, north, east, west, south };
   }
 
   function gateStatus(gate) {
     const c = state.canvas;
-    const a = state.authorities;
-    const i = state.inspect;
 
     switch (gate.id) {
       case "F1_EAST_ROUTE_SHELL":
         return { ok: Boolean(doc), progress: doc ? 100 : 20, reason: doc ? "document-present" : "document-missing" };
+
       case "F2_EAST_FIRST_PAINT":
-        return { ok: Boolean(doc && (state.dom.cockpitPresent || doc.body || doc.documentElement)), progress: state.dom.cockpitPresent ? 100 : doc ? 80 : 20, reason: state.dom.cockpitPresent ? "cockpit-present" : "document-shell-present" };
+        return { ok: Boolean(doc && (state.dom.cockpit || doc.body || doc.documentElement)), degraded: Boolean(doc && !state.dom.cockpit), progress: state.dom.cockpit ? 100 : doc ? 80 : 20, reason: state.dom.cockpit ? "cockpit-present" : "document-shell-present" };
+
       case "F3_EAST_SCRIPT_ORDER":
-        return { ok: Boolean(a.indexPresent || doc), degraded: !a.indexPresent, progress: a.indexPresent ? 100 : 75, reason: a.indexPresent ? "index-api-present" : "page-shell-script-order-fallback" };
+        return { ok: Boolean(state.auth.index || doc), degraded: !state.auth.index, progress: state.auth.index ? 100 : 75, reason: state.auth.index ? "index-api-present" : "page-shell-script-order-fallback" };
+
       case "F5_NORTH_AUTHORITY":
-        return { ok: Boolean(a.northPresent || readSession()), degraded: !a.northPresent, progress: a.northPresent ? 100 : 70, reason: a.northPresent ? "north-present" : "north-local-session-fallback" };
+        return { ok: Boolean(state.auth.north || readSession()), degraded: !state.auth.north, progress: state.auth.north ? 100 : 70, reason: state.auth.north ? "north-present" : "north-session-fallback" };
+
       case "F8_SOUTH_CONDUCTOR":
-        return { ok: state.routeConductor.hydrated, progress: state.routeConductor.hydrated ? 100 : state.routeConductor.markerPresent ? 45 : 20, reason: state.routeConductor.recognitionStatus };
+        return { ok: state.conductor.hydrated, progress: state.conductor.hydrated ? 100 : state.conductor.marker ? 45 : 20, reason: state.conductor.status };
+
       case "F13A_CANVAS_PARENT":
-        return { ok: Boolean(c.parentPresent && c.parentBootMethodAvailable && c.bootRequested), progress: c.bootRequested ? 100 : c.parentPresent ? 75 : 20, reason: c.parentPresent ? `parent-method=${c.parentBootMethod || "missing"}` : "canvas-parent-missing" };
+        return { ok: Boolean(c.parent && c.methodReady && c.bootRequested), degraded: Boolean(c.bootRequested && !c.bootResolved), progress: c.bootRequested ? 100 : c.parent ? 75 : 20, reason: c.parent ? `parent-method=${c.method || "missing"}` : "canvas-parent-missing" };
+
       case "F13B_CANVAS_CHILDREN":
         return { ok: Boolean(c.allChildrenReady || (c.eastPresent && c.westPresent && c.southPresent)), degraded: !c.allChildrenReady, progress: c.allChildrenReady ? 100 : (c.eastPresent || c.westPresent || c.southPresent) ? 70 : 25, reason: c.allChildrenReady ? "all-canvas-children-ready" : c.childGap || "canvas-children-pending" };
+
       case "F13C_CANVAS_TEXTURE":
         return { ok: Boolean(c.textureComposeComplete || c.atlasBuildComplete), degraded: !c.textureComposeComplete, progress: c.textureComposeComplete ? 100 : c.atlasBuildComplete ? 80 : c.textureComposeStarted ? 55 : 25, reason: c.textureComposeComplete ? "texture-complete" : "texture-pending" };
+
       case "F13D_CANVAS_FRAME":
-        return { ok: Boolean(c.firstFrameDetected || c.imageRendered || (state.dom.canvasPresent && state.dom.canvasNonZeroSize && c.canvasReady)), degraded: !(c.firstFrameDetected || c.imageRendered), progress: c.firstFrameDetected ? 100 : c.imageRendered ? 95 : state.dom.canvasNonZeroSize ? 70 : 25, reason: c.firstFrameDetected ? "first-frame-detected" : "frame-pending" };
+        return { ok: Boolean(c.firstFrameDetected || c.imageRendered || (state.dom.planetCanvas && state.dom.planetCanvasNonZero && c.canvasReady)), degraded: !(c.firstFrameDetected || c.imageRendered), progress: c.firstFrameDetected ? 100 : c.imageRendered ? 95 : state.dom.planetCanvasNonZero ? 70 : 25, reason: c.firstFrameDetected ? "first-frame-detected" : "frame-pending" };
+
       case "F13E_VISIBLE_PROOF":
         if (c.visibleContentHardFail) return { ok: false, hard: true, progress: 0, reason: "visible-content-hard-fail" };
-        return { ok: c.visiblePlanetProofValid, degraded: c.visibleContentSoftGap || !c.visibleContentStrictProof, progress: c.visiblePlanetProofValid ? 100 : state.dom.canvasNonZeroSize ? 60 : 20, reason: c.visiblePlanetProofValid ? (c.visibleContentStrictProof ? "strict-visible-proof" : "visible-proof-soft-or-dom-reconciled") : "visible-proof-pending" };
+        return { ok: c.visiblePlanetProofValid, degraded: c.visiblePlanetProofValid && (c.visibleContentSoftGap || !c.visibleContentStrictProof), progress: c.visiblePlanetProofValid ? 100 : state.dom.planetCanvasNonZero ? 60 : 20, reason: c.visiblePlanetProofValid ? c.visibleContentStrictProof ? "strict-visible-proof" : "visible-proof-soft-or-dom-reconciled" : "visible-proof-pending" };
+
       case "F13N_INSPECT_GATE":
-        return { ok: Boolean(i.strictReady || i.fallbackReady), degraded: !i.strictReady, progress: i.strictReady ? 100 : i.fallbackReady ? 80 : 35, reason: i.strictReady ? "strict-inspect-ready" : i.fallbackReady ? "receipt-inspect-fallback-ready" : "inspect-pending" };
+        return { ok: Boolean(state.inspect.strictReady || state.inspect.fallbackReady), degraded: !state.inspect.strictReady, progress: state.inspect.strictReady ? 100 : state.inspect.fallbackReady ? 80 : 35, reason: state.inspect.strictReady ? "strict-inspect-ready" : state.inspect.fallbackReady ? "receipt-inspect-fallback-ready" : "inspect-pending" };
+
       case "F21_COMPLETION_LATCH": {
         const news = evaluateNews();
         if (!c.visiblePlanetProofValid) return { ok: false, hard: true, progress: 0, reason: "F21_BLOCKED_VISIBLE_PLANET_PROOF_MISSING" };
-        return { ok: news.passed || news.degraded, degraded: news.degraded && !news.passed, progress: news.passed || news.degraded ? 100 : 70, reason: news.passed ? "news-gates-passed" : news.degraded ? "news-gates-degraded" : "news-gates-pending" };
+        return { ok: news.strict || news.degraded, degraded: news.degraded && !news.strict, progress: news.strict || news.degraded ? 100 : 70, reason: news.strict ? "news-gates-passed" : news.degraded ? "news-gates-degraded" : "news-gates-pending" };
       }
+
       default:
         return { ok: false, progress: 0, reason: "unknown-gate" };
     }
   }
 
-  function evaluateNews() {
-    const c = state.canvas;
-    const a = state.authorities;
-    const i = state.inspect;
-    const north = Boolean(a.northPresent || a.sessionPresent);
-    const east = Boolean(a.indexPresent || doc);
-    const west = Boolean(i.strictReady || i.fallbackReady);
-    const south = Boolean(state.routeConductor.hydrated && c.visiblePlanetProofValid && !c.visibleContentHardFail);
-    const strict = Boolean(north && east && i.strictReady && south && c.visibleContentStrictProof && c.allChildrenReady);
-    const degraded = Boolean(strict || (north && east && west && south));
-
-    state.completion.newsGatePassed = strict;
-    state.completion.newsGateDegraded = degraded && !strict;
-    return { passed: strict, degraded: degraded && !strict, north, east, west, south };
-  }
-
   function evaluateGates() {
-    const ledger = [];
-    GATES.forEach((gate, index) => {
+    const ledger = GATES.map((gate) => {
       const status = gateStatus(gate);
-      ledger.push({
-        id: gate.id,
-        fib: gate.fib,
-        cardinal: gate.cardinal,
-        label: gate.label,
-        index,
+      return {
+        ...gate,
         ok: status.ok === true,
         degraded: status.degraded === true,
         hard: status.hard === true,
         progress: clamp(status.progress, 0, 100),
         reason: status.reason || ""
-      });
+      };
     });
+
     state.gateLedger = ledger;
 
     let next = 0;
+
     for (let i = 0; i < ledger.length; i += 1) {
-      const item = ledger[i];
-      if (item.ok) {
-        if (!state.completedGates.includes(item.id)) {
-          state.completedGates.push(item.id);
-          if (item.degraded && !state.degradedGates.includes(item.id)) state.degradedGates.push(item.id);
-          record("GATE_COMPLETED", { id: item.id, fib: item.fib, cardinal: item.cardinal, degraded: item.degraded, reason: item.reason });
-          submitToNorth(item);
-        }
-        next = Math.min(i + 1, GATES.length - 1);
-      } else {
+      const gate = ledger[i];
+
+      if (!gate.ok) {
         next = i;
-        if (item.hard && !state.blockedGates.includes(item.id)) state.blockedGates.push(item.id);
+        if (gate.hard) addOnce(state.blockedGates, gate.id);
         break;
       }
+
+      if (!state.completedGates.includes(gate.id)) {
+        state.completedGates.push(gate.id);
+        if (gate.degraded) addOnce(state.degradedGates, gate.id);
+        log("GATE_COMPLETED", { id: gate.id, fib: gate.fib, cardinal: gate.cardinal, degraded: gate.degraded, reason: gate.reason });
+        submitToNorth(gate);
+      }
+
+      next = Math.min(i + 1, ledger.length - 1);
     }
+
+    const active = ledger[next] || ledger[0];
+
+    state.activeGateId = active.id;
+    state.activeFibonacci = active.fib;
+    state.activeCardinal = active.cardinal;
+    state.activeProgress = active.progress;
 
     if (state.completedGates.length === GATES.length && state.canvas.visiblePlanetProofValid) {
       state.completion.latched = true;
@@ -795,21 +700,13 @@
       state.firstFailedCoordinate = state.completion.degraded ? "DEGRADED_F21_LATCHED" : "NONE_F21_LATCHED";
       state.recommendedNextRenewalTarget = "read-postgame-receipt";
     } else {
-      const active = ledger[next] || ledger[ledger.length - 1];
       state.completion.latched = false;
       state.completion.readyTextAllowed = false;
-      state.completion.f21LatchMode = active && active.id === "F21_COMPLETION_LATCH" ? "BLOCKED_OR_WAITING" : "WAITING";
-      state.postgameStatus = active && active.hard ? "BLOCKED_BY_ACTIVE_GATE" : "WAITING_ACTIVE_GATE";
-      state.firstFailedCoordinate = active ? `WAITING_${active.id}` : "WAITING_GATE";
-      state.recommendedNextRenewalTarget = active && active.id && active.id.startsWith("F13") ? CANVAS_FILE : FILE;
+      state.completion.f21LatchMode = active.id === "F21_COMPLETION_LATCH" ? "BLOCKED_OR_WAITING" : "WAITING";
+      state.postgameStatus = active.hard ? "BLOCKED_BY_ACTIVE_GATE" : "WAITING_ACTIVE_GATE";
+      state.firstFailedCoordinate = `WAITING_${active.id}`;
+      state.recommendedNextRenewalTarget = active.id.startsWith("F13") ? FILES.canvas : FILE;
     }
-
-    const activeGate = ledger[next] || ledger[0];
-    state.activeGateIndex = next;
-    state.activeGateId = activeGate.id;
-    state.activeFibonacci = activeGate.fib;
-    state.activeCardinal = activeGate.cardinal;
-    state.activeProgress = activeGate.progress;
   }
 
   function submitToNorth(gate) {
@@ -827,7 +724,7 @@
       contract: CONTRACT,
       receipt: RECEIPT,
       detail: {
-        gate: clonePlain(gate),
+        gate: copy(gate),
         markerIsNotHydrationProof: true,
         visualProofRequiredForF13: true,
         visualProofRequiredForF21: true,
@@ -838,35 +735,33 @@
     };
 
     try {
-      if (isFunction(session.submitEvent)) return session.submitEvent(payload);
-      if (isFunction(session.submit)) return session.submit(payload);
-      if (isFunction(session.completeActive)) return session.completeActive(payload);
+      if (fn(session.submitEvent)) return session.submitEvent(payload);
+      if (fn(session.submit)) return session.submit(payload);
+      if (fn(session.completeActive)) return session.completeActive(payload);
     } catch (error) {
-      recordError("NORTH_GATE_SUBMIT_FAILED", error, { gate: gate.id });
+      err("NORTH_GATE_SUBMIT_FAILED", error, { gate: gate.id });
     }
 
     return false;
   }
 
   function canvasSignature(receipt) {
-    const keys = [
-      "contract", "receipt", "splitContract", "splitReceipt", "canvasCarrierRequested", "canvasCarrierMounted", "canvasContextReady",
-      "canvasEastReady", "canvasWestReady", "canvasSouthReady", "allCanvasChildrenReady", "atlasBuildComplete", "textureComposeComplete",
-      "firstFrameDetected", "canvasReady", "imageRendered", "visibleContentProofStarted", "visibleContentProof", "visibleContentStrictProof",
-      "visibleContentSoftGap", "visibleContentHardFail", "visibleForwardProgress", "visibleContentAdmissible", "visiblePlanetAvailable"
-    ];
-    return keys.map((key) => `${key}:${safeString(receipt && receipt[key], "")}`).join("|");
+    const keys = ["contract", "receipt", "splitContract", "splitReceipt", "canvasCarrierRequested", "canvasCarrierMounted", "canvasContextReady", "canvasEastReady", "canvasWestReady", "canvasSouthReady", "allCanvasChildrenReady", "atlasBuildComplete", "textureComposeComplete", "firstFrameDetected", "canvasReady", "imageRendered", "visibleContentProofStarted", "visibleContentProof", "visibleContentStrictProof", "visibleContentSoftGap", "visibleContentHardFail", "visibleForwardProgress", "visibleContentAdmissible", "visiblePlanetAvailable"];
+    return keys.map((key) => `${key}:${str(receipt && receipt[key], "")}`).join("|");
   }
 
   function reconcileCanvas(force = false) {
     const receipt = readCanvasReceipt();
     const signature = canvasSignature(receipt);
-    if (!force && signature && signature === state.canvas.latestSignature) return;
-    state.canvas.latestSignature = signature;
+    if (!force && signature && signature === state.canvas.signature) return getReceiptLight(false);
+
+    state.canvas.signature = signature;
     summarizeCanvas(receipt);
     evaluateGates();
     updateDataset();
-    render();
+    scheduleRender();
+
+    return getReceiptLight(false);
   }
 
   function bootCanvas(reason = "south-cardinal-boot") {
@@ -874,21 +769,23 @@
       return canvasBootPromise || Promise.resolve(readCanvasReceipt());
     }
 
-    if (!state.routeConductor.hydrated) {
+    refresh();
+
+    if (!state.conductor.hydrated) {
       state.canvas.bootError = "waiting-f8-route-conductor-hydration";
       state.postgameStatus = "CANVAS_BOOT_WAITING_FOR_F8";
+      state.recommendedNextRenewalTarget = FILE;
       return Promise.resolve(null);
     }
 
     const canvas = readCanvasApi();
-    const method = selectCanvasMethod(canvas);
-    summarizeCanvas(readCanvasReceipt());
+    const method = canvasMethod(canvas);
 
     if (!canvas || !method) {
       state.canvas.bootError = !canvas ? "canvas-parent-api-missing" : "canvas-parent-boot-method-missing";
       state.postgameStatus = !canvas ? "WAITING_FOR_CANVAS_PARENT_API" : "WAITING_FOR_CANVAS_PARENT_BOOT_METHOD";
-      state.recommendedNextRenewalTarget = CANVAS_FILE;
-      record("CANVAS_PARENT_WAITING", { reason, error: state.canvas.bootError });
+      state.recommendedNextRenewalTarget = FILES.canvas;
+      log("CANVAS_PARENT_WAITING", { reason, error: state.canvas.bootError });
       return Promise.resolve(null);
     }
 
@@ -896,7 +793,8 @@
     state.canvas.bootStarted = true;
     state.canvas.bootAttempts += 1;
     state.canvas.bootError = "";
-    record("CANVAS_PARENT_BOOT_REQUESTED", { reason, method, attempt: state.canvas.bootAttempts });
+
+    log("CANVAS_PARENT_BOOT_REQUESTED", { reason, method, attempt: state.canvas.bootAttempts });
 
     const options = {
       mount: refs.mount || "#hearthCanvasMount",
@@ -909,7 +807,7 @@
       onError: (error) => {
         state.canvas.bootRejected = true;
         state.canvas.bootError = error && error.message ? error.message : String(error || "canvas-boot-error");
-        recordError("CANVAS_PARENT_BOOT_ERROR", state.canvas.bootError);
+        err("CANVAS_PARENT_BOOT_ERROR", state.canvas.bootError);
         reconcileCanvas(true);
       },
       onPhase: () => reconcileCanvas(true)
@@ -920,7 +818,7 @@
         .then((result) => {
           canvasBootPromise = null;
           state.canvas.bootResolved = true;
-          summarizeCanvas(isObject(result) ? result : readCanvasReceipt());
+          summarizeCanvas(obj(result) ? result : readCanvasReceipt());
           state.canvas.bootComplete = Boolean(state.canvas.bootComplete || state.canvas.canvasReady || state.canvas.visiblePlanetProofValid || state.canvas.firstFrameDetected);
           reconcileCanvas(true);
           return result;
@@ -929,7 +827,7 @@
           canvasBootPromise = null;
           state.canvas.bootRejected = true;
           state.canvas.bootError = error && error.message ? error.message : String(error || "canvas-boot-failed");
-          recordError("CANVAS_PARENT_BOOT_FAILED", state.canvas.bootError);
+          err("CANVAS_PARENT_BOOT_FAILED", state.canvas.bootError);
           reconcileCanvas(true);
           return null;
         });
@@ -939,7 +837,7 @@
       canvasBootPromise = null;
       state.canvas.bootRejected = true;
       state.canvas.bootError = error && error.message ? error.message : String(error || "canvas-boot-sync-failed");
-      recordError("CANVAS_PARENT_BOOT_SYNC_FAILED", state.canvas.bootError);
+      err("CANVAS_PARENT_BOOT_SYNC_FAILED", state.canvas.bootError);
       reconcileCanvas(true);
       return Promise.resolve(null);
     }
@@ -950,12 +848,12 @@
     const phase = detail.event && (detail.event.event || detail.event.phase || detail.event.id)
       ? detail.event.event || detail.event.phase || detail.event.id
       : "CANVAS_PHASE";
-    record("CANVAS_PHASE_RECEIVED", { phase });
+    log("CANVAS_PHASE_RECEIVED", { phase });
     reconcileCanvas(true);
   }
 
   function bindControls() {
-    if (state.refsBound || !doc) return;
+    if (!doc) return;
 
     if (refs.copyButton && !refs.copyButton.dataset.hearthSouthThinConductorBound) {
       refs.copyButton.dataset.hearthSouthThinConductorBound = "true";
@@ -974,38 +872,47 @@
 
     if (refs.inspectButton && !refs.inspectButton.dataset.hearthSouthThinConductorBound) {
       refs.inspectButton.dataset.hearthSouthThinConductorBound = "true";
-      refs.inspectButton.addEventListener("click", () => setInspectMode(!(doc.documentElement.dataset.hearthSouthPlanetInspect === "true")));
+      refs.inspectButton.addEventListener("click", () => {
+        const active = !(doc.documentElement.dataset.hearthSouthPlanetInspect === "true");
+        setInspectMode(active);
+      });
     }
 
     if (refs.showTab && !refs.showTab.dataset.hearthSouthThinConductorBound) {
       refs.showTab.dataset.hearthSouthThinConductorBound = "true";
       refs.showTab.addEventListener("click", () => setInspectMode(false));
     }
-
-    state.refsBound = true;
   }
 
   function setInspectMode(active) {
     if (!doc) return getReceipt();
+
     scanDom();
+
     doc.documentElement.dataset.hearthSouthPlanetInspect = String(active);
     doc.documentElement.dataset.hearthEastInspectReservedActive = String(active);
+
     if (refs.cockpit) refs.cockpit.dataset.cockpitMode = active ? "planet-inspect" : "diagnostic-dock";
+
     if (refs.showTab) {
       refs.showTab.hidden = !active;
       refs.showTab.dataset.visible = String(active);
     }
+
     if (refs.inspectButton) refs.inspectButton.textContent = active ? "Show diagnostic" : "Inspect planet";
-    record(active ? "SOUTH_INSPECT_MODE_ACTIVE" : "SOUTH_INSPECT_MODE_RELEASED", { active });
+
+    log(active ? "SOUTH_INSPECT_MODE_ACTIVE" : "SOUTH_INSPECT_MODE_RELEASED", { active });
     refresh();
     render();
+
     return getReceipt();
   }
 
   async function copyDiagnostic() {
     const text = getReceiptText();
+
     try {
-      if (root.navigator && root.navigator.clipboard && isFunction(root.navigator.clipboard.writeText)) {
+      if (root.navigator && root.navigator.clipboard && fn(root.navigator.clipboard.writeText)) {
         await root.navigator.clipboard.writeText(text);
       } else if (doc) {
         const area = doc.createElement("textarea");
@@ -1018,47 +925,52 @@
         doc.execCommand("copy");
         area.remove();
       }
+
       if (refs.copyButton) {
         const prior = refs.copyButton.textContent || "Copy diagnostic";
         refs.copyButton.textContent = "Copied";
         root.setTimeout(() => { refs.copyButton.textContent = prior; }, 900);
       }
+
       return true;
     } catch (error) {
-      recordError("COPY_DIAGNOSTIC_FAILED", error);
+      err("COPY_DIAGNOSTIC_FAILED", error);
       return false;
     }
   }
 
   function renderLanes() {
-    return (state.gateLedger || []).map((gate) => {
+    return state.gateLedger.map((gate) => {
       const status = state.completedGates.includes(gate.id)
         ? state.degradedGates.includes(gate.id) ? "DEGRADED" : "COMPLETE"
-        : gate.id === state.activeGateId ? gate.hard ? "BLOCKED" : "ACTIVE"
-          : "PENDING";
+        : gate.id === state.activeGateId ? gate.hard ? "BLOCKED" : "ACTIVE" : "PENDING";
+
       const progress = status === "COMPLETE" || status === "DEGRADED" ? 100 : gate.id === state.activeGateId ? gate.progress : 0;
-      return [
-        `<section class="hearth-ledger-lane" data-lane="${gate.id}" data-status="${status}">`,
-        `<div class="hearth-ledger-lane-top"><span class="hearth-ledger-lane-title"><strong>${gate.fib} · ${gate.label}</strong><span>${gate.cardinal}</span></span><span class="hearth-ledger-lane-status">${status}</span></div>`,
-        `<div class="hearth-ledger-lane-track"><span class="hearth-ledger-lane-fill" style="width:${progress}%"></span></div>`,
-        `</section>`
-      ].join("");
+
+      return `<section class="hearth-ledger-lane" data-lane="${gate.id}" data-status="${status}"><div class="hearth-ledger-lane-top"><span class="hearth-ledger-lane-title"><strong>${gate.fib} · ${gate.label}</strong><span>${gate.cardinal}</span></span><span class="hearth-ledger-lane-status">${status}</span></div><div class="hearth-ledger-lane-track"><span class="hearth-ledger-lane-fill" style="width:${progress}%"></span></div></section>`;
     }).join("");
   }
 
   function render() {
     if (!doc) return;
+
     state.renderCount += 1;
-    const gate = state.gateLedger[state.activeGateIndex] || GATES[state.activeGateIndex] || GATES[0];
-    const status = state.completion.latched ? "Ready" : `${gate.fib} · ${gate.label}`;
+
+    const gate = state.gateLedger.find((g) => g.id === state.activeGateId) || GATES[0];
+    const title = state.completion.latched ? "Ready" : `${gate.fib} · ${gate.label}`;
+
     if (refs.stage) refs.stage.textContent = `${gate.cardinal} · ${gate.fib}`;
-    if (refs.heartbeat) refs.heartbeat.textContent = status;
+    if (refs.heartbeat) refs.heartbeat.textContent = title;
     if (refs.latest) refs.latest.textContent = `latest=${state.latestEvent}`;
     if (refs.fill) refs.fill.style.width = `${clamp(state.activeProgress, 0, 100)}%`;
     if (refs.percent) refs.percent.textContent = `${Math.round(clamp(state.activeProgress, 0, 100))}%`;
     if (refs.lanes) refs.lanes.innerHTML = renderLanes();
     if (refs.status) refs.status.textContent = getStatusText();
-    if (refs.receiptText && refs.receiptBox && refs.receiptBox.dataset.visible === "true") refs.receiptText.textContent = getReceiptText();
+
+    if (refs.receiptText && refs.receiptBox && refs.receiptBox.dataset.visible === "true") {
+      refs.receiptText.textContent = getReceiptText();
+    }
+
     updateDataset();
   }
 
@@ -1072,12 +984,19 @@
 
   function startWatchdog() {
     if (watchdogTimer) root.clearInterval(watchdogTimer);
+
     watchdogTimer = root.setInterval(() => {
       state.watchdogTicks += 1;
+
       refresh();
-      if (state.routeConductor.hydrated && !state.canvas.bootComplete && state.canvas.bootAttempts < 3) bootCanvas("watchdog");
+
+      if (state.conductor.hydrated && !state.canvas.bootComplete && state.canvas.bootAttempts < CANVAS_BOOT_LIMIT) {
+        bootCanvas("watchdog");
+      }
+
       reconcileCanvas();
       render();
+
       if (state.completion.latched || state.watchdogTicks >= WATCHDOG_LIMIT) {
         root.clearInterval(watchdogTimer);
         watchdogTimer = 0;
@@ -1087,8 +1006,10 @@
 
   function boot() {
     if (bootPromise) return bootPromise;
+
     bootPromise = Promise.resolve().then(() => {
       if (state.booted || state.booting) return getReceipt();
+
       state.booting = true;
       state.startedAt = nowIso();
       state.updatedAt = state.startedAt;
@@ -1105,35 +1026,38 @@
 
       state.booting = false;
       state.booted = true;
-      state.routeConductor.runtimeActive = true;
+      state.conductor.runtime = true;
+
       publishGlobals();
       refresh();
       render();
 
       root.setTimeout(() => bootCanvas("initial"), 80);
       startWatchdog();
-      record("SOUTH_CARDINAL_FIBONACCI_THIN_CONDUCTOR_BOOTED", { route: ROUTE });
+
+      log("SOUTH_CARDINAL_FIBONACCI_THIN_CONDUCTOR_BOOTED", { route: ROUTE });
+
       return getReceipt();
     });
+
     return bootPromise;
   }
 
   function dispose(reason = "manual-dispose") {
-    if (watchdogTimer) {
-      root.clearInterval(watchdogTimer);
-      watchdogTimer = 0;
-    }
-    if (renderTimer) {
-      root.clearTimeout(renderTimer);
-      renderTimer = 0;
-    }
+    if (watchdogTimer) root.clearInterval(watchdogTimer);
+    if (renderTimer) root.clearTimeout(renderTimer);
+    watchdogTimer = 0;
+    renderTimer = 0;
+
     if (root.removeEventListener) root.removeEventListener("hearth:canvas-phase", onCanvasPhase);
-    record("SOUTH_CARDINAL_FIBONACCI_THIN_CONDUCTOR_DISPOSED", { reason });
+
+    log("SOUTH_CARDINAL_FIBONACCI_THIN_CONDUCTOR_DISPOSED", { reason });
     render();
   }
 
   function getReceiptLight(doRefresh = true) {
     if (doRefresh) refresh();
+
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
@@ -1147,7 +1071,6 @@
       cardinalCircuitActive: true,
       newsProtocolSynchronized: true,
       fibonacciSynchronizationActive: true,
-      transmissionMode: true,
       oneActiveGearAtATime: true,
       markerIsNotHydrationProof: true,
       visualProofRequiredForF13: true,
@@ -1161,24 +1084,24 @@
       degradedGates: state.degradedGates.slice(),
       blockedGates: state.blockedGates.slice(),
 
-      indexPresent: state.authorities.indexPresent,
-      northPresent: state.authorities.northPresent,
-      eastBranchPresent: state.authorities.eastBranchPresent,
-      westBranchPresent: state.authorities.westBranchPresent,
-      southBranchPresent: state.authorities.southBranchPresent,
-      sessionPresent: state.authorities.sessionPresent,
-      sessionCreatedBySouth: state.authorities.sessionCreatedBySouth,
+      indexPresent: state.auth.index,
+      northPresent: state.auth.north,
+      eastBranchPresent: state.auth.east,
+      westBranchPresent: state.auth.west,
+      southBranchPresent: state.auth.south,
+      sessionPresent: state.auth.session,
+      sessionCreatedBySouth: state.auth.sessionCreatedBySouth,
 
-      routeConductorMarkerPresent: state.routeConductor.markerPresent,
-      routeConductorApiPresent: state.routeConductor.apiPresent,
-      routeConductorReceiptPresent: state.routeConductor.receiptPresent,
-      routeConductorRuntimeActive: state.routeConductor.runtimeActive,
-      routeConductorHydrated: state.routeConductor.hydrated,
-      routeConductorRecognitionStatus: state.routeConductor.recognitionStatus,
+      routeConductorMarkerPresent: state.conductor.marker,
+      routeConductorApiPresent: state.conductor.api,
+      routeConductorReceiptPresent: state.conductor.receipt,
+      routeConductorRuntimeActive: state.conductor.runtime,
+      routeConductorHydrated: state.conductor.hydrated,
+      routeConductorRecognitionStatus: state.conductor.status,
 
-      canvasParentPresent: state.canvas.parentPresent,
-      canvasParentBootMethodAvailable: state.canvas.parentBootMethodAvailable,
-      canvasParentBootMethod: state.canvas.parentBootMethod,
+      canvasParentPresent: state.canvas.parent,
+      canvasParentBootMethodAvailable: state.canvas.methodReady,
+      canvasParentBootMethod: state.canvas.method,
       canvasBootRequested: state.canvas.bootRequested,
       canvasBootStarted: state.canvas.bootStarted,
       canvasBootResolved: state.canvas.bootResolved,
@@ -1201,23 +1124,15 @@
       allCanvasChildrenReady: state.canvas.allChildrenReady,
       canvasChildGap: state.canvas.childGap,
 
-      canvasCarrierRequested: state.canvas.carrierRequested,
-      canvasCarrierMounted: state.canvas.carrierMounted,
-      canvasContextReady: state.canvas.contextReady,
-      dragInspectionBound: state.canvas.dragInspectionBound,
-      zoomInspectionBound: state.canvas.zoomInspectionBound,
-      atlasBuildStarted: state.canvas.atlasBuildStarted,
       atlasBuildComplete: state.canvas.atlasBuildComplete,
-      textureComposeStarted: state.canvas.textureComposeStarted,
       textureComposeComplete: state.canvas.textureComposeComplete,
-      firstFrameRequested: state.canvas.firstFrameRequested,
       firstFrameDetected: state.canvas.firstFrameDetected,
       canvasReady: state.canvas.canvasReady,
       imageRendered: state.canvas.imageRendered,
 
-      planetCanvasPresent: state.dom.canvasPresent,
-      planetCanvasNonZeroSize: state.dom.canvasNonZeroSize,
-      visiblePlanetHintPresent: state.dom.visiblePlanetHintPresent,
+      planetCanvasPresent: state.dom.planetCanvas,
+      planetCanvasNonZeroSize: state.dom.planetCanvasNonZero,
+      visiblePlanetHintPresent: state.dom.visibleHint,
       visibleContentProofStarted: state.canvas.visibleContentProofStarted,
       visibleContentProof: state.canvas.visibleContentProof,
       visibleContentStrictProof: state.canvas.visibleContentStrictProof,
@@ -1228,11 +1143,11 @@
       visiblePlanetAvailable: state.canvas.visiblePlanetAvailable,
       visiblePlanetProofValid: state.canvas.visiblePlanetProofValid,
 
-      inspectModeAvailable: state.inspect.inspectModeAvailable,
-      inspectPlanetControlAvailable: state.inspect.inspectPlanetControlAvailable,
-      diagnosticCanLeavePlanetFrame: state.inspect.diagnosticCanLeavePlanetFrame,
-      receiptToggleReady: state.inspect.receiptToggleReady,
-      copyDiagnosticReady: state.inspect.copyDiagnosticReady,
+      inspectModeAvailable: state.inspect.available,
+      inspectPlanetControlAvailable: state.inspect.control,
+      diagnosticCanLeavePlanetFrame: state.inspect.canLeaveFrame,
+      receiptToggleReady: state.inspect.receiptReady,
+      copyDiagnosticReady: state.inspect.copyReady,
       inspectStrictReady: state.inspect.strictReady,
       inspectFallbackReady: state.inspect.fallbackReady,
 
@@ -1240,8 +1155,8 @@
       degradedCompletionLatched: state.completion.degraded,
       readyTextAllowed: state.completion.readyTextAllowed,
       f21LatchMode: state.completion.f21LatchMode,
-      newsGatePassed: state.completion.newsGatePassed,
-      newsGateDegraded: state.completion.newsGateDegraded,
+      newsGatePassed: state.completion.newsStrict,
+      newsGateDegraded: state.completion.newsDegraded,
 
       latestEvent: state.latestEvent,
       postgameStatus: state.postgameStatus,
@@ -1264,11 +1179,11 @@
     const light = getReceiptLight(true);
     return {
       ...light,
-      files: clonePlain(state.files),
-      jobs: clonePlain(state.jobs),
-      gateLedger: clonePlain(state.gateLedger),
-      localEvents: clonePlain(state.localEvents),
-      errors: clonePlain(state.errors),
+      files: copy(FILES),
+      jobs: copy(state.jobs),
+      gateLedger: copy(state.gateLedger),
+      localEvents: copy(state.localEvents),
+      errors: copy(state.errors),
       startedAt: state.startedAt
     };
   }
@@ -1284,7 +1199,9 @@
       `activeCardinal=${r.activeCardinal}`,
       `activeProgress=${r.activeProgress}`,
       `routeConductorHydrated=${r.routeConductorHydrated}`,
+      `routeConductorRecognitionStatus=${r.routeConductorRecognitionStatus}`,
       `canvasParentPresent=${r.canvasParentPresent}`,
+      `canvasParentBootMethodAvailable=${r.canvasParentBootMethodAvailable}`,
       `canvasBootRequested=${r.canvasBootRequested}`,
       `allCanvasChildrenReady=${r.allCanvasChildrenReady}`,
       `textureComposeComplete=${r.textureComposeComplete}`,
@@ -1301,9 +1218,6 @@
 
   function getReceiptText() {
     const r = getReceipt();
-    const completed = r.completedGates.join(" > ") || "none";
-    const degraded = r.degradedGates.join(" > ") || "none";
-    const blocked = r.blockedGates.join(" > ") || "none";
     const gates = r.gateLedger.map((g) => `- ${g.id} :: ${g.cardinal} :: ${g.fib} :: ok=${g.ok} :: degraded=${g.degraded} :: progress=${g.progress} :: ${g.reason}`).join("\n") || "- none";
     const errors = r.errors.map((e) => `- ${e.at} :: ${e.code} :: ${e.message}`).join("\n") || "- none";
 
@@ -1319,29 +1233,13 @@
       `route=${r.route}`,
       `role=${r.role}`,
       "",
-      `cardinalCircuitActive=${r.cardinalCircuitActive}`,
-      `newsProtocolSynchronized=${r.newsProtocolSynchronized}`,
-      `fibonacciSynchronizationActive=${r.fibonacciSynchronizationActive}`,
-      `oneActiveGearAtATime=${r.oneActiveGearAtATime}`,
-      `markerIsNotHydrationProof=${r.markerIsNotHydrationProof}`,
-      `visualProofRequiredForF13=${r.visualProofRequiredForF13}`,
-      `visualProofRequiredForF21=${r.visualProofRequiredForF21}`,
-      "",
       `activeGateId=${r.activeGateId}`,
       `activeFibonacci=${r.activeFibonacci}`,
       `activeCardinal=${r.activeCardinal}`,
       `activeProgress=${r.activeProgress}`,
-      `completedGates=${completed}`,
-      `degradedGates=${degraded}`,
-      `blockedGates=${blocked}`,
-      "",
-      `indexPresent=${r.indexPresent}`,
-      `northPresent=${r.northPresent}`,
-      `eastBranchPresent=${r.eastBranchPresent}`,
-      `westBranchPresent=${r.westBranchPresent}`,
-      `southBranchPresent=${r.southBranchPresent}`,
-      `sessionPresent=${r.sessionPresent}`,
-      `sessionCreatedBySouth=${r.sessionCreatedBySouth}`,
+      `completedGates=${r.completedGates.join(" > ") || "none"}`,
+      `degradedGates=${r.degradedGates.join(" > ") || "none"}`,
+      `blockedGates=${r.blockedGates.join(" > ") || "none"}`,
       "",
       `routeConductorMarkerPresent=${r.routeConductorMarkerPresent}`,
       `routeConductorApiPresent=${r.routeConductorApiPresent}`,
@@ -1361,10 +1259,6 @@
       `canvasBootError=${r.canvasBootError}`,
       `canvasBootComplete=${r.canvasBootComplete}`,
       "",
-      `canvasContract=${r.canvasContract}`,
-      `canvasReceipt=${r.canvasReceipt}`,
-      `canvasSplitContract=${r.canvasSplitContract}`,
-      `canvasSplitReceipt=${r.canvasSplitReceipt}`,
       `canvasEastReady=${r.canvasEastReady}`,
       `canvasWestReady=${r.canvasWestReady}`,
       `canvasSouthReady=${r.canvasSouthReady}`,
@@ -1383,11 +1277,6 @@
       `visibleContentStrictProof=${r.visibleContentStrictProof}`,
       `visibleContentSoftGap=${r.visibleContentSoftGap}`,
       `visibleContentHardFail=${r.visibleContentHardFail}`,
-      "",
-      `inspectModeAvailable=${r.inspectModeAvailable}`,
-      `diagnosticCanLeavePlanetFrame=${r.diagnosticCanLeavePlanetFrame}`,
-      `inspectStrictReady=${r.inspectStrictReady}`,
-      `inspectFallbackReady=${r.inspectFallbackReady}`,
       "",
       `completionLatched=${r.completionLatched}`,
       `degradedCompletionLatched=${r.degradedCompletionLatched}`,
@@ -1417,54 +1306,53 @@
 
   function updateDataset() {
     if (!doc || !doc.documentElement) return;
-    const dataset = doc.documentElement.dataset;
-    dataset.hearthRouteConductorMarkerPresent = "true";
-    dataset.hearthRouteConductorLoaded = "true";
-    dataset.hearthRouteConductorPresent = "true";
-    dataset.hearthRouteConductorContract = CONTRACT;
-    dataset.hearthRouteConductorReceipt = RECEIPT;
-    dataset.hearthRouteConductorVersion = VERSION;
-    dataset.hearthRouteConductorMarkerIsHydrationProof = "false";
 
-    dataset.hearthSouthRouteConductorLoaded = "true";
-    dataset.hearthSouthRouteConductorPresent = "true";
-    dataset.hearthSouthRouteConductorContract = CONTRACT;
-    dataset.hearthSouthRouteConductorReceipt = RECEIPT;
-    dataset.hearthSouthCardinalFibonacciThinConductor = "true";
+    const d = doc.documentElement.dataset;
 
-    dataset.hearthSouthActiveGateId = state.activeGateId;
-    dataset.hearthSouthActiveFibonacci = state.activeFibonacci;
-    dataset.hearthSouthActiveCardinal = state.activeCardinal;
-    dataset.hearthSouthActiveProgress = String(state.activeProgress);
-    dataset.hearthSouthCompletedGates = state.completedGates.join(",");
-    dataset.hearthSouthDegradedGates = state.degradedGates.join(",");
-    dataset.hearthSouthBlockedGates = state.blockedGates.join(",");
+    d.hearthRouteConductorMarkerPresent = "true";
+    d.hearthRouteConductorLoaded = "true";
+    d.hearthRouteConductorPresent = "true";
+    d.hearthRouteConductorContract = CONTRACT;
+    d.hearthRouteConductorReceipt = RECEIPT;
+    d.hearthRouteConductorVersion = VERSION;
+    d.hearthRouteConductorMarkerIsHydrationProof = "false";
 
-    dataset.hearthSouthRouteConductorHydrated = String(state.routeConductor.hydrated);
-    dataset.hearthSouthCanvasBootRequested = String(state.canvas.bootRequested);
-    dataset.hearthSouthCanvasBootComplete = String(state.canvas.bootComplete);
-    dataset.hearthSouthAllCanvasChildrenReady = String(state.canvas.allChildrenReady);
-    dataset.hearthSouthVisiblePlanetProofValid = String(state.canvas.visiblePlanetProofValid);
-    dataset.hearthSouthCompletionLatched = String(state.completion.latched);
-    dataset.hearthSouthF21LatchMode = state.completion.f21LatchMode;
-    dataset.hearthSouthPostgameStatus = state.postgameStatus;
-    dataset.hearthSouthFirstFailedCoordinate = state.firstFailedCoordinate;
-    dataset.hearthSouthRecommendedNextRenewalTarget = state.recommendedNextRenewalTarget;
+    d.hearthSouthRouteConductorLoaded = "true";
+    d.hearthSouthRouteConductorPresent = "true";
+    d.hearthSouthRouteConductorContract = CONTRACT;
+    d.hearthSouthRouteConductorReceipt = RECEIPT;
+    d.hearthSouthCardinalFibonacciThinConductor = "true";
 
-    dataset.generatedImage = "false";
-    dataset.graphicBox = "false";
-    dataset.webgl = "false";
-    dataset.visualPassClaimed = "false";
+    d.hearthSouthActiveGateId = state.activeGateId;
+    d.hearthSouthActiveFibonacci = state.activeFibonacci;
+    d.hearthSouthActiveCardinal = state.activeCardinal;
+    d.hearthSouthActiveProgress = String(state.activeProgress);
+    d.hearthSouthRouteConductorHydrated = String(state.conductor.hydrated);
+    d.hearthSouthRouteConductorRecognitionStatus = state.conductor.status;
+    d.hearthSouthCanvasBootRequested = String(state.canvas.bootRequested);
+    d.hearthSouthAllCanvasChildrenReady = String(state.canvas.allChildrenReady);
+    d.hearthSouthVisiblePlanetProofValid = String(state.canvas.visiblePlanetProofValid);
+    d.hearthSouthCompletionLatched = String(state.completion.latched);
+    d.hearthSouthF21LatchMode = state.completion.f21LatchMode;
+    d.hearthSouthPostgameStatus = state.postgameStatus;
+    d.hearthSouthFirstFailedCoordinate = state.firstFailedCoordinate;
+    d.hearthSouthRecommendedNextRenewalTarget = state.recommendedNextRenewalTarget;
+
+    d.generatedImage = "false";
+    d.graphicBox = "false";
+    d.webgl = "false";
+    d.visualPassClaimed = "false";
   }
 
-  function publishEarlyMarker() {
+  function publishMarker() {
     root.__HEARTH_ROUTE_CONDUCTOR_MARKER__ = true;
     root.__HEARTH_ROUTE_CONDUCTOR_FILE__ = FILE;
     root.__HEARTH_ROUTE_CONDUCTOR_CONTRACT__ = CONTRACT;
     root.__HEARTH_ROUTE_CONDUCTOR_RECEIPT__ = RECEIPT;
     root.__HEARTH_ROUTE_CONDUCTOR_MARKER_IS_HYDRATION_PROOF__ = false;
-    state.routeConductor.markerPresent = true;
-    state.routeConductor.recognitionStatus = "MARKER_PRESENT_API_PENDING";
+
+    state.conductor.marker = true;
+    state.conductor.status = "MARKER_PRESENT_API_PENDING";
     updateDataset();
   }
 
@@ -1487,13 +1375,14 @@
     root.DEXTER_LAB.hearthSouthRouteConductor = api;
     root.DEXTER_LAB.hearthSouthCardinalFibonacciThinConductor = api;
 
-    state.routeConductor.apiPresent = true;
-    state.routeConductor.receiptPresent = true;
-    state.routeConductor.runtimeActive = true;
-    state.routeConductor.hydrated = Boolean(state.booted || state.booting || state.routeConductor.runtimeActive);
-    state.routeConductor.recognitionStatus = "API_RECEIPT_RUNTIME_PRESENT";
+    state.conductor.api = true;
+    state.conductor.receipt = true;
+    state.conductor.runtime = true;
+    state.conductor.hydrated = true;
+    state.conductor.status = "API_RECEIPT_RUNTIME_PRESENT";
 
     const light = getReceiptLight(false);
+
     root.HEARTH_ROUTE_CONDUCTOR_RECEIPT = light;
     root.HEARTH_SOUTH_ROUTE_CONDUCTOR_RECEIPT = light;
     root.HEARTH_SOUTH_CARDINAL_FIBONACCI_THIN_CONDUCTOR_RECEIPT = light;
@@ -1564,7 +1453,7 @@
     get state() { return state; }
   };
 
-  publishEarlyMarker();
+  publishMarker();
   publishGlobals();
 
   if (doc) {

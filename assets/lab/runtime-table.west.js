@@ -1,17 +1,15 @@
 // /assets/lab/runtime-table.west.js
-// LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_TNT_v2
+// LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_TNT_v3
 // Full-file replacement.
 // Cardinal West authority.
 // Purpose:
-// - Repair Cycle 2 West intake and Canvas release recognition.
-// - Parse cycleNumber, cycleRoute, activeCycleNumber, activeCycleRoute directly.
-// - Parse handoffTo, receivedFrom, returnTo, sourceFile, destinationFile directly.
-// - Treat Cycle 2 + handoffTo=WEST as macro West audit intake.
-// - Produce the exact top-level Canvas release packet shape required by route conductor and Canvas parent.
+// - Preserve v2 Cycle-aware West admissibility responsibilities.
+// - Add strict pre-release Canvas carrier admissibility before Cycle 2 Canvas release.
+// - Stop false hard-blocking when the current Canvas parent already reports safe carrier proof.
+// - Do not release blindly: Cycle 2 + South output + West intake still requires current Canvas parent observation and safe pre-release carrier proof.
+// - Publish flattened West decision fields required by the Hearth route conductor.
 // - Preserve file-name gates as primary routing gates.
-// - Preserve NEWS alignment, Fibonacci synchronization, false-completion firewall, and legacy West exports.
-// - Release to Canvas only in Cycle 2 after South / route-conductor output is admissible.
-// - Return Cycle 1 South packets to North.
+// - Preserve NEWS alignment, Fibonacci synchronization, false-completion firewall, legacy West exports, and F21 North-only boundary.
 // Does not own:
 // - Canvas child West inspection logic
 // - Canvas parent boot
@@ -30,11 +28,11 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_TNT_v2";
-  const RECEIPT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_RECEIPT_v2";
-  const PREVIOUS_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_TNT_v1";
-  const BASELINE_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_TNT_v1";
-  const VERSION = "2026-05-31.lab-runtime-table-west-cycle-aware-admissibility-clutch-v2";
+  const CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_TNT_v3";
+  const RECEIPT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_RECEIPT_v3";
+  const PREVIOUS_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_TNT_v2";
+  const BASELINE_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_TNT_v2";
+  const VERSION = "2026-06-01.lab-runtime-table-west-cycle-aware-admissibility-clutch-v3";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
@@ -150,7 +148,7 @@
     checkpoint(CHECKPOINT_IDS.F13C, 13.3, "F13C", "SOUTH", "canvas texture"),
     checkpoint(CHECKPOINT_IDS.F13D, 13.4, "F13D", "SOUTH", "canvas frame"),
     checkpoint(CHECKPOINT_IDS.F13E, 13.5, "F13E", "SOUTH", "visible proof"),
-    checkpoint(CHECKPOINT_IDS.F13N, 13.9, "F13N", "WEST", "inspect gate"),
+    checkpoint(CHECKPOINT_IDS.F13N, 13.9, "WEST", "inspect gate"),
     checkpoint(CHECKPOINT_IDS.F21, 21, "F21", "NORTH", "completion latch")
   ]);
 
@@ -240,6 +238,8 @@
     routeConductorCycleParsingActive: true,
     handoffFieldParsingActive: true,
     canvasReleaseTopLevelShapeActive: true,
+    preReleaseCarrierAdmissibilityActive: true,
+    currentCanvasParentObservationRequired: true,
 
     classifyCount: 0,
     cycleOneCount: 0,
@@ -248,6 +248,8 @@
     returnNorthCount: 0,
     falseCompletionBlockCount: 0,
     degradedForwardCount: 0,
+    carrierHoldCount: 0,
+    carrierHardBlockCount: 0,
 
     lastNorthContext: null,
     lastCyclePacket: null,
@@ -255,6 +257,7 @@
     lastGapReceipt: null,
     lastCanvasReleasePacket: null,
     lastNormalizedPacket: null,
+    lastPreReleaseCarrierAssessment: null,
 
     localEvents: [],
     errors: [],
@@ -309,7 +312,6 @@
 
   function clonePlain(value) {
     if (!isObject(value) && !Array.isArray(value)) return value;
-
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
@@ -383,10 +385,17 @@
   function readReceipt(authority) {
     if (!authority || !isObject(authority)) return null;
 
+    if (isFunction(authority.getReceiptLight)) {
+      try {
+        const receipt = authority.getReceiptLight();
+        if (isObject(receipt)) return receipt;
+      } catch (_error) {}
+    }
+
     if (isFunction(authority.getReceipt)) {
       try {
         const receipt = authority.getReceipt();
-        return isObject(receipt) ? receipt : null;
+        if (isObject(receipt)) return receipt;
       } catch (error) {
         recordError("READ_RECEIPT_FAILED", error);
         return null;
@@ -398,6 +407,40 @@
     if (authority.contract || authority.receipt || authority.version) return authority;
 
     return null;
+  }
+
+  function fieldDeep(input, names, maxDepth = 7) {
+    const wanted = new Set(asArray(names));
+    const queue = [{ value: input, depth: 0 }];
+    const seen = typeof WeakSet !== "undefined" ? new WeakSet() : null;
+
+    while (queue.length) {
+      const current = queue.shift();
+      const value = current.value;
+
+      if (!isObject(value) || current.depth > maxDepth) continue;
+      if (seen && seen.has(value)) continue;
+      if (seen) seen.add(value);
+
+      for (const key of Object.keys(value)) {
+        if (wanted.has(key)) return value[key];
+      }
+
+      for (const key of Object.keys(value)) {
+        if (isObject(value[key])) queue.push({ value: value[key], depth: current.depth + 1 });
+      }
+    }
+
+    return undefined;
+  }
+
+  function anyString(input, names, fallback = "") {
+    const value = fieldDeep(input, names);
+    return value === undefined || value === null ? fallback : String(value);
+  }
+
+  function anyBool(input, names, fallback = false) {
+    return safeBool(fieldDeep(input, names), fallback);
   }
 
   function normalizeCycleRoute(value = "") {
@@ -447,7 +490,8 @@
     const canvasEvidenceBody = isObject(source.canvasEvidenceBody) ? source.canvasEvidenceBody : {};
     const admissibility = isObject(source.admissibility) ? source.admissibility : {};
     const nestedGap = isObject(admissibility.gap) ? admissibility.gap : isObject(source.gap) ? source.gap : {};
-
+    const canvasReleasePacket = isObject(source.canvasReleasePacket) ? source.canvasReleasePacket : {};
+    const westPacket = isObject(source.westPacket) ? source.westPacket : {};
     const merged = {
       ...snapshot,
       ...detail,
@@ -456,6 +500,8 @@
       ...canvasEvidenceBody,
       ...nestedGap,
       ...admissibility,
+      ...canvasReleasePacket,
+      ...westPacket,
       ...source
     };
 
@@ -567,13 +613,7 @@
 
   function eventNameFromContext(context = {}) {
     const event = normalizeEvent(context.event || {});
-    return safeString(
-      context.eventName ||
-      event.event ||
-      event.id ||
-      event.phase ||
-      ""
-    );
+    return safeString(context.eventName || event.event || event.id || event.phase || "");
   }
 
   function checkpointFromValue(value = "") {
@@ -875,8 +915,8 @@
       contract: CONTRACT,
       receipt: RECEIPT,
       northRuntimeTableObserved: Boolean(northApi || northReceipt.contract),
-      northContract: safeString(northReceipt.contract || northApi && northApi.contract || ""),
-      northReceipt: safeString(northReceipt.receipt || northApi && northApi.receipt || ""),
+      northContract: safeString(northReceipt.contract || (northApi && northApi.contract) || ""),
+      northReceipt: safeString(northReceipt.receipt || (northApi && northApi.receipt) || ""),
       activeGateId: safeString(activeGateSource),
       activeCheckpointId: checkpoint ? checkpoint.id : safeString(activeGateSource),
       activeFibonacci: checkpoint ? checkpoint.fibonacci : safeString(activeGateSource),
@@ -1038,6 +1078,218 @@
         canvasTargetPresent
       )
     };
+  }
+
+  function readCanvasParentReceipt() {
+    const parentApi = firstGlobal([
+      "HEARTH_CANVAS_PARENT_CURRENT_SOUTH_PROOF_RECONCILIATION",
+      "HEARTH_CANVAS_PARENT_PRE_RELEASE_STRUCTURAL_CARRIER_THEN_WEST_RELEASE_TO_EAST",
+      "HEARTH_CANVAS_PARENT_CHILD_RECONCILIATION_F13_EVIDENCE_RECEIVER",
+      "HEARTH_CANVAS_PARENT_GOVERNED_F13_EVIDENCE_RECEIVER",
+      "HEARTH_CANVAS_PRE_RELEASE_STRUCTURAL_CARRIER",
+      "HEARTH_CANVAS",
+      "HEARTH.canvasParentCurrentSouthProofReconciliation",
+      "HEARTH.canvasParentPreReleaseStructuralCarrierThenWestReleaseToEast",
+      "HEARTH.canvasParentChildReconciliationF13EvidenceReceiver",
+      "HEARTH.canvasPreReleaseStructuralCarrier",
+      "HEARTH.canvas",
+      "DEXTER_LAB.hearthCanvasParentCurrentSouthProofReconciliation",
+      "DEXTER_LAB.hearthCanvasParentPreReleaseStructuralCarrierThenWestReleaseToEast",
+      "DEXTER_LAB.hearthCanvasPreReleaseStructuralCarrier",
+      "DEXTER_LAB.hearthCanvasEvidence"
+    ]);
+
+    return readReceipt(parentApi) || {};
+  }
+
+  function readCanvasCarrierDataset() {
+    const dataset = doc && doc.documentElement && doc.documentElement.dataset ? doc.documentElement.dataset : {};
+
+    return {
+      currentCanvasParentObserved: safeBool(dataset.hearthCanvasLoaded, false) || safeBool(dataset.hearthCanvasParentObserved, false) || safeBool(dataset.hearthCanvasParentApiReady, false),
+      canvasParentObserved: safeBool(dataset.hearthCanvasLoaded, false) || safeBool(dataset.hearthCanvasParentObserved, false),
+      canvasParentV2Observed: safeBool(dataset.hearthCanvasParentChildReconciliationActive, false) || safeBool(dataset.hearthCanvasCurrentSouthProofReconciliationActive, false),
+      canvasParentCarrierSafe: safeBool(dataset.hearthCanvasStructuralCarrierSafeForCanvasRelease, false) || safeBool(dataset.hearthCanvasPreReleaseCarrierSafeForWest, false),
+      structuralCarrierSafeForCanvasRelease: safeBool(dataset.hearthCanvasStructuralCarrierSafeForCanvasRelease, false),
+      canvasPreReleaseCarrierSafeForWest: safeBool(dataset.hearthCanvasPreReleaseCarrierSafeForWest, false),
+      preReleaseStructuralCarrierSafe: safeBool(dataset.hearthCanvasStructuralCarrierSafeForCanvasRelease, false),
+      canvasCarrierHandoffOk: safeBool(dataset.hearthCanvasCarrierHandoffOk, false),
+      planetCanvasPresent: safeBool(dataset.hearthPlanetCanvasPresent, false),
+      planetCanvasNonZeroSize: safeBool(dataset.hearthPlanetCanvasNonZeroSize, false),
+      canvasTargetPresent: safeBool(dataset.hearthCanvasTargetPresent, false),
+      canvasCarrierMounted: safeBool(dataset.hearthCanvasCarrierMounted, false),
+      currentParentIdentityMismatch: safeBool(dataset.hearthCanvasCurrentParentIdentityMismatch, false),
+      currentParentStaleDetected: safeBool(dataset.hearthCanvasCurrentParentStaleDetected, false),
+      staleParentDetected: safeBool(dataset.hearthCanvasStaleParentDetected, false),
+      canvasCarrierHandoffError: safeString(dataset.hearthCanvasCarrierHandoffError, "")
+    };
+  }
+
+  function assessPreReleaseCarrierAdmissibility(packet = {}, context = {}) {
+    const normalized = isObject(packet) && packet.normalizedAt ? packet : normalizeEvent(packet);
+    const canvasReceipt = readCanvasParentReceipt();
+    const datasetCarrier = readCanvasCarrierDataset();
+
+    const merged = {
+      ...datasetCarrier,
+      ...canvasReceipt,
+      ...(isObject(context) ? context : {}),
+      ...normalized
+    };
+
+    const currentCanvasParentObserved = Boolean(
+      anyBool(merged, [
+        "currentCanvasParentObserved",
+        "canvasParentObserved",
+        "canvasParentApiReady",
+        "canvasParentV2Observed",
+        "currentCanvasParentApiReady"
+      ], false) ||
+      Boolean(canvasReceipt.contract) ||
+      Boolean(firstGlobal([
+        "HEARTH_CANVAS",
+        "HEARTH.canvas",
+        "HEARTH_CANVAS_PARENT_CURRENT_SOUTH_PROOF_RECONCILIATION"
+      ]))
+    );
+
+    const canvasParentV2Observed = Boolean(
+      anyBool(merged, [
+        "canvasParentV2Observed",
+        "currentSouthProofReconciliationActive",
+        "parentChildReconciliationActive",
+        "preReleaseStructuralCarrierActive",
+        "governedF13EvidenceReceiverActive"
+      ], false)
+    );
+
+    const canvasParentCarrierSafe = Boolean(
+      anyBool(merged, [
+        "canvasParentCarrierSafe",
+        "carrierReady",
+        "canvasCarrierReady",
+        "carrierHostReady",
+        "canvasPreReleaseCarrierAccepted",
+        "canvasPreReleaseCarrierSafeForWest"
+      ], false)
+    );
+
+    const structuralCarrierSafeForCanvasRelease = Boolean(
+      anyBool(merged, [
+        "structuralCarrierSafeForCanvasRelease",
+        "preReleaseStructuralCarrierSafe",
+        "preReleaseStructuralCarrierSafeForCanvasRelease",
+        "canvasCarrierStructuralSafeForWest"
+      ], false)
+    );
+
+    const canvasPreReleaseCarrierSafeForWest = Boolean(
+      anyBool(merged, [
+        "canvasPreReleaseCarrierSafeForWest",
+        "preReleaseCarrierSafeForWest",
+        "canvasPreReleaseCarrierAccepted",
+        "canvasCarrierReleaseSafeForWest"
+      ], false)
+    );
+
+    const canvasCarrierHandoffOk = anyBool(merged, ["canvasCarrierHandoffOk", "canvasCarrierHandoffOK"], false);
+    const planetCanvasPresent = anyBool(merged, ["planetCanvasPresent", "canvasPresent"], false);
+    const planetCanvasNonZeroSize = anyBool(merged, ["planetCanvasNonZeroSize", "canvasNonZeroSize"], false);
+    const canvasTargetPresent = anyBool(merged, ["canvasTargetPresent", "mountPresent"], false);
+    const canvasCarrierMounted = anyBool(merged, ["canvasCarrierMounted", "carrierMounted"], false);
+
+    const currentParentIdentityMismatch = anyBool(merged, ["currentParentIdentityMismatch", "parentIdentityMismatch"], false);
+    const currentParentStaleDetected = anyBool(merged, ["currentParentStaleDetected", "staleParentDetected"], false);
+    const staleParentDetected = anyBool(merged, ["staleParentDetected"], false);
+    const canvasCarrierHandoffError = anyString(merged, ["canvasCarrierHandoffError", "carrierHandoffError"], "");
+
+    const explicitUnsafe = Boolean(
+      fieldPresent(merged, "canvasParentCarrierSafe") && !safeBool(merged.canvasParentCarrierSafe, false) ||
+      fieldPresent(merged, "structuralCarrierSafeForCanvasRelease") && !safeBool(merged.structuralCarrierSafeForCanvasRelease, false) ||
+      fieldPresent(merged, "canvasPreReleaseCarrierSafeForWest") && !safeBool(merged.canvasPreReleaseCarrierSafeForWest, false)
+    );
+
+    const physicalCarrierProof = Boolean(
+      canvasCarrierHandoffOk &&
+      planetCanvasPresent &&
+      planetCanvasNonZeroSize &&
+      (canvasTargetPresent || canvasCarrierMounted)
+    );
+
+    const admissible = Boolean(
+      currentCanvasParentObserved &&
+      !currentParentIdentityMismatch &&
+      !currentParentStaleDetected &&
+      !staleParentDetected &&
+      !canvasCarrierHandoffError &&
+      (
+        canvasParentCarrierSafe ||
+        structuralCarrierSafeForCanvasRelease ||
+        canvasPreReleaseCarrierSafeForWest ||
+        physicalCarrierProof ||
+        (canvasParentV2Observed && canvasParentCarrierSafe)
+      )
+    );
+
+    const hardBlock = Boolean(
+      currentParentIdentityMismatch ||
+      currentParentStaleDetected ||
+      staleParentDetected ||
+      canvasCarrierHandoffError ||
+      (currentCanvasParentObserved && explicitUnsafe)
+    );
+
+    const held = Boolean(!admissible && !hardBlock);
+
+    const firstFailedCoordinate =
+      admissible
+        ? "NONE_PRE_RELEASE_CARRIER_ADMISSIBLE"
+        : currentParentIdentityMismatch
+          ? "CANVAS_PARENT_IDENTITY_MISMATCH"
+          : currentParentStaleDetected || staleParentDetected
+            ? "CANVAS_PARENT_STALE_DETECTED"
+            : canvasCarrierHandoffError
+              ? "CANVAS_CARRIER_HANDOFF_ERROR"
+              : !currentCanvasParentObserved
+                ? "WAITING_CURRENT_CANVAS_PARENT_OBSERVATION"
+                : explicitUnsafe
+                  ? "STRUCTURAL_CARRIER_UNSAFE_FOR_CANVAS"
+                  : "WAITING_PRE_RELEASE_STRUCTURAL_CARRIER_PROOF";
+
+    const result = {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      preReleaseCarrierAdmissibilityActive: true,
+      currentCanvasParentObserved,
+      canvasParentV2Observed,
+      canvasParentCarrierSafe,
+      structuralCarrierSafeForCanvasRelease,
+      canvasPreReleaseCarrierSafeForWest,
+      canvasCarrierHandoffOk,
+      planetCanvasPresent,
+      planetCanvasNonZeroSize,
+      canvasTargetPresent,
+      canvasCarrierMounted,
+      physicalCarrierProof,
+      currentParentIdentityMismatch,
+      currentParentStaleDetected,
+      staleParentDetected,
+      canvasCarrierHandoffError,
+      explicitUnsafe,
+      preReleaseCarrierAdmissible: admissible,
+      carrierHardBlock: hardBlock,
+      carrierHeld: held,
+      firstFailedCoordinate,
+      recommendedNextFile: FILE_GATES.canvas,
+      recommendedNextRenewalTarget: FILE_GATES.canvas,
+      canvasParentReceiptContract: safeString(canvasReceipt.contract, ""),
+      canvasParentReceiptId: safeString(canvasReceipt.receipt, ""),
+      visualPassClaimed: false,
+      updatedAt: nowIso()
+    };
+
+    state.lastPreReleaseCarrierAssessment = clonePlain(result);
+    return result;
   }
 
   function assessVisibleContent(snapshot = {}) {
@@ -1205,7 +1457,7 @@
     const northReady = Boolean(
       safeBool(normalized.northGateReady, false) ||
       safeBool(context.northGateReady, false) ||
-      state.lastNorthContext && state.lastNorthContext.northRuntimeTableObserved ||
+      (state.lastNorthContext && state.lastNorthContext.northRuntimeTableObserved) ||
       cycle === CYCLES.CYCLE_2
     );
 
@@ -1563,6 +1815,8 @@
   }
 
   function composeCanvasReleasePacket(config = {}) {
+    const carrier = config.carrier || state.lastPreReleaseCarrierAssessment || {};
+
     const packet = {
       contract: CONTRACT,
       receipt: RECEIPT,
@@ -1596,6 +1850,13 @@
       westReleaseApproved: true,
       westReleaseObserved: true,
       westReleaseLawful: true,
+
+      currentCanvasParentObserved: carrier.currentCanvasParentObserved === true,
+      canvasParentV2Observed: carrier.canvasParentV2Observed === true,
+      canvasParentCarrierSafe: carrier.canvasParentCarrierSafe === true,
+      structuralCarrierSafeForCanvasRelease: carrier.structuralCarrierSafeForCanvasRelease === true,
+      canvasPreReleaseCarrierSafeForWest: carrier.canvasPreReleaseCarrierSafeForWest === true,
+      preReleaseCarrierAdmissible: carrier.preReleaseCarrierAdmissible === true,
 
       canvasReleaseAuthorized: true,
       canvasReleaseApprovedByWest: true,
@@ -1652,15 +1913,25 @@
     const canvasReleasePacket = canvasRelease
       ? composeCanvasReleasePacket({
           sourcePacket: config.sourcePacket || null,
-          detail: config.detail || {}
+          detail: config.detail || {},
+          carrier: config.carrier || null
         })
       : null;
+
+    const forwardAllowed = !hardBlock && (
+      canDegradeForward ||
+      gapClass === GAP_CLASS.NONE ||
+      decision === GAP_DECISION.ADMIT_TO_SOUTH ||
+      decision === GAP_DECISION.RELEASE_TO_CANVAS ||
+      decision === GAP_DECISION.RETURN_TO_NORTH ||
+      decision === GAP_DECISION.RETURN_TO_NORTH_FOR_F21
+    );
 
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
-      westGapReceipt: "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_GAP_RECEIPT_v2",
+      westGapReceipt: "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_GAP_RECEIPT_v3",
       gapAssessed: true,
       westAuthority: true,
       cycleAwareWestAuthority: true,
@@ -1669,6 +1940,7 @@
       routeConductorCycleParsingActive: true,
       handoffFieldParsingActive: true,
       canvasReleaseTopLevelShapeActive: true,
+      preReleaseCarrierAdmissibilityActive: true,
 
       cycle: config.cycle || CYCLES.UNKNOWN,
       cycleNumber: config.cycle === CYCLES.CYCLE_2 ? 2 : config.cycle === CYCLES.CYCLE_1 ? 1 : 0,
@@ -1684,8 +1956,14 @@
       decision,
       hardBlock,
       canDegradeForward,
-      forwardAllowed: !hardBlock && (canDegradeForward || gapClass === GAP_CLASS.NONE || decision === GAP_DECISION.ADMIT_TO_SOUTH || decision === GAP_DECISION.RELEASE_TO_CANVAS || decision === GAP_DECISION.RETURN_TO_NORTH),
+      forwardAllowed,
       shouldArchive: decision === GAP_DECISION.ARCHIVE,
+
+      westDecision: decision,
+      westGapClass: gapClass,
+      westGapSeverity: config.gapSeverity || (hardBlock ? GAP_SEVERITY.HARD_BLOCK : canDegradeForward ? GAP_SEVERITY.DEGRADED : gapClass === GAP_CLASS.NONE ? GAP_SEVERITY.NONE : GAP_SEVERITY.HELD),
+      westHardBlock: hardBlock,
+      westForwardAllowed: forwardAllowed,
 
       checkpointId: config.checkpointId || "",
       activeCheckpointId: config.activeCheckpointId || config.checkpointId || "",
@@ -1693,14 +1971,22 @@
       activeRank: config.activeRank || checkpointRank(config.activeCheckpointId || config.checkpointId || ""),
       eventName: config.eventName || "",
       firstFailedCoordinate: config.firstFailedCoordinate || "NONE",
+      westFirstFailedCoordinate: config.firstFailedCoordinate || "NONE",
       recommendedNextFile: canvasRelease ? FILE_GATES.canvas : config.recommendedNextFile || config.recommendedNextRenewalTarget || "none",
       recommendedNextRenewalTarget: canvasRelease ? FILE_GATES.canvas : config.recommendedNextRenewalTarget || "none",
+      westRecommendedNextRenewalTarget: canvasRelease ? FILE_GATES.canvas : config.recommendedNextRenewalTarget || "none",
       reason: config.reason || "",
       observed: config.observed || "",
       math: config.math || "",
       detail: clonePlain(config.detail || {}),
       probableCause: asArray(config.probableCause),
       nextStrategy: asArray(config.nextStrategy),
+
+      carrierAssessment: clonePlain(config.carrier || null),
+      preReleaseCarrierAdmissible: config.carrier && config.carrier.preReleaseCarrierAdmissible === true,
+      currentCanvasParentObserved: config.carrier && config.carrier.currentCanvasParentObserved === true,
+      canvasParentCarrierSafe: config.carrier && config.carrier.canvasParentCarrierSafe === true,
+      structuralCarrierSafeForCanvasRelease: config.carrier && config.carrier.structuralCarrierSafeForCanvasRelease === true,
 
       canvasRelease,
       canvasReleasePacket,
@@ -1891,6 +2177,7 @@
 
     if (cycle === CYCLES.CYCLE_2) {
       const carrier = assessStructuralCarrier(normalized, context);
+      const preReleaseCarrier = assessPreReleaseCarrierAdmissibility(normalized, context);
       const visible = assessVisibleContent(normalized);
       const inspect = assessInspectMode(normalized);
       const westAuditIntake = isSouthOutputWestIntake(normalized, context);
@@ -1911,12 +2198,12 @@
           recommendedNextRenewalTarget: FILE_GATES.north,
           reason: "F21 eligibility returned to North. West audits eligibility but does not latch.",
           returnToNorth: true,
-          detail: { active, news, fibonacci, carrier, visible, inspect },
+          detail: { active, news, fibonacci, carrier, preReleaseCarrier, visible, inspect },
           sourcePacket: normalized
         });
       }
 
-      if (westAuditIntake && outputAdmissible) {
+      if (westAuditIntake && outputAdmissible && preReleaseCarrier.preReleaseCarrierAdmissible) {
         return makeGap({
           gapClass: GAP_CLASS.NONE,
           gapSeverity: GAP_SEVERITY.NONE,
@@ -1929,11 +2216,57 @@
           eventName: active.eventName || "CYCLE_TWO_WEST_AUDIT_INTAKE",
           firstFailedCoordinate: "NONE_CYCLE_TWO_CANVAS_RELEASE_AUTHORIZED_BY_WEST",
           recommendedNextRenewalTarget: FILE_GATES.canvas,
-          reason: "Cycle 2 South/route-conductor output reached West; West audit accepted and released to Canvas.",
+          reason: "Cycle 2 South/route-conductor output reached West; South output is admissible; current Canvas pre-release carrier is safe; West released to Canvas.",
           canvasRelease: true,
           westAuditObserved: true,
           westAuditAccepted: true,
-          detail: { active, news, fibonacci, carrier, visible, inspect, westAuditIntake, outputAdmissible },
+          carrier: preReleaseCarrier,
+          detail: { active, news, fibonacci, carrier, preReleaseCarrier, visible, inspect, westAuditIntake, outputAdmissible },
+          sourcePacket: normalized
+        });
+      }
+
+      if (westAuditIntake && outputAdmissible && !preReleaseCarrier.preReleaseCarrierAdmissible) {
+        if (preReleaseCarrier.carrierHardBlock) {
+          state.carrierHardBlockCount += 1;
+
+          return makeGap({
+            gapClass: GAP_CLASS.STRUCTURAL_BLOCK,
+            gapSeverity: GAP_SEVERITY.HARD_BLOCK,
+            decision: GAP_DECISION.HARD_BLOCK,
+            hardBlock: true,
+            cycle,
+            source,
+            destination: CARDINALS.WEST,
+            checkpointId: active.checkpointId || CHECKPOINT_IDS.F8,
+            activeCheckpointId: active.activeCheckpointId || CHECKPOINT_IDS.F8,
+            eventName: active.eventName || "CYCLE_TWO_WEST_AUDIT_INTAKE",
+            firstFailedCoordinate: preReleaseCarrier.firstFailedCoordinate || "STRUCTURAL_CARRIER_UNSAFE_FOR_CANVAS",
+            recommendedNextRenewalTarget: FILE_GATES.canvas,
+            reason: "Cycle 2 South output is admissible, but West blocked Canvas release because current Canvas pre-release carrier proof is unsafe or identity/stale state is invalid.",
+            carrier: preReleaseCarrier,
+            detail: { active, news, fibonacci, carrier, preReleaseCarrier, visible, inspect, westAuditIntake, outputAdmissible },
+            sourcePacket: normalized
+          });
+        }
+
+        state.carrierHoldCount += 1;
+
+        return makeGap({
+          gapClass: GAP_CLASS.CANVAS_RELEASE_HELD,
+          gapSeverity: GAP_SEVERITY.HELD,
+          decision: GAP_DECISION.HOLD_ACTIVE,
+          cycle,
+          source,
+          destination: CARDINALS.WEST,
+          checkpointId: active.checkpointId || CHECKPOINT_IDS.F8,
+          activeCheckpointId: active.activeCheckpointId || CHECKPOINT_IDS.F8,
+          eventName: active.eventName || "CYCLE_TWO_WEST_AUDIT_INTAKE",
+          firstFailedCoordinate: preReleaseCarrier.firstFailedCoordinate || "WAITING_PRE_RELEASE_STRUCTURAL_CARRIER_PROOF",
+          recommendedNextRenewalTarget: FILE_GATES.canvas,
+          reason: "Cycle 2 South output is admissible, but West is holding Canvas release until current Canvas parent and pre-release carrier proof are observed.",
+          carrier: preReleaseCarrier,
+          detail: { active, news, fibonacci, carrier, preReleaseCarrier, visible, inspect, westAuditIntake, outputAdmissible },
           sourcePacket: normalized
         });
       }
@@ -1952,7 +2285,7 @@
           firstFailedCoordinate: "WAITING_SOUTH_OUTPUT_SPREAD_FOR_WEST_AUDIT",
           recommendedNextRenewalTarget: FILE_GATES.south,
           reason: "Cycle 2 reached West but South output spread is not yet admissible.",
-          detail: { active, news, fibonacci, carrier, visible, inspect, westAuditIntake, outputAdmissible },
+          detail: { active, news, fibonacci, carrier, preReleaseCarrier, visible, inspect, westAuditIntake, outputAdmissible },
           sourcePacket: normalized
         });
       }
@@ -1971,29 +2304,30 @@
           firstFailedCoordinate: "CANVAS_RELEASE_REQUIRES_SOUTH_SOURCE_IN_CYCLE_TWO",
           recommendedNextRenewalTarget: FILE_GATES.south,
           reason: "Cycle 2 Canvas release requires South output before West releases to Canvas.",
-          detail: { active, news, fibonacci, carrier, visible, inspect },
+          detail: { active, news, fibonacci, carrier, preReleaseCarrier, visible, inspect },
           sourcePacket: normalized
         });
       }
 
-      if (!carrier.structuralCarrierSafeForCanvasRelease && destination === CARDINALS.CANVAS) {
+      if ((destination === CARDINALS.CANVAS || safeBool(normalized.canvasReleaseRequested, false) || safeBool(normalized.releaseToCanvas, false)) && !preReleaseCarrier.preReleaseCarrierAdmissible) {
         return makeGap({
-          gapClass: carrier.carrierStructurallySafe ? GAP_CLASS.CANVAS_RELEASE_HELD : GAP_CLASS.STRUCTURAL_BLOCK,
-          gapSeverity: carrier.carrierStructurallySafe ? GAP_SEVERITY.HELD : GAP_SEVERITY.HARD_BLOCK,
-          decision: carrier.carrierStructurallySafe ? GAP_DECISION.HOLD_ACTIVE : GAP_DECISION.HARD_BLOCK,
-          hardBlock: !carrier.carrierStructurallySafe,
+          gapClass: preReleaseCarrier.carrierHardBlock ? GAP_CLASS.STRUCTURAL_BLOCK : GAP_CLASS.CANVAS_RELEASE_HELD,
+          gapSeverity: preReleaseCarrier.carrierHardBlock ? GAP_SEVERITY.HARD_BLOCK : GAP_SEVERITY.HELD,
+          decision: preReleaseCarrier.carrierHardBlock ? GAP_DECISION.HARD_BLOCK : GAP_DECISION.HOLD_ACTIVE,
+          hardBlock: preReleaseCarrier.carrierHardBlock,
           cycle,
           source,
           destination,
           checkpointId: active.checkpointId,
           activeCheckpointId: active.activeCheckpointId,
           eventName: active.eventName,
-          firstFailedCoordinate: carrier.carrierStructurallySafe ? "WAITING_CANVAS_RELEASE_TARGET" : "STRUCTURAL_CARRIER_UNSAFE_FOR_CANVAS",
+          firstFailedCoordinate: preReleaseCarrier.firstFailedCoordinate,
           recommendedNextRenewalTarget: FILE_GATES.canvas,
-          reason: carrier.carrierStructurallySafe
-            ? "Canvas release target is not fully present yet."
-            : "Structural carrier is unsafe for Canvas release.",
-          detail: { active, news, fibonacci, carrier, visible, inspect },
+          reason: preReleaseCarrier.carrierHardBlock
+            ? "Canvas release requested but current Canvas carrier proof is unsafe."
+            : "Canvas release requested but current Canvas carrier proof is not yet observed.",
+          carrier: preReleaseCarrier,
+          detail: { active, news, fibonacci, carrier, preReleaseCarrier, visible, inspect },
           sourcePacket: normalized
         });
       }
@@ -2011,11 +2345,12 @@
           eventName: active.eventName,
           firstFailedCoordinate: "NONE_CYCLE_TWO_CANVAS_RELEASE_AUTHORIZED_BY_WEST",
           recommendedNextRenewalTarget: FILE_GATES.canvas,
-          reason: "Cycle 2 packet passed West admissibility and may release to Canvas.",
+          reason: "Cycle 2 packet passed West admissibility and current Canvas carrier safety proof; release to Canvas authorized.",
           canvasRelease: true,
           westAuditObserved: true,
           westAuditAccepted: true,
-          detail: { active, news, fibonacci, carrier, visible, inspect },
+          carrier: preReleaseCarrier,
+          detail: { active, news, fibonacci, carrier, preReleaseCarrier, visible, inspect },
           sourcePacket: normalized
         });
       }
@@ -2033,7 +2368,7 @@
         firstFailedCoordinate: "WAITING_CYCLE_TWO_CANVAS_RELEASE_PACKET",
         recommendedNextRenewalTarget: FILE_GATES.south,
         reason: "Cycle 2 is active; West is waiting for South output release packet.",
-        detail: { active, news, fibonacci, carrier, visible, inspect },
+        detail: { active, news, fibonacci, carrier, preReleaseCarrier, visible, inspect },
         sourcePacket: normalized
       });
     }
@@ -2056,15 +2391,52 @@
     });
   }
 
+  function flattenAdmissibilityFields(admissibility, gap, release) {
+    const recommended = gap.recommendedNextFile || gap.recommendedNextRenewalTarget || "none";
+    const westRecommended = gap.westRecommendedNextRenewalTarget || gap.recommendedNextRenewalTarget || recommended;
+
+    return {
+      ...admissibility,
+
+      gapClass: gap.gapClass,
+      gapSeverity: gap.gapSeverity,
+      firstFailedCoordinate: gap.firstFailedCoordinate,
+      recommendedNextFile: recommended,
+      recommendedNextRenewalTarget: gap.recommendedNextRenewalTarget || recommended,
+      forwardAllowed: gap.forwardAllowed,
+
+      westDecision: gap.decision,
+      westGapClass: gap.gapClass,
+      westGapSeverity: gap.gapSeverity,
+      westHardBlock: gap.hardBlock,
+      westForwardAllowed: gap.forwardAllowed,
+      westFirstFailedCoordinate: gap.firstFailedCoordinate,
+      westRecommendedNextRenewalTarget: westRecommended,
+
+      canvasReleaseAuthorized: gap.decision === GAP_DECISION.RELEASE_TO_CANVAS,
+      canvasReleaseApprovedByWest: gap.decision === GAP_DECISION.RELEASE_TO_CANVAS,
+      westCanvasReleaseApproved: gap.decision === GAP_DECISION.RELEASE_TO_CANVAS,
+      westAuditObserved: gap.westAuditObserved === true,
+      westAuditAccepted: gap.westAuditAccepted === true,
+      westAuditPassed: gap.decision === GAP_DECISION.RELEASE_TO_CANVAS,
+      releaseToCanvas: gap.decision === GAP_DECISION.RELEASE_TO_CANVAS,
+      canvasReleasePacket: release,
+
+      receivedFrom: release ? CARDINALS.WEST : gap.receivedFrom,
+      returnTo: release ? CARDINALS.NORTH : gap.returnTo,
+      handoffTo: release ? CARDINALS.CANVAS : gap.handoffTo
+    };
+  }
+
   function classifyWestAdmissibility(packet = {}, context = {}) {
     const normalized = normalizeEvent(packet);
     const gap = classifyCyclePacket(normalized, context);
     const release = gap.canvasReleasePacket || null;
 
-    const admissibility = {
+    const base = {
       contract: CONTRACT,
       receipt: RECEIPT,
-      westAdmissibilityReceipt: "LAB_RUNTIME_TABLE_CARDINAL_WEST_ADMISSIBILITY_RECEIPT_v2",
+      westAdmissibilityReceipt: "LAB_RUNTIME_TABLE_CARDINAL_WEST_ADMISSIBILITY_RECEIPT_v3",
       cycleAwareWestAuthority: true,
       admissibilityClutchActive: true,
       packetAdmissible: [
@@ -2083,23 +2455,18 @@
       source: gap.source,
       destination: gap.destination,
 
-      receivedFrom: release ? CARDINALS.WEST : gap.receivedFrom,
-      returnTo: release ? CARDINALS.NORTH : gap.returnTo,
-      handoffTo: release ? CARDINALS.CANVAS : gap.handoffTo,
-
-      canvasReleaseAuthorized: gap.decision === GAP_DECISION.RELEASE_TO_CANVAS,
-      canvasReleaseApprovedByWest: gap.decision === GAP_DECISION.RELEASE_TO_CANVAS,
-      westCanvasReleaseApproved: gap.decision === GAP_DECISION.RELEASE_TO_CANVAS,
-      westAuditObserved: gap.westAuditObserved === true,
-      westAuditAccepted: gap.westAuditAccepted === true,
-      westAuditPassed: gap.decision === GAP_DECISION.RELEASE_TO_CANVAS,
-      releaseToCanvas: gap.decision === GAP_DECISION.RELEASE_TO_CANVAS,
-      canvasReleasePacket: release,
-
       returnToNorthRequired: gap.decision === GAP_DECISION.RETURN_TO_NORTH || gap.decision === GAP_DECISION.RETURN_TO_NORTH_FOR_F21,
       southAdmitted: gap.decision === GAP_DECISION.ADMIT_TO_SOUTH,
       degradedForward: gap.decision === GAP_DECISION.DEGRADED_FORWARD,
       hardBlock: gap.hardBlock,
+
+      preReleaseCarrierAdmissibilityActive: true,
+      carrierAssessment: clonePlain(gap.carrierAssessment || state.lastPreReleaseCarrierAssessment),
+      preReleaseCarrierAdmissible: Boolean(gap.preReleaseCarrierAdmissible),
+      currentCanvasParentObserved: Boolean(gap.currentCanvasParentObserved),
+      canvasParentCarrierSafe: Boolean(gap.canvasParentCarrierSafe),
+      structuralCarrierSafeForCanvasRelease: Boolean(gap.structuralCarrierSafeForCanvasRelease),
+
       f21NorthLatchOnly: true,
       generatedImage: false,
       graphicBox: false,
@@ -2107,6 +2474,8 @@
       visualPassClaimed: false,
       updatedAt: nowIso()
     };
+
+    const admissibility = flattenAdmissibilityFields(base, gap, release);
 
     state.classifyCount += 1;
     if (gap.cycle === CYCLES.CYCLE_1) state.cycleOneCount += 1;
@@ -2127,7 +2496,8 @@
       gapClass: gap.gapClass,
       firstFailedCoordinate: gap.firstFailedCoordinate,
       canvasReleaseAuthorized: admissibility.canvasReleaseAuthorized,
-      handoffTo: admissibility.handoffTo
+      handoffTo: admissibility.handoffTo,
+      preReleaseCarrierAdmissible: admissibility.preReleaseCarrierAdmissible
     });
 
     publishAll();
@@ -2148,6 +2518,7 @@
     const news = evaluateNewsAlignment(normalized, context);
     const fibonacci = evaluateFibonacciSynchronization(normalized, context);
     const carrier = assessStructuralCarrier(normalized, context);
+    const preReleaseCarrier = assessPreReleaseCarrierAdmissibility(normalized, context);
     const visible = assessVisibleContent(normalized);
     const inspect = assessInspectMode(normalized);
     const release = admissibility.canvasReleasePacket || null;
@@ -2160,7 +2531,7 @@
       version: VERSION,
       file: FILE,
       destinationFile: FILE,
-      westCycleReceipt: "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_RECEIPT_v2",
+      westCycleReceipt: "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_RECEIPT_v3",
 
       cycleAwareWestAuthority: true,
       cycleOneLawActive: true,
@@ -2170,6 +2541,7 @@
       southReturnsToNorthInCycleOne: true,
       southPrecedesWestInCycleTwo: true,
       f21NorthLatchOnly: true,
+      preReleaseCarrierAdmissibilityActive: true,
 
       cycleNumber: admissibility.cycleNumber,
       activeCycleNumber: admissibility.cycleNumber,
@@ -2178,6 +2550,22 @@
       receivedFrom: release ? CARDINALS.WEST : admissibility.receivedFrom,
       returnTo: release ? CARDINALS.NORTH : admissibility.returnTo,
       handoffTo: release ? CARDINALS.CANVAS : admissibility.handoffTo,
+
+      decision: admissibility.decision,
+      gapClass: admissibility.gapClass,
+      gapSeverity: admissibility.gapSeverity,
+      firstFailedCoordinate: admissibility.firstFailedCoordinate,
+      recommendedNextFile: admissibility.recommendedNextFile,
+      recommendedNextRenewalTarget: admissibility.recommendedNextRenewalTarget,
+      forwardAllowed: admissibility.forwardAllowed,
+
+      westDecision: admissibility.westDecision,
+      westGapClass: admissibility.westGapClass,
+      westGapSeverity: admissibility.westGapSeverity,
+      westHardBlock: admissibility.westHardBlock,
+      westForwardAllowed: admissibility.westForwardAllowed,
+      westFirstFailedCoordinate: admissibility.westFirstFailedCoordinate,
+      westRecommendedNextRenewalTarget: admissibility.westRecommendedNextRenewalTarget,
 
       westAuditObserved: admissibility.westAuditObserved,
       westAuditAccepted: admissibility.westAuditAccepted,
@@ -2193,16 +2581,19 @@
       canvasParentMayCallChildren: admissibility.canvasReleaseAuthorized,
       canvasReleasePacket: release,
 
+      preReleaseCarrierAdmissible: admissibility.preReleaseCarrierAdmissible,
+      currentCanvasParentObserved: admissibility.currentCanvasParentObserved,
+      canvasParentCarrierSafe: admissibility.canvasParentCarrierSafe,
+      structuralCarrierSafeForCanvasRelease: admissibility.structuralCarrierSafeForCanvasRelease,
+      carrierAssessment: clonePlain(admissibility.carrierAssessment),
+
       admissibility,
       newsAlignment: news,
       fibonacciSynchronization: fibonacci,
       structuralCarrier: carrier,
+      preReleaseCarrier,
       visibleContent: visible,
       inspectMode: inspect,
-
-      firstFailedCoordinate: admissibility.gap.firstFailedCoordinate,
-      recommendedNextFile: admissibility.gap.recommendedNextFile,
-      recommendedNextRenewalTarget: admissibility.gap.recommendedNextRenewalTarget,
 
       f21EligibleForNorth: false,
       f21SubmittedToNorth: false,
@@ -2232,7 +2623,7 @@
 
     return {
       ...receipt,
-      westGapReceipt: "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_GAP_RECEIPT_v2",
+      westGapReceipt: "LAB_RUNTIME_TABLE_CARDINAL_WEST_CYCLE_AWARE_GAP_RECEIPT_v3",
       gap: receipt.admissibility.gap
     };
   }
@@ -2271,6 +2662,8 @@
       routeConductorCycleParsingActive: true,
       handoffFieldParsingActive: true,
       canvasReleaseTopLevelShapeActive: true,
+      preReleaseCarrierAdmissibilityActive: true,
+      currentCanvasParentObservationRequired: true,
 
       classifyCount: state.classifyCount,
       cycleOneCount: state.cycleOneCount,
@@ -2279,6 +2672,8 @@
       returnNorthCount: state.returnNorthCount,
       falseCompletionBlockCount: state.falseCompletionBlockCount,
       degradedForwardCount: state.degradedForwardCount,
+      carrierHoldCount: state.carrierHoldCount,
+      carrierHardBlockCount: state.carrierHardBlockCount,
 
       gapClasses: Object.values(GAP_CLASS),
       gapSeverities: Object.values(GAP_SEVERITY),
@@ -2300,6 +2695,7 @@
         "createGapReceipt",
         "createWestCycleReceipt",
         "composeCanvasReleasePacket",
+        "assessPreReleaseCarrierAdmissibility",
         "assessActiveGear",
         "evidenceForGear",
         "assessStructuralCarrier",
@@ -2326,6 +2722,7 @@
         "South returns to North in Cycle 1.",
         "South precedes West in Cycle 2.",
         "West releases to Canvas only in Cycle 2 after South output passes admissibility.",
+        "West must observe current Canvas parent and safe pre-release carrier proof before releasing to Canvas.",
         "West Canvas release must publish top-level receivedFrom=WEST, handoffTo=CANVAS, cycleNumber=2, cycleRoute=NORTH_EAST_SOUTH_WEST_CANVAS, westAuditObserved=true, westAuditAccepted=true, westCanvasReleaseApproved=true, canvasReleaseAuthorized=true, releaseToCanvas=true.",
         "F21 latch remains North-owned.",
         "West audits NEWS alignment and Fibonacci synchronization."
@@ -2337,6 +2734,7 @@
       lastAdmissibility: clonePlain(state.lastAdmissibility),
       lastGapReceipt: clonePlain(state.lastGapReceipt),
       lastCanvasReleasePacket: clonePlain(state.lastCanvasReleasePacket),
+      lastPreReleaseCarrierAssessment: clonePlain(state.lastPreReleaseCarrierAssessment),
       localEvents: clonePlain(state.localEvents),
       errors: clonePlain(state.errors),
 
@@ -2372,9 +2770,13 @@
           `lastWestAuditObserved=${r.lastAdmissibility.westAuditObserved}`,
           `lastWestAuditAccepted=${r.lastAdmissibility.westAuditAccepted}`,
           `lastWestCanvasReleaseApproved=${r.lastAdmissibility.westCanvasReleaseApproved}`,
-          `lastGapClass=${r.lastAdmissibility.gap ? r.lastAdmissibility.gap.gapClass : ""}`,
-          `lastFirstFailedCoordinate=${r.lastAdmissibility.gap ? r.lastAdmissibility.gap.firstFailedCoordinate : ""}`,
-          `lastRecommendedNextRenewalTarget=${r.lastAdmissibility.gap ? r.lastAdmissibility.gap.recommendedNextRenewalTarget : ""}`
+          `lastPreReleaseCarrierAdmissible=${r.lastAdmissibility.preReleaseCarrierAdmissible}`,
+          `lastCurrentCanvasParentObserved=${r.lastAdmissibility.currentCanvasParentObserved}`,
+          `lastCanvasParentCarrierSafe=${r.lastAdmissibility.canvasParentCarrierSafe}`,
+          `lastStructuralCarrierSafeForCanvasRelease=${r.lastAdmissibility.structuralCarrierSafeForCanvasRelease}`,
+          `lastGapClass=${r.lastAdmissibility.gapClass}`,
+          `lastFirstFailedCoordinate=${r.lastAdmissibility.firstFailedCoordinate}`,
+          `lastRecommendedNextRenewalTarget=${r.lastAdmissibility.recommendedNextRenewalTarget}`
         ].join("\n")
       : [
           "lastDecision=",
@@ -2387,6 +2789,10 @@
           "lastWestAuditObserved=",
           "lastWestAuditAccepted=",
           "lastWestCanvasReleaseApproved=",
+          "lastPreReleaseCarrierAdmissible=",
+          "lastCurrentCanvasParentObserved=",
+          "lastCanvasParentCarrierSafe=",
+          "lastStructuralCarrierSafeForCanvasRelease=",
           "lastGapClass=",
           "lastFirstFailedCoordinate=",
           "lastRecommendedNextRenewalTarget="
@@ -2418,6 +2824,8 @@
       `routeConductorCycleParsingActive=${r.routeConductorCycleParsingActive}`,
       `handoffFieldParsingActive=${r.handoffFieldParsingActive}`,
       `canvasReleaseTopLevelShapeActive=${r.canvasReleaseTopLevelShapeActive}`,
+      `preReleaseCarrierAdmissibilityActive=${r.preReleaseCarrierAdmissibilityActive}`,
+      `currentCanvasParentObservationRequired=${r.currentCanvasParentObservationRequired}`,
       "",
       `classifyCount=${r.classifyCount}`,
       `cycleOneCount=${r.cycleOneCount}`,
@@ -2426,8 +2834,13 @@
       `returnNorthCount=${r.returnNorthCount}`,
       `falseCompletionBlockCount=${r.falseCompletionBlockCount}`,
       `degradedForwardCount=${r.degradedForwardCount}`,
+      `carrierHoldCount=${r.carrierHoldCount}`,
+      `carrierHardBlockCount=${r.carrierHardBlockCount}`,
       "",
       last,
+      "",
+      "LAST_PRE_RELEASE_CARRIER_ASSESSMENT",
+      r.lastPreReleaseCarrierAssessment ? JSON.stringify(r.lastPreReleaseCarrierAssessment, null, 2) : "{}",
       "",
       "LOCAL_EVENTS",
       events,
@@ -2474,6 +2887,7 @@
     createWestCycleReceipt,
     composeCanvasReleasePacket,
 
+    assessPreReleaseCarrierAdmissibility,
     assessActiveGear,
     evidenceForGear,
     assessStructuralCarrier,
@@ -2510,6 +2924,8 @@
     routeConductorCycleParsingActive: true,
     handoffFieldParsingActive: true,
     canvasReleaseTopLevelShapeActive: true,
+    preReleaseCarrierAdmissibilityActive: true,
+    currentCanvasParentObservationRequired: true,
 
     generatedImage: false,
     graphicBox: false,
@@ -2547,6 +2963,8 @@
     dataset.routeConductorCycleParsingActive = "true";
     dataset.westHandoffFieldParsingActive = "true";
     dataset.westCanvasReleaseTopLevelShapeActive = "true";
+    dataset.westPreReleaseCarrierAdmissibilityActive = "true";
+    dataset.westCurrentCanvasParentObservationRequired = "true";
 
     dataset.westClassifyCount = String(state.classifyCount);
     dataset.westCycleOneCount = String(state.cycleOneCount);
@@ -2555,6 +2973,16 @@
     dataset.westReturnNorthCount = String(state.returnNorthCount);
     dataset.westFalseCompletionBlockCount = String(state.falseCompletionBlockCount);
     dataset.westDegradedForwardCount = String(state.degradedForwardCount);
+    dataset.westCarrierHoldCount = String(state.carrierHoldCount);
+    dataset.westCarrierHardBlockCount = String(state.carrierHardBlockCount);
+
+    if (state.lastPreReleaseCarrierAssessment) {
+      dataset.westPreReleaseCarrierAdmissible = String(state.lastPreReleaseCarrierAssessment.preReleaseCarrierAdmissible === true);
+      dataset.westCurrentCanvasParentObserved = String(state.lastPreReleaseCarrierAssessment.currentCanvasParentObserved === true);
+      dataset.westCanvasParentCarrierSafe = String(state.lastPreReleaseCarrierAssessment.canvasParentCarrierSafe === true);
+      dataset.westStructuralCarrierSafeForCanvasRelease = String(state.lastPreReleaseCarrierAssessment.structuralCarrierSafeForCanvasRelease === true);
+      dataset.westCarrierFirstFailedCoordinate = state.lastPreReleaseCarrierAssessment.firstFailedCoordinate || "";
+    }
 
     if (state.lastCanvasReleasePacket) {
       dataset.westCanvasReleaseAuthorized = "true";
@@ -2618,7 +3046,9 @@
     canvasCycleTwoReleaseSupported: true,
     routeConductorCycleParsingActive: true,
     handoffFieldParsingActive: true,
-    canvasReleaseTopLevelShapeActive: true
+    canvasReleaseTopLevelShapeActive: true,
+    preReleaseCarrierAdmissibilityActive: true,
+    currentCanvasParentObservationRequired: true
   });
 
   if (typeof module !== "undefined" && module.exports) {

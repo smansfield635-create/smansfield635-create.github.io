@@ -1,18 +1,17 @@
 // /assets/lab/runtime-table.js
-// LAB_RUNTIME_TABLE_NORTH_NON_BLOCKING_PHASE_SCHEDULER_TWO_CYCLE_DISTRIBUTOR_TNT_v2
+// LAB_RUNTIME_TABLE_NORTH_CENTRAL_TRAIN_STATION_PRODUCT_ENGINE_CONDUCTOR_TNT_v3
 // Full-file replacement.
-// North primary Runtime Table authority.
+// North primary Runtime Table authority + Central Train Station conductor.
 // Purpose:
 // - Preserve the locked two-cycle Runtime Table law.
 // - Cycle 1: NORTH -> EAST -> WEST -> SOUTH -> NORTH.
 // - Cycle 2: NORTH -> EAST -> SOUTH -> WEST -> CANVAS.
 // - Preserve Canvas F13 release before F21.
 // - Preserve North-only F21 completion latch.
-// - Repair page freezes by replacing synchronous phase publication with a non-blocking scheduler.
-// - Cache authority scans.
-// - Split light receipt / full receipt / receipt text.
-// - Defer broad dataset writes.
-// - Preserve existing Runtime Table, Triple G, Visual Carrier Plan, checkpoint, and Hearth compatibility exports.
+// - Preserve non-blocking phase scheduling, cached authority scans, light receipts, deferred broad dataset writes.
+// - Add Central Train Station authority for nodal artifact extraction, NEWS alignment, Fibonacci synchronization,
+//   parent-contact detection, product-engine routing, and true next-file diagnosis.
+// - Prevent repeated child-file renewals when parent contact, stale contract, NEWS mismatch, or downstream expression drift is the real gap.
 // Does not own:
 // - Canvas drawing
 // - Canvas children
@@ -22,15 +21,16 @@
 // - elevation truth
 // - route visual layout
 // - final visual pass claim
+// - public benchmark superiority claims
 
 (() => {
   "use strict";
 
-  const CONTRACT = "LAB_RUNTIME_TABLE_NORTH_NON_BLOCKING_PHASE_SCHEDULER_TWO_CYCLE_DISTRIBUTOR_TNT_v2";
-  const RECEIPT = "LAB_RUNTIME_TABLE_NORTH_NON_BLOCKING_PHASE_SCHEDULER_TWO_CYCLE_DISTRIBUTOR_RECEIPT_v2";
-  const PREVIOUS_CONTRACT = "LAB_RUNTIME_TABLE_NORTH_TWO_CYCLE_CANVAS_F13_RELEASE_DISTRIBUTOR_TNT_v1";
-  const BASELINE_CONTRACT = "LAB_RUNTIME_TABLE_NORTH_TWO_CYCLE_CANVAS_F13_RELEASE_DISTRIBUTOR_TNT_v1";
-  const VERSION = "2026-05-31.lab-runtime-table-north-non-blocking-phase-scheduler-two-cycle-distributor-v2";
+  const CONTRACT = "LAB_RUNTIME_TABLE_NORTH_CENTRAL_TRAIN_STATION_PRODUCT_ENGINE_CONDUCTOR_TNT_v3";
+  const RECEIPT = "LAB_RUNTIME_TABLE_NORTH_CENTRAL_TRAIN_STATION_PRODUCT_ENGINE_CONDUCTOR_RECEIPT_v3";
+  const PREVIOUS_CONTRACT = "LAB_RUNTIME_TABLE_NORTH_NON_BLOCKING_PHASE_SCHEDULER_TWO_CYCLE_DISTRIBUTOR_TNT_v2";
+  const BASELINE_CONTRACT = "LAB_RUNTIME_TABLE_NORTH_NON_BLOCKING_PHASE_SCHEDULER_TWO_CYCLE_DISTRIBUTOR_TNT_v2";
+  const VERSION = "2026-06-01.lab-runtime-table-north-central-train-station-product-engine-conductor-v3";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
@@ -52,7 +52,14 @@
     canvas: "/assets/hearth/hearth.canvas.js",
     canvasEast: "/assets/hearth/hearth.canvas.east.js",
     canvasWest: "/assets/hearth/hearth.canvas.west.js",
-    canvasSouth: "/assets/hearth/hearth.canvas.south.js"
+    canvasSouth: "/assets/hearth/hearth.canvas.south.js",
+    hearthAssets: "/assets/hearth/hearth.assets.js",
+    productEngineKernel: "/assets/product-engine/product-engine.kernel.js",
+    productEngineRuntime: "/assets/product-engine/product-engine.runtime.js",
+    productEngineAssets: "/assets/product-engine/product-engine.assets.js",
+    productEngineInterface: "/assets/product-engine/product-engine.interface.js",
+    productEngineDiagnostics: "/assets/product-engine/product-engine.diagnostics.js",
+    productEngineExport: "/assets/product-engine/product-engine.export.js"
   });
 
   const FILE_GATES = Object.freeze({
@@ -72,6 +79,7 @@
     WEST: "WEST",
     CANVAS: "CANVAS",
     DOWNSTREAM: "DOWNSTREAM",
+    PRODUCT: "PRODUCT",
     UNKNOWN: "UNKNOWN"
   });
 
@@ -116,7 +124,8 @@
     HELD: "HELD",
     DEGRADED_FORWARD: "DEGRADED_FORWARD",
     LATCH: "LATCH",
-    RELEASE: "RELEASE"
+    RELEASE: "RELEASE",
+    DISPATCH: "DISPATCH"
   });
 
   const CHECKPOINT_STATUS = Object.freeze({
@@ -144,7 +153,13 @@
     DUPLICATE_ARCHIVE: "DUPLICATE_ARCHIVE",
     DOWNSTREAM_HELD: "DOWNSTREAM_HELD",
     CANVAS_F13_HELD: "CANVAS_F13_HELD",
-    NON_BLOCKING_SCHEDULED: "NON_BLOCKING_SCHEDULED"
+    NON_BLOCKING_SCHEDULED: "NON_BLOCKING_SCHEDULED",
+    PARENT_CONTACT_GAP: "PARENT_CONTACT_GAP",
+    FIBONACCI_DRIFT: "FIBONACCI_DRIFT",
+    NEWS_MISMATCH: "NEWS_MISMATCH",
+    PRODUCT_ENGINE_ROUTING_GAP: "PRODUCT_ENGINE_ROUTING_GAP",
+    STALE_CONTRACT: "STALE_CONTRACT",
+    EXPRESSION_DOWNSTREAM_GAP: "EXPRESSION_DOWNSTREAM_GAP"
   });
 
   const NEWS_GATES = Object.freeze({
@@ -154,7 +169,79 @@
     WEST: "WEST",
     CANVAS: "CANVAS",
     F21: "F21",
-    DOWNSTREAM: "DOWNSTREAM"
+    DOWNSTREAM: "DOWNSTREAM",
+    PRODUCT: "PRODUCT",
+    AUDIT: "AUDIT"
+  });
+
+  const STATION_PLATFORMS = Object.freeze({
+    NORTH_PLATFORM: "NORTH_PLATFORM",
+    EAST_PLATFORM: "EAST_PLATFORM",
+    SOUTH_PLATFORM: "SOUTH_PLATFORM",
+    WEST_PLATFORM: "WEST_PLATFORM",
+    CANVAS_PLATFORM: "CANVAS_PLATFORM",
+    PRODUCT_ENGINE_PLATFORM: "PRODUCT_ENGINE_PLATFORM",
+    VISUAL_ENGINE_PLATFORM: "VISUAL_ENGINE_PLATFORM",
+    ASSET_ENGINE_PLATFORM: "ASSET_ENGINE_PLATFORM",
+    ROUTE_ENGINE_PLATFORM: "ROUTE_ENGINE_PLATFORM",
+    AUDIT_ENGINE_PLATFORM: "AUDIT_ENGINE_PLATFORM",
+    DOWNSTREAM_PLATFORM: "DOWNSTREAM_PLATFORM",
+    UNKNOWN_PLATFORM: "UNKNOWN_PLATFORM"
+  });
+
+  const ARTIFACT_CLASSES = Object.freeze({
+    PRIMARY_CARDINAL_ARTIFACT: "PRIMARY_CARDINAL_ARTIFACT",
+    CANVAS_PARENT_ARTIFACT: "CANVAS_PARENT_ARTIFACT",
+    CANVAS_CHILD_ARTIFACT: "CANVAS_CHILD_ARTIFACT",
+    PRODUCT_ENGINE_ARTIFACT: "PRODUCT_ENGINE_ARTIFACT",
+    VISUAL_ENGINE_ARTIFACT: "VISUAL_ENGINE_ARTIFACT",
+    ASSET_ENGINE_ARTIFACT: "ASSET_ENGINE_ARTIFACT",
+    ROUTE_ENGINE_ARTIFACT: "ROUTE_ENGINE_ARTIFACT",
+    AUDIT_ENGINE_ARTIFACT: "AUDIT_ENGINE_ARTIFACT",
+    RECEIPT_ARTIFACT: "RECEIPT_ARTIFACT",
+    UNKNOWN_ARTIFACT: "UNKNOWN_ARTIFACT"
+  });
+
+  const PARENT_CONTACT_STATUS = Object.freeze({
+    PARENT_CONTACT_STRICT: "PARENT_CONTACT_STRICT",
+    PARENT_CONTACT_ADMISSIBLE: "PARENT_CONTACT_ADMISSIBLE",
+    PARENT_CONTACT_DEGRADED: "PARENT_CONTACT_DEGRADED",
+    PARENT_CONTACT_LOST: "PARENT_CONTACT_LOST",
+    PARENT_CONTACT_CONFLICT: "PARENT_CONTACT_CONFLICT"
+  });
+
+  const FIBONACCI_SYNC_STATUS = Object.freeze({
+    STRICT_SYNC: "STRICT_SYNC",
+    ADMISSIBLE_SYNC: "ADMISSIBLE_SYNC",
+    DEGRADED_SYNC: "DEGRADED_SYNC",
+    HELD_SYNC: "HELD_SYNC",
+    BLOCKED_SYNC: "BLOCKED_SYNC"
+  });
+
+  const NEWS_ALIGNMENT_STATUS = Object.freeze({
+    NEWS_PASS: "NEWS_PASS",
+    NEWS_DEGRADED: "NEWS_DEGRADED",
+    NEWS_HELD: "NEWS_HELD",
+    NEWS_BLOCKED: "NEWS_BLOCKED"
+  });
+
+  const DISPATCH_ACTION = Object.freeze({
+    ADMIT: "ADMIT",
+    DISPATCH: "DISPATCH",
+    HOLD: "HOLD",
+    DEGRADED_FORWARD: "DEGRADED_FORWARD",
+    BLOCK: "BLOCK",
+    ARCHIVE: "ARCHIVE"
+  });
+
+  const PRODUCT_ENGINE_TRACKS = Object.freeze({
+    PRODUCT_KERNEL: "PRODUCT_KERNEL",
+    PRODUCT_RUNTIME: "PRODUCT_RUNTIME",
+    PRODUCT_ASSETS: "PRODUCT_ASSETS",
+    PRODUCT_INTERFACE: "PRODUCT_INTERFACE",
+    PRODUCT_DIAGNOSTICS: "PRODUCT_DIAGNOSTICS",
+    PRODUCT_EXPORT: "PRODUCT_EXPORT",
+    PRODUCT_UNKNOWN: "PRODUCT_UNKNOWN"
   });
 
   const R_COORDINATES = Object.freeze({
@@ -207,149 +294,30 @@
   });
 
   const NORTH_LANGUAGE = Object.freeze({
-    north: "primary macro distributor / timing governor / release authority",
+    north: "primary macro distributor / central train station / timing governor / release authority",
     correctedLaw: "two-cycle Runtime Table law",
     cycleOne: "North -> East -> West -> South -> North",
     cycleTwo: "North -> East -> South -> West -> Canvas",
     canvasF13: "Canvas F13 evidence receiver; allowed before F21 and forbidden from claiming READY",
     f21: "North-only completion latch after Canvas F13 evidence returns",
-    downstream: "route, canvas, and Hearth-specific consumers after North F21 latch",
-    scheduler: "non-blocking phase scheduler; light receipts during motion, full receipts on demand"
+    downstream: "route, canvas, product, and Hearth-specific consumers after North F21 latch",
+    scheduler: "non-blocking phase scheduler; light receipts during motion, full receipts on demand",
+    station: "central train station routes all coordinated engine artifacts by platform, NEWS gate, Fibonacci stage, and parent contact"
   });
 
   const PRIMARY_ROTATION = Object.freeze([
-    {
-      id: "C1_NORTH_START",
-      gear: "GEAR_C1_NORTH_START",
-      cycleNumber: 1,
-      cycleRoute: CYCLE.ONE,
-      cardinal: CARDINAL.NORTH,
-      file: PRIMARY_GATES.north,
-      fibonacci: "F1",
-      news: NEWS_GATES.NORTH,
-      label: "Cycle 1 North start"
-    },
-    {
-      id: "C1_EAST_PRIMARY",
-      gear: "GEAR_C1_EAST_PRIMARY",
-      cycleNumber: 1,
-      cycleRoute: CYCLE.ONE,
-      cardinal: CARDINAL.EAST,
-      file: PRIMARY_GATES.east,
-      fibonacci: "F3",
-      news: NEWS_GATES.EAST,
-      label: "Cycle 1 East primary"
-    },
-    {
-      id: "C1_WEST_PRIMARY",
-      gear: "GEAR_C1_WEST_PRIMARY",
-      cycleNumber: 1,
-      cycleRoute: CYCLE.ONE,
-      cardinal: CARDINAL.WEST,
-      file: PRIMARY_GATES.west,
-      fibonacci: "F5",
-      news: NEWS_GATES.WEST,
-      label: "Cycle 1 West primary"
-    },
-    {
-      id: "C1_SOUTH_RETURN",
-      gear: "GEAR_C1_SOUTH_RETURN",
-      cycleNumber: 1,
-      cycleRoute: CYCLE.ONE,
-      cardinal: CARDINAL.SOUTH,
-      file: PRIMARY_GATES.south,
-      fibonacci: "F8",
-      news: NEWS_GATES.SOUTH,
-      label: "Cycle 1 South return"
-    },
-    {
-      id: "C1_NORTH_RETURN_LATCH",
-      gear: "GEAR_C1_NORTH_RETURN_LATCH",
-      cycleNumber: 1,
-      cycleRoute: CYCLE.ONE,
-      cardinal: CARDINAL.NORTH,
-      file: PRIMARY_GATES.north,
-      fibonacci: "F8N",
-      news: NEWS_GATES.NORTH,
-      label: "Cycle 1 North return latch"
-    },
-    {
-      id: "C2_NORTH_START",
-      gear: "GEAR_C2_NORTH_START",
-      cycleNumber: 2,
-      cycleRoute: CYCLE.TWO,
-      cardinal: CARDINAL.NORTH,
-      file: PRIMARY_GATES.north,
-      fibonacci: "F13",
-      news: NEWS_GATES.NORTH,
-      label: "Cycle 2 North start"
-    },
-    {
-      id: "C2_EAST_PRIMARY",
-      gear: "GEAR_C2_EAST_PRIMARY",
-      cycleNumber: 2,
-      cycleRoute: CYCLE.TWO,
-      cardinal: CARDINAL.EAST,
-      file: PRIMARY_GATES.east,
-      fibonacci: "F13E",
-      news: NEWS_GATES.EAST,
-      label: "Cycle 2 East primary"
-    },
-    {
-      id: "C2_SOUTH_PRIMARY",
-      gear: "GEAR_C2_SOUTH_PRIMARY",
-      cycleNumber: 2,
-      cycleRoute: CYCLE.TWO,
-      cardinal: CARDINAL.SOUTH,
-      file: PRIMARY_GATES.south,
-      fibonacci: "F13S",
-      news: NEWS_GATES.SOUTH,
-      label: "Cycle 2 South primary"
-    },
-    {
-      id: "C2_WEST_CANVAS_RELEASE_AUDIT",
-      gear: "GEAR_C2_WEST_CANVAS_RELEASE_AUDIT",
-      cycleNumber: 2,
-      cycleRoute: CYCLE.TWO,
-      cardinal: CARDINAL.WEST,
-      file: PRIMARY_GATES.west,
-      fibonacci: "F13W",
-      news: NEWS_GATES.WEST,
-      label: "Cycle 2 West canvas-release audit"
-    },
-    {
-      id: "C2_CANVAS_F13_EVIDENCE",
-      gear: "GEAR_C2_CANVAS_F13_EVIDENCE",
-      cycleNumber: 2,
-      cycleRoute: CYCLE.TWO,
-      cardinal: CARDINAL.CANVAS,
-      file: DOWNSTREAM_GATES.canvas,
-      fibonacci: "F13C",
-      news: NEWS_GATES.CANVAS,
-      label: "Canvas F13 evidence"
-    },
-    {
-      id: "F21_NORTH_NEWS_LATCH",
-      gear: "GEAR_F21_NORTH_NEWS_LATCH",
-      cycleNumber: 2,
-      cycleRoute: CYCLE.TWO,
-      cardinal: CARDINAL.NORTH,
-      file: PRIMARY_GATES.north,
-      fibonacci: "F21",
-      news: NEWS_GATES.F21,
-      label: "F21 North NEWS latch"
-    },
-    {
-      id: "DOWNSTREAM_RELEASE",
-      gear: "GEAR_DOWNSTREAM_RELEASE",
-      cycleNumber: 2,
-      cycleRoute: CYCLE.TWO,
-      cardinal: CARDINAL.DOWNSTREAM,
-      file: DOWNSTREAM_GATES.hearthIndex,
-      fibonacci: "F21_RELEASE",
-      news: NEWS_GATES.DOWNSTREAM,
-      label: "Downstream release"
-    }
+    { id: "C1_NORTH_START", gear: "GEAR_C1_NORTH_START", cycleNumber: 1, cycleRoute: CYCLE.ONE, cardinal: CARDINAL.NORTH, file: PRIMARY_GATES.north, fibonacci: "F1", news: NEWS_GATES.NORTH, label: "Cycle 1 North start" },
+    { id: "C1_EAST_PRIMARY", gear: "GEAR_C1_EAST_PRIMARY", cycleNumber: 1, cycleRoute: CYCLE.ONE, cardinal: CARDINAL.EAST, file: PRIMARY_GATES.east, fibonacci: "F3", news: NEWS_GATES.EAST, label: "Cycle 1 East primary" },
+    { id: "C1_WEST_PRIMARY", gear: "GEAR_C1_WEST_PRIMARY", cycleNumber: 1, cycleRoute: CYCLE.ONE, cardinal: CARDINAL.WEST, file: PRIMARY_GATES.west, fibonacci: "F5", news: NEWS_GATES.WEST, label: "Cycle 1 West primary" },
+    { id: "C1_SOUTH_RETURN", gear: "GEAR_C1_SOUTH_RETURN", cycleNumber: 1, cycleRoute: CYCLE.ONE, cardinal: CARDINAL.SOUTH, file: PRIMARY_GATES.south, fibonacci: "F8", news: NEWS_GATES.SOUTH, label: "Cycle 1 South return" },
+    { id: "C1_NORTH_RETURN_LATCH", gear: "GEAR_C1_NORTH_RETURN_LATCH", cycleNumber: 1, cycleRoute: CYCLE.ONE, cardinal: CARDINAL.NORTH, file: PRIMARY_GATES.north, fibonacci: "F8N", news: NEWS_GATES.NORTH, label: "Cycle 1 North return latch" },
+    { id: "C2_NORTH_START", gear: "GEAR_C2_NORTH_START", cycleNumber: 2, cycleRoute: CYCLE.TWO, cardinal: CARDINAL.NORTH, file: PRIMARY_GATES.north, fibonacci: "F13", news: NEWS_GATES.NORTH, label: "Cycle 2 North start" },
+    { id: "C2_EAST_PRIMARY", gear: "GEAR_C2_EAST_PRIMARY", cycleNumber: 2, cycleRoute: CYCLE.TWO, cardinal: CARDINAL.EAST, file: PRIMARY_GATES.east, fibonacci: "F13E", news: NEWS_GATES.EAST, label: "Cycle 2 East primary" },
+    { id: "C2_SOUTH_PRIMARY", gear: "GEAR_C2_SOUTH_PRIMARY", cycleNumber: 2, cycleRoute: CYCLE.TWO, cardinal: CARDINAL.SOUTH, file: PRIMARY_GATES.south, fibonacci: "F13S", news: NEWS_GATES.SOUTH, label: "Cycle 2 South primary" },
+    { id: "C2_WEST_CANVAS_RELEASE_AUDIT", gear: "GEAR_C2_WEST_CANVAS_RELEASE_AUDIT", cycleNumber: 2, cycleRoute: CYCLE.TWO, cardinal: CARDINAL.WEST, file: PRIMARY_GATES.west, fibonacci: "F13W", news: NEWS_GATES.WEST, label: "Cycle 2 West canvas-release audit" },
+    { id: "C2_CANVAS_F13_EVIDENCE", gear: "GEAR_C2_CANVAS_F13_EVIDENCE", cycleNumber: 2, cycleRoute: CYCLE.TWO, cardinal: CARDINAL.CANVAS, file: DOWNSTREAM_GATES.canvas, fibonacci: "F13C", news: NEWS_GATES.CANVAS, label: "Canvas F13 evidence" },
+    { id: "F21_NORTH_NEWS_LATCH", gear: "GEAR_F21_NORTH_NEWS_LATCH", cycleNumber: 2, cycleRoute: CYCLE.TWO, cardinal: CARDINAL.NORTH, file: PRIMARY_GATES.north, fibonacci: "F21", news: NEWS_GATES.F21, label: "F21 North NEWS latch" },
+    { id: "DOWNSTREAM_RELEASE", gear: "GEAR_DOWNSTREAM_RELEASE", cycleNumber: 2, cycleRoute: CYCLE.TWO, cardinal: CARDINAL.DOWNSTREAM, file: DOWNSTREAM_GATES.hearthIndex, fibonacci: "F21_RELEASE", news: NEWS_GATES.DOWNSTREAM, label: "Downstream release" }
   ]);
 
   const PRIMARY_EVENTS = Object.freeze({
@@ -456,6 +424,8 @@
       "DEXTER_LAB.transmissionGapClassifierWest"
     ],
     canvas: [
+      "HEARTH_CANVAS_PARENT_CURRENT_SOUTH_PROOF_RECONCILIATION",
+      "HEARTH_CANVAS_PARENT_PRE_RELEASE_STRUCTURAL_CARRIER_THEN_WEST_RELEASE_TO_EAST",
       "HEARTH_CANVAS_PARENT_RELEASE_PACKET_TO_EAST_STALE_CLEARANCE",
       "HEARTH_CANVAS_PARENT_CHILD_RECONCILIATION_F13_EVIDENCE_RECEIVER",
       "HEARTH_CANVAS_PARENT_GOVERNED_F13_EVIDENCE_RECEIVER",
@@ -467,6 +437,8 @@
       "HEARTH_CANVAS_AUTHORITY",
       "HEARTH_CANVAS_EVIDENCE",
       "HEARTH_CANVAS",
+      "HEARTH.canvasParentCurrentSouthProofReconciliation",
+      "HEARTH.canvasParentPreReleaseStructuralCarrierThenWestReleaseToEast",
       "HEARTH.canvasParentReleasePacketToEastStaleClearance",
       "HEARTH.canvasParentChildReconciliationF13EvidenceReceiver",
       "HEARTH.canvasParentGovernedF13EvidenceReceiver",
@@ -475,16 +447,63 @@
       "HEARTH.canvasTransistorGate",
       "HEARTH.canvasEvidence",
       "HEARTH.canvas",
+      "DEXTER_LAB.hearthCanvasParentCurrentSouthProofReconciliation",
+      "DEXTER_LAB.hearthCanvasParentPreReleaseStructuralCarrierThenWestReleaseToEast",
       "DEXTER_LAB.hearthCanvasParentReleasePacketToEastStaleClearance",
       "DEXTER_LAB.hearthCanvasParentChildReconciliationF13EvidenceReceiver",
       "DEXTER_LAB.hearthCanvasParentGovernedF13EvidenceReceiver",
       "DEXTER_LAB.hearthCanvasNorth",
       "DEXTER_LAB.hearthCanvasEvidence"
+    ],
+    product: [
+      "PRODUCT_ENGINE",
+      "PRODUCT_ENGINE_KERNEL",
+      "PRODUCT_ENGINE_RUNTIME",
+      "PRODUCT_ENGINE_ASSETS",
+      "PRODUCT_ENGINE_INTERFACE",
+      "PRODUCT_ENGINE_DIAGNOSTICS",
+      "PRODUCT_ENGINE_EXPORT",
+      "DGB_PRODUCT_ENGINE",
+      "HEARTH_PRODUCT_ENGINE",
+      "DEXTER_LAB.productEngine",
+      "DEXTER_LAB.productEngineKernel",
+      "DEXTER_LAB.productEngineRuntime",
+      "DEXTER_LAB.productEngineAssets",
+      "DEXTER_LAB.productEngineInterface",
+      "DEXTER_LAB.productEngineDiagnostics",
+      "DEXTER_LAB.productEngineExport"
     ]
   });
 
-  const MAX_LOG = 120;
+  const CANVAS_CHILD_GLOBALS = Object.freeze({
+    east: [
+      "HEARTH_CANVAS_EAST",
+      "HEARTH.canvasEast",
+      "HEARTH.canvasEastMaterialAtlasSourceMachine",
+      "HEARTH.canvasEastMaterialAtlasSourceTransistor",
+      "DEXTER_LAB.hearthCanvasEast",
+      "DEXTER_LAB.hearthCanvasEastMaterialAtlasSourceMachine"
+    ],
+    west: [
+      "HEARTH_CANVAS_WEST",
+      "HEARTH.canvasWest",
+      "HEARTH.canvasWestInspectionInvalidationControl",
+      "DEXTER_LAB.hearthCanvasWest",
+      "DEXTER_LAB.hearthCanvasWestInspectionInvalidationControl"
+    ],
+    south: [
+      "HEARTH_CANVAS_SOUTH",
+      "HEARTH.canvasSouth",
+      "HEARTH.canvasSouthF13SStrictVisibleProofClassifierChild",
+      "DEXTER_LAB.hearthCanvasSouth",
+      "DEXTER_LAB.hearthCanvasSouthF13SStrictVisibleProofClassifierChild"
+    ]
+  });
+
+  const MAX_LOG = 160;
+  const MAX_ARTIFACTS = 96;
   const AUTHORITY_CACHE_TTL_MS = 850;
+  const STATION_CACHE_TTL_MS = 950;
   const LIGHT_FLUSH_DELAY_MS = 24;
   const FULL_DATASET_IDLE_DELAY_MS = 240;
   const PHASE_BUDGET_MS = 10;
@@ -497,7 +516,7 @@
     version: VERSION,
     file: FILE,
     route: ROUTE,
-    role: "north-non-blocking-phase-scheduler-two-cycle-distributor",
+    role: "north-central-train-station-product-engine-conductor",
     cardinalRole: CARDINAL.NORTH,
 
     primaryGateRegistryActive: true,
@@ -519,6 +538,24 @@
     broadDatasetWritesDeferred: true,
     pageResponsive: true,
 
+    centralTrainStationActive: true,
+    stationRegistryActive: true,
+    nodalArtifactExtractorActive: true,
+    platformAssignerActive: true,
+    centralDispatcherActive: true,
+    productEngineConductorActive: true,
+    newsAlignmentProtocolActive: true,
+    fibonacciSynchronizationMetricActive: true,
+    parentContactLedgerActive: true,
+    centralReceiptBoardActive: true,
+    expressionPreservationRuleActive: true,
+
+    unrealStyleReference: true,
+    surpassMarketTargetInternal: true,
+    benchmarkRequiredBeforePublicClaim: true,
+    productEngineBenchmarkPending: true,
+    publicSuperiorityClaimed: false,
+
     activeStageId: "C1_EAST_PRIMARY",
     activeGear: "GEAR_C1_EAST_PRIMARY",
     activeCycleNumber: 1,
@@ -539,9 +576,13 @@
       canvasWestApiReady: false,
       canvasSouthApiReady: false,
       allCanvasChildrenApiReady: false,
+      productEngineObserved: false,
       authorityScanCached: false,
       authorityScanCount: 0,
-      authorityScanLastAt: ""
+      authorityScanLastAt: "",
+      stationScanCached: false,
+      stationScanCount: 0,
+      stationScanLastAt: ""
     },
 
     cycleOne: {
@@ -602,11 +643,36 @@
     blockedStages: [],
     stageLedger: [],
 
+    stationArtifacts: [],
+    platformLedger: [],
+    parentContactLedger: [],
+    newsAlignmentLedger: [],
+    fibonacciSyncLedger: [],
+    dispatchLedger: [],
+    productEngineLedger: [],
+    doNotTouchList: [],
+
+    artifactCount: 0,
+    platformCount: 0,
+    staleArtifactCount: 0,
+    lostParentContactCount: 0,
+    readyArtifactCount: 0,
+    heldArtifactCount: 0,
+    blockedArtifactCount: 0,
+
+    parentBridgeAuditRequired: false,
+    doNotRenewRepeatedly: true,
+    expressionDownstreamGapLikely: false,
+    repeatedChildRenewalGuardActive: true,
+    lastRepeatedRenewalWarning: "",
+
     firstFailedCoordinate: "WAITING_EAST_PRIMARY_GATE",
     recommendedNextOwner: CARDINAL.EAST,
     recommendedNextFile: PRIMARY_GATES.east,
     recommendedNextRenewalTarget: PRIMARY_GATES.east,
-    postgameStatus: "TWO_CYCLE_NORTH_READY",
+    nextPlatform: STATION_PLATFORMS.EAST_PLATFORM,
+    nextReason: "WAITING_EAST_PRIMARY_GATE",
+    postgameStatus: "CENTRAL_TRAIN_STATION_READY",
 
     admittedEvents: [],
     heldEvents: [],
@@ -633,16 +699,23 @@
     globalsPublished: false,
     authorityCache: null,
     authorityCacheAt: 0,
+    stationCache: null,
+    stationCacheAt: 0,
     receiptLightCache: null,
     receiptLightCacheAt: 0,
+    centralStationReceiptLightCache: null,
+    centralStationReceiptLightCacheAt: 0,
     dirtyDatasetLight: true,
     dirtyDatasetFull: true,
     dirtyGlobals: true,
     dirtyReceiptLight: true,
+    dirtyStationReceiptLight: true,
     phaseRunCount: 0,
     lastYieldAt: 0,
     lastFlushAt: 0
   };
+
+  let transmissionSession = null;
 
   function nowIso() {
     try {
@@ -689,7 +762,6 @@
 
   function clonePlain(value) {
     if (!isObject(value) && !Array.isArray(value)) return value;
-
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
@@ -739,7 +811,7 @@
     return value === undefined || value === null || value === "" ? fallback : value;
   }
 
-  function scanFieldDeep(input, fields, maxDepth = 6) {
+  function scanFieldDeep(input, fields, maxDepth = 7) {
     const wanted = new Set(asArray(fields));
     const seen = typeof WeakSet !== "undefined" ? new WeakSet() : null;
     const queue = [{ value: input, depth: 0 }];
@@ -784,17 +856,20 @@
     const snapshot = isObject(base.snapshot) ? base.snapshot : isObject(detail.snapshot) ? detail.snapshot : {};
     const release = isObject(base.releasePacket) ? base.releasePacket : {};
     const receipt = isObject(base.receiptPacket) ? base.receiptPacket : {};
+    const artifact = isObject(base.artifact) ? base.artifact : {};
 
     return {
       ...snapshot,
       ...detail,
       ...release,
       ...receipt,
+      ...artifact,
       ...base,
       detail,
       snapshot,
       releasePacket: release,
-      receiptPacket: receipt
+      receiptPacket: receipt,
+      artifact
     };
   }
 
@@ -842,13 +917,23 @@
       getAnyString(packet, ["file"], "") ||
       getAnyString(packet, ["sourceFile"], "") ||
       getAnyString(packet, ["destinationFile"], "") ||
+      getAnyString(packet, ["targetFile"], "") ||
       getAnyString(packet, ["primaryFileGate"], "") ||
       getAnyString(packet, ["activeFileGate"], "")
     );
   }
 
+  function packetRoute(input = {}) {
+    const packet = normalizePayload(input);
+    return getAnyString(packet, ["route"], "") || ROUTE;
+  }
+
   function packetContract(input = {}) {
     return getAnyString(input, ["contract"], "");
+  }
+
+  function packetReceipt(input = {}) {
+    return getAnyString(input, ["receipt"], "");
   }
 
   function normalizeCycleRoute(value = "") {
@@ -902,6 +987,7 @@
 
   function markDirty(scope = "light") {
     scheduler.dirtyReceiptLight = true;
+    scheduler.dirtyStationReceiptLight = true;
     scheduler.dirtyDatasetLight = true;
     scheduler.dirtyGlobals = true;
 
@@ -1019,10 +1105,46 @@
     });
   }
 
+  function record(kind, event, detail = {}, options = {}) {
+    const item = {
+      at: nowIso(),
+      kind,
+      event,
+      detail: clonePlain(detail)
+    };
+
+    const list =
+      kind === "admit" ? state.admittedEvents :
+      kind === "held" ? state.heldEvents :
+      kind === "archive" ? state.archivedEvents :
+      kind === "block" ? state.blockedEvents :
+      kind === "error" ? state.errors :
+      state.receipts;
+
+    list.push(item);
+    trim(list);
+    state.updatedAt = item.at;
+
+    if (options.deferPublish !== true) markDirty(options.scope || "light");
+
+    return item;
+  }
+
+  function recordError(code, message, detail = {}, options = {}) {
+    return record("error", code, {
+      code,
+      message: String(message || ""),
+      detail: clonePlain(detail)
+    }, options);
+  }
+
   function invalidateAuthorityCache(reason = "manual") {
     scheduler.authorityCache = null;
     scheduler.authorityCacheAt = 0;
+    scheduler.stationCache = null;
+    scheduler.stationCacheAt = 0;
     state.observed.authorityScanCached = false;
+    state.observed.stationScanCached = false;
 
     record("receipt", "AUTHORITY_CACHE_INVALIDATED", { reason }, { deferPublish: true });
     markDirty("light");
@@ -1040,6 +1162,11 @@
     try {
       if (isFunction(authority.getReceiptLight)) {
         const receipt = authority.getReceiptLight();
+        return isObject(receipt) ? receipt : null;
+      }
+
+      if (isFunction(authority.getCentralStationReceiptLight)) {
+        const receipt = authority.getCentralStationReceiptLight();
         return isObject(receipt) ? receipt : null;
       }
 
@@ -1080,37 +1207,881 @@
         key === "south" ? PRIMARY_GATES.south :
         key === "west" ? PRIMARY_GATES.west :
         key === "canvas" ? DOWNSTREAM_GATES.canvas :
+        key === "product" ? DOWNSTREAM_GATES.productEngineKernel :
         ""
     };
   }
 
   function readCanvasChild(key) {
-    const names = {
-      east: [
-        "HEARTH_CANVAS_EAST",
-        "HEARTH.canvasEast",
-        "HEARTH.canvasEastMaterialAtlasSourceMachine",
-        "DEXTER_LAB.hearthCanvasEast",
-        "DEXTER_LAB.hearthCanvasEastMaterialAtlasSourceMachine"
-      ],
-      west: [
-        "HEARTH_CANVAS_WEST",
-        "HEARTH.canvasWest",
-        "DEXTER_LAB.hearthCanvasWest"
-      ],
-      south: [
-        "HEARTH_CANVAS_SOUTH",
-        "HEARTH.canvasSouth",
-        "DEXTER_LAB.hearthCanvasSouth"
-      ]
+    return firstGlobal(CANVAS_CHILD_GLOBALS[key] || []);
+  }
+
+  function stageById(id) {
+    return PRIMARY_ROTATION.find((stage) => stage.id === id) || null;
+  }
+
+  function stageForFibonacci(fibonacci = "") {
+    return PRIMARY_ROTATION.find((stage) => String(stage.fibonacci) === String(fibonacci)) || null;
+  }
+
+  function cycleOneComplete() {
+    return Boolean(
+      state.cycleOne.eastAccepted &&
+      state.cycleOne.westAccepted &&
+      state.cycleOne.southAccepted &&
+      state.cycleOne.northReturnValidated
+    );
+  }
+
+  function cycleTwoPrimaryReadyForCanvasRelease() {
+    return Boolean(
+      state.cycleTwo.startAuthorized &&
+      state.cycleTwo.eastAccepted &&
+      state.cycleTwo.southAccepted &&
+      state.cycleTwo.westAccepted &&
+      state.cycleTwo.westAuditAccepted
+    );
+  }
+
+  function canvasF13EvidenceComplete() {
+    return Boolean(
+      state.cycleTwo.canvasF13EvidenceReceived &&
+      !state.cycleTwo.canvasF13HardFail &&
+      (
+        state.cycleTwo.canvasF13EvidenceStrict ||
+        state.cycleTwo.canvasF13EvidenceDegraded ||
+        state.cycleTwo.canvasF13EvidenceComplete
+      )
+    );
+  }
+
+  function primaryCycleComplete() {
+    return Boolean(cycleOneComplete() && cycleTwoPrimaryReadyForCanvasRelease());
+  }
+
+  function refreshStageLedger() {
+    state.stageLedger = PRIMARY_ROTATION.map((stage) => ({
+      id: stage.id,
+      gear: stage.gear,
+      cycleNumber: stage.cycleNumber,
+      cycleRoute: stage.cycleRoute,
+      cardinal: stage.cardinal,
+      file: stage.file,
+      fibonacci: stage.fibonacci,
+      news: stage.news,
+      label: stage.label,
+      complete: state.completedStages.includes(stage.id),
+      degraded: state.degradedStages.includes(stage.id),
+      blocked: state.blockedStages.includes(stage.id),
+      active: state.activeStageId === stage.id
+    }));
+
+    return state.stageLedger;
+  }
+
+  function setActiveStageLocal(stageId) {
+    const stage = stageById(stageId);
+    if (!stage) return;
+
+    state.activeStageId = stage.id;
+    state.activeGear = stage.gear;
+    state.activeCycleNumber = stage.cycleNumber;
+    state.activeCycleRoute = stage.cycleRoute;
+    state.activeCardinal = stage.cardinal;
+    state.activeFileGate = stage.file;
+    state.activeFibonacci = stage.fibonacci;
+    state.activeNewsGate = stage.news;
+    state.activeProgress = state.completedStages.includes(stage.id)
+      ? 100
+      : stage.id === "C2_CANVAS_F13_EVIDENCE"
+        ? 72
+        : 50;
+  }
+
+  function setRecommendation(owner, file, coordinate, platform = "", reason = "") {
+    state.firstFailedCoordinate = coordinate;
+    state.recommendedNextOwner = owner;
+    state.recommendedNextFile = file;
+    state.recommendedNextRenewalTarget = file;
+    state.nextPlatform = platform || platformForFile(file);
+    state.nextReason = reason || coordinate;
+  }
+
+  function platformForFile(file = "") {
+    const f = safeString(file);
+
+    if (f === PRIMARY_GATES.north) return STATION_PLATFORMS.NORTH_PLATFORM;
+    if (f === PRIMARY_GATES.east) return STATION_PLATFORMS.EAST_PLATFORM;
+    if (f === PRIMARY_GATES.south) return STATION_PLATFORMS.SOUTH_PLATFORM;
+    if (f === PRIMARY_GATES.west) return STATION_PLATFORMS.WEST_PLATFORM;
+    if (f.includes("/assets/hearth/hearth.canvas")) return STATION_PLATFORMS.CANVAS_PLATFORM;
+    if (f.includes("/product-engine/") || /product/i.test(f)) return STATION_PLATFORMS.PRODUCT_ENGINE_PLATFORM;
+    if (/assets|materials|biome|climate|elevation|terrain/i.test(f)) return STATION_PLATFORMS.ASSET_ENGINE_PLATFORM;
+    if (/visual|carrier|render|expression|planet/i.test(f)) return STATION_PLATFORMS.VISUAL_ENGINE_PLATFORM;
+    if (/route|index|handoff|showroom/i.test(f)) return STATION_PLATFORMS.ROUTE_ENGINE_PLATFORM;
+    if (/audit|gauge|diagnostic|triple|ccr|news|fibonacci/i.test(f)) return STATION_PLATFORMS.AUDIT_ENGINE_PLATFORM;
+
+    return STATION_PLATFORMS.UNKNOWN_PLATFORM;
+  }
+
+  function recomputeActiveStage() {
+    state.cycleOne.complete = cycleOneComplete();
+    if (state.cycleOne.complete) state.cycleTwo.startAuthorized = true;
+
+    if (!state.cycleOne.eastAccepted) setActiveStageLocal("C1_EAST_PRIMARY");
+    else if (!state.cycleOne.westAccepted) setActiveStageLocal("C1_WEST_PRIMARY");
+    else if (!state.cycleOne.southAccepted) setActiveStageLocal("C1_SOUTH_RETURN");
+    else if (!state.cycleOne.northReturnValidated) setActiveStageLocal("C1_NORTH_RETURN_LATCH");
+    else if (!state.cycleTwo.eastAccepted) setActiveStageLocal("C2_EAST_PRIMARY");
+    else if (!state.cycleTwo.southAccepted) setActiveStageLocal("C2_SOUTH_PRIMARY");
+    else if (!state.cycleTwo.westAccepted || !state.cycleTwo.westAuditAccepted) setActiveStageLocal("C2_WEST_CANVAS_RELEASE_AUDIT");
+    else if (!state.cycleTwo.canvasF13ReleaseAuthorized) setActiveStageLocal("C2_WEST_CANVAS_RELEASE_AUDIT");
+    else if (!canvasF13EvidenceComplete()) setActiveStageLocal("C2_CANVAS_F13_EVIDENCE");
+    else if (!state.completionLatched) setActiveStageLocal("F21_NORTH_NEWS_LATCH");
+    else setActiveStageLocal("DOWNSTREAM_RELEASE");
+
+    state.canvasReleaseAuthorized = state.cycleTwo.canvasF13ReleaseAuthorized;
+    state.downstreamReleaseAuthorized = state.completionLatched === true;
+
+    if (state.activeStageId === "C1_EAST_PRIMARY") setRecommendation(CARDINAL.EAST, PRIMARY_GATES.east, "WAITING_EAST_PRIMARY_GATE");
+    else if (state.activeStageId === "C1_WEST_PRIMARY") setRecommendation(CARDINAL.WEST, PRIMARY_GATES.west, "WAITING_CYCLE_ONE_WEST_PRIMARY_GATE");
+    else if (state.activeStageId === "C1_SOUTH_RETURN") setRecommendation(CARDINAL.SOUTH, PRIMARY_GATES.south, "WAITING_CYCLE_ONE_SOUTH_RETURN");
+    else if (state.activeStageId === "C1_NORTH_RETURN_LATCH") setRecommendation(CARDINAL.NORTH, PRIMARY_GATES.north, "WAITING_CYCLE_ONE_NORTH_RETURN_LATCH");
+    else if (state.activeStageId === "C2_EAST_PRIMARY") setRecommendation(CARDINAL.EAST, PRIMARY_GATES.east, "WAITING_CYCLE_TWO_EAST_PRIMARY_GATE");
+    else if (state.activeStageId === "C2_SOUTH_PRIMARY") setRecommendation(CARDINAL.SOUTH, PRIMARY_GATES.south, "WAITING_CYCLE_TWO_SOUTH_PRIMARY_GATE");
+    else if (state.activeStageId === "C2_WEST_CANVAS_RELEASE_AUDIT") setRecommendation(CARDINAL.WEST, PRIMARY_GATES.west, "WAITING_CYCLE_TWO_WEST_CANVAS_RELEASE_AUDIT");
+    else if (state.activeStageId === "C2_CANVAS_F13_EVIDENCE") setRecommendation(CARDINAL.CANVAS, DOWNSTREAM_GATES.canvas, "WAITING_CANVAS_F13_EVIDENCE");
+    else if (state.activeStageId === "F21_NORTH_NEWS_LATCH") setRecommendation(CARDINAL.NORTH, PRIMARY_GATES.north, "WAITING_F21_NORTH_NEWS_LATCH");
+    else setRecommendation(CARDINAL.DOWNSTREAM, DOWNSTREAM_GATES.hearthIndex, "NONE_DOWNSTREAM_RELEASE_AUTHORIZED");
+
+    state.postgameStatus =
+      state.completionLatched
+        ? state.degradedCompletionLatched
+          ? "PRIMARY_GATES_COMPLETE_CANVAS_F13_DEGRADED_F21_LATCHED"
+          : "PRIMARY_GATES_COMPLETE_CANVAS_F13_STRICT_F21_LATCHED"
+        : state.cycleTwo.canvasF13ReleaseAuthorized && !canvasF13EvidenceComplete()
+          ? "CANVAS_F13_RELEASE_AUTHORIZED_WAITING_EVIDENCE"
+          : state.cycleTwo.startAuthorized
+            ? "CYCLE_TWO_ACTIVE"
+            : "CYCLE_ONE_ACTIVE";
+
+    refreshStageLedger();
+    state.updatedAt = nowIso();
+    scheduler.dirtyReceiptLight = true;
+  }
+
+  function artifactClassFor(packet = {}) {
+    const file = packetFile(packet);
+    const contract = packetContract(packet);
+    const text = `${file} ${contract} ${eventName(packet)}`.toUpperCase();
+
+    if (file === PRIMARY_GATES.east || file === PRIMARY_GATES.south || file === PRIMARY_GATES.west || file === PRIMARY_GATES.north) {
+      return ARTIFACT_CLASSES.PRIMARY_CARDINAL_ARTIFACT;
+    }
+
+    if (file === DOWNSTREAM_GATES.canvas || /CANVAS_PARENT|HEARTH_CANVAS_PARENT|HEARTH_CANVAS$/.test(text)) {
+      return ARTIFACT_CLASSES.CANVAS_PARENT_ARTIFACT;
+    }
+
+    if (/CANVAS_EAST|CANVAS_WEST|CANVAS_SOUTH|HEARTH\.CANVAS(EAST|WEST|SOUTH)|HEARTH\.CANVASEAST|HEARTH\.CANVASWEST|HEARTH\.CANVASSOUTH/i.test(text) || file.includes("hearth.canvas.")) {
+      return ARTIFACT_CLASSES.CANVAS_CHILD_ARTIFACT;
+    }
+
+    if (/PRODUCT_ENGINE|PRODUCT-ENGINE|PRODUCT ENGINE|PRODUCT_KERNEL|PRODUCT_RUNTIME|PRODUCT_ASSETS|PRODUCT_INTERFACE|PRODUCT_DIAGNOSTICS|PRODUCT_EXPORT/i.test(text)) {
+      return ARTIFACT_CLASSES.PRODUCT_ENGINE_ARTIFACT;
+    }
+
+    if (/ASSET|MATERIAL|BIOME|CLIMATE|ELEVATION|TERRAIN|HYDROLOGY/i.test(text)) {
+      return ARTIFACT_CLASSES.ASSET_ENGINE_ARTIFACT;
+    }
+
+    if (/VISUAL|CARRIER|PLANET_EXPRESSION|RENDER|EXPRESSION/i.test(text)) {
+      return ARTIFACT_CLASSES.VISUAL_ENGINE_ARTIFACT;
+    }
+
+    if (/ROUTE|INDEX|HANDOFF|SHOWROOM|HEARTH\.JS/i.test(text)) {
+      return ARTIFACT_CLASSES.ROUTE_ENGINE_ARTIFACT;
+    }
+
+    if (/AUDIT|CCR|GAUGE|TRIPLE|DIAGNOSTIC|NEWS|FIBONACCI|CHECKPOINT/i.test(text)) {
+      return ARTIFACT_CLASSES.AUDIT_ENGINE_ARTIFACT;
+    }
+
+    if (/RECEIPT/i.test(text)) {
+      return ARTIFACT_CLASSES.RECEIPT_ARTIFACT;
+    }
+
+    return ARTIFACT_CLASSES.UNKNOWN_ARTIFACT;
+  }
+
+  function inferArtifactFibonacci(packet = {}, artifactClass = "") {
+    const explicit =
+      getAnyString(packet, ["activeFibonacci", "activeFibonacciRank", "fibonacci", "fibonacciRank", "activeFibonacciGate"], "");
+
+    if (explicit) return String(explicit);
+
+    const file = packetFile(packet);
+    const text = `${file} ${packetContract(packet)} ${eventName(packet)} ${artifactClass}`.toUpperCase();
+
+    if (file === PRIMARY_GATES.north && /F21|LATCH/.test(text)) return "F21";
+    if (file === PRIMARY_GATES.north) return "F1";
+    if (file === PRIMARY_GATES.east && /C2|F13/.test(text)) return "F13E";
+    if (file === PRIMARY_GATES.east) return "F3";
+    if (file === PRIMARY_GATES.west && /C2|CANVAS|F13/.test(text)) return "F13W";
+    if (file === PRIMARY_GATES.west) return "F5";
+    if (file === PRIMARY_GATES.south && /C2|F13/.test(text)) return "F13S";
+    if (file === PRIMARY_GATES.south) return "F8";
+    if (file.includes("hearth.canvas")) return "F13C";
+    if (artifactClass === ARTIFACT_CLASSES.PRODUCT_ENGINE_ARTIFACT) return "F21_RELEASE";
+
+    return state.activeFibonacci || "F3";
+  }
+
+  function expectedNewsForPlatform(platform, artifactClass = "", file = "") {
+    if (platform === STATION_PLATFORMS.NORTH_PLATFORM) return NEWS_GATES.NORTH;
+    if (platform === STATION_PLATFORMS.EAST_PLATFORM) return NEWS_GATES.EAST;
+    if (platform === STATION_PLATFORMS.SOUTH_PLATFORM) return NEWS_GATES.SOUTH;
+    if (platform === STATION_PLATFORMS.WEST_PLATFORM) return NEWS_GATES.WEST;
+    if (platform === STATION_PLATFORMS.CANVAS_PLATFORM) return NEWS_GATES.CANVAS;
+    if (platform === STATION_PLATFORMS.PRODUCT_ENGINE_PLATFORM) return NEWS_GATES.PRODUCT;
+    if (platform === STATION_PLATFORMS.AUDIT_ENGINE_PLATFORM) return NEWS_GATES.AUDIT;
+    if (platform === STATION_PLATFORMS.DOWNSTREAM_PLATFORM) return NEWS_GATES.DOWNSTREAM;
+
+    if (artifactClass === ARTIFACT_CLASSES.CANVAS_CHILD_ARTIFACT || file.includes("hearth.canvas")) return NEWS_GATES.CANVAS;
+    if (artifactClass === ARTIFACT_CLASSES.PRODUCT_ENGINE_ARTIFACT) return NEWS_GATES.PRODUCT;
+
+    return NEWS_GATES.DOWNSTREAM;
+  }
+
+  function assignArtifactPlatform(artifact = {}) {
+    const file = artifact.file || packetFile(artifact);
+    const contract = artifact.contract || packetContract(artifact);
+    const text = `${file} ${contract} ${artifact.artifactClass || ""}`.toUpperCase();
+
+    let platform = platformForFile(file);
+
+    if (platform === STATION_PLATFORMS.UNKNOWN_PLATFORM) {
+      if (/PRODUCT_ENGINE|PRODUCT ENGINE|PRODUCT_KERNEL|PRODUCT_RUNTIME|PRODUCT_ASSETS|PRODUCT_INTERFACE|PRODUCT_DIAGNOSTICS|PRODUCT_EXPORT/i.test(text)) {
+        platform = STATION_PLATFORMS.PRODUCT_ENGINE_PLATFORM;
+      } else if (/ASSET|MATERIAL|BIOME|CLIMATE|ELEVATION|TERRAIN|HYDROLOGY/i.test(text)) {
+        platform = STATION_PLATFORMS.ASSET_ENGINE_PLATFORM;
+      } else if (/VISUAL|CARRIER|PLANET_EXPRESSION|RENDER|EXPRESSION/i.test(text)) {
+        platform = STATION_PLATFORMS.VISUAL_ENGINE_PLATFORM;
+      } else if (/ROUTE|INDEX|HANDOFF|SHOWROOM|HEARTH\.JS/i.test(text)) {
+        platform = STATION_PLATFORMS.ROUTE_ENGINE_PLATFORM;
+      } else if (/AUDIT|CCR|GAUGE|TRIPLE|DIAGNOSTIC|NEWS|FIBONACCI|CHECKPOINT/i.test(text)) {
+        platform = STATION_PLATFORMS.AUDIT_ENGINE_PLATFORM;
+      }
+    }
+
+    return platform;
+  }
+
+  function detectStaleArtifact(packet = {}) {
+    const contract = packetContract(packet);
+    const previous = getAnyString(packet, ["previousContract", "baselineContract"], "");
+    const text = `${contract} ${previous}`.toUpperCase();
+
+    if (!contract) return false;
+
+    if (/STALE|LEGACY|DEPRECATED/.test(text)) return true;
+    if (contract === PREVIOUS_CONTRACT || contract === BASELINE_CONTRACT) return false;
+
+    if (/HEARTH_CANVAS_PARENT_RELEASE_PACKET_TO_EAST_STALE_CLEARANCE_TNT_v3/.test(contract)) return true;
+    if (/HEARTH_CANVAS_PARENT_CHILD_RECONCILIATION_F13_EVIDENCE_RECEIVER_TNT_v2/.test(contract)) return true;
+    if (/HEARTH_CANVAS_PARENT_GOVERNED_F13_EVIDENCE_RECEIVER_TNT_v1/.test(contract)) return true;
+
+    return false;
+  }
+
+  function extractNodalArtifact(input = {}, source = "extractNodalArtifact") {
+    const packet = normalizePayload(input);
+    const file = packetFile(packet);
+    const contract = packetContract(packet);
+    const receipt = packetReceipt(packet);
+    const artifactClass = artifactClassFor(packet);
+    const platform = assignArtifactPlatform({ ...packet, file, contract, artifactClass });
+    const fibonacciStage = inferArtifactFibonacci(packet, artifactClass);
+    const stage = stageForFibonacci(fibonacciStage);
+    const newsGate = getAnyString(packet, ["activeNewsGate", "activeNEWSGate", "newsGate"], "") || expectedNewsForPlatform(platform, artifactClass, file);
+    const stale = detectStaleArtifact(packet);
+    const firstFailedCoordinate = getAnyString(packet, ["firstFailedCoordinate"], "");
+    const recommendedNextFile = getAnyString(packet, ["recommendedNextFile", "recommendedNextRenewalTarget"], "");
+    const ready = getAnyBool(packet, ["ready", "accepted", "releaseAccepted", "canvasF13EvidenceComplete", "f13CanvasEvidenceComplete"], false);
+    const blocked = getAnyBool(packet, ["hardBlock", "blocked", "blocking", "f13HardFail", "visibleContentHardFail"], false);
+    const held = Boolean(!ready && !blocked && (firstFailedCoordinate || getAnyBool(packet, ["held"], false)));
+
+    return {
+      artifactId: `${artifactClass}:${file || "unknown"}:${contract || receipt || eventName(packet) || "artifact"}:${nowMs()}`,
+      artifactClass,
+      source,
+      file,
+      route: packetRoute(packet),
+      contract,
+      receipt,
+      previousContract: getAnyString(packet, ["previousContract"], ""),
+      baselineContract: getAnyString(packet, ["baselineContract"], ""),
+      authorityRole: getAnyString(packet, ["authority", "role", "cardinalRole"], ""),
+      platform,
+      newsGate,
+      fibonacciStage,
+      fibonacciRank: fibonacciStage,
+      expectedStageId: stage ? stage.id : "",
+      syncScore: 0,
+      syncStatus: FIBONACCI_SYNC_STATUS.HELD_SYNC,
+      syncReasons: [],
+      newsAlignmentStatus: NEWS_ALIGNMENT_STATUS.NEWS_HELD,
+      newsAlignmentReason: "",
+      parentContactStatus: PARENT_CONTACT_STATUS.PARENT_CONTACT_LOST,
+      stale,
+      current: !stale,
+      ready,
+      held,
+      blocked,
+      firstFailedCoordinate,
+      recommendedNextFile,
+      recommendedNextRenewalTarget: recommendedNextFile,
+      rawEvent: eventName(packet),
+      extractedAt: nowIso()
+    };
+  }
+
+  function evaluateNewsAlignment(artifact = {}) {
+    const platform = artifact.platform || assignArtifactPlatform(artifact);
+    const expected = expectedNewsForPlatform(platform, artifact.artifactClass, artifact.file);
+    const observed = safeString(artifact.newsGate || expected);
+    let status = NEWS_ALIGNMENT_STATUS.NEWS_PASS;
+    let reason = "NEWS_ALIGNED";
+
+    if (platform === STATION_PLATFORMS.CANVAS_PLATFORM && observed === NEWS_GATES.F21) {
+      status = NEWS_ALIGNMENT_STATUS.NEWS_BLOCKED;
+      reason = "CANVAS_CANNOT_OWN_F21";
+    } else if (artifact.artifactClass === ARTIFACT_CLASSES.PRODUCT_ENGINE_ARTIFACT && observed === NEWS_GATES.DOWNSTREAM && !state.completionLatched) {
+      status = NEWS_ALIGNMENT_STATUS.NEWS_HELD;
+      reason = "PRODUCT_ENGINE_EXPORT_HELD_UNTIL_F21";
+    } else if (observed !== expected) {
+      status = NEWS_ALIGNMENT_STATUS.NEWS_DEGRADED;
+      reason = `EXPECTED_${expected}_OBSERVED_${observed}`;
+    }
+
+    return {
+      newsGate: observed,
+      expectedDirection: expected,
+      observedDirection: observed,
+      newsAlignmentStatus: status,
+      newsAlignmentReason: reason
+    };
+  }
+
+  function evaluateParentContact(artifact = {}, parent = null) {
+    const packet = normalizePayload(artifact);
+    const parentContract =
+      getAnyString(packet, ["parentContract", "expectedParentContract", "canvasParentContract", "governedParentContract"], "") ||
+      getAnyString(parent || {}, ["contract"], "");
+
+    const parentReceipt =
+      getAnyString(packet, ["parentReceipt", "parentReceiptId", "canvasParentReceipt", "governedParentReceiptId"], "") ||
+      getAnyString(parent || {}, ["receipt"], "");
+
+    const parentAccepted = getAnyBool(packet, ["currentParentIdentityAccepted", "parentIdentityAccepted"], false);
+    const parentMismatch = getAnyBool(packet, ["currentParentIdentityMismatch", "parentIdentityMismatch"], false);
+    const staleParent = getAnyBool(packet, ["currentParentStaleDetected", "staleParentDetected"], false);
+
+    let status = PARENT_CONTACT_STATUS.PARENT_CONTACT_LOST;
+    let reason = "NO_PARENT_CONTACT_OBSERVED";
+
+    if (parentMismatch) {
+      status = PARENT_CONTACT_STATUS.PARENT_CONTACT_CONFLICT;
+      reason = "PARENT_IDENTITY_CONFLICT";
+    } else if (staleParent) {
+      status = PARENT_CONTACT_STATUS.PARENT_CONTACT_DEGRADED;
+      reason = "STALE_PARENT_CONTACT";
+    } else if (parentAccepted && parentContract && parentReceipt) {
+      status = PARENT_CONTACT_STATUS.PARENT_CONTACT_STRICT;
+      reason = "STRICT_PARENT_CONTACT";
+    } else if (parentContract && parentReceipt) {
+      status = PARENT_CONTACT_STATUS.PARENT_CONTACT_ADMISSIBLE;
+      reason = "ADMISSIBLE_PARENT_CONTACT";
+    } else if (parentContract || parentReceipt) {
+      status = PARENT_CONTACT_STATUS.PARENT_CONTACT_DEGRADED;
+      reason = "PARTIAL_PARENT_CONTACT";
+    }
+
+    if (
+      artifact.artifactClass === ARTIFACT_CLASSES.CANVAS_CHILD_ARTIFACT &&
+      [PARENT_CONTACT_STATUS.PARENT_CONTACT_LOST, PARENT_CONTACT_STATUS.PARENT_CONTACT_CONFLICT].includes(status)
+    ) {
+      state.parentBridgeAuditRequired = true;
+      state.expressionDownstreamGapLikely = true;
+    }
+
+    return {
+      parentContactStatus: status,
+      parentContactReason: reason,
+      parentContract,
+      parentReceipt,
+      parentAccepted,
+      parentMismatch,
+      staleParent
+    };
+  }
+
+  function evaluateFibonacciSynchronization(artifact = {}) {
+    const stage = stageForFibonacci(artifact.fibonacciStage);
+    const expectedFile = stage ? stage.file : "";
+    const expectedNews = stage ? stage.news : expectedNewsForPlatform(artifact.platform, artifact.artifactClass, artifact.file);
+
+    const stageIdentityScore = stage ? 15 : 5;
+    const newsGateScore = artifact.newsGate === expectedNews ? 15 : 6;
+    const fileGateScore = expectedFile && artifact.file === expectedFile ? 15 : artifact.platform === platformForFile(expectedFile) ? 10 : 4;
+    const parentContactScore =
+      artifact.parentContactStatus === PARENT_CONTACT_STATUS.PARENT_CONTACT_STRICT ? 15 :
+      artifact.parentContactStatus === PARENT_CONTACT_STATUS.PARENT_CONTACT_ADMISSIBLE ? 12 :
+      artifact.parentContactStatus === PARENT_CONTACT_STATUS.PARENT_CONTACT_DEGRADED ? 7 :
+      artifact.artifactClass === ARTIFACT_CLASSES.PRIMARY_CARDINAL_ARTIFACT ? 12 :
+      2;
+    const contractCurrentScore = artifact.stale ? 0 : 12;
+    const handoffScore = artifact.blocked ? 0 : artifact.held ? 5 : 10;
+    const boundaryScore =
+      artifact.platform === STATION_PLATFORMS.CANVAS_PLATFORM && artifact.newsGate === NEWS_GATES.F21 ? 0 :
+      artifact.visualPassClaimed ? 0 :
+      10;
+    const receiptScore = artifact.receipt ? 8 : artifact.contract ? 4 : 0;
+
+    const syncScore = clamp(
+      stageIdentityScore +
+      newsGateScore +
+      fileGateScore +
+      parentContactScore +
+      contractCurrentScore +
+      handoffScore +
+      boundaryScore +
+      receiptScore,
+      0,
+      100
+    );
+
+    const syncStatus =
+      syncScore >= 95 ? FIBONACCI_SYNC_STATUS.STRICT_SYNC :
+      syncScore >= 85 ? FIBONACCI_SYNC_STATUS.ADMISSIBLE_SYNC :
+      syncScore >= 70 ? FIBONACCI_SYNC_STATUS.DEGRADED_SYNC :
+      syncScore >= 50 ? FIBONACCI_SYNC_STATUS.HELD_SYNC :
+      FIBONACCI_SYNC_STATUS.BLOCKED_SYNC;
+
+    const syncReasons = [
+      stage ? "" : "NO_CANONICAL_STAGE_MATCH",
+      artifact.newsGate === expectedNews ? "" : "NEWS_GATE_MISMATCH",
+      expectedFile && artifact.file === expectedFile ? "" : "FILE_GATE_MISMATCH_OR_PLATFORM_ROUTED",
+      artifact.stale ? "STALE_CONTRACT" : "",
+      artifact.blocked ? "BLOCKED_ARTIFACT" : "",
+      artifact.platform === STATION_PLATFORMS.CANVAS_PLATFORM && artifact.newsGate === NEWS_GATES.F21 ? "CANVAS_F21_BOUNDARY_BLOCK" : ""
+    ].filter(Boolean);
+
+    return {
+      syncScore,
+      syncStatus,
+      syncReasons,
+      components: {
+        stageIdentityScore,
+        newsGateScore,
+        fileGateScore,
+        parentContactScore,
+        contractCurrentScore,
+        handoffScore,
+        boundaryScore,
+        receiptScore
+      }
+    };
+  }
+
+  function classifyProductEngineArtifact(artifact = {}) {
+    const text = `${artifact.file || ""} ${artifact.contract || ""} ${artifact.rawEvent || ""}`.toUpperCase();
+
+    let track = PRODUCT_ENGINE_TRACKS.PRODUCT_UNKNOWN;
+    if (/KERNEL|CORE|SOURCE|TRUTH/.test(text)) track = PRODUCT_ENGINE_TRACKS.PRODUCT_KERNEL;
+    else if (/RUNTIME|MOTION|EXECUTION|PERFORM/.test(text)) track = PRODUCT_ENGINE_TRACKS.PRODUCT_RUNTIME;
+    else if (/ASSET|MATERIAL|TEXTURE|PLASMA|STYLE/.test(text)) track = PRODUCT_ENGINE_TRACKS.PRODUCT_ASSETS;
+    else if (/INTERFACE|UI|CONTROL|DISPLAY|PANEL/.test(text)) track = PRODUCT_ENGINE_TRACKS.PRODUCT_INTERFACE;
+    else if (/DIAGNOSTIC|AUDIT|CCR|GAUGE|BENCHMARK|MEASURE/.test(text)) track = PRODUCT_ENGINE_TRACKS.PRODUCT_DIAGNOSTICS;
+    else if (/EXPORT|PUBLIC|DOWNSTREAM|RELEASE|PACKAGE/.test(text)) track = PRODUCT_ENGINE_TRACKS.PRODUCT_EXPORT;
+
+    return {
+      productTrack: track,
+      productEngineConductorActive: true,
+      unrealStyleReference: true,
+      surpassMarketTargetInternal: true,
+      benchmarkRequiredBeforePublicClaim: true,
+      productEngineBenchmarkPending: true,
+      publicSuperiorityClaimed: false
+    };
+  }
+
+  function routeProductEngineArtifact(artifact = {}) {
+    const classification = classifyProductEngineArtifact(artifact);
+    let targetPlatform = STATION_PLATFORMS.PRODUCT_ENGINE_PLATFORM;
+    let targetFile = artifact.file || DOWNSTREAM_GATES.productEngineKernel;
+    let action = DISPATCH_ACTION.DISPATCH;
+    let reason = "PRODUCT_ENGINE_DISPATCHED";
+
+    if (classification.productTrack === PRODUCT_ENGINE_TRACKS.PRODUCT_KERNEL) {
+      targetPlatform = STATION_PLATFORMS.NORTH_PLATFORM;
+      targetFile = PRIMARY_GATES.north;
+    } else if (classification.productTrack === PRODUCT_ENGINE_TRACKS.PRODUCT_RUNTIME) {
+      targetPlatform = STATION_PLATFORMS.SOUTH_PLATFORM;
+      targetFile = PRIMARY_GATES.south;
+    } else if (classification.productTrack === PRODUCT_ENGINE_TRACKS.PRODUCT_ASSETS) {
+      targetPlatform = STATION_PLATFORMS.ASSET_ENGINE_PLATFORM;
+      targetFile = DOWNSTREAM_GATES.hearthAssets;
+    } else if (classification.productTrack === PRODUCT_ENGINE_TRACKS.PRODUCT_INTERFACE) {
+      targetPlatform = STATION_PLATFORMS.ROUTE_ENGINE_PLATFORM;
+      targetFile = DOWNSTREAM_GATES.hearthRouteConductor;
+    } else if (classification.productTrack === PRODUCT_ENGINE_TRACKS.PRODUCT_DIAGNOSTICS) {
+      targetPlatform = STATION_PLATFORMS.AUDIT_ENGINE_PLATFORM;
+      targetFile = PRIMARY_GATES.north;
+    } else if (classification.productTrack === PRODUCT_ENGINE_TRACKS.PRODUCT_EXPORT) {
+      if (!state.completionLatched) {
+        action = DISPATCH_ACTION.HOLD;
+        reason = "PRODUCT_EXPORT_HELD_UNTIL_F21";
+      }
+      targetPlatform = STATION_PLATFORMS.DOWNSTREAM_PLATFORM;
+      targetFile = DOWNSTREAM_GATES.hearthIndex;
+    }
+
+    return {
+      ...classification,
+      action,
+      reason,
+      targetPlatform,
+      targetFile,
+      publicSuperiorityClaimed: false,
+      benchmarkRequiredBeforePublicClaim: true
+    };
+  }
+
+  function registerProductEngineArtifact(input = {}) {
+    const artifact = extractNodalArtifact(input, "registerProductEngineArtifact");
+    artifact.artifactClass = ARTIFACT_CLASSES.PRODUCT_ENGINE_ARTIFACT;
+    artifact.platform = STATION_PLATFORMS.PRODUCT_ENGINE_PLATFORM;
+
+    const route = routeProductEngineArtifact(artifact);
+    const registered = {
+      ...artifact,
+      ...route,
+      registeredAt: nowIso()
     };
 
-    return firstGlobal(names[key] || []);
+    state.productEngineLedger.push(registered);
+    trim(state.productEngineLedger, MAX_ARTIFACTS);
+
+    dispatchStationArtifact(registered, "product-engine-register");
+
+    return registered;
+  }
+
+  function updateStationCounters() {
+    const artifacts = state.stationArtifacts;
+    const platforms = new Set(artifacts.map((artifact) => artifact.platform).filter(Boolean));
+
+    state.artifactCount = artifacts.length;
+    state.platformCount = platforms.size;
+    state.staleArtifactCount = artifacts.filter((artifact) => artifact.stale).length;
+    state.lostParentContactCount = artifacts.filter((artifact) => artifact.parentContactStatus === PARENT_CONTACT_STATUS.PARENT_CONTACT_LOST).length;
+    state.readyArtifactCount = artifacts.filter((artifact) => artifact.ready).length;
+    state.heldArtifactCount = artifacts.filter((artifact) => artifact.held).length;
+    state.blockedArtifactCount = artifacts.filter((artifact) => artifact.blocked).length;
+  }
+
+  function storeStationArtifact(artifact = {}) {
+    const compact = clonePlain(artifact);
+    state.stationArtifacts.push(compact);
+    trim(state.stationArtifacts, MAX_ARTIFACTS);
+
+    state.platformLedger.push({
+      at: nowIso(),
+      artifactId: compact.artifactId,
+      platform: compact.platform,
+      artifactClass: compact.artifactClass,
+      file: compact.file,
+      contract: compact.contract
+    });
+    trim(state.platformLedger, MAX_ARTIFACTS);
+
+    state.parentContactLedger.push({
+      at: nowIso(),
+      artifactId: compact.artifactId,
+      file: compact.file,
+      parentContactStatus: compact.parentContactStatus,
+      parentContactReason: compact.parentContactReason || ""
+    });
+    trim(state.parentContactLedger, MAX_ARTIFACTS);
+
+    state.newsAlignmentLedger.push({
+      at: nowIso(),
+      artifactId: compact.artifactId,
+      file: compact.file,
+      newsGate: compact.newsGate,
+      newsAlignmentStatus: compact.newsAlignmentStatus,
+      newsAlignmentReason: compact.newsAlignmentReason
+    });
+    trim(state.newsAlignmentLedger, MAX_ARTIFACTS);
+
+    state.fibonacciSyncLedger.push({
+      at: nowIso(),
+      artifactId: compact.artifactId,
+      file: compact.file,
+      fibonacciStage: compact.fibonacciStage,
+      syncScore: compact.syncScore,
+      syncStatus: compact.syncStatus,
+      syncReasons: compact.syncReasons || []
+    });
+    trim(state.fibonacciSyncLedger, MAX_ARTIFACTS);
+
+    updateStationCounters();
+    return compact;
+  }
+
+  function decideStationDispatch(artifact = {}) {
+    if (artifact.newsAlignmentStatus === NEWS_ALIGNMENT_STATUS.NEWS_BLOCKED) {
+      return {
+        action: DISPATCH_ACTION.BLOCK,
+        reason: artifact.newsAlignmentReason || "NEWS_BLOCKED",
+        targetFile: PRIMARY_GATES.north,
+        targetPlatform: STATION_PLATFORMS.NORTH_PLATFORM,
+        gapClass: GAP_CLASS.NEWS_MISMATCH
+      };
+    }
+
+    if (artifact.stale) {
+      return {
+        action: DISPATCH_ACTION.HOLD,
+        reason: "STALE_CONTRACT_HELD_FOR_PARENT_AUDIT",
+        targetFile: artifact.artifactClass === ARTIFACT_CLASSES.CANVAS_CHILD_ARTIFACT ? DOWNSTREAM_GATES.canvas : artifact.file,
+        targetPlatform: artifact.artifactClass === ARTIFACT_CLASSES.CANVAS_CHILD_ARTIFACT ? STATION_PLATFORMS.CANVAS_PLATFORM : artifact.platform,
+        gapClass: GAP_CLASS.STALE_CONTRACT
+      };
+    }
+
+    if (
+      artifact.artifactClass === ARTIFACT_CLASSES.CANVAS_CHILD_ARTIFACT &&
+      [PARENT_CONTACT_STATUS.PARENT_CONTACT_LOST, PARENT_CONTACT_STATUS.PARENT_CONTACT_CONFLICT].includes(artifact.parentContactStatus)
+    ) {
+      return {
+        action: DISPATCH_ACTION.HOLD,
+        reason: "CANVAS_CHILD_PARENT_CONTACT_GAP_DO_NOT_RENEW_CHILD_AGAIN",
+        targetFile: DOWNSTREAM_GATES.canvas,
+        targetPlatform: STATION_PLATFORMS.CANVAS_PLATFORM,
+        gapClass: GAP_CLASS.PARENT_CONTACT_GAP
+      };
+    }
+
+    if ([FIBONACCI_SYNC_STATUS.BLOCKED_SYNC].includes(artifact.syncStatus)) {
+      return {
+        action: DISPATCH_ACTION.BLOCK,
+        reason: "FIBONACCI_SYNC_BLOCKED",
+        targetFile: PRIMARY_GATES.north,
+        targetPlatform: STATION_PLATFORMS.NORTH_PLATFORM,
+        gapClass: GAP_CLASS.FIBONACCI_DRIFT
+      };
+    }
+
+    if ([FIBONACCI_SYNC_STATUS.HELD_SYNC].includes(artifact.syncStatus)) {
+      return {
+        action: DISPATCH_ACTION.HOLD,
+        reason: "FIBONACCI_SYNC_HELD",
+        targetFile: artifact.recommendedNextFile || artifact.file || PRIMARY_GATES.north,
+        targetPlatform: artifact.platform,
+        gapClass: GAP_CLASS.FIBONACCI_DRIFT
+      };
+    }
+
+    if (artifact.newsAlignmentStatus === NEWS_ALIGNMENT_STATUS.NEWS_HELD) {
+      return {
+        action: DISPATCH_ACTION.HOLD,
+        reason: artifact.newsAlignmentReason || "NEWS_HELD",
+        targetFile: artifact.recommendedNextFile || artifact.file || PRIMARY_GATES.north,
+        targetPlatform: artifact.platform,
+        gapClass: GAP_CLASS.NEWS_MISMATCH
+      };
+    }
+
+    if (artifact.artifactClass === ARTIFACT_CLASSES.PRODUCT_ENGINE_ARTIFACT) {
+      const routed = routeProductEngineArtifact(artifact);
+      return {
+        action: routed.action,
+        reason: routed.reason,
+        targetFile: routed.targetFile,
+        targetPlatform: routed.targetPlatform,
+        gapClass: routed.action === DISPATCH_ACTION.HOLD ? GAP_CLASS.PRODUCT_ENGINE_ROUTING_GAP : GAP_CLASS.NONE,
+        productTrack: routed.productTrack
+      };
+    }
+
+    if (artifact.syncStatus === FIBONACCI_SYNC_STATUS.DEGRADED_SYNC || artifact.newsAlignmentStatus === NEWS_ALIGNMENT_STATUS.NEWS_DEGRADED) {
+      return {
+        action: DISPATCH_ACTION.DEGRADED_FORWARD,
+        reason: "DEGRADED_SYNC_OR_NEWS_ALIGNMENT",
+        targetFile: artifact.recommendedNextFile || artifact.file || PRIMARY_GATES.north,
+        targetPlatform: artifact.platform,
+        gapClass: GAP_CLASS.DEGRADED_GAP
+      };
+    }
+
+    return {
+      action: DISPATCH_ACTION.DISPATCH,
+      reason: "STATION_ARTIFACT_DISPATCHED",
+      targetFile: artifact.recommendedNextFile || artifact.file || PRIMARY_GATES.north,
+      targetPlatform: artifact.platform,
+      gapClass: GAP_CLASS.NONE
+    };
+  }
+
+  function dispatchStationArtifact(input = {}, source = "dispatchStationArtifact") {
+    let artifact = input && input.artifactId ? clonePlain(input) : extractNodalArtifact(input, source);
+
+    artifact.platform = assignArtifactPlatform(artifact);
+
+    const news = evaluateNewsAlignment(artifact);
+    artifact = { ...artifact, ...news };
+
+    const parent = artifact.artifactClass === ARTIFACT_CLASSES.CANVAS_CHILD_ARTIFACT ? readAuthority("canvas").receipt : null;
+    const parentContact = evaluateParentContact(artifact, parent);
+    artifact = { ...artifact, ...parentContact };
+
+    const fib = evaluateFibonacciSynchronization(artifact);
+    artifact = { ...artifact, ...fib };
+
+    const dispatch = decideStationDispatch(artifact);
+    artifact.dispatchAction = dispatch.action;
+    artifact.dispatchReason = dispatch.reason;
+    artifact.dispatchTargetFile = dispatch.targetFile;
+    artifact.dispatchTargetPlatform = dispatch.targetPlatform;
+    artifact.gapClass = dispatch.gapClass;
+
+    if (dispatch.productTrack) artifact.productTrack = dispatch.productTrack;
+
+    if (dispatch.action === DISPATCH_ACTION.BLOCK) artifact.blocked = true;
+    if (dispatch.action === DISPATCH_ACTION.HOLD) artifact.held = true;
+    if ([DISPATCH_ACTION.DISPATCH, DISPATCH_ACTION.ADMIT, DISPATCH_ACTION.DEGRADED_FORWARD].includes(dispatch.action)) artifact.ready = true;
+
+    storeStationArtifact(artifact);
+
+    state.dispatchLedger.push({
+      at: nowIso(),
+      artifactId: artifact.artifactId,
+      action: dispatch.action,
+      reason: dispatch.reason,
+      targetFile: dispatch.targetFile,
+      targetPlatform: dispatch.targetPlatform,
+      gapClass: dispatch.gapClass
+    });
+    trim(state.dispatchLedger, MAX_ARTIFACTS);
+
+    if ([DISPATCH_ACTION.HOLD, DISPATCH_ACTION.BLOCK].includes(dispatch.action)) {
+      setRecommendation(
+        dispatch.targetPlatform === STATION_PLATFORMS.CANVAS_PLATFORM ? CARDINAL.CANVAS :
+        dispatch.targetPlatform === STATION_PLATFORMS.WEST_PLATFORM ? CARDINAL.WEST :
+        dispatch.targetPlatform === STATION_PLATFORMS.SOUTH_PLATFORM ? CARDINAL.SOUTH :
+        dispatch.targetPlatform === STATION_PLATFORMS.EAST_PLATFORM ? CARDINAL.EAST :
+        CARDINAL.NORTH,
+        dispatch.targetFile,
+        dispatch.reason,
+        dispatch.targetPlatform,
+        dispatch.gapClass
+      );
+    }
+
+    if (
+      artifact.artifactClass === ARTIFACT_CLASSES.CANVAS_CHILD_ARTIFACT &&
+      dispatch.gapClass === GAP_CLASS.PARENT_CONTACT_GAP
+    ) {
+      state.lastRepeatedRenewalWarning = "CANVAS_CHILD_PARENT_CONTACT_GAP_DETECTED_DO_NOT_RENEW_CHILD_AGAIN";
+      state.doNotTouchList = [
+        ...new Set([
+          ...state.doNotTouchList,
+          artifact.file,
+          "Do not renew same Canvas child again until Canvas parent contact is audited."
+        ])
+      ];
+    }
+
+    record(
+      dispatch.action === DISPATCH_ACTION.BLOCK ? "block" :
+      dispatch.action === DISPATCH_ACTION.HOLD ? "held" :
+      dispatch.action === DISPATCH_ACTION.ARCHIVE ? "archive" :
+      "admit",
+      "CENTRAL_STATION_ARTIFACT_DISPATCHED",
+      {
+        artifactId: artifact.artifactId,
+        artifactClass: artifact.artifactClass,
+        platform: artifact.platform,
+        syncStatus: artifact.syncStatus,
+        newsAlignmentStatus: artifact.newsAlignmentStatus,
+        parentContactStatus: artifact.parentContactStatus,
+        action: dispatch.action,
+        reason: dispatch.reason,
+        targetFile: dispatch.targetFile,
+        targetPlatform: dispatch.targetPlatform,
+        publicSuperiorityClaimed: false,
+        visualPassClaimed: false
+      },
+      { deferPublish: true }
+    );
+
+    markDirty("light");
+
+    return artifact;
+  }
+
+  function refreshStationArtifacts(options = {}) {
+    const force = options.force === true;
+    const current = nowMs();
+
+    if (!force && scheduler.stationCache && current - scheduler.stationCacheAt <= STATION_CACHE_TTL_MS) {
+      state.observed.stationScanCached = true;
+      return scheduler.stationCache;
+    }
+
+    const authorities = [
+      readAuthority("east"),
+      readAuthority("south"),
+      readAuthority("west"),
+      readAuthority("canvas"),
+      readAuthority("product")
+    ];
+
+    const artifacts = [];
+
+    authorities.forEach((entry) => {
+      if (!entry || !entry.observed) return;
+      const sourceInput = entry.receipt && entry.receipt.contract ? entry.receipt : entry.authority || {};
+      artifacts.push(dispatchStationArtifact(sourceInput, "refreshStationArtifacts"));
+    });
+
+    const canvasChildren = [
+      readCanvasChild("east"),
+      readCanvasChild("west"),
+      readCanvasChild("south")
+    ].filter(Boolean);
+
+    canvasChildren.forEach((child) => {
+      const receipt = readReceiptLightFirst(child) || child;
+      artifacts.push(dispatchStationArtifact(receipt, "refreshStationArtifacts.canvasChild"));
+    });
+
+    state.observed.stationScanCached = false;
+    state.observed.stationScanCount += 1;
+    state.observed.stationScanLastAt = nowIso();
+
+    scheduler.stationCache = artifacts;
+    scheduler.stationCacheAt = current;
+
+    return artifacts;
   }
 
   function refreshObservedAuthorities(options = {}) {
     const force = options.force === true;
     const includeCanvas = options.includeCanvas === true || state.activeCardinal === CARDINAL.CANVAS || state.activeStageId === "C2_CANVAS_F13_EVIDENCE";
+    const includeProduct = options.includeProduct !== false;
     const current = nowMs();
 
     if (
@@ -1126,6 +2097,7 @@
     const south = readAuthority("south");
     const west = readAuthority("west");
     const canvas = includeCanvas ? readAuthority("canvas") : { authority: null, receipt: {}, observed: state.observed.canvasParentObserved, file: DOWNSTREAM_GATES.canvas };
+    const product = includeProduct ? readAuthority("product") : { authority: null, receipt: {}, observed: state.observed.productEngineObserved, file: DOWNSTREAM_GATES.productEngineKernel };
 
     const canvasReceipt = canvas.receipt || {};
     const canvasEast = includeCanvas ? readCanvasChild("east") : null;
@@ -1145,11 +2117,12 @@
       state.observed.canvasWestApiReady &&
       state.observed.canvasSouthApiReady
     );
+    state.observed.productEngineObserved = includeProduct ? product.observed : state.observed.productEngineObserved;
     state.observed.authorityScanCached = false;
     state.observed.authorityScanCount += 1;
     state.observed.authorityScanLastAt = nowIso();
 
-    const snapshot = { east, south, west, canvas };
+    const snapshot = { east, south, west, canvas, product };
     scheduler.authorityCache = snapshot;
     scheduler.authorityCacheAt = current;
 
@@ -1242,6 +2215,11 @@
       }
     }
 
+    if (includeProduct && product.observed) {
+      const productReceipt = product.receipt || product.authority || {};
+      dispatchStationArtifact(productReceipt, "cached-observed-product-engine");
+    }
+
     recomputeActiveStage();
     markDirty("light");
 
@@ -1260,7 +2238,8 @@
       decision.includes("FULL_PASS") ||
       decision.includes("DEGRADED_FORWARD") ||
       decision.includes("ADMIT") ||
-      decision.includes("PASS")
+      decision.includes("PASS") ||
+      decision.includes("RELEASE_TO_CANVAS")
     );
   }
 
@@ -1274,11 +2253,13 @@
     if (card === CARDINAL.EAST && file === PRIMARY_GATES.east) return true;
     if (card === CARDINAL.SOUTH && file === PRIMARY_GATES.south) return true;
     if (card === CARDINAL.WEST && file === PRIMARY_GATES.west) return true;
+    if (card === CARDINAL.NORTH && file === PRIMARY_GATES.north) return true;
     if (primaryCardinal === card && getAnyBool(packet, ["primaryGateReady", "primaryRuntimeTableGate"], false)) return true;
 
     if (card === CARDINAL.EAST && /RUNTIME_TABLE_EAST|EAST_PRIMARY|EAST_STEP|EAST_ROUTE/i.test(contract)) return true;
     if (card === CARDINAL.SOUTH && /RUNTIME_TABLE_SOUTH|SOUTH_PRIMARY|VISIBLE_STATE_COMPOSER|SOUTH_ROUTE/i.test(contract)) return true;
     if (card === CARDINAL.WEST && /RUNTIME_TABLE_WEST|WEST_PRIMARY|GAP_CLASSIFIER|AUDIT|ADMISSIBILITY/i.test(contract)) return true;
+    if (card === CARDINAL.NORTH && /RUNTIME_TABLE_NORTH|NORTH_PRIMARY|NORTH_COMMAND|NORTH_NEWS/i.test(contract)) return true;
 
     return false;
   }
@@ -1297,202 +2278,27 @@
     return hasEvent(input, DOWNSTREAM_EVENTS);
   }
 
-  function record(kind, event, detail = {}, options = {}) {
-    const item = {
-      at: nowIso(),
-      kind,
-      event,
-      detail: clonePlain(detail)
-    };
+  function inferCycleForCardinal(cardinal, packet = {}) {
+    const input = normalizePayload(packet);
+    const explicit = packetCycleNumber(input);
+    if (explicit === 1 || explicit === 2) return explicit;
 
-    const list =
-      kind === "admit" ? state.admittedEvents :
-      kind === "held" ? state.heldEvents :
-      kind === "archive" ? state.archivedEvents :
-      kind === "block" ? state.blockedEvents :
-      kind === "error" ? state.errors :
-      state.receipts;
+    const route = packetCycleRoute(input);
+    if (route === CYCLE.ONE) return 1;
+    if (route === CYCLE.TWO) return 2;
 
-    list.push(item);
-    trim(list);
-    state.updatedAt = item.at;
+    if (state.cycleOne.complete || state.cycleTwo.startAuthorized) return 2;
 
-    if (options.deferPublish !== true) markDirty("light");
-
-    return item;
-  }
-
-  function recordError(code, message, detail = {}, options = {}) {
-    return record("error", code, {
-      code,
-      message: String(message || ""),
-      detail: clonePlain(detail)
-    }, options);
-  }
-
-  function stageById(id) {
-    return PRIMARY_ROTATION.find((stage) => stage.id === id) || null;
-  }
-
-  function cycleOneComplete() {
-    return Boolean(
-      state.cycleOne.eastAccepted &&
-      state.cycleOne.westAccepted &&
-      state.cycleOne.southAccepted &&
-      state.cycleOne.northReturnValidated
-    );
-  }
-
-  function cycleTwoPrimaryReadyForCanvasRelease() {
-    return Boolean(
-      state.cycleTwo.startAuthorized &&
-      state.cycleTwo.eastAccepted &&
-      state.cycleTwo.southAccepted &&
-      state.cycleTwo.westAccepted &&
-      state.cycleTwo.westAuditAccepted
-    );
-  }
-
-  function canvasF13EvidenceComplete() {
-    return Boolean(
-      state.cycleTwo.canvasF13EvidenceReceived &&
-      !state.cycleTwo.canvasF13HardFail &&
-      (
-        state.cycleTwo.canvasF13EvidenceStrict ||
-        state.cycleTwo.canvasF13EvidenceDegraded ||
-        state.cycleTwo.canvasF13EvidenceComplete
-      )
-    );
-  }
-
-  function primaryCycleComplete() {
-    return Boolean(cycleOneComplete() && cycleTwoPrimaryReadyForCanvasRelease());
-  }
-
-  function refreshStageLedger() {
-    state.stageLedger = PRIMARY_ROTATION.map((stage) => ({
-      id: stage.id,
-      gear: stage.gear,
-      cycleNumber: stage.cycleNumber,
-      cycleRoute: stage.cycleRoute,
-      cardinal: stage.cardinal,
-      file: stage.file,
-      fibonacci: stage.fibonacci,
-      news: stage.news,
-      label: stage.label,
-      complete: state.completedStages.includes(stage.id),
-      degraded: state.degradedStages.includes(stage.id),
-      blocked: state.blockedStages.includes(stage.id),
-      active: state.activeStageId === stage.id
-    }));
-
-    return state.stageLedger;
-  }
-
-  function setActiveStageLocal(stageId) {
-    const stage = stageById(stageId);
-    if (!stage) return;
-
-    state.activeStageId = stage.id;
-    state.activeGear = stage.gear;
-    state.activeCycleNumber = stage.cycleNumber;
-    state.activeCycleRoute = stage.cycleRoute;
-    state.activeCardinal = stage.cardinal;
-    state.activeFileGate = stage.file;
-    state.activeFibonacci = stage.fibonacci;
-    state.activeNewsGate = stage.news;
-    state.activeProgress = state.completedStages.includes(stage.id)
-      ? 100
-      : stage.id === "C2_CANVAS_F13_EVIDENCE"
-        ? 72
-        : 50;
-  }
-
-  function setRecommendation(owner, file, coordinate) {
-    state.firstFailedCoordinate = coordinate;
-    state.recommendedNextOwner = owner;
-    state.recommendedNextFile = file;
-    state.recommendedNextRenewalTarget = file;
-  }
-
-  function recomputeActiveStage() {
-    state.cycleOne.complete = cycleOneComplete();
-    if (state.cycleOne.complete) state.cycleTwo.startAuthorized = true;
-
-    if (!state.cycleOne.eastAccepted) setActiveStageLocal("C1_EAST_PRIMARY");
-    else if (!state.cycleOne.westAccepted) setActiveStageLocal("C1_WEST_PRIMARY");
-    else if (!state.cycleOne.southAccepted) setActiveStageLocal("C1_SOUTH_RETURN");
-    else if (!state.cycleOne.northReturnValidated) setActiveStageLocal("C1_NORTH_RETURN_LATCH");
-    else if (!state.cycleTwo.eastAccepted) setActiveStageLocal("C2_EAST_PRIMARY");
-    else if (!state.cycleTwo.southAccepted) setActiveStageLocal("C2_SOUTH_PRIMARY");
-    else if (!state.cycleTwo.westAccepted || !state.cycleTwo.westAuditAccepted) setActiveStageLocal("C2_WEST_CANVAS_RELEASE_AUDIT");
-    else if (!state.cycleTwo.canvasF13ReleaseAuthorized) setActiveStageLocal("C2_WEST_CANVAS_RELEASE_AUDIT");
-    else if (!canvasF13EvidenceComplete()) setActiveStageLocal("C2_CANVAS_F13_EVIDENCE");
-    else if (!state.completionLatched) setActiveStageLocal("F21_NORTH_NEWS_LATCH");
-    else setActiveStageLocal("DOWNSTREAM_RELEASE");
-
-    state.canvasReleaseAuthorized = state.cycleTwo.canvasF13ReleaseAuthorized;
-    state.downstreamReleaseAuthorized = state.completionLatched === true;
-
-    if (state.activeStageId === "C1_EAST_PRIMARY") setRecommendation(CARDINAL.EAST, PRIMARY_GATES.east, "WAITING_EAST_PRIMARY_GATE");
-    else if (state.activeStageId === "C1_WEST_PRIMARY") setRecommendation(CARDINAL.WEST, PRIMARY_GATES.west, "WAITING_CYCLE_ONE_WEST_PRIMARY_GATE");
-    else if (state.activeStageId === "C1_SOUTH_RETURN") setRecommendation(CARDINAL.SOUTH, PRIMARY_GATES.south, "WAITING_CYCLE_ONE_SOUTH_RETURN");
-    else if (state.activeStageId === "C1_NORTH_RETURN_LATCH") setRecommendation(CARDINAL.NORTH, PRIMARY_GATES.north, "WAITING_CYCLE_ONE_NORTH_RETURN_LATCH");
-    else if (state.activeStageId === "C2_EAST_PRIMARY") setRecommendation(CARDINAL.EAST, PRIMARY_GATES.east, "WAITING_CYCLE_TWO_EAST_PRIMARY_GATE");
-    else if (state.activeStageId === "C2_SOUTH_PRIMARY") setRecommendation(CARDINAL.SOUTH, PRIMARY_GATES.south, "WAITING_CYCLE_TWO_SOUTH_PRIMARY_GATE");
-    else if (state.activeStageId === "C2_WEST_CANVAS_RELEASE_AUDIT") setRecommendation(CARDINAL.WEST, PRIMARY_GATES.west, "WAITING_CYCLE_TWO_WEST_CANVAS_RELEASE_AUDIT");
-    else if (state.activeStageId === "C2_CANVAS_F13_EVIDENCE") setRecommendation(CARDINAL.CANVAS, DOWNSTREAM_GATES.canvas, "WAITING_CANVAS_F13_EVIDENCE");
-    else if (state.activeStageId === "F21_NORTH_NEWS_LATCH") setRecommendation(CARDINAL.NORTH, PRIMARY_GATES.north, "WAITING_F21_NORTH_NEWS_LATCH");
-    else setRecommendation(CARDINAL.DOWNSTREAM, DOWNSTREAM_GATES.hearthIndex, "NONE_DOWNSTREAM_RELEASE_AUTHORIZED");
-
-    state.postgameStatus =
-      state.completionLatched
-        ? state.degradedCompletionLatched
-          ? "PRIMARY_GATES_COMPLETE_CANVAS_F13_DEGRADED_F21_LATCHED"
-          : "PRIMARY_GATES_COMPLETE_CANVAS_F13_STRICT_F21_LATCHED"
-        : state.cycleTwo.canvasF13ReleaseAuthorized && !canvasF13EvidenceComplete()
-          ? "CANVAS_F13_RELEASE_AUTHORIZED_WAITING_EVIDENCE"
-          : state.cycleTwo.startAuthorized
-            ? "CYCLE_TWO_ACTIVE"
-            : "CYCLE_ONE_ACTIVE";
-
-    refreshStageLedger();
-    state.updatedAt = nowIso();
-    scheduler.dirtyReceiptLight = true;
-  }
-
-  function completeStage(stageId, options = {}) {
-    const stage = stageById(stageId);
-    if (!stage) return getHeldResponse("UNKNOWN_PRIMARY_STAGE", "complete-stage-unknown", { stageId });
-
-    if (!state.completedStages.includes(stage.id)) state.completedStages.push(stage.id);
-    if (options.degraded === true && !state.degradedStages.includes(stage.id)) state.degradedStages.push(stage.id);
-
-    record("admit", "PRIMARY_STAGE_COMPLETE", {
-      stageId: stage.id,
-      degraded: options.degraded === true,
-      reason: options.reason || ""
-    });
-
-    recomputeActiveStage();
-    markDirty("light");
-
-    return {
-      accepted: true,
-      action: options.degraded === true ? CHECKPOINT_EVENT_ACTIONS.DEGRADED_FORWARD : CHECKPOINT_EVENT_ACTIONS.ADMIT,
-      completedStage: stage.id,
-      activeStageId: state.activeStageId,
-      activeFileGate: state.activeFileGate,
-      pageResponsive: true,
-      visualPassClaimed: false
-    };
+    return 1;
   }
 
   function getHeldResponse(firstFailedCoordinate, reason = "held", extra = {}) {
     setRecommendation(
       extra.recommendedNextOwner || state.activeCardinal || CARDINAL.NORTH,
       extra.recommendedNextFile || state.activeFileGate || PRIMARY_GATES.north,
-      firstFailedCoordinate
+      firstFailedCoordinate,
+      extra.targetPlatform || "",
+      reason
     );
 
     state.postgameStatus = firstFailedCoordinate;
@@ -1506,12 +2312,14 @@
       recommendedNextOwner: state.recommendedNextOwner,
       recommendedNextFile: state.recommendedNextFile,
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+      nextPlatform: state.nextPlatform,
       activeStageId: state.activeStageId,
       activeGear: state.activeGear,
       activeCycleNumber: state.activeCycleNumber,
       activeCycleRoute: state.activeCycleRoute,
       activeFileGate: state.activeFileGate,
       activeProgress: state.activeProgress,
+      centralTrainStationActive: true,
       pageResponsive: true,
       nonBlockingPhaseSchedulerActive: true,
       hardBlock: false,
@@ -1532,6 +2340,7 @@
       activeGear: state.activeGear,
       activeFileGate: state.activeFileGate,
       activeProgress: state.activeProgress,
+      centralTrainStationActive: true,
       pageResponsive: true,
       nonBlockingPhaseSchedulerActive: true,
       hardBlock: false,
@@ -1547,7 +2356,9 @@
     setRecommendation(
       extra.recommendedNextOwner || state.activeCardinal || CARDINAL.NORTH,
       extra.recommendedNextFile || state.activeFileGate || PRIMARY_GATES.north,
-      firstFailedCoordinate
+      firstFailedCoordinate,
+      extra.targetPlatform || "",
+      reason
     );
 
     if (!state.blockedStages.includes(state.activeStageId)) state.blockedStages.push(state.activeStageId);
@@ -1560,10 +2371,12 @@
       recommendedNextOwner: state.recommendedNextOwner,
       recommendedNextFile: state.recommendedNextFile,
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+      nextPlatform: state.nextPlatform,
       activeStageId: state.activeStageId,
       activeGear: state.activeGear,
       activeFileGate: state.activeFileGate,
       activeProgress: state.activeProgress,
+      centralTrainStationActive: true,
       pageResponsive: true,
       nonBlockingPhaseSchedulerActive: true,
       hardBlock: true,
@@ -1575,22 +2388,9 @@
     return response;
   }
 
-  function inferCycleForCardinal(cardinal, packet = {}) {
-    const input = normalizePayload(packet);
-    const explicit = packetCycleNumber(input);
-    if (explicit === 1 || explicit === 2) return explicit;
-
-    const route = packetCycleRoute(input);
-    if (route === CYCLE.ONE) return 1;
-    if (route === CYCLE.TWO) return 2;
-
-    if (state.cycleOne.complete || state.cycleTwo.startAuthorized) return 2;
-
-    return 1;
-  }
-
   function acceptEastPrimaryGate(packet = {}) {
     const input = normalizePayload(packet);
+    dispatchStationArtifact(input, "acceptEastPrimaryGate");
 
     if (!isPrimaryGatePacket(input, CARDINAL.EAST) && !hasEvent(input, PRIMARY_EVENTS.EAST)) {
       return getHeldResponse("WAITING_EAST_PRIMARY_GATE_FILE", "east-primary-file-gate-required", {
@@ -1630,6 +2430,7 @@
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
       activeStageId: state.activeStageId,
       activeFileGate: state.activeFileGate,
+      centralTrainStationActive: true,
       pageResponsive: true,
       nonBlockingPhaseSchedulerActive: true,
       hardBlock: false,
@@ -1642,6 +2443,7 @@
 
   function acceptSouthPrimaryGate(packet = {}) {
     const input = normalizePayload(packet);
+    dispatchStationArtifact(input, "acceptSouthPrimaryGate");
 
     if (!isPrimaryGatePacket(input, CARDINAL.SOUTH) && !hasEvent(input, PRIMARY_EVENTS.SOUTH)) {
       return getHeldResponse("WAITING_SOUTH_PRIMARY_GATE_FILE", "south-primary-file-gate-required", {
@@ -1667,11 +2469,7 @@
       state.cycleOne.complete = true;
       state.cycleTwo.startAuthorized = true;
 
-      [
-        "C1_SOUTH_RETURN",
-        "C1_NORTH_RETURN_LATCH",
-        "C2_NORTH_START"
-      ].forEach((id) => {
+      ["C1_SOUTH_RETURN", "C1_NORTH_RETURN_LATCH", "C2_NORTH_START"].forEach((id) => {
         if (!state.completedStages.includes(id)) state.completedStages.push(id);
       });
     } else {
@@ -1698,6 +2496,7 @@
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
       activeStageId: state.activeStageId,
       activeFileGate: state.activeFileGate,
+      centralTrainStationActive: true,
       pageResponsive: true,
       nonBlockingPhaseSchedulerActive: true,
       hardBlock: false,
@@ -1710,6 +2509,7 @@
 
   function acceptWestPrimaryGate(packet = {}) {
     const input = normalizePayload(packet);
+    dispatchStationArtifact(input, "acceptWestPrimaryGate");
 
     if (!isPrimaryGatePacket(input, CARDINAL.WEST) && !hasEvent(input, PRIMARY_EVENTS.WEST)) {
       return getHeldResponse("WAITING_WEST_PRIMARY_GATE_FILE", "west-primary-file-gate-required", {
@@ -1768,6 +2568,7 @@
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
       activeStageId: state.activeStageId,
       activeFileGate: state.activeFileGate,
+      centralTrainStationActive: true,
       pageResponsive: true,
       nonBlockingPhaseSchedulerActive: true,
       hardBlock: false,
@@ -1780,6 +2581,7 @@
 
   function receiveCycleOneSouthReturn(packet = {}) {
     const input = normalizePayload(packet);
+    dispatchStationArtifact(input, "receiveCycleOneSouthReturn");
 
     state.cycleOne.southReceived = true;
     state.cycleOne.southAccepted = true;
@@ -1788,11 +2590,7 @@
     state.cycleOne.complete = true;
     state.cycleTwo.startAuthorized = true;
 
-    [
-      "C1_SOUTH_RETURN",
-      "C1_NORTH_RETURN_LATCH",
-      "C2_NORTH_START"
-    ].forEach((id) => {
+    ["C1_SOUTH_RETURN", "C1_NORTH_RETURN_LATCH", "C2_NORTH_START"].forEach((id) => {
       if (!state.completedStages.includes(id)) state.completedStages.push(id);
     });
 
@@ -1809,6 +2607,7 @@
       recommendedNextOwner: state.recommendedNextOwner,
       recommendedNextFile: state.recommendedNextFile,
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+      centralTrainStationActive: true,
       pageResponsive: true,
       nonBlockingPhaseSchedulerActive: true,
       visualPassClaimed: false
@@ -1820,6 +2619,7 @@
 
   function authorizeCycleTwoStart(packet = {}, source = "authorizeCycleTwoStart") {
     const input = normalizePayload(packet);
+    dispatchStationArtifact(input, source);
 
     if (!state.cycleOne.complete && !cycleOneComplete()) {
       return getHeldResponse("WAITING_CYCLE_ONE_NORTH_RETURN", "cycle-two-start-held-until-cycle-one-return", {
@@ -1849,6 +2649,7 @@
       activeStageId: state.activeStageId,
       activeFileGate: state.activeFileGate,
       recommendedNextFile: state.recommendedNextFile,
+      centralTrainStationActive: true,
       pageResponsive: true,
       nonBlockingPhaseSchedulerActive: true,
       visualPassClaimed: false
@@ -1860,6 +2661,7 @@
 
   function authorizeCanvasF13Release(packet = {}, source = "authorizeCanvasF13Release", options = {}) {
     const input = normalizePayload(packet);
+    dispatchStationArtifact(input, source);
 
     const lawfulCycle = Boolean(
       state.cycleTwo.startAuthorized &&
@@ -1948,6 +2750,7 @@
       recommendedNextOwner: state.recommendedNextOwner,
       recommendedNextFile: state.recommendedNextFile,
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+      centralTrainStationActive: true,
       pageResponsive: true,
       nonBlockingPhaseSchedulerActive: true,
       generatedImage: false,
@@ -1995,6 +2798,12 @@
       canvasReleaseReceived: true,
       releaseAuthorized: true,
 
+      centralTrainStationActive: true,
+      stationRegistryActive: true,
+      nodalArtifactExtractorActive: true,
+      platformAssignerActive: true,
+      centralDispatcherActive: true,
+
       currentParentIdentityAccepted: true,
       currentParentIdentityMismatch: false,
       staleParentDetected: false,
@@ -2025,6 +2834,7 @@
 
   function acceptCanvasF13Evidence(packet = {}, source = "acceptCanvasF13Evidence", options = {}) {
     const input = normalizePayload(packet);
+    dispatchStationArtifact(input, source);
 
     const explicitEvidence = Boolean(
       hasEvent(input, PRIMARY_EVENTS.CANVAS) ||
@@ -2094,6 +2904,7 @@
       recommendedNextOwner: state.recommendedNextOwner,
       recommendedNextFile: state.recommendedNextFile,
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+      centralTrainStationActive: true,
       pageResponsive: true,
       nonBlockingPhaseSchedulerActive: true,
       generatedImage: false,
@@ -2171,6 +2982,8 @@
 
   function latchF21FromSouthEligibility(packet = {}, source = "latchF21FromSouthEligibility") {
     const input = normalizePayload(packet);
+    dispatchStationArtifact(input, source);
+
     const validation = validateF21Eligibility(input);
 
     state.f21EligibilityReceived = true;
@@ -2212,25 +3025,19 @@
     state.downstreamReleaseTarget = DOWNSTREAM_GATES.hearthIndex;
     state.readyTextAllowed = true;
 
-    if (!state.completedStages.includes("F21_NORTH_NEWS_LATCH")) {
-      state.completedStages.push("F21_NORTH_NEWS_LATCH");
-    }
-
-    if (!state.completedStages.includes("DOWNSTREAM_RELEASE")) {
-      state.completedStages.push("DOWNSTREAM_RELEASE");
-    }
-
-    if (validation.degraded && !state.degradedStages.includes("F21_NORTH_NEWS_LATCH")) {
-      state.degradedStages.push("F21_NORTH_NEWS_LATCH");
-    }
+    if (!state.completedStages.includes("F21_NORTH_NEWS_LATCH")) state.completedStages.push("F21_NORTH_NEWS_LATCH");
+    if (!state.completedStages.includes("DOWNSTREAM_RELEASE")) state.completedStages.push("DOWNSTREAM_RELEASE");
+    if (validation.degraded && !state.degradedStages.includes("F21_NORTH_NEWS_LATCH")) state.degradedStages.push("F21_NORTH_NEWS_LATCH");
 
     state.firstFailedCoordinate = validation.full
-      ? "NONE_F21_FULL_LATCHED_BY_NORTH_TWO_CYCLE_DISTRIBUTOR"
-      : "NONE_F21_DEGRADED_LATCHED_BY_NORTH_TWO_CYCLE_DISTRIBUTOR";
+      ? "NONE_F21_FULL_LATCHED_BY_NORTH_CENTRAL_STATION"
+      : "NONE_F21_DEGRADED_LATCHED_BY_NORTH_CENTRAL_STATION";
 
     state.recommendedNextOwner = CARDINAL.DOWNSTREAM;
     state.recommendedNextFile = DOWNSTREAM_GATES.hearthIndex;
     state.recommendedNextRenewalTarget = DOWNSTREAM_GATES.hearthIndex;
+    state.nextPlatform = STATION_PLATFORMS.DOWNSTREAM_PLATFORM;
+    state.nextReason = "F21_LATCHED_DOWNSTREAM_RELEASE_AUTHORIZED";
 
     recomputeActiveStage();
 
@@ -2248,6 +3055,7 @@
       recommendedNextOwner: state.recommendedNextOwner,
       recommendedNextFile: state.recommendedNextFile,
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+      centralTrainStationActive: true,
       validation,
       pageResponsive: true,
       nonBlockingPhaseSchedulerActive: true,
@@ -2257,7 +3065,7 @@
       visualPassClaimed: false
     };
 
-    record("admit", "F21_LATCHED_BY_NORTH_NON_BLOCKING_TWO_CYCLE_DISTRIBUTOR", response, {}, "full");
+    record("admit", "F21_LATCHED_BY_NORTH_CENTRAL_TRAIN_STATION", response, { scope: "full" });
     markDirty("full");
 
     return response;
@@ -2265,6 +3073,8 @@
 
   function receivePrimaryGateEvent(packet = {}, source = "receiveEvent") {
     const input = normalizePayload(packet);
+
+    dispatchStationArtifact(input, source);
 
     if (hasEvent(input, PRIMARY_EVENTS.F21) || getAnyBool(input, ["f21EligibleForNorth", "primaryGateCycleEligible"], false)) {
       return latchF21FromSouthEligibility(input, source);
@@ -2288,6 +3098,10 @@
 
     if (isPrimaryGatePacket(input, CARDINAL.EAST) || hasEvent(input, PRIMARY_EVENTS.EAST)) {
       return acceptEastPrimaryGate(input);
+    }
+
+    if (artifactClassFor(input) === ARTIFACT_CLASSES.PRODUCT_ENGINE_ARTIFACT) {
+      return registerProductEngineArtifact(input);
     }
 
     if (isDownstreamPacket(input)) {
@@ -2408,14 +3222,16 @@
   function classifyCheckpointEvent(packet = {}) {
     const input = normalizePayload(packet);
     const name = eventName(input);
+    const artifact = dispatchStationArtifact(input, "classifyCheckpointEvent");
 
     if (hasEvent(input, PRIMARY_EVENTS.F21) || getAnyBool(input, ["f21EligibleForNorth", "primaryGateCycleEligible"], false)) {
       const validation = validateF21Eligibility(input);
       return {
         action: validation.ok ? CHECKPOINT_EVENT_ACTIONS.LATCH : CHECKPOINT_EVENT_ACTIONS.HELD,
         gapClass: validation.ok ? GAP_CLASS.NONE : GAP_CLASS.CANVAS_F13_HELD,
-        checkpointId: "F21_NORTH_TWO_CYCLE_LATCH",
+        checkpointId: "F21_NORTH_CENTRAL_STATION_LATCH",
         event: name || "F21_ELIGIBILITY_PACKET",
+        artifact,
         validation,
         activeStageId: state.activeStageId,
         activeFileGate: state.activeFileGate,
@@ -2426,9 +3242,10 @@
     if (isCanvasPacket(input)) {
       return {
         action: CHECKPOINT_EVENT_ACTIONS.ADMIT,
-        gapClass: GAP_CLASS.NONE,
+        gapClass: artifact.gapClass || GAP_CLASS.NONE,
         checkpointId: "CANVAS_F13_EVIDENCE",
         event: name,
+        artifact,
         activeStageId: state.activeStageId,
         activeFileGate: state.activeFileGate,
         pageResponsive: true
@@ -2438,9 +3255,10 @@
     if (isPrimaryGatePacket(input, CARDINAL.WEST) || hasEvent(input, PRIMARY_EVENTS.WEST)) {
       return {
         action: CHECKPOINT_EVENT_ACTIONS.ADMIT,
-        gapClass: GAP_CLASS.NONE,
+        gapClass: artifact.gapClass || GAP_CLASS.NONE,
         checkpointId: "WEST_PRIMARY_GATE",
         event: name,
+        artifact,
         activeStageId: state.activeStageId,
         activeFileGate: state.activeFileGate,
         pageResponsive: true
@@ -2450,9 +3268,10 @@
     if (isPrimaryGatePacket(input, CARDINAL.SOUTH) || hasEvent(input, PRIMARY_EVENTS.SOUTH)) {
       return {
         action: CHECKPOINT_EVENT_ACTIONS.ADMIT,
-        gapClass: GAP_CLASS.NONE,
+        gapClass: artifact.gapClass || GAP_CLASS.NONE,
         checkpointId: "SOUTH_PRIMARY_GATE",
         event: name,
+        artifact,
         activeStageId: state.activeStageId,
         activeFileGate: state.activeFileGate,
         pageResponsive: true
@@ -2462,9 +3281,10 @@
     if (isPrimaryGatePacket(input, CARDINAL.EAST) || hasEvent(input, PRIMARY_EVENTS.EAST)) {
       return {
         action: CHECKPOINT_EVENT_ACTIONS.ADMIT,
-        gapClass: GAP_CLASS.NONE,
+        gapClass: artifact.gapClass || GAP_CLASS.NONE,
         checkpointId: "EAST_PRIMARY_GATE",
         event: name,
+        artifact,
         activeStageId: state.activeStageId,
         activeFileGate: state.activeFileGate,
         pageResponsive: true
@@ -2477,6 +3297,7 @@
         gapClass: GAP_CLASS.DOWNSTREAM_HELD,
         checkpointId: "DOWNSTREAM_HELD_UNTIL_F21_LATCH",
         event: name,
+        artifact,
         activeStageId: state.activeStageId,
         activeFileGate: state.activeFileGate,
         recommendedNextFile: state.recommendedNextFile,
@@ -2486,9 +3307,10 @@
 
     return {
       action: CHECKPOINT_EVENT_ACTIONS.ARCHIVE,
-      gapClass: GAP_CLASS.DUPLICATE_ARCHIVE,
+      gapClass: artifact.gapClass || GAP_CLASS.DUPLICATE_ARCHIVE,
       reason: name ? "unknown-primary-event-archived" : "missing-event-name",
       event: name,
+      artifact,
       activeStageId: state.activeStageId,
       activeFileGate: state.activeFileGate,
       pageResponsive: true
@@ -2539,6 +3361,8 @@
       downstreamReleaseAuthorized: state.downstreamReleaseAuthorized,
       completionLatched: state.completionLatched,
       f21LatchMode: state.f21LatchMode,
+      centralTrainStationActive: true,
+      productEngineConductorActive: true,
       pageResponsive: true,
       nonBlockingPhaseSchedulerActive: true
     };
@@ -2560,6 +3384,7 @@
       primaryGateRegistryActive: true,
       primaryGateFilesLocked: true,
       twoCycleRuntimeLawActive: true,
+      centralTrainStationActive: true,
       nonBlockingPhaseSchedulerActive: true,
       oneActiveGearAtATime: true,
       pageResponsive: true,
@@ -2576,6 +3401,34 @@
 
     record("receipt", "ACTIVE_PRIMARY_STAGE_SET", { stageId, reason });
     return getActiveGateState();
+  }
+
+  function completeStage(stageId, options = {}) {
+    const stage = stageById(stageId);
+    if (!stage) return getHeldResponse("UNKNOWN_PRIMARY_STAGE", "complete-stage-unknown", { stageId });
+
+    if (!state.completedStages.includes(stage.id)) state.completedStages.push(stage.id);
+    if (options.degraded === true && !state.degradedStages.includes(stage.id)) state.degradedStages.push(stage.id);
+
+    record("admit", "PRIMARY_STAGE_COMPLETE", {
+      stageId: stage.id,
+      degraded: options.degraded === true,
+      reason: options.reason || ""
+    });
+
+    recomputeActiveStage();
+    markDirty("light");
+
+    return {
+      accepted: true,
+      action: options.degraded === true ? CHECKPOINT_EVENT_ACTIONS.DEGRADED_FORWARD : CHECKPOINT_EVENT_ACTIONS.ADMIT,
+      completedStage: stage.id,
+      activeStageId: state.activeStageId,
+      activeFileGate: state.activeFileGate,
+      centralTrainStationActive: true,
+      pageResponsive: true,
+      visualPassClaimed: false
+    };
   }
 
   function updateActiveProgress(progress, reason = "progress-update") {
@@ -2597,11 +3450,12 @@
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      registryContract: "LAB_RUNTIME_TABLE_TWO_CYCLE_PRIMARY_GATE_REGISTRY_v2",
-      registryReceipt: "LAB_RUNTIME_TABLE_TWO_CYCLE_PRIMARY_GATE_REGISTRY_RECEIPT_v2",
-      authority: "north-two-cycle-primary-gate-registry-non-blocking",
+      registryContract: "LAB_RUNTIME_TABLE_CENTRAL_TRAIN_STATION_PRIMARY_GATE_REGISTRY_v3",
+      registryReceipt: "LAB_RUNTIME_TABLE_CENTRAL_TRAIN_STATION_PRIMARY_GATE_REGISTRY_RECEIPT_v3",
+      authority: "north-central-train-station-two-cycle-primary-gate-registry",
       primaryGates: clonePlain(PRIMARY_GATES),
       downstreamGates: clonePlain(DOWNSTREAM_GATES),
+      stationPlatforms: clonePlain(STATION_PLATFORMS),
       rotation: clonePlain(PRIMARY_ROTATION),
       language: clonePlain(NORTH_LANGUAGE),
       cycleOne: clonePlain(state.cycleOne),
@@ -2614,10 +3468,16 @@
       canvasF13ReleaseAuthorized: state.cycleTwo.canvasF13ReleaseAuthorized,
       canvasF13EvidenceComplete: canvasF13EvidenceComplete(),
       downstreamReleaseAuthorized: state.downstreamReleaseAuthorized,
+      centralTrainStationActive: true,
+      stationRegistryActive: true,
+      productEngineConductorActive: true,
       nonBlockingPhaseSchedulerActive: true,
       authorityScanCacheActive: true,
       nextPrimaryOwner: state.recommendedNextOwner,
       nextPrimaryTarget: state.recommendedNextFile,
+      nextPlatform: state.nextPlatform,
+      doNotRenewRepeatedly: state.doNotRenewRepeatedly,
+      parentBridgeAuditRequired: state.parentBridgeAuditRequired,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -2650,9 +3510,12 @@
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      authority: "north-two-cycle-news-fibonacci-plan-non-blocking",
+      authority: "north-central-train-station-news-fibonacci-plan",
       sequence: createChronologicalFibonacciPlan(),
       newsGates: clonePlain(NEWS_GATES),
+      stationPlatforms: clonePlain(STATION_PLATFORMS),
+      fibonacciSyncStatus: clonePlain(FIBONACCI_SYNC_STATUS),
+      newsAlignmentStatus: clonePlain(NEWS_ALIGNMENT_STATUS),
       primaryGates: clonePlain(PRIMARY_GATES),
       downstreamGates: clonePlain(DOWNSTREAM_GATES),
       primaryGateRegistryActive: true,
@@ -2660,6 +3523,8 @@
       twoCycleRuntimeLawActive: true,
       oneActiveGearAtATime: true,
       canvasF13ReleaseBeforeF21Active: true,
+      centralTrainStationActive: true,
+      productEngineConductorActive: true,
       nonBlockingPhaseSchedulerActive: true,
       generatedImage: false,
       graphicBox: false,
@@ -2788,7 +3653,7 @@
   }
 
   function resolveHandoff(records) {
-    const statuses = records.map((record) => record.status);
+    const statuses = records.map((recordItem) => recordItem.status);
 
     if (statuses.includes(STATUS.BLOCKING)) return HANDOFF.BLOCKING;
     if (statuses.includes(STATUS.REJECTED)) return HANDOFF.REJECTED;
@@ -2841,7 +3706,7 @@
     }
 
     function registerChild(registration = {}) {
-      const record = {
+      const recordItem = {
         key: registration.key || registration.name || `child-${local.registrations.length + 1}`,
         name: registration.name || registration.key || `Child ${local.registrations.length + 1}`,
         planetId: registration.planetId || local.planetId || "",
@@ -2860,14 +3725,14 @@
         metadata: clonePlain(registration.metadata || {})
       };
 
-      local.registrations.push(record);
+      local.registrations.push(recordItem);
       log("REGISTER_CHILD", {
-        key: record.key,
-        fileGate: record.fileGate,
-        expectedContract: record.expectedContract
+        key: recordItem.key,
+        fileGate: recordItem.fileGate,
+        expectedContract: recordItem.expectedContract
       });
 
-      return record;
+      return recordItem;
     }
 
     function validateChild(registration, samplePoint = {}) {
@@ -2986,6 +3851,7 @@
         runtimeAllowed: local.runtimeAllowed,
         tableSet: local.tableSet,
         twoCycleRuntimeLawActive: true,
+        centralTrainStationActive: true,
         nonBlockingPhaseSchedulerActive: true,
         childCount: local.registrations.length,
         records: clonePlain(local.records),
@@ -3049,6 +3915,7 @@
           runtimeAllowed: local.runtimeAllowed,
           status: local.status,
           twoCycleRuntimeLawActive: true,
+          centralTrainStationActive: true,
           nonBlockingPhaseSchedulerActive: true,
           visualPassClaimed: false,
           updatedAt: nowIso()
@@ -3133,6 +4000,8 @@
         twoCycleRuntimeLawActive: true,
         canvasF13ReleaseBeforeF21Active: true,
         downstreamReleaseRequiresF21Latch: true,
+        centralTrainStationActive: true,
+        productEngineConductorActive: true,
         nonBlockingPhaseSchedulerActive: true,
         ...(overrides.laws || {})
       },
@@ -3153,28 +4022,46 @@
     const wideProbeCount = Array.isArray(input.probeSamples) ? input.probeSamples.length : 0;
     const minWideProbe = safeNumber(goalProfile.tolerances && goalProfile.tolerances.minimumWideProbePoints, 25);
 
+    const stationReceipt = getCentralStationReceiptLight();
+
     const checkpoints = [
       {
         id: "TWO_CYCLE_RUNTIME_LAW_CHECK",
         name: "Two-Cycle Runtime Law Check",
         status: COHERENCE_STATUS.PASS,
-        observed: "North is using Cycle 1 and Cycle 2 separately.",
+        observed: "North preserves Cycle 1 and Cycle 2 separately.",
         nonBlocking: false,
         at: nowIso()
       },
       {
-        id: "NON_BLOCKING_SCHEDULER_CHECK",
-        name: "Non-Blocking Scheduler Check",
-        status: COHERENCE_STATUS.PASS,
-        observed: "North phase publication uses light scheduler and cached authority scans.",
+        id: "CENTRAL_TRAIN_STATION_CHECK",
+        name: "Central Train Station Check",
+        status: state.centralTrainStationActive ? COHERENCE_STATUS.PASS : COHERENCE_STATUS.FAIL,
+        observed: state.centralTrainStationActive ? "Central station conductor active." : "Central station conductor missing.",
         nonBlocking: false,
         at: nowIso()
       },
       {
-        id: "CYCLE_ONE_RETURN_CHECK",
-        name: "Cycle 1 Return Check",
-        status: cycleOneComplete() ? COHERENCE_STATUS.PASS : COHERENCE_STATUS.WARNING,
-        observed: cycleOneComplete() ? "Cycle 1 returned through North." : "Cycle 1 still awaiting return closure.",
+        id: "NEWS_ALIGNMENT_PROTOCOL_CHECK",
+        name: "NEWS Alignment Protocol Check",
+        status: state.newsAlignmentProtocolActive ? COHERENCE_STATUS.PASS : COHERENCE_STATUS.FAIL,
+        observed: state.newsAlignmentProtocolActive ? "NEWS alignment protocol active." : "NEWS alignment protocol missing.",
+        nonBlocking: false,
+        at: nowIso()
+      },
+      {
+        id: "FIBONACCI_SYNC_METRIC_CHECK",
+        name: "Fibonacci Synchronization Metric Check",
+        status: state.fibonacciSynchronizationMetricActive ? COHERENCE_STATUS.PASS : COHERENCE_STATUS.FAIL,
+        observed: state.fibonacciSynchronizationMetricActive ? "Fibonacci synchronization metric active." : "Fibonacci synchronization metric missing.",
+        nonBlocking: false,
+        at: nowIso()
+      },
+      {
+        id: "PARENT_CONTACT_LEDGER_CHECK",
+        name: "Parent Contact Ledger Check",
+        status: state.parentBridgeAuditRequired ? COHERENCE_STATUS.WARNING : COHERENCE_STATUS.PASS,
+        observed: state.parentBridgeAuditRequired ? "Parent bridge audit required before repeating child renewal." : "No parent-contact hard gap detected.",
         nonBlocking: true,
         at: nowIso()
       },
@@ -3225,22 +4112,27 @@
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      authority: "lab-triple-g-coherence-diagnostic-north-non-blocking-two-cycle-distributor",
+      authority: "lab-triple-g-coherence-diagnostic-north-central-train-station",
       goalProfileId: goalProfile.id,
       goalProfile: clonePlain(goalProfile),
       constructionReady: true,
       imageRendered,
       coherentExpressionPass: false,
-      coherenceScore: failedCheckpoints.length ? 72 : canvasF13EvidenceComplete() ? 88 : state.cycleTwo.canvasF13ReleaseAuthorized ? 84 : 78,
+      coherenceScore: failedCheckpoints.length ? 72 : canvasF13EvidenceComplete() ? 90 : state.cycleTwo.canvasF13ReleaseAuthorized ? 86 : 80,
       coherenceStatus: failedCheckpoints.length ? COHERENCE_STATUS.FAIL : COHERENCE_STATUS.WARNING,
       checkpoints,
       failedCheckpoints: failedCheckpoints.map((item) => item.id),
       warningCheckpoints: checkpoints.filter((item) => item.status === COHERENCE_STATUS.WARNING).map((item) => item.id),
       heldCheckpoints: heldCheckpoints.map((item) => item.id),
+      stationReceipt,
       nextStrategy: [`Complete next gate: ${state.recommendedNextFile}`],
       twoCycleRuntimeLawActive: true,
       primaryGateRegistryActive: true,
       primaryGateFilesLocked: true,
+      centralTrainStationActive: true,
+      newsAlignmentProtocolActive: true,
+      fibonacciSynchronizationMetricActive: true,
+      productEngineConductorActive: true,
       nonBlockingPhaseSchedulerActive: true,
       generatedImage: false,
       graphicBox: false,
@@ -3283,6 +4175,7 @@
           id: local.id,
           reportCount: local.reports.length,
           tripleGDiagnostic: true,
+          centralTrainStationActive: true,
           twoCycleRuntimeLawActive: true,
           nonBlockingPhaseSchedulerActive: true,
           visualPassClaimed: false,
@@ -3322,9 +4215,9 @@
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      loadingOptimizationContract: "LAB_UNIVERSAL_PLANET_LOADING_OPTIMIZATION_PLAN_NON_BLOCKING_TWO_CYCLE_PRIMARY_GATE_v2",
-      loadingOptimizationReceipt: "LAB_UNIVERSAL_PLANET_LOADING_OPTIMIZATION_PLAN_NON_BLOCKING_TWO_CYCLE_PRIMARY_GATE_RECEIPT_v2",
-      authority: "north-non-blocking-two-cycle-loading-optimization",
+      loadingOptimizationContract: "LAB_UNIVERSAL_PLANET_LOADING_OPTIMIZATION_PLAN_CENTRAL_TRAIN_STATION_v3",
+      loadingOptimizationReceipt: "LAB_UNIVERSAL_PLANET_LOADING_OPTIMIZATION_PLAN_CENTRAL_TRAIN_STATION_RECEIPT_v3",
+      authority: "north-central-station-loading-optimization",
       visibleCarrierFirst: true,
       wideProbeBlocksFirstVisibleRender: false,
       firstVisibleRenderAllowed: true,
@@ -3335,12 +4228,14 @@
         probeRowsPerChunk: budget.probeRowsPerChunk,
         deferWideProbe: true,
         useIdleFrames: true,
-        usePhaseScheduler: true
+        usePhaseScheduler: true,
+        useCentralStation: true
       },
       twoCycleRuntimeLawActive: true,
       canvasF13ReleaseBeforeF21Active: true,
       primaryGateRegistryActive: true,
       primaryGateFilesLocked: true,
+      centralTrainStationActive: true,
       nonBlockingPhaseSchedulerActive: true,
       generatedImage: false,
       graphicBox: false,
@@ -3366,9 +4261,9 @@
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      planContract: "LAB_UNIVERSAL_PLANET_PROCEDURAL_VISUAL_CARRIER_PLAN_NON_BLOCKING_TWO_CYCLE_PRIMARY_GATE_v2",
-      planReceipt: "LAB_UNIVERSAL_PLANET_PROCEDURAL_VISUAL_CARRIER_PLAN_NON_BLOCKING_TWO_CYCLE_PRIMARY_GATE_RECEIPT_v2",
-      authority: "north-non-blocking-two-cycle-visual-carrier-plan",
+      planContract: "LAB_UNIVERSAL_PLANET_PROCEDURAL_VISUAL_CARRIER_PLAN_CENTRAL_TRAIN_STATION_v3",
+      planReceipt: "LAB_UNIVERSAL_PLANET_PROCEDURAL_VISUAL_CARRIER_PLAN_CENTRAL_TRAIN_STATION_RECEIPT_v3",
+      authority: "north-central-train-station-visual-carrier-plan",
       planetId: input.planetId || options.planetId || "",
       planetLabel: input.planetLabel || options.planetLabel || "",
       planGenerated: true,
@@ -3382,6 +4277,7 @@
       atlasStartAuthorized: state.cycleTwo.canvasF13ReleaseAuthorized,
       loadingOptimizationPlan,
       primaryGateRegistry: createPrimaryGateRegistry(),
+      centralStationReceipt: getCentralStationReceiptLight(),
       tripleGCheckpoints: diagnostic.checkpoints,
       failedCheckpoints: diagnostic.failedCheckpoints,
       warningCheckpoints: diagnostic.warningCheckpoints,
@@ -3391,11 +4287,15 @@
       primaryGateRegistryActive: true,
       primaryGateFilesLocked: true,
       twoCycleRuntimeLawActive: true,
+      centralTrainStationActive: true,
+      productEngineConductorActive: true,
       nonBlockingPhaseSchedulerActive: true,
       canvasF13ReleaseAuthorized: state.cycleTwo.canvasF13ReleaseAuthorized,
       canvasF13EvidenceComplete: canvasF13EvidenceComplete(),
       downstreamReleaseAuthorized: state.downstreamReleaseAuthorized,
       childFailureDoesNotEraseVisualization: true,
+      repeatedChildRenewalGuardActive: true,
+      parentBridgeAuditRequired: state.parentBridgeAuditRequired,
       wideProbeBlocksFirstVisibleRender: false,
       singleAnchorIsLocalProofOnly: true,
       coherentExpressionEligible: true,
@@ -3505,7 +4405,9 @@
     state.recommendedNextOwner = CARDINAL.EAST;
     state.recommendedNextFile = PRIMARY_GATES.east;
     state.recommendedNextRenewalTarget = PRIMARY_GATES.east;
-    state.postgameStatus = "TWO_CYCLE_NORTH_READY";
+    state.nextPlatform = STATION_PLATFORMS.EAST_PLATFORM;
+    state.nextReason = "TWO_CYCLE_PRIMARY_GATE_REGISTRY_RESET";
+    state.postgameStatus = "CENTRAL_TRAIN_STATION_READY";
     state.updatedAt = nowIso();
 
     invalidateAuthorityCache("reset-primary-gate-registry");
@@ -3517,19 +4419,20 @@
   }
 
   function createCheckpointSession(_sequenceInput = null, options = {}) {
-    const sessionId = options.sessionId || options.id || "HEARTH-NORTH-NON-BLOCKING-TWO-CYCLE-CANVAS-F13-RELEASE";
+    const sessionId = options.sessionId || options.id || "HEARTH-NORTH-CENTRAL-TRAIN-STATION-TWO-CYCLE-CANVAS-F13-RELEASE";
 
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      checkpointSessionContract: "LAB_RUNTIME_TABLE_NORTH_NON_BLOCKING_TWO_CYCLE_SESSION_v2",
-      checkpointSessionReceipt: "LAB_RUNTIME_TABLE_NORTH_NON_BLOCKING_TWO_CYCLE_SESSION_RECEIPT_v2",
+      checkpointSessionContract: "LAB_RUNTIME_TABLE_NORTH_CENTRAL_TRAIN_STATION_SESSION_v3",
+      checkpointSessionReceipt: "LAB_RUNTIME_TABLE_NORTH_CENTRAL_TRAIN_STATION_SESSION_RECEIPT_v3",
       sessionId,
       route: options.route || ROUTE,
       persistentNorthSession: true,
       primaryGateRegistryActive: true,
       primaryGateFilesLocked: true,
       twoCycleRuntimeLawActive: true,
+      centralTrainStationActive: true,
       nonBlockingPhaseSchedulerActive: true,
 
       acceptEastPrimary,
@@ -3570,14 +4473,28 @@
       receiveEvent,
       completeActive,
 
+      extractNodalArtifact,
+      assignArtifactPlatform,
+      evaluateNewsAlignment,
+      evaluateFibonacciSynchronization,
+      evaluateParentContact,
+      dispatchStationArtifact,
+      registerProductEngineArtifact,
+      classifyProductEngineArtifact,
+      routeProductEngineArtifact,
+
       queuePhase,
       invalidateAuthorityCache,
       refreshObservedAuthorities,
+      refreshStationArtifacts,
 
       getActiveCheckpoint: getActiveGateState,
       getCheckpointState: getReceiptLight,
       getNewsGateState: evaluateNewsGateState,
       createPrimaryGateRegistry,
+      getCentralStationReceiptLight,
+      getCentralStationReceipt,
+      getCentralStationReceiptText,
       getReceipt,
       getReceiptLight,
       getReceiptText,
@@ -3597,8 +4514,6 @@
       route: ROUTE
     });
   }
-
-  let transmissionSession = null;
 
   function getTransmissionReceipt() {
     return getReceiptLight();
@@ -3635,16 +4550,18 @@
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      authority: "north-non-blocking-two-cycle-cardinal-receipt",
+      authority: "north-central-train-station-cardinal-receipt",
       primaryGateRegistryActive: true,
       primaryGateFilesLocked: true,
       twoCycleRuntimeLawActive: true,
+      centralTrainStationActive: true,
       nonBlockingPhaseSchedulerActive: true,
       northLoaded: true,
       eastPrimaryFileGate: PRIMARY_GATES.east,
       southPrimaryFileGate: PRIMARY_GATES.south,
       westPrimaryFileGate: PRIMARY_GATES.west,
       canvasFileGate: DOWNSTREAM_GATES.canvas,
+      productEnginePlatform: STATION_PLATFORMS.PRODUCT_ENGINE_PLATFORM,
       cycleOneRoute: CYCLE.ONE,
       cycleTwoRoute: CYCLE.TWO,
       canvasF13ReleaseAuthorized: state.cycleTwo.canvasF13ReleaseAuthorized,
@@ -3652,10 +4569,164 @@
       downstreamReleaseAuthorized: state.downstreamReleaseAuthorized,
       nextPrimaryOwner: state.recommendedNextOwner,
       nextPrimaryTarget: state.recommendedNextFile,
+      nextPlatform: state.nextPlatform,
       pageResponsive: true,
       visualPassClaimed: false,
       updatedAt: nowIso()
     };
+  }
+
+  function getCentralStationReceiptLight() {
+    if (!scheduler.dirtyStationReceiptLight && scheduler.centralStationReceiptLightCache) {
+      return clonePlain(scheduler.centralStationReceiptLightCache);
+    }
+
+    updateStationCounters();
+
+    const receipt = {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      stationReceipt: "LAB_RUNTIME_TABLE_NORTH_CENTRAL_TRAIN_STATION_LIGHT_RECEIPT_v3",
+      file: FILE,
+      role: state.role,
+
+      centralTrainStationActive: true,
+      stationRegistryActive: true,
+      nodalArtifactExtractorActive: true,
+      platformAssignerActive: true,
+      centralDispatcherActive: true,
+      productEngineConductorActive: true,
+      newsAlignmentProtocolActive: true,
+      fibonacciSynchronizationMetricActive: true,
+      parentContactLedgerActive: true,
+      centralReceiptBoardActive: true,
+      expressionPreservationRuleActive: true,
+
+      artifactCount: state.artifactCount,
+      platformCount: state.platformCount,
+      staleArtifactCount: state.staleArtifactCount,
+      lostParentContactCount: state.lostParentContactCount,
+      readyArtifactCount: state.readyArtifactCount,
+      heldArtifactCount: state.heldArtifactCount,
+      blockedArtifactCount: state.blockedArtifactCount,
+
+      nextPlatform: state.nextPlatform,
+      nextFile: state.recommendedNextFile,
+      nextRenewalTarget: state.recommendedNextRenewalTarget,
+      nextReason: state.nextReason,
+      firstFailedCoordinate: state.firstFailedCoordinate,
+      parentBridgeAuditRequired: state.parentBridgeAuditRequired,
+      doNotRenewRepeatedly: state.doNotRenewRepeatedly,
+      repeatedChildRenewalGuardActive: state.repeatedChildRenewalGuardActive,
+      lastRepeatedRenewalWarning: state.lastRepeatedRenewalWarning,
+      expressionDownstreamGapLikely: state.expressionDownstreamGapLikely,
+      doNotTouchList: state.doNotTouchList.slice(),
+
+      unrealStyleReference: true,
+      surpassMarketTargetInternal: true,
+      benchmarkRequiredBeforePublicClaim: true,
+      productEngineBenchmarkPending: true,
+      publicSuperiorityClaimed: false,
+
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false,
+      updatedAt: nowIso()
+    };
+
+    scheduler.centralStationReceiptLightCache = clonePlain(receipt);
+    scheduler.centralStationReceiptLightCacheAt = nowMs();
+    scheduler.dirtyStationReceiptLight = false;
+
+    return receipt;
+  }
+
+  function getCentralStationReceipt() {
+    refreshStationArtifacts({ force: true });
+
+    return {
+      ...getCentralStationReceiptLight(),
+      stationReceipt: "LAB_RUNTIME_TABLE_NORTH_CENTRAL_TRAIN_STATION_FULL_RECEIPT_v3",
+      stationPlatforms: clonePlain(STATION_PLATFORMS),
+      artifactClasses: clonePlain(ARTIFACT_CLASSES),
+      parentContactStatus: clonePlain(PARENT_CONTACT_STATUS),
+      fibonacciSyncStatus: clonePlain(FIBONACCI_SYNC_STATUS),
+      newsAlignmentStatus: clonePlain(NEWS_ALIGNMENT_STATUS),
+      dispatchAction: clonePlain(DISPATCH_ACTION),
+      productEngineTracks: clonePlain(PRODUCT_ENGINE_TRACKS),
+      stationArtifacts: clonePlain(state.stationArtifacts),
+      platformLedger: clonePlain(state.platformLedger),
+      parentContactLedger: clonePlain(state.parentContactLedger),
+      newsAlignmentLedger: clonePlain(state.newsAlignmentLedger),
+      fibonacciSyncLedger: clonePlain(state.fibonacciSyncLedger),
+      dispatchLedger: clonePlain(state.dispatchLedger),
+      productEngineLedger: clonePlain(state.productEngineLedger),
+      updatedAt: nowIso()
+    };
+  }
+
+  function getCentralStationReceiptText() {
+    const r = getCentralStationReceipt();
+
+    const artifacts = r.stationArtifacts.slice(-30).map((artifact) => (
+      `- ${artifact.extractedAt || ""} :: ${artifact.artifactClass} :: ${artifact.platform} :: file=${artifact.file || ""} :: sync=${artifact.syncStatus}:${artifact.syncScore} :: news=${artifact.newsAlignmentStatus} :: parent=${artifact.parentContactStatus} :: action=${artifact.dispatchAction}`
+    )).join("\n") || "- none";
+
+    const dispatches = r.dispatchLedger.slice(-30).map((item) => (
+      `- ${item.at || ""} :: action=${item.action} :: target=${item.targetFile} :: platform=${item.targetPlatform} :: reason=${item.reason}`
+    )).join("\n") || "- none";
+
+    return [
+      "LAB_RUNTIME_TABLE_NORTH_CENTRAL_TRAIN_STATION_RECEIPT",
+      "",
+      `contract=${r.contract}`,
+      `receipt=${r.receipt}`,
+      `file=${r.file}`,
+      `role=${r.role}`,
+      "",
+      `centralTrainStationActive=${r.centralTrainStationActive}`,
+      `stationRegistryActive=${r.stationRegistryActive}`,
+      `nodalArtifactExtractorActive=${r.nodalArtifactExtractorActive}`,
+      `platformAssignerActive=${r.platformAssignerActive}`,
+      `centralDispatcherActive=${r.centralDispatcherActive}`,
+      `productEngineConductorActive=${r.productEngineConductorActive}`,
+      `newsAlignmentProtocolActive=${r.newsAlignmentProtocolActive}`,
+      `fibonacciSynchronizationMetricActive=${r.fibonacciSynchronizationMetricActive}`,
+      `parentContactLedgerActive=${r.parentContactLedgerActive}`,
+      `centralReceiptBoardActive=${r.centralReceiptBoardActive}`,
+      `expressionPreservationRuleActive=${r.expressionPreservationRuleActive}`,
+      "",
+      `artifactCount=${r.artifactCount}`,
+      `platformCount=${r.platformCount}`,
+      `staleArtifactCount=${r.staleArtifactCount}`,
+      `lostParentContactCount=${r.lostParentContactCount}`,
+      `readyArtifactCount=${r.readyArtifactCount}`,
+      `heldArtifactCount=${r.heldArtifactCount}`,
+      `blockedArtifactCount=${r.blockedArtifactCount}`,
+      "",
+      `nextPlatform=${r.nextPlatform}`,
+      `nextFile=${r.nextFile}`,
+      `nextRenewalTarget=${r.nextRenewalTarget}`,
+      `nextReason=${r.nextReason}`,
+      `parentBridgeAuditRequired=${r.parentBridgeAuditRequired}`,
+      `doNotRenewRepeatedly=${r.doNotRenewRepeatedly}`,
+      `lastRepeatedRenewalWarning=${r.lastRepeatedRenewalWarning}`,
+      "",
+      "ARTIFACTS",
+      artifacts,
+      "",
+      "DISPATCH_LEDGER",
+      dispatches,
+      "",
+      `benchmarkRequiredBeforePublicClaim=${r.benchmarkRequiredBeforePublicClaim}`,
+      `publicSuperiorityClaimed=${r.publicSuperiorityClaimed}`,
+      `generatedImage=${r.generatedImage}`,
+      `graphicBox=${r.graphicBox}`,
+      `webGL=${r.webGL}`,
+      `visualPassClaimed=${r.visualPassClaimed}`,
+      `updatedAt=${r.updatedAt}`
+    ].join("\n");
   }
 
   function getReceiptLight() {
@@ -3666,6 +4737,7 @@
     refreshStageLedger();
 
     const news = evaluateNewsGateState();
+    const stationReceipt = getCentralStationReceiptLight();
 
     const light = {
       contract: CONTRACT,
@@ -3673,7 +4745,7 @@
       previousContract: PREVIOUS_CONTRACT,
       baselineContract: BASELINE_CONTRACT,
       version: VERSION,
-      authority: "lab-runtime-table-north-non-blocking-phase-scheduler-two-cycle-distributor",
+      authority: "lab-runtime-table-north-central-train-station-product-engine-conductor",
       destinationFile: FILE,
       file: FILE,
       route: ROUTE,
@@ -3692,6 +4764,18 @@
       downstreamReleaseHeldUntilF21Latch: true,
       northMacroOnly: true,
       microTuningDelegatesDownstream: true,
+
+      centralTrainStationActive: true,
+      stationRegistryActive: true,
+      nodalArtifactExtractorActive: true,
+      platformAssignerActive: true,
+      centralDispatcherActive: true,
+      productEngineConductorActive: true,
+      newsAlignmentProtocolActive: true,
+      fibonacciSynchronizationMetricActive: true,
+      parentContactLedgerActive: true,
+      centralReceiptBoardActive: true,
+      expressionPreservationRuleActive: true,
 
       nonBlockingPhaseSchedulerActive: true,
       authorityScanCacheActive: true,
@@ -3753,6 +4837,8 @@
       newsGatePassedBeforeF21: news.newsGatePassedBeforeF21,
       newsGateDegradedBeforeF21: news.newsGateDegradedBeforeF21,
 
+      centralStationReceipt: stationReceipt,
+
       downstreamReleaseAuthorized: state.downstreamReleaseAuthorized,
       downstreamReleaseTarget: state.downstreamReleaseTarget,
 
@@ -3760,6 +4846,10 @@
       recommendedNextOwner: state.recommendedNextOwner,
       recommendedNextFile: state.recommendedNextFile,
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+      nextPlatform: state.nextPlatform,
+      nextReason: state.nextReason,
+      parentBridgeAuditRequired: state.parentBridgeAuditRequired,
+      doNotRenewRepeatedly: state.doNotRenewRepeatedly,
       postgameStatus: state.postgameStatus,
 
       scheduler: {
@@ -3768,11 +4858,19 @@
         phaseRunCount: scheduler.phaseRunCount,
         authorityCacheActive: Boolean(scheduler.authorityCache),
         authorityCacheAgeMs: scheduler.authorityCacheAt ? nowMs() - scheduler.authorityCacheAt : 0,
+        stationCacheActive: Boolean(scheduler.stationCache),
+        stationCacheAgeMs: scheduler.stationCacheAt ? nowMs() - scheduler.stationCacheAt : 0,
         lightPublishScheduled: scheduler.lightPublishScheduled,
         fullDatasetScheduled: scheduler.fullDatasetScheduled
       },
 
       observed: clonePlain(state.observed),
+
+      unrealStyleReference: true,
+      surpassMarketTargetInternal: true,
+      benchmarkRequiredBeforePublicClaim: true,
+      productEngineBenchmarkPending: true,
+      publicSuperiorityClaimed: false,
 
       generatedImage: false,
       graphicBox: false,
@@ -3790,7 +4888,7 @@
   }
 
   function getReceipt() {
-    refreshObservedAuthorities({ force: true, includeCanvas: true });
+    refreshObservedAuthorities({ force: true, includeCanvas: true, includeProduct: true });
     refreshStageLedger();
 
     const light = getReceiptLight();
@@ -3813,6 +4911,12 @@
       fileGates: clonePlain(FILE_GATES),
       northLanguage: clonePlain(NORTH_LANGUAGE),
       primaryRotation: clonePlain(PRIMARY_ROTATION),
+      stationPlatforms: clonePlain(STATION_PLATFORMS),
+      artifactClasses: clonePlain(ARTIFACT_CLASSES),
+      parentContactStatus: clonePlain(PARENT_CONTACT_STATUS),
+      fibonacciSyncStatus: clonePlain(FIBONACCI_SYNC_STATUS),
+      newsAlignmentStatus: clonePlain(NEWS_ALIGNMENT_STATUS),
+      productEngineTracks: clonePlain(PRODUCT_ENGINE_TRACKS),
       stageLedger: clonePlain(state.stageLedger),
 
       cycleOne: clonePlain(state.cycleOne),
@@ -3826,6 +4930,8 @@
 
       f21EligibilityValidation: clonePlain(state.f21EligibilityValidation),
 
+      centralStationReceiptFull: getCentralStationReceipt(),
+
       preservedExports: [
         "createTable",
         "createHearthChannelTable",
@@ -3834,6 +4940,7 @@
         "HANDOFF",
         "getReceipt",
         "getReceiptLight",
+        "getReceiptText",
         "createTripleGDiagnostic",
         "createHearthCoherenceDiagnostic",
         "runCoherenceDiagnostic",
@@ -3892,15 +4999,37 @@
         "refreshObservedAuthorities"
       ],
 
+      addedExports: [
+        "extractNodalArtifact",
+        "assignArtifactPlatform",
+        "evaluateNewsAlignment",
+        "evaluateFibonacciSynchronization",
+        "evaluateParentContact",
+        "dispatchStationArtifact",
+        "registerProductEngineArtifact",
+        "classifyProductEngineArtifact",
+        "routeProductEngineArtifact",
+        "getCentralStationReceiptLight",
+        "getCentralStationReceipt",
+        "getCentralStationReceiptText",
+        "refreshStationArtifacts"
+      ],
+
       owns: [
         "two-cycle-runtime-law",
         "primary-file-gate-map",
         "north-macro-distribution",
+        "central-train-station-routing",
+        "nodal-artifact-extraction",
+        "NEWS-alignment-protocol",
+        "Fibonacci-synchronization-metric",
+        "parent-contact-ledger",
         "cycle-one-return-latch",
         "cycle-two-start-authorization",
         "Canvas F13 release authorization",
         "F21 North latch validation",
         "downstream release authorization",
+        "product-engine-conductor",
         "non-blocking phase scheduling",
         "authority scan cache",
         "light receipt publication"
@@ -3953,7 +5082,7 @@
     )).join("\n") || "- none";
 
     return [
-      "LAB_RUNTIME_TABLE_NORTH_NON_BLOCKING_PHASE_SCHEDULER_TWO_CYCLE_DISTRIBUTOR_RECEIPT",
+      "LAB_RUNTIME_TABLE_NORTH_CENTRAL_TRAIN_STATION_PRODUCT_ENGINE_CONDUCTOR_RECEIPT",
       "",
       `contract=${r.contract}`,
       `receipt=${r.receipt}`,
@@ -3973,6 +5102,19 @@
       `canvasF13ReleaseBeforeF21Active=${r.canvasF13ReleaseBeforeF21Active}`,
       `canvasF13IsNotDownstreamRelease=${r.canvasF13IsNotDownstreamRelease}`,
       `downstreamReleaseHeldUntilF21Latch=${r.downstreamReleaseHeldUntilF21Latch}`,
+      "",
+      "CENTRAL_TRAIN_STATION",
+      `centralTrainStationActive=${r.centralTrainStationActive}`,
+      `stationRegistryActive=${r.stationRegistryActive}`,
+      `nodalArtifactExtractorActive=${r.nodalArtifactExtractorActive}`,
+      `platformAssignerActive=${r.platformAssignerActive}`,
+      `centralDispatcherActive=${r.centralDispatcherActive}`,
+      `productEngineConductorActive=${r.productEngineConductorActive}`,
+      `newsAlignmentProtocolActive=${r.newsAlignmentProtocolActive}`,
+      `fibonacciSynchronizationMetricActive=${r.fibonacciSynchronizationMetricActive}`,
+      `parentContactLedgerActive=${r.parentContactLedgerActive}`,
+      `centralReceiptBoardActive=${r.centralReceiptBoardActive}`,
+      `expressionPreservationRuleActive=${r.expressionPreservationRuleActive}`,
       "",
       "SCHEDULER",
       `nonBlockingPhaseSchedulerActive=${r.nonBlockingPhaseSchedulerActive}`,
@@ -4042,6 +5184,10 @@
       `recommendedNextOwner=${r.recommendedNextOwner}`,
       `recommendedNextFile=${r.recommendedNextFile}`,
       `recommendedNextRenewalTarget=${r.recommendedNextRenewalTarget}`,
+      `nextPlatform=${r.nextPlatform}`,
+      `nextReason=${r.nextReason}`,
+      `parentBridgeAuditRequired=${r.parentBridgeAuditRequired}`,
+      `doNotRenewRepeatedly=${r.doNotRenewRepeatedly}`,
       `postgameStatus=${r.postgameStatus}`,
       "",
       "ADMITTED_EVENTS",
@@ -4053,6 +5199,8 @@
       "ERRORS",
       errors,
       "",
+      `benchmarkRequiredBeforePublicClaim=${r.benchmarkRequiredBeforePublicClaim}`,
+      `publicSuperiorityClaimed=${r.publicSuperiorityClaimed}`,
       `generatedImage=${r.generatedImage}`,
       `graphicBox=${r.graphicBox}`,
       `webGL=${r.webGL}`,
@@ -4083,6 +5231,18 @@
     setDataset("fullReceiptOnDemandOnly", "true");
     setDataset("datasetWriteCompactionActive", "true");
     setDataset("pageResponsive", "true");
+
+    setDataset("centralTrainStationActive", "true");
+    setDataset("stationRegistryActive", "true");
+    setDataset("nodalArtifactExtractorActive", "true");
+    setDataset("platformAssignerActive", "true");
+    setDataset("centralDispatcherActive", "true");
+    setDataset("productEngineConductorActive", "true");
+    setDataset("newsAlignmentProtocolActive", "true");
+    setDataset("fibonacciSynchronizationMetricActive", "true");
+    setDataset("parentContactLedgerActive", "true");
+    setDataset("centralReceiptBoardActive", "true");
+    setDataset("expressionPreservationRuleActive", "true");
 
     setDataset("activeStageId", state.activeStageId);
     setDataset("activeGear", state.activeGear);
@@ -4118,11 +5278,32 @@
     setDataset("downstreamReleaseAuthorized", String(state.downstreamReleaseAuthorized));
     setDataset("downstreamReleaseTarget", state.downstreamReleaseTarget);
 
+    setDataset("stationArtifactCount", String(state.artifactCount));
+    setDataset("stationPlatformCount", String(state.platformCount));
+    setDataset("stationStaleArtifactCount", String(state.staleArtifactCount));
+    setDataset("stationLostParentContactCount", String(state.lostParentContactCount));
+    setDataset("stationReadyArtifactCount", String(state.readyArtifactCount));
+    setDataset("stationHeldArtifactCount", String(state.heldArtifactCount));
+    setDataset("stationBlockedArtifactCount", String(state.blockedArtifactCount));
+
+    setDataset("parentBridgeAuditRequired", String(state.parentBridgeAuditRequired));
+    setDataset("doNotRenewRepeatedly", String(state.doNotRenewRepeatedly));
+    setDataset("repeatedChildRenewalGuardActive", String(state.repeatedChildRenewalGuardActive));
+    setDataset("expressionDownstreamGapLikely", String(state.expressionDownstreamGapLikely));
+
     setDataset("firstFailedCoordinate", state.firstFailedCoordinate);
     setDataset("recommendedNextOwner", state.recommendedNextOwner);
     setDataset("recommendedNextFile", state.recommendedNextFile);
     setDataset("recommendedNextRenewalTarget", state.recommendedNextRenewalTarget);
+    setDataset("nextPlatform", state.nextPlatform);
+    setDataset("nextReason", state.nextReason);
     setDataset("postgameStatus", state.postgameStatus);
+
+    setDataset("unrealStyleReference", "true");
+    setDataset("surpassMarketTargetInternal", "true");
+    setDataset("benchmarkRequiredBeforePublicClaim", "true");
+    setDataset("productEngineBenchmarkPending", "true");
+    setDataset("publicSuperiorityClaimed", "false");
 
     setDataset("generatedImage", "false");
     setDataset("graphicBox", "false");
@@ -4165,6 +5346,8 @@
     setDataset("schedulerPhaseRunCount", String(scheduler.phaseRunCount));
     setDataset("authorityScanCount", String(state.observed.authorityScanCount));
     setDataset("authorityScanLastAt", state.observed.authorityScanLastAt);
+    setDataset("stationScanCount", String(state.observed.stationScanCount));
+    setDataset("stationScanLastAt", state.observed.stationScanLastAt);
 
     scheduler.dirtyDatasetFull = false;
   }
@@ -4188,6 +5371,9 @@
     root.DEXTER_LAB.northPrimaryGateRegistry = api;
     root.DEXTER_LAB.northTwoCycleCanvasF13ReleaseDistributor = api;
     root.DEXTER_LAB.northNonBlockingPhaseScheduler = api;
+    root.DEXTER_LAB.centralTrainStation = api;
+    root.DEXTER_LAB.northCentralTrainStation = api;
+    root.DEXTER_LAB.productEngineConductor = api;
     root.DEXTER_LAB.hearthCheckpointSession = transmissionSession;
     root.DEXTER_LAB.checkpointSession = transmissionSession;
 
@@ -4208,6 +5394,9 @@
     root.LAB_RUNTIME_TABLE_NORTH_PRIMARY_GATE_REGISTRY = api;
     root.LAB_RUNTIME_TABLE_NORTH_TWO_CYCLE_DISTRIBUTOR = api;
     root.LAB_RUNTIME_TABLE_NORTH_NON_BLOCKING_PHASE_SCHEDULER = api;
+    root.LAB_RUNTIME_TABLE_NORTH_CENTRAL_TRAIN_STATION = api;
+    root.LAB_CENTRAL_TRAIN_STATION = api;
+    root.LAB_PRODUCT_ENGINE_CONDUCTOR = api;
 
     root.HEARTH_NORTH_COMMAND_RUNTIME_TABLE = api;
     root.HEARTH_NORTH_COMMAND_TABLE = api;
@@ -4218,6 +5407,9 @@
     root.HEARTH.primaryGateRegistry = api;
     root.HEARTH.northTwoCycleCanvasF13ReleaseDistributor = api;
     root.HEARTH.northNonBlockingPhaseScheduler = api;
+    root.HEARTH.centralTrainStation = api;
+    root.HEARTH.northCentralTrainStation = api;
+    root.HEARTH.productEngineConductor = api;
 
     root.HEARTH_CHECKPOINT_SESSION = transmissionSession;
     root.HEARTH_RUNTIME_CHECKPOINT_SESSION = transmissionSession;
@@ -4228,8 +5420,10 @@
     root.HEARTH_NORTH_PRIMARY_GATE_SESSION = transmissionSession;
     root.HEARTH_NORTH_TWO_CYCLE_SESSION = transmissionSession;
     root.HEARTH_NORTH_NON_BLOCKING_PHASE_SESSION = transmissionSession;
+    root.HEARTH_NORTH_CENTRAL_TRAIN_STATION_SESSION = transmissionSession;
 
     const receiptLight = getReceiptLight();
+    const stationLight = getCentralStationReceiptLight();
 
     root.HEARTH_NORTH_COMMAND_RUNTIME_TABLE_RECEIPT = receiptLight;
     root.HEARTH_NORTH_CYCLICAL_CHECKPOINT_RECEIPT = receiptLight;
@@ -4237,6 +5431,8 @@
     root.LAB_RUNTIME_TABLE_NORTH_PRIMARY_GATE_RECEIPT = receiptLight;
     root.LAB_RUNTIME_TABLE_NORTH_TWO_CYCLE_RECEIPT = receiptLight;
     root.LAB_RUNTIME_TABLE_NORTH_NON_BLOCKING_RECEIPT = receiptLight;
+    root.LAB_RUNTIME_TABLE_NORTH_CENTRAL_STATION_RECEIPT = stationLight;
+    root.HEARTH_NORTH_CENTRAL_STATION_RECEIPT = stationLight;
 
     scheduler.dirtyGlobals = false;
     scheduler.globalsPublished = true;
@@ -4268,6 +5464,14 @@
     CARDINAL,
     NORTH_LANGUAGE,
     PRIMARY_ROTATION,
+
+    STATION_PLATFORMS,
+    ARTIFACT_CLASSES,
+    PARENT_CONTACT_STATUS,
+    FIBONACCI_SYNC_STATUS,
+    NEWS_ALIGNMENT_STATUS,
+    DISPATCH_ACTION,
+    PRODUCT_ENGINE_TRACKS,
 
     createTable,
     createHearthChannelTable,
@@ -4352,6 +5556,20 @@
     getReceiptLight,
     getReceiptText,
 
+    extractNodalArtifact,
+    assignArtifactPlatform,
+    evaluateNewsAlignment,
+    evaluateFibonacciSynchronization,
+    evaluateParentContact,
+    dispatchStationArtifact,
+    registerProductEngineArtifact,
+    classifyProductEngineArtifact,
+    routeProductEngineArtifact,
+    getCentralStationReceiptLight,
+    getCentralStationReceipt,
+    getCentralStationReceiptText,
+    refreshStationArtifacts,
+
     queuePhase,
     invalidateAuthorityCache,
     refreshObservedAuthorities,
@@ -4383,6 +5601,18 @@
     microTuningDelegatesDownstream: true,
     oneActiveGearAtATime: true,
 
+    centralTrainStationActive: true,
+    stationRegistryActive: true,
+    nodalArtifactExtractorActive: true,
+    platformAssignerActive: true,
+    centralDispatcherActive: true,
+    productEngineConductorActive: true,
+    newsAlignmentProtocolActive: true,
+    fibonacciSynchronizationMetricActive: true,
+    parentContactLedgerActive: true,
+    centralReceiptBoardActive: true,
+    expressionPreservationRuleActive: true,
+
     nonBlockingPhaseSchedulerActive: true,
     authorityScanCacheActive: true,
     lightReceiptDuringMotionActive: true,
@@ -4390,6 +5620,12 @@
     datasetWriteCompactionActive: true,
     broadDatasetWritesDeferred: true,
     pageResponsive: true,
+
+    unrealStyleReference: true,
+    surpassMarketTargetInternal: true,
+    benchmarkRequiredBeforePublicClaim: true,
+    productEngineBenchmarkPending: true,
+    publicSuperiorityClaimed: false,
 
     validatesBeforeExpression: true,
     coordinatesBeforeRuntimePerforms: true,
@@ -4403,6 +5639,7 @@
     wideProbeNeverBlocksFirstVisibleRender: true,
     childFailureDoesNotEraseVisualization: true,
     visualizationBlocksOnlyWhenCarrierUnsafe: true,
+    repeatedChildRenewalGuardActive: true,
     doesNotOwnTruth: true,
 
     generatedImage: false,
@@ -4443,6 +5680,9 @@
     get f21LatchMode() {
       return state.f21LatchMode;
     },
+    get centralStationState() {
+      return state;
+    },
     get primaryGateState() {
       return state;
     },
@@ -4454,10 +5694,11 @@
   transmissionSession = {
     contract: CONTRACT,
     receipt: RECEIPT,
-    sessionId: "HEARTH-NORTH-NON-BLOCKING-TWO-CYCLE-CANVAS-F13-RELEASE",
+    sessionId: "HEARTH-NORTH-CENTRAL-TRAIN-STATION-TWO-CYCLE-CANVAS-F13-RELEASE",
     route: ROUTE,
     file: FILE,
     cardinalRole: CARDINAL.NORTH,
+    centralTrainStationActive: true,
     nonBlockingPhaseSchedulerActive: true,
 
     acceptEastPrimary,
@@ -4498,6 +5739,16 @@
     receiveEvent,
     completeActive,
 
+    extractNodalArtifact,
+    assignArtifactPlatform,
+    evaluateNewsAlignment,
+    evaluateFibonacciSynchronization,
+    evaluateParentContact,
+    dispatchStationArtifact,
+    registerProductEngineArtifact,
+    classifyProductEngineArtifact,
+    routeProductEngineArtifact,
+
     setActiveStage,
     completeStage,
     updateActiveProgress,
@@ -4507,11 +5758,15 @@
     queuePhase,
     invalidateAuthorityCache,
     refreshObservedAuthorities,
+    refreshStationArtifacts,
 
     getTransmissionReceipt,
     getReceipt: getTransmissionReceipt,
     getReceiptLight,
     getReceiptText: getTransmissionReceiptText,
+    getCentralStationReceiptLight,
+    getCentralStationReceipt,
+    getCentralStationReceiptText,
     getNorthCommandReceipt,
     reset: resetPrimaryGateRegistry,
 
@@ -4527,7 +5782,11 @@
   publishDatasetsLight();
 
   queuePhase("INITIAL_AUTHORITY_CACHE_WARM", () => {
-    refreshObservedAuthorities({ force: true, includeCanvas: false });
+    refreshObservedAuthorities({ force: true, includeCanvas: false, includeProduct: true });
+  });
+
+  queuePhase("INITIAL_CENTRAL_STATION_SCAN", () => {
+    refreshStationArtifacts({ force: true });
   });
 
   if (typeof module !== "undefined" && module.exports) {

@@ -1,13 +1,13 @@
 // /assets/hearth/hearth.canvas.east.js
-// HEARTH_CANVAS_EAST_PARENT_AUTHORITY_ACCLIMATION_SYNC_HELD_PACKET_TNT_v6
+// HEARTH_CANVAS_EAST_PARENT_OBSERVATION_RENEWAL_SPLIT_SYNC_HELD_PACKET_TNT_v7
 // Full-file replacement.
-// Canvas East / parent-authority-acclimating synchronous held-packet F13 atlas source.
+// Canvas East / parent-observation-renewal-split synchronous held-packet F13 atlas source.
 // Purpose:
 // - Keep Canvas East API visible synchronously before any atlas build.
 // - Make buildAtlas() return a synchronous held packet when parent/West permission is missing.
 // - Clear the East break by making East accustom itself to the authoritative Canvas parent.
-// - Stop using narrow downstream East recognition to infer that the upstream parent must be renewed.
-// - Separate parent absence, parent corruption/staleness, parent release pending, West release pending, and East recognition mismatch.
+// - Stop using downstream East audit to infer that the upstream parent must be renewed.
+// - Separate parent observation pending, parent corruption/staleness, parent release pending, West release pending, and East recognition mismatch.
 // - Preserve governed F13 atlas build after lawful parent/West release.
 // - Preserve material bridge to HEARTH_MATERIALS_MOUNTAIN_RANGE_CANYON_RELIEF_CONSUMER_TNT_v1.
 // - Preserve all Canvas parent aliases and methods.
@@ -33,11 +33,11 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_EAST_PARENT_AUTHORITY_ACCLIMATION_SYNC_HELD_PACKET_TNT_v6";
-  const RECEIPT = "HEARTH_CANVAS_EAST_PARENT_AUTHORITY_ACCLIMATION_SYNC_HELD_PACKET_RECEIPT_v6";
+  const CONTRACT = "HEARTH_CANVAS_EAST_PARENT_OBSERVATION_RENEWAL_SPLIT_SYNC_HELD_PACKET_TNT_v7";
+  const RECEIPT = "HEARTH_CANVAS_EAST_PARENT_OBSERVATION_RENEWAL_SPLIT_SYNC_HELD_PACKET_RECEIPT_v7";
 
-  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_EAST_SYNCHRONOUS_HELD_PACKET_PARENT_FIRST_F13_ATLAS_SOURCE_TNT_v5";
-  const PREVIOUS_RECEIPT = "HEARTH_CANVAS_EAST_SYNCHRONOUS_HELD_PACKET_PARENT_FIRST_F13_ATLAS_SOURCE_RECEIPT_v5";
+  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_EAST_PARENT_AUTHORITY_ACCLIMATION_SYNC_HELD_PACKET_TNT_v6";
+  const PREVIOUS_RECEIPT = "HEARTH_CANVAS_EAST_PARENT_AUTHORITY_ACCLIMATION_SYNC_HELD_PACKET_RECEIPT_v6";
 
   const BASELINE_CONTRACT = "HEARTH_CANVAS_EAST_PARENT_ALIGNED_MATERIAL_ATLAS_SOURCE_TRANSISTOR_TNT_v3";
   const BASELINE_RECEIPT = "HEARTH_CANVAS_EAST_PARENT_ALIGNED_MATERIAL_ATLAS_SOURCE_TRANSISTOR_RECEIPT_v3";
@@ -53,12 +53,12 @@
   const EXPECTED_MATERIAL_CONTRACT = "HEARTH_MATERIALS_MOUNTAIN_RANGE_CANYON_RELIEF_CONSUMER_TNT_v1";
   const EXPECTED_MATERIAL_RECEIPT = "HEARTH_MATERIALS_MOUNTAIN_RANGE_CANYON_RELIEF_CONSUMER_RECEIPT_v1";
 
-  const VERSION = "2026-06-01.hearth-canvas-east-parent-authority-acclimation-sync-held-packet-v6";
+  const VERSION = "2026-06-01.hearth-canvas-east-parent-observation-renewal-split-sync-held-packet-v7";
 
   const ACTIVE_FIBONACCI_GATE = "F13E_F13F";
   const FUTURE_FIBONACCI_GATE = "F21";
   const CYCLE_ROUTE = "NORTH_EAST_SOUTH_WEST_CANVAS";
-  const CYCLE_ORDER = "PARENT_AUTHORITY_PROFILE -> SYNCHRONOUS_HELD_PACKET_OR_LAWFUL_BUILD -> EAST_SOURCE_F13E -> EAST_ATLAS_F13F -> PARENT_F13_RECEIPT";
+  const CYCLE_ORDER = "PARENT_AUTHORITY_PROFILE -> OBSERVATION_RENEWAL_SPLIT -> SYNCHRONOUS_HELD_PACKET_OR_LAWFUL_BUILD -> EAST_SOURCE_F13E -> EAST_ATLAS_F13F -> PARENT_F13_RECEIPT";
 
   const DEFAULT_ATLAS_WIDTH = 512;
   const DEFAULT_ATLAS_HEIGHT = 256;
@@ -137,13 +137,15 @@
     parentFile: PARENT_FILE,
     westFile: WEST_FILE,
     routeFile: ROUTE_FILE,
-    role: "canvas-east-parent-authority-acclimation-sync-held-packet",
+    role: "canvas-east-parent-observation-renewal-split-sync-held-packet",
 
     parentAuthorityIsUpstream: true,
     eastAccustomsToParent: true,
     parentRenewalNotInferredFromEastAudit: true,
     parentContractExactMatchRequired: false,
     eastRecognitionMismatchRepairTarget: FILE,
+    parentObservationRenewalSplitActive: true,
+    parentObservationDoesNotEqualRenewal: true,
 
     parentFirstApiRecognitionBootstrapActive: true,
     parentAuthorityProfileActive: true,
@@ -185,6 +187,12 @@
     parentCorruptOrStale: false,
     parentRecommendedForRenewal: false,
     eastRecommendedForAcclimation: false,
+    parentObservationRequired: true,
+    parentRenewalRequired: false,
+    eastAcclimationRequired: false,
+    parentReleasePending: false,
+    westReleasePending: false,
+    heldReasonClass: "PARENT_OBSERVATION_PENDING",
     parentProfileFirstFailedCoordinate: "WAITING_PARENT_OBSERVATION",
 
     newsProtocolSynchronized: true,
@@ -237,8 +245,8 @@
     activeCycleNumber: 2,
     activeCycleRoute: CYCLE_ROUTE,
     activeCardinal: "EAST",
-    activeStageId: "F13E_F13F_PARENT_AUTHORITY_ACCLIMATION_ATLAS_SOURCE",
-    activeGearId: "F13E_F13F_PARENT_AUTHORITY_ACCLIMATION_ATLAS_SOURCE",
+    activeStageId: "F13E_F13F_PARENT_OBSERVATION_RENEWAL_SPLIT_ATLAS_SOURCE",
+    activeGearId: "F13E_F13F_PARENT_OBSERVATION_RENEWAL_SPLIT_ATLAS_SOURCE",
     activeNewsGate: "F13_CANVAS_EVIDENCE",
 
     materialReceiptBridgeActive: false,
@@ -317,8 +325,8 @@
     f13AtlasPacketReady: false,
 
     firstFailedCoordinate: "WAITING_PARENT_OBSERVATION",
-    recommendedNextFile: PARENT_FILE,
-    recommendedNextRenewalTarget: PARENT_FILE,
+    recommendedNextFile: FILE,
+    recommendedNextRenewalTarget: FILE,
 
     lastNormalizedInput: null,
     lastParentAuthorityProfile: null,
@@ -609,6 +617,17 @@
     );
   }
 
+  function classifyHeldReasonClass(reason) {
+    if (reason === "STALE_PARENT_CONTRACT_DETECTED") return "PARENT_RENEWAL_REQUIRED";
+    if (reason === "WAITING_PARENT_OBSERVATION") return "PARENT_OBSERVATION_PENDING";
+    if (reason === "EAST_PARENT_RECOGNITION_ADAPTER_MISMATCH") return "EAST_ACCLIMATION_REQUIRED";
+    if (reason === "WAITING_PARENT_RELEASE") return "PARENT_RELEASE_PENDING";
+    if (reason === "WAITING_WEST_RELEASE") return "WEST_RELEASE_PENDING";
+    if (reason === "FALSE_PROMOTION_BLOCKED") return "FALSE_PROMOTION_BLOCKED";
+    if (reason === "WAITING_CANVAS_EAST_ATLAS_BUILD") return "EAST_ATLAS_BUILD_PENDING";
+    return reason ? "HELD_OTHER" : "NONE";
+  }
+
   function readParentAuthorityProfile(input = {}) {
     const source = isObject(input) ? input : {};
 
@@ -684,8 +703,7 @@
       parentApi && parentApi.splitContract,
       datasetValue("hearthCanvasContract", ""),
       datasetValue("hearthCanvasSplitContract", ""),
-      datasetValue("hearthCanvasParentContract", ""),
-      datasetValue("hearthSouthRouteConductorCanvasFile", "")
+      datasetValue("hearthCanvasParentContract", "")
     );
 
     const receipt = firstString(
@@ -822,19 +840,31 @@
     let firstFailedCoordinate = "NONE_PARENT_AUTHORITY_PROFILE_ACCEPTED";
     let recommendedNextFile = FILE;
     let recommendedNextRenewalTarget = FILE;
+    let parentObservationRequired = false;
+    let parentRenewalRequired = false;
+    let eastAcclimationRequired = false;
 
     if (parentCorruptOrStale) {
       firstFailedCoordinate = "STALE_PARENT_CONTRACT_DETECTED";
       recommendedNextFile = PARENT_FILE;
       recommendedNextRenewalTarget = PARENT_FILE;
+      parentObservationRequired = false;
+      parentRenewalRequired = true;
+      eastAcclimationRequired = false;
     } else if (parentAbsent) {
       firstFailedCoordinate = "WAITING_PARENT_OBSERVATION";
-      recommendedNextFile = PARENT_FILE;
-      recommendedNextRenewalTarget = PARENT_FILE;
+      recommendedNextFile = FILE;
+      recommendedNextRenewalTarget = FILE;
+      parentObservationRequired = true;
+      parentRenewalRequired = false;
+      eastAcclimationRequired = false;
     } else if (parentRecognitionMismatch) {
       firstFailedCoordinate = "EAST_PARENT_RECOGNITION_ADAPTER_MISMATCH";
       recommendedNextFile = FILE;
       recommendedNextRenewalTarget = FILE;
+      parentObservationRequired = false;
+      parentRenewalRequired = false;
+      eastAcclimationRequired = true;
     }
 
     const profile = {
@@ -845,6 +875,9 @@
       eastAccustomsToParent: true,
       parentRenewalNotInferredFromEastAudit: true,
       parentContractExactMatchRequired: false,
+      parentObservationRenewalSplitActive: true,
+      parentObservationDoesNotEqualRenewal: true,
+
       parentObserved,
       parentApiPresent,
       parentCallable,
@@ -857,8 +890,16 @@
       parentRecognitionMismatch,
       parentAbsent,
       parentCorruptOrStale,
-      parentRecommendedForRenewal: Boolean(parentAbsent || parentCorruptOrStale),
-      eastRecommendedForAcclimation: Boolean(parentRecognitionMismatch),
+
+      parentRecommendedForRenewal: parentRenewalRequired,
+      eastRecommendedForAcclimation: eastAcclimationRequired,
+      parentObservationRequired,
+      parentRenewalRequired,
+      eastAcclimationRequired,
+      parentReleasePending: false,
+      westReleasePending: false,
+      heldReasonClass: classifyHeldReasonClass(firstFailedCoordinate),
+
       firstFailedCoordinate,
       recommendedNextFile,
       recommendedNextRenewalTarget,
@@ -882,6 +923,12 @@
     state.parentCorruptOrStale = profile.parentCorruptOrStale;
     state.parentRecommendedForRenewal = profile.parentRecommendedForRenewal;
     state.eastRecommendedForAcclimation = profile.eastRecommendedForAcclimation;
+    state.parentObservationRequired = profile.parentObservationRequired;
+    state.parentRenewalRequired = profile.parentRenewalRequired;
+    state.eastAcclimationRequired = profile.eastAcclimationRequired;
+    state.parentReleasePending = false;
+    state.westReleasePending = false;
+    state.heldReasonClass = profile.heldReasonClass;
     state.parentProfileFirstFailedCoordinate = profile.firstFailedCoordinate;
 
     updateDataset();
@@ -1141,8 +1188,8 @@
       activeCardinal: "EAST",
       activeFibonacci: ACTIVE_FIBONACCI_GATE,
       activeFibonacciRank: ACTIVE_FIBONACCI_GATE,
-      activeStageId: firstString(source.activeStageId, source.activeGearId, "F13E_F13F_PARENT_AUTHORITY_ACCLIMATION_ATLAS_SOURCE"),
-      activeGearId: firstString(source.activeGearId, source.activeStageId, "F13E_F13F_PARENT_AUTHORITY_ACCLIMATION_ATLAS_SOURCE"),
+      activeStageId: firstString(source.activeStageId, source.activeGearId, "F13E_F13F_PARENT_OBSERVATION_RENEWAL_SPLIT_ATLAS_SOURCE"),
+      activeGearId: firstString(source.activeGearId, source.activeStageId, "F13E_F13F_PARENT_OBSERVATION_RENEWAL_SPLIT_ATLAS_SOURCE"),
       activeNewsGate: firstString(source.activeNewsGate, "F13_CANVAS_EVIDENCE"),
 
       parent,
@@ -1162,6 +1209,9 @@
       parentCorruptOrStale: parent.parentCorruptOrStale,
       parentRecommendedForRenewal: parent.parentRecommendedForRenewal,
       eastRecommendedForAcclimation: parent.eastRecommendedForAcclimation,
+      parentObservationRequired: parent.parentObservationRequired,
+      parentRenewalRequired: parent.parentRenewalRequired,
+      eastAcclimationRequired: parent.eastAcclimationRequired,
 
       westReleaseObserved: west.westReleaseObserved,
       westReleaseRequired: true,
@@ -1196,6 +1246,24 @@
       normalizedAt: nowIso()
     };
 
+    normalized.parentReleasePending = Boolean(
+      normalized.parentAuthorityAccepted &&
+      !normalized.parentReleaseObserved &&
+      !normalized.parentAbsent &&
+      !normalized.parentCorruptOrStale &&
+      !normalized.parentRecognitionMismatch
+    );
+
+    normalized.westReleasePending = Boolean(
+      normalized.parentRequestObserved &&
+      normalized.parentAuthorityAccepted &&
+      !normalized.westReleaseObserved &&
+      !normalized.westAuditBlocked &&
+      !normalized.parentCorruptOrStale &&
+      !normalized.parentRecognitionMismatch &&
+      !normalized.parentAbsent
+    );
+
     state.lastNormalizedInput = clonePlain(normalized);
     applyNormalizedState(normalized);
 
@@ -1229,6 +1297,11 @@
     state.parentCorruptOrStale = normalized.parentCorruptOrStale;
     state.parentRecommendedForRenewal = normalized.parentRecommendedForRenewal;
     state.eastRecommendedForAcclimation = normalized.eastRecommendedForAcclimation;
+    state.parentObservationRequired = normalized.parentObservationRequired;
+    state.parentRenewalRequired = normalized.parentRenewalRequired;
+    state.eastAcclimationRequired = normalized.eastAcclimationRequired;
+    state.parentReleasePending = normalized.parentReleasePending;
+    state.westReleasePending = normalized.westReleasePending;
 
     state.westReleaseObserved = normalized.westReleaseObserved;
     state.westAuditObserved = normalized.westAuditObserved;
@@ -1273,7 +1346,7 @@
     let allowed = false;
     let source = "NONE";
     let reason = "WAITING_PARENT_OBSERVATION";
-    let recommended = PARENT_FILE;
+    let recommended = FILE;
 
     if (normalized.falsePromotionDetected) {
       allowed = false;
@@ -1289,7 +1362,7 @@
       allowed = false;
       source = "NONE";
       reason = "WAITING_PARENT_OBSERVATION";
-      recommended = PARENT_FILE;
+      recommended = FILE;
     } else if (normalized.parentRecognitionMismatch) {
       allowed = false;
       source = "NONE";
@@ -1332,6 +1405,13 @@
       recommended = FILE;
     }
 
+    const heldReasonClass = classifyHeldReasonClass(reason);
+    const parentObservationRequired = reason === "WAITING_PARENT_OBSERVATION";
+    const parentRenewalRequired = reason === "STALE_PARENT_CONTRACT_DETECTED";
+    const eastAcclimationRequired = reason === "EAST_PARENT_RECOGNITION_ADAPTER_MISMATCH";
+    const parentReleasePending = reason === "WAITING_PARENT_RELEASE";
+    const westReleasePending = reason === "WAITING_WEST_RELEASE";
+
     const packet = {
       contract: CONTRACT,
       receipt: RECEIPT,
@@ -1344,6 +1424,8 @@
       parentRenewalNotInferredFromEastAudit: true,
       parentContractExactMatchRequired: false,
       eastRecognitionMismatchRepairTarget: FILE,
+      parentObservationRenewalSplitActive: true,
+      parentObservationDoesNotEqualRenewal: true,
 
       parentFirstApiRecognitionBootstrapActive: true,
       parentAuthorityProfileActive: true,
@@ -1363,6 +1445,7 @@
       f13BuildLawful: allowed,
       f13BuildBlockedReason: allowed ? "" : reason,
       f13PermissionSource: source,
+      heldReasonClass: allowed ? "NONE" : heldReasonClass,
 
       parentAuthorityProfile: clonePlain(normalized.parent),
       parentObserved: normalized.parentObserved,
@@ -1377,8 +1460,13 @@
       parentRecognitionMismatch: normalized.parentRecognitionMismatch,
       parentAbsent: normalized.parentAbsent,
       parentCorruptOrStale: normalized.parentCorruptOrStale,
-      parentRecommendedForRenewal: normalized.parentRecommendedForRenewal,
-      eastRecommendedForAcclimation: normalized.eastRecommendedForAcclimation,
+      parentRecommendedForRenewal: parentRenewalRequired,
+      eastRecommendedForAcclimation: eastAcclimationRequired,
+      parentObservationRequired,
+      parentRenewalRequired,
+      eastAcclimationRequired,
+      parentReleasePending,
+      westReleasePending,
 
       westReleaseObserved: normalized.westReleaseObserved,
       westAuditObserved: normalized.westAuditObserved,
@@ -1415,6 +1503,14 @@
     state.f13BuildLawful = allowed;
     state.f13BuildBlockedReason = allowed ? "" : reason;
     state.f13PermissionSource = source;
+    state.heldReasonClass = allowed ? "NONE" : heldReasonClass;
+    state.parentObservationRequired = parentObservationRequired;
+    state.parentRenewalRequired = parentRenewalRequired;
+    state.eastAcclimationRequired = eastAcclimationRequired;
+    state.parentReleasePending = parentReleasePending;
+    state.westReleasePending = westReleasePending;
+    state.parentRecommendedForRenewal = parentRenewalRequired;
+    state.eastRecommendedForAcclimation = eastAcclimationRequired;
     state.firstFailedCoordinate = allowed ? "NONE_F13_ATLAS_BUILD_PERMISSION_GRANTED" : reason;
     state.recommendedNextFile = recommended;
     state.recommendedNextRenewalTarget = recommended;
@@ -1443,13 +1539,19 @@
     state.f13BuildLawful = false;
     state.f13BuildBlockedReason = gate.f13BuildBlockedReason || "WAITING_PARENT_OBSERVATION";
     state.f13PermissionSource = "NONE";
+    state.heldReasonClass = gate.heldReasonClass || classifyHeldReasonClass(state.f13BuildBlockedReason);
+    state.parentObservationRequired = gate.parentObservationRequired === true;
+    state.parentRenewalRequired = gate.parentRenewalRequired === true;
+    state.eastAcclimationRequired = gate.eastAcclimationRequired === true;
+    state.parentReleasePending = gate.parentReleasePending === true;
+    state.westReleasePending = gate.westReleasePending === true;
     state.atlasBuildStarted = false;
     state.atlasBuildComplete = false;
     state.f13SourceStageStarted = false;
     state.f13SourceStageComplete = false;
     state.f13AtlasPacketReady = false;
     state.firstFailedCoordinate = state.f13BuildBlockedReason;
-    state.recommendedNextFile = gate.recommendedNextFile || PARENT_FILE;
+    state.recommendedNextFile = gate.recommendedNextFile || FILE;
     state.recommendedNextRenewalTarget = gate.recommendedNextRenewalTarget || state.recommendedNextFile;
     state.f21EligibleForNorth = false;
     state.f21ClaimedByCanvasEast = false;
@@ -1473,6 +1575,8 @@
       parentRenewalNotInferredFromEastAudit: true,
       parentContractExactMatchRequired: false,
       eastRecognitionMismatchRepairTarget: FILE,
+      parentObservationRenewalSplitActive: true,
+      parentObservationDoesNotEqualRenewal: true,
 
       parentFirstApiRecognitionBootstrapActive: true,
       parentAuthorityProfileActive: true,
@@ -1499,7 +1603,10 @@
       heldPacketWasSynchronous: true,
       buildAtlasReturnedPromise: false,
       heldDoesNotMeanApiMissing: true,
-      heldDoesNotMeanParentRenewalUnlessAbsentCorruptOrStale: true,
+      heldDoesNotMeanParentRenewalUnlessCorruptOrStale: true,
+      heldMayMeanParentObservationPending: true,
+      heldMayMeanWestReleasePending: true,
+      heldMayMeanParentReleasePending: true,
 
       atlasCanvas: null,
       canvas: null,
@@ -1513,6 +1620,7 @@
       f13BuildLawful: false,
       f13BuildBlockedReason: state.f13BuildBlockedReason,
       f13PermissionSource: "NONE",
+      heldReasonClass: state.heldReasonClass,
       f13SourceStageStarted: false,
       f13SourceStageComplete: false,
       f13AtlasPacketReady: false,
@@ -1530,8 +1638,13 @@
       parentRecognitionMismatch: normalized.parentRecognitionMismatch,
       parentAbsent: normalized.parentAbsent,
       parentCorruptOrStale: normalized.parentCorruptOrStale,
-      parentRecommendedForRenewal: normalized.parentRecommendedForRenewal,
-      eastRecommendedForAcclimation: normalized.eastRecommendedForAcclimation,
+      parentRecommendedForRenewal: state.parentRenewalRequired,
+      eastRecommendedForAcclimation: state.eastAcclimationRequired,
+      parentObservationRequired: state.parentObservationRequired,
+      parentRenewalRequired: state.parentRenewalRequired,
+      eastAcclimationRequired: state.eastAcclimationRequired,
+      parentReleasePending: state.parentReleasePending,
+      westReleasePending: state.westReleasePending,
 
       westReleaseObserved: normalized.westReleaseObserved,
       westCanvasReleaseApproved: normalized.westCanvasReleaseApproved,
@@ -1569,11 +1682,13 @@
 
     recordLocal("SYNCHRONOUS_HELD_ATLAS_PACKET_RETURNED", {
       firstFailedCoordinate: packet.firstFailedCoordinate,
+      heldReasonClass: packet.heldReasonClass,
       recommendedNextFile: packet.recommendedNextFile,
       apiReadyStillTrue: true,
       evidenceReadyStillFalse: true,
       returnedPromise: false,
-      parentRenewalInferredFromEastAudit: false
+      parentRenewalInferredFromEastAudit: false,
+      parentObservationDoesNotEqualRenewal: true
     });
 
     updateDataset();
@@ -1620,6 +1735,8 @@
       eastAccustomsToParent: true,
       parentRenewalNotInferredFromEastAudit: true,
       parentContractExactMatchRequired: false,
+      parentObservationRenewalSplitActive: true,
+      parentObservationDoesNotEqualRenewal: true,
 
       parentFirstApiRecognitionBootstrapActive: true,
       parentAuthorityProfileActive: true,
@@ -2311,6 +2428,8 @@
     canvas.dataset.hearthCanvasEastParentAuthorityIsUpstream = "true";
     canvas.dataset.hearthCanvasEastAccustomsToParent = "true";
     canvas.dataset.hearthCanvasEastParentRenewalNotInferredFromEastAudit = "true";
+    canvas.dataset.hearthCanvasEastParentObservationRenewalSplit = "true";
+    canvas.dataset.hearthCanvasEastParentObservationDoesNotEqualRenewal = "true";
     canvas.dataset.hearthCanvasEastParentContractExactMatchRequired = "false";
     canvas.dataset.hearthCanvasEastSynchronousHeldPacket = "true";
     canvas.dataset.hearthCanvasEastGovernedParentAligned = "true";
@@ -2391,6 +2510,7 @@
       permissionSource: state.f13PermissionSource,
       parentAuthorityIsUpstream: true,
       eastAccustomsToParent: true,
+      parentObservationRenewalSplitActive: true,
       apiWasReadyBeforeBuild: true
     });
   }
@@ -2459,6 +2579,12 @@
     state.firstFailedCoordinate = "NONE_F13F_ATLAS_PACKET_READY";
     state.recommendedNextFile = PARENT_FILE;
     state.recommendedNextRenewalTarget = PARENT_FILE;
+    state.heldReasonClass = "NONE";
+    state.parentObservationRequired = false;
+    state.parentRenewalRequired = false;
+    state.eastAcclimationRequired = false;
+    state.parentReleasePending = false;
+    state.westReleasePending = false;
     state.f21EligibleForNorth = false;
     state.f21ClaimedByCanvasEast = false;
     state.readyTextClaimedByCanvasEast = false;
@@ -2595,6 +2721,12 @@
       state.firstFailedCoordinate = "WAITING_CANVAS_EAST_ATLAS_BUILD";
       state.recommendedNextFile = FILE;
       state.recommendedNextRenewalTarget = FILE;
+      state.heldReasonClass = "EAST_ATLAS_BUILD_PENDING";
+      state.parentObservationRequired = false;
+      state.parentRenewalRequired = false;
+      state.eastAcclimationRequired = false;
+      state.parentReleasePending = false;
+      state.westReleasePending = false;
       state.f21EligibleForNorth = false;
       state.f21ClaimedByCanvasEast = false;
       state.readyTextClaimedByCanvasEast = false;
@@ -2621,6 +2753,7 @@
         parentAuthorityIsUpstream: true,
         eastAccustomsToParent: true,
         parentRenewalNotInferredFromEastAudit: true,
+        parentObservationRenewalSplitActive: true,
         parentFirstApiRecognitionBootstrapActive: true,
         parentAuthorityProfileActive: true,
         synchronousBuildAtlasDispatcherActive: true,
@@ -2635,6 +2768,7 @@
         f13AtlasPacketReady: false,
         canvasEastEvidenceReady: false,
         firstFailedCoordinate: "WAITING_CANVAS_EAST_ATLAS_BUILD",
+        heldReasonClass: "EAST_ATLAS_BUILD_PENDING",
         recommendedNextFile: FILE,
         recommendedNextRenewalTarget: FILE,
         visibleProof: false,
@@ -2745,6 +2879,12 @@
       state.firstFailedCoordinate = "WAITING_CANVAS_EAST_ATLAS_BUILD";
       state.recommendedNextFile = FILE;
       state.recommendedNextRenewalTarget = FILE;
+      state.heldReasonClass = "EAST_ATLAS_BUILD_PENDING";
+      state.parentObservationRequired = false;
+      state.parentRenewalRequired = false;
+      state.eastAcclimationRequired = false;
+      state.parentReleasePending = false;
+      state.westReleasePending = false;
       state.f21EligibleForNorth = false;
       state.f21ClaimedByCanvasEast = false;
       state.readyTextClaimedByCanvasEast = false;
@@ -2771,6 +2911,7 @@
         parentAuthorityIsUpstream: true,
         eastAccustomsToParent: true,
         parentRenewalNotInferredFromEastAudit: true,
+        parentObservationRenewalSplitActive: true,
         parentFirstApiRecognitionBootstrapActive: true,
         parentAuthorityProfileActive: true,
         synchronousBuildAtlasDispatcherActive: true,
@@ -2785,6 +2926,7 @@
         f13AtlasPacketReady: false,
         canvasEastEvidenceReady: false,
         firstFailedCoordinate: "WAITING_CANVAS_EAST_ATLAS_BUILD",
+        heldReasonClass: "EAST_ATLAS_BUILD_PENDING",
         recommendedNextFile: FILE,
         recommendedNextRenewalTarget: FILE,
         visibleProof: false,
@@ -2841,7 +2983,8 @@
       reason: state.atlasInvalidationReason,
       apiStillReady: true,
       parentAuthorityIsUpstream: true,
-      eastAccustomsToParent: true
+      eastAccustomsToParent: true,
+      parentObservationRenewalSplitActive: true
     });
 
     if (!options.skipDataset) updateDataset();
@@ -2890,6 +3033,8 @@
       parentRenewalNotInferredFromEastAudit: true,
       parentContractExactMatchRequired: false,
       eastRecognitionMismatchRepairTarget: FILE,
+      parentObservationRenewalSplitActive: true,
+      parentObservationDoesNotEqualRenewal: true,
 
       parentFirstApiRecognitionBootstrapActive: true,
       parentAuthorityProfileActive: true,
@@ -2922,12 +3067,16 @@
       heldPacketWasSynchronous: state.heldPacketWasSynchronous,
       buildAtlasReturnedPromise: state.buildAtlasReturnedPromise,
       heldDoesNotMeanApiMissing: true,
-      heldDoesNotMeanParentRenewalUnlessAbsentCorruptOrStale: true,
+      heldDoesNotMeanParentRenewalUnlessCorruptOrStale: true,
+      heldMayMeanParentObservationPending: true,
+      heldMayMeanWestReleasePending: true,
+      heldMayMeanParentReleasePending: true,
 
       canvasEastMayBuildAtlas: state.canvasEastMayBuildAtlas,
       f13BuildLawful: state.f13BuildLawful,
       f13BuildBlockedReason: state.f13BuildBlockedReason,
       f13PermissionSource: state.f13PermissionSource,
+      heldReasonClass: state.heldReasonClass,
 
       parentAuthorityProfile: clonePlain(state.lastParentAuthorityProfile),
       parentObserved: state.parentObserved,
@@ -2944,6 +3093,11 @@
       parentCorruptOrStale: state.parentCorruptOrStale,
       parentRecommendedForRenewal: state.parentRecommendedForRenewal,
       eastRecommendedForAcclimation: state.eastRecommendedForAcclimation,
+      parentObservationRequired: state.parentObservationRequired,
+      parentRenewalRequired: state.parentRenewalRequired,
+      eastAcclimationRequired: state.eastAcclimationRequired,
+      parentReleasePending: state.parentReleasePending,
+      westReleasePending: state.westReleasePending,
       parentProfileFirstFailedCoordinate: state.parentProfileFirstFailedCoordinate,
 
       westReleaseObserved: state.westReleaseObserved,
@@ -3065,6 +3219,7 @@
       ownsReceiptSurface: true,
       ownsParentFirstApiRecognition: true,
       ownsParentAuthorityProfile: true,
+      ownsParentObservationRenewalSplit: true,
       ownsSynchronousHeldPacket: true,
       ownsEastAcclimationToParent: true,
 
@@ -3112,7 +3267,7 @@
       .join("\n") || "- none";
 
     return [
-      "HEARTH_CANVAS_EAST_PARENT_AUTHORITY_ACCLIMATION_SYNC_HELD_PACKET_RECEIPT",
+      "HEARTH_CANVAS_EAST_PARENT_OBSERVATION_RENEWAL_SPLIT_SYNC_HELD_PACKET_RECEIPT",
       "",
       `contract=${r.contract}`,
       `receipt=${r.receipt}`,
@@ -3134,6 +3289,8 @@
       `parentRenewalNotInferredFromEastAudit=${r.parentRenewalNotInferredFromEastAudit}`,
       `parentContractExactMatchRequired=${r.parentContractExactMatchRequired}`,
       `eastRecognitionMismatchRepairTarget=${r.eastRecognitionMismatchRepairTarget}`,
+      `parentObservationRenewalSplitActive=${r.parentObservationRenewalSplitActive}`,
+      `parentObservationDoesNotEqualRenewal=${r.parentObservationDoesNotEqualRenewal}`,
       "",
       "API_SURFACE",
       `parentFirstApiRecognitionBootstrapActive=${r.parentFirstApiRecognitionBootstrapActive}`,
@@ -3173,6 +3330,11 @@
       `parentCorruptOrStale=${r.parentCorruptOrStale}`,
       `parentRecommendedForRenewal=${r.parentRecommendedForRenewal}`,
       `eastRecommendedForAcclimation=${r.eastRecommendedForAcclimation}`,
+      `parentObservationRequired=${r.parentObservationRequired}`,
+      `parentRenewalRequired=${r.parentRenewalRequired}`,
+      `eastAcclimationRequired=${r.eastAcclimationRequired}`,
+      `parentReleasePending=${r.parentReleasePending}`,
+      `westReleasePending=${r.westReleasePending}`,
       `parentProfileFirstFailedCoordinate=${r.parentProfileFirstFailedCoordinate}`,
       "",
       "SYNCHRONOUS_HELD_PACKET",
@@ -3180,13 +3342,17 @@
       `heldPacketWasSynchronous=${r.heldPacketWasSynchronous}`,
       `buildAtlasReturnedPromise=${r.buildAtlasReturnedPromise}`,
       `heldDoesNotMeanApiMissing=${r.heldDoesNotMeanApiMissing}`,
-      `heldDoesNotMeanParentRenewalUnlessAbsentCorruptOrStale=${r.heldDoesNotMeanParentRenewalUnlessAbsentCorruptOrStale}`,
+      `heldDoesNotMeanParentRenewalUnlessCorruptOrStale=${r.heldDoesNotMeanParentRenewalUnlessCorruptOrStale}`,
+      `heldMayMeanParentObservationPending=${r.heldMayMeanParentObservationPending}`,
+      `heldMayMeanWestReleasePending=${r.heldMayMeanWestReleasePending}`,
+      `heldMayMeanParentReleasePending=${r.heldMayMeanParentReleasePending}`,
       "",
       "BUILD_PERMISSION",
       `canvasEastMayBuildAtlas=${r.canvasEastMayBuildAtlas}`,
       `f13BuildLawful=${r.f13BuildLawful}`,
       `f13BuildBlockedReason=${r.f13BuildBlockedReason}`,
       `f13PermissionSource=${r.f13PermissionSource}`,
+      `heldReasonClass=${r.heldReasonClass}`,
       `westReleaseObserved=${r.westReleaseObserved}`,
       `westCanvasReleaseApproved=${r.westCanvasReleaseApproved}`,
       `canvasReleaseAuthorized=${r.canvasReleaseAuthorized}`,
@@ -3255,6 +3421,7 @@
       `ownsReceiptSurface=${r.ownsReceiptSurface}`,
       `ownsParentFirstApiRecognition=${r.ownsParentFirstApiRecognition}`,
       `ownsParentAuthorityProfile=${r.ownsParentAuthorityProfile}`,
+      `ownsParentObservationRenewalSplit=${r.ownsParentObservationRenewalSplit}`,
       `ownsSynchronousHeldPacket=${r.ownsSynchronousHeldPacket}`,
       `ownsEastAcclimationToParent=${r.ownsEastAcclimationToParent}`,
       `ownsPlanetTruth=${r.ownsPlanetTruth}`,
@@ -3308,6 +3475,8 @@
     dataset.hearthCanvasEastParentRenewalNotInferredFromEastAudit = "true";
     dataset.hearthCanvasEastParentContractExactMatchRequired = "false";
     dataset.hearthCanvasEastRecognitionMismatchRepairTarget = FILE;
+    dataset.hearthCanvasEastParentObservationRenewalSplitActive = "true";
+    dataset.hearthCanvasEastParentObservationDoesNotEqualRenewal = "true";
 
     dataset.hearthCanvasEastParentFirstApiRecognition = "true";
     dataset.hearthCanvasEastParentAuthorityProfileActive = "true";
@@ -3347,13 +3516,22 @@
     dataset.hearthCanvasEastParentCorruptOrStale = String(state.parentCorruptOrStale);
     dataset.hearthCanvasEastParentRecommendedForRenewal = String(state.parentRecommendedForRenewal);
     dataset.hearthCanvasEastEastRecommendedForAcclimation = String(state.eastRecommendedForAcclimation);
+    dataset.hearthCanvasEastParentObservationRequired = String(state.parentObservationRequired);
+    dataset.hearthCanvasEastParentRenewalRequired = String(state.parentRenewalRequired);
+    dataset.hearthCanvasEastEastAcclimationRequired = String(state.eastAcclimationRequired);
+    dataset.hearthCanvasEastParentReleasePending = String(state.parentReleasePending);
+    dataset.hearthCanvasEastWestReleasePending = String(state.westReleasePending);
+    dataset.hearthCanvasEastHeldReasonClass = state.heldReasonClass;
     dataset.hearthCanvasEastParentProfileFirstFailedCoordinate = state.parentProfileFirstFailedCoordinate;
 
     dataset.hearthCanvasEastHeldAtlasPacketReturned = String(state.heldAtlasPacketReturned);
     dataset.hearthCanvasEastHeldPacketWasSynchronous = String(state.heldPacketWasSynchronous);
     dataset.hearthCanvasEastBuildAtlasReturnedPromise = String(state.buildAtlasReturnedPromise);
     dataset.hearthCanvasEastHeldDoesNotMeanApiMissing = "true";
-    dataset.hearthCanvasEastHeldDoesNotMeanParentRenewalUnlessAbsentCorruptOrStale = "true";
+    dataset.hearthCanvasEastHeldDoesNotMeanParentRenewalUnlessCorruptOrStale = "true";
+    dataset.hearthCanvasEastHeldMayMeanParentObservationPending = "true";
+    dataset.hearthCanvasEastHeldMayMeanWestReleasePending = "true";
+    dataset.hearthCanvasEastHeldMayMeanParentReleasePending = "true";
 
     dataset.hearthCanvasEastMayBuildAtlas = String(state.canvasEastMayBuildAtlas);
     dataset.hearthCanvasEastF13BuildLawful = String(state.f13BuildLawful);
@@ -3436,6 +3614,7 @@
     root.HEARTH.canvasEastParentFirstApiRecognitionBootstrap = api;
     root.HEARTH.canvasEastSynchronousHeldPacketParentFirstF13AtlasSource = api;
     root.HEARTH.canvasEastParentAuthorityAcclimationSyncHeldPacket = api;
+    root.HEARTH.canvasEastParentObservationRenewalSplitSyncHeldPacket = api;
     root.HEARTH.canvasEastSource = api;
 
     root.HEARTH_CANVAS_EAST = api;
@@ -3446,6 +3625,7 @@
     root.HEARTH_CANVAS_EAST_PARENT_FIRST_API_RECOGNITION_BOOTSTRAP = api;
     root.HEARTH_CANVAS_EAST_SYNCHRONOUS_HELD_PACKET_PARENT_FIRST_F13_ATLAS_SOURCE = api;
     root.HEARTH_CANVAS_EAST_PARENT_AUTHORITY_ACCLIMATION_SYNC_HELD_PACKET = api;
+    root.HEARTH_CANVAS_EAST_PARENT_OBSERVATION_RENEWAL_SPLIT_SYNC_HELD_PACKET = api;
     root.HEARTH_CANVAS_EAST_SOURCE = api;
 
     root.DEXTER_LAB.hearthCanvasEast = api;
@@ -3457,6 +3637,7 @@
     root.DEXTER_LAB.hearthCanvasEastParentFirstApiRecognitionBootstrap = api;
     root.DEXTER_LAB.hearthCanvasEastSynchronousHeldPacketParentFirstF13AtlasSource = api;
     root.DEXTER_LAB.hearthCanvasEastParentAuthorityAcclimationSyncHeldPacket = api;
+    root.DEXTER_LAB.hearthCanvasEastParentObservationRenewalSplitSyncHeldPacket = api;
     root.DEXTER_LAB.hearthCanvasEastSource = api;
 
     const receipt = getReceipt();
@@ -3469,6 +3650,7 @@
     root.HEARTH_CANVAS_EAST_PARENT_FIRST_API_RECOGNITION_BOOTSTRAP_RECEIPT = receipt;
     root.HEARTH_CANVAS_EAST_SYNCHRONOUS_HELD_PACKET_PARENT_FIRST_F13_ATLAS_SOURCE_RECEIPT = receipt;
     root.HEARTH_CANVAS_EAST_PARENT_AUTHORITY_ACCLIMATION_SYNC_HELD_PACKET_RECEIPT = receipt;
+    root.HEARTH_CANVAS_EAST_PARENT_OBSERVATION_RENEWAL_SPLIT_SYNC_HELD_PACKET_RECEIPT = receipt;
 
     root.HEARTH.canvasEastReceipt = receipt;
     root.HEARTH.canvasEastMaterialAtlasSourceMachineReceipt = receipt;
@@ -3479,6 +3661,7 @@
     root.HEARTH.canvasEastParentFirstApiRecognitionBootstrapReceipt = receipt;
     root.HEARTH.canvasEastSynchronousHeldPacketParentFirstF13AtlasSourceReceipt = receipt;
     root.HEARTH.canvasEastParentAuthorityAcclimationSyncHeldPacketReceipt = receipt;
+    root.HEARTH.canvasEastParentObservationRenewalSplitSyncHeldPacketReceipt = receipt;
 
     root.DEXTER_LAB.hearthCanvasEastReceipt = receipt;
     root.DEXTER_LAB.hearthCanvasEastMaterialAtlasSourceMachineReceipt = receipt;
@@ -3489,6 +3672,7 @@
     root.DEXTER_LAB.hearthCanvasEastParentFirstApiRecognitionBootstrapReceipt = receipt;
     root.DEXTER_LAB.hearthCanvasEastSynchronousHeldPacketParentFirstF13AtlasSourceReceipt = receipt;
     root.DEXTER_LAB.hearthCanvasEastParentAuthorityAcclimationSyncHeldPacketReceipt = receipt;
+    root.DEXTER_LAB.hearthCanvasEastParentObservationRenewalSplitSyncHeldPacketReceipt = receipt;
 
     root.__HEARTH_CANVAS_EAST_LOADED__ = true;
     root.__HEARTH_CANVAS_EAST_PRESENT__ = true;
@@ -3500,6 +3684,8 @@
     root.__HEARTH_CANVAS_EAST_ACCUSTOMS_TO_PARENT__ = true;
     root.__HEARTH_CANVAS_EAST_PARENT_RENEWAL_NOT_INFERRED_FROM_EAST_AUDIT__ = true;
     root.__HEARTH_CANVAS_EAST_PARENT_CONTRACT_EXACT_MATCH_REQUIRED__ = false;
+    root.__HEARTH_CANVAS_EAST_PARENT_OBSERVATION_RENEWAL_SPLIT_ACTIVE__ = true;
+    root.__HEARTH_CANVAS_EAST_PARENT_OBSERVATION_DOES_NOT_EQUAL_RENEWAL__ = true;
     root.__HEARTH_CANVAS_EAST_PARENT_FIRST_API_RECOGNITION__ = true;
     root.__HEARTH_CANVAS_EAST_PARENT_AUTHORITY_PROFILE_ACTIVE__ = true;
     root.__HEARTH_CANVAS_EAST_SYNCHRONOUS_BUILD_ATLAS_DISPATCHER__ = true;
@@ -3521,7 +3707,7 @@
     updateDataset();
   }
 
-  function publishParentFirstApiSurface(reason = "initial-parent-authority-acclimation-api-publication") {
+  function publishParentFirstApiSurface(reason = "initial-parent-observation-renewal-split-api-publication") {
     state.parentFirstApiRecognitionBootstrapActive = true;
     state.parentAuthorityProfileActive = true;
     state.synchronousBuildAtlasDispatcherActive = true;
@@ -3554,8 +3740,8 @@
 
     publishGlobals();
 
-    if (!state.localEvents.some((event) => event.event === "PARENT_AUTHORITY_ACCLIMATION_API_SURFACE_PUBLISHED")) {
-      recordLocal("PARENT_AUTHORITY_ACCLIMATION_API_SURFACE_PUBLISHED", {
+    if (!state.localEvents.some((event) => event.event === "PARENT_OBSERVATION_RENEWAL_SPLIT_API_SURFACE_PUBLISHED")) {
+      recordLocal("PARENT_OBSERVATION_RENEWAL_SPLIT_API_SURFACE_PUBLISHED", {
         reason,
         contract: CONTRACT,
         receipt: RECEIPT,
@@ -3564,6 +3750,8 @@
         parentAuthorityIsUpstream: true,
         eastAccustomsToParent: true,
         parentRenewalNotInferredFromEastAudit: true,
+        parentObservationRenewalSplitActive: true,
+        parentObservationDoesNotEqualRenewal: true,
         parentContractExactMatchRequired: false,
         apiReadyBeforeAtlasEvidence: true,
         synchronousHeldPacketActive: true,
@@ -3639,6 +3827,8 @@
     parentRenewalNotInferredFromEastAudit: true,
     parentContractExactMatchRequired: false,
     eastRecognitionMismatchRepairTarget: FILE,
+    parentObservationRenewalSplitActive: true,
+    parentObservationDoesNotEqualRenewal: true,
 
     parentFirstApiRecognitionBootstrapActive: true,
     parentAuthorityProfileActive: true,
@@ -3667,6 +3857,7 @@
     ownsReceiptSurface: true,
     ownsParentFirstApiRecognition: true,
     ownsParentAuthorityProfile: true,
+    ownsParentObservationRenewalSplit: true,
     ownsSynchronousHeldPacket: true,
     ownsEastAcclimationToParent: true,
 
@@ -3732,7 +3923,7 @@
 
     publishParentFirstApiSurface("post-material-bridge-and-parent-profile-api-confirmation");
 
-    recordLocal("CANVAS_EAST_PARENT_AUTHORITY_ACCLIMATION_SYNC_HELD_PACKET_LOADED", {
+    recordLocal("CANVAS_EAST_PARENT_OBSERVATION_RENEWAL_SPLIT_SYNC_HELD_PACKET_LOADED", {
       file: FILE,
       contract: CONTRACT,
       receipt: RECEIPT,
@@ -3740,6 +3931,8 @@
       parentAuthorityIsUpstream: true,
       eastAccustomsToParent: true,
       parentRenewalNotInferredFromEastAudit: true,
+      parentObservationRenewalSplitActive: true,
+      parentObservationDoesNotEqualRenewal: true,
       parentContractExactMatchRequired: false,
       parentFirstApiPublished: true,
       parentCompatibilityAliasesPublished: true,
@@ -3750,7 +3943,10 @@
       buildAtlasAlwaysCallable: true,
       buildAtlasHeldPathSynchronous: true,
       heldAtlasPacketDoesNotMeanApiMissing: true,
-      heldDoesNotMeanParentRenewalUnlessAbsentCorruptOrStale: true,
+      heldDoesNotMeanParentRenewalUnlessCorruptOrStale: true,
+      heldMayMeanParentObservationPending: true,
+      heldMayMeanWestReleasePending: true,
+      heldMayMeanParentReleasePending: true,
       asyncHeldPacketRetired: true,
       generatedImage: false,
       graphicBox: false,
@@ -3758,7 +3954,7 @@
       visualPassClaimed: false
     });
   } catch (error) {
-    recordError("CANVAS_EAST_PARENT_AUTHORITY_ACCLIMATION_SYNC_HELD_PACKET_INITIALIZATION_FAILED", error);
+    recordError("CANVAS_EAST_PARENT_OBSERVATION_RENEWAL_SPLIT_SYNC_HELD_PACKET_INITIALIZATION_FAILED", error);
 
     try {
       publishGlobals();

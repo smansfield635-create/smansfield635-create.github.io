@@ -1,19 +1,19 @@
 // /assets/hearth/hearth.canvas.west.js
-// HEARTH_CANVAS_WEST_F13N_RELEASE_EVIDENCE_OBSERVER_CHILD_TNT_v3
+// HEARTH_CANVAS_WEST_PARENT_ACCLIMATED_F13W_INSPECTION_RELEASE_EVIDENCE_CHILD_TNT_v4
 // Full-file replacement.
-// Canvas West / F13N inspection, view-state, drag, zoom, invalidation, and release-evidence observer child only.
+// Canvas West / F13W inspection, view-state, drag, zoom, invalidation, and release-evidence observer child only.
 // Purpose:
-// - Serve the Canvas parent under /assets/hearth/hearth.canvas.js.
-// - Own child-level F13N inspection/view/control readiness.
-// - Preserve public methods required by Canvas parent:
+// - Serve the authoritative Canvas parent under /assets/hearth/hearth.canvas.js without requiring parent mutation.
+// - Accustom downstream West to the parent contract.
+// - Own child-level F13W inspection/view/control readiness.
+// - Preserve parent-required public methods:
 //   bindInspection, getViewState, setRotation, resetRotation, setZoom, getReceipt.
-// - Add a narrow West-release evidence observer/echo surface.
-// - Publish observed macro-West release evidence without becoming the macro West authority.
 // - Preserve working drag, pinch, wheel, keyboard, zoom, and invalidation control.
-// - Keep zoom/drag as cached-texture inspection only.
+// - Preserve cached-texture inspection only.
 // - Do not trigger atlas rebuild from ordinary zoom or drag.
-// - Provide explicit invalidation hooks only when requested.
-// - Renew NEWS/Fibonacci/F13N receipt discipline.
+// - Observe/echo explicit Macro West / route-conductor release evidence without becoming Macro West authority.
+// - Remove false release inference from empty packets, route shape alone, or receivedFrom=WEST alone.
+// - Renew NEWS/Fibonacci receipt discipline: active rank is F13W; F13N remains legacy compatibility only.
 // Does not own:
 // - macro West admissibility decision
 // - Canvas release authorization
@@ -35,12 +35,13 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_WEST_F13N_RELEASE_EVIDENCE_OBSERVER_CHILD_TNT_v3";
-  const RECEIPT = "HEARTH_CANVAS_WEST_F13N_RELEASE_EVIDENCE_OBSERVER_CHILD_RECEIPT_v3";
-  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_WEST_F13N_INSPECTION_VIEW_INVALIDATION_CHILD_TNT_v2";
+  const CONTRACT = "HEARTH_CANVAS_WEST_PARENT_ACCLIMATED_F13W_INSPECTION_RELEASE_EVIDENCE_CHILD_TNT_v4";
+  const RECEIPT = "HEARTH_CANVAS_WEST_PARENT_ACCLIMATED_F13W_INSPECTION_RELEASE_EVIDENCE_CHILD_RECEIPT_v4";
+  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_WEST_F13N_RELEASE_EVIDENCE_OBSERVER_CHILD_TNT_v3";
   const BASELINE_CONTRACT = "HEARTH_CANVAS_WEST_F13N_INSPECTION_VIEW_INVALIDATION_CHILD_TNT_v2";
-  const VERSION = "2026-05-31.hearth-canvas-west-f13n-release-evidence-observer-child-v3";
+  const VERSION = "2026-06-01.hearth-canvas-west-parent-acclimated-f13w-inspection-release-evidence-child-v4";
   const FILE = "/assets/hearth/hearth.canvas.west.js";
+  const PARENT_FILE = "/assets/hearth/hearth.canvas.js";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
@@ -57,6 +58,17 @@
   const MACRO_CYCLE_2 = "NORTH_EAST_SOUTH_WEST_CANVAS";
   const CANVAS_CHILD_SEQUENCE = "CANVAS_EAST_ATLAS_SOURCE__CANVAS_WEST_INSPECTION_VIEW__CANVAS_SOUTH_TEXTURE_RENDER__CANVAS_PARENT_F13_EVIDENCE";
 
+  const ACTIVE_FIBONACCI_RANK = "F13W";
+  const LEGACY_FIBONACCI_RANK = "F13N";
+  const ACTIVE_STAGE_ID = "canvas-west-f13w-inspection-release-evidence-observer";
+  const ACTIVE_GEAR_ID = "hearth-canvas-west-f13w-release-evidence-observer";
+
+  const EXPLICIT_RELEASE_DECISIONS = Object.freeze([
+    "RELEASE_TO_CANVAS",
+    "FULL_PASS",
+    "DEGRADED_FORWARD"
+  ]);
+
   const state = {
     contract: CONTRACT,
     receipt: RECEIPT,
@@ -64,7 +76,13 @@
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     file: FILE,
-    role: "canvas-west-f13n-release-evidence-observer-child",
+    parentFile: PARENT_FILE,
+    role: "canvas-west-parent-acclimated-f13w-inspection-release-evidence-child",
+
+    parentAuthorityAccepted: true,
+    downstreamAccustomsToParent: true,
+    westDoesNotRecommendParentMutation: true,
+    parentMutationRecommended: false,
 
     newsProtocolSynchronized: true,
     fibonacciAlignmentSynchronized: true,
@@ -79,6 +97,7 @@
     canvasWestDoesNotAuthorizeCanvasRelease: true,
     canvasWestObservesReleaseEvidenceOnly: true,
     releaseEvidenceObserverActive: true,
+    observerReadyNoReleaseEvidence: true,
 
     receivedFrom: "",
     returnTo: "",
@@ -86,7 +105,7 @@
     cycleNumber: 0,
     cycleRoute: "",
     sourceFile: "",
-    destinationFile: "/assets/hearth/hearth.canvas.js",
+    destinationFile: PARENT_FILE,
 
     westAuditObserved: false,
     westAuditAccepted: false,
@@ -101,6 +120,9 @@
     releaseToCanvasObserved: false,
     macroWestReleaseEvidenceReady: false,
     macroWestReleaseEvidenceSource: "NONE",
+    releaseEvidenceStrict: false,
+    releaseEvidenceDegraded: false,
+    releaseEvidenceExplicit: false,
     lastReleaseEvidenceAt: "",
     lastReleaseEvidencePacket: null,
 
@@ -110,12 +132,15 @@
     southGateReady: false,
     canvasGateReady: false,
     newsGatePassedBeforeF21: false,
-    newsGateDegradedBeforeF21: true,
+    newsGateDegradedBeforeF21: false,
 
     activeFibonacci: 13,
-    activeFibonacciRank: "F13N",
-    activeStageId: "canvas-west-inspection-release-evidence-observer",
-    activeGearId: "hearth-canvas-west-f13n-release-evidence-observer",
+    activeFibonacciRank: ACTIVE_FIBONACCI_RANK,
+    legacyFibonacciRank: LEGACY_FIBONACCI_RANK,
+    legacyF13NAliasAccepted: true,
+    legacyF13NIsNotActiveRank: true,
+    activeStageId: ACTIVE_STAGE_ID,
+    activeGearId: ACTIVE_GEAR_ID,
     activeFibonacciGate: "F13",
     futureFibonacciGate: "F21",
     oneActiveGearAtATime: true,
@@ -123,14 +148,18 @@
     f13ProofBodyAvailable: false,
     f13VisibleEvidenceAvailable: false,
     f13InspectEvidenceAvailable: false,
-    f13InspectEvidenceDegraded: true,
+    f13InspectEvidenceDegraded: false,
+    f13wInspectionReady: false,
     f13nInspectionReady: false,
+    f13wReleaseEvidenceObserved: false,
+    f13wReleaseEvidenceReady: false,
     f21EligibleForNorth: false,
     f21SubmittedToNorth: false,
     f21LatchMode: "north-only",
 
     canvasWestLoaded: true,
     canvasWestApiReady: false,
+    canvasWestControlReady: false,
     canvasWestActive: true,
     canvasWestReady: false,
     splitAdapterRole: "WEST",
@@ -139,6 +168,7 @@
 
     inspectionBound: false,
     inspectionReady: false,
+    inspectionDegraded: false,
     inspectionBindDegraded: false,
     viewStateReady: false,
     controlsReady: false,
@@ -249,6 +279,7 @@
     visibleContentProof: false,
     visualPassClaimed: false,
     f21ClaimedByCanvasWest: false,
+    readyTextClaimedByCanvasWest: false,
 
     localEvents: [],
     errors: [],
@@ -351,6 +382,15 @@
       }
     }
 
+    if (isFunction(authority.getReceiptLight)) {
+      try {
+        const receipt = authority.getReceiptLight();
+        return isObject(receipt) ? receipt : {};
+      } catch (_error) {
+        return {};
+      }
+    }
+
     if (isObject(authority.receiptPacket)) return authority.receiptPacket;
     if (isObject(authority.receipt)) return authority.receipt;
     if (authority.contract || authority.receipt || authority.version) return authority;
@@ -363,17 +403,25 @@
     const detail = isObject(source.detail) ? source.detail : {};
     const snapshot = isObject(source.snapshot) ? source.snapshot : {};
     const release = isObject(source.release) ? source.release : {};
+    const releasePacket = isObject(source.releasePacket) ? source.releasePacket : {};
+    const canvasReleasePacket = isObject(source.canvasReleasePacket) ? source.canvasReleasePacket : {};
     const receipt = isObject(source.receiptPacket) ? source.receiptPacket : {};
     const west = isObject(source.west) ? source.west : {};
     const westReceipt = isObject(source.westReceipt) ? source.westReceipt : {};
+    const admissibility = isObject(source.admissibility) ? source.admissibility : {};
+    const gap = isObject(source.gap) ? source.gap : {};
 
     return {
       ...snapshot,
       ...detail,
       ...release,
+      ...releasePacket,
+      ...canvasReleasePacket,
       ...receipt,
       ...west,
       ...westReceipt,
+      ...admissibility,
+      ...gap,
       ...source
     };
   }
@@ -493,11 +541,14 @@
 
   function readMacroWestAuthorityReceipt() {
     const candidates = [
+      pathRead("LAB_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_WEST"),
+      pathRead("HEARTH_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH"),
       pathRead("LAB_RUNTIME_TABLE_WEST"),
       pathRead("RUNTIME_TABLE_WEST"),
       pathRead("DEXTER_LAB_RUNTIME_TABLE_WEST"),
       pathRead("LAB_CARDINAL_RUNTIME_TABLE_WEST"),
       pathRead("LAB_TRANSMISSION_GAP_CLASSIFIER_WEST"),
+      pathRead("DEXTER_LAB.cycleAwareAdmissibilityClutchWest"),
       pathRead("DEXTER_LAB.runtimeTableWest"),
       pathRead("DEXTER_LAB.cardinalRuntimeTableWest"),
       pathRead("HEARTH_RUNTIME_TABLE_WEST"),
@@ -513,6 +564,40 @@
     }
 
     return {};
+  }
+
+  function hasExplicitReleaseEvidence(input) {
+    const decision = getAnyString(input, ["decision", "westDecision"], "");
+    const forwardAllowed = getAnyBool(input, ["forwardAllowed", "westForwardAllowed"], false);
+    const hardBlock = getAnyBool(input, ["hardBlock", "westHardBlock", "westAuditBlocked"], false);
+
+    return Boolean(
+      getAnyBool(input, ["westCanvasReleaseApproved"], false) ||
+      getAnyBool(input, ["canvasReleaseApprovedByWest"], false) ||
+      getAnyBool(input, ["westReleaseApproved"], false) ||
+      getAnyBool(input, ["canvasReleaseAuthorizedByWest"], false) ||
+      getAnyBool(input, ["westAuthorizedCanvasRelease"], false) ||
+      getAnyBool(input, ["canvasReleaseAuthorized"], false) ||
+      getAnyBool(input, ["releaseToCanvas"], false) ||
+      getAnyBool(input, ["canvasReleaseApproved"], false) ||
+      decision === "RELEASE_TO_CANVAS" ||
+      (decision === "FULL_PASS" && forwardAllowed && !hardBlock) ||
+      (decision === "DEGRADED_FORWARD" && forwardAllowed && !hardBlock)
+    );
+  }
+
+  function hasExplicitAuditEvidence(input) {
+    const decision = getAnyString(input, ["decision", "westDecision"], "");
+
+    return Boolean(
+      getAnyBool(input, ["westAuditObserved", "westAuditPresent", "westReviewObserved", "gapAssessed"], false) ||
+      getAnyBool(input, ["westAuditAccepted", "westAccepted", "westHandoffAccepted", "auditAccepted"], false) ||
+      getAnyBool(input, ["westAuditPassed", "auditPassed", "admissibilityReady", "westGateReady"], false) ||
+      getAnyBool(input, ["westAuditDegraded", "westGateDegradedReady", "canDegradeForward"], false) ||
+      getAnyBool(input, ["westAuditBlocked", "hardBlock", "westHardBlock"], false) ||
+      EXPLICIT_RELEASE_DECISIONS.includes(decision) ||
+      decision === "HARD_BLOCK"
+    );
   }
 
   function normalizeReleaseEvidence(input = {}) {
@@ -557,93 +642,81 @@
     const destinationFile =
       getAnyString(merged, ["destinationFile", "targetFile", "toFile"], "") ||
       datasetValue("hearthCanvasReleaseDestinationFile", "") ||
-      "/assets/hearth/hearth.canvas.js";
+      PARENT_FILE;
 
-    const westAuditObserved = Boolean(
-      getAnyBool(merged, ["westAuditObserved", "westAuditPresent", "westReviewObserved", "gapAssessed"], false) ||
-      receivedFrom === "WEST" ||
-      datasetValue("hearthCanvasWestAuditObserved", "") === "true" ||
-      datasetValue("hearthCanvasWestReleaseObserved", "") === "true"
+    const explicitAudit = hasExplicitAuditEvidence(merged);
+    const explicitRelease = hasExplicitReleaseEvidence(merged);
+
+    const decision = getAnyString(merged, ["decision", "westDecision"], "");
+    const hardBlock = Boolean(
+      getAnyBool(merged, ["westAuditBlocked", "hardBlock", "westHardBlock"], false) ||
+      decision === "HARD_BLOCK"
     );
 
-    const westAuditPassed = Boolean(
-      getAnyBool(merged, ["westAuditPassed", "auditPassed", "admissibilityReady", "westGateReady"], false) ||
-      getAnyString(merged, ["decision"], "") === "FULL_PASS" ||
-      datasetValue("hearthCanvasWestAuditPassed", "") === "true"
-    );
-
-    const westAuditAccepted = Boolean(
-      getAnyBool(merged, ["westAuditAccepted", "westAccepted", "westHandoffAccepted", "auditAccepted"], false) ||
-      westAuditPassed ||
-      datasetValue("hearthCanvasWestAuditAccepted", "") === "true"
-    );
-
-    const westAuditDegraded = Boolean(
+    const degradedDecision = Boolean(
       getAnyBool(merged, ["westAuditDegraded", "westGateDegradedReady", "canDegradeForward"], false) ||
-      getAnyString(merged, ["decision"], "") === "DEGRADED_FORWARD" ||
-      datasetValue("hearthCanvasWestAuditDegraded", "") === "true"
+      decision === "DEGRADED_FORWARD"
     );
 
-    const westAuditBlocked = Boolean(
-      getAnyBool(merged, ["westAuditBlocked", "hardBlock"], false) ||
-      getAnyString(merged, ["decision"], "") === "HARD_BLOCK" ||
-      datasetValue("hearthCanvasWestAuditBlocked", "") === "true"
+    const passedDecision = Boolean(
+      getAnyBool(merged, ["westAuditPassed", "auditPassed", "admissibilityReady", "westGateReady"], false) ||
+      decision === "FULL_PASS" ||
+      decision === "RELEASE_TO_CANVAS"
     );
 
-    const westCanvasReleaseApproved = Boolean(
-      getAnyBool(merged, ["westCanvasReleaseApproved", "canvasReleaseApprovedByWest", "westReleaseApproved", "releaseToCanvas"], false) ||
-      datasetValue("hearthCanvasWestReleaseApproved", "") === "true" ||
+    const westAuditObserved = Boolean(explicitAudit);
+    const westAuditBlocked = Boolean(hardBlock);
+    const westAuditPassed = Boolean(explicitAudit && !hardBlock && passedDecision);
+    const westAuditDegraded = Boolean(explicitAudit && !hardBlock && degradedDecision);
+    const westAuditAccepted = Boolean(
+      explicitAudit &&
+      !hardBlock &&
       (
-        cycleNumber === 2 &&
-        cycleRoute === MACRO_CYCLE_2 &&
-        receivedFrom === "WEST" &&
-        !westAuditBlocked
+        westAuditPassed ||
+        westAuditDegraded ||
+        getAnyBool(merged, ["westAuditAccepted", "westAccepted", "westHandoffAccepted", "auditAccepted"], false)
       )
     );
 
+    const westCanvasReleaseApproved = Boolean(explicitRelease && !hardBlock);
     const canvasReleaseAuthorizedByWestObserved = Boolean(
-      westCanvasReleaseApproved ||
-      getAnyBool(merged, ["canvasReleaseAuthorizedByWest", "westAuthorizedCanvasRelease"], false)
+      explicitRelease &&
+      !hardBlock &&
+      (
+        getAnyBool(merged, ["canvasReleaseAuthorizedByWest", "westAuthorizedCanvasRelease", "canvasReleaseAuthorized"], false) ||
+        westCanvasReleaseApproved
+      )
     );
 
     const releaseToCanvasObserved = Boolean(
-      westCanvasReleaseApproved ||
-      handoffTo === "CANVAS" ||
-      getAnyString(merged, ["releasedTo"], "") === "CANVAS"
-    );
-
-    const evidenceObserved = Boolean(
-      westAuditObserved ||
-      westAuditAccepted ||
-      westAuditPassed ||
-      westAuditDegraded ||
-      westCanvasReleaseApproved ||
-      canvasReleaseAuthorizedByWestObserved ||
-      releaseToCanvasObserved
-    );
-
-    const evidenceReady = Boolean(
-      evidenceObserved &&
-      !westAuditBlocked &&
+      explicitRelease &&
+      !hardBlock &&
       (
-        westCanvasReleaseApproved ||
-        canvasReleaseAuthorizedByWestObserved ||
-        (
-          cycleNumber === 2 &&
-          cycleRoute === MACRO_CYCLE_2 &&
-          receivedFrom === "WEST" &&
-          (westAuditAccepted || westAuditPassed || westAuditDegraded)
-        )
+        getAnyBool(merged, ["releaseToCanvas"], false) ||
+        westCanvasReleaseApproved
       )
     );
+
+    const evidenceObserved = Boolean(explicitAudit || explicitRelease);
+    const evidenceStrict = Boolean(explicitRelease && !hardBlock && !westAuditDegraded);
+    const evidenceDegraded = Boolean(explicitRelease && !hardBlock && westAuditDegraded && !evidenceStrict);
+    const evidenceReady = Boolean(explicitRelease && !hardBlock);
 
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
       file: FILE,
       role: state.role,
+
+      parentAuthorityAccepted: true,
+      downstreamAccustomsToParent: true,
+      westDoesNotRecommendParentMutation: true,
+      parentMutationRecommended: false,
+
       releaseEvidenceObserverActive: true,
+      observerReadyNoReleaseEvidence: !evidenceObserved,
       canvasWestDoesNotAuthorizeCanvasRelease: true,
+      canvasWestObservesReleaseEvidenceOnly: true,
       ownsReleaseAuthorization: false,
       ownsMacroWestAdmissibility: false,
 
@@ -667,7 +740,14 @@
       canvasReleaseAuthorizedByWestObserved,
       releaseToCanvasObserved,
       macroWestReleaseEvidenceReady: evidenceReady,
-      macroWestReleaseEvidenceSource: evidenceReady ? "MACRO_WEST_OBSERVED_EVIDENCE" : "NONE",
+      macroWestReleaseEvidenceSource: evidenceReady ? "EXPLICIT_MACRO_WEST_OR_ROUTE_CONDUCTOR_RELEASE_EVIDENCE" : "NONE",
+      releaseEvidenceStrict: evidenceStrict,
+      releaseEvidenceDegraded: evidenceDegraded,
+      releaseEvidenceExplicit: explicitRelease,
+
+      routeShapeAloneIgnored: true,
+      receivedFromWestAloneIgnored: true,
+      handoffToCanvasAloneIgnored: true,
 
       northGateReady: false,
       eastGateReady: false,
@@ -675,12 +755,18 @@
       southGateReady: false,
       canvasGateReady: false,
       newsGatePassedBeforeF21: false,
-      newsGateDegradedBeforeF21: true,
+      newsGateDegradedBeforeF21: false,
 
       activeFibonacci: 13,
-      activeFibonacciRank: "F13N",
+      activeFibonacciRank: ACTIVE_FIBONACCI_RANK,
+      legacyFibonacciRank: LEGACY_FIBONACCI_RANK,
+      legacyF13NAliasAccepted: true,
+      legacyF13NIsNotActiveRank: true,
       activeStageId: state.activeStageId,
       activeGearId: state.activeGearId,
+
+      f13wReleaseEvidenceObserved: evidenceObserved,
+      f13wReleaseEvidenceReady: evidenceReady,
 
       f21EligibleForNorth: false,
       f21SubmittedToNorth: false,
@@ -698,13 +784,14 @@
   function applyReleaseEvidence(packet = {}, source = "observeWestReleaseEvidence") {
     const evidence = normalizeReleaseEvidence(packet);
 
+    state.observerReadyNoReleaseEvidence = evidence.observerReadyNoReleaseEvidence;
     state.receivedFrom = evidence.receivedFrom;
     state.returnTo = evidence.returnTo;
     state.handoffTo = evidence.handoffTo;
     state.cycleNumber = evidence.cycleNumber;
     state.cycleRoute = evidence.cycleRoute;
     state.sourceFile = evidence.sourceFile;
-    state.destinationFile = evidence.destinationFile;
+    state.destinationFile = evidence.destinationFile || PARENT_FILE;
 
     state.westAuditObserved = evidence.westAuditObserved;
     state.westAuditAccepted = evidence.westAuditAccepted;
@@ -719,10 +806,15 @@
     state.releaseToCanvasObserved = evidence.releaseToCanvasObserved;
     state.macroWestReleaseEvidenceReady = evidence.macroWestReleaseEvidenceReady;
     state.macroWestReleaseEvidenceSource = evidence.macroWestReleaseEvidenceSource;
+    state.releaseEvidenceStrict = evidence.releaseEvidenceStrict;
+    state.releaseEvidenceDegraded = evidence.releaseEvidenceDegraded;
+    state.releaseEvidenceExplicit = evidence.releaseEvidenceExplicit;
+    state.f13wReleaseEvidenceObserved = evidence.f13wReleaseEvidenceObserved;
+    state.f13wReleaseEvidenceReady = evidence.f13wReleaseEvidenceReady;
     state.lastReleaseEvidenceAt = evidence.observedAt;
     state.lastReleaseEvidencePacket = clonePlain(evidence);
 
-    recordLocal("WEST_RELEASE_EVIDENCE_OBSERVED", {
+    recordLocal(evidence.canvasReleaseEvidenceObserved ? "WEST_RELEASE_EVIDENCE_OBSERVED" : "WEST_RELEASE_EVIDENCE_OBSERVER_NO_RELEASE_EVIDENCE", {
       source,
       receivedFrom: state.receivedFrom,
       handoffTo: state.handoffTo,
@@ -735,7 +827,9 @@
       westAuditBlocked: state.westAuditBlocked,
       westCanvasReleaseApproved: state.westCanvasReleaseApproved,
       canvasReleaseEvidenceReady: state.canvasReleaseEvidenceReady,
-      ownsReleaseAuthorization: false
+      ownsReleaseAuthorization: false,
+      routeShapeAloneIgnored: true,
+      parentMutationRecommended: false
     });
 
     updateDataset();
@@ -760,10 +854,18 @@
       contract: CONTRACT,
       receipt: RECEIPT,
       file: FILE,
+      parentFile: PARENT_FILE,
       role: state.role,
 
+      parentAuthorityAccepted: true,
+      downstreamAccustomsToParent: true,
+      westDoesNotRecommendParentMutation: true,
+      parentMutationRecommended: false,
+
       releaseEvidenceObserverActive: true,
+      observerReadyNoReleaseEvidence: state.observerReadyNoReleaseEvidence,
       canvasWestDoesNotAuthorizeCanvasRelease: true,
+      canvasWestObservesReleaseEvidenceOnly: true,
       ownsReleaseAuthorization: false,
       ownsMacroWestAdmissibility: false,
 
@@ -788,7 +890,14 @@
       releaseToCanvasObserved: state.releaseToCanvasObserved,
       macroWestReleaseEvidenceReady: state.macroWestReleaseEvidenceReady,
       macroWestReleaseEvidenceSource: state.macroWestReleaseEvidenceSource,
+      releaseEvidenceStrict: state.releaseEvidenceStrict,
+      releaseEvidenceDegraded: state.releaseEvidenceDegraded,
+      releaseEvidenceExplicit: state.releaseEvidenceExplicit,
       lastReleaseEvidenceAt: state.lastReleaseEvidenceAt,
+
+      routeShapeAloneIgnored: true,
+      receivedFromWestAloneIgnored: true,
+      handoffToCanvasAloneIgnored: true,
 
       northGateReady: false,
       eastGateReady: false,
@@ -796,12 +905,17 @@
       southGateReady: false,
       canvasGateReady: false,
       newsGatePassedBeforeF21: false,
-      newsGateDegradedBeforeF21: true,
+      newsGateDegradedBeforeF21: false,
 
       activeFibonacci: 13,
-      activeFibonacciRank: "F13N",
+      activeFibonacciRank: ACTIVE_FIBONACCI_RANK,
+      legacyFibonacciRank: LEGACY_FIBONACCI_RANK,
+      legacyF13NAliasAccepted: true,
+      legacyF13NIsNotActiveRank: true,
       activeStageId: state.activeStageId,
       activeGearId: state.activeGearId,
+      f13wReleaseEvidenceObserved: state.f13wReleaseEvidenceObserved,
+      f13wReleaseEvidenceReady: state.f13wReleaseEvidenceReady,
 
       f21EligibleForNorth: false,
       f21SubmittedToNorth: false,
@@ -838,12 +952,16 @@
     state.zoomReady = zoomWithinBounds;
     state.invalidationReady = isFunction(requestInvalidation) && isFunction(invalidate) && isFunction(invalidateView);
     state.controlsReady = state.viewStateReady && state.rotationReady && state.zoomReady && state.invalidationReady;
+    state.canvasWestControlReady = state.controlsReady;
 
     state.canvasPresent = Boolean(runtime.canvas);
     state.inspectionBound = Boolean(state.bound && state.canvasPresent);
     state.inspectionReady = Boolean(state.inspectionBound && state.viewStateReady && state.controlsReady);
-    state.f13InspectEvidenceAvailable = Boolean(state.inspectionReady || (state.canvasWestApiReady && state.controlsReady));
-    state.f13InspectEvidenceDegraded = Boolean(state.canvasWestApiReady && state.controlsReady && !state.inspectionReady);
+    state.inspectionDegraded = Boolean(state.canvasWestApiReady && state.controlsReady && !state.inspectionReady);
+
+    state.f13InspectEvidenceAvailable = Boolean(state.inspectionReady || state.inspectionDegraded);
+    state.f13InspectEvidenceDegraded = Boolean(state.inspectionDegraded);
+    state.f13wInspectionReady = Boolean(state.f13InspectEvidenceAvailable);
     state.f13nInspectionReady = Boolean(state.f13InspectEvidenceAvailable);
 
     state.westGateReady = Boolean(state.canvasWestApiReady && state.viewStateReady && state.controlsReady);
@@ -854,7 +972,10 @@
     state.southGateReady = false;
     state.canvasGateReady = false;
     state.newsGatePassedBeforeF21 = false;
-    state.newsGateDegradedBeforeF21 = true;
+    state.newsGateDegradedBeforeF21 = Boolean(
+      state.f13InspectEvidenceDegraded ||
+      state.releaseEvidenceDegraded
+    );
 
     state.f8SelfDutySatisfied = false;
     state.f13ProofBodyAvailable = false;
@@ -864,17 +985,22 @@
     state.f21LatchMode = "north-only";
     state.visualPassClaimed = false;
     state.f21ClaimedByCanvasWest = false;
+    state.readyTextClaimedByCanvasWest = false;
+    state.parentMutationRecommended = false;
 
     return {
       canvasWestApiReady: state.canvasWestApiReady,
+      canvasWestControlReady: state.canvasWestControlReady,
       viewStateReady: state.viewStateReady,
       controlsReady: state.controlsReady,
       rotationReady: state.rotationReady,
       zoomReady: state.zoomReady,
       invalidationReady: state.invalidationReady,
       inspectionReady: state.inspectionReady,
+      inspectionDegraded: state.inspectionDegraded,
       f13InspectEvidenceAvailable: state.f13InspectEvidenceAvailable,
       f13InspectEvidenceDegraded: state.f13InspectEvidenceDegraded,
+      f13wInspectionReady: state.f13wInspectionReady,
       f13nInspectionReady: state.f13nInspectionReady,
       westGateReady: state.westGateReady,
       canvasReleaseEvidenceReady: state.canvasReleaseEvidenceReady
@@ -928,11 +1054,19 @@
     canvas.dataset.hearthCanvasWestLoaded = "true";
     canvas.dataset.hearthCanvasWestApiReady = String(state.canvasWestApiReady);
     canvas.dataset.hearthCanvasWestInspectionReady = String(state.inspectionReady);
+    canvas.dataset.hearthCanvasWestInspectionDegraded = String(state.inspectionDegraded);
     canvas.dataset.hearthCanvasWestF13InspectEvidenceAvailable = String(state.f13InspectEvidenceAvailable);
     canvas.dataset.hearthCanvasWestF13InspectEvidenceDegraded = String(state.f13InspectEvidenceDegraded);
+    canvas.dataset.hearthCanvasWestF13WInspectionReady = String(state.f13wInspectionReady);
     canvas.dataset.hearthCanvasWestF13NInspectionReady = String(state.f13nInspectionReady);
 
+    canvas.dataset.hearthCanvasWestActiveFibonacciRank = ACTIVE_FIBONACCI_RANK;
+    canvas.dataset.hearthCanvasWestLegacyFibonacciRank = LEGACY_FIBONACCI_RANK;
+    canvas.dataset.hearthCanvasWestLegacyF13NAliasAccepted = "true";
+    canvas.dataset.hearthCanvasWestLegacyF13NIsNotActiveRank = "true";
+
     canvas.dataset.hearthCanvasWestReleaseEvidenceObserverActive = "true";
+    canvas.dataset.hearthCanvasWestObserverReadyNoReleaseEvidence = String(state.observerReadyNoReleaseEvidence);
     canvas.dataset.hearthCanvasWestDoesNotAuthorizeCanvasRelease = "true";
     canvas.dataset.hearthCanvasWestReleaseEvidenceReady = String(state.canvasReleaseEvidenceReady);
     canvas.dataset.hearthCanvasWestAuditObserved = String(state.westAuditObserved);
@@ -941,6 +1075,11 @@
     canvas.dataset.hearthCanvasWestDragInspectionBound = String(state.dragInspectionBound);
     canvas.dataset.hearthCanvasWestZoomInspectionBound = String(state.zoomInspectionBound);
     canvas.dataset.hearthCanvasWestZoomDoesNotTriggerAtlasRebuild = "true";
+
+    canvas.dataset.hearthCanvasWestParentAuthorityAccepted = "true";
+    canvas.dataset.hearthCanvasWestDownstreamAccustomsToParent = "true";
+    canvas.dataset.hearthCanvasWestDoesNotRecommendParentMutation = "true";
+    canvas.dataset.hearthCanvasWestParentMutationRecommended = "false";
 
     canvas.dataset.hearthCanvasWestOwnsReleaseAuthorization = "false";
     canvas.dataset.hearthCanvasWestOwnsMacroWestAdmissibility = "false";
@@ -969,7 +1108,13 @@
     dataset.hearthCanvasWestBaselineContract = BASELINE_CONTRACT;
     dataset.hearthCanvasWestVersion = VERSION;
     dataset.hearthCanvasWestFile = FILE;
+    dataset.hearthCanvasWestParentFile = PARENT_FILE;
     dataset.hearthCanvasWestRole = state.role;
+
+    dataset.hearthCanvasWestParentAuthorityAccepted = "true";
+    dataset.hearthCanvasWestDownstreamAccustomsToParent = "true";
+    dataset.hearthCanvasWestDoesNotRecommendParentMutation = "true";
+    dataset.hearthCanvasWestParentMutationRecommended = "false";
 
     dataset.hearthCanvasWestNewsProtocolSynchronized = "true";
     dataset.hearthCanvasWestFibonacciAlignmentSynchronized = "true";
@@ -985,6 +1130,7 @@
     dataset.hearthCanvasWestObservesReleaseEvidenceOnly = "true";
 
     dataset.hearthCanvasWestReleaseEvidenceObserverActive = "true";
+    dataset.hearthCanvasWestObserverReadyNoReleaseEvidence = String(state.observerReadyNoReleaseEvidence);
     dataset.hearthCanvasWestReceivedFrom = state.receivedFrom;
     dataset.hearthCanvasWestReturnTo = state.returnTo;
     dataset.hearthCanvasWestHandoffTo = state.handoffTo;
@@ -1003,6 +1149,11 @@
     dataset.hearthCanvasWestCanvasReleaseAuthorizedByWestObserved = String(state.canvasReleaseAuthorizedByWestObserved);
     dataset.hearthCanvasWestReleaseToCanvasObserved = String(state.releaseToCanvasObserved);
     dataset.hearthCanvasWestMacroReleaseEvidenceReady = String(state.macroWestReleaseEvidenceReady);
+    dataset.hearthCanvasWestF13WReleaseEvidenceObserved = String(state.f13wReleaseEvidenceObserved);
+    dataset.hearthCanvasWestF13WReleaseEvidenceReady = String(state.f13wReleaseEvidenceReady);
+    dataset.hearthCanvasWestRouteShapeAloneIgnored = "true";
+    dataset.hearthCanvasWestReceivedFromWestAloneIgnored = "true";
+    dataset.hearthCanvasWestHandoffToCanvasAloneIgnored = "true";
 
     dataset.hearthCanvasWestNorthGateReady = String(state.northGateReady);
     dataset.hearthCanvasWestEastGateReady = String(state.eastGateReady);
@@ -1013,7 +1164,10 @@
     dataset.hearthCanvasWestNewsGateDegradedBeforeF21 = String(state.newsGateDegradedBeforeF21);
 
     dataset.hearthCanvasWestActiveFibonacci = String(state.activeFibonacci);
-    dataset.hearthCanvasWestActiveFibonacciRank = state.activeFibonacciRank;
+    dataset.hearthCanvasWestActiveFibonacciRank = ACTIVE_FIBONACCI_RANK;
+    dataset.hearthCanvasWestLegacyFibonacciRank = LEGACY_FIBONACCI_RANK;
+    dataset.hearthCanvasWestLegacyF13NAliasAccepted = "true";
+    dataset.hearthCanvasWestLegacyF13NIsNotActiveRank = "true";
     dataset.hearthCanvasWestActiveStageId = state.activeStageId;
     dataset.hearthCanvasWestActiveGearId = state.activeGearId;
     dataset.hearthCanvasWestActiveFibonacciGate = state.activeFibonacciGate;
@@ -1024,6 +1178,7 @@
     dataset.hearthCanvasWestF13VisibleEvidenceAvailable = String(state.f13VisibleEvidenceAvailable);
     dataset.hearthCanvasWestF13InspectEvidenceAvailable = String(state.f13InspectEvidenceAvailable);
     dataset.hearthCanvasWestF13InspectEvidenceDegraded = String(state.f13InspectEvidenceDegraded);
+    dataset.hearthCanvasWestF13WInspectionReady = String(state.f13wInspectionReady);
     dataset.hearthCanvasWestF13NInspectionReady = String(state.f13nInspectionReady);
     dataset.hearthCanvasWestF21EligibleForNorth = String(state.f21EligibleForNorth);
     dataset.hearthCanvasWestF21SubmittedToNorth = String(state.f21SubmittedToNorth);
@@ -1031,10 +1186,12 @@
 
     dataset.hearthCanvasWestActive = "true";
     dataset.hearthCanvasWestApiReady = String(state.canvasWestApiReady);
+    dataset.hearthCanvasWestControlReady = String(state.canvasWestControlReady);
     dataset.hearthCanvasWestReady = String(state.canvasWestReady);
     dataset.hearthCanvasWestBound = String(state.bound);
     dataset.hearthCanvasWestInspectionBound = String(state.inspectionBound);
     dataset.hearthCanvasWestInspectionReady = String(state.inspectionReady);
+    dataset.hearthCanvasWestInspectionDegraded = String(state.inspectionDegraded);
     dataset.hearthCanvasWestInspectionBindDegraded = String(state.inspectionBindDegraded);
     dataset.hearthCanvasWestViewStateReady = String(state.viewStateReady);
     dataset.hearthCanvasWestControlsReady = String(state.controlsReady);
@@ -1085,6 +1242,7 @@
     dataset.hearthCanvasWestImageRendered = "false";
     dataset.hearthCanvasWestVisibleContentProof = "false";
     dataset.hearthCanvasWestF21ClaimedByCanvasWest = "false";
+    dataset.hearthCanvasWestReadyTextClaimedByCanvasWest = "false";
     dataset.visualPassClaimed = "false";
 
     if (runtime.canvas) {
@@ -1133,9 +1291,15 @@
 
       releaseEvidence: getCanvasReleaseEvidence(),
       f13InspectEvidenceAvailable: state.f13InspectEvidenceAvailable,
-      f13nInspectionReady: state.f13nInspectionReady,
+      f13InspectEvidenceDegraded: state.f13InspectEvidenceDegraded,
+      f13wInspectionReady: state.f13wInspectionReady,
       zoomDoesNotTriggerAtlasRebuild: true,
       ordinaryViewChangeOnly: true,
+
+      parentAuthorityAccepted: true,
+      downstreamAccustomsToParent: true,
+      westDoesNotRecommendParentMutation: true,
+      parentMutationRecommended: false,
 
       visualPassClaimed: false,
       f21ClaimedByCanvasWest: false,
@@ -1188,6 +1352,11 @@
       invalidationDoesNotMeanVisualPassClaimed: true,
 
       zoomDoesNotTriggerAtlasRebuild: true,
+      parentAuthorityAccepted: true,
+      downstreamAccustomsToParent: true,
+      westDoesNotRecommendParentMutation: true,
+      parentMutationRecommended: false,
+
       visualPassClaimed: false,
       f21ClaimedByCanvasWest: false,
       f21EligibleForNorth: false,
@@ -1332,7 +1501,10 @@
       pitchDelta,
       zoomLevel: state.zoomLevel,
       pointerInspectionPaintedMeansControlInteractionOnly: true,
-      pointerInspectionPaintedDoesNotMeanVisibleProof: true
+      pointerInspectionPaintedDoesNotMeanVisibleProof: true,
+      pointerInspectionPaintedDoesNotMeanRenderedFrame: true,
+      pointerInspectionPaintedDoesNotMeanF13VisibleEvidence: true,
+      parentMutationRecommended: false
     });
 
     if (event.cancelable) event.preventDefault();
@@ -1482,10 +1654,14 @@
   function bindInspection(options = {}) {
     const packet = normalizeBindInput(options);
 
-    if (isObject(packet.releaseEvidence) || isObject(packet.releasePacket)) {
-      observeWestReleaseEvidence(packet.releaseEvidence || packet.releasePacket);
-    } else if (isObject(packet)) {
-      observeWestReleaseEvidence(packet);
+    if (
+      isObject(packet.releaseEvidence) ||
+      isObject(packet.releasePacket) ||
+      isObject(packet.canvasReleasePacket) ||
+      hasExplicitAuditEvidence(packet) ||
+      hasExplicitReleaseEvidence(packet)
+    ) {
+      observeWestReleaseEvidence(packet.releaseEvidence || packet.releasePacket || packet.canvasReleasePacket || packet);
     }
 
     state.bindAttempted = true;
@@ -1499,19 +1675,23 @@
       state.bound = false;
       state.inspectionBound = false;
       state.inspectionReady = false;
+      state.inspectionDegraded = true;
       state.dragInspectionBound = false;
       state.zoomInspectionBound = false;
       state.canvasPresent = false;
       state.inspectionBindDegraded = true;
       state.f13InspectEvidenceAvailable = state.canvasWestApiReady && state.controlsReady;
       state.f13InspectEvidenceDegraded = true;
+      state.f13wInspectionReady = state.f13InspectEvidenceAvailable;
       state.f13nInspectionReady = state.f13InspectEvidenceAvailable;
 
       recordLocal("WEST_BIND_INSPECTION_DEGRADED_NO_CANVAS", {
         reason: "missing-or-unbound-canvas",
         hardFailure: false,
         f13InspectEvidenceAvailable: state.f13InspectEvidenceAvailable,
-        f13InspectEvidenceDegraded: true
+        f13InspectEvidenceDegraded: true,
+        f13wInspectionReady: state.f13wInspectionReady,
+        parentMutationRecommended: false
       });
 
       updateDataset();
@@ -1594,8 +1774,9 @@
         onInvalidateAvailable: state.onInvalidateAvailable,
         zoomLevel: state.zoomLevel,
         f13InspectEvidenceAvailable: true,
-        f13nInspectionReady: true,
-        canvasReleaseEvidenceReady: state.canvasReleaseEvidenceReady
+        f13wInspectionReady: true,
+        canvasReleaseEvidenceReady: state.canvasReleaseEvidenceReady,
+        parentMutationRecommended: false
       });
 
       updateDataset();
@@ -1604,14 +1785,17 @@
       state.bound = false;
       state.inspectionBound = false;
       state.inspectionReady = false;
+      state.inspectionDegraded = true;
       state.inspectionBindDegraded = true;
       state.f13InspectEvidenceAvailable = state.canvasWestApiReady && state.controlsReady;
       state.f13InspectEvidenceDegraded = true;
+      state.f13wInspectionReady = state.f13InspectEvidenceAvailable;
       state.f13nInspectionReady = state.f13InspectEvidenceAvailable;
 
       recordError("WEST_BIND_INSPECTION_FAILED", error, {
         hardFailure: true,
-        canvasPresent: Boolean(canvas)
+        canvasPresent: Boolean(canvas),
+        parentMutationRecommended: false
       });
 
       updateDataset();
@@ -1626,6 +1810,7 @@
     state.bound = false;
     state.inspectionBound = false;
     state.inspectionReady = false;
+    state.inspectionDegraded = true;
     state.inspectionBindDegraded = true;
     state.dragInspectionBound = false;
     state.zoomInspectionBound = false;
@@ -1633,13 +1818,16 @@
     state.pinchActive = false;
     state.f13InspectEvidenceAvailable = state.canvasWestApiReady && state.controlsReady;
     state.f13InspectEvidenceDegraded = true;
+    state.f13wInspectionReady = state.f13InspectEvidenceAvailable;
     state.f13nInspectionReady = state.f13InspectEvidenceAvailable;
 
     if (runtime.canvas && runtime.canvas.dataset) {
       runtime.canvas.dataset.hearthCanvasWestBound = "false";
       runtime.canvas.dataset.hearthCanvasWestInspectionReady = "false";
+      runtime.canvas.dataset.hearthCanvasWestInspectionDegraded = "true";
       runtime.canvas.dataset.hearthCanvasWestF13InspectEvidenceAvailable = String(state.f13InspectEvidenceAvailable);
       runtime.canvas.dataset.hearthCanvasWestF13InspectEvidenceDegraded = "true";
+      runtime.canvas.dataset.hearthCanvasWestF13WInspectionReady = String(state.f13wInspectionReady);
       runtime.canvas.dataset.hearthCanvasWestF13NInspectionReady = String(state.f13nInspectionReady);
     }
 
@@ -1649,7 +1837,9 @@
 
     recordLocal("WEST_UNBIND_INSPECTION_COMPLETE", {
       f13InspectEvidenceAvailable: state.f13InspectEvidenceAvailable,
-      f13InspectEvidenceDegraded: true
+      f13InspectEvidenceDegraded: true,
+      f13wInspectionReady: state.f13wInspectionReady,
+      parentMutationRecommended: false
     });
 
     updateDataset();
@@ -1665,6 +1855,11 @@
       receipt: RECEIPT,
       source: "hearth.canvas.west",
       role: state.role,
+
+      parentAuthorityAccepted: true,
+      downstreamAccustomsToParent: true,
+      westDoesNotRecommendParentMutation: true,
+      parentMutationRecommended: false,
 
       yaw: state.yaw,
       pitch: state.pitch,
@@ -1686,6 +1881,8 @@
       pointerInspectionPainted: state.pointerInspectionPainted,
       pointerInspectionPaintedMeansControlInteractionOnly: true,
       pointerInspectionPaintedDoesNotMeanVisibleProof: true,
+      pointerInspectionPaintedDoesNotMeanRenderedFrame: true,
+      pointerInspectionPaintedDoesNotMeanF13VisibleEvidence: true,
       pointerInspectionMoved: state.pointerInspectionMoved,
       viewInteractionOccurred: state.viewInteractionOccurred,
       controlInteractionOccurred: state.controlInteractionOccurred,
@@ -1699,6 +1896,7 @@
 
       inspectionBound: state.inspectionBound,
       inspectionReady: state.inspectionReady,
+      inspectionDegraded: state.inspectionDegraded,
       viewStateReady: state.viewStateReady,
       controlsReady: state.controlsReady,
       rotationReady: state.rotationReady,
@@ -1707,6 +1905,7 @@
       invalidationRequested: state.invalidationRequested,
 
       releaseEvidenceObserverActive: true,
+      observerReadyNoReleaseEvidence: state.observerReadyNoReleaseEvidence,
       canvasReleaseEvidenceReady: state.canvasReleaseEvidenceReady,
       westAuditObserved: state.westAuditObserved,
       westAuditAccepted: state.westAuditAccepted,
@@ -1722,17 +1921,22 @@
       newsGateDegradedBeforeF21: state.newsGateDegradedBeforeF21,
 
       activeFibonacci: state.activeFibonacci,
-      activeFibonacciRank: state.activeFibonacciRank,
+      activeFibonacciRank: ACTIVE_FIBONACCI_RANK,
+      legacyFibonacciRank: LEGACY_FIBONACCI_RANK,
+      legacyF13NAliasAccepted: true,
+      legacyF13NIsNotActiveRank: true,
       activeStageId: state.activeStageId,
       activeGearId: state.activeGearId,
       f13InspectEvidenceAvailable: state.f13InspectEvidenceAvailable,
       f13InspectEvidenceDegraded: state.f13InspectEvidenceDegraded,
+      f13wInspectionReady: state.f13wInspectionReady,
       f13nInspectionReady: state.f13nInspectionReady,
 
       f21EligibleForNorth: false,
       f21SubmittedToNorth: false,
       f21LatchMode: "north-only",
       f21ClaimedByCanvasWest: false,
+      readyTextClaimedByCanvasWest: false,
       visualPassClaimed: false,
 
       updatedAt: state.updatedAt
@@ -1791,7 +1995,8 @@
       pitch: state.pitch,
       source: opts.source || "setRotation",
       pointerInspectionPaintedMeansControlInteractionOnly: true,
-      pointerInspectionPaintedDoesNotMeanVisibleProof: true
+      pointerInspectionPaintedDoesNotMeanVisibleProof: true,
+      parentMutationRecommended: false
     });
 
     if (opts.invalidate === true) {
@@ -1875,7 +2080,8 @@
       zoomLodLevel: state.zoomLodLevel,
       source: state.lastZoomSource,
       zoomDoesNotTriggerAtlasRebuild: true,
-      zoomDoesNotMeanVisibleProof: true
+      zoomDoesNotMeanVisibleProof: true,
+      parentMutationRecommended: false
     });
 
     if (opts.invalidate === true) {
@@ -1953,7 +2159,13 @@
       baselineContract: BASELINE_CONTRACT,
       version: VERSION,
       file: FILE,
+      parentFile: PARENT_FILE,
       role: state.role,
+
+      parentAuthorityAccepted: true,
+      downstreamAccustomsToParent: true,
+      westDoesNotRecommendParentMutation: true,
+      parentMutationRecommended: false,
 
       newsProtocolSynchronized: true,
       fibonacciAlignmentSynchronized: true,
@@ -1969,6 +2181,7 @@
       canvasWestObservesReleaseEvidenceOnly: true,
 
       releaseEvidenceObserverActive: true,
+      observerReadyNoReleaseEvidence: state.observerReadyNoReleaseEvidence,
       receivedFrom: state.receivedFrom,
       returnTo: state.returnTo,
       handoffTo: state.handoffTo,
@@ -1990,8 +2203,15 @@
       releaseToCanvasObserved: state.releaseToCanvasObserved,
       macroWestReleaseEvidenceReady: state.macroWestReleaseEvidenceReady,
       macroWestReleaseEvidenceSource: state.macroWestReleaseEvidenceSource,
+      releaseEvidenceStrict: state.releaseEvidenceStrict,
+      releaseEvidenceDegraded: state.releaseEvidenceDegraded,
+      releaseEvidenceExplicit: state.releaseEvidenceExplicit,
       lastReleaseEvidenceAt: state.lastReleaseEvidenceAt,
       releaseEvidence: getCanvasReleaseEvidence(),
+
+      routeShapeAloneIgnored: true,
+      receivedFromWestAloneIgnored: true,
+      handoffToCanvasAloneIgnored: true,
 
       northGateReady: state.northGateReady,
       eastGateReady: state.eastGateReady,
@@ -2002,7 +2222,10 @@
       newsGateDegradedBeforeF21: state.newsGateDegradedBeforeF21,
 
       activeFibonacci: state.activeFibonacci,
-      activeFibonacciRank: state.activeFibonacciRank,
+      activeFibonacciRank: ACTIVE_FIBONACCI_RANK,
+      legacyFibonacciRank: LEGACY_FIBONACCI_RANK,
+      legacyF13NAliasAccepted: true,
+      legacyF13NIsNotActiveRank: true,
       activeStageId: state.activeStageId,
       activeGearId: state.activeGearId,
       activeFibonacciGate: state.activeFibonacciGate,
@@ -2013,13 +2236,17 @@
       f13VisibleEvidenceAvailable: false,
       f13InspectEvidenceAvailable: state.f13InspectEvidenceAvailable,
       f13InspectEvidenceDegraded: state.f13InspectEvidenceDegraded,
+      f13wInspectionReady: state.f13wInspectionReady,
       f13nInspectionReady: state.f13nInspectionReady,
+      f13wReleaseEvidenceObserved: state.f13wReleaseEvidenceObserved,
+      f13wReleaseEvidenceReady: state.f13wReleaseEvidenceReady,
       f21EligibleForNorth: false,
       f21SubmittedToNorth: false,
       f21LatchMode: "north-only",
 
       canvasWestLoaded: true,
       canvasWestApiReady: readiness.canvasWestApiReady,
+      canvasWestControlReady: readiness.canvasWestControlReady,
       canvasWestActive: true,
       canvasWestReady: state.canvasWestReady,
       splitAdapterRole: "WEST",
@@ -2028,6 +2255,7 @@
 
       inspectionBound: state.inspectionBound,
       inspectionReady: state.inspectionReady,
+      inspectionDegraded: state.inspectionDegraded,
       inspectionBindDegraded: state.inspectionBindDegraded,
       viewStateReady: state.viewStateReady,
       controlsReady: state.controlsReady,
@@ -2134,10 +2362,15 @@
       ownsF21: false,
 
       designRules: [
-        "west child owns F13N inspection and view control only",
-        "west child observes macro-West release evidence only",
+        "west child owns F13W inspection and view control only",
+        "F13N remains legacy compatibility only",
+        "west child observes explicit macro-West or route-conductor release evidence only",
         "west child does not authorize Canvas release",
         "west child does not own macro-West admissibility",
+        "route shape alone does not create release evidence",
+        "receivedFrom=WEST alone does not create release evidence",
+        "handoffTo=CANVAS alone does not create release evidence",
+        "boot publishes observer readiness without false release evidence",
         "drag changes view state only",
         "zoom changes cached-texture inspection only",
         "ordinary zoom does not trigger atlas rebuild",
@@ -2153,7 +2386,9 @@
         "west does not compose texture",
         "west does not form atlas",
         "west does not claim F21",
-        "west does not claim final visual pass"
+        "west does not claim final visual pass",
+        "downstream file accustoms itself to parent authority",
+        "west does not recommend parent mutation"
       ],
 
       localEvents: clonePlain(state.localEvents),
@@ -2166,6 +2401,7 @@
       visibleContentProof: false,
       visualPassClaimed: false,
       f21ClaimedByCanvasWest: false,
+      readyTextClaimedByCanvasWest: false,
       updatedAt: state.updatedAt
     };
   }
@@ -2178,7 +2414,7 @@
       : "- none";
 
     return [
-      "HEARTH_CANVAS_WEST_F13N_RELEASE_EVIDENCE_OBSERVER_CHILD_RECEIPT",
+      "HEARTH_CANVAS_WEST_PARENT_ACCLIMATED_F13W_INSPECTION_RELEASE_EVIDENCE_CHILD_RECEIPT",
       "",
       "IDENTITY",
       `contract=${r.contract}`,
@@ -2187,7 +2423,14 @@
       `baselineContract=${r.baselineContract}`,
       `version=${r.version}`,
       `file=${r.file}`,
+      `parentFile=${r.parentFile}`,
       `role=${r.role}`,
+      "",
+      "PARENT_ACCLIMATION",
+      `parentAuthorityAccepted=${r.parentAuthorityAccepted}`,
+      `downstreamAccustomsToParent=${r.downstreamAccustomsToParent}`,
+      `westDoesNotRecommendParentMutation=${r.westDoesNotRecommendParentMutation}`,
+      `parentMutationRecommended=${r.parentMutationRecommended}`,
       "",
       "NEWS",
       `newsProtocolSynchronized=${r.newsProtocolSynchronized}`,
@@ -2212,6 +2455,7 @@
       "",
       "RELEASE_EVIDENCE_OBSERVER",
       `releaseEvidenceObserverActive=${r.releaseEvidenceObserverActive}`,
+      `observerReadyNoReleaseEvidence=${r.observerReadyNoReleaseEvidence}`,
       `receivedFrom=${r.receivedFrom}`,
       `returnTo=${r.returnTo}`,
       `handoffTo=${r.handoffTo}`,
@@ -2231,11 +2475,18 @@
       `releaseToCanvasObserved=${r.releaseToCanvasObserved}`,
       `macroWestReleaseEvidenceReady=${r.macroWestReleaseEvidenceReady}`,
       `macroWestReleaseEvidenceSource=${r.macroWestReleaseEvidenceSource}`,
+      `releaseEvidenceExplicit=${r.releaseEvidenceExplicit}`,
+      `routeShapeAloneIgnored=${r.routeShapeAloneIgnored}`,
+      `receivedFromWestAloneIgnored=${r.receivedFromWestAloneIgnored}`,
+      `handoffToCanvasAloneIgnored=${r.handoffToCanvasAloneIgnored}`,
       "",
       "FIBONACCI",
       `fibonacciAlignmentSynchronized=${r.fibonacciAlignmentSynchronized}`,
       `activeFibonacci=${r.activeFibonacci}`,
       `activeFibonacciRank=${r.activeFibonacciRank}`,
+      `legacyFibonacciRank=${r.legacyFibonacciRank}`,
+      `legacyF13NAliasAccepted=${r.legacyF13NAliasAccepted}`,
+      `legacyF13NIsNotActiveRank=${r.legacyF13NIsNotActiveRank}`,
       `activeStageId=${r.activeStageId}`,
       `activeGearId=${r.activeGearId}`,
       `activeFibonacciGate=${r.activeFibonacciGate}`,
@@ -2246,14 +2497,19 @@
       `f13VisibleEvidenceAvailable=${r.f13VisibleEvidenceAvailable}`,
       `f13InspectEvidenceAvailable=${r.f13InspectEvidenceAvailable}`,
       `f13InspectEvidenceDegraded=${r.f13InspectEvidenceDegraded}`,
+      `f13wInspectionReady=${r.f13wInspectionReady}`,
       `f13nInspectionReady=${r.f13nInspectionReady}`,
+      `f13wReleaseEvidenceObserved=${r.f13wReleaseEvidenceObserved}`,
+      `f13wReleaseEvidenceReady=${r.f13wReleaseEvidenceReady}`,
       "",
-      "F13N_INSPECTION",
+      "F13W_INSPECTION",
       `canvasWestLoaded=${r.canvasWestLoaded}`,
       `canvasWestApiReady=${r.canvasWestApiReady}`,
+      `canvasWestControlReady=${r.canvasWestControlReady}`,
       `canvasWestReady=${r.canvasWestReady}`,
       `inspectionBound=${r.inspectionBound}`,
       `inspectionReady=${r.inspectionReady}`,
+      `inspectionDegraded=${r.inspectionDegraded}`,
       `inspectionBindDegraded=${r.inspectionBindDegraded}`,
       `viewStateReady=${r.viewStateReady}`,
       `controlsReady=${r.controlsReady}`,
@@ -2327,6 +2583,7 @@
       `f21SubmittedToNorth=${r.f21SubmittedToNorth}`,
       `f21LatchMode=${r.f21LatchMode}`,
       `f21ClaimedByCanvasWest=${r.f21ClaimedByCanvasWest}`,
+      `readyTextClaimedByCanvasWest=${r.readyTextClaimedByCanvasWest}`,
       "",
       "ERRORS",
       errors,
@@ -2350,6 +2607,7 @@
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     file: FILE,
+    parentFile: PARENT_FILE,
 
     bindInspection,
     unbindInspection,
@@ -2381,6 +2639,11 @@
     splitAdapterRole: "WEST",
     splitAdapterTransistorMode: true,
 
+    parentAuthorityAccepted: true,
+    downstreamAccustomsToParent: true,
+    westDoesNotRecommendParentMutation: true,
+    parentMutationRecommended: false,
+
     newsProtocolSynchronized: true,
     fibonacciAlignmentSynchronized: true,
 
@@ -2394,9 +2657,12 @@
     releaseEvidenceObserverActive: true,
 
     activeFibonacci: 13,
-    activeFibonacciRank: "F13N",
-    activeStageId: "canvas-west-inspection-release-evidence-observer",
-    activeGearId: "hearth-canvas-west-f13n-release-evidence-observer",
+    activeFibonacciRank: ACTIVE_FIBONACCI_RANK,
+    legacyFibonacciRank: LEGACY_FIBONACCI_RANK,
+    legacyF13NAliasAccepted: true,
+    legacyF13NIsNotActiveRank: true,
+    activeStageId: ACTIVE_STAGE_ID,
+    activeGearId: ACTIVE_GEAR_ID,
     activeFibonacciGate: "F13",
     futureFibonacciGate: "F21",
     oneActiveGearAtATime: true,
@@ -2429,6 +2695,7 @@
     visibleContentProof: false,
     visualPassClaimed: false,
     f21ClaimedByCanvasWest: false,
+    readyTextClaimedByCanvasWest: false,
 
     get state() {
       deriveReadiness();
@@ -2442,12 +2709,16 @@
     root.HEARTH.canvasWestInspectionInvalidationControl = api;
     root.HEARTH.canvasWestF13NInspectionViewInvalidationChild = api;
     root.HEARTH.canvasWestF13NReleaseEvidenceObserverChild = api;
+    root.HEARTH.canvasWestF13WInspectionReleaseEvidenceChild = api;
+    root.HEARTH.canvasWestParentAcclimatedF13WInspectionReleaseEvidenceChild = api;
     root.HEARTH.canvasWestReleaseEvidenceObserver = api;
 
     root.HEARTH_CANVAS_WEST = api;
     root.HEARTH_CANVAS_WEST_INSPECTION_INVALIDATION_CONTROL = api;
     root.HEARTH_CANVAS_WEST_F13N_INSPECTION_VIEW_INVALIDATION_CHILD = api;
     root.HEARTH_CANVAS_WEST_F13N_RELEASE_EVIDENCE_OBSERVER_CHILD = api;
+    root.HEARTH_CANVAS_WEST_F13W_INSPECTION_RELEASE_EVIDENCE_CHILD = api;
+    root.HEARTH_CANVAS_WEST_PARENT_ACCLIMATED_F13W_INSPECTION_RELEASE_EVIDENCE_CHILD = api;
     root.HEARTH_CANVAS_WEST_RELEASE_EVIDENCE_OBSERVER = api;
 
     root.DEXTER_LAB = root.DEXTER_LAB || {};
@@ -2455,6 +2726,8 @@
     root.DEXTER_LAB.hearthCanvasWestInspectionInvalidationControl = api;
     root.DEXTER_LAB.hearthCanvasWestF13NInspectionViewInvalidationChild = api;
     root.DEXTER_LAB.hearthCanvasWestF13NReleaseEvidenceObserverChild = api;
+    root.DEXTER_LAB.hearthCanvasWestF13WInspectionReleaseEvidenceChild = api;
+    root.DEXTER_LAB.hearthCanvasWestParentAcclimatedF13WInspectionReleaseEvidenceChild = api;
     root.DEXTER_LAB.hearthCanvasWestReleaseEvidenceObserver = api;
 
     root.__HEARTH_CANVAS_WEST_LOADED__ = true;
@@ -2462,31 +2735,52 @@
     root.__HEARTH_CANVAS_WEST_CONTRACT__ = CONTRACT;
     root.__HEARTH_CANVAS_WEST_RECEIPT__ = RECEIPT;
     root.__HEARTH_CANVAS_WEST_API_READY__ = true;
+    root.__HEARTH_CANVAS_WEST_ACTIVE_FIBONACCI_RANK__ = ACTIVE_FIBONACCI_RANK;
+    root.__HEARTH_CANVAS_WEST_LEGACY_F13N_ALIAS_ACCEPTED__ = true;
     root.__HEARTH_CANVAS_WEST_RELEASE_EVIDENCE_OBSERVER_ACTIVE__ = true;
+    root.__HEARTH_CANVAS_WEST_OBSERVER_READY_NO_RELEASE_EVIDENCE__ = state.observerReadyNoReleaseEvidence;
     root.__HEARTH_CANVAS_WEST_DOES_NOT_AUTHORIZE_CANVAS_RELEASE__ = true;
     root.__HEARTH_CANVAS_WEST_RELEASE_EVIDENCE_READY__ = state.canvasReleaseEvidenceReady;
+    root.__HEARTH_CANVAS_WEST_PARENT_AUTHORITY_ACCEPTED__ = true;
+    root.__HEARTH_CANVAS_WEST_DOWNSTREAM_ACCUSTOMS_TO_PARENT__ = true;
+    root.__HEARTH_CANVAS_WEST_DOES_NOT_RECOMMEND_PARENT_MUTATION__ = true;
     root.__HEARTH_CANVAS_WEST_F21_CLAIMED__ = false;
     root.__HEARTH_CANVAS_WEST_VISUAL_PASS_CLAIMED__ = false;
 
     root.HEARTH_CANVAS_WEST_RECEIPT = getReceipt();
     root.HEARTH_CANVAS_WEST_RELEASE_EVIDENCE_RECEIPT = getCanvasReleaseEvidence();
+    root.HEARTH_CANVAS_WEST_PARENT_ACCLIMATED_F13W_INSPECTION_RELEASE_EVIDENCE_CHILD_RECEIPT = root.HEARTH_CANVAS_WEST_RECEIPT;
     root.HEARTH.canvasWestReceipt = root.HEARTH_CANVAS_WEST_RECEIPT;
     root.HEARTH.canvasWestReleaseEvidenceReceipt = root.HEARTH_CANVAS_WEST_RELEASE_EVIDENCE_RECEIPT;
+    root.HEARTH.canvasWestParentAcclimatedF13WInspectionReleaseEvidenceChildReceipt = root.HEARTH_CANVAS_WEST_RECEIPT;
 
     updateDataset();
   }
 
   state.updatedAt = nowIso();
 
-  try {
-    observeWestReleaseEvidence({});
-  } catch (_error) {
-    updateDataset();
-  }
-
+  updateDataset();
   publishGlobals();
 
-  recordLocal("WEST_F13N_RELEASE_EVIDENCE_OBSERVER_CHILD_PUBLISHED", {
+  recordLocal("WEST_RELEASE_EVIDENCE_OBSERVER_READY_NO_RELEASE_EVIDENCE", {
+    file: FILE,
+    contract: CONTRACT,
+    receipt: RECEIPT,
+    activeFibonacciRank: ACTIVE_FIBONACCI_RANK,
+    legacyFibonacciRank: LEGACY_FIBONACCI_RANK,
+    observerReadyNoReleaseEvidence: true,
+    releaseEvidenceObserverActive: true,
+    canvasWestDoesNotAuthorizeCanvasRelease: true,
+    routeShapeAloneIgnored: true,
+    receivedFromWestAloneIgnored: true,
+    handoffToCanvasAloneIgnored: true,
+    parentAuthorityAccepted: true,
+    downstreamAccustomsToParent: true,
+    westDoesNotRecommendParentMutation: true,
+    parentMutationRecommended: false
+  });
+
+  recordLocal("WEST_PARENT_ACCLIMATED_F13W_INSPECTION_RELEASE_EVIDENCE_CHILD_PUBLISHED", {
     file: FILE,
     contract: CONTRACT,
     receipt: RECEIPT,
@@ -2494,7 +2788,10 @@
     releaseEvidenceObserverActive: true,
     canvasWestDoesNotAuthorizeCanvasRelease: true,
     ownsReleaseAuthorization: false,
-    ownsMacroWestAdmissibility: false
+    ownsMacroWestAdmissibility: false,
+    activeFibonacciRank: ACTIVE_FIBONACCI_RANK,
+    legacyF13NAliasAccepted: true,
+    parentMutationRecommended: false
   });
 
   if (typeof module !== "undefined" && module.exports) {

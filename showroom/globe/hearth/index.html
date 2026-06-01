@@ -10,26 +10,33 @@
   data-contract="HEARTH_HTML_SOUTH_PAIR_MALE_SHELL_FEMALE_SELECTED_RUNTIME_RECEIVER_TNT_v1"
   data-previous-contract="HEARTH_HTML_NON_BLOCKING_EAST_BOOT_TWO_CYCLE_RUNTIME_SHELL_TNT_v3"
   data-role="hearth-html-south-pair-male-shell-female-selected-runtime-receiver"
-  data-south-pair-disposition="south-facing-expression-pair"
-  data-south-pair-male-html-shell="true"
-  data-south-pair-female-js-selector="/showroom/globe/hearth/index.js"
-  data-hearth-south-pair-shell-ready="true"
-  data-hearth-south-pair-auto-release-runtime="false"
-  data-cycle-one-route="NORTH_EAST_WEST_SOUTH_NORTH"
-  data-cycle-two-route="NORTH_EAST_SOUTH_WEST_CANVAS"
+  data-disposition="south-facing-expression-pair"
+  data-pair-gender-model="male-html-shell-receives-female-js-selector"
+  data-male-html-shell="true"
+  data-female-js-selector="/showroom/globe/hearth/index.js"
+  data-female-js-chooses-male-html-shell="true"
   data-news-alignment-active="true"
   data-fibonacci-synchronization-active="true"
-  data-html-owns-public-shell="true"
-  data-html-owns-runtime="false"
-  data-html-owns-canvas-drawing="false"
-  data-html-owns-north="false"
-  data-html-owns-east-selector="false"
-  data-html-owns-west="false"
-  data-html-owns-south-runtime="false"
+  data-cycle-one-route="NORTH_EAST_WEST_SOUTH_NORTH"
+  data-cycle-two-route="NORTH_EAST_SOUTH_WEST_CANVAS"
+  data-html-loads-east-entry-only="true"
+  data-html-loads-runtime-table="false"
+  data-html-loads-source-stack="false"
+  data-html-loads-canvas="false"
+  data-html-loads-west="false"
+  data-html-loads-north="false"
+  data-html-loads-south="false"
+  data-east-owns-staged-boot="true"
   data-canvas-f13-delegated="true"
   data-f21-north-only="true"
   data-ready-text-allowed="false"
   data-downstream-release-claimed="false"
+  data-html-owns-public-shell="true"
+  data-html-owns-runtime="false"
+  data-html-owns-canvas-drawing="false"
+  data-html-owns-north="false"
+  data-html-owns-west="false"
+  data-html-owns-south="false"
   data-generated-image="false"
   data-graphic-box="false"
   data-webgl="false"
@@ -42,7 +49,7 @@
   <title>Hearth · Mirrorland Survival Path</title>
   <meta
     name="description"
-    content="Hearth is the survival path inside Mirrorland. The male HTML shell receives the female JS selector, holds the public body stable, and does not force heavy runtime release."
+    content="Hearth is the survival path inside Mirrorland. The male HTML shell paints first and receives the female JavaScript selector, which chooses the shell and releases runtime non-blockingly."
   >
 
   <style>
@@ -189,7 +196,7 @@
 
     .header-note{
       justify-self:end;
-      max-width:30rem;
+      max-width:31rem;
       color:rgba(226,235,255,.66);
       font-size:.76rem;
       font-weight:820;
@@ -317,7 +324,7 @@
       z-index:5;
       display:grid;
       gap:.14rem;
-      max-width:min(37rem,calc(100% - 1.7rem));
+      max-width:min(36rem,calc(100% - 1.7rem));
       padding:.7rem .78rem;
       border:1px solid rgba(255,255,255,.12);
       border-radius:.9rem;
@@ -412,8 +419,7 @@
       gap:.42rem;
     }
 
-    .portal-link,
-    .runtime-button{
+    .portal-link{
       min-height:2.5rem;
       display:inline-flex;
       align-items:center;
@@ -423,25 +429,22 @@
       padding:.58rem .86rem;
       background:rgba(255,255,255,.045);
       color:rgba(241,246,255,.88);
-      font:950 .68rem/1 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      font-size:.68rem;
+      font-weight:950;
       letter-spacing:.06em;
       text-transform:uppercase;
       text-align:center;
       box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
-      cursor:pointer;
     }
 
     .portal-link:hover,
-    .portal-link:focus-visible,
-    .runtime-button:hover,
-    .runtime-button:focus-visible{
+    .portal-link:focus-visible{
       border-color:rgba(242,198,109,.55);
       color:rgba(255,243,210,.98);
       outline:none;
     }
 
-    .portal-link.current,
-    .runtime-button.gold{
+    .portal-link.current{
       border-color:rgba(242,198,109,.9);
       color:#060811;
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
@@ -703,7 +706,7 @@
       cursor:pointer;
     }
 
-    html[data-hearth-south-pair-inspect="true"] [data-hearth-south-show-diagnostic-tab],
+    html[data-hearth-south-planet-inspect="true"] [data-hearth-south-show-diagnostic-tab],
     html[data-hearth-east-inspect-reserved-active="true"] [data-hearth-south-show-diagnostic-tab]{
       display:inline-flex;
     }
@@ -879,6 +882,22 @@
       }
     }
   </style>
+
+  <script
+    defer
+    src="/showroom/globe/hearth/index.js?v=HEARTH_HTML_SOUTH_PAIR_MALE_SHELL_FEMALE_SELECTED_RUNTIME_RECEIVER_TNT_v1"
+    data-loaded-by="HEARTH_HTML_SOUTH_PAIR_MALE_SHELL_FEMALE_SELECTED_RUNTIME_RECEIVER_TNT_v1"
+    data-role="female-js-selector"
+    data-female-js-selector="true"
+    data-male-html-shell-selected="true"
+    data-html-loads-east-entry-only="true"
+    data-canvas-f13-delegated="true"
+    data-f21-north-only="true"
+    data-generated-image="false"
+    data-graphic-box="false"
+    data-webgl="false"
+    data-visual-pass-claimed="false"
+  ></script>
 </head>
 
 <body>
@@ -903,7 +922,7 @@
       </a>
 
       <div class="header-note">
-        Male HTML shell: stable public body. Female JS selector: chooses and binds this shell. Heavy runtime is held until explicitly released.
+        Male HTML shell paints first. Female JS selector chooses this shell and releases runtime non-blockingly.
       </div>
     </header>
 
@@ -913,10 +932,10 @@
 
         <h1 id="page-title">Hearth is the survival path inside Mirrorland.</h1>
 
-        <h2>Male shell stable. Female selector attached. Runtime release held until chosen.</h2>
+        <h2>Male shell received. Female selector chooses. Runtime releases downstream.</h2>
 
         <p class="lead">
-          ZIONTS carries consequence. Audralia carries possibility. Hearth carries survival condition: the living proof field where visibility, inspection, completion, and survivability are tested without collapsing the page shell.
+          ZIONTS carries consequence. Audralia carries possibility. Hearth carries survival condition: the living proof field where visibility, inspection, completion, and survivability are tested only after the page itself has stabilized.
         </p>
       </section>
 
@@ -926,13 +945,13 @@
           class="globe-stage"
           data-hearth-globe-stage="true"
           data-hearth-survival-path-stage="true"
-          data-south-pair-male-shell-stage="true"
+          data-south-pair-male-shell="true"
           aria-label="Interactive Hearth globe stage"
         >
           <div class="globe-label">
-            <b>Hearth · South Pair Receiver</b>
+            <b>Hearth · South Pair Runtime Receiver</b>
             <span>
-              <strong>HTML shell</strong> receives the JS selector. Cycle 1: North/East/West/South/North. Cycle 2: North/East/South/West/Canvas.
+              <strong>Male HTML shell</strong> → female JS selector → F8 runtime release → F13 Canvas evidence → F21 North-only latch.
             </span>
           </div>
 
@@ -941,8 +960,8 @@
             class="globe-mount"
             data-hearth-canvas-mount="true"
             data-hearth-shell-first="true"
-            data-hearth-south-pair-male-shell="true"
-            data-hearth-south-pair-shell-ready="true"
+            data-south-pair-male-shell="true"
+            data-female-js-selector="/showroom/globe/hearth/index.js"
             data-canvas-f13-delegated="true"
             data-generated-image="false"
             data-graphic-box="false"
@@ -955,15 +974,15 @@
             id="hearthLoadCockpit"
             class="hearth-ledger-cockpit"
             data-hearth-load-cockpit="true"
-            data-cockpit-mode="loading-cockpit"
-            data-hearth-south-pair-male-shell="true"
-            data-hearth-south-pair-shell-ready="true"
+            data-cockpit-mode="diagnostic-dock"
+            data-south-pair-male-shell="true"
+            data-female-selector-pending="true"
             aria-live="polite"
           >
             <div class="hearth-ledger-head">
               <div class="hearth-ledger-kicker">Hearth · South Pair Shell</div>
-              <h2 class="hearth-ledger-title">HEARTH SHELL READY</h2>
-              <div class="hearth-ledger-meta" data-hearth-stage-label>F1 · male shell stable</div>
+              <h2 class="hearth-ledger-title">HEARTH MALE SHELL READY</h2>
+              <div class="hearth-ledger-meta" data-hearth-stage-label>F1 · Static shell painted</div>
               <div class="hearth-ledger-meta" data-hearth-heartbeat-text>female-selector=pending · runtime-release=held</div>
               <div class="hearth-ledger-latest" data-hearth-latest-event>latest=MALE_HTML_SHELL_READY</div>
             </div>
@@ -979,58 +998,70 @@
               <button class="hearth-ledger-button primary" type="button" data-hearth-copy-diagnostic>Copy diagnostic</button>
               <button class="hearth-ledger-button" type="button" data-hearth-toggle-receipt>Show receipt</button>
               <button class="hearth-ledger-button" type="button" data-hearth-inspect-planet>Inspect planet</button>
-              <button class="hearth-ledger-button" type="button" data-hearth-collapse-cockpit>Collapse cockpit</button>
-              <button class="hearth-ledger-button" type="button" data-hearth-runtime-release>Start runtime</button>
+              <button class="hearth-ledger-button" type="button" data-hearth-collapse-cockpit>Expand cockpit</button>
             </div>
 
             <div class="hearth-ledger-scroll">
               <div class="hearth-ledger-lanes" data-hearth-lane-list>
-                <section class="hearth-ledger-lane" data-lane="F1" data-status="READY">
+                <section class="hearth-ledger-lane" data-lane="F1" data-status="ACTIVE">
                   <div class="hearth-ledger-lane-top">
                     <span class="hearth-ledger-lane-title">
-                      <strong>F1 · Male shell body</strong>
-                      <span>public body painted and stable</span>
+                      <strong>F1 · Male shell paint</strong>
+                      <span>public shell visible before runtime</span>
                     </span>
-                    <span class="hearth-ledger-lane-status">READY</span>
+                    <span class="hearth-ledger-lane-status">ACTIVE</span>
                   </div>
                   <div class="hearth-ledger-lane-track">
-                    <span class="hearth-ledger-lane-fill" style="width:100%"></span>
+                    <span class="hearth-ledger-lane-fill" style="width:12%"></span>
                   </div>
                 </section>
 
                 <section class="hearth-ledger-lane" data-lane="F2" data-status="READY">
                   <div class="hearth-ledger-lane-top">
                     <span class="hearth-ledger-lane-title">
-                      <strong>F2 · Hooks available</strong>
-                      <span>mount, cockpit, status, and diagnostic hooks present</span>
+                      <strong>F2 · Dynamic anchors</strong>
+                      <span>all female-selector anchors are present in the male shell</span>
                     </span>
                     <span class="hearth-ledger-lane-status">READY</span>
                   </div>
                   <div class="hearth-ledger-lane-track">
-                    <span class="hearth-ledger-lane-fill" style="width:100%"></span>
+                    <span class="hearth-ledger-lane-fill" style="width:24%"></span>
                   </div>
                 </section>
 
-                <section class="hearth-ledger-lane" data-lane="F3" data-status="PENDING">
+                <section class="hearth-ledger-lane" data-lane="F3" data-status="READY">
                   <div class="hearth-ledger-lane-top">
                     <span class="hearth-ledger-lane-title">
-                      <strong>F3 · Female selector bind</strong>
-                      <span>JS selector chooses and binds the shell</span>
+                      <strong>F3 · Shell controls</strong>
+                      <span>copy, receipt, inspect, and cockpit controls exist before runtime</span>
                     </span>
-                    <span class="hearth-ledger-lane-status">PENDING</span>
+                    <span class="hearth-ledger-lane-status">READY</span>
                   </div>
                   <div class="hearth-ledger-lane-track">
-                    <span class="hearth-ledger-lane-fill" style="width:0%"></span>
+                    <span class="hearth-ledger-lane-fill" style="width:30%"></span>
                   </div>
                 </section>
 
-                <section class="hearth-ledger-lane" data-lane="F5" data-status="HELD">
+                <section class="hearth-ledger-lane" data-lane="F5" data-status="SELECTABLE">
                   <div class="hearth-ledger-lane-top">
                     <span class="hearth-ledger-lane-title">
-                      <strong>F5 · Runtime release</strong>
-                      <span>manual release only; no automatic white-screen risk</span>
+                      <strong>F5 · Female selector</strong>
+                      <span>JS chooses this shell and clears shell-selection hold</span>
                     </span>
-                    <span class="hearth-ledger-lane-status">HELD</span>
+                    <span class="hearth-ledger-lane-status">SELECTABLE</span>
+                  </div>
+                  <div class="hearth-ledger-lane-track">
+                    <span class="hearth-ledger-lane-fill" style="width:34%"></span>
+                  </div>
+                </section>
+
+                <section class="hearth-ledger-lane" data-lane="F8" data-status="PENDING">
+                  <div class="hearth-ledger-lane-top">
+                    <span class="hearth-ledger-lane-title">
+                      <strong>F8 · Runtime release</strong>
+                      <span>non-blocking runtime release begins only after shell acceptance</span>
+                    </span>
+                    <span class="hearth-ledger-lane-status">PENDING</span>
                   </div>
                   <div class="hearth-ledger-lane-track">
                     <span class="hearth-ledger-lane-fill" style="width:0%"></span>
@@ -1041,7 +1072,7 @@
                   <div class="hearth-ledger-lane-top">
                     <span class="hearth-ledger-lane-title">
                       <strong>F13 · Canvas evidence</strong>
-                      <span>delegated downstream; not claimed by HTML</span>
+                      <span>delegated to Canvas; never claimed by HTML</span>
                     </span>
                     <span class="hearth-ledger-lane-status">DELEGATED</span>
                   </div>
@@ -1054,7 +1085,7 @@
                   <div class="hearth-ledger-lane-top">
                     <span class="hearth-ledger-lane-title">
                       <strong>F21 · North latch</strong>
-                      <span>North-only completion; never claimed by HTML</span>
+                      <span>final completion is North-only and remains forbidden to HTML</span>
                     </span>
                     <span class="hearth-ledger-lane-status">NORTH ONLY</span>
                   </div>
@@ -1071,26 +1102,33 @@
                 data-visible="false"
               >
                 <pre data-hearth-receipt-text>HEARTH_HTML_SOUTH_PAIR_MALE_SHELL_FEMALE_SELECTED_RUNTIME_RECEIVER_TNT_v1
-receipt=male_shell_ready
+receipt=male_shell_ready_for_female_selector
 route=/showroom/globe/hearth/
+htmlContract=HEARTH_HTML_SOUTH_PAIR_MALE_SHELL_FEMALE_SELECTED_RUNTIME_RECEIVER_TNT_v1
 femaleSelector=/showroom/globe/hearth/index.js
-southPairDisposition=south-facing-expression-pair
-maleHtmlShell=true
-shellReady=true
-autoReleaseRuntime=false
+dynamicAlignmentAnchors=present
+htmlLoadsEastEntryOnly=true
+htmlLoadsRuntimeTable=false
+htmlLoadsSourceStack=false
+htmlLoadsCanvas=false
+htmlLoadsWest=false
+htmlLoadsNorth=false
+htmlLoadsSouth=false
 cycleOneRoute=NORTH_EAST_WEST_SOUTH_NORTH
 cycleTwoRoute=NORTH_EAST_SOUTH_WEST_CANVAS
 canvasF13Delegated=true
 f21NorthOnly=true
+readyTextAllowed=false
+downstreamReleaseClaimed=false
 visualPassClaimed=false</pre>
               </div>
             </div>
           </aside>
 
           <div class="globe-status">
-            <strong>Stable Hearth Shell Ready</strong>
+            <strong>Male HTML Shell Ready</strong>
             <span>
-              This HTML file receives the selector and keeps the page stable. Runtime release is manual so the shell cannot collapse into a flash-to-white-screen failure.
+              This shell exposes every dynamic alignment anchor required by the female selector. It does not load the runtime table, source stack, Canvas, West, North, or South directly.
             </span>
           </div>
         </section>
@@ -1114,17 +1152,9 @@ visualPassClaimed=false</pre>
             </div>
           </div>
 
-          <button
-            class="runtime-button gold"
-            type="button"
-            data-hearth-runtime-release
-          >
-            Start runtime
-          </button>
-
           <div class="micro-card">
             <b>Pair</b>
-            <span>Male HTML shell receives. Female JS selector chooses, binds, and controls release.</span>
+            <span>Male HTML receives. Female JS selects. Runtime releases only after selection.</span>
           </div>
 
           <div class="micro-card">
@@ -1139,7 +1169,7 @@ visualPassClaimed=false</pre>
 
           <div class="micro-card">
             <b>Boundary</b>
-            <span>HTML owns public shell only. JS selector owns runtime request. Canvas owns F13 evidence. North owns F21.</span>
+            <span>HTML owns shell. JS selects shell. Runtime owns proof. Canvas owns F13. North owns F21.</span>
           </div>
         </aside>
       </section>
@@ -1150,10 +1180,10 @@ visualPassClaimed=false</pre>
           <div class="drawer-body">
             <strong>Hearth gives survival a visible condition.</strong>
             <p>
-              Hearth is not a decorative planet page. It is the survival-path field where visible body, inspection controls, completion latch, and route diagnostics must survive together.
+              Hearth is not a decorative planet page. It is the survival-path field where the visible planet, inspection controls, completion latch, and route diagnostics must survive together.
             </p>
             <p>
-              This page is now the receiving shell. It does not serial-load the heavy stack. It waits for the selector and allows release only through the selector API.
+              The HTML file is now the matched male shell. It stays visible and stable while the female JavaScript selector chooses it and releases runtime downstream.
             </p>
           </div>
         </details>
@@ -1161,12 +1191,12 @@ visualPassClaimed=false</pre>
         <details class="drawer">
           <summary>Runtime Cycle</summary>
           <div class="drawer-body">
-            <strong>The HTML file does not conduct the runtime.</strong>
+            <strong>The HTML shell does not conduct runtime proof.</strong>
             <p>
-              The HTML shell exposes stable anchors and receives the female JS selector. The selector decides whether the shell is matched before any runtime queue is allowed.
+              HTML loads only the female selector file. That selector accepts this shell, clears the old shell wait, and stages runtime release without blocking the page.
             </p>
             <p>
-              Runtime release is intentionally manual in this shell to prevent a flash-to-white-screen collapse while the paired system is being stabilized.
+              Canvas remains F13 evidence only. F21 remains North-only. This shell does not claim final readiness or visual pass.
             </p>
           </div>
         </details>
@@ -1174,20 +1204,20 @@ visualPassClaimed=false</pre>
         <details class="drawer">
           <summary>Diagnostic Scope</summary>
           <div class="drawer-body">
-            <strong>Readable placeholders remain visible before runtime proof.</strong>
+            <strong>All required dynamic alignment anchors are present.</strong>
 
             <div class="diagnostic-grid">
               <div class="diagnostic"><b>Route</b><span data-hearth-diagnostic-route>/showroom/globe/hearth/</span></div>
-              <div class="diagnostic"><b>Lifecycle</b><span data-hearth-diagnostic-lifecycle>male shell ready</span></div>
+              <div class="diagnostic"><b>Lifecycle</b><span data-hearth-diagnostic-lifecycle>male shell painted</span></div>
               <div class="diagnostic"><b>Cycle 1</b><span data-hearth-diagnostic-cycle-one>NORTH_EAST_WEST_SOUTH_NORTH</span></div>
               <div class="diagnostic"><b>Cycle 2</b><span data-hearth-diagnostic-cycle-two>NORTH_EAST_SOUTH_WEST_CANVAS</span></div>
-              <div class="diagnostic"><b>Female Selector</b><span data-hearth-diagnostic-east>loading</span></div>
-              <div class="diagnostic"><b>West</b><span data-hearth-diagnostic-west>downstream delegated</span></div>
+              <div class="diagnostic"><b>Female Selector</b><span data-hearth-diagnostic-east>/showroom/globe/hearth/index.js</span></div>
+              <div class="diagnostic"><b>West</b><span data-hearth-diagnostic-west>runtime delegated</span></div>
               <div class="diagnostic"><b>North</b><span data-hearth-diagnostic-north>F21 authority only</span></div>
-              <div class="diagnostic"><b>South</b><span data-hearth-diagnostic-south>expression receiver shell</span></div>
+              <div class="diagnostic"><b>South</b><span data-hearth-diagnostic-south>visible proof downstream</span></div>
               <div class="diagnostic"><b>Canvas</b><span data-hearth-diagnostic-canvas>F13 delegated</span></div>
-              <div class="diagnostic"><b>Inspect Mode</b><span data-hearth-diagnostic-inspect>shell placeholder active</span></div>
-              <div class="diagnostic"><b>Runtime</b><span data-hearth-diagnostic-runtime>held until manual release</span></div>
+              <div class="diagnostic"><b>Inspect Mode</b><span data-hearth-diagnostic-inspect>shell controls active</span></div>
+              <div class="diagnostic"><b>F21</b><span data-hearth-diagnostic-f21>North-only latch</span></div>
               <div class="diagnostic"><b>Visual Pass</b><span data-hearth-diagnostic-visual-pass>false</span></div>
             </div>
           </div>
@@ -1203,38 +1233,48 @@ HEARTH_HTML_SOUTH_PAIR_MALE_SHELL_FEMALE_SELECTED_RUNTIME_RECEIVER_TNT_v1
 route=/showroom/globe/hearth/
 target=/showroom/globe/hearth/index.html
 previous=HEARTH_HTML_NON_BLOCKING_EAST_BOOT_TWO_CYCLE_RUNTIME_SHELL_TNT_v3
-southPairDisposition=south-facing-expression-pair
+disposition=south-facing-expression-pair
+pairGenderModel=male-html-shell-receives-female-js-selector
 maleHtmlShell=true
 femaleJsSelector=/showroom/globe/hearth/index.js
-shellReady=true
-autoReleaseRuntime=false
+femaleJsChoosesMaleHtmlShell=true
 htmlOwnsPublicShell=true
 htmlOwnsRuntime=false
 htmlOwnsCanvasDrawing=false
 htmlOwnsNorth=false
-htmlOwnsEastSelector=false
 htmlOwnsWest=false
-htmlOwnsSouthRuntime=false
+htmlOwnsSouth=false
+htmlLoadsEastEntryOnly=true
+htmlLoadsRuntimeTable=false
+htmlLoadsSourceStack=false
+htmlLoadsCanvas=false
+htmlLoadsWest=false
+htmlLoadsNorth=false
+htmlLoadsSouth=false
+newsAlignmentActive=true
+fibonacciSynchronizationActive=true
 cycleOneRoute=NORTH_EAST_WEST_SOUTH_NORTH
 cycleTwoRoute=NORTH_EAST_SOUTH_WEST_CANVAS
-newsNorth=macro law / permission / F21 latch
-newsEast=female selector / staged runtime release
-newsWest=admissibility and Canvas release audit
-newsSouth=expression receiver shell / visible proof downstream
-newsCanvas=F13 evidence only
-f1=male shell body stable
-f2=hooks available
-f3=female selector binds shell
-f5=runtime release request
-f8=runtime release acknowledged
+f1=male shell paint
+f2=dynamic alignment anchors present
+f3=shell controls active
+f5=female selector chooses shell
+f8=runtime release authorized by JS
 f13=Canvas evidence delegated downstream
 f21=North-only latch
 mount=#hearthCanvasMount
 cockpit=#hearthLoadCockpit
 status=#hearth-route-status
 receiptPanel=#hearthReceiptPanel
-showDiagnosticTab=[data-hearth-south-show-diagnostic-tab]
 mapPortal=#hearthMapPortal
+copyControl=[data-hearth-copy-diagnostic]
+receiptControl=[data-hearth-toggle-receipt]
+inspectControl=[data-hearth-inspect-planet]
+collapseControl=[data-hearth-collapse-cockpit]
+canvasF13Delegated=true
+f21NorthOnly=true
+readyTextAllowed=false
+downstreamReleaseClaimed=false
 visualPassClaimed=false
 generatedImage=false
 graphicBox=false
@@ -1242,364 +1282,22 @@ webGL=false
         </template>
       </section>
 
-      <pre id="hearth-route-status" data-hearth-route-status hidden>Hearth male HTML shell ready. Female JS selector pending. Runtime release held manually.</pre>
+      <pre id="hearth-route-status" data-hearth-route-status hidden>Hearth male HTML shell ready. Female JS selector loaded from /showroom/globe/hearth/index.js. Runtime release remains delegated to JS. Canvas F13 delegated. F21 North-only.</pre>
 
       <noscript>
         <section class="panel hero" aria-label="JavaScript required notice">
           <div class="kicker">Runtime Held</div>
           <h2>Runtime proof requires JavaScript.</h2>
           <p>
-            The Hearth narrative, Map Portal, and survival-path shell remain readable. Selector binding, runtime release, inspection mode, copy diagnostic, receipt toggling, and F21 completion require JavaScript.
+            The Hearth narrative, Map Portal, and survival-path page remain readable. Canvas rendering, inspection mode, copy diagnostic, receipt toggling, and F21 completion require JavaScript.
           </p>
         </section>
       </noscript>
     </main>
 
     <footer>
-      HEARTH_HTML_SOUTH_PAIR_MALE_SHELL_FEMALE_SELECTED_RUNTIME_RECEIVER_TNT_v1 · Male shell receiver · Female selector attached · Runtime manual release · F13 delegated · F21 North-only · Visual pass not claimed.
+      HEARTH_HTML_SOUTH_PAIR_MALE_SHELL_FEMALE_SELECTED_RUNTIME_RECEIVER_TNT_v1 · Male shell · Female selector · F13 Canvas delegated · F21 North-only · Visual pass not claimed.
     </footer>
   </div>
-
-  <script>
-    (() => {
-      "use strict";
-
-      const CONTRACT = "HEARTH_HTML_SOUTH_PAIR_MALE_SHELL_FEMALE_SELECTED_RUNTIME_RECEIVER_TNT_v1";
-      const RECEIPT = "HEARTH_HTML_SOUTH_PAIR_MALE_SHELL_FEMALE_SELECTED_RUNTIME_RECEIVER_RECEIPT_v1";
-      const FEMALE_SELECTOR_FILE = "/showroom/globe/hearth/index.js";
-      const root = window;
-      const doc = document;
-
-      const state = {
-        contract: CONTRACT,
-        receipt: RECEIPT,
-        file: "/showroom/globe/hearth/index.html",
-        route: "/showroom/globe/hearth/",
-        femaleSelectorFile: FEMALE_SELECTOR_FILE,
-        maleHtmlShell: true,
-        shellReady: true,
-        autoReleaseRuntime: false,
-        femaleSelectorScriptRequested: false,
-        femaleSelectorScriptAttached: false,
-        femaleSelectorScriptExisting: false,
-        femaleSelectorScriptFailed: false,
-        runtimeReleaseRequestedFromHtml: false,
-        runtimeReleaseAcceptedByFemaleSelector: false,
-        runtimeReleaseHeldReason: "MANUAL_RELEASE_PENDING",
-        updatedAt: new Date().toISOString(),
-        generatedImage: false,
-        graphicBox: false,
-        webGL: false,
-        visualPassClaimed: false
-      };
-
-      function qs(selector) {
-        return doc.querySelector(selector);
-      }
-
-      function qsa(selector) {
-        return Array.from(doc.querySelectorAll(selector));
-      }
-
-      function nowIso() {
-        try {
-          return new Date().toISOString();
-        } catch (_error) {
-          return "";
-        }
-      }
-
-      function setText(selector, value) {
-        const node = qs(selector);
-        if (node) node.textContent = value;
-      }
-
-      function setProgress(value) {
-        const safe = Math.max(0, Math.min(100, Number(value) || 0));
-        const fill = qs("[data-hearth-main-progress-fill]");
-        const label = qs("[data-hearth-main-progress-percent]");
-
-        if (fill) fill.style.width = `${safe}%`;
-        if (label) label.textContent = `${Math.round(safe)}%`;
-      }
-
-      function composeReceipt() {
-        return [
-          "HEARTH_HTML_SOUTH_PAIR_MALE_SHELL_FEMALE_SELECTED_RUNTIME_RECEIVER_RECEIPT",
-          "",
-          `contract=${CONTRACT}`,
-          `receipt=${RECEIPT}`,
-          "file=/showroom/globe/hearth/index.html",
-          "route=/showroom/globe/hearth/",
-          `femaleSelectorFile=${FEMALE_SELECTOR_FILE}`,
-          "",
-          "PAIR",
-          "southPairDisposition=south-facing-expression-pair",
-          "maleHtmlShell=true",
-          "femaleJsSelector=true",
-          "femaleJsSelectorComesFirstInPair=true",
-          "htmlReceivesSelector=true",
-          "",
-          "STATUS",
-          `shellReady=${state.shellReady}`,
-          `autoReleaseRuntime=${state.autoReleaseRuntime}`,
-          `femaleSelectorScriptRequested=${state.femaleSelectorScriptRequested}`,
-          `femaleSelectorScriptAttached=${state.femaleSelectorScriptAttached}`,
-          `femaleSelectorScriptExisting=${state.femaleSelectorScriptExisting}`,
-          `femaleSelectorScriptFailed=${state.femaleSelectorScriptFailed}`,
-          `runtimeReleaseRequestedFromHtml=${state.runtimeReleaseRequestedFromHtml}`,
-          `runtimeReleaseAcceptedByFemaleSelector=${state.runtimeReleaseAcceptedByFemaleSelector}`,
-          `runtimeReleaseHeldReason=${state.runtimeReleaseHeldReason}`,
-          "",
-          "NEWS_ALIGNMENT",
-          "north=macro law / permission / F21 latch",
-          "east=female selector / staged runtime release",
-          "west=admissibility and Canvas release audit",
-          "south=expression receiver shell / visible proof downstream",
-          "canvas=F13 evidence only",
-          "",
-          "FIBONACCI_SYNCHRONIZATION",
-          "F1=male shell body stable",
-          "F2=hooks available",
-          "F3=female selector binds shell",
-          "F5=runtime release request",
-          "F8=runtime release acknowledged",
-          "F13=Canvas evidence delegated downstream",
-          "F21=North-only latch",
-          "",
-          "CLAIMS",
-          "generatedImage=false",
-          "graphicBox=false",
-          "webGL=false",
-          "visualPassClaimed=false",
-          `updatedAt=${state.updatedAt}`
-        ].join("\n");
-      }
-
-      function publish(message) {
-        state.updatedAt = nowIso();
-
-        const dataset = doc.documentElement.dataset;
-
-        dataset.hearthSouthPairShellReady = "true";
-        dataset.hearthSouthPairMaleHtmlShell = "true";
-        dataset.hearthSouthPairFemaleJsSelector = FEMALE_SELECTOR_FILE;
-        dataset.hearthSouthPairAutoReleaseRuntime = "false";
-
-        dataset.hearthHtmlMaleShellReceipt = RECEIPT;
-        dataset.hearthHtmlMaleShellContract = CONTRACT;
-        dataset.hearthHtmlMaleShellReady = "true";
-        dataset.hearthHtmlFemaleSelectorScriptRequested = String(state.femaleSelectorScriptRequested);
-        dataset.hearthHtmlFemaleSelectorScriptAttached = String(state.femaleSelectorScriptAttached);
-        dataset.hearthHtmlFemaleSelectorScriptExisting = String(state.femaleSelectorScriptExisting);
-        dataset.hearthHtmlFemaleSelectorScriptFailed = String(state.femaleSelectorScriptFailed);
-        dataset.hearthHtmlRuntimeReleaseRequested = String(state.runtimeReleaseRequestedFromHtml);
-        dataset.hearthHtmlRuntimeReleaseAcceptedByFemaleSelector = String(state.runtimeReleaseAcceptedByFemaleSelector);
-        dataset.hearthHtmlRuntimeReleaseHeldReason = state.runtimeReleaseHeldReason;
-
-        dataset.generatedImage = "false";
-        dataset.graphicBox = "false";
-        dataset.webgl = "false";
-        dataset.visualPassClaimed = "false";
-
-        const status = qs("#hearth-route-status");
-        if (status) status.textContent = composeReceipt();
-
-        const receiptBox = qs("[data-hearth-receipt-box]");
-        const receiptText = qs("[data-hearth-receipt-text]");
-        if (receiptBox && receiptText && receiptBox.dataset.visible === "true") {
-          receiptText.textContent = composeReceipt();
-        }
-
-        root.HEARTH_HTML_SOUTH_PAIR_MALE_SHELL_RECEIPT = {
-          ...state,
-          message: message || "",
-          receiptText: composeReceipt()
-        };
-      }
-
-      function existingSelectorScript() {
-        return Array.from(doc.scripts || []).find((script) => {
-          const src = script.getAttribute("src") || script.src || "";
-          return src.includes(FEMALE_SELECTOR_FILE);
-        }) || null;
-      }
-
-      function attachFemaleSelector() {
-        const existing = existingSelectorScript();
-
-        state.femaleSelectorScriptRequested = true;
-
-        if (existing) {
-          state.femaleSelectorScriptExisting = true;
-          state.femaleSelectorScriptAttached = true;
-          state.femaleSelectorScriptFailed = false;
-          setText("[data-hearth-heartbeat-text]", "female-selector=existing · runtime-release=manual");
-          setText("[data-hearth-latest-event]", "latest=FEMALE_SELECTOR_EXISTING");
-          setText("[data-hearth-diagnostic-east]", "selector existing");
-          setProgress(26);
-          publish("Female selector already present.");
-          return;
-        }
-
-        const script = doc.createElement("script");
-        const separator = FEMALE_SELECTOR_FILE.includes("?") ? "&" : "?";
-
-        script.src = `${FEMALE_SELECTOR_FILE}${separator}v=${encodeURIComponent(CONTRACT)}`;
-        script.defer = true;
-        script.async = false;
-        script.dataset.loadedBy = CONTRACT;
-        script.dataset.role = "south-pair-female-js-selector";
-        script.dataset.hearthSouthPairFemaleJsSelector = "true";
-        script.dataset.hearthSouthPairMaleHtmlShell = "true";
-        script.dataset.hearthSouthPairAutoReleaseRuntime = "false";
-        script.dataset.generatedImage = "false";
-        script.dataset.graphicBox = "false";
-        script.dataset.webgl = "false";
-        script.dataset.visualPassClaimed = "false";
-
-        setText("[data-hearth-heartbeat-text]", "female-selector=loading · runtime-release=manual");
-        setText("[data-hearth-latest-event]", "latest=LOADING_FEMALE_SELECTOR");
-        setText("[data-hearth-diagnostic-east]", "selector loading");
-        setProgress(18);
-        publish("Female selector loading.");
-
-        script.onload = () => {
-          state.femaleSelectorScriptAttached = true;
-          state.femaleSelectorScriptFailed = false;
-
-          setText("[data-hearth-heartbeat-text]", "female-selector=attached · runtime-release=manual");
-          setText("[data-hearth-latest-event]", "latest=FEMALE_SELECTOR_ATTACHED");
-          setText("[data-hearth-diagnostic-east]", "selector attached");
-          setProgress(34);
-          publish("Female selector attached.");
-        };
-
-        script.onerror = () => {
-          state.femaleSelectorScriptAttached = false;
-          state.femaleSelectorScriptFailed = true;
-
-          setText("[data-hearth-heartbeat-text]", "female-selector=failed · shell remains stable");
-          setText("[data-hearth-latest-event]", "latest=FEMALE_SELECTOR_LOAD_FAILED");
-          setText("[data-hearth-diagnostic-east]", "selector failed");
-          setProgress(12);
-          publish("Female selector failed. Shell remains stable.");
-        };
-
-        doc.head.appendChild(script);
-      }
-
-      async function requestRuntimeRelease() {
-        state.runtimeReleaseRequestedFromHtml = true;
-
-        const selector =
-          root.HEARTH_EAST_FEMALE_SELECTOR ||
-          root.HEARTH_EAST_SOUTH_PAIR_FEMALE_SELECTOR ||
-          root.HEARTH_INDEX_JS ||
-          root.HEARTH_INDEX_BRIDGE ||
-          (root.HEARTH && root.HEARTH.eastFemaleSelector);
-
-        if (!selector || typeof selector.releaseRuntime !== "function") {
-          state.runtimeReleaseAcceptedByFemaleSelector = false;
-          state.runtimeReleaseHeldReason = "FEMALE_SELECTOR_API_NOT_READY";
-          setText("[data-hearth-heartbeat-text]", "runtime-release=held · selector API not ready");
-          setText("[data-hearth-latest-event]", "latest=RUNTIME_RELEASE_HELD_SELECTOR_API_NOT_READY");
-          setText("[data-hearth-diagnostic-runtime]", "held · selector API not ready");
-          publish("Runtime release held; selector API not ready.");
-          return;
-        }
-
-        try {
-          setText("[data-hearth-heartbeat-text]", "runtime-release=requested-through-female-selector");
-          setText("[data-hearth-latest-event]", "latest=RUNTIME_RELEASE_REQUESTED");
-          setText("[data-hearth-diagnostic-runtime]", "release requested");
-          setProgress(38);
-          publish("Runtime release requested.");
-
-          const result = await selector.releaseRuntime("male-html-shell-button");
-
-          state.runtimeReleaseAcceptedByFemaleSelector = Boolean(result);
-          state.runtimeReleaseHeldReason = "NONE_OR_SELECTOR_MANAGED";
-
-          setText("[data-hearth-heartbeat-text]", "runtime-release=selector-managed");
-          setText("[data-hearth-latest-event]", "latest=RUNTIME_RELEASE_SELECTOR_MANAGED");
-          setText("[data-hearth-diagnostic-runtime]", "selector-managed");
-          setProgress(44);
-          publish("Runtime release is now selector-managed.");
-        } catch (error) {
-          state.runtimeReleaseAcceptedByFemaleSelector = false;
-          state.runtimeReleaseHeldReason = error && error.message ? error.message : String(error);
-          setText("[data-hearth-heartbeat-text]", "runtime-release=held · selector returned error");
-          setText("[data-hearth-latest-event]", "latest=RUNTIME_RELEASE_ERROR");
-          setText("[data-hearth-diagnostic-runtime]", "held · selector error");
-          publish("Runtime release failed through selector.");
-        }
-      }
-
-      function bindRuntimeButtons() {
-        qsa("[data-hearth-runtime-release]").forEach((button) => {
-          if (button.dataset.hearthRuntimeReleaseBound === "true") return;
-          button.dataset.hearthRuntimeReleaseBound = "true";
-          button.addEventListener("click", requestRuntimeRelease);
-        });
-      }
-
-      function bindHtmlReceiptMirror() {
-        const receiptButton = qs("[data-hearth-toggle-receipt]");
-        const receiptBox = qs("[data-hearth-receipt-box]");
-        const receiptText = qs("[data-hearth-receipt-text]");
-
-        if (!receiptButton || !receiptBox || receiptButton.dataset.hearthHtmlMirrorBound === "true") return;
-
-        receiptButton.dataset.hearthHtmlMirrorBound = "true";
-        receiptButton.addEventListener("click", () => {
-          if (receiptText && receiptBox.dataset.visible === "true") {
-            receiptText.textContent = composeReceipt();
-          }
-        });
-      }
-
-      function bootHtmlShell() {
-        setText("[data-hearth-heartbeat-text]", "male-shell=ready · female-selector=scheduled · runtime-release=manual");
-        setText("[data-hearth-latest-event]", "latest=MALE_HTML_SHELL_READY");
-        setText("[data-hearth-diagnostic-lifecycle]", "male shell ready");
-        setText("[data-hearth-diagnostic-runtime]", "held until manual release");
-        setProgress(12);
-
-        bindRuntimeButtons();
-        bindHtmlReceiptMirror();
-        publish("Male HTML shell ready.");
-
-        if ("requestIdleCallback" in root) {
-          root.requestIdleCallback(attachFemaleSelector, { timeout: 900 });
-        } else {
-          root.setTimeout(attachFemaleSelector, 80);
-        }
-      }
-
-      root.HEARTH_HTML_SOUTH_PAIR_MALE_SHELL = {
-        contract: CONTRACT,
-        receipt: RECEIPT,
-        state,
-        attachFemaleSelector,
-        requestRuntimeRelease,
-        getReceipt: () => ({ ...state, receiptText: composeReceipt() }),
-        getReceiptText: composeReceipt,
-        maleHtmlShell: true,
-        femaleJsSelector: FEMALE_SELECTOR_FILE,
-        autoReleaseRuntime: false,
-        generatedImage: false,
-        graphicBox: false,
-        webGL: false,
-        visualPassClaimed: false
-      };
-
-      if (doc.readyState === "loading") {
-        doc.addEventListener("DOMContentLoaded", bootHtmlShell, { once: true });
-      } else {
-        bootHtmlShell();
-      }
-    })();
-  </script>
 </body>
 </html>

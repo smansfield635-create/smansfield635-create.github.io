@@ -1,28 +1,28 @@
 // /showroom/globe/hearth/index.js
-// HEARTH_INDEX_JS_HTML_SHELL_ANCHOR_AUDIT_RUNTIME_HOST_TNT_v4
+// HEARTH_INDEX_JS_TWO_FILE_NEWS_FIBONACCI_CARRIER_HOST_ALIGNMENT_TNT_v5
 // Full-file replacement.
-// Index JS / HTML-shell anchor auditor / control binder / runtime host / Canvas pre-release carrier requester.
+// Index JS / HTML-shell anchor auditor / control binder / runtime host / carrier-host admissibility publisher.
 // Purpose:
-// - Preserve the split: /showroom/globe/hearth/index.html owns the visible shell.
+// - Preserve /showroom/globe/hearth/index.html as the visible shell owner.
 // - Keep this file from generating the visible route shell, cockpit, loading bar, receipt panel, portal, or CSS.
-// - Audit the existing HTML shell anchors and hold cleanly when the HTML shell is missing.
+// - Audit existing HTML shell anchors and hold cleanly when the shell is missing.
 // - Bind existing controls only when the HTML anchors exist.
 // - Release runtime scripts without reintroducing WAITING_MATCHED_MALE_HTML_SHELL contradiction.
-// - Load Canvas parent early enough to request pre-release structural carrier proof before Macro West admissibility.
-// - Provide a stable carrier-host packet to /assets/hearth/hearth.canvas.js.
-// - Keep /showroom/globe/hearth/hearth.js as downstream route conductor / macro-cycle coordination consumer.
-// - Keep Canvas at F13 evidence only.
+// - Publish carrierHostAdmissibilityReady for /showroom/globe/hearth/hearth.js.
+// - Separate carrier-host admissibility from Canvas structural proof.
+// - Keep Canvas parent / Canvas children as downstream F13 evidence authorities.
+// - Keep /showroom/globe/hearth/hearth.js as route conductor / macro-cycle coordination consumer.
 // - Keep F21 North-only.
 // - Never claim ready text, F21 latch, final visual pass, generated image, GraphicBox, or WebGL.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_INDEX_JS_HTML_SHELL_ANCHOR_AUDIT_RUNTIME_HOST_TNT_v4";
-  const RECEIPT = "HEARTH_INDEX_JS_HTML_SHELL_ANCHOR_AUDIT_RUNTIME_HOST_RECEIPT_v4";
-  const PREVIOUS_CONTRACT = "HEARTH_MALE_ROUTE_SHELL_PRE_RELEASE_CARRIER_RUNTIME_HOST_TNT_v3";
-  const BASELINE_CONTRACT = "HEARTH_MALE_ROUTE_SHELL_PRE_RELEASE_CARRIER_RUNTIME_HOST_TNT_v3";
-  const VERSION = "2026-06-01.hearth-index-js-html-shell-anchor-audit-runtime-host-v4";
+  const CONTRACT = "HEARTH_INDEX_JS_TWO_FILE_NEWS_FIBONACCI_CARRIER_HOST_ALIGNMENT_TNT_v5";
+  const RECEIPT = "HEARTH_INDEX_JS_TWO_FILE_NEWS_FIBONACCI_CARRIER_HOST_ALIGNMENT_RECEIPT_v5";
+  const PREVIOUS_CONTRACT = "HEARTH_INDEX_JS_HTML_SHELL_ANCHOR_AUDIT_RUNTIME_HOST_TNT_v4";
+  const BASELINE_CONTRACT = "HEARTH_INDEX_JS_HTML_SHELL_ANCHOR_AUDIT_RUNTIME_HOST_TNT_v4";
+  const VERSION = "2026-06-01.hearth-index-js-two-file-news-fibonacci-carrier-host-alignment-v5";
 
   const ROUTE = "/showroom/globe/hearth/";
   const FILE = "/showroom/globe/hearth/index.js";
@@ -95,21 +95,23 @@
         "HEARTH_CANVAS_AUTHORITY",
         "HEARTH_CANVAS_EVIDENCE",
         "HEARTH_CANVAS_NORTH",
-        "HEARTH_CANVAS_PRE_RELEASE_STRUCTURAL_CARRIER",
+        "HEARTH_CANVAS_PARENT",
+        "HEARTH_CANVAS_PARENT_EAST_V5_SYNCHRONOUS_HELD_PACKET_CONSUMPTION",
+        "HEARTH_CANVAS_PARENT_PRE_RELEASE_STRUCTURAL_CARRIER_THEN_WEST_RELEASE_TO_EAST",
         "HEARTH_CANVAS_PARENT_GOVERNED_F13_EVIDENCE_RECEIVER",
         "HEARTH_CANVAS_PARENT_CHILD_RECONCILIATION_F13_EVIDENCE_RECEIVER",
-        "HEARTH_CANVAS_PARENT_PRE_RELEASE_STRUCTURAL_CARRIER_THEN_WEST_RELEASE_TO_EAST",
         "HEARTH.canvas",
-        "HEARTH.canvasAuthority",
+        "HEARTH.canvasParent",
         "HEARTH.canvasEvidence",
         "HEARTH.canvasNorth",
-        "HEARTH.canvasPreReleaseStructuralCarrier",
+        "HEARTH.canvasParentEastV5SynchronousHeldPacketConsumption",
+        "HEARTH.canvasParentPreReleaseStructuralCarrierThenWestReleaseToEast",
         "HEARTH.canvasParentGovernedF13EvidenceReceiver",
         "HEARTH.canvasParentChildReconciliationF13EvidenceReceiver",
-        "HEARTH.canvasParentPreReleaseStructuralCarrierThenWestReleaseToEast",
+        "DEXTER_LAB.hearthCanvas",
+        "DEXTER_LAB.hearthCanvasParent",
         "DEXTER_LAB.hearthCanvasEvidence",
-        "DEXTER_LAB.hearthCanvasPreReleaseStructuralCarrier",
-        "DEXTER_LAB.hearthCanvasParentPreReleaseStructuralCarrierThenWestReleaseToEast"
+        "DEXTER_LAB.hearthCanvasParentEastV5SynchronousHeldPacketConsumption"
       ]
     },
     {
@@ -186,12 +188,15 @@
         "HEARTH_SOUTH_ROUTE_CONDUCTOR",
         "HEARTH_ROUTE_CONDUCTOR_PRIMARY_GATE",
         "HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT",
+        "HEARTH_ROUTE_CONDUCTOR_MALE_PAIR_INDEX_SELECTOR_INTEGRATION_STRICT_F13",
         "HEARTH.routeConductor",
         "HEARTH.southRouteConductor",
         "HEARTH.routeConductorPrimaryGate",
         "HEARTH.routeConductorStrictF13DownstreamAlignment",
+        "HEARTH.routeConductorMalePairIndexSelectorIntegrationStrictF13",
         "DEXTER_LAB.hearthRouteConductor",
-        "DEXTER_LAB.hearthSouthRouteConductor"
+        "DEXTER_LAB.hearthSouthRouteConductor",
+        "DEXTER_LAB.hearthRouteConductorPrimaryGate"
       ]
     }
   ]);
@@ -206,8 +211,8 @@
     htmlFile: HTML_FILE,
     route: ROUTE,
 
-    role: "index-js-html-shell-anchor-audit-runtime-host",
-    pairRole: "female-runtime-host-for-male-html-shell",
+    role: "index-js-two-file-news-fibonacci-carrier-host-alignment",
+    pairRole: "female-runtime-host-for-male-route-conductor",
     pairedRouteConductorFile: PAIRED_ROUTE_CONDUCTOR_FILE,
 
     htmlOwnsVisibleShell: true,
@@ -222,6 +227,8 @@
     ownsControlBinding: true,
     ownsRuntimeScriptRelease: true,
     ownsCanvasCarrierHostPacket: true,
+    ownsCarrierHostAdmissibility: true,
+    ownsRouteConductorHandoff: true,
 
     ownsMacroWestTruth: false,
     ownsCanvasStructuralCarrierTruth: false,
@@ -256,6 +263,17 @@
     carrierHostReady: false,
     carrierHostPacketReady: false,
 
+    carrierHostAdmissibilityActive: true,
+    carrierHostAdmissibilityReady: false,
+    carrierHostAdmissibilityPacketReady: false,
+    carrierHostAdmissibilityPacketPublished: false,
+    carrierHostAdmissibilityReceiptObservedByRoute: false,
+    carrierHostAdmissibilityHoldReason: "WAITING_HTML_MALE_ROUTE_SHELL_ANCHORS",
+    handoffToRouteConductor: false,
+    indexMacroWestCandidateReady: false,
+    routeConductorHandoffPacketReady: false,
+    lastCarrierHostAdmissibilityPacket: null,
+
     canvasParentObserved: false,
     canvasParentApiReady: false,
     canvasParentLoadedBeforeWest: false,
@@ -281,7 +299,14 @@
     currentRuntimeFile: "",
 
     newsAlignmentActive: true,
+    newsAlignmentProtocolActive: true,
     fibonacciSynchronizationActive: true,
+    fibonacciSynchronizationMetricActive: true,
+    fibonacciSynchronizationScore: 0,
+    fibonacciSynchronizationSatisfied: 0,
+    fibonacciSynchronizationExpected: 8,
+    fibonacciSynchronizationPassed: false,
+    fibonacciSynchronizationDegraded: false,
     macroCycle1: MACRO_CYCLE_1,
     macroCycle2: MACRO_CYCLE_2,
     activeNews: "EAST",
@@ -384,6 +409,7 @@
 
   function clonePlain(value) {
     if (!isObject(value) && !Array.isArray(value)) return value;
+
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
@@ -393,6 +419,7 @@
 
   function qs(selector) {
     if (!doc) return null;
+
     try {
       return doc.querySelector(selector);
     } catch (_error) {
@@ -433,11 +460,31 @@
       }
     }
 
+    if (isFunction(authority.getReceiptLight)) {
+      try {
+        const receipt = authority.getReceiptLight();
+        return isObject(receipt) ? receipt : null;
+      } catch (_error) {
+        return null;
+      }
+    }
+
     if (isObject(authority.receiptPacket)) return authority.receiptPacket;
     if (isObject(authority.receipt)) return authority.receipt;
     if (authority.contract || authority.receipt || authority.version) return authority;
 
     return null;
+  }
+
+  function datasetValue(key, fallback = "") {
+    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return fallback;
+    const value = doc.documentElement.dataset[key];
+    return value === undefined || value === null || value === "" ? fallback : value;
+  }
+
+  function setDataset(key, value) {
+    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
+    doc.documentElement.dataset[key] = value === undefined || value === null ? "" : String(value);
   }
 
   function scriptPresent(file) {
@@ -469,6 +516,10 @@
         root.setTimeout(callback, 72);
       }
     });
+  }
+
+  function line(key, value) {
+    return `${key}=${value === undefined || value === null ? "" : String(value)}`;
   }
 
   function refreshRefs() {
@@ -533,6 +584,7 @@
     state.portalPresent = Boolean(refs.portal);
     state.carrierHostReady = Boolean(refs.mount);
     state.carrierHostPacketReady = Boolean(refs.mount);
+    state.f13CarrierHostAvailable = Boolean(refs.mount);
 
     if (!detected) {
       state.shellHoldReason = "WAITING_HTML_MALE_ROUTE_SHELL";
@@ -548,12 +600,14 @@
       refs.mount.dataset.hearthIndexJsAnchorAudit = "true";
       refs.mount.dataset.hearthIndexJsContract = CONTRACT;
       refs.mount.dataset.hearthCanvasCarrierHostReady = String(state.carrierHostReady);
+      refs.mount.dataset.hearthCarrierHostPacketReady = String(state.carrierHostPacketReady);
       refs.mount.dataset.generatedImage = "false";
       refs.mount.dataset.graphicBox = "false";
       refs.mount.dataset.webgl = "false";
       refs.mount.dataset.visualPassClaimed = "false";
     }
 
+    updateCarrierHostAdmissibility(`shell-audit:${reason}`);
     updateDataset();
 
     return {
@@ -579,7 +633,7 @@
     if (state.runtimeReleaseAuthorized) {
       if (!state.runtimeReleaseStarted) {
         state.runtimeReleaseHeldReason = "NONE_RUNTIME_RELEASE_AUTHORIZED";
-        state.firstFailedCoordinate = "WAITING_RUNTIME_RELEASE_START";
+        state.firstFailedCoordinate = state.shellControlsBound ? "WAITING_RUNTIME_RELEASE_START" : "WAITING_HTML_SHELL_CONTROLS_BOUND";
         state.recommendedNextFile = FILE;
         state.recommendedNextRenewalTarget = FILE;
         state.postgameStatus = "HTML_SHELL_ACCEPTED_RUNTIME_RELEASE_AUTHORIZED";
@@ -605,6 +659,7 @@
       state.activeProgress = shell.dynamicAnchorsPass ? 22 : 12;
     }
 
+    updateCarrierHostAdmissibility("apply-release-law");
     updateDataset();
     return state.runtimeReleaseAuthorized;
   }
@@ -635,13 +690,16 @@
       ownsControlBinding: true,
       ownsRuntimeScriptRelease: true,
       ownsCanvasCarrierHostPacket: true,
+      ownsCarrierHostAdmissibility: true,
 
       mountSelector: "#hearthCanvasMount",
       mountPresent: Boolean(refs.mount),
       cockpitPresent: Boolean(refs.cockpit),
       statusNodePresent: Boolean(refs.status),
+      receiptPanelPresent: Boolean(refs.receiptPanel),
       routeShellAccepted: state.shellAccepted,
       dynamicAnchorsPass: state.dynamicAnchorsPass,
+      shellControlsBound: state.shellControlsBound,
       carrierHostReady: Boolean(refs.mount),
       carrierHostPacketReady: Boolean(refs.mount),
 
@@ -676,6 +734,246 @@
     };
   }
 
+  function computeCarrierHostAdmissibility() {
+    const ready = Boolean(
+      state.shellAccepted &&
+      state.dynamicAnchorsPass &&
+      state.mountPresent &&
+      state.carrierHostReady &&
+      state.carrierHostPacketReady &&
+      state.shellControlsBound &&
+      state.runtimeReleaseAuthorized &&
+      state.runtimeReleaseComplete
+    );
+
+    const holdReason = ready
+      ? "NONE_CARRIER_HOST_ADMISSIBILITY_READY"
+      : !state.shellAccepted
+        ? state.shellHoldReason || "WAITING_HTML_MALE_ROUTE_SHELL_ANCHORS"
+        : !state.dynamicAnchorsPass
+          ? "WAITING_DYNAMIC_HTML_ANCHORS"
+          : !state.mountPresent || !state.carrierHostReady || !state.carrierHostPacketReady
+            ? "WAITING_CARRIER_HOST_PACKET"
+            : !state.shellControlsBound
+              ? "WAITING_HTML_SHELL_CONTROLS_BOUND"
+              : !state.runtimeReleaseAuthorized
+                ? "WAITING_RUNTIME_RELEASE_AUTHORIZATION"
+                : !state.runtimeReleaseComplete
+                  ? "WAITING_RUNTIME_RELEASE_COMPLETION"
+                  : "WAITING_CARRIER_HOST_ADMISSIBILITY";
+
+    return { ready, holdReason };
+  }
+
+  function composeCarrierHostAdmissibilityPacket() {
+    const computed = computeCarrierHostAdmissibility();
+    const carrierPacket = composeCarrierHostPacket();
+
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      packetType: "INDEX_JS_TWO_FILE_CARRIER_HOST_ADMISSIBILITY_PACKET",
+      sourceFile: FILE,
+      targetFile: PAIRED_ROUTE_CONDUCTOR_FILE,
+      destinationFile: PAIRED_ROUTE_CONDUCTOR_FILE,
+      route: ROUTE,
+
+      carrierHostAdmissibilityActive: true,
+      carrierHostAdmissibilityReady: computed.ready,
+      carrierHostAdmissibilityPacketReady: computed.ready,
+      carrierHostAdmissibilityHoldReason: computed.holdReason,
+      handoffToRouteConductor: computed.ready,
+      indexMacroWestCandidateReady: computed.ready,
+      routeConductorHandoffPacketReady: computed.ready,
+
+      shellDetected: state.shellDetected,
+      shellSelected: state.shellSelected,
+      shellAccepted: state.shellAccepted,
+      shellSelectionMode: state.shellSelectionMode,
+      dynamicAnchorsPass: state.dynamicAnchorsPass,
+      missingAnchors: state.missingAnchors.slice(),
+      shellControlsBound: state.shellControlsBound,
+
+      mountPresent: state.mountPresent,
+      cockpitPresent: state.cockpitPresent,
+      statusNodePresent: state.statusNodePresent,
+      receiptPanelPresent: state.receiptPanelPresent,
+      portalPresent: state.portalPresent,
+      carrierHostReady: state.carrierHostReady,
+      carrierHostPacketReady: state.carrierHostPacketReady,
+      carrierHostPacket: carrierPacket,
+
+      runtimeReleaseRequestable: state.runtimeReleaseRequestable,
+      runtimeReleaseRequested: state.runtimeReleaseRequested,
+      runtimeReleaseAuthorized: state.runtimeReleaseAuthorized,
+      runtimeReleaseStarted: state.runtimeReleaseStarted,
+      runtimeReleaseComplete: state.runtimeReleaseComplete,
+      runtimeHeld: state.runtimeHeld,
+      runtimeReleaseHeldReason: state.runtimeReleaseHeldReason,
+      runtimeLoaded: state.runtimeLoaded.slice(),
+      runtimeHeldFiles: state.runtimeHeldFiles.slice(),
+      runtimeErrors: clonePlain(state.runtimeErrors),
+
+      newsAlignmentActive: true,
+      newsAlignmentProtocolActive: true,
+      fibonacciSynchronizationActive: true,
+      fibonacciSynchronizationMetricActive: true,
+      activeNews: state.activeNews,
+      activeFibonacci: state.activeFibonacci,
+      activeFibonacciRank: state.activeFibonacciRank,
+      activeStageId: state.activeStageId,
+      activeGearId: state.activeGearId,
+      oneActiveGearAtATime: true,
+
+      f13CarrierHostAvailable: state.f13CarrierHostAvailable,
+      f13CanvasDelegated: true,
+      f13CanvasEvidenceOwnedByCanvas: true,
+      canvasParentObserved: state.canvasParentObserved,
+      canvasParentApiReady: state.canvasParentApiReady,
+      canvasPreReleaseCarrierRequested: state.canvasPreReleaseCarrierRequested,
+      canvasPreReleaseCarrierObserved: state.canvasPreReleaseCarrierObserved,
+      canvasPreReleaseCarrierAccepted: state.canvasPreReleaseCarrierAccepted,
+      canvasPreReleaseCarrierSafeForWest: state.canvasPreReleaseCarrierSafeForWest,
+      canvasCarrierHeldReason: state.canvasCarrierHeldReason,
+
+      canvasReleaseAuthorized: false,
+      canvasParentCarrierSafe: false,
+      f13CanvasEvidenceComplete: false,
+      f21EligibleForNorth: false,
+      f21SubmittedToNorth: false,
+      f21ClaimedByIndex: false,
+      readyTextAllowed: false,
+      readyTextClaimedByIndex: false,
+
+      ownsCanvasStructuralCarrierTruth: false,
+      ownsCanvasReleaseTruth: false,
+      ownsCanvasDrawing: false,
+      ownsMaterialTruth: false,
+      ownsHydrologyTruth: false,
+      ownsElevationTruth: false,
+      ownsPlanetTruth: false,
+      ownsF21: false,
+      ownsReadyText: false,
+      ownsFinalVisualPassClaim: false,
+
+      firstFailedCoordinate: computed.ready ? "NONE_CARRIER_HOST_ADMISSIBILITY_READY" : computed.holdReason,
+      recommendedNextFile: computed.ready ? PAIRED_ROUTE_CONDUCTOR_FILE : state.recommendedNextFile,
+      recommendedNextRenewalTarget: computed.ready ? PAIRED_ROUTE_CONDUCTOR_FILE : state.recommendedNextRenewalTarget,
+      postgameStatus: computed.ready ? "CARRIER_HOST_ADMISSIBILITY_READY_FOR_ROUTE_CONDUCTOR" : computed.holdReason,
+
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false,
+      createdAt: nowIso()
+    };
+  }
+
+  function computeFibonacciSynchronization() {
+    const gates = [
+      Boolean(state.newsAlignmentActive),
+      Boolean(state.activeFibonacci),
+      Boolean(state.shellDetected),
+      Boolean(state.shellAccepted),
+      Boolean(state.shellControlsBound),
+      Boolean(state.runtimeReleaseAuthorized),
+      Boolean(state.runtimeReleaseComplete),
+      Boolean(state.carrierHostAdmissibilityReady),
+      Boolean(!state.f21ClaimedByIndex && !state.readyTextAllowed && !state.visualPassClaimed)
+    ];
+
+    const expected = gates.length;
+    const satisfied = gates.filter(Boolean).length;
+    const score = expected ? Math.round((satisfied / expected) * 100) : 0;
+
+    state.fibonacciSynchronizationExpected = expected;
+    state.fibonacciSynchronizationSatisfied = satisfied;
+    state.fibonacciSynchronizationScore = score;
+    state.fibonacciSynchronizationPassed = satisfied === expected;
+    state.fibonacciSynchronizationDegraded = satisfied >= Math.max(1, expected - 2) && satisfied < expected;
+
+    return {
+      expected,
+      satisfied,
+      score,
+      passed: state.fibonacciSynchronizationPassed,
+      degraded: state.fibonacciSynchronizationDegraded
+    };
+  }
+
+  function updateCarrierHostAdmissibility(reason = "carrier-host-admissibility-refresh") {
+    const computed = computeCarrierHostAdmissibility();
+
+    state.carrierHostAdmissibilityReady = computed.ready;
+    state.carrierHostAdmissibilityPacketReady = computed.ready;
+    state.carrierHostAdmissibilityHoldReason = computed.holdReason;
+    state.handoffToRouteConductor = computed.ready;
+    state.indexMacroWestCandidateReady = computed.ready;
+    state.routeConductorHandoffPacketReady = computed.ready;
+
+    if (computed.ready) {
+      state.firstFailedCoordinate = "NONE_CARRIER_HOST_ADMISSIBILITY_READY";
+      state.recommendedNextFile = PAIRED_ROUTE_CONDUCTOR_FILE;
+      state.recommendedNextRenewalTarget = PAIRED_ROUTE_CONDUCTOR_FILE;
+      state.postgameStatus = "CARRIER_HOST_ADMISSIBILITY_READY_FOR_ROUTE_CONDUCTOR";
+      state.activeNews = "SOUTH";
+      state.activeFibonacci = "F8";
+      state.activeFibonacciRank = 8;
+      state.activeStageId = "F8_CARRIER_HOST_ADMISSIBILITY_READY";
+      state.activeGearId = "hearth-index-js-carrier-host-admissibility-f8";
+      state.activeProgress = Math.max(state.activeProgress, 92);
+    } else if (state.shellAccepted && state.runtimeReleaseStarted && !state.runtimeReleaseComplete) {
+      state.firstFailedCoordinate = "WAITING_RUNTIME_RELEASE_COMPLETION";
+      state.recommendedNextFile = FILE;
+      state.recommendedNextRenewalTarget = FILE;
+      state.postgameStatus = "RUNTIME_RELEASE_IN_PROGRESS";
+    } else if (state.shellAccepted && !state.shellControlsBound) {
+      state.firstFailedCoordinate = "WAITING_HTML_SHELL_CONTROLS_BOUND";
+      state.recommendedNextFile = HTML_FILE;
+      state.recommendedNextRenewalTarget = HTML_FILE;
+      state.postgameStatus = "WAITING_HTML_SHELL_CONTROLS_BOUND";
+    } else if (!state.shellAccepted) {
+      state.firstFailedCoordinate = state.shellHoldReason || "WAITING_HTML_MALE_ROUTE_SHELL_ANCHORS";
+      state.recommendedNextFile = HTML_FILE;
+      state.recommendedNextRenewalTarget = HTML_FILE;
+      state.postgameStatus = state.firstFailedCoordinate;
+    }
+
+    state.lastCarrierHostAdmissibilityPacket = composeCarrierHostAdmissibilityPacket();
+    computeFibonacciSynchronization();
+    state.updatedAt = nowIso();
+
+    publishCarrierHostAdmissibility(reason);
+    updateDataset();
+
+    return state.lastCarrierHostAdmissibilityPacket;
+  }
+
+  function publishCarrierHostAdmissibility(_reason = "publish-carrier-host-admissibility") {
+    root.HEARTH = root.HEARTH || {};
+    root.DEXTER_LAB = root.DEXTER_LAB || {};
+
+    const packet = state.lastCarrierHostAdmissibilityPacket || composeCarrierHostAdmissibilityPacket();
+
+    root.HEARTH.carrierHostAdmissibility = packet;
+    root.HEARTH.indexCarrierHostAdmissibility = packet;
+    root.HEARTH.indexCarrierHostAdmissibilityReceipt = packet;
+    root.HEARTH.carrierHostAdmissibilityReady = packet.carrierHostAdmissibilityReady;
+    root.HEARTH.indexMacroWestCandidateReady = packet.indexMacroWestCandidateReady;
+    root.HEARTH.handoffToRouteConductor = packet.handoffToRouteConductor;
+
+    root.DEXTER_LAB.hearthCarrierHostAdmissibility = packet;
+    root.DEXTER_LAB.hearthIndexCarrierHostAdmissibility = packet;
+
+    root.HEARTH_INDEX_CARRIER_HOST_ADMISSIBILITY = packet;
+    root.HEARTH_INDEX_CARRIER_HOST_ADMISSIBILITY_RECEIPT = packet;
+    root.HEARTH_INDEX_CARRIER_HOST_ADMISSIBILITY_READY = packet.carrierHostAdmissibilityReady;
+    root.HEARTH_INDEX_HANDOFF_TO_ROUTE_CONDUCTOR = packet.handoffToRouteConductor;
+    root.HEARTH_INDEX_MACRO_WEST_CANDIDATE_READY = packet.indexMacroWestCandidateReady;
+
+    state.carrierHostAdmissibilityPacketPublished = true;
+  }
+
   function findCanvasParentApi() {
     const canvasDef = RUNTIME_FILES.find((item) => item.key === "canvasParent");
     return canvasDef ? firstGlobal(canvasDef.globals) : null;
@@ -685,7 +983,8 @@
     const receipt = isObject(result) && (
       result.contract ||
       result.receipt ||
-      result.structuralCarrierSafeForCanvasRelease !== undefined
+      result.structuralCarrierSafeForCanvasRelease !== undefined ||
+      result.preReleaseStructuralCarrierSafe !== undefined
     )
       ? result
       : readReceipt(api) || {};
@@ -711,7 +1010,7 @@
       observed,
       safe,
       heldReason: safe
-        ? "NONE_CANVAS_PRE_RELEASE_CARRIER_SAFE_FOR_WEST"
+        ? "NONE_CANVAS_PRE_RELEASE_CARRIER_SAFE_FOR_WEST_OBSERVED_ONLY"
         : safeString(
             receipt.firstFailedCoordinate ||
             receipt.canvasCarrierHandoffError ||
@@ -732,6 +1031,7 @@
       state.canvasPreReleaseCarrierSafeForWest = false;
       state.canvasCarrierHeldReason = state.shellHoldReason || "WAITING_HTML_MALE_ROUTE_SHELL_ANCHORS";
       state.f13CarrierHostAvailable = Boolean(refs.mount);
+      updateCarrierHostAdmissibility("canvas-pre-release-held-shell");
       updateDataset();
       return false;
     }
@@ -743,6 +1043,8 @@
       isFunction(api.ensurePreReleaseStructuralCarrier) ||
       isFunction(api.ensureCarrier) ||
       isFunction(api.mount) ||
+      isFunction(api.boot) ||
+      isFunction(api.bootCooperative) ||
       isFunction(api.getReceipt)
     ));
 
@@ -751,8 +1053,9 @@
       state.canvasPreReleaseCarrierObserved = false;
       state.canvasPreReleaseCarrierAccepted = false;
       state.canvasPreReleaseCarrierSafeForWest = false;
-      state.canvasCarrierHeldReason = "WAITING_CANVAS_PARENT_API";
+      state.canvasCarrierHeldReason = "WAITING_CANVAS_PARENT_API_OBSERVED_ONLY";
       state.f13CarrierHostAvailable = Boolean(refs.mount);
+      updateCarrierHostAdmissibility("canvas-parent-api-not-ready-observed-only");
       updateDataset();
       return false;
     }
@@ -772,7 +1075,12 @@
         carrierHostPacket: packet,
         sourceFile: FILE,
         htmlFile: HTML_FILE,
-        requestedBy: CONTRACT
+        requestedBy: CONTRACT,
+        releaseAuthorized: false,
+        canvasReleaseAuthorized: false,
+        westReleaseObserved: false,
+        childWorkAuthorized: false,
+        visualPassClaimed: false
       };
 
       if (isFunction(api.ensurePreReleaseStructuralCarrier)) {
@@ -781,6 +1089,8 @@
         result = api.ensureCarrier(input);
       } else if (isFunction(api.mount)) {
         result = api.mount(input);
+      } else if (isFunction(api.getReceipt)) {
+        result = api.getReceipt();
       }
     } catch (error) {
       state.runtimeErrors.push({
@@ -791,7 +1101,8 @@
         at: nowIso()
       });
 
-      state.canvasCarrierHeldReason = "CANVAS_PARENT_PRE_RELEASE_CARRIER_REQUEST_FAILED";
+      state.canvasCarrierHeldReason = "CANVAS_PARENT_PRE_RELEASE_CARRIER_REQUEST_FAILED_OBSERVED_ONLY";
+      updateCarrierHostAdmissibility("canvas-pre-release-request-error-observed-only");
       updateDataset();
       return false;
     }
@@ -806,14 +1117,7 @@
     state.canvasCarrierHeldReason = normalized.heldReason;
     state.f13CarrierHostAvailable = Boolean(refs.mount);
 
-    if (normalized.safe) {
-      state.firstFailedCoordinate = state.runtimeReleaseComplete
-        ? "WAITING_DOWNSTREAM_MATERIAL_OR_CANVAS_F13_EVIDENCE"
-        : "WAITING_RUNTIME_RELEASE_COMPLETION";
-      state.recommendedNextFile = state.runtimeReleaseComplete ? PAIRED_ROUTE_CONDUCTOR_FILE : FILE;
-      state.recommendedNextRenewalTarget = state.recommendedNextFile;
-    }
-
+    updateCarrierHostAdmissibility("canvas-pre-release-observed-only");
     updateDataset();
     return normalized.safe;
   }
@@ -823,6 +1127,7 @@
 
     if (!state.shellAccepted) {
       state.shellControlsBound = false;
+      updateCarrierHostAdmissibility("bind-controls-shell-not-accepted");
       updateDataset();
       return false;
     }
@@ -922,8 +1227,13 @@
       state.activeStageId = "F3_HTML_SHELL_CONTROLS_BOUND";
       state.activeGearId = "hearth-index-js-controls-f3";
       state.activeProgress = Math.max(state.activeProgress, 28);
+      state.firstFailedCoordinate = state.runtimeReleaseAuthorized ? "WAITING_RUNTIME_RELEASE_START" : "WAITING_RUNTIME_RELEASE_AUTHORIZATION";
+      state.recommendedNextFile = FILE;
+      state.recommendedNextRenewalTarget = FILE;
+      state.postgameStatus = "HTML_SHELL_CONTROLS_BOUND";
     }
 
+    updateCarrierHostAdmissibility("bind-controls-complete");
     updateDataset();
     return state.shellControlsBound;
   }
@@ -984,6 +1294,7 @@
       state.currentRuntimeFile = file;
     }
 
+    updateCarrierHostAdmissibility("runtime-hold");
     updateDataset();
   }
 
@@ -1111,6 +1422,7 @@
     state.activeProgress = 44;
     state.postgameStatus = "RUNTIME_RELEASE_STARTED";
     state.firstFailedCoordinate = "RUNTIME_RELEASE_IN_PROGRESS";
+    updateCarrierHostAdmissibility("runtime-release-started");
     schedulePublish("runtime-release-started");
 
     for (let i = 0; i < RUNTIME_FILES.length; i += 1) {
@@ -1125,6 +1437,7 @@
       state.activeGearId = `hearth-index-js-${def.key}`;
       state.activeProgress = clamp(46 + i * 7, 46, 88);
       state.postgameStatus = `LOADING_${def.key.toUpperCase()}`;
+      updateCarrierHostAdmissibility(`loading-${def.key}`);
       schedulePublish(`loading-${def.key}`);
 
       await new Promise((resolve) => afterIdle(resolve, 1000));
@@ -1160,18 +1473,19 @@
 
         if (def.key === "canvasParent") {
           state.canvasParentLoadedBeforeWest = !state.runtimeLoaded.includes(WEST_RUNTIME_FILE);
-          requestCanvasPreReleaseCarrier("canvas-parent-loaded-before-west-admissibility");
+          requestCanvasPreReleaseCarrier("canvas-parent-loaded-before-west-admissibility-observed-only");
         }
 
         auditShellAnchors(`runtime-loaded-${def.key}`);
         bindControls();
+        updateCarrierHostAdmissibility(`runtime-loaded-${def.key}`);
         schedulePublish(`runtime-loaded-${def.key}`);
       }
 
       await new Promise((resolve) => root.setTimeout(resolve, 80));
     }
 
-    requestCanvasPreReleaseCarrier("runtime-queue-settled-carrier-proof-refresh");
+    requestCanvasPreReleaseCarrier("runtime-queue-settled-carrier-proof-refresh-observed-only");
 
     if (state.runtimeErrors.some((item) => item.required === true)) {
       state.runtimeReleaseComplete = false;
@@ -1183,6 +1497,9 @@
       state.activeGearId = "hearth-index-js-runtime-held-f8";
       state.activeProgress = 58;
       state.postgameStatus = "RUNTIME_RELEASE_HELD_REQUIRED_FILE";
+      state.firstFailedCoordinate = "RUNTIME_REQUIRED_FILE_LOAD_FAILED";
+      state.recommendedNextFile = state.currentRuntimeFile || NORTH_RUNTIME_FILE;
+      state.recommendedNextRenewalTarget = state.recommendedNextFile;
     } else {
       state.runtimeReleaseComplete = true;
       state.runtimeHeld = state.runtimeErrors.length > 0;
@@ -1190,31 +1507,21 @@
         ? "RUNTIME_RELEASE_COMPLETE_WITH_OPTIONAL_HOLDS"
         : "NONE_RUNTIME_RELEASE_COMPLETE";
 
-      state.activeNews = "CANVAS";
-      state.activeFibonacci = "F13";
-      state.activeFibonacciRank = 13;
-      state.activeStageId = state.canvasPreReleaseCarrierSafeForWest
-        ? "F13_CANVAS_PRE_RELEASE_CARRIER_SAFE_FOR_WEST"
-        : "F13_CANVAS_PRE_RELEASE_CARRIER_REQUESTED";
-      state.activeGearId = "hearth-index-js-canvas-carrier-host-f13";
-      state.activeProgress = state.canvasPreReleaseCarrierSafeForWest ? 88 : 78;
-
-      state.firstFailedCoordinate = state.canvasPreReleaseCarrierSafeForWest
-        ? "WAITING_DOWNSTREAM_CANVAS_OR_MATERIAL_EXPRESSION"
-        : state.canvasCarrierHeldReason;
-
-      state.recommendedNextFile = state.canvasPreReleaseCarrierSafeForWest
-        ? PAIRED_ROUTE_CONDUCTOR_FILE
-        : CANVAS_PARENT_FILE;
-
-      state.recommendedNextRenewalTarget = state.recommendedNextFile;
-      state.postgameStatus = state.canvasPreReleaseCarrierSafeForWest
-        ? "RUNTIME_RELEASE_COMPLETE_CANVAS_CARRIER_SAFE_FOR_WEST"
-        : "RUNTIME_RELEASE_COMPLETE_WAITING_CANVAS_PRE_RELEASE_CARRIER";
+      state.activeNews = "SOUTH";
+      state.activeFibonacci = "F8";
+      state.activeFibonacciRank = 8;
+      state.activeStageId = "F8_CARRIER_HOST_ADMISSIBILITY_READY";
+      state.activeGearId = "hearth-index-js-carrier-host-admissibility-f8";
+      state.activeProgress = 92;
+      state.firstFailedCoordinate = "NONE_CARRIER_HOST_ADMISSIBILITY_READY";
+      state.recommendedNextFile = PAIRED_ROUTE_CONDUCTOR_FILE;
+      state.recommendedNextRenewalTarget = PAIRED_ROUTE_CONDUCTOR_FILE;
+      state.postgameStatus = "CARRIER_HOST_ADMISSIBILITY_READY_FOR_ROUTE_CONDUCTOR";
     }
 
     state.settled = true;
     state.booted = true;
+    updateCarrierHostAdmissibility("runtime-release-settled");
     schedulePublish("runtime-release-settled");
 
     return getReceipt();
@@ -1228,9 +1535,10 @@
     if (refs.heartbeatText) {
       refs.heartbeatText.textContent = message || [
         `htmlShell=${state.shellAccepted}`,
-        `carrierHost=${state.carrierHostReady}`,
-        `canvasPreRelease=${state.canvasPreReleaseCarrierSafeForWest}`,
+        `controls=${state.shellControlsBound}`,
         `runtime=${state.runtimeReleaseComplete}`,
+        `carrierHost=${state.carrierHostReady}`,
+        `admissibility=${state.carrierHostAdmissibilityReady}`,
         "f21=north-only"
       ].join(" · ");
     }
@@ -1244,6 +1552,8 @@
       refs.cockpit.dataset.hearthIndexJsContract = CONTRACT;
       refs.cockpit.dataset.hearthShellAccepted = String(state.shellAccepted);
       refs.cockpit.dataset.hearthRuntimeReleaseComplete = String(state.runtimeReleaseComplete);
+      refs.cockpit.dataset.hearthCarrierHostAdmissibilityReady = String(state.carrierHostAdmissibilityReady);
+      refs.cockpit.dataset.hearthIndexHandoffToRouteConductor = String(state.handoffToRouteConductor);
       refs.cockpit.dataset.hearthCanvasPreReleaseCarrierSafeForWest = String(state.canvasPreReleaseCarrierSafeForWest);
       refs.cockpit.dataset.generatedImage = "false";
       refs.cockpit.dataset.graphicBox = "false";
@@ -1263,108 +1573,129 @@
   function updateDataset() {
     if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
 
-    const dataset = doc.documentElement.dataset;
+    setDataset("hearthIndexJsLoaded", "true");
+    setDataset("hearthIndexJsContract", CONTRACT);
+    setDataset("hearthIndexJsReceipt", RECEIPT);
+    setDataset("hearthIndexJsPreviousContract", PREVIOUS_CONTRACT);
+    setDataset("hearthIndexJsBaselineContract", BASELINE_CONTRACT);
+    setDataset("hearthIndexJsVersion", VERSION);
+    setDataset("hearthIndexJsFile", FILE);
+    setDataset("hearthIndexJsRoute", ROUTE);
 
-    dataset.hearthIndexJsLoaded = "true";
-    dataset.hearthIndexJsContract = CONTRACT;
-    dataset.hearthIndexJsReceipt = RECEIPT;
-    dataset.hearthIndexJsVersion = VERSION;
-    dataset.hearthIndexJsFile = FILE;
-    dataset.hearthIndexJsRoute = ROUTE;
+    setDataset("hearthIndexJsHtmlFile", HTML_FILE);
+    setDataset("hearthHtmlOwnsVisibleShell", "true");
+    setDataset("hearthIndexJsCreatesVisibleShell", "false");
+    setDataset("hearthIndexJsCreatesFallbackCss", "false");
+    setDataset("hearthIndexJsCreatesShellDom", "false");
+    setDataset("hearthIndexJsCreatesRuntimeScriptsOnly", "true");
 
-    dataset.hearthIndexJsHtmlFile = HTML_FILE;
-    dataset.hearthHtmlOwnsVisibleShell = "true";
-    dataset.hearthIndexJsCreatesVisibleShell = "false";
-    dataset.hearthIndexJsCreatesFallbackCss = "false";
-    dataset.hearthIndexJsCreatesShellDom = "false";
-    dataset.hearthIndexJsCreatesRuntimeScriptsOnly = "true";
+    setDataset("hearthPairRole", state.pairRole);
+    setDataset("hearthPairedRouteConductorFile", PAIRED_ROUTE_CONDUCTOR_FILE);
 
-    dataset.hearthPairRole = state.pairRole;
-    dataset.hearthPairedRouteConductorFile = PAIRED_ROUTE_CONDUCTOR_FILE;
+    setDataset("hearthIndexJsOwnsRouteAnchors", "false");
+    setDataset("hearthIndexJsOwnsMountHost", "false");
+    setDataset("hearthIndexJsOwnsControlsCreation", "false");
+    setDataset("hearthIndexJsOwnsControlBinding", "true");
+    setDataset("hearthIndexJsOwnsRuntimeScriptRelease", "true");
+    setDataset("hearthIndexJsOwnsCanvasCarrierHostPacket", "true");
+    setDataset("hearthIndexJsOwnsCarrierHostAdmissibility", "true");
+    setDataset("hearthIndexJsOwnsCanvasStructuralCarrierTruth", "false");
+    setDataset("hearthIndexJsOwnsCanvasReleaseTruth", "false");
+    setDataset("hearthIndexJsOwnsCanvasDrawing", "false");
+    setDataset("hearthIndexJsOwnsMaterialTruth", "false");
+    setDataset("hearthIndexJsOwnsPlanetTruth", "false");
+    setDataset("hearthIndexJsOwnsF21", "false");
+    setDataset("hearthIndexJsOwnsReadyText", "false");
+    setDataset("hearthIndexJsOwnsFinalVisualPassClaim", "false");
 
-    dataset.hearthIndexJsOwnsRouteAnchors = "false";
-    dataset.hearthIndexJsOwnsMountHost = "false";
-    dataset.hearthIndexJsOwnsControlsCreation = "false";
-    dataset.hearthIndexJsOwnsControlBinding = "true";
-    dataset.hearthIndexJsOwnsRuntimeScriptRelease = "true";
-    dataset.hearthIndexJsOwnsCanvasCarrierHostPacket = "true";
-    dataset.hearthIndexJsOwnsCanvasStructuralCarrierTruth = "false";
-    dataset.hearthIndexJsOwnsCanvasReleaseTruth = "false";
-    dataset.hearthIndexJsOwnsCanvasDrawing = "false";
-    dataset.hearthIndexJsOwnsMaterialTruth = "false";
-    dataset.hearthIndexJsOwnsPlanetTruth = "false";
-    dataset.hearthIndexJsOwnsF21 = "false";
+    setDataset("hearthExpectedHtmlContract", EXPECTED_HTML_CONTRACT);
+    setDataset("hearthCurrentSafeHtmlContract", CURRENT_SAFE_HTML_CONTRACT);
+    setDataset("hearthShellContract", state.shellContract);
+    setDataset("hearthShellDetected", state.shellDetected);
+    setDataset("hearthShellSelected", state.shellSelected);
+    setDataset("hearthShellAccepted", state.shellAccepted);
+    setDataset("hearthShellSelectionMode", state.shellSelectionMode);
+    setDataset("hearthShellHoldReason", state.shellHoldReason);
+    setDataset("hearthHtmlAnchorAuditActive", "true");
+    setDataset("hearthDynamicAnchorsPass", state.dynamicAnchorsPass);
+    setDataset("hearthMissingAnchors", state.missingAnchors.join(","));
+    setDataset("hearthShellControlsBound", state.shellControlsBound);
 
-    dataset.hearthExpectedHtmlContract = EXPECTED_HTML_CONTRACT;
-    dataset.hearthCurrentSafeHtmlContract = CURRENT_SAFE_HTML_CONTRACT;
-    dataset.hearthShellContract = state.shellContract;
-    dataset.hearthShellDetected = String(state.shellDetected);
-    dataset.hearthShellSelected = String(state.shellSelected);
-    dataset.hearthShellAccepted = String(state.shellAccepted);
-    dataset.hearthShellSelectionMode = state.shellSelectionMode;
-    dataset.hearthShellHoldReason = state.shellHoldReason;
-    dataset.hearthHtmlAnchorAuditActive = "true";
-    dataset.hearthDynamicAnchorsPass = String(state.dynamicAnchorsPass);
-    dataset.hearthMissingAnchors = state.missingAnchors.join(",");
+    setDataset("hearthMountPresent", state.mountPresent);
+    setDataset("hearthCockpitPresent", state.cockpitPresent);
+    setDataset("hearthStatusNodePresent", state.statusNodePresent);
+    setDataset("hearthReceiptPanelPresent", state.receiptPanelPresent);
+    setDataset("hearthCarrierHostReady", state.carrierHostReady);
+    setDataset("hearthCarrierHostPacketReady", state.carrierHostPacketReady);
 
-    dataset.hearthMountPresent = String(state.mountPresent);
-    dataset.hearthCockpitPresent = String(state.cockpitPresent);
-    dataset.hearthStatusNodePresent = String(state.statusNodePresent);
-    dataset.hearthCarrierHostReady = String(state.carrierHostReady);
-    dataset.hearthCarrierHostPacketReady = String(state.carrierHostPacketReady);
+    setDataset("hearthCarrierHostAdmissibilityActive", "true");
+    setDataset("hearthCarrierHostAdmissibilityReady", state.carrierHostAdmissibilityReady);
+    setDataset("hearthCarrierHostAdmissibilityPacketReady", state.carrierHostAdmissibilityPacketReady);
+    setDataset("hearthCarrierHostAdmissibilityPacketPublished", state.carrierHostAdmissibilityPacketPublished);
+    setDataset("hearthCarrierHostAdmissibilityHoldReason", state.carrierHostAdmissibilityHoldReason);
+    setDataset("hearthIndexHandoffToRouteConductor", state.handoffToRouteConductor);
+    setDataset("hearthIndexMacroWestCandidateReady", state.indexMacroWestCandidateReady);
+    setDataset("hearthIndexRouteConductorHandoffPacketReady", state.routeConductorHandoffPacketReady);
 
-    dataset.hearthCanvasParentObserved = String(state.canvasParentObserved);
-    dataset.hearthCanvasParentApiReady = String(state.canvasParentApiReady);
-    dataset.hearthCanvasParentLoadedBeforeWest = String(state.canvasParentLoadedBeforeWest);
-    dataset.hearthCanvasPreReleaseCarrierRequested = String(state.canvasPreReleaseCarrierRequested);
-    dataset.hearthCanvasPreReleaseCarrierObserved = String(state.canvasPreReleaseCarrierObserved);
-    dataset.hearthCanvasPreReleaseCarrierAccepted = String(state.canvasPreReleaseCarrierAccepted);
-    dataset.hearthCanvasPreReleaseCarrierSafeForWest = String(state.canvasPreReleaseCarrierSafeForWest);
-    dataset.hearthCanvasCarrierHeldReason = state.canvasCarrierHeldReason;
+    setDataset("hearthCanvasParentObserved", state.canvasParentObserved);
+    setDataset("hearthCanvasParentApiReady", state.canvasParentApiReady);
+    setDataset("hearthCanvasParentLoadedBeforeWest", state.canvasParentLoadedBeforeWest);
+    setDataset("hearthCanvasPreReleaseCarrierRequested", state.canvasPreReleaseCarrierRequested);
+    setDataset("hearthCanvasPreReleaseCarrierObserved", state.canvasPreReleaseCarrierObserved);
+    setDataset("hearthCanvasPreReleaseCarrierAccepted", state.canvasPreReleaseCarrierAccepted);
+    setDataset("hearthCanvasPreReleaseCarrierSafeForWest", state.canvasPreReleaseCarrierSafeForWest);
+    setDataset("hearthCanvasCarrierHeldReason", state.canvasCarrierHeldReason);
 
-    dataset.hearthRuntimeReleaseRequestable = String(state.runtimeReleaseRequestable);
-    dataset.hearthRuntimeReleaseRequested = String(state.runtimeReleaseRequested);
-    dataset.hearthRuntimeReleaseAuthorized = String(state.runtimeReleaseAuthorized);
-    dataset.hearthRuntimeReleaseStarted = String(state.runtimeReleaseStarted);
-    dataset.hearthRuntimeReleaseComplete = String(state.runtimeReleaseComplete);
-    dataset.hearthRuntimeHeld = String(state.runtimeHeld);
-    dataset.hearthRuntimeReleaseHeldReason = state.runtimeReleaseHeldReason;
-    dataset.hearthRuntimeLoaded = state.runtimeLoaded.join(",");
-    dataset.hearthRuntimeHeldFiles = state.runtimeHeldFiles.join(",");
-    dataset.hearthCurrentRuntimeKey = state.currentRuntimeKey;
-    dataset.hearthCurrentRuntimeFile = state.currentRuntimeFile;
+    setDataset("hearthRuntimeReleaseRequestable", state.runtimeReleaseRequestable);
+    setDataset("hearthRuntimeReleaseRequested", state.runtimeReleaseRequested);
+    setDataset("hearthRuntimeReleaseAuthorized", state.runtimeReleaseAuthorized);
+    setDataset("hearthRuntimeReleaseStarted", state.runtimeReleaseStarted);
+    setDataset("hearthRuntimeReleaseComplete", state.runtimeReleaseComplete);
+    setDataset("hearthRuntimeHeld", state.runtimeHeld);
+    setDataset("hearthRuntimeReleaseHeldReason", state.runtimeReleaseHeldReason);
+    setDataset("hearthRuntimeLoaded", state.runtimeLoaded.join(","));
+    setDataset("hearthRuntimeHeldFiles", state.runtimeHeldFiles.join(","));
+    setDataset("hearthCurrentRuntimeKey", state.currentRuntimeKey);
+    setDataset("hearthCurrentRuntimeFile", state.currentRuntimeFile);
 
-    dataset.hearthNewsAlignmentActive = "true";
-    dataset.hearthFibonacciSynchronizationActive = "true";
-    dataset.hearthMacroCycle1 = MACRO_CYCLE_1;
-    dataset.hearthMacroCycle2 = MACRO_CYCLE_2;
-    dataset.hearthActiveNews = state.activeNews;
-    dataset.hearthActiveFibonacci = state.activeFibonacci;
-    dataset.hearthActiveFibonacciRank = String(state.activeFibonacciRank);
-    dataset.hearthActiveStageId = state.activeStageId;
-    dataset.hearthActiveGearId = state.activeGearId;
-    dataset.hearthActiveProgress = String(state.activeProgress);
-    dataset.hearthOneActiveGearAtATime = "true";
+    setDataset("hearthNewsAlignmentActive", "true");
+    setDataset("hearthNewsAlignmentProtocolActive", "true");
+    setDataset("hearthFibonacciSynchronizationActive", "true");
+    setDataset("hearthFibonacciSynchronizationMetricActive", "true");
+    setDataset("hearthFibonacciSynchronizationScore", state.fibonacciSynchronizationScore);
+    setDataset("hearthFibonacciSynchronizationSatisfied", state.fibonacciSynchronizationSatisfied);
+    setDataset("hearthFibonacciSynchronizationExpected", state.fibonacciSynchronizationExpected);
+    setDataset("hearthFibonacciSynchronizationPassed", state.fibonacciSynchronizationPassed);
+    setDataset("hearthFibonacciSynchronizationDegraded", state.fibonacciSynchronizationDegraded);
+    setDataset("hearthMacroCycle1", MACRO_CYCLE_1);
+    setDataset("hearthMacroCycle2", MACRO_CYCLE_2);
+    setDataset("hearthActiveNews", state.activeNews);
+    setDataset("hearthActiveFibonacci", state.activeFibonacci);
+    setDataset("hearthActiveFibonacciRank", state.activeFibonacciRank);
+    setDataset("hearthActiveStageId", state.activeStageId);
+    setDataset("hearthActiveGearId", state.activeGearId);
+    setDataset("hearthActiveProgress", state.activeProgress);
+    setDataset("hearthOneActiveGearAtATime", "true");
 
-    dataset.hearthF13CanvasDelegated = "true";
-    dataset.hearthF13CarrierHostAvailable = String(state.f13CarrierHostAvailable);
-    dataset.hearthF13CanvasEvidenceOwnedByCanvas = "true";
-    dataset.hearthF21NorthOnly = "true";
-    dataset.hearthF21EligibleForNorth = "false";
-    dataset.hearthF21SubmittedToNorth = "false";
-    dataset.hearthF21ClaimedByIndex = "false";
-    dataset.hearthReadyTextAllowed = "false";
-    dataset.hearthReadyTextClaimedByIndex = "false";
+    setDataset("hearthF13CanvasDelegated", "true");
+    setDataset("hearthF13CarrierHostAvailable", state.f13CarrierHostAvailable);
+    setDataset("hearthF13CanvasEvidenceOwnedByCanvas", "true");
+    setDataset("hearthF21NorthOnly", "true");
+    setDataset("hearthF21EligibleForNorth", "false");
+    setDataset("hearthF21SubmittedToNorth", "false");
+    setDataset("hearthF21ClaimedByIndex", "false");
+    setDataset("hearthReadyTextAllowed", "false");
+    setDataset("hearthReadyTextClaimedByIndex", "false");
 
-    dataset.hearthFirstFailedCoordinate = state.firstFailedCoordinate;
-    dataset.hearthRecommendedNextFile = state.recommendedNextFile;
-    dataset.hearthRecommendedNextRenewalTarget = state.recommendedNextRenewalTarget;
-    dataset.hearthPostgameStatus = state.postgameStatus;
+    setDataset("hearthFirstFailedCoordinate", state.firstFailedCoordinate);
+    setDataset("hearthRecommendedNextFile", state.recommendedNextFile);
+    setDataset("hearthRecommendedNextRenewalTarget", state.recommendedNextRenewalTarget);
+    setDataset("hearthPostgameStatus", state.postgameStatus);
 
-    dataset.generatedImage = "false";
-    dataset.graphicBox = "false";
-    dataset.webgl = "false";
-    dataset.visualPassClaimed = "false";
+    setDataset("generatedImage", "false");
+    setDataset("graphicBox", "false");
+    setDataset("webgl", "false");
+    setDataset("visualPassClaimed", "false");
   }
 
   function publishGlobals() {
@@ -1377,11 +1708,14 @@
     root.HEARTH.indexJs = api;
     root.HEARTH.dynamicSelectorRuntimeRelease = api;
     root.HEARTH.eastSouthPairFemaleSelector = api;
+    root.HEARTH.twoFileNewsFibonacciCarrierHostAlignment = api;
 
     root.DEXTER_LAB.hearthIndexRuntimeHost = api;
     root.DEXTER_LAB.hearthHtmlShellAnchorAuditRuntimeHost = api;
     root.DEXTER_LAB.hearthDynamicSelectorRuntimeRelease = api;
+    root.DEXTER_LAB.hearthTwoFileNewsFibonacciCarrierHostAlignment = api;
 
+    root.HEARTH_INDEX_JS_TWO_FILE_NEWS_FIBONACCI_CARRIER_HOST_ALIGNMENT = api;
     root.HEARTH_INDEX_JS_HTML_SHELL_ANCHOR_AUDIT_RUNTIME_HOST = api;
     root.HEARTH_INDEX_RUNTIME_HOST = api;
     root.HEARTH_HTML_SHELL_ANCHOR_AUDIT_RUNTIME_HOST = api;
@@ -1391,13 +1725,20 @@
     root.HEARTH_EAST_SOUTH_PAIR_FEMALE_SELECTOR = api;
     root.HEARTH_EAST_SOUTH_PAIR_DYNAMIC_SELECTOR_RUNTIME_RELEASE = api;
 
+    publishCarrierHostAdmissibility("publish-globals");
+
     const receipt = getReceipt();
 
+    root.HEARTH_INDEX_JS_TWO_FILE_NEWS_FIBONACCI_CARRIER_HOST_ALIGNMENT_RECEIPT = receipt;
     root.HEARTH_INDEX_JS_HTML_SHELL_ANCHOR_AUDIT_RUNTIME_HOST_RECEIPT = receipt;
     root.HEARTH_INDEX_RUNTIME_HOST_RECEIPT = receipt;
     root.HEARTH_HTML_SHELL_ANCHOR_AUDIT_RUNTIME_HOST_RECEIPT = receipt;
     root.HEARTH_INDEX_JS_RECEIPT = receipt;
     root.HEARTH_INDEX_BRIDGE_RECEIPT = receipt;
+
+    root.HEARTH.indexRuntimeHostReceipt = receipt;
+    root.HEARTH.indexJsReceipt = receipt;
+    root.HEARTH.twoFileNewsFibonacciCarrierHostAlignmentReceipt = receipt;
   }
 
   function schedulePublish(message = "") {
@@ -1412,6 +1753,7 @@
   function publishState(message = "") {
     state.updatedAt = nowIso();
 
+    updateCarrierHostAdmissibility(`publish-state:${message}`);
     updateDataset();
     updateVisualShell(message);
     publishGlobals();
@@ -1432,9 +1774,10 @@
       applyReleaseLaw();
 
       if (findCanvasParentApi()) {
-        requestCanvasPreReleaseCarrier("SHELL_GUARD_CANVAS_CARRIER_REFRESH");
+        requestCanvasPreReleaseCarrier("SHELL_GUARD_CANVAS_CARRIER_REFRESH_OBSERVED_ONLY");
       }
 
+      updateCarrierHostAdmissibility("shell-guard");
       schedulePublish("shell-guard");
 
       if (state.settled || ticks >= 30) {
@@ -1454,7 +1797,8 @@
     auditShellAnchors("BOOT_HTML_SHELL_ANCHOR_AUDIT");
     bindControls();
     applyReleaseLaw();
-    requestCanvasPreReleaseCarrier("BOOT_EXISTING_CANVAS_PARENT_PREFLIGHT");
+    requestCanvasPreReleaseCarrier("BOOT_EXISTING_CANVAS_PARENT_PREFLIGHT_OBSERVED_ONLY");
+    updateCarrierHostAdmissibility("boot");
     publishState("boot");
 
     startShellGuard();
@@ -1487,6 +1831,8 @@
   }
 
   function getReceipt() {
+    const carrierPacket = state.lastCarrierHostAdmissibilityPacket || composeCarrierHostAdmissibilityPacket();
+
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
@@ -1513,6 +1859,8 @@
       ownsControlBinding: true,
       ownsRuntimeScriptRelease: true,
       ownsCanvasCarrierHostPacket: true,
+      ownsCarrierHostAdmissibility: true,
+      ownsRouteConductorHandoff: true,
 
       ownsMacroWestTruth: false,
       ownsCanvasStructuralCarrierTruth: false,
@@ -1547,6 +1895,16 @@
       carrierHostReady: state.carrierHostReady,
       carrierHostPacketReady: state.carrierHostPacketReady,
 
+      carrierHostAdmissibilityActive: true,
+      carrierHostAdmissibilityReady: state.carrierHostAdmissibilityReady,
+      carrierHostAdmissibilityPacketReady: state.carrierHostAdmissibilityPacketReady,
+      carrierHostAdmissibilityPacketPublished: state.carrierHostAdmissibilityPacketPublished,
+      carrierHostAdmissibilityHoldReason: state.carrierHostAdmissibilityHoldReason,
+      handoffToRouteConductor: state.handoffToRouteConductor,
+      indexMacroWestCandidateReady: state.indexMacroWestCandidateReady,
+      routeConductorHandoffPacketReady: state.routeConductorHandoffPacketReady,
+      carrierHostAdmissibilityPacket: carrierPacket,
+
       canvasParentObserved: state.canvasParentObserved,
       canvasParentApiReady: state.canvasParentApiReady,
       canvasParentLoadedBeforeWest: state.canvasParentLoadedBeforeWest,
@@ -1572,7 +1930,14 @@
       currentRuntimeFile: state.currentRuntimeFile,
 
       newsAlignmentActive: true,
+      newsAlignmentProtocolActive: true,
       fibonacciSynchronizationActive: true,
+      fibonacciSynchronizationMetricActive: true,
+      fibonacciSynchronizationScore: state.fibonacciSynchronizationScore,
+      fibonacciSynchronizationSatisfied: state.fibonacciSynchronizationSatisfied,
+      fibonacciSynchronizationExpected: state.fibonacciSynchronizationExpected,
+      fibonacciSynchronizationPassed: state.fibonacciSynchronizationPassed,
+      fibonacciSynchronizationDegraded: state.fibonacciSynchronizationDegraded,
       macroCycle1: MACRO_CYCLE_1,
       macroCycle2: MACRO_CYCLE_2,
       activeNews: state.activeNews,
@@ -1628,132 +1993,151 @@
     const r = getReceipt();
 
     return [
-      "HEARTH_INDEX_JS_HTML_SHELL_ANCHOR_AUDIT_RUNTIME_HOST_RECEIPT",
+      "HEARTH_INDEX_JS_TWO_FILE_NEWS_FIBONACCI_CARRIER_HOST_ALIGNMENT_RECEIPT",
       "",
-      `contract=${r.contract}`,
-      `receipt=${r.receipt}`,
-      `previousContract=${r.previousContract}`,
-      `baselineContract=${r.baselineContract}`,
-      `version=${r.version}`,
-      `file=${r.file}`,
-      `htmlFile=${r.htmlFile}`,
-      `route=${r.route}`,
+      line("contract", r.contract),
+      line("receipt", r.receipt),
+      line("previousContract", r.previousContract),
+      line("baselineContract", r.baselineContract),
+      line("version", r.version),
+      line("file", r.file),
+      line("htmlFile", r.htmlFile),
+      line("route", r.route),
       "",
       "SPLIT_BOUNDARY",
-      `htmlOwnsVisibleShell=${r.htmlOwnsVisibleShell}`,
-      `indexJsCreatesVisibleShell=${r.indexJsCreatesVisibleShell}`,
-      `indexJsCreatesFallbackCss=${r.indexJsCreatesFallbackCss}`,
-      `indexJsCreatesShellDom=${r.indexJsCreatesShellDom}`,
-      `indexJsCreatesRuntimeScriptsOnly=${r.indexJsCreatesRuntimeScriptsOnly}`,
+      line("htmlOwnsVisibleShell", r.htmlOwnsVisibleShell),
+      line("indexJsCreatesVisibleShell", r.indexJsCreatesVisibleShell),
+      line("indexJsCreatesFallbackCss", r.indexJsCreatesFallbackCss),
+      line("indexJsCreatesShellDom", r.indexJsCreatesShellDom),
+      line("indexJsCreatesRuntimeScriptsOnly", r.indexJsCreatesRuntimeScriptsOnly),
       "",
       "PAIR",
-      `role=${r.role}`,
-      `pairRole=${r.pairRole}`,
-      `pairedRouteConductorFile=${r.pairedRouteConductorFile}`,
-      `ownsRouteAnchors=${r.ownsRouteAnchors}`,
-      `ownsMountHost=${r.ownsMountHost}`,
-      `ownsControlsCreation=${r.ownsControlsCreation}`,
-      `ownsControlBinding=${r.ownsControlBinding}`,
-      `ownsRuntimeScriptRelease=${r.ownsRuntimeScriptRelease}`,
-      `ownsCanvasCarrierHostPacket=${r.ownsCanvasCarrierHostPacket}`,
+      line("role", r.role),
+      line("pairRole", r.pairRole),
+      line("pairedRouteConductorFile", r.pairedRouteConductorFile),
+      line("ownsRouteAnchors", r.ownsRouteAnchors),
+      line("ownsMountHost", r.ownsMountHost),
+      line("ownsControlsCreation", r.ownsControlsCreation),
+      line("ownsControlBinding", r.ownsControlBinding),
+      line("ownsRuntimeScriptRelease", r.ownsRuntimeScriptRelease),
+      line("ownsCanvasCarrierHostPacket", r.ownsCanvasCarrierHostPacket),
+      line("ownsCarrierHostAdmissibility", r.ownsCarrierHostAdmissibility),
+      line("ownsRouteConductorHandoff", r.ownsRouteConductorHandoff),
       "",
       "HTML_SHELL_AUDIT",
-      `shellDetected=${r.shellDetected}`,
-      `shellSelected=${r.shellSelected}`,
-      `shellAccepted=${r.shellAccepted}`,
-      `shellContract=${r.shellContract}`,
-      `shellSelectionMode=${r.shellSelectionMode}`,
-      `shellHoldReason=${r.shellHoldReason}`,
-      `htmlAnchorAuditActive=${r.htmlAnchorAuditActive}`,
-      `dynamicAnchorsPass=${r.dynamicAnchorsPass}`,
-      `missingAnchors=${r.missingAnchors.join(",")}`,
-      `shellControlsBound=${r.shellControlsBound}`,
+      line("shellDetected", r.shellDetected),
+      line("shellSelected", r.shellSelected),
+      line("shellAccepted", r.shellAccepted),
+      line("shellContract", r.shellContract),
+      line("shellSelectionMode", r.shellSelectionMode),
+      line("shellHoldReason", r.shellHoldReason),
+      line("htmlAnchorAuditActive", r.htmlAnchorAuditActive),
+      line("dynamicAnchorsPass", r.dynamicAnchorsPass),
+      line("missingAnchors", r.missingAnchors.join(",")),
+      line("shellControlsBound", r.shellControlsBound),
       "",
       "CARRIER_HOST",
-      `mountPresent=${r.mountPresent}`,
-      `cockpitPresent=${r.cockpitPresent}`,
-      `statusNodePresent=${r.statusNodePresent}`,
-      `receiptPanelPresent=${r.receiptPanelPresent}`,
-      `portalPresent=${r.portalPresent}`,
-      `carrierHostReady=${r.carrierHostReady}`,
-      `carrierHostPacketReady=${r.carrierHostPacketReady}`,
+      line("mountPresent", r.mountPresent),
+      line("cockpitPresent", r.cockpitPresent),
+      line("statusNodePresent", r.statusNodePresent),
+      line("receiptPanelPresent", r.receiptPanelPresent),
+      line("portalPresent", r.portalPresent),
+      line("carrierHostReady", r.carrierHostReady),
+      line("carrierHostPacketReady", r.carrierHostPacketReady),
       "",
-      "CANVAS_PRE_RELEASE",
-      `canvasParentObserved=${r.canvasParentObserved}`,
-      `canvasParentApiReady=${r.canvasParentApiReady}`,
-      `canvasParentLoadedBeforeWest=${r.canvasParentLoadedBeforeWest}`,
-      `canvasPreReleaseCarrierRequested=${r.canvasPreReleaseCarrierRequested}`,
-      `canvasPreReleaseCarrierObserved=${r.canvasPreReleaseCarrierObserved}`,
-      `canvasPreReleaseCarrierAccepted=${r.canvasPreReleaseCarrierAccepted}`,
-      `canvasPreReleaseCarrierSafeForWest=${r.canvasPreReleaseCarrierSafeForWest}`,
-      `canvasCarrierReceiptObserved=${r.canvasCarrierReceiptObserved}`,
-      `canvasCarrierHeldReason=${r.canvasCarrierHeldReason}`,
+      "CARRIER_HOST_ADMISSIBILITY",
+      line("carrierHostAdmissibilityActive", r.carrierHostAdmissibilityActive),
+      line("carrierHostAdmissibilityReady", r.carrierHostAdmissibilityReady),
+      line("carrierHostAdmissibilityPacketReady", r.carrierHostAdmissibilityPacketReady),
+      line("carrierHostAdmissibilityPacketPublished", r.carrierHostAdmissibilityPacketPublished),
+      line("carrierHostAdmissibilityHoldReason", r.carrierHostAdmissibilityHoldReason),
+      line("handoffToRouteConductor", r.handoffToRouteConductor),
+      line("indexMacroWestCandidateReady", r.indexMacroWestCandidateReady),
+      line("routeConductorHandoffPacketReady", r.routeConductorHandoffPacketReady),
+      "",
+      "CANVAS_PRE_RELEASE_OBSERVED_ONLY",
+      line("canvasParentObserved", r.canvasParentObserved),
+      line("canvasParentApiReady", r.canvasParentApiReady),
+      line("canvasParentLoadedBeforeWest", r.canvasParentLoadedBeforeWest),
+      line("canvasPreReleaseCarrierRequested", r.canvasPreReleaseCarrierRequested),
+      line("canvasPreReleaseCarrierObserved", r.canvasPreReleaseCarrierObserved),
+      line("canvasPreReleaseCarrierAccepted", r.canvasPreReleaseCarrierAccepted),
+      line("canvasPreReleaseCarrierSafeForWest", r.canvasPreReleaseCarrierSafeForWest),
+      line("canvasCarrierReceiptObserved", r.canvasCarrierReceiptObserved),
+      line("canvasCarrierHeldReason", r.canvasCarrierHeldReason),
       "",
       "RUNTIME",
-      `runtimeReleaseRequestable=${r.runtimeReleaseRequestable}`,
-      `runtimeReleaseRequested=${r.runtimeReleaseRequested}`,
-      `runtimeReleaseAuthorized=${r.runtimeReleaseAuthorized}`,
-      `runtimeReleaseStarted=${r.runtimeReleaseStarted}`,
-      `runtimeReleaseComplete=${r.runtimeReleaseComplete}`,
-      `runtimeHeld=${r.runtimeHeld}`,
-      `runtimeReleaseHeldReason=${r.runtimeReleaseHeldReason}`,
-      `currentRuntimeKey=${r.currentRuntimeKey}`,
-      `currentRuntimeFile=${r.currentRuntimeFile}`,
-      `runtimeLoaded=${r.runtimeLoaded.join(",")}`,
-      `runtimeHeldFiles=${r.runtimeHeldFiles.join(",")}`,
-      `runtimeErrors=${r.runtimeErrors.map((error) => `${error.key || ""}:${error.file || ""}:${error.message || ""}`).join(" | ")}`,
+      line("runtimeReleaseRequestable", r.runtimeReleaseRequestable),
+      line("runtimeReleaseRequested", r.runtimeReleaseRequested),
+      line("runtimeReleaseAuthorized", r.runtimeReleaseAuthorized),
+      line("runtimeReleaseStarted", r.runtimeReleaseStarted),
+      line("runtimeReleaseComplete", r.runtimeReleaseComplete),
+      line("runtimeHeld", r.runtimeHeld),
+      line("runtimeReleaseHeldReason", r.runtimeReleaseHeldReason),
+      line("currentRuntimeKey", r.currentRuntimeKey),
+      line("currentRuntimeFile", r.currentRuntimeFile),
+      line("runtimeLoaded", r.runtimeLoaded.join(",")),
+      line("runtimeHeldFiles", r.runtimeHeldFiles.join(",")),
+      line("runtimeErrors", r.runtimeErrors.map((error) => `${error.key || ""}:${error.file || ""}:${error.message || ""}`).join(" | ")),
       "",
       "NEWS_FIBONACCI",
-      `newsAlignmentActive=${r.newsAlignmentActive}`,
-      `fibonacciSynchronizationActive=${r.fibonacciSynchronizationActive}`,
-      `macroCycle1=${r.macroCycle1}`,
-      `macroCycle2=${r.macroCycle2}`,
-      `activeNews=${r.activeNews}`,
-      `activeFibonacci=${r.activeFibonacci}`,
-      `activeFibonacciRank=${r.activeFibonacciRank}`,
-      `activeStageId=${r.activeStageId}`,
-      `activeGearId=${r.activeGearId}`,
-      `activeProgress=${r.activeProgress}`,
-      `oneActiveGearAtATime=${r.oneActiveGearAtATime}`,
+      line("newsAlignmentActive", r.newsAlignmentActive),
+      line("newsAlignmentProtocolActive", r.newsAlignmentProtocolActive),
+      line("fibonacciSynchronizationActive", r.fibonacciSynchronizationActive),
+      line("fibonacciSynchronizationMetricActive", r.fibonacciSynchronizationMetricActive),
+      line("fibonacciSynchronizationScore", r.fibonacciSynchronizationScore),
+      line("fibonacciSynchronizationSatisfied", r.fibonacciSynchronizationSatisfied),
+      line("fibonacciSynchronizationExpected", r.fibonacciSynchronizationExpected),
+      line("fibonacciSynchronizationPassed", r.fibonacciSynchronizationPassed),
+      line("fibonacciSynchronizationDegraded", r.fibonacciSynchronizationDegraded),
+      line("macroCycle1", r.macroCycle1),
+      line("macroCycle2", r.macroCycle2),
+      line("activeNews", r.activeNews),
+      line("activeFibonacci", r.activeFibonacci),
+      line("activeFibonacciRank", r.activeFibonacciRank),
+      line("activeStageId", r.activeStageId),
+      line("activeGearId", r.activeGearId),
+      line("activeProgress", r.activeProgress),
+      line("oneActiveGearAtATime", r.oneActiveGearAtATime),
       "",
       "F13_F21_BOUNDARY",
-      `f13CanvasDelegated=${r.f13CanvasDelegated}`,
-      `f13CarrierHostAvailable=${r.f13CarrierHostAvailable}`,
-      `f13CanvasEvidenceOwnedByCanvas=${r.f13CanvasEvidenceOwnedByCanvas}`,
-      `f21NorthOnly=${r.f21NorthOnly}`,
-      `f21EligibleForNorth=${r.f21EligibleForNorth}`,
-      `f21SubmittedToNorth=${r.f21SubmittedToNorth}`,
-      `f21ClaimedByIndex=${r.f21ClaimedByIndex}`,
-      `readyTextAllowed=${r.readyTextAllowed}`,
-      `readyTextClaimedByIndex=${r.readyTextClaimedByIndex}`,
+      line("f13CanvasDelegated", r.f13CanvasDelegated),
+      line("f13CarrierHostAvailable", r.f13CarrierHostAvailable),
+      line("f13CanvasEvidenceOwnedByCanvas", r.f13CanvasEvidenceOwnedByCanvas),
+      line("f21NorthOnly", r.f21NorthOnly),
+      line("f21EligibleForNorth", r.f21EligibleForNorth),
+      line("f21SubmittedToNorth", r.f21SubmittedToNorth),
+      line("f21ClaimedByIndex", r.f21ClaimedByIndex),
+      line("readyTextAllowed", r.readyTextAllowed),
+      line("readyTextClaimedByIndex", r.readyTextClaimedByIndex),
       "",
       "OWNERSHIP_BOUNDARY",
-      `ownsMacroWestTruth=${r.ownsMacroWestTruth}`,
-      `ownsCanvasStructuralCarrierTruth=${r.ownsCanvasStructuralCarrierTruth}`,
-      `ownsCanvasReleaseTruth=${r.ownsCanvasReleaseTruth}`,
-      `ownsCanvasDrawing=${r.ownsCanvasDrawing}`,
-      `ownsMaterialTruth=${r.ownsMaterialTruth}`,
-      `ownsHydrologyTruth=${r.ownsHydrologyTruth}`,
-      `ownsElevationTruth=${r.ownsElevationTruth}`,
-      `ownsPlanetTruth=${r.ownsPlanetTruth}`,
-      `ownsF21=${r.ownsF21}`,
-      `ownsReadyText=${r.ownsReadyText}`,
-      `ownsFinalVisualPassClaim=${r.ownsFinalVisualPassClaim}`,
+      line("ownsMacroWestTruth", r.ownsMacroWestTruth),
+      line("ownsCanvasStructuralCarrierTruth", r.ownsCanvasStructuralCarrierTruth),
+      line("ownsCanvasReleaseTruth", r.ownsCanvasReleaseTruth),
+      line("ownsCanvasDrawing", r.ownsCanvasDrawing),
+      line("ownsMaterialTruth", r.ownsMaterialTruth),
+      line("ownsHydrologyTruth", r.ownsHydrologyTruth),
+      line("ownsElevationTruth", r.ownsElevationTruth),
+      line("ownsPlanetTruth", r.ownsPlanetTruth),
+      line("ownsF21", r.ownsF21),
+      line("ownsReadyText", r.ownsReadyText),
+      line("ownsFinalVisualPassClaim", r.ownsFinalVisualPassClaim),
       "",
       "NEXT",
-      `firstFailedCoordinate=${r.firstFailedCoordinate}`,
-      `recommendedNextFile=${r.recommendedNextFile}`,
-      `recommendedNextRenewalTarget=${r.recommendedNextRenewalTarget}`,
-      `postgameStatus=${r.postgameStatus}`,
+      line("firstFailedCoordinate", r.firstFailedCoordinate),
+      line("recommendedNextFile", r.recommendedNextFile),
+      line("recommendedNextRenewalTarget", r.recommendedNextRenewalTarget),
+      line("postgameStatus", r.postgameStatus),
       "",
       "FINAL_CLAIMS",
-      `generatedImage=${r.generatedImage}`,
-      `graphicBox=${r.graphicBox}`,
-      `webGL=${r.webGL}`,
-      `visualPassClaimed=${r.visualPassClaimed}`,
+      line("generatedImage", r.generatedImage),
+      line("graphicBox", r.graphicBox),
+      line("webGL", r.webGL),
+      line("visualPassClaimed", r.visualPassClaimed),
       "",
-      `startedAt=${r.startedAt}`,
-      `updatedAt=${r.updatedAt}`
+      line("startedAt", r.startedAt),
+      line("updatedAt", r.updatedAt)
     ].join("\n");
   }
 
@@ -1834,6 +2218,9 @@
     releaseRuntimeQueue,
     requestCanvasPreReleaseCarrier,
     composeCarrierHostPacket,
+    composeCarrierHostAdmissibilityPacket,
+    updateCarrierHostAdmissibility,
+    publishCarrierHostAdmissibility,
     findCanvasParentApi,
     publishState,
     getReceipt,
@@ -1846,11 +2233,14 @@
     indexJsCreatesShellDom: false,
     indexJsCreatesRuntimeScriptsOnly: true,
 
-    pairRole: "female-runtime-host-for-male-html-shell",
+    pairRole: "female-runtime-host-for-male-route-conductor",
     pairedRouteConductorFile: PAIRED_ROUTE_CONDUCTOR_FILE,
 
+    carrierHostAdmissibilityActive: true,
     newsAlignmentActive: true,
+    newsAlignmentProtocolActive: true,
     fibonacciSynchronizationActive: true,
+    fibonacciSynchronizationMetricActive: true,
     f13CanvasDelegated: true,
     f21NorthOnly: true,
     f21EligibleForNorth: false,
@@ -1864,6 +2254,8 @@
     ownsControlBinding: true,
     ownsRuntimeScriptRelease: true,
     ownsCanvasCarrierHostPacket: true,
+    ownsCarrierHostAdmissibility: true,
+    ownsRouteConductorHandoff: true,
     ownsMacroWestTruth: false,
     ownsCanvasStructuralCarrierTruth: false,
     ownsCanvasReleaseTruth: false,
@@ -1893,11 +2285,14 @@
   root.HEARTH.indexJs = api;
   root.HEARTH.dynamicSelectorRuntimeRelease = api;
   root.HEARTH.eastSouthPairFemaleSelector = api;
+  root.HEARTH.twoFileNewsFibonacciCarrierHostAlignment = api;
 
   root.DEXTER_LAB.hearthIndexRuntimeHost = api;
   root.DEXTER_LAB.hearthHtmlShellAnchorAuditRuntimeHost = api;
   root.DEXTER_LAB.hearthDynamicSelectorRuntimeRelease = api;
+  root.DEXTER_LAB.hearthTwoFileNewsFibonacciCarrierHostAlignment = api;
 
+  root.HEARTH_INDEX_JS_TWO_FILE_NEWS_FIBONACCI_CARRIER_HOST_ALIGNMENT = api;
   root.HEARTH_INDEX_JS_HTML_SHELL_ANCHOR_AUDIT_RUNTIME_HOST = api;
   root.HEARTH_INDEX_RUNTIME_HOST = api;
   root.HEARTH_HTML_SHELL_ANCHOR_AUDIT_RUNTIME_HOST = api;
@@ -1906,6 +2301,7 @@
   root.HEARTH_EAST_SOUTH_PAIR_FEMALE_SELECTOR = api;
   root.HEARTH_EAST_SOUTH_PAIR_DYNAMIC_SELECTOR_RUNTIME_RELEASE = api;
 
+  updateCarrierHostAdmissibility("initial-publication");
   publishGlobals();
 
   if (doc) {

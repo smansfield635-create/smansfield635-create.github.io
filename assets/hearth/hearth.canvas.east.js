@@ -1,16 +1,16 @@
 // /assets/hearth/hearth.canvas.east.js
-// HEARTH_CANVAS_EAST_PARENT_FIRST_API_RECOGNITION_BOOTSTRAP_TNT_v4
+// HEARTH_CANVAS_EAST_SYNCHRONOUS_HELD_PACKET_PARENT_FIRST_F13_ATLAS_SOURCE_TNT_v5
 // Full-file replacement.
-// Canvas East / parent-first API recognition bootstrap / governed F13 atlas source.
+// Canvas East / synchronous held-packet parent-first F13 atlas source.
 // Purpose:
-// - Publish Canvas East API synchronously before atlas build, material bridge, permission parsing, or async work.
-// - Make active Canvas parent v5 recognize East immediately as API-ready/current.
-// - Preserve buildAtlas, sample, read, getReceipt, material bridge, atlas cache, and all parent-required aliases.
-// - Accept active Canvas parent v5 release packets without renewing parent, West, South, route conductor, index, or HTML.
-// - Return held atlas packets without making East appear API-missing.
-// - Build governed F13 atlas/source packet only after lawful parent/West release or emergency F13 request.
+// - Keep Canvas East API visible synchronously before any atlas build.
+// - Make buildAtlas() return a synchronous held packet when parent/West permission is missing.
+// - Remove the prior async-held ambiguity where East could be API-ready but parent still read it as evidence-missing/API-missing.
+// - Preserve governed F13 atlas build after lawful parent/West release.
+// - Preserve material bridge to HEARTH_MATERIALS_MOUNTAIN_RANGE_CANYON_RELIEF_CONSUMER_TNT_v1.
+// - Preserve all Canvas parent aliases and methods.
 // - Keep East source/intake only.
-// - Keep F13E/F13F synchronized without promoting atlas readiness into visible proof, Canvas readiness, F21, ready text, or final visual pass.
+// - Keep F13E/F13F synchronized without promoting East into visible proof, Canvas readiness, F21, ready text, or final visual pass.
 // Does not own:
 // - planet truth
 // - elevation truth
@@ -31,11 +31,11 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_EAST_PARENT_FIRST_API_RECOGNITION_BOOTSTRAP_TNT_v4";
-  const RECEIPT = "HEARTH_CANVAS_EAST_PARENT_FIRST_API_RECOGNITION_BOOTSTRAP_RECEIPT_v4";
+  const CONTRACT = "HEARTH_CANVAS_EAST_SYNCHRONOUS_HELD_PACKET_PARENT_FIRST_F13_ATLAS_SOURCE_TNT_v5";
+  const RECEIPT = "HEARTH_CANVAS_EAST_SYNCHRONOUS_HELD_PACKET_PARENT_FIRST_F13_ATLAS_SOURCE_RECEIPT_v5";
 
-  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_EAST_CURRENT_PARENT_RECOGNIZED_F13_ATLAS_SOURCE_AFTER_WEST_RELEASE_TNT_v2";
-  const PREVIOUS_RECEIPT = "HEARTH_CANVAS_EAST_CURRENT_PARENT_RECOGNIZED_F13_ATLAS_SOURCE_AFTER_WEST_RELEASE_RECEIPT_v2";
+  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_EAST_PARENT_FIRST_API_RECOGNITION_BOOTSTRAP_TNT_v4";
+  const PREVIOUS_RECEIPT = "HEARTH_CANVAS_EAST_PARENT_FIRST_API_RECOGNITION_BOOTSTRAP_RECEIPT_v4";
 
   const BASELINE_CONTRACT = "HEARTH_CANVAS_EAST_PARENT_ALIGNED_MATERIAL_ATLAS_SOURCE_TRANSISTOR_TNT_v3";
   const BASELINE_RECEIPT = "HEARTH_CANVAS_EAST_PARENT_ALIGNED_MATERIAL_ATLAS_SOURCE_TRANSISTOR_RECEIPT_v3";
@@ -46,17 +46,17 @@
   const ACTIVE_PARENT_CONTRACT = "HEARTH_CANVAS_PARENT_CURRENT_SOUTH_PROOF_RECONCILIATION_TNT_v5";
   const ACTIVE_PARENT_RECEIPT = "HEARTH_CANVAS_PARENT_CURRENT_SOUTH_PROOF_RECONCILIATION_RECEIPT_v5";
 
-  const VERSION = "2026-06-01.hearth-canvas-east-parent-first-api-recognition-bootstrap-v4";
-  const FILE = "/assets/hearth/hearth.canvas.east.js";
-  const PARENT_FILE = "/assets/hearth/hearth.canvas.js";
-
   const EXPECTED_MATERIAL_CONTRACT = "HEARTH_MATERIALS_MOUNTAIN_RANGE_CANYON_RELIEF_CONSUMER_TNT_v1";
   const EXPECTED_MATERIAL_RECEIPT = "HEARTH_MATERIALS_MOUNTAIN_RANGE_CANYON_RELIEF_CONSUMER_RECEIPT_v1";
+
+  const VERSION = "2026-06-01.hearth-canvas-east-synchronous-held-packet-parent-first-f13-atlas-source-v5";
+  const FILE = "/assets/hearth/hearth.canvas.east.js";
+  const PARENT_FILE = "/assets/hearth/hearth.canvas.js";
 
   const ACTIVE_FIBONACCI_GATE = "F13E_F13F";
   const FUTURE_FIBONACCI_GATE = "F21";
   const CYCLE_ROUTE = "NORTH_EAST_SOUTH_WEST_CANVAS";
-  const CYCLE_ORDER = "PARENT_FIRST_API_RECOGNITION -> CANVAS_PARENT_V5_RELEASE -> EAST_SOURCE_F13E -> EAST_ATLAS_F13F -> PARENT_F13_RECEIPT";
+  const CYCLE_ORDER = "PARENT_FIRST_API_RECOGNITION -> SYNCHRONOUS_HELD_PACKET_OR_LAWFUL_BUILD -> EAST_SOURCE_F13E -> EAST_ATLAS_F13F -> PARENT_F13_RECEIPT";
 
   const DEFAULT_ATLAS_WIDTH = 512;
   const DEFAULT_ATLAS_HEIGHT = 256;
@@ -65,14 +65,22 @@
   const MAX_ATLAS_WIDTH = 1024;
   const MAX_ATLAS_HEIGHT = 512;
 
-  const REQUIRED_METHODS = Object.freeze(["buildAtlas", "sample", "read", "getReceipt"]);
+  const REQUIRED_METHODS = Object.freeze([
+    "buildAtlas",
+    "buildAtlasAsync",
+    "sample",
+    "read",
+    "getReceipt",
+    "getReceiptText"
+  ]);
 
   const ACCEPTED_PARENT_CONTEXT_CONTRACTS = Object.freeze([
     ACTIVE_PARENT_CONTRACT,
     "HEARTH_CANVAS_PARENT_PRE_RELEASE_STRUCTURAL_CARRIER_THEN_WEST_RELEASE_TO_EAST_TNT_v4",
     "HEARTH_CANVAS_PARENT_RELEASE_PACKET_TO_EAST_STALE_CLEARANCE_TNT_v3",
     "HEARTH_CANVAS_PARENT_CHILD_RECONCILIATION_F13_EVIDENCE_RECEIVER_TNT_v2",
-    "HEARTH_CANVAS_PARENT_GOVERNED_F13_EVIDENCE_RECEIVER_AFTER_WEST_RELEASE_TNT_v1"
+    "HEARTH_CANVAS_PARENT_GOVERNED_F13_EVIDENCE_RECEIVER_AFTER_WEST_RELEASE_TNT_v1",
+    "HEARTH_CANVAS_PARENT_CURRENT_SOUTH_PROOF_RECONCILIATION_TNT_v5"
   ]);
 
   const RETIRED_PARENT_SPLIT_CONTRACTS = Object.freeze([
@@ -125,9 +133,12 @@
     version: VERSION,
     file: FILE,
     parentFile: PARENT_FILE,
-    role: "canvas-east-parent-first-api-recognition-bootstrap",
+    role: "canvas-east-synchronous-held-packet-parent-first-f13-atlas-source",
 
     parentFirstApiRecognitionBootstrapActive: true,
+    synchronousBuildAtlasDispatcherActive: true,
+    synchronousHeldPacketActive: true,
+    asyncHeldPacketRetired: true,
     parentFirstApiPublished: false,
     parentCompatibilityAliasesPublished: false,
     datasetFirstProofPublished: false,
@@ -139,9 +150,11 @@
     requiredApiSurfaceComplete: true,
     requiredMethods: REQUIRED_METHODS.slice(),
     buildAtlasAvailable: true,
+    buildAtlasAsyncAvailable: true,
     sampleAvailable: true,
     readAvailable: true,
     getReceiptAvailable: true,
+    getReceiptTextAvailable: true,
     canvasEastApiReady: true,
     canvasEastCurrent: true,
     canvasEastPresent: true,
@@ -173,6 +186,8 @@
     f13BuildBlockedReason: "WAITING_CURRENT_PARENT_OR_WEST_RELEASE",
     f13PermissionSource: "NONE",
     heldAtlasPacketReturned: false,
+    heldPacketWasSynchronous: false,
+    buildAtlasReturnedPromise: false,
 
     canvasParentObserved: false,
     canvasParentRequestObserved: false,
@@ -410,7 +425,6 @@
     state.localEvents.push(item);
     trimArray(state.localEvents, 180);
     state.updatedAt = item.at;
-
     updateDataset();
     return item;
   }
@@ -426,7 +440,6 @@
     state.errors.push(item);
     trimArray(state.errors, 140);
     state.updatedAt = item.at;
-
     updateDataset();
     return item;
   }
@@ -453,6 +466,7 @@
       if (!cursor || typeof cursor !== "object" || cursor[part] === undefined || cursor[part] === null) {
         return fallback;
       }
+
       cursor = cursor[part];
     }
 
@@ -484,6 +498,15 @@
     return value === undefined || value === null || value === "" ? fallback : value;
   }
 
+  function firstGlobal(names) {
+    for (const name of names || []) {
+      const found = pathRead(name);
+      if (found) return found;
+    }
+
+    return null;
+  }
+
   function findNestedReceipt(source, names) {
     if (!isObject(source)) return {};
 
@@ -495,25 +518,21 @@
     return {};
   }
 
-  function firstGlobal(names) {
-    for (const name of names || []) {
-      const found = pathRead(name);
-      if (found) return found;
-    }
-
-    return null;
-  }
-
   function readReceipt(authority) {
     if (!authority || !isObject(authority)) return null;
 
     if (isFunction(authority.getReceipt)) {
       try {
         const receipt = authority.getReceipt();
-        return isObject(receipt) ? receipt : null;
-      } catch (_error) {
-        return null;
-      }
+        if (isObject(receipt)) return receipt;
+      } catch (_error) {}
+    }
+
+    if (isFunction(authority.getReceiptLight)) {
+      try {
+        const receipt = authority.getReceiptLight();
+        if (isObject(receipt)) return receipt;
+      } catch (_error) {}
     }
 
     if (isObject(authority.receiptPacket)) return authority.receiptPacket;
@@ -536,6 +555,7 @@
     if (c === ACTIVE_PARENT_CONTRACT || r === ACTIVE_PARENT_RECEIPT) return true;
     if (ACCEPTED_PARENT_CONTEXT_CONTRACTS.includes(c)) return true;
     if (c.includes("HEARTH_CANVAS_PARENT") && !c.includes("STALE")) return true;
+
     return false;
   }
 
@@ -856,13 +876,13 @@
   }
 
   function detectFalsePromotion(input = {}) {
-    const text = (() => {
-      try {
-        return JSON.stringify(input || {});
-      } catch (_error) {
-        return String(input || "");
-      }
-    })();
+    let text = "";
+
+    try {
+      text = JSON.stringify(input || {});
+    } catch (_error) {
+      text = String(input || "");
+    }
 
     return Boolean(
       safeBool(input.visibleProof, false) ||
@@ -970,11 +990,11 @@
       materialBridgeChanged: state.materialBridgeChanged,
       canonicalMaterialConsumed: state.canonicalMaterialConsumed,
 
-      northGateReady: firstBool(false, source.northGateReady, objectValue(parent.parentReceipt, "northGateReady")),
+      northGateReady: false,
       eastGateReady: true,
       westGateReady: firstBool(false, source.westGateReady, west.westAuditPassed || west.westAuditDegraded || west.westCanvasReleaseApproved),
       southGateReady: firstBool(false, source.southGateReady, objectValue(parent.parentReceipt, "southGateReady")),
-      canvasGateReady: firstBool(false, source.canvasGateReady, objectValue(parent.parentReceipt, "canvasGateReady")),
+      canvasGateReady: false,
       newsGatePassedBeforeF21: false,
       newsGateDegradedBeforeF21: false,
       f21EligibleForNorth: false,
@@ -1093,7 +1113,11 @@
       activeParentContract: ACTIVE_PARENT_CONTRACT,
       activeParentReceipt: ACTIVE_PARENT_RECEIPT,
       compatibilityContract: COMPATIBILITY_CONTRACT,
+
       parentFirstApiRecognitionBootstrapActive: true,
+      synchronousBuildAtlasDispatcherActive: true,
+      synchronousHeldPacketActive: true,
+      asyncHeldPacketRetired: true,
       currentParentRecognized: true,
       governedCanvasParentAligned: true,
       afterWestReleaseOnly: true,
@@ -1101,6 +1125,7 @@
 
       canvasEastApiReady: true,
       canvasEastCurrent: true,
+      canvasEastPresent: true,
       requiredApiSurfaceComplete: true,
 
       canvasEastMayBuildAtlas: allowed,
@@ -1170,6 +1195,8 @@
     const gate = permission || resolveAtlasBuildPermission(normalized);
 
     state.heldAtlasPacketReturned = true;
+    state.heldPacketWasSynchronous = true;
+    state.buildAtlasReturnedPromise = false;
     state.canvasEastApiReady = true;
     state.canvasEastCurrent = true;
     state.requiredApiSurfaceComplete = true;
@@ -1186,6 +1213,12 @@
     state.firstFailedCoordinate = state.f13BuildBlockedReason;
     state.recommendedNextFile = PARENT_FILE;
     state.recommendedNextRenewalTarget = PARENT_FILE;
+    state.f21EligibleForNorth = false;
+    state.f21ClaimedByCanvasEast = false;
+    state.readyTextClaimedByCanvasEast = false;
+    state.completionLatched = false;
+    state.visualPassClaimed = false;
+    state.updatedAt = nowIso();
 
     const packet = {
       contract: CONTRACT,
@@ -1199,6 +1232,9 @@
       parentFile: PARENT_FILE,
 
       parentFirstApiRecognitionBootstrapActive: true,
+      synchronousBuildAtlasDispatcherActive: true,
+      synchronousHeldPacketActive: true,
+      asyncHeldPacketRetired: true,
       currentParentRecognized: true,
       parentCompatibilityAliasesPublished: true,
       governedCanvasParentAligned: true,
@@ -1210,11 +1246,16 @@
       canvasEastPresent: true,
       requiredApiSurfaceComplete: true,
       buildAtlasAvailable: true,
+      buildAtlasAsyncAvailable: true,
       sampleAvailable: true,
       readAvailable: true,
       getReceiptAvailable: true,
+      getReceiptTextAvailable: true,
 
       heldAtlasPacketReturned: true,
+      heldPacketWasSynchronous: true,
+      buildAtlasReturnedPromise: false,
+
       atlasCanvas: null,
       canvas: null,
       width: safeNumber(normalized.raw && (normalized.raw.width || normalized.raw.atlasWidth), DEFAULT_ATLAS_WIDTH),
@@ -1268,6 +1309,14 @@
     };
 
     state.lastHeldAtlasPacket = clonePlain(packet);
+
+    recordLocal("SYNCHRONOUS_HELD_ATLAS_PACKET_RETURNED", {
+      firstFailedCoordinate: packet.firstFailedCoordinate,
+      apiReadyStillTrue: true,
+      evidenceReadyStillFalse: true,
+      returnedPromise: false
+    });
+
     updateDataset();
     publishGlobals();
 
@@ -1311,6 +1360,9 @@
       parentFile: PARENT_FILE,
 
       parentFirstApiRecognitionBootstrapActive: true,
+      synchronousBuildAtlasDispatcherActive: true,
+      synchronousHeldPacketActive: true,
+      asyncHeldPacketRetired: true,
       currentParentRecognized: true,
       parentCompatibilityAliasesPublished: true,
       governedCanvasParentAligned: true,
@@ -1408,7 +1460,7 @@
     };
   }
 
-  function normalizePoint(input = {}) {
+  function normalizePoint(input = {}, b, c) {
     if (isObject(input)) {
       if (Number.isFinite(Number(input.u)) && Number.isFinite(Number(input.v))) {
         return pointFromUv(input.u, input.v);
@@ -1445,6 +1497,14 @@
       }
     }
 
+    if (Number.isFinite(Number(input)) && Number.isFinite(Number(b)) && Number.isFinite(Number(c))) {
+      return normalizePoint({ x: input, y: b, z: c });
+    }
+
+    if (Number.isFinite(Number(input)) && Number.isFinite(Number(b))) {
+      return pointFromUv(input, b);
+    }
+
     return pointFromUv(0.5, 0.5);
   }
 
@@ -1454,12 +1514,20 @@
       pathRead("HEARTH.materialAuthority"),
       pathRead("HEARTH.materialsAuthority"),
       pathRead("HEARTH.surfaceMaterials"),
+      pathRead("HEARTH.assets"),
+      pathRead("HEARTH.assetsAuthority"),
       root.HEARTH_MATERIALS,
       root.HEARTH_MATERIAL_AUTHORITY,
+      root.HEARTH_MATERIALS_AUTHORITY,
+      root.HEARTH_SURFACE_MATERIALS,
+      root.HEARTH_ASSETS,
+      root.HEARTH_ASSETS_AUTHORITY,
       root.HearthMaterials,
       root.HearthMaterialAuthority,
+      root.HearthAssets,
       root.DEXTER_LAB && root.DEXTER_LAB.hearthMaterials,
-      root.DEXTER_LAB && root.DEXTER_LAB.hearthMaterialAuthority
+      root.DEXTER_LAB && root.DEXTER_LAB.hearthMaterialAuthority,
+      root.DEXTER_LAB && root.DEXTER_LAB.hearthAssets
     ];
 
     for (const candidate of candidates) {
@@ -1534,12 +1602,19 @@
       } catch (_error) {}
     }
 
+    if (isFunction(authority.getStatus)) {
+      try {
+        const receipt = authority.getStatus();
+        if (receipt && typeof receipt === "object") return receipt;
+      } catch (_error) {}
+    }
+
     return {
       contract: authority.contract || "",
       receipt: authority.receipt || "",
-      previousContract: authority.previousContract || "",
-      baselineContract: authority.baselineContract || "",
-      requiredElevationContract: authority.requiredElevationContract || "",
+      previousContract: authority.previousContract || authority.previousAssetsContract || "",
+      baselineContract: authority.baselineContract || authority.previousMaterialContract || "",
+      requiredElevationContract: authority.requiredElevationContract || authority.requiredElevation || "",
       optionalReliefChildContract: authority.optionalReliefChildContract || "",
       version: authority.version || "",
       authority: authority.authority || "materials",
@@ -1954,20 +2029,20 @@
     return normalizeSample(raw, p, fallbackUsed);
   }
 
-  function sample(point = {}) {
+  function sample(point = {}, b, c) {
     try {
-      return sampleWithAuthority(point, getMaterialAuthority(), {
+      return sampleWithAuthority(normalizePoint(point, b, c), getMaterialAuthority(), {
         syncBridge: true,
         updateDataset: false
       });
     } catch (error) {
       recordError("SAMPLE_FAILED_USING_FALLBACK", error);
-      return normalizeSample(fallbackTerrain(normalizePoint(point)), normalizePoint(point), true);
+      return normalizeSample(fallbackTerrain(normalizePoint(point, b, c)), normalizePoint(point, b, c), true);
     }
   }
 
-  function read(point = {}) {
-    return sample(point);
+  function read(point = {}, b, c) {
+    return sample(point, b, c);
   }
 
   function createAtlasCanvas(width, height) {
@@ -1985,6 +2060,7 @@
     canvas.dataset.hearthCanvasEastCompatibilityContract = COMPATIBILITY_CONTRACT;
     canvas.dataset.hearthCanvasEastActiveParentContract = ACTIVE_PARENT_CONTRACT;
     canvas.dataset.hearthCanvasEastParentFirstApiRecognition = "true";
+    canvas.dataset.hearthCanvasEastSynchronousHeldPacket = "true";
     canvas.dataset.hearthCanvasEastCurrentParentRecognized = "true";
     canvas.dataset.hearthCanvasEastGovernedParentAligned = "true";
     canvas.dataset.hearthCanvasEastAfterWestReleaseOnly = "true";
@@ -2014,8 +2090,10 @@
     });
   }
 
-  function resetBuildCounters(width, height) {
+  function resetBuildCounters(width, height, mode = "sync") {
     state.heldAtlasPacketReturned = false;
+    state.heldPacketWasSynchronous = false;
+    state.buildAtlasReturnedPromise = mode === "async";
     state.atlasBuildStarted = true;
     state.atlasBuildProgress = 0;
     state.atlasBuildComplete = false;
@@ -2057,6 +2135,7 @@
     recordLocal("F13E_ATLAS_BUILD_STARTED", {
       width,
       height,
+      mode,
       activeFibonacciGate: ACTIVE_FIBONACCI_GATE,
       permissionSource: state.f13PermissionSource,
       activeParentContract: ACTIVE_PARENT_CONTRACT,
@@ -2114,8 +2193,211 @@
     updateDataset();
   }
 
-  async function buildAtlas(options = {}) {
-    publishParentFirstApiSurface("buildAtlas-entry");
+  function finalizeAtlasBuild(width, height, mode, options = {}) {
+    state.atlasBuildProgress = 100;
+    state.atlasBuildComplete = true;
+    state.atlasCanvasPresent = true;
+    state.atlasInvalidated = false;
+    state.atlasInvalidationReason = "";
+    state.atlasBuildCompletedAt = nowIso();
+    state.atlasBuildElapsedMs = Math.max(0, Date.parse(state.atlasBuildCompletedAt) - Date.parse(state.atlasBuildStartedAt));
+    state.lastBuildAt = state.atlasBuildCompletedAt;
+    state.f13SourceStageComplete = true;
+    state.f13AtlasPacketReady = true;
+    state.canvasEastEvidenceReady = true;
+    state.firstFailedCoordinate = "NONE_F13F_ATLAS_PACKET_READY";
+    state.recommendedNextFile = PARENT_FILE;
+    state.recommendedNextRenewalTarget = PARENT_FILE;
+    state.f21EligibleForNorth = false;
+    state.f21ClaimedByCanvasEast = false;
+    state.readyTextClaimedByCanvasEast = false;
+    state.completionLatched = false;
+    state.visualPassClaimed = false;
+    state.updatedAt = state.atlasBuildCompletedAt;
+
+    recordLocal("F13F_ATLAS_BUILD_COMPLETE", {
+      width,
+      height,
+      mode,
+      atlasPixelCount: state.atlasPixelCount,
+      atlasClassCount: state.atlasClassCount,
+      fallbackSamples: state.atlasFallbackSampleCount,
+      materialSamples: state.atlasMaterialSampleCount,
+      canonicalMaterialSamples: state.atlasCanonicalMaterialSampleCount,
+      activeFibonacciGate: ACTIVE_FIBONACCI_GATE,
+      permissionSource: state.f13PermissionSource,
+      apiReadyBeforeEvidence: true,
+      visibleProof: false,
+      canvasReady: false,
+      f21ClaimedByCanvasEast: false,
+      visualPassClaimed: false
+    });
+
+    updateDataset();
+    publishGlobals();
+
+    const packet = composeAtlasEvidencePacket({
+      atlasCanvas,
+      width,
+      height
+    });
+
+    if (isFunction(options.onComplete)) {
+      try {
+        options.onComplete(packet);
+      } catch (error) {
+        recordError("ATLAS_COMPLETE_CALLBACK_FAILED", error);
+      }
+    }
+
+    return packet;
+  }
+
+  function buildAtlasSync(options = {}, normalized = null, permission = null) {
+    const localNormalized = normalized || normalizeCanvasEastInput(options);
+    const gate = permission || resolveAtlasBuildPermission(localNormalized);
+
+    if (!gate.canvasEastMayBuildAtlas || !gate.f13BuildLawful) {
+      return composeHeldAtlasPacket(localNormalized, gate);
+    }
+
+    const width = clamp(
+      Math.round(safeNumber(options.width || options.atlasWidth, DEFAULT_ATLAS_WIDTH)),
+      MIN_ATLAS_WIDTH,
+      MAX_ATLAS_WIDTH
+    );
+
+    const height = clamp(
+      Math.round(safeNumber(options.height || options.atlasHeight, DEFAULT_ATLAS_HEIGHT)),
+      MIN_ATLAS_HEIGHT,
+      MAX_ATLAS_HEIGHT
+    );
+
+    const materialAuthority = localNormalized.emergencyF13Requested ? null : getMaterialAuthority();
+
+    resetBuildCounters(width, height, "sync");
+
+    syncMaterialBridge({
+      authority: materialAuthority,
+      updateDataset: false,
+      invalidate: false
+    });
+
+    try {
+      atlasCanvas = createAtlasCanvas(width, height);
+      const ctx = atlasCanvas.getContext("2d", { alpha: true, willReadFrequently: true });
+
+      if (!ctx) {
+        throw new Error("Canvas East could not create atlas 2D context.");
+      }
+
+      const imageData = ctx.createImageData(width, height);
+      const data = imageData.data;
+      const classSet = new Set();
+
+      for (let y = 0; y < height; y += 1) {
+        const v = height <= 1 ? 0.5 : y / (height - 1);
+
+        for (let x = 0; x < width; x += 1) {
+          const u = width <= 1 ? 0.5 : x / (width - 1);
+          const material = sampleWithAuthority({ u, v }, materialAuthority, {
+            syncBridge: false,
+            updateDataset: false
+          });
+
+          countSample(material, classSet);
+
+          const offset = (y * width + x) * 4;
+          const rgb = normalizeRgb(material.rgb || material.color, PALETTE.void);
+          const alpha = clamp(Math.round(clamp01(material.alpha === undefined ? 1 : material.alpha) * 255), 0, 255);
+
+          data[offset] = rgb[0];
+          data[offset + 1] = rgb[1];
+          data[offset + 2] = rgb[2];
+          data[offset + 3] = alpha;
+        }
+
+        if (y % 32 === 0 || y === height - 1) {
+          progressCallback(options, Math.round(((y + 1) / height) * 100), {
+            row: y,
+            height,
+            mode: "sync"
+          });
+        }
+      }
+
+      ctx.putImageData(imageData, 0, 0);
+      lastAtlasImageData = imageData;
+
+      state.atlasClassCount = classSet.size;
+      state.atlasClasses = Array.from(classSet).slice(0, 64);
+
+      return finalizeAtlasBuild(width, height, "sync", options);
+    } catch (error) {
+      state.atlasBuildError = error && error.message ? error.message : String(error);
+      state.atlasBuildComplete = false;
+      state.f13SourceStageComplete = false;
+      state.f13AtlasPacketReady = false;
+      state.canvasEastEvidenceReady = false;
+      state.firstFailedCoordinate = "WAITING_CANVAS_EAST_ATLAS_BUILD";
+      state.recommendedNextFile = FILE;
+      state.recommendedNextRenewalTarget = FILE;
+      state.f21EligibleForNorth = false;
+      state.f21ClaimedByCanvasEast = false;
+      state.readyTextClaimedByCanvasEast = false;
+      state.completionLatched = false;
+      state.visualPassClaimed = false;
+      state.updatedAt = nowIso();
+
+      recordError("ATLAS_BUILD_FAILED", error, {
+        width,
+        height,
+        mode: "sync",
+        permissionSource: state.f13PermissionSource
+      });
+
+      updateDataset();
+      publishGlobals();
+
+      return {
+        contract: CONTRACT,
+        receipt: RECEIPT,
+        file: FILE,
+        parentFile: PARENT_FILE,
+        compatibilityContract: COMPATIBILITY_CONTRACT,
+        activeParentContract: ACTIVE_PARENT_CONTRACT,
+        parentFirstApiRecognitionBootstrapActive: true,
+        synchronousBuildAtlasDispatcherActive: true,
+        canvasEastApiReady: true,
+        canvasEastCurrent: true,
+        requiredApiSurfaceComplete: true,
+        atlasBuildStarted: true,
+        atlasBuildComplete: false,
+        atlasBuildError: state.atlasBuildError,
+        f13SourceStageStarted: true,
+        f13SourceStageComplete: false,
+        f13AtlasPacketReady: false,
+        canvasEastEvidenceReady: false,
+        firstFailedCoordinate: "WAITING_CANVAS_EAST_ATLAS_BUILD",
+        recommendedNextFile: FILE,
+        recommendedNextRenewalTarget: FILE,
+        visibleProof: false,
+        visibleContentProof: false,
+        visiblePlanetAvailable: false,
+        canvasReady: false,
+        f21EligibleForNorth: false,
+        f21ClaimedByCanvasEast: false,
+        readyTextClaimedByCanvasEast: false,
+        generatedImage: false,
+        graphicBox: false,
+        webGL: false,
+        visualPassClaimed: false
+      };
+    }
+  }
+
+  async function buildAtlasAsync(options = {}) {
+    publishParentFirstApiSurface("buildAtlasAsync-entry");
 
     const normalized = normalizeCanvasEastInput(options);
     const permission = resolveAtlasBuildPermission(normalized);
@@ -2139,7 +2421,7 @@
     const rowsPerChunk = clamp(Math.round(safeNumber(options.rowsPerChunk, 10)), 1, 40);
     const materialAuthority = normalized.emergencyF13Requested ? null : getMaterialAuthority();
 
-    resetBuildCounters(width, height);
+    resetBuildCounters(width, height, "async");
 
     syncMaterialBridge({
       authority: materialAuthority,
@@ -2184,7 +2466,8 @@
         if (y % rowsPerChunk === 0 || y === height - 1) {
           progressCallback(options, Math.round(((y + 1) / height) * 100), {
             row: y,
-            height
+            height,
+            mode: "async"
           });
           await yieldBuildFrame();
         }
@@ -2193,64 +2476,10 @@
       ctx.putImageData(imageData, 0, 0);
       lastAtlasImageData = imageData;
 
-      state.atlasBuildProgress = 100;
-      state.atlasBuildComplete = true;
-      state.atlasCanvasPresent = true;
-      state.atlasInvalidated = false;
-      state.atlasInvalidationReason = "";
       state.atlasClassCount = classSet.size;
       state.atlasClasses = Array.from(classSet).slice(0, 64);
-      state.atlasBuildCompletedAt = nowIso();
-      state.atlasBuildElapsedMs = Math.max(0, Date.parse(state.atlasBuildCompletedAt) - Date.parse(state.atlasBuildStartedAt));
-      state.lastBuildAt = state.atlasBuildCompletedAt;
-      state.f13SourceStageComplete = true;
-      state.f13AtlasPacketReady = true;
-      state.canvasEastEvidenceReady = true;
-      state.firstFailedCoordinate = "NONE_F13F_ATLAS_PACKET_READY";
-      state.recommendedNextFile = PARENT_FILE;
-      state.recommendedNextRenewalTarget = PARENT_FILE;
-      state.f21EligibleForNorth = false;
-      state.f21ClaimedByCanvasEast = false;
-      state.readyTextClaimedByCanvasEast = false;
-      state.completionLatched = false;
-      state.visualPassClaimed = false;
-      state.updatedAt = state.atlasBuildCompletedAt;
 
-      recordLocal("F13F_ATLAS_BUILD_COMPLETE", {
-        width,
-        height,
-        atlasPixelCount: state.atlasPixelCount,
-        atlasClassCount: state.atlasClassCount,
-        fallbackSamples: state.atlasFallbackSampleCount,
-        materialSamples: state.atlasMaterialSampleCount,
-        canonicalMaterialSamples: state.atlasCanonicalMaterialSampleCount,
-        activeFibonacciGate: ACTIVE_FIBONACCI_GATE,
-        permissionSource: state.f13PermissionSource,
-        apiReadyBeforeEvidence: true,
-        visibleProof: false,
-        canvasReady: false,
-        f21ClaimedByCanvasEast: false,
-        visualPassClaimed: false
-      });
-
-      updateDataset();
-      publishGlobals();
-
-      const packet = composeAtlasEvidencePacket({
-        atlasCanvas,
-        width,
-        height
-      });
-
-      if (isFunction(options.onComplete)) {
-        try {
-          options.onComplete(packet);
-        } catch (error) {
-          recordError("ATLAS_COMPLETE_CALLBACK_FAILED", error);
-        }
-      }
-
-      return packet;
+      return finalizeAtlasBuild(width, height, "async", options);
     } catch (error) {
       state.atlasBuildError = error && error.message ? error.message : String(error);
       state.atlasBuildComplete = false;
@@ -2270,6 +2499,7 @@
       recordError("ATLAS_BUILD_FAILED", error, {
         width,
         height,
+        mode: "async",
         permissionSource: state.f13PermissionSource
       });
 
@@ -2284,6 +2514,7 @@
         compatibilityContract: COMPATIBILITY_CONTRACT,
         activeParentContract: ACTIVE_PARENT_CONTRACT,
         parentFirstApiRecognitionBootstrapActive: true,
+        synchronousBuildAtlasDispatcherActive: true,
         canvasEastApiReady: true,
         canvasEastCurrent: true,
         requiredApiSurfaceComplete: true,
@@ -2310,6 +2541,24 @@
         visualPassClaimed: false
       };
     }
+  }
+
+  function buildAtlas(options = {}) {
+    publishParentFirstApiSurface("buildAtlas-sync-dispatcher-entry");
+
+    const normalized = normalizeCanvasEastInput(options);
+    const permission = resolveAtlasBuildPermission(normalized);
+
+    if (!permission.canvasEastMayBuildAtlas || !permission.f13BuildLawful) {
+      return composeHeldAtlasPacket(normalized, permission);
+    }
+
+    if (options && (options.async === true || options.defer === true || options.nonBlocking === true)) {
+      state.buildAtlasReturnedPromise = true;
+      return buildAtlasAsync(options);
+    }
+
+    return buildAtlasSync(options, normalized, permission);
   }
 
   function invalidateAtlas(reason = "manual-invalidation", options = {}) {
@@ -2376,6 +2625,9 @@
       role: state.role,
 
       parentFirstApiRecognitionBootstrapActive: true,
+      synchronousBuildAtlasDispatcherActive: true,
+      synchronousHeldPacketActive: true,
+      asyncHeldPacketRetired: true,
       parentFirstApiPublished: state.parentFirstApiPublished,
       parentCompatibilityAliasesPublished: state.parentCompatibilityAliasesPublished,
       datasetFirstProofPublished: state.datasetFirstProofPublished,
@@ -2387,14 +2639,20 @@
       requiredApiSurfaceComplete: true,
       requiredMethods: state.requiredMethods.slice(),
       buildAtlasAvailable: true,
+      buildAtlasAsyncAvailable: true,
       sampleAvailable: true,
       readAvailable: true,
       getReceiptAvailable: true,
+      getReceiptTextAvailable: true,
 
       canvasEastPresent: true,
       canvasEastApiReady: true,
       canvasEastCurrent: true,
       canvasEastEvidenceReady: state.f13AtlasPacketReady,
+
+      heldAtlasPacketReturned: state.heldAtlasPacketReturned,
+      heldPacketWasSynchronous: state.heldPacketWasSynchronous,
+      buildAtlasReturnedPromise: state.buildAtlasReturnedPromise,
 
       canvasEastMayBuildAtlas: state.canvasEastMayBuildAtlas,
       f13BuildLawful: state.f13BuildLawful,
@@ -2513,7 +2771,6 @@
       readyTextClaimedByCanvasEast: false,
       completionLatched: false,
 
-      heldAtlasPacketReturned: state.heldAtlasPacketReturned,
       firstFailedCoordinate: state.firstFailedCoordinate,
       recommendedNextFile: state.recommendedNextFile,
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
@@ -2523,10 +2780,12 @@
 
       ownsSourceMaterialAtlas: true,
       ownsBuildAtlasMethod: true,
+      ownsBuildAtlasAsyncMethod: true,
       ownsSampleMethod: true,
       ownsReadMethod: true,
       ownsReceiptSurface: true,
       ownsParentFirstApiRecognition: true,
+      ownsSynchronousHeldPacket: true,
 
       ownsPlanetTruth: false,
       ownsElevationTruth: false,
@@ -2572,7 +2831,7 @@
       .join("\n") || "- none";
 
     return [
-      "HEARTH_CANVAS_EAST_PARENT_FIRST_API_RECOGNITION_BOOTSTRAP_RECEIPT",
+      "HEARTH_CANVAS_EAST_SYNCHRONOUS_HELD_PACKET_PARENT_FIRST_F13_ATLAS_SOURCE_RECEIPT",
       "",
       `contract=${r.contract}`,
       `receipt=${r.receipt}`,
@@ -2591,6 +2850,9 @@
       "",
       "PARENT_FIRST_API_RECOGNITION",
       `parentFirstApiRecognitionBootstrapActive=${r.parentFirstApiRecognitionBootstrapActive}`,
+      `synchronousBuildAtlasDispatcherActive=${r.synchronousBuildAtlasDispatcherActive}`,
+      `synchronousHeldPacketActive=${r.synchronousHeldPacketActive}`,
+      `asyncHeldPacketRetired=${r.asyncHeldPacketRetired}`,
       `parentFirstApiPublished=${r.parentFirstApiPublished}`,
       `parentCompatibilityAliasesPublished=${r.parentCompatibilityAliasesPublished}`,
       `datasetFirstProofPublished=${r.datasetFirstProofPublished}`,
@@ -2602,13 +2864,20 @@
       "API_SURFACE",
       `requiredApiSurfaceComplete=${r.requiredApiSurfaceComplete}`,
       `buildAtlasAvailable=${r.buildAtlasAvailable}`,
+      `buildAtlasAsyncAvailable=${r.buildAtlasAsyncAvailable}`,
       `sampleAvailable=${r.sampleAvailable}`,
       `readAvailable=${r.readAvailable}`,
       `getReceiptAvailable=${r.getReceiptAvailable}`,
+      `getReceiptTextAvailable=${r.getReceiptTextAvailable}`,
       `canvasEastPresent=${r.canvasEastPresent}`,
       `canvasEastApiReady=${r.canvasEastApiReady}`,
       `canvasEastCurrent=${r.canvasEastCurrent}`,
       `canvasEastEvidenceReady=${r.canvasEastEvidenceReady}`,
+      "",
+      "SYNCHRONOUS_HELD_PACKET",
+      `heldAtlasPacketReturned=${r.heldAtlasPacketReturned}`,
+      `heldPacketWasSynchronous=${r.heldPacketWasSynchronous}`,
+      `buildAtlasReturnedPromise=${r.buildAtlasReturnedPromise}`,
       "",
       "BUILD_PERMISSION",
       `canvasEastMayBuildAtlas=${r.canvasEastMayBuildAtlas}`,
@@ -2684,10 +2953,12 @@
       "OWNERSHIP",
       `ownsSourceMaterialAtlas=${r.ownsSourceMaterialAtlas}`,
       `ownsBuildAtlasMethod=${r.ownsBuildAtlasMethod}`,
+      `ownsBuildAtlasAsyncMethod=${r.ownsBuildAtlasAsyncMethod}`,
       `ownsSampleMethod=${r.ownsSampleMethod}`,
       `ownsReadMethod=${r.ownsReadMethod}`,
       `ownsReceiptSurface=${r.ownsReceiptSurface}`,
       `ownsParentFirstApiRecognition=${r.ownsParentFirstApiRecognition}`,
+      `ownsSynchronousHeldPacket=${r.ownsSynchronousHeldPacket}`,
       `ownsPlanetTruth=${r.ownsPlanetTruth}`,
       `ownsMaterialTruth=${r.ownsMaterialTruth}`,
       `ownsTextureComposition=${r.ownsTextureComposition}`,
@@ -2735,6 +3006,9 @@
     dataset.hearthCanvasEastVersion = VERSION;
 
     dataset.hearthCanvasEastParentFirstApiRecognition = "true";
+    dataset.hearthCanvasEastSynchronousBuildAtlasDispatcher = "true";
+    dataset.hearthCanvasEastSynchronousHeldPacket = "true";
+    dataset.hearthCanvasEastAsyncHeldPacketRetired = "true";
     dataset.hearthCanvasEastParentFirstApiPublished = String(state.parentFirstApiPublished);
     dataset.hearthCanvasEastParentCompatibilityAliasesPublished = String(state.parentCompatibilityAliasesPublished);
     dataset.hearthCanvasEastDatasetFirstProofPublished = String(state.datasetFirstProofPublished);
@@ -2746,12 +3020,18 @@
 
     dataset.hearthCanvasEastRequiredApiSurfaceComplete = "true";
     dataset.hearthCanvasEastBuildAtlasAvailable = "true";
+    dataset.hearthCanvasEastBuildAtlasAsyncAvailable = "true";
     dataset.hearthCanvasEastSampleAvailable = "true";
     dataset.hearthCanvasEastReadAvailable = "true";
     dataset.hearthCanvasEastGetReceiptAvailable = "true";
+    dataset.hearthCanvasEastGetReceiptTextAvailable = "true";
     dataset.hearthCanvasEastApiReady = "true";
     dataset.hearthCanvasEastCurrent = "true";
     dataset.hearthCanvasEastEvidenceReady = String(state.f13AtlasPacketReady);
+
+    dataset.hearthCanvasEastHeldAtlasPacketReturned = String(state.heldAtlasPacketReturned);
+    dataset.hearthCanvasEastHeldPacketWasSynchronous = String(state.heldPacketWasSynchronous);
+    dataset.hearthCanvasEastBuildAtlasReturnedPromise = String(state.buildAtlasReturnedPromise);
 
     dataset.hearthCanvasEastMayBuildAtlas = String(state.canvasEastMayBuildAtlas);
     dataset.hearthCanvasEastF13BuildLawful = String(state.f13BuildLawful);
@@ -2840,6 +3120,7 @@
     root.HEARTH.canvasEastGovernedF13AtlasSource = api;
     root.HEARTH.canvasEastCurrentParentRecognizedF13AtlasSource = api;
     root.HEARTH.canvasEastParentFirstApiRecognitionBootstrap = api;
+    root.HEARTH.canvasEastSynchronousHeldPacketParentFirstF13AtlasSource = api;
     root.HEARTH.canvasEastSource = api;
 
     root.HEARTH_CANVAS_EAST = api;
@@ -2848,6 +3129,7 @@
     root.HEARTH_CANVAS_EAST_GOVERNED_F13_ATLAS_SOURCE = api;
     root.HEARTH_CANVAS_EAST_CURRENT_PARENT_RECOGNIZED_F13_ATLAS_SOURCE = api;
     root.HEARTH_CANVAS_EAST_PARENT_FIRST_API_RECOGNITION_BOOTSTRAP = api;
+    root.HEARTH_CANVAS_EAST_SYNCHRONOUS_HELD_PACKET_PARENT_FIRST_F13_ATLAS_SOURCE = api;
     root.HEARTH_CANVAS_EAST_SOURCE = api;
 
     root.DEXTER_LAB.hearthCanvasEast = api;
@@ -2857,6 +3139,7 @@
     root.DEXTER_LAB.hearthCanvasEastGovernedF13AtlasSource = api;
     root.DEXTER_LAB.hearthCanvasEastCurrentParentRecognizedF13AtlasSource = api;
     root.DEXTER_LAB.hearthCanvasEastParentFirstApiRecognitionBootstrap = api;
+    root.DEXTER_LAB.hearthCanvasEastSynchronousHeldPacketParentFirstF13AtlasSource = api;
     root.DEXTER_LAB.hearthCanvasEastSource = api;
 
     const receipt = getReceipt();
@@ -2867,6 +3150,7 @@
     root.HEARTH_CANVAS_EAST_GOVERNED_F13_ATLAS_SOURCE_RECEIPT = receipt;
     root.HEARTH_CANVAS_EAST_CURRENT_PARENT_RECOGNIZED_F13_ATLAS_SOURCE_RECEIPT = receipt;
     root.HEARTH_CANVAS_EAST_PARENT_FIRST_API_RECOGNITION_BOOTSTRAP_RECEIPT = receipt;
+    root.HEARTH_CANVAS_EAST_SYNCHRONOUS_HELD_PACKET_PARENT_FIRST_F13_ATLAS_SOURCE_RECEIPT = receipt;
 
     root.HEARTH.canvasEastReceipt = receipt;
     root.HEARTH.canvasEastMaterialAtlasSourceMachineReceipt = receipt;
@@ -2875,6 +3159,7 @@
     root.HEARTH.canvasEastGovernedF13AtlasSourceReceipt = receipt;
     root.HEARTH.canvasEastCurrentParentRecognizedF13AtlasSourceReceipt = receipt;
     root.HEARTH.canvasEastParentFirstApiRecognitionBootstrapReceipt = receipt;
+    root.HEARTH.canvasEastSynchronousHeldPacketParentFirstF13AtlasSourceReceipt = receipt;
 
     root.DEXTER_LAB.hearthCanvasEastReceipt = receipt;
     root.DEXTER_LAB.hearthCanvasEastMaterialAtlasSourceMachineReceipt = receipt;
@@ -2883,6 +3168,7 @@
     root.DEXTER_LAB.hearthCanvasEastGovernedF13AtlasSourceReceipt = receipt;
     root.DEXTER_LAB.hearthCanvasEastCurrentParentRecognizedF13AtlasSourceReceipt = receipt;
     root.DEXTER_LAB.hearthCanvasEastParentFirstApiRecognitionBootstrapReceipt = receipt;
+    root.DEXTER_LAB.hearthCanvasEastSynchronousHeldPacketParentFirstF13AtlasSourceReceipt = receipt;
 
     root.__HEARTH_CANVAS_EAST_LOADED__ = true;
     root.__HEARTH_CANVAS_EAST_PRESENT__ = true;
@@ -2892,6 +3178,9 @@
     root.__HEARTH_CANVAS_EAST_COMPATIBILITY_CONTRACT__ = COMPATIBILITY_CONTRACT;
     root.__HEARTH_CANVAS_EAST_ACTIVE_PARENT_CONTRACT__ = ACTIVE_PARENT_CONTRACT;
     root.__HEARTH_CANVAS_EAST_PARENT_FIRST_API_RECOGNITION__ = true;
+    root.__HEARTH_CANVAS_EAST_SYNCHRONOUS_BUILD_ATLAS_DISPATCHER__ = true;
+    root.__HEARTH_CANVAS_EAST_SYNCHRONOUS_HELD_PACKET__ = true;
+    root.__HEARTH_CANVAS_EAST_ASYNC_HELD_PACKET_RETIRED__ = true;
     root.__HEARTH_CANVAS_EAST_CURRENT_PARENT_RECOGNIZED__ = true;
     root.__HEARTH_CANVAS_EAST_PARENT_COMPATIBILITY_ALIASES_PUBLISHED__ = true;
     root.__HEARTH_CANVAS_EAST_REQUIRED_API_SURFACE_COMPLETE__ = true;
@@ -2911,11 +3200,16 @@
 
   function publishParentFirstApiSurface(reason = "initial-parent-first-api-publication") {
     state.parentFirstApiRecognitionBootstrapActive = true;
+    state.synchronousBuildAtlasDispatcherActive = true;
+    state.synchronousHeldPacketActive = true;
+    state.asyncHeldPacketRetired = true;
     state.requiredApiSurfaceComplete = true;
     state.buildAtlasAvailable = true;
+    state.buildAtlasAsyncAvailable = true;
     state.sampleAvailable = true;
     state.readAvailable = true;
     state.getReceiptAvailable = true;
+    state.getReceiptTextAvailable = true;
     state.canvasEastApiReady = true;
     state.canvasEastCurrent = true;
     state.canvasEastPresent = true;
@@ -2944,6 +3238,8 @@
         activeParentContract: ACTIVE_PARENT_CONTRACT,
         methods: REQUIRED_METHODS.slice(),
         apiReadyBeforeAtlasEvidence: true,
+        synchronousHeldPacketActive: true,
+        asyncHeldPacketRetired: true,
         atlasEvidenceReady: state.f13AtlasPacketReady,
         noF21Claim: true,
         visualPassClaimed: false
@@ -2969,6 +3265,8 @@
     parentFile: PARENT_FILE,
 
     buildAtlas,
+    buildAtlasSync,
+    buildAtlasAsync,
     sample,
     read,
     getReceipt,
@@ -2997,14 +3295,20 @@
 
     requiredApiSurfaceComplete: true,
     buildAtlasAvailable: true,
+    buildAtlasSyncAvailable: true,
+    buildAtlasAsyncAvailable: true,
     sampleAvailable: true,
     readAvailable: true,
     getReceiptAvailable: true,
+    getReceiptTextAvailable: true,
 
     canvasEastApiReady: true,
     canvasEastCurrent: true,
     canvasEastPresent: true,
     parentFirstApiRecognitionBootstrapActive: true,
+    synchronousBuildAtlasDispatcherActive: true,
+    synchronousHeldPacketActive: true,
+    asyncHeldPacketRetired: true,
     currentParentRecognized: true,
     parentCompatibilityAliasesPublished: true,
     governedCanvasParentAligned: true,
@@ -3021,10 +3325,13 @@
 
     ownsSourceMaterialAtlas: true,
     ownsBuildAtlasMethod: true,
+    ownsBuildAtlasSyncMethod: true,
+    ownsBuildAtlasAsyncMethod: true,
     ownsSampleMethod: true,
     ownsReadMethod: true,
     ownsReceiptSurface: true,
     ownsParentFirstApiRecognition: true,
+    ownsSynchronousHeldPacket: true,
 
     ownsPlanetTruth: false,
     ownsElevationTruth: false,
@@ -3079,7 +3386,7 @@
 
     publishParentFirstApiSurface("post-material-bridge-api-confirmation");
 
-    recordLocal("CANVAS_EAST_PARENT_FIRST_API_RECOGNITION_BOOTSTRAP_LOADED", {
+    recordLocal("CANVAS_EAST_SYNCHRONOUS_HELD_PACKET_PARENT_FIRST_F13_ATLAS_SOURCE_LOADED", {
       file: FILE,
       contract: CONTRACT,
       receipt: RECEIPT,
@@ -3092,14 +3399,16 @@
       canvasEastCurrent: true,
       canvasEastEvidenceReady: state.f13AtlasPacketReady,
       buildAtlasAlwaysCallable: true,
+      buildAtlasHeldPathSynchronous: true,
       heldAtlasPacketDoesNotMeanApiMissing: true,
+      asyncHeldPacketRetired: true,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
       visualPassClaimed: false
     });
   } catch (error) {
-    recordError("CANVAS_EAST_PARENT_FIRST_API_RECOGNITION_BOOTSTRAP_INITIALIZATION_FAILED", error);
+    recordError("CANVAS_EAST_SYNCHRONOUS_HELD_PACKET_PARENT_FIRST_F13_ATLAS_SOURCE_INITIALIZATION_FAILED", error);
 
     try {
       publishGlobals();

@@ -1,51 +1,34 @@
 // /showroom/globe/hearth/hearth.js
-// HEARTH_ROUTE_CONDUCTOR_MACRO_WEST_ADMISSIBILITY_CANVAS_RELEASE_CONSUMPTION_TNT_v3
+// HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT_TNT_v4
 // Full-file replacement.
-// Hearth route conductor / macro-West admissibility consumption / Canvas release bridge.
+// Hearth route conductor / Macro West release consumer / strict F13 downstream alignment authority.
 // Purpose:
-// - Preserve route-conductor marker/API/receipt/runtime self-duty.
-// - Keep F8 hydration strict: marker + API + receipt + runtime.
+// - Preserve the functional v3 route conductor behavior.
 // - Preserve two-cycle Runtime Table law:
 //   Cycle 1: NORTH -> EAST -> WEST -> SOUTH -> NORTH.
 //   Cycle 2: NORTH -> EAST -> SOUTH -> WEST -> CANVAS.
-// - Consume macro West admissibility from /assets/lab/runtime-table.west.js before Canvas release.
-// - Separate macro West from Canvas West:
-//   Macro West = /assets/lab/runtime-table.west.js admissibility clutch.
-//   Canvas West = /assets/hearth/hearth.canvas.west.js F13N inspection/view child.
-// - Release to Canvas parent only after macro West admissibility authorizes release.
-// - Prefer renewed Canvas parent-child reconciliation parent before legacy Canvas aliases.
-// - Read renewed Canvas parent-child API/evidence fields directly.
-// - Separate route proof body, macro West admissibility, Canvas release, Canvas readiness, and Canvas F13 evidence completion.
-// - Prevent F21 eligibility unless Canvas F13 evidence is complete.
-// - Preserve North-only F21 latch authority.
-// - Preserve Canvas as F13 evidence only.
-// - Preserve final visual pass refusal.
-// Does not own:
-// - Canvas drawing
-// - Canvas children
-// - planet truth
-// - material truth
-// - hydrology truth
-// - elevation truth
-// - North checkpoint truth
-// - macro West admissibility truth
-// - Canvas West inspection truth
-// - South output proof truth
-// - F21 latch
-// - ready text
-// - final visual pass claim
+// - Preserve Macro West admissibility consumption before Canvas release.
+// - Preserve Canvas parent release and child reconciliation.
+// - Correct next-file recommendation so degraded F13 proof points downstream, not automatically back to North.
+// - Separate F21 eligibility/latch observation from strict visual-proof repair targeting.
+// - Keep Canvas at F13 evidence only.
+// - Keep F21 North-only.
+// - Never claim final visual pass.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_ROUTE_CONDUCTOR_MACRO_WEST_ADMISSIBILITY_CANVAS_RELEASE_CONSUMPTION_TNT_v3";
-  const RECEIPT = "HEARTH_ROUTE_CONDUCTOR_MACRO_WEST_ADMISSIBILITY_CANVAS_RELEASE_CONSUMPTION_RECEIPT_v3";
-  const PREVIOUS_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_PARENT_CHILD_RECONCILIATION_HANDOFF_TNT_v2";
-  const BASELINE_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_PARENT_CHILD_RECONCILIATION_HANDOFF_TNT_v2";
-  const VERSION = "2026-05-31.hearth-route-conductor-macro-west-admissibility-canvas-release-consumption-v3";
+  const CONTRACT = "HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT_TNT_v4";
+  const RECEIPT = "HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT_RECEIPT_v4";
+  const PREVIOUS_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_MACRO_WEST_ADMISSIBILITY_CANVAS_RELEASE_CONSUMPTION_TNT_v3";
+  const BASELINE_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_MACRO_WEST_ADMISSIBILITY_CANVAS_RELEASE_CONSUMPTION_TNT_v3";
+  const VERSION = "2026-05-31.hearth-route-conductor-strict-f13-downstream-alignment-v4";
 
   const ROUTE = "/showroom/globe/hearth/";
   const FILE = "/showroom/globe/hearth/hearth.js";
+
+  const root = typeof window !== "undefined" ? window : globalThis;
+  const doc = root.document || null;
 
   const FILE_GATES = Object.freeze({
     north: "/assets/lab/runtime-table.js",
@@ -69,26 +52,10 @@
   const CARDINALS = Object.freeze({
     NORTH: "NORTH",
     EAST: "EAST",
-    WEST: "WEST",
     SOUTH: "SOUTH",
+    WEST: "WEST",
     CANVAS: "CANVAS",
     UNKNOWN: "UNKNOWN"
-  });
-
-  const FIBONACCI_RANK = Object.freeze({
-    F1: 1,
-    F2: 2,
-    F3: 3,
-    F5: 5,
-    F8: 8,
-    F13: 13,
-    F13A: 13.01,
-    F13B: 13.02,
-    F13C: 13.03,
-    F13D: 13.04,
-    F13E: 13.05,
-    F13N: 13.14,
-    F21: 21
   });
 
   const WEST_DECISION = Object.freeze({
@@ -100,20 +67,29 @@
     RETURN_TO_NORTH_FOR_F21: "RETURN_TO_NORTH_FOR_F21",
     HOLD_ACTIVE: "HOLD_ACTIVE",
     HOLD_FOR_CYCLE: "HOLD_FOR_CYCLE",
-    ARCHIVE: "ARCHIVE",
     HARD_BLOCK: "HARD_BLOCK",
     UNKNOWN: "UNKNOWN"
   });
 
-  const CANVAS_PARENT_V2_CONTRACT = "HEARTH_CANVAS_PARENT_CHILD_RECONCILIATION_F13_EVIDENCE_RECEIVER_TNT_v2";
-  const CANVAS_PARENT_V2_RECEIPT = "HEARTH_CANVAS_PARENT_CHILD_RECONCILIATION_F13_EVIDENCE_RECEIVER_RECEIPT_v2";
+  const CURRENT_CANVAS_PARENT_CONTRACTS = Object.freeze([
+    "HEARTH_CANVAS_PARENT_PRE_RELEASE_STRUCTURAL_CARRIER_THEN_WEST_RELEASE_TO_EAST_TNT_v4",
+    "HEARTH_CANVAS_PARENT_RELEASE_PACKET_TO_EAST_STALE_CLEARANCE_TNT_v3",
+    "HEARTH_CANVAS_PARENT_CHILD_RECONCILIATION_F13_EVIDENCE_RECEIVER_TNT_v2",
+    "HEARTH_CANVAS_PARENT_GOVERNED_F13_EVIDENCE_RECEIVER_TNT_v1",
+    "HEARTH_CANVAS_PHYSICAL_OBJECT_BOOTSTRAP_F13_CARRIER_TNT_v1"
+  ]);
 
-  const root = typeof window !== "undefined" ? window : globalThis;
-  const doc = root.document || null;
+  const STRICT_PROOF_MINIMUMS = Object.freeze({
+    sampleCount: 36,
+    contentCount: 18,
+    varianceScore: 18,
+    classCount: 2,
+    landWaterBothRequired: true
+  });
 
-  const MAX_LOG = 160;
-  const WATCHDOG_MS = 700;
-  const WATCHDOG_LIMIT = 140;
+  const MAX_LOG = 180;
+  const WATCHDOG_MS = 900;
+  const WATCHDOG_LIMIT = 96;
 
   const state = {
     contract: CONTRACT,
@@ -123,9 +99,10 @@
     version: VERSION,
     file: FILE,
     route: ROUTE,
-    role: "hearth-route-conductor-macro-west-admissibility-canvas-release-consumption",
+    role: "hearth-route-conductor-strict-f13-downstream-alignment",
 
     routeConductorPrimaryGateActive: true,
+    strictF13DownstreamAlignmentActive: true,
     canvasParentChildReconciliationActive: true,
     cycleAwareRoutingActive: true,
     southPrimaryGateIntegrationActive: true,
@@ -134,6 +111,11 @@
     newsProtocolSynchronized: true,
     fibonacciSynchronizationActive: true,
 
+    cycleOneIsPosition: true,
+    cycleTwoIsCoordination: true,
+    cycleOneRoute: CYCLE_ROUTES.CYCLE_1,
+    cycleTwoRoute: CYCLE_ROUTES.CYCLE_2,
+
     markerIsNotHydrationProof: true,
     apiRequiredForF8: true,
     receiptRequiredForF8: true,
@@ -141,6 +123,7 @@
     canvasOwnsF13Only: true,
     f21NorthLatchOnly: true,
     routeMaySubmitF21EligibilityOnly: true,
+    routeDoesNotOwnFinalVisualPass: true,
 
     activeCycleNumber: 1,
     activeCycleRoute: CYCLE_ROUTES.CYCLE_1,
@@ -149,11 +132,11 @@
     handoffTo: "",
     activeCardinal: CARDINALS.SOUTH,
     activeFileGate: FILE,
+    activeNewsGate: CARDINALS.SOUTH,
     activeFibonacci: "F8",
     activeFibonacciRank: 8,
     activeStageId: "F8_SOUTH_SELF_DUTY",
     activeGearId: "F8_SOUTH_SELF_DUTY",
-    activeNewsGate: CARDINALS.SOUTH,
 
     canvasActiveFibonacci: "F13",
     canvasActiveFibonacciRank: 13,
@@ -173,8 +156,6 @@
     westAuthorityObserved: false,
     southAuthorityObserved: false,
     southPrimaryGateObserved: false,
-    canvasAuthorityObserved: false,
-    canvasParentV2Observed: false,
     hearthIndexObserved: false,
 
     macroWestAdmissibilityObserved: false,
@@ -188,44 +169,17 @@
     westDegradedForwardApproved: false,
     westFirstFailedCoordinate: "WAITING_MACRO_WEST_ADMISSIBILITY_DECISION",
     westRecommendedNextRenewalTarget: FILE_GATES.macroWest,
-    westReleaseReceiptObserved: false,
 
-    westAuditObserved: false,
-    westAuditRequired: false,
-    westAuditApproved: false,
-    westDegradedForwardApproved: false,
-
-    northReturnRequired: true,
-    northReturnPacketReady: true,
-    westHandoffPacketReady: false,
-
-    proofBodyAvailable: false,
-    proofBodyComposed: false,
-    outputSpreadAvailable: false,
-    outputSpreadComposed: false,
-    visibleStateAvailable: false,
-    visibleStateComposed: false,
-    receiptAvailable: true,
-    receiptComposed: true,
-
-    f13ProofBodyAvailable: false,
-    f13CanvasReadinessObserved: false,
-    f13VisibleEvidenceAvailable: false,
-    f13InspectEvidenceAvailable: false,
-    f13CanvasEvidenceStrict: false,
-    f13CanvasEvidenceDegraded: false,
-    f13CanvasEvidenceComplete: false,
-    f13HardFail: false,
-
-    canvasEvidenceObserved: false,
-    canvasGateReady: false,
+    canvasAuthorityObserved: false,
+    currentCanvasParentObserved: false,
+    canvasParentV2Observed: false,
+    canvasParentReleaseAccepted: false,
     canvasReleaseAuthorized: false,
     canvasReleasePacketReady: false,
     canvasReleaseHeldReason: "WAITING_MACRO_WEST_ADMISSIBILITY_DECISION",
     canvasReleaseRequiresWestAudit: true,
     canvasReleaseRequiresMacroWest: true,
-    canvasReleaseRequiresNorthOrWestEvidence: true,
-    canvasParentReleaseAccepted: false,
+
     canvasBootAttempted: false,
     canvasBootInFlight: false,
     canvasBootResultObserved: false,
@@ -238,20 +192,36 @@
     canvasWestInspectionReady: false,
     canvasSouthVisibleProofReady: false,
     allCanvasChildrenEvidenceReady: false,
+    allCanvasChildrenReady: false,
     canvasNextAuditTarget: "",
+
+    f13ProofBodyAvailable: false,
+    f13CanvasReadinessObserved: false,
+    f13VisibleEvidenceAvailable: false,
+    f13InspectEvidenceAvailable: false,
+    f13CanvasEvidenceStrict: false,
+    f13CanvasEvidenceDegraded: false,
+    f13CanvasEvidenceComplete: false,
+    f13HardFail: false,
+    f13StrictEvidenceGap: "WAITING_CANVAS_F13_EVIDENCE",
+    f13StrictEvidenceRepairTarget: FILE_GATES.canvas,
+
+    southStrictProofObserved: false,
+    southSoftProofObserved: false,
+    southHardFailObserved: false,
+    southProofStale: false,
+    parentStrictReadMismatch: false,
+    degradedF13IsFunctional: false,
+    functionalPageObserved: false,
+    strictVisualProofPending: false,
 
     northGateReady: false,
     eastGateReady: false,
     westGateReady: false,
     southGateReady: false,
-    canvasGateReadyNews: false,
+    canvasGateReady: false,
     newsGatePassedBeforeF21: false,
     newsGateDegradedBeforeF21: false,
-    routeNewsObserved: false,
-    routeNewsComposed: false,
-    routeNewsReturnedToNorth: false,
-    routeNewsSubmittedToWest: false,
-    routeNewsSubmittedToCanvas: false,
 
     f21EligibleForNorth: false,
     f21SubmittedToNorth: false,
@@ -262,6 +232,20 @@
     completionLatched: false,
     degradedCompletionLatched: false,
     readyTextAllowed: false,
+    f21ClaimedByRouteConductor: false,
+    northRepairRequired: false,
+    northRepairReason: "NONE",
+
+    proofBodyAvailable: false,
+    proofBodyComposed: false,
+    outputSpreadAvailable: false,
+    outputSpreadComposed: false,
+    visibleStateAvailable: false,
+    visibleStateComposed: false,
+    receiptAvailable: true,
+    receiptComposed: true,
+    northReturnPacketReady: true,
+    westHandoffPacketReady: false,
 
     firstFailedCoordinate: "WAITING_BOOT",
     recommendedNextFile: FILE,
@@ -273,7 +257,7 @@
     booting: false,
     watchdogTicks: 0,
     renderCount: 0,
-    latestEvent: "HEARTH_ROUTE_CONDUCTOR_MACRO_WEST_ADMISSIBILITY_CANVAS_RELEASE_CONSUMPTION_LOADED",
+    latestEvent: "HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT_LOADED",
     startedAt: "",
     updatedAt: "",
 
@@ -366,6 +350,14 @@
     }
   }
 
+  function firstDefined(...values) {
+    for (const value of values) {
+      if (value !== undefined && value !== null && value !== "") return value;
+    }
+
+    return undefined;
+  }
+
   function objectValue(source, path) {
     if (!source || (!isObject(source) && !Array.isArray(source))) return undefined;
 
@@ -378,20 +370,6 @@
     }
 
     return cursor;
-  }
-
-  function firstDefined(...values) {
-    for (const value of values) {
-      if (value !== undefined && value !== null && value !== "") return value;
-    }
-
-    return undefined;
-  }
-
-  function asArray(value) {
-    if (Array.isArray(value)) return value.slice();
-    if (value === undefined || value === null || value === "") return [];
-    return [value];
   }
 
   function readPath(path) {
@@ -448,7 +426,7 @@
   function record(event, detail = {}) {
     const item = {
       at: nowIso(),
-      event: safeString(event),
+      event: safeString(event, "EVENT"),
       detail: clonePlain(detail)
     };
 
@@ -480,33 +458,20 @@
     return `${key}=${value === undefined || value === null ? "" : String(value)}`;
   }
 
-  function publishEarlyMarker() {
-    root.__HEARTH_ROUTE_CONDUCTOR_MARKER__ = true;
-    root.__HEARTH_ROUTE_CONDUCTOR_FILE__ = FILE;
-    root.__HEARTH_ROUTE_CONDUCTOR_CONTRACT__ = CONTRACT;
-    root.__HEARTH_ROUTE_CONDUCTOR_RECEIPT__ = RECEIPT;
-    root.__HEARTH_ROUTE_CONDUCTOR_MARKER_IS_HYDRATION_PROOF__ = false;
-    root.__HEARTH_ROUTE_CONDUCTOR_MACRO_WEST_ADMISSIBILITY_CONSUMPTION__ = true;
-
-    state.routeConductorMarkerPresent = true;
-
-    updateDataset();
-  }
-
   function normalizeCardinal(value, fallback = CARDINALS.UNKNOWN) {
     const text = safeString(value, fallback).toUpperCase();
 
     if (text.includes("NORTH")) return CARDINALS.NORTH;
     if (text.includes("EAST")) return CARDINALS.EAST;
-    if (text.includes("WEST")) return CARDINALS.WEST;
     if (text.includes("SOUTH")) return CARDINALS.SOUTH;
+    if (text.includes("WEST")) return CARDINALS.WEST;
     if (text.includes("CANVAS")) return CARDINALS.CANVAS;
 
     return fallback;
   }
 
   function normalizeCycleRoute(value) {
-    const text = safeString(value).toUpperCase();
+    const text = safeString(value, "").toUpperCase();
 
     if (
       text.includes(CYCLE_ROUTES.CYCLE_1) ||
@@ -530,6 +495,19 @@
   function childHasMethods(child, methods) {
     if (!child || !isObject(child)) return false;
     return methods.every((method) => isFunction(child[method]));
+  }
+
+  function publishEarlyMarker() {
+    root.__HEARTH_ROUTE_CONDUCTOR_MARKER__ = true;
+    root.__HEARTH_ROUTE_CONDUCTOR_FILE__ = FILE;
+    root.__HEARTH_ROUTE_CONDUCTOR_CONTRACT__ = CONTRACT;
+    root.__HEARTH_ROUTE_CONDUCTOR_RECEIPT__ = RECEIPT;
+    root.__HEARTH_ROUTE_CONDUCTOR_MARKER_IS_HYDRATION_PROOF__ = false;
+    root.__HEARTH_ROUTE_CONDUCTOR_MACRO_WEST_ADMISSIBILITY_CONSUMPTION__ = true;
+    root.__HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT__ = true;
+
+    state.routeConductorMarkerPresent = true;
+    updateDataset();
   }
 
   function readNorthAuthority() {
@@ -610,15 +588,15 @@
       api ||
       receipt.contract ||
       datasetValue("labRuntimeTableWestLoaded") === "true" ||
-      datasetValue("westCycleAwareAdmissibilityClutch") === "true"
+      datasetValue("westCycleAwareAdmissibilityClutch") === "true" ||
+      datasetValue("hearthSouthMacroWestAuthorityObserved") === "true"
     );
 
     return {
       authority: api || null,
       receipt,
       observed,
-      file: FILE_GATES.macroWest,
-      macroWest: true
+      file: FILE_GATES.macroWest
     };
   }
 
@@ -665,23 +643,47 @@
 
   function readHearthIndexAuthority() {
     const api = firstGlobal([
+      "HEARTH_EAST_SOUTH_PAIR_DYNAMIC_SELECTOR_RUNTIME_RELEASE",
+      "HEARTH_EAST_SOUTH_PAIR_FEMALE_SELECTOR",
       "HEARTH_EAST_STEP1_IGNITION",
       "HEARTH_INDEX_BRIDGE",
       "HEARTH_INDEX_JS",
       "HEARTH.indexBridge",
+      "HEARTH.indexJs",
+      "HEARTH.dynamicSelectorRuntimeRelease",
+      "HEARTH.eastSouthPairFemaleSelector",
       "HEARTH.eastStep1Ignition"
     ]);
 
+    const receipt = readReceipt(api) || {};
+
+    const shellAccepted = Boolean(
+      safeBool(receipt.shellAccepted, false) ||
+      datasetValue("hearthShellAccepted") === "true" ||
+      datasetValue("hearthRuntimeReleaseAuthorized") === "true"
+    );
+
+    const runtimeReleaseAuthorized = Boolean(
+      safeBool(receipt.runtimeReleaseAuthorized, false) ||
+      datasetValue("hearthRuntimeReleaseAuthorized") === "true"
+    );
+
     return {
       authority: api || null,
-      receipt: readReceipt(api) || {},
-      observed: Boolean(api),
+      receipt,
+      observed: Boolean(api || datasetValue("hearthFemaleSelectorLoaded") === "true"),
+      shellAccepted,
+      runtimeReleaseAuthorized,
       file: FILE_GATES.hearthIndex
     };
   }
 
   function readCanvasApi() {
     return firstGlobal([
+      "HEARTH_CANVAS_PARENT_PRE_RELEASE_STRUCTURAL_CARRIER_THEN_WEST_RELEASE_TO_EAST",
+      "HEARTH.canvasParentPreReleaseStructuralCarrierThenWestReleaseToEast",
+      "DEXTER_LAB.hearthCanvasParentPreReleaseStructuralCarrierThenWestReleaseToEast",
+
       "HEARTH_CANVAS_PARENT_CHILD_RECONCILIATION_F13_EVIDENCE_RECEIVER",
       "HEARTH.canvasParentChildReconciliationF13EvidenceReceiver",
       "DEXTER_LAB.hearthCanvasParentChildReconciliationF13EvidenceReceiver",
@@ -690,6 +692,8 @@
       "HEARTH.canvasParentGovernedF13EvidenceReceiver",
       "DEXTER_LAB.hearthCanvasParentGovernedF13EvidenceReceiver",
 
+      "HEARTH_CANVAS_PRE_RELEASE_STRUCTURAL_CARRIER",
+      "HEARTH_CANVAS_PHYSICAL_OBJECT_BOOTSTRAP",
       "HEARTH_CANVAS_PHYSICAL_CARRIER_F13_PROOF_PARENT",
       "HEARTH_CANVAS_MATERIALS_RELIEF_CONSUMPTION_INVALIDATION",
       "HEARTH_CANVAS_TRANSISTOR_GATE",
@@ -698,17 +702,13 @@
       "HEARTH_CANVAS_AUTHORITY",
       "HEARTH_CANVAS_EVIDENCE",
       "HEARTH_CANVAS",
-      "HEARTH.canvasNorth",
-      "HEARTH.canvasSplitAdapter",
-      "HEARTH.canvasTransistorGate",
-      "HEARTH.canvasEvidence",
       "HEARTH.canvas",
-      "DEXTER_LAB.hearthCanvasPhysicalCarrierF13ProofParent",
-      "DEXTER_LAB.hearthCanvasMaterialsReliefConsumptionInvalidation",
-      "DEXTER_LAB.hearthCanvasTransistorGate",
-      "DEXTER_LAB.hearthCanvasSplitAdapter",
-      "DEXTER_LAB.hearthCanvasNorth",
-      "DEXTER_LAB.hearthCanvasEvidence"
+      "HEARTH.canvasAuthority",
+      "HEARTH.canvasEvidence",
+      "HEARTH.canvasNorth",
+      "HEARTH.canvasPreReleaseStructuralCarrier",
+      "DEXTER_LAB.hearthCanvasEvidence",
+      "DEXTER_LAB.hearthCanvasNorth"
     ]);
   }
 
@@ -719,15 +719,15 @@
     if (receipt) return receipt;
 
     const fallback = firstGlobal([
+      "HEARTH_CANVAS_PARENT_PRE_RELEASE_STRUCTURAL_CARRIER_THEN_WEST_RELEASE_TO_EAST_RECEIPT",
       "HEARTH_CANVAS_PARENT_CHILD_RECONCILIATION_F13_EVIDENCE_RECEIVER_RECEIPT",
-      "HEARTH.canvasParentChildReconciliationF13EvidenceReceiverReceipt",
-      "DEXTER_LAB.hearthCanvasParentChildReconciliationF13EvidenceReceiverReceipt",
-
+      "HEARTH_CANVAS_PARENT_GOVERNED_F13_EVIDENCE_RECEIVER_RECEIPT",
       "HEARTH_CANVAS_RECEIPT",
       "HEARTH_CANVAS_EVIDENCE_RECEIPT",
       "HEARTH_CANVAS_POSTGAME_RECEIPT",
       "HEARTH.canvasReceipt",
-      "HEARTH.canvasEvidenceReceipt"
+      "HEARTH.canvasEvidenceReceipt",
+      "DEXTER_LAB.hearthCanvasEvidenceReceipt"
     ]);
 
     return isObject(fallback) ? fallback : {};
@@ -739,20 +739,30 @@
         "HEARTH_CANVAS_EAST",
         "HEARTH.canvasEast",
         "HEARTH.canvasEastMaterialAtlasSourceMachine",
+        "HEARTH.canvasEastMaterialAtlasSourceTransistor",
+        "HEARTH.canvasEastF13AtlasSourceChild",
+        "HEARTH.canvasEastGovernedF13AtlasSource",
         "DEXTER_LAB.hearthCanvasEast",
-        "DEXTER_LAB.hearthCanvasEastMaterialAtlasSourceMachine"
+        "DEXTER_LAB.hearthCanvasEastMaterialAtlasSourceMachine",
+        "DEXTER_LAB.hearthCanvasEastF13AtlasSourceChild"
       ],
       west: [
         "HEARTH_CANVAS_WEST",
         "HEARTH.canvasWest",
+        "HEARTH.canvasWestInspectionInvalidationControl",
         "HEARTH.canvasWestF13NInspectionViewInvalidationChild",
-        "DEXTER_LAB.hearthCanvasWest"
+        "DEXTER_LAB.hearthCanvasWest",
+        "DEXTER_LAB.hearthCanvasWestInspectionInvalidationControl"
       ],
       south: [
         "HEARTH_CANVAS_SOUTH",
         "HEARTH.canvasSouth",
+        "HEARTH.canvasSouthTextureSphereVisibleProof",
+        "HEARTH.canvasSouthSplitAdapterDrainVisibleProofHardening",
         "HEARTH.canvasSouthF13STextureRenderVisibleProofChild",
-        "DEXTER_LAB.hearthCanvasSouth"
+        "DEXTER_LAB.hearthCanvasSouth",
+        "DEXTER_LAB.hearthCanvasSouthTextureSphereVisibleProof",
+        "DEXTER_LAB.hearthCanvasSouthF13STextureRenderVisibleProofChild"
       ]
     };
 
@@ -766,6 +776,40 @@
     if (isFunction(canvas.render)) return "render";
     if (isFunction(canvas.mount)) return "mount";
     return "";
+  }
+
+  function bindControls() {
+    if (!doc) return;
+
+    if (refs.copyButton && refs.copyButton.dataset.hearthRouteConductorStrictF13Bound !== "true") {
+      refs.copyButton.dataset.hearthRouteConductorStrictF13Bound = "true";
+      refs.copyButton.addEventListener("click", copyDiagnostic);
+    }
+
+    if (refs.toggleButton && refs.toggleButton.dataset.hearthRouteConductorStrictF13Bound !== "true") {
+      refs.toggleButton.dataset.hearthRouteConductorStrictF13Bound = "true";
+      refs.toggleButton.addEventListener("click", () => {
+        const visible = refs.receiptBox ? refs.receiptBox.dataset.visible !== "true" : true;
+
+        if (refs.receiptBox) refs.receiptBox.dataset.visible = String(visible);
+        if (refs.receiptText) refs.receiptText.textContent = visible ? getReceiptText() : "";
+        if (refs.toggleButton) refs.toggleButton.textContent = visible ? "Hide receipt" : "Show receipt";
+      });
+    }
+
+    if (refs.inspectButton && refs.inspectButton.dataset.hearthRouteConductorStrictF13Bound !== "true") {
+      refs.inspectButton.dataset.hearthRouteConductorStrictF13Bound = "true";
+      refs.inspectButton.addEventListener("click", () => {
+        setInspectMode(!(doc.documentElement.dataset.hearthSouthPlanetInspect === "true"));
+      });
+    }
+
+    if (refs.showTab && refs.showTab.dataset.hearthRouteConductorStrictF13Bound !== "true") {
+      refs.showTab.dataset.hearthRouteConductorStrictF13Bound = "true";
+      refs.showTab.addEventListener("click", () => setInspectMode(false));
+    }
+
+    state.refsBound = Boolean(refs.copyButton || refs.toggleButton || refs.inspectButton || refs.showTab);
   }
 
   function scanDom() {
@@ -839,7 +883,8 @@
       datasetValue("hearthCanvasF13EvidenceComplete") === "true" ||
       datasetValue("hearthCanvasSouthVisibleContentProof") === "true" ||
       datasetValue("hearthCanvasSouthImageRendered") === "true" ||
-      datasetValue("hearthSouthVisiblePlanetAvailable") === "true"
+      datasetValue("hearthSouthVisiblePlanetAvailable") === "true" ||
+      datasetValue("hearthSouthF13CanvasEvidenceComplete") === "true"
     );
 
     const copyDiagnosticReady = Boolean(refs.copyButton);
@@ -877,6 +922,10 @@
     };
   }
 
+  function readChildReceipt(child) {
+    return readReceipt(child) || {};
+  }
+
   function readCanvasEvidence() {
     const api = readCanvasApi();
     const receipt = readCanvasReceipt();
@@ -886,22 +935,37 @@
     const westChild = readCanvasChild("west");
     const southChild = readCanvasChild("south");
 
+    const eastReceipt = readChildReceipt(eastChild);
+    const westReceipt = readChildReceipt(westChild);
+    const southReceipt = readChildReceipt(southChild);
+
     const parentBootMethod = selectCanvasMethod(api);
     const parentPresent = Boolean(api);
     const parentBootMethodAvailable = Boolean(parentBootMethod);
 
-    const receiptContract = safeString(receipt.contract || receipt.splitContract || "");
-    const receiptName = safeString(receipt.receipt || receipt.splitReceipt || "");
+    const receiptContract = safeString(firstDefined(receipt.contract, receipt.splitContract), "");
+    const receiptName = safeString(firstDefined(receipt.receipt, receipt.splitReceipt), "");
+
+    const currentCanvasParentObserved = Boolean(
+      parentPresent ||
+      CURRENT_CANVAS_PARENT_CONTRACTS.includes(receiptContract) ||
+      CURRENT_CANVAS_PARENT_CONTRACTS.includes(safeString(receipt.splitContract, "")) ||
+      safeBool(receipt.preReleaseStructuralCarrierActive, false) ||
+      safeBool(receipt.parentChildReconciliationActive, false) ||
+      safeBool(receipt.governedF13EvidenceReceiverActive, false) ||
+      safeBool(receipt.ownsParentChildReconciliation, false) ||
+      datasetValue("hearthCanvasLoaded") === "true" ||
+      datasetValue("hearthCanvasPreReleaseStructuralCarrierActive") === "true" ||
+      datasetValue("hearthCanvasParentChildReconciliationActive") === "true"
+    );
 
     const canvasParentV2Observed = Boolean(
-      receiptContract === CANVAS_PARENT_V2_CONTRACT ||
-      receiptName === CANVAS_PARENT_V2_RECEIPT ||
-      receipt.canvasParentChildReconciliationActive === true ||
-      receipt.parentChildReconciliationActive === true ||
-      receipt.ownsParentChildReconciliation === true ||
-      datasetValue("hearthCanvasParentChildReconciliationActive") === "true" ||
-      datasetValue("hearthCanvasContract") === CANVAS_PARENT_V2_CONTRACT ||
-      datasetValue("hearthCanvasSplitContract") === CANVAS_PARENT_V2_CONTRACT
+      receiptContract === "HEARTH_CANVAS_PARENT_CHILD_RECONCILIATION_F13_EVIDENCE_RECEIVER_TNT_v2" ||
+      receiptName === "HEARTH_CANVAS_PARENT_CHILD_RECONCILIATION_F13_EVIDENCE_RECEIVER_RECEIPT_v2" ||
+      safeBool(receipt.canvasParentChildReconciliationActive, false) ||
+      safeBool(receipt.parentChildReconciliationActive, false) ||
+      safeBool(receipt.ownsParentChildReconciliation, false) ||
+      datasetValue("hearthCanvasParentChildReconciliationActive") === "true"
     );
 
     const eastApiFallback = childHasMethods(eastChild, ["buildAtlas", "sample", "read", "getReceipt"]);
@@ -918,17 +982,17 @@
     ]);
 
     const canvasEastApiReady = safeBool(
-      firstDefined(receipt.canvasEastApiReady, receipt.canvasEastReady),
+      firstDefined(receipt.canvasEastApiReady, eastReceipt.canvasEastApiReady, eastReceipt.canvasEastReady),
       eastApiFallback
     );
 
     const canvasWestApiReady = safeBool(
-      firstDefined(receipt.canvasWestApiReady, receipt.canvasWestReady),
+      firstDefined(receipt.canvasWestApiReady, westReceipt.canvasWestApiReady, westReceipt.canvasWestReady),
       westApiFallback
     );
 
     const canvasSouthApiReady = safeBool(
-      firstDefined(receipt.canvasSouthApiReady, receipt.canvasSouthReady),
+      firstDefined(receipt.canvasSouthApiReady, southReceipt.canvasSouthApiReady, southReceipt.canvasSouthReady),
       southApiFallback
     );
 
@@ -938,79 +1002,187 @@
     );
 
     const atlasBuildComplete = safeBool(
-      receipt.atlasBuildComplete,
+      firstDefined(receipt.atlasBuildComplete, eastReceipt.atlasBuildComplete, eastReceipt.atlasReady, eastReceipt.f13AtlasReady),
       datasetValue("hearthCanvasAtlasBuildComplete") === "true"
     );
 
     const textureComposeComplete = safeBool(
-      receipt.textureComposeComplete,
-      datasetValue("hearthCanvasTextureComposeComplete") === "true"
+      firstDefined(receipt.textureComposeComplete, southReceipt.textureComposeComplete, southReceipt.textureReady),
+      datasetValue("hearthCanvasTextureComposeComplete") === "true" ||
+      datasetValue("hearthCanvasSouthTextureComposeComplete") === "true"
     );
 
     const firstFrameDetected = safeBool(
-      receipt.firstFrameDetected,
-      datasetValue("hearthCanvasFirstFrameDetected") === "true"
+      firstDefined(receipt.firstFrameDetected, southReceipt.firstFrameDetected),
+      datasetValue("hearthCanvasFirstFrameDetected") === "true" ||
+      datasetValue("hearthCanvasSouthFirstFrameDetected") === "true"
     );
 
     const imageRendered = safeBool(
-      receipt.imageRendered,
-      datasetValue("hearthCanvasImageRendered") === "true"
+      firstDefined(receipt.imageRendered, southReceipt.imageRendered),
+      datasetValue("hearthCanvasImageRendered") === "true" ||
+      datasetValue("hearthCanvasSouthImageRendered") === "true"
     );
 
     const canvasReady = safeBool(
-      receipt.canvasReady,
-      datasetValue("hearthCanvasReady") === "true"
+      firstDefined(receipt.canvasReady, receipt.canvasGateReady),
+      datasetValue("hearthCanvasReady") === "true" ||
+      datasetValue("hearthCanvasCanvasGateReady") === "true"
     );
 
     const visibleContentProof = safeBool(
-      receipt.visibleContentProof,
-      datasetValue("hearthCanvasVisibleContentProof") === "true"
+      firstDefined(receipt.visibleContentProof, southReceipt.visibleContentProof),
+      datasetValue("hearthCanvasVisibleContentProof") === "true" ||
+      datasetValue("hearthCanvasSouthVisibleContentProof") === "true"
     );
 
     const visibleContentStrictProof = safeBool(
-      firstDefined(receipt.visibleContentStrictProof, receipt.f13CanvasEvidenceStrict),
-      datasetValue("hearthCanvasVisibleContentStrictProof") === "true"
+      firstDefined(
+        receipt.visibleContentStrictProof,
+        receipt.f13CanvasEvidenceStrict,
+        southReceipt.visibleContentStrictProof,
+        southReceipt.f13VisibleEvidenceStrict
+      ),
+      datasetValue("hearthCanvasVisibleContentStrictProof") === "true" ||
+      datasetValue("hearthCanvasF13EvidenceStrict") === "true" ||
+      datasetValue("hearthCanvasSouthVisibleContentStrictProof") === "true"
     );
 
     const visibleContentSoftGap = safeBool(
-      firstDefined(receipt.visibleContentSoftGap, receipt.f13CanvasEvidenceDegraded),
-      datasetValue("hearthCanvasVisibleContentSoftGap") === "true"
+      firstDefined(
+        receipt.visibleContentSoftGap,
+        receipt.f13CanvasEvidenceDegraded,
+        southReceipt.visibleContentSoftGap,
+        southReceipt.f13VisibleEvidenceDegraded
+      ),
+      datasetValue("hearthCanvasVisibleContentSoftGap") === "true" ||
+      datasetValue("hearthCanvasF13EvidenceDegraded") === "true" ||
+      datasetValue("hearthCanvasSouthVisibleContentSoftGap") === "true"
     );
 
     const visibleContentHardFail = safeBool(
-      firstDefined(receipt.visibleContentHardFail, receipt.f13HardFail),
-      datasetValue("hearthCanvasVisibleContentHardFail") === "true"
+      firstDefined(
+        receipt.visibleContentHardFail,
+        receipt.f13HardFail,
+        southReceipt.visibleContentHardFail,
+        southReceipt.f13HardFail
+      ),
+      datasetValue("hearthCanvasVisibleContentHardFail") === "true" ||
+      datasetValue("hearthCanvasF13HardFail") === "true" ||
+      datasetValue("hearthCanvasSouthVisibleContentHardFail") === "true"
     );
 
     const visibleForwardProgress = safeBool(
-      receipt.visibleForwardProgress,
+      firstDefined(receipt.visibleForwardProgress, southReceipt.visibleForwardProgress),
       datasetValue("hearthCanvasVisibleForwardProgress") === "true"
     );
 
-    const visibleContentAdmissible = safeBool(receipt.visibleContentAdmissible, false);
-
-    const visiblePlanetAvailable = safeBool(
-      receipt.visiblePlanetAvailable,
-      datasetValue("hearthCanvasVisiblePlanetAvailable") === "true"
+    const visibleContentAdmissible = safeBool(
+      firstDefined(receipt.visibleContentAdmissible, southReceipt.visibleContentAdmissible),
+      false
     );
 
-    const visibleCounts = Boolean(
-      safeNumber(receipt.visibleContentClassCount, 0) > 0 ||
-      safeNumber(receipt.visibleContentLandSampleCount, 0) > 0 ||
-      safeNumber(receipt.visibleContentWaterSampleCount, 0) > 0 ||
-      safeNumber(receipt.visibleContentOtherSampleCount, 0) > 0
+    const visiblePlanetAvailable = safeBool(
+      firstDefined(receipt.visiblePlanetAvailable, southReceipt.visiblePlanetAvailable),
+      datasetValue("hearthCanvasVisiblePlanetAvailable") === "true" ||
+      datasetValue("hearthCanvasSouthVisiblePlanetAvailable") === "true"
+    );
+
+    const visibleContentSampleCount = safeNumber(firstDefined(
+      receipt.visibleContentSampleCount,
+      southReceipt.visibleContentSampleCount
+    ), 0);
+
+    const visibleContentVarianceScore = safeNumber(firstDefined(
+      receipt.visibleContentVarianceScore,
+      southReceipt.visibleContentVarianceScore
+    ), 0);
+
+    const visibleContentClassCount = safeNumber(firstDefined(
+      receipt.visibleContentClassCount,
+      southReceipt.visibleContentClassCount
+    ), 0);
+
+    const visibleContentLandSampleCount = safeNumber(firstDefined(
+      receipt.visibleContentLandSampleCount,
+      southReceipt.visibleContentLandSampleCount
+    ), 0);
+
+    const visibleContentWaterSampleCount = safeNumber(firstDefined(
+      receipt.visibleContentWaterSampleCount,
+      southReceipt.visibleContentWaterSampleCount
+    ), 0);
+
+    const visibleContentOtherSampleCount = safeNumber(firstDefined(
+      receipt.visibleContentOtherSampleCount,
+      southReceipt.visibleContentOtherSampleCount
+    ), 0);
+
+    const carrierOnlyDetected = safeBool(firstDefined(
+      receipt.carrierOnlyDetected,
+      southReceipt.carrierOnlyDetected
+    ), false);
+
+    const visibleProofStale = safeBool(firstDefined(
+      receipt.visibleProofStale,
+      southReceipt.visibleProofStale,
+      receipt.renderFrameStale,
+      southReceipt.renderFrameStale
+    ), false);
+
+    const textureInvalidated = safeBool(firstDefined(
+      receipt.textureInvalidated,
+      southReceipt.textureInvalidated
+    ), false);
+
+    const contentCount = visibleContentLandSampleCount + visibleContentWaterSampleCount + visibleContentOtherSampleCount;
+    const strictByMetrics = Boolean(
+      visibleContentSampleCount >= STRICT_PROOF_MINIMUMS.sampleCount &&
+      contentCount >= STRICT_PROOF_MINIMUMS.contentCount &&
+      visibleContentVarianceScore >= STRICT_PROOF_MINIMUMS.varianceScore &&
+      visibleContentClassCount >= STRICT_PROOF_MINIMUMS.classCount &&
+      visibleContentLandSampleCount > 0 &&
+      visibleContentWaterSampleCount > 0 &&
+      !carrierOnlyDetected &&
+      !visibleProofStale &&
+      !textureInvalidated
+    );
+
+    const southStrictProofObserved = Boolean(
+      visibleContentStrictProof ||
+      safeBool(southReceipt.currentVisibleProofValid, false) && safeString(southReceipt.proofBin, "") === "STRICT" ||
+      strictByMetrics
+    );
+
+    const southSoftProofObserved = Boolean(
+      visibleContentSoftGap ||
+      safeString(southReceipt.proofBin, "") === "SOFT_GAP" ||
+      visibleForwardProgress ||
+      visibleContentAdmissible
+    );
+
+    const southHardFailObserved = Boolean(
+      visibleContentHardFail ||
+      safeString(southReceipt.proofBin, "") === "HARD_FAIL" ||
+      safeBool(southReceipt.f13HardFail, false)
     );
 
     const canvasEastEvidenceReady = safeBool(
-      firstDefined(receipt.canvasEastEvidenceReady, receipt.f13AtlasReady, receipt.atlasReady),
+      firstDefined(receipt.canvasEastEvidenceReady, receipt.f13AtlasReady, eastReceipt.f13AtlasReady, eastReceipt.atlasReady),
       Boolean(atlasBuildComplete)
     );
 
     const canvasWestInspectionReady = safeBool(
-      firstDefined(receipt.canvasWestInspectionReady, receipt.inspectModeAvailable, receipt.inspectPlanetControlAvailable),
+      firstDefined(
+        receipt.canvasWestInspectionReady,
+        receipt.inspectModeAvailable,
+        receipt.inspectPlanetControlAvailable,
+        westReceipt.f13nInspectionReady,
+        westReceipt.inspectionReady
+      ),
       Boolean(
-        receipt.dragInspectionBound === true ||
-        receipt.zoomInspectionBound === true ||
+        safeBool(westReceipt.dragInspectionBound, false) ||
+        safeBool(westReceipt.zoomInspectionBound, false) ||
         dom.inspectStrictReady ||
         dom.inspectFallbackReady
       )
@@ -1020,16 +1192,16 @@
       firstDefined(
         receipt.canvasSouthVisibleProofReady,
         receipt.f13VisibleEvidenceAvailable,
-        receipt.f13VisibleEvidenceComplete
+        receipt.f13VisibleEvidenceComplete,
+        southReceipt.f13VisibleEvidenceAvailable,
+        southReceipt.f13sVisibleProofReady,
+        southReceipt.visibleProofReady
       ),
       Boolean(
+        southStrictProofObserved ||
+        southSoftProofObserved ||
         visibleContentProof ||
-        visibleContentStrictProof ||
-        visibleContentSoftGap ||
-        visibleForwardProgress ||
-        visibleContentAdmissible ||
         visiblePlanetAvailable ||
-        visibleCounts ||
         (firstFrameDetected && imageRendered)
       )
     );
@@ -1039,47 +1211,63 @@
       Boolean(canvasEastEvidenceReady && canvasWestInspectionReady && canvasSouthVisibleProofReady)
     );
 
-    const f13CanvasEvidenceStrict = safeBool(
-      receipt.f13CanvasEvidenceStrict,
-      Boolean(visibleContentStrictProof || (visibleContentProof && !visibleContentSoftGap))
+    const allCanvasChildrenReady = Boolean(
+      allCanvasChildrenApiReady &&
+      allCanvasChildrenEvidenceReady
     );
 
-    const f13CanvasEvidenceDegraded = safeBool(
-      receipt.f13CanvasEvidenceDegraded,
-      Boolean(
-        !f13CanvasEvidenceStrict &&
+    const f13CanvasEvidenceStrict = Boolean(
+      safeBool(receipt.f13CanvasEvidenceStrict, false) ||
+      (
+        parentPresent &&
+        currentCanvasParentObserved &&
+        allCanvasChildrenReady &&
+        canvasEastEvidenceReady &&
+        canvasWestInspectionReady &&
+        canvasSouthVisibleProofReady &&
+        southStrictProofObserved &&
+        !southHardFailObserved &&
+        !visibleProofStale &&
+        !textureInvalidated
+      )
+    );
+
+    const f13CanvasEvidenceDegraded = Boolean(
+      !f13CanvasEvidenceStrict &&
+      (
+        safeBool(receipt.f13CanvasEvidenceDegraded, false) ||
         (
-          visibleContentSoftGap ||
-          visibleForwardProgress ||
-          visibleContentAdmissible ||
-          receipt.f13VisibleEvidenceDegraded === true
+          parentPresent &&
+          currentCanvasParentObserved &&
+          allCanvasChildrenApiReady &&
+          canvasEastEvidenceReady &&
+          canvasSouthVisibleProofReady &&
+          (southSoftProofObserved || visibleForwardProgress || visibleContentAdmissible || visiblePlanetAvailable || imageRendered)
         )
       )
     );
 
-    const f13HardFail = safeBool(
-      firstDefined(receipt.f13HardFail, receipt.visibleContentHardFail),
-      visibleContentHardFail
+    const f13HardFail = Boolean(
+      southHardFailObserved &&
+      !southSoftProofObserved &&
+      !southStrictProofObserved
     );
 
-    const f13CanvasEvidenceComplete = safeBool(
-      receipt.f13CanvasEvidenceComplete,
-      Boolean(
-        !f13HardFail &&
-        allCanvasChildrenEvidenceReady &&
-        (f13CanvasEvidenceStrict || f13CanvasEvidenceDegraded)
+    const f13CanvasEvidenceComplete = Boolean(
+      !f13HardFail &&
+      (
+        safeBool(receipt.f13CanvasEvidenceComplete, false) ||
+        f13CanvasEvidenceStrict ||
+        f13CanvasEvidenceDegraded
       )
     );
 
-    const canvasGateReady = safeBool(
-      receipt.canvasGateReady,
-      Boolean(
-        parentPresent &&
-        allCanvasChildrenApiReady &&
-        allCanvasChildrenEvidenceReady &&
-        f13CanvasEvidenceComplete &&
-        !f13HardFail
-      )
+    const canvasGateReady = Boolean(
+      currentCanvasParentObserved &&
+      allCanvasChildrenApiReady &&
+      allCanvasChildrenEvidenceReady &&
+      f13CanvasEvidenceComplete &&
+      !f13HardFail
     );
 
     const visiblePlanetProofValid = Boolean(
@@ -1088,13 +1276,12 @@
       !f13HardFail &&
       (
         f13CanvasEvidenceComplete ||
+        southStrictProofObserved ||
+        southSoftProofObserved ||
         visibleContentProof ||
-        visibleContentStrictProof ||
-        visibleContentSoftGap ||
         visibleForwardProgress ||
         visibleContentAdmissible ||
         visiblePlanetAvailable ||
-        visibleCounts ||
         (canvasReady && firstFrameDetected) ||
         (imageRendered && firstFrameDetected)
       )
@@ -1131,6 +1318,13 @@
       datasetValue("hearthCanvasReleaseAccepted") === "true"
     );
 
+    const parentStrictReadMismatch = Boolean(
+      southStrictProofObserved &&
+      !safeBool(receipt.f13CanvasEvidenceStrict, false) &&
+      currentCanvasParentObserved &&
+      allCanvasChildrenReady
+    );
+
     const nextAuditTarget = safeString(
       firstDefined(
         receipt.nextAuditTarget,
@@ -1141,14 +1335,45 @@
       ""
     );
 
+    const strictGap = resolveStrictF13Gap({
+      parentPresent,
+      currentCanvasParentObserved,
+      parentReleaseAccepted,
+      parentBootMethodAvailable,
+      canvasEastApiReady,
+      canvasWestApiReady,
+      canvasSouthApiReady,
+      allCanvasChildrenApiReady,
+      canvasEastEvidenceReady,
+      canvasWestInspectionReady,
+      canvasSouthVisibleProofReady,
+      allCanvasChildrenEvidenceReady,
+      f13CanvasEvidenceStrict,
+      f13CanvasEvidenceDegraded,
+      f13CanvasEvidenceComplete,
+      f13HardFail,
+      southStrictProofObserved,
+      southSoftProofObserved,
+      southHardFailObserved,
+      parentStrictReadMismatch,
+      visibleProofStale,
+      textureInvalidated,
+      carrierOnlyDetected
+    });
+
     return {
       authority: api || null,
       receipt,
+      eastReceipt,
+      westReceipt,
+      southReceipt,
       file: FILE_GATES.canvas,
+
       observed: evidenceObserved,
       parentPresent,
       parentBootMethod,
       parentBootMethodAvailable,
+      currentCanvasParentObserved,
       canvasParentV2Observed,
       parentReleaseAccepted,
 
@@ -1161,6 +1386,7 @@
       canvasWestInspectionReady,
       canvasSouthVisibleProofReady,
       allCanvasChildrenEvidenceReady,
+      allCanvasChildrenReady,
 
       atlasBuildComplete,
       textureComposeComplete,
@@ -1176,6 +1402,21 @@
       visibleContentAdmissible,
       visiblePlanetAvailable,
       visiblePlanetProofValid,
+
+      visibleContentSampleCount,
+      visibleContentVarianceScore,
+      visibleContentClassCount,
+      visibleContentLandSampleCount,
+      visibleContentWaterSampleCount,
+      visibleContentOtherSampleCount,
+      carrierOnlyDetected,
+      visibleProofStale,
+      textureInvalidated,
+
+      southStrictProofObserved,
+      southSoftProofObserved,
+      southHardFailObserved,
+      parentStrictReadMismatch,
 
       f13CanvasEvidenceStrict,
       f13CanvasEvidenceDegraded,
@@ -1194,8 +1435,133 @@
         imageRendered
       ),
 
+      f13StrictEvidenceGap: strictGap.gap,
+      f13StrictEvidenceRepairTarget: strictGap.repairTarget,
+      degradedF13IsFunctional: Boolean(f13CanvasEvidenceComplete && f13CanvasEvidenceDegraded && !f13CanvasEvidenceStrict && !f13HardFail),
+      strictVisualProofPending: Boolean(f13CanvasEvidenceComplete && !f13CanvasEvidenceStrict && !f13HardFail),
+      functionalPageObserved: Boolean(
+        parentReleaseAccepted &&
+        currentCanvasParentObserved &&
+        allCanvasChildrenApiReady &&
+        imageRendered &&
+        f13CanvasEvidenceComplete &&
+        !f13HardFail
+      ),
+
       nextAuditTarget,
       dom
+    };
+  }
+
+  function resolveStrictF13Gap(canvas = {}) {
+    if (!canvas.parentPresent || !canvas.currentCanvasParentObserved) {
+      return {
+        gap: "WAITING_CURRENT_CANVAS_PARENT",
+        repairTarget: FILE_GATES.canvas
+      };
+    }
+
+    if (!canvas.parentBootMethodAvailable) {
+      return {
+        gap: "WAITING_CANVAS_PARENT_BOOT_METHOD",
+        repairTarget: FILE_GATES.canvas
+      };
+    }
+
+    if (!canvas.parentReleaseAccepted && !canvas.f13CanvasEvidenceComplete) {
+      return {
+        gap: "WAITING_CANVAS_PARENT_RELEASE_ACCEPTANCE",
+        repairTarget: FILE_GATES.canvas
+      };
+    }
+
+    if (!canvas.canvasEastApiReady) {
+      return {
+        gap: "WAITING_CANVAS_EAST_API",
+        repairTarget: FILE_GATES.canvasEast
+      };
+    }
+
+    if (!canvas.canvasEastEvidenceReady) {
+      return {
+        gap: "WAITING_CANVAS_EAST_ATLAS_EVIDENCE",
+        repairTarget: FILE_GATES.canvasEast
+      };
+    }
+
+    if (!canvas.canvasWestApiReady) {
+      return {
+        gap: "WAITING_CANVAS_WEST_API",
+        repairTarget: FILE_GATES.canvasWest
+      };
+    }
+
+    if (!canvas.canvasWestInspectionReady) {
+      return {
+        gap: "WAITING_CANVAS_WEST_INSPECTION_EVIDENCE",
+        repairTarget: FILE_GATES.canvasWest
+      };
+    }
+
+    if (!canvas.canvasSouthApiReady) {
+      return {
+        gap: "WAITING_CANVAS_SOUTH_API",
+        repairTarget: FILE_GATES.canvasSouth
+      };
+    }
+
+    if (canvas.textureInvalidated || canvas.visibleProofStale) {
+      return {
+        gap: "WAITING_CANVAS_SOUTH_CURRENT_NON_STALE_VISIBLE_PROOF",
+        repairTarget: FILE_GATES.canvasSouth
+      };
+    }
+
+    if (canvas.f13HardFail || canvas.southHardFailObserved) {
+      return {
+        gap: "CANVAS_SOUTH_VISIBLE_PROOF_HARD_FAIL",
+        repairTarget: FILE_GATES.canvasSouth
+      };
+    }
+
+    if (!canvas.canvasSouthVisibleProofReady) {
+      return {
+        gap: "WAITING_CANVAS_SOUTH_VISIBLE_PROOF",
+        repairTarget: FILE_GATES.canvasSouth
+      };
+    }
+
+    if (canvas.parentStrictReadMismatch) {
+      return {
+        gap: "WAITING_CANVAS_PARENT_STRICT_READ_OF_SOUTH_PROOF",
+        repairTarget: FILE_GATES.canvas
+      };
+    }
+
+    if (canvas.f13CanvasEvidenceComplete && canvas.f13CanvasEvidenceDegraded && !canvas.f13CanvasEvidenceStrict) {
+      return {
+        gap: "WAITING_CANVAS_SOUTH_STRICT_VISIBLE_PROOF",
+        repairTarget: FILE_GATES.canvasSouth
+      };
+    }
+
+    if (!canvas.f13CanvasEvidenceComplete) {
+      return {
+        gap: "WAITING_CANVAS_F13_EVIDENCE_COMPLETE",
+        repairTarget: FILE_GATES.canvas
+      };
+    }
+
+    if (canvas.f13CanvasEvidenceStrict) {
+      return {
+        gap: "NONE_F13_STRICT_EVIDENCE_COMPLETE",
+        repairTarget: FILE_GATES.north
+      };
+    }
+
+    return {
+      gap: "WAITING_CANVAS_F13_STRICT_EVIDENCE",
+      repairTarget: FILE_GATES.canvasSouth
     };
   }
 
@@ -1211,24 +1577,24 @@
       root.HearthRouteConductor === api ||
       root.HEARTH_SOUTH_ROUTE_CONDUCTOR === api ||
       root.HEARTH_ROUTE_CONDUCTOR_PRIMARY_GATE === api ||
-      root.HEARTH_ROUTE_CONDUCTOR_MACRO_WEST_ADMISSIBILITY_CANVAS_RELEASE_CONSUMPTION === api ||
+      root.HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT === api ||
       firstGlobal([
         "HEARTH.routeConductor",
         "HEARTH.southRouteConductor",
         "HEARTH.routeConductorPrimaryGate",
-        "HEARTH.routeConductorMacroWestAdmissibilityCanvasReleaseConsumption",
+        "HEARTH.routeConductorStrictF13DownstreamAlignment",
         "DEXTER_LAB.hearthRouteConductor",
         "DEXTER_LAB.hearthSouthRouteConductor",
         "DEXTER_LAB.hearthRouteConductorPrimaryGate",
-        "DEXTER_LAB.hearthRouteConductorMacroWestAdmissibilityCanvasReleaseConsumption"
+        "DEXTER_LAB.hearthRouteConductorStrictF13DownstreamAlignment"
       ]) === api
     );
 
     const receiptPresent = Boolean(
       root.HEARTH_ROUTE_CONDUCTOR_RECEIPT &&
       root.HEARTH_ROUTE_CONDUCTOR_RECEIPT.receipt === RECEIPT &&
-      root.HEARTH_ROUTE_CONDUCTOR_MACRO_WEST_ADMISSIBILITY_CANVAS_RELEASE_CONSUMPTION_RECEIPT &&
-      root.HEARTH_ROUTE_CONDUCTOR_MACRO_WEST_ADMISSIBILITY_CANVAS_RELEASE_CONSUMPTION_RECEIPT.contract === CONTRACT
+      root.HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT_RECEIPT &&
+      root.HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT_RECEIPT.contract === CONTRACT
     );
 
     const runtimeActive = true;
@@ -1257,8 +1623,12 @@
     const southReceipt = south.receipt || {};
 
     const proofBodyAvailable = safeBool(
-      southReceipt.proofBodyAvailable,
-      safeBool(southReceipt.proofBodyComposed, false)
+      firstDefined(
+        southReceipt.proofBodyAvailable,
+        southReceipt.proofBodyComposed,
+        southReceipt.f13ProofBodyAvailable
+      ),
+      false
     );
 
     const f13ProofBodyAvailable = Boolean(
@@ -1267,13 +1637,10 @@
       canvasEvidence.observed
     );
 
-    const f13VisibleEvidenceAvailable = Boolean(canvasEvidence.f13CanvasEvidenceComplete);
-    const f13InspectEvidenceAvailable = Boolean(canvasEvidence.f13InspectEvidenceAvailable);
-
     return {
       f13ProofBodyAvailable,
-      f13VisibleEvidenceAvailable,
-      f13InspectEvidenceAvailable,
+      f13VisibleEvidenceAvailable: canvasEvidence.f13CanvasEvidenceComplete,
+      f13InspectEvidenceAvailable: canvasEvidence.f13InspectEvidenceAvailable,
       f13CanvasReadinessObserved: canvasEvidence.f13CanvasReadinessObserved,
 
       f13CanvasEvidenceStrict: canvasEvidence.f13CanvasEvidenceStrict,
@@ -1281,14 +1648,19 @@
       f13CanvasEvidenceComplete: canvasEvidence.f13CanvasEvidenceComplete,
       f13HardFail: canvasEvidence.f13HardFail,
 
+      f13StrictEvidenceGap: canvasEvidence.f13StrictEvidenceGap,
+      f13StrictEvidenceRepairTarget: canvasEvidence.f13StrictEvidenceRepairTarget,
+
       canvasEvidenceObserved: canvasEvidence.observed,
       canvasGateReady: canvasEvidence.canvasGateReady,
       canvasOwnsF13Only: true,
-      firstFailedCoordinate: canvasEvidence.f13CanvasEvidenceComplete
-        ? "NONE_CANVAS_F13_EVIDENCE_COMPLETE"
-        : f13ProofBodyAvailable
-          ? "WAITING_CANVAS_F13_EVIDENCE_COMPLETE"
-          : "WAITING_F13_PROOF_BODY"
+      firstFailedCoordinate: canvasEvidence.f13CanvasEvidenceStrict
+        ? "NONE_CANVAS_F13_STRICT_EVIDENCE_COMPLETE"
+        : canvasEvidence.f13CanvasEvidenceComplete
+          ? canvasEvidence.f13StrictEvidenceGap
+          : f13ProofBodyAvailable
+            ? "WAITING_CANVAS_F13_EVIDENCE_COMPLETE"
+            : "WAITING_F13_PROOF_BODY"
     };
   }
 
@@ -1325,7 +1697,6 @@
     );
 
     return {
-      southNewsObserved: true,
       routeNewsObserved: true,
       routeNewsComposed: true,
       northGateReady,
@@ -1334,10 +1705,7 @@
       southGateReady,
       canvasGateReady,
       newsGatePassedBeforeF21,
-      newsGateDegradedBeforeF21,
-      routeNewsReturnedToNorth: false,
-      routeNewsSubmittedToWest: false,
-      routeNewsSubmittedToCanvas: false
+      newsGateDegradedBeforeF21
     };
   }
 
@@ -1349,12 +1717,14 @@
     const northAlreadyLatched = Boolean(
       safeBool(northReceipt.completionLatched, false) ||
       safeBool(northReceipt.finalCompletionLatched, false) ||
-      safeBool(supplied.completionLatchedByNorth, false)
+      safeBool(supplied.completionLatchedByNorth, false) ||
+      datasetValue("hearthSouthCompletionLatched") === "true"
     );
 
     const northAlreadyLatchedDegraded = Boolean(
       safeBool(northReceipt.degradedCompletionLatched, false) ||
-      safeBool(supplied.degradedCompletionLatchedByNorth, false)
+      safeBool(supplied.degradedCompletionLatchedByNorth, false) ||
+      datasetValue("hearthSouthDegradedCompletionLatched") === "true"
     );
 
     const eligible = Boolean(
@@ -1391,6 +1761,14 @@
                       ? "CANVAS_F13_HARD_FAIL"
                       : "WAITING_NEWS_GATE_BEFORE_F21";
 
+    const northRepairRequired = Boolean(
+      f13.f13CanvasEvidenceStrict &&
+      eligible &&
+      !northAlreadyLatched &&
+      state.f21EligibilitySubmittedToNorth &&
+      state.f21EligibilitySubmissionCount > 0
+    );
+
     return {
       f21EligibleForNorth: eligible,
       f21SubmittedToNorth: state.f21SubmittedToNorth,
@@ -1402,15 +1780,19 @@
           ? "DEGRADED_LATCHED_BY_NORTH"
           : "FULL_LATCHED_BY_NORTH"
         : eligible
-          ? "READY_FOR_NORTH_NEWS_LATCH"
+          ? f13.f13CanvasEvidenceStrict
+            ? "READY_FOR_NORTH_STRICT_F21_LATCH"
+            : "READY_FOR_NORTH_DEGRADED_F21_LATCH"
           : failed,
       completionLatched: northAlreadyLatched,
       degradedCompletionLatched: northAlreadyLatchedDegraded,
       readyTextAllowed: northAlreadyLatched,
       f21NorthLatchOnly: true,
       routeMaySubmitF21EligibilityOnly: true,
-      visualPassClaimed: false,
-      firstFailedCoordinate: failed
+      northRepairRequired,
+      northRepairReason: northRepairRequired ? "STRICT_F21_ELIGIBILITY_SUBMITTED_BUT_NORTH_NOT_LATCHED" : "NONE",
+      firstFailedCoordinate: failed,
+      visualPassClaimed: false
     };
   }
 
@@ -1444,7 +1826,8 @@
       source.cycleRoute,
       source.activeCycleRoute,
       objectValue(authorities.south.receipt, "cycleRoute"),
-      objectValue(authorities.north.receipt, "activeCycleRoute")
+      objectValue(authorities.north.receipt, "activeCycleRoute"),
+      datasetValue("hearthSouthActiveCycleRoute", "")
     ));
 
     const outputSpreadAvailable = Boolean(
@@ -1533,7 +1916,7 @@
       activeFileGate: FILE,
 
       activeFibonacci: "F8",
-      activeFibonacciRank: FIBONACCI_RANK.F8,
+      activeFibonacciRank: 8,
       activeStageId: "F8_SOUTH_SELF_DUTY",
       activeGearId: "F8_SOUTH_SELF_DUTY",
       activeNewsGate: CARDINALS.SOUTH,
@@ -1590,6 +1973,7 @@
 
       recommendedNextFile: safeString(firstDefined(
         source.recommendedNextFile,
+        canvasEvidence.f13StrictEvidenceRepairTarget,
         canvasEvidence.nextAuditTarget,
         objectValue(authorities.south.receipt, "recommendedNextFile"),
         FILE
@@ -1597,6 +1981,7 @@
 
       recommendedNextRenewalTarget: safeString(firstDefined(
         source.recommendedNextRenewalTarget,
+        canvasEvidence.f13StrictEvidenceRepairTarget,
         canvasEvidence.nextAuditTarget,
         objectValue(authorities.south.receipt, "recommendedNextRenewalTarget"),
         objectValue(authorities.west.receipt, "recommendedNextRenewalTarget"),
@@ -1626,7 +2011,8 @@
         (receivedFrom === CARDINALS.EAST || receivedFrom === CARDINALS.NORTH || receivedFrom === CARDINALS.UNKNOWN) &&
         normalized.westAuditRequired === true
       ) ||
-      normalized.outputSpreadAvailable === true
+      normalized.outputSpreadAvailable === true ||
+      normalized.canvasEvidence.parentReleaseAccepted === true
     );
 
     if (cycleOne && !cycleTwo) {
@@ -1660,7 +2046,7 @@
     }
 
     if (cycleTwo && cycleOne) {
-      if (receivedFrom === CARDINALS.WEST && !normalized.outputSpreadAvailable) {
+      if (receivedFrom === CARDINALS.WEST && !normalized.outputSpreadAvailable && !normalized.canvasEvidence.parentReleaseAccepted) {
         return {
           cycleKnown: true,
           cycleNumber: 1,
@@ -1685,7 +2071,7 @@
         northReturnRequired: false,
         westAuditRequired: true,
         canvasReleaseAuthorized: false,
-        firstFailedCoordinate: "NONE_CYCLE_2_ROUTE_RESOLVED_FROM_OUTPUT_SPREAD"
+        firstFailedCoordinate: "NONE_CYCLE_2_ROUTE_RESOLVED_FROM_OUTPUT_SPREAD_OR_CANVAS_RELEASE"
       };
     }
 
@@ -1751,6 +2137,7 @@
       },
 
       canvasParentChildProof: {
+        currentCanvasParentObserved: canvas.currentCanvasParentObserved,
         canvasParentV2Observed: canvas.canvasParentV2Observed,
         parentReleaseAccepted: canvas.parentReleaseAccepted,
         canvasEastApiReady: canvas.canvasEastApiReady,
@@ -1761,10 +2148,13 @@
         canvasWestInspectionReady: canvas.canvasWestInspectionReady,
         canvasSouthVisibleProofReady: canvas.canvasSouthVisibleProofReady,
         allCanvasChildrenEvidenceReady: canvas.allCanvasChildrenEvidenceReady,
+        allCanvasChildrenReady: canvas.allCanvasChildrenReady,
         f13CanvasEvidenceStrict: canvas.f13CanvasEvidenceStrict,
         f13CanvasEvidenceDegraded: canvas.f13CanvasEvidenceDegraded,
         f13CanvasEvidenceComplete: canvas.f13CanvasEvidenceComplete,
         f13HardFail: canvas.f13HardFail,
+        f13StrictEvidenceGap: canvas.f13StrictEvidenceGap,
+        f13StrictEvidenceRepairTarget: canvas.f13StrictEvidenceRepairTarget,
         nextAuditTarget: canvas.nextAuditTarget
       },
 
@@ -1772,10 +2162,13 @@
         present: visibleProofPresent,
         strict: canvas.f13CanvasEvidenceStrict,
         degraded: canvas.f13CanvasEvidenceDegraded,
-        pending: !visibleProofPresent && !canvas.f13HardFail,
+        pendingStrict: canvas.strictVisualProofPending,
         absent: !visibleProofPresent && !canvas.f13HardFail,
         hardFail: canvas.f13HardFail,
-        visiblePlanetProofValid: canvas.visiblePlanetProofValid
+        visiblePlanetProofValid: canvas.visiblePlanetProofValid,
+        southStrictProofObserved: canvas.southStrictProofObserved,
+        southSoftProofObserved: canvas.southSoftProofObserved,
+        parentStrictReadMismatch: canvas.parentStrictReadMismatch
       },
 
       inspectProof: {
@@ -1783,22 +2176,6 @@
         degraded: Boolean(canvas.dom && canvas.dom.inspectFallbackReady && !(canvas.dom && canvas.dom.inspectStrictReady)),
         pending: !inspectProofPresent,
         absent: !inspectProofPresent
-      },
-
-      receiptProof: {
-        present: receiptProofPresent,
-        preservesForwardMotion: receiptProofPresent
-      },
-
-      canvasReadinessProof: {
-        present: canvasReadinessProofPresent,
-        parentPresent: canvas.parentPresent,
-        parentBootMethodAvailable: canvas.parentBootMethodAvailable,
-        allCanvasChildrenApiReady: canvas.allCanvasChildrenApiReady,
-        allCanvasChildrenEvidenceReady: canvas.allCanvasChildrenEvidenceReady,
-        canvasReady: canvas.canvasReady,
-        firstFrameDetected: canvas.firstFrameDetected,
-        imageRendered: canvas.imageRendered
       },
 
       newsProof: {
@@ -1832,7 +2209,9 @@
         f13CanvasEvidenceStrict: f13.f13CanvasEvidenceStrict,
         f13CanvasEvidenceDegraded: f13.f13CanvasEvidenceDegraded,
         f13CanvasEvidenceComplete: f13.f13CanvasEvidenceComplete,
-        f13HardFail: f13.f13HardFail
+        f13HardFail: f13.f13HardFail,
+        f13StrictEvidenceGap: f13.f13StrictEvidenceGap,
+        f13StrictEvidenceRepairTarget: f13.f13StrictEvidenceRepairTarget
       },
 
       f21EligibilitySummary: {
@@ -1840,7 +2219,9 @@
         f21SubmittedToNorth: f21.f21SubmittedToNorth,
         f21LatchMode: f21.f21LatchMode,
         completionLatched: f21.completionLatched,
-        degradedCompletionLatched: f21.degradedCompletionLatched
+        degradedCompletionLatched: f21.degradedCompletionLatched,
+        northRepairRequired: f21.northRepairRequired,
+        northRepairReason: f21.northRepairReason
       },
 
       activeGapSummary: {
@@ -1891,7 +2272,6 @@
       canvasReleaseAuthorized: false,
       northReturnRequired: true,
       southReturnPacketReady: true,
-      westAuditObserved: normalized.westAuditObserved,
       proofBodyComposed: proofBody.proofBodyComposed,
       visibleStateComposed: true,
       receiptComposed: true,
@@ -1966,7 +2346,6 @@
 
   function composeMacroWestCandidate(input = {}) {
     const normalized = input && input.normalizedAt ? input : normalizeRouteConductorInput(input);
-    const cycle = resolveRouteCycle(normalized);
     const proofBody = composeProofBody(normalized);
     const westHandoff = composeCycleTwoWestHandoff(normalized);
     const canvas = normalized.canvasEvidence;
@@ -1976,7 +2355,6 @@
       id: "F13N_INSPECT_GATE",
       phase: "F13N_INSPECT_GATE",
       checkpointId: "F13N_INSPECT_GATE",
-      checkpointEvent: "INSPECT_MODE_READY",
       activeFibonacci: "F13N",
       fibonacci: "F13N",
       activeCheckpointId: "F13N_INSPECT_GATE",
@@ -2007,7 +2385,7 @@
       planetCanvasNonZeroSize: canvas.dom ? canvas.dom.planetCanvasNonZeroSize : true,
       canvasCarrierMounted: firstDefined(canvas.receipt.canvasCarrierMounted, true),
       canvasCarrierHandoffOk: firstDefined(canvas.receipt.canvasCarrierHandoffOk, true),
-      canvasTargetPresent: canvas.parentPresent || canvas.canvasParentV2Observed || true,
+      canvasTargetPresent: canvas.parentPresent || canvas.currentCanvasParentObserved || true,
       sphereContainment: true,
       outsideSphereTransparent: true,
       noRectangularTextureSpill: true,
@@ -2034,6 +2412,9 @@
       buttonsReachable: canvas.dom.inspectFallbackReady || canvas.dom.inspectStrictReady,
       receiptOverlayIndependent: true,
 
+      currentCanvasParentObserved: canvas.currentCanvasParentObserved,
+      canvasParentV2Observed: canvas.canvasParentV2Observed,
+      parentReleaseAccepted: canvas.parentReleaseAccepted,
       canvasReady: canvas.canvasReady,
       atlasBuildComplete: canvas.atlasBuildComplete || canvas.canvasEastEvidenceReady,
       textureComposeComplete: canvas.textureComposeComplete || canvas.canvasSouthVisibleProofReady,
@@ -2047,17 +2428,25 @@
       visibleContentAdmissible: canvas.visibleContentAdmissible,
       visiblePlanetAvailable: canvas.visiblePlanetAvailable,
       nonblankPlanetVisible: canvas.visiblePlanetProofValid,
-      visibleContentClassCount: firstDefined(canvas.receipt.visibleContentClassCount, 2),
-      visibleContentSampleCount: firstDefined(canvas.receipt.visibleContentSampleCount, 24),
-      visibleContentVarianceScore: firstDefined(canvas.receipt.visibleContentVarianceScore, 8),
-      visibleContentLandSampleCount: firstDefined(canvas.receipt.visibleContentLandSampleCount, 1),
-      visibleContentWaterSampleCount: firstDefined(canvas.receipt.visibleContentWaterSampleCount, 1),
-      visibleContentOtherSampleCount: firstDefined(canvas.receipt.visibleContentOtherSampleCount, 1),
+
+      visibleContentClassCount: firstDefined(canvas.visibleContentClassCount, 2),
+      visibleContentSampleCount: firstDefined(canvas.visibleContentSampleCount, 24),
+      visibleContentVarianceScore: firstDefined(canvas.visibleContentVarianceScore, 8),
+      visibleContentLandSampleCount: firstDefined(canvas.visibleContentLandSampleCount, 1),
+      visibleContentWaterSampleCount: firstDefined(canvas.visibleContentWaterSampleCount, 1),
+      visibleContentOtherSampleCount: firstDefined(canvas.visibleContentOtherSampleCount, 1),
+
+      southStrictProofObserved: canvas.southStrictProofObserved,
+      southSoftProofObserved: canvas.southSoftProofObserved,
+      southHardFailObserved: canvas.southHardFailObserved,
+      parentStrictReadMismatch: canvas.parentStrictReadMismatch,
 
       f13CanvasEvidenceStrict: canvas.f13CanvasEvidenceStrict,
       f13CanvasEvidenceDegraded: canvas.f13CanvasEvidenceDegraded,
       f13CanvasEvidenceComplete: canvas.f13CanvasEvidenceComplete,
       f13HardFail: canvas.f13HardFail,
+      f13StrictEvidenceGap: canvas.f13StrictEvidenceGap,
+      f13StrictEvidenceRepairTarget: canvas.f13StrictEvidenceRepairTarget,
 
       f21EligibleForNorth: false,
       f21EligibilitySubmittedToNorth: false,
@@ -2204,10 +2593,17 @@
     const authority = west.authority;
     const candidate = composeMacroWestCandidate(normalized);
 
-    const noAuthority = normalizeMacroWestResult(null, "", Boolean(west.observed));
     if (!authority || !isObject(authority)) {
+      const fallbackReceipt = west.receipt || {};
+
+      const receiptResult = normalizeMacroWestResult(fallbackReceipt, "receipt-fallback-no-api", Boolean(west.observed));
+
+      if (receiptResult.westCanvasReleaseApproved) {
+        return receiptResult;
+      }
+
       return {
-        ...noAuthority,
+        ...receiptResult,
         macroWestAuthorityObserved: Boolean(west.observed),
         macroWestAdmissibilityObserved: false,
         westDecision: WEST_DECISION.HOLD_ACTIVE,
@@ -2219,7 +2615,7 @@
         westDegradedForwardApproved: false,
         westFirstFailedCoordinate: "WAITING_MACRO_WEST_ADMISSIBILITY_AUTHORITY",
         westRecommendedNextRenewalTarget: FILE_GATES.macroWest,
-        raw: clonePlain(west.receipt || {}),
+        raw: clonePlain(fallbackReceipt),
         normalizedAt: nowIso()
       };
     }
@@ -2299,14 +2695,12 @@
     );
 
     const noVisibleHardFail = !canvas.f13HardFail;
-    const noPrematureLocalLatch = true;
 
     const authorized = Boolean(
       lawfulCycle &&
       southProofReady &&
       macroWestReleaseEvidence &&
-      noVisibleHardFail &&
-      noPrematureLocalLatch
+      noVisibleHardFail
     );
 
     const heldReason = authorized
@@ -2355,8 +2749,8 @@
       canvasReleaseReceived: authorized,
       canvasReleaseRequiresWestAudit: true,
       canvasReleaseRequiresMacroWest: true,
-      canvasReleaseRequiresNorthOrWestEvidence: true,
       canvasEvidenceObserved: canvas.observed,
+      currentCanvasParentObserved: canvas.currentCanvasParentObserved,
       canvasParentV2Observed: canvas.canvasParentV2Observed,
       canvasReleasePacketReady: authorized,
       canvasReleaseHeldReason: heldReason,
@@ -2390,18 +2784,27 @@
     };
   }
 
-  function selectRecommendedNextFile(packet, normalized, f21, canvasReleasePacket, macroWest) {
+  function selectRecommendedNextFile(packetSeed, normalized, f21, canvasReleasePacket, macroWest) {
     const canvas = normalized.canvasEvidence;
+    const index = normalized.authorities.hearthIndex;
 
-    if (f21.f21EligibleForNorth || f21.completionLatched) {
+    if (index.observed && index.receipt && index.receipt.shellAccepted === false) {
+      return FILE_GATES.hearthIndex;
+    }
+
+    if (index.observed && index.receipt && index.receipt.runtimeReleaseAuthorized === false && !state.booted) {
+      return FILE_GATES.hearthIndex;
+    }
+
+    if (!normalized.f8.f8SelfDutySatisfied) {
+      return FILE;
+    }
+
+    if (packetSeed && packetSeed.activeCycleNumber === 1) {
       return FILE_GATES.north;
     }
 
-    if (packet && packet.activeCycleNumber === 1) {
-      return FILE_GATES.north;
-    }
-
-    if (packet && packet.activeCycleNumber === 2) {
+    if (packetSeed && packetSeed.activeCycleNumber === 2) {
       if (!macroWest || !macroWest.macroWestAuthorityObserved || !macroWest.macroWestAdmissibilityObserved) {
         return FILE_GATES.macroWest;
       }
@@ -2414,11 +2817,7 @@
         return FILE_GATES.macroWest;
       }
 
-      if (!canvas.parentPresent || !canvas.authority) {
-        return FILE_GATES.canvas;
-      }
-
-      if (!canvas.canvasParentV2Observed) {
+      if (!canvas.parentPresent || !canvas.currentCanvasParentObserved || !canvas.authority) {
         return FILE_GATES.canvas;
       }
 
@@ -2426,13 +2825,45 @@
         return FILE_GATES.canvas;
       }
 
-      if (!canvas.allCanvasChildrenApiReady || !canvas.allCanvasChildrenEvidenceReady || !canvas.f13CanvasEvidenceComplete) {
-        return canvas.nextAuditTarget || FILE_GATES.canvas;
+      if (!canvas.canvasEastApiReady || !canvas.canvasEastEvidenceReady) {
+        return FILE_GATES.canvasEast;
+      }
+
+      if (!canvas.canvasWestApiReady || !canvas.canvasWestInspectionReady) {
+        return FILE_GATES.canvasWest;
+      }
+
+      if (!canvas.canvasSouthApiReady || !canvas.canvasSouthVisibleProofReady) {
+        return FILE_GATES.canvasSouth;
       }
 
       if (canvas.f13HardFail) {
-        return canvas.nextAuditTarget || FILE_GATES.canvasSouth;
+        return FILE_GATES.canvasSouth;
       }
+
+      if (canvas.parentStrictReadMismatch) {
+        return FILE_GATES.canvas;
+      }
+
+      if (canvas.f13CanvasEvidenceComplete && !canvas.f13CanvasEvidenceStrict) {
+        return canvas.f13StrictEvidenceRepairTarget || FILE_GATES.canvasSouth;
+      }
+
+      if (canvas.f13CanvasEvidenceStrict && f21.northRepairRequired) {
+        return FILE_GATES.north;
+      }
+
+      if (canvas.f13CanvasEvidenceStrict && !f21.completionLatched && !f21.f21SubmittedToNorth) {
+        return FILE_GATES.north;
+      }
+
+      if (canvas.f13CanvasEvidenceStrict && f21.completionLatched) {
+        return FILE_GATES.north;
+      }
+    }
+
+    if (canvas.f13CanvasEvidenceComplete && !canvas.f13CanvasEvidenceStrict) {
+      return canvas.f13StrictEvidenceRepairTarget || FILE_GATES.canvasSouth;
     }
 
     return FILE;
@@ -2441,12 +2872,12 @@
   function composeVisibleStateFromPrimary(packet) {
     const p = isObject(packet) ? packet : {};
 
-    const visibleProgress = p.completionLatched
+    const visibleProgress = p.completionLatched && p.f13CanvasEvidenceStrict
       ? 100
       : p.f21EligibleForNorth
-        ? 92
+        ? p.f13CanvasEvidenceStrict ? 94 : 88
         : p.f13CanvasEvidenceComplete
-          ? 86
+          ? p.f13CanvasEvidenceStrict ? 90 : 82
           : p.canvasReleaseAuthorized
             ? 76
             : p.macroWestAdmissibilityObserved
@@ -2459,19 +2890,21 @@
                     ? 24
                     : 12;
 
-    const visibleStatusText = p.completionLatched
+    const visibleStatusText = p.completionLatched && p.f13CanvasEvidenceStrict
       ? "Ready"
-      : p.f21EligibleForNorth
-        ? "Ready for North latch"
-        : p.f13CanvasEvidenceComplete
-          ? "Canvas F13 evidence complete"
-          : p.canvasReleaseAuthorized
-            ? "Canvas release authorized by macro West"
-            : p.activeCycleNumber === 2 && !p.macroWestAdmissibilityObserved
-              ? "Cycle 2: waiting macro West admissibility"
-              : p.activeCycleNumber === 2
-                ? "Cycle 2: macro West hold"
-                : "Cycle 1: returning proof to North";
+      : p.degradedCompletionLatched || (p.f13CanvasEvidenceComplete && p.f13CanvasEvidenceDegraded && !p.f13CanvasEvidenceStrict)
+        ? "Functional page · strict F13 proof pending"
+        : p.f21EligibleForNorth
+          ? "Ready for North latch"
+          : p.f13CanvasEvidenceComplete
+            ? "Canvas F13 evidence complete"
+            : p.canvasReleaseAuthorized
+              ? "Canvas release authorized by Macro West"
+              : p.activeCycleNumber === 2 && !p.macroWestAdmissibilityObserved
+                ? "Cycle 2: waiting Macro West admissibility"
+                : p.activeCycleNumber === 2
+                  ? "Cycle 2: Macro West hold"
+                  : "Cycle 1: returning proof to North";
 
     return {
       activeCycleNumber: p.activeCycleNumber,
@@ -2496,7 +2929,10 @@
       macroWestAdmissibilityObserved: p.macroWestAdmissibilityObserved,
       westDecision: p.westDecision,
       canvasReleaseAuthorized: p.canvasReleaseAuthorized,
+      f13CanvasEvidenceStrict: p.f13CanvasEvidenceStrict,
+      f13CanvasEvidenceDegraded: p.f13CanvasEvidenceDegraded,
       f13CanvasEvidenceComplete: p.f13CanvasEvidenceComplete,
+      f13StrictEvidenceGap: p.f13StrictEvidenceGap,
       completionLatched: p.completionLatched,
       degradedCompletionLatched: p.degradedCompletionLatched,
       visualPassClaimed: false
@@ -2530,9 +2966,33 @@
       const recommendedNextFile = selectRecommendedNextFile(packetSeed, normalized, f21, canvasReleasePacket, macroWest);
       const recommendedNextRenewalTarget = recommendedNextFile;
 
+      const degradedFunctional = Boolean(
+        normalized.canvasEvidence.functionalPageObserved ||
+        (
+          normalized.canvasEvidence.parentReleaseAccepted &&
+          normalized.canvasEvidence.currentCanvasParentObserved &&
+          normalized.canvasEvidence.allCanvasChildrenApiReady &&
+          normalized.canvasEvidence.f13CanvasEvidenceComplete &&
+          normalized.canvasEvidence.f13CanvasEvidenceDegraded &&
+          !normalized.canvasEvidence.f13CanvasEvidenceStrict &&
+          !normalized.canvasEvidence.f13HardFail
+        )
+      );
+
+      const strictPending = Boolean(
+        normalized.canvasEvidence.strictVisualProofPending ||
+        (
+          normalized.canvasEvidence.f13CanvasEvidenceComplete &&
+          !normalized.canvasEvidence.f13CanvasEvidenceStrict &&
+          !normalized.canvasEvidence.f13HardFail
+        )
+      );
+
       const firstFailedCoordinate =
-        f21.f21EligibleForNorth
+        f21.f21EligibleForNorth && normalized.canvasEvidence.f13CanvasEvidenceStrict
           ? "NONE_F21_ELIGIBLE_FOR_NORTH"
+          : degradedFunctional || strictPending
+            ? normalized.canvasEvidence.f13StrictEvidenceGap
           : isCycleTwo && !macroWest.macroWestAdmissibilityObserved
             ? "WAITING_MACRO_WEST_ADMISSIBILITY_DECISION"
             : isCycleTwo && !canvasReleasePacket.canvasReleaseAuthorized
@@ -2541,7 +3001,23 @@
                 canvasReleasePacket.canvasReleaseHeldReason ||
                 f13.firstFailedCoordinate ||
                 cycle.firstFailedCoordinate ||
-                "WAITING_ROUTE_CONDUCTOR_MACRO_WEST_CANVAS_PARENT_CHILD_RECONCILIATION";
+                "WAITING_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT";
+
+      const postgameStatus = f21.completionLatched && normalized.canvasEvidence.f13CanvasEvidenceStrict
+        ? f21.degradedCompletionLatched
+          ? "READY_DEGRADED_PLANET_VISIBLE_DIAGNOSTIC_AVAILABLE"
+          : "READY_PLANET_VISIBLE_DIAGNOSTIC_AVAILABLE"
+        : degradedFunctional || strictPending
+          ? "FUNCTIONAL_DEGRADED_F13_STRICT_PROOF_PENDING"
+          : f21.f21EligibleForNorth
+            ? "WAITING_NORTH_F21_LATCH"
+            : f13.f13CanvasEvidenceComplete
+              ? "CANVAS_F13_EVIDENCE_COMPLETE_WAITING_NORTH"
+              : canvasReleasePacket.canvasReleaseAuthorized
+                ? "CANVAS_RELEASE_AUTHORIZED_BY_MACRO_WEST"
+                : isCycleTwo
+                  ? "CYCLE_2_WAITING_MACRO_WEST_ADMISSIBILITY_OR_CANVAS_RELEASE"
+                  : "CYCLE_1_RETURNING_TO_NORTH";
 
       const packet = {
         contract: CONTRACT,
@@ -2554,12 +3030,15 @@
         role: state.role,
 
         routeConductorPrimaryGateActive: true,
+        strictF13DownstreamAlignmentActive: true,
         canvasParentChildReconciliationActive: true,
         cycleAwareRoutingActive: true,
         southPrimaryGateIntegrationActive: true,
         macroWestAdmissibilityConsumptionActive: true,
         canvasReleaseFirewallActive: true,
 
+        cycleOneIsPosition: true,
+        cycleTwoIsCoordination: true,
         cycleNumber: cycle.cycleNumber,
         cycleRoute: cycle.cycleRoute,
         activeCycleNumber: cycle.cycleNumber,
@@ -2600,8 +3079,6 @@
         macroWestAuthorityObserved: macroWest.macroWestAuthorityObserved,
         southAuthorityObserved: normalized.authorities.south.observed,
         southPrimaryGateObserved: normalized.authorities.south.primaryGateObserved,
-        canvasAuthorityObserved: Boolean(normalized.canvasEvidence.authority),
-        canvasParentV2Observed: normalized.canvasEvidence.canvasParentV2Observed,
         hearthIndexObserved: normalized.authorities.hearthIndex.observed,
 
         routeConductorMarkerPresent: f8.routeConductorMarkerPresent,
@@ -2631,7 +3108,6 @@
         westAuditObserved: macroWest.macroWestAdmissibilityObserved || normalized.westAuditObserved,
         westAuditRequired: isCycleTwo || normalized.westAuditRequired,
         westAuditApproved: macroWest.westCanvasReleaseApproved || normalized.westAuditApproved,
-        westDegradedForwardApproved: macroWest.westDegradedForwardApproved || normalized.westDegradedForwardApproved,
         northReturnRequired: isCycleOne,
         northReturnPacketReady: isCycleOne ? true : northReturnPacket.southReturnPacketReady === true,
         westHandoffPacketReady: isCycleTwo ? true : false,
@@ -2645,15 +3121,10 @@
         receiptAvailable: true,
         receiptComposed: true,
 
-        f13ProofBodyAvailable: f13.f13ProofBodyAvailable,
-        f13CanvasReadinessObserved: f13.f13CanvasReadinessObserved,
-        f13VisibleEvidenceAvailable: f13.f13VisibleEvidenceAvailable,
-        f13InspectEvidenceAvailable: f13.f13InspectEvidenceAvailable,
-        f13CanvasEvidenceStrict: f13.f13CanvasEvidenceStrict,
-        f13CanvasEvidenceDegraded: f13.f13CanvasEvidenceDegraded,
-        f13CanvasEvidenceComplete: f13.f13CanvasEvidenceComplete,
-        f13HardFail: f13.f13HardFail,
-        canvasOwnsF13Only: true,
+        canvasAuthorityObserved: Boolean(normalized.canvasEvidence.authority),
+        currentCanvasParentObserved: normalized.canvasEvidence.currentCanvasParentObserved,
+        canvasParentV2Observed: normalized.canvasEvidence.canvasParentV2Observed,
+        canvasParentReleaseAccepted: normalized.canvasEvidence.parentReleaseAccepted,
 
         canvasEvidenceObserved: normalized.canvasEvidence.observed,
         canvasGateReady: f13.canvasGateReady,
@@ -2662,8 +3133,6 @@
         canvasReleaseHeldReason: canvasReleasePacket.canvasReleaseHeldReason,
         canvasReleaseRequiresWestAudit: true,
         canvasReleaseRequiresMacroWest: true,
-        canvasReleaseRequiresNorthOrWestEvidence: true,
-        canvasParentReleaseAccepted: normalized.canvasEvidence.parentReleaseAccepted,
 
         canvasEastApiReady: normalized.canvasEvidence.canvasEastApiReady,
         canvasWestApiReady: normalized.canvasEvidence.canvasWestApiReady,
@@ -2673,14 +3142,29 @@
         canvasWestInspectionReady: normalized.canvasEvidence.canvasWestInspectionReady,
         canvasSouthVisibleProofReady: normalized.canvasEvidence.canvasSouthVisibleProofReady,
         allCanvasChildrenEvidenceReady: normalized.canvasEvidence.allCanvasChildrenEvidenceReady,
+        allCanvasChildrenReady: normalized.canvasEvidence.allCanvasChildrenReady,
         canvasNextAuditTarget: normalized.canvasEvidence.nextAuditTarget,
 
-        southNewsObserved: news.southNewsObserved,
-        routeNewsObserved: news.routeNewsObserved,
-        routeNewsComposed: news.routeNewsComposed,
-        routeNewsReturnedToNorth: isCycleOne,
-        routeNewsSubmittedToWest: isCycleTwo,
-        routeNewsSubmittedToCanvas: canvasReleasePacket.canvasReleaseAuthorized,
+        f13ProofBodyAvailable: f13.f13ProofBodyAvailable,
+        f13CanvasReadinessObserved: f13.f13CanvasReadinessObserved,
+        f13VisibleEvidenceAvailable: f13.f13VisibleEvidenceAvailable,
+        f13InspectEvidenceAvailable: f13.f13InspectEvidenceAvailable,
+        f13CanvasEvidenceStrict: f13.f13CanvasEvidenceStrict,
+        f13CanvasEvidenceDegraded: f13.f13CanvasEvidenceDegraded,
+        f13CanvasEvidenceComplete: f13.f13CanvasEvidenceComplete,
+        f13HardFail: f13.f13HardFail,
+        f13StrictEvidenceGap: f13.f13StrictEvidenceGap,
+        f13StrictEvidenceRepairTarget: f13.f13StrictEvidenceRepairTarget,
+
+        southStrictProofObserved: normalized.canvasEvidence.southStrictProofObserved,
+        southSoftProofObserved: normalized.canvasEvidence.southSoftProofObserved,
+        southHardFailObserved: normalized.canvasEvidence.southHardFailObserved,
+        southProofStale: normalized.canvasEvidence.visibleProofStale,
+        parentStrictReadMismatch: normalized.canvasEvidence.parentStrictReadMismatch,
+        degradedF13IsFunctional: degradedFunctional,
+        functionalPageObserved: normalized.canvasEvidence.functionalPageObserved,
+        strictVisualProofPending: strictPending,
+
         northGateReady: news.northGateReady,
         eastGateReady: news.eastGateReady,
         westGateReady: news.westGateReady,
@@ -2688,6 +3172,11 @@
         canvasGateReadyNews: news.canvasGateReady,
         newsGatePassedBeforeF21: news.newsGatePassedBeforeF21,
         newsGateDegradedBeforeF21: news.newsGateDegradedBeforeF21,
+        routeNewsObserved: news.routeNewsObserved,
+        routeNewsComposed: news.routeNewsComposed,
+        routeNewsReturnedToNorth: isCycleOne,
+        routeNewsSubmittedToWest: isCycleTwo,
+        routeNewsSubmittedToCanvas: canvasReleasePacket.canvasReleaseAuthorized,
 
         fibonacciSynchronizationActive: true,
         newsProtocolSynchronized: true,
@@ -2703,6 +3192,8 @@
         f21NorthLatchOnly: true,
         routeMaySubmitF21EligibilityOnly: true,
         f21ClaimedByRouteConductor: false,
+        northRepairRequired: f21.northRepairRequired,
+        northRepairReason: f21.northRepairReason,
 
         northReturnPacket,
         westHandoffPacket,
@@ -2710,20 +3201,7 @@
         canvasReleasePacket,
         proofBody,
 
-        postgameStatus: f21.completionLatched
-          ? f21.degradedCompletionLatched
-            ? "READY_DEGRADED_PLANET_VISIBLE_DIAGNOSTIC_AVAILABLE"
-            : "READY_PLANET_VISIBLE_DIAGNOSTIC_AVAILABLE"
-          : f21.f21EligibleForNorth
-            ? "WAITING_NORTH_F21_LATCH"
-            : f13.f13CanvasEvidenceComplete
-              ? "CANVAS_F13_EVIDENCE_COMPLETE_WAITING_NORTH"
-              : canvasReleasePacket.canvasReleaseAuthorized
-                ? "CANVAS_RELEASE_AUTHORIZED_BY_MACRO_WEST"
-                : isCycleTwo
-                  ? "CYCLE_2_WAITING_MACRO_WEST_ADMISSIBILITY_OR_CANVAS_RELEASE"
-                  : "CYCLE_1_RETURNING_TO_NORTH",
-
+        postgameStatus,
         firstFailedCoordinate,
         recommendedNextFile,
         recommendedNextRenewalTarget,
@@ -2761,6 +3239,7 @@
       role: state.role,
 
       routeConductorPrimaryGateActive: true,
+      strictF13DownstreamAlignmentActive: true,
       canvasParentChildReconciliationActive: true,
       cycleAwareRoutingActive: true,
       macroWestAdmissibilityConsumptionActive: true,
@@ -2803,6 +3282,8 @@
       macroWestAdmissibilityObserved: false,
       westDecision: WEST_DECISION.UNKNOWN,
 
+      currentCanvasParentObserved: false,
+      canvasParentV2Observed: false,
       proofBodyAvailable: false,
       proofBodyComposed: false,
       outputSpreadAvailable: false,
@@ -2818,8 +3299,9 @@
       f13CanvasEvidenceDegraded: false,
       f13CanvasEvidenceComplete: false,
       f13HardFail: false,
+      f13StrictEvidenceGap: "WAITING_ROUTE_CONDUCTOR_PRIMARY_GATE_COMPOSITION",
+      f13StrictEvidenceRepairTarget: FILE,
 
-      canvasParentV2Observed: false,
       canvasGateReady: false,
 
       f21EligibleForNorth: false,
@@ -2830,6 +3312,8 @@
       degradedCompletionLatched: false,
       readyTextAllowed: false,
       f21ClaimedByRouteConductor: false,
+      northRepairRequired: false,
+      northRepairReason: "NONE",
 
       firstFailedCoordinate: "WAITING_ROUTE_CONDUCTOR_PRIMARY_GATE_COMPOSITION",
       recommendedNextFile: FILE,
@@ -2849,264 +3333,12 @@
 
     return {
       ...clonePlain(packet),
-      authority: "hearth-route-conductor-macro-west-admissibility-canvas-release-consumption",
+      authority: "hearth-route-conductor-strict-f13-downstream-alignment",
       status: "active",
       receiptComposed: true,
       currentReceipt: true,
       updatedAt: nowIso()
     };
-  }
-
-  function getRouteCycleReceipt(input = {}) {
-    const packet = composeRoutePrimaryPacket(input);
-
-    return {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      cycleReceipt: "HEARTH_ROUTE_CONDUCTOR_CYCLE_RECEIPT_v3",
-      cycleNumber: packet.cycleNumber,
-      cycleRoute: packet.cycleRoute,
-      receivedFrom: packet.receivedFrom,
-      returnTo: packet.returnTo,
-      handoffTo: packet.handoffTo,
-      macroWestAdmissibilityObserved: packet.macroWestAdmissibilityObserved,
-      westDecision: packet.westDecision,
-      canvasReleaseAuthorized: packet.canvasReleaseAuthorized,
-      canvasGateReady: packet.canvasGateReady,
-      f13CanvasEvidenceComplete: packet.f13CanvasEvidenceComplete,
-      f21EligibleForNorth: packet.f21EligibleForNorth,
-      firstFailedCoordinate: packet.firstFailedCoordinate,
-      recommendedNextFile: packet.recommendedNextFile,
-      recommendedNextRenewalTarget: packet.recommendedNextRenewalTarget,
-      visualPassClaimed: false,
-      updatedAt: nowIso()
-    };
-  }
-
-  function getRoutePrimaryGateReceipt(input = {}) {
-    return composeRouteReceipt(input);
-  }
-
-  function submitF21EligibilityToNorth(input = {}) {
-    const normalized = input && input.normalizedAt ? input : normalizeRouteConductorInput(input);
-    const f21 = resolveF21Eligibility(normalized, normalized.f8, normalized.f13, normalized.news);
-
-    if (!f21.f21EligibleForNorth) {
-      return {
-        accepted: false,
-        action: "HELD",
-        reason: "f21-not-eligible-for-north",
-        firstFailedCoordinate: f21.firstFailedCoordinate,
-        f13CanvasEvidenceComplete: normalized.f13.f13CanvasEvidenceComplete,
-        canvasGateReady: normalized.f13.canvasGateReady,
-        visualPassClaimed: false
-      };
-    }
-
-    const north = normalized.authorities.north.authority;
-    const session = firstGlobal([
-      "HEARTH_CHECKPOINT_SESSION",
-      "HEARTH_RUNTIME_CHECKPOINT_SESSION",
-      "LAB_HEARTH_CHECKPOINT_SESSION",
-      "LAB_CHECKPOINT_SESSION",
-      "DEXTER_LAB.hearthCheckpointSession",
-      "DEXTER_LAB.checkpointSession"
-    ]);
-
-    const payload = {
-      event: "F21_ELIGIBILITY_SUBMITTED_TO_NORTH",
-      checkpointEvent: "F21_ELIGIBILITY_SUBMITTED_TO_NORTH",
-      id: "F21_COMPLETION_LATCH",
-      phase: "F21_COMPLETION_LATCH",
-      checkpointId: "F21_COMPLETION_LATCH",
-      activeFibonacci: "F21",
-      activeCardinal: CARDINALS.NORTH,
-      source: "hearth-route-conductor-macro-west-admissibility-canvas-release-consumption",
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      f21EligibleForNorth: true,
-      f21EligibilitySubmittedToNorth: true,
-      completionLatchedByRouteConductor: false,
-      f21ClaimedByRouteConductor: false,
-      visualPassClaimed: false,
-      detail: {
-        f8SelfDutySatisfied: normalized.f8.f8SelfDutySatisfied,
-        macroWestAdmissibilityObserved: state.macroWestAdmissibilityObserved,
-        westDecision: state.westDecision,
-        f13ProofBodyAvailable: normalized.f13.f13ProofBodyAvailable,
-        f13CanvasReadinessObserved: normalized.f13.f13CanvasReadinessObserved,
-        f13VisibleEvidenceAvailable: normalized.f13.f13VisibleEvidenceAvailable,
-        f13InspectEvidenceAvailable: normalized.f13.f13InspectEvidenceAvailable,
-        f13CanvasEvidenceStrict: normalized.f13.f13CanvasEvidenceStrict,
-        f13CanvasEvidenceDegraded: normalized.f13.f13CanvasEvidenceDegraded,
-        f13CanvasEvidenceComplete: normalized.f13.f13CanvasEvidenceComplete,
-        f13HardFail: normalized.f13.f13HardFail,
-        canvasGateReady: normalized.f13.canvasGateReady,
-        newsGatePassedBeforeF21: normalized.news.newsGatePassedBeforeF21,
-        newsGateDegradedBeforeF21: normalized.news.newsGateDegradedBeforeF21
-      }
-    };
-
-    let result = null;
-
-    try {
-      if (session && isFunction(session.submitF21Eligibility)) result = session.submitF21Eligibility(payload);
-      else if (session && isFunction(session.acceptF21Eligibility)) result = session.acceptF21Eligibility(payload);
-      else if (session && isFunction(session.submitEvent)) result = session.submitEvent(payload);
-      else if (session && isFunction(session.submit)) result = session.submit(payload);
-      else if (north && isFunction(north.submitF21Eligibility)) result = north.submitF21Eligibility(payload);
-      else if (north && isFunction(north.acceptF21Eligibility)) result = north.acceptF21Eligibility(payload);
-      else if (north && isFunction(north.receiveF21Eligibility)) result = north.receiveF21Eligibility(payload);
-
-      state.f21SubmittedToNorth = true;
-      state.f21EligibilitySubmittedToNorth = true;
-      state.f21EligibilitySubmittedAt = nowIso();
-      state.f21EligibilitySubmissionCount += 1;
-
-      record("F21_ELIGIBILITY_SUBMITTED_TO_NORTH", {
-        submitted: true,
-        resultObserved: Boolean(result),
-        completionLatchedByRouteConductor: false,
-        f21ClaimedByRouteConductor: false
-      });
-
-      return {
-        accepted: true,
-        action: "SUBMITTED_TO_NORTH",
-        result: clonePlain(result),
-        f21EligibleForNorth: true,
-        f21SubmittedToNorth: true,
-        completionLatched: false,
-        f21ClaimedByRouteConductor: false,
-        visualPassClaimed: false
-      };
-    } catch (error) {
-      recordError("F21_ELIGIBILITY_SUBMIT_FAILED", error);
-
-      return {
-        accepted: false,
-        action: "HELD",
-        reason: "north-submit-failed",
-        error: error && error.message ? error.message : String(error),
-        visualPassClaimed: false
-      };
-    }
-  }
-
-  function globalsNeedRepublish() {
-    const apiPresent = Boolean(
-      root.HEARTH_ROUTE_CONDUCTOR === api &&
-      root.HearthRouteConductor === api &&
-      root.HEARTH_SOUTH_ROUTE_CONDUCTOR === api &&
-      root.HEARTH_ROUTE_CONDUCTOR_PRIMARY_GATE === api &&
-      root.HEARTH_ROUTE_CONDUCTOR_MACRO_WEST_ADMISSIBILITY_CANVAS_RELEASE_CONSUMPTION === api
-    );
-
-    const nestedApiPresent = Boolean(
-      root.HEARTH &&
-      root.HEARTH.routeConductor === api &&
-      root.HEARTH.southRouteConductor === api &&
-      root.HEARTH.routeConductorPrimaryGate === api &&
-      root.HEARTH.routeConductorMacroWestAdmissibilityCanvasReleaseConsumption === api
-    );
-
-    const dexterApiPresent = Boolean(
-      root.DEXTER_LAB &&
-      root.DEXTER_LAB.hearthRouteConductor === api &&
-      root.DEXTER_LAB.hearthSouthRouteConductor === api &&
-      root.DEXTER_LAB.hearthRouteConductorPrimaryGate === api &&
-      root.DEXTER_LAB.hearthRouteConductorMacroWestAdmissibilityCanvasReleaseConsumption === api
-    );
-
-    const receiptPresent = Boolean(
-      root.HEARTH_ROUTE_CONDUCTOR_RECEIPT &&
-      root.HEARTH_ROUTE_CONDUCTOR_RECEIPT.receipt === RECEIPT &&
-      root.HEARTH_ROUTE_CONDUCTOR_MACRO_WEST_ADMISSIBILITY_CANVAS_RELEASE_CONSUMPTION_RECEIPT &&
-      root.HEARTH_ROUTE_CONDUCTOR_MACRO_WEST_ADMISSIBILITY_CANVAS_RELEASE_CONSUMPTION_RECEIPT.contract === CONTRACT
-    );
-
-    const markerValid = Boolean(
-      root.__HEARTH_ROUTE_CONDUCTOR_MARKER__ === true &&
-      root.__HEARTH_ROUTE_CONDUCTOR_MARKER_IS_HYDRATION_PROOF__ === false &&
-      root.__HEARTH_ROUTE_CONDUCTOR_CONTRACT__ === CONTRACT
-    );
-
-    return !(apiPresent && nestedApiPresent && dexterApiPresent && receiptPresent && markerValid);
-  }
-
-  function publishGlobals(reason = "publish-globals", force = false) {
-    if (!force && !globalsNeedRepublish()) {
-      updateDataset();
-      return false;
-    }
-
-    root.HEARTH = root.HEARTH || {};
-    root.DEXTER_LAB = root.DEXTER_LAB || {};
-
-    root.HEARTH_ROUTE_CONDUCTOR = api;
-    root.HearthRouteConductor = api;
-    root.HEARTH_SOUTH_ROUTE_CONDUCTOR = api;
-    root.HEARTH_SOUTH_VISIBLE_COMPLETION = api;
-    root.HEARTH_SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_HANDOFF = api;
-    root.HEARTH_SOUTH_SELF_DUTY_NEWS_FIBONACCI_HANDOFF = api;
-    root.HEARTH_ROUTE_CONDUCTOR_PRIMARY_GATE = api;
-    root.HEARTH_ROUTE_CONDUCTOR_CANVAS_PARENT_CHILD_RECONCILIATION_HANDOFF = api;
-    root.HEARTH_ROUTE_CONDUCTOR_MACRO_WEST_ADMISSIBILITY_CANVAS_RELEASE_CONSUMPTION = api;
-
-    root.HEARTH.routeConductor = api;
-    root.HEARTH.southRouteConductor = api;
-    root.HEARTH.southVisibleCompletion = api;
-    root.HEARTH.southRouteConductorSelfDutyHandoff = api;
-    root.HEARTH.southSelfDutyNewsFibonacciHandoff = api;
-    root.HEARTH.routeConductorPrimaryGate = api;
-    root.HEARTH.routeConductorCanvasParentChildReconciliationHandoff = api;
-    root.HEARTH.routeConductorMacroWestAdmissibilityCanvasReleaseConsumption = api;
-
-    root.DEXTER_LAB.hearthRouteConductor = api;
-    root.DEXTER_LAB.hearthSouthRouteConductor = api;
-    root.DEXTER_LAB.hearthSouthVisibleCompletion = api;
-    root.DEXTER_LAB.hearthSouthRouteConductorSelfDutyHandoff = api;
-    root.DEXTER_LAB.hearthRouteConductorPrimaryGate = api;
-    root.DEXTER_LAB.hearthRouteConductorCanvasParentChildReconciliationHandoff = api;
-    root.DEXTER_LAB.hearthRouteConductorMacroWestAdmissibilityCanvasReleaseConsumption = api;
-
-    const receiptLight = getReceiptLight(false);
-
-    root.HEARTH_ROUTE_CONDUCTOR_RECEIPT = receiptLight;
-    root.HEARTH_SOUTH_ROUTE_CONDUCTOR_RECEIPT = receiptLight;
-    root.HEARTH_SOUTH_VISIBLE_COMPLETION_RECEIPT = receiptLight;
-    root.HEARTH_SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_HANDOFF_RECEIPT = receiptLight;
-    root.HEARTH_ROUTE_CONDUCTOR_PRIMARY_GATE_RECEIPT = receiptLight;
-    root.HEARTH_ROUTE_CONDUCTOR_CANVAS_PARENT_CHILD_RECONCILIATION_HANDOFF_RECEIPT = receiptLight;
-    root.HEARTH_ROUTE_CONDUCTOR_MACRO_WEST_ADMISSIBILITY_CANVAS_RELEASE_CONSUMPTION_RECEIPT = receiptLight;
-
-    root.HEARTH.routeConductorReceipt = receiptLight;
-    root.HEARTH.southRouteConductorReceipt = receiptLight;
-    root.HEARTH.southVisibleCompletionReceipt = receiptLight;
-    root.HEARTH.southRouteConductorSelfDutyHandoffReceipt = receiptLight;
-    root.HEARTH.routeConductorPrimaryGateReceipt = receiptLight;
-    root.HEARTH.routeConductorCanvasParentChildReconciliationHandoffReceipt = receiptLight;
-    root.HEARTH.routeConductorMacroWestAdmissibilityCanvasReleaseConsumptionReceipt = receiptLight;
-
-    root.DEXTER_LAB.hearthRouteConductorReceipt = receiptLight;
-    root.DEXTER_LAB.hearthSouthRouteConductorReceipt = receiptLight;
-    root.DEXTER_LAB.hearthSouthVisibleCompletionReceipt = receiptLight;
-    root.DEXTER_LAB.hearthSouthRouteConductorSelfDutyHandoffReceipt = receiptLight;
-    root.DEXTER_LAB.hearthRouteConductorPrimaryGateReceipt = receiptLight;
-    root.DEXTER_LAB.hearthRouteConductorCanvasParentChildReconciliationHandoffReceipt = receiptLight;
-    root.DEXTER_LAB.hearthRouteConductorMacroWestAdmissibilityCanvasReleaseConsumptionReceipt = receiptLight;
-
-    record(reason, {
-      apiPresent: true,
-      receiptPresent: true,
-      routeConductorPrimaryGateActive: true,
-      macroWestAdmissibilityConsumptionActive: true,
-      canvasParentChildReconciliationActive: true,
-      force: force === true
-    });
-
-    updateDataset();
-    return true;
   }
 
   function updateStateFromPacket(packet) {
@@ -3123,12 +3355,12 @@
     state.handoffTo = p.handoffTo || "";
     state.activeCardinal = CARDINALS.SOUTH;
     state.activeFileGate = FILE;
+    state.activeNewsGate = CARDINALS.SOUTH;
 
     state.activeFibonacci = "F8";
     state.activeFibonacciRank = 8;
     state.activeStageId = "F8_SOUTH_SELF_DUTY";
     state.activeGearId = "F8_SOUTH_SELF_DUTY";
-    state.activeNewsGate = CARDINALS.SOUTH;
 
     state.canvasActiveFibonacci = p.canvasActiveFibonacci || "F13";
     state.canvasActiveFibonacciRank = p.canvasActiveFibonacciRank || 13;
@@ -3148,8 +3380,6 @@
     state.macroWestAuthorityObserved = p.macroWestAuthorityObserved === true;
     state.southAuthorityObserved = p.southAuthorityObserved === true;
     state.southPrimaryGateObserved = p.southPrimaryGateObserved === true;
-    state.canvasAuthorityObserved = p.canvasAuthorityObserved === true;
-    state.canvasParentV2Observed = p.canvasParentV2Observed === true;
     state.hearthIndexObserved = p.hearthIndexObserved === true;
 
     state.macroWestAdmissibilityObserved = p.macroWestAdmissibilityObserved === true;
@@ -3163,41 +3393,14 @@
     state.westDegradedForwardApproved = p.westDegradedForwardApproved === true;
     state.westFirstFailedCoordinate = p.westFirstFailedCoordinate || "WAITING_MACRO_WEST_ADMISSIBILITY_DECISION";
     state.westRecommendedNextRenewalTarget = p.westRecommendedNextRenewalTarget || FILE_GATES.macroWest;
-    state.westReleaseReceiptObserved = p.westReleaseReceiptObserved === true;
 
-    state.westAuditObserved = p.westAuditObserved === true;
-    state.westAuditRequired = p.westAuditRequired === true;
-    state.westAuditApproved = p.westAuditApproved === true;
-    state.westDegradedForwardApproved = p.westDegradedForwardApproved === true;
-
-    state.northReturnRequired = p.northReturnRequired === true;
-    state.northReturnPacketReady = p.northReturnPacketReady === true;
-    state.westHandoffPacketReady = p.westHandoffPacketReady === true;
-
-    state.proofBodyAvailable = p.proofBodyAvailable === true;
-    state.proofBodyComposed = p.proofBodyComposed === true;
-    state.outputSpreadAvailable = p.outputSpreadAvailable === true;
-    state.outputSpreadComposed = p.outputSpreadComposed === true;
-    state.visibleStateAvailable = p.visibleStateAvailable === true;
-    state.visibleStateComposed = p.visibleStateComposed === true;
-    state.receiptAvailable = p.receiptAvailable !== false;
-    state.receiptComposed = p.receiptComposed !== false;
-
-    state.f13ProofBodyAvailable = p.f13ProofBodyAvailable === true;
-    state.f13CanvasReadinessObserved = p.f13CanvasReadinessObserved === true;
-    state.f13VisibleEvidenceAvailable = p.f13VisibleEvidenceAvailable === true;
-    state.f13InspectEvidenceAvailable = p.f13InspectEvidenceAvailable === true;
-    state.f13CanvasEvidenceStrict = p.f13CanvasEvidenceStrict === true;
-    state.f13CanvasEvidenceDegraded = p.f13CanvasEvidenceDegraded === true;
-    state.f13CanvasEvidenceComplete = p.f13CanvasEvidenceComplete === true;
-    state.f13HardFail = p.f13HardFail === true;
-
-    state.canvasEvidenceObserved = p.canvasEvidenceObserved === true;
-    state.canvasGateReady = p.canvasGateReady === true;
+    state.canvasAuthorityObserved = p.canvasAuthorityObserved === true;
+    state.currentCanvasParentObserved = p.currentCanvasParentObserved === true;
+    state.canvasParentV2Observed = p.canvasParentV2Observed === true;
+    state.canvasParentReleaseAccepted = p.canvasParentReleaseAccepted === true;
     state.canvasReleaseAuthorized = p.canvasReleaseAuthorized === true;
     state.canvasReleasePacketReady = p.canvasReleasePacketReady === true;
     state.canvasReleaseHeldReason = p.canvasReleaseHeldReason || "WAITING_MACRO_WEST_ADMISSIBILITY_DECISION";
-    state.canvasParentReleaseAccepted = p.canvasParentReleaseAccepted === true;
 
     state.canvasEastApiReady = p.canvasEastApiReady === true;
     state.canvasWestApiReady = p.canvasWestApiReady === true;
@@ -3207,20 +3410,47 @@
     state.canvasWestInspectionReady = p.canvasWestInspectionReady === true;
     state.canvasSouthVisibleProofReady = p.canvasSouthVisibleProofReady === true;
     state.allCanvasChildrenEvidenceReady = p.allCanvasChildrenEvidenceReady === true;
+    state.allCanvasChildrenReady = p.allCanvasChildrenReady === true;
     state.canvasNextAuditTarget = p.canvasNextAuditTarget || "";
+
+    state.proofBodyAvailable = p.proofBodyAvailable === true;
+    state.proofBodyComposed = p.proofBodyComposed === true;
+    state.outputSpreadAvailable = p.outputSpreadAvailable === true;
+    state.outputSpreadComposed = p.outputSpreadComposed === true;
+    state.visibleStateAvailable = p.visibleStateAvailable === true;
+    state.visibleStateComposed = p.visibleStateComposed === true;
+    state.receiptAvailable = p.receiptAvailable !== false;
+    state.receiptComposed = p.receiptComposed !== false;
+    state.northReturnPacketReady = p.northReturnPacketReady === true;
+    state.westHandoffPacketReady = p.westHandoffPacketReady === true;
+
+    state.f13ProofBodyAvailable = p.f13ProofBodyAvailable === true;
+    state.f13CanvasReadinessObserved = p.f13CanvasReadinessObserved === true;
+    state.f13VisibleEvidenceAvailable = p.f13VisibleEvidenceAvailable === true;
+    state.f13InspectEvidenceAvailable = p.f13InspectEvidenceAvailable === true;
+    state.f13CanvasEvidenceStrict = p.f13CanvasEvidenceStrict === true;
+    state.f13CanvasEvidenceDegraded = p.f13CanvasEvidenceDegraded === true;
+    state.f13CanvasEvidenceComplete = p.f13CanvasEvidenceComplete === true;
+    state.f13HardFail = p.f13HardFail === true;
+    state.f13StrictEvidenceGap = p.f13StrictEvidenceGap || "WAITING_CANVAS_F13_EVIDENCE";
+    state.f13StrictEvidenceRepairTarget = p.f13StrictEvidenceRepairTarget || FILE_GATES.canvas;
+
+    state.southStrictProofObserved = p.southStrictProofObserved === true;
+    state.southSoftProofObserved = p.southSoftProofObserved === true;
+    state.southHardFailObserved = p.southHardFailObserved === true;
+    state.southProofStale = p.southProofStale === true;
+    state.parentStrictReadMismatch = p.parentStrictReadMismatch === true;
+    state.degradedF13IsFunctional = p.degradedF13IsFunctional === true;
+    state.functionalPageObserved = p.functionalPageObserved === true;
+    state.strictVisualProofPending = p.strictVisualProofPending === true;
 
     state.northGateReady = p.northGateReady === true;
     state.eastGateReady = p.eastGateReady === true;
     state.westGateReady = p.westGateReady === true;
     state.southGateReady = p.southGateReady === true;
-    state.canvasGateReadyNews = p.canvasGateReadyNews === true;
+    state.canvasGateReady = p.canvasGateReady === true || p.canvasGateReadyNews === true;
     state.newsGatePassedBeforeF21 = p.newsGatePassedBeforeF21 === true;
     state.newsGateDegradedBeforeF21 = p.newsGateDegradedBeforeF21 === true;
-    state.routeNewsObserved = p.routeNewsObserved === true;
-    state.routeNewsComposed = p.routeNewsComposed === true;
-    state.routeNewsReturnedToNorth = p.routeNewsReturnedToNorth === true;
-    state.routeNewsSubmittedToWest = p.routeNewsSubmittedToWest === true;
-    state.routeNewsSubmittedToCanvas = p.routeNewsSubmittedToCanvas === true;
 
     state.f21EligibleForNorth = p.f21EligibleForNorth === true;
     state.f21SubmittedToNorth = p.f21SubmittedToNorth === true;
@@ -3229,8 +3459,10 @@
     state.completionLatched = p.completionLatched === true;
     state.degradedCompletionLatched = p.degradedCompletionLatched === true;
     state.readyTextAllowed = p.readyTextAllowed === true;
+    state.northRepairRequired = p.northRepairRequired === true;
+    state.northRepairReason = p.northRepairReason || "NONE";
 
-    state.firstFailedCoordinate = p.firstFailedCoordinate || "WAITING_ROUTE_CONDUCTOR_MACRO_WEST_CANVAS_PARENT_CHILD_RECONCILIATION";
+    state.firstFailedCoordinate = p.firstFailedCoordinate || "WAITING_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT";
     state.recommendedNextFile = p.recommendedNextFile || FILE;
     state.recommendedNextRenewalTarget = p.recommendedNextRenewalTarget || FILE;
     state.postgameStatus = p.postgameStatus || "ACTIVE";
@@ -3396,6 +3628,118 @@
     }, 40);
   }
 
+  function submitF21EligibilityToNorth(input = {}) {
+    const normalized = input && input.normalizedAt ? input : normalizeRouteConductorInput(input);
+    const f21 = resolveF21Eligibility(normalized, normalized.f8, normalized.f13, normalized.news);
+
+    if (!f21.f21EligibleForNorth) {
+      return {
+        accepted: false,
+        action: "HELD",
+        reason: "f21-not-eligible-for-north",
+        firstFailedCoordinate: f21.firstFailedCoordinate,
+        f13CanvasEvidenceComplete: normalized.f13.f13CanvasEvidenceComplete,
+        canvasGateReady: normalized.f13.canvasGateReady,
+        visualPassClaimed: false
+      };
+    }
+
+    const north = normalized.authorities.north.authority;
+    const session = firstGlobal([
+      "HEARTH_CHECKPOINT_SESSION",
+      "HEARTH_RUNTIME_CHECKPOINT_SESSION",
+      "LAB_HEARTH_CHECKPOINT_SESSION",
+      "LAB_CHECKPOINT_SESSION",
+      "DEXTER_LAB.hearthCheckpointSession",
+      "DEXTER_LAB.checkpointSession"
+    ]);
+
+    const payload = {
+      event: "F21_ELIGIBILITY_SUBMITTED_TO_NORTH",
+      checkpointEvent: "F21_ELIGIBILITY_SUBMITTED_TO_NORTH",
+      id: "F21_COMPLETION_LATCH",
+      phase: "F21_COMPLETION_LATCH",
+      checkpointId: "F21_COMPLETION_LATCH",
+      activeFibonacci: "F21",
+      activeCardinal: CARDINALS.NORTH,
+      source: "hearth-route-conductor-strict-f13-downstream-alignment",
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      f21EligibleForNorth: true,
+      f21EligibilitySubmittedToNorth: true,
+      completionLatchedByRouteConductor: false,
+      f21ClaimedByRouteConductor: false,
+      degradedEligibility: normalized.f13.f13CanvasEvidenceDegraded && !normalized.f13.f13CanvasEvidenceStrict,
+      strictEligibility: normalized.f13.f13CanvasEvidenceStrict,
+      visualPassClaimed: false,
+      detail: {
+        f8SelfDutySatisfied: normalized.f8.f8SelfDutySatisfied,
+        macroWestAdmissibilityObserved: state.macroWestAdmissibilityObserved,
+        westDecision: state.westDecision,
+        f13ProofBodyAvailable: normalized.f13.f13ProofBodyAvailable,
+        f13CanvasReadinessObserved: normalized.f13.f13CanvasReadinessObserved,
+        f13VisibleEvidenceAvailable: normalized.f13.f13VisibleEvidenceAvailable,
+        f13InspectEvidenceAvailable: normalized.f13.f13InspectEvidenceAvailable,
+        f13CanvasEvidenceStrict: normalized.f13.f13CanvasEvidenceStrict,
+        f13CanvasEvidenceDegraded: normalized.f13.f13CanvasEvidenceDegraded,
+        f13CanvasEvidenceComplete: normalized.f13.f13CanvasEvidenceComplete,
+        f13HardFail: normalized.f13.f13HardFail,
+        f13StrictEvidenceGap: normalized.f13.f13StrictEvidenceGap,
+        f13StrictEvidenceRepairTarget: normalized.f13.f13StrictEvidenceRepairTarget,
+        canvasGateReady: normalized.f13.canvasGateReady,
+        newsGatePassedBeforeF21: normalized.news.newsGatePassedBeforeF21,
+        newsGateDegradedBeforeF21: normalized.news.newsGateDegradedBeforeF21
+      }
+    };
+
+    let result = null;
+
+    try {
+      if (session && isFunction(session.submitF21Eligibility)) result = session.submitF21Eligibility(payload);
+      else if (session && isFunction(session.acceptF21Eligibility)) result = session.acceptF21Eligibility(payload);
+      else if (session && isFunction(session.submitEvent)) result = session.submitEvent(payload);
+      else if (session && isFunction(session.submit)) result = session.submit(payload);
+      else if (north && isFunction(north.submitF21Eligibility)) result = north.submitF21Eligibility(payload);
+      else if (north && isFunction(north.acceptF21Eligibility)) result = north.acceptF21Eligibility(payload);
+      else if (north && isFunction(north.receiveF21Eligibility)) result = north.receiveF21Eligibility(payload);
+
+      state.f21SubmittedToNorth = true;
+      state.f21EligibilitySubmittedToNorth = true;
+      state.f21EligibilitySubmittedAt = nowIso();
+      state.f21EligibilitySubmissionCount += 1;
+
+      record("F21_ELIGIBILITY_SUBMITTED_TO_NORTH", {
+        submitted: true,
+        resultObserved: Boolean(result),
+        strictEligibility: normalized.f13.f13CanvasEvidenceStrict,
+        degradedEligibility: normalized.f13.f13CanvasEvidenceDegraded && !normalized.f13.f13CanvasEvidenceStrict,
+        completionLatchedByRouteConductor: false,
+        f21ClaimedByRouteConductor: false
+      });
+
+      return {
+        accepted: true,
+        action: "SUBMITTED_TO_NORTH",
+        result: clonePlain(result),
+        f21EligibleForNorth: true,
+        f21SubmittedToNorth: true,
+        completionLatched: false,
+        f21ClaimedByRouteConductor: false,
+        visualPassClaimed: false
+      };
+    } catch (error) {
+      recordError("F21_ELIGIBILITY_SUBMIT_FAILED", error);
+
+      return {
+        accepted: false,
+        action: "HELD",
+        reason: "north-submit-failed",
+        error: error && error.message ? error.message : String(error),
+        visualPassClaimed: false
+      };
+    }
+  }
+
   function setInspectMode(active) {
     if (!doc) return getReceipt();
 
@@ -3454,61 +3798,27 @@
     }
   }
 
-  function bindControls() {
-    if (state.refsBound || !doc) return;
-
-    if (refs.copyButton && !refs.copyButton.dataset.hearthRouteConductorMacroWestBound) {
-      refs.copyButton.dataset.hearthRouteConductorMacroWestBound = "true";
-      refs.copyButton.addEventListener("click", copyDiagnostic);
-    }
-
-    if (refs.toggleButton && !refs.toggleButton.dataset.hearthRouteConductorMacroWestBound) {
-      refs.toggleButton.dataset.hearthRouteConductorMacroWestBound = "true";
-      refs.toggleButton.addEventListener("click", () => {
-        const visible = refs.receiptBox ? refs.receiptBox.dataset.visible !== "true" : true;
-
-        if (refs.receiptBox) refs.receiptBox.dataset.visible = String(visible);
-        if (refs.receiptText) refs.receiptText.textContent = visible ? getReceiptText() : "";
-
-        refs.toggleButton.textContent = visible ? "Hide receipt" : "Show receipt";
-      });
-    }
-
-    if (refs.inspectButton && !refs.inspectButton.dataset.hearthRouteConductorMacroWestBound) {
-      refs.inspectButton.dataset.hearthRouteConductorMacroWestBound = "true";
-      refs.inspectButton.addEventListener("click", () => {
-        setInspectMode(!(doc.documentElement.dataset.hearthSouthPlanetInspect === "true"));
-      });
-    }
-
-    if (refs.showTab && !refs.showTab.dataset.hearthRouteConductorMacroWestBound) {
-      refs.showTab.dataset.hearthRouteConductorMacroWestBound = "true";
-      refs.showTab.addEventListener("click", () => setInspectMode(false));
-    }
-
-    state.refsBound = true;
-  }
-
   function renderLanes() {
     const packet = state.currentPacket || {};
 
     const rows = [
       ["F8", "Self-duty", packet.f8SelfDutySatisfied ? "COMPLETE" : "ACTIVE"],
       ["W", "Macro West", packet.macroWestAdmissibilityObserved ? packet.westCanvasReleaseApproved ? "RELEASE" : "HELD" : "WAITING"],
-      ["F13", "Canvas evidence", packet.f13CanvasEvidenceComplete ? "COMPLETE" : packet.f13CanvasReadinessObserved ? "ACTIVE" : "PENDING"],
-      ["F21", "North eligibility", packet.f21EligibleForNorth ? "READY" : "WAITING"]
+      ["F13", "Canvas evidence", packet.f13CanvasEvidenceStrict ? "STRICT" : packet.f13CanvasEvidenceComplete ? "DEGRADED" : packet.f13CanvasReadinessObserved ? "ACTIVE" : "PENDING"],
+      ["NEXT", "Strict target", packet.recommendedNextFile || state.recommendedNextFile || FILE]
     ];
 
     return rows.map(([fib, label, status]) => {
       const progress =
-        status === "COMPLETE" || status === "READY" || status === "RELEASE" ? 100 :
-          status === "HELD" ? 68 :
-            status === "ACTIVE" ? 55 :
-              status === "WAITING" ? 35 :
-                15;
+        status === "COMPLETE" || status === "STRICT" || status === "RELEASE" ? 100 :
+          status === "DEGRADED" ? 82 :
+            status === "HELD" ? 68 :
+              status === "ACTIVE" ? 55 :
+                status === "WAITING" ? 35 :
+                  48;
 
       return [
-        `<section class="hearth-ledger-lane" data-lane="${fib}" data-status="${status}">`,
+        `<section class="hearth-ledger-lane" data-lane="${fib}" data-status="${String(status).replace(/"/g, "")}">`,
         `<div class="hearth-ledger-lane-top">`,
         `<span class="hearth-ledger-lane-title"><strong>${fib} · ${label}</strong><span>SOUTH</span></span>`,
         `<span class="hearth-ledger-lane-status">${status}</span>`,
@@ -3522,6 +3832,7 @@
   function render() {
     if (!doc) return;
 
+    scanDom();
     state.renderCount += 1;
 
     const packet = state.currentPacket || composeRoutePrimaryPacket();
@@ -3551,6 +3862,129 @@
     }, 80);
   }
 
+  function globalsNeedRepublish() {
+    const apiPresent = Boolean(
+      root.HEARTH_ROUTE_CONDUCTOR === api &&
+      root.HearthRouteConductor === api &&
+      root.HEARTH_SOUTH_ROUTE_CONDUCTOR === api &&
+      root.HEARTH_ROUTE_CONDUCTOR_PRIMARY_GATE === api &&
+      root.HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT === api
+    );
+
+    const nestedApiPresent = Boolean(
+      root.HEARTH &&
+      root.HEARTH.routeConductor === api &&
+      root.HEARTH.southRouteConductor === api &&
+      root.HEARTH.routeConductorPrimaryGate === api &&
+      root.HEARTH.routeConductorStrictF13DownstreamAlignment === api
+    );
+
+    const dexterApiPresent = Boolean(
+      root.DEXTER_LAB &&
+      root.DEXTER_LAB.hearthRouteConductor === api &&
+      root.DEXTER_LAB.hearthSouthRouteConductor === api &&
+      root.DEXTER_LAB.hearthRouteConductorPrimaryGate === api &&
+      root.DEXTER_LAB.hearthRouteConductorStrictF13DownstreamAlignment === api
+    );
+
+    const receiptPresent = Boolean(
+      root.HEARTH_ROUTE_CONDUCTOR_RECEIPT &&
+      root.HEARTH_ROUTE_CONDUCTOR_RECEIPT.receipt === RECEIPT &&
+      root.HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT_RECEIPT &&
+      root.HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT_RECEIPT.contract === CONTRACT
+    );
+
+    const markerValid = Boolean(
+      root.__HEARTH_ROUTE_CONDUCTOR_MARKER__ === true &&
+      root.__HEARTH_ROUTE_CONDUCTOR_MARKER_IS_HYDRATION_PROOF__ === false &&
+      root.__HEARTH_ROUTE_CONDUCTOR_CONTRACT__ === CONTRACT
+    );
+
+    return !(apiPresent && nestedApiPresent && dexterApiPresent && receiptPresent && markerValid);
+  }
+
+  function publishGlobals(reason = "publish-globals", force = false) {
+    if (!force && !globalsNeedRepublish()) {
+      updateDataset();
+      return false;
+    }
+
+    root.HEARTH = root.HEARTH || {};
+    root.DEXTER_LAB = root.DEXTER_LAB || {};
+
+    root.HEARTH_ROUTE_CONDUCTOR = api;
+    root.HearthRouteConductor = api;
+    root.HEARTH_SOUTH_ROUTE_CONDUCTOR = api;
+    root.HEARTH_SOUTH_VISIBLE_COMPLETION = api;
+    root.HEARTH_SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_HANDOFF = api;
+    root.HEARTH_SOUTH_SELF_DUTY_NEWS_FIBONACCI_HANDOFF = api;
+    root.HEARTH_ROUTE_CONDUCTOR_PRIMARY_GATE = api;
+    root.HEARTH_ROUTE_CONDUCTOR_CANVAS_PARENT_CHILD_RECONCILIATION_HANDOFF = api;
+    root.HEARTH_ROUTE_CONDUCTOR_MACRO_WEST_ADMISSIBILITY_CANVAS_RELEASE_CONSUMPTION = api;
+    root.HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT = api;
+
+    root.HEARTH.routeConductor = api;
+    root.HEARTH.southRouteConductor = api;
+    root.HEARTH.southVisibleCompletion = api;
+    root.HEARTH.southRouteConductorSelfDutyHandoff = api;
+    root.HEARTH.southSelfDutyNewsFibonacciHandoff = api;
+    root.HEARTH.routeConductorPrimaryGate = api;
+    root.HEARTH.routeConductorCanvasParentChildReconciliationHandoff = api;
+    root.HEARTH.routeConductorMacroWestAdmissibilityCanvasReleaseConsumption = api;
+    root.HEARTH.routeConductorStrictF13DownstreamAlignment = api;
+
+    root.DEXTER_LAB.hearthRouteConductor = api;
+    root.DEXTER_LAB.hearthSouthRouteConductor = api;
+    root.DEXTER_LAB.hearthSouthVisibleCompletion = api;
+    root.DEXTER_LAB.hearthSouthRouteConductorSelfDutyHandoff = api;
+    root.DEXTER_LAB.hearthRouteConductorPrimaryGate = api;
+    root.DEXTER_LAB.hearthRouteConductorCanvasParentChildReconciliationHandoff = api;
+    root.DEXTER_LAB.hearthRouteConductorMacroWestAdmissibilityCanvasReleaseConsumption = api;
+    root.DEXTER_LAB.hearthRouteConductorStrictF13DownstreamAlignment = api;
+
+    const receiptLight = getReceiptLight(false);
+
+    root.HEARTH_ROUTE_CONDUCTOR_RECEIPT = receiptLight;
+    root.HEARTH_SOUTH_ROUTE_CONDUCTOR_RECEIPT = receiptLight;
+    root.HEARTH_SOUTH_VISIBLE_COMPLETION_RECEIPT = receiptLight;
+    root.HEARTH_SOUTH_ROUTE_CONDUCTOR_SELF_DUTY_HANDOFF_RECEIPT = receiptLight;
+    root.HEARTH_ROUTE_CONDUCTOR_PRIMARY_GATE_RECEIPT = receiptLight;
+    root.HEARTH_ROUTE_CONDUCTOR_CANVAS_PARENT_CHILD_RECONCILIATION_HANDOFF_RECEIPT = receiptLight;
+    root.HEARTH_ROUTE_CONDUCTOR_MACRO_WEST_ADMISSIBILITY_CANVAS_RELEASE_CONSUMPTION_RECEIPT = receiptLight;
+    root.HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT_RECEIPT = receiptLight;
+
+    root.HEARTH.routeConductorReceipt = receiptLight;
+    root.HEARTH.southRouteConductorReceipt = receiptLight;
+    root.HEARTH.southVisibleCompletionReceipt = receiptLight;
+    root.HEARTH.southRouteConductorSelfDutyHandoffReceipt = receiptLight;
+    root.HEARTH.routeConductorPrimaryGateReceipt = receiptLight;
+    root.HEARTH.routeConductorCanvasParentChildReconciliationHandoffReceipt = receiptLight;
+    root.HEARTH.routeConductorMacroWestAdmissibilityCanvasReleaseConsumptionReceipt = receiptLight;
+    root.HEARTH.routeConductorStrictF13DownstreamAlignmentReceipt = receiptLight;
+
+    root.DEXTER_LAB.hearthRouteConductorReceipt = receiptLight;
+    root.DEXTER_LAB.hearthSouthRouteConductorReceipt = receiptLight;
+    root.DEXTER_LAB.hearthSouthVisibleCompletionReceipt = receiptLight;
+    root.DEXTER_LAB.hearthSouthRouteConductorSelfDutyHandoffReceipt = receiptLight;
+    root.DEXTER_LAB.hearthRouteConductorPrimaryGateReceipt = receiptLight;
+    root.DEXTER_LAB.hearthRouteConductorCanvasParentChildReconciliationHandoffReceipt = receiptLight;
+    root.DEXTER_LAB.hearthRouteConductorMacroWestAdmissibilityCanvasReleaseConsumptionReceipt = receiptLight;
+    root.DEXTER_LAB.hearthRouteConductorStrictF13DownstreamAlignmentReceipt = receiptLight;
+
+    record(reason, {
+      apiPresent: true,
+      receiptPresent: true,
+      routeConductorPrimaryGateActive: true,
+      strictF13DownstreamAlignmentActive: true,
+      macroWestAdmissibilityConsumptionActive: true,
+      canvasParentChildReconciliationActive: true,
+      force: force === true
+    });
+
+    updateDataset();
+    return true;
+  }
+
   function startWatchdog() {
     if (watchdogTimer) root.clearInterval(watchdogTimer);
 
@@ -3560,10 +3994,13 @@
       refresh();
 
       if (globalsNeedRepublish()) {
-        publishGlobals("watchdog-conditional-macro-west-reconciliation-republish", false);
+        publishGlobals("watchdog-conditional-strict-f13-downstream-republish", false);
       }
 
-      if (state.f21EligibleForNorth || state.completionLatched || state.watchdogTicks >= WATCHDOG_LIMIT) {
+      if (
+        (state.f13CanvasEvidenceStrict && state.completionLatched) ||
+        state.watchdogTicks >= WATCHDOG_LIMIT
+      ) {
         root.clearInterval(watchdogTimer);
         watchdogTimer = 0;
       }
@@ -3579,10 +4016,10 @@
       state.booting = true;
       state.startedAt = nowIso();
       state.updatedAt = state.startedAt;
-      state.postgameStatus = "BOOTING_ROUTE_CONDUCTOR_MACRO_WEST_ADMISSIBILITY_CANVAS_RELEASE_CONSUMPTION";
+      state.postgameStatus = "BOOTING_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT";
 
       publishEarlyMarker();
-      publishGlobals("boot-early-macro-west-reconciliation-api-receipt-publication", true);
+      publishGlobals("boot-early-strict-f13-downstream-api-receipt-publication", true);
 
       refresh();
 
@@ -3590,13 +4027,13 @@
       state.booted = true;
       state.routeConductorRuntimeActive = true;
 
-      publishGlobals("boot-complete-macro-west-reconciliation-api-receipt-publication", true);
+      publishGlobals("boot-complete-strict-f13-downstream-api-receipt-publication", true);
       refresh();
       render();
 
       startWatchdog();
 
-      record("HEARTH_ROUTE_CONDUCTOR_MACRO_WEST_ADMISSIBILITY_CANVAS_RELEASE_CONSUMPTION_BOOTED", {
+      record("HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT_BOOTED", {
         route: ROUTE,
         markerPresent: state.routeConductorMarkerPresent,
         apiPresent: state.routeConductorApiPresent,
@@ -3607,8 +4044,12 @@
         macroWestAdmissibilityObserved: state.macroWestAdmissibilityObserved,
         westDecision: state.westDecision,
         canvasReleaseAuthorized: state.canvasReleaseAuthorized,
-        canvasParentV2Observed: state.canvasParentV2Observed,
+        currentCanvasParentObserved: state.currentCanvasParentObserved,
+        f13CanvasEvidenceStrict: state.f13CanvasEvidenceStrict,
+        f13CanvasEvidenceDegraded: state.f13CanvasEvidenceDegraded,
         f13CanvasEvidenceComplete: state.f13CanvasEvidenceComplete,
+        f13StrictEvidenceGap: state.f13StrictEvidenceGap,
+        recommendedNextFile: state.recommendedNextFile,
         f21EligibleForNorth: state.f21EligibleForNorth
       });
 
@@ -3634,15 +4075,17 @@
       autoBootTimer = 0;
     }
 
-    record("HEARTH_ROUTE_CONDUCTOR_MACRO_WEST_ADMISSIBILITY_CANVAS_RELEASE_CONSUMPTION_DISPOSED", { reason });
+    record("HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT_DISPOSED", { reason });
     render();
+
+    return getReceipt();
   }
 
   function composeReceiptText(receipt = {}) {
     const r = isObject(receipt) ? receipt : getReceiptLight(false);
 
     return [
-      "HEARTH_ROUTE_CONDUCTOR_MACRO_WEST_ADMISSIBILITY_CANVAS_RELEASE_CONSUMPTION_RECEIPT",
+      "HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT_RECEIPT",
       "",
       line("contract", r.contract || CONTRACT),
       line("receipt", r.receipt || RECEIPT),
@@ -3654,21 +4097,20 @@
       line("role", r.role || state.role),
       "",
       line("routeConductorPrimaryGateActive", r.routeConductorPrimaryGateActive === true),
+      line("strictF13DownstreamAlignmentActive", r.strictF13DownstreamAlignmentActive === true),
       line("canvasParentChildReconciliationActive", r.canvasParentChildReconciliationActive === true),
       line("cycleAwareRoutingActive", r.cycleAwareRoutingActive === true),
       line("southPrimaryGateIntegrationActive", r.southPrimaryGateIntegrationActive === true),
       line("macroWestAdmissibilityConsumptionActive", r.macroWestAdmissibilityConsumptionActive === true),
       line("canvasReleaseFirewallActive", r.canvasReleaseFirewallActive === true),
       "",
+      line("cycleOneIsPosition", r.cycleOneIsPosition === true),
+      line("cycleTwoIsCoordination", r.cycleTwoIsCoordination === true),
       line("cycleNumber", r.cycleNumber || r.activeCycleNumber || ""),
       line("cycleRoute", r.cycleRoute || r.activeCycleRoute || ""),
       line("receivedFrom", r.receivedFrom || ""),
       line("returnTo", r.returnTo || ""),
       line("handoffTo", r.handoffTo || ""),
-      line("canvasReleaseAuthorized", r.canvasReleaseAuthorized === true),
-      line("canvasReleaseRequiresWestAudit", r.canvasReleaseRequiresWestAudit !== false),
-      line("canvasReleaseRequiresMacroWest", r.canvasReleaseRequiresMacroWest !== false),
-      line("canvasReleaseHeldReason", r.canvasReleaseHeldReason || ""),
       "",
       line("routeConductorMarkerPresent", r.routeConductorMarkerPresent === true),
       line("routeConductorApiPresent", r.routeConductorApiPresent === true),
@@ -3690,6 +4132,13 @@
       line("westFirstFailedCoordinate", r.westFirstFailedCoordinate || ""),
       line("westRecommendedNextRenewalTarget", r.westRecommendedNextRenewalTarget || ""),
       "",
+      line("canvasReleaseAuthorized", r.canvasReleaseAuthorized === true),
+      line("canvasReleasePacketReady", r.canvasReleasePacketReady === true),
+      line("canvasReleaseRequiresWestAudit", r.canvasReleaseRequiresWestAudit !== false),
+      line("canvasReleaseRequiresMacroWest", r.canvasReleaseRequiresMacroWest !== false),
+      line("canvasReleaseHeldReason", r.canvasReleaseHeldReason || ""),
+      "",
+      line("currentCanvasParentObserved", r.currentCanvasParentObserved === true),
       line("canvasParentV2Observed", r.canvasParentV2Observed === true),
       line("canvasParentReleaseAccepted", r.canvasParentReleaseAccepted === true),
       line("canvasEastApiReady", r.canvasEastApiReady === true),
@@ -3700,6 +4149,7 @@
       line("canvasWestInspectionReady", r.canvasWestInspectionReady === true),
       line("canvasSouthVisibleProofReady", r.canvasSouthVisibleProofReady === true),
       line("allCanvasChildrenEvidenceReady", r.allCanvasChildrenEvidenceReady === true),
+      line("allCanvasChildrenReady", r.allCanvasChildrenReady === true),
       "",
       line("f13ProofBodyAvailable", r.f13ProofBodyAvailable === true),
       line("f13CanvasReadinessObserved", r.f13CanvasReadinessObserved === true),
@@ -3709,6 +4159,17 @@
       line("f13CanvasEvidenceDegraded", r.f13CanvasEvidenceDegraded === true),
       line("f13CanvasEvidenceComplete", r.f13CanvasEvidenceComplete === true),
       line("f13HardFail", r.f13HardFail === true),
+      line("f13StrictEvidenceGap", r.f13StrictEvidenceGap || ""),
+      line("f13StrictEvidenceRepairTarget", r.f13StrictEvidenceRepairTarget || ""),
+      "",
+      line("southStrictProofObserved", r.southStrictProofObserved === true),
+      line("southSoftProofObserved", r.southSoftProofObserved === true),
+      line("southHardFailObserved", r.southHardFailObserved === true),
+      line("southProofStale", r.southProofStale === true),
+      line("parentStrictReadMismatch", r.parentStrictReadMismatch === true),
+      line("degradedF13IsFunctional", r.degradedF13IsFunctional === true),
+      line("functionalPageObserved", r.functionalPageObserved === true),
+      line("strictVisualProofPending", r.strictVisualProofPending === true),
       "",
       line("canvasGateReady", r.canvasGateReady === true || r.canvasGateReadyNews === true),
       line("northGateReady", r.northGateReady === true),
@@ -3744,6 +4205,8 @@
       line("degradedCompletionLatched", r.degradedCompletionLatched === true),
       line("readyTextAllowed", r.readyTextAllowed === true),
       line("f21ClaimedByRouteConductor", r.f21ClaimedByRouteConductor === true),
+      line("northRepairRequired", r.northRepairRequired === true),
+      line("northRepairReason", r.northRepairReason || ""),
       "",
       line("firstFailedCoordinate", r.firstFailedCoordinate || ""),
       line("recommendedNextFile", r.recommendedNextFile || ""),
@@ -3790,6 +4253,8 @@
     return {
       ...receipt,
       files: clonePlain(FILE_GATES),
+      strictProofMinimums: clonePlain(STRICT_PROOF_MINIMUMS),
+      currentCanvasParentContracts: CURRENT_CANVAS_PARENT_CONTRACTS.slice(),
       localEvents: clonePlain(state.localEvents),
       errors: clonePlain(state.errors),
       startedAt: state.startedAt,
@@ -3806,7 +4271,7 @@
     const r = getReceiptLight(false);
 
     return [
-      "HEARTH_ROUTE_CONDUCTOR_MACRO_WEST_ADMISSIBILITY_CANVAS_RELEASE_CONSUMPTION_STATUS",
+      "HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT_STATUS",
       line("contract", r.contract),
       line("receipt", r.receipt),
       line("cycleNumber", r.cycleNumber),
@@ -3820,17 +4285,22 @@
       line("macroWestAdmissibilityObserved", r.macroWestAdmissibilityObserved),
       line("westDecision", r.westDecision),
       line("westCanvasReleaseApproved", r.westCanvasReleaseApproved),
-      line("canvasParentV2Observed", r.canvasParentV2Observed),
+      line("currentCanvasParentObserved", r.currentCanvasParentObserved),
       line("canvasParentReleaseAccepted", r.canvasParentReleaseAccepted),
       line("canvasGateReady", r.canvasGateReady),
+      line("f13CanvasEvidenceStrict", r.f13CanvasEvidenceStrict),
+      line("f13CanvasEvidenceDegraded", r.f13CanvasEvidenceDegraded),
       line("f13CanvasEvidenceComplete", r.f13CanvasEvidenceComplete),
-      line("f13HardFail", r.f13HardFail),
+      line("f13StrictEvidenceGap", r.f13StrictEvidenceGap),
+      line("f13StrictEvidenceRepairTarget", r.f13StrictEvidenceRepairTarget),
       line("f21EligibleForNorth", r.f21EligibleForNorth),
       line("f21SubmittedToNorth", r.f21SubmittedToNorth),
+      line("completionLatched", r.completionLatched),
+      line("degradedCompletionLatched", r.degradedCompletionLatched),
+      line("readyTextAllowed", r.readyTextAllowed),
+      line("northRepairRequired", r.northRepairRequired),
       line("canvasReleaseAuthorized", r.canvasReleaseAuthorized),
       line("canvasReleaseHeldReason", r.canvasReleaseHeldReason),
-      line("completionLatched", r.completionLatched),
-      line("readyTextAllowed", r.readyTextAllowed),
       line("visualPassClaimed", r.visualPassClaimed),
       line("postgameStatus", r.postgameStatus),
       line("firstFailedCoordinate", r.firstFailedCoordinate),
@@ -3846,11 +4316,16 @@
     setDataset("hearthRouteConductorPresent", "true");
     setDataset("hearthRouteConductorContract", CONTRACT);
     setDataset("hearthRouteConductorReceipt", RECEIPT);
+    setDataset("hearthRouteConductorPreviousContract", PREVIOUS_CONTRACT);
+    setDataset("hearthRouteConductorBaselineContract", BASELINE_CONTRACT);
     setDataset("hearthRouteConductorVersion", VERSION);
     setDataset("hearthRouteConductorPrimaryGateActive", "true");
+    setDataset("hearthRouteConductorStrictF13DownstreamAlignmentActive", "true");
     setDataset("hearthRouteConductorCanvasParentChildReconciliationActive", "true");
     setDataset("hearthRouteConductorMacroWestAdmissibilityConsumptionActive", "true");
     setDataset("hearthRouteConductorCycleAwareRoutingActive", "true");
+    setDataset("hearthRouteConductorCycleOneIsPosition", "true");
+    setDataset("hearthRouteConductorCycleTwoIsCoordination", "true");
     setDataset("hearthRouteConductorCycleOneReturnsToNorth", "true");
     setDataset("hearthRouteConductorCycleTwoHandsToMacroWest", "true");
     setDataset("hearthRouteConductorCanvasReleaseRequiresWestAudit", "true");
@@ -3882,6 +4357,17 @@
     setDataset("hearthSouthF13CanvasEvidenceDegraded", String(state.f13CanvasEvidenceDegraded));
     setDataset("hearthSouthF13CanvasEvidenceComplete", String(state.f13CanvasEvidenceComplete));
     setDataset("hearthSouthF13HardFail", String(state.f13HardFail));
+    setDataset("hearthSouthF13StrictEvidenceGap", state.f13StrictEvidenceGap);
+    setDataset("hearthSouthF13StrictEvidenceRepairTarget", state.f13StrictEvidenceRepairTarget);
+
+    setDataset("hearthSouthStrictProofObserved", String(state.southStrictProofObserved));
+    setDataset("hearthSouthSoftProofObserved", String(state.southSoftProofObserved));
+    setDataset("hearthSouthHardFailObserved", String(state.southHardFailObserved));
+    setDataset("hearthSouthProofStale", String(state.southProofStale));
+    setDataset("hearthSouthParentStrictReadMismatch", String(state.parentStrictReadMismatch));
+    setDataset("hearthSouthDegradedF13IsFunctional", String(state.degradedF13IsFunctional));
+    setDataset("hearthSouthFunctionalPageObserved", String(state.functionalPageObserved));
+    setDataset("hearthSouthStrictVisualProofPending", String(state.strictVisualProofPending));
 
     setDataset("hearthSouthMacroWestAuthorityObserved", String(state.macroWestAuthorityObserved));
     setDataset("hearthSouthMacroWestAdmissibilityObserved", String(state.macroWestAdmissibilityObserved));
@@ -3893,6 +4379,7 @@
     setDataset("hearthSouthWestCanvasReleaseApproved", String(state.westCanvasReleaseApproved));
     setDataset("hearthSouthWestFirstFailedCoordinate", state.westFirstFailedCoordinate);
 
+    setDataset("hearthSouthCurrentCanvasParentObserved", String(state.currentCanvasParentObserved));
     setDataset("hearthSouthCanvasParentV2Observed", String(state.canvasParentV2Observed));
     setDataset("hearthSouthCanvasParentReleaseAccepted", String(state.canvasParentReleaseAccepted));
     setDataset("hearthSouthCanvasEastApiReady", String(state.canvasEastApiReady));
@@ -3903,14 +4390,18 @@
     setDataset("hearthSouthCanvasWestInspectionReady", String(state.canvasWestInspectionReady));
     setDataset("hearthSouthCanvasSouthVisibleProofReady", String(state.canvasSouthVisibleProofReady));
     setDataset("hearthSouthAllCanvasChildrenEvidenceReady", String(state.allCanvasChildrenEvidenceReady));
+    setDataset("hearthSouthAllCanvasChildrenReady", String(state.allCanvasChildrenReady));
 
     setDataset("hearthSouthCanvasGateReady", String(state.canvasGateReady));
     setDataset("hearthSouthF21EligibleForNorth", String(state.f21EligibleForNorth));
     setDataset("hearthSouthF21EligibilitySubmittedToNorth", String(state.f21EligibilitySubmittedToNorth));
     setDataset("hearthSouthCompletionLatched", String(state.completionLatched));
+    setDataset("hearthSouthDegradedCompletionLatched", String(state.degradedCompletionLatched));
     setDataset("hearthSouthReadyTextAllowed", String(state.readyTextAllowed));
     setDataset("hearthSouthF21LatchMode", state.f21LatchMode);
     setDataset("hearthSouthF21ClaimedByRouteConductor", "false");
+    setDataset("hearthSouthNorthRepairRequired", String(state.northRepairRequired));
+    setDataset("hearthSouthNorthRepairReason", state.northRepairReason);
 
     setDataset("hearthSouthCanvasReleaseAuthorized", String(state.canvasReleaseAuthorized));
     setDataset("hearthSouthCanvasReleaseHeldReason", state.canvasReleaseHeldReason);
@@ -3928,6 +4419,42 @@
     setDataset("visualPassClaimed", "false");
   }
 
+  function getRouteCycleReceipt(input = {}) {
+    const packet = composeRoutePrimaryPacket(input);
+
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      cycleReceipt: "HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT_CYCLE_RECEIPT_v4",
+      cycleNumber: packet.cycleNumber,
+      cycleRoute: packet.cycleRoute,
+      receivedFrom: packet.receivedFrom,
+      returnTo: packet.returnTo,
+      handoffTo: packet.handoffTo,
+      macroWestAdmissibilityObserved: packet.macroWestAdmissibilityObserved,
+      westDecision: packet.westDecision,
+      canvasReleaseAuthorized: packet.canvasReleaseAuthorized,
+      currentCanvasParentObserved: packet.currentCanvasParentObserved,
+      canvasGateReady: packet.canvasGateReady,
+      f13CanvasEvidenceStrict: packet.f13CanvasEvidenceStrict,
+      f13CanvasEvidenceDegraded: packet.f13CanvasEvidenceDegraded,
+      f13CanvasEvidenceComplete: packet.f13CanvasEvidenceComplete,
+      f13StrictEvidenceGap: packet.f13StrictEvidenceGap,
+      f13StrictEvidenceRepairTarget: packet.f13StrictEvidenceRepairTarget,
+      f21EligibleForNorth: packet.f21EligibleForNorth,
+      northRepairRequired: packet.northRepairRequired,
+      firstFailedCoordinate: packet.firstFailedCoordinate,
+      recommendedNextFile: packet.recommendedNextFile,
+      recommendedNextRenewalTarget: packet.recommendedNextRenewalTarget,
+      visualPassClaimed: false,
+      updatedAt: nowIso()
+    };
+  }
+
+  function getRoutePrimaryGateReceipt(input = {}) {
+    return composeRouteReceipt(input);
+  }
+
   const api = {
     contract: CONTRACT,
     receipt: RECEIPT,
@@ -3941,8 +4468,9 @@
     FILE_GATES,
     CYCLE_ROUTES,
     CARDINALS,
-    FIBONACCI_RANK,
     WEST_DECISION,
+    STRICT_PROOF_MINIMUMS,
+    CURRENT_CANVAS_PARENT_CONTRACTS,
 
     boot,
     start: boot,
@@ -3971,6 +4499,7 @@
     readMacroWestAuthority,
     readSouthPrimaryGate,
     readCanvasEvidence,
+    resolveStrictF13Gap,
     resolveRouteCycle,
     resolveF8SelfDuty,
     resolveF13Evidence,
@@ -4000,11 +4529,14 @@
     supportsMacroWestCanvasRelease: true,
     supportsCanvasReleaseFirewall: true,
     supportsCanvasParentChildReconciliation: true,
+    supportsStrictF13DownstreamAlignment: true,
+    supportsFunctionalDegradedF13Status: true,
     supportsCanvasF13EvidenceOnly: true,
     supportsF21NorthNewsLatchOnly: true,
     supportsF21EligibilitySubmissionOnly: true,
 
     routeConductorPrimaryGateActive: true,
+    strictF13DownstreamAlignmentActive: true,
     canvasParentChildReconciliationActive: true,
     cycleAwareRoutingActive: true,
     southPrimaryGateIntegrationActive: true,
@@ -4018,6 +4550,7 @@
     ownsMacroWestAdmissibilityConsumption: true,
     ownsCanvasReleasePacket: true,
     ownsF13EvidenceObservation: true,
+    ownsStrictF13RepairRouting: true,
     ownsF21EligibilitySubmission: true,
 
     ownsMacroWestTruth: false,
@@ -4041,7 +4574,7 @@
   };
 
   publishEarlyMarker();
-  publishGlobals("immediate-macro-west-reconciliation-api-receipt-publication", true);
+  publishGlobals("immediate-strict-f13-downstream-api-receipt-publication", true);
 
   if (doc) {
     if (doc.readyState === "loading") {

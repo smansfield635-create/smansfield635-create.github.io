@@ -1,20 +1,17 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_CANVAS_PARENT_PRE_RELEASE_STRUCTURAL_CARRIER_THEN_WEST_RELEASE_TO_EAST_TNT_v4
+// HEARTH_CANVAS_PARENT_CURRENT_SOUTH_PROOF_RECONCILIATION_TNT_v5
 // Full-file replacement.
-// Canvas parent / governed F13 evidence receiver / pre-release structural carrier / post-release child render chain.
+// Canvas parent / current South proof reconciliation / governed F13 evidence receiver.
 // Purpose:
-// - Break the circular lock where Macro West requires a safe Canvas carrier before release,
-//   while Canvas previously required West release before mounting the carrier.
-// - Allow pre-release structural carrier proof only:
-//   parent identity guard, stale clearance, physical carrier mount, 2D context, nonzero size,
-//   safe containment fields, and structural receipt.
-// - Keep child work gated behind lawful Cycle 2 / Macro West release:
-//   East buildAtlas, West inspection binding, South texture/render/visible proof.
-// - Pass accepted West release packet into East buildAtlas().
-// - Preserve current-parent stale clearance while treating old parent evidence as historical only.
-// - Split child API readiness from child evidence readiness.
-// - Keep Canvas strictly F13 evidence only.
-// - Never claim F21, READY text, completion latch, or final visual pass.
+// - Preserve the v4 pre-release structural carrier and Macro West release bridge.
+// - Keep child rendering gated behind lawful Cycle 2 / Macro West release.
+// - Repair stale South-proof acceptance by requiring current, non-stale South proof.
+// - Prefer the current strict South child aliases before legacy South aliases.
+// - Validate child contract/currentness before accepting child evidence as current.
+// - Force South visible-proof sampling after render unless explicitly suppressed.
+// - Never allow suppressed sampling or stale South proof to satisfy strict F13.
+// - Preserve Canvas as F13 evidence only.
+// - Never claim F21, READY text, completion latch, WebGL, generated image, GraphicBox, or final visual pass.
 // Does not own:
 // - planet truth
 // - material truth
@@ -31,17 +28,17 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_PARENT_PRE_RELEASE_STRUCTURAL_CARRIER_THEN_WEST_RELEASE_TO_EAST_TNT_v4";
-  const RECEIPT = "HEARTH_CANVAS_PARENT_PRE_RELEASE_STRUCTURAL_CARRIER_THEN_WEST_RELEASE_TO_EAST_RECEIPT_v4";
+  const CONTRACT = "HEARTH_CANVAS_PARENT_CURRENT_SOUTH_PROOF_RECONCILIATION_TNT_v5";
+  const RECEIPT = "HEARTH_CANVAS_PARENT_CURRENT_SOUTH_PROOF_RECONCILIATION_RECEIPT_v5";
 
-  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_PARENT_RELEASE_PACKET_TO_EAST_STALE_CLEARANCE_TNT_v3";
-  const PREVIOUS_RECEIPT = "HEARTH_CANVAS_PARENT_RELEASE_PACKET_TO_EAST_STALE_CLEARANCE_RECEIPT_v3";
-  const BASELINE_CONTRACT = "HEARTH_CANVAS_PARENT_RELEASE_PACKET_TO_EAST_STALE_CLEARANCE_TNT_v3";
-  const BASELINE_RECEIPT = "HEARTH_CANVAS_PARENT_RELEASE_PACKET_TO_EAST_STALE_CLEARANCE_RECEIPT_v3";
+  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_PARENT_PRE_RELEASE_STRUCTURAL_CARRIER_THEN_WEST_RELEASE_TO_EAST_TNT_v4";
+  const PREVIOUS_RECEIPT = "HEARTH_CANVAS_PARENT_PRE_RELEASE_STRUCTURAL_CARRIER_THEN_WEST_RELEASE_TO_EAST_RECEIPT_v4";
+  const BASELINE_CONTRACT = PREVIOUS_CONTRACT;
+  const BASELINE_RECEIPT = PREVIOUS_RECEIPT;
 
   const SPLIT_CONTRACT = CONTRACT;
   const SPLIT_RECEIPT = RECEIPT;
-  const VERSION = "2026-05-31.hearth-canvas-parent-pre-release-structural-carrier-then-west-release-to-east-v4";
+  const VERSION = "2026-05-31.hearth-canvas-parent-current-south-proof-reconciliation-v5";
 
   const FILE = "/assets/hearth/hearth.canvas.js";
   const NORTH_FILE = "/assets/lab/runtime-table.js";
@@ -51,7 +48,7 @@
 
   const MACRO_CYCLE_1 = "NORTH_EAST_WEST_SOUTH_NORTH";
   const MACRO_CYCLE_2 = "NORTH_EAST_SOUTH_WEST_CANVAS";
-  const CANVAS_CHILD_SEQUENCE = "CANVAS_PRE_RELEASE_CARRIER__MACRO_WEST_RELEASE__CANVAS_EAST_ATLAS__CANVAS_WEST_INSPECTION__CANVAS_SOUTH_RENDER__CANVAS_PARENT_F13_RETURN";
+  const CANVAS_CHILD_SEQUENCE = "CANVAS_PRE_RELEASE_CARRIER__MACRO_WEST_RELEASE__CANVAS_EAST_ATLAS__CANVAS_WEST_INSPECTION__CANVAS_SOUTH_RENDER__SOUTH_CURRENT_PROOF_SAMPLE__CANVAS_PARENT_F13_RETURN";
   const DEPRECATED_CYCLE_ORDER = "EAST_WEST_NORTH_SOUTH_CHECKPOINT_EAST";
 
   const DEFAULT_SIZE = 600;
@@ -64,6 +61,9 @@
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
+
+  const SOUTH_STRICT_CONTRACT = "HEARTH_CANVAS_SOUTH_F13S_STRICT_VISIBLE_PROOF_CLASSIFIER_CHILD_TNT_v3";
+  const SOUTH_STRICT_RECEIPT = "HEARTH_CANVAS_SOUTH_F13S_STRICT_VISIBLE_PROOF_CLASSIFIER_CHILD_RECEIPT_v3";
 
   const RELEASE_STATUS = Object.freeze({
     WAITING: "WAITING_MACRO_WEST_RELEASE",
@@ -78,6 +78,15 @@
     HELD_FALLBACK: "RELEASE_HELD_FALLBACK"
   });
 
+  const PROOF_BIN = Object.freeze({
+    NONE: "NONE",
+    STRICT: "STRICT",
+    SOFT_GAP: "SOFT_GAP",
+    HARD_FAIL: "HARD_FAIL",
+    STALE: "STALE",
+    SUPPRESSED: "SUPPRESSED"
+  });
+
   const STALE_PARENT_CONTRACTS = Object.freeze([
     "HEARTH_CANVAS_PHYSICAL_CARRIER_F13_PROOF_PARENT_RENEWAL_TNT_v1",
     "HEARTH_CANVAS_PHYSICAL_OBJECT_BOOTSTRAP_F13_CARRIER_TNT_v1",
@@ -86,12 +95,25 @@
     "HEARTH_CANVAS_PARENT_IDENTITY_BOOT_HANDSHAKE_STALE_CONSUMPTION_GUARD_TNT_v4",
     "HEARTH_CANVAS_PARENT_GOVERNED_F13_EVIDENCE_RECEIVER_AFTER_WEST_RELEASE_TNT_v1",
     "HEARTH_CANVAS_PARENT_CHILD_RECONCILIATION_F13_EVIDENCE_RECEIVER_TNT_v2",
-    "HEARTH_CANVAS_PARENT_RELEASE_PACKET_TO_EAST_STALE_CLEARANCE_TNT_v3"
+    "HEARTH_CANVAS_PARENT_RELEASE_PACKET_TO_EAST_STALE_CLEARANCE_TNT_v3",
+    "HEARTH_CANVAS_PARENT_PRE_RELEASE_STRUCTURAL_CARRIER_THEN_WEST_RELEASE_TO_EAST_TNT_v4"
+  ]);
+
+  const STALE_SOUTH_CONTRACTS = Object.freeze([
+    "HEARTH_CANVAS_SOUTH_F13S_TEXTURE_RENDER_VISIBLE_PROOF_CHILD_TNT_v2",
+    "HEARTH_CANVAS_SOUTH_TEXTURE_SPHERE_VISIBLE_PROOF_TNT_v1",
+    "HEARTH_CANVAS_SOUTH_SPLIT_ADAPTER_DRAIN_VISIBLE_PROOF_HARDENING_TNT_v1"
   ]);
 
   const CHILDREN = Object.freeze({
     east: {
       file: EAST_FILE,
+      role: "east-atlas-source",
+      acceptedContracts: [
+        "HEARTH_CANVAS_EAST_PARENT_ALIGNED_MATERIAL_ATLAS_SOURCE_TRANSISTOR_TNT_v3",
+        "HEARTH_CANVAS_EAST_MATERIAL_ATLAS_SOURCE_MACHINE_TNT_v2",
+        "HEARTH_CANVAS_EAST_GOVERNED_F13_ATLAS_SOURCE_TNT_v1"
+      ],
       globals: [
         "HEARTH_CANVAS_EAST",
         "HEARTH.canvasEast",
@@ -111,6 +133,11 @@
     },
     west: {
       file: WEST_FILE,
+      role: "west-inspection-view",
+      acceptedContracts: [
+        "HEARTH_CANVAS_WEST_F13N_INSPECTION_VIEW_INVALIDATION_CHILD_TNT_v1",
+        "HEARTH_CANVAS_WEST_INSPECTION_INVALIDATION_CONTROL_TNT_v1"
+      ],
       globals: [
         "HEARTH_CANVAS_WEST",
         "HEARTH.canvasWest",
@@ -126,7 +153,17 @@
     },
     south: {
       file: SOUTH_FILE,
+      role: "south-texture-render-current-visible-proof",
+      requiredContract: SOUTH_STRICT_CONTRACT,
+      acceptedContracts: [
+        SOUTH_STRICT_CONTRACT
+      ],
+      staleContracts: STALE_SOUTH_CONTRACTS,
       globals: [
+        "HEARTH_CANVAS_SOUTH_F13S_STRICT_VISIBLE_PROOF_CLASSIFIER_CHILD",
+        "HEARTH.canvasSouthF13SStrictVisibleProofClassifierChild",
+        "DEXTER_LAB.hearthCanvasSouthF13SStrictVisibleProofClassifierChild",
+
         "HEARTH_CANVAS_SOUTH",
         "HEARTH.canvasSouth",
         "HEARTH.canvasSouthTextureSphereVisibleProof",
@@ -154,7 +191,11 @@
   });
 
   function nowIso() {
-    try { return new Date().toISOString(); } catch (_error) { return ""; }
+    try {
+      return new Date().toISOString();
+    } catch (_error) {
+      return "";
+    }
   }
 
   function isObject(value) {
@@ -188,8 +229,11 @@
 
   function clonePlain(value) {
     if (!isObject(value) && !Array.isArray(value)) return value;
-    try { return JSON.parse(JSON.stringify(value)); }
-    catch (_error) { return Array.isArray(value) ? value.slice() : { ...value }; }
+    try {
+      return JSON.parse(JSON.stringify(value));
+    } catch (_error) {
+      return Array.isArray(value) ? value.slice() : { ...value };
+    }
   }
 
   function trimArray(array, max = MAX_LOG) {
@@ -337,10 +381,11 @@
     splitReceipt: SPLIT_RECEIPT,
     version: VERSION,
     file: FILE,
-    role: "canvas-parent-pre-release-structural-carrier-then-west-release-to-east",
+    role: "canvas-parent-current-south-proof-reconciliation",
 
     governedF13EvidenceReceiverActive: true,
     parentChildReconciliationActive: true,
+    currentSouthProofReconciliationActive: true,
     preReleaseStructuralCarrierActive: true,
     postReleaseChildRenderChainActive: true,
     eastReleasePacketBridgeActive: true,
@@ -354,6 +399,8 @@
     parentIdentityGuardActive: true,
     bootHandshakeGuardActive: true,
     staleConsumptionGuardActive: true,
+    childCurrentContractGuardActive: true,
+    southCurrentProofGuardActive: true,
     expectedParentContract: CONTRACT,
     expectedParentSplitContract: SPLIT_CONTRACT,
     currentParentIdentityAccepted: false,
@@ -410,6 +457,9 @@
     canvasEastPresent: false,
     canvasWestPresent: false,
     canvasSouthPresent: false,
+    canvasEastCurrent: false,
+    canvasWestCurrent: false,
+    canvasSouthCurrent: false,
     canvasEastApiReady: false,
     canvasWestApiReady: false,
     canvasSouthApiReady: false,
@@ -425,6 +475,12 @@
     canvasEastMissingMethods: "",
     canvasWestMissingMethods: "",
     canvasSouthMissingMethods: "",
+    canvasEastContract: "",
+    canvasWestContract: "",
+    canvasSouthContract: "",
+    canvasSouthReceiptId: "",
+    canvasSouthStrictContractObserved: false,
+    canvasSouthStaleContractObserved: false,
 
     childLoadAttempted: false,
     childLoadComplete: false,
@@ -475,6 +531,26 @@
     zoomMin: 0.82,
     zoomMax: 2.8,
     pointerDragCount: 0,
+
+    southCurrentProofObserved: false,
+    southCurrentProofValid: false,
+    southCurrentProofAt: "",
+    southLastValidProofAt: "",
+    southProofBin: PROOF_BIN.NONE,
+    southProofStale: true,
+    southStaleProofSuppressed: true,
+    southProofSamplingSuppressed: false,
+    southProofSamplingSuppressedAt: "",
+    southProofSamplingSuppressedReason: "",
+    southStrictProofObserved: false,
+    southSoftProofObserved: false,
+    southHardFailObserved: false,
+    southCurrentStrictProof: false,
+    southCurrentDegradedProof: false,
+    southCurrentHardFail: false,
+    southCurrentProofSource: "",
+    f13StrictEvidenceGap: "WAITING_CANVAS_SOUTH_CURRENT_NON_STALE_VISIBLE_PROOF",
+    f13StrictEvidenceRepairTarget: FILE,
 
     visibleContentProofStarted: false,
     visibleContentProof: false,
@@ -532,8 +608,8 @@
     fibonacciAlignmentSynchronized: true,
     activeFibonacci: 13,
     activeFibonacciRank: "F13P",
-    activeStageId: "canvas-parent-f13-evidence-receiver",
-    activeGearId: "hearth-canvas-parent-f13",
+    activeStageId: "canvas-parent-current-south-proof-reconciliation",
+    activeGearId: "hearth-canvas-parent-f13-current-south-proof",
     activeFibonacciGate: "F13",
     futureFibonacciGate: "F21",
     oneActiveGearAtATime: true,
@@ -592,11 +668,13 @@
     ownsPreReleaseStructuralCarrier: true,
     ownsGovernedF13EvidenceReceiver: true,
     ownsParentChildReconciliation: true,
+    ownsCurrentSouthProofReconciliation: true,
     ownsEastReleasePacketBridge: true,
     ownsCanvasParentGate: true,
     ownsParentIdentityGuard: true,
     ownsBootHandshakeGuard: true,
     ownsStaleConsumptionDetection: true,
+    ownsChildCurrentContractGuard: true,
     ownsPhysicalCarrierProof: true,
     ownsEmergencyF13DiagnosticPlanet: true,
     ownsPlanetTruth: false,
@@ -680,6 +758,7 @@
     root.__HEARTH_CANVAS_PARENT_SPLIT_CONTRACT__ = SPLIT_CONTRACT;
     root.__HEARTH_CANVAS_PARENT_SPLIT_RECEIPT__ = SPLIT_RECEIPT;
     root.__HEARTH_CANVAS_PARENT_CHILD_RECONCILIATION__ = true;
+    root.__HEARTH_CANVAS_PARENT_CURRENT_SOUTH_PROOF_RECONCILIATION__ = true;
     root.__HEARTH_CANVAS_PARENT_GOVERNED_F13_EVIDENCE_RECEIVER__ = true;
     root.__HEARTH_CANVAS_PARENT_PRE_RELEASE_STRUCTURAL_CARRIER__ = true;
     root.__HEARTH_CANVAS_PARENT_RELEASE_PACKET_TO_EAST__ = true;
@@ -721,7 +800,7 @@
     state.recommendedNextFile = FILE;
     state.recommendedNextRenewalTarget = FILE;
 
-    recordError("PARENT_IDENTITY_MISMATCH", "Live parent identity does not match v4 parent identity.", {
+    recordError("PARENT_IDENTITY_MISMATCH", "Live parent identity does not match v5 parent identity.", {
       reason,
       expectedContract: CONTRACT,
       expectedSplit: SPLIT_CONTRACT,
@@ -913,12 +992,16 @@
     canvas.dataset.hearthCanvasPreReleaseStructuralCarrier = "true";
     canvas.dataset.hearthCanvasGovernedF13EvidenceReceiver = "true";
     canvas.dataset.hearthCanvasParentChildReconciliation = "true";
+    canvas.dataset.hearthCanvasCurrentSouthProofReconciliation = "true";
     canvas.dataset.hearthCanvasCarrierReady = String(state.carrierReady);
     canvas.dataset.hearthCanvasCarrierStructuralSafeForWest = String(state.structuralCarrierSafeForCanvasRelease);
     canvas.dataset.hearthCanvasReady = String(state.f13CanvasEvidenceComplete);
     canvas.dataset.hearthCanvasF13Only = "true";
     canvas.dataset.hearthCanvasF21Claimed = "false";
     canvas.dataset.hearthCanvasReadyTextClaimed = "false";
+    canvas.dataset.generatedImage = "false";
+    canvas.dataset.graphicBox = "false";
+    canvas.dataset.webgl = "false";
     canvas.dataset.visualPassClaimed = "false";
 
     if (state.structuralCarrierSafeForCanvasRelease && !state.releaseAccepted) {
@@ -930,25 +1013,6 @@
     updateDataset();
 
     return getReceiptLight();
-  }
-
-  function readChild(key) {
-    const spec = CHILDREN[key];
-    if (!spec) return null;
-
-    for (const name of spec.globals) {
-      const found = readPath(name);
-      if (found && isObject(found)) return found;
-    }
-
-    return null;
-  }
-
-  function childMissingMethods(key, child = readChild(key)) {
-    const spec = CHILDREN[key];
-    if (!spec) return [];
-    if (!child) return spec.methods.slice();
-    return spec.methods.filter((method) => !isFunction(child[method]));
   }
 
   function safeChildReceipt(child) {
@@ -967,33 +1031,319 @@
     return {};
   }
 
+  function readChildCandidates(key) {
+    const spec = CHILDREN[key];
+    if (!spec) return [];
+
+    const found = [];
+
+    for (const name of spec.globals) {
+      const api = readPath(name);
+      if (api && isObject(api) && !found.includes(api)) found.push(api);
+    }
+
+    return found;
+  }
+
+  function childContractOf(child) {
+    const receipt = safeChildReceipt(child);
+    return safeString(receipt.contract || child.contract || "");
+  }
+
+  function childReceiptOf(child) {
+    const receipt = safeChildReceipt(child);
+    return safeString(receipt.receipt || child.receipt || "");
+  }
+
+  function validateChild(key, child) {
+    const spec = CHILDREN[key];
+    const receipt = safeChildReceipt(child);
+    const contract = childContractOf(child);
+    const receiptId = childReceiptOf(child);
+    const missingMethods = spec && child ? spec.methods.filter((method) => !isFunction(child[method])) : (spec ? spec.methods.slice() : []);
+    const methodsReady = Boolean(child && missingMethods.length === 0);
+    const staleContracts = spec && spec.staleContracts ? spec.staleContracts : [];
+    const stale = Boolean(contract && staleContracts.includes(contract));
+
+    let current = Boolean(child && methodsReady && !stale);
+    let contractAccepted = true;
+    let strictSouth = false;
+
+    if (key === "south") {
+      strictSouth = Boolean(
+        contract === SOUTH_STRICT_CONTRACT ||
+        receiptId === SOUTH_STRICT_RECEIPT ||
+        receipt.strictVisibleProofClassifierActive === true ||
+        child.strictVisibleProofClassifierActive === true
+      );
+
+      contractAccepted = Boolean(strictSouth && !stale);
+      current = Boolean(child && methodsReady && contractAccepted);
+    } else if (spec && spec.acceptedContracts && spec.acceptedContracts.length && contract) {
+      contractAccepted = Boolean(spec.acceptedContracts.includes(contract) || !contract.includes("STALE"));
+      current = Boolean(child && methodsReady && contractAccepted && !stale);
+    }
+
+    return {
+      key,
+      child: child || null,
+      present: Boolean(child),
+      methodsReady,
+      missingMethods,
+      contract,
+      receipt: receiptId,
+      contractAccepted,
+      stale,
+      current,
+      strictSouth,
+      receiptPacket: receipt
+    };
+  }
+
+  function readChild(key) {
+    const candidates = readChildCandidates(key);
+    if (!candidates.length) return null;
+
+    const validations = candidates.map((candidate) => validateChild(key, candidate));
+
+    const current = validations.find((item) => item.current);
+    if (current) return current.child;
+
+    const methodsReady = validations.find((item) => item.methodsReady && !item.stale);
+    if (methodsReady) return methodsReady.child;
+
+    return validations[0].child;
+  }
+
+  function childMissingMethods(key, child = readChild(key)) {
+    const spec = CHILDREN[key];
+    if (!spec) return [];
+    if (!child) return spec.methods.slice();
+    return spec.methods.filter((method) => !isFunction(child[method]));
+  }
+
+  function readSouthCurrentProofFromReceipt(receipt = {}) {
+    const currentVisibleProofValid = safeBool(receipt.currentVisibleProofValid, false);
+    const visibleProofStale = safeBool(receipt.visibleProofStale, true);
+    const staleProofSuppressed = safeBool(receipt.staleProofSuppressed, true);
+    const proofBin = safeString(receipt.proofBin, PROOF_BIN.NONE);
+    const currentVisibleProofAt = safeString(receipt.currentVisibleProofAt, "");
+    const lastValidVisibleProofAt = safeString(receipt.lastValidVisibleProofAt, "");
+    const f13sVisibleProofReady = safeBool(receipt.f13sVisibleProofReady, false);
+    const f13VisibleEvidenceAvailable = safeBool(receipt.f13VisibleEvidenceAvailable, false);
+    const f13VisibleEvidenceStrict = safeBool(receipt.f13VisibleEvidenceStrict, false);
+    const f13VisibleEvidenceDegraded = safeBool(receipt.f13VisibleEvidenceDegraded, false);
+    const visibleContentProof = safeBool(receipt.visibleContentProof, false);
+    const visibleContentStrictProof = safeBool(receipt.visibleContentStrictProof, false);
+    const visibleContentSoftGap = safeBool(receipt.visibleContentSoftGap, false);
+    const visibleForwardProgress = safeBool(receipt.visibleForwardProgress, false);
+    const visibleContentAdmissible = safeBool(receipt.visibleContentAdmissible, false);
+    const visibleContentHardFail = safeBool(receipt.visibleContentHardFail, false);
+    const f13HardFail = safeBool(receipt.f13HardFail, false);
+
+    const currentNonStale = Boolean(
+      currentVisibleProofValid &&
+      !visibleProofStale &&
+      !staleProofSuppressed &&
+      currentVisibleProofAt
+    );
+
+    const strict = Boolean(
+      currentNonStale &&
+      f13sVisibleProofReady &&
+      f13VisibleEvidenceAvailable &&
+      (
+        proofBin === PROOF_BIN.STRICT ||
+        f13VisibleEvidenceStrict ||
+        visibleContentStrictProof
+      )
+    );
+
+    const degraded = Boolean(
+      currentNonStale &&
+      f13sVisibleProofReady &&
+      f13VisibleEvidenceAvailable &&
+      !strict &&
+      (
+        proofBin === PROOF_BIN.SOFT_GAP ||
+        f13VisibleEvidenceDegraded ||
+        visibleContentSoftGap ||
+        visibleForwardProgress ||
+        visibleContentAdmissible ||
+        visibleContentProof
+      )
+    );
+
+    const hardFail = Boolean(
+      !strict &&
+      !degraded &&
+      (
+        proofBin === PROOF_BIN.HARD_FAIL ||
+        visibleContentHardFail ||
+        f13HardFail
+      )
+    );
+
+    const gap =
+      strict
+        ? "NONE_CANVAS_SOUTH_CURRENT_STRICT_VISIBLE_PROOF"
+        : degraded
+          ? "NONE_CANVAS_SOUTH_CURRENT_DEGRADED_VISIBLE_PROOF"
+          : !currentVisibleProofValid
+            ? "WAITING_CANVAS_SOUTH_CURRENT_VISIBLE_PROOF"
+            : visibleProofStale || staleProofSuppressed
+              ? "WAITING_CANVAS_SOUTH_CURRENT_NON_STALE_VISIBLE_PROOF"
+              : !f13sVisibleProofReady || !f13VisibleEvidenceAvailable
+                ? "WAITING_CANVAS_SOUTH_F13S_VISIBLE_PROOF_READY"
+                : hardFail
+                  ? "CANVAS_SOUTH_CURRENT_VISIBLE_PROOF_HARD_FAIL"
+                  : "WAITING_CANVAS_SOUTH_CURRENT_NON_STALE_VISIBLE_PROOF";
+
+    return {
+      currentVisibleProofValid,
+      visibleProofStale,
+      staleProofSuppressed,
+      proofBin,
+      currentVisibleProofAt,
+      lastValidVisibleProofAt,
+      f13sVisibleProofReady,
+      f13VisibleEvidenceAvailable,
+      f13VisibleEvidenceStrict,
+      f13VisibleEvidenceDegraded,
+      visibleContentProof,
+      visibleContentStrictProof,
+      visibleContentSoftGap,
+      visibleForwardProgress,
+      visibleContentAdmissible,
+      visibleContentHardFail,
+      f13HardFail,
+      currentNonStale,
+      strict,
+      degraded,
+      hardFail,
+      gap
+    };
+  }
+
+  function applySouthCurrentProof(proof = {}, source = "south-proof") {
+    const normalized = readSouthCurrentProofFromReceipt(proof);
+
+    state.southCurrentProofObserved = Boolean(normalized.currentVisibleProofValid || normalized.currentVisibleProofAt || normalized.lastValidVisibleProofAt);
+    state.southCurrentProofValid = normalized.currentVisibleProofValid;
+    state.southCurrentProofAt = normalized.currentVisibleProofAt;
+    state.southLastValidProofAt = normalized.lastValidVisibleProofAt;
+    state.southProofBin = normalized.proofBin;
+    state.southProofStale = normalized.visibleProofStale;
+    state.southStaleProofSuppressed = normalized.staleProofSuppressed;
+    state.southStrictProofObserved = normalized.visibleContentStrictProof || normalized.f13VisibleEvidenceStrict;
+    state.southSoftProofObserved = normalized.visibleContentSoftGap || normalized.f13VisibleEvidenceDegraded || normalized.visibleForwardProgress || normalized.visibleContentAdmissible;
+    state.southHardFailObserved = normalized.hardFail;
+    state.southCurrentStrictProof = normalized.strict;
+    state.southCurrentDegradedProof = normalized.degraded;
+    state.southCurrentHardFail = normalized.hardFail;
+    state.southCurrentProofSource = source;
+
+    state.visibleContentProofStarted = true;
+    state.visibleContentProof = normalized.visibleContentProof || normalized.strict || normalized.degraded;
+    state.visibleContentStrictProof = normalized.strict;
+    state.visibleContentSoftGap = normalized.degraded;
+    state.visibleContentHardFail = normalized.hardFail;
+    state.visibleForwardProgress = normalized.visibleForwardProgress || normalized.degraded || normalized.strict;
+    state.visibleContentAdmissible = normalized.visibleContentAdmissible || normalized.degraded || normalized.strict;
+    state.visiblePlanetAvailable = safeBool(proof.visiblePlanetAvailable, normalized.strict || normalized.degraded);
+    state.nonblankPlanetVisible = safeBool(proof.nonblankPlanetVisible, state.visiblePlanetAvailable);
+    state.planetNotObstructed = safeBool(proof.planetNotObstructed, state.visiblePlanetAvailable);
+    state.carrierOnlyDetected = safeBool(proof.carrierOnlyDetected, false);
+    state.visibleContentProofMethod = safeString(proof.visibleContentProofMethod, normalized.gap);
+    state.visibleContentProofError = safeString(proof.visibleContentProofError, "");
+    state.visibleContentSampleCount = safeNumber(proof.visibleContentSampleCount, state.visibleContentSampleCount);
+    state.visibleContentVarianceScore = safeNumber(proof.visibleContentVarianceScore, state.visibleContentVarianceScore);
+    state.visibleContentClassCount = safeNumber(proof.visibleContentClassCount, state.visibleContentClassCount);
+    state.visibleContentClasses = Array.isArray(proof.visibleContentClasses) ? proof.visibleContentClasses.slice() : state.visibleContentClasses;
+    state.visibleContentLandSampleCount = safeNumber(proof.visibleContentLandSampleCount, state.visibleContentLandSampleCount);
+    state.visibleContentWaterSampleCount = safeNumber(proof.visibleContentWaterSampleCount, state.visibleContentWaterSampleCount);
+    state.visibleContentOtherSampleCount = safeNumber(proof.visibleContentOtherSampleCount, state.visibleContentOtherSampleCount);
+    state.visibleContentCarrierSampleCount = safeNumber(proof.visibleContentCarrierSampleCount, state.visibleContentCarrierSampleCount);
+    state.visibleProofReady = Boolean(normalized.strict || normalized.degraded);
+
+    state.f13StrictEvidenceGap = normalized.gap;
+    state.f13StrictEvidenceRepairTarget = FILE;
+
+    deriveParentReadiness();
+    updateDataset();
+
+    return normalized;
+  }
+
+  function markSouthProofSamplingSuppressed(reason = "sampling-suppressed") {
+    state.southProofSamplingSuppressed = true;
+    state.southProofSamplingSuppressedAt = nowIso();
+    state.southProofSamplingSuppressedReason = reason;
+    state.southCurrentProofValid = false;
+    state.southCurrentStrictProof = false;
+    state.southCurrentDegradedProof = false;
+    state.southProofBin = PROOF_BIN.SUPPRESSED;
+    state.southProofStale = true;
+    state.southStaleProofSuppressed = true;
+    state.f13CanvasEvidenceStrict = false;
+    state.f13CanvasEvidenceDegraded = false;
+    state.f13CanvasEvidenceComplete = false;
+    state.f13StrictEvidenceGap = "WAITING_CANVAS_SOUTH_CURRENT_NON_STALE_VISIBLE_PROOF";
+    state.f13StrictEvidenceRepairTarget = FILE;
+    state.firstFailedCoordinate = state.f13StrictEvidenceGap;
+    state.recommendedNextFile = FILE;
+    state.recommendedNextRenewalTarget = FILE;
+
+    updateDataset();
+  }
+
+  function clearSouthProofSamplingSuppressed() {
+    state.southProofSamplingSuppressed = false;
+    state.southProofSamplingSuppressedReason = "";
+  }
+
   function markChildrenPresence() {
     const east = readChild("east");
     const west = readChild("west");
     const south = readChild("south");
 
-    const eastMissing = childMissingMethods("east", east);
-    const westMissing = childMissingMethods("west", west);
-    const southMissing = childMissingMethods("south", south);
+    const eastValidation = validateChild("east", east);
+    const westValidation = validateChild("west", west);
+    const southValidation = validateChild("south", south);
 
-    state.canvasEastPresent = Boolean(east);
-    state.canvasWestPresent = Boolean(west);
-    state.canvasSouthPresent = Boolean(south);
+    state.canvasEastPresent = eastValidation.present;
+    state.canvasWestPresent = westValidation.present;
+    state.canvasSouthPresent = southValidation.present;
 
-    state.canvasEastApiReady = Boolean(east && eastMissing.length === 0);
-    state.canvasWestApiReady = Boolean(west && westMissing.length === 0);
-    state.canvasSouthApiReady = Boolean(south && southMissing.length === 0);
+    state.canvasEastCurrent = eastValidation.current;
+    state.canvasWestCurrent = westValidation.current;
+    state.canvasSouthCurrent = southValidation.current;
+
+    state.canvasEastApiReady = Boolean(eastValidation.current && eastValidation.methodsReady);
+    state.canvasWestApiReady = Boolean(westValidation.current && westValidation.methodsReady);
+    state.canvasSouthApiReady = Boolean(southValidation.current && southValidation.methodsReady);
     state.allCanvasChildrenApiReady = Boolean(state.canvasEastApiReady && state.canvasWestApiReady && state.canvasSouthApiReady);
 
-    state.canvasEastMissingMethods = eastMissing.join(",");
-    state.canvasWestMissingMethods = westMissing.join(",");
-    state.canvasSouthMissingMethods = southMissing.join(",");
+    state.canvasEastMissingMethods = eastValidation.missingMethods.join(",");
+    state.canvasWestMissingMethods = westValidation.missingMethods.join(",");
+    state.canvasSouthMissingMethods = southValidation.missingMethods.join(",");
 
-    state.eastReceipt = safeChildReceipt(east);
-    state.westReceipt = safeChildReceipt(west);
-    state.southReceipt = safeChildReceipt(south);
+    state.canvasEastContract = eastValidation.contract;
+    state.canvasWestContract = westValidation.contract;
+    state.canvasSouthContract = southValidation.contract;
+    state.canvasSouthReceiptId = southValidation.receipt;
+    state.canvasSouthStrictContractObserved = southValidation.strictSouth;
+    state.canvasSouthStaleContractObserved = southValidation.stale;
 
-    deriveParentReadiness();
+    state.eastReceipt = eastValidation.receiptPacket || {};
+    state.westReceipt = westValidation.receiptPacket || {};
+    state.southReceipt = southValidation.receiptPacket || {};
+
+    if (state.southReceipt && Object.keys(state.southReceipt).length) {
+      applySouthCurrentProof(state.southReceipt, "south-receipt-scan");
+    } else {
+      deriveParentReadiness();
+    }
 
     if (!state.releaseAccepted) state.nextAuditTarget = WEST_FILE;
     else if (!state.canvasEastApiReady) state.nextAuditTarget = EAST_FILE;
@@ -1001,7 +1351,7 @@
     else if (!state.canvasSouthApiReady) state.nextAuditTarget = SOUTH_FILE;
     else if (!state.canvasEastEvidenceReady) state.nextAuditTarget = EAST_FILE;
     else if (!state.canvasWestInspectionReady) state.nextAuditTarget = WEST_FILE;
-    else if (!state.canvasSouthVisibleProofReady) state.nextAuditTarget = SOUTH_FILE;
+    else if (!state.canvasSouthVisibleProofReady) state.nextAuditTarget = FILE;
     else if (!state.f13CanvasEvidenceComplete) state.nextAuditTarget = FILE;
     else state.nextAuditTarget = NORTH_FILE;
 
@@ -1016,73 +1366,72 @@
     const south = state.southReceipt || {};
 
     const eastAtlasReady = Boolean(
-      safeBool(east.atlasBuildComplete, false) ||
-      safeBool(east.atlasReady, false) ||
-      safeBool(east.f13AtlasReady, false) ||
-      safeBool(east.f13AtlasEvidenceAvailable, false) ||
-      safeBool(east.f13AtlasPacketReady, false) ||
-      safeBool(east.canvasEastReady, false)
+      state.canvasEastApiReady &&
+      (
+        safeBool(east.atlasBuildComplete, false) ||
+        safeBool(east.atlasReady, false) ||
+        safeBool(east.f13AtlasReady, false) ||
+        safeBool(east.f13AtlasEvidenceAvailable, false) ||
+        safeBool(east.f13AtlasPacketReady, false) ||
+        safeBool(east.canvasEastReady, false) ||
+        state.atlasBuildComplete
+      )
     );
 
     const westInspectReady = Boolean(
-      safeBool(west.f13InspectEvidenceAvailable, false) ||
-      safeBool(west.f13nInspectionReady, false) ||
-      safeBool(west.inspectionReady, false) ||
-      (safeBool(west.canvasWestReady, false) && safeBool(west.westGateReady, false))
+      state.canvasWestApiReady &&
+      (
+        safeBool(west.f13InspectEvidenceAvailable, false) ||
+        safeBool(west.f13nInspectionReady, false) ||
+        safeBool(west.inspectionReady, false) ||
+        state.inspectModeAvailable ||
+        (safeBool(west.canvasWestReady, false) && safeBool(west.westGateReady, false))
+      )
     );
 
+    const southProof = readSouthCurrentProofFromReceipt(south);
+
     const southTextureReady = Boolean(
-      safeBool(south.textureReady, false) ||
-      safeBool(south.textureComposeComplete, false) ||
-      safeBool(south.textureProofComplete, false) ||
-      state.textureComposeComplete
+      state.canvasSouthApiReady &&
+      (
+        safeBool(south.textureReady, false) ||
+        safeBool(south.textureComposeComplete, false) ||
+        safeBool(south.textureProofComplete, false) ||
+        state.textureComposeComplete
+      )
     );
 
     const southRenderReady = Boolean(
-      safeBool(south.renderReady, false) ||
-      (safeBool(south.imageRendered, false) && safeBool(south.firstFrameDetected, false)) ||
-      safeBool(south.sphereProjectionComplete, false) ||
-      state.renderReady
+      state.canvasSouthApiReady &&
+      (
+        safeBool(south.renderReady, false) ||
+        (safeBool(south.imageRendered, false) && safeBool(south.firstFrameDetected, false)) ||
+        safeBool(south.sphereProjectionComplete, false) ||
+        state.renderReady
+      )
     );
 
-    const southVisibleReady = Boolean(
-      safeBool(south.f13sVisibleProofReady, false) ||
-      safeBool(south.f13VisibleEvidenceAvailable, false) ||
-      safeBool(south.visibleProofReady, false) ||
-      safeBool(south.visibleContentProof, false) ||
-      safeBool(south.visibleContentSoftGap, false) ||
-      safeBool(south.visibleForwardProgress, false) ||
-      safeBool(south.visibleContentAdmissible, false) ||
-      state.visibleContentProof ||
-      state.visibleContentSoftGap ||
-      state.visibleForwardProgress ||
-      state.visibleContentAdmissible
+    const southCurrentReady = Boolean(
+      state.canvasSouthApiReady &&
+      state.canvasSouthCurrent &&
+      !state.southProofSamplingSuppressed &&
+      southProof.currentNonStale &&
+      southProof.f13sVisibleProofReady &&
+      southProof.f13VisibleEvidenceAvailable &&
+      (southProof.strict || southProof.degraded)
     );
 
-    const southVisibleStrict = Boolean(
-      safeBool(south.visibleContentStrictProof, false) ||
-      (safeBool(south.f13VisibleEvidenceAvailable, false) && !safeBool(south.f13VisibleEvidenceDegraded, false)) ||
-      state.visibleContentStrictProof
-    );
-
-    const southVisibleDegraded = Boolean(
-      safeBool(south.f13VisibleEvidenceDegraded, false) ||
-      safeBool(south.visibleContentSoftGap, false) ||
-      safeBool(south.visibleForwardProgress, false) ||
-      safeBool(south.visibleContentAdmissible, false) ||
-      state.visibleContentSoftGap ||
-      state.visibleForwardProgress ||
-      state.visibleContentAdmissible
-    );
+    const southCurrentStrict = Boolean(southCurrentReady && southProof.strict);
+    const southCurrentDegraded = Boolean(southCurrentReady && southProof.degraded);
 
     state.canvasEastEvidenceReady = eastAtlasReady;
     state.canvasWestInspectionReady = westInspectReady;
-    state.canvasSouthVisibleProofReady = southVisibleReady;
+    state.canvasSouthVisibleProofReady = southCurrentReady;
 
     state.canvasEastReady = Boolean(state.canvasEastApiReady && state.canvasEastEvidenceReady);
     state.canvasWestReady = Boolean(state.canvasWestApiReady && state.canvasWestInspectionReady);
     state.canvasSouthReady = Boolean(state.canvasSouthApiReady && state.canvasSouthVisibleProofReady);
-    state.allCanvasChildrenEvidenceReady = Boolean(eastAtlasReady && westInspectReady && southVisibleReady);
+    state.allCanvasChildrenEvidenceReady = Boolean(eastAtlasReady && westInspectReady && southCurrentReady);
     state.allCanvasChildrenReady = Boolean(state.canvasEastReady && state.canvasWestReady && state.canvasSouthReady);
 
     state.f13ReleaseReceived = state.releaseAccepted;
@@ -1096,22 +1445,22 @@
     state.f13TextureReady = southTextureReady || state.textureComposeComplete;
     state.f13RenderReady = southRenderReady || state.renderReady;
     state.f13FrameReady = Boolean(state.firstFrameDetected && state.imageRendered);
-    state.f13VisibleEvidenceAvailable = southVisibleReady;
-    state.f13VisibleEvidenceStrict = southVisibleStrict;
-    state.f13VisibleEvidenceDegraded = southVisibleDegraded;
+    state.f13VisibleEvidenceAvailable = southCurrentReady;
+    state.f13VisibleEvidenceStrict = southCurrentStrict;
+    state.f13VisibleEvidenceDegraded = southCurrentDegraded;
 
     state.f13CanvasEvidenceStrict = Boolean(
       state.releaseAccepted &&
       state.currentParentIdentityAccepted &&
       !state.currentParentStaleDetected &&
       state.f13PhysicalCarrierMounted &&
-      state.f13ChildrenEvidenceReady &&
+      state.f13ChildrenApiReady &&
       state.f13AtlasReady &&
       state.f13InspectReady &&
       state.f13TextureReady &&
       state.f13RenderReady &&
       state.f13FrameReady &&
-      state.f13VisibleEvidenceStrict
+      southCurrentStrict
     );
 
     state.f13CanvasEvidenceDegraded = Boolean(
@@ -1122,10 +1471,11 @@
       state.f13PhysicalCarrierMounted &&
       state.f13ChildrenApiReady &&
       state.f13AtlasReady &&
+      state.f13InspectReady &&
       state.f13TextureReady &&
       state.f13RenderReady &&
       state.f13FrameReady &&
-      state.f13VisibleEvidenceAvailable
+      southCurrentDegraded
     );
 
     state.f13CanvasEvidenceComplete = Boolean(state.f13CanvasEvidenceStrict || state.f13CanvasEvidenceDegraded);
@@ -1134,6 +1484,7 @@
       !state.f13CanvasEvidenceComplete &&
       state.releaseAccepted &&
       (
+        southProof.hardFail ||
         safeBool(south.f13HardFail, false) ||
         safeBool(south.visibleContentHardFail, false) ||
         safeBool(south.textureHardFail, false) ||
@@ -1161,14 +1512,31 @@
       state.firstFailedCoordinate = "NONE_CANVAS_F13_EVIDENCE_COMPLETE";
       state.recommendedNextFile = NORTH_FILE;
       state.recommendedNextRenewalTarget = NORTH_FILE;
+      state.f13StrictEvidenceGap = state.f13CanvasEvidenceStrict
+        ? "NONE_CANVAS_SOUTH_CURRENT_STRICT_VISIBLE_PROOF"
+        : "NONE_CANVAS_SOUTH_CURRENT_DEGRADED_VISIBLE_PROOF";
     } else if (state.releaseAccepted) {
-      state.firstFailedCoordinate = state.f13HardFail ? "CANVAS_F13_HARD_FAIL" : "WAITING_POST_RELEASE_CHILD_F13_EVIDENCE";
-      state.recommendedNextFile = state.nextAuditTarget || FILE;
-      state.recommendedNextRenewalTarget = state.recommendedNextFile;
+      if (!state.canvasSouthCurrent || state.canvasSouthStaleContractObserved) {
+        state.firstFailedCoordinate = "WAITING_CANVAS_SOUTH_CURRENT_STRICT_CHILD_CONTRACT";
+        state.recommendedNextFile = SOUTH_FILE;
+        state.recommendedNextRenewalTarget = SOUTH_FILE;
+        state.f13StrictEvidenceGap = "WAITING_CANVAS_SOUTH_CURRENT_STRICT_CHILD_CONTRACT";
+      } else if (!southCurrentReady || state.southProofSamplingSuppressed || southProof.visibleProofStale || southProof.staleProofSuppressed) {
+        state.firstFailedCoordinate = "WAITING_CANVAS_SOUTH_CURRENT_NON_STALE_VISIBLE_PROOF";
+        state.recommendedNextFile = FILE;
+        state.recommendedNextRenewalTarget = FILE;
+        state.f13StrictEvidenceGap = "WAITING_CANVAS_SOUTH_CURRENT_NON_STALE_VISIBLE_PROOF";
+      } else {
+        state.firstFailedCoordinate = state.f13HardFail ? "CANVAS_F13_HARD_FAIL" : "WAITING_POST_RELEASE_CHILD_F13_EVIDENCE";
+        state.recommendedNextFile = state.nextAuditTarget || FILE;
+        state.recommendedNextRenewalTarget = state.recommendedNextFile;
+        state.f13StrictEvidenceGap = southProof.gap;
+      }
     } else if (state.structuralCarrierSafeForCanvasRelease) {
       state.firstFailedCoordinate = "WAITING_MACRO_WEST_RELEASE";
       state.recommendedNextFile = WEST_FILE;
       state.recommendedNextRenewalTarget = WEST_FILE;
+      state.f13StrictEvidenceGap = "WAITING_MACRO_WEST_RELEASE";
     }
 
     return {
@@ -1176,7 +1544,9 @@
       westInspectReady,
       southTextureReady,
       southRenderReady,
-      southVisibleReady,
+      southCurrentReady,
+      southCurrentStrict,
+      southCurrentDegraded,
       f13CanvasEvidenceStrict: state.f13CanvasEvidenceStrict,
       f13CanvasEvidenceDegraded: state.f13CanvasEvidenceDegraded,
       f13CanvasEvidenceComplete: state.f13CanvasEvidenceComplete
@@ -1441,14 +1811,19 @@
     }) || null;
   }
 
-  function loadScriptOnce(file) {
+  function loadScriptOnce(file, key = "") {
     if (!doc || !file) return Promise.resolve(false);
 
+    const currentChild = key ? readChild(key) : null;
+    const currentValidation = key ? validateChild(key, currentChild) : { current: false };
+
+    if (currentValidation.current) return Promise.resolve(true);
+
     const existing = scriptAlreadyPresent(file);
-    if (existing && existing.dataset.hearthCanvasChildLoaded === "true") return Promise.resolve(true);
+    const mustReloadForCurrentContract = Boolean(key && existing && !currentValidation.current);
 
     return new Promise((resolve) => {
-      const script = existing || doc.createElement("script");
+      const script = doc.createElement("script");
       let settled = false;
 
       function finish(ok) {
@@ -1462,24 +1837,35 @@
       script.defer = false;
       script.dataset.hearthCanvasChildLoadedBy = CONTRACT;
       script.dataset.hearthCanvasChildFile = file;
+      script.dataset.hearthCanvasChildKey = key;
+      script.dataset.hearthCanvasChildReloadForCurrentContract = String(mustReloadForCurrentContract);
       script.dataset.generatedImage = "false";
       script.dataset.graphicBox = "false";
       script.dataset.webgl = "false";
       script.dataset.visualPassClaimed = "false";
 
-      if (!existing) {
-        script.src = `${file}?v=${encodeURIComponent(`${CONTRACT}-${VERSION}`)}`;
-        script.onload = () => finish(true);
-        script.onerror = () => {
-          recordError("CANVAS_CHILD_SCRIPT_LOAD_FAILED", `Failed to load ${file}`, { file });
-          finish(false);
-        };
-        (doc.head || doc.documentElement).appendChild(script);
-      } else {
-        finish(true);
-      }
+      const sep = file.includes("?") ? "&" : "?";
+      script.src = `${file}${sep}v=${encodeURIComponent(`${CONTRACT}-${VERSION}-${Date.now ? Date.now() : nowIso()}`)}`;
 
-      root.setTimeout(() => finish(Boolean(scriptAlreadyPresent(file))), CHILD_LOAD_TIMEOUT_MS);
+      script.onload = () => finish(true);
+      script.onerror = () => {
+        recordError("CANVAS_CHILD_SCRIPT_LOAD_FAILED", `Failed to load ${file}`, { file, key });
+        finish(false);
+      };
+
+      (doc.head || doc.documentElement).appendChild(script);
+
+      root.setTimeout(() => {
+        if (settled) return;
+
+        if (key) {
+          const child = readChild(key);
+          const validation = validateChild(key, child);
+          finish(validation.current || Boolean(scriptAlreadyPresent(file)));
+        } else {
+          finish(Boolean(scriptAlreadyPresent(file)));
+        }
+      }, CHILD_LOAD_TIMEOUT_MS);
     });
   }
 
@@ -1489,8 +1875,9 @@
     return new Promise((resolve) => {
       const timer = root.setInterval(() => {
         const child = readChild(key);
+        const validation = validateChild(key, child);
 
-        if (child) {
+        if (validation.current || (key !== "south" && validation.methodsReady)) {
           root.clearInterval(timer);
           resolve(child);
           return;
@@ -1500,7 +1887,7 @@
 
         if (current - started >= timeoutMs) {
           root.clearInterval(timer);
-          resolve(null);
+          resolve(child || null);
         }
       }, 80);
     });
@@ -1522,8 +1909,10 @@
       markChildrenPresence();
 
       for (const key of Object.keys(CHILDREN)) {
-        if (!readChild(key)) {
-          await loadScriptOnce(CHILDREN[key].file);
+        const validation = validateChild(key, readChild(key));
+
+        if (!validation.current) {
+          await loadScriptOnce(CHILDREN[key].file, key);
           await waitForChild(key);
         }
       }
@@ -1533,9 +1922,9 @@
       if (!state.allCanvasChildrenApiReady) {
         state.childLoadComplete = false;
         state.childLoadError = [
-          state.canvasEastApiReady ? "" : `east:${state.canvasEastMissingMethods || "missing-api"}`,
-          state.canvasWestApiReady ? "" : `west:${state.canvasWestMissingMethods || "missing-api"}`,
-          state.canvasSouthApiReady ? "" : `south:${state.canvasSouthMissingMethods || "missing-api"}`
+          state.canvasEastApiReady ? "" : `east:${state.canvasEastMissingMethods || state.canvasEastContract || "missing-current-api"}`,
+          state.canvasWestApiReady ? "" : `west:${state.canvasWestMissingMethods || state.canvasWestContract || "missing-current-api"}`,
+          state.canvasSouthApiReady ? "" : `south:${state.canvasSouthMissingMethods || state.canvasSouthContract || "missing-current-strict-api"}`
         ].filter(Boolean).join("; ");
 
         updateDataset();
@@ -1618,7 +2007,12 @@
       }
     });
 
-    deriveParentReadiness();
+    if (southReceipt && Object.keys(southReceipt).length) {
+      applySouthCurrentProof(southReceipt, "south-merge-receipt");
+    } else {
+      deriveParentReadiness();
+    }
+
     updateDataset();
 
     return { children, eastReceipt, westReceipt, southReceipt };
@@ -1640,6 +2034,7 @@
       role: state.role,
       governedF13EvidenceReceiverActive: true,
       parentChildReconciliationActive: true,
+      currentSouthProofReconciliationActive: true,
       preReleaseStructuralCarrierActive: true,
       eastReleasePacketBridgeActive: true,
       canvasParentReleaseObserved: state.releaseAccepted,
@@ -1653,8 +2048,16 @@
       currentParentStaleDetected: false,
       currentParentIdentityAccepted: true,
       currentParentIdentityMismatch: false,
+      southCurrentProofRequired: true,
+      southCurrentProofSamplingRequiredAfterRender: true,
+      southStaleProofCannotSatisfyF13: true,
+      suppressedSamplingCannotSatisfyStrictF13: true,
+      expectedSouthContract: SOUTH_STRICT_CONTRACT,
       preexistingStaleParentDetected: state.preexistingStaleParentDetected,
       preexistingStaleParentPreservedAsHistoricalEvidence: true,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
       visualPassClaimed: false,
       updatedAt: nowIso()
     };
@@ -1689,7 +2092,7 @@
       destinationFile: EAST_FILE,
       parentFile: FILE,
       requestedBy: "canvas-parent",
-      requestSource: "canvas-parent-pre-release-structural-carrier-then-west-release-to-east",
+      requestSource: "canvas-parent-current-south-proof-reconciliation",
       receivedFrom: "PARENT",
 
       activeCycleNumber: 2,
@@ -1740,9 +2143,15 @@
       newsGatePassedBeforeF21: false,
       newsGateDegradedBeforeF21: true,
 
+      southCurrentProofRequired: true,
+      expectedSouthContract: SOUTH_STRICT_CONTRACT,
+
       f21EligibleForNorth: false,
       f21ClaimedByCanvasEast: false,
       readyTextClaimedByCanvasEast: false,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
       visualPassClaimed: false,
 
       reason,
@@ -1750,8 +2159,11 @@
         state.atlasBuildProgress = clamp(progress, 0, 100);
         emitProgressOnly("ATLAS_BUILD_PROGRESS", 88 + (state.atlasBuildProgress * 0.03), `East atlas progress ${state.atlasBuildProgress}%`, receipt || {});
         if (isFunction(options.onProgress)) {
-          try { options.onProgress(progress, receipt); }
-          catch (error) { recordError("EAST_BUILD_PROGRESS_CALLBACK_ERROR", error); }
+          try {
+            options.onProgress(progress, receipt);
+          } catch (error) {
+            recordError("EAST_BUILD_PROGRESS_CALLBACK_ERROR", error);
+          }
         }
       }
     };
@@ -1806,12 +2218,19 @@
       visibleContentWaterSampleCount: 0,
       visibleContentOtherSampleCount: 0,
       visibleContentCarrierSampleCount: 0,
-      visibleContentProofMethod: "canvas-parent-pixel-sampling-v4"
+      visibleContentProofMethod: "canvas-parent-pixel-sampling-v5",
+      currentVisibleProofValid: false,
+      visibleProofStale: false,
+      staleProofSuppressed: false,
+      currentVisibleProofAt: nowIso(),
+      proofBin: PROOF_BIN.NONE
     };
 
     if (!canvas || !ctx || !canvas.width || !canvas.height) {
       output.visibleContentHardFail = true;
+      output.f13HardFail = true;
       output.visibleContentProofError = "canvas-or-context-unavailable";
+      output.proofBin = PROOF_BIN.HARD_FAIL;
       return output;
     }
 
@@ -1824,7 +2243,9 @@
       image = ctx.getImageData(sx, sy, sampleSize, sampleSize);
     } catch (error) {
       output.visibleContentHardFail = true;
+      output.f13HardFail = true;
       output.visibleContentProofError = error && error.message ? error.message : String(error);
+      output.proofBin = PROOF_BIN.HARD_FAIL;
       return output;
     }
 
@@ -1896,44 +2317,27 @@
     output.visiblePlanetAvailable = strict || soft;
     output.visibleForwardProgress = strict || soft;
     output.visibleContentAdmissible = strict || soft;
-    output.visibleContentProof = strict;
+    output.visibleContentProof = strict || soft;
     output.visibleContentStrictProof = strict;
     output.visibleContentSoftGap = soft;
     output.visibleContentHardFail = !strict && !soft;
+    output.currentVisibleProofValid = strict || soft;
+    output.f13sVisibleProofReady = strict || soft;
+    output.f13VisibleEvidenceAvailable = strict || soft;
+    output.f13VisibleEvidenceStrict = strict;
+    output.f13VisibleEvidenceDegraded = soft;
+    output.proofBin = strict ? PROOF_BIN.STRICT : soft ? PROOF_BIN.SOFT_GAP : PROOF_BIN.HARD_FAIL;
 
     return output;
   }
 
-  function applyVisibleProof(proof = {}) {
-    const pixelProof = sampleCanvasPixels();
-    const merged = { ...pixelProof, ...(isObject(proof) ? proof : {}) };
+  function applyVisibleProof(proof = {}, source = "south-sample") {
+    const south = readChild("south");
+    const southReceipt = south ? safeChildReceipt(south) : {};
+    const merged = { ...(sampleCanvasPixels()), ...(isObject(proof) ? proof : {}), ...(isObject(southReceipt) ? southReceipt : {}) };
 
-    state.visibleContentProofStarted = true;
-    state.visibleContentProof = safeBool(merged.visibleContentProof, false);
-    state.visibleContentStrictProof = safeBool(merged.visibleContentStrictProof, state.visibleContentProof);
-    state.visibleContentSoftGap = safeBool(merged.visibleContentSoftGap, false);
-    state.visibleContentHardFail = safeBool(merged.visibleContentHardFail, !state.visibleContentProof && !state.visibleContentSoftGap);
-    state.visibleForwardProgress = safeBool(merged.visibleForwardProgress, state.visibleContentProof || state.visibleContentSoftGap);
-    state.visibleContentAdmissible = safeBool(merged.visibleContentAdmissible, state.visibleContentProof || state.visibleContentSoftGap);
-    state.visiblePlanetAvailable = safeBool(merged.visiblePlanetAvailable, state.visibleContentProof || state.visibleContentSoftGap);
-    state.nonblankPlanetVisible = safeBool(merged.nonblankPlanetVisible, state.visiblePlanetAvailable);
-    state.planetNotObstructed = safeBool(merged.planetNotObstructed, state.visiblePlanetAvailable);
-    state.carrierOnlyDetected = safeBool(merged.carrierOnlyDetected, false);
-    state.visibleContentProofMethod = merged.visibleContentProofMethod || "south-child-plus-parent-pixel-sampling-v4";
-    state.visibleContentProofError = merged.visibleContentProofError || "";
-    state.visibleContentSampleCount = safeNumber(merged.visibleContentSampleCount, state.visibleContentSampleCount);
-    state.visibleContentVarianceScore = safeNumber(merged.visibleContentVarianceScore, state.visibleContentVarianceScore);
-    state.visibleContentClassCount = safeNumber(merged.visibleContentClassCount, state.visibleContentClassCount);
-    state.visibleContentClasses = Array.isArray(merged.visibleContentClasses) ? merged.visibleContentClasses.slice() : state.visibleContentClasses;
-    state.visibleContentLandSampleCount = safeNumber(merged.visibleContentLandSampleCount, state.visibleContentLandSampleCount);
-    state.visibleContentWaterSampleCount = safeNumber(merged.visibleContentWaterSampleCount, state.visibleContentWaterSampleCount);
-    state.visibleContentOtherSampleCount = safeNumber(merged.visibleContentOtherSampleCount, state.visibleContentOtherSampleCount);
-    state.visibleContentCarrierSampleCount = safeNumber(merged.visibleContentCarrierSampleCount, state.visibleContentCarrierSampleCount);
-
-    deriveParentReadiness();
-    updateDataset();
-
-    return merged;
+    clearSouthProofSamplingSuppressed();
+    return applySouthCurrentProof(merged, source);
   }
 
   function drawEmergencyF13DiagnosticPlanet(reason = "child-output-unavailable") {
@@ -2044,39 +2448,37 @@
     state.visibleContentProofStarted = true;
     state.visibleContentProof = false;
     state.visibleContentStrictProof = false;
-    state.visibleContentSoftGap = true;
+    state.visibleContentSoftGap = false;
     state.visibleContentHardFail = false;
     state.visibleForwardProgress = true;
-    state.visibleContentAdmissible = true;
-    state.visibleProofReady = true;
-    state.visibleContentProofMethod = "emergency-f13-diagnostic-planet-governed-parent-carrier-v4";
+    state.visibleContentAdmissible = false;
+    state.visibleProofReady = false;
+    state.visibleContentProofMethod = "emergency-f13-diagnostic-planet-parent-carrier-v5-not-south-proof";
     state.visibleContentProofError = reason;
-    state.visibleContentSampleCount = 1;
-    state.visibleContentVarianceScore = 1;
-    state.visibleContentClassCount = 3;
-    state.visibleContentClasses = ["water", "land", "carrier"];
-    state.visibleContentLandSampleCount = 1;
-    state.visibleContentWaterSampleCount = 1;
-    state.visibleContentOtherSampleCount = 1;
-    state.visibleContentCarrierSampleCount = 1;
-    state.carrierOnlyDetected = false;
     state.renderFrameCount += 1;
 
-    deriveParentReadiness();
+    state.southCurrentProofObserved = false;
+    state.southCurrentProofValid = false;
+    state.southCurrentStrictProof = false;
+    state.southCurrentDegradedProof = false;
+    state.southProofBin = PROOF_BIN.NONE;
+    state.southProofStale = true;
+    state.southStaleProofSuppressed = true;
+    state.f13CanvasEvidenceStrict = false;
+    state.f13CanvasEvidenceDegraded = false;
+    state.f13CanvasEvidenceComplete = false;
+    state.f13StrictEvidenceGap = "WAITING_CANVAS_SOUTH_CURRENT_NON_STALE_VISIBLE_PROOF";
+    state.f13StrictEvidenceRepairTarget = FILE;
+    state.firstFailedCoordinate = state.f13StrictEvidenceGap;
+    state.recommendedNextFile = FILE;
+    state.recommendedNextRenewalTarget = FILE;
 
-    recordLocal("EMERGENCY_F13_DIAGNOSTIC_PLANET_RENDERED", {
+    recordLocal("EMERGENCY_F13_DIAGNOSTIC_PLANET_RENDERED_WITHOUT_F13_COMPLETION", {
       reason,
-      degradedF13Only: true,
+      emergencyDoesNotSatisfySouthCurrentProof: true,
       f21ClaimedByCanvas: false,
       readyTextClaimedByCanvas: false,
       visualPassClaimed: false
-    });
-
-    emitMilestone("DEGRADED_VISIBLE_CONTENT_ACCEPTED", 98, "Visible object present through emergency F13 diagnostic carrier.", {
-      checkpointId: "F13_VISIBLE_CONTENT_PROOF_DEGRADED",
-      fibonacci: "F13",
-      emergency: true,
-      reason
     });
 
     updateDataset();
@@ -2115,13 +2517,17 @@
     const receipt = getReceiptLight();
 
     state.callbacks.slice().forEach((callback) => {
-      try { callback(event, receipt); }
-      catch (error) { recordError("CANVAS_CALLBACK_ERROR", error, { event: event.event || event.phase || "" }); }
+      try {
+        callback(event, receipt);
+      } catch (error) {
+        recordError("CANVAS_CALLBACK_ERROR", error, { event: event.event || event.phase || "" });
+      }
     });
 
     if (isFunction(root.dispatchEvent) && isFunction(root.CustomEvent)) {
-      try { root.dispatchEvent(new root.CustomEvent("hearth:canvas-phase", { detail: { event, receipt } })); }
-      catch (_error) {}
+      try {
+        root.dispatchEvent(new root.CustomEvent("hearth:canvas-phase", { detail: { event, receipt } }));
+      } catch (_error) {}
     }
   }
 
@@ -2130,9 +2536,9 @@
       at: nowIso(),
       event: safeString(phase || "CANVAS_EVENT"),
       phase: safeString(phase || "CANVAS_EVENT"),
-      checkpointId: safeString(detail.checkpointId || "F13_CANVAS_PARENT_RECONCILIATION"),
+      checkpointId: safeString(detail.checkpointId || "F13_CANVAS_PARENT_CURRENT_SOUTH_PROOF_RECONCILIATION"),
       fibonacci: safeString(detail.fibonacci || "F13P"),
-      source: "hearth.canvas.parent-pre-release-structural-carrier-then-west-release-to-east",
+      source: "hearth.canvas.parent-current-south-proof-reconciliation",
       contract: CONTRACT,
       receipt: RECEIPT,
       splitContract: SPLIT_CONTRACT,
@@ -2145,7 +2551,9 @@
         releaseAccepted: state.releaseAccepted,
         releaseStatus: state.releaseStatus,
         carrierReadyIsNotPlanetReady: true,
-        canvasReadyRequiresTextureFrameAndProof: true,
+        canvasReadyRequiresTextureFrameAndCurrentSouthProof: true,
+        staleSouthProofCannotSatisfyF13: true,
+        suppressedSamplingCannotSatisfyStrictF13: true,
         f13Only: true,
         f21ClaimedByCanvas: false,
         readyTextClaimedByCanvas: false,
@@ -2308,7 +2716,7 @@
           children.west.bindInspection({
             canvas: state.canvas,
             releasePacket: state.releasePacket || {},
-            onChange: () => forceRedraw({ ...options, interactive: true, sampleProof: false, releasePacket: state.releasePacket || {} }),
+            onChange: () => forceRedraw({ ...options, interactive: true, sampleProof: true, releasePacket: state.releasePacket || {} }),
             onInvalidate: (reason) => invalidateTexture(reason || "west-control-invalidation")
           });
 
@@ -2460,7 +2868,7 @@
 
         mergeChildReceipts();
 
-        emitMilestone("FIRST_FRAME_DETECTED", 98, "First frame detected.", {
+        emitMilestone("FIRST_FRAME_DETECTED", 98, "First frame detected. Current South visible-proof sampling required next.", {
           checkpointId: "F13S_FIRST_FRAME_DETECTED",
           fibonacci: "F13S"
         });
@@ -2475,25 +2883,28 @@
           }
         }
 
-        applyVisibleProof(proof);
+        applyVisibleProof(proof, "south-sample-after-boot-render");
         mergeChildReceipts();
 
-        if (state.visibleContentStrictProof || state.f13CanvasEvidenceStrict) {
-          emitMilestone("VISIBLE_CONTENT_PROOF_PASSED", 98, "Visible content strict proof passed.", {
-            checkpointId: "F13S_VISIBLE_PROOF_STRICT",
+        if (state.southCurrentStrictProof || state.f13CanvasEvidenceStrict) {
+          emitMilestone("VISIBLE_CONTENT_PROOF_PASSED", 98, "Visible content current strict proof passed.", {
+            checkpointId: "F13S_VISIBLE_PROOF_CURRENT_STRICT",
             fibonacci: "F13S"
           });
-        } else if (state.visibleContentProof || state.visibleContentSoftGap || state.visibleForwardProgress || state.visibleContentAdmissible) {
-          state.visibleContentSoftGap = true;
-          state.visibleContentHardFail = false;
-          deriveParentReadiness();
-
-          emitMilestone("DEGRADED_VISIBLE_CONTENT_ACCEPTED", 98, "Visible content degraded F13 evidence accepted.", {
-            checkpointId: "F13S_VISIBLE_PROOF_DEGRADED",
+        } else if (state.southCurrentDegradedProof || state.f13CanvasEvidenceDegraded) {
+          emitMilestone("CURRENT_DEGRADED_VISIBLE_CONTENT_ACCEPTED", 98, "Visible content current degraded F13 evidence accepted.", {
+            checkpointId: "F13S_VISIBLE_PROOF_CURRENT_DEGRADED",
             fibonacci: "F13S"
           });
         } else {
-          drawEmergencyF13DiagnosticPlanet("child-render-produced-no-visible-object");
+          state.firstFailedCoordinate = "WAITING_CANVAS_SOUTH_CURRENT_NON_STALE_VISIBLE_PROOF";
+          state.recommendedNextFile = FILE;
+          state.recommendedNextRenewalTarget = FILE;
+          state.f13StrictEvidenceGap = "WAITING_CANVAS_SOUTH_CURRENT_NON_STALE_VISIBLE_PROOF";
+          emitMilestone("CURRENT_SOUTH_VISIBLE_PROOF_PENDING", 98, "Rendered frame exists; current non-stale South visible proof is still pending.", {
+            checkpointId: "F13S_CURRENT_VISIBLE_PROOF_PENDING",
+            fibonacci: "F13S"
+          });
         }
 
         emitMilestone("INSPECT_MODE_READY", 98, "Inspect mode ready.", {
@@ -2510,8 +2921,11 @@
         submitCanvasEvidenceUpstream();
 
         if (isFunction(options.onReady)) {
-          try { options.onReady(getReceipt()); }
-          catch (error) { recordError("ON_READY_CALLBACK_ERROR", error); }
+          try {
+            options.onReady(getReceipt());
+          } catch (error) {
+            recordError("ON_READY_CALLBACK_ERROR", error);
+          }
         }
 
         return getReceipt();
@@ -2521,7 +2935,7 @@
         state.canvasBootError = error && error.message ? error.message : String(error);
         state.canvasCarrierHandoffOk = false;
         state.canvasCarrierHandoffError = state.canvasBootError;
-        recordError("CANVAS_PARENT_V4_BOOT_FAILED", error);
+        recordError("CANVAS_PARENT_V5_BOOT_FAILED", error);
 
         try {
           drawEmergencyF13DiagnosticPlanet(state.canvasBootError);
@@ -2539,8 +2953,11 @@
         finishBoot();
 
         if (isFunction(options.onError)) {
-          try { options.onError(error, getReceipt()); }
-          catch (callbackError) { recordError("ON_ERROR_CALLBACK_ERROR", callbackError); }
+          try {
+            options.onError(error, getReceipt());
+          } catch (callbackError) {
+            recordError("ON_ERROR_CALLBACK_ERROR", callbackError);
+          }
         }
 
         return getReceipt();
@@ -2583,7 +3000,7 @@
       west.bindInspection({
         canvas: state.canvas,
         releasePacket: state.releasePacket || {},
-        onChange: () => forceRedraw({ ...options, interactive: true, sampleProof: false, releasePacket: state.releasePacket || {} }),
+        onChange: () => forceRedraw({ ...options, interactive: true, sampleProof: true, releasePacket: state.releasePacket || {} }),
         onInvalidate: (reason) => invalidateTexture(reason || "west-control-invalidation")
       });
 
@@ -2645,10 +3062,12 @@
     state.planetFramePainted = true;
     state.renderFrameCount += 1;
 
-    if (isFunction(south.sampleVisibleContent)) {
-      applyVisibleProof(south.sampleVisibleContent({ canvas: state.canvas, releasePacket: state.releasePacket || {} }));
+    if (options.sampleProof === false) {
+      markSouthProofSamplingSuppressed("render-sampleProof-false");
+    } else if (isFunction(south.sampleVisibleContent)) {
+      applyVisibleProof(south.sampleVisibleContent({ canvas: state.canvas, releasePacket: state.releasePacket || {} }), "south-sample-after-render");
     } else {
-      applyVisibleProof(sampleCanvasPixels());
+      markSouthProofSamplingSuppressed("south-sampleVisibleContent-unavailable-after-render");
     }
 
     mergeChildReceipts();
@@ -2686,8 +3105,12 @@
         state.firstFrameDetected = true;
         state.renderReady = true;
 
-        if (options.sampleProof === true && isFunction(south.sampleVisibleContent)) {
-          applyVisibleProof(south.sampleVisibleContent({ canvas: state.canvas, releasePacket: state.releasePacket || {} }));
+        if (options.sampleProof === false) {
+          markSouthProofSamplingSuppressed("forceRedraw-sampleProof-false");
+        } else if (isFunction(south.sampleVisibleContent)) {
+          applyVisibleProof(south.sampleVisibleContent({ canvas: state.canvas, releasePacket: state.releasePacket || {} }), "south-sample-after-forceRedraw");
+        } else {
+          markSouthProofSamplingSuppressed("south-sampleVisibleContent-unavailable-after-forceRedraw");
         }
 
         mergeChildReceipts();
@@ -2712,16 +3135,29 @@
     state.visibleContentProof = false;
     state.visibleContentStrictProof = false;
     state.visibleContentSoftGap = false;
+    state.southCurrentProofValid = false;
+    state.southCurrentStrictProof = false;
+    state.southCurrentDegradedProof = false;
+    state.southProofStale = true;
+    state.southStaleProofSuppressed = true;
     state.f13CanvasEvidenceComplete = false;
     state.f13CanvasEvidenceStrict = false;
     state.f13CanvasEvidenceDegraded = false;
+    state.f13StrictEvidenceGap = "WAITING_CANVAS_SOUTH_CURRENT_NON_STALE_VISIBLE_PROOF";
+    state.f13StrictEvidenceRepairTarget = FILE;
+    state.firstFailedCoordinate = state.f13StrictEvidenceGap;
+    state.recommendedNextFile = FILE;
+    state.recommendedNextRenewalTarget = FILE;
     state.updatedAt = nowIso();
 
     const south = readChild("south");
 
     if (south && isFunction(south.invalidateTexture)) {
-      try { south.invalidateTexture(reason); }
-      catch (error) { recordError("SOUTH_INVALIDATE_TEXTURE_FAILED", error); }
+      try {
+        south.invalidateTexture(reason);
+      } catch (error) {
+        recordError("SOUTH_INVALIDATE_TEXTURE_FAILED", error);
+      }
     }
 
     mergeChildReceipts();
@@ -2804,10 +3240,12 @@
     state.renderReady = true;
     state.renderFrameCount += 1;
 
-    if (isFunction(south.sampleVisibleContent)) {
-      applyVisibleProof(south.sampleVisibleContent({ canvas: state.canvas, releasePacket: state.releasePacket || {} }));
+    if (options.sampleProof === false) {
+      markSouthProofSamplingSuppressed("rebuildTexture-sampleProof-false");
+    } else if (isFunction(south.sampleVisibleContent)) {
+      applyVisibleProof(south.sampleVisibleContent({ canvas: state.canvas, releasePacket: state.releasePacket || {} }), "south-sample-after-rebuildTexture");
     } else {
-      applyVisibleProof(sampleCanvasPixels());
+      markSouthProofSamplingSuppressed("south-sampleVisibleContent-unavailable-after-rebuildTexture");
     }
 
     mergeChildReceipts();
@@ -2848,7 +3286,7 @@
 
     if (west && isFunction(west.setRotation)) west.setRotation({ yaw: state.rotationYaw, pitch: state.rotationPitch });
 
-    return forceRedraw({ releasePacket: state.releasePacket || {}, interactive: true, sampleProof: false });
+    return forceRedraw({ releasePacket: state.releasePacket || {}, interactive: true, sampleProof: true });
   }
 
   function resetRotation() {
@@ -2859,7 +3297,7 @@
 
     if (west && isFunction(west.resetRotation)) west.resetRotation();
 
-    return forceRedraw({ releasePacket: state.releasePacket || {}, interactive: true, sampleProof: false });
+    return forceRedraw({ releasePacket: state.releasePacket || {}, interactive: true, sampleProof: true });
   }
 
   function setZoom(value = 1, options = {}) {
@@ -2876,7 +3314,12 @@
       });
     }
 
-    return forceRedraw({ ...options, releasePacket: options.releasePacket || state.releasePacket || {}, interactive: true, sampleProof: options.sampleProof === true });
+    return forceRedraw({
+      ...options,
+      releasePacket: options.releasePacket || state.releasePacket || {},
+      interactive: true,
+      sampleProof: options.sampleProof !== false
+    });
   }
 
   function zoomIn(step = 0.18) {
@@ -2921,11 +3364,17 @@
     let proof = {};
 
     if (south && isFunction(south.sampleVisibleContent)) {
-      try { proof = south.sampleVisibleContent({ canvas: state.canvas, releasePacket: state.releasePacket || {} }) || {}; }
-      catch (error) { recordError("SOUTH_SAMPLE_VISIBLE_CONTENT_FAILED", error); }
+      try {
+        proof = south.sampleVisibleContent({ canvas: state.canvas, releasePacket: state.releasePacket || {} }) || {};
+      } catch (error) {
+        recordError("SOUTH_SAMPLE_VISIBLE_CONTENT_FAILED", error);
+      }
+    } else {
+      markSouthProofSamplingSuppressed("sampleVisibleContent-south-api-unavailable");
+      return getReceiptLight();
     }
 
-    const applied = applyVisibleProof(proof);
+    const applied = applyVisibleProof(proof, "manual-sampleVisibleContent");
     mergeChildReceipts();
     composeCanvasEvidenceBody();
     composeCanvasReturnPacket();
@@ -2935,16 +3384,19 @@
   }
 
   function classifyVisibleContentEvidence(metrics = {}) {
-    if (!state.releaseAccepted) return applyVisibleProof({ visibleContentHardFail: false });
+    if (!state.releaseAccepted) return applyVisibleProof({ visibleContentHardFail: false }, "pre-release-classify-noop");
 
     const south = readChild("south");
 
     if (south && isFunction(south.classifyVisibleContentEvidence)) {
-      try { return applyVisibleProof(south.classifyVisibleContentEvidence(metrics)); }
-      catch (error) { recordError("SOUTH_CLASSIFY_VISIBLE_CONTENT_FAILED", error); }
+      try {
+        return applyVisibleProof(south.classifyVisibleContentEvidence(metrics), "south-classifyVisibleContentEvidence");
+      } catch (error) {
+        recordError("SOUTH_CLASSIFY_VISIBLE_CONTENT_FAILED", error);
+      }
     }
 
-    return applyVisibleProof(metrics);
+    return applyVisibleProof(metrics, "parent-classify-visible-content-fallback");
   }
 
   function getMaterialBridgeReceipt() {
@@ -2980,10 +3432,9 @@
       state.textureComposeComplete,
       state.firstFrameDetected,
       state.imageRendered,
-      state.visibleContentProof,
-      state.visibleContentSoftGap,
-      state.visibleForwardProgress,
-      state.visibleContentAdmissible,
+      state.southCurrentProofValid,
+      state.southCurrentStrictProof,
+      state.southCurrentDegradedProof,
       state.inspectModeAvailable,
       state.materialReceiptBridgeActive
     ].filter(Boolean).length;
@@ -3038,6 +3489,11 @@
       },
 
       childReadinessProof: {
+        canvasEastCurrent: state.canvasEastCurrent,
+        canvasWestCurrent: state.canvasWestCurrent,
+        canvasSouthCurrent: state.canvasSouthCurrent,
+        canvasSouthStrictContractObserved: state.canvasSouthStrictContractObserved,
+        canvasSouthStaleContractObserved: state.canvasSouthStaleContractObserved,
         canvasEastApiReady: state.canvasEastApiReady,
         canvasWestApiReady: state.canvasWestApiReady,
         canvasSouthApiReady: state.canvasSouthApiReady,
@@ -3051,6 +3507,27 @@
         canvasSouthReady: state.canvasSouthReady,
         allCanvasChildrenReady: state.allCanvasChildrenReady,
         childLoadError: state.childLoadError
+      },
+
+      southCurrentProof: {
+        expectedSouthContract: SOUTH_STRICT_CONTRACT,
+        canvasSouthContract: state.canvasSouthContract,
+        canvasSouthReceiptId: state.canvasSouthReceiptId,
+        southCurrentProofObserved: state.southCurrentProofObserved,
+        southCurrentProofValid: state.southCurrentProofValid,
+        southCurrentProofAt: state.southCurrentProofAt,
+        southLastValidProofAt: state.southLastValidProofAt,
+        southProofBin: state.southProofBin,
+        southProofStale: state.southProofStale,
+        southStaleProofSuppressed: state.southStaleProofSuppressed,
+        southProofSamplingSuppressed: state.southProofSamplingSuppressed,
+        southStrictProofObserved: state.southStrictProofObserved,
+        southSoftProofObserved: state.southSoftProofObserved,
+        southHardFailObserved: state.southHardFailObserved,
+        southCurrentStrictProof: state.southCurrentStrictProof,
+        southCurrentDegradedProof: state.southCurrentDegradedProof,
+        f13StrictEvidenceGap: state.f13StrictEvidenceGap,
+        f13StrictEvidenceRepairTarget: state.f13StrictEvidenceRepairTarget
       },
 
       f13Proof: {
@@ -3127,6 +3604,8 @@
       f13CanvasEvidenceDegraded: state.f13CanvasEvidenceDegraded,
       f13CanvasEvidenceComplete: state.f13CanvasEvidenceComplete,
       f13HardFail: state.f13HardFail,
+      f13StrictEvidenceGap: state.f13StrictEvidenceGap,
+      f13StrictEvidenceRepairTarget: state.f13StrictEvidenceRepairTarget,
       f21ClaimedByCanvas: false,
       readyTextClaimedByCanvas: false,
       completionLatched: false,
@@ -3178,6 +3657,17 @@
       f13CanvasEvidenceDegraded: state.f13CanvasEvidenceDegraded,
       f13CanvasEvidenceComplete: state.f13CanvasEvidenceComplete,
       f13HardFail: state.f13HardFail,
+      f13StrictEvidenceGap: state.f13StrictEvidenceGap,
+      f13StrictEvidenceRepairTarget: state.f13StrictEvidenceRepairTarget,
+
+      southCurrentProofRequired: true,
+      southCurrentProofObserved: state.southCurrentProofObserved,
+      southCurrentProofValid: state.southCurrentProofValid,
+      southCurrentProofAt: state.southCurrentProofAt,
+      southProofStale: state.southProofStale,
+      southStaleProofSuppressed: state.southStaleProofSuppressed,
+      southCurrentStrictProof: state.southCurrentStrictProof,
+      southCurrentDegradedProof: state.southCurrentDegradedProof,
 
       preexistingStaleParentDetected: state.preexistingStaleParentDetected,
       currentParentStaleDetected: state.currentParentStaleDetected,
@@ -3191,6 +3681,9 @@
       completionLatched: false,
       degradedCompletionLatched: false,
       f21LatchMode: "north-only",
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
       visualPassClaimed: false,
 
       firstFailedCoordinate: state.firstFailedCoordinate,
@@ -3284,6 +3777,7 @@
 
       governedF13EvidenceReceiverActive: true,
       parentChildReconciliationActive: true,
+      currentSouthProofReconciliationActive: true,
       preReleaseStructuralCarrierActive: true,
       postReleaseChildRenderChainActive: true,
       eastReleasePacketBridgeActive: true,
@@ -3311,6 +3805,8 @@
       parentIdentityGuardActive: true,
       bootHandshakeGuardActive: true,
       staleConsumptionGuardActive: true,
+      childCurrentContractGuardActive: true,
+      southCurrentProofGuardActive: true,
       currentParentIdentityAccepted: state.currentParentIdentityAccepted,
       currentParentIdentityMismatch: state.currentParentIdentityMismatch,
       preexistingStaleParentDetected: state.preexistingStaleParentDetected,
@@ -3337,6 +3833,11 @@
       carrierReady: state.carrierReady,
       canvasCarrierReady: state.canvasCarrierReady,
 
+      canvasEastCurrent: state.canvasEastCurrent,
+      canvasWestCurrent: state.canvasWestCurrent,
+      canvasSouthCurrent: state.canvasSouthCurrent,
+      canvasSouthStrictContractObserved: state.canvasSouthStrictContractObserved,
+      canvasSouthStaleContractObserved: state.canvasSouthStaleContractObserved,
       allCanvasChildrenApiReady: state.allCanvasChildrenApiReady,
       allCanvasChildrenEvidenceReady: state.allCanvasChildrenEvidenceReady,
       allCanvasChildrenReady: state.allCanvasChildrenReady,
@@ -3345,7 +3846,19 @@
       textureComposeComplete: state.textureComposeComplete,
       firstFrameDetected: state.firstFrameDetected,
       imageRendered: state.imageRendered,
+
+      southCurrentProofObserved: state.southCurrentProofObserved,
+      southCurrentProofValid: state.southCurrentProofValid,
+      southCurrentProofAt: state.southCurrentProofAt,
+      southProofBin: state.southProofBin,
+      southProofStale: state.southProofStale,
+      southStaleProofSuppressed: state.southStaleProofSuppressed,
+      southProofSamplingSuppressed: state.southProofSamplingSuppressed,
+      southCurrentStrictProof: state.southCurrentStrictProof,
+      southCurrentDegradedProof: state.southCurrentDegradedProof,
+
       visibleContentProof: state.visibleContentProof,
+      visibleContentStrictProof: state.visibleContentStrictProof,
       visibleContentSoftGap: state.visibleContentSoftGap,
       visibleContentHardFail: state.visibleContentHardFail,
 
@@ -3353,6 +3866,8 @@
       f13CanvasEvidenceDegraded: state.f13CanvasEvidenceDegraded,
       f13CanvasEvidenceComplete: state.f13CanvasEvidenceComplete,
       f13HardFail: state.f13HardFail,
+      f13StrictEvidenceGap: state.f13StrictEvidenceGap,
+      f13StrictEvidenceRepairTarget: state.f13StrictEvidenceRepairTarget,
 
       nextAuditTarget: state.nextAuditTarget,
       firstFailedCoordinate: state.firstFailedCoordinate,
@@ -3409,6 +3924,8 @@
 
       expectedParentContract: CONTRACT,
       expectedParentSplitContract: SPLIT_CONTRACT,
+      expectedSouthContract: SOUTH_STRICT_CONTRACT,
+      expectedSouthReceipt: SOUTH_STRICT_RECEIPT,
       preexistingParentDetected: state.preexistingParentDetected,
       preexistingParentContract: state.preexistingParentContract,
       preexistingParentReceipt: state.preexistingParentReceipt,
@@ -3429,6 +3946,15 @@
       canvasEastPresent: state.canvasEastPresent,
       canvasWestPresent: state.canvasWestPresent,
       canvasSouthPresent: state.canvasSouthPresent,
+      canvasEastCurrent: state.canvasEastCurrent,
+      canvasWestCurrent: state.canvasWestCurrent,
+      canvasSouthCurrent: state.canvasSouthCurrent,
+      canvasEastContract: state.canvasEastContract,
+      canvasWestContract: state.canvasWestContract,
+      canvasSouthContract: state.canvasSouthContract,
+      canvasSouthReceiptId: state.canvasSouthReceiptId,
+      canvasSouthStrictContractObserved: state.canvasSouthStrictContractObserved,
+      canvasSouthStaleContractObserved: state.canvasSouthStaleContractObserved,
       canvasEastApiReady: state.canvasEastApiReady,
       canvasWestApiReady: state.canvasWestApiReady,
       canvasSouthApiReady: state.canvasSouthApiReady,
@@ -3474,6 +4000,26 @@
       materialReceiptMatchesExpected: state.materialReceiptMatchesExpected,
       canonicalMaterialConsumed: state.canonicalMaterialConsumed,
 
+      southCurrentProofRequired: true,
+      southCurrentProofObserved: state.southCurrentProofObserved,
+      southCurrentProofValid: state.southCurrentProofValid,
+      southCurrentProofAt: state.southCurrentProofAt,
+      southLastValidProofAt: state.southLastValidProofAt,
+      southProofBin: state.southProofBin,
+      southProofStale: state.southProofStale,
+      southStaleProofSuppressed: state.southStaleProofSuppressed,
+      southProofSamplingSuppressed: state.southProofSamplingSuppressed,
+      southProofSamplingSuppressedAt: state.southProofSamplingSuppressedAt,
+      southProofSamplingSuppressedReason: state.southProofSamplingSuppressedReason,
+      southStrictProofObserved: state.southStrictProofObserved,
+      southSoftProofObserved: state.southSoftProofObserved,
+      southHardFailObserved: state.southHardFailObserved,
+      southCurrentStrictProof: state.southCurrentStrictProof,
+      southCurrentDegradedProof: state.southCurrentDegradedProof,
+      southCurrentProofSource: state.southCurrentProofSource,
+      f13StrictEvidenceGap: state.f13StrictEvidenceGap,
+      f13StrictEvidenceRepairTarget: state.f13StrictEvidenceRepairTarget,
+
       visibleContentProofStarted: state.visibleContentProofStarted,
       visibleContentStrictProof: state.visibleContentStrictProof,
       visibleForwardProgress: state.visibleForwardProgress,
@@ -3492,6 +4038,7 @@
 
       emergencyF13DiagnosticPlanetAllowed: state.emergencyF13DiagnosticPlanetAllowed,
       emergencyF13DiagnosticPlanetUsed: state.emergencyF13DiagnosticPlanetUsed,
+      emergencyF13DiagnosticPlanetDoesNotSatisfySouthProof: true,
 
       f13ReleaseReceived: state.f13ReleaseReceived,
       f13ParentIdentityAccepted: state.f13ParentIdentityAccepted,
@@ -3532,11 +4079,13 @@
       ownsPreReleaseStructuralCarrier: true,
       ownsGovernedF13EvidenceReceiver: true,
       ownsParentChildReconciliation: true,
+      ownsCurrentSouthProofReconciliation: true,
       ownsEastReleasePacketBridge: true,
       ownsCanvasParentGate: true,
       ownsParentIdentityGuard: true,
       ownsBootHandshakeGuard: true,
       ownsStaleConsumptionDetection: true,
+      ownsChildCurrentContractGuard: true,
       ownsPhysicalCarrierProof: true,
       ownsEmergencyF13DiagnosticPlanet: true,
       ownsPlanetTruth: false,
@@ -3564,7 +4113,7 @@
       .join("\n") || "- none";
 
     return [
-      "HEARTH_CANVAS_PARENT_PRE_RELEASE_STRUCTURAL_CARRIER_THEN_WEST_RELEASE_TO_EAST_RECEIPT",
+      "HEARTH_CANVAS_PARENT_CURRENT_SOUTH_PROOF_RECONCILIATION_RECEIPT",
       "",
       "IDENTITY",
       `contract=${r.contract}`,
@@ -3616,6 +4165,19 @@
       `staleParentDetected=${r.staleParentDetected}`,
       `staleParentDetectedMeansCurrentParentOnly=${r.staleParentDetectedMeansCurrentParentOnly}`,
       "",
+      "CHILD_CURRENT_CONTRACT_GUARD",
+      `expectedSouthContract=${r.expectedSouthContract}`,
+      `expectedSouthReceipt=${r.expectedSouthReceipt}`,
+      `canvasEastCurrent=${r.canvasEastCurrent}`,
+      `canvasWestCurrent=${r.canvasWestCurrent}`,
+      `canvasSouthCurrent=${r.canvasSouthCurrent}`,
+      `canvasEastContract=${r.canvasEastContract}`,
+      `canvasWestContract=${r.canvasWestContract}`,
+      `canvasSouthContract=${r.canvasSouthContract}`,
+      `canvasSouthReceiptId=${r.canvasSouthReceiptId}`,
+      `canvasSouthStrictContractObserved=${r.canvasSouthStrictContractObserved}`,
+      `canvasSouthStaleContractObserved=${r.canvasSouthStaleContractObserved}`,
+      "",
       "EAST_RELEASE_PACKET_BRIDGE",
       `eastBuildRequestIncludesReleasePacket=${r.eastBuildRequestIncludesReleasePacket}`,
       `eastBuildRequestIncludesCurrentParentClearance=${r.eastBuildRequestIncludesCurrentParentClearance}`,
@@ -3633,6 +4195,27 @@
       `allCanvasChildrenReady=${r.allCanvasChildrenReady}`,
       `childLoadError=${r.childLoadError}`,
       `nextAuditTarget=${r.nextAuditTarget}`,
+      "",
+      "CURRENT_SOUTH_PROOF",
+      `southCurrentProofRequired=${r.southCurrentProofRequired}`,
+      `southCurrentProofObserved=${r.southCurrentProofObserved}`,
+      `southCurrentProofValid=${r.southCurrentProofValid}`,
+      `southCurrentProofAt=${r.southCurrentProofAt}`,
+      `southLastValidProofAt=${r.southLastValidProofAt}`,
+      `southProofBin=${r.southProofBin}`,
+      `southProofStale=${r.southProofStale}`,
+      `southStaleProofSuppressed=${r.southStaleProofSuppressed}`,
+      `southProofSamplingSuppressed=${r.southProofSamplingSuppressed}`,
+      `southProofSamplingSuppressedAt=${r.southProofSamplingSuppressedAt}`,
+      `southProofSamplingSuppressedReason=${r.southProofSamplingSuppressedReason}`,
+      `southStrictProofObserved=${r.southStrictProofObserved}`,
+      `southSoftProofObserved=${r.southSoftProofObserved}`,
+      `southHardFailObserved=${r.southHardFailObserved}`,
+      `southCurrentStrictProof=${r.southCurrentStrictProof}`,
+      `southCurrentDegradedProof=${r.southCurrentDegradedProof}`,
+      `southCurrentProofSource=${r.southCurrentProofSource}`,
+      `f13StrictEvidenceGap=${r.f13StrictEvidenceGap}`,
+      `f13StrictEvidenceRepairTarget=${r.f13StrictEvidenceRepairTarget}`,
       "",
       "F13_EVIDENCE",
       `atlasBuildComplete=${r.atlasBuildComplete}`,
@@ -3713,6 +4296,7 @@
 
     dataset.hearthCanvasGovernedF13EvidenceReceiverActive = "true";
     dataset.hearthCanvasParentChildReconciliationActive = "true";
+    dataset.hearthCanvasCurrentSouthProofReconciliationActive = "true";
     dataset.hearthCanvasPreReleaseStructuralCarrierActive = "true";
     dataset.hearthCanvasPostReleaseChildRenderChainActive = "true";
     dataset.hearthCanvasEastReleasePacketBridgeActive = "true";
@@ -3773,8 +4357,12 @@
     dataset.hearthCanvasParentIdentityGuardActive = "true";
     dataset.hearthCanvasBootHandshakeGuardActive = "true";
     dataset.hearthCanvasStaleConsumptionGuardActive = "true";
+    dataset.hearthCanvasChildCurrentContractGuardActive = "true";
+    dataset.hearthCanvasSouthCurrentProofGuardActive = "true";
     dataset.hearthCanvasExpectedParentContract = CONTRACT;
     dataset.hearthCanvasExpectedParentSplitContract = SPLIT_CONTRACT;
+    dataset.hearthCanvasExpectedSouthContract = SOUTH_STRICT_CONTRACT;
+    dataset.hearthCanvasExpectedSouthReceipt = SOUTH_STRICT_RECEIPT;
     dataset.hearthCanvasCurrentParentIdentityAccepted = String(state.currentParentIdentityAccepted);
     dataset.hearthCanvasCurrentParentIdentityMismatch = String(state.currentParentIdentityMismatch);
     dataset.hearthCanvasPreexistingStaleParentDetected = String(state.preexistingStaleParentDetected);
@@ -3790,6 +4378,16 @@
     dataset.hearthCanvasEastPresent = String(state.canvasEastPresent);
     dataset.hearthCanvasWestPresent = String(state.canvasWestPresent);
     dataset.hearthCanvasSouthPresent = String(state.canvasSouthPresent);
+    dataset.hearthCanvasEastCurrent = String(state.canvasEastCurrent);
+    dataset.hearthCanvasWestCurrent = String(state.canvasWestCurrent);
+    dataset.hearthCanvasSouthCurrent = String(state.canvasSouthCurrent);
+    dataset.hearthCanvasEastContract = state.canvasEastContract;
+    dataset.hearthCanvasWestContract = state.canvasWestContract;
+    dataset.hearthCanvasSouthContract = state.canvasSouthContract;
+    dataset.hearthCanvasSouthReceiptId = state.canvasSouthReceiptId;
+    dataset.hearthCanvasSouthStrictContractObserved = String(state.canvasSouthStrictContractObserved);
+    dataset.hearthCanvasSouthStaleContractObserved = String(state.canvasSouthStaleContractObserved);
+
     dataset.hearthCanvasEastApiReady = String(state.canvasEastApiReady);
     dataset.hearthCanvasWestApiReady = String(state.canvasWestApiReady);
     dataset.hearthCanvasSouthApiReady = String(state.canvasSouthApiReady);
@@ -3820,6 +4418,22 @@
     dataset.hearthCanvasImageRenderedDoesNotMeanVisualPass = "true";
     dataset.hearthCanvasImageRenderedDoesNotMeanF21 = "true";
     dataset.hearthCanvasRenderReady = String(state.renderReady);
+
+    dataset.hearthCanvasSouthCurrentProofRequired = "true";
+    dataset.hearthCanvasSouthCurrentProofObserved = String(state.southCurrentProofObserved);
+    dataset.hearthCanvasSouthCurrentProofValid = String(state.southCurrentProofValid);
+    dataset.hearthCanvasSouthCurrentProofAt = state.southCurrentProofAt;
+    dataset.hearthCanvasSouthLastValidProofAt = state.southLastValidProofAt;
+    dataset.hearthCanvasSouthProofBin = state.southProofBin;
+    dataset.hearthCanvasSouthProofStale = String(state.southProofStale);
+    dataset.hearthCanvasSouthStaleProofSuppressed = String(state.southStaleProofSuppressed);
+    dataset.hearthCanvasSouthProofSamplingSuppressed = String(state.southProofSamplingSuppressed);
+    dataset.hearthCanvasSouthProofSamplingSuppressedAt = state.southProofSamplingSuppressedAt;
+    dataset.hearthCanvasSouthProofSamplingSuppressedReason = state.southProofSamplingSuppressedReason;
+    dataset.hearthCanvasSouthCurrentStrictProof = String(state.southCurrentStrictProof);
+    dataset.hearthCanvasSouthCurrentDegradedProof = String(state.southCurrentDegradedProof);
+    dataset.hearthCanvasF13StrictEvidenceGap = state.f13StrictEvidenceGap;
+    dataset.hearthCanvasF13StrictEvidenceRepairTarget = state.f13StrictEvidenceRepairTarget;
 
     dataset.hearthCanvasVisibleContentProofStarted = String(state.visibleContentProofStarted);
     dataset.hearthCanvasVisibleContentProof = String(state.visibleContentProof);
@@ -3882,6 +4496,7 @@
       state.canvas.dataset.hearthCanvasSplitReceipt = SPLIT_RECEIPT;
       state.canvas.dataset.hearthCanvasVersion = VERSION;
       state.canvas.dataset.hearthCanvasPreReleaseStructuralCarrier = "true";
+      state.canvas.dataset.hearthCanvasCurrentSouthProofReconciliation = "true";
       state.canvas.dataset.hearthCanvasCarrierReady = String(state.carrierReady);
       state.canvas.dataset.hearthCanvasCarrierStructuralSafeForWest = String(state.structuralCarrierSafeForCanvasRelease);
       state.canvas.dataset.hearthCanvasReady = String(state.f13CanvasEvidenceComplete);
@@ -3889,6 +4504,9 @@
       state.canvas.dataset.hearthCanvasF13Only = "true";
       state.canvas.dataset.hearthCanvasF21Claimed = "false";
       state.canvas.dataset.hearthCanvasReadyTextClaimed = "false";
+      state.canvas.dataset.generatedImage = "false";
+      state.canvas.dataset.graphicBox = "false";
+      state.canvas.dataset.webgl = "false";
       state.canvas.dataset.visualPassClaimed = "false";
     }
   }
@@ -3909,6 +4527,7 @@
     root.HEARTH.canvasParentGovernedF13EvidenceReceiver = api;
     root.HEARTH.canvasParentChildReconciliationF13EvidenceReceiver = api;
     root.HEARTH.canvasParentPreReleaseStructuralCarrierThenWestReleaseToEast = api;
+    root.HEARTH.canvasParentCurrentSouthProofReconciliation = api;
 
     root.HEARTH_CANVAS = api;
     root.HEARTH_CANVAS_AUTHORITY = api;
@@ -3923,6 +4542,7 @@
     root.HEARTH_CANVAS_PARENT_GOVERNED_F13_EVIDENCE_RECEIVER = api;
     root.HEARTH_CANVAS_PARENT_CHILD_RECONCILIATION_F13_EVIDENCE_RECEIVER = api;
     root.HEARTH_CANVAS_PARENT_PRE_RELEASE_STRUCTURAL_CARRIER_THEN_WEST_RELEASE_TO_EAST = api;
+    root.HEARTH_CANVAS_PARENT_CURRENT_SOUTH_PROOF_RECONCILIATION = api;
 
     root.DEXTER_LAB.hearthCanvasEvidence = api;
     root.DEXTER_LAB.hearthCanvasNorth = api;
@@ -3932,6 +4552,7 @@
     root.DEXTER_LAB.hearthCanvasParentGovernedF13EvidenceReceiver = api;
     root.DEXTER_LAB.hearthCanvasParentChildReconciliationF13EvidenceReceiver = api;
     root.DEXTER_LAB.hearthCanvasParentPreReleaseStructuralCarrierThenWestReleaseToEast = api;
+    root.DEXTER_LAB.hearthCanvasParentCurrentSouthProofReconciliation = api;
 
     const light = getReceiptLight();
 
@@ -3940,6 +4561,7 @@
     root.HEARTH_CANVAS_POSTGAME_RECEIPT = light;
     root.HEARTH.canvasReceipt = light;
     root.HEARTH.canvasEvidenceReceipt = light;
+    root.HEARTH.canvasParentCurrentSouthProofReconciliationReceipt = light;
 
     root.__HEARTH_CANVAS_PARENT_CONTRACT__ = CONTRACT;
     root.__HEARTH_CANVAS_PARENT_RECEIPT__ = RECEIPT;
@@ -3947,6 +4569,7 @@
     root.__HEARTH_CANVAS_PARENT_SPLIT_RECEIPT__ = SPLIT_RECEIPT;
     root.__HEARTH_CANVAS_PARENT_PRE_RELEASE_STRUCTURAL_CARRIER__ = true;
     root.__HEARTH_CANVAS_PARENT_RELEASE_PACKET_TO_EAST__ = true;
+    root.__HEARTH_CANVAS_PARENT_CURRENT_SOUTH_PROOF_RECONCILIATION__ = true;
     root.__HEARTH_CANVAS_STALE_PARENT_DETECTED_BEFORE_RECONCILIATION__ = state.preexistingStaleParentDetected;
     root.__HEARTH_CANVAS_CURRENT_STALE_PARENT_DETECTED__ = state.currentParentStaleDetected;
 
@@ -4013,6 +4636,10 @@
     verifyCurrentParentIdentity,
     deriveParentReadiness,
     mergeChildReceipts,
+    validateChild,
+    readSouthCurrentProofFromReceipt,
+    applySouthCurrentProof,
+    markSouthProofSamplingSuppressed,
 
     canvasNorthActive: true,
     physicalObjectBootstrapActive: true,
@@ -4022,6 +4649,7 @@
 
     governedF13EvidenceReceiverActive: true,
     parentChildReconciliationActive: true,
+    currentSouthProofReconciliationActive: true,
     preReleaseStructuralCarrierActive: true,
     postReleaseChildRenderChainActive: true,
     eastReleasePacketBridgeActive: true,
@@ -4035,8 +4663,11 @@
     parentIdentityGuardActive: true,
     bootHandshakeGuardActive: true,
     staleConsumptionGuardActive: true,
+    childCurrentContractGuardActive: true,
+    southCurrentProofGuardActive: true,
     expectedParentContract: CONTRACT,
     expectedParentSplitContract: SPLIT_CONTRACT,
+    expectedSouthContract: SOUTH_STRICT_CONTRACT,
 
     newsProtocolSynchronized: true,
     northGateReady: false,
@@ -4051,8 +4682,8 @@
     fibonacciAlignmentSynchronized: true,
     activeFibonacci: 13,
     activeFibonacciRank: "F13P",
-    activeStageId: "canvas-parent-f13-evidence-receiver",
-    activeGearId: "hearth-canvas-parent-f13",
+    activeStageId: "canvas-parent-current-south-proof-reconciliation",
+    activeGearId: "hearth-canvas-parent-f13-current-south-proof",
     activeFibonacciGate: "F13",
     futureFibonacciGate: "F21",
     oneActiveGearAtATime: true,
@@ -4061,11 +4692,13 @@
     ownsPreReleaseStructuralCarrier: true,
     ownsGovernedF13EvidenceReceiver: true,
     ownsParentChildReconciliation: true,
+    ownsCurrentSouthProofReconciliation: true,
     ownsEastReleasePacketBridge: true,
     ownsCanvasParentGate: true,
     ownsParentIdentityGuard: true,
     ownsBootHandshakeGuard: true,
     ownsStaleConsumptionDetection: true,
+    ownsChildCurrentContractGuard: true,
     ownsPhysicalCarrierProof: true,
     ownsEmergencyF13DiagnosticPlanet: true,
     ownsPlanetTruth: false,
@@ -4104,7 +4737,7 @@
     const preflight = () => {
       ensurePreReleaseStructuralCarrier({});
       publishGlobals();
-      recordLocal("CANVAS_PARENT_PRE_RELEASE_STRUCTURAL_CARRIER_THEN_WEST_RELEASE_TO_EAST_LOADED", {
+      recordLocal("CANVAS_PARENT_CURRENT_SOUTH_PROOF_RECONCILIATION_LOADED", {
         file: FILE,
         contract: CONTRACT,
         receipt: RECEIPT,
@@ -4113,10 +4746,15 @@
         waitsForWestRelease: true,
         autoChildBootSuppressed: true,
         parentChildReconciliationActive: true,
+        currentSouthProofReconciliationActive: true,
         eastReleasePacketBridgeActive: true,
+        expectedSouthContract: SOUTH_STRICT_CONTRACT,
         preexistingStaleParentDetected: state.preexistingStaleParentDetected,
         currentParentStaleDetected: state.currentParentStaleDetected,
         staleParentDetectedMeansCurrentParentOnly: true,
+        generatedImage: false,
+        graphicBox: false,
+        webGL: false,
         visualPassClaimed: false
       });
     };
@@ -4128,14 +4766,14 @@
         preflight();
       }
     } else {
-      recordLocal("CANVAS_PARENT_V4_LOADED_WITHOUT_DOCUMENT", {
+      recordLocal("CANVAS_PARENT_V5_LOADED_WITHOUT_DOCUMENT", {
         file: FILE,
         contract: CONTRACT,
         receipt: RECEIPT
       });
     }
   } catch (error) {
-    recordError("CANVAS_PARENT_V4_INITIALIZATION_FAILED", error);
+    recordError("CANVAS_PARENT_V5_INITIALIZATION_FAILED", error);
   }
 
   if (typeof module !== "undefined" && module.exports) {

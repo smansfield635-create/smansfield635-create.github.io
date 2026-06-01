@@ -1,28 +1,29 @@
 // /showroom/globe/hearth/hearth.js
-// HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT_TNT_v4
+// HEARTH_ROUTE_CONDUCTOR_MALE_PAIR_INDEX_SELECTOR_INTEGRATION_STRICT_F13_TNT_v5
 // Full-file replacement.
-// Hearth route conductor / Macro West release consumer / strict F13 downstream alignment authority.
+// Hearth male route conductor / index-pair selector consumer / Macro West release consumer / strict F13 downstream alignment authority.
 // Purpose:
-// - Preserve the functional v3 route conductor behavior.
+// - Preserve the v4 route-conductor duties.
+// - Integrate the paired split with /showroom/globe/hearth/index.js as the female selector/runtime-release authority.
+// - Consume selector shell/runtime receipt before asking Macro West for Canvas release.
+// - Prevent misplaced responsibility where Macro West is asked to judge an unsafe Canvas carrier before selector/canvas prerequisites are settled.
 // - Preserve two-cycle Runtime Table law:
 //   Cycle 1: NORTH -> EAST -> WEST -> SOUTH -> NORTH.
 //   Cycle 2: NORTH -> EAST -> SOUTH -> WEST -> CANVAS.
-// - Preserve Macro West admissibility consumption before Canvas release.
-// - Preserve Canvas parent release and child reconciliation.
-// - Correct next-file recommendation so degraded F13 proof points downstream, not automatically back to North.
-// - Separate F21 eligibility/latch observation from strict visual-proof repair targeting.
-// - Keep Canvas at F13 evidence only.
-// - Keep F21 North-only.
+// - Preserve Macro West as admissibility judge.
+// - Preserve Canvas as F13 evidence only.
+// - Preserve North as the only F21 latch authority.
+// - Preserve degraded functional state while routing strict proof downstream.
 // - Never claim final visual pass.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT_TNT_v4";
-  const RECEIPT = "HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT_RECEIPT_v4";
-  const PREVIOUS_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_MACRO_WEST_ADMISSIBILITY_CANVAS_RELEASE_CONSUMPTION_TNT_v3";
-  const BASELINE_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_MACRO_WEST_ADMISSIBILITY_CANVAS_RELEASE_CONSUMPTION_TNT_v3";
-  const VERSION = "2026-05-31.hearth-route-conductor-strict-f13-downstream-alignment-v4";
+  const CONTRACT = "HEARTH_ROUTE_CONDUCTOR_MALE_PAIR_INDEX_SELECTOR_INTEGRATION_STRICT_F13_TNT_v5";
+  const RECEIPT = "HEARTH_ROUTE_CONDUCTOR_MALE_PAIR_INDEX_SELECTOR_INTEGRATION_STRICT_F13_RECEIPT_v5";
+  const PREVIOUS_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT_TNT_v4";
+  const BASELINE_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT_TNT_v4";
+  const VERSION = "2026-06-01.hearth-route-conductor-male-pair-index-selector-integration-strict-f13-v5";
 
   const ROUTE = "/showroom/globe/hearth/";
   const FILE = "/showroom/globe/hearth/hearth.js";
@@ -71,6 +72,11 @@
     UNKNOWN: "UNKNOWN"
   });
 
+  const INDEX_CONTRACTS = Object.freeze([
+    "HEARTH_EAST_SOUTH_PAIR_DYNAMIC_SELECTOR_RUNTIME_RELEASE_TNT_v2",
+    "HEARTH_EAST_SOUTH_PAIR_FEMALE_SELECTOR_NON_BLOCKING_BOOT_TNT_v1"
+  ]);
+
   const CURRENT_CANVAS_PARENT_CONTRACTS = Object.freeze([
     "HEARTH_CANVAS_PARENT_PRE_RELEASE_STRUCTURAL_CARRIER_THEN_WEST_RELEASE_TO_EAST_TNT_v4",
     "HEARTH_CANVAS_PARENT_RELEASE_PACKET_TO_EAST_STALE_CLEARANCE_TNT_v3",
@@ -99,8 +105,10 @@
     version: VERSION,
     file: FILE,
     route: ROUTE,
-    role: "hearth-route-conductor-strict-f13-downstream-alignment",
+    role: "hearth-route-conductor-male-pair-index-selector-integration-strict-f13",
 
+    malePairRouteConductorActive: true,
+    femaleSelectorConsumerActive: true,
     routeConductorPrimaryGateActive: true,
     strictF13DownstreamAlignmentActive: true,
     canvasParentChildReconciliationActive: true,
@@ -138,6 +146,19 @@
     activeStageId: "F8_SOUTH_SELF_DUTY",
     activeGearId: "F8_SOUTH_SELF_DUTY",
 
+    indexActiveFibonacci: "F1",
+    indexActiveStage: "",
+    indexPairObserved: false,
+    indexPairReady: false,
+    indexShellAccepted: false,
+    indexRuntimeReleaseAuthorized: false,
+    indexRuntimeReleaseComplete: false,
+    indexMountPresent: false,
+    indexControlsBound: false,
+    indexMissingHooks: "",
+    indexPairHoldReason: "WAITING_INDEX_PAIR_OBSERVATION",
+    indexPairRecommendedNextFile: FILE_GATES.hearthIndex,
+
     canvasActiveFibonacci: "F13",
     canvasActiveFibonacciRank: 13,
     canvasActiveStageId: "canvas-parent-f13-evidence-receiver",
@@ -173,10 +194,11 @@
     canvasAuthorityObserved: false,
     currentCanvasParentObserved: false,
     canvasParentV2Observed: false,
+    canvasParentCarrierSafe: false,
     canvasParentReleaseAccepted: false,
     canvasReleaseAuthorized: false,
     canvasReleasePacketReady: false,
-    canvasReleaseHeldReason: "WAITING_MACRO_WEST_ADMISSIBILITY_DECISION",
+    canvasReleaseHeldReason: "WAITING_INDEX_PAIR_OR_CANVAS_CARRIER",
     canvasReleaseRequiresWestAudit: true,
     canvasReleaseRequiresMacroWest: true,
 
@@ -257,7 +279,7 @@
     booting: false,
     watchdogTicks: 0,
     renderCount: 0,
-    latestEvent: "HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT_LOADED",
+    latestEvent: "HEARTH_ROUTE_CONDUCTOR_MALE_PAIR_INDEX_SELECTOR_INTEGRATION_STRICT_F13_LOADED",
     startedAt: "",
     updatedAt: "",
 
@@ -298,11 +320,7 @@
   let autoBootTimer = 0;
 
   function nowIso() {
-    try {
-      return new Date().toISOString();
-    } catch (_error) {
-      return "";
-    }
+    try { return new Date().toISOString(); } catch (_error) { return ""; }
   }
 
   function isObject(value) {
@@ -336,12 +354,8 @@
 
   function clonePlain(value) {
     if (!isObject(value) && !Array.isArray(value)) return value;
-
-    try {
-      return JSON.parse(JSON.stringify(value));
-    } catch (_error) {
-      return Array.isArray(value) ? value.slice() : { ...value };
-    }
+    try { return JSON.parse(JSON.stringify(value)); }
+    catch (_error) { return Array.isArray(value) ? value.slice() : { ...value }; }
   }
 
   function trimLog(array) {
@@ -354,33 +368,27 @@
     for (const value of values) {
       if (value !== undefined && value !== null && value !== "") return value;
     }
-
     return undefined;
   }
 
   function objectValue(source, path) {
     if (!source || (!isObject(source) && !Array.isArray(source))) return undefined;
-
     const parts = String(path || "").split(".");
     let cursor = source;
-
     for (const part of parts) {
       if (!cursor || cursor[part] === undefined || cursor[part] === null) return undefined;
       cursor = cursor[part];
     }
-
     return cursor;
   }
 
   function readPath(path) {
     const parts = String(path || "").split(".");
     let cursor = root;
-
     for (const part of parts) {
       if (!cursor || cursor[part] === undefined || cursor[part] === null) return null;
       cursor = cursor[part];
     }
-
     return cursor || null;
   }
 
@@ -389,13 +397,11 @@
       const found = readPath(name);
       if (found) return found;
     }
-
     return null;
   }
 
   function readReceipt(authority) {
     if (!authority || !isObject(authority)) return null;
-
     if (isFunction(authority.getReceipt)) {
       try {
         const receipt = authority.getReceipt();
@@ -404,11 +410,9 @@
         return null;
       }
     }
-
     if (isObject(authority.receiptPacket)) return authority.receiptPacket;
     if (isObject(authority.receipt)) return authority.receipt;
     if (authority.contract || authority.receipt || authority.version) return authority;
-
     return null;
   }
 
@@ -429,12 +433,10 @@
       event: safeString(event, "EVENT"),
       detail: clonePlain(detail)
     };
-
     state.localEvents.push(item);
     trimLog(state.localEvents);
     state.latestEvent = item.event;
     state.updatedAt = item.at;
-
     return item;
   }
 
@@ -445,12 +447,10 @@
       message: error && error.message ? String(error.message) : safeString(error),
       detail: clonePlain(detail)
     };
-
     state.errors.push(item);
     trimLog(state.errors);
     state.latestEvent = item.code;
     state.updatedAt = item.at;
-
     return item;
   }
 
@@ -460,34 +460,27 @@
 
   function normalizeCardinal(value, fallback = CARDINALS.UNKNOWN) {
     const text = safeString(value, fallback).toUpperCase();
-
     if (text.includes("NORTH")) return CARDINALS.NORTH;
     if (text.includes("EAST")) return CARDINALS.EAST;
     if (text.includes("SOUTH")) return CARDINALS.SOUTH;
     if (text.includes("WEST")) return CARDINALS.WEST;
     if (text.includes("CANVAS")) return CARDINALS.CANVAS;
-
     return fallback;
   }
 
   function normalizeCycleRoute(value) {
     const text = safeString(value, "").toUpperCase();
-
     if (
       text.includes(CYCLE_ROUTES.CYCLE_1) ||
       text.includes("NORTH->EAST->WEST->SOUTH->NORTH") ||
       text.includes("NORTH→EAST→WEST→SOUTH→NORTH")
-    ) {
-      return CYCLE_ROUTES.CYCLE_1;
-    }
+    ) return CYCLE_ROUTES.CYCLE_1;
 
     if (
       text.includes(CYCLE_ROUTES.CYCLE_2) ||
       text.includes("NORTH->EAST->SOUTH->WEST->CANVAS") ||
       text.includes("NORTH→EAST→SOUTH→WEST→CANVAS")
-    ) {
-      return CYCLE_ROUTES.CYCLE_2;
-    }
+    ) return CYCLE_ROUTES.CYCLE_2;
 
     return "";
   }
@@ -505,9 +498,112 @@
     root.__HEARTH_ROUTE_CONDUCTOR_MARKER_IS_HYDRATION_PROOF__ = false;
     root.__HEARTH_ROUTE_CONDUCTOR_MACRO_WEST_ADMISSIBILITY_CONSUMPTION__ = true;
     root.__HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT__ = true;
-
+    root.__HEARTH_ROUTE_CONDUCTOR_INDEX_PAIR_INTEGRATION__ = true;
     state.routeConductorMarkerPresent = true;
     updateDataset();
+  }
+
+  function scanDom() {
+    if (!doc) {
+      return {
+        mountPresent: false,
+        cockpitPresent: false,
+        planetCanvasPresent: false,
+        planetCanvasNonZeroSize: false,
+        visiblePlanetHintPresent: false,
+        copyDiagnosticReady: false,
+        receiptToggleReady: false,
+        inspectPlanetControlAvailable: false,
+        inspectModeAvailable: false,
+        diagnosticCanLeavePlanetFrame: false,
+        diagnosticDockRestorable: false,
+        showTabVisible: false,
+        inspectFallbackReady: false,
+        inspectStrictReady: false
+      };
+    }
+
+    refs.mount =
+      doc.getElementById("hearthCanvasMount") ||
+      doc.querySelector("[data-hearth-canvas-mount='true']") ||
+      doc.querySelector("[data-hearth-canvas-mount]");
+
+    refs.cockpit =
+      doc.getElementById("hearthLoadCockpit") ||
+      doc.querySelector("[data-hearth-load-cockpit='true']") ||
+      doc.querySelector("[data-hearth-first-paint-cockpit='true']");
+
+    refs.stage = doc.querySelector("[data-hearth-stage-label]");
+    refs.heartbeat = doc.querySelector("[data-hearth-heartbeat-text]");
+    refs.latest = doc.querySelector("[data-hearth-latest-event]");
+    refs.fill = doc.querySelector("[data-hearth-main-progress-fill]");
+    refs.percent = doc.querySelector("[data-hearth-main-progress-percent]");
+    refs.lanes = doc.querySelector("[data-hearth-lane-list]");
+    refs.receiptBox = doc.querySelector("[data-hearth-receipt-box]");
+    refs.receiptText = doc.querySelector("[data-hearth-receipt-text]");
+    refs.copyButton = doc.querySelector("[data-hearth-copy-diagnostic]");
+    refs.toggleButton = doc.querySelector("[data-hearth-toggle-receipt]");
+    refs.inspectButton = doc.querySelector("[data-hearth-inspect-planet]");
+    refs.showTab =
+      doc.querySelector("[data-hearth-south-show-diagnostic-tab]") ||
+      doc.querySelector("[data-hearth-east-show-diagnostic-tab]") ||
+      doc.querySelector("[data-hearth-index-show-diagnostic-tab]");
+    refs.status = doc.getElementById("hearth-route-status") || doc.querySelector("[data-hearth-route-status]");
+
+    const canvas = refs.mount
+      ? refs.mount.querySelector("canvas")
+      : doc.querySelector("canvas[data-hearth-canvas='true'],canvas[data-hearth-canvas-texture='true'],canvas[data-hearth-planet-canvas='true']");
+
+    const rect = canvas && isFunction(canvas.getBoundingClientRect) ? canvas.getBoundingClientRect() : null;
+
+    const nonZero = Boolean(
+      canvas &&
+      (
+        (safeNumber(canvas.width, 0) > 0 && safeNumber(canvas.height, 0) > 0) ||
+        (rect && safeNumber(rect.width, 0) > 0 && safeNumber(rect.height, 0) > 0)
+      )
+    );
+
+    const visibleHint = Boolean(
+      datasetValue("hearthCanvasReady") === "true" ||
+      datasetValue("hearthCanvasVisibleReady") === "true" ||
+      datasetValue("hearthCanvasVisiblePlanetAvailable") === "true" ||
+      datasetValue("hearthCanvasVisibleContentProof") === "true" ||
+      datasetValue("hearthCanvasF13EvidenceComplete") === "true" ||
+      datasetValue("hearthCanvasSouthVisibleContentProof") === "true" ||
+      datasetValue("hearthCanvasSouthImageRendered") === "true" ||
+      datasetValue("hearthSouthVisiblePlanetAvailable") === "true" ||
+      datasetValue("hearthSouthF13CanvasEvidenceComplete") === "true"
+    );
+
+    const copyDiagnosticReady = Boolean(refs.copyButton);
+    const receiptToggleReady = Boolean(refs.toggleButton || refs.receiptText || refs.receiptBox);
+    const inspectPlanetControlAvailable = Boolean(refs.inspectButton);
+    const inspectModeAvailable = Boolean(refs.inspectButton && refs.cockpit);
+    const diagnosticCanLeavePlanetFrame = Boolean(refs.inspectButton && refs.cockpit && refs.showTab);
+    const diagnosticDockRestorable = Boolean(refs.cockpit);
+    const showTabVisible = Boolean(refs.showTab && refs.showTab.hidden === false);
+    const inspectFallbackReady = Boolean(copyDiagnosticReady || receiptToggleReady || diagnosticDockRestorable);
+    const inspectStrictReady = Boolean(inspectModeAvailable && diagnosticCanLeavePlanetFrame && copyDiagnosticReady && receiptToggleReady);
+
+    bindControls();
+
+    return {
+      mountPresent: Boolean(refs.mount),
+      cockpitPresent: Boolean(refs.cockpit),
+      planetCanvasPresent: Boolean(canvas),
+      planetCanvasNonZeroSize: nonZero,
+      visiblePlanetHintPresent: Boolean(canvas && nonZero && visibleHint),
+      copyDiagnosticReady,
+      receiptToggleReady,
+      inspectPlanetControlAvailable,
+      inspectModeAvailable,
+      diagnosticCanLeavePlanetFrame,
+      diagnosticDockRestorable,
+      showTabVisible,
+      inspectFallbackReady,
+      inspectStrictReady
+    };
   }
 
   function readNorthAuthority() {
@@ -652,10 +748,41 @@
       "HEARTH.indexJs",
       "HEARTH.dynamicSelectorRuntimeRelease",
       "HEARTH.eastSouthPairFemaleSelector",
-      "HEARTH.eastStep1Ignition"
+      "HEARTH.eastStep1Ignition",
+      "DEXTER_LAB.hearthEastSouthPairFemaleSelector",
+      "DEXTER_LAB.hearthDynamicSelectorRuntimeRelease"
     ]);
 
     const receipt = readReceipt(api) || {};
+    const dom = scanDom();
+
+    const contract = safeString(firstDefined(
+      receipt.contract,
+      datasetValue("hearthFemaleSelectorContract", ""),
+      datasetValue("hearthIndexContract", "")
+    ), "");
+
+    const observed = Boolean(
+      api ||
+      INDEX_CONTRACTS.includes(contract) ||
+      datasetValue("hearthFemaleSelectorLoaded") === "true" ||
+      datasetValue("hearthIndexJsLoaded") === "true" ||
+      datasetValue("hearthShellDetected") === "true" ||
+      datasetValue("hearthRuntimeReleaseAuthorized") === "true"
+    );
+
+    const shellDetected = Boolean(
+      safeBool(receipt.shellDetected, false) ||
+      datasetValue("hearthShellDetected") === "true" ||
+      dom.mountPresent ||
+      dom.cockpitPresent
+    );
+
+    const shellSelected = Boolean(
+      safeBool(receipt.shellSelected, false) ||
+      datasetValue("hearthShellSelected") === "true" ||
+      datasetValue("hearthShellAccepted") === "true"
+    );
 
     const shellAccepted = Boolean(
       safeBool(receipt.shellAccepted, false) ||
@@ -663,18 +790,116 @@
       datasetValue("hearthRuntimeReleaseAuthorized") === "true"
     );
 
+    const hooksBound = Boolean(
+      safeBool(receipt.hooksBound, false) ||
+      safeBool(receipt.shellControlsBound, false) ||
+      datasetValue("hearthHooksBound") === "true" ||
+      datasetValue("hearthShellControlsBound") === "true" ||
+      (dom.copyDiagnosticReady && dom.receiptToggleReady && dom.inspectPlanetControlAvailable)
+    );
+
     const runtimeReleaseAuthorized = Boolean(
       safeBool(receipt.runtimeReleaseAuthorized, false) ||
       datasetValue("hearthRuntimeReleaseAuthorized") === "true"
     );
 
+    const runtimeReleaseStarted = Boolean(
+      safeBool(receipt.runtimeReleaseStarted, false) ||
+      datasetValue("hearthRuntimeReleaseStarted") === "true"
+    );
+
+    const runtimeReleaseComplete = Boolean(
+      safeBool(receipt.runtimeReleaseComplete, false) ||
+      datasetValue("hearthRuntimeReleaseComplete") === "true" ||
+      datasetValue("hearthRuntimeLoaded", "").includes("/assets/lab/runtime-table.js")
+    );
+
+    const runtimeHeld = Boolean(
+      safeBool(receipt.runtimeHeld, false) ||
+      datasetValue("hearthRuntimeHeld") === "true"
+    );
+
+    const missingHooks = Array.isArray(receipt.missingHooks)
+      ? receipt.missingHooks.slice()
+      : safeString(datasetValue("hearthMissingHooks", "")).split(",").filter(Boolean);
+
+    const mountPresent = Boolean(
+      dom.mountPresent ||
+      safeBool(receipt.mountPresent, false) ||
+      datasetValue("hearthMountPresent") === "true"
+    );
+
+    const controlsBound = Boolean(
+      hooksBound ||
+      safeBool(receipt.shellControlsBound, false) ||
+      datasetValue("hearthShellControlsBound") === "true"
+    );
+
+    const hardIndexError = Boolean(
+      !shellDetected ||
+      !shellSelected ||
+      !shellAccepted ||
+      !mountPresent ||
+      !controlsBound ||
+      (!runtimeReleaseAuthorized && !runtimeReleaseComplete)
+    );
+
+    const ready = Boolean(
+      observed &&
+      shellDetected &&
+      shellSelected &&
+      shellAccepted &&
+      mountPresent &&
+      controlsBound &&
+      (runtimeReleaseAuthorized || runtimeReleaseStarted || runtimeReleaseComplete) &&
+      !hardIndexError
+    );
+
+    const holdReason = ready
+      ? "NONE_INDEX_PAIR_READY"
+      : !observed
+        ? "WAITING_INDEX_PAIR_OBSERVATION"
+        : !shellDetected
+          ? "WAITING_INDEX_SHELL_DETECTION"
+          : !shellSelected
+            ? "WAITING_INDEX_SHELL_SELECTION"
+            : !shellAccepted
+              ? "WAITING_INDEX_SHELL_ACCEPTANCE"
+              : !mountPresent
+                ? "WAITING_INDEX_CANVAS_MOUNT"
+                : !controlsBound
+                  ? "WAITING_INDEX_DYNAMIC_ANCHORS_OR_CONTROLS"
+                  : !runtimeReleaseAuthorized && !runtimeReleaseComplete
+                    ? "WAITING_INDEX_RUNTIME_RELEASE_AUTHORIZATION"
+                    : runtimeHeld
+                      ? "INDEX_RUNTIME_RELEASE_HELD"
+                      : "WAITING_INDEX_PAIR_READY";
+
     return {
       authority: api || null,
       receipt,
-      observed: Boolean(api || datasetValue("hearthFemaleSelectorLoaded") === "true"),
+      observed,
+      file: FILE_GATES.hearthIndex,
+      contract,
+      indexPairReady: ready,
+      shellDetected,
+      shellSelected,
       shellAccepted,
+      hooksBound,
       runtimeReleaseAuthorized,
-      file: FILE_GATES.hearthIndex
+      runtimeReleaseStarted,
+      runtimeReleaseComplete,
+      runtimeHeld,
+      runtimeReleaseHeldReason: safeString(firstDefined(receipt.runtimeReleaseHeldReason, datasetValue("hearthRuntimeReleaseHeldReason", "")), ""),
+      mountPresent,
+      controlsBound,
+      missingHooks,
+      activeFibonacci: safeString(firstDefined(receipt.activeFibonacci, datasetValue("hearthActiveFibonacci", "F1")), "F1"),
+      activeStage: safeString(firstDefined(receipt.activeStage, datasetValue("hearthActiveStage", "")), ""),
+      postgameStatus: safeString(firstDefined(receipt.postgameStatus, datasetValue("hearthPostgameStatus", "")), ""),
+      holdReason,
+      recommendedNextFile: FILE_GATES.hearthIndex,
+      dom
     };
   }
 
@@ -715,7 +940,6 @@
   function readCanvasReceipt() {
     const api = readCanvasApi();
     const receipt = readReceipt(api);
-
     if (receipt) return receipt;
 
     const fallback = firstGlobal([
@@ -778,152 +1002,76 @@
     return "";
   }
 
-  function bindControls() {
-    if (!doc) return;
-
-    if (refs.copyButton && refs.copyButton.dataset.hearthRouteConductorStrictF13Bound !== "true") {
-      refs.copyButton.dataset.hearthRouteConductorStrictF13Bound = "true";
-      refs.copyButton.addEventListener("click", copyDiagnostic);
-    }
-
-    if (refs.toggleButton && refs.toggleButton.dataset.hearthRouteConductorStrictF13Bound !== "true") {
-      refs.toggleButton.dataset.hearthRouteConductorStrictF13Bound = "true";
-      refs.toggleButton.addEventListener("click", () => {
-        const visible = refs.receiptBox ? refs.receiptBox.dataset.visible !== "true" : true;
-
-        if (refs.receiptBox) refs.receiptBox.dataset.visible = String(visible);
-        if (refs.receiptText) refs.receiptText.textContent = visible ? getReceiptText() : "";
-        if (refs.toggleButton) refs.toggleButton.textContent = visible ? "Hide receipt" : "Show receipt";
-      });
-    }
-
-    if (refs.inspectButton && refs.inspectButton.dataset.hearthRouteConductorStrictF13Bound !== "true") {
-      refs.inspectButton.dataset.hearthRouteConductorStrictF13Bound = "true";
-      refs.inspectButton.addEventListener("click", () => {
-        setInspectMode(!(doc.documentElement.dataset.hearthSouthPlanetInspect === "true"));
-      });
-    }
-
-    if (refs.showTab && refs.showTab.dataset.hearthRouteConductorStrictF13Bound !== "true") {
-      refs.showTab.dataset.hearthRouteConductorStrictF13Bound = "true";
-      refs.showTab.addEventListener("click", () => setInspectMode(false));
-    }
-
-    state.refsBound = Boolean(refs.copyButton || refs.toggleButton || refs.inspectButton || refs.showTab);
-  }
-
-  function scanDom() {
-    if (!doc) {
-      return {
-        mountPresent: false,
-        cockpitPresent: false,
-        planetCanvasPresent: false,
-        planetCanvasNonZeroSize: false,
-        visiblePlanetHintPresent: false,
-        copyDiagnosticReady: false,
-        receiptToggleReady: false,
-        inspectPlanetControlAvailable: false,
-        inspectModeAvailable: false,
-        diagnosticCanLeavePlanetFrame: false,
-        diagnosticDockRestorable: false,
-        showTabVisible: false,
-        inspectFallbackReady: false,
-        inspectStrictReady: false
-      };
-    }
-
-    refs.mount =
-      doc.getElementById("hearthCanvasMount") ||
-      doc.querySelector("[data-hearth-canvas-mount='true']") ||
-      doc.querySelector("[data-hearth-canvas-mount]");
-
-    refs.cockpit =
-      doc.getElementById("hearthLoadCockpit") ||
-      doc.querySelector("[data-hearth-load-cockpit='true']") ||
-      doc.querySelector("[data-hearth-first-paint-cockpit='true']");
-
-    refs.stage = doc.querySelector("[data-hearth-stage-label]");
-    refs.heartbeat = doc.querySelector("[data-hearth-heartbeat-text]");
-    refs.latest = doc.querySelector("[data-hearth-latest-event]");
-    refs.fill = doc.querySelector("[data-hearth-main-progress-fill]");
-    refs.percent = doc.querySelector("[data-hearth-main-progress-percent]");
-    refs.lanes = doc.querySelector("[data-hearth-lane-list]");
-    refs.receiptBox = doc.querySelector("[data-hearth-receipt-box]");
-    refs.receiptText = doc.querySelector("[data-hearth-receipt-text]");
-    refs.copyButton = doc.querySelector("[data-hearth-copy-diagnostic]");
-    refs.toggleButton = doc.querySelector("[data-hearth-toggle-receipt]");
-    refs.inspectButton = doc.querySelector("[data-hearth-inspect-planet]");
-    refs.showTab =
-      doc.querySelector("[data-hearth-south-show-diagnostic-tab]") ||
-      doc.querySelector("[data-hearth-east-show-diagnostic-tab]") ||
-      doc.querySelector("[data-hearth-index-show-diagnostic-tab]");
-    refs.status = doc.getElementById("hearth-route-status") || doc.querySelector("[data-hearth-route-status]");
-
-    const canvas = refs.mount
-      ? refs.mount.querySelector("canvas")
-      : doc.querySelector("canvas[data-hearth-canvas='true'],canvas[data-hearth-canvas-texture='true'],canvas[data-hearth-planet-canvas='true']");
-
-    const rect = canvas && isFunction(canvas.getBoundingClientRect)
-      ? canvas.getBoundingClientRect()
-      : null;
-
-    const nonZero = Boolean(
-      canvas &&
-      (
-        (safeNumber(canvas.width, 0) > 0 && safeNumber(canvas.height, 0) > 0) ||
-        (rect && safeNumber(rect.width, 0) > 0 && safeNumber(rect.height, 0) > 0)
-      )
-    );
-
-    const visibleHint = Boolean(
-      datasetValue("hearthCanvasReady") === "true" ||
-      datasetValue("hearthCanvasVisibleReady") === "true" ||
-      datasetValue("hearthCanvasVisiblePlanetAvailable") === "true" ||
-      datasetValue("hearthCanvasVisibleContentProof") === "true" ||
-      datasetValue("hearthCanvasF13EvidenceComplete") === "true" ||
-      datasetValue("hearthCanvasSouthVisibleContentProof") === "true" ||
-      datasetValue("hearthCanvasSouthImageRendered") === "true" ||
-      datasetValue("hearthSouthVisiblePlanetAvailable") === "true" ||
-      datasetValue("hearthSouthF13CanvasEvidenceComplete") === "true"
-    );
-
-    const copyDiagnosticReady = Boolean(refs.copyButton);
-    const receiptToggleReady = Boolean(refs.toggleButton || refs.receiptText || refs.receiptBox);
-    const inspectPlanetControlAvailable = Boolean(refs.inspectButton);
-    const inspectModeAvailable = Boolean(refs.inspectButton && refs.cockpit);
-    const diagnosticCanLeavePlanetFrame = Boolean(refs.inspectButton && refs.cockpit && refs.showTab);
-    const diagnosticDockRestorable = Boolean(refs.cockpit);
-    const showTabVisible = Boolean(refs.showTab && refs.showTab.hidden === false);
-    const inspectFallbackReady = Boolean(copyDiagnosticReady || receiptToggleReady || diagnosticDockRestorable);
-    const inspectStrictReady = Boolean(
-      inspectModeAvailable &&
-      diagnosticCanLeavePlanetFrame &&
-      copyDiagnosticReady &&
-      receiptToggleReady
-    );
-
-    bindControls();
-
-    return {
-      mountPresent: Boolean(refs.mount),
-      cockpitPresent: Boolean(refs.cockpit),
-      planetCanvasPresent: Boolean(canvas),
-      planetCanvasNonZeroSize: nonZero,
-      visiblePlanetHintPresent: Boolean(canvas && nonZero && visibleHint),
-      copyDiagnosticReady,
-      receiptToggleReady,
-      inspectPlanetControlAvailable,
-      inspectModeAvailable,
-      diagnosticCanLeavePlanetFrame,
-      diagnosticDockRestorable,
-      showTabVisible,
-      inspectFallbackReady,
-      inspectStrictReady
-    };
-  }
-
   function readChildReceipt(child) {
     return readReceipt(child) || {};
+  }
+
+  function resolveStrictF13Gap(canvas = {}) {
+    if (!canvas.parentPresent || !canvas.currentCanvasParentObserved) {
+      return { gap: "WAITING_CURRENT_CANVAS_PARENT", repairTarget: FILE_GATES.canvas };
+    }
+
+    if (!canvas.parentBootMethodAvailable) {
+      return { gap: "WAITING_CANVAS_PARENT_BOOT_METHOD", repairTarget: FILE_GATES.canvas };
+    }
+
+    if (!canvas.parentCarrierSafe && !canvas.f13CanvasEvidenceComplete) {
+      return { gap: "WAITING_CANVAS_PARENT_STRUCTURAL_CARRIER", repairTarget: FILE_GATES.canvas };
+    }
+
+    if (!canvas.parentReleaseAccepted && !canvas.f13CanvasEvidenceComplete) {
+      return { gap: "WAITING_CANVAS_PARENT_RELEASE_ACCEPTANCE", repairTarget: FILE_GATES.canvas };
+    }
+
+    if (!canvas.canvasEastApiReady) {
+      return { gap: "WAITING_CANVAS_EAST_API", repairTarget: FILE_GATES.canvasEast };
+    }
+
+    if (!canvas.canvasEastEvidenceReady) {
+      return { gap: "WAITING_CANVAS_EAST_ATLAS_EVIDENCE", repairTarget: FILE_GATES.canvasEast };
+    }
+
+    if (!canvas.canvasWestApiReady) {
+      return { gap: "WAITING_CANVAS_WEST_API", repairTarget: FILE_GATES.canvasWest };
+    }
+
+    if (!canvas.canvasWestInspectionReady) {
+      return { gap: "WAITING_CANVAS_WEST_INSPECTION_EVIDENCE", repairTarget: FILE_GATES.canvasWest };
+    }
+
+    if (!canvas.canvasSouthApiReady) {
+      return { gap: "WAITING_CANVAS_SOUTH_API", repairTarget: FILE_GATES.canvasSouth };
+    }
+
+    if (canvas.textureInvalidated || canvas.visibleProofStale) {
+      return { gap: "WAITING_CANVAS_SOUTH_CURRENT_NON_STALE_VISIBLE_PROOF", repairTarget: FILE_GATES.canvasSouth };
+    }
+
+    if (canvas.f13HardFail || canvas.southHardFailObserved) {
+      return { gap: "CANVAS_SOUTH_VISIBLE_PROOF_HARD_FAIL", repairTarget: FILE_GATES.canvasSouth };
+    }
+
+    if (!canvas.canvasSouthVisibleProofReady) {
+      return { gap: "WAITING_CANVAS_SOUTH_VISIBLE_PROOF", repairTarget: FILE_GATES.canvasSouth };
+    }
+
+    if (canvas.parentStrictReadMismatch) {
+      return { gap: "WAITING_CANVAS_PARENT_STRICT_READ_OF_SOUTH_PROOF", repairTarget: FILE_GATES.canvas };
+    }
+
+    if (canvas.f13CanvasEvidenceComplete && canvas.f13CanvasEvidenceDegraded && !canvas.f13CanvasEvidenceStrict) {
+      return { gap: "WAITING_CANVAS_SOUTH_STRICT_VISIBLE_PROOF", repairTarget: FILE_GATES.canvasSouth };
+    }
+
+    if (!canvas.f13CanvasEvidenceComplete) {
+      return { gap: "WAITING_CANVAS_F13_EVIDENCE_COMPLETE", repairTarget: FILE_GATES.canvas };
+    }
+
+    if (canvas.f13CanvasEvidenceStrict) {
+      return { gap: "NONE_F13_STRICT_EVIDENCE_COMPLETE", repairTarget: FILE_GATES.north };
+    }
+
+    return { gap: "WAITING_CANVAS_F13_STRICT_EVIDENCE", repairTarget: FILE_GATES.canvasSouth };
   }
 
   function readCanvasEvidence() {
@@ -968,6 +1116,25 @@
       datasetValue("hearthCanvasParentChildReconciliationActive") === "true"
     );
 
+    const parentCarrierSafe = Boolean(
+      safeBool(receipt.structuralCarrierSafeForCanvasRelease, false) ||
+      safeBool(receipt.preReleaseStructuralCarrierSafe, false) ||
+      safeBool(receipt.canvasCarrierReady, false) ||
+      safeBool(receipt.carrierReady, false) ||
+      (
+        safeBool(receipt.canvasCarrierMounted, false) &&
+        safeBool(receipt.canvasContextReady, false) &&
+        safeBool(receipt.planetCanvasNonZeroSize, false)
+      ) ||
+      (
+        dom.planetCanvasPresent &&
+        dom.planetCanvasNonZeroSize &&
+        currentCanvasParentObserved
+      ) ||
+      datasetValue("hearthCanvasStructuralCarrierSafeForCanvasRelease") === "true" ||
+      datasetValue("hearthCanvasCarrierReady") === "true"
+    );
+
     const eastApiFallback = childHasMethods(eastChild, ["buildAtlas", "sample", "read", "getReceipt"]);
     const westApiFallback = childHasMethods(westChild, ["bindInspection", "getViewState", "setRotation", "resetRotation", "setZoom", "getReceipt"]);
     const southApiFallback = childHasMethods(southChild, [
@@ -981,20 +1148,9 @@
       "getReceipt"
     ]);
 
-    const canvasEastApiReady = safeBool(
-      firstDefined(receipt.canvasEastApiReady, eastReceipt.canvasEastApiReady, eastReceipt.canvasEastReady),
-      eastApiFallback
-    );
-
-    const canvasWestApiReady = safeBool(
-      firstDefined(receipt.canvasWestApiReady, westReceipt.canvasWestApiReady, westReceipt.canvasWestReady),
-      westApiFallback
-    );
-
-    const canvasSouthApiReady = safeBool(
-      firstDefined(receipt.canvasSouthApiReady, southReceipt.canvasSouthApiReady, southReceipt.canvasSouthReady),
-      southApiFallback
-    );
+    const canvasEastApiReady = safeBool(firstDefined(receipt.canvasEastApiReady, eastReceipt.canvasEastApiReady, eastReceipt.canvasEastReady), eastApiFallback);
+    const canvasWestApiReady = safeBool(firstDefined(receipt.canvasWestApiReady, westReceipt.canvasWestApiReady, westReceipt.canvasWestReady), westApiFallback);
+    const canvasSouthApiReady = safeBool(firstDefined(receipt.canvasSouthApiReady, southReceipt.canvasSouthApiReady, southReceipt.canvasSouthReady), southApiFallback);
 
     const allCanvasChildrenApiReady = safeBool(
       firstDefined(receipt.allCanvasChildrenApiReady, receipt.allCanvasChildrenReady),
@@ -1088,54 +1244,19 @@
       datasetValue("hearthCanvasSouthVisiblePlanetAvailable") === "true"
     );
 
-    const visibleContentSampleCount = safeNumber(firstDefined(
-      receipt.visibleContentSampleCount,
-      southReceipt.visibleContentSampleCount
-    ), 0);
+    const visibleContentSampleCount = safeNumber(firstDefined(receipt.visibleContentSampleCount, southReceipt.visibleContentSampleCount), 0);
+    const visibleContentVarianceScore = safeNumber(firstDefined(receipt.visibleContentVarianceScore, southReceipt.visibleContentVarianceScore), 0);
+    const visibleContentClassCount = safeNumber(firstDefined(receipt.visibleContentClassCount, southReceipt.visibleContentClassCount), 0);
+    const visibleContentLandSampleCount = safeNumber(firstDefined(receipt.visibleContentLandSampleCount, southReceipt.visibleContentLandSampleCount), 0);
+    const visibleContentWaterSampleCount = safeNumber(firstDefined(receipt.visibleContentWaterSampleCount, southReceipt.visibleContentWaterSampleCount), 0);
+    const visibleContentOtherSampleCount = safeNumber(firstDefined(receipt.visibleContentOtherSampleCount, southReceipt.visibleContentOtherSampleCount), 0);
 
-    const visibleContentVarianceScore = safeNumber(firstDefined(
-      receipt.visibleContentVarianceScore,
-      southReceipt.visibleContentVarianceScore
-    ), 0);
-
-    const visibleContentClassCount = safeNumber(firstDefined(
-      receipt.visibleContentClassCount,
-      southReceipt.visibleContentClassCount
-    ), 0);
-
-    const visibleContentLandSampleCount = safeNumber(firstDefined(
-      receipt.visibleContentLandSampleCount,
-      southReceipt.visibleContentLandSampleCount
-    ), 0);
-
-    const visibleContentWaterSampleCount = safeNumber(firstDefined(
-      receipt.visibleContentWaterSampleCount,
-      southReceipt.visibleContentWaterSampleCount
-    ), 0);
-
-    const visibleContentOtherSampleCount = safeNumber(firstDefined(
-      receipt.visibleContentOtherSampleCount,
-      southReceipt.visibleContentOtherSampleCount
-    ), 0);
-
-    const carrierOnlyDetected = safeBool(firstDefined(
-      receipt.carrierOnlyDetected,
-      southReceipt.carrierOnlyDetected
-    ), false);
-
-    const visibleProofStale = safeBool(firstDefined(
-      receipt.visibleProofStale,
-      southReceipt.visibleProofStale,
-      receipt.renderFrameStale,
-      southReceipt.renderFrameStale
-    ), false);
-
-    const textureInvalidated = safeBool(firstDefined(
-      receipt.textureInvalidated,
-      southReceipt.textureInvalidated
-    ), false);
+    const carrierOnlyDetected = safeBool(firstDefined(receipt.carrierOnlyDetected, southReceipt.carrierOnlyDetected), false);
+    const visibleProofStale = safeBool(firstDefined(receipt.visibleProofStale, southReceipt.visibleProofStale, receipt.renderFrameStale, southReceipt.renderFrameStale), false);
+    const textureInvalidated = safeBool(firstDefined(receipt.textureInvalidated, southReceipt.textureInvalidated), false);
 
     const contentCount = visibleContentLandSampleCount + visibleContentWaterSampleCount + visibleContentOtherSampleCount;
+
     const strictByMetrics = Boolean(
       visibleContentSampleCount >= STRICT_PROOF_MINIMUMS.sampleCount &&
       contentCount >= STRICT_PROOF_MINIMUMS.contentCount &&
@@ -1150,7 +1271,7 @@
 
     const southStrictProofObserved = Boolean(
       visibleContentStrictProof ||
-      safeBool(southReceipt.currentVisibleProofValid, false) && safeString(southReceipt.proofBin, "") === "STRICT" ||
+      (safeBool(southReceipt.currentVisibleProofValid, false) && safeString(southReceipt.proofBin, "") === "STRICT") ||
       strictByMetrics
     );
 
@@ -1211,9 +1332,12 @@
       Boolean(canvasEastEvidenceReady && canvasWestInspectionReady && canvasSouthVisibleProofReady)
     );
 
-    const allCanvasChildrenReady = Boolean(
-      allCanvasChildrenApiReady &&
-      allCanvasChildrenEvidenceReady
+    const allCanvasChildrenReady = Boolean(allCanvasChildrenApiReady && allCanvasChildrenEvidenceReady);
+
+    const parentReleaseAccepted = Boolean(
+      safeBool(receipt.releaseAccepted, false) ||
+      safeString(receipt.releaseStatus, "").includes("RELEASE_ACCEPTED") ||
+      datasetValue("hearthCanvasReleaseAccepted") === "true"
     );
 
     const f13CanvasEvidenceStrict = Boolean(
@@ -1221,6 +1345,7 @@
       (
         parentPresent &&
         currentCanvasParentObserved &&
+        parentCarrierSafe &&
         allCanvasChildrenReady &&
         canvasEastEvidenceReady &&
         canvasWestInspectionReady &&
@@ -1264,6 +1389,7 @@
 
     const canvasGateReady = Boolean(
       currentCanvasParentObserved &&
+      parentCarrierSafe &&
       allCanvasChildrenApiReady &&
       allCanvasChildrenEvidenceReady &&
       f13CanvasEvidenceComplete &&
@@ -1312,12 +1438,6 @@
       f13CanvasEvidenceComplete
     );
 
-    const parentReleaseAccepted = Boolean(
-      safeBool(receipt.releaseAccepted, false) ||
-      safeString(receipt.releaseStatus, "").includes("RELEASE_ACCEPTED") ||
-      datasetValue("hearthCanvasReleaseAccepted") === "true"
-    );
-
     const parentStrictReadMismatch = Boolean(
       southStrictProofObserved &&
       !safeBool(receipt.f13CanvasEvidenceStrict, false) &&
@@ -1338,6 +1458,7 @@
     const strictGap = resolveStrictF13Gap({
       parentPresent,
       currentCanvasParentObserved,
+      parentCarrierSafe,
       parentReleaseAccepted,
       parentBootMethodAvailable,
       canvasEastApiReady,
@@ -1375,6 +1496,7 @@
       parentBootMethodAvailable,
       currentCanvasParentObserved,
       canvasParentV2Observed,
+      parentCarrierSafe,
       parentReleaseAccepted,
 
       canvasEastApiReady,
@@ -1453,118 +1575,6 @@
     };
   }
 
-  function resolveStrictF13Gap(canvas = {}) {
-    if (!canvas.parentPresent || !canvas.currentCanvasParentObserved) {
-      return {
-        gap: "WAITING_CURRENT_CANVAS_PARENT",
-        repairTarget: FILE_GATES.canvas
-      };
-    }
-
-    if (!canvas.parentBootMethodAvailable) {
-      return {
-        gap: "WAITING_CANVAS_PARENT_BOOT_METHOD",
-        repairTarget: FILE_GATES.canvas
-      };
-    }
-
-    if (!canvas.parentReleaseAccepted && !canvas.f13CanvasEvidenceComplete) {
-      return {
-        gap: "WAITING_CANVAS_PARENT_RELEASE_ACCEPTANCE",
-        repairTarget: FILE_GATES.canvas
-      };
-    }
-
-    if (!canvas.canvasEastApiReady) {
-      return {
-        gap: "WAITING_CANVAS_EAST_API",
-        repairTarget: FILE_GATES.canvasEast
-      };
-    }
-
-    if (!canvas.canvasEastEvidenceReady) {
-      return {
-        gap: "WAITING_CANVAS_EAST_ATLAS_EVIDENCE",
-        repairTarget: FILE_GATES.canvasEast
-      };
-    }
-
-    if (!canvas.canvasWestApiReady) {
-      return {
-        gap: "WAITING_CANVAS_WEST_API",
-        repairTarget: FILE_GATES.canvasWest
-      };
-    }
-
-    if (!canvas.canvasWestInspectionReady) {
-      return {
-        gap: "WAITING_CANVAS_WEST_INSPECTION_EVIDENCE",
-        repairTarget: FILE_GATES.canvasWest
-      };
-    }
-
-    if (!canvas.canvasSouthApiReady) {
-      return {
-        gap: "WAITING_CANVAS_SOUTH_API",
-        repairTarget: FILE_GATES.canvasSouth
-      };
-    }
-
-    if (canvas.textureInvalidated || canvas.visibleProofStale) {
-      return {
-        gap: "WAITING_CANVAS_SOUTH_CURRENT_NON_STALE_VISIBLE_PROOF",
-        repairTarget: FILE_GATES.canvasSouth
-      };
-    }
-
-    if (canvas.f13HardFail || canvas.southHardFailObserved) {
-      return {
-        gap: "CANVAS_SOUTH_VISIBLE_PROOF_HARD_FAIL",
-        repairTarget: FILE_GATES.canvasSouth
-      };
-    }
-
-    if (!canvas.canvasSouthVisibleProofReady) {
-      return {
-        gap: "WAITING_CANVAS_SOUTH_VISIBLE_PROOF",
-        repairTarget: FILE_GATES.canvasSouth
-      };
-    }
-
-    if (canvas.parentStrictReadMismatch) {
-      return {
-        gap: "WAITING_CANVAS_PARENT_STRICT_READ_OF_SOUTH_PROOF",
-        repairTarget: FILE_GATES.canvas
-      };
-    }
-
-    if (canvas.f13CanvasEvidenceComplete && canvas.f13CanvasEvidenceDegraded && !canvas.f13CanvasEvidenceStrict) {
-      return {
-        gap: "WAITING_CANVAS_SOUTH_STRICT_VISIBLE_PROOF",
-        repairTarget: FILE_GATES.canvasSouth
-      };
-    }
-
-    if (!canvas.f13CanvasEvidenceComplete) {
-      return {
-        gap: "WAITING_CANVAS_F13_EVIDENCE_COMPLETE",
-        repairTarget: FILE_GATES.canvas
-      };
-    }
-
-    if (canvas.f13CanvasEvidenceStrict) {
-      return {
-        gap: "NONE_F13_STRICT_EVIDENCE_COMPLETE",
-        repairTarget: FILE_GATES.north
-      };
-    }
-
-    return {
-      gap: "WAITING_CANVAS_F13_STRICT_EVIDENCE",
-      repairTarget: FILE_GATES.canvasSouth
-    };
-  }
-
   function resolveF8SelfDuty() {
     const markerPresent = Boolean(
       root.__HEARTH_ROUTE_CONDUCTOR_MARKER__ === true ||
@@ -1578,23 +1588,26 @@
       root.HEARTH_SOUTH_ROUTE_CONDUCTOR === api ||
       root.HEARTH_ROUTE_CONDUCTOR_PRIMARY_GATE === api ||
       root.HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT === api ||
+      root.HEARTH_ROUTE_CONDUCTOR_MALE_PAIR_INDEX_SELECTOR_INTEGRATION_STRICT_F13 === api ||
       firstGlobal([
         "HEARTH.routeConductor",
         "HEARTH.southRouteConductor",
         "HEARTH.routeConductorPrimaryGate",
         "HEARTH.routeConductorStrictF13DownstreamAlignment",
+        "HEARTH.routeConductorMalePairIndexSelectorIntegrationStrictF13",
         "DEXTER_LAB.hearthRouteConductor",
         "DEXTER_LAB.hearthSouthRouteConductor",
         "DEXTER_LAB.hearthRouteConductorPrimaryGate",
-        "DEXTER_LAB.hearthRouteConductorStrictF13DownstreamAlignment"
+        "DEXTER_LAB.hearthRouteConductorStrictF13DownstreamAlignment",
+        "DEXTER_LAB.hearthRouteConductorMalePairIndexSelectorIntegrationStrictF13"
       ]) === api
     );
 
     const receiptPresent = Boolean(
       root.HEARTH_ROUTE_CONDUCTOR_RECEIPT &&
       root.HEARTH_ROUTE_CONDUCTOR_RECEIPT.receipt === RECEIPT &&
-      root.HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT_RECEIPT &&
-      root.HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT_RECEIPT.contract === CONTRACT
+      root.HEARTH_ROUTE_CONDUCTOR_MALE_PAIR_INDEX_SELECTOR_INTEGRATION_STRICT_F13_RECEIPT &&
+      root.HEARTH_ROUTE_CONDUCTOR_MALE_PAIR_INDEX_SELECTOR_INTEGRATION_STRICT_F13_RECEIPT.contract === CONTRACT
     );
 
     const runtimeActive = true;
@@ -1665,6 +1678,7 @@
   }
 
   function resolveNewsState(authorities = {}, f8 = resolveF8SelfDuty(), f13 = resolveF13Evidence()) {
+    const indexGateReady = Boolean(authorities.hearthIndex && authorities.hearthIndex.indexPairReady);
     const northGateReady = Boolean(authorities.north && authorities.north.observed);
     const eastGateReady = Boolean(authorities.east && authorities.east.observed);
     const westGateReady = Boolean(authorities.west && authorities.west.observed);
@@ -1672,6 +1686,7 @@
     const canvasGateReady = Boolean(f13.canvasGateReady);
 
     const baseGatesReady = Boolean(
+      indexGateReady &&
       northGateReady &&
       eastGateReady &&
       westGateReady &&
@@ -1699,6 +1714,7 @@
     return {
       routeNewsObserved: true,
       routeNewsComposed: true,
+      indexGateReady,
       northGateReady,
       eastGateReady,
       westGateReady,
@@ -1713,6 +1729,7 @@
     const supplied = isObject(input) ? input : {};
     const northReceipt = objectValue(supplied, "authorities.north.receipt") || {};
     const canvasEvidence = supplied.canvasEvidence || {};
+    const index = objectValue(supplied, "authorities.hearthIndex") || {};
 
     const northAlreadyLatched = Boolean(
       safeBool(northReceipt.completionLatched, false) ||
@@ -1728,6 +1745,7 @@
     );
 
     const eligible = Boolean(
+      index.indexPairReady !== false &&
       f8.f8SelfDutySatisfied &&
       news.northGateReady &&
       news.eastGateReady &&
@@ -1743,23 +1761,25 @@
 
     const failed = eligible
       ? "NONE_F21_ELIGIBLE_FOR_NORTH"
-      : !f8.f8SelfDutySatisfied
-        ? "WAITING_F8_SELF_DUTY"
-        : !news.northGateReady
-          ? "WAITING_NORTH_GATE"
-          : !news.eastGateReady
-            ? "WAITING_EAST_GATE"
-            : !news.westGateReady
-              ? "WAITING_MACRO_WEST_GATE"
-              : !news.southGateReady
-                ? "WAITING_SOUTH_GATE"
-                : !news.canvasGateReady
-                  ? "WAITING_CANVAS_GATE"
-                  : !f13.f13CanvasEvidenceComplete
-                    ? "WAITING_CANVAS_F13_EVIDENCE"
-                    : f13.f13HardFail
-                      ? "CANVAS_F13_HARD_FAIL"
-                      : "WAITING_NEWS_GATE_BEFORE_F21";
+      : index.indexPairReady === false
+        ? index.holdReason || "WAITING_INDEX_PAIR_READY"
+        : !f8.f8SelfDutySatisfied
+          ? "WAITING_F8_SELF_DUTY"
+          : !news.northGateReady
+            ? "WAITING_NORTH_GATE"
+            : !news.eastGateReady
+              ? "WAITING_EAST_GATE"
+              : !news.westGateReady
+                ? "WAITING_MACRO_WEST_GATE"
+                : !news.southGateReady
+                  ? "WAITING_SOUTH_GATE"
+                  : !news.canvasGateReady
+                    ? "WAITING_CANVAS_GATE"
+                    : !f13.f13CanvasEvidenceComplete
+                      ? "WAITING_CANVAS_F13_EVIDENCE"
+                      : f13.f13HardFail
+                        ? "CANVAS_F13_HARD_FAIL"
+                        : "WAITING_NEWS_GATE_BEFORE_F21";
 
     const northRepairRequired = Boolean(
       f13.f13CanvasEvidenceStrict &&
@@ -1921,6 +1941,9 @@
       activeGearId: "F8_SOUTH_SELF_DUTY",
       activeNewsGate: CARDINALS.SOUTH,
 
+      indexActiveFibonacci: authorities.hearthIndex.activeFibonacci || "F1",
+      indexActiveStage: authorities.hearthIndex.activeStage || "",
+
       canvasActiveFibonacci: safeString(firstDefined(
         canvasEvidence.receipt.activeFibonacci,
         canvasEvidence.receipt.activeFibonacciGate,
@@ -1967,12 +1990,14 @@
         source.firstFailedCoordinate,
         objectValue(authorities.south.receipt, "firstFailedCoordinate"),
         objectValue(authorities.west.receipt, "firstFailedCoordinate"),
+        authorities.hearthIndex.indexPairReady ? "" : authorities.hearthIndex.holdReason,
         f13.firstFailedCoordinate,
         f8.firstFailedCoordinate
       ), f8.firstFailedCoordinate),
 
       recommendedNextFile: safeString(firstDefined(
         source.recommendedNextFile,
+        authorities.hearthIndex.indexPairReady ? "" : FILE_GATES.hearthIndex,
         canvasEvidence.f13StrictEvidenceRepairTarget,
         canvasEvidence.nextAuditTarget,
         objectValue(authorities.south.receipt, "recommendedNextFile"),
@@ -1981,6 +2006,7 @@
 
       recommendedNextRenewalTarget: safeString(firstDefined(
         source.recommendedNextRenewalTarget,
+        authorities.hearthIndex.indexPairReady ? "" : FILE_GATES.hearthIndex,
         canvasEvidence.f13StrictEvidenceRepairTarget,
         canvasEvidence.nextAuditTarget,
         objectValue(authorities.south.receipt, "recommendedNextRenewalTarget"),
@@ -1994,7 +2020,6 @@
 
   function resolveRouteCycle(input = {}) {
     const normalized = input && input.normalizedAt ? input : normalizeRouteConductorInput(input);
-
     const explicitCycleRoute = normalizeCycleRoute(normalized.activeCycleRoute);
     const receivedFrom = normalized.receivedFrom;
 
@@ -2097,8 +2122,10 @@
     const news = normalized.news;
     const f21 = resolveF21Eligibility(normalized, f8, f13, news);
     const canvas = normalized.canvasEvidence;
+    const index = normalized.authorities.hearthIndex;
 
     const routeConductorProofPresent = Boolean(f8.f8SelfDutySatisfied);
+    const indexPairProofPresent = Boolean(index.observed);
     const proofBodyPresent = Boolean(normalized.proofBodyAvailable || f13.f13ProofBodyAvailable);
     const canvasReadinessProofPresent = Boolean(f13.f13CanvasReadinessObserved);
     const canvasEvidenceProofPresent = Boolean(f13.f13CanvasEvidenceComplete);
@@ -2110,6 +2137,7 @@
 
     const proofBodyComposed = Boolean(
       routeConductorProofPresent ||
+      indexPairProofPresent ||
       proofBodyPresent ||
       canvasReadinessProofPresent ||
       canvasEvidenceProofPresent ||
@@ -2127,6 +2155,21 @@
       proofBodyComposed,
       proofBodyAvailable: proofBodyComposed,
 
+      indexPairProof: {
+        present: indexPairProofPresent,
+        observed: index.observed,
+        ready: index.indexPairReady,
+        shellDetected: index.shellDetected,
+        shellSelected: index.shellSelected,
+        shellAccepted: index.shellAccepted,
+        runtimeReleaseAuthorized: index.runtimeReleaseAuthorized,
+        runtimeReleaseComplete: index.runtimeReleaseComplete,
+        mountPresent: index.mountPresent,
+        controlsBound: index.controlsBound,
+        holdReason: index.holdReason,
+        recommendedNextFile: index.recommendedNextFile
+      },
+
       routeConductorProof: {
         present: routeConductorProofPresent,
         markerPresent: f8.routeConductorMarkerPresent,
@@ -2139,6 +2182,7 @@
       canvasParentChildProof: {
         currentCanvasParentObserved: canvas.currentCanvasParentObserved,
         canvasParentV2Observed: canvas.canvasParentV2Observed,
+        parentCarrierSafe: canvas.parentCarrierSafe,
         parentReleaseAccepted: canvas.parentReleaseAccepted,
         canvasEastApiReady: canvas.canvasEastApiReady,
         canvasWestApiReady: canvas.canvasWestApiReady,
@@ -2180,6 +2224,7 @@
 
       newsProof: {
         present: newsProofPresent,
+        indexGateReady: news.indexGateReady,
         northGateReady: news.northGateReady,
         eastGateReady: news.eastGateReady,
         westGateReady: news.westGateReady,
@@ -2195,6 +2240,8 @@
         activeFibonacciRank: normalized.activeFibonacciRank,
         activeStageId: normalized.activeStageId,
         activeGearId: normalized.activeGearId,
+        indexActiveFibonacci: normalized.indexActiveFibonacci,
+        indexActiveStage: normalized.indexActiveStage,
         canvasActiveFibonacci: normalized.canvasActiveFibonacci,
         canvasActiveFibonacciRank: normalized.canvasActiveFibonacciRank,
         canvasActiveStageId: normalized.canvasActiveStageId,
@@ -2302,7 +2349,6 @@
     const cycle = resolveRouteCycle(normalized);
     const proofBody = composeProofBody(normalized);
     const f21 = resolveF21Eligibility(normalized, normalized.f8, normalized.f13, normalized.news);
-
     const outputSpreadComposed = Boolean(normalized.outputSpreadAvailable || proofBody.proofBodyComposed);
 
     const fallback = {
@@ -2349,6 +2395,13 @@
     const proofBody = composeProofBody(normalized);
     const westHandoff = composeCycleTwoWestHandoff(normalized);
     const canvas = normalized.canvasEvidence;
+    const index = normalized.authorities.hearthIndex;
+
+    const structuralPrereqsReady = Boolean(
+      index.indexPairReady &&
+      canvas.currentCanvasParentObserved &&
+      canvas.parentCarrierSafe
+    );
 
     return {
       event: "CYCLE_2_SOUTH_OUTPUT_FOR_CANVAS_RELEASE",
@@ -2377,18 +2430,28 @@
       activeCycleNumber: 2,
       cycleRoute: CYCLE_ROUTES.CYCLE_2,
       activeCycleRoute: CYCLE_ROUTES.CYCLE_2,
-      canvasReleaseRequested: true,
-      releaseToCanvas: true,
+      canvasReleaseRequested: structuralPrereqsReady,
+      releaseToCanvas: structuralPrereqsReady,
 
-      routeMounted: true,
-      planetCanvasPresent: canvas.dom ? canvas.dom.planetCanvasPresent : true,
-      planetCanvasNonZeroSize: canvas.dom ? canvas.dom.planetCanvasNonZeroSize : true,
-      canvasCarrierMounted: firstDefined(canvas.receipt.canvasCarrierMounted, true),
-      canvasCarrierHandoffOk: firstDefined(canvas.receipt.canvasCarrierHandoffOk, true),
-      canvasTargetPresent: canvas.parentPresent || canvas.currentCanvasParentObserved || true,
-      sphereContainment: true,
-      outsideSphereTransparent: true,
-      noRectangularTextureSpill: true,
+      indexPairObserved: index.observed,
+      indexPairReady: index.indexPairReady,
+      indexShellAccepted: index.shellAccepted,
+      indexRuntimeReleaseAuthorized: index.runtimeReleaseAuthorized,
+      indexRuntimeReleaseComplete: index.runtimeReleaseComplete,
+      indexMountPresent: index.mountPresent,
+      indexControlsBound: index.controlsBound,
+      indexPairHoldReason: index.holdReason,
+
+      routeMounted: index.mountPresent,
+      planetCanvasPresent: canvas.dom ? canvas.dom.planetCanvasPresent : false,
+      planetCanvasNonZeroSize: canvas.dom ? canvas.dom.planetCanvasNonZeroSize : false,
+      canvasCarrierMounted: firstDefined(canvas.receipt.canvasCarrierMounted, canvas.parentCarrierSafe),
+      canvasCarrierHandoffOk: firstDefined(canvas.receipt.canvasCarrierHandoffOk, canvas.parentCarrierSafe),
+      canvasTargetPresent: canvas.parentPresent || canvas.currentCanvasParentObserved,
+      structuralCarrierSafeForCanvasRelease: canvas.parentCarrierSafe,
+      sphereContainment: firstDefined(canvas.receipt.sphereContainment, canvas.parentCarrierSafe),
+      outsideSphereTransparent: firstDefined(canvas.receipt.outsideSphereTransparent, canvas.parentCarrierSafe),
+      noRectangularTextureSpill: firstDefined(canvas.receipt.noRectangularTextureSpill, canvas.parentCarrierSafe),
 
       northGateReady: normalized.news.northGateReady,
       eastGateReady: normalized.news.eastGateReady,
@@ -2414,6 +2477,7 @@
 
       currentCanvasParentObserved: canvas.currentCanvasParentObserved,
       canvasParentV2Observed: canvas.canvasParentV2Observed,
+      parentCarrierSafe: canvas.parentCarrierSafe,
       parentReleaseAccepted: canvas.parentReleaseAccepted,
       canvasReady: canvas.canvasReady,
       atlasBuildComplete: canvas.atlasBuildComplete || canvas.canvasEastEvidenceReady,
@@ -2458,9 +2522,21 @@
       graphicBox: false,
       webGL: false,
 
-      firstFailedCoordinate: normalized.firstFailedCoordinate,
-      recommendedNextFile: FILE_GATES.macroWest,
-      recommendedNextRenewalTarget: FILE_GATES.macroWest,
+      firstFailedCoordinate: structuralPrereqsReady
+        ? normalized.firstFailedCoordinate
+        : !index.indexPairReady
+          ? index.holdReason
+          : "WAITING_CANVAS_PARENT_STRUCTURAL_CARRIER",
+      recommendedNextFile: structuralPrereqsReady
+        ? FILE_GATES.macroWest
+        : !index.indexPairReady
+          ? FILE_GATES.hearthIndex
+          : FILE_GATES.canvas,
+      recommendedNextRenewalTarget: structuralPrereqsReady
+        ? FILE_GATES.macroWest
+        : !index.indexPairReady
+          ? FILE_GATES.hearthIndex
+          : FILE_GATES.canvas,
       createdAt: nowIso()
     };
   }
@@ -2590,17 +2666,60 @@
   function classifyMacroWestAdmissibility(input = {}) {
     const normalized = input && input.normalizedAt ? input : normalizeRouteConductorInput(input);
     const west = normalized.authorities.west || readMacroWestAuthority();
+    const index = normalized.authorities.hearthIndex;
+    const canvas = normalized.canvasEvidence;
+
+    if (!index.indexPairReady) {
+      return {
+        ...normalizeMacroWestResult({}, "index-pair-precheck", Boolean(west.observed)),
+        macroWestAuthorityObserved: Boolean(west.observed),
+        macroWestAdmissibilityObserved: false,
+        westDecision: WEST_DECISION.HOLD_ACTIVE,
+        westGapClass: "WAITING_INDEX_PAIR_READY",
+        westGapSeverity: "HELD",
+        westHardBlock: false,
+        westForwardAllowed: false,
+        westCanvasReleaseApproved: false,
+        westDegradedForwardApproved: false,
+        westFirstFailedCoordinate: index.holdReason || "WAITING_INDEX_PAIR_READY",
+        westRecommendedNextRenewalTarget: FILE_GATES.hearthIndex,
+        raw: { indexPairReady: false, indexHoldReason: index.holdReason },
+        normalizedAt: nowIso()
+      };
+    }
+
+    if (!canvas.currentCanvasParentObserved || !canvas.parentCarrierSafe) {
+      return {
+        ...normalizeMacroWestResult({}, "canvas-carrier-precheck", Boolean(west.observed)),
+        macroWestAuthorityObserved: Boolean(west.observed),
+        macroWestAdmissibilityObserved: false,
+        westDecision: WEST_DECISION.HOLD_ACTIVE,
+        westGapClass: "WAITING_CANVAS_PARENT_STRUCTURAL_CARRIER",
+        westGapSeverity: "HELD",
+        westHardBlock: false,
+        westForwardAllowed: false,
+        westCanvasReleaseApproved: false,
+        westDegradedForwardApproved: false,
+        westFirstFailedCoordinate: !canvas.currentCanvasParentObserved
+          ? "WAITING_CURRENT_CANVAS_PARENT"
+          : "WAITING_CANVAS_PARENT_STRUCTURAL_CARRIER",
+        westRecommendedNextRenewalTarget: FILE_GATES.canvas,
+        raw: {
+          currentCanvasParentObserved: canvas.currentCanvasParentObserved,
+          parentCarrierSafe: canvas.parentCarrierSafe
+        },
+        normalizedAt: nowIso()
+      };
+    }
+
     const authority = west.authority;
     const candidate = composeMacroWestCandidate(normalized);
 
     if (!authority || !isObject(authority)) {
       const fallbackReceipt = west.receipt || {};
-
       const receiptResult = normalizeMacroWestResult(fallbackReceipt, "receipt-fallback-no-api", Boolean(west.observed));
 
-      if (receiptResult.westCanvasReleaseApproved) {
-        return receiptResult;
-      }
+      if (receiptResult.westCanvasReleaseApproved) return receiptResult;
 
       return {
         ...receiptResult,
@@ -2649,7 +2768,9 @@
           checkpointId: "F13N_INSPECT_GATE",
           activeFibonacci: "F13N",
           canvasReleaseRequested: true,
-          releaseToCanvas: true
+          releaseToCanvas: true,
+          indexPairReady: true,
+          parentCarrierSafe: true
         });
 
         const normalizedResult = normalizeMacroWestResult(result, method, true);
@@ -2682,9 +2803,12 @@
     const cycle = resolveRouteCycle(normalized);
     const proofBody = composeProofBody(normalized);
     const canvas = normalized.canvasEvidence;
+    const index = normalized.authorities.hearthIndex;
     const macroWest = classifyMacroWestAdmissibility(normalized);
 
     const lawfulCycle = cycle.cycleNumber === 2 && cycle.cycleRoute === CYCLE_ROUTES.CYCLE_2;
+    const indexPairReady = index.indexPairReady === true;
+    const canvasCarrierReady = Boolean(canvas.currentCanvasParentObserved && canvas.parentCarrierSafe);
     const southProofReady = Boolean(proofBody.proofBodyComposed || normalized.proofBodyAvailable || normalized.outputSpreadAvailable);
 
     const macroWestReleaseEvidence = Boolean(
@@ -2698,6 +2822,8 @@
 
     const authorized = Boolean(
       lawfulCycle &&
+      indexPairReady &&
+      canvasCarrierReady &&
       southProofReady &&
       macroWestReleaseEvidence &&
       noVisibleHardFail
@@ -2707,19 +2833,37 @@
       ? "NONE_CANVAS_RELEASE_AUTHORIZED_BY_MACRO_WEST"
       : !lawfulCycle
         ? "WAITING_CYCLE_2_ROUTE"
-        : !southProofReady
-          ? "WAITING_SOUTH_OUTPUT_PROOF_PACKET"
-          : !macroWest.macroWestAuthorityObserved
-            ? "WAITING_MACRO_WEST_AUTHORITY"
-            : !macroWest.macroWestAdmissibilityObserved
-              ? "WAITING_MACRO_WEST_ADMISSIBILITY_DECISION"
-              : macroWest.westHardBlock
-                ? "MACRO_WEST_HARD_BLOCK"
-                : !macroWest.westCanvasReleaseApproved
-                  ? macroWest.westFirstFailedCoordinate || "WAITING_MACRO_WEST_CANVAS_RELEASE_APPROVAL"
-                  : !noVisibleHardFail
-                    ? "CANVAS_F13_HARD_FAIL_BLOCKS_RELEASE"
-                    : "WAITING_MACRO_WEST_CANVAS_RELEASE_EVIDENCE";
+        : !indexPairReady
+          ? index.holdReason || "WAITING_INDEX_PAIR_READY"
+          : !canvasCarrierReady
+            ? !canvas.currentCanvasParentObserved
+              ? "WAITING_CURRENT_CANVAS_PARENT"
+              : "WAITING_CANVAS_PARENT_STRUCTURAL_CARRIER"
+            : !southProofReady
+              ? "WAITING_SOUTH_OUTPUT_PROOF_PACKET"
+              : !macroWest.macroWestAuthorityObserved
+                ? "WAITING_MACRO_WEST_AUTHORITY"
+                : !macroWest.macroWestAdmissibilityObserved
+                  ? "WAITING_MACRO_WEST_ADMISSIBILITY_DECISION"
+                  : macroWest.westHardBlock
+                    ? "MACRO_WEST_HARD_BLOCK"
+                    : !macroWest.westCanvasReleaseApproved
+                      ? macroWest.westFirstFailedCoordinate || "WAITING_MACRO_WEST_CANVAS_RELEASE_APPROVAL"
+                      : !noVisibleHardFail
+                        ? "CANVAS_F13_HARD_FAIL_BLOCKS_RELEASE"
+                        : "WAITING_MACRO_WEST_CANVAS_RELEASE_EVIDENCE";
+
+    const recommended = authorized
+      ? FILE_GATES.canvas
+      : !indexPairReady
+        ? FILE_GATES.hearthIndex
+        : !canvasCarrierReady
+          ? FILE_GATES.canvas
+          : !southProofReady
+            ? FILE_GATES.south
+            : !macroWest.macroWestAuthorityObserved || !macroWest.macroWestAdmissibilityObserved || macroWest.westHardBlock || !macroWest.westCanvasReleaseApproved
+              ? FILE_GATES.macroWest
+              : canvas.f13StrictEvidenceRepairTarget || FILE_GATES.canvasSouth;
 
     return {
       contract: CONTRACT,
@@ -2737,6 +2881,16 @@
       returnTo: "",
       handoffTo: authorized ? CARDINALS.CANVAS : "",
 
+      indexPairObserved: index.observed,
+      indexPairReady,
+      indexPairHoldReason: index.holdReason,
+      indexRecommendedNextFile: FILE_GATES.hearthIndex,
+
+      canvasCarrierReady,
+      currentCanvasParentObserved: canvas.currentCanvasParentObserved,
+      canvasParentV2Observed: canvas.canvasParentV2Observed,
+      parentCarrierSafe: canvas.parentCarrierSafe,
+
       westAuditObserved: macroWest.macroWestAdmissibilityObserved,
       westAuditAccepted: macroWest.westCanvasReleaseApproved,
       westCanvasReleaseApproved: macroWest.westCanvasReleaseApproved,
@@ -2750,8 +2904,6 @@
       canvasReleaseRequiresWestAudit: true,
       canvasReleaseRequiresMacroWest: true,
       canvasEvidenceObserved: canvas.observed,
-      currentCanvasParentObserved: canvas.currentCanvasParentObserved,
-      canvasParentV2Observed: canvas.canvasParentV2Observed,
       canvasReleasePacketReady: authorized,
       canvasReleaseHeldReason: heldReason,
 
@@ -2775,8 +2927,8 @@
       completionLatched: false,
       readyTextAllowed: false,
       visualPassClaimed: false,
-      recommendedNextFile: authorized ? FILE_GATES.canvas : FILE_GATES.macroWest,
-      recommendedNextRenewalTarget: authorized ? FILE_GATES.canvas : FILE_GATES.macroWest,
+      recommendedNextFile: recommended,
+      recommendedNextRenewalTarget: recommended,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -2788,78 +2940,32 @@
     const canvas = normalized.canvasEvidence;
     const index = normalized.authorities.hearthIndex;
 
-    if (index.observed && index.receipt && index.receipt.shellAccepted === false) {
-      return FILE_GATES.hearthIndex;
-    }
+    if (!index.indexPairReady) return FILE_GATES.hearthIndex;
 
-    if (index.observed && index.receipt && index.receipt.runtimeReleaseAuthorized === false && !state.booted) {
-      return FILE_GATES.hearthIndex;
-    }
+    if (!normalized.f8.f8SelfDutySatisfied) return FILE;
 
-    if (!normalized.f8.f8SelfDutySatisfied) {
-      return FILE;
-    }
-
-    if (packetSeed && packetSeed.activeCycleNumber === 1) {
-      return FILE_GATES.north;
-    }
+    if (packetSeed && packetSeed.activeCycleNumber === 1) return FILE_GATES.north;
 
     if (packetSeed && packetSeed.activeCycleNumber === 2) {
-      if (!macroWest || !macroWest.macroWestAuthorityObserved || !macroWest.macroWestAdmissibilityObserved) {
-        return FILE_GATES.macroWest;
-      }
+      if (!canvas.currentCanvasParentObserved || !canvas.parentPresent || !canvas.authority) return FILE_GATES.canvas;
+      if (!canvas.parentCarrierSafe) return FILE_GATES.canvas;
 
-      if (!macroWest.westCanvasReleaseApproved || macroWest.westHardBlock || !macroWest.westForwardAllowed) {
-        return FILE_GATES.macroWest;
-      }
+      if (!macroWest || !macroWest.macroWestAuthorityObserved || !macroWest.macroWestAdmissibilityObserved) return FILE_GATES.macroWest;
+      if (!macroWest.westCanvasReleaseApproved || macroWest.westHardBlock || !macroWest.westForwardAllowed) return FILE_GATES.macroWest;
 
-      if (!canvasReleasePacket || !canvasReleasePacket.canvasReleaseAuthorized) {
-        return FILE_GATES.macroWest;
-      }
+      if (!canvasReleasePacket || !canvasReleasePacket.canvasReleaseAuthorized) return canvasReleasePacket.recommendedNextFile || FILE_GATES.macroWest;
 
-      if (!canvas.parentPresent || !canvas.currentCanvasParentObserved || !canvas.authority) {
-        return FILE_GATES.canvas;
-      }
+      if (!canvas.parentReleaseAccepted && !canvas.f13CanvasReadinessObserved) return FILE_GATES.canvas;
 
-      if (!canvas.parentReleaseAccepted && !canvas.f13CanvasReadinessObserved) {
-        return FILE_GATES.canvas;
-      }
-
-      if (!canvas.canvasEastApiReady || !canvas.canvasEastEvidenceReady) {
-        return FILE_GATES.canvasEast;
-      }
-
-      if (!canvas.canvasWestApiReady || !canvas.canvasWestInspectionReady) {
-        return FILE_GATES.canvasWest;
-      }
-
-      if (!canvas.canvasSouthApiReady || !canvas.canvasSouthVisibleProofReady) {
-        return FILE_GATES.canvasSouth;
-      }
-
-      if (canvas.f13HardFail) {
-        return FILE_GATES.canvasSouth;
-      }
-
-      if (canvas.parentStrictReadMismatch) {
-        return FILE_GATES.canvas;
-      }
-
-      if (canvas.f13CanvasEvidenceComplete && !canvas.f13CanvasEvidenceStrict) {
-        return canvas.f13StrictEvidenceRepairTarget || FILE_GATES.canvasSouth;
-      }
-
-      if (canvas.f13CanvasEvidenceStrict && f21.northRepairRequired) {
-        return FILE_GATES.north;
-      }
-
-      if (canvas.f13CanvasEvidenceStrict && !f21.completionLatched && !f21.f21SubmittedToNorth) {
-        return FILE_GATES.north;
-      }
-
-      if (canvas.f13CanvasEvidenceStrict && f21.completionLatched) {
-        return FILE_GATES.north;
-      }
+      if (!canvas.canvasEastApiReady || !canvas.canvasEastEvidenceReady) return FILE_GATES.canvasEast;
+      if (!canvas.canvasWestApiReady || !canvas.canvasWestInspectionReady) return FILE_GATES.canvasWest;
+      if (!canvas.canvasSouthApiReady || !canvas.canvasSouthVisibleProofReady) return FILE_GATES.canvasSouth;
+      if (canvas.f13HardFail) return FILE_GATES.canvasSouth;
+      if (canvas.parentStrictReadMismatch) return FILE_GATES.canvas;
+      if (canvas.f13CanvasEvidenceComplete && !canvas.f13CanvasEvidenceStrict) return canvas.f13StrictEvidenceRepairTarget || FILE_GATES.canvasSouth;
+      if (canvas.f13CanvasEvidenceStrict && f21.northRepairRequired) return FILE_GATES.north;
+      if (canvas.f13CanvasEvidenceStrict && !f21.completionLatched && !f21.f21SubmittedToNorth) return FILE_GATES.north;
+      if (canvas.f13CanvasEvidenceStrict && f21.completionLatched) return FILE_GATES.north;
     }
 
     if (canvas.f13CanvasEvidenceComplete && !canvas.f13CanvasEvidenceStrict) {
@@ -2882,8 +2988,8 @@
             ? 76
             : p.macroWestAdmissibilityObserved
               ? 66
-              : p.f13CanvasReadinessObserved
-                ? 58
+              : p.indexPairReady
+                ? 52
                 : p.f8SelfDutySatisfied
                   ? 45
                   : p.routeConductorMarkerPresent
@@ -2894,17 +3000,19 @@
       ? "Ready"
       : p.degradedCompletionLatched || (p.f13CanvasEvidenceComplete && p.f13CanvasEvidenceDegraded && !p.f13CanvasEvidenceStrict)
         ? "Functional page · strict F13 proof pending"
-        : p.f21EligibleForNorth
-          ? "Ready for North latch"
-          : p.f13CanvasEvidenceComplete
-            ? "Canvas F13 evidence complete"
-            : p.canvasReleaseAuthorized
-              ? "Canvas release authorized by Macro West"
-              : p.activeCycleNumber === 2 && !p.macroWestAdmissibilityObserved
-                ? "Cycle 2: waiting Macro West admissibility"
-                : p.activeCycleNumber === 2
-                  ? "Cycle 2: Macro West hold"
-                  : "Cycle 1: returning proof to North";
+        : !p.indexPairReady
+          ? "Waiting Hearth index pair"
+          : p.f21EligibleForNorth
+            ? "Ready for North latch"
+            : p.f13CanvasEvidenceComplete
+              ? "Canvas F13 evidence complete"
+              : p.canvasReleaseAuthorized
+                ? "Canvas release authorized by Macro West"
+                : p.activeCycleNumber === 2 && !p.macroWestAdmissibilityObserved
+                  ? "Cycle 2: waiting Macro West admissibility"
+                  : p.activeCycleNumber === 2
+                    ? "Cycle 2: Macro West hold"
+                    : "Cycle 1: returning proof to North";
 
     return {
       activeCycleNumber: p.activeCycleNumber,
@@ -2922,6 +3030,7 @@
       firstFailedCoordinate: p.firstFailedCoordinate,
       recommendedNextFile: p.recommendedNextFile,
       recommendedNextRenewalTarget: p.recommendedNextRenewalTarget,
+      indexPairReady: p.indexPairReady,
       proofBodyComposed: p.proofBodyComposed,
       outputSpreadComposed: p.outputSpreadComposed,
       northReturnPacketReady: p.northReturnPacketReady,
@@ -2954,6 +3063,7 @@
       const f13 = normalized.f13;
       const news = normalized.news;
       const f21 = resolveF21Eligibility(normalized, f8, f13, news);
+      const index = normalized.authorities.hearthIndex;
 
       const isCycleOne = cycle.cycleNumber === 1;
       const isCycleTwo = cycle.cycleNumber === 2;
@@ -2989,35 +3099,39 @@
       );
 
       const firstFailedCoordinate =
-        f21.f21EligibleForNorth && normalized.canvasEvidence.f13CanvasEvidenceStrict
-          ? "NONE_F21_ELIGIBLE_FOR_NORTH"
-          : degradedFunctional || strictPending
-            ? normalized.canvasEvidence.f13StrictEvidenceGap
-          : isCycleTwo && !macroWest.macroWestAdmissibilityObserved
-            ? "WAITING_MACRO_WEST_ADMISSIBILITY_DECISION"
-            : isCycleTwo && !canvasReleasePacket.canvasReleaseAuthorized
-              ? canvasReleasePacket.canvasReleaseHeldReason
-              : f21.firstFailedCoordinate ||
-                canvasReleasePacket.canvasReleaseHeldReason ||
-                f13.firstFailedCoordinate ||
-                cycle.firstFailedCoordinate ||
-                "WAITING_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT";
+        !index.indexPairReady
+          ? index.holdReason || "WAITING_INDEX_PAIR_READY"
+          : f21.f21EligibleForNorth && normalized.canvasEvidence.f13CanvasEvidenceStrict
+            ? "NONE_F21_ELIGIBLE_FOR_NORTH"
+            : degradedFunctional || strictPending
+              ? normalized.canvasEvidence.f13StrictEvidenceGap
+              : isCycleTwo && !macroWest.macroWestAdmissibilityObserved
+                ? canvasReleasePacket.canvasReleaseHeldReason || "WAITING_MACRO_WEST_ADMISSIBILITY_DECISION"
+                : isCycleTwo && !canvasReleasePacket.canvasReleaseAuthorized
+                  ? canvasReleasePacket.canvasReleaseHeldReason
+                  : f21.firstFailedCoordinate ||
+                    canvasReleasePacket.canvasReleaseHeldReason ||
+                    f13.firstFailedCoordinate ||
+                    cycle.firstFailedCoordinate ||
+                    "WAITING_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT";
 
-      const postgameStatus = f21.completionLatched && normalized.canvasEvidence.f13CanvasEvidenceStrict
-        ? f21.degradedCompletionLatched
-          ? "READY_DEGRADED_PLANET_VISIBLE_DIAGNOSTIC_AVAILABLE"
-          : "READY_PLANET_VISIBLE_DIAGNOSTIC_AVAILABLE"
-        : degradedFunctional || strictPending
-          ? "FUNCTIONAL_DEGRADED_F13_STRICT_PROOF_PENDING"
-          : f21.f21EligibleForNorth
-            ? "WAITING_NORTH_F21_LATCH"
-            : f13.f13CanvasEvidenceComplete
-              ? "CANVAS_F13_EVIDENCE_COMPLETE_WAITING_NORTH"
-              : canvasReleasePacket.canvasReleaseAuthorized
-                ? "CANVAS_RELEASE_AUTHORIZED_BY_MACRO_WEST"
-                : isCycleTwo
-                  ? "CYCLE_2_WAITING_MACRO_WEST_ADMISSIBILITY_OR_CANVAS_RELEASE"
-                  : "CYCLE_1_RETURNING_TO_NORTH";
+      const postgameStatus = !index.indexPairReady
+        ? "WAITING_HEARTH_INDEX_PAIR_SELECTOR_RUNTIME_RELEASE"
+        : f21.completionLatched && normalized.canvasEvidence.f13CanvasEvidenceStrict
+          ? f21.degradedCompletionLatched
+            ? "READY_DEGRADED_PLANET_VISIBLE_DIAGNOSTIC_AVAILABLE"
+            : "READY_PLANET_VISIBLE_DIAGNOSTIC_AVAILABLE"
+          : degradedFunctional || strictPending
+            ? "FUNCTIONAL_DEGRADED_F13_STRICT_PROOF_PENDING"
+            : f21.f21EligibleForNorth
+              ? "WAITING_NORTH_F21_LATCH"
+              : f13.f13CanvasEvidenceComplete
+                ? "CANVAS_F13_EVIDENCE_COMPLETE_WAITING_NORTH"
+                : canvasReleasePacket.canvasReleaseAuthorized
+                  ? "CANVAS_RELEASE_AUTHORIZED_BY_MACRO_WEST"
+                  : isCycleTwo
+                    ? "CYCLE_2_WAITING_MACRO_WEST_ADMISSIBILITY_OR_CANVAS_RELEASE"
+                    : "CYCLE_1_RETURNING_TO_NORTH";
 
       const packet = {
         contract: CONTRACT,
@@ -3029,6 +3143,8 @@
         route: ROUTE,
         role: state.role,
 
+        malePairRouteConductorActive: true,
+        femaleSelectorConsumerActive: true,
         routeConductorPrimaryGateActive: true,
         strictF13DownstreamAlignmentActive: true,
         canvasParentChildReconciliationActive: true,
@@ -3057,6 +3173,24 @@
         activeGearLabel: "F8_SOUTH_SELF_DUTY",
         activeNewsGate: CARDINALS.SOUTH,
 
+        indexFile: FILE_GATES.hearthIndex,
+        indexPairObserved: index.observed,
+        indexPairReady: index.indexPairReady,
+        indexShellDetected: index.shellDetected,
+        indexShellSelected: index.shellSelected,
+        indexShellAccepted: index.shellAccepted,
+        indexRuntimeReleaseAuthorized: index.runtimeReleaseAuthorized,
+        indexRuntimeReleaseStarted: index.runtimeReleaseStarted,
+        indexRuntimeReleaseComplete: index.runtimeReleaseComplete,
+        indexRuntimeHeld: index.runtimeHeld,
+        indexRuntimeReleaseHeldReason: index.runtimeReleaseHeldReason,
+        indexMountPresent: index.mountPresent,
+        indexControlsBound: index.controlsBound,
+        indexMissingHooks: index.missingHooks.join(","),
+        indexPairHoldReason: index.holdReason,
+        indexActiveFibonacci: index.activeFibonacci,
+        indexActiveStage: index.activeStage,
+
         canvasActiveFibonacci: normalized.canvasActiveFibonacci,
         canvasActiveFibonacciRank: normalized.canvasActiveFibonacciRank,
         canvasActiveStageId: normalized.canvasActiveStageId,
@@ -3071,7 +3205,6 @@
         canvasEastFile: FILE_GATES.canvasEast,
         canvasWestFile: FILE_GATES.canvasWest,
         canvasSouthFile: FILE_GATES.canvasSouth,
-        hearthIndexFile: FILE_GATES.hearthIndex,
 
         northAuthorityObserved: normalized.authorities.north.observed,
         eastAuthorityObserved: normalized.authorities.east.observed,
@@ -3079,7 +3212,7 @@
         macroWestAuthorityObserved: macroWest.macroWestAuthorityObserved,
         southAuthorityObserved: normalized.authorities.south.observed,
         southPrimaryGateObserved: normalized.authorities.south.primaryGateObserved,
-        hearthIndexObserved: normalized.authorities.hearthIndex.observed,
+        hearthIndexObserved: index.observed,
 
         routeConductorMarkerPresent: f8.routeConductorMarkerPresent,
         routeConductorApiPresent: f8.routeConductorApiPresent,
@@ -3110,7 +3243,7 @@
         westAuditApproved: macroWest.westCanvasReleaseApproved || normalized.westAuditApproved,
         northReturnRequired: isCycleOne,
         northReturnPacketReady: isCycleOne ? true : northReturnPacket.southReturnPacketReady === true,
-        westHandoffPacketReady: isCycleTwo ? true : false,
+        westHandoffPacketReady: isCycleTwo,
 
         proofBodyAvailable: proofBody.proofBodyAvailable,
         proofBodyComposed: proofBody.proofBodyComposed,
@@ -3124,6 +3257,7 @@
         canvasAuthorityObserved: Boolean(normalized.canvasEvidence.authority),
         currentCanvasParentObserved: normalized.canvasEvidence.currentCanvasParentObserved,
         canvasParentV2Observed: normalized.canvasEvidence.canvasParentV2Observed,
+        canvasParentCarrierSafe: normalized.canvasEvidence.parentCarrierSafe,
         canvasParentReleaseAccepted: normalized.canvasEvidence.parentReleaseAccepted,
 
         canvasEvidenceObserved: normalized.canvasEvidence.observed,
@@ -3165,6 +3299,7 @@
         functionalPageObserved: normalized.canvasEvidence.functionalPageObserved,
         strictVisualProofPending: strictPending,
 
+        indexGateReady: news.indexGateReady,
         northGateReady: news.northGateReady,
         eastGateReady: news.eastGateReady,
         westGateReady: news.westGateReady,
@@ -3217,7 +3352,6 @@
       };
 
       packet.visibleState = composeVisibleStateFromPrimary(packet);
-
       return packet;
     } catch (error) {
       recordError("COMPOSE_ROUTE_PRIMARY_PACKET_FAILED", error);
@@ -3238,6 +3372,8 @@
       route: ROUTE,
       role: state.role,
 
+      malePairRouteConductorActive: true,
+      femaleSelectorConsumerActive: true,
       routeConductorPrimaryGateActive: true,
       strictF13DownstreamAlignmentActive: true,
       canvasParentChildReconciliationActive: true,
@@ -3266,6 +3402,10 @@
       activeGearId: "F8_SOUTH_SELF_DUTY",
       activeNewsGate: CARDINALS.SOUTH,
 
+      indexPairObserved: false,
+      indexPairReady: false,
+      indexPairHoldReason: "WAITING_ROUTE_CONDUCTOR_PRIMARY_GATE_COMPOSITION",
+
       canvasActiveFibonacci: "F13",
       canvasActiveFibonacciRank: 13,
       canvasActiveStageId: "canvas-parent-f13-evidence-receiver",
@@ -3284,6 +3424,7 @@
 
       currentCanvasParentObserved: false,
       canvasParentV2Observed: false,
+      canvasParentCarrierSafe: false,
       proofBodyAvailable: false,
       proofBodyComposed: false,
       outputSpreadAvailable: false,
@@ -3333,7 +3474,7 @@
 
     return {
       ...clonePlain(packet),
-      authority: "hearth-route-conductor-strict-f13-downstream-alignment",
+      authority: "hearth-route-conductor-male-pair-index-selector-integration-strict-f13",
       status: "active",
       receiptComposed: true,
       currentReceipt: true,
@@ -3361,6 +3502,19 @@
     state.activeFibonacciRank = 8;
     state.activeStageId = "F8_SOUTH_SELF_DUTY";
     state.activeGearId = "F8_SOUTH_SELF_DUTY";
+
+    state.indexActiveFibonacci = p.indexActiveFibonacci || "F1";
+    state.indexActiveStage = p.indexActiveStage || "";
+    state.indexPairObserved = p.indexPairObserved === true;
+    state.indexPairReady = p.indexPairReady === true;
+    state.indexShellAccepted = p.indexShellAccepted === true;
+    state.indexRuntimeReleaseAuthorized = p.indexRuntimeReleaseAuthorized === true;
+    state.indexRuntimeReleaseComplete = p.indexRuntimeReleaseComplete === true;
+    state.indexMountPresent = p.indexMountPresent === true;
+    state.indexControlsBound = p.indexControlsBound === true;
+    state.indexMissingHooks = p.indexMissingHooks || "";
+    state.indexPairHoldReason = p.indexPairHoldReason || "WAITING_INDEX_PAIR_OBSERVATION";
+    state.indexPairRecommendedNextFile = FILE_GATES.hearthIndex;
 
     state.canvasActiveFibonacci = p.canvasActiveFibonacci || "F13";
     state.canvasActiveFibonacciRank = p.canvasActiveFibonacciRank || 13;
@@ -3397,10 +3551,11 @@
     state.canvasAuthorityObserved = p.canvasAuthorityObserved === true;
     state.currentCanvasParentObserved = p.currentCanvasParentObserved === true;
     state.canvasParentV2Observed = p.canvasParentV2Observed === true;
+    state.canvasParentCarrierSafe = p.canvasParentCarrierSafe === true;
     state.canvasParentReleaseAccepted = p.canvasParentReleaseAccepted === true;
     state.canvasReleaseAuthorized = p.canvasReleaseAuthorized === true;
     state.canvasReleasePacketReady = p.canvasReleasePacketReady === true;
-    state.canvasReleaseHeldReason = p.canvasReleaseHeldReason || "WAITING_MACRO_WEST_ADMISSIBILITY_DECISION";
+    state.canvasReleaseHeldReason = p.canvasReleaseHeldReason || "WAITING_INDEX_PAIR_OR_CANVAS_CARRIER";
 
     state.canvasEastApiReady = p.canvasEastApiReady === true;
     state.canvasWestApiReady = p.canvasWestApiReady === true;
@@ -3517,7 +3672,9 @@
         reason: releasePacket.canvasReleaseHeldReason,
         cycleNumber: releasePacket.cycleNumber,
         cycleRoute: releasePacket.cycleRoute,
-        westDecision: releasePacket.westDecision
+        westDecision: releasePacket.westDecision,
+        indexPairReady: releasePacket.indexPairReady,
+        canvasCarrierReady: releasePacket.canvasCarrierReady
       });
 
       refresh({
@@ -3565,7 +3722,9 @@
       method,
       cycleRoute: releasePacket.cycleRoute,
       westDecision: releasePacket.westDecision,
-      macroWestMethodUsed: releasePacket.macroWestMethodUsed
+      macroWestMethodUsed: releasePacket.macroWestMethodUsed,
+      indexPairReady: releasePacket.indexPairReady,
+      canvasCarrierReady: releasePacket.canvasCarrierReady
     });
 
     state.canvasBootInFlight = true;
@@ -3584,7 +3743,9 @@
           westAuditAccepted: true,
           westCanvasReleaseApproved: true,
           canvasReleaseAuthorized: true,
-          canvasReleaseReceived: true
+          canvasReleaseReceived: true,
+          indexPairReady: true,
+          parentCarrierSafe: true
         },
         onReady: () => reconcileCanvas({ receivedFrom: CARDINALS.CANVAS }),
         onError: (error) => {
@@ -3613,6 +3774,7 @@
 
   function maybeAutoBootCanvas(packet = state.currentPacket || {}) {
     if (!packet || !packet.canvasReleaseAuthorized) return;
+    if (!packet.indexPairReady || !packet.canvasParentCarrierSafe) return;
     if (state.canvasBootAttempted || state.canvasBootInFlight || state.f13CanvasEvidenceComplete) return;
     if (!readCanvasApi()) return;
     if (autoBootTimer) return;
@@ -3662,7 +3824,7 @@
       checkpointId: "F21_COMPLETION_LATCH",
       activeFibonacci: "F21",
       activeCardinal: CARDINALS.NORTH,
-      source: "hearth-route-conductor-strict-f13-downstream-alignment",
+      source: "hearth-route-conductor-male-pair-index-selector-integration-strict-f13",
       contract: CONTRACT,
       receipt: RECEIPT,
       f21EligibleForNorth: true,
@@ -3673,6 +3835,7 @@
       strictEligibility: normalized.f13.f13CanvasEvidenceStrict,
       visualPassClaimed: false,
       detail: {
+        indexPairReady: normalized.authorities.hearthIndex.indexPairReady,
         f8SelfDutySatisfied: normalized.f8.f8SelfDutySatisfied,
         macroWestAdmissibilityObserved: state.macroWestAdmissibilityObserved,
         westDecision: state.westDecision,
@@ -3740,6 +3903,39 @@
     }
   }
 
+  function bindControls() {
+    if (!doc) return;
+
+    if (refs.copyButton && refs.copyButton.dataset.hearthRouteConductorMalePairBound !== "true") {
+      refs.copyButton.dataset.hearthRouteConductorMalePairBound = "true";
+      refs.copyButton.addEventListener("click", copyDiagnostic);
+    }
+
+    if (refs.toggleButton && refs.toggleButton.dataset.hearthRouteConductorMalePairBound !== "true") {
+      refs.toggleButton.dataset.hearthRouteConductorMalePairBound = "true";
+      refs.toggleButton.addEventListener("click", () => {
+        const visible = refs.receiptBox ? refs.receiptBox.dataset.visible !== "true" : true;
+        if (refs.receiptBox) refs.receiptBox.dataset.visible = String(visible);
+        if (refs.receiptText) refs.receiptText.textContent = visible ? getReceiptText() : "";
+        if (refs.toggleButton) refs.toggleButton.textContent = visible ? "Hide receipt" : "Show receipt";
+      });
+    }
+
+    if (refs.inspectButton && refs.inspectButton.dataset.hearthRouteConductorMalePairBound !== "true") {
+      refs.inspectButton.dataset.hearthRouteConductorMalePairBound = "true";
+      refs.inspectButton.addEventListener("click", () => {
+        setInspectMode(!(doc.documentElement.dataset.hearthSouthPlanetInspect === "true"));
+      });
+    }
+
+    if (refs.showTab && refs.showTab.dataset.hearthRouteConductorMalePairBound !== "true") {
+      refs.showTab.dataset.hearthRouteConductorMalePairBound = "true";
+      refs.showTab.addEventListener("click", () => setInspectMode(false));
+    }
+
+    state.refsBound = Boolean(refs.copyButton || refs.toggleButton || refs.inspectButton || refs.showTab);
+  }
+
   function setInspectMode(active) {
     if (!doc) return getReceipt();
 
@@ -3802,6 +3998,7 @@
     const packet = state.currentPacket || {};
 
     const rows = [
+      ["F5", "Index pair", packet.indexPairReady ? "READY" : "WAITING"],
       ["F8", "Self-duty", packet.f8SelfDutySatisfied ? "COMPLETE" : "ACTIVE"],
       ["W", "Macro West", packet.macroWestAdmissibilityObserved ? packet.westCanvasReleaseApproved ? "RELEASE" : "HELD" : "WAITING"],
       ["F13", "Canvas evidence", packet.f13CanvasEvidenceStrict ? "STRICT" : packet.f13CanvasEvidenceComplete ? "DEGRADED" : packet.f13CanvasReadinessObserved ? "ACTIVE" : "PENDING"],
@@ -3810,7 +4007,7 @@
 
     return rows.map(([fib, label, status]) => {
       const progress =
-        status === "COMPLETE" || status === "STRICT" || status === "RELEASE" ? 100 :
+        status === "READY" || status === "COMPLETE" || status === "STRICT" || status === "RELEASE" ? 100 :
           status === "DEGRADED" ? 82 :
             status === "HELD" ? 68 :
               status === "ACTIVE" ? 55 :
@@ -3868,7 +4065,7 @@
       root.HearthRouteConductor === api &&
       root.HEARTH_SOUTH_ROUTE_CONDUCTOR === api &&
       root.HEARTH_ROUTE_CONDUCTOR_PRIMARY_GATE === api &&
-      root.HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT === api
+      root.HEARTH_ROUTE_CONDUCTOR_MALE_PAIR_INDEX_SELECTOR_INTEGRATION_STRICT_F13 === api
     );
 
     const nestedApiPresent = Boolean(
@@ -3876,7 +4073,7 @@
       root.HEARTH.routeConductor === api &&
       root.HEARTH.southRouteConductor === api &&
       root.HEARTH.routeConductorPrimaryGate === api &&
-      root.HEARTH.routeConductorStrictF13DownstreamAlignment === api
+      root.HEARTH.routeConductorMalePairIndexSelectorIntegrationStrictF13 === api
     );
 
     const dexterApiPresent = Boolean(
@@ -3884,14 +4081,14 @@
       root.DEXTER_LAB.hearthRouteConductor === api &&
       root.DEXTER_LAB.hearthSouthRouteConductor === api &&
       root.DEXTER_LAB.hearthRouteConductorPrimaryGate === api &&
-      root.DEXTER_LAB.hearthRouteConductorStrictF13DownstreamAlignment === api
+      root.DEXTER_LAB.hearthRouteConductorMalePairIndexSelectorIntegrationStrictF13 === api
     );
 
     const receiptPresent = Boolean(
       root.HEARTH_ROUTE_CONDUCTOR_RECEIPT &&
       root.HEARTH_ROUTE_CONDUCTOR_RECEIPT.receipt === RECEIPT &&
-      root.HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT_RECEIPT &&
-      root.HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT_RECEIPT.contract === CONTRACT
+      root.HEARTH_ROUTE_CONDUCTOR_MALE_PAIR_INDEX_SELECTOR_INTEGRATION_STRICT_F13_RECEIPT &&
+      root.HEARTH_ROUTE_CONDUCTOR_MALE_PAIR_INDEX_SELECTOR_INTEGRATION_STRICT_F13_RECEIPT.contract === CONTRACT
     );
 
     const markerValid = Boolean(
@@ -3922,6 +4119,7 @@
     root.HEARTH_ROUTE_CONDUCTOR_CANVAS_PARENT_CHILD_RECONCILIATION_HANDOFF = api;
     root.HEARTH_ROUTE_CONDUCTOR_MACRO_WEST_ADMISSIBILITY_CANVAS_RELEASE_CONSUMPTION = api;
     root.HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT = api;
+    root.HEARTH_ROUTE_CONDUCTOR_MALE_PAIR_INDEX_SELECTOR_INTEGRATION_STRICT_F13 = api;
 
     root.HEARTH.routeConductor = api;
     root.HEARTH.southRouteConductor = api;
@@ -3932,6 +4130,7 @@
     root.HEARTH.routeConductorCanvasParentChildReconciliationHandoff = api;
     root.HEARTH.routeConductorMacroWestAdmissibilityCanvasReleaseConsumption = api;
     root.HEARTH.routeConductorStrictF13DownstreamAlignment = api;
+    root.HEARTH.routeConductorMalePairIndexSelectorIntegrationStrictF13 = api;
 
     root.DEXTER_LAB.hearthRouteConductor = api;
     root.DEXTER_LAB.hearthSouthRouteConductor = api;
@@ -3941,6 +4140,7 @@
     root.DEXTER_LAB.hearthRouteConductorCanvasParentChildReconciliationHandoff = api;
     root.DEXTER_LAB.hearthRouteConductorMacroWestAdmissibilityCanvasReleaseConsumption = api;
     root.DEXTER_LAB.hearthRouteConductorStrictF13DownstreamAlignment = api;
+    root.DEXTER_LAB.hearthRouteConductorMalePairIndexSelectorIntegrationStrictF13 = api;
 
     const receiptLight = getReceiptLight(false);
 
@@ -3952,6 +4152,7 @@
     root.HEARTH_ROUTE_CONDUCTOR_CANVAS_PARENT_CHILD_RECONCILIATION_HANDOFF_RECEIPT = receiptLight;
     root.HEARTH_ROUTE_CONDUCTOR_MACRO_WEST_ADMISSIBILITY_CANVAS_RELEASE_CONSUMPTION_RECEIPT = receiptLight;
     root.HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT_RECEIPT = receiptLight;
+    root.HEARTH_ROUTE_CONDUCTOR_MALE_PAIR_INDEX_SELECTOR_INTEGRATION_STRICT_F13_RECEIPT = receiptLight;
 
     root.HEARTH.routeConductorReceipt = receiptLight;
     root.HEARTH.southRouteConductorReceipt = receiptLight;
@@ -3961,6 +4162,7 @@
     root.HEARTH.routeConductorCanvasParentChildReconciliationHandoffReceipt = receiptLight;
     root.HEARTH.routeConductorMacroWestAdmissibilityCanvasReleaseConsumptionReceipt = receiptLight;
     root.HEARTH.routeConductorStrictF13DownstreamAlignmentReceipt = receiptLight;
+    root.HEARTH.routeConductorMalePairIndexSelectorIntegrationStrictF13Receipt = receiptLight;
 
     root.DEXTER_LAB.hearthRouteConductorReceipt = receiptLight;
     root.DEXTER_LAB.hearthSouthRouteConductorReceipt = receiptLight;
@@ -3970,10 +4172,13 @@
     root.DEXTER_LAB.hearthRouteConductorCanvasParentChildReconciliationHandoffReceipt = receiptLight;
     root.DEXTER_LAB.hearthRouteConductorMacroWestAdmissibilityCanvasReleaseConsumptionReceipt = receiptLight;
     root.DEXTER_LAB.hearthRouteConductorStrictF13DownstreamAlignmentReceipt = receiptLight;
+    root.DEXTER_LAB.hearthRouteConductorMalePairIndexSelectorIntegrationStrictF13Receipt = receiptLight;
 
     record(reason, {
       apiPresent: true,
       receiptPresent: true,
+      malePairRouteConductorActive: true,
+      femaleSelectorConsumerActive: true,
       routeConductorPrimaryGateActive: true,
       strictF13DownstreamAlignmentActive: true,
       macroWestAdmissibilityConsumptionActive: true,
@@ -3994,7 +4199,7 @@
       refresh();
 
       if (globalsNeedRepublish()) {
-        publishGlobals("watchdog-conditional-strict-f13-downstream-republish", false);
+        publishGlobals("watchdog-conditional-male-pair-index-selector-integration-republish", false);
       }
 
       if (
@@ -4016,10 +4221,10 @@
       state.booting = true;
       state.startedAt = nowIso();
       state.updatedAt = state.startedAt;
-      state.postgameStatus = "BOOTING_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT";
+      state.postgameStatus = "BOOTING_ROUTE_CONDUCTOR_MALE_PAIR_INDEX_SELECTOR_INTEGRATION_STRICT_F13";
 
       publishEarlyMarker();
-      publishGlobals("boot-early-strict-f13-downstream-api-receipt-publication", true);
+      publishGlobals("boot-early-male-pair-index-selector-integration-api-receipt-publication", true);
 
       refresh();
 
@@ -4027,24 +4232,26 @@
       state.booted = true;
       state.routeConductorRuntimeActive = true;
 
-      publishGlobals("boot-complete-strict-f13-downstream-api-receipt-publication", true);
+      publishGlobals("boot-complete-male-pair-index-selector-integration-api-receipt-publication", true);
       refresh();
       render();
 
       startWatchdog();
 
-      record("HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT_BOOTED", {
+      record("HEARTH_ROUTE_CONDUCTOR_MALE_PAIR_INDEX_SELECTOR_INTEGRATION_STRICT_F13_BOOTED", {
         route: ROUTE,
         markerPresent: state.routeConductorMarkerPresent,
         apiPresent: state.routeConductorApiPresent,
         receiptPresent: state.routeConductorReceiptPresent,
         hydrated: state.routeConductorHydrated,
+        indexPairReady: state.indexPairReady,
         cycleAwareRoutingActive: true,
         macroWestAuthorityObserved: state.macroWestAuthorityObserved,
         macroWestAdmissibilityObserved: state.macroWestAdmissibilityObserved,
         westDecision: state.westDecision,
         canvasReleaseAuthorized: state.canvasReleaseAuthorized,
         currentCanvasParentObserved: state.currentCanvasParentObserved,
+        canvasParentCarrierSafe: state.canvasParentCarrierSafe,
         f13CanvasEvidenceStrict: state.f13CanvasEvidenceStrict,
         f13CanvasEvidenceDegraded: state.f13CanvasEvidenceDegraded,
         f13CanvasEvidenceComplete: state.f13CanvasEvidenceComplete,
@@ -4075,7 +4282,7 @@
       autoBootTimer = 0;
     }
 
-    record("HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT_DISPOSED", { reason });
+    record("HEARTH_ROUTE_CONDUCTOR_MALE_PAIR_INDEX_SELECTOR_INTEGRATION_STRICT_F13_DISPOSED", { reason });
     render();
 
     return getReceipt();
@@ -4085,7 +4292,7 @@
     const r = isObject(receipt) ? receipt : getReceiptLight(false);
 
     return [
-      "HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT_RECEIPT",
+      "HEARTH_ROUTE_CONDUCTOR_MALE_PAIR_INDEX_SELECTOR_INTEGRATION_STRICT_F13_RECEIPT",
       "",
       line("contract", r.contract || CONTRACT),
       line("receipt", r.receipt || RECEIPT),
@@ -4096,6 +4303,8 @@
       line("route", r.route || ROUTE),
       line("role", r.role || state.role),
       "",
+      line("malePairRouteConductorActive", r.malePairRouteConductorActive === true),
+      line("femaleSelectorConsumerActive", r.femaleSelectorConsumerActive === true),
       line("routeConductorPrimaryGateActive", r.routeConductorPrimaryGateActive === true),
       line("strictF13DownstreamAlignmentActive", r.strictF13DownstreamAlignmentActive === true),
       line("canvasParentChildReconciliationActive", r.canvasParentChildReconciliationActive === true),
@@ -4111,6 +4320,16 @@
       line("receivedFrom", r.receivedFrom || ""),
       line("returnTo", r.returnTo || ""),
       line("handoffTo", r.handoffTo || ""),
+      "",
+      line("indexPairObserved", r.indexPairObserved === true),
+      line("indexPairReady", r.indexPairReady === true),
+      line("indexShellAccepted", r.indexShellAccepted === true),
+      line("indexRuntimeReleaseAuthorized", r.indexRuntimeReleaseAuthorized === true),
+      line("indexRuntimeReleaseComplete", r.indexRuntimeReleaseComplete === true),
+      line("indexMountPresent", r.indexMountPresent === true),
+      line("indexControlsBound", r.indexControlsBound === true),
+      line("indexMissingHooks", r.indexMissingHooks || ""),
+      line("indexPairHoldReason", r.indexPairHoldReason || ""),
       "",
       line("routeConductorMarkerPresent", r.routeConductorMarkerPresent === true),
       line("routeConductorApiPresent", r.routeConductorApiPresent === true),
@@ -4140,6 +4359,7 @@
       "",
       line("currentCanvasParentObserved", r.currentCanvasParentObserved === true),
       line("canvasParentV2Observed", r.canvasParentV2Observed === true),
+      line("canvasParentCarrierSafe", r.canvasParentCarrierSafe === true),
       line("canvasParentReleaseAccepted", r.canvasParentReleaseAccepted === true),
       line("canvasEastApiReady", r.canvasEastApiReady === true),
       line("canvasWestApiReady", r.canvasWestApiReady === true),
@@ -4171,6 +4391,7 @@
       line("functionalPageObserved", r.functionalPageObserved === true),
       line("strictVisualProofPending", r.strictVisualProofPending === true),
       "",
+      line("indexGateReady", r.indexGateReady === true),
       line("canvasGateReady", r.canvasGateReady === true || r.canvasGateReadyNews === true),
       line("northGateReady", r.northGateReady === true),
       line("eastGateReady", r.eastGateReady === true),
@@ -4185,6 +4406,8 @@
       line("activeGearId", r.activeGearId || ""),
       line("activeFileGate", r.activeFileGate || ""),
       line("activeNewsGate", r.activeNewsGate || ""),
+      line("indexActiveFibonacci", r.indexActiveFibonacci || ""),
+      line("indexActiveStage", r.indexActiveStage || ""),
       line("canvasActiveFibonacci", r.canvasActiveFibonacci || ""),
       line("canvasActiveFibonacciRank", r.canvasActiveFibonacciRank || ""),
       line("canvasActiveStageId", r.canvasActiveStageId || ""),
@@ -4253,6 +4476,7 @@
     return {
       ...receipt,
       files: clonePlain(FILE_GATES),
+      indexContracts: INDEX_CONTRACTS.slice(),
       strictProofMinimums: clonePlain(STRICT_PROOF_MINIMUMS),
       currentCanvasParentContracts: CURRENT_CANVAS_PARENT_CONTRACTS.slice(),
       localEvents: clonePlain(state.localEvents),
@@ -4271,7 +4495,7 @@
     const r = getReceiptLight(false);
 
     return [
-      "HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT_STATUS",
+      "HEARTH_ROUTE_CONDUCTOR_MALE_PAIR_INDEX_SELECTOR_INTEGRATION_STRICT_F13_STATUS",
       line("contract", r.contract),
       line("receipt", r.receipt),
       line("cycleNumber", r.cycleNumber),
@@ -4279,6 +4503,8 @@
       line("receivedFrom", r.receivedFrom),
       line("returnTo", r.returnTo),
       line("handoffTo", r.handoffTo),
+      line("indexPairReady", r.indexPairReady),
+      line("indexPairHoldReason", r.indexPairHoldReason),
       line("routeConductorHydrated", r.routeConductorHydrated),
       line("f8SelfDutySatisfied", r.f8SelfDutySatisfied),
       line("macroWestAuthorityObserved", r.macroWestAuthorityObserved),
@@ -4286,6 +4512,7 @@
       line("westDecision", r.westDecision),
       line("westCanvasReleaseApproved", r.westCanvasReleaseApproved),
       line("currentCanvasParentObserved", r.currentCanvasParentObserved),
+      line("canvasParentCarrierSafe", r.canvasParentCarrierSafe),
       line("canvasParentReleaseAccepted", r.canvasParentReleaseAccepted),
       line("canvasGateReady", r.canvasGateReady),
       line("f13CanvasEvidenceStrict", r.f13CanvasEvidenceStrict),
@@ -4319,6 +4546,8 @@
     setDataset("hearthRouteConductorPreviousContract", PREVIOUS_CONTRACT);
     setDataset("hearthRouteConductorBaselineContract", BASELINE_CONTRACT);
     setDataset("hearthRouteConductorVersion", VERSION);
+    setDataset("hearthRouteConductorMalePairActive", "true");
+    setDataset("hearthRouteConductorFemaleSelectorConsumerActive", "true");
     setDataset("hearthRouteConductorPrimaryGateActive", "true");
     setDataset("hearthRouteConductorStrictF13DownstreamAlignmentActive", "true");
     setDataset("hearthRouteConductorCanvasParentChildReconciliationActive", "true");
@@ -4338,6 +4567,15 @@
     setDataset("hearthSouthRouteConductorContract", CONTRACT);
     setDataset("hearthSouthRouteConductorReceipt", RECEIPT);
     setDataset("hearthSouthRouteConductorHydrated", String(state.routeConductorHydrated));
+
+    setDataset("hearthSouthIndexPairObserved", String(state.indexPairObserved));
+    setDataset("hearthSouthIndexPairReady", String(state.indexPairReady));
+    setDataset("hearthSouthIndexShellAccepted", String(state.indexShellAccepted));
+    setDataset("hearthSouthIndexRuntimeReleaseAuthorized", String(state.indexRuntimeReleaseAuthorized));
+    setDataset("hearthSouthIndexRuntimeReleaseComplete", String(state.indexRuntimeReleaseComplete));
+    setDataset("hearthSouthIndexMountPresent", String(state.indexMountPresent));
+    setDataset("hearthSouthIndexControlsBound", String(state.indexControlsBound));
+    setDataset("hearthSouthIndexPairHoldReason", state.indexPairHoldReason);
 
     setDataset("hearthSouthActiveCycleNumber", String(state.activeCycleNumber));
     setDataset("hearthSouthActiveCycleRoute", state.activeCycleRoute);
@@ -4381,6 +4619,7 @@
 
     setDataset("hearthSouthCurrentCanvasParentObserved", String(state.currentCanvasParentObserved));
     setDataset("hearthSouthCanvasParentV2Observed", String(state.canvasParentV2Observed));
+    setDataset("hearthSouthCanvasParentCarrierSafe", String(state.canvasParentCarrierSafe));
     setDataset("hearthSouthCanvasParentReleaseAccepted", String(state.canvasParentReleaseAccepted));
     setDataset("hearthSouthCanvasEastApiReady", String(state.canvasEastApiReady));
     setDataset("hearthSouthCanvasWestApiReady", String(state.canvasWestApiReady));
@@ -4425,16 +4664,18 @@
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      cycleReceipt: "HEARTH_ROUTE_CONDUCTOR_STRICT_F13_DOWNSTREAM_ALIGNMENT_CYCLE_RECEIPT_v4",
+      cycleReceipt: "HEARTH_ROUTE_CONDUCTOR_MALE_PAIR_INDEX_SELECTOR_INTEGRATION_STRICT_F13_CYCLE_RECEIPT_v5",
       cycleNumber: packet.cycleNumber,
       cycleRoute: packet.cycleRoute,
       receivedFrom: packet.receivedFrom,
       returnTo: packet.returnTo,
       handoffTo: packet.handoffTo,
+      indexPairReady: packet.indexPairReady,
       macroWestAdmissibilityObserved: packet.macroWestAdmissibilityObserved,
       westDecision: packet.westDecision,
       canvasReleaseAuthorized: packet.canvasReleaseAuthorized,
       currentCanvasParentObserved: packet.currentCanvasParentObserved,
+      canvasParentCarrierSafe: packet.canvasParentCarrierSafe,
       canvasGateReady: packet.canvasGateReady,
       f13CanvasEvidenceStrict: packet.f13CanvasEvidenceStrict,
       f13CanvasEvidenceDegraded: packet.f13CanvasEvidenceDegraded,
@@ -4469,6 +4710,7 @@
     CYCLE_ROUTES,
     CARDINALS,
     WEST_DECISION,
+    INDEX_CONTRACTS,
     STRICT_PROOF_MINIMUMS,
     CURRENT_CANVAS_PARENT_CONTRACTS,
 
@@ -4498,6 +4740,7 @@
     readWestAuthority,
     readMacroWestAuthority,
     readSouthPrimaryGate,
+    readHearthIndexAuthority,
     readCanvasEvidence,
     resolveStrictF13Gap,
     resolveRouteCycle,
@@ -4525,6 +4768,7 @@
     supportsFibonacciSynchronization: true,
     supportsTwoCycleRouting: true,
     supportsSouthPrimaryGateIntegration: true,
+    supportsIndexPairSelectorConsumption: true,
     supportsMacroWestAdmissibilityConsumption: true,
     supportsMacroWestCanvasRelease: true,
     supportsCanvasReleaseFirewall: true,
@@ -4535,6 +4779,8 @@
     supportsF21NorthNewsLatchOnly: true,
     supportsF21EligibilitySubmissionOnly: true,
 
+    malePairRouteConductorActive: true,
+    femaleSelectorConsumerActive: true,
     routeConductorPrimaryGateActive: true,
     strictF13DownstreamAlignmentActive: true,
     canvasParentChildReconciliationActive: true,
@@ -4547,12 +4793,15 @@
     ownsSelfDutyPublication: true,
     ownsRouteCycleResolution: true,
     ownsSouthPrimaryGateConsumption: true,
+    ownsIndexPairConsumption: true,
     ownsMacroWestAdmissibilityConsumption: true,
     ownsCanvasReleasePacket: true,
     ownsF13EvidenceObservation: true,
     ownsStrictF13RepairRouting: true,
     ownsF21EligibilitySubmission: true,
 
+    ownsIndexShellTruth: false,
+    ownsIndexRuntimeReleaseTruth: false,
     ownsMacroWestTruth: false,
     ownsCanvasDrawing: false,
     ownsCanvasChildren: false,
@@ -4574,7 +4823,7 @@
   };
 
   publishEarlyMarker();
-  publishGlobals("immediate-strict-f13-downstream-api-receipt-publication", true);
+  publishGlobals("immediate-male-pair-index-selector-integration-api-receipt-publication", true);
 
   if (doc) {
     if (doc.readyState === "loading") {

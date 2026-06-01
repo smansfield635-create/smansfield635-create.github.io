@@ -1,68 +1,76 @@
 // /showroom/globe/hearth/index.js
-// HEARTH_EAST_NON_BLOCKING_EXISTING_STATUS_ADMISSION_ADAPTER_TNT_v1
+// HEARTH_EAST_SOUTH_PAIR_FEMALE_SELECTOR_NON_BLOCKING_BOOT_TNT_v1
 // Full-file replacement.
-// East admission adapter only.
+// Female JS selector / chooser / binder comes first in the South-facing pair.
 // Purpose:
-// - Match HEARTH_HTML_NON_BLOCKING_EAST_BOOT_TWO_CYCLE_RUNTIME_SHELL_TNT_v3.
-// - Keep HTML shell-first architecture responsive.
-// - Publish East admission packet without loading downstream scripts.
-// - Preserve compatibility aliases for existing North/West consumers if already present.
-// - Delegate Canvas F13 and North F21 without claiming either.
+// - Stop the flash-to-white-screen failure by preventing forced downstream runtime boot against an unmatched shell.
+// - Treat JS as the selector/binder that carries the expected HTML shell contract inside itself.
+// - Bind safe shell controls only.
+// - Hold heavy runtime release until the paired HTML shell explicitly confirms readiness.
+// - Preserve NEWS alignment and Fibonacci synchronization.
+// - Preserve existing file status, not future North timetable rewrites.
+// - Preserve F13 Canvas delegation and F21 North-only latch.
 // Does not own:
-// - North Runtime Table authority
-// - North F21 latch
-// - West admissibility decision
-// - South visible proof
-// - Canvas drawing
-// - Canvas F13 evidence generation
-// - Route conductor runtime
-// - source stack hydration
-// - downstream script loading
+// - HTML public shell structure
+// - North Runtime Table truth
+// - West admissibility truth
+// - South route-conductor runtime truth
+// - Canvas drawing truth
+// - planet material truth
 // - final visual pass claim
+// - F21 completion latch
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_EAST_NON_BLOCKING_EXISTING_STATUS_ADMISSION_ADAPTER_TNT_v1";
-  const RECEIPT = "HEARTH_EAST_NON_BLOCKING_EXISTING_STATUS_ADMISSION_ADAPTER_RECEIPT_v1";
+  const CONTRACT = "HEARTH_EAST_SOUTH_PAIR_FEMALE_SELECTOR_NON_BLOCKING_BOOT_TNT_v1";
+  const RECEIPT = "HEARTH_EAST_SOUTH_PAIR_FEMALE_SELECTOR_NON_BLOCKING_BOOT_RECEIPT_v1";
   const PREVIOUS_CONTRACT = "HEARTH_EAST_ROUTE_CONDUCTOR_REQUEST_HYDRATION_ADMISSION_TNT_v1";
-  const BASELINE_CONTRACT = "HEARTH_HTML_NON_BLOCKING_EAST_BOOT_TWO_CYCLE_RUNTIME_SHELL_TNT_v3";
-  const VERSION = "2026-05-31.hearth-east-non-blocking-existing-status-admission-adapter-v1";
+  const BASELINE_CONTRACT = "HEARTH_EAST_ROUTE_CONDUCTOR_REQUEST_HYDRATION_ADMISSION_TNT_v1";
+  const VERSION = "2026-05-31.hearth-east-south-pair-female-selector-non-blocking-boot-v1";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
 
   const FILE = "/showroom/globe/hearth/index.js";
   const ROUTE = "/showroom/globe/hearth/";
-  const HTML_FILE = "/showroom/globe/hearth/index.html";
-  const HTML_CONTRACT = "HEARTH_HTML_NON_BLOCKING_EAST_BOOT_TWO_CYCLE_RUNTIME_SHELL_TNT_v3";
 
-  const NORTH_FILE = "/assets/lab/runtime-table.js";
-  const WEST_FILE = "/assets/lab/runtime-table.west.js";
-  const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
+  const EXPECTED_HTML_CONTRACT = "HEARTH_HTML_SOUTH_PAIR_MALE_SHELL_FEMALE_SELECTED_RUNTIME_RECEIVER_TNT_v1";
+  const CURRENT_SAFE_HTML_CONTRACT = "HEARTH_HTML_NON_BLOCKING_EAST_BOOT_TWO_CYCLE_RUNTIME_SHELL_TNT_v3";
 
-  const CYCLE_ONE = "NORTH_EAST_WEST_SOUTH_NORTH";
-  const CYCLE_TWO = "NORTH_EAST_SOUTH_WEST_CANVAS";
+  const FILES = Object.freeze({
+    north: "/assets/lab/runtime-table.js",
+    east: "/assets/lab/runtime-table.east.js",
+    south: "/assets/lab/runtime-table.south.js",
+    west: "/assets/lab/runtime-table.west.js",
+    canvas: "/assets/hearth/hearth.canvas.js",
+    routeConductor: "/showroom/globe/hearth/hearth.js"
+  });
 
-  const CORE_HOOKS = Object.freeze([
-    "#hearthCanvasMount",
-    "#hearthLoadCockpit",
-    "#hearth-route-status"
+  const SOURCE_STACK = Object.freeze([
+    "/assets/hearth/hearth.tectonics.js",
+    "/assets/hearth/hearth.elevation.js",
+    "/assets/hearth/hearth.composition.js",
+    "/assets/hearth/hearth.hydrology.js",
+    "/assets/hearth/hearth.materials.js",
+    "/assets/hearth/hearth.hex.four-pair.authority.js",
+    "/assets/hearth/hearth.hex.surface.js"
   ]);
 
-  const OPTIONAL_HOOKS = Object.freeze([
-    "[data-hearth-stage-label]",
-    "[data-hearth-heartbeat-text]",
-    "[data-hearth-latest-event]",
-    "[data-hearth-main-progress-fill]",
-    "[data-hearth-main-progress-percent]",
-    "[data-hearth-receipt-text]",
-    "[data-hearth-receipt-box]",
-    "[data-hearth-copy-diagnostic]",
-    "[data-hearth-toggle-receipt]",
-    "[data-hearth-inspect-planet]",
-    "[data-hearth-collapse-cockpit]",
-    "[data-hearth-south-show-diagnostic-tab]"
+  const RUNTIME_QUEUE = Object.freeze([
+    { key: "north", file: FILES.north, news: "NORTH", fibonacci: "F8N", required: true },
+    { key: "east", file: FILES.east, news: "EAST", fibonacci: "F8E", required: false },
+    { key: "south", file: FILES.south, news: "SOUTH", fibonacci: "F13S", required: false },
+    { key: "west", file: FILES.west, news: "WEST", fibonacci: "F13W", required: false },
+    ...SOURCE_STACK.map((file, index) => ({
+      key: `source_${index + 1}`,
+      file,
+      news: "SOUTH",
+      fibonacci: "F13M",
+      required: false
+    })),
+    { key: "canvas", file: FILES.canvas, news: "CANVAS", fibonacci: "F13C", required: false },
+    { key: "routeConductor", file: FILES.routeConductor, news: "SOUTH", fibonacci: "F13R", required: false }
   ]);
 
   const state = {
@@ -73,77 +81,91 @@
     version: VERSION,
     file: FILE,
     route: ROUTE,
-    htmlFile: HTML_FILE,
-    htmlContract: HTML_CONTRACT,
-    role: "hearth-east-non-blocking-existing-status-admission-adapter",
 
-    shellObserved: false,
-    hooksValidated: false,
-    coreHooksValidated: false,
-    optionalHooksObserved: false,
-    missingCoreHooks: [],
-    missingOptionalHooks: [],
+    disposition: "south-facing-expression-pair",
+    pairGenderModel: "female-js-selector-chooses-male-html-shell",
+    femaleJsComesFirst: true,
+    maleHtmlShellExpected: true,
+    expectedHtmlContract: EXPECTED_HTML_CONTRACT,
+    currentSafeHtmlContract: CURRENT_SAFE_HTML_CONTRACT,
 
-    eastAdmissionReady: false,
-    admissionPacketEmitted: false,
-    browserEventDispatched: false,
+    newsAlignmentActive: true,
+    fibonacciSynchronizationActive: true,
+    cycleOneRoute: "NORTH_EAST_WEST_SOUTH_NORTH",
+    cycleTwoRoute: "NORTH_EAST_SOUTH_WEST_CANVAS",
 
-    compatibilityHandoffAttempted: false,
-    compatibilityHandoffAcceptedByNorth: false,
-    compatibilityHandoffAcceptedByWest: false,
-    compatibilityHandoffErrors: [],
+    activeNews: "EAST",
+    activeFibonacci: "F1",
+    activeStage: "F1_FEMALE_SELECTOR_ALIVE",
+    activeProgress: 8,
 
-    northObserved: false,
-    westObserved: false,
+    shellSelected: false,
+    shellAccepted: false,
+    shellContract: "",
+    shellMode: "UNSELECTED",
+    shellHoldReason: "WAITING_SELECTION",
 
-    htmlLoadedEastOnly: true,
-    eastLoadsDownstreamCycle: false,
-    downstreamLoadingOwnedByEast: false,
-    downstreamLoadingPerformed: false,
+    hooksBound: false,
+    shellControlsBound: false,
+    cockpitPresent: false,
+    mountPresent: false,
+    statusNodePresent: false,
+
+    runtimeReleaseRequested: false,
+    runtimeReleaseAuthorized: false,
+    runtimeReleaseStarted: false,
+    runtimeReleaseComplete: false,
+    runtimeReleaseHeldReason: "WAITING_MATCHED_MALE_HTML_SHELL",
+
+    currentRuntimeKey: "",
+    currentRuntimeFile: "",
+    runtimeLoaded: [],
+    runtimeHeld: [],
+    runtimeErrors: [],
 
     canvasF13Delegated: true,
     f21NorthOnly: true,
+    readyTextAllowed: false,
+    downstreamReleaseClaimed: false,
 
-    activeFibonacci: "F1",
-    activeStage: "EAST_ADMISSION_NOT_STARTED",
-    activeProgress: 0,
-
-    firstFailedCoordinate: "EAST_ADMISSION_NOT_STARTED",
-    recommendedNextOwner: "EAST",
-    recommendedNextRenewalTarget: FILE,
-    postgameStatus: "EAST_ADMISSION_NOT_STARTED",
+    firstFailedCoordinate: "WAITING_MATCHED_MALE_HTML_SHELL",
+    recommendedNextFile: "/showroom/globe/hearth/index.html",
+    recommendedNextRenewalTarget: "/showroom/globe/hearth/index.html",
+    postgameStatus: "FEMALE_JS_READY_WAITING_MATCHED_MALE_HTML_SHELL",
 
     events: [],
     errors: [],
 
-    bootStarted: false,
-    bootComplete: false,
-    createdAt: "",
-    updatedAt: "",
-
     generatedImage: false,
     graphicBox: false,
     webGL: false,
-    visualPassClaimed: false
+    visualPassClaimed: false,
+
+    startedAt: "",
+    updatedAt: ""
   };
 
   const refs = {
     mount: null,
     cockpit: null,
     status: null,
+    title: null,
     stage: null,
     heartbeat: null,
     latest: null,
     progressFill: null,
     progressPercent: null,
-    receiptText: null,
     receiptBox: null,
+    receiptText: null,
     copyButton: null,
-    toggleReceiptButton: null,
+    receiptButton: null,
     inspectButton: null,
     collapseButton: null,
     showTab: null
   };
+
+  let booted = false;
+  let runtimeRunning = false;
 
   function nowIso() {
     try {
@@ -161,16 +183,6 @@
     return typeof value === "function";
   }
 
-  function clonePlain(value) {
-    if (!isObject(value)) return value;
-
-    try {
-      return JSON.parse(JSON.stringify(value));
-    } catch (_error) {
-      return Array.isArray(value) ? value.slice() : { ...value };
-    }
-  }
-
   function safeString(value, fallback = "") {
     if (value === undefined || value === null) return fallback;
     return String(value);
@@ -182,12 +194,21 @@
     return Math.max(min, Math.min(max, safe));
   }
 
-  function qs(selector) {
+  function clonePlain(value) {
+    if (!isObject(value)) return value;
+    try {
+      return JSON.parse(JSON.stringify(value));
+    } catch (_error) {
+      return Array.isArray(value) ? value.slice() : { ...value };
+    }
+  }
+
+  function q(selector) {
     return doc ? doc.querySelector(selector) : null;
   }
 
-  function setText(node, text) {
-    if (node) node.textContent = safeString(text);
+  function qa(selector) {
+    return doc ? Array.from(doc.querySelectorAll(selector)) : [];
   }
 
   function record(event, detail = {}) {
@@ -198,11 +219,13 @@
     };
 
     state.events.push(item);
-    if (state.events.length > 80) {
-      state.events.splice(0, state.events.length - 80);
+    if (state.events.length > 120) {
+      state.events.splice(0, state.events.length - 120);
     }
 
     state.updatedAt = item.at;
+    publish();
+
     return item;
   }
 
@@ -215,498 +238,625 @@
     };
 
     state.errors.push(item);
-    if (state.errors.length > 40) {
-      state.errors.splice(0, state.errors.length - 40);
+    if (state.errors.length > 60) {
+      state.errors.splice(0, state.errors.length - 60);
     }
 
     state.updatedAt = item.at;
+    publish();
+
     return item;
   }
 
-  function readPath(path) {
-    const parts = safeString(path).split(".");
-    let cursor = root;
+  function setStage(fibonacci, news, stage, progress, message = "") {
+    state.activeFibonacci = fibonacci;
+    state.activeNews = news;
+    state.activeStage = stage;
+    state.activeProgress = clamp(progress, 0, 100);
+    state.updatedAt = nowIso();
 
-    for (const part of parts) {
-      if (!cursor || cursor[part] === undefined || cursor[part] === null) return null;
-      cursor = cursor[part];
+    if (refs.stage) refs.stage.textContent = `${fibonacci} · ${stage}`;
+    if (refs.heartbeat) refs.heartbeat.textContent = message || `news=${news} · fibonacci=${fibonacci}`;
+    if (refs.latest) refs.latest.textContent = `latest=${stage}`;
+    if (refs.progressFill) refs.progressFill.style.width = `${state.activeProgress}%`;
+    if (refs.progressPercent) refs.progressPercent.textContent = `${Math.round(state.activeProgress)}%`;
+
+    publish();
+  }
+
+  function ensureStatusNode() {
+    if (!doc) return null;
+
+    let node = doc.getElementById("hearth-route-status") || q("[data-hearth-route-status]");
+
+    if (!node) {
+      node = doc.createElement("pre");
+      node.id = "hearth-route-status";
+      node.hidden = true;
+      node.dataset.hearthRouteStatus = "true";
+      (doc.getElementById("hearth-main") || doc.body || doc.documentElement).appendChild(node);
     }
 
-    return cursor || null;
+    refs.status = node;
+    state.statusNodePresent = true;
+    return node;
   }
 
-  function firstExisting(paths) {
-    for (const path of paths) {
-      const found = readPath(path);
-      if (found) return found;
+  function ensureMount() {
+    if (!doc) return null;
+
+    let mount =
+      doc.getElementById("hearthCanvasMount") ||
+      q("[data-hearth-canvas-mount='true']") ||
+      q("[data-hearth-canvas-mount]");
+
+    if (!mount) {
+      mount = doc.createElement("section");
+      mount.id = "hearthCanvasMount";
+      mount.className = "globe-mount";
+      mount.dataset.hearthCanvasMount = "true";
+      mount.dataset.createdByFemaleJsSelector = CONTRACT;
+
+      const stage = doc.getElementById("hearthGlobeStage") || q("[data-hearth-globe-stage]") || doc.getElementById("hearth-main") || doc.body || doc.documentElement;
+      stage.appendChild(mount);
     }
-    return null;
+
+    mount.id = "hearthCanvasMount";
+    mount.dataset.hearthCanvasMount = "true";
+    mount.dataset.hearthFemaleJsSelected = CONTRACT;
+    mount.dataset.hearthFemaleJsComesFirst = "true";
+    mount.dataset.hearthCanvasF13Delegated = "true";
+    mount.dataset.hearthF21NorthOnly = "true";
+    mount.dataset.generatedImage = "false";
+    mount.dataset.graphicBox = "false";
+    mount.dataset.webgl = "false";
+    mount.dataset.visualPassClaimed = "false";
+
+    refs.mount = mount;
+    state.mountPresent = true;
+
+    return mount;
   }
 
-  function readReceipt(authority) {
-    if (!authority || !isObject(authority)) return null;
+  function ensureCockpit() {
+    if (!doc) return null;
 
-    if (isFunction(authority.getReceipt)) {
-      try {
-        const receipt = authority.getReceipt();
-        return isObject(receipt) ? receipt : null;
-      } catch (error) {
-        recordError("READ_RECEIPT_FAILED", error && error.message ? error.message : String(error));
-        return null;
-      }
+    const mount = ensureMount();
+
+    let cockpit =
+      doc.getElementById("hearthLoadCockpit") ||
+      q("[data-hearth-load-cockpit='true']") ||
+      q("[data-hearth-load-cockpit]");
+
+    if (!cockpit) {
+      cockpit = doc.createElement("aside");
+      cockpit.id = "hearthLoadCockpit";
+      cockpit.className = "hearth-ledger-cockpit";
+      cockpit.dataset.hearthLoadCockpit = "true";
+      cockpit.dataset.cockpitMode = "diagnostic-dock";
+      cockpit.setAttribute("aria-live", "polite");
+
+      cockpit.innerHTML = [
+        '<div class="hearth-ledger-head">',
+        '<div class="hearth-ledger-kicker">Hearth · Female JS Selector</div>',
+        '<h2 class="hearth-ledger-title">HEARTH SELECTOR READY</h2>',
+        '<div class="hearth-ledger-meta" data-hearth-stage-label>F1 · selector alive</div>',
+        '<div class="hearth-ledger-meta" data-hearth-heartbeat-text>waiting for matched HTML shell</div>',
+        '<div class="hearth-ledger-latest" data-hearth-latest-event>latest=FEMALE_SELECTOR_READY</div>',
+        '</div>',
+        '<div class="hearth-ledger-progress" data-hearth-index-progress-strip="true">',
+        '<div class="hearth-ledger-track"><span class="hearth-ledger-fill" data-hearth-main-progress-fill style="width:8%"></span></div>',
+        '<div class="hearth-ledger-percent" data-hearth-main-progress-percent>8%</div>',
+        '</div>',
+        '<div class="hearth-ledger-actions">',
+        '<button class="hearth-ledger-button primary" type="button" data-hearth-copy-diagnostic>Copy diagnostic</button>',
+        '<button class="hearth-ledger-button" type="button" data-hearth-toggle-receipt>Show receipt</button>',
+        '<button class="hearth-ledger-button" type="button" data-hearth-inspect-planet>Inspect planet</button>',
+        '<button class="hearth-ledger-button" type="button" data-hearth-collapse-cockpit>Collapse cockpit</button>',
+        '</div>',
+        '<div class="hearth-ledger-scroll">',
+        '<div class="hearth-ledger-lanes" data-hearth-lane-list></div>',
+        '<div class="hearth-ledger-receipt" data-hearth-receipt-box data-visible="false"><pre data-hearth-receipt-text></pre></div>',
+        '</div>'
+      ].join("");
+
+      if (mount) mount.appendChild(cockpit);
     }
 
-    if (isObject(authority.receipt)) return authority.receipt;
-    if (isObject(authority.receiptPacket)) return authority.receiptPacket;
+    cockpit.dataset.hearthFemaleJsSelected = CONTRACT;
+    cockpit.dataset.hearthSouthPairDisposition = "female-js-selector";
+    cockpit.dataset.generatedImage = "false";
+    cockpit.dataset.graphicBox = "false";
+    cockpit.dataset.webgl = "false";
+    cockpit.dataset.visualPassClaimed = "false";
 
-    if (authority.contract || authority.receipt || authority.version) return authority;
+    refs.cockpit = cockpit;
+    refs.title = cockpit.querySelector(".hearth-ledger-title");
+    refs.stage = cockpit.querySelector("[data-hearth-stage-label]");
+    refs.heartbeat = cockpit.querySelector("[data-hearth-heartbeat-text]");
+    refs.latest = cockpit.querySelector("[data-hearth-latest-event]");
+    refs.progressFill = cockpit.querySelector("[data-hearth-main-progress-fill]");
+    refs.progressPercent = cockpit.querySelector("[data-hearth-main-progress-percent]");
+    refs.receiptBox = cockpit.querySelector("[data-hearth-receipt-box]");
+    refs.receiptText = cockpit.querySelector("[data-hearth-receipt-text]");
+    refs.copyButton = cockpit.querySelector("[data-hearth-copy-diagnostic]");
+    refs.receiptButton = cockpit.querySelector("[data-hearth-toggle-receipt]");
+    refs.inspectButton = cockpit.querySelector("[data-hearth-inspect-planet]");
+    refs.collapseButton = cockpit.querySelector("[data-hearth-collapse-cockpit]");
 
-    return null;
+    refs.showTab =
+      q("[data-hearth-south-show-diagnostic-tab]") ||
+      q("[data-hearth-east-show-diagnostic-tab]");
+
+    if (refs.copyButton) refs.copyButton.onclick = copyDiagnostic;
+    if (refs.receiptButton) refs.receiptButton.onclick = toggleReceipt;
+    if (refs.inspectButton) refs.inspectButton.onclick = toggleInspect;
+    if (refs.collapseButton) refs.collapseButton.onclick = toggleCockpit;
+    if (refs.showTab) refs.showTab.onclick = showDiagnostic;
+
+    state.cockpitPresent = true;
+    return cockpit;
   }
 
-  function bindRefs() {
-    refs.mount = qs("#hearthCanvasMount");
-    refs.cockpit = qs("#hearthLoadCockpit");
-    refs.status = qs("#hearth-route-status");
-    refs.stage = qs("[data-hearth-stage-label]");
-    refs.heartbeat = qs("[data-hearth-heartbeat-text]");
-    refs.latest = qs("[data-hearth-latest-event]");
-    refs.progressFill = qs("[data-hearth-main-progress-fill]");
-    refs.progressPercent = qs("[data-hearth-main-progress-percent]");
-    refs.receiptText = qs("[data-hearth-receipt-text]");
-    refs.receiptBox = qs("[data-hearth-receipt-box]");
-    refs.copyButton = qs("[data-hearth-copy-diagnostic]");
-    refs.toggleReceiptButton = qs("[data-hearth-toggle-receipt]");
-    refs.inspectButton = qs("[data-hearth-inspect-planet]");
-    refs.collapseButton = qs("[data-hearth-collapse-cockpit]");
-    refs.showTab = qs("[data-hearth-south-show-diagnostic-tab]");
+  function bindShellControls() {
+    ensureStatusNode();
+    ensureMount();
+    ensureCockpit();
 
-    state.shellObserved = Boolean(refs.mount && refs.cockpit && refs.status);
+    state.hooksBound = Boolean(refs.mount && refs.cockpit && refs.status);
+    state.shellControlsBound = true;
+
+    setStage(
+      "F3",
+      "EAST",
+      "F3_SHELL_CONTROLS_BOUND",
+      22,
+      "female JS selector bound safe shell controls only"
+    );
+
+    record("SHELL_CONTROLS_BOUND", {
+      mountPresent: state.mountPresent,
+      cockpitPresent: state.cockpitPresent,
+      statusNodePresent: state.statusNodePresent
+    });
   }
 
-  function validateHooks() {
-    bindRefs();
+  function selectMaleShell() {
+    if (!doc || !doc.documentElement) {
+      state.shellSelected = false;
+      state.shellAccepted = false;
+      state.shellMode = "NO_DOCUMENT";
+      state.shellHoldReason = "DOCUMENT_UNAVAILABLE";
+      state.firstFailedCoordinate = "DOCUMENT_UNAVAILABLE";
+      return false;
+    }
 
-    state.missingCoreHooks = CORE_HOOKS.filter((selector) => !qs(selector));
-    state.missingOptionalHooks = OPTIONAL_HOOKS.filter((selector) => !qs(selector));
+    const dataset = doc.documentElement.dataset || {};
+    const htmlContract = safeString(dataset.contract, "");
 
-    state.coreHooksValidated = state.missingCoreHooks.length === 0;
-    state.optionalHooksObserved = state.missingOptionalHooks.length < OPTIONAL_HOOKS.length;
-    state.hooksValidated = state.coreHooksValidated;
+    state.shellContract = htmlContract;
+    state.shellSelected = true;
 
-    if (!state.coreHooksValidated) {
-      state.activeFibonacci = "F2";
-      state.activeStage = "EAST_SHELL_HOOK_VALIDATION_HELD";
-      state.activeProgress = 18;
-      state.firstFailedCoordinate = "EAST_SHELL_HOOK_VALIDATION_HELD";
-      state.recommendedNextOwner = "HTML";
-      state.recommendedNextRenewalTarget = HTML_FILE;
-      state.postgameStatus = "EAST_ADMISSION_HELD_BY_MISSING_CORE_HTML_HOOKS";
+    const matchedPair = htmlContract === EXPECTED_HTML_CONTRACT;
+    const safeLegacy = htmlContract === CURRENT_SAFE_HTML_CONTRACT;
 
-      record("HOOK_VALIDATION_HELD", {
-        missingCoreHooks: state.missingCoreHooks,
-        missingOptionalHooks: state.missingOptionalHooks
+    if (matchedPair) {
+      state.shellAccepted = true;
+      state.shellMode = "MATCHED_MALE_HTML_PAIR";
+      state.shellHoldReason = "NONE";
+      state.firstFailedCoordinate = "WAITING_RUNTIME_RELEASE";
+      state.recommendedNextFile = FILE;
+      state.recommendedNextRenewalTarget = FILE;
+      state.postgameStatus = "MATCHED_MALE_HTML_SELECTED_RUNTIME_HELD_FOR_RELEASE";
+
+      setStage(
+        "F5",
+        "EAST",
+        "F5_MATCHED_MALE_HTML_SELECTED",
+        34,
+        "female JS selected matched HTML shell; runtime still held"
+      );
+
+      record("MATCHED_MALE_HTML_SELECTED", {
+        htmlContract,
+        expected: EXPECTED_HTML_CONTRACT
+      });
+
+      return true;
+    }
+
+    if (safeLegacy) {
+      state.shellAccepted = false;
+      state.shellMode = "SAFE_LEGACY_HTML_HELD";
+      state.shellHoldReason = "WAITING_PAIRED_HTML_TNT";
+      state.firstFailedCoordinate = "WAITING_PAIRED_HTML_TNT";
+      state.recommendedNextFile = "/showroom/globe/hearth/index.html";
+      state.recommendedNextRenewalTarget = "/showroom/globe/hearth/index.html";
+      state.postgameStatus = "SAFE_HOLD_WAITING_PAIRED_MALE_HTML_SHELL";
+
+      setStage(
+        "F5",
+        "EAST",
+        "F5_SAFE_LEGACY_HTML_HELD",
+        28,
+        "current shell is safe legacy; heavy runtime release held until paired HTML executes"
+      );
+
+      record("SAFE_LEGACY_HTML_HELD", {
+        htmlContract,
+        expected: EXPECTED_HTML_CONTRACT
       });
 
       return false;
     }
 
-    state.activeFibonacci = "F2";
-    state.activeStage = "EAST_SHELL_HOOK_VALIDATION_COMPLETE";
-    state.activeProgress = 24;
-    state.firstFailedCoordinate = "NONE_CORE_HOOKS_VALIDATED";
-    state.recommendedNextOwner = "EAST";
-    state.recommendedNextRenewalTarget = FILE;
-    state.postgameStatus = "EAST_CORE_HOOKS_VALIDATED";
+    state.shellAccepted = false;
+    state.shellMode = "UNMATCHED_HTML_HELD";
+    state.shellHoldReason = "HTML_CONTRACT_MISMATCH";
+    state.firstFailedCoordinate = "HTML_CONTRACT_MISMATCH";
+    state.recommendedNextFile = "/showroom/globe/hearth/index.html";
+    state.recommendedNextRenewalTarget = "/showroom/globe/hearth/index.html";
+    state.postgameStatus = "UNMATCHED_HTML_HELD_RUNTIME_NOT_RELEASED";
 
-    record("HOOK_VALIDATION_COMPLETE", {
-      missingOptionalHooks: state.missingOptionalHooks
+    setStage(
+      "F5",
+      "EAST",
+      "F5_UNMATCHED_HTML_HELD",
+      26,
+      "female JS refused heavy runtime release against unmatched HTML shell"
+    );
+
+    record("UNMATCHED_HTML_HELD", {
+      htmlContract,
+      expected: EXPECTED_HTML_CONTRACT,
+      safeLegacy: CURRENT_SAFE_HTML_CONTRACT
     });
 
-    return true;
+    return false;
   }
 
-  function setProgress(value) {
-    const progress = clamp(value, 0, 100);
-    state.activeProgress = progress;
+  function existingScript(file) {
+    if (!doc) return null;
 
-    if (refs.progressFill) refs.progressFill.style.width = `${progress}%`;
-    if (refs.progressPercent) refs.progressPercent.textContent = `${Math.round(progress)}%`;
+    return Array.from(doc.scripts || []).find((script) => {
+      const src = script.getAttribute("src") || script.src || "";
+      return src.includes(file);
+    }) || null;
   }
 
-  function updateShellText(message) {
-    bindRefs();
+  function loadScript(item) {
+    return new Promise((resolve) => {
+      if (!doc || !doc.head) {
+        state.runtimeHeld.push(item.key);
+        state.runtimeErrors.push(`${item.key}:document-head-missing`);
+        resolve(false);
+        return;
+      }
 
-    if (refs.stage) refs.stage.textContent = `${state.activeFibonacci} · ${state.activeStage}`;
-    if (refs.heartbeat) refs.heartbeat.textContent = message || state.postgameStatus;
-    if (refs.latest) refs.latest.textContent = `latest=${state.postgameStatus}`;
-    setProgress(state.activeProgress);
+      const existing = existingScript(item.file);
 
-    if (refs.status) refs.status.textContent = getReceiptText();
+      if (existing) {
+        state.runtimeLoaded.push(`${item.key}:existing`);
+        record("RUNTIME_SCRIPT_EXISTING", item);
+        resolve(true);
+        return;
+      }
 
-    if (refs.receiptText && refs.receiptBox && refs.receiptBox.dataset.visible === "true") {
+      const script = doc.createElement("script");
+      const separator = item.file.includes("?") ? "&" : "?";
+
+      state.currentRuntimeKey = item.key;
+      state.currentRuntimeFile = item.file;
+
+      setStage(
+        item.fibonacci,
+        item.news,
+        `LOADING_${item.key.toUpperCase()}`,
+        Math.min(88, state.activeProgress + 4),
+        `loading ${item.key}`
+      );
+
+      script.src = `${item.file}${separator}v=${encodeURIComponent(CONTRACT)}`;
+      script.async = false;
+      script.defer = true;
+      script.dataset.loadedBy = CONTRACT;
+      script.dataset.hearthSouthPairRuntime = "true";
+      script.dataset.hearthFemaleJsSelected = "true";
+      script.dataset.hearthNewsGate = item.news;
+      script.dataset.hearthFibonacci = item.fibonacci;
+      script.dataset.generatedImage = "false";
+      script.dataset.graphicBox = "false";
+      script.dataset.webgl = "false";
+      script.dataset.visualPassClaimed = "false";
+
+      let settled = false;
+
+      const finish = (ok, label) => {
+        if (settled) return;
+        settled = true;
+
+        if (ok) {
+          state.runtimeLoaded.push(item.key);
+          record("RUNTIME_SCRIPT_LOADED", { ...item, label });
+        } else {
+          state.runtimeHeld.push(item.key);
+          state.runtimeErrors.push(`${item.key}:${label}`);
+          recordError("RUNTIME_SCRIPT_HELD", label, item);
+        }
+
+        resolve(ok);
+      };
+
+      script.onload = () => finish(true, "loaded");
+      script.onerror = () => finish(false, "load-error");
+
+      doc.head.appendChild(script);
+
+      root.setTimeout(() => {
+        finish(false, "load-timeout-soft-held");
+      }, item.required ? 5000 : 3600);
+    });
+  }
+
+  function idle(callback, timeout = 800) {
+    if (root.requestIdleCallback) {
+      root.requestIdleCallback(callback, { timeout });
+      return;
+    }
+
+    root.setTimeout(callback, 80);
+  }
+
+  function sleep(ms) {
+    return new Promise((resolve) => root.setTimeout(resolve, ms));
+  }
+
+  async function releaseRuntime(source = "manual-release") {
+    state.runtimeReleaseRequested = true;
+
+    if (!state.shellAccepted) {
+      const selected = selectMaleShell();
+
+      if (!selected) {
+        state.runtimeReleaseAuthorized = false;
+        state.runtimeReleaseHeldReason = state.shellHoldReason || "WAITING_MATCHED_MALE_HTML_SHELL";
+        state.firstFailedCoordinate = state.runtimeReleaseHeldReason;
+        state.postgameStatus = "RUNTIME_RELEASE_HELD_WAITING_MATCHED_HTML";
+
+        setStage(
+          "F5",
+          "EAST",
+          "F5_RUNTIME_RELEASE_HELD",
+          30,
+          state.runtimeReleaseHeldReason
+        );
+
+        record("RUNTIME_RELEASE_HELD", {
+          source,
+          reason: state.runtimeReleaseHeldReason,
+          shellContract: state.shellContract,
+          expectedHtmlContract: EXPECTED_HTML_CONTRACT
+        });
+
+        return getReceipt();
+      }
+    }
+
+    if (runtimeRunning || state.runtimeReleaseStarted) {
+      record("RUNTIME_RELEASE_ALREADY_STARTED", { source });
+      return getReceipt();
+    }
+
+    runtimeRunning = true;
+    state.runtimeReleaseAuthorized = true;
+    state.runtimeReleaseStarted = true;
+    state.runtimeReleaseHeldReason = "NONE";
+
+    setStage(
+      "F8",
+      "EAST",
+      "F8_RUNTIME_RELEASE_AUTHORIZED",
+      38,
+      "matched shell accepted; non-blocking runtime release begins"
+    );
+
+    record("RUNTIME_RELEASE_AUTHORIZED", { source });
+
+    for (let i = 0; i < RUNTIME_QUEUE.length; i += 1) {
+      const item = RUNTIME_QUEUE[i];
+
+      await new Promise((resolve) => {
+        idle(() => resolve(), 900);
+      });
+
+      await loadScript(item);
+      await sleep(60);
+    }
+
+    state.runtimeReleaseComplete = true;
+    state.currentRuntimeKey = "";
+    state.currentRuntimeFile = "";
+    state.firstFailedCoordinate = "NONE_RUNTIME_QUEUE_COMPLETE";
+    state.recommendedNextFile = FILES.routeConductor;
+    state.recommendedNextRenewalTarget = FILES.routeConductor;
+    state.postgameStatus = "RUNTIME_QUEUE_COMPLETE_F13_DELEGATED_F21_HELD_BY_NORTH";
+
+    setStage(
+      "F13",
+      "CANVAS",
+      "F13_RUNTIME_QUEUE_COMPLETE_CANVAS_DELEGATED",
+      72,
+      "runtime queue complete; Canvas F13 evidence is delegated; F21 remains North-only"
+    );
+
+    runtimeRunning = false;
+    publish();
+
+    record("RUNTIME_QUEUE_COMPLETE", {
+      loaded: state.runtimeLoaded,
+      held: state.runtimeHeld,
+      errors: state.runtimeErrors
+    });
+
+    return getReceipt();
+  }
+
+  function maybeAutoReleaseFromMatchedHtml() {
+    if (!doc || !doc.documentElement) return;
+
+    const dataset = doc.documentElement.dataset || {};
+    const autoReady = dataset.hearthSouthPairShellReady === "true";
+    const autoRelease = dataset.hearthSouthPairAutoReleaseRuntime === "true";
+
+    if (autoReady) {
+      selectMaleShell();
+    }
+
+    if (autoReady && autoRelease) {
+      idle(() => {
+        releaseRuntime("matched-html-auto-release");
+      }, 1200);
+    }
+  }
+
+  function toggleReceipt() {
+    if (!refs.receiptBox) return;
+
+    const visible = refs.receiptBox.dataset.visible !== "true";
+    refs.receiptBox.dataset.visible = String(visible);
+
+    if (refs.receiptButton) {
+      refs.receiptButton.textContent = visible ? "Hide receipt" : "Show receipt";
+    }
+
+    if (refs.receiptText) {
       refs.receiptText.textContent = getReceiptText();
     }
   }
 
-  function detectExistingAuthorities() {
-    const north = firstExisting([
-      "LAB_RUNTIME_TABLE",
-      "LAB_RUNTIME_TABLE_NORTH",
-      "LAB_CARDINAL_RUNTIME_TABLE_NORTH",
-      "LAB_RUNTIME_TABLE_NORTH_TWO_CYCLE_DISTRIBUTOR",
-      "LAB_CHECKPOINT_GOVERNOR",
-      "LAB_NEWS_FIBONACCI_CHECKPOINT_GOVERNOR",
-      "DexterRuntimeTable",
-      "RUNTIME_TABLE",
-      "DEXTER_LAB.runtimeTable",
-      "DEXTER_LAB.cardinalRuntimeTableNorth"
-    ]);
+  function toggleCockpit() {
+    if (!refs.cockpit) return;
 
-    const west = firstExisting([
-      "LAB_RUNTIME_TABLE_WEST",
-      "LAB_CARDINAL_RUNTIME_TABLE_WEST",
-      "LAB_GAP_CLASSIFIER_WEST",
-      "LAB_TRANSMISSION_GAP_CLASSIFIER_WEST",
-      "RUNTIME_TABLE_WEST",
-      "DEXTER_LAB.runtimeTableWest",
-      "DEXTER_LAB.cardinalRuntimeTableWest",
-      "DEXTER_LAB.gapClassifierWest"
-    ]);
+    const expanded = refs.cockpit.dataset.cockpitMode !== "expanded-cockpit";
+    refs.cockpit.dataset.cockpitMode = expanded ? "expanded-cockpit" : "diagnostic-dock";
 
-    state.northObserved = Boolean(north);
-    state.westObserved = Boolean(west);
-
-    return { north, west };
+    if (refs.collapseButton) {
+      refs.collapseButton.textContent = expanded ? "Collapse cockpit" : "Expand cockpit";
+    }
   }
 
-  function getAdmissionPacket() {
-    const authorities = detectExistingAuthorities();
+  function toggleInspect() {
+    if (!doc || !doc.documentElement || !refs.cockpit) return;
 
-    return {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      previousContract: PREVIOUS_CONTRACT,
-      baselineContract: BASELINE_CONTRACT,
-      version: VERSION,
-      packetType: "HEARTH_EAST_ADMISSION_PACKET",
-      file: FILE,
-      route: ROUTE,
-      htmlFile: HTML_FILE,
-      htmlContract: HTML_CONTRACT,
+    const active = doc.documentElement.dataset.hearthSouthPairInspect === "true" ? false : true;
 
-      cycleOneRoute: CYCLE_ONE,
-      cycleTwoRoute: CYCLE_TWO,
+    doc.documentElement.dataset.hearthSouthPairInspect = String(active);
+    refs.cockpit.dataset.cockpitMode = active ? "planet-inspect" : "diagnostic-dock";
 
-      activeFibonacci: state.activeFibonacci,
-      activeStage: state.activeStage,
-      activeProgress: state.activeProgress,
+    if (refs.inspectButton) {
+      refs.inspectButton.textContent = active ? "Show diagnostic" : "Inspect planet";
+    }
 
-      shellObserved: state.shellObserved,
-      hooksValidated: state.hooksValidated,
-      coreHooksValidated: state.coreHooksValidated,
-      optionalHooksObserved: state.optionalHooksObserved,
-      missingCoreHooks: state.missingCoreHooks.slice(),
-      missingOptionalHooks: state.missingOptionalHooks.slice(),
+    if (refs.showTab) {
+      refs.showTab.hidden = !active;
+    }
 
-      eastAdmissionReady: state.eastAdmissionReady,
-      admissionPacketEmitted: state.admissionPacketEmitted,
-
-      htmlLoadedEastOnly: true,
-      htmlLoadsRuntimeTable: false,
-      htmlLoadsSourceStack: false,
-      htmlLoadsCanvas: false,
-      htmlLoadsWest: false,
-      htmlLoadsNorth: false,
-      htmlLoadsSouth: false,
-
-      eastLoadsDownstreamCycle: false,
-      downstreamLoadingOwnedByEast: false,
-      downstreamLoadingPerformed: false,
-
-      northObserved: Boolean(authorities.north),
-      westObserved: Boolean(authorities.west),
-
-      canvasF13Delegated: true,
-      f21NorthOnly: true,
-
-      firstFailedCoordinate: state.firstFailedCoordinate,
-      recommendedNextOwner: state.recommendedNextOwner,
-      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
-      postgameStatus: state.postgameStatus,
-
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false,
-
-      emittedAt: nowIso()
-    };
+    record(active ? "INSPECT_PLACEHOLDER_ACTIVE" : "DIAGNOSTIC_DOCK_RESTORED", {
+      shellOnly: true,
+      runtimeMayEnhance: true
+    });
   }
 
-  function dispatchAdmission() {
-    const packet = getAdmissionPacket();
+  function showDiagnostic() {
+    if (!doc || !doc.documentElement || !refs.cockpit) return;
 
-    state.admissionPacketEmitted = true;
-    state.browserEventDispatched = false;
+    doc.documentElement.dataset.hearthSouthPairInspect = "false";
+    refs.cockpit.dataset.cockpitMode = "diagnostic-dock";
+
+    if (refs.showTab) refs.showTab.hidden = true;
+    if (refs.inspectButton) refs.inspectButton.textContent = "Inspect planet";
+
+    record("DIAGNOSTIC_DOCK_RESTORED_FROM_TAB");
+  }
+
+  async function copyDiagnostic() {
+    const text = getReceiptText();
+    let copied = false;
 
     try {
-      if (isFunction(root.CustomEvent) && isFunction(root.dispatchEvent)) {
-        root.dispatchEvent(new CustomEvent("hearth:east-admission-ready", { detail: packet }));
-        root.dispatchEvent(new CustomEvent("HEARTH_EAST_ADMISSION_READY", { detail: packet }));
-        state.browserEventDispatched = true;
+      if (root.navigator && root.navigator.clipboard && isFunction(root.navigator.clipboard.writeText)) {
+        await root.navigator.clipboard.writeText(text);
+        copied = true;
+      } else if (doc) {
+        const area = doc.createElement("textarea");
+        area.value = text;
+        area.setAttribute("readonly", "readonly");
+        area.style.position = "fixed";
+        area.style.left = "-9999px";
+        doc.body.appendChild(area);
+        area.select();
+        doc.execCommand("copy");
+        area.remove();
+        copied = true;
       }
     } catch (error) {
-      recordError("ADMISSION_EVENT_DISPATCH_FAILED", error && error.message ? error.message : String(error));
+      recordError("COPY_DIAGNOSTIC_FAILED", error && error.message ? error.message : String(error));
     }
 
-    root.HEARTH_EAST_ADMISSION_PACKET = packet;
-    root.HEARTH_INDEX_STEP1_HANDOFF_RECEIPT = packet;
-    root.HEARTH_EAST_STEP1_HANDOFF_RECEIPT = packet;
+    if (refs.copyButton) {
+      refs.copyButton.textContent = copied ? "Copied" : "Copy held";
+      root.setTimeout(() => {
+        if (refs.copyButton) refs.copyButton.textContent = "Copy diagnostic";
+      }, 900);
+    }
 
-    record("EAST_ADMISSION_PACKET_EMITTED", {
-      browserEventDispatched: state.browserEventDispatched
-    });
-
-    return packet;
+    record("COPY_DIAGNOSTIC", { copied });
+    return copied;
   }
 
-  function callFirst(authority, methodNames, packet) {
-    if (!authority || !isObject(authority)) return false;
-
-    for (const methodName of methodNames) {
-      if (!isFunction(authority[methodName])) continue;
-
-      try {
-        const result = authority[methodName](packet);
-        return result !== false;
-      } catch (error) {
-        recordError(`${methodName}_FAILED`, error && error.message ? error.message : String(error));
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  function attemptCompatibilityHandoff() {
-    const packet = getAdmissionPacket();
-    const authorities = detectExistingAuthorities();
-
-    state.compatibilityHandoffAttempted = true;
-    state.compatibilityHandoffAcceptedByNorth = false;
-    state.compatibilityHandoffAcceptedByWest = false;
-
-    if (authorities.north) {
-      state.compatibilityHandoffAcceptedByNorth = callFirst(authorities.north, [
-        "acceptEastPrimary",
-        "receiveEastPrimary",
-        "acceptEastHandoff",
-        "receiveEastHandoff",
-        "acceptCheckpointEvent",
-        "receiveCheckpointEvent",
-        "submitEvent",
-        "receiveEvent"
-      ], packet);
-    }
-
-    if (authorities.west) {
-      state.compatibilityHandoffAcceptedByWest = callFirst(authorities.west, [
-        "acceptEastHandoff",
-        "receiveEastHandoff",
-        "acceptEastPrimary",
-        "receiveEastPrimary",
-        "acceptWestIntake",
-        "receiveWestIntake"
-      ], packet);
-    }
-
-    if (!authorities.north) {
-      state.firstFailedCoordinate = "WAITING_EXISTING_NORTH_RUNTIME_TABLE_OR_NEXT_NORTH_RENEWAL";
-      state.recommendedNextOwner = "NORTH";
-      state.recommendedNextRenewalTarget = NORTH_FILE;
-      state.postgameStatus = "EAST_ADMISSION_READY_NO_EXISTING_NORTH_CONSUMER_OBSERVED";
-    } else {
-      state.firstFailedCoordinate = "NONE_EAST_ADMISSION_READY";
-      state.recommendedNextOwner = state.compatibilityHandoffAcceptedByWest ? "CANVAS" : "WEST";
-      state.recommendedNextRenewalTarget = state.compatibilityHandoffAcceptedByWest ? CANVAS_FILE : WEST_FILE;
-      state.postgameStatus = state.compatibilityHandoffAcceptedByWest
-        ? "EAST_ADMISSION_READY_EXISTING_STATUS_HANDOFF_COMPLETE"
-        : "EAST_ADMISSION_READY_WAITING_EXISTING_WEST_OR_NEXT_WEST_RENEWAL";
-    }
-
-    record("COMPATIBILITY_HANDOFF_ATTEMPTED", {
-      northObserved: Boolean(authorities.north),
-      westObserved: Boolean(authorities.west),
-      acceptedByNorth: state.compatibilityHandoffAcceptedByNorth,
-      acceptedByWest: state.compatibilityHandoffAcceptedByWest
-    });
-
-    return {
-      attempted: true,
-      northObserved: Boolean(authorities.north),
-      westObserved: Boolean(authorities.west),
-      acceptedByNorth: state.compatibilityHandoffAcceptedByNorth,
-      acceptedByWest: state.compatibilityHandoffAcceptedByWest,
-      packet
-    };
-  }
-
-  function bindShellControls() {
-    bindRefs();
-
-    if (refs.copyButton && !refs.copyButton.dataset.hearthEastAdmissionBound) {
-      refs.copyButton.dataset.hearthEastAdmissionBound = "true";
-      refs.copyButton.addEventListener("click", () => {
-        const text = getReceiptText();
-
-        const done = (ok) => {
-          const original = refs.copyButton.textContent || "Copy diagnostic";
-          refs.copyButton.textContent = ok ? "Copied" : "Copy held";
-          root.setTimeout(() => {
-            refs.copyButton.textContent = original;
-          }, 900);
-        };
-
-        if (root.navigator && root.navigator.clipboard && isFunction(root.navigator.clipboard.writeText)) {
-          root.navigator.clipboard.writeText(text).then(() => done(true)).catch(() => done(false));
-          return;
-        }
-
-        try {
-          const area = doc.createElement("textarea");
-          area.value = text;
-          area.setAttribute("readonly", "readonly");
-          area.style.position = "fixed";
-          area.style.left = "-9999px";
-          doc.body.appendChild(area);
-          area.select();
-          doc.execCommand("copy");
-          area.remove();
-          done(true);
-        } catch (_error) {
-          done(false);
-        }
-      });
-    }
-
-    if (refs.toggleReceiptButton && refs.receiptBox && !refs.toggleReceiptButton.dataset.hearthEastAdmissionBound) {
-      refs.toggleReceiptButton.dataset.hearthEastAdmissionBound = "true";
-      refs.toggleReceiptButton.addEventListener("click", () => {
-        const visible = refs.receiptBox.dataset.visible !== "true";
-        refs.receiptBox.dataset.visible = String(visible);
-        refs.toggleReceiptButton.textContent = visible ? "Hide receipt" : "Show receipt";
-        if (refs.receiptText) refs.receiptText.textContent = getReceiptText();
-      });
-    }
-
-    if (refs.inspectButton && refs.cockpit && !refs.inspectButton.dataset.hearthEastAdmissionBound) {
-      refs.inspectButton.dataset.hearthEastAdmissionBound = "true";
-      refs.inspectButton.addEventListener("click", () => {
-        const active = doc.documentElement.dataset.hearthEastAdmissionInspectPlaceholder !== "true";
-        doc.documentElement.dataset.hearthEastAdmissionInspectPlaceholder = String(active);
-        refs.cockpit.dataset.cockpitMode = active ? "planet-inspect" : "diagnostic-dock";
-        refs.inspectButton.textContent = active ? "Show diagnostic" : "Inspect planet";
-
-        if (refs.showTab) {
-          refs.showTab.hidden = !active;
-          refs.showTab.dataset.visible = String(active);
-        }
-
-        record(active ? "INSPECT_PLACEHOLDER_ACTIVE" : "DIAGNOSTIC_DOCK_RESTORED", {
-          shellOnly: true
-        });
-
-        publishAll();
-        updateShellText(active ? "inspect placeholder active" : "diagnostic dock restored");
-      });
-    }
-
-    if (refs.showTab && refs.cockpit && !refs.showTab.dataset.hearthEastAdmissionBound) {
-      refs.showTab.dataset.hearthEastAdmissionBound = "true";
-      refs.showTab.addEventListener("click", () => {
-        doc.documentElement.dataset.hearthEastAdmissionInspectPlaceholder = "false";
-        refs.showTab.hidden = true;
-        refs.cockpit.dataset.cockpitMode = "diagnostic-dock";
-        if (refs.inspectButton) refs.inspectButton.textContent = "Inspect planet";
-
-        record("DIAGNOSTIC_DOCK_RESTORED_FROM_TAB");
-        publishAll();
-        updateShellText("diagnostic dock restored");
-      });
-    }
-
-    if (refs.collapseButton && refs.cockpit && !refs.collapseButton.dataset.hearthEastAdmissionBound) {
-      refs.collapseButton.dataset.hearthEastAdmissionBound = "true";
-      refs.collapseButton.addEventListener("click", () => {
-        const expanded = refs.cockpit.dataset.cockpitMode !== "expanded-cockpit";
-        refs.cockpit.dataset.cockpitMode = expanded ? "expanded-cockpit" : "diagnostic-dock";
-        refs.collapseButton.textContent = expanded ? "Collapse cockpit" : "Expand cockpit";
-
-        record(expanded ? "COCKPIT_EXPANDED" : "COCKPIT_COLLAPSED");
-        publishAll();
-      });
-    }
-
-    state.activeFibonacci = "F3";
-    state.activeStage = "EAST_LOCAL_API_AND_SHELL_CONTROLS_READY";
-    state.activeProgress = 30;
-    state.postgameStatus = "EAST_LOCAL_API_AND_SHELL_CONTROLS_READY";
-
-    record("SHELL_CONTROLS_BOUND");
-  }
-
-  function publishDatasets() {
-    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
+  function publish() {
+    if (!doc || !doc.documentElement) return;
 
     const dataset = doc.documentElement.dataset;
 
-    dataset.hearthEastAdmissionAdapterLoaded = "true";
-    dataset.hearthEastAdmissionAdapterContract = CONTRACT;
-    dataset.hearthEastAdmissionAdapterReceipt = RECEIPT;
-    dataset.hearthEastAdmissionAdapterVersion = VERSION;
+    dataset.hearthEastFemaleSelectorLoaded = "true";
+    dataset.hearthEastFemaleSelectorContract = CONTRACT;
+    dataset.hearthEastFemaleSelectorReceipt = RECEIPT;
+    dataset.hearthEastFemaleSelectorVersion = VERSION;
 
-    dataset.hearthEastFile = FILE;
-    dataset.hearthHtmlContract = HTML_CONTRACT;
+    dataset.hearthSouthPairDisposition = "south-facing-expression-pair";
+    dataset.hearthSouthPairFemaleJsComesFirst = "true";
+    dataset.hearthSouthPairFemaleJsFile = FILE;
+    dataset.hearthSouthPairExpectedMaleHtmlContract = EXPECTED_HTML_CONTRACT;
 
-    dataset.hearthCycleOneRoute = CYCLE_ONE;
-    dataset.hearthCycleTwoRoute = CYCLE_TWO;
-
-    dataset.hearthHtmlLoadedEastOnly = "true";
-    dataset.hearthHtmlLoadsRuntimeTable = "false";
-    dataset.hearthHtmlLoadsSourceStack = "false";
-    dataset.hearthHtmlLoadsCanvas = "false";
-    dataset.hearthHtmlLoadsWest = "false";
-    dataset.hearthHtmlLoadsNorth = "false";
-    dataset.hearthHtmlLoadsSouth = "false";
-
-    dataset.hearthEastLoadsDownstreamCycle = "false";
-    dataset.hearthDownstreamLoadingOwnedByEast = "false";
-    dataset.hearthDownstreamLoadingPerformed = "false";
-
-    dataset.hearthEastAdmissionReady = String(state.eastAdmissionReady);
-    dataset.hearthEastAdmissionPacketEmitted = String(state.admissionPacketEmitted);
-    dataset.hearthEastAdmissionBrowserEventDispatched = String(state.browserEventDispatched);
-
-    dataset.hearthEastHooksValidated = String(state.hooksValidated);
-    dataset.hearthEastMissingCoreHooks = state.missingCoreHooks.join(",");
-    dataset.hearthEastMissingOptionalHooks = state.missingOptionalHooks.join(",");
-
-    dataset.hearthEastNorthObserved = String(state.northObserved);
-    dataset.hearthEastWestObserved = String(state.westObserved);
-    dataset.hearthEastCompatibilityHandoffAttempted = String(state.compatibilityHandoffAttempted);
-    dataset.hearthEastCompatibilityHandoffAcceptedByNorth = String(state.compatibilityHandoffAcceptedByNorth);
-    dataset.hearthEastCompatibilityHandoffAcceptedByWest = String(state.compatibilityHandoffAcceptedByWest);
-
-    dataset.hearthCanvasF13Delegated = "true";
-    dataset.hearthF21NorthOnly = "true";
-
+    dataset.hearthNewsAlignmentActive = "true";
+    dataset.hearthFibonacciSynchronizationActive = "true";
+    dataset.hearthCycleOneRoute = state.cycleOneRoute;
+    dataset.hearthCycleTwoRoute = state.cycleTwoRoute;
+    dataset.hearthActiveNews = state.activeNews;
     dataset.hearthActiveFibonacci = state.activeFibonacci;
     dataset.hearthActiveStage = state.activeStage;
     dataset.hearthActiveProgress = String(state.activeProgress);
 
+    dataset.hearthShellSelected = String(state.shellSelected);
+    dataset.hearthShellAccepted = String(state.shellAccepted);
+    dataset.hearthShellContract = state.shellContract;
+    dataset.hearthShellMode = state.shellMode;
+    dataset.hearthShellHoldReason = state.shellHoldReason;
+
+    dataset.hearthRuntimeReleaseRequested = String(state.runtimeReleaseRequested);
+    dataset.hearthRuntimeReleaseAuthorized = String(state.runtimeReleaseAuthorized);
+    dataset.hearthRuntimeReleaseStarted = String(state.runtimeReleaseStarted);
+    dataset.hearthRuntimeReleaseComplete = String(state.runtimeReleaseComplete);
+    dataset.hearthRuntimeReleaseHeldReason = state.runtimeReleaseHeldReason;
+
+    dataset.hearthCanvasF13Delegated = "true";
+    dataset.hearthF21NorthOnly = "true";
+    dataset.hearthReadyTextAllowed = "false";
+    dataset.hearthDownstreamReleaseClaimed = "false";
+
     dataset.hearthFirstFailedCoordinate = state.firstFailedCoordinate;
-    dataset.hearthRecommendedNextOwner = state.recommendedNextOwner;
+    dataset.hearthRecommendedNextFile = state.recommendedNextFile;
     dataset.hearthRecommendedNextRenewalTarget = state.recommendedNextRenewalTarget;
     dataset.hearthPostgameStatus = state.postgameStatus;
 
@@ -714,35 +864,27 @@
     dataset.graphicBox = "false";
     dataset.webgl = "false";
     dataset.visualPassClaimed = "false";
-  }
 
-  function publishGlobals() {
+    if (refs.status) {
+      refs.status.textContent = getReceiptText();
+    }
+
     root.HEARTH = root.HEARTH || {};
-    root.DEXTER_LAB = root.DEXTER_LAB || {};
-
-    root.HEARTH.eastAdmissionAdapter = api;
+    root.HEARTH.eastFemaleSelector = api;
     root.HEARTH.indexBridge = api;
-    root.HEARTH.eastStep1Ignition = api;
+    root.HEARTH.indexJs = api;
 
-    root.DEXTER_LAB.hearthEastAdmissionAdapter = api;
-
-    root.HEARTH_EAST_ADMISSION_ADAPTER = api;
+    root.HEARTH_EAST_FEMALE_SELECTOR = api;
     root.HEARTH_EAST_STEP1_IGNITION = api;
-    root.HEARTH_INDEX_BRIDGE = api;
     root.HEARTH_INDEX_JS = api;
-    root.HearthIndexBridge = api;
+    root.HEARTH_INDEX_BRIDGE = api;
+    root.HEARTH_EAST_SOUTH_PAIR_FEMALE_SELECTOR = api;
 
-    root.HEARTH_EAST_ADMISSION_ADAPTER_RECEIPT = getReceipt();
-    root.HEARTH_EAST_STEP1_IGNITION_RECEIPT = root.HEARTH_EAST_ADMISSION_ADAPTER_RECEIPT;
-    root.HEARTH_INDEX_BRIDGE_RECEIPT = root.HEARTH_EAST_ADMISSION_ADAPTER_RECEIPT;
-    root.HEARTH_INDEX_JS_RECEIPT = root.HEARTH_EAST_ADMISSION_ADAPTER_RECEIPT;
-
-    publishDatasets();
+    root.HEARTH_EAST_FEMALE_SELECTOR_RECEIPT = getReceipt();
+    root.HEARTH_INDEX_JS_RECEIPT = root.HEARTH_EAST_FEMALE_SELECTOR_RECEIPT;
   }
 
   function getReceipt() {
-    detectExistingAuthorities();
-
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
@@ -751,84 +893,67 @@
       version: VERSION,
       file: FILE,
       route: ROUTE,
-      htmlFile: HTML_FILE,
-      htmlContract: HTML_CONTRACT,
-      role: state.role,
 
-      shellObserved: state.shellObserved,
-      hooksValidated: state.hooksValidated,
-      coreHooksValidated: state.coreHooksValidated,
-      optionalHooksObserved: state.optionalHooksObserved,
-      missingCoreHooks: state.missingCoreHooks.slice(),
-      missingOptionalHooks: state.missingOptionalHooks.slice(),
+      disposition: state.disposition,
+      pairGenderModel: state.pairGenderModel,
+      femaleJsComesFirst: state.femaleJsComesFirst,
+      maleHtmlShellExpected: state.maleHtmlShellExpected,
+      expectedHtmlContract: EXPECTED_HTML_CONTRACT,
+      currentSafeHtmlContract: CURRENT_SAFE_HTML_CONTRACT,
 
-      eastAdmissionReady: state.eastAdmissionReady,
-      admissionPacketEmitted: state.admissionPacketEmitted,
-      browserEventDispatched: state.browserEventDispatched,
+      newsAlignmentActive: true,
+      fibonacciSynchronizationActive: true,
+      cycleOneRoute: state.cycleOneRoute,
+      cycleTwoRoute: state.cycleTwoRoute,
 
-      compatibilityHandoffAttempted: state.compatibilityHandoffAttempted,
-      compatibilityHandoffAcceptedByNorth: state.compatibilityHandoffAcceptedByNorth,
-      compatibilityHandoffAcceptedByWest: state.compatibilityHandoffAcceptedByWest,
-      compatibilityHandoffErrors: state.compatibilityHandoffErrors.slice(),
-
-      northObserved: state.northObserved,
-      westObserved: state.westObserved,
-
-      htmlLoadedEastOnly: true,
-      htmlLoadsRuntimeTable: false,
-      htmlLoadsSourceStack: false,
-      htmlLoadsCanvas: false,
-      htmlLoadsWest: false,
-      htmlLoadsNorth: false,
-      htmlLoadsSouth: false,
-
-      eastLoadsDownstreamCycle: false,
-      downstreamLoadingOwnedByEast: false,
-      downstreamLoadingPerformed: false,
-
-      canvasF13Delegated: true,
-      f21NorthOnly: true,
-
+      activeNews: state.activeNews,
       activeFibonacci: state.activeFibonacci,
       activeStage: state.activeStage,
       activeProgress: state.activeProgress,
 
+      shellSelected: state.shellSelected,
+      shellAccepted: state.shellAccepted,
+      shellContract: state.shellContract,
+      shellMode: state.shellMode,
+      shellHoldReason: state.shellHoldReason,
+
+      hooksBound: state.hooksBound,
+      shellControlsBound: state.shellControlsBound,
+      cockpitPresent: state.cockpitPresent,
+      mountPresent: state.mountPresent,
+      statusNodePresent: state.statusNodePresent,
+
+      runtimeReleaseRequested: state.runtimeReleaseRequested,
+      runtimeReleaseAuthorized: state.runtimeReleaseAuthorized,
+      runtimeReleaseStarted: state.runtimeReleaseStarted,
+      runtimeReleaseComplete: state.runtimeReleaseComplete,
+      runtimeReleaseHeldReason: state.runtimeReleaseHeldReason,
+
+      currentRuntimeKey: state.currentRuntimeKey,
+      currentRuntimeFile: state.currentRuntimeFile,
+      runtimeLoaded: state.runtimeLoaded.slice(),
+      runtimeHeld: state.runtimeHeld.slice(),
+      runtimeErrors: state.runtimeErrors.slice(),
+
+      canvasF13Delegated: true,
+      f21NorthOnly: true,
+      readyTextAllowed: false,
+      downstreamReleaseClaimed: false,
+
       firstFailedCoordinate: state.firstFailedCoordinate,
-      recommendedNextOwner: state.recommendedNextOwner,
+      recommendedNextFile: state.recommendedNextFile,
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
       postgameStatus: state.postgameStatus,
-
-      ownsShellAdmission: true,
-      ownsHookValidation: true,
-      ownsEastAdmissionPacket: true,
-      ownsOneTimeCompatibilityHandoff: true,
-
-      ownsNorthRuntimeTable: false,
-      ownsNorthF21Latch: false,
-      ownsWestAdmissibilityDecision: false,
-      ownsSouthVisibleProof: false,
-      ownsCanvasDrawing: false,
-      ownsCanvasF13EvidenceGeneration: false,
-      ownsRouteConductorRuntime: false,
-      ownsSourceStackHydration: false,
-      ownsDownstreamScriptLoading: false,
-      ownsFinalVisualPassClaim: false,
-
-      noHeartbeatInterval: true,
-      noWatchdogInterval: true,
-      noSerialDownstreamScriptLoader: true,
-      noDeepRecursiveGlobalScan: true,
-      noLaneRepaintLoop: true,
-
-      events: clonePlain(state.events),
-      errors: clonePlain(state.errors),
 
       generatedImage: false,
       graphicBox: false,
       webGL: false,
       visualPassClaimed: false,
 
-      createdAt: state.createdAt,
+      events: clonePlain(state.events),
+      errors: clonePlain(state.errors),
+
+      startedAt: state.startedAt,
       updatedAt: nowIso()
     };
   }
@@ -836,16 +961,8 @@
   function getReceiptText() {
     const r = getReceipt();
 
-    const events = r.events.map((item) => (
-      `- ${item.at || ""} :: ${item.event || ""} :: ${JSON.stringify(item.detail || {})}`
-    )).join("\n") || "- none";
-
-    const errors = r.errors.map((item) => (
-      `- ${item.at || ""} :: ${item.code || ""} :: ${item.message || ""}`
-    )).join("\n") || "- none";
-
     return [
-      "HEARTH_EAST_NON_BLOCKING_EXISTING_STATUS_ADMISSION_ADAPTER_RECEIPT",
+      "HEARTH_EAST_SOUTH_PAIR_FEMALE_SELECTOR_NON_BLOCKING_BOOT_RECEIPT",
       "",
       `contract=${r.contract}`,
       `receipt=${r.receipt}`,
@@ -854,168 +971,105 @@
       `version=${r.version}`,
       `file=${r.file}`,
       `route=${r.route}`,
-      `htmlContract=${r.htmlContract}`,
-      `role=${r.role}`,
       "",
-      `shellObserved=${r.shellObserved}`,
-      `hooksValidated=${r.hooksValidated}`,
-      `coreHooksValidated=${r.coreHooksValidated}`,
-      `optionalHooksObserved=${r.optionalHooksObserved}`,
-      `missingCoreHooks=${r.missingCoreHooks.join(",")}`,
-      `missingOptionalHooks=${r.missingOptionalHooks.join(",")}`,
+      `disposition=${r.disposition}`,
+      `pairGenderModel=${r.pairGenderModel}`,
+      `femaleJsComesFirst=${r.femaleJsComesFirst}`,
+      `maleHtmlShellExpected=${r.maleHtmlShellExpected}`,
+      `expectedHtmlContract=${r.expectedHtmlContract}`,
+      `currentSafeHtmlContract=${r.currentSafeHtmlContract}`,
       "",
-      `eastAdmissionReady=${r.eastAdmissionReady}`,
-      `admissionPacketEmitted=${r.admissionPacketEmitted}`,
-      `browserEventDispatched=${r.browserEventDispatched}`,
+      `newsAlignmentActive=${r.newsAlignmentActive}`,
+      `fibonacciSynchronizationActive=${r.fibonacciSynchronizationActive}`,
+      `cycleOneRoute=${r.cycleOneRoute}`,
+      `cycleTwoRoute=${r.cycleTwoRoute}`,
       "",
-      `compatibilityHandoffAttempted=${r.compatibilityHandoffAttempted}`,
-      `compatibilityHandoffAcceptedByNorth=${r.compatibilityHandoffAcceptedByNorth}`,
-      `compatibilityHandoffAcceptedByWest=${r.compatibilityHandoffAcceptedByWest}`,
-      `northObserved=${r.northObserved}`,
-      `westObserved=${r.westObserved}`,
-      "",
-      "SCRIPT_BOUNDARY",
-      "htmlLoadedEastOnly=true",
-      "htmlLoadsRuntimeTable=false",
-      "htmlLoadsSourceStack=false",
-      "htmlLoadsCanvas=false",
-      "htmlLoadsWest=false",
-      "htmlLoadsNorth=false",
-      "htmlLoadsSouth=false",
-      "eastLoadsDownstreamCycle=false",
-      "downstreamLoadingOwnedByEast=false",
-      "downstreamLoadingPerformed=false",
-      "",
-      "NEWS_ALIGNMENT",
-      "north=macro law / permission / F21 latch",
-      "east=shell admission / packet / event / one-time compatibility handoff",
-      "west=admissibility and Canvas release audit",
-      "south=visible completion and proof body",
-      "canvas=F13 evidence only",
-      "",
-      "FIBONACCI_SYNCHRONIZATION",
-      "F1=HTML shell painted",
-      "F2=East hook validation",
-      "F3=East local API and shell controls",
-      "F5=East admission packet emitted",
-      "F8=East compatibility handoff attempted",
-      "F13=Canvas evidence delegated",
-      "F21=North-only latch",
-      "",
+      `activeNews=${r.activeNews}`,
       `activeFibonacci=${r.activeFibonacci}`,
       `activeStage=${r.activeStage}`,
       `activeProgress=${r.activeProgress}`,
       "",
+      `shellSelected=${r.shellSelected}`,
+      `shellAccepted=${r.shellAccepted}`,
+      `shellContract=${r.shellContract}`,
+      `shellMode=${r.shellMode}`,
+      `shellHoldReason=${r.shellHoldReason}`,
+      "",
+      `hooksBound=${r.hooksBound}`,
+      `shellControlsBound=${r.shellControlsBound}`,
+      `cockpitPresent=${r.cockpitPresent}`,
+      `mountPresent=${r.mountPresent}`,
+      `statusNodePresent=${r.statusNodePresent}`,
+      "",
+      `runtimeReleaseRequested=${r.runtimeReleaseRequested}`,
+      `runtimeReleaseAuthorized=${r.runtimeReleaseAuthorized}`,
+      `runtimeReleaseStarted=${r.runtimeReleaseStarted}`,
+      `runtimeReleaseComplete=${r.runtimeReleaseComplete}`,
+      `runtimeReleaseHeldReason=${r.runtimeReleaseHeldReason}`,
+      `currentRuntimeKey=${r.currentRuntimeKey}`,
+      `currentRuntimeFile=${r.currentRuntimeFile}`,
+      `runtimeLoaded=${r.runtimeLoaded.join(",")}`,
+      `runtimeHeld=${r.runtimeHeld.join(",")}`,
+      `runtimeErrors=${r.runtimeErrors.join(" | ")}`,
+      "",
       `canvasF13Delegated=${r.canvasF13Delegated}`,
       `f21NorthOnly=${r.f21NorthOnly}`,
+      `readyTextAllowed=${r.readyTextAllowed}`,
+      `downstreamReleaseClaimed=${r.downstreamReleaseClaimed}`,
       "",
       `firstFailedCoordinate=${r.firstFailedCoordinate}`,
-      `recommendedNextOwner=${r.recommendedNextOwner}`,
+      `recommendedNextFile=${r.recommendedNextFile}`,
       `recommendedNextRenewalTarget=${r.recommendedNextRenewalTarget}`,
       `postgameStatus=${r.postgameStatus}`,
-      "",
-      "OWNERSHIP",
-      `ownsShellAdmission=${r.ownsShellAdmission}`,
-      `ownsHookValidation=${r.ownsHookValidation}`,
-      `ownsEastAdmissionPacket=${r.ownsEastAdmissionPacket}`,
-      `ownsOneTimeCompatibilityHandoff=${r.ownsOneTimeCompatibilityHandoff}`,
-      `ownsNorthRuntimeTable=${r.ownsNorthRuntimeTable}`,
-      `ownsNorthF21Latch=${r.ownsNorthF21Latch}`,
-      `ownsWestAdmissibilityDecision=${r.ownsWestAdmissibilityDecision}`,
-      `ownsSouthVisibleProof=${r.ownsSouthVisibleProof}`,
-      `ownsCanvasDrawing=${r.ownsCanvasDrawing}`,
-      `ownsCanvasF13EvidenceGeneration=${r.ownsCanvasF13EvidenceGeneration}`,
-      `ownsRouteConductorRuntime=${r.ownsRouteConductorRuntime}`,
-      `ownsSourceStackHydration=${r.ownsSourceStackHydration}`,
-      `ownsDownstreamScriptLoading=${r.ownsDownstreamScriptLoading}`,
-      `ownsFinalVisualPassClaim=${r.ownsFinalVisualPassClaim}`,
-      "",
-      "PERFORMANCE_BOUNDARY",
-      `noHeartbeatInterval=${r.noHeartbeatInterval}`,
-      `noWatchdogInterval=${r.noWatchdogInterval}`,
-      `noSerialDownstreamScriptLoader=${r.noSerialDownstreamScriptLoader}`,
-      `noDeepRecursiveGlobalScan=${r.noDeepRecursiveGlobalScan}`,
-      `noLaneRepaintLoop=${r.noLaneRepaintLoop}`,
-      "",
-      "EVENTS",
-      events,
-      "",
-      "ERRORS",
-      errors,
       "",
       `generatedImage=${r.generatedImage}`,
       `graphicBox=${r.graphicBox}`,
       `webGL=${r.webGL}`,
       `visualPassClaimed=${r.visualPassClaimed}`,
       "",
-      `createdAt=${r.createdAt}`,
+      `startedAt=${r.startedAt}`,
       `updatedAt=${r.updatedAt}`
     ].join("\n");
   }
 
   function boot() {
-    if (state.bootStarted) {
-      publishAll();
-      updateShellText("East admission already booted.");
-      return getReceipt();
-    }
+    if (booted) return getReceipt();
 
-    state.bootStarted = true;
-    state.createdAt = nowIso();
-    state.updatedAt = state.createdAt;
+    booted = true;
+    state.startedAt = nowIso();
+    state.updatedAt = state.startedAt;
 
-    state.activeFibonacci = "F2";
-    state.activeStage = "EAST_HOOK_VALIDATION_STARTED";
-    state.activeProgress = 18;
-    state.postgameStatus = "EAST_HOOK_VALIDATION_STARTED";
+    ensureStatusNode();
+    ensureMount();
+    ensureCockpit();
 
-    record("BOOT_STARTED");
-
-    if (!validateHooks()) {
-      state.bootComplete = true;
-      publishAll();
-      updateShellText("hook validation held · core shell hook missing");
-      return getReceipt();
-    }
+    setStage(
+      "F1",
+      "EAST",
+      "F1_FEMALE_SELECTOR_ALIVE",
+      8,
+      "female JS selector alive; choosing shell"
+    );
 
     bindShellControls();
-    publishAll();
-    updateShellText("shell controls ready · East admission packet pending");
 
-    state.activeFibonacci = "F5";
-    state.activeStage = "EAST_ADMISSION_PACKET_EMITTED";
-    state.activeProgress = 34;
-    state.eastAdmissionReady = true;
-    state.firstFailedCoordinate = "NONE_EAST_ADMISSION_PACKET_READY";
-    state.recommendedNextOwner = "NORTH";
-    state.recommendedNextRenewalTarget = NORTH_FILE;
-    state.postgameStatus = "EAST_ADMISSION_PACKET_READY";
+    setStage(
+      "F2",
+      "EAST",
+      "F2_SHELL_HOOKS_STABLE",
+      18,
+      "safe shell hooks stable; no heavy runtime loaded"
+    );
 
-    dispatchAdmission();
-    publishAll();
-    updateShellText("East admission packet emitted · compatibility handoff pending");
+    selectMaleShell();
+    maybeAutoReleaseFromMatchedHtml();
 
-    state.activeFibonacci = "F8";
-    state.activeStage = "EAST_EXISTING_STATUS_COMPATIBILITY_HANDOFF_ATTEMPTED";
-    state.activeProgress = 40;
+    publish();
 
-    attemptCompatibilityHandoff();
-
-    state.bootComplete = true;
-
-    if (state.postgameStatus === "EAST_ADMISSION_READY_NO_EXISTING_NORTH_CONSUMER_OBSERVED") {
-      state.activeStage = "EAST_ADMISSION_READY_NO_EXISTING_DOWNSTREAM_CONSUMER_OBSERVED";
-    } else {
-      state.activeStage = "EAST_ADMISSION_READY_EXISTING_STATUS_HANDOFF_COMPLETE_OR_WAITING";
-    }
-
-    publishAll();
-    updateShellText("East admission ready · downstream ownership delegated");
-
-    record("BOOT_COMPLETE", {
-      postgameStatus: state.postgameStatus,
-      firstFailedCoordinate: state.firstFailedCoordinate,
-      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget
+    record("FEMALE_JS_SELECTOR_BOOTED", {
+      shellContract: state.shellContract,
+      shellAccepted: state.shellAccepted,
+      runtimeReleaseAuthorized: state.runtimeReleaseAuthorized
     });
 
     return getReceipt();
@@ -1029,54 +1083,34 @@
     version: VERSION,
     file: FILE,
     route: ROUTE,
-    htmlContract: HTML_CONTRACT,
 
     boot,
     start: boot,
     init: boot,
     run: boot,
 
-    getAdmissionPacket,
-    dispatchAdmission,
-    attemptCompatibilityHandoff,
+    selectMaleShell,
+    bindShellControls,
+    releaseRuntime,
     getReceipt,
     getReceiptText,
+    copyDiagnostic,
 
-    htmlLoadedEastOnly: true,
-    htmlLoadsRuntimeTable: false,
-    htmlLoadsSourceStack: false,
-    htmlLoadsCanvas: false,
-    htmlLoadsWest: false,
-    htmlLoadsNorth: false,
-    htmlLoadsSouth: false,
-    eastLoadsDownstreamCycle: false,
-    downstreamLoadingOwnedByEast: false,
-    downstreamLoadingPerformed: false,
+    expectedHtmlContract: EXPECTED_HTML_CONTRACT,
+    currentSafeHtmlContract: CURRENT_SAFE_HTML_CONTRACT,
+    femaleJsComesFirst: true,
+    maleHtmlShellExpected: true,
+    southFacingExpressionPair: true,
+
+    newsAlignmentActive: true,
+    fibonacciSynchronizationActive: true,
+    cycleOneRoute: "NORTH_EAST_WEST_SOUTH_NORTH",
+    cycleTwoRoute: "NORTH_EAST_SOUTH_WEST_CANVAS",
 
     canvasF13Delegated: true,
     f21NorthOnly: true,
-
-    ownsShellAdmission: true,
-    ownsHookValidation: true,
-    ownsEastAdmissionPacket: true,
-    ownsOneTimeCompatibilityHandoff: true,
-
-    ownsNorthRuntimeTable: false,
-    ownsNorthF21Latch: false,
-    ownsWestAdmissibilityDecision: false,
-    ownsSouthVisibleProof: false,
-    ownsCanvasDrawing: false,
-    ownsCanvasF13EvidenceGeneration: false,
-    ownsRouteConductorRuntime: false,
-    ownsSourceStackHydration: false,
-    ownsDownstreamScriptLoading: false,
-    ownsFinalVisualPassClaim: false,
-
-    noHeartbeatInterval: true,
-    noWatchdogInterval: true,
-    noSerialDownstreamScriptLoader: true,
-    noDeepRecursiveGlobalScan: true,
-    noLaneRepaintLoop: true,
+    readyTextAllowed: false,
+    downstreamReleaseClaimed: false,
 
     generatedImage: false,
     graphicBox: false,
@@ -1088,7 +1122,14 @@
     }
   };
 
-  publishGlobals();
+  root.HEARTH = root.HEARTH || {};
+  root.HEARTH.eastFemaleSelector = api;
+  root.HEARTH.indexJs = api;
+
+  root.HEARTH_EAST_FEMALE_SELECTOR = api;
+  root.HEARTH_EAST_SOUTH_PAIR_FEMALE_SELECTOR = api;
+  root.HEARTH_INDEX_JS = api;
+  root.HEARTH_INDEX_BRIDGE = api;
 
   if (doc) {
     if (doc.readyState === "loading") {

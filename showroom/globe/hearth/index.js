@@ -1,15 +1,16 @@
 // /showroom/globe/hearth/index.js
-// HEARTH_MALE_ROUTE_SHELL_PRE_RELEASE_CARRIER_RUNTIME_HOST_TNT_v3
+// HEARTH_INDEX_JS_HTML_SHELL_ANCHOR_AUDIT_RUNTIME_HOST_TNT_v4
 // Full-file replacement.
-// Male route-shell host / dynamic shell alignment / pre-release Canvas carrier host / non-blocking runtime release.
+// Index JS / HTML-shell anchor auditor / control binder / runtime host / Canvas pre-release carrier requester.
 // Purpose:
-// - Split route-shell responsibility away from /showroom/globe/hearth/hearth.js.
-// - Make this file the male shell host: visible route structure, required anchors, controls, mount, diagnostic dock, and runtime script release.
+// - Preserve the split: /showroom/globe/hearth/index.html owns the visible shell.
+// - Keep this file from generating the visible route shell, cockpit, loading bar, receipt panel, portal, or CSS.
+// - Audit the existing HTML shell anchors and hold cleanly when the HTML shell is missing.
+// - Bind existing controls only when the HTML anchors exist.
+// - Release runtime scripts without reintroducing WAITING_MATCHED_MALE_HTML_SHELL contradiction.
+// - Load Canvas parent early enough to request pre-release structural carrier proof before Macro West admissibility.
+// - Provide a stable carrier-host packet to /assets/hearth/hearth.canvas.js.
 // - Keep /showroom/globe/hearth/hearth.js as downstream route conductor / macro-cycle coordination consumer.
-// - Load the Canvas parent early enough for pre-release structural carrier proof before Macro West admissibility.
-// - Provide a stable #hearthCanvasMount and shell-carrier packet for /assets/hearth/hearth.canvas.js.
-// - Preserve runtime release without reintroducing WAITING_MATCHED_MALE_HTML_SHELL contradiction.
-// - Preserve shell visibility during downstream runtime, Canvas, material, or visible-proof failure.
 // - Keep Canvas at F13 evidence only.
 // - Keep F21 North-only.
 // - Never claim ready text, F21 latch, final visual pass, generated image, GraphicBox, or WebGL.
@@ -17,15 +18,17 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_MALE_ROUTE_SHELL_PRE_RELEASE_CARRIER_RUNTIME_HOST_TNT_v3";
-  const RECEIPT = "HEARTH_MALE_ROUTE_SHELL_PRE_RELEASE_CARRIER_RUNTIME_HOST_RECEIPT_v3";
-  const PREVIOUS_CONTRACT = "HEARTH_EAST_SOUTH_PAIR_DYNAMIC_SELECTOR_RUNTIME_RELEASE_TNT_v2";
-  const BASELINE_CONTRACT = "HEARTH_EAST_SOUTH_PAIR_DYNAMIC_SELECTOR_RUNTIME_RELEASE_TNT_v2";
-  const VERSION = "2026-06-01.hearth-male-route-shell-pre-release-carrier-runtime-host-v3";
+  const CONTRACT = "HEARTH_INDEX_JS_HTML_SHELL_ANCHOR_AUDIT_RUNTIME_HOST_TNT_v4";
+  const RECEIPT = "HEARTH_INDEX_JS_HTML_SHELL_ANCHOR_AUDIT_RUNTIME_HOST_RECEIPT_v4";
+  const PREVIOUS_CONTRACT = "HEARTH_MALE_ROUTE_SHELL_PRE_RELEASE_CARRIER_RUNTIME_HOST_TNT_v3";
+  const BASELINE_CONTRACT = "HEARTH_MALE_ROUTE_SHELL_PRE_RELEASE_CARRIER_RUNTIME_HOST_TNT_v3";
+  const VERSION = "2026-06-01.hearth-index-js-html-shell-anchor-audit-runtime-host-v4";
 
   const ROUTE = "/showroom/globe/hearth/";
   const FILE = "/showroom/globe/hearth/index.js";
+  const HTML_FILE = "/showroom/globe/hearth/index.html";
   const PAIRED_ROUTE_CONDUCTOR_FILE = "/showroom/globe/hearth/hearth.js";
+
   const CANVAS_PARENT_FILE = "/assets/hearth/hearth.canvas.js";
   const NORTH_RUNTIME_FILE = "/assets/lab/runtime-table.js";
   const EAST_RUNTIME_FILE = "/assets/lab/runtime-table.east.js";
@@ -41,7 +44,7 @@
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
 
-  const DYNAMIC_ALIGNMENT_ANCHORS = Object.freeze([
+  const REQUIRED_HTML_ANCHORS = Object.freeze([
     "#hearth-main",
     "#hearthCanvasMount",
     "#hearthLoadCockpit",
@@ -186,6 +189,7 @@
         "HEARTH.routeConductor",
         "HEARTH.southRouteConductor",
         "HEARTH.routeConductorPrimaryGate",
+        "HEARTH.routeConductorStrictF13DownstreamAlignment",
         "DEXTER_LAB.hearthRouteConductor",
         "DEXTER_LAB.hearthSouthRouteConductor"
       ]
@@ -199,16 +203,25 @@
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     file: FILE,
+    htmlFile: HTML_FILE,
     route: ROUTE,
 
-    pairRole: "male-route-shell-host",
+    role: "index-js-html-shell-anchor-audit-runtime-host",
+    pairRole: "female-runtime-host-for-male-html-shell",
     pairedRouteConductorFile: PAIRED_ROUTE_CONDUCTOR_FILE,
-    pairedRouteConductorRole: "female-route-conductor-macro-cycle-consumer",
-    maleShellOwnsRouteAnchors: true,
-    maleShellOwnsMountHost: true,
-    maleShellOwnsControls: true,
-    maleShellOwnsRuntimeScriptRelease: true,
-    maleShellOwnsCanvasCarrierHostPacket: true,
+
+    htmlOwnsVisibleShell: true,
+    indexJsCreatesVisibleShell: false,
+    indexJsCreatesFallbackCss: false,
+    indexJsCreatesShellDom: false,
+    indexJsCreatesRuntimeScriptsOnly: true,
+
+    ownsRouteAnchors: false,
+    ownsMountHost: false,
+    ownsControlsCreation: false,
+    ownsControlBinding: true,
+    ownsRuntimeScriptRelease: true,
+    ownsCanvasCarrierHostPacket: true,
 
     ownsMacroWestTruth: false,
     ownsCanvasStructuralCarrierTruth: false,
@@ -229,12 +242,11 @@
     shellSelected: false,
     shellAccepted: false,
     shellSelectionMode: "UNSELECTED",
-    shellHoldReason: "WAITING_SHELL_DETECTION",
+    shellHoldReason: "WAITING_HTML_MALE_ROUTE_SHELL_ANCHORS",
+    htmlAnchorAuditActive: true,
     dynamicAnchorsPass: false,
     missingAnchors: [],
     shellControlsBound: false,
-    shellRescued: false,
-    shellRescueCount: 0,
 
     mountPresent: false,
     cockpitPresent: false,
@@ -261,7 +273,7 @@
     runtimeReleaseStarted: false,
     runtimeReleaseComplete: false,
     runtimeHeld: false,
-    runtimeReleaseHeldReason: "WAITING_SHELL_SELECTION",
+    runtimeReleaseHeldReason: "WAITING_HTML_MALE_ROUTE_SHELL_ANCHORS",
     runtimeLoaded: [],
     runtimeHeldFiles: [],
     runtimeErrors: [],
@@ -275,8 +287,8 @@
     activeNews: "EAST",
     activeFibonacci: "F1",
     activeFibonacciRank: 1,
-    activeStageId: "F1_ROUTE_SHELL_OBSERVED",
-    activeGearId: "hearth-male-route-shell-host-f1",
+    activeStageId: "F1_HTML_SHELL_ANCHOR_AUDIT",
+    activeGearId: "hearth-index-js-html-anchor-audit-f1",
     activeProgress: 8,
     oneActiveGearAtATime: true,
 
@@ -290,10 +302,10 @@
     readyTextAllowed: false,
     readyTextClaimedByIndex: false,
 
-    firstFailedCoordinate: "WAITING_SHELL_SELECTION",
-    recommendedNextFile: FILE,
-    recommendedNextRenewalTarget: FILE,
-    postgameStatus: "MALE_ROUTE_SHELL_HOST_LOADED",
+    firstFailedCoordinate: "WAITING_HTML_MALE_ROUTE_SHELL_ANCHORS",
+    recommendedNextFile: HTML_FILE,
+    recommendedNextRenewalTarget: HTML_FILE,
+    postgameStatus: "INDEX_JS_WAITING_HTML_SHELL_ANCHORS",
 
     renderWriteCount: 0,
     receiptWriteCount: 0,
@@ -430,6 +442,7 @@
 
   function scriptPresent(file) {
     if (!doc || !file) return null;
+
     return Array.from(doc.scripts || []).find((script) => {
       const src = script.getAttribute("src") || script.src || "";
       return src.includes(file);
@@ -478,329 +491,12 @@
     refs.portal = qs("#hearthMapPortal") || qs("[data-hearth-map-portal='true']");
   }
 
-  function ensureFallbackStyle() {
-    if (!doc || qs("#hearth-male-route-shell-host-style")) return;
-
-    const style = doc.createElement("style");
-    style.id = "hearth-male-route-shell-host-style";
-    style.dataset.hearthMaleShellStyle = CONTRACT;
-    style.textContent = `
-      #hearth-main[data-hearth-shell-hosted="true"] {
-        min-height: 100vh;
-      }
-      .hearth-shell-fallback {
-        display: grid;
-        gap: 1rem;
-        padding: clamp(1rem, 3vw, 2rem);
-        color: #eef7ff;
-        background: radial-gradient(circle at 50% 18%, rgba(43, 77, 112, 0.85), rgba(8, 13, 24, 0.98) 58%, #03050b 100%);
-      }
-      .hearth-shell-fallback .panel,
-      .hearth-shell-fallback .hearth-ledger-cockpit,
-      .hearth-shell-fallback .map-portal {
-        border: 1px solid rgba(185, 225, 255, 0.26);
-        border-radius: 1.25rem;
-        background: rgba(4, 10, 20, 0.62);
-        box-shadow: 0 20px 70px rgba(0, 0, 0, 0.35);
-      }
-      .hearth-shell-fallback .panel {
-        padding: clamp(1rem, 3vw, 2rem);
-      }
-      .hearth-shell-fallback .kicker,
-      .hearth-ledger-kicker {
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-        opacity: 0.75;
-        font-size: 0.78rem;
-      }
-      .hearth-shell-fallback h1 {
-        margin: 0.35rem 0;
-        font-size: clamp(2rem, 6vw, 4.5rem);
-        line-height: 0.98;
-      }
-      .hearth-shell-fallback .lead {
-        max-width: 68ch;
-        font-size: clamp(1rem, 2vw, 1.24rem);
-        line-height: 1.55;
-        opacity: 0.88;
-      }
-      .hearth-core-layout {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr);
-        gap: 1rem;
-      }
-      .hearth-globe-stage {
-        position: relative;
-        display: grid;
-        min-height: clamp(420px, 72vh, 760px);
-        place-items: center;
-        overflow: hidden;
-        border-radius: 1.35rem;
-        border: 1px solid rgba(185, 225, 255, 0.22);
-        background: radial-gradient(circle at 50% 45%, rgba(29, 58, 91, 0.32), rgba(3, 6, 13, 0.92) 58%, #01030a);
-      }
-      #hearthCanvasMount {
-        position: absolute;
-        inset: 0;
-        display: grid;
-        min-width: 360px;
-        min-height: 360px;
-        place-items: center;
-        overflow: hidden;
-      }
-      .hearth-ledger-cockpit {
-        position: relative;
-        z-index: 4;
-        width: min(520px, calc(100% - 2rem));
-        margin: auto;
-        padding: 1rem;
-        justify-self: end;
-        align-self: end;
-        backdrop-filter: blur(14px);
-      }
-      .hearth-ledger-title {
-        margin: 0.2rem 0 0.35rem;
-        font-size: 1.08rem;
-      }
-      .hearth-ledger-meta,
-      .hearth-ledger-latest {
-        font-size: 0.84rem;
-        opacity: 0.78;
-      }
-      .hearth-ledger-progress {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: 0.75rem;
-        align-items: center;
-        margin: 0.85rem 0;
-      }
-      .hearth-ledger-track {
-        height: 0.62rem;
-        overflow: hidden;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.14);
-      }
-      .hearth-ledger-fill {
-        display: block;
-        height: 100%;
-        border-radius: inherit;
-        background: linear-gradient(90deg, rgba(148, 209, 255, 0.72), rgba(255, 255, 255, 0.88));
-      }
-      .hearth-ledger-actions,
-      .portal-grid {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-      }
-      .hearth-ledger-button,
-      .portal-link {
-        border: 1px solid rgba(210, 238, 255, 0.24);
-        border-radius: 999px;
-        padding: 0.62rem 0.82rem;
-        color: inherit;
-        background: rgba(255, 255, 255, 0.08);
-        text-decoration: none;
-        cursor: pointer;
-      }
-      .hearth-ledger-button.primary {
-        background: rgba(185, 225, 255, 0.18);
-      }
-      .hearth-ledger-receipt {
-        margin-top: 0.75rem;
-        max-height: 260px;
-        overflow: auto;
-      }
-      .hearth-ledger-receipt[data-visible="false"] {
-        display: none;
-      }
-      .hearth-ledger-receipt pre,
-      #hearth-route-status {
-        white-space: pre-wrap;
-        font-size: 0.72rem;
-        line-height: 1.42;
-      }
-      .map-portal {
-        padding: 1rem;
-      }
-      [data-cockpit-mode="planet-inspect"] {
-        opacity: 0.42;
-        transform: scale(0.92);
-        pointer-events: auto;
-      }
-    `;
-
-    (doc.head || doc.documentElement).appendChild(style);
-  }
-
-  function ensureShell(reason = "ensure-shell") {
-    if (!doc || !doc.body) return false;
-
-    ensureFallbackStyle();
-    refreshRefs();
-
-    let changed = false;
-    let main = refs.main;
-
-    if (!main) {
-      main = doc.createElement("main");
-      main.id = "hearth-main";
-      main.className = "hearth-shell-fallback";
-      main.dataset.hearthMain = "true";
-      main.dataset.hearthShellRescuedBy = CONTRACT;
-      main.innerHTML = `
-        <section class="panel hero" aria-labelledby="page-title">
-          <div class="kicker">Mirrorland · Survival Path</div>
-          <h1 id="page-title">Hearth is the survival path inside Mirrorland.</h1>
-          <p class="lead">The route shell is active. Runtime, Canvas carrier proof, material distribution, and visual evidence remain downstream-owned.</p>
-        </section>
-        <section class="hearth-core-layout" aria-label="Hearth route shell and object stage">
-          <section id="hearthGlobeStage" class="hearth-globe-stage" data-hearth-globe-stage="true">
-            <section id="hearthCanvasMount" data-hearth-canvas-mount="true" aria-label="Hearth Canvas carrier mount"></section>
-            <aside id="hearthLoadCockpit" class="hearth-ledger-cockpit" data-hearth-load-cockpit="true" data-cockpit-mode="diagnostic-dock">
-              <div class="hearth-ledger-head">
-                <div class="hearth-ledger-kicker">Hearth · Route Shell Host</div>
-                <h2 class="hearth-ledger-title">MALE SHELL HOST ACTIVE</h2>
-                <div class="hearth-ledger-meta" data-hearth-stage-label>F1 · Shell observed</div>
-                <div class="hearth-ledger-meta" data-hearth-heartbeat-text>runtime guarded · Canvas delegated</div>
-                <div class="hearth-ledger-latest" data-hearth-latest-event>latest=SHELL_HOST_READY</div>
-              </div>
-              <div class="hearth-ledger-progress">
-                <div class="hearth-ledger-track"><span class="hearth-ledger-fill" data-hearth-main-progress-fill style="width:8%"></span></div>
-                <div class="hearth-ledger-percent" data-hearth-main-progress-percent>8%</div>
-              </div>
-              <div class="hearth-ledger-actions">
-                <button class="hearth-ledger-button primary" type="button" data-hearth-copy-diagnostic>Copy diagnostic</button>
-                <button class="hearth-ledger-button" type="button" data-hearth-toggle-receipt>Show receipt</button>
-                <button class="hearth-ledger-button" type="button" data-hearth-inspect-planet>Inspect planet</button>
-                <button class="hearth-ledger-button" type="button" data-hearth-collapse-cockpit>Collapse cockpit</button>
-              </div>
-              <div id="hearthReceiptPanel" class="hearth-ledger-receipt" data-hearth-receipt-box data-visible="false">
-                <pre data-hearth-receipt-text></pre>
-              </div>
-            </aside>
-          </section>
-          <aside id="hearthMapPortal" class="map-portal" data-hearth-map-portal="true">
-            <b>Map / Portal</b>
-            <div class="portal-grid">
-              <a class="portal-link" href="/showroom/globe/">Return to Globe</a>
-              <a class="portal-link current" href="/showroom/globe/hearth/">Hearth · Survival</a>
-              <a class="portal-link" href="/gauges/">Gauges</a>
-            </div>
-          </aside>
-        </section>
-        <pre id="hearth-route-status" data-hearth-route-status hidden></pre>
-      `;
-      doc.body.appendChild(main);
-      changed = true;
-    }
-
-    main.dataset.hearthShellHosted = "true";
-    main.dataset.hearthMaleShellHostContract = CONTRACT;
-    main.dataset.hearthMaleShellHostReceipt = RECEIPT;
-    main.dataset.hearthShellHostReason = reason;
-
-    if (!qs("#hearthCanvasMount")) {
-      const mount = doc.createElement("section");
-      mount.id = "hearthCanvasMount";
-      mount.dataset.hearthCanvasMount = "true";
-      mount.dataset.hearthShellRescuedBy = CONTRACT;
-      mount.setAttribute("aria-label", "Hearth Canvas carrier mount");
-      main.appendChild(mount);
-      changed = true;
-    }
-
-    if (!qs("#hearthLoadCockpit")) {
-      const cockpit = doc.createElement("aside");
-      cockpit.id = "hearthLoadCockpit";
-      cockpit.className = "hearth-ledger-cockpit";
-      cockpit.dataset.hearthLoadCockpit = "true";
-      cockpit.dataset.cockpitMode = "diagnostic-dock";
-      cockpit.innerHTML = `
-        <div class="hearth-ledger-head">
-          <div class="hearth-ledger-kicker">Hearth · Route Shell Host</div>
-          <h2 class="hearth-ledger-title">MALE SHELL HOST ACTIVE</h2>
-          <div class="hearth-ledger-meta" data-hearth-stage-label>F2 · Controls restored</div>
-          <div class="hearth-ledger-meta" data-hearth-heartbeat-text>runtime guarded · Canvas delegated</div>
-          <div class="hearth-ledger-latest" data-hearth-latest-event>latest=COCKPIT_RESTORED</div>
-        </div>
-        <div class="hearth-ledger-progress">
-          <div class="hearth-ledger-track"><span class="hearth-ledger-fill" data-hearth-main-progress-fill style="width:18%"></span></div>
-          <div class="hearth-ledger-percent" data-hearth-main-progress-percent>18%</div>
-        </div>
-        <div class="hearth-ledger-actions">
-          <button class="hearth-ledger-button primary" type="button" data-hearth-copy-diagnostic>Copy diagnostic</button>
-          <button class="hearth-ledger-button" type="button" data-hearth-toggle-receipt>Show receipt</button>
-          <button class="hearth-ledger-button" type="button" data-hearth-inspect-planet>Inspect planet</button>
-          <button class="hearth-ledger-button" type="button" data-hearth-collapse-cockpit>Collapse cockpit</button>
-        </div>
-        <div id="hearthReceiptPanel" class="hearth-ledger-receipt" data-hearth-receipt-box data-visible="false">
-          <pre data-hearth-receipt-text></pre>
-        </div>
-      `;
-      main.appendChild(cockpit);
-      changed = true;
-    }
-
-    if (!qs("#hearth-route-status")) {
-      const status = doc.createElement("pre");
-      status.id = "hearth-route-status";
-      status.dataset.hearthRouteStatus = "true";
-      status.hidden = true;
-      main.appendChild(status);
-      changed = true;
-    }
-
-    if (!qs("#hearthMapPortal")) {
-      const portal = doc.createElement("aside");
-      portal.id = "hearthMapPortal";
-      portal.className = "map-portal";
-      portal.dataset.hearthMapPortal = "true";
-      portal.innerHTML = `
-        <b>Map / Portal</b>
-        <div class="portal-grid">
-          <a class="portal-link" href="/showroom/globe/">Return to Globe</a>
-          <a class="portal-link current" href="/showroom/globe/hearth/">Hearth · Survival</a>
-          <a class="portal-link" href="/gauges/">Gauges</a>
-        </div>
-      `;
-      main.appendChild(portal);
-      changed = true;
-    }
-
-    if (changed) {
-      state.shellRescued = true;
-      state.shellRescueCount += 1;
-    }
-
-    refreshRefs();
-
-    state.mountPresent = Boolean(refs.mount);
-    state.cockpitPresent = Boolean(refs.cockpit);
-    state.statusNodePresent = Boolean(refs.status);
-    state.receiptPanelPresent = Boolean(refs.receiptPanel);
-    state.portalPresent = Boolean(refs.portal);
-    state.carrierHostReady = Boolean(refs.mount);
-    state.carrierHostPacketReady = Boolean(refs.mount);
-
-    if (refs.mount) {
-      refs.mount.dataset.hearthMaleShellHostMount = "true";
-      refs.mount.dataset.hearthMaleShellHostContract = CONTRACT;
-      refs.mount.dataset.hearthCanvasCarrierHostReady = "true";
-      refs.mount.dataset.generatedImage = "false";
-      refs.mount.dataset.graphicBox = "false";
-      refs.mount.dataset.webgl = "false";
-      refs.mount.dataset.visualPassClaimed = "false";
-    }
-
-    return changed;
-  }
-
-  function detectShell() {
+  function auditShellAnchors(reason = "audit-shell-anchors") {
     refreshRefs();
 
     const dataset = doc && doc.documentElement && doc.documentElement.dataset ? doc.documentElement.dataset : {};
     const shellContract = safeString(dataset.contract || dataset.hearthHtmlContract || dataset.hearthShellContract || "");
-    const missingAnchors = DYNAMIC_ALIGNMENT_ANCHORS.filter((selector) => !qs(selector));
+    const missingAnchors = REQUIRED_HTML_ANCHORS.filter((selector) => !qs(selector));
 
     const matchedMale = shellContract === EXPECTED_HTML_CONTRACT;
     const safeTransitional = shellContract === CURRENT_SAFE_HTML_CONTRACT;
@@ -814,9 +510,9 @@
     } else if (safeTransitional && dynamicAnchorsPass) {
       selectionMode = "SAFE_TRANSITIONAL_HTML_BRIDGE";
     } else if (dynamicAnchorsPass) {
-      selectionMode = "DYNAMIC_ANCHOR_ACCEPTED_MALE_SHELL";
+      selectionMode = "DYNAMIC_ANCHOR_ACCEPTED_HTML_SHELL";
     } else if (matchedMale || safeTransitional) {
-      selectionMode = "CONTRACT_PRESENT_ANCHORS_MISSING";
+      selectionMode = "HTML_CONTRACT_PRESENT_ANCHORS_MISSING";
     }
 
     const selected = Boolean(detected && (matchedMale || safeTransitional || dynamicAnchorsPass));
@@ -830,12 +526,38 @@
     state.dynamicAnchorsPass = dynamicAnchorsPass;
     state.missingAnchors = missingAnchors;
 
-    if (!detected) state.shellHoldReason = "WAITING_ROUTE_SHELL_DETECTION";
-    else if (!selected) state.shellHoldReason = "WAITING_MALE_ROUTE_SHELL_SELECTION";
-    else if (!dynamicAnchorsPass) state.shellHoldReason = "WAITING_DYNAMIC_ALIGNMENT_ANCHORS";
-    else state.shellHoldReason = "NONE";
+    state.mountPresent = Boolean(refs.mount);
+    state.cockpitPresent = Boolean(refs.cockpit);
+    state.statusNodePresent = Boolean(refs.status);
+    state.receiptPanelPresent = Boolean(refs.receiptPanel);
+    state.portalPresent = Boolean(refs.portal);
+    state.carrierHostReady = Boolean(refs.mount);
+    state.carrierHostPacketReady = Boolean(refs.mount);
+
+    if (!detected) {
+      state.shellHoldReason = "WAITING_HTML_MALE_ROUTE_SHELL";
+    } else if (!selected) {
+      state.shellHoldReason = "WAITING_HTML_MALE_ROUTE_SHELL_SELECTION";
+    } else if (!dynamicAnchorsPass) {
+      state.shellHoldReason = "WAITING_HTML_MALE_ROUTE_SHELL_ANCHORS";
+    } else {
+      state.shellHoldReason = "NONE";
+    }
+
+    if (refs.mount) {
+      refs.mount.dataset.hearthIndexJsAnchorAudit = "true";
+      refs.mount.dataset.hearthIndexJsContract = CONTRACT;
+      refs.mount.dataset.hearthCanvasCarrierHostReady = String(state.carrierHostReady);
+      refs.mount.dataset.generatedImage = "false";
+      refs.mount.dataset.graphicBox = "false";
+      refs.mount.dataset.webgl = "false";
+      refs.mount.dataset.visualPassClaimed = "false";
+    }
+
+    updateDataset();
 
     return {
+      reason,
       detected,
       selected,
       accepted,
@@ -849,7 +571,7 @@
   }
 
   function applyReleaseLaw() {
-    const shell = detectShell();
+    const shell = auditShellAnchors("apply-release-law");
 
     state.runtimeReleaseRequestable = Boolean(shell.accepted);
     state.runtimeReleaseAuthorized = Boolean(shell.accepted);
@@ -860,29 +582,30 @@
         state.firstFailedCoordinate = "WAITING_RUNTIME_RELEASE_START";
         state.recommendedNextFile = FILE;
         state.recommendedNextRenewalTarget = FILE;
-        state.postgameStatus = "MALE_SHELL_ACCEPTED_RUNTIME_RELEASE_AUTHORIZED";
+        state.postgameStatus = "HTML_SHELL_ACCEPTED_RUNTIME_RELEASE_AUTHORIZED";
       }
 
       state.activeNews = "EAST";
       state.activeFibonacci = state.runtimeReleaseStarted ? "F8" : "F5";
       state.activeFibonacciRank = state.runtimeReleaseStarted ? 8 : 5;
-      state.activeStageId = state.runtimeReleaseStarted ? "F8_RUNTIME_RELEASE_ACTIVE" : "F5_MALE_SHELL_ACCEPTED";
-      state.activeGearId = state.runtimeReleaseStarted ? "hearth-male-shell-runtime-release-f8" : "hearth-male-shell-accepted-f5";
+      state.activeStageId = state.runtimeReleaseStarted ? "F8_RUNTIME_RELEASE_ACTIVE" : "F5_HTML_SHELL_ACCEPTED";
+      state.activeGearId = state.runtimeReleaseStarted ? "hearth-index-js-runtime-release-f8" : "hearth-index-js-html-shell-accepted-f5";
       state.activeProgress = Math.max(state.activeProgress, state.runtimeReleaseStarted ? 48 : 34);
     } else {
       state.runtimeReleaseHeldReason = state.shellHoldReason;
       state.firstFailedCoordinate = state.shellHoldReason;
-      state.recommendedNextFile = FILE;
-      state.recommendedNextRenewalTarget = FILE;
+      state.recommendedNextFile = HTML_FILE;
+      state.recommendedNextRenewalTarget = HTML_FILE;
       state.postgameStatus = state.shellHoldReason;
       state.activeNews = "EAST";
       state.activeFibonacci = shell.dynamicAnchorsPass ? "F2" : "F1";
       state.activeFibonacciRank = shell.dynamicAnchorsPass ? 2 : 1;
-      state.activeStageId = shell.dynamicAnchorsPass ? "F2_DYNAMIC_ANCHORS_PRESENT" : "F1_ROUTE_SHELL_OBSERVED";
-      state.activeGearId = shell.dynamicAnchorsPass ? "hearth-male-shell-anchors-f2" : "hearth-male-shell-observed-f1";
+      state.activeStageId = shell.dynamicAnchorsPass ? "F2_DYNAMIC_HTML_ANCHORS_PRESENT" : "F1_HTML_SHELL_ANCHOR_AUDIT";
+      state.activeGearId = shell.dynamicAnchorsPass ? "hearth-index-js-html-anchors-f2" : "hearth-index-js-html-anchor-audit-f1";
       state.activeProgress = shell.dynamicAnchorsPass ? 22 : 12;
     }
 
+    updateDataset();
     return state.runtimeReleaseAuthorized;
   }
 
@@ -892,18 +615,26 @@
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      packetType: "MALE_ROUTE_SHELL_CARRIER_HOST_PACKET",
+      packetType: "INDEX_JS_HTML_SHELL_CARRIER_HOST_PACKET",
       sourceFile: FILE,
+      htmlFile: HTML_FILE,
       targetFile: CANVAS_PARENT_FILE,
       route: ROUTE,
       pairRole: state.pairRole,
       pairedRouteConductorFile: PAIRED_ROUTE_CONDUCTOR_FILE,
 
-      maleShellOwnsRouteAnchors: true,
-      maleShellOwnsMountHost: true,
-      maleShellOwnsControls: true,
-      maleShellOwnsRuntimeScriptRelease: true,
-      maleShellOwnsCanvasCarrierHostPacket: true,
+      htmlOwnsVisibleShell: true,
+      indexJsCreatesVisibleShell: false,
+      indexJsCreatesFallbackCss: false,
+      indexJsCreatesShellDom: false,
+      indexJsCreatesRuntimeScriptsOnly: true,
+
+      ownsRouteAnchors: false,
+      ownsMountHost: false,
+      ownsControlsCreation: false,
+      ownsControlBinding: true,
+      ownsRuntimeScriptRelease: true,
+      ownsCanvasCarrierHostPacket: true,
 
       mountSelector: "#hearthCanvasMount",
       mountPresent: Boolean(refs.mount),
@@ -951,7 +682,11 @@
   }
 
   function normalizeCanvasCarrierReceipt(result, api) {
-    const receipt = isObject(result) && (result.contract || result.receipt || result.structuralCarrierSafeForCanvasRelease !== undefined)
+    const receipt = isObject(result) && (
+      result.contract ||
+      result.receipt ||
+      result.structuralCarrierSafeForCanvasRelease !== undefined
+    )
       ? result
       : readReceipt(api) || {};
 
@@ -988,7 +723,18 @@
   }
 
   function requestCanvasPreReleaseCarrier(reason = "request-canvas-pre-release-carrier") {
-    ensureShell(reason);
+    auditShellAnchors(reason);
+
+    if (!state.shellAccepted || !refs.mount) {
+      state.canvasPreReleaseCarrierRequested = false;
+      state.canvasPreReleaseCarrierObserved = false;
+      state.canvasPreReleaseCarrierAccepted = false;
+      state.canvasPreReleaseCarrierSafeForWest = false;
+      state.canvasCarrierHeldReason = state.shellHoldReason || "WAITING_HTML_MALE_ROUTE_SHELL_ANCHORS";
+      state.f13CarrierHostAvailable = Boolean(refs.mount);
+      updateDataset();
+      return false;
+    }
 
     const api = findCanvasParentApi();
 
@@ -1017,39 +763,24 @@
     state.canvasPreReleaseCarrierRequested = true;
 
     try {
+      const input = {
+        mount: refs.mount,
+        container: refs.mount,
+        target: refs.mount,
+        route: ROUTE,
+        preReleaseOnly: true,
+        carrierHostPacket: packet,
+        sourceFile: FILE,
+        htmlFile: HTML_FILE,
+        requestedBy: CONTRACT
+      };
+
       if (isFunction(api.ensurePreReleaseStructuralCarrier)) {
-        result = api.ensurePreReleaseStructuralCarrier({
-          mount: refs.mount,
-          container: refs.mount,
-          target: refs.mount,
-          route: ROUTE,
-          preReleaseOnly: true,
-          carrierHostPacket: packet,
-          sourceFile: FILE,
-          requestedBy: CONTRACT
-        });
+        result = api.ensurePreReleaseStructuralCarrier(input);
       } else if (isFunction(api.ensureCarrier)) {
-        result = api.ensureCarrier({
-          mount: refs.mount,
-          container: refs.mount,
-          target: refs.mount,
-          route: ROUTE,
-          preReleaseOnly: true,
-          carrierHostPacket: packet,
-          sourceFile: FILE,
-          requestedBy: CONTRACT
-        });
+        result = api.ensureCarrier(input);
       } else if (isFunction(api.mount)) {
-        result = api.mount({
-          mount: refs.mount,
-          container: refs.mount,
-          target: refs.mount,
-          route: ROUTE,
-          preReleaseOnly: true,
-          carrierHostPacket: packet,
-          sourceFile: FILE,
-          requestedBy: CONTRACT
-        });
+        result = api.mount(input);
       }
     } catch (error) {
       state.runtimeErrors.push({
@@ -1088,15 +819,21 @@
   }
 
   function bindControls() {
-    refreshRefs();
+    auditShellAnchors("bind-controls");
 
-    if (refs.copyButton && refs.copyButton.dataset.hearthMaleShellHostBound !== "true") {
-      refs.copyButton.dataset.hearthMaleShellHostBound = "true";
+    if (!state.shellAccepted) {
+      state.shellControlsBound = false;
+      updateDataset();
+      return false;
+    }
+
+    if (refs.copyButton && refs.copyButton.dataset.hearthIndexJsBound !== "true") {
+      refs.copyButton.dataset.hearthIndexJsBound = "true";
       refs.copyButton.addEventListener("click", copyDiagnostic);
     }
 
-    if (refs.toggleButton && refs.toggleButton.dataset.hearthMaleShellHostBound !== "true") {
-      refs.toggleButton.dataset.hearthMaleShellHostBound = "true";
+    if (refs.toggleButton && refs.toggleButton.dataset.hearthIndexJsBound !== "true") {
+      refs.toggleButton.dataset.hearthIndexJsBound = "true";
       refs.toggleButton.addEventListener("click", () => {
         refreshRefs();
 
@@ -1115,8 +852,8 @@
       });
     }
 
-    if (refs.inspectButton && refs.inspectButton.dataset.hearthMaleShellHostBound !== "true") {
-      refs.inspectButton.dataset.hearthMaleShellHostBound = "true";
+    if (refs.inspectButton && refs.inspectButton.dataset.hearthIndexJsBound !== "true") {
+      refs.inspectButton.dataset.hearthIndexJsBound = "true";
       refs.inspectButton.addEventListener("click", () => {
         const html = doc && doc.documentElement ? doc.documentElement : null;
         const active = !(html && html.dataset.hearthSouthPlanetInspect === "true");
@@ -1124,7 +861,7 @@
         if (html) {
           html.dataset.hearthSouthPlanetInspect = String(active);
           html.dataset.hearthEastInspectReservedActive = String(active);
-          html.dataset.hearthMaleShellInspectIntent = String(active);
+          html.dataset.hearthIndexJsInspectIntent = String(active);
         }
 
         if (refs.cockpit) {
@@ -1140,13 +877,13 @@
           refs.showDiagnosticTab.dataset.visible = String(active);
         }
 
-        state.postgameStatus = active ? "MALE_SHELL_INSPECT_INTENT_ACTIVE" : "MALE_SHELL_DIAGNOSTIC_DOCK_ACTIVE";
+        state.postgameStatus = active ? "INDEX_JS_INSPECT_INTENT_ACTIVE" : "INDEX_JS_DIAGNOSTIC_DOCK_ACTIVE";
         schedulePublish("inspect-toggle");
       });
     }
 
-    if (refs.collapseButton && refs.collapseButton.dataset.hearthMaleShellHostBound !== "true") {
-      refs.collapseButton.dataset.hearthMaleShellHostBound = "true";
+    if (refs.collapseButton && refs.collapseButton.dataset.hearthIndexJsBound !== "true") {
+      refs.collapseButton.dataset.hearthIndexJsBound = "true";
       refs.collapseButton.addEventListener("click", () => {
         if (!refs.cockpit) return;
 
@@ -1156,15 +893,15 @@
       });
     }
 
-    if (refs.showDiagnosticTab && refs.showDiagnosticTab.dataset.hearthMaleShellHostBound !== "true") {
-      refs.showDiagnosticTab.dataset.hearthMaleShellHostBound = "true";
+    if (refs.showDiagnosticTab && refs.showDiagnosticTab.dataset.hearthIndexJsBound !== "true") {
+      refs.showDiagnosticTab.dataset.hearthIndexJsBound = "true";
       refs.showDiagnosticTab.addEventListener("click", () => {
         const html = doc && doc.documentElement ? doc.documentElement : null;
 
         if (html) {
           html.dataset.hearthSouthPlanetInspect = "false";
           html.dataset.hearthEastInspectReservedActive = "false";
-          html.dataset.hearthMaleShellInspectIntent = "false";
+          html.dataset.hearthIndexJsInspectIntent = "false";
         }
 
         if (refs.cockpit) refs.cockpit.dataset.cockpitMode = "diagnostic-dock";
@@ -1172,22 +909,23 @@
 
         if (refs.inspectButton) refs.inspectButton.textContent = "Inspect planet";
 
-        state.postgameStatus = "MALE_SHELL_DIAGNOSTIC_DOCK_ACTIVE";
+        state.postgameStatus = "INDEX_JS_DIAGNOSTIC_DOCK_ACTIVE";
         schedulePublish("show-diagnostic");
       });
     }
 
-    state.shellControlsBound = Boolean(refs.copyButton && refs.toggleButton && refs.inspectButton);
+    state.shellControlsBound = Boolean(refs.copyButton && refs.toggleButton && refs.inspectButton && refs.collapseButton);
 
     if (state.shellControlsBound && state.shellAccepted && !state.runtimeReleaseStarted) {
       state.activeFibonacci = "F3";
       state.activeFibonacciRank = 3;
-      state.activeStageId = "F3_SHELL_CONTROLS_BOUND";
-      state.activeGearId = "hearth-male-shell-controls-f3";
+      state.activeStageId = "F3_HTML_SHELL_CONTROLS_BOUND";
+      state.activeGearId = "hearth-index-js-controls-f3";
       state.activeProgress = Math.max(state.activeProgress, 28);
     }
 
     updateDataset();
+    return state.shellControlsBound;
   }
 
   async function copyDiagnostic() {
@@ -1245,6 +983,8 @@
       state.currentRuntimeKey = key;
       state.currentRuntimeFile = file;
     }
+
+    updateDataset();
   }
 
   function appendScript(def) {
@@ -1259,7 +999,7 @@
       }
 
       if (existing) {
-        existing.dataset.hearthMaleShellHostObserved = CONTRACT;
+        existing.dataset.hearthIndexJsObserved = CONTRACT;
 
         if (!state.runtimeLoaded.includes(def.file)) state.runtimeLoaded.push(def.file);
 
@@ -1279,7 +1019,7 @@
       script.async = false;
       script.defer = true;
       script.dataset.loadedBy = CONTRACT;
-      script.dataset.hearthMaleShellRuntimeRelease = "true";
+      script.dataset.hearthIndexJsRuntimeRelease = "true";
       script.dataset.hearthRuntimeKey = def.key;
       script.dataset.hearthRuntimeNews = def.news;
       script.dataset.hearthRuntimeFibonacci = def.fibonacci;
@@ -1302,7 +1042,7 @@
         if (!state.runtimeLoaded.includes(def.file)) state.runtimeLoaded.push(def.file);
 
         afterFrame(() => {
-          ensureShell(`SHELL_GUARD_AFTER_${def.key.toUpperCase()}`);
+          auditShellAnchors(`script-loaded-${def.key}`);
           bindControls();
 
           if (def.carrierPreflightAfter) {
@@ -1367,7 +1107,7 @@
     state.activeFibonacci = "F8";
     state.activeFibonacciRank = 8;
     state.activeStageId = "F8_RUNTIME_RELEASE_STARTED";
-    state.activeGearId = "hearth-male-shell-runtime-release-f8";
+    state.activeGearId = "hearth-index-js-runtime-release-f8";
     state.activeProgress = 44;
     state.postgameStatus = "RUNTIME_RELEASE_STARTED";
     state.firstFailedCoordinate = "RUNTIME_RELEASE_IN_PROGRESS";
@@ -1382,7 +1122,7 @@
       state.activeFibonacci = def.fibonacci;
       state.activeFibonacciRank = def.fibonacci;
       state.activeStageId = `${def.fibonacci}_${def.key}`;
-      state.activeGearId = `hearth-${def.key}`;
+      state.activeGearId = `hearth-index-js-${def.key}`;
       state.activeProgress = clamp(46 + i * 7, 46, 88);
       state.postgameStatus = `LOADING_${def.key.toUpperCase()}`;
       schedulePublish(`loading-${def.key}`);
@@ -1423,7 +1163,7 @@
           requestCanvasPreReleaseCarrier("canvas-parent-loaded-before-west-admissibility");
         }
 
-        ensureShell(`SHELL_GUARD_LOADED_${def.key.toUpperCase()}`);
+        auditShellAnchors(`runtime-loaded-${def.key}`);
         bindControls();
         schedulePublish(`runtime-loaded-${def.key}`);
       }
@@ -1440,7 +1180,7 @@
       state.activeFibonacci = "F8";
       state.activeFibonacciRank = 8;
       state.activeStageId = "F8_RUNTIME_RELEASE_HELD_REQUIRED_FILE";
-      state.activeGearId = "hearth-male-shell-runtime-held-f8";
+      state.activeGearId = "hearth-index-js-runtime-held-f8";
       state.activeProgress = 58;
       state.postgameStatus = "RUNTIME_RELEASE_HELD_REQUIRED_FILE";
     } else {
@@ -1456,7 +1196,7 @@
       state.activeStageId = state.canvasPreReleaseCarrierSafeForWest
         ? "F13_CANVAS_PRE_RELEASE_CARRIER_SAFE_FOR_WEST"
         : "F13_CANVAS_PRE_RELEASE_CARRIER_REQUESTED";
-      state.activeGearId = "hearth-canvas-carrier-host-f13";
+      state.activeGearId = "hearth-index-js-canvas-carrier-host-f13";
       state.activeProgress = state.canvasPreReleaseCarrierSafeForWest ? 88 : 78;
 
       state.firstFailedCoordinate = state.canvasPreReleaseCarrierSafeForWest
@@ -1484,22 +1224,24 @@
     refreshRefs();
 
     if (refs.stageLabel) refs.stageLabel.textContent = `${state.activeFibonacci} · ${state.activeStageId}`;
+
     if (refs.heartbeatText) {
       refs.heartbeatText.textContent = message || [
-        `shell=${state.shellAccepted}`,
+        `htmlShell=${state.shellAccepted}`,
         `carrierHost=${state.carrierHostReady}`,
         `canvasPreRelease=${state.canvasPreReleaseCarrierSafeForWest}`,
         `runtime=${state.runtimeReleaseComplete}`,
         "f21=north-only"
       ].join(" · ");
     }
+
     if (refs.latestEvent) refs.latestEvent.textContent = `latest=${state.postgameStatus}`;
     if (refs.progressFill) refs.progressFill.style.width = `${clamp(state.activeProgress, 0, 100)}%`;
     if (refs.progressPercent) refs.progressPercent.textContent = `${Math.round(clamp(state.activeProgress, 0, 100))}%`;
 
     if (refs.cockpit) {
-      refs.cockpit.dataset.hearthMaleShellHostActive = "true";
-      refs.cockpit.dataset.hearthMaleShellHostContract = CONTRACT;
+      refs.cockpit.dataset.hearthIndexJsActive = "true";
+      refs.cockpit.dataset.hearthIndexJsContract = CONTRACT;
       refs.cockpit.dataset.hearthShellAccepted = String(state.shellAccepted);
       refs.cockpit.dataset.hearthRuntimeReleaseComplete = String(state.runtimeReleaseComplete);
       refs.cockpit.dataset.hearthCanvasPreReleaseCarrierSafeForWest = String(state.canvasPreReleaseCarrierSafeForWest);
@@ -1523,28 +1265,35 @@
 
     const dataset = doc.documentElement.dataset;
 
-    dataset.hearthMaleShellHostLoaded = "true";
-    dataset.hearthMaleShellHostContract = CONTRACT;
-    dataset.hearthMaleShellHostReceipt = RECEIPT;
-    dataset.hearthMaleShellHostVersion = VERSION;
-    dataset.hearthMaleShellHostFile = FILE;
-    dataset.hearthMaleShellHostRoute = ROUTE;
+    dataset.hearthIndexJsLoaded = "true";
+    dataset.hearthIndexJsContract = CONTRACT;
+    dataset.hearthIndexJsReceipt = RECEIPT;
+    dataset.hearthIndexJsVersion = VERSION;
+    dataset.hearthIndexJsFile = FILE;
+    dataset.hearthIndexJsRoute = ROUTE;
+
+    dataset.hearthIndexJsHtmlFile = HTML_FILE;
+    dataset.hearthHtmlOwnsVisibleShell = "true";
+    dataset.hearthIndexJsCreatesVisibleShell = "false";
+    dataset.hearthIndexJsCreatesFallbackCss = "false";
+    dataset.hearthIndexJsCreatesShellDom = "false";
+    dataset.hearthIndexJsCreatesRuntimeScriptsOnly = "true";
 
     dataset.hearthPairRole = state.pairRole;
     dataset.hearthPairedRouteConductorFile = PAIRED_ROUTE_CONDUCTOR_FILE;
-    dataset.hearthPairedRouteConductorRole = state.pairedRouteConductorRole;
 
-    dataset.hearthMaleShellOwnsRouteAnchors = "true";
-    dataset.hearthMaleShellOwnsMountHost = "true";
-    dataset.hearthMaleShellOwnsControls = "true";
-    dataset.hearthMaleShellOwnsRuntimeScriptRelease = "true";
-    dataset.hearthMaleShellOwnsCanvasCarrierHostPacket = "true";
-    dataset.hearthMaleShellOwnsCanvasStructuralCarrierTruth = "false";
-    dataset.hearthMaleShellOwnsCanvasReleaseTruth = "false";
-    dataset.hearthMaleShellOwnsCanvasDrawing = "false";
-    dataset.hearthMaleShellOwnsMaterialTruth = "false";
-    dataset.hearthMaleShellOwnsPlanetTruth = "false";
-    dataset.hearthMaleShellOwnsF21 = "false";
+    dataset.hearthIndexJsOwnsRouteAnchors = "false";
+    dataset.hearthIndexJsOwnsMountHost = "false";
+    dataset.hearthIndexJsOwnsControlsCreation = "false";
+    dataset.hearthIndexJsOwnsControlBinding = "true";
+    dataset.hearthIndexJsOwnsRuntimeScriptRelease = "true";
+    dataset.hearthIndexJsOwnsCanvasCarrierHostPacket = "true";
+    dataset.hearthIndexJsOwnsCanvasStructuralCarrierTruth = "false";
+    dataset.hearthIndexJsOwnsCanvasReleaseTruth = "false";
+    dataset.hearthIndexJsOwnsCanvasDrawing = "false";
+    dataset.hearthIndexJsOwnsMaterialTruth = "false";
+    dataset.hearthIndexJsOwnsPlanetTruth = "false";
+    dataset.hearthIndexJsOwnsF21 = "false";
 
     dataset.hearthExpectedHtmlContract = EXPECTED_HTML_CONTRACT;
     dataset.hearthCurrentSafeHtmlContract = CURRENT_SAFE_HTML_CONTRACT;
@@ -1554,6 +1303,7 @@
     dataset.hearthShellAccepted = String(state.shellAccepted);
     dataset.hearthShellSelectionMode = state.shellSelectionMode;
     dataset.hearthShellHoldReason = state.shellHoldReason;
+    dataset.hearthHtmlAnchorAuditActive = "true";
     dataset.hearthDynamicAnchorsPass = String(state.dynamicAnchorsPass);
     dataset.hearthMissingAnchors = state.missingAnchors.join(",");
 
@@ -1621,21 +1371,20 @@
     root.HEARTH = root.HEARTH || {};
     root.DEXTER_LAB = root.DEXTER_LAB || {};
 
-    root.HEARTH.maleRouteShellHost = api;
-    root.HEARTH.routeShellHost = api;
+    root.HEARTH.indexRuntimeHost = api;
+    root.HEARTH.htmlShellAnchorAuditRuntimeHost = api;
     root.HEARTH.indexBridge = api;
     root.HEARTH.indexJs = api;
     root.HEARTH.dynamicSelectorRuntimeRelease = api;
     root.HEARTH.eastSouthPairFemaleSelector = api;
 
-    root.DEXTER_LAB.hearthMaleRouteShellHost = api;
-    root.DEXTER_LAB.hearthRouteShellHost = api;
+    root.DEXTER_LAB.hearthIndexRuntimeHost = api;
+    root.DEXTER_LAB.hearthHtmlShellAnchorAuditRuntimeHost = api;
     root.DEXTER_LAB.hearthDynamicSelectorRuntimeRelease = api;
-    root.DEXTER_LAB.hearthEastSouthPairFemaleSelector = api;
 
-    root.HEARTH_MALE_ROUTE_SHELL_HOST = api;
-    root.HEARTH_MALE_ROUTE_SHELL_PRE_RELEASE_CARRIER_RUNTIME_HOST = api;
-    root.HEARTH_ROUTE_SHELL_HOST = api;
+    root.HEARTH_INDEX_JS_HTML_SHELL_ANCHOR_AUDIT_RUNTIME_HOST = api;
+    root.HEARTH_INDEX_RUNTIME_HOST = api;
+    root.HEARTH_HTML_SHELL_ANCHOR_AUDIT_RUNTIME_HOST = api;
     root.HEARTH_INDEX_JS = api;
     root.HEARTH_INDEX_BRIDGE = api;
 
@@ -1644,8 +1393,9 @@
 
     const receipt = getReceipt();
 
-    root.HEARTH_MALE_ROUTE_SHELL_HOST_RECEIPT = receipt;
-    root.HEARTH_MALE_ROUTE_SHELL_PRE_RELEASE_CARRIER_RUNTIME_HOST_RECEIPT = receipt;
+    root.HEARTH_INDEX_JS_HTML_SHELL_ANCHOR_AUDIT_RUNTIME_HOST_RECEIPT = receipt;
+    root.HEARTH_INDEX_RUNTIME_HOST_RECEIPT = receipt;
+    root.HEARTH_HTML_SHELL_ANCHOR_AUDIT_RUNTIME_HOST_RECEIPT = receipt;
     root.HEARTH_INDEX_JS_RECEIPT = receipt;
     root.HEARTH_INDEX_BRIDGE_RECEIPT = receipt;
   }
@@ -1677,8 +1427,7 @@
     shellGuardTimer = root.setInterval(() => {
       ticks += 1;
 
-      ensureShell("SHELL_GUARD_INTERVAL");
-      detectShell();
+      auditShellAnchors("SHELL_GUARD_INTERVAL");
       bindControls();
       applyReleaseLaw();
 
@@ -1702,8 +1451,7 @@
     state.startedAt = nowIso();
     state.updatedAt = state.startedAt;
 
-    ensureShell("BOOT_MALE_ROUTE_SHELL_HOST");
-    detectShell();
+    auditShellAnchors("BOOT_HTML_SHELL_ANCHOR_AUDIT");
     bindControls();
     applyReleaseLaw();
     requestCanvasPreReleaseCarrier("BOOT_EXISTING_CANVAS_PARENT_PREFLIGHT");
@@ -1746,16 +1494,25 @@
       baselineContract: BASELINE_CONTRACT,
       version: VERSION,
       file: FILE,
+      htmlFile: HTML_FILE,
       route: ROUTE,
 
+      role: state.role,
       pairRole: state.pairRole,
       pairedRouteConductorFile: PAIRED_ROUTE_CONDUCTOR_FILE,
-      pairedRouteConductorRole: state.pairedRouteConductorRole,
-      maleShellOwnsRouteAnchors: true,
-      maleShellOwnsMountHost: true,
-      maleShellOwnsControls: true,
-      maleShellOwnsRuntimeScriptRelease: true,
-      maleShellOwnsCanvasCarrierHostPacket: true,
+
+      htmlOwnsVisibleShell: true,
+      indexJsCreatesVisibleShell: false,
+      indexJsCreatesFallbackCss: false,
+      indexJsCreatesShellDom: false,
+      indexJsCreatesRuntimeScriptsOnly: true,
+
+      ownsRouteAnchors: false,
+      ownsMountHost: false,
+      ownsControlsCreation: false,
+      ownsControlBinding: true,
+      ownsRuntimeScriptRelease: true,
+      ownsCanvasCarrierHostPacket: true,
 
       ownsMacroWestTruth: false,
       ownsCanvasStructuralCarrierTruth: false,
@@ -1777,11 +1534,10 @@
       shellAccepted: state.shellAccepted,
       shellSelectionMode: state.shellSelectionMode,
       shellHoldReason: state.shellHoldReason,
+      htmlAnchorAuditActive: true,
       dynamicAnchorsPass: state.dynamicAnchorsPass,
       missingAnchors: state.missingAnchors.slice(),
       shellControlsBound: state.shellControlsBound,
-      shellRescued: state.shellRescued,
-      shellRescueCount: state.shellRescueCount,
 
       mountPresent: state.mountPresent,
       cockpitPresent: state.cockpitPresent,
@@ -1842,7 +1598,7 @@
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
       postgameStatus: state.postgameStatus,
 
-      dynamicAlignmentAnchors: DYNAMIC_ALIGNMENT_ANCHORS.slice(),
+      requiredHtmlAnchors: REQUIRED_HTML_ANCHORS.slice(),
       runtimeFiles: RUNTIME_FILES.map((item) => ({
         key: item.key,
         label: item.label,
@@ -1872,7 +1628,7 @@
     const r = getReceipt();
 
     return [
-      "HEARTH_MALE_ROUTE_SHELL_PRE_RELEASE_CARRIER_RUNTIME_HOST_RECEIPT",
+      "HEARTH_INDEX_JS_HTML_SHELL_ANCHOR_AUDIT_RUNTIME_HOST_RECEIPT",
       "",
       `contract=${r.contract}`,
       `receipt=${r.receipt}`,
@@ -1880,30 +1636,38 @@
       `baselineContract=${r.baselineContract}`,
       `version=${r.version}`,
       `file=${r.file}`,
+      `htmlFile=${r.htmlFile}`,
       `route=${r.route}`,
       "",
+      "SPLIT_BOUNDARY",
+      `htmlOwnsVisibleShell=${r.htmlOwnsVisibleShell}`,
+      `indexJsCreatesVisibleShell=${r.indexJsCreatesVisibleShell}`,
+      `indexJsCreatesFallbackCss=${r.indexJsCreatesFallbackCss}`,
+      `indexJsCreatesShellDom=${r.indexJsCreatesShellDom}`,
+      `indexJsCreatesRuntimeScriptsOnly=${r.indexJsCreatesRuntimeScriptsOnly}`,
+      "",
       "PAIR",
+      `role=${r.role}`,
       `pairRole=${r.pairRole}`,
       `pairedRouteConductorFile=${r.pairedRouteConductorFile}`,
-      `pairedRouteConductorRole=${r.pairedRouteConductorRole}`,
-      `maleShellOwnsRouteAnchors=${r.maleShellOwnsRouteAnchors}`,
-      `maleShellOwnsMountHost=${r.maleShellOwnsMountHost}`,
-      `maleShellOwnsControls=${r.maleShellOwnsControls}`,
-      `maleShellOwnsRuntimeScriptRelease=${r.maleShellOwnsRuntimeScriptRelease}`,
-      `maleShellOwnsCanvasCarrierHostPacket=${r.maleShellOwnsCanvasCarrierHostPacket}`,
+      `ownsRouteAnchors=${r.ownsRouteAnchors}`,
+      `ownsMountHost=${r.ownsMountHost}`,
+      `ownsControlsCreation=${r.ownsControlsCreation}`,
+      `ownsControlBinding=${r.ownsControlBinding}`,
+      `ownsRuntimeScriptRelease=${r.ownsRuntimeScriptRelease}`,
+      `ownsCanvasCarrierHostPacket=${r.ownsCanvasCarrierHostPacket}`,
       "",
-      "SHELL",
+      "HTML_SHELL_AUDIT",
       `shellDetected=${r.shellDetected}`,
       `shellSelected=${r.shellSelected}`,
       `shellAccepted=${r.shellAccepted}`,
       `shellContract=${r.shellContract}`,
       `shellSelectionMode=${r.shellSelectionMode}`,
       `shellHoldReason=${r.shellHoldReason}`,
+      `htmlAnchorAuditActive=${r.htmlAnchorAuditActive}`,
       `dynamicAnchorsPass=${r.dynamicAnchorsPass}`,
       `missingAnchors=${r.missingAnchors.join(",")}`,
       `shellControlsBound=${r.shellControlsBound}`,
-      `shellRescued=${r.shellRescued}`,
-      `shellRescueCount=${r.shellRescueCount}`,
       "",
       "CARRIER_HOST",
       `mountPresent=${r.mountPresent}`,
@@ -2016,7 +1780,7 @@
         runtimeMatch.key
       );
 
-      ensureShell("SHELL_GUARD_RUNTIME_ERROR");
+      auditShellAnchors("RUNTIME_ERROR_SHELL_AUDIT");
       bindControls();
       schedulePublish("runtime-error");
     }, true);
@@ -2034,7 +1798,7 @@
         at: nowIso()
       });
 
-      ensureShell("SHELL_GUARD_UNHANDLED_REJECTION");
+      auditShellAnchors("UNHANDLED_REJECTION_SHELL_AUDIT");
       bindControls();
       schedulePublish("runtime-rejection");
     }, true);
@@ -2047,13 +1811,14 @@
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     file: FILE,
+    htmlFile: HTML_FILE,
     route: ROUTE,
 
     EXPECTED_HTML_CONTRACT,
     CURRENT_SAFE_HTML_CONTRACT,
     MACRO_CYCLE_1,
     MACRO_CYCLE_2,
-    DYNAMIC_ALIGNMENT_ANCHORS,
+    REQUIRED_HTML_ANCHORS,
     RUNTIME_FILES,
 
     boot,
@@ -2062,8 +1827,8 @@
     run: boot,
     dispose,
 
-    ensureShell,
-    detectShell,
+    auditShellAnchors,
+    detectShell: auditShellAnchors,
     applyReleaseLaw,
     bindControls,
     releaseRuntimeQueue,
@@ -2075,7 +1840,13 @@
     getReceiptText,
     copyDiagnostic,
 
-    pairRole: "male-route-shell-host",
+    htmlOwnsVisibleShell: true,
+    indexJsCreatesVisibleShell: false,
+    indexJsCreatesFallbackCss: false,
+    indexJsCreatesShellDom: false,
+    indexJsCreatesRuntimeScriptsOnly: true,
+
+    pairRole: "female-runtime-host-for-male-html-shell",
     pairedRouteConductorFile: PAIRED_ROUTE_CONDUCTOR_FILE,
 
     newsAlignmentActive: true,
@@ -2087,9 +1858,10 @@
     readyTextAllowed: false,
     readyTextClaimedByIndex: false,
 
-    ownsRouteAnchors: true,
-    ownsMountHost: true,
-    ownsControls: true,
+    ownsRouteAnchors: false,
+    ownsMountHost: false,
+    ownsControlsCreation: false,
+    ownsControlBinding: true,
     ownsRuntimeScriptRelease: true,
     ownsCanvasCarrierHostPacket: true,
     ownsMacroWestTruth: false,
@@ -2115,24 +1887,26 @@
   root.HEARTH = root.HEARTH || {};
   root.DEXTER_LAB = root.DEXTER_LAB || {};
 
-  root.HEARTH.maleRouteShellHost = api;
-  root.HEARTH.routeShellHost = api;
+  root.HEARTH.indexRuntimeHost = api;
+  root.HEARTH.htmlShellAnchorAuditRuntimeHost = api;
   root.HEARTH.indexBridge = api;
   root.HEARTH.indexJs = api;
   root.HEARTH.dynamicSelectorRuntimeRelease = api;
   root.HEARTH.eastSouthPairFemaleSelector = api;
 
-  root.DEXTER_LAB.hearthMaleRouteShellHost = api;
-  root.DEXTER_LAB.hearthRouteShellHost = api;
+  root.DEXTER_LAB.hearthIndexRuntimeHost = api;
+  root.DEXTER_LAB.hearthHtmlShellAnchorAuditRuntimeHost = api;
   root.DEXTER_LAB.hearthDynamicSelectorRuntimeRelease = api;
 
-  root.HEARTH_MALE_ROUTE_SHELL_HOST = api;
-  root.HEARTH_MALE_ROUTE_SHELL_PRE_RELEASE_CARRIER_RUNTIME_HOST = api;
-  root.HEARTH_ROUTE_SHELL_HOST = api;
+  root.HEARTH_INDEX_JS_HTML_SHELL_ANCHOR_AUDIT_RUNTIME_HOST = api;
+  root.HEARTH_INDEX_RUNTIME_HOST = api;
+  root.HEARTH_HTML_SHELL_ANCHOR_AUDIT_RUNTIME_HOST = api;
   root.HEARTH_INDEX_JS = api;
   root.HEARTH_INDEX_BRIDGE = api;
   root.HEARTH_EAST_SOUTH_PAIR_FEMALE_SELECTOR = api;
   root.HEARTH_EAST_SOUTH_PAIR_DYNAMIC_SELECTOR_RUNTIME_RELEASE = api;
+
+  publishGlobals();
 
   if (doc) {
     if (doc.readyState === "loading") {

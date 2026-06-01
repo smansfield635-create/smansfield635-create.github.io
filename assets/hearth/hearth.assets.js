@@ -270,18 +270,6 @@
     return total / Math.max(0.000001, norm);
   }
 
-  function pathRead(path) {
-    const parts = safeString(path).split(".");
-    let cursor = root;
-
-    for (const part of parts) {
-      if (!cursor || cursor[part] === undefined || cursor[part] === null) return null;
-      cursor = cursor[part];
-    }
-
-    return cursor || null;
-  }
-
   function terrainExtension() {
     const candidates = [
       root.HEARTH_TERRAIN_EXTENSION,
@@ -863,7 +851,7 @@
       basinShade: clamp01(elevation.basinShadow || 0),
 
       submergedScarMaterialFeed: !t.isLand ? clamp01(t.shelf * (elevation.shelfDrop || 0)) : 0,
-      submergedBlockMaterialFeed: !t.isLand ? clamp01(t.shelf * terrain.fractureTexture * 0.50) : 0,
+      submergedBlockMaterialFeed: !t.isLand ? clamp01(t.shelf * (terrain.fractureTexture || 0) * 0.50) : 0,
       oldCoastalTechUnderwaterMaterialFeed: !t.isLand ? clamp01(t.shelf * t.coast * 0.20) : 0,
       boundaryMorphologyFeed: clamp01((terrain.fractureTexture || 0) * 0.50 + t.coast * 0.30),
 
@@ -1244,6 +1232,16 @@
     root.DEXTER_LAB.hearthAssets = api;
     root.DEXTER_LAB.hearthAssetsAuthority = api;
 
+    root.__HEARTH_MATERIALS_CONTRACT__ = CONTRACT;
+    root.__HEARTH_MATERIALS_RECEIPT__ = RECEIPT;
+    root.__HEARTH_MATERIAL_AUTHORITY_PUBLISHED__ = true;
+    root.__HEARTH_MATERIAL_ALIASES_PUBLISHED__ = true;
+    root.__HEARTH_EAST_CONSUMABLE_MATERIAL_API__ = true;
+    root.__HEARTH_ASSETS_VISUAL_PASS_CLAIMED__ = false;
+
+    state.materialAliasesPublished = true;
+    state.updatedAt = nowIso();
+
     const receipt = getReceipt();
 
     root.HEARTH_MATERIALS_RECEIPT = receipt;
@@ -1255,16 +1253,6 @@
     root.DEXTER_LAB.hearthMaterialsReceipt = receipt;
     root.DEXTER_LAB.hearthMaterialAuthorityReceipt = receipt;
     root.DEXTER_LAB.hearthAssetsReceipt = receipt;
-
-    root.__HEARTH_MATERIALS_CONTRACT__ = CONTRACT;
-    root.__HEARTH_MATERIALS_RECEIPT__ = RECEIPT;
-    root.__HEARTH_MATERIAL_AUTHORITY_PUBLISHED__ = true;
-    root.__HEARTH_MATERIAL_ALIASES_PUBLISHED__ = true;
-    root.__HEARTH_EAST_CONSUMABLE_MATERIAL_API__ = true;
-    root.__HEARTH_ASSETS_VISUAL_PASS_CLAIMED__ = false;
-
-    state.materialAliasesPublished = true;
-    state.updatedAt = nowIso();
 
     updateDataset();
   }

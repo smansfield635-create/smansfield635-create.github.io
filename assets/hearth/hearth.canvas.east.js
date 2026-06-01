@@ -1,12 +1,14 @@
 // /assets/hearth/hearth.canvas.east.js
-// HEARTH_CANVAS_EAST_GOVERNED_F13_ATLAS_SOURCE_AFTER_WEST_RELEASE_TNT_v1
+// HEARTH_CANVAS_EAST_CURRENT_PARENT_RECOGNIZED_F13_ATLAS_SOURCE_AFTER_WEST_RELEASE_TNT_v2
 // Full-file replacement.
-// Canvas East / governed F13 atlas source child only.
+// Canvas East / current-parent-recognized governed F13 atlas source child only.
 // Purpose:
-// - Renew Canvas East as governed F13 atlas/source evidence after West release.
-// - Preserve buildAtlas, sample, read, getReceipt, material bridge, atlas cache, and parent-required aliases.
-// - Hold atlas builds unless a governed Canvas parent request after West release, lawful parent release, lawful West release, or explicit emergency F13 request exists.
-// - Keep East as source/intake only.
+// - Renew Canvas East so the active Canvas parent recognizes it immediately.
+// - Preserve buildAtlas, sample, read, getReceipt, material bridge, atlas cache, and all parent-required aliases.
+// - Accept the active Canvas parent v5 release packet without requiring renewal of parent, West, South, route conductor, index, or HTML.
+// - Accept lawful Cycle 2 West release evidence and parent release evidence.
+// - Build a governed F13 atlas/source packet after West release.
+// - Keep East source/intake only.
 // - Keep F13E/F13F synchronized without promoting atlas readiness into visible proof, Canvas readiness, F21, ready text, or final visual pass.
 // Does not own:
 // - planet truth
@@ -28,13 +30,20 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_EAST_GOVERNED_F13_ATLAS_SOURCE_AFTER_WEST_RELEASE_TNT_v1";
-  const RECEIPT = "HEARTH_CANVAS_EAST_GOVERNED_F13_ATLAS_SOURCE_AFTER_WEST_RELEASE_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_EAST_PARENT_ALIGNED_MATERIAL_ATLAS_SOURCE_TRANSISTOR_TNT_v3";
+  const CONTRACT = "HEARTH_CANVAS_EAST_CURRENT_PARENT_RECOGNIZED_F13_ATLAS_SOURCE_AFTER_WEST_RELEASE_TNT_v2";
+  const RECEIPT = "HEARTH_CANVAS_EAST_CURRENT_PARENT_RECOGNIZED_F13_ATLAS_SOURCE_AFTER_WEST_RELEASE_RECEIPT_v2";
+  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_EAST_GOVERNED_F13_ATLAS_SOURCE_AFTER_WEST_RELEASE_TNT_v1";
   const BASELINE_CONTRACT = "HEARTH_CANVAS_EAST_PARENT_ALIGNED_MATERIAL_ATLAS_SOURCE_TRANSISTOR_TNT_v3";
 
-  const GOVERNED_PARENT_CONTRACT = "HEARTH_CANVAS_PARENT_GOVERNED_F13_EVIDENCE_RECEIVER_AFTER_WEST_RELEASE_TNT_v1";
-  const GOVERNED_PARENT_RECEIPT = "HEARTH_CANVAS_PARENT_GOVERNED_F13_EVIDENCE_RECEIVER_AFTER_WEST_RELEASE_RECEIPT_v1";
+  const ACTIVE_PARENT_CONTRACT = "HEARTH_CANVAS_PARENT_CURRENT_SOUTH_PROOF_RECONCILIATION_TNT_v5";
+  const ACTIVE_PARENT_RECEIPT = "HEARTH_CANVAS_PARENT_CURRENT_SOUTH_PROOF_RECONCILIATION_RECEIPT_v5";
+
+  const LEGACY_PARENT_CONTRACTS_ACCEPTED_AS_CONTEXT = Object.freeze([
+    "HEARTH_CANVAS_PARENT_PRE_RELEASE_STRUCTURAL_CARRIER_THEN_WEST_RELEASE_TO_EAST_TNT_v4",
+    "HEARTH_CANVAS_PARENT_RELEASE_PACKET_TO_EAST_STALE_CLEARANCE_TNT_v3",
+    "HEARTH_CANVAS_PARENT_CHILD_RECONCILIATION_F13_EVIDENCE_RECEIVER_TNT_v2",
+    "HEARTH_CANVAS_PARENT_GOVERNED_F13_EVIDENCE_RECEIVER_AFTER_WEST_RELEASE_TNT_v1"
+  ]);
 
   const RETIRED_PARENT_SPLIT_CONTRACTS = Object.freeze([
     "HEARTH_CANVAS_PHYSICAL_OBJECT_BOOTSTRAP_F13_CARRIER_TNT_v1",
@@ -50,7 +59,7 @@
   const EXPECTED_MATERIAL_CONTRACT = "HEARTH_MATERIALS_MOUNTAIN_RANGE_CANYON_RELIEF_CONSUMER_TNT_v1";
   const EXPECTED_MATERIAL_RECEIPT = "HEARTH_MATERIALS_MOUNTAIN_RANGE_CANYON_RELIEF_CONSUMER_RECEIPT_v1";
 
-  const VERSION = "2026-05-31.hearth-canvas-east-governed-f13-atlas-source-after-west-release-v1";
+  const VERSION = "2026-06-01.hearth-canvas-east-current-parent-recognized-f13-atlas-source-after-west-release-v2";
   const FILE = "/assets/hearth/hearth.canvas.east.js";
   const PARENT_FILE = "/assets/hearth/hearth.canvas.js";
 
@@ -63,7 +72,8 @@
 
   const ACTIVE_FIBONACCI_GATE = "F13E_F13F";
   const FUTURE_FIBONACCI_GATE = "F21";
-  const CYCLE_ORDER = "GOVERNED_PARENT_AFTER_WEST_RELEASE -> EAST_SOURCE_F13E -> EAST_ATLAS_F13F -> PARENT_F13_RECEIPT";
+  const CYCLE_ROUTE = "NORTH_EAST_SOUTH_WEST_CANVAS";
+  const CYCLE_ORDER = "CANVAS_PARENT_V5_RELEASE_ACCEPTED -> EAST_SOURCE_F13E -> EAST_ATLAS_F13F -> PARENT_F13_RECEIPT";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
@@ -83,26 +93,31 @@
     scar: [31, 39, 39]
   });
 
+  const REQUIRED_METHODS = Object.freeze(["buildAtlas", "sample", "read", "getReceipt"]);
+
   const state = {
     contract: CONTRACT,
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     baselineContract: BASELINE_CONTRACT,
-    governedParentContract: GOVERNED_PARENT_CONTRACT,
-    governedParentReceipt: GOVERNED_PARENT_RECEIPT,
+    activeParentContract: ACTIVE_PARENT_CONTRACT,
+    activeParentReceipt: ACTIVE_PARENT_RECEIPT,
+    legacyParentContractsAcceptedAsContext: LEGACY_PARENT_CONTRACTS_ACCEPTED_AS_CONTEXT.slice(),
     retiredParentSplitContracts: RETIRED_PARENT_SPLIT_CONTRACTS.slice(),
     expectedMaterialContract: EXPECTED_MATERIAL_CONTRACT,
     expectedMaterialReceipt: EXPECTED_MATERIAL_RECEIPT,
     version: VERSION,
     file: FILE,
     parentFile: PARENT_FILE,
-    role: "canvas-east-governed-f13-atlas-source-after-west-release",
+    role: "canvas-east-current-parent-recognized-f13-atlas-source-after-west-release",
 
+    currentParentRecognized: true,
+    parentCompatibilityAliasesPublished: true,
     governedCanvasParentAligned: true,
     afterWestReleaseOnly: true,
     canvasEastSourceOnly: true,
     requiredApiSurfaceComplete: true,
-    requiredMethods: ["buildAtlas", "sample", "read", "getReceipt"],
+    requiredMethods: REQUIRED_METHODS.slice(),
 
     newsProtocolSynchronized: true,
     fibonacciAlignmentSynchronized: true,
@@ -114,7 +129,7 @@
 
     canvasEastMayBuildAtlas: false,
     f13BuildLawful: false,
-    f13BuildBlockedReason: "WAITING_GOVERNED_PARENT_WEST_RELEASE",
+    f13BuildBlockedReason: "WAITING_CURRENT_PARENT_OR_WEST_RELEASE",
     f13PermissionSource: "NONE",
     heldAtlasPacketReturned: false,
 
@@ -124,11 +139,18 @@
     westAuditPassed: false,
     westAuditDegraded: false,
     westAuditBlocked: false,
+    westCanvasReleaseApproved: false,
+    canvasReleaseAuthorized: false,
+
+    canvasParentObserved: false,
     canvasParentRequestObserved: false,
     canvasParentReleaseObserved: false,
     parentRequestLawful: false,
     parentReleaseLawful: false,
+    parentCurrentContractObserved: false,
+    parentLegacyContextObserved: false,
     staleParentContractDetected: false,
+
     emergencyF13Requested: false,
     emergencyF13Reason: "",
     emergencyF13AtlasPacket: false,
@@ -139,14 +161,14 @@
     requestedBy: "",
     requestSource: "",
     activeCycleNumber: 2,
-    activeCycleRoute: "NORTH_EAST_SOUTH_WEST_CANVAS",
+    activeCycleRoute: CYCLE_ROUTE,
     activeCardinal: "EAST",
     activeStageId: "F13E_F13F_ATLAS_SOURCE",
     activeGearId: "F13E_F13F_ATLAS_SOURCE",
     activeNewsGate: "F13_CANVAS_EVIDENCE",
 
     northGateReady: false,
-    eastGateReady: false,
+    eastGateReady: true,
     westGateReady: false,
     southGateReady: false,
     canvasGateReady: false,
@@ -233,7 +255,7 @@
     f13SourceStageComplete: false,
     f13AtlasPacketReady: false,
 
-    firstFailedCoordinate: "WAITING_GOVERNED_PARENT_WEST_RELEASE",
+    firstFailedCoordinate: "WAITING_CURRENT_PARENT_OR_WEST_RELEASE",
     recommendedNextFile: PARENT_FILE,
     recommendedNextRenewalTarget: PARENT_FILE,
 
@@ -257,6 +279,7 @@
 
   let atlasCanvas = null;
   let lastAtlasImageData = null;
+  let materialSampler = null;
 
   function nowIso() {
     try {
@@ -452,10 +475,12 @@
 
   function findNestedReceipt(source, names) {
     if (!isObject(source)) return {};
+
     for (const name of names || []) {
       const direct = objectValue(source, name);
       if (isObject(direct)) return direct;
     }
+
     return {};
   }
 
@@ -464,27 +489,45 @@
       const found = pathRead(name);
       if (found) return found;
     }
+
     return null;
+  }
+
+  function currentParentContractAccepted(contract = "") {
+    const value = safeString(contract, "");
+    if (!value) return false;
+    if (value === ACTIVE_PARENT_CONTRACT) return true;
+    if (LEGACY_PARENT_CONTRACTS_ACCEPTED_AS_CONTEXT.includes(value)) return true;
+    return Boolean(value.includes("HEARTH_CANVAS_PARENT") && !value.includes("STALE"));
   }
 
   function readGovernedParentState(input = {}) {
     const directParent = findNestedReceipt(input, [
       "parent",
       "parentReceipt",
+      "parentReceiptPacket",
       "canvasParent",
       "canvasParentReceipt",
+      "canvasParentReceiptPacket",
+      "canvasParentReceiptBody",
       "governedParent",
-      "governedParentReceipt"
+      "governedParentReceipt",
+      "currentParent",
+      "currentParentReceipt"
     ]);
 
     const parentApi = firstGlobal([
       "HEARTH_CANVAS",
+      "HEARTH_CANVAS_PARENT_CURRENT_SOUTH_PROOF_RECONCILIATION",
+      "HEARTH_CANVAS_PARENT_PRE_RELEASE_STRUCTURAL_CARRIER_THEN_WEST_RELEASE_TO_EAST",
       "HEARTH_CANVAS_PARENT_GOVERNED_F13_EVIDENCE_RECEIVER",
-      "HEARTH_CANVAS_PARENT_IDENTITY_BOOT_HANDSHAKE",
       "HEARTH.canvas",
+      "HEARTH.canvasParentCurrentSouthProofReconciliation",
+      "HEARTH.canvasParentPreReleaseStructuralCarrierThenWestReleaseToEast",
       "HEARTH.canvasParentGovernedF13EvidenceReceiver",
-      "HEARTH.canvasParentIdentityBootHandshake",
       "DEXTER_LAB.hearthCanvasEvidence",
+      "DEXTER_LAB.hearthCanvasParentCurrentSouthProofReconciliation",
+      "DEXTER_LAB.hearthCanvasParentPreReleaseStructuralCarrierThenWestReleaseToEast",
       "DEXTER_LAB.hearthCanvasParentGovernedF13EvidenceReceiver"
     ]);
 
@@ -494,9 +537,12 @@
 
     const contract = firstString(
       input.parentContract,
+      input.governedParentContract,
       input.parentSplitContract,
       parentReceipt.contract,
       parentReceipt.splitContract,
+      parentReceipt.parentContract,
+      parentReceipt.activeParentContract,
       parentApi && parentApi.contract,
       parentApi && parentApi.splitContract,
       datasetValue("hearthCanvasContract", ""),
@@ -505,25 +551,39 @@
 
     const receipt = firstString(
       input.parentReceipt,
+      input.governedParentReceipt,
       input.parentSplitReceipt,
       parentReceipt.receipt,
       parentReceipt.splitReceipt,
+      parentReceipt.parentReceipt,
+      parentReceipt.activeParentReceipt,
       parentApi && parentApi.receipt,
       parentApi && parentApi.splitReceipt,
       datasetValue("hearthCanvasReceipt", ""),
       datasetValue("hearthCanvasSplitReceipt", "")
     );
 
+    const currentParentObserved = contract === ACTIVE_PARENT_CONTRACT || receipt === ACTIVE_PARENT_RECEIPT;
+    const legacyContextObserved = LEGACY_PARENT_CONTRACTS_ACCEPTED_AS_CONTEXT.includes(contract);
+
     const stale = Boolean(
       RETIRED_PARENT_SPLIT_CONTRACTS.includes(contract) ||
       RETIRED_PARENT_SPLIT_CONTRACTS.includes(receipt) ||
-      firstBool(false, input.staleParentContractDetected, parentReceipt.staleParentDetected, parentReceipt.currentParentIdentityMismatch)
+      firstBool(
+        false,
+        input.staleParentContractDetected,
+        input.currentParentStaleDetected,
+        parentReceipt.staleParentDetected,
+        parentReceipt.currentParentStaleDetected,
+        parentReceipt.currentParentIdentityMismatch
+      )
     );
 
     const parentObserved = Boolean(
       parentApi ||
       parentReceipt.contract ||
       parentReceipt.splitContract ||
+      contract ||
       datasetValue("hearthCanvasLoaded", "") === "true" ||
       datasetValue("hearthCanvasParentMarkerPresent", "") === "true"
     );
@@ -534,11 +594,16 @@
       input.parentRequestObserved,
       input.atlasBuildRequested,
       input.f13AtlasBuildRequested,
+      input.buildAtlasRequested,
+      input.requestedBy === "canvas-parent",
+      input.requestSource === "canvas-parent-current-south-proof-reconciliation",
       parentReceipt.canvasEastRequestObserved,
       parentReceipt.canvasEastBuildRequested,
       parentReceipt.f13AtlasBuildRequested,
       parentReceipt.f13SourceRequestToEast,
       parentReceipt.requestEastAtlas,
+      parentReceipt.eastAtlasReleaseAuthorized,
+      parentReceipt.canvasEastMayBuildAtlas,
       parentReceipt.handoffTo === "EAST",
       parentReceipt.requestedChild === "east",
       parentReceipt.activeCardinal === "EAST",
@@ -551,15 +616,24 @@
       input.canvasParentReleaseObserved,
       input.parentReleaseObserved,
       input.parentReleaseLawful,
+      input.canvasReleaseAuthorized,
+      input.releaseToCanvas,
       parentReceipt.canvasParentReleaseObserved,
       parentReceipt.parentReleaseLawful,
       parentReceipt.eastAtlasReleaseAuthorized,
       parentReceipt.canvasEastMayBuildAtlas,
       parentReceipt.f13EastAtlasReleaseAuthorized,
-      datasetValue("hearthCanvasEastParentReleaseObserved", "")
+      parentReceipt.releaseAccepted,
+      parentReceipt.canvasReleaseAccepted,
+      parentReceipt.canvasReleaseAuthorized,
+      parentReceipt.westCanvasReleaseApproved,
+      parentReceipt.westReleaseObserved,
+      datasetValue("hearthCanvasReleaseAccepted", ""),
+      datasetValue("hearthCanvasReleaseAuthorized", "")
     );
 
-    const parentLaw = Boolean(parentObserved && !stale);
+    const parentCurrentAccepted = currentParentContractAccepted(contract) || currentParentObserved;
+    const parentLaw = Boolean(parentObserved && parentCurrentAccepted && !stale);
     const parentRequestLawful = Boolean(parentLaw && parentRequestObserved);
     const parentReleaseLawful = Boolean(parentLaw && parentReleaseObserved);
 
@@ -569,9 +643,12 @@
       parentReceipt: clonePlain(parentReceipt),
       parentContract: contract,
       parentReceiptId: receipt,
+      parentCurrentContractObserved: currentParentObserved,
+      parentLegacyContextObserved: legacyContextObserved,
+      parentCurrentAccepted,
       staleParentContractDetected: stale,
-      governedParentContract: GOVERNED_PARENT_CONTRACT,
-      governedParentReceipt: GOVERNED_PARENT_RECEIPT,
+      activeParentContract: ACTIVE_PARENT_CONTRACT,
+      activeParentReceipt: ACTIVE_PARENT_RECEIPT,
       governedCanvasParentAligned: true,
       canvasParentRequestObserved: parentRequestObserved,
       canvasParentReleaseObserved: parentReleaseObserved,
@@ -587,7 +664,13 @@
       "westRelease",
       "westReleaseReceipt",
       "westAudit",
-      "westAuditReceipt"
+      "westAuditReceipt",
+      "release",
+      "releasePacket",
+      "canvasReleasePacket",
+      "westReleasePacket",
+      "admissibility",
+      "gap"
     ]);
 
     const westApi = firstGlobal([
@@ -596,11 +679,13 @@
       "DEXTER_LAB_RUNTIME_TABLE_WEST",
       "LAB_CARDINAL_RUNTIME_TABLE_WEST",
       "LAB_TRANSMISSION_GAP_CLASSIFIER_WEST",
-      "HEARTH_CANVAS_WEST",
-      "HEARTH.canvasWest",
+      "LAB_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_WEST",
+      "HEARTH_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH",
+      "HEARTH.westCycleAwareAdmissibilityClutch",
       "DEXTER_LAB.runtimeTableWest",
       "DEXTER_LAB.cardinalRuntimeTableWest",
-      "DEXTER_LAB.hearthCanvasWest"
+      "DEXTER_LAB.gapClassifierWest",
+      "DEXTER_LAB.cycleAwareAdmissibilityClutchWest"
     ]);
 
     const westReceipt = isObject(directWest) && Object.keys(directWest).length
@@ -611,11 +696,13 @@
       false,
       input.westAuditObserved,
       input.westReleaseObserved,
+      input.macroWestAdmissibilityObserved,
       westReceipt.westAuditObserved,
       westReceipt.westReviewRecommended,
       westReceipt.gapAssessed,
       westReceipt.westAuthority,
-      datasetValue("hearthCanvasWestReleaseObserved", ""),
+      westReceipt.macroWestAuthorityObserved,
+      datasetValue("hearthCanvasWestAuditObserved", ""),
       datasetValue("westGateReady", "")
     );
 
@@ -623,12 +710,23 @@
       false,
       input.westAuditPassed,
       input.westReleasePassed,
+      input.westAuditAccepted,
+      input.westCanvasReleaseApproved,
+      input.canvasReleaseApprovedByWest,
+      input.canvasReleaseAuthorized,
+      input.releaseToCanvas,
       westReceipt.westAuditPassed,
+      westReceipt.westAuditAccepted,
       westReceipt.westGateReady,
       westReceipt.gapClass === "NONE",
+      westReceipt.gapSeverity === "NONE",
+      westReceipt.decision === "RELEASE_TO_CANVAS",
       westReceipt.decision === "FULL_PASS",
       westReceipt.forwardAllowed === true && westReceipt.hardBlock !== true,
-      datasetValue("hearthCanvasWestAuditPassed", "")
+      westReceipt.westCanvasReleaseApproved,
+      westReceipt.canvasReleaseAuthorized,
+      datasetValue("hearthCanvasWestReleaseApproved", ""),
+      datasetValue("westCanvasReleaseAuthorized", "")
     );
 
     const westAuditDegraded = firstBool(
@@ -647,35 +745,70 @@
       input.westAuditBlocked,
       westReceipt.westAuditBlocked,
       westReceipt.hardBlock,
+      westReceipt.westHardBlock,
       westReceipt.decision === "HARD_BLOCK",
       datasetValue("hearthCanvasWestAuditBlocked", "")
     );
 
-    const westReleaseObserved = firstBool(
-      Boolean(westAuditObserved && (westAuditPassed || westAuditDegraded) && !westAuditBlocked),
-      input.westReleaseObserved,
-      input.westReleaseLawful,
+    const westCanvasReleaseApproved = firstBool(
+      false,
+      input.westCanvasReleaseApproved,
+      input.canvasReleaseApprovedByWest,
       input.canvasReleaseAuthorized,
-      westReceipt.westReleaseObserved,
-      westReceipt.westReleaseLawful,
+      input.releaseToCanvas,
+      westReceipt.westCanvasReleaseApproved,
+      westReceipt.canvasReleaseApprovedByWest,
       westReceipt.canvasReleaseAuthorized,
       westReceipt.releaseToCanvas,
       westReceipt.handoffTo === "CANVAS",
-      westReceipt.handoffTo === "EAST",
-      westReceipt.releasedTo === "CANVAS",
-      westReceipt.releasedTo === "EAST",
-      datasetValue("hearthCanvasWestReleaseObserved", "")
+      westReceipt.destination === "CANVAS",
+      westReceipt.targetCardinal === "CANVAS",
+      datasetValue("hearthCanvasWestReleaseApproved", "")
+    );
+
+    const canvasReleaseAuthorized = firstBool(
+      false,
+      input.canvasReleaseAuthorized,
+      input.releaseToCanvas,
+      westReceipt.canvasReleaseAuthorized,
+      westReceipt.releaseToCanvas,
+      westCanvasReleaseApproved,
+      datasetValue("hearthCanvasReleaseAuthorized", "")
+    );
+
+    const cycle2 = Boolean(
+      safeNumber(input.cycleNumber || input.activeCycleNumber || westReceipt.cycleNumber || westReceipt.activeCycleNumber, 2) === 2 ||
+      firstString(input.cycleRoute, input.activeCycleRoute, westReceipt.cycleRoute, westReceipt.activeCycleRoute).includes(CYCLE_ROUTE)
+    );
+
+    const westReleaseObserved = Boolean(
+      !westAuditBlocked &&
+      cycle2 &&
+      firstBool(
+        Boolean((westAuditObserved && (westAuditPassed || westAuditDegraded)) || westCanvasReleaseApproved || canvasReleaseAuthorized),
+        input.westReleaseObserved,
+        input.westReleaseLawful,
+        westReceipt.westReleaseObserved,
+        westReceipt.westReleaseLawful,
+        westReceipt.canvasReleaseAuthorized,
+        westReceipt.releaseToCanvas,
+        westReceipt.handoffTo === "CANVAS",
+        westReceipt.releasedTo === "CANVAS",
+        datasetValue("hearthCanvasWestReleaseObserved", "")
+      )
     );
 
     return {
       westApiPresent: Boolean(westApi),
       westReceipt: clonePlain(westReceipt),
-      westReleaseObserved: Boolean(westReleaseObserved && !westAuditBlocked),
+      westReleaseObserved,
       westReleaseRequired: true,
       westAuditObserved,
       westAuditPassed,
       westAuditDegraded,
-      westAuditBlocked
+      westAuditBlocked,
+      westCanvasReleaseApproved,
+      canvasReleaseAuthorized
     };
   }
 
@@ -755,9 +888,10 @@
       requestSource: firstString(source.requestSource, receivedFrom, "unknown"),
 
       activeCycleNumber: safeNumber(firstDefined(source.activeCycleNumber, source.cycleNumber), 2),
-      activeCycleRoute: firstString(source.activeCycleRoute, source.cycleRoute, "NORTH_EAST_SOUTH_WEST_CANVAS"),
+      activeCycleRoute: firstString(source.activeCycleRoute, source.cycleRoute, CYCLE_ROUTE),
       activeCardinal: "EAST",
       activeFibonacci: ACTIVE_FIBONACCI_GATE,
+      activeFibonacciRank: ACTIVE_FIBONACCI_GATE,
       activeStageId: firstString(source.activeStageId, source.activeGearId, "F13E_F13F_ATLAS_SOURCE"),
       activeGearId: firstString(source.activeGearId, source.activeStageId, "F13E_F13F_ATLAS_SOURCE"),
       activeNewsGate: firstString(source.activeNewsGate, "F13_CANVAS_EVIDENCE"),
@@ -771,11 +905,16 @@
       westAuditPassed: west.westAuditPassed,
       westAuditDegraded: west.westAuditDegraded,
       westAuditBlocked: west.westAuditBlocked,
+      westCanvasReleaseApproved: west.westCanvasReleaseApproved,
+      canvasReleaseAuthorized: west.canvasReleaseAuthorized,
 
+      canvasParentObserved: parent.parentObserved,
       canvasParentRequestObserved: parent.canvasParentRequestObserved,
       canvasParentReleaseObserved: parent.canvasParentReleaseObserved,
       parentRequestLawful: parent.parentRequestLawful,
       parentReleaseLawful: parent.parentReleaseLawful,
+      parentCurrentContractObserved: parent.parentCurrentContractObserved,
+      parentLegacyContextObserved: parent.parentLegacyContextObserved,
       staleParentContractDetected: parent.staleParentContractDetected,
 
       emergencyF13Requested,
@@ -791,15 +930,15 @@
       newsGatePassedBeforeF21: firstBool(false, source.newsGatePassedBeforeF21, objectValue(parent.parentReceipt, "newsGatePassedBeforeF21")),
       newsGateDegradedBeforeF21: firstBool(false, source.newsGateDegradedBeforeF21, objectValue(parent.parentReceipt, "newsGateDegradedBeforeF21")),
       northGateReady: firstBool(false, source.northGateReady, objectValue(parent.parentReceipt, "northGateReady")),
-      eastGateReady: firstBool(false, source.eastGateReady, true),
-      westGateReady: firstBool(false, source.westGateReady, west.westAuditPassed || west.westAuditDegraded),
+      eastGateReady: true,
+      westGateReady: firstBool(false, source.westGateReady, west.westAuditPassed || west.westAuditDegraded || west.westCanvasReleaseApproved),
       southGateReady: firstBool(false, source.southGateReady, objectValue(parent.parentReceipt, "southGateReady")),
       canvasGateReady: firstBool(false, source.canvasGateReady, objectValue(parent.parentReceipt, "canvasGateReady")),
 
       f21EligibleForNorth: firstBool(false, source.f21EligibleForNorth, objectValue(parent.parentReceipt, "f21EligibleForNorth")),
       falsePromotionDetected,
 
-      firstFailedCoordinate: firstString(source.firstFailedCoordinate, "WAITING_GOVERNED_PARENT_WEST_RELEASE"),
+      firstFailedCoordinate: firstString(source.firstFailedCoordinate, "WAITING_CURRENT_PARENT_OR_WEST_RELEASE"),
       recommendedNextFile: firstString(source.recommendedNextFile, PARENT_FILE),
       recommendedNextRenewalTarget: firstString(source.recommendedNextRenewalTarget, PARENT_FILE),
 
@@ -828,7 +967,7 @@
 
     let allowed = false;
     let source = "NONE";
-    let reason = "WAITING_GOVERNED_PARENT_WEST_RELEASE";
+    let reason = "WAITING_CURRENT_PARENT_OR_WEST_RELEASE";
 
     if (normalized.falsePromotionDetected) {
       allowed = false;
@@ -844,16 +983,20 @@
       reason = "NONE_EMERGENCY_F13_ATLAS_ALLOWED";
     } else if (normalized.parentReleaseLawful) {
       allowed = true;
-      source = "PARENT_RELEASE";
-      reason = "NONE_PARENT_RELEASE_LAWFUL";
+      source = "CURRENT_PARENT_RELEASE";
+      reason = "NONE_CURRENT_PARENT_RELEASE_LAWFUL";
     } else if (normalized.parentRequestLawful && normalized.westReleaseObserved) {
       allowed = true;
-      source = "PARENT_REQUEST_AFTER_WEST_RELEASE";
-      reason = "NONE_PARENT_REQUEST_AFTER_WEST_RELEASE";
-    } else if (normalized.westReleaseObserved && normalized.destinationFile === PARENT_FILE) {
+      source = "CURRENT_PARENT_REQUEST_AFTER_WEST_RELEASE";
+      reason = "NONE_CURRENT_PARENT_REQUEST_AFTER_WEST_RELEASE";
+    } else if (normalized.westReleaseObserved && normalized.canvasReleaseAuthorized) {
       allowed = true;
-      source = "WEST_RELEASE";
-      reason = "NONE_WEST_RELEASE_TO_GOVERNED_PARENT";
+      source = "WEST_CANVAS_RELEASE";
+      reason = "NONE_WEST_RELEASE_TO_CANVAS_PARENT";
+    } else if (normalized.westCanvasReleaseApproved && normalized.destinationFile === PARENT_FILE) {
+      allowed = true;
+      source = "WEST_RELEASE_TO_PARENT";
+      reason = "NONE_WEST_RELEASE_TO_PARENT";
     }
 
     const packet = {
@@ -861,6 +1004,9 @@
       receipt: RECEIPT,
       file: FILE,
       parentFile: PARENT_FILE,
+      activeParentContract: ACTIVE_PARENT_CONTRACT,
+      activeParentReceipt: ACTIVE_PARENT_RECEIPT,
+      currentParentRecognized: true,
       governedCanvasParentAligned: true,
       afterWestReleaseOnly: true,
       canvasEastSourceOnly: true,
@@ -875,10 +1021,17 @@
       westAuditPassed: normalized.westAuditPassed,
       westAuditDegraded: normalized.westAuditDegraded,
       westAuditBlocked: normalized.westAuditBlocked,
+      westCanvasReleaseApproved: normalized.westCanvasReleaseApproved,
+      canvasReleaseAuthorized: normalized.canvasReleaseAuthorized,
+
+      canvasParentObserved: normalized.canvasParentObserved,
       canvasParentRequestObserved: normalized.canvasParentRequestObserved,
       canvasParentReleaseObserved: normalized.canvasParentReleaseObserved,
       parentRequestLawful: normalized.parentRequestLawful,
       parentReleaseLawful: normalized.parentReleaseLawful,
+      parentCurrentContractObserved: normalized.parentCurrentContractObserved,
+      parentLegacyContextObserved: normalized.parentLegacyContextObserved,
+
       emergencyF13Requested: normalized.emergencyF13Requested,
       emergencyF13Reason: normalized.emergencyF13Reason,
       falsePromotionDetected: normalized.falsePromotionDetected,
@@ -933,11 +1086,16 @@
     state.westAuditPassed = normalized.westAuditPassed;
     state.westAuditDegraded = normalized.westAuditDegraded;
     state.westAuditBlocked = normalized.westAuditBlocked;
+    state.westCanvasReleaseApproved = normalized.westCanvasReleaseApproved;
+    state.canvasReleaseAuthorized = normalized.canvasReleaseAuthorized;
 
+    state.canvasParentObserved = normalized.canvasParentObserved;
     state.canvasParentRequestObserved = normalized.canvasParentRequestObserved;
     state.canvasParentReleaseObserved = normalized.canvasParentReleaseObserved;
     state.parentRequestLawful = normalized.parentRequestLawful;
     state.parentReleaseLawful = normalized.parentReleaseLawful;
+    state.parentCurrentContractObserved = normalized.parentCurrentContractObserved;
+    state.parentLegacyContextObserved = normalized.parentLegacyContextObserved;
     state.staleParentContractDetected = normalized.staleParentContractDetected;
 
     state.emergencyF13Requested = normalized.emergencyF13Requested;
@@ -965,7 +1123,7 @@
     state.heldAtlasPacketReturned = true;
     state.canvasEastMayBuildAtlas = false;
     state.f13BuildLawful = false;
-    state.f13BuildBlockedReason = gate.f13BuildBlockedReason || "WAITING_GOVERNED_PARENT_WEST_RELEASE";
+    state.f13BuildBlockedReason = gate.f13BuildBlockedReason || "WAITING_CURRENT_PARENT_OR_WEST_RELEASE";
     state.f13PermissionSource = "NONE";
     state.atlasBuildStarted = false;
     state.atlasBuildComplete = false;
@@ -984,6 +1142,8 @@
       receipt: RECEIPT,
       file: FILE,
       parentFile: PARENT_FILE,
+      activeParentContract: ACTIVE_PARENT_CONTRACT,
+      currentParentRecognized: true,
       governedCanvasParentAligned: true,
       afterWestReleaseOnly: true,
       canvasEastSourceOnly: true,
@@ -1005,8 +1165,12 @@
       f13AtlasPacketReady: false,
 
       westReleaseObserved: normalized.westReleaseObserved,
+      westCanvasReleaseApproved: normalized.westCanvasReleaseApproved,
+      canvasReleaseAuthorized: normalized.canvasReleaseAuthorized,
+      canvasParentObserved: normalized.canvasParentObserved,
       canvasParentRequestObserved: normalized.canvasParentRequestObserved,
       canvasParentReleaseObserved: normalized.canvasParentReleaseObserved,
+      parentCurrentContractObserved: normalized.parentCurrentContractObserved,
       emergencyF13Requested: normalized.emergencyF13Requested,
 
       visibleProof: false,
@@ -1061,6 +1225,10 @@
       receipt: RECEIPT,
       file: FILE,
       parentFile: PARENT_FILE,
+      activeParentContract: ACTIVE_PARENT_CONTRACT,
+      activeParentReceipt: ACTIVE_PARENT_RECEIPT,
+      currentParentRecognized: true,
+      parentCompatibilityAliasesPublished: true,
       governedCanvasParentAligned: true,
       afterWestReleaseOnly: true,
       canvasEastSourceOnly: true,
@@ -1084,6 +1252,10 @@
       f13SourceStageStarted: state.f13SourceStageStarted,
       f13SourceStageComplete: state.f13SourceStageComplete,
       f13AtlasPacketReady: state.f13AtlasPacketReady,
+
+      canvasEastApiReady: true,
+      canvasEastCurrent: true,
+      canvasEastEvidenceReady: state.f13AtlasPacketReady,
 
       visibleProof: false,
       visibleContentProof: false,
@@ -1181,31 +1353,6 @@
     return pointFromUv(0.5, 0.5);
   }
 
-  function callAuthority(authority, methods, point) {
-    if (!authority || typeof authority !== "object") return null;
-
-    for (const method of methods) {
-      if (!isFunction(authority[method])) continue;
-
-      try {
-        const result = authority[method](point);
-        if (result && typeof result === "object") return result;
-      } catch (_error) {}
-
-      try {
-        const result = authority[method](point.u, point.v, point.lon, point.lat);
-        if (result && typeof result === "object") return result;
-      } catch (_error2) {}
-
-      try {
-        const result = authority[method](point.x, point.y, point.z);
-        if (result && typeof result === "object") return result;
-      } catch (_error3) {}
-    }
-
-    return null;
-  }
-
   function getMaterialAuthority() {
     const candidates = [
       pathRead("HEARTH.materials"),
@@ -1236,6 +1383,46 @@
         isFunction(candidate.resolveMaterial)
       ) {
         return candidate;
+      }
+    }
+
+    return null;
+  }
+
+  function resolveMaterialSampler(authority) {
+    if (!authority || !isObject(authority)) return null;
+
+    const methods = [
+      "sample",
+      "read",
+      "getMaterial",
+      "materialAt",
+      "getMaterialAt",
+      "getSurfaceMaterial",
+      "resolve",
+      "resolveMaterial"
+    ];
+
+    for (const method of methods) {
+      if (isFunction(authority[method])) {
+        return function runMaterialSampler(point) {
+          try {
+            const result = authority[method](point);
+            if (result && typeof result === "object") return result;
+          } catch (_error) {}
+
+          try {
+            const result = authority[method](point.u, point.v, point.lon, point.lat);
+            if (result && typeof result === "object") return result;
+          } catch (_error2) {}
+
+          try {
+            const result = authority[method](point.x, point.y, point.z);
+            if (result && typeof result === "object") return result;
+          } catch (_error3) {}
+
+          return null;
+        };
       }
     }
 
@@ -1283,6 +1470,8 @@
     const materialReceipt = readMaterialReceipt(authority);
     const signature = signatureFromReceipt(materialReceipt);
     const previousSignature = state.materialBridgeSignature || "";
+
+    materialSampler = resolveMaterialSampler(authority);
 
     state.materialBridgeSyncCount += 1;
     state.materialBridgeLastSyncedAt = nowIso();
@@ -1581,7 +1770,7 @@
       receipt: source.receipt || (fallbackUsed ? "HEARTH_CANVAS_EAST_EMERGENCY_F13_ATLAS_CARRIER_RECEIPT" : "UNKNOWN_MATERIAL_RECEIPT"),
       eastContract: CONTRACT,
       eastReceipt: RECEIPT,
-      governedParentContract: GOVERNED_PARENT_CONTRACT,
+      activeParentContract: ACTIVE_PARENT_CONTRACT,
       sourceType,
       u: point.u,
       v: point.v,
@@ -1636,16 +1825,8 @@
     let fallbackUsed = false;
 
     if (materialAuthority) {
-      raw = callAuthority(materialAuthority, [
-        "sample",
-        "read",
-        "getMaterial",
-        "materialAt",
-        "getMaterialAt",
-        "getSurfaceMaterial",
-        "resolve",
-        "resolveMaterial"
-      ], p);
+      const sampler = materialSampler || resolveMaterialSampler(materialAuthority);
+      if (sampler) raw = sampler(p);
     }
 
     if (!raw || typeof raw !== "object") {
@@ -1692,7 +1873,8 @@
     canvas.dataset.hearthCanvasEastAtlas = "true";
     canvas.dataset.hearthCanvasEastContract = CONTRACT;
     canvas.dataset.hearthCanvasEastReceipt = RECEIPT;
-    canvas.dataset.hearthCanvasEastGovernedParentContract = GOVERNED_PARENT_CONTRACT;
+    canvas.dataset.hearthCanvasEastActiveParentContract = ACTIVE_PARENT_CONTRACT;
+    canvas.dataset.hearthCanvasEastCurrentParentRecognized = "true";
     canvas.dataset.hearthCanvasEastGovernedParentAligned = "true";
     canvas.dataset.hearthCanvasEastAfterWestReleaseOnly = "true";
     canvas.dataset.hearthCanvasEastSourceOnly = "true";
@@ -1762,7 +1944,7 @@
       height,
       activeFibonacciGate: ACTIVE_FIBONACCI_GATE,
       permissionSource: state.f13PermissionSource,
-      governedParentContract: GOVERNED_PARENT_CONTRACT
+      activeParentContract: ACTIVE_PARENT_CONTRACT
     });
   }
 
@@ -1792,7 +1974,7 @@
         options.onProgress(state.atlasBuildProgress, {
           contract: CONTRACT,
           receipt: RECEIPT,
-          governedParentContract: GOVERNED_PARENT_CONTRACT,
+          activeParentContract: ACTIVE_PARENT_CONTRACT,
           event: "ATLAS_BUILD_PROGRESS",
           fibonacci: ACTIVE_FIBONACCI_GATE,
           progress: state.atlasBuildProgress,
@@ -1831,7 +2013,7 @@
       MAX_ATLAS_HEIGHT
     );
 
-    const rowsPerChunk = clamp(Math.round(safeNumber(options.rowsPerChunk, 8)), 1, 32);
+    const rowsPerChunk = clamp(Math.round(safeNumber(options.rowsPerChunk, 10)), 1, 40);
     const materialAuthority = normalized.emergencyF13Requested ? null : getMaterialAuthority();
 
     resetBuildCounters(width, height);
@@ -1885,7 +2067,6 @@
       }
 
       ctx.putImageData(imageData, 0, 0);
-
       lastAtlasImageData = imageData;
 
       state.atlasBuildProgress = 100;
@@ -1969,6 +2150,8 @@
         receipt: RECEIPT,
         file: FILE,
         parentFile: PARENT_FILE,
+        activeParentContract: ACTIVE_PARENT_CONTRACT,
+        currentParentRecognized: true,
         governedCanvasParentAligned: true,
         afterWestReleaseOnly: true,
         canvasEastSourceOnly: true,
@@ -2039,8 +2222,9 @@
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       baselineContract: BASELINE_CONTRACT,
-      governedParentContract: GOVERNED_PARENT_CONTRACT,
-      governedParentReceipt: GOVERNED_PARENT_RECEIPT,
+      activeParentContract: ACTIVE_PARENT_CONTRACT,
+      activeParentReceipt: ACTIVE_PARENT_RECEIPT,
+      legacyParentContractsAcceptedAsContext: LEGACY_PARENT_CONTRACTS_ACCEPTED_AS_CONTEXT.slice(),
       retiredParentSplitContracts: RETIRED_PARENT_SPLIT_CONTRACTS.slice(),
       expectedMaterialContract: EXPECTED_MATERIAL_CONTRACT,
       expectedMaterialReceipt: EXPECTED_MATERIAL_RECEIPT,
@@ -2049,6 +2233,8 @@
       parentFile: PARENT_FILE,
       role: state.role,
 
+      currentParentRecognized: true,
+      parentCompatibilityAliasesPublished: true,
       governedCanvasParentAligned: true,
       afterWestReleaseOnly: true,
       canvasEastSourceOnly: true,
@@ -2059,6 +2245,10 @@
       sampleAvailable: true,
       readAvailable: true,
       getReceiptAvailable: true,
+
+      canvasEastApiReady: true,
+      canvasEastCurrent: true,
+      canvasEastEvidenceReady: state.f13AtlasPacketReady,
 
       canvasEastMayBuildAtlas: state.canvasEastMayBuildAtlas,
       f13BuildLawful: state.f13BuildLawful,
@@ -2071,11 +2261,18 @@
       westAuditPassed: state.westAuditPassed,
       westAuditDegraded: state.westAuditDegraded,
       westAuditBlocked: state.westAuditBlocked,
+      westCanvasReleaseApproved: state.westCanvasReleaseApproved,
+      canvasReleaseAuthorized: state.canvasReleaseAuthorized,
+
+      canvasParentObserved: state.canvasParentObserved,
       canvasParentRequestObserved: state.canvasParentRequestObserved,
       canvasParentReleaseObserved: state.canvasParentReleaseObserved,
       parentRequestLawful: state.parentRequestLawful,
       parentReleaseLawful: state.parentReleaseLawful,
+      parentCurrentContractObserved: state.parentCurrentContractObserved,
+      parentLegacyContextObserved: state.parentLegacyContextObserved,
       staleParentContractDetected: state.staleParentContractDetected,
+
       emergencyF13Requested: state.emergencyF13Requested,
       emergencyF13Reason: state.emergencyF13Reason,
       emergencyF13AtlasPacket: state.emergencyF13AtlasPacket,
@@ -2224,19 +2421,21 @@
       .join("\n") || "- none";
 
     return [
-      "HEARTH_CANVAS_EAST_GOVERNED_F13_ATLAS_SOURCE_AFTER_WEST_RELEASE_RECEIPT",
+      "HEARTH_CANVAS_EAST_CURRENT_PARENT_RECOGNIZED_F13_ATLAS_SOURCE_AFTER_WEST_RELEASE_RECEIPT",
       "",
       `contract=${r.contract}`,
       `receipt=${r.receipt}`,
       `previousContract=${r.previousContract}`,
       `baselineContract=${r.baselineContract}`,
-      `governedParentContract=${r.governedParentContract}`,
-      `governedParentReceipt=${r.governedParentReceipt}`,
+      `activeParentContract=${r.activeParentContract}`,
+      `activeParentReceipt=${r.activeParentReceipt}`,
       `version=${r.version}`,
       `file=${r.file}`,
       `parentFile=${r.parentFile}`,
       `role=${r.role}`,
       "",
+      `currentParentRecognized=${r.currentParentRecognized}`,
+      `parentCompatibilityAliasesPublished=${r.parentCompatibilityAliasesPublished}`,
       `governedCanvasParentAligned=${r.governedCanvasParentAligned}`,
       `afterWestReleaseOnly=${r.afterWestReleaseOnly}`,
       `canvasEastSourceOnly=${r.canvasEastSourceOnly}`,
@@ -2246,14 +2445,20 @@
       `sampleAvailable=${r.sampleAvailable}`,
       `readAvailable=${r.readAvailable}`,
       `getReceiptAvailable=${r.getReceiptAvailable}`,
+      `canvasEastApiReady=${r.canvasEastApiReady}`,
+      `canvasEastCurrent=${r.canvasEastCurrent}`,
+      `canvasEastEvidenceReady=${r.canvasEastEvidenceReady}`,
       "",
       `canvasEastMayBuildAtlas=${r.canvasEastMayBuildAtlas}`,
       `f13BuildLawful=${r.f13BuildLawful}`,
       `f13BuildBlockedReason=${r.f13BuildBlockedReason}`,
       `f13PermissionSource=${r.f13PermissionSource}`,
       `westReleaseObserved=${r.westReleaseObserved}`,
-      `canvasParentRequestObserved=${r.canvasParentRequestObserved}`,
+      `westCanvasReleaseApproved=${r.westCanvasReleaseApproved}`,
+      `canvasReleaseAuthorized=${r.canvasReleaseAuthorized}`,
+      `canvasParentObserved=${r.canvasParentObserved}`,
       `canvasParentReleaseObserved=${r.canvasParentReleaseObserved}`,
+      `parentCurrentContractObserved=${r.parentCurrentContractObserved}`,
       `emergencyF13Requested=${r.emergencyF13Requested}`,
       "",
       `newsProtocolSynchronized=${r.newsProtocolSynchronized}`,
@@ -2343,24 +2548,33 @@
     dataset.hearthCanvasEastReceipt = RECEIPT;
     dataset.hearthCanvasEastVersion = VERSION;
 
+    dataset.hearthCanvasEastActiveParentContract = ACTIVE_PARENT_CONTRACT;
+    dataset.hearthCanvasEastCurrentParentRecognized = "true";
+    dataset.hearthCanvasEastParentCompatibilityAliasesPublished = "true";
     dataset.hearthCanvasEastGovernedParentAligned = "true";
     dataset.hearthCanvasEastAfterWestReleaseOnly = "true";
     dataset.hearthCanvasEastSourceOnly = "true";
-    dataset.hearthCanvasEastGovernedParentContract = GOVERNED_PARENT_CONTRACT;
 
     dataset.hearthCanvasEastRequiredApiSurfaceComplete = "true";
     dataset.hearthCanvasEastBuildAtlasAvailable = "true";
     dataset.hearthCanvasEastSampleAvailable = "true";
     dataset.hearthCanvasEastReadAvailable = "true";
     dataset.hearthCanvasEastGetReceiptAvailable = "true";
+    dataset.hearthCanvasEastApiReady = "true";
+    dataset.hearthCanvasEastCurrent = "true";
+    dataset.hearthCanvasEastEvidenceReady = String(state.f13AtlasPacketReady);
 
     dataset.hearthCanvasEastMayBuildAtlas = String(state.canvasEastMayBuildAtlas);
     dataset.hearthCanvasEastF13BuildLawful = String(state.f13BuildLawful);
     dataset.hearthCanvasEastF13BuildBlockedReason = state.f13BuildBlockedReason;
     dataset.hearthCanvasEastF13PermissionSource = state.f13PermissionSource;
     dataset.hearthCanvasEastWestReleaseObserved = String(state.westReleaseObserved);
+    dataset.hearthCanvasEastWestCanvasReleaseApproved = String(state.westCanvasReleaseApproved);
+    dataset.hearthCanvasEastCanvasReleaseAuthorized = String(state.canvasReleaseAuthorized);
+    dataset.hearthCanvasEastCanvasParentObserved = String(state.canvasParentObserved);
     dataset.hearthCanvasEastCanvasParentRequestObserved = String(state.canvasParentRequestObserved);
     dataset.hearthCanvasEastCanvasParentReleaseObserved = String(state.canvasParentReleaseObserved);
+    dataset.hearthCanvasEastParentCurrentContractObserved = String(state.parentCurrentContractObserved);
     dataset.hearthCanvasEastEmergencyF13Requested = String(state.emergencyF13Requested);
 
     dataset.hearthCanvasEastNewsProtocolSynchronized = "true";
@@ -2409,32 +2623,56 @@
 
     root.HEARTH.canvasEast = api;
     root.HEARTH.canvasEastMaterialAtlasSourceMachine = api;
-    root.HEARTH.canvasEastSource = api;
+    root.HEARTH.canvasEastMaterialAtlasSourceTransistor = api;
+    root.HEARTH.canvasEastF13AtlasSourceChild = api;
     root.HEARTH.canvasEastGovernedF13AtlasSource = api;
+    root.HEARTH.canvasEastCurrentParentRecognizedF13AtlasSource = api;
+    root.HEARTH.canvasEastSource = api;
 
     root.HEARTH_CANVAS_EAST = api;
     root.HEARTH_CANVAS_EAST_MATERIAL_ATLAS_SOURCE_MACHINE = api;
-    root.HEARTH_CANVAS_EAST_SOURCE = api;
+    root.HEARTH_CANVAS_EAST_PARENT_ALIGNED_MATERIAL_ATLAS_SOURCE_TRANSISTOR = api;
     root.HEARTH_CANVAS_EAST_GOVERNED_F13_ATLAS_SOURCE = api;
+    root.HEARTH_CANVAS_EAST_CURRENT_PARENT_RECOGNIZED_F13_ATLAS_SOURCE = api;
+    root.HEARTH_CANVAS_EAST_SOURCE = api;
 
     root.DEXTER_LAB.hearthCanvasEast = api;
     root.DEXTER_LAB.hearthCanvasEastMaterialAtlasSourceMachine = api;
-    root.DEXTER_LAB.hearthCanvasEastSource = api;
+    root.DEXTER_LAB.hearthCanvasEastMaterialAtlasSourceTransistor = api;
+    root.DEXTER_LAB.hearthCanvasEastF13AtlasSourceChild = api;
     root.DEXTER_LAB.hearthCanvasEastGovernedF13AtlasSource = api;
+    root.DEXTER_LAB.hearthCanvasEastCurrentParentRecognizedF13AtlasSource = api;
+    root.DEXTER_LAB.hearthCanvasEastSource = api;
 
     const receipt = getReceipt();
 
     root.HEARTH_CANVAS_EAST_RECEIPT = receipt;
+    root.HEARTH_CANVAS_EAST_MATERIAL_ATLAS_SOURCE_MACHINE_RECEIPT = receipt;
+    root.HEARTH_CANVAS_EAST_PARENT_ALIGNED_MATERIAL_ATLAS_SOURCE_TRANSISTOR_RECEIPT = receipt;
+    root.HEARTH_CANVAS_EAST_GOVERNED_F13_ATLAS_SOURCE_RECEIPT = receipt;
+    root.HEARTH_CANVAS_EAST_CURRENT_PARENT_RECOGNIZED_F13_ATLAS_SOURCE_RECEIPT = receipt;
+
     root.HEARTH.canvasEastReceipt = receipt;
     root.HEARTH.canvasEastMaterialAtlasSourceMachineReceipt = receipt;
+    root.HEARTH.canvasEastMaterialAtlasSourceTransistorReceipt = receipt;
+    root.HEARTH.canvasEastF13AtlasSourceChildReceipt = receipt;
+    root.HEARTH.canvasEastGovernedF13AtlasSourceReceipt = receipt;
+    root.HEARTH.canvasEastCurrentParentRecognizedF13AtlasSourceReceipt = receipt;
+
     root.DEXTER_LAB.hearthCanvasEastReceipt = receipt;
     root.DEXTER_LAB.hearthCanvasEastMaterialAtlasSourceMachineReceipt = receipt;
+    root.DEXTER_LAB.hearthCanvasEastMaterialAtlasSourceTransistorReceipt = receipt;
+    root.DEXTER_LAB.hearthCanvasEastF13AtlasSourceChildReceipt = receipt;
+    root.DEXTER_LAB.hearthCanvasEastGovernedF13AtlasSourceReceipt = receipt;
+    root.DEXTER_LAB.hearthCanvasEastCurrentParentRecognizedF13AtlasSourceReceipt = receipt;
 
     root.__HEARTH_CANVAS_EAST_LOADED__ = true;
     root.__HEARTH_CANVAS_EAST_FILE__ = FILE;
     root.__HEARTH_CANVAS_EAST_CONTRACT__ = CONTRACT;
     root.__HEARTH_CANVAS_EAST_RECEIPT__ = RECEIPT;
-    root.__HEARTH_CANVAS_EAST_GOVERNED_PARENT_CONTRACT__ = GOVERNED_PARENT_CONTRACT;
+    root.__HEARTH_CANVAS_EAST_ACTIVE_PARENT_CONTRACT__ = ACTIVE_PARENT_CONTRACT;
+    root.__HEARTH_CANVAS_EAST_CURRENT_PARENT_RECOGNIZED__ = true;
+    root.__HEARTH_CANVAS_EAST_PARENT_COMPATIBILITY_ALIASES_PUBLISHED__ = true;
     root.__HEARTH_CANVAS_EAST_REQUIRED_API_SURFACE_COMPLETE__ = true;
     root.__HEARTH_CANVAS_EAST_F21_CLAIMED__ = false;
     root.__HEARTH_CANVAS_EAST_VISUAL_PASS_CLAIMED__ = false;
@@ -2450,8 +2688,8 @@
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     baselineContract: BASELINE_CONTRACT,
-    governedParentContract: GOVERNED_PARENT_CONTRACT,
-    governedParentReceipt: GOVERNED_PARENT_RECEIPT,
+    activeParentContract: ACTIVE_PARENT_CONTRACT,
+    activeParentReceipt: ACTIVE_PARENT_RECEIPT,
     version: VERSION,
     file: FILE,
     parentFile: PARENT_FILE,
@@ -2487,6 +2725,10 @@
     readAvailable: true,
     getReceiptAvailable: true,
 
+    canvasEastApiReady: true,
+    canvasEastCurrent: true,
+    currentParentRecognized: true,
+    parentCompatibilityAliasesPublished: true,
     governedCanvasParentAligned: true,
     afterWestReleaseOnly: true,
     canvasEastSourceOnly: true,
@@ -2538,16 +2780,24 @@
     invalidate: false
   });
 
-  recordLocal("CANVAS_EAST_GOVERNED_F13_ATLAS_SOURCE_PUBLISHED", {
+  recordLocal("CANVAS_EAST_CURRENT_PARENT_RECOGNIZED_F13_ATLAS_SOURCE_PUBLISHED", {
     requiredMethods: state.requiredMethods.slice(),
-    governedParentContract: GOVERNED_PARENT_CONTRACT,
+    activeParentContract: ACTIVE_PARENT_CONTRACT,
+    currentParentRecognized: true,
+    parentCompatibilityAliasesPublished: true,
     afterWestReleaseOnly: true,
     aliasSet: [
       "HEARTH_CANVAS_EAST",
       "HEARTH.canvasEast",
       "HEARTH.canvasEastMaterialAtlasSourceMachine",
+      "HEARTH.canvasEastMaterialAtlasSourceTransistor",
+      "HEARTH.canvasEastF13AtlasSourceChild",
+      "HEARTH.canvasEastGovernedF13AtlasSource",
+      "HEARTH_CANVAS_EAST_PARENT_ALIGNED_MATERIAL_ATLAS_SOURCE_TRANSISTOR",
       "DEXTER_LAB.hearthCanvasEast",
-      "DEXTER_LAB.hearthCanvasEastMaterialAtlasSourceMachine"
+      "DEXTER_LAB.hearthCanvasEastMaterialAtlasSourceMachine",
+      "DEXTER_LAB.hearthCanvasEastMaterialAtlasSourceTransistor",
+      "DEXTER_LAB.hearthCanvasEastF13AtlasSourceChild"
     ]
   });
 

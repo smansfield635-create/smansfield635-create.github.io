@@ -1,23 +1,24 @@
 <!-- TARGET FILE: /showroom/globe/hearth/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- HEARTH_HTML_CURRENT_RUNTIME_SELECTOR_CACHE_RENEWAL_RECEIVER_TNT_v2 -->
+<!-- HEARTH_HTML_CONTROL_SURFACE_CACHE_KEY_TOUCH_BINDING_REPAIR_TNT_v2_1 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/globe/hearth/"
   data-page="hearth-survival-path"
-  data-version="G2-CURRENT-RUNTIME-SELECTOR-CACHE-RENEWAL-RECEIVER-v2"
-  data-contract="HEARTH_HTML_CURRENT_RUNTIME_SELECTOR_CACHE_RENEWAL_RECEIVER_TNT_v2"
-  data-previous-contract="HEARTH_HTML_SOUTH_PAIR_MALE_SHELL_FEMALE_SELECTED_RUNTIME_RECEIVER_TNT_v1"
+  data-version="G2-CONTROL-SURFACE-CACHE-KEY-TOUCH-BINDING-REPAIR-v2_1"
+  data-contract="HEARTH_HTML_CONTROL_SURFACE_CACHE_KEY_TOUCH_BINDING_REPAIR_TNT_v2_1"
+  data-previous-contract="HEARTH_HTML_CURRENT_RUNTIME_SELECTOR_CACHE_RENEWAL_RECEIVER_TNT_v2"
   data-stale-contract-superseded="HEARTH_HTML_SOUTH_PAIR_MALE_SHELL_FEMALE_SELECTED_RUNTIME_RECEIVER_TNT_v1"
-  data-role="hearth-html-current-runtime-selector-cache-renewal-receiver"
+  data-role="hearth-html-control-surface-cache-key-touch-binding-repair"
   data-disposition="current-south-facing-expression-shell"
   data-pair-gender-model="male-html-shell-receives-female-js-selector"
   data-male-html-shell="true"
   data-female-js-selector="/showroom/globe/hearth/index.js"
   data-female-js-chooses-male-html-shell="true"
   data-html-cache-renewal-active="true"
-  data-selector-cache-bust="HEARTH_HTML_CURRENT_RUNTIME_SELECTOR_CACHE_RENEWAL_RECEIVER_TNT_v2"
+  data-control-surface-cache-key-touch-binding-repair-active="true"
+  data-selector-cache-bust="HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_TNT_v5_1"
   data-stale-html-v1-superseded="true"
   data-news-alignment-active="true"
   data-fibonacci-synchronization-active="true"
@@ -53,7 +54,7 @@
   <title>Hearth · Mirrorland Survival Path</title>
   <meta
     name="description"
-    content="Hearth is the survival path inside Mirrorland. The current HTML shell paints first, clears stale v1 shell identity, and receives the cache-renewed JavaScript selector non-blockingly."
+    content="Hearth is the survival path inside Mirrorland. The current HTML shell paints first, clears stale v1 shell identity, loads the repaired JavaScript selector cache key, and preserves mobile-tappable cockpit controls."
   >
 
   <style>
@@ -303,7 +304,7 @@
         linear-gradient(180deg,rgba(0,6,18,.72),rgba(1,5,15,.96));
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
       isolation:isolate;
-      touch-action:none;
+      touch-action:pan-y;
       user-select:none;
       -webkit-user-select:none;
     }
@@ -373,6 +374,7 @@
       border-radius:.9rem;
       background:rgba(2,6,18,.78);
       backdrop-filter:blur(8px);
+      pointer-events:none;
     }
 
     .globe-status strong{
@@ -396,6 +398,7 @@
       border:1px solid rgba(188,208,255,.14);
       border-radius:1.15rem;
       background:rgba(255,255,255,.032);
+      touch-action:pan-y;
     }
 
     .map-portal{
@@ -439,6 +442,7 @@
       text-transform:uppercase;
       text-align:center;
       box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+      touch-action:manipulation;
     }
 
     .portal-link:hover,
@@ -491,6 +495,10 @@
       box-shadow:0 22px 70px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.08);
       backdrop-filter:blur(10px);
       transition:max-height .22s ease,opacity .18s ease,visibility .18s ease,transform .22s ease;
+      pointer-events:auto;
+      touch-action:manipulation;
+      user-select:auto;
+      -webkit-user-select:auto;
     }
 
     .hearth-ledger-head{
@@ -498,6 +506,8 @@
       gap:5px;
       padding:.78rem .9rem .55rem;
       border-bottom:1px solid rgba(242,198,109,.12);
+      pointer-events:auto;
+      touch-action:manipulation;
     }
 
     .hearth-ledger-kicker{
@@ -532,6 +542,8 @@
       gap:10px;
       padding:.55rem .9rem;
       border-bottom:1px solid rgba(242,198,109,.10);
+      pointer-events:auto;
+      touch-action:manipulation;
     }
 
     .hearth-ledger-track,
@@ -569,6 +581,10 @@
       gap:7px;
       padding:.55rem .9rem;
       border-bottom:1px solid rgba(242,198,109,.10);
+      pointer-events:auto;
+      touch-action:manipulation;
+      user-select:auto;
+      -webkit-user-select:auto;
     }
 
     .hearth-ledger-button{
@@ -582,6 +598,11 @@
       letter-spacing:.07em;
       text-transform:uppercase;
       cursor:pointer;
+      pointer-events:auto;
+      touch-action:manipulation;
+      user-select:none;
+      -webkit-user-select:none;
+      -webkit-tap-highlight-color:rgba(242,198,109,.20);
     }
 
     .hearth-ledger-button.primary{
@@ -594,6 +615,9 @@
       min-height:0;
       overflow:auto;
       padding:.6rem .9rem .8rem;
+      pointer-events:auto;
+      touch-action:pan-y;
+      -webkit-overflow-scrolling:touch;
     }
 
     .hearth-ledger-lanes{
@@ -646,6 +670,8 @@
       border:1px solid rgba(242,198,109,.16);
       border-radius:.8rem;
       background:rgba(0,0,0,.24);
+      pointer-events:auto;
+      touch-action:pan-y;
     }
 
     .hearth-ledger-receipt[data-visible="true"]{
@@ -660,6 +686,10 @@
       color:rgba(238,246,255,.72);
       white-space:pre-wrap;
       font:700 .62rem/1.38 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      touch-action:pan-y;
+      -webkit-overflow-scrolling:touch;
+      user-select:text;
+      -webkit-user-select:text;
     }
 
     .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"]{
@@ -708,6 +738,9 @@
       letter-spacing:.08em;
       text-transform:uppercase;
       cursor:pointer;
+      pointer-events:auto;
+      touch-action:manipulation;
+      -webkit-tap-highlight-color:rgba(242,198,109,.20);
     }
 
     html[data-hearth-south-planet-inspect="true"] [data-hearth-south-show-diagnostic-tab],
@@ -720,6 +753,7 @@
       grid-template-columns:repeat(3,minmax(0,1fr));
       gap:.75rem;
       margin-top:.85rem;
+      touch-action:pan-y;
     }
 
     details.drawer{
@@ -752,6 +786,7 @@
       font-weight:950;
       letter-spacing:.12em;
       text-transform:uppercase;
+      touch-action:manipulation;
     }
 
     details.drawer summary::-webkit-details-marker{display:none}
@@ -857,7 +892,10 @@
       h1{font-size:clamp(2.8rem,14.5vw,5rem)}
       .hero{padding:.9rem}
       .core-layout{gap:.75rem}
-      .globe-stage{min-height:38rem}
+      .globe-stage{
+        min-height:38rem;
+        touch-action:pan-y;
+      }
       .globe-label{left:.65rem;right:.65rem;max-width:none}
       .globe-status{left:.65rem;right:.65rem}
       .hearth-ledger-cockpit{
@@ -865,6 +903,8 @@
         right:.65rem;
         bottom:7.4rem;
         max-height:17rem;
+        pointer-events:auto;
+        touch-action:manipulation;
       }
       .hearth-ledger-actions{padding:.5rem .7rem}
       .hearth-ledger-button{
@@ -889,9 +929,12 @@
 
   <script
     defer
-    src="/showroom/globe/hearth/index.js?v=HEARTH_HTML_CURRENT_RUNTIME_SELECTOR_CACHE_RENEWAL_RECEIVER_TNT_v2"
-    data-loaded-by="HEARTH_HTML_CURRENT_RUNTIME_SELECTOR_CACHE_RENEWAL_RECEIVER_TNT_v2"
-    data-previous-loaded-by="HEARTH_HTML_SOUTH_PAIR_MALE_SHELL_FEMALE_SELECTED_RUNTIME_RECEIVER_TNT_v1"
+    src="/showroom/globe/hearth/index.js?v=HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_TNT_v5_1"
+    data-loaded-by="HEARTH_HTML_CONTROL_SURFACE_CACHE_KEY_TOUCH_BINDING_REPAIR_TNT_v2_1"
+    data-previous-loaded-by="HEARTH_HTML_CURRENT_RUNTIME_SELECTOR_CACHE_RENEWAL_RECEIVER_TNT_v2"
+    data-js-selector-cache-key="HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_TNT_v5_1"
+    data-js-selector-repair-active="true"
+    data-control-surface-cache-key-touch-binding-repair-active="true"
     data-role="female-js-selector"
     data-female-js-selector="true"
     data-male-html-shell-selected="true"
@@ -929,7 +972,7 @@
       </a>
 
       <div class="header-note">
-        Current HTML shell paints first. The cache-renewed female selector chooses this shell and releases runtime non-blockingly.
+        Current HTML shell paints first. The repaired female selector cache key is active, and the mobile cockpit controls remain tappable.
       </div>
     </header>
 
@@ -939,7 +982,7 @@
 
         <h1 id="page-title">Hearth is the survival path inside Mirrorland.</h1>
 
-        <h2>Current shell received. Stale v1 cleared. Runtime selector renewed.</h2>
+        <h2>Current shell received. Selector cache repaired. Control surface touch binding restored.</h2>
 
         <p class="lead">
           ZIONTS carries consequence. Audralia carries possibility. Hearth carries survival condition: the living proof field where visibility, inspection, completion, and survivability are tested only after the page itself has stabilized.
@@ -954,12 +997,13 @@
           data-hearth-survival-path-stage="true"
           data-south-pair-male-shell="true"
           data-html-cache-renewal-active="true"
+          data-control-surface-cache-key-touch-binding-repair-active="true"
           aria-label="Interactive Hearth globe stage"
         >
           <div class="globe-label">
-            <b>Hearth · Current Runtime Selector Receiver</b>
+            <b>Hearth · Control Surface Repair Receiver</b>
             <span>
-              <strong>HTML shell</strong> → cache-renewed female JS selector → F8 runtime release → F13 Canvas evidence → F21 North-only latch.
+              <strong>HTML shell</strong> → repaired female JS selector cache key → F8 runtime release → F13 Canvas evidence → F21 North-only latch.
             </span>
           </div>
 
@@ -971,6 +1015,7 @@
             data-south-pair-male-shell="true"
             data-female-js-selector="/showroom/globe/hearth/index.js"
             data-html-cache-renewal-active="true"
+            data-control-surface-cache-key-touch-binding-repair-active="true"
             data-canvas-f13-delegated="true"
             data-generated-image="false"
             data-graphic-box="false"
@@ -987,14 +1032,15 @@
             data-south-pair-male-shell="true"
             data-female-selector-pending="true"
             data-html-cache-renewal-active="true"
+            data-control-surface-touch-binding-repair-active="true"
             aria-live="polite"
           >
             <div class="hearth-ledger-head">
               <div class="hearth-ledger-kicker">Hearth · Current Shell</div>
-              <h2 class="hearth-ledger-title">HEARTH HTML CACHE RENEWED</h2>
+              <h2 class="hearth-ledger-title">HEARTH CONTROL SURFACE REPAIRED</h2>
               <div class="hearth-ledger-meta" data-hearth-stage-label>F1 · Current static shell painted</div>
-              <div class="hearth-ledger-meta" data-hearth-heartbeat-text>female-selector=cache-renewed · runtime-release=delegated</div>
-              <div class="hearth-ledger-latest" data-hearth-latest-event>latest=HEARTH_HTML_CURRENT_RUNTIME_SELECTOR_CACHE_RENEWAL_RECEIVER_TNT_v2</div>
+              <div class="hearth-ledger-meta" data-hearth-heartbeat-text>female-selector=v5_1 · controls=tappable · runtime-release=delegated</div>
+              <div class="hearth-ledger-latest" data-hearth-latest-event>latest=HEARTH_HTML_CONTROL_SURFACE_CACHE_KEY_TOUCH_BINDING_REPAIR_TNT_v2_1</div>
             </div>
 
             <div class="hearth-ledger-progress" data-hearth-index-progress-strip="true">
@@ -1039,26 +1085,26 @@
                   </div>
                 </section>
 
-                <section class="hearth-ledger-lane" data-lane="F3" data-status="READY">
+                <section class="hearth-ledger-lane" data-lane="F3" data-status="TOUCH REPAIRED">
                   <div class="hearth-ledger-lane-top">
                     <span class="hearth-ledger-lane-title">
                       <strong>F3 · Shell controls</strong>
-                      <span>copy, receipt, inspect, and cockpit controls exist before runtime</span>
+                      <span>copy, receipt, inspect, and cockpit controls are protected as tappable control surfaces</span>
                     </span>
-                    <span class="hearth-ledger-lane-status">READY</span>
+                    <span class="hearth-ledger-lane-status">TOUCH REPAIRED</span>
                   </div>
                   <div class="hearth-ledger-lane-track">
                     <span class="hearth-ledger-lane-fill" style="width:36%"></span>
                   </div>
                 </section>
 
-                <section class="hearth-ledger-lane" data-lane="F5" data-status="CACHE RENEWED">
+                <section class="hearth-ledger-lane" data-lane="F5" data-status="JS v5_1">
                   <div class="hearth-ledger-lane-top">
                     <span class="hearth-ledger-lane-title">
                       <strong>F5 · Female selector</strong>
-                      <span>index.js is loaded with the renewed HTML contract cache key</span>
+                      <span>index.js is loaded with the repaired v5_1 selector cache key</span>
                     </span>
-                    <span class="hearth-ledger-lane-status">CACHE RENEWED</span>
+                    <span class="hearth-ledger-lane-status">JS v5_1</span>
                   </div>
                   <div class="hearth-ledger-lane-track">
                     <span class="hearth-ledger-lane-fill" style="width:42%"></span>
@@ -1111,14 +1157,20 @@
                 data-hearth-receipt-box
                 data-visible="false"
               >
-                <pre data-hearth-receipt-text>HEARTH_HTML_CURRENT_RUNTIME_SELECTOR_CACHE_RENEWAL_RECEIVER_TNT_v2
-receipt=html_shell_cache_renewed_for_runtime_selector
+                <pre data-hearth-receipt-text>HEARTH_HTML_CONTROL_SURFACE_CACHE_KEY_TOUCH_BINDING_REPAIR_TNT_v2_1
+receipt=html_shell_cache_key_and_touch_binding_repaired
 route=/showroom/globe/hearth/
-htmlContract=HEARTH_HTML_CURRENT_RUNTIME_SELECTOR_CACHE_RENEWAL_RECEIVER_TNT_v2
-previousHtmlContract=HEARTH_HTML_SOUTH_PAIR_MALE_SHELL_FEMALE_SELECTED_RUNTIME_RECEIVER_TNT_v1
+htmlContract=HEARTH_HTML_CONTROL_SURFACE_CACHE_KEY_TOUCH_BINDING_REPAIR_TNT_v2_1
+previousHtmlContract=HEARTH_HTML_CURRENT_RUNTIME_SELECTOR_CACHE_RENEWAL_RECEIVER_TNT_v2
 staleHtmlV1Superseded=true
 femaleSelector=/showroom/globe/hearth/index.js
-selectorCacheBust=HEARTH_HTML_CURRENT_RUNTIME_SELECTOR_CACHE_RENEWAL_RECEIVER_TNT_v2
+selectorCacheBust=HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_TNT_v5_1
+scriptSrc=/showroom/globe/hearth/index.js?v=HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_TNT_v5_1
+controlSurfaceTouchBindingRepairActive=true
+stageTouchAction=pan-y
+cockpitTouchAction=manipulation
+cockpitPointerEvents=auto
+buttonTouchAction=manipulation
 dynamicAlignmentAnchors=present
 htmlLoadsEastEntryOnly=true
 htmlLoadsRuntimeTable=false
@@ -1139,9 +1191,9 @@ visualPassClaimed=false</pre>
           </aside>
 
           <div class="globe-status">
-            <strong>HTML Shell Cache Renewed</strong>
+            <strong>HTML Shell Cache Key Repaired</strong>
             <span>
-              This shell supersedes the stale v1 route identity and loads only the cache-renewed runtime selector. It does not load the runtime table, source stack, Canvas, West, North, or South directly.
+              This shell loads the repaired v5_1 selector cache key and protects cockpit controls as tappable surfaces. It does not load the runtime table, source stack, Canvas, West, North, or South directly.
             </span>
           </div>
         </section>
@@ -1196,7 +1248,7 @@ visualPassClaimed=false</pre>
               Hearth is not a decorative planet page. It is the survival-path field where the visible planet, inspection controls, completion latch, and route diagnostics must survive together.
             </p>
             <p>
-              This HTML file is now the current cache-renewed shell. It stays visible and stable while the JavaScript selector chooses it and releases runtime downstream.
+              This HTML file is now the control-surface cache-key repair shell. It stays visible and stable while the JavaScript selector chooses it and releases runtime downstream.
             </p>
           </div>
         </details>
@@ -1221,39 +1273,42 @@ visualPassClaimed=false</pre>
 
             <div class="diagnostic-grid">
               <div class="diagnostic"><b>Route</b><span data-hearth-diagnostic-route>/showroom/globe/hearth/</span></div>
-              <div class="diagnostic"><b>Lifecycle</b><span data-hearth-diagnostic-lifecycle>current shell painted</span></div>
+              <div class="diagnostic"><b>Lifecycle</b><span data-hearth-diagnostic-lifecycle>control surface cache key repaired</span></div>
               <div class="diagnostic"><b>Cycle 1</b><span data-hearth-diagnostic-cycle-one>NORTH_EAST_WEST_SOUTH_NORTH</span></div>
               <div class="diagnostic"><b>Cycle 2</b><span data-hearth-diagnostic-cycle-two>NORTH_EAST_SOUTH_WEST_CANVAS</span></div>
               <div class="diagnostic"><b>Female Selector</b><span data-hearth-diagnostic-east>/showroom/globe/hearth/index.js</span></div>
-              <div class="diagnostic"><b>Selector Cache</b><span data-hearth-diagnostic-selector-cache>renewed by HEARTH_HTML_CURRENT_RUNTIME_SELECTOR_CACHE_RENEWAL_RECEIVER_TNT_v2</span></div>
+              <div class="diagnostic"><b>Selector Cache</b><span data-hearth-diagnostic-selector-cache>renewed by HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_TNT_v5_1</span></div>
               <div class="diagnostic"><b>West</b><span data-hearth-diagnostic-west>runtime delegated</span></div>
               <div class="diagnostic"><b>North</b><span data-hearth-diagnostic-north>F21 authority only</span></div>
               <div class="diagnostic"><b>South</b><span data-hearth-diagnostic-south>visible proof downstream</span></div>
               <div class="diagnostic"><b>Canvas</b><span data-hearth-diagnostic-canvas>F13 delegated</span></div>
-              <div class="diagnostic"><b>Inspect Mode</b><span data-hearth-diagnostic-inspect>shell controls active</span></div>
+              <div class="diagnostic"><b>Inspect Mode</b><span data-hearth-diagnostic-inspect>shell controls tappable</span></div>
               <div class="diagnostic"><b>Visual Pass</b><span data-hearth-diagnostic-visual-pass>false</span></div>
             </div>
           </div>
         </details>
 
         <template
-          id="hearth-html-current-runtime-selector-cache-renewal-receipt"
+          id="hearth-html-control-surface-cache-key-touch-binding-repair-receipt"
           class="receipt"
           data-route-receipt
           data-hearth-html-receipt
         >
-HEARTH_HTML_CURRENT_RUNTIME_SELECTOR_CACHE_RENEWAL_RECEIVER_TNT_v2
+HEARTH_HTML_CONTROL_SURFACE_CACHE_KEY_TOUCH_BINDING_REPAIR_TNT_v2_1
 route=/showroom/globe/hearth/
 target=/showroom/globe/hearth/index.html
-previous=HEARTH_HTML_SOUTH_PAIR_MALE_SHELL_FEMALE_SELECTED_RUNTIME_RECEIVER_TNT_v1
+previous=HEARTH_HTML_CURRENT_RUNTIME_SELECTOR_CACHE_RENEWAL_RECEIVER_TNT_v2
+baseline=HEARTH_HTML_SOUTH_PAIR_MALE_SHELL_FEMALE_SELECTED_RUNTIME_RECEIVER_TNT_v1
 staleHtmlV1Superseded=true
 disposition=current-south-facing-expression-shell
 pairGenderModel=male-html-shell-receives-female-js-selector
 maleHtmlShell=true
 femaleJsSelector=/showroom/globe/hearth/index.js
-selectorCacheBust=HEARTH_HTML_CURRENT_RUNTIME_SELECTOR_CACHE_RENEWAL_RECEIVER_TNT_v2
+selectorCacheBust=HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_TNT_v5_1
+scriptSrc=/showroom/globe/hearth/index.js?v=HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_TNT_v5_1
 femaleJsChoosesMaleHtmlShell=true
 htmlCacheRenewalActive=true
+controlSurfaceCacheKeyTouchBindingRepairActive=true
 htmlOwnsPublicShell=true
 htmlOwnsRuntime=false
 htmlOwnsCanvasDrawing=false
@@ -1273,11 +1328,16 @@ cycleOneRoute=NORTH_EAST_WEST_SOUTH_NORTH
 cycleTwoRoute=NORTH_EAST_SOUTH_WEST_CANVAS
 f1=current shell paint
 f2=dynamic alignment anchors present
-f3=shell controls active
-f5=cache-renewed female selector chooses shell
+f3=shell controls active and tappable
+f5=repaired v5_1 female selector chooses shell
 f8=runtime release authorized by JS
 f13=Canvas evidence delegated downstream
 f21=North-only latch
+stageTouchAction=pan-y
+mountTouchAction=none
+cockpitTouchAction=manipulation
+cockpitPointerEvents=auto
+buttonTouchAction=manipulation
 mount=#hearthCanvasMount
 cockpit=#hearthLoadCockpit
 status=#hearth-route-status
@@ -1298,7 +1358,7 @@ webGL=false
         </template>
       </section>
 
-      <pre id="hearth-route-status" data-hearth-route-status hidden>Hearth current HTML shell ready. Stale v1 HTML contract superseded. Female JS selector loaded from /showroom/globe/hearth/index.js with cache key HEARTH_HTML_CURRENT_RUNTIME_SELECTOR_CACHE_RENEWAL_RECEIVER_TNT_v2. Runtime release remains delegated to JS. Canvas F13 delegated. F21 North-only.</pre>
+      <pre id="hearth-route-status" data-hearth-route-status hidden>Hearth current HTML shell ready. Selector cache key updated to HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_TNT_v5_1. Cockpit/control surfaces protected for mobile taps. Runtime release remains delegated to JS. Canvas F13 delegated. F21 North-only.</pre>
 
       <noscript>
         <section class="panel hero" aria-label="JavaScript required notice">
@@ -1312,7 +1372,7 @@ webGL=false
     </main>
 
     <footer>
-      HEARTH_HTML_CURRENT_RUNTIME_SELECTOR_CACHE_RENEWAL_RECEIVER_TNT_v2 · Current shell · Stale v1 superseded · Female selector cache renewed · F13 Canvas delegated · F21 North-only · Visual pass not claimed.
+      HEARTH_HTML_CONTROL_SURFACE_CACHE_KEY_TOUCH_BINDING_REPAIR_TNT_v2_1 · Current shell · Selector cache key v5_1 · Mobile control surface repaired · F13 Canvas delegated · F21 North-only · Visual pass not claimed.
     </footer>
   </div>
 </body>

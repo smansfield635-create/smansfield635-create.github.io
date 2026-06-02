@@ -1,30 +1,38 @@
 // /assets/hearth/hearth.canvas.east.js
-// HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_SERVED_DETECTION_REPAIR_TNT_v10
+// HEARTH_CANVAS_EAST_SAME_RUNTIME_EXPOSURE_BEACON_API_PUBLICATION_TNT_v11_1
 // Full-file replacement.
-// Canvas East / parent-v10_3-dispatch recognition / served-detection repair / API-visible atlas-source child.
+// Canvas East / same-runtime exposure beacon / API-publication / atlas-source child.
+//
+// Baseline authority:
+// - HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_SERVED_DETECTION_REPAIR_TNT_v10
+//
+// Supersedes defective draft:
+// - HEARTH_CANVAS_EAST_SAME_RUNTIME_EXPOSURE_BEACON_API_PUBLICATION_TNT_v11
+//
 // Purpose:
-// - Supersede the current served v9 Canvas East baseline.
-// - Repair the served-detection/API-recognition gap where the route conductor still reports WAITING_CANVAS_EAST_API.
-// - Publish Canvas East API immediately and redundantly before parent scans, route-conductor scans, atlas builds, or async branches.
-// - Recognize Canvas Parent v10_3 East dispatch packets from direct calls, globals, dataset, parent receipts, and lifecycle options.
-// - Preserve Canvas East as source/intake/atlas authority only.
-// - Preserve synchronous held-packet behavior when parent dispatch is absent, malformed, or not lawful.
-// - Treat held packets as lawful non-evidence, not API failure.
-// - Distinguish API readiness from atlas evidence readiness.
-// - Return East atlas evidence only after lawful parent v10_3 dispatch.
+// - Keep Canvas East as the lawful next target while Route Conductor reports WAITING_CANVAS_EAST_API.
+// - Publish Canvas East API into the same served runtime immediately and redundantly.
+// - Expose the exact aliases already scanned by Route Conductor v8_2.
+// - Preserve strict separation between East API readiness and East atlas evidence readiness.
+// - Treat held atlas packets as lawful non-evidence, not API failure.
+// - Keep API readiness true when parent dispatch, material authority, atlas evidence, West, South, or route conductor are absent.
+// - Notify Route Conductor nonblockingly after East publication.
 // - Never claim final visible proof, ready text, completion latch, F21, generated image, GraphicBox, WebGL, or final visual pass.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_SERVED_DETECTION_REPAIR_TNT_v10";
-  const RECEIPT = "HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_SERVED_DETECTION_REPAIR_RECEIPT_v10";
+  const CONTRACT = "HEARTH_CANVAS_EAST_SAME_RUNTIME_EXPOSURE_BEACON_API_PUBLICATION_TNT_v11_1";
+  const RECEIPT = "HEARTH_CANVAS_EAST_SAME_RUNTIME_EXPOSURE_BEACON_API_PUBLICATION_RECEIPT_v11_1";
 
-  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_ATLAS_SOURCE_TNT_v9";
-  const PREVIOUS_RECEIPT = "HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_ATLAS_SOURCE_RECEIPT_v9";
+  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_EAST_SAME_RUNTIME_EXPOSURE_BEACON_API_PUBLICATION_TNT_v11";
+  const PREVIOUS_RECEIPT = "HEARTH_CANVAS_EAST_SAME_RUNTIME_EXPOSURE_BEACON_API_PUBLICATION_RECEIPT_v11";
 
-  const BASELINE_CONTRACT = "HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_ATLAS_SOURCE_TNT_v9";
-  const BASELINE_RECEIPT = "HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_ATLAS_SOURCE_RECEIPT_v9";
+  const BASELINE_CONTRACT = "HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_SERVED_DETECTION_REPAIR_TNT_v10";
+  const BASELINE_RECEIPT = "HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_SERVED_DETECTION_REPAIR_RECEIPT_v10";
+
+  const LEGACY_BASELINE_CONTRACT = "HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_ATLAS_SOURCE_TNT_v9";
+  const LEGACY_BASELINE_RECEIPT = "HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_ATLAS_SOURCE_RECEIPT_v9";
 
   const COMPATIBILITY_CONTRACT = "HEARTH_CANVAS_EAST_SYNCHRONOUS_HELD_PACKET_PARENT_FIRST_F13_ATLAS_SOURCE_TNT_v5";
   const COMPATIBILITY_RECEIPT = "HEARTH_CANVAS_EAST_SYNCHRONOUS_HELD_PACKET_PARENT_FIRST_F13_ATLAS_SOURCE_RECEIPT_v5";
@@ -40,7 +48,7 @@
   const EXPECTED_MATERIAL_CONTRACT = "HEARTH_MATERIALS_MOUNTAIN_RANGE_CANYON_RELIEF_CONSUMER_TNT_v1";
   const EXPECTED_MATERIAL_RECEIPT = "HEARTH_MATERIALS_MOUNTAIN_RANGE_CANYON_RELIEF_CONSUMER_RECEIPT_v1";
 
-  const VERSION = "2026-06-01.hearth-canvas-east-parent-v10-3-dispatch-api-recognition-served-detection-repair-v10";
+  const VERSION = "2026-06-01.hearth-canvas-east-same-runtime-exposure-beacon-api-publication-v11-1";
 
   const FILE = "/assets/hearth/hearth.canvas.east.js";
   const PARENT_FILE = "/assets/hearth/hearth.canvas.js";
@@ -51,17 +59,19 @@
 
   const ACTIVE_CYCLE_NUMBER = 2;
   const ACTIVE_CYCLE_ROUTE = "NORTH_EAST_SOUTH_WEST_CANVAS";
+  const ACTIVE_CARDINAL = "EAST";
+
   const ACTIVE_FIBONACCI_GATE = "F13E_F13F";
   const F13E_GATE = "F13E_API_SOURCE_VISIBLE";
   const F13F_GATE = "F13F_ATLAS_EVIDENCE_READY";
   const FUTURE_FIBONACCI_GATE = "F21";
 
-  const DEFAULT_ATLAS_WIDTH = 512;
-  const DEFAULT_ATLAS_HEIGHT = 256;
-  const MIN_ATLAS_WIDTH = 256;
-  const MIN_ATLAS_HEIGHT = 128;
-  const MAX_ATLAS_WIDTH = 1024;
-  const MAX_ATLAS_HEIGHT = 512;
+  const CANVAS_CHILD_SEQUENCE = Object.freeze([
+    "CANVAS_EAST_ATLAS_SOURCE",
+    "CANVAS_WEST_INSPECTION_VIEW",
+    "CANVAS_SOUTH_TEXTURE_RENDER",
+    "CANVAS_PARENT_F13_EVIDENCE"
+  ]);
 
   const CHRONOLOGY = Object.freeze([
     "INDEX_CARRIER_HOST_READY",
@@ -96,6 +106,8 @@
     "publishApiSurface",
     "publishAliasStation",
     "publishDatasetFirstProof",
+    "publishReceipts",
+    "notifyRouteConductor",
     "readParentAuthorityProfile",
     "readParentEastDispatchPacket",
     "readWestReleaseState",
@@ -108,6 +120,33 @@
     "receiveParentPacket",
     "receiveReleasePacket",
     "receiveCanvasParentPacket"
+  ]);
+
+  const PUBLIC_ALIAS_PATHS = Object.freeze([
+    "HEARTH_CANVAS_EAST",
+    "HEARTH_CANVAS_EAST_SOURCE",
+    "HEARTH_CANVAS_EAST_AUTHORITY",
+    "HEARTH_CANVAS_EAST_EVIDENCE",
+    "HEARTH_CANVAS_EAST_ENGINE",
+    "HEARTH_CANVAS_EAST_SAME_RUNTIME_EXPOSURE_BEACON_API_PUBLICATION",
+    "HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_SERVED_DETECTION_REPAIR",
+    "HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_ATLAS_SOURCE",
+    "HEARTH_CANVAS_EAST_SYNCHRONOUS_HELD_PACKET_PARENT_FIRST_F13_ATLAS_SOURCE",
+    "HEARTH_CANVAS_EAST_F13_ATLAS_SOURCE_CHILD"
+  ]);
+
+  const PUBLIC_NESTED_ALIAS_PATHS = Object.freeze([
+    "canvasEast",
+    "canvasEastSource",
+    "canvasEastAuthority",
+    "canvasEastEvidence",
+    "canvasEastEngine",
+    "canvasEastSameRuntimeExposureBeaconApiPublication",
+    "canvasEastParentV103DispatchApiRecognitionServedDetectionRepair",
+    "canvasEastParentV103DispatchApiRecognitionAtlasSource",
+    "canvasEastSynchronousHeldPacketParentFirstF13AtlasSource",
+    "canvasEastF13AtlasSourceChild",
+    "canvasEastMaterialAtlasSourceMachine"
   ]);
 
   const PERMISSION = Object.freeze({
@@ -136,6 +175,13 @@
     ice: [196, 214, 218]
   });
 
+  const DEFAULT_ATLAS_WIDTH = 512;
+  const DEFAULT_ATLAS_HEIGHT = 256;
+  const MIN_ATLAS_WIDTH = 256;
+  const MIN_ATLAS_HEIGHT = 128;
+  const MAX_ATLAS_WIDTH = 1024;
+  const MAX_ATLAS_HEIGHT = 512;
+
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
   const api = {};
@@ -144,6 +190,7 @@
   let lastAtlasImageData = null;
   let materialSampler = null;
   let publishDepth = 0;
+  let notificationQueued = false;
   let booted = false;
 
   const state = {
@@ -153,6 +200,8 @@
     previousReceipt: PREVIOUS_RECEIPT,
     baselineContract: BASELINE_CONTRACT,
     baselineReceipt: BASELINE_RECEIPT,
+    legacyBaselineContract: LEGACY_BASELINE_CONTRACT,
+    legacyBaselineReceipt: LEGACY_BASELINE_RECEIPT,
     compatibilityContract: COMPATIBILITY_CONTRACT,
     compatibilityReceipt: COMPATIBILITY_RECEIPT,
     currentParentContract: CURRENT_PARENT_CONTRACT,
@@ -162,6 +211,7 @@
     macroWestContract: MACRO_WEST_CONTRACT,
     expectedMaterialContract: EXPECTED_MATERIAL_CONTRACT,
     expectedMaterialReceipt: EXPECTED_MATERIAL_RECEIPT,
+
     version: VERSION,
     file: FILE,
     parentFile: PARENT_FILE,
@@ -169,8 +219,11 @@
     macroWestFile: MACRO_WEST_FILE,
     canvasWestFile: CANVAS_WEST_FILE,
     canvasSouthFile: CANVAS_SOUTH_FILE,
-    role: "canvas-east-parent-v10-3-dispatch-api-recognition-served-detection-repair",
+    role: "canvas-east-same-runtime-exposure-beacon-api-publication",
 
+    sameRuntimeExposureBeaconActive: true,
+    strictInitializationSafetyActive: true,
+    undefinedStateReferenceCorrectionActive: true,
     servedDetectionRepairActive: true,
     parentV10_3DispatchRecognitionActive: true,
     routeConductorV8_2AlignmentActive: true,
@@ -178,14 +231,31 @@
     earlyApiSurfaceActive: true,
     aliasStationActive: true,
     datasetFirstProofActive: true,
+    receiptFirstProofActive: true,
+    routeConductorNotificationActive: true,
     synchronousHeldPacketActive: true,
     atlasSourceActive: true,
     parentReturnNodeActive: true,
+
+    canvasChildSequence: CANVAS_CHILD_SEQUENCE.slice(),
+    activeCycleNumber: ACTIVE_CYCLE_NUMBER,
+    activeCycleRoute: ACTIVE_CYCLE_ROUTE,
+    activeCardinal: ACTIVE_CARDINAL,
+    activeFibonacciGate: ACTIVE_FIBONACCI_GATE,
+    activeF13EGate: F13E_GATE,
+    activeF13FGate: F13F_GATE,
+    futureFibonacciGate: FUTURE_FIBONACCI_GATE,
+    activeStageId: "F13E_F13F_SAME_RUNTIME_EXPOSURE_BEACON_API_PUBLICATION",
+    activeGearId: "F13E_F13F_SAME_RUNTIME_EXPOSURE_BEACON_API_PUBLICATION",
+    activeNewsGate: "CANVAS_EAST_SOURCE",
 
     apiSurfacePublished: false,
     aliasesPublished: false,
     datasetFirstProofPublished: false,
     receiptsPublished: false,
+    routeConductorNotificationAttempted: false,
+    routeConductorNotificationAccepted: false,
+    routeConductorNotificationError: "",
 
     requiredApiSurfaceComplete: true,
     requiredMethods: REQUIRED_METHODS.slice(),
@@ -201,6 +271,11 @@
     getReceiptAvailable: true,
     getReceiptLightAvailable: true,
     getReceiptTextAvailable: true,
+    publishApiSurfaceAvailable: true,
+    publishAliasStationAvailable: true,
+    publishDatasetFirstProofAvailable: true,
+    publishReceiptsAvailable: true,
+    notifyRouteConductorAvailable: true,
     receiveParentDispatchPacketAvailable: true,
 
     canvasEastPresent: true,
@@ -263,17 +338,6 @@
     buildAtlasReturnedPromise: false,
     heldDoesNotMeanApiMissing: true,
 
-    activeCycleNumber: ACTIVE_CYCLE_NUMBER,
-    activeCycleRoute: ACTIVE_CYCLE_ROUTE,
-    activeCardinal: "EAST",
-    activeFibonacciGate: ACTIVE_FIBONACCI_GATE,
-    activeF13EGate: F13E_GATE,
-    activeF13FGate: F13F_GATE,
-    futureFibonacciGate: FUTURE_FIBONACCI_GATE,
-    activeStageId: "F13E_F13F_PARENT_V10_3_DISPATCH_API_RECOGNITION_SERVED_DETECTION_REPAIR",
-    activeGearId: "F13E_F13F_PARENT_V10_3_DISPATCH_API_RECOGNITION_SERVED_DETECTION_REPAIR",
-    activeNewsGate: "CANVAS_EAST_SOURCE",
-
     newsAlignmentProtocolActive: true,
     newsChronologicalOrderLocked: true,
     newsFinalizedByCanvasEast: false,
@@ -284,7 +348,7 @@
     fibonacciSynchronizationPassed: false,
     fibonacciSynchronizationDegraded: true,
     fibonacciSynchronizationHardFail: false,
-    fibonacciSynchronizationHoldReason: "WAITING_CANVAS_PARENT_EAST_DISPATCH",
+    fibonacciSynchronizationHoldReason: "WAITING_CANVAS_EAST_ATLAS_EVIDENCE",
 
     chronologicalGateCount: CHRONOLOGY.length,
     chronologicalGatesSatisfied: 6,
@@ -349,9 +413,9 @@
     f13SourceStageComplete: false,
     f13AtlasPacketReady: false,
 
-    firstFailedCoordinate: "WAITING_CANVAS_PARENT_EAST_DISPATCH",
-    recommendedNextFile: PARENT_FILE,
-    recommendedNextRenewalTarget: PARENT_FILE,
+    firstFailedCoordinate: "WAITING_CANVAS_EAST_ATLAS_EVIDENCE",
+    recommendedNextFile: FILE,
+    recommendedNextRenewalTarget: FILE,
     nextConsumerFile: PARENT_FILE,
 
     lastParentAuthorityProfile: null,
@@ -438,7 +502,7 @@
     }
   }
 
-  function trimArray(array, max = 160) {
+  function trimArray(array, max = 180) {
     if (Array.isArray(array) && array.length > max) {
       array.splice(0, array.length - max);
     }
@@ -449,7 +513,7 @@
   }
 
   function objectValue(source, path, fallback = undefined) {
-    if (!isObject(source)) return fallback;
+    if (!source || typeof source !== "object") return fallback;
     const parts = String(path || "").split(".");
     let cursor = source;
 
@@ -494,6 +558,15 @@
     doc.documentElement.dataset[key] = value === undefined || value === null ? "" : String(value);
   }
 
+  function findNestedObject(source, paths) {
+    if (!isObject(source)) return {};
+    for (const path of paths || []) {
+      const value = objectValue(source, path);
+      if (isObject(value) && Object.keys(value).length) return value;
+    }
+    return {};
+  }
+
   function readReceipt(authority) {
     if (!authority || !isObject(authority)) return null;
 
@@ -522,15 +595,6 @@
     return null;
   }
 
-  function findNestedObject(source, paths) {
-    if (!isObject(source)) return {};
-    for (const path of paths || []) {
-      const value = objectValue(source, path);
-      if (isObject(value) && Object.keys(value).length) return value;
-    }
-    return {};
-  }
-
   function recordLocal(event, detail = {}) {
     const item = {
       at: nowIso(),
@@ -539,9 +603,13 @@
     };
 
     state.localEvents.push(item);
-    trimArray(state.localEvents, 180);
+    trimArray(state.localEvents, 220);
     state.updatedAt = item.at;
-    publishDatasetFirstProof({ quiet: true });
+
+    try {
+      publishDatasetFirstProof({ quiet: true });
+    } catch (_error) {}
+
     return item;
   }
 
@@ -554,9 +622,13 @@
     };
 
     state.errors.push(item);
-    trimArray(state.errors, 140);
+    trimArray(state.errors, 160);
     state.updatedAt = item.at;
-    publishDatasetFirstProof({ quiet: true });
+
+    try {
+      publishDatasetFirstProof({ quiet: true });
+    } catch (_error) {}
+
     return item;
   }
 
@@ -600,16 +672,446 @@
     );
   }
 
+  function ensureNamespaces() {
+    root.HEARTH = root.HEARTH || {};
+    root.DEXTER_LAB = root.DEXTER_LAB || {};
+    return true;
+  }
+
+  function publishAliasStation() {
+    ensureNamespaces();
+
+    root.HEARTH.canvasEast = api;
+    root.HEARTH.canvasEastSource = api;
+    root.HEARTH.canvasEastAuthority = api;
+    root.HEARTH.canvasEastEvidence = api;
+    root.HEARTH.canvasEastEngine = api;
+    root.HEARTH.canvasEastSameRuntimeExposureBeaconApiPublication = api;
+    root.HEARTH.canvasEastParentV103DispatchApiRecognitionServedDetectionRepair = api;
+    root.HEARTH.canvasEastParentV103DispatchApiRecognitionAtlasSource = api;
+    root.HEARTH.canvasEastSpineNodalParentAcceptanceSyncHeldAtlasSource = api;
+    root.HEARTH.canvasEastSynchronousHeldPacketParentFirstF13AtlasSource = api;
+    root.HEARTH.canvasEastParentFirstApiRecognitionBootstrap = api;
+    root.HEARTH.canvasEastCurrentParentRecognizedF13AtlasSource = api;
+    root.HEARTH.canvasEastGovernedF13AtlasSource = api;
+    root.HEARTH.canvasEastF13AtlasSourceChild = api;
+    root.HEARTH.canvasEastMaterialAtlasSourceMachine = api;
+
+    root.HEARTH_CANVAS_EAST = api;
+    root.HEARTH_CANVAS_EAST_SOURCE = api;
+    root.HEARTH_CANVAS_EAST_AUTHORITY = api;
+    root.HEARTH_CANVAS_EAST_EVIDENCE = api;
+    root.HEARTH_CANVAS_EAST_ENGINE = api;
+    root.HEARTH_CANVAS_EAST_SAME_RUNTIME_EXPOSURE_BEACON_API_PUBLICATION = api;
+    root.HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_SERVED_DETECTION_REPAIR = api;
+    root.HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_ATLAS_SOURCE = api;
+    root.HEARTH_CANVAS_EAST_SPINE_NODAL_PARENT_ACCEPTANCE_SYNC_HELD_ATLAS_SOURCE = api;
+    root.HEARTH_CANVAS_EAST_SYNCHRONOUS_HELD_PACKET_PARENT_FIRST_F13_ATLAS_SOURCE = api;
+    root.HEARTH_CANVAS_EAST_PARENT_FIRST_API_RECOGNITION_BOOTSTRAP = api;
+    root.HEARTH_CANVAS_EAST_CURRENT_PARENT_RECOGNIZED_F13_ATLAS_SOURCE = api;
+    root.HEARTH_CANVAS_EAST_GOVERNED_F13_ATLAS_SOURCE = api;
+    root.HEARTH_CANVAS_EAST_F13_ATLAS_SOURCE_CHILD = api;
+    root.HEARTH_CANVAS_EAST_MATERIAL_ATLAS_SOURCE_MACHINE = api;
+
+    root.DEXTER_LAB.hearthCanvasEast = api;
+    root.DEXTER_LAB.hearthCanvasEastSource = api;
+    root.DEXTER_LAB.hearthCanvasEastAuthority = api;
+    root.DEXTER_LAB.hearthCanvasEastEvidence = api;
+    root.DEXTER_LAB.hearthCanvasEastEngine = api;
+    root.DEXTER_LAB.hearthCanvasEastSameRuntimeExposureBeaconApiPublication = api;
+    root.DEXTER_LAB.hearthCanvasEastParentV103DispatchApiRecognitionServedDetectionRepair = api;
+    root.DEXTER_LAB.hearthCanvasEastParentV103DispatchApiRecognitionAtlasSource = api;
+    root.DEXTER_LAB.hearthCanvasEastSpineNodalParentAcceptanceSyncHeldAtlasSource = api;
+    root.DEXTER_LAB.hearthCanvasEastSynchronousHeldPacketParentFirstF13AtlasSource = api;
+    root.DEXTER_LAB.hearthCanvasEastParentFirstApiRecognitionBootstrap = api;
+    root.DEXTER_LAB.hearthCanvasEastCurrentParentRecognizedF13AtlasSource = api;
+    root.DEXTER_LAB.hearthCanvasEastGovernedF13AtlasSource = api;
+    root.DEXTER_LAB.hearthCanvasEastF13AtlasSourceChild = api;
+    root.DEXTER_LAB.hearthCanvasEastMaterialAtlasSourceMachine = api;
+
+    root.__HEARTH_CANVAS_EAST_LOADED__ = true;
+    root.__HEARTH_CANVAS_EAST_PRESENT__ = true;
+    root.__HEARTH_CANVAS_EAST_FILE__ = FILE;
+    root.__HEARTH_CANVAS_EAST_CONTRACT__ = CONTRACT;
+    root.__HEARTH_CANVAS_EAST_RECEIPT__ = RECEIPT;
+    root.__HEARTH_CANVAS_EAST_API_READY__ = true;
+    root.__HEARTH_CANVAS_EAST_READY__ = true;
+    root.__HEARTH_CANVAS_EAST_CURRENT__ = true;
+    root.__HEARTH_CANVAS_EAST_REQUIRED_API_SURFACE_COMPLETE__ = true;
+    root.__HEARTH_CANVAS_EAST_BUILD_ATLAS_AVAILABLE__ = true;
+    root.__HEARTH_CANVAS_EAST_SAMPLE_AVAILABLE__ = true;
+    root.__HEARTH_CANVAS_EAST_READ_AVAILABLE__ = true;
+    root.__HEARTH_CANVAS_EAST_GET_RECEIPT_AVAILABLE__ = true;
+    root.__HEARTH_CANVAS_EAST_EVIDENCE_READY__ = false;
+    root.__HEARTH_CANVAS_EAST_VISUAL_PASS_CLAIMED__ = false;
+
+    state.aliasesPublished = true;
+    state.apiSurfacePublished = true;
+    state.canvasEastApiReady = true;
+    state.canvasEastReady = true;
+    state.canvasEastCurrent = true;
+    state.canvasEastPresent = true;
+    state.requiredApiSurfaceComplete = true;
+    state.canvasEastGateReady = true;
+    state.updatedAt = nowIso();
+
+    blockFinalClaims();
+    return true;
+  }
+
+  function publishDatasetFirstProof(options = {}) {
+    state.datasetFirstProofPublished = true;
+    state.canvasEastApiReady = true;
+    state.canvasEastReady = true;
+    state.canvasEastCurrent = true;
+    state.canvasEastPresent = true;
+    state.requiredApiSurfaceComplete = true;
+    state.canvasEastGateReady = true;
+
+    setDataset("hearthCanvasEastLoaded", "true");
+    setDataset("hearthCanvasEastPresent", "true");
+    setDataset("hearthCanvasEastContract", CONTRACT);
+    setDataset("hearthCanvasEastReceipt", RECEIPT);
+    setDataset("hearthCanvasEastPreviousContract", PREVIOUS_CONTRACT);
+    setDataset("hearthCanvasEastBaselineContract", BASELINE_CONTRACT);
+    setDataset("hearthCanvasEastLegacyBaselineContract", LEGACY_BASELINE_CONTRACT);
+    setDataset("hearthCanvasEastVersion", VERSION);
+    setDataset("hearthCanvasEastFile", FILE);
+
+    setDataset("hearthCanvasEastSameRuntimeExposureBeaconActive", "true");
+    setDataset("hearthCanvasEastStrictInitializationSafetyActive", "true");
+    setDataset("hearthCanvasEastUndefinedStateReferenceCorrectionActive", "true");
+    setDataset("hearthCanvasEastServedDetectionRepairActive", "true");
+    setDataset("hearthCanvasEastParentV10_3DispatchRecognitionActive", "true");
+    setDataset("hearthCanvasEastRouteConductorV8_2AlignmentActive", "true");
+    setDataset("hearthCanvasEastMacroWestV4_2ReleaseChainRecognized", "true");
+    setDataset("hearthCanvasEastApiSurfacePublished", String(state.apiSurfacePublished));
+    setDataset("hearthCanvasEastAliasesPublished", String(state.aliasesPublished));
+    setDataset("hearthCanvasEastDatasetFirstProofPublished", "true");
+    setDataset("hearthCanvasEastReceiptsPublished", String(state.receiptsPublished));
+
+    setDataset("hearthCanvasEastRequiredApiSurfaceComplete", "true");
+    setDataset("hearthCanvasEastBuildAtlasAvailable", "true");
+    setDataset("hearthCanvasEastBuildAtlasSyncAvailable", "true");
+    setDataset("hearthCanvasEastBuildAtlasAsyncAvailable", "true");
+    setDataset("hearthCanvasEastSampleAvailable", "true");
+    setDataset("hearthCanvasEastReadAvailable", "true");
+    setDataset("hearthCanvasEastGetAtlasAvailable", "true");
+    setDataset("hearthCanvasEastGetAtlasCanvasAvailable", "true");
+    setDataset("hearthCanvasEastGetAtlasPacketAvailable", "true");
+    setDataset("hearthCanvasEastGetReceiptAvailable", "true");
+    setDataset("hearthCanvasEastGetReceiptLightAvailable", "true");
+    setDataset("hearthCanvasEastGetReceiptTextAvailable", "true");
+    setDataset("hearthCanvasEastReceiveParentDispatchPacketAvailable", "true");
+    setDataset("hearthCanvasEastApiReady", "true");
+    setDataset("hearthCanvasEastReady", "true");
+    setDataset("hearthCanvasEastCurrent", "true");
+    setDataset("hearthCanvasEastEvidenceReady", String(state.f13AtlasPacketReady));
+
+    setDataset("hearthCanvasEastChildSequence", CANVAS_CHILD_SEQUENCE.join("__"));
+    setDataset("hearthCanvasEastActiveCycleNumber", String(ACTIVE_CYCLE_NUMBER));
+    setDataset("hearthCanvasEastActiveCycleRoute", ACTIVE_CYCLE_ROUTE);
+    setDataset("hearthCanvasEastActiveCardinal", ACTIVE_CARDINAL);
+
+    setDataset("hearthCanvasEastParentObserved", String(state.parentObserved));
+    setDataset("hearthCanvasEastParentApiPresent", String(state.parentApiPresent));
+    setDataset("hearthCanvasEastParentCallable", String(state.parentCallable));
+    setDataset("hearthCanvasEastParentContract", state.parentContract);
+    setDataset("hearthCanvasEastCurrentParentIsV10_3", String(state.currentParentIsV10_3));
+    setDataset("hearthCanvasEastParentReleaseAccepted", String(state.parentReleaseAccepted));
+    setDataset("hearthCanvasEastParentReleaseLawful", String(state.parentReleaseLawful));
+    setDataset("hearthCanvasEastCanvasParentReleaseGateReady", String(state.canvasParentReleaseGateReady));
+    setDataset("hearthCanvasEastParentAcceptedRouteConductorRelease", String(state.parentAcceptedRouteConductorRelease));
+    setDataset("hearthCanvasEastParentReleasePacketSentToEast", String(state.parentReleasePacketSentToEast));
+    setDataset("hearthCanvasEastParentReleasePacketLawful", String(state.parentReleasePacketLawful));
+
+    setDataset("hearthCanvasEastDispatchAuthorized", String(state.eastDispatchAuthorized));
+    setDataset("hearthCanvasEastDispatchPacketPublished", String(state.eastDispatchPacketPublished));
+    setDataset("hearthCanvasEastDispatchPacketObserved", String(state.eastDispatchPacketObserved));
+    setDataset("hearthCanvasEastDispatchPacketValid", String(state.eastDispatchPacketValid));
+    setDataset("hearthCanvasEastDispatchPacketAccepted", String(state.eastDispatchPacketAccepted));
+    setDataset("hearthCanvasEastDispatchPacketSource", state.eastDispatchPacketSource);
+
+    setDataset("hearthCanvasEastWestReleaseObserved", String(state.westReleaseObserved));
+    setDataset("hearthCanvasEastWestCanvasReleaseApproved", String(state.westCanvasReleaseApproved));
+    setDataset("hearthCanvasEastCanvasReleaseAuthorized", String(state.canvasReleaseAuthorized));
+
+    setDataset("hearthCanvasEastPermissionClass", state.permissionClass);
+    setDataset("hearthCanvasEastMayBuildAtlas", String(state.canvasEastMayBuildAtlas));
+    setDataset("hearthCanvasEastF13BuildLawful", String(state.f13BuildLawful));
+    setDataset("hearthCanvasEastF13BuildBlockedReason", state.f13BuildBlockedReason);
+    setDataset("hearthCanvasEastF13PermissionSource", state.f13PermissionSource);
+
+    setDataset("hearthCanvasEastHeldAtlasPacketReturned", String(state.heldAtlasPacketReturned));
+    setDataset("hearthCanvasEastHeldPacketWasSynchronous", String(state.heldPacketWasSynchronous));
+    setDataset("hearthCanvasEastBuildAtlasReturnedPromise", String(state.buildAtlasReturnedPromise));
+    setDataset("hearthCanvasEastHeldDoesNotMeanApiMissing", "true");
+
+    setDataset("hearthCanvasEastChronologicalGateCount", String(state.chronologicalGateCount));
+    setDataset("hearthCanvasEastChronologicalGatesSatisfied", String(state.chronologicalGatesSatisfied));
+    setDataset("hearthCanvasEastChronologicalFirstFailedGate", state.chronologicalFirstFailedGate);
+    setDataset("hearthCanvasEastChronologicalFirstFailedCoordinate", state.chronologicalFirstFailedCoordinate);
+
+    setDataset("hearthCanvasEastFibonacciSynchronizationScore", String(state.fibonacciSynchronizationScore));
+    setDataset("hearthCanvasEastFibonacciSynchronizationExpected", String(state.fibonacciSynchronizationExpected));
+    setDataset("hearthCanvasEastFibonacciSynchronizationSatisfied", String(state.fibonacciSynchronizationSatisfied));
+    setDataset("hearthCanvasEastFibonacciSynchronizationPassed", String(state.fibonacciSynchronizationPassed));
+    setDataset("hearthCanvasEastFibonacciSynchronizationDegraded", String(state.fibonacciSynchronizationDegraded));
+    setDataset("hearthCanvasEastFibonacciSynchronizationHardFail", String(state.fibonacciSynchronizationHardFail));
+    setDataset("hearthCanvasEastFibonacciSynchronizationHoldReason", state.fibonacciSynchronizationHoldReason);
+    setDataset("hearthCanvasEastActiveFibonacciGate", ACTIVE_FIBONACCI_GATE);
+    setDataset("hearthCanvasEastActiveF13EGate", F13E_GATE);
+    setDataset("hearthCanvasEastActiveF13FGate", F13F_GATE);
+    setDataset("hearthCanvasEastFutureFibonacciGate", FUTURE_FIBONACCI_GATE);
+
+    setDataset("hearthCanvasEastGateReady", "true");
+    setDataset("hearthCanvasEastEvidenceGateReady", String(state.canvasEastEvidenceGateReady));
+    setDataset("hearthCanvasEastCanvasGateReady", "false");
+    setDataset("hearthCanvasEastNewsGatePassedBeforeF21", "false");
+    setDataset("hearthCanvasEastNewsGateDegradedBeforeF21", "false");
+
+    setDataset("hearthCanvasEastMaterialReceiptBridgeActive", String(state.materialReceiptBridgeActive));
+    setDataset("hearthCanvasEastMaterialContract", state.materialContract);
+    setDataset("hearthCanvasEastMaterialReceipt", state.materialReceipt);
+    setDataset("hearthCanvasEastCanonicalMaterialConsumed", String(state.canonicalMaterialConsumed));
+
+    setDataset("hearthCanvasEastAtlasBuildRequested", String(state.atlasBuildRequested));
+    setDataset("hearthCanvasEastAtlasBuildStarted", String(state.atlasBuildStarted));
+    setDataset("hearthCanvasEastAtlasBuildProgress", String(state.atlasBuildProgress));
+    setDataset("hearthCanvasEastAtlasBuildComplete", String(state.atlasBuildComplete));
+    setDataset("hearthCanvasEastAtlasCanvasPresent", String(state.atlasCanvasPresent));
+    setDataset("hearthCanvasEastAtlasWidth", String(state.atlasWidth));
+    setDataset("hearthCanvasEastAtlasHeight", String(state.atlasHeight));
+    setDataset("hearthCanvasEastAtlasClassCount", String(state.atlasClassCount));
+    setDataset("hearthCanvasEastF13SourceStageStarted", String(state.f13SourceStageStarted));
+    setDataset("hearthCanvasEastF13SourceStageComplete", String(state.f13SourceStageComplete));
+    setDataset("hearthCanvasEastF13AtlasPacketReady", String(state.f13AtlasPacketReady));
+
+    setDataset("hearthCanvasEastFirstFailedCoordinate", state.firstFailedCoordinate);
+    setDataset("hearthCanvasEastRecommendedNextFile", state.recommendedNextFile);
+    setDataset("hearthCanvasEastRecommendedNextRenewalTarget", state.recommendedNextRenewalTarget);
+    setDataset("hearthCanvasEastNextConsumerFile", PARENT_FILE);
+
+    setDataset("hearthCanvasEastRouteConductorNotificationAttempted", String(state.routeConductorNotificationAttempted));
+    setDataset("hearthCanvasEastRouteConductorNotificationAccepted", String(state.routeConductorNotificationAccepted));
+    setDataset("hearthCanvasEastRouteConductorNotificationError", state.routeConductorNotificationError);
+
+    setDataset("hearthCanvasEastVisibleProof", "false");
+    setDataset("hearthCanvasEastVisibleContentProof", "false");
+    setDataset("hearthCanvasEastVisiblePlanetAvailable", "false");
+    setDataset("hearthCanvasEastCanvasReady", "false");
+    setDataset("hearthCanvasEastReadyTextAllowed", "false");
+    setDataset("hearthCanvasEastF21EligibleForNorth", "false");
+    setDataset("hearthCanvasEastF21Claimed", "false");
+    setDataset("hearthCanvasEastReadyTextClaimed", "false");
+    setDataset("hearthCanvasEastCompletionLatched", "false");
+
+    setDataset("generatedImage", "false");
+    setDataset("graphicBox", "false");
+    setDataset("webgl", "false");
+    setDataset("visualPassClaimed", "false");
+
+    if (!options.quiet) state.updatedAt = nowIso();
+
+    return true;
+  }
+
+  function publishReceipts() {
+    const light = getReceiptLight(false);
+
+    ensureNamespaces();
+
+    root.HEARTH_CANVAS_EAST_RECEIPT = light;
+    root.HEARTH_CANVAS_EAST_SAME_RUNTIME_EXPOSURE_BEACON_API_PUBLICATION_RECEIPT = light;
+    root.HEARTH_CANVAS_EAST_SAME_RUNTIME_EXPOSURE_BEACON_API_PUBLICATION_RECEIPT_v11_1 = light;
+    root.HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_SERVED_DETECTION_REPAIR_RECEIPT = light;
+    root.HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_ATLAS_SOURCE_RECEIPT = light;
+    root.HEARTH_CANVAS_EAST_SYNCHRONOUS_HELD_PACKET_PARENT_FIRST_F13_ATLAS_SOURCE_RECEIPT = light;
+    root.HEARTH_CANVAS_EAST_F13_ATLAS_SOURCE_CHILD_RECEIPT = light;
+
+    root.HEARTH.canvasEastReceipt = light;
+    root.HEARTH.canvasEastSameRuntimeExposureBeaconApiPublicationReceipt = light;
+    root.HEARTH.canvasEastParentV103DispatchApiRecognitionServedDetectionRepairReceipt = light;
+    root.HEARTH.canvasEastParentV103DispatchApiRecognitionAtlasSourceReceipt = light;
+    root.HEARTH.canvasEastSynchronousHeldPacketParentFirstF13AtlasSourceReceipt = light;
+
+    root.DEXTER_LAB.hearthCanvasEastReceipt = light;
+    root.DEXTER_LAB.hearthCanvasEastSameRuntimeExposureBeaconApiPublicationReceipt = light;
+    root.DEXTER_LAB.hearthCanvasEastParentV103DispatchApiRecognitionServedDetectionRepairReceipt = light;
+    root.DEXTER_LAB.hearthCanvasEastParentV103DispatchApiRecognitionAtlasSourceReceipt = light;
+    root.DEXTER_LAB.hearthCanvasEastSynchronousHeldPacketParentFirstF13AtlasSourceReceipt = light;
+
+    state.receiptsPublished = true;
+    return true;
+  }
+
+  function notifyRouteConductor(reason = "canvas-east-api-published") {
+    if (notificationQueued) return false;
+
+    notificationQueued = true;
+
+    const run = () => {
+      notificationQueued = false;
+      state.routeConductorNotificationAttempted = true;
+      state.routeConductorNotificationError = "";
+
+      try {
+        const conductor = firstGlobal([
+          "HEARTH_ROUTE_CONDUCTOR_CENTRAL_STATION_SWITCHBOARD_WEST_V4_2_SOUTH_OUTPUT_ALIGNMENT",
+          "HEARTH.routeConductorCentralStationSwitchboardWestV42SouthOutputAlignment",
+          "DEXTER_LAB.hearthRouteConductorCentralStationSwitchboardWestV42SouthOutputAlignment",
+          "HEARTH_ROUTE_CONDUCTOR_CENTRAL_STATION_SWITCHBOARD_NEWS_FIBONACCI_PARENT_COORDINATION",
+          "HEARTH.routeConductorCentralStationSwitchboardNewsFibonacciParentCoordination",
+          "DEXTER_LAB.hearthRouteConductorCentralStationSwitchboardNewsFibonacciParentCoordination",
+          "HEARTH_ROUTE_CONDUCTOR",
+          "HEARTH.routeConductor",
+          "DEXTER_LAB.hearthRouteConductor"
+        ]);
+
+        const packet = {
+          contract: CONTRACT,
+          receipt: RECEIPT,
+          file: FILE,
+          packetType: "CANVAS_EAST_SAME_RUNTIME_EXPOSURE_BEACON",
+          reason,
+          canvasEastApiReady: true,
+          requiredApiSurfaceComplete: true,
+          aliasesPublished: true,
+          datasetFirstProofPublished: true,
+          receiptsPublished: true,
+          buildAtlasAvailable: true,
+          sampleAvailable: true,
+          readAvailable: true,
+          getReceiptAvailable: true,
+          canvasEastEvidenceReady: state.f13AtlasPacketReady,
+          heldDoesNotMeanApiMissing: true,
+          firstFailedCoordinate: state.f13AtlasPacketReady ? "NONE_F13F_ATLAS_PACKET_READY" : "WAITING_CANVAS_EAST_ATLAS_EVIDENCE",
+          recommendedNextFile: state.f13AtlasPacketReady ? CANVAS_WEST_FILE : FILE,
+          visualPassClaimed: false,
+          createdAt: nowIso()
+        };
+
+        let accepted = false;
+
+        if (conductor && isObject(conductor)) {
+          const methods = ["reconcileCanvas", "refresh", "run", "start", "boot", "init"];
+          for (const method of methods) {
+            if (!isFunction(conductor[method])) continue;
+            try {
+              conductor[method]({
+                receivedFrom: "CANVAS_EAST",
+                activeCycleRoute: ACTIVE_CYCLE_ROUTE,
+                canvasEastApiPublished: true,
+                canvasEastApiReady: true,
+                canvasEastExposureBeacon: packet
+              });
+              accepted = true;
+              break;
+            } catch (_error) {}
+          }
+        }
+
+        if (doc && isFunction(doc.dispatchEvent)) {
+          try {
+            const event = typeof CustomEvent !== "undefined"
+              ? new CustomEvent("hearth:canvas-east-api-published", { detail: packet })
+              : null;
+            if (event) doc.dispatchEvent(event);
+          } catch (_error) {}
+        }
+
+        state.routeConductorObserved = Boolean(conductor);
+        state.routeConductorNotificationAccepted = accepted;
+        recordLocal("ROUTE_CONDUCTOR_NONBLOCKING_NOTIFICATION_SENT", {
+          reason,
+          routeConductorObserved: Boolean(conductor),
+          routeConductorNotificationAccepted: accepted,
+          canvasEastApiReady: true,
+          canvasEastEvidenceReady: state.f13AtlasPacketReady
+        });
+
+        publishDatasetFirstProof({ quiet: true });
+        publishReceipts();
+      } catch (error) {
+        state.routeConductorNotificationAccepted = false;
+        state.routeConductorNotificationError = error && error.message ? error.message : String(error);
+        recordError("ROUTE_CONDUCTOR_NOTIFICATION_FAILED_NONBLOCKING", error, {
+          apiAlreadyPublished: true
+        });
+      }
+    };
+
+    try {
+      if (isFunction(root.queueMicrotask)) root.queueMicrotask(run);
+      else root.setTimeout(run, 0);
+    } catch (_error) {
+      try {
+        root.setTimeout(run, 0);
+      } catch (error) {
+        recordError("ROUTE_CONDUCTOR_NOTIFICATION_QUEUE_FAILED_NONBLOCKING", error, {
+          apiAlreadyPublished: true
+        });
+      }
+    }
+
+    return true;
+  }
+
+  function publishApiSurface(reason = "publish-api-surface") {
+    if (publishDepth > 4) return getReceiptLight(false);
+
+    publishDepth += 1;
+
+    try {
+      publishAliasStation();
+      recomputeChronology();
+      publishDatasetFirstProof({ quiet: true });
+      publishReceipts();
+
+      state.apiSurfacePublished = true;
+      state.aliasesPublished = true;
+      state.datasetFirstProofPublished = true;
+      state.receiptsPublished = true;
+      state.publishedAt = state.publishedAt || nowIso();
+      state.updatedAt = nowIso();
+
+      if (!state.localEvents.some((item) => item.event === "CANVAS_EAST_V11_1_API_SURFACE_PUBLISHED")) {
+        state.localEvents.push({
+          at: nowIso(),
+          event: "CANVAS_EAST_V11_1_API_SURFACE_PUBLISHED",
+          detail: {
+            reason,
+            contract: CONTRACT,
+            receipt: RECEIPT,
+            baselineContract: BASELINE_CONTRACT,
+            methods: REQUIRED_METHODS.slice(),
+            aliases: PUBLIC_ALIAS_PATHS.slice(),
+            nestedAliases: PUBLIC_NESTED_ALIAS_PATHS.slice(),
+            apiReadyBeforeParentScan: true,
+            apiReadyBeforeRouteConductorScan: true,
+            apiReadyBeforeAtlasEvidence: true,
+            apiReadyDoesNotRequireEvidence: true,
+            visualPassClaimed: false
+          }
+        });
+        trimArray(state.localEvents, 220);
+      }
+
+      notifyRouteConductor(reason);
+      return getReceiptLight(false);
+    } finally {
+      publishDepth -= 1;
+    }
+  }
+
   function readParentApi() {
     return firstGlobal([
       "HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD",
       "HEARTH.canvasParentReleaseAcceptanceEastDispatchSwitchboard",
       "DEXTER_LAB.hearthCanvasParentReleaseAcceptanceEastDispatchSwitchboard",
-
       "HEARTH_CANVAS_PARENT",
       "HEARTH.canvasParent",
       "DEXTER_LAB.hearthCanvasParent",
-
       "HEARTH_CANVAS_AUTHORITY",
       "HEARTH_CANVAS_EVIDENCE",
       "HEARTH_CANVAS",
@@ -641,6 +1143,7 @@
 
   function readParentAuthorityProfile(input = {}) {
     const source = isObject(input) ? input : {};
+
     const directParent = findNestedObject(source, [
       "parent",
       "canvasParent",
@@ -696,10 +1199,6 @@
       datasetValue("hearthCanvasParentV10_3Active") === "true" ||
       datasetValue("hearthSouthCurrentCanvasParentObserved") === "true"
     );
-
-    const parentApiPresent = Boolean(parentApi);
-    const parentCallable = hasParentCallable(parentApi);
-    const parentReceiptObserved = Boolean(parentReceipt.contract || parentReceipt.receipt || contract || receipt);
 
     const parentReleaseAccepted = Boolean(
       safeBool(source.canvasParentReleaseAccepted, false) ||
@@ -769,7 +1268,7 @@
       datasetValue("hearthCanvasEastDispatchPacketPublished") === "true"
     );
 
-    const stale = Boolean(
+    const parentCorruptOrStale = Boolean(
       safeBool(parentReceipt.currentParentStaleDetected, false) ||
       safeBool(parentReceipt.staleParentDetected, false) ||
       safeBool(parentReceipt.currentParentIdentityMismatch, false) ||
@@ -781,9 +1280,9 @@
       receipt: RECEIPT,
       packetType: "CANVAS_EAST_PARENT_AUTHORITY_PROFILE",
       parentObserved,
-      parentApiPresent,
-      parentCallable,
-      parentReceiptObserved,
+      parentApiPresent: Boolean(parentApi),
+      parentCallable: hasParentCallable(parentApi),
+      parentReceiptObserved: Boolean(parentReceipt.contract || parentReceipt.receipt || contract || receipt),
       parentContract: contract,
       parentReceiptId: receipt,
       currentParentIsV10_3,
@@ -796,7 +1295,7 @@
       parentReleasePacketLawful,
       eastDispatchAuthorized,
       eastDispatchPacketPublished,
-      parentCorruptOrStale: stale,
+      parentCorruptOrStale,
       parentAbsent: !parentObserved,
       parentReceipt: clonePlain(parentReceipt),
       createdAt: nowIso()
@@ -829,15 +1328,14 @@
 
   function readRouteConductorProfile(input = {}) {
     const source = isObject(input) ? input : {};
+
     const routeApi = firstGlobal([
       "HEARTH_ROUTE_CONDUCTOR_CENTRAL_STATION_SWITCHBOARD_WEST_V4_2_SOUTH_OUTPUT_ALIGNMENT",
       "HEARTH.routeConductorCentralStationSwitchboardWestV42SouthOutputAlignment",
       "DEXTER_LAB.hearthRouteConductorCentralStationSwitchboardWestV42SouthOutputAlignment",
-
       "HEARTH_ROUTE_CONDUCTOR_CENTRAL_STATION_SWITCHBOARD_NEWS_FIBONACCI_PARENT_COORDINATION",
       "HEARTH.routeConductorCentralStationSwitchboardNewsFibonacciParentCoordination",
       "DEXTER_LAB.hearthRouteConductorCentralStationSwitchboardNewsFibonacciParentCoordination",
-
       "HEARTH_ROUTE_CONDUCTOR",
       "HEARTH.routeConductor",
       "DEXTER_LAB.hearthRouteConductor"
@@ -893,6 +1391,7 @@
 
   function readWestReleaseState(input = {}) {
     const source = isObject(input) ? input : {};
+
     const westApi = firstGlobal([
       "LAB_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_WEST",
       "HEARTH_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH",
@@ -975,7 +1474,6 @@
     state.westCanvasReleaseApproved = packet.westCanvasReleaseApproved;
     state.canvasReleaseAuthorized = packet.canvasReleaseAuthorized;
     state.macroWestGateReady = packet.westReleaseObserved;
-    state.westGateReady = packet.westReleaseObserved;
 
     return packet;
   }
@@ -1018,6 +1516,7 @@
 
   function readParentEastDispatchPacket(input = {}) {
     const source = isObject(input) ? input : {};
+
     const directDispatch = findNestedObject(source, [
       "eastDispatchPacket",
       "dispatchPacket",
@@ -1124,6 +1623,8 @@
       contract: CONTRACT,
       receipt: RECEIPT,
       packetType: "CANVAS_EAST_PARENT_DISPATCH_READ",
+      canvasEastApiReady: true,
+      requiredApiSurfaceComplete: true,
       eastDispatchPacketObserved: dispatchObserved,
       eastDispatchPacketValid: valid,
       eastDispatchPacketAccepted: valid,
@@ -1158,6 +1659,7 @@
                       ? "WAITING_MACRO_WEST_CANVAS_RELEASE"
                       : "WAITING_CANVAS_PARENT_EAST_DISPATCH_VALID_SHAPE",
       recommendedNextFile: valid ? FILE : PARENT_FILE,
+      visualPassClaimed: false,
       createdAt: nowIso()
     };
 
@@ -1178,57 +1680,6 @@
     state.canvasParentEastDispatchGateReady = Boolean(result.eastDispatchPacketAccepted || result.eastDispatchAuthorized || result.eastDispatchPacketPublished);
 
     return result;
-  }
-
-  function receiveParentDispatchPacket(packet = {}) {
-    publishApiSurface("receive-parent-dispatch-entry");
-
-    const dispatch = readParentEastDispatchPacket({ eastDispatchPacket: packet });
-
-    if (dispatch.eastDispatchPacketValid) {
-      state.firstFailedCoordinate = "WAITING_CANVAS_EAST_ATLAS_EVIDENCE";
-      state.recommendedNextFile = FILE;
-      state.recommendedNextRenewalTarget = FILE;
-      state.atlasBuildRequested = dispatch.eastDispatchAtlasBuildRequested;
-    } else {
-      state.firstFailedCoordinate = dispatch.firstFailedCoordinate;
-      state.recommendedNextFile = dispatch.recommendedNextFile || PARENT_FILE;
-      state.recommendedNextRenewalTarget = state.recommendedNextFile;
-    }
-
-    recomputeChronology();
-    publishApiSurface("receive-parent-dispatch-complete");
-
-    if (dispatch.eastDispatchPacketValid && dispatch.eastDispatchAtlasBuildRequested) {
-      return buildAtlas({ eastDispatchPacket: packet });
-    }
-
-    if (dispatch.eastDispatchPacketValid) {
-      return {
-        contract: CONTRACT,
-        receipt: RECEIPT,
-        packetType: "CANVAS_EAST_PARENT_DISPATCH_ACCEPTANCE_RECEIPT",
-        canvasEastApiReady: true,
-        requiredApiSurfaceComplete: true,
-        eastDispatchPacketObserved: true,
-        eastDispatchPacketValid: true,
-        eastDispatchPacketAccepted: true,
-        atlasBuildRequested: dispatch.eastDispatchAtlasBuildRequested,
-        canvasEastEvidenceReady: state.f13AtlasPacketReady,
-        firstFailedCoordinate: state.f13AtlasPacketReady ? "NONE_F13F_ATLAS_PACKET_READY" : "WAITING_CANVAS_EAST_ATLAS_EVIDENCE",
-        recommendedNextFile: state.f13AtlasPacketReady ? CANVAS_WEST_FILE : FILE,
-        recommendedNextRenewalTarget: state.f13AtlasPacketReady ? CANVAS_WEST_FILE : FILE,
-        f21EligibleForNorth: false,
-        readyTextAllowed: false,
-        completionLatched: false,
-        generatedImage: false,
-        graphicBox: false,
-        webGL: false,
-        visualPassClaimed: false
-      };
-    }
-
-    return composeHeldAtlasPacket({}, resolveAtlasBuildPermission({ eastDispatchPacket: packet }));
   }
 
   function resolveAtlasBuildPermission(input = {}) {
@@ -1324,10 +1775,10 @@
     state.f13PermissionSource = permissionSource;
     state.firstFailedCoordinate = allowed
       ? (state.f13AtlasPacketReady ? "NONE_F13F_ATLAS_PACKET_READY" : "WAITING_CANVAS_EAST_ATLAS_EVIDENCE")
-      : reason;
+      : "WAITING_CANVAS_EAST_ATLAS_EVIDENCE";
     state.recommendedNextFile = allowed
       ? (state.f13AtlasPacketReady ? CANVAS_WEST_FILE : FILE)
-      : recommended;
+      : FILE;
     state.recommendedNextRenewalTarget = state.recommendedNextFile;
 
     recomputeChronology();
@@ -1360,9 +1811,9 @@
     state.f13SourceStageComplete = false;
     state.f13AtlasPacketReady = false;
     state.canvasEastEvidenceGateReady = false;
-    state.firstFailedCoordinate = reason;
-    state.recommendedNextFile = gate.recommendedNextFile || PARENT_FILE;
-    state.recommendedNextRenewalTarget = state.recommendedNextFile;
+    state.firstFailedCoordinate = "WAITING_CANVAS_EAST_ATLAS_EVIDENCE";
+    state.recommendedNextFile = FILE;
+    state.recommendedNextRenewalTarget = FILE;
 
     blockFinalClaims();
     recomputeChronology();
@@ -1381,6 +1832,9 @@
       canvasEastCurrent: true,
       canvasEastPresent: true,
       requiredApiSurfaceComplete: true,
+      aliasesPublished: true,
+      datasetFirstProofPublished: true,
+      receiptsPublished: true,
 
       heldAtlasPacketReturned: true,
       synchronousHeldPacketActive: true,
@@ -1406,26 +1860,26 @@
 
       chronologicalGateCount: state.chronologicalGateCount,
       chronologicalGatesSatisfied: state.chronologicalGatesSatisfied,
-      chronologicalFirstFailedGate: state.chronologicalFirstFailedGate,
-      chronologicalFirstFailedCoordinate: state.chronologicalFirstFailedCoordinate,
+      chronologicalFirstFailedGate: "CANVAS_EAST_ATLAS_EVIDENCE_READY",
+      chronologicalFirstFailedCoordinate: "WAITING_CANVAS_EAST_ATLAS_EVIDENCE",
 
       fibonacciSynchronizationChronologyFirst: true,
-      fibonacciSynchronizationScore: state.fibonacciSynchronizationScore,
+      fibonacciSynchronizationScore: 50,
       fibonacciSynchronizationExpected: 100,
-      fibonacciSynchronizationSatisfied: state.fibonacciSynchronizationSatisfied,
+      fibonacciSynchronizationSatisfied: 50,
       fibonacciSynchronizationPassed: false,
-      fibonacciSynchronizationDegraded: state.fibonacciSynchronizationDegraded,
-      fibonacciSynchronizationHardFail: state.fibonacciSynchronizationHardFail,
-      fibonacciSynchronizationHoldReason: reason,
+      fibonacciSynchronizationDegraded: true,
+      fibonacciSynchronizationHardFail: false,
+      fibonacciSynchronizationHoldReason: "WAITING_CANVAS_EAST_ATLAS_EVIDENCE",
 
       activeFibonacciGate: ACTIVE_FIBONACCI_GATE,
       activeF13EGate: F13E_GATE,
       activeF13FGate: F13F_GATE,
       futureFibonacciGate: FUTURE_FIBONACCI_GATE,
 
-      firstFailedCoordinate: reason,
-      recommendedNextFile: state.recommendedNextFile,
-      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+      firstFailedCoordinate: "WAITING_CANVAS_EAST_ATLAS_EVIDENCE",
+      recommendedNextFile: FILE,
+      recommendedNextRenewalTarget: FILE,
       nextConsumerFile: PARENT_FILE,
 
       visibleProof: false,
@@ -1446,7 +1900,7 @@
 
     state.lastHeldAtlasPacket = clonePlain(packet);
 
-    recordLocal("SYNCHRONOUS_HELD_ATLAS_PACKET_RETURNED", {
+    recordLocal("SYNCHRONOUS_HELD_ATLAS_PACKET_RETURNED_API_STILL_READY", {
       reason,
       permissionClass: state.permissionClass,
       apiReadyStillTrue: true,
@@ -1454,8 +1908,59 @@
       heldDoesNotMeanApiMissing: true
     });
 
-    publishApiSurface("held-packet-returned");
+    publishApiSurface("held-packet-returned-api-still-ready");
     return packet;
+  }
+
+  function receiveParentDispatchPacket(packet = {}) {
+    publishApiSurface("receive-parent-dispatch-entry");
+
+    const dispatch = readParentEastDispatchPacket({ eastDispatchPacket: packet });
+
+    if (dispatch.eastDispatchPacketValid) {
+      state.firstFailedCoordinate = "WAITING_CANVAS_EAST_ATLAS_EVIDENCE";
+      state.recommendedNextFile = FILE;
+      state.recommendedNextRenewalTarget = FILE;
+      state.atlasBuildRequested = dispatch.eastDispatchAtlasBuildRequested;
+    } else {
+      state.firstFailedCoordinate = "WAITING_CANVAS_EAST_ATLAS_EVIDENCE";
+      state.recommendedNextFile = FILE;
+      state.recommendedNextRenewalTarget = FILE;
+    }
+
+    recomputeChronology();
+    publishApiSurface("receive-parent-dispatch-complete");
+
+    if (dispatch.eastDispatchPacketValid && dispatch.eastDispatchAtlasBuildRequested) {
+      return buildAtlas({ eastDispatchPacket: packet });
+    }
+
+    if (dispatch.eastDispatchPacketValid) {
+      return {
+        contract: CONTRACT,
+        receipt: RECEIPT,
+        packetType: "CANVAS_EAST_PARENT_DISPATCH_ACCEPTANCE_RECEIPT",
+        canvasEastApiReady: true,
+        requiredApiSurfaceComplete: true,
+        eastDispatchPacketObserved: true,
+        eastDispatchPacketValid: true,
+        eastDispatchPacketAccepted: true,
+        atlasBuildRequested: dispatch.eastDispatchAtlasBuildRequested,
+        canvasEastEvidenceReady: state.f13AtlasPacketReady,
+        firstFailedCoordinate: state.f13AtlasPacketReady ? "NONE_F13F_ATLAS_PACKET_READY" : "WAITING_CANVAS_EAST_ATLAS_EVIDENCE",
+        recommendedNextFile: state.f13AtlasPacketReady ? CANVAS_WEST_FILE : FILE,
+        recommendedNextRenewalTarget: state.f13AtlasPacketReady ? CANVAS_WEST_FILE : FILE,
+        f21EligibleForNorth: false,
+        readyTextAllowed: false,
+        completionLatched: false,
+        generatedImage: false,
+        graphicBox: false,
+        webGL: false,
+        visualPassClaimed: false
+      };
+    }
+
+    return composeHeldAtlasPacket({}, resolveAtlasBuildPermission({ eastDispatchPacket: packet }));
   }
 
   function buildAtlas(options = {}) {
@@ -1728,7 +2233,7 @@
 
     recordError("ATLAS_BUILD_FAILED", error, { width, height, mode });
     recomputeChronology();
-    publishApiSurface("atlas-build-failed");
+    publishApiSurface("atlas-build-failed-api-still-ready");
 
     return {
       contract: CONTRACT,
@@ -2263,7 +2768,7 @@
     try {
       return sampleWithAuthority(normalizePoint(point, b, c));
     } catch (error) {
-      recordError("SAMPLE_FAILED_USING_FALLBACK", error);
+      recordError("SAMPLE_FAILED_USING_FALLBACK_API_STILL_READY", error);
       const p = normalizePoint(point, b, c);
       return normalizeSample(fallbackTerrain(p), p, true);
     }
@@ -2315,14 +2820,14 @@
 
     blockFinalClaims();
 
-    recordLocal("ATLAS_INVALIDATED", {
+    recordLocal("ATLAS_INVALIDATED_API_STILL_READY", {
       reason,
       apiStillReady: true
     });
 
     recomputeChronology();
     if (!options.skipDataset) publishDatasetFirstProof({ quiet: true });
-    publishApiSurface("atlas-invalidated");
+    publishApiSurface("atlas-invalidated-api-still-ready");
 
     return getReceipt();
   }
@@ -2387,7 +2892,7 @@
     );
     state.fibonacciSynchronizationHoldReason = state.fibonacciSynchronizationPassed
       ? "NONE_F13E_F13F_SYNCHRONIZED"
-      : state.firstFailedCoordinate;
+      : (f13ePass ? "WAITING_CANVAS_EAST_ATLAS_EVIDENCE" : "WAITING_CANVAS_EAST_API");
 
     state.canvasEastGateReady = f13ePass;
     state.canvasEastEvidenceGateReady = f13fPass;
@@ -2396,305 +2901,17 @@
       state.firstFailedCoordinate = "NONE_F13F_ATLAS_PACKET_READY";
       state.recommendedNextFile = CANVAS_WEST_FILE;
       state.recommendedNextRenewalTarget = CANVAS_WEST_FILE;
-    } else if (state.eastDispatchPacketAccepted || state.eastDispatchAuthorized || state.eastDispatchPacketPublished) {
+    } else if (f13ePass) {
       state.firstFailedCoordinate = "WAITING_CANVAS_EAST_ATLAS_EVIDENCE";
       state.recommendedNextFile = FILE;
       state.recommendedNextRenewalTarget = FILE;
-    } else if (f13ePass) {
-      state.firstFailedCoordinate = "WAITING_CANVAS_PARENT_EAST_DISPATCH";
-      state.recommendedNextFile = PARENT_FILE;
-      state.recommendedNextRenewalTarget = PARENT_FILE;
+    } else {
+      state.firstFailedCoordinate = "WAITING_CANVAS_EAST_API";
+      state.recommendedNextFile = FILE;
+      state.recommendedNextRenewalTarget = FILE;
     }
 
     blockFinalClaims();
-  }
-
-  function publishAliasStation() {
-    root.HEARTH = root.HEARTH || {};
-    root.DEXTER_LAB = root.DEXTER_LAB || {};
-
-    root.HEARTH.canvasEast = api;
-    root.HEARTH.canvasEastSource = api;
-    root.HEARTH.canvasEastAuthority = api;
-    root.HEARTH.canvasEastEvidence = api;
-    root.HEARTH.canvasEastEngine = api;
-    root.HEARTH.canvasEastParentV103DispatchApiRecognitionServedDetectionRepair = api;
-    root.HEARTH.canvasEastParentV103DispatchApiRecognitionAtlasSource = api;
-    root.HEARTH.canvasEastSpineNodalParentAcceptanceSyncHeldAtlasSource = api;
-    root.HEARTH.canvasEastSynchronousHeldPacketParentFirstF13AtlasSource = api;
-    root.HEARTH.canvasEastParentFirstApiRecognitionBootstrap = api;
-    root.HEARTH.canvasEastCurrentParentRecognizedF13AtlasSource = api;
-    root.HEARTH.canvasEastGovernedF13AtlasSource = api;
-    root.HEARTH.canvasEastF13AtlasSourceChild = api;
-    root.HEARTH.canvasEastMaterialAtlasSourceMachine = api;
-
-    root.HEARTH_CANVAS_EAST = api;
-    root.HEARTH_CANVAS_EAST_SOURCE = api;
-    root.HEARTH_CANVAS_EAST_AUTHORITY = api;
-    root.HEARTH_CANVAS_EAST_EVIDENCE = api;
-    root.HEARTH_CANVAS_EAST_ENGINE = api;
-    root.HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_SERVED_DETECTION_REPAIR = api;
-    root.HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_ATLAS_SOURCE = api;
-    root.HEARTH_CANVAS_EAST_SPINE_NODAL_PARENT_ACCEPTANCE_SYNC_HELD_ATLAS_SOURCE = api;
-    root.HEARTH_CANVAS_EAST_SYNCHRONOUS_HELD_PACKET_PARENT_FIRST_F13_ATLAS_SOURCE = api;
-    root.HEARTH_CANVAS_EAST_PARENT_FIRST_API_RECOGNITION_BOOTSTRAP = api;
-    root.HEARTH_CANVAS_EAST_CURRENT_PARENT_RECOGNIZED_F13_ATLAS_SOURCE = api;
-    root.HEARTH_CANVAS_EAST_GOVERNED_F13_ATLAS_SOURCE = api;
-    root.HEARTH_CANVAS_EAST_F13_ATLAS_SOURCE_CHILD = api;
-    root.HEARTH_CANVAS_EAST_MATERIAL_ATLAS_SOURCE_MACHINE = api;
-
-    root.DEXTER_LAB.hearthCanvasEast = api;
-    root.DEXTER_LAB.hearthCanvasEastSource = api;
-    root.DEXTER_LAB.hearthCanvasEastAuthority = api;
-    root.DEXTER_LAB.hearthCanvasEastEvidence = api;
-    root.DEXTER_LAB.hearthCanvasEastEngine = api;
-    root.DEXTER_LAB.hearthCanvasEastParentV103DispatchApiRecognitionServedDetectionRepair = api;
-    root.DEXTER_LAB.hearthCanvasEastParentV103DispatchApiRecognitionAtlasSource = api;
-    root.DEXTER_LAB.hearthCanvasEastSpineNodalParentAcceptanceSyncHeldAtlasSource = api;
-    root.DEXTER_LAB.hearthCanvasEastSynchronousHeldPacketParentFirstF13AtlasSource = api;
-    root.DEXTER_LAB.hearthCanvasEastParentFirstApiRecognitionBootstrap = api;
-    root.DEXTER_LAB.hearthCanvasEastCurrentParentRecognizedF13AtlasSource = api;
-    root.DEXTER_LAB.hearthCanvasEastGovernedF13AtlasSource = api;
-    root.DEXTER_LAB.hearthCanvasEastF13AtlasSourceChild = api;
-    root.DEXTER_LAB.hearthCanvasEastMaterialAtlasSourceMachine = api;
-
-    root.__HEARTH_CANVAS_EAST_LOADED__ = true;
-    root.__HEARTH_CANVAS_EAST_PRESENT__ = true;
-    root.__HEARTH_CANVAS_EAST_FILE__ = FILE;
-    root.__HEARTH_CANVAS_EAST_CONTRACT__ = CONTRACT;
-    root.__HEARTH_CANVAS_EAST_RECEIPT__ = RECEIPT;
-    root.__HEARTH_CANVAS_EAST_API_READY__ = true;
-    root.__HEARTH_CANVAS_EAST_READY__ = true;
-    root.__HEARTH_CANVAS_EAST_CURRENT__ = true;
-    root.__HEARTH_CANVAS_EAST_REQUIRED_API_SURFACE_COMPLETE__ = true;
-    root.__HEARTH_CANVAS_EAST_BUILD_ATLAS_AVAILABLE__ = true;
-    root.__HEARTH_CANVAS_EAST_SAMPLE_AVAILABLE__ = true;
-    root.__HEARTH_CANVAS_EAST_READ_AVAILABLE__ = true;
-    root.__HEARTH_CANVAS_EAST_GET_RECEIPT_AVAILABLE__ = true;
-    root.__HEARTH_CANVAS_EAST_VISUAL_PASS_CLAIMED__ = false;
-
-    state.aliasesPublished = true;
-    state.apiSurfacePublished = true;
-    state.canvasEastApiReady = true;
-    state.canvasEastReady = true;
-    state.canvasEastCurrent = true;
-    state.canvasEastPresent = true;
-    state.requiredApiSurfaceComplete = true;
-    state.updatedAt = nowIso();
-
-    return true;
-  }
-
-  function publishDatasetFirstProof(options = {}) {
-    state.datasetFirstProofPublished = true;
-    state.canvasEastApiReady = true;
-    state.canvasEastReady = true;
-    state.canvasEastCurrent = true;
-    state.canvasEastPresent = true;
-    state.requiredApiSurfaceComplete = true;
-
-    setDataset("hearthCanvasEastLoaded", "true");
-    setDataset("hearthCanvasEastPresent", "true");
-    setDataset("hearthCanvasEastContract", CONTRACT);
-    setDataset("hearthCanvasEastReceipt", RECEIPT);
-    setDataset("hearthCanvasEastPreviousContract", PREVIOUS_CONTRACT);
-    setDataset("hearthCanvasEastBaselineContract", BASELINE_CONTRACT);
-    setDataset("hearthCanvasEastVersion", VERSION);
-
-    setDataset("hearthCanvasEastServedDetectionRepairActive", "true");
-    setDataset("hearthCanvasEastParentV10_3DispatchRecognitionActive", "true");
-    setDataset("hearthCanvasEastRouteConductorV8_2AlignmentActive", "true");
-    setDataset("hearthCanvasEastMacroWestV4_2ReleaseChainRecognized", "true");
-    setDataset("hearthCanvasEastApiSurfacePublished", String(state.apiSurfacePublished));
-    setDataset("hearthCanvasEastAliasesPublished", String(state.aliasesPublished));
-    setDataset("hearthCanvasEastDatasetFirstProofPublished", "true");
-
-    setDataset("hearthCanvasEastRequiredApiSurfaceComplete", "true");
-    setDataset("hearthCanvasEastBuildAtlasAvailable", "true");
-    setDataset("hearthCanvasEastBuildAtlasSyncAvailable", "true");
-    setDataset("hearthCanvasEastBuildAtlasAsyncAvailable", "true");
-    setDataset("hearthCanvasEastSampleAvailable", "true");
-    setDataset("hearthCanvasEastReadAvailable", "true");
-    setDataset("hearthCanvasEastGetAtlasAvailable", "true");
-    setDataset("hearthCanvasEastGetAtlasCanvasAvailable", "true");
-    setDataset("hearthCanvasEastGetAtlasPacketAvailable", "true");
-    setDataset("hearthCanvasEastGetReceiptAvailable", "true");
-    setDataset("hearthCanvasEastGetReceiptLightAvailable", "true");
-    setDataset("hearthCanvasEastGetReceiptTextAvailable", "true");
-    setDataset("hearthCanvasEastReceiveParentDispatchPacketAvailable", "true");
-    setDataset("hearthCanvasEastApiReady", "true");
-    setDataset("hearthCanvasEastReady", "true");
-    setDataset("hearthCanvasEastCurrent", "true");
-    setDataset("hearthCanvasEastEvidenceReady", String(state.f13AtlasPacketReady));
-
-    setDataset("hearthCanvasEastParentObserved", String(state.parentObserved));
-    setDataset("hearthCanvasEastParentApiPresent", String(state.parentApiPresent));
-    setDataset("hearthCanvasEastParentCallable", String(state.parentCallable));
-    setDataset("hearthCanvasEastParentContract", state.parentContract);
-    setDataset("hearthCanvasEastCurrentParentIsV10_3", String(state.currentParentIsV10_3));
-    setDataset("hearthCanvasEastParentReleaseAccepted", String(state.parentReleaseAccepted));
-    setDataset("hearthCanvasEastParentReleaseLawful", String(state.parentReleaseLawful));
-    setDataset("hearthCanvasEastCanvasParentReleaseGateReady", String(state.canvasParentReleaseGateReady));
-    setDataset("hearthCanvasEastParentAcceptedRouteConductorRelease", String(state.parentAcceptedRouteConductorRelease));
-    setDataset("hearthCanvasEastParentReleasePacketSentToEast", String(state.parentReleasePacketSentToEast));
-    setDataset("hearthCanvasEastParentReleasePacketLawful", String(state.parentReleasePacketLawful));
-
-    setDataset("hearthCanvasEastDispatchAuthorized", String(state.eastDispatchAuthorized));
-    setDataset("hearthCanvasEastDispatchPacketPublished", String(state.eastDispatchPacketPublished));
-    setDataset("hearthCanvasEastDispatchPacketObserved", String(state.eastDispatchPacketObserved));
-    setDataset("hearthCanvasEastDispatchPacketValid", String(state.eastDispatchPacketValid));
-    setDataset("hearthCanvasEastDispatchPacketAccepted", String(state.eastDispatchPacketAccepted));
-    setDataset("hearthCanvasEastDispatchPacketSource", state.eastDispatchPacketSource);
-
-    setDataset("hearthCanvasEastWestReleaseObserved", String(state.westReleaseObserved));
-    setDataset("hearthCanvasEastWestCanvasReleaseApproved", String(state.westCanvasReleaseApproved));
-    setDataset("hearthCanvasEastCanvasReleaseAuthorized", String(state.canvasReleaseAuthorized));
-
-    setDataset("hearthCanvasEastPermissionClass", state.permissionClass);
-    setDataset("hearthCanvasEastMayBuildAtlas", String(state.canvasEastMayBuildAtlas));
-    setDataset("hearthCanvasEastF13BuildLawful", String(state.f13BuildLawful));
-    setDataset("hearthCanvasEastF13BuildBlockedReason", state.f13BuildBlockedReason);
-    setDataset("hearthCanvasEastF13PermissionSource", state.f13PermissionSource);
-
-    setDataset("hearthCanvasEastHeldAtlasPacketReturned", String(state.heldAtlasPacketReturned));
-    setDataset("hearthCanvasEastHeldPacketWasSynchronous", String(state.heldPacketWasSynchronous));
-    setDataset("hearthCanvasEastBuildAtlasReturnedPromise", String(state.buildAtlasReturnedPromise));
-    setDataset("hearthCanvasEastHeldDoesNotMeanApiMissing", "true");
-
-    setDataset("hearthCanvasEastChronologicalGateCount", String(state.chronologicalGateCount));
-    setDataset("hearthCanvasEastChronologicalGatesSatisfied", String(state.chronologicalGatesSatisfied));
-    setDataset("hearthCanvasEastChronologicalFirstFailedGate", state.chronologicalFirstFailedGate);
-    setDataset("hearthCanvasEastChronologicalFirstFailedCoordinate", state.chronologicalFirstFailedCoordinate);
-
-    setDataset("hearthCanvasEastFibonacciSynchronizationScore", String(state.fibonacciSynchronizationScore));
-    setDataset("hearthCanvasEastFibonacciSynchronizationExpected", String(state.fibonacciSynchronizationExpected));
-    setDataset("hearthCanvasEastFibonacciSynchronizationSatisfied", String(state.fibonacciSynchronizationSatisfied));
-    setDataset("hearthCanvasEastFibonacciSynchronizationPassed", String(state.fibonacciSynchronizationPassed));
-    setDataset("hearthCanvasEastFibonacciSynchronizationDegraded", String(state.fibonacciSynchronizationDegraded));
-    setDataset("hearthCanvasEastFibonacciSynchronizationHardFail", String(state.fibonacciSynchronizationHardFail));
-    setDataset("hearthCanvasEastFibonacciSynchronizationHoldReason", state.fibonacciSynchronizationHoldReason);
-    setDataset("hearthCanvasEastActiveFibonacciGate", ACTIVE_FIBONACCI_GATE);
-    setDataset("hearthCanvasEastActiveF13EGate", F13E_GATE);
-    setDataset("hearthCanvasEastActiveF13FGate", F13F_GATE);
-    setDataset("hearthCanvasEastFutureFibonacciGate", FUTURE_FIBONACCI_GATE);
-
-    setDataset("hearthCanvasEastGateReady", String(state.canvasEastGateReady));
-    setDataset("hearthCanvasEastEvidenceGateReady", String(state.canvasEastEvidenceGateReady));
-    setDataset("hearthCanvasEastCanvasGateReady", "false");
-    setDataset("hearthCanvasEastNewsGatePassedBeforeF21", "false");
-    setDataset("hearthCanvasEastNewsGateDegradedBeforeF21", "false");
-
-    setDataset("hearthCanvasEastMaterialReceiptBridgeActive", String(state.materialReceiptBridgeActive));
-    setDataset("hearthCanvasEastMaterialContract", state.materialContract);
-    setDataset("hearthCanvasEastMaterialReceipt", state.materialReceipt);
-    setDataset("hearthCanvasEastCanonicalMaterialConsumed", String(state.canonicalMaterialConsumed));
-
-    setDataset("hearthCanvasEastAtlasBuildStarted", String(state.atlasBuildStarted));
-    setDataset("hearthCanvasEastAtlasBuildProgress", String(state.atlasBuildProgress));
-    setDataset("hearthCanvasEastAtlasBuildComplete", String(state.atlasBuildComplete));
-    setDataset("hearthCanvasEastAtlasCanvasPresent", String(state.atlasCanvasPresent));
-    setDataset("hearthCanvasEastAtlasWidth", String(state.atlasWidth));
-    setDataset("hearthCanvasEastAtlasHeight", String(state.atlasHeight));
-    setDataset("hearthCanvasEastAtlasClassCount", String(state.atlasClassCount));
-    setDataset("hearthCanvasEastF13SourceStageStarted", String(state.f13SourceStageStarted));
-    setDataset("hearthCanvasEastF13SourceStageComplete", String(state.f13SourceStageComplete));
-    setDataset("hearthCanvasEastF13AtlasPacketReady", String(state.f13AtlasPacketReady));
-
-    setDataset("hearthCanvasEastFirstFailedCoordinate", state.firstFailedCoordinate);
-    setDataset("hearthCanvasEastRecommendedNextFile", state.recommendedNextFile);
-    setDataset("hearthCanvasEastRecommendedNextRenewalTarget", state.recommendedNextRenewalTarget);
-    setDataset("hearthCanvasEastNextConsumerFile", PARENT_FILE);
-
-    setDataset("hearthCanvasEastVisibleProof", "false");
-    setDataset("hearthCanvasEastVisibleContentProof", "false");
-    setDataset("hearthCanvasEastVisiblePlanetAvailable", "false");
-    setDataset("hearthCanvasEastCanvasReady", "false");
-    setDataset("hearthCanvasEastReadyTextAllowed", "false");
-    setDataset("hearthCanvasEastF21EligibleForNorth", "false");
-    setDataset("hearthCanvasEastF21Claimed", "false");
-    setDataset("hearthCanvasEastReadyTextClaimed", "false");
-    setDataset("hearthCanvasEastCompletionLatched", "false");
-
-    setDataset("generatedImage", "false");
-    setDataset("graphicBox", "false");
-    setDataset("webgl", "false");
-    setDataset("visualPassClaimed", "false");
-
-    if (!options.quiet) state.updatedAt = nowIso();
-
-    return true;
-  }
-
-  function publishReceipts() {
-    const light = getReceiptLight(false);
-
-    root.HEARTH_CANVAS_EAST_RECEIPT = light;
-    root.HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_SERVED_DETECTION_REPAIR_RECEIPT = light;
-    root.HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_ATLAS_SOURCE_RECEIPT = light;
-    root.HEARTH_CANVAS_EAST_SPINE_NODAL_PARENT_ACCEPTANCE_SYNC_HELD_ATLAS_SOURCE_RECEIPT = light;
-    root.HEARTH_CANVAS_EAST_SYNCHRONOUS_HELD_PACKET_PARENT_FIRST_F13_ATLAS_SOURCE_RECEIPT = light;
-    root.HEARTH_CANVAS_EAST_CURRENT_PARENT_RECOGNIZED_F13_ATLAS_SOURCE_RECEIPT = light;
-    root.HEARTH_CANVAS_EAST_F13_ATLAS_SOURCE_CHILD_RECEIPT = light;
-
-    if (root.HEARTH) {
-      root.HEARTH.canvasEastReceipt = light;
-      root.HEARTH.canvasEastParentV103DispatchApiRecognitionServedDetectionRepairReceipt = light;
-      root.HEARTH.canvasEastParentV103DispatchApiRecognitionAtlasSourceReceipt = light;
-      root.HEARTH.canvasEastSpineNodalParentAcceptanceSyncHeldAtlasSourceReceipt = light;
-      root.HEARTH.canvasEastSynchronousHeldPacketParentFirstF13AtlasSourceReceipt = light;
-      root.HEARTH.canvasEastCurrentParentRecognizedF13AtlasSourceReceipt = light;
-    }
-
-    if (root.DEXTER_LAB) {
-      root.DEXTER_LAB.hearthCanvasEastReceipt = light;
-      root.DEXTER_LAB.hearthCanvasEastParentV103DispatchApiRecognitionServedDetectionRepairReceipt = light;
-      root.DEXTER_LAB.hearthCanvasEastParentV103DispatchApiRecognitionAtlasSourceReceipt = light;
-      root.DEXTER_LAB.hearthCanvasEastSpineNodalParentAcceptanceSyncHeldAtlasSourceReceipt = light;
-      root.DEXTER_LAB.hearthCanvasEastSynchronousHeldPacketParentFirstF13AtlasSourceReceipt = light;
-      root.DEXTER_LAB.hearthCanvasEastCurrentParentRecognizedF13AtlasSourceReceipt = light;
-    }
-
-    state.receiptsPublished = true;
-  }
-
-  function publishApiSurface(reason = "publish-api-surface") {
-    if (publishDepth > 4) return getReceiptLight(false);
-    publishDepth += 1;
-
-    try {
-      publishAliasStation();
-      recomputeChronology();
-      publishDatasetFirstProof({ quiet: true });
-      publishReceipts();
-
-      state.apiSurfacePublished = true;
-      state.aliasesPublished = true;
-      state.datasetFirstProofPublished = true;
-      state.publishedAt = state.publishedAt || nowIso();
-      state.updatedAt = nowIso();
-
-      if (!state.localEvents.some((event) => event.event === "CANVAS_EAST_V10_API_SURFACE_PUBLISHED")) {
-        state.localEvents.push({
-          at: nowIso(),
-          event: "CANVAS_EAST_V10_API_SURFACE_PUBLISHED",
-          detail: {
-            reason,
-            contract: CONTRACT,
-            receipt: RECEIPT,
-            methods: REQUIRED_METHODS.slice(),
-            apiReadyBeforeParentScan: true,
-            apiReadyBeforeRouteConductorScan: true,
-            apiReadyBeforeAtlasEvidence: true,
-            visualPassClaimed: false
-          }
-        });
-        trimArray(state.localEvents, 180);
-      }
-
-      return getReceiptLight(false);
-    } finally {
-      publishDepth -= 1;
-    }
   }
 
   function getReceiptLight(_doRefresh = false) {
@@ -2705,6 +2922,8 @@
       previousReceipt: PREVIOUS_RECEIPT,
       baselineContract: BASELINE_CONTRACT,
       baselineReceipt: BASELINE_RECEIPT,
+      legacyBaselineContract: LEGACY_BASELINE_CONTRACT,
+      legacyBaselineReceipt: LEGACY_BASELINE_RECEIPT,
       compatibilityContract: COMPATIBILITY_CONTRACT,
       compatibilityReceipt: COMPATIBILITY_RECEIPT,
       currentParentContract: CURRENT_PARENT_CONTRACT,
@@ -2712,6 +2931,7 @@
       routeConductorContract: ROUTE_CONDUCTOR_CONTRACT,
       routeConductorReceipt: ROUTE_CONDUCTOR_RECEIPT,
       macroWestContract: MACRO_WEST_CONTRACT,
+
       version: VERSION,
       file: FILE,
       parentFile: PARENT_FILE,
@@ -2721,6 +2941,9 @@
       canvasSouthFile: CANVAS_SOUTH_FILE,
       role: state.role,
 
+      sameRuntimeExposureBeaconActive: true,
+      strictInitializationSafetyActive: true,
+      undefinedStateReferenceCorrectionActive: true,
       servedDetectionRepairActive: true,
       parentV10_3DispatchRecognitionActive: true,
       routeConductorV8_2AlignmentActive: true,
@@ -2728,14 +2951,22 @@
       earlyApiSurfaceActive: true,
       aliasStationActive: true,
       datasetFirstProofActive: true,
+      receiptFirstProofActive: true,
+      routeConductorNotificationActive: true,
       synchronousHeldPacketActive: true,
       atlasSourceActive: true,
       parentReturnNodeActive: true,
+
+      canvasChildSequence: CANVAS_CHILD_SEQUENCE.slice(),
 
       apiSurfacePublished: state.apiSurfacePublished,
       aliasesPublished: state.aliasesPublished,
       datasetFirstProofPublished: state.datasetFirstProofPublished,
       receiptsPublished: state.receiptsPublished,
+      routeConductorNotificationAttempted: state.routeConductorNotificationAttempted,
+      routeConductorNotificationAccepted: state.routeConductorNotificationAccepted,
+      routeConductorNotificationError: state.routeConductorNotificationError,
+
       requiredApiSurfaceComplete: true,
       requiredMethods: REQUIRED_METHODS.slice(),
 
@@ -2910,6 +3141,7 @@
       ownsReceiptSurface: true,
       ownsParentDispatchRecognition: true,
       ownsSynchronousHeldPacket: true,
+      ownsSameRuntimeExposureBeacon: true,
 
       ownsPlanetTruth: false,
       ownsElevationTruth: false,
@@ -2967,12 +3199,13 @@
     const r = getReceiptLight(false);
 
     return [
-      "HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_SERVED_DETECTION_REPAIR_RECEIPT",
+      "HEARTH_CANVAS_EAST_SAME_RUNTIME_EXPOSURE_BEACON_API_PUBLICATION_RECEIPT",
       "",
       line("contract", r.contract),
       line("receipt", r.receipt),
       line("previousContract", r.previousContract),
       line("baselineContract", r.baselineContract),
+      line("legacyBaselineContract", r.legacyBaselineContract),
       line("currentParentContract", r.currentParentContract),
       line("routeConductorContract", r.routeConductorContract),
       line("macroWestContract", r.macroWestContract),
@@ -2983,6 +3216,9 @@
       line("macroWestFile", r.macroWestFile),
       line("role", r.role),
       "",
+      line("sameRuntimeExposureBeaconActive", r.sameRuntimeExposureBeaconActive),
+      line("strictInitializationSafetyActive", r.strictInitializationSafetyActive),
+      line("undefinedStateReferenceCorrectionActive", r.undefinedStateReferenceCorrectionActive),
       line("servedDetectionRepairActive", r.servedDetectionRepairActive),
       line("parentV10_3DispatchRecognitionActive", r.parentV10_3DispatchRecognitionActive),
       line("routeConductorV8_2AlignmentActive", r.routeConductorV8_2AlignmentActive),
@@ -2992,6 +3228,9 @@
       line("aliasesPublished", r.aliasesPublished),
       line("datasetFirstProofPublished", r.datasetFirstProofPublished),
       line("receiptsPublished", r.receiptsPublished),
+      line("routeConductorNotificationAttempted", r.routeConductorNotificationAttempted),
+      line("routeConductorNotificationAccepted", r.routeConductorNotificationAccepted),
+      "",
       line("requiredApiSurfaceComplete", r.requiredApiSurfaceComplete),
       line("buildAtlasAvailable", r.buildAtlasAvailable),
       line("buildAtlasSyncAvailable", r.buildAtlasSyncAvailable),
@@ -3002,6 +3241,14 @@
       line("receiveParentDispatchPacketAvailable", r.receiveParentDispatchPacketAvailable),
       line("canvasEastApiReady", r.canvasEastApiReady),
       line("canvasEastEvidenceReady", r.canvasEastEvidenceReady),
+      "",
+      line("canvasChildSequence", CANVAS_CHILD_SEQUENCE.join("__")),
+      line("activeCycleNumber", r.activeCycleNumber),
+      line("activeCycleRoute", r.activeCycleRoute),
+      line("activeCardinal", r.activeCardinal),
+      line("activeFibonacciGate", r.activeFibonacciGate),
+      line("activeF13EGate", r.activeF13EGate),
+      line("activeF13FGate", r.activeF13FGate),
       "",
       line("parentObserved", r.parentObserved),
       line("parentContract", r.parentContract),
@@ -3052,6 +3299,7 @@
       line("fibonacciSynchronizationHardFail", r.fibonacciSynchronizationHardFail),
       line("fibonacciSynchronizationHoldReason", r.fibonacciSynchronizationHoldReason),
       "",
+      line("atlasBuildRequested", r.atlasBuildRequested),
       line("atlasBuildStarted", r.atlasBuildStarted),
       line("atlasBuildProgress", r.atlasBuildProgress),
       line("atlasBuildComplete", r.atlasBuildComplete),
@@ -3096,20 +3344,23 @@
         readParentEastDispatchPacket(options);
         resolveAtlasBuildPermission(options);
       } catch (error) {
-        recordError("BOOT_PROFILE_SCAN_FAILED_NONBLOCKING", error, {
-          apiAlreadyPublished: true
+        recordError("BOOT_PROFILE_SCAN_FAILED_NONBLOCKING_AFTER_API_PUBLICATION", error, {
+          apiAlreadyPublished: true,
+          canvasEastApiReady: true
         });
       }
 
       recomputeChronology();
       publishApiSurface("boot-complete");
 
-      recordLocal("CANVAS_EAST_V10_SERVED_DETECTION_REPAIR_BOOTED", {
+      recordLocal("CANVAS_EAST_V11_1_SAME_RUNTIME_EXPOSURE_BEACON_BOOTED", {
         file: FILE,
         contract: CONTRACT,
         receipt: RECEIPT,
+        baselineContract: BASELINE_CONTRACT,
         canvasEastApiReady: true,
         requiredApiSurfaceComplete: true,
+        aliasesPublished: true,
         firstFailedCoordinate: state.firstFailedCoordinate,
         visualPassClaimed: false
       });
@@ -3120,11 +3371,15 @@
 
   Object.assign(api, {
     contract: CONTRACT,
+    CONTRACT,
     receipt: RECEIPT,
+    RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
     baselineContract: BASELINE_CONTRACT,
     baselineReceipt: BASELINE_RECEIPT,
+    legacyBaselineContract: LEGACY_BASELINE_CONTRACT,
+    legacyBaselineReceipt: LEGACY_BASELINE_RECEIPT,
     compatibilityContract: COMPATIBILITY_CONTRACT,
     compatibilityReceipt: COMPATIBILITY_RECEIPT,
     currentParentContract: CURRENT_PARENT_CONTRACT,
@@ -3137,8 +3392,13 @@
     parentFile: PARENT_FILE,
     routeFile: ROUTE_FILE,
     macroWestFile: MACRO_WEST_FILE,
+    canvasWestFile: CANVAS_WEST_FILE,
+    canvasSouthFile: CANVAS_SOUTH_FILE,
 
     REQUIRED_METHODS,
+    PUBLIC_ALIAS_PATHS,
+    PUBLIC_NESTED_ALIAS_PATHS,
+    CANVAS_CHILD_SEQUENCE,
     PERMISSION,
     CHRONOLOGY,
 
@@ -3162,6 +3422,8 @@
     publishGlobals: publishApiSurface,
     publishAliasStation,
     publishDatasetFirstProof,
+    publishReceipts,
+    notifyRouteConductor,
 
     readParentAuthorityProfile,
     readParentState: readParentAuthorityProfile,
@@ -3188,6 +3450,9 @@
     getReceiptLight,
     getReceiptText,
 
+    sameRuntimeExposureBeaconActive: true,
+    strictInitializationSafetyActive: true,
+    undefinedStateReferenceCorrectionActive: true,
     servedDetectionRepairActive: true,
     parentV10_3DispatchRecognitionActive: true,
     routeConductorV8_2AlignmentActive: true,
@@ -3195,6 +3460,8 @@
     earlyApiSurfaceActive: true,
     aliasStationActive: true,
     datasetFirstProofActive: true,
+    receiptFirstProofActive: true,
+    routeConductorNotificationActive: true,
     synchronousHeldPacketActive: true,
     atlasSourceActive: true,
 
@@ -3223,6 +3490,7 @@
     ownsReceiptSurface: true,
     ownsParentDispatchRecognition: true,
     ownsSynchronousHeldPacket: true,
+    ownsSameRuntimeExposureBeacon: true,
 
     ownsPlanetTruth: false,
     ownsElevationTruth: false,
@@ -3261,24 +3529,32 @@
 
   try {
     state.updatedAt = nowIso();
-    publishApiSurface("initial-api-surface-before-any-scan");
+
+    publishAliasStation();
+    publishDatasetFirstProof({ quiet: true });
+    publishReceipts();
+    notifyRouteConductor("initial-same-runtime-exposure-before-any-scan");
 
     try {
       refreshMaterialBridge({ updateDataset: false });
     } catch (materialError) {
-      recordError("MATERIAL_BRIDGE_SYNC_NONBLOCKING_FAILURE", materialError, {
-        apiAlreadyPublished: true
+      recordError("MATERIAL_BRIDGE_SYNC_NONBLOCKING_FAILURE_API_STILL_READY", materialError, {
+        apiAlreadyPublished: true,
+        canvasEastApiReady: true
       });
     }
 
     boot({});
   } catch (error) {
-    recordError("CANVAS_EAST_V10_INITIALIZATION_FAILED", error);
+    recordError("CANVAS_EAST_V11_1_INITIALIZATION_GUARD_CAUGHT_AFTER_PUBLICATION", error, {
+      attemptedAliasPublication: true
+    });
 
     try {
       publishAliasStation();
       publishDatasetFirstProof({ quiet: true });
       publishReceipts();
+      notifyRouteConductor("fallback-publication-after-initialization-guard");
     } catch (_fallbackError) {}
   }
 

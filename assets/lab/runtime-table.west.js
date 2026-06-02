@@ -1,71 +1,104 @@
 // /assets/lab/runtime-table.west.js
-// LAB_RUNTIME_TABLE_CARDINAL_WEST_CURRENT_CANVAS_PARENT_V10_3_CARRIER_COMPATIBILITY_TNT_v4_2
+// LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_TIMETABLE_ALIGNED_LOCAL_ADMISSIBILITY_CLUTCH_TNT_v4_6_3
 // Full-file replacement.
-// Cardinal West / cycle-aware admissibility clutch only.
+// Cardinal West / North-timetable-aligned local admissibility clutch only.
 // Purpose:
-// - Preserve West as Macro/Cardinal admissibility authority.
-// - Preserve v4_1 South-output correction: no blind release.
-// - Preserve current Canvas parent v10_3 carrier compatibility.
-// - Require identity-safe Canvas parent plus explicit carrier-safe marker.
-// - Clear stale release globals during HOLD or HARD_BLOCK.
-// - Publish both releasePacket and canvasReleasePacket receipt aliases.
-// - Correct F13N NEWS/Fibonacci checkpoint declaration.
-// Does not own:
-// - Canvas parent boot
-// - Canvas parent release acceptance
-// - Canvas East dispatch
-// - East atlas/source truth
-// - Canvas child West inspection truth
-// - South visible proof truth
-// - material truth
-// - elevation truth
-// - hydrology truth
-// - planet truth
-// - route conductor switching
-// - F21 latch
-// - ready text
-// - final visual pass
+// - Keep West as a local admissibility clutch under North timetable authority.
+// - Separate West invocation, intake acceptance, admissibility acceptance, and audit pass.
+// - Release to Canvas only after lawful C2 West audit intake, South-output admissibility, and Canvas Local Station admissibility.
+// - Accept Canvas Local Station v11_1/v11 as current pass candidates.
+// - Recognize Canvas Parent v10_3 as baseline-only, never as current pass.
+// - Correct unsafe-field logic so false mismatch/stale markers do not become hard blocks.
+// - Rank clean current Canvas Local Station proof above unsafe proof.
+// - Prevent West-owned dataset keys from creating upstream Canvas proof.
+// - Publish dominant West aliases and legacy receipt aliases so stale West contracts cannot outrank v4_6_3.
+// - Publish release packets only from RELEASE_TO_CANVAS.
+// - Clear stale release packets during HOLD or HARD_BLOCK.
+// - Preserve no Canvas child scanning, no F21 claim, no ready text, no completion latch, no final visual pass, no generated image, no GraphicBox, and no WebGL.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_CURRENT_CANVAS_PARENT_V10_3_CARRIER_COMPATIBILITY_TNT_v4_2";
-  const RECEIPT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_CURRENT_CANVAS_PARENT_V10_3_CARRIER_COMPATIBILITY_RECEIPT_v4_2";
-  const PREVIOUS_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_CURRENT_CANVAS_PARENT_V10_3_CARRIER_COMPATIBILITY_TNT_v4_1";
-  const BASELINE_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_CURRENT_CANVAS_PARENT_V10_3_CARRIER_COMPATIBILITY_TNT_v4_1";
+  const CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_TIMETABLE_ALIGNED_LOCAL_ADMISSIBILITY_CLUTCH_TNT_v4_6_3";
+  const RECEIPT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_TIMETABLE_ALIGNED_LOCAL_ADMISSIBILITY_CLUTCH_RECEIPT_v4_6_3";
+  const PREVIOUS_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_TIMETABLE_ALIGNED_LOCAL_ADMISSIBILITY_CLUTCH_TNT_v4_6_2";
+  const BASELINE_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_CURRENT_CANVAS_PARENT_V10_3_CARRIER_COMPATIBILITY_TNT_v4_2";
+
+  const VERSION = "2026-06-02.lab-runtime-table-west-north-timetable-aligned-local-admissibility-clutch-v4-6-3";
 
   const FILE = "/assets/lab/runtime-table.west.js";
   const ROUTE = "/showroom/globe/hearth/";
-  const CANVAS_PARENT_FILE = "/assets/hearth/hearth.canvas.js";
+  const NORTH_FILE = "/assets/lab/runtime-table.js";
   const ROUTE_CONDUCTOR_FILE = "/showroom/globe/hearth/hearth.js";
-  const CANVAS_PARENT_V10_3_CONTRACT = "HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD_TNT_v10_3";
+  const CANVAS_LOCAL_STATION_FILE = "/assets/hearth/hearth.canvas.js";
 
-  const CHECKPOINT_IDS = Object.freeze({
-    F8: "F8",
-    F13E: "F13E",
-    F13S: "F13S",
-    F13W: "F13W",
-    F13N: "F13N",
-    F21: "F21",
-  });
+  const ACTIVE_STAGE_ID = "C2_WEST_CANVAS_RELEASE_AUDIT";
+  const ACTIVE_GEAR = "GEAR_C2_WEST_CANVAS_RELEASE_AUDIT";
+  const ACTIVE_CYCLE_NUMBER = 2;
+  const ACTIVE_CYCLE_ROUTE = "NORTH_EAST_SOUTH_WEST_CANVAS";
+  const ACTIVE_CARDINAL = "WEST";
+  const ACTIVE_FIBONACCI = "F13W";
+  const ACTIVE_NEWS_GATE = "WEST";
 
-  const TRI = Object.freeze({
-    TRUE: "TRUE",
-    FALSE: "FALSE",
-    UNKNOWN: "UNKNOWN",
-  });
+  const CANVAS_LOCAL_STATION_CONTRACTS = Object.freeze([
+    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_1",
+    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11"
+  ]);
+
+  const CANVAS_BASELINE_V10_3_CONTRACT = "HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD_TNT_v10_3";
 
   const WEST_DECISION = Object.freeze({
-    RELEASE_TO_CANVAS: "RELEASE_TO_CANVAS",
     HOLD: "HOLD",
     HARD_BLOCK: "HARD_BLOCK",
+    RELEASE_TO_CANVAS: "RELEASE_TO_CANVAS"
   });
 
-  const CARRIER_SPECIFIC_METHODS = Object.freeze([
-    "getStructuralCarrier",
-    "readStructuralCarrier",
-    "getCanvasCarrier",
-    "getCarrierReceipt",
+  const WEST_GAP_CLASS = Object.freeze({
+    NONE: "NONE",
+    NORTH_TIMETABLE_HOLD: "WAITING_NORTH_TIMETABLE",
+    SOUTH_OUTPUT_HOLD: "WAITING_CYCLE_TWO_SOUTH_OUTPUT",
+    CANVAS_LOCAL_STATION_HOLD: "WAITING_CURRENT_CANVAS_LOCAL_STATION",
+    CARRIER_HOLD: "CARRIER_HOLD",
+    STRUCTURAL_BLOCK: "STRUCTURAL_BLOCK"
+  });
+
+  const OUTPUT_MARKERS = Object.freeze([
+    "westHandoffPacketReady",
+    "outputSpreadComposed",
+    "southOutputReady",
+    "cycleTwoSouthOutputReady",
+    "southOutputAdmissible",
+    "southVisibleProofReady",
+    "canvasSouthVisibleProofReady",
+    "proofBodyComposed",
+    "receiptComposed",
+    "visibleStateComposed",
+    "routeConductorOutputReady",
+    "routeConductorReleaseCandidate"
+  ]);
+
+  const TRUE_ONLY_UNSAFE_KEYS = Object.freeze([
+    "currentParentIdentityMismatch",
+    "canvasParentIdentityMismatch",
+    "currentParentStaleDetected",
+    "canvasParentStaleDetected",
+    "staleParentDetected"
+  ]);
+
+  const FALSE_IS_UNSAFE_KEYS = Object.freeze([
+    "structuralCarrierSafe",
+    "hearthCanvasStructuralCarrierSafe",
+    "canvasParentCarrierSafe",
+    "hearthCanvasParentCarrierSafe",
+    "structuralCarrierSafeForCanvasRelease",
+    "hearthCanvasStructuralCarrierSafeForCanvasRelease",
+    "canvasPreReleaseCarrierSafeForWest",
+    "hearthCanvasPreReleaseCarrierSafeForWest"
+  ]);
+
+  const NON_EMPTY_ERROR_KEYS = Object.freeze([
+    "canvasCarrierHandoffError",
+    "carrierHandoffError"
   ]);
 
   const state = {
@@ -74,78 +107,80 @@
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     baselineContract: BASELINE_CONTRACT,
+    version: VERSION,
     file: FILE,
     route: ROUTE,
-    role: "lab-runtime-table-cardinal-west-current-canvas-parent-v10-3-carrier-compatibility",
+    role: "lab-runtime-table-cardinal-west-north-timetable-aligned-local-admissibility-clutch",
 
-    westRuntimeTableLoaded: true,
-    westRuntimeTableContract: CONTRACT,
-    westRuntimeTableReceipt: RECEIPT,
-    westV4_2Active: true,
-    westV4_1Superseded: true,
-    westV4Superseded: true,
-    westV3Superseded: true,
+    westV4_6_3Active: true,
+    westV4_6_2Superseded: true,
+    westV4_6_1Superseded: true,
+    westV4_6Superseded: true,
+    westV4_5Superseded: true,
+    westV4_4Superseded: true,
+    westV4_3Superseded: true,
+    westV4_2Superseded: true,
+
+    northTimetableAlignmentActive: true,
+    northTimetableObserved: false,
+    northSourceMethod: "NONE",
+    northActiveStageId: "",
+    northActiveGearId: "",
+    northActiveCycleNumber: 0,
+    northActiveCycleRoute: "",
+    northActiveCardinal: "",
+    northActiveFileGate: "",
+    northActiveFibonacci: "",
+    northActiveNewsGate: "",
+    northC2WestAuditAligned: false,
 
     cycleNumber: 0,
     cycleRoute: "",
     receivedFrom: "UNKNOWN",
     handoffTo: "UNKNOWN",
-
-    checkpointRegistry: [],
-    f13nCheckpointCorrected: false,
-
-    currentCanvasParentObserved: false,
-    currentCanvasParentContractObserved: false,
-    currentCanvasParentContract: "",
-    currentParentIdentityMismatch: false,
-    currentParentStaleDetected: false,
-    staleParentDetected: false,
-    canvasParentBootMethodAvailable: false,
-
-    canvasCarrierReceiptObserved: false,
-    canvasCarrierSourceMethod: "NONE",
-    canvasCarrierSourceIsCarrierSpecific: false,
-    canvasCarrierProof: null,
-
-    structuralCarrierReadyTri: TRI.UNKNOWN,
-    structuralCarrierSafeTri: TRI.UNKNOWN,
-    canvasParentCarrierSafeTri: TRI.UNKNOWN,
-    structuralCarrierSafeForCanvasReleaseTri: TRI.UNKNOWN,
-    canvasPreReleaseCarrierSafeForWestTri: TRI.UNKNOWN,
-
-    carrierSafeMarkerObserved: false,
-    secondaryCarrierConfidenceObserved: false,
-    carrierIdentitySafe: false,
-    preReleaseCarrierAdmissible: false,
-    carrierHardBlock: false,
-    carrierHeld: true,
-    carrierHoldReason: "WAITING_CURRENT_CANVAS_PARENT_CARRIER_PROOF",
-    explicitUnsafeFields: [],
+    activeCycleInputCardinal: "",
+    activeCycleHandoffTarget: "",
 
     indexPairReady: false,
     carrierHostAdmissibilityReady: false,
     f8SelfDutySatisfied: false,
 
-    indexPairReadyObserved: false,
-    carrierHostAdmissibilityReadyObserved: false,
-    f8SelfDutySatisfiedObserved: false,
-
-    southRouteConductorPacketObserved: false,
-    explicitSouthRouteSignalObserved: false,
-    explicitSouthAdmissibilitySignalObserved: false,
     southOutputReady: false,
-    routeConductorOutputReady: false,
-    routeConductorReleaseCandidate: false,
+    explicitSouthOutputMarkerObserved: false,
+    explicitSouthOutputMarkers: [],
     cycleTwoSouthOutputObserved: false,
     cycleTwoSouthOutputAdmissible: false,
     southOutputIntakeMethod: "NONE",
-    explicitSouthSignals: [],
+
+    currentCanvasParentObserved: false,
+    currentCanvasParentContractObserved: false,
+    currentCanvasParentContract: "",
+    currentCanvasParentIsLocalStation: false,
+    canvasLocalStationContractAccepted: false,
+    canvasBaselineV10_3Recognized: false,
+    v10_3BaselineRecognizedOnly: false,
+    v11OrV11_1RequiredForLocalStationPass: true,
+    canvasLocalStationApiReady: false,
+    canvasLocalStationSummaryObserved: false,
+    canvasLocalStationReceiveSurfaceReady: false,
+    canvasLocalStationSourceMethod: "NONE",
+    selectedCanvasProofRank: 99,
+    selectedCanvasProofUnsafe: false,
+
+    carrierIdentitySafe: false,
+    carrierSafeMarkerObserved: false,
+    preReleaseCarrierAdmissible: false,
+    carrierHardBlock: false,
+    carrierHeld: true,
+    carrierHoldReason: "WAITING_NORTH_TIMETABLE_C2_WEST_AUDIT",
+    explicitUnsafeFields: [],
 
     westAuditObserved: true,
+    westAuditIntakeAccepted: false,
     westAuditAccepted: false,
     westAuditPassed: false,
     westDecision: WEST_DECISION.HOLD,
-    westGapClass: "WAITING_CYCLE_TWO_SOUTH_OUTPUT",
+    westGapClass: WEST_GAP_CLASS.NORTH_TIMETABLE_HOLD,
     westHardBlock: false,
     westForwardAllowed: false,
     westCanvasReleaseApproved: false,
@@ -154,45 +189,49 @@
     canvasReleasePacketReady: false,
     canvasReleaseApprovedByWest: false,
     releaseToCanvas: false,
-    canvasReleaseHeldReason: "WAITING_CYCLE_TWO_SOUTH_OUTPUT_ADMISSIBILITY",
+    canvasReleaseHeldReason: "WAITING_NORTH_TIMETABLE_C2_WEST_AUDIT",
     releasePacket: null,
 
     f21EligibleForNorth: false,
     f21SubmittedToNorth: false,
     f21EligibilitySubmittedToNorth: false,
+    f21ClaimedByWest: false,
     completionLatched: false,
+    finalCompletionLatched: false,
+    degradedCompletionLatched: false,
     readyTextAllowed: false,
     visualPassClaimed: false,
-    f21ClaimedByWest: false,
-
     generatedImage: false,
     graphicBox: false,
     webGL: false,
 
-    firstFailedCoordinate: "WAITING_CYCLE_TWO_SOUTH_OUTPUT_ADMISSIBILITY",
-    recommendedNextFile: ROUTE_CONDUCTOR_FILE,
-    recommendedNextRenewalTarget: ROUTE_CONDUCTOR_FILE,
-    postgameStatus: "WEST_HOLD_WAITING_CYCLE_TWO_SOUTH_OUTPUT_ADMISSIBILITY",
+    firstFailedCoordinate: "WAITING_NORTH_TIMETABLE_C2_WEST_AUDIT",
+    recommendedNextFile: NORTH_FILE,
+    recommendedNextRenewalTarget: NORTH_FILE,
+    postgameStatus: "WEST_HOLD_WAITING_NORTH_TIMETABLE_C2_WEST_AUDIT",
 
     lastInput: null,
-    lastReceipt: null,
+    lastNorthEvidence: null,
+    lastCanvasProof: null,
+    lastCanvasCandidates: [],
+    lastReceipt: null
   };
 
-  function getWindow() {
+  function root() {
     if (typeof window !== "undefined") return window;
     if (typeof globalThis !== "undefined") return globalThis;
     return {};
   }
 
-  function getDocument() {
-    const w = getWindow();
+  function documentRef() {
+    const w = root();
     return w.document || null;
   }
 
   function nowIso() {
     try {
       return new Date().toISOString();
-    } catch (_) {
+    } catch (_error) {
       return String(Date.now());
     }
   }
@@ -209,24 +248,70 @@
     return Boolean(value) && Object.prototype.hasOwnProperty.call(value, key);
   }
 
+  function trimText(value) {
+    if (value === undefined || value === null) return "";
+    return String(value).trim();
+  }
+
+  function firstNonEmpty(...values) {
+    for (const value of values) {
+      const text = trimText(value);
+      if (text) return text;
+    }
+    return "";
+  }
+
+  function toBool(value) {
+    if (value === true) return true;
+    if (value === false) return false;
+    if (value === 1) return true;
+    if (value === 0) return false;
+    if (value === "1") return true;
+    if (value === "0") return false;
+    if (typeof value === "string") {
+      const text = value.trim().toLowerCase();
+      if (text === "true" || text === "yes" || text === "pass") return true;
+      if (text === "false" || text === "no" || text === "fail") return false;
+    }
+    return false;
+  }
+
+  function isExplicitFalse(value) {
+    if (value === false) return true;
+    if (value === 0) return true;
+    if (value === "0") return true;
+    if (typeof value === "string") return value.trim().toLowerCase() === "false";
+    return false;
+  }
+
+  function isExplicitTrue(value) {
+    if (value === true) return true;
+    if (value === 1) return true;
+    if (value === "1") return true;
+    if (typeof value === "string") return value.trim().toLowerCase() === "true";
+    return false;
+  }
+
+  function toNumber(value, fallback = 0) {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : fallback;
+  }
+
   function clonePlain(value) {
     if (!isObject(value) && !Array.isArray(value)) return value;
-
     try {
       return JSON.parse(JSON.stringify(value));
-    } catch (_) {
-      if (Array.isArray(value)) return value.slice();
-      return Object.assign({}, value);
+    } catch (_error) {
+      return Array.isArray(value) ? value.slice() : { ...value };
     }
   }
 
-  function safeCall(fn, fallback) {
+  function safeCall(fn, fallback = null) {
     try {
       if (isFunction(fn)) return fn();
-    } catch (_) {
+    } catch (_error) {
       return fallback;
     }
-
     return fallback;
   }
 
@@ -235,712 +320,895 @@
     return parent[key];
   }
 
-  function toBool(value) {
-    if (value === true) return true;
-    if (value === false) return false;
-    if (value === "true") return true;
-    if (value === "false") return false;
-    if (value === "TRUE") return true;
-    if (value === "FALSE") return false;
-    if (value === "1") return true;
-    if (value === "0") return false;
-    if (value === 1) return true;
-    if (value === 0) return false;
-    return Boolean(value);
-  }
+  function readPath(path) {
+    const parts = String(path || "").split(".");
+    let cursor = root();
 
-  function toTri(source, key) {
-    if (!isObject(source) || !own(source, key)) return TRI.UNKNOWN;
-
-    const value = source[key];
-
-    if (value === true || value === "true" || value === "TRUE" || value === 1 || value === "1") return TRI.TRUE;
-    if (value === false || value === "false" || value === "FALSE" || value === 0 || value === "0") return TRI.FALSE;
-
-    return TRI.UNKNOWN;
-  }
-
-  function firstTri(source, keys) {
-    if (!isObject(source)) return TRI.UNKNOWN;
-
-    for (let i = 0; i < keys.length; i += 1) {
-      const tri = toTri(source, keys[i]);
-      if (tri !== TRI.UNKNOWN) return tri;
+    for (const part of parts) {
+      if (!cursor || cursor[part] === undefined || cursor[part] === null) return null;
+      cursor = cursor[part];
     }
 
-    return TRI.UNKNOWN;
+    return cursor || null;
   }
 
-  function firstString(source, keys, fallback) {
-    if (!isObject(source)) return fallback || "";
+  function dataset() {
+    const doc = documentRef();
+    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return {};
+    return doc.documentElement.dataset;
+  }
 
-    for (let i = 0; i < keys.length; i += 1) {
-      const key = keys[i];
-      if (own(source, key) && source[key] !== undefined && source[key] !== null && String(source[key]).trim()) {
-        return String(source[key]).trim();
+  function setDataset(key, value) {
+    const ds = dataset();
+    if (!ds) return;
+    ds[key] = value === undefined || value === null ? "" : String(value);
+  }
+
+  function readFirst(source, keys) {
+    if (!isObject(source)) return undefined;
+    for (const key of keys) {
+      if (own(source, key) && source[key] !== undefined && source[key] !== null && String(source[key]).trim() !== "") {
+        return source[key];
       }
     }
-
-    return fallback || "";
+    return undefined;
   }
 
-  function readExplicit(source, dataset, keys) {
-    const packet = isObject(source) ? source : {};
-    const ds = isObject(dataset) ? dataset : {};
+  function readBoolField(source, keys) {
+    const value = readFirst(source, keys);
+    return value === undefined ? false : toBool(value);
+  }
 
-    for (let i = 0; i < keys.length; i += 1) {
-      const key = keys[i];
+  function readNumberField(source, keys, fallback = 0) {
+    const value = readFirst(source, keys);
+    return value === undefined ? fallback : toNumber(value, fallback);
+  }
 
-      if (own(packet, key)) {
+  function methodReceipt(authority, methodNames) {
+    if (!authority || !isObject(authority)) return null;
+
+    for (const methodName of methodNames) {
+      if (!isFunction(authority[methodName])) continue;
+      const result = safeCall(() => authority[methodName](), null);
+      if (isObject(result)) return { method: methodName, receipt: result };
+    }
+
+    return null;
+  }
+
+  function readNorthAuthorityReceipt() {
+    const candidates = [
+      ["LAB_RUNTIME_TABLE_NORTH", root().LAB_RUNTIME_TABLE_NORTH],
+      ["LAB_RUNTIME_TABLE", root().LAB_RUNTIME_TABLE],
+      ["HEARTH_NORTH_COMMAND_RUNTIME_TABLE", root().HEARTH_NORTH_COMMAND_RUNTIME_TABLE],
+      ["HEARTH_NORTH_COMMAND", root().HEARTH_NORTH_COMMAND],
+      ["LAB_RUNTIME_TABLE_NORTH_CENTRAL_TRAIN_STATION", root().LAB_RUNTIME_TABLE_NORTH_CENTRAL_TRAIN_STATION],
+      ["DEXTER_LAB.runtimeTable", readPath("DEXTER_LAB.runtimeTable")],
+      ["DEXTER_LAB.cardinalRuntimeTableNorth", readPath("DEXTER_LAB.cardinalRuntimeTableNorth")],
+      ["DEXTER_LAB.northCentralTrainStation", readPath("DEXTER_LAB.northCentralTrainStation")],
+      ["DEXTER_LAB.hearthCheckpointSession", readPath("DEXTER_LAB.hearthCheckpointSession")],
+      ["HEARTH.northCentralTrainStation", readPath("HEARTH.northCentralTrainStation")],
+      ["HEARTH.northCommandRuntimeTable", readPath("HEARTH.northCommandRuntimeTable")]
+    ];
+
+    const methods = [
+      "getReceiptLight",
+      "getTransmissionReceipt",
+      "getNorthCommandReceipt",
+      "getActiveGateState",
+      "getReceipt"
+    ];
+
+    for (const [name, candidate] of candidates) {
+      if (!candidate || !isObject(candidate)) continue;
+
+      const called = methodReceipt(candidate, methods);
+      if (called) {
         return {
-          present: true,
-          value: packet[key],
-          key,
-          source: "packet",
+          sourceMethod: `${name}.${called.method}`,
+          proof: called.receipt
         };
       }
 
-      if (own(ds, key)) {
+      if (isObject(candidate.receipt)) {
         return {
-          present: true,
-          value: ds[key],
-          key,
-          source: "dataset",
+          sourceMethod: `${name}.receipt`,
+          proof: candidate.receipt
+        };
+      }
+
+      if (candidate.contract || candidate.activeStageId || candidate.activeCycleNumber || candidate.activeGear || candidate.activeGearId) {
+        return {
+          sourceMethod: name,
+          proof: candidate
+        };
+      }
+    }
+
+    const directReceipts = [
+      ["LAB_RUNTIME_TABLE_NORTH_TRANSMISSION_RECEIPT", root().LAB_RUNTIME_TABLE_NORTH_TRANSMISSION_RECEIPT],
+      ["HEARTH_NORTH_COMMAND_RUNTIME_TABLE_RECEIPT", root().HEARTH_NORTH_COMMAND_RUNTIME_TABLE_RECEIPT],
+      ["HEARTH_NORTH_CYCLICAL_CHECKPOINT_RECEIPT", root().HEARTH_NORTH_CYCLICAL_CHECKPOINT_RECEIPT]
+    ];
+
+    for (const [name, proof] of directReceipts) {
+      if (isObject(proof)) {
+        return {
+          sourceMethod: name,
+          proof
         };
       }
     }
 
     return {
-      present: false,
-      value: undefined,
-      key: "",
-      source: "none",
+      sourceMethod: "NONE",
+      proof: null
     };
   }
 
-  function boolFromExplicit(readResult) {
-    return readResult.present ? toBool(readResult.value) : false;
-  }
+  function normalizeNorthTimetable(source, sourceMethod) {
+    const s = isObject(source) ? source : {};
+    const ds = dataset();
 
-  function textFromExplicit(readResult, fallback) {
-    return readResult.present ? String(readResult.value || "").trim() : (fallback || "");
-  }
-
-  function checkpoint(id, rank, fibonacci, owner, label) {
-    const entry = {
-      id,
-      rank,
-      fibonacci,
-      owner,
-      label,
+    const merged = {
+      ...ds,
+      ...s
     };
 
-    state.checkpointRegistry.push(entry);
-
-    if (
-      id === CHECKPOINT_IDS.F13N &&
-      rank === 13.9 &&
-      fibonacci === "F13N" &&
-      owner === "WEST" &&
-      label === "inspect gate"
-    ) {
-      state.f13nCheckpointCorrected = true;
-    }
-
-    return entry;
-  }
-
-  function initializeCheckpoints() {
-    state.checkpointRegistry = [];
-    state.f13nCheckpointCorrected = false;
-
-    checkpoint(CHECKPOINT_IDS.F8, 8, "F8", "ROUTE", "self duty gate");
-    checkpoint(CHECKPOINT_IDS.F13E, 13.1, "F13E", "EAST", "source gate");
-    checkpoint(CHECKPOINT_IDS.F13S, 13.5, "F13S", "SOUTH", "output gate");
-    checkpoint(CHECKPOINT_IDS.F13W, 13.7, "F13W", "WEST", "admissibility gate");
-    checkpoint(CHECKPOINT_IDS.F13N, 13.9, "F13N", "WEST", "inspect gate");
-    checkpoint(CHECKPOINT_IDS.F21, 21, "F21", "NORTH", "north-only completion review");
-
-    return state.checkpointRegistry.slice();
-  }
-
-  function getCanvasParentCandidates() {
-    const w = getWindow();
-    const h = ensureObject(w, "HEARTH");
-    const lab = ensureObject(w, "DEXTER_LAB");
-
-    return [
-      h.canvas,
-      h.canvasParent,
-      h.canvasEvidence,
-
-      w.HEARTH_CANVAS,
-      w.HEARTH_CANVAS_PARENT,
-      w.HEARTH_CANVAS_AUTHORITY,
-      w.HEARTH_CANVAS_EVIDENCE,
-      w.HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD,
-
-      lab.hearthCanvas,
-      lab.hearthCanvasParent,
-      lab.hearthCanvasEvidence,
-      lab.hearthCanvasParentReleaseAcceptanceEastDispatchSwitchboard,
-    ];
-  }
-
-  function hasCanvasBootCandidate() {
-    const candidates = getCanvasParentCandidates();
-
-    return candidates.some((candidate) => {
-      return (
-        isObject(candidate) &&
-        (
-          isFunction(candidate.boot) ||
-          isFunction(candidate.init) ||
-          isFunction(candidate.start) ||
-          isFunction(candidate.mount)
-        )
-      );
-    });
-  }
-
-  function getDatasetCarrierProof() {
-    const doc = getDocument();
-    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return null;
-
-    const ds = doc.documentElement.dataset;
-
-    const candidateKeys = [
-      "hearthCanvasLoaded",
-      "hearthCanvasParentV10_3Active",
-      "hearthCanvasParentV2Observed",
-      "hearthCanvasStaleParentV2FalsePositiveBlocked",
-      "hearthCanvasContract",
-      "hearthCanvasParentReleaseGateReady",
-      "hearthCanvasParentAcceptedRouteConductorRelease",
-      "hearthCanvasReleasePacketAccepted",
-      "hearthCanvasParentReleaseAccepted",
-      "hearthCanvasParentReleaseObserved",
-      "hearthCanvasParentReleaseLawful",
-      "hearthCanvasStructuralCarrierReady",
-      "hearthCanvasStructuralCarrierSafe",
-      "hearthCanvasParentCarrierSafe",
-      "hearthCanvasStructuralCarrierSafeForCanvasRelease",
-      "hearthCanvasPreReleaseCarrierSafeForWest",
-      "structuralCarrierReady",
-      "structuralCarrierSafe",
-      "canvasParentCarrierSafe",
-      "structuralCarrierSafeForCanvasRelease",
-      "canvasPreReleaseCarrierSafeForWest",
-      "currentCanvasParentContract",
-      "canvasParentBootMethodAvailable",
-    ];
-
-    const proof = {
-      source: "DOCUMENT_DATASET",
-    };
-
-    let observed = false;
-
-    candidateKeys.forEach((key) => {
-      if (own(ds, key)) {
-        proof[key] = ds[key];
-        observed = true;
-      }
-    });
-
-    if (!observed) return null;
-
-    return proof;
-  }
-
-  function readCanvasParentCarrier() {
-    const candidates = getCanvasParentCandidates();
-
-    const carrierMethodPriority = [
-      "getStructuralCarrier",
-      "readStructuralCarrier",
-      "getCanvasCarrier",
-      "getCarrierReceipt",
-      "getReceipt",
-      "getReceiptLight",
-    ];
-
-    for (let i = 0; i < candidates.length; i += 1) {
-      const candidate = candidates[i];
-
-      if (!candidate) continue;
-
-      if (isObject(candidate)) {
-        for (let m = 0; m < carrierMethodPriority.length; m += 1) {
-          const method = carrierMethodPriority[m];
-
-          if (!isFunction(candidate[method])) continue;
-
-          const result = safeCall(() => candidate[method](), null);
-
-          if (isObject(result)) {
-            state.canvasCarrierSourceMethod = method;
-            state.canvasCarrierSourceIsCarrierSpecific = CARRIER_SPECIFIC_METHODS.includes(method);
-            state.canvasCarrierReceiptObserved = true;
-            state.canvasCarrierProof = clonePlain(result);
-            return result;
-          }
-        }
-
-        if (isObject(candidate.structuralCarrier)) {
-          state.canvasCarrierSourceMethod = "structuralCarrier";
-          state.canvasCarrierSourceIsCarrierSpecific = true;
-          state.canvasCarrierReceiptObserved = true;
-          state.canvasCarrierProof = clonePlain(candidate.structuralCarrier);
-          return candidate.structuralCarrier;
-        }
-
-        if (isObject(candidate.canvasCarrier)) {
-          state.canvasCarrierSourceMethod = "canvasCarrier";
-          state.canvasCarrierSourceIsCarrierSpecific = true;
-          state.canvasCarrierReceiptObserved = true;
-          state.canvasCarrierProof = clonePlain(candidate.canvasCarrier);
-          return candidate.canvasCarrier;
-        }
-
-        if (isObject(candidate.receipt)) {
-          state.canvasCarrierSourceMethod = "receipt";
-          state.canvasCarrierSourceIsCarrierSpecific = false;
-          state.canvasCarrierReceiptObserved = true;
-          state.canvasCarrierProof = clonePlain(candidate.receipt);
-          return candidate.receipt;
-        }
-      }
-    }
-
-    const datasetProof = getDatasetCarrierProof();
-
-    if (datasetProof) {
-      state.canvasCarrierSourceMethod = "dataset";
-      state.canvasCarrierSourceIsCarrierSpecific = false;
-      state.canvasCarrierReceiptObserved = true;
-      state.canvasCarrierProof = clonePlain(datasetProof);
-      return datasetProof;
-    }
-
-    state.canvasCarrierSourceMethod = "NONE";
-    state.canvasCarrierSourceIsCarrierSpecific = false;
-    state.canvasCarrierReceiptObserved = false;
-    state.canvasCarrierProof = null;
-    return null;
-  }
-
-  function normalizeCanvasCarrierProof(proof) {
     const normalized = {
-      source: firstString(proof, ["source", "carrierSource", "role"], state.canvasCarrierSourceMethod),
-
-      currentCanvasParentObserved:
-        firstTri(proof, ["currentCanvasParentObserved"]) === TRI.TRUE ||
-        firstTri(proof, ["hearthCanvasLoaded"]) === TRI.TRUE ||
-        firstTri(proof, ["hearthCanvasParentV10_3Active"]) === TRI.TRUE,
-
-      currentCanvasParentContractObserved:
-        firstTri(proof, ["currentCanvasParentContractObserved"]) === TRI.TRUE,
-
-      currentCanvasParentContract: firstString(proof, [
-        "currentCanvasParentContract",
-        "contract",
-        "hearthCanvasContract",
-      ], ""),
-
-      canvasParentBootMethodAvailable:
-        firstTri(proof, ["canvasParentBootMethodAvailable", "hearthCanvasBootMethodAvailable"]) === TRI.TRUE,
-
-      structuralCarrierReadyTri: firstTri(proof, [
-        "structuralCarrierReady",
-        "hearthCanvasStructuralCarrierReady",
-      ]),
-
-      structuralCarrierSafeTri: firstTri(proof, [
-        "structuralCarrierSafe",
-        "hearthCanvasStructuralCarrierSafe",
-      ]),
-
-      canvasParentCarrierSafeTri: firstTri(proof, [
-        "canvasParentCarrierSafe",
-        "hearthCanvasParentCarrierSafe",
-      ]),
-
-      structuralCarrierSafeForCanvasReleaseTri: firstTri(proof, [
-        "structuralCarrierSafeForCanvasRelease",
-        "hearthCanvasStructuralCarrierSafeForCanvasRelease",
-      ]),
-
-      canvasPreReleaseCarrierSafeForWestTri: firstTri(proof, [
-        "canvasPreReleaseCarrierSafeForWest",
-        "hearthCanvasPreReleaseCarrierSafeForWest",
-      ]),
-
-      canvasParentV10_3Active:
-        firstTri(proof, ["hearthCanvasParentV10_3Active", "canvasParentV10_3Active"]) === TRI.TRUE,
-
-      canvasParentV2ObservedTri: firstTri(proof, [
-        "canvasParentV2Observed",
-        "hearthCanvasParentV2Observed",
-      ]),
-
-      staleFalsePositiveBlocked:
-        firstTri(proof, [
-          "hearthCanvasStaleParentV2FalsePositiveBlocked",
-          "canvasStaleParentV2FalsePositiveBlocked",
-          "staleCanvasV2FalsePositiveBlocked",
-        ]) === TRI.TRUE,
-
-      canvasParentReleaseGateReadyTri: firstTri(proof, [
-        "canvasParentReleaseGateReady",
-        "hearthCanvasParentReleaseGateReady",
-      ]),
-
-      parentAcceptedRouteConductorReleaseTri: firstTri(proof, [
-        "parentAcceptedRouteConductorRelease",
-        "hearthCanvasParentAcceptedRouteConductorRelease",
-      ]),
-
-      releasePacketAcceptedTri: firstTri(proof, [
-        "releasePacketAccepted",
-        "hearthCanvasReleasePacketAccepted",
-      ]),
-
-      canvasParentReleaseAcceptedTri: firstTri(proof, [
-        "canvasParentReleaseAccepted",
-        "hearthCanvasParentReleaseAccepted",
-      ]),
-
-      currentParentIdentityMismatch:
-        firstTri(proof, ["currentParentIdentityMismatch", "canvasParentIdentityMismatch"]) === TRI.TRUE,
-
-      currentParentStaleDetected:
-        firstTri(proof, ["currentParentStaleDetected"]) === TRI.TRUE,
-
-      staleParentDetected:
-        firstTri(proof, ["staleParentDetected"]) === TRI.TRUE,
-
-      canvasCarrierHandoffError: firstString(proof, [
-        "canvasCarrierHandoffError",
-        "carrierHandoffError",
-      ], ""),
+      northTimetableObserved: Boolean(source),
+      northSourceMethod: sourceMethod || "NONE",
+      northActiveStageId: trimText(readFirst(merged, [
+        "activeStageId",
+        "northActiveStageId",
+        "hearthNorthActiveStageId",
+        "stageId"
+      ])),
+      northActiveGearId: trimText(readFirst(merged, [
+        "activeGear",
+        "activeGearId",
+        "northActiveGear",
+        "northActiveGearId",
+        "hearthNorthActiveGear",
+        "hearthNorthActiveGearId",
+        "gear",
+        "gearId"
+      ])),
+      northActiveCycleNumber: readNumberField(merged, [
+        "activeCycleNumber",
+        "cycleNumber",
+        "northActiveCycleNumber",
+        "hearthNorthActiveCycleNumber"
+      ], 0),
+      northActiveCycleRoute: trimText(readFirst(merged, [
+        "activeCycleRoute",
+        "cycleRoute",
+        "northActiveCycleRoute",
+        "hearthNorthActiveCycleRoute"
+      ])),
+      northActiveCardinal: trimText(readFirst(merged, [
+        "activeCardinal",
+        "northActiveCardinal",
+        "hearthNorthActiveCardinal"
+      ])),
+      northActiveFileGate: trimText(readFirst(merged, [
+        "activeFileGate",
+        "fileGate",
+        "northActiveFileGate",
+        "hearthNorthActiveFileGate"
+      ])),
+      northActiveFibonacci: trimText(readFirst(merged, [
+        "activeFibonacci",
+        "northActiveFibonacci",
+        "hearthNorthActiveFibonacci"
+      ])),
+      northActiveNewsGate: trimText(readFirst(merged, [
+        "activeNewsGate",
+        "northActiveNewsGate",
+        "hearthNorthActiveNewsGate"
+      ]))
     };
 
-    if (!normalized.currentCanvasParentContractObserved && normalized.currentCanvasParentContract) {
-      normalized.currentCanvasParentContractObserved = true;
-    }
-
-    if (!normalized.currentCanvasParentObserved && normalized.currentCanvasParentContract === CANVAS_PARENT_V10_3_CONTRACT) {
-      normalized.currentCanvasParentObserved = true;
-    }
+    normalized.northC2WestAuditAligned = Boolean(
+      normalized.northActiveStageId === ACTIVE_STAGE_ID &&
+      (!normalized.northActiveGearId || normalized.northActiveGearId === ACTIVE_GEAR) &&
+      normalized.northActiveCycleNumber === ACTIVE_CYCLE_NUMBER &&
+      normalized.northActiveCycleRoute === ACTIVE_CYCLE_ROUTE &&
+      normalized.northActiveCardinal === ACTIVE_CARDINAL &&
+      normalized.northActiveFileGate === FILE
+    );
 
     return normalized;
   }
 
-  function triIsSafe(tri) {
-    return tri === TRI.TRUE;
-  }
+  function readNorthTimetableLight() {
+    const found = readNorthAuthorityReceipt();
+    const normalized = normalizeNorthTimetable(found.proof, found.sourceMethod);
 
-  function triIsExplicitUnsafe(tri) {
-    return tri === TRI.FALSE;
-  }
+    state.lastNorthEvidence = clonePlain({
+      sourceMethod: found.sourceMethod,
+      proof: found.proof,
+      normalized
+    });
 
-  function assessPreReleaseCarrierAdmissibility() {
-    const proof = readCanvasParentCarrier();
+    state.northTimetableObserved = normalized.northTimetableObserved;
+    state.northSourceMethod = normalized.northSourceMethod;
+    state.northActiveStageId = normalized.northActiveStageId;
+    state.northActiveGearId = normalized.northActiveGearId;
+    state.northActiveCycleNumber = normalized.northActiveCycleNumber;
+    state.northActiveCycleRoute = normalized.northActiveCycleRoute;
+    state.northActiveCardinal = normalized.northActiveCardinal;
+    state.northActiveFileGate = normalized.northActiveFileGate;
+    state.northActiveFibonacci = normalized.northActiveFibonacci;
+    state.northActiveNewsGate = normalized.northActiveNewsGate;
+    state.northC2WestAuditAligned = normalized.northC2WestAuditAligned;
 
-    if (!isObject(proof)) {
-      state.currentCanvasParentObserved = false;
-      state.currentCanvasParentContractObserved = false;
-      state.currentCanvasParentContract = "";
-      state.canvasParentBootMethodAvailable = false;
-      state.carrierIdentitySafe = false;
-      state.carrierSafeMarkerObserved = false;
-      state.secondaryCarrierConfidenceObserved = false;
-      state.preReleaseCarrierAdmissible = false;
-      state.carrierHardBlock = false;
-      state.carrierHeld = true;
-      state.carrierHoldReason = "WAITING_CURRENT_CANVAS_PARENT_CARRIER_PROOF";
-      return false;
-    }
-
-    const normalized = normalizeCanvasCarrierProof(proof);
-
-    state.currentCanvasParentObserved = normalized.currentCanvasParentObserved;
-    state.currentCanvasParentContractObserved = normalized.currentCanvasParentContractObserved;
-    state.currentCanvasParentContract = normalized.currentCanvasParentContract;
-    state.canvasParentBootMethodAvailable = normalized.canvasParentBootMethodAvailable || hasCanvasBootCandidate();
-
-    state.currentParentIdentityMismatch =
-      normalized.currentCanvasParentContractObserved &&
-      normalized.currentCanvasParentContract &&
-      normalized.currentCanvasParentContract !== CANVAS_PARENT_V10_3_CONTRACT;
-
-    state.currentParentStaleDetected = normalized.currentParentStaleDetected;
-    state.staleParentDetected = normalized.staleParentDetected;
-
-    state.structuralCarrierReadyTri = normalized.structuralCarrierReadyTri;
-    state.structuralCarrierSafeTri = normalized.structuralCarrierSafeTri;
-    state.canvasParentCarrierSafeTri = normalized.canvasParentCarrierSafeTri;
-    state.structuralCarrierSafeForCanvasReleaseTri = normalized.structuralCarrierSafeForCanvasReleaseTri;
-    state.canvasPreReleaseCarrierSafeForWestTri = normalized.canvasPreReleaseCarrierSafeForWestTri;
-
-    const unsafeFields = [];
-
-    if (state.currentParentIdentityMismatch) unsafeFields.push("currentParentIdentityMismatch");
-    if (state.currentParentStaleDetected) unsafeFields.push("currentParentStaleDetected");
-    if (state.staleParentDetected) unsafeFields.push("staleParentDetected");
-    if (normalized.canvasCarrierHandoffError) unsafeFields.push("canvasCarrierHandoffError");
-
-    if (triIsExplicitUnsafe(normalized.structuralCarrierSafeTri)) unsafeFields.push("structuralCarrierSafe");
-    if (triIsExplicitUnsafe(normalized.canvasParentCarrierSafeTri)) unsafeFields.push("canvasParentCarrierSafe");
-    if (triIsExplicitUnsafe(normalized.structuralCarrierSafeForCanvasReleaseTri)) unsafeFields.push("structuralCarrierSafeForCanvasRelease");
-    if (triIsExplicitUnsafe(normalized.canvasPreReleaseCarrierSafeForWestTri)) unsafeFields.push("canvasPreReleaseCarrierSafeForWest");
-
-    if (normalized.canvasParentV2ObservedTri === TRI.TRUE && !normalized.staleFalsePositiveBlocked) {
-      unsafeFields.push("canvasParentV2Observed");
-    }
-
-    state.explicitUnsafeFields = unsafeFields.slice();
-
-    if (unsafeFields.length) {
-      state.carrierIdentitySafe = false;
-      state.carrierSafeMarkerObserved = false;
-      state.secondaryCarrierConfidenceObserved = false;
-      state.preReleaseCarrierAdmissible = false;
-      state.carrierHardBlock = true;
-      state.carrierHeld = false;
-      state.carrierHoldReason = `EXPLICIT_UNSAFE_CURRENT_CANVAS_CARRIER:${unsafeFields.join("|")}`;
-      return false;
-    }
-
-    const identitySafe =
-      state.currentCanvasParentObserved &&
-      state.currentCanvasParentContractObserved &&
-      state.currentCanvasParentContract === CANVAS_PARENT_V10_3_CONTRACT &&
-      state.canvasParentBootMethodAvailable &&
-      state.currentParentIdentityMismatch === false &&
-      state.currentParentStaleDetected === false &&
-      state.staleParentDetected === false;
-
-    const primaryCarrierSafeMarker =
-      triIsSafe(normalized.structuralCarrierReadyTri) ||
-      triIsSafe(normalized.structuralCarrierSafeTri) ||
-      triIsSafe(normalized.canvasParentCarrierSafeTri) ||
-      triIsSafe(normalized.structuralCarrierSafeForCanvasReleaseTri) ||
-      triIsSafe(normalized.canvasPreReleaseCarrierSafeForWestTri);
-
-    const secondaryCarrierConfidence =
-      normalized.canvasParentV10_3Active ||
-      normalized.staleFalsePositiveBlocked ||
-      normalized.canvasParentV2ObservedTri === TRI.FALSE ||
-      normalized.canvasParentReleaseGateReadyTri === TRI.TRUE ||
-      normalized.parentAcceptedRouteConductorReleaseTri === TRI.TRUE ||
-      normalized.releasePacketAcceptedTri === TRI.TRUE ||
-      normalized.canvasParentReleaseAcceptedTri === TRI.TRUE;
-
-    const secondaryAllowedAsCarrierProof =
-      state.canvasCarrierSourceIsCarrierSpecific && secondaryCarrierConfidence;
-
-    state.carrierIdentitySafe = identitySafe;
-    state.carrierSafeMarkerObserved = primaryCarrierSafeMarker || secondaryAllowedAsCarrierProof;
-    state.secondaryCarrierConfidenceObserved = secondaryCarrierConfidence;
-
-    if (identitySafe && state.carrierSafeMarkerObserved) {
-      state.preReleaseCarrierAdmissible = true;
-      state.carrierHardBlock = false;
-      state.carrierHeld = false;
-      state.carrierHoldReason = "NONE_PRE_RELEASE_CARRIER_ADMISSIBLE";
-      return true;
-    }
-
-    if (identitySafe && !state.carrierSafeMarkerObserved) {
-      state.preReleaseCarrierAdmissible = false;
-      state.carrierHardBlock = false;
-      state.carrierHeld = true;
-      state.carrierHoldReason = "WAITING_CURRENT_CANVAS_PARENT_CARRIER_SAFE_MARKER";
-      return false;
-    }
-
-    state.preReleaseCarrierAdmissible = false;
-    state.carrierHardBlock = false;
-    state.carrierHeld = true;
-    state.carrierHoldReason = "WAITING_CURRENT_CANVAS_PARENT_V10_3_IDENTITY_OR_BOOT";
-    return false;
-  }
-
-  function getDatasetForCycleInput() {
-    const doc = getDocument();
-    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return {};
-    return doc.documentElement.dataset || {};
+    return normalized;
   }
 
   function normalizeCycleInput(input) {
     const packet = isObject(input) ? clonePlain(input) : {};
-    const ds = getDatasetForCycleInput();
-
-    const fields = {
-      cycleNumber: readExplicit(packet, ds, ["cycleNumber", "hearthCycleNumber", "hearthRouteConductorCycleNumber", "hearthSouthCycleNumber"]),
-      cycleRoute: readExplicit(packet, ds, ["cycleRoute", "hearthCycleRoute", "hearthRouteConductorCycleRoute", "hearthSouthCycleRoute"]),
-      receivedFrom: readExplicit(packet, ds, ["receivedFrom", "hearthReceivedFrom", "hearthRouteConductorReceivedFrom", "hearthSouthReceivedFrom"]),
-      handoffTo: readExplicit(packet, ds, ["handoffTo", "hearthHandoffTo", "hearthRouteConductorHandoffTo", "hearthSouthHandoffTo"]),
-
-      indexPairReady: readExplicit(packet, ds, ["indexPairReady", "hearthIndexPairReady", "hearthRouteConductorIndexPairReady", "hearthSouthIndexPairReady"]),
-      carrierHostAdmissibilityReady: readExplicit(packet, ds, ["carrierHostAdmissibilityReady", "hearthCarrierHostAdmissibilityReady", "hearthRouteConductorCarrierHostAdmissibilityReady", "hearthSouthCarrierHostAdmissibilityReady"]),
-      f8SelfDutySatisfied: readExplicit(packet, ds, ["f8SelfDutySatisfied", "hearthF8SelfDutySatisfied", "hearthRouteConductorF8SelfDutySatisfied", "hearthSouthF8SelfDutySatisfied"]),
-
-      westHandoffPacketReady: readExplicit(packet, ds, ["westHandoffPacketReady", "hearthWestHandoffPacketReady", "hearthSouthWestHandoffPacketReady", "hearthRouteConductorWestHandoffPacketReady"]),
-      outputSpreadComposed: readExplicit(packet, ds, ["outputSpreadComposed", "hearthOutputSpreadComposed", "hearthSouthOutputSpreadComposed"]),
-      southOutputReady: readExplicit(packet, ds, ["southOutputReady", "hearthSouthOutputReady"]),
-      cycleTwoSouthOutputReady: readExplicit(packet, ds, ["cycleTwoSouthOutputReady", "hearthCycleTwoSouthOutputReady", "hearthSouthCycleTwoSouthOutputReady"]),
-      southOutputAdmissible: readExplicit(packet, ds, ["southOutputAdmissible", "hearthSouthOutputAdmissible"]),
-      southVisibleProofReady: readExplicit(packet, ds, ["southVisibleProofReady", "hearthSouthVisibleProofReady"]),
-      canvasSouthVisibleProofReady: readExplicit(packet, ds, ["canvasSouthVisibleProofReady", "hearthCanvasSouthVisibleProofReady"]),
-      proofBodyComposed: readExplicit(packet, ds, ["proofBodyComposed", "hearthProofBodyComposed", "hearthSouthProofBodyComposed"]),
-      receiptComposed: readExplicit(packet, ds, ["receiptComposed", "hearthReceiptComposed", "hearthSouthReceiptComposed"]),
-      visibleStateComposed: readExplicit(packet, ds, ["visibleStateComposed", "hearthVisibleStateComposed", "hearthSouthVisibleStateComposed"]),
-      routeConductorOutputReady: readExplicit(packet, ds, ["routeConductorOutputReady", "hearthRouteConductorOutputReady"]),
-      routeConductorReleaseCandidate: readExplicit(packet, ds, ["routeConductorReleaseCandidate", "hearthRouteConductorReleaseCandidate"]),
-
-      f13VisibleEvidenceAvailable: readExplicit(packet, ds, ["f13VisibleEvidenceAvailable", "hearthF13VisibleEvidenceAvailable"]),
-      visibleEvidenceAvailable: readExplicit(packet, ds, ["visibleEvidenceAvailable", "hearthVisibleEvidenceAvailable"]),
-      f13InspectEvidenceAvailable: readExplicit(packet, ds, ["f13InspectEvidenceAvailable", "hearthF13InspectEvidenceAvailable"]),
+    const ds = dataset();
+    const merged = {
+      ...ds,
+      ...packet
     };
 
-    const cycleNumber = fields.cycleNumber.present ? Number(fields.cycleNumber.value) || 0 : 0;
-    const cycleRoute = textFromExplicit(fields.cycleRoute, "");
-    const receivedFrom = textFromExplicit(fields.receivedFrom, "UNKNOWN");
-    const handoffTo = textFromExplicit(fields.handoffTo, "UNKNOWN");
+    const cycleNumber = readNumberField(merged, [
+      "cycleNumber",
+      "activeCycleNumber",
+      "hearthCycleNumber",
+      "hearthRouteConductorCycleNumber",
+      "hearthSouthCycleNumber",
+      "hearthWestCycleNumber"
+    ], 0);
 
-    const indexPairReady = boolFromExplicit(fields.indexPairReady);
-    const carrierHostAdmissibilityReady = boolFromExplicit(fields.carrierHostAdmissibilityReady);
-    const f8SelfDutySatisfied = boolFromExplicit(fields.f8SelfDutySatisfied);
+    const cycleRoute = trimText(readFirst(merged, [
+      "cycleRoute",
+      "activeCycleRoute",
+      "hearthCycleRoute",
+      "hearthRouteConductorCycleRoute",
+      "hearthSouthCycleRoute",
+      "hearthWestCycleRoute"
+    ]));
 
-    const explicitSignals = [];
+    const receivedFrom = trimText(readFirst(merged, [
+      "receivedFrom",
+      "hearthReceivedFrom",
+      "hearthRouteConductorReceivedFrom",
+      "hearthSouthReceivedFrom",
+      "hearthWestReceivedFrom"
+    ]));
 
-    function recordSignal(name, readResult, requiredValue) {
-      if (!readResult.present) return false;
+    const handoffTo = trimText(readFirst(merged, [
+      "handoffTo",
+      "activeCycleHandoffTarget",
+      "hearthHandoffTo",
+      "hearthRouteConductorHandoffTo",
+      "hearthSouthHandoffTo",
+      "hearthWestHandoffTo"
+    ]));
 
-      const matched =
-        typeof requiredValue === "boolean"
-          ? toBool(readResult.value) === requiredValue
-          : String(readResult.value || "").trim() === String(requiredValue);
+    const activeCycleInputCardinal = trimText(readFirst(merged, [
+      "activeCycleInputCardinal",
+      "hearthActiveCycleInputCardinal",
+      "hearthRouteConductorActiveCycleInputCardinal",
+      "hearthSouthActiveCycleInputCardinal"
+    ]));
 
-      if (matched) explicitSignals.push(`${name}:${readResult.key}`);
-      return matched;
+    const activeCycleHandoffTarget = trimText(readFirst(merged, [
+      "activeCycleHandoffTarget",
+      "hearthActiveCycleHandoffTarget",
+      "hearthRouteConductorActiveCycleHandoffTarget"
+    ]));
+
+    const indexPairReady = readBoolField(merged, [
+      "indexPairReady",
+      "hearthIndexPairReady",
+      "hearthRouteConductorIndexPairReady",
+      "hearthSouthIndexPairReady"
+    ]);
+
+    const carrierHostAdmissibilityReady = readBoolField(merged, [
+      "carrierHostAdmissibilityReady",
+      "hearthCarrierHostAdmissibilityReady",
+      "hearthRouteConductorCarrierHostAdmissibilityReady",
+      "hearthSouthCarrierHostAdmissibilityReady"
+    ]);
+
+    const f8SelfDutySatisfied = readBoolField(merged, [
+      "f8SelfDutySatisfied",
+      "hearthF8SelfDutySatisfied",
+      "hearthRouteConductorF8SelfDutySatisfied",
+      "hearthSouthF8SelfDutySatisfied"
+    ]);
+
+    const explicitMarkers = [];
+    let outputReady = false;
+
+    for (const marker of OUTPUT_MARKERS) {
+      const aliases = [
+        marker,
+        `hearth${marker.charAt(0).toUpperCase()}${marker.slice(1)}`,
+        `hearthSouth${marker.charAt(0).toUpperCase()}${marker.slice(1)}`,
+        `hearthRouteConductor${marker.charAt(0).toUpperCase()}${marker.slice(1)}`
+      ];
+
+      const value = readFirst(merged, aliases);
+      if (value !== undefined && toBool(value)) {
+        explicitMarkers.push(marker);
+        outputReady = true;
+      }
     }
 
-    const explicitRouteSignals = [
-      recordSignal("receivedFrom=SOUTH", fields.receivedFrom, "SOUTH"),
-      recordSignal("handoffTo=WEST", fields.handoffTo, "WEST"),
-      recordSignal("cycleNumber=2", fields.cycleNumber, 2),
-      recordSignal("cycleRoute=NORTH_EAST_SOUTH_WEST_CANVAS", fields.cycleRoute, "NORTH_EAST_SOUTH_WEST_CANVAS"),
-    ].some(Boolean);
+    const routeAligned = cycleNumber === ACTIVE_CYCLE_NUMBER && cycleRoute === ACTIVE_CYCLE_ROUTE;
+    const sourceIsSouth = receivedFrom === "SOUTH" || activeCycleInputCardinal === "SOUTH";
+    const targetIsWest = handoffTo === "WEST" || activeCycleHandoffTarget === "WEST";
 
-    const explicitAdmissibilitySignals = [
-      recordSignal("f8SelfDutySatisfied=true", fields.f8SelfDutySatisfied, true),
-      recordSignal("westHandoffPacketReady=true", fields.westHandoffPacketReady, true),
-      recordSignal("outputSpreadComposed=true", fields.outputSpreadComposed, true),
-      recordSignal("southOutputReady=true", fields.southOutputReady, true),
-      recordSignal("cycleTwoSouthOutputReady=true", fields.cycleTwoSouthOutputReady, true),
-      recordSignal("southOutputAdmissible=true", fields.southOutputAdmissible, true),
-      recordSignal("southVisibleProofReady=true", fields.southVisibleProofReady, true),
-      recordSignal("canvasSouthVisibleProofReady=true", fields.canvasSouthVisibleProofReady, true),
-      recordSignal("proofBodyComposed=true", fields.proofBodyComposed, true),
-      recordSignal("receiptComposed=true", fields.receiptComposed, true),
-      recordSignal("visibleStateComposed=true", fields.visibleStateComposed, true),
-      recordSignal("routeConductorOutputReady=true", fields.routeConductorOutputReady, true),
-      recordSignal("routeConductorReleaseCandidate=true", fields.routeConductorReleaseCandidate, true),
-    ].some(Boolean);
-
-    const explicitVisibleFalseIgnored =
-      (fields.f13VisibleEvidenceAvailable.present && toBool(fields.f13VisibleEvidenceAvailable.value) === false) ||
-      (fields.visibleEvidenceAvailable.present && toBool(fields.visibleEvidenceAvailable.value) === false);
-
-    if (explicitVisibleFalseIgnored) {
-      explicitSignals.push("visibleEvidenceFalseIgnored:notSouthObservation");
-    }
-
-    const validCycleRoute =
-      cycleNumber === 2 &&
-      cycleRoute === "NORTH_EAST_SOUTH_WEST_CANVAS" &&
-      handoffTo === "WEST";
-
-    const explicitSouthOutputTrue =
-      boolFromExplicit(fields.westHandoffPacketReady) ||
-      boolFromExplicit(fields.outputSpreadComposed) ||
-      boolFromExplicit(fields.southOutputReady) ||
-      boolFromExplicit(fields.cycleTwoSouthOutputReady) ||
-      boolFromExplicit(fields.southOutputAdmissible) ||
-      boolFromExplicit(fields.southVisibleProofReady) ||
-      boolFromExplicit(fields.canvasSouthVisibleProofReady) ||
-      boolFromExplicit(fields.proofBodyComposed) ||
-      boolFromExplicit(fields.receiptComposed) ||
-      boolFromExplicit(fields.visibleStateComposed) ||
-      boolFromExplicit(fields.routeConductorOutputReady) ||
-      boolFromExplicit(fields.routeConductorReleaseCandidate);
-
-    const cycleTwoSouthOutputObserved =
-      validCycleRoute &&
-      explicitRouteSignals &&
-      explicitAdmissibilitySignals;
-
-    const cycleTwoSouthOutputAdmissible =
-      validCycleRoute &&
-      cycleTwoSouthOutputObserved &&
+    const observed = Boolean(routeAligned && sourceIsSouth && targetIsWest);
+    const admissible = Boolean(
+      observed &&
       indexPairReady &&
       carrierHostAdmissibilityReady &&
       f8SelfDutySatisfied &&
-      explicitSouthOutputTrue;
-
-    state.lastInput = clonePlain({
-      packet,
-      fields,
-      explicitSignals,
-    });
+      outputReady
+    );
 
     state.cycleNumber = cycleNumber;
     state.cycleRoute = cycleRoute;
-    state.receivedFrom = receivedFrom;
-    state.handoffTo = handoffTo;
-
+    state.receivedFrom = receivedFrom || "UNKNOWN";
+    state.handoffTo = handoffTo || activeCycleHandoffTarget || "UNKNOWN";
+    state.activeCycleInputCardinal = activeCycleInputCardinal;
+    state.activeCycleHandoffTarget = activeCycleHandoffTarget;
     state.indexPairReady = indexPairReady;
     state.carrierHostAdmissibilityReady = carrierHostAdmissibilityReady;
     state.f8SelfDutySatisfied = f8SelfDutySatisfied;
+    state.southOutputReady = outputReady;
+    state.explicitSouthOutputMarkerObserved = outputReady;
+    state.explicitSouthOutputMarkers = explicitMarkers.slice();
+    state.cycleTwoSouthOutputObserved = observed;
+    state.cycleTwoSouthOutputAdmissible = admissible;
+    state.southOutputIntakeMethod = observed ? "NORTH_OR_ROUTE_CONFIRMED_SOUTH_TO_WEST_CYCLE_TWO" : "NONE";
 
-    state.indexPairReadyObserved = fields.indexPairReady.present;
-    state.carrierHostAdmissibilityReadyObserved = fields.carrierHostAdmissibilityReady.present;
-    state.f8SelfDutySatisfiedObserved = fields.f8SelfDutySatisfied.present;
-
-    state.southOutputReady = explicitSouthOutputTrue;
-    state.routeConductorOutputReady = boolFromExplicit(fields.routeConductorOutputReady);
-    state.routeConductorReleaseCandidate = boolFromExplicit(fields.routeConductorReleaseCandidate);
-    state.explicitSouthRouteSignalObserved = explicitRouteSignals;
-    state.explicitSouthAdmissibilitySignalObserved = explicitAdmissibilitySignals;
-    state.southRouteConductorPacketObserved = cycleTwoSouthOutputObserved;
-    state.cycleTwoSouthOutputObserved = cycleTwoSouthOutputObserved;
-    state.cycleTwoSouthOutputAdmissible = cycleTwoSouthOutputAdmissible;
-    state.southOutputIntakeMethod = cycleTwoSouthOutputObserved ? "EXPLICIT_SOUTH_ROUTE_CONDUCTOR_SIGNAL" : "NONE";
-    state.explicitSouthSignals = explicitSignals.slice();
+    state.lastInput = clonePlain({
+      packet,
+      cycleNumber,
+      cycleRoute,
+      receivedFrom,
+      handoffTo,
+      activeCycleInputCardinal,
+      activeCycleHandoffTarget,
+      indexPairReady,
+      carrierHostAdmissibilityReady,
+      f8SelfDutySatisfied,
+      explicitMarkers,
+      observed,
+      admissible
+    });
 
     return {
       cycleNumber,
       cycleRoute,
       receivedFrom,
       handoffTo,
+      activeCycleInputCardinal,
+      activeCycleHandoffTarget,
       indexPairReady,
       carrierHostAdmissibilityReady,
       f8SelfDutySatisfied,
-      explicitRouteSignals,
-      explicitAdmissibilitySignals,
-      explicitSouthOutputTrue,
-      cycleTwoSouthOutputObserved,
-      cycleTwoSouthOutputAdmissible,
+      southOutputReady: outputReady,
+      explicitSouthOutputMarkers: explicitMarkers,
+      cycleTwoSouthOutputObserved: observed,
+      cycleTwoSouthOutputAdmissible: admissible
     };
   }
 
+  function inputCallsWestForCycleTwoAudit(input) {
+    const packet = isObject(input) ? input : {};
+    const ds = dataset();
+    const merged = {
+      ...ds,
+      ...packet
+    };
+
+    const cycleNumber = readNumberField(merged, [
+      "cycleNumber",
+      "activeCycleNumber",
+      "hearthCycleNumber",
+      "hearthRouteConductorCycleNumber"
+    ], 0);
+
+    const cycleRoute = trimText(readFirst(merged, [
+      "cycleRoute",
+      "activeCycleRoute",
+      "hearthCycleRoute",
+      "hearthRouteConductorCycleRoute"
+    ]));
+
+    const handoffTo = trimText(readFirst(merged, [
+      "handoffTo",
+      "activeCycleHandoffTarget",
+      "hearthHandoffTo",
+      "hearthRouteConductorHandoffTo"
+    ]));
+
+    const receivedFrom = trimText(readFirst(merged, [
+      "receivedFrom",
+      "hearthReceivedFrom",
+      "hearthRouteConductorReceivedFrom",
+      "hearthSouthReceivedFrom"
+    ]));
+
+    const activeCycleInputCardinal = trimText(readFirst(merged, [
+      "activeCycleInputCardinal",
+      "hearthRouteConductorActiveCycleInputCardinal"
+    ]));
+
+    const activeCycleHandoffTarget = trimText(readFirst(merged, [
+      "activeCycleHandoffTarget",
+      "hearthRouteConductorActiveCycleHandoffTarget"
+    ]));
+
+    const indexPairReady = readBoolField(merged, ["indexPairReady", "hearthRouteConductorIndexPairReady", "hearthIndexPairReady"]);
+    const carrierHostAdmissibilityReady = readBoolField(merged, ["carrierHostAdmissibilityReady", "hearthRouteConductorCarrierHostAdmissibilityReady", "hearthCarrierHostAdmissibilityReady"]);
+    const f8SelfDutySatisfied = readBoolField(merged, ["f8SelfDutySatisfied", "hearthRouteConductorF8SelfDutySatisfied", "hearthF8SelfDutySatisfied"]);
+
+    const pathAligned = cycleNumber === ACTIVE_CYCLE_NUMBER && cycleRoute === ACTIVE_CYCLE_ROUTE;
+    const targetAligned = handoffTo === "WEST" || activeCycleHandoffTarget === "WEST";
+    const sourceAligned = receivedFrom === "SOUTH" || activeCycleInputCardinal === "SOUTH";
+
+    const directInputAligned = Boolean(pathAligned && targetAligned && sourceAligned);
+    const routeConductorAligned = Boolean(pathAligned && activeCycleInputCardinal === "SOUTH" && activeCycleHandoffTarget === "WEST" && indexPairReady && carrierHostAdmissibilityReady && f8SelfDutySatisfied);
+
+    return directInputAligned || routeConductorAligned;
+  }
+
+  function isNorthCallingWestForCycleTwoCanvasAudit(input) {
+    const north = readNorthTimetableLight();
+    const inputAligned = inputCallsWestForCycleTwoAudit(input);
+    state.northC2WestAuditAligned = Boolean(north.northC2WestAuditAligned || inputAligned);
+    return state.northC2WestAuditAligned;
+  }
+
+  function canvasAuthorityCandidates() {
+    return [
+      ["HEARTH_CANVAS_LOCAL_STATION", root().HEARTH_CANVAS_LOCAL_STATION],
+      ["HEARTH_CANVAS_STATION", root().HEARTH_CANVAS_STATION],
+      ["HEARTH_CANVAS_CHILD_DISTRIBUTION_SWITCHBOARD", root().HEARTH_CANVAS_CHILD_DISTRIBUTION_SWITCHBOARD],
+      ["HEARTH_CANVAS", root().HEARTH_CANVAS],
+      ["HEARTH.canvasLocalStation", readPath("HEARTH.canvasLocalStation")],
+      ["HEARTH.canvasStation", readPath("HEARTH.canvasStation")],
+      ["HEARTH.canvasChildDistributionSwitchboard", readPath("HEARTH.canvasChildDistributionSwitchboard")],
+      ["HEARTH.canvas", readPath("HEARTH.canvas")],
+      ["DEXTER_LAB.hearthCanvasLocalStation", readPath("DEXTER_LAB.hearthCanvasLocalStation")],
+      ["DEXTER_LAB.hearthCanvasStation", readPath("DEXTER_LAB.hearthCanvasStation")],
+      ["DEXTER_LAB.hearthCanvasChildDistributionSwitchboard", readPath("DEXTER_LAB.hearthCanvasChildDistributionSwitchboard")],
+      ["DEXTER_LAB.hearthCanvas", readPath("DEXTER_LAB.hearthCanvas")]
+    ];
+  }
+
+  function readCanvasProofFromCandidate(candidate) {
+    if (!candidate || !isObject(candidate)) return null;
+
+    const methodResult = methodReceipt(candidate, [
+      "getCanvasStationSummary",
+      "getCanvasStationReceiptLight",
+      "getCanvasStationReceipt",
+      "getReceiptLight",
+      "getReceipt"
+    ]);
+
+    if (methodResult) {
+      return {
+        method: methodResult.method,
+        proof: methodResult.receipt
+      };
+    }
+
+    if (isObject(candidate.canvasStationSummary)) return { method: "canvasStationSummary", proof: candidate.canvasStationSummary };
+    if (isObject(candidate.stationSummary)) return { method: "stationSummary", proof: candidate.stationSummary };
+    if (isObject(candidate.receipt)) return { method: "receipt", proof: candidate.receipt };
+
+    return {
+      method: "authorityObject",
+      proof: candidate
+    };
+  }
+
+  function contractFromProof(proof) {
+    const p = isObject(proof) ? proof : {};
+    return firstNonEmpty(
+      p.canvasLocalStationContract,
+      p.currentCanvasStationContract,
+      p.currentCanvasParentContract,
+      p.canvasStationContract,
+      p.contract,
+      p.hearthCanvasContract,
+      p.hearthCanvasLocalStationContract,
+      p.hearthCanvasCurrentCanvasStationContract,
+      p.hearthCanvasCurrentCanvasParentContract
+    );
+  }
+
+  function hasReceiveSurface(api) {
+    if (!api || !isObject(api)) return false;
+    return Boolean(
+      isFunction(api.consumeRouteConductorReleasePacket) ||
+      isFunction(api.receiveReleasePacket) ||
+      isFunction(api.receiveCanvasReleasePacket) ||
+      isFunction(api.receiveCanvasStationSummary) ||
+      isFunction(api.boot) ||
+      isFunction(api.init) ||
+      isFunction(api.start) ||
+      isFunction(api.mount)
+    );
+  }
+
+  function unsafeFieldsFromProof(proof) {
+    const p = isObject(proof) ? proof : {};
+    const fields = [];
+
+    TRUE_ONLY_UNSAFE_KEYS.forEach((key) => {
+      if (own(p, key) && isExplicitTrue(p[key])) fields.push(key);
+    });
+
+    FALSE_IS_UNSAFE_KEYS.forEach((key) => {
+      if (own(p, key) && isExplicitFalse(p[key])) fields.push(key);
+    });
+
+    NON_EMPTY_ERROR_KEYS.forEach((key) => {
+      if (own(p, key) && trimText(p[key])) fields.push(key);
+    });
+
+    const v2Observed =
+      (own(p, "canvasParentV2Observed") && isExplicitTrue(p.canvasParentV2Observed)) ||
+      (own(p, "hearthCanvasParentV2Observed") && isExplicitTrue(p.hearthCanvasParentV2Observed));
+
+    const staleFalsePositiveBlocked =
+      readBoolField(p, [
+        "hearthCanvasStaleParentV2FalsePositiveBlocked",
+        "canvasStaleParentV2FalsePositiveBlocked",
+        "staleCanvasV2FalsePositiveBlocked"
+      ]);
+
+    if (v2Observed && !staleFalsePositiveBlocked) fields.push("canvasParentV2Observed");
+
+    return fields;
+  }
+
+  function normalizeCanvasProof(name, api, proof, method) {
+    const p = isObject(proof) ? proof : {};
+    const contract = contractFromProof(p);
+    const localAccepted = CANVAS_LOCAL_STATION_CONTRACTS.includes(contract);
+    const baselineV10_3 = contract === CANVAS_BASELINE_V10_3_CONTRACT;
+    const explicitUnsafeFields = unsafeFieldsFromProof(p);
+    const unsafe = explicitUnsafeFields.length > 0;
+
+    const summaryObserved = Boolean(
+      method === "getCanvasStationSummary" ||
+      method === "getCanvasStationReceiptLight" ||
+      method === "getCanvasStationReceipt" ||
+      readBoolField(p, ["canvasLocalStationSummaryObserved", "summaryObserved", "canvasStationSummaryObserved"]) ||
+      p.packetType === "CANVAS_LOCAL_STATION_SUMMARY" ||
+      p.packetType === "CANVAS_LOCAL_STATION_RECEIPT"
+    );
+
+    const apiReady = Boolean(
+      readBoolField(p, ["canvasLocalStationApiReady", "apiReady"]) ||
+      localAccepted ||
+      (api && isObject(api))
+    );
+
+    const receiveSurfaceReady = Boolean(
+      hasReceiveSurface(api) ||
+      readBoolField(p, ["canvasLocalStationReceiveSurfaceReady", "receiveSurfaceReady"])
+    );
+
+    const carrierSafeMarkerObserved = Boolean(
+      readBoolField(p, ["structuralCarrierReady", "hearthCanvasStructuralCarrierReady"]) ||
+      readBoolField(p, ["structuralCarrierSafe", "hearthCanvasStructuralCarrierSafe"]) ||
+      readBoolField(p, ["canvasParentCarrierSafe", "hearthCanvasParentCarrierSafe"]) ||
+      readBoolField(p, ["structuralCarrierSafeForCanvasRelease", "hearthCanvasStructuralCarrierSafeForCanvasRelease"]) ||
+      readBoolField(p, ["canvasPreReleaseCarrierSafeForWest", "hearthCanvasPreReleaseCarrierSafeForWest"]) ||
+      (localAccepted && summaryObserved)
+    );
+
+    const unrecognizedCurrentCanvasContract = Boolean(contract && !localAccepted && !baselineV10_3);
+    if (unrecognizedCurrentCanvasContract && !explicitUnsafeFields.includes("unrecognizedCurrentCanvasContract")) {
+      explicitUnsafeFields.push("unrecognizedCurrentCanvasContract");
+    }
+
+    const finalUnsafe = explicitUnsafeFields.length > 0;
+
+    let rank = 99;
+
+    if (finalUnsafe) {
+      rank = 6;
+    } else if (localAccepted && summaryObserved && apiReady && receiveSurfaceReady) {
+      rank = 1;
+    } else if (localAccepted && apiReady && receiveSurfaceReady) {
+      rank = 2;
+    } else if (localAccepted) {
+      rank = 3;
+    } else if (baselineV10_3) {
+      rank = 4;
+    } else if (contract) {
+      rank = 5;
+    }
+
+    return {
+      name,
+      method,
+      proof: clonePlain(p),
+      contract,
+      currentCanvasParentObserved: Boolean(api || contract),
+      currentCanvasParentContractObserved: Boolean(contract),
+      currentCanvasParentIsLocalStation: localAccepted,
+      canvasLocalStationContractAccepted: localAccepted,
+      canvasBaselineV10_3Recognized: baselineV10_3,
+      v10_3BaselineRecognizedOnly: baselineV10_3,
+      canvasLocalStationApiReady: apiReady && localAccepted,
+      canvasLocalStationSummaryObserved: summaryObserved,
+      canvasLocalStationReceiveSurfaceReady: receiveSurfaceReady,
+      carrierSafeMarkerObserved,
+      explicitUnsafeFields,
+      carrierHardBlock: finalUnsafe,
+      rank
+    };
+  }
+
+  function readDatasetCanvasProof() {
+    const ds = dataset();
+
+    const contract = firstNonEmpty(
+      ds.hearthCanvasLocalStationContract,
+      ds.hearthCanvasCurrentCanvasStationContract,
+      ds.hearthCanvasCurrentCanvasParentContract,
+      ds.currentCanvasParentContract,
+      ds.canvasLocalStationContract,
+      ds.currentCanvasStationContract,
+      ds.hearthCanvasContract
+    );
+
+    if (!contract) return null;
+
+    return {
+      contract,
+      currentCanvasParentContract: contract,
+      canvasLocalStationContract: contract,
+      canvasLocalStationSummaryObserved: ds.hearthCanvasLocalStationSummaryObserved || ds.canvasLocalStationSummaryObserved,
+      canvasLocalStationApiReady: ds.hearthCanvasLocalStationApiReady || ds.canvasLocalStationApiReady,
+      canvasLocalStationReceiveSurfaceReady: ds.hearthCanvasLocalStationReceiveSurfaceReady || ds.canvasLocalStationReceiveSurfaceReady,
+      structuralCarrierReady: ds.hearthCanvasStructuralCarrierReady || ds.structuralCarrierReady,
+      structuralCarrierSafe: ds.hearthCanvasStructuralCarrierSafe || ds.structuralCarrierSafe,
+      canvasParentCarrierSafe: ds.hearthCanvasParentCarrierSafe || ds.canvasParentCarrierSafe,
+      structuralCarrierSafeForCanvasRelease: ds.hearthCanvasStructuralCarrierSafeForCanvasRelease || ds.structuralCarrierSafeForCanvasRelease,
+      canvasPreReleaseCarrierSafeForWest: ds.hearthCanvasPreReleaseCarrierSafeForWest || ds.canvasPreReleaseCarrierSafeForWest,
+      currentParentIdentityMismatch: ds.currentParentIdentityMismatch,
+      canvasParentIdentityMismatch: ds.canvasParentIdentityMismatch,
+      currentParentStaleDetected: ds.currentParentStaleDetected,
+      canvasParentStaleDetected: ds.canvasParentStaleDetected,
+      staleParentDetected: ds.staleParentDetected,
+      canvasParentV2Observed: ds.hearthCanvasParentV2Observed || ds.canvasParentV2Observed,
+      hearthCanvasStaleParentV2FalsePositiveBlocked: ds.hearthCanvasStaleParentV2FalsePositiveBlocked,
+      canvasCarrierHandoffError: ds.canvasCarrierHandoffError,
+      carrierHandoffError: ds.carrierHandoffError
+    };
+  }
+
+  function selectCanvasLocalStationProof() {
+    const candidates = [];
+
+    for (const [name, api] of canvasAuthorityCandidates()) {
+      if (!api || !isObject(api)) continue;
+      const read = readCanvasProofFromCandidate(api);
+      if (!read || !isObject(read.proof)) continue;
+      candidates.push(normalizeCanvasProof(name, api, read.proof, read.method));
+    }
+
+    const datasetProof = readDatasetCanvasProof();
+    if (datasetProof) {
+      candidates.push(normalizeCanvasProof("DOCUMENT_DATASET_CANVAS_PROOF", null, datasetProof, "dataset"));
+    }
+
+    candidates.sort((a, b) => {
+      const aUnsafe = Boolean(a.carrierHardBlock || (Array.isArray(a.explicitUnsafeFields) && a.explicitUnsafeFields.length));
+      const bUnsafe = Boolean(b.carrierHardBlock || (Array.isArray(b.explicitUnsafeFields) && b.explicitUnsafeFields.length));
+
+      if (aUnsafe !== bUnsafe) return aUnsafe ? 1 : -1;
+      if (a.rank !== b.rank) return a.rank - b.rank;
+
+      const aCurrent = a.canvasLocalStationContractAccepted ? 0 : 1;
+      const bCurrent = b.canvasLocalStationContractAccepted ? 0 : 1;
+      if (aCurrent !== bCurrent) return aCurrent - bCurrent;
+
+      return 0;
+    });
+
+    const selected = candidates[0] || {
+      name: "NONE",
+      method: "NONE",
+      proof: null,
+      contract: "",
+      currentCanvasParentObserved: false,
+      currentCanvasParentContractObserved: false,
+      currentCanvasParentIsLocalStation: false,
+      canvasLocalStationContractAccepted: false,
+      canvasBaselineV10_3Recognized: false,
+      v10_3BaselineRecognizedOnly: false,
+      canvasLocalStationApiReady: false,
+      canvasLocalStationSummaryObserved: false,
+      canvasLocalStationReceiveSurfaceReady: false,
+      carrierSafeMarkerObserved: false,
+      explicitUnsafeFields: [],
+      carrierHardBlock: false,
+      rank: 99
+    };
+
+    state.lastCanvasCandidates = clonePlain(candidates);
+    state.lastCanvasProof = clonePlain(selected);
+
+    state.currentCanvasParentObserved = selected.currentCanvasParentObserved;
+    state.currentCanvasParentContractObserved = selected.currentCanvasParentContractObserved;
+    state.currentCanvasParentContract = selected.contract;
+    state.currentCanvasParentIsLocalStation = selected.currentCanvasParentIsLocalStation;
+    state.canvasLocalStationContractAccepted = selected.canvasLocalStationContractAccepted;
+    state.canvasBaselineV10_3Recognized = selected.canvasBaselineV10_3Recognized;
+    state.v10_3BaselineRecognizedOnly = selected.v10_3BaselineRecognizedOnly;
+    state.canvasLocalStationApiReady = selected.canvasLocalStationApiReady;
+    state.canvasLocalStationSummaryObserved = selected.canvasLocalStationSummaryObserved;
+    state.canvasLocalStationReceiveSurfaceReady = selected.canvasLocalStationReceiveSurfaceReady;
+    state.canvasLocalStationSourceMethod = `${selected.name}:${selected.method}`;
+    state.selectedCanvasProofRank = selected.rank;
+    state.selectedCanvasProofUnsafe = Boolean(selected.carrierHardBlock);
+
+    state.explicitUnsafeFields = selected.explicitUnsafeFields.slice();
+    state.carrierHardBlock = selected.carrierHardBlock;
+    state.carrierSafeMarkerObserved = selected.carrierSafeMarkerObserved;
+    state.carrierIdentitySafe = Boolean(
+      selected.currentCanvasParentObserved &&
+      selected.currentCanvasParentIsLocalStation &&
+      selected.canvasLocalStationContractAccepted &&
+      !selected.carrierHardBlock
+    );
+
+    state.preReleaseCarrierAdmissible = Boolean(
+      state.carrierIdentitySafe &&
+      state.canvasLocalStationApiReady &&
+      state.canvasLocalStationSummaryObserved &&
+      state.canvasLocalStationReceiveSurfaceReady &&
+      state.carrierSafeMarkerObserved &&
+      !state.carrierHardBlock
+    );
+
+    if (state.preReleaseCarrierAdmissible) {
+      state.carrierHeld = false;
+      state.carrierHoldReason = "NONE_PRE_RELEASE_CARRIER_ADMISSIBLE";
+    } else if (selected.canvasBaselineV10_3Recognized) {
+      state.carrierHeld = true;
+      state.carrierHoldReason = "WAITING_CURRENT_CANVAS_LOCAL_STATION_CONTRACT";
+    } else if (!selected.currentCanvasParentObserved) {
+      state.carrierHeld = true;
+      state.carrierHoldReason = "WAITING_CURRENT_CANVAS_LOCAL_STATION_PROOF";
+    } else if (!selected.canvasLocalStationContractAccepted && !selected.carrierHardBlock) {
+      state.carrierHeld = true;
+      state.carrierHoldReason = "WAITING_CURRENT_CANVAS_LOCAL_STATION_CONTRACT";
+    } else if (!state.carrierSafeMarkerObserved) {
+      state.carrierHeld = true;
+      state.carrierHoldReason = "WAITING_CURRENT_CANVAS_LOCAL_STATION_CARRIER_SAFE_MARKER";
+    } else if (!state.canvasLocalStationSummaryObserved || !state.canvasLocalStationApiReady || !state.canvasLocalStationReceiveSurfaceReady) {
+      state.carrierHeld = true;
+      state.carrierHoldReason = "WAITING_CURRENT_CANVAS_LOCAL_STATION_SUMMARY_API";
+    } else {
+      state.carrierHeld = false;
+      state.carrierHoldReason = state.carrierHardBlock ? "STRUCTURAL_CARRIER_UNSAFE_FOR_CANVAS" : "NONE";
+    }
+
+    return selected;
+  }
+
+  function clearCanvasReleasePacket() {
+    const w = root();
+    const h = ensureObject(w, "HEARTH");
+    const lab = ensureObject(w, "DEXTER_LAB");
+
+    h.canvasReleasePacket = null;
+    h.routeConductorReleasePacket = null;
+    h.westCanvasReleasePacket = null;
+
+    lab.hearthWestCanvasReleasePacket = null;
+    lab.hearthRuntimeTableWestReleasePacket = null;
+
+    w.HEARTH_CANVAS_RELEASE_PACKET = null;
+    w.HEARTH_ROUTE_CONDUCTOR_CANVAS_RELEASE_PACKET = null;
+    w.HEARTH_WEST_CANVAS_RELEASE_PACKET = null;
+    w.LAB_RUNTIME_TABLE_WEST_CANVAS_RELEASE_PACKET = null;
+
+    state.releasePacket = null;
+    return true;
+  }
+
+  function blockFinalClaims() {
+    state.f21EligibleForNorth = false;
+    state.f21SubmittedToNorth = false;
+    state.f21EligibilitySubmittedToNorth = false;
+    state.f21ClaimedByWest = false;
+    state.completionLatched = false;
+    state.finalCompletionLatched = false;
+    state.degradedCompletionLatched = false;
+    state.readyTextAllowed = false;
+    state.visualPassClaimed = false;
+    state.generatedImage = false;
+    state.graphicBox = false;
+    state.webGL = false;
+  }
+
+  function applyHold(reason, nextFile, gapClass) {
+    state.westAuditObserved = true;
+    state.westAuditIntakeAccepted = state.northC2WestAuditAligned;
+    state.westAuditAccepted = false;
+    state.westAuditPassed = false;
+    state.westDecision = WEST_DECISION.HOLD;
+    state.westGapClass = gapClass || WEST_GAP_CLASS.CARRIER_HOLD;
+    state.westHardBlock = false;
+    state.westForwardAllowed = false;
+    state.westCanvasReleaseApproved = false;
+
+    state.canvasReleaseAuthorized = false;
+    state.canvasReleasePacketReady = false;
+    state.canvasReleaseApprovedByWest = false;
+    state.releaseToCanvas = false;
+    state.canvasReleaseHeldReason = reason;
+    state.firstFailedCoordinate = reason;
+    state.recommendedNextFile = nextFile;
+    state.recommendedNextRenewalTarget = nextFile;
+    state.postgameStatus = `WEST_HOLD_${reason}`;
+
+    blockFinalClaims();
+    clearCanvasReleasePacket();
+
+    return state.westDecision;
+  }
+
+  function applyHardBlock(reason, nextFile) {
+    state.westAuditObserved = true;
+    state.westAuditIntakeAccepted = state.northC2WestAuditAligned;
+    state.westAuditAccepted = false;
+    state.westAuditPassed = false;
+    state.westDecision = WEST_DECISION.HARD_BLOCK;
+    state.westGapClass = WEST_GAP_CLASS.STRUCTURAL_BLOCK;
+    state.westHardBlock = true;
+    state.westForwardAllowed = false;
+    state.westCanvasReleaseApproved = false;
+
+    state.canvasReleaseAuthorized = false;
+    state.canvasReleasePacketReady = false;
+    state.canvasReleaseApprovedByWest = false;
+    state.releaseToCanvas = false;
+    state.canvasReleaseHeldReason = reason;
+    state.firstFailedCoordinate = reason;
+    state.recommendedNextFile = nextFile;
+    state.recommendedNextRenewalTarget = nextFile;
+    state.postgameStatus = `WEST_HARD_BLOCK_${reason}`;
+
+    blockFinalClaims();
+    clearCanvasReleasePacket();
+
+    return state.westDecision;
+  }
+
   function composeCanvasReleasePacket() {
-    const packet = {
+    return {
       timestamp: nowIso(),
+      event: "WEST_RELEASE_TO_CANVAS",
+      checkpointEvent: "F13W_CANVAS_RELEASE_APPROVED",
+      primaryCardinal: "WEST",
+      activeStageId: ACTIVE_STAGE_ID,
+      activeGear: ACTIVE_GEAR,
+      activeFileGate: FILE,
+      fileGate: FILE,
+      activeFibonacci: ACTIVE_FIBONACCI,
+      activeNewsGate: ACTIVE_NEWS_GATE,
 
       contract: CONTRACT,
       receipt: RECEIPT,
@@ -952,66 +1220,59 @@
       sourceContract: CONTRACT,
       sourceReceipt: RECEIPT,
 
-      cycleNumber: 2,
-      cycleRoute: "NORTH_EAST_SOUTH_WEST_CANVAS",
+      cycleNumber: ACTIVE_CYCLE_NUMBER,
+      cycleRoute: ACTIVE_CYCLE_ROUTE,
       receivedFrom: "WEST",
       handoffTo: "CANVAS",
-      destinationFile: CANVAS_PARENT_FILE,
-      targetFile: CANVAS_PARENT_FILE,
+      destinationFile: CANVAS_LOCAL_STATION_FILE,
+      targetFile: CANVAS_LOCAL_STATION_FILE,
 
       westAuditObserved: true,
+      westAuditIntakeAccepted: true,
       westAuditAccepted: true,
       westAuditPassed: true,
       westDecision: WEST_DECISION.RELEASE_TO_CANVAS,
-      westGapClass: "NONE",
+      westGapClass: WEST_GAP_CLASS.NONE,
       westHardBlock: false,
       westForwardAllowed: true,
       westCanvasReleaseApproved: true,
+      canvasReleaseApprovedByWest: true,
 
       canvasReleaseAuthorized: true,
       canvasReleasePacketReady: true,
-      canvasReleaseApprovedByWest: true,
       releaseToCanvas: true,
 
-      carrierHostAdmissibilityReady: true,
-      indexPairReady: true,
-      f8SelfDutySatisfied: true,
-      cycleTwoSouthOutputObserved: true,
-      cycleTwoSouthOutputAdmissible: true,
-
-      preReleaseCarrierAdmissible: true,
-      currentCanvasParentObserved: state.currentCanvasParentObserved,
-      currentCanvasParentContractObserved: state.currentCanvasParentContractObserved,
+      northTimetableObserved: state.northTimetableObserved,
+      northC2WestAuditAligned: state.northC2WestAuditAligned,
+      cycleTwoSouthOutputObserved: state.cycleTwoSouthOutputObserved,
+      cycleTwoSouthOutputAdmissible: state.cycleTwoSouthOutputAdmissible,
+      canvasLocalStationContractAccepted: state.canvasLocalStationContractAccepted,
       currentCanvasParentContract: state.currentCanvasParentContract,
-      canvasParentBootMethodAvailable: state.canvasParentBootMethodAvailable,
-      canvasParentCarrierSafe: true,
-      structuralCarrierSafeForCanvasRelease: true,
+      preReleaseCarrierAdmissible: state.preReleaseCarrierAdmissible,
 
       firstFailedCoordinate: "NONE_CYCLE_TWO_CANVAS_RELEASE_AUTHORIZED_BY_WEST",
-      recommendedNextFile: CANVAS_PARENT_FILE,
-      recommendedNextRenewalTarget: CANVAS_PARENT_FILE,
+      recommendedNextFile: CANVAS_LOCAL_STATION_FILE,
+      recommendedNextRenewalTarget: CANVAS_LOCAL_STATION_FILE,
 
       f21EligibleForNorth: false,
       f21SubmittedToNorth: false,
       f21EligibilitySubmittedToNorth: false,
+      f21ClaimedByWest: false,
       completionLatched: false,
+      finalCompletionLatched: false,
+      degradedCompletionLatched: false,
       readyTextAllowed: false,
       visualPassClaimed: false,
-      f21ClaimedByWest: false,
-
       generatedImage: false,
       graphicBox: false,
-      webGL: false,
+      webGL: false
     };
-
-    state.releasePacket = clonePlain(packet);
-    return packet;
   }
 
   function publishCanvasReleasePacket(packet) {
     if (!isObject(packet)) return false;
 
-    const w = getWindow();
+    const w = root();
     const h = ensureObject(w, "HEARTH");
     const lab = ensureObject(w, "DEXTER_LAB");
 
@@ -1030,98 +1291,13 @@
     return true;
   }
 
-  function clearCanvasReleasePacket() {
-    const w = getWindow();
-    const h = ensureObject(w, "HEARTH");
-    const lab = ensureObject(w, "DEXTER_LAB");
-
-    h.canvasReleasePacket = null;
-    h.routeConductorReleasePacket = null;
-    h.westCanvasReleasePacket = null;
-
-    lab.hearthWestCanvasReleasePacket = null;
-    lab.hearthRuntimeTableWestReleasePacket = null;
-
-    w.HEARTH_CANVAS_RELEASE_PACKET = null;
-    w.HEARTH_ROUTE_CONDUCTOR_CANVAS_RELEASE_PACKET = null;
-    w.HEARTH_WEST_CANVAS_RELEASE_PACKET = null;
-    w.LAB_RUNTIME_TABLE_WEST_CANVAS_RELEASE_PACKET = null;
-
-    return true;
-  }
-
-  function clearReleaseState() {
-    state.canvasReleaseAuthorized = false;
-    state.canvasReleasePacketReady = false;
-    state.canvasReleaseApprovedByWest = false;
-    state.releaseToCanvas = false;
-    state.westCanvasReleaseApproved = false;
-    state.releasePacket = null;
-    clearCanvasReleasePacket();
-  }
-
-  function applyWestDecision() {
-    if (state.carrierHardBlock) {
-      state.westAuditAccepted = true;
-      state.westAuditPassed = false;
-      state.westDecision = WEST_DECISION.HARD_BLOCK;
-      state.westGapClass = "STRUCTURAL_BLOCK";
-      state.westHardBlock = true;
-      state.westForwardAllowed = false;
-
-      clearReleaseState();
-
-      state.canvasReleaseHeldReason = state.carrierHoldReason || "STRUCTURAL_CARRIER_UNSAFE_FOR_CANVAS";
-      state.firstFailedCoordinate = "STRUCTURAL_CARRIER_UNSAFE_FOR_CANVAS";
-      state.recommendedNextFile = state.currentParentIdentityMismatch ? CANVAS_PARENT_FILE : FILE;
-      state.recommendedNextRenewalTarget = state.currentParentIdentityMismatch ? CANVAS_PARENT_FILE : FILE;
-      state.postgameStatus = "WEST_HARD_BLOCK_CURRENT_CANVAS_CARRIER_UNSAFE";
-      return state.westDecision;
-    }
-
-    if (state.carrierHeld) {
-      state.westAuditAccepted = true;
-      state.westAuditPassed = false;
-      state.westDecision = WEST_DECISION.HOLD;
-      state.westGapClass = "CARRIER_HOLD";
-      state.westHardBlock = false;
-      state.westForwardAllowed = false;
-
-      clearReleaseState();
-
-      state.canvasReleaseHeldReason = state.carrierHoldReason || "WAITING_CURRENT_CANVAS_PARENT_CARRIER_PROOF";
-      state.firstFailedCoordinate =
-        state.carrierHoldReason === "WAITING_CURRENT_CANVAS_PARENT_CARRIER_SAFE_MARKER"
-          ? "WAITING_CURRENT_CANVAS_PARENT_CARRIER_SAFE_MARKER"
-          : "WAITING_CURRENT_CANVAS_PARENT_CARRIER_PROOF";
-      state.recommendedNextFile = CANVAS_PARENT_FILE;
-      state.recommendedNextRenewalTarget = CANVAS_PARENT_FILE;
-      state.postgameStatus = "WEST_HOLD_WAITING_CURRENT_CANVAS_PARENT_CARRIER_PROOF";
-      return state.westDecision;
-    }
-
-    if (!state.cycleTwoSouthOutputAdmissible) {
-      state.westAuditAccepted = true;
-      state.westAuditPassed = false;
-      state.westDecision = WEST_DECISION.HOLD;
-      state.westGapClass = "WAITING_CYCLE_TWO_SOUTH_OUTPUT";
-      state.westHardBlock = false;
-      state.westForwardAllowed = false;
-
-      clearReleaseState();
-
-      state.canvasReleaseHeldReason = "WAITING_CYCLE_TWO_SOUTH_OUTPUT_ADMISSIBILITY";
-      state.firstFailedCoordinate = "WAITING_CYCLE_TWO_SOUTH_OUTPUT_ADMISSIBILITY";
-      state.recommendedNextFile = ROUTE_CONDUCTOR_FILE;
-      state.recommendedNextRenewalTarget = ROUTE_CONDUCTOR_FILE;
-      state.postgameStatus = "WEST_HOLD_WAITING_CYCLE_TWO_SOUTH_OUTPUT_ADMISSIBILITY";
-      return state.westDecision;
-    }
-
+  function applyRelease() {
+    state.westAuditObserved = true;
+    state.westAuditIntakeAccepted = true;
     state.westAuditAccepted = true;
     state.westAuditPassed = true;
     state.westDecision = WEST_DECISION.RELEASE_TO_CANVAS;
-    state.westGapClass = "NONE";
+    state.westGapClass = WEST_GAP_CLASS.NONE;
     state.westHardBlock = false;
     state.westForwardAllowed = true;
     state.westCanvasReleaseApproved = true;
@@ -1131,37 +1307,93 @@
     state.canvasReleaseApprovedByWest = true;
     state.releaseToCanvas = true;
     state.canvasReleaseHeldReason = "NONE_CYCLE_TWO_CANVAS_RELEASE_AUTHORIZED_BY_WEST";
-
     state.firstFailedCoordinate = "NONE_CYCLE_TWO_CANVAS_RELEASE_AUTHORIZED_BY_WEST";
-    state.recommendedNextFile = CANVAS_PARENT_FILE;
-    state.recommendedNextRenewalTarget = CANVAS_PARENT_FILE;
-    state.postgameStatus = "CYCLE_2_CANVAS_RELEASE_AUTHORIZED_BY_WEST";
+    state.recommendedNextFile = CANVAS_LOCAL_STATION_FILE;
+    state.recommendedNextRenewalTarget = CANVAS_LOCAL_STATION_FILE;
+    state.postgameStatus = "CYCLE_TWO_CANVAS_RELEASE_AUTHORIZED_BY_WEST";
 
-    const releasePacket = composeCanvasReleasePacket();
-    publishCanvasReleasePacket(releasePacket);
+    blockFinalClaims();
+
+    const packet = composeCanvasReleasePacket();
+    state.releasePacket = clonePlain(packet);
+    publishCanvasReleasePacket(packet);
 
     return state.westDecision;
   }
 
-  function classifyWestAdmissibility(input) {
+  function decideWest(input) {
     state.timestamp = nowIso();
+    state.westAuditObserved = true;
 
-    initializeCheckpoints();
+    isNorthCallingWestForCycleTwoCanvasAudit(input);
     normalizeCycleInput(input);
-    assessPreReleaseCarrierAdmissibility();
-    applyWestDecision();
+    selectCanvasLocalStationProof();
 
-    state.f21EligibleForNorth = false;
-    state.f21SubmittedToNorth = false;
-    state.f21EligibilitySubmittedToNorth = false;
-    state.completionLatched = false;
-    state.readyTextAllowed = false;
-    state.visualPassClaimed = false;
-    state.f21ClaimedByWest = false;
+    if (!state.northC2WestAuditAligned) {
+      return applyHold(
+        "WAITING_NORTH_TIMETABLE_C2_WEST_AUDIT",
+        NORTH_FILE,
+        WEST_GAP_CLASS.NORTH_TIMETABLE_HOLD
+      );
+    }
 
+    state.westAuditIntakeAccepted = true;
+
+    if (!state.cycleTwoSouthOutputAdmissible) {
+      return applyHold(
+        "WAITING_CYCLE_TWO_SOUTH_OUTPUT_ADMISSIBILITY",
+        ROUTE_CONDUCTOR_FILE,
+        WEST_GAP_CLASS.SOUTH_OUTPUT_HOLD
+      );
+    }
+
+    if (state.carrierHardBlock || state.explicitUnsafeFields.length) {
+      return applyHardBlock(
+        "STRUCTURAL_CARRIER_UNSAFE_FOR_CANVAS",
+        CANVAS_LOCAL_STATION_FILE
+      );
+    }
+
+    if (state.canvasBaselineV10_3Recognized && !state.canvasLocalStationContractAccepted) {
+      return applyHold(
+        "WAITING_CURRENT_CANVAS_LOCAL_STATION_CONTRACT",
+        CANVAS_LOCAL_STATION_FILE,
+        WEST_GAP_CLASS.CANVAS_LOCAL_STATION_HOLD
+      );
+    }
+
+    if (!state.currentCanvasParentObserved || !state.canvasLocalStationContractAccepted) {
+      return applyHold(
+        "WAITING_CURRENT_CANVAS_LOCAL_STATION_CONTRACT",
+        CANVAS_LOCAL_STATION_FILE,
+        WEST_GAP_CLASS.CANVAS_LOCAL_STATION_HOLD
+      );
+    }
+
+    if (!state.canvasLocalStationApiReady || !state.canvasLocalStationSummaryObserved || !state.canvasLocalStationReceiveSurfaceReady) {
+      return applyHold(
+        "WAITING_CURRENT_CANVAS_LOCAL_STATION_SUMMARY_API",
+        CANVAS_LOCAL_STATION_FILE,
+        WEST_GAP_CLASS.CARRIER_HOLD
+      );
+    }
+
+    if (!state.preReleaseCarrierAdmissible || !state.carrierSafeMarkerObserved) {
+      return applyHold(
+        "WAITING_CURRENT_CANVAS_LOCAL_STATION_CARRIER_SAFE_MARKER",
+        CANVAS_LOCAL_STATION_FILE,
+        WEST_GAP_CLASS.CARRIER_HOLD
+      );
+    }
+
+    return applyRelease();
+  }
+
+  function classifyWestAdmissibility(input) {
+    decideWest(input || {});
     updateDataset();
     publishGlobals();
-
+    state.lastReceipt = clonePlain(getReceiptLight());
     return getReceipt();
   }
 
@@ -1194,13 +1426,7 @@
   }
 
   function getCanvasReleasePacket() {
-    if (isObject(state.releasePacket)) return clonePlain(state.releasePacket);
-
-    if (state.canvasReleasePacketReady && state.canvasReleaseAuthorized) {
-      return composeCanvasReleasePacket();
-    }
-
-    return null;
+    return isObject(state.releasePacket) ? clonePlain(state.releasePacket) : null;
   }
 
   function getReleasePacket() {
@@ -1222,173 +1448,75 @@
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       baselineContract: BASELINE_CONTRACT,
-      file: FILE,
-      route: ROUTE,
-
-      cycleNumber: state.cycleNumber,
-      cycleRoute: state.cycleRoute,
-      receivedFrom: state.receivedFrom,
-      handoffTo: state.handoffTo,
-
-      f13nCheckpointCorrected: state.f13nCheckpointCorrected,
-
-      currentCanvasParentObserved: state.currentCanvasParentObserved,
-      currentCanvasParentContractObserved: state.currentCanvasParentContractObserved,
-      currentCanvasParentContract: state.currentCanvasParentContract,
-      currentParentIdentityMismatch: state.currentParentIdentityMismatch,
-      currentParentStaleDetected: state.currentParentStaleDetected,
-      staleParentDetected: state.staleParentDetected,
-      canvasParentBootMethodAvailable: state.canvasParentBootMethodAvailable,
-
-      canvasCarrierReceiptObserved: state.canvasCarrierReceiptObserved,
-      canvasCarrierSourceMethod: state.canvasCarrierSourceMethod,
-      canvasCarrierSourceIsCarrierSpecific: state.canvasCarrierSourceIsCarrierSpecific,
-
-      structuralCarrierReadyTri: state.structuralCarrierReadyTri,
-      structuralCarrierSafeTri: state.structuralCarrierSafeTri,
-      canvasParentCarrierSafeTri: state.canvasParentCarrierSafeTri,
-      structuralCarrierSafeForCanvasReleaseTri: state.structuralCarrierSafeForCanvasReleaseTri,
-      canvasPreReleaseCarrierSafeForWestTri: state.canvasPreReleaseCarrierSafeForWestTri,
-
-      carrierIdentitySafe: state.carrierIdentitySafe,
-      carrierSafeMarkerObserved: state.carrierSafeMarkerObserved,
-      secondaryCarrierConfidenceObserved: state.secondaryCarrierConfidenceObserved,
-
-      preReleaseCarrierAdmissible: state.preReleaseCarrierAdmissible,
-      canvasParentCarrierSafe: state.preReleaseCarrierAdmissible,
-      structuralCarrierSafeForCanvasRelease: state.preReleaseCarrierAdmissible,
-      carrierHardBlock: state.carrierHardBlock,
-      carrierHeld: state.carrierHeld,
-      carrierHoldReason: state.carrierHoldReason,
-      explicitUnsafeFields: state.explicitUnsafeFields.slice(),
-
-      indexPairReady: state.indexPairReady,
-      carrierHostAdmissibilityReady: state.carrierHostAdmissibilityReady,
-      f8SelfDutySatisfied: state.f8SelfDutySatisfied,
-      indexPairReadyObserved: state.indexPairReadyObserved,
-      carrierHostAdmissibilityReadyObserved: state.carrierHostAdmissibilityReadyObserved,
-      f8SelfDutySatisfiedObserved: state.f8SelfDutySatisfiedObserved,
-
-      southRouteConductorPacketObserved: state.southRouteConductorPacketObserved,
-      explicitSouthRouteSignalObserved: state.explicitSouthRouteSignalObserved,
-      explicitSouthAdmissibilitySignalObserved: state.explicitSouthAdmissibilitySignalObserved,
-      southOutputReady: state.southOutputReady,
-      routeConductorOutputReady: state.routeConductorOutputReady,
-      routeConductorReleaseCandidate: state.routeConductorReleaseCandidate,
-      cycleTwoSouthOutputObserved: state.cycleTwoSouthOutputObserved,
-      cycleTwoSouthOutputAdmissible: state.cycleTwoSouthOutputAdmissible,
-      southOutputIntakeMethod: state.southOutputIntakeMethod,
-      explicitSouthSignals: state.explicitSouthSignals.slice(),
-
-      westAuditObserved: state.westAuditObserved,
-      westAuditAccepted: state.westAuditAccepted,
-      westAuditPassed: state.westAuditPassed,
-      westDecision: state.westDecision,
-      westGapClass: state.westGapClass,
-      westHardBlock: state.westHardBlock,
-      westForwardAllowed: state.westForwardAllowed,
-      westCanvasReleaseApproved: state.westCanvasReleaseApproved,
-
-      canvasReleaseAuthorized: state.canvasReleaseAuthorized,
-      canvasReleasePacketReady: state.canvasReleasePacketReady,
-      canvasReleaseApprovedByWest: state.canvasReleaseApprovedByWest,
-      releaseToCanvas: state.releaseToCanvas,
-      canvasReleaseHeldReason: state.canvasReleaseHeldReason,
-
-      releasePacket: clonePlain(state.releasePacket),
-      canvasReleasePacket: clonePlain(state.releasePacket),
-
-      f21EligibleForNorth: false,
-      f21SubmittedToNorth: false,
-      f21EligibilitySubmittedToNorth: false,
-      completionLatched: false,
-      readyTextAllowed: false,
-      visualPassClaimed: false,
-      f21ClaimedByWest: false,
-
-      firstFailedCoordinate: state.firstFailedCoordinate,
-      recommendedNextFile: state.recommendedNextFile,
-      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
-      postgameStatus: state.postgameStatus,
-    };
-  }
-
-  function getReceipt() {
-    return {
-      timestamp: state.timestamp || nowIso(),
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      previousContract: PREVIOUS_CONTRACT,
-      baselineContract: BASELINE_CONTRACT,
-      version: "2026-06-01.lab-runtime-table-west-current-canvas-parent-v10-3-carrier-compatibility-v4-2",
+      version: VERSION,
       file: FILE,
       route: ROUTE,
       role: state.role,
 
-      westRuntimeTableLoaded: true,
-      westV4_2Active: true,
-      westV4_1Superseded: true,
-      westV4Superseded: true,
-      westV3Superseded: true,
+      westV4_6_3Active: true,
+      westV4_6_2Superseded: true,
+      westV4_6_1Superseded: true,
+      westV4_6Superseded: true,
+      westV4_5Superseded: true,
+      westV4_4Superseded: true,
+      westV4_3Superseded: true,
+      westV4_2Superseded: true,
 
-      checkpointRegistry: clonePlain(state.checkpointRegistry),
-      f13nCheckpointCorrected: state.f13nCheckpointCorrected,
+      northTimetableAlignmentActive: true,
+      northTimetableObserved: state.northTimetableObserved,
+      northSourceMethod: state.northSourceMethod,
+      northActiveStageId: state.northActiveStageId,
+      northActiveGearId: state.northActiveGearId,
+      northActiveCycleNumber: state.northActiveCycleNumber,
+      northActiveCycleRoute: state.northActiveCycleRoute,
+      northActiveCardinal: state.northActiveCardinal,
+      northActiveFileGate: state.northActiveFileGate,
+      northActiveFibonacci: state.northActiveFibonacci,
+      northActiveNewsGate: state.northActiveNewsGate,
+      northC2WestAuditAligned: state.northC2WestAuditAligned,
 
       cycleNumber: state.cycleNumber,
       cycleRoute: state.cycleRoute,
       receivedFrom: state.receivedFrom,
       handoffTo: state.handoffTo,
+      activeCycleInputCardinal: state.activeCycleInputCardinal,
+      activeCycleHandoffTarget: state.activeCycleHandoffTarget,
+      indexPairReady: state.indexPairReady,
+      carrierHostAdmissibilityReady: state.carrierHostAdmissibilityReady,
+      f8SelfDutySatisfied: state.f8SelfDutySatisfied,
+
+      southOutputReady: state.southOutputReady,
+      explicitSouthOutputMarkerObserved: state.explicitSouthOutputMarkerObserved,
+      explicitSouthOutputMarkers: state.explicitSouthOutputMarkers.slice(),
+      cycleTwoSouthOutputObserved: state.cycleTwoSouthOutputObserved,
+      cycleTwoSouthOutputAdmissible: state.cycleTwoSouthOutputAdmissible,
+      southOutputIntakeMethod: state.southOutputIntakeMethod,
 
       currentCanvasParentObserved: state.currentCanvasParentObserved,
       currentCanvasParentContractObserved: state.currentCanvasParentContractObserved,
       currentCanvasParentContract: state.currentCanvasParentContract,
-      currentParentIdentityMismatch: state.currentParentIdentityMismatch,
-      currentParentStaleDetected: state.currentParentStaleDetected,
-      staleParentDetected: state.staleParentDetected,
-      canvasParentBootMethodAvailable: state.canvasParentBootMethodAvailable,
-
-      canvasCarrierReceiptObserved: state.canvasCarrierReceiptObserved,
-      canvasCarrierSourceMethod: state.canvasCarrierSourceMethod,
-      canvasCarrierSourceIsCarrierSpecific: state.canvasCarrierSourceIsCarrierSpecific,
-      canvasCarrierProof: clonePlain(state.canvasCarrierProof),
-
-      structuralCarrierReadyTri: state.structuralCarrierReadyTri,
-      structuralCarrierSafeTri: state.structuralCarrierSafeTri,
-      canvasParentCarrierSafeTri: state.canvasParentCarrierSafeTri,
-      structuralCarrierSafeForCanvasReleaseTri: state.structuralCarrierSafeForCanvasReleaseTri,
-      canvasPreReleaseCarrierSafeForWestTri: state.canvasPreReleaseCarrierSafeForWestTri,
+      currentCanvasParentIsLocalStation: state.currentCanvasParentIsLocalStation,
+      canvasLocalStationContractAccepted: state.canvasLocalStationContractAccepted,
+      canvasBaselineV10_3Recognized: state.canvasBaselineV10_3Recognized,
+      v10_3BaselineRecognizedOnly: state.v10_3BaselineRecognizedOnly,
+      v11OrV11_1RequiredForLocalStationPass: true,
+      canvasLocalStationApiReady: state.canvasLocalStationApiReady,
+      canvasLocalStationSummaryObserved: state.canvasLocalStationSummaryObserved,
+      canvasLocalStationReceiveSurfaceReady: state.canvasLocalStationReceiveSurfaceReady,
+      canvasLocalStationSourceMethod: state.canvasLocalStationSourceMethod,
+      selectedCanvasProofRank: state.selectedCanvasProofRank,
+      selectedCanvasProofUnsafe: state.selectedCanvasProofUnsafe,
 
       carrierIdentitySafe: state.carrierIdentitySafe,
       carrierSafeMarkerObserved: state.carrierSafeMarkerObserved,
-      secondaryCarrierConfidenceObserved: state.secondaryCarrierConfidenceObserved,
-
       preReleaseCarrierAdmissible: state.preReleaseCarrierAdmissible,
-      canvasParentCarrierSafe: state.preReleaseCarrierAdmissible,
-      structuralCarrierSafeForCanvasRelease: state.preReleaseCarrierAdmissible,
       carrierHardBlock: state.carrierHardBlock,
       carrierHeld: state.carrierHeld,
       carrierHoldReason: state.carrierHoldReason,
       explicitUnsafeFields: state.explicitUnsafeFields.slice(),
 
-      indexPairReady: state.indexPairReady,
-      carrierHostAdmissibilityReady: state.carrierHostAdmissibilityReady,
-      f8SelfDutySatisfied: state.f8SelfDutySatisfied,
-      indexPairReadyObserved: state.indexPairReadyObserved,
-      carrierHostAdmissibilityReadyObserved: state.carrierHostAdmissibilityReadyObserved,
-      f8SelfDutySatisfiedObserved: state.f8SelfDutySatisfiedObserved,
-
-      southRouteConductorPacketObserved: state.southRouteConductorPacketObserved,
-      explicitSouthRouteSignalObserved: state.explicitSouthRouteSignalObserved,
-      explicitSouthAdmissibilitySignalObserved: state.explicitSouthAdmissibilitySignalObserved,
-      southOutputReady: state.southOutputReady,
-      routeConductorOutputReady: state.routeConductorOutputReady,
-      routeConductorReleaseCandidate: state.routeConductorReleaseCandidate,
-      cycleTwoSouthOutputObserved: state.cycleTwoSouthOutputObserved,
-      cycleTwoSouthOutputAdmissible: state.cycleTwoSouthOutputAdmissible,
-      southOutputIntakeMethod: state.southOutputIntakeMethod,
-      explicitSouthSignals: state.explicitSouthSignals.slice(),
-
       westAuditObserved: state.westAuditObserved,
+      westAuditIntakeAccepted: state.westAuditIntakeAccepted,
       westAuditAccepted: state.westAuditAccepted,
       westAuditPassed: state.westAuditPassed,
       westDecision: state.westDecision,
@@ -1402,18 +1530,18 @@
       canvasReleaseApprovedByWest: state.canvasReleaseApprovedByWest,
       releaseToCanvas: state.releaseToCanvas,
       canvasReleaseHeldReason: state.canvasReleaseHeldReason,
-
-      releasePacket: clonePlain(state.releasePacket),
-      canvasReleasePacket: clonePlain(state.releasePacket),
+      releasePacket: isObject(state.releasePacket) ? "present" : "null",
+      canvasReleasePacket: isObject(state.releasePacket) ? "present" : "null",
 
       f21EligibleForNorth: false,
       f21SubmittedToNorth: false,
       f21EligibilitySubmittedToNorth: false,
+      f21ClaimedByWest: false,
       completionLatched: false,
+      finalCompletionLatched: false,
+      degradedCompletionLatched: false,
       readyTextAllowed: false,
       visualPassClaimed: false,
-      f21ClaimedByWest: false,
-
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -1421,15 +1549,27 @@
       firstFailedCoordinate: state.firstFailedCoordinate,
       recommendedNextFile: state.recommendedNextFile,
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
-      postgameStatus: state.postgameStatus,
+      postgameStatus: state.postgameStatus
+    };
+  }
+
+  function getReceipt() {
+    return {
+      ...getReceiptLight(),
+      releasePacket: clonePlain(state.releasePacket),
+      canvasReleasePacket: clonePlain(state.releasePacket),
+      lastInput: clonePlain(state.lastInput),
+      lastNorthEvidence: clonePlain(state.lastNorthEvidence),
+      lastCanvasProof: clonePlain(state.lastCanvasProof),
+      lastCanvasCandidates: clonePlain(state.lastCanvasCandidates)
     };
   }
 
   function getReceiptText() {
-    const r = getReceipt();
+    const r = getReceiptLight();
 
     return [
-      "LAB_RUNTIME_TABLE_CARDINAL_WEST_CURRENT_CANVAS_PARENT_V10_3_CARRIER_COMPATIBILITY_RECEIPT",
+      "LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_TIMETABLE_ALIGNED_LOCAL_ADMISSIBILITY_CLUTCH_RECEIPT",
       "",
       `timestamp=${r.timestamp}`,
       `contract=${r.contract}`,
@@ -1441,66 +1581,59 @@
       `route=${r.route}`,
       `role=${r.role}`,
       "",
-      `westRuntimeTableLoaded=${r.westRuntimeTableLoaded}`,
-      `westV4_2Active=${r.westV4_2Active}`,
-      `westV4_1Superseded=${r.westV4_1Superseded}`,
-      `westV4Superseded=${r.westV4Superseded}`,
-      `westV3Superseded=${r.westV3Superseded}`,
-      "",
-      `f13nCheckpointCorrected=${r.f13nCheckpointCorrected}`,
+      `northTimetableAlignmentActive=${r.northTimetableAlignmentActive}`,
+      `northTimetableObserved=${r.northTimetableObserved}`,
+      `northSourceMethod=${r.northSourceMethod}`,
+      `northActiveStageId=${r.northActiveStageId}`,
+      `northActiveGearId=${r.northActiveGearId}`,
+      `northActiveCycleNumber=${r.northActiveCycleNumber}`,
+      `northActiveCycleRoute=${r.northActiveCycleRoute}`,
+      `northActiveCardinal=${r.northActiveCardinal}`,
+      `northActiveFileGate=${r.northActiveFileGate}`,
+      `northActiveFibonacci=${r.northActiveFibonacci}`,
+      `northActiveNewsGate=${r.northActiveNewsGate}`,
+      `northC2WestAuditAligned=${r.northC2WestAuditAligned}`,
       "",
       `cycleNumber=${r.cycleNumber}`,
       `cycleRoute=${r.cycleRoute}`,
       `receivedFrom=${r.receivedFrom}`,
       `handoffTo=${r.handoffTo}`,
+      `activeCycleInputCardinal=${r.activeCycleInputCardinal}`,
+      `activeCycleHandoffTarget=${r.activeCycleHandoffTarget}`,
+      `indexPairReady=${r.indexPairReady}`,
+      `carrierHostAdmissibilityReady=${r.carrierHostAdmissibilityReady}`,
+      `f8SelfDutySatisfied=${r.f8SelfDutySatisfied}`,
+      `southOutputReady=${r.southOutputReady}`,
+      `cycleTwoSouthOutputObserved=${r.cycleTwoSouthOutputObserved}`,
+      `cycleTwoSouthOutputAdmissible=${r.cycleTwoSouthOutputAdmissible}`,
+      `southOutputIntakeMethod=${r.southOutputIntakeMethod}`,
+      `explicitSouthOutputMarkers=${r.explicitSouthOutputMarkers.join(",") || "none"}`,
       "",
       `currentCanvasParentObserved=${r.currentCanvasParentObserved}`,
       `currentCanvasParentContractObserved=${r.currentCanvasParentContractObserved}`,
       `currentCanvasParentContract=${r.currentCanvasParentContract}`,
-      `currentParentIdentityMismatch=${r.currentParentIdentityMismatch}`,
-      `currentParentStaleDetected=${r.currentParentStaleDetected}`,
-      `staleParentDetected=${r.staleParentDetected}`,
-      `canvasParentBootMethodAvailable=${r.canvasParentBootMethodAvailable}`,
+      `currentCanvasParentIsLocalStation=${r.currentCanvasParentIsLocalStation}`,
+      `canvasLocalStationContractAccepted=${r.canvasLocalStationContractAccepted}`,
+      `canvasBaselineV10_3Recognized=${r.canvasBaselineV10_3Recognized}`,
+      `v10_3BaselineRecognizedOnly=${r.v10_3BaselineRecognizedOnly}`,
+      `v11OrV11_1RequiredForLocalStationPass=${r.v11OrV11_1RequiredForLocalStationPass}`,
+      `canvasLocalStationApiReady=${r.canvasLocalStationApiReady}`,
+      `canvasLocalStationSummaryObserved=${r.canvasLocalStationSummaryObserved}`,
+      `canvasLocalStationReceiveSurfaceReady=${r.canvasLocalStationReceiveSurfaceReady}`,
+      `canvasLocalStationSourceMethod=${r.canvasLocalStationSourceMethod}`,
+      `selectedCanvasProofRank=${r.selectedCanvasProofRank}`,
+      `selectedCanvasProofUnsafe=${r.selectedCanvasProofUnsafe}`,
       "",
-      `canvasCarrierReceiptObserved=${r.canvasCarrierReceiptObserved}`,
-      `canvasCarrierSourceMethod=${r.canvasCarrierSourceMethod}`,
-      `canvasCarrierSourceIsCarrierSpecific=${r.canvasCarrierSourceIsCarrierSpecific}`,
-      `structuralCarrierReadyTri=${r.structuralCarrierReadyTri}`,
-      `structuralCarrierSafeTri=${r.structuralCarrierSafeTri}`,
-      `canvasParentCarrierSafeTri=${r.canvasParentCarrierSafeTri}`,
-      `structuralCarrierSafeForCanvasReleaseTri=${r.structuralCarrierSafeForCanvasReleaseTri}`,
-      `canvasPreReleaseCarrierSafeForWestTri=${r.canvasPreReleaseCarrierSafeForWestTri}`,
       `carrierIdentitySafe=${r.carrierIdentitySafe}`,
       `carrierSafeMarkerObserved=${r.carrierSafeMarkerObserved}`,
-      `secondaryCarrierConfidenceObserved=${r.secondaryCarrierConfidenceObserved}`,
-      "",
       `preReleaseCarrierAdmissible=${r.preReleaseCarrierAdmissible}`,
-      `canvasParentCarrierSafe=${r.canvasParentCarrierSafe}`,
-      `structuralCarrierSafeForCanvasRelease=${r.structuralCarrierSafeForCanvasRelease}`,
       `carrierHardBlock=${r.carrierHardBlock}`,
       `carrierHeld=${r.carrierHeld}`,
       `carrierHoldReason=${r.carrierHoldReason}`,
       `explicitUnsafeFields=${r.explicitUnsafeFields.join(",") || "none"}`,
       "",
-      `indexPairReady=${r.indexPairReady}`,
-      `carrierHostAdmissibilityReady=${r.carrierHostAdmissibilityReady}`,
-      `f8SelfDutySatisfied=${r.f8SelfDutySatisfied}`,
-      `indexPairReadyObserved=${r.indexPairReadyObserved}`,
-      `carrierHostAdmissibilityReadyObserved=${r.carrierHostAdmissibilityReadyObserved}`,
-      `f8SelfDutySatisfiedObserved=${r.f8SelfDutySatisfiedObserved}`,
-      "",
-      `southRouteConductorPacketObserved=${r.southRouteConductorPacketObserved}`,
-      `explicitSouthRouteSignalObserved=${r.explicitSouthRouteSignalObserved}`,
-      `explicitSouthAdmissibilitySignalObserved=${r.explicitSouthAdmissibilitySignalObserved}`,
-      `southOutputReady=${r.southOutputReady}`,
-      `routeConductorOutputReady=${r.routeConductorOutputReady}`,
-      `routeConductorReleaseCandidate=${r.routeConductorReleaseCandidate}`,
-      `cycleTwoSouthOutputObserved=${r.cycleTwoSouthOutputObserved}`,
-      `cycleTwoSouthOutputAdmissible=${r.cycleTwoSouthOutputAdmissible}`,
-      `southOutputIntakeMethod=${r.southOutputIntakeMethod}`,
-      `explicitSouthSignals=${r.explicitSouthSignals.join(",") || "none"}`,
-      "",
       `westAuditObserved=${r.westAuditObserved}`,
+      `westAuditIntakeAccepted=${r.westAuditIntakeAccepted}`,
       `westAuditAccepted=${r.westAuditAccepted}`,
       `westAuditPassed=${r.westAuditPassed}`,
       `westDecision=${r.westDecision}`,
@@ -1514,17 +1647,18 @@
       `canvasReleaseApprovedByWest=${r.canvasReleaseApprovedByWest}`,
       `releaseToCanvas=${r.releaseToCanvas}`,
       `canvasReleaseHeldReason=${r.canvasReleaseHeldReason}`,
-      `releasePacket=${r.releasePacket ? "present" : "null"}`,
-      `canvasReleasePacket=${r.canvasReleasePacket ? "present" : "null"}`,
+      `releasePacket=${r.releasePacket}`,
+      `canvasReleasePacket=${r.canvasReleasePacket}`,
       "",
       `f21EligibleForNorth=${r.f21EligibleForNorth}`,
       `f21SubmittedToNorth=${r.f21SubmittedToNorth}`,
       `f21EligibilitySubmittedToNorth=${r.f21EligibilitySubmittedToNorth}`,
+      `f21ClaimedByWest=${r.f21ClaimedByWest}`,
       `completionLatched=${r.completionLatched}`,
+      `finalCompletionLatched=${r.finalCompletionLatched}`,
+      `degradedCompletionLatched=${r.degradedCompletionLatched}`,
       `readyTextAllowed=${r.readyTextAllowed}`,
       `visualPassClaimed=${r.visualPassClaimed}`,
-      `f21ClaimedByWest=${r.f21ClaimedByWest}`,
-      "",
       `generatedImage=${r.generatedImage}`,
       `graphicBox=${r.graphicBox}`,
       `webGL=${r.webGL}`,
@@ -1532,129 +1666,130 @@
       `firstFailedCoordinate=${r.firstFailedCoordinate}`,
       `recommendedNextFile=${r.recommendedNextFile}`,
       `recommendedNextRenewalTarget=${r.recommendedNextRenewalTarget}`,
-      `postgameStatus=${r.postgameStatus}`,
+      `postgameStatus=${r.postgameStatus}`
     ].join("\n");
   }
 
   function updateDataset() {
-    const doc = getDocument();
-    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return false;
+    setDataset("labRuntimeTableWestLoaded", "true");
+    setDataset("labRuntimeTableWestContract", CONTRACT);
+    setDataset("labRuntimeTableWestReceipt", RECEIPT);
+    setDataset("hearthWestRuntimeTableLoaded", "true");
+    setDataset("hearthWestRuntimeTableContract", CONTRACT);
+    setDataset("hearthWestRuntimeTableReceipt", RECEIPT);
 
-    const ds = doc.documentElement.dataset;
+    setDataset("hearthWestNorthTimetableAligned", String(Boolean(state.northC2WestAuditAligned)));
+    setDataset("hearthWestNorthActiveStageId", state.northActiveStageId);
+    setDataset("hearthWestNorthActiveGearId", state.northActiveGearId);
+    setDataset("hearthWestNorthActiveFileGate", state.northActiveFileGate);
+    setDataset("hearthWestNorthActiveCycleRoute", state.northActiveCycleRoute);
+    setDataset("hearthWestNorthActiveFibonacci", state.northActiveFibonacci);
+    setDataset("hearthWestNorthActiveNewsGate", state.northActiveNewsGate);
 
-    ds.labRuntimeTableWestLoaded = "true";
-    ds.labRuntimeTableWestContract = CONTRACT;
-    ds.labRuntimeTableWestReceipt = RECEIPT;
-    ds.labRuntimeTableWestV4_2Active = "true";
-    ds.labRuntimeTableWestV4_1Superseded = "true";
-    ds.labRuntimeTableWestV4Superseded = "true";
-    ds.labRuntimeTableWestV3Superseded = "true";
+    setDataset("hearthWestCycleNumber", String(state.cycleNumber));
+    setDataset("hearthWestCycleRoute", state.cycleRoute);
+    setDataset("hearthWestReceivedFrom", state.receivedFrom);
+    setDataset("hearthWestHandoffTo", state.handoffTo);
+    setDataset("hearthWestSouthOutputReady", String(Boolean(state.southOutputReady)));
+    setDataset("hearthWestCycleTwoSouthOutputAdmissible", String(Boolean(state.cycleTwoSouthOutputAdmissible)));
 
-    ds.hearthWestRuntimeTableLoaded = "true";
-    ds.hearthWestRuntimeTableContract = CONTRACT;
-    ds.hearthWestRuntimeTableReceipt = RECEIPT;
+    setDataset("hearthWestCurrentCanvasParentContract", state.currentCanvasParentContract);
+    setDataset("hearthWestCurrentCanvasParentIsLocalStation", String(Boolean(state.currentCanvasParentIsLocalStation)));
+    setDataset("hearthWestCanvasLocalStationContractAccepted", String(Boolean(state.canvasLocalStationContractAccepted)));
+    setDataset("hearthWestV10_3BaselineRecognizedOnly", String(Boolean(state.v10_3BaselineRecognizedOnly)));
+    setDataset("hearthWestCanvasLocalStationApiReady", String(Boolean(state.canvasLocalStationApiReady)));
+    setDataset("hearthWestCanvasLocalStationSummaryObserved", String(Boolean(state.canvasLocalStationSummaryObserved)));
+    setDataset("hearthWestCanvasLocalStationReceiveSurfaceReady", String(Boolean(state.canvasLocalStationReceiveSurfaceReady)));
+    setDataset("hearthWestSelectedCanvasProofRank", String(state.selectedCanvasProofRank));
+    setDataset("hearthWestSelectedCanvasProofUnsafe", String(Boolean(state.selectedCanvasProofUnsafe)));
 
-    ds.hearthWestF13NCheckpointCorrected = String(Boolean(state.f13nCheckpointCorrected));
+    setDataset("hearthWestAuditObserved", String(Boolean(state.westAuditObserved)));
+    setDataset("hearthWestAuditIntakeAccepted", String(Boolean(state.westAuditIntakeAccepted)));
+    setDataset("hearthWestAuditAccepted", String(Boolean(state.westAuditAccepted)));
+    setDataset("hearthWestAuditPassed", String(Boolean(state.westAuditPassed)));
+    setDataset("hearthWestDecision", state.westDecision);
+    setDataset("hearthWestGapClass", state.westGapClass);
+    setDataset("hearthWestHardBlock", String(Boolean(state.westHardBlock)));
+    setDataset("hearthWestForwardAllowed", String(Boolean(state.westForwardAllowed)));
+    setDataset("hearthWestCanvasReleaseApproved", String(Boolean(state.westCanvasReleaseApproved)));
 
-    ds.hearthWestCycleNumber = String(state.cycleNumber);
-    ds.hearthWestCycleRoute = state.cycleRoute;
-    ds.hearthWestReceivedFrom = state.receivedFrom;
-    ds.hearthWestHandoffTo = state.handoffTo;
+    setDataset("hearthCanvasReleaseAuthorized", String(Boolean(state.canvasReleaseAuthorized)));
+    setDataset("hearthCanvasReleasePacketReady", String(Boolean(state.canvasReleasePacketReady)));
+    setDataset("hearthCanvasReleaseApprovedByWest", String(Boolean(state.canvasReleaseApprovedByWest)));
+    setDataset("hearthReleaseToCanvas", String(Boolean(state.releaseToCanvas)));
+    setDataset("hearthCanvasReleaseHeldReason", state.canvasReleaseHeldReason);
 
-    ds.hearthWestCurrentCanvasParentObserved = String(Boolean(state.currentCanvasParentObserved));
-    ds.hearthWestCurrentCanvasParentContractObserved = String(Boolean(state.currentCanvasParentContractObserved));
-    ds.hearthWestCurrentCanvasParentContract = state.currentCanvasParentContract;
-    ds.hearthWestCanvasParentBootMethodAvailable = String(Boolean(state.canvasParentBootMethodAvailable));
+    setDataset("hearthWestFirstFailedCoordinate", state.firstFailedCoordinate);
+    setDataset("hearthWestRecommendedNextFile", state.recommendedNextFile);
+    setDataset("hearthWestRecommendedNextRenewalTarget", state.recommendedNextRenewalTarget);
+    setDataset("hearthWestPostgameStatus", state.postgameStatus);
 
-    ds.hearthWestCanvasCarrierReceiptObserved = String(Boolean(state.canvasCarrierReceiptObserved));
-    ds.hearthWestCanvasCarrierSourceMethod = state.canvasCarrierSourceMethod;
-    ds.hearthWestCanvasCarrierSourceIsCarrierSpecific = String(Boolean(state.canvasCarrierSourceIsCarrierSpecific));
+    setDataset("hearthWestF21EligibleForNorth", "false");
+    setDataset("hearthWestF21SubmittedToNorth", "false");
+    setDataset("hearthWestCompletionLatched", "false");
+    setDataset("hearthWestReadyTextAllowed", "false");
+    setDataset("hearthWestVisualPassClaimed", "false");
+    setDataset("generatedImage", "false");
+    setDataset("graphicBox", "false");
+    setDataset("webgl", "false");
+    setDataset("visualPassClaimed", "false");
 
-    ds.hearthWestCarrierIdentitySafe = String(Boolean(state.carrierIdentitySafe));
-    ds.hearthWestCarrierSafeMarkerObserved = String(Boolean(state.carrierSafeMarkerObserved));
-    ds.hearthWestSecondaryCarrierConfidenceObserved = String(Boolean(state.secondaryCarrierConfidenceObserved));
+    return true;
+  }
 
-    ds.hearthWestPreReleaseCarrierAdmissible = String(Boolean(state.preReleaseCarrierAdmissible));
-    ds.hearthWestCanvasParentCarrierSafe = String(Boolean(state.preReleaseCarrierAdmissible));
-    ds.hearthWestStructuralCarrierSafeForCanvasRelease = String(Boolean(state.preReleaseCarrierAdmissible));
-    ds.hearthWestCarrierHardBlock = String(Boolean(state.carrierHardBlock));
-    ds.hearthWestCarrierHeld = String(Boolean(state.carrierHeld));
-    ds.hearthWestCarrierHoldReason = state.carrierHoldReason;
+  function publishReceiptAliases() {
+    const w = root();
+    const full = getReceipt();
+    const light = getReceiptLight();
 
-    ds.hearthWestIndexPairReady = String(Boolean(state.indexPairReady));
-    ds.hearthWestCarrierHostAdmissibilityReady = String(Boolean(state.carrierHostAdmissibilityReady));
-    ds.hearthWestF8SelfDutySatisfied = String(Boolean(state.f8SelfDutySatisfied));
-    ds.hearthWestIndexPairReadyObserved = String(Boolean(state.indexPairReadyObserved));
-    ds.hearthWestCarrierHostAdmissibilityReadyObserved = String(Boolean(state.carrierHostAdmissibilityReadyObserved));
-    ds.hearthWestF8SelfDutySatisfiedObserved = String(Boolean(state.f8SelfDutySatisfiedObserved));
-
-    ds.hearthWestSouthRouteConductorPacketObserved = String(Boolean(state.southRouteConductorPacketObserved));
-    ds.hearthWestExplicitSouthRouteSignalObserved = String(Boolean(state.explicitSouthRouteSignalObserved));
-    ds.hearthWestExplicitSouthAdmissibilitySignalObserved = String(Boolean(state.explicitSouthAdmissibilitySignalObserved));
-    ds.hearthWestSouthOutputReady = String(Boolean(state.southOutputReady));
-    ds.hearthWestRouteConductorOutputReady = String(Boolean(state.routeConductorOutputReady));
-    ds.hearthWestRouteConductorReleaseCandidate = String(Boolean(state.routeConductorReleaseCandidate));
-    ds.hearthWestCycleTwoSouthOutputObserved = String(Boolean(state.cycleTwoSouthOutputObserved));
-    ds.hearthWestCycleTwoSouthOutputAdmissible = String(Boolean(state.cycleTwoSouthOutputAdmissible));
-    ds.hearthWestSouthOutputIntakeMethod = state.southOutputIntakeMethod;
-
-    ds.hearthWestAuditObserved = String(Boolean(state.westAuditObserved));
-    ds.hearthWestAuditAccepted = String(Boolean(state.westAuditAccepted));
-    ds.hearthWestAuditPassed = String(Boolean(state.westAuditPassed));
-    ds.hearthWestDecision = state.westDecision;
-    ds.hearthWestGapClass = state.westGapClass;
-    ds.hearthWestHardBlock = String(Boolean(state.westHardBlock));
-    ds.hearthWestForwardAllowed = String(Boolean(state.westForwardAllowed));
-    ds.hearthWestCanvasReleaseApproved = String(Boolean(state.westCanvasReleaseApproved));
-
-    ds.hearthCanvasReleaseAuthorized = String(Boolean(state.canvasReleaseAuthorized));
-    ds.hearthCanvasReleasePacketReady = String(Boolean(state.canvasReleasePacketReady));
-    ds.hearthCanvasReleaseApprovedByWest = String(Boolean(state.canvasReleaseApprovedByWest));
-    ds.hearthReleaseToCanvas = String(Boolean(state.releaseToCanvas));
-    ds.hearthCanvasReleaseHeldReason = state.canvasReleaseHeldReason;
-
-    ds.hearthWestF21EligibleForNorth = "false";
-    ds.hearthWestF21SubmittedToNorth = "false";
-    ds.hearthWestCompletionLatched = "false";
-    ds.hearthWestReadyTextAllowed = "false";
-    ds.hearthWestVisualPassClaimed = "false";
-    ds.visualPassClaimed = "false";
-
-    ds.hearthWestFirstFailedCoordinate = state.firstFailedCoordinate;
-    ds.hearthWestRecommendedNextFile = state.recommendedNextFile;
-    ds.hearthWestRecommendedNextRenewalTarget = state.recommendedNextRenewalTarget;
-    ds.hearthWestPostgameStatus = state.postgameStatus;
+    w.LAB_RUNTIME_TABLE_WEST_RECEIPT = light;
+    w.LAB_RUNTIME_TABLE_CARDINAL_WEST_RECEIPT = full;
+    w.LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_TIMETABLE_ALIGNED_LOCAL_ADMISSIBILITY_CLUTCH_RECEIPT = full;
+    w.LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_TIMETABLE_ALIGNED_LOCAL_ADMISSIBILITY_CLUTCH_RECEIPT_v4_6_3 = full;
+    w.LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_TIMETABLE_ALIGNED_LOCAL_ADMISSIBILITY_CLUTCH_RECEIPT_v4_6_2 = full;
+    w.LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_TIMETABLE_ALIGNED_LOCAL_ADMISSIBILITY_CLUTCH_RECEIPT_v4_6_1 = full;
+    w.LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_TIMETABLE_ALIGNED_LOCAL_ADMISSIBILITY_CLUTCH_RECEIPT_v4_6 = full;
+    w.LAB_RUNTIME_TABLE_CARDINAL_WEST_V11_1_LOCAL_STATION_ALIAS_SELECTION_STRICT_SOUTH_AND_CANVAS_PROOF_RANKING_RECEIPT_v4_5 = full;
+    w.LAB_RUNTIME_TABLE_CARDINAL_WEST_V11_1_LOCAL_STATION_ALIAS_SELECTION_AND_CARRIER_COMPATIBILITY_RECEIPT_v4_4 = full;
+    w.LAB_RUNTIME_TABLE_CARDINAL_WEST_V11_1_LOCAL_STATION_CARRIER_COMPATIBILITY_RECEIPT_v4_3 = full;
+    w.LAB_RUNTIME_TABLE_CARDINAL_WEST_CURRENT_CANVAS_PARENT_V10_3_CARRIER_COMPATIBILITY_RECEIPT_v4_2 = full;
 
     return true;
   }
 
   function publishGlobals() {
-    const w = getWindow();
+    const w = root();
     const lab = ensureObject(w, "DEXTER_LAB");
     const h = ensureObject(w, "HEARTH");
 
-    lab.runtimeTableWest = api;
-    lab.hearthRuntimeTableWest = api;
-    lab.westAdmissibility = api;
-
-    h.runtimeTableWest = api;
-    h.westRuntimeTable = api;
-    h.westAdmissibility = api;
-    h.macroWestAuthority = api;
-
+    w.LAB_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_WEST = api;
+    w.HEARTH_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH = api;
     w.LAB_RUNTIME_TABLE_WEST = api;
+    w.RUNTIME_TABLE_WEST = api;
+    w.DEXTER_LAB_RUNTIME_TABLE_WEST = api;
+    w.LAB_CARDINAL_RUNTIME_TABLE_WEST = api;
+    w.LAB_GAP_CLASSIFIER_WEST = api;
+    w.LAB_TRANSMISSION_GAP_CLASSIFIER_WEST = api;
     w.LAB_RUNTIME_TABLE_CARDINAL_WEST = api;
     w.HEARTH_RUNTIME_TABLE_WEST = api;
     w.HEARTH_MACRO_WEST_AUTHORITY = api;
     w.HEARTH_WEST_ADMISSIBILITY = api;
 
-    w.LAB_RUNTIME_TABLE_WEST_RECEIPT = getReceiptLight();
-    w.LAB_RUNTIME_TABLE_CARDINAL_WEST_RECEIPT = getReceipt();
-    w.LAB_RUNTIME_TABLE_CARDINAL_WEST_CURRENT_CANVAS_PARENT_V10_3_CARRIER_COMPATIBILITY_RECEIPT = getReceipt();
-    w.LAB_RUNTIME_TABLE_CARDINAL_WEST_CURRENT_CANVAS_PARENT_V10_3_CARRIER_COMPATIBILITY_RECEIPT_v4_2 = getReceipt();
+    h.runtimeTableWest = api;
+    h.westRuntimeTable = api;
+    h.westAdmissibility = api;
+    h.macroWestAuthority = api;
+    h.westCycleAwareAdmissibilityClutch = api;
 
-    h.westReceipt = getReceiptLight();
-    lab.hearthRuntimeTableWestReceipt = getReceipt();
+    lab.runtimeTableWest = api;
+    lab.hearthRuntimeTableWest = api;
+    lab.cardinalRuntimeTableWest = api;
+    lab.gapClassifierWest = api;
+    lab.transmissionGapClassifierWest = api;
+    lab.westAdmissibility = api;
+    lab.cycleAwareAdmissibilityClutchWest = api;
+
+    publishReceiptAliases();
 
     if (state.releasePacket) {
       publishCanvasReleasePacket(state.releasePacket);
@@ -1665,35 +1800,51 @@
     return api;
   }
 
+  function scheduleAliasRepublish() {
+    const w = root();
+    const delays = [0, 16, 80, 240, 700];
+
+    delays.forEach((delay) => {
+      if (isFunction(w.setTimeout)) {
+        w.setTimeout(() => {
+          publishGlobals();
+          updateDataset();
+        }, delay);
+      }
+    });
+  }
+
   const api = {
     CONTRACT,
     RECEIPT,
     PREVIOUS_CONTRACT,
     BASELINE_CONTRACT,
+    VERSION,
     FILE,
     ROUTE,
-    CANVAS_PARENT_FILE,
+    NORTH_FILE,
     ROUTE_CONDUCTOR_FILE,
-    CANVAS_PARENT_V10_3_CONTRACT,
+    CANVAS_LOCAL_STATION_FILE,
 
-    TRI,
-    CHECKPOINT_IDS,
+    ACTIVE_STAGE_ID,
+    ACTIVE_GEAR,
+    ACTIVE_CYCLE_NUMBER,
+    ACTIVE_CYCLE_ROUTE,
+    ACTIVE_CARDINAL,
+    ACTIVE_FIBONACCI,
+    ACTIVE_NEWS_GATE,
+
     WEST_DECISION,
+    WEST_GAP_CLASS,
+    CANVAS_LOCAL_STATION_CONTRACTS,
+    CANVAS_BASELINE_V10_3_CONTRACT,
 
-    checkpoint,
-    initializeCheckpoints,
-
-    readCanvasParentCarrier,
-    assessPreReleaseCarrierAdmissibility,
+    readNorthTimetableLight,
+    normalizeNorthTimetable,
+    isNorthCallingWestForCycleTwoCanvasAudit,
+    normalizeCycleInput,
+    selectCanvasLocalStationProof,
     classifyWestAdmissibility,
-    composeCanvasReleasePacket,
-    publishCanvasReleasePacket,
-    clearCanvasReleasePacket,
-
-    getCanvasReleasePacket,
-    getReleasePacket,
-    getCanvasHandoffPacket,
-    getHandoffPacket,
 
     assess,
     inspect,
@@ -1706,13 +1857,53 @@
     getReceipt,
     getReceiptLight,
     getReceiptText,
+    getCanvasReleasePacket,
+    getReleasePacket,
+    getCanvasHandoffPacket,
+    getHandoffPacket,
+
+    clearCanvasReleasePacket,
+    publishCanvasReleasePacket,
     updateDataset,
     publishGlobals,
 
-    getState: () => clonePlain(state),
+    getState: () => clonePlain(state)
   };
 
-  initializeCheckpoints();
   publishGlobals();
-  classifyWestAdmissibility({});
+  updateDataset();
+
+  try {
+    classifyWestAdmissibility({});
+  } catch (_error) {
+    state.timestamp = nowIso();
+    state.westAuditObserved = true;
+    state.westAuditIntakeAccepted = false;
+    state.westAuditAccepted = false;
+    state.westAuditPassed = false;
+    state.westDecision = WEST_DECISION.HOLD;
+    state.westGapClass = WEST_GAP_CLASS.NORTH_TIMETABLE_HOLD;
+    state.westHardBlock = false;
+    state.westForwardAllowed = false;
+    state.westCanvasReleaseApproved = false;
+    state.canvasReleaseAuthorized = false;
+    state.canvasReleasePacketReady = false;
+    state.canvasReleaseApprovedByWest = false;
+    state.releaseToCanvas = false;
+    state.canvasReleaseHeldReason = "WAITING_NORTH_TIMETABLE_C2_WEST_AUDIT";
+    state.firstFailedCoordinate = "WAITING_NORTH_TIMETABLE_C2_WEST_AUDIT";
+    state.recommendedNextFile = NORTH_FILE;
+    state.recommendedNextRenewalTarget = NORTH_FILE;
+    state.postgameStatus = "WEST_HOLD_INITIALIZATION_SAFE";
+    blockFinalClaims();
+    clearCanvasReleasePacket();
+    updateDataset();
+    publishGlobals();
+  }
+
+  scheduleAliasRepublish();
+
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = api;
+  }
 })();

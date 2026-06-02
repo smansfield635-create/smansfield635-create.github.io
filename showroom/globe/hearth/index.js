@@ -1,28 +1,24 @@
 // /showroom/globe/hearth/index.js
-// HEARTH_INDEX_JS_TWO_FILE_NEWS_FIBONACCI_CARRIER_HOST_ALIGNMENT_TNT_v5
+// HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_TNT_v5_1
 // Full-file replacement.
 // Index JS / HTML-shell anchor auditor / control binder / runtime host / carrier-host admissibility publisher.
+// Narrow repair over:
+// - HEARTH_INDEX_JS_TWO_FILE_NEWS_FIBONACCI_CARRIER_HOST_ALIGNMENT_TNT_v5
 // Purpose:
-// - Preserve /showroom/globe/hearth/index.html as the visible shell owner.
-// - Keep this file from generating the visible route shell, cockpit, loading bar, receipt panel, portal, or CSS.
-// - Audit existing HTML shell anchors and hold cleanly when the shell is missing.
-// - Bind existing controls only when the HTML anchors exist.
-// - Release runtime scripts without reintroducing WAITING_MATCHED_MALE_HTML_SHELL contradiction.
-// - Publish carrierHostAdmissibilityReady for /showroom/globe/hearth/hearth.js.
-// - Separate carrier-host admissibility from Canvas structural proof.
-// - Keep Canvas parent / Canvas children as downstream F13 evidence authorities.
-// - Keep /showroom/globe/hearth/hearth.js as route conductor / macro-cycle coordination consumer.
-// - Keep F21 North-only.
-// - Never claim ready text, F21 latch, final visual pass, generated image, GraphicBox, or WebGL.
+// - Preserve accepted v5 structure.
+// - Correct fatal parser defect caused by duplicate `const api` declaration.
+// - Keep early `const api = {};` and populate it with Object.assign(api, {...}).
+// - Restore boot/control binding for Copy Diagnostic, Show Receipt, Inspect Planet, and Expand Cockpit.
+// - Do not alter HTML shell, runtime loading order, Canvas, Route Conductor, West, child files, visual shell, generated image, GraphicBox, WebGL, ready text, F21, or final visual pass claims.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_INDEX_JS_TWO_FILE_NEWS_FIBONACCI_CARRIER_HOST_ALIGNMENT_TNT_v5";
-  const RECEIPT = "HEARTH_INDEX_JS_TWO_FILE_NEWS_FIBONACCI_CARRIER_HOST_ALIGNMENT_RECEIPT_v5";
-  const PREVIOUS_CONTRACT = "HEARTH_INDEX_JS_HTML_SHELL_ANCHOR_AUDIT_RUNTIME_HOST_TNT_v4";
-  const BASELINE_CONTRACT = "HEARTH_INDEX_JS_HTML_SHELL_ANCHOR_AUDIT_RUNTIME_HOST_TNT_v4";
-  const VERSION = "2026-06-01.hearth-index-js-two-file-news-fibonacci-carrier-host-alignment-v5";
+  const CONTRACT = "HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_TNT_v5_1";
+  const RECEIPT = "HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_RECEIPT_v5_1";
+  const PREVIOUS_CONTRACT = "HEARTH_INDEX_JS_TWO_FILE_NEWS_FIBONACCI_CARRIER_HOST_ALIGNMENT_TNT_v5";
+  const BASELINE_CONTRACT = "HEARTH_INDEX_JS_TWO_FILE_NEWS_FIBONACCI_CARRIER_HOST_ALIGNMENT_TNT_v5";
+  const VERSION = "2026-06-02.hearth-index-js-api-redeclaration-control-binding-repair-v5-1";
 
   const ROUTE = "/showroom/globe/hearth/";
   const FILE = "/showroom/globe/hearth/index.js";
@@ -43,6 +39,7 @@
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
+  const api = {};
 
   const REQUIRED_HTML_ANCHORS = Object.freeze([
     "#hearth-main",
@@ -211,9 +208,13 @@
     htmlFile: HTML_FILE,
     route: ROUTE,
 
-    role: "index-js-two-file-news-fibonacci-carrier-host-alignment",
+    role: "index-js-api-redeclaration-control-binding-repair",
     pairRole: "female-runtime-host-for-male-route-conductor",
     pairedRouteConductorFile: PAIRED_ROUTE_CONDUCTOR_FILE,
+
+    parserRepairActive: true,
+    apiRedeclarationRepairActive: true,
+    priorApiRedeclarationFatalDefectCorrected: true,
 
     htmlOwnsVisibleShell: true,
     indexJsCreatesVisibleShell: false,
@@ -979,7 +980,7 @@
     return canvasDef ? firstGlobal(canvasDef.globals) : null;
   }
 
-  function normalizeCanvasCarrierReceipt(result, api) {
+  function normalizeCanvasCarrierReceipt(result, apiObject) {
     const receipt = isObject(result) && (
       result.contract ||
       result.receipt ||
@@ -987,7 +988,7 @@
       result.preReleaseStructuralCarrierSafe !== undefined
     )
       ? result
-      : readReceipt(api) || {};
+      : readReceipt(apiObject) || {};
 
     const safe = Boolean(
       safeBool(receipt.structuralCarrierSafeForCanvasRelease, false) ||
@@ -1036,19 +1037,19 @@
       return false;
     }
 
-    const api = findCanvasParentApi();
+    const canvasApi = findCanvasParentApi();
 
-    state.canvasParentObserved = Boolean(api);
-    state.canvasParentApiReady = Boolean(api && (
-      isFunction(api.ensurePreReleaseStructuralCarrier) ||
-      isFunction(api.ensureCarrier) ||
-      isFunction(api.mount) ||
-      isFunction(api.boot) ||
-      isFunction(api.bootCooperative) ||
-      isFunction(api.getReceipt)
+    state.canvasParentObserved = Boolean(canvasApi);
+    state.canvasParentApiReady = Boolean(canvasApi && (
+      isFunction(canvasApi.ensurePreReleaseStructuralCarrier) ||
+      isFunction(canvasApi.ensureCarrier) ||
+      isFunction(canvasApi.mount) ||
+      isFunction(canvasApi.boot) ||
+      isFunction(canvasApi.bootCooperative) ||
+      isFunction(canvasApi.getReceipt)
     ));
 
-    if (!api || !state.canvasParentApiReady) {
+    if (!canvasApi || !state.canvasParentApiReady) {
       state.canvasPreReleaseCarrierRequested = false;
       state.canvasPreReleaseCarrierObserved = false;
       state.canvasPreReleaseCarrierAccepted = false;
@@ -1083,14 +1084,14 @@
         visualPassClaimed: false
       };
 
-      if (isFunction(api.ensurePreReleaseStructuralCarrier)) {
-        result = api.ensurePreReleaseStructuralCarrier(input);
-      } else if (isFunction(api.ensureCarrier)) {
-        result = api.ensureCarrier(input);
-      } else if (isFunction(api.mount)) {
-        result = api.mount(input);
-      } else if (isFunction(api.getReceipt)) {
-        result = api.getReceipt();
+      if (isFunction(canvasApi.ensurePreReleaseStructuralCarrier)) {
+        result = canvasApi.ensurePreReleaseStructuralCarrier(input);
+      } else if (isFunction(canvasApi.ensureCarrier)) {
+        result = canvasApi.ensureCarrier(input);
+      } else if (isFunction(canvasApi.mount)) {
+        result = canvasApi.mount(input);
+      } else if (isFunction(canvasApi.getReceipt)) {
+        result = canvasApi.getReceipt();
       }
     } catch (error) {
       state.runtimeErrors.push({
@@ -1107,7 +1108,7 @@
       return false;
     }
 
-    const normalized = normalizeCanvasCarrierReceipt(result, api);
+    const normalized = normalizeCanvasCarrierReceipt(result, canvasApi);
 
     state.canvasParentReceipt = clonePlain(normalized.receipt);
     state.canvasCarrierReceiptObserved = Boolean(normalized.receipt && (normalized.receipt.contract || normalized.receipt.receipt));
@@ -1581,6 +1582,8 @@
     setDataset("hearthIndexJsVersion", VERSION);
     setDataset("hearthIndexJsFile", FILE);
     setDataset("hearthIndexJsRoute", ROUTE);
+    setDataset("hearthIndexJsParserRepairActive", "true");
+    setDataset("hearthIndexJsApiRedeclarationRepairActive", "true");
 
     setDataset("hearthIndexJsHtmlFile", HTML_FILE);
     setDataset("hearthHtmlOwnsVisibleShell", "true");
@@ -1709,12 +1712,15 @@
     root.HEARTH.dynamicSelectorRuntimeRelease = api;
     root.HEARTH.eastSouthPairFemaleSelector = api;
     root.HEARTH.twoFileNewsFibonacciCarrierHostAlignment = api;
+    root.HEARTH.indexJsApiRedeclarationControlBindingRepair = api;
 
     root.DEXTER_LAB.hearthIndexRuntimeHost = api;
     root.DEXTER_LAB.hearthHtmlShellAnchorAuditRuntimeHost = api;
     root.DEXTER_LAB.hearthDynamicSelectorRuntimeRelease = api;
     root.DEXTER_LAB.hearthTwoFileNewsFibonacciCarrierHostAlignment = api;
+    root.DEXTER_LAB.hearthIndexJsApiRedeclarationControlBindingRepair = api;
 
+    root.HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR = api;
     root.HEARTH_INDEX_JS_TWO_FILE_NEWS_FIBONACCI_CARRIER_HOST_ALIGNMENT = api;
     root.HEARTH_INDEX_JS_HTML_SHELL_ANCHOR_AUDIT_RUNTIME_HOST = api;
     root.HEARTH_INDEX_RUNTIME_HOST = api;
@@ -1729,6 +1735,8 @@
 
     const receipt = getReceipt();
 
+    root.HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_RECEIPT = receipt;
+    root.HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_RECEIPT_v5_1 = receipt;
     root.HEARTH_INDEX_JS_TWO_FILE_NEWS_FIBONACCI_CARRIER_HOST_ALIGNMENT_RECEIPT = receipt;
     root.HEARTH_INDEX_JS_HTML_SHELL_ANCHOR_AUDIT_RUNTIME_HOST_RECEIPT = receipt;
     root.HEARTH_INDEX_RUNTIME_HOST_RECEIPT = receipt;
@@ -1739,6 +1747,7 @@
     root.HEARTH.indexRuntimeHostReceipt = receipt;
     root.HEARTH.indexJsReceipt = receipt;
     root.HEARTH.twoFileNewsFibonacciCarrierHostAlignmentReceipt = receipt;
+    root.HEARTH.indexJsApiRedeclarationControlBindingRepairReceipt = receipt;
   }
 
   function schedulePublish(message = "") {
@@ -1846,6 +1855,11 @@
       role: state.role,
       pairRole: state.pairRole,
       pairedRouteConductorFile: PAIRED_ROUTE_CONDUCTOR_FILE,
+
+      parserRepairActive: true,
+      apiRedeclarationRepairActive: true,
+      priorApiRedeclarationFatalDefectCorrected: true,
+      apiObjectPopulationMode: "Object.assign(api, {...})",
 
       htmlOwnsVisibleShell: true,
       indexJsCreatesVisibleShell: false,
@@ -1993,7 +2007,7 @@
     const r = getReceipt();
 
     return [
-      "HEARTH_INDEX_JS_TWO_FILE_NEWS_FIBONACCI_CARRIER_HOST_ALIGNMENT_RECEIPT",
+      "HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_RECEIPT",
       "",
       line("contract", r.contract),
       line("receipt", r.receipt),
@@ -2003,6 +2017,12 @@
       line("file", r.file),
       line("htmlFile", r.htmlFile),
       line("route", r.route),
+      "",
+      "PARSER_REPAIR",
+      line("parserRepairActive", r.parserRepairActive),
+      line("apiRedeclarationRepairActive", r.apiRedeclarationRepairActive),
+      line("priorApiRedeclarationFatalDefectCorrected", r.priorApiRedeclarationFatalDefectCorrected),
+      line("apiObjectPopulationMode", r.apiObjectPopulationMode),
       "",
       "SPLIT_BOUNDARY",
       line("htmlOwnsVisibleShell", r.htmlOwnsVisibleShell),
@@ -2188,7 +2208,7 @@
     }, true);
   }
 
-  const api = {
+  Object.assign(api, {
     contract: CONTRACT,
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
@@ -2226,6 +2246,10 @@
     getReceipt,
     getReceiptText,
     copyDiagnostic,
+
+    parserRepairActive: true,
+    apiRedeclarationRepairActive: true,
+    priorApiRedeclarationFatalDefectCorrected: true,
 
     htmlOwnsVisibleShell: true,
     indexJsCreatesVisibleShell: false,
@@ -2274,7 +2298,7 @@
     get state() {
       return state;
     }
-  };
+  });
 
   root.HEARTH = root.HEARTH || {};
   root.DEXTER_LAB = root.DEXTER_LAB || {};
@@ -2286,12 +2310,15 @@
   root.HEARTH.dynamicSelectorRuntimeRelease = api;
   root.HEARTH.eastSouthPairFemaleSelector = api;
   root.HEARTH.twoFileNewsFibonacciCarrierHostAlignment = api;
+  root.HEARTH.indexJsApiRedeclarationControlBindingRepair = api;
 
   root.DEXTER_LAB.hearthIndexRuntimeHost = api;
   root.DEXTER_LAB.hearthHtmlShellAnchorAuditRuntimeHost = api;
   root.DEXTER_LAB.hearthDynamicSelectorRuntimeRelease = api;
   root.DEXTER_LAB.hearthTwoFileNewsFibonacciCarrierHostAlignment = api;
+  root.DEXTER_LAB.hearthIndexJsApiRedeclarationControlBindingRepair = api;
 
+  root.HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR = api;
   root.HEARTH_INDEX_JS_TWO_FILE_NEWS_FIBONACCI_CARRIER_HOST_ALIGNMENT = api;
   root.HEARTH_INDEX_JS_HTML_SHELL_ANCHOR_AUDIT_RUNTIME_HOST = api;
   root.HEARTH_INDEX_RUNTIME_HOST = api;

@@ -1,24 +1,30 @@
 // /showroom/globe/hearth/index.js
-// HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_TNT_v5_1
+// HEARTH_INDEX_JS_CONTROL_SURFACE_EARLY_ACTIVATION_SHIELD_TNT_v5_3
 // Full-file replacement.
 // Index JS / HTML-shell anchor auditor / control binder / runtime host / carrier-host admissibility publisher.
 // Narrow repair over:
-// - HEARTH_INDEX_JS_TWO_FILE_NEWS_FIBONACCI_CARRIER_HOST_ALIGNMENT_TNT_v5
+// - HEARTH_INDEX_JS_CONTROL_SURFACE_EVENT_SHIELD_RUNTIME_STAGE_INTERCEPTION_REPAIR_TNT_v5_2
+// Accepted baseline lineage:
+// - HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_TNT_v5_1
 // Purpose:
-// - Preserve accepted v5 structure.
-// - Correct fatal parser defect caused by duplicate `const api` declaration.
-// - Keep early `const api = {};` and populate it with Object.assign(api, {...}).
-// - Restore boot/control binding for Copy Diagnostic, Show Receipt, Inspect Planet, and Expand Cockpit.
-// - Do not alter HTML shell, runtime loading order, Canvas, Route Conductor, West, child files, visual shell, generated image, GraphicBox, WebGL, ready text, F21, or final visual pass claims.
+// - Preserve accepted v5_1 parser repair and API Object.assign pattern.
+// - Preserve runtime loading order, carrier-host admissibility, and route-conductor handoff.
+// - Explicitly recognize current HTML v2_1 control-surface receiver.
+// - Install an Index-owned early activation shield across window/document/html/body/cockpit/stage/control surfaces.
+// - Execute cockpit controls from terminal physical activation, not click-only dependency.
+// - Suppress pointer/touch/mouse/click duplicate execution by physical activation window.
+// - Block event leakage into globe/stage/canvas/runtime gesture paths.
+// - Preserve keyboard activation through Enter/Space click behavior.
+// - Do not alter HTML shell, Route Conductor, Canvas, Macro West, runtime tables, North, F21, ready text, generated image, GraphicBox, WebGL, or final visual pass claims.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_TNT_v5_1";
-  const RECEIPT = "HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_RECEIPT_v5_1";
-  const PREVIOUS_CONTRACT = "HEARTH_INDEX_JS_TWO_FILE_NEWS_FIBONACCI_CARRIER_HOST_ALIGNMENT_TNT_v5";
-  const BASELINE_CONTRACT = "HEARTH_INDEX_JS_TWO_FILE_NEWS_FIBONACCI_CARRIER_HOST_ALIGNMENT_TNT_v5";
-  const VERSION = "2026-06-02.hearth-index-js-api-redeclaration-control-binding-repair-v5-1";
+  const CONTRACT = "HEARTH_INDEX_JS_CONTROL_SURFACE_EARLY_ACTIVATION_SHIELD_TNT_v5_3";
+  const RECEIPT = "HEARTH_INDEX_JS_CONTROL_SURFACE_EARLY_ACTIVATION_SHIELD_RECEIPT_v5_3";
+  const PREVIOUS_CONTRACT = "HEARTH_INDEX_JS_CONTROL_SURFACE_EVENT_SHIELD_RUNTIME_STAGE_INTERCEPTION_REPAIR_TNT_v5_2";
+  const BASELINE_CONTRACT = "HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_TNT_v5_1";
+  const VERSION = "2026-06-02.hearth-index-js-control-surface-early-activation-shield-v5-3";
 
   const ROUTE = "/showroom/globe/hearth/";
   const FILE = "/showroom/globe/hearth/index.js";
@@ -31,8 +37,16 @@
   const SOUTH_RUNTIME_FILE = "/assets/lab/runtime-table.south.js";
   const WEST_RUNTIME_FILE = "/assets/lab/runtime-table.west.js";
 
+  const CURRENT_HTML_CONTRACT = "HEARTH_HTML_CONTROL_SURFACE_CACHE_KEY_TOUCH_BINDING_REPAIR_TNT_v2_1";
   const EXPECTED_HTML_CONTRACT = "HEARTH_HTML_SOUTH_PAIR_MALE_SHELL_FEMALE_SELECTED_RUNTIME_RECEIVER_TNT_v1";
   const CURRENT_SAFE_HTML_CONTRACT = "HEARTH_HTML_NON_BLOCKING_EAST_BOOT_TWO_CYCLE_RUNTIME_SHELL_TNT_v3";
+
+  const HTML_CONTRACTS_RECOGNIZED = Object.freeze([
+    CURRENT_HTML_CONTRACT,
+    CURRENT_SAFE_HTML_CONTRACT,
+    EXPECTED_HTML_CONTRACT,
+    "HEARTH_HTML_CURRENT_RUNTIME_SELECTOR_CACHE_RENEWAL_RECEIVER_TNT_v2"
+  ]);
 
   const MACRO_CYCLE_1 = "NORTH_EAST_WEST_SOUTH_NORTH";
   const MACRO_CYCLE_2 = "NORTH_EAST_SOUTH_WEST_CANVAS";
@@ -40,6 +54,78 @@
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
   const api = {};
+
+  const CONTROL_SELECTORS = Object.freeze([
+    "[data-hearth-copy-diagnostic]",
+    "[data-hearth-toggle-receipt]",
+    "[data-hearth-inspect-planet]",
+    "[data-hearth-collapse-cockpit]",
+    "[data-hearth-south-show-diagnostic-tab]",
+    "[data-hearth-east-show-diagnostic-tab]",
+    "[data-hearth-show-diagnostic-tab]"
+  ]);
+
+  const CONTROL_ACTIONS = Object.freeze([
+    {
+      actionName: "copyDiagnostic",
+      selector: "[data-hearth-copy-diagnostic]",
+      label: "Copy Diagnostic"
+    },
+    {
+      actionName: "toggleReceipt",
+      selector: "[data-hearth-toggle-receipt]",
+      label: "Show Receipt"
+    },
+    {
+      actionName: "inspectPlanet",
+      selector: "[data-hearth-inspect-planet]",
+      label: "Inspect Planet"
+    },
+    {
+      actionName: "toggleCockpit",
+      selector: "[data-hearth-collapse-cockpit]",
+      label: "Expand Cockpit"
+    },
+    {
+      actionName: "showDiagnostic",
+      selector: "[data-hearth-south-show-diagnostic-tab]",
+      label: "Show Diagnostic"
+    },
+    {
+      actionName: "showDiagnostic",
+      selector: "[data-hearth-east-show-diagnostic-tab]",
+      label: "Show Diagnostic"
+    },
+    {
+      actionName: "showDiagnostic",
+      selector: "[data-hearth-show-diagnostic-tab]",
+      label: "Show Diagnostic"
+    }
+  ]);
+
+  const CONTROL_SHIELD_EVENTS = Object.freeze([
+    "pointerdown",
+    "pointerup",
+    "touchstart",
+    "touchend",
+    "mousedown",
+    "mouseup",
+    "click"
+  ]);
+
+  const CONTROL_TERMINAL_EVENTS = Object.freeze([
+    "pointerup",
+    "touchend",
+    "mouseup"
+  ]);
+
+  const CONTROL_START_EVENTS = Object.freeze([
+    "pointerdown",
+    "touchstart",
+    "mousedown"
+  ]);
+
+  const DUPLICATE_ACTIVATION_WINDOW_MS = 720;
 
   const REQUIRED_HTML_ANCHORS = Object.freeze([
     "#hearth-main",
@@ -208,13 +294,45 @@
     htmlFile: HTML_FILE,
     route: ROUTE,
 
-    role: "index-js-api-redeclaration-control-binding-repair",
+    role: "index-js-control-surface-early-activation-shield",
     pairRole: "female-runtime-host-for-male-route-conductor",
     pairedRouteConductorFile: PAIRED_ROUTE_CONDUCTOR_FILE,
 
     parserRepairActive: true,
     apiRedeclarationRepairActive: true,
     priorApiRedeclarationFatalDefectCorrected: true,
+
+    indexControlSurfaceEarlyActivationShieldActive: true,
+    indexControlSurfaceEventShieldActive: true,
+    controlPointerTouchShieldActive: true,
+    controlCapturePhaseShieldActive: true,
+    multiLayerControlCaptureShieldActive: true,
+    terminalActivationExecutionActive: true,
+    clickOnlyActivationAvoided: true,
+    runtimeStageInterceptionPrevented: true,
+    canvasGestureLeakBlocked: true,
+    duplicateTouchClickSuppressionActive: true,
+    physicalActivationWindowSuppressionActive: true,
+    keyboardActivationPreserved: true,
+    currentHtmlContractRecognized: false,
+    htmlRebuildRequired: false,
+    routeConductorRebuildRequired: false,
+    canvasRebuildRequired: false,
+    runtimeTableRebuildRequired: false,
+    routeConductorOwnsControlBinding: false,
+
+    controlSurfaceShieldBound: false,
+    controlShieldBoundTargets: 0,
+    controlShieldBoundControls: 0,
+    controlShieldInterceptCount: 0,
+    controlShieldTerminalActivationCount: 0,
+    controlShieldClickSuppressionCount: 0,
+    controlShieldDuplicateSuppressionCount: 0,
+    controlShieldKeyboardActivationCount: 0,
+    controlShieldLastActionName: "",
+    controlShieldLastEventType: "",
+    controlShieldLastActivatedAt: "",
+    controlShieldLastSuppressedAt: "",
 
     htmlOwnsVisibleShell: true,
     indexJsCreatesVisibleShell: false,
@@ -226,6 +344,7 @@
     ownsMountHost: false,
     ownsControlsCreation: false,
     ownsControlBinding: true,
+    indexOwnsControlBinding: true,
     ownsRuntimeScriptRelease: true,
     ownsCanvasCarrierHostPacket: true,
     ownsCarrierHostAdmissibility: true,
@@ -243,6 +362,7 @@
     ownsReadyText: false,
     ownsFinalVisualPassClaim: false,
 
+    currentHtmlContract: CURRENT_HTML_CONTRACT,
     expectedHtmlContract: EXPECTED_HTML_CONTRACT,
     currentSafeHtmlContract: CURRENT_SAFE_HTML_CONTRACT,
     shellContract: "",
@@ -350,7 +470,9 @@
   const refs = {
     main: null,
     mount: null,
+    stage: null,
     cockpit: null,
+    controlSurface: null,
     status: null,
     receiptPanel: null,
     receiptText: null,
@@ -371,6 +493,10 @@
   let publishTimer = 0;
   let shellGuardTimer = 0;
 
+  const shieldBoundTargets = typeof WeakSet !== "undefined" ? new WeakSet() : null;
+  const shieldBoundControls = typeof WeakSet !== "undefined" ? new WeakSet() : null;
+  const activationLedger = new Map();
+
   function nowIso() {
     try {
       return new Date().toISOString();
@@ -379,8 +505,20 @@
     }
   }
 
+  function nowMs() {
+    try {
+      return Date.now();
+    } catch (_error) {
+      return new Date().getTime();
+    }
+  }
+
   function isObject(value) {
     return Boolean(value && typeof value === "object");
+  }
+
+  function isElement(value) {
+    return Boolean(value && value.nodeType === 1);
   }
 
   function isFunction(value) {
@@ -425,6 +563,16 @@
       return doc.querySelector(selector);
     } catch (_error) {
       return null;
+    }
+  }
+
+  function qsa(selector) {
+    if (!doc) return [];
+
+    try {
+      return Array.from(doc.querySelectorAll(selector));
+    } catch (_error) {
+      return [];
     }
   }
 
@@ -523,10 +671,434 @@
     return `${key}=${value === undefined || value === null ? "" : String(value)}`;
   }
 
+  function stopControlEvent(event) {
+    if (!event) return;
+
+    try {
+      if (isFunction(event.stopImmediatePropagation)) event.stopImmediatePropagation();
+      if (isFunction(event.stopPropagation)) event.stopPropagation();
+    } catch (_error) {}
+
+    if (event.cancelable) {
+      try {
+        event.preventDefault();
+      } catch (_error) {}
+    }
+  }
+
+  function getEventPath(event) {
+    if (!event) return [];
+
+    if (isFunction(event.composedPath)) {
+      try {
+        return event.composedPath();
+      } catch (_error) {
+        return [];
+      }
+    }
+
+    const path = [];
+    let cursor = event.target || null;
+
+    while (cursor) {
+      path.push(cursor);
+      cursor = cursor.parentNode || cursor.host || null;
+    }
+
+    path.push(root);
+    return path;
+  }
+
+  function closestSafe(target, selector) {
+    if (!target) return null;
+
+    if (isElement(target) && isFunction(target.closest)) {
+      try {
+        return target.closest(selector);
+      } catch (_error) {
+        return null;
+      }
+    }
+
+    return null;
+  }
+
+  function matchControlActionFromNode(node) {
+    if (!isElement(node)) return null;
+
+    for (const def of CONTROL_ACTIONS) {
+      const matched = closestSafe(node, def.selector);
+      if (matched) {
+        return {
+          ...def,
+          element: matched
+        };
+      }
+    }
+
+    return null;
+  }
+
+  function matchControlActionFromEvent(event) {
+    const direct = matchControlActionFromNode(event && event.target);
+    if (direct) return direct;
+
+    const path = getEventPath(event);
+
+    for (const node of path) {
+      const found = matchControlActionFromNode(node);
+      if (found) return found;
+    }
+
+    return null;
+  }
+
+  function getControlIdentity(element, actionName) {
+    if (!element) return actionName;
+
+    const dataset = element.dataset || {};
+    const explicit = dataset.hearthControlId || dataset.hearthAction || dataset.action || element.id || element.getAttribute("aria-label") || element.textContent || "";
+    return `${actionName}:${safeString(explicit, actionName).trim().slice(0, 80)}`;
+  }
+
+  function markControlElement(element, actionName) {
+    if (!element || !element.dataset) return;
+
+    element.dataset.hearthIndexControlShield = "true";
+    element.dataset.hearthIndexControlShieldContract = CONTRACT;
+    element.dataset.hearthIndexOwnsControlBinding = "true";
+    element.dataset.hearthRouteConductorOwnsControlBinding = "false";
+    element.dataset.hearthControlPointerTouchShieldActive = "true";
+    element.dataset.hearthControlCapturePhaseShieldActive = "true";
+    element.dataset.hearthRuntimeStageInterceptionPrevented = "true";
+    element.dataset.hearthCanvasGestureLeakBlocked = "true";
+    element.dataset.hearthDuplicateTouchClickSuppressionActive = "true";
+    element.dataset.hearthKeyboardActivationPreserved = "true";
+    element.dataset.hearthControlActionName = actionName || "";
+  }
+
+  function bindShieldTarget(target, label = "target") {
+    if (!target || !isFunction(target.addEventListener)) return false;
+
+    if (shieldBoundTargets && shieldBoundTargets.has(target)) return false;
+
+    const options = {
+      capture: true,
+      passive: false
+    };
+
+    for (const eventType of CONTROL_SHIELD_EVENTS) {
+      try {
+        target.addEventListener(eventType, handleControlSurfaceEvent, options);
+      } catch (_error) {
+        try {
+          target.addEventListener(eventType, handleControlSurfaceEvent, true);
+        } catch (__error) {}
+      }
+    }
+
+    try {
+      target.__hearthIndexControlShieldBound = CONTRACT;
+      target.__hearthIndexControlShieldLabel = label;
+    } catch (_error) {}
+
+    if (shieldBoundTargets) shieldBoundTargets.add(target);
+    state.controlShieldBoundTargets += 1;
+    return true;
+  }
+
+  function bindControlElement(element, actionName = "") {
+    if (!element || !isFunction(element.addEventListener)) return false;
+
+    markControlElement(element, actionName);
+
+    if (shieldBoundControls && shieldBoundControls.has(element)) return false;
+
+    const options = {
+      capture: true,
+      passive: false
+    };
+
+    for (const eventType of CONTROL_SHIELD_EVENTS) {
+      try {
+        element.addEventListener(eventType, handleControlSurfaceEvent, options);
+      } catch (_error) {
+        try {
+          element.addEventListener(eventType, handleControlSurfaceEvent, true);
+        } catch (__error) {}
+      }
+    }
+
+    if (shieldBoundControls) shieldBoundControls.add(element);
+    state.controlShieldBoundControls += 1;
+    return true;
+  }
+
+  function collectShieldTargets() {
+    const targets = [];
+
+    if (root && isFunction(root.addEventListener)) targets.push({ target: root, label: "window" });
+    if (doc && isFunction(doc.addEventListener)) targets.push({ target: doc, label: "document" });
+    if (doc && doc.documentElement) targets.push({ target: doc.documentElement, label: "documentElement" });
+    if (doc && doc.body) targets.push({ target: doc.body, label: "body" });
+
+    refreshRefs();
+
+    [
+      ["main", refs.main],
+      ["stage", refs.stage],
+      ["mount", refs.mount],
+      ["cockpit", refs.cockpit],
+      ["controlSurface", refs.controlSurface],
+      ["receiptPanel", refs.receiptPanel]
+    ].forEach(([label, target]) => {
+      if (target) targets.push({ target, label });
+    });
+
+    const seen = new Set();
+    return targets.filter((entry) => {
+      if (!entry.target) return false;
+      const id = entry.label + ":" + (entry.target.__hearthIndexControlShieldObjectId || "");
+      if (seen.has(entry.target)) return false;
+      seen.add(entry.target);
+      return Boolean(id);
+    });
+  }
+
+  function bindControlSurfaceEventShield(reason = "bind-control-surface-event-shield") {
+    refreshRefs();
+
+    const targets = collectShieldTargets();
+
+    for (const entry of targets) {
+      bindShieldTarget(entry.target, entry.label);
+    }
+
+    for (const def of CONTROL_ACTIONS) {
+      const elements = qsa(def.selector);
+      for (const element of elements) {
+        bindControlElement(element, def.actionName);
+      }
+    }
+
+    if (refs.cockpit && refs.cockpit.dataset) {
+      refs.cockpit.dataset.hearthIndexControlSurfaceEventShieldActive = "true";
+      refs.cockpit.dataset.hearthIndexControlSurfaceEarlyActivationShieldActive = "true";
+      refs.cockpit.dataset.hearthIndexOwnsControlBinding = "true";
+      refs.cockpit.dataset.hearthRouteConductorOwnsControlBinding = "false";
+      refs.cockpit.dataset.hearthRuntimeStageInterceptionPrevented = "true";
+      refs.cockpit.dataset.hearthCanvasGestureLeakBlocked = "true";
+    }
+
+    if (refs.stage && refs.stage.dataset) {
+      refs.stage.dataset.hearthIndexStageControlShieldAware = "true";
+      refs.stage.dataset.hearthIndexCockpitControlEventsBlockedFromStage = "true";
+    }
+
+    if (refs.mount && refs.mount.dataset) {
+      refs.mount.dataset.hearthIndexCockpitControlEventsBlockedFromCanvas = "true";
+    }
+
+    state.controlSurfaceShieldBound = true;
+    state.shellControlsBound = Boolean(refs.copyButton && refs.toggleButton && refs.inspectButton && refs.collapseButton);
+    state.controlShieldLastActionName = state.controlShieldLastActionName || "";
+    state.postgameStatus = state.shellControlsBound
+      ? "INDEX_CONTROL_SURFACE_EARLY_ACTIVATION_SHIELD_BOUND"
+      : state.postgameStatus;
+
+    updateDataset();
+
+    if (reason && reason !== "audit-shell-anchors") {
+      state.updatedAt = nowIso();
+    }
+
+    return {
+      bound: state.controlSurfaceShieldBound,
+      controlsBound: state.shellControlsBound,
+      boundTargets: state.controlShieldBoundTargets,
+      boundControls: state.controlShieldBoundControls
+    };
+  }
+
+  function shouldExecuteControlAction(event, actionName, element) {
+    const eventType = event && event.type ? event.type : "";
+    const identity = getControlIdentity(element, actionName);
+    const key = identity;
+    const at = nowMs();
+    const prior = activationLedger.get(key) || 0;
+    const withinWindow = at - prior >= 0 && at - prior < DUPLICATE_ACTIVATION_WINDOW_MS;
+
+    if (CONTROL_START_EVENTS.includes(eventType)) {
+      return false;
+    }
+
+    if (eventType === "click") {
+      const keyboardClick = safeNumber(event && event.detail, 0) === 0;
+
+      if (withinWindow) {
+        state.controlShieldClickSuppressionCount += 1;
+        state.controlShieldDuplicateSuppressionCount += 1;
+        state.controlShieldLastSuppressedAt = nowIso();
+        return false;
+      }
+
+      if (keyboardClick) {
+        activationLedger.set(key, at);
+        state.controlShieldKeyboardActivationCount += 1;
+        return true;
+      }
+
+      state.controlShieldClickSuppressionCount += 1;
+      state.controlShieldLastSuppressedAt = nowIso();
+      return false;
+    }
+
+    if (CONTROL_TERMINAL_EVENTS.includes(eventType)) {
+      if (withinWindow) {
+        state.controlShieldDuplicateSuppressionCount += 1;
+        state.controlShieldLastSuppressedAt = nowIso();
+        return false;
+      }
+
+      activationLedger.set(key, at);
+      return true;
+    }
+
+    return false;
+  }
+
+  function handleControlSurfaceEvent(event) {
+    const matched = matchControlActionFromEvent(event);
+    if (!matched) return;
+
+    state.controlShieldInterceptCount += 1;
+    state.controlShieldLastEventType = event.type || "";
+    state.runtimeStageInterceptionPrevented = true;
+    state.canvasGestureLeakBlocked = true;
+
+    stopControlEvent(event);
+
+    const execute = shouldExecuteControlAction(event, matched.actionName, matched.element);
+
+    if (!execute) {
+      updateDataset();
+      return false;
+    }
+
+    state.controlShieldTerminalActivationCount += 1;
+    state.controlShieldLastActionName = matched.actionName;
+    state.controlShieldLastActivatedAt = nowIso();
+
+    activateControlAction(matched.actionName, matched.element, event);
+
+    updateDataset();
+    return false;
+  }
+
+  function activateControlAction(actionName, element, event) {
+    markControlElement(element, actionName);
+
+    switch (actionName) {
+      case "copyDiagnostic":
+        copyDiagnostic();
+        break;
+      case "toggleReceipt":
+        toggleReceiptPanel();
+        break;
+      case "inspectPlanet":
+        setInspectIntent(true, "index-control-surface-shield");
+        break;
+      case "showDiagnostic":
+        setInspectIntent(false, "index-control-surface-shield");
+        break;
+      case "toggleCockpit":
+        toggleCockpitMode();
+        break;
+      default:
+        break;
+    }
+
+    state.postgameStatus = `INDEX_CONTROL_ACTION_${safeString(actionName).toUpperCase()}_EXECUTED`;
+    state.updatedAt = nowIso();
+
+    if (event && event.type === "click" && safeNumber(event.detail, 0) === 0) {
+      state.controlShieldKeyboardActivationCount += 1;
+    }
+
+    updateVisualShell(`control=${actionName}`);
+    schedulePublish(`control-surface-action-${actionName}`);
+  }
+
+  function toggleReceiptPanel() {
+    refreshRefs();
+
+    if (!refs.receiptPanel) return false;
+
+    const visible = refs.receiptPanel.dataset.visible !== "true";
+    refs.receiptPanel.dataset.visible = String(visible);
+
+    if (refs.toggleButton) {
+      refs.toggleButton.textContent = visible ? "Hide receipt" : "Show receipt";
+    }
+
+    if (refs.receiptText) {
+      refs.receiptText.textContent = visible ? getReceiptText() : "";
+    }
+
+    return visible;
+  }
+
+  function setInspectIntent(active, source = "index-js") {
+    const html = doc && doc.documentElement ? doc.documentElement : null;
+
+    refreshRefs();
+
+    if (html) {
+      html.dataset.hearthSouthPlanetInspect = String(active);
+      html.dataset.hearthEastInspectReservedActive = String(active);
+      html.dataset.hearthIndexJsInspectIntent = String(active);
+      html.dataset.hearthIndexControlShieldInspectIntentSource = source;
+    }
+
+    if (refs.cockpit) {
+      refs.cockpit.dataset.cockpitMode = active ? "planet-inspect" : "diagnostic-dock";
+    }
+
+    if (refs.inspectButton) {
+      refs.inspectButton.textContent = active ? "Show diagnostic" : "Inspect planet";
+    }
+
+    if (refs.showDiagnosticTab) {
+      refs.showDiagnosticTab.hidden = !active;
+      refs.showDiagnosticTab.dataset.visible = String(active);
+    }
+
+    state.postgameStatus = active ? "INDEX_JS_INSPECT_INTENT_ACTIVE" : "INDEX_JS_DIAGNOSTIC_DOCK_ACTIVE";
+    updateDataset();
+    return active;
+  }
+
+  function toggleCockpitMode() {
+    refreshRefs();
+
+    if (!refs.cockpit) return false;
+
+    const expanded = refs.cockpit.dataset.cockpitMode !== "expanded-cockpit";
+    refs.cockpit.dataset.cockpitMode = expanded ? "expanded-cockpit" : "diagnostic-dock";
+
+    if (refs.collapseButton) {
+      refs.collapseButton.textContent = expanded ? "Collapse cockpit" : "Expand cockpit";
+    }
+
+    return expanded;
+  }
+
   function refreshRefs() {
     refs.main = qs("#hearth-main") || qs("[data-hearth-main='true']");
     refs.mount = qs("#hearthCanvasMount") || qs("[data-hearth-canvas-mount='true']") || qs("[data-hearth-canvas-mount]");
+    refs.stage = qs("#hearthGlobeStage") || qs("[data-hearth-globe-stage='true']") || qs("[data-hearth-survival-path-stage='true']");
     refs.cockpit = qs("#hearthLoadCockpit") || qs("[data-hearth-load-cockpit='true']");
+    refs.controlSurface = refs.cockpit || qs("[data-hearth-control-surface='true']") || qs("[data-hearth-ledger-cockpit]");
     refs.status = qs("#hearth-route-status") || qs("[data-hearth-route-status]");
     refs.receiptPanel = qs("#hearthReceiptPanel") || qs("[data-hearth-receipt-box]");
     refs.receiptText = qs("[data-hearth-receipt-text]");
@@ -550,27 +1122,34 @@
     const shellContract = safeString(dataset.contract || dataset.hearthHtmlContract || dataset.hearthShellContract || "");
     const missingAnchors = REQUIRED_HTML_ANCHORS.filter((selector) => !qs(selector));
 
+    const currentV2_1 = shellContract === CURRENT_HTML_CONTRACT;
     const matchedMale = shellContract === EXPECTED_HTML_CONTRACT;
     const safeTransitional = shellContract === CURRENT_SAFE_HTML_CONTRACT;
+    const recognizedContract = HTML_CONTRACTS_RECOGNIZED.includes(shellContract);
     const dynamicAnchorsPass = missingAnchors.length === 0;
     const detected = Boolean(refs.main && refs.mount && refs.cockpit);
 
     let selectionMode = "UNSELECTED";
 
-    if (matchedMale && dynamicAnchorsPass) {
+    if (currentV2_1 && dynamicAnchorsPass) {
+      selectionMode = "CURRENT_HTML_V2_1_CONTROL_SURFACE_RECEIVER";
+    } else if (matchedMale && dynamicAnchorsPass) {
       selectionMode = "MATCHED_MALE_HTML_PAIR";
     } else if (safeTransitional && dynamicAnchorsPass) {
       selectionMode = "SAFE_TRANSITIONAL_HTML_BRIDGE";
+    } else if (recognizedContract && dynamicAnchorsPass) {
+      selectionMode = "RECOGNIZED_HTML_CONTRACT_DYNAMIC_ANCHORS";
     } else if (dynamicAnchorsPass) {
       selectionMode = "DYNAMIC_ANCHOR_ACCEPTED_HTML_SHELL";
-    } else if (matchedMale || safeTransitional) {
+    } else if (recognizedContract) {
       selectionMode = "HTML_CONTRACT_PRESENT_ANCHORS_MISSING";
     }
 
-    const selected = Boolean(detected && (matchedMale || safeTransitional || dynamicAnchorsPass));
+    const selected = Boolean(detected && (recognizedContract || dynamicAnchorsPass));
     const accepted = Boolean(selected && dynamicAnchorsPass);
 
     state.shellContract = shellContract;
+    state.currentHtmlContractRecognized = currentV2_1 || recognizedContract;
     state.shellDetected = detected;
     state.shellSelected = selected;
     state.shellAccepted = accepted;
@@ -602,11 +1181,14 @@
       refs.mount.dataset.hearthIndexJsContract = CONTRACT;
       refs.mount.dataset.hearthCanvasCarrierHostReady = String(state.carrierHostReady);
       refs.mount.dataset.hearthCarrierHostPacketReady = String(state.carrierHostPacketReady);
+      refs.mount.dataset.hearthIndexCockpitControlEventsBlockedFromCanvas = "true";
       refs.mount.dataset.generatedImage = "false";
       refs.mount.dataset.graphicBox = "false";
       refs.mount.dataset.webgl = "false";
       refs.mount.dataset.visualPassClaimed = "false";
     }
+
+    bindControlSurfaceEventShield("audit-shell-anchors");
 
     updateCarrierHostAdmissibility(`shell-audit:${reason}`);
     updateDataset();
@@ -616,8 +1198,10 @@
       detected,
       selected,
       accepted,
+      currentV2_1,
       matchedMale,
       safeTransitional,
+      recognizedContract,
       dynamicAnchorsPass,
       missingAnchors,
       selectionMode,
@@ -689,9 +1273,25 @@
       ownsMountHost: false,
       ownsControlsCreation: false,
       ownsControlBinding: true,
+      indexOwnsControlBinding: true,
+      routeConductorOwnsControlBinding: false,
       ownsRuntimeScriptRelease: true,
       ownsCanvasCarrierHostPacket: true,
       ownsCarrierHostAdmissibility: true,
+
+      indexControlSurfaceEarlyActivationShieldActive: true,
+      indexControlSurfaceEventShieldActive: true,
+      controlPointerTouchShieldActive: true,
+      controlCapturePhaseShieldActive: true,
+      multiLayerControlCaptureShieldActive: true,
+      terminalActivationExecutionActive: true,
+      clickOnlyActivationAvoided: true,
+      runtimeStageInterceptionPrevented: true,
+      canvasGestureLeakBlocked: true,
+      duplicateTouchClickSuppressionActive: true,
+      physicalActivationWindowSuppressionActive: true,
+      keyboardActivationPreserved: true,
+      currentHtmlContractRecognized: state.currentHtmlContractRecognized,
 
       mountSelector: "#hearthCanvasMount",
       mountPresent: Boolean(refs.mount),
@@ -743,6 +1343,7 @@
       state.carrierHostReady &&
       state.carrierHostPacketReady &&
       state.shellControlsBound &&
+      state.controlSurfaceShieldBound &&
       state.runtimeReleaseAuthorized &&
       state.runtimeReleaseComplete
     );
@@ -757,11 +1358,13 @@
             ? "WAITING_CARRIER_HOST_PACKET"
             : !state.shellControlsBound
               ? "WAITING_HTML_SHELL_CONTROLS_BOUND"
-              : !state.runtimeReleaseAuthorized
-                ? "WAITING_RUNTIME_RELEASE_AUTHORIZATION"
-                : !state.runtimeReleaseComplete
-                  ? "WAITING_RUNTIME_RELEASE_COMPLETION"
-                  : "WAITING_CARRIER_HOST_ADMISSIBILITY";
+              : !state.controlSurfaceShieldBound
+                ? "WAITING_INDEX_CONTROL_SURFACE_EARLY_ACTIVATION_SHIELD"
+                : !state.runtimeReleaseAuthorized
+                  ? "WAITING_RUNTIME_RELEASE_AUTHORIZATION"
+                  : !state.runtimeReleaseComplete
+                    ? "WAITING_RUNTIME_RELEASE_COMPLETION"
+                    : "WAITING_CARRIER_HOST_ADMISSIBILITY";
 
     return { ready, holdReason };
   }
@@ -791,9 +1394,29 @@
       shellSelected: state.shellSelected,
       shellAccepted: state.shellAccepted,
       shellSelectionMode: state.shellSelectionMode,
+      currentHtmlContractRecognized: state.currentHtmlContractRecognized,
       dynamicAnchorsPass: state.dynamicAnchorsPass,
       missingAnchors: state.missingAnchors.slice(),
       shellControlsBound: state.shellControlsBound,
+
+      indexControlSurfaceEarlyActivationShieldActive: true,
+      indexControlSurfaceEventShieldActive: true,
+      indexOwnsControlBinding: true,
+      routeConductorOwnsControlBinding: false,
+      controlPointerTouchShieldActive: true,
+      controlCapturePhaseShieldActive: true,
+      multiLayerControlCaptureShieldActive: true,
+      terminalActivationExecutionActive: true,
+      clickOnlyActivationAvoided: true,
+      runtimeStageInterceptionPrevented: true,
+      canvasGestureLeakBlocked: true,
+      duplicateTouchClickSuppressionActive: true,
+      physicalActivationWindowSuppressionActive: true,
+      keyboardActivationPreserved: true,
+      htmlRebuildRequired: false,
+      routeConductorRebuildRequired: false,
+      canvasRebuildRequired: false,
+      runtimeTableRebuildRequired: false,
 
       mountPresent: state.mountPresent,
       cockpitPresent: state.cockpitPresent,
@@ -875,8 +1498,10 @@
       Boolean(state.newsAlignmentActive),
       Boolean(state.activeFibonacci),
       Boolean(state.shellDetected),
+      Boolean(state.currentHtmlContractRecognized),
       Boolean(state.shellAccepted),
       Boolean(state.shellControlsBound),
+      Boolean(state.controlSurfaceShieldBound),
       Boolean(state.runtimeReleaseAuthorized),
       Boolean(state.runtimeReleaseComplete),
       Boolean(state.carrierHostAdmissibilityReady),
@@ -933,6 +1558,11 @@
       state.recommendedNextFile = HTML_FILE;
       state.recommendedNextRenewalTarget = HTML_FILE;
       state.postgameStatus = "WAITING_HTML_SHELL_CONTROLS_BOUND";
+    } else if (state.shellAccepted && !state.controlSurfaceShieldBound) {
+      state.firstFailedCoordinate = "WAITING_INDEX_CONTROL_SURFACE_EARLY_ACTIVATION_SHIELD";
+      state.recommendedNextFile = FILE;
+      state.recommendedNextRenewalTarget = FILE;
+      state.postgameStatus = "WAITING_INDEX_CONTROL_SURFACE_EARLY_ACTIVATION_SHIELD";
     } else if (!state.shellAccepted) {
       state.firstFailedCoordinate = state.shellHoldReason || "WAITING_HTML_MALE_ROUTE_SHELL_ANCHORS";
       state.recommendedNextFile = HTML_FILE;
@@ -1133,105 +1763,20 @@
       return false;
     }
 
-    if (refs.copyButton && refs.copyButton.dataset.hearthIndexJsBound !== "true") {
-      refs.copyButton.dataset.hearthIndexJsBound = "true";
-      refs.copyButton.addEventListener("click", copyDiagnostic);
-    }
-
-    if (refs.toggleButton && refs.toggleButton.dataset.hearthIndexJsBound !== "true") {
-      refs.toggleButton.dataset.hearthIndexJsBound = "true";
-      refs.toggleButton.addEventListener("click", () => {
-        refreshRefs();
-
-        if (!refs.receiptPanel) return;
-
-        const visible = refs.receiptPanel.dataset.visible !== "true";
-        refs.receiptPanel.dataset.visible = String(visible);
-
-        if (refs.toggleButton) {
-          refs.toggleButton.textContent = visible ? "Hide receipt" : "Show receipt";
-        }
-
-        if (refs.receiptText) {
-          refs.receiptText.textContent = visible ? getReceiptText() : "";
-        }
-      });
-    }
-
-    if (refs.inspectButton && refs.inspectButton.dataset.hearthIndexJsBound !== "true") {
-      refs.inspectButton.dataset.hearthIndexJsBound = "true";
-      refs.inspectButton.addEventListener("click", () => {
-        const html = doc && doc.documentElement ? doc.documentElement : null;
-        const active = !(html && html.dataset.hearthSouthPlanetInspect === "true");
-
-        if (html) {
-          html.dataset.hearthSouthPlanetInspect = String(active);
-          html.dataset.hearthEastInspectReservedActive = String(active);
-          html.dataset.hearthIndexJsInspectIntent = String(active);
-        }
-
-        if (refs.cockpit) {
-          refs.cockpit.dataset.cockpitMode = active ? "planet-inspect" : "diagnostic-dock";
-        }
-
-        if (refs.inspectButton) {
-          refs.inspectButton.textContent = active ? "Show diagnostic" : "Inspect planet";
-        }
-
-        if (refs.showDiagnosticTab) {
-          refs.showDiagnosticTab.hidden = !active;
-          refs.showDiagnosticTab.dataset.visible = String(active);
-        }
-
-        state.postgameStatus = active ? "INDEX_JS_INSPECT_INTENT_ACTIVE" : "INDEX_JS_DIAGNOSTIC_DOCK_ACTIVE";
-        schedulePublish("inspect-toggle");
-      });
-    }
-
-    if (refs.collapseButton && refs.collapseButton.dataset.hearthIndexJsBound !== "true") {
-      refs.collapseButton.dataset.hearthIndexJsBound = "true";
-      refs.collapseButton.addEventListener("click", () => {
-        if (!refs.cockpit) return;
-
-        const expanded = refs.cockpit.dataset.cockpitMode !== "expanded-cockpit";
-        refs.cockpit.dataset.cockpitMode = expanded ? "expanded-cockpit" : "diagnostic-dock";
-        refs.collapseButton.textContent = expanded ? "Collapse cockpit" : "Expand cockpit";
-      });
-    }
-
-    if (refs.showDiagnosticTab && refs.showDiagnosticTab.dataset.hearthIndexJsBound !== "true") {
-      refs.showDiagnosticTab.dataset.hearthIndexJsBound = "true";
-      refs.showDiagnosticTab.addEventListener("click", () => {
-        const html = doc && doc.documentElement ? doc.documentElement : null;
-
-        if (html) {
-          html.dataset.hearthSouthPlanetInspect = "false";
-          html.dataset.hearthEastInspectReservedActive = "false";
-          html.dataset.hearthIndexJsInspectIntent = "false";
-        }
-
-        if (refs.cockpit) refs.cockpit.dataset.cockpitMode = "diagnostic-dock";
-        refs.showDiagnosticTab.hidden = true;
-
-        if (refs.inspectButton) refs.inspectButton.textContent = "Inspect planet";
-
-        state.postgameStatus = "INDEX_JS_DIAGNOSTIC_DOCK_ACTIVE";
-        schedulePublish("show-diagnostic");
-      });
-    }
+    bindControlSurfaceEventShield("bind-controls");
 
     state.shellControlsBound = Boolean(refs.copyButton && refs.toggleButton && refs.inspectButton && refs.collapseButton);
 
     if (state.shellControlsBound && state.shellAccepted && !state.runtimeReleaseStarted) {
       state.activeFibonacci = "F3";
       state.activeFibonacciRank = 3;
-      state.activeStageId = "F3_HTML_SHELL_CONTROLS_BOUND";
-      state.activeGearId = "hearth-index-js-controls-f3";
+      state.activeStageId = "F3_HTML_SHELL_CONTROLS_BOUND_AND_SHIELDED";
+      state.activeGearId = "hearth-index-js-controls-shielded-f3";
       state.activeProgress = Math.max(state.activeProgress, 28);
       state.firstFailedCoordinate = state.runtimeReleaseAuthorized ? "WAITING_RUNTIME_RELEASE_START" : "WAITING_RUNTIME_RELEASE_AUTHORIZATION";
       state.recommendedNextFile = FILE;
       state.recommendedNextRenewalTarget = FILE;
-      state.postgameStatus = "HTML_SHELL_CONTROLS_BOUND";
+      state.postgameStatus = "HTML_SHELL_CONTROLS_BOUND_WITH_EARLY_ACTIVATION_SHIELD";
     }
 
     updateCarrierHostAdmissibility("bind-controls-complete");
@@ -1536,7 +2081,9 @@
     if (refs.heartbeatText) {
       refs.heartbeatText.textContent = message || [
         `htmlShell=${state.shellAccepted}`,
+        `htmlContract=${state.currentHtmlContractRecognized}`,
         `controls=${state.shellControlsBound}`,
+        `shield=${state.controlSurfaceShieldBound}`,
         `runtime=${state.runtimeReleaseComplete}`,
         `carrierHost=${state.carrierHostReady}`,
         `admissibility=${state.carrierHostAdmissibilityReady}`,
@@ -1552,6 +2099,15 @@
       refs.cockpit.dataset.hearthIndexJsActive = "true";
       refs.cockpit.dataset.hearthIndexJsContract = CONTRACT;
       refs.cockpit.dataset.hearthShellAccepted = String(state.shellAccepted);
+      refs.cockpit.dataset.hearthCurrentHtmlContractRecognized = String(state.currentHtmlContractRecognized);
+      refs.cockpit.dataset.hearthIndexControlSurfaceEarlyActivationShieldActive = "true";
+      refs.cockpit.dataset.hearthIndexControlSurfaceEventShieldActive = "true";
+      refs.cockpit.dataset.hearthIndexControlPointerTouchShieldActive = "true";
+      refs.cockpit.dataset.hearthIndexControlCapturePhaseShieldActive = "true";
+      refs.cockpit.dataset.hearthRuntimeStageInterceptionPrevented = "true";
+      refs.cockpit.dataset.hearthCanvasGestureLeakBlocked = "true";
+      refs.cockpit.dataset.hearthDuplicateTouchClickSuppressionActive = "true";
+      refs.cockpit.dataset.hearthKeyboardActivationPreserved = "true";
       refs.cockpit.dataset.hearthRuntimeReleaseComplete = String(state.runtimeReleaseComplete);
       refs.cockpit.dataset.hearthCarrierHostAdmissibilityReady = String(state.carrierHostAdmissibilityReady);
       refs.cockpit.dataset.hearthIndexHandoffToRouteConductor = String(state.handoffToRouteConductor);
@@ -1585,6 +2141,33 @@
     setDataset("hearthIndexJsParserRepairActive", "true");
     setDataset("hearthIndexJsApiRedeclarationRepairActive", "true");
 
+    setDataset("hearthIndexControlSurfaceEarlyActivationShieldActive", "true");
+    setDataset("hearthIndexControlSurfaceEventShieldActive", "true");
+    setDataset("hearthIndexOwnsControlBinding", "true");
+    setDataset("hearthRouteConductorOwnsControlBinding", "false");
+    setDataset("hearthControlPointerTouchShieldActive", "true");
+    setDataset("hearthControlCapturePhaseShieldActive", "true");
+    setDataset("hearthMultiLayerControlCaptureShieldActive", "true");
+    setDataset("hearthTerminalActivationExecutionActive", "true");
+    setDataset("hearthClickOnlyActivationAvoided", "true");
+    setDataset("hearthRuntimeStageInterceptionPrevented", "true");
+    setDataset("hearthCanvasGestureLeakBlocked", "true");
+    setDataset("hearthDuplicateTouchClickSuppressionActive", "true");
+    setDataset("hearthPhysicalActivationWindowSuppressionActive", "true");
+    setDataset("hearthKeyboardActivationPreserved", "true");
+    setDataset("hearthCurrentHtmlContractRecognized", state.currentHtmlContractRecognized);
+    setDataset("hearthHtmlRebuildRequired", "false");
+    setDataset("hearthRouteConductorRebuildRequired", "false");
+    setDataset("hearthCanvasRebuildRequired", "false");
+    setDataset("hearthRuntimeTableRebuildRequired", "false");
+    setDataset("hearthControlShieldInterceptCount", state.controlShieldInterceptCount);
+    setDataset("hearthControlShieldTerminalActivationCount", state.controlShieldTerminalActivationCount);
+    setDataset("hearthControlShieldClickSuppressionCount", state.controlShieldClickSuppressionCount);
+    setDataset("hearthControlShieldDuplicateSuppressionCount", state.controlShieldDuplicateSuppressionCount);
+    setDataset("hearthControlShieldKeyboardActivationCount", state.controlShieldKeyboardActivationCount);
+    setDataset("hearthControlShieldLastActionName", state.controlShieldLastActionName);
+    setDataset("hearthControlShieldLastEventType", state.controlShieldLastEventType);
+
     setDataset("hearthIndexJsHtmlFile", HTML_FILE);
     setDataset("hearthHtmlOwnsVisibleShell", "true");
     setDataset("hearthIndexJsCreatesVisibleShell", "false");
@@ -1611,6 +2194,7 @@
     setDataset("hearthIndexJsOwnsReadyText", "false");
     setDataset("hearthIndexJsOwnsFinalVisualPassClaim", "false");
 
+    setDataset("hearthCurrentHtmlContract", CURRENT_HTML_CONTRACT);
     setDataset("hearthExpectedHtmlContract", EXPECTED_HTML_CONTRACT);
     setDataset("hearthCurrentSafeHtmlContract", CURRENT_SAFE_HTML_CONTRACT);
     setDataset("hearthShellContract", state.shellContract);
@@ -1713,13 +2297,16 @@
     root.HEARTH.eastSouthPairFemaleSelector = api;
     root.HEARTH.twoFileNewsFibonacciCarrierHostAlignment = api;
     root.HEARTH.indexJsApiRedeclarationControlBindingRepair = api;
+    root.HEARTH.indexJsControlSurfaceEarlyActivationShield = api;
 
     root.DEXTER_LAB.hearthIndexRuntimeHost = api;
     root.DEXTER_LAB.hearthHtmlShellAnchorAuditRuntimeHost = api;
     root.DEXTER_LAB.hearthDynamicSelectorRuntimeRelease = api;
     root.DEXTER_LAB.hearthTwoFileNewsFibonacciCarrierHostAlignment = api;
     root.DEXTER_LAB.hearthIndexJsApiRedeclarationControlBindingRepair = api;
+    root.DEXTER_LAB.hearthIndexJsControlSurfaceEarlyActivationShield = api;
 
+    root.HEARTH_INDEX_JS_CONTROL_SURFACE_EARLY_ACTIVATION_SHIELD = api;
     root.HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR = api;
     root.HEARTH_INDEX_JS_TWO_FILE_NEWS_FIBONACCI_CARRIER_HOST_ALIGNMENT = api;
     root.HEARTH_INDEX_JS_HTML_SHELL_ANCHOR_AUDIT_RUNTIME_HOST = api;
@@ -1735,8 +2322,9 @@
 
     const receipt = getReceipt();
 
+    root.HEARTH_INDEX_JS_CONTROL_SURFACE_EARLY_ACTIVATION_SHIELD_RECEIPT = receipt;
+    root.HEARTH_INDEX_JS_CONTROL_SURFACE_EARLY_ACTIVATION_SHIELD_RECEIPT_v5_3 = receipt;
     root.HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_RECEIPT = receipt;
-    root.HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_RECEIPT_v5_1 = receipt;
     root.HEARTH_INDEX_JS_TWO_FILE_NEWS_FIBONACCI_CARRIER_HOST_ALIGNMENT_RECEIPT = receipt;
     root.HEARTH_INDEX_JS_HTML_SHELL_ANCHOR_AUDIT_RUNTIME_HOST_RECEIPT = receipt;
     root.HEARTH_INDEX_RUNTIME_HOST_RECEIPT = receipt;
@@ -1748,6 +2336,7 @@
     root.HEARTH.indexJsReceipt = receipt;
     root.HEARTH.twoFileNewsFibonacciCarrierHostAlignmentReceipt = receipt;
     root.HEARTH.indexJsApiRedeclarationControlBindingRepairReceipt = receipt;
+    root.HEARTH.indexJsControlSurfaceEarlyActivationShieldReceipt = receipt;
   }
 
   function schedulePublish(message = "") {
@@ -1839,6 +2428,38 @@
     return getReceipt();
   }
 
+  function getControlShieldStatus() {
+    return {
+      indexControlSurfaceEarlyActivationShieldActive: true,
+      indexControlSurfaceEventShieldActive: true,
+      indexOwnsControlBinding: true,
+      routeConductorOwnsControlBinding: false,
+      controlPointerTouchShieldActive: true,
+      controlCapturePhaseShieldActive: true,
+      multiLayerControlCaptureShieldActive: true,
+      terminalActivationExecutionActive: true,
+      clickOnlyActivationAvoided: true,
+      runtimeStageInterceptionPrevented: true,
+      canvasGestureLeakBlocked: true,
+      duplicateTouchClickSuppressionActive: true,
+      physicalActivationWindowSuppressionActive: true,
+      keyboardActivationPreserved: true,
+      currentHtmlContractRecognized: state.currentHtmlContractRecognized,
+      controlSurfaceShieldBound: state.controlSurfaceShieldBound,
+      controlShieldBoundTargets: state.controlShieldBoundTargets,
+      controlShieldBoundControls: state.controlShieldBoundControls,
+      controlShieldInterceptCount: state.controlShieldInterceptCount,
+      controlShieldTerminalActivationCount: state.controlShieldTerminalActivationCount,
+      controlShieldClickSuppressionCount: state.controlShieldClickSuppressionCount,
+      controlShieldDuplicateSuppressionCount: state.controlShieldDuplicateSuppressionCount,
+      controlShieldKeyboardActivationCount: state.controlShieldKeyboardActivationCount,
+      controlShieldLastActionName: state.controlShieldLastActionName,
+      controlShieldLastEventType: state.controlShieldLastEventType,
+      controlShieldLastActivatedAt: state.controlShieldLastActivatedAt,
+      controlShieldLastSuppressedAt: state.controlShieldLastSuppressedAt
+    };
+  }
+
   function getReceipt() {
     const carrierPacket = state.lastCarrierHostAdmissibilityPacket || composeCarrierHostAdmissibilityPacket();
 
@@ -1860,6 +2481,13 @@
       apiRedeclarationRepairActive: true,
       priorApiRedeclarationFatalDefectCorrected: true,
       apiObjectPopulationMode: "Object.assign(api, {...})",
+
+      ...getControlShieldStatus(),
+
+      htmlRebuildRequired: false,
+      routeConductorRebuildRequired: false,
+      canvasRebuildRequired: false,
+      runtimeTableRebuildRequired: false,
 
       htmlOwnsVisibleShell: true,
       indexJsCreatesVisibleShell: false,
@@ -1888,8 +2516,10 @@
       ownsReadyText: false,
       ownsFinalVisualPassClaim: false,
 
+      currentHtmlContract: CURRENT_HTML_CONTRACT,
       expectedHtmlContract: EXPECTED_HTML_CONTRACT,
       currentSafeHtmlContract: CURRENT_SAFE_HTML_CONTRACT,
+      htmlContractsRecognized: HTML_CONTRACTS_RECOGNIZED.slice(),
       shellContract: state.shellContract,
       shellDetected: state.shellDetected,
       shellSelected: state.shellSelected,
@@ -1978,6 +2608,9 @@
       postgameStatus: state.postgameStatus,
 
       requiredHtmlAnchors: REQUIRED_HTML_ANCHORS.slice(),
+      controlSelectors: CONTROL_SELECTORS.slice(),
+      controlShieldEvents: CONTROL_SHIELD_EVENTS.slice(),
+      controlTerminalEvents: CONTROL_TERMINAL_EVENTS.slice(),
       runtimeFiles: RUNTIME_FILES.map((item) => ({
         key: item.key,
         label: item.label,
@@ -2007,7 +2640,7 @@
     const r = getReceipt();
 
     return [
-      "HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_RECEIPT",
+      "HEARTH_INDEX_JS_CONTROL_SURFACE_EARLY_ACTIVATION_SHIELD_RECEIPT",
       "",
       line("contract", r.contract),
       line("receipt", r.receipt),
@@ -2023,6 +2656,46 @@
       line("apiRedeclarationRepairActive", r.apiRedeclarationRepairActive),
       line("priorApiRedeclarationFatalDefectCorrected", r.priorApiRedeclarationFatalDefectCorrected),
       line("apiObjectPopulationMode", r.apiObjectPopulationMode),
+      "",
+      "CONTROL_SURFACE_EARLY_ACTIVATION_SHIELD",
+      line("indexControlSurfaceEarlyActivationShieldActive", r.indexControlSurfaceEarlyActivationShieldActive),
+      line("indexControlSurfaceEventShieldActive", r.indexControlSurfaceEventShieldActive),
+      line("indexOwnsControlBinding", r.indexOwnsControlBinding),
+      line("routeConductorOwnsControlBinding", r.routeConductorOwnsControlBinding),
+      line("controlPointerTouchShieldActive", r.controlPointerTouchShieldActive),
+      line("controlCapturePhaseShieldActive", r.controlCapturePhaseShieldActive),
+      line("multiLayerControlCaptureShieldActive", r.multiLayerControlCaptureShieldActive),
+      line("terminalActivationExecutionActive", r.terminalActivationExecutionActive),
+      line("clickOnlyActivationAvoided", r.clickOnlyActivationAvoided),
+      line("runtimeStageInterceptionPrevented", r.runtimeStageInterceptionPrevented),
+      line("canvasGestureLeakBlocked", r.canvasGestureLeakBlocked),
+      line("duplicateTouchClickSuppressionActive", r.duplicateTouchClickSuppressionActive),
+      line("physicalActivationWindowSuppressionActive", r.physicalActivationWindowSuppressionActive),
+      line("keyboardActivationPreserved", r.keyboardActivationPreserved),
+      line("controlSurfaceShieldBound", r.controlSurfaceShieldBound),
+      line("controlShieldBoundTargets", r.controlShieldBoundTargets),
+      line("controlShieldBoundControls", r.controlShieldBoundControls),
+      line("controlShieldInterceptCount", r.controlShieldInterceptCount),
+      line("controlShieldTerminalActivationCount", r.controlShieldTerminalActivationCount),
+      line("controlShieldClickSuppressionCount", r.controlShieldClickSuppressionCount),
+      line("controlShieldDuplicateSuppressionCount", r.controlShieldDuplicateSuppressionCount),
+      line("controlShieldKeyboardActivationCount", r.controlShieldKeyboardActivationCount),
+      line("controlShieldLastActionName", r.controlShieldLastActionName),
+      line("controlShieldLastEventType", r.controlShieldLastEventType),
+      line("controlShieldLastActivatedAt", r.controlShieldLastActivatedAt),
+      line("controlShieldLastSuppressedAt", r.controlShieldLastSuppressedAt),
+      "",
+      "HTML_CONTRACT_ALIGNMENT",
+      line("currentHtmlContract", r.currentHtmlContract),
+      line("currentHtmlContractRecognized", r.currentHtmlContractRecognized),
+      line("expectedHtmlContract", r.expectedHtmlContract),
+      line("currentSafeHtmlContract", r.currentSafeHtmlContract),
+      line("shellContract", r.shellContract),
+      line("shellSelectionMode", r.shellSelectionMode),
+      line("htmlRebuildRequired", r.htmlRebuildRequired),
+      line("routeConductorRebuildRequired", r.routeConductorRebuildRequired),
+      line("canvasRebuildRequired", r.canvasRebuildRequired),
+      line("runtimeTableRebuildRequired", r.runtimeTableRebuildRequired),
       "",
       "SPLIT_BOUNDARY",
       line("htmlOwnsVisibleShell", r.htmlOwnsVisibleShell),
@@ -2218,11 +2891,17 @@
     htmlFile: HTML_FILE,
     route: ROUTE,
 
+    CURRENT_HTML_CONTRACT,
     EXPECTED_HTML_CONTRACT,
     CURRENT_SAFE_HTML_CONTRACT,
+    HTML_CONTRACTS_RECOGNIZED,
     MACRO_CYCLE_1,
     MACRO_CYCLE_2,
     REQUIRED_HTML_ANCHORS,
+    CONTROL_SELECTORS,
+    CONTROL_ACTIONS,
+    CONTROL_SHIELD_EVENTS,
+    CONTROL_TERMINAL_EVENTS,
     RUNTIME_FILES,
 
     boot,
@@ -2235,6 +2914,12 @@
     detectShell: auditShellAnchors,
     applyReleaseLaw,
     bindControls,
+    bindControlSurfaceEventShield,
+    handleControlSurfaceEvent,
+    activateControlAction,
+    setInspectIntent,
+    toggleReceiptPanel,
+    toggleCockpitMode,
     releaseRuntimeQueue,
     requestCanvasPreReleaseCarrier,
     composeCarrierHostPacket,
@@ -2245,11 +2930,25 @@
     publishState,
     getReceipt,
     getReceiptText,
+    getControlShieldStatus,
     copyDiagnostic,
 
     parserRepairActive: true,
     apiRedeclarationRepairActive: true,
     priorApiRedeclarationFatalDefectCorrected: true,
+
+    indexControlSurfaceEarlyActivationShieldActive: true,
+    indexControlSurfaceEventShieldActive: true,
+    controlPointerTouchShieldActive: true,
+    controlCapturePhaseShieldActive: true,
+    multiLayerControlCaptureShieldActive: true,
+    terminalActivationExecutionActive: true,
+    clickOnlyActivationAvoided: true,
+    runtimeStageInterceptionPrevented: true,
+    canvasGestureLeakBlocked: true,
+    duplicateTouchClickSuppressionActive: true,
+    physicalActivationWindowSuppressionActive: true,
+    keyboardActivationPreserved: true,
 
     htmlOwnsVisibleShell: true,
     indexJsCreatesVisibleShell: false,
@@ -2276,6 +2975,8 @@
     ownsMountHost: false,
     ownsControlsCreation: false,
     ownsControlBinding: true,
+    indexOwnsControlBinding: true,
+    routeConductorOwnsControlBinding: false,
     ownsRuntimeScriptRelease: true,
     ownsCanvasCarrierHostPacket: true,
     ownsCarrierHostAdmissibility: true,
@@ -2289,6 +2990,11 @@
     ownsF21: false,
     ownsReadyText: false,
     ownsFinalVisualPassClaim: false,
+
+    htmlRebuildRequired: false,
+    routeConductorRebuildRequired: false,
+    canvasRebuildRequired: false,
+    runtimeTableRebuildRequired: false,
 
     generatedImage: false,
     graphicBox: false,
@@ -2311,13 +3017,16 @@
   root.HEARTH.eastSouthPairFemaleSelector = api;
   root.HEARTH.twoFileNewsFibonacciCarrierHostAlignment = api;
   root.HEARTH.indexJsApiRedeclarationControlBindingRepair = api;
+  root.HEARTH.indexJsControlSurfaceEarlyActivationShield = api;
 
   root.DEXTER_LAB.hearthIndexRuntimeHost = api;
   root.DEXTER_LAB.hearthHtmlShellAnchorAuditRuntimeHost = api;
   root.DEXTER_LAB.hearthDynamicSelectorRuntimeRelease = api;
   root.DEXTER_LAB.hearthTwoFileNewsFibonacciCarrierHostAlignment = api;
   root.DEXTER_LAB.hearthIndexJsApiRedeclarationControlBindingRepair = api;
+  root.DEXTER_LAB.hearthIndexJsControlSurfaceEarlyActivationShield = api;
 
+  root.HEARTH_INDEX_JS_CONTROL_SURFACE_EARLY_ACTIVATION_SHIELD = api;
   root.HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR = api;
   root.HEARTH_INDEX_JS_TWO_FILE_NEWS_FIBONACCI_CARRIER_HOST_ALIGNMENT = api;
   root.HEARTH_INDEX_JS_HTML_SHELL_ANCHOR_AUDIT_RUNTIME_HOST = api;
@@ -2328,6 +3037,7 @@
   root.HEARTH_EAST_SOUTH_PAIR_FEMALE_SELECTOR = api;
   root.HEARTH_EAST_SOUTH_PAIR_DYNAMIC_SELECTOR_RUNTIME_RELEASE = api;
 
+  bindControlSurfaceEventShield("initial-control-shield-publication");
   updateCarrierHostAdmissibility("initial-publication");
   publishGlobals();
 

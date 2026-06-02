@@ -1,16 +1,17 @@
 <!-- TARGET FILE: /showroom/globe/hearth/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- HEARTH_HTML_CONTROL_SURFACE_CACHE_KEY_TOUCH_BINDING_REPAIR_TNT_v2_1 -->
+<!-- HEARTH_HTML_PARALLEL_DIAGNOSTIC_RAIL_NATIVE_ACCESS_DOORWAY_TNT_v2_2 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/globe/hearth/"
   data-page="hearth-survival-path"
-  data-version="G2-CONTROL-SURFACE-CACHE-KEY-TOUCH-BINDING-REPAIR-v2_1"
-  data-contract="HEARTH_HTML_CONTROL_SURFACE_CACHE_KEY_TOUCH_BINDING_REPAIR_TNT_v2_1"
-  data-previous-contract="HEARTH_HTML_CURRENT_RUNTIME_SELECTOR_CACHE_RENEWAL_RECEIVER_TNT_v2"
+  data-version="G2-PARALLEL-DIAGNOSTIC-RAIL-NATIVE-ACCESS-DOORWAY-v2_2"
+  data-contract="HEARTH_HTML_PARALLEL_DIAGNOSTIC_RAIL_NATIVE_ACCESS_DOORWAY_TNT_v2_2"
+  data-previous-contract="HEARTH_HTML_CONTROL_SURFACE_CACHE_KEY_TOUCH_BINDING_REPAIR_TNT_v2_1"
+  data-prior-contract="HEARTH_HTML_CURRENT_RUNTIME_SELECTOR_CACHE_RENEWAL_RECEIVER_TNT_v2"
   data-stale-contract-superseded="HEARTH_HTML_SOUTH_PAIR_MALE_SHELL_FEMALE_SELECTED_RUNTIME_RECEIVER_TNT_v1"
-  data-role="hearth-html-control-surface-cache-key-touch-binding-repair"
+  data-role="hearth-html-parallel-diagnostic-rail-native-access-doorway"
   data-disposition="current-south-facing-expression-shell"
   data-pair-gender-model="male-html-shell-receives-female-js-selector"
   data-male-html-shell="true"
@@ -18,6 +19,15 @@
   data-female-js-chooses-male-html-shell="true"
   data-html-cache-renewal-active="true"
   data-control-surface-cache-key-touch-binding-repair-active="true"
+  data-diagnostic-rail-native-access="true"
+  data-diagnostic-rail-route="/showroom/globe/hearth/diagnostic/"
+  data-html-loads-diagnostic-rail="false"
+  data-html-owns-diagnostic-rail="false"
+  data-diagnostic-child-chain-loaded-by-html="false"
+  data-diagnostic-rail-iframe="false"
+  data-diagnostic-rail-direct-north-call="false"
+  data-diagnostic-rail-fix-claimed="false"
+  data-production-repair-claimed="false"
   data-selector-cache-bust="HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_TNT_v5_1"
   data-stale-html-v1-superseded="true"
   data-news-alignment-active="true"
@@ -33,8 +43,11 @@
   data-html-loads-south="false"
   data-east-owns-staged-boot="true"
   data-canvas-f13-delegated="true"
+  data-f13-claimed="false"
   data-f21-north-only="true"
+  data-f21-claimed="false"
   data-ready-text-allowed="false"
+  data-ready-text-claimed="false"
   data-downstream-release-claimed="false"
   data-html-owns-public-shell="true"
   data-html-owns-runtime="false"
@@ -54,7 +67,7 @@
   <title>Hearth · Mirrorland Survival Path</title>
   <meta
     name="description"
-    content="Hearth is the survival path inside Mirrorland. The current HTML shell paints first, clears stale v1 shell identity, loads the repaired JavaScript selector cache key, and preserves mobile-tappable cockpit controls."
+    content="Hearth is the survival path inside Mirrorland. The current HTML shell paints first, preserves local Hearth controls, and now provides native anchor access to the independent Hearth Diagnostic Rail without loading or owning the diagnostic chain."
   >
 
   <style>
@@ -458,6 +471,14 @@
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
     }
 
+    .portal-link.diagnostic-doorway{
+      border-color:rgba(126,216,255,.42);
+      color:rgba(232,248,255,.96);
+      background:
+        radial-gradient(circle at 18% 0%,rgba(126,216,255,.14),transparent 80%),
+        rgba(255,255,255,.05);
+    }
+
     .micro-card{
       display:grid;
       gap:.22rem;
@@ -589,6 +610,9 @@
 
     .hearth-ledger-button{
       min-height:30px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
       border:1px solid rgba(242,198,109,.24);
       border-radius:999px;
       padding:7px 10px;
@@ -597,6 +621,8 @@
       font:900 .58rem/1 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       letter-spacing:.07em;
       text-transform:uppercase;
+      text-align:center;
+      text-decoration:none;
       cursor:pointer;
       pointer-events:auto;
       touch-action:manipulation;
@@ -605,10 +631,33 @@
       -webkit-tap-highlight-color:rgba(242,198,109,.20);
     }
 
+    .hearth-ledger-button:visited{
+      color:rgba(238,246,255,.84);
+    }
+
+    .hearth-ledger-button:hover,
+    .hearth-ledger-button:focus-visible{
+      border-color:rgba(242,198,109,.52);
+      color:rgba(255,243,210,.96);
+      outline:none;
+    }
+
     .hearth-ledger-button.primary{
       color:#06101e;
       border-color:rgba(242,198,109,.86);
       background:linear-gradient(135deg,#ffe8a3,#f2c66d);
+    }
+
+    .hearth-ledger-button.primary:visited{
+      color:#06101e;
+    }
+
+    .hearth-ledger-button.diagnostic-doorway{
+      border-color:rgba(126,216,255,.44);
+      color:rgba(232,248,255,.96);
+      background:
+        radial-gradient(circle at 18% 0%,rgba(126,216,255,.14),transparent 80%),
+        rgba(255,255,255,.05);
     }
 
     .hearth-ledger-scroll{
@@ -842,11 +891,19 @@
       text-transform:uppercase;
     }
 
-    .diagnostic span{
+    .diagnostic span,
+    .diagnostic a{
       color:rgba(230,238,255,.68);
       font-size:.68rem;
       font-weight:760;
       line-height:1.25;
+      overflow-wrap:anywhere;
+    }
+
+    .diagnostic a{
+      text-decoration:underline;
+      text-decoration-color:rgba(126,216,255,.38);
+      text-underline-offset:3px;
     }
 
     .receipt,
@@ -930,11 +987,15 @@
   <script
     defer
     src="/showroom/globe/hearth/index.js?v=HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_TNT_v5_1"
-    data-loaded-by="HEARTH_HTML_CONTROL_SURFACE_CACHE_KEY_TOUCH_BINDING_REPAIR_TNT_v2_1"
-    data-previous-loaded-by="HEARTH_HTML_CURRENT_RUNTIME_SELECTOR_CACHE_RENEWAL_RECEIVER_TNT_v2"
+    data-loaded-by="HEARTH_HTML_PARALLEL_DIAGNOSTIC_RAIL_NATIVE_ACCESS_DOORWAY_TNT_v2_2"
+    data-previous-loaded-by="HEARTH_HTML_CONTROL_SURFACE_CACHE_KEY_TOUCH_BINDING_REPAIR_TNT_v2_1"
     data-js-selector-cache-key="HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_TNT_v5_1"
     data-js-selector-repair-active="true"
     data-control-surface-cache-key-touch-binding-repair-active="true"
+    data-diagnostic-rail-native-access="true"
+    data-html-loads-diagnostic-rail="false"
+    data-html-owns-diagnostic-rail="false"
+    data-diagnostic-child-chain-loaded-by-html="false"
     data-role="female-js-selector"
     data-female-js-selector="true"
     data-male-html-shell-selected="true"
@@ -972,7 +1033,7 @@
       </a>
 
       <div class="header-note">
-        Current HTML shell paints first. The repaired female selector cache key is active, and the mobile cockpit controls remain tappable.
+        Current HTML shell paints first. The repaired female selector cache key remains active, local cockpit controls remain tappable, and the independent Diagnostic Rail is available by native anchor only.
       </div>
     </header>
 
@@ -982,10 +1043,10 @@
 
         <h1 id="page-title">Hearth is the survival path inside Mirrorland.</h1>
 
-        <h2>Current shell received. Selector cache repaired. Control surface touch binding restored.</h2>
+        <h2>Current shell received. Selector cache repaired. Diagnostic rail doorway added.</h2>
 
         <p class="lead">
-          ZIONTS carries consequence. Audralia carries possibility. Hearth carries survival condition: the living proof field where visibility, inspection, completion, and survivability are tested only after the page itself has stabilized.
+          ZIONTS carries consequence. Audralia carries possibility. Hearth carries survival condition: the living proof field where visibility, inspection, completion, and survivability are tested only after the page itself has stabilized. The independent diagnostic rail is available through a native doorway without being loaded into this production shell.
         </p>
       </section>
 
@@ -998,12 +1059,14 @@
           data-south-pair-male-shell="true"
           data-html-cache-renewal-active="true"
           data-control-surface-cache-key-touch-binding-repair-active="true"
+          data-diagnostic-rail-native-access="true"
+          data-diagnostic-rail-route="/showroom/globe/hearth/diagnostic/"
           aria-label="Interactive Hearth globe stage"
         >
           <div class="globe-label">
-            <b>Hearth · Control Surface Repair Receiver</b>
+            <b>Hearth · Native Diagnostic Doorway Receiver</b>
             <span>
-              <strong>HTML shell</strong> → repaired female JS selector cache key → F8 runtime release → F13 Canvas evidence → F21 North-only latch.
+              <strong>HTML shell</strong> → repaired female JS selector cache key → native diagnostic anchor access → F8 runtime release → F13 Canvas evidence → F21 North-only latch.
             </span>
           </div>
 
@@ -1016,6 +1079,8 @@
             data-female-js-selector="/showroom/globe/hearth/index.js"
             data-html-cache-renewal-active="true"
             data-control-surface-cache-key-touch-binding-repair-active="true"
+            data-diagnostic-rail-native-access="true"
+            data-diagnostic-rail-route="/showroom/globe/hearth/diagnostic/"
             data-canvas-f13-delegated="true"
             data-generated-image="false"
             data-graphic-box="false"
@@ -1033,14 +1098,16 @@
             data-female-selector-pending="true"
             data-html-cache-renewal-active="true"
             data-control-surface-touch-binding-repair-active="true"
+            data-diagnostic-rail-native-access="true"
+            data-diagnostic-rail-route="/showroom/globe/hearth/diagnostic/"
             aria-live="polite"
           >
             <div class="hearth-ledger-head">
               <div class="hearth-ledger-kicker">Hearth · Current Shell</div>
-              <h2 class="hearth-ledger-title">HEARTH CONTROL SURFACE REPAIRED</h2>
+              <h2 class="hearth-ledger-title">HEARTH NATIVE DIAGNOSTIC DOORWAY ACTIVE</h2>
               <div class="hearth-ledger-meta" data-hearth-stage-label>F1 · Current static shell painted</div>
-              <div class="hearth-ledger-meta" data-hearth-heartbeat-text>female-selector=v5_1 · controls=tappable · runtime-release=delegated</div>
-              <div class="hearth-ledger-latest" data-hearth-latest-event>latest=HEARTH_HTML_CONTROL_SURFACE_CACHE_KEY_TOUCH_BINDING_REPAIR_TNT_v2_1</div>
+              <div class="hearth-ledger-meta" data-hearth-heartbeat-text>female-selector=v5_1 · controls=tappable · diagnostic-doorway=native-anchor · runtime-release=delegated</div>
+              <div class="hearth-ledger-latest" data-hearth-latest-event>latest=HEARTH_HTML_PARALLEL_DIAGNOSTIC_RAIL_NATIVE_ACCESS_DOORWAY_TNT_v2_2</div>
             </div>
 
             <div class="hearth-ledger-progress" data-hearth-index-progress-strip="true">
@@ -1053,6 +1120,11 @@
             <div class="hearth-ledger-actions">
               <button class="hearth-ledger-button primary" type="button" data-hearth-copy-diagnostic>Copy diagnostic</button>
               <button class="hearth-ledger-button" type="button" data-hearth-toggle-receipt>Show receipt</button>
+              <a
+                class="hearth-ledger-button diagnostic-doorway"
+                href="/showroom/globe/hearth/diagnostic/"
+                data-hearth-diagnostic-rail-native-anchor="true"
+              >Open Diagnostic</a>
               <button class="hearth-ledger-button" type="button" data-hearth-inspect-planet>Inspect planet</button>
               <button class="hearth-ledger-button" type="button" data-hearth-collapse-cockpit>Expand cockpit</button>
             </div>
@@ -1089,7 +1161,7 @@
                   <div class="hearth-ledger-lane-top">
                     <span class="hearth-ledger-lane-title">
                       <strong>F3 · Shell controls</strong>
-                      <span>copy, receipt, inspect, and cockpit controls are protected as tappable control surfaces</span>
+                      <span>copy, receipt, inspect, cockpit, and native diagnostic doorway controls are protected as tappable control surfaces</span>
                     </span>
                     <span class="hearth-ledger-lane-status">TOUCH REPAIRED</span>
                   </div>
@@ -1157,16 +1229,26 @@
                 data-hearth-receipt-box
                 data-visible="false"
               >
-                <pre data-hearth-receipt-text>HEARTH_HTML_CONTROL_SURFACE_CACHE_KEY_TOUCH_BINDING_REPAIR_TNT_v2_1
-receipt=html_shell_cache_key_and_touch_binding_repaired
+                <pre data-hearth-receipt-text>HEARTH_HTML_PARALLEL_DIAGNOSTIC_RAIL_NATIVE_ACCESS_DOORWAY_TNT_v2_2
+receipt=html_native_diagnostic_rail_access_doorway_added
 route=/showroom/globe/hearth/
-htmlContract=HEARTH_HTML_CONTROL_SURFACE_CACHE_KEY_TOUCH_BINDING_REPAIR_TNT_v2_1
-previousHtmlContract=HEARTH_HTML_CURRENT_RUNTIME_SELECTOR_CACHE_RENEWAL_RECEIVER_TNT_v2
+htmlContract=HEARTH_HTML_PARALLEL_DIAGNOSTIC_RAIL_NATIVE_ACCESS_DOORWAY_TNT_v2_2
+previousHtmlContract=HEARTH_HTML_CONTROL_SURFACE_CACHE_KEY_TOUCH_BINDING_REPAIR_TNT_v2_1
 staleHtmlV1Superseded=true
 femaleSelector=/showroom/globe/hearth/index.js
 selectorCacheBust=HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_TNT_v5_1
 scriptSrc=/showroom/globe/hearth/index.js?v=HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_TNT_v5_1
 controlSurfaceTouchBindingRepairActive=true
+diagnosticRailNativeAccess=true
+diagnosticRailRoute=/showroom/globe/hearth/diagnostic/
+diagnosticRailLoadedByHtml=false
+htmlOwnsDiagnosticRail=false
+diagnosticRailChildChainLoadedByHtml=false
+nativeAnchorAccess=true
+diagnosticRailIframe=false
+diagnosticRailDirectNorthCall=false
+diagnosticRailFixClaimed=false
+productionRepairClaimed=false
 stageTouchAction=pan-y
 cockpitTouchAction=manipulation
 cockpitPointerEvents=auto
@@ -1182,18 +1264,24 @@ htmlLoadsSouth=false
 cycleOneRoute=NORTH_EAST_WEST_SOUTH_NORTH
 cycleTwoRoute=NORTH_EAST_SOUTH_WEST_CANVAS
 canvasF13Delegated=true
+f13Claimed=false
 f21NorthOnly=true
+f21Claimed=false
 readyTextAllowed=false
+readyTextClaimed=false
 downstreamReleaseClaimed=false
-visualPassClaimed=false</pre>
+visualPassClaimed=false
+generatedImage=false
+graphicBox=false
+webGL=false</pre>
               </div>
             </div>
           </aside>
 
           <div class="globe-status">
-            <strong>HTML Shell Cache Key Repaired</strong>
+            <strong>Native Diagnostic Doorway Added</strong>
             <span>
-              This shell loads the repaired v5_1 selector cache key and protects cockpit controls as tappable surfaces. It does not load the runtime table, source stack, Canvas, West, North, or South directly.
+              This shell keeps the repaired v5_1 selector cache key and preserves cockpit controls as tappable surfaces. It does not load, call, iframe, or own the diagnostic rail; it only provides native anchor access to the independent diagnostic route.
             </span>
           </div>
         </section>
@@ -1211,6 +1299,11 @@ visualPassClaimed=false</pre>
               <a class="portal-link" href="/showroom/globe/earth/">ZIONTS · Consequence</a>
               <a class="portal-link" href="/showroom/globe/audralia/">Audralia · Possibility</a>
               <a class="portal-link current" href="/showroom/globe/hearth/">Hearth · Survival</a>
+              <a
+                class="portal-link diagnostic-doorway"
+                href="/showroom/globe/hearth/diagnostic/"
+                data-hearth-diagnostic-rail-native-anchor="true"
+              >Hearth Diagnostic Rail</a>
               <a class="portal-link" href="/explore/frontier/">Frontier</a>
               <a class="portal-link" href="/gauges/">Gauges</a>
               <a class="portal-link" href="/showroom/">Showroom</a>
@@ -1220,6 +1313,11 @@ visualPassClaimed=false</pre>
           <div class="micro-card">
             <b>Pair</b>
             <span>HTML receives. Female JS selects. Runtime releases only after selection.</span>
+          </div>
+
+          <div class="micro-card">
+            <b>Diagnostic Rail</b>
+            <span>Native anchor access only. The independent route loads its own diagnostic chain.</span>
           </div>
 
           <div class="micro-card">
@@ -1248,7 +1346,7 @@ visualPassClaimed=false</pre>
               Hearth is not a decorative planet page. It is the survival-path field where the visible planet, inspection controls, completion latch, and route diagnostics must survive together.
             </p>
             <p>
-              This HTML file is now the control-surface cache-key repair shell. It stays visible and stable while the JavaScript selector chooses it and releases runtime downstream.
+              This HTML file is now the native diagnostic doorway shell. It stays visible and stable while the JavaScript selector chooses it and releases runtime downstream. Diagnostic rail access is provided by native anchor only.
             </p>
           </div>
         </details>
@@ -1273,11 +1371,15 @@ visualPassClaimed=false</pre>
 
             <div class="diagnostic-grid">
               <div class="diagnostic"><b>Route</b><span data-hearth-diagnostic-route>/showroom/globe/hearth/</span></div>
-              <div class="diagnostic"><b>Lifecycle</b><span data-hearth-diagnostic-lifecycle>control surface cache key repaired</span></div>
+              <div class="diagnostic"><b>Diagnostic Rail</b><a href="/showroom/globe/hearth/diagnostic/" data-hearth-diagnostic-rail-field>/showroom/globe/hearth/diagnostic/</a></div>
+              <div class="diagnostic"><b>Lifecycle</b><span data-hearth-diagnostic-lifecycle>native diagnostic doorway active</span></div>
               <div class="diagnostic"><b>Cycle 1</b><span data-hearth-diagnostic-cycle-one>NORTH_EAST_WEST_SOUTH_NORTH</span></div>
               <div class="diagnostic"><b>Cycle 2</b><span data-hearth-diagnostic-cycle-two>NORTH_EAST_SOUTH_WEST_CANVAS</span></div>
               <div class="diagnostic"><b>Female Selector</b><span data-hearth-diagnostic-east>/showroom/globe/hearth/index.js</span></div>
               <div class="diagnostic"><b>Selector Cache</b><span data-hearth-diagnostic-selector-cache>renewed by HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_TNT_v5_1</span></div>
+              <div class="diagnostic"><b>Rail Loaded By HTML</b><span data-hearth-diagnostic-rail-loaded-by-html>false</span></div>
+              <div class="diagnostic"><b>Rail Iframe</b><span data-hearth-diagnostic-rail-iframe>false</span></div>
+              <div class="diagnostic"><b>Direct NORTH Call</b><span data-hearth-diagnostic-rail-north-call>false</span></div>
               <div class="diagnostic"><b>West</b><span data-hearth-diagnostic-west>runtime delegated</span></div>
               <div class="diagnostic"><b>North</b><span data-hearth-diagnostic-north>F21 authority only</span></div>
               <div class="diagnostic"><b>South</b><span data-hearth-diagnostic-south>visible proof downstream</span></div>
@@ -1289,15 +1391,16 @@ visualPassClaimed=false</pre>
         </details>
 
         <template
-          id="hearth-html-control-surface-cache-key-touch-binding-repair-receipt"
+          id="hearth-html-parallel-diagnostic-rail-native-access-doorway-receipt"
           class="receipt"
           data-route-receipt
           data-hearth-html-receipt
         >
-HEARTH_HTML_CONTROL_SURFACE_CACHE_KEY_TOUCH_BINDING_REPAIR_TNT_v2_1
+HEARTH_HTML_PARALLEL_DIAGNOSTIC_RAIL_NATIVE_ACCESS_DOORWAY_TNT_v2_2
 route=/showroom/globe/hearth/
 target=/showroom/globe/hearth/index.html
-previous=HEARTH_HTML_CURRENT_RUNTIME_SELECTOR_CACHE_RENEWAL_RECEIVER_TNT_v2
+previous=HEARTH_HTML_CONTROL_SURFACE_CACHE_KEY_TOUCH_BINDING_REPAIR_TNT_v2_1
+prior=HEARTH_HTML_CURRENT_RUNTIME_SELECTOR_CACHE_RENEWAL_RECEIVER_TNT_v2
 baseline=HEARTH_HTML_SOUTH_PAIR_MALE_SHELL_FEMALE_SELECTED_RUNTIME_RECEIVER_TNT_v1
 staleHtmlV1Superseded=true
 disposition=current-south-facing-expression-shell
@@ -1309,6 +1412,16 @@ scriptSrc=/showroom/globe/hearth/index.js?v=HEARTH_INDEX_JS_API_REDECLARATION_CO
 femaleJsChoosesMaleHtmlShell=true
 htmlCacheRenewalActive=true
 controlSurfaceCacheKeyTouchBindingRepairActive=true
+diagnosticRailNativeAccess=true
+diagnosticRailRoute=/showroom/globe/hearth/diagnostic/
+diagnosticRailLoadedByHtml=false
+htmlOwnsDiagnosticRail=false
+diagnosticRailChildChainLoadedByHtml=false
+nativeAnchorAccess=true
+diagnosticRailIframe=false
+diagnosticRailDirectNorthCall=false
+diagnosticRailFixClaimed=false
+productionRepairClaimed=false
 htmlOwnsPublicShell=true
 htmlOwnsRuntime=false
 htmlOwnsCanvasDrawing=false
@@ -1328,7 +1441,7 @@ cycleOneRoute=NORTH_EAST_WEST_SOUTH_NORTH
 cycleTwoRoute=NORTH_EAST_SOUTH_WEST_CANVAS
 f1=current shell paint
 f2=dynamic alignment anchors present
-f3=shell controls active and tappable
+f3=shell controls and native diagnostic doorway active and tappable
 f5=repaired v5_1 female selector chooses shell
 f8=runtime release authorized by JS
 f13=Canvas evidence delegated downstream
@@ -1345,11 +1458,15 @@ receiptPanel=#hearthReceiptPanel
 mapPortal=#hearthMapPortal
 copyControl=[data-hearth-copy-diagnostic]
 receiptControl=[data-hearth-toggle-receipt]
+diagnosticRailNativeControl=[data-hearth-diagnostic-rail-native-anchor]
 inspectControl=[data-hearth-inspect-planet]
 collapseControl=[data-hearth-collapse-cockpit]
 canvasF13Delegated=true
+f13Claimed=false
 f21NorthOnly=true
+f21Claimed=false
 readyTextAllowed=false
+readyTextClaimed=false
 downstreamReleaseClaimed=false
 visualPassClaimed=false
 generatedImage=false
@@ -1358,21 +1475,24 @@ webGL=false
         </template>
       </section>
 
-      <pre id="hearth-route-status" data-hearth-route-status hidden>Hearth current HTML shell ready. Selector cache key updated to HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_TNT_v5_1. Cockpit/control surfaces protected for mobile taps. Runtime release remains delegated to JS. Canvas F13 delegated. F21 North-only.</pre>
+      <pre id="hearth-route-status" data-hearth-route-status hidden>Hearth current HTML shell ready. Native diagnostic rail doorway active. Selector cache key updated to HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR_TNT_v5_1. Cockpit/control surfaces protected for mobile taps. Diagnostic route=/showroom/globe/hearth/diagnostic/. Diagnostic rail loaded by HTML=false. Diagnostic rail iframe=false. Direct NORTH call=false. Runtime release remains delegated to JS. Canvas F13 delegated. F21 North-only.</pre>
 
       <noscript>
         <section class="panel hero" aria-label="JavaScript required notice">
           <div class="kicker">Runtime Held</div>
           <h2>Runtime proof requires JavaScript.</h2>
           <p>
-            The Hearth narrative, Map Portal, and survival-path page remain readable. Canvas rendering, inspection mode, copy diagnostic, receipt toggling, and F21 completion require JavaScript.
+            The Hearth narrative, Map Portal, survival-path page, and native Diagnostic Rail doorway remain readable. Canvas rendering, inspection mode, copy diagnostic, receipt toggling, and F21 completion require JavaScript.
+          </p>
+          <p>
+            <a class="portal-link diagnostic-doorway" href="/showroom/globe/hearth/diagnostic/">Open Hearth Diagnostic Rail</a>
           </p>
         </section>
       </noscript>
     </main>
 
     <footer>
-      HEARTH_HTML_CONTROL_SURFACE_CACHE_KEY_TOUCH_BINDING_REPAIR_TNT_v2_1 · Current shell · Selector cache key v5_1 · Mobile control surface repaired · F13 Canvas delegated · F21 North-only · Visual pass not claimed.
+      HEARTH_HTML_PARALLEL_DIAGNOSTIC_RAIL_NATIVE_ACCESS_DOORWAY_TNT_v2_2 · Current shell · Native diagnostic doorway · Selector cache key v5_1 · Mobile control surface preserved · F13 Canvas delegated · F21 North-only · Visual pass not claimed.
     </footer>
   </div>
 </body>

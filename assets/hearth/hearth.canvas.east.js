@@ -1,54 +1,56 @@
 // /assets/hearth/hearth.canvas.east.js
-// HEARTH_CANVAS_EAST_SAME_RUNTIME_EXPOSURE_BEACON_API_PUBLICATION_TNT_v11_1
+// HEARTH_CANVAS_EAST_CURRENT_LOCAL_STATION_V11_1_API_PUBLICATION_TNT_v11_4
 // Full-file replacement.
-// Canvas East / same-runtime exposure beacon / API-publication / atlas-source child.
+// Canvas East / current Local Station v11_1 API-publication / atlas-source child.
 //
-// Baseline authority:
+// Supersedes:
+// - HEARTH_CANVAS_EAST_CURRENT_LOCAL_STATION_V11_1_API_PUBLICATION_TNT_v11_3
+//
+// Baseline reference only:
 // - HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_SERVED_DETECTION_REPAIR_TNT_v10
 //
-// Supersedes defective draft:
-// - HEARTH_CANVAS_EAST_SAME_RUNTIME_EXPOSURE_BEACON_API_PUBLICATION_TNT_v11
+// Current served chain:
+// - Route Conductor: HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_TNT_v9_2
+// - Macro West: LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_TIMETABLE_ALIGNED_LOCAL_ADMISSIBILITY_CLUTCH_TNT_v4_6_3
+// - Canvas Local Station: HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_1 / v11
 //
 // Purpose:
-// - Keep Canvas East as the lawful next target while Route Conductor reports WAITING_CANVAS_EAST_API.
-// - Publish Canvas East API into the same served runtime immediately and redundantly.
-// - Expose the exact aliases already scanned by Route Conductor v8_2.
-// - Preserve strict separation between East API readiness and East atlas evidence readiness.
-// - Treat held atlas packets as lawful non-evidence, not API failure.
-// - Keep API readiness true when parent dispatch, material authority, atlas evidence, West, South, or route conductor are absent.
-// - Notify Route Conductor nonblockingly after East publication.
-// - Never claim final visible proof, ready text, completion latch, F21, generated image, GraphicBox, WebGL, or final visual pass.
+// - Publish Canvas East API immediately and redundantly in the same served runtime.
+// - Preserve strict separation between East-owned diagnostics and upstream proof.
+// - Cache material authority before atlas loops; do not rediscover material authority per pixel.
+// - Require exact Route Conductor v9_2 recognition before atlas-build permission.
+// - Require exact Macro West v4_6_3 release recognition before atlas-build permission.
+// - Bind East to current Canvas Local Station v11_1/v11, not obsolete v10_3 parent-current law.
+// - Treat v10_3 as baseline-only/historical parent-chain reference.
+// - Keep API readiness separate from atlas/evidence readiness.
+// - Return synchronous held atlas packets when dispatch/evidence is absent or incomplete.
+// - Never claim F21, ready text, completion latch, final visual pass, generated image, GraphicBox, or WebGL.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_EAST_SAME_RUNTIME_EXPOSURE_BEACON_API_PUBLICATION_TNT_v11_1";
-  const RECEIPT = "HEARTH_CANVAS_EAST_SAME_RUNTIME_EXPOSURE_BEACON_API_PUBLICATION_RECEIPT_v11_1";
+  const CONTRACT = "HEARTH_CANVAS_EAST_CURRENT_LOCAL_STATION_V11_1_API_PUBLICATION_TNT_v11_4";
+  const RECEIPT = "HEARTH_CANVAS_EAST_CURRENT_LOCAL_STATION_V11_1_API_PUBLICATION_RECEIPT_v11_4";
 
-  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_EAST_SAME_RUNTIME_EXPOSURE_BEACON_API_PUBLICATION_TNT_v11";
-  const PREVIOUS_RECEIPT = "HEARTH_CANVAS_EAST_SAME_RUNTIME_EXPOSURE_BEACON_API_PUBLICATION_RECEIPT_v11";
+  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_EAST_CURRENT_LOCAL_STATION_V11_1_API_PUBLICATION_TNT_v11_3";
+  const PREVIOUS_RECEIPT = "HEARTH_CANVAS_EAST_CURRENT_LOCAL_STATION_V11_1_API_PUBLICATION_RECEIPT_v11_3";
 
   const BASELINE_CONTRACT = "HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_SERVED_DETECTION_REPAIR_TNT_v10";
   const BASELINE_RECEIPT = "HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_SERVED_DETECTION_REPAIR_RECEIPT_v10";
 
-  const LEGACY_BASELINE_CONTRACT = "HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_ATLAS_SOURCE_TNT_v9";
-  const LEGACY_BASELINE_RECEIPT = "HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_ATLAS_SOURCE_RECEIPT_v9";
+  const ROUTE_CONDUCTOR_CURRENT_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_TNT_v9_2";
+  const ROUTE_CONDUCTOR_CURRENT_RECEIPT = "HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_RECEIPT_v9_2";
 
-  const COMPATIBILITY_CONTRACT = "HEARTH_CANVAS_EAST_SYNCHRONOUS_HELD_PACKET_PARENT_FIRST_F13_ATLAS_SOURCE_TNT_v5";
-  const COMPATIBILITY_RECEIPT = "HEARTH_CANVAS_EAST_SYNCHRONOUS_HELD_PACKET_PARENT_FIRST_F13_ATLAS_SOURCE_RECEIPT_v5";
+  const MACRO_WEST_CURRENT_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_TIMETABLE_ALIGNED_LOCAL_ADMISSIBILITY_CLUTCH_TNT_v4_6_3";
+  const MACRO_WEST_CURRENT_RECEIPT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_TIMETABLE_ALIGNED_LOCAL_ADMISSIBILITY_CLUTCH_RECEIPT_v4_6_3";
 
-  const ROUTE_CONDUCTOR_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CENTRAL_STATION_SWITCHBOARD_WEST_V4_2_SOUTH_OUTPUT_ALIGNMENT_TNT_v8_2";
-  const ROUTE_CONDUCTOR_RECEIPT = "HEARTH_ROUTE_CONDUCTOR_CENTRAL_STATION_SWITCHBOARD_WEST_V4_2_SOUTH_OUTPUT_ALIGNMENT_RECEIPT_v8_2";
+  const LOCAL_STATION_V11_1_CONTRACT = "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_1";
+  const LOCAL_STATION_V11_CONTRACT = "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11";
+  const LOCAL_STATION_V11_1_RECEIPT = "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_RECEIPT_v11_1";
+  const LOCAL_STATION_V11_RECEIPT = "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_RECEIPT_v11";
 
-  const CURRENT_PARENT_CONTRACT = "HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD_TNT_v10_3";
-  const CURRENT_PARENT_RECEIPT = "HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD_RECEIPT_v10_3";
-
-  const MACRO_WEST_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_CURRENT_CANVAS_PARENT_V10_3_CARRIER_COMPATIBILITY_TNT_v4_2";
-
-  const EXPECTED_MATERIAL_CONTRACT = "HEARTH_MATERIALS_MOUNTAIN_RANGE_CANYON_RELIEF_CONSUMER_TNT_v1";
-  const EXPECTED_MATERIAL_RECEIPT = "HEARTH_MATERIALS_MOUNTAIN_RANGE_CANYON_RELIEF_CONSUMER_RECEIPT_v1";
-
-  const VERSION = "2026-06-01.hearth-canvas-east-same-runtime-exposure-beacon-api-publication-v11-1";
+  const V10_3_BASELINE_CONTRACT = "HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD_TNT_v10_3";
+  const V10_3_BASELINE_RECEIPT = "HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD_RECEIPT_v10_3";
 
   const FILE = "/assets/hearth/hearth.canvas.east.js";
   const PARENT_FILE = "/assets/hearth/hearth.canvas.js";
@@ -56,35 +58,17 @@
   const MACRO_WEST_FILE = "/assets/lab/runtime-table.west.js";
   const CANVAS_WEST_FILE = "/assets/hearth/hearth.canvas.west.js";
   const CANVAS_SOUTH_FILE = "/assets/hearth/hearth.canvas.south.js";
+  const ROUTE = "/showroom/globe/hearth/";
 
   const ACTIVE_CYCLE_NUMBER = 2;
   const ACTIVE_CYCLE_ROUTE = "NORTH_EAST_SOUTH_WEST_CANVAS";
   const ACTIVE_CARDINAL = "EAST";
+  const ACTIVE_STAGE_ID = "C2_CANVAS_EAST_API_PUBLICATION_AND_ATLAS_SOURCE";
+  const ACTIVE_GEAR = "GEAR_C2_CANVAS_EAST_API_PUBLICATION";
+  const ACTIVE_FIBONACCI = "F13E";
+  const ACTIVE_NEWS_GATE = "EAST";
 
-  const ACTIVE_FIBONACCI_GATE = "F13E_F13F";
-  const F13E_GATE = "F13E_API_SOURCE_VISIBLE";
-  const F13F_GATE = "F13F_ATLAS_EVIDENCE_READY";
-  const FUTURE_FIBONACCI_GATE = "F21";
-
-  const CANVAS_CHILD_SEQUENCE = Object.freeze([
-    "CANVAS_EAST_ATLAS_SOURCE",
-    "CANVAS_WEST_INSPECTION_VIEW",
-    "CANVAS_SOUTH_TEXTURE_RENDER",
-    "CANVAS_PARENT_F13_EVIDENCE"
-  ]);
-
-  const CHRONOLOGY = Object.freeze([
-    "INDEX_CARRIER_HOST_READY",
-    "ROUTE_F8_SELF_DUTY_READY",
-    "MACRO_WEST_RELEASE_TO_CANVAS",
-    "CANVAS_PARENT_RELEASE_ACCEPTED",
-    "CANVAS_PARENT_EAST_DISPATCH_PUBLISHED",
-    "CANVAS_EAST_API_VISIBLE",
-    "CANVAS_EAST_ATLAS_EVIDENCE_READY",
-    "CANVAS_WEST_INSPECTION_READY",
-    "CANVAS_SOUTH_VISIBLE_PROOF_READY",
-    "NORTH_F21_LATCH_ELIGIBILITY"
-  ]);
+  const VERSION = "2026-06-02.hearth-canvas-east-current-local-station-v11-1-api-publication-v11-4";
 
   const REQUIRED_METHODS = Object.freeze([
     "boot",
@@ -108,12 +92,8 @@
     "publishDatasetFirstProof",
     "publishReceipts",
     "notifyRouteConductor",
-    "readParentAuthorityProfile",
-    "readParentEastDispatchPacket",
-    "readWestReleaseState",
-    "resolveAtlasBuildPermission",
-    "composeHeldAtlasPacket",
-    "composeAtlasEvidencePacket",
+    "readEastDiagnosticDataset",
+    "readUpstreamDatasetProof",
     "receiveParentDispatchPacket",
     "receiveEastDispatchPacket",
     "receiveDispatchPacket",
@@ -122,57 +102,48 @@
     "receiveCanvasParentPacket"
   ]);
 
-  const PUBLIC_ALIAS_PATHS = Object.freeze([
-    "HEARTH_CANVAS_EAST",
-    "HEARTH_CANVAS_EAST_SOURCE",
-    "HEARTH_CANVAS_EAST_AUTHORITY",
-    "HEARTH_CANVAS_EAST_EVIDENCE",
-    "HEARTH_CANVAS_EAST_ENGINE",
-    "HEARTH_CANVAS_EAST_SAME_RUNTIME_EXPOSURE_BEACON_API_PUBLICATION",
-    "HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_SERVED_DETECTION_REPAIR",
-    "HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_ATLAS_SOURCE",
-    "HEARTH_CANVAS_EAST_SYNCHRONOUS_HELD_PACKET_PARENT_FIRST_F13_ATLAS_SOURCE",
-    "HEARTH_CANVAS_EAST_F13_ATLAS_SOURCE_CHILD"
+  const CANVAS_CHILD_SEQUENCE = Object.freeze([
+    "CANVAS_EAST_ATLAS_SOURCE",
+    "CANVAS_WEST_INSPECTION_VIEW",
+    "CANVAS_SOUTH_VISIBLE_PROOF",
+    "CANVAS_LOCAL_STATION_F13_AGGREGATE"
   ]);
 
-  const PUBLIC_NESTED_ALIAS_PATHS = Object.freeze([
-    "canvasEast",
-    "canvasEastSource",
-    "canvasEastAuthority",
-    "canvasEastEvidence",
-    "canvasEastEngine",
-    "canvasEastSameRuntimeExposureBeaconApiPublication",
-    "canvasEastParentV103DispatchApiRecognitionServedDetectionRepair",
-    "canvasEastParentV103DispatchApiRecognitionAtlasSource",
-    "canvasEastSynchronousHeldPacketParentFirstF13AtlasSource",
-    "canvasEastF13AtlasSourceChild",
-    "canvasEastMaterialAtlasSourceMachine"
+  const CHRONOLOGY = Object.freeze([
+    "INDEX_CARRIER_HOST_READY",
+    "ROUTE_F8_SELF_DUTY_READY",
+    "MACRO_WEST_RELEASE_TO_CANVAS",
+    "CANVAS_LOCAL_STATION_RELEASE_ACCEPTED",
+    "CANVAS_LOCAL_STATION_EAST_DISPATCH_PUBLISHED",
+    "CANVAS_EAST_API_VISIBLE",
+    "CANVAS_EAST_ATLAS_EVIDENCE_READY",
+    "CANVAS_WEST_INSPECTION_READY",
+    "CANVAS_SOUTH_VISIBLE_PROOF_READY",
+    "NORTH_F21_REVIEW_ONLY"
   ]);
 
   const PERMISSION = Object.freeze({
-    BUILD_ALLOWED_PARENT_DISPATCH: "BUILD_ALLOWED_PARENT_DISPATCH",
-    HELD_PARENT_OBSERVATION_PENDING: "HELD_PARENT_OBSERVATION_PENDING",
-    HELD_PARENT_RELEASE_PENDING: "HELD_PARENT_RELEASE_PENDING",
+    BUILD_ALLOWED_LOCAL_STATION_DISPATCH: "BUILD_ALLOWED_LOCAL_STATION_DISPATCH",
+    HELD_ROUTE_CONDUCTOR_PENDING: "HELD_ROUTE_CONDUCTOR_PENDING",
+    HELD_LOCAL_STATION_PENDING: "HELD_LOCAL_STATION_PENDING",
+    HELD_RELEASE_PENDING: "HELD_RELEASE_PENDING",
     HELD_EAST_DISPATCH_PENDING: "HELD_EAST_DISPATCH_PENDING",
     HELD_EAST_DISPATCH_MALFORMED: "HELD_EAST_DISPATCH_MALFORMED",
-    HELD_PARENT_STALE_OR_CORRUPT: "HELD_PARENT_STALE_OR_CORRUPT",
+    HELD_ATLAS_EVIDENCE_PENDING: "HELD_ATLAS_EVIDENCE_PENDING",
     BLOCKED_FALSE_PROMOTION: "BLOCKED_FALSE_PROMOTION"
   });
 
   const PALETTE = Object.freeze({
-    void: [0, 0, 0],
-    deepWater: [4, 12, 27],
-    water: [11, 42, 75],
-    shelf: [28, 75, 87],
-    coast: [93, 92, 70],
-    land: [86, 112, 69],
-    highland: [119, 113, 83],
-    ridge: [146, 134, 100],
-    canyon: [62, 45, 34],
-    peak: [178, 172, 148],
-    wetStone: [45, 58, 55],
-    scar: [31, 39, 39],
-    ice: [196, 214, 218]
+    deepWater: [4, 14, 32],
+    water: [12, 52, 92],
+    shelf: [37, 93, 111],
+    coast: [113, 103, 72],
+    land: [78, 110, 68],
+    highland: [122, 116, 80],
+    ridge: [152, 139, 102],
+    canyon: [72, 48, 38],
+    peak: [186, 181, 156],
+    ice: [202, 219, 225]
   });
 
   const DEFAULT_ATLAS_WIDTH = 512;
@@ -182,16 +153,15 @@
   const MAX_ATLAS_WIDTH = 1024;
   const MAX_ATLAS_HEIGHT = 512;
 
-  const root = typeof window !== "undefined" ? window : globalThis;
-  const doc = root.document || null;
   const api = {};
-
   let atlasCanvas = null;
   let lastAtlasImageData = null;
-  let materialSampler = null;
-  let publishDepth = 0;
+  let cachedMaterialAuthority = null;
+  let cachedMaterialSampler = null;
+  let cachedMaterialReceipt = null;
   let notificationQueued = false;
   let booted = false;
+  let publishDepth = 0;
 
   const state = {
     contract: CONTRACT,
@@ -200,54 +170,44 @@
     previousReceipt: PREVIOUS_RECEIPT,
     baselineContract: BASELINE_CONTRACT,
     baselineReceipt: BASELINE_RECEIPT,
-    legacyBaselineContract: LEGACY_BASELINE_CONTRACT,
-    legacyBaselineReceipt: LEGACY_BASELINE_RECEIPT,
-    compatibilityContract: COMPATIBILITY_CONTRACT,
-    compatibilityReceipt: COMPATIBILITY_RECEIPT,
-    currentParentContract: CURRENT_PARENT_CONTRACT,
-    currentParentReceipt: CURRENT_PARENT_RECEIPT,
-    routeConductorContract: ROUTE_CONDUCTOR_CONTRACT,
-    routeConductorReceipt: ROUTE_CONDUCTOR_RECEIPT,
-    macroWestContract: MACRO_WEST_CONTRACT,
-    expectedMaterialContract: EXPECTED_MATERIAL_CONTRACT,
-    expectedMaterialReceipt: EXPECTED_MATERIAL_RECEIPT,
-
-    version: VERSION,
     file: FILE,
     parentFile: PARENT_FILE,
     routeFile: ROUTE_FILE,
     macroWestFile: MACRO_WEST_FILE,
     canvasWestFile: CANVAS_WEST_FILE,
     canvasSouthFile: CANVAS_SOUTH_FILE,
-    role: "canvas-east-same-runtime-exposure-beacon-api-publication",
+    route: ROUTE,
+    version: VERSION,
+    role: "canvas-east-current-local-station-v11-1-api-publication",
 
+    currentRouteConductorContract: ROUTE_CONDUCTOR_CURRENT_CONTRACT,
+    currentMacroWestContract: MACRO_WEST_CURRENT_CONTRACT,
+    currentCanvasLocalStationContracts: [LOCAL_STATION_V11_1_CONTRACT, LOCAL_STATION_V11_CONTRACT],
+    v10_3BaselineContract: V10_3_BASELINE_CONTRACT,
+
+    currentLocalStationV11_1ApiPublicationActive: true,
     sameRuntimeExposureBeaconActive: true,
     strictInitializationSafetyActive: true,
-    undefinedStateReferenceCorrectionActive: true,
-    servedDetectionRepairActive: true,
-    parentV10_3DispatchRecognitionActive: true,
-    routeConductorV8_2AlignmentActive: true,
-    macroWestV4_2ReleaseChainRecognized: true,
-    earlyApiSurfaceActive: true,
-    aliasStationActive: true,
-    datasetFirstProofActive: true,
-    receiptFirstProofActive: true,
-    routeConductorNotificationActive: true,
-    synchronousHeldPacketActive: true,
-    atlasSourceActive: true,
-    parentReturnNodeActive: true,
+    noDuplicateRootIdentifier: true,
+    datasetSelfContaminationBlocked: true,
+    materialAuthorityCachedForAtlasLoop: true,
+    emptyContractFalseRecognitionBlocked: true,
+    routeConductorPermissionGateEnforced: true,
+    localStationV11OrV11_1CurrentPassActive: true,
+    v10_3BaselineRecognizedOnly: true,
 
-    canvasChildSequence: CANVAS_CHILD_SEQUENCE.slice(),
-    activeCycleNumber: ACTIVE_CYCLE_NUMBER,
-    activeCycleRoute: ACTIVE_CYCLE_ROUTE,
-    activeCardinal: ACTIVE_CARDINAL,
-    activeFibonacciGate: ACTIVE_FIBONACCI_GATE,
-    activeF13EGate: F13E_GATE,
-    activeF13FGate: F13F_GATE,
-    futureFibonacciGate: FUTURE_FIBONACCI_GATE,
-    activeStageId: "F13E_F13F_SAME_RUNTIME_EXPOSURE_BEACON_API_PUBLICATION",
-    activeGearId: "F13E_F13F_SAME_RUNTIME_EXPOSURE_BEACON_API_PUBLICATION",
-    activeNewsGate: "CANVAS_EAST_SOURCE",
+    routeConductorObserved: false,
+    routeConductorContractKnown: false,
+    routeConductorContractRecognized: false,
+    routeConductorV9_2Recognized: false,
+
+    macroWestObserved: false,
+    macroWestContractKnown: false,
+    macroWestContractRecognized: false,
+    macroWestV4_6_3ReleaseRecognized: false,
+
+    canvasLocalStationV11_1Recognized: false,
+    canvasLocalStationV11Recognized: false,
 
     apiSurfacePublished: false,
     aliasesPublished: false,
@@ -257,8 +217,21 @@
     routeConductorNotificationAccepted: false,
     routeConductorNotificationError: "",
 
+    activeCycleNumber: ACTIVE_CYCLE_NUMBER,
+    activeCycleRoute: ACTIVE_CYCLE_ROUTE,
+    activeCardinal: ACTIVE_CARDINAL,
+    activeStageId: ACTIVE_STAGE_ID,
+    activeGear: ACTIVE_GEAR,
+    activeFibonacci: ACTIVE_FIBONACCI,
+    activeNewsGate: ACTIVE_NEWS_GATE,
+
+    canvasEastPresent: true,
+    canvasEastCurrent: true,
+    canvasEastReady: true,
+    canvasEastApiReady: true,
+    canvasEastEvidenceReady: false,
     requiredApiSurfaceComplete: true,
-    requiredMethods: REQUIRED_METHODS.slice(),
+    heldDoesNotMeanApiMissing: true,
 
     buildAtlasAvailable: true,
     buildAtlasSyncAvailable: true,
@@ -271,35 +244,29 @@
     getReceiptAvailable: true,
     getReceiptLightAvailable: true,
     getReceiptTextAvailable: true,
-    publishApiSurfaceAvailable: true,
-    publishAliasStationAvailable: true,
-    publishDatasetFirstProofAvailable: true,
-    publishReceiptsAvailable: true,
-    notifyRouteConductorAvailable: true,
     receiveParentDispatchPacketAvailable: true,
 
-    canvasEastPresent: true,
-    canvasEastCurrent: true,
-    canvasEastReady: true,
-    canvasEastApiReady: true,
-    canvasEastEvidenceReady: false,
+    canvasLocalStationObserved: false,
+    canvasLocalStationContractKnown: false,
+    canvasLocalStationApiReady: false,
+    canvasLocalStationContract: "",
+    canvasLocalStationContractAccepted: false,
+    canvasLocalStationSummaryObserved: false,
+    canvasLocalStationSummaryMethod: "NONE",
+    currentCanvasParentObserved: false,
+    currentCanvasParentContract: "",
+    currentCanvasParentIsLocalStation: false,
+    canvasParentV10_3BaselineRecognized: false,
+    canvasLocalStationReleaseAccepted: false,
+    canvasLocalStationReleaseLawful: false,
+    canvasLocalStationReleasePacketSentToEast: false,
 
-    parentObserved: false,
-    parentApiPresent: false,
-    parentCallable: false,
-    parentReceiptObserved: false,
-    parentContract: "",
-    parentReceiptId: "",
-    currentParentIsV10_3: false,
-    parentReleaseObserved: false,
-    parentReleaseAccepted: false,
-    parentReleaseLawful: false,
-    canvasParentReleaseGateReady: false,
-    parentAcceptedRouteConductorRelease: false,
-    parentReleasePacketSentToEast: false,
-    parentReleasePacketLawful: false,
-    parentCorruptOrStale: false,
-    parentAbsent: true,
+    westReleaseObserved: false,
+    westDecision: "",
+    westHardBlock: false,
+    westCanvasReleaseApproved: false,
+    canvasReleaseAuthorized: false,
+    canvasReleasePacketReady: false,
 
     eastDispatchAuthorized: false,
     eastDispatchPacketPublished: false,
@@ -311,85 +278,23 @@
     eastDispatchHandoffTo: "",
     eastDispatchCycleNumber: 0,
     eastDispatchCycleRoute: "",
-    eastDispatchParentContract: "",
     eastDispatchTargetFile: "",
-    eastDispatchAtlasBuildRequested: false,
 
-    routeConductorObserved: false,
-    routeConductorContractObserved: "",
-    routeConductorReceiptObserved: "",
-    routeConductorCentralStationActive: false,
-
-    westReleaseObserved: false,
-    westAuditObserved: false,
-    westAuditPassed: false,
-    westAuditBlocked: false,
-    westCanvasReleaseApproved: false,
-    canvasReleaseAuthorized: false,
-
-    permissionClass: PERMISSION.HELD_EAST_DISPATCH_PENDING,
+    permissionClass: PERMISSION.HELD_ATLAS_EVIDENCE_PENDING,
     canvasEastMayBuildAtlas: false,
     f13BuildLawful: false,
-    f13BuildBlockedReason: "WAITING_CANVAS_PARENT_EAST_DISPATCH",
+    f13BuildBlockedReason: "WAITING_CANVAS_EAST_ATLAS_EVIDENCE",
     f13PermissionSource: "NONE",
 
     heldAtlasPacketReturned: false,
     heldPacketWasSynchronous: false,
     buildAtlasReturnedPromise: false,
-    heldDoesNotMeanApiMissing: true,
-
-    newsAlignmentProtocolActive: true,
-    newsChronologicalOrderLocked: true,
-    newsFinalizedByCanvasEast: false,
-    fibonacciSynchronizationChronologyFirst: true,
-    fibonacciSynchronizationScore: 50,
-    fibonacciSynchronizationExpected: 100,
-    fibonacciSynchronizationSatisfied: 50,
-    fibonacciSynchronizationPassed: false,
-    fibonacciSynchronizationDegraded: true,
-    fibonacciSynchronizationHardFail: false,
-    fibonacciSynchronizationHoldReason: "WAITING_CANVAS_EAST_ATLAS_EVIDENCE",
-
-    chronologicalGateCount: CHRONOLOGY.length,
-    chronologicalGatesSatisfied: 6,
-    chronologicalFirstFailedGate: "CANVAS_EAST_ATLAS_EVIDENCE_READY",
-    chronologicalFirstFailedCoordinate: "WAITING_CANVAS_EAST_ATLAS_EVIDENCE",
-
-    indexGateReady: true,
-    routeF8GateReady: true,
-    macroWestGateReady: false,
-    canvasParentGateReady: false,
-    canvasParentReleaseGateReady: false,
-    canvasParentEastDispatchGateReady: false,
-    canvasEastGateReady: true,
-    canvasEastEvidenceGateReady: false,
-    canvasWestGateReady: false,
-    canvasSouthGateReady: false,
-    canvasGateReady: false,
-    northGateReady: false,
-    newsGatePassedBeforeF21: false,
-    newsGateDegradedBeforeF21: false,
-
-    materialReceiptBridgeActive: false,
-    materialNestedReceiptAvailable: false,
-    materialContract: "",
-    materialReceipt: "",
-    materialVersion: "",
-    materialRole: "",
-    materialContractMatchesExpected: false,
-    materialReceiptMatchesExpected: false,
-    canonicalMaterialAuthorityPresent: false,
-    canonicalMaterialConsumed: false,
-    canvasEastDoesNotOwnMaterialTruth: true,
-    canvasStillDoesNotOwnPlanetTruth: true,
 
     atlasBuildRequested: false,
     atlasBuildStarted: false,
     atlasBuildProgress: 0,
     atlasBuildComplete: false,
     atlasBuildError: "",
-    atlasBuildStartedAt: "",
-    atlasBuildCompletedAt: "",
     atlasCanvasPresent: false,
     atlasWidth: DEFAULT_ATLAS_WIDTH,
     atlasHeight: DEFAULT_ATLAS_HEIGHT,
@@ -402,25 +307,47 @@
     atlasClassCount: 0,
     atlasClasses: [],
 
-    fallbackSampleAvailable: true,
-    fallbackSampleUsedAtRuntime: false,
-    emergencyFallbackUsed: false,
-    elevationControlsLandShape: true,
-    hydrologyControlsWaterShape: true,
-    coastlinesReadFromHydrologyAndMaterials: true,
-
     f13SourceStageStarted: false,
     f13SourceStageComplete: false,
     f13AtlasPacketReady: false,
+
+    materialReceiptBridgeActive: false,
+    materialContract: "",
+    materialReceipt: "",
+    materialAuthorityCached: false,
+    materialAuthorityScanCount: 0,
+    materialAuthorityScanDuringAtlasLoopBlocked: true,
+    canonicalMaterialAuthorityPresent: false,
+    canonicalMaterialConsumed: false,
+    fallbackSampleAvailable: true,
+    fallbackSampleUsedAtRuntime: false,
+    emergencyFallbackUsed: false,
+
+    chronologicalGateCount: CHRONOLOGY.length,
+    chronologicalGatesSatisfied: 6,
+    chronologicalFirstFailedGate: "CANVAS_EAST_ATLAS_EVIDENCE_READY",
+    chronologicalFirstFailedCoordinate: "WAITING_CANVAS_EAST_ATLAS_EVIDENCE",
+
+    fibonacciSynchronizationChronologyFirst: true,
+    fibonacciSynchronizationScore: 50,
+    fibonacciSynchronizationExpected: 100,
+    fibonacciSynchronizationSatisfied: 50,
+    fibonacciSynchronizationPassed: false,
+    fibonacciSynchronizationDegraded: true,
+    fibonacciSynchronizationHardFail: false,
+    fibonacciSynchronizationHoldReason: "WAITING_CANVAS_EAST_ATLAS_EVIDENCE",
 
     firstFailedCoordinate: "WAITING_CANVAS_EAST_ATLAS_EVIDENCE",
     recommendedNextFile: FILE,
     recommendedNextRenewalTarget: FILE,
     nextConsumerFile: PARENT_FILE,
 
-    lastParentAuthorityProfile: null,
-    lastDispatchPacket: null,
+    lastEastDiagnosticDataset: null,
+    lastUpstreamDatasetProof: null,
+    lastCanvasLocalStationSummary: null,
+    lastRouteConductorState: null,
     lastWestReleaseState: null,
+    lastDispatchPacket: null,
     lastPermissionPacket: null,
     lastHeldAtlasPacket: null,
     lastAtlasPacket: null,
@@ -436,14 +363,28 @@
     canvasReady: false,
     readyTextAllowed: false,
     f21EligibleForNorth: false,
+    f21SubmittedToNorth: false,
+    f21EligibilitySubmittedToNorth: false,
     f21ClaimedByCanvasEast: false,
-    readyTextClaimedByCanvasEast: false,
     completionLatched: false,
+    finalCompletionLatched: false,
+    degradedCompletionLatched: false,
     generatedImage: false,
     graphicBox: false,
     webGL: false,
     visualPassClaimed: false
   };
+
+  function getRoot() {
+    if (typeof window !== "undefined") return window;
+    if (typeof globalThis !== "undefined") return globalThis;
+    return {};
+  }
+
+  function getDocument() {
+    const root = getRoot();
+    return root.document || null;
+  }
 
   function nowIso() {
     try {
@@ -467,27 +408,19 @@
   }
 
   function safeNumber(value, fallback = 0) {
-    const number = Number(value);
-    return Number.isFinite(number) ? number : fallback;
+    const n = Number(value);
+    return Number.isFinite(n) ? n : fallback;
   }
 
   function safeBool(value, fallback = false) {
-    if (typeof value === "boolean") return value;
     if (value === true || value === 1 || value === "1" || value === "true" || value === "TRUE") return true;
     if (value === false || value === 0 || value === "0" || value === "false" || value === "FALSE") return false;
     return fallback;
   }
 
-  function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, safeNumber(value, min)));
-  }
-
-  function clamp01(value) {
-    return clamp(value, 0, 1);
-  }
-
   function firstDefined(...values) {
-    for (const value of values) {
+    for (let i = 0; i < values.length; i += 1) {
+      const value = values[i];
       if (value !== undefined && value !== null && value !== "") return value;
     }
     return undefined;
@@ -502,10 +435,12 @@
     }
   }
 
-  function trimArray(array, max = 180) {
-    if (Array.isArray(array) && array.length > max) {
-      array.splice(0, array.length - max);
-    }
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, safeNumber(value, min)));
+  }
+
+  function clamp01(value) {
+    return clamp(value, 0, 1);
   }
 
   function line(key, value) {
@@ -517,10 +452,9 @@
     const parts = String(path || "").split(".");
     let cursor = source;
 
-    for (const part of parts) {
-      if (!cursor || typeof cursor !== "object" || cursor[part] === undefined || cursor[part] === null) {
-        return fallback;
-      }
+    for (let i = 0; i < parts.length; i += 1) {
+      const part = parts[i];
+      if (!cursor || typeof cursor !== "object" || cursor[part] === undefined || cursor[part] === null) return fallback;
       cursor = cursor[part];
     }
 
@@ -528,10 +462,12 @@
   }
 
   function pathRead(path) {
+    const root = getRoot();
     const parts = String(path || "").split(".");
     let cursor = root;
 
-    for (const part of parts) {
+    for (let i = 0; i < parts.length; i += 1) {
+      const part = parts[i];
       if (!cursor || cursor[part] === undefined || cursor[part] === null) return null;
       cursor = cursor[part];
     }
@@ -539,97 +475,136 @@
     return cursor || null;
   }
 
-  function firstGlobal(names) {
-    for (const name of names || []) {
-      const found = pathRead(name);
-      if (found) return found;
-    }
-    return null;
-  }
-
   function datasetValue(key, fallback = "") {
+    const doc = getDocument();
     if (!doc || !doc.documentElement || !doc.documentElement.dataset) return fallback;
     const value = doc.documentElement.dataset[key];
     return value === undefined || value === null || value === "" ? fallback : value;
   }
 
   function setDataset(key, value) {
+    const doc = getDocument();
     if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
     doc.documentElement.dataset[key] = value === undefined || value === null ? "" : String(value);
   }
 
-  function findNestedObject(source, paths) {
-    if (!isObject(source)) return {};
-    for (const path of paths || []) {
-      const value = objectValue(source, path);
-      if (isObject(value) && Object.keys(value).length) return value;
+  function readDatasetObject() {
+    const doc = getDocument();
+    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return {};
+    return doc.documentElement.dataset || {};
+  }
+
+  function readEastDiagnosticDataset() {
+    const ds = readDatasetObject();
+    const packet = {};
+    Object.keys(ds).forEach((key) => {
+      if (key.indexOf("hearthCanvasEast") === 0) packet[key] = ds[key];
+    });
+
+    state.lastEastDiagnosticDataset = clonePlain(packet);
+    return packet;
+  }
+
+  function readUpstreamDatasetProof() {
+    const ds = readDatasetObject();
+
+    function read(key) {
+      if (key.indexOf("hearthCanvasEast") === 0) return "";
+      const value = ds[key];
+      return value === undefined || value === null || value === "" ? "" : value;
     }
-    return {};
+
+    const packet = {
+      canvasLocalStationContract: firstDefined(
+        read("hearthCanvasLocalStationContract"),
+        read("hearthCanvasCurrentCanvasStationContract"),
+        read("hearthCanvasCurrentCanvasParentContract"),
+        read("currentCanvasParentContract"),
+        read("canvasLocalStationContract"),
+        read("currentCanvasStationContract"),
+        read("hearthCanvasContract")
+      ) || "",
+      canvasLocalStationReceipt: firstDefined(
+        read("hearthCanvasLocalStationReceipt"),
+        read("hearthCanvasCurrentCanvasStationReceipt"),
+        read("hearthCanvasCurrentCanvasParentReceipt"),
+        read("currentCanvasParentReceipt"),
+        read("canvasLocalStationReceipt"),
+        read("currentCanvasStationReceipt"),
+        read("hearthCanvasReceipt")
+      ) || "",
+      canvasReleaseAuthorized: read("hearthCanvasReleaseAuthorized"),
+      canvasReleasePacketReady: read("hearthCanvasReleasePacketReady"),
+      canvasLocalStationReleaseAccepted: firstDefined(
+        read("hearthCanvasReleasePacketAccepted"),
+        read("hearthCanvasParentReleaseAccepted"),
+        read("canvasLocalStationReleaseAccepted")
+      ) || "",
+      eastDispatchPacketGlobalHint: firstDefined(
+        read("canvasEastDispatchPacketPublished"),
+        read("canvasEastDispatchAuthorized")
+      ) || "",
+      westContract: firstDefined(
+        read("hearthWestRuntimeTableContract"),
+        read("labRuntimeTableWestContract")
+      ) || "",
+      westDecision: read("hearthWestDecision"),
+      westHardBlock: read("hearthWestHardBlock"),
+      westCanvasReleaseApproved: read("hearthWestCanvasReleaseApproved"),
+      routeConductorContract: read("hearthRouteConductorContract")
+    };
+
+    state.lastUpstreamDatasetProof = clonePlain(packet);
+    return packet;
   }
 
   function readReceipt(authority) {
     if (!authority || !isObject(authority)) return null;
 
     const methods = [
-      "getReceipt",
+      "getCanvasStationSummary",
+      "getCanvasStationReceiptLight",
+      "getCanvasStationReceipt",
       "getReceiptLight",
-      "getCarrierReceipt",
-      "readStructuralCarrier",
-      "getStructuralCarrier",
-      "getCanvasCarrier",
+      "getReceipt",
       "getStatus"
     ];
 
-    for (const method of methods) {
+    for (let i = 0; i < methods.length; i += 1) {
+      const method = methods[i];
       if (!isFunction(authority[method])) continue;
+
       try {
-        const receipt = method === "getReceiptLight" ? authority[method](false) : authority[method]();
-        if (isObject(receipt)) return receipt;
+        const result = method === "getReceiptLight" || method === "getCanvasStationReceiptLight"
+          ? authority[method](false)
+          : authority[method]();
+
+        if (isObject(result)) {
+          result.__sourceMethod = method;
+          return result;
+        }
       } catch (_error) {}
     }
 
-    if (isObject(authority.receiptPacket)) return authority.receiptPacket;
     if (isObject(authority.receipt)) return authority.receipt;
-    if (authority.contract || authority.receipt || authority.version) return authority;
+    if (authority.contract || authority.receipt || authority.CONTRACT || authority.RECEIPT) return authority;
 
     return null;
   }
 
-  function recordLocal(event, detail = {}) {
-    const item = {
-      at: nowIso(),
-      event: safeString(event, "CANVAS_EAST_EVENT"),
-      detail: clonePlain(detail)
-    };
-
-    state.localEvents.push(item);
-    trimArray(state.localEvents, 220);
-    state.updatedAt = item.at;
-
-    try {
-      publishDatasetFirstProof({ quiet: true });
-    } catch (_error) {}
-
-    return item;
+  function firstGlobal(paths) {
+    for (let i = 0; i < paths.length; i += 1) {
+      const found = pathRead(paths[i]);
+      if (found) return found;
+    }
+    return null;
   }
 
-  function recordError(code, error, detail = {}) {
-    const item = {
-      at: nowIso(),
-      code: safeString(code, "CANVAS_EAST_ERROR"),
-      message: error && error.message ? String(error.message) : safeString(error),
-      detail: clonePlain(detail)
-    };
-
-    state.errors.push(item);
-    trimArray(state.errors, 160);
-    state.updatedAt = item.at;
-
-    try {
-      publishDatasetFirstProof({ quiet: true });
-    } catch (_error) {}
-
-    return item;
+  function ensureNamespaces() {
+    const root = getRoot();
+    root.HEARTH = root.HEARTH || {};
+    root.DEXTER_LAB = root.DEXTER_LAB || {};
+    return root;
   }
 
   function blockFinalClaims() {
@@ -639,95 +614,118 @@
     state.canvasReady = false;
     state.readyTextAllowed = false;
     state.f21EligibleForNorth = false;
+    state.f21SubmittedToNorth = false;
+    state.f21EligibilitySubmittedToNorth = false;
     state.f21ClaimedByCanvasEast = false;
-    state.readyTextClaimedByCanvasEast = false;
     state.completionLatched = false;
+    state.finalCompletionLatched = false;
+    state.degradedCompletionLatched = false;
     state.generatedImage = false;
     state.graphicBox = false;
     state.webGL = false;
     state.visualPassClaimed = false;
   }
 
-  function detectFalsePromotion(input = {}) {
-    let text = "";
-    try {
-      text = JSON.stringify(input || {});
-    } catch (_error) {
-      text = String(input || "");
-    }
+  function recordLocal(event, detail = {}) {
+    state.localEvents.push({
+      at: nowIso(),
+      event: safeString(event, "CANVAS_EAST_EVENT"),
+      detail: clonePlain(detail)
+    });
 
+    if (state.localEvents.length > 160) state.localEvents.splice(0, state.localEvents.length - 160);
+    state.updatedAt = nowIso();
+  }
+
+  function recordError(code, error, detail = {}) {
+    state.errors.push({
+      at: nowIso(),
+      code: safeString(code, "CANVAS_EAST_ERROR"),
+      message: error && error.message ? String(error.message) : safeString(error),
+      detail: clonePlain(detail)
+    });
+
+    if (state.errors.length > 100) state.errors.splice(0, state.errors.length - 100);
+    state.updatedAt = nowIso();
+  }
+
+  function isCurrentLocalStationContract(contract) {
+    return contract === LOCAL_STATION_V11_1_CONTRACT || contract === LOCAL_STATION_V11_CONTRACT;
+  }
+
+  function detectFalsePromotion(input = {}) {
     return Boolean(
       safeBool(input.visualPassClaimed, false) ||
       safeBool(input.readyTextAllowed, false) ||
       safeBool(input.f21EligibleForNorth, false) ||
       safeBool(input.f21SubmittedToNorth, false) ||
-      safeBool(input.f21ClaimedByCanvasEast, false) ||
+      safeBool(input.f21EligibilitySubmittedToNorth, false) ||
       safeBool(input.completionLatched, false) ||
       safeBool(input.finalCompletionLatched, false) ||
       safeBool(input.degradedCompletionLatched, false) ||
-      text.includes('"visualPassClaimed":true') ||
-      text.includes('"readyTextAllowed":true') ||
-      text.includes('"f21EligibleForNorth":true') ||
-      text.includes('"completionLatched":true')
+      safeBool(input.canvasReady, false) ||
+      safeBool(input.visibleProof, false)
     );
   }
 
-  function ensureNamespaces() {
-    root.HEARTH = root.HEARTH || {};
-    root.DEXTER_LAB = root.DEXTER_LAB || {};
-    return true;
-  }
-
   function publishAliasStation() {
-    ensureNamespaces();
+    const root = ensureNamespaces();
 
-    root.HEARTH.canvasEast = api;
-    root.HEARTH.canvasEastSource = api;
-    root.HEARTH.canvasEastAuthority = api;
-    root.HEARTH.canvasEastEvidence = api;
-    root.HEARTH.canvasEastEngine = api;
-    root.HEARTH.canvasEastSameRuntimeExposureBeaconApiPublication = api;
-    root.HEARTH.canvasEastParentV103DispatchApiRecognitionServedDetectionRepair = api;
-    root.HEARTH.canvasEastParentV103DispatchApiRecognitionAtlasSource = api;
-    root.HEARTH.canvasEastSpineNodalParentAcceptanceSyncHeldAtlasSource = api;
-    root.HEARTH.canvasEastSynchronousHeldPacketParentFirstF13AtlasSource = api;
-    root.HEARTH.canvasEastParentFirstApiRecognitionBootstrap = api;
-    root.HEARTH.canvasEastCurrentParentRecognizedF13AtlasSource = api;
-    root.HEARTH.canvasEastGovernedF13AtlasSource = api;
-    root.HEARTH.canvasEastF13AtlasSourceChild = api;
-    root.HEARTH.canvasEastMaterialAtlasSourceMachine = api;
+    const rootAliases = [
+      "HEARTH_CANVAS_EAST",
+      "HEARTH_CANVAS_EAST_SOURCE",
+      "HEARTH_CANVAS_EAST_AUTHORITY",
+      "HEARTH_CANVAS_EAST_EVIDENCE",
+      "HEARTH_CANVAS_EAST_ENGINE",
+      "HEARTH_CANVAS_EAST_CURRENT_LOCAL_STATION_V11_1_API_PUBLICATION",
+      "HEARTH_CANVAS_EAST_SAME_RUNTIME_EXPOSURE_BEACON_API_PUBLICATION",
+      "HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_SERVED_DETECTION_REPAIR",
+      "HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_ATLAS_SOURCE",
+      "HEARTH_CANVAS_EAST_SYNCHRONOUS_HELD_PACKET_PARENT_FIRST_F13_ATLAS_SOURCE",
+      "HEARTH_CANVAS_EAST_F13_ATLAS_SOURCE_CHILD"
+    ];
 
-    root.HEARTH_CANVAS_EAST = api;
-    root.HEARTH_CANVAS_EAST_SOURCE = api;
-    root.HEARTH_CANVAS_EAST_AUTHORITY = api;
-    root.HEARTH_CANVAS_EAST_EVIDENCE = api;
-    root.HEARTH_CANVAS_EAST_ENGINE = api;
-    root.HEARTH_CANVAS_EAST_SAME_RUNTIME_EXPOSURE_BEACON_API_PUBLICATION = api;
-    root.HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_SERVED_DETECTION_REPAIR = api;
-    root.HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_ATLAS_SOURCE = api;
-    root.HEARTH_CANVAS_EAST_SPINE_NODAL_PARENT_ACCEPTANCE_SYNC_HELD_ATLAS_SOURCE = api;
-    root.HEARTH_CANVAS_EAST_SYNCHRONOUS_HELD_PACKET_PARENT_FIRST_F13_ATLAS_SOURCE = api;
-    root.HEARTH_CANVAS_EAST_PARENT_FIRST_API_RECOGNITION_BOOTSTRAP = api;
-    root.HEARTH_CANVAS_EAST_CURRENT_PARENT_RECOGNIZED_F13_ATLAS_SOURCE = api;
-    root.HEARTH_CANVAS_EAST_GOVERNED_F13_ATLAS_SOURCE = api;
-    root.HEARTH_CANVAS_EAST_F13_ATLAS_SOURCE_CHILD = api;
-    root.HEARTH_CANVAS_EAST_MATERIAL_ATLAS_SOURCE_MACHINE = api;
+    const hearthAliases = [
+      "canvasEast",
+      "canvasEastSource",
+      "canvasEastAuthority",
+      "canvasEastEvidence",
+      "canvasEastEngine",
+      "canvasEastCurrentLocalStationV111ApiPublication",
+      "canvasEastSameRuntimeExposureBeaconApiPublication",
+      "canvasEastParentV103DispatchApiRecognitionServedDetectionRepair",
+      "canvasEastParentV103DispatchApiRecognitionAtlasSource",
+      "canvasEastSynchronousHeldPacketParentFirstF13AtlasSource",
+      "canvasEastF13AtlasSourceChild",
+      "canvasEastMaterialAtlasSourceMachine"
+    ];
 
-    root.DEXTER_LAB.hearthCanvasEast = api;
-    root.DEXTER_LAB.hearthCanvasEastSource = api;
-    root.DEXTER_LAB.hearthCanvasEastAuthority = api;
-    root.DEXTER_LAB.hearthCanvasEastEvidence = api;
-    root.DEXTER_LAB.hearthCanvasEastEngine = api;
-    root.DEXTER_LAB.hearthCanvasEastSameRuntimeExposureBeaconApiPublication = api;
-    root.DEXTER_LAB.hearthCanvasEastParentV103DispatchApiRecognitionServedDetectionRepair = api;
-    root.DEXTER_LAB.hearthCanvasEastParentV103DispatchApiRecognitionAtlasSource = api;
-    root.DEXTER_LAB.hearthCanvasEastSpineNodalParentAcceptanceSyncHeldAtlasSource = api;
-    root.DEXTER_LAB.hearthCanvasEastSynchronousHeldPacketParentFirstF13AtlasSource = api;
-    root.DEXTER_LAB.hearthCanvasEastParentFirstApiRecognitionBootstrap = api;
-    root.DEXTER_LAB.hearthCanvasEastCurrentParentRecognizedF13AtlasSource = api;
-    root.DEXTER_LAB.hearthCanvasEastGovernedF13AtlasSource = api;
-    root.DEXTER_LAB.hearthCanvasEastF13AtlasSourceChild = api;
-    root.DEXTER_LAB.hearthCanvasEastMaterialAtlasSourceMachine = api;
+    const dexterAliases = [
+      "hearthCanvasEast",
+      "hearthCanvasEastSource",
+      "hearthCanvasEastAuthority",
+      "hearthCanvasEastEvidence",
+      "hearthCanvasEastEngine",
+      "hearthCanvasEastCurrentLocalStationV111ApiPublication",
+      "hearthCanvasEastSameRuntimeExposureBeaconApiPublication",
+      "hearthCanvasEastParentV103DispatchApiRecognitionServedDetectionRepair",
+      "hearthCanvasEastParentV103DispatchApiRecognitionAtlasSource",
+      "hearthCanvasEastSynchronousHeldPacketParentFirstF13AtlasSource",
+      "hearthCanvasEastF13AtlasSourceChild",
+      "hearthCanvasEastMaterialAtlasSourceMachine"
+    ];
+
+    rootAliases.forEach((name) => {
+      root[name] = api;
+    });
+
+    hearthAliases.forEach((name) => {
+      root.HEARTH[name] = api;
+    });
+
+    dexterAliases.forEach((name) => {
+      root.DEXTER_LAB[name] = api;
+    });
 
     root.__HEARTH_CANVAS_EAST_LOADED__ = true;
     root.__HEARTH_CANVAS_EAST_PRESENT__ = true;
@@ -742,7 +740,7 @@
     root.__HEARTH_CANVAS_EAST_SAMPLE_AVAILABLE__ = true;
     root.__HEARTH_CANVAS_EAST_READ_AVAILABLE__ = true;
     root.__HEARTH_CANVAS_EAST_GET_RECEIPT_AVAILABLE__ = true;
-    root.__HEARTH_CANVAS_EAST_EVIDENCE_READY__ = false;
+    root.__HEARTH_CANVAS_EAST_EVIDENCE_READY__ = Boolean(state.f13AtlasPacketReady);
     root.__HEARTH_CANVAS_EAST_VISUAL_PASS_CLAIMED__ = false;
 
     state.aliasesPublished = true;
@@ -752,8 +750,6 @@
     state.canvasEastCurrent = true;
     state.canvasEastPresent = true;
     state.requiredApiSurfaceComplete = true;
-    state.canvasEastGateReady = true;
-    state.updatedAt = nowIso();
 
     blockFinalClaims();
     return true;
@@ -766,7 +762,6 @@
     state.canvasEastCurrent = true;
     state.canvasEastPresent = true;
     state.requiredApiSurfaceComplete = true;
-    state.canvasEastGateReady = true;
 
     setDataset("hearthCanvasEastLoaded", "true");
     setDataset("hearthCanvasEastPresent", "true");
@@ -774,292 +769,171 @@
     setDataset("hearthCanvasEastReceipt", RECEIPT);
     setDataset("hearthCanvasEastPreviousContract", PREVIOUS_CONTRACT);
     setDataset("hearthCanvasEastBaselineContract", BASELINE_CONTRACT);
-    setDataset("hearthCanvasEastLegacyBaselineContract", LEGACY_BASELINE_CONTRACT);
-    setDataset("hearthCanvasEastVersion", VERSION);
     setDataset("hearthCanvasEastFile", FILE);
+    setDataset("hearthCanvasEastVersion", VERSION);
 
-    setDataset("hearthCanvasEastSameRuntimeExposureBeaconActive", "true");
-    setDataset("hearthCanvasEastStrictInitializationSafetyActive", "true");
-    setDataset("hearthCanvasEastUndefinedStateReferenceCorrectionActive", "true");
-    setDataset("hearthCanvasEastServedDetectionRepairActive", "true");
-    setDataset("hearthCanvasEastParentV10_3DispatchRecognitionActive", "true");
-    setDataset("hearthCanvasEastRouteConductorV8_2AlignmentActive", "true");
-    setDataset("hearthCanvasEastMacroWestV4_2ReleaseChainRecognized", "true");
-    setDataset("hearthCanvasEastApiSurfacePublished", String(state.apiSurfacePublished));
-    setDataset("hearthCanvasEastAliasesPublished", String(state.aliasesPublished));
-    setDataset("hearthCanvasEastDatasetFirstProofPublished", "true");
-    setDataset("hearthCanvasEastReceiptsPublished", String(state.receiptsPublished));
-
-    setDataset("hearthCanvasEastRequiredApiSurfaceComplete", "true");
-    setDataset("hearthCanvasEastBuildAtlasAvailable", "true");
-    setDataset("hearthCanvasEastBuildAtlasSyncAvailable", "true");
-    setDataset("hearthCanvasEastBuildAtlasAsyncAvailable", "true");
-    setDataset("hearthCanvasEastSampleAvailable", "true");
-    setDataset("hearthCanvasEastReadAvailable", "true");
-    setDataset("hearthCanvasEastGetAtlasAvailable", "true");
-    setDataset("hearthCanvasEastGetAtlasCanvasAvailable", "true");
-    setDataset("hearthCanvasEastGetAtlasPacketAvailable", "true");
-    setDataset("hearthCanvasEastGetReceiptAvailable", "true");
-    setDataset("hearthCanvasEastGetReceiptLightAvailable", "true");
-    setDataset("hearthCanvasEastGetReceiptTextAvailable", "true");
-    setDataset("hearthCanvasEastReceiveParentDispatchPacketAvailable", "true");
     setDataset("hearthCanvasEastApiReady", "true");
     setDataset("hearthCanvasEastReady", "true");
     setDataset("hearthCanvasEastCurrent", "true");
-    setDataset("hearthCanvasEastEvidenceReady", String(state.f13AtlasPacketReady));
+    setDataset("hearthCanvasEastRequiredApiSurfaceComplete", "true");
+    setDataset("hearthCanvasEastBuildAtlasAvailable", "true");
+    setDataset("hearthCanvasEastSampleAvailable", "true");
+    setDataset("hearthCanvasEastReadAvailable", "true");
+    setDataset("hearthCanvasEastGetReceiptAvailable", "true");
+    setDataset("hearthCanvasEastEvidenceReady", String(Boolean(state.f13AtlasPacketReady)));
+    setDataset("hearthCanvasEastHeldDoesNotMeanApiMissing", "true");
 
-    setDataset("hearthCanvasEastChildSequence", CANVAS_CHILD_SEQUENCE.join("__"));
+    setDataset("hearthCanvasEastDatasetSelfContaminationBlocked", "true");
+    setDataset("hearthCanvasEastMaterialAuthorityCachedForAtlasLoop", "true");
+    setDataset("hearthCanvasEastEmptyContractFalseRecognitionBlocked", "true");
+    setDataset("hearthCanvasEastRouteConductorPermissionGateEnforced", "true");
+    setDataset("hearthCanvasEastV10_3BaselineRecognizedOnly", "true");
+
+    setDataset("hearthCanvasEastRouteConductorObserved", String(Boolean(state.routeConductorObserved)));
+    setDataset("hearthCanvasEastRouteConductorContractKnown", String(Boolean(state.routeConductorContractKnown)));
+    setDataset("hearthCanvasEastRouteConductorContractRecognized", String(Boolean(state.routeConductorContractRecognized)));
+    setDataset("hearthCanvasEastRouteConductorV9_2Recognized", String(Boolean(state.routeConductorV9_2Recognized)));
+
+    setDataset("hearthCanvasEastMacroWestObserved", String(Boolean(state.macroWestObserved)));
+    setDataset("hearthCanvasEastMacroWestContractKnown", String(Boolean(state.macroWestContractKnown)));
+    setDataset("hearthCanvasEastMacroWestContractRecognized", String(Boolean(state.macroWestContractRecognized)));
+    setDataset("hearthCanvasEastMacroWestV4_6_3ReleaseRecognized", String(Boolean(state.macroWestV4_6_3ReleaseRecognized)));
+
     setDataset("hearthCanvasEastActiveCycleNumber", String(ACTIVE_CYCLE_NUMBER));
     setDataset("hearthCanvasEastActiveCycleRoute", ACTIVE_CYCLE_ROUTE);
     setDataset("hearthCanvasEastActiveCardinal", ACTIVE_CARDINAL);
+    setDataset("hearthCanvasEastActiveStageId", ACTIVE_STAGE_ID);
+    setDataset("hearthCanvasEastActiveGear", ACTIVE_GEAR);
+    setDataset("hearthCanvasEastActiveFibonacci", ACTIVE_FIBONACCI);
+    setDataset("hearthCanvasEastActiveNewsGate", ACTIVE_NEWS_GATE);
 
-    setDataset("hearthCanvasEastParentObserved", String(state.parentObserved));
-    setDataset("hearthCanvasEastParentApiPresent", String(state.parentApiPresent));
-    setDataset("hearthCanvasEastParentCallable", String(state.parentCallable));
-    setDataset("hearthCanvasEastParentContract", state.parentContract);
-    setDataset("hearthCanvasEastCurrentParentIsV10_3", String(state.currentParentIsV10_3));
-    setDataset("hearthCanvasEastParentReleaseAccepted", String(state.parentReleaseAccepted));
-    setDataset("hearthCanvasEastParentReleaseLawful", String(state.parentReleaseLawful));
-    setDataset("hearthCanvasEastCanvasParentReleaseGateReady", String(state.canvasParentReleaseGateReady));
-    setDataset("hearthCanvasEastParentAcceptedRouteConductorRelease", String(state.parentAcceptedRouteConductorRelease));
-    setDataset("hearthCanvasEastParentReleasePacketSentToEast", String(state.parentReleasePacketSentToEast));
-    setDataset("hearthCanvasEastParentReleasePacketLawful", String(state.parentReleasePacketLawful));
+    setDataset("hearthCanvasEastCanvasLocalStationObserved", String(Boolean(state.canvasLocalStationObserved)));
+    setDataset("hearthCanvasEastCanvasLocalStationContractKnown", String(Boolean(state.canvasLocalStationContractKnown)));
+    setDataset("hearthCanvasEastCanvasLocalStationApiReady", String(Boolean(state.canvasLocalStationApiReady)));
+    setDataset("hearthCanvasEastCanvasLocalStationContract", state.canvasLocalStationContract);
+    setDataset("hearthCanvasEastCanvasLocalStationContractAccepted", String(Boolean(state.canvasLocalStationContractAccepted)));
+    setDataset("hearthCanvasEastCanvasLocalStationSummaryObserved", String(Boolean(state.canvasLocalStationSummaryObserved)));
+    setDataset("hearthCanvasEastCanvasLocalStationSummaryMethod", state.canvasLocalStationSummaryMethod);
+    setDataset("hearthCanvasEastCurrentCanvasParentObserved", String(Boolean(state.currentCanvasParentObserved)));
+    setDataset("hearthCanvasEastCurrentCanvasParentContract", state.currentCanvasParentContract);
+    setDataset("hearthCanvasEastCurrentCanvasParentIsLocalStation", String(Boolean(state.currentCanvasParentIsLocalStation)));
+    setDataset("hearthCanvasEastCanvasParentV10_3BaselineRecognized", String(Boolean(state.canvasParentV10_3BaselineRecognized)));
 
-    setDataset("hearthCanvasEastDispatchAuthorized", String(state.eastDispatchAuthorized));
-    setDataset("hearthCanvasEastDispatchPacketPublished", String(state.eastDispatchPacketPublished));
-    setDataset("hearthCanvasEastDispatchPacketObserved", String(state.eastDispatchPacketObserved));
-    setDataset("hearthCanvasEastDispatchPacketValid", String(state.eastDispatchPacketValid));
-    setDataset("hearthCanvasEastDispatchPacketAccepted", String(state.eastDispatchPacketAccepted));
+    setDataset("hearthCanvasEastCanvasLocalStationReleaseAccepted", String(Boolean(state.canvasLocalStationReleaseAccepted)));
+    setDataset("hearthCanvasEastCanvasLocalStationReleaseLawful", String(Boolean(state.canvasLocalStationReleaseLawful)));
+    setDataset("hearthCanvasEastCanvasLocalStationReleasePacketSentToEast", String(Boolean(state.canvasLocalStationReleasePacketSentToEast)));
+
+    setDataset("hearthCanvasEastWestReleaseObserved", String(Boolean(state.westReleaseObserved)));
+    setDataset("hearthCanvasEastWestDecision", state.westDecision);
+    setDataset("hearthCanvasEastWestHardBlock", String(Boolean(state.westHardBlock)));
+    setDataset("hearthCanvasEastWestCanvasReleaseApproved", String(Boolean(state.westCanvasReleaseApproved)));
+    setDataset("hearthCanvasEastCanvasReleaseAuthorized", String(Boolean(state.canvasReleaseAuthorized)));
+    setDataset("hearthCanvasEastCanvasReleasePacketReady", String(Boolean(state.canvasReleasePacketReady)));
+
+    setDataset("hearthCanvasEastDispatchAuthorized", String(Boolean(state.eastDispatchAuthorized)));
+    setDataset("hearthCanvasEastDispatchPacketPublished", String(Boolean(state.eastDispatchPacketPublished)));
+    setDataset("hearthCanvasEastDispatchPacketObserved", String(Boolean(state.eastDispatchPacketObserved)));
+    setDataset("hearthCanvasEastDispatchPacketValid", String(Boolean(state.eastDispatchPacketValid)));
+    setDataset("hearthCanvasEastDispatchPacketAccepted", String(Boolean(state.eastDispatchPacketAccepted)));
     setDataset("hearthCanvasEastDispatchPacketSource", state.eastDispatchPacketSource);
 
-    setDataset("hearthCanvasEastWestReleaseObserved", String(state.westReleaseObserved));
-    setDataset("hearthCanvasEastWestCanvasReleaseApproved", String(state.westCanvasReleaseApproved));
-    setDataset("hearthCanvasEastCanvasReleaseAuthorized", String(state.canvasReleaseAuthorized));
-
     setDataset("hearthCanvasEastPermissionClass", state.permissionClass);
-    setDataset("hearthCanvasEastMayBuildAtlas", String(state.canvasEastMayBuildAtlas));
-    setDataset("hearthCanvasEastF13BuildLawful", String(state.f13BuildLawful));
+    setDataset("hearthCanvasEastMayBuildAtlas", String(Boolean(state.canvasEastMayBuildAtlas)));
+    setDataset("hearthCanvasEastF13BuildLawful", String(Boolean(state.f13BuildLawful)));
     setDataset("hearthCanvasEastF13BuildBlockedReason", state.f13BuildBlockedReason);
     setDataset("hearthCanvasEastF13PermissionSource", state.f13PermissionSource);
 
-    setDataset("hearthCanvasEastHeldAtlasPacketReturned", String(state.heldAtlasPacketReturned));
-    setDataset("hearthCanvasEastHeldPacketWasSynchronous", String(state.heldPacketWasSynchronous));
-    setDataset("hearthCanvasEastBuildAtlasReturnedPromise", String(state.buildAtlasReturnedPromise));
-    setDataset("hearthCanvasEastHeldDoesNotMeanApiMissing", "true");
+    setDataset("hearthCanvasEastHeldAtlasPacketReturned", String(Boolean(state.heldAtlasPacketReturned)));
+    setDataset("hearthCanvasEastHeldPacketWasSynchronous", String(Boolean(state.heldPacketWasSynchronous)));
+    setDataset("hearthCanvasEastBuildAtlasReturnedPromise", String(Boolean(state.buildAtlasReturnedPromise)));
+
+    setDataset("hearthCanvasEastAtlasBuildRequested", String(Boolean(state.atlasBuildRequested)));
+    setDataset("hearthCanvasEastAtlasBuildStarted", String(Boolean(state.atlasBuildStarted)));
+    setDataset("hearthCanvasEastAtlasBuildProgress", String(state.atlasBuildProgress));
+    setDataset("hearthCanvasEastAtlasBuildComplete", String(Boolean(state.atlasBuildComplete)));
+    setDataset("hearthCanvasEastAtlasCanvasPresent", String(Boolean(state.atlasCanvasPresent)));
+    setDataset("hearthCanvasEastAtlasWidth", String(state.atlasWidth));
+    setDataset("hearthCanvasEastAtlasHeight", String(state.atlasHeight));
+    setDataset("hearthCanvasEastF13SourceStageStarted", String(Boolean(state.f13SourceStageStarted)));
+    setDataset("hearthCanvasEastF13SourceStageComplete", String(Boolean(state.f13SourceStageComplete)));
+    setDataset("hearthCanvasEastF13AtlasPacketReady", String(Boolean(state.f13AtlasPacketReady)));
+
+    setDataset("hearthCanvasEastMaterialAuthorityCached", String(Boolean(state.materialAuthorityCached)));
+    setDataset("hearthCanvasEastMaterialAuthorityScanCount", String(state.materialAuthorityScanCount));
+    setDataset("hearthCanvasEastMaterialAuthorityScanDuringAtlasLoopBlocked", "true");
+    setDataset("hearthCanvasEastMaterialReceiptBridgeActive", String(Boolean(state.materialReceiptBridgeActive)));
+    setDataset("hearthCanvasEastMaterialContract", state.materialContract);
+    setDataset("hearthCanvasEastMaterialReceipt", state.materialReceipt);
 
     setDataset("hearthCanvasEastChronologicalGateCount", String(state.chronologicalGateCount));
     setDataset("hearthCanvasEastChronologicalGatesSatisfied", String(state.chronologicalGatesSatisfied));
     setDataset("hearthCanvasEastChronologicalFirstFailedGate", state.chronologicalFirstFailedGate);
     setDataset("hearthCanvasEastChronologicalFirstFailedCoordinate", state.chronologicalFirstFailedCoordinate);
-
     setDataset("hearthCanvasEastFibonacciSynchronizationScore", String(state.fibonacciSynchronizationScore));
     setDataset("hearthCanvasEastFibonacciSynchronizationExpected", String(state.fibonacciSynchronizationExpected));
     setDataset("hearthCanvasEastFibonacciSynchronizationSatisfied", String(state.fibonacciSynchronizationSatisfied));
-    setDataset("hearthCanvasEastFibonacciSynchronizationPassed", String(state.fibonacciSynchronizationPassed));
-    setDataset("hearthCanvasEastFibonacciSynchronizationDegraded", String(state.fibonacciSynchronizationDegraded));
-    setDataset("hearthCanvasEastFibonacciSynchronizationHardFail", String(state.fibonacciSynchronizationHardFail));
+    setDataset("hearthCanvasEastFibonacciSynchronizationPassed", String(Boolean(state.fibonacciSynchronizationPassed)));
+    setDataset("hearthCanvasEastFibonacciSynchronizationDegraded", String(Boolean(state.fibonacciSynchronizationDegraded)));
+    setDataset("hearthCanvasEastFibonacciSynchronizationHardFail", String(Boolean(state.fibonacciSynchronizationHardFail)));
     setDataset("hearthCanvasEastFibonacciSynchronizationHoldReason", state.fibonacciSynchronizationHoldReason);
-    setDataset("hearthCanvasEastActiveFibonacciGate", ACTIVE_FIBONACCI_GATE);
-    setDataset("hearthCanvasEastActiveF13EGate", F13E_GATE);
-    setDataset("hearthCanvasEastActiveF13FGate", F13F_GATE);
-    setDataset("hearthCanvasEastFutureFibonacciGate", FUTURE_FIBONACCI_GATE);
-
-    setDataset("hearthCanvasEastGateReady", "true");
-    setDataset("hearthCanvasEastEvidenceGateReady", String(state.canvasEastEvidenceGateReady));
-    setDataset("hearthCanvasEastCanvasGateReady", "false");
-    setDataset("hearthCanvasEastNewsGatePassedBeforeF21", "false");
-    setDataset("hearthCanvasEastNewsGateDegradedBeforeF21", "false");
-
-    setDataset("hearthCanvasEastMaterialReceiptBridgeActive", String(state.materialReceiptBridgeActive));
-    setDataset("hearthCanvasEastMaterialContract", state.materialContract);
-    setDataset("hearthCanvasEastMaterialReceipt", state.materialReceipt);
-    setDataset("hearthCanvasEastCanonicalMaterialConsumed", String(state.canonicalMaterialConsumed));
-
-    setDataset("hearthCanvasEastAtlasBuildRequested", String(state.atlasBuildRequested));
-    setDataset("hearthCanvasEastAtlasBuildStarted", String(state.atlasBuildStarted));
-    setDataset("hearthCanvasEastAtlasBuildProgress", String(state.atlasBuildProgress));
-    setDataset("hearthCanvasEastAtlasBuildComplete", String(state.atlasBuildComplete));
-    setDataset("hearthCanvasEastAtlasCanvasPresent", String(state.atlasCanvasPresent));
-    setDataset("hearthCanvasEastAtlasWidth", String(state.atlasWidth));
-    setDataset("hearthCanvasEastAtlasHeight", String(state.atlasHeight));
-    setDataset("hearthCanvasEastAtlasClassCount", String(state.atlasClassCount));
-    setDataset("hearthCanvasEastF13SourceStageStarted", String(state.f13SourceStageStarted));
-    setDataset("hearthCanvasEastF13SourceStageComplete", String(state.f13SourceStageComplete));
-    setDataset("hearthCanvasEastF13AtlasPacketReady", String(state.f13AtlasPacketReady));
 
     setDataset("hearthCanvasEastFirstFailedCoordinate", state.firstFailedCoordinate);
     setDataset("hearthCanvasEastRecommendedNextFile", state.recommendedNextFile);
     setDataset("hearthCanvasEastRecommendedNextRenewalTarget", state.recommendedNextRenewalTarget);
     setDataset("hearthCanvasEastNextConsumerFile", PARENT_FILE);
 
-    setDataset("hearthCanvasEastRouteConductorNotificationAttempted", String(state.routeConductorNotificationAttempted));
-    setDataset("hearthCanvasEastRouteConductorNotificationAccepted", String(state.routeConductorNotificationAccepted));
-    setDataset("hearthCanvasEastRouteConductorNotificationError", state.routeConductorNotificationError);
-
     setDataset("hearthCanvasEastVisibleProof", "false");
     setDataset("hearthCanvasEastVisibleContentProof", "false");
     setDataset("hearthCanvasEastVisiblePlanetAvailable", "false");
     setDataset("hearthCanvasEastCanvasReady", "false");
-    setDataset("hearthCanvasEastReadyTextAllowed", "false");
     setDataset("hearthCanvasEastF21EligibleForNorth", "false");
-    setDataset("hearthCanvasEastF21Claimed", "false");
-    setDataset("hearthCanvasEastReadyTextClaimed", "false");
+    setDataset("hearthCanvasEastF21SubmittedToNorth", "false");
+    setDataset("hearthCanvasEastF21EligibilitySubmittedToNorth", "false");
     setDataset("hearthCanvasEastCompletionLatched", "false");
-
+    setDataset("hearthCanvasEastReadyTextAllowed", "false");
+    setDataset("hearthCanvasEastVisualPassClaimed", "false");
     setDataset("generatedImage", "false");
     setDataset("graphicBox", "false");
     setDataset("webgl", "false");
     setDataset("visualPassClaimed", "false");
 
     if (!options.quiet) state.updatedAt = nowIso();
-
     return true;
   }
 
   function publishReceipts() {
+    const root = ensureNamespaces();
     const light = getReceiptLight(false);
 
-    ensureNamespaces();
-
     root.HEARTH_CANVAS_EAST_RECEIPT = light;
+    root.HEARTH_CANVAS_EAST_CURRENT_LOCAL_STATION_V11_1_API_PUBLICATION_RECEIPT = light;
+    root.HEARTH_CANVAS_EAST_CURRENT_LOCAL_STATION_V11_1_API_PUBLICATION_RECEIPT_v11_4 = light;
+    root.HEARTH_CANVAS_EAST_CURRENT_LOCAL_STATION_V11_1_API_PUBLICATION_RECEIPT_v11_3 = light;
+    root.HEARTH_CANVAS_EAST_CURRENT_LOCAL_STATION_V11_1_API_PUBLICATION_RECEIPT_v11_2 = light;
     root.HEARTH_CANVAS_EAST_SAME_RUNTIME_EXPOSURE_BEACON_API_PUBLICATION_RECEIPT = light;
     root.HEARTH_CANVAS_EAST_SAME_RUNTIME_EXPOSURE_BEACON_API_PUBLICATION_RECEIPT_v11_1 = light;
     root.HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_SERVED_DETECTION_REPAIR_RECEIPT = light;
-    root.HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_ATLAS_SOURCE_RECEIPT = light;
     root.HEARTH_CANVAS_EAST_SYNCHRONOUS_HELD_PACKET_PARENT_FIRST_F13_ATLAS_SOURCE_RECEIPT = light;
     root.HEARTH_CANVAS_EAST_F13_ATLAS_SOURCE_CHILD_RECEIPT = light;
 
     root.HEARTH.canvasEastReceipt = light;
+    root.HEARTH.canvasEastCurrentLocalStationV111ApiPublicationReceipt = light;
     root.HEARTH.canvasEastSameRuntimeExposureBeaconApiPublicationReceipt = light;
     root.HEARTH.canvasEastParentV103DispatchApiRecognitionServedDetectionRepairReceipt = light;
-    root.HEARTH.canvasEastParentV103DispatchApiRecognitionAtlasSourceReceipt = light;
     root.HEARTH.canvasEastSynchronousHeldPacketParentFirstF13AtlasSourceReceipt = light;
 
     root.DEXTER_LAB.hearthCanvasEastReceipt = light;
+    root.DEXTER_LAB.hearthCanvasEastCurrentLocalStationV111ApiPublicationReceipt = light;
     root.DEXTER_LAB.hearthCanvasEastSameRuntimeExposureBeaconApiPublicationReceipt = light;
     root.DEXTER_LAB.hearthCanvasEastParentV103DispatchApiRecognitionServedDetectionRepairReceipt = light;
-    root.DEXTER_LAB.hearthCanvasEastParentV103DispatchApiRecognitionAtlasSourceReceipt = light;
     root.DEXTER_LAB.hearthCanvasEastSynchronousHeldPacketParentFirstF13AtlasSourceReceipt = light;
 
     state.receiptsPublished = true;
     return true;
   }
 
-  function notifyRouteConductor(reason = "canvas-east-api-published") {
-    if (notificationQueued) return false;
-
-    notificationQueued = true;
-
-    const run = () => {
-      notificationQueued = false;
-      state.routeConductorNotificationAttempted = true;
-      state.routeConductorNotificationError = "";
-
-      try {
-        const conductor = firstGlobal([
-          "HEARTH_ROUTE_CONDUCTOR_CENTRAL_STATION_SWITCHBOARD_WEST_V4_2_SOUTH_OUTPUT_ALIGNMENT",
-          "HEARTH.routeConductorCentralStationSwitchboardWestV42SouthOutputAlignment",
-          "DEXTER_LAB.hearthRouteConductorCentralStationSwitchboardWestV42SouthOutputAlignment",
-          "HEARTH_ROUTE_CONDUCTOR_CENTRAL_STATION_SWITCHBOARD_NEWS_FIBONACCI_PARENT_COORDINATION",
-          "HEARTH.routeConductorCentralStationSwitchboardNewsFibonacciParentCoordination",
-          "DEXTER_LAB.hearthRouteConductorCentralStationSwitchboardNewsFibonacciParentCoordination",
-          "HEARTH_ROUTE_CONDUCTOR",
-          "HEARTH.routeConductor",
-          "DEXTER_LAB.hearthRouteConductor"
-        ]);
-
-        const packet = {
-          contract: CONTRACT,
-          receipt: RECEIPT,
-          file: FILE,
-          packetType: "CANVAS_EAST_SAME_RUNTIME_EXPOSURE_BEACON",
-          reason,
-          canvasEastApiReady: true,
-          requiredApiSurfaceComplete: true,
-          aliasesPublished: true,
-          datasetFirstProofPublished: true,
-          receiptsPublished: true,
-          buildAtlasAvailable: true,
-          sampleAvailable: true,
-          readAvailable: true,
-          getReceiptAvailable: true,
-          canvasEastEvidenceReady: state.f13AtlasPacketReady,
-          heldDoesNotMeanApiMissing: true,
-          firstFailedCoordinate: state.f13AtlasPacketReady ? "NONE_F13F_ATLAS_PACKET_READY" : "WAITING_CANVAS_EAST_ATLAS_EVIDENCE",
-          recommendedNextFile: state.f13AtlasPacketReady ? CANVAS_WEST_FILE : FILE,
-          visualPassClaimed: false,
-          createdAt: nowIso()
-        };
-
-        let accepted = false;
-
-        if (conductor && isObject(conductor)) {
-          const methods = ["reconcileCanvas", "refresh", "run", "start", "boot", "init"];
-          for (const method of methods) {
-            if (!isFunction(conductor[method])) continue;
-            try {
-              conductor[method]({
-                receivedFrom: "CANVAS_EAST",
-                activeCycleRoute: ACTIVE_CYCLE_ROUTE,
-                canvasEastApiPublished: true,
-                canvasEastApiReady: true,
-                canvasEastExposureBeacon: packet
-              });
-              accepted = true;
-              break;
-            } catch (_error) {}
-          }
-        }
-
-        if (doc && isFunction(doc.dispatchEvent)) {
-          try {
-            const event = typeof CustomEvent !== "undefined"
-              ? new CustomEvent("hearth:canvas-east-api-published", { detail: packet })
-              : null;
-            if (event) doc.dispatchEvent(event);
-          } catch (_error) {}
-        }
-
-        state.routeConductorObserved = Boolean(conductor);
-        state.routeConductorNotificationAccepted = accepted;
-        recordLocal("ROUTE_CONDUCTOR_NONBLOCKING_NOTIFICATION_SENT", {
-          reason,
-          routeConductorObserved: Boolean(conductor),
-          routeConductorNotificationAccepted: accepted,
-          canvasEastApiReady: true,
-          canvasEastEvidenceReady: state.f13AtlasPacketReady
-        });
-
-        publishDatasetFirstProof({ quiet: true });
-        publishReceipts();
-      } catch (error) {
-        state.routeConductorNotificationAccepted = false;
-        state.routeConductorNotificationError = error && error.message ? error.message : String(error);
-        recordError("ROUTE_CONDUCTOR_NOTIFICATION_FAILED_NONBLOCKING", error, {
-          apiAlreadyPublished: true
-        });
-      }
-    };
-
-    try {
-      if (isFunction(root.queueMicrotask)) root.queueMicrotask(run);
-      else root.setTimeout(run, 0);
-    } catch (_error) {
-      try {
-        root.setTimeout(run, 0);
-      } catch (error) {
-        recordError("ROUTE_CONDUCTOR_NOTIFICATION_QUEUE_FAILED_NONBLOCKING", error, {
-          apiAlreadyPublished: true
-        });
-      }
-    }
-
-    return true;
-  }
-
   function publishApiSurface(reason = "publish-api-surface") {
     if (publishDepth > 4) return getReceiptLight(false);
-
     publishDepth += 1;
 
     try {
@@ -1075,589 +949,469 @@
       state.publishedAt = state.publishedAt || nowIso();
       state.updatedAt = nowIso();
 
-      if (!state.localEvents.some((item) => item.event === "CANVAS_EAST_V11_1_API_SURFACE_PUBLISHED")) {
-        state.localEvents.push({
-          at: nowIso(),
-          event: "CANVAS_EAST_V11_1_API_SURFACE_PUBLISHED",
-          detail: {
-            reason,
-            contract: CONTRACT,
-            receipt: RECEIPT,
-            baselineContract: BASELINE_CONTRACT,
-            methods: REQUIRED_METHODS.slice(),
-            aliases: PUBLIC_ALIAS_PATHS.slice(),
-            nestedAliases: PUBLIC_NESTED_ALIAS_PATHS.slice(),
-            apiReadyBeforeParentScan: true,
-            apiReadyBeforeRouteConductorScan: true,
-            apiReadyBeforeAtlasEvidence: true,
-            apiReadyDoesNotRequireEvidence: true,
-            visualPassClaimed: false
-          }
+      if (!state.localEvents.some((item) => item.event === "CANVAS_EAST_V11_4_API_SURFACE_PUBLISHED")) {
+        recordLocal("CANVAS_EAST_V11_4_API_SURFACE_PUBLISHED", {
+          reason,
+          contract: CONTRACT,
+          receipt: RECEIPT,
+          apiReadyBeforeUpstreamProof: true,
+          apiReadyBeforeRouteConductorScan: true,
+          apiReadyBeforeAtlasEvidence: true,
+          apiReadinessDoesNotRequireEvidence: true,
+          datasetSelfContaminationBlocked: true,
+          materialAuthorityCachedForAtlasLoop: true,
+          emptyContractFalseRecognitionBlocked: true,
+          routeConductorPermissionGateEnforced: true,
+          canvasEastApiReady: true,
+          canvasEastEvidenceReady: Boolean(state.f13AtlasPacketReady),
+          visualPassClaimed: false
         });
-        trimArray(state.localEvents, 220);
       }
 
-      notifyRouteConductor(reason);
       return getReceiptLight(false);
     } finally {
       publishDepth -= 1;
     }
   }
 
-  function readParentApi() {
-    return firstGlobal([
-      "HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD",
-      "HEARTH.canvasParentReleaseAcceptanceEastDispatchSwitchboard",
-      "DEXTER_LAB.hearthCanvasParentReleaseAcceptanceEastDispatchSwitchboard",
-      "HEARTH_CANVAS_PARENT",
-      "HEARTH.canvasParent",
-      "DEXTER_LAB.hearthCanvasParent",
-      "HEARTH_CANVAS_AUTHORITY",
-      "HEARTH_CANVAS_EVIDENCE",
-      "HEARTH_CANVAS",
-      "HEARTH.canvas",
-      "HEARTH.canvasAuthority",
-      "HEARTH.canvasEvidence",
-      "HEARTH.canvasNorth",
-      "DEXTER_LAB.hearthCanvas",
-      "DEXTER_LAB.hearthCanvasEvidence"
-    ]);
+  function getCanvasLocalStationCandidates() {
+    const root = getRoot();
+
+    return [
+      pathRead("HEARTH.canvasLocalStation"),
+      pathRead("HEARTH.canvasStation"),
+      pathRead("HEARTH.canvasChildDistributionSwitchboard"),
+      pathRead("HEARTH.canvasParentReleaseAcceptanceEastDispatchSwitchboard"),
+      pathRead("HEARTH.canvasParent"),
+      pathRead("HEARTH.canvasNorth"),
+      pathRead("HEARTH.canvasEvidence"),
+      pathRead("HEARTH.canvas"),
+      root.HEARTH_CANVAS_LOCAL_STATION,
+      root.HEARTH_CANVAS_STATION,
+      root.HEARTH_CANVAS_CHILD_DISTRIBUTION_SWITCHBOARD,
+      root.HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD,
+      root.HEARTH_CANVAS_PARENT,
+      root.HEARTH_CANVAS_AUTHORITY,
+      root.HEARTH_CANVAS_EVIDENCE,
+      root.HEARTH_CANVAS,
+      pathRead("DEXTER_LAB.hearthCanvasLocalStation"),
+      pathRead("DEXTER_LAB.hearthCanvasStation"),
+      pathRead("DEXTER_LAB.hearthCanvasChildDistributionSwitchboard"),
+      pathRead("DEXTER_LAB.hearthCanvasParentReleaseAcceptanceEastDispatchSwitchboard"),
+      pathRead("DEXTER_LAB.hearthCanvasParent"),
+      pathRead("DEXTER_LAB.hearthCanvasEvidence"),
+      pathRead("DEXTER_LAB.hearthCanvas")
+    ].filter(Boolean);
   }
 
-  function hasParentCallable(parentApi) {
-    if (!parentApi || !isObject(parentApi)) return false;
-
-    return Boolean(
-      isFunction(parentApi.boot) ||
-      isFunction(parentApi.init) ||
-      isFunction(parentApi.start) ||
-      isFunction(parentApi.mount) ||
-      isFunction(parentApi.consumeRouteConductorReleasePacket) ||
-      isFunction(parentApi.receiveCanvasReleasePacket) ||
-      isFunction(parentApi.receiveEastPacket) ||
-      isFunction(parentApi.getReceipt) ||
-      isFunction(parentApi.getReceiptLight) ||
-      isFunction(parentApi.getStructuralCarrier)
-    );
-  }
-
-  function readParentAuthorityProfile(input = {}) {
-    const source = isObject(input) ? input : {};
-
-    const directParent = findNestedObject(source, [
-      "parent",
-      "canvasParent",
-      "parentReceipt",
-      "canvasParentReceipt",
-      "releasePacket.parent",
-      "releasePacket.canvasParent",
-      "eastDispatchPacket.parent",
-      "parentAuthorityProfile"
-    ]);
-
-    const parentApi = readParentApi();
-    const parentReceipt = Object.keys(directParent).length ? directParent : (readReceipt(parentApi) || {});
+  function normalizeCanvasLocalStationSummary(summary = {}, authority = null) {
+    const upstream = readUpstreamDatasetProof();
 
     const contract = safeString(firstDefined(
-      source.parentContract,
-      source.currentCanvasParentContract,
-      source.parentContractFromDispatch,
-      objectValue(source, "eastDispatchPacket.parentContract"),
-      objectValue(source, "dispatchPacket.parentContract"),
-      parentReceipt.contract,
-      parentReceipt.parentContract,
-      parentReceipt.currentCanvasParentContract,
-      parentReceipt.sourceParentContract,
-      parentApi && parentApi.contract,
-      datasetValue("hearthCanvasContract", ""),
-      datasetValue("hearthCanvasParentContract", ""),
-      datasetValue("hearthSouthCurrentCanvasParentContract", "")
+      summary.canvasLocalStationContract,
+      summary.currentCanvasStationContract,
+      summary.currentCanvasParentContract,
+      summary.hearthCanvasContract,
+      summary.contract,
+      authority && authority.CONTRACT,
+      authority && authority.contract,
+      upstream.canvasLocalStationContract
     ), "");
 
     const receipt = safeString(firstDefined(
-      source.parentReceipt,
-      source.currentCanvasParentReceipt,
-      objectValue(source, "eastDispatchPacket.parentReceipt"),
-      objectValue(source, "dispatchPacket.parentReceipt"),
-      parentReceipt.receipt,
-      parentReceipt.parentReceipt,
-      parentReceipt.currentCanvasParentReceipt,
-      parentReceipt.sourceParentReceipt,
-      parentApi && parentApi.receipt,
-      datasetValue("hearthCanvasReceipt", ""),
-      datasetValue("hearthCanvasParentReceipt", "")
+      summary.canvasLocalStationReceipt,
+      summary.currentCanvasStationReceipt,
+      summary.currentCanvasParentReceipt,
+      summary.receipt,
+      authority && authority.RECEIPT,
+      authority && authority.receipt,
+      upstream.canvasLocalStationReceipt
     ), "");
 
-    const currentParentIsV10_3 = contract === CURRENT_PARENT_CONTRACT || receipt === CURRENT_PARENT_RECEIPT;
+    const contractKnown = Boolean(contract);
+    const localAccepted = isCurrentLocalStationContract(contract);
+    const baselineV10_3 = contract === V10_3_BASELINE_CONTRACT || receipt === V10_3_BASELINE_RECEIPT;
 
-    const parentObserved = Boolean(
-      parentApi ||
-      parentReceipt.contract ||
-      parentReceipt.receipt ||
-      contract ||
-      datasetValue("hearthCanvasLoaded") === "true" ||
-      datasetValue("hearthCanvasParentV10_3Active") === "true" ||
-      datasetValue("hearthSouthCurrentCanvasParentObserved") === "true"
+    const summaryMethod = safeString(summary.__sourceMethod, "OBJECT_OR_UPSTREAM_DATASET");
+    const summaryObserved = Boolean(
+      summaryMethod !== "OBJECT_OR_UPSTREAM_DATASET" ||
+      summary.packetType === "CANVAS_LOCAL_STATION_SUMMARY" ||
+      summary.packetType === "CANVAS_LOCAL_STATION_RECEIPT" ||
+      summary.canvasLocalStationActive === true ||
+      summary.childDistributionSwitchboardActive === true ||
+      localAccepted ||
+      baselineV10_3
     );
 
-    const parentReleaseAccepted = Boolean(
-      safeBool(source.canvasParentReleaseAccepted, false) ||
-      safeBool(source.parentReleaseAccepted, false) ||
-      safeBool(parentReceipt.canvasParentReleaseAccepted, false) ||
-      safeBool(parentReceipt.canvasParentReleaseObserved, false) ||
-      safeBool(parentReceipt.releasePacketAccepted, false) ||
-      safeBool(parentReceipt.parentAcceptedRouteConductorRelease, false) ||
-      datasetValue("hearthCanvasParentReleaseAccepted") === "true" ||
-      datasetValue("hearthSouthCanvasParentReleaseAccepted") === "true"
+    const apiReady = Boolean(
+      localAccepted &&
+      (
+        summary.canvasLocalStationApiReady === true ||
+        summary.currentCanvasParentIsLocalStation === true ||
+        summary.canvasLocalStationObserved === true ||
+        summary.currentCanvasParentObserved === true ||
+        summary.childDistributionSwitchboardActive === true ||
+        summary.canvasLocalStationActive === true ||
+        isObject(authority)
+      )
     );
 
-    const parentReleaseLawful = Boolean(
-      safeBool(source.parentReleaseLawful, false) ||
-      safeBool(source.canvasParentReleaseLawful, false) ||
-      safeBool(parentReceipt.parentReleaseLawful, false) ||
-      safeBool(parentReceipt.canvasParentReleaseLawful, false) ||
-      safeBool(parentReceipt.parentReleasePacketLawful, false) ||
-      datasetValue("hearthCanvasParentReleaseLawful") === "true" ||
-      datasetValue("hearthSouthParentReleaseLawful") === "true"
+    const releaseAccepted = Boolean(
+      safeBool(summary.canvasLocalStationReleaseAccepted, false) ||
+      safeBool(summary.canvasParentReleaseAccepted, false) ||
+      safeBool(summary.parentReleaseAccepted, false) ||
+      safeBool(summary.releasePacketAccepted, false) ||
+      safeBool(summary.parentAcceptedRouteConductorRelease, false) ||
+      safeBool(upstream.canvasLocalStationReleaseAccepted, false)
     );
 
-    const canvasParentReleaseGateReady = Boolean(
-      safeBool(source.canvasParentReleaseGateReady, false) ||
-      safeBool(parentReceipt.canvasParentReleaseGateReady, false) ||
-      safeBool(parentReceipt.hearthCanvasParentReleaseGateReady, false) ||
-      datasetValue("hearthCanvasParentReleaseGateReady") === "true" ||
-      datasetValue("hearthSouthCanvasParentReleaseGateReady") === "true"
+    const releaseLawful = Boolean(
+      safeBool(summary.canvasLocalStationReleaseLawful, false) ||
+      safeBool(summary.canvasParentReleaseLawful, false) ||
+      safeBool(summary.parentReleaseLawful, false) ||
+      safeBool(summary.parentReleasePacketLawful, false) ||
+      safeBool(summary.canvasReleaseAuthorized, false) ||
+      safeBool(upstream.canvasReleaseAuthorized, false)
     );
 
-    const parentAcceptedRouteConductorRelease = Boolean(
-      safeBool(source.parentAcceptedRouteConductorRelease, false) ||
-      safeBool(parentReceipt.parentAcceptedRouteConductorRelease, false) ||
-      safeBool(parentReceipt.hearthCanvasParentAcceptedRouteConductorRelease, false) ||
-      datasetValue("hearthCanvasParentAcceptedRouteConductorRelease") === "true"
+    const sentToEast = Boolean(
+      safeBool(summary.parentReleasePacketSentToEast, false) ||
+      safeBool(summary.eastDispatchAuthorized, false) ||
+      safeBool(summary.eastDispatchPacketPublished, false) ||
+      safeBool(summary.canvasEastDispatchAuthorized, false) ||
+      safeBool(summary.canvasEastDispatchPacketPublished, false)
     );
 
-    const parentReleasePacketSentToEast = Boolean(
-      safeBool(source.parentReleasePacketSentToEast, false) ||
-      safeBool(parentReceipt.parentReleasePacketSentToEast, false) ||
-      safeBool(parentReceipt.hearthCanvasParentReleasePacketSentToEast, false) ||
-      datasetValue("hearthCanvasParentReleasePacketSentToEast") === "true" ||
-      datasetValue("hearthSouthParentReleasePacketSentToEast") === "true"
-    );
-
-    const parentReleasePacketLawful = Boolean(
-      safeBool(source.parentReleasePacketLawful, false) ||
-      safeBool(parentReceipt.parentReleasePacketLawful, false) ||
-      safeBool(parentReceipt.hearthCanvasParentReleasePacketLawful, false) ||
-      datasetValue("hearthCanvasParentReleasePacketLawful") === "true" ||
-      datasetValue("hearthSouthParentReleasePacketLawful") === "true"
-    );
-
-    const eastDispatchAuthorized = Boolean(
-      safeBool(source.eastDispatchAuthorized, false) ||
-      safeBool(source.canvasEastDispatchAuthorized, false) ||
-      safeBool(parentReceipt.eastDispatchAuthorized, false) ||
-      safeBool(parentReceipt.canvasEastDispatchAuthorized, false) ||
-      safeBool(parentReceipt.hearthCanvasEastDispatchAuthorized, false) ||
-      datasetValue("hearthCanvasEastDispatchAuthorized") === "true"
-    );
-
-    const eastDispatchPacketPublished = Boolean(
-      safeBool(source.eastDispatchPacketPublished, false) ||
-      safeBool(parentReceipt.eastDispatchPacketPublished, false) ||
-      safeBool(parentReceipt.hearthCanvasEastDispatchPacketPublished, false) ||
-      datasetValue("hearthCanvasEastDispatchPacketPublished") === "true"
-    );
-
-    const parentCorruptOrStale = Boolean(
-      safeBool(parentReceipt.currentParentStaleDetected, false) ||
-      safeBool(parentReceipt.staleParentDetected, false) ||
-      safeBool(parentReceipt.currentParentIdentityMismatch, false) ||
-      (parentObserved && contract && !currentParentIsV10_3 && contract.includes("HEARTH_CANVAS_PARENT"))
-    );
-
-    const profile = {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      packetType: "CANVAS_EAST_PARENT_AUTHORITY_PROFILE",
-      parentObserved,
-      parentApiPresent: Boolean(parentApi),
-      parentCallable: hasParentCallable(parentApi),
-      parentReceiptObserved: Boolean(parentReceipt.contract || parentReceipt.receipt || contract || receipt),
-      parentContract: contract,
-      parentReceiptId: receipt,
-      currentParentIsV10_3,
-      parentReleaseObserved: parentReleaseAccepted || parentReleaseLawful || canvasParentReleaseGateReady,
-      parentReleaseAccepted,
-      parentReleaseLawful,
-      canvasParentReleaseGateReady,
-      parentAcceptedRouteConductorRelease,
-      parentReleasePacketSentToEast,
-      parentReleasePacketLawful,
-      eastDispatchAuthorized,
-      eastDispatchPacketPublished,
-      parentCorruptOrStale,
-      parentAbsent: !parentObserved,
-      parentReceipt: clonePlain(parentReceipt),
-      createdAt: nowIso()
+    return {
+      contract,
+      receipt,
+      contractKnown,
+      localAccepted,
+      baselineV10_3,
+      summaryMethod,
+      summaryObserved,
+      apiReady,
+      releaseAccepted,
+      releaseLawful,
+      sentToEast,
+      source: clonePlain(summary)
     };
+  }
 
-    state.lastParentAuthorityProfile = clonePlain(profile);
-    state.parentObserved = profile.parentObserved;
-    state.parentApiPresent = profile.parentApiPresent;
-    state.parentCallable = profile.parentCallable;
-    state.parentReceiptObserved = profile.parentReceiptObserved;
-    state.parentContract = profile.parentContract;
-    state.parentReceiptId = profile.parentReceiptId;
-    state.currentParentIsV10_3 = profile.currentParentIsV10_3;
-    state.parentReleaseObserved = profile.parentReleaseObserved;
-    state.parentReleaseAccepted = profile.parentReleaseAccepted;
-    state.parentReleaseLawful = profile.parentReleaseLawful;
-    state.canvasParentReleaseGateReady = Boolean(profile.parentReleaseAccepted && profile.parentReleaseLawful && profile.canvasParentReleaseGateReady);
-    state.parentAcceptedRouteConductorRelease = profile.parentAcceptedRouteConductorRelease;
-    state.parentReleasePacketSentToEast = profile.parentReleasePacketSentToEast;
-    state.parentReleasePacketLawful = profile.parentReleasePacketLawful;
-    state.eastDispatchAuthorized = profile.eastDispatchAuthorized;
-    state.eastDispatchPacketPublished = profile.eastDispatchPacketPublished;
-    state.parentCorruptOrStale = profile.parentCorruptOrStale;
-    state.parentAbsent = profile.parentAbsent;
-    state.canvasParentGateReady = Boolean(profile.parentObserved && profile.currentParentIsV10_3 && !profile.parentCorruptOrStale);
-    state.canvasParentEastDispatchGateReady = Boolean(profile.eastDispatchAuthorized || profile.eastDispatchPacketPublished);
+  function readCanvasLocalStationSummary(input = {}) {
+    const directSummary = isObject(input.canvasLocalStationSummary)
+      ? input.canvasLocalStationSummary
+      : isObject(input.canvasStationSummary)
+        ? input.canvasStationSummary
+        : isObject(input.parentSummary)
+          ? input.parentSummary
+          : null;
 
-    return profile;
+    let best = null;
+
+    if (directSummary) best = normalizeCanvasLocalStationSummary(directSummary, null);
+
+    const candidates = getCanvasLocalStationCandidates();
+
+    for (let i = 0; i < candidates.length; i += 1) {
+      const authority = candidates[i];
+      if (!isObject(authority) || authority === api) continue;
+
+      const receipt = readReceipt(authority) || {};
+      const normalized = normalizeCanvasLocalStationSummary(receipt, authority);
+
+      if (!best) {
+        best = normalized;
+      } else if (normalized.localAccepted && !best.localAccepted) {
+        best = normalized;
+      } else if (normalized.localAccepted && normalized.apiReady && !best.apiReady) {
+        best = normalized;
+      } else if (normalized.baselineV10_3 && !best.localAccepted && !best.baselineV10_3) {
+        best = normalized;
+      }
+    }
+
+    if (!best) best = normalizeCanvasLocalStationSummary({}, null);
+
+    state.lastCanvasLocalStationSummary = clonePlain(best);
+    state.canvasLocalStationObserved = Boolean(best.summaryObserved || best.contractKnown);
+    state.canvasLocalStationContractKnown = Boolean(best.contractKnown);
+    state.canvasLocalStationApiReady = Boolean(best.apiReady);
+    state.canvasLocalStationContract = best.contract;
+    state.canvasLocalStationContractAccepted = Boolean(best.localAccepted);
+    state.canvasLocalStationSummaryObserved = Boolean(best.summaryObserved);
+    state.canvasLocalStationSummaryMethod = best.summaryMethod;
+    state.currentCanvasParentObserved = Boolean(best.summaryObserved || best.contractKnown);
+    state.currentCanvasParentContract = best.contract;
+    state.currentCanvasParentIsLocalStation = Boolean(best.localAccepted);
+    state.canvasParentV10_3BaselineRecognized = Boolean(best.baselineV10_3);
+    state.canvasLocalStationReleaseAccepted = Boolean(best.releaseAccepted);
+    state.canvasLocalStationReleaseLawful = Boolean(best.releaseLawful || best.releaseAccepted);
+    state.canvasLocalStationReleasePacketSentToEast = Boolean(best.sentToEast);
+    state.canvasLocalStationV11_1Recognized = best.contract === LOCAL_STATION_V11_1_CONTRACT;
+    state.canvasLocalStationV11Recognized = best.contract === LOCAL_STATION_V11_CONTRACT;
+
+    return best;
   }
 
   function readRouteConductorProfile(input = {}) {
-    const source = isObject(input) ? input : {};
-
     const routeApi = firstGlobal([
-      "HEARTH_ROUTE_CONDUCTOR_CENTRAL_STATION_SWITCHBOARD_WEST_V4_2_SOUTH_OUTPUT_ALIGNMENT",
-      "HEARTH.routeConductorCentralStationSwitchboardWestV42SouthOutputAlignment",
-      "DEXTER_LAB.hearthRouteConductorCentralStationSwitchboardWestV42SouthOutputAlignment",
-      "HEARTH_ROUTE_CONDUCTOR_CENTRAL_STATION_SWITCHBOARD_NEWS_FIBONACCI_PARENT_COORDINATION",
-      "HEARTH.routeConductorCentralStationSwitchboardNewsFibonacciParentCoordination",
-      "DEXTER_LAB.hearthRouteConductorCentralStationSwitchboardNewsFibonacciParentCoordination",
+      "HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR",
+      "HEARTH.routeConductorNorthStarCompletionCycleGovernor",
+      "DEXTER_LAB.hearthRouteConductorNorthStarCompletionCycleGovernor",
       "HEARTH_ROUTE_CONDUCTOR",
       "HEARTH.routeConductor",
-      "DEXTER_LAB.hearthRouteConductor"
+      "DEXTER_LAB.hearthRouteConductor",
+      "HEARTH_ROUTE_CONDUCTOR_CENTRAL_STATION_SWITCHBOARD_WEST_V4_2_SOUTH_OUTPUT_ALIGNMENT"
     ]);
 
-    const routeReceipt = readReceipt(routeApi) || findNestedObject(source, [
-      "routeConductor",
-      "routeConductorReceipt",
-      "routeReceipt"
-    ]) || {};
+    const receipt = readReceipt(routeApi) || (isObject(input.routeConductorReceipt) ? input.routeConductorReceipt : {});
+    const upstream = readUpstreamDatasetProof();
 
     const contract = safeString(firstDefined(
-      source.routeConductorContract,
-      routeReceipt.contract,
-      datasetValue("hearthRouteConductorContract", ""),
-      datasetValue("hearthSouthRouteConductorContract", "")
+      input.routeConductorContract,
+      receipt.contract,
+      upstream.routeConductorContract
     ), "");
 
-    const receipt = safeString(firstDefined(
-      source.routeConductorReceipt,
-      routeReceipt.receipt,
-      datasetValue("hearthRouteConductorReceipt", ""),
-      datasetValue("hearthSouthRouteConductorReceipt", "")
-    ), "");
-
-    const observed = Boolean(
-      routeApi ||
-      contract ||
-      receipt ||
-      datasetValue("hearthRouteConductorLoaded") === "true" ||
-      datasetValue("hearthSouthRouteConductorLoaded") === "true"
-    );
-
-    const centralStationActive = Boolean(
-      safeBool(routeReceipt.centralStationSwitchboardActive, false) ||
-      contract.includes("HEARTH_ROUTE_CONDUCTOR_CENTRAL_STATION_SWITCHBOARD") ||
-      datasetValue("hearthRouteConductorCentralStationSwitchboardActive") === "true"
-    );
+    const observed = Boolean(routeApi || contract);
+    const contractKnown = Boolean(contract);
+    const contractRecognized = contract === ROUTE_CONDUCTOR_CURRENT_CONTRACT;
 
     state.routeConductorObserved = observed;
-    state.routeConductorContractObserved = contract;
-    state.routeConductorReceiptObserved = receipt;
-    state.routeConductorCentralStationActive = centralStationActive;
-
-    return {
+    state.routeConductorContractKnown = contractKnown;
+    state.routeConductorContractRecognized = contractRecognized;
+    state.routeConductorV9_2Recognized = contractRecognized;
+    state.lastRouteConductorState = {
       observed,
+      contractKnown,
+      contractRecognized,
+      routeConductorV9_2Recognized: contractRecognized,
       contract,
-      receipt,
-      centralStationActive,
-      receiptBody: clonePlain(routeReceipt)
+      receipt: safeString(receipt.receipt, ""),
+      body: clonePlain(receipt)
     };
+
+    return state.lastRouteConductorState;
   }
 
   function readWestReleaseState(input = {}) {
-    const source = isObject(input) ? input : {};
-
     const westApi = firstGlobal([
-      "LAB_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_WEST",
-      "HEARTH_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH",
-      "HEARTH.westCycleAwareAdmissibilityClutch",
       "LAB_RUNTIME_TABLE_WEST",
       "RUNTIME_TABLE_WEST",
       "DEXTER_LAB_RUNTIME_TABLE_WEST",
       "LAB_CARDINAL_RUNTIME_TABLE_WEST",
+      "LAB_RUNTIME_TABLE_CARDINAL_WEST",
+      "HEARTH_RUNTIME_TABLE_WEST",
+      "HEARTH_MACRO_WEST_AUTHORITY",
+      "HEARTH_WEST_ADMISSIBILITY",
+      "HEARTH.macroWestAuthority",
+      "HEARTH.westAdmissibility",
+      "HEARTH.runtimeTableWest",
+      "HEARTH.westRuntimeTable",
       "DEXTER_LAB.runtimeTableWest",
-      "DEXTER_LAB.cardinalRuntimeTableWest"
+      "DEXTER_LAB.hearthRuntimeTableWest",
+      "DEXTER_LAB.westAdmissibility"
     ]);
 
-    const westReceipt = readReceipt(westApi) || findNestedObject(source, [
-      "west",
-      "westReceipt",
-      "westRelease",
-      "releasePacket",
-      "canvasReleasePacket"
-    ]) || {};
+    const receipt = readReceipt(westApi) || (isObject(input.westReceipt) ? input.westReceipt : {});
+    const upstream = readUpstreamDatasetProof();
 
-    const observed = Boolean(
-      westApi ||
-      westReceipt.contract ||
-      westReceipt.receipt ||
-      safeBool(source.westCanvasReleaseApproved, false) ||
-      datasetValue("hearthSouthMacroWestAdmissibilityObserved") === "true"
+    const contract = safeString(firstDefined(
+      input.macroWestContract,
+      receipt.contract,
+      upstream.westContract
+    ), "");
+
+    const decision = safeString(firstDefined(input.westDecision, receipt.westDecision, upstream.westDecision), "");
+    const hardBlock = Boolean(
+      safeBool(input.westHardBlock, false) ||
+      safeBool(receipt.westHardBlock, false) ||
+      safeBool(upstream.westHardBlock, false) ||
+      decision === "HARD_BLOCK"
     );
 
-    const blocked = Boolean(
-      safeBool(source.westHardBlock, false) ||
-      safeBool(source.westAuditBlocked, false) ||
-      safeBool(westReceipt.westHardBlock, false) ||
-      safeBool(westReceipt.hardBlock, false) ||
-      westReceipt.westDecision === "HARD_BLOCK" ||
-      westReceipt.decision === "HARD_BLOCK" ||
-      datasetValue("hearthSouthWestHardBlock") === "true"
-    );
-
-    const westCanvasReleaseApproved = Boolean(
-      !blocked &&
+    const releaseApproved = Boolean(
+      !hardBlock &&
       (
-        safeBool(source.westCanvasReleaseApproved, false) ||
-        safeBool(source.canvasReleaseApprovedByWest, false) ||
-        safeBool(westReceipt.westCanvasReleaseApproved, false) ||
-        safeBool(westReceipt.canvasReleaseApprovedByWest, false) ||
-        westReceipt.westDecision === "RELEASE_TO_CANVAS" ||
-        westReceipt.decision === "RELEASE_TO_CANVAS" ||
-        datasetValue("hearthSouthWestCanvasReleaseApproved") === "true"
+        safeBool(input.westCanvasReleaseApproved, false) ||
+        safeBool(input.canvasReleaseApprovedByWest, false) ||
+        safeBool(receipt.westCanvasReleaseApproved, false) ||
+        safeBool(receipt.canvasReleaseApprovedByWest, false) ||
+        safeBool(upstream.westCanvasReleaseApproved, false) ||
+        decision === "RELEASE_TO_CANVAS"
       )
     );
 
-    const canvasReleaseAuthorized = Boolean(
-      !blocked &&
+    const releaseAuthorized = Boolean(
+      !hardBlock &&
       (
-        safeBool(source.canvasReleaseAuthorized, false) ||
-        safeBool(source.releaseToCanvas, false) ||
-        safeBool(westReceipt.canvasReleaseAuthorized, false) ||
-        safeBool(westReceipt.releaseToCanvas, false) ||
-        westCanvasReleaseApproved ||
-        datasetValue("hearthSouthCanvasReleaseAuthorized") === "true"
+        safeBool(input.canvasReleaseAuthorized, false) ||
+        safeBool(input.canvasReleasePacketReady, false) ||
+        safeBool(input.releaseToCanvas, false) ||
+        safeBool(receipt.canvasReleaseAuthorized, false) ||
+        safeBool(receipt.canvasReleasePacketReady, false) ||
+        safeBool(receipt.releaseToCanvas, false) ||
+        safeBool(upstream.canvasReleaseAuthorized, false) ||
+        safeBool(upstream.canvasReleasePacketReady, false) ||
+        releaseApproved
       )
     );
+
+    const observed = Boolean(westApi || contract || releaseApproved || releaseAuthorized);
+    const contractKnown = Boolean(contract);
+    const contractRecognized = contract === MACRO_WEST_CURRENT_CONTRACT;
+    const releaseRecognized = Boolean(contractRecognized && releaseApproved && releaseAuthorized && !hardBlock);
 
     const packet = {
-      westApiPresent: Boolean(westApi),
-      westReceipt: clonePlain(westReceipt),
-      westReleaseObserved: Boolean(observed && canvasReleaseAuthorized && westCanvasReleaseApproved),
-      westAuditObserved: observed,
-      westAuditPassed: Boolean(westCanvasReleaseApproved && !blocked),
-      westAuditBlocked: blocked,
-      westCanvasReleaseApproved,
-      canvasReleaseAuthorized
+      observed,
+      contractKnown,
+      contractRecognized,
+      releaseRecognized,
+      contract,
+      receipt: safeString(receipt.receipt, ""),
+      decision,
+      westHardBlock: hardBlock,
+      westReleaseObserved: releaseRecognized,
+      westCanvasReleaseApproved: releaseApproved,
+      canvasReleaseAuthorized: releaseAuthorized,
+      canvasReleasePacketReady: Boolean(releaseAuthorized || safeBool(receipt.canvasReleasePacketReady, false) || safeBool(upstream.canvasReleasePacketReady, false)),
+      body: clonePlain(receipt)
     };
 
     state.lastWestReleaseState = clonePlain(packet);
+    state.macroWestObserved = packet.observed;
+    state.macroWestContractKnown = packet.contractKnown;
+    state.macroWestContractRecognized = packet.contractRecognized;
+    state.macroWestV4_6_3ReleaseRecognized = packet.releaseRecognized;
     state.westReleaseObserved = packet.westReleaseObserved;
-    state.westAuditObserved = packet.westAuditObserved;
-    state.westAuditPassed = packet.westAuditPassed;
-    state.westAuditBlocked = packet.westAuditBlocked;
+    state.westDecision = packet.decision;
+    state.westHardBlock = packet.westHardBlock;
     state.westCanvasReleaseApproved = packet.westCanvasReleaseApproved;
     state.canvasReleaseAuthorized = packet.canvasReleaseAuthorized;
-    state.macroWestGateReady = packet.westReleaseObserved;
+    state.canvasReleasePacketReady = packet.canvasReleasePacketReady;
 
     return packet;
   }
 
   function readDispatchCandidateFromGlobals() {
+    const root = getRoot();
+
     const sources = [
       ["HEARTH_CANVAS_PARENT_EAST_DISPATCH_PACKET", root.HEARTH_CANVAS_PARENT_EAST_DISPATCH_PACKET],
       ["HEARTH_CANVAS_EAST_DISPATCH_PACKET", root.HEARTH_CANVAS_EAST_DISPATCH_PACKET],
       ["HEARTH.canvasParentEastDispatchPacket", pathRead("HEARTH.canvasParentEastDispatchPacket")],
       ["HEARTH.canvasEastDispatchPacket", pathRead("HEARTH.canvasEastDispatchPacket")],
+      ["HEARTH.canvasLocalStationEastDispatchPacket", pathRead("HEARTH.canvasLocalStationEastDispatchPacket")],
       ["DEXTER_LAB.hearthCanvasParentEastDispatchPacket", pathRead("DEXTER_LAB.hearthCanvasParentEastDispatchPacket")],
       ["DEXTER_LAB.hearthCanvasEastDispatchPacket", pathRead("DEXTER_LAB.hearthCanvasEastDispatchPacket")]
     ];
 
-    for (const [name, packet] of sources) {
-      if (isObject(packet)) return { source: name, packet };
+    for (let i = 0; i < sources.length; i += 1) {
+      const source = sources[i];
+      if (isObject(source[1])) return { source: source[0], packet: source[1] };
     }
 
     return { source: "NONE", packet: null };
   }
 
-  function readDatasetDispatchPacket() {
-    const packet = {
-      eastDispatchAuthorized: datasetValue("hearthCanvasEastDispatchAuthorized") === "true",
-      eastDispatchPacketPublished: datasetValue("hearthCanvasEastDispatchPacketPublished") === "true",
-      parentContract: datasetValue("hearthCanvasContract", ""),
-      parentReceipt: datasetValue("hearthCanvasReceipt", ""),
-      targetFile: FILE,
-      handoffTo: "EAST",
-      receivedFrom: "CANVAS_PARENT",
-      cycleNumber: ACTIVE_CYCLE_NUMBER,
-      cycleRoute: ACTIVE_CYCLE_ROUTE,
-      atlasBuildRequested: true,
-      source: "DOCUMENT_DATASET_EAST_DISPATCH"
-    };
-
-    if (packet.eastDispatchAuthorized || packet.eastDispatchPacketPublished) return packet;
-    return null;
-  }
-
   function readParentEastDispatchPacket(input = {}) {
-    const source = isObject(input) ? input : {};
-
-    const directDispatch = findNestedObject(source, [
-      "eastDispatchPacket",
-      "dispatchPacket",
-      "parentEastDispatchPacket",
-      "canvasEastDispatchPacket",
-      "releasePacket.eastDispatchPacket",
-      "canvasReleasePacket.eastDispatchPacket"
-    ]);
+    const directPacket = isObject(input.eastDispatchPacket)
+      ? input.eastDispatchPacket
+      : isObject(input.dispatchPacket)
+        ? input.dispatchPacket
+        : isObject(input.parentEastDispatchPacket)
+          ? input.parentEastDispatchPacket
+          : null;
 
     const globalDispatch = readDispatchCandidateFromGlobals();
-    const datasetDispatch = readDatasetDispatchPacket();
+    const packet = directPacket || globalDispatch.packet || {};
 
-    const packet = Object.keys(directDispatch).length
-      ? directDispatch
-      : (globalDispatch.packet || datasetDispatch || {});
+    const localStation = readCanvasLocalStationSummary(input);
+    const west = readWestReleaseState(input);
 
-    const packetSource = Object.keys(directDispatch).length
-      ? "DIRECT_INPUT"
-      : (globalDispatch.packet ? globalDispatch.source : (datasetDispatch ? "DOCUMENT_DATASET" : "NONE"));
-
-    const parent = readParentAuthorityProfile(source);
-    const west = readWestReleaseState(source);
-
-    const parentContract = safeString(firstDefined(
-      packet.parentContract,
-      packet.sourceParentContract,
-      packet.contract === CURRENT_PARENT_CONTRACT ? packet.contract : "",
-      parent.parentContract
-    ), "");
-
-    const targetFile = safeString(firstDefined(packet.targetFile, packet.destinationFile, ""), "");
-    const handoffTo = safeString(firstDefined(packet.handoffTo, packet.targetCardinal, ""), "");
-    const receivedFrom = safeString(firstDefined(packet.receivedFrom, packet.sourceCardinal, ""), "");
-    const cycleNumber = safeNumber(firstDefined(packet.cycleNumber, packet.activeCycleNumber), 0);
-    const cycleRoute = safeString(firstDefined(packet.cycleRoute, packet.activeCycleRoute, ""), "");
-
-    const dispatchObserved = Boolean(
-      Object.keys(packet).length ||
-      parent.eastDispatchAuthorized ||
-      parent.eastDispatchPacketPublished ||
-      datasetValue("hearthCanvasEastDispatchAuthorized") === "true" ||
-      datasetValue("hearthCanvasEastDispatchPacketPublished") === "true"
-    );
-
-    const dispatchAuthorized = Boolean(
+    const observed = Boolean(
+      (isObject(packet) && Object.keys(packet).length) ||
       safeBool(packet.eastDispatchAuthorized, false) ||
       safeBool(packet.canvasEastDispatchAuthorized, false) ||
-      parent.eastDispatchAuthorized ||
-      datasetValue("hearthCanvasEastDispatchAuthorized") === "true"
-    );
-
-    const dispatchPublished = Boolean(
       safeBool(packet.eastDispatchPacketPublished, false) ||
-      safeBool(packet.parentReleasePacketPublishedForEast, false) ||
-      parent.eastDispatchPacketPublished ||
-      dispatchObserved ||
-      datasetValue("hearthCanvasEastDispatchPacketPublished") === "true"
+      safeBool(packet.canvasEastDispatchPacketPublished, false) ||
+      localStation.sentToEast
     );
 
-    const atlasBuildRequested = Boolean(
-      safeBool(packet.atlasBuildRequested, false) ||
-      safeBool(packet.f13AtlasBuildRequested, false) ||
-      safeBool(packet.buildAtlasRequested, false) ||
-      dispatchAuthorized
+    const authorized = Boolean(
+      safeBool(packet.eastDispatchAuthorized, false) ||
+      safeBool(packet.canvasEastDispatchAuthorized, false) ||
+      safeBool(packet.eastDispatchPacketPublished, false) ||
+      safeBool(packet.canvasEastDispatchPacketPublished, false) ||
+      localStation.sentToEast
     );
 
-    const targetOk = Boolean(!targetFile || targetFile === FILE || targetFile.includes("hearth.canvas.east.js"));
-    const handoffOk = Boolean(!handoffTo || handoffTo === "EAST" || handoffTo === "CANVAS_EAST");
-    const receivedOk = Boolean(!receivedFrom || receivedFrom === "CANVAS_PARENT" || receivedFrom === "PARENT" || receivedFrom === "CANVAS");
-    const cycleOk = Boolean(!cycleNumber || cycleNumber === ACTIVE_CYCLE_NUMBER);
-    const routeOk = Boolean(!cycleRoute || cycleRoute === ACTIVE_CYCLE_ROUTE);
-
-    const parentChainOk = Boolean(
-      parent.currentParentIsV10_3 &&
-      parent.parentReleaseAccepted &&
-      parent.parentReleaseLawful &&
-      (
-        parent.canvasParentReleaseGateReady ||
-        parent.parentAcceptedRouteConductorRelease ||
-        parent.parentReleasePacketLawful ||
-        parent.parentReleasePacketSentToEast
-      )
+    const published = Boolean(
+      safeBool(packet.eastDispatchPacketPublished, false) ||
+      safeBool(packet.canvasEastDispatchPacketPublished, false) ||
+      localStation.sentToEast ||
+      observed
     );
 
-    const westChainOk = Boolean(
-      west.canvasReleaseAuthorized &&
-      west.westCanvasReleaseApproved
-    );
+    const cycleNumber = safeNumber(firstDefined(packet.cycleNumber, packet.activeCycleNumber, ACTIVE_CYCLE_NUMBER), ACTIVE_CYCLE_NUMBER);
+    const cycleRoute = safeString(firstDefined(packet.cycleRoute, packet.activeCycleRoute, ACTIVE_CYCLE_ROUTE), ACTIVE_CYCLE_ROUTE);
+    const handoffTo = safeString(firstDefined(packet.handoffTo, packet.targetCardinal, "EAST"), "EAST");
+    const receivedFrom = safeString(firstDefined(packet.receivedFrom, packet.sourceCardinal, "CANVAS_LOCAL_STATION"), "CANVAS_LOCAL_STATION");
+    const targetFile = safeString(firstDefined(packet.targetFile, packet.destinationFile, FILE), FILE);
+
+    const targetOk = !targetFile || targetFile === FILE || targetFile.indexOf("hearth.canvas.east.js") !== -1;
+    const handoffOk = !handoffTo || handoffTo === "EAST" || handoffTo === "CANVAS_EAST";
+    const cycleOk = !cycleNumber || cycleNumber === ACTIVE_CYCLE_NUMBER;
+    const routeOk = !cycleRoute || cycleRoute === ACTIVE_CYCLE_ROUTE;
 
     const valid = Boolean(
-      dispatchObserved &&
-      dispatchAuthorized &&
-      dispatchPublished &&
-      parentChainOk &&
-      westChainOk &&
+      observed &&
+      authorized &&
+      published &&
+      localStation.localAccepted &&
+      west.releaseRecognized &&
       targetOk &&
       handoffOk &&
-      receivedOk &&
       cycleOk &&
       routeOk
     );
 
     const result = {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      packetType: "CANVAS_EAST_PARENT_DISPATCH_READ",
+      packetType: "CANVAS_EAST_LOCAL_STATION_DISPATCH_READ",
       canvasEastApiReady: true,
       requiredApiSurfaceComplete: true,
-      eastDispatchPacketObserved: dispatchObserved,
+      eastDispatchPacketObserved: observed,
       eastDispatchPacketValid: valid,
       eastDispatchPacketAccepted: valid,
-      eastDispatchPacketSource: packetSource,
-      eastDispatchReceivedFrom: receivedFrom || "CANVAS_PARENT",
-      eastDispatchHandoffTo: handoffTo || "EAST",
-      eastDispatchCycleNumber: cycleNumber || ACTIVE_CYCLE_NUMBER,
-      eastDispatchCycleRoute: cycleRoute || ACTIVE_CYCLE_ROUTE,
-      eastDispatchParentContract: parentContract || parent.parentContract,
-      eastDispatchTargetFile: targetFile || FILE,
-      eastDispatchAuthorized: dispatchAuthorized,
-      eastDispatchPacketPublished: dispatchPublished,
-      eastDispatchAtlasBuildRequested: atlasBuildRequested,
-      parentAuthorityProfile: clonePlain(parent),
+      eastDispatchPacketSource: directPacket ? "DIRECT_INPUT" : globalDispatch.source,
+      eastDispatchReceivedFrom: receivedFrom,
+      eastDispatchHandoffTo: handoffTo,
+      eastDispatchCycleNumber: cycleNumber,
+      eastDispatchCycleRoute: cycleRoute,
+      eastDispatchTargetFile: targetFile,
+      eastDispatchAuthorized: authorized,
+      eastDispatchPacketPublished: published,
+      eastDispatchAtlasBuildRequested: Boolean(
+        safeBool(packet.atlasBuildRequested, false) ||
+        safeBool(packet.f13AtlasBuildRequested, false) ||
+        safeBool(packet.buildAtlasRequested, false) ||
+        authorized
+      ),
+      canvasLocalStationSummary: clonePlain(localStation),
       westReleaseState: clonePlain(west),
       rawDispatchPacket: clonePlain(packet),
       firstFailedCoordinate: valid
-        ? "NONE_CANVAS_PARENT_EAST_DISPATCH_ACCEPTED"
-        : !dispatchObserved
-          ? "WAITING_CANVAS_PARENT_EAST_DISPATCH"
-          : !dispatchAuthorized
-            ? "WAITING_CANVAS_PARENT_EAST_DISPATCH_AUTHORIZATION"
-            : !dispatchPublished
-              ? "WAITING_CANVAS_PARENT_EAST_DISPATCH_PACKET_PUBLICATION"
-              : !parent.currentParentIsV10_3
-                ? "WAITING_CURRENT_CANVAS_PARENT_V10_3"
-                : !parent.parentReleaseAccepted
-                  ? "WAITING_CANVAS_PARENT_RELEASE_ACCEPTANCE"
-                  : !parent.parentReleaseLawful
-                    ? "WAITING_CANVAS_PARENT_RELEASE_LAWFUL"
-                    : !west.canvasReleaseAuthorized || !west.westCanvasReleaseApproved
-                      ? "WAITING_MACRO_WEST_CANVAS_RELEASE"
-                      : "WAITING_CANVAS_PARENT_EAST_DISPATCH_VALID_SHAPE",
+        ? "NONE_CANVAS_LOCAL_STATION_EAST_DISPATCH_ACCEPTED"
+        : !localStation.localAccepted
+          ? "WAITING_CURRENT_CANVAS_LOCAL_STATION_CONTRACT"
+          : !west.releaseRecognized
+            ? "WAITING_CANVAS_RELEASE_AUTHORIZATION"
+            : !observed
+              ? "WAITING_CANVAS_LOCAL_STATION_EAST_DISPATCH"
+              : !authorized
+                ? "WAITING_CANVAS_LOCAL_STATION_EAST_DISPATCH_AUTHORIZATION"
+                : "WAITING_CANVAS_LOCAL_STATION_EAST_DISPATCH_VALID_SHAPE",
       recommendedNextFile: valid ? FILE : PARENT_FILE,
       visualPassClaimed: false,
       createdAt: nowIso()
@@ -1672,60 +1426,59 @@
     state.eastDispatchHandoffTo = result.eastDispatchHandoffTo;
     state.eastDispatchCycleNumber = result.eastDispatchCycleNumber;
     state.eastDispatchCycleRoute = result.eastDispatchCycleRoute;
-    state.eastDispatchParentContract = result.eastDispatchParentContract;
     state.eastDispatchTargetFile = result.eastDispatchTargetFile;
-    state.eastDispatchAtlasBuildRequested = result.eastDispatchAtlasBuildRequested;
     state.eastDispatchAuthorized = result.eastDispatchAuthorized;
     state.eastDispatchPacketPublished = result.eastDispatchPacketPublished;
-    state.canvasParentEastDispatchGateReady = Boolean(result.eastDispatchPacketAccepted || result.eastDispatchAuthorized || result.eastDispatchPacketPublished);
 
     return result;
   }
 
   function resolveAtlasBuildPermission(input = {}) {
-    publishApiSurface("permission-gate-entry");
+    publishApiSurface("permission-entry");
 
-    const source = isObject(input) ? input : {};
-    const falsePromotion = detectFalsePromotion(source);
-    const parent = readParentAuthorityProfile(source);
-    const west = readWestReleaseState(source);
-    const dispatch = readParentEastDispatchPacket(source);
+    const falsePromotion = detectFalsePromotion(input);
+    const route = readRouteConductorProfile(input);
+    const localStation = readCanvasLocalStationSummary(input);
+    const west = readWestReleaseState(input);
+    const dispatch = readParentEastDispatchPacket(input);
 
-    let permissionClass = PERMISSION.HELD_EAST_DISPATCH_PENDING;
+    let permissionClass = PERMISSION.HELD_ATLAS_EVIDENCE_PENDING;
     let allowed = false;
-    let reason = "WAITING_CANVAS_PARENT_EAST_DISPATCH";
-    let permissionSource = "NONE";
-    let recommended = PARENT_FILE;
+    let reason = "WAITING_CANVAS_EAST_ATLAS_EVIDENCE";
+    let source = "NONE";
+    let recommended = FILE;
 
     if (falsePromotion) {
       permissionClass = PERMISSION.BLOCKED_FALSE_PROMOTION;
       reason = "FALSE_PROMOTION_BLOCKED";
       recommended = FILE;
-    } else if (parent.parentCorruptOrStale || (parent.parentObserved && !parent.currentParentIsV10_3)) {
-      permissionClass = PERMISSION.HELD_PARENT_STALE_OR_CORRUPT;
-      reason = "WAITING_CURRENT_CANVAS_PARENT_V10_3";
+    } else if (!route.routeConductorV9_2Recognized) {
+      permissionClass = PERMISSION.HELD_ROUTE_CONDUCTOR_PENDING;
+      reason = "WAITING_ROUTE_CONDUCTOR_V9_2_RECOGNITION";
+      recommended = ROUTE_FILE;
+    } else if (!localStation.localAccepted) {
+      permissionClass = PERMISSION.HELD_LOCAL_STATION_PENDING;
+      reason = localStation.baselineV10_3
+        ? "WAITING_CURRENT_CANVAS_LOCAL_STATION_CONTRACT"
+        : "WAITING_CURRENT_CANVAS_LOCAL_STATION";
       recommended = PARENT_FILE;
-    } else if (!parent.parentObserved) {
-      permissionClass = PERMISSION.HELD_PARENT_OBSERVATION_PENDING;
-      reason = "WAITING_CANVAS_PARENT_OBSERVATION";
-      recommended = PARENT_FILE;
-    } else if (!parent.parentReleaseAccepted || !parent.parentReleaseLawful) {
-      permissionClass = PERMISSION.HELD_PARENT_RELEASE_PENDING;
-      reason = !parent.parentReleaseAccepted ? "WAITING_CANVAS_PARENT_RELEASE_ACCEPTANCE" : "WAITING_CANVAS_PARENT_RELEASE_LAWFUL";
-      recommended = PARENT_FILE;
+    } else if (!west.releaseRecognized) {
+      permissionClass = PERMISSION.HELD_RELEASE_PENDING;
+      reason = "WAITING_CANVAS_RELEASE_AUTHORIZATION";
+      recommended = MACRO_WEST_FILE;
     } else if (!dispatch.eastDispatchPacketObserved) {
       permissionClass = PERMISSION.HELD_EAST_DISPATCH_PENDING;
-      reason = "WAITING_CANVAS_PARENT_EAST_DISPATCH";
+      reason = "WAITING_CANVAS_LOCAL_STATION_EAST_DISPATCH";
       recommended = PARENT_FILE;
     } else if (!dispatch.eastDispatchPacketValid) {
       permissionClass = PERMISSION.HELD_EAST_DISPATCH_MALFORMED;
-      reason = dispatch.firstFailedCoordinate || "WAITING_CANVAS_PARENT_EAST_DISPATCH_VALID_SHAPE";
+      reason = dispatch.firstFailedCoordinate || "WAITING_CANVAS_LOCAL_STATION_EAST_DISPATCH_VALID_SHAPE";
       recommended = PARENT_FILE;
     } else {
-      permissionClass = PERMISSION.BUILD_ALLOWED_PARENT_DISPATCH;
+      permissionClass = PERMISSION.BUILD_ALLOWED_LOCAL_STATION_DISPATCH;
       allowed = true;
-      reason = "";
-      permissionSource = dispatch.eastDispatchPacketSource || "CANVAS_PARENT_V10_3_EAST_DISPATCH";
+      reason = "WAITING_CANVAS_EAST_ATLAS_EVIDENCE";
+      source = dispatch.eastDispatchPacketSource || "CANVAS_LOCAL_STATION_V11_1_EAST_DISPATCH";
       recommended = FILE;
     }
 
@@ -1734,32 +1487,45 @@
       receipt: RECEIPT,
       file: FILE,
       parentFile: PARENT_FILE,
+      routeFile: ROUTE_FILE,
       packetType: "CANVAS_EAST_ATLAS_BUILD_PERMISSION_PACKET",
+
       permissionClass,
       canvasEastMayBuildAtlas: allowed,
       f13BuildLawful: allowed,
       f13BuildBlockedReason: reason,
-      f13PermissionSource: permissionSource,
-      parentAuthorityProfile: clonePlain(parent),
+      f13PermissionSource: source,
+
+      routeConductorState: clonePlain(route),
+      routeConductorV9_2Recognized: Boolean(route.routeConductorV9_2Recognized),
+      routeConductorContractRecognized: Boolean(route.contractRecognized),
+      routeConductorContractKnown: Boolean(route.contractKnown),
+
+      canvasLocalStationSummary: clonePlain(localStation),
       westReleaseState: clonePlain(west),
       eastDispatchState: clonePlain(dispatch),
+
       canvasEastApiReady: true,
       requiredApiSurfaceComplete: true,
-      eastDispatchPacketObserved: dispatch.eastDispatchPacketObserved,
-      eastDispatchPacketValid: dispatch.eastDispatchPacketValid,
-      eastDispatchPacketAccepted: dispatch.eastDispatchPacketAccepted,
-      firstFailedCoordinate: allowed ? "NONE_CANVAS_EAST_ATLAS_BUILD_PERMISSION_GRANTED" : reason,
+      heldDoesNotMeanApiMissing: true,
+      atlasReady: false,
+      atlasBuildComplete: false,
+      canvasEastEvidenceReady: false,
+      f13AtlasPacketReady: false,
+
+      firstFailedCoordinate: allowed ? "WAITING_CANVAS_EAST_ATLAS_EVIDENCE" : reason,
       recommendedNextFile: recommended,
       recommendedNextRenewalTarget: recommended,
+
       visibleProof: false,
-      visibleContentProof: false,
-      visiblePlanetAvailable: false,
       canvasReady: false,
       readyTextAllowed: false,
       f21EligibleForNorth: false,
-      f21ClaimedByCanvasEast: false,
-      readyTextClaimedByCanvasEast: false,
+      f21SubmittedToNorth: false,
+      f21EligibilitySubmittedToNorth: false,
       completionLatched: false,
+      finalCompletionLatched: false,
+      degradedCompletionLatched: false,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -1772,14 +1538,10 @@
     state.canvasEastMayBuildAtlas = allowed;
     state.f13BuildLawful = allowed;
     state.f13BuildBlockedReason = reason;
-    state.f13PermissionSource = permissionSource;
-    state.firstFailedCoordinate = allowed
-      ? (state.f13AtlasPacketReady ? "NONE_F13F_ATLAS_PACKET_READY" : "WAITING_CANVAS_EAST_ATLAS_EVIDENCE")
-      : "WAITING_CANVAS_EAST_ATLAS_EVIDENCE";
-    state.recommendedNextFile = allowed
-      ? (state.f13AtlasPacketReady ? CANVAS_WEST_FILE : FILE)
-      : FILE;
-    state.recommendedNextRenewalTarget = state.recommendedNextFile;
+    state.f13PermissionSource = source;
+    state.firstFailedCoordinate = allowed ? "WAITING_CANVAS_EAST_ATLAS_EVIDENCE" : reason;
+    state.recommendedNextFile = recommended;
+    state.recommendedNextRenewalTarget = recommended;
 
     recomputeChronology();
     publishDatasetFirstProof({ quiet: true });
@@ -1787,11 +1549,10 @@
     return packet;
   }
 
-  function composeHeldAtlasPacket(input = {}, permission = null) {
+  function composeHeldAtlasPacket(input = {}, permissionInput = null) {
     publishApiSurface("held-packet-entry");
 
-    const gate = permission || resolveAtlasBuildPermission(input);
-    const reason = gate.f13BuildBlockedReason || "WAITING_CANVAS_PARENT_EAST_DISPATCH";
+    const permission = permissionInput || resolveAtlasBuildPermission(input);
 
     state.heldAtlasPacketReturned = true;
     state.heldPacketWasSynchronous = true;
@@ -1803,17 +1564,14 @@
     state.canvasEastEvidenceReady = false;
     state.canvasEastMayBuildAtlas = false;
     state.f13BuildLawful = false;
-    state.f13BuildBlockedReason = reason;
-    state.permissionClass = gate.permissionClass || PERMISSION.HELD_EAST_DISPATCH_PENDING;
-    state.atlasBuildStarted = false;
+    state.f13BuildBlockedReason = permission.f13BuildBlockedReason || "WAITING_CANVAS_EAST_ATLAS_EVIDENCE";
+    state.permissionClass = permission.permissionClass || PERMISSION.HELD_ATLAS_EVIDENCE_PENDING;
     state.atlasBuildComplete = false;
-    state.f13SourceStageStarted = false;
     state.f13SourceStageComplete = false;
     state.f13AtlasPacketReady = false;
-    state.canvasEastEvidenceGateReady = false;
-    state.firstFailedCoordinate = "WAITING_CANVAS_EAST_ATLAS_EVIDENCE";
-    state.recommendedNextFile = FILE;
-    state.recommendedNextRenewalTarget = FILE;
+    state.firstFailedCoordinate = permission.firstFailedCoordinate || state.f13BuildBlockedReason || "WAITING_CANVAS_EAST_ATLAS_EVIDENCE";
+    state.recommendedNextFile = permission.recommendedNextFile || FILE;
+    state.recommendedNextRenewalTarget = permission.recommendedNextRenewalTarget || state.recommendedNextFile;
 
     blockFinalClaims();
     recomputeChronology();
@@ -1821,10 +1579,9 @@
     const packet = {
       contract: CONTRACT,
       receipt: RECEIPT,
-      previousContract: PREVIOUS_CONTRACT,
-      baselineContract: BASELINE_CONTRACT,
       file: FILE,
       parentFile: PARENT_FILE,
+      routeFile: ROUTE_FILE,
       packetType: "CANVAS_EAST_SYNCHRONOUS_HELD_ATLAS_PACKET",
 
       canvasEastApiReady: true,
@@ -1832,9 +1589,6 @@
       canvasEastCurrent: true,
       canvasEastPresent: true,
       requiredApiSurfaceComplete: true,
-      aliasesPublished: true,
-      datasetFirstProofPublished: true,
-      receiptsPublished: true,
 
       heldAtlasPacketReturned: true,
       synchronousHeldPacketActive: true,
@@ -1851,35 +1605,17 @@
       permissionClass: state.permissionClass,
       canvasEastMayBuildAtlas: false,
       f13BuildLawful: false,
-      f13BuildBlockedReason: reason,
+      f13BuildBlockedReason: state.f13BuildBlockedReason,
       f13PermissionSource: "NONE",
 
-      parentAuthorityProfile: clonePlain(state.lastParentAuthorityProfile),
+      routeConductorState: clonePlain(state.lastRouteConductorState),
+      canvasLocalStationSummary: clonePlain(state.lastCanvasLocalStationSummary),
       westReleaseState: clonePlain(state.lastWestReleaseState),
       eastDispatchState: clonePlain(state.lastDispatchPacket),
 
-      chronologicalGateCount: state.chronologicalGateCount,
-      chronologicalGatesSatisfied: state.chronologicalGatesSatisfied,
-      chronologicalFirstFailedGate: "CANVAS_EAST_ATLAS_EVIDENCE_READY",
-      chronologicalFirstFailedCoordinate: "WAITING_CANVAS_EAST_ATLAS_EVIDENCE",
-
-      fibonacciSynchronizationChronologyFirst: true,
-      fibonacciSynchronizationScore: 50,
-      fibonacciSynchronizationExpected: 100,
-      fibonacciSynchronizationSatisfied: 50,
-      fibonacciSynchronizationPassed: false,
-      fibonacciSynchronizationDegraded: true,
-      fibonacciSynchronizationHardFail: false,
-      fibonacciSynchronizationHoldReason: "WAITING_CANVAS_EAST_ATLAS_EVIDENCE",
-
-      activeFibonacciGate: ACTIVE_FIBONACCI_GATE,
-      activeF13EGate: F13E_GATE,
-      activeF13FGate: F13F_GATE,
-      futureFibonacciGate: FUTURE_FIBONACCI_GATE,
-
-      firstFailedCoordinate: "WAITING_CANVAS_EAST_ATLAS_EVIDENCE",
-      recommendedNextFile: FILE,
-      recommendedNextRenewalTarget: FILE,
+      firstFailedCoordinate: state.firstFailedCoordinate,
+      recommendedNextFile: state.recommendedNextFile,
+      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
       nextConsumerFile: PARENT_FILE,
 
       visibleProof: false,
@@ -1888,9 +1624,11 @@
       canvasReady: false,
       readyTextAllowed: false,
       f21EligibleForNorth: false,
-      f21ClaimedByCanvasEast: false,
-      readyTextClaimedByCanvasEast: false,
+      f21SubmittedToNorth: false,
+      f21EligibilitySubmittedToNorth: false,
       completionLatched: false,
+      finalCompletionLatched: false,
+      degradedCompletionLatched: false,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -1901,14 +1639,15 @@
     state.lastHeldAtlasPacket = clonePlain(packet);
 
     recordLocal("SYNCHRONOUS_HELD_ATLAS_PACKET_RETURNED_API_STILL_READY", {
-      reason,
       permissionClass: state.permissionClass,
+      reason: state.f13BuildBlockedReason,
+      recommendedNextFile: state.recommendedNextFile,
       apiReadyStillTrue: true,
       evidenceReadyStillFalse: true,
       heldDoesNotMeanApiMissing: true
     });
 
-    publishApiSurface("held-packet-returned-api-still-ready");
+    publishApiSurface("held-packet-returned");
     return packet;
   }
 
@@ -1917,18 +1656,6 @@
 
     const dispatch = readParentEastDispatchPacket({ eastDispatchPacket: packet });
 
-    if (dispatch.eastDispatchPacketValid) {
-      state.firstFailedCoordinate = "WAITING_CANVAS_EAST_ATLAS_EVIDENCE";
-      state.recommendedNextFile = FILE;
-      state.recommendedNextRenewalTarget = FILE;
-      state.atlasBuildRequested = dispatch.eastDispatchAtlasBuildRequested;
-    } else {
-      state.firstFailedCoordinate = "WAITING_CANVAS_EAST_ATLAS_EVIDENCE";
-      state.recommendedNextFile = FILE;
-      state.recommendedNextRenewalTarget = FILE;
-    }
-
-    recomputeChronology();
     publishApiSurface("receive-parent-dispatch-complete");
 
     if (dispatch.eastDispatchPacketValid && dispatch.eastDispatchAtlasBuildRequested) {
@@ -1939,6 +1666,7 @@
       return {
         contract: CONTRACT,
         receipt: RECEIPT,
+        file: FILE,
         packetType: "CANVAS_EAST_PARENT_DISPATCH_ACCEPTANCE_RECEIPT",
         canvasEastApiReady: true,
         requiredApiSurfaceComplete: true,
@@ -1949,7 +1677,6 @@
         canvasEastEvidenceReady: state.f13AtlasPacketReady,
         firstFailedCoordinate: state.f13AtlasPacketReady ? "NONE_F13F_ATLAS_PACKET_READY" : "WAITING_CANVAS_EAST_ATLAS_EVIDENCE",
         recommendedNextFile: state.f13AtlasPacketReady ? CANVAS_WEST_FILE : FILE,
-        recommendedNextRenewalTarget: state.f13AtlasPacketReady ? CANVAS_WEST_FILE : FILE,
         f21EligibleForNorth: false,
         readyTextAllowed: false,
         completionLatched: false,
@@ -1972,7 +1699,7 @@
       return composeHeldAtlasPacket(options, permission);
     }
 
-    if (options && (options.async === true || options.defer === true || options.nonBlocking === true)) {
+    if (options.async === true || options.defer === true || options.nonBlocking === true) {
       state.buildAtlasReturnedPromise = true;
       publishDatasetFirstProof({ quiet: true });
       return buildAtlasAsync(options, permission);
@@ -1992,16 +1719,13 @@
 
     const width = clamp(Math.round(safeNumber(options.width || options.atlasWidth, DEFAULT_ATLAS_WIDTH)), MIN_ATLAS_WIDTH, MAX_ATLAS_WIDTH);
     const height = clamp(Math.round(safeNumber(options.height || options.atlasHeight, DEFAULT_ATLAS_HEIGHT)), MIN_ATLAS_HEIGHT, MAX_ATLAS_HEIGHT);
+    const materialContext = refreshMaterialBridge({ force: true });
 
     resetBuildCounters(width, height, "sync");
-    refreshMaterialBridge({ updateDataset: false });
 
     try {
       atlasCanvas = createAtlasCanvas(width, height);
-      const ctx = atlasCanvas && isFunction(atlasCanvas.getContext)
-        ? atlasCanvas.getContext("2d", { alpha: true, willReadFrequently: true })
-        : null;
-
+      const ctx = atlasCanvas.getContext("2d", { alpha: true, willReadFrequently: true });
       if (!ctx) throw new Error("Canvas East could not create atlas 2D context.");
 
       const imageData = ctx.createImageData(width, height);
@@ -2013,11 +1737,12 @@
 
         for (let x = 0; x < width; x += 1) {
           const u = width <= 1 ? 0.5 : x / (width - 1);
-          const material = sampleWithAuthority({ u, v });
+          const material = sampleWithAuthority({ u, v }, materialContext);
           countSample(material, classSet);
 
           const offset = (y * width + x) * 4;
-          const rgb = normalizeRgb(material.rgb || material.color, PALETTE.void);
+          const rgb = normalizeRgb(material.rgb || material.color, PALETTE.water);
+
           data[offset] = rgb[0];
           data[offset + 1] = rgb[1];
           data[offset + 2] = rgb[2];
@@ -2025,7 +1750,7 @@
         }
 
         if (y % 32 === 0 || y === height - 1) {
-          progressCallback(options, Math.round(((y + 1) / height) * 100), { row: y, height, mode: "sync" });
+          state.atlasBuildProgress = Math.round(((y + 1) / height) * 100);
         }
       }
 
@@ -2034,7 +1759,7 @@
       state.atlasClassCount = classSet.size;
       state.atlasClasses = Array.from(classSet).slice(0, 64);
 
-      return finalizeAtlasBuild(width, height, "sync", options);
+      return finalizeAtlasBuild(width, height, "sync");
     } catch (error) {
       return atlasBuildFailure(error, width, height, "sync");
     }
@@ -2052,16 +1777,13 @@
     const width = clamp(Math.round(safeNumber(options.width || options.atlasWidth, DEFAULT_ATLAS_WIDTH)), MIN_ATLAS_WIDTH, MAX_ATLAS_WIDTH);
     const height = clamp(Math.round(safeNumber(options.height || options.atlasHeight, DEFAULT_ATLAS_HEIGHT)), MIN_ATLAS_HEIGHT, MAX_ATLAS_HEIGHT);
     const rowsPerChunk = clamp(Math.round(safeNumber(options.rowsPerChunk, 10)), 1, 40);
+    const materialContext = refreshMaterialBridge({ force: true });
 
     resetBuildCounters(width, height, "async");
-    refreshMaterialBridge({ updateDataset: false });
 
     try {
       atlasCanvas = createAtlasCanvas(width, height);
-      const ctx = atlasCanvas && isFunction(atlasCanvas.getContext)
-        ? atlasCanvas.getContext("2d", { alpha: true, willReadFrequently: true })
-        : null;
-
+      const ctx = atlasCanvas.getContext("2d", { alpha: true, willReadFrequently: true });
       if (!ctx) throw new Error("Canvas East could not create atlas 2D context.");
 
       const imageData = ctx.createImageData(width, height);
@@ -2073,11 +1795,12 @@
 
         for (let x = 0; x < width; x += 1) {
           const u = width <= 1 ? 0.5 : x / (width - 1);
-          const material = sampleWithAuthority({ u, v });
+          const material = sampleWithAuthority({ u, v }, materialContext);
           countSample(material, classSet);
 
           const offset = (y * width + x) * 4;
-          const rgb = normalizeRgb(material.rgb || material.color, PALETTE.void);
+          const rgb = normalizeRgb(material.rgb || material.color, PALETTE.water);
+
           data[offset] = rgb[0];
           data[offset + 1] = rgb[1];
           data[offset + 2] = rgb[2];
@@ -2085,7 +1808,7 @@
         }
 
         if (y % rowsPerChunk === 0 || y === height - 1) {
-          progressCallback(options, Math.round(((y + 1) / height) * 100), { row: y, height, mode: "async" });
+          state.atlasBuildProgress = Math.round(((y + 1) / height) * 100);
           await yieldBuildFrame();
         }
       }
@@ -2095,23 +1818,22 @@
       state.atlasClassCount = classSet.size;
       state.atlasClasses = Array.from(classSet).slice(0, 64);
 
-      return finalizeAtlasBuild(width, height, "async", options);
+      return finalizeAtlasBuild(width, height, "async");
     } catch (error) {
       return atlasBuildFailure(error, width, height, "async");
     }
   }
 
   function createAtlasCanvas(width, height) {
+    const doc = getDocument();
+
     if (doc && isFunction(doc.createElement)) {
       const canvas = doc.createElement("canvas");
       canvas.width = width;
       canvas.height = height;
       canvas.dataset.hearthCanvasEastAtlas = "true";
       canvas.dataset.hearthCanvasEastContract = CONTRACT;
-      canvas.dataset.hearthCanvasEastReceipt = RECEIPT;
       canvas.dataset.hearthCanvasEastSourceOnly = "true";
-      canvas.dataset.hearthCanvasEastVisibleProof = "false";
-      canvas.dataset.hearthCanvasEastCanvasReady = "false";
       canvas.dataset.generatedImage = "false";
       canvas.dataset.graphicBox = "false";
       canvas.dataset.webgl = "false";
@@ -2119,30 +1841,29 @@
       return canvas;
     }
 
-    if (typeof OffscreenCanvas !== "undefined") {
-      return new OffscreenCanvas(width, height);
-    }
-
+    if (typeof OffscreenCanvas !== "undefined") return new OffscreenCanvas(width, height);
     throw new Error("No canvas creation API available.");
   }
 
   function yieldBuildFrame() {
+    const root = getRoot();
+
     return new Promise((resolve) => {
       if (isFunction(root.requestAnimationFrame)) root.requestAnimationFrame(() => resolve());
-      else root.setTimeout(resolve, 0);
+      else if (isFunction(root.setTimeout)) root.setTimeout(resolve, 0);
+      else resolve();
     });
   }
 
-  function resetBuildCounters(width, height, mode = "sync") {
+  function resetBuildCounters(width, height, mode) {
     state.heldAtlasPacketReturned = false;
     state.heldPacketWasSynchronous = false;
     state.buildAtlasReturnedPromise = mode === "async";
+    state.atlasBuildRequested = true;
     state.atlasBuildStarted = true;
     state.atlasBuildProgress = 0;
     state.atlasBuildComplete = false;
     state.atlasBuildError = "";
-    state.atlasBuildStartedAt = nowIso();
-    state.atlasBuildCompletedAt = "";
     state.atlasCanvasPresent = false;
     state.atlasWidth = width;
     state.atlasHeight = height;
@@ -2158,29 +1879,29 @@
     state.f13SourceStageComplete = false;
     state.f13AtlasPacketReady = false;
     state.canvasEastEvidenceReady = false;
-    state.canvasEastEvidenceGateReady = false;
 
     blockFinalClaims();
-    state.updatedAt = state.atlasBuildStartedAt;
+    publishDatasetFirstProof({ quiet: true });
 
     recordLocal("F13E_ATLAS_BUILD_STARTED", {
       width,
       height,
       mode,
-      permissionSource: state.f13PermissionSource,
-      apiReadyBeforeBuild: true
+      materialAuthorityCached: state.materialAuthorityCached,
+      materialAuthorityScanCount: state.materialAuthorityScanCount,
+      apiReadyBeforeBuild: true,
+      routeConductorV9_2Recognized: state.routeConductorV9_2Recognized,
+      visualPassClaimed: false
     });
   }
 
-  function finalizeAtlasBuild(width, height, mode, options = {}) {
+  function finalizeAtlasBuild(width, height, mode) {
     state.atlasBuildProgress = 100;
     state.atlasBuildComplete = true;
     state.atlasCanvasPresent = true;
-    state.atlasBuildCompletedAt = nowIso();
     state.f13SourceStageComplete = true;
     state.f13AtlasPacketReady = true;
     state.canvasEastEvidenceReady = true;
-    state.canvasEastEvidenceGateReady = true;
     state.firstFailedCoordinate = "NONE_F13F_ATLAS_PACKET_READY";
     state.recommendedNextFile = CANVAS_WEST_FILE;
     state.recommendedNextRenewalTarget = CANVAS_WEST_FILE;
@@ -2193,28 +1914,20 @@
       width,
       height,
       mode,
-      atlasPixelCount: state.atlasPixelCount,
-      atlasClassCount: state.atlasClassCount,
-      evidenceReturnsToParent: true,
+      materialAuthorityScanCount: state.materialAuthorityScanCount,
+      evidenceReturnsToLocalStation: true,
       visibleProof: false,
       canvasReady: false,
-      f21ClaimedByCanvasEast: false,
       visualPassClaimed: false
     });
 
     publishApiSurface("atlas-build-complete");
 
-    const packet = composeAtlasEvidencePacket({ atlasCanvas, width, height });
-
-    if (isFunction(options.onComplete)) {
-      try {
-        options.onComplete(packet);
-      } catch (error) {
-        recordError("ATLAS_COMPLETE_CALLBACK_FAILED", error);
-      }
-    }
-
-    return packet;
+    return composeAtlasEvidencePacket({
+      atlasCanvas,
+      width,
+      height
+    });
   }
 
   function atlasBuildFailure(error, width, height, mode) {
@@ -2224,49 +1937,35 @@
     state.f13SourceStageComplete = false;
     state.f13AtlasPacketReady = false;
     state.canvasEastEvidenceReady = false;
-    state.canvasEastEvidenceGateReady = false;
     state.firstFailedCoordinate = "WAITING_CANVAS_EAST_ATLAS_BUILD";
     state.recommendedNextFile = FILE;
     state.recommendedNextRenewalTarget = FILE;
 
     blockFinalClaims();
-
-    recordError("ATLAS_BUILD_FAILED", error, { width, height, mode });
+    recordError("ATLAS_BUILD_FAILED_API_STILL_READY", error, { width, height, mode });
     recomputeChronology();
-    publishApiSurface("atlas-build-failed-api-still-ready");
+    publishApiSurface("atlas-build-failed");
 
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
       file: FILE,
-      parentFile: PARENT_FILE,
       packetType: "CANVAS_EAST_ATLAS_BUILD_FAILURE_PACKET",
       canvasEastApiReady: true,
-      canvasEastReady: true,
-      canvasEastCurrent: true,
       requiredApiSurfaceComplete: true,
       atlasBuildStarted: true,
       atlasBuildComplete: false,
       atlasBuildError: state.atlasBuildError,
-      f13SourceStageStarted: true,
-      f13SourceStageComplete: false,
-      f13AtlasPacketReady: false,
       canvasEastEvidenceReady: false,
       firstFailedCoordinate: state.firstFailedCoordinate,
       recommendedNextFile: FILE,
-      recommendedNextRenewalTarget: FILE,
-      visibleProof: false,
-      visibleContentProof: false,
-      visiblePlanetAvailable: false,
-      canvasReady: false,
+      visualPassClaimed: false,
       readyTextAllowed: false,
       f21EligibleForNorth: false,
-      f21ClaimedByCanvasEast: false,
       completionLatched: false,
       generatedImage: false,
       graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false
+      webGL: false
     };
   }
 
@@ -2287,20 +1986,6 @@
       canvasEastPresent: true,
       requiredApiSurfaceComplete: true,
 
-      eastDispatchPacketObserved: state.eastDispatchPacketObserved,
-      eastDispatchPacketValid: state.eastDispatchPacketValid,
-      eastDispatchPacketAccepted: state.eastDispatchPacketAccepted,
-      eastDispatchPacketSource: state.eastDispatchPacketSource,
-
-      permissionClass: state.permissionClass,
-      canvasEastMayBuildAtlas: state.canvasEastMayBuildAtlas,
-      f13BuildLawful: state.f13BuildLawful,
-      f13BuildBlockedReason: state.f13BuildBlockedReason,
-      f13PermissionSource: state.f13PermissionSource,
-
-      parentAuthorityProfile: clonePlain(state.lastParentAuthorityProfile),
-      westReleaseState: clonePlain(state.lastWestReleaseState),
-
       atlasCanvas: config.atlasCanvas || atlasCanvas || null,
       canvas: config.atlasCanvas || atlasCanvas || null,
       width: safeNumber(config.width, state.atlasWidth),
@@ -2310,30 +1995,22 @@
       atlasReady: Boolean(config.atlasCanvas || atlasCanvas),
       atlasBuildComplete: state.atlasBuildComplete,
       atlasCanvasPresent: state.atlasCanvasPresent,
-      sourceRole: "east-material-atlas-source",
-      materialBridgeReceipt: getMaterialBridgeReceipt({ sync: false }),
+
+      routeConductorState: clonePlain(state.lastRouteConductorState),
+      routeConductorV9_2Recognized: state.routeConductorV9_2Recognized,
+
+      materialAuthorityCached: state.materialAuthorityCached,
+      materialAuthorityScanCount: state.materialAuthorityScanCount,
+      materialAuthorityScanDuringAtlasLoopBlocked: true,
 
       f13SourceStageStarted: state.f13SourceStageStarted,
       f13SourceStageComplete: state.f13SourceStageComplete,
       f13AtlasPacketReady: state.f13AtlasPacketReady,
       canvasEastEvidenceReady: state.f13AtlasPacketReady,
 
-      chronologicalGateCount: state.chronologicalGateCount,
-      chronologicalGatesSatisfied: state.chronologicalGatesSatisfied,
-      chronologicalFirstFailedGate: state.chronologicalFirstFailedGate,
-      chronologicalFirstFailedCoordinate: state.chronologicalFirstFailedCoordinate,
-
-      fibonacciSynchronizationChronologyFirst: true,
-      fibonacciSynchronizationScore: state.fibonacciSynchronizationScore,
-      fibonacciSynchronizationExpected: 100,
-      fibonacciSynchronizationSatisfied: state.fibonacciSynchronizationSatisfied,
-      fibonacciSynchronizationPassed: state.fibonacciSynchronizationPassed,
-      fibonacciSynchronizationDegraded: state.fibonacciSynchronizationDegraded,
-      fibonacciSynchronizationHardFail: false,
-      activeFibonacciGate: ACTIVE_FIBONACCI_GATE,
-      activeF13EGate: F13E_GATE,
-      activeF13FGate: F13F_GATE,
-      futureFibonacciGate: FUTURE_FIBONACCI_GATE,
+      canvasLocalStationSummary: clonePlain(state.lastCanvasLocalStationSummary),
+      westReleaseState: clonePlain(state.lastWestReleaseState),
+      eastDispatchState: clonePlain(state.lastDispatchPacket),
 
       nextConsumerFile: PARENT_FILE,
       destinationFile: PARENT_FILE,
@@ -2346,14 +2023,15 @@
       canvasReady: false,
       readyTextAllowed: false,
       f21EligibleForNorth: false,
-      f21ClaimedByCanvasEast: false,
-      readyTextClaimedByCanvasEast: false,
+      f21SubmittedToNorth: false,
+      f21EligibilitySubmittedToNorth: false,
       completionLatched: false,
+      finalCompletionLatched: false,
+      degradedCompletionLatched: false,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
       visualPassClaimed: false,
-      getReceipt,
       createdAt: nowIso()
     };
 
@@ -2366,61 +2044,29 @@
     return packet;
   }
 
-  function progressCallback(options, progress, detail = {}) {
-    state.atlasBuildProgress = clamp(progress, 0, 100);
-    state.updatedAt = nowIso();
-
-    if (isFunction(options.onProgress)) {
-      try {
-        options.onProgress(state.atlasBuildProgress, {
-          contract: CONTRACT,
-          receipt: RECEIPT,
-          event: "ATLAS_BUILD_PROGRESS",
-          fibonacci: ACTIVE_FIBONACCI_GATE,
-          progress: state.atlasBuildProgress,
-          detail: clonePlain(detail),
-          canvasEastApiReady: true,
-          canvasEastEvidenceReady: false,
-          visibleProof: false,
-          canvasReady: false,
-          f21ClaimedByCanvasEast: false,
-          visualPassClaimed: false
-        });
-      } catch (error) {
-        recordError("ATLAS_PROGRESS_CALLBACK_FAILED", error);
-      }
-    }
-
-    publishDatasetFirstProof({ quiet: true });
-  }
-
   function getMaterialAuthority() {
     const candidates = [
       pathRead("HEARTH.materials"),
       pathRead("HEARTH.materialAuthority"),
       pathRead("HEARTH.materialsAuthority"),
       pathRead("HEARTH.surfaceMaterials"),
-      root.HEARTH_MATERIALS,
-      root.HEARTH_MATERIAL_AUTHORITY,
-      root.HEARTH_MATERIALS_AUTHORITY,
-      root.HEARTH_SURFACE_MATERIALS,
-      root.HearthMaterials,
-      root.HearthMaterialAuthority,
-      root.DEXTER_LAB && root.DEXTER_LAB.hearthMaterials,
-      root.DEXTER_LAB && root.DEXTER_LAB.hearthMaterialAuthority
+      pathRead("DEXTER_LAB.hearthMaterials"),
+      pathRead("DEXTER_LAB.hearthMaterialAuthority"),
+      pathRead("HEARTH_MATERIALS"),
+      pathRead("HEARTH_MATERIAL_AUTHORITY"),
+      pathRead("HEARTH_MATERIALS_AUTHORITY"),
+      pathRead("HEARTH_SURFACE_MATERIALS")
     ];
 
-    for (const candidate of candidates) {
-      if (!candidate || !isObject(candidate)) continue;
-      if (candidate === api) continue;
-      if (candidate.contract === CONTRACT || candidate.receipt === RECEIPT) continue;
+    for (let i = 0; i < candidates.length; i += 1) {
+      const candidate = candidates[i];
+      if (!isObject(candidate) || candidate === api) continue;
 
       if (
         isFunction(candidate.sample) ||
         isFunction(candidate.read) ||
         isFunction(candidate.getMaterial) ||
         isFunction(candidate.materialAt) ||
-        isFunction(candidate.getMaterialAt) ||
         isFunction(candidate.resolveMaterial)
       ) {
         return candidate;
@@ -2431,11 +2077,13 @@
   }
 
   function resolveMaterialSampler(authority) {
-    if (!authority || !isObject(authority)) return null;
+    if (!isObject(authority)) return null;
 
     const methods = ["sample", "read", "getMaterial", "materialAt", "getMaterialAt", "resolveMaterial"];
 
-    for (const method of methods) {
+    for (let i = 0; i < methods.length; i += 1) {
+      const method = methods[i];
+
       if (!isFunction(authority[method])) continue;
 
       return function runMaterialSampler(point) {
@@ -2447,7 +2095,7 @@
         try {
           const result = authority[method](point.u, point.v, point.lon, point.lat);
           if (isObject(result)) return result;
-        } catch (_error2) {}
+        } catch (_error) {}
 
         return null;
       };
@@ -2456,82 +2104,46 @@
     return null;
   }
 
-  function readMaterialReceipt(authority = getMaterialAuthority()) {
-    if (!authority || !isObject(authority)) return null;
-
-    const receipt = readReceipt(authority);
-    if (receipt) return receipt;
-
-    return {
-      contract: authority.contract || "",
-      receipt: authority.receipt || "",
-      version: authority.version || "",
-      role: authority.role || "materials"
-    };
-  }
-
   function refreshMaterialBridge(options = {}) {
-    const authority = options.authority || getMaterialAuthority();
-    const materialReceipt = readMaterialReceipt(authority);
+    if (cachedMaterialAuthority && cachedMaterialSampler && options.force !== true) {
+      return {
+        authority: cachedMaterialAuthority,
+        sampler: cachedMaterialSampler,
+        receipt: clonePlain(cachedMaterialReceipt),
+        materialReceiptBridgeActive: state.materialReceiptBridgeActive,
+        materialContract: state.materialContract,
+        materialReceipt: state.materialReceipt,
+        canonicalMaterialAuthorityPresent: state.canonicalMaterialAuthorityPresent,
+        canonicalMaterialConsumed: state.canonicalMaterialConsumed
+      };
+    }
 
-    materialSampler = resolveMaterialSampler(authority);
+    state.materialAuthorityScanCount += 1;
 
+    const authority = getMaterialAuthority();
+    const sampler = resolveMaterialSampler(authority);
+    const receipt = authority ? readReceipt(authority) : null;
+
+    cachedMaterialAuthority = authority || null;
+    cachedMaterialSampler = sampler || null;
+    cachedMaterialReceipt = receipt || null;
+
+    state.materialAuthorityCached = Boolean(authority && sampler);
     state.canonicalMaterialAuthorityPresent = Boolean(authority);
-    state.materialNestedReceiptAvailable = Boolean(materialReceipt);
-    state.materialReceiptBridgeActive = Boolean(materialReceipt);
-    state.materialContract = materialReceipt ? safeString(materialReceipt.contract, "") : "";
-    state.materialReceipt = materialReceipt ? safeString(materialReceipt.receipt, "") : "";
-    state.materialVersion = materialReceipt ? safeString(materialReceipt.version, "") : "";
-    state.materialRole = materialReceipt ? safeString(materialReceipt.authority || materialReceipt.role || "materials", "materials") : "";
-    state.materialContractMatchesExpected = state.materialContract === EXPECTED_MATERIAL_CONTRACT;
-    state.materialReceiptMatchesExpected = state.materialReceipt === EXPECTED_MATERIAL_RECEIPT;
-    state.canonicalMaterialConsumed = Boolean(authority && state.materialContractMatchesExpected);
-
-    if (options.updateDataset !== false) publishDatasetFirstProof({ quiet: true });
+    state.materialReceiptBridgeActive = Boolean(receipt);
+    state.materialContract = receipt ? safeString(receipt.contract, "") : "";
+    state.materialReceipt = receipt ? safeString(receipt.receipt, "") : "";
+    state.canonicalMaterialConsumed = Boolean(authority);
 
     return {
-      authorityPresent: Boolean(authority),
-      materialReceipt: clonePlain(materialReceipt || null),
-      materialBridgeReceipt: getMaterialBridgeReceipt({ sync: false })
-    };
-  }
-
-  function getMaterialBridgeReceipt(options = {}) {
-    if (options.sync !== false) refreshMaterialBridge({ updateDataset: false });
-
-    return {
+      authority: cachedMaterialAuthority,
+      sampler: cachedMaterialSampler,
+      receipt: clonePlain(cachedMaterialReceipt),
       materialReceiptBridgeActive: state.materialReceiptBridgeActive,
-      materialNestedReceiptAvailable: state.materialNestedReceiptAvailable,
       materialContract: state.materialContract,
       materialReceipt: state.materialReceipt,
-      materialExpectedContract: EXPECTED_MATERIAL_CONTRACT,
-      materialExpectedReceipt: EXPECTED_MATERIAL_RECEIPT,
-      materialContractMatchesExpected: state.materialContractMatchesExpected,
-      materialReceiptMatchesExpected: state.materialReceiptMatchesExpected,
-      materialVersion: state.materialVersion,
-      materialRole: state.materialRole,
       canonicalMaterialAuthorityPresent: state.canonicalMaterialAuthorityPresent,
       canonicalMaterialConsumed: state.canonicalMaterialConsumed
-    };
-  }
-
-  function pointFromUv(u, v) {
-    const uu = ((safeNumber(u, 0.5) % 1) + 1) % 1;
-    const vv = clamp(safeNumber(v, 0.5), 0, 1);
-    const lon = uu * 360 - 180;
-    const lat = 90 - vv * 180;
-    const lonRad = lon * Math.PI / 180;
-    const latRad = lat * Math.PI / 180;
-    const c = Math.cos(latRad);
-
-    return {
-      u: uu,
-      v: vv,
-      lon,
-      lat,
-      x: Math.sin(lonRad) * c,
-      y: Math.sin(latRad),
-      z: Math.cos(lonRad) * c
     };
   }
 
@@ -2553,6 +2165,7 @@
         const nz = z / m;
         const lon = Math.atan2(nx, nz) * 180 / Math.PI;
         const lat = Math.asin(clamp(ny, -1, 1)) * 180 / Math.PI;
+
         return {
           x: nx,
           y: ny,
@@ -2569,11 +2182,29 @@
       return normalizePoint({ x: input, y: b, z: c });
     }
 
-    if (Number.isFinite(Number(input)) && Number.isFinite(Number(b))) {
-      return pointFromUv(input, b);
-    }
+    if (Number.isFinite(Number(input)) && Number.isFinite(Number(b))) return pointFromUv(input, b);
 
     return pointFromUv(0.5, 0.5);
+  }
+
+  function pointFromUv(u, v) {
+    const uu = ((safeNumber(u, 0.5) % 1) + 1) % 1;
+    const vv = clamp(safeNumber(v, 0.5), 0, 1);
+    const lon = uu * 360 - 180;
+    const lat = 90 - vv * 180;
+    const lonRad = lon * Math.PI / 180;
+    const latRad = lat * Math.PI / 180;
+    const c = Math.cos(latRad);
+
+    return {
+      u: uu,
+      v: vv,
+      lon,
+      lat,
+      x: Math.sin(lonRad) * c,
+      y: Math.sin(latRad),
+      z: Math.cos(lonRad) * c
+    };
   }
 
   function hashNoise(x, y, z, salt = 0) {
@@ -2602,16 +2233,7 @@
     ];
   }
 
-  function scaleColor(color, scalar) {
-    const s = Number.isFinite(Number(scalar)) ? Number(scalar) : 1;
-    return [
-      clamp(Math.round(color[0] * s), 0, 255),
-      clamp(Math.round(color[1] * s), 0, 255),
-      clamp(Math.round(color[2] * s), 0, 255)
-    ];
-  }
-
-  function normalizeRgb(value, fallback = PALETTE.void) {
+  function normalizeRgb(value, fallback = PALETTE.water) {
     if (!Array.isArray(value) || value.length < 3) return fallback.slice();
 
     return [
@@ -2668,9 +2290,9 @@
       elevation,
       isLand,
       isWater,
+      isCoast: coastBand > 0.30,
       terrainClass: isWater ? (coastBand > 0.34 ? "shallow_water" : "ocean_basin") : (coastBand > 0.34 ? "coast_edge" : "continent_mass"),
       materialClass: isWater ? "fallback.water.carrier" : "fallback.land.carrier",
-      hydrologyClass: isWater ? "fallback_ocean_basin" : "fallback_coastal_transition",
       terrainRelief: isLand ? clamp01(n * 0.26 + landSignal * 0.22) : 0,
       fallbackOnly: true,
       canvasEastSourceOnly: true,
@@ -2685,21 +2307,15 @@
 
   function normalizeSample(raw, point, fallbackUsed) {
     const source = isObject(raw) ? raw : fallbackTerrain(point);
-    const terrainClass = safeString(source.terrainClass || source.worldTerrainClass || source.expandedTerrainClass || source.semanticTerrainClass, "") || (safeBool(source.isWater, false) ? "ocean_basin" : "continent_mass");
-
-    const isWater = safeBool(source.isWater, terrainClass.includes("water") || terrainClass.includes("ocean"));
+    const terrainClass = safeString(source.terrainClass || source.materialClass || "", "") || (safeBool(source.isWater, false) ? "ocean_basin" : "continent_mass");
+    const isWater = safeBool(source.isWater, terrainClass.indexOf("water") !== -1 || terrainClass.indexOf("ocean") !== -1);
     const isLand = safeBool(source.isLand, !isWater);
-    const isCoast = terrainClass.includes("coast") || terrainClass.includes("shore");
+    const isCoast = safeBool(source.isCoast, terrainClass.indexOf("coast") !== -1 || terrainClass.indexOf("shore") !== -1);
     const relief = clamp01(safeNumber(source.terrainRelief, 0) + safeNumber(source.ridgeRelief, 0));
-
     const rgb = normalizeRgb(source.rgb || source.color || source.baseColor || source.finalColorHint, isWater ? PALETTE.water : PALETTE.land);
-    const n = textureNoise(point, 733);
-    const finalRgb = scaleColor(rgb, 1 + (n - 0.5) * (0.03 + relief * 0.03));
 
     return {
       ...source,
-      contract: source.contract || (fallbackUsed ? "HEARTH_CANVAS_EAST_EMERGENCY_F13_ATLAS_CARRIER" : "UNKNOWN_MATERIAL_SOURCE"),
-      receipt: source.receipt || (fallbackUsed ? "HEARTH_CANVAS_EAST_EMERGENCY_F13_ATLAS_CARRIER_RECEIPT" : "UNKNOWN_MATERIAL_RECEIPT"),
       eastContract: CONTRACT,
       eastReceipt: RECEIPT,
       sourceType: fallbackUsed ? "fallback" : "material",
@@ -2710,10 +2326,10 @@
       x: point.x,
       y: point.y,
       z: point.z,
-      rgb: finalRgb,
-      color: finalRgb,
-      baseColor: finalRgb,
-      finalColorHint: finalRgb,
+      rgb,
+      color: rgb,
+      baseColor: rgb,
+      finalColorHint: rgb,
       alpha: clamp01(safeNumber(source.alpha, 1)),
       terrainClass,
       isWater,
@@ -2727,8 +2343,6 @@
       canvasStillDoesNotOwnPlanetTruth: true,
       canvasEastDoesNotOwnMaterialTruth: true,
       visibleProof: false,
-      visibleContentProof: false,
-      visiblePlanetAvailable: false,
       canvasReady: false,
       f21ClaimedByCanvasEast: false,
       readyTextClaimedByCanvasEast: false,
@@ -2739,18 +2353,15 @@
     };
   }
 
-  function sampleWithAuthority(point = {}) {
+  function sampleWithAuthority(point = {}, materialContext = null) {
     const p = normalizePoint(point);
-    const materialAuthority = getMaterialAuthority();
-    refreshMaterialBridge({ authority: materialAuthority, updateDataset: false });
+    const context = materialContext || refreshMaterialBridge({ force: false });
+    const sampler = context && context.sampler ? context.sampler : null;
 
     let raw = null;
     let fallbackUsed = false;
 
-    if (materialAuthority) {
-      const sampler = materialSampler || resolveMaterialSampler(materialAuthority);
-      if (sampler) raw = sampler(p);
-    }
+    if (sampler) raw = sampler(p);
 
     if (!isObject(raw)) {
       raw = fallbackTerrain(p);
@@ -2766,7 +2377,8 @@
     publishApiSurface("sample-entry");
 
     try {
-      return sampleWithAuthority(normalizePoint(point, b, c));
+      const context = refreshMaterialBridge({ force: false });
+      return sampleWithAuthority(normalizePoint(point, b, c), context);
     } catch (error) {
       recordError("SAMPLE_FAILED_USING_FALLBACK_API_STILL_READY", error);
       const p = normalizePoint(point, b, c);
@@ -2806,32 +2418,6 @@
     return getAtlasPacket();
   }
 
-  function invalidateAtlas(reason = "manual-invalidation", options = {}) {
-    state.atlasBuildComplete = false;
-    state.atlasCanvasPresent = false;
-    state.f13AtlasPacketReady = false;
-    state.canvasEastEvidenceReady = false;
-    state.canvasEastEvidenceGateReady = false;
-    state.firstFailedCoordinate = "WAITING_CANVAS_EAST_ATLAS_EVIDENCE";
-    state.recommendedNextFile = FILE;
-    state.recommendedNextRenewalTarget = FILE;
-    atlasCanvas = null;
-    lastAtlasImageData = null;
-
-    blockFinalClaims();
-
-    recordLocal("ATLAS_INVALIDATED_API_STILL_READY", {
-      reason,
-      apiStillReady: true
-    });
-
-    recomputeChronology();
-    if (!options.skipDataset) publishDatasetFirstProof({ quiet: true });
-    publishApiSurface("atlas-invalidated-api-still-ready");
-
-    return getReceipt();
-  }
-
   function recomputeChronology() {
     const f13ePass = Boolean(
       state.canvasEastApiReady &&
@@ -2854,12 +2440,12 @@
       true,
       true,
       Boolean(state.westReleaseObserved || state.westCanvasReleaseApproved || state.canvasReleaseAuthorized),
-      Boolean(state.parentReleaseAccepted && state.parentReleaseLawful),
+      Boolean(state.canvasLocalStationReleaseAccepted || state.canvasReleaseAuthorized),
       Boolean(state.eastDispatchAuthorized || state.eastDispatchPacketPublished || state.eastDispatchPacketAccepted),
       f13ePass,
       f13fPass,
-      Boolean(state.canvasWestGateReady),
-      Boolean(state.canvasSouthGateReady),
+      false,
+      false,
       false
     ];
 
@@ -2872,9 +2458,10 @@
     state.chronologicalFirstFailedCoordinate =
       firstFailedIndex === 6 ? "WAITING_CANVAS_EAST_ATLAS_EVIDENCE" :
       firstFailedIndex === 5 ? "WAITING_CANVAS_EAST_API" :
-      firstFailedIndex === 4 ? "WAITING_CANVAS_PARENT_EAST_DISPATCH" :
-      firstFailedIndex === 3 ? "WAITING_CANVAS_PARENT_RELEASE_ACCEPTANCE" :
-      state.firstFailedCoordinate || "WAITING_CANVAS_EAST_ATLAS_EVIDENCE";
+      firstFailedIndex === 4 ? "WAITING_CANVAS_LOCAL_STATION_EAST_DISPATCH" :
+      firstFailedIndex === 3 ? "WAITING_CANVAS_LOCAL_STATION_RELEASE_ACCEPTANCE" :
+      firstFailedIndex === 2 ? "WAITING_CANVAS_RELEASE_AUTHORIZATION" :
+      "WAITING_CANVAS_EAST_ATLAS_EVIDENCE";
 
     let score = 0;
     if (f13ePass) score += 50;
@@ -2884,34 +2471,134 @@
     state.fibonacciSynchronizationExpected = 100;
     state.fibonacciSynchronizationScore = score;
     state.fibonacciSynchronizationPassed = score === 100;
-    state.fibonacciSynchronizationDegraded = score >= 50 && score < 100 && !state.fibonacciSynchronizationHardFail;
-    state.fibonacciSynchronizationHardFail = Boolean(
-      state.permissionClass === PERMISSION.BLOCKED_FALSE_PROMOTION ||
-      state.permissionClass === PERMISSION.HELD_PARENT_STALE_OR_CORRUPT ||
-      state.atlasBuildError
-    );
+    state.fibonacciSynchronizationDegraded = score >= 50 && score < 100;
+    state.fibonacciSynchronizationHardFail = state.permissionClass === PERMISSION.BLOCKED_FALSE_PROMOTION || Boolean(state.atlasBuildError);
     state.fibonacciSynchronizationHoldReason = state.fibonacciSynchronizationPassed
       ? "NONE_F13E_F13F_SYNCHRONIZED"
       : (f13ePass ? "WAITING_CANVAS_EAST_ATLAS_EVIDENCE" : "WAITING_CANVAS_EAST_API");
 
-    state.canvasEastGateReady = f13ePass;
-    state.canvasEastEvidenceGateReady = f13fPass;
-
-    if (f13fPass) {
+    if (state.permissionClass === PERMISSION.HELD_ROUTE_CONDUCTOR_PENDING) {
+      state.firstFailedCoordinate = "WAITING_ROUTE_CONDUCTOR_V9_2_RECOGNITION";
+      state.recommendedNextFile = ROUTE_FILE;
+      state.recommendedNextRenewalTarget = ROUTE_FILE;
+    } else if (f13fPass) {
       state.firstFailedCoordinate = "NONE_F13F_ATLAS_PACKET_READY";
       state.recommendedNextFile = CANVAS_WEST_FILE;
       state.recommendedNextRenewalTarget = CANVAS_WEST_FILE;
-    } else if (f13ePass) {
+    } else if (f13ePass && !state.firstFailedCoordinate) {
       state.firstFailedCoordinate = "WAITING_CANVAS_EAST_ATLAS_EVIDENCE";
       state.recommendedNextFile = FILE;
       state.recommendedNextRenewalTarget = FILE;
-    } else {
+    } else if (!f13ePass) {
       state.firstFailedCoordinate = "WAITING_CANVAS_EAST_API";
       state.recommendedNextFile = FILE;
       state.recommendedNextRenewalTarget = FILE;
     }
 
     blockFinalClaims();
+  }
+
+  function notifyRouteConductor(reason = "canvas-east-api-published") {
+    if (notificationQueued) return false;
+
+    notificationQueued = true;
+
+    const run = () => {
+      notificationQueued = false;
+      state.routeConductorNotificationAttempted = true;
+      state.routeConductorNotificationError = "";
+
+      try {
+        const conductor = firstGlobal([
+          "HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR",
+          "HEARTH.routeConductorNorthStarCompletionCycleGovernor",
+          "DEXTER_LAB.hearthRouteConductorNorthStarCompletionCycleGovernor",
+          "HEARTH_ROUTE_CONDUCTOR",
+          "HEARTH.routeConductor",
+          "DEXTER_LAB.hearthRouteConductor",
+          "HEARTH_ROUTE_CONDUCTOR_CENTRAL_STATION_SWITCHBOARD_WEST_V4_2_SOUTH_OUTPUT_ALIGNMENT"
+        ]);
+
+        const packet = {
+          contract: CONTRACT,
+          receipt: RECEIPT,
+          file: FILE,
+          packetType: "CANVAS_EAST_API_PUBLICATION_NOTICE",
+          reason,
+          receivedFrom: "CANVAS_EAST",
+          canvasEastApiPublished: true,
+          canvasEastApiReady: true,
+          requiredApiSurfaceComplete: true,
+          canvasEastEvidenceReady: Boolean(state.f13AtlasPacketReady),
+          heldDoesNotMeanApiMissing: true,
+          firstFailedCoordinate: state.f13AtlasPacketReady ? "NONE_F13F_ATLAS_PACKET_READY" : "WAITING_CANVAS_EAST_ATLAS_EVIDENCE",
+          recommendedNextFile: state.f13AtlasPacketReady ? CANVAS_WEST_FILE : FILE,
+          visualPassClaimed: false,
+          createdAt: nowIso()
+        };
+
+        let accepted = false;
+
+        if (conductor && isObject(conductor)) {
+          const methods = ["reconcileCanvas", "refresh", "run", "start", "boot", "init"];
+
+          for (let i = 0; i < methods.length; i += 1) {
+            const method = methods[i];
+            if (!isFunction(conductor[method])) continue;
+
+            try {
+              conductor[method](packet);
+              accepted = true;
+              break;
+            } catch (_error) {}
+          }
+        }
+
+        const doc = getDocument();
+        if (doc && isFunction(doc.dispatchEvent)) {
+          try {
+            const event = typeof CustomEvent !== "undefined"
+              ? new CustomEvent("hearth:canvas-east-api-published", { detail: packet })
+              : null;
+            if (event) doc.dispatchEvent(event);
+          } catch (_error) {}
+        }
+
+        state.routeConductorNotificationAccepted = accepted;
+        recordLocal("ROUTE_CONDUCTOR_NONBLOCKING_NOTIFICATION_SENT", {
+          reason,
+          routeConductorObserved: Boolean(conductor),
+          routeConductorNotificationAccepted: accepted,
+          canvasEastApiReady: true,
+          canvasEastEvidenceReady: Boolean(state.f13AtlasPacketReady)
+        });
+
+        publishDatasetFirstProof({ quiet: true });
+        publishReceipts();
+      } catch (error) {
+        state.routeConductorNotificationAccepted = false;
+        state.routeConductorNotificationError = error && error.message ? error.message : String(error);
+        recordError("ROUTE_CONDUCTOR_NOTIFICATION_FAILED_NONBLOCKING", error, {
+          apiAlreadyPublished: true
+        });
+      }
+    };
+
+    const root = getRoot();
+
+    try {
+      if (isFunction(root.queueMicrotask)) root.queueMicrotask(run);
+      else if (isFunction(root.setTimeout)) root.setTimeout(run, 0);
+      else run();
+    } catch (_error) {
+      try {
+        run();
+      } catch (error) {
+        recordError("ROUTE_CONDUCTOR_NOTIFICATION_QUEUE_FAILED_NONBLOCKING", error);
+      }
+    }
+
+    return true;
   }
 
   function getReceiptLight(_doRefresh = false) {
@@ -2922,42 +2609,56 @@
       previousReceipt: PREVIOUS_RECEIPT,
       baselineContract: BASELINE_CONTRACT,
       baselineReceipt: BASELINE_RECEIPT,
-      legacyBaselineContract: LEGACY_BASELINE_CONTRACT,
-      legacyBaselineReceipt: LEGACY_BASELINE_RECEIPT,
-      compatibilityContract: COMPATIBILITY_CONTRACT,
-      compatibilityReceipt: COMPATIBILITY_RECEIPT,
-      currentParentContract: CURRENT_PARENT_CONTRACT,
-      currentParentReceipt: CURRENT_PARENT_RECEIPT,
-      routeConductorContract: ROUTE_CONDUCTOR_CONTRACT,
-      routeConductorReceipt: ROUTE_CONDUCTOR_RECEIPT,
-      macroWestContract: MACRO_WEST_CONTRACT,
-
-      version: VERSION,
       file: FILE,
       parentFile: PARENT_FILE,
       routeFile: ROUTE_FILE,
       macroWestFile: MACRO_WEST_FILE,
       canvasWestFile: CANVAS_WEST_FILE,
       canvasSouthFile: CANVAS_SOUTH_FILE,
+      route: ROUTE,
+      version: VERSION,
       role: state.role,
 
+      activeCycleNumber: ACTIVE_CYCLE_NUMBER,
+      activeCycleRoute: ACTIVE_CYCLE_ROUTE,
+      activeCardinal: ACTIVE_CARDINAL,
+      activeStageId: ACTIVE_STAGE_ID,
+      activeGear: ACTIVE_GEAR,
+      activeFibonacci: ACTIVE_FIBONACCI,
+      activeNewsGate: ACTIVE_NEWS_GATE,
+
+      currentLocalStationV11_1ApiPublicationActive: true,
       sameRuntimeExposureBeaconActive: true,
       strictInitializationSafetyActive: true,
-      undefinedStateReferenceCorrectionActive: true,
-      servedDetectionRepairActive: true,
-      parentV10_3DispatchRecognitionActive: true,
-      routeConductorV8_2AlignmentActive: true,
-      macroWestV4_2ReleaseChainRecognized: true,
-      earlyApiSurfaceActive: true,
-      aliasStationActive: true,
-      datasetFirstProofActive: true,
-      receiptFirstProofActive: true,
-      routeConductorNotificationActive: true,
-      synchronousHeldPacketActive: true,
-      atlasSourceActive: true,
-      parentReturnNodeActive: true,
+      noDuplicateRootIdentifier: true,
+      datasetSelfContaminationBlocked: true,
+      materialAuthorityCachedForAtlasLoop: true,
+      emptyContractFalseRecognitionBlocked: true,
+      routeConductorPermissionGateEnforced: true,
 
-      canvasChildSequence: CANVAS_CHILD_SEQUENCE.slice(),
+      routeConductorCurrentContract: ROUTE_CONDUCTOR_CURRENT_CONTRACT,
+      routeConductorCurrentReceipt: ROUTE_CONDUCTOR_CURRENT_RECEIPT,
+      routeConductorObserved: state.routeConductorObserved,
+      routeConductorContractKnown: state.routeConductorContractKnown,
+      routeConductorContractRecognized: state.routeConductorContractRecognized,
+      routeConductorV9_2Recognized: state.routeConductorV9_2Recognized,
+
+      macroWestCurrentContract: MACRO_WEST_CURRENT_CONTRACT,
+      macroWestCurrentReceipt: MACRO_WEST_CURRENT_RECEIPT,
+      macroWestObserved: state.macroWestObserved,
+      macroWestContractKnown: state.macroWestContractKnown,
+      macroWestContractRecognized: state.macroWestContractRecognized,
+      macroWestV4_6_3ReleaseRecognized: state.macroWestV4_6_3ReleaseRecognized,
+
+      canvasLocalStationV11_1Contract: LOCAL_STATION_V11_1_CONTRACT,
+      canvasLocalStationV11Contract: LOCAL_STATION_V11_CONTRACT,
+      canvasLocalStationV11_1Recognized: state.canvasLocalStationV11_1Recognized,
+      canvasLocalStationV11Recognized: state.canvasLocalStationV11Recognized,
+      localStationV11OrV11_1CurrentPassActive: true,
+      v10_3BaselineContract: V10_3_BASELINE_CONTRACT,
+      v10_3BaselineReceipt: V10_3_BASELINE_RECEIPT,
+      v10_3BaselineRecognizedOnly: true,
+      canvasParentV10_3BaselineRecognized: state.canvasParentV10_3BaselineRecognized,
 
       apiSurfacePublished: state.apiSurfacePublished,
       aliasesPublished: state.aliasesPublished,
@@ -2969,7 +2670,6 @@
 
       requiredApiSurfaceComplete: true,
       requiredMethods: REQUIRED_METHODS.slice(),
-
       buildAtlasAvailable: true,
       buildAtlasSyncAvailable: true,
       buildAtlasAsyncAvailable: true,
@@ -2978,6 +2678,7 @@
       getAtlasAvailable: true,
       getAtlasCanvasAvailable: true,
       getAtlasPacketAvailable: true,
+      getLastAtlasImageDataAvailable: true,
       getReceiptAvailable: true,
       getReceiptLightAvailable: true,
       getReceiptTextAvailable: true,
@@ -2987,24 +2688,29 @@
       canvasEastCurrent: true,
       canvasEastReady: true,
       canvasEastApiReady: true,
-      canvasEastEvidenceReady: state.f13AtlasPacketReady,
+      canvasEastEvidenceReady: Boolean(state.f13AtlasPacketReady),
+      heldDoesNotMeanApiMissing: true,
 
-      parentObserved: state.parentObserved,
-      parentApiPresent: state.parentApiPresent,
-      parentCallable: state.parentCallable,
-      parentReceiptObserved: state.parentReceiptObserved,
-      parentContract: state.parentContract,
-      parentReceiptId: state.parentReceiptId,
-      currentParentIsV10_3: state.currentParentIsV10_3,
-      parentReleaseObserved: state.parentReleaseObserved,
-      parentReleaseAccepted: state.parentReleaseAccepted,
-      parentReleaseLawful: state.parentReleaseLawful,
-      canvasParentReleaseGateReady: state.canvasParentReleaseGateReady,
-      parentAcceptedRouteConductorRelease: state.parentAcceptedRouteConductorRelease,
-      parentReleasePacketSentToEast: state.parentReleasePacketSentToEast,
-      parentReleasePacketLawful: state.parentReleasePacketLawful,
-      parentCorruptOrStale: state.parentCorruptOrStale,
-      parentAbsent: state.parentAbsent,
+      canvasLocalStationObserved: state.canvasLocalStationObserved,
+      canvasLocalStationContractKnown: state.canvasLocalStationContractKnown,
+      canvasLocalStationApiReady: state.canvasLocalStationApiReady,
+      canvasLocalStationContract: state.canvasLocalStationContract,
+      canvasLocalStationContractAccepted: state.canvasLocalStationContractAccepted,
+      canvasLocalStationSummaryObserved: state.canvasLocalStationSummaryObserved,
+      canvasLocalStationSummaryMethod: state.canvasLocalStationSummaryMethod,
+      currentCanvasParentObserved: state.currentCanvasParentObserved,
+      currentCanvasParentContract: state.currentCanvasParentContract,
+      currentCanvasParentIsLocalStation: state.currentCanvasParentIsLocalStation,
+      canvasLocalStationReleaseAccepted: state.canvasLocalStationReleaseAccepted,
+      canvasLocalStationReleaseLawful: state.canvasLocalStationReleaseLawful,
+      canvasLocalStationReleasePacketSentToEast: state.canvasLocalStationReleasePacketSentToEast,
+
+      westReleaseObserved: state.westReleaseObserved,
+      westDecision: state.westDecision,
+      westHardBlock: state.westHardBlock,
+      westCanvasReleaseApproved: state.westCanvasReleaseApproved,
+      canvasReleaseAuthorized: state.canvasReleaseAuthorized,
+      canvasReleasePacketReady: state.canvasReleasePacketReady,
 
       eastDispatchAuthorized: state.eastDispatchAuthorized,
       eastDispatchPacketPublished: state.eastDispatchPacketPublished,
@@ -3016,21 +2722,7 @@
       eastDispatchHandoffTo: state.eastDispatchHandoffTo,
       eastDispatchCycleNumber: state.eastDispatchCycleNumber,
       eastDispatchCycleRoute: state.eastDispatchCycleRoute,
-      eastDispatchParentContract: state.eastDispatchParentContract,
       eastDispatchTargetFile: state.eastDispatchTargetFile,
-      eastDispatchAtlasBuildRequested: state.eastDispatchAtlasBuildRequested,
-
-      routeConductorObserved: state.routeConductorObserved,
-      routeConductorContractObserved: state.routeConductorContractObserved,
-      routeConductorReceiptObserved: state.routeConductorReceiptObserved,
-      routeConductorCentralStationActive: state.routeConductorCentralStationActive,
-
-      westReleaseObserved: state.westReleaseObserved,
-      westAuditObserved: state.westAuditObserved,
-      westAuditPassed: state.westAuditPassed,
-      westAuditBlocked: state.westAuditBlocked,
-      westCanvasReleaseApproved: state.westCanvasReleaseApproved,
-      canvasReleaseAuthorized: state.canvasReleaseAuthorized,
 
       permissionClass: state.permissionClass,
       canvasEastMayBuildAtlas: state.canvasEastMayBuildAtlas,
@@ -3039,67 +2731,8 @@
       f13PermissionSource: state.f13PermissionSource,
 
       heldAtlasPacketReturned: state.heldAtlasPacketReturned,
-      synchronousHeldPacketActive: true,
       heldPacketWasSynchronous: state.heldPacketWasSynchronous,
       buildAtlasReturnedPromise: state.buildAtlasReturnedPromise,
-      heldDoesNotMeanApiMissing: true,
-
-      newsAlignmentProtocolActive: true,
-      newsChronologicalOrderLocked: true,
-      newsFinalizedByCanvasEast: false,
-      chronology: CHRONOLOGY.slice(),
-      chronologicalGateCount: state.chronologicalGateCount,
-      chronologicalGatesSatisfied: state.chronologicalGatesSatisfied,
-      chronologicalFirstFailedGate: state.chronologicalFirstFailedGate,
-      chronologicalFirstFailedCoordinate: state.chronologicalFirstFailedCoordinate,
-
-      fibonacciSynchronizationChronologyFirst: true,
-      fibonacciSynchronizationScore: state.fibonacciSynchronizationScore,
-      fibonacciSynchronizationExpected: 100,
-      fibonacciSynchronizationSatisfied: state.fibonacciSynchronizationSatisfied,
-      fibonacciSynchronizationPassed: state.fibonacciSynchronizationPassed,
-      fibonacciSynchronizationDegraded: state.fibonacciSynchronizationDegraded,
-      fibonacciSynchronizationHardFail: state.fibonacciSynchronizationHardFail,
-      fibonacciSynchronizationHoldReason: state.fibonacciSynchronizationHoldReason,
-
-      activeCycleNumber: state.activeCycleNumber,
-      activeCycleRoute: state.activeCycleRoute,
-      activeCardinal: state.activeCardinal,
-      activeFibonacciGate: ACTIVE_FIBONACCI_GATE,
-      activeF13EGate: F13E_GATE,
-      activeF13FGate: F13F_GATE,
-      futureFibonacciGate: FUTURE_FIBONACCI_GATE,
-      activeStageId: state.activeStageId,
-      activeGearId: state.activeGearId,
-      activeNewsGate: state.activeNewsGate,
-
-      indexGateReady: state.indexGateReady,
-      routeF8GateReady: state.routeF8GateReady,
-      macroWestGateReady: state.macroWestGateReady,
-      canvasParentGateReady: state.canvasParentGateReady,
-      canvasParentReleaseGateReady: state.canvasParentReleaseGateReady,
-      canvasParentEastDispatchGateReady: state.canvasParentEastDispatchGateReady,
-      canvasEastGateReady: state.canvasEastGateReady,
-      canvasEastEvidenceGateReady: state.canvasEastEvidenceGateReady,
-      canvasWestGateReady: state.canvasWestGateReady,
-      canvasSouthGateReady: state.canvasSouthGateReady,
-      canvasGateReady: false,
-      northGateReady: false,
-      newsGatePassedBeforeF21: false,
-      newsGateDegradedBeforeF21: false,
-
-      materialReceiptBridgeActive: state.materialReceiptBridgeActive,
-      materialNestedReceiptAvailable: state.materialNestedReceiptAvailable,
-      materialContract: state.materialContract,
-      materialReceipt: state.materialReceipt,
-      materialVersion: state.materialVersion,
-      materialRole: state.materialRole,
-      materialContractMatchesExpected: state.materialContractMatchesExpected,
-      materialReceiptMatchesExpected: state.materialReceiptMatchesExpected,
-      canonicalMaterialAuthorityPresent: state.canonicalMaterialAuthorityPresent,
-      canonicalMaterialConsumed: state.canonicalMaterialConsumed,
-      canvasEastDoesNotOwnMaterialTruth: true,
-      canvasStillDoesNotOwnPlanetTruth: true,
 
       atlasBuildRequested: state.atlasBuildRequested,
       atlasBuildStarted: state.atlasBuildStarted,
@@ -3118,16 +2751,34 @@
       atlasClassCount: state.atlasClassCount,
       atlasClasses: state.atlasClasses.slice(),
 
-      fallbackSampleAvailable: true,
-      fallbackSampleUsedAtRuntime: state.fallbackSampleUsedAtRuntime,
-      emergencyFallbackUsed: state.emergencyFallbackUsed,
-      elevationControlsLandShape: true,
-      hydrologyControlsWaterShape: true,
-      coastlinesReadFromHydrologyAndMaterials: true,
-
       f13SourceStageStarted: state.f13SourceStageStarted,
       f13SourceStageComplete: state.f13SourceStageComplete,
       f13AtlasPacketReady: state.f13AtlasPacketReady,
+
+      materialReceiptBridgeActive: state.materialReceiptBridgeActive,
+      materialContract: state.materialContract,
+      materialReceipt: state.materialReceipt,
+      materialAuthorityCached: state.materialAuthorityCached,
+      materialAuthorityScanCount: state.materialAuthorityScanCount,
+      materialAuthorityScanDuringAtlasLoopBlocked: true,
+      canonicalMaterialAuthorityPresent: state.canonicalMaterialAuthorityPresent,
+      canonicalMaterialConsumed: state.canonicalMaterialConsumed,
+      canvasEastDoesNotOwnMaterialTruth: true,
+      canvasStillDoesNotOwnPlanetTruth: true,
+
+      chronology: CHRONOLOGY.slice(),
+      chronologicalGateCount: state.chronologicalGateCount,
+      chronologicalGatesSatisfied: state.chronologicalGatesSatisfied,
+      chronologicalFirstFailedGate: state.chronologicalFirstFailedGate,
+      chronologicalFirstFailedCoordinate: state.chronologicalFirstFailedCoordinate,
+      fibonacciSynchronizationChronologyFirst: true,
+      fibonacciSynchronizationScore: state.fibonacciSynchronizationScore,
+      fibonacciSynchronizationExpected: state.fibonacciSynchronizationExpected,
+      fibonacciSynchronizationSatisfied: state.fibonacciSynchronizationSatisfied,
+      fibonacciSynchronizationPassed: state.fibonacciSynchronizationPassed,
+      fibonacciSynchronizationDegraded: state.fibonacciSynchronizationDegraded,
+      fibonacciSynchronizationHardFail: state.fibonacciSynchronizationHardFail,
+      fibonacciSynchronizationHoldReason: state.fibonacciSynchronizationHoldReason,
 
       firstFailedCoordinate: state.firstFailedCoordinate,
       recommendedNextFile: state.recommendedNextFile,
@@ -3143,20 +2794,16 @@
       ownsSynchronousHeldPacket: true,
       ownsSameRuntimeExposureBeacon: true,
 
-      ownsPlanetTruth: false,
-      ownsElevationTruth: false,
-      ownsHydrologyTruth: false,
-      ownsMaterialTruth: false,
-      ownsTextureComposition: false,
-      ownsSphereRendering: false,
-      ownsVisibleProof: false,
-      ownsRuntimeTableGovernance: false,
+      ownsNorthTimetableAuthority: false,
+      ownsMacroWestAdmissibility: false,
       ownsRouteOrchestration: false,
-      ownsNewsFinalization: false,
-      ownsCanvasRelease: false,
-      ownsWestAudit: false,
+      ownsCanvasLocalStationTruth: false,
+      ownsCanvasWestInspection: false,
+      ownsCanvasSouthVisibleProof: false,
+      ownsF13AggregateProof: false,
       ownsF21: false,
       ownsReadyText: false,
+      ownsCompletionLatch: false,
       ownsFinalVisualPassClaim: false,
 
       visibleProof: false,
@@ -3165,9 +2812,12 @@
       canvasReady: false,
       readyTextAllowed: false,
       f21EligibleForNorth: false,
+      f21SubmittedToNorth: false,
+      f21EligibilitySubmittedToNorth: false,
       f21ClaimedByCanvasEast: false,
-      readyTextClaimedByCanvasEast: false,
       completionLatched: false,
+      finalCompletionLatched: false,
+      degradedCompletionLatched: false,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -3183,13 +2833,15 @@
   function getReceipt() {
     return {
       ...getReceiptLight(false),
-      parentAuthorityProfile: clonePlain(state.lastParentAuthorityProfile),
-      eastDispatchState: clonePlain(state.lastDispatchPacket),
+      eastDiagnosticDataset: clonePlain(state.lastEastDiagnosticDataset),
+      upstreamDatasetProof: clonePlain(state.lastUpstreamDatasetProof),
+      routeConductorState: clonePlain(state.lastRouteConductorState),
+      canvasLocalStationSummary: clonePlain(state.lastCanvasLocalStationSummary),
       westReleaseState: clonePlain(state.lastWestReleaseState),
+      eastDispatchState: clonePlain(state.lastDispatchPacket),
       permissionPacket: clonePlain(state.lastPermissionPacket),
       heldAtlasPacket: clonePlain(state.lastHeldAtlasPacket),
       atlasPacket: clonePlain(state.lastAtlasPacket),
-      materialReceiptBridge: getMaterialBridgeReceipt({ sync: false }),
       localEvents: clonePlain(state.localEvents),
       errors: clonePlain(state.errors)
     };
@@ -3199,82 +2851,70 @@
     const r = getReceiptLight(false);
 
     return [
-      "HEARTH_CANVAS_EAST_SAME_RUNTIME_EXPOSURE_BEACON_API_PUBLICATION_RECEIPT",
+      "HEARTH_CANVAS_EAST_CURRENT_LOCAL_STATION_V11_1_API_PUBLICATION_RECEIPT",
       "",
       line("contract", r.contract),
       line("receipt", r.receipt),
       line("previousContract", r.previousContract),
       line("baselineContract", r.baselineContract),
-      line("legacyBaselineContract", r.legacyBaselineContract),
-      line("currentParentContract", r.currentParentContract),
-      line("routeConductorContract", r.routeConductorContract),
-      line("macroWestContract", r.macroWestContract),
-      line("version", r.version),
       line("file", r.file),
       line("parentFile", r.parentFile),
       line("routeFile", r.routeFile),
       line("macroWestFile", r.macroWestFile),
+      line("version", r.version),
       line("role", r.role),
       "",
-      line("sameRuntimeExposureBeaconActive", r.sameRuntimeExposureBeaconActive),
-      line("strictInitializationSafetyActive", r.strictInitializationSafetyActive),
-      line("undefinedStateReferenceCorrectionActive", r.undefinedStateReferenceCorrectionActive),
-      line("servedDetectionRepairActive", r.servedDetectionRepairActive),
-      line("parentV10_3DispatchRecognitionActive", r.parentV10_3DispatchRecognitionActive),
-      line("routeConductorV8_2AlignmentActive", r.routeConductorV8_2AlignmentActive),
-      line("macroWestV4_2ReleaseChainRecognized", r.macroWestV4_2ReleaseChainRecognized),
+      line("datasetSelfContaminationBlocked", r.datasetSelfContaminationBlocked),
+      line("materialAuthorityCachedForAtlasLoop", r.materialAuthorityCachedForAtlasLoop),
+      line("emptyContractFalseRecognitionBlocked", r.emptyContractFalseRecognitionBlocked),
+      line("routeConductorPermissionGateEnforced", r.routeConductorPermissionGateEnforced),
+      "",
+      line("activeCycleNumber", r.activeCycleNumber),
+      line("activeCycleRoute", r.activeCycleRoute),
+      line("activeCardinal", r.activeCardinal),
+      line("activeStageId", r.activeStageId),
+      line("activeGear", r.activeGear),
+      line("activeFibonacci", r.activeFibonacci),
+      line("activeNewsGate", r.activeNewsGate),
       "",
       line("apiSurfacePublished", r.apiSurfacePublished),
       line("aliasesPublished", r.aliasesPublished),
       line("datasetFirstProofPublished", r.datasetFirstProofPublished),
       line("receiptsPublished", r.receiptsPublished),
-      line("routeConductorNotificationAttempted", r.routeConductorNotificationAttempted),
-      line("routeConductorNotificationAccepted", r.routeConductorNotificationAccepted),
-      "",
       line("requiredApiSurfaceComplete", r.requiredApiSurfaceComplete),
-      line("buildAtlasAvailable", r.buildAtlasAvailable),
-      line("buildAtlasSyncAvailable", r.buildAtlasSyncAvailable),
-      line("buildAtlasAsyncAvailable", r.buildAtlasAsyncAvailable),
-      line("sampleAvailable", r.sampleAvailable),
-      line("readAvailable", r.readAvailable),
-      line("getReceiptAvailable", r.getReceiptAvailable),
-      line("receiveParentDispatchPacketAvailable", r.receiveParentDispatchPacketAvailable),
       line("canvasEastApiReady", r.canvasEastApiReady),
       line("canvasEastEvidenceReady", r.canvasEastEvidenceReady),
+      line("heldDoesNotMeanApiMissing", r.heldDoesNotMeanApiMissing),
       "",
-      line("canvasChildSequence", CANVAS_CHILD_SEQUENCE.join("__")),
-      line("activeCycleNumber", r.activeCycleNumber),
-      line("activeCycleRoute", r.activeCycleRoute),
-      line("activeCardinal", r.activeCardinal),
-      line("activeFibonacciGate", r.activeFibonacciGate),
-      line("activeF13EGate", r.activeF13EGate),
-      line("activeF13FGate", r.activeF13FGate),
+      line("routeConductorObserved", r.routeConductorObserved),
+      line("routeConductorContractKnown", r.routeConductorContractKnown),
+      line("routeConductorContractRecognized", r.routeConductorContractRecognized),
+      line("routeConductorV9_2Recognized", r.routeConductorV9_2Recognized),
+      line("macroWestObserved", r.macroWestObserved),
+      line("macroWestContractKnown", r.macroWestContractKnown),
+      line("macroWestContractRecognized", r.macroWestContractRecognized),
+      line("macroWestV4_6_3ReleaseRecognized", r.macroWestV4_6_3ReleaseRecognized),
       "",
-      line("parentObserved", r.parentObserved),
-      line("parentContract", r.parentContract),
-      line("currentParentIsV10_3", r.currentParentIsV10_3),
-      line("parentReleaseAccepted", r.parentReleaseAccepted),
-      line("parentReleaseLawful", r.parentReleaseLawful),
-      line("canvasParentReleaseGateReady", r.canvasParentReleaseGateReady),
-      line("parentAcceptedRouteConductorRelease", r.parentAcceptedRouteConductorRelease),
-      line("parentReleasePacketSentToEast", r.parentReleasePacketSentToEast),
-      line("parentReleasePacketLawful", r.parentReleasePacketLawful),
-      line("eastDispatchAuthorized", r.eastDispatchAuthorized),
-      line("eastDispatchPacketPublished", r.eastDispatchPacketPublished),
-      "",
-      line("eastDispatchPacketObserved", r.eastDispatchPacketObserved),
-      line("eastDispatchPacketValid", r.eastDispatchPacketValid),
-      line("eastDispatchPacketAccepted", r.eastDispatchPacketAccepted),
-      line("eastDispatchPacketSource", r.eastDispatchPacketSource),
-      line("eastDispatchReceivedFrom", r.eastDispatchReceivedFrom),
-      line("eastDispatchHandoffTo", r.eastDispatchHandoffTo),
-      line("eastDispatchCycleNumber", r.eastDispatchCycleNumber),
-      line("eastDispatchCycleRoute", r.eastDispatchCycleRoute),
-      line("eastDispatchTargetFile", r.eastDispatchTargetFile),
+      line("canvasLocalStationContract", r.canvasLocalStationContract),
+      line("canvasLocalStationContractKnown", r.canvasLocalStationContractKnown),
+      line("canvasLocalStationContractAccepted", r.canvasLocalStationContractAccepted),
+      line("canvasLocalStationApiReady", r.canvasLocalStationApiReady),
+      line("canvasLocalStationSummaryObserved", r.canvasLocalStationSummaryObserved),
+      line("currentCanvasParentIsLocalStation", r.currentCanvasParentIsLocalStation),
+      line("v10_3BaselineRecognizedOnly", r.v10_3BaselineRecognizedOnly),
+      line("canvasParentV10_3BaselineRecognized", r.canvasParentV10_3BaselineRecognized),
       "",
       line("westReleaseObserved", r.westReleaseObserved),
       line("westCanvasReleaseApproved", r.westCanvasReleaseApproved),
       line("canvasReleaseAuthorized", r.canvasReleaseAuthorized),
+      line("canvasReleasePacketReady", r.canvasReleasePacketReady),
+      "",
+      line("eastDispatchAuthorized", r.eastDispatchAuthorized),
+      line("eastDispatchPacketPublished", r.eastDispatchPacketPublished),
+      line("eastDispatchPacketObserved", r.eastDispatchPacketObserved),
+      line("eastDispatchPacketValid", r.eastDispatchPacketValid),
+      line("eastDispatchPacketAccepted", r.eastDispatchPacketAccepted),
+      line("eastDispatchPacketSource", r.eastDispatchPacketSource),
       "",
       line("permissionClass", r.permissionClass),
       line("canvasEastMayBuildAtlas", r.canvasEastMayBuildAtlas),
@@ -3283,9 +2923,14 @@
       line("f13PermissionSource", r.f13PermissionSource),
       "",
       line("heldAtlasPacketReturned", r.heldAtlasPacketReturned),
-      line("synchronousHeldPacketActive", r.synchronousHeldPacketActive),
       line("heldPacketWasSynchronous", r.heldPacketWasSynchronous),
-      line("heldDoesNotMeanApiMissing", r.heldDoesNotMeanApiMissing),
+      line("atlasBuildStarted", r.atlasBuildStarted),
+      line("atlasBuildComplete", r.atlasBuildComplete),
+      line("f13AtlasPacketReady", r.f13AtlasPacketReady),
+      "",
+      line("materialAuthorityCached", r.materialAuthorityCached),
+      line("materialAuthorityScanCount", r.materialAuthorityScanCount),
+      line("materialAuthorityScanDuringAtlasLoopBlocked", r.materialAuthorityScanDuringAtlasLoopBlocked),
       "",
       line("chronologicalGateCount", r.chronologicalGateCount),
       line("chronologicalGatesSatisfied", r.chronologicalGatesSatisfied),
@@ -3299,15 +2944,6 @@
       line("fibonacciSynchronizationHardFail", r.fibonacciSynchronizationHardFail),
       line("fibonacciSynchronizationHoldReason", r.fibonacciSynchronizationHoldReason),
       "",
-      line("atlasBuildRequested", r.atlasBuildRequested),
-      line("atlasBuildStarted", r.atlasBuildStarted),
-      line("atlasBuildProgress", r.atlasBuildProgress),
-      line("atlasBuildComplete", r.atlasBuildComplete),
-      line("atlasCanvasPresent", r.atlasCanvasPresent),
-      line("f13SourceStageStarted", r.f13SourceStageStarted),
-      line("f13SourceStageComplete", r.f13SourceStageComplete),
-      line("f13AtlasPacketReady", r.f13AtlasPacketReady),
-      "",
       line("firstFailedCoordinate", r.firstFailedCoordinate),
       line("recommendedNextFile", r.recommendedNextFile),
       line("recommendedNextRenewalTarget", r.recommendedNextRenewalTarget),
@@ -3319,8 +2955,8 @@
       line("canvasReady", false),
       line("readyTextAllowed", false),
       line("f21EligibleForNorth", false),
-      line("f21ClaimedByCanvasEast", false),
-      line("readyTextClaimedByCanvasEast", false),
+      line("f21SubmittedToNorth", false),
+      line("f21EligibilitySubmittedToNorth", false),
       line("completionLatched", false),
       line("generatedImage", false),
       line("graphicBox", false),
@@ -3338,13 +2974,15 @@
       state.updatedAt = nowIso();
 
       try {
+        readEastDiagnosticDataset();
+        readUpstreamDatasetProof();
         readRouteConductorProfile(options);
-        readParentAuthorityProfile(options);
+        readCanvasLocalStationSummary(options);
         readWestReleaseState(options);
         readParentEastDispatchPacket(options);
         resolveAtlasBuildPermission(options);
       } catch (error) {
-        recordError("BOOT_PROFILE_SCAN_FAILED_NONBLOCKING_AFTER_API_PUBLICATION", error, {
+        recordError("BOOT_SCAN_FAILED_NONBLOCKING_AFTER_API_PUBLICATION", error, {
           apiAlreadyPublished: true,
           canvasEastApiReady: true
         });
@@ -3353,14 +2991,14 @@
       recomputeChronology();
       publishApiSurface("boot-complete");
 
-      recordLocal("CANVAS_EAST_V11_1_SAME_RUNTIME_EXPOSURE_BEACON_BOOTED", {
+      recordLocal("CANVAS_EAST_V11_4_BOOTED", {
         file: FILE,
         contract: CONTRACT,
         receipt: RECEIPT,
-        baselineContract: BASELINE_CONTRACT,
         canvasEastApiReady: true,
         requiredApiSurfaceComplete: true,
         aliasesPublished: true,
+        routeConductorPermissionGateEnforced: true,
         firstFailedCoordinate: state.firstFailedCoordinate,
         visualPassClaimed: false
       });
@@ -3378,29 +3016,26 @@
     previousReceipt: PREVIOUS_RECEIPT,
     baselineContract: BASELINE_CONTRACT,
     baselineReceipt: BASELINE_RECEIPT,
-    legacyBaselineContract: LEGACY_BASELINE_CONTRACT,
-    legacyBaselineReceipt: LEGACY_BASELINE_RECEIPT,
-    compatibilityContract: COMPATIBILITY_CONTRACT,
-    compatibilityReceipt: COMPATIBILITY_RECEIPT,
-    currentParentContract: CURRENT_PARENT_CONTRACT,
-    currentParentReceipt: CURRENT_PARENT_RECEIPT,
-    routeConductorContract: ROUTE_CONDUCTOR_CONTRACT,
-    routeConductorReceipt: ROUTE_CONDUCTOR_RECEIPT,
-    macroWestContract: MACRO_WEST_CONTRACT,
-    version: VERSION,
+
+    routeConductorCurrentContract: ROUTE_CONDUCTOR_CURRENT_CONTRACT,
+    macroWestCurrentContract: MACRO_WEST_CURRENT_CONTRACT,
+    localStationV111Contract: LOCAL_STATION_V11_1_CONTRACT,
+    localStationV11Contract: LOCAL_STATION_V11_CONTRACT,
+    v10_3BaselineContract: V10_3_BASELINE_CONTRACT,
+
     file: FILE,
     parentFile: PARENT_FILE,
     routeFile: ROUTE_FILE,
     macroWestFile: MACRO_WEST_FILE,
     canvasWestFile: CANVAS_WEST_FILE,
     canvasSouthFile: CANVAS_SOUTH_FILE,
+    route: ROUTE,
+    version: VERSION,
 
     REQUIRED_METHODS,
-    PUBLIC_ALIAS_PATHS,
-    PUBLIC_NESTED_ALIAS_PATHS,
     CANVAS_CHILD_SEQUENCE,
-    PERMISSION,
     CHRONOLOGY,
+    PERMISSION,
 
     boot,
     init: boot,
@@ -3425,8 +3060,12 @@
     publishReceipts,
     notifyRouteConductor,
 
-    readParentAuthorityProfile,
-    readParentState: readParentAuthorityProfile,
+    readEastDiagnosticDataset,
+    readUpstreamDatasetProof,
+    readRouteConductorProfile,
+    readCanvasLocalStationSummary,
+    readParentAuthorityProfile: readCanvasLocalStationSummary,
+    readParentState: readCanvasLocalStationSummary,
     readParentEastDispatchPacket,
     readEastDispatchPacket: readParentEastDispatchPacket,
     readWestReleaseState,
@@ -3434,6 +3073,7 @@
     composeAtlasBuildPermissionPacket: resolveAtlasBuildPermission,
     composeHeldAtlasPacket,
     composeAtlasEvidencePacket,
+    refreshMaterialBridge,
 
     receiveParentDispatchPacket,
     receiveEastDispatchPacket: receiveParentDispatchPacket,
@@ -3442,28 +3082,20 @@
     receiveReleasePacket: receiveParentDispatchPacket,
     receiveCanvasParentPacket: receiveParentDispatchPacket,
 
-    getMaterialBridgeReceipt,
-    refreshMaterialBridge,
-    invalidateAtlas,
-
     getReceipt,
     getReceiptLight,
     getReceiptText,
 
+    currentLocalStationV11_1ApiPublicationActive: true,
     sameRuntimeExposureBeaconActive: true,
     strictInitializationSafetyActive: true,
-    undefinedStateReferenceCorrectionActive: true,
-    servedDetectionRepairActive: true,
-    parentV10_3DispatchRecognitionActive: true,
-    routeConductorV8_2AlignmentActive: true,
-    macroWestV4_2ReleaseChainRecognized: true,
-    earlyApiSurfaceActive: true,
-    aliasStationActive: true,
-    datasetFirstProofActive: true,
-    receiptFirstProofActive: true,
-    routeConductorNotificationActive: true,
-    synchronousHeldPacketActive: true,
-    atlasSourceActive: true,
+    noDuplicateRootIdentifier: true,
+    datasetSelfContaminationBlocked: true,
+    materialAuthorityCachedForAtlasLoop: true,
+    emptyContractFalseRecognitionBlocked: true,
+    routeConductorPermissionGateEnforced: true,
+    localStationV11OrV11_1CurrentPassActive: true,
+    v10_3BaselineRecognizedOnly: true,
 
     requiredApiSurfaceComplete: true,
     buildAtlasAvailable: true,
@@ -3482,6 +3114,7 @@
     canvasEastCurrent: true,
     canvasEastReady: true,
     canvasEastApiReady: true,
+    heldDoesNotMeanApiMissing: true,
 
     ownsSourceMaterialAtlas: true,
     ownsBuildAtlasMethod: true,
@@ -3492,20 +3125,16 @@
     ownsSynchronousHeldPacket: true,
     ownsSameRuntimeExposureBeacon: true,
 
-    ownsPlanetTruth: false,
-    ownsElevationTruth: false,
-    ownsHydrologyTruth: false,
-    ownsMaterialTruth: false,
-    ownsTextureComposition: false,
-    ownsSphereRendering: false,
-    ownsVisibleProof: false,
-    ownsRuntimeTableGovernance: false,
+    ownsNorthTimetableAuthority: false,
+    ownsMacroWestAdmissibility: false,
     ownsRouteOrchestration: false,
-    ownsNewsFinalization: false,
-    ownsCanvasRelease: false,
-    ownsWestAudit: false,
+    ownsCanvasLocalStationTruth: false,
+    ownsCanvasWestInspection: false,
+    ownsCanvasSouthVisibleProof: false,
+    ownsF13AggregateProof: false,
     ownsF21: false,
     ownsReadyText: false,
+    ownsCompletionLatch: false,
     ownsFinalVisualPassClaim: false,
 
     visibleProof: false,
@@ -3514,9 +3143,11 @@
     canvasReady: false,
     readyTextAllowed: false,
     f21EligibleForNorth: false,
-    f21ClaimedByCanvasEast: false,
-    readyTextClaimedByCanvasEast: false,
+    f21SubmittedToNorth: false,
+    f21EligibilitySubmittedToNorth: false,
     completionLatched: false,
+    finalCompletionLatched: false,
+    degradedCompletionLatched: false,
     generatedImage: false,
     graphicBox: false,
     webGL: false,
@@ -3533,20 +3164,19 @@
     publishAliasStation();
     publishDatasetFirstProof({ quiet: true });
     publishReceipts();
-    notifyRouteConductor("initial-same-runtime-exposure-before-any-scan");
+    notifyRouteConductor("initial-current-local-station-v11-4-api-publication-before-any-scan");
 
     try {
-      refreshMaterialBridge({ updateDataset: false });
+      refreshMaterialBridge({ force: true });
     } catch (materialError) {
       recordError("MATERIAL_BRIDGE_SYNC_NONBLOCKING_FAILURE_API_STILL_READY", materialError, {
-        apiAlreadyPublished: true,
-        canvasEastApiReady: true
+        apiAlreadyPublished: true
       });
     }
 
     boot({});
   } catch (error) {
-    recordError("CANVAS_EAST_V11_1_INITIALIZATION_GUARD_CAUGHT_AFTER_PUBLICATION", error, {
+    recordError("CANVAS_EAST_V11_4_INITIALIZATION_GUARD_CAUGHT_AFTER_PUBLICATION", error, {
       attemptedAliasPublication: true
     });
 

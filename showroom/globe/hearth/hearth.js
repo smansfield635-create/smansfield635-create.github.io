@@ -1,27 +1,25 @@
 // /showroom/globe/hearth/hearth.js
-// HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_TNT_v9_2
+// HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_TNT_v9_3
 // Full-file replacement.
 // Route Conductor / North Star completion-cycle governor only.
 // Purpose:
-// - Preserve v9_1 loop-risk correction.
-// - Add v9_2 pushed-summary API-readiness correction.
-// - Add v9_2 contract-gate override so v10_3 or any nonlocal-station contract cannot leak stale child coordinates.
-// - Consume Canvas Local Station summaries without redelivering release packets recursively.
-// - Treat v10_3 as recognized baseline only, never as accepted current Canvas Local Station.
-// - Require v11 / v11_1 for Canvas Local Station pass.
-// - Preserve read-only release packet getters.
-// - Preserve North Star authority, NEWS chronology, Fibonacci synchronization, Macro West boundary, Canvas release boundary, and F21 submission-only law.
+// - Preserve v9_2 North Star route-governance architecture.
+// - Repair Route Conductor overreach by disabling direct HTML control binding.
+// - Preserve passive DOM/control-surface observation without attaching duplicate click handlers.
+// - Replace active watchdog delivery loop with bounded passive observation.
+// - Prevent interval-based Canvas release redelivery.
+// - Preserve Canvas Local Station summary consumption, Macro West boundary, NEWS chronology, Fibonacci synchronization, and F21 submission-only law.
 // - Do not directly scan Canvas East / West / South children.
 // - Do not claim F21, ready text, completion latch, final visual pass, generated image, GraphicBox, or WebGL.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_TNT_v9_2";
-  const RECEIPT = "HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_RECEIPT_v9_2";
-  const PREVIOUS_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_TNT_v9_1";
+  const CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_TNT_v9_3";
+  const RECEIPT = "HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_RECEIPT_v9_3";
+  const PREVIOUS_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_TNT_v9_2";
   const BASELINE_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CENTRAL_STATION_SWITCHBOARD_WEST_V4_2_SOUTH_OUTPUT_ALIGNMENT_TNT_v8_2";
-  const VERSION = "2026-06-02.hearth-route-conductor-north-star-completion-cycle-governor-v9-2";
+  const VERSION = "2026-06-02.hearth-route-conductor-control-ownership-passive-watchdog-repair-v9-3";
 
   const FILE = "/showroom/globe/hearth/hearth.js";
   const ROUTE = "/showroom/globe/hearth/";
@@ -31,6 +29,9 @@
   const NORTH_FILE = "/assets/lab/runtime-table.js";
 
   const CANVAS_LOCAL_STATION_CONTRACTS = Object.freeze([
+    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_3_1",
+    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_3",
+    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_2",
     "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_1",
     "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11"
   ]);
@@ -72,6 +73,17 @@
     STATION_IDS.NORTH_F21
   ]);
 
+  const CONTROL_SELECTORS = Object.freeze([
+    "[data-hearth-copy-diagnostic]",
+    "[data-hearth-toggle-receipt]",
+    "[data-hearth-inspect-planet]",
+    "[data-hearth-collapse-cockpit]",
+    "[data-hearth-south-show-diagnostic-tab]"
+  ]);
+
+  const PASSIVE_WATCHDOG_INTERVAL_MS = 1800;
+  const PASSIVE_WATCHDOG_MAX_TICKS = 36;
+
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
   const api = {};
@@ -102,7 +114,7 @@
     version: VERSION,
     file: FILE,
     route: ROUTE,
-    role: "route-conductor-north-star-completion-cycle-governor",
+    role: "route-conductor-control-ownership-passive-watchdog-repair",
 
     routeConductorAuthorityCardinal: CARDINALS.NORTH,
     activeCycleInputCardinal: CARDINALS.SOUTH,
@@ -122,11 +134,30 @@
     canvasReleaseReentryGuardActive: true,
     readOnlyGetterDeliveryBlocked: true,
     v10_3BaselineRecognizedOnly: false,
-    v11OrV11_1RequiredForLocalStationPass: true,
+    v11OrLaterRequiredForLocalStationPass: true,
 
     pushedSummaryApiReadinessCorrectionActive: true,
     contractGateOverridesStaleChildCoordinates: true,
     nonLocalStationChildCoordinateTrustBlocked: true,
+
+    routeConductorControlBindingDisabled: true,
+    indexOwnsControlBinding: true,
+    routeConductorOwnsControlBinding: false,
+    routeConductorUsesPassiveControlObservation: true,
+    duplicateButtonHandlerRiskRemoved: true,
+    controlSurfacePassiveObservationActive: true,
+    controlSurfaceObserved: false,
+    controlSurfaceButtonsObserved: 0,
+    routeConductorControlListenersAttached: false,
+
+    watchdogPassiveObservationActive: true,
+    watchdogDeliveryLoopDisabled: true,
+    canvasReleaseIntervalRedeliveryDisabled: true,
+    refreshDeliveryBounded: true,
+    passiveWatchdogMaxTicks: PASSIVE_WATCHDOG_MAX_TICKS,
+    passiveWatchdogIntervalMs: PASSIVE_WATCHDOG_INTERVAL_MS,
+    htmlRebuildRequired: false,
+    indexRebuildRequired: false,
 
     newsAlignmentProtocolActive: true,
     newsChronologicalOrderLocked: true,
@@ -291,10 +322,11 @@
     booting: false,
     refsBound: false,
     watchdogTicks: 0,
+    passiveObservationTicks: 0,
     renderCount: 0,
     startedAt: "",
     updatedAt: "",
-    latestEvent: "HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_V9_2_LOADED",
+    latestEvent: "HEARTH_ROUTE_CONDUCTOR_V9_3_LOADED",
     localEvents: [],
     errors: [],
 
@@ -526,13 +558,52 @@
     root.__HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_SUMMARY_REQUIRED__ = true;
     root.__HEARTH_ROUTE_CONDUCTOR_CANVAS_SUMMARY_RECEIVER_AVAILABLE__ = true;
     root.__HEARTH_ROUTE_CONDUCTOR_CANVAS_RELEASE_REENTRY_GUARD_ACTIVE__ = true;
-    root.__HEARTH_ROUTE_CONDUCTOR_V9_2_PUSHED_SUMMARY_API_READINESS_CORRECTION__ = true;
-    root.__HEARTH_ROUTE_CONDUCTOR_V9_2_CONTRACT_GATE_OVERRIDE__ = true;
+    root.__HEARTH_ROUTE_CONDUCTOR_V9_3_CONTROL_BINDING_DISABLED__ = true;
+    root.__HEARTH_ROUTE_CONDUCTOR_V9_3_PASSIVE_WATCHDOG_ACTIVE__ = true;
+    root.__HEARTH_ROUTE_CONDUCTOR_V9_3_CANVAS_RELEASE_INTERVAL_REDELIVERY_DISABLED__ = true;
 
     state.routeConductorMarkerPresent = true;
     updateDataset();
 
     return true;
+  }
+
+  function observeControlSurface() {
+    if (!doc) {
+      state.controlSurfaceObserved = false;
+      state.controlSurfaceButtonsObserved = 0;
+      state.refsBound = false;
+      state.routeConductorControlListenersAttached = false;
+      return {
+        observed: false,
+        buttonsObserved: 0,
+        routeConductorControlBindingDisabled: true,
+        indexOwnsControlBinding: true,
+        routeConductorOwnsControlBinding: false
+      };
+    }
+
+    const controls = CONTROL_SELECTORS.map((selector) => doc.querySelector(selector)).filter(Boolean);
+
+    state.controlSurfaceObserved = controls.length > 0;
+    state.controlSurfaceButtonsObserved = controls.length;
+    state.refsBound = false;
+    state.routeConductorControlListenersAttached = false;
+
+    controls.forEach((node) => {
+      if (!node || !node.dataset) return;
+      node.dataset.hearthRouteConductorObservedPassive = "true";
+      node.dataset.hearthRouteConductorBound = "false";
+      node.dataset.hearthRouteConductorControlOwner = "index-js";
+    });
+
+    return {
+      observed: state.controlSurfaceObserved,
+      buttonsObserved: state.controlSurfaceButtonsObserved,
+      routeConductorControlBindingDisabled: true,
+      indexOwnsControlBinding: true,
+      routeConductorOwnsControlBinding: false
+    };
   }
 
   function scanDom() {
@@ -603,7 +674,7 @@
     const inspectFallbackReady = Boolean(copyDiagnosticReady || receiptToggleReady || diagnosticDockRestorable);
     const inspectStrictReady = Boolean(inspectModeAvailable && copyDiagnosticReady && receiptToggleReady);
 
-    bindControls();
+    observeControlSurface();
 
     return {
       mountPresent: Boolean(mount),
@@ -623,6 +694,7 @@
 
   function readIndexAuthority() {
     const apiRef = firstGlobal([
+      "HEARTH_INDEX_JS_API_REDECLARATION_CONTROL_BINDING_REPAIR",
       "HEARTH_INDEX_JS_TWO_FILE_NEWS_FIBONACCI_CARRIER_HOST_ALIGNMENT",
       "HEARTH_INDEX_RUNTIME_HOST",
       "HEARTH_INDEX_JS",
@@ -778,6 +850,7 @@
 
   function readMacroWestAuthority() {
     const apiRef = firstGlobal([
+      "LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_TIMETABLE_ALIGNED_LOCAL_ADMISSIBILITY_CLUTCH",
       "LAB_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_WEST",
       "HEARTH_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH",
       "LAB_RUNTIME_TABLE_WEST",
@@ -786,7 +859,6 @@
       "LAB_CARDINAL_RUNTIME_TABLE_WEST",
       "LAB_GAP_CLASSIFIER_WEST",
       "LAB_TRANSMISSION_GAP_CLASSIFIER_WEST",
-      "DEXTER_LAB.cycleAwareAdmissibilityClutchWest",
       "DEXTER_LAB.runtimeTableWest",
       "DEXTER_LAB.cardinalRuntimeTableWest",
       "DEXTER_LAB.gapClassifierWest",
@@ -867,6 +939,8 @@
       centralStationOverloadSuperseded: true,
       canvasLocalStationOwnsChildDistribution: true,
       routeConductorDirectCanvasChildScanRemoved: true,
+      routeConductorControlBindingDisabled: true,
+      watchdogDeliveryLoopDisabled: true,
 
       f21EligibleForNorth: false,
       completionLatched: false,
@@ -1070,7 +1144,8 @@
           activeCycleRoute: CYCLE_ROUTES.CYCLE_2,
           activeFibonacci: "F13N",
           canvasLocalStationOwnsChildDistribution: true,
-          routeConductorDirectCanvasChildScanRemoved: true
+          routeConductorDirectCanvasChildScanRemoved: true,
+          routeConductorControlBindingDisabled: true
         });
 
         const normalized = normalizeMacroWestResult(result, method, true, authority);
@@ -1496,7 +1571,7 @@
       canvasLocalStationContractAccepted: localContractAccepted,
       canvasBaselineV10_3Recognized: baselineV10_3Recognized,
       v10_3BaselineRecognizedOnly: Boolean(baselineV10_3Recognized && !localContractAccepted),
-      v11OrV11_1RequiredForLocalStationPass: true,
+      v11OrLaterRequiredForLocalStationPass: true,
       canvasParentBootMethodAvailable: Boolean(
         localContractAccepted &&
         (
@@ -1587,7 +1662,7 @@
     state.canvasLocalStationContractAccepted = canvas.currentCanvasParentIsLocalStation;
     state.canvasBaselineV10_3Recognized = canvas.canvasBaselineV10_3Recognized;
     state.v10_3BaselineRecognizedOnly = canvas.v10_3BaselineRecognizedOnly;
-    state.v11OrV11_1RequiredForLocalStationPass = true;
+    state.v11OrLaterRequiredForLocalStationPass = true;
     state.canvasLocalStationSummaryObserved = canvas.summaryObserved;
     state.canvasLocalStationSummaryMethod = methodName;
     state.canvasLocalStationPushedSummaryProof = canvas.pushedSummaryProof === true;
@@ -1668,7 +1743,9 @@
         f13StrictEvidenceGap: normalized.f13StrictEvidenceGap,
         staleChildCoordinateOverrideActive: normalized.staleChildCoordinateOverrideActive,
         noRefreshCalled: true,
-        noReleaseRedelivered: true
+        noReleaseRedelivered: true,
+        routeConductorControlBindingDisabled: true,
+        watchdogDeliveryLoopDisabled: true
       });
 
       publishGlobals("canvas-summary-receiver-nonrecursive-publication", false);
@@ -1825,6 +1902,11 @@
       routeConductorDirectCanvasChildScanRemoved: true,
       canvasReleaseReentryGuardActive: true,
       readOnlyGetterDeliveryBlocked: true,
+      routeConductorControlBindingDisabled: true,
+      indexOwnsControlBinding: true,
+      routeConductorOwnsControlBinding: false,
+      watchdogDeliveryLoopDisabled: true,
+      canvasReleaseIntervalRedeliveryDisabled: true,
 
       f21EligibleForNorth: false,
       f21SubmittedToNorth: false,
@@ -1946,7 +2028,9 @@
             accepted,
             currentCanvasParentContract: receipt.currentCanvasParentContract || receipt.contract || "",
             signature,
-            reentryGuardActive: true
+            reentryGuardActive: true,
+            deliveredByManualRefreshOnly: true,
+            intervalRedeliveryDisabled: true
           });
 
           return {
@@ -1990,7 +2074,9 @@
             accepted,
             currentCanvasParentContract: receipt.currentCanvasParentContract || receipt.contract || "",
             signature,
-            reentryGuardActive: true
+            reentryGuardActive: true,
+            deliveredByManualRefreshOnly: true,
+            intervalRedeliveryDisabled: true
           });
 
           return {
@@ -2391,13 +2477,32 @@
         canvasReleaseReentryGuardActive: true,
         readOnlyGetterDeliveryBlocked: true,
         v10_3BaselineRecognizedOnly: canvas.v10_3BaselineRecognizedOnly,
-        v11OrV11_1RequiredForLocalStationPass: true,
+        v11OrLaterRequiredForLocalStationPass: true,
         pushedSummaryApiReadinessCorrectionActive: true,
         contractGateOverridesStaleChildCoordinates: true,
         nonLocalStationChildCoordinateTrustBlocked: true,
         canvasSummaryReceiveInProgress: state.canvasSummaryReceiveInProgress,
         canvasReleaseDeliveryInProgress: state.canvasReleaseDeliveryInProgress,
         lastCanvasReleasePacketSignature: state.lastCanvasReleasePacketSignature,
+
+        routeConductorControlBindingDisabled: true,
+        indexOwnsControlBinding: true,
+        routeConductorOwnsControlBinding: false,
+        routeConductorUsesPassiveControlObservation: true,
+        duplicateButtonHandlerRiskRemoved: true,
+        controlSurfacePassiveObservationActive: true,
+        controlSurfaceObserved: state.controlSurfaceObserved,
+        controlSurfaceButtonsObserved: state.controlSurfaceButtonsObserved,
+        routeConductorControlListenersAttached: false,
+
+        watchdogPassiveObservationActive: true,
+        watchdogDeliveryLoopDisabled: true,
+        canvasReleaseIntervalRedeliveryDisabled: true,
+        refreshDeliveryBounded: true,
+        passiveWatchdogMaxTicks: PASSIVE_WATCHDOG_MAX_TICKS,
+        passiveObservationTicks: state.passiveObservationTicks,
+        htmlRebuildRequired: false,
+        indexRebuildRequired: false,
 
         newsAlignmentProtocolActive: true,
         newsChronologicalOrderLocked: true,
@@ -2572,7 +2677,7 @@
   }
 
   function composeFallbackPacket(error = null) {
-    const message = error && error.message ? error.message : safeString(error, "route-conductor-v9-2-fallback");
+    const message = error && error.message ? error.message : safeString(error, "route-conductor-v9-3-fallback");
 
     return {
       contract: CONTRACT,
@@ -2603,6 +2708,18 @@
       routeConductorFallbackUsed: true,
       routeConductorCompositionOk: false,
       routeConductorCompositionError: message,
+
+      routeConductorControlBindingDisabled: true,
+      indexOwnsControlBinding: true,
+      routeConductorOwnsControlBinding: false,
+      routeConductorUsesPassiveControlObservation: true,
+      duplicateButtonHandlerRiskRemoved: true,
+      watchdogPassiveObservationActive: true,
+      watchdogDeliveryLoopDisabled: true,
+      canvasReleaseIntervalRedeliveryDisabled: true,
+      refreshDeliveryBounded: true,
+      htmlRebuildRequired: false,
+      indexRebuildRequired: false,
 
       activeCycleNumber: 2,
       activeCycleRoute: CYCLE_ROUTES.CYCLE_2,
@@ -2706,6 +2823,9 @@
       fibonacciSynchronizationScore: p.fibonacciSynchronizationScore,
       fibonacciSynchronizationPassed: p.fibonacciSynchronizationPassed,
       fibonacciSynchronizationDegraded: p.fibonacciSynchronizationDegraded,
+      routeConductorControlBindingDisabled: true,
+      indexOwnsControlBinding: true,
+      watchdogDeliveryLoopDisabled: true,
       completionLatched: false,
       visualPassClaimed: false
     };
@@ -2805,16 +2925,28 @@
       "fibonacciSynchronizationDegraded",
       "fibonacciSynchronizationHardFail",
       "v10_3BaselineRecognizedOnly",
-      "v11OrV11_1RequiredForLocalStationPass",
+      "v11OrLaterRequiredForLocalStationPass",
       "pushedSummaryApiReadinessCorrectionActive",
       "contractGateOverridesStaleChildCoordinates",
-      "nonLocalStationChildCoordinateTrustBlocked"
+      "nonLocalStationChildCoordinateTrustBlocked",
+      "routeConductorControlBindingDisabled",
+      "indexOwnsControlBinding",
+      "routeConductorUsesPassiveControlObservation",
+      "duplicateButtonHandlerRiskRemoved",
+      "watchdogPassiveObservationActive",
+      "watchdogDeliveryLoopDisabled",
+      "canvasReleaseIntervalRedeliveryDisabled",
+      "refreshDeliveryBounded",
+      "htmlRebuildRequired",
+      "indexRebuildRequired"
     ];
 
     for (const key of boolKeys) {
       if (key in p) state[key] = p[key] === true;
     }
 
+    state.routeConductorOwnsControlBinding = false;
+    state.routeConductorControlListenersAttached = false;
     state.routeConductorAuthorityCardinal = CARDINALS.NORTH;
     state.activeCycleInputCardinal = CARDINALS.SOUTH;
     state.activeCycleHandoffTarget = p.activeCycleHandoffTarget || (p.canvasReleaseAuthorized ? CARDINALS.CANVAS : CARDINALS.WEST);
@@ -2886,6 +3018,27 @@
     return getReceiptLight(false);
   }
 
+  function observePassive(input = {}) {
+    state.passiveObservationTicks += 1;
+
+    const packet = composePrimaryPacket(input, { allowDelivery: false });
+    updateStateFromPacket(packet);
+
+    record("ROUTE_CONDUCTOR_PASSIVE_OBSERVATION", {
+      tick: state.passiveObservationTicks,
+      allowDelivery: false,
+      controlBindingDisabled: true,
+      canvasReleaseIntervalRedeliveryDisabled: true,
+      firstFailedCoordinate: packet.firstFailedCoordinate,
+      recommendedNextFile: packet.recommendedNextFile
+    });
+
+    scheduleRender();
+    publishGlobals("passive-observation-receipt-publication", false);
+
+    return getReceiptLight(false);
+  }
+
   function submitF21EligibilityToNorth(packet = {}) {
     if (!packet.f21EligibleForNorth) {
       return {
@@ -2927,7 +3080,7 @@
       activeFibonacci: "F21",
       activeCardinal: CARDINALS.NORTH,
       routeConductorAuthorityCardinal: CARDINALS.NORTH,
-      source: "hearth-route-conductor-north-star-completion-cycle-governor",
+      source: "hearth-route-conductor-control-ownership-passive-watchdog-repair",
       contract: CONTRACT,
       receipt: RECEIPT,
       f21EligibleForNorth: true,
@@ -2948,7 +3101,9 @@
         f13CanvasEvidenceComplete: packet.f13CanvasEvidenceComplete,
         f13HardFail: packet.f13HardFail,
         newsGatePassedBeforeF21: packet.newsGatePassedBeforeF21,
-        newsGateDegradedBeforeF21: packet.newsGateDegradedBeforeF21
+        newsGateDegradedBeforeF21: packet.newsGateDegradedBeforeF21,
+        routeConductorControlBindingDisabled: true,
+        watchdogDeliveryLoopDisabled: true
       }
     };
 
@@ -2999,50 +3154,6 @@
     }
   }
 
-  function bindControls() {
-    if (!doc) return;
-
-    if (refs.copyButton && refs.copyButton.dataset.hearthRouteConductorNorthStarBound !== "true") {
-      refs.copyButton.dataset.hearthRouteConductorNorthStarBound = "true";
-      refs.copyButton.addEventListener("click", copyDiagnostic);
-    }
-
-    if (refs.toggleButton && refs.toggleButton.dataset.hearthRouteConductorNorthStarBound !== "true") {
-      refs.toggleButton.dataset.hearthRouteConductorNorthStarBound = "true";
-      refs.toggleButton.addEventListener("click", () => {
-        const visible = refs.receiptBox ? refs.receiptBox.dataset.visible !== "true" : true;
-        if (refs.receiptBox) refs.receiptBox.dataset.visible = String(visible);
-        if (refs.receiptText) refs.receiptText.textContent = visible ? getReceiptText() : "";
-        if (refs.toggleButton) refs.toggleButton.textContent = visible ? "Hide receipt" : "Show receipt";
-      });
-    }
-
-    if (refs.inspectButton && refs.inspectButton.dataset.hearthRouteConductorNorthStarBound !== "true") {
-      refs.inspectButton.dataset.hearthRouteConductorNorthStarBound = "true";
-      refs.inspectButton.addEventListener("click", () => {
-        setInspectMode(!(doc.documentElement.dataset.hearthSouthPlanetInspect === "true"));
-      });
-    }
-
-    if (refs.collapseButton && refs.collapseButton.dataset.hearthRouteConductorNorthStarBound !== "true") {
-      refs.collapseButton.dataset.hearthRouteConductorNorthStarBound = "true";
-      refs.collapseButton.addEventListener("click", () => {
-        if (!refs.cockpit) return;
-        const current = refs.cockpit.dataset.cockpitMode || "diagnostic-dock";
-        const next = current === "expanded-cockpit" ? "diagnostic-dock" : "expanded-cockpit";
-        refs.cockpit.dataset.cockpitMode = next;
-        refs.collapseButton.textContent = next === "expanded-cockpit" ? "Dock cockpit" : "Expand cockpit";
-      });
-    }
-
-    if (refs.showTab && refs.showTab.dataset.hearthRouteConductorNorthStarBound !== "true") {
-      refs.showTab.dataset.hearthRouteConductorNorthStarBound = "true";
-      refs.showTab.addEventListener("click", () => setInspectMode(false));
-    }
-
-    state.refsBound = Boolean(refs.copyButton || refs.toggleButton || refs.inspectButton || refs.showTab || refs.collapseButton);
-  }
-
   function setInspectMode(active) {
     if (!doc) return getReceipt();
 
@@ -3062,7 +3173,12 @@
       refs.inspectButton.textContent = active ? "Show diagnostic" : "Inspect planet";
     }
 
-    record(active ? "INSPECT_MODE_ACTIVE" : "INSPECT_MODE_RELEASED", { active });
+    record(active ? "INSPECT_MODE_ACTIVE_BY_API" : "INSPECT_MODE_RELEASED_BY_API", {
+      active,
+      routeConductorDirectButtonBinding: false,
+      indexOwnsVisibleClickControl: true
+    });
+
     refresh();
 
     return getReceipt();
@@ -3086,17 +3202,9 @@
         area.remove();
       }
 
-      if (refs.copyButton) {
-        const prior = refs.copyButton.textContent || "Copy diagnostic";
-        refs.copyButton.textContent = "Copied";
-        root.setTimeout(() => {
-          refs.copyButton.textContent = prior;
-        }, 900);
-      }
-
       return true;
     } catch (error) {
-      recordError("COPY_DIAGNOSTIC_FAILED", error);
+      recordError("COPY_DIAGNOSTIC_API_FAILED", error);
       return false;
     }
   }
@@ -3107,6 +3215,7 @@
     const rows = [
       ["F1", "Index host", packet.carrierHostAdmissibilityReady ? "READY" : "WAITING"],
       ["F8", "North Star self-duty", packet.f8SelfDutySatisfied ? "COMPLETE" : "ACTIVE"],
+      ["CTL", "Control ownership", packet.routeConductorControlBindingDisabled ? "INDEX OWNS" : "CHECK"],
       ["W", "Macro West boundary", packet.westCanvasReleaseApproved ? "RELEASE" : packet.macroWestAdmissibilityObserved ? "HELD" : "WAITING"],
       ["C", "Canvas local station", packet.canvasLocalStationContractAccepted ? "LOCAL" : packet.v10_3BaselineRecognizedOnly ? "BASELINE" : packet.canvasLocalStationObserved ? "MISMATCH" : "WAITING"],
       ["API", "Summary API", packet.canvasLocalStationApiReady ? "READY" : "WAITING"],
@@ -3123,7 +3232,8 @@
         status === "RELEASE" ||
         status === "LOCAL" ||
         status === "ACCEPTED" ||
-        status === "DISPATCHED" ? 100 :
+        status === "DISPATCHED" ||
+        status === "INDEX OWNS" ? 100 :
           status === "DEGRADED" ? 82 :
             status === "ACTIVE" ? 56 :
               status === "HELD" ? 50 :
@@ -3186,10 +3296,8 @@
     setDataset("hearthRouteConductorPreviousContract", PREVIOUS_CONTRACT);
     setDataset("hearthRouteConductorBaselineContract", BASELINE_CONTRACT);
     setDataset("hearthRouteConductorVersion", VERSION);
-    setDataset("hearthRouteConductorV9_2Active", "true");
-    setDataset("hearthRouteConductorV9_1Superseded", "true");
-    setDataset("hearthRouteConductorV9Superseded", "true");
-    setDataset("hearthRouteConductorV8_2Superseded", "true");
+    setDataset("hearthRouteConductorV9_3Active", "true");
+    setDataset("hearthRouteConductorV9_2Superseded", "true");
 
     setDataset("hearthRouteConductorAuthorityCardinal", CARDINALS.NORTH);
     setDataset("hearthRouteConductorActiveCycleInputCardinal", CARDINALS.SOUTH);
@@ -3212,10 +3320,25 @@
     setDataset("hearthRouteConductorCanvasSummaryReceiveInProgress", String(state.canvasSummaryReceiveInProgress));
     setDataset("hearthRouteConductorLastCanvasReleasePacketSignature", state.lastCanvasReleasePacketSignature);
     setDataset("hearthRouteConductorV10_3BaselineRecognizedOnly", String(state.v10_3BaselineRecognizedOnly));
-    setDataset("hearthRouteConductorV11OrV11_1RequiredForLocalStationPass", "true");
+    setDataset("hearthRouteConductorV11OrLaterRequiredForLocalStationPass", "true");
     setDataset("hearthRouteConductorPushedSummaryApiReadinessCorrectionActive", "true");
     setDataset("hearthRouteConductorContractGateOverridesStaleChildCoordinates", "true");
     setDataset("hearthRouteConductorNonLocalStationChildCoordinateTrustBlocked", "true");
+
+    setDataset("hearthRouteConductorControlBindingDisabled", "true");
+    setDataset("hearthIndexOwnsControlBinding", "true");
+    setDataset("hearthRouteConductorOwnsControlBinding", "false");
+    setDataset("hearthRouteConductorUsesPassiveControlObservation", "true");
+    setDataset("hearthDuplicateButtonHandlerRiskRemoved", "true");
+    setDataset("hearthRouteConductorControlListenersAttached", "false");
+    setDataset("hearthControlSurfaceObserved", String(state.controlSurfaceObserved));
+    setDataset("hearthControlSurfaceButtonsObserved", String(state.controlSurfaceButtonsObserved));
+    setDataset("hearthWatchdogPassiveObservationActive", "true");
+    setDataset("hearthWatchdogDeliveryLoopDisabled", "true");
+    setDataset("hearthCanvasReleaseIntervalRedeliveryDisabled", "true");
+    setDataset("hearthRefreshDeliveryBounded", "true");
+    setDataset("hearthHtmlRebuildRequired", "false");
+    setDataset("hearthIndexRebuildRequired", "false");
 
     setDataset("hearthSouthIndexPairReady", String(state.indexPairReady));
     setDataset("hearthSouthCarrierHostAdmissibilityReady", String(state.carrierHostAdmissibilityReady));
@@ -3373,12 +3496,27 @@
       canvasReleaseReentryGuardActive: true,
       readOnlyGetterDeliveryBlocked: true,
       v10_3BaselineRecognizedOnly: state.v10_3BaselineRecognizedOnly,
-      v11OrV11_1RequiredForLocalStationPass: true,
+      v11OrLaterRequiredForLocalStationPass: true,
       pushedSummaryApiReadinessCorrectionActive: true,
       contractGateOverridesStaleChildCoordinates: true,
       nonLocalStationChildCoordinateTrustBlocked: true,
+
+      routeConductorControlBindingDisabled: true,
+      indexOwnsControlBinding: true,
+      routeConductorOwnsControlBinding: false,
+      routeConductorUsesPassiveControlObservation: true,
+      duplicateButtonHandlerRiskRemoved: true,
+      routeConductorControlListenersAttached: false,
+      watchdogPassiveObservationActive: true,
+      watchdogDeliveryLoopDisabled: true,
+      canvasReleaseIntervalRedeliveryDisabled: true,
+      refreshDeliveryBounded: true,
+      htmlRebuildRequired: false,
+      indexRebuildRequired: false,
+
       renderCount: state.renderCount,
       watchdogTicks: state.watchdogTicks,
+      passiveObservationTicks: state.passiveObservationTicks,
       booted: state.booted,
       booting: state.booting,
       latestEvent: state.latestEvent,
@@ -3418,7 +3556,7 @@
 
     return {
       ...clonePlain(packet),
-      authority: "hearth-route-conductor-north-star-completion-cycle-governor",
+      authority: "hearth-route-conductor-control-ownership-passive-watchdog-repair",
       status: "active",
       receiptComposed: true,
       currentReceipt: true,
@@ -3430,7 +3568,7 @@
     const r = isObject(receipt) ? receipt : getReceiptLight(false);
 
     return [
-      "HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_RECEIPT",
+      "HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_RECEIPT",
       "",
       line("contract", r.contract || CONTRACT),
       line("receipt", r.receipt || RECEIPT),
@@ -3440,6 +3578,28 @@
       line("file", r.file || FILE),
       line("route", r.route || ROUTE),
       line("role", r.role || state.role),
+      "",
+      "CONTROL_OWNERSHIP_REPAIR",
+      line("routeConductorControlBindingDisabled", true),
+      line("indexOwnsControlBinding", true),
+      line("routeConductorOwnsControlBinding", false),
+      line("routeConductorUsesPassiveControlObservation", true),
+      line("duplicateButtonHandlerRiskRemoved", true),
+      line("controlSurfacePassiveObservationActive", true),
+      line("controlSurfaceObserved", state.controlSurfaceObserved),
+      line("controlSurfaceButtonsObserved", state.controlSurfaceButtonsObserved),
+      line("routeConductorControlListenersAttached", false),
+      line("htmlRebuildRequired", false),
+      line("indexRebuildRequired", false),
+      "",
+      "WATCHDOG_REPAIR",
+      line("watchdogPassiveObservationActive", true),
+      line("watchdogDeliveryLoopDisabled", true),
+      line("canvasReleaseIntervalRedeliveryDisabled", true),
+      line("refreshDeliveryBounded", true),
+      line("passiveObservationTicks", state.passiveObservationTicks),
+      line("passiveWatchdogMaxTicks", PASSIVE_WATCHDOG_MAX_TICKS),
+      line("passiveWatchdogIntervalMs", PASSIVE_WATCHDOG_INTERVAL_MS),
       "",
       line("routeConductorAuthorityCardinal", r.routeConductorAuthorityCardinal || CARDINALS.NORTH),
       line("activeCycleInputCardinal", r.activeCycleInputCardinal || CARDINALS.SOUTH),
@@ -3462,7 +3622,7 @@
       line("contractGateOverridesStaleChildCoordinates", true),
       line("nonLocalStationChildCoordinateTrustBlocked", true),
       line("v10_3BaselineRecognizedOnly", r.v10_3BaselineRecognizedOnly === true),
-      line("v11OrV11_1RequiredForLocalStationPass", true),
+      line("v11OrLaterRequiredForLocalStationPass", true),
       line("canvasReleaseDeliveryInProgress", state.canvasReleaseDeliveryInProgress),
       line("canvasSummaryReceiveInProgress", state.canvasSummaryReceiveInProgress),
       "",
@@ -3612,6 +3772,10 @@
       line("activeCycleHandoffTarget", r.activeCycleHandoffTarget),
       line("cycleNumber", r.cycleNumber),
       line("cycleRoute", r.cycleRoute),
+      line("routeConductorControlBindingDisabled", r.routeConductorControlBindingDisabled),
+      line("indexOwnsControlBinding", r.indexOwnsControlBinding),
+      line("watchdogDeliveryLoopDisabled", r.watchdogDeliveryLoopDisabled),
+      line("canvasReleaseIntervalRedeliveryDisabled", r.canvasReleaseIntervalRedeliveryDisabled),
       line("northStarCompletionCycleGovernorActive", r.northStarCompletionCycleGovernorActive),
       line("directCanvasChildScanningRemoved", r.directCanvasChildScanningRemoved),
       line("receiveCanvasStationSummaryAvailable", r.receiveCanvasStationSummaryAvailable),
@@ -3679,18 +3843,21 @@
     root.HEARTH_SOUTH_ROUTE_CONDUCTOR = api;
     root.HEARTH_ROUTE_CONDUCTOR_PRIMARY_GATE = api;
     root.HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR = api;
+    root.HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR = api;
     root.HEARTH_ROUTE_CONDUCTOR_CENTRAL_STATION_SWITCHBOARD_WEST_V4_2_SOUTH_OUTPUT_ALIGNMENT = api;
 
     root.HEARTH.routeConductor = api;
     root.HEARTH.southRouteConductor = api;
     root.HEARTH.routeConductorPrimaryGate = api;
     root.HEARTH.routeConductorNorthStarCompletionCycleGovernor = api;
+    root.HEARTH.routeConductorControlOwnershipPassiveWatchdogRepair = api;
     root.HEARTH.routeConductorCentralStationSwitchboardWestV42SouthOutputAlignment = api;
 
     root.DEXTER_LAB.hearthRouteConductor = api;
     root.DEXTER_LAB.hearthSouthRouteConductor = api;
     root.DEXTER_LAB.hearthRouteConductorPrimaryGate = api;
     root.DEXTER_LAB.hearthRouteConductorNorthStarCompletionCycleGovernor = api;
+    root.DEXTER_LAB.hearthRouteConductorControlOwnershipPassiveWatchdogRepair = api;
     root.DEXTER_LAB.hearthRouteConductorCentralStationSwitchboardWestV42SouthOutputAlignment = api;
 
     const receiptLight = getReceiptLight(false);
@@ -3699,18 +3866,21 @@
     root.HEARTH_SOUTH_ROUTE_CONDUCTOR_RECEIPT = receiptLight;
     root.HEARTH_ROUTE_CONDUCTOR_PRIMARY_GATE_RECEIPT = receiptLight;
     root.HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_RECEIPT = receiptLight;
-    root.HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_RECEIPT_v9_2 = receiptLight;
+    root.HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_RECEIPT = receiptLight;
+    root.HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_RECEIPT_v9_3 = receiptLight;
     root.HEARTH_ROUTE_CONDUCTOR_CENTRAL_STATION_SWITCHBOARD_WEST_V4_2_SOUTH_OUTPUT_ALIGNMENT_RECEIPT = receiptLight;
 
     root.HEARTH.routeConductorReceipt = receiptLight;
     root.HEARTH.southRouteConductorReceipt = receiptLight;
     root.HEARTH.routeConductorPrimaryGateReceipt = receiptLight;
     root.HEARTH.routeConductorNorthStarCompletionCycleGovernorReceipt = receiptLight;
+    root.HEARTH.routeConductorControlOwnershipPassiveWatchdogRepairReceipt = receiptLight;
 
     root.DEXTER_LAB.hearthRouteConductorReceipt = receiptLight;
     root.DEXTER_LAB.hearthSouthRouteConductorReceipt = receiptLight;
     root.DEXTER_LAB.hearthRouteConductorPrimaryGateReceipt = receiptLight;
     root.DEXTER_LAB.hearthRouteConductorNorthStarCompletionCycleGovernorReceipt = receiptLight;
+    root.DEXTER_LAB.hearthRouteConductorControlOwnershipPassiveWatchdogRepairReceipt = receiptLight;
 
     if (state.currentCanvasReleasePacket && state.currentCanvasReleasePacket.canvasReleaseAuthorized) {
       root.HEARTH_ROUTE_CONDUCTOR_CANVAS_RELEASE_PACKET = clonePlain(state.currentCanvasReleasePacket);
@@ -3728,6 +3898,8 @@
       canvasReleaseReentryGuardActive: true,
       pushedSummaryApiReadinessCorrectionActive: true,
       contractGateOverridesStaleChildCoordinates: true,
+      routeConductorControlBindingDisabled: true,
+      watchdogDeliveryLoopDisabled: true,
       force: force === true
     });
 
@@ -3741,20 +3913,27 @@
     watchdogTimer = root.setInterval(() => {
       state.watchdogTicks += 1;
 
-      refresh();
+      observePassive();
 
       if (globalsNeedRepublish()) {
-        publishGlobals("watchdog-conditional-north-star-republish", false);
+        publishGlobals("watchdog-passive-conditional-north-star-republish", false);
       }
 
       if (
         (state.f13CanvasEvidenceStrict && state.f21EligibilitySubmittedToNorth) ||
-        state.watchdogTicks >= 120
+        state.watchdogTicks >= PASSIVE_WATCHDOG_MAX_TICKS
       ) {
         root.clearInterval(watchdogTimer);
         watchdogTimer = 0;
+
+        record("PASSIVE_WATCHDOG_STOPPED", {
+          watchdogTicks: state.watchdogTicks,
+          maxTicks: PASSIVE_WATCHDOG_MAX_TICKS,
+          deliveryLoopDisabled: true,
+          intervalRedeliveryDisabled: true
+        });
       }
-    }, 900);
+    }, PASSIVE_WATCHDOG_INTERVAL_MS);
   }
 
   function boot() {
@@ -3766,10 +3945,10 @@
       state.booting = true;
       state.startedAt = nowIso();
       state.updatedAt = state.startedAt;
-      state.postgameStatus = "BOOTING_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_V9_2";
+      state.postgameStatus = "BOOTING_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_V9_3";
 
       publishEarlyMarker();
-      publishGlobals("boot-early-north-star-api-receipt-publication", true);
+      publishGlobals("boot-early-north-star-v9-3-api-receipt-publication", true);
 
       refresh();
 
@@ -3777,13 +3956,13 @@
       state.booted = true;
       state.routeConductorRuntimeActive = true;
 
-      publishGlobals("boot-complete-north-star-api-receipt-publication", true);
-      refresh();
+      publishGlobals("boot-complete-north-star-v9-3-api-receipt-publication", true);
+      observePassive();
       render();
 
       startWatchdog();
 
-      record("HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_V9_2_BOOTED", {
+      record("HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_V9_3_BOOTED", {
         route: ROUTE,
         contract: CONTRACT,
         markerPresent: state.routeConductorMarkerPresent,
@@ -3794,6 +3973,12 @@
         canvasReleaseReentryGuardActive: true,
         pushedSummaryApiReadinessCorrectionActive: true,
         contractGateOverridesStaleChildCoordinates: true,
+        routeConductorControlBindingDisabled: true,
+        indexOwnsControlBinding: true,
+        duplicateButtonHandlerRiskRemoved: true,
+        watchdogPassiveObservationActive: true,
+        watchdogDeliveryLoopDisabled: true,
+        canvasReleaseIntervalRedeliveryDisabled: true,
         canvasLocalStationContract: state.canvasLocalStationContract,
         canvasLocalStationApiReady: state.canvasLocalStationApiReady,
         currentCanvasParentIsLocalStation: state.currentCanvasParentIsLocalStation,
@@ -3820,7 +4005,7 @@
       renderTimer = 0;
     }
 
-    record("HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_DISPOSED", { reason });
+    record("HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_V9_3_DISPOSED", { reason });
     render();
 
     return getReceipt();
@@ -3832,7 +4017,7 @@
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      cycleReceipt: "HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_CYCLE_RECEIPT_v9_2",
+      cycleReceipt: "HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_CYCLE_RECEIPT_v9_3",
       cycleNumber: packet.cycleNumber,
       cycleRoute: packet.cycleRoute,
       routeConductorAuthorityCardinal: packet.routeConductorAuthorityCardinal,
@@ -3846,6 +4031,10 @@
       readOnlyGetterDeliveryBlocked: true,
       pushedSummaryApiReadinessCorrectionActive: true,
       contractGateOverridesStaleChildCoordinates: true,
+      routeConductorControlBindingDisabled: true,
+      indexOwnsControlBinding: true,
+      watchdogDeliveryLoopDisabled: true,
+      canvasReleaseIntervalRedeliveryDisabled: true,
       canvasLocalStationContract: packet.canvasLocalStationContract,
       canvasLocalStationApiReady: packet.canvasLocalStationApiReady,
       currentCanvasParentContract: packet.currentCanvasParentContract,
@@ -3890,6 +4079,7 @@
     run: boot,
     dispose,
     refresh,
+    observePassive,
     render,
     setInspectMode,
     copyDiagnostic,
@@ -3934,6 +4124,8 @@
     composePrimaryPacket,
     composeReceipt,
 
+    observeControlSurface,
+    scanDom,
     globalsNeedRepublish,
     publishGlobals,
     updateDataset,
@@ -3952,6 +4144,10 @@
     supportsContractGateStaleChildCoordinateOverride: true,
     supportsF21EligibilitySubmissionOnly: true,
     supportsAntiFalseCompletionLaw: true,
+    supportsPassiveControlObservation: true,
+    supportsRouteConductorControlBindingDisabled: true,
+    supportsPassiveWatchdogObservation: true,
+    supportsCanvasReleaseIntervalRedeliveryDisabled: true,
 
     routeConductorAuthorityCardinal: CARDINALS.NORTH,
     activeCycleInputCardinal: CARDINALS.SOUTH,
@@ -3968,10 +4164,22 @@
     reconcileCanvasAvailable: true,
     canvasReleaseReentryGuardActive: true,
     readOnlyGetterDeliveryBlocked: true,
-    v11OrV11_1RequiredForLocalStationPass: true,
+    v11OrLaterRequiredForLocalStationPass: true,
     pushedSummaryApiReadinessCorrectionActive: true,
     contractGateOverridesStaleChildCoordinates: true,
     nonLocalStationChildCoordinateTrustBlocked: true,
+
+    routeConductorControlBindingDisabled: true,
+    indexOwnsControlBinding: true,
+    routeConductorOwnsControlBinding: false,
+    routeConductorUsesPassiveControlObservation: true,
+    duplicateButtonHandlerRiskRemoved: true,
+    watchdogPassiveObservationActive: true,
+    watchdogDeliveryLoopDisabled: true,
+    canvasReleaseIntervalRedeliveryDisabled: true,
+    refreshDeliveryBounded: true,
+    htmlRebuildRequired: false,
+    indexRebuildRequired: false,
 
     ownsRouteConductorRuntime: true,
     ownsNorthStarCompletionCycleGovernor: true,
@@ -3982,6 +4190,8 @@
     ownsCanvasLocalStationSummaryConsumption: true,
     ownsF21EligibilitySubmission: true,
 
+    ownsControlBinding: false,
+    ownsHtmlButtonHandlers: false,
     ownsCanvasLocalStation: false,
     ownsCanvasChildDistribution: false,
     ownsCanvasEastAtlasTruth: false,
@@ -4007,7 +4217,7 @@
   });
 
   publishEarlyMarker();
-  publishGlobals("immediate-north-star-v9-2-api-receipt-publication", true);
+  publishGlobals("immediate-north-star-v9-3-api-receipt-publication", true);
 
   if (doc) {
     if (doc.readyState === "loading") {

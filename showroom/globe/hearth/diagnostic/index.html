@@ -1,0 +1,1028 @@
+<!doctype html>
+<html
+  lang="en"
+  data-route="/showroom/globe/hearth/diagnostic/"
+  data-page="hearth-diagnostic-route"
+  data-contract="HEARTH_DIAGNOSTIC_ROUTE_PARALLEL_RAIL_RECEIVER_TNT_v1"
+  data-role="thin-diagnostic-route-receiver"
+  data-diagnostic-target="/showroom/globe/hearth/"
+  data-child-loading-mode="route-loads-child-assets-as-loading-convenience"
+  data-route-calls-north-only="true"
+  data-diagnostic-law-authority="north-parent-only"
+  data-production-mutation-authorized="false"
+  data-f13-claimed="false"
+  data-f21-claimed="false"
+  data-ready-text-claimed="false"
+  data-visual-pass-claimed="false"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-webgl="false"
+>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hearth Diagnostic Rail</title>
+  <meta
+    name="description"
+    content="Independent diagnostic receiver for the Hearth route. Loads the diagnostic rail child chain and calls NORTH only."
+  />
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #07090d;
+      --panel: rgba(255, 255, 255, 0.065);
+      --panel-strong: rgba(255, 255, 255, 0.1);
+      --line: rgba(255, 255, 255, 0.18);
+      --text: rgba(255, 255, 255, 0.94);
+      --muted: rgba(255, 255, 255, 0.68);
+      --soft: rgba(255, 255, 255, 0.48);
+      --warn: #ffd37a;
+      --bad: #ff9b9b;
+      --good: #9ef0c1;
+      --code: #0d1118;
+      --button: rgba(255, 255, 255, 0.12);
+      --button-hover: rgba(255, 255, 255, 0.18);
+      --focus: rgba(180, 220, 255, 0.75);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(116, 160, 255, 0.14), transparent 32rem),
+        radial-gradient(circle at 85% 0%, rgba(255, 190, 120, 0.1), transparent 28rem),
+        var(--bg);
+      color: var(--text);
+    }
+
+    body {
+      padding: 22px;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 12px;
+      top: -80px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: #fff;
+      color: #000;
+      z-index: 20;
+    }
+
+    .skip-link:focus {
+      top: 12px;
+    }
+
+    .shell {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+    }
+
+    .topbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .crumbs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .crumbs a,
+    .crumbs span {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 10px;
+      background: rgba(255, 255, 255, 0.04);
+      text-decoration: none;
+    }
+
+    .hero {
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 22px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.035));
+      box-shadow: 0 18px 70px rgba(0, 0, 0, 0.28);
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: 0.98;
+      letter-spacing: -0.055em;
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      font-size: 1.1rem;
+      letter-spacing: -0.025em;
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 0.98rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .hero-grid,
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 14px;
+    }
+
+    .hero-main {
+      grid-column: span 8;
+    }
+
+    .hero-side {
+      grid-column: span 4;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 15px;
+      background: var(--panel);
+      min-width: 0;
+    }
+
+    .panel.strong {
+      background: var(--panel-strong);
+    }
+
+    .span-12 {
+      grid-column: span 12;
+    }
+
+    .span-8 {
+      grid-column: span 8;
+    }
+
+    .span-6 {
+      grid-column: span 6;
+    }
+
+    .span-4 {
+      grid-column: span 4;
+    }
+
+    .span-3 {
+      grid-column: span 3;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    button,
+    .button-link {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: var(--button);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 11px 14px;
+      font: inherit;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+    }
+
+    button:hover,
+    .button-link:hover {
+      background: var(--button-hover);
+    }
+
+    button:focus-visible,
+    .button-link:focus-visible,
+    iframe:focus-visible,
+    textarea:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    button[disabled] {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
+
+    .status-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .status-row {
+      display: grid;
+      grid-template-columns: minmax(150px, 0.45fr) 1fr;
+      gap: 10px;
+      align-items: start;
+      border-top: 1px solid rgba(255, 255, 255, 0.11);
+      padding-top: 8px;
+      font-size: 0.93rem;
+    }
+
+    .status-row:first-child {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .key {
+      color: var(--soft);
+    }
+
+    .value {
+      color: var(--text);
+      overflow-wrap: anywhere;
+    }
+
+    .ok {
+      color: var(--good);
+    }
+
+    .warn {
+      color: var(--warn);
+    }
+
+    .bad {
+      color: var(--bad);
+    }
+
+    .mono,
+    pre,
+    textarea {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+
+    pre,
+    textarea {
+      width: 100%;
+      margin: 0;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 14px;
+      background: var(--code);
+      color: rgba(255, 255, 255, 0.9);
+      padding: 12px;
+      line-height: 1.45;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    textarea {
+      min-height: 280px;
+      resize: vertical;
+    }
+
+    .target-frame {
+      width: 100%;
+      min-height: 480px;
+      height: 52vh;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #030507;
+      display: block;
+    }
+
+    .small {
+      font-size: 0.88rem;
+      color: var(--soft);
+    }
+
+    .badge-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .badge {
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: 12px;
+      padding: 9px;
+      background: rgba(255, 255, 255, 0.045);
+      font-size: 0.86rem;
+      color: var(--muted);
+    }
+
+    .badge strong {
+      color: var(--text);
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .footer {
+      color: var(--soft);
+      padding: 18px 0 0;
+      font-size: 0.88rem;
+    }
+
+    @media (max-width: 860px) {
+      body {
+        padding: 14px;
+      }
+
+      .hero-main,
+      .hero-side,
+      .span-8,
+      .span-6,
+      .span-4,
+      .span-3 {
+        grid-column: span 12;
+      }
+
+      .status-row {
+        grid-template-columns: 1fr;
+        gap: 2px;
+      }
+
+      .badge-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip-link" href="#diagnostic-main">Skip to diagnostic controls</a>
+
+  <main class="shell" id="diagnostic-main">
+    <nav class="topbar" aria-label="Diagnostic navigation">
+      <div class="crumbs">
+        <a href="/">Compass</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/showroom/globe/">Globe</a>
+        <a href="/showroom/globe/hearth/">Hearth</a>
+        <span aria-current="page">Diagnostic Rail</span>
+      </div>
+      <a class="button-link" href="/showroom/globe/hearth/">Open Hearth route</a>
+    </nav>
+
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-grid">
+        <div class="hero-main">
+          <h1 id="page-title">Hearth Diagnostic Rail</h1>
+          <p>
+            Independent receiver for the Hearth diagnostic rail. This page loads EAST, WEST, SOUTH, and NORTH,
+            then calls NORTH only. It does not repair Hearth, mutate production files, select cases, or claim readiness.
+          </p>
+
+          <div class="controls" aria-label="Diagnostic controls">
+            <button id="runDiagnosticButton" type="button" data-run-diagnostic disabled>Run Diagnostic</button>
+            <button id="copyReportButton" type="button" data-copy-report disabled>Copy Report</button>
+            <button id="refreshStatusButton" type="button" data-refresh-status>Refresh Status</button>
+          </div>
+        </div>
+
+        <aside class="hero-side panel strong" aria-label="Boundary lock">
+          <h2>Receiver boundary</h2>
+          <div class="status-list">
+            <div class="status-row">
+              <div class="key">Route role</div>
+              <div class="value">Thin UI receiver</div>
+            </div>
+            <div class="status-row">
+              <div class="key">Execution authority</div>
+              <div class="value">NORTH only</div>
+            </div>
+            <div class="status-row">
+              <div class="key">Repair authority</div>
+              <div class="value bad">false</div>
+            </div>
+            <div class="status-row">
+              <div class="key">Visual pass claim</div>
+              <div class="value bad">false</div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="grid" aria-label="Diagnostic panels">
+      <section class="panel span-6" aria-labelledby="load-status-title">
+        <h2 id="load-status-title">Child-chain load status</h2>
+        <div class="status-list" id="loadStatusPanel" data-load-status-panel>
+          <div class="status-row">
+            <div class="key">EAST</div>
+            <div class="value warn">PENDING</div>
+          </div>
+          <div class="status-row">
+            <div class="key">WEST</div>
+            <div class="value warn">PENDING</div>
+          </div>
+          <div class="status-row">
+            <div class="key">SOUTH</div>
+            <div class="value warn">PENDING</div>
+          </div>
+          <div class="status-row">
+            <div class="key">NORTH</div>
+            <div class="value warn">PENDING</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel span-6" aria-labelledby="north-status-title">
+        <h2 id="north-status-title">NORTH receipt / route status</h2>
+        <div class="status-list" id="northStatusPanel" data-north-status-panel>
+          <div class="status-row">
+            <div class="key">NORTH API</div>
+            <div class="value warn">WAITING_FOR_LOAD</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel span-12" aria-labelledby="summary-title">
+        <h2 id="summary-title">Compact summary</h2>
+        <pre id="compactSummary" data-compact-summary>COMPACT_SUMMARY=NOT_RUN</pre>
+      </section>
+
+      <section class="panel span-12" aria-labelledby="packet-title">
+        <h2 id="packet-title">Full diagnostic packet</h2>
+        <textarea
+          id="packetOutput"
+          data-packet-output
+          spellcheck="false"
+          aria-label="Full diagnostic packet output"
+        >FULL_PACKET_TEXT=NOT_RUN</textarea>
+      </section>
+
+      <section class="panel span-8" aria-labelledby="target-title">
+        <h2 id="target-title">Diagnostic target frame</h2>
+        <p class="small">
+          The frame gives WEST a diagnostic-owned same-origin target when browser policy allows.
+          The frame is hosted by this diagnostic route. It does not mutate the Hearth route.
+        </p>
+        <iframe
+          id="hearthDiagnosticTargetFrame"
+          class="target-frame"
+          title="Hearth diagnostic target"
+          src="/showroom/globe/hearth/"
+          data-hearth-diagnostic-target-frame="true"
+          data-hearth-diagnostic-frame-hosted-by-route-receiver="true"
+          loading="eager"
+          referrerpolicy="same-origin"
+        ></iframe>
+      </section>
+
+      <aside class="panel span-4" aria-labelledby="field-title">
+        <h2 id="field-title">Layer checks</h2>
+        <div class="badge-grid">
+          <div class="badge">
+            <strong>Served source</strong>
+            EAST reads served contracts and script sources.
+          </div>
+          <div class="badge">
+            <strong>Rendered target</strong>
+            WEST reads target access, hit-test, blockers, and runtime state.
+          </div>
+          <div class="badge">
+            <strong>Output</strong>
+            SOUTH formats the packet after NORTH supplies final meaning.
+          </div>
+          <div class="badge">
+            <strong>Authority</strong>
+            NORTH selects the final case and recommendation.
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <footer class="footer">
+      Contract: HEARTH_DIAGNOSTIC_ROUTE_PARALLEL_RAIL_RECEIVER_TNT_v1.
+      This route claims no F13, no F21, no ready text, and no final visual pass.
+    </footer>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const CONTRACT = "HEARTH_DIAGNOSTIC_ROUTE_PARALLEL_RAIL_RECEIVER_TNT_v1";
+      const RECEIPT = "HEARTH_DIAGNOSTIC_ROUTE_PARALLEL_RAIL_RECEIVER_RECEIPT_v1";
+      const VERSION = "2026-06-02.hearth-diagnostic-route-parallel-rail-receiver-v1";
+
+      const TARGET_ROUTE = "/showroom/globe/hearth/";
+      const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
+
+      const CHILD_SCRIPTS = Object.freeze([
+        {
+          name: "EAST",
+          file: "/assets/hearth/hearth.diagnostic.east.js",
+          contract: "HEARTH_DIAGNOSTIC_RAIL_EAST_SERVED_SOURCE_EVIDENCE_TNT_v1",
+          globalPaths: [
+            "HEARTH.diagnosticEast",
+            "HEARTH.diagnosticRailEast",
+            "HEARTH_DIAGNOSTIC_EAST",
+            "HEARTH_DIAGNOSTIC_RAIL_EAST"
+          ]
+        },
+        {
+          name: "WEST",
+          file: "/assets/hearth/hearth.diagnostic.west.js",
+          contract: "HEARTH_DIAGNOSTIC_RAIL_WEST_RENDERED_TARGET_AUTHORITY_PROBE_TNT_v1",
+          globalPaths: [
+            "HEARTH.diagnosticWest",
+            "HEARTH.diagnosticRailWest",
+            "HEARTH_DIAGNOSTIC_WEST",
+            "HEARTH_DIAGNOSTIC_RAIL_WEST"
+          ]
+        },
+        {
+          name: "SOUTH",
+          file: "/assets/hearth/hearth.diagnostic.south.js",
+          contract: "HEARTH_DIAGNOSTIC_RAIL_SOUTH_REPORT_PACKET_OUTPUT_TNT_v1",
+          globalPaths: [
+            "HEARTH.diagnosticSouth",
+            "HEARTH.diagnosticRailSouth",
+            "HEARTH_DIAGNOSTIC_SOUTH",
+            "HEARTH_DIAGNOSTIC_RAIL_SOUTH"
+          ]
+        },
+        {
+          name: "NORTH",
+          file: "/assets/hearth/hearth.diagnostic.rail.js",
+          contract: "HEARTH_DIAGNOSTIC_RAIL_NORTH_PARENT_ORCHESTRATOR_TNT_v1",
+          globalPaths: [
+            "HEARTH.diagnosticRail",
+            "HEARTH.parallelDiagnosticRail",
+            "DEXTER_LAB.hearthDiagnosticRail",
+            "HEARTH_DIAGNOSTIC_RAIL",
+            "HEARTH_PARALLEL_DIAGNOSTIC_RAIL"
+          ]
+        }
+      ]);
+
+      const root = window;
+      const doc = document;
+
+      const state = {
+        contract: CONTRACT,
+        receipt: RECEIPT,
+        version: VERSION,
+        targetRoute: TARGET_ROUTE,
+        diagnosticRoute: DIAGNOSTIC_ROUTE,
+        childLoadingMode: "ROUTE_RECEIVER_LOADS_CHILD_ASSETS_AS_LOADING_CONVENIENCE",
+        routeReceiverCallsNorthOnly: true,
+        routeReceiverOwnsDiagnosticLaw: false,
+        routeReceiverOwnsRepair: false,
+        loadStatus: {},
+        northAvailable: false,
+        lastRunOk: false,
+        lastPacketText: "FULL_PACKET_TEXT=NOT_RUN",
+        lastCompactSummary: "COMPACT_SUMMARY=NOT_RUN",
+        lastError: "",
+        f21EligibleForNorth: false,
+        f21ClaimedByDiagnosticRail: false,
+        readyTextAllowed: false,
+        readyTextClaimedByDiagnosticRail: false,
+        visualPassClaimed: false,
+        generatedImage: false,
+        graphicBox: false,
+        webGL: false
+      };
+
+      const els = {
+        run: doc.getElementById("runDiagnosticButton"),
+        copy: doc.getElementById("copyReportButton"),
+        refresh: doc.getElementById("refreshStatusButton"),
+        loadStatus: doc.getElementById("loadStatusPanel"),
+        northStatus: doc.getElementById("northStatusPanel"),
+        summary: doc.getElementById("compactSummary"),
+        packet: doc.getElementById("packetOutput"),
+        frame: doc.getElementById("hearthDiagnosticTargetFrame")
+      };
+
+      function nowIso() {
+        try {
+          return new Date().toISOString();
+        } catch (_error) {
+          return "";
+        }
+      }
+
+      function isObject(value) {
+        return Boolean(value && typeof value === "object" && !Array.isArray(value));
+      }
+
+      function isFunction(value) {
+        return typeof value === "function";
+      }
+
+      function safeString(value, fallback = "") {
+        if (value === undefined || value === null) return fallback;
+        return String(value);
+      }
+
+      function bounded(value, limit = 1600) {
+        return safeString(value)
+          .replace(/\n/g, " ")
+          .replace(/\s+/g, " ")
+          .trim()
+          .slice(0, limit);
+      }
+
+      function readPath(base, path) {
+        try {
+          const parts = safeString(path).split(".");
+          let cursor = base;
+          for (const part of parts) {
+            if (!cursor || cursor[part] === undefined || cursor[part] === null) return null;
+            cursor = cursor[part];
+          }
+          return cursor || null;
+        } catch (_error) {
+          return null;
+        }
+      }
+
+      function setText(node, text) {
+        if (!node) return;
+        node.textContent = safeString(text);
+      }
+
+      function classForStatus(value) {
+        const text = safeString(value).toUpperCase();
+        if (text.includes("VALID") || text.includes("COMPLETE") || text.includes("LOADED") || text === "true") return "ok";
+        if (text.includes("FAILED") || text.includes("INVALID") || text.includes("ERROR") || text.includes("MISSING")) return "bad";
+        return "warn";
+      }
+
+      function row(key, value) {
+        const cls = classForStatus(value);
+        return `
+          <div class="status-row">
+            <div class="key">${escapeHtml(key)}</div>
+            <div class="value ${cls}">${escapeHtml(value)}</div>
+          </div>
+        `;
+      }
+
+      function escapeHtml(value) {
+        return safeString(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function findGlobal(paths) {
+        for (const path of paths) {
+          const found = readPath(root, path);
+          if (found && isObject(found)) return found;
+        }
+        return null;
+      }
+
+      function getNorth() {
+        return findGlobal([
+          "HEARTH.diagnosticRail",
+          "HEARTH.parallelDiagnosticRail",
+          "DEXTER_LAB.hearthDiagnosticRail",
+          "HEARTH_DIAGNOSTIC_RAIL",
+          "HEARTH_PARALLEL_DIAGNOSTIC_RAIL"
+        ]);
+      }
+
+      function childLoaded(child) {
+        return Boolean(findGlobal(child.globalPaths));
+      }
+
+      function renderLoadStatus() {
+        const html = CHILD_SCRIPTS.map((child) => {
+          const status = state.loadStatus[child.name] || "PENDING";
+          return row(`${child.name} · ${child.file}`, status);
+        }).join("");
+
+        els.loadStatus.innerHTML = html;
+      }
+
+      function renderNorthStatus() {
+        const north = getNorth();
+        state.northAvailable = Boolean(north && isFunction(north.runDiagnostic));
+
+        if (!north) {
+          els.northStatus.innerHTML = row("NORTH API", "NOT_FOUND");
+          els.run.disabled = true;
+          els.copy.disabled = !state.lastPacketText || state.lastPacketText === "FULL_PACKET_TEXT=NOT_RUN";
+          return;
+        }
+
+        let receipt = {};
+        try {
+          receipt = isFunction(north.getReceipt) ? north.getReceipt() : {};
+        } catch (error) {
+          receipt = { error: bounded(error && error.message ? error.message : error) };
+        }
+
+        const rows = [
+          row("NORTH API", state.northAvailable ? "AVAILABLE" : "FOUND_BUT_RUN_API_MISSING"),
+          row("contract", receipt.contract || north.contract || "UNKNOWN"),
+          row("childLoadingMode", receipt.childLoadingMode || "UNKNOWN"),
+          row("routeReceiverMustLoadChildrenBeforeRun", receipt.routeReceiverMustLoadChildrenBeforeRun),
+          row("northDynamicChildLoadingOwned", receipt.northDynamicChildLoadingOwned),
+          row("eastReceiptValid", receipt.eastReceiptValid || "NOT_RUN"),
+          row("westReceiptValid", receipt.westReceiptValid || "NOT_RUN"),
+          row("southReceiptValid", receipt.southReceiptValid || "NOT_RUN"),
+          row("eastEvidenceValid", receipt.eastEvidenceValid || "NOT_RUN"),
+          row("westEvidenceValid", receipt.westEvidenceValid || "NOT_RUN"),
+          row("southOutputValid", receipt.southOutputValid || "NOT_RUN"),
+          row("lastDiagnosticRunStatus", receipt.lastDiagnosticRunStatus || "NOT_RUN"),
+          row("lastPrimaryCase", receipt.lastPrimaryCase || "NOT_RUN"),
+          row("lastRecommendedNextAction", receipt.lastRecommendedNextAction || "NOT_RUN")
+        ];
+
+        els.northStatus.innerHTML = rows.join("");
+        els.run.disabled = !state.northAvailable;
+        els.copy.disabled = !state.lastPacketText || state.lastPacketText === "FULL_PACKET_TEXT=NOT_RUN";
+      }
+
+      function renderOutputs(summary, packet) {
+        state.lastCompactSummary = summary || state.lastCompactSummary;
+        state.lastPacketText = packet || state.lastPacketText;
+
+        setText(els.summary, state.lastCompactSummary || "COMPACT_SUMMARY=EMPTY");
+        els.packet.value = state.lastPacketText || "FULL_PACKET_TEXT=EMPTY";
+        els.copy.disabled = !state.lastPacketText || state.lastPacketText === "FULL_PACKET_TEXT=NOT_RUN";
+      }
+
+      function createScript(src) {
+        return new Promise((resolve) => {
+          const existing = doc.querySelector(`script[data-hearth-diagnostic-script="${src}"]`);
+          if (existing && existing.dataset.loadStatus === "loaded") {
+            resolve({ ok: true, status: "ALREADY_LOADED" });
+            return;
+          }
+
+          const script = existing || doc.createElement("script");
+          script.src = src;
+          script.async = false;
+          script.defer = false;
+          script.dataset.hearthDiagnosticScript = src;
+          script.dataset.loadStatus = "loading";
+
+          script.addEventListener("load", () => {
+            script.dataset.loadStatus = "loaded";
+            resolve({ ok: true, status: "LOADED" });
+          }, { once: true });
+
+          script.addEventListener("error", () => {
+            script.dataset.loadStatus = "failed";
+            resolve({ ok: false, status: "LOAD_FAILED" });
+          }, { once: true });
+
+          if (!existing) doc.head.appendChild(script);
+        });
+      }
+
+      async function loadChildChain() {
+        renderLoadStatus();
+
+        for (const child of CHILD_SCRIPTS) {
+          if (childLoaded(child)) {
+            state.loadStatus[child.name] = "ALREADY_AVAILABLE";
+            renderLoadStatus();
+            continue;
+          }
+
+          state.loadStatus[child.name] = "LOADING";
+          renderLoadStatus();
+
+          const result = await createScript(child.file);
+          const available = childLoaded(child);
+
+          state.loadStatus[child.name] = result.ok && available
+            ? "LOADED_AND_AVAILABLE"
+            : result.ok
+              ? "LOADED_BUT_GLOBAL_NOT_FOUND"
+              : "LOAD_FAILED";
+
+          renderLoadStatus();
+        }
+
+        renderNorthStatus();
+      }
+
+      async function runDiagnostic() {
+        const north = getNorth();
+
+        if (!north || !isFunction(north.runDiagnostic)) {
+          state.lastError = "NORTH_RUN_DIAGNOSTIC_API_NOT_AVAILABLE";
+          renderNorthStatus();
+          renderOutputs(
+            "PRIMARY_CASE=NOT_RUN\nERROR=NORTH_RUN_DIAGNOSTIC_API_NOT_AVAILABLE",
+            "PACKET_NAME=HEARTH_PARALLEL_DIAGNOSTIC_RAIL_RESULT_PACKET_v1\nPRIMARY_CASE=INCONCLUSIVE_EVIDENCE\nSECONDARY_EVIDENCE_NOTES=NORTH_RUN_DIAGNOSTIC_API_NOT_AVAILABLE"
+          );
+          return;
+        }
+
+        els.run.disabled = true;
+        els.run.textContent = "Running Diagnostic";
+
+        try {
+          const result = await north.runDiagnostic({
+            frameElement: els.frame,
+            allowSyntheticActivation: false,
+            northPermitsSyntheticActivation: false,
+            syntheticActivationPermittedByNorth: false,
+            includeOptionalTraceFields: true,
+            includeNoClaimFieldsInPacket: false
+          });
+
+          state.lastRunOk = Boolean(result && result.ok);
+
+          const packet = result && result.packetText
+            ? result.packetText
+            : isFunction(north.getPacketText)
+              ? north.getPacketText()
+              : "FULL_PACKET_TEXT=UNAVAILABLE";
+
+          const summary = result && result.compactSummary
+            ? result.compactSummary
+            : isFunction(north.getCompactSummary)
+              ? north.getCompactSummary()
+              : "COMPACT_SUMMARY=UNAVAILABLE";
+
+          renderOutputs(summary, packet);
+          renderNorthStatus();
+        } catch (error) {
+          const msg = bounded(error && error.message ? error.message : error);
+          state.lastError = msg;
+          renderOutputs(
+            `PRIMARY_CASE=INCONCLUSIVE_EVIDENCE\nERROR=${msg}`,
+            [
+              "PACKET_NAME=HEARTH_PARALLEL_DIAGNOSTIC_RAIL_RESULT_PACKET_v1",
+              "TARGET_ROUTE=/showroom/globe/hearth/",
+              "DIAGNOSTIC_ROUTE=/showroom/globe/hearth/diagnostic/",
+              `DIAGNOSTIC_TIMESTAMP=${nowIso()}`,
+              "PRIMARY_CASE=INCONCLUSIVE_EVIDENCE",
+              `SECONDARY_EVIDENCE_NOTES=ROUTE_RECEIVER_RUN_ERROR:${msg}`,
+              "RECOMMENDED_NEXT_OWNER=INSUFFICIENT_EVIDENCE",
+              "RECOMMENDED_NEXT_FILE=HOLD_FOR_TEACHER_REVIEW",
+              "RECOMMENDED_NEXT_ACTION=REVIEW_ROUTE_RECEIVER_OR_CHILD_LOAD_CHAIN"
+            ].join("\n")
+          );
+          renderNorthStatus();
+        } finally {
+          els.run.textContent = "Run Diagnostic";
+          renderNorthStatus();
+        }
+      }
+
+      async function copyReport() {
+        const text = els.packet.value || state.lastPacketText || "";
+
+        if (!text) return;
+
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(text);
+          } else {
+            els.packet.focus();
+            els.packet.select();
+            document.execCommand("copy");
+          }
+
+          els.copy.textContent = "Copied";
+          setTimeout(() => {
+            els.copy.textContent = "Copy Report";
+          }, 1200);
+        } catch (_error) {
+          els.copy.textContent = "Copy failed";
+          setTimeout(() => {
+            els.copy.textContent = "Copy Report";
+          }, 1400);
+        }
+      }
+
+      function getRouteReceipt() {
+        return {
+          contract: CONTRACT,
+          receipt: RECEIPT,
+          version: VERSION,
+          route: DIAGNOSTIC_ROUTE,
+          targetRoute: TARGET_ROUTE,
+          role: "thin-diagnostic-route-receiver",
+
+          routeReceiverLoadsChildAssetsAsLoadingConvenience: true,
+          routeReceiverCallsNorthOnly: true,
+          routeReceiverOwnsDiagnosticLaw: false,
+          routeReceiverOwnsEvidenceLaw: false,
+          routeReceiverOwnsClassificationLaw: false,
+          routeReceiverOwnsRecommendationLaw: false,
+          routeReceiverOwnsRepair: false,
+
+          eastChildLoadStatus: state.loadStatus.EAST || "PENDING",
+          westChildLoadStatus: state.loadStatus.WEST || "PENDING",
+          southChildLoadStatus: state.loadStatus.SOUTH || "PENDING",
+          northParentLoadStatus: state.loadStatus.NORTH || "PENDING",
+
+          northAvailable: state.northAvailable,
+          runDiagnosticControlPresent: Boolean(els.run),
+          copyReportControlPresent: Boolean(els.copy),
+          targetFramePresent: Boolean(els.frame),
+
+          productionMutationAuthorized: false,
+          hearthRepairClaimed: false,
+          f13Claimed: false,
+          f21EligibleForNorth: false,
+          f21ClaimedByDiagnosticRail: false,
+          readyTextAllowed: false,
+          readyTextClaimedByDiagnosticRail: false,
+          visualPassClaimed: false,
+          generatedImage: false,
+          graphicBox: false,
+          webGL: false,
+
+          updatedAt: nowIso()
+        };
+      }
+
+      function publishRouteReceiver() {
+        root.HEARTH = root.HEARTH || {};
+        root.DEXTER_LAB = root.DEXTER_LAB || {};
+
+        const api = Object.freeze({
+          contract: CONTRACT,
+          receipt: RECEIPT,
+          version: VERSION,
+          targetRoute: TARGET_ROUTE,
+          diagnosticRoute: DIAGNOSTIC_ROUTE,
+
+          loadChildChain,
+          runDiagnostic,
+          getRouteReceipt,
+          getState: () => JSON.parse(JSON.stringify(state)),
+
+          f21EligibleForNorth: false,
+          f21ClaimedByDiagnosticRail: false,
+          readyTextAllowed: false,
+          readyTextClaimedByDiagnosticRail: false,
+          visualPassClaimed: false,
+          generatedImage: false,
+          graphicBox: false,
+          webGL: false
+        });
+
+        root.HEARTH.diagnosticRouteReceiver = api;
+        root.HEARTH_DIAGNOSTIC_ROUTE_RECEIVER = api;
+        root.DEXTER_LAB.hearthDiagnosticRouteReceiver = api;
+
+        root.HEARTH_DIAGNOSTIC_ROUTE_RECEIVER_RECEIPT = getRouteReceipt();
+      }
+
+      els.run.addEventListener("click", runDiagnostic);
+      els.copy.addEventListener("click", copyReport);
+      els.refresh.addEventListener("click", () => {
+        renderLoadStatus();
+        renderNorthStatus();
+        publishRouteReceiver();
+      });
+
+      publishRouteReceiver();
+      renderLoadStatus();
+      renderNorthStatus();
+      renderOutputs(state.lastCompactSummary, state.lastPacketText);
+
+      loadChildChain().then(() => {
+        publishRouteReceiver();
+        renderNorthStatus();
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,12 +1,19 @@
 // /showroom/globe/hearth/index.js
 // HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4
 // Internal controlled renewal:
-// HEARTH_INDEX_JS_PAGE_RECEIPT_TARGET_BINDING_RENEWAL_TNT_v5_4_1
+// HEARTH_INDEX_JS_VISIBLE_EXPRESSION_CHAIN_LOADER_BRIDGE_TNT_v5_4_2
 // Full-file replacement.
-// Index JS / front-end button authority reset only.
+// Index JS / front-end button authority reset / visible-expression loader bridge only.
 // Served CONTRACT intentionally remains v5_4 to preserve HTML/EAST diagnostic expectations.
 // Supersedes internally:
-// - HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4 baseline behavior for receipt source only.
+// - HEARTH_INDEX_JS_PAGE_RECEIPT_TARGET_BINDING_RENEWAL_TNT_v5_4_1
+// Adds:
+// - Loads/recognizes the downstream visible-expression chain from the index bridge:
+//   1. /assets/hearth/hearth.hex.four-pair.authority.js
+//   2. /assets/hearth/hearth.hex.surface.js
+//   3. /assets/hearth/hearth.canvas.js
+// - Calls the Canvas Hub only through its public API: boot/init/start/mount.
+// - Publishes loader receipts proving whether the chain is served, loaded, and boot-attempted.
 // Preserves:
 // - visible Hearth front-end button and anchor functionality
 // - native navigation for diagnostic and portal anchors
@@ -18,9 +25,6 @@
 // - inspect/diagnostic dock
 // - cockpit expansion
 // - emergency diagnostic anchor
-// - runtime held
-// - canvas held
-// - route conductor handoff held
 // - diagnostic child-chain loading held
 // - F13 held
 // - F21 held
@@ -29,19 +33,16 @@
 // - GraphicBox false
 // - WebGL false
 // - visual pass false
-// Adds:
-// - Current HTML/page receipt target resolution before index receipt fallback.
-// - Copy diagnostic now copies the active page receipt when available.
-// - Show receipt now displays the active page receipt when available.
 // Does not own:
-// - runtime release
 // - canvas drawing
-// - route conductor handoff
-// - diagnostic child-chain loading
+// - hex truth
+// - hex surface truth
+// - route conductor systemic authority
+// - diagnostic child-chain authority
 // - F13
 // - F21
 // - final visual pass
-// - production repair beyond front-end button authority
+// - production repair beyond front-end button authority and downstream asset loading
 
 (() => {
   "use strict";
@@ -49,24 +50,63 @@
   const CONTRACT = "HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4";
   const RECEIPT = "HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_RECEIPT_v5_4";
   const PREVIOUS_CONTRACT = "HEARTH_INDEX_JS_CONTROL_SURFACE_EARLY_ACTIVATION_SHIELD_TNT_v5_3";
-  const RENEWAL_CONTRACT = "HEARTH_INDEX_JS_PAGE_RECEIPT_TARGET_BINDING_RENEWAL_TNT_v5_4_1";
-  const RENEWAL_RECEIPT = "HEARTH_INDEX_JS_PAGE_RECEIPT_TARGET_BINDING_RENEWAL_RECEIPT_v5_4_1";
-  const VERSION = "2026-06-03.hearth-index-js-page-receipt-target-binding-renewal-v5-4-1";
+
+  const PREVIOUS_RENEWAL_CONTRACT = "HEARTH_INDEX_JS_PAGE_RECEIPT_TARGET_BINDING_RENEWAL_TNT_v5_4_1";
+  const PREVIOUS_RENEWAL_RECEIPT = "HEARTH_INDEX_JS_PAGE_RECEIPT_TARGET_BINDING_RENEWAL_RECEIPT_v5_4_1";
+
+  const RENEWAL_CONTRACT = "HEARTH_INDEX_JS_VISIBLE_EXPRESSION_CHAIN_LOADER_BRIDGE_TNT_v5_4_2";
+  const RENEWAL_RECEIPT = "HEARTH_INDEX_JS_VISIBLE_EXPRESSION_CHAIN_LOADER_BRIDGE_RECEIPT_v5_4_2";
+  const VERSION = "2026-06-03.hearth-index-js-visible-expression-chain-loader-bridge-v5-4-2";
 
   const ROUTE = "/showroom/globe/hearth/";
   const FILE = "/showroom/globe/hearth/index.js";
   const HTML_FILE = "/showroom/globe/hearth/index.html";
   const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
 
-  const CURRENT_HTML_CONTRACT = "HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_RECEIPT_TARGET_RESTORATION_TNT_v2_6";
+  const CURRENT_HTML_CONTRACT = "HEARTH_HTML_PLANET_FACTORY_MIRRORLAND_PUBLIC_SHELL_TNT_v3";
+  const LINEAGE_HTML_CONTRACT = "HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_RECEIPT_TARGET_RESTORATION_TNT_v2_6";
   const PREVIOUS_HTML_CONTRACT = "HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_OPTIMAL_STANDARD_TNT_v2_5";
+
   const ACCEPTED_HTML_CONTRACTS = Object.freeze([
+    "HEARTH_HTML_PLANET_FACTORY_MIRRORLAND_PUBLIC_SHELL_TNT_v3",
     "HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_RECEIPT_TARGET_RESTORATION_TNT_v2_6",
     "HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_OPTIMAL_STANDARD_TNT_v2_5",
     "HEARTH_HTML_SINGLE_FLOATING_DIAGNOSTIC_DOORWAY_NO_DUPLICATE_TOP_BANNER_TNT_v2_4",
     "HEARTH_HTML_PARALLEL_DIAGNOSTIC_RAIL_TOP_PRIORITY_NATIVE_ACCESS_DOORWAY_TNT_v2_3",
     "HEARTH_HTML_PARALLEL_DIAGNOSTIC_RAIL_NATIVE_ACCESS_DOORWAY_TNT_v2_2",
     "HEARTH_HTML_CONTROL_SURFACE_CACHE_KEY_TOUCH_BINDING_REPAIR_TNT_v2_1"
+  ]);
+
+  const HEX_FOUR_PAIR_FILE = "/assets/hearth/hearth.hex.four-pair.authority.js";
+  const HEX_SURFACE_FILE = "/assets/hearth/hearth.hex.surface.js";
+  const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
+
+  const EXPECTED_HEX_FOUR_PAIR_CONTRACT = "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_TNT_v1";
+  const EXPECTED_HEX_SURFACE_CONTRACT = "HEARTH_HEX_SURFACE_FOUR_PAIR_AUTHORITY_CONSUMER_TNT_v1";
+  const EXPECTED_CANVAS_CONTRACT = "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_TNT_v12";
+
+  const ASSET_CHAIN = Object.freeze([
+    {
+      key: "hexFourPairAuthority",
+      file: HEX_FOUR_PAIR_FILE,
+      expectedContract: EXPECTED_HEX_FOUR_PAIR_CONTRACT,
+      globalLabel: "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY",
+      resolverName: "resolveHexFourPairAuthority"
+    },
+    {
+      key: "hexSurface",
+      file: HEX_SURFACE_FILE,
+      expectedContract: EXPECTED_HEX_SURFACE_CONTRACT,
+      globalLabel: "HEARTH_HEX_SURFACE",
+      resolverName: "resolveHexSurface"
+    },
+    {
+      key: "canvasHub",
+      file: CANVAS_FILE,
+      expectedContract: EXPECTED_CANVAS_CONTRACT,
+      globalLabel: "HEARTH_CANVAS",
+      resolverName: "resolveCanvasHub"
+    }
   ]);
 
   const root = typeof window !== "undefined" ? window : globalThis;
@@ -76,6 +116,8 @@
     contract: CONTRACT,
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
+    previousRenewalContract: PREVIOUS_RENEWAL_CONTRACT,
+    previousRenewalReceipt: PREVIOUS_RENEWAL_RECEIPT,
     renewalContract: RENEWAL_CONTRACT,
     renewalReceipt: RENEWAL_RECEIPT,
     version: VERSION,
@@ -84,8 +126,9 @@
     htmlFile: HTML_FILE,
     diagnosticRoute: DIAGNOSTIC_ROUTE,
 
-    role: "frontend-button-authority-reset-page-receipt-target-binding",
+    role: "frontend-button-authority-reset-visible-expression-chain-loader-bridge",
     currentHtmlContract: CURRENT_HTML_CONTRACT,
+    lineageHtmlContract: LINEAGE_HTML_CONTRACT,
     previousHtmlContract: PREVIOUS_HTML_CONTRACT,
     observedHtmlContract: "UNKNOWN",
     currentHtmlContractRecognized: false,
@@ -101,15 +144,60 @@
     directButtonBindingActive: true,
     delegatedButtonBindingActive: true,
     detailsSummaryBindingActive: true,
-    runtimeReleaseHeld: true,
-    diagnosticRailLoadedByIndex: false,
-    diagnosticRailOwnedByIndex: false,
 
     pageReceiptTargetBindingActive: true,
     pageReceiptAvailable: false,
     activeReceiptSource: "INDEX_FALLBACK",
     copiedReceiptSource: "NONE",
     shownReceiptSource: "NONE",
+
+    visibleExpressionChainLoaderBridgeActive: true,
+    visibleExpressionChainLoadStarted: false,
+    visibleExpressionChainLoadComplete: false,
+    visibleExpressionChainLoadHeld: false,
+    visibleExpressionChainLoadHeldReason: "NOT_RUN",
+    visibleExpressionChainLoadAttemptCount: 0,
+    visibleExpressionChainLoadCompleteCount: 0,
+    visibleExpressionChainLoadLastReason: "NOT_RUN",
+    visibleExpressionChainLoadLastError: "",
+    visibleExpressionChainLoadPromiseActive: false,
+
+    hexFourPairAuthorityFile: HEX_FOUR_PAIR_FILE,
+    hexSurfaceFile: HEX_SURFACE_FILE,
+    canvasFile: CANVAS_FILE,
+
+    hexFourPairAuthorityLoaded: false,
+    hexFourPairAuthorityContract: "UNKNOWN",
+    hexFourPairAuthorityContractRecognized: false,
+    hexFourPairAuthorityLoadStatus: "NOT_RUN",
+    hexFourPairAuthorityLoadError: "",
+
+    hexSurfaceLoaded: false,
+    hexSurfaceContract: "UNKNOWN",
+    hexSurfaceContractRecognized: false,
+    hexSurfaceLoadStatus: "NOT_RUN",
+    hexSurfaceLoadError: "",
+
+    canvasHubLoaded: false,
+    canvasHubContract: "UNKNOWN",
+    canvasHubContractRecognized: false,
+    canvasHubLoadStatus: "NOT_RUN",
+    canvasHubLoadError: "",
+
+    canvasBootAttempted: false,
+    canvasBootMethod: "NONE",
+    canvasBootResult: "NOT_RUN",
+    canvasBootError: "",
+    canvasLoadedByIndex: false,
+    canvasStartedByIndex: false,
+    canvasBootedByIndex: false,
+
+    routeConductorLoadedByIndex: false,
+    routeConductorHandoffByIndex: false,
+    routeConductorOwnedByIndex: false,
+
+    diagnosticRailLoadedByIndex: false,
+    diagnosticRailOwnedByIndex: false,
 
     copyDiagnosticBound: false,
     toggleReceiptBound: false,
@@ -144,7 +232,8 @@
     webGL: false,
 
     startedAt: "",
-    updatedAt: ""
+    updatedAt: "",
+    events: []
   };
 
   const refs = {
@@ -175,6 +264,7 @@
   const boundElements = typeof WeakSet !== "undefined" ? new WeakSet() : null;
   let lastActivationKey = "";
   let lastActivationAt = 0;
+  let visibleExpressionChainPromise = null;
 
   function nowIso() {
     try {
@@ -195,6 +285,17 @@
   function safeString(value, fallback = "") {
     if (value === undefined || value === null) return fallback;
     return String(value);
+  }
+
+  function safeBool(value, fallback = false) {
+    if (typeof value === "boolean") return value;
+    if (value === true || value === 1 || value === "1" || value === "true" || value === "TRUE") return true;
+    if (value === false || value === 0 || value === "0" || value === "false" || value === "FALSE") return false;
+    return fallback;
+  }
+
+  function isObject(value) {
+    return Boolean(value && typeof value === "object" && !Array.isArray(value));
   }
 
   function isElement(value) {
@@ -246,6 +347,80 @@
     node.textContent = safeString(text);
   }
 
+  function trimEvents() {
+    if (state.events.length > 80) {
+      state.events.splice(0, state.events.length - 80);
+    }
+  }
+
+  function record(event, detail = {}) {
+    const item = {
+      at: nowIso(),
+      event: safeString(event, "HEARTH_INDEX_EVENT"),
+      detail: clonePlain(detail)
+    };
+
+    state.events.push(item);
+    trimEvents();
+    state.updatedAt = item.at;
+    return item;
+  }
+
+  function clonePlain(value) {
+    if (!isObject(value) && !Array.isArray(value)) return value;
+    try {
+      return JSON.parse(JSON.stringify(value));
+    } catch (_error) {
+      return Array.isArray(value) ? value.slice() : Object.assign({}, value);
+    }
+  }
+
+  function readPath(path) {
+    const parts = safeString(path).split(".");
+    let cursor = root;
+
+    for (const part of parts) {
+      if (!cursor || cursor[part] === undefined || cursor[part] === null) return null;
+      cursor = cursor[part];
+    }
+
+    return cursor || null;
+  }
+
+  function getContract(value) {
+    if (!isObject(value)) return "UNKNOWN";
+
+    let receipt = null;
+
+    const methods = ["getReceipt", "getReceiptLight", "getStatus", "getCanvasStationReceiptLight", "getCanvasStationReceipt"];
+
+    for (const method of methods) {
+      if (!isFunction(value[method])) continue;
+      try {
+        const result = value[method]();
+        if (isObject(result)) {
+          receipt = result;
+          break;
+        }
+      } catch (_error) {}
+    }
+
+    return safeString(
+      (receipt && (receipt.contract || receipt.CONTRACT || receipt.currentContract)) ||
+      value.contract ||
+      value.CONTRACT ||
+      value.currentContract ||
+      "UNKNOWN",
+      "UNKNOWN"
+    );
+  }
+
+  function contractMatches(actual, expected) {
+    const a = safeString(actual, "");
+    const e = safeString(expected, "");
+    return Boolean(a && e && a === e);
+  }
+
   function cleanReceiptText(value) {
     return safeString(value)
       .replace(/\r\n/g, "\n")
@@ -260,12 +435,13 @@
   }
 
   function isIndexReceiptText(value) {
-    const first = firstReceiptLine(value);
+    const text = cleanReceiptText(value);
+    const first = firstReceiptLine(text);
+
     return (
       first === "HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_RECEIPT" ||
       first === RECEIPT ||
-      cleanReceiptText(value).includes(`contract=${CONTRACT}`) &&
-      cleanReceiptText(value).includes(`file=${FILE}`)
+      (text.includes(`contract=${CONTRACT}`) && text.includes(`file=${FILE}`))
     );
   }
 
@@ -278,6 +454,7 @@
     return (
       first.startsWith("HEARTH_HTML_") ||
       text.includes("target=/showroom/globe/hearth/index.html") ||
+      text.includes("pageContext=Planet Factory · Mirrorland Formation Site") ||
       text.includes("pageContext=Planet Engine and Planetary Template Development page") ||
       text.includes("visiblePlanetMountRequired=true") ||
       text.includes("htmlOwnsPublicShell=true")
@@ -400,7 +577,10 @@
     refs.toggleReceiptButton = qs("[data-hearth-toggle-receipt]");
     refs.inspectButton = qs("[data-hearth-inspect-planet]");
     refs.collapseButton = qs("[data-hearth-collapse-cockpit]");
-    refs.showDiagnosticTab = qs("[data-hearth-south-show-diagnostic-tab]") || qs("[data-hearth-east-show-diagnostic-tab]") || qs("[data-hearth-show-diagnostic-tab]");
+    refs.showDiagnosticTab =
+      qs("[data-hearth-south-show-diagnostic-tab]") ||
+      qs("[data-hearth-east-show-diagnostic-tab]") ||
+      qs("[data-hearth-show-diagnostic-tab]");
     refs.diagnosticAnchors = qsa("a[href='/showroom/globe/hearth/diagnostic/'], a[data-hearth-diagnostic-rail-native-anchor], a[data-hearth-diagnostic-rail-field]");
     refs.portalLinks = qsa("#hearthMapPortal a[href], [data-hearth-map-portal] a[href], .portal-link[href]");
     refs.summaries = qsa("details.drawer > summary, details > summary");
@@ -411,6 +591,7 @@
     refs.progressPercent = qs("[data-hearth-main-progress-percent]");
 
     refs.htmlReceiptTargets = uniqueElements([
+      qs("#hearth-html-planet-factory-mirrorland-public-shell-receipt"),
       qs("#hearth-html-planet-engine-template-development-receipt-target-restoration-receipt"),
       qs("#hearth-html-planet-engine-template-development-optimal-standard-receipt"),
       qs("#hearth-html-single-floating-diagnostic-doorway-no-duplicate-top-banner-receipt"),
@@ -442,6 +623,7 @@
 
     const dataset = doc.documentElement.dataset;
     const contract = dataset.contract || dataset.hearthHtmlContract || dataset.hearthShellContract || "";
+
     if (!contract || !safeString(contract).startsWith("HEARTH_HTML_")) return "";
 
     return [
@@ -451,10 +633,13 @@
       line("target", HTML_FILE),
       line("pageAlias", dataset.pageAlias || dataset.hearthAlias || "Hearth"),
       line("pageContext", dataset.pageContext || "UNKNOWN"),
+      line("planetFactoryPage", dataset.planetFactoryPage || "UNKNOWN"),
       line("planetEnginePage", dataset.planetEnginePage || "UNKNOWN"),
-      line("planetaryTemplateDevelopmentPage", dataset.planetaryTemplateDevelopmentPage || "UNKNOWN"),
+      line("worldFormationStandardPage", dataset.worldFormationStandardPage || "UNKNOWN"),
       line("visiblePlanetStagePrimary", dataset.visiblePlanetStagePrimary || "UNKNOWN"),
       line("visiblePlanetMountRequired", dataset.visiblePlanetMountRequired || "UNKNOWN"),
+      line("mount", dataset.mount || "#hearthCanvasMount"),
+      line("globeStage", dataset.globeStage || "#hearthGlobeStage"),
       line("htmlOwnsPublicShell", dataset.htmlOwnsPublicShell || "UNKNOWN"),
       line("htmlOwnsPlanetMount", dataset.htmlOwnsPlanetMount || "UNKNOWN"),
       line("htmlOwnsRuntime", dataset.htmlOwnsRuntime || "false"),
@@ -503,6 +688,7 @@
     }
 
     const datasetReceipt = composeDatasetReceipt();
+
     if (isPageReceiptText(datasetReceipt)) {
       return {
         ok: true,
@@ -572,8 +758,23 @@
         -webkit-user-select: auto !important;
       }
 
-      #hearthCanvasMount[data-hearth-canvas-mount] {
+      #hearthCanvasMount[data-hearth-canvas-mount],
+      #hearthCanvasMount,
+      [data-hearth-canvas-mount] {
+        position: relative;
         z-index: 2;
+        min-height: 320px;
+      }
+
+      #hearthReceiptPanel[data-visible="true"],
+      [data-hearth-receipt-box][data-visible="true"] {
+        display: block !important;
+        visibility: visible !important;
+      }
+
+      #hearthReceiptPanel[data-visible="false"],
+      [data-hearth-receipt-box][data-visible="false"] {
+        display: none !important;
       }
 
       #hearthDiagnosticRailEmergencyAnchor {
@@ -629,7 +830,7 @@
   function bindOnce(element, type, handler, options) {
     if (!element || !isFunction(element.addEventListener)) return false;
 
-    const key = `__hearth_${CONTRACT}_${type}`;
+    const key = `__hearth_${CONTRACT}_${RENEWAL_CONTRACT}_${type}`;
     if (element[key]) return false;
 
     try {
@@ -681,10 +882,12 @@
     bindOnce(element, "click", (event) => {
       const keyboardClick = Number(event.detail || 0) === 0;
       const key = `${actionName}:click`;
+
       if (!keyboardClick && shouldIgnoreDuplicate(key)) {
         stopForButton(event);
         return;
       }
+
       stopForButton(event);
       callback(event);
     }, { capture: true, passive: false });
@@ -827,6 +1030,11 @@
     refs.receiptPanel.dataset.visible = String(visible);
     refs.receiptPanel.hidden = false;
 
+    try {
+      refs.receiptPanel.style.display = visible ? "block" : "none";
+      refs.receiptPanel.style.visibility = visible ? "visible" : "visible";
+    } catch (_error) {}
+
     const resolved = resolveActiveReceiptText();
 
     if (refs.receiptText) {
@@ -871,6 +1079,7 @@
     if (state.inspectModeActive) {
       state.inspectPlanetCount += 1;
       state.cockpitMode = "planet-inspect";
+      startVisibleExpressionChainBridge("inspectPlanet");
       markAction("inspectPlanet");
     } else {
       state.showDiagnosticCount += 1;
@@ -906,6 +1115,422 @@
     return true;
   }
 
+  function resolveHexFourPairAuthority() {
+    const candidates = [
+      readPath("HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY"),
+      readPath("HEARTH_HEX_FOUR_PAIR_AUTHORITY"),
+      readPath("HEARTH_HEX_PIXEL_HANDSHAKE_AUTHORITY"),
+      readPath("HEARTH_HEX_HANDSHAKE_AUTHORITY"),
+      readPath("HEARTH_HEXGRID_AUTHORITY"),
+      readPath("HEARTH.hexFourPairAuthority"),
+      readPath("HEARTH.hexAuthority")
+    ];
+
+    return candidates.find((candidate) => (
+      isObject(candidate) &&
+      (
+        isFunction(candidate.sample) ||
+        isFunction(candidate.read) ||
+        isFunction(candidate.getCell) ||
+        isFunction(candidate.wideProbe) ||
+        isFunction(candidate.getReceipt)
+      )
+    )) || null;
+  }
+
+  function resolveHexSurface() {
+    const candidates = [
+      readPath("HEARTH_HEX_SURFACE"),
+      readPath("HEARTH_HEX_SURFACE_FOUR_PAIR_AUTHORITY_CONSUMER"),
+      readPath("HEARTH.hexSurface"),
+      readPath("HEARTH.hexSurfaceConsumer")
+    ];
+
+    return candidates.find((candidate) => (
+      isObject(candidate) &&
+      (
+        isFunction(candidate.drawHearthHexSurfaceFrame) ||
+        isFunction(candidate.drawFrame) ||
+        isFunction(candidate.getHearthHexSurfaceStatus) ||
+        isFunction(candidate.getStatus) ||
+        isFunction(candidate.getReceipt)
+      )
+    )) || null;
+  }
+
+  function resolveCanvasHub() {
+    const candidates = [
+      readPath("HEARTH_CANVAS"),
+      readPath("HEARTH_CANVAS_PARENT"),
+      readPath("HEARTH_CANVAS_AUTHORITY"),
+      readPath("HEARTH_CANVAS_LOCAL_STATION"),
+      readPath("HEARTH_CANVAS_STATION"),
+      readPath("HEARTH_CANVAS_EXPRESSION_HUB"),
+      readPath("HEARTH_CANVAS_FINGER_MANAGER"),
+      readPath("HEARTH_CANVAS_VISIBLE_BASE_GLOBE_CARRIER"),
+      readPath("HEARTH.canvas"),
+      readPath("HEARTH.canvasParent"),
+      readPath("HEARTH.canvasLocalStation"),
+      readPath("HEARTH.canvasStation"),
+      readPath("HEARTH.canvasExpressionHub"),
+      readPath("HEARTH.canvasVisibleBaseGlobeCarrier"),
+      readPath("DEXTER_LAB.hearthCanvas"),
+      readPath("DEXTER_LAB.hearthCanvasParent"),
+      readPath("DEXTER_LAB.hearthCanvasLocalStation"),
+      readPath("DEXTER_LAB.hearthCanvasStation"),
+      readPath("DEXTER_LAB.hearthCanvasExpressionHub"),
+      readPath("DEXTER_LAB.hearthCanvasVisibleBaseGlobeCarrier")
+    ];
+
+    return candidates.find((candidate) => (
+      isObject(candidate) &&
+      (
+        isFunction(candidate.boot) ||
+        isFunction(candidate.init) ||
+        isFunction(candidate.start) ||
+        isFunction(candidate.mount) ||
+        isFunction(candidate.drawBaseGlobe) ||
+        isFunction(candidate.getReceipt) ||
+        isFunction(candidate.getCanvasStationReceipt)
+      )
+    )) || null;
+  }
+
+  function resolverForKey(key) {
+    if (key === "hexFourPairAuthority") return resolveHexFourPairAuthority;
+    if (key === "hexSurface") return resolveHexSurface;
+    if (key === "canvasHub") return resolveCanvasHub;
+    return () => null;
+  }
+
+  function updateAssetState(key, authority, extra = {}) {
+    const loaded = Boolean(authority);
+    const actualContract = loaded ? getContract(authority) : "UNKNOWN";
+
+    if (key === "hexFourPairAuthority") {
+      state.hexFourPairAuthorityLoaded = loaded;
+      state.hexFourPairAuthorityContract = actualContract;
+      state.hexFourPairAuthorityContractRecognized = contractMatches(actualContract, EXPECTED_HEX_FOUR_PAIR_CONTRACT);
+      state.hexFourPairAuthorityLoadStatus = loaded ? "LOADED_AND_AVAILABLE" : (extra.status || state.hexFourPairAuthorityLoadStatus || "NOT_FOUND");
+      state.hexFourPairAuthorityLoadError = extra.error || "";
+    }
+
+    if (key === "hexSurface") {
+      state.hexSurfaceLoaded = loaded;
+      state.hexSurfaceContract = actualContract;
+      state.hexSurfaceContractRecognized = contractMatches(actualContract, EXPECTED_HEX_SURFACE_CONTRACT);
+      state.hexSurfaceLoadStatus = loaded ? "LOADED_AND_AVAILABLE" : (extra.status || state.hexSurfaceLoadStatus || "NOT_FOUND");
+      state.hexSurfaceLoadError = extra.error || "";
+    }
+
+    if (key === "canvasHub") {
+      state.canvasHubLoaded = loaded;
+      state.canvasHubContract = actualContract;
+      state.canvasHubContractRecognized = contractMatches(actualContract, EXPECTED_CANVAS_CONTRACT);
+      state.canvasHubLoadStatus = loaded ? "LOADED_AND_AVAILABLE" : (extra.status || state.canvasHubLoadStatus || "NOT_FOUND");
+      state.canvasHubLoadError = extra.error || "";
+      state.canvasLoadedByIndex = loaded;
+    }
+
+    publishDataset();
+    return loaded;
+  }
+
+  function refreshVisibleExpressionChainState() {
+    updateAssetState("hexFourPairAuthority", resolveHexFourPairAuthority());
+    updateAssetState("hexSurface", resolveHexSurface());
+    updateAssetState("canvasHub", resolveCanvasHub());
+
+    state.visibleExpressionChainLoadComplete = Boolean(
+      state.hexFourPairAuthorityLoaded &&
+      state.hexSurfaceLoaded &&
+      state.canvasHubLoaded
+    );
+
+    if (state.visibleExpressionChainLoadComplete) {
+      state.visibleExpressionChainLoadHeld = false;
+      state.visibleExpressionChainLoadHeldReason = "NONE";
+    }
+
+    publishDataset();
+    return getVisibleExpressionChainReceipt();
+  }
+
+  function assetScriptId(file) {
+    return `hearth-index-visible-expression-loader-${safeString(file).replace(/[^a-zA-Z0-9]+/g, "-")}`;
+  }
+
+  function assetScriptSrc(file, cacheKey) {
+    const separator = safeString(file).includes("?") ? "&" : "?";
+    return `${file}${separator}v=${encodeURIComponent(cacheKey || RENEWAL_CONTRACT)}`;
+  }
+
+  function existingScriptForFile(file) {
+    if (!doc) return null;
+    const scripts = qsa("script[src]");
+    return scripts.find((script) => safeString(script.getAttribute("src")).includes(file)) || null;
+  }
+
+  function loadScriptForAsset(asset) {
+    return new Promise((resolve) => {
+      if (!doc || !doc.head) {
+        resolve({ ok: false, status: "DOCUMENT_HEAD_NOT_AVAILABLE", error: "document.head unavailable" });
+        return;
+      }
+
+      const resolver = resolverForKey(asset.key);
+      const already = resolver();
+
+      if (already) {
+        updateAssetState(asset.key, already, { status: "ALREADY_AVAILABLE" });
+        resolve({ ok: true, status: "ALREADY_AVAILABLE", authority: already });
+        return;
+      }
+
+      const existing = existingScriptForFile(asset.file);
+
+      if (existing && existing.dataset && existing.dataset.hearthIndexVisibleExpressionLoaded === "true") {
+        const authority = resolver();
+        updateAssetState(asset.key, authority, { status: authority ? "EXISTING_SCRIPT_AVAILABLE" : "EXISTING_SCRIPT_NO_AUTHORITY" });
+        resolve({ ok: Boolean(authority), status: authority ? "EXISTING_SCRIPT_AVAILABLE" : "EXISTING_SCRIPT_NO_AUTHORITY", authority });
+        return;
+      }
+
+      const script = existing || doc.createElement("script");
+
+      script.id = script.id || assetScriptId(asset.file);
+      script.async = false;
+      script.defer = false;
+      script.dataset.hearthIndexVisibleExpressionLoader = RENEWAL_CONTRACT;
+      script.dataset.hearthIndexVisibleExpressionAssetKey = asset.key;
+      script.dataset.hearthIndexVisibleExpressionAssetFile = asset.file;
+      script.dataset.hearthIndexVisibleExpressionExpectedContract = asset.expectedContract;
+
+      const done = (ok, status, error = "") => {
+        const authority = resolver();
+
+        if (script.dataset) {
+          script.dataset.hearthIndexVisibleExpressionLoaded = String(Boolean(authority));
+          script.dataset.hearthIndexVisibleExpressionLoadStatus = status;
+          script.dataset.hearthIndexVisibleExpressionLoadError = error;
+          script.dataset.hearthIndexVisibleExpressionActualContract = authority ? getContract(authority) : "UNKNOWN";
+        }
+
+        updateAssetState(asset.key, authority, { status, error });
+
+        resolve({
+          ok: Boolean(ok && authority),
+          status,
+          error,
+          authority: authority || null,
+          actualContract: authority ? getContract(authority) : "UNKNOWN"
+        });
+      };
+
+      script.onload = () => {
+        root.setTimeout(() => {
+          const authority = resolver();
+          done(Boolean(authority), authority ? "SCRIPT_LOADED_AUTHORITY_AVAILABLE" : "SCRIPT_LOADED_AUTHORITY_NOT_FOUND", authority ? "" : "authority global not found after script load");
+        }, 0);
+      };
+
+      script.onerror = () => {
+        done(false, "SCRIPT_LOAD_ERROR", `failed to load ${asset.file}`);
+      };
+
+      if (!existing) {
+        script.src = assetScriptSrc(asset.file, RENEWAL_CONTRACT);
+        doc.head.appendChild(script);
+      } else {
+        root.setTimeout(() => {
+          const authority = resolver();
+          done(Boolean(authority), authority ? "EXISTING_SCRIPT_AUTHORITY_AVAILABLE" : "EXISTING_SCRIPT_AUTHORITY_NOT_FOUND", authority ? "" : "existing script present but authority global not found");
+        }, 0);
+      }
+    });
+  }
+
+  async function loadVisibleExpressionChain(reason = "boot") {
+    state.visibleExpressionChainLoadStarted = true;
+    state.visibleExpressionChainLoadAttemptCount += 1;
+    state.visibleExpressionChainLoadLastReason = safeString(reason, "boot");
+    state.visibleExpressionChainLoadPromiseActive = true;
+    state.visibleExpressionChainLoadHeld = false;
+    state.visibleExpressionChainLoadHeldReason = "LOADING";
+    state.visibleExpressionChainLoadLastError = "";
+    publishDataset();
+
+    record("VISIBLE_EXPRESSION_CHAIN_LOAD_STARTED", {
+      reason,
+      files: ASSET_CHAIN.map((asset) => asset.file)
+    });
+
+    for (const asset of ASSET_CHAIN) {
+      const result = await loadScriptForAsset(asset);
+
+      record("VISIBLE_EXPRESSION_ASSET_LOAD_RESULT", {
+        key: asset.key,
+        file: asset.file,
+        ok: result.ok,
+        status: result.status,
+        actualContract: result.actualContract,
+        error: result.error || ""
+      });
+    }
+
+    refreshVisibleExpressionChainState();
+
+    if (!state.hexFourPairAuthorityLoaded) {
+      state.visibleExpressionChainLoadHeld = true;
+      state.visibleExpressionChainLoadHeldReason = "HEX_FOUR_PAIR_AUTHORITY_NOT_LOADED";
+    } else if (!state.hexSurfaceLoaded) {
+      state.visibleExpressionChainLoadHeld = true;
+      state.visibleExpressionChainLoadHeldReason = "HEX_SURFACE_NOT_LOADED";
+    } else if (!state.canvasHubLoaded) {
+      state.visibleExpressionChainLoadHeld = true;
+      state.visibleExpressionChainLoadHeldReason = "CANVAS_HUB_NOT_LOADED";
+    } else {
+      state.visibleExpressionChainLoadHeld = false;
+      state.visibleExpressionChainLoadHeldReason = "NONE";
+      state.visibleExpressionChainLoadComplete = true;
+      state.visibleExpressionChainLoadCompleteCount += 1;
+    }
+
+    const canvasResult = callCanvasHubPublicApi(reason);
+
+    state.visibleExpressionChainLoadPromiseActive = false;
+
+    if (state.visibleExpressionChainLoadHeld) {
+      state.visibleExpressionChainLoadLastError = state.visibleExpressionChainLoadHeldReason;
+    }
+
+    publishDataset();
+    publishGlobals();
+    updateStatusLine(`visibleExpressionChain:${state.visibleExpressionChainLoadHeld ? state.visibleExpressionChainLoadHeldReason : "complete"}`);
+
+    record("VISIBLE_EXPRESSION_CHAIN_LOAD_COMPLETE", {
+      reason,
+      complete: state.visibleExpressionChainLoadComplete,
+      held: state.visibleExpressionChainLoadHeld,
+      heldReason: state.visibleExpressionChainLoadHeldReason,
+      canvasBootResult: canvasResult
+    });
+
+    return getVisibleExpressionChainReceipt();
+  }
+
+  function startVisibleExpressionChainBridge(reason = "boot") {
+    if (visibleExpressionChainPromise) return visibleExpressionChainPromise;
+
+    visibleExpressionChainPromise = loadVisibleExpressionChain(reason)
+      .catch((error) => {
+        state.visibleExpressionChainLoadHeld = true;
+        state.visibleExpressionChainLoadHeldReason = "VISIBLE_EXPRESSION_CHAIN_EXCEPTION";
+        state.visibleExpressionChainLoadLastError = error && error.message ? error.message : String(error);
+        state.visibleExpressionChainLoadPromiseActive = false;
+        state.lastError = state.visibleExpressionChainLoadLastError;
+        record("VISIBLE_EXPRESSION_CHAIN_EXCEPTION", { error: state.visibleExpressionChainLoadLastError });
+        publishDataset();
+        return getVisibleExpressionChainReceipt();
+      })
+      .finally(() => {
+        visibleExpressionChainPromise = null;
+      });
+
+    return visibleExpressionChainPromise;
+  }
+
+  function callCanvasHubPublicApi(reason = "boot") {
+    const canvas = resolveCanvasHub();
+
+    state.canvasBootAttempted = true;
+    state.canvasBootMethod = "NONE";
+    state.canvasBootResult = "CANVAS_HUB_NOT_AVAILABLE";
+    state.canvasBootError = "";
+
+    if (!canvas) {
+      publishDataset();
+      return state.canvasBootResult;
+    }
+
+    const methods = ["boot", "init", "start", "mount"];
+
+    for (const method of methods) {
+      if (!isFunction(canvas[method])) continue;
+
+      state.canvasBootMethod = method;
+
+      try {
+        const result = canvas[method]({
+          source: "HEARTH_INDEX_VISIBLE_EXPRESSION_CHAIN_LOADER_BRIDGE",
+          sourceFile: FILE,
+          contract: CONTRACT,
+          renewalContract: RENEWAL_CONTRACT,
+          reason,
+          hexFourPairAuthorityLoaded: state.hexFourPairAuthorityLoaded,
+          hexSurfaceLoaded: state.hexSurfaceLoaded,
+          canvasHubLoaded: state.canvasHubLoaded,
+          indexOwnsCanvasDrawing: false,
+          indexOwnsHexTruth: false,
+          indexOwnsVisualPass: false,
+          f13Claimed: false,
+          f21Claimed: false,
+          visualPassClaimed: false
+        });
+
+        state.canvasBootResult = result === false ? "PUBLIC_API_RETURNED_FALSE" : "PUBLIC_API_CALLED";
+        state.canvasBootedByIndex = true;
+        state.canvasStartedByIndex = true;
+        state.canvasLoadedByIndex = true;
+        publishDataset();
+        return state.canvasBootResult;
+      } catch (error) {
+        try {
+          canvas[method]();
+          state.canvasBootResult = "PUBLIC_API_CALLED_WITHOUT_OPTIONS";
+          state.canvasBootedByIndex = true;
+          state.canvasStartedByIndex = true;
+          state.canvasLoadedByIndex = true;
+          state.canvasBootError = "";
+          publishDataset();
+          return state.canvasBootResult;
+        } catch (fallbackError) {
+          state.canvasBootResult = "PUBLIC_API_ERROR";
+          state.canvasBootError = fallbackError && fallbackError.message
+            ? fallbackError.message
+            : error && error.message
+              ? error.message
+              : String(fallbackError || error);
+          publishDataset();
+          return state.canvasBootResult;
+        }
+      }
+    }
+
+    if (isFunction(canvas.drawBaseGlobe)) {
+      try {
+        canvas.drawBaseGlobe();
+        state.canvasBootMethod = "drawBaseGlobe";
+        state.canvasBootResult = "PUBLIC_FALLBACK_DRAW_BASE_GLOBE_CALLED";
+        state.canvasBootedByIndex = true;
+        state.canvasStartedByIndex = true;
+        state.canvasLoadedByIndex = true;
+        publishDataset();
+        return state.canvasBootResult;
+      } catch (error) {
+        state.canvasBootMethod = "drawBaseGlobe";
+        state.canvasBootResult = "PUBLIC_FALLBACK_DRAW_BASE_GLOBE_ERROR";
+        state.canvasBootError = error && error.message ? error.message : String(error);
+        publishDataset();
+        return state.canvasBootResult;
+      }
+    }
+
+    state.canvasBootResult = "NO_PUBLIC_CANVAS_BOOT_METHOD";
+    publishDataset();
+    return state.canvasBootResult;
+  }
+
   function updateStatusLine(message = "") {
     refreshRefs();
 
@@ -916,7 +1541,8 @@
         "buttons=functional",
         "native-anchors=preserved",
         "page-receipt-target=bound",
-        "runtime-release=held",
+        "visible-expression-chain=loading-bridge",
+        `canvas=${state.canvasHubLoaded ? "loaded" : "waiting"}`,
         `last=${message || state.lastAction}`
       ].join(" · ");
     }
@@ -925,8 +1551,8 @@
       refs.latestEvent.textContent = `latest=${state.observedHtmlContract && state.observedHtmlContract !== "UNKNOWN" ? state.observedHtmlContract : CONTRACT}`;
     }
 
-    if (refs.progressFill) refs.progressFill.style.width = "34%";
-    if (refs.progressPercent) refs.progressPercent.textContent = "34%";
+    if (refs.progressFill) refs.progressFill.style.width = state.canvasHubLoaded ? "55%" : "34%";
+    if (refs.progressPercent) refs.progressPercent.textContent = state.canvasHubLoaded ? "55%" : "34%";
 
     if (refs.routeStatus) {
       const resolved = resolveActiveReceiptText();
@@ -938,21 +1564,23 @@
     if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
 
     const html = doc.documentElement;
+
     html.dataset.hearthIndexJsLoaded = "true";
     html.dataset.hearthIndexJsContract = CONTRACT;
     html.dataset.hearthIndexJsReceipt = RECEIPT;
     html.dataset.hearthIndexJsPreviousContract = PREVIOUS_CONTRACT;
+    html.dataset.hearthIndexJsPreviousRenewalContract = PREVIOUS_RENEWAL_CONTRACT;
+    html.dataset.hearthIndexJsPreviousRenewalReceipt = PREVIOUS_RENEWAL_RECEIPT;
     html.dataset.hearthIndexJsRenewalContract = RENEWAL_CONTRACT;
     html.dataset.hearthIndexJsRenewalReceipt = RENEWAL_RECEIPT;
     html.dataset.hearthIndexJsVersion = VERSION;
+
     html.dataset.hearthIndexButtonAuthorityResetActive = "true";
     html.dataset.hearthFrontendButtonAuthorityRestored = "true";
     html.dataset.hearthWindowDocumentCaptureSuppressionRetired = "true";
     html.dataset.hearthNativeAnchorDefaultPreserved = "true";
     html.dataset.hearthDirectButtonBindingActive = "true";
-    html.dataset.hearthRuntimeReleaseHeld = "true";
-    html.dataset.hearthDiagnosticRailLoadedByIndex = "false";
-    html.dataset.hearthDiagnosticRailOwnedByIndex = "false";
+
     html.dataset.hearthPageReceiptTargetBindingActive = "true";
     html.dataset.hearthPageReceiptAvailable = String(state.pageReceiptAvailable);
     html.dataset.hearthActiveReceiptSource = state.activeReceiptSource;
@@ -960,6 +1588,56 @@
     html.dataset.hearthShownReceiptSource = state.shownReceiptSource;
     html.dataset.hearthCurrentHtmlContractRecognized = String(state.currentHtmlContractRecognized);
     html.dataset.hearthObservedHtmlContract = state.observedHtmlContract;
+
+    html.dataset.hearthVisibleExpressionChainLoaderBridgeActive = "true";
+    html.dataset.hearthVisibleExpressionChainLoadStarted = String(state.visibleExpressionChainLoadStarted);
+    html.dataset.hearthVisibleExpressionChainLoadComplete = String(state.visibleExpressionChainLoadComplete);
+    html.dataset.hearthVisibleExpressionChainLoadHeld = String(state.visibleExpressionChainLoadHeld);
+    html.dataset.hearthVisibleExpressionChainLoadHeldReason = state.visibleExpressionChainLoadHeldReason;
+    html.dataset.hearthVisibleExpressionChainLoadAttemptCount = String(state.visibleExpressionChainLoadAttemptCount);
+    html.dataset.hearthVisibleExpressionChainLoadCompleteCount = String(state.visibleExpressionChainLoadCompleteCount);
+    html.dataset.hearthVisibleExpressionChainLoadLastReason = state.visibleExpressionChainLoadLastReason;
+    html.dataset.hearthVisibleExpressionChainLoadLastError = state.visibleExpressionChainLoadLastError;
+    html.dataset.hearthVisibleExpressionChainLoadPromiseActive = String(state.visibleExpressionChainLoadPromiseActive);
+
+    html.dataset.hearthHexFourPairAuthorityFile = HEX_FOUR_PAIR_FILE;
+    html.dataset.hearthHexFourPairAuthorityLoaded = String(state.hexFourPairAuthorityLoaded);
+    html.dataset.hearthHexFourPairAuthorityContract = state.hexFourPairAuthorityContract;
+    html.dataset.hearthHexFourPairAuthorityExpectedContract = EXPECTED_HEX_FOUR_PAIR_CONTRACT;
+    html.dataset.hearthHexFourPairAuthorityContractRecognized = String(state.hexFourPairAuthorityContractRecognized);
+    html.dataset.hearthHexFourPairAuthorityLoadStatus = state.hexFourPairAuthorityLoadStatus;
+    html.dataset.hearthHexFourPairAuthorityLoadError = state.hexFourPairAuthorityLoadError;
+
+    html.dataset.hearthHexSurfaceFile = HEX_SURFACE_FILE;
+    html.dataset.hearthHexSurfaceLoaded = String(state.hexSurfaceLoaded);
+    html.dataset.hearthHexSurfaceContract = state.hexSurfaceContract;
+    html.dataset.hearthHexSurfaceExpectedContract = EXPECTED_HEX_SURFACE_CONTRACT;
+    html.dataset.hearthHexSurfaceContractRecognized = String(state.hexSurfaceContractRecognized);
+    html.dataset.hearthHexSurfaceLoadStatus = state.hexSurfaceLoadStatus;
+    html.dataset.hearthHexSurfaceLoadError = state.hexSurfaceLoadError;
+
+    html.dataset.hearthCanvasFile = CANVAS_FILE;
+    html.dataset.hearthCanvasHubLoaded = String(state.canvasHubLoaded);
+    html.dataset.hearthCanvasHubContract = state.canvasHubContract;
+    html.dataset.hearthCanvasHubExpectedContract = EXPECTED_CANVAS_CONTRACT;
+    html.dataset.hearthCanvasHubContractRecognized = String(state.canvasHubContractRecognized);
+    html.dataset.hearthCanvasHubLoadStatus = state.canvasHubLoadStatus;
+    html.dataset.hearthCanvasHubLoadError = state.canvasHubLoadError;
+
+    html.dataset.hearthCanvasBootAttempted = String(state.canvasBootAttempted);
+    html.dataset.hearthCanvasBootMethod = state.canvasBootMethod;
+    html.dataset.hearthCanvasBootResult = state.canvasBootResult;
+    html.dataset.hearthCanvasBootError = state.canvasBootError;
+    html.dataset.hearthCanvasLoadedByIndex = String(state.canvasLoadedByIndex);
+    html.dataset.hearthCanvasStartedByIndex = String(state.canvasStartedByIndex);
+    html.dataset.hearthCanvasBootedByIndex = String(state.canvasBootedByIndex);
+
+    html.dataset.hearthRouteConductorLoadedByIndex = "false";
+    html.dataset.hearthRouteConductorHandoffByIndex = "false";
+    html.dataset.hearthRouteConductorOwnedByIndex = "false";
+    html.dataset.hearthDiagnosticRailLoadedByIndex = "false";
+    html.dataset.hearthDiagnosticRailOwnedByIndex = "false";
+
     html.dataset.hearthCopyDiagnosticBound = String(state.copyDiagnosticBound);
     html.dataset.hearthToggleReceiptBound = String(state.toggleReceiptBound);
     html.dataset.hearthDiagnosticAnchorBound = String(state.diagnosticAnchorBound);
@@ -969,6 +1647,7 @@
     html.dataset.hearthDetailsDrawersBound = String(state.detailsDrawersBound);
     html.dataset.hearthLastButtonAction = state.lastAction;
     html.dataset.hearthLastButtonActionAt = state.lastActionAt;
+
     html.dataset.hearthF13Claimed = "false";
     html.dataset.hearthF21Claimed = "false";
     html.dataset.hearthReadyTextClaimed = "false";
@@ -1017,6 +1696,8 @@
     state.pageReceiptAvailable = Boolean(pageReceipt.ok && pageReceipt.text);
     state.activeReceiptSource = pageReceipt.ok ? pageReceipt.source : "INDEX_FALLBACK";
 
+    refreshVisibleExpressionChainState();
+
     return {
       observedHtmlContract: state.observedHtmlContract,
       currentHtmlContractRecognized: state.currentHtmlContractRecognized,
@@ -1031,7 +1712,13 @@
       detailsSummariesPresent: refs.summaries.length,
       receiptPanelPresent: Boolean(refs.receiptPanel),
       receiptTextPresent: Boolean(refs.receiptText),
-      htmlReceiptTargetsPresent: refs.htmlReceiptTargets.length
+      htmlReceiptTargetsPresent: refs.htmlReceiptTargets.length,
+      visibleExpressionChainLoaderBridgeActive: true,
+      hexFourPairAuthorityLoaded: state.hexFourPairAuthorityLoaded,
+      hexSurfaceLoaded: state.hexSurfaceLoaded,
+      canvasHubLoaded: state.canvasHubLoaded,
+      canvasBootAttempted: state.canvasBootAttempted,
+      canvasBootResult: state.canvasBootResult
     };
   }
 
@@ -1044,9 +1731,9 @@
 
     auditHtml();
     bindControls();
+    startVisibleExpressionChainBridge("boot");
 
     state.bootComplete = true;
-    state.runtimeReleaseHeld = true;
 
     publishGlobals();
     markAction("bootComplete");
@@ -1054,6 +1741,7 @@
     root.setTimeout(() => {
       auditHtml();
       bindControls();
+      startVisibleExpressionChainBridge("postBootRebind");
       publishGlobals();
       markAction("postBootRebind");
     }, 350);
@@ -1061,6 +1749,7 @@
     root.setTimeout(() => {
       auditHtml();
       bindControls();
+      startVisibleExpressionChainBridge("lateRebind");
       publishGlobals();
       markAction("lateRebind");
     }, 1200);
@@ -1068,11 +1757,86 @@
     return getReceipt();
   }
 
+  function getVisibleExpressionChainReceipt() {
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      renewalContract: RENEWAL_CONTRACT,
+      renewalReceipt: RENEWAL_RECEIPT,
+      packetType: "HEARTH_INDEX_VISIBLE_EXPRESSION_CHAIN_LOADER_BRIDGE_RECEIPT",
+      route: ROUTE,
+      file: FILE,
+
+      visibleExpressionChainLoaderBridgeActive: true,
+      visibleExpressionChainLoadStarted: state.visibleExpressionChainLoadStarted,
+      visibleExpressionChainLoadComplete: state.visibleExpressionChainLoadComplete,
+      visibleExpressionChainLoadHeld: state.visibleExpressionChainLoadHeld,
+      visibleExpressionChainLoadHeldReason: state.visibleExpressionChainLoadHeldReason,
+      visibleExpressionChainLoadAttemptCount: state.visibleExpressionChainLoadAttemptCount,
+      visibleExpressionChainLoadCompleteCount: state.visibleExpressionChainLoadCompleteCount,
+      visibleExpressionChainLoadLastReason: state.visibleExpressionChainLoadLastReason,
+      visibleExpressionChainLoadLastError: state.visibleExpressionChainLoadLastError,
+
+      hexFourPairAuthorityFile: HEX_FOUR_PAIR_FILE,
+      hexFourPairAuthorityLoaded: state.hexFourPairAuthorityLoaded,
+      hexFourPairAuthorityContract: state.hexFourPairAuthorityContract,
+      hexFourPairAuthorityExpectedContract: EXPECTED_HEX_FOUR_PAIR_CONTRACT,
+      hexFourPairAuthorityContractRecognized: state.hexFourPairAuthorityContractRecognized,
+      hexFourPairAuthorityLoadStatus: state.hexFourPairAuthorityLoadStatus,
+      hexFourPairAuthorityLoadError: state.hexFourPairAuthorityLoadError,
+
+      hexSurfaceFile: HEX_SURFACE_FILE,
+      hexSurfaceLoaded: state.hexSurfaceLoaded,
+      hexSurfaceContract: state.hexSurfaceContract,
+      hexSurfaceExpectedContract: EXPECTED_HEX_SURFACE_CONTRACT,
+      hexSurfaceContractRecognized: state.hexSurfaceContractRecognized,
+      hexSurfaceLoadStatus: state.hexSurfaceLoadStatus,
+      hexSurfaceLoadError: state.hexSurfaceLoadError,
+
+      canvasFile: CANVAS_FILE,
+      canvasHubLoaded: state.canvasHubLoaded,
+      canvasHubContract: state.canvasHubContract,
+      canvasHubExpectedContract: EXPECTED_CANVAS_CONTRACT,
+      canvasHubContractRecognized: state.canvasHubContractRecognized,
+      canvasHubLoadStatus: state.canvasHubLoadStatus,
+      canvasHubLoadError: state.canvasHubLoadError,
+
+      canvasBootAttempted: state.canvasBootAttempted,
+      canvasBootMethod: state.canvasBootMethod,
+      canvasBootResult: state.canvasBootResult,
+      canvasBootError: state.canvasBootError,
+      canvasLoadedByIndex: state.canvasLoadedByIndex,
+      canvasStartedByIndex: state.canvasStartedByIndex,
+      canvasBootedByIndex: state.canvasBootedByIndex,
+
+      indexOwnsCanvasDrawing: false,
+      indexOwnsCanvasTruth: false,
+      indexOwnsHexTruth: false,
+      indexOwnsHexSurfaceTruth: false,
+      indexOwnsRouteConductorAuthority: false,
+      routeConductorLoadedByIndex: false,
+      routeConductorHandoffByIndex: false,
+      routeConductorOwnedByIndex: false,
+
+      f13Claimed: false,
+      f21Claimed: false,
+      readyTextClaimed: false,
+      visualPassClaimed: false,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+
+      updatedAt: state.updatedAt || nowIso()
+    };
+  }
+
   function getReceipt() {
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
+      previousRenewalContract: PREVIOUS_RENEWAL_CONTRACT,
+      previousRenewalReceipt: PREVIOUS_RENEWAL_RECEIPT,
       renewalContract: RENEWAL_CONTRACT,
       renewalReceipt: RENEWAL_RECEIPT,
       version: VERSION,
@@ -1083,6 +1847,7 @@
 
       role: state.role,
       currentHtmlContract: CURRENT_HTML_CONTRACT,
+      lineageHtmlContract: LINEAGE_HTML_CONTRACT,
       previousHtmlContract: PREVIOUS_HTML_CONTRACT,
       observedHtmlContract: state.observedHtmlContract,
       currentHtmlContractRecognized: state.currentHtmlContractRecognized,
@@ -1105,6 +1870,33 @@
       activeReceiptSource: state.activeReceiptSource,
       copiedReceiptSource: state.copiedReceiptSource,
       shownReceiptSource: state.shownReceiptSource,
+
+      visibleExpressionChainReceipt: getVisibleExpressionChainReceipt(),
+
+      visibleExpressionChainLoaderBridgeActive: true,
+      visibleExpressionChainLoadStarted: state.visibleExpressionChainLoadStarted,
+      visibleExpressionChainLoadComplete: state.visibleExpressionChainLoadComplete,
+      visibleExpressionChainLoadHeld: state.visibleExpressionChainLoadHeld,
+      visibleExpressionChainLoadHeldReason: state.visibleExpressionChainLoadHeldReason,
+
+      hexFourPairAuthorityLoaded: state.hexFourPairAuthorityLoaded,
+      hexFourPairAuthorityContract: state.hexFourPairAuthorityContract,
+      hexFourPairAuthorityContractRecognized: state.hexFourPairAuthorityContractRecognized,
+
+      hexSurfaceLoaded: state.hexSurfaceLoaded,
+      hexSurfaceContract: state.hexSurfaceContract,
+      hexSurfaceContractRecognized: state.hexSurfaceContractRecognized,
+
+      canvasHubLoaded: state.canvasHubLoaded,
+      canvasHubContract: state.canvasHubContract,
+      canvasHubContractRecognized: state.canvasHubContractRecognized,
+      canvasBootAttempted: state.canvasBootAttempted,
+      canvasBootMethod: state.canvasBootMethod,
+      canvasBootResult: state.canvasBootResult,
+      canvasBootError: state.canvasBootError,
+      canvasLoadedByIndex: state.canvasLoadedByIndex,
+      canvasStartedByIndex: state.canvasStartedByIndex,
+      canvasBootedByIndex: state.canvasBootedByIndex,
 
       copyDiagnosticBound: state.copyDiagnosticBound,
       toggleReceiptBound: state.toggleReceiptBound,
@@ -1130,19 +1922,21 @@
       lastActionAt: state.lastActionAt,
       lastError: state.lastError,
 
-      runtimeReleaseHeld: true,
-      runtimeReleaseStarted: false,
-      runtimeReleaseComplete: false,
       routeConductorLoadedByIndex: false,
-      canvasLoadedByIndex: false,
+      routeConductorHandoffByIndex: false,
+      routeConductorOwnedByIndex: false,
       diagnosticRailLoadedByIndex: false,
       diagnosticRailOwnedByIndex: false,
 
       htmlOwnsVisibleShell: true,
       indexCreatesVisibleShell: false,
-      indexOwnsButtonBindingOnly: true,
+      indexOwnsButtonBindingOnly: false,
+      indexOwnsButtonBindingAndLoaderBridgeOnly: true,
       indexOwnsRuntimeRelease: false,
       indexOwnsCanvasDrawing: false,
+      indexOwnsCanvasTruth: false,
+      indexOwnsHexTruth: false,
+      indexOwnsHexSurfaceTruth: false,
       indexOwnsRouteConductorHandoff: false,
       indexOwnsPageReceiptSelection: true,
       indexOwnsPageReceiptTruth: false,
@@ -1162,12 +1956,15 @@
 
   function getIndexReceiptText() {
     const r = getReceipt();
+    const c = r.visibleExpressionChainReceipt || {};
 
     return [
       "HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_RECEIPT",
       line("contract", r.contract),
       line("receipt", r.receipt),
       line("previousContract", r.previousContract),
+      line("previousRenewalContract", r.previousRenewalContract),
+      line("previousRenewalReceipt", r.previousRenewalReceipt),
       line("renewalContract", r.renewalContract),
       line("renewalReceipt", r.renewalReceipt),
       line("version", r.version),
@@ -1178,9 +1975,53 @@
       "",
       "HTML_ALIGNMENT",
       line("currentHtmlContract", r.currentHtmlContract),
+      line("lineageHtmlContract", r.lineageHtmlContract),
       line("previousHtmlContract", r.previousHtmlContract),
       line("observedHtmlContract", r.observedHtmlContract),
       line("currentHtmlContractRecognized", r.currentHtmlContractRecognized),
+      "",
+      "VISIBLE_EXPRESSION_CHAIN_LOADER_BRIDGE",
+      line("visibleExpressionChainLoaderBridgeActive", c.visibleExpressionChainLoaderBridgeActive),
+      line("visibleExpressionChainLoadStarted", c.visibleExpressionChainLoadStarted),
+      line("visibleExpressionChainLoadComplete", c.visibleExpressionChainLoadComplete),
+      line("visibleExpressionChainLoadHeld", c.visibleExpressionChainLoadHeld),
+      line("visibleExpressionChainLoadHeldReason", c.visibleExpressionChainLoadHeldReason),
+      line("visibleExpressionChainLoadAttemptCount", c.visibleExpressionChainLoadAttemptCount),
+      line("visibleExpressionChainLoadCompleteCount", c.visibleExpressionChainLoadCompleteCount),
+      line("visibleExpressionChainLoadLastReason", c.visibleExpressionChainLoadLastReason),
+      line("visibleExpressionChainLoadLastError", c.visibleExpressionChainLoadLastError),
+      "",
+      "VISIBLE_EXPRESSION_CHAIN_FILES",
+      line("hexFourPairAuthorityFile", c.hexFourPairAuthorityFile),
+      line("hexFourPairAuthorityLoaded", c.hexFourPairAuthorityLoaded),
+      line("hexFourPairAuthorityContract", c.hexFourPairAuthorityContract),
+      line("hexFourPairAuthorityExpectedContract", c.hexFourPairAuthorityExpectedContract),
+      line("hexFourPairAuthorityContractRecognized", c.hexFourPairAuthorityContractRecognized),
+      line("hexFourPairAuthorityLoadStatus", c.hexFourPairAuthorityLoadStatus),
+      line("hexFourPairAuthorityLoadError", c.hexFourPairAuthorityLoadError),
+      line("hexSurfaceFile", c.hexSurfaceFile),
+      line("hexSurfaceLoaded", c.hexSurfaceLoaded),
+      line("hexSurfaceContract", c.hexSurfaceContract),
+      line("hexSurfaceExpectedContract", c.hexSurfaceExpectedContract),
+      line("hexSurfaceContractRecognized", c.hexSurfaceContractRecognized),
+      line("hexSurfaceLoadStatus", c.hexSurfaceLoadStatus),
+      line("hexSurfaceLoadError", c.hexSurfaceLoadError),
+      line("canvasFile", c.canvasFile),
+      line("canvasHubLoaded", c.canvasHubLoaded),
+      line("canvasHubContract", c.canvasHubContract),
+      line("canvasHubExpectedContract", c.canvasHubExpectedContract),
+      line("canvasHubContractRecognized", c.canvasHubContractRecognized),
+      line("canvasHubLoadStatus", c.canvasHubLoadStatus),
+      line("canvasHubLoadError", c.canvasHubLoadError),
+      "",
+      "CANVAS_PUBLIC_API_CALL",
+      line("canvasBootAttempted", c.canvasBootAttempted),
+      line("canvasBootMethod", c.canvasBootMethod),
+      line("canvasBootResult", c.canvasBootResult),
+      line("canvasBootError", c.canvasBootError),
+      line("canvasLoadedByIndex", c.canvasLoadedByIndex),
+      line("canvasStartedByIndex", c.canvasStartedByIndex),
+      line("canvasBootedByIndex", c.canvasBootedByIndex),
       "",
       "RECEIPT_TARGET_BINDING",
       line("pageReceiptTargetBindingActive", r.pageReceiptTargetBindingActive),
@@ -1227,22 +2068,22 @@
       line("lastActionAt", r.lastActionAt),
       line("lastError", r.lastError),
       "",
-      "RUNTIME_HELD",
-      line("runtimeReleaseHeld", r.runtimeReleaseHeld),
-      line("runtimeReleaseStarted", r.runtimeReleaseStarted),
-      line("runtimeReleaseComplete", r.runtimeReleaseComplete),
-      line("routeConductorLoadedByIndex", r.routeConductorLoadedByIndex),
-      line("canvasLoadedByIndex", r.canvasLoadedByIndex),
-      line("diagnosticRailLoadedByIndex", r.diagnosticRailLoadedByIndex),
-      line("diagnosticRailOwnedByIndex", r.diagnosticRailOwnedByIndex),
-      "",
       "OWNERSHIP",
       line("htmlOwnsVisibleShell", r.htmlOwnsVisibleShell),
       line("indexCreatesVisibleShell", r.indexCreatesVisibleShell),
       line("indexOwnsButtonBindingOnly", r.indexOwnsButtonBindingOnly),
+      line("indexOwnsButtonBindingAndLoaderBridgeOnly", r.indexOwnsButtonBindingAndLoaderBridgeOnly),
       line("indexOwnsRuntimeRelease", r.indexOwnsRuntimeRelease),
       line("indexOwnsCanvasDrawing", r.indexOwnsCanvasDrawing),
+      line("indexOwnsCanvasTruth", r.indexOwnsCanvasTruth),
+      line("indexOwnsHexTruth", r.indexOwnsHexTruth),
+      line("indexOwnsHexSurfaceTruth", r.indexOwnsHexSurfaceTruth),
       line("indexOwnsRouteConductorHandoff", r.indexOwnsRouteConductorHandoff),
+      line("routeConductorLoadedByIndex", r.routeConductorLoadedByIndex),
+      line("routeConductorHandoffByIndex", r.routeConductorHandoffByIndex),
+      line("routeConductorOwnedByIndex", r.routeConductorOwnedByIndex),
+      line("diagnosticRailLoadedByIndex", r.diagnosticRailLoadedByIndex),
+      line("diagnosticRailOwnedByIndex", r.diagnosticRailOwnedByIndex),
       "",
       "NO_CLAIMS",
       line("f13Claimed", r.f13Claimed),
@@ -1278,26 +2119,34 @@
     root.HEARTH.indexBridge = api;
     root.HEARTH.frontendButtonAuthorityReset = api;
     root.HEARTH.buttonAuthority = api;
+    root.HEARTH.visibleExpressionChainLoaderBridge = api;
     root.HEARTH.indexJsReceipt = getReceipt();
     root.HEARTH.indexJsReceiptText = getIndexReceiptText;
     root.HEARTH.indexJsPageReceiptText = getPageReceiptText;
     root.HEARTH.indexJsActiveReceiptText = getActiveReceiptText;
+    root.HEARTH.visibleExpressionChainReceipt = getVisibleExpressionChainReceipt;
 
     root.DEXTER_LAB.hearthIndexJs = api;
     root.DEXTER_LAB.hearthFrontendButtonAuthorityReset = api;
+    root.DEXTER_LAB.hearthVisibleExpressionChainLoaderBridge = api;
 
     root.HEARTH_INDEX_JS = api;
     root.HEARTH_INDEX_BRIDGE = api;
     root.HEARTH_FRONTEND_BUTTON_AUTHORITY_RESET = api;
     root.HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET = api;
+    root.HEARTH_INDEX_JS_VISIBLE_EXPRESSION_CHAIN_LOADER_BRIDGE = api;
+
     root.HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_RECEIPT = getReceipt();
     root.HEARTH_INDEX_JS_PAGE_RECEIPT_TARGET_BINDING_RECEIPT = getReceipt();
+    root.HEARTH_INDEX_JS_VISIBLE_EXPRESSION_CHAIN_LOADER_BRIDGE_RECEIPT = getVisibleExpressionChainReceipt();
   }
 
   const api = Object.freeze({
     contract: CONTRACT,
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
+    previousRenewalContract: PREVIOUS_RENEWAL_CONTRACT,
+    previousRenewalReceipt: PREVIOUS_RENEWAL_RECEIPT,
     renewalContract: RENEWAL_CONTRACT,
     renewalReceipt: RENEWAL_RECEIPT,
     version: VERSION,
@@ -1315,19 +2164,44 @@
     toggleReceiptPanel,
     setInspectMode,
     toggleCockpitMode,
+
+    startVisibleExpressionChainBridge,
+    loadVisibleExpressionChain,
+    refreshVisibleExpressionChainState,
+    resolveHexFourPairAuthority,
+    resolveHexSurface,
+    resolveCanvasHub,
+    callCanvasHubPublicApi,
+
     getReceipt,
     getReceiptText,
     getIndexReceiptText,
     getPageReceiptText,
     getActiveReceiptText,
+    getVisibleExpressionChainReceipt,
     publishGlobals,
 
     buttonAuthorityActive: true,
     frontendButtonAuthorityRestored: true,
     pageReceiptTargetBindingActive: true,
-    runtimeReleaseHeld: true,
+    visibleExpressionChainLoaderBridgeActive: true,
+
+    hexFourPairAuthorityFile: HEX_FOUR_PAIR_FILE,
+    hexSurfaceFile: HEX_SURFACE_FILE,
+    canvasFile: CANVAS_FILE,
+
+    routeConductorLoadedByIndex: false,
+    routeConductorHandoffByIndex: false,
+    routeConductorOwnedByIndex: false,
     diagnosticRailLoadedByIndex: false,
     diagnosticRailOwnedByIndex: false,
+
+    indexOwnsCanvasDrawing: false,
+    indexOwnsCanvasTruth: false,
+    indexOwnsHexTruth: false,
+    indexOwnsHexSurfaceTruth: false,
+    indexOwnsRouteConductorAuthority: false,
+
     f13Claimed: false,
     f21Claimed: false,
     readyTextClaimed: false,

@@ -1,4 +1,4 @@
-// /assets/hearth/hearth.canvas.finger.lighting.js
+// assets/hearth/hearth.canvas.finger.lighting.js
 // HEARTH_CANVAS_FINGER_LIGHTING_SOLAR_SHADOW_AUTHORITY_TNT_v1
 // Full-file replacement.
 // Canvas Finger / Lighting / Solar-Shadow Authority.

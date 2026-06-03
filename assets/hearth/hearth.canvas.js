@@ -1,20 +1,22 @@
 // /assets/hearth/hearth.canvas.js
 // HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_4_DIAGNOSTIC_BRIDGE_ALIGNMENT_TNT_v11_5
 // Full-file replacement.
-// Canvas Parent / Canvas Local Station / Route Conductor v9_4 Diagnostic Bridge Alignment.
+// Public Canvas Parent contract intentionally preserved for Route Hub / Route Conductor compatibility.
+// Renewal layer:
+// HEARTH_CANVAS_LOCAL_STATION_FINGER_MANAGER_REGISTRY_EXPANSION_LAYER_v11_6
+//
 // Purpose:
-// - Preserve accepted v11_4 Canvas Local Station / Diagnostic Bridge architecture.
-// - Correct current Route Conductor recognition from stale v9_3 authority to current v9_4 authority.
-// - Treat v9_3 as accepted lineage / observation-only history, not current authority.
-// - Preserve v9_2 as older legacy lineage / observation-only history, not current authority.
-// - Bridge the diagnostic receipt side and route-conductor/canvas receipt side without building expression ports.
-// - Preserve public receiver methods as validated intake surfaces.
-// - Preserve East dispatch only after accepted current Route Conductor release.
-// - Preserve child aggregation summary for EAST / WEST / SOUTH.
-// - Publish generic current-route-conductor fields usable across Route Conductor, Diagnostic Rail, and future expression-port work.
-// - Publish explicit v9_4 fields only as version evidence, not obscure private aliases.
-// - Keep expression, terrain, mountain, material, hydrology, and planet-geometry ports held.
+// - Preserve accepted v11_5 Canvas Local Station / Route Conductor v9_4 diagnostic bridge architecture.
+// - Preserve current Route Conductor v9_4 recognition.
+// - Preserve Route Hub compatibility without requiring another /showroom/globe/hearth/hearth.js renewal.
+// - Expand Canvas Parent into the Canvas finger-manager registry surface.
+// - Name downstream Canvas fingers and future expression fingers without requiring them to exist yet.
+// - Keep East / West / South aggregation active.
+// - Keep expression ports held until evidence opens them.
+// - Publish stable summaries for Route Hub, Diagnostic Rail, and future expression-port work.
+// - Prevent missing held future files from becoming hard failures.
 // - Never claim F13, F21, ready text, completion latch, final visual pass, generated image, GraphicBox, or WebGL.
+//
 // Does not own:
 // - HTML shell
 // - front-end button binding
@@ -24,7 +26,8 @@
 // - EAST atlas truth
 // - WEST inspection truth
 // - SOUTH visible proof truth
-// - terrain/material/hydrology/elevation/mountain expression
+// - terrain/material/hydrology/elevation/mountain/atmosphere/geometry expression truth
+// - rendering
 // - expression-port construction
 // - F13 latch
 // - F21 latch
@@ -37,14 +40,20 @@
   const CONTRACT = "HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_4_DIAGNOSTIC_BRIDGE_ALIGNMENT_TNT_v11_5";
   const RECEIPT = "HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_4_DIAGNOSTIC_BRIDGE_ALIGNMENT_RECEIPT_v11_5";
 
-  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_LOCAL_STATION_DIAGNOSTIC_BRIDGE_ALIGNMENT_TNT_v11_4";
-  const PREVIOUS_RECEIPT = "HEARTH_CANVAS_LOCAL_STATION_DIAGNOSTIC_BRIDGE_ALIGNMENT_RECEIPT_v11_4";
+  const RENEWAL_LAYER_CONTRACT = "HEARTH_CANVAS_LOCAL_STATION_FINGER_MANAGER_REGISTRY_EXPANSION_LAYER_v11_6";
+  const RENEWAL_LAYER_RECEIPT = "HEARTH_CANVAS_LOCAL_STATION_FINGER_MANAGER_REGISTRY_EXPANSION_RECEIPT_v11_6";
 
-  const BASELINE_CONTRACT = "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_3_1";
-  const BASELINE_RECEIPT = "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_RECEIPT_v11_3_1";
+  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_4_DIAGNOSTIC_BRIDGE_ALIGNMENT_TNT_v11_5";
+  const PREVIOUS_RECEIPT = "HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_4_DIAGNOSTIC_BRIDGE_ALIGNMENT_RECEIPT_v11_5";
 
-  const ACCEPTED_BASELINE_CONTRACT = "HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD_TNT_v10_3";
-  const ACCEPTED_BASELINE_RECEIPT = "HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD_RECEIPT_v10_3";
+  const BASELINE_CONTRACT = "HEARTH_CANVAS_LOCAL_STATION_DIAGNOSTIC_BRIDGE_ALIGNMENT_TNT_v11_4";
+  const BASELINE_RECEIPT = "HEARTH_CANVAS_LOCAL_STATION_DIAGNOSTIC_BRIDGE_ALIGNMENT_RECEIPT_v11_4";
+
+  const ACCEPTED_BASELINE_CONTRACT = "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_3_1";
+  const ACCEPTED_BASELINE_RECEIPT = "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_RECEIPT_v11_3_1";
+
+  const RELEASE_BASELINE_CONTRACT = "HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD_TNT_v10_3";
+  const RELEASE_BASELINE_RECEIPT = "HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD_RECEIPT_v10_3";
 
   const CURRENT_ROUTE_CONDUCTOR_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_TNT_v9_4";
   const CURRENT_ROUTE_CONDUCTOR_RECEIPT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_RECEIPT_v9_4";
@@ -62,13 +71,25 @@
   const TARGET_FILE = "/assets/hearth/hearth.canvas.js";
   const ROUTE_FILE = "/showroom/globe/hearth/hearth.js";
   const INDEX_FILE = "/showroom/globe/hearth/index.js";
+  const HTML_FILE = "/showroom/globe/hearth/index.html";
+  const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
+  const ROUTE = "/showroom/globe/hearth/";
+
   const EAST_FILE = "/assets/hearth/hearth.canvas.east.js";
   const WEST_FILE = "/assets/hearth/hearth.canvas.west.js";
   const SOUTH_FILE = "/assets/hearth/hearth.canvas.south.js";
+
+  const CANVAS_EXPRESSION_PORT_FILE = "/assets/hearth/hearth.canvas.expression.port.js";
+  const TERRAIN_EXPRESSION_FILE = "/assets/hearth/hearth.terrain.expression.js";
+  const MATERIAL_EXPRESSION_FILE = "/assets/hearth/hearth.material.expression.js";
+  const HYDROLOGY_EXPRESSION_FILE = "/assets/hearth/hearth.hydrology.expression.js";
+  const MOUNTAIN_EXPRESSION_FILE = "/assets/hearth/hearth.mountain.expression.js";
+  const ATMOSPHERE_EXPRESSION_FILE = "/assets/hearth/hearth.atmosphere.expression.js";
+  const GEOMETRY_EXPRESSION_FILE = "/assets/hearth/hearth.geometry.expression.js";
+
   const MACRO_WEST_FILE = "/assets/lab/runtime-table.west.js";
   const NORTH_FILE = "/assets/lab/runtime-table.js";
-  const ROUTE = "/showroom/globe/hearth/";
-  const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
+
   const CYCLE_2_ROUTE = "NORTH_EAST_SOUTH_WEST_CANVAS";
 
   const RELEASE_SOURCE = Object.freeze({
@@ -107,7 +128,14 @@
     "CANVAS_WEST_API",
     "CANVAS_WEST_INSPECTION_EVIDENCE",
     "CANVAS_SOUTH_API",
-    "CANVAS_SOUTH_VISIBLE_PROOF"
+    "CANVAS_SOUTH_VISIBLE_PROOF",
+    "CANVAS_EXPRESSION_PORT_HELD",
+    "TERRAIN_EXPRESSION_HELD",
+    "MATERIAL_EXPRESSION_HELD",
+    "HYDROLOGY_EXPRESSION_HELD",
+    "MOUNTAIN_EXPRESSION_HELD",
+    "ATMOSPHERE_EXPRESSION_HELD",
+    "GEOMETRY_EXPRESSION_HELD"
   ]);
 
   const REQUIRED_RELEASE = Object.freeze({
@@ -131,6 +159,40 @@
     "read",
     "getReceipt"
   ]);
+
+  const FILE_REGISTRY = Object.freeze({
+    active: Object.freeze({
+      routeHub: ROUTE_FILE,
+      routeConductor: ROUTE_FILE,
+      canvasParent: FILE,
+      canvasEast: EAST_FILE,
+      canvasWest: WEST_FILE,
+      canvasSouth: SOUTH_FILE,
+      index: INDEX_FILE,
+      html: HTML_FILE,
+      diagnosticRoute: DIAGNOSTIC_ROUTE,
+      north: NORTH_FILE,
+      macroWest: MACRO_WEST_FILE
+    }),
+    heldExpressionFingers: Object.freeze({
+      canvasExpressionPort: CANVAS_EXPRESSION_PORT_FILE,
+      terrainExpression: TERRAIN_EXPRESSION_FILE,
+      materialExpression: MATERIAL_EXPRESSION_FILE,
+      hydrologyExpression: HYDROLOGY_EXPRESSION_FILE,
+      mountainExpression: MOUNTAIN_EXPRESSION_FILE,
+      atmosphereExpression: ATMOSPHERE_EXPRESSION_FILE,
+      geometryExpression: GEOMETRY_EXPRESSION_FILE
+    })
+  });
+
+  const FINGER_STATUS = Object.freeze({
+    ACTIVE_REQUIRED: "ACTIVE_REQUIRED",
+    ACTIVE_READY: "ACTIVE_READY",
+    ACTIVE_WAITING: "ACTIVE_WAITING",
+    HELD_NAMED_NOT_REQUIRED: "HELD_NAMED_NOT_REQUIRED",
+    HELD_DISCOVERED_NOT_REQUIRED: "HELD_DISCOVERED_NOT_REQUIRED",
+    HARD_FAIL: "HARD_FAIL"
+  });
 
   const FINAL_FALSE = Object.freeze({
     f13EligibleForCanvas: false,
@@ -162,12 +224,16 @@
     timestamp: "",
     contract: CONTRACT,
     receipt: RECEIPT,
+    renewalLayerContract: RENEWAL_LAYER_CONTRACT,
+    renewalLayerReceipt: RENEWAL_LAYER_RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
     baselineContract: BASELINE_CONTRACT,
     baselineReceipt: BASELINE_RECEIPT,
     acceptedBaselineContract: ACCEPTED_BASELINE_CONTRACT,
     acceptedBaselineReceipt: ACCEPTED_BASELINE_RECEIPT,
+    releaseBaselineContract: RELEASE_BASELINE_CONTRACT,
+    releaseBaselineReceipt: RELEASE_BASELINE_RECEIPT,
 
     currentRouteConductorRequiredContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
     currentRouteConductorRequiredReceipt: CURRENT_ROUTE_CONDUCTOR_RECEIPT,
@@ -181,9 +247,12 @@
     file: FILE,
     route: ROUTE,
     diagnosticRoute: DIAGNOSTIC_ROUTE,
-    role: "canvas-local-station-route-conductor-v9-4-diagnostic-bridge-alignment",
+    role: "canvas-local-station-route-conductor-v9-4-diagnostic-bridge-finger-manager-registry",
 
     canvasLocalStationActive: true,
+    canvasParentActive: true,
+    canvasFingerManagerActive: true,
+    canvasFingerRegistryEmbedded: true,
     childDistributionSwitchboardActive: true,
     releaseAcceptanceActive: true,
     eastDispatchActive: true,
@@ -191,19 +260,30 @@
     routeConductorSummarySurfaceActive: true,
     diagnosticBridgeActive: true,
     diagnosticReceiptBridgeActive: true,
+
     expressionBridgeHeld: true,
+    expressionPortsBuilt: false,
     expressionLaneSeparateFromReceiptLane: true,
     receiptProvesExpressionDoesNotReplaceExpression: true,
+    heldExpressionFingersDoNotBlockCurrentCycle: true,
+    futureExpressionFingersNamedNotRequired: true,
 
     newsAlignmentProtocolActive: true,
     fibonacciSynchronizationChronologyFirst: true,
     canvasChildSequence: CANVAS_CHILD_SEQUENCE,
 
+    fileRegistry: clonePlain(FILE_REGISTRY),
+    activeFingerRegistry: clonePlain(FILE_REGISTRY.active),
+    heldExpressionFingerRegistry: clonePlain(FILE_REGISTRY.heldExpressionFingers),
+    fingerRegistryPublished: false,
+
     currentCanvasParentObserved: true,
     currentCanvasParentContractObserved: true,
     currentCanvasParentContract: CONTRACT,
+    currentCanvasParentReceipt: RECEIPT,
     currentCanvasParentIsLocalStation: true,
-    currentCanvasParentIsV11_5: true,
+    currentCanvasParentIsV11_5Compatible: true,
+    currentCanvasParentHasFingerManagerLayerV11_6: true,
     previousCanvasParentContract: PREVIOUS_CONTRACT,
     baselineCanvasParentContract: BASELINE_CONTRACT,
     acceptedBaselineCanvasParentContract: ACCEPTED_BASELINE_CONTRACT,
@@ -312,9 +392,17 @@
     canvasSouthHardFail: false,
     canvasSouthProofStale: false,
 
+    heldExpressionFingersObserved: {},
+    heldExpressionFingersReady: {},
+    heldExpressionFingerStatuses: {},
+    expressionPortObserved: false,
+    expressionPortRequiredNow: false,
+    expressionPortReady: false,
+
     allCanvasChildrenApiReady: false,
     allCanvasChildrenEvidenceReady: false,
     allCanvasChildrenReady: false,
+    activeCanvasChildrenReady: false,
 
     f13CanvasReadinessObserved: false,
     f13VisibleEvidenceAvailable: false,
@@ -546,15 +634,12 @@
       ["HEARTH_ROUTE_CONDUCTOR", readPath("HEARTH_ROUTE_CONDUCTOR")],
       ["HEARTH.routeConductor", readPath("HEARTH.routeConductor")],
       ["DEXTER_LAB.hearthRouteConductor", readPath("DEXTER_LAB.hearthRouteConductor")],
-
       ["HEARTH_ROUTE_CONDUCTOR_RECEIPT", readPath("HEARTH_ROUTE_CONDUCTOR_RECEIPT")],
       ["HEARTH.routeConductorReceipt", readPath("HEARTH.routeConductorReceipt")],
       ["DEXTER_LAB.hearthRouteConductorReceipt", readPath("DEXTER_LAB.hearthRouteConductorReceipt")],
-
       ["HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT", readPath("HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT")],
       ["HEARTH.routeConductorCanvasLocalStationBridgeAlignment", readPath("HEARTH.routeConductorCanvasLocalStationBridgeAlignment")],
       ["DEXTER_LAB.hearthRouteConductorCanvasLocalStationBridgeAlignment", readPath("DEXTER_LAB.hearthRouteConductorCanvasLocalStationBridgeAlignment")],
-
       ["HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_RECEIPT", readPath("HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_RECEIPT")],
       ["HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_RECEIPT_v9_4", readPath("HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_RECEIPT_v9_4")],
       ["HEARTH.routeConductorCanvasLocalStationBridgeAlignmentReceipt", readPath("HEARTH.routeConductorCanvasLocalStationBridgeAlignmentReceipt")],
@@ -567,7 +652,6 @@
       ["HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR", readPath("HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR")],
       ["HEARTH.routeConductorControlOwnershipPassiveWatchdogRepair", readPath("HEARTH.routeConductorControlOwnershipPassiveWatchdogRepair")],
       ["DEXTER_LAB.hearthRouteConductorControlOwnershipPassiveWatchdogRepair", readPath("DEXTER_LAB.hearthRouteConductorControlOwnershipPassiveWatchdogRepair")],
-
       ["HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_RECEIPT", readPath("HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_RECEIPT")],
       ["HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_RECEIPT_v9_3", readPath("HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_RECEIPT_v9_3")],
       ["HEARTH.routeConductorControlOwnershipPassiveWatchdogRepairReceipt", readPath("HEARTH.routeConductorControlOwnershipPassiveWatchdogRepairReceipt")],
@@ -580,7 +664,6 @@
       ["HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR", readPath("HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR")],
       ["HEARTH.routeConductorNorthStarCompletionCycleGovernor", readPath("HEARTH.routeConductorNorthStarCompletionCycleGovernor")],
       ["DEXTER_LAB.hearthRouteConductorNorthStarCompletionCycleGovernor", readPath("DEXTER_LAB.hearthRouteConductorNorthStarCompletionCycleGovernor")],
-
       ["HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_RECEIPT", readPath("HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_RECEIPT")],
       ["HEARTH.routeConductorNorthStarCompletionCycleGovernorReceipt", readPath("HEARTH.routeConductorNorthStarCompletionCycleGovernorReceipt")],
       ["DEXTER_LAB.hearthRouteConductorNorthStarCompletionCycleGovernorReceipt", readPath("DEXTER_LAB.hearthRouteConductorNorthStarCompletionCycleGovernorReceipt")]
@@ -1280,6 +1363,8 @@
       timestamp: nowIso(),
       contract: CONTRACT,
       receipt: RECEIPT,
+      renewalLayerContract: RENEWAL_LAYER_CONTRACT,
+      renewalLayerReceipt: RENEWAL_LAYER_RECEIPT,
       parentContract: CONTRACT,
       parentReceipt: RECEIPT,
       previousParentContract: PREVIOUS_CONTRACT,
@@ -1327,6 +1412,14 @@
       structuralCarrierSafe: true,
       canvasParentCarrierSafe: true,
 
+      fileRegistry: clonePlain(FILE_REGISTRY),
+      activeFingerRegistry: clonePlain(FILE_REGISTRY.active),
+      heldExpressionFingerRegistry: clonePlain(FILE_REGISTRY.heldExpressionFingers),
+      canvasFingerManagerActive: true,
+      canvasFingerRegistryEmbedded: true,
+      heldExpressionFingersDoNotBlockCurrentCycle: true,
+      futureExpressionFingersNamedNotRequired: true,
+
       atlasBuildRequested: true,
       f13AtlasBuildRequested: true,
       buildAtlasRequested: true,
@@ -1364,11 +1457,15 @@
 
     hearth.canvasParentEastDispatchPacket = clonePlain(packet);
     hearth.canvasEastDispatchPacket = clonePlain(packet);
+    hearth.canvasFingerManagerEastDispatchPacket = clonePlain(packet);
+
     lab.hearthCanvasParentEastDispatchPacket = clonePlain(packet);
     lab.hearthCanvasEastDispatchPacket = clonePlain(packet);
+    lab.hearthCanvasFingerManagerEastDispatchPacket = clonePlain(packet);
 
     root.HEARTH_CANVAS_PARENT_EAST_DISPATCH_PACKET = clonePlain(packet);
     root.HEARTH_CANVAS_EAST_DISPATCH_PACKET = clonePlain(packet);
+    root.HEARTH_CANVAS_FINGER_MANAGER_EAST_DISPATCH_PACKET = clonePlain(packet);
 
     state.parentReleasePacketPublishedForEast = true;
     state.eastDispatchPacketPublished = true;
@@ -1445,6 +1542,43 @@
         "DEXTER_LAB.hearthCanvasSouthEvidence",
         "DEXTER_LAB.hearthCanvasSouthTextureSphereVisibleProof",
         "DEXTER_LAB.hearthCanvasSouthF13STextureRenderVisibleProofChild"
+      ],
+      expressionPort: [
+        "HEARTH_CANVAS_EXPRESSION_PORT",
+        "HEARTH.canvasExpressionPort",
+        "HEARTH.canvasExpressionPortManager",
+        "DEXTER_LAB.hearthCanvasExpressionPort",
+        "DEXTER_LAB.hearthCanvasExpressionPortManager"
+      ],
+      terrainExpression: [
+        "HEARTH_TERRAIN_EXPRESSION",
+        "HEARTH.terrainExpression",
+        "DEXTER_LAB.hearthTerrainExpression"
+      ],
+      materialExpression: [
+        "HEARTH_MATERIAL_EXPRESSION",
+        "HEARTH.materialExpression",
+        "DEXTER_LAB.hearthMaterialExpression"
+      ],
+      hydrologyExpression: [
+        "HEARTH_HYDROLOGY_EXPRESSION",
+        "HEARTH.hydrologyExpression",
+        "DEXTER_LAB.hearthHydrologyExpression"
+      ],
+      mountainExpression: [
+        "HEARTH_MOUNTAIN_EXPRESSION",
+        "HEARTH.mountainExpression",
+        "DEXTER_LAB.hearthMountainExpression"
+      ],
+      atmosphereExpression: [
+        "HEARTH_ATMOSPHERE_EXPRESSION",
+        "HEARTH.atmosphereExpression",
+        "DEXTER_LAB.hearthAtmosphereExpression"
+      ],
+      geometryExpression: [
+        "HEARTH_GEOMETRY_EXPRESSION",
+        "HEARTH.geometryExpression",
+        "DEXTER_LAB.hearthGeometryExpression"
       ]
     };
 
@@ -1848,12 +1982,87 @@
     };
   }
 
+  function readHeldExpressionFinger(kind) {
+    const child = readCanvasChild(kind);
+    const receipt = readReceipt(child) || {};
+    const observed = Boolean(child);
+    const ready = Boolean(
+      observed &&
+      (
+        safeBool(receipt.expressionReady, false) ||
+        safeBool(receipt.expressionPacketReady, false) ||
+        safeBool(receipt.fingerReady, false) ||
+        safeBool(receipt.apiReady, false) ||
+        isFunction(child.getReceipt) ||
+        isFunction(child.getReceiptLight) ||
+        isFunction(child.read) ||
+        isFunction(child.getExpressionPacket)
+      )
+    );
+
+    return {
+      kind,
+      child,
+      receipt,
+      observed,
+      ready,
+      requiredNow: false,
+      status: observed
+        ? ready
+          ? FINGER_STATUS.HELD_DISCOVERED_NOT_REQUIRED
+          : FINGER_STATUS.HELD_NAMED_NOT_REQUIRED
+        : FINGER_STATUS.HELD_NAMED_NOT_REQUIRED
+    };
+  }
+
+  function scanHeldExpressionFingers() {
+    const kinds = [
+      "expressionPort",
+      "terrainExpression",
+      "materialExpression",
+      "hydrologyExpression",
+      "mountainExpression",
+      "atmosphereExpression",
+      "geometryExpression"
+    ];
+
+    const observed = {};
+    const ready = {};
+    const statuses = {};
+
+    kinds.forEach((kind) => {
+      const result = readHeldExpressionFinger(kind);
+      observed[kind] = result.observed;
+      ready[kind] = result.ready;
+      statuses[kind] = result.status;
+    });
+
+    state.heldExpressionFingersObserved = observed;
+    state.heldExpressionFingersReady = ready;
+    state.heldExpressionFingerStatuses = statuses;
+    state.expressionPortObserved = Boolean(observed.expressionPort);
+    state.expressionPortReady = Boolean(ready.expressionPort);
+    state.expressionPortRequiredNow = false;
+
+    return {
+      observed,
+      ready,
+      statuses,
+      expressionPortObserved: state.expressionPortObserved,
+      expressionPortReady: state.expressionPortReady,
+      expressionPortRequiredNow: false
+    };
+  }
+
   function recomputeChildAggregation() {
     const east = scanEast();
     const west = scanWest();
     const south = scanSouth();
+    scanHeldExpressionFingers();
 
     state.allCanvasChildrenApiReady = Boolean(east.apiReady && west.apiReady && south.apiReady);
+    state.activeCanvasChildrenReady = state.allCanvasChildrenApiReady;
+
     state.allCanvasChildrenEvidenceReady = Boolean(
       east.evidenceReady &&
       west.inspectionReady &&
@@ -1928,6 +2137,7 @@
       east,
       west,
       south,
+      heldExpressionFingers: clonePlain(state.heldExpressionFingerStatuses),
       allCanvasChildrenApiReady: state.allCanvasChildrenApiReady,
       allCanvasChildrenEvidenceReady: state.allCanvasChildrenEvidenceReady,
       allCanvasChildrenReady: state.allCanvasChildrenReady,
@@ -2013,6 +2223,10 @@
       gap = "WAITING_CANVAS_F13_STRICT_EVIDENCE";
       target = SOUTH_FILE;
       status = "CANVAS_LOCAL_STATION_WAITING_CANVAS_F13_STRICT_EVIDENCE";
+    } else {
+      gap = "READY_FOR_CANVAS_EXPRESSION_PORT_AUDIT";
+      target = CANVAS_EXPRESSION_PORT_FILE;
+      status = "CANVAS_LOCAL_STATION_READY_FOR_CANVAS_EXPRESSION_PORT_AUDIT";
     }
 
     state.f13StrictEvidenceGap = gap;
@@ -2090,7 +2304,8 @@
       state.westObserved ||
       state.southObserved ||
       state.allCanvasChildrenApiReady ||
-      state.f13CanvasReadinessObserved
+      state.f13CanvasReadinessObserved ||
+      state.canvasFingerRegistryEmbedded
     );
 
     const mismatch = !routeCurrent
@@ -2124,6 +2339,8 @@
       packetType: "HEARTH_CANVAS_DIAGNOSTIC_BRIDGE_SUMMARY",
       contract: CONTRACT,
       receipt: RECEIPT,
+      renewalLayerContract: RENEWAL_LAYER_CONTRACT,
+      renewalLayerReceipt: RENEWAL_LAYER_RECEIPT,
       file: FILE,
       route: ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
@@ -2135,6 +2352,12 @@
       expressionPortsBuilt: false,
       expressionPacketAccepted: false,
       expressionComplete: false,
+
+      canvasFingerManagerActive: true,
+      canvasFingerRegistryEmbedded: true,
+      fileRegistry: clonePlain(FILE_REGISTRY),
+      heldExpressionFingersDoNotBlockCurrentCycle: true,
+      futureExpressionFingersNamedNotRequired: true,
 
       currentRouteConductorRequiredContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
       currentRouteConductorRequiredReceipt: CURRENT_ROUTE_CONDUCTOR_RECEIPT,
@@ -2148,6 +2371,7 @@
       routeConductorLegacyV9_2AuthorityAccepted: false,
 
       canvasParentCurrentContract: CONTRACT,
+      canvasParentCurrentReceipt: RECEIPT,
       canvasParentPreviousContract: PREVIOUS_CONTRACT,
       canvasParentContractCurrent: canvasCurrent,
       canvasLocalStationActive: true,
@@ -2173,6 +2397,8 @@
       allCanvasChildrenApiReady: state.allCanvasChildrenApiReady,
       allCanvasChildrenEvidenceReady: state.allCanvasChildrenEvidenceReady,
 
+      heldExpressionFingerStatuses: clonePlain(state.heldExpressionFingerStatuses),
+
       f13CanvasEvidenceStrict: state.f13CanvasEvidenceStrict,
       f13CanvasEvidenceDegraded: state.f13CanvasEvidenceDegraded,
       f13CanvasEvidenceComplete: state.f13CanvasEvidenceComplete,
@@ -2183,7 +2409,7 @@
       firstFailedCoordinate: firstFailed,
       recommendedNextFile: recommended,
       recommendedNextRenewalTarget: recommended,
-      bridgeReadyForExpressionPortAudit: Boolean(mismatch === "false"),
+      bridgeReadyForExpressionPortAudit: Boolean(mismatch === "false" && state.allCanvasChildrenReady),
       bridgeReadyForExpressionPortBuild: false,
 
       noClaimsPreserved: true,
@@ -2334,7 +2560,7 @@
     return getCanvasStationSummary();
   }
 
-  function receiveChildPacket(packet) {
+  function receiveExpressionFingerPacket(packet) {
     if (!isObject(packet)) return false;
 
     state.lastChildPacket = clonePlain(packet);
@@ -2342,7 +2568,43 @@
     trimArray(state.childPackets, 60);
 
     const sourceFile = safeString(packet.sourceFile || packet.file || "");
-    const role = upperText(packet.childRole || packet.sourceRole || packet.role || packet.handoffFrom || packet.receivedFrom);
+    const role = upperText(packet.childRole || packet.sourceRole || packet.role || packet.handoffFrom || packet.receivedFrom || packet.fingerRole);
+
+    let key = "";
+    if (sourceFile === CANVAS_EXPRESSION_PORT_FILE || role.includes("EXPRESSION_PORT")) key = "expressionPort";
+    if (sourceFile === TERRAIN_EXPRESSION_FILE || role.includes("TERRAIN")) key = "terrainExpression";
+    if (sourceFile === MATERIAL_EXPRESSION_FILE || role.includes("MATERIAL")) key = "materialExpression";
+    if (sourceFile === HYDROLOGY_EXPRESSION_FILE || role.includes("HYDROLOGY") || role.includes("WATER")) key = "hydrologyExpression";
+    if (sourceFile === MOUNTAIN_EXPRESSION_FILE || role.includes("MOUNTAIN") || role.includes("ELEVATION")) key = "mountainExpression";
+    if (sourceFile === ATMOSPHERE_EXPRESSION_FILE || role.includes("ATMOSPHERE") || role.includes("AIR")) key = "atmosphereExpression";
+    if (sourceFile === GEOMETRY_EXPRESSION_FILE || role.includes("GEOMETRY") || role.includes("BODY")) key = "geometryExpression";
+
+    if (key) {
+      state.heldExpressionFingersObserved[key] = true;
+      state.heldExpressionFingersReady[key] = Boolean(
+        packet.expressionReady === true ||
+        packet.expressionPacketReady === true ||
+        packet.fingerReady === true ||
+        packet.apiReady === true
+      );
+      state.heldExpressionFingerStatuses[key] = state.heldExpressionFingersReady[key]
+        ? FINGER_STATUS.HELD_DISCOVERED_NOT_REQUIRED
+        : FINGER_STATUS.HELD_NAMED_NOT_REQUIRED;
+    }
+
+    recomputeParentState();
+    updateDataset();
+    publishGlobals();
+    notifyRouteConductor();
+
+    return true;
+  }
+
+  function receiveChildPacket(packet) {
+    if (!isObject(packet)) return false;
+
+    const sourceFile = safeString(packet.sourceFile || packet.file || "");
+    const role = upperText(packet.childRole || packet.sourceRole || packet.role || packet.handoffFrom || packet.receivedFrom || packet.fingerRole);
 
     if (sourceFile === EAST_FILE || role.includes("EAST")) {
       receiveEastPacket(packet);
@@ -2351,13 +2613,34 @@
     } else if (sourceFile === SOUTH_FILE || role.includes("SOUTH")) {
       receiveSouthPacket(packet);
     } else {
-      recomputeParentState();
-      updateDataset();
-      publishGlobals();
-      notifyRouteConductor();
+      receiveExpressionFingerPacket(packet);
     }
 
     return true;
+  }
+
+  function getFileRegistry() {
+    return clonePlain(FILE_REGISTRY);
+  }
+
+  function getFingerRegistry() {
+    return {
+      timestamp: nowIso(),
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      renewalLayerContract: RENEWAL_LAYER_CONTRACT,
+      renewalLayerReceipt: RENEWAL_LAYER_RECEIPT,
+      file: FILE,
+      active: clonePlain(FILE_REGISTRY.active),
+      heldExpressionFingers: clonePlain(FILE_REGISTRY.heldExpressionFingers),
+      heldExpressionFingersDoNotBlockCurrentCycle: true,
+      futureExpressionFingersNamedNotRequired: true,
+      expressionPortRequiredNow: false,
+      statuses: clonePlain(state.heldExpressionFingerStatuses),
+      observed: clonePlain(state.heldExpressionFingersObserved),
+      ready: clonePlain(state.heldExpressionFingersReady),
+      ...FINAL_FALSE
+    };
   }
 
   function getCanvasStationSummary() {
@@ -2367,12 +2650,16 @@
       timestamp: state.timestamp || nowIso(),
       contract: CONTRACT,
       receipt: RECEIPT,
+      renewalLayerContract: RENEWAL_LAYER_CONTRACT,
+      renewalLayerReceipt: RENEWAL_LAYER_RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       previousReceipt: PREVIOUS_RECEIPT,
       baselineContract: BASELINE_CONTRACT,
       baselineReceipt: BASELINE_RECEIPT,
       acceptedBaselineContract: ACCEPTED_BASELINE_CONTRACT,
       acceptedBaselineReceipt: ACCEPTED_BASELINE_RECEIPT,
+      releaseBaselineContract: RELEASE_BASELINE_CONTRACT,
+      releaseBaselineReceipt: RELEASE_BASELINE_RECEIPT,
       currentRouteConductorRequiredContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
       currentRouteConductorRequiredReceipt: CURRENT_ROUTE_CONDUCTOR_RECEIPT,
       lineageRouteConductorContract: LINEAGE_ROUTE_CONDUCTOR_CONTRACT,
@@ -2387,6 +2674,9 @@
       diagnosticRoute: DIAGNOSTIC_ROUTE,
 
       canvasLocalStationActive: true,
+      canvasParentActive: true,
+      canvasFingerManagerActive: true,
+      canvasFingerRegistryEmbedded: true,
       childDistributionSwitchboardActive: true,
       releaseAcceptanceActive: true,
       eastDispatchActive: true,
@@ -2398,12 +2688,26 @@
       expressionPortsBuilt: false,
       expressionPacketAccepted: false,
       expressionComplete: false,
+      heldExpressionFingersDoNotBlockCurrentCycle: true,
+      futureExpressionFingersNamedNotRequired: true,
+
+      fileRegistry: clonePlain(FILE_REGISTRY),
+      activeFingerRegistry: clonePlain(FILE_REGISTRY.active),
+      heldExpressionFingerRegistry: clonePlain(FILE_REGISTRY.heldExpressionFingers),
+      heldExpressionFingerStatuses: clonePlain(state.heldExpressionFingerStatuses),
+      heldExpressionFingersObserved: clonePlain(state.heldExpressionFingersObserved),
+      heldExpressionFingersReady: clonePlain(state.heldExpressionFingersReady),
+      expressionPortObserved: state.expressionPortObserved,
+      expressionPortReady: state.expressionPortReady,
+      expressionPortRequiredNow: false,
 
       currentCanvasParentObserved: true,
       currentCanvasParentContractObserved: true,
       currentCanvasParentContract: CONTRACT,
+      currentCanvasParentReceipt: RECEIPT,
       currentCanvasParentIsLocalStation: true,
-      currentCanvasParentIsV11_5: true,
+      currentCanvasParentIsV11_5Compatible: true,
+      currentCanvasParentHasFingerManagerLayerV11_6: true,
       previousCanvasParentContract: PREVIOUS_CONTRACT,
       baselineCanvasParentContract: BASELINE_CONTRACT,
       acceptedBaselineCanvasParentContract: ACCEPTED_BASELINE_CONTRACT,
@@ -2496,6 +2800,7 @@
       allCanvasChildrenApiReady: state.allCanvasChildrenApiReady,
       allCanvasChildrenEvidenceReady: state.allCanvasChildrenEvidenceReady,
       allCanvasChildrenReady: state.allCanvasChildrenReady,
+      activeCanvasChildrenReady: state.activeCanvasChildrenReady,
 
       f13CanvasReadinessObserved: state.f13CanvasReadinessObserved,
       f13VisibleEvidenceAvailable: state.f13VisibleEvidenceAvailable,
@@ -2547,7 +2852,8 @@
       lastWestReceipt: clonePlain(state.lastWestReceipt),
       lastSouthReceipt: clonePlain(state.lastSouthReceipt),
       lastRouteConductorAuthorityReceipt: clonePlain(state.lastRouteConductorAuthorityReceipt),
-      lastDiagnosticBridgeSummary: clonePlain(state.lastDiagnosticBridgeSummary)
+      lastDiagnosticBridgeSummary: clonePlain(state.lastDiagnosticBridgeSummary),
+      fingerRegistry: getFingerRegistry()
     };
   }
 
@@ -2569,7 +2875,8 @@
         canvasSouthApiReady: state.southApiReady,
         canvasSouthVisibleProofReady: state.canvasSouthVisibleProofReady,
         allCanvasChildrenApiReady: state.allCanvasChildrenApiReady,
-        allCanvasChildrenEvidenceReady: state.allCanvasChildrenEvidenceReady
+        allCanvasChildrenEvidenceReady: state.allCanvasChildrenEvidenceReady,
+        heldExpressionFingerStatuses: clonePlain(state.heldExpressionFingerStatuses)
       },
       ...FINAL_FALSE
     };
@@ -2580,13 +2887,15 @@
       timestamp: state.timestamp || nowIso(),
       contract: CONTRACT,
       receipt: RECEIPT,
+      renewalLayerContract: RENEWAL_LAYER_CONTRACT,
+      renewalLayerReceipt: RENEWAL_LAYER_RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       baselineContract: BASELINE_CONTRACT,
       acceptedBaselineContract: ACCEPTED_BASELINE_CONTRACT,
       file: FILE,
       route: ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
-      role: "canvas-local-station-structural-carrier",
+      role: "canvas-local-station-structural-carrier-finger-manager",
 
       structuralCarrierReady: true,
       structuralCarrierSafe: true,
@@ -2595,13 +2904,20 @@
       currentCanvasParentObserved: true,
       currentCanvasParentContractObserved: true,
       currentCanvasParentContract: CONTRACT,
+      currentCanvasParentReceipt: RECEIPT,
       canvasParentBootMethodAvailable: true,
       canvasLocalStationActive: true,
+      canvasFingerManagerActive: true,
+      canvasFingerRegistryEmbedded: true,
       childDistributionSwitchboardActive: true,
       releaseAcceptanceActive: true,
       eastDispatchActive: true,
       canvasChildAggregationActive: true,
       diagnosticBridgeActive: true,
+
+      fileRegistry: clonePlain(FILE_REGISTRY),
+      heldExpressionFingersDoNotBlockCurrentCycle: true,
+      futureExpressionFingersNamedNotRequired: true,
 
       routeConductorCurrentRecognized: state.routeConductorCurrentRecognized,
       routeConductorCurrentV9_4Recognized: state.routeConductorCurrentV9_4Recognized,
@@ -2633,6 +2949,8 @@
       allCanvasChildrenApiReady: state.allCanvasChildrenApiReady,
       allCanvasChildrenEvidenceReady: state.allCanvasChildrenEvidenceReady,
       allCanvasChildrenReady: state.allCanvasChildrenReady,
+
+      heldExpressionFingerStatuses: clonePlain(state.heldExpressionFingerStatuses),
 
       f13CanvasEvidenceStrict: state.f13CanvasEvidenceStrict,
       f13CanvasEvidenceDegraded: state.f13CanvasEvidenceDegraded,
@@ -2679,6 +2997,7 @@
       currentReceipt: true,
       structuralCarrier: getStructuralCarrier(),
       diagnosticBridgeReceipt: getDiagnosticBridgeReceipt(),
+      fingerRegistry: getFingerRegistry(),
       childPackets: clonePlain(state.childPackets),
       localEvents: clonePlain(state.localEvents),
       errors: clonePlain(state.errors)
@@ -2693,11 +3012,13 @@
     const r = getCanvasStationSummary();
 
     return [
-      "HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_4_DIAGNOSTIC_BRIDGE_ALIGNMENT_RECEIPT",
+      "HEARTH_CANVAS_LOCAL_STATION_FINGER_MANAGER_REGISTRY_EXPANSION_RECEIPT",
       "",
       line("timestamp", r.timestamp),
       line("contract", r.contract),
       line("receipt", r.receipt),
+      line("renewalLayerContract", r.renewalLayerContract),
+      line("renewalLayerReceipt", r.renewalLayerReceipt),
       line("previousContract", r.previousContract),
       line("previousReceipt", r.previousReceipt),
       line("baselineContract", r.baselineContract),
@@ -2709,6 +3030,30 @@
       line("diagnosticRoute", DIAGNOSTIC_ROUTE),
       line("role", state.role),
       "",
+      "FINGER_MANAGER",
+      line("canvasFingerManagerActive", true),
+      line("canvasFingerRegistryEmbedded", true),
+      line("heldExpressionFingersDoNotBlockCurrentCycle", true),
+      line("futureExpressionFingersNamedNotRequired", true),
+      line("expressionPortRequiredNow", false),
+      line("expressionPortsBuilt", false),
+      "",
+      "ACTIVE_FILES",
+      line("routeHubFile", ROUTE_FILE),
+      line("canvasParentFile", FILE),
+      line("canvasEastFile", EAST_FILE),
+      line("canvasWestFile", WEST_FILE),
+      line("canvasSouthFile", SOUTH_FILE),
+      "",
+      "HELD_EXPRESSION_FINGERS",
+      line("canvasExpressionPortFile", CANVAS_EXPRESSION_PORT_FILE),
+      line("terrainExpressionFile", TERRAIN_EXPRESSION_FILE),
+      line("materialExpressionFile", MATERIAL_EXPRESSION_FILE),
+      line("hydrologyExpressionFile", HYDROLOGY_EXPRESSION_FILE),
+      line("mountainExpressionFile", MOUNTAIN_EXPRESSION_FILE),
+      line("atmosphereExpressionFile", ATMOSPHERE_EXPRESSION_FILE),
+      line("geometryExpressionFile", GEOMETRY_EXPRESSION_FILE),
+      "",
       "BRIDGE_ALIGNMENT",
       line("diagnosticBridgeActive", true),
       line("diagnosticReceiptBridgeActive", true),
@@ -2717,17 +3062,12 @@
       line("diagnosticBridgeFirstFailedCoordinate", r.diagnosticBridgeFirstFailedCoordinate),
       line("diagnosticBridgeRecommendedNextFile", r.diagnosticBridgeRecommendedNextFile),
       line("expressionBridgeHeld", true),
-      line("expressionPortsBuilt", false),
       line("expressionPacketAccepted", false),
       line("expressionComplete", false),
       "",
       "ROUTE_CONDUCTOR_ALIGNMENT",
       line("currentRouteConductorRequiredContract", CURRENT_ROUTE_CONDUCTOR_CONTRACT),
       line("currentRouteConductorRequiredReceipt", CURRENT_ROUTE_CONDUCTOR_RECEIPT),
-      line("lineageRouteConductorContract", LINEAGE_ROUTE_CONDUCTOR_CONTRACT),
-      line("lineageRouteConductorReceipt", LINEAGE_ROUTE_CONDUCTOR_RECEIPT),
-      line("legacyRouteConductorContract", LEGACY_ROUTE_CONDUCTOR_CONTRACT),
-      line("legacyRouteConductorReceipt", LEGACY_ROUTE_CONDUCTOR_RECEIPT),
       line("routeConductorObserved", r.routeConductorObserved),
       line("routeConductorContractKnown", r.routeConductorContractKnown),
       line("routeConductorContract", r.routeConductorContract),
@@ -2735,24 +3075,7 @@
       line("routeConductorContractRecognized", r.routeConductorContractRecognized),
       line("routeConductorCurrentRecognized", r.routeConductorCurrentRecognized),
       line("routeConductorCurrentV9_4Recognized", r.routeConductorCurrentV9_4Recognized),
-      line("routeConductorLineageV9_3Observed", r.routeConductorLineageV9_3Observed),
-      line("routeConductorLineageV9_3AuthorityAccepted", false),
-      line("routeConductorLegacyV9_2Observed", r.routeConductorLegacyV9_2Observed),
-      line("routeConductorLegacyV9_2AuthorityAccepted", false),
-      line("routeConductorAuthoritySourceName", r.routeConductorAuthoritySourceName),
-      line("routeConductorAuthoritySourceMethod", r.routeConductorAuthoritySourceMethod),
       line("routeConductorReleaseAuthorityAccepted", r.routeConductorReleaseAuthorityAccepted),
-      "",
-      "OBSERVATION_BOUNDARY",
-      line("observedFallbackRouteConductorSourceName", r.observedFallbackRouteConductorSourceName),
-      line("observedFallbackRouteConductorContract", r.observedFallbackRouteConductorContract),
-      line("observedFallbackRouteConductorReceipt", r.observedFallbackRouteConductorReceipt),
-      line("fallbackSourcesAreObservationOnly", r.fallbackSourcesAreObservationOnly),
-      line("datasetMayProveServedCurrentContract", r.datasetMayProveServedCurrentContract),
-      line("datasetIsReportingOnlyNotReleaseAuthority", r.datasetIsReportingOnlyNotReleaseAuthority),
-      line("datasetReleaseAuthorityBlocked", r.datasetReleaseAuthorityBlocked),
-      line("globalFallbackIsObservationOnlyUnlessCurrentRouteConductor", r.globalFallbackIsObservationOnlyUnlessCurrentRouteConductor),
-      line("globalReleaseAuthorityBlocked", r.globalReleaseAuthorityBlocked),
       "",
       "RELEASE_INTAKE",
       line("releasePacketObserved", r.releasePacketObserved),
@@ -2761,7 +3084,6 @@
       line("acceptedReleaseSource", r.acceptedReleaseSource),
       line("releasePacketAuthoritySource", r.releasePacketAuthoritySource),
       line("releasePacketIntakeMethod", r.releasePacketIntakeMethod),
-      line("candidateReleaseIntakeMethod", r.candidateReleaseIntakeMethod),
       line("releaseValidationFailures", r.releaseValidationFailures.join(",") || "none"),
       "",
       "PARENT_RELEASE",
@@ -2845,6 +3167,8 @@
     setDataset("hearthCanvasLoaded", "true");
     setDataset("hearthCanvasContract", CONTRACT);
     setDataset("hearthCanvasReceipt", RECEIPT);
+    setDataset("hearthCanvasRenewalLayerContract", RENEWAL_LAYER_CONTRACT);
+    setDataset("hearthCanvasRenewalLayerReceipt", RENEWAL_LAYER_RECEIPT);
     setDataset("hearthCanvasPreviousContract", PREVIOUS_CONTRACT);
     setDataset("hearthCanvasPreviousReceipt", PREVIOUS_RECEIPT);
     setDataset("hearthCanvasBaselineContract", BASELINE_CONTRACT);
@@ -2853,12 +3177,33 @@
     setDataset("hearthCanvasAcceptedBaselineReceipt", ACCEPTED_BASELINE_RECEIPT);
 
     setDataset("hearthCanvasLocalStationActive", "true");
+    setDataset("hearthCanvasParentActive", "true");
+    setDataset("hearthCanvasFingerManagerActive", "true");
+    setDataset("hearthCanvasFingerRegistryEmbedded", "true");
     setDataset("hearthCanvasChildDistributionSwitchboardActive", "true");
-    setDataset("hearthCanvasParentV11_5Active", "true");
+    setDataset("hearthCanvasParentV11_5CompatibleActive", "true");
+    setDataset("hearthCanvasParentFingerManagerLayerV116Active", "true");
     setDataset("hearthCanvasParentV11_4Superseded", "true");
     setDataset("hearthCanvasParentV11_3_1BaselineRecognized", "true");
     setDataset("hearthCanvasParentV10_3BaselineRecognized", "true");
     setDataset("hearthCanvasV10_3BaselineRecognizedOnly", "false");
+
+    setDataset("hearthCanvasRouteHubFile", ROUTE_FILE);
+    setDataset("hearthCanvasParentFile", FILE);
+    setDataset("hearthCanvasEastFile", EAST_FILE);
+    setDataset("hearthCanvasWestFile", WEST_FILE);
+    setDataset("hearthCanvasSouthFile", SOUTH_FILE);
+
+    setDataset("hearthCanvasExpressionPortFile", CANVAS_EXPRESSION_PORT_FILE);
+    setDataset("hearthTerrainExpressionFile", TERRAIN_EXPRESSION_FILE);
+    setDataset("hearthMaterialExpressionFile", MATERIAL_EXPRESSION_FILE);
+    setDataset("hearthHydrologyExpressionFile", HYDROLOGY_EXPRESSION_FILE);
+    setDataset("hearthMountainExpressionFile", MOUNTAIN_EXPRESSION_FILE);
+    setDataset("hearthAtmosphereExpressionFile", ATMOSPHERE_EXPRESSION_FILE);
+    setDataset("hearthGeometryExpressionFile", GEOMETRY_EXPRESSION_FILE);
+    setDataset("hearthCanvasHeldExpressionFingersDoNotBlockCurrentCycle", "true");
+    setDataset("hearthCanvasFutureExpressionFingersNamedNotRequired", "true");
+    setDataset("hearthCanvasExpressionPortRequiredNow", "false");
 
     setDataset("hearthCanvasDiagnosticBridgeActive", "true");
     setDataset("hearthCanvasDiagnosticReceiptBridgeActive", "true");
@@ -2908,6 +3253,7 @@
     setDataset("hearthCanvasCurrentCanvasParentObserved", "true");
     setDataset("hearthCanvasCurrentCanvasParentContractObserved", "true");
     setDataset("hearthCanvasCurrentCanvasParentContract", CONTRACT);
+    setDataset("hearthCanvasCurrentCanvasParentReceipt", RECEIPT);
     setDataset("hearthCanvasParentBootMethodAvailable", "true");
 
     setDataset("hearthCanvasReleasePacketObserved", String(state.releasePacketObserved));
@@ -3010,6 +3356,7 @@
     hearth.canvasChildDistributionSwitchboard = api;
     hearth.canvasParentReleaseAcceptanceEastDispatchSwitchboard = api;
     hearth.canvasDiagnosticBridge = api;
+    hearth.canvasFingerManager = api;
 
     root.HEARTH_CANVAS = api;
     root.HEARTH_CANVAS_PARENT = api;
@@ -3021,6 +3368,7 @@
     root.HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD = api;
     root.HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD = api;
     root.HEARTH_CANVAS_DIAGNOSTIC_BRIDGE = api;
+    root.HEARTH_CANVAS_FINGER_MANAGER = api;
 
     lab.hearthCanvas = api;
     lab.hearthCanvasParent = api;
@@ -3030,10 +3378,12 @@
     lab.hearthCanvasChildDistributionSwitchboard = api;
     lab.hearthCanvasParentReleaseAcceptanceEastDispatchSwitchboard = api;
     lab.hearthCanvasDiagnosticBridge = api;
+    lab.hearthCanvasFingerManager = api;
 
     const light = getReceiptLight();
     const full = getReceipt();
     const bridge = getDiagnosticBridgeReceipt();
+    const registry = getFingerRegistry();
 
     root.HEARTH_CANVAS_RECEIPT = light;
     root.HEARTH_CANVAS_PARENT_RECEIPT = light;
@@ -3043,9 +3393,13 @@
     root.HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_RECEIPT = full;
     root.HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_4_DIAGNOSTIC_BRIDGE_ALIGNMENT_RECEIPT = full;
     root.HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_4_DIAGNOSTIC_BRIDGE_ALIGNMENT_RECEIPT_v11_5 = full;
+    root.HEARTH_CANVAS_LOCAL_STATION_FINGER_MANAGER_REGISTRY_EXPANSION_RECEIPT = full;
+    root.HEARTH_CANVAS_LOCAL_STATION_FINGER_MANAGER_REGISTRY_EXPANSION_RECEIPT_v11_6 = full;
     root.HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD_RECEIPT = full;
     root.HEARTH_CANVAS_DIAGNOSTIC_BRIDGE_RECEIPT = bridge;
     root.HEARTH_CANVAS_DIAGNOSTIC_BRIDGE_SUMMARY = clonePlain(state.lastDiagnosticBridgeSummary);
+    root.HEARTH_CANVAS_FINGER_REGISTRY = registry;
+    root.HEARTH_CANVAS_FINGER_MANAGER_RECEIPT = registry;
 
     hearth.canvasReceipt = light;
     hearth.canvasParentReceipt = light;
@@ -3054,6 +3408,8 @@
     hearth.canvasChildDistributionSwitchboardReceipt = full;
     hearth.canvasDiagnosticBridgeReceipt = bridge;
     hearth.canvasDiagnosticBridgeSummary = clonePlain(state.lastDiagnosticBridgeSummary);
+    hearth.canvasFingerRegistry = registry;
+    hearth.canvasFingerManagerReceipt = registry;
 
     lab.hearthCanvasReceipt = light;
     lab.hearthCanvasParentReceipt = light;
@@ -3062,6 +3418,8 @@
     lab.hearthCanvasChildDistributionSwitchboardReceipt = full;
     lab.hearthCanvasDiagnosticBridgeReceipt = bridge;
     lab.hearthCanvasDiagnosticBridgeSummary = clonePlain(state.lastDiagnosticBridgeSummary);
+    lab.hearthCanvasFingerRegistry = registry;
+    lab.hearthCanvasFingerManagerReceipt = registry;
 
     hearth.canvasStructuralCarrier = getStructuralCarrier();
     hearth.canvasCarrier = getStructuralCarrier();
@@ -3075,6 +3433,7 @@
       publishEastDispatchPacket(state.lastEastDispatchPacket);
     }
 
+    state.fingerRegistryPublished = true;
     state.publishedAt = state.publishedAt || nowIso();
     state.updatedAt = nowIso();
 
@@ -3087,11 +3446,14 @@
     const candidates = [
       readPath("HEARTH_ROUTE_CONDUCTOR"),
       readPath("HEARTH.routeConductor"),
+      readPath("HEARTH.routeHub"),
       readPath("DEXTER_LAB.hearthRouteConductor"),
+      readPath("DEXTER_LAB.hearthRouteHub"),
       readPath("HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT"),
       readPath("HEARTH.routeConductorCanvasLocalStationBridgeAlignment"),
       readPath("DEXTER_LAB.hearthRouteConductorCanvasLocalStationBridgeAlignment"),
       root.HEARTH_ROUTE_CONDUCTOR,
+      root.HEARTH_ROUTE_HUB,
       readPath("HEARTH.routeConductorControlOwnershipPassiveWatchdogRepair"),
       readPath("DEXTER_LAB.hearthRouteConductorControlOwnershipPassiveWatchdogRepair")
     ];
@@ -3155,13 +3517,9 @@
 
     state.bootAuditComplete = true;
 
-    record("CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_4_DIAGNOSTIC_BRIDGE_ALIGNMENT_BOOT_AUDIT_COMPLETE", {
+    record("CANVAS_LOCAL_STATION_FINGER_MANAGER_REGISTRY_EXPANSION_BOOT_AUDIT_COMPLETE", {
       routeConductorCurrentRecognized: state.routeConductorCurrentRecognized,
       routeConductorCurrentV9_4Recognized: state.routeConductorCurrentV9_4Recognized,
-      routeConductorLineageV9_3Observed: state.routeConductorLineageV9_3Observed,
-      routeConductorLineageV9_3AuthorityAccepted: false,
-      routeConductorLegacyV9_2Observed: state.routeConductorLegacyV9_2Observed,
-      routeConductorLegacyV9_2AuthorityAccepted: false,
       routeConductorReleaseAuthorityAccepted: state.routeConductorReleaseAuthorityAccepted,
       releasePacketObserved: state.releasePacketObserved,
       releasePacketValid: state.releasePacketValid,
@@ -3170,6 +3528,10 @@
       canvasParentReleaseAccepted: state.canvasParentReleaseAccepted,
       eastDispatchPacketPublished: state.eastDispatchPacketPublished,
       diagnosticBridgeSummaryStatus: state.diagnosticBridgeSummaryStatus,
+      canvasFingerManagerActive: true,
+      canvasFingerRegistryEmbedded: true,
+      heldExpressionFingersDoNotBlockCurrentCycle: true,
+      futureExpressionFingersNamedNotRequired: true,
       expressionBridgeHeld: true,
       expressionPortsBuilt: false,
       getLastEastDispatchPacketAvailable: true,
@@ -3202,12 +3564,16 @@
   Object.assign(api, {
     CONTRACT,
     RECEIPT,
+    RENEWAL_LAYER_CONTRACT,
+    RENEWAL_LAYER_RECEIPT,
     PREVIOUS_CONTRACT,
     PREVIOUS_RECEIPT,
     BASELINE_CONTRACT,
     BASELINE_RECEIPT,
     ACCEPTED_BASELINE_CONTRACT,
     ACCEPTED_BASELINE_RECEIPT,
+    RELEASE_BASELINE_CONTRACT,
+    RELEASE_BASELINE_RECEIPT,
     CURRENT_ROUTE_CONDUCTOR_CONTRACT,
     CURRENT_ROUTE_CONDUCTOR_RECEIPT,
     LINEAGE_ROUTE_CONDUCTOR_CONTRACT,
@@ -3220,9 +3586,17 @@
     TARGET_FILE,
     ROUTE_FILE,
     INDEX_FILE,
+    HTML_FILE,
     EAST_FILE,
     WEST_FILE,
     SOUTH_FILE,
+    CANVAS_EXPRESSION_PORT_FILE,
+    TERRAIN_EXPRESSION_FILE,
+    MATERIAL_EXPRESSION_FILE,
+    HYDROLOGY_EXPRESSION_FILE,
+    MOUNTAIN_EXPRESSION_FILE,
+    ATMOSPHERE_EXPRESSION_FILE,
+    GEOMETRY_EXPRESSION_FILE,
     MACRO_WEST_FILE,
     NORTH_FILE,
     ROUTE,
@@ -3233,9 +3607,13 @@
     CHILD_STATUS,
     EAST_RESULT_CLASS,
     CANVAS_CHILD_SEQUENCE,
+    FILE_REGISTRY,
+    FINGER_STATUS,
 
     contract: CONTRACT,
     receipt: RECEIPT,
+    renewalLayerContract: RENEWAL_LAYER_CONTRACT,
+    renewalLayerReceipt: RENEWAL_LAYER_RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
     baselineContract: BASELINE_CONTRACT,
@@ -3265,6 +3643,7 @@
     receiveEastPacket,
     receiveWestPacket,
     receiveSouthPacket,
+    receiveExpressionFingerPacket,
 
     normalizeReleasePacket,
     validateReleasePacket,
@@ -3279,6 +3658,7 @@
     scanEast,
     scanWest,
     scanSouth,
+    scanHeldExpressionFingers,
     recomputeChildAggregation,
     recomputeParentState,
     resolveF13Gap,
@@ -3297,6 +3677,9 @@
     getCanvasCarrier,
     getCarrierReceipt,
 
+    getFileRegistry,
+    getFingerRegistry,
+
     getReceipt,
     getReceiptLight,
     getReceiptText,
@@ -3308,6 +3691,9 @@
 
     supportsCanvasLocalStation: true,
     supportsChildDistributionSwitchboard: true,
+    supportsCanvasFingerManager: true,
+    supportsCanvasFingerRegistry: true,
+    supportsHeldExpressionFingerRegistry: true,
     supportsRouteConductorReleasePacketIntake: true,
     supportsCurrentRouteConductorV9_4Authority: true,
     supportsLineageRouteConductorV9_3ObservationOnly: true,
@@ -3325,11 +3711,14 @@
     supportsCanvasChildAggregation: true,
     supportsEastApiEvidenceSeparation: true,
     supportsHeldPacketDoesNotDemoteApi: true,
+    supportsHeldExpressionFingersDoNotBlockCurrentCycle: true,
+    supportsFutureExpressionFingersNamedNotRequired: true,
     supportsRouteConductorSummarySurface: true,
     supportsDatasetFallbackBlankPacketBlock: true,
     supportsLastEastDispatchPacketGetter: true,
 
     ownsCanvasParentIdentity: true,
+    ownsCanvasFingerManagerRegistry: true,
     ownsRouteConductorReleasePacketIntake: true,
     ownsParentReleaseAcceptance: true,
     ownsEastDispatchPacket: true,
@@ -3349,7 +3738,10 @@
     ownsHydrologyTruth: false,
     ownsTerrainTruth: false,
     ownsMountainTruth: false,
+    ownsAtmosphereTruth: false,
+    ownsGeometryTruth: false,
     ownsExpressionPortBuild: false,
+    ownsRendering: false,
     ownsF13: false,
     ownsF21: false,
     ownsReadyText: false,
@@ -3378,7 +3770,7 @@
       bootAudit({});
     }
   } catch (error) {
-    recordError("CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_4_DIAGNOSTIC_BRIDGE_ALIGNMENT_INITIALIZATION_FAILED", error);
+    recordError("CANVAS_LOCAL_STATION_FINGER_MANAGER_REGISTRY_EXPANSION_INITIALIZATION_FAILED", error);
 
     try {
       publishGlobals();

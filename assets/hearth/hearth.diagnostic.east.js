@@ -3,31 +3,34 @@
 // Full-file replacement.
 // Diagnostic rail EAST child only.
 // Purpose:
-// - Align EAST diagnostic HTML-contract recognition to the currently served Hearth production HTML shell.
+// - Align EAST served-source recognition to the currently served Hearth HTML shell.
 // - Recognize HEARTH_HTML_SINGLE_FLOATING_DIAGNOSTIC_DOORWAY_NO_DUPLICATE_TOP_BANNER_TNT_v2_4 as the current expected Hearth HTML contract.
-// - Preserve accepted lineage:
-//   HEARTH_HTML_PARALLEL_DIAGNOSTIC_RAIL_NATIVE_ACCESS_DOORWAY_TNT_v2_2
-//   HEARTH_HTML_CONTROL_SURFACE_CACHE_KEY_TOUCH_BINDING_REPAIR_TNT_v2_1
-// - Prevent false CASE_5 failure caused by stale expected-contract drift.
-// - Continue serving NORTH as source-recognition / served-source evidence only.
+// - Preserve HEARTH_HTML_PARALLEL_DIAGNOSTIC_RAIL_NATIVE_ACCESS_DOORWAY_TNT_v2_2 as accepted lineage.
+// - Preserve HEARTH_HTML_CONTROL_SURFACE_CACHE_KEY_TOUCH_BINDING_REPAIR_TNT_v2_1 as previous accepted lineage.
+// - Prevent false CASE_5 caused only by stale EAST expected-HTML contract drift.
+// - Read what the browser is actually being served for the Hearth route.
+// - Support CASE_5 evidence only for NORTH adjudication.
+// - Preserve protected production files as read-only observation targets.
 // - Preserve Diagnostic Doorway as access proof and Diagnostic Receipt as engine-truth proof.
+// - Preserve no F13, no F21, no ready text, no visual pass, no generated image, no GraphicBox, no WebGL.
 // Does not own:
-// - final PRIMARY_CASE selection
-// - final recommendation selection
 // - rendered-target probing
 // - Show Receipt testing
 // - hit-test inspection
 // - pointer-events inspection
 // - overlay inspection
-// - runtime release
-// - Canvas release
-// - route conductor handoff
+// - runtime release inspection
+// - synthetic activation
+// - final PRIMARY_CASE selection
+// - final recommendation selection
+// - packet formatting
 // - diagnostic UI
 // - Hearth repair
+// - cache repair
 // - production mutation
-// - generated image
-// - GraphicBox
-// - WebGL
+// - diagnostic route loading
+// - NORTH calls from the production Hearth route
+// - Canvas, runtime release, route conductor handoff, or planet rendering
 
 (() => {
   "use strict";
@@ -45,12 +48,28 @@
   const TARGET_INDEX_JS_FILE = "/showroom/globe/hearth/index.js";
   const TARGET_ROUTE_CONDUCTOR_FILE = "/showroom/globe/hearth/hearth.js";
 
-  const CURRENT_EXPECTED_HTML_CONTRACT = "HEARTH_HTML_SINGLE_FLOATING_DIAGNOSTIC_DOORWAY_NO_DUPLICATE_TOP_BANNER_TNT_v2_4";
-  const ACCEPTED_LINEAGE_HTML_CONTRACT = "HEARTH_HTML_PARALLEL_DIAGNOSTIC_RAIL_NATIVE_ACCESS_DOORWAY_TNT_v2_2";
-  const PREVIOUS_ACCEPTED_HTML_CONTRACT = "HEARTH_HTML_CONTROL_SURFACE_CACHE_KEY_TOUCH_BINDING_REPAIR_TNT_v2_1";
+  const CURRENT_EXPECTED_HTML_CONTRACT =
+    "HEARTH_HTML_SINGLE_FLOATING_DIAGNOSTIC_DOORWAY_NO_DUPLICATE_TOP_BANNER_TNT_v2_4";
 
-  const EXPECTED_INDEX_JS_CONTRACT = "HEARTH_INDEX_JS_CONTROL_SURFACE_EARLY_ACTIVATION_SHIELD_TNT_v5_3";
-  const EXPECTED_ROUTE_CONDUCTOR_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_TNT_v9_3";
+  const ACCEPTED_HTML_LINEAGE_CONTRACT =
+    "HEARTH_HTML_PARALLEL_DIAGNOSTIC_RAIL_NATIVE_ACCESS_DOORWAY_TNT_v2_2";
+
+  const PREVIOUS_ACCEPTED_HTML_CONTRACT =
+    "HEARTH_HTML_CONTROL_SURFACE_CACHE_KEY_TOUCH_BINDING_REPAIR_TNT_v2_1";
+
+  const EXPECTED_HTML_CONTRACT = CURRENT_EXPECTED_HTML_CONTRACT;
+
+  const EXPECTED_INDEX_JS_CONTRACT =
+    "HEARTH_INDEX_JS_CONTROL_SURFACE_EARLY_ACTIVATION_SHIELD_TNT_v5_3";
+
+  const EXPECTED_ROUTE_CONDUCTOR_CONTRACT =
+    "HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_TNT_v9_3";
+
+  const ACCEPTED_HTML_CONTRACTS = Object.freeze([
+    CURRENT_EXPECTED_HTML_CONTRACT,
+    ACCEPTED_HTML_LINEAGE_CONTRACT,
+    PREVIOUS_ACCEPTED_HTML_CONTRACT
+  ]);
 
   const FALLBACK = Object.freeze({
     UNKNOWN: "UNKNOWN",
@@ -62,9 +81,7 @@
     INSUFFICIENT_EVIDENCE: "INSUFFICIENT_EVIDENCE",
     PARTIAL: "PARTIAL",
     FAILED: "FAILED",
-    COMPLETE: "COMPLETE",
-    TRUE: "true",
-    FALSE: "false"
+    COMPLETE: "COMPLETE"
   });
 
   const STATUS = Object.freeze({
@@ -102,7 +119,7 @@
   }
 
   function isObject(value) {
-    return Boolean(value && typeof value === "object" && !Array.isArray(value));
+    return Boolean(value && typeof value === "object");
   }
 
   function isFunction(value) {
@@ -118,7 +135,7 @@
     return safeString(value, fallback).replace(/\s+/g, " ").trim();
   }
 
-  function bounded(value, limit = 1000) {
+  function bounded(value, limit = 900) {
     return safeString(value).replace(/\s+/g, " ").trim().slice(0, limit);
   }
 
@@ -127,10 +144,8 @@
     return text || fallback;
   }
 
-  function boolString(value, fallback = FALLBACK.UNKNOWN) {
-    if (value === true || value === "true") return "true";
-    if (value === false || value === "false") return "false";
-    return fallback;
+  function boolString(value) {
+    return value ? "true" : "false";
   }
 
   function clonePlain(value) {
@@ -144,7 +159,7 @@
   }
 
   function addNote(state, note) {
-    const clean = bounded(note, 900);
+    const clean = bounded(note, 800);
     if (!clean) return;
     if (!state.eastSecondaryEvidenceNotes.includes(clean)) {
       state.eastSecondaryEvidenceNotes.push(clean);
@@ -163,51 +178,50 @@
       eastContract: CONTRACT,
       eastReceipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
-      version: VERSION,
-      file: FILE,
+
       targetRoute: TARGET_ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
 
       eastSourceReadComplete: "false",
       eastSourceReadStatus: FALLBACK.UNKNOWN,
 
-      sourceReadAttempted: "false",
-      sourceReadComplete: "false",
-      sourceReadPartial: "false",
-      sourceReadFailed: "false",
-      sourceEvidenceStatus: FALLBACK.UNKNOWN,
-
-      expectedHtmlContract: CURRENT_EXPECTED_HTML_CONTRACT,
+      expectedHtmlContract: EXPECTED_HTML_CONTRACT,
       currentExpectedHtmlContract: CURRENT_EXPECTED_HTML_CONTRACT,
-      acceptedLineageHtmlContract: ACCEPTED_LINEAGE_HTML_CONTRACT,
+      acceptedLineageHtmlContract: ACCEPTED_HTML_LINEAGE_CONTRACT,
       previousAcceptedHtmlContract: PREVIOUS_ACCEPTED_HTML_CONTRACT,
 
       expectedIndexJsContract: EXPECTED_INDEX_JS_CONTRACT,
       expectedRouteConductorContract: EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
 
-      observedHtmlContract: FALLBACK.UNKNOWN,
       servedHtmlContract: FALLBACK.UNKNOWN,
-      servedSourceContract: FALLBACK.UNKNOWN,
+      observedHtmlContract: FALLBACK.UNKNOWN,
+      servedIndexJsContract: FALLBACK.UNKNOWN,
+      servedRouteConductorContract: FALLBACK.UNKNOWN,
+
       domDatasetContract: FALLBACK.UNKNOWN,
       metaContract: FALLBACK.UNKNOWN,
       scriptContract: FALLBACK.UNKNOWN,
-      cacheKeyEvidence: FALLBACK.UNKNOWN,
+      servedSourceContract: FALLBACK.UNKNOWN,
 
       currentHtmlContractRecognized: FALLBACK.UNKNOWN,
       acceptedLineageRecognized: FALLBACK.UNKNOWN,
       previousAcceptedRecognized: FALLBACK.UNKNOWN,
-      htmlContractMismatch: MISMATCH.UNKNOWN,
+      htmlContractMismatch: FALLBACK.UNKNOWN,
       staleExpectedContractDriftPrevented: FALLBACK.UNKNOWN,
-
-      servedIndexJsContract: FALLBACK.UNKNOWN,
-      servedRouteConductorContract: FALLBACK.UNKNOWN,
 
       indexScriptSrc: FALLBACK.UNKNOWN,
       routeConductorScriptSrc: FALLBACK.UNKNOWN,
+      cacheKeyEvidence: FALLBACK.UNKNOWN,
 
       htmlSourceReadStatus: FALLBACK.UNKNOWN,
       indexJsSourceReadStatus: FALLBACK.UNKNOWN,
       routeConductorSourceReadStatus: FALLBACK.UNKNOWN,
+
+      sourceReadAttempted: "false",
+      sourceReadComplete: "false",
+      sourceReadPartial: "false",
+      sourceReadFailed: "false",
+      sourceEvidenceStatus: FALLBACK.UNKNOWN,
 
       cacheOrServedContractMismatch: MISMATCH.UNKNOWN,
       case5Support: CASE5.UNKNOWN,
@@ -223,24 +237,21 @@
       eastReportsToNorth: true,
 
       f13Claimed: false,
+      f21EligibleForNorth: false,
+      f21ClaimedByDiagnosticRail: false,
       f21Claimed: false,
+      readyTextAllowed: false,
+      readyTextClaimedByDiagnosticRail: false,
       readyTextClaimed: false,
       visualPassClaimed: false,
       generatedImage: false,
       graphicBox: false,
-      webGL: false,
-
-      f21EligibleForNorth: false,
-      f21ClaimedByDiagnosticRail: false,
-      readyTextAllowed: false,
-      readyTextClaimedByDiagnosticRail: false
+      webGL: false
     };
   }
 
   async function fetchText(url, state, label) {
     try {
-      state.sourceReadAttempted = "true";
-
       if (!isFunction(root.fetch)) {
         addNote(state, `${label}_FETCH_UNAVAILABLE`);
         return {
@@ -269,7 +280,7 @@
 
       if (!response.ok) {
         const statusText = `${response.status}:${response.statusText || "HTTP_ERROR"}`;
-        addNote(state, `${label}_FETCH_FAILED:${bounded(statusText, 220)}`);
+        addNote(state, `${label}_FETCH_FAILED:${bounded(statusText, 200)}`);
         return {
           ok: false,
           status: response.status === 404 ? FALLBACK.NOT_FOUND : FALLBACK.FAILED,
@@ -298,59 +309,69 @@
     }
   }
 
-  function firstMatch(source, patterns) {
+  function extractByPattern(source, patterns) {
     const text = safeString(source);
-
     for (const pattern of patterns) {
       const match = text.match(pattern);
       if (match && match[1]) return packetSafe(match[1]);
     }
+    return FALLBACK.UNKNOWN;
+  }
+
+  function extractDomDatasetContract(source) {
+    return extractByPattern(source, [
+      /data-contract=["']([^"']+)["']/i,
+      /data-hearth-html-contract=["']([^"']+)["']/i,
+      /data-hearth-shell-contract=["']([^"']+)["']/i,
+      /data-current-html-contract=["']([^"']+)["']/i
+    ]);
+  }
+
+  function extractMetaContract(source) {
+    return extractByPattern(source, [
+      /<meta\b[^>]*name=["']hearth-html-contract["'][^>]*content=["']([^"']+)["'][^>]*>/i,
+      /<meta\b[^>]*content=["']([^"']+)["'][^>]*name=["']hearth-html-contract["'][^>]*>/i,
+      /<meta\b[^>]*name=["']contract["'][^>]*content=["']([^"']+)["'][^>]*>/i,
+      /<meta\b[^>]*content=["']([^"']+)["'][^>]*name=["']contract["'][^>]*>/i
+    ]);
+  }
+
+  function extractScriptContractEvidence(source) {
+    const text = safeString(source);
+
+    const loadedBy = extractByPattern(text, [
+      /data-loaded-by=["']([^"']+)["']/i,
+      /data-js-selector-cache-key=["']([^"']+)["']/i,
+      /data-selector-cache-bust=["']([^"']+)["']/i
+    ]);
+
+    if (loadedBy !== FALLBACK.UNKNOWN) return loadedBy;
 
     return FALLBACK.UNKNOWN;
   }
 
-  function extractHtmlContracts(source) {
+  function extractHtmlContract(source, state) {
     const text = safeString(source);
 
-    const domDatasetContract = firstMatch(text, [
-      /data-contract=["']([^"']+)["']/i,
-      /data-hearth-html-contract=["']([^"']+)["']/i,
-      /data-hearth-shell-contract=["']([^"']+)["']/i
-    ]);
+    const domDatasetContract = extractDomDatasetContract(text);
+    const metaContract = extractMetaContract(text);
+    const scriptContract = extractScriptContractEvidence(text);
 
-    const metaContract = firstMatch(text, [
-      /<meta\b[^>]*(?:name|property)=["'][^"']*contract[^"']*["'][^>]*content=["']([^"']+)["'][^>]*>/i,
-      /<meta\b[^>]*content=["']([^"']*HEARTH_HTML_[^"']+_TNT_v[^"']*)["'][^>]*(?:name|property)=["'][^"']*contract[^"']*["'][^>]*>/i
-    ]);
+    state.domDatasetContract = domDatasetContract;
+    state.metaContract = metaContract;
+    state.scriptContract = scriptContract;
 
-    const scriptContract = firstMatch(text, [
-      /<script\b[^>]*data-loaded-by=["']([^"']+)["'][^>]*>/i,
-      /<script\b[^>]*data-html-contract=["']([^"']+)["'][^>]*>/i
-    ]);
+    if (domDatasetContract !== FALLBACK.UNKNOWN) return domDatasetContract;
+    if (metaContract !== FALLBACK.UNKNOWN) return metaContract;
 
-    let observed = FALLBACK.UNKNOWN;
-
-    if (domDatasetContract !== FALLBACK.UNKNOWN) {
-      observed = domDatasetContract;
-    } else if (metaContract !== FALLBACK.UNKNOWN) {
-      observed = metaContract;
-    } else if (text.includes(CURRENT_EXPECTED_HTML_CONTRACT)) {
-      observed = CURRENT_EXPECTED_HTML_CONTRACT;
-    } else if (text.includes(ACCEPTED_LINEAGE_HTML_CONTRACT)) {
-      observed = ACCEPTED_LINEAGE_HTML_CONTRACT;
-    } else if (text.includes(PREVIOUS_ACCEPTED_HTML_CONTRACT)) {
-      observed = PREVIOUS_ACCEPTED_HTML_CONTRACT;
-    } else {
-      const generic = text.match(/\bHEARTH_HTML_[A-Z0-9_]+_TNT_v[0-9A-Za-z_.-]+\b/);
-      observed = generic && generic[0] ? packetSafe(generic[0]) : FALLBACK.UNKNOWN;
+    for (const accepted of ACCEPTED_HTML_CONTRACTS) {
+      if (text.includes(accepted)) return accepted;
     }
 
-    return {
-      observed,
-      domDatasetContract,
-      metaContract,
-      scriptContract
-    };
+    const generic = text.match(/\bHEARTH_HTML_[A-Z0-9_]+_TNT_v[0-9A-Za-z_.-]+\b/);
+    if (generic && generic[0]) return packetSafe(generic[0]);
+
+    return FALLBACK.UNKNOWN;
   }
 
   function extractJsContract(source, expectedContract, genericPrefix) {
@@ -391,9 +412,8 @@
     try {
       if (root.location && root.location.origin) return root.location.origin;
     } catch (_error) {
-      // Fallback below.
+      // Continue to fallback.
     }
-
     return "https://diamondgatebridge.com";
   }
 
@@ -474,6 +494,24 @@
     return FALLBACK.NOT_FOUND;
   }
 
+  function extractCacheKeyEvidence(htmlSource, state) {
+    const sources = parseScriptSources(htmlSource);
+    const keyed = [];
+
+    for (const src of sources) {
+      const normalized = normalizeScriptSource(src);
+      if (normalized.cacheKeyed) keyed.push(src);
+    }
+
+    const evidence = keyed.length ? keyed.join(" | ") : FALLBACK.NOT_FOUND;
+
+    if (keyed.length) {
+      addNote(state, "CACHE_KEY_EVIDENCE_PRESENT");
+    }
+
+    return evidence;
+  }
+
   function isConfidentContract(value) {
     return Boolean(
       value &&
@@ -483,57 +521,65 @@
       value !== FALLBACK.FAILED &&
       value !== FALLBACK.NOT_FOUND &&
       value !== FALLBACK.PARTIAL &&
-      value !== FALLBACK.INSUFFICIENT_EVIDENCE &&
-      value !== FALLBACK.INACCESSIBLE &&
-      value !== FALLBACK.NOT_APPLICABLE
+      value !== FALLBACK.INSUFFICIENT_EVIDENCE
     );
   }
 
+  function isAcceptedHtmlContract(value) {
+    return ACCEPTED_HTML_CONTRACTS.includes(value);
+  }
+
   function evaluateHtmlAlignment(state) {
-    const observed = state.observedHtmlContract;
+    const observed = state.servedHtmlContract;
+
+    state.observedHtmlContract = observed;
+    state.servedSourceContract = observed;
 
     const currentRecognized = observed === CURRENT_EXPECTED_HTML_CONTRACT;
-    const lineageRecognized = observed === ACCEPTED_LINEAGE_HTML_CONTRACT;
+    const lineageRecognized = observed === ACCEPTED_HTML_LINEAGE_CONTRACT;
     const previousRecognized = observed === PREVIOUS_ACCEPTED_HTML_CONTRACT;
+    const acceptedRecognized = currentRecognized || lineageRecognized || previousRecognized;
 
     state.currentHtmlContractRecognized = boolString(currentRecognized);
     state.acceptedLineageRecognized = boolString(lineageRecognized);
     state.previousAcceptedRecognized = boolString(previousRecognized);
 
     if (!isConfidentContract(observed)) {
-      state.htmlContractMismatch = MISMATCH.UNKNOWN;
+      state.htmlContractMismatch = FALLBACK.UNKNOWN;
       state.staleExpectedContractDriftPrevented = FALLBACK.UNKNOWN;
-      addNote(state, "HTML_CONTRACT_UNKNOWN_OR_UNREADABLE");
+      addNote(state, "HTML_CONTRACT_ALIGNMENT_UNKNOWN");
       return;
     }
 
     if (currentRecognized) {
-      state.htmlContractMismatch = MISMATCH.FALSE;
+      state.htmlContractMismatch = "false";
       state.staleExpectedContractDriftPrevented = "true";
-      addNote(state, "CURRENT_EXPECTED_HTML_CONTRACT_RECOGNIZED");
+      addNote(state, "CURRENT_HTML_CONTRACT_RECOGNIZED");
       addNote(state, "STALE_EXPECTED_CONTRACT_DRIFT_PREVENTED");
       return;
     }
 
     if (lineageRecognized) {
-      state.htmlContractMismatch = MISMATCH.FALSE;
+      state.htmlContractMismatch = "false";
       state.staleExpectedContractDriftPrevented = "true";
       addNote(state, "ACCEPTED_LINEAGE_HTML_CONTRACT_RECOGNIZED");
-      addNote(state, "LINEAGE_HTML_CONTRACT_NOT_TREATED_AS_CURRENT_FAILURE");
+      addNote(state, "HTML_LINEAGE_NOT_CURRENT_BUT_NOT_CASE5_FAILURE");
       return;
     }
 
     if (previousRecognized) {
-      state.htmlContractMismatch = MISMATCH.TRUE;
+      state.htmlContractMismatch = "false";
       state.staleExpectedContractDriftPrevented = "true";
       addNote(state, "PREVIOUS_ACCEPTED_HTML_CONTRACT_RECOGNIZED");
-      addNote(state, "PREVIOUS_ACCEPTED_HTML_CONTRACT_SERVED_REVIEW_AS_STALE_SOURCE");
+      addNote(state, "HTML_PREVIOUS_LINEAGE_REQUIRES_CONTEXT_NOT_CURRENT_SUCCESS");
       return;
     }
 
-    state.htmlContractMismatch = MISMATCH.TRUE;
-    state.staleExpectedContractDriftPrevented = "false";
-    addNote(state, "HTML_CONTRACT_MISMATCH");
+    if (!acceptedRecognized) {
+      state.htmlContractMismatch = "true";
+      state.staleExpectedContractDriftPrevented = "false";
+      addNote(state, "HTML_CONTRACT_TRUE_MISMATCH");
+    }
   }
 
   function evaluateReadStatus(state) {
@@ -544,63 +590,77 @@
     ];
 
     const allComplete = statuses.every((value) => value === FALLBACK.COMPLETE);
-    const allFailed = statuses.every((value) => (
+    const allFailed = statuses.every((value) =>
       value === FALLBACK.FAILED ||
       value === FALLBACK.UNREADABLE ||
       value === FALLBACK.BLOCKED ||
       value === FALLBACK.NOT_FOUND
-    ));
+    );
     const anyIncomplete = statuses.some((value) => value !== FALLBACK.COMPLETE);
 
-    const indexConfident = isConfidentContract(state.servedIndexJsContract);
-    const routeConfident = isConfidentContract(state.servedRouteConductorContract);
-    const htmlComparable = state.htmlContractMismatch === MISMATCH.TRUE || state.htmlContractMismatch === MISMATCH.FALSE;
+    const contracts = [
+      state.servedHtmlContract,
+      state.servedIndexJsContract,
+      state.servedRouteConductorContract
+    ];
 
-    const completeEnoughToCompare = allComplete && htmlComparable && indexConfident && routeConfident;
+    const htmlContractAcceptable = isConfidentContract(state.servedHtmlContract) && isAcceptedHtmlContract(state.servedHtmlContract);
 
-    state.eastSourceReadComplete = completeEnoughToCompare ? "true" : "false";
-    state.sourceReadComplete = completeEnoughToCompare ? "true" : "false";
+    const indexContractConfident = isConfidentContract(state.servedIndexJsContract);
+    const routeContractConfident = isConfidentContract(state.servedRouteConductorContract);
 
-    if (completeEnoughToCompare) {
+    const allContractsComparable = htmlContractAcceptable && indexContractConfident && routeContractConfident;
+
+    state.eastSourceReadComplete = allComplete && allContractsComparable ? "true" : "false";
+    state.sourceReadComplete = state.eastSourceReadComplete;
+
+    if (allComplete && allContractsComparable) {
       state.eastSourceReadStatus = FALLBACK.COMPLETE;
       state.sourceEvidenceStatus = FALLBACK.COMPLETE;
-      addNote(state, "SOURCE_READ_COMPLETE");
-      return;
-    }
-
-    if (allFailed) {
+    } else if (allFailed) {
       state.eastSourceReadStatus = FALLBACK.FAILED;
       state.sourceEvidenceStatus = FALLBACK.FAILED;
-      state.sourceReadFailed = "true";
-      addNote(state, "SOURCE_READ_FAILED");
-      return;
-    }
-
-    if (anyIncomplete || !htmlComparable || !indexConfident || !routeConfident) {
+    } else if (anyIncomplete || !allContractsComparable) {
       state.eastSourceReadStatus = FALLBACK.PARTIAL;
       state.sourceEvidenceStatus = FALLBACK.PARTIAL;
-      state.sourceReadPartial = "true";
-      addNote(state, "SOURCE_READ_PARTIAL");
-      return;
+    } else {
+      state.eastSourceReadStatus = FALLBACK.UNKNOWN;
+      state.sourceEvidenceStatus = FALLBACK.UNKNOWN;
     }
 
-    state.eastSourceReadStatus = FALLBACK.UNKNOWN;
-    state.sourceEvidenceStatus = FALLBACK.UNKNOWN;
+    state.sourceReadPartial = boolString(state.eastSourceReadStatus === FALLBACK.PARTIAL);
+    state.sourceReadFailed = boolString(state.eastSourceReadStatus === FALLBACK.FAILED);
+
+    if (state.eastSourceReadStatus === FALLBACK.PARTIAL) {
+      addNote(state, "SOURCE_READ_PARTIAL");
+    }
+
+    if (state.eastSourceReadStatus === FALLBACK.COMPLETE) {
+      addNote(state, "SOURCE_READ_COMPLETE");
+    }
+
+    if (state.eastSourceReadStatus === FALLBACK.FAILED) {
+      addNote(state, "SOURCE_READ_FAILED");
+    }
   }
 
   function evaluateMismatch(state) {
+    const htmlConfident = isConfidentContract(state.servedHtmlContract);
     const indexConfident = isConfidentContract(state.servedIndexJsContract);
     const routeConfident = isConfidentContract(state.servedRouteConductorContract);
 
+    const htmlMismatch = htmlConfident && state.htmlContractMismatch === "true";
     const indexMismatch = indexConfident && state.servedIndexJsContract !== EXPECTED_INDEX_JS_CONTRACT;
     const routeMismatch = routeConfident && state.servedRouteConductorContract !== EXPECTED_ROUTE_CONDUCTOR_CONTRACT;
-    const htmlMismatch = state.htmlContractMismatch === MISMATCH.TRUE;
 
+    if (htmlMismatch) addNote(state, "HTML_CONTRACT_MISMATCH");
     if (indexMismatch) addNote(state, "INDEX_JS_CONTRACT_MISMATCH");
     if (routeMismatch) addNote(state, "ROUTE_CONDUCTOR_CONTRACT_MISMATCH");
 
     if (state.indexScriptSrc === FALLBACK.NOT_FOUND) addNote(state, "INDEX_SCRIPT_SRC_NOT_FOUND");
     if (state.routeConductorScriptSrc === FALLBACK.NOT_FOUND) addNote(state, "ROUTE_CONDUCTOR_SCRIPT_SRC_NOT_FOUND");
+
+    const contractMismatch = htmlMismatch || indexMismatch || routeMismatch;
 
     const clearMaterialScriptAnomaly = (
       state.htmlSourceReadStatus === FALLBACK.COMPLETE &&
@@ -610,12 +670,13 @@
       )
     );
 
-    if (htmlMismatch || indexMismatch || routeMismatch || clearMaterialScriptAnomaly) {
+    if (contractMismatch || clearMaterialScriptAnomaly) {
       state.cacheOrServedContractMismatch = MISMATCH.TRUE;
       state.case5Support = CASE5.TRUE;
 
-      if (htmlMismatch) addNote(state, "CASE_5_SUPPORT_FROM_HTML_CONTRACT_MISMATCH");
-      if (clearMaterialScriptAnomaly) addNote(state, "SCRIPT_SOURCE_ANOMALY_CLEAR_AND_MATERIAL");
+      if (clearMaterialScriptAnomaly) {
+        addNote(state, "SCRIPT_SOURCE_ANOMALY_CLEAR_AND_MATERIAL");
+      }
 
       addNote(state, "CASE_5_SUPPORT_TRUE");
       return;
@@ -641,36 +702,28 @@
       EAST_STATUS: state.eastStatus,
       EAST_CONTRACT: CONTRACT,
       EAST_RECEIPT: RECEIPT,
-      EAST_PREVIOUS_CONTRACT: PREVIOUS_CONTRACT,
+
       EAST_SOURCE_READ_COMPLETE: state.eastSourceReadComplete,
       EAST_SOURCE_READ_STATUS: state.eastSourceReadStatus,
 
-      TARGET_ROUTE,
-      DIAGNOSTIC_ROUTE,
-
-      EXPECTED_HTML_CONTRACT: CURRENT_EXPECTED_HTML_CONTRACT,
-      CURRENT_EXPECTED_HTML_CONTRACT,
-      ACCEPTED_LINEAGE_HTML_CONTRACT,
-      PREVIOUS_ACCEPTED_HTML_CONTRACT,
+      EXPECTED_HTML_CONTRACT,
       EXPECTED_INDEX_JS_CONTRACT,
       EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
 
-      OBSERVED_HTML_CONTRACT: state.observedHtmlContract,
+      CURRENT_EXPECTED_HTML_CONTRACT,
+      ACCEPTED_HTML_LINEAGE_CONTRACT,
+      PREVIOUS_ACCEPTED_HTML_CONTRACT,
+
       SERVED_HTML_CONTRACT: state.servedHtmlContract,
-      SERVED_SOURCE_CONTRACT: state.servedSourceContract,
-      DOM_DATASET_CONTRACT: state.domDatasetContract,
-      META_CONTRACT: state.metaContract,
-      SCRIPT_CONTRACT: state.scriptContract,
-      CACHE_KEY_EVIDENCE: state.cacheKeyEvidence,
+      OBSERVED_HTML_CONTRACT: state.observedHtmlContract,
+      SERVED_INDEX_JS_CONTRACT: state.servedIndexJsContract,
+      SERVED_ROUTE_CONDUCTOR_CONTRACT: state.servedRouteConductorContract,
 
       CURRENT_HTML_CONTRACT_RECOGNIZED: state.currentHtmlContractRecognized,
       ACCEPTED_LINEAGE_RECOGNIZED: state.acceptedLineageRecognized,
       PREVIOUS_ACCEPTED_RECOGNIZED: state.previousAcceptedRecognized,
       HTML_CONTRACT_MISMATCH: state.htmlContractMismatch,
       STALE_EXPECTED_CONTRACT_DRIFT_PREVENTED: state.staleExpectedContractDriftPrevented,
-
-      SERVED_INDEX_JS_CONTRACT: state.servedIndexJsContract,
-      SERVED_ROUTE_CONDUCTOR_CONTRACT: state.servedRouteConductorContract,
 
       INDEX_SCRIPT_SRC: state.indexScriptSrc,
       ROUTE_CONDUCTOR_SCRIPT_SRC: state.routeConductorScriptSrc,
@@ -679,29 +732,20 @@
       INDEX_JS_SOURCE_READ_STATUS: state.indexJsSourceReadStatus,
       ROUTE_CONDUCTOR_SOURCE_READ_STATUS: state.routeConductorSourceReadStatus,
 
+      CACHE_OR_SERVED_CONTRACT_MISMATCH: state.cacheOrServedContractMismatch,
+      CASE_5_SUPPORT: state.case5Support,
+
       SOURCE_READ_ATTEMPTED: state.sourceReadAttempted,
       SOURCE_READ_COMPLETE: state.sourceReadComplete,
       SOURCE_READ_PARTIAL: state.sourceReadPartial,
       SOURCE_READ_FAILED: state.sourceReadFailed,
       SOURCE_EVIDENCE_STATUS: state.sourceEvidenceStatus,
 
-      CACHE_OR_SERVED_CONTRACT_MISMATCH: state.cacheOrServedContractMismatch,
-      CASE_5_SUPPORT: state.case5Support,
-
-      EAST_OWNS_FINAL_CASE: "false",
-      EAST_OWNS_REPAIR: "false",
-      EAST_OWNS_RUNTIME_RELEASE: "false",
-      EAST_OWNS_CANVAS: "false",
-      EAST_OWNS_DIAGNOSTIC_ROUTE_LOAD: "false",
-      EAST_REPORTS_TO_NORTH: "true",
-
-      F13_CLAIMED: "false",
-      F21_CLAIMED: "false",
-      READY_TEXT_CLAIMED: "false",
-      VISUAL_PASS_CLAIMED: "false",
-      GENERATED_IMAGE: "false",
-      GRAPHIC_BOX: "false",
-      WEBGL: "false",
+      SERVED_SOURCE_CONTRACT: state.servedSourceContract,
+      DOM_DATASET_CONTRACT: state.domDatasetContract,
+      META_CONTRACT: state.metaContract,
+      SCRIPT_CONTRACT: state.scriptContract,
+      CACHE_KEY_EVIDENCE: state.cacheKeyEvidence,
 
       EAST_SECONDARY_EVIDENCE_NOTES: state.eastSecondaryEvidenceNotes.length
         ? state.eastSecondaryEvidenceNotes.join(" | ")
@@ -712,6 +756,7 @@
   async function runEastSourceRead() {
     const state = makeState();
     state.eastStatus = STATUS.RUNNING;
+    state.sourceReadAttempted = "true";
     state.updatedAt = nowIso();
 
     try {
@@ -724,35 +769,28 @@
       state.routeConductorSourceReadStatus = routeConductor.status;
 
       if (html.ok) {
-        const htmlContracts = extractHtmlContracts(html.text);
-
-        state.observedHtmlContract = htmlContracts.observed;
-        state.servedHtmlContract = htmlContracts.observed;
-        state.servedSourceContract = htmlContracts.observed;
-        state.domDatasetContract = htmlContracts.domDatasetContract;
-        state.metaContract = htmlContracts.metaContract;
-        state.scriptContract = htmlContracts.scriptContract;
+        state.servedHtmlContract = extractHtmlContract(html.text, state);
+        state.observedHtmlContract = state.servedHtmlContract;
+        state.servedSourceContract = state.servedHtmlContract;
 
         state.indexScriptSrc = extractScriptSrc(html.text, "index.js", state, "INDEX_SCRIPT_SRC");
         state.routeConductorScriptSrc = extractScriptSrc(html.text, "hearth.js", state, "ROUTE_CONDUCTOR_SCRIPT_SRC");
+        state.cacheKeyEvidence = extractCacheKeyEvidence(html.text, state);
 
-        const cacheNotes = [];
-        if (state.indexScriptSrc.includes("?")) cacheNotes.push("INDEX_SCRIPT_CACHE_KEY_PRESENT");
-        if (state.routeConductorScriptSrc.includes("?")) cacheNotes.push("ROUTE_CONDUCTOR_SCRIPT_CACHE_KEY_PRESENT");
-        state.cacheKeyEvidence = cacheNotes.length ? cacheNotes.join(" | ") : FALLBACK.NOT_FOUND;
+        if (state.servedHtmlContract === FALLBACK.UNKNOWN) addNote(state, "HTML_CONTRACT_UNKNOWN");
 
         evaluateHtmlAlignment(state);
       } else {
-        state.observedHtmlContract = html.status === FALLBACK.NOT_FOUND ? FALLBACK.NOT_FOUND : FALLBACK.UNREADABLE;
-        state.servedHtmlContract = state.observedHtmlContract;
-        state.servedSourceContract = state.observedHtmlContract;
-        state.domDatasetContract = state.observedHtmlContract;
-        state.metaContract = state.observedHtmlContract;
-        state.scriptContract = state.observedHtmlContract;
+        state.servedHtmlContract = html.status === FALLBACK.NOT_FOUND ? FALLBACK.NOT_FOUND : FALLBACK.UNREADABLE;
+        state.observedHtmlContract = state.servedHtmlContract;
+        state.servedSourceContract = state.servedHtmlContract;
+        state.domDatasetContract = FALLBACK.UNREADABLE;
+        state.metaContract = FALLBACK.UNREADABLE;
+        state.scriptContract = FALLBACK.UNREADABLE;
         state.indexScriptSrc = FALLBACK.UNREADABLE;
         state.routeConductorScriptSrc = FALLBACK.UNREADABLE;
         state.cacheKeyEvidence = FALLBACK.UNREADABLE;
-        state.htmlContractMismatch = MISMATCH.UNKNOWN;
+        state.htmlContractMismatch = FALLBACK.UNKNOWN;
         state.currentHtmlContractRecognized = FALLBACK.UNKNOWN;
         state.acceptedLineageRecognized = FALLBACK.UNKNOWN;
         state.previousAcceptedRecognized = FALLBACK.UNKNOWN;
@@ -766,9 +804,7 @@
           "HEARTH_INDEX_JS"
         );
 
-        if (state.servedIndexJsContract === FALLBACK.UNKNOWN) {
-          addNote(state, "INDEX_JS_CONTRACT_UNKNOWN");
-        }
+        if (state.servedIndexJsContract === FALLBACK.UNKNOWN) addNote(state, "INDEX_JS_CONTRACT_UNKNOWN");
       } else {
         state.servedIndexJsContract = indexJs.status === FALLBACK.NOT_FOUND ? FALLBACK.NOT_FOUND : FALLBACK.UNREADABLE;
       }
@@ -780,9 +816,7 @@
           "HEARTH_ROUTE_CONDUCTOR"
         );
 
-        if (state.servedRouteConductorContract === FALLBACK.UNKNOWN) {
-          addNote(state, "ROUTE_CONDUCTOR_CONTRACT_UNKNOWN");
-        }
+        if (state.servedRouteConductorContract === FALLBACK.UNKNOWN) addNote(state, "ROUTE_CONDUCTOR_CONTRACT_UNKNOWN");
       } else {
         state.servedRouteConductorContract = routeConductor.status === FALLBACK.NOT_FOUND ? FALLBACK.NOT_FOUND : FALLBACK.UNREADABLE;
       }
@@ -812,11 +846,12 @@
       state.eastStatus = STATUS.FAILED;
       state.eastSourceReadComplete = "false";
       state.eastSourceReadStatus = FALLBACK.FAILED;
+      state.sourceReadComplete = "false";
       state.sourceReadFailed = "true";
       state.sourceEvidenceStatus = FALLBACK.FAILED;
       state.cacheOrServedContractMismatch = MISMATCH.UNKNOWN;
       state.case5Support = CASE5.UNKNOWN;
-      addNote(state, normalizeError(error, "EAST_HTML_CONTRACT_ALIGNMENT_TOP_LEVEL_ERROR"));
+      addNote(state, normalizeError(error, "EAST_SOURCE_READ_TOP_LEVEL_ERROR"));
       state.updatedAt = nowIso();
 
       publish(state);
@@ -826,7 +861,7 @@
         contract: CONTRACT,
         receipt: RECEIPT,
         previousContract: PREVIOUS_CONTRACT,
-        error: normalizeError(error, "EAST_HTML_CONTRACT_ALIGNMENT_TOP_LEVEL_ERROR"),
+        error: normalizeError(error, "EAST_SOURCE_READ_TOP_LEVEL_ERROR"),
         evidence: clonePlain(lastEvidencePacket),
         state: clonePlain(lastState)
       };
@@ -835,6 +870,7 @@
 
   function getEastReceipt() {
     return {
+      childRole: "EAST_SERVED_SOURCE_EVIDENCE",
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
@@ -843,7 +879,6 @@
       targetRoute: TARGET_ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
 
-      childRole: "EAST_HTML_SOURCE_RECOGNITION_AND_CONTRACT_ALIGNMENT",
       servesNorth: true,
       finalPrimaryCaseAuthority: false,
       finalRecommendationAuthority: false,
@@ -854,62 +889,32 @@
       hearthRepairAuthorized: false,
       case5EvidenceSupportOnly: true,
 
-      htmlContractAlignment: {
-        currentExpectedHtmlContract: CURRENT_EXPECTED_HTML_CONTRACT,
-        acceptedLineageHtmlContract: ACCEPTED_LINEAGE_HTML_CONTRACT,
-        previousAcceptedHtmlContract: PREVIOUS_ACCEPTED_HTML_CONTRACT,
-        observedHtmlContract: lastEvidencePacket ? lastEvidencePacket.OBSERVED_HTML_CONTRACT : FALLBACK.UNKNOWN,
-        currentHtmlContractRecognized: lastEvidencePacket ? lastEvidencePacket.CURRENT_HTML_CONTRACT_RECOGNIZED : FALLBACK.UNKNOWN,
-        acceptedLineageRecognized: lastEvidencePacket ? lastEvidencePacket.ACCEPTED_LINEAGE_RECOGNIZED : FALLBACK.UNKNOWN,
-        previousAcceptedRecognized: lastEvidencePacket ? lastEvidencePacket.PREVIOUS_ACCEPTED_RECOGNIZED : FALLBACK.UNKNOWN,
-        htmlContractMismatch: lastEvidencePacket ? lastEvidencePacket.HTML_CONTRACT_MISMATCH : FALLBACK.UNKNOWN,
-        staleExpectedContractDriftPrevented: lastEvidencePacket ? lastEvidencePacket.STALE_EXPECTED_CONTRACT_DRIFT_PREVENTED : FALLBACK.UNKNOWN
-      },
-
-      sourceEvidence: {
-        sourceReadAttempted: lastEvidencePacket ? lastEvidencePacket.SOURCE_READ_ATTEMPTED : "false",
-        sourceReadComplete: lastEvidencePacket ? lastEvidencePacket.SOURCE_READ_COMPLETE : "false",
-        sourceReadPartial: lastEvidencePacket ? lastEvidencePacket.SOURCE_READ_PARTIAL : "false",
-        sourceReadFailed: lastEvidencePacket ? lastEvidencePacket.SOURCE_READ_FAILED : "false",
-        sourceEvidenceStatus: lastEvidencePacket ? lastEvidencePacket.SOURCE_EVIDENCE_STATUS : FALLBACK.UNKNOWN,
-        servedSourceContract: lastEvidencePacket ? lastEvidencePacket.SERVED_SOURCE_CONTRACT : FALLBACK.UNKNOWN,
-        domDatasetContract: lastEvidencePacket ? lastEvidencePacket.DOM_DATASET_CONTRACT : FALLBACK.UNKNOWN,
-        metaContract: lastEvidencePacket ? lastEvidencePacket.META_CONTRACT : FALLBACK.UNKNOWN,
-        scriptContract: lastEvidencePacket ? lastEvidencePacket.SCRIPT_CONTRACT : FALLBACK.UNKNOWN,
-        cacheKeyEvidence: lastEvidencePacket ? lastEvidencePacket.CACHE_KEY_EVIDENCE : FALLBACK.UNKNOWN
-      },
-
-      diagnosticBoundary: {
-        eastOwnsFinalCase: false,
-        eastOwnsRepair: false,
-        eastOwnsRuntimeRelease: false,
-        eastOwnsCanvas: false,
-        eastOwnsDiagnosticRouteLoad: false,
-        eastReportsToNorth: true
-      },
-
-      noClaims: {
-        f13Claimed: false,
-        f21Claimed: false,
-        readyTextClaimed: false,
-        visualPassClaimed: false,
-        generatedImage: false,
-        graphicBox: false,
-        webGL: false
-      },
-
       runEastSourceReadApiAvailable: true,
       getEastReceiptApiAvailable: true,
       getEastStateApiAvailable: true,
 
       servedHtmlReadOwned: true,
-      htmlContractAlignmentOwned: true,
       servedIndexJsReadOwned: true,
       servedRouteConductorReadOwned: true,
       contractExtractionOwned: true,
       scriptSourceExtractionOwned: true,
       routeAwareScriptMatchingOwned: true,
       cacheOrServedContractMismatchEvidenceOwned: true,
+
+      htmlContractAlignmentActive: true,
+      currentExpectedHtmlContract: CURRENT_EXPECTED_HTML_CONTRACT,
+      acceptedLineageHtmlContract: ACCEPTED_HTML_LINEAGE_CONTRACT,
+      previousAcceptedHtmlContract: PREVIOUS_ACCEPTED_HTML_CONTRACT,
+
+      diagnosticDoorwayEqualsAccessProof: true,
+      diagnosticReceiptEqualsEngineTruthProof: true,
+
+      eastOwnsFinalCase: false,
+      eastOwnsRepair: false,
+      eastOwnsRuntimeRelease: false,
+      eastOwnsCanvas: false,
+      eastOwnsDiagnosticRouteLoad: false,
+      eastReportsToNorth: true,
 
       renderedTargetProbingOwned: false,
       showReceiptTestingOwned: false,
@@ -922,21 +927,23 @@
       diagnosticUiOwned: false,
 
       f13Claimed: false,
+      f21EligibleForNorth: false,
+      f21ClaimedByDiagnosticRail: false,
       f21Claimed: false,
+      readyTextAllowed: false,
+      readyTextClaimedByDiagnosticRail: false,
       readyTextClaimed: false,
       visualPassClaimed: false,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
 
-      f21EligibleForNorth: false,
-      f21ClaimedByDiagnosticRail: false,
-      readyTextAllowed: false,
-      readyTextClaimedByDiagnosticRail: false,
-
       lastEastStatus: lastEvidencePacket ? lastEvidencePacket.EAST_STATUS : STATUS.READY,
       lastEastSourceReadStatus: lastEvidencePacket ? lastEvidencePacket.EAST_SOURCE_READ_STATUS : FALLBACK.UNKNOWN,
       lastCase5Support: lastEvidencePacket ? lastEvidencePacket.CASE_5_SUPPORT : CASE5.UNKNOWN,
+      lastObservedHtmlContract: lastEvidencePacket ? lastEvidencePacket.OBSERVED_HTML_CONTRACT : FALLBACK.UNKNOWN,
+      lastCurrentHtmlContractRecognized: lastEvidencePacket ? lastEvidencePacket.CURRENT_HTML_CONTRACT_RECOGNIZED : FALLBACK.UNKNOWN,
+      lastHtmlContractMismatch: lastEvidencePacket ? lastEvidencePacket.HTML_CONTRACT_MISMATCH : FALLBACK.UNKNOWN,
       updatedAt: nowIso()
     };
   }
@@ -952,19 +959,15 @@
     root.HEARTH = root.HEARTH || {};
     root.HEARTH.diagnosticEast = api;
     root.HEARTH.diagnosticRailEast = api;
-    root.HEARTH.diagnosticEastHtmlContractAlignment = api;
 
     root.HEARTH_DIAGNOSTIC_EAST = api;
     root.HEARTH_DIAGNOSTIC_RAIL_EAST = api;
-    root.HEARTH_DIAGNOSTIC_EAST_HTML_CONTRACT_ALIGNMENT = api;
 
     root.HEARTH_DIAGNOSTIC_EAST_RECEIPT = getEastReceipt();
     root.HEARTH_DIAGNOSTIC_RAIL_EAST_RECEIPT = getEastReceipt();
-    root.HEARTH_DIAGNOSTIC_EAST_HTML_CONTRACT_ALIGNMENT_RECEIPT = getEastReceipt();
 
     root.DEXTER_LAB = root.DEXTER_LAB || {};
     root.DEXTER_LAB.hearthDiagnosticEast = api;
-    root.DEXTER_LAB.hearthDiagnosticEastHtmlContractAlignment = api;
   }
 
   const api = Object.freeze({
@@ -976,33 +979,25 @@
     targetRoute: TARGET_ROUTE,
     diagnosticRoute: DIAGNOSTIC_ROUTE,
 
-    currentExpectedHtmlContract: CURRENT_EXPECTED_HTML_CONTRACT,
-    acceptedLineageHtmlContract: ACCEPTED_LINEAGE_HTML_CONTRACT,
-    previousAcceptedHtmlContract: PREVIOUS_ACCEPTED_HTML_CONTRACT,
-
     runEastSourceRead,
     getEastReceipt,
     getEastState,
 
-    eastOwnsFinalCase: false,
-    eastOwnsRepair: false,
-    eastOwnsRuntimeRelease: false,
-    eastOwnsCanvas: false,
-    eastOwnsDiagnosticRouteLoad: false,
-    eastReportsToNorth: true,
+    currentExpectedHtmlContract: CURRENT_EXPECTED_HTML_CONTRACT,
+    acceptedLineageHtmlContract: ACCEPTED_HTML_LINEAGE_CONTRACT,
+    previousAcceptedHtmlContract: PREVIOUS_ACCEPTED_HTML_CONTRACT,
 
     f13Claimed: false,
+    f21EligibleForNorth: false,
+    f21ClaimedByDiagnosticRail: false,
     f21Claimed: false,
+    readyTextAllowed: false,
+    readyTextClaimedByDiagnosticRail: false,
     readyTextClaimed: false,
     visualPassClaimed: false,
     generatedImage: false,
     graphicBox: false,
-    webGL: false,
-
-    f21EligibleForNorth: false,
-    f21ClaimedByDiagnosticRail: false,
-    readyTextAllowed: false,
-    readyTextClaimedByDiagnosticRail: false
+    webGL: false
   });
 
   publish(makeState());

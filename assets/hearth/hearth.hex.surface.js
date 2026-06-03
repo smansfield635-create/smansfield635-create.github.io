@@ -1,29 +1,35 @@
 // /assets/hearth/hearth.hex.surface.js
-// HEARTH_HEX_SURFACE_FOUR_PAIR_AUTHORITY_CONSUMER_TNT_v1
+// HEARTH_HEX_SURFACE_CANVAS_HUB_THREE_FILE_VISIBLE_EXPRESSION_RENDERER_TNT_v2
 // Full-file replacement.
-// Previous contract: HEARTH_G3_HEX_SURFACE_GLOBAL_API_REPAIR_TNT_v1
+// Final file in the three-file Canvas Hub <-> Hex Authority <-> Hex Surface stretch.
+// Hex Surface Renderer only.
 // Purpose:
-// - Convert Hearth hex surface into a pure consumer of the canonical four-pair hex authority.
-// - Preserve HEARTH_HEX_SURFACE global API.
-// - Preserve drawHearthHexSurfaceFrame() and getHearthHexSurfaceStatus().
-// - Use HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY as the sole canonical hex truth.
-// - Use raw sphere position for visual continuity.
-// - Use hex authority cell / state / four-pair handshakes for grain, seam, influence, and diagnostic proof.
-// - Keep local render hex footprint as visual seam geometry only, never canonical truth.
-// - Preserve land / water / air authority separation.
-// - Do not own land truth.
-// - Do not own water truth.
-// - Do not own air truth.
-// - Do not own hydrology.
-// - Do not own elevation.
-// - Do not own materials.
-// - Do not own canvas mounting.
-// - Do not own route orchestration.
-// - Do not own runtime motion.
-// - Do not own controls.
-// - Do not create GraphicBox.
-// - Do not use generated images.
-// - Do not claim visual pass.
+// - Consume HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_TNT_v1.
+// - Render a body-bound 2D canvas planet surface when the Canvas Hub supplies a canvas/context.
+// - Use pixel/cell/four-pair data as rendering intelligence without making other Hearth files pixel-aware.
+// - Report only to the Canvas Hub when a compatible hub receiver is present.
+// - Preserve the old donor value: high-density surface expression, body-bound grain, seam pressure, atmosphere edge, and visible globe surface.
+// - Keep this file as renderer-only: no mounting, no route orchestration, no runtime restart, no controls, no F13/F21/ready/final claim.
+// Does not own:
+// - Canvas Hub
+// - Hex Four-Pair Authority
+// - Composite
+// - land truth
+// - water truth
+// - air truth
+// - hydrology
+// - elevation
+// - materials
+// - atmosphere truth
+// - lighting truth
+// - canvas mounting
+// - runtime motion
+// - controls
+// - route orchestration
+// - F13
+// - F21
+// - ready text
+// - final visual pass
 
 (() => {
   "use strict";
@@ -31,121 +37,182 @@
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
 
-  const CONTRACT = "HEARTH_HEX_SURFACE_FOUR_PAIR_AUTHORITY_CONSUMER_TNT_v1";
-  const RECEIPT = "HEARTH_HEX_SURFACE_FOUR_PAIR_AUTHORITY_CONSUMER_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "HEARTH_G3_HEX_SURFACE_GLOBAL_API_REPAIR_TNT_v1";
-  const BASELINE_CONTRACT = "HEARTH_G3_HIGH_DENSITY_HEX_SURFACE_BASELINE_v1";
-  const FAMILY_CONTRACT = "HEARTH_G3_256_LATTICE_CHILD_ENGINE_SCOPE_v1";
-  const CANONICAL_HEX_CONTRACT = "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_TNT_v1";
-  const CANONICAL_HEX_FILE = "/assets/hearth/hearth.hex.four-pair.authority.js";
-  const VERSION = "2026-05-29.hearth-hex-surface-four-pair-authority-consumer-v1";
+  const CONTRACT = "HEARTH_HEX_SURFACE_CANVAS_HUB_THREE_FILE_VISIBLE_EXPRESSION_RENDERER_TNT_v2";
+  const RECEIPT = "HEARTH_HEX_SURFACE_CANVAS_HUB_THREE_FILE_VISIBLE_EXPRESSION_RENDERER_RECEIPT_v2";
+  const PREVIOUS_CONTRACT = "HEARTH_HEX_SURFACE_FOUR_PAIR_AUTHORITY_CONSUMER_TNT_v1";
+  const PREVIOUS_RECEIPT = "HEARTH_HEX_SURFACE_FOUR_PAIR_AUTHORITY_CONSUMER_RECEIPT_v1";
+  const FILE = "/assets/hearth/hearth.hex.surface.js";
+  const ROUTE = "/showroom/globe/hearth/";
+  const VERSION = "2026-06-03.hearth-hex-surface-canvas-hub-three-file-visible-expression-renderer-v2";
+
+  const REQUIRED_HEX_AUTHORITY_CONTRACT = "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_TNT_v1";
+  const REQUIRED_HEX_AUTHORITY_RECEIPT = "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_RECEIPT_v1";
+  const REQUIRED_HEX_AUTHORITY_FILE = "/assets/hearth/hearth.hex.four-pair.authority.js";
+
+  const CANVAS_HUB_CONTRACT = "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_TNT_v12";
+  const CANVAS_HUB_FILE = "/assets/hearth/hearth.canvas.js";
 
   const PLANET_ID = "hearth";
   const PLANET_LABEL = "Hearth";
   const TAU = Math.PI * 2;
   const DEG = Math.PI / 180;
 
+  const FINAL_FALSE = Object.freeze({
+    f13Claimed: false,
+    f13EligibleForCanvas: false,
+    f21EligibleForNorth: false,
+    f21Claimed: false,
+    readyTextAllowed: false,
+    readyTextClaimed: false,
+    completionLatched: false,
+    finalCompletionLatched: false,
+    generatedImage: false,
+    graphicBox: false,
+    webGL: false,
+    visualPassClaimed: false,
+    finalVisualPassClaimed: false
+  });
+
   const DEFAULTS = Object.freeze({
     radiusRatio: 0.456,
-    hexDensity: 232,
-    minHexRadius: 0.84,
-    maxHexRadius: 3.15,
-    edgeDarkening: 0.026,
-    seamSoftening: 0.042,
-    authoritySeedStrength: 0.42,
-    microTerrainStrength: 0.38,
-    landExposureLift: 0.18,
-    waterDepthPush: 0.22,
-    contrastLift: 0.16,
-    atmosphereStrength: 0.94,
     axialTilt: -0.22,
+    phase: 0,
+    hexDensity: 238,
+    hexEdgeStrength: 0.065,
+    grainStrength: 0.32,
+    materialStrength: 0.28,
+    reliefStrength: 0.34,
+    atmosphereStrength: 0.92,
     lightX: -0.48,
     lightY: 0.28,
     lightZ: 0.84
   });
 
-  const STATUS = {
-    ok: true,
+  const BODY_MASSES = Object.freeze([
+    { key: "north-crown-mass", lat: 78 * DEG, lon: -20 * DEG, rx: 42 * DEG, ry: 13 * DEG, angle: -10 * DEG },
+    { key: "equatorial-great-mass", lat: 1 * DEG, lon: -8 * DEG, rx: 64 * DEG, ry: 28 * DEG, angle: -8 * DEG },
+    { key: "northwest-temperate-mass", lat: 44 * DEG, lon: -104 * DEG, rx: 32 * DEG, ry: 17 * DEG, angle: 28 * DEG },
+    { key: "northeast-broken-shelf-mass", lat: 34 * DEG, lon: 104 * DEG, rx: 34 * DEG, ry: 16 * DEG, angle: -24 * DEG },
+    { key: "southeast-warm-mass", lat: -24 * DEG, lon: 142 * DEG, rx: 38 * DEG, ry: 20 * DEG, angle: 18 * DEG },
+    { key: "southwest-ridge-mass", lat: -38 * DEG, lon: -122 * DEG, rx: 36 * DEG, ry: 18 * DEG, angle: -30 * DEG },
+    { key: "south-transitional-mass", lat: -59 * DEG, lon: 36 * DEG, rx: 40 * DEG, ry: 14 * DEG, angle: 9 * DEG }
+  ]);
+
+  const COLOR = Object.freeze({
+    abyss: [2, 10, 28, 255],
+    deep: [4, 28, 70, 255],
+    ocean: [8, 68, 122, 255],
+    shelf: [30, 128, 146, 255],
+    foam: [104, 176, 170, 255],
+    landLow: [86, 116, 70, 255],
+    landWarm: [144, 132, 78, 255],
+    landWet: [36, 104, 66, 255],
+    ridge: [92, 88, 78, 255],
+    granite: [138, 132, 118, 255],
+    cliff: [42, 50, 60, 255],
+    snow: [218, 230, 228, 255],
+    copper: [158, 92, 60, 255],
+    opal: [148, 194, 188, 255],
+    shadow: [10, 14, 22, 255],
+    atmosphere: [154, 214, 248, 255]
+  });
+
+  const state = {
     contract: CONTRACT,
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
-    baselineContract: BASELINE_CONTRACT,
-    familyContract: FAMILY_CONTRACT,
+    previousReceipt: PREVIOUS_RECEIPT,
     version: VERSION,
-    role: "hearth-hex-surface-four-pair-authority-consumer",
-    globalApi: "HEARTH_HEX_SURFACE",
-    drawFunction: "drawHearthHexSurfaceFrame",
-    statusFunction: "getHearthHexSurfaceStatus",
+    file: FILE,
+    route: ROUTE,
+    role: "Hex Surface Renderer",
 
-    canonicalHexAuthorityFile: CANONICAL_HEX_FILE,
-    canonicalHexAuthorityExpectedContract: CANONICAL_HEX_CONTRACT,
-    canonicalHexAuthorityPresent: false,
-    canonicalHexAuthorityContractOk: false,
-    canonicalHexAuthoritySampleOk: false,
-    canonicalHexAuthorityFourPairOk: false,
-    canonicalHexAuthorityWideProbeOk: false,
+    rendererLoaded: true,
+    canvasHubCompatible: true,
+    canvasHubContract: CANVAS_HUB_CONTRACT,
+    canvasHubFile: CANVAS_HUB_FILE,
+    requiredHexAuthorityContract: REQUIRED_HEX_AUTHORITY_CONTRACT,
+    requiredHexAuthorityReceipt: REQUIRED_HEX_AUTHORITY_RECEIPT,
+    requiredHexAuthorityFile: REQUIRED_HEX_AUTHORITY_FILE,
 
-    soleHexAuthorityConsumer: true,
-    ownsCanonicalHexTruth: false,
-    ownsHexCellIdentity: false,
-    ownsFourPairHandshakeTruth: false,
-    highDensityHexSurface: true,
-    overlappingHexFootprints: true,
-    rawSpherePositionOwnsVisualContinuity: true,
-    rawVectorVisualSampling: true,
-    hexCenterVisualOverride: false,
-    localRenderHexIsVisualFootprintOnly: true,
+    hexAuthorityPresent: false,
+    hexAuthorityContractOk: false,
+    hexAuthoritySampleOk: false,
+    hexAuthorityWideProbeOk: false,
+    canvasHubPresent: false,
+    canvasHubContractOk: false,
 
-    landAuthority: false,
-    waterAuthority: false,
-    airAuthority: false,
-    terrainAuthority: false,
-    childEngineAuthority: false,
-    canvasAuthority: false,
-    runtimeAuthority: false,
-    routeAuthority: false,
+    drawCount: 0,
+    lastDrawAt: "",
+    lastDrawOk: false,
+    lastDrawWidth: 0,
+    lastDrawHeight: 0,
+    lastDrawSamples: 0,
+    lastDrawLandPixels: 0,
+    lastDrawWaterPixels: 0,
+    lastDrawFallbackHexPixels: 0,
+    lastDrawAuthorityHexPixels: 0,
+    lastHubNotifyOk: false,
+    lastHubNotifyMethod: "NONE",
+    lastError: "",
+    updatedAt: nowIso(),
 
-    generatedImage: false,
-    graphicBox: false,
-    webGL: false,
-    visualPassClaimed: false,
+    ownsCanvasHub: false,
+    ownsHexAuthority: false,
+    ownsComposite: false,
+    ownsCanvasMounting: false,
+    ownsRouteOrchestration: false,
+    ownsRuntimeRestart: false,
+    ownsControls: false,
+    ownsLandTruth: false,
+    ownsWaterTruth: false,
+    ownsAirTruth: false,
+    ownsHydrology: false,
+    ownsElevation: false,
+    ownsMaterials: false,
+    ownsAtmosphereTruth: false,
+    ownsLightingTruth: false,
 
-    lastFrameReceipt: null,
-    lastAuthorityValidation: null,
-    lastError: ""
+    ...FINAL_FALSE
   };
 
   function nowIso() {
     try {
       return new Date().toISOString();
     } catch (_error) {
-      return "";
+      return String(Date.now());
     }
   }
 
+  function isObject(value) {
+    return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+  }
+
+  function isFunction(value) {
+    return typeof value === "function";
+  }
+
+  function safeString(value, fallback = "") {
+    if (value === undefined || value === null) return fallback;
+    return String(value);
+  }
+
+  function safeNumber(value, fallback = 0) {
+    const number = Number(value);
+    return Number.isFinite(number) ? number : fallback;
+  }
+
   function clamp(value, min, max) {
-    const n = Number(value);
-    if (!Number.isFinite(n)) return min;
-    return Math.max(min, Math.min(max, n));
+    const number = safeNumber(value, min);
+    return Math.max(min, Math.min(max, number));
   }
 
   function clamp01(value) {
     return clamp(value, 0, 1);
   }
 
-  function mix(a, b, t) {
-    const k = clamp01(t);
-    return a + (b - a) * k;
-  }
-
-  function fract(value) {
-    return value - Math.floor(value);
-  }
-
-  function wrap01(value) {
-    const n = Number(value);
-    if (!Number.isFinite(n)) return 0;
-    return ((n % 1) + 1) % 1;
+  function lerp(a, b, t) {
+    return a + (b - a) * clamp01(t);
   }
 
   function smoothstep(edge0, edge1, value) {
@@ -153,15 +220,54 @@
     return t * t * (3 - 2 * t);
   }
 
+  function wrap01(value) {
+    const number = safeNumber(value, 0);
+    return ((number % 1) + 1) % 1;
+  }
+
+  function wrapPi(value) {
+    return Math.atan2(Math.sin(value), Math.cos(value));
+  }
+
+  function clonePlain(value) {
+    if (!isObject(value) && !Array.isArray(value)) return value;
+    try {
+      return JSON.parse(JSON.stringify(value));
+    } catch (_error) {
+      return Array.isArray(value) ? value.slice() : Object.assign({}, value);
+    }
+  }
+
+  function mixColor(a, b, t) {
+    const k = clamp01(t);
+    return [
+      Math.round(lerp(a[0], b[0], k)),
+      Math.round(lerp(a[1], b[1], k)),
+      Math.round(lerp(a[2], b[2], k)),
+      Math.round(lerp(a[3] === undefined ? 255 : a[3], b[3] === undefined ? 255 : b[3], k))
+    ];
+  }
+
+  function multiplyColor(color, amount) {
+    const k = clamp(amount, 0, 2);
+    return [
+      clamp(Math.round(color[0] * k), 0, 255),
+      clamp(Math.round(color[1] * k), 0, 255),
+      clamp(Math.round(color[2] * k), 0, 255),
+      color[3] === undefined ? 255 : color[3]
+    ];
+  }
+
   function hash2(x, y, seed) {
-    return fract(Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123);
+    const n = Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123;
+    return n - Math.floor(n);
   }
 
   function valueNoise(x, y, seed) {
     const ix = Math.floor(x);
     const iy = Math.floor(y);
-    const fx = fract(x);
-    const fy = fract(y);
+    const fx = x - ix;
+    const fy = y - iy;
 
     const a = hash2(ix, iy, seed);
     const b = hash2(ix + 1, iy, seed);
@@ -171,75 +277,508 @@
     const ux = fx * fx * (3 - 2 * fx);
     const uy = fy * fy * (3 - 2 * fy);
 
-    return mix(mix(a, b, ux), mix(c, d, ux), uy);
+    return lerp(lerp(a, b, ux), lerp(c, d, ux), uy);
   }
 
   function fbm(x, y, seed, octaves) {
     let total = 0;
-    let amplitude = 0.52;
+    let amplitude = 0.54;
     let frequency = 1;
-    let normalizer = 0;
+    let norm = 0;
 
-    for (let index = 0; index < octaves; index += 1) {
-      total += valueNoise(x * frequency, y * frequency, seed + index * 29.37) * amplitude;
-      normalizer += amplitude;
+    for (let i = 0; i < octaves; i += 1) {
+      total += valueNoise(x * frequency, y * frequency, seed + i * 31.17) * amplitude;
+      norm += amplitude;
       amplitude *= 0.5;
-      frequency *= 2.04;
+      frequency *= 2.03;
     }
 
-    return total / Math.max(0.000001, normalizer);
+    return total / Math.max(0.000001, norm);
   }
 
-  function norm3(v) {
-    const x = Number(v && v[0]) || 0;
-    const y = Number(v && v[1]) || 0;
-    const z = Number(v && v[2]) || 1;
-    const m = Math.hypot(x, y, z) || 1;
-
-    return [x / m, y / m, z / m];
+  function normalizeOptions(options = {}) {
+    return {
+      radiusRatio: clamp(options.radiusRatio ?? DEFAULTS.radiusRatio, 0.32, 0.49),
+      axialTilt: safeNumber(options.axialTilt ?? DEFAULTS.axialTilt, DEFAULTS.axialTilt),
+      phase: safeNumber(options.phase ?? DEFAULTS.phase, DEFAULTS.phase),
+      hexDensity: clamp(options.hexDensity ?? DEFAULTS.hexDensity, 120, 560),
+      hexEdgeStrength: clamp(options.hexEdgeStrength ?? DEFAULTS.hexEdgeStrength, 0, 0.24),
+      grainStrength: clamp(options.grainStrength ?? DEFAULTS.grainStrength, 0, 0.9),
+      materialStrength: clamp(options.materialStrength ?? DEFAULTS.materialStrength, 0, 0.8),
+      reliefStrength: clamp(options.reliefStrength ?? DEFAULTS.reliefStrength, 0, 0.9),
+      atmosphereStrength: clamp(options.atmosphereStrength ?? DEFAULTS.atmosphereStrength, 0, 1.6),
+      lightX: safeNumber(options.lightX ?? DEFAULTS.lightX, DEFAULTS.lightX),
+      lightY: safeNumber(options.lightY ?? DEFAULTS.lightY, DEFAULTS.lightY),
+      lightZ: safeNumber(options.lightZ ?? DEFAULTS.lightZ, DEFAULTS.lightZ)
+    };
   }
 
-  function rotateY(v, angle) {
-    const c = Math.cos(angle);
-    const s = Math.sin(angle);
-
-    return [
-      v[0] * c + v[2] * s,
-      v[1],
-      -v[0] * s + v[2] * c
-    ];
+  function norm3(x, y, z) {
+    const length = Math.hypot(x, y, z) || 1;
+    return {
+      x: x / length,
+      y: y / length,
+      z: z / length
+    };
   }
 
   function rotateX(v, angle) {
     const c = Math.cos(angle);
     const s = Math.sin(angle);
 
-    return [
-      v[0],
-      v[1] * c - v[2] * s,
-      v[1] * s + v[2] * c
-    ];
+    return {
+      x: v.x,
+      y: v.y * c - v.z * s,
+      z: v.y * s + v.z * c
+    };
+  }
+
+  function rotateY(v, angle) {
+    const c = Math.cos(angle);
+    const s = Math.sin(angle);
+
+    return {
+      x: v.x * c + v.z * s,
+      y: v.y,
+      z: -v.x * s + v.z * c
+    };
   }
 
   function vectorToCoordinate(v) {
-    const n = norm3(v);
-    const lon = Math.atan2(n[0], n[2]) / DEG;
-    const lat = Math.asin(clamp(n[1], -1, 1)) / DEG;
+    const n = norm3(v.x, v.y, v.z);
+    const lon = Math.atan2(n.x, n.z);
+    const lat = Math.asin(clamp(n.y, -1, 1));
 
     return {
-      x: n[0],
-      y: n[1],
-      z: n[2],
+      x: n.x,
+      y: n.y,
+      z: n.z,
       lon,
       lat,
-      u: wrap01((lon + 180) / 360),
-      v: clamp01((90 - lat) / 180)
+      lonDegrees: lon / DEG,
+      latDegrees: lat / DEG,
+      u: wrap01((lon / DEG + 180) / 360),
+      v: clamp01((90 - lat / DEG) / 180)
     };
+  }
+
+  function contractOf(candidate) {
+    if (!candidate || typeof candidate !== "object") return "";
+    return safeString(candidate.contract || candidate.CONTRACT || "");
+  }
+
+  function receiptOf(candidate) {
+    if (!candidate || typeof candidate !== "object") return "";
+    return safeString(candidate.receipt || candidate.RECEIPT || "");
+  }
+
+  function resolveHexAuthority() {
+    const candidates = [
+      root.HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY,
+      root.HEARTH && root.HEARTH.hexFourPairAuthority,
+      root.DEXTER_LAB && root.DEXTER_LAB.hearthHexFourPairAuthority
+    ];
+
+    for (const candidate of candidates) {
+      if (candidate && typeof candidate === "object") return candidate;
+    }
+
+    return null;
+  }
+
+  function resolveCanvasHub() {
+    const candidates = [
+      root.HEARTH_CANVAS,
+      root.HEARTH && root.HEARTH.canvas,
+      root.DEXTER_LAB && root.DEXTER_LAB.hearthCanvas
+    ];
+
+    for (const candidate of candidates) {
+      if (candidate && typeof candidate === "object") return candidate;
+    }
+
+    return null;
+  }
+
+  function validateHexAuthority() {
+    const authority = resolveHexAuthority();
+    const result = {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      requiredHexAuthorityContract: REQUIRED_HEX_AUTHORITY_CONTRACT,
+      requiredHexAuthorityReceipt: REQUIRED_HEX_AUTHORITY_RECEIPT,
+      authorityPresent: Boolean(authority),
+      authorityContract: contractOf(authority),
+      authorityReceipt: receiptOf(authority),
+      contractOk: false,
+      receiptOk: false,
+      sampleOk: false,
+      fourPairOk: false,
+      bodyBoundOk: false,
+      wideProbeOk: false,
+      wideProbeTotal: 0,
+      wideProbeFailedCount: 0,
+      status: "MISSING",
+      error: "",
+      ...FINAL_FALSE
+    };
+
+    result.contractOk = result.authorityContract === REQUIRED_HEX_AUTHORITY_CONTRACT;
+    result.receiptOk = !result.authorityReceipt || result.authorityReceipt === REQUIRED_HEX_AUTHORITY_RECEIPT;
+
+    if (!authority || !isFunction(authority.sample)) {
+      result.status = "MISSING";
+      return result;
+    }
+
+    try {
+      const sample = authority.sample({ u: 0.5, v: 0.5 });
+
+      result.sampleOk = Boolean(sample && typeof sample === "object");
+      result.fourPairOk = Boolean(
+        sample &&
+        sample.everyPixelHasFourPairSet === true &&
+        Array.isArray(sample.fourPairSet) &&
+        sample.fourPairSet.length === 4 &&
+        sample.north &&
+        sample.south &&
+        sample.east &&
+        sample.west
+      );
+      result.bodyBoundOk = Boolean(
+        sample &&
+        sample.bodyBound === true &&
+        sample.surfaceBound === true &&
+        sample.floatsAboveBody === false &&
+        sample.allowedToFloat === false
+      );
+
+      if (isFunction(authority.wideProbe)) {
+        const probe = authority.wideProbe({ rows: 5, columns: 9 });
+        result.wideProbeTotal = safeNumber(probe && probe.total, 0);
+        result.wideProbeFailedCount = safeNumber(probe && probe.failedCount, 0);
+        result.wideProbeOk = Boolean(
+          probe &&
+          probe.wideProbeReady === true &&
+          probe.everyPixelHasNorthSouthEastWest === true &&
+          probe.everyPixelHasFourPairSet === true &&
+          result.wideProbeTotal >= 25 &&
+          result.wideProbeFailedCount === 0
+        );
+      }
+    } catch (error) {
+      result.error = error && error.message ? String(error.message) : String(error);
+    }
+
+    result.status = result.authorityPresent && result.contractOk && result.sampleOk && result.fourPairOk && result.bodyBoundOk
+      ? "PASS"
+      : "DEGRADED";
+
+    state.hexAuthorityPresent = result.authorityPresent;
+    state.hexAuthorityContractOk = result.contractOk;
+    state.hexAuthoritySampleOk = result.sampleOk;
+    state.hexAuthorityWideProbeOk = result.wideProbeOk;
+
+    return result;
+  }
+
+  function validateCanvasHub() {
+    const hub = resolveCanvasHub();
+    const result = {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      requiredCanvasHubContract: CANVAS_HUB_CONTRACT,
+      hubPresent: Boolean(hub),
+      hubContract: contractOf(hub),
+      contractOk: contractOf(hub) === CANVAS_HUB_CONTRACT,
+      status: "MISSING",
+      ...FINAL_FALSE
+    };
+
+    result.status = result.hubPresent
+      ? result.contractOk
+        ? "PASS"
+        : "PRESENT_DIFFERENT_CONTRACT"
+      : "MISSING";
+
+    state.canvasHubPresent = result.hubPresent;
+    state.canvasHubContractOk = result.contractOk;
+
+    return result;
+  }
+
+  function sampleHexAuthority(coord, fallbackQ, fallbackR) {
+    const authority = resolveHexAuthority();
+
+    if (authority && isFunction(authority.sample)) {
+      try {
+        const packet = authority.sample({
+          x: coord.x,
+          y: coord.y,
+          z: coord.z,
+          u: coord.u,
+          v: coord.v,
+          lon: coord.lonDegrees,
+          lat: coord.latDegrees
+        });
+
+        if (packet && typeof packet === "object") {
+          return {
+            ...packet,
+            fallbackHexAuthority: false,
+            authorityHexPixel: true
+          };
+        }
+      } catch (_error) {}
+    }
+
+    const stateId = Math.abs(((fallbackQ * 37 + fallbackR * 19 + fallbackQ * fallbackR * 7 + 113) | 0) % 256);
+
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      authority: "Hex Surface Renderer fallback cell address",
+      fallbackHexAuthority: true,
+      authorityHexPixel: false,
+      cellId: `HEARTH_HEX_SURFACE_FALLBACK_Q${fallbackQ}_R${fallbackR}`,
+      hexId: `HEARTH_HEX_SURFACE_FALLBACK_Q${fallbackQ}_R${fallbackR}`,
+      q: fallbackQ,
+      r: fallbackR,
+      s: -fallbackQ - fallbackR,
+      stateId,
+      stateClass: `state-${String(stateId).padStart(3, "0")}`,
+      everyPixelHasNorthSouthEastWest: false,
+      everyPixelHasFourPairSet: false,
+      bodyBound: true,
+      surfaceBound: true,
+      floatsAboveBody: false,
+      allowedToFloat: false,
+      ...FINAL_FALSE
+    };
+  }
+
+  function sampleHubExpression(coord, hexPacket) {
+    const hub = resolveCanvasHub();
+
+    if (!hub || !isFunction(hub.sampleHexSurfaceExpression)) return null;
+
+    try {
+      const packet = hub.sampleHexSurfaceExpression({
+        contract: CONTRACT,
+        receipt: RECEIPT,
+        sourceFile: FILE,
+        coord: {
+          x: coord.x,
+          y: coord.y,
+          z: coord.z,
+          u: coord.u,
+          v: coord.v,
+          lon: coord.lonDegrees,
+          lat: coord.latDegrees
+        },
+        hexPacket: {
+          cellId: hexPacket.cellId,
+          stateId: hexPacket.stateId,
+          q: hexPacket.q,
+          r: hexPacket.r,
+          s: hexPacket.s
+        },
+        ...FINAL_FALSE
+      });
+
+      if (packet && typeof packet === "object") return packet;
+    } catch (_error) {}
+
+    return null;
+  }
+
+  function landField(coord) {
+    let best = {
+      field: -999,
+      massKey: "",
+      coast: 0,
+      ridge: 0,
+      basin: 0,
+      mineral: 0
+    };
+
+    for (let i = 0; i < BODY_MASSES.length; i += 1) {
+      const mass = BODY_MASSES[i];
+      const dx = wrapPi(coord.lon - mass.lon) * Math.cos(mass.lat);
+      const dy = coord.lat - mass.lat;
+      const ca = Math.cos(mass.angle);
+      const sa = Math.sin(mass.angle);
+      const x = dx * ca - dy * sa;
+      const y = dx * sa + dy * ca;
+      const nx = x / mass.rx;
+      const ny = y / mass.ry;
+      const theta = Math.atan2(ny, nx);
+      const dist = Math.sqrt(nx * nx + ny * ny);
+
+      const angularCut =
+        Math.sin(theta * (5 + i) + i * 0.71) * 0.055 +
+        Math.sin(theta * (9 + i) - i * 0.43) * 0.038;
+
+      const fracture = (fbm(coord.u * 18 + i * 3.1, coord.v * 12 - i * 2.4, 710 + i * 53, 4) - 0.5) * 0.22;
+      const bayCut = smoothstep(0.58, 0.92, fbm(coord.u * 36 - i * 2.7, coord.v * 26 + i * 4.2, 910 + i * 79, 3)) * 0.11;
+
+      const field = 1 - dist + angularCut + fracture - bayCut;
+
+      if (field > best.field) {
+        const ridge = smoothstep(0.44, 0.91, fbm(coord.u * 12 + i, coord.v * 15 - i, 1200 + i * 41, 5));
+        const basin = smoothstep(0.10, 0.38, 1 - ridge);
+        const mineral = smoothstep(0.62, 0.96, fbm(coord.u * 44 + i * 2, coord.v * 41 - i * 3, 1500 + i * 83, 3));
+
+        best = {
+          field,
+          massKey: mass.key,
+          coast: smoothstep(0, 0.88, 1 - clamp(Math.abs(field) * 16, 0, 1)),
+          ridge,
+          basin,
+          mineral
+        };
+      }
+    }
+
+    return best;
+  }
+
+  function fallbackExpression(coord, hexPacket) {
+    const field = landField(coord);
+    const isLand = field.field > 0;
+    const latAbs = Math.abs(coord.latDegrees) / 90;
+    const grain = fbm(coord.u * 32 + safeNumber(hexPacket.stateId, 0) * 0.031, coord.v * 24 - safeNumber(hexPacket.stateId, 0) * 0.027, 2200, 4);
+    const relief = isLand ? clamp01(field.ridge * 0.74 + grain * 0.26) : 0;
+    const shelf = !isLand ? smoothstep(-0.24, 0.04, field.field) * (0.45 + grain * 0.35) : 0;
+    const deep = !isLand ? clamp01(1 - shelf * 0.72) : 0;
+    const cold = smoothstep(0.68, 0.98, latAbs);
+    const arid = isLand ? smoothstep(0.62, 0.88, fbm(coord.u * 7, coord.v * 5, 2500, 3)) * (1 - cold * 0.4) : 0;
+    const wet = isLand ? smoothstep(0.50, 0.86, fbm(coord.u * 9 + 8, coord.v * 8 - 4, 2600, 3)) * (1 - arid * 0.45) : 0;
+
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      source: "hex-surface-renderer-fallback-expression",
+      hubExpression: false,
+      isLand,
+      isWater: !isLand,
+      massKey: field.massKey,
+      field: field.field,
+      coast: field.coast,
+      ridge: field.ridge,
+      relief,
+      basin: field.basin,
+      shelf,
+      deep,
+      cold,
+      arid,
+      wet,
+      mineral: field.mineral,
+      grain,
+      bodyBound: true,
+      surfaceBound: true,
+      ...FINAL_FALSE
+    };
+  }
+
+  function normalizeExpression(value, coord, hexPacket) {
+    const fallback = fallbackExpression(coord, hexPacket);
+
+    if (!value || typeof value !== "object") return fallback;
+
+    return {
+      ...fallback,
+      ...value,
+      hubExpression: true,
+      bodyBound: true,
+      surfaceBound: true,
+      f13Claimed: false,
+      f21EligibleForNorth: false,
+      f21Claimed: false,
+      readyTextAllowed: false,
+      visualPassClaimed: false,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false
+    };
+  }
+
+  function composeColor(expression, coord, hexPacket, shade, config, edgeFactor) {
+    const isLand = expression.isLand === true || expression.landPresence > 0.5;
+    const stateId = safeNumber(hexPacket.stateId, 0);
+    const stateSeed = (stateId + 1) / 257;
+    const grain = clamp01(safeNumber(expression.grain, 0.5));
+    const relief = clamp01(safeNumber(expression.relief, expression.ridge || 0));
+    const coast = clamp01(safeNumber(expression.coast, 0));
+    const mineral = clamp01(safeNumber(expression.mineral, 0));
+    const cold = clamp01(safeNumber(expression.cold, 0));
+    const arid = clamp01(safeNumber(expression.arid, 0));
+    const wet = clamp01(safeNumber(expression.wet, 0));
+    const shelf = clamp01(safeNumber(expression.shelf, 0));
+    const deep = clamp01(safeNumber(expression.deep, 0.6));
+    const basin = clamp01(safeNumber(expression.basin, 0));
+
+    let color;
+
+    if (Array.isArray(expression.rgb) && expression.rgb.length >= 3) {
+      color = [
+        clamp(Math.round(expression.rgb[0]), 0, 255),
+        clamp(Math.round(expression.rgb[1]), 0, 255),
+        clamp(Math.round(expression.rgb[2]), 0, 255),
+        expression.rgb[3] === undefined ? 255 : clamp(Math.round(expression.rgb[3]), 0, 255)
+      ];
+    } else if (Array.isArray(expression.color) && expression.color.length >= 3) {
+      color = [
+        clamp(Math.round(expression.color[0]), 0, 255),
+        clamp(Math.round(expression.color[1]), 0, 255),
+        clamp(Math.round(expression.color[2]), 0, 255),
+        expression.color[3] === undefined ? 255 : clamp(Math.round(expression.color[3]), 0, 255)
+      ];
+    } else if (isLand) {
+      color = COLOR.landLow.slice();
+      color = mixColor(color, COLOR.landWarm, arid * 0.42);
+      color = mixColor(color, COLOR.landWet, wet * 0.38);
+      color = mixColor(color, COLOR.ridge, relief * 0.34);
+      color = mixColor(color, COLOR.granite, relief * relief * 0.30);
+      color = mixColor(color, COLOR.cliff, clamp01(relief * coast) * 0.24);
+      color = mixColor(color, COLOR.snow, cold * relief * 0.48);
+      color = mixColor(color, COLOR.copper, mineral * 0.08);
+      color = mixColor(color, COLOR.opal, mineral * coast * 0.10);
+    } else {
+      color = COLOR.ocean.slice();
+      color = mixColor(color, COLOR.deep, deep * 0.55);
+      color = mixColor(color, COLOR.abyss, deep * deep * 0.36);
+      color = mixColor(color, COLOR.shelf, shelf * 0.58);
+      color = mixColor(color, COLOR.foam, shelf * coast * 0.16);
+    }
+
+    const micro =
+      (grain - 0.5) * config.grainStrength +
+      (stateSeed - 0.5) * config.materialStrength +
+      (relief - 0.5) * config.reliefStrength * (isLand ? 0.40 : 0.08);
+
+    color = multiplyColor(color, clamp(1 + micro, 0.72, 1.28));
+
+    const limb = clamp(0.50 + shade.depth * 0.56, 0.44, 1.08);
+    const light = clamp(0.70 + shade.light * 0.43, 0.52, 1.16);
+    const seam = clamp(1 - edgeFactor * config.hexEdgeStrength, 0.78, 1.04);
+    const basinShade = isLand ? 1 - basin * 0.10 : 1;
+
+    color = multiplyColor(color, limb * light * seam * basinShade);
+
+    if (isLand && coast > 0.48) {
+      color = mixColor(color, COLOR.foam, (coast - 0.48) * 0.18);
+    }
+
+    if (!isLand && shelf > 0.35) {
+      color = mixColor(color, COLOR.foam, shelf * coast * 0.08);
+    }
+
+    return color;
   }
 
   function cubeRound(q, r) {
     const s = -q - r;
-
     let rq = Math.round(q);
     let rr = Math.round(r);
     let rs = Math.round(s);
@@ -278,1246 +817,712 @@
     return Math.max(Math.abs(q), Math.abs(r), Math.abs(s));
   }
 
-  function normalizeOptions(options = {}) {
-    return Object.freeze({
-      radiusRatio: clamp(options.radiusRatio ?? DEFAULTS.radiusRatio, 0.34, 0.49),
-      hexDensity: clamp(options.hexDensity ?? DEFAULTS.hexDensity, 150, 560),
-      minHexRadius: clamp(options.minHexRadius ?? DEFAULTS.minHexRadius, 0.55, 3),
-      maxHexRadius: clamp(options.maxHexRadius ?? DEFAULTS.maxHexRadius, 1.4, 6),
-      edgeDarkening: clamp(options.edgeDarkening ?? DEFAULTS.edgeDarkening, 0, 0.18),
-      seamSoftening: clamp(options.seamSoftening ?? DEFAULTS.seamSoftening, 0, 0.18),
-      authoritySeedStrength: clamp(options.authoritySeedStrength ?? DEFAULTS.authoritySeedStrength, 0, 1),
-      microTerrainStrength: clamp(options.microTerrainStrength ?? DEFAULTS.microTerrainStrength, 0, 0.9),
-      landExposureLift: clamp(options.landExposureLift ?? DEFAULTS.landExposureLift, 0, 0.45),
-      waterDepthPush: clamp(options.waterDepthPush ?? DEFAULTS.waterDepthPush, 0, 0.55),
-      contrastLift: clamp(options.contrastLift ?? DEFAULTS.contrastLift, 0, 0.48),
-      atmosphereStrength: clamp(options.atmosphereStrength ?? DEFAULTS.atmosphereStrength, 0, 1.4),
-      axialTilt: Number.isFinite(Number(options.axialTilt)) ? Number(options.axialTilt) : DEFAULTS.axialTilt,
-      lightX: Number(options.lightX) || DEFAULTS.lightX,
-      lightY: Number(options.lightY) || DEFAULTS.lightY,
-      lightZ: Number(options.lightZ) || DEFAULTS.lightZ
-    });
-  }
-
-  function rgba(input, fallback) {
-    if (Array.isArray(input) && input.length >= 3) {
-      return [
-        clamp(Math.round(input[0]), 0, 255),
-        clamp(Math.round(input[1]), 0, 255),
-        clamp(Math.round(input[2]), 0, 255),
-        input[3] === undefined ? 255 : clamp(Math.round(input[3]), 0, 255)
-      ];
-    }
-
-    return fallback.slice();
-  }
-
-  function mixColor(base, overlay, amount) {
-    const t = clamp01(amount);
-
-    return [
-      clamp(Math.round(mix(base[0], overlay[0], t)), 0, 255),
-      clamp(Math.round(mix(base[1], overlay[1], t)), 0, 255),
-      clamp(Math.round(mix(base[2], overlay[2], t)), 0, 255),
-      base[3] === undefined ? 255 : base[3]
-    ];
-  }
-
-  function multiplyColor(color, amount) {
-    return [
-      clamp(Math.round(color[0] * amount), 0, 255),
-      clamp(Math.round(color[1] * amount), 0, 255),
-      clamp(Math.round(color[2] * amount), 0, 255),
-      color[3] === undefined ? 255 : color[3]
-    ];
-  }
-
-  function readNumber(sample, keys, fallback = 0) {
-    if (!sample || typeof sample !== "object") return fallback;
-
-    for (const key of keys) {
-      const value = sample[key];
-      const n = Number(value);
-
-      if (Number.isFinite(n)) return n;
-    }
-
-    return fallback;
-  }
-
-  function readBoolean(sample, keys) {
-    if (!sample || typeof sample !== "object") return false;
-
-    return keys.some((key) => sample[key] === true || sample[key] === "true");
-  }
-
-  function readText(sample, keys, fallback = "") {
-    if (!sample || typeof sample !== "object") return fallback;
-
-    for (const key of keys) {
-      if (sample[key] !== undefined && sample[key] !== null && String(sample[key]).length) {
-        return String(sample[key]);
-      }
-    }
-
-    return fallback;
-  }
-
-  function contractOf(value) {
-    if (!value || typeof value !== "object") return "";
-
-    return String(
-      value.contract ||
-      value.CONTRACT ||
-      value.compatibilityContract ||
-      value.boundaryHandshakeContract ||
-      value.receipt ||
-      value.RECEIPT ||
-      ""
-    );
-  }
-
-  function resolveCanonicalHexAuthority() {
-    const candidates = [
-      root.HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY,
-      root.HEARTH_HEX_FOUR_PAIR_AUTHORITY,
-      root.HEARTH_HEX_PIXEL_HANDSHAKE_AUTHORITY,
-      root.HEARTH_HEX_HANDSHAKE_AUTHORITY,
-      root.HEARTH_HEXGRID_AUTHORITY,
-      root.HEARTH && root.HEARTH.hexFourPairAuthority,
-      root.HEARTH && root.HEARTH.hexAuthority
-    ];
-
-    return candidates.find((candidate) => candidate && typeof candidate === "object") || null;
-  }
-
-  function validateCanonicalHexAuthority() {
-    const authority = resolveCanonicalHexAuthority();
-
-    const validation = {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      expectedContract: CANONICAL_HEX_CONTRACT,
-      authorityPresent: Boolean(authority),
-      actualContract: contractOf(authority),
-      contractOk: false,
-      sampleOk: false,
-      fourPairOk: false,
-      fourPairDirectionsOk: false,
-      fourPairBodyBoundOk: false,
-      wideProbeOk: false,
-      wideProbeTotal: 0,
-      wideProbeFailedCount: 0,
-      status: "MISSING",
-      validationOk: false,
-      error: "",
-      at: nowIso(),
-      visualPassClaimed: false
-    };
-
-    validation.contractOk = Boolean(authority && contractOf(authority) === CANONICAL_HEX_CONTRACT);
-
-    if (!authority) {
-      validation.status = "MISSING";
-      return validation;
-    }
-
-    try {
-      if (typeof authority.sample === "function") {
-        const sample = authority.sample({ u: 0.5, v: 0.5 });
-
-        validation.sampleOk = Boolean(sample && typeof sample === "object");
-        validation.fourPairDirectionsOk = Boolean(
-          sample &&
-          sample.north &&
-          sample.south &&
-          sample.east &&
-          sample.west &&
-          sample.north.direction === "north" &&
-          sample.south.direction === "south" &&
-          sample.east.direction === "east" &&
-          sample.west.direction === "west"
-        );
-
-        validation.fourPairOk = Boolean(
-          sample &&
-          sample.everyPixelHasFourPairSet === true &&
-          Array.isArray(sample.fourPairSet) &&
-          sample.fourPairSet.length === 4 &&
-          validation.fourPairDirectionsOk
-        );
-
-        validation.fourPairBodyBoundOk = Boolean(
-          sample &&
-          sample.bodyBound === true &&
-          sample.surfaceBound === true &&
-          sample.floatsAboveBody === false &&
-          sample.allowedToFloat === false
-        );
-      }
-
-      if (typeof authority.wideProbe === "function") {
-        const wideProbe = authority.wideProbe({ rows: 5, columns: 9 });
-
-        validation.wideProbeTotal = readNumber(wideProbe, ["total"], 0);
-        validation.wideProbeFailedCount = readNumber(wideProbe, ["failedCount"], 0);
-        validation.wideProbeOk = Boolean(
-          wideProbe &&
-          wideProbe.wideProbeReady === true &&
-          wideProbe.everyPixelHasNorthSouthEastWest === true &&
-          wideProbe.everyPixelHasFourPairSet === true &&
-          validation.wideProbeTotal >= 25 &&
-          validation.wideProbeFailedCount === 0
-        );
-      }
-    } catch (error) {
-      validation.error = error && error.message ? error.message : String(error);
-    }
-
-    validation.validationOk = Boolean(
-      validation.authorityPresent &&
-      validation.contractOk &&
-      validation.sampleOk &&
-      validation.fourPairOk &&
-      validation.fourPairBodyBoundOk
-    );
-
-    validation.status = validation.validationOk
-      ? "PASS"
-      : validation.authorityPresent
-        ? "DEGRADED"
-        : "MISSING";
-
-    return validation;
-  }
-
-  function sampleCanonicalHex(coord, localFallback = null) {
-    const authority = resolveCanonicalHexAuthority();
-
-    if (authority && typeof authority.sample === "function") {
-      try {
-        const packet = authority.sample(coord);
-
-        if (packet && typeof packet === "object") {
-          return {
-            ...packet,
-            canonicalHexAuthorityPresent: true,
-            canonicalHexAuthorityContractOk: contractOf(authority) === CANONICAL_HEX_CONTRACT,
-            fallbackHexAuthority: false
-          };
-        }
-      } catch (_error) {}
-    }
-
-    return {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      authority: "hearth-hex-surface-local-render-footprint-fallback",
-      fallbackHexAuthority: true,
-      canonicalHexAuthorityPresent: false,
-      canonicalHexAuthorityContractOk: false,
-      cellId: localFallback ? `LOCAL_RENDER_HEX_Q${localFallback.q}_R${localFallback.r}` : "LOCAL_RENDER_HEX_UNKNOWN",
-      hexId: localFallback ? `LOCAL_RENDER_HEX_Q${localFallback.q}_R${localFallback.r}` : "LOCAL_RENDER_HEX_UNKNOWN",
-      row: 0,
-      column: 0,
-      q: localFallback ? localFallback.q : 0,
-      r: localFallback ? localFallback.r : 0,
-      s: localFallback ? -localFallback.q - localFallback.r : 0,
-      stateId: localFallback ? Math.abs((localFallback.q * 37 + localFallback.r * 19) % 256) : 0,
-      stateClass: "fallback-state",
-      fourPairSet: [],
-      everyPixelHasFourPairSet: false,
-      everyPixelHasNorthSouthEastWest: false,
-      bodyBound: true,
-      surfaceBound: true,
-      floatsAboveBody: false,
-      allowedToFloat: false,
-      visualPassClaimed: false
-    };
-  }
-
-  function resolveChannel(kind) {
-    const table = {
-      land: [
-        root.HEARTH_LAND_CHANNEL,
-        root.HEARTH && root.HEARTH.landChannel,
-        root.HEARTH && root.HEARTH.land
-      ],
-      water: [
-        root.HEARTH_WATER_CHANNEL,
-        root.HEARTH && root.HEARTH.waterChannel,
-        root.HEARTH && root.HEARTH.water
-      ],
-      air: [
-        root.HEARTH_AIR_CHANNEL,
-        root.HEARTH && root.HEARTH.airChannel,
-        root.HEARTH && root.HEARTH.air
-      ]
-    };
-
-    return (table[kind] || []).find((candidate) => candidate && typeof candidate === "object") || null;
-  }
-
-  function sampleAuthority(authority, coord) {
-    if (!authority || typeof authority !== "object") return null;
-
-    try {
-      if (typeof authority.sample === "function") {
-        const value = authority.sample(coord);
-
-        if (value && typeof value === "object") return value;
-      }
-
-      if (typeof authority.read === "function") {
-        const value = authority.read(coord);
-
-        if (value && typeof value === "object") return value;
-      }
-
-      if (typeof authority.sampleVector === "function") {
-        const value = authority.sampleVector([coord.x, coord.y, coord.z]);
-
-        if (value && typeof value === "object") return value;
-      }
-    } catch (_error) {}
-
-    return null;
-  }
-
-  function fallbackLand(coord) {
-    const ridge = fbm(coord.u * 6.4, coord.v * 5.1, 933, 4);
-    const arch = Math.sin((coord.lon + 22) * DEG * 2.2) * Math.cos((coord.lat - 8) * DEG * 2.7);
-    const belt = Math.abs(coord.lat) < 58 ? 1 : 0.38;
-    const landSignal = clamp01((ridge * 0.72 + arch * 0.22 + 0.18) * belt);
-
-    return {
-      contract: "HEARTH_HEX_SURFACE_VISUAL_FALLBACK_LAND_PACKET",
-      channel: "land",
-      isLandChannel: true,
-      isWaterChannel: false,
-      isAirChannel: false,
-      landPresence: landSignal > 0.57 ? landSignal : 0,
-      landAlpha: landSignal > 0.57 ? landSignal : 0,
-      isLand: landSignal > 0.57,
-      rgb: [96, 84, 56],
-      color: [96, 84, 56],
-      terrainRelief: clamp01((ridge - 0.5) * 1.8),
-      bodyBound: true,
-      surfaceBound: true,
-      floatsAboveBody: false,
-      allowedToFloat: false,
-      fallback: true,
-      visualPassClaimed: false
-    };
-  }
-
-  function fallbackWater(coord) {
-    const basin = fbm(coord.u * 4.2 + 8, coord.v * 3.7 - 3, 419, 3);
-    const depth = clamp01(0.48 + basin * 0.38 + Math.abs(coord.lat) / 220);
-
-    return {
-      contract: "HEARTH_HEX_SURFACE_VISUAL_FALLBACK_WATER_PACKET",
-      channel: "water",
-      isWaterChannel: true,
-      isLandChannel: false,
-      isAirChannel: false,
-      waterPresence: 0.72,
-      waterAlpha: 0.72,
-      waterDepth: depth,
-      isWater: true,
-      rgb: [14, 64, 116],
-      color: [14, 64, 116],
-      bodyBound: true,
-      surfaceBound: true,
-      floatsAboveBody: false,
-      allowedToFloat: false,
-      fallback: true,
-      visualPassClaimed: false
-    };
-  }
-
-  function fallbackAir(coord) {
-    const pressure = clamp01(0.28 + Math.abs(coord.lat) / 300);
-
-    return {
-      contract: "HEARTH_HEX_SURFACE_VISUAL_FALLBACK_AIR_PACKET",
-      channel: "air",
-      isAirChannel: true,
-      airPresence: 0.12,
-      airAlpha: 0.12,
-      pressureEnvelope: pressure,
-      humidity: 0.45,
-      allowedToFloat: true,
-      floatsAboveBody: true,
-      mayDefineLand: false,
-      mayDefineWater: false,
-      fallback: true,
-      visualPassClaimed: false
-    };
-  }
-
-  function sampleChannels(coord) {
-    const landAuthority = resolveChannel("land");
-    const waterAuthority = resolveChannel("water");
-    const airAuthority = resolveChannel("air");
-
-    const land = sampleAuthority(landAuthority, coord) || fallbackLand(coord);
-    const water = sampleAuthority(waterAuthority, coord) || fallbackWater(coord);
-    const air = sampleAuthority(airAuthority, coord) || fallbackAir(coord);
-
-    return {
-      land,
-      water,
-      air,
-      landAuthorityPresent: Boolean(landAuthority),
-      waterAuthorityPresent: Boolean(waterAuthority),
-      airAuthorityPresent: Boolean(airAuthority)
-    };
-  }
-
-  function classifyVisualBlend(channels) {
-    const land = channels.land || {};
-    const water = channels.water || {};
-
-    const landAlpha = clamp01(readNumber(land, ["landAlpha", "landPresence", "alpha"], readBoolean(land, ["isLand"]) ? 0.72 : 0));
-    const waterAlpha = clamp01(readNumber(water, ["waterAlpha", "waterPresence", "alpha"], readBoolean(water, ["isWater"]) ? 0.72 : 0));
-
-    const isLand = readBoolean(land, ["isLand", "visibleLand", "solidSurfaceLand"]) || landAlpha > 0.56;
-    const isWater = readBoolean(water, ["isWater", "water", "ocean", "liquidWater"]) || waterAlpha > 0.42;
-
-    const shorelineContact = Math.max(
-      clamp01(readNumber(land, ["shorelineContact", "coastPotential"], 0)),
-      clamp01(readNumber(water, ["shorelineContact", "coastPotential", "wetEdge"], 0))
-    );
-
-    const landDominance = landAlpha - waterAlpha * 0.62 + shorelineContact * 0.18;
-
-    return {
-      visualClass: isLand && landDominance > 0.05 ? "land" : isWater ? "water" : "water",
-      landAlpha,
-      waterAlpha,
-      shorelineContact,
-      landDominance,
-      isLand,
-      isWater
-    };
-  }
-
-  function baseWaterColor(water, blend, config) {
-    const depth = clamp01(readNumber(water, ["waterDepth", "depth", "oceanDepth"], 0.58));
-    const wetEdge = clamp01(readNumber(water, ["wetEdge", "shorelineContact", "coastPotential"], 0));
-    const basin = clamp01(readNumber(water, ["basinInfluence", "submergedBlockInfluence", "submergedScarInfluence"], 0));
-
-    let color = rgba(water.rgb || water.color, [14, 64, 116, 255]);
-
-    color = mixColor(color, [5, 30, 78, 255], depth * (0.34 + config.waterDepthPush));
-    color = mixColor(color, [24, 118, 152, 255], wetEdge * 0.26);
-    color = mixColor(color, [4, 24, 62, 255], basin * 0.12);
-
-    if (blend.landAlpha > 0.22 && blend.shorelineContact > 0.12) {
-      color = mixColor(color, [38, 128, 140, 255], blend.shorelineContact * 0.12);
-    }
-
-    return color;
-  }
-
-  function baseLandColor(land, blend, config) {
-    const relief = clamp01(readNumber(land, ["terrainRelief", "reliefStrength", "reliefBinding"], 0));
-    const ridge = clamp01(readNumber(land, ["ridgeRelief", "ridgePotential", "mountainArcPotential"], 0));
-    const plateau = clamp01(readNumber(land, ["plateauPotential", "massAnchor"], 0));
-    const basin = clamp01(readNumber(land, ["basinPotential", "contactOcclusion", "underlandShadow"], 0));
-    const materialClass = readText(land, ["materialClass", "terrainClass", "landClass"], "");
-
-    let color = rgba(land.rgb || land.color, [96, 84, 56, 255]);
-
-    color = mixColor(color, [128, 112, 70, 255], config.landExposureLift + plateau * 0.14);
-    color = mixColor(color, [168, 148, 96, 255], relief * 0.14 + config.contrastLift * 0.12);
-    color = mixColor(color, [62, 58, 46, 255], ridge * 0.16 + basin * 0.12);
-
-    if (materialClass.includes("wetstone") || materialClass.includes("shelf") || materialClass.includes("coastal")) {
-      color = mixColor(color, [118, 104, 78, 255], 0.16 + blend.shorelineContact * 0.12);
-    }
-
-    if (materialClass.includes("shallow_water") || materialClass.includes("beach")) {
-      color = mixColor(color, [154, 132, 84, 255], 0.12);
-    }
-
-    return color;
-  }
-
-  function composeColor(channels, hexPacket, geometry, index, coord, config, lightValue) {
-    const blend = classifyVisualBlend(channels);
-    const land = channels.land || {};
-    const water = channels.water || {};
-    const air = channels.air || {};
-
-    let color = blend.visualClass === "land"
-      ? baseLandColor(land, blend, config)
-      : baseWaterColor(water, blend, config);
-
-    if (blend.visualClass === "land" && blend.waterAlpha > 0.28 && blend.shorelineContact > 0.12) {
-      color = mixColor(color, baseWaterColor(water, blend, config), blend.shorelineContact * 0.18);
-    }
-
-    const stateId = Number.isFinite(Number(hexPacket.stateId)) ? Number(hexPacket.stateId) : 0;
-    const q = Number.isFinite(Number(hexPacket.q)) ? Number(hexPacket.q) : geometry.localHexQ[index];
-    const r = Number.isFinite(Number(hexPacket.r)) ? Number(hexPacket.r) : geometry.localHexR[index];
-
-    const edge = geometry.edgeFactors[index];
-    const overlap = geometry.overlapFactors[index];
-    const zDepth = geometry.sphericalDepths[index];
-    const seed = (stateId + 1) / 257;
-
-    const fineNoise = fbm(
-      q * 0.145 + coord.u * 6.2 + seed * 4.1,
-      r * 0.145 + coord.v * 5.4 - seed * 3.8,
-      1711 + stateId,
-      3
-    );
-
-    const broadNoise = fbm(
-      coord.u * 12.4 + seed * 2.1,
-      coord.v * 9.2 - seed * 1.7,
-      2719 + stateId,
-      3
-    );
-
-    const micro = (fineNoise - 0.5) * config.microTerrainStrength;
-    const broad = (broadNoise - 0.5) * config.authoritySeedStrength;
-
-    if (blend.visualClass === "land") {
-      color = mixColor(color, [202, 184, 128, 255], Math.max(0, micro + broad) * 0.12);
-      color = mixColor(color, [48, 52, 46, 255], Math.max(0, -(micro + broad)) * 0.15);
-    } else {
-      color = mixColor(color, [46, 160, 182, 255], Math.max(0, micro) * 0.045);
-      color = mixColor(color, [3, 20, 58, 255], Math.max(0, -micro) * 0.07);
-    }
-
-    const fourPairValid = Boolean(
-      hexPacket &&
-      hexPacket.everyPixelHasFourPairSet === true &&
-      Array.isArray(hexPacket.fourPairSet) &&
-      hexPacket.fourPairSet.length === 4
-    );
-
-    const handshakeLift = fourPairValid ? 1 : 0.94;
-    const seam = clamp(
-      1 - edge * config.edgeDarkening + overlap * config.seamSoftening,
-      0.80,
-      1.10
-    );
-
-    const limbShade = clamp(0.56 + zDepth * 0.52, 0.48, 1.08);
-    const lightShade = clamp(0.70 + lightValue * 0.42, 0.58, 1.14);
-    const microShade = clamp(0.965 + (micro + broad) * 0.12, 0.86, 1.14);
-    const airAlpha = clamp01(readNumber(air, ["airAlpha", "airPresence", "visualShellAlpha"], 0.10));
-
-    color = multiplyColor(color, seam * limbShade * lightShade * microShade * handshakeLift);
-    color = mixColor(color, [160, 198, 218, 255], airAlpha * 0.035);
-
-    return color;
-  }
-
-  function buildHexGeometry(size, options = {}) {
-    const config = normalizeOptions(options);
-    const radius = size * config.radiusRatio;
-    const cx = size / 2;
-    const cy = size / 2;
-
-    const hexRadius = clamp(
-      size / config.hexDensity,
-      config.minHexRadius,
-      config.maxHexRadius
-    );
-
-    let count = 0;
-
-    for (let py = 0; py < size; py += 1) {
-      const y = (py + 0.5 - cy) / radius;
-
-      for (let px = 0; px < size; px += 1) {
-        const x = (px + 0.5 - cx) / radius;
-
-        if (x * x + y * y <= 1) {
-          count += 1;
-        }
-      }
-    }
-
-    const indices = new Uint32Array(count);
-    const sphereX = new Float32Array(count);
-    const sphereY = new Float32Array(count);
-    const sphereZ = new Float32Array(count);
-    const rawX = new Float32Array(count);
-    const rawY = new Float32Array(count);
-    const edgeFactors = new Float32Array(count);
-    const overlapFactors = new Float32Array(count);
-    const sphericalDepths = new Float32Array(count);
-    const localHexQ = new Int32Array(count);
-    const localHexR = new Int32Array(count);
-
-    let index = 0;
-
-    for (let py = 0; py < size; py += 1) {
-      const yRaw = py + 0.5 - cy;
-      const y = yRaw / radius;
-
-      for (let px = 0; px < size; px += 1) {
-        const xRaw = px + 0.5 - cx;
-        const x = xRaw / radius;
-        const r2 = x * x + y * y;
-
-        if (r2 > 1) continue;
-
-        const z = Math.sqrt(Math.max(0, 1 - r2));
-        const center = nearestHexCenter(xRaw, yRaw, hexRadius);
-        const localX = xRaw - center.x;
-        const localY = yRaw - center.y;
-        const hd = hexDistance(localX, localY, hexRadius);
-
-        indices[index] = (py * size + px) * 4;
-        sphereX[index] = x;
-        sphereY[index] = -y;
-        sphereZ[index] = z;
-        rawX[index] = x;
-        rawY[index] = y;
-        edgeFactors[index] = smoothstep(0.76, 1.05, hd);
-        overlapFactors[index] = 1 - smoothstep(0.82, 1.24, hd);
-        sphericalDepths[index] = z;
-        localHexQ[index] = center.q;
-        localHexR[index] = center.r;
-
-        index += 1;
-      }
-    }
-
-    return Object.freeze({
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      previousContract: PREVIOUS_CONTRACT,
-      baselineContract: BASELINE_CONTRACT,
-      familyContract: FAMILY_CONTRACT,
-      model: "hearth-four-pair-authority-consumer-high-density-hex-surface",
-      size,
-      radius,
-      hexRadius,
-      count,
-      configKey: [
-        config.radiusRatio,
-        config.hexDensity,
-        config.minHexRadius,
-        config.maxHexRadius
-      ].join(":"),
-      indices,
-      sphereX,
-      sphereY,
-      sphereZ,
-      rawX,
-      rawY,
-      edgeFactors,
-      overlapFactors,
-      sphericalDepths,
-      localHexQ,
-      localHexR,
-      rawSpherePositionOwnsVisualContinuity: true,
-      localRenderHexIsVisualFootprintOnly: true,
-      hexCenterVisualOverride: false,
-      ownsCanonicalHexTruth: false,
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false
-    });
-  }
-
-  function drawAtmosphere(ctx, size, options = {}) {
-    const config = normalizeOptions(options);
-    const cx = size / 2;
-    const cy = size / 2;
-    const radius = size * config.radiusRatio;
+  function drawAtmosphere(ctx, width, height, cx, cy, radius, config) {
     const strength = config.atmosphereStrength;
 
     ctx.save();
 
+    const glow = ctx.createRadialGradient(cx, cy, radius * 0.82, cx, cy, radius * 1.33);
+    glow.addColorStop(0, "rgba(112,194,255,0.02)");
+    glow.addColorStop(0.46, `rgba(114,198,255,${0.18 * strength})`);
+    glow.addColorStop(1, "rgba(30,48,100,0)");
+
+    ctx.fillStyle = glow;
     ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, TAU);
-    ctx.clip();
-
-    const highlight = ctx.createRadialGradient(
-      cx - radius * 0.34,
-      cy - radius * 0.36,
-      radius * 0.02,
-      cx,
-      cy,
-      radius * 1.16
-    );
-
-    highlight.addColorStop(0, `rgba(255,255,255,${0.12 * strength})`);
-    highlight.addColorStop(0.32, `rgba(255,255,255,${0.035 * strength})`);
-    highlight.addColorStop(0.74, "rgba(0,0,0,0.10)");
-    highlight.addColorStop(1, "rgba(0,0,0,0.48)");
-
-    ctx.fillStyle = highlight;
-    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
-
-    const edge = ctx.createRadialGradient(cx, cy, radius * 0.66, cx, cy, radius);
-    edge.addColorStop(0, "rgba(0,0,0,0)");
-    edge.addColorStop(0.78, `rgba(8,23,44,${0.16 * strength})`);
-    edge.addColorStop(1, `rgba(4,10,20,${0.62 * strength})`);
-
-    ctx.fillStyle = edge;
-    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
-
-    ctx.restore();
-
-    ctx.save();
+    ctx.arc(cx, cy, radius * 1.33, 0, TAU);
+    ctx.fill();
 
     ctx.beginPath();
-    ctx.arc(cx, cy, radius + Math.max(1, size * 0.004), 0, TAU);
-    ctx.strokeStyle = `rgba(190,226,255,${0.26 * strength})`;
-    ctx.lineWidth = Math.max(1, size * 0.003);
+    ctx.arc(cx, cy, radius + Math.max(1, radius * 0.012), 0, TAU);
+    ctx.strokeStyle = `rgba(190,226,255,${0.28 * strength})`;
+    ctx.lineWidth = Math.max(1, radius * 0.012);
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.arc(cx, cy, radius + Math.max(2, size * 0.011), 0, TAU);
-    ctx.strokeStyle = `rgba(108,185,232,${0.10 * strength})`;
-    ctx.lineWidth = Math.max(1, size * 0.006);
+    ctx.arc(cx, cy, radius + Math.max(2, radius * 0.036), 0, TAU);
+    ctx.strokeStyle = `rgba(92,178,236,${0.10 * strength})`;
+    ctx.lineWidth = Math.max(1, radius * 0.018);
     ctx.stroke();
 
     ctx.restore();
   }
 
-  function publishDataset(state, frameReceipt, validation) {
-    const dataset = doc && doc.documentElement ? doc.documentElement.dataset : null;
+  function resolveCanvasAndContext(target) {
+    const canvas = target && target.canvas
+      ? target.canvas
+      : target && target.nodeName && String(target.nodeName).toLowerCase() === "canvas"
+        ? target
+        : null;
 
-    if (dataset) {
-      dataset.hearthHexSurfaceLoaded = "true";
-      dataset.hearthHexSurfaceReady = "true";
-      dataset.hearthHexSurfaceContract = CONTRACT;
-      dataset.hearthHexSurfaceReceipt = RECEIPT;
-      dataset.hearthHexSurfacePreviousContract = PREVIOUS_CONTRACT;
-      dataset.hearthHexSurfaceBaselineContract = BASELINE_CONTRACT;
-      dataset.hearthHexSurfaceFamilyContract = FAMILY_CONTRACT;
-      dataset.hearthHexSurfaceVersion = VERSION;
-
-      dataset.hearthHexSurfaceRole = "four-pair-authority-consumer";
-      dataset.hearthHexSurfaceGlobalApi = "true";
-      dataset.hearthHexSurfaceDrawFunction = "drawHearthHexSurfaceFrame";
-      dataset.hearthHexSurfaceStatusFunction = "getHearthHexSurfaceStatus";
-
-      dataset.hearthHexSurfaceCanonicalAuthorityFile = CANONICAL_HEX_FILE;
-      dataset.hearthHexSurfaceCanonicalAuthorityExpectedContract = CANONICAL_HEX_CONTRACT;
-      dataset.hearthHexSurfaceCanonicalAuthorityPresent = String(Boolean(validation && validation.authorityPresent));
-      dataset.hearthHexSurfaceCanonicalAuthorityContractOk = String(Boolean(validation && validation.contractOk));
-      dataset.hearthHexSurfaceCanonicalAuthoritySampleOk = String(Boolean(validation && validation.sampleOk));
-      dataset.hearthHexSurfaceCanonicalAuthorityFourPairOk = String(Boolean(validation && validation.fourPairOk));
-      dataset.hearthHexSurfaceCanonicalAuthorityWideProbeOk = String(Boolean(validation && validation.wideProbeOk));
-      dataset.hearthHexSurfaceCanonicalAuthorityStatus = validation && validation.status ? validation.status : "UNKNOWN";
-
-      dataset.hearthHexSurfaceSoleHexAuthorityConsumer = "true";
-      dataset.hearthHexSurfaceOwnsCanonicalHexTruth = "false";
-      dataset.hearthHexSurfaceOwnsHexCellIdentity = "false";
-      dataset.hearthHexSurfaceOwnsFourPairHandshakeTruth = "false";
-      dataset.rawSpherePositionOwnsVisualContinuity = "true";
-      dataset.hearthHexSurfaceRawVectorVisualSampling = "true";
-      dataset.hearthHexSurfaceHexCenterVisualOverride = "false";
-      dataset.hearthHexSurfaceLocalRenderHexVisualFootprintOnly = "true";
-
-      dataset.hearthHexSurfaceLandAuthority = "false";
-      dataset.hearthHexSurfaceWaterAuthority = "false";
-      dataset.hearthHexSurfaceAirAuthority = "false";
-      dataset.hearthHexSurfaceTerrainAuthority = "false";
-      dataset.hearthHexSurfaceCanvasAuthority = "false";
-      dataset.hearthHexSurfaceRuntimeAuthority = "false";
-      dataset.hearthHexSurfaceRouteAuthority = "false";
-
-      dataset.generatedImage = "false";
-      dataset.graphicBox = "false";
-      dataset.webgl = "false";
-      dataset.visualPassClaimed = "false";
-
-      if (frameReceipt) {
-        dataset.hearthHexSurfaceFrameReceipt = frameReceipt.receipt;
-        dataset.hearthHexSurfaceSamples = String(frameReceipt.samples || 0);
-        dataset.hearthHexSurfaceLandPixels = String(frameReceipt.landPixels || 0);
-        dataset.hearthHexSurfaceWaterPixels = String(frameReceipt.waterPixels || 0);
-        dataset.hearthHexSurfaceFallbackHexPixels = String(frameReceipt.fallbackHexPixels || 0);
-        dataset.hearthHexSurfaceCanonicalHexPixels = String(frameReceipt.canonicalHexPixels || 0);
-        dataset.hearthHexSurfaceLandAuthorityPresent = String(Boolean(frameReceipt.landAuthorityPresent));
-        dataset.hearthHexSurfaceWaterAuthorityPresent = String(Boolean(frameReceipt.waterAuthorityPresent));
-        dataset.hearthHexSurfaceAirAuthorityPresent = String(Boolean(frameReceipt.airAuthorityPresent));
-      }
-    }
-
-    if (state && state.canvas && state.canvas.dataset) {
-      const canvasDataset = state.canvas.dataset;
-
-      canvasDataset.hearthHexSurface = RECEIPT;
-      canvasDataset.hearthHexSurfaceContract = CONTRACT;
-      canvasDataset.hearthHexSurfacePreviousContract = PREVIOUS_CONTRACT;
-      canvasDataset.hearthHexSurfaceVersion = VERSION;
-      canvasDataset.hearthHexSurfaceRole = "four-pair-authority-consumer";
-      canvasDataset.hearthHexSurfaceCanonicalAuthorityExpectedContract = CANONICAL_HEX_CONTRACT;
-      canvasDataset.hearthHexSurfaceCanonicalAuthorityPresent = String(Boolean(validation && validation.authorityPresent));
-      canvasDataset.hearthHexSurfaceCanonicalAuthorityContractOk = String(Boolean(validation && validation.contractOk));
-      canvasDataset.hearthHexSurfaceCanonicalAuthorityFourPairOk = String(Boolean(validation && validation.fourPairOk));
-      canvasDataset.rawSpherePositionOwnsVisualContinuity = "true";
-      canvasDataset.hexCenterVisualOverride = "false";
-      canvasDataset.hexCenterOwnsInfluenceOnly = "true";
-      canvasDataset.hearthHexSurfaceOwnsCanonicalHexTruth = "false";
-      canvasDataset.hearthHexSurfaceLocalRenderHexVisualFootprintOnly = "true";
-      canvasDataset.generatedImage = "false";
-      canvasDataset.graphicBox = "false";
-      canvasDataset.webgl = "false";
-      canvasDataset.visualPassClaimed = "false";
-
-      if (frameReceipt) {
-        canvasDataset.hearthHexSurfaceFrameReceipt = frameReceipt.receipt;
-        canvasDataset.hearthHexSurfaceSamples = String(frameReceipt.samples || 0);
-        canvasDataset.hearthHexSurfaceLandPixels = String(frameReceipt.landPixels || 0);
-        canvasDataset.hearthHexSurfaceWaterPixels = String(frameReceipt.waterPixels || 0);
-      }
-    }
-  }
-
-  function drawHearthHexSurfaceFrame(state, options = {}) {
-    const canvas = state && state.canvas ? state.canvas : state;
-    const ctx = state && state.ctx
-      ? state.ctx
-      : state && state.context
-        ? state.context
-        : canvas && typeof canvas.getContext === "function"
-          ? canvas.getContext("2d")
+    const ctx = target && target.ctx
+      ? target.ctx
+      : target && target.context
+        ? target.context
+        : canvas && isFunction(canvas.getContext)
+          ? canvas.getContext("2d", { alpha: true, willReadFrequently: true })
           : null;
 
+    return { canvas, ctx };
+  }
+
+  function drawHearthHexSurfaceFrame(target, options = {}) {
+    const resolved = resolveCanvasAndContext(target);
+    const canvas = resolved.canvas;
+    const ctx = resolved.ctx;
+
     if (!canvas || !ctx) {
-      const error = "HEARTH_HEX_SURFACE_MISSING_CANVAS_OR_CONTEXT";
-      STATUS.lastError = error;
-      throw new Error(error);
+      state.lastError = "HEARTH_HEX_SURFACE_MISSING_CANVAS_OR_CONTEXT";
+      state.lastDrawOk = false;
+      state.updatedAt = nowIso();
+      updateDataset();
+      throw new Error(state.lastError);
     }
 
-    const size = Number(canvas.width) || 0;
+    const width = Math.max(1, Math.round(safeNumber(canvas.width, 0)));
+    const height = Math.max(1, Math.round(safeNumber(canvas.height, 0)));
 
-    if (!size) {
-      const error = "HEARTH_HEX_SURFACE_MISSING_CANVAS_SIZE";
-      STATUS.lastError = error;
-      throw new Error(error);
+    if (!width || !height) {
+      state.lastError = "HEARTH_HEX_SURFACE_MISSING_CANVAS_SIZE";
+      state.lastDrawOk = false;
+      state.updatedAt = nowIso();
+      updateDataset();
+      throw new Error(state.lastError);
     }
 
-    const config = normalizeOptions(options);
-    const configKey = [
-      config.radiusRatio,
-      config.hexDensity,
-      config.minHexRadius,
-      config.maxHexRadius
-    ].join(":");
+    const config = normalizeOptions({
+      ...options,
+      phase: options.phase !== undefined ? options.phase : target && target.phase !== undefined ? target.phase : DEFAULTS.phase
+    });
 
-    const phase = Number(state && state.phase) || 0;
-    const light = norm3([config.lightX, config.lightY, config.lightZ]);
-    const validation = validateCanonicalHexAuthority();
+    const minSide = Math.min(width, height);
+    const radius = minSide * config.radiusRatio;
+    const cx = width / 2;
+    const cy = height / 2;
+    const hexRadius = clamp(minSide / config.hexDensity, 0.55, 5.5);
+    const light = norm3(config.lightX, config.lightY, config.lightZ);
 
-    if (
-      !state.hearthHexSurfaceGeometry ||
-      state.hearthHexSurfaceGeometry.size !== size ||
-      state.hearthHexSurfaceGeometry.receipt !== RECEIPT ||
-      state.hearthHexSurfaceGeometry.configKey !== configKey
-    ) {
-      state.hearthHexSurfaceGeometry = buildHexGeometry(size, config);
-      state.hearthHexGeometry = state.hearthHexSurfaceGeometry;
-    }
+    const hexValidation = validateHexAuthority();
+    const hubValidation = validateCanvasHub();
 
-    const geometry = state.hearthHexSurfaceGeometry;
-    const output = ctx.createImageData(size, size);
-    const data = output.data;
+    const image = ctx.createImageData(width, height);
+    const data = image.data;
 
+    let samples = 0;
     let landPixels = 0;
     let waterPixels = 0;
     let fallbackHexPixels = 0;
-    let canonicalHexPixels = 0;
-    let fallbackLandPixels = 0;
-    let fallbackWaterPixels = 0;
-    let authorityLandPixels = 0;
-    let authorityWaterPixels = 0;
+    let authorityHexPixels = 0;
 
-    let landAuthorityPresent = false;
-    let waterAuthorityPresent = false;
-    let airAuthorityPresent = false;
+    try {
+      for (let py = 0; py < height; py += 1) {
+        const yRaw = py + 0.5 - cy;
+        const ny = yRaw / radius;
 
-    for (let index = 0; index < geometry.count; index += 1) {
-      const out = geometry.indices[index];
+        for (let px = 0; px < width; px += 1) {
+          const xRaw = px + 0.5 - cx;
+          const nx = xRaw / radius;
+          const r2 = nx * nx + ny * ny;
 
-      let vec = [
-        geometry.sphereX[index],
-        geometry.sphereY[index],
-        geometry.sphereZ[index]
-      ];
+          if (r2 > 1) continue;
 
-      vec = rotateX(vec, config.axialTilt);
-      vec = rotateY(vec, phase);
+          const z = Math.sqrt(Math.max(0, 1 - r2));
+          let vector = { x: nx, y: -ny, z };
 
-      const coord = vectorToCoordinate(vec);
-      const localFallback = {
-        q: geometry.localHexQ[index],
-        r: geometry.localHexR[index]
+          vector = rotateX(vector, config.axialTilt);
+          vector = rotateY(vector, config.phase);
+
+          const coord = vectorToCoordinate(vector);
+          const center = nearestHexCenter(xRaw, yRaw, hexRadius);
+          const localX = xRaw - center.x;
+          const localY = yRaw - center.y;
+          const hexEdge = smoothstep(0.78, 1.08, hexDistance(localX, localY, hexRadius));
+
+          const hexPacket = sampleHexAuthority(coord, center.q, center.r);
+          const hubExpression = sampleHubExpression(coord, hexPacket);
+          const expression = normalizeExpression(hubExpression, coord, hexPacket);
+
+          if (hexPacket.fallbackHexAuthority) fallbackHexPixels += 1;
+          else authorityHexPixels += 1;
+
+          if (expression.isLand === true || expression.landPresence > 0.5) landPixels += 1;
+          else waterPixels += 1;
+
+          const rawNormal = norm3(nx, -ny, z);
+          const lightValue = clamp01(
+            rawNormal.x * light.x +
+            rawNormal.y * light.y +
+            rawNormal.z * light.z
+          );
+
+          const color = composeColor(
+            expression,
+            coord,
+            hexPacket,
+            { light: lightValue, depth: z },
+            config,
+            hexEdge
+          );
+
+          const index = (py * width + px) * 4;
+
+          data[index] = color[0];
+          data[index + 1] = color[1];
+          data[index + 2] = color[2];
+          data[index + 3] = color[3];
+
+          samples += 1;
+        }
+      }
+
+      ctx.clearRect(0, 0, width, height);
+      ctx.putImageData(image, 0, 0);
+      drawAtmosphere(ctx, width, height, cx, cy, radius, config);
+
+      const receipt = {
+        contract: CONTRACT,
+        receipt: RECEIPT,
+        previousContract: PREVIOUS_CONTRACT,
+        previousReceipt: PREVIOUS_RECEIPT,
+        version: VERSION,
+        file: FILE,
+        route: ROUTE,
+        role: "Hex Surface Renderer",
+        packetType: "HEARTH_HEX_SURFACE_RENDER_FRAME_RECEIPT",
+
+        canvasHubCompatible: true,
+        canvasHubContract: CANVAS_HUB_CONTRACT,
+        canvasHubFile: CANVAS_HUB_FILE,
+        canvasHubPresent: hubValidation.hubPresent,
+        canvasHubContractOk: hubValidation.contractOk,
+
+        requiredHexAuthorityContract: REQUIRED_HEX_AUTHORITY_CONTRACT,
+        requiredHexAuthorityReceipt: REQUIRED_HEX_AUTHORITY_RECEIPT,
+        requiredHexAuthorityFile: REQUIRED_HEX_AUTHORITY_FILE,
+        hexAuthorityPresent: hexValidation.authorityPresent,
+        hexAuthorityContractOk: hexValidation.contractOk,
+        hexAuthoritySampleOk: hexValidation.sampleOk,
+        hexAuthorityWideProbeOk: hexValidation.wideProbeOk,
+
+        width,
+        height,
+        samples,
+        radius,
+        hexRadius,
+        landPixels,
+        waterPixels,
+        fallbackHexPixels,
+        authorityHexPixels,
+
+        rendererDrewSurface: true,
+        rendererOwnsMounting: false,
+        rendererOwnsCanvasHub: false,
+        rendererOwnsHexAuthority: false,
+        rendererOwnsTruth: false,
+        rendererOwnsFinalPass: false,
+
+        bodyBound: true,
+        surfaceBound: true,
+        visibleSurfaceRendered: true,
+        highDensitySurfaceExpression: true,
+        pixelAuthorityConsumed: hexValidation.authorityPresent === true,
+        canvasHubOnlyAwarenessUpdate: true,
+
+        ...FINAL_FALSE,
+        updatedAt: nowIso()
       };
 
-      const hexPacket = sampleCanonicalHex(coord, localFallback);
-      const channels = sampleChannels(coord);
-      const blend = classifyVisualBlend(channels);
+      state.drawCount += 1;
+      state.lastDrawAt = receipt.updatedAt;
+      state.lastDrawOk = true;
+      state.lastDrawWidth = width;
+      state.lastDrawHeight = height;
+      state.lastDrawSamples = samples;
+      state.lastDrawLandPixels = landPixels;
+      state.lastDrawWaterPixels = waterPixels;
+      state.lastDrawFallbackHexPixels = fallbackHexPixels;
+      state.lastDrawAuthorityHexPixels = authorityHexPixels;
+      state.lastError = "";
+      state.updatedAt = receipt.updatedAt;
 
-      landAuthorityPresent = landAuthorityPresent || channels.landAuthorityPresent;
-      waterAuthorityPresent = waterAuthorityPresent || channels.waterAuthorityPresent;
-      airAuthorityPresent = airAuthorityPresent || channels.airAuthorityPresent;
+      updateDataset(receipt);
+      publishGlobals();
+      notifyCanvasHub(receipt);
 
-      if (hexPacket.fallbackHexAuthority) fallbackHexPixels += 1;
-      else canonicalHexPixels += 1;
+      if (canvas.dataset) {
+        canvas.dataset.hearthHexSurfaceRenderer = "true";
+        canvas.dataset.hearthHexSurfaceRendererContract = CONTRACT;
+        canvas.dataset.hearthHexSurfaceRendererReceipt = RECEIPT;
+        canvas.dataset.hearthHexSurfaceRendererFile = FILE;
+        canvas.dataset.hearthHexSurfaceRendererDrawOk = "true";
+        canvas.dataset.hearthHexSurfaceRendererSamples = String(samples);
+        canvas.dataset.hearthHexSurfaceRendererLandPixels = String(landPixels);
+        canvas.dataset.hearthHexSurfaceRendererWaterPixels = String(waterPixels);
+        canvas.dataset.hearthHexSurfaceRendererAuthorityHexPixels = String(authorityHexPixels);
+        canvas.dataset.generatedImage = "false";
+        canvas.dataset.graphicBox = "false";
+        canvas.dataset.webgl = "false";
+        canvas.dataset.visualPassClaimed = "false";
+      }
 
-      if (blend.visualClass === "land") landPixels += 1;
-      else waterPixels += 1;
-
-      if (channels.land && channels.land.fallback) fallbackLandPixels += 1;
-      else if (blend.visualClass === "land") authorityLandPixels += 1;
-
-      if (channels.water && channels.water.fallback) fallbackWaterPixels += 1;
-      else if (blend.visualClass === "water") authorityWaterPixels += 1;
-
-      const rawNormal = norm3([
-        geometry.sphereX[index],
-        geometry.sphereY[index],
-        geometry.sphereZ[index]
-      ]);
-
-      const lightValue = clamp01(
-        rawNormal[0] * light[0] +
-        rawNormal[1] * light[1] +
-        rawNormal[2] * light[2]
-      );
-
-      const color = composeColor(channels, hexPacket, geometry, index, coord, config, lightValue);
-
-      data[out] = color[0];
-      data[out + 1] = color[1];
-      data[out + 2] = color[2];
-      data[out + 3] = color[3];
+      return receipt;
+    } catch (error) {
+      state.lastDrawOk = false;
+      state.lastError = error && error.message ? String(error.message) : String(error);
+      state.updatedAt = nowIso();
+      updateDataset();
+      publishGlobals();
+      throw error;
     }
-
-    ctx.putImageData(output, 0, 0);
-    drawAtmosphere(ctx, size, config);
-
-    const frameReceipt = Object.freeze({
-      ok: true,
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      previousContract: PREVIOUS_CONTRACT,
-      baselineContract: BASELINE_CONTRACT,
-      familyContract: FAMILY_CONTRACT,
-      version: VERSION,
-      model: "hearth-four-pair-authority-consumer-high-density-hex-surface",
-      size,
-      samples: geometry.count,
-      hexRadius: geometry.hexRadius,
-
-      canonicalHexAuthorityFile: CANONICAL_HEX_FILE,
-      canonicalHexAuthorityExpectedContract: CANONICAL_HEX_CONTRACT,
-      canonicalHexAuthorityPresent: validation.authorityPresent,
-      canonicalHexAuthorityContractOk: validation.contractOk,
-      canonicalHexAuthoritySampleOk: validation.sampleOk,
-      canonicalHexAuthorityFourPairOk: validation.fourPairOk,
-      canonicalHexAuthorityWideProbeOk: validation.wideProbeOk,
-      canonicalHexAuthorityStatus: validation.status,
-
-      canonicalHexPixels,
-      fallbackHexPixels,
-      landPixels,
-      waterPixels,
-      fallbackLandPixels,
-      fallbackWaterPixels,
-      authorityLandPixels,
-      authorityWaterPixels,
-      landAuthorityPresent,
-      waterAuthorityPresent,
-      airAuthorityPresent,
-
-      soleHexAuthorityConsumer: true,
-      ownsCanonicalHexTruth: false,
-      ownsHexCellIdentity: false,
-      ownsFourPairHandshakeTruth: false,
-      rawSpherePositionOwnsVisualContinuity: true,
-      rawVectorVisualSampling: true,
-      localRenderHexIsVisualFootprintOnly: true,
-      hexCenterVisualOverride: false,
-      hexCenterOwnsInfluenceOnly: true,
-
-      landAuthority: false,
-      waterAuthority: false,
-      airAuthority: false,
-      terrainAuthority: false,
-      childEngineAuthority: false,
-      canvasAuthority: false,
-      runtimeAuthority: false,
-      routeAuthority: false,
-
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false,
-      at: nowIso()
-    });
-
-    STATUS.lastFrameReceipt = frameReceipt;
-    STATUS.lastAuthorityValidation = validation;
-    STATUS.lastError = "";
-    STATUS.canonicalHexAuthorityPresent = validation.authorityPresent;
-    STATUS.canonicalHexAuthorityContractOk = validation.contractOk;
-    STATUS.canonicalHexAuthoritySampleOk = validation.sampleOk;
-    STATUS.canonicalHexAuthorityFourPairOk = validation.fourPairOk;
-    STATUS.canonicalHexAuthorityWideProbeOk = validation.wideProbeOk;
-
-    publishDataset({ ...state, canvas }, frameReceipt, validation);
-
-    return frameReceipt;
   }
 
-  function getHearthHexSurfaceStatus(state = null) {
-    const validation = validateCanonicalHexAuthority();
+  function drawFrame(target, options = {}) {
+    return drawHearthHexSurfaceFrame(target, options);
+  }
 
-    return Object.freeze({
-      ok: true,
+  function render(target, options = {}) {
+    return drawHearthHexSurfaceFrame(target, options);
+  }
+
+  function renderFrame(target, options = {}) {
+    return drawHearthHexSurfaceFrame(target, options);
+  }
+
+  function notifyCanvasHub(packet) {
+    const hub = resolveCanvasHub();
+
+    state.lastHubNotifyOk = false;
+    state.lastHubNotifyMethod = "NONE";
+
+    if (!hub || typeof hub !== "object") return false;
+
+    const methods = [
+      "receiveHexSurfaceRendererReceipt",
+      "receiveHexSurfaceRendererPacket",
+      "receiveHexSurfaceReceipt",
+      "receiveHexSurfacePacket"
+    ];
+
+    for (const method of methods) {
+      if (!isFunction(hub[method])) continue;
+
+      try {
+        hub[method]({
+          ...clonePlain(packet),
+          canvasHubOnlyAwarenessUpdate: true,
+          sourceFile: FILE,
+          ...FINAL_FALSE
+        });
+
+        state.lastHubNotifyOk = true;
+        state.lastHubNotifyMethod = method;
+        state.updatedAt = nowIso();
+        return true;
+      } catch (error) {
+        state.lastHubNotifyOk = false;
+        state.lastHubNotifyMethod = `${method}:ERROR`;
+        state.lastError = error && error.message ? String(error.message) : String(error);
+        state.updatedAt = nowIso();
+        return false;
+      }
+    }
+
+    return false;
+  }
+
+  function getStatus() {
+    const hexValidation = validateHexAuthority();
+    const hubValidation = validateCanvasHub();
+
+    return {
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
-      baselineContract: BASELINE_CONTRACT,
-      familyContract: FAMILY_CONTRACT,
+      previousReceipt: PREVIOUS_RECEIPT,
       version: VERSION,
-      role: "hearth-hex-surface-four-pair-authority-consumer",
-      globalApi: "HEARTH_HEX_SURFACE",
+      file: FILE,
+      route: ROUTE,
+      role: "Hex Surface Renderer",
+
+      rendererLoaded: true,
       apiReady: true,
-      drawHearthHexSurfaceFrame: true,
-      getHearthHexSurfaceStatus: true,
+      canvasHubCompatible: true,
+      canvasHubContract: CANVAS_HUB_CONTRACT,
+      canvasHubFile: CANVAS_HUB_FILE,
+      canvasHubPresent: hubValidation.hubPresent,
+      canvasHubContractOk: hubValidation.contractOk,
+      canvasHubStatus: hubValidation.status,
 
-      canonicalHexAuthorityFile: CANONICAL_HEX_FILE,
-      canonicalHexAuthorityExpectedContract: CANONICAL_HEX_CONTRACT,
-      canonicalHexAuthorityPresent: validation.authorityPresent,
-      canonicalHexAuthorityActualContract: validation.actualContract,
-      canonicalHexAuthorityContractOk: validation.contractOk,
-      canonicalHexAuthoritySampleOk: validation.sampleOk,
-      canonicalHexAuthorityFourPairOk: validation.fourPairOk,
-      canonicalHexAuthorityFourPairDirectionsOk: validation.fourPairDirectionsOk,
-      canonicalHexAuthorityFourPairBodyBoundOk: validation.fourPairBodyBoundOk,
-      canonicalHexAuthorityWideProbeOk: validation.wideProbeOk,
-      canonicalHexAuthorityWideProbeTotal: validation.wideProbeTotal,
-      canonicalHexAuthorityWideProbeFailedCount: validation.wideProbeFailedCount,
-      canonicalHexAuthorityStatus: validation.status,
+      requiredHexAuthorityContract: REQUIRED_HEX_AUTHORITY_CONTRACT,
+      requiredHexAuthorityReceipt: REQUIRED_HEX_AUTHORITY_RECEIPT,
+      requiredHexAuthorityFile: REQUIRED_HEX_AUTHORITY_FILE,
+      hexAuthorityPresent: hexValidation.authorityPresent,
+      hexAuthorityContract: hexValidation.authorityContract,
+      hexAuthorityReceipt: hexValidation.authorityReceipt,
+      hexAuthorityContractOk: hexValidation.contractOk,
+      hexAuthorityReceiptOk: hexValidation.receiptOk,
+      hexAuthoritySampleOk: hexValidation.sampleOk,
+      hexAuthorityFourPairOk: hexValidation.fourPairOk,
+      hexAuthorityBodyBoundOk: hexValidation.bodyBoundOk,
+      hexAuthorityWideProbeOk: hexValidation.wideProbeOk,
+      hexAuthorityStatus: hexValidation.status,
 
-      geometryLoaded: Boolean(state && (state.hearthHexSurfaceGeometry || state.hearthHexGeometry)),
-      hexRadius: state && state.hearthHexSurfaceGeometry ? state.hearthHexSurfaceGeometry.hexRadius : null,
-      hexSamples: state && state.hearthHexSurfaceGeometry ? state.hearthHexSurfaceGeometry.count : null,
+      drawCount: state.drawCount,
+      lastDrawAt: state.lastDrawAt,
+      lastDrawOk: state.lastDrawOk,
+      lastDrawWidth: state.lastDrawWidth,
+      lastDrawHeight: state.lastDrawHeight,
+      lastDrawSamples: state.lastDrawSamples,
+      lastDrawLandPixels: state.lastDrawLandPixels,
+      lastDrawWaterPixels: state.lastDrawWaterPixels,
+      lastDrawFallbackHexPixels: state.lastDrawFallbackHexPixels,
+      lastDrawAuthorityHexPixels: state.lastDrawAuthorityHexPixels,
+      lastHubNotifyOk: state.lastHubNotifyOk,
+      lastHubNotifyMethod: state.lastHubNotifyMethod,
+      lastError: state.lastError,
+      updatedAt: state.updatedAt,
 
-      landChannelReady: Boolean(resolveChannel("land")),
-      waterChannelReady: Boolean(resolveChannel("water")),
-      airChannelReady: Boolean(resolveChannel("air")),
+      supportsDrawHearthHexSurfaceFrame: true,
+      supportsDrawFrame: true,
+      supportsRender: true,
+      supportsRenderFrame: true,
+      supportsGetStatus: true,
+      supportsGetReceipt: true,
+      supportsGetReceiptText: true,
 
-      soleHexAuthorityConsumer: true,
-      ownsCanonicalHexTruth: false,
-      ownsHexCellIdentity: false,
-      ownsFourPairHandshakeTruth: false,
-      highDensityHexSurface: true,
-      overlappingHexFootprints: true,
-      rawSpherePositionOwnsVisualContinuity: true,
-      rawVectorVisualSampling: true,
-      localRenderHexIsVisualFootprintOnly: true,
-      hexCenterOwnsInfluenceOnly: true,
-      hexCenterVisualOverride: false,
+      bodyBound: true,
+      surfaceBound: true,
+      highDensitySurfaceExpression: true,
+      canvasHubOnlyAwarenessUpdate: true,
 
-      landAuthority: false,
-      waterAuthority: false,
-      airAuthority: false,
-      terrainAuthority: false,
-      childEngineAuthority: false,
-      canvasAuthority: false,
-      runtimeAuthority: false,
-      routeAuthority: false,
+      ownsCanvasHub: false,
+      ownsHexAuthority: false,
+      ownsComposite: false,
+      ownsCanvasMounting: false,
+      ownsRouteOrchestration: false,
+      ownsRuntimeRestart: false,
+      ownsControls: false,
+      ownsLandTruth: false,
+      ownsWaterTruth: false,
+      ownsAirTruth: false,
+      ownsHydrology: false,
+      ownsElevation: false,
+      ownsMaterials: false,
+      ownsAtmosphereTruth: false,
+      ownsLightingTruth: false,
 
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false,
-      lastFrameReceipt: STATUS.lastFrameReceipt,
-      lastAuthorityValidation: validation,
-      lastError: STATUS.lastError || ""
-    });
+      ...FINAL_FALSE
+    };
   }
 
   function getReceipt() {
-    return Object.freeze({
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      previousContract: PREVIOUS_CONTRACT,
-      baselineContract: BASELINE_CONTRACT,
-      familyContract: FAMILY_CONTRACT,
-      version: VERSION,
-      authority: "hearth-hex-surface-four-pair-authority-consumer",
-      status: "active",
-      destinationFile: "/assets/hearth/hearth.hex.surface.js",
-      planetId: PLANET_ID,
-      planetLabel: PLANET_LABEL,
-
-      canonicalHexAuthorityFile: CANONICAL_HEX_FILE,
-      canonicalHexAuthorityExpectedContract: CANONICAL_HEX_CONTRACT,
-      canonicalHexAuthorityRole: "sole Hearth hex truth",
-
+    return {
+      ...getStatus(),
+      packetType: "HEARTH_HEX_SURFACE_RENDERER_RECEIPT",
+      destinationFile: FILE,
       purpose: [
-        "consume the canonical Hearth four-pair hex authority",
-        "preserve high-density visible hex surface expression",
-        "keep raw sphere position as visual continuity source",
-        "use hex authority only for cell identity, four-pair proof, grain, seam, state seed, and diagnostic alignment",
-        "prevent competing hex truth from living inside the surface renderer"
+        "Consume the Hex Four-Pair Authority.",
+        "Render a body-bound visible planet surface only when Canvas Hub supplies a canvas/context.",
+        "Keep pixel authority isolated inside the three-file stretch.",
+        "Update Canvas Hub awareness without teaching other files pixel language.",
+        "Preserve renderer-only boundaries and no-claim posture."
       ],
-
-      exposedMethods: [
-        "drawHearthHexSurfaceFrame",
-        "drawFrame",
-        "getHearthHexSurfaceStatus",
-        "getStatus",
-        "getReceipt",
-        "buildHexGeometry",
-        "validateCanonicalHexAuthority"
-      ],
-
-      renderLaw: [
-        "canonical hex truth belongs only to HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_TNT_v1",
-        "hex surface is a consumer, not an authority",
-        "raw sphere position owns visual continuity",
-        "hex center may influence grain, seam, seed, and edge pressure only",
-        "hex center may not override land or water visual continuity",
-        "local render hex geometry is visual footprint only",
-        "surface renderer may not define land truth",
-        "surface renderer may not define water truth",
-        "surface renderer may not define air truth",
-        "surface renderer may not claim visual pass"
-      ],
-
       owns: [
-        "visible hex surface expression",
-        "high-density hex footprint rendering",
-        "authority-seeded grain expression",
+        "visible surface rendering",
+        "high-density pixel surface expression",
+        "hex authority consumption",
+        "surface grain expression",
         "seam pressure expression",
-        "micro texture expression",
-        "surface-consumer receipts"
+        "body-bound rendered frame receipts"
       ],
-
       doesNotOwn: [
-        "canonical hex truth",
-        "hex cell identity",
-        "four-pair handshake truth",
+        "Canvas Hub",
+        "Hex Four-Pair Authority",
+        "Composite",
         "land truth",
         "water truth",
         "air truth",
         "hydrology",
         "elevation",
         "materials",
+        "atmosphere truth",
+        "lighting truth",
         "canvas mounting",
-        "atlas projection",
-        "route orchestration",
         "runtime motion",
         "controls",
-        "final visual pass claim"
-      ],
+        "route orchestration",
+        "F13",
+        "F21",
+        "ready text",
+        "final visual pass"
+      ]
+    };
+  }
 
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false
-    });
+  function getReceiptText() {
+    const r = getStatus();
+
+    return [
+      "HEARTH_HEX_SURFACE_CANVAS_HUB_THREE_FILE_VISIBLE_EXPRESSION_RENDERER_RECEIPT",
+      "",
+      `contract=${r.contract}`,
+      `receipt=${r.receipt}`,
+      `previousContract=${r.previousContract}`,
+      `previousReceipt=${r.previousReceipt}`,
+      `version=${r.version}`,
+      `file=${r.file}`,
+      `route=${r.route}`,
+      `role=${r.role}`,
+      "",
+      `rendererLoaded=${r.rendererLoaded}`,
+      `apiReady=${r.apiReady}`,
+      `canvasHubCompatible=${r.canvasHubCompatible}`,
+      `canvasHubContract=${r.canvasHubContract}`,
+      `canvasHubFile=${r.canvasHubFile}`,
+      `canvasHubPresent=${r.canvasHubPresent}`,
+      `canvasHubContractOk=${r.canvasHubContractOk}`,
+      `canvasHubStatus=${r.canvasHubStatus}`,
+      "",
+      `requiredHexAuthorityContract=${r.requiredHexAuthorityContract}`,
+      `requiredHexAuthorityReceipt=${r.requiredHexAuthorityReceipt}`,
+      `requiredHexAuthorityFile=${r.requiredHexAuthorityFile}`,
+      `hexAuthorityPresent=${r.hexAuthorityPresent}`,
+      `hexAuthorityContract=${r.hexAuthorityContract}`,
+      `hexAuthorityReceipt=${r.hexAuthorityReceipt}`,
+      `hexAuthorityContractOk=${r.hexAuthorityContractOk}`,
+      `hexAuthorityReceiptOk=${r.hexAuthorityReceiptOk}`,
+      `hexAuthoritySampleOk=${r.hexAuthoritySampleOk}`,
+      `hexAuthorityFourPairOk=${r.hexAuthorityFourPairOk}`,
+      `hexAuthorityBodyBoundOk=${r.hexAuthorityBodyBoundOk}`,
+      `hexAuthorityWideProbeOk=${r.hexAuthorityWideProbeOk}`,
+      `hexAuthorityStatus=${r.hexAuthorityStatus}`,
+      "",
+      `drawCount=${r.drawCount}`,
+      `lastDrawAt=${r.lastDrawAt}`,
+      `lastDrawOk=${r.lastDrawOk}`,
+      `lastDrawWidth=${r.lastDrawWidth}`,
+      `lastDrawHeight=${r.lastDrawHeight}`,
+      `lastDrawSamples=${r.lastDrawSamples}`,
+      `lastDrawLandPixels=${r.lastDrawLandPixels}`,
+      `lastDrawWaterPixels=${r.lastDrawWaterPixels}`,
+      `lastDrawFallbackHexPixels=${r.lastDrawFallbackHexPixels}`,
+      `lastDrawAuthorityHexPixels=${r.lastDrawAuthorityHexPixels}`,
+      `lastHubNotifyOk=${r.lastHubNotifyOk}`,
+      `lastHubNotifyMethod=${r.lastHubNotifyMethod}`,
+      `lastError=${r.lastError}`,
+      "",
+      `bodyBound=${r.bodyBound}`,
+      `surfaceBound=${r.surfaceBound}`,
+      `highDensitySurfaceExpression=${r.highDensitySurfaceExpression}`,
+      `canvasHubOnlyAwarenessUpdate=${r.canvasHubOnlyAwarenessUpdate}`,
+      "",
+      `ownsCanvasHub=${r.ownsCanvasHub}`,
+      `ownsHexAuthority=${r.ownsHexAuthority}`,
+      `ownsComposite=${r.ownsComposite}`,
+      `ownsCanvasMounting=${r.ownsCanvasMounting}`,
+      `ownsRouteOrchestration=${r.ownsRouteOrchestration}`,
+      `ownsRuntimeRestart=${r.ownsRuntimeRestart}`,
+      `ownsControls=${r.ownsControls}`,
+      `ownsLandTruth=${r.ownsLandTruth}`,
+      `ownsWaterTruth=${r.ownsWaterTruth}`,
+      `ownsAirTruth=${r.ownsAirTruth}`,
+      `ownsHydrology=${r.ownsHydrology}`,
+      `ownsElevation=${r.ownsElevation}`,
+      `ownsMaterials=${r.ownsMaterials}`,
+      "",
+      `f13Claimed=${r.f13Claimed}`,
+      `f21EligibleForNorth=${r.f21EligibleForNorth}`,
+      `f21Claimed=${r.f21Claimed}`,
+      `readyTextAllowed=${r.readyTextAllowed}`,
+      `completionLatched=${r.completionLatched}`,
+      `finalCompletionLatched=${r.finalCompletionLatched}`,
+      `visualPassClaimed=${r.visualPassClaimed}`,
+      `finalVisualPassClaimed=${r.finalVisualPassClaimed}`,
+      `generatedImage=${r.generatedImage}`,
+      `graphicBox=${r.graphicBox}`,
+      `webGL=${r.webGL}`,
+      `updatedAt=${r.updatedAt}`
+    ].join("\n");
+  }
+
+  function updateDataset(frameReceipt = null) {
+    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return false;
+
+    const dataset = doc.documentElement.dataset;
+
+    dataset.hearthHexSurfaceRendererLoaded = "true";
+    dataset.hearthHexSurfaceRendererContract = CONTRACT;
+    dataset.hearthHexSurfaceRendererReceipt = RECEIPT;
+    dataset.hearthHexSurfaceRendererPreviousContract = PREVIOUS_CONTRACT;
+    dataset.hearthHexSurfaceRendererVersion = VERSION;
+    dataset.hearthHexSurfaceRendererFile = FILE;
+    dataset.hearthHexSurfaceRendererRole = "Hex Surface Renderer";
+
+    dataset.hearthHexSurfaceRendererCanvasHubCompatible = "true";
+    dataset.hearthHexSurfaceRendererCanvasHubContract = CANVAS_HUB_CONTRACT;
+    dataset.hearthHexSurfaceRendererCanvasHubFile = CANVAS_HUB_FILE;
+    dataset.hearthHexSurfaceRendererCanvasHubOnlyAwarenessUpdate = "true";
+
+    dataset.hearthHexSurfaceRendererRequiredHexAuthorityContract = REQUIRED_HEX_AUTHORITY_CONTRACT;
+    dataset.hearthHexSurfaceRendererRequiredHexAuthorityReceipt = REQUIRED_HEX_AUTHORITY_RECEIPT;
+    dataset.hearthHexSurfaceRendererRequiredHexAuthorityFile = REQUIRED_HEX_AUTHORITY_FILE;
+    dataset.hearthHexSurfaceRendererHexAuthorityPresent = String(state.hexAuthorityPresent);
+    dataset.hearthHexSurfaceRendererHexAuthorityContractOk = String(state.hexAuthorityContractOk);
+    dataset.hearthHexSurfaceRendererHexAuthoritySampleOk = String(state.hexAuthoritySampleOk);
+    dataset.hearthHexSurfaceRendererHexAuthorityWideProbeOk = String(state.hexAuthorityWideProbeOk);
+
+    dataset.hearthHexSurfaceRendererDrawCount = String(state.drawCount);
+    dataset.hearthHexSurfaceRendererLastDrawOk = String(state.lastDrawOk);
+    dataset.hearthHexSurfaceRendererLastDrawWidth = String(state.lastDrawWidth);
+    dataset.hearthHexSurfaceRendererLastDrawHeight = String(state.lastDrawHeight);
+    dataset.hearthHexSurfaceRendererLastDrawSamples = String(state.lastDrawSamples);
+    dataset.hearthHexSurfaceRendererLastDrawLandPixels = String(state.lastDrawLandPixels);
+    dataset.hearthHexSurfaceRendererLastDrawWaterPixels = String(state.lastDrawWaterPixels);
+    dataset.hearthHexSurfaceRendererLastHubNotifyOk = String(state.lastHubNotifyOk);
+    dataset.hearthHexSurfaceRendererLastHubNotifyMethod = state.lastHubNotifyMethod;
+    dataset.hearthHexSurfaceRendererLastError = state.lastError;
+
+    dataset.hearthHexSurfaceRendererOwnsCanvasHub = "false";
+    dataset.hearthHexSurfaceRendererOwnsHexAuthority = "false";
+    dataset.hearthHexSurfaceRendererOwnsComposite = "false";
+    dataset.hearthHexSurfaceRendererOwnsCanvasMounting = "false";
+    dataset.hearthHexSurfaceRendererOwnsRouteOrchestration = "false";
+    dataset.hearthHexSurfaceRendererOwnsRuntimeRestart = "false";
+    dataset.hearthHexSurfaceRendererOwnsControls = "false";
+    dataset.hearthHexSurfaceRendererOwnsLandTruth = "false";
+    dataset.hearthHexSurfaceRendererOwnsWaterTruth = "false";
+    dataset.hearthHexSurfaceRendererOwnsAirTruth = "false";
+
+    if (frameReceipt) {
+      dataset.hearthHexSurfaceRendererFrameReceipt = frameReceipt.receipt;
+      dataset.hearthHexSurfaceRendererVisibleSurfaceRendered = String(Boolean(frameReceipt.visibleSurfaceRendered));
+      dataset.hearthHexSurfaceRendererAuthorityHexPixels = String(frameReceipt.authorityHexPixels || 0);
+      dataset.hearthHexSurfaceRendererFallbackHexPixels = String(frameReceipt.fallbackHexPixels || 0);
+    }
+
+    dataset.generatedImage = "false";
+    dataset.graphicBox = "false";
+    dataset.webgl = "false";
+    dataset.visualPassClaimed = "false";
+
+    return true;
+  }
+
+  function publishGlobals() {
+    root.HEARTH = root.HEARTH || {};
+    root.DEXTER_LAB = root.DEXTER_LAB || {};
+
+    root.HEARTH.hexSurface = api;
+    root.HEARTH.hexSurfaceRenderer = api;
+    root.DEXTER_LAB.hearthHexSurface = api;
+    root.DEXTER_LAB.hearthHexSurfaceRenderer = api;
+
+    root.HEARTH_HEX_SURFACE = api;
+    root.HEARTH_HEX_SURFACE_RENDERER = api;
+    root.HEARTH_HEX_SURFACE_CANVAS_HUB_THREE_FILE_VISIBLE_EXPRESSION_RENDERER = api;
+
+    root.HEARTH_HEX_SURFACE_CONTRACT = CONTRACT;
+    root.HEARTH_HEX_SURFACE_RECEIPT = RECEIPT;
+    root.HEARTH_HEX_SURFACE_STATUS = getStatus();
+    root.HEARTH_HEX_SURFACE_RENDERER_RECEIPT = getReceipt();
+
+    root.HEARTH.hexSurfaceReceipt = getReceipt();
+    root.HEARTH.hexSurfaceRendererReceipt = getReceipt();
+    root.DEXTER_LAB.hearthHexSurfaceReceipt = getReceipt();
+
+    return api;
   }
 
   function dispose() {
-    if (root.HEARTH_HEX_SURFACE && root.HEARTH_HEX_SURFACE.contract === CONTRACT) {
-      try {
-        delete root.HEARTH_HEX_SURFACE;
-      } catch (_error) {
-        root.HEARTH_HEX_SURFACE = null;
-      }
-    }
+    if (root.HEARTH && root.HEARTH.hexSurface === api) root.HEARTH.hexSurface = null;
+    if (root.HEARTH && root.HEARTH.hexSurfaceRenderer === api) root.HEARTH.hexSurfaceRenderer = null;
+    if (root.DEXTER_LAB && root.DEXTER_LAB.hearthHexSurface === api) root.DEXTER_LAB.hearthHexSurface = null;
+    if (root.DEXTER_LAB && root.DEXTER_LAB.hearthHexSurfaceRenderer === api) root.DEXTER_LAB.hearthHexSurfaceRenderer = null;
+    if (root.HEARTH_HEX_SURFACE === api) root.HEARTH_HEX_SURFACE = null;
+    if (root.HEARTH_HEX_SURFACE_RENDERER === api) root.HEARTH_HEX_SURFACE_RENDERER = null;
 
-    if (root.HEARTH_HEX_SURFACE_STATUS && root.HEARTH_HEX_SURFACE_STATUS.contract === CONTRACT) {
-      try {
-        delete root.HEARTH_HEX_SURFACE_STATUS;
-      } catch (_error) {
-        root.HEARTH_HEX_SURFACE_STATUS = null;
-      }
-    }
-
-    if (doc && doc.documentElement) {
-      doc.documentElement.dataset.hearthHexSurfaceDisposed = "true";
+    if (doc && doc.documentElement && doc.documentElement.dataset) {
+      doc.documentElement.dataset.hearthHexSurfaceRendererDisposed = "true";
     }
   }
 
-  const api = Object.freeze({
+  const api = {
+    CONTRACT,
+    RECEIPT,
+    PREVIOUS_CONTRACT,
+    PREVIOUS_RECEIPT,
+    FILE,
+    ROUTE,
+    VERSION,
+    REQUIRED_HEX_AUTHORITY_CONTRACT,
+    REQUIRED_HEX_AUTHORITY_RECEIPT,
+    REQUIRED_HEX_AUTHORITY_FILE,
+    CANVAS_HUB_CONTRACT,
+    CANVAS_HUB_FILE,
+
     contract: CONTRACT,
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
-    baselineContract: BASELINE_CONTRACT,
-    familyContract: FAMILY_CONTRACT,
+    previousReceipt: PREVIOUS_RECEIPT,
     version: VERSION,
+    file: FILE,
+    route: ROUTE,
+    role: "Hex Surface Renderer",
 
     drawHearthHexSurfaceFrame,
-    drawFrame: drawHearthHexSurfaceFrame,
-    getHearthHexSurfaceStatus,
-    getStatus: getHearthHexSurfaceStatus,
+    drawFrame,
+    render,
+    renderFrame,
+    validateHexAuthority,
+    validateCanvasHub,
+    getStatus,
     getReceipt,
-    buildHexGeometry,
-    validateCanonicalHexAuthority,
-    resolveCanonicalHexAuthority,
+    getReceiptText,
+    notifyCanvasHub,
+    dispose,
 
-    canonicalHexAuthorityFile: CANONICAL_HEX_FILE,
-    canonicalHexAuthorityExpectedContract: CANONICAL_HEX_CONTRACT,
+    canvasHubCompatible: true,
+    canvasHubOnlyAwarenessUpdate: true,
+    bodyBound: true,
+    surfaceBound: true,
+    highDensitySurfaceExpression: true,
 
-    soleHexAuthorityConsumer: true,
-    ownsCanonicalHexTruth: false,
-    ownsHexCellIdentity: false,
-    ownsFourPairHandshakeTruth: false,
-    rawSpherePositionOwnsVisualContinuity: true,
-    rawVectorVisualSampling: true,
-    localRenderHexIsVisualFootprintOnly: true,
-    hexCenterOwnsInfluenceOnly: true,
-    hexCenterVisualOverride: false,
+    ownsCanvasHub: false,
+    ownsHexAuthority: false,
+    ownsComposite: false,
+    ownsCanvasMounting: false,
+    ownsRouteOrchestration: false,
+    ownsRuntimeRestart: false,
+    ownsControls: false,
+    ownsLandTruth: false,
+    ownsWaterTruth: false,
+    ownsAirTruth: false,
+    ownsHydrology: false,
+    ownsElevation: false,
+    ownsMaterials: false,
+    ownsAtmosphereTruth: false,
+    ownsLightingTruth: false,
 
-    landAuthority: false,
-    waterAuthority: false,
-    airAuthority: false,
-    terrainAuthority: false,
-    canvasAuthority: false,
-    runtimeAuthority: false,
-    routeAuthority: false,
+    ...FINAL_FALSE,
 
-    generatedImage: false,
-    graphicBox: false,
-    webGL: false,
-    visualPassClaimed: false
-  });
+    get state() {
+      return state;
+    }
+  };
 
-  root.HEARTH = root.HEARTH || {};
-  root.HEARTH.hexSurface = api;
-  root.HEARTH.hexSurfaceConsumer = api;
+  try {
+    validateHexAuthority();
+    validateCanvasHub();
+    updateDataset();
+    publishGlobals();
+  } catch (error) {
+    state.lastError = error && error.message ? String(error.message) : String(error);
+    state.updatedAt = nowIso();
 
-  root.HEARTH_HEX_SURFACE = api;
-  root.HEARTH_HEX_SURFACE_STATUS = STATUS;
-  root.HEARTH_HEX_SURFACE_CONTRACT = CONTRACT;
-  root.HEARTH_HEX_SURFACE_RECEIPT = RECEIPT;
-  root.HEARTH_HEX_SURFACE_FOUR_PAIR_AUTHORITY_CONSUMER = api;
-  root.__HEARTH_HEX_SURFACE_DISPOSE__ = dispose;
-
-  const initialValidation = validateCanonicalHexAuthority();
-
-  STATUS.lastAuthorityValidation = initialValidation;
-  STATUS.canonicalHexAuthorityPresent = initialValidation.authorityPresent;
-  STATUS.canonicalHexAuthorityContractOk = initialValidation.contractOk;
-  STATUS.canonicalHexAuthoritySampleOk = initialValidation.sampleOk;
-  STATUS.canonicalHexAuthorityFourPairOk = initialValidation.fourPairOk;
-  STATUS.canonicalHexAuthorityWideProbeOk = initialValidation.wideProbeOk;
-
-  publishDataset(null, null, initialValidation);
+    try {
+      updateDataset();
+      publishGlobals();
+    } catch (_fallbackError) {}
+  }
 
   if (typeof module !== "undefined" && module.exports) {
     module.exports = api;

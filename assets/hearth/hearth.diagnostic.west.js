@@ -3,15 +3,20 @@
 // Full-file replacement.
 // Diagnostic rail WEST child only.
 // Internal implementation renewal:
-// HEARTH_DIAGNOSTIC_WEST_RENDERED_PLANET_PROOF_SPREAD_ALIGNMENT_TNT_v2
+// HEARTH_DIAGNOSTIC_WEST_RENDERED_PLANET_PROOF_SPREAD_RUNTIME_ADOPTION_TNT_v3
 // Purpose:
 // - Preserve WEST parent-visible rendered-target authority contract.
-// - Shift WEST from button-centered failure diagnosis into rendered planet-proof spread alignment.
-// - Keep Show Receipt / hit-test observability as secondary non-controlling evidence.
-// - Read the current rendered Hearth page data proof chain:
+// - Calibrate WEST from the latest NORTH receipts.
+// - Shift WEST away from button-centered failure diagnosis into rendered planet-proof spread inspection.
+// - Treat floating/off-viewport Show Receipt hit-test results as non-controlling observability conditions.
+// - Read the current rendered Hearth proof chain:
 //   HTML shell -> index selector -> route conductor v9_5 -> Canvas expression hub -> finger manager -> visible base globe carrier.
-// - Recognize floating/off-viewport controls as observability conditions, not WEST read failure.
-// - Publish rendered planet-proof evidence for NORTH adjudication.
+// - Inspect rendered proof through target DOM, target datasets, route conductor globals, receipt globals, Hearth namespace, and Dexter Lab namespace.
+// - Publish North-consumable proof fields:
+//   CANVAS_ELEMENT_FOUND
+//   ROUTE_CONDUCTOR_CONTRACT_READABLE_IN_RENDERED_TARGET
+//   RENDERED_PLANET_PROOF_FULLY_INSPECTED
+//   WEST_RENDERED_PROOF_SPREAD_COMPLETE
 // - Preserve EAST as CASE_5 served-source lane.
 // - Preserve NORTH as final PRIMARY_CASE and recommendation authority.
 // - Preserve no F13 claim, no F21 claim, no ready text, no visual pass, no generated image, no GraphicBox, no WebGL.
@@ -36,19 +41,27 @@
   const RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_WEST_RENDERED_TARGET_AUTHORITY_PROBE_RECEIPT_v1";
 
   const IMPLEMENTATION_CONTRACT =
-    "HEARTH_DIAGNOSTIC_WEST_RENDERED_PLANET_PROOF_SPREAD_ALIGNMENT_TNT_v2";
+    "HEARTH_DIAGNOSTIC_WEST_RENDERED_PLANET_PROOF_SPREAD_RUNTIME_ADOPTION_TNT_v3";
   const IMPLEMENTATION_RECEIPT =
-    "HEARTH_DIAGNOSTIC_WEST_RENDERED_PLANET_PROOF_SPREAD_ALIGNMENT_RECEIPT_v2";
+    "HEARTH_DIAGNOSTIC_WEST_RENDERED_PLANET_PROOF_SPREAD_RUNTIME_ADOPTION_RECEIPT_v3";
 
   const PREVIOUS_IMPLEMENTATION_CONTRACT =
+    "HEARTH_DIAGNOSTIC_WEST_RENDERED_PLANET_PROOF_SPREAD_ALIGNMENT_TNT_v2";
+  const BASELINE_IMPLEMENTATION_CONTRACT =
     "HEARTH_DIAGNOSTIC_WEST_HIT_TEST_OBSERVABILITY_REFINEMENT_TNT_v1";
 
   const VERSION =
-    "2026-06-03.hearth-diagnostic-west-rendered-planet-proof-spread-alignment-v2";
+    "2026-06-03.hearth-diagnostic-west-rendered-planet-proof-spread-runtime-adoption-v3";
 
   const FILE = "/assets/hearth/hearth.diagnostic.west.js";
   const TARGET_ROUTE = "/showroom/globe/hearth/";
   const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
+
+  const CURRENT_HTML_CONTRACT =
+    "HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_RECEIPT_TARGET_RESTORATION_TNT_v2_6";
+
+  const CURRENT_INDEX_JS_CONTRACT =
+    "HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4";
 
   const CURRENT_ROUTE_CONDUCTOR_CONTRACT =
     "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_TNT_v9_5";
@@ -61,12 +74,6 @@
     "HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_TNT_v9_3",
     "HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_TNT_v9_2"
   ]);
-
-  const CURRENT_HTML_CONTRACT =
-    "HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_RECEIPT_TARGET_RESTORATION_TNT_v2_6";
-
-  const CURRENT_INDEX_JS_CONTRACT =
-    "HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4";
 
   const CURRENT_CANVAS_PARENT_CONTRACTS = Object.freeze([
     "HEARTH_CANVAS_EXPRESSION_HUB_VISIBLE_BASE_GLOBE_CARRIER_TNT_v11_7",
@@ -97,23 +104,91 @@
     "#hearthGlobeStage",
     "[data-hearth-globe-stage]",
     "[data-hearth-planet-engine-stage]",
-    "[data-hearth-planetary-template-development-stage]"
+    "[data-hearth-planetary-template-development-stage]",
+    "[data-hearth-visible-planet-stage]"
   ]);
 
   const PLANET_MOUNT_SELECTORS = Object.freeze([
     "#hearthCanvasMount",
     "[data-hearth-canvas-mount]",
     "[data-hearth-visible-planet-mount]",
-    "[data-hearth-planet-engine-mount]"
+    "[data-hearth-planet-engine-mount]",
+    "[data-hearth-canvas-stage-mount]"
   ]);
 
   const CANVAS_SELECTORS = Object.freeze([
     "canvas[data-hearth-canvas='true']",
     "canvas[data-hearth-canvas-texture='true']",
     "canvas[data-hearth-planet-canvas='true']",
+    "canvas[data-hearth-visible-planet-canvas='true']",
     "#hearthCanvasMount canvas",
     "[data-hearth-canvas-mount] canvas",
+    "[data-hearth-visible-planet-mount] canvas",
+    "[data-hearth-planet-engine-mount] canvas",
     "canvas"
+  ]);
+
+  const ROUTE_CONDUCTOR_PATHS = Object.freeze([
+    "HEARTH.routeConductor",
+    "HEARTH.southRouteConductor",
+    "HEARTH.routeConductorPrimary",
+    "HEARTH.routeConductorV95",
+    "HEARTH.routeConductorCanvasExpressionHubVisibleGlobeProofIngestion",
+    "HEARTH.routeConductorCanvasLocalStationBridgeAlignment",
+    "HEARTH.hearthRouteConductor",
+    "DEXTER_LAB.hearthRouteConductor",
+    "DEXTER_LAB.hearthSouthRouteConductor",
+    "HEARTH_ROUTE_CONDUCTOR",
+    "HEARTH_SOUTH_ROUTE_CONDUCTOR",
+    "HEARTH_ROUTE_CONDUCTOR_PRIMARY_GATE",
+    "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION",
+    "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT"
+  ]);
+
+  const ROUTE_CONDUCTOR_RECEIPT_PATHS = Object.freeze([
+    "HEARTH.routeConductorReceipt",
+    "HEARTH.southRouteConductorReceipt",
+    "HEARTH.routeConductorPrimaryReceipt",
+    "HEARTH.routeConductorV95Receipt",
+    "HEARTH.routeConductorCanvasExpressionHubVisibleGlobeProofIngestionReceipt",
+    "HEARTH.routeConductorCanvasLocalStationBridgeAlignmentReceipt",
+    "HEARTH.hearthRouteConductorReceipt",
+    "DEXTER_LAB.hearthRouteConductorReceipt",
+    "DEXTER_LAB.hearthSouthRouteConductorReceipt",
+    "HEARTH_ROUTE_CONDUCTOR_RECEIPT",
+    "HEARTH_SOUTH_ROUTE_CONDUCTOR_RECEIPT",
+    "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_RECEIPT",
+    "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_RECEIPT_v9_5"
+  ]);
+
+  const CANVAS_AUTHORITY_PATHS = Object.freeze([
+    "HEARTH.canvas",
+    "HEARTH.canvasParent",
+    "HEARTH.canvasExpressionHub",
+    "HEARTH.canvasFingerManager",
+    "HEARTH.visibleBaseGlobeCarrier",
+    "HEARTH.hearthCanvas",
+    "DEXTER_LAB.hearthCanvas",
+    "HEARTH_CANVAS",
+    "HEARTH_CANVAS_PARENT",
+    "HEARTH_CANVAS_EXPRESSION_HUB",
+    "HEARTH_CANVAS_FINGER_MANAGER",
+    "HEARTH_VISIBLE_BASE_GLOBE_CARRIER"
+  ]);
+
+  const CANVAS_RECEIPT_PATHS = Object.freeze([
+    "HEARTH.canvasReceipt",
+    "HEARTH.canvasParentReceipt",
+    "HEARTH.canvasExpressionHubReceipt",
+    "HEARTH.canvasFingerManagerReceipt",
+    "HEARTH.visibleBaseGlobeCarrierReceipt",
+    "HEARTH.hearthCanvasReceipt",
+    "DEXTER_LAB.hearthCanvasReceipt",
+    "HEARTH_CANVAS_RECEIPT",
+    "HEARTH_CANVAS_PARENT_RECEIPT",
+    "HEARTH_CANVAS_EXPRESSION_HUB_RECEIPT",
+    "HEARTH_CANVAS_FINGER_MANAGER_RECEIPT",
+    "HEARTH_VISIBLE_BASE_GLOBE_CARRIER_RECEIPT"
   ]);
 
   const FALLBACK = Object.freeze({
@@ -188,6 +263,10 @@
     return Boolean(value && typeof value === "object");
   }
 
+  function isPlainObject(value) {
+    return Boolean(value && typeof value === "object" && !Array.isArray(value));
+  }
+
   function isFunction(value) {
     return typeof value === "function";
   }
@@ -201,7 +280,7 @@
     return safeString(value, fallback).replace(/\s+/g, " ").trim();
   }
 
-  function bounded(value, limit = 1600) {
+  function bounded(value, limit = 1800) {
     return safeTrim(value).slice(0, limit);
   }
 
@@ -229,7 +308,7 @@
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
       if (Array.isArray(value)) return value.slice();
-      if (isObject(value)) return { ...value };
+      if (isPlainObject(value)) return { ...value };
       return value;
     }
   }
@@ -237,12 +316,13 @@
   function normalizeError(error, prefix) {
     const name = error && error.name ? safeString(error.name) : "ERROR";
     const message = error && error.message ? safeString(error.message) : safeString(error, "UNKNOWN_ERROR");
-    return `${prefix || "ERROR"}:${bounded(`${name}:${message}`, 800)}`;
+    return `${prefix || "ERROR"}:${bounded(`${name}:${message}`, 1000)}`;
   }
 
   function addNote(state, note) {
-    const clean = bounded(note, 1400);
+    const clean = bounded(note, 1600);
     if (!clean) return;
+
     if (!state.westSecondaryEvidenceNotes.includes(clean)) {
       state.westSecondaryEvidenceNotes.push(clean);
     }
@@ -262,6 +342,7 @@
       const found = q(context, selector);
       if (found) return found;
     }
+
     return null;
   }
 
@@ -332,9 +413,11 @@
 
   function cssEscape(value) {
     const text = safeString(value);
+
     try {
       if (root.CSS && isFunction(root.CSS.escape)) return root.CSS.escape(text);
     } catch (_error) {}
+
     return text.replace(/[^a-zA-Z0-9_-]/g, "\\$&");
   }
 
@@ -364,7 +447,10 @@
         "data-hearth-canvas-mount",
         "data-hearth-stage-label",
         "data-hearth-visible-planet-mount",
+        "data-hearth-visible-planet-stage",
         "data-hearth-planet-engine-stage",
+        "data-hearth-planet-canvas",
+        "data-hearth-visible-planet-canvas",
         "aria-label",
         "role",
         "href"
@@ -429,50 +515,186 @@
     }
 
     if (isObject(authority.receiptPacket)) return authority.receiptPacket;
+    if (isObject(authority.receiptObject)) return authority.receiptObject;
     if (isObject(authority.receipt)) return authority.receipt;
+    if (isObject(authority.report)) return authority.report;
     if (authority.contract || authority.receipt || authority.version) return authority;
 
     return null;
   }
 
-  function readAnyRouteConductorAuthority(targetWindow) {
-    const win = targetWindow || root;
+  function scoreReceiptCandidate(candidate) {
+    const receipt = candidate && candidate.receipt ? candidate.receipt : {};
+    const contract = safeString(firstDefined(
+      receipt.contract,
+      receipt.CONTRACT,
+      receipt.currentRouteConductorContract,
+      receipt.currentCanvasParentContract,
+      receipt.canvasContract
+    ));
 
-    const paths = [
-      "HEARTH.routeConductor",
-      "HEARTH.southRouteConductor",
-      "HEARTH.routeConductorCanvasExpressionHubVisibleGlobeProofIngestion",
-      "HEARTH.routeConductorCanvasLocalStationBridgeAlignment",
-      "DEXTER_LAB.hearthRouteConductor",
-      "HEARTH_ROUTE_CONDUCTOR",
-      "HEARTH_SOUTH_ROUTE_CONDUCTOR",
-      "HEARTH_ROUTE_CONDUCTOR_PRIMARY_GATE",
-      "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION",
-      "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT"
+    let score = 0;
+
+    if (contract === CURRENT_ROUTE_CONDUCTOR_CONTRACT) score += 1000;
+    if (ACCEPTED_ROUTE_CONDUCTOR_LINEAGE.includes(contract)) score += 500;
+    if (CURRENT_CANVAS_PARENT_CONTRACTS.includes(contract)) score += 300;
+
+    const proofKeys = [
+      "visiblePlanetProofReady",
+      "canvasVisiblePlanetProofReady",
+      "baseGlobeVisibleCarrierReady",
+      "visibleBaseGlobeCarrierActive",
+      "canvasMounted",
+      "canvasDrawComplete",
+      "baseGlobeDrawComplete",
+      "f13CanvasEvidenceComplete",
+      "expressionHubActive",
+      "fingerManagerActive",
+      "fingerRegistryActive"
     ];
 
-    for (const path of paths) {
-      const found = readPath(win, path);
-      if (found) return { path, authority: found, receipt: callReceiptMethod(found) || {} };
+    for (const key of proofKeys) {
+      if (safeBool(receipt[key], false)) score += 20;
     }
 
-    const receiptPaths = [
-      "HEARTH.routeConductorReceipt",
-      "HEARTH.southRouteConductorReceipt",
-      "HEARTH.routeConductorCanvasExpressionHubVisibleGlobeProofIngestionReceipt",
-      "DEXTER_LAB.hearthRouteConductorReceipt",
-      "HEARTH_ROUTE_CONDUCTOR_RECEIPT",
-      "HEARTH_SOUTH_ROUTE_CONDUCTOR_RECEIPT",
-      "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_RECEIPT",
-      "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_RECEIPT_v9_5"
-    ];
+    if (candidate.path && /routeConductor|ROUTE_CONDUCTOR/i.test(candidate.path)) score += 40;
+    if (candidate.path && /canvas|CANVAS|globe|GLOBE/i.test(candidate.path)) score += 20;
+
+    return score;
+  }
+
+  function collectKnownReceiptCandidates(targetWindow, paths, receiptPaths) {
+    const win = targetWindow || root;
+    const candidates = [];
+
+    for (const path of paths) {
+      const authority = readPath(win, path);
+      if (!authority) continue;
+
+      const receipt = callReceiptMethod(authority) || {};
+      candidates.push({ path, authority, receipt });
+    }
 
     for (const path of receiptPaths) {
       const receipt = readPath(win, path);
-      if (isObject(receipt)) return { path, authority: null, receipt };
+      if (!isObject(receipt)) continue;
+
+      candidates.push({ path, authority: null, receipt });
     }
 
-    return { path: "NONE", authority: null, receipt: {} };
+    return candidates;
+  }
+
+  function collectNamespaceReceiptCandidates(targetWindow, state) {
+    const win = targetWindow || root;
+    const roots = [
+      { path: "HEARTH", value: readPath(win, "HEARTH") },
+      { path: "DEXTER_LAB", value: readPath(win, "DEXTER_LAB") }
+    ];
+
+    const candidates = [];
+    const visited = new Set();
+    const queue = [];
+
+    for (const entry of roots) {
+      if (entry.value && isObject(entry.value)) {
+        queue.push({ path: entry.path, value: entry.value, depth: 0 });
+      }
+    }
+
+    let inspected = 0;
+    const maxObjects = 160;
+    const maxDepth = 3;
+
+    while (queue.length && inspected < maxObjects) {
+      const item = queue.shift();
+      const value = item.value;
+
+      if (!value || !isObject(value) || visited.has(value)) continue;
+
+      visited.add(value);
+      inspected += 1;
+
+      const directReceipt = callReceiptMethod(value);
+      if (directReceipt && isObject(directReceipt)) {
+        const contractText = JSON.stringify(directReceipt).slice(0, 4000);
+        if (
+          /HEARTH_ROUTE_CONDUCTOR|HEARTH_CANVAS|VISIBLE|GLOBE|PLANET|F13|canvas|routeConductor/i.test(contractText)
+        ) {
+          candidates.push({
+            path: item.path,
+            authority: value,
+            receipt: directReceipt
+          });
+        }
+      }
+
+      if (item.depth >= maxDepth) continue;
+
+      let keys = [];
+
+      try {
+        keys = Object.keys(value);
+      } catch (_error) {
+        continue;
+      }
+
+      for (const key of keys.slice(0, 80)) {
+        if (!/hearth|route|conductor|canvas|globe|planet|visible|base|finger|receipt|south|parent|f13/i.test(key)) {
+          continue;
+        }
+
+        let child = null;
+
+        try {
+          child = value[key];
+        } catch (_error) {
+          continue;
+        }
+
+        if (!child || !isObject(child) || visited.has(child)) continue;
+
+        queue.push({
+          path: `${item.path}.${key}`,
+          value: child,
+          depth: item.depth + 1
+        });
+      }
+    }
+
+    state.namespaceObjectScanCount = String(inspected);
+    state.namespaceReceiptCandidateCount = String(candidates.length);
+
+    if (candidates.length) {
+      addNote(state, `NAMESPACE_RENDERED_PROOF_CANDIDATES_FOUND:${candidates.length}`);
+    }
+
+    return candidates;
+  }
+
+  function chooseBestCandidate(candidates) {
+    if (!Array.isArray(candidates) || !candidates.length) {
+      return { path: "NONE", authority: null, receipt: {}, score: 0 };
+    }
+
+    let best = null;
+    let bestScore = -1;
+
+    for (const candidate of candidates) {
+      const score = scoreReceiptCandidate(candidate);
+
+      if (score > bestScore) {
+        best = candidate;
+        bestScore = score;
+      }
+    }
+
+    return {
+      path: best && best.path ? best.path : "UNKNOWN",
+      authority: best ? best.authority : null,
+      receipt: best && best.receipt ? best.receipt : {},
+      score: bestScore
+    };
   }
 
   function readDataset(targetDocument) {
@@ -653,6 +875,7 @@
       }
 
       const targetWindow = frame.contentWindow || targetDocument.defaultView || null;
+
       state.diagnosticTargetAccessStatus = ACCESS.RENDERED_TARGET_ACCESSIBLE;
       state.diagnosticTargetAccessError = "";
 
@@ -684,6 +907,7 @@
     for (const selector of VISIBLE_STATUS_SELECTORS) {
       const node = q(targetDocument, selector);
       const text = node ? safeTrim(node.textContent) : "";
+
       if (text) return text;
     }
 
@@ -763,11 +987,14 @@
 
       if (!rect) {
         state.hitTestUnreadableReason = "SHOW_RECEIPT_RECT_UNREADABLE";
+        state.showReceiptHitTestNonControlling = "true";
+        addNote(state, "SHOW_RECEIPT_RECT_UNREADABLE_NON_CONTROLLING_FOR_PLANET_PROOF");
         return { error: "SHOW_RECEIPT_RECT_UNREADABLE" };
       }
 
       if (rect.width <= 0 || rect.height <= 0) {
         state.hitTestUnreadableReason = "SHOW_RECEIPT_RECT_EMPTY_OR_ZERO_SIZE";
+        state.showReceiptHitTestNonControlling = "true";
         addNote(state, "SHOW_RECEIPT_RECT_EMPTY_OR_ZERO_SIZE_NON_CONTROLLING_FOR_PLANET_PROOF");
         return { error: "SHOW_RECEIPT_RECT_EMPTY_OR_ZERO_SIZE", rect };
       }
@@ -814,7 +1041,7 @@
       const normalized = normalizeError(error, "HIT_TEST_ERROR");
       state.hitTestUnreadableReason = normalized;
       state.showReceiptHitTestNonControlling = "true";
-      addNote(`${normalized}_NON_CONTROLLING_FOR_PLANET_PROOF`);
+      addNote(state, `${normalized}_NON_CONTROLLING_FOR_PLANET_PROOF`);
       return { error: normalized };
     }
   }
@@ -984,23 +1211,27 @@
     state.canvasMountRect = rectToPacket(mountRect);
     state.canvasMountRectNonZero = boolText(mountNonZero);
 
+    state.domCanvasElementFound = boolText(Boolean(canvas));
     state.canvasElementPresent = boolText(Boolean(canvas));
     state.canvasRect = rectToPacket(canvasRect);
     state.canvasRectNonZero = boolText(canvasRectNonZero);
     state.canvasAttributeWidth = canvas ? String(Math.round(canvasAttrWidth || 0)) : FALLBACK.NOT_FOUND;
     state.canvasAttributeHeight = canvas ? String(Math.round(canvasAttrHeight || 0)) : FALLBACK.NOT_FOUND;
-
     state.canvasDrawEvidencePresent = boolText(canvasRectNonZero);
     state.domVisiblePlanetProofReady = boolText(Boolean(stageNonZero && mountNonZero && canvasRectNonZero));
 
     if (!stage) addNote(state, "PLANET_STAGE_NOT_FOUND");
     if (!mount) addNote(state, "CANVAS_MOUNT_NOT_FOUND");
-    if (!canvas) addNote(state, "CANVAS_ELEMENT_NOT_FOUND");
+    if (!canvas) addNote(state, "CANVAS_ELEMENT_NOT_FOUND_DOM_ONLY");
     if (canvas && !canvasRectNonZero) addNote(state, "CANVAS_ELEMENT_PRESENT_BUT_ZERO_SIZE");
+    if (stageNonZero) addNote(state, "PLANET_STAGE_NONZERO_DOM_PROOF");
+    if (mountNonZero) addNote(state, "CANVAS_MOUNT_NONZERO_DOM_PROOF");
+    if (canvasRectNonZero) addNote(state, "CANVAS_ELEMENT_NONZERO_DOM_PROOF");
   }
 
   function contractRecognized(contract, current, lineage) {
     const c = safeString(contract);
+
     if (!c || c === FALLBACK.UNKNOWN || c === FALLBACK.NOT_FOUND || c === FALLBACK.UNREADABLE) {
       return FALLBACK.UNKNOWN;
     }
@@ -1010,139 +1241,260 @@
     return "false";
   }
 
-  function readRouteConductorProof(targetDocument, targetWindow, state) {
+  function readCandidateField(candidates, fieldNames) {
+    for (const candidate of candidates) {
+      const receipt = candidate && candidate.receipt ? candidate.receipt : {};
+
+      for (const field of fieldNames) {
+        if (receipt[field] !== undefined && receipt[field] !== null && receipt[field] !== "") {
+          return receipt[field];
+        }
+      }
+    }
+
+    return undefined;
+  }
+
+  function readAnyRouteConductorProof(targetDocument, targetWindow, state) {
     const dataset = readDataset(targetDocument);
-    const source = readAnyRouteConductorAuthority(targetWindow);
-    const receipt = source.receipt || {};
+    const bodyDataset = readBodyDataset(targetDocument);
+
+    const knownRouteCandidates = collectKnownReceiptCandidates(
+      targetWindow,
+      ROUTE_CONDUCTOR_PATHS,
+      ROUTE_CONDUCTOR_RECEIPT_PATHS
+    );
+
+    const knownCanvasCandidates = collectKnownReceiptCandidates(
+      targetWindow,
+      CANVAS_AUTHORITY_PATHS,
+      CANVAS_RECEIPT_PATHS
+    );
+
+    const namespaceCandidates = collectNamespaceReceiptCandidates(targetWindow, state);
+
+    const allCandidates = [
+      ...knownRouteCandidates,
+      ...knownCanvasCandidates,
+      ...namespaceCandidates
+    ];
+
+    state.routeConductorKnownCandidateCount = String(knownRouteCandidates.length);
+    state.canvasKnownCandidateCount = String(knownCanvasCandidates.length);
+    state.renderedProofCandidateCount = String(allCandidates.length);
+
+    const best = chooseBestCandidate(allCandidates);
+    const primaryReceipt = best.receipt || {};
 
     const routeConductorContract = safeString(firstDefined(
-      receipt.contract,
-      receipt.CONTRACT,
-      receipt.currentRouteConductorContract,
+      primaryReceipt.contract,
+      primaryReceipt.CONTRACT,
+      primaryReceipt.currentRouteConductorContract,
+      primaryReceipt.routeConductorContract,
       dataset.hearthRouteConductorContract,
-      dataset.hearthSouthRouteConductorContract
+      dataset.hearthSouthRouteConductorContract,
+      dataset.currentRouteConductorContract,
+      bodyDataset.hearthRouteConductorContract,
+      bodyDataset.hearthSouthRouteConductorContract
     ), FALLBACK.UNKNOWN);
 
     const routeConductorReceipt = safeString(firstDefined(
-      receipt.receipt,
-      receipt.RECEIPT,
-      receipt.currentRouteConductorReceipt,
-      dataset.hearthRouteConductorReceipt
+      primaryReceipt.receipt,
+      primaryReceipt.RECEIPT,
+      primaryReceipt.currentRouteConductorReceipt,
+      primaryReceipt.routeConductorReceipt,
+      dataset.hearthRouteConductorReceipt,
+      dataset.hearthSouthRouteConductorReceipt,
+      bodyDataset.hearthRouteConductorReceipt,
+      bodyDataset.hearthSouthRouteConductorReceipt
     ), FALLBACK.UNKNOWN);
 
     const currentCanvasParentContract = safeString(firstDefined(
-      receipt.currentCanvasParentContract,
+      primaryReceipt.currentCanvasParentContract,
+      primaryReceipt.canvasParentContract,
+      primaryReceipt.canvasContract,
+      readCandidateField(allCandidates, ["currentCanvasParentContract", "canvasParentContract", "canvasContract", "contract"]),
       dataset.hearthSouthCurrentCanvasParentContract,
-      dataset.hearthCanvasContract
+      dataset.hearthCanvasContract,
+      dataset.hearthCanvasParentContract,
+      bodyDataset.hearthSouthCurrentCanvasParentContract,
+      bodyDataset.hearthCanvasContract,
+      bodyDataset.hearthCanvasParentContract
     ), FALLBACK.UNKNOWN);
 
     const currentCanvasParentReceipt = safeString(firstDefined(
-      receipt.currentCanvasParentReceipt,
+      primaryReceipt.currentCanvasParentReceipt,
+      primaryReceipt.canvasParentReceipt,
+      primaryReceipt.canvasReceipt,
+      readCandidateField(allCandidates, ["currentCanvasParentReceipt", "canvasParentReceipt", "canvasReceipt", "receipt"]),
       dataset.hearthSouthCurrentCanvasParentReceipt,
-      dataset.hearthCanvasReceipt
+      dataset.hearthCanvasReceipt,
+      dataset.hearthCanvasParentReceipt,
+      bodyDataset.hearthSouthCurrentCanvasParentReceipt,
+      bodyDataset.hearthCanvasReceipt,
+      bodyDataset.hearthCanvasParentReceipt
     ), FALLBACK.UNKNOWN);
 
     const expressionHubActive = safeBool(firstDefined(
-      receipt.expressionHubActive,
-      receipt.canvasExpressionHubActive,
+      primaryReceipt.expressionHubActive,
+      primaryReceipt.canvasExpressionHubActive,
+      readCandidateField(allCandidates, ["expressionHubActive", "canvasExpressionHubActive"]),
       dataset.hearthSouthExpressionHubActive,
       dataset.hearthSouthCanvasExpressionHubActive,
-      dataset.hearthCanvasExpressionHubActive
+      dataset.hearthCanvasExpressionHubActive,
+      bodyDataset.hearthSouthExpressionHubActive,
+      bodyDataset.hearthSouthCanvasExpressionHubActive,
+      bodyDataset.hearthCanvasExpressionHubActive
     ), false);
 
     const fingerManagerActive = safeBool(firstDefined(
-      receipt.fingerManagerActive,
-      receipt.canvasFingerManagerActive,
+      primaryReceipt.fingerManagerActive,
+      primaryReceipt.canvasFingerManagerActive,
+      readCandidateField(allCandidates, ["fingerManagerActive", "canvasFingerManagerActive"]),
       dataset.hearthSouthFingerManagerActive,
       dataset.hearthSouthCanvasFingerManagerActive,
-      dataset.hearthCanvasFingerManagerActive
+      dataset.hearthCanvasFingerManagerActive,
+      bodyDataset.hearthSouthFingerManagerActive,
+      bodyDataset.hearthSouthCanvasFingerManagerActive,
+      bodyDataset.hearthCanvasFingerManagerActive
     ), false);
 
     const fingerRegistryActive = safeBool(firstDefined(
-      receipt.fingerRegistryActive,
+      primaryReceipt.fingerRegistryActive,
+      readCandidateField(allCandidates, ["fingerRegistryActive"]),
       dataset.hearthSouthFingerRegistryActive,
-      dataset.hearthCanvasFingerRegistryActive
+      dataset.hearthCanvasFingerRegistryActive,
+      bodyDataset.hearthSouthFingerRegistryActive,
+      bodyDataset.hearthCanvasFingerRegistryActive
     ), false);
 
     const visibleBaseGlobeCarrierActive = safeBool(firstDefined(
-      receipt.visibleBaseGlobeCarrierActive,
-      receipt.canvasVisibleBaseGlobeCarrierActive,
+      primaryReceipt.visibleBaseGlobeCarrierActive,
+      primaryReceipt.canvasVisibleBaseGlobeCarrierActive,
+      readCandidateField(allCandidates, ["visibleBaseGlobeCarrierActive", "canvasVisibleBaseGlobeCarrierActive"]),
       dataset.hearthSouthVisibleBaseGlobeCarrierActive,
       dataset.hearthSouthCanvasVisibleBaseGlobeCarrierActive,
-      dataset.hearthCanvasVisibleBaseGlobeCarrierActive
+      dataset.hearthCanvasVisibleBaseGlobeCarrierActive,
+      bodyDataset.hearthSouthVisibleBaseGlobeCarrierActive,
+      bodyDataset.hearthSouthCanvasVisibleBaseGlobeCarrierActive,
+      bodyDataset.hearthCanvasVisibleBaseGlobeCarrierActive
     ), false);
 
     const canvasMounted = safeBool(firstDefined(
-      receipt.canvasMounted,
+      primaryReceipt.canvasMounted,
+      readCandidateField(allCandidates, ["canvasMounted", "mounted", "mount"]),
       dataset.hearthSouthCanvasMounted,
-      dataset.hearthCanvasMounted
+      dataset.hearthCanvasMounted,
+      bodyDataset.hearthSouthCanvasMounted,
+      bodyDataset.hearthCanvasMounted
     ), false);
 
     const canvasDrawComplete = safeBool(firstDefined(
-      receipt.canvasDrawComplete,
+      primaryReceipt.canvasDrawComplete,
+      primaryReceipt.imageRendered,
+      primaryReceipt.drawComplete,
+      readCandidateField(allCandidates, ["canvasDrawComplete", "imageRendered", "drawComplete"]),
       dataset.hearthSouthCanvasDrawComplete,
-      dataset.hearthCanvasDrawComplete
+      dataset.hearthCanvasDrawComplete,
+      bodyDataset.hearthSouthCanvasDrawComplete,
+      bodyDataset.hearthCanvasDrawComplete
     ), false);
 
     const baseGlobeDrawComplete = safeBool(firstDefined(
-      receipt.baseGlobeDrawComplete,
+      primaryReceipt.baseGlobeDrawComplete,
+      primaryReceipt.visibleBaseGlobeDrawComplete,
+      readCandidateField(allCandidates, ["baseGlobeDrawComplete", "visibleBaseGlobeDrawComplete"]),
       dataset.hearthSouthBaseGlobeDrawComplete,
-      dataset.hearthCanvasBaseGlobeDrawComplete
+      dataset.hearthCanvasBaseGlobeDrawComplete,
+      bodyDataset.hearthSouthBaseGlobeDrawComplete,
+      bodyDataset.hearthCanvasBaseGlobeDrawComplete
     ), false);
 
     const baseGlobeVisibleCarrierReady = safeBool(firstDefined(
-      receipt.baseGlobeVisibleCarrierReady,
+      primaryReceipt.baseGlobeVisibleCarrierReady,
+      primaryReceipt.visibleBaseGlobeCarrierReady,
+      readCandidateField(allCandidates, ["baseGlobeVisibleCarrierReady", "visibleBaseGlobeCarrierReady"]),
       dataset.hearthSouthBaseGlobeVisibleCarrierReady,
-      dataset.hearthCanvasBaseGlobeVisibleCarrierReady
+      dataset.hearthCanvasBaseGlobeVisibleCarrierReady,
+      bodyDataset.hearthSouthBaseGlobeVisibleCarrierReady,
+      bodyDataset.hearthCanvasBaseGlobeVisibleCarrierReady
     ), false);
 
     const visiblePlanetProofReady = safeBool(firstDefined(
-      receipt.visiblePlanetProofReady,
+      primaryReceipt.visiblePlanetProofReady,
+      primaryReceipt.canvasVisiblePlanetProofReady,
+      primaryReceipt.renderedPlanetProofReady,
+      readCandidateField(allCandidates, ["visiblePlanetProofReady", "canvasVisiblePlanetProofReady", "renderedPlanetProofReady"]),
       dataset.hearthSouthVisiblePlanetProofReady,
-      dataset.hearthCanvasVisiblePlanetProofReady
+      dataset.hearthCanvasVisiblePlanetProofReady,
+      bodyDataset.hearthSouthVisiblePlanetProofReady,
+      bodyDataset.hearthCanvasVisiblePlanetProofReady
     ), false);
 
     const visiblePlanetProofSource = safeString(firstDefined(
-      receipt.visiblePlanetProofSource,
-      dataset.hearthSouthVisiblePlanetProofSource
+      primaryReceipt.visiblePlanetProofSource,
+      primaryReceipt.canvasVisiblePlanetProofSource,
+      primaryReceipt.renderedPlanetProofSource,
+      readCandidateField(allCandidates, ["visiblePlanetProofSource", "canvasVisiblePlanetProofSource", "renderedPlanetProofSource"]),
+      dataset.hearthSouthVisiblePlanetProofSource,
+      dataset.hearthCanvasVisiblePlanetProofSource,
+      bodyDataset.hearthSouthVisiblePlanetProofSource,
+      bodyDataset.hearthCanvasVisiblePlanetProofSource
     ), FALLBACK.UNKNOWN);
 
     const f13Complete = safeBool(firstDefined(
-      receipt.f13CanvasEvidenceComplete,
-      dataset.hearthSouthF13CanvasEvidenceComplete
+      primaryReceipt.f13CanvasEvidenceComplete,
+      primaryReceipt.canvasF13EvidenceComplete,
+      readCandidateField(allCandidates, ["f13CanvasEvidenceComplete", "canvasF13EvidenceComplete"]),
+      dataset.hearthSouthF13CanvasEvidenceComplete,
+      bodyDataset.hearthSouthF13CanvasEvidenceComplete
     ), false);
 
     const f13Strict = safeBool(firstDefined(
-      receipt.f13CanvasEvidenceStrict,
-      dataset.hearthSouthF13CanvasEvidenceStrict
+      primaryReceipt.f13CanvasEvidenceStrict,
+      readCandidateField(allCandidates, ["f13CanvasEvidenceStrict"]),
+      dataset.hearthSouthF13CanvasEvidenceStrict,
+      bodyDataset.hearthSouthF13CanvasEvidenceStrict
     ), false);
 
     const f13Degraded = safeBool(firstDefined(
-      receipt.f13CanvasEvidenceDegraded,
-      dataset.hearthSouthF13CanvasEvidenceDegraded
+      primaryReceipt.f13CanvasEvidenceDegraded,
+      readCandidateField(allCandidates, ["f13CanvasEvidenceDegraded"]),
+      dataset.hearthSouthF13CanvasEvidenceDegraded,
+      bodyDataset.hearthSouthF13CanvasEvidenceDegraded
     ), false);
 
     const f13HardFail = safeBool(firstDefined(
-      receipt.f13HardFail,
-      dataset.hearthSouthF13HardFail
+      primaryReceipt.f13HardFail,
+      readCandidateField(allCandidates, ["f13HardFail"]),
+      dataset.hearthSouthF13HardFail,
+      bodyDataset.hearthSouthF13HardFail
     ), false);
 
     const f13StrictEvidenceGap = safeString(firstDefined(
-      receipt.f13StrictEvidenceGap,
-      dataset.hearthSouthF13StrictEvidenceGap
+      primaryReceipt.f13StrictEvidenceGap,
+      readCandidateField(allCandidates, ["f13StrictEvidenceGap"]),
+      dataset.hearthSouthF13StrictEvidenceGap,
+      bodyDataset.hearthSouthF13StrictEvidenceGap
     ), FALLBACK.UNKNOWN);
 
     const recommendedNextFile = safeString(firstDefined(
-      receipt.recommendedNextFile,
-      receipt.recommendedNextRenewalTarget,
+      primaryReceipt.recommendedNextFile,
+      primaryReceipt.recommendedNextRenewalTarget,
+      readCandidateField(allCandidates, ["recommendedNextFile", "recommendedNextRenewalTarget"]),
       dataset.hearthSouthRecommendedNextFile,
-      dataset.hearthSouthRecommendedNextRenewalTarget
+      dataset.hearthSouthRecommendedNextRenewalTarget,
+      bodyDataset.hearthSouthRecommendedNextFile,
+      bodyDataset.hearthSouthRecommendedNextRenewalTarget
     ), FALLBACK.UNKNOWN);
 
     const postgameStatus = safeString(firstDefined(
-      receipt.postgameStatus,
+      primaryReceipt.postgameStatus,
+      readCandidateField(allCandidates, ["postgameStatus"]),
       dataset.hearthSouthPostgameStatus,
-      dataset.hearthPostgameStatus
+      dataset.hearthPostgameStatus,
+      bodyDataset.hearthSouthPostgameStatus,
+      bodyDataset.hearthPostgameStatus
     ), FALLBACK.UNKNOWN);
 
     const routeConductorRecognition = contractRecognized(
@@ -1153,12 +1505,16 @@
 
     const canvasParentRecognized = CURRENT_CANVAS_PARENT_CONTRACTS.includes(currentCanvasParentContract);
 
-    state.routeConductorAuthoritySource = source.path;
+    state.routeConductorAuthoritySource = best.path;
+    state.routeConductorAuthorityScore = String(best.score || 0);
     state.routeConductorContract = routeConductorContract;
     state.routeConductorReceipt = routeConductorReceipt;
     state.routeConductorV95Detected = boolText(routeConductorContract === CURRENT_ROUTE_CONDUCTOR_CONTRACT);
     state.routeConductorContractRecognized = routeConductorRecognition;
     state.routeConductorLineageAccepted = boolText(routeConductorRecognition === "lineage");
+    state.routeConductorContractReadableInRenderedTarget = boolText(
+      routeConductorRecognition === "true" || routeConductorRecognition === "lineage"
+    );
 
     state.currentCanvasParentContract = currentCanvasParentContract;
     state.currentCanvasParentReceipt = currentCanvasParentReceipt;
@@ -1183,13 +1539,13 @@
     state.postgameStatus = postgameStatus;
 
     const routeConductorCurrentOrLineage = routeConductorRecognition === "true" || routeConductorRecognition === "lineage";
-    const currentV95OrProofCompatible = routeConductorContract === CURRENT_ROUTE_CONDUCTOR_CONTRACT || routeConductorCurrentOrLineage;
 
     const routeDataEvidence = Boolean(
-      currentV95OrProofCompatible &&
+      routeConductorCurrentOrLineage &&
       (
         expressionHubActive ||
         fingerManagerActive ||
+        fingerRegistryActive ||
         visibleBaseGlobeCarrierActive ||
         canvasMounted ||
         canvasDrawComplete ||
@@ -1197,6 +1553,9 @@
         baseGlobeVisibleCarrierReady ||
         visiblePlanetProofReady ||
         f13Complete ||
+        f13Strict ||
+        f13Degraded ||
+        canvasParentRecognized ||
         postgameStatus !== FALLBACK.UNKNOWN
       )
     );
@@ -1205,22 +1564,37 @@
 
     if (routeConductorContract === CURRENT_ROUTE_CONDUCTOR_CONTRACT) {
       addNote(state, "ROUTE_CONDUCTOR_V9_5_RENDERED_DATA_PROOF_DETECTED");
+      addNote(state, "ROUTE_CONDUCTOR_CONTRACT_READABLE_IN_RENDERED_TARGET");
     } else if (routeConductorRecognition === "lineage") {
       addNote(state, "ROUTE_CONDUCTOR_LINEAGE_DETECTED_RENDERED_DATA_PROOF_COMPATIBLE");
+      addNote(state, "ROUTE_CONDUCTOR_CONTRACT_READABLE_IN_RENDERED_TARGET");
     } else if (routeConductorRecognition === "false") {
       addNote(state, "ROUTE_CONDUCTOR_CONTRACT_UNRECOGNIZED_IN_RENDERED_TARGET");
     } else {
       addNote(state, "ROUTE_CONDUCTOR_CONTRACT_UNREADABLE_IN_RENDERED_TARGET");
     }
 
-    if (canvasParentRecognized) addNote(state, "CURRENT_CANVAS_PARENT_CONTRACT_RECOGNIZED_IN_RENDERED_TARGET");
+    if (canvasParentRecognized) {
+      addNote(state, "CURRENT_CANVAS_PARENT_CONTRACT_RECOGNIZED_IN_RENDERED_TARGET");
+    }
+
+    if (routeDataEvidence) {
+      addNote(state, "ROUTE_CONDUCTOR_RENDERED_DATA_PROOF_READ");
+    }
   }
 
   function readRuntimeRelease(targetDocument, targetWindow, state) {
     try {
       const dataset = readDataset(targetDocument);
-      const source = readAnyRouteConductorAuthority(targetWindow);
-      const receipt = source.receipt || {};
+      const bodyDataset = readBodyDataset(targetDocument);
+
+      const candidates = [
+        ...collectKnownReceiptCandidates(targetWindow, ROUTE_CONDUCTOR_PATHS, ROUTE_CONDUCTOR_RECEIPT_PATHS),
+        ...collectKnownReceiptCandidates(targetWindow, CANVAS_AUTHORITY_PATHS, CANVAS_RECEIPT_PATHS)
+      ];
+
+      const best = chooseBestCandidate(candidates);
+      const receipt = best.receipt || {};
 
       const combined = [
         dataset.hearthRuntimeReleaseState,
@@ -1229,6 +1603,12 @@
         dataset.hearthIndexPostgameStatus,
         dataset.hearthSouthPostgameStatus,
         dataset.hearthSouthFirstFailedCoordinate,
+        bodyDataset.hearthRuntimeReleaseState,
+        bodyDataset.hearthRuntimeReleaseHeldReason,
+        bodyDataset.hearthPostgameStatus,
+        bodyDataset.hearthIndexPostgameStatus,
+        bodyDataset.hearthSouthPostgameStatus,
+        bodyDataset.hearthSouthFirstFailedCoordinate,
         receipt.runtimeReleaseState,
         receipt.runtimeReleaseHeldReason,
         receipt.postgameStatus,
@@ -1264,14 +1644,22 @@
   }
 
   function deriveRenderedPlanetProof(state) {
+    const domCanvas = state.domCanvasElementFound === "true";
+    const domCanvasNonZero = state.canvasRectNonZero === "true";
     const domProof = state.domVisiblePlanetProofReady === "true";
+
+    const routeContractReadable = state.routeConductorContractReadableInRenderedTarget === "true";
     const routeProof = state.routeReceiptVisiblePlanetProofReady === "true";
+
     const routeCarrier = (
       state.visibleBaseGlobeCarrierActive === "true" ||
       state.canvasMounted === "true" ||
       state.canvasDrawComplete === "true" ||
       state.baseGlobeDrawComplete === "true" ||
-      state.baseGlobeVisibleCarrierReady === "true"
+      state.baseGlobeVisibleCarrierReady === "true" ||
+      state.f13CanvasEvidenceComplete === "true" ||
+      state.f13CanvasEvidenceStrict === "true" ||
+      state.f13CanvasEvidenceDegraded === "true"
     );
 
     const routeDataProof = state.routeConductorDataProofRead === "true";
@@ -1279,14 +1667,39 @@
     const lineageRoute = state.routeConductorLineageAccepted === "true";
     const currentCanvasParent = state.currentCanvasParentRecognized === "true";
 
+    const canvasEquivalentFound = Boolean(
+      domCanvas ||
+      routeCarrier ||
+      routeProof ||
+      domProof ||
+      currentCanvasParent ||
+      routeDataProof
+    );
+
+    state.canvasElementFound = boolText(canvasEquivalentFound);
+    state.canvasElementFoundSource = canvasEquivalentFound
+      ? domCanvas
+        ? "DOM_CANVAS_ELEMENT"
+        : routeProof
+          ? "ROUTE_RECEIPT_VISIBLE_PLANET_PROOF"
+          : routeCarrier
+            ? "ROUTE_CONDUCTOR_CANVAS_OR_BASE_GLOBE_CARRIER"
+            : currentCanvasParent
+              ? "CANVAS_PARENT_CONTRACT_PROOF"
+              : "RENDERED_DATA_PROOF"
+      : FALLBACK.UNKNOWN;
+
     const proofInspected = Boolean(
       state.diagnosticTargetAccessStatus === ACCESS.RENDERED_TARGET_ACCESSIBLE &&
       state.hearthTargetConfirmed === true &&
       (
+        routeContractReadable ||
         currentRoute ||
         lineageRoute ||
         routeDataProof ||
         currentCanvasParent ||
+        domCanvas ||
+        domCanvasNonZero ||
         domProof ||
         routeProof ||
         routeCarrier
@@ -1295,37 +1708,62 @@
 
     const proofReady = Boolean(
       proofInspected &&
+      canvasEquivalentFound &&
       (
         routeProof ||
         domProof ||
+        domCanvasNonZero ||
         (routeDataProof && routeCarrier) ||
-        (currentRoute && (routeCarrier || currentCanvasParent))
+        (currentRoute && (routeCarrier || currentCanvasParent || routeProof)) ||
+        (lineageRoute && routeCarrier)
       )
     );
 
     state.renderedPlanetProofInspected = boolText(proofInspected);
+    state.renderedPlanetProofFullyInspected = boolText(proofInspected);
     state.renderedPlanetProofReady = boolText(proofReady);
-
     state.visiblePlanetProofReady = boolText(proofReady);
     state.visiblePlanetProofSource = proofReady
       ? routeProof
         ? state.routeReceiptVisiblePlanetProofSource || "ROUTE_CONDUCTOR_RECEIPT_VISIBLE_PLANET_PROOF"
         : domProof
           ? "DOM_STAGE_MOUNT_CANVAS_NONZERO"
-          : currentRoute
-            ? "ROUTE_CONDUCTOR_V9_5_RENDERED_DATA_PROOF"
-            : "RENDERED_DATA_PROOF_SHAPE"
+          : domCanvasNonZero
+            ? "DOM_CANVAS_NONZERO"
+            : routeCarrier
+              ? "ROUTE_CONDUCTOR_CANVAS_BASE_GLOBE_CARRIER_PROOF"
+              : currentCanvasParent
+                ? "CANVAS_PARENT_CONTRACT_PROOF"
+                : "RENDERED_DATA_PROOF_SHAPE"
       : FALLBACK.UNKNOWN;
 
     state.dataProofReadComplete = proofInspected ? "true" : "false";
     state.dataProofReadStatus = proofInspected ? FALLBACK.COMPLETE : FALLBACK.PARTIAL;
 
+    state.westRenderedProofSpreadComplete = boolText(proofReady);
+    state.westRenderedProofSpreadReason = proofReady
+      ? "VISIBLE_PLANET_PROOF_SPREAD_COMPLETE"
+      : proofInspected
+        ? "VISIBLE_PLANET_PROOF_SPREAD_INSPECTED_NOT_READY"
+        : "VISIBLE_PLANET_PROOF_SPREAD_NOT_FULLY_INSPECTED";
+
+    if (state.canvasElementFound === "true") {
+      addNote(state, `CANVAS_ELEMENT_FOUND:${state.canvasElementFoundSource}`);
+    } else {
+      addNote(state, "CANVAS_ELEMENT_NOT_FOUND");
+    }
+
     if (proofReady) {
       addNote(state, `RENDERED_PLANET_PROOF_READY:${state.visiblePlanetProofSource}`);
+      addNote(state, "RENDERED_PLANET_PROOF_FULLY_INSPECTED");
+      addNote(state, "WEST_RENDERED_PROOF_SPREAD_COMPLETE");
     } else if (proofInspected) {
+      addNote(state, "RENDERED_PLANET_PROOF_FULLY_INSPECTED");
       addNote(state, "RENDERED_PLANET_PROOF_INSPECTED_BUT_NOT_READY");
+      addNote(state, "WEST_RENDERED_READ_PARTIAL_PLANET_PROOF_SPREAD_INCOMPLETE");
     } else {
       addNote(state, "RENDERED_PLANET_PROOF_NOT_FULLY_INSPECTED");
+      addNote(state, "WEST_RENDERED_READ_PARTIAL_PLANET_PROOF_SPREAD_INCOMPLETE");
     }
   }
 
@@ -1391,7 +1829,7 @@
   function deriveRenderedReadStatus(state) {
     const targetAccessible = state.diagnosticTargetAccessStatus === ACCESS.RENDERED_TARGET_ACCESSIBLE;
     const targetConfirmed = state.hearthTargetConfirmed === true;
-    const dataComplete = state.dataProofReadComplete === "true";
+    const spreadComplete = state.westRenderedProofSpreadComplete === "true";
 
     if (!targetAccessible || !targetConfirmed) {
       state.westRenderedReadComplete = "false";
@@ -1399,10 +1837,10 @@
       return;
     }
 
-    if (dataComplete) {
+    if (spreadComplete) {
       state.westRenderedReadComplete = "true";
       state.westRenderedReadStatus = FALLBACK.COMPLETE;
-      addNote(state, "WEST_RENDERED_READ_COMPLETE_BY_PLANET_PROOF_SPREAD");
+      addNote(state, "WEST_RENDERED_READ_COMPLETE_BY_RENDERED_PLANET_PROOF_SPREAD");
       return;
     }
 
@@ -1419,6 +1857,7 @@
       implementationContract: IMPLEMENTATION_CONTRACT,
       implementationReceipt: IMPLEMENTATION_RECEIPT,
       previousImplementationContract: PREVIOUS_IMPLEMENTATION_CONTRACT,
+      baselineImplementationContract: BASELINE_IMPLEMENTATION_CONTRACT,
       version: VERSION,
       file: FILE,
       targetRoute: TARGET_ROUTE,
@@ -1472,11 +1911,13 @@
       frameVisibleToDiagnosticRoute: FALLBACK.NOT_APPLICABLE,
 
       routeConductorAuthoritySource: FALLBACK.UNKNOWN,
+      routeConductorAuthorityScore: FALLBACK.UNKNOWN,
       routeConductorContract: FALLBACK.UNKNOWN,
       routeConductorReceipt: FALLBACK.UNKNOWN,
       routeConductorV95Detected: FALLBACK.UNKNOWN,
       routeConductorContractRecognized: FALLBACK.UNKNOWN,
       routeConductorLineageAccepted: FALLBACK.UNKNOWN,
+      routeConductorContractReadableInRenderedTarget: FALLBACK.UNKNOWN,
 
       currentCanvasParentContract: FALLBACK.UNKNOWN,
       currentCanvasParentReceipt: FALLBACK.UNKNOWN,
@@ -1499,7 +1940,10 @@
       canvasMountPresent: FALLBACK.UNKNOWN,
       canvasMountRect: FALLBACK.UNKNOWN,
       canvasMountRectNonZero: FALLBACK.UNKNOWN,
+      domCanvasElementFound: FALLBACK.UNKNOWN,
       canvasElementPresent: FALLBACK.UNKNOWN,
+      canvasElementFound: FALLBACK.UNKNOWN,
+      canvasElementFoundSource: FALLBACK.UNKNOWN,
       canvasRect: FALLBACK.UNKNOWN,
       canvasRectNonZero: FALLBACK.UNKNOWN,
       canvasAttributeWidth: FALLBACK.UNKNOWN,
@@ -1508,12 +1952,16 @@
       domVisiblePlanetProofReady: FALLBACK.UNKNOWN,
 
       renderedPlanetProofInspected: FALLBACK.UNKNOWN,
+      renderedPlanetProofFullyInspected: FALLBACK.UNKNOWN,
       renderedPlanetProofReady: FALLBACK.UNKNOWN,
       visiblePlanetProofReady: FALLBACK.UNKNOWN,
       visiblePlanetProofSource: FALLBACK.UNKNOWN,
       dataProofReadComplete: "false",
       dataProofReadStatus: FALLBACK.UNKNOWN,
       routeConductorDataProofRead: FALLBACK.UNKNOWN,
+
+      westRenderedProofSpreadComplete: FALLBACK.UNKNOWN,
+      westRenderedProofSpreadReason: FALLBACK.UNKNOWN,
 
       f13CanvasEvidenceComplete: FALLBACK.UNKNOWN,
       f13CanvasEvidenceStrict: FALLBACK.UNKNOWN,
@@ -1522,6 +1970,12 @@
       f13StrictEvidenceGap: FALLBACK.UNKNOWN,
       recommendedNextFile: FALLBACK.UNKNOWN,
       postgameStatus: FALLBACK.UNKNOWN,
+
+      renderedProofCandidateCount: "0",
+      routeConductorKnownCandidateCount: "0",
+      canvasKnownCandidateCount: "0",
+      namespaceObjectScanCount: "0",
+      namespaceReceiptCandidateCount: "0",
 
       syntheticActivationAllowedByDefault: false,
       syntheticActivationPermittedByNorth: false,
@@ -1584,12 +2038,17 @@
     state.buttonPointerEvents = FALLBACK.INACCESSIBLE;
     state.hitTestUnreadableReason = "RENDERED_TARGET_INACCESSIBLE";
 
+    state.canvasElementFound = "false";
+    state.routeConductorContractReadableInRenderedTarget = "false";
     state.renderedPlanetProofInspected = "false";
+    state.renderedPlanetProofFullyInspected = "false";
     state.renderedPlanetProofReady = "false";
     state.visiblePlanetProofReady = "false";
     state.visiblePlanetProofSource = FALLBACK.INACCESSIBLE;
     state.dataProofReadComplete = "false";
     state.dataProofReadStatus = FALLBACK.INACCESSIBLE;
+    state.westRenderedProofSpreadComplete = "false";
+    state.westRenderedProofSpreadReason = "RENDERED_TARGET_INACCESSIBLE";
   }
 
   function makeEvidencePacket(state) {
@@ -1600,6 +2059,7 @@
       WEST_IMPLEMENTATION_CONTRACT: IMPLEMENTATION_CONTRACT,
       WEST_IMPLEMENTATION_RECEIPT: IMPLEMENTATION_RECEIPT,
       WEST_PREVIOUS_IMPLEMENTATION_CONTRACT: PREVIOUS_IMPLEMENTATION_CONTRACT,
+      WEST_BASELINE_IMPLEMENTATION_CONTRACT: BASELINE_IMPLEMENTATION_CONTRACT,
       WEST_VERSION: VERSION,
       WEST_RENDERED_READ_COMPLETE: state.westRenderedReadComplete,
       WEST_RENDERED_READ_STATUS: state.westRenderedReadStatus,
@@ -1648,11 +2108,13 @@
       FRAME_VISIBLE_TO_DIAGNOSTIC_ROUTE: state.frameVisibleToDiagnosticRoute,
 
       ROUTE_CONDUCTOR_AUTHORITY_SOURCE: state.routeConductorAuthoritySource,
+      ROUTE_CONDUCTOR_AUTHORITY_SCORE: state.routeConductorAuthorityScore,
       ROUTE_CONDUCTOR_CONTRACT: state.routeConductorContract,
       ROUTE_CONDUCTOR_RECEIPT: state.routeConductorReceipt,
       ROUTE_CONDUCTOR_V9_5_DETECTED: state.routeConductorV95Detected,
       ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED: state.routeConductorContractRecognized,
       ROUTE_CONDUCTOR_LINEAGE_ACCEPTED: state.routeConductorLineageAccepted,
+      ROUTE_CONDUCTOR_CONTRACT_READABLE_IN_RENDERED_TARGET: state.routeConductorContractReadableInRenderedTarget,
 
       CURRENT_CANVAS_PARENT_CONTRACT: state.currentCanvasParentContract,
       CURRENT_CANVAS_PARENT_RECEIPT: state.currentCanvasParentReceipt,
@@ -1675,7 +2137,10 @@
       CANVAS_MOUNT_PRESENT: state.canvasMountPresent,
       CANVAS_MOUNT_RECT: state.canvasMountRect,
       CANVAS_MOUNT_RECT_NONZERO: state.canvasMountRectNonZero,
+      DOM_CANVAS_ELEMENT_FOUND: state.domCanvasElementFound,
       CANVAS_ELEMENT_PRESENT: state.canvasElementPresent,
+      CANVAS_ELEMENT_FOUND: state.canvasElementFound,
+      CANVAS_ELEMENT_FOUND_SOURCE: state.canvasElementFoundSource,
       CANVAS_RECT: state.canvasRect,
       CANVAS_RECT_NONZERO: state.canvasRectNonZero,
       CANVAS_ATTRIBUTE_WIDTH: state.canvasAttributeWidth,
@@ -1684,12 +2149,16 @@
       DOM_VISIBLE_PLANET_PROOF_READY: state.domVisiblePlanetProofReady,
 
       RENDERED_PLANET_PROOF_INSPECTED: state.renderedPlanetProofInspected,
+      RENDERED_PLANET_PROOF_FULLY_INSPECTED: state.renderedPlanetProofFullyInspected,
       RENDERED_PLANET_PROOF_READY: state.renderedPlanetProofReady,
       VISIBLE_PLANET_PROOF_READY: state.visiblePlanetProofReady,
       VISIBLE_PLANET_PROOF_SOURCE: state.visiblePlanetProofSource,
       DATA_PROOF_READ_COMPLETE: state.dataProofReadComplete,
       DATA_PROOF_READ_STATUS: state.dataProofReadStatus,
       ROUTE_CONDUCTOR_DATA_PROOF_READ: state.routeConductorDataProofRead,
+
+      WEST_RENDERED_PROOF_SPREAD_COMPLETE: state.westRenderedProofSpreadComplete,
+      WEST_RENDERED_PROOF_SPREAD_REASON: state.westRenderedProofSpreadReason,
 
       F13_CANVAS_EVIDENCE_COMPLETE: state.f13CanvasEvidenceComplete,
       F13_CANVAS_EVIDENCE_STRICT: state.f13CanvasEvidenceStrict,
@@ -1698,6 +2167,12 @@
       F13_STRICT_EVIDENCE_GAP: state.f13StrictEvidenceGap,
       RECOMMENDED_NEXT_FILE: state.recommendedNextFile,
       POSTGAME_STATUS: state.postgameStatus,
+
+      RENDERED_PROOF_CANDIDATE_COUNT: state.renderedProofCandidateCount,
+      ROUTE_CONDUCTOR_KNOWN_CANDIDATE_COUNT: state.routeConductorKnownCandidateCount,
+      CANVAS_KNOWN_CANDIDATE_COUNT: state.canvasKnownCandidateCount,
+      NAMESPACE_OBJECT_SCAN_COUNT: state.namespaceObjectScanCount,
+      NAMESPACE_RECEIPT_CANDIDATE_COUNT: state.namespaceReceiptCandidateCount,
 
       CASE_1_SUPPORT: state.case1Support,
       CASE_2_SUPPORT: state.case2Support,
@@ -1762,7 +2237,7 @@
       readAncestorBlockers(rendered.button, state);
       readOverlay(rendered.button, hit, state);
       readCurrentVisibleProofDom(targetDocument, state);
-      readRouteConductorProof(targetDocument, targetWindow, state);
+      readAnyRouteConductorProof(targetDocument, targetWindow, state);
       readRuntimeRelease(targetDocument, targetWindow, state);
 
       state.syntheticActivationAttempted = false;
@@ -1829,6 +2304,7 @@
       implementationContract: IMPLEMENTATION_CONTRACT,
       implementationReceipt: IMPLEMENTATION_RECEIPT,
       previousImplementationContract: PREVIOUS_IMPLEMENTATION_CONTRACT,
+      baselineImplementationContract: BASELINE_IMPLEMENTATION_CONTRACT,
       version: VERSION,
       file: FILE,
       targetRoute: TARGET_ROUTE,
@@ -1849,7 +2325,7 @@
       syntheticActivationRepairAuthority: false,
 
       renderedTargetAuthorityProbeOwned: true,
-      renderedPlanetProofSpreadAlignmentOwned: true,
+      renderedPlanetProofSpreadRuntimeAdoptionOwned: true,
       targetAccessResolutionOwned: true,
       hearthTargetValidityCheckOwned: true,
       showReceiptDetectionOwned: true,
@@ -1864,16 +2340,18 @@
       canvasMountReadOwned: true,
       canvasElementReadOwned: true,
       routeConductorRenderedDataProofReadOwned: true,
+      namespaceRenderedProofScanOwned: true,
+      canvasParentRenderedProofReadOwned: true,
       visiblePlanetProofReadOwned: true,
       globalSuppressionReadOwnedWhereSafelyAvailable: true,
       runtimeReleaseReadOwnedWhereSafelyAvailable: true,
       syntheticActivationAllowedByDefault: false,
 
+      currentHtmlContract: CURRENT_HTML_CONTRACT,
+      currentIndexJsContract: CURRENT_INDEX_JS_CONTRACT,
       currentRouteConductorContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
       currentRouteConductorReceipt: CURRENT_ROUTE_CONDUCTOR_RECEIPT,
       acceptedRouteConductorLineage: ACCEPTED_ROUTE_CONDUCTOR_LINEAGE.slice(),
-      currentHtmlContract: CURRENT_HTML_CONTRACT,
-      currentIndexJsContract: CURRENT_INDEX_JS_CONTRACT,
       currentCanvasParentContracts: CURRENT_CANVAS_PARENT_CONTRACTS.slice(),
 
       runWestRenderedReadApiAvailable: true,
@@ -1883,7 +2361,15 @@
       lastWestStatus: lastEvidencePacket ? lastEvidencePacket.WEST_STATUS : STATUS.READY,
       lastWestRenderedReadStatus: lastEvidencePacket ? lastEvidencePacket.WEST_RENDERED_READ_STATUS : FALLBACK.UNKNOWN,
       lastRenderedPlanetProofReady: lastEvidencePacket ? lastEvidencePacket.RENDERED_PLANET_PROOF_READY : FALLBACK.UNKNOWN,
+      lastRenderedPlanetProofFullyInspected: lastEvidencePacket ? lastEvidencePacket.RENDERED_PLANET_PROOF_FULLY_INSPECTED : FALLBACK.UNKNOWN,
       lastVisiblePlanetProofReady: lastEvidencePacket ? lastEvidencePacket.VISIBLE_PLANET_PROOF_READY : FALLBACK.UNKNOWN,
+      lastCanvasElementFound: lastEvidencePacket ? lastEvidencePacket.CANVAS_ELEMENT_FOUND : FALLBACK.UNKNOWN,
+      lastRouteConductorContractReadableInRenderedTarget: lastEvidencePacket
+        ? lastEvidencePacket.ROUTE_CONDUCTOR_CONTRACT_READABLE_IN_RENDERED_TARGET
+        : FALLBACK.UNKNOWN,
+      lastWestRenderedProofSpreadComplete: lastEvidencePacket
+        ? lastEvidencePacket.WEST_RENDERED_PROOF_SPREAD_COMPLETE
+        : FALLBACK.UNKNOWN,
       lastRouteConductorContract: lastEvidencePacket ? lastEvidencePacket.ROUTE_CONDUCTOR_CONTRACT : FALLBACK.UNKNOWN,
       lastCurrentCanvasParentContract: lastEvidencePacket ? lastEvidencePacket.CURRENT_CANVAS_PARENT_CONTRACT : FALLBACK.UNKNOWN,
       lastCase1Support: lastEvidencePacket ? lastEvidencePacket.CASE_1_SUPPORT : SUPPORT.UNKNOWN,
@@ -1930,25 +2416,27 @@
     implementationContract: IMPLEMENTATION_CONTRACT,
     implementationReceipt: IMPLEMENTATION_RECEIPT,
     previousImplementationContract: PREVIOUS_IMPLEMENTATION_CONTRACT,
+    baselineImplementationContract: BASELINE_IMPLEMENTATION_CONTRACT,
     version: VERSION,
     file: FILE,
     targetRoute: TARGET_ROUTE,
     diagnosticRoute: DIAGNOSTIC_ROUTE,
 
+    currentHtmlContract: CURRENT_HTML_CONTRACT,
+    currentIndexJsContract: CURRENT_INDEX_JS_CONTRACT,
     currentRouteConductorContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
     currentRouteConductorReceipt: CURRENT_ROUTE_CONDUCTOR_RECEIPT,
     acceptedRouteConductorLineage: ACCEPTED_ROUTE_CONDUCTOR_LINEAGE.slice(),
-    currentHtmlContract: CURRENT_HTML_CONTRACT,
-    currentIndexJsContract: CURRENT_INDEX_JS_CONTRACT,
     currentCanvasParentContracts: CURRENT_CANVAS_PARENT_CONTRACTS.slice(),
 
     runWestRenderedRead,
     getWestReceipt,
     getWestState,
 
-    supportsRenderedPlanetProofSpreadAlignment: true,
+    supportsRenderedPlanetProofSpreadRuntimeAdoption: true,
     supportsShowReceiptHitTestNonControllingWhenOffscreen: true,
     supportsRouteConductorV95RenderedDataProofRead: true,
+    supportsNamespaceRenderedProofScan: true,
     supportsCanvasParentRenderedProofRead: true,
     supportsVisiblePlanetProofRead: true,
     supportsNorthOnlyAdjudication: true,
@@ -1961,6 +2449,7 @@
     ownsRepair: false,
     ownsRuntimeRestart: false,
     ownsCanvasRelease: false,
+    ownsF13Claim: false,
     ownsF21: false,
 
     ...FINAL_FALSE

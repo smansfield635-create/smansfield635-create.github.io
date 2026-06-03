@@ -1,45 +1,49 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_3_EXPRESSION_PORT_ALIGNMENT_TNT_v11_4
+// HEARTH_CANVAS_LOCAL_STATION_DIAGNOSTIC_BRIDGE_ALIGNMENT_TNT_v11_4
 // Full-file replacement.
-// Canvas Parent / Canvas Local Station / Child Distribution Switchboard / Expression-Port Bridge.
+// Canvas Parent / Canvas Local Station / Diagnostic Bridge Alignment.
 // Purpose:
-// - Preserve the accepted Canvas Local Station architecture.
-// - Align Canvas parent with current Route Conductor v9_3.
-// - Preserve v9_2 Route Conductor as accepted lineage only.
-// - Preserve route-conductor-facing v11_3_1 compatibility so /showroom/globe/hearth/hearth.js does not need renewal in this step.
-// - Add separated expression-packet and receipt-packet intake ports.
-// - Keep Canvas parent as visible-expression carrier / child-distribution switchboard, not terrain truth, diagnostic rail, route conductor, runtime table, or final latch.
-// - Preserve East/West/South child aggregation.
-// - Preserve local-station summary publication.
-// - Preserve no F13, no F21, no ready text, no final visual pass, no generated image, no GraphicBox, no WebGL.
+// - Preserve accepted v11_3_1 Canvas Local Station / Child Distribution Switchboard architecture.
+// - Renew the Canvas parent to recognize the current Route Conductor v9_3 authority.
+// - Preserve v9_2 as accepted lineage / observation-only history, not current authority.
+// - Bridge the diagnostic receipt side and the route-conductor/canvas receipt side without building expression ports yet.
+// - Preserve public receiver methods as validated intake surfaces.
+// - Preserve East dispatch only after accepted current Route Conductor release.
+// - Preserve child aggregation summary for EAST / WEST / SOUTH.
+// - Publish bridge summary fields usable by Route Conductor, Diagnostic Rail, and future expression-port work.
+// - Keep expression, terrain, mountain, material, hydrology, and planet-geometry ports held.
+// - Never claim F13, F21, ready text, completion latch, final visual pass, generated image, GraphicBox, or WebGL.
+// Does not own:
+// - HTML shell
+// - front-end button binding
+// - diagnostic rail final case selection
+// - Route Conductor systemic cycle authority
+// - Macro West admissibility
+// - EAST atlas truth
+// - WEST inspection truth
+// - SOUTH visible proof truth
+// - terrain/material/hydrology/elevation/mountain expression
+// - expression-port construction
+// - F13 latch
+// - F21 latch
+// - ready text
+// - final visual pass
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_3_EXPRESSION_PORT_ALIGNMENT_TNT_v11_4";
-  const RECEIPT = "HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_3_EXPRESSION_PORT_ALIGNMENT_RECEIPT_v11_4";
+  const CONTRACT = "HEARTH_CANVAS_LOCAL_STATION_DIAGNOSTIC_BRIDGE_ALIGNMENT_TNT_v11_4";
+  const RECEIPT = "HEARTH_CANVAS_LOCAL_STATION_DIAGNOSTIC_BRIDGE_ALIGNMENT_RECEIPT_v11_4";
   const PREVIOUS_CONTRACT = "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_3_1";
   const PREVIOUS_RECEIPT = "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_RECEIPT_v11_3_1";
-  const LINEAGE_CONTRACT = "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_3";
-  const LINEAGE_RECEIPT = "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_RECEIPT_v11_3";
   const BASELINE_CONTRACT = "HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD_TNT_v10_3";
   const BASELINE_RECEIPT = "HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD_RECEIPT_v10_3";
-
-  /*
-    Compatibility note:
-    /showroom/globe/hearth/hearth.js currently recognizes Canvas local-station contracts through
-    a fixed accepted list ending at v11_3_1. This file therefore publishes the actual implementation
-    contract as v11_4 while keeping currentCanvasParentContract/canvasLocalStationContract route-
-    conductor-facing at v11_3_1 until the Route Conductor is separately authorized for a contract-list
-    renewal. This prevents a false Canvas-local-station mismatch.
-  */
-  const ROUTE_CONDUCTOR_FACING_CONTRACT = PREVIOUS_CONTRACT;
-  const ROUTE_CONDUCTOR_FACING_RECEIPT = PREVIOUS_RECEIPT;
 
   const CURRENT_ROUTE_CONDUCTOR_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_TNT_v9_3";
   const CURRENT_ROUTE_CONDUCTOR_RECEIPT = "HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_RECEIPT_v9_3";
   const LINEAGE_ROUTE_CONDUCTOR_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_TNT_v9_2";
   const LINEAGE_ROUTE_CONDUCTOR_RECEIPT = "HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_RECEIPT_v9_2";
+
   const MACRO_WEST_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_TIMETABLE_ALIGNED_LOCAL_ADMISSIBILITY_CLUTCH_TNT_v4_6_3";
   const CURRENT_EAST_CONTRACT = "HEARTH_CANVAS_EAST_CURRENT_LOCAL_STATION_V11_1_API_PUBLICATION_TNT_v11_4";
 
@@ -50,24 +54,20 @@
   const EAST_FILE = "/assets/hearth/hearth.canvas.east.js";
   const WEST_FILE = "/assets/hearth/hearth.canvas.west.js";
   const SOUTH_FILE = "/assets/hearth/hearth.canvas.south.js";
-  const EXPRESSION_PORT_FILE = "/assets/hearth/hearth.canvas.expression.port.js";
   const MACRO_WEST_FILE = "/assets/lab/runtime-table.west.js";
+  const NORTH_FILE = "/assets/lab/runtime-table.js";
   const ROUTE = "/showroom/globe/hearth/";
+  const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
   const CYCLE_2_ROUTE = "NORTH_EAST_SOUTH_WEST_CANVAS";
-
-  const EXPRESSION_PACKET_TYPE = "HEARTH_CANVAS_EXPRESSION_PACKET";
-  const RECEIPT_PACKET_TYPE = "HEARTH_CANVAS_RECEIPT_PACKET";
-  const EXPRESSION_PORT_STANDARD = "HEARTH_CANVAS_EXPRESSION_RECEIPT_PORT_STANDARD_v1";
 
   const RELEASE_SOURCE = Object.freeze({
     ROUTE_CONDUCTOR_CURRENT_V9_3_API: "ROUTE_CONDUCTOR_CURRENT_V9_3_API",
     ROUTE_CONDUCTOR_CURRENT_V9_3_RECEIPT: "ROUTE_CONDUCTOR_CURRENT_V9_3_RECEIPT",
-    ROUTE_CONDUCTOR_ACCEPTED_LINEAGE_V9_2_API: "ROUTE_CONDUCTOR_ACCEPTED_LINEAGE_V9_2_API",
-    ROUTE_CONDUCTOR_ACCEPTED_LINEAGE_V9_2_RECEIPT: "ROUTE_CONDUCTOR_ACCEPTED_LINEAGE_V9_2_RECEIPT",
     DIRECT_ROUTE_CONDUCTOR_CANDIDATE: "DIRECT_ROUTE_CONDUCTOR_CANDIDATE",
     OPTIONS_TEST: "OPTIONS_TEST",
     GLOBAL_OBSERVATION: "GLOBAL_OBSERVATION",
     DATASET_OBSERVATION: "DATASET_OBSERVATION",
+    LINEAGE_V9_2_OBSERVATION_ONLY: "LINEAGE_V9_2_OBSERVATION_ONLY",
     NONE: "NONE"
   });
 
@@ -98,6 +98,21 @@
     "CANVAS_SOUTH_VISIBLE_PROOF"
   ]);
 
+  const REQUIRED_RELEASE = Object.freeze({
+    routeConductorContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
+    routeConductorReceipt: CURRENT_ROUTE_CONDUCTOR_RECEIPT,
+    canvasReleaseAuthorized: true,
+    canvasReleasePacketReady: true,
+    westCanvasReleaseApproved: true,
+    westHardBlock: false,
+    carrierHostAdmissibilityReady: true,
+    indexPairReady: true,
+    handoffTo: "CANVAS",
+    destinationFile: TARGET_FILE,
+    cycleNumber: 2,
+    cycleRoute: CYCLE_2_ROUTE
+  });
+
   const EAST_REQUIRED_METHODS = Object.freeze([
     "buildAtlas",
     "sample",
@@ -106,7 +121,8 @@
   ]);
 
   const FINAL_FALSE = Object.freeze({
-    f13Claimed: false,
+    f13EligibleForCanvas: false,
+    f13ClaimedByCanvasParent: false,
     f21EligibleForNorth: false,
     f21SubmittedToNorth: false,
     f21EligibilitySubmittedToNorth: false,
@@ -116,6 +132,9 @@
     degradedCompletionLatched: false,
     readyTextAllowed: false,
     readyTextClaimedByCanvasParent: false,
+    expressionPortBuilt: false,
+    expressionPacketAccepted: false,
+    expressionComplete: false,
     generatedImage: false,
     graphicBox: false,
     webGL: false,
@@ -125,7 +144,6 @@
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
   const api = {};
-  let notifyInProgress = false;
 
   const state = {
     timestamp: "",
@@ -133,26 +151,20 @@
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
-    lineageContract: LINEAGE_CONTRACT,
-    lineageReceipt: LINEAGE_RECEIPT,
     baselineContract: BASELINE_CONTRACT,
     baselineReceipt: BASELINE_RECEIPT,
 
-    routeConductorCurrentContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
-    routeConductorCurrentReceipt: CURRENT_ROUTE_CONDUCTOR_RECEIPT,
-    routeConductorAcceptedLineageContract: LINEAGE_ROUTE_CONDUCTOR_CONTRACT,
-    routeConductorAcceptedLineageReceipt: LINEAGE_ROUTE_CONDUCTOR_RECEIPT,
+    currentRouteConductorRequiredContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
+    currentRouteConductorRequiredReceipt: CURRENT_ROUTE_CONDUCTOR_RECEIPT,
+    lineageRouteConductorContract: LINEAGE_ROUTE_CONDUCTOR_CONTRACT,
+    lineageRouteConductorReceipt: LINEAGE_ROUTE_CONDUCTOR_RECEIPT,
     macroWestRequiredContract: MACRO_WEST_CONTRACT,
     currentEastContract: CURRENT_EAST_CONTRACT,
 
-    routeConductorFacingContract: ROUTE_CONDUCTOR_FACING_CONTRACT,
-    routeConductorFacingReceipt: ROUTE_CONDUCTOR_FACING_RECEIPT,
-    routeConductorCompatibilityContractActive: true,
-
     file: FILE,
-    targetFile: TARGET_FILE,
     route: ROUTE,
-    role: "canvas-local-station-v9-3-expression-port-alignment",
+    diagnosticRoute: DIAGNOSTIC_ROUTE,
+    role: "canvas-local-station-diagnostic-bridge-alignment",
 
     canvasLocalStationActive: true,
     childDistributionSwitchboardActive: true,
@@ -160,19 +172,22 @@
     eastDispatchActive: true,
     canvasChildAggregationActive: true,
     routeConductorSummarySurfaceActive: true,
-    expressionReceiptPortActive: true,
-    expressionReceiptSeparationActive: true,
+    diagnosticBridgeActive: true,
+    diagnosticReceiptBridgeActive: true,
+    expressionBridgeHeld: true,
+    expressionPortsBuilt: false,
+    expressionLaneSeparateFromReceiptLane: true,
+    receiptProvesExpressionDoesNotReplaceExpression: true,
+
     newsAlignmentProtocolActive: true,
     fibonacciSynchronizationChronologyFirst: true,
-    canvasChildSequence: CANVAS_CHILD_SEQUENCE.slice(),
+    canvasChildSequence: CANVAS_CHILD_SEQUENCE,
 
     currentCanvasParentObserved: true,
     currentCanvasParentContractObserved: true,
-    currentCanvasParentContract: ROUTE_CONDUCTOR_FACING_CONTRACT,
-    currentCanvasParentImplementationContract: CONTRACT,
+    currentCanvasParentContract: CONTRACT,
     currentCanvasParentIsLocalStation: true,
-    currentCanvasParentIsV11_3_1Compatible: true,
-    currentCanvasParentIsV11_4Implementation: true,
+    currentCanvasParentIsV11_4: true,
     previousCanvasParentContract: PREVIOUS_CONTRACT,
     baselineCanvasParentContract: BASELINE_CONTRACT,
     canvasParentBootMethodAvailable: true,
@@ -184,12 +199,24 @@
     routeConductorReceipt: "",
     routeConductorContractRecognized: false,
     routeConductorCurrentV9_3Recognized: false,
-    routeConductorAcceptedLineageV9_2Recognized: false,
+    routeConductorLineageV9_2Observed: false,
+    routeConductorLineageV9_2AuthorityAccepted: false,
     routeConductorAuthoritySourceAlias: "NONE",
     routeConductorAuthoritySourceMethod: "NONE",
     routeConductorReleaseAuthorityAccepted: false,
     routeConductorReleasePacketObserved: false,
     routeConductorReleasePacketValid: false,
+
+    diagnosticRailObserved: false,
+    diagnosticRailContract: "",
+    diagnosticRailReceipt: "",
+    diagnosticRailLastPrimaryCase: "",
+    diagnosticRailLastRunStatus: "",
+    diagnosticRailSummaryAvailable: false,
+    diagnosticBridgeSummaryStatus: "WAITING_ROUTE_CONDUCTOR_AND_DIAGNOSTIC_RECEIPT_COMPARISON",
+    diagnosticBridgeMismatch: "UNKNOWN",
+    diagnosticBridgeFirstFailedCoordinate: "WAITING_ROUTE_CONDUCTOR_V9_3_RECOGNITION",
+    diagnosticBridgeRecommendedNextFile: ROUTE_FILE,
 
     observedDatasetRouteConductorContract: "",
     observedDatasetRouteConductorReceipt: "",
@@ -202,7 +229,7 @@
     observedFallbackRouteConductorAlias: "NONE",
     datasetIsReportingOnlyNotAuthority: true,
     datasetReleaseAuthorityBlocked: false,
-    globalFallbackIsObservationOnlyUnlessCurrentOrLineage: true,
+    globalFallbackIsObservationOnlyUnlessCurrentV9_3: true,
     globalReleaseAuthorityBlocked: false,
     fallbackAliasesAreObservationOnly: true,
 
@@ -225,7 +252,7 @@
     parentReleaseLawful: false,
     canvasReleaseAuthorized: false,
     canvasReleasePacketReady: false,
-    canvasReleaseHeldReason: "WAITING_ROUTE_CONDUCTOR_V9_3_OR_ACCEPTED_LINEAGE_RECOGNITION",
+    canvasReleaseHeldReason: "WAITING_ROUTE_CONDUCTOR_V9_3_RECOGNITION",
     canvasParentReleaseGateReady: false,
     parentAcceptedRouteConductorRelease: false,
 
@@ -268,34 +295,6 @@
     allCanvasChildrenEvidenceReady: false,
     allCanvasChildrenReady: false,
 
-    expressionPacketPresent: false,
-    receiptPacketPresent: false,
-    expressionAndReceiptSeparated: false,
-    expressionPacketAccepted: false,
-    receiptPacketAccepted: false,
-    expressionPacketSourceFile: "",
-    receiptPacketSourceFile: "",
-    expressionFingerRole: "",
-    receiptFingerRole: "",
-    expressionType: "",
-    expressionVersion: "",
-    expressionGridScope: "",
-    expressionCoordinateSystem: "",
-    expressionCanvasConsumable: false,
-    expressionComplete: false,
-    receiptOutputShapeValid: false,
-    receiptDownstreamSafe: false,
-    receiptSourceInputsRecognized: false,
-    expressionReceiptNoClaimsPreserved: true,
-    expressionPortEvidenceComplete: false,
-    expressionPortMismatch: false,
-    expressionPortPartial: false,
-    expressionPortFirstFailedCoordinate: "WAITING_EXPRESSION_PACKET",
-    expressionPortRecommendedNextFile: EXPRESSION_PORT_FILE,
-    lastExpressionPacket: null,
-    lastReceiptPacket: null,
-    lastExpressionPortReceipt: null,
-
     f13CanvasReadinessObserved: false,
     f13VisibleEvidenceAvailable: false,
     f13InspectEvidenceAvailable: false,
@@ -303,7 +302,7 @@
     f13CanvasEvidenceDegraded: false,
     f13CanvasEvidenceComplete: false,
     f13HardFail: false,
-    f13StrictEvidenceGap: "WAITING_ROUTE_CONDUCTOR_V9_3_OR_ACCEPTED_LINEAGE_RECOGNITION",
+    f13StrictEvidenceGap: "WAITING_ROUTE_CONDUCTOR_V9_3_RECOGNITION",
     f13StrictEvidenceRepairTarget: ROUTE_FILE,
 
     structuralCarrierReady: true,
@@ -314,17 +313,18 @@
     routeConductorNotifyMethod: "NONE",
     routeConductorNotificationError: "",
 
-    firstFailedCoordinate: "WAITING_ROUTE_CONDUCTOR_V9_3_OR_ACCEPTED_LINEAGE_RECOGNITION",
+    firstFailedCoordinate: "WAITING_ROUTE_CONDUCTOR_V9_3_RECOGNITION",
     recommendedNextFile: ROUTE_FILE,
     recommendedNextRenewalTarget: ROUTE_FILE,
     canvasNextAuditTarget: ROUTE_FILE,
-    postgameStatus: "CANVAS_LOCAL_STATION_WAITING_ROUTE_CONDUCTOR_V9_3_OR_ACCEPTED_LINEAGE_RECOGNITION",
+    postgameStatus: "CANVAS_LOCAL_STATION_WAITING_ROUTE_CONDUCTOR_V9_3_RECOGNITION",
 
     lastEastDispatchPacket: null,
     lastEastReceipt: null,
     lastWestReceipt: null,
     lastSouthReceipt: null,
     lastCanvasStationSummary: null,
+    lastDiagnosticBridgeSummary: null,
     lastRouteConductorAuthorityReceipt: null,
     lastChildPacket: null,
     childPackets: [],
@@ -389,7 +389,6 @@
 
   function clonePlain(value) {
     if (!isObject(value) && !Array.isArray(value)) return value;
-
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
@@ -494,7 +493,9 @@
       "readStructuralCarrier",
       "getStructuralCarrier",
       "getCanvasCarrier",
-      "getStatus"
+      "getStatus",
+      "getReport",
+      "getState"
     ];
 
     for (const method of methods) {
@@ -519,51 +520,41 @@
     return null;
   }
 
-  function routeConductorPairClass(contract, receipt) {
-    if (contract === CURRENT_ROUTE_CONDUCTOR_CONTRACT && receipt === CURRENT_ROUTE_CONDUCTOR_RECEIPT) {
-      return "CURRENT_V9_3";
-    }
-
-    if (contract === LINEAGE_ROUTE_CONDUCTOR_CONTRACT && receipt === LINEAGE_ROUTE_CONDUCTOR_RECEIPT) {
-      return "ACCEPTED_LINEAGE_V9_2";
-    }
-
-    return "UNRECOGNIZED";
-  }
-
-  function isAcceptedRouteConductorPair(contract, receipt) {
-    const cls = routeConductorPairClass(contract, receipt);
-    return cls === "CURRENT_V9_3" || cls === "ACCEPTED_LINEAGE_V9_2";
-  }
-
-  function readRouteConductorAuthorityAliases() {
+  function readCurrentRouteConductorAuthorityAliases() {
     return [
-      ["HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR", readPath("HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR")],
-      ["HEARTH.routeConductorNorthStarCompletionCycleGovernor", readPath("HEARTH.routeConductorNorthStarCompletionCycleGovernor")],
-      ["DEXTER_LAB.hearthRouteConductorNorthStarCompletionCycleGovernor", readPath("DEXTER_LAB.hearthRouteConductorNorthStarCompletionCycleGovernor")],
       ["HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR", readPath("HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR")],
       ["HEARTH.routeConductorControlOwnershipPassiveWatchdogRepair", readPath("HEARTH.routeConductorControlOwnershipPassiveWatchdogRepair")],
       ["DEXTER_LAB.hearthRouteConductorControlOwnershipPassiveWatchdogRepair", readPath("DEXTER_LAB.hearthRouteConductorControlOwnershipPassiveWatchdogRepair")],
+      ["HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR", readPath("HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR")],
+      ["HEARTH.routeConductorNorthStarCompletionCycleGovernor", readPath("HEARTH.routeConductorNorthStarCompletionCycleGovernor")],
+      ["DEXTER_LAB.hearthRouteConductorNorthStarCompletionCycleGovernor", readPath("DEXTER_LAB.hearthRouteConductorNorthStarCompletionCycleGovernor")],
+      ["HEARTH_ROUTE_CONDUCTOR", readPath("HEARTH_ROUTE_CONDUCTOR")],
+      ["HEARTH.routeConductor", readPath("HEARTH.routeConductor")],
+      ["DEXTER_LAB.hearthRouteConductor", readPath("DEXTER_LAB.hearthRouteConductor")],
+      ["HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_RECEIPT", readPath("HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_RECEIPT")],
+      ["HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_RECEIPT_v9_3", readPath("HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_RECEIPT_v9_3")],
+      ["HEARTH.routeConductorControlOwnershipPassiveWatchdogRepairReceipt", readPath("HEARTH.routeConductorControlOwnershipPassiveWatchdogRepairReceipt")],
+      ["DEXTER_LAB.hearthRouteConductorControlOwnershipPassiveWatchdogRepairReceipt", readPath("DEXTER_LAB.hearthRouteConductorControlOwnershipPassiveWatchdogRepairReceipt")],
+      ["HEARTH_ROUTE_CONDUCTOR_RECEIPT", readPath("HEARTH_ROUTE_CONDUCTOR_RECEIPT")],
+      ["HEARTH.routeConductorReceipt", readPath("HEARTH.routeConductorReceipt")],
+      ["DEXTER_LAB.hearthRouteConductorReceipt", readPath("DEXTER_LAB.hearthRouteConductorReceipt")]
+    ];
+  }
+
+  function readRouteConductorLineageAliases() {
+    return [
       ["HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_RECEIPT", readPath("HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_RECEIPT")],
       ["HEARTH.routeConductorNorthStarCompletionCycleGovernorReceipt", readPath("HEARTH.routeConductorNorthStarCompletionCycleGovernorReceipt")],
-      ["DEXTER_LAB.hearthRouteConductorNorthStarCompletionCycleGovernorReceipt", readPath("DEXTER_LAB.hearthRouteConductorNorthStarCompletionCycleGovernorReceipt")],
-      ["HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_RECEIPT", readPath("HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_RECEIPT")],
-      ["HEARTH.routeConductorControlOwnershipPassiveWatchdogRepairReceipt", readPath("HEARTH.routeConductorControlOwnershipPassiveWatchdogRepairReceipt")],
-      ["DEXTER_LAB.hearthRouteConductorControlOwnershipPassiveWatchdogRepairReceipt", readPath("DEXTER_LAB.hearthRouteConductorControlOwnershipPassiveWatchdogRepairReceipt")]
+      ["DEXTER_LAB.hearthRouteConductorNorthStarCompletionCycleGovernorReceipt", readPath("DEXTER_LAB.hearthRouteConductorNorthStarCompletionCycleGovernorReceipt")]
     ];
   }
 
   function readRouteConductorFallbackAliases() {
     return [
-      ["HEARTH_ROUTE_CONDUCTOR", readPath("HEARTH_ROUTE_CONDUCTOR")],
-      ["HEARTH.routeConductor", readPath("HEARTH.routeConductor")],
-      ["DEXTER_LAB.hearthRouteConductor", readPath("DEXTER_LAB.hearthRouteConductor")],
       ["HEARTH_SOUTH_ROUTE_CONDUCTOR", readPath("HEARTH_SOUTH_ROUTE_CONDUCTOR")],
       ["HEARTH.southRouteConductor", readPath("HEARTH.southRouteConductor")],
       ["DEXTER_LAB.hearthSouthRouteConductor", readPath("DEXTER_LAB.hearthSouthRouteConductor")],
-      ["HEARTH_ROUTE_CONDUCTOR_RECEIPT", readPath("HEARTH_ROUTE_CONDUCTOR_RECEIPT")],
       ["HEARTH_SOUTH_ROUTE_CONDUCTOR_RECEIPT", readPath("HEARTH_SOUTH_ROUTE_CONDUCTOR_RECEIPT")],
-      ["HEARTH_ROUTE_CONDUCTOR_PRIMARY_GATE_RECEIPT", readPath("HEARTH_ROUTE_CONDUCTOR_PRIMARY_GATE_RECEIPT")],
       ["HEARTH_ROUTE_CONDUCTOR_CENTRAL_STATION_SWITCHBOARD_WEST_V4_2_SOUTH_OUTPUT_ALIGNMENT", readPath("HEARTH_ROUTE_CONDUCTOR_CENTRAL_STATION_SWITCHBOARD_WEST_V4_2_SOUTH_OUTPUT_ALIGNMENT")],
       ["HEARTH.routeConductorCentralStationSwitchboardWestV42SouthOutputAlignment", readPath("HEARTH.routeConductorCentralStationSwitchboardWestV42SouthOutputAlignment")],
       ["DEXTER_LAB.hearthRouteConductorCentralStationSwitchboardWestV42SouthOutputAlignment", readPath("DEXTER_LAB.hearthRouteConductorCentralStationSwitchboardWestV42SouthOutputAlignment")]
@@ -592,6 +583,14 @@
     return { contract, receipt, body: receiptBody };
   }
 
+  function isCurrentRouteConductorPair(contract, receipt) {
+    return contract === CURRENT_ROUTE_CONDUCTOR_CONTRACT && receipt === CURRENT_ROUTE_CONDUCTOR_RECEIPT;
+  }
+
+  function isLineageRouteConductorPair(contract, receipt) {
+    return contract === LINEAGE_ROUTE_CONDUCTOR_CONTRACT && receipt === LINEAGE_ROUTE_CONDUCTOR_RECEIPT;
+  }
+
   function isAuthorityObject(candidate) {
     return Boolean(
       isObject(candidate) &&
@@ -600,8 +599,6 @@
         isFunction(candidate.getReleasePacket) ||
         isFunction(candidate.getCanvasHandoffPacket) ||
         isFunction(candidate.getHandoffPacket) ||
-        isFunction(candidate.getRoutePrimaryGateReceipt) ||
-        isFunction(candidate.getRouteCycleReceipt) ||
         isFunction(candidate.getReceipt) ||
         isFunction(candidate.getReceiptLight)
       )
@@ -609,21 +606,21 @@
   }
 
   function readRouteConductorProfile(_input = {}) {
-    const authorityAliases = readRouteConductorAuthorityAliases();
+    const currentAliases = readCurrentRouteConductorAuthorityAliases();
+    const lineageAliases = readRouteConductorLineageAliases();
     const fallbackAliases = readRouteConductorFallbackAliases();
 
     let observed = false;
     let contract = "";
     let receipt = "";
-    let recognized = false;
-    let currentV9_3 = false;
-    let lineageV9_2 = false;
+    let currentRecognized = false;
+    let lineageObserved = false;
     let sourceAlias = "NONE";
     let sourceMethod = "NONE";
     let authorityObject = null;
     let authorityReceipt = null;
 
-    for (const [alias, candidate] of authorityAliases) {
+    for (const [alias, candidate] of currentAliases) {
       if (!candidate) continue;
 
       observed = true;
@@ -632,18 +629,30 @@
       if (!contract && pair.contract) contract = pair.contract;
       if (!receipt && pair.receipt) receipt = pair.receipt;
 
-      const cls = routeConductorPairClass(pair.contract, pair.receipt);
-
-      if (cls === "CURRENT_V9_3" || cls === "ACCEPTED_LINEAGE_V9_2") {
-        recognized = true;
-        currentV9_3 = cls === "CURRENT_V9_3";
-        lineageV9_2 = cls === "ACCEPTED_LINEAGE_V9_2";
+      if (isCurrentRouteConductorPair(pair.contract, pair.receipt)) {
+        currentRecognized = true;
         sourceAlias = alias;
-        sourceMethod = cls === "CURRENT_V9_3"
-          ? "CURRENT_V9_3_AUTHORITY_ALIAS"
-          : "ACCEPTED_LINEAGE_V9_2_AUTHORITY_ALIAS";
+        sourceMethod = "CURRENT_V9_3_AUTHORITY_ALIAS";
         authorityObject = isAuthorityObject(candidate) ? candidate : null;
         authorityReceipt = clonePlain(pair.body || candidate);
+        break;
+      }
+    }
+
+    for (const [alias, candidate] of lineageAliases) {
+      if (!candidate) continue;
+
+      const pair = readContractReceiptPair(candidate);
+      if (isLineageRouteConductorPair(pair.contract, pair.receipt)) {
+        lineageObserved = true;
+        if (!observed) {
+          observed = true;
+          contract = pair.contract;
+          receipt = pair.receipt;
+          sourceAlias = alias;
+          sourceMethod = "LINEAGE_V9_2_OBSERVATION_ONLY";
+          authorityReceipt = clonePlain(pair.body || candidate);
+        }
         break;
       }
     }
@@ -659,6 +668,7 @@
       if (!fallbackContract && pair.contract) fallbackContract = pair.contract;
       if (!fallbackReceipt && pair.receipt) fallbackReceipt = pair.receipt;
       if (fallbackAlias === "NONE" && (pair.contract || pair.receipt)) fallbackAlias = alias;
+
       if (!observed) observed = true;
     }
 
@@ -674,13 +684,22 @@
       "routeConductorReceipt"
     ], ""), "");
 
+    if (isCurrentRouteConductorPair(observedDatasetContract, observedDatasetReceipt)) {
+      observed = true;
+      if (!currentRecognized) {
+        contract = observedDatasetContract;
+        receipt = observedDatasetReceipt;
+      }
+    }
+
     state.routeConductorObserved = observed;
     state.routeConductorContractKnown = Boolean(contract);
     state.routeConductorContract = contract;
     state.routeConductorReceipt = receipt;
-    state.routeConductorContractRecognized = recognized;
-    state.routeConductorCurrentV9_3Recognized = currentV9_3;
-    state.routeConductorAcceptedLineageV9_2Recognized = lineageV9_2;
+    state.routeConductorContractRecognized = currentRecognized;
+    state.routeConductorCurrentV9_3Recognized = currentRecognized;
+    state.routeConductorLineageV9_2Observed = lineageObserved;
+    state.routeConductorLineageV9_2AuthorityAccepted = false;
     state.routeConductorAuthoritySourceAlias = sourceAlias;
     state.routeConductorAuthoritySourceMethod = sourceMethod;
     state.lastRouteConductorAuthorityReceipt = authorityReceipt;
@@ -696,9 +715,10 @@
       contractKnown: Boolean(contract),
       contract,
       receipt,
-      contractRecognized: recognized,
-      routeConductorCurrentV9_3Recognized: currentV9_3,
-      routeConductorAcceptedLineageV9_2Recognized: lineageV9_2,
+      contractRecognized: currentRecognized,
+      routeConductorCurrentV9_3Recognized: currentRecognized,
+      routeConductorLineageV9_2Observed: lineageObserved,
+      routeConductorLineageV9_2AuthorityAccepted: false,
       authoritySourceAlias: sourceAlias,
       authoritySourceMethod: sourceMethod,
       authorityObject,
@@ -797,18 +817,6 @@
     return null;
   }
 
-  function sourceForRecognizedRouteConductor() {
-    if (state.routeConductorCurrentV9_3Recognized) return RELEASE_SOURCE.ROUTE_CONDUCTOR_CURRENT_V9_3_API;
-    if (state.routeConductorAcceptedLineageV9_2Recognized) return RELEASE_SOURCE.ROUTE_CONDUCTOR_ACCEPTED_LINEAGE_V9_2_API;
-    return RELEASE_SOURCE.NONE;
-  }
-
-  function receiptSourceForRecognizedRouteConductor() {
-    if (state.routeConductorCurrentV9_3Recognized) return RELEASE_SOURCE.ROUTE_CONDUCTOR_CURRENT_V9_3_RECEIPT;
-    if (state.routeConductorAcceptedLineageV9_2Recognized) return RELEASE_SOURCE.ROUTE_CONDUCTOR_ACCEPTED_LINEAGE_V9_2_RECEIPT;
-    return RELEASE_SOURCE.NONE;
-  }
-
   function markAuthorityReleasePacket(packet, source, method) {
     state.releasePacketObserved = Boolean(packet);
     state.acceptedReleaseSource = packet ? source : RELEASE_SOURCE.NONE;
@@ -823,7 +831,7 @@
     state.candidateReleasePacket = packet ? clonePlain(packet) : null;
     state.candidateReleaseIntakeMethod = packet ? method : "NONE";
     state.releasePacketObserved = Boolean(packet);
-    state.acceptedReleaseSource = RELEASE_SOURCE.NONE;
+    state.acceptedReleaseSource = source || RELEASE_SOURCE.NONE;
     state.releasePacketAuthoritySource = source || RELEASE_SOURCE.NONE;
     state.releasePacketIntakeMethod = packet ? method : "NONE";
     state.routeConductorReleasePacket = packet ? clonePlain(packet) : null;
@@ -839,80 +847,18 @@
 
   function readDatasetPacketObservation() {
     const fieldMap = {
-      routeConductorContract: [
-        "routeConductorContract",
-        "hearthRouteConductorContract",
-        "hearthSouthRouteConductorContract"
-      ],
-      routeConductorReceipt: [
-        "routeConductorReceipt",
-        "hearthRouteConductorReceipt",
-        "hearthSouthRouteConductorReceipt"
-      ],
-      canvasReleaseAuthorized: [
-        "canvasReleaseAuthorized",
-        "hearthCanvasReleaseAuthorized",
-        "hearthSouthCanvasReleaseAuthorized",
-        "hearthRouteConductorCanvasReleaseAuthorized"
-      ],
-      canvasReleasePacketReady: [
-        "canvasReleasePacketReady",
-        "hearthCanvasReleasePacketReady",
-        "hearthSouthCanvasReleasePacketReady",
-        "hearthRouteConductorCanvasReleasePacketReady"
-      ],
-      westCanvasReleaseApproved: [
-        "westCanvasReleaseApproved",
-        "hearthWestCanvasReleaseApproved",
-        "hearthSouthWestCanvasReleaseApproved",
-        "hearthRouteConductorWestCanvasReleaseApproved"
-      ],
-      westHardBlock: [
-        "westHardBlock",
-        "hearthWestHardBlock",
-        "hearthSouthWestHardBlock",
-        "hearthRouteConductorWestHardBlock"
-      ],
-      carrierHostAdmissibilityReady: [
-        "carrierHostAdmissibilityReady",
-        "hearthCarrierHostAdmissibilityReady",
-        "hearthSouthCarrierHostAdmissibilityReady",
-        "hearthRouteConductorCarrierHostAdmissibilityReady"
-      ],
-      indexPairReady: [
-        "indexPairReady",
-        "hearthIndexPairReady",
-        "hearthSouthIndexPairReady",
-        "hearthRouteConductorIndexPairReady"
-      ],
-      handoffTo: [
-        "handoffTo",
-        "hearthHandoffTo",
-        "hearthSouthHandoffTo",
-        "hearthRouteConductorHandoffTo"
-      ],
-      destinationFile: [
-        "destinationFile",
-        "targetFile",
-        "hearthDestinationFile",
-        "hearthTargetFile",
-        "hearthSouthDestinationFile",
-        "hearthSouthTargetFile",
-        "hearthRouteConductorDestinationFile",
-        "hearthRouteConductorTargetFile"
-      ],
-      cycleNumber: [
-        "cycleNumber",
-        "hearthCycleNumber",
-        "hearthSouthCycleNumber",
-        "hearthRouteConductorCycleNumber"
-      ],
-      cycleRoute: [
-        "cycleRoute",
-        "hearthCycleRoute",
-        "hearthSouthCycleRoute",
-        "hearthRouteConductorCycleRoute"
-      ]
+      routeConductorContract: ["routeConductorContract", "hearthRouteConductorContract", "hearthSouthRouteConductorContract"],
+      routeConductorReceipt: ["routeConductorReceipt", "hearthRouteConductorReceipt", "hearthSouthRouteConductorReceipt"],
+      canvasReleaseAuthorized: ["canvasReleaseAuthorized", "hearthCanvasReleaseAuthorized", "hearthSouthCanvasReleaseAuthorized", "hearthRouteConductorCanvasReleaseAuthorized"],
+      canvasReleasePacketReady: ["canvasReleasePacketReady", "hearthCanvasReleasePacketReady", "hearthSouthCanvasReleasePacketReady", "hearthRouteConductorCanvasReleasePacketReady"],
+      westCanvasReleaseApproved: ["westCanvasReleaseApproved", "hearthWestCanvasReleaseApproved", "hearthSouthWestCanvasReleaseApproved", "hearthRouteConductorWestCanvasReleaseApproved"],
+      westHardBlock: ["westHardBlock", "hearthWestHardBlock", "hearthSouthWestHardBlock", "hearthRouteConductorWestHardBlock"],
+      carrierHostAdmissibilityReady: ["carrierHostAdmissibilityReady", "hearthCarrierHostAdmissibilityReady", "hearthSouthCarrierHostAdmissibilityReady", "hearthRouteConductorCarrierHostAdmissibilityReady"],
+      indexPairReady: ["indexPairReady", "hearthIndexPairReady", "hearthSouthIndexPairReady", "hearthRouteConductorIndexPairReady"],
+      handoffTo: ["handoffTo", "hearthHandoffTo", "hearthSouthHandoffTo", "hearthRouteConductorHandoffTo"],
+      destinationFile: ["destinationFile", "targetFile", "hearthDestinationFile", "hearthTargetFile", "hearthSouthDestinationFile", "hearthSouthTargetFile", "hearthRouteConductorDestinationFile", "hearthRouteConductorTargetFile"],
+      cycleNumber: ["cycleNumber", "hearthCycleNumber", "hearthSouthCycleNumber", "hearthRouteConductorCycleNumber"],
+      cycleRoute: ["cycleRoute", "hearthCycleRoute", "hearthSouthCycleRoute", "hearthRouteConductorCycleRoute"]
     };
 
     const packet = { source: "DOCUMENT_DATASET_RELEASE_OBSERVATION_ONLY" };
@@ -939,6 +885,7 @@
   function readGlobalReleaseObservation() {
     const globalSources = [
       readPath("HEARTH.canvasReleasePacket"),
+      readPath("HEARTH.routeConductorCanvasReleasePacket"),
       readPath("HEARTH.routeConductorReleasePacket"),
       readPath("HEARTH.southRouteConductorReleasePacket"),
       readPath("HEARTH.canvasParentReleasePacket"),
@@ -948,9 +895,7 @@
       root.HEARTH_ROUTE_CONDUCTOR_CANVAS_RELEASE_PACKET,
       root.HEARTH_SOUTH_ROUTE_CONDUCTOR_CANVAS_RELEASE_PACKET,
       root.HEARTH_ROUTE_CONDUCTOR_RECEIPT,
-      root.HEARTH_SOUTH_ROUTE_CONDUCTOR_RECEIPT,
-      root.HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_RECEIPT,
-      root.HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_RECEIPT_v9_3
+      root.HEARTH_SOUTH_ROUTE_CONDUCTOR_RECEIPT
     ];
 
     for (const source of globalSources) {
@@ -975,7 +920,7 @@
   function readRouteConductorReleasePacket(options = {}) {
     const route = readRouteConductorProfile(options || {});
 
-    if (route.contractRecognized && route.authorityObject) {
+    if (route.routeConductorCurrentV9_3Recognized && route.authorityObject) {
       const methods = [
         "getCanvasReleasePacket",
         "getReleasePacket",
@@ -992,23 +937,15 @@
         const extracted = extractNestedReleasePacket(result);
 
         if (extracted) {
-          return markAuthorityReleasePacket(
-            extracted,
-            sourceForRecognizedRouteConductor(),
-            `${route.authoritySourceMethod}:${method}`
-          );
+          return markAuthorityReleasePacket(extracted, RELEASE_SOURCE.ROUTE_CONDUCTOR_CURRENT_V9_3_API, `ROUTE_CONDUCTOR_V9_3_API:${method}`);
         }
       }
     }
 
-    if (route.contractRecognized && route.authorityReceipt) {
+    if (route.routeConductorCurrentV9_3Recognized && route.authorityReceipt) {
       const extracted = extractNestedReleasePacket(route.authorityReceipt);
       if (extracted) {
-        return markAuthorityReleasePacket(
-          extracted,
-          receiptSourceForRecognizedRouteConductor(),
-          `${route.authoritySourceMethod}:RECEIPT_ALIAS`
-        );
+        return markAuthorityReleasePacket(extracted, RELEASE_SOURCE.ROUTE_CONDUCTOR_CURRENT_V9_3_RECEIPT, "ROUTE_CONDUCTOR_V9_3_RECEIPT_ALIAS");
       }
     }
 
@@ -1054,11 +991,11 @@
 
   function validationFailureToCoordinate(failure) {
     const map = {
-      ROUTE_CONDUCTOR_V9_3_OR_LINEAGE_NOT_RECOGNIZED: "WAITING_ROUTE_CONDUCTOR_V9_3_OR_ACCEPTED_LINEAGE_RECOGNITION",
+      ROUTE_CONDUCTOR_V9_3_NOT_RECOGNIZED: "WAITING_ROUTE_CONDUCTOR_V9_3_RECOGNITION",
       RELEASE_PACKET_MISSING: "WAITING_ROUTE_CONDUCTOR_RELEASE_PACKET",
       releaseSource: "WAITING_CURRENT_ROUTE_CONDUCTOR_RELEASE_AUTHORITY",
-      routeConductorContract: "WAITING_ROUTE_CONDUCTOR_CURRENT_OR_LINEAGE_RELEASE_CONTRACT",
-      routeConductorReceipt: "WAITING_ROUTE_CONDUCTOR_CURRENT_OR_LINEAGE_RELEASE_RECEIPT",
+      routeConductorContract: "WAITING_ROUTE_CONDUCTOR_V9_3_RELEASE_CONTRACT",
+      routeConductorReceipt: "WAITING_ROUTE_CONDUCTOR_V9_3_RELEASE_RECEIPT",
       canvasReleaseAuthorized: "WAITING_CANVAS_RELEASE_AUTHORIZATION",
       canvasReleasePacketReady: "WAITING_CANVAS_RELEASE_PACKET_READY",
       westCanvasReleaseApproved: "WAITING_WEST_CANVAS_RELEASE_APPROVAL",
@@ -1074,45 +1011,57 @@
     return map[failure] || "WAITING_VALID_ROUTE_CONDUCTOR_RELEASE_PACKET";
   }
 
-  function sourceCanBeAccepted(source) {
-    return (
+  function sourceCanBeAccepted(source, packet) {
+    if (
       source === RELEASE_SOURCE.ROUTE_CONDUCTOR_CURRENT_V9_3_API ||
-      source === RELEASE_SOURCE.ROUTE_CONDUCTOR_CURRENT_V9_3_RECEIPT ||
-      source === RELEASE_SOURCE.ROUTE_CONDUCTOR_ACCEPTED_LINEAGE_V9_2_API ||
-      source === RELEASE_SOURCE.ROUTE_CONDUCTOR_ACCEPTED_LINEAGE_V9_2_RECEIPT
-    );
+      source === RELEASE_SOURCE.ROUTE_CONDUCTOR_CURRENT_V9_3_RECEIPT
+    ) {
+      return true;
+    }
+
+    if (
+      source === RELEASE_SOURCE.DIRECT_ROUTE_CONDUCTOR_CANDIDATE ||
+      source === RELEASE_SOURCE.OPTIONS_TEST
+    ) {
+      return Boolean(
+        state.routeConductorCurrentV9_3Recognized &&
+        isObject(packet) &&
+        packet.routeConductorContract === CURRENT_ROUTE_CONDUCTOR_CONTRACT &&
+        packet.routeConductorReceipt === CURRENT_ROUTE_CONDUCTOR_RECEIPT
+      );
+    }
+
+    return false;
   }
 
   function validateReleasePacket(packet) {
     const failures = [];
 
-    if (!state.routeConductorContractRecognized) {
-      failures.push("ROUTE_CONDUCTOR_V9_3_OR_LINEAGE_NOT_RECOGNIZED");
+    if (!state.routeConductorCurrentV9_3Recognized) {
+      failures.push("ROUTE_CONDUCTOR_V9_3_NOT_RECOGNIZED");
     }
 
     if (!isObject(packet)) {
       failures.push("RELEASE_PACKET_MISSING");
     } else {
-      if (!sourceCanBeAccepted(state.acceptedReleaseSource)) failures.push("releaseSource");
-      if (!isAcceptedRouteConductorPair(packet.routeConductorContract, packet.routeConductorReceipt)) {
-        failures.push("routeConductorContract");
-        failures.push("routeConductorReceipt");
-      }
+      if (!sourceCanBeAccepted(state.acceptedReleaseSource, packet)) failures.push("releaseSource");
+      if (packet.routeConductorContract !== REQUIRED_RELEASE.routeConductorContract) failures.push("routeConductorContract");
+      if (packet.routeConductorReceipt !== REQUIRED_RELEASE.routeConductorReceipt) failures.push("routeConductorReceipt");
       if (packet.canvasReleaseAuthorized !== true) failures.push("canvasReleaseAuthorized");
       if (packet.canvasReleasePacketReady !== true) failures.push("canvasReleasePacketReady");
       if (packet.westCanvasReleaseApproved !== true) failures.push("westCanvasReleaseApproved");
       if (packet.westHardBlock !== false) failures.push("westHardBlock");
       if (packet.carrierHostAdmissibilityReady !== true) failures.push("carrierHostAdmissibilityReady");
       if (packet.indexPairReady !== true) failures.push("indexPairReady");
-      if (!sameText(packet.handoffTo, "CANVAS")) failures.push("handoffTo");
-      if (!sameText(packet.destinationFile, TARGET_FILE)) failures.push("destinationFile");
-      if (safeNumber(packet.cycleNumber, 0) !== 2) failures.push("cycleNumber");
-      if (!sameText(packet.cycleRoute, CYCLE_2_ROUTE)) failures.push("cycleRoute");
+      if (!sameText(packet.handoffTo, REQUIRED_RELEASE.handoffTo)) failures.push("handoffTo");
+      if (!sameText(packet.destinationFile, REQUIRED_RELEASE.destinationFile)) failures.push("destinationFile");
+      if (safeNumber(packet.cycleNumber, 0) !== REQUIRED_RELEASE.cycleNumber) failures.push("cycleNumber");
+      if (!sameText(packet.cycleRoute, REQUIRED_RELEASE.cycleRoute)) failures.push("cycleRoute");
     }
 
-    state.releaseValidationFailures = Array.from(new Set(failures));
-    state.firstReleaseValidationFailure = state.releaseValidationFailures[0] || "";
-    state.releasePacketValid = state.releaseValidationFailures.length === 0;
+    state.releaseValidationFailures = failures.slice();
+    state.firstReleaseValidationFailure = failures[0] || "";
+    state.releasePacketValid = failures.length === 0;
     state.routeConductorReleasePacketValid = state.releasePacketValid;
 
     return state.releasePacketValid;
@@ -1153,10 +1102,10 @@
   }
 
   function acceptRelease(packet) {
-    if (!state.routeConductorContractRecognized) {
+    if (!state.routeConductorCurrentV9_3Recognized) {
       return clearReleaseAcceptance(
-        "WAITING_ROUTE_CONDUCTOR_V9_3_OR_ACCEPTED_LINEAGE_RECOGNITION",
-        "WAITING_ROUTE_CONDUCTOR_V9_3_OR_ACCEPTED_LINEAGE_RECOGNITION",
+        "WAITING_ROUTE_CONDUCTOR_V9_3_RECOGNITION",
+        "WAITING_ROUTE_CONDUCTOR_V9_3_RECOGNITION",
         ROUTE_FILE
       );
     }
@@ -1169,7 +1118,7 @@
       );
     }
 
-    if (!sourceCanBeAccepted(state.acceptedReleaseSource)) {
+    if (!sourceCanBeAccepted(state.acceptedReleaseSource, packet)) {
       return clearReleaseAcceptance(
         "WAITING_CURRENT_ROUTE_CONDUCTOR_RELEASE_AUTHORITY",
         "WAITING_CURRENT_ROUTE_CONDUCTOR_RELEASE_AUTHORITY",
@@ -1208,7 +1157,7 @@
 
   function refreshParentReleaseGateMarkers() {
     const ready = Boolean(
-      state.routeConductorContractRecognized &&
+      state.routeConductorCurrentV9_3Recognized &&
       state.routeConductorReleaseAuthorityAccepted &&
       state.releasePacketObserved &&
       state.releasePacketValid &&
@@ -1227,349 +1176,9 @@
     return ready;
   }
 
-  function packetHasFinalClaim(packet) {
-    if (!isObject(packet)) return false;
-
-    return Boolean(
-      packet.finalPageProof === true ||
-      packet.finalRouteProof === true ||
-      packet.finalVisualPass === true ||
-      packet.visualPassClaimed === true ||
-      packet.readyTextAllowed === true ||
-      packet.f21EligibleForNorth === true ||
-      packet.f21SubmittedToNorth === true ||
-      packet.f21ClaimedByCanvasParent === true ||
-      packet.completionLatched === true ||
-      packet.finalCompletionLatched === true ||
-      packet.degradedCompletionLatched === true ||
-      upperText(packet.proofScope).includes("FINAL") ||
-      upperText(packet.scope).includes("FINAL") ||
-      upperText(packet.claimScope).includes("FINAL")
-    );
-  }
-
-  function noClaimsPreserved(packet) {
-    if (!isObject(packet)) return true;
-    return !packetHasFinalClaim(packet);
-  }
-
-  function normalizeExpressionPacket(packet) {
-    if (!isObject(packet)) return null;
-
-    const normalized = {
-      packetType: safeString(packet.packetType || EXPRESSION_PACKET_TYPE),
-      fingerRole: safeString(packet.fingerRole || packet.childRole || packet.sourceRole || packet.role || ""),
-      contract: safeString(packet.contract || packet.CONTRACT || ""),
-      file: safeString(packet.file || packet.sourceFile || ""),
-      targetCanvasParent: safeString(packet.targetCanvasParent || TARGET_FILE),
-      expressionType: safeString(packet.expressionType || packet.type || ""),
-      expressionVersion: safeString(packet.expressionVersion || packet.version || ""),
-      gridScope: safeString(packet.gridScope || packet.scope || ""),
-      coordinateSystem: safeString(packet.coordinateSystem || ""),
-      payload: isObject(packet.payload) ? clonePlain(packet.payload) : {},
-      canvasConsumable: safeBool(packet.canvasConsumable, false),
-      expressionComplete: safeBool(packet.expressionComplete, false),
-      firstFailedCoordinate: safeString(packet.firstFailedCoordinate || ""),
-      recommendedNextFile: safeString(packet.recommendedNextFile || ""),
-      noClaimsPreserved: noClaimsPreserved(packet),
-      original: clonePlain(packet)
-    };
-
-    return normalized;
-  }
-
-  function normalizeReceiptPacket(packet) {
-    if (!isObject(packet)) return null;
-
-    const noClaims = isObject(packet.noClaims) ? packet.noClaims : {};
-
-    const normalized = {
-      packetType: safeString(packet.packetType || RECEIPT_PACKET_TYPE),
-      contract: safeString(packet.contract || packet.CONTRACT || ""),
-      receipt: safeString(packet.receipt || packet.RECEIPT || ""),
-      file: safeString(packet.file || packet.sourceFile || ""),
-      fingerRole: safeString(packet.fingerRole || packet.childRole || packet.sourceRole || packet.role || ""),
-      expressionComplete: safeBool(packet.expressionComplete, false),
-      canvasConsumable: safeBool(packet.canvasConsumable, false),
-      sourceInputsRecognized: safeBool(packet.sourceInputsRecognized, false),
-      outputShapeValid: safeBool(packet.outputShapeValid, false),
-      downstreamSafe: safeBool(packet.downstreamSafe, false),
-      firstFailedCoordinate: safeString(packet.firstFailedCoordinate || ""),
-      recommendedNextFile: safeString(packet.recommendedNextFile || ""),
-      noClaims: {
-        f13Claimed: safeBool(noClaims.f13Claimed, false),
-        f21Claimed: safeBool(noClaims.f21Claimed, false),
-        readyTextClaimed: safeBool(noClaims.readyTextClaimed, false),
-        visualPassClaimed: safeBool(noClaims.visualPassClaimed, false),
-        generatedImage: safeBool(noClaims.generatedImage, false),
-        graphicBox: safeBool(noClaims.graphicBox, false),
-        webGL: safeBool(noClaims.webGL, false)
-      },
-      noClaimsPreserved: noClaimsPreserved(packet) &&
-        safeBool(noClaims.f13Claimed, false) === false &&
-        safeBool(noClaims.f21Claimed, false) === false &&
-        safeBool(noClaims.readyTextClaimed, false) === false &&
-        safeBool(noClaims.visualPassClaimed, false) === false &&
-        safeBool(noClaims.generatedImage, false) === false &&
-        safeBool(noClaims.graphicBox, false) === false &&
-        safeBool(noClaims.webGL, false) === false,
-      original: clonePlain(packet)
-    };
-
-    return normalized;
-  }
-
-  function recomputeExpressionPortState() {
-    const expression = state.lastExpressionPacket;
-    const receipt = state.lastReceiptPacket;
-
-    state.expressionPacketPresent = isObject(expression);
-    state.receiptPacketPresent = isObject(receipt);
-
-    state.expressionAndReceiptSeparated = Boolean(
-      state.expressionPacketPresent &&
-      state.receiptPacketPresent &&
-      expression.packetType !== receipt.packetType
-    );
-
-    state.expressionPacketAccepted = Boolean(
-      state.expressionPacketPresent &&
-      expression.packetType === EXPRESSION_PACKET_TYPE &&
-      expression.targetCanvasParent === TARGET_FILE &&
-      expression.noClaimsPreserved
-    );
-
-    state.receiptPacketAccepted = Boolean(
-      state.receiptPacketPresent &&
-      receipt.packetType === RECEIPT_PACKET_TYPE &&
-      receipt.noClaimsPreserved
-    );
-
-    state.expressionPacketSourceFile = expression ? expression.file : "";
-    state.receiptPacketSourceFile = receipt ? receipt.file : "";
-    state.expressionFingerRole = expression ? expression.fingerRole : "";
-    state.receiptFingerRole = receipt ? receipt.fingerRole : "";
-    state.expressionType = expression ? expression.expressionType : "";
-    state.expressionVersion = expression ? expression.expressionVersion : "";
-    state.expressionGridScope = expression ? expression.gridScope : "";
-    state.expressionCoordinateSystem = expression ? expression.coordinateSystem : "";
-
-    state.expressionCanvasConsumable = Boolean(expression && expression.canvasConsumable);
-    state.expressionComplete = Boolean(expression && expression.expressionComplete);
-    state.receiptOutputShapeValid = Boolean(receipt && receipt.outputShapeValid);
-    state.receiptDownstreamSafe = Boolean(receipt && receipt.downstreamSafe);
-    state.receiptSourceInputsRecognized = Boolean(receipt && receipt.sourceInputsRecognized);
-    state.expressionReceiptNoClaimsPreserved = Boolean(
-      (!expression || expression.noClaimsPreserved) &&
-      (!receipt || receipt.noClaimsPreserved)
-    );
-
-    state.expressionPortEvidenceComplete = Boolean(
-      state.expressionPacketAccepted &&
-      state.receiptPacketAccepted &&
-      state.expressionAndReceiptSeparated &&
-      state.expressionCanvasConsumable &&
-      state.expressionComplete &&
-      state.receiptOutputShapeValid &&
-      state.receiptDownstreamSafe &&
-      state.expressionReceiptNoClaimsPreserved
-    );
-
-    state.expressionPortMismatch = Boolean(
-      state.expressionPacketPresent &&
-      state.receiptPacketPresent &&
-      (
-        !state.expressionAndReceiptSeparated ||
-        state.expressionCanvasConsumable !== Boolean(receipt && receipt.canvasConsumable) ||
-        state.expressionComplete !== Boolean(receipt && receipt.expressionComplete)
-      )
-    );
-
-    state.expressionPortPartial = Boolean(
-      !state.expressionPortEvidenceComplete &&
-      (state.expressionPacketPresent || state.receiptPacketPresent)
-    );
-
-    if (!state.expressionPacketPresent) {
-      state.expressionPortFirstFailedCoordinate = "WAITING_EXPRESSION_PACKET";
-      state.expressionPortRecommendedNextFile = EXPRESSION_PORT_FILE;
-    } else if (!state.receiptPacketPresent) {
-      state.expressionPortFirstFailedCoordinate = "WAITING_RECEIPT_PACKET";
-      state.expressionPortRecommendedNextFile = expression.recommendedNextFile || EXPRESSION_PORT_FILE;
-    } else if (!state.expressionAndReceiptSeparated) {
-      state.expressionPortFirstFailedCoordinate = "WAITING_EXPRESSION_RECEIPT_SEPARATION";
-      state.expressionPortRecommendedNextFile = EXPRESSION_PORT_FILE;
-    } else if (!state.expressionCanvasConsumable) {
-      state.expressionPortFirstFailedCoordinate = expression.firstFailedCoordinate || "WAITING_CANVAS_CONSUMABLE_EXPRESSION";
-      state.expressionPortRecommendedNextFile = expression.recommendedNextFile || expression.file || EXPRESSION_PORT_FILE;
-    } else if (!state.receiptOutputShapeValid) {
-      state.expressionPortFirstFailedCoordinate = receipt.firstFailedCoordinate || "WAITING_RECEIPT_OUTPUT_SHAPE_VALID";
-      state.expressionPortRecommendedNextFile = receipt.recommendedNextFile || receipt.file || EXPRESSION_PORT_FILE;
-    } else if (!state.receiptDownstreamSafe) {
-      state.expressionPortFirstFailedCoordinate = receipt.firstFailedCoordinate || "WAITING_RECEIPT_DOWNSTREAM_SAFE";
-      state.expressionPortRecommendedNextFile = receipt.recommendedNextFile || receipt.file || EXPRESSION_PORT_FILE;
-    } else if (!state.expressionComplete) {
-      state.expressionPortFirstFailedCoordinate = expression.firstFailedCoordinate || "WAITING_EXPRESSION_COMPLETE";
-      state.expressionPortRecommendedNextFile = expression.recommendedNextFile || expression.file || EXPRESSION_PORT_FILE;
-    } else if (!state.expressionReceiptNoClaimsPreserved) {
-      state.expressionPortFirstFailedCoordinate = "EXPRESSION_RECEIPT_NO_CLAIM_BOUNDARY_FAILURE";
-      state.expressionPortRecommendedNextFile = expression.file || receipt.file || EXPRESSION_PORT_FILE;
-    } else {
-      state.expressionPortFirstFailedCoordinate = "NONE_EXPRESSION_PORT_EVIDENCE_COMPLETE";
-      state.expressionPortRecommendedNextFile = FILE;
-    }
-
-    state.lastExpressionPortReceipt = getExpressionPortReceipt();
-    return state.lastExpressionPortReceipt;
-  }
-
-  function receiveExpressionPacket(packet) {
-    const normalized = normalizeExpressionPacket(packet);
-
-    if (!normalized) {
-      record("EXPRESSION_PACKET_REJECTED", { reason: "NOT_OBJECT" });
-      recomputeExpressionPortState();
-      updateDataset();
-      publishGlobals();
-      return getExpressionPortReceipt();
-    }
-
-    state.lastExpressionPacket = clonePlain(normalized);
-    record("EXPRESSION_PACKET_RECEIVED", {
-      file: normalized.file,
-      fingerRole: normalized.fingerRole,
-      expressionType: normalized.expressionType,
-      canvasConsumable: normalized.canvasConsumable,
-      expressionComplete: normalized.expressionComplete,
-      noClaimsPreserved: normalized.noClaimsPreserved
-    });
-
-    recomputeExpressionPortState();
-    recomputeParentState();
-    updateDataset();
-    publishGlobals();
-    notifyRouteConductor();
-
-    return getExpressionPortReceipt();
-  }
-
-  function receiveReceiptPacket(packet) {
-    const normalized = normalizeReceiptPacket(packet);
-
-    if (!normalized) {
-      record("RECEIPT_PACKET_REJECTED", { reason: "NOT_OBJECT" });
-      recomputeExpressionPortState();
-      updateDataset();
-      publishGlobals();
-      return getExpressionPortReceipt();
-    }
-
-    state.lastReceiptPacket = clonePlain(normalized);
-    record("RECEIPT_PACKET_RECEIVED", {
-      file: normalized.file,
-      fingerRole: normalized.fingerRole,
-      canvasConsumable: normalized.canvasConsumable,
-      expressionComplete: normalized.expressionComplete,
-      outputShapeValid: normalized.outputShapeValid,
-      downstreamSafe: normalized.downstreamSafe,
-      noClaimsPreserved: normalized.noClaimsPreserved
-    });
-
-    recomputeExpressionPortState();
-    recomputeParentState();
-    updateDataset();
-    publishGlobals();
-    notifyRouteConductor();
-
-    return getExpressionPortReceipt();
-  }
-
-  function receiveExpressionReceiptPair(input = {}) {
-    if (isObject(input.expressionPacket)) receiveExpressionPacket(input.expressionPacket);
-    if (isObject(input.receiptPacket)) receiveReceiptPacket(input.receiptPacket);
-    return getExpressionPortReceipt();
-  }
-
-  function getExpressionPortState() {
-    recomputeExpressionPortState();
-
-    return {
-      packetType: "HEARTH_CANVAS_EXPRESSION_PORT_STATE",
-      standard: EXPRESSION_PORT_STANDARD,
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      file: FILE,
-      targetCanvasParent: TARGET_FILE,
-
-      expressionPacketPresent: state.expressionPacketPresent,
-      receiptPacketPresent: state.receiptPacketPresent,
-      expressionAndReceiptSeparated: state.expressionAndReceiptSeparated,
-      expressionPacketAccepted: state.expressionPacketAccepted,
-      receiptPacketAccepted: state.receiptPacketAccepted,
-
-      expressionPacketSourceFile: state.expressionPacketSourceFile,
-      receiptPacketSourceFile: state.receiptPacketSourceFile,
-      expressionFingerRole: state.expressionFingerRole,
-      receiptFingerRole: state.receiptFingerRole,
-      expressionType: state.expressionType,
-      expressionVersion: state.expressionVersion,
-      expressionGridScope: state.expressionGridScope,
-      expressionCoordinateSystem: state.expressionCoordinateSystem,
-
-      canvasConsumable: state.expressionCanvasConsumable,
-      expressionComplete: state.expressionComplete,
-      outputShapeValid: state.receiptOutputShapeValid,
-      downstreamSafe: state.receiptDownstreamSafe,
-      sourceInputsRecognized: state.receiptSourceInputsRecognized,
-      noClaimsPreserved: state.expressionReceiptNoClaimsPreserved,
-
-      evidenceComplete: state.expressionPortEvidenceComplete,
-      mismatch: state.expressionPortMismatch,
-      partial: state.expressionPortPartial,
-      firstFailedCoordinate: state.expressionPortFirstFailedCoordinate,
-      recommendedNextFile: state.expressionPortRecommendedNextFile,
-
-      noClaims: {
-        f13Claimed: false,
-        f21Claimed: false,
-        readyTextClaimed: false,
-        visualPassClaimed: false,
-        generatedImage: false,
-        graphicBox: false,
-        webGL: false
-      }
-    };
-  }
-
-  function getExpressionPortReceipt() {
-    return {
-      ...getExpressionPortState(),
-      packetType: "HEARTH_CANVAS_EXPRESSION_PORT_RECEIPT",
-      expressionPacket: clonePlain(state.lastExpressionPacket),
-      receiptPacket: clonePlain(state.lastReceiptPacket)
-    };
-  }
-
-  function getCanvasPortStatus() {
-    const p = getExpressionPortState();
-
-    return {
-      packetType: "DIAGNOSTIC_CANVAS_PORT_STATUS",
-      canvasParentRecognized: true,
-      expressionLanePresent: p.expressionPacketPresent,
-      receiptLanePresent: p.receiptPacketPresent,
-      expressionAndReceiptSeparated: p.expressionAndReceiptSeparated,
-      evidenceComplete: p.evidenceComplete,
-      mismatch: p.mismatch,
-      partial: p.partial,
-      recommendedNextFile: p.recommendedNextFile,
-      noClaimsPreserved: p.noClaimsPreserved
-    };
-  }
-
   function composeEastDispatchPacket() {
     if (!(
-      state.routeConductorContractRecognized &&
+      state.routeConductorCurrentV9_3Recognized &&
       state.routeConductorReleaseAuthorityAccepted &&
       state.releasePacketObserved &&
       state.releasePacketValid &&
@@ -1593,25 +1202,20 @@
       receipt: RECEIPT,
       parentContract: CONTRACT,
       parentReceipt: RECEIPT,
-      parentCompatibilityContract: ROUTE_CONDUCTOR_FACING_CONTRACT,
-      parentCompatibilityReceipt: ROUTE_CONDUCTOR_FACING_RECEIPT,
+      previousParentContract: PREVIOUS_CONTRACT,
       sourceFile: FILE,
       targetFile: EAST_FILE,
       destinationFile: EAST_FILE,
       handoffTo: "EAST",
       receivedFrom: "CANVAS_PARENT",
 
-      routeConductorContract: state.routeConductorContract,
-      routeConductorReceipt: state.routeConductorReceipt,
-      routeConductorCurrentV9_3Recognized: state.routeConductorCurrentV9_3Recognized,
-      routeConductorAcceptedLineageV9_2Recognized: state.routeConductorAcceptedLineageV9_2Recognized,
+      routeConductorContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
+      routeConductorReceipt: CURRENT_ROUTE_CONDUCTOR_RECEIPT,
+      routeConductorCurrentV9_3Recognized: true,
+      routeConductorLineageV9_2Observed: state.routeConductorLineageV9_2Observed,
+      routeConductorLineageV9_2AuthorityAccepted: false,
       routeConductorReleaseAuthorityAccepted: true,
       parentAcceptedRouteConductorRelease: true,
-
-      expressionReceiptPortActive: true,
-      expressionPortEvidenceComplete: state.expressionPortEvidenceComplete,
-      expressionPacketPresent: state.expressionPacketPresent,
-      receiptPacketPresent: state.receiptPacketPresent,
 
       cycleNumber: 2,
       cycleRoute: CYCLE_2_ROUTE,
@@ -1644,6 +1248,10 @@
       f13AtlasBuildRequested: true,
       buildAtlasRequested: true,
 
+      expressionPortBuilt: false,
+      expressionPacketAccepted: false,
+      expressionComplete: false,
+      expressionBridgeHeld: true,
       canvasEastApiReadinessDoesNotRequireAtlasEvidence: true,
       heldEastPacketDoesNotDemoteApiReadiness: true,
       missingMaterialDoesNotDemoteApiReadiness: true,
@@ -1770,6 +1378,26 @@
     return methods.every((method) => isFunction(child[method]));
   }
 
+  function packetHasFinalClaim(packet) {
+    if (!isObject(packet)) return false;
+
+    return Boolean(
+      packet.finalPageProof === true ||
+      packet.finalRouteProof === true ||
+      packet.finalVisualPass === true ||
+      packet.visualPassClaimed === true ||
+      packet.readyTextAllowed === true ||
+      packet.f21EligibleForNorth === true ||
+      packet.f21SubmittedToNorth === true ||
+      packet.completionLatched === true ||
+      packet.finalCompletionLatched === true ||
+      packet.degradedCompletionLatched === true ||
+      upperText(packet.proofScope).includes("FINAL") ||
+      upperText(packet.scope).includes("FINAL") ||
+      upperText(packet.claimScope).includes("FINAL")
+    );
+  }
+
   function hasAtlasEvidence(packet) {
     if (!isObject(packet)) return false;
 
@@ -1825,11 +1453,6 @@
     state.eastResponseObserved = response !== null && response !== undefined;
     state.eastResponseReceived = isObject(response);
     state.eastResponse = isObject(response) ? clonePlain(response) : response;
-
-    if (isObject(response)) {
-      if (response.packetType === EXPRESSION_PACKET_TYPE) receiveExpressionPacket(response);
-      if (response.packetType === RECEIPT_PACKET_TYPE) receiveReceiptPacket(response);
-    }
 
     if (!state.eastObserved || !state.eastApiReady) {
       state.eastResponseClass = EAST_RESULT_CLASS.MISSING_API;
@@ -2168,8 +1791,6 @@
     state.f13CanvasReadinessObserved = Boolean(
       state.canvasParentReleaseObserved ||
       state.eastDispatchPacketPublished ||
-      state.expressionPacketPresent ||
-      state.receiptPacketPresent ||
       east.observed ||
       west.observed ||
       south.observed
@@ -2209,8 +1830,7 @@
         east.evidenceReady ||
         east.heldPacketRecognized ||
         west.inspectionReady ||
-        south.visibleProofReady ||
-        state.expressionPortEvidenceComplete
+        south.visibleProofReady
       )
     );
 
@@ -2228,7 +1848,6 @@
       allCanvasChildrenApiReady: state.allCanvasChildrenApiReady,
       allCanvasChildrenEvidenceReady: state.allCanvasChildrenEvidenceReady,
       allCanvasChildrenReady: state.allCanvasChildrenReady,
-      expressionPortEvidenceComplete: state.expressionPortEvidenceComplete,
       f13CanvasEvidenceStrict: state.f13CanvasEvidenceStrict,
       f13CanvasEvidenceDegraded: state.f13CanvasEvidenceDegraded,
       f13CanvasEvidenceComplete: state.f13CanvasEvidenceComplete,
@@ -2240,18 +1859,18 @@
 
   function resolveF13Gap() {
     let gap = "NONE_F13_STRICT_EVIDENCE_COMPLETE";
-    let target = ROUTE_FILE;
+    let target = NORTH_FILE;
     let status = "CANVAS_LOCAL_STATION_F13_STRICT_EVIDENCE_COMPLETE";
 
-    if (!state.routeConductorContractRecognized) {
-      gap = "WAITING_ROUTE_CONDUCTOR_V9_3_OR_ACCEPTED_LINEAGE_RECOGNITION";
+    if (!state.routeConductorCurrentV9_3Recognized) {
+      gap = "WAITING_ROUTE_CONDUCTOR_V9_3_RECOGNITION";
       target = ROUTE_FILE;
-      status = "CANVAS_LOCAL_STATION_WAITING_ROUTE_CONDUCTOR_V9_3_OR_ACCEPTED_LINEAGE_RECOGNITION";
+      status = "CANVAS_LOCAL_STATION_WAITING_ROUTE_CONDUCTOR_V9_3_RECOGNITION";
     } else if (!state.releasePacketObserved) {
       gap = "WAITING_ROUTE_CONDUCTOR_RELEASE_PACKET";
       target = ROUTE_FILE;
       status = "CANVAS_LOCAL_STATION_WAITING_ROUTE_CONDUCTOR_RELEASE_PACKET";
-    } else if (!sourceCanBeAccepted(state.acceptedReleaseSource)) {
+    } else if (!sourceCanBeAccepted(state.acceptedReleaseSource, state.normalizedReleasePacket)) {
       gap = "WAITING_CURRENT_ROUTE_CONDUCTOR_RELEASE_AUTHORITY";
       target = ROUTE_FILE;
       status = "CANVAS_LOCAL_STATION_WAITING_CURRENT_ROUTE_CONDUCTOR_RELEASE_AUTHORITY";
@@ -2279,7 +1898,7 @@
       gap = "EAST_FALSE_PROMOTION_BLOCKED";
       target = EAST_FILE;
       status = "CANVAS_LOCAL_STATION_EAST_FALSE_PROMOTION_BLOCKED";
-    } else if (!state.canvasEastEvidenceReady && !state.expressionPortEvidenceComplete) {
+    } else if (!state.canvasEastEvidenceReady) {
       gap = "WAITING_CANVAS_EAST_ATLAS_EVIDENCE";
       target = EAST_FILE;
       status = "CANVAS_LOCAL_STATION_EAST_API_READY_WAITING_ATLAS_EVIDENCE";
@@ -2324,13 +1943,173 @@
     return { gap, target, status };
   }
 
+  function readDiagnosticRailSummary() {
+    const candidates = [
+      readPath("HEARTH_DIAGNOSTIC_RAIL"),
+      readPath("HEARTH_PARALLEL_DIAGNOSTIC_RAIL"),
+      readPath("HEARTH.diagnosticRail"),
+      readPath("HEARTH.parallelDiagnosticRail"),
+      readPath("DEXTER_LAB.hearthDiagnosticRail")
+    ];
+
+    let apiCandidate = null;
+    for (const candidate of candidates) {
+      if (candidate && isObject(candidate)) {
+        apiCandidate = candidate;
+        break;
+      }
+    }
+
+    const receipt = readReceipt(apiCandidate) || readPath("HEARTH_DIAGNOSTIC_RAIL_RECEIPT") || readPath("HEARTH_PARALLEL_DIAGNOSTIC_RAIL_RECEIPT") || null;
+    const report = apiCandidate && isFunction(apiCandidate.getReport) ? safeInvoke(apiCandidate, "getReport") : null;
+    const statePacket = apiCandidate && isFunction(apiCandidate.getState) ? safeInvoke(apiCandidate, "getState") : null;
+
+    state.diagnosticRailObserved = Boolean(apiCandidate || receipt || report || statePacket);
+    state.diagnosticRailContract = safeString((receipt && receipt.contract) || (apiCandidate && apiCandidate.contract) || "");
+    state.diagnosticRailReceipt = safeString((receipt && receipt.receipt) || (apiCandidate && apiCandidate.receipt) || "");
+    state.diagnosticRailLastPrimaryCase = safeString(
+      (receipt && receipt.lastPrimaryCase) ||
+      (report && report.PRIMARY_CASE) ||
+      (statePacket && statePacket.primaryCase) ||
+      ""
+    );
+    state.diagnosticRailLastRunStatus = safeString(
+      (receipt && receipt.lastDiagnosticRunStatus) ||
+      (statePacket && statePacket.diagnosticRunStatus) ||
+      ""
+    );
+    state.diagnosticRailSummaryAvailable = Boolean(receipt || report || statePacket);
+
+    return {
+      observed: state.diagnosticRailObserved,
+      contract: state.diagnosticRailContract,
+      receipt: state.diagnosticRailReceipt,
+      lastPrimaryCase: state.diagnosticRailLastPrimaryCase,
+      lastDiagnosticRunStatus: state.diagnosticRailLastRunStatus,
+      summaryAvailable: state.diagnosticRailSummaryAvailable,
+      receiptObject: clonePlain(receipt),
+      reportObject: clonePlain(report),
+      stateObject: clonePlain(statePacket)
+    };
+  }
+
+  function composeDiagnosticBridgeSummary() {
+    const diagnostic = readDiagnosticRailSummary();
+
+    const routeCurrent = Boolean(state.routeConductorCurrentV9_3Recognized);
+    const canvasCurrent = state.currentCanvasParentContract === CONTRACT;
+    const childSideKnown = Boolean(
+      state.eastObserved ||
+      state.westObserved ||
+      state.southObserved ||
+      state.allCanvasChildrenApiReady ||
+      state.f13CanvasReadinessObserved
+    );
+
+    const mismatch = !routeCurrent
+      ? "ROUTE_CONDUCTOR_CURRENT_V9_3_NOT_RECOGNIZED"
+      : !canvasCurrent
+        ? "CANVAS_PARENT_CONTRACT_NOT_CURRENT"
+        : "false";
+
+    const summaryStatus = mismatch === "false"
+      ? diagnostic.observed
+        ? "BRIDGE_ALIGNED_DIAGNOSTIC_AND_CANVAS_SUMMARIES_AVAILABLE"
+        : "BRIDGE_ALIGNED_CANVAS_ROUTE_SIDE_ONLY_DIAGNOSTIC_RAIL_NOT_IN_THIS_WINDOW"
+      : "BRIDGE_HELD";
+
+    const firstFailed = mismatch === "false"
+      ? state.firstFailedCoordinate
+      : mismatch;
+
+    const recommended = mismatch === "false"
+      ? state.recommendedNextFile
+      : mismatch === "ROUTE_CONDUCTOR_CURRENT_V9_3_NOT_RECOGNIZED"
+        ? ROUTE_FILE
+        : FILE;
+
+    state.diagnosticBridgeSummaryStatus = summaryStatus;
+    state.diagnosticBridgeMismatch = mismatch;
+    state.diagnosticBridgeFirstFailedCoordinate = firstFailed;
+    state.diagnosticBridgeRecommendedNextFile = recommended;
+
+    const bridge = {
+      packetType: "HEARTH_CANVAS_DIAGNOSTIC_BRIDGE_SUMMARY",
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      file: FILE,
+      route: ROUTE,
+      diagnosticRoute: DIAGNOSTIC_ROUTE,
+
+      diagnosticBridgeActive: true,
+      diagnosticReceiptBridgeActive: true,
+      bridgePurpose: "ALIGN_DIAGNOSTIC_RECEIPT_WITH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_RECEIPT_BEFORE_EXPRESSION_PORTS",
+      expressionBridgeHeld: true,
+      expressionPortsBuilt: false,
+      expressionPacketAccepted: false,
+      expressionComplete: false,
+
+      routeConductorCurrentV9_3Recognized: state.routeConductorCurrentV9_3Recognized,
+      routeConductorContract: state.routeConductorContract,
+      routeConductorReceipt: state.routeConductorReceipt,
+      routeConductorLineageV9_2Observed: state.routeConductorLineageV9_2Observed,
+      routeConductorLineageV9_2AuthorityAccepted: false,
+
+      canvasParentCurrentContract: CONTRACT,
+      canvasParentPreviousContract: PREVIOUS_CONTRACT,
+      canvasParentContractCurrent: canvasCurrent,
+      canvasLocalStationActive: true,
+      canvasParentReleaseAccepted: state.canvasParentReleaseAccepted,
+      parentReleaseLawful: state.parentReleaseLawful,
+      eastDispatchAuthorized: state.eastDispatchAuthorized,
+      eastDispatchPacketPublished: state.eastDispatchPacketPublished,
+
+      diagnosticRailObserved: diagnostic.observed,
+      diagnosticRailContract: diagnostic.contract,
+      diagnosticRailReceipt: diagnostic.receipt,
+      diagnosticRailLastPrimaryCase: diagnostic.lastPrimaryCase,
+      diagnosticRailLastDiagnosticRunStatus: diagnostic.lastDiagnosticRunStatus,
+      diagnosticRailSummaryAvailable: diagnostic.summaryAvailable,
+
+      childSideKnown,
+      canvasEastApiReady: state.eastApiReady,
+      canvasEastEvidenceReady: state.canvasEastEvidenceReady,
+      canvasWestApiReady: state.westApiReady,
+      canvasWestInspectionReady: state.canvasWestInspectionReady,
+      canvasSouthApiReady: state.southApiReady,
+      canvasSouthVisibleProofReady: state.canvasSouthVisibleProofReady,
+      allCanvasChildrenApiReady: state.allCanvasChildrenApiReady,
+      allCanvasChildrenEvidenceReady: state.allCanvasChildrenEvidenceReady,
+
+      f13CanvasEvidenceStrict: state.f13CanvasEvidenceStrict,
+      f13CanvasEvidenceDegraded: state.f13CanvasEvidenceDegraded,
+      f13CanvasEvidenceComplete: state.f13CanvasEvidenceComplete,
+      f13HardFail: state.f13HardFail,
+
+      diagnosticBridgeSummaryStatus: summaryStatus,
+      diagnosticBridgeMismatch: mismatch,
+      firstFailedCoordinate: firstFailed,
+      recommendedNextFile: recommended,
+      recommendedNextRenewalTarget: recommended,
+      bridgeReadyForExpressionPortAudit: Boolean(mismatch === "false"),
+      bridgeReadyForExpressionPortBuild: false,
+
+      noClaimsPreserved: true,
+      ...FINAL_FALSE,
+      updatedAt: nowIso()
+    };
+
+    state.lastDiagnosticBridgeSummary = clonePlain(bridge);
+    return bridge;
+  }
+
   function recomputeParentState() {
     state.timestamp = nowIso();
 
     readRouteConductorProfile({});
     refreshParentReleaseGateMarkers();
-    recomputeExpressionPortState();
     recomputeChildAggregation();
+    composeDiagnosticBridgeSummary();
 
     Object.assign(state, FINAL_FALSE);
     state.updatedAt = state.timestamp;
@@ -2398,9 +2177,6 @@
   }
 
   function receiveEastPacket(packet) {
-    if (isObject(packet) && packet.packetType === EXPRESSION_PACKET_TYPE) receiveExpressionPacket(packet);
-    if (isObject(packet) && packet.packetType === RECEIPT_PACKET_TYPE) receiveReceiptPacket(packet);
-
     classifyEastResponse(packet);
     recomputeParentState();
     updateDataset();
@@ -2469,16 +2245,6 @@
   function receiveChildPacket(packet) {
     if (!isObject(packet)) return false;
 
-    if (packet.packetType === EXPRESSION_PACKET_TYPE) {
-      receiveExpressionPacket(packet);
-      return true;
-    }
-
-    if (packet.packetType === RECEIPT_PACKET_TYPE) {
-      receiveReceiptPacket(packet);
-      return true;
-    }
-
     state.lastChildPacket = clonePlain(packet);
     state.childPackets.push(clonePlain(packet));
     trimArray(state.childPackets, 60);
@@ -2507,26 +2273,22 @@
 
     const summary = {
       timestamp: state.timestamp || nowIso(),
-
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       previousReceipt: PREVIOUS_RECEIPT,
-      lineageContract: LINEAGE_CONTRACT,
-      lineageReceipt: LINEAGE_RECEIPT,
       baselineContract: BASELINE_CONTRACT,
       baselineReceipt: BASELINE_RECEIPT,
-
-      routeConductorCurrentContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
-      routeConductorCurrentReceipt: CURRENT_ROUTE_CONDUCTOR_RECEIPT,
-      routeConductorAcceptedLineageContract: LINEAGE_ROUTE_CONDUCTOR_CONTRACT,
-      routeConductorAcceptedLineageReceipt: LINEAGE_ROUTE_CONDUCTOR_RECEIPT,
+      currentRouteConductorRequiredContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
+      currentRouteConductorRequiredReceipt: CURRENT_ROUTE_CONDUCTOR_RECEIPT,
+      lineageRouteConductorContract: LINEAGE_ROUTE_CONDUCTOR_CONTRACT,
+      lineageRouteConductorReceipt: LINEAGE_ROUTE_CONDUCTOR_RECEIPT,
       macroWestRequiredContract: MACRO_WEST_CONTRACT,
       currentEastContract: CURRENT_EAST_CONTRACT,
-
       packetType: "CANVAS_LOCAL_STATION_SUMMARY",
       file: FILE,
       route: ROUTE,
+      diagnosticRoute: DIAGNOSTIC_ROUTE,
 
       canvasLocalStationActive: true,
       childDistributionSwitchboardActive: true,
@@ -2534,20 +2296,19 @@
       eastDispatchActive: true,
       canvasChildAggregationActive: true,
       routeConductorSummarySurfaceActive: true,
-      expressionReceiptPortActive: true,
-      expressionReceiptPortStandard: EXPRESSION_PORT_STANDARD,
+      diagnosticBridgeActive: true,
+      diagnosticReceiptBridgeActive: true,
+      expressionBridgeHeld: true,
+      expressionPortsBuilt: false,
+      expressionPacketAccepted: false,
+      expressionComplete: false,
 
       currentCanvasParentObserved: true,
       currentCanvasParentContractObserved: true,
-      currentCanvasParentContract: ROUTE_CONDUCTOR_FACING_CONTRACT,
-      canvasLocalStationContract: ROUTE_CONDUCTOR_FACING_CONTRACT,
-      currentCanvasParentImplementationContract: CONTRACT,
-      canvasParentActualContract: CONTRACT,
-      routeConductorFacingContract: ROUTE_CONDUCTOR_FACING_CONTRACT,
-      routeConductorCompatibilityContractActive: true,
+      currentCanvasParentContract: CONTRACT,
       currentCanvasParentIsLocalStation: true,
-      currentCanvasParentIsV11_3_1: true,
-      currentCanvasParentIsV11_4Implementation: true,
+      currentCanvasParentIsV11_4: true,
+      previousCanvasParentContract: PREVIOUS_CONTRACT,
       baselineCanvasParentContract: BASELINE_CONTRACT,
       v10_3BaselineRecognizedOnly: false,
       canvasParentBootMethodAvailable: true,
@@ -2558,7 +2319,8 @@
       routeConductorReceipt: state.routeConductorReceipt,
       routeConductorContractRecognized: state.routeConductorContractRecognized,
       routeConductorCurrentV9_3Recognized: state.routeConductorCurrentV9_3Recognized,
-      routeConductorAcceptedLineageV9_2Recognized: state.routeConductorAcceptedLineageV9_2Recognized,
+      routeConductorLineageV9_2Observed: state.routeConductorLineageV9_2Observed,
+      routeConductorLineageV9_2AuthorityAccepted: false,
       routeConductorAuthoritySourceAlias: state.routeConductorAuthoritySourceAlias,
       routeConductorAuthoritySourceMethod: state.routeConductorAuthoritySourceMethod,
       routeConductorReleaseAuthorityAccepted: state.routeConductorReleaseAuthorityAccepted,
@@ -2576,7 +2338,7 @@
       observedFallbackRouteConductorAlias: state.observedFallbackRouteConductorAlias,
       datasetIsReportingOnlyNotAuthority: true,
       datasetReleaseAuthorityBlocked: state.datasetReleaseAuthorityBlocked,
-      globalFallbackIsObservationOnlyUnlessCurrentOrLineage: true,
+      globalFallbackIsObservationOnlyUnlessCurrentV9_3: true,
       globalReleaseAuthorityBlocked: state.globalReleaseAuthorityBlocked,
       fallbackAliasesAreObservationOnly: true,
 
@@ -2611,22 +2373,6 @@
       handoffTo: state.handoffTo,
       getLastEastDispatchPacketAvailable: true,
 
-      expressionPacketPresent: state.expressionPacketPresent,
-      receiptPacketPresent: state.receiptPacketPresent,
-      expressionAndReceiptSeparated: state.expressionAndReceiptSeparated,
-      expressionPacketAccepted: state.expressionPacketAccepted,
-      receiptPacketAccepted: state.receiptPacketAccepted,
-      expressionCanvasConsumable: state.expressionCanvasConsumable,
-      expressionComplete: state.expressionComplete,
-      receiptOutputShapeValid: state.receiptOutputShapeValid,
-      receiptDownstreamSafe: state.receiptDownstreamSafe,
-      receiptSourceInputsRecognized: state.receiptSourceInputsRecognized,
-      expressionPortEvidenceComplete: state.expressionPortEvidenceComplete,
-      expressionPortMismatch: state.expressionPortMismatch,
-      expressionPortPartial: state.expressionPortPartial,
-      expressionPortFirstFailedCoordinate: state.expressionPortFirstFailedCoordinate,
-      expressionPortRecommendedNextFile: state.expressionPortRecommendedNextFile,
-
       canvasEastApiReady: state.eastApiReady,
       canvasEastRequiredMethodsPresent: state.eastRequiredMethodsPresent,
       canvasEastEvidenceReady: state.canvasEastEvidenceReady,
@@ -2660,6 +2406,12 @@
       f13StrictEvidenceGap: state.f13StrictEvidenceGap,
       f13StrictEvidenceRepairTarget: state.f13StrictEvidenceRepairTarget,
 
+      diagnosticBridgeSummary: clonePlain(state.lastDiagnosticBridgeSummary || composeDiagnosticBridgeSummary()),
+      diagnosticBridgeSummaryStatus: state.diagnosticBridgeSummaryStatus,
+      diagnosticBridgeMismatch: state.diagnosticBridgeMismatch,
+      diagnosticBridgeFirstFailedCoordinate: state.diagnosticBridgeFirstFailedCoordinate,
+      diagnosticBridgeRecommendedNextFile: state.diagnosticBridgeRecommendedNextFile,
+
       firstFailedCoordinate: state.firstFailedCoordinate,
       recommendedNextFile: state.recommendedNextFile,
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
@@ -2668,6 +2420,8 @@
 
       routeConductorShouldConsumeThisSummary: true,
       routeConductorShouldNotScanChildrenDirectlyAfterV9: true,
+      diagnosticRailMayReadThisSummary: true,
+      expressionPortBuildHeldUntilBridgeStable: true,
 
       ...FINAL_FALSE
     };
@@ -2688,11 +2442,35 @@
       candidateReleasePacket: clonePlain(state.candidateReleasePacket),
       normalizedReleasePacket: clonePlain(state.normalizedReleasePacket),
       lastEastDispatchPacket: getLastEastDispatchPacket(),
-      expressionPortReceipt: getExpressionPortReceipt(),
       lastEastReceipt: clonePlain(state.lastEastReceipt),
       lastWestReceipt: clonePlain(state.lastWestReceipt),
       lastSouthReceipt: clonePlain(state.lastSouthReceipt),
-      lastRouteConductorAuthorityReceipt: clonePlain(state.lastRouteConductorAuthorityReceipt)
+      lastRouteConductorAuthorityReceipt: clonePlain(state.lastRouteConductorAuthorityReceipt),
+      lastDiagnosticBridgeSummary: clonePlain(state.lastDiagnosticBridgeSummary)
+    };
+  }
+
+  function getDiagnosticBridgeSummary() {
+    recomputeParentState();
+    return clonePlain(state.lastDiagnosticBridgeSummary || composeDiagnosticBridgeSummary());
+  }
+
+  function getDiagnosticBridgeReceipt() {
+    return {
+      ...getDiagnosticBridgeSummary(),
+      packetType: "HEARTH_CANVAS_DIAGNOSTIC_BRIDGE_RECEIPT",
+      currentReceipt: true,
+      childAggregationSummary: {
+        canvasEastApiReady: state.eastApiReady,
+        canvasEastEvidenceReady: state.canvasEastEvidenceReady,
+        canvasWestApiReady: state.westApiReady,
+        canvasWestInspectionReady: state.canvasWestInspectionReady,
+        canvasSouthApiReady: state.southApiReady,
+        canvasSouthVisibleProofReady: state.canvasSouthVisibleProofReady,
+        allCanvasChildrenApiReady: state.allCanvasChildrenApiReady,
+        allCanvasChildrenEvidenceReady: state.allCanvasChildrenEvidenceReady
+      },
+      ...FINAL_FALSE
     };
   }
 
@@ -2705,6 +2483,7 @@
       baselineContract: BASELINE_CONTRACT,
       file: FILE,
       route: ROUTE,
+      diagnosticRoute: DIAGNOSTIC_ROUTE,
       role: "canvas-local-station-structural-carrier",
 
       structuralCarrierReady: true,
@@ -2713,20 +2492,18 @@
 
       currentCanvasParentObserved: true,
       currentCanvasParentContractObserved: true,
-      currentCanvasParentContract: ROUTE_CONDUCTOR_FACING_CONTRACT,
-      currentCanvasParentImplementationContract: CONTRACT,
-      routeConductorCompatibilityContractActive: true,
+      currentCanvasParentContract: CONTRACT,
       canvasParentBootMethodAvailable: true,
       canvasLocalStationActive: true,
       childDistributionSwitchboardActive: true,
       releaseAcceptanceActive: true,
       eastDispatchActive: true,
       canvasChildAggregationActive: true,
-      expressionReceiptPortActive: true,
+      diagnosticBridgeActive: true,
 
-      routeConductorContractRecognized: state.routeConductorContractRecognized,
       routeConductorCurrentV9_3Recognized: state.routeConductorCurrentV9_3Recognized,
-      routeConductorAcceptedLineageV9_2Recognized: state.routeConductorAcceptedLineageV9_2Recognized,
+      routeConductorLineageV9_2Observed: state.routeConductorLineageV9_2Observed,
+      routeConductorLineageV9_2AuthorityAccepted: false,
       routeConductorReleaseAuthorityAccepted: state.routeConductorReleaseAuthorityAccepted,
       releasePacketObserved: state.releasePacketObserved,
       releasePacketValid: state.releasePacketValid,
@@ -2740,11 +2517,6 @@
 
       eastDispatchAuthorized: state.eastDispatchAuthorized,
       eastDispatchPacketPublished: state.eastDispatchPacketPublished,
-
-      expressionPacketPresent: state.expressionPacketPresent,
-      receiptPacketPresent: state.receiptPacketPresent,
-      expressionAndReceiptSeparated: state.expressionAndReceiptSeparated,
-      expressionPortEvidenceComplete: state.expressionPortEvidenceComplete,
 
       canvasEastApiReady: state.eastApiReady,
       canvasEastEvidenceReady: state.canvasEastEvidenceReady,
@@ -2763,6 +2535,11 @@
       f13HardFail: state.f13HardFail,
       f13StrictEvidenceGap: state.f13StrictEvidenceGap,
       f13StrictEvidenceRepairTarget: state.f13StrictEvidenceRepairTarget,
+
+      diagnosticBridgeSummaryStatus: state.diagnosticBridgeSummaryStatus,
+      diagnosticBridgeMismatch: state.diagnosticBridgeMismatch,
+      diagnosticBridgeFirstFailedCoordinate: state.diagnosticBridgeFirstFailedCoordinate,
+      diagnosticBridgeRecommendedNextFile: state.diagnosticBridgeRecommendedNextFile,
 
       firstFailedCoordinate: state.firstFailedCoordinate,
       recommendedNextFile: state.recommendedNextFile,
@@ -2796,8 +2573,7 @@
       ...getCanvasStationReceipt(),
       currentReceipt: true,
       structuralCarrier: getStructuralCarrier(),
-      expressionPortReceipt: getExpressionPortReceipt(),
-      canvasPortStatus: getCanvasPortStatus(),
+      diagnosticBridgeReceipt: getDiagnosticBridgeReceipt(),
       childPackets: clonePlain(state.childPackets),
       localEvents: clonePlain(state.localEvents),
       errors: clonePlain(state.errors)
@@ -2812,42 +2588,60 @@
     const r = getCanvasStationSummary();
 
     return [
-      "HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_3_EXPRESSION_PORT_ALIGNMENT_RECEIPT",
+      "HEARTH_CANVAS_LOCAL_STATION_DIAGNOSTIC_BRIDGE_ALIGNMENT_RECEIPT",
       "",
       line("timestamp", r.timestamp),
       line("contract", r.contract),
       line("receipt", r.receipt),
       line("previousContract", r.previousContract),
       line("previousReceipt", r.previousReceipt),
-      line("lineageContract", r.lineageContract),
-      line("lineageReceipt", r.lineageReceipt),
       line("baselineContract", r.baselineContract),
       line("baselineReceipt", r.baselineReceipt),
       line("file", FILE),
       line("route", ROUTE),
+      line("diagnosticRoute", DIAGNOSTIC_ROUTE),
       line("role", state.role),
       "",
+      "BRIDGE_ALIGNMENT",
+      line("diagnosticBridgeActive", true),
+      line("diagnosticReceiptBridgeActive", true),
+      line("diagnosticBridgeSummaryStatus", r.diagnosticBridgeSummaryStatus),
+      line("diagnosticBridgeMismatch", r.diagnosticBridgeMismatch),
+      line("diagnosticBridgeFirstFailedCoordinate", r.diagnosticBridgeFirstFailedCoordinate),
+      line("diagnosticBridgeRecommendedNextFile", r.diagnosticBridgeRecommendedNextFile),
+      line("expressionBridgeHeld", true),
+      line("expressionPortsBuilt", false),
+      line("expressionPacketAccepted", false),
+      line("expressionComplete", false),
+      "",
       "ROUTE_CONDUCTOR_ALIGNMENT",
-      line("routeConductorCurrentContract", CURRENT_ROUTE_CONDUCTOR_CONTRACT),
-      line("routeConductorCurrentReceipt", CURRENT_ROUTE_CONDUCTOR_RECEIPT),
-      line("routeConductorAcceptedLineageContract", LINEAGE_ROUTE_CONDUCTOR_CONTRACT),
-      line("routeConductorAcceptedLineageReceipt", LINEAGE_ROUTE_CONDUCTOR_RECEIPT),
+      line("currentRouteConductorRequiredContract", CURRENT_ROUTE_CONDUCTOR_CONTRACT),
+      line("currentRouteConductorRequiredReceipt", CURRENT_ROUTE_CONDUCTOR_RECEIPT),
+      line("lineageRouteConductorContract", LINEAGE_ROUTE_CONDUCTOR_CONTRACT),
+      line("lineageRouteConductorReceipt", LINEAGE_ROUTE_CONDUCTOR_RECEIPT),
+      line("routeConductorObserved", r.routeConductorObserved),
+      line("routeConductorContractKnown", r.routeConductorContractKnown),
+      line("routeConductorContract", r.routeConductorContract),
+      line("routeConductorReceipt", r.routeConductorReceipt),
       line("routeConductorContractRecognized", r.routeConductorContractRecognized),
       line("routeConductorCurrentV9_3Recognized", r.routeConductorCurrentV9_3Recognized),
-      line("routeConductorAcceptedLineageV9_2Recognized", r.routeConductorAcceptedLineageV9_2Recognized),
+      line("routeConductorLineageV9_2Observed", r.routeConductorLineageV9_2Observed),
+      line("routeConductorLineageV9_2AuthorityAccepted", false),
       line("routeConductorAuthoritySourceAlias", r.routeConductorAuthoritySourceAlias),
       line("routeConductorAuthoritySourceMethod", r.routeConductorAuthoritySourceMethod),
       line("routeConductorReleaseAuthorityAccepted", r.routeConductorReleaseAuthorityAccepted),
       "",
-      "CANVAS_PARENT_COMPATIBILITY",
-      line("currentCanvasParentContract", r.currentCanvasParentContract),
-      line("canvasLocalStationContract", r.canvasLocalStationContract),
-      line("currentCanvasParentImplementationContract", r.currentCanvasParentImplementationContract),
-      line("routeConductorFacingContract", r.routeConductorFacingContract),
-      line("routeConductorCompatibilityContractActive", r.routeConductorCompatibilityContractActive),
-      line("v10_3BaselineRecognizedOnly", r.v10_3BaselineRecognizedOnly),
+      "OBSERVATION_BOUNDARY",
+      line("observedFallbackRouteConductorAlias", r.observedFallbackRouteConductorAlias),
+      line("observedFallbackRouteConductorContract", r.observedFallbackRouteConductorContract),
+      line("observedFallbackRouteConductorReceipt", r.observedFallbackRouteConductorReceipt),
+      line("fallbackAliasesAreObservationOnly", r.fallbackAliasesAreObservationOnly),
+      line("datasetIsReportingOnlyNotAuthority", r.datasetIsReportingOnlyNotAuthority),
+      line("datasetReleaseAuthorityBlocked", r.datasetReleaseAuthorityBlocked),
+      line("globalFallbackIsObservationOnlyUnlessCurrentV9_3", r.globalFallbackIsObservationOnlyUnlessCurrentV9_3),
+      line("globalReleaseAuthorityBlocked", r.globalReleaseAuthorityBlocked),
       "",
-      "RELEASE_PACKET",
+      "RELEASE_INTAKE",
       line("releasePacketObserved", r.releasePacketObserved),
       line("releasePacketValid", r.releasePacketValid),
       line("releasePacketAccepted", r.releasePacketAccepted),
@@ -2857,7 +2651,7 @@
       line("candidateReleaseIntakeMethod", r.candidateReleaseIntakeMethod),
       line("releaseValidationFailures", r.releaseValidationFailures.join(",") || "none"),
       "",
-      "PARENT_RELEASE_AND_EAST_DISPATCH",
+      "PARENT_RELEASE",
       line("canvasParentReleaseObserved", r.canvasParentReleaseObserved),
       line("canvasParentReleaseAccepted", r.canvasParentReleaseAccepted),
       line("canvasParentReleaseLawful", r.canvasParentReleaseLawful),
@@ -2867,6 +2661,8 @@
       line("canvasReleaseHeldReason", r.canvasReleaseHeldReason),
       line("canvasParentReleaseGateReady", r.canvasParentReleaseGateReady),
       line("parentAcceptedRouteConductorRelease", r.parentAcceptedRouteConductorRelease),
+      "",
+      "EAST_DISPATCH",
       line("parentReleasePacketComposed", r.parentReleasePacketComposed),
       line("parentReleasePacketPublishedForEast", r.parentReleasePacketPublishedForEast),
       line("parentReleasePacketSentToEast", r.parentReleasePacketSentToEast),
@@ -2875,25 +2671,7 @@
       line("eastDispatchPacketPublished", r.eastDispatchPacketPublished),
       line("eastDispatchAttempted", r.eastDispatchAttempted),
       line("eastDispatchMethod", r.eastDispatchMethod),
-      "",
-      "EXPRESSION_RECEIPT_PORT",
-      line("expressionReceiptPortActive", r.expressionReceiptPortActive),
-      line("expressionReceiptPortStandard", r.expressionReceiptPortStandard),
-      line("expressionPacketPresent", r.expressionPacketPresent),
-      line("receiptPacketPresent", r.receiptPacketPresent),
-      line("expressionAndReceiptSeparated", r.expressionAndReceiptSeparated),
-      line("expressionPacketAccepted", r.expressionPacketAccepted),
-      line("receiptPacketAccepted", r.receiptPacketAccepted),
-      line("expressionCanvasConsumable", r.expressionCanvasConsumable),
-      line("expressionComplete", r.expressionComplete),
-      line("receiptOutputShapeValid", r.receiptOutputShapeValid),
-      line("receiptDownstreamSafe", r.receiptDownstreamSafe),
-      line("receiptSourceInputsRecognized", r.receiptSourceInputsRecognized),
-      line("expressionPortEvidenceComplete", r.expressionPortEvidenceComplete),
-      line("expressionPortMismatch", r.expressionPortMismatch),
-      line("expressionPortPartial", r.expressionPortPartial),
-      line("expressionPortFirstFailedCoordinate", r.expressionPortFirstFailedCoordinate),
-      line("expressionPortRecommendedNextFile", r.expressionPortRecommendedNextFile),
+      line("getLastEastDispatchPacketAvailable", true),
       "",
       "CHILD_AGGREGATION",
       line("canvasEastApiReady", r.canvasEastApiReady),
@@ -2934,7 +2712,8 @@
       line("postgameStatus", r.postgameStatus),
       "",
       "NO_CLAIMS",
-      line("f13Claimed", false),
+      line("f13EligibleForCanvas", false),
+      line("f13ClaimedByCanvasParent", false),
       line("f21EligibleForNorth", false),
       line("f21SubmittedToNorth", false),
       line("f21EligibilitySubmittedToNorth", false),
@@ -2959,24 +2738,53 @@
     setDataset("hearthCanvasBaselineReceipt", BASELINE_RECEIPT);
     setDataset("hearthCanvasLocalStationActive", "true");
     setDataset("hearthCanvasChildDistributionSwitchboardActive", "true");
-    setDataset("hearthCanvasParentV11_4ImplementationActive", "true");
-    setDataset("hearthCanvasRouteConductorFacingContract", ROUTE_CONDUCTOR_FACING_CONTRACT);
-    setDataset("hearthCanvasCurrentCanvasParentContract", ROUTE_CONDUCTOR_FACING_CONTRACT);
-    setDataset("hearthCanvasCurrentCanvasParentImplementationContract", CONTRACT);
-    setDataset("hearthCanvasRouteConductorCompatibilityContractActive", "true");
-    setDataset("hearthCanvasParentV10_3BaselineRecognizedOnly", "false");
+    setDataset("hearthCanvasParentV11_4Active", "true");
+    setDataset("hearthCanvasParentV11_3_1Superseded", "true");
+    setDataset("hearthCanvasParentV10_3BaselineRecognized", "true");
     setDataset("hearthCanvasV10_3BaselineRecognizedOnly", "false");
 
+    setDataset("hearthCanvasDiagnosticBridgeActive", "true");
+    setDataset("hearthCanvasDiagnosticReceiptBridgeActive", "true");
+    setDataset("hearthCanvasDiagnosticBridgeSummaryStatus", state.diagnosticBridgeSummaryStatus);
+    setDataset("hearthCanvasDiagnosticBridgeMismatch", state.diagnosticBridgeMismatch);
+    setDataset("hearthCanvasDiagnosticBridgeFirstFailedCoordinate", state.diagnosticBridgeFirstFailedCoordinate);
+    setDataset("hearthCanvasDiagnosticBridgeRecommendedNextFile", state.diagnosticBridgeRecommendedNextFile);
+    setDataset("hearthCanvasExpressionBridgeHeld", "true");
+    setDataset("hearthCanvasExpressionPortsBuilt", "false");
+    setDataset("hearthCanvasExpressionPacketAccepted", "false");
+    setDataset("hearthCanvasExpressionComplete", "false");
+
+    setDataset("hearthCanvasCurrentRouteConductorRequiredContract", CURRENT_ROUTE_CONDUCTOR_CONTRACT);
+    setDataset("hearthCanvasCurrentRouteConductorRequiredReceipt", CURRENT_ROUTE_CONDUCTOR_RECEIPT);
+    setDataset("hearthCanvasLineageRouteConductorContract", LINEAGE_ROUTE_CONDUCTOR_CONTRACT);
+    setDataset("hearthCanvasLineageRouteConductorReceipt", LINEAGE_ROUTE_CONDUCTOR_RECEIPT);
     setDataset("hearthCanvasRouteConductorObserved", String(state.routeConductorObserved));
     setDataset("hearthCanvasRouteConductorContractKnown", String(state.routeConductorContractKnown));
     setDataset("hearthCanvasRouteConductorContract", state.routeConductorContract);
     setDataset("hearthCanvasRouteConductorReceipt", state.routeConductorReceipt);
     setDataset("hearthCanvasRouteConductorContractRecognized", String(state.routeConductorContractRecognized));
-    setDataset("hearthCanvasRouteConductorCurrentV9_3Recognized", String(state.routeConductorCurrentV9_3Recognized));
-    setDataset("hearthCanvasRouteConductorAcceptedLineageV9_2Recognized", String(state.routeConductorAcceptedLineageV9_2Recognized));
+    setDataset("hearthCanvasRouteConductorCurrentV93Recognized", String(state.routeConductorCurrentV9_3Recognized));
+    setDataset("hearthCanvasRouteConductorLineageV92Observed", String(state.routeConductorLineageV9_2Observed));
+    setDataset("hearthCanvasRouteConductorLineageV92AuthorityAccepted", "false");
     setDataset("hearthCanvasRouteConductorReleaseAuthorityAccepted", String(state.routeConductorReleaseAuthorityAccepted));
     setDataset("hearthCanvasRouteConductorAuthoritySourceAlias", state.routeConductorAuthoritySourceAlias);
     setDataset("hearthCanvasRouteConductorAuthoritySourceMethod", state.routeConductorAuthoritySourceMethod);
+
+    setDataset("hearthCanvasObservedDatasetRouteConductorContract", state.observedDatasetRouteConductorContract);
+    setDataset("hearthCanvasObservedDatasetRouteConductorReceipt", state.observedDatasetRouteConductorReceipt);
+    setDataset("hearthCanvasObservedFallbackRouteConductorAlias", state.observedFallbackRouteConductorAlias);
+    setDataset("hearthCanvasObservedFallbackRouteConductorContract", state.observedFallbackRouteConductorContract);
+    setDataset("hearthCanvasObservedFallbackRouteConductorReceipt", state.observedFallbackRouteConductorReceipt);
+    setDataset("hearthCanvasFallbackAliasesAreObservationOnly", "true");
+    setDataset("hearthCanvasDatasetIsReportingOnlyNotAuthority", "true");
+    setDataset("hearthCanvasDatasetReleaseAuthorityBlocked", String(state.datasetReleaseAuthorityBlocked));
+    setDataset("hearthCanvasGlobalFallbackIsObservationOnlyUnlessCurrentV93", "true");
+    setDataset("hearthCanvasGlobalReleaseAuthorityBlocked", String(state.globalReleaseAuthorityBlocked));
+
+    setDataset("hearthCanvasCurrentCanvasParentObserved", "true");
+    setDataset("hearthCanvasCurrentCanvasParentContractObserved", "true");
+    setDataset("hearthCanvasCurrentCanvasParentContract", CONTRACT);
+    setDataset("hearthCanvasParentBootMethodAvailable", "true");
 
     setDataset("hearthCanvasReleasePacketObserved", String(state.releasePacketObserved));
     setDataset("hearthCanvasReleasePacketValid", String(state.releasePacketValid));
@@ -2984,6 +2792,7 @@
     setDataset("hearthCanvasAcceptedReleaseSource", state.acceptedReleaseSource);
     setDataset("hearthCanvasReleasePacketAuthoritySource", state.releasePacketAuthoritySource);
     setDataset("hearthCanvasReleasePacketIntakeMethod", state.releasePacketIntakeMethod);
+    setDataset("hearthCanvasCandidateReleaseIntakeMethod", state.candidateReleaseIntakeMethod);
 
     setDataset("hearthCanvasParentReleaseObserved", String(state.canvasParentReleaseObserved));
     setDataset("hearthCanvasParentReleaseAccepted", String(state.canvasParentReleaseAccepted));
@@ -3002,16 +2811,7 @@
     setDataset("hearthCanvasEastDispatchPacketPublished", String(state.eastDispatchPacketPublished));
     setDataset("hearthCanvasEastDispatchAttempted", String(state.eastDispatchAttempted));
     setDataset("hearthCanvasEastDispatchMethod", state.eastDispatchMethod);
-
-    setDataset("hearthCanvasExpressionReceiptPortActive", "true");
-    setDataset("hearthCanvasExpressionPacketPresent", String(state.expressionPacketPresent));
-    setDataset("hearthCanvasReceiptPacketPresent", String(state.receiptPacketPresent));
-    setDataset("hearthCanvasExpressionAndReceiptSeparated", String(state.expressionAndReceiptSeparated));
-    setDataset("hearthCanvasExpressionPortEvidenceComplete", String(state.expressionPortEvidenceComplete));
-    setDataset("hearthCanvasExpressionPortMismatch", String(state.expressionPortMismatch));
-    setDataset("hearthCanvasExpressionPortPartial", String(state.expressionPortPartial));
-    setDataset("hearthCanvasExpressionPortFirstFailedCoordinate", state.expressionPortFirstFailedCoordinate);
-    setDataset("hearthCanvasExpressionPortRecommendedNextFile", state.expressionPortRecommendedNextFile);
+    setDataset("hearthCanvasGetLastEastDispatchPacketAvailable", "true");
 
     setDataset("hearthCanvasEastObserved", String(state.eastObserved));
     setDataset("hearthCanvasEastApiReady", String(state.eastApiReady));
@@ -3055,7 +2855,8 @@
     setDataset("hearthCanvasNextAuditTarget", state.canvasNextAuditTarget);
     setDataset("hearthCanvasPostgameStatus", state.postgameStatus);
 
-    setDataset("hearthCanvasF13Claimed", "false");
+    setDataset("hearthCanvasF13EligibleForCanvas", "false");
+    setDataset("hearthCanvasF13ClaimedByCanvasParent", "false");
     setDataset("hearthCanvasF21EligibleForNorth", "false");
     setDataset("hearthCanvasF21SubmittedToNorth", "false");
     setDataset("hearthCanvasF21EligibilitySubmittedToNorth", "false");
@@ -3084,7 +2885,7 @@
     hearth.canvasStation = api;
     hearth.canvasChildDistributionSwitchboard = api;
     hearth.canvasParentReleaseAcceptanceEastDispatchSwitchboard = api;
-    hearth.canvasExpressionPort = api;
+    hearth.canvasDiagnosticBridge = api;
 
     root.HEARTH_CANVAS = api;
     root.HEARTH_CANVAS_PARENT = api;
@@ -3095,7 +2896,7 @@
     root.HEARTH_CANVAS_CHILD_DISTRIBUTION_SWITCHBOARD = api;
     root.HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD = api;
     root.HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD = api;
-    root.HEARTH_CANVAS_EXPRESSION_PORT = api;
+    root.HEARTH_CANVAS_DIAGNOSTIC_BRIDGE = api;
 
     lab.hearthCanvas = api;
     lab.hearthCanvasParent = api;
@@ -3104,11 +2905,11 @@
     lab.hearthCanvasStation = api;
     lab.hearthCanvasChildDistributionSwitchboard = api;
     lab.hearthCanvasParentReleaseAcceptanceEastDispatchSwitchboard = api;
-    lab.hearthCanvasExpressionPort = api;
+    lab.hearthCanvasDiagnosticBridge = api;
 
     const light = getReceiptLight();
     const full = getReceipt();
-    const port = getExpressionPortReceipt();
+    const bridge = getDiagnosticBridgeReceipt();
 
     root.HEARTH_CANVAS_RECEIPT = light;
     root.HEARTH_CANVAS_PARENT_RECEIPT = light;
@@ -3116,31 +2917,27 @@
     root.HEARTH_CANVAS_STATION_RECEIPT = full;
     root.HEARTH_CANVAS_CHILD_DISTRIBUTION_SWITCHBOARD_RECEIPT = full;
     root.HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_RECEIPT = full;
-    root.HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_3_EXPRESSION_PORT_ALIGNMENT_RECEIPT = full;
-    root.HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_3_EXPRESSION_PORT_ALIGNMENT_RECEIPT_v11_4 = full;
+    root.HEARTH_CANVAS_LOCAL_STATION_DIAGNOSTIC_BRIDGE_ALIGNMENT_RECEIPT = full;
+    root.HEARTH_CANVAS_LOCAL_STATION_DIAGNOSTIC_BRIDGE_ALIGNMENT_RECEIPT_v11_4 = full;
     root.HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD_RECEIPT = full;
-
-    root.HEARTH_CANVAS_EXPRESSION_PORT_RECEIPT = port;
-    root.HEARTH_CANVAS_EXPRESSION_PACKET = clonePlain(state.lastExpressionPacket);
-    root.HEARTH_CANVAS_RECEIPT_PACKET = clonePlain(state.lastReceiptPacket);
-    root.HEARTH_CANVAS_PORT_STATE = getExpressionPortState();
-    root.HEARTH_CANVAS_PORT_RECEIPT = port;
+    root.HEARTH_CANVAS_DIAGNOSTIC_BRIDGE_RECEIPT = bridge;
+    root.HEARTH_CANVAS_DIAGNOSTIC_BRIDGE_SUMMARY = clonePlain(state.lastDiagnosticBridgeSummary);
 
     hearth.canvasReceipt = light;
     hearth.canvasParentReceipt = light;
     hearth.canvasLocalStationReceipt = full;
     hearth.canvasStationReceipt = full;
     hearth.canvasChildDistributionSwitchboardReceipt = full;
-    hearth.canvasExpressionPortReceipt = port;
-    hearth.canvasExpressionPacket = clonePlain(state.lastExpressionPacket);
-    hearth.canvasReceiptPacket = clonePlain(state.lastReceiptPacket);
+    hearth.canvasDiagnosticBridgeReceipt = bridge;
+    hearth.canvasDiagnosticBridgeSummary = clonePlain(state.lastDiagnosticBridgeSummary);
 
     lab.hearthCanvasReceipt = light;
     lab.hearthCanvasParentReceipt = light;
     lab.hearthCanvasLocalStationReceipt = full;
     lab.hearthCanvasStationReceipt = full;
     lab.hearthCanvasChildDistributionSwitchboardReceipt = full;
-    lab.hearthCanvasExpressionPortReceipt = port;
+    lab.hearthCanvasDiagnosticBridgeReceipt = bridge;
+    lab.hearthCanvasDiagnosticBridgeSummary = clonePlain(state.lastDiagnosticBridgeSummary);
 
     hearth.canvasStructuralCarrier = getStructuralCarrier();
     hearth.canvasCarrier = getStructuralCarrier();
@@ -3161,63 +2958,57 @@
   }
 
   function notifyRouteConductor() {
-    if (notifyInProgress) return false;
-    notifyInProgress = true;
+    const summary = getCanvasStationSummary();
 
-    try {
-      const summary = getCanvasStationSummary();
+    const candidates = [
+      readPath("HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR"),
+      readPath("HEARTH.routeConductorControlOwnershipPassiveWatchdogRepair"),
+      readPath("DEXTER_LAB.hearthRouteConductorControlOwnershipPassiveWatchdogRepair"),
+      readPath("HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR"),
+      readPath("HEARTH.routeConductorNorthStarCompletionCycleGovernor"),
+      readPath("DEXTER_LAB.hearthRouteConductorNorthStarCompletionCycleGovernor"),
+      readPath("HEARTH.routeConductor"),
+      readPath("HEARTH.southRouteConductor"),
+      readPath("HEARTH.routeConductorCentralStationSwitchboardWestV42SouthOutputAlignment"),
+      readPath("DEXTER_LAB.hearthRouteConductor"),
+      readPath("DEXTER_LAB.hearthSouthRouteConductor"),
+      readPath("DEXTER_LAB.hearthRouteConductorCentralStationSwitchboardWestV42SouthOutputAlignment"),
+      root.HEARTH_ROUTE_CONDUCTOR,
+      root.HEARTH_SOUTH_ROUTE_CONDUCTOR,
+      root.HEARTH_ROUTE_CONDUCTOR_CENTRAL_STATION_SWITCHBOARD_WEST_V4_2_SOUTH_OUTPUT_ALIGNMENT
+    ];
 
-      const candidates = [
-        readPath("HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR"),
-        readPath("HEARTH.routeConductorControlOwnershipPassiveWatchdogRepair"),
-        readPath("DEXTER_LAB.hearthRouteConductorControlOwnershipPassiveWatchdogRepair"),
-        readPath("HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR"),
-        readPath("HEARTH.routeConductorNorthStarCompletionCycleGovernor"),
-        readPath("DEXTER_LAB.hearthRouteConductorNorthStarCompletionCycleGovernor"),
-        readPath("HEARTH.routeConductor"),
-        readPath("HEARTH.southRouteConductor"),
-        readPath("HEARTH.routeConductorCentralStationSwitchboardWestV42SouthOutputAlignment"),
-        readPath("DEXTER_LAB.hearthRouteConductor"),
-        readPath("DEXTER_LAB.hearthSouthRouteConductor"),
-        readPath("DEXTER_LAB.hearthRouteConductorCentralStationSwitchboardWestV42SouthOutputAlignment"),
-        root.HEARTH_ROUTE_CONDUCTOR,
-        root.HEARTH_SOUTH_ROUTE_CONDUCTOR,
-        root.HEARTH_ROUTE_CONDUCTOR_CENTRAL_STATION_SWITCHBOARD_WEST_V4_2_SOUTH_OUTPUT_ALIGNMENT
-      ];
+    const methods = [
+      "receiveCanvasStationSummary",
+      "receiveCanvasLocalStationSummary",
+      "receiveCanvasParentSummary",
+      "reconcileCanvas",
+      "refresh"
+    ];
 
-      const methods = [
-        "receiveCanvasStationSummary",
-        "receiveCanvasLocalStationSummary",
-        "receiveCanvasParentSummary",
-        "reconcileCanvas"
-      ];
+    for (const target of candidates) {
+      if (!target || !isObject(target)) continue;
 
-      for (const target of candidates) {
-        if (!target || !isObject(target)) continue;
+      for (const method of methods) {
+        if (!isFunction(target[method])) continue;
 
-        for (const method of methods) {
-          if (!isFunction(target[method])) continue;
-
-          try {
-            target[method](clonePlain(summary));
-            state.routeConductorNotified = true;
-            state.routeConductorNotifyMethod = method;
-            state.routeConductorNotificationError = "";
-            return true;
-          } catch (error) {
-            state.routeConductorNotificationError = error && error.message ? error.message : String(error);
-            recordError("ROUTE_CONDUCTOR_NOTIFICATION_FAILED_NONBLOCKING", error, { method });
-            return false;
-          }
+        try {
+          target[method](clonePlain(summary));
+          state.routeConductorNotified = true;
+          state.routeConductorNotifyMethod = method;
+          state.routeConductorNotificationError = "";
+          return true;
+        } catch (error) {
+          state.routeConductorNotificationError = error && error.message ? error.message : String(error);
+          recordError("ROUTE_CONDUCTOR_NOTIFICATION_FAILED_NONBLOCKING", error, { method });
+          return false;
         }
       }
-
-      state.routeConductorNotified = false;
-      state.routeConductorNotifyMethod = "NONE";
-      return false;
-    } finally {
-      notifyInProgress = false;
     }
+
+    state.routeConductorNotified = false;
+    state.routeConductorNotifyMethod = "NONE";
+    return false;
   }
 
   function updateDatasetAndReceipt() {
@@ -3246,10 +3037,10 @@
 
     state.bootAuditComplete = true;
 
-    record("CANVAS_LOCAL_STATION_V9_3_EXPRESSION_PORT_BOOT_AUDIT_COMPLETE", {
-      routeConductorContractRecognized: state.routeConductorContractRecognized,
+    record("CANVAS_LOCAL_STATION_DIAGNOSTIC_BRIDGE_ALIGNMENT_BOOT_AUDIT_COMPLETE", {
       routeConductorCurrentV9_3Recognized: state.routeConductorCurrentV9_3Recognized,
-      routeConductorAcceptedLineageV9_2Recognized: state.routeConductorAcceptedLineageV9_2Recognized,
+      routeConductorLineageV9_2Observed: state.routeConductorLineageV9_2Observed,
+      routeConductorLineageV9_2AuthorityAccepted: false,
       routeConductorReleaseAuthorityAccepted: state.routeConductorReleaseAuthorityAccepted,
       releasePacketObserved: state.releasePacketObserved,
       releasePacketValid: state.releasePacketValid,
@@ -3257,8 +3048,10 @@
       acceptedReleaseSource: state.acceptedReleaseSource,
       canvasParentReleaseAccepted: state.canvasParentReleaseAccepted,
       eastDispatchPacketPublished: state.eastDispatchPacketPublished,
-      expressionReceiptPortActive: true,
-      expressionPortEvidenceComplete: state.expressionPortEvidenceComplete,
+      diagnosticBridgeSummaryStatus: state.diagnosticBridgeSummaryStatus,
+      expressionBridgeHeld: true,
+      expressionPortsBuilt: false,
+      getLastEastDispatchPacketAvailable: true,
       canvasEastApiReady: state.eastApiReady,
       canvasEastEvidenceReady: state.canvasEastEvidenceReady,
       f13StrictEvidenceGap: state.f13StrictEvidenceGap,
@@ -3290,16 +3083,12 @@
     RECEIPT,
     PREVIOUS_CONTRACT,
     PREVIOUS_RECEIPT,
-    LINEAGE_CONTRACT,
-    LINEAGE_RECEIPT,
     BASELINE_CONTRACT,
     BASELINE_RECEIPT,
     CURRENT_ROUTE_CONDUCTOR_CONTRACT,
     CURRENT_ROUTE_CONDUCTOR_RECEIPT,
     LINEAGE_ROUTE_CONDUCTOR_CONTRACT,
     LINEAGE_ROUTE_CONDUCTOR_RECEIPT,
-    ROUTE_CONDUCTOR_FACING_CONTRACT,
-    ROUTE_CONDUCTOR_FACING_RECEIPT,
     MACRO_WEST_CONTRACT,
     CURRENT_EAST_CONTRACT,
     FILE,
@@ -3309,13 +3098,12 @@
     EAST_FILE,
     WEST_FILE,
     SOUTH_FILE,
-    EXPRESSION_PORT_FILE,
     MACRO_WEST_FILE,
+    NORTH_FILE,
     ROUTE,
+    DIAGNOSTIC_ROUTE,
 
-    EXPRESSION_PACKET_TYPE,
-    RECEIPT_PACKET_TYPE,
-    EXPRESSION_PORT_STANDARD,
+    REQUIRED_RELEASE,
     RELEASE_SOURCE,
     CHILD_STATUS,
     EAST_RESULT_CLASS,
@@ -3327,9 +3115,9 @@
     previousReceipt: PREVIOUS_RECEIPT,
     baselineContract: BASELINE_CONTRACT,
     baselineReceipt: BASELINE_RECEIPT,
-    routeConductorFacingContract: ROUTE_CONDUCTOR_FACING_CONTRACT,
     file: FILE,
     route: ROUTE,
+    diagnosticRoute: DIAGNOSTIC_ROUTE,
     role: state.role,
 
     boot,
@@ -3345,13 +3133,6 @@
     consumeReleasePacket,
     receiveReleasePacket,
     receiveCanvasReleasePacket,
-
-    receiveExpressionPacket,
-    receiveReceiptPacket,
-    receiveExpressionReceiptPair,
-    getExpressionPortState,
-    getExpressionPortReceipt,
-    getCanvasPortStatus,
 
     receiveChildPacket,
     receiveEastPacket,
@@ -3375,6 +3156,11 @@
     recomputeParentState,
     resolveF13Gap,
 
+    readDiagnosticRailSummary,
+    composeDiagnosticBridgeSummary,
+    getDiagnosticBridgeSummary,
+    getDiagnosticBridgeReceipt,
+
     getCanvasStationSummary,
     getCanvasStationReceipt,
     getCanvasStationReceiptLight,
@@ -3396,22 +3182,22 @@
     supportsCanvasLocalStation: true,
     supportsChildDistributionSwitchboard: true,
     supportsRouteConductorReleasePacketIntake: true,
-    supportsCurrentRouteConductorV9_3: true,
-    supportsAcceptedLineageRouteConductorV9_2: true,
-    supportsRouteConductorFacingV11_3_1Compatibility: true,
+    supportsCurrentRouteConductorV9_3Authority: true,
+    supportsLineageRouteConductorV9_2ObservationOnly: true,
+    supportsDiagnosticBridgeSummary: true,
+    supportsDiagnosticReceiptBridge: true,
+    supportsExpressionHeldUntilBridgeStable: true,
     supportsDatasetReportingOnlyNotAuthority: true,
     supportsGlobalObservationOnlyNotAuthority: true,
     supportsFallbackAliasObservationOnly: true,
-    supportsPublicReceiverCandidateOnly: true,
+    supportsPublicReceiverValidatedCandidateIntake: true,
     supportsParentReleaseAcceptance: true,
     supportsEastDispatchPublication: true,
     supportsCanvasChildAggregation: true,
     supportsEastApiEvidenceSeparation: true,
     supportsHeldPacketDoesNotDemoteApi: true,
     supportsRouteConductorSummarySurface: true,
-    supportsExpressionReceiptPort: true,
-    supportsExpressionReceiptSeparation: true,
-    supportsDiagnosticCanvasPortStatus: true,
+    supportsDatasetFallbackBlankPacketBlock: true,
     supportsLastEastDispatchPacketGetter: true,
 
     ownsCanvasParentIdentity: true,
@@ -3421,9 +3207,10 @@
     ownsCanvasChildDiscovery: true,
     ownsCanvasChildAggregateReadiness: true,
     ownsCanvasStationSummary: true,
-    ownsExpressionReceiptPort: true,
+    ownsDiagnosticBridgeSummary: true,
 
     ownsRouteConductorSwitching: false,
+    ownsDiagnosticRailCaseSelection: false,
     ownsMacroWestAdmissibility: false,
     ownsEastAtlasTruth: false,
     ownsWestInspectionTruth: false,
@@ -3431,6 +3218,9 @@
     ownsMaterialTruth: false,
     ownsElevationTruth: false,
     ownsHydrologyTruth: false,
+    ownsTerrainTruth: false,
+    ownsMountainTruth: false,
+    ownsExpressionPortBuild: false,
     ownsF13: false,
     ownsF21: false,
     ownsReadyText: false,
@@ -3459,7 +3249,7 @@
       bootAudit({});
     }
   } catch (error) {
-    recordError("CANVAS_LOCAL_STATION_V9_3_EXPRESSION_PORT_INITIALIZATION_FAILED", error);
+    recordError("CANVAS_LOCAL_STATION_DIAGNOSTIC_BRIDGE_ALIGNMENT_INITIALIZATION_FAILED", error);
 
     try {
       publishGlobals();

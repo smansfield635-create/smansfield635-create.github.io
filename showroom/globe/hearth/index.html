@@ -1,6 +1,6 @@
 <!-- TARGET FILE: /showroom/globe/hearth/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_OPTIMAL_STANDARD_TNT_v2_5 -->
+<!-- HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_RECEIPT_TARGET_RESTORATION_TNT_v2_6 -->
 <!doctype html>
 <html
   lang="en"
@@ -8,12 +8,12 @@
   data-page="hearth-planet-engine-template-development"
   data-page-alias="Hearth"
   data-page-context="Planet Engine and Planetary Template Development page"
-  data-version="G2-PLANET-ENGINE-TEMPLATE-DEVELOPMENT-OPTIMAL-STANDARD-v2_5"
-  data-contract="HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_OPTIMAL_STANDARD_TNT_v2_5"
-  data-previous-contract="HEARTH_HTML_SINGLE_FLOATING_DIAGNOSTIC_DOORWAY_NO_DUPLICATE_TOP_BANNER_TNT_v2_4"
-  data-prior-contract="HEARTH_HTML_PARALLEL_DIAGNOSTIC_RAIL_TOP_PRIORITY_NATIVE_ACCESS_DOORWAY_TNT_v2_3"
+  data-version="G2-PLANET-ENGINE-TEMPLATE-DEVELOPMENT-RECEIPT-TARGET-RESTORATION-v2_6"
+  data-contract="HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_RECEIPT_TARGET_RESTORATION_TNT_v2_6"
+  data-previous-contract="HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_OPTIMAL_STANDARD_TNT_v2_5"
+  data-prior-contract="HEARTH_HTML_SINGLE_FLOATING_DIAGNOSTIC_DOORWAY_NO_DUPLICATE_TOP_BANNER_TNT_v2_4"
   data-baseline-contract="HEARTH_HTML_PARALLEL_DIAGNOSTIC_RAIL_NATIVE_ACCESS_DOORWAY_TNT_v2_2"
-  data-role="hearth-html-planet-engine-template-development-shell"
+  data-role="hearth-html-planet-engine-template-development-receipt-target-restoration-shell"
   data-disposition="current-planet-engine-expression-shell"
   data-public-facing-purpose="planet-engine-template-development"
   data-hearth-alias="Hearth"
@@ -21,6 +21,12 @@
   data-planetary-template-development-page="true"
   data-legacy-print-superseded="true"
   data-optimal-standard-active="true"
+  data-v2-5-visual-standard-preserved="true"
+  data-receipt-target-restoration-active="true"
+  data-receipt-panel-selector="#hearthReceiptPanel"
+  data-receipt-text-selector="[data-hearth-receipt-text]"
+  data-route-status-selector="#hearth-route-status"
+  data-diagnostic-doorway-receiver-restored="true"
   data-visible-planet-stage-primary="true"
   data-visible-planet-mount-required="true"
   data-html-owns-public-shell="true"
@@ -79,7 +85,7 @@
   <title>Hearth · Planet Engine and Planetary Template Development</title>
   <meta
     name="description"
-    content="Hearth is the Planet Engine and Planetary Template Development page for the Mirrorland globe system. The HTML shell hosts the visible planet mount, diagnostic doorway, and downstream Canvas expression chain without claiming runtime, Canvas truth, F13, F21, or final visual pass."
+    content="Hearth is the Planet Engine and Planetary Template Development page for the Mirrorland globe system. The HTML shell hosts the visible planet mount, diagnostic doorway, receipt receiver targets, and downstream Canvas expression chain without claiming runtime, Canvas truth, F13, F21, or final visual pass."
   >
 
   <style>
@@ -189,6 +195,27 @@
     }
 
     .skip:focus{left:8px}
+
+    #hearthDiagnosticRailEmergencyAnchor{
+      position:fixed;
+      left:max(10px,env(safe-area-inset-left));
+      top:max(10px,env(safe-area-inset-top));
+      z-index:100000;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:42px;
+      padding:10px 14px;
+      border:1px solid rgba(243,201,111,.8);
+      border-radius:999px;
+      background:linear-gradient(135deg,#ffe8a3,#f3c96f);
+      color:#06101e;
+      font:950 12px/1.1 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      text-decoration:none;
+      box-shadow:0 16px 44px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.28);
+    }
 
     .shell{
       position:relative;
@@ -793,22 +820,24 @@
 
     .hearth-ledger-receipt{
       display:none;
-      margin-top:10px;
-      border:1px solid rgba(243,201,111,.16);
+      margin:.65rem .9rem .75rem;
+      border:1px solid rgba(243,201,111,.20);
       border-radius:.8rem;
-      background:rgba(0,0,0,.24);
+      background:rgba(0,0,0,.32);
       pointer-events:auto;
       touch-action:pan-y;
     }
 
-    .hearth-ledger-receipt[data-visible="true"]{display:block}
+    .hearth-ledger-receipt[data-visible="true"]{
+      display:block;
+    }
 
     .hearth-ledger-receipt pre{
       margin:0;
       max-height:250px;
       overflow:auto;
       padding:10px;
-      color:rgba(238,247,255,.72);
+      color:rgba(238,247,255,.76);
       white-space:pre-wrap;
       font:700 .62rem/1.38 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
       touch-action:pan-y;
@@ -820,8 +849,12 @@
     .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"]{
       inset:auto .85rem .85rem .85rem;
       min-height:8.2rem;
-      max-height:11.6rem;
+      max-height:12.8rem;
       overflow:hidden;
+    }
+
+    .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"]:has(.hearth-ledger-receipt[data-visible="true"]){
+      max-height:min(28rem,calc(100% - 1.7rem));
     }
 
     .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"] .hearth-ledger-meta,
@@ -1040,6 +1073,12 @@
         pointer-events:auto;
         touch-action:manipulation;
       }
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"]{
+        max-height:14rem;
+      }
+      .hearth-ledger-cockpit[data-cockpit-mode="diagnostic-dock"]:has(.hearth-ledger-receipt[data-visible="true"]){
+        max-height:min(29rem,calc(100% - 1.7rem));
+      }
       .hearth-ledger-actions{padding:.5rem .7rem}
       .hearth-ledger-button{
         flex:1 1 auto;
@@ -1047,6 +1086,12 @@
         font-size:.54rem;
       }
       .diagnostic-grid{grid-template-columns:1fr}
+      #hearthDiagnosticRailEmergencyAnchor{
+        top:auto;
+        bottom:max(12px,env(safe-area-inset-bottom));
+        left:max(10px,env(safe-area-inset-left));
+        right:max(10px,env(safe-area-inset-right));
+      }
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -1064,8 +1109,8 @@
   <script
     defer
     src="/showroom/globe/hearth/index.js?v=HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4"
-    data-loaded-by="HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_OPTIMAL_STANDARD_TNT_v2_5"
-    data-previous-loaded-by="HEARTH_HTML_SINGLE_FLOATING_DIAGNOSTIC_DOORWAY_NO_DUPLICATE_TOP_BANNER_TNT_v2_4"
+    data-loaded-by="HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_RECEIPT_TARGET_RESTORATION_TNT_v2_6"
+    data-previous-loaded-by="HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_OPTIMAL_STANDARD_TNT_v2_5"
     data-js-selector-cache-key="HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4"
     data-js-selector-repair-active="true"
     data-page-alias="Hearth"
@@ -1073,6 +1118,7 @@
     data-planet-engine-page="true"
     data-planetary-template-development-page="true"
     data-visible-planet-stage-primary="true"
+    data-receipt-target-restoration-active="true"
     data-diagnostic-rail-native-access="true"
     data-diagnostic-floating-doorway-owned-by-index="true"
     data-html-loads-diagnostic-rail="false"
@@ -1098,6 +1144,14 @@
 
 <body>
   <a class="skip" href="#hearth-main">Skip to Hearth Planet Engine</a>
+
+  <a
+    id="hearthDiagnosticRailEmergencyAnchor"
+    href="/showroom/globe/hearth/diagnostic/"
+    data-hearth-diagnostic-rail-native-anchor="true"
+    data-hearth-index-emergency-diagnostic-anchor="HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_RECEIPT_TARGET_RESTORATION_TNT_v2_6"
+    aria-label="Open Hearth Diagnostic Rail"
+  >Open Hearth Diagnostic Rail</a>
 
   <button
     type="button"
@@ -1221,6 +1275,7 @@
             data-south-pair-male-shell="true"
             data-female-selector-pending="true"
             data-html-cache-renewal-active="true"
+            data-receipt-target-restoration-active="true"
             data-diagnostic-rail-native-access="true"
             data-diagnostic-floating-doorway-owned-by-index="true"
             data-diagnostic-rail-route="/showroom/globe/hearth/diagnostic/"
@@ -1231,7 +1286,7 @@
               <h2 class="hearth-ledger-title">PLANETARY TEMPLATE DEVELOPMENT SHELL</h2>
               <div class="hearth-ledger-meta" data-hearth-stage-label>F1 · Planet engine shell painted</div>
               <div class="hearth-ledger-meta" data-hearth-heartbeat-text>page=Hearth · context=Planet Engine and Planetary Template Development · visible-planet-mount=ready · runtime=delegated · canvas=finger-chain downstream</div>
-              <div class="hearth-ledger-latest" data-hearth-latest-event>latest=HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_OPTIMAL_STANDARD_TNT_v2_5</div>
+              <div class="hearth-ledger-latest" data-hearth-latest-event>latest=HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_RECEIPT_TARGET_RESTORATION_TNT_v2_6</div>
             </div>
 
             <div class="hearth-ledger-progress" data-hearth-index-progress-strip="true">
@@ -1253,6 +1308,70 @@
               <button class="hearth-ledger-button" type="button" data-hearth-collapse-cockpit>Expand cockpit</button>
             </div>
 
+            <div
+              id="hearthReceiptPanel"
+              class="hearth-ledger-receipt"
+              data-hearth-receipt-box
+              data-visible="false"
+            >
+              <pre data-hearth-receipt-text>HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_RECEIPT_TARGET_RESTORATION_RECEIPT_v2_6
+contract=HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_RECEIPT_TARGET_RESTORATION_TNT_v2_6
+previousContract=HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_OPTIMAL_STANDARD_TNT_v2_5
+priorContract=HEARTH_HTML_SINGLE_FLOATING_DIAGNOSTIC_DOORWAY_NO_DUPLICATE_TOP_BANNER_TNT_v2_4
+route=/showroom/globe/hearth/
+target=/showroom/globe/hearth/index.html
+pageAlias=Hearth
+pageContext=Planet Engine and Planetary Template Development page
+v2_5VisualStandardPreserved=true
+receiptTargetRestorationActive=true
+receiptPanelSelector=#hearthReceiptPanel
+receiptTextSelector=[data-hearth-receipt-text]
+routeStatusSelector=#hearth-route-status
+diagnosticDoorwayReceiverRestored=true
+floatingDiagnosticAnchor=#hearthDiagnosticRailEmergencyAnchor
+legacyPrintSuperseded=true
+optimalStandardActive=true
+visiblePlanetStagePrimary=true
+visiblePlanetMountRequired=true
+htmlOwnsPublicShell=true
+htmlOwnsPlanetMount=true
+htmlOwnsRuntime=false
+htmlOwnsCanvasDrawing=false
+htmlOwnsCanvasTruth=false
+htmlOwnsFingerTruth=false
+htmlOwnsRouteConductor=false
+htmlOwnsDiagnosticRail=false
+diagnosticRailRoute=/showroom/globe/hearth/diagnostic/
+diagnosticRailLoadedByHtml=false
+diagnosticRailIframe=false
+diagnosticRailDirectNorthCall=false
+femaleSelector=/showroom/globe/hearth/index.js
+selectorCacheBust=HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4
+scriptSrc=/showroom/globe/hearth/index.js?v=HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4
+expectedIndexJsContract=HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4
+expectedRouteConductorContract=HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_TNT_v9_4
+expectedCanvasParentContract=HEARTH_CANVAS_EXPRESSION_HUB_FINGER_MANAGER_TNT_v11_6
+htmlLoadsEastEntryOnly=true
+htmlLoadsRuntimeTable=false
+htmlLoadsSourceStack=false
+htmlLoadsCanvas=false
+htmlLoadsWest=false
+htmlLoadsNorth=false
+htmlLoadsSouth=false
+routeConductorDelegated=true
+canvasF13Delegated=true
+fingersDownstream=true
+f13Claimed=false
+f21NorthOnly=true
+f21Claimed=false
+readyTextAllowed=false
+readyTextClaimed=false
+visualPassClaimed=false
+generatedImage=false
+graphicBox=false
+webGL=false</pre>
+            </div>
+
             <div class="hearth-ledger-scroll">
               <div class="hearth-ledger-lanes" data-hearth-lane-list>
                 <section class="hearth-ledger-lane" data-lane="F1" data-status="SHELL">
@@ -1268,16 +1387,16 @@
                   </div>
                 </section>
 
-                <section class="hearth-ledger-lane" data-lane="F2" data-status="ANCHORS">
+                <section class="hearth-ledger-lane" data-lane="F2" data-status="RECEIVER">
                   <div class="hearth-ledger-lane-top">
                     <span class="hearth-ledger-lane-title">
-                      <strong>F2 · Mount anchors</strong>
-                      <span>globe stage, canvas mount, cockpit, status, receipt, and diagnostic doorway remain exposed</span>
+                      <strong>F2 · Receiver targets</strong>
+                      <span>receipt panel, receipt text node, route status, and diagnostic doorway targets restored</span>
                     </span>
-                    <span class="hearth-ledger-lane-status">ANCHORS</span>
+                    <span class="hearth-ledger-lane-status">RECEIVER</span>
                   </div>
                   <div class="hearth-ledger-lane-track">
-                    <span class="hearth-ledger-lane-fill" style="width:34%"></span>
+                    <span class="hearth-ledger-lane-fill" style="width:38%"></span>
                   </div>
                 </section>
 
@@ -1345,62 +1464,6 @@
                     <span class="hearth-ledger-lane-fill" style="width:0%"></span>
                   </div>
                 </section>
-              </div>
-
-              <div
-                id="hearthReceiptPanel"
-                class="hearth-ledger-receipt"
-                data-hearth-receipt-box
-                data-visible="false"
-              >
-                <pre data-hearth-receipt-text>HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_OPTIMAL_STANDARD_RECEIPT_v2_5
-contract=HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_OPTIMAL_STANDARD_TNT_v2_5
-previousContract=HEARTH_HTML_SINGLE_FLOATING_DIAGNOSTIC_DOORWAY_NO_DUPLICATE_TOP_BANNER_TNT_v2_4
-route=/showroom/globe/hearth/
-target=/showroom/globe/hearth/index.html
-pageAlias=Hearth
-pageContext=Planet Engine and Planetary Template Development page
-legacyPrintSuperseded=true
-optimalStandardActive=true
-visiblePlanetStagePrimary=true
-visiblePlanetMountRequired=true
-htmlOwnsPublicShell=true
-htmlOwnsPlanetMount=true
-htmlOwnsRuntime=false
-htmlOwnsCanvasDrawing=false
-htmlOwnsCanvasTruth=false
-htmlOwnsFingerTruth=false
-htmlOwnsRouteConductor=false
-htmlOwnsDiagnosticRail=false
-diagnosticRailRoute=/showroom/globe/hearth/diagnostic/
-diagnosticRailLoadedByHtml=false
-diagnosticRailIframe=false
-diagnosticRailDirectNorthCall=false
-femaleSelector=/showroom/globe/hearth/index.js
-selectorCacheBust=HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4
-scriptSrc=/showroom/globe/hearth/index.js?v=HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4
-expectedIndexJsContract=HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4
-expectedRouteConductorContract=HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_TNT_v9_4
-expectedCanvasParentContract=HEARTH_CANVAS_EXPRESSION_HUB_FINGER_MANAGER_TNT_v11_6
-htmlLoadsEastEntryOnly=true
-htmlLoadsRuntimeTable=false
-htmlLoadsSourceStack=false
-htmlLoadsCanvas=false
-htmlLoadsWest=false
-htmlLoadsNorth=false
-htmlLoadsSouth=false
-routeConductorDelegated=true
-canvasF13Delegated=true
-fingersDownstream=true
-f13Claimed=false
-f21NorthOnly=true
-f21Claimed=false
-readyTextAllowed=false
-readyTextClaimed=false
-visualPassClaimed=false
-generatedImage=false
-graphicBox=false
-webGL=false</pre>
               </div>
             </div>
           </aside>
@@ -1503,6 +1566,9 @@ webGL=false</pre>
               <div class="diagnostic"><b>Diagnostic Rail</b><a href="/showroom/globe/hearth/diagnostic/" data-hearth-diagnostic-rail-field>/showroom/globe/hearth/diagnostic/</a></div>
               <div class="diagnostic"><b>Visible Mount</b><span data-hearth-diagnostic-visible-mount>#hearthCanvasMount</span></div>
               <div class="diagnostic"><b>Globe Stage</b><span data-hearth-diagnostic-globe-stage>#hearthGlobeStage</span></div>
+              <div class="diagnostic"><b>Receipt Panel</b><span data-hearth-diagnostic-receipt-panel>#hearthReceiptPanel</span></div>
+              <div class="diagnostic"><b>Receipt Text</b><span data-hearth-diagnostic-receipt-text>[data-hearth-receipt-text]</span></div>
+              <div class="diagnostic"><b>Route Status</b><span data-hearth-diagnostic-route-status>#hearth-route-status</span></div>
               <div class="diagnostic"><b>Index Selector</b><span data-hearth-diagnostic-east>/showroom/globe/hearth/index.js</span></div>
               <div class="diagnostic"><b>Index Contract</b><span data-hearth-diagnostic-index-contract>HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4</span></div>
               <div class="diagnostic"><b>Route Conductor</b><span data-hearth-diagnostic-route-conductor>HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_TNT_v9_4</span></div>
@@ -1518,19 +1584,26 @@ webGL=false</pre>
         </details>
 
         <template
-          id="hearth-html-planet-engine-template-development-optimal-standard-receipt"
+          id="hearth-html-planet-engine-template-development-receipt-target-restoration-receipt"
           class="receipt"
           data-route-receipt
           data-hearth-html-receipt
         >
-HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_OPTIMAL_STANDARD_TNT_v2_5
+HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_RECEIPT_TARGET_RESTORATION_TNT_v2_6
 route=/showroom/globe/hearth/
 target=/showroom/globe/hearth/index.html
-previous=HEARTH_HTML_SINGLE_FLOATING_DIAGNOSTIC_DOORWAY_NO_DUPLICATE_TOP_BANNER_TNT_v2_4
-prior=HEARTH_HTML_PARALLEL_DIAGNOSTIC_RAIL_TOP_PRIORITY_NATIVE_ACCESS_DOORWAY_TNT_v2_3
+previous=HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_OPTIMAL_STANDARD_TNT_v2_5
+prior=HEARTH_HTML_SINGLE_FLOATING_DIAGNOSTIC_DOORWAY_NO_DUPLICATE_TOP_BANNER_TNT_v2_4
 baseline=HEARTH_HTML_PARALLEL_DIAGNOSTIC_RAIL_NATIVE_ACCESS_DOORWAY_TNT_v2_2
 pageAlias=Hearth
 pageContext=Planet Engine and Planetary Template Development page
+v2_5VisualStandardPreserved=true
+receiptTargetRestorationActive=true
+receiptPanel=#hearthReceiptPanel
+receiptText=[data-hearth-receipt-text]
+routeStatus=#hearth-route-status
+diagnosticDoorwayReceiverRestored=true
+floatingDiagnosticAnchor=#hearthDiagnosticRailEmergencyAnchor
 legacyPrintSuperseded=true
 optimalStandardActive=true
 visiblePlanetStagePrimary=true
@@ -1539,7 +1612,6 @@ mount=#hearthCanvasMount
 globeStage=#hearthGlobeStage
 cockpit=#hearthLoadCockpit
 status=#hearth-route-status
-receiptPanel=#hearthReceiptPanel
 mapPortal=#hearthMapPortal
 femaleJsSelector=/showroom/globe/hearth/index.js
 selectorCacheBust=HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4
@@ -1571,7 +1643,7 @@ routeConductorDelegated=true
 canvasF13Delegated=true
 fingersDownstream=true
 f1=shell paint
-f2=dynamic alignment anchors present
+f2=receiver targets restored
 f3=planet engine context active
 f5=index selector
 f8=route conductor delegated
@@ -1595,7 +1667,7 @@ webGL=false
         </template>
       </section>
 
-      <pre id="hearth-route-status" data-hearth-route-status hidden>Hearth Planet Engine and Planetary Template Development shell ready. Route=/showroom/globe/hearth/. Alias=Hearth. Contract=HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_OPTIMAL_STANDARD_TNT_v2_5. Previous=HEARTH_HTML_SINGLE_FLOATING_DIAGNOSTIC_DOORWAY_NO_DUPLICATE_TOP_BANNER_TNT_v2_4. Visible planet mount=#hearthCanvasMount. Index selector=/showroom/globe/hearth/index.js?v=HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4. Expected route conductor=HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_TNT_v9_4. Expected Canvas parent=HEARTH_CANVAS_EXPRESSION_HUB_FINGER_MANAGER_TNT_v11_6. HTML loads Canvas=false. Runtime delegated=true. Canvas F13 delegated=true. F21 North-only=true. Visual pass claimed=false. Generated image=false. GraphicBox=false. WebGL=false.</pre>
+      <pre id="hearth-route-status" data-hearth-route-status hidden>Hearth Planet Engine and Planetary Template Development shell ready. Route=/showroom/globe/hearth/. Alias=Hearth. Contract=HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_RECEIPT_TARGET_RESTORATION_TNT_v2_6. Previous=HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_OPTIMAL_STANDARD_TNT_v2_5. Prior=HEARTH_HTML_SINGLE_FLOATING_DIAGNOSTIC_DOORWAY_NO_DUPLICATE_TOP_BANNER_TNT_v2_4. Receipt target restoration=true. Receipt panel=#hearthReceiptPanel. Receipt text=[data-hearth-receipt-text]. Route status=#hearth-route-status. Diagnostic doorway=/showroom/globe/hearth/diagnostic/. Floating diagnostic anchor=#hearthDiagnosticRailEmergencyAnchor. Visible planet mount=#hearthCanvasMount. Index selector=/showroom/globe/hearth/index.js?v=HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4. Expected route conductor=HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_TNT_v9_4. Expected Canvas parent=HEARTH_CANVAS_EXPRESSION_HUB_FINGER_MANAGER_TNT_v11_6. HTML loads Canvas=false. Runtime delegated=true. Canvas F13 delegated=true. F21 North-only=true. Visual pass claimed=false. Generated image=false. GraphicBox=false. WebGL=false.</pre>
 
       <noscript>
         <section class="panel hero" aria-label="JavaScript required notice">
@@ -1612,7 +1684,7 @@ webGL=false
     </main>
 
     <footer>
-      HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_OPTIMAL_STANDARD_TNT_v2_5 · Hearth · Planet Engine and Planetary Template Development · visible planet mount primary · runtime delegated · Canvas/fingers delegated · F13 not claimed · F21 North-only · visual pass not claimed.
+      HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_RECEIPT_TARGET_RESTORATION_TNT_v2_6 · Hearth · Planet Engine and Planetary Template Development · receiver targets restored · visible planet mount primary · runtime delegated · Canvas/fingers delegated · F13 not claimed · F21 North-only · visual pass not claimed.
     </footer>
   </div>
 </body>

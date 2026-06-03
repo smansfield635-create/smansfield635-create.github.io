@@ -1,4 +1,4 @@
-// /assets/hearth/hearth.canvas.finger.light.js
+// assets/hearth/hearth.canvas.finger.light.js
 // HEARTH_CANVAS_FINGER_LIGHT_FOUR_CHANNEL_VISIBILITY_TNT_v1
 // Full-file replacement.
 // Canvas Finger 4 / Light / Four-Channel Visibility.

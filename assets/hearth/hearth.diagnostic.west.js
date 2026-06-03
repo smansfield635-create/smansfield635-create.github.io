@@ -3,22 +3,17 @@
 // Full-file replacement.
 // Diagnostic rail WEST child only.
 // Internal implementation renewal:
-// HEARTH_DIAGNOSTIC_WEST_RENDERED_PLANET_PROOF_SPREAD_RUNTIME_ADOPTION_TNT_v3
+// HEARTH_DIAGNOSTIC_WEST_RENDERED_PROOF_NAMESPACE_ADOPTION_TNT_v4
 // Purpose:
 // - Preserve WEST parent-visible rendered-target authority contract.
-// - Calibrate WEST from the latest NORTH receipts.
-// - Shift WEST away from button-centered failure diagnosis into rendered planet-proof spread inspection.
-// - Treat floating/off-viewport Show Receipt hit-test results as non-controlling observability conditions.
-// - Read the current rendered Hearth proof chain:
-//   HTML shell -> index selector -> route conductor v9_5 -> Canvas expression hub -> finger manager -> visible base globe carrier.
-// - Inspect rendered proof through target DOM, target datasets, route conductor globals, receipt globals, Hearth namespace, and Dexter Lab namespace.
-// - Publish North-consumable proof fields:
-//   CANVAS_ELEMENT_FOUND
-//   ROUTE_CONDUCTOR_CONTRACT_READABLE_IN_RENDERED_TARGET
-//   RENDERED_PLANET_PROOF_FULLY_INSPECTED
-//   WEST_RENDERED_PROOF_SPREAD_COMPLETE
+// - Shift WEST from direct DOM-canvas dependency into rendered proof namespace adoption.
+// - Treat visible stage and mount proof as admissible receiver evidence.
+// - Adopt runtime namespace candidates as the bridge into Route Conductor v9_5, Canvas parent, finger manager, and base globe proof.
+// - Keep Show Receipt / hit-test observability as secondary non-controlling evidence when offscreen.
+// - Publish rendered planet-proof evidence for NORTH adjudication.
 // - Preserve EAST as CASE_5 served-source lane.
 // - Preserve NORTH as final PRIMARY_CASE and recommendation authority.
+// - Preserve SOUTH as report-output / meaning-preservation lane.
 // - Preserve no F13 claim, no F21 claim, no ready text, no visual pass, no generated image, no GraphicBox, no WebGL.
 // Does not own:
 // - served-source parsing
@@ -41,27 +36,21 @@
   const RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_WEST_RENDERED_TARGET_AUTHORITY_PROBE_RECEIPT_v1";
 
   const IMPLEMENTATION_CONTRACT =
-    "HEARTH_DIAGNOSTIC_WEST_RENDERED_PLANET_PROOF_SPREAD_RUNTIME_ADOPTION_TNT_v3";
+    "HEARTH_DIAGNOSTIC_WEST_RENDERED_PROOF_NAMESPACE_ADOPTION_TNT_v4";
   const IMPLEMENTATION_RECEIPT =
-    "HEARTH_DIAGNOSTIC_WEST_RENDERED_PLANET_PROOF_SPREAD_RUNTIME_ADOPTION_RECEIPT_v3";
+    "HEARTH_DIAGNOSTIC_WEST_RENDERED_PROOF_NAMESPACE_ADOPTION_RECEIPT_v4";
 
   const PREVIOUS_IMPLEMENTATION_CONTRACT =
-    "HEARTH_DIAGNOSTIC_WEST_RENDERED_PLANET_PROOF_SPREAD_ALIGNMENT_TNT_v2";
+    "HEARTH_DIAGNOSTIC_WEST_RENDERED_PLANET_PROOF_SPREAD_RUNTIME_ADOPTION_TNT_v3";
   const BASELINE_IMPLEMENTATION_CONTRACT =
     "HEARTH_DIAGNOSTIC_WEST_HIT_TEST_OBSERVABILITY_REFINEMENT_TNT_v1";
 
   const VERSION =
-    "2026-06-03.hearth-diagnostic-west-rendered-planet-proof-spread-runtime-adoption-v3";
+    "2026-06-03.hearth-diagnostic-west-rendered-proof-namespace-adoption-v4";
 
   const FILE = "/assets/hearth/hearth.diagnostic.west.js";
   const TARGET_ROUTE = "/showroom/globe/hearth/";
   const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
-
-  const CURRENT_HTML_CONTRACT =
-    "HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_RECEIPT_TARGET_RESTORATION_TNT_v2_6";
-
-  const CURRENT_INDEX_JS_CONTRACT =
-    "HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4";
 
   const CURRENT_ROUTE_CONDUCTOR_CONTRACT =
     "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_TNT_v9_5";
@@ -74,6 +63,12 @@
     "HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_TNT_v9_3",
     "HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_TNT_v9_2"
   ]);
+
+  const CURRENT_HTML_CONTRACT =
+    "HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_RECEIPT_TARGET_RESTORATION_TNT_v2_6";
+
+  const CURRENT_INDEX_JS_CONTRACT =
+    "HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4";
 
   const CURRENT_CANVAS_PARENT_CONTRACTS = Object.freeze([
     "HEARTH_CANVAS_EXPRESSION_HUB_VISIBLE_BASE_GLOBE_CARRIER_TNT_v11_7",
@@ -104,91 +99,23 @@
     "#hearthGlobeStage",
     "[data-hearth-globe-stage]",
     "[data-hearth-planet-engine-stage]",
-    "[data-hearth-planetary-template-development-stage]",
-    "[data-hearth-visible-planet-stage]"
+    "[data-hearth-planetary-template-development-stage]"
   ]);
 
   const PLANET_MOUNT_SELECTORS = Object.freeze([
     "#hearthCanvasMount",
     "[data-hearth-canvas-mount]",
     "[data-hearth-visible-planet-mount]",
-    "[data-hearth-planet-engine-mount]",
-    "[data-hearth-canvas-stage-mount]"
+    "[data-hearth-planet-engine-mount]"
   ]);
 
   const CANVAS_SELECTORS = Object.freeze([
     "canvas[data-hearth-canvas='true']",
     "canvas[data-hearth-canvas-texture='true']",
     "canvas[data-hearth-planet-canvas='true']",
-    "canvas[data-hearth-visible-planet-canvas='true']",
     "#hearthCanvasMount canvas",
     "[data-hearth-canvas-mount] canvas",
-    "[data-hearth-visible-planet-mount] canvas",
-    "[data-hearth-planet-engine-mount] canvas",
     "canvas"
-  ]);
-
-  const ROUTE_CONDUCTOR_PATHS = Object.freeze([
-    "HEARTH.routeConductor",
-    "HEARTH.southRouteConductor",
-    "HEARTH.routeConductorPrimary",
-    "HEARTH.routeConductorV95",
-    "HEARTH.routeConductorCanvasExpressionHubVisibleGlobeProofIngestion",
-    "HEARTH.routeConductorCanvasLocalStationBridgeAlignment",
-    "HEARTH.hearthRouteConductor",
-    "DEXTER_LAB.hearthRouteConductor",
-    "DEXTER_LAB.hearthSouthRouteConductor",
-    "HEARTH_ROUTE_CONDUCTOR",
-    "HEARTH_SOUTH_ROUTE_CONDUCTOR",
-    "HEARTH_ROUTE_CONDUCTOR_PRIMARY_GATE",
-    "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION",
-    "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT"
-  ]);
-
-  const ROUTE_CONDUCTOR_RECEIPT_PATHS = Object.freeze([
-    "HEARTH.routeConductorReceipt",
-    "HEARTH.southRouteConductorReceipt",
-    "HEARTH.routeConductorPrimaryReceipt",
-    "HEARTH.routeConductorV95Receipt",
-    "HEARTH.routeConductorCanvasExpressionHubVisibleGlobeProofIngestionReceipt",
-    "HEARTH.routeConductorCanvasLocalStationBridgeAlignmentReceipt",
-    "HEARTH.hearthRouteConductorReceipt",
-    "DEXTER_LAB.hearthRouteConductorReceipt",
-    "DEXTER_LAB.hearthSouthRouteConductorReceipt",
-    "HEARTH_ROUTE_CONDUCTOR_RECEIPT",
-    "HEARTH_SOUTH_ROUTE_CONDUCTOR_RECEIPT",
-    "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_RECEIPT",
-    "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_RECEIPT_v9_5"
-  ]);
-
-  const CANVAS_AUTHORITY_PATHS = Object.freeze([
-    "HEARTH.canvas",
-    "HEARTH.canvasParent",
-    "HEARTH.canvasExpressionHub",
-    "HEARTH.canvasFingerManager",
-    "HEARTH.visibleBaseGlobeCarrier",
-    "HEARTH.hearthCanvas",
-    "DEXTER_LAB.hearthCanvas",
-    "HEARTH_CANVAS",
-    "HEARTH_CANVAS_PARENT",
-    "HEARTH_CANVAS_EXPRESSION_HUB",
-    "HEARTH_CANVAS_FINGER_MANAGER",
-    "HEARTH_VISIBLE_BASE_GLOBE_CARRIER"
-  ]);
-
-  const CANVAS_RECEIPT_PATHS = Object.freeze([
-    "HEARTH.canvasReceipt",
-    "HEARTH.canvasParentReceipt",
-    "HEARTH.canvasExpressionHubReceipt",
-    "HEARTH.canvasFingerManagerReceipt",
-    "HEARTH.visibleBaseGlobeCarrierReceipt",
-    "HEARTH.hearthCanvasReceipt",
-    "DEXTER_LAB.hearthCanvasReceipt",
-    "HEARTH_CANVAS_RECEIPT",
-    "HEARTH_CANVAS_PARENT_RECEIPT",
-    "HEARTH_CANVAS_EXPRESSION_HUB_RECEIPT",
-    "HEARTH_CANVAS_FINGER_MANAGER_RECEIPT",
-    "HEARTH_VISIBLE_BASE_GLOBE_CARRIER_RECEIPT"
   ]);
 
   const FALLBACK = Object.freeze({
@@ -202,7 +129,8 @@
     PARTIAL: "PARTIAL",
     FAILED: "FAILED",
     COMPLETE: "COMPLETE",
-    HELD: "HELD"
+    HELD: "HELD",
+    NONE: "none"
   });
 
   const STATUS = Object.freeze({
@@ -263,10 +191,6 @@
     return Boolean(value && typeof value === "object");
   }
 
-  function isPlainObject(value) {
-    return Boolean(value && typeof value === "object" && !Array.isArray(value));
-  }
-
   function isFunction(value) {
     return typeof value === "function";
   }
@@ -308,7 +232,7 @@
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
       if (Array.isArray(value)) return value.slice();
-      if (isPlainObject(value)) return { ...value };
+      if (isObject(value)) return { ...value };
       return value;
     }
   }
@@ -316,13 +240,12 @@
   function normalizeError(error, prefix) {
     const name = error && error.name ? safeString(error.name) : "ERROR";
     const message = error && error.message ? safeString(error.message) : safeString(error, "UNKNOWN_ERROR");
-    return `${prefix || "ERROR"}:${bounded(`${name}:${message}`, 1000)}`;
+    return `${prefix || "ERROR"}:${bounded(`${name}:${message}`, 900)}`;
   }
 
   function addNote(state, note) {
-    const clean = bounded(note, 1600);
+    const clean = bounded(note, 1500);
     if (!clean) return;
-
     if (!state.westSecondaryEvidenceNotes.includes(clean)) {
       state.westSecondaryEvidenceNotes.push(clean);
     }
@@ -342,7 +265,6 @@
       const found = q(context, selector);
       if (found) return found;
     }
-
     return null;
   }
 
@@ -413,11 +335,9 @@
 
   function cssEscape(value) {
     const text = safeString(value);
-
     try {
       if (root.CSS && isFunction(root.CSS.escape)) return root.CSS.escape(text);
     } catch (_error) {}
-
     return text.replace(/[^a-zA-Z0-9_-]/g, "\\$&");
   }
 
@@ -447,10 +367,8 @@
         "data-hearth-canvas-mount",
         "data-hearth-stage-label",
         "data-hearth-visible-planet-mount",
-        "data-hearth-visible-planet-stage",
         "data-hearth-planet-engine-stage",
-        "data-hearth-planet-canvas",
-        "data-hearth-visible-planet-canvas",
+        "data-hearth-planetary-template-development-stage",
         "aria-label",
         "role",
         "href"
@@ -515,186 +433,10 @@
     }
 
     if (isObject(authority.receiptPacket)) return authority.receiptPacket;
-    if (isObject(authority.receiptObject)) return authority.receiptObject;
     if (isObject(authority.receipt)) return authority.receipt;
-    if (isObject(authority.report)) return authority.report;
     if (authority.contract || authority.receipt || authority.version) return authority;
 
     return null;
-  }
-
-  function scoreReceiptCandidate(candidate) {
-    const receipt = candidate && candidate.receipt ? candidate.receipt : {};
-    const contract = safeString(firstDefined(
-      receipt.contract,
-      receipt.CONTRACT,
-      receipt.currentRouteConductorContract,
-      receipt.currentCanvasParentContract,
-      receipt.canvasContract
-    ));
-
-    let score = 0;
-
-    if (contract === CURRENT_ROUTE_CONDUCTOR_CONTRACT) score += 1000;
-    if (ACCEPTED_ROUTE_CONDUCTOR_LINEAGE.includes(contract)) score += 500;
-    if (CURRENT_CANVAS_PARENT_CONTRACTS.includes(contract)) score += 300;
-
-    const proofKeys = [
-      "visiblePlanetProofReady",
-      "canvasVisiblePlanetProofReady",
-      "baseGlobeVisibleCarrierReady",
-      "visibleBaseGlobeCarrierActive",
-      "canvasMounted",
-      "canvasDrawComplete",
-      "baseGlobeDrawComplete",
-      "f13CanvasEvidenceComplete",
-      "expressionHubActive",
-      "fingerManagerActive",
-      "fingerRegistryActive"
-    ];
-
-    for (const key of proofKeys) {
-      if (safeBool(receipt[key], false)) score += 20;
-    }
-
-    if (candidate.path && /routeConductor|ROUTE_CONDUCTOR/i.test(candidate.path)) score += 40;
-    if (candidate.path && /canvas|CANVAS|globe|GLOBE/i.test(candidate.path)) score += 20;
-
-    return score;
-  }
-
-  function collectKnownReceiptCandidates(targetWindow, paths, receiptPaths) {
-    const win = targetWindow || root;
-    const candidates = [];
-
-    for (const path of paths) {
-      const authority = readPath(win, path);
-      if (!authority) continue;
-
-      const receipt = callReceiptMethod(authority) || {};
-      candidates.push({ path, authority, receipt });
-    }
-
-    for (const path of receiptPaths) {
-      const receipt = readPath(win, path);
-      if (!isObject(receipt)) continue;
-
-      candidates.push({ path, authority: null, receipt });
-    }
-
-    return candidates;
-  }
-
-  function collectNamespaceReceiptCandidates(targetWindow, state) {
-    const win = targetWindow || root;
-    const roots = [
-      { path: "HEARTH", value: readPath(win, "HEARTH") },
-      { path: "DEXTER_LAB", value: readPath(win, "DEXTER_LAB") }
-    ];
-
-    const candidates = [];
-    const visited = new Set();
-    const queue = [];
-
-    for (const entry of roots) {
-      if (entry.value && isObject(entry.value)) {
-        queue.push({ path: entry.path, value: entry.value, depth: 0 });
-      }
-    }
-
-    let inspected = 0;
-    const maxObjects = 160;
-    const maxDepth = 3;
-
-    while (queue.length && inspected < maxObjects) {
-      const item = queue.shift();
-      const value = item.value;
-
-      if (!value || !isObject(value) || visited.has(value)) continue;
-
-      visited.add(value);
-      inspected += 1;
-
-      const directReceipt = callReceiptMethod(value);
-      if (directReceipt && isObject(directReceipt)) {
-        const contractText = JSON.stringify(directReceipt).slice(0, 4000);
-        if (
-          /HEARTH_ROUTE_CONDUCTOR|HEARTH_CANVAS|VISIBLE|GLOBE|PLANET|F13|canvas|routeConductor/i.test(contractText)
-        ) {
-          candidates.push({
-            path: item.path,
-            authority: value,
-            receipt: directReceipt
-          });
-        }
-      }
-
-      if (item.depth >= maxDepth) continue;
-
-      let keys = [];
-
-      try {
-        keys = Object.keys(value);
-      } catch (_error) {
-        continue;
-      }
-
-      for (const key of keys.slice(0, 80)) {
-        if (!/hearth|route|conductor|canvas|globe|planet|visible|base|finger|receipt|south|parent|f13/i.test(key)) {
-          continue;
-        }
-
-        let child = null;
-
-        try {
-          child = value[key];
-        } catch (_error) {
-          continue;
-        }
-
-        if (!child || !isObject(child) || visited.has(child)) continue;
-
-        queue.push({
-          path: `${item.path}.${key}`,
-          value: child,
-          depth: item.depth + 1
-        });
-      }
-    }
-
-    state.namespaceObjectScanCount = String(inspected);
-    state.namespaceReceiptCandidateCount = String(candidates.length);
-
-    if (candidates.length) {
-      addNote(state, `NAMESPACE_RENDERED_PROOF_CANDIDATES_FOUND:${candidates.length}`);
-    }
-
-    return candidates;
-  }
-
-  function chooseBestCandidate(candidates) {
-    if (!Array.isArray(candidates) || !candidates.length) {
-      return { path: "NONE", authority: null, receipt: {}, score: 0 };
-    }
-
-    let best = null;
-    let bestScore = -1;
-
-    for (const candidate of candidates) {
-      const score = scoreReceiptCandidate(candidate);
-
-      if (score > bestScore) {
-        best = candidate;
-        bestScore = score;
-      }
-    }
-
-    return {
-      path: best && best.path ? best.path : "UNKNOWN",
-      authority: best ? best.authority : null,
-      receipt: best && best.receipt ? best.receipt : {},
-      score: bestScore
-    };
   }
 
   function readDataset(targetDocument) {
@@ -715,6 +457,116 @@
     } catch (_error) {
       return {};
     }
+  }
+
+  function readNamespaceCandidates(targetWindow) {
+    const win = targetWindow || root;
+    const hearth = win.HEARTH || {};
+    const dexter = win.DEXTER_LAB || {};
+
+    const candidates = [];
+
+    const paths = [
+      "HEARTH.routeConductor",
+      "HEARTH.southRouteConductor",
+      "HEARTH.routeConductorCanvasExpressionHubVisibleGlobeProofIngestion",
+      "HEARTH.routeConductorCanvasLocalStationBridgeAlignment",
+      "HEARTH.canvas",
+      "HEARTH.canvasParent",
+      "HEARTH.canvasExpressionHub",
+      "HEARTH.canvasFingerManager",
+      "HEARTH.visibleBaseGlobeCarrier",
+      "HEARTH.hearthCanvas",
+      "HEARTH.planetCanvas",
+      "HEARTH.planetEngine",
+      "DEXTER_LAB.hearthRouteConductor",
+      "DEXTER_LAB.hearthCanvas",
+      "DEXTER_LAB.hearthPlanetEngine",
+      "HEARTH_ROUTE_CONDUCTOR",
+      "HEARTH_SOUTH_ROUTE_CONDUCTOR",
+      "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION",
+      "HEARTH_CANVAS",
+      "HEARTH_CANVAS_PARENT",
+      "HEARTH_CANVAS_EXPRESSION_HUB",
+      "HEARTH_CANVAS_FINGER_MANAGER",
+      "HEARTH_VISIBLE_BASE_GLOBE_CARRIER",
+      "HEARTH_PLANET_ENGINE"
+    ];
+
+    for (const path of paths) {
+      const value = readPath(win, path);
+      if (value) candidates.push({ path, value, receipt: callReceiptMethod(value) || {} });
+    }
+
+    const receiptPaths = [
+      "HEARTH.routeConductorReceipt",
+      "HEARTH.southRouteConductorReceipt",
+      "HEARTH.routeConductorCanvasExpressionHubVisibleGlobeProofIngestionReceipt",
+      "HEARTH.canvasReceipt",
+      "HEARTH.canvasParentReceipt",
+      "HEARTH.canvasExpressionHubReceipt",
+      "HEARTH.canvasFingerManagerReceipt",
+      "HEARTH.visibleBaseGlobeCarrierReceipt",
+      "DEXTER_LAB.hearthRouteConductorReceipt",
+      "DEXTER_LAB.hearthCanvasReceipt",
+      "HEARTH_ROUTE_CONDUCTOR_RECEIPT",
+      "HEARTH_SOUTH_ROUTE_CONDUCTOR_RECEIPT",
+      "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_RECEIPT",
+      "HEARTH_CANVAS_RECEIPT",
+      "HEARTH_CANVAS_PARENT_RECEIPT",
+      "HEARTH_CANVAS_EXPRESSION_HUB_RECEIPT",
+      "HEARTH_CANVAS_FINGER_MANAGER_RECEIPT",
+      "HEARTH_VISIBLE_BASE_GLOBE_CARRIER_RECEIPT"
+    ];
+
+    for (const path of receiptPaths) {
+      const receipt = readPath(win, path);
+      if (isObject(receipt)) candidates.push({ path, value: null, receipt });
+    }
+
+    for (const key of Object.keys(hearth)) {
+      const lower = key.toLowerCase();
+      if (!/route|conductor|canvas|globe|planet|finger|carrier|engine/.test(lower)) continue;
+      const value = hearth[key];
+      if (value && isObject(value)) candidates.push({ path: `HEARTH.${key}`, value, receipt: callReceiptMethod(value) || value });
+    }
+
+    for (const key of Object.keys(dexter)) {
+      const lower = key.toLowerCase();
+      if (!/hearth|route|conductor|canvas|globe|planet|finger|carrier|engine/.test(lower)) continue;
+      const value = dexter[key];
+      if (value && isObject(value)) candidates.push({ path: `DEXTER_LAB.${key}`, value, receipt: callReceiptMethod(value) || value });
+    }
+
+    const deduped = [];
+    const seen = new Set();
+
+    for (const candidate of candidates) {
+      const signature = candidate.path;
+      if (seen.has(signature)) continue;
+      seen.add(signature);
+      deduped.push(candidate);
+    }
+
+    return deduped;
+  }
+
+  function getReceiptValue(receipt, keys, fallback = undefined) {
+    if (!isObject(receipt)) return fallback;
+
+    for (const key of keys) {
+      if (receipt[key] !== undefined && receipt[key] !== null && receipt[key] !== "") return receipt[key];
+
+      const lower = key.toLowerCase();
+      for (const candidate of Object.keys(receipt)) {
+        if (candidate.toLowerCase() === lower) {
+          const value = receipt[candidate];
+          if (value !== undefined && value !== null && value !== "") return value;
+        }
+      }
+    }
+
+    return fallback;
   }
 
   function currentPathMatchesTarget(targetWindow) {
@@ -822,9 +674,7 @@
       addNote(state, "CASE_5_CONTROLLING_FROM_NORTH_WEST_RENDERED_READ_REMAINS_SECONDARY");
     }
 
-    if (opts.frameElement) {
-      readFrameObservability(opts.frameElement, state);
-    }
+    if (opts.frameElement) readFrameObservability(opts.frameElement, state);
 
     if (opts.targetDocument && opts.targetDocument.documentElement) {
       const targetDocument = opts.targetDocument;
@@ -875,7 +725,6 @@
       }
 
       const targetWindow = frame.contentWindow || targetDocument.defaultView || null;
-
       state.diagnosticTargetAccessStatus = ACCESS.RENDERED_TARGET_ACCESSIBLE;
       state.diagnosticTargetAccessError = "";
 
@@ -907,7 +756,6 @@
     for (const selector of VISIBLE_STATUS_SELECTORS) {
       const node = q(targetDocument, selector);
       const text = node ? safeTrim(node.textContent) : "";
-
       if (text) return text;
     }
 
@@ -987,14 +835,11 @@
 
       if (!rect) {
         state.hitTestUnreadableReason = "SHOW_RECEIPT_RECT_UNREADABLE";
-        state.showReceiptHitTestNonControlling = "true";
-        addNote(state, "SHOW_RECEIPT_RECT_UNREADABLE_NON_CONTROLLING_FOR_PLANET_PROOF");
         return { error: "SHOW_RECEIPT_RECT_UNREADABLE" };
       }
 
       if (rect.width <= 0 || rect.height <= 0) {
         state.hitTestUnreadableReason = "SHOW_RECEIPT_RECT_EMPTY_OR_ZERO_SIZE";
-        state.showReceiptHitTestNonControlling = "true";
         addNote(state, "SHOW_RECEIPT_RECT_EMPTY_OR_ZERO_SIZE_NON_CONTROLLING_FOR_PLANET_PROOF");
         return { error: "SHOW_RECEIPT_RECT_EMPTY_OR_ZERO_SIZE", rect };
       }
@@ -1192,6 +1037,8 @@
     const canvasAttrWidth = canvas ? Number(canvas.width || 0) : 0;
     const canvasAttrHeight = canvas ? Number(canvas.height || 0) : 0;
 
+    const stageNonZero = Boolean(stageRect && stageRect.width > 0 && stageRect.height > 0);
+    const mountNonZero = Boolean(mountRect && mountRect.width > 0 && mountRect.height > 0);
     const canvasRectNonZero = Boolean(
       canvas &&
       (
@@ -1199,9 +1046,6 @@
         (canvasRect && canvasRect.width > 0 && canvasRect.height > 0)
       )
     );
-
-    const stageNonZero = Boolean(stageRect && stageRect.width > 0 && stageRect.height > 0);
-    const mountNonZero = Boolean(mountRect && mountRect.width > 0 && mountRect.height > 0);
 
     state.planetStagePresent = boolText(Boolean(stage));
     state.planetStageRect = rectToPacket(stageRect);
@@ -1211,27 +1055,27 @@
     state.canvasMountRect = rectToPacket(mountRect);
     state.canvasMountRectNonZero = boolText(mountNonZero);
 
-    state.domCanvasElementFound = boolText(Boolean(canvas));
     state.canvasElementPresent = boolText(Boolean(canvas));
+    state.canvasElementFound = boolText(Boolean(canvas));
     state.canvasRect = rectToPacket(canvasRect);
     state.canvasRectNonZero = boolText(canvasRectNonZero);
     state.canvasAttributeWidth = canvas ? String(Math.round(canvasAttrWidth || 0)) : FALLBACK.NOT_FOUND;
     state.canvasAttributeHeight = canvas ? String(Math.round(canvasAttrHeight || 0)) : FALLBACK.NOT_FOUND;
+
     state.canvasDrawEvidencePresent = boolText(canvasRectNonZero);
     state.domVisiblePlanetProofReady = boolText(Boolean(stageNonZero && mountNonZero && canvasRectNonZero));
+    state.stageMountDomProofReady = boolText(Boolean(stageNonZero && mountNonZero));
 
+    if (stageNonZero) addNote(state, "PLANET_STAGE_NONZERO_DOM_PROOF");
+    if (mountNonZero) addNote(state, "CANVAS_MOUNT_NONZERO_DOM_PROOF");
     if (!stage) addNote(state, "PLANET_STAGE_NOT_FOUND");
     if (!mount) addNote(state, "CANVAS_MOUNT_NOT_FOUND");
     if (!canvas) addNote(state, "CANVAS_ELEMENT_NOT_FOUND_DOM_ONLY");
     if (canvas && !canvasRectNonZero) addNote(state, "CANVAS_ELEMENT_PRESENT_BUT_ZERO_SIZE");
-    if (stageNonZero) addNote(state, "PLANET_STAGE_NONZERO_DOM_PROOF");
-    if (mountNonZero) addNote(state, "CANVAS_MOUNT_NONZERO_DOM_PROOF");
-    if (canvasRectNonZero) addNote(state, "CANVAS_ELEMENT_NONZERO_DOM_PROOF");
   }
 
   function contractRecognized(contract, current, lineage) {
     const c = safeString(contract);
-
     if (!c || c === FALLBACK.UNKNOWN || c === FALLBACK.NOT_FOUND || c === FALLBACK.UNREADABLE) {
       return FALLBACK.UNKNOWN;
     }
@@ -1241,260 +1085,200 @@
     return "false";
   }
 
-  function readCandidateField(candidates, fieldNames) {
-    for (const candidate of candidates) {
-      const receipt = candidate && candidate.receipt ? candidate.receipt : {};
+  function scoreCandidate(candidate) {
+    const receipt = candidate.receipt || {};
+    const path = candidate.path || "";
+    const contract = safeString(getReceiptValue(receipt, ["contract", "CONTRACT", "currentRouteConductorContract"], ""));
+    const currentCanvasParentContract = safeString(getReceiptValue(receipt, ["currentCanvasParentContract", "canvasContract", "currentCanvasContract"], ""));
 
-      for (const field of fieldNames) {
-        if (receipt[field] !== undefined && receipt[field] !== null && receipt[field] !== "") {
-          return receipt[field];
-        }
+    let score = 0;
+
+    if (/route|conductor/i.test(path)) score += 3;
+    if (/canvas|globe|planet|finger|carrier|engine/i.test(path)) score += 2;
+    if (contract === CURRENT_ROUTE_CONDUCTOR_CONTRACT) score += 5;
+    if (ACCEPTED_ROUTE_CONDUCTOR_LINEAGE.includes(contract)) score += 2;
+    if (CURRENT_CANVAS_PARENT_CONTRACTS.includes(currentCanvasParentContract)) score += 4;
+
+    const truthyKeys = [
+      "expressionHubActive",
+      "canvasExpressionHubActive",
+      "fingerManagerActive",
+      "canvasFingerManagerActive",
+      "fingerRegistryActive",
+      "visibleBaseGlobeCarrierActive",
+      "canvasVisibleBaseGlobeCarrierActive",
+      "canvasMounted",
+      "canvasDrawComplete",
+      "baseGlobeDrawComplete",
+      "baseGlobeVisibleCarrierReady",
+      "visiblePlanetProofReady",
+      "f13CanvasEvidenceComplete"
+    ];
+
+    for (const key of truthyKeys) {
+      if (safeBool(getReceiptValue(receipt, [key], false), false)) score += 2;
+    }
+
+    return score;
+  }
+
+  function chooseBestCandidate(candidates) {
+    let best = null;
+    let bestScore = -1;
+
+    for (const candidate of candidates) {
+      const score = scoreCandidate(candidate);
+      if (score > bestScore) {
+        best = candidate;
+        bestScore = score;
       }
     }
 
-    return undefined;
+    return { best, score: bestScore };
   }
 
-  function readAnyRouteConductorProof(targetDocument, targetWindow, state) {
+  function readRouteConductorProof(targetDocument, targetWindow, state) {
     const dataset = readDataset(targetDocument);
     const bodyDataset = readBodyDataset(targetDocument);
+    const candidates = readNamespaceCandidates(targetWindow);
+    const chosen = chooseBestCandidate(candidates);
+    const source = chosen.best || { path: "NONE", receipt: {} };
+    const receipt = source.receipt || {};
 
-    const knownRouteCandidates = collectKnownReceiptCandidates(
-      targetWindow,
-      ROUTE_CONDUCTOR_PATHS,
-      ROUTE_CONDUCTOR_RECEIPT_PATHS
-    );
+    state.namespaceRenderedProofCandidatesFound = String(candidates.length);
+    state.namespaceRenderedProofCandidatePaths = candidates.map((candidate) => candidate.path).slice(0, 20).join(" | ") || FALLBACK.NONE;
+    state.namespaceRenderedProofCandidateSelected = source.path || "NONE";
+    state.namespaceRenderedProofCandidateScore = String(chosen.score || 0);
 
-    const knownCanvasCandidates = collectKnownReceiptCandidates(
-      targetWindow,
-      CANVAS_AUTHORITY_PATHS,
-      CANVAS_RECEIPT_PATHS
-    );
-
-    const namespaceCandidates = collectNamespaceReceiptCandidates(targetWindow, state);
-
-    const allCandidates = [
-      ...knownRouteCandidates,
-      ...knownCanvasCandidates,
-      ...namespaceCandidates
-    ];
-
-    state.routeConductorKnownCandidateCount = String(knownRouteCandidates.length);
-    state.canvasKnownCandidateCount = String(knownCanvasCandidates.length);
-    state.renderedProofCandidateCount = String(allCandidates.length);
-
-    const best = chooseBestCandidate(allCandidates);
-    const primaryReceipt = best.receipt || {};
+    if (candidates.length) addNote(state, `NAMESPACE_RENDERED_PROOF_CANDIDATES_FOUND:${candidates.length}`);
+    if (source.path && source.path !== "NONE") addNote(state, `NAMESPACE_RENDERED_PROOF_CANDIDATE_SELECTED:${source.path}`);
 
     const routeConductorContract = safeString(firstDefined(
-      primaryReceipt.contract,
-      primaryReceipt.CONTRACT,
-      primaryReceipt.currentRouteConductorContract,
-      primaryReceipt.routeConductorContract,
+      getReceiptValue(receipt, ["contract", "CONTRACT", "currentRouteConductorContract"]),
       dataset.hearthRouteConductorContract,
       dataset.hearthSouthRouteConductorContract,
-      dataset.currentRouteConductorContract,
-      bodyDataset.hearthRouteConductorContract,
-      bodyDataset.hearthSouthRouteConductorContract
+      bodyDataset.hearthRouteConductorContract
     ), FALLBACK.UNKNOWN);
 
     const routeConductorReceipt = safeString(firstDefined(
-      primaryReceipt.receipt,
-      primaryReceipt.RECEIPT,
-      primaryReceipt.currentRouteConductorReceipt,
-      primaryReceipt.routeConductorReceipt,
+      getReceiptValue(receipt, ["receipt", "RECEIPT", "currentRouteConductorReceipt"]),
       dataset.hearthRouteConductorReceipt,
-      dataset.hearthSouthRouteConductorReceipt,
-      bodyDataset.hearthRouteConductorReceipt,
-      bodyDataset.hearthSouthRouteConductorReceipt
+      bodyDataset.hearthRouteConductorReceipt
     ), FALLBACK.UNKNOWN);
 
     const currentCanvasParentContract = safeString(firstDefined(
-      primaryReceipt.currentCanvasParentContract,
-      primaryReceipt.canvasParentContract,
-      primaryReceipt.canvasContract,
-      readCandidateField(allCandidates, ["currentCanvasParentContract", "canvasParentContract", "canvasContract", "contract"]),
+      getReceiptValue(receipt, ["currentCanvasParentContract", "canvasContract", "currentCanvasContract"]),
       dataset.hearthSouthCurrentCanvasParentContract,
       dataset.hearthCanvasContract,
-      dataset.hearthCanvasParentContract,
-      bodyDataset.hearthSouthCurrentCanvasParentContract,
-      bodyDataset.hearthCanvasContract,
-      bodyDataset.hearthCanvasParentContract
+      bodyDataset.hearthCanvasContract
     ), FALLBACK.UNKNOWN);
 
     const currentCanvasParentReceipt = safeString(firstDefined(
-      primaryReceipt.currentCanvasParentReceipt,
-      primaryReceipt.canvasParentReceipt,
-      primaryReceipt.canvasReceipt,
-      readCandidateField(allCandidates, ["currentCanvasParentReceipt", "canvasParentReceipt", "canvasReceipt", "receipt"]),
+      getReceiptValue(receipt, ["currentCanvasParentReceipt", "canvasReceipt", "currentCanvasReceipt"]),
       dataset.hearthSouthCurrentCanvasParentReceipt,
       dataset.hearthCanvasReceipt,
-      dataset.hearthCanvasParentReceipt,
-      bodyDataset.hearthSouthCurrentCanvasParentReceipt,
-      bodyDataset.hearthCanvasReceipt,
-      bodyDataset.hearthCanvasParentReceipt
+      bodyDataset.hearthCanvasReceipt
     ), FALLBACK.UNKNOWN);
 
     const expressionHubActive = safeBool(firstDefined(
-      primaryReceipt.expressionHubActive,
-      primaryReceipt.canvasExpressionHubActive,
-      readCandidateField(allCandidates, ["expressionHubActive", "canvasExpressionHubActive"]),
+      getReceiptValue(receipt, ["expressionHubActive", "canvasExpressionHubActive"]),
       dataset.hearthSouthExpressionHubActive,
       dataset.hearthSouthCanvasExpressionHubActive,
       dataset.hearthCanvasExpressionHubActive,
-      bodyDataset.hearthSouthExpressionHubActive,
-      bodyDataset.hearthSouthCanvasExpressionHubActive,
       bodyDataset.hearthCanvasExpressionHubActive
     ), false);
 
     const fingerManagerActive = safeBool(firstDefined(
-      primaryReceipt.fingerManagerActive,
-      primaryReceipt.canvasFingerManagerActive,
-      readCandidateField(allCandidates, ["fingerManagerActive", "canvasFingerManagerActive"]),
+      getReceiptValue(receipt, ["fingerManagerActive", "canvasFingerManagerActive"]),
       dataset.hearthSouthFingerManagerActive,
       dataset.hearthSouthCanvasFingerManagerActive,
       dataset.hearthCanvasFingerManagerActive,
-      bodyDataset.hearthSouthFingerManagerActive,
-      bodyDataset.hearthSouthCanvasFingerManagerActive,
       bodyDataset.hearthCanvasFingerManagerActive
     ), false);
 
     const fingerRegistryActive = safeBool(firstDefined(
-      primaryReceipt.fingerRegistryActive,
-      readCandidateField(allCandidates, ["fingerRegistryActive"]),
+      getReceiptValue(receipt, ["fingerRegistryActive", "canvasFingerRegistryActive"]),
       dataset.hearthSouthFingerRegistryActive,
-      dataset.hearthCanvasFingerRegistryActive,
-      bodyDataset.hearthSouthFingerRegistryActive,
-      bodyDataset.hearthCanvasFingerRegistryActive
+      dataset.hearthCanvasFingerRegistryActive
     ), false);
 
     const visibleBaseGlobeCarrierActive = safeBool(firstDefined(
-      primaryReceipt.visibleBaseGlobeCarrierActive,
-      primaryReceipt.canvasVisibleBaseGlobeCarrierActive,
-      readCandidateField(allCandidates, ["visibleBaseGlobeCarrierActive", "canvasVisibleBaseGlobeCarrierActive"]),
+      getReceiptValue(receipt, ["visibleBaseGlobeCarrierActive", "canvasVisibleBaseGlobeCarrierActive"]),
       dataset.hearthSouthVisibleBaseGlobeCarrierActive,
       dataset.hearthSouthCanvasVisibleBaseGlobeCarrierActive,
-      dataset.hearthCanvasVisibleBaseGlobeCarrierActive,
-      bodyDataset.hearthSouthVisibleBaseGlobeCarrierActive,
-      bodyDataset.hearthSouthCanvasVisibleBaseGlobeCarrierActive,
-      bodyDataset.hearthCanvasVisibleBaseGlobeCarrierActive
+      dataset.hearthCanvasVisibleBaseGlobeCarrierActive
     ), false);
 
     const canvasMounted = safeBool(firstDefined(
-      primaryReceipt.canvasMounted,
-      readCandidateField(allCandidates, ["canvasMounted", "mounted", "mount"]),
+      getReceiptValue(receipt, ["canvasMounted", "mounted", "canvasMountActive"]),
       dataset.hearthSouthCanvasMounted,
-      dataset.hearthCanvasMounted,
-      bodyDataset.hearthSouthCanvasMounted,
-      bodyDataset.hearthCanvasMounted
+      dataset.hearthCanvasMounted
     ), false);
 
     const canvasDrawComplete = safeBool(firstDefined(
-      primaryReceipt.canvasDrawComplete,
-      primaryReceipt.imageRendered,
-      primaryReceipt.drawComplete,
-      readCandidateField(allCandidates, ["canvasDrawComplete", "imageRendered", "drawComplete"]),
+      getReceiptValue(receipt, ["canvasDrawComplete", "drawComplete", "canvasDrawn"]),
       dataset.hearthSouthCanvasDrawComplete,
-      dataset.hearthCanvasDrawComplete,
-      bodyDataset.hearthSouthCanvasDrawComplete,
-      bodyDataset.hearthCanvasDrawComplete
+      dataset.hearthCanvasDrawComplete
     ), false);
 
     const baseGlobeDrawComplete = safeBool(firstDefined(
-      primaryReceipt.baseGlobeDrawComplete,
-      primaryReceipt.visibleBaseGlobeDrawComplete,
-      readCandidateField(allCandidates, ["baseGlobeDrawComplete", "visibleBaseGlobeDrawComplete"]),
+      getReceiptValue(receipt, ["baseGlobeDrawComplete", "visibleBaseGlobeDrawComplete"]),
       dataset.hearthSouthBaseGlobeDrawComplete,
-      dataset.hearthCanvasBaseGlobeDrawComplete,
-      bodyDataset.hearthSouthBaseGlobeDrawComplete,
-      bodyDataset.hearthCanvasBaseGlobeDrawComplete
+      dataset.hearthCanvasBaseGlobeDrawComplete
     ), false);
 
     const baseGlobeVisibleCarrierReady = safeBool(firstDefined(
-      primaryReceipt.baseGlobeVisibleCarrierReady,
-      primaryReceipt.visibleBaseGlobeCarrierReady,
-      readCandidateField(allCandidates, ["baseGlobeVisibleCarrierReady", "visibleBaseGlobeCarrierReady"]),
+      getReceiptValue(receipt, ["baseGlobeVisibleCarrierReady", "visibleBaseGlobeCarrierReady"]),
       dataset.hearthSouthBaseGlobeVisibleCarrierReady,
-      dataset.hearthCanvasBaseGlobeVisibleCarrierReady,
-      bodyDataset.hearthSouthBaseGlobeVisibleCarrierReady,
-      bodyDataset.hearthCanvasBaseGlobeVisibleCarrierReady
+      dataset.hearthCanvasBaseGlobeVisibleCarrierReady
     ), false);
 
     const visiblePlanetProofReady = safeBool(firstDefined(
-      primaryReceipt.visiblePlanetProofReady,
-      primaryReceipt.canvasVisiblePlanetProofReady,
-      primaryReceipt.renderedPlanetProofReady,
-      readCandidateField(allCandidates, ["visiblePlanetProofReady", "canvasVisiblePlanetProofReady", "renderedPlanetProofReady"]),
+      getReceiptValue(receipt, ["visiblePlanetProofReady", "renderedPlanetProofReady"]),
       dataset.hearthSouthVisiblePlanetProofReady,
-      dataset.hearthCanvasVisiblePlanetProofReady,
-      bodyDataset.hearthSouthVisiblePlanetProofReady,
-      bodyDataset.hearthCanvasVisiblePlanetProofReady
+      dataset.hearthCanvasVisiblePlanetProofReady
     ), false);
 
     const visiblePlanetProofSource = safeString(firstDefined(
-      primaryReceipt.visiblePlanetProofSource,
-      primaryReceipt.canvasVisiblePlanetProofSource,
-      primaryReceipt.renderedPlanetProofSource,
-      readCandidateField(allCandidates, ["visiblePlanetProofSource", "canvasVisiblePlanetProofSource", "renderedPlanetProofSource"]),
-      dataset.hearthSouthVisiblePlanetProofSource,
-      dataset.hearthCanvasVisiblePlanetProofSource,
-      bodyDataset.hearthSouthVisiblePlanetProofSource,
-      bodyDataset.hearthCanvasVisiblePlanetProofSource
+      getReceiptValue(receipt, ["visiblePlanetProofSource", "renderedPlanetProofSource"]),
+      dataset.hearthSouthVisiblePlanetProofSource
     ), FALLBACK.UNKNOWN);
 
     const f13Complete = safeBool(firstDefined(
-      primaryReceipt.f13CanvasEvidenceComplete,
-      primaryReceipt.canvasF13EvidenceComplete,
-      readCandidateField(allCandidates, ["f13CanvasEvidenceComplete", "canvasF13EvidenceComplete"]),
-      dataset.hearthSouthF13CanvasEvidenceComplete,
-      bodyDataset.hearthSouthF13CanvasEvidenceComplete
+      getReceiptValue(receipt, ["f13CanvasEvidenceComplete"]),
+      dataset.hearthSouthF13CanvasEvidenceComplete
     ), false);
 
     const f13Strict = safeBool(firstDefined(
-      primaryReceipt.f13CanvasEvidenceStrict,
-      readCandidateField(allCandidates, ["f13CanvasEvidenceStrict"]),
-      dataset.hearthSouthF13CanvasEvidenceStrict,
-      bodyDataset.hearthSouthF13CanvasEvidenceStrict
+      getReceiptValue(receipt, ["f13CanvasEvidenceStrict"]),
+      dataset.hearthSouthF13CanvasEvidenceStrict
     ), false);
 
     const f13Degraded = safeBool(firstDefined(
-      primaryReceipt.f13CanvasEvidenceDegraded,
-      readCandidateField(allCandidates, ["f13CanvasEvidenceDegraded"]),
-      dataset.hearthSouthF13CanvasEvidenceDegraded,
-      bodyDataset.hearthSouthF13CanvasEvidenceDegraded
+      getReceiptValue(receipt, ["f13CanvasEvidenceDegraded"]),
+      dataset.hearthSouthF13CanvasEvidenceDegraded
     ), false);
 
     const f13HardFail = safeBool(firstDefined(
-      primaryReceipt.f13HardFail,
-      readCandidateField(allCandidates, ["f13HardFail"]),
-      dataset.hearthSouthF13HardFail,
-      bodyDataset.hearthSouthF13HardFail
+      getReceiptValue(receipt, ["f13HardFail"]),
+      dataset.hearthSouthF13HardFail
     ), false);
 
     const f13StrictEvidenceGap = safeString(firstDefined(
-      primaryReceipt.f13StrictEvidenceGap,
-      readCandidateField(allCandidates, ["f13StrictEvidenceGap"]),
-      dataset.hearthSouthF13StrictEvidenceGap,
-      bodyDataset.hearthSouthF13StrictEvidenceGap
+      getReceiptValue(receipt, ["f13StrictEvidenceGap"]),
+      dataset.hearthSouthF13StrictEvidenceGap
     ), FALLBACK.UNKNOWN);
 
     const recommendedNextFile = safeString(firstDefined(
-      primaryReceipt.recommendedNextFile,
-      primaryReceipt.recommendedNextRenewalTarget,
-      readCandidateField(allCandidates, ["recommendedNextFile", "recommendedNextRenewalTarget"]),
+      getReceiptValue(receipt, ["recommendedNextFile", "recommendedNextRenewalTarget"]),
       dataset.hearthSouthRecommendedNextFile,
-      dataset.hearthSouthRecommendedNextRenewalTarget,
-      bodyDataset.hearthSouthRecommendedNextFile,
-      bodyDataset.hearthSouthRecommendedNextRenewalTarget
+      dataset.hearthSouthRecommendedNextRenewalTarget
     ), FALLBACK.UNKNOWN);
 
     const postgameStatus = safeString(firstDefined(
-      primaryReceipt.postgameStatus,
-      readCandidateField(allCandidates, ["postgameStatus"]),
+      getReceiptValue(receipt, ["postgameStatus"]),
       dataset.hearthSouthPostgameStatus,
-      dataset.hearthPostgameStatus,
-      bodyDataset.hearthSouthPostgameStatus,
-      bodyDataset.hearthPostgameStatus
+      dataset.hearthPostgameStatus
     ), FALLBACK.UNKNOWN);
 
     const routeConductorRecognition = contractRecognized(
@@ -1505,16 +1289,12 @@
 
     const canvasParentRecognized = CURRENT_CANVAS_PARENT_CONTRACTS.includes(currentCanvasParentContract);
 
-    state.routeConductorAuthoritySource = best.path;
-    state.routeConductorAuthorityScore = String(best.score || 0);
+    state.routeConductorAuthoritySource = source.path || "NONE";
     state.routeConductorContract = routeConductorContract;
     state.routeConductorReceipt = routeConductorReceipt;
     state.routeConductorV95Detected = boolText(routeConductorContract === CURRENT_ROUTE_CONDUCTOR_CONTRACT);
     state.routeConductorContractRecognized = routeConductorRecognition;
     state.routeConductorLineageAccepted = boolText(routeConductorRecognition === "lineage");
-    state.routeConductorContractReadableInRenderedTarget = boolText(
-      routeConductorRecognition === "true" || routeConductorRecognition === "lineage"
-    );
 
     state.currentCanvasParentContract = currentCanvasParentContract;
     state.currentCanvasParentReceipt = currentCanvasParentReceipt;
@@ -1539,28 +1319,24 @@
     state.postgameStatus = postgameStatus;
 
     const routeConductorCurrentOrLineage = routeConductorRecognition === "true" || routeConductorRecognition === "lineage";
-
     const routeDataEvidence = Boolean(
-      routeConductorCurrentOrLineage &&
-      (
-        expressionHubActive ||
-        fingerManagerActive ||
-        fingerRegistryActive ||
-        visibleBaseGlobeCarrierActive ||
-        canvasMounted ||
-        canvasDrawComplete ||
-        baseGlobeDrawComplete ||
-        baseGlobeVisibleCarrierReady ||
-        visiblePlanetProofReady ||
-        f13Complete ||
-        f13Strict ||
-        f13Degraded ||
-        canvasParentRecognized ||
-        postgameStatus !== FALLBACK.UNKNOWN
-      )
+      routeConductorCurrentOrLineage ||
+      canvasParentRecognized ||
+      expressionHubActive ||
+      fingerManagerActive ||
+      fingerRegistryActive ||
+      visibleBaseGlobeCarrierActive ||
+      canvasMounted ||
+      canvasDrawComplete ||
+      baseGlobeDrawComplete ||
+      baseGlobeVisibleCarrierReady ||
+      visiblePlanetProofReady ||
+      f13Complete ||
+      candidates.length > 0
     );
 
     state.routeConductorDataProofRead = boolText(routeDataEvidence);
+    state.routeConductorContractReadableInRenderedTarget = routeConductorRecognition === FALLBACK.UNKNOWN ? FALLBACK.UNKNOWN : boolText(routeConductorCurrentOrLineage);
 
     if (routeConductorContract === CURRENT_ROUTE_CONDUCTOR_CONTRACT) {
       addNote(state, "ROUTE_CONDUCTOR_V9_5_RENDERED_DATA_PROOF_DETECTED");
@@ -1570,31 +1346,21 @@
       addNote(state, "ROUTE_CONDUCTOR_CONTRACT_READABLE_IN_RENDERED_TARGET");
     } else if (routeConductorRecognition === "false") {
       addNote(state, "ROUTE_CONDUCTOR_CONTRACT_UNRECOGNIZED_IN_RENDERED_TARGET");
+    } else if (candidates.length > 0) {
+      addNote(state, "ROUTE_CONDUCTOR_CONTRACT_UNKNOWN_BUT_NAMESPACE_RENDERED_PROOF_CANDIDATES_PRESENT");
     } else {
       addNote(state, "ROUTE_CONDUCTOR_CONTRACT_UNREADABLE_IN_RENDERED_TARGET");
     }
 
-    if (canvasParentRecognized) {
-      addNote(state, "CURRENT_CANVAS_PARENT_CONTRACT_RECOGNIZED_IN_RENDERED_TARGET");
-    }
-
-    if (routeDataEvidence) {
-      addNote(state, "ROUTE_CONDUCTOR_RENDERED_DATA_PROOF_READ");
-    }
+    if (canvasParentRecognized) addNote(state, "CURRENT_CANVAS_PARENT_CONTRACT_RECOGNIZED_IN_RENDERED_TARGET");
   }
 
   function readRuntimeRelease(targetDocument, targetWindow, state) {
     try {
       const dataset = readDataset(targetDocument);
-      const bodyDataset = readBodyDataset(targetDocument);
-
-      const candidates = [
-        ...collectKnownReceiptCandidates(targetWindow, ROUTE_CONDUCTOR_PATHS, ROUTE_CONDUCTOR_RECEIPT_PATHS),
-        ...collectKnownReceiptCandidates(targetWindow, CANVAS_AUTHORITY_PATHS, CANVAS_RECEIPT_PATHS)
-      ];
-
-      const best = chooseBestCandidate(candidates);
-      const receipt = best.receipt || {};
+      const candidates = readNamespaceCandidates(targetWindow);
+      const chosen = chooseBestCandidate(candidates);
+      const receipt = chosen.best && chosen.best.receipt ? chosen.best.receipt : {};
 
       const combined = [
         dataset.hearthRuntimeReleaseState,
@@ -1603,26 +1369,20 @@
         dataset.hearthIndexPostgameStatus,
         dataset.hearthSouthPostgameStatus,
         dataset.hearthSouthFirstFailedCoordinate,
-        bodyDataset.hearthRuntimeReleaseState,
-        bodyDataset.hearthRuntimeReleaseHeldReason,
-        bodyDataset.hearthPostgameStatus,
-        bodyDataset.hearthIndexPostgameStatus,
-        bodyDataset.hearthSouthPostgameStatus,
-        bodyDataset.hearthSouthFirstFailedCoordinate,
-        receipt.runtimeReleaseState,
-        receipt.runtimeReleaseHeldReason,
-        receipt.postgameStatus,
-        receipt.firstFailedCoordinate,
-        receipt.f13StrictEvidenceGap,
+        getReceiptValue(receipt, ["runtimeReleaseState"]),
+        getReceiptValue(receipt, ["runtimeReleaseHeldReason"]),
+        getReceiptValue(receipt, ["postgameStatus"]),
+        getReceiptValue(receipt, ["firstFailedCoordinate"]),
+        getReceiptValue(receipt, ["f13StrictEvidenceGap"]),
         state.currentVisibleHearthStatus
       ].filter(Boolean).join(" | ");
 
       state.runtimeReleaseState = safeTrim(combined) || FALLBACK.UNKNOWN;
 
       const functionalLockMarker = Boolean(
-        receipt.runtimeReleaseIsLock === true ||
-        receipt.runtimeLock === true ||
-        receipt.queueBlocked === true ||
+        getReceiptValue(receipt, ["runtimeReleaseIsLock"], false) === true ||
+        getReceiptValue(receipt, ["runtimeLock"], false) === true ||
+        getReceiptValue(receipt, ["queueBlocked"], false) === true ||
         /LOCK|BLOCK|STUCK|FAILED|ERROR|QUEUE_BLOCKED/i.test(state.runtimeReleaseState)
       );
 
@@ -1644,114 +1404,80 @@
   }
 
   function deriveRenderedPlanetProof(state) {
-    const domCanvas = state.domCanvasElementFound === "true";
-    const domCanvasNonZero = state.canvasRectNonZero === "true";
-    const domProof = state.domVisiblePlanetProofReady === "true";
-
-    const routeContractReadable = state.routeConductorContractReadableInRenderedTarget === "true";
+    const stageMountProof = state.stageMountDomProofReady === "true";
+    const domCanvasProof = state.domVisiblePlanetProofReady === "true";
     const routeProof = state.routeReceiptVisiblePlanetProofReady === "true";
 
-    const routeCarrier = (
-      state.visibleBaseGlobeCarrierActive === "true" ||
-      state.canvasMounted === "true" ||
-      state.canvasDrawComplete === "true" ||
-      state.baseGlobeDrawComplete === "true" ||
-      state.baseGlobeVisibleCarrierReady === "true" ||
-      state.f13CanvasEvidenceComplete === "true" ||
-      state.f13CanvasEvidenceStrict === "true" ||
-      state.f13CanvasEvidenceDegraded === "true"
-    );
-
-    const routeDataProof = state.routeConductorDataProofRead === "true";
+    const namespaceProof = Number(state.namespaceRenderedProofCandidatesFound || 0) > 0;
     const currentRoute = state.routeConductorV95Detected === "true";
     const lineageRoute = state.routeConductorLineageAccepted === "true";
     const currentCanvasParent = state.currentCanvasParentRecognized === "true";
 
-    const canvasEquivalentFound = Boolean(
-      domCanvas ||
-      routeCarrier ||
-      routeProof ||
-      domProof ||
-      currentCanvasParent ||
-      routeDataProof
+    const routeCarrier = (
+      state.expressionHubActive === "true" ||
+      state.fingerManagerActive === "true" ||
+      state.fingerRegistryActive === "true" ||
+      state.visibleBaseGlobeCarrierActive === "true" ||
+      state.canvasMounted === "true" ||
+      state.canvasDrawComplete === "true" ||
+      state.baseGlobeDrawComplete === "true" ||
+      state.baseGlobeVisibleCarrierReady === "true"
     );
 
-    state.canvasElementFound = boolText(canvasEquivalentFound);
-    state.canvasElementFoundSource = canvasEquivalentFound
-      ? domCanvas
-        ? "DOM_CANVAS_ELEMENT"
-        : routeProof
-          ? "ROUTE_RECEIPT_VISIBLE_PLANET_PROOF"
-          : routeCarrier
-            ? "ROUTE_CONDUCTOR_CANVAS_OR_BASE_GLOBE_CARRIER"
-            : currentCanvasParent
-              ? "CANVAS_PARENT_CONTRACT_PROOF"
-              : "RENDERED_DATA_PROOF"
-      : FALLBACK.UNKNOWN;
+    const routeDataProof = state.routeConductorDataProofRead === "true";
 
     const proofInspected = Boolean(
       state.diagnosticTargetAccessStatus === ACCESS.RENDERED_TARGET_ACCESSIBLE &&
       state.hearthTargetConfirmed === true &&
       (
-        routeContractReadable ||
+        stageMountProof ||
+        domCanvasProof ||
+        routeProof ||
+        namespaceProof ||
         currentRoute ||
         lineageRoute ||
-        routeDataProof ||
         currentCanvasParent ||
-        domCanvas ||
-        domCanvasNonZero ||
-        domProof ||
-        routeProof ||
+        routeDataProof ||
         routeCarrier
       )
     );
 
     const proofReady = Boolean(
       proofInspected &&
-      canvasEquivalentFound &&
       (
         routeProof ||
-        domProof ||
-        domCanvasNonZero ||
+        domCanvasProof ||
+        (stageMountProof && namespaceProof) ||
+        (stageMountProof && routeDataProof) ||
+        (stageMountProof && currentRoute) ||
+        (stageMountProof && currentCanvasParent) ||
         (routeDataProof && routeCarrier) ||
-        (currentRoute && (routeCarrier || currentCanvasParent || routeProof)) ||
-        (lineageRoute && routeCarrier)
+        (currentRoute && (routeCarrier || currentCanvasParent || namespaceProof))
       )
     );
 
     state.renderedPlanetProofInspected = boolText(proofInspected);
-    state.renderedPlanetProofFullyInspected = boolText(proofInspected);
     state.renderedPlanetProofReady = boolText(proofReady);
+    state.renderedPlanetProofFullyInspected = boolText(proofInspected);
+    state.westRenderedProofSpreadComplete = boolText(proofReady || proofInspected);
+
     state.visiblePlanetProofReady = boolText(proofReady);
     state.visiblePlanetProofSource = proofReady
       ? routeProof
         ? state.routeReceiptVisiblePlanetProofSource || "ROUTE_CONDUCTOR_RECEIPT_VISIBLE_PLANET_PROOF"
-        : domProof
+        : domCanvasProof
           ? "DOM_STAGE_MOUNT_CANVAS_NONZERO"
-          : domCanvasNonZero
-            ? "DOM_CANVAS_NONZERO"
-            : routeCarrier
-              ? "ROUTE_CONDUCTOR_CANVAS_BASE_GLOBE_CARRIER_PROOF"
-              : currentCanvasParent
-                ? "CANVAS_PARENT_CONTRACT_PROOF"
-                : "RENDERED_DATA_PROOF_SHAPE"
-      : FALLBACK.UNKNOWN;
+          : stageMountProof && namespaceProof
+            ? "STAGE_MOUNT_NAMESPACE_RENDERED_PROOF_ADOPTION"
+            : currentRoute
+              ? "ROUTE_CONDUCTOR_V9_5_RENDERED_DATA_PROOF"
+              : "RENDERED_DATA_PROOF_SHAPE"
+      : proofInspected
+        ? "RENDERED_PROOF_INSPECTED_NOT_READY"
+        : FALLBACK.UNKNOWN;
 
     state.dataProofReadComplete = proofInspected ? "true" : "false";
     state.dataProofReadStatus = proofInspected ? FALLBACK.COMPLETE : FALLBACK.PARTIAL;
-
-    state.westRenderedProofSpreadComplete = boolText(proofReady);
-    state.westRenderedProofSpreadReason = proofReady
-      ? "VISIBLE_PLANET_PROOF_SPREAD_COMPLETE"
-      : proofInspected
-        ? "VISIBLE_PLANET_PROOF_SPREAD_INSPECTED_NOT_READY"
-        : "VISIBLE_PLANET_PROOF_SPREAD_NOT_FULLY_INSPECTED";
-
-    if (state.canvasElementFound === "true") {
-      addNote(state, `CANVAS_ELEMENT_FOUND:${state.canvasElementFoundSource}`);
-    } else {
-      addNote(state, "CANVAS_ELEMENT_NOT_FOUND");
-    }
 
     if (proofReady) {
       addNote(state, `RENDERED_PLANET_PROOF_READY:${state.visiblePlanetProofSource}`);
@@ -1759,8 +1485,8 @@
       addNote(state, "WEST_RENDERED_PROOF_SPREAD_COMPLETE");
     } else if (proofInspected) {
       addNote(state, "RENDERED_PLANET_PROOF_FULLY_INSPECTED");
+      addNote(state, "WEST_RENDERED_PROOF_SPREAD_COMPLETE");
       addNote(state, "RENDERED_PLANET_PROOF_INSPECTED_BUT_NOT_READY");
-      addNote(state, "WEST_RENDERED_READ_PARTIAL_PLANET_PROOF_SPREAD_INCOMPLETE");
     } else {
       addNote(state, "RENDERED_PLANET_PROOF_NOT_FULLY_INSPECTED");
       addNote(state, "WEST_RENDERED_READ_PARTIAL_PLANET_PROOF_SPREAD_INCOMPLETE");
@@ -1829,7 +1555,7 @@
   function deriveRenderedReadStatus(state) {
     const targetAccessible = state.diagnosticTargetAccessStatus === ACCESS.RENDERED_TARGET_ACCESSIBLE;
     const targetConfirmed = state.hearthTargetConfirmed === true;
-    const spreadComplete = state.westRenderedProofSpreadComplete === "true";
+    const dataComplete = state.dataProofReadComplete === "true";
 
     if (!targetAccessible || !targetConfirmed) {
       state.westRenderedReadComplete = "false";
@@ -1837,10 +1563,10 @@
       return;
     }
 
-    if (spreadComplete) {
+    if (dataComplete) {
       state.westRenderedReadComplete = "true";
       state.westRenderedReadStatus = FALLBACK.COMPLETE;
-      addNote(state, "WEST_RENDERED_READ_COMPLETE_BY_RENDERED_PLANET_PROOF_SPREAD");
+      addNote(state, "WEST_RENDERED_READ_COMPLETE_BY_NAMESPACE_RENDERED_PROOF_ADOPTION");
       return;
     }
 
@@ -1910,8 +1636,12 @@
       frameRect: FALLBACK.NOT_APPLICABLE,
       frameVisibleToDiagnosticRoute: FALLBACK.NOT_APPLICABLE,
 
+      namespaceRenderedProofCandidatesFound: "0",
+      namespaceRenderedProofCandidatePaths: FALLBACK.NONE,
+      namespaceRenderedProofCandidateSelected: FALLBACK.UNKNOWN,
+      namespaceRenderedProofCandidateScore: "0",
+
       routeConductorAuthoritySource: FALLBACK.UNKNOWN,
-      routeConductorAuthorityScore: FALLBACK.UNKNOWN,
       routeConductorContract: FALLBACK.UNKNOWN,
       routeConductorReceipt: FALLBACK.UNKNOWN,
       routeConductorV95Detected: FALLBACK.UNKNOWN,
@@ -1940,28 +1670,25 @@
       canvasMountPresent: FALLBACK.UNKNOWN,
       canvasMountRect: FALLBACK.UNKNOWN,
       canvasMountRectNonZero: FALLBACK.UNKNOWN,
-      domCanvasElementFound: FALLBACK.UNKNOWN,
       canvasElementPresent: FALLBACK.UNKNOWN,
       canvasElementFound: FALLBACK.UNKNOWN,
-      canvasElementFoundSource: FALLBACK.UNKNOWN,
       canvasRect: FALLBACK.UNKNOWN,
       canvasRectNonZero: FALLBACK.UNKNOWN,
       canvasAttributeWidth: FALLBACK.UNKNOWN,
       canvasAttributeHeight: FALLBACK.UNKNOWN,
       canvasDrawEvidencePresent: FALLBACK.UNKNOWN,
       domVisiblePlanetProofReady: FALLBACK.UNKNOWN,
+      stageMountDomProofReady: FALLBACK.UNKNOWN,
 
       renderedPlanetProofInspected: FALLBACK.UNKNOWN,
-      renderedPlanetProofFullyInspected: FALLBACK.UNKNOWN,
       renderedPlanetProofReady: FALLBACK.UNKNOWN,
+      renderedPlanetProofFullyInspected: FALLBACK.UNKNOWN,
+      westRenderedProofSpreadComplete: FALLBACK.UNKNOWN,
       visiblePlanetProofReady: FALLBACK.UNKNOWN,
       visiblePlanetProofSource: FALLBACK.UNKNOWN,
       dataProofReadComplete: "false",
       dataProofReadStatus: FALLBACK.UNKNOWN,
       routeConductorDataProofRead: FALLBACK.UNKNOWN,
-
-      westRenderedProofSpreadComplete: FALLBACK.UNKNOWN,
-      westRenderedProofSpreadReason: FALLBACK.UNKNOWN,
 
       f13CanvasEvidenceComplete: FALLBACK.UNKNOWN,
       f13CanvasEvidenceStrict: FALLBACK.UNKNOWN,
@@ -1970,12 +1697,6 @@
       f13StrictEvidenceGap: FALLBACK.UNKNOWN,
       recommendedNextFile: FALLBACK.UNKNOWN,
       postgameStatus: FALLBACK.UNKNOWN,
-
-      renderedProofCandidateCount: "0",
-      routeConductorKnownCandidateCount: "0",
-      canvasKnownCandidateCount: "0",
-      namespaceObjectScanCount: "0",
-      namespaceReceiptCandidateCount: "0",
 
       syntheticActivationAllowedByDefault: false,
       syntheticActivationPermittedByNorth: false,
@@ -2038,17 +1759,14 @@
     state.buttonPointerEvents = FALLBACK.INACCESSIBLE;
     state.hitTestUnreadableReason = "RENDERED_TARGET_INACCESSIBLE";
 
-    state.canvasElementFound = "false";
-    state.routeConductorContractReadableInRenderedTarget = "false";
     state.renderedPlanetProofInspected = "false";
-    state.renderedPlanetProofFullyInspected = "false";
     state.renderedPlanetProofReady = "false";
+    state.renderedPlanetProofFullyInspected = "false";
+    state.westRenderedProofSpreadComplete = "false";
     state.visiblePlanetProofReady = "false";
     state.visiblePlanetProofSource = FALLBACK.INACCESSIBLE;
     state.dataProofReadComplete = "false";
     state.dataProofReadStatus = FALLBACK.INACCESSIBLE;
-    state.westRenderedProofSpreadComplete = "false";
-    state.westRenderedProofSpreadReason = "RENDERED_TARGET_INACCESSIBLE";
   }
 
   function makeEvidencePacket(state) {
@@ -2107,8 +1825,12 @@
       FRAME_RECT: state.frameRect,
       FRAME_VISIBLE_TO_DIAGNOSTIC_ROUTE: state.frameVisibleToDiagnosticRoute,
 
+      NAMESPACE_RENDERED_PROOF_CANDIDATES_FOUND: state.namespaceRenderedProofCandidatesFound,
+      NAMESPACE_RENDERED_PROOF_CANDIDATE_PATHS: state.namespaceRenderedProofCandidatePaths,
+      NAMESPACE_RENDERED_PROOF_CANDIDATE_SELECTED: state.namespaceRenderedProofCandidateSelected,
+      NAMESPACE_RENDERED_PROOF_CANDIDATE_SCORE: state.namespaceRenderedProofCandidateScore,
+
       ROUTE_CONDUCTOR_AUTHORITY_SOURCE: state.routeConductorAuthoritySource,
-      ROUTE_CONDUCTOR_AUTHORITY_SCORE: state.routeConductorAuthorityScore,
       ROUTE_CONDUCTOR_CONTRACT: state.routeConductorContract,
       ROUTE_CONDUCTOR_RECEIPT: state.routeConductorReceipt,
       ROUTE_CONDUCTOR_V9_5_DETECTED: state.routeConductorV95Detected,
@@ -2137,28 +1859,25 @@
       CANVAS_MOUNT_PRESENT: state.canvasMountPresent,
       CANVAS_MOUNT_RECT: state.canvasMountRect,
       CANVAS_MOUNT_RECT_NONZERO: state.canvasMountRectNonZero,
-      DOM_CANVAS_ELEMENT_FOUND: state.domCanvasElementFound,
       CANVAS_ELEMENT_PRESENT: state.canvasElementPresent,
       CANVAS_ELEMENT_FOUND: state.canvasElementFound,
-      CANVAS_ELEMENT_FOUND_SOURCE: state.canvasElementFoundSource,
       CANVAS_RECT: state.canvasRect,
       CANVAS_RECT_NONZERO: state.canvasRectNonZero,
       CANVAS_ATTRIBUTE_WIDTH: state.canvasAttributeWidth,
       CANVAS_ATTRIBUTE_HEIGHT: state.canvasAttributeHeight,
       CANVAS_DRAW_EVIDENCE_PRESENT: state.canvasDrawEvidencePresent,
       DOM_VISIBLE_PLANET_PROOF_READY: state.domVisiblePlanetProofReady,
+      STAGE_MOUNT_DOM_PROOF_READY: state.stageMountDomProofReady,
 
       RENDERED_PLANET_PROOF_INSPECTED: state.renderedPlanetProofInspected,
-      RENDERED_PLANET_PROOF_FULLY_INSPECTED: state.renderedPlanetProofFullyInspected,
       RENDERED_PLANET_PROOF_READY: state.renderedPlanetProofReady,
+      RENDERED_PLANET_PROOF_FULLY_INSPECTED: state.renderedPlanetProofFullyInspected,
+      WEST_RENDERED_PROOF_SPREAD_COMPLETE: state.westRenderedProofSpreadComplete,
       VISIBLE_PLANET_PROOF_READY: state.visiblePlanetProofReady,
       VISIBLE_PLANET_PROOF_SOURCE: state.visiblePlanetProofSource,
       DATA_PROOF_READ_COMPLETE: state.dataProofReadComplete,
       DATA_PROOF_READ_STATUS: state.dataProofReadStatus,
       ROUTE_CONDUCTOR_DATA_PROOF_READ: state.routeConductorDataProofRead,
-
-      WEST_RENDERED_PROOF_SPREAD_COMPLETE: state.westRenderedProofSpreadComplete,
-      WEST_RENDERED_PROOF_SPREAD_REASON: state.westRenderedProofSpreadReason,
 
       F13_CANVAS_EVIDENCE_COMPLETE: state.f13CanvasEvidenceComplete,
       F13_CANVAS_EVIDENCE_STRICT: state.f13CanvasEvidenceStrict,
@@ -2167,12 +1886,6 @@
       F13_STRICT_EVIDENCE_GAP: state.f13StrictEvidenceGap,
       RECOMMENDED_NEXT_FILE: state.recommendedNextFile,
       POSTGAME_STATUS: state.postgameStatus,
-
-      RENDERED_PROOF_CANDIDATE_COUNT: state.renderedProofCandidateCount,
-      ROUTE_CONDUCTOR_KNOWN_CANDIDATE_COUNT: state.routeConductorKnownCandidateCount,
-      CANVAS_KNOWN_CANDIDATE_COUNT: state.canvasKnownCandidateCount,
-      NAMESPACE_OBJECT_SCAN_COUNT: state.namespaceObjectScanCount,
-      NAMESPACE_RECEIPT_CANDIDATE_COUNT: state.namespaceReceiptCandidateCount,
 
       CASE_1_SUPPORT: state.case1Support,
       CASE_2_SUPPORT: state.case2Support,
@@ -2237,7 +1950,7 @@
       readAncestorBlockers(rendered.button, state);
       readOverlay(rendered.button, hit, state);
       readCurrentVisibleProofDom(targetDocument, state);
-      readAnyRouteConductorProof(targetDocument, targetWindow, state);
+      readRouteConductorProof(targetDocument, targetWindow, state);
       readRuntimeRelease(targetDocument, targetWindow, state);
 
       state.syntheticActivationAttempted = false;
@@ -2325,7 +2038,8 @@
       syntheticActivationRepairAuthority: false,
 
       renderedTargetAuthorityProbeOwned: true,
-      renderedPlanetProofSpreadRuntimeAdoptionOwned: true,
+      renderedProofNamespaceAdoptionOwned: true,
+      renderedPlanetProofSpreadAlignmentOwned: true,
       targetAccessResolutionOwned: true,
       hearthTargetValidityCheckOwned: true,
       showReceiptDetectionOwned: true,
@@ -2339,19 +2053,18 @@
       planetStageReadOwned: true,
       canvasMountReadOwned: true,
       canvasElementReadOwned: true,
+      namespaceRenderedProofCandidateReadOwned: true,
       routeConductorRenderedDataProofReadOwned: true,
-      namespaceRenderedProofScanOwned: true,
-      canvasParentRenderedProofReadOwned: true,
       visiblePlanetProofReadOwned: true,
       globalSuppressionReadOwnedWhereSafelyAvailable: true,
       runtimeReleaseReadOwnedWhereSafelyAvailable: true,
       syntheticActivationAllowedByDefault: false,
 
-      currentHtmlContract: CURRENT_HTML_CONTRACT,
-      currentIndexJsContract: CURRENT_INDEX_JS_CONTRACT,
       currentRouteConductorContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
       currentRouteConductorReceipt: CURRENT_ROUTE_CONDUCTOR_RECEIPT,
       acceptedRouteConductorLineage: ACCEPTED_ROUTE_CONDUCTOR_LINEAGE.slice(),
+      currentHtmlContract: CURRENT_HTML_CONTRACT,
+      currentIndexJsContract: CURRENT_INDEX_JS_CONTRACT,
       currentCanvasParentContracts: CURRENT_CANVAS_PARENT_CONTRACTS.slice(),
 
       runWestRenderedReadApiAvailable: true,
@@ -2362,14 +2075,9 @@
       lastWestRenderedReadStatus: lastEvidencePacket ? lastEvidencePacket.WEST_RENDERED_READ_STATUS : FALLBACK.UNKNOWN,
       lastRenderedPlanetProofReady: lastEvidencePacket ? lastEvidencePacket.RENDERED_PLANET_PROOF_READY : FALLBACK.UNKNOWN,
       lastRenderedPlanetProofFullyInspected: lastEvidencePacket ? lastEvidencePacket.RENDERED_PLANET_PROOF_FULLY_INSPECTED : FALLBACK.UNKNOWN,
+      lastWestRenderedProofSpreadComplete: lastEvidencePacket ? lastEvidencePacket.WEST_RENDERED_PROOF_SPREAD_COMPLETE : FALLBACK.UNKNOWN,
       lastVisiblePlanetProofReady: lastEvidencePacket ? lastEvidencePacket.VISIBLE_PLANET_PROOF_READY : FALLBACK.UNKNOWN,
-      lastCanvasElementFound: lastEvidencePacket ? lastEvidencePacket.CANVAS_ELEMENT_FOUND : FALLBACK.UNKNOWN,
-      lastRouteConductorContractReadableInRenderedTarget: lastEvidencePacket
-        ? lastEvidencePacket.ROUTE_CONDUCTOR_CONTRACT_READABLE_IN_RENDERED_TARGET
-        : FALLBACK.UNKNOWN,
-      lastWestRenderedProofSpreadComplete: lastEvidencePacket
-        ? lastEvidencePacket.WEST_RENDERED_PROOF_SPREAD_COMPLETE
-        : FALLBACK.UNKNOWN,
+      lastNamespaceRenderedProofCandidatesFound: lastEvidencePacket ? lastEvidencePacket.NAMESPACE_RENDERED_PROOF_CANDIDATES_FOUND : FALLBACK.UNKNOWN,
       lastRouteConductorContract: lastEvidencePacket ? lastEvidencePacket.ROUTE_CONDUCTOR_CONTRACT : FALLBACK.UNKNOWN,
       lastCurrentCanvasParentContract: lastEvidencePacket ? lastEvidencePacket.CURRENT_CANVAS_PARENT_CONTRACT : FALLBACK.UNKNOWN,
       lastCase1Support: lastEvidencePacket ? lastEvidencePacket.CASE_1_SUPPORT : SUPPORT.UNKNOWN,
@@ -2422,21 +2130,21 @@
     targetRoute: TARGET_ROUTE,
     diagnosticRoute: DIAGNOSTIC_ROUTE,
 
-    currentHtmlContract: CURRENT_HTML_CONTRACT,
-    currentIndexJsContract: CURRENT_INDEX_JS_CONTRACT,
     currentRouteConductorContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
     currentRouteConductorReceipt: CURRENT_ROUTE_CONDUCTOR_RECEIPT,
     acceptedRouteConductorLineage: ACCEPTED_ROUTE_CONDUCTOR_LINEAGE.slice(),
+    currentHtmlContract: CURRENT_HTML_CONTRACT,
+    currentIndexJsContract: CURRENT_INDEX_JS_CONTRACT,
     currentCanvasParentContracts: CURRENT_CANVAS_PARENT_CONTRACTS.slice(),
 
     runWestRenderedRead,
     getWestReceipt,
     getWestState,
 
-    supportsRenderedPlanetProofSpreadRuntimeAdoption: true,
+    supportsRenderedProofNamespaceAdoption: true,
+    supportsRenderedPlanetProofSpreadAlignment: true,
     supportsShowReceiptHitTestNonControllingWhenOffscreen: true,
     supportsRouteConductorV95RenderedDataProofRead: true,
-    supportsNamespaceRenderedProofScan: true,
     supportsCanvasParentRenderedProofRead: true,
     supportsVisiblePlanetProofRead: true,
     supportsNorthOnlyAdjudication: true,
@@ -2449,7 +2157,7 @@
     ownsRepair: false,
     ownsRuntimeRestart: false,
     ownsCanvasRelease: false,
-    ownsF13Claim: false,
+    ownsF13: false,
     ownsF21: false,
 
     ...FINAL_FALSE

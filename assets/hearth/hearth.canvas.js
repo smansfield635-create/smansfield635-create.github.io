@@ -1,16 +1,18 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_CANVAS_LOCAL_STATION_DIAGNOSTIC_BRIDGE_ALIGNMENT_TNT_v11_4
+// HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_4_DIAGNOSTIC_BRIDGE_ALIGNMENT_TNT_v11_5
 // Full-file replacement.
-// Canvas Parent / Canvas Local Station / Diagnostic Bridge Alignment.
+// Canvas Parent / Canvas Local Station / Route Conductor v9_4 Diagnostic Bridge Alignment.
 // Purpose:
-// - Preserve accepted v11_3_1 Canvas Local Station / Child Distribution Switchboard architecture.
-// - Renew the Canvas parent to recognize the current Route Conductor v9_3 authority.
-// - Preserve v9_2 as accepted lineage / observation-only history, not current authority.
-// - Bridge the diagnostic receipt side and the route-conductor/canvas receipt side without building expression ports yet.
+// - Preserve accepted v11_4 Canvas Local Station / Diagnostic Bridge architecture.
+// - Correct current Route Conductor recognition from stale v9_3 authority to current v9_4 authority.
+// - Treat v9_3 as accepted lineage / observation-only history, not current authority.
+// - Preserve v9_2 as older legacy lineage / observation-only history, not current authority.
+// - Bridge the diagnostic receipt side and route-conductor/canvas receipt side without building expression ports.
 // - Preserve public receiver methods as validated intake surfaces.
 // - Preserve East dispatch only after accepted current Route Conductor release.
 // - Preserve child aggregation summary for EAST / WEST / SOUTH.
-// - Publish bridge summary fields usable by Route Conductor, Diagnostic Rail, and future expression-port work.
+// - Publish generic current-route-conductor fields usable across Route Conductor, Diagnostic Rail, and future expression-port work.
+// - Publish explicit v9_4 fields only as version evidence, not obscure private aliases.
 // - Keep expression, terrain, mountain, material, hydrology, and planet-geometry ports held.
 // - Never claim F13, F21, ready text, completion latch, final visual pass, generated image, GraphicBox, or WebGL.
 // Does not own:
@@ -32,17 +34,26 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_LOCAL_STATION_DIAGNOSTIC_BRIDGE_ALIGNMENT_TNT_v11_4";
-  const RECEIPT = "HEARTH_CANVAS_LOCAL_STATION_DIAGNOSTIC_BRIDGE_ALIGNMENT_RECEIPT_v11_4";
-  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_3_1";
-  const PREVIOUS_RECEIPT = "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_RECEIPT_v11_3_1";
-  const BASELINE_CONTRACT = "HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD_TNT_v10_3";
-  const BASELINE_RECEIPT = "HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD_RECEIPT_v10_3";
+  const CONTRACT = "HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_4_DIAGNOSTIC_BRIDGE_ALIGNMENT_TNT_v11_5";
+  const RECEIPT = "HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_4_DIAGNOSTIC_BRIDGE_ALIGNMENT_RECEIPT_v11_5";
 
-  const CURRENT_ROUTE_CONDUCTOR_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_TNT_v9_3";
-  const CURRENT_ROUTE_CONDUCTOR_RECEIPT = "HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_RECEIPT_v9_3";
-  const LINEAGE_ROUTE_CONDUCTOR_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_TNT_v9_2";
-  const LINEAGE_ROUTE_CONDUCTOR_RECEIPT = "HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_RECEIPT_v9_2";
+  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_LOCAL_STATION_DIAGNOSTIC_BRIDGE_ALIGNMENT_TNT_v11_4";
+  const PREVIOUS_RECEIPT = "HEARTH_CANVAS_LOCAL_STATION_DIAGNOSTIC_BRIDGE_ALIGNMENT_RECEIPT_v11_4";
+
+  const BASELINE_CONTRACT = "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_3_1";
+  const BASELINE_RECEIPT = "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_RECEIPT_v11_3_1";
+
+  const ACCEPTED_BASELINE_CONTRACT = "HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD_TNT_v10_3";
+  const ACCEPTED_BASELINE_RECEIPT = "HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD_RECEIPT_v10_3";
+
+  const CURRENT_ROUTE_CONDUCTOR_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_TNT_v9_4";
+  const CURRENT_ROUTE_CONDUCTOR_RECEIPT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_RECEIPT_v9_4";
+
+  const LINEAGE_ROUTE_CONDUCTOR_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_TNT_v9_3";
+  const LINEAGE_ROUTE_CONDUCTOR_RECEIPT = "HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_RECEIPT_v9_3";
+
+  const LEGACY_ROUTE_CONDUCTOR_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_TNT_v9_2";
+  const LEGACY_ROUTE_CONDUCTOR_RECEIPT = "HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_RECEIPT_v9_2";
 
   const MACRO_WEST_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_TIMETABLE_ALIGNED_LOCAL_ADMISSIBILITY_CLUTCH_TNT_v4_6_3";
   const CURRENT_EAST_CONTRACT = "HEARTH_CANVAS_EAST_CURRENT_LOCAL_STATION_V11_1_API_PUBLICATION_TNT_v11_4";
@@ -61,13 +72,14 @@
   const CYCLE_2_ROUTE = "NORTH_EAST_SOUTH_WEST_CANVAS";
 
   const RELEASE_SOURCE = Object.freeze({
-    ROUTE_CONDUCTOR_CURRENT_V9_3_API: "ROUTE_CONDUCTOR_CURRENT_V9_3_API",
-    ROUTE_CONDUCTOR_CURRENT_V9_3_RECEIPT: "ROUTE_CONDUCTOR_CURRENT_V9_3_RECEIPT",
+    CURRENT_ROUTE_CONDUCTOR_API: "CURRENT_ROUTE_CONDUCTOR_API",
+    CURRENT_ROUTE_CONDUCTOR_RECEIPT: "CURRENT_ROUTE_CONDUCTOR_RECEIPT",
     DIRECT_ROUTE_CONDUCTOR_CANDIDATE: "DIRECT_ROUTE_CONDUCTOR_CANDIDATE",
     OPTIONS_TEST: "OPTIONS_TEST",
     GLOBAL_OBSERVATION: "GLOBAL_OBSERVATION",
     DATASET_OBSERVATION: "DATASET_OBSERVATION",
-    LINEAGE_V9_2_OBSERVATION_ONLY: "LINEAGE_V9_2_OBSERVATION_ONLY",
+    LINEAGE_V9_3_OBSERVATION_ONLY: "LINEAGE_V9_3_OBSERVATION_ONLY",
+    LEGACY_V9_2_OBSERVATION_ONLY: "LEGACY_V9_2_OBSERVATION_ONLY",
     NONE: "NONE"
   });
 
@@ -133,6 +145,7 @@
     readyTextAllowed: false,
     readyTextClaimedByCanvasParent: false,
     expressionPortBuilt: false,
+    expressionPortsBuilt: false,
     expressionPacketAccepted: false,
     expressionComplete: false,
     generatedImage: false,
@@ -153,18 +166,22 @@
     previousReceipt: PREVIOUS_RECEIPT,
     baselineContract: BASELINE_CONTRACT,
     baselineReceipt: BASELINE_RECEIPT,
+    acceptedBaselineContract: ACCEPTED_BASELINE_CONTRACT,
+    acceptedBaselineReceipt: ACCEPTED_BASELINE_RECEIPT,
 
     currentRouteConductorRequiredContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
     currentRouteConductorRequiredReceipt: CURRENT_ROUTE_CONDUCTOR_RECEIPT,
     lineageRouteConductorContract: LINEAGE_ROUTE_CONDUCTOR_CONTRACT,
     lineageRouteConductorReceipt: LINEAGE_ROUTE_CONDUCTOR_RECEIPT,
+    legacyRouteConductorContract: LEGACY_ROUTE_CONDUCTOR_CONTRACT,
+    legacyRouteConductorReceipt: LEGACY_ROUTE_CONDUCTOR_RECEIPT,
     macroWestRequiredContract: MACRO_WEST_CONTRACT,
     currentEastContract: CURRENT_EAST_CONTRACT,
 
     file: FILE,
     route: ROUTE,
     diagnosticRoute: DIAGNOSTIC_ROUTE,
-    role: "canvas-local-station-diagnostic-bridge-alignment",
+    role: "canvas-local-station-route-conductor-v9-4-diagnostic-bridge-alignment",
 
     canvasLocalStationActive: true,
     childDistributionSwitchboardActive: true,
@@ -175,7 +192,6 @@
     diagnosticBridgeActive: true,
     diagnosticReceiptBridgeActive: true,
     expressionBridgeHeld: true,
-    expressionPortsBuilt: false,
     expressionLaneSeparateFromReceiptLane: true,
     receiptProvesExpressionDoesNotReplaceExpression: true,
 
@@ -187,9 +203,10 @@
     currentCanvasParentContractObserved: true,
     currentCanvasParentContract: CONTRACT,
     currentCanvasParentIsLocalStation: true,
-    currentCanvasParentIsV11_4: true,
+    currentCanvasParentIsV11_5: true,
     previousCanvasParentContract: PREVIOUS_CONTRACT,
     baselineCanvasParentContract: BASELINE_CONTRACT,
+    acceptedBaselineCanvasParentContract: ACCEPTED_BASELINE_CONTRACT,
     canvasParentBootMethodAvailable: true,
     v10_3BaselineRecognizedOnly: false,
 
@@ -198,10 +215,13 @@
     routeConductorContract: "",
     routeConductorReceipt: "",
     routeConductorContractRecognized: false,
-    routeConductorCurrentV9_3Recognized: false,
-    routeConductorLineageV9_2Observed: false,
-    routeConductorLineageV9_2AuthorityAccepted: false,
-    routeConductorAuthoritySourceAlias: "NONE",
+    routeConductorCurrentRecognized: false,
+    routeConductorCurrentV9_4Recognized: false,
+    routeConductorLineageV9_3Observed: false,
+    routeConductorLineageV9_3AuthorityAccepted: false,
+    routeConductorLegacyV9_2Observed: false,
+    routeConductorLegacyV9_2AuthorityAccepted: false,
+    routeConductorAuthoritySourceName: "NONE",
     routeConductorAuthoritySourceMethod: "NONE",
     routeConductorReleaseAuthorityAccepted: false,
     routeConductorReleasePacketObserved: false,
@@ -215,7 +235,7 @@
     diagnosticRailSummaryAvailable: false,
     diagnosticBridgeSummaryStatus: "WAITING_ROUTE_CONDUCTOR_AND_DIAGNOSTIC_RECEIPT_COMPARISON",
     diagnosticBridgeMismatch: "UNKNOWN",
-    diagnosticBridgeFirstFailedCoordinate: "WAITING_ROUTE_CONDUCTOR_V9_3_RECOGNITION",
+    diagnosticBridgeFirstFailedCoordinate: "WAITING_CURRENT_ROUTE_CONDUCTOR_V9_4_RECOGNITION",
     diagnosticBridgeRecommendedNextFile: ROUTE_FILE,
 
     observedDatasetRouteConductorContract: "",
@@ -226,12 +246,13 @@
     observedGlobalReleasePacket: null,
     observedFallbackRouteConductorContract: "",
     observedFallbackRouteConductorReceipt: "",
-    observedFallbackRouteConductorAlias: "NONE",
-    datasetIsReportingOnlyNotAuthority: true,
+    observedFallbackRouteConductorSourceName: "NONE",
+    datasetMayProveServedCurrentContract: true,
+    datasetIsReportingOnlyNotReleaseAuthority: true,
     datasetReleaseAuthorityBlocked: false,
-    globalFallbackIsObservationOnlyUnlessCurrentV9_3: true,
+    globalFallbackIsObservationOnlyUnlessCurrentRouteConductor: true,
     globalReleaseAuthorityBlocked: false,
-    fallbackAliasesAreObservationOnly: true,
+    fallbackSourcesAreObservationOnly: true,
 
     releasePacketObserved: false,
     releasePacketValid: false,
@@ -252,7 +273,7 @@
     parentReleaseLawful: false,
     canvasReleaseAuthorized: false,
     canvasReleasePacketReady: false,
-    canvasReleaseHeldReason: "WAITING_ROUTE_CONDUCTOR_V9_3_RECOGNITION",
+    canvasReleaseHeldReason: "WAITING_CURRENT_ROUTE_CONDUCTOR_V9_4_RECOGNITION",
     canvasParentReleaseGateReady: false,
     parentAcceptedRouteConductorRelease: false,
 
@@ -302,7 +323,7 @@
     f13CanvasEvidenceDegraded: false,
     f13CanvasEvidenceComplete: false,
     f13HardFail: false,
-    f13StrictEvidenceGap: "WAITING_ROUTE_CONDUCTOR_V9_3_RECOGNITION",
+    f13StrictEvidenceGap: "WAITING_CURRENT_ROUTE_CONDUCTOR_V9_4_RECOGNITION",
     f13StrictEvidenceRepairTarget: ROUTE_FILE,
 
     structuralCarrierReady: true,
@@ -313,11 +334,11 @@
     routeConductorNotifyMethod: "NONE",
     routeConductorNotificationError: "",
 
-    firstFailedCoordinate: "WAITING_ROUTE_CONDUCTOR_V9_3_RECOGNITION",
+    firstFailedCoordinate: "WAITING_CURRENT_ROUTE_CONDUCTOR_V9_4_RECOGNITION",
     recommendedNextFile: ROUTE_FILE,
     recommendedNextRenewalTarget: ROUTE_FILE,
     canvasNextAuditTarget: ROUTE_FILE,
-    postgameStatus: "CANVAS_LOCAL_STATION_WAITING_ROUTE_CONDUCTOR_V9_3_RECOGNITION",
+    postgameStatus: "CANVAS_LOCAL_STATION_WAITING_CURRENT_ROUTE_CONDUCTOR_V9_4_RECOGNITION",
 
     lastEastDispatchPacket: null,
     lastEastReceipt: null,
@@ -520,36 +541,53 @@
     return null;
   }
 
-  function readCurrentRouteConductorAuthorityAliases() {
+  function currentRouteConductorSources() {
+    return [
+      ["HEARTH_ROUTE_CONDUCTOR", readPath("HEARTH_ROUTE_CONDUCTOR")],
+      ["HEARTH.routeConductor", readPath("HEARTH.routeConductor")],
+      ["DEXTER_LAB.hearthRouteConductor", readPath("DEXTER_LAB.hearthRouteConductor")],
+
+      ["HEARTH_ROUTE_CONDUCTOR_RECEIPT", readPath("HEARTH_ROUTE_CONDUCTOR_RECEIPT")],
+      ["HEARTH.routeConductorReceipt", readPath("HEARTH.routeConductorReceipt")],
+      ["DEXTER_LAB.hearthRouteConductorReceipt", readPath("DEXTER_LAB.hearthRouteConductorReceipt")],
+
+      ["HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT", readPath("HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT")],
+      ["HEARTH.routeConductorCanvasLocalStationBridgeAlignment", readPath("HEARTH.routeConductorCanvasLocalStationBridgeAlignment")],
+      ["DEXTER_LAB.hearthRouteConductorCanvasLocalStationBridgeAlignment", readPath("DEXTER_LAB.hearthRouteConductorCanvasLocalStationBridgeAlignment")],
+
+      ["HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_RECEIPT", readPath("HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_RECEIPT")],
+      ["HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_RECEIPT_v9_4", readPath("HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_RECEIPT_v9_4")],
+      ["HEARTH.routeConductorCanvasLocalStationBridgeAlignmentReceipt", readPath("HEARTH.routeConductorCanvasLocalStationBridgeAlignmentReceipt")],
+      ["DEXTER_LAB.hearthRouteConductorCanvasLocalStationBridgeAlignmentReceipt", readPath("DEXTER_LAB.hearthRouteConductorCanvasLocalStationBridgeAlignmentReceipt")]
+    ];
+  }
+
+  function lineageRouteConductorSources() {
     return [
       ["HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR", readPath("HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR")],
       ["HEARTH.routeConductorControlOwnershipPassiveWatchdogRepair", readPath("HEARTH.routeConductorControlOwnershipPassiveWatchdogRepair")],
       ["DEXTER_LAB.hearthRouteConductorControlOwnershipPassiveWatchdogRepair", readPath("DEXTER_LAB.hearthRouteConductorControlOwnershipPassiveWatchdogRepair")],
-      ["HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR", readPath("HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR")],
-      ["HEARTH.routeConductorNorthStarCompletionCycleGovernor", readPath("HEARTH.routeConductorNorthStarCompletionCycleGovernor")],
-      ["DEXTER_LAB.hearthRouteConductorNorthStarCompletionCycleGovernor", readPath("DEXTER_LAB.hearthRouteConductorNorthStarCompletionCycleGovernor")],
-      ["HEARTH_ROUTE_CONDUCTOR", readPath("HEARTH_ROUTE_CONDUCTOR")],
-      ["HEARTH.routeConductor", readPath("HEARTH.routeConductor")],
-      ["DEXTER_LAB.hearthRouteConductor", readPath("DEXTER_LAB.hearthRouteConductor")],
+
       ["HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_RECEIPT", readPath("HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_RECEIPT")],
       ["HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_RECEIPT_v9_3", readPath("HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_RECEIPT_v9_3")],
       ["HEARTH.routeConductorControlOwnershipPassiveWatchdogRepairReceipt", readPath("HEARTH.routeConductorControlOwnershipPassiveWatchdogRepairReceipt")],
-      ["DEXTER_LAB.hearthRouteConductorControlOwnershipPassiveWatchdogRepairReceipt", readPath("DEXTER_LAB.hearthRouteConductorControlOwnershipPassiveWatchdogRepairReceipt")],
-      ["HEARTH_ROUTE_CONDUCTOR_RECEIPT", readPath("HEARTH_ROUTE_CONDUCTOR_RECEIPT")],
-      ["HEARTH.routeConductorReceipt", readPath("HEARTH.routeConductorReceipt")],
-      ["DEXTER_LAB.hearthRouteConductorReceipt", readPath("DEXTER_LAB.hearthRouteConductorReceipt")]
+      ["DEXTER_LAB.hearthRouteConductorControlOwnershipPassiveWatchdogRepairReceipt", readPath("DEXTER_LAB.hearthRouteConductorControlOwnershipPassiveWatchdogRepairReceipt")]
     ];
   }
 
-  function readRouteConductorLineageAliases() {
+  function legacyRouteConductorSources() {
     return [
+      ["HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR", readPath("HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR")],
+      ["HEARTH.routeConductorNorthStarCompletionCycleGovernor", readPath("HEARTH.routeConductorNorthStarCompletionCycleGovernor")],
+      ["DEXTER_LAB.hearthRouteConductorNorthStarCompletionCycleGovernor", readPath("DEXTER_LAB.hearthRouteConductorNorthStarCompletionCycleGovernor")],
+
       ["HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_RECEIPT", readPath("HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_RECEIPT")],
       ["HEARTH.routeConductorNorthStarCompletionCycleGovernorReceipt", readPath("HEARTH.routeConductorNorthStarCompletionCycleGovernorReceipt")],
       ["DEXTER_LAB.hearthRouteConductorNorthStarCompletionCycleGovernorReceipt", readPath("DEXTER_LAB.hearthRouteConductorNorthStarCompletionCycleGovernorReceipt")]
     ];
   }
 
-  function readRouteConductorFallbackAliases() {
+  function fallbackRouteConductorSources() {
     return [
       ["HEARTH_SOUTH_ROUTE_CONDUCTOR", readPath("HEARTH_SOUTH_ROUTE_CONDUCTOR")],
       ["HEARTH.southRouteConductor", readPath("HEARTH.southRouteConductor")],
@@ -591,6 +629,10 @@
     return contract === LINEAGE_ROUTE_CONDUCTOR_CONTRACT && receipt === LINEAGE_ROUTE_CONDUCTOR_RECEIPT;
   }
 
+  function isLegacyRouteConductorPair(contract, receipt) {
+    return contract === LEGACY_ROUTE_CONDUCTOR_CONTRACT && receipt === LEGACY_ROUTE_CONDUCTOR_RECEIPT;
+  }
+
   function isAuthorityObject(candidate) {
     return Boolean(
       isObject(candidate) &&
@@ -605,22 +647,44 @@
     );
   }
 
+  function readDatasetRouteConductorPair() {
+    const contract = safeString(readFirstDataset([
+      "routeConductorContract",
+      "hearthRouteConductorContract",
+      "hearthSouthRouteConductorContract",
+      "hearthServedRouteConductorContract",
+      "hearthCurrentRouteConductorContract"
+    ], ""), "");
+
+    const receipt = safeString(readFirstDataset([
+      "routeConductorReceipt",
+      "hearthRouteConductorReceipt",
+      "hearthSouthRouteConductorReceipt",
+      "hearthServedRouteConductorReceipt",
+      "hearthCurrentRouteConductorReceipt"
+    ], ""), "");
+
+    return { contract, receipt };
+  }
+
   function readRouteConductorProfile(_input = {}) {
-    const currentAliases = readCurrentRouteConductorAuthorityAliases();
-    const lineageAliases = readRouteConductorLineageAliases();
-    const fallbackAliases = readRouteConductorFallbackAliases();
+    const currentSources = currentRouteConductorSources();
+    const lineageSources = lineageRouteConductorSources();
+    const legacySources = legacyRouteConductorSources();
+    const fallbackSources = fallbackRouteConductorSources();
 
     let observed = false;
     let contract = "";
     let receipt = "";
     let currentRecognized = false;
     let lineageObserved = false;
-    let sourceAlias = "NONE";
+    let legacyObserved = false;
+    let sourceName = "NONE";
     let sourceMethod = "NONE";
     let authorityObject = null;
     let authorityReceipt = null;
 
-    for (const [alias, candidate] of currentAliases) {
+    for (const [name, candidate] of currentSources) {
       if (!candidate) continue;
 
       observed = true;
@@ -631,15 +695,32 @@
 
       if (isCurrentRouteConductorPair(pair.contract, pair.receipt)) {
         currentRecognized = true;
-        sourceAlias = alias;
-        sourceMethod = "CURRENT_V9_3_AUTHORITY_ALIAS";
+        sourceName = name;
+        sourceMethod = "CURRENT_ROUTE_CONDUCTOR_AUTHORITY_SOURCE";
         authorityObject = isAuthorityObject(candidate) ? candidate : null;
         authorityReceipt = clonePlain(pair.body || candidate);
         break;
       }
     }
 
-    for (const [alias, candidate] of lineageAliases) {
+    const datasetPair = readDatasetRouteConductorPair();
+    state.observedDatasetRouteConductorContract = datasetPair.contract;
+    state.observedDatasetRouteConductorReceipt = datasetPair.receipt;
+
+    if (isCurrentRouteConductorPair(datasetPair.contract, datasetPair.receipt)) {
+      observed = true;
+
+      if (!contract) contract = datasetPair.contract;
+      if (!receipt) receipt = datasetPair.receipt;
+
+      if (!currentRecognized) {
+        currentRecognized = true;
+        sourceName = "DOCUMENT_DATASET_CURRENT_ROUTE_CONDUCTOR_CONTRACT";
+        sourceMethod = "DATASET_CONTRACT_RECOGNITION_ONLY";
+      }
+    }
+
+    for (const [name, candidate] of lineageSources) {
       if (!candidate) continue;
 
       const pair = readContractReceiptPair(candidate);
@@ -649,8 +730,26 @@
           observed = true;
           contract = pair.contract;
           receipt = pair.receipt;
-          sourceAlias = alias;
-          sourceMethod = "LINEAGE_V9_2_OBSERVATION_ONLY";
+          sourceName = name;
+          sourceMethod = "LINEAGE_V9_3_OBSERVATION_ONLY";
+          authorityReceipt = clonePlain(pair.body || candidate);
+        }
+        break;
+      }
+    }
+
+    for (const [name, candidate] of legacySources) {
+      if (!candidate) continue;
+
+      const pair = readContractReceiptPair(candidate);
+      if (isLegacyRouteConductorPair(pair.contract, pair.receipt)) {
+        legacyObserved = true;
+        if (!observed) {
+          observed = true;
+          contract = pair.contract;
+          receipt = pair.receipt;
+          sourceName = name;
+          sourceMethod = "LEGACY_V9_2_OBSERVATION_ONLY";
           authorityReceipt = clonePlain(pair.body || candidate);
         }
         break;
@@ -659,37 +758,17 @@
 
     let fallbackContract = "";
     let fallbackReceipt = "";
-    let fallbackAlias = "NONE";
+    let fallbackSourceName = "NONE";
 
-    for (const [alias, candidate] of fallbackAliases) {
+    for (const [name, candidate] of fallbackSources) {
       if (!candidate) continue;
 
       const pair = readContractReceiptPair(candidate);
       if (!fallbackContract && pair.contract) fallbackContract = pair.contract;
       if (!fallbackReceipt && pair.receipt) fallbackReceipt = pair.receipt;
-      if (fallbackAlias === "NONE" && (pair.contract || pair.receipt)) fallbackAlias = alias;
+      if (fallbackSourceName === "NONE" && (pair.contract || pair.receipt)) fallbackSourceName = name;
 
       if (!observed) observed = true;
-    }
-
-    const observedDatasetContract = safeString(readFirstDataset([
-      "hearthRouteConductorContract",
-      "hearthSouthRouteConductorContract",
-      "routeConductorContract"
-    ], ""), "");
-
-    const observedDatasetReceipt = safeString(readFirstDataset([
-      "hearthRouteConductorReceipt",
-      "hearthSouthRouteConductorReceipt",
-      "routeConductorReceipt"
-    ], ""), "");
-
-    if (isCurrentRouteConductorPair(observedDatasetContract, observedDatasetReceipt)) {
-      observed = true;
-      if (!currentRecognized) {
-        contract = observedDatasetContract;
-        receipt = observedDatasetReceipt;
-      }
     }
 
     state.routeConductorObserved = observed;
@@ -697,18 +776,19 @@
     state.routeConductorContract = contract;
     state.routeConductorReceipt = receipt;
     state.routeConductorContractRecognized = currentRecognized;
-    state.routeConductorCurrentV9_3Recognized = currentRecognized;
-    state.routeConductorLineageV9_2Observed = lineageObserved;
-    state.routeConductorLineageV9_2AuthorityAccepted = false;
-    state.routeConductorAuthoritySourceAlias = sourceAlias;
+    state.routeConductorCurrentRecognized = currentRecognized;
+    state.routeConductorCurrentV9_4Recognized = currentRecognized;
+    state.routeConductorLineageV9_3Observed = lineageObserved;
+    state.routeConductorLineageV9_3AuthorityAccepted = false;
+    state.routeConductorLegacyV9_2Observed = legacyObserved;
+    state.routeConductorLegacyV9_2AuthorityAccepted = false;
+    state.routeConductorAuthoritySourceName = sourceName;
     state.routeConductorAuthoritySourceMethod = sourceMethod;
     state.lastRouteConductorAuthorityReceipt = authorityReceipt;
 
     state.observedFallbackRouteConductorContract = fallbackContract;
     state.observedFallbackRouteConductorReceipt = fallbackReceipt;
-    state.observedFallbackRouteConductorAlias = fallbackAlias;
-    state.observedDatasetRouteConductorContract = observedDatasetContract;
-    state.observedDatasetRouteConductorReceipt = observedDatasetReceipt;
+    state.observedFallbackRouteConductorSourceName = fallbackSourceName;
 
     return {
       observed,
@@ -716,18 +796,21 @@
       contract,
       receipt,
       contractRecognized: currentRecognized,
-      routeConductorCurrentV9_3Recognized: currentRecognized,
-      routeConductorLineageV9_2Observed: lineageObserved,
-      routeConductorLineageV9_2AuthorityAccepted: false,
-      authoritySourceAlias: sourceAlias,
+      routeConductorCurrentRecognized: currentRecognized,
+      routeConductorCurrentV9_4Recognized: currentRecognized,
+      routeConductorLineageV9_3Observed: lineageObserved,
+      routeConductorLineageV9_3AuthorityAccepted: false,
+      routeConductorLegacyV9_2Observed: legacyObserved,
+      routeConductorLegacyV9_2AuthorityAccepted: false,
+      authoritySourceName: sourceName,
       authoritySourceMethod: sourceMethod,
       authorityObject,
       authorityReceipt: clonePlain(authorityReceipt),
       observedFallbackRouteConductorContract: fallbackContract,
       observedFallbackRouteConductorReceipt: fallbackReceipt,
-      observedFallbackRouteConductorAlias: fallbackAlias,
-      observedDatasetRouteConductorContract: observedDatasetContract,
-      observedDatasetRouteConductorReceipt: observedDatasetReceipt
+      observedFallbackRouteConductorSourceName: fallbackSourceName,
+      observedDatasetRouteConductorContract: datasetPair.contract,
+      observedDatasetRouteConductorReceipt: datasetPair.receipt
     };
   }
 
@@ -847,8 +930,8 @@
 
   function readDatasetPacketObservation() {
     const fieldMap = {
-      routeConductorContract: ["routeConductorContract", "hearthRouteConductorContract", "hearthSouthRouteConductorContract"],
-      routeConductorReceipt: ["routeConductorReceipt", "hearthRouteConductorReceipt", "hearthSouthRouteConductorReceipt"],
+      routeConductorContract: ["routeConductorContract", "hearthRouteConductorContract", "hearthSouthRouteConductorContract", "hearthServedRouteConductorContract", "hearthCurrentRouteConductorContract"],
+      routeConductorReceipt: ["routeConductorReceipt", "hearthRouteConductorReceipt", "hearthSouthRouteConductorReceipt", "hearthServedRouteConductorReceipt", "hearthCurrentRouteConductorReceipt"],
       canvasReleaseAuthorized: ["canvasReleaseAuthorized", "hearthCanvasReleaseAuthorized", "hearthSouthCanvasReleaseAuthorized", "hearthRouteConductorCanvasReleaseAuthorized"],
       canvasReleasePacketReady: ["canvasReleasePacketReady", "hearthCanvasReleasePacketReady", "hearthSouthCanvasReleasePacketReady", "hearthRouteConductorCanvasReleasePacketReady"],
       westCanvasReleaseApproved: ["westCanvasReleaseApproved", "hearthWestCanvasReleaseApproved", "hearthSouthWestCanvasReleaseApproved", "hearthRouteConductorWestCanvasReleaseApproved"],
@@ -887,15 +970,12 @@
       readPath("HEARTH.canvasReleasePacket"),
       readPath("HEARTH.routeConductorCanvasReleasePacket"),
       readPath("HEARTH.routeConductorReleasePacket"),
-      readPath("HEARTH.southRouteConductorReleasePacket"),
       readPath("HEARTH.canvasParentReleasePacket"),
       readPath("DEXTER_LAB.hearthRouteConductorReceipt"),
-      readPath("DEXTER_LAB.hearthSouthRouteConductorReceipt"),
       root.HEARTH_CANVAS_RELEASE_PACKET,
       root.HEARTH_ROUTE_CONDUCTOR_CANVAS_RELEASE_PACKET,
-      root.HEARTH_SOUTH_ROUTE_CONDUCTOR_CANVAS_RELEASE_PACKET,
-      root.HEARTH_ROUTE_CONDUCTOR_RECEIPT,
-      root.HEARTH_SOUTH_ROUTE_CONDUCTOR_RECEIPT
+      root.HEARTH_ROUTE_CONDUCTOR_RELEASE_PACKET,
+      root.HEARTH_ROUTE_CONDUCTOR_RECEIPT
     ];
 
     for (const source of globalSources) {
@@ -920,7 +1000,7 @@
   function readRouteConductorReleasePacket(options = {}) {
     const route = readRouteConductorProfile(options || {});
 
-    if (route.routeConductorCurrentV9_3Recognized && route.authorityObject) {
+    if (route.routeConductorCurrentRecognized && route.authorityObject) {
       const methods = [
         "getCanvasReleasePacket",
         "getReleasePacket",
@@ -937,15 +1017,15 @@
         const extracted = extractNestedReleasePacket(result);
 
         if (extracted) {
-          return markAuthorityReleasePacket(extracted, RELEASE_SOURCE.ROUTE_CONDUCTOR_CURRENT_V9_3_API, `ROUTE_CONDUCTOR_V9_3_API:${method}`);
+          return markAuthorityReleasePacket(extracted, RELEASE_SOURCE.CURRENT_ROUTE_CONDUCTOR_API, `CURRENT_ROUTE_CONDUCTOR_API:${method}`);
         }
       }
     }
 
-    if (route.routeConductorCurrentV9_3Recognized && route.authorityReceipt) {
+    if (route.routeConductorCurrentRecognized && route.authorityReceipt) {
       const extracted = extractNestedReleasePacket(route.authorityReceipt);
       if (extracted) {
-        return markAuthorityReleasePacket(extracted, RELEASE_SOURCE.ROUTE_CONDUCTOR_CURRENT_V9_3_RECEIPT, "ROUTE_CONDUCTOR_V9_3_RECEIPT_ALIAS");
+        return markAuthorityReleasePacket(extracted, RELEASE_SOURCE.CURRENT_ROUTE_CONDUCTOR_RECEIPT, "CURRENT_ROUTE_CONDUCTOR_RECEIPT_SOURCE");
       }
     }
 
@@ -991,11 +1071,11 @@
 
   function validationFailureToCoordinate(failure) {
     const map = {
-      ROUTE_CONDUCTOR_V9_3_NOT_RECOGNIZED: "WAITING_ROUTE_CONDUCTOR_V9_3_RECOGNITION",
-      RELEASE_PACKET_MISSING: "WAITING_ROUTE_CONDUCTOR_RELEASE_PACKET",
+      CURRENT_ROUTE_CONDUCTOR_NOT_RECOGNIZED: "WAITING_CURRENT_ROUTE_CONDUCTOR_V9_4_RECOGNITION",
+      RELEASE_PACKET_MISSING: "WAITING_CURRENT_ROUTE_CONDUCTOR_RELEASE_PACKET",
       releaseSource: "WAITING_CURRENT_ROUTE_CONDUCTOR_RELEASE_AUTHORITY",
-      routeConductorContract: "WAITING_ROUTE_CONDUCTOR_V9_3_RELEASE_CONTRACT",
-      routeConductorReceipt: "WAITING_ROUTE_CONDUCTOR_V9_3_RELEASE_RECEIPT",
+      routeConductorContract: "WAITING_CURRENT_ROUTE_CONDUCTOR_RELEASE_CONTRACT",
+      routeConductorReceipt: "WAITING_CURRENT_ROUTE_CONDUCTOR_RELEASE_RECEIPT",
       canvasReleaseAuthorized: "WAITING_CANVAS_RELEASE_AUTHORIZATION",
       canvasReleasePacketReady: "WAITING_CANVAS_RELEASE_PACKET_READY",
       westCanvasReleaseApproved: "WAITING_WEST_CANVAS_RELEASE_APPROVAL",
@@ -1008,13 +1088,13 @@
       cycleRoute: "WAITING_CYCLE_TWO_CANVAS_ROUTE"
     };
 
-    return map[failure] || "WAITING_VALID_ROUTE_CONDUCTOR_RELEASE_PACKET";
+    return map[failure] || "WAITING_VALID_CURRENT_ROUTE_CONDUCTOR_RELEASE_PACKET";
   }
 
   function sourceCanBeAccepted(source, packet) {
     if (
-      source === RELEASE_SOURCE.ROUTE_CONDUCTOR_CURRENT_V9_3_API ||
-      source === RELEASE_SOURCE.ROUTE_CONDUCTOR_CURRENT_V9_3_RECEIPT
+      source === RELEASE_SOURCE.CURRENT_ROUTE_CONDUCTOR_API ||
+      source === RELEASE_SOURCE.CURRENT_ROUTE_CONDUCTOR_RECEIPT
     ) {
       return true;
     }
@@ -1024,7 +1104,7 @@
       source === RELEASE_SOURCE.OPTIONS_TEST
     ) {
       return Boolean(
-        state.routeConductorCurrentV9_3Recognized &&
+        state.routeConductorCurrentRecognized &&
         isObject(packet) &&
         packet.routeConductorContract === CURRENT_ROUTE_CONDUCTOR_CONTRACT &&
         packet.routeConductorReceipt === CURRENT_ROUTE_CONDUCTOR_RECEIPT
@@ -1037,8 +1117,8 @@
   function validateReleasePacket(packet) {
     const failures = [];
 
-    if (!state.routeConductorCurrentV9_3Recognized) {
-      failures.push("ROUTE_CONDUCTOR_V9_3_NOT_RECOGNIZED");
+    if (!state.routeConductorCurrentRecognized) {
+      failures.push("CURRENT_ROUTE_CONDUCTOR_NOT_RECOGNIZED");
     }
 
     if (!isObject(packet)) {
@@ -1102,18 +1182,18 @@
   }
 
   function acceptRelease(packet) {
-    if (!state.routeConductorCurrentV9_3Recognized) {
+    if (!state.routeConductorCurrentRecognized) {
       return clearReleaseAcceptance(
-        "WAITING_ROUTE_CONDUCTOR_V9_3_RECOGNITION",
-        "WAITING_ROUTE_CONDUCTOR_V9_3_RECOGNITION",
+        "WAITING_CURRENT_ROUTE_CONDUCTOR_V9_4_RECOGNITION",
+        "WAITING_CURRENT_ROUTE_CONDUCTOR_V9_4_RECOGNITION",
         ROUTE_FILE
       );
     }
 
     if (!state.releasePacketObserved) {
       return clearReleaseAcceptance(
-        "WAITING_ROUTE_CONDUCTOR_RELEASE_PACKET",
-        "WAITING_ROUTE_CONDUCTOR_RELEASE_PACKET",
+        "WAITING_CURRENT_ROUTE_CONDUCTOR_RELEASE_PACKET",
+        "WAITING_CURRENT_ROUTE_CONDUCTOR_RELEASE_PACKET",
         ROUTE_FILE
       );
     }
@@ -1128,7 +1208,7 @@
 
     if (!state.releasePacketValid || !isObject(packet)) {
       return clearReleaseAcceptance(
-        "ROUTE_CONDUCTOR_RELEASE_PACKET_INVALID",
+        "CURRENT_ROUTE_CONDUCTOR_RELEASE_PACKET_INVALID",
         validationFailureToCoordinate(state.firstReleaseValidationFailure),
         ROUTE_FILE
       );
@@ -1157,7 +1237,7 @@
 
   function refreshParentReleaseGateMarkers() {
     const ready = Boolean(
-      state.routeConductorCurrentV9_3Recognized &&
+      state.routeConductorCurrentRecognized &&
       state.routeConductorReleaseAuthorityAccepted &&
       state.releasePacketObserved &&
       state.releasePacketValid &&
@@ -1178,7 +1258,7 @@
 
   function composeEastDispatchPacket() {
     if (!(
-      state.routeConductorCurrentV9_3Recognized &&
+      state.routeConductorCurrentRecognized &&
       state.routeConductorReleaseAuthorityAccepted &&
       state.releasePacketObserved &&
       state.releasePacketValid &&
@@ -1211,9 +1291,12 @@
 
       routeConductorContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
       routeConductorReceipt: CURRENT_ROUTE_CONDUCTOR_RECEIPT,
-      routeConductorCurrentV9_3Recognized: true,
-      routeConductorLineageV9_2Observed: state.routeConductorLineageV9_2Observed,
-      routeConductorLineageV9_2AuthorityAccepted: false,
+      routeConductorCurrentRecognized: true,
+      routeConductorCurrentV9_4Recognized: true,
+      routeConductorLineageV9_3Observed: state.routeConductorLineageV9_3Observed,
+      routeConductorLineageV9_3AuthorityAccepted: false,
+      routeConductorLegacyV9_2Observed: state.routeConductorLegacyV9_2Observed,
+      routeConductorLegacyV9_2AuthorityAccepted: false,
       routeConductorReleaseAuthorityAccepted: true,
       parentAcceptedRouteConductorRelease: true,
 
@@ -1296,7 +1379,7 @@
   }
 
   function readCanvasChild(kind) {
-    const aliases = {
+    const sources = {
       east: [
         "HEARTH_CANVAS_EAST",
         "HEARTH_CANVAS_EAST_SOURCE",
@@ -1365,7 +1448,7 @@
       ]
     };
 
-    for (const name of aliases[kind] || []) {
+    for (const name of sources[kind] || []) {
       const found = readPath(name);
       if (found) return found;
     }
@@ -1862,14 +1945,14 @@
     let target = NORTH_FILE;
     let status = "CANVAS_LOCAL_STATION_F13_STRICT_EVIDENCE_COMPLETE";
 
-    if (!state.routeConductorCurrentV9_3Recognized) {
-      gap = "WAITING_ROUTE_CONDUCTOR_V9_3_RECOGNITION";
+    if (!state.routeConductorCurrentRecognized) {
+      gap = "WAITING_CURRENT_ROUTE_CONDUCTOR_V9_4_RECOGNITION";
       target = ROUTE_FILE;
-      status = "CANVAS_LOCAL_STATION_WAITING_ROUTE_CONDUCTOR_V9_3_RECOGNITION";
+      status = "CANVAS_LOCAL_STATION_WAITING_CURRENT_ROUTE_CONDUCTOR_V9_4_RECOGNITION";
     } else if (!state.releasePacketObserved) {
-      gap = "WAITING_ROUTE_CONDUCTOR_RELEASE_PACKET";
+      gap = "WAITING_CURRENT_ROUTE_CONDUCTOR_RELEASE_PACKET";
       target = ROUTE_FILE;
-      status = "CANVAS_LOCAL_STATION_WAITING_ROUTE_CONDUCTOR_RELEASE_PACKET";
+      status = "CANVAS_LOCAL_STATION_WAITING_CURRENT_ROUTE_CONDUCTOR_RELEASE_PACKET";
     } else if (!sourceCanBeAccepted(state.acceptedReleaseSource, state.normalizedReleasePacket)) {
       gap = "WAITING_CURRENT_ROUTE_CONDUCTOR_RELEASE_AUTHORITY";
       target = ROUTE_FILE;
@@ -1877,7 +1960,7 @@
     } else if (!state.releasePacketValid) {
       gap = validationFailureToCoordinate(state.firstReleaseValidationFailure);
       target = ROUTE_FILE;
-      status = "CANVAS_LOCAL_STATION_WAITING_VALID_ROUTE_CONDUCTOR_RELEASE_PACKET";
+      status = "CANVAS_LOCAL_STATION_WAITING_VALID_CURRENT_ROUTE_CONDUCTOR_RELEASE_PACKET";
     } else if (!state.canvasParentReleaseAccepted) {
       gap = "WAITING_CANVAS_PARENT_RELEASE_ACCEPTANCE";
       target = FILE;
@@ -1960,7 +2043,11 @@
       }
     }
 
-    const receipt = readReceipt(apiCandidate) || readPath("HEARTH_DIAGNOSTIC_RAIL_RECEIPT") || readPath("HEARTH_PARALLEL_DIAGNOSTIC_RAIL_RECEIPT") || null;
+    const receipt = readReceipt(apiCandidate) ||
+      readPath("HEARTH_DIAGNOSTIC_RAIL_RECEIPT") ||
+      readPath("HEARTH_PARALLEL_DIAGNOSTIC_RAIL_RECEIPT") ||
+      null;
+
     const report = apiCandidate && isFunction(apiCandidate.getReport) ? safeInvoke(apiCandidate, "getReport") : null;
     const statePacket = apiCandidate && isFunction(apiCandidate.getState) ? safeInvoke(apiCandidate, "getState") : null;
 
@@ -1996,7 +2083,7 @@
   function composeDiagnosticBridgeSummary() {
     const diagnostic = readDiagnosticRailSummary();
 
-    const routeCurrent = Boolean(state.routeConductorCurrentV9_3Recognized);
+    const routeCurrent = Boolean(state.routeConductorCurrentRecognized);
     const canvasCurrent = state.currentCanvasParentContract === CONTRACT;
     const childSideKnown = Boolean(
       state.eastObserved ||
@@ -2007,7 +2094,7 @@
     );
 
     const mismatch = !routeCurrent
-      ? "ROUTE_CONDUCTOR_CURRENT_V9_3_NOT_RECOGNIZED"
+      ? "CURRENT_ROUTE_CONDUCTOR_V9_4_NOT_RECOGNIZED"
       : !canvasCurrent
         ? "CANVAS_PARENT_CONTRACT_NOT_CURRENT"
         : "false";
@@ -2024,7 +2111,7 @@
 
     const recommended = mismatch === "false"
       ? state.recommendedNextFile
-      : mismatch === "ROUTE_CONDUCTOR_CURRENT_V9_3_NOT_RECOGNIZED"
+      : mismatch === "CURRENT_ROUTE_CONDUCTOR_V9_4_NOT_RECOGNIZED"
         ? ROUTE_FILE
         : FILE;
 
@@ -2043,17 +2130,22 @@
 
       diagnosticBridgeActive: true,
       diagnosticReceiptBridgeActive: true,
-      bridgePurpose: "ALIGN_DIAGNOSTIC_RECEIPT_WITH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_RECEIPT_BEFORE_EXPRESSION_PORTS",
+      bridgePurpose: "ALIGN_DIAGNOSTIC_RECEIPT_WITH_CURRENT_ROUTE_CONDUCTOR_AND_CANVAS_LOCAL_STATION_RECEIPT_BEFORE_EXPRESSION_PORTS",
       expressionBridgeHeld: true,
       expressionPortsBuilt: false,
       expressionPacketAccepted: false,
       expressionComplete: false,
 
-      routeConductorCurrentV9_3Recognized: state.routeConductorCurrentV9_3Recognized,
+      currentRouteConductorRequiredContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
+      currentRouteConductorRequiredReceipt: CURRENT_ROUTE_CONDUCTOR_RECEIPT,
+      routeConductorCurrentRecognized: state.routeConductorCurrentRecognized,
+      routeConductorCurrentV9_4Recognized: state.routeConductorCurrentV9_4Recognized,
       routeConductorContract: state.routeConductorContract,
       routeConductorReceipt: state.routeConductorReceipt,
-      routeConductorLineageV9_2Observed: state.routeConductorLineageV9_2Observed,
-      routeConductorLineageV9_2AuthorityAccepted: false,
+      routeConductorLineageV9_3Observed: state.routeConductorLineageV9_3Observed,
+      routeConductorLineageV9_3AuthorityAccepted: false,
+      routeConductorLegacyV9_2Observed: state.routeConductorLegacyV9_2Observed,
+      routeConductorLegacyV9_2AuthorityAccepted: false,
 
       canvasParentCurrentContract: CONTRACT,
       canvasParentPreviousContract: PREVIOUS_CONTRACT,
@@ -2279,10 +2371,14 @@
       previousReceipt: PREVIOUS_RECEIPT,
       baselineContract: BASELINE_CONTRACT,
       baselineReceipt: BASELINE_RECEIPT,
+      acceptedBaselineContract: ACCEPTED_BASELINE_CONTRACT,
+      acceptedBaselineReceipt: ACCEPTED_BASELINE_RECEIPT,
       currentRouteConductorRequiredContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
       currentRouteConductorRequiredReceipt: CURRENT_ROUTE_CONDUCTOR_RECEIPT,
       lineageRouteConductorContract: LINEAGE_ROUTE_CONDUCTOR_CONTRACT,
       lineageRouteConductorReceipt: LINEAGE_ROUTE_CONDUCTOR_RECEIPT,
+      legacyRouteConductorContract: LEGACY_ROUTE_CONDUCTOR_CONTRACT,
+      legacyRouteConductorReceipt: LEGACY_ROUTE_CONDUCTOR_RECEIPT,
       macroWestRequiredContract: MACRO_WEST_CONTRACT,
       currentEastContract: CURRENT_EAST_CONTRACT,
       packetType: "CANVAS_LOCAL_STATION_SUMMARY",
@@ -2307,9 +2403,10 @@
       currentCanvasParentContractObserved: true,
       currentCanvasParentContract: CONTRACT,
       currentCanvasParentIsLocalStation: true,
-      currentCanvasParentIsV11_4: true,
+      currentCanvasParentIsV11_5: true,
       previousCanvasParentContract: PREVIOUS_CONTRACT,
       baselineCanvasParentContract: BASELINE_CONTRACT,
+      acceptedBaselineCanvasParentContract: ACCEPTED_BASELINE_CONTRACT,
       v10_3BaselineRecognizedOnly: false,
       canvasParentBootMethodAvailable: true,
 
@@ -2318,10 +2415,13 @@
       routeConductorContract: state.routeConductorContract,
       routeConductorReceipt: state.routeConductorReceipt,
       routeConductorContractRecognized: state.routeConductorContractRecognized,
-      routeConductorCurrentV9_3Recognized: state.routeConductorCurrentV9_3Recognized,
-      routeConductorLineageV9_2Observed: state.routeConductorLineageV9_2Observed,
-      routeConductorLineageV9_2AuthorityAccepted: false,
-      routeConductorAuthoritySourceAlias: state.routeConductorAuthoritySourceAlias,
+      routeConductorCurrentRecognized: state.routeConductorCurrentRecognized,
+      routeConductorCurrentV9_4Recognized: state.routeConductorCurrentV9_4Recognized,
+      routeConductorLineageV9_3Observed: state.routeConductorLineageV9_3Observed,
+      routeConductorLineageV9_3AuthorityAccepted: false,
+      routeConductorLegacyV9_2Observed: state.routeConductorLegacyV9_2Observed,
+      routeConductorLegacyV9_2AuthorityAccepted: false,
+      routeConductorAuthoritySourceName: state.routeConductorAuthoritySourceName,
       routeConductorAuthoritySourceMethod: state.routeConductorAuthoritySourceMethod,
       routeConductorReleaseAuthorityAccepted: state.routeConductorReleaseAuthorityAccepted,
       routeConductorReleasePacketObserved: state.routeConductorReleasePacketObserved,
@@ -2335,12 +2435,13 @@
       observedGlobalReleasePacket: clonePlain(state.observedGlobalReleasePacket),
       observedFallbackRouteConductorContract: state.observedFallbackRouteConductorContract,
       observedFallbackRouteConductorReceipt: state.observedFallbackRouteConductorReceipt,
-      observedFallbackRouteConductorAlias: state.observedFallbackRouteConductorAlias,
-      datasetIsReportingOnlyNotAuthority: true,
+      observedFallbackRouteConductorSourceName: state.observedFallbackRouteConductorSourceName,
+      datasetMayProveServedCurrentContract: true,
+      datasetIsReportingOnlyNotReleaseAuthority: true,
       datasetReleaseAuthorityBlocked: state.datasetReleaseAuthorityBlocked,
-      globalFallbackIsObservationOnlyUnlessCurrentV9_3: true,
+      globalFallbackIsObservationOnlyUnlessCurrentRouteConductor: true,
       globalReleaseAuthorityBlocked: state.globalReleaseAuthorityBlocked,
-      fallbackAliasesAreObservationOnly: true,
+      fallbackSourcesAreObservationOnly: true,
 
       releasePacketObserved: state.releasePacketObserved,
       releasePacketValid: state.releasePacketValid,
@@ -2481,6 +2582,7 @@
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       baselineContract: BASELINE_CONTRACT,
+      acceptedBaselineContract: ACCEPTED_BASELINE_CONTRACT,
       file: FILE,
       route: ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
@@ -2501,9 +2603,12 @@
       canvasChildAggregationActive: true,
       diagnosticBridgeActive: true,
 
-      routeConductorCurrentV9_3Recognized: state.routeConductorCurrentV9_3Recognized,
-      routeConductorLineageV9_2Observed: state.routeConductorLineageV9_2Observed,
-      routeConductorLineageV9_2AuthorityAccepted: false,
+      routeConductorCurrentRecognized: state.routeConductorCurrentRecognized,
+      routeConductorCurrentV9_4Recognized: state.routeConductorCurrentV9_4Recognized,
+      routeConductorLineageV9_3Observed: state.routeConductorLineageV9_3Observed,
+      routeConductorLineageV9_3AuthorityAccepted: false,
+      routeConductorLegacyV9_2Observed: state.routeConductorLegacyV9_2Observed,
+      routeConductorLegacyV9_2AuthorityAccepted: false,
       routeConductorReleaseAuthorityAccepted: state.routeConductorReleaseAuthorityAccepted,
       releasePacketObserved: state.releasePacketObserved,
       releasePacketValid: state.releasePacketValid,
@@ -2588,7 +2693,7 @@
     const r = getCanvasStationSummary();
 
     return [
-      "HEARTH_CANVAS_LOCAL_STATION_DIAGNOSTIC_BRIDGE_ALIGNMENT_RECEIPT",
+      "HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_4_DIAGNOSTIC_BRIDGE_ALIGNMENT_RECEIPT",
       "",
       line("timestamp", r.timestamp),
       line("contract", r.contract),
@@ -2597,6 +2702,8 @@
       line("previousReceipt", r.previousReceipt),
       line("baselineContract", r.baselineContract),
       line("baselineReceipt", r.baselineReceipt),
+      line("acceptedBaselineContract", r.acceptedBaselineContract),
+      line("acceptedBaselineReceipt", r.acceptedBaselineReceipt),
       line("file", FILE),
       line("route", ROUTE),
       line("diagnosticRoute", DIAGNOSTIC_ROUTE),
@@ -2619,26 +2726,32 @@
       line("currentRouteConductorRequiredReceipt", CURRENT_ROUTE_CONDUCTOR_RECEIPT),
       line("lineageRouteConductorContract", LINEAGE_ROUTE_CONDUCTOR_CONTRACT),
       line("lineageRouteConductorReceipt", LINEAGE_ROUTE_CONDUCTOR_RECEIPT),
+      line("legacyRouteConductorContract", LEGACY_ROUTE_CONDUCTOR_CONTRACT),
+      line("legacyRouteConductorReceipt", LEGACY_ROUTE_CONDUCTOR_RECEIPT),
       line("routeConductorObserved", r.routeConductorObserved),
       line("routeConductorContractKnown", r.routeConductorContractKnown),
       line("routeConductorContract", r.routeConductorContract),
       line("routeConductorReceipt", r.routeConductorReceipt),
       line("routeConductorContractRecognized", r.routeConductorContractRecognized),
-      line("routeConductorCurrentV9_3Recognized", r.routeConductorCurrentV9_3Recognized),
-      line("routeConductorLineageV9_2Observed", r.routeConductorLineageV9_2Observed),
-      line("routeConductorLineageV9_2AuthorityAccepted", false),
-      line("routeConductorAuthoritySourceAlias", r.routeConductorAuthoritySourceAlias),
+      line("routeConductorCurrentRecognized", r.routeConductorCurrentRecognized),
+      line("routeConductorCurrentV9_4Recognized", r.routeConductorCurrentV9_4Recognized),
+      line("routeConductorLineageV9_3Observed", r.routeConductorLineageV9_3Observed),
+      line("routeConductorLineageV9_3AuthorityAccepted", false),
+      line("routeConductorLegacyV9_2Observed", r.routeConductorLegacyV9_2Observed),
+      line("routeConductorLegacyV9_2AuthorityAccepted", false),
+      line("routeConductorAuthoritySourceName", r.routeConductorAuthoritySourceName),
       line("routeConductorAuthoritySourceMethod", r.routeConductorAuthoritySourceMethod),
       line("routeConductorReleaseAuthorityAccepted", r.routeConductorReleaseAuthorityAccepted),
       "",
       "OBSERVATION_BOUNDARY",
-      line("observedFallbackRouteConductorAlias", r.observedFallbackRouteConductorAlias),
+      line("observedFallbackRouteConductorSourceName", r.observedFallbackRouteConductorSourceName),
       line("observedFallbackRouteConductorContract", r.observedFallbackRouteConductorContract),
       line("observedFallbackRouteConductorReceipt", r.observedFallbackRouteConductorReceipt),
-      line("fallbackAliasesAreObservationOnly", r.fallbackAliasesAreObservationOnly),
-      line("datasetIsReportingOnlyNotAuthority", r.datasetIsReportingOnlyNotAuthority),
+      line("fallbackSourcesAreObservationOnly", r.fallbackSourcesAreObservationOnly),
+      line("datasetMayProveServedCurrentContract", r.datasetMayProveServedCurrentContract),
+      line("datasetIsReportingOnlyNotReleaseAuthority", r.datasetIsReportingOnlyNotReleaseAuthority),
       line("datasetReleaseAuthorityBlocked", r.datasetReleaseAuthorityBlocked),
-      line("globalFallbackIsObservationOnlyUnlessCurrentV9_3", r.globalFallbackIsObservationOnlyUnlessCurrentV9_3),
+      line("globalFallbackIsObservationOnlyUnlessCurrentRouteConductor", r.globalFallbackIsObservationOnlyUnlessCurrentRouteConductor),
       line("globalReleaseAuthorityBlocked", r.globalReleaseAuthorityBlocked),
       "",
       "RELEASE_INTAKE",
@@ -2736,10 +2849,14 @@
     setDataset("hearthCanvasPreviousReceipt", PREVIOUS_RECEIPT);
     setDataset("hearthCanvasBaselineContract", BASELINE_CONTRACT);
     setDataset("hearthCanvasBaselineReceipt", BASELINE_RECEIPT);
+    setDataset("hearthCanvasAcceptedBaselineContract", ACCEPTED_BASELINE_CONTRACT);
+    setDataset("hearthCanvasAcceptedBaselineReceipt", ACCEPTED_BASELINE_RECEIPT);
+
     setDataset("hearthCanvasLocalStationActive", "true");
     setDataset("hearthCanvasChildDistributionSwitchboardActive", "true");
-    setDataset("hearthCanvasParentV11_4Active", "true");
-    setDataset("hearthCanvasParentV11_3_1Superseded", "true");
+    setDataset("hearthCanvasParentV11_5Active", "true");
+    setDataset("hearthCanvasParentV11_4Superseded", "true");
+    setDataset("hearthCanvasParentV11_3_1BaselineRecognized", "true");
     setDataset("hearthCanvasParentV10_3BaselineRecognized", "true");
     setDataset("hearthCanvasV10_3BaselineRecognizedOnly", "false");
 
@@ -2758,27 +2875,34 @@
     setDataset("hearthCanvasCurrentRouteConductorRequiredReceipt", CURRENT_ROUTE_CONDUCTOR_RECEIPT);
     setDataset("hearthCanvasLineageRouteConductorContract", LINEAGE_ROUTE_CONDUCTOR_CONTRACT);
     setDataset("hearthCanvasLineageRouteConductorReceipt", LINEAGE_ROUTE_CONDUCTOR_RECEIPT);
+    setDataset("hearthCanvasLegacyRouteConductorContract", LEGACY_ROUTE_CONDUCTOR_CONTRACT);
+    setDataset("hearthCanvasLegacyRouteConductorReceipt", LEGACY_ROUTE_CONDUCTOR_RECEIPT);
+
     setDataset("hearthCanvasRouteConductorObserved", String(state.routeConductorObserved));
     setDataset("hearthCanvasRouteConductorContractKnown", String(state.routeConductorContractKnown));
     setDataset("hearthCanvasRouteConductorContract", state.routeConductorContract);
     setDataset("hearthCanvasRouteConductorReceipt", state.routeConductorReceipt);
     setDataset("hearthCanvasRouteConductorContractRecognized", String(state.routeConductorContractRecognized));
-    setDataset("hearthCanvasRouteConductorCurrentV93Recognized", String(state.routeConductorCurrentV9_3Recognized));
-    setDataset("hearthCanvasRouteConductorLineageV92Observed", String(state.routeConductorLineageV9_2Observed));
-    setDataset("hearthCanvasRouteConductorLineageV92AuthorityAccepted", "false");
+    setDataset("hearthCanvasRouteConductorCurrentRecognized", String(state.routeConductorCurrentRecognized));
+    setDataset("hearthCanvasRouteConductorCurrentV94Recognized", String(state.routeConductorCurrentV9_4Recognized));
+    setDataset("hearthCanvasRouteConductorLineageV93Observed", String(state.routeConductorLineageV9_3Observed));
+    setDataset("hearthCanvasRouteConductorLineageV93AuthorityAccepted", "false");
+    setDataset("hearthCanvasRouteConductorLegacyV92Observed", String(state.routeConductorLegacyV9_2Observed));
+    setDataset("hearthCanvasRouteConductorLegacyV92AuthorityAccepted", "false");
     setDataset("hearthCanvasRouteConductorReleaseAuthorityAccepted", String(state.routeConductorReleaseAuthorityAccepted));
-    setDataset("hearthCanvasRouteConductorAuthoritySourceAlias", state.routeConductorAuthoritySourceAlias);
+    setDataset("hearthCanvasRouteConductorAuthoritySourceName", state.routeConductorAuthoritySourceName);
     setDataset("hearthCanvasRouteConductorAuthoritySourceMethod", state.routeConductorAuthoritySourceMethod);
 
     setDataset("hearthCanvasObservedDatasetRouteConductorContract", state.observedDatasetRouteConductorContract);
     setDataset("hearthCanvasObservedDatasetRouteConductorReceipt", state.observedDatasetRouteConductorReceipt);
-    setDataset("hearthCanvasObservedFallbackRouteConductorAlias", state.observedFallbackRouteConductorAlias);
+    setDataset("hearthCanvasObservedFallbackRouteConductorSourceName", state.observedFallbackRouteConductorSourceName);
     setDataset("hearthCanvasObservedFallbackRouteConductorContract", state.observedFallbackRouteConductorContract);
     setDataset("hearthCanvasObservedFallbackRouteConductorReceipt", state.observedFallbackRouteConductorReceipt);
-    setDataset("hearthCanvasFallbackAliasesAreObservationOnly", "true");
-    setDataset("hearthCanvasDatasetIsReportingOnlyNotAuthority", "true");
+    setDataset("hearthCanvasFallbackSourcesAreObservationOnly", "true");
+    setDataset("hearthCanvasDatasetMayProveServedCurrentContract", "true");
+    setDataset("hearthCanvasDatasetIsReportingOnlyNotReleaseAuthority", "true");
     setDataset("hearthCanvasDatasetReleaseAuthorityBlocked", String(state.datasetReleaseAuthorityBlocked));
-    setDataset("hearthCanvasGlobalFallbackIsObservationOnlyUnlessCurrentV93", "true");
+    setDataset("hearthCanvasGlobalFallbackIsObservationOnlyUnlessCurrentRouteConductor", "true");
     setDataset("hearthCanvasGlobalReleaseAuthorityBlocked", String(state.globalReleaseAuthorityBlocked));
 
     setDataset("hearthCanvasCurrentCanvasParentObserved", "true");
@@ -2917,8 +3041,8 @@
     root.HEARTH_CANVAS_STATION_RECEIPT = full;
     root.HEARTH_CANVAS_CHILD_DISTRIBUTION_SWITCHBOARD_RECEIPT = full;
     root.HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_RECEIPT = full;
-    root.HEARTH_CANVAS_LOCAL_STATION_DIAGNOSTIC_BRIDGE_ALIGNMENT_RECEIPT = full;
-    root.HEARTH_CANVAS_LOCAL_STATION_DIAGNOSTIC_BRIDGE_ALIGNMENT_RECEIPT_v11_4 = full;
+    root.HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_4_DIAGNOSTIC_BRIDGE_ALIGNMENT_RECEIPT = full;
+    root.HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_4_DIAGNOSTIC_BRIDGE_ALIGNMENT_RECEIPT_v11_5 = full;
     root.HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD_RECEIPT = full;
     root.HEARTH_CANVAS_DIAGNOSTIC_BRIDGE_RECEIPT = bridge;
     root.HEARTH_CANVAS_DIAGNOSTIC_BRIDGE_SUMMARY = clonePlain(state.lastDiagnosticBridgeSummary);
@@ -2961,21 +3085,15 @@
     const summary = getCanvasStationSummary();
 
     const candidates = [
-      readPath("HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR"),
-      readPath("HEARTH.routeConductorControlOwnershipPassiveWatchdogRepair"),
-      readPath("DEXTER_LAB.hearthRouteConductorControlOwnershipPassiveWatchdogRepair"),
-      readPath("HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR"),
-      readPath("HEARTH.routeConductorNorthStarCompletionCycleGovernor"),
-      readPath("DEXTER_LAB.hearthRouteConductorNorthStarCompletionCycleGovernor"),
+      readPath("HEARTH_ROUTE_CONDUCTOR"),
       readPath("HEARTH.routeConductor"),
-      readPath("HEARTH.southRouteConductor"),
-      readPath("HEARTH.routeConductorCentralStationSwitchboardWestV42SouthOutputAlignment"),
       readPath("DEXTER_LAB.hearthRouteConductor"),
-      readPath("DEXTER_LAB.hearthSouthRouteConductor"),
-      readPath("DEXTER_LAB.hearthRouteConductorCentralStationSwitchboardWestV42SouthOutputAlignment"),
+      readPath("HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT"),
+      readPath("HEARTH.routeConductorCanvasLocalStationBridgeAlignment"),
+      readPath("DEXTER_LAB.hearthRouteConductorCanvasLocalStationBridgeAlignment"),
       root.HEARTH_ROUTE_CONDUCTOR,
-      root.HEARTH_SOUTH_ROUTE_CONDUCTOR,
-      root.HEARTH_ROUTE_CONDUCTOR_CENTRAL_STATION_SWITCHBOARD_WEST_V4_2_SOUTH_OUTPUT_ALIGNMENT
+      readPath("HEARTH.routeConductorControlOwnershipPassiveWatchdogRepair"),
+      readPath("DEXTER_LAB.hearthRouteConductorControlOwnershipPassiveWatchdogRepair")
     ];
 
     const methods = [
@@ -3037,10 +3155,13 @@
 
     state.bootAuditComplete = true;
 
-    record("CANVAS_LOCAL_STATION_DIAGNOSTIC_BRIDGE_ALIGNMENT_BOOT_AUDIT_COMPLETE", {
-      routeConductorCurrentV9_3Recognized: state.routeConductorCurrentV9_3Recognized,
-      routeConductorLineageV9_2Observed: state.routeConductorLineageV9_2Observed,
-      routeConductorLineageV9_2AuthorityAccepted: false,
+    record("CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_4_DIAGNOSTIC_BRIDGE_ALIGNMENT_BOOT_AUDIT_COMPLETE", {
+      routeConductorCurrentRecognized: state.routeConductorCurrentRecognized,
+      routeConductorCurrentV9_4Recognized: state.routeConductorCurrentV9_4Recognized,
+      routeConductorLineageV9_3Observed: state.routeConductorLineageV9_3Observed,
+      routeConductorLineageV9_3AuthorityAccepted: false,
+      routeConductorLegacyV9_2Observed: state.routeConductorLegacyV9_2Observed,
+      routeConductorLegacyV9_2AuthorityAccepted: false,
       routeConductorReleaseAuthorityAccepted: state.routeConductorReleaseAuthorityAccepted,
       releasePacketObserved: state.releasePacketObserved,
       releasePacketValid: state.releasePacketValid,
@@ -3085,10 +3206,14 @@
     PREVIOUS_RECEIPT,
     BASELINE_CONTRACT,
     BASELINE_RECEIPT,
+    ACCEPTED_BASELINE_CONTRACT,
+    ACCEPTED_BASELINE_RECEIPT,
     CURRENT_ROUTE_CONDUCTOR_CONTRACT,
     CURRENT_ROUTE_CONDUCTOR_RECEIPT,
     LINEAGE_ROUTE_CONDUCTOR_CONTRACT,
     LINEAGE_ROUTE_CONDUCTOR_RECEIPT,
+    LEGACY_ROUTE_CONDUCTOR_CONTRACT,
+    LEGACY_ROUTE_CONDUCTOR_RECEIPT,
     MACRO_WEST_CONTRACT,
     CURRENT_EAST_CONTRACT,
     FILE,
@@ -3115,6 +3240,8 @@
     previousReceipt: PREVIOUS_RECEIPT,
     baselineContract: BASELINE_CONTRACT,
     baselineReceipt: BASELINE_RECEIPT,
+    acceptedBaselineContract: ACCEPTED_BASELINE_CONTRACT,
+    acceptedBaselineReceipt: ACCEPTED_BASELINE_RECEIPT,
     file: FILE,
     route: ROUTE,
     diagnosticRoute: DIAGNOSTIC_ROUTE,
@@ -3182,14 +3309,16 @@
     supportsCanvasLocalStation: true,
     supportsChildDistributionSwitchboard: true,
     supportsRouteConductorReleasePacketIntake: true,
-    supportsCurrentRouteConductorV9_3Authority: true,
-    supportsLineageRouteConductorV9_2ObservationOnly: true,
+    supportsCurrentRouteConductorV9_4Authority: true,
+    supportsLineageRouteConductorV9_3ObservationOnly: true,
+    supportsLegacyRouteConductorV9_2ObservationOnly: true,
     supportsDiagnosticBridgeSummary: true,
     supportsDiagnosticReceiptBridge: true,
     supportsExpressionHeldUntilBridgeStable: true,
-    supportsDatasetReportingOnlyNotAuthority: true,
+    supportsDatasetCurrentContractRecognition: true,
+    supportsDatasetReportingOnlyNotReleaseAuthority: true,
     supportsGlobalObservationOnlyNotAuthority: true,
-    supportsFallbackAliasObservationOnly: true,
+    supportsFallbackObservationOnly: true,
     supportsPublicReceiverValidatedCandidateIntake: true,
     supportsParentReleaseAcceptance: true,
     supportsEastDispatchPublication: true,
@@ -3249,7 +3378,7 @@
       bootAudit({});
     }
   } catch (error) {
-    recordError("CANVAS_LOCAL_STATION_DIAGNOSTIC_BRIDGE_ALIGNMENT_INITIALIZATION_FAILED", error);
+    recordError("CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_4_DIAGNOSTIC_BRIDGE_ALIGNMENT_INITIALIZATION_FAILED", error);
 
     try {
       publishGlobals();

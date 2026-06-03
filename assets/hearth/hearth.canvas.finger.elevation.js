@@ -1,4 +1,4 @@
-// /assets/hearth/hearth.canvas.finger.elevation.js
+// assets/hearth/hearth.canvas.finger.elevation.js
 // HEARTH_CANVAS_FINGER_ELEVATION_RELIEF_PRESSURE_AUTHORITY_TNT_v1
 // Full-file replacement.
 // Canvas Finger / Elevation / Relief Pressure Authority.

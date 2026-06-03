@@ -2,8 +2,12 @@
 // HEARTH_DIAGNOSTIC_RAIL_WEST_RENDERED_TARGET_AUTHORITY_PROBE_TNT_v1
 // Full-file replacement.
 // Diagnostic rail WEST child only.
+// Implementation refinement:
+// - HEARTH_DIAGNOSTIC_WEST_HIT_TEST_OBSERVABILITY_REFINEMENT_TNT_v1
 // Purpose:
 // - Provide rendered-target / interaction-authority evidence for the Hearth diagnostic rail.
+// - Preserve WEST as read-only rendered-target evidence lane.
+// - Add hit-test observability fields so UNREADABLE hit-test results can be diagnosed.
 // - Inspect the rendered Hearth target where browser policy allows.
 // - Support CASE_1, CASE_2, CASE_3, CASE_4, CASE_6, and CASE_7 evidence only for NORTH adjudication.
 // - Preserve EAST as CASE_5 served-source evidence lane.
@@ -28,7 +32,8 @@
 
   const CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_WEST_RENDERED_TARGET_AUTHORITY_PROBE_TNT_v1";
   const RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_WEST_RENDERED_TARGET_AUTHORITY_PROBE_RECEIPT_v1";
-  const VERSION = "2026-06-02.hearth-diagnostic-rail-west-rendered-target-authority-probe-v1";
+  const IMPLEMENTATION_CONTRACT = "HEARTH_DIAGNOSTIC_WEST_HIT_TEST_OBSERVABILITY_REFINEMENT_TNT_v1";
+  const VERSION = "2026-06-02.hearth-diagnostic-west-hit-test-observability-refinement-v1";
 
   const FILE = "/assets/hearth/hearth.diagnostic.west.js";
   const TARGET_ROUTE = "/showroom/globe/hearth/";
@@ -123,7 +128,7 @@
     return safeString(value, fallback).replace(/\s+/g, " ").trim();
   }
 
-  function bounded(value, limit = 1200) {
+  function bounded(value, limit = 1400) {
     return safeString(value).replace(/\s+/g, " ").trim().slice(0, limit);
   }
 
@@ -146,11 +151,11 @@
   function normalizeError(error, prefix) {
     const name = error && error.name ? safeString(error.name) : "ERROR";
     const message = error && error.message ? safeString(error.message) : safeString(error, "UNKNOWN_ERROR");
-    return `${prefix || "ERROR"}:${bounded(`${name}:${message}`, 600)}`;
+    return `${prefix || "ERROR"}:${bounded(`${name}:${message}`, 700)}`;
   }
 
   function addNote(state, note) {
-    const clean = bounded(note, 1000);
+    const clean = bounded(note, 1200);
     if (!clean) return;
     if (!state.westSecondaryEvidenceNotes.includes(clean)) {
       state.westSecondaryEvidenceNotes.push(clean);
@@ -226,21 +231,14 @@
     }
   }
 
-  function qa(context, selector) {
-    try {
-      if (!context || !selector || !isFunction(context.querySelectorAll)) return [];
-      return Array.from(context.querySelectorAll(selector));
-    } catch (_error) {
-      return [];
-    }
-  }
-
   function computed(el, prop) {
     try {
       const owner = el && el.ownerDocument && el.ownerDocument.defaultView
         ? el.ownerDocument.defaultView
         : root;
+
       if (!el || !owner || !isFunction(owner.getComputedStyle)) return FALLBACK.UNKNOWN;
+
       const style = owner.getComputedStyle(el);
       return style && prop ? safeString(style[prop], FALLBACK.UNKNOWN) : FALLBACK.UNKNOWN;
     } catch (_error) {
@@ -252,10 +250,12 @@
     try {
       const parts = safeString(path).split(".");
       let cursor = base;
+
       for (const part of parts) {
         if (!cursor || cursor[part] === undefined || cursor[part] === null) return null;
         cursor = cursor[part];
       }
+
       return cursor || null;
     } catch (_error) {
       return null;
@@ -286,11 +286,62 @@
     }
   }
 
+  function rectToPacket(rect) {
+    try {
+      if (!rect) return FALLBACK.UNKNOWN;
+
+      return [
+        `left:${Math.round(rect.left)}`,
+        `top:${Math.round(rect.top)}`,
+        `right:${Math.round(rect.right)}`,
+        `bottom:${Math.round(rect.bottom)}`,
+        `width:${Math.round(rect.width)}`,
+        `height:${Math.round(rect.height)}`
+      ].join(";");
+    } catch (_error) {
+      return FALLBACK.UNREADABLE;
+    }
+  }
+
+  function viewportPacket(targetWindow) {
+    try {
+      const win = targetWindow || root;
+      const width = Number(win.innerWidth || 0);
+      const height = Number(win.innerHeight || 0);
+
+      return {
+        width,
+        height,
+        packet: `width:${Math.round(width)};height:${Math.round(height)}`
+      };
+    } catch (_error) {
+      return {
+        width: 0,
+        height: 0,
+        packet: FALLBACK.UNREADABLE
+      };
+    }
+  }
+
+  function pointInViewport(point, viewport) {
+    if (!point || !viewport) return FALLBACK.UNKNOWN;
+    if (!Number.isFinite(point.x) || !Number.isFinite(point.y)) return FALLBACK.UNKNOWN;
+    if (!Number.isFinite(viewport.width) || !Number.isFinite(viewport.height)) return FALLBACK.UNKNOWN;
+
+    return safeBoolString(
+      point.x >= 0 &&
+      point.y >= 0 &&
+      point.x <= viewport.width &&
+      point.y <= viewport.height
+    );
+  }
+
   function makeState() {
     return {
       westStatus: STATUS.READY,
       westContract: CONTRACT,
       westReceipt: RECEIPT,
+      implementationContract: IMPLEMENTATION_CONTRACT,
 
       westRenderedReadComplete: "false",
       westRenderedReadStatus: FALLBACK.UNKNOWN,
@@ -325,6 +376,18 @@
 
       runtimeReleaseState: FALLBACK.UNKNOWN,
       runtimeReleaseIsLock: FALLBACK.UNKNOWN,
+
+      showReceiptRect: FALLBACK.UNKNOWN,
+      showReceiptCenterPoint: FALLBACK.UNKNOWN,
+      targetViewportWidth: FALLBACK.UNKNOWN,
+      targetViewportHeight: FALLBACK.UNKNOWN,
+      centerPointInViewport: FALLBACK.UNKNOWN,
+      elementFromPointAvailable: FALLBACK.UNKNOWN,
+      elementFromPointResult: FALLBACK.UNKNOWN,
+      buttonPointerEvents: FALLBACK.UNKNOWN,
+      hitTestUnreadableReason: FALLBACK.UNKNOWN,
+      frameRect: FALLBACK.NOT_APPLICABLE,
+      frameVisibleToDiagnosticRoute: FALLBACK.NOT_APPLICABLE,
 
       syntheticActivationAllowedByDefault: false,
       syntheticActivationPermittedByNorth: false,
@@ -417,10 +480,43 @@
     }
   }
 
+  function readFrameObservability(frame, state) {
+    if (!frame) {
+      state.frameRect = FALLBACK.NOT_APPLICABLE;
+      state.frameVisibleToDiagnosticRoute = FALLBACK.NOT_APPLICABLE;
+      return;
+    }
+
+    try {
+      const rect = frame.getBoundingClientRect ? frame.getBoundingClientRect() : null;
+      state.frameRect = rectToPacket(rect);
+
+      if (!rect) {
+        state.frameVisibleToDiagnosticRoute = FALLBACK.UNKNOWN;
+        addNote(state, "FRAME_RECT_UNREADABLE");
+        return;
+      }
+
+      state.frameVisibleToDiagnosticRoute = safeBoolString(rect.width > 0 && rect.height > 0);
+
+      if (!(rect.width > 0 && rect.height > 0)) {
+        addNote(state, "FRAME_NOT_VISIBLY_SIZED");
+      }
+    } catch (error) {
+      state.frameRect = FALLBACK.UNREADABLE;
+      state.frameVisibleToDiagnosticRoute = FALLBACK.UNKNOWN;
+      addNote(state, normalizeError(error, "FRAME_OBSERVABILITY_READ_ERROR"));
+    }
+  }
+
   function resolveTargetFromOptions(options, state) {
     if (options && options.sourceMismatchControlling === true) {
       state.sourceMismatchControlling = true;
       addNote(state, "CASE_5_CONTROLLING_FROM_NORTH_RENDERED_READ_STILL_ALLOWED_AS_SECONDARY_EVIDENCE_ONLY");
+    }
+
+    if (options && options.frameElement) {
+      readFrameObservability(options.frameElement, state);
     }
 
     if (options && options.targetDocument && options.targetDocument.documentElement) {
@@ -505,6 +601,7 @@
       const text = node ? safeTrim(node.textContent) : "";
       if (text) return text;
     }
+
     return FALLBACK.NOT_FOUND;
   }
 
@@ -559,28 +656,72 @@
     return { button, panel, textNode };
   }
 
-  function centerHit(button) {
+  function centerHit(button, state) {
     try {
-      if (!button) return null;
+      if (!button) {
+        state.hitTestUnreadableReason = "SHOW_RECEIPT_BUTTON_NOT_FOUND";
+        return null;
+      }
 
       const targetDocument = button.ownerDocument;
-      const rect = button.getBoundingClientRect();
+      const targetWindow = targetDocument && targetDocument.defaultView ? targetDocument.defaultView : root;
+      const rect = button.getBoundingClientRect ? button.getBoundingClientRect() : null;
 
-      if (!rect || rect.width <= 0 || rect.height <= 0) {
-        return { error: "SHOW_RECEIPT_RECT_EMPTY_OR_UNREADABLE" };
+      state.showReceiptRect = rectToPacket(rect);
+      state.buttonPointerEvents = computed(button, "pointerEvents");
+
+      const viewport = viewportPacket(targetWindow);
+      state.targetViewportWidth = Number.isFinite(viewport.width) ? String(Math.round(viewport.width)) : FALLBACK.UNKNOWN;
+      state.targetViewportHeight = Number.isFinite(viewport.height) ? String(Math.round(viewport.height)) : FALLBACK.UNKNOWN;
+
+      if (!rect) {
+        state.hitTestUnreadableReason = "SHOW_RECEIPT_RECT_UNREADABLE";
+        return { error: "SHOW_RECEIPT_RECT_UNREADABLE" };
+      }
+
+      if (rect.width <= 0 || rect.height <= 0) {
+        state.hitTestUnreadableReason = "SHOW_RECEIPT_RECT_EMPTY_OR_ZERO_SIZE";
+        addNote(state, "SHOW_RECEIPT_RECT_EMPTY_OR_ZERO_SIZE");
+        return { error: "SHOW_RECEIPT_RECT_EMPTY_OR_ZERO_SIZE", rect };
       }
 
       const x = Math.round(rect.left + rect.width / 2);
       const y = Math.round(rect.top + rect.height / 2);
+      const point = { x, y };
+
+      state.showReceiptCenterPoint = `x:${x};y:${y}`;
+      state.centerPointInViewport = pointInViewport(point, viewport);
+
+      if (state.centerPointInViewport !== "true") {
+        state.hitTestUnreadableReason = "BUTTON_CENTER_POINT_OUTSIDE_VIEWPORT";
+        addNote(state, "BUTTON_CENTER_POINT_OUTSIDE_VIEWPORT");
+        return { error: "BUTTON_CENTER_POINT_OUTSIDE_VIEWPORT", x, y, rect, targetDocument };
+      }
+
+      state.elementFromPointAvailable = safeBoolString(isFunction(targetDocument.elementFromPoint));
 
       if (!isFunction(targetDocument.elementFromPoint)) {
-        return { error: "ELEMENT_FROM_POINT_UNAVAILABLE" };
+        state.hitTestUnreadableReason = "ELEMENT_FROM_POINT_UNAVAILABLE";
+        return { error: "ELEMENT_FROM_POINT_UNAVAILABLE", x, y, rect, targetDocument };
       }
 
       const target = targetDocument.elementFromPoint(x, y);
+
+      if (!target) {
+        state.elementFromPointResult = "NULL";
+        state.hitTestUnreadableReason = "ELEMENT_FROM_POINT_RETURNED_NULL";
+        addNote(state, "ELEMENT_FROM_POINT_RETURNED_NULL");
+        return { error: "ELEMENT_FROM_POINT_RETURNED_NULL", x, y, rect, targetDocument };
+      }
+
+      state.elementFromPointResult = selectorFor(target);
+      state.hitTestUnreadableReason = "none";
+
       return { x, y, rect, target, targetDocument };
     } catch (error) {
-      return { error: normalizeError(error, "HIT_TEST_ERROR") };
+      const normalized = normalizeError(error, "HIT_TEST_ERROR");
+      state.hitTestUnreadableReason = normalized;
+      return { error: normalized };
     }
   }
 
@@ -591,10 +732,11 @@
       state.showReceiptHitTestTargetTag = FALLBACK.NOT_FOUND;
       state.showReceiptTargetIsButton = "false";
       state.targetPointerEvents = FALLBACK.NOT_FOUND;
+      state.buttonPointerEvents = FALLBACK.NOT_FOUND;
       return null;
     }
 
-    const hit = centerHit(button);
+    const hit = centerHit(button, state);
 
     if (!hit || hit.error || !hit.target) {
       const error = hit && hit.error ? hit.error : "HIT_TEST_TARGET_UNREADABLE";
@@ -603,7 +745,12 @@
       state.showReceiptHitTestTargetTag = FALLBACK.UNREADABLE;
       state.showReceiptTargetIsButton = FALLBACK.UNKNOWN;
       state.targetPointerEvents = FALLBACK.UNREADABLE;
-      addNote(state, error);
+
+      if (state.hitTestUnreadableReason === FALLBACK.UNKNOWN) {
+        state.hitTestUnreadableReason = error;
+      }
+
+      addNote(state, `HIT_TEST_TARGET_UNREADABLE:${state.hitTestUnreadableReason}`);
       return null;
     }
 
@@ -894,7 +1041,8 @@
       state.targetPointerEvents !== FALLBACK.UNKNOWN &&
       state.ancestorBlockerFound !== FALLBACK.UNKNOWN &&
       state.overlayAboveControl !== FALLBACK.UNKNOWN &&
-      state.runtimeReleaseState !== FALLBACK.UNKNOWN
+      state.runtimeReleaseState !== FALLBACK.UNKNOWN &&
+      state.hitTestUnreadableReason !== FALLBACK.UNKNOWN
     );
   }
 
@@ -1073,7 +1221,10 @@
         state.overlayAboveControl === "false"
       ) {
         state.case1Support = SUPPORT.FALSE;
-      } else if (state.showReceiptButtonExists === FALLBACK.UNKNOWN || state.showReceiptTargetIsButton === FALLBACK.UNKNOWN) {
+      } else if (
+        state.showReceiptButtonExists === FALLBACK.UNKNOWN ||
+        state.showReceiptTargetIsButton === FALLBACK.UNKNOWN
+      ) {
         state.case1Support = SUPPORT.UNKNOWN;
       }
     }
@@ -1130,17 +1281,8 @@
       return;
     }
 
-    const hasSupport = [
-      state.case1Support,
-      state.case2Support,
-      state.case3Support,
-      state.case4Support,
-      state.case6Support,
-      state.case7Support
-    ].some((value) => value === SUPPORT.TRUE);
-
     state.westRenderedReadComplete = "false";
-    state.westRenderedReadStatus = hasSupport ? FALLBACK.PARTIAL : FALLBACK.PARTIAL;
+    state.westRenderedReadStatus = FALLBACK.PARTIAL;
   }
 
   function makeEvidencePacket(state) {
@@ -1148,6 +1290,7 @@
       WEST_STATUS: state.westStatus,
       WEST_CONTRACT: CONTRACT,
       WEST_RECEIPT: RECEIPT,
+      WEST_IMPLEMENTATION_CONTRACT: IMPLEMENTATION_CONTRACT,
       WEST_RENDERED_READ_COMPLETE: state.westRenderedReadComplete,
       WEST_RENDERED_READ_STATUS: state.westRenderedReadStatus,
 
@@ -1180,6 +1323,18 @@
 
       RUNTIME_RELEASE_STATE: state.runtimeReleaseState,
       RUNTIME_RELEASE_IS_LOCK: state.runtimeReleaseIsLock,
+
+      SHOW_RECEIPT_RECT: state.showReceiptRect,
+      SHOW_RECEIPT_CENTER_POINT: state.showReceiptCenterPoint,
+      TARGET_VIEWPORT_WIDTH: state.targetViewportWidth,
+      TARGET_VIEWPORT_HEIGHT: state.targetViewportHeight,
+      CENTER_POINT_IN_VIEWPORT: state.centerPointInViewport,
+      ELEMENT_FROM_POINT_AVAILABLE: state.elementFromPointAvailable,
+      ELEMENT_FROM_POINT_RESULT: state.elementFromPointResult,
+      BUTTON_POINTER_EVENTS: state.buttonPointerEvents,
+      HIT_TEST_UNREADABLE_REASON: state.hitTestUnreadableReason,
+      FRAME_RECT: state.frameRect,
+      FRAME_VISIBLE_TO_DIAGNOSTIC_ROUTE: state.frameVisibleToDiagnosticRoute,
 
       CASE_1_SUPPORT: state.case1Support,
       CASE_2_SUPPORT: state.case2Support,
@@ -1232,6 +1387,16 @@
         state.runtimeReleaseState = FALLBACK.INACCESSIBLE;
         state.runtimeReleaseIsLock = FALLBACK.UNKNOWN;
 
+        state.showReceiptRect = FALLBACK.INACCESSIBLE;
+        state.showReceiptCenterPoint = FALLBACK.INACCESSIBLE;
+        state.targetViewportWidth = FALLBACK.INACCESSIBLE;
+        state.targetViewportHeight = FALLBACK.INACCESSIBLE;
+        state.centerPointInViewport = FALLBACK.INACCESSIBLE;
+        state.elementFromPointAvailable = FALLBACK.INACCESSIBLE;
+        state.elementFromPointResult = FALLBACK.INACCESSIBLE;
+        state.buttonPointerEvents = FALLBACK.INACCESSIBLE;
+        state.hitTestUnreadableReason = "RENDERED_TARGET_INACCESSIBLE";
+
         deriveSupportFlags(state);
         deriveRenderedReadStatus(state);
 
@@ -1244,6 +1409,7 @@
           ok: true,
           contract: CONTRACT,
           receipt: RECEIPT,
+          implementationContract: IMPLEMENTATION_CONTRACT,
           evidence: clonePlain(lastEvidencePacket),
           state: clonePlain(lastState)
         };
@@ -1289,6 +1455,7 @@
         ok: true,
         contract: CONTRACT,
         receipt: RECEIPT,
+        implementationContract: IMPLEMENTATION_CONTRACT,
         evidence: clonePlain(lastEvidencePacket),
         state: clonePlain(lastState)
       };
@@ -1299,6 +1466,7 @@
       state.diagnosticTargetAccessStatus = state.diagnosticTargetAccessStatus || ACCESS.UNKNOWN;
       state.diagnosticTargetAccessError = normalizeError(error, "WEST_RENDERED_READ_TOP_LEVEL_ERROR");
       state.case7Support = SUPPORT.UNKNOWN;
+      state.hitTestUnreadableReason = state.hitTestUnreadableReason || "WEST_TOP_LEVEL_ERROR";
       addNote(state, state.diagnosticTargetAccessError);
       state.updatedAt = nowIso();
 
@@ -1308,6 +1476,7 @@
         ok: false,
         contract: CONTRACT,
         receipt: RECEIPT,
+        implementationContract: IMPLEMENTATION_CONTRACT,
         error: state.diagnosticTargetAccessError,
         evidence: clonePlain(lastEvidencePacket),
         state: clonePlain(lastState)
@@ -1320,6 +1489,7 @@
       childRole: "WEST_RENDERED_TARGET_AUTHORITY_PROBE",
       contract: CONTRACT,
       receipt: RECEIPT,
+      implementationContract: IMPLEMENTATION_CONTRACT,
       version: VERSION,
       file: FILE,
       targetRoute: TARGET_ROUTE,
@@ -1349,6 +1519,7 @@
       receiptPanelDetectionOwned: true,
       receiptTextNodeDetectionOwned: true,
       hitTestInspectionOwned: true,
+      hitTestObservabilityRefinementOwned: true,
       pointerEventsInspectionOwned: true,
       blockerOverlayInspectionOwned: true,
       globalSuppressionReadOwnedWhereSafelyAvailable: true,
@@ -1372,6 +1543,7 @@
       lastCase4Support: lastEvidencePacket ? lastEvidencePacket.CASE_4_SUPPORT : SUPPORT.UNKNOWN,
       lastCase6Support: lastEvidencePacket ? lastEvidencePacket.CASE_6_SUPPORT : SUPPORT.UNKNOWN,
       lastCase7Support: lastEvidencePacket ? lastEvidencePacket.CASE_7_SUPPORT : SUPPORT.UNKNOWN,
+      lastHitTestUnreadableReason: lastEvidencePacket ? lastEvidencePacket.HIT_TEST_UNREADABLE_REASON : FALLBACK.UNKNOWN,
       updatedAt: nowIso()
     };
   }
@@ -1398,6 +1570,7 @@
   const api = Object.freeze({
     contract: CONTRACT,
     receipt: RECEIPT,
+    implementationContract: IMPLEMENTATION_CONTRACT,
     version: VERSION,
     file: FILE,
     targetRoute: TARGET_ROUTE,

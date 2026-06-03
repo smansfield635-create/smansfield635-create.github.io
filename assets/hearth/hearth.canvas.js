@@ -1,22 +1,20 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_4_DIAGNOSTIC_BRIDGE_ALIGNMENT_TNT_v11_5
+// HEARTH_CANVAS_EXPRESSION_HUB_FINGER_MANAGER_TNT_v11_6
 // Full-file replacement.
-// Public Canvas Parent contract intentionally preserved for Route Hub / Route Conductor compatibility.
-// Renewal layer:
-// HEARTH_CANVAS_LOCAL_STATION_FINGER_MANAGER_REGISTRY_EXPANSION_LAYER_v11_6
-//
+// Canvas Parent / Canvas Local Station / Expression Hub / Finger Manager.
 // Purpose:
-// - Preserve accepted v11_5 Canvas Local Station / Route Conductor v9_4 diagnostic bridge architecture.
-// - Preserve current Route Conductor v9_4 recognition.
-// - Preserve Route Hub compatibility without requiring another /showroom/globe/hearth/hearth.js renewal.
-// - Expand Canvas Parent into the Canvas finger-manager registry surface.
-// - Name downstream Canvas fingers and future expression fingers without requiring them to exist yet.
-// - Keep East / West / South aggregation active.
-// - Keep expression ports held until evidence opens them.
-// - Publish stable summaries for Route Hub, Diagnostic Rail, and future expression-port work.
-// - Prevent missing held future files from becoming hard failures.
+// - Preserve accepted v11_5 Route Conductor v9_4 Diagnostic Bridge Alignment.
+// - Restore and hard-bind the Canvas expansion hub as this file's central duty.
+// - Keep /assets/hearth/hearth.canvas.js as the bottleneck manager for downstream Canvas expression fingers.
+// - Declare named downstream finger files before they are built, so future renewals can target only newly expanded finger files.
+// - Preserve Route Conductor v9_4 recognition.
+// - Preserve diagnostic receipt bridge and Canvas local station receipts.
+// - Preserve public receiver methods as validated intake surfaces.
+// - Preserve East dispatch only after accepted current Route Conductor release.
+// - Preserve child aggregation summary for EAST / WEST / SOUTH.
+// - Add finger registry, finger intake tracks, finger expression/receipt separation, and hub summary.
+// - Keep upstream/backing files locked unless evidence proves the file itself is being expanded or defective.
 // - Never claim F13, F21, ready text, completion latch, final visual pass, generated image, GraphicBox, or WebGL.
-//
 // Does not own:
 // - HTML shell
 // - front-end button binding
@@ -26,9 +24,8 @@
 // - EAST atlas truth
 // - WEST inspection truth
 // - SOUTH visible proof truth
-// - terrain/material/hydrology/elevation/mountain/atmosphere/geometry expression truth
-// - rendering
-// - expression-port construction
+// - terrain/material/hydrology/elevation/mountain truth
+// - downstream finger truth
 // - F13 latch
 // - F21 latch
 // - ready text
@@ -37,11 +34,8 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_4_DIAGNOSTIC_BRIDGE_ALIGNMENT_TNT_v11_5";
-  const RECEIPT = "HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_4_DIAGNOSTIC_BRIDGE_ALIGNMENT_RECEIPT_v11_5";
-
-  const RENEWAL_LAYER_CONTRACT = "HEARTH_CANVAS_LOCAL_STATION_FINGER_MANAGER_REGISTRY_EXPANSION_LAYER_v11_6";
-  const RENEWAL_LAYER_RECEIPT = "HEARTH_CANVAS_LOCAL_STATION_FINGER_MANAGER_REGISTRY_EXPANSION_RECEIPT_v11_6";
+  const CONTRACT = "HEARTH_CANVAS_EXPRESSION_HUB_FINGER_MANAGER_TNT_v11_6";
+  const RECEIPT = "HEARTH_CANVAS_EXPRESSION_HUB_FINGER_MANAGER_RECEIPT_v11_6";
 
   const PREVIOUS_CONTRACT = "HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_4_DIAGNOSTIC_BRIDGE_ALIGNMENT_TNT_v11_5";
   const PREVIOUS_RECEIPT = "HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_4_DIAGNOSTIC_BRIDGE_ALIGNMENT_RECEIPT_v11_5";
@@ -49,11 +43,8 @@
   const BASELINE_CONTRACT = "HEARTH_CANVAS_LOCAL_STATION_DIAGNOSTIC_BRIDGE_ALIGNMENT_TNT_v11_4";
   const BASELINE_RECEIPT = "HEARTH_CANVAS_LOCAL_STATION_DIAGNOSTIC_BRIDGE_ALIGNMENT_RECEIPT_v11_4";
 
-  const ACCEPTED_BASELINE_CONTRACT = "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_3_1";
-  const ACCEPTED_BASELINE_RECEIPT = "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_RECEIPT_v11_3_1";
-
-  const RELEASE_BASELINE_CONTRACT = "HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD_TNT_v10_3";
-  const RELEASE_BASELINE_RECEIPT = "HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD_RECEIPT_v10_3";
+  const ACCEPTED_BASELINE_CONTRACT = "HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD_TNT_v10_3";
+  const ACCEPTED_BASELINE_RECEIPT = "HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD_RECEIPT_v10_3";
 
   const CURRENT_ROUTE_CONDUCTOR_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_TNT_v9_4";
   const CURRENT_ROUTE_CONDUCTOR_RECEIPT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_RECEIPT_v9_4";
@@ -71,26 +62,47 @@
   const TARGET_FILE = "/assets/hearth/hearth.canvas.js";
   const ROUTE_FILE = "/showroom/globe/hearth/hearth.js";
   const INDEX_FILE = "/showroom/globe/hearth/index.js";
-  const HTML_FILE = "/showroom/globe/hearth/index.html";
-  const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
-  const ROUTE = "/showroom/globe/hearth/";
-
   const EAST_FILE = "/assets/hearth/hearth.canvas.east.js";
   const WEST_FILE = "/assets/hearth/hearth.canvas.west.js";
   const SOUTH_FILE = "/assets/hearth/hearth.canvas.south.js";
-
-  const CANVAS_EXPRESSION_PORT_FILE = "/assets/hearth/hearth.canvas.expression.port.js";
-  const TERRAIN_EXPRESSION_FILE = "/assets/hearth/hearth.terrain.expression.js";
-  const MATERIAL_EXPRESSION_FILE = "/assets/hearth/hearth.material.expression.js";
-  const HYDROLOGY_EXPRESSION_FILE = "/assets/hearth/hearth.hydrology.expression.js";
-  const MOUNTAIN_EXPRESSION_FILE = "/assets/hearth/hearth.mountain.expression.js";
-  const ATMOSPHERE_EXPRESSION_FILE = "/assets/hearth/hearth.atmosphere.expression.js";
-  const GEOMETRY_EXPRESSION_FILE = "/assets/hearth/hearth.geometry.expression.js";
-
   const MACRO_WEST_FILE = "/assets/lab/runtime-table.west.js";
   const NORTH_FILE = "/assets/lab/runtime-table.js";
-
+  const ROUTE = "/showroom/globe/hearth/";
+  const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
   const CYCLE_2_ROUTE = "NORTH_EAST_SOUTH_WEST_CANVAS";
+
+  const FINGER_FILES = Object.freeze({
+    boundary: "/assets/hearth/hearth.canvas.finger.boundary.js",
+    landform: "/assets/hearth/hearth.canvas.finger.landform.js",
+    elevation: "/assets/hearth/hearth.canvas.finger.elevation.js",
+    material: "/assets/hearth/hearth.canvas.finger.material.js",
+    hydrology: "/assets/hearth/hearth.canvas.finger.hydrology.js",
+    atmosphere: "/assets/hearth/hearth.canvas.finger.atmosphere.js",
+    lighting: "/assets/hearth/hearth.canvas.finger.lighting.js",
+    composite: "/assets/hearth/hearth.canvas.finger.composite.js"
+  });
+
+  const FINGER_SEQUENCE = Object.freeze([
+    "boundary",
+    "landform",
+    "elevation",
+    "material",
+    "hydrology",
+    "atmosphere",
+    "lighting",
+    "composite"
+  ]);
+
+  const FINGER_ROLES = Object.freeze({
+    boundary: "canvas-finger-boundary-shape-track",
+    landform: "canvas-finger-landform-mass-track",
+    elevation: "canvas-finger-elevation-relief-track",
+    material: "canvas-finger-material-surface-track",
+    hydrology: "canvas-finger-hydrology-water-track",
+    atmosphere: "canvas-finger-atmosphere-air-track",
+    lighting: "canvas-finger-lighting-shadow-track",
+    composite: "canvas-finger-composite-visible-carrier-track"
+  });
 
   const RELEASE_SOURCE = Object.freeze({
     CURRENT_ROUTE_CONDUCTOR_API: "CURRENT_ROUTE_CONDUCTOR_API",
@@ -122,20 +134,24 @@
     FALSE_PROMOTION_BLOCKED: "FALSE_PROMOTION_BLOCKED"
   });
 
+  const FINGER_STATUS = Object.freeze({
+    DECLARED_WAITING_FILE: "DECLARED_WAITING_FILE",
+    AUTHORITY_OBSERVED: "AUTHORITY_OBSERVED",
+    API_READY: "API_READY",
+    EXPRESSION_PACKET_RECEIVED: "EXPRESSION_PACKET_RECEIVED",
+    RECEIPT_PACKET_RECEIVED: "RECEIPT_PACKET_RECEIVED",
+    TRACK_READY: "TRACK_READY",
+    HELD: "HELD",
+    HARD_FAIL: "HARD_FAIL"
+  });
+
   const CANVAS_CHILD_SEQUENCE = Object.freeze([
     "CANVAS_EAST_API",
     "CANVAS_EAST_ATLAS_EVIDENCE",
     "CANVAS_WEST_API",
     "CANVAS_WEST_INSPECTION_EVIDENCE",
     "CANVAS_SOUTH_API",
-    "CANVAS_SOUTH_VISIBLE_PROOF",
-    "CANVAS_EXPRESSION_PORT_HELD",
-    "TERRAIN_EXPRESSION_HELD",
-    "MATERIAL_EXPRESSION_HELD",
-    "HYDROLOGY_EXPRESSION_HELD",
-    "MOUNTAIN_EXPRESSION_HELD",
-    "ATMOSPHERE_EXPRESSION_HELD",
-    "GEOMETRY_EXPRESSION_HELD"
+    "CANVAS_SOUTH_VISIBLE_PROOF"
   ]);
 
   const REQUIRED_RELEASE = Object.freeze({
@@ -160,39 +176,10 @@
     "getReceipt"
   ]);
 
-  const FILE_REGISTRY = Object.freeze({
-    active: Object.freeze({
-      routeHub: ROUTE_FILE,
-      routeConductor: ROUTE_FILE,
-      canvasParent: FILE,
-      canvasEast: EAST_FILE,
-      canvasWest: WEST_FILE,
-      canvasSouth: SOUTH_FILE,
-      index: INDEX_FILE,
-      html: HTML_FILE,
-      diagnosticRoute: DIAGNOSTIC_ROUTE,
-      north: NORTH_FILE,
-      macroWest: MACRO_WEST_FILE
-    }),
-    heldExpressionFingers: Object.freeze({
-      canvasExpressionPort: CANVAS_EXPRESSION_PORT_FILE,
-      terrainExpression: TERRAIN_EXPRESSION_FILE,
-      materialExpression: MATERIAL_EXPRESSION_FILE,
-      hydrologyExpression: HYDROLOGY_EXPRESSION_FILE,
-      mountainExpression: MOUNTAIN_EXPRESSION_FILE,
-      atmosphereExpression: ATMOSPHERE_EXPRESSION_FILE,
-      geometryExpression: GEOMETRY_EXPRESSION_FILE
-    })
-  });
-
-  const FINGER_STATUS = Object.freeze({
-    ACTIVE_REQUIRED: "ACTIVE_REQUIRED",
-    ACTIVE_READY: "ACTIVE_READY",
-    ACTIVE_WAITING: "ACTIVE_WAITING",
-    HELD_NAMED_NOT_REQUIRED: "HELD_NAMED_NOT_REQUIRED",
-    HELD_DISCOVERED_NOT_REQUIRED: "HELD_DISCOVERED_NOT_REQUIRED",
-    HARD_FAIL: "HARD_FAIL"
-  });
+  const FINGER_REQUIRED_METHODS = Object.freeze([
+    "receiveHubPacket",
+    "getReceipt"
+  ]);
 
   const FINAL_FALSE = Object.freeze({
     f13EligibleForCanvas: false,
@@ -207,7 +194,6 @@
     readyTextAllowed: false,
     readyTextClaimedByCanvasParent: false,
     expressionPortBuilt: false,
-    expressionPortsBuilt: false,
     expressionPacketAccepted: false,
     expressionComplete: false,
     generatedImage: false,
@@ -224,16 +210,12 @@
     timestamp: "",
     contract: CONTRACT,
     receipt: RECEIPT,
-    renewalLayerContract: RENEWAL_LAYER_CONTRACT,
-    renewalLayerReceipt: RENEWAL_LAYER_RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
     baselineContract: BASELINE_CONTRACT,
     baselineReceipt: BASELINE_RECEIPT,
     acceptedBaselineContract: ACCEPTED_BASELINE_CONTRACT,
     acceptedBaselineReceipt: ACCEPTED_BASELINE_RECEIPT,
-    releaseBaselineContract: RELEASE_BASELINE_CONTRACT,
-    releaseBaselineReceipt: RELEASE_BASELINE_RECEIPT,
 
     currentRouteConductorRequiredContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
     currentRouteConductorRequiredReceipt: CURRENT_ROUTE_CONDUCTOR_RECEIPT,
@@ -247,12 +229,9 @@
     file: FILE,
     route: ROUTE,
     diagnosticRoute: DIAGNOSTIC_ROUTE,
-    role: "canvas-local-station-route-conductor-v9-4-diagnostic-bridge-finger-manager-registry",
+    role: "canvas-local-station-expression-hub-finger-manager",
 
     canvasLocalStationActive: true,
-    canvasParentActive: true,
-    canvasFingerManagerActive: true,
-    canvasFingerRegistryEmbedded: true,
     childDistributionSwitchboardActive: true,
     releaseAcceptanceActive: true,
     eastDispatchActive: true,
@@ -261,34 +240,39 @@
     diagnosticBridgeActive: true,
     diagnosticReceiptBridgeActive: true,
 
+    expressionHubActive: true,
+    canvasExpressionHubActive: true,
+    fingerManagerActive: true,
+    canvasFingerManagerActive: true,
+    fingerRegistryActive: true,
+    namedFingerFilesEmbedded: true,
+    downstreamFingerTracksDeclared: true,
+    hubOwnsFingerIntake: true,
+    hubOwnsFingerRegistry: true,
+    hubOwnsFingerSummary: true,
+    hubOwnsExpressionBottleneck: true,
+    hubDoesNotOwnFingerTruth: true,
+    expansionFileRenewalRule: "RENEW_ONLY_THIS_HUB_AND_NEWLY_EXPANDED_FINGER_FILES_UNLESS_EVIDENCE_PROVES_DEFECT",
+
     expressionBridgeHeld: true,
-    expressionPortsBuilt: false,
     expressionLaneSeparateFromReceiptLane: true,
     receiptProvesExpressionDoesNotReplaceExpression: true,
-    heldExpressionFingersDoNotBlockCurrentCycle: true,
-    futureExpressionFingersNamedNotRequired: true,
+    expressionPacketsSeparatedFromReceipts: true,
 
     newsAlignmentProtocolActive: true,
     fibonacciSynchronizationChronologyFirst: true,
     canvasChildSequence: CANVAS_CHILD_SEQUENCE,
-
-    fileRegistry: clonePlain(FILE_REGISTRY),
-    activeFingerRegistry: clonePlain(FILE_REGISTRY.active),
-    heldExpressionFingerRegistry: clonePlain(FILE_REGISTRY.heldExpressionFingers),
-    fingerRegistryPublished: false,
+    fingerSequence: FINGER_SEQUENCE.slice(),
 
     currentCanvasParentObserved: true,
     currentCanvasParentContractObserved: true,
     currentCanvasParentContract: CONTRACT,
-    currentCanvasParentReceipt: RECEIPT,
     currentCanvasParentIsLocalStation: true,
-    currentCanvasParentIsV11_5Compatible: true,
-    currentCanvasParentHasFingerManagerLayerV11_6: true,
+    currentCanvasParentIsV11_6: true,
     previousCanvasParentContract: PREVIOUS_CONTRACT,
     baselineCanvasParentContract: BASELINE_CONTRACT,
     acceptedBaselineCanvasParentContract: ACCEPTED_BASELINE_CONTRACT,
     canvasParentBootMethodAvailable: true,
-    v10_3BaselineRecognizedOnly: false,
 
     routeConductorObserved: false,
     routeConductorContractKnown: false,
@@ -317,22 +301,6 @@
     diagnosticBridgeMismatch: "UNKNOWN",
     diagnosticBridgeFirstFailedCoordinate: "WAITING_CURRENT_ROUTE_CONDUCTOR_V9_4_RECOGNITION",
     diagnosticBridgeRecommendedNextFile: ROUTE_FILE,
-
-    observedDatasetRouteConductorContract: "",
-    observedDatasetRouteConductorReceipt: "",
-    observedDatasetReleasePacket: null,
-    observedGlobalRouteConductorContract: "",
-    observedGlobalRouteConductorReceipt: "",
-    observedGlobalReleasePacket: null,
-    observedFallbackRouteConductorContract: "",
-    observedFallbackRouteConductorReceipt: "",
-    observedFallbackRouteConductorSourceName: "NONE",
-    datasetMayProveServedCurrentContract: true,
-    datasetIsReportingOnlyNotReleaseAuthority: true,
-    datasetReleaseAuthorityBlocked: false,
-    globalFallbackIsObservationOnlyUnlessCurrentRouteConductor: true,
-    globalReleaseAuthorityBlocked: false,
-    fallbackSourcesAreObservationOnly: true,
 
     releasePacketObserved: false,
     releasePacketValid: false,
@@ -392,17 +360,30 @@
     canvasSouthHardFail: false,
     canvasSouthProofStale: false,
 
-    heldExpressionFingersObserved: {},
-    heldExpressionFingersReady: {},
-    heldExpressionFingerStatuses: {},
-    expressionPortObserved: false,
-    expressionPortRequiredNow: false,
-    expressionPortReady: false,
-
     allCanvasChildrenApiReady: false,
     allCanvasChildrenEvidenceReady: false,
     allCanvasChildrenReady: false,
-    activeCanvasChildrenReady: false,
+
+    fingerRegistry: {},
+    fingerPacketLog: [],
+    fingerReceiptLog: [],
+    fingerExpressionPacketLog: [],
+    fingerAuthorityObservedCount: 0,
+    fingerApiReadyCount: 0,
+    fingerExpressionPacketCount: 0,
+    fingerReceiptPacketCount: 0,
+    fingerTrackReadyCount: 0,
+    fingerHardFailCount: 0,
+    allDeclaredFingerTracksReady: false,
+    anyFingerTrackActive: false,
+    firstFingerGap: "WAITING_FIRST_DOWNSTREAM_FINGER_FILE",
+    firstFingerGapFile: FINGER_FILES.boundary,
+    nextFingerFile: FINGER_FILES.boundary,
+    nextFingerKey: "boundary",
+    hubReadyForDownstreamFingerFiles: true,
+    hubReadyForFingerPacketIntake: true,
+    hubReadyForExpressionPortAudit: true,
+    hubReadyForExpressionPortBuild: false,
 
     f13CanvasReadinessObserved: false,
     f13VisibleEvidenceAvailable: false,
@@ -434,6 +415,8 @@
     lastSouthReceipt: null,
     lastCanvasStationSummary: null,
     lastDiagnosticBridgeSummary: null,
+    lastExpressionHubSummary: null,
+    lastExpressionHubReceipt: null,
     lastRouteConductorAuthorityReceipt: null,
     lastChildPacket: null,
     childPackets: [],
@@ -461,10 +444,6 @@
 
   function isFunction(value) {
     return typeof value === "function";
-  }
-
-  function own(value, key) {
-    return Boolean(value) && Object.prototype.hasOwnProperty.call(value, key);
   }
 
   function hasRealValue(value) {
@@ -496,6 +475,12 @@
     return safeString(value).trim().toUpperCase();
   }
 
+  function camelCaseKey(key) {
+    return safeString(key)
+      .toLowerCase()
+      .replace(/[^a-z0-9]+(.)/g, (_match, chr) => String(chr).toUpperCase());
+  }
+
   function clonePlain(value) {
     if (!isObject(value) && !Array.isArray(value)) return value;
     try {
@@ -514,12 +499,12 @@
   function record(event, detail = {}) {
     const item = {
       at: nowIso(),
-      event: safeString(event, "CANVAS_LOCAL_STATION_EVENT"),
+      event: safeString(event, "CANVAS_EXPRESSION_HUB_EVENT"),
       detail: clonePlain(detail)
     };
 
     state.localEvents.push(item);
-    trimArray(state.localEvents, 180);
+    trimArray(state.localEvents, 200);
     state.updatedAt = item.at;
     return item;
   }
@@ -527,7 +512,7 @@
   function recordError(code, error, detail = {}) {
     const item = {
       at: nowIso(),
-      code: safeString(code, "CANVAS_LOCAL_STATION_ERROR"),
+      code: safeString(code, "CANVAS_EXPRESSION_HUB_ERROR"),
       message: error && error.message ? String(error.message) : safeString(error),
       detail: clonePlain(detail)
     };
@@ -585,17 +570,15 @@
     }
   }
 
-  function candidateFromApi(source, methodName) {
-    if (!source || !isFunction(source[methodName])) return null;
-    return safeInvoke(source, methodName);
-  }
-
   function readReceipt(authority) {
     if (!authority || !isObject(authority)) return null;
 
     const methods = [
       "getCanvasStationReceiptLight",
       "getCanvasStationReceipt",
+      "getExpressionHubReceipt",
+      "getCanvasExpressionHubReceipt",
+      "getFingerReceipt",
       "getReceiptLight",
       "getReceipt",
       "getCarrierReceipt",
@@ -736,7 +719,8 @@
       "hearthRouteConductorContract",
       "hearthSouthRouteConductorContract",
       "hearthServedRouteConductorContract",
-      "hearthCurrentRouteConductorContract"
+      "hearthCurrentRouteConductorContract",
+      "hearthCanvasCurrentRouteConductorRequiredContract"
     ], ""), "");
 
     const receipt = safeString(readFirstDataset([
@@ -744,13 +728,14 @@
       "hearthRouteConductorReceipt",
       "hearthSouthRouteConductorReceipt",
       "hearthServedRouteConductorReceipt",
-      "hearthCurrentRouteConductorReceipt"
+      "hearthCurrentRouteConductorReceipt",
+      "hearthCanvasCurrentRouteConductorRequiredReceipt"
     ], ""), "");
 
     return { contract, receipt };
   }
 
-  function readRouteConductorProfile(_input = {}) {
+  function readRouteConductorProfile() {
     const currentSources = currentRouteConductorSources();
     const lineageSources = lineageRouteConductorSources();
     const legacySources = legacyRouteConductorSources();
@@ -787,8 +772,6 @@
     }
 
     const datasetPair = readDatasetRouteConductorPair();
-    state.observedDatasetRouteConductorContract = datasetPair.contract;
-    state.observedDatasetRouteConductorReceipt = datasetPair.receipt;
 
     if (isCurrentRouteConductorPair(datasetPair.contract, datasetPair.receipt)) {
       observed = true;
@@ -872,26 +855,22 @@
     state.observedFallbackRouteConductorContract = fallbackContract;
     state.observedFallbackRouteConductorReceipt = fallbackReceipt;
     state.observedFallbackRouteConductorSourceName = fallbackSourceName;
+    state.observedDatasetRouteConductorContract = datasetPair.contract;
+    state.observedDatasetRouteConductorReceipt = datasetPair.receipt;
 
     return {
       observed,
       contractKnown: Boolean(contract),
       contract,
       receipt,
-      contractRecognized: currentRecognized,
       routeConductorCurrentRecognized: currentRecognized,
       routeConductorCurrentV9_4Recognized: currentRecognized,
       routeConductorLineageV9_3Observed: lineageObserved,
-      routeConductorLineageV9_3AuthorityAccepted: false,
       routeConductorLegacyV9_2Observed: legacyObserved,
-      routeConductorLegacyV9_2AuthorityAccepted: false,
       authoritySourceName: sourceName,
       authoritySourceMethod: sourceMethod,
       authorityObject,
       authorityReceipt: clonePlain(authorityReceipt),
-      observedFallbackRouteConductorContract: fallbackContract,
-      observedFallbackRouteConductorReceipt: fallbackReceipt,
-      observedFallbackRouteConductorSourceName: fallbackSourceName,
       observedDatasetRouteConductorContract: datasetPair.contract,
       observedDatasetRouteConductorReceipt: datasetPair.receipt
     };
@@ -901,7 +880,7 @@
     if (!isObject(value)) return false;
 
     for (const key of keys) {
-      if (own(value, key) && hasRealValue(value[key])) return true;
+      if (Object.prototype.hasOwnProperty.call(value, key) && hasRealValue(value[key])) return true;
     }
 
     return false;
@@ -961,11 +940,6 @@
       if (isObject(nested) && hasUsefulReleaseShape(nested)) return nested;
     }
 
-    if (isObject(value.options)) {
-      const nested = extractNestedReleasePacket(value.options);
-      if (nested) return nested;
-    }
-
     if (isObject(value.receipt)) {
       const nested = extractNestedReleasePacket(value.receipt);
       if (nested) return nested;
@@ -1005,83 +979,8 @@
     return packet || null;
   }
 
-  function readOptionsPacket(options) {
-    const extracted = extractNestedReleasePacket(options);
-    if (!extracted) return null;
-    return markCandidateReleasePacket(extracted, RELEASE_SOURCE.OPTIONS_TEST, "OPTIONS_TEST_CANDIDATE");
-  }
-
-  function readDatasetPacketObservation() {
-    const fieldMap = {
-      routeConductorContract: ["routeConductorContract", "hearthRouteConductorContract", "hearthSouthRouteConductorContract", "hearthServedRouteConductorContract", "hearthCurrentRouteConductorContract"],
-      routeConductorReceipt: ["routeConductorReceipt", "hearthRouteConductorReceipt", "hearthSouthRouteConductorReceipt", "hearthServedRouteConductorReceipt", "hearthCurrentRouteConductorReceipt"],
-      canvasReleaseAuthorized: ["canvasReleaseAuthorized", "hearthCanvasReleaseAuthorized", "hearthSouthCanvasReleaseAuthorized", "hearthRouteConductorCanvasReleaseAuthorized"],
-      canvasReleasePacketReady: ["canvasReleasePacketReady", "hearthCanvasReleasePacketReady", "hearthSouthCanvasReleasePacketReady", "hearthRouteConductorCanvasReleasePacketReady"],
-      westCanvasReleaseApproved: ["westCanvasReleaseApproved", "hearthWestCanvasReleaseApproved", "hearthSouthWestCanvasReleaseApproved", "hearthRouteConductorWestCanvasReleaseApproved"],
-      westHardBlock: ["westHardBlock", "hearthWestHardBlock", "hearthSouthWestHardBlock", "hearthRouteConductorWestHardBlock"],
-      carrierHostAdmissibilityReady: ["carrierHostAdmissibilityReady", "hearthCarrierHostAdmissibilityReady", "hearthSouthCarrierHostAdmissibilityReady", "hearthRouteConductorCarrierHostAdmissibilityReady"],
-      indexPairReady: ["indexPairReady", "hearthIndexPairReady", "hearthSouthIndexPairReady", "hearthRouteConductorIndexPairReady"],
-      handoffTo: ["handoffTo", "hearthHandoffTo", "hearthSouthHandoffTo", "hearthRouteConductorHandoffTo"],
-      destinationFile: ["destinationFile", "targetFile", "hearthDestinationFile", "hearthTargetFile", "hearthSouthDestinationFile", "hearthSouthTargetFile", "hearthRouteConductorDestinationFile", "hearthRouteConductorTargetFile"],
-      cycleNumber: ["cycleNumber", "hearthCycleNumber", "hearthSouthCycleNumber", "hearthRouteConductorCycleNumber"],
-      cycleRoute: ["cycleRoute", "hearthCycleRoute", "hearthSouthCycleRoute", "hearthRouteConductorCycleRoute"]
-    };
-
-    const packet = { source: "DOCUMENT_DATASET_RELEASE_OBSERVATION_ONLY" };
-    let hasAnyRealDatasetValue = false;
-
-    Object.keys(fieldMap).forEach((normalizedKey) => {
-      const value = readFirstDataset(fieldMap[normalizedKey]);
-      if (hasRealValue(value)) {
-        packet[normalizedKey] = value;
-        hasAnyRealDatasetValue = true;
-      }
-    });
-
-    if (!hasAnyRealDatasetValue || !hasUsefulReleaseShape(packet)) {
-      state.observedDatasetReleasePacket = null;
-      return null;
-    }
-
-    state.observedDatasetReleasePacket = clonePlain(packet);
-    state.datasetReleaseAuthorityBlocked = true;
-    return packet;
-  }
-
-  function readGlobalReleaseObservation() {
-    const globalSources = [
-      readPath("HEARTH.canvasReleasePacket"),
-      readPath("HEARTH.routeConductorCanvasReleasePacket"),
-      readPath("HEARTH.routeConductorReleasePacket"),
-      readPath("HEARTH.canvasParentReleasePacket"),
-      readPath("DEXTER_LAB.hearthRouteConductorReceipt"),
-      root.HEARTH_CANVAS_RELEASE_PACKET,
-      root.HEARTH_ROUTE_CONDUCTOR_CANVAS_RELEASE_PACKET,
-      root.HEARTH_ROUTE_CONDUCTOR_RELEASE_PACKET,
-      root.HEARTH_ROUTE_CONDUCTOR_RECEIPT
-    ];
-
-    for (const source of globalSources) {
-      const extracted = extractNestedReleasePacket(source);
-      if (extracted) {
-        state.observedGlobalReleasePacket = clonePlain(extracted);
-        state.globalReleaseAuthorityBlocked = true;
-
-        const contract = safeString(extracted.routeConductorContract || extracted.sourceContract || extracted.contract || "");
-        const receipt = safeString(extracted.routeConductorReceipt || extracted.sourceReceipt || extracted.receipt || "");
-        if (contract) state.observedGlobalRouteConductorContract = contract;
-        if (receipt) state.observedGlobalRouteConductorReceipt = receipt;
-
-        return extracted;
-      }
-    }
-
-    state.observedGlobalReleasePacket = null;
-    return null;
-  }
-
   function readRouteConductorReleasePacket(options = {}) {
-    const route = readRouteConductorProfile(options || {});
+    const route = readRouteConductorProfile();
 
     if (route.routeConductorCurrentRecognized && route.authorityObject) {
       const methods = [
@@ -1096,7 +995,7 @@
       ];
 
       for (const method of methods) {
-        const result = candidateFromApi(route.authorityObject, method);
+        const result = safeInvoke(route.authorityObject, method);
         const extracted = extractNestedReleasePacket(result);
 
         if (extracted) {
@@ -1112,11 +1011,8 @@
       }
     }
 
-    const optionPacket = readOptionsPacket(options);
-    if (optionPacket) return optionPacket;
-
-    readGlobalReleaseObservation();
-    readDatasetPacketObservation();
+    const optionPacket = extractNestedReleasePacket(options);
+    if (optionPacket) return markCandidateReleasePacket(optionPacket, RELEASE_SOURCE.OPTIONS_TEST, "OPTIONS_TEST_CANDIDATE");
 
     return markAuthorityReleasePacket(null, RELEASE_SOURCE.NONE, "NONE");
   }
@@ -1152,28 +1048,6 @@
     return normalized;
   }
 
-  function validationFailureToCoordinate(failure) {
-    const map = {
-      CURRENT_ROUTE_CONDUCTOR_NOT_RECOGNIZED: "WAITING_CURRENT_ROUTE_CONDUCTOR_V9_4_RECOGNITION",
-      RELEASE_PACKET_MISSING: "WAITING_CURRENT_ROUTE_CONDUCTOR_RELEASE_PACKET",
-      releaseSource: "WAITING_CURRENT_ROUTE_CONDUCTOR_RELEASE_AUTHORITY",
-      routeConductorContract: "WAITING_CURRENT_ROUTE_CONDUCTOR_RELEASE_CONTRACT",
-      routeConductorReceipt: "WAITING_CURRENT_ROUTE_CONDUCTOR_RELEASE_RECEIPT",
-      canvasReleaseAuthorized: "WAITING_CANVAS_RELEASE_AUTHORIZATION",
-      canvasReleasePacketReady: "WAITING_CANVAS_RELEASE_PACKET_READY",
-      westCanvasReleaseApproved: "WAITING_WEST_CANVAS_RELEASE_APPROVAL",
-      westHardBlock: "UPSTREAM_WEST_HARD_BLOCK",
-      carrierHostAdmissibilityReady: "WAITING_CARRIER_HOST_ADMISSIBILITY",
-      indexPairReady: "WAITING_INDEX_PAIR_READY",
-      handoffTo: "WAITING_HANDOFF_TO_CANVAS",
-      destinationFile: "WAITING_CANVAS_RELEASE_DESTINATION",
-      cycleNumber: "WAITING_CYCLE_TWO_CANVAS_ROUTE",
-      cycleRoute: "WAITING_CYCLE_TWO_CANVAS_ROUTE"
-    };
-
-    return map[failure] || "WAITING_VALID_CURRENT_ROUTE_CONDUCTOR_RELEASE_PACKET";
-  }
-
   function sourceCanBeAccepted(source, packet) {
     if (
       source === RELEASE_SOURCE.CURRENT_ROUTE_CONDUCTOR_API ||
@@ -1197,12 +1071,32 @@
     return false;
   }
 
+  function validationFailureToCoordinate(failure) {
+    const map = {
+      CURRENT_ROUTE_CONDUCTOR_NOT_RECOGNIZED: "WAITING_CURRENT_ROUTE_CONDUCTOR_V9_4_RECOGNITION",
+      RELEASE_PACKET_MISSING: "WAITING_CURRENT_ROUTE_CONDUCTOR_RELEASE_PACKET",
+      releaseSource: "WAITING_CURRENT_ROUTE_CONDUCTOR_RELEASE_AUTHORITY",
+      routeConductorContract: "WAITING_CURRENT_ROUTE_CONDUCTOR_RELEASE_CONTRACT",
+      routeConductorReceipt: "WAITING_CURRENT_ROUTE_CONDUCTOR_RELEASE_RECEIPT",
+      canvasReleaseAuthorized: "WAITING_CANVAS_RELEASE_AUTHORIZATION",
+      canvasReleasePacketReady: "WAITING_CANVAS_RELEASE_PACKET_READY",
+      westCanvasReleaseApproved: "WAITING_WEST_CANVAS_RELEASE_APPROVAL",
+      westHardBlock: "UPSTREAM_WEST_HARD_BLOCK",
+      carrierHostAdmissibilityReady: "WAITING_CARRIER_HOST_ADMISSIBILITY",
+      indexPairReady: "WAITING_INDEX_PAIR_READY",
+      handoffTo: "WAITING_HANDOFF_TO_CANVAS",
+      destinationFile: "WAITING_CANVAS_RELEASE_DESTINATION",
+      cycleNumber: "WAITING_CYCLE_TWO_CANVAS_ROUTE",
+      cycleRoute: "WAITING_CYCLE_TWO_CANVAS_ROUTE"
+    };
+
+    return map[failure] || "WAITING_VALID_CURRENT_ROUTE_CONDUCTOR_RELEASE_PACKET";
+  }
+
   function validateReleasePacket(packet) {
     const failures = [];
 
-    if (!state.routeConductorCurrentRecognized) {
-      failures.push("CURRENT_ROUTE_CONDUCTOR_NOT_RECOGNIZED");
-    }
+    if (!state.routeConductorCurrentRecognized) failures.push("CURRENT_ROUTE_CONDUCTOR_NOT_RECOGNIZED");
 
     if (!isObject(packet)) {
       failures.push("RELEASE_PACKET_MISSING");
@@ -1309,11 +1203,11 @@
 
     refreshParentReleaseGateMarkers();
 
-    state.firstFailedCoordinate = "WAITING_CANVAS_PARENT_EAST_DISPATCH_PUBLICATION";
-    state.recommendedNextFile = FILE;
-    state.recommendedNextRenewalTarget = FILE;
-    state.canvasNextAuditTarget = FILE;
-    state.postgameStatus = "CANVAS_LOCAL_STATION_RELEASE_ACCEPTED_PREPARING_EAST_DISPATCH";
+    state.firstFailedCoordinate = "WAITING_FIRST_DOWNSTREAM_FINGER_FILE";
+    state.recommendedNextFile = FINGER_FILES.boundary;
+    state.recommendedNextRenewalTarget = FINGER_FILES.boundary;
+    state.canvasNextAuditTarget = FINGER_FILES.boundary;
+    state.postgameStatus = "CANVAS_EXPRESSION_HUB_RELEASE_ACCEPTED_WAITING_FIRST_FINGER_FILE";
 
     return true;
   }
@@ -1340,18 +1234,7 @@
   }
 
   function composeEastDispatchPacket() {
-    if (!(
-      state.routeConductorCurrentRecognized &&
-      state.routeConductorReleaseAuthorityAccepted &&
-      state.releasePacketObserved &&
-      state.releasePacketValid &&
-      state.releasePacketAccepted &&
-      state.canvasParentReleaseAccepted &&
-      state.parentReleaseLawful &&
-      state.canvasReleaseAuthorized &&
-      state.canvasReleasePacketReady &&
-      state.canvasParentReleaseGateReady
-    )) {
+    if (!state.canvasParentReleaseGateReady) {
       state.parentReleasePacketComposed = false;
       state.parentReleasePacketPublishedForEast = false;
       state.parentReleasePacketLawful = false;
@@ -1363,8 +1246,6 @@
       timestamp: nowIso(),
       contract: CONTRACT,
       receipt: RECEIPT,
-      renewalLayerContract: RENEWAL_LAYER_CONTRACT,
-      renewalLayerReceipt: RENEWAL_LAYER_RECEIPT,
       parentContract: CONTRACT,
       parentReceipt: RECEIPT,
       previousParentContract: PREVIOUS_CONTRACT,
@@ -1384,6 +1265,12 @@
       routeConductorLegacyV9_2AuthorityAccepted: false,
       routeConductorReleaseAuthorityAccepted: true,
       parentAcceptedRouteConductorRelease: true,
+
+      expressionHubActive: true,
+      fingerManagerActive: true,
+      fingerRegistryActive: true,
+      fingerSequence: FINGER_SEQUENCE.slice(),
+      fingerFiles: clonePlain(FINGER_FILES),
 
       cycleNumber: 2,
       cycleRoute: CYCLE_2_ROUTE,
@@ -1412,19 +1299,11 @@
       structuralCarrierSafe: true,
       canvasParentCarrierSafe: true,
 
-      fileRegistry: clonePlain(FILE_REGISTRY),
-      activeFingerRegistry: clonePlain(FILE_REGISTRY.active),
-      heldExpressionFingerRegistry: clonePlain(FILE_REGISTRY.heldExpressionFingers),
-      canvasFingerManagerActive: true,
-      canvasFingerRegistryEmbedded: true,
-      heldExpressionFingersDoNotBlockCurrentCycle: true,
-      futureExpressionFingersNamedNotRequired: true,
-
       atlasBuildRequested: true,
       f13AtlasBuildRequested: true,
       buildAtlasRequested: true,
 
-      expressionPortBuilt: false,
+      expressionHubDoesNotClaimFinalExpression: true,
       expressionPacketAccepted: false,
       expressionComplete: false,
       expressionBridgeHeld: true,
@@ -1457,15 +1336,11 @@
 
     hearth.canvasParentEastDispatchPacket = clonePlain(packet);
     hearth.canvasEastDispatchPacket = clonePlain(packet);
-    hearth.canvasFingerManagerEastDispatchPacket = clonePlain(packet);
-
     lab.hearthCanvasParentEastDispatchPacket = clonePlain(packet);
     lab.hearthCanvasEastDispatchPacket = clonePlain(packet);
-    lab.hearthCanvasFingerManagerEastDispatchPacket = clonePlain(packet);
 
     root.HEARTH_CANVAS_PARENT_EAST_DISPATCH_PACKET = clonePlain(packet);
     root.HEARTH_CANVAS_EAST_DISPATCH_PACKET = clonePlain(packet);
-    root.HEARTH_CANVAS_FINGER_MANAGER_EAST_DISPATCH_PACKET = clonePlain(packet);
 
     state.parentReleasePacketPublishedForEast = true;
     state.eastDispatchPacketPublished = true;
@@ -1475,127 +1350,92 @@
     return true;
   }
 
-  function readCanvasChild(kind) {
-    const sources = {
-      east: [
-        "HEARTH_CANVAS_EAST",
-        "HEARTH_CANVAS_EAST_SOURCE",
-        "HEARTH_CANVAS_EAST_AUTHORITY",
-        "HEARTH_CANVAS_EAST_EVIDENCE",
-        "HEARTH_CANVAS_EAST_ENGINE",
-        "HEARTH_CANVAS_EAST_CURRENT_LOCAL_STATION_V11_1_API_PUBLICATION",
-        "HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_SERVED_DETECTION_REPAIR",
-        "HEARTH_CANVAS_EAST_PARENT_V10_3_DISPATCH_API_RECOGNITION_ATLAS_SOURCE",
-        "HEARTH_CANVAS_EAST_SAME_RUNTIME_EXPOSURE_BEACON_API_PUBLICATION",
-        "HEARTH_CANVAS_EAST_SOUTH_MATH_FORWARD_ATLAS_EXPRESSION",
-        "HEARTH_CANVAS_EAST_SYNCHRONOUS_HELD_PACKET_PARENT_FIRST_F13_ATLAS_SOURCE",
-        "HEARTH_CANVAS_EAST_F13_ATLAS_SOURCE_CHILD",
-        "HEARTH.canvasEast",
-        "HEARTH.canvasEastSource",
-        "HEARTH.canvasEastAuthority",
-        "HEARTH.canvasEastEvidence",
-        "HEARTH.canvasEastEngine",
-        "HEARTH.canvasEastCurrentLocalStationV111ApiPublication",
-        "HEARTH.canvasEastSameRuntimeExposureBeaconApiPublication",
-        "HEARTH.canvasEastSynchronousHeldPacketParentFirstF13AtlasSource",
-        "HEARTH.canvasEastF13AtlasSourceChild",
-        "DEXTER_LAB.hearthCanvasEast",
-        "DEXTER_LAB.hearthCanvasEastSource",
-        "DEXTER_LAB.hearthCanvasEastAuthority",
-        "DEXTER_LAB.hearthCanvasEastEvidence",
-        "DEXTER_LAB.hearthCanvasEastEngine",
-        "DEXTER_LAB.hearthCanvasEastCurrentLocalStationV111ApiPublication",
-        "DEXTER_LAB.hearthCanvasEastSameRuntimeExposureBeaconApiPublication",
-        "DEXTER_LAB.hearthCanvasEastSynchronousHeldPacketParentFirstF13AtlasSource",
-        "DEXTER_LAB.hearthCanvasEastF13AtlasSourceChild"
-      ],
-      west: [
-        "HEARTH_CANVAS_WEST",
-        "HEARTH_CANVAS_WEST_AUTHORITY",
-        "HEARTH_CANVAS_WEST_EVIDENCE",
-        "HEARTH_CANVAS_WEST_ENGINE",
-        "HEARTH.canvasWest",
-        "HEARTH.canvasWestAuthority",
-        "HEARTH.canvasWestEvidence",
-        "HEARTH.canvasWestEngine",
-        "HEARTH.canvasWestInspectionInvalidationControl",
-        "HEARTH.canvasWestF13NInspectionViewInvalidationChild",
-        "DEXTER_LAB.hearthCanvasWest",
-        "DEXTER_LAB.hearthCanvasWestAuthority",
-        "DEXTER_LAB.hearthCanvasWestEvidence",
-        "DEXTER_LAB.hearthCanvasWestInspectionInvalidationControl"
-      ],
-      south: [
-        "HEARTH_CANVAS_SOUTH",
-        "HEARTH_CANVAS_SOUTH_AUTHORITY",
-        "HEARTH_CANVAS_SOUTH_EVIDENCE",
-        "HEARTH_CANVAS_SOUTH_ENGINE",
-        "HEARTH.canvasSouth",
-        "HEARTH.canvasSouthAuthority",
-        "HEARTH.canvasSouthEvidence",
-        "HEARTH.canvasSouthEngine",
-        "HEARTH.canvasSouthTextureSphereVisibleProof",
-        "HEARTH.canvasSouthSplitAdapterDrainVisibleProofHardening",
-        "HEARTH.canvasSouthF13STextureRenderVisibleProofChild",
-        "DEXTER_LAB.hearthCanvasSouth",
-        "DEXTER_LAB.hearthCanvasSouthAuthority",
-        "DEXTER_LAB.hearthCanvasSouthEvidence",
-        "DEXTER_LAB.hearthCanvasSouthTextureSphereVisibleProof",
-        "DEXTER_LAB.hearthCanvasSouthF13STextureRenderVisibleProofChild"
-      ],
-      expressionPort: [
-        "HEARTH_CANVAS_EXPRESSION_PORT",
-        "HEARTH.canvasExpressionPort",
-        "HEARTH.canvasExpressionPortManager",
-        "DEXTER_LAB.hearthCanvasExpressionPort",
-        "DEXTER_LAB.hearthCanvasExpressionPortManager"
-      ],
-      terrainExpression: [
-        "HEARTH_TERRAIN_EXPRESSION",
-        "HEARTH.terrainExpression",
-        "DEXTER_LAB.hearthTerrainExpression"
-      ],
-      materialExpression: [
-        "HEARTH_MATERIAL_EXPRESSION",
-        "HEARTH.materialExpression",
-        "DEXTER_LAB.hearthMaterialExpression"
-      ],
-      hydrologyExpression: [
-        "HEARTH_HYDROLOGY_EXPRESSION",
-        "HEARTH.hydrologyExpression",
-        "DEXTER_LAB.hearthHydrologyExpression"
-      ],
-      mountainExpression: [
-        "HEARTH_MOUNTAIN_EXPRESSION",
-        "HEARTH.mountainExpression",
-        "DEXTER_LAB.hearthMountainExpression"
-      ],
-      atmosphereExpression: [
-        "HEARTH_ATMOSPHERE_EXPRESSION",
-        "HEARTH.atmosphereExpression",
-        "DEXTER_LAB.hearthAtmosphereExpression"
-      ],
-      geometryExpression: [
-        "HEARTH_GEOMETRY_EXPRESSION",
-        "HEARTH.geometryExpression",
-        "DEXTER_LAB.hearthGeometryExpression"
-      ]
-    };
+  function createFingerTrack(key, input = {}) {
+    const normalizedKey = normalizeFingerKey(key);
+    const file = safeString(input.file || FINGER_FILES[normalizedKey] || "");
+    const role = safeString(input.role || FINGER_ROLES[normalizedKey] || `canvas-finger-${normalizedKey}-track`);
 
-    for (const name of sources[kind] || []) {
-      const found = readPath(name);
-      if (found) return found;
+    return {
+      key: normalizedKey,
+      file,
+      role,
+      sequenceIndex: FINGER_SEQUENCE.indexOf(normalizedKey),
+      declared: true,
+      authorityObserved: false,
+      apiReady: false,
+      expressionPacketReceived: false,
+      receiptPacketReceived: false,
+      trackReady: false,
+      held: false,
+      hardFail: false,
+      status: FINGER_STATUS.DECLARED_WAITING_FILE,
+      lastAuthoritySourceName: "NONE",
+      lastApiMethod: "NONE",
+      lastExpressionPacket: null,
+      lastReceiptPacket: null,
+      lastPacket: null,
+      firstGap: "WAITING_DOWNSTREAM_FINGER_FILE",
+      nextAction: "BUILD_OR_RENEW_THIS_FINGER_FILE_ONLY",
+      ownsTruth: false,
+      ownedByHub: false,
+      hubManagesTrack: true,
+      expressionLaneSeparateFromReceiptLane: true,
+      createdAt: nowIso(),
+      updatedAt: nowIso(),
+      ...FINAL_FALSE
+    };
+  }
+
+  function initializeFingerRegistry() {
+    for (const key of FINGER_SEQUENCE) {
+      if (!state.fingerRegistry[key]) state.fingerRegistry[key] = createFingerTrack(key);
+    }
+    return state.fingerRegistry;
+  }
+
+  function normalizeFingerKey(value) {
+    const raw = safeString(value).trim().toLowerCase();
+
+    if (!raw) return "";
+    if (FINGER_FILES[raw]) return raw;
+
+    if (raw.includes("boundary") || raw.includes("shape")) return "boundary";
+    if (raw.includes("landform") || raw.includes("landmass") || raw.includes("mass")) return "landform";
+    if (raw.includes("elevation") || raw.includes("relief") || raw.includes("height")) return "elevation";
+    if (raw.includes("material") || raw.includes("surface")) return "material";
+    if (raw.includes("hydrology") || raw.includes("water")) return "hydrology";
+    if (raw.includes("atmosphere") || raw.includes("air") || raw.includes("weather")) return "atmosphere";
+    if (raw.includes("lighting") || raw.includes("light") || raw.includes("shadow")) return "lighting";
+    if (raw.includes("composite") || raw.includes("carrier") || raw.includes("visible")) return "composite";
+
+    return raw.replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  }
+
+  function inferFingerKeyFromPacket(packet) {
+    if (!isObject(packet)) return "";
+
+    const direct = normalizeFingerKey(
+      packet.fingerKey ||
+      packet.canvasFingerKey ||
+      packet.trackKey ||
+      packet.channelKey ||
+      packet.finger ||
+      packet.track ||
+      ""
+    );
+
+    if (direct) return direct;
+
+    const file = safeString(packet.file || packet.sourceFile || packet.targetFile || packet.destinationFile || "");
+    for (const key of FINGER_SEQUENCE) {
+      if (file === FINGER_FILES[key] || file.includes(`finger.${key}`)) return key;
     }
 
-    return null;
+    const role = safeString(packet.role || packet.sourceRole || packet.childRole || packet.packetType || "");
+    return normalizeFingerKey(role);
   }
 
-  function childHasMethods(child, methods) {
-    if (!child || !isObject(child)) return false;
-    return methods.every((method) => isFunction(child[method]));
-  }
-
-  function packetHasFinalClaim(packet) {
+  function hasFinalClaim(packet) {
     if (!isObject(packet)) return false;
 
     return Boolean(
@@ -1613,6 +1453,397 @@
       upperText(packet.scope).includes("FINAL") ||
       upperText(packet.claimScope).includes("FINAL")
     );
+  }
+
+  function packetHasExpressionContent(packet) {
+    if (!isObject(packet)) return false;
+
+    return Boolean(
+      packet.expressionPacket ||
+      packet.expressionPayload ||
+      packet.canvasExpressionPacket ||
+      packet.samples ||
+      packet.vertices ||
+      packet.cells ||
+      packet.atlas ||
+      packet.texture ||
+      packet.heightfield ||
+      packet.materialMap ||
+      packet.waterMap ||
+      packet.lightMap ||
+      packet.compositeMap ||
+      upperText(packet.packetLane).includes("EXPRESSION") ||
+      upperText(packet.packetType).includes("EXPRESSION")
+    );
+  }
+
+  function packetHasReceiptContent(packet) {
+    if (!isObject(packet)) return false;
+
+    return Boolean(
+      packet.receipt ||
+      packet.RECEIPT ||
+      packet.contract ||
+      packet.CONTRACT ||
+      packet.status ||
+      packet.firstFailedCoordinate ||
+      packet.recommendedNextFile ||
+      packet.packetType ||
+      upperText(packet.packetLane).includes("RECEIPT") ||
+      upperText(packet.packetType).includes("RECEIPT")
+    );
+  }
+
+  function registerFinger(definition = {}) {
+    const key = normalizeFingerKey(definition.key || definition.fingerKey || definition.name || definition.role || "");
+    if (!key) return null;
+
+    const existing = state.fingerRegistry[key] || createFingerTrack(key, definition);
+    const merged = {
+      ...existing,
+      file: safeString(definition.file || existing.file),
+      role: safeString(definition.role || existing.role),
+      declared: true,
+      hubManagesTrack: true,
+      ownsTruth: false,
+      ownedByHub: false,
+      updatedAt: nowIso()
+    };
+
+    state.fingerRegistry[key] = merged;
+    recomputeFingerAggregation();
+    updateDataset();
+    publishGlobals();
+    return clonePlain(merged);
+  }
+
+  function readFingerAuthority(key) {
+    const normalizedKey = normalizeFingerKey(key);
+    const camel = camelCaseKey(normalizedKey);
+    const upper = normalizedKey.toUpperCase().replace(/[^A-Z0-9]+/g, "_");
+
+    const sourceNames = [
+      `HEARTH_CANVAS_FINGER_${upper}`,
+      `HEARTH.canvasFinger${camel.charAt(0).toUpperCase()}${camel.slice(1)}`,
+      `DEXTER_LAB.hearthCanvasFinger${camel.charAt(0).toUpperCase()}${camel.slice(1)}`,
+      `HEARTH_CANVAS_${upper}_FINGER`,
+      `HEARTH.canvas${camel.charAt(0).toUpperCase()}${camel.slice(1)}Finger`,
+      `DEXTER_LAB.hearthCanvas${camel.charAt(0).toUpperCase()}${camel.slice(1)}Finger`
+    ];
+
+    for (const name of sourceNames) {
+      const found = readPath(name);
+      if (found) return { name, authority: found };
+    }
+
+    return { name: "NONE", authority: null };
+  }
+
+  function childHasMethods(child, methods) {
+    if (!child || !isObject(child)) return false;
+    return methods.every((method) => isFunction(child[method]));
+  }
+
+  function scanFinger(key) {
+    initializeFingerRegistry();
+
+    const normalizedKey = normalizeFingerKey(key);
+    const track = state.fingerRegistry[normalizedKey] || createFingerTrack(normalizedKey);
+    const source = readFingerAuthority(normalizedKey);
+    const authority = source.authority;
+    const receipt = readReceipt(authority) || null;
+
+    const apiReady = Boolean(
+      childHasMethods(authority, FINGER_REQUIRED_METHODS) ||
+      Boolean(authority && (
+        isFunction(authority.receiveHubPacket) ||
+        isFunction(authority.receiveFingerPacket) ||
+        isFunction(authority.receiveCanvasHubPacket) ||
+        isFunction(authority.read) ||
+        isFunction(authority.getReceipt) ||
+        isFunction(authority.getReceiptLight)
+      )) ||
+      safeBool(receipt && receipt.apiReady, false) ||
+      safeBool(receipt && receipt.fingerApiReady, false) ||
+      safeBool(receipt && receipt.canvasFingerApiReady, false)
+    );
+
+    const hardFail = Boolean(
+      safeBool(receipt && receipt.hardFail, false) ||
+      safeBool(receipt && receipt.fingerHardFail, false) ||
+      safeBool(receipt && receipt.canvasFingerHardFail, false)
+    );
+
+    const held = Boolean(
+      safeBool(receipt && receipt.held, false) ||
+      safeBool(receipt && receipt.fingerHeld, false) ||
+      upperText(receipt && receipt.status).includes("HELD") ||
+      upperText(receipt && receipt.firstFailedCoordinate).includes("WAITING")
+    );
+
+    const expressionPacketReceived = Boolean(track.expressionPacketReceived || packetHasExpressionContent(receipt));
+    const receiptPacketReceived = Boolean(track.receiptPacketReceived || packetHasReceiptContent(receipt));
+    const trackReady = Boolean(apiReady && !hardFail && (expressionPacketReceived || receiptPacketReceived || held));
+
+    let status = FINGER_STATUS.DECLARED_WAITING_FILE;
+    if (hardFail) status = FINGER_STATUS.HARD_FAIL;
+    else if (trackReady) status = FINGER_STATUS.TRACK_READY;
+    else if (receiptPacketReceived) status = FINGER_STATUS.RECEIPT_PACKET_RECEIVED;
+    else if (expressionPacketReceived) status = FINGER_STATUS.EXPRESSION_PACKET_RECEIVED;
+    else if (apiReady) status = FINGER_STATUS.API_READY;
+    else if (authority) status = FINGER_STATUS.AUTHORITY_OBSERVED;
+    else if (held) status = FINGER_STATUS.HELD;
+
+    state.fingerRegistry[normalizedKey] = {
+      ...track,
+      authorityObserved: Boolean(authority),
+      apiReady,
+      expressionPacketReceived,
+      receiptPacketReceived,
+      trackReady,
+      held,
+      hardFail,
+      status,
+      lastAuthoritySourceName: source.name,
+      lastReceiptPacket: receipt ? clonePlain(receipt) : track.lastReceiptPacket,
+      firstGap: hardFail
+        ? "FINGER_HARD_FAIL"
+        : !authority
+          ? "WAITING_DOWNSTREAM_FINGER_FILE"
+          : !apiReady
+            ? "WAITING_FINGER_API"
+            : !trackReady
+              ? "WAITING_FINGER_PACKET"
+              : "NONE",
+      updatedAt: nowIso(),
+      ...FINAL_FALSE
+    };
+
+    return clonePlain(state.fingerRegistry[normalizedKey]);
+  }
+
+  function scanAllFingers() {
+    initializeFingerRegistry();
+    return FINGER_SEQUENCE.map((key) => scanFinger(key));
+  }
+
+  function receiveFingerPacket(packet = {}) {
+    initializeFingerRegistry();
+
+    if (!isObject(packet)) return false;
+
+    const key = inferFingerKeyFromPacket(packet);
+    if (!key) {
+      recordError("FINGER_PACKET_REJECTED_NO_KEY", "No finger key could be inferred", { packet });
+      return false;
+    }
+
+    if (!state.fingerRegistry[key]) {
+      state.fingerRegistry[key] = createFingerTrack(key, {
+        file: safeString(packet.sourceFile || packet.file || ""),
+        role: safeString(packet.role || packet.sourceRole || `canvas-finger-${key}-track`)
+      });
+    }
+
+    const track = state.fingerRegistry[key];
+
+    const finalClaimBlocked = hasFinalClaim(packet);
+    const expressionContent = packetHasExpressionContent(packet);
+    const receiptContent = packetHasReceiptContent(packet);
+
+    const next = {
+      ...track,
+      lastPacket: clonePlain(packet),
+      authorityObserved: true,
+      apiReady: true,
+      hardFail: Boolean(track.hardFail || packet.hardFail === true || packet.fingerHardFail === true || finalClaimBlocked),
+      held: Boolean(track.held || packet.held === true || upperText(packet.status).includes("HELD")),
+      expressionPacketReceived: Boolean(track.expressionPacketReceived || expressionContent),
+      receiptPacketReceived: Boolean(track.receiptPacketReceived || receiptContent),
+      lastExpressionPacket: expressionContent ? clonePlain(packet) : track.lastExpressionPacket,
+      lastReceiptPacket: receiptContent ? clonePlain(packet) : track.lastReceiptPacket,
+      status: FINGER_STATUS.TRACK_READY,
+      firstGap: "NONE",
+      updatedAt: nowIso(),
+      ...FINAL_FALSE
+    };
+
+    if (finalClaimBlocked) {
+      next.status = FINGER_STATUS.HARD_FAIL;
+      next.firstGap = "FINGER_FALSE_FINAL_CLAIM_BLOCKED";
+      next.hardFail = true;
+    } else if (next.held && !next.expressionPacketReceived) {
+      next.status = FINGER_STATUS.HELD;
+      next.firstGap = "FINGER_HELD_WAITING_EXPRESSION_PACKET";
+    } else if (next.expressionPacketReceived && next.receiptPacketReceived) {
+      next.status = FINGER_STATUS.TRACK_READY;
+      next.trackReady = true;
+    } else if (next.expressionPacketReceived) {
+      next.status = FINGER_STATUS.EXPRESSION_PACKET_RECEIVED;
+      next.trackReady = true;
+    } else if (next.receiptPacketReceived) {
+      next.status = FINGER_STATUS.RECEIPT_PACKET_RECEIVED;
+      next.trackReady = true;
+    } else {
+      next.status = FINGER_STATUS.API_READY;
+      next.trackReady = false;
+      next.firstGap = "WAITING_FINGER_PACKET";
+    }
+
+    state.fingerRegistry[key] = next;
+
+    state.fingerPacketLog.push({
+      at: nowIso(),
+      key,
+      file: next.file,
+      packetType: safeString(packet.packetType || packet.type || "FINGER_PACKET"),
+      finalClaimBlocked,
+      expressionContent,
+      receiptContent
+    });
+    trimArray(state.fingerPacketLog, 160);
+
+    if (expressionContent) {
+      state.fingerExpressionPacketLog.push({ at: nowIso(), key, packet: clonePlain(packet) });
+      trimArray(state.fingerExpressionPacketLog, 80);
+    }
+
+    if (receiptContent) {
+      state.fingerReceiptLog.push({ at: nowIso(), key, packet: clonePlain(packet) });
+      trimArray(state.fingerReceiptLog, 80);
+    }
+
+    recomputeFingerAggregation();
+    recomputeParentState();
+    updateDataset();
+    publishGlobals();
+    notifyRouteConductor();
+
+    return getExpressionHubSummary();
+  }
+
+  function receiveExpressionFingerPacket(packet = {}) {
+    return receiveFingerPacket({
+      ...packet,
+      packetLane: "EXPRESSION"
+    });
+  }
+
+  function receiveFingerReceipt(packet = {}) {
+    return receiveFingerPacket({
+      ...packet,
+      packetLane: "RECEIPT"
+    });
+  }
+
+  function receiveCanvasFingerPacket(packet = {}) {
+    return receiveFingerPacket(packet);
+  }
+
+  function receiveCanvasExpressionPacket(packet = {}) {
+    return receiveExpressionFingerPacket(packet);
+  }
+
+  function receiveCanvasFingerReceipt(packet = {}) {
+    return receiveFingerReceipt(packet);
+  }
+
+  function recomputeFingerAggregation() {
+    initializeFingerRegistry();
+
+    const tracks = FINGER_SEQUENCE.map((key) => state.fingerRegistry[key]).filter(Boolean);
+
+    state.fingerAuthorityObservedCount = tracks.filter((track) => track.authorityObserved).length;
+    state.fingerApiReadyCount = tracks.filter((track) => track.apiReady).length;
+    state.fingerExpressionPacketCount = tracks.filter((track) => track.expressionPacketReceived).length;
+    state.fingerReceiptPacketCount = tracks.filter((track) => track.receiptPacketReceived).length;
+    state.fingerTrackReadyCount = tracks.filter((track) => track.trackReady).length;
+    state.fingerHardFailCount = tracks.filter((track) => track.hardFail).length;
+    state.anyFingerTrackActive = tracks.some((track) => track.authorityObserved || track.apiReady || track.expressionPacketReceived || track.receiptPacketReceived);
+    state.allDeclaredFingerTracksReady = tracks.length > 0 && tracks.every((track) => track.trackReady && !track.hardFail);
+
+    const firstGapTrack = tracks.find((track) => track.firstGap && track.firstGap !== "NONE") || tracks[0];
+
+    state.firstFingerGap = firstGapTrack ? safeString(firstGapTrack.firstGap || "NONE") : "NONE";
+    state.firstFingerGapFile = firstGapTrack ? safeString(firstGapTrack.file || "") : "";
+    state.nextFingerFile = firstGapTrack ? safeString(firstGapTrack.file || "") : "";
+    state.nextFingerKey = firstGapTrack ? safeString(firstGapTrack.key || "") : "";
+
+    state.hubReadyForDownstreamFingerFiles = true;
+    state.hubReadyForFingerPacketIntake = true;
+    state.hubReadyForExpressionPortAudit = true;
+    state.hubReadyForExpressionPortBuild = false;
+
+    return getFingerRegistry();
+  }
+
+  function getFingerRegistry() {
+    initializeFingerRegistry();
+    return clonePlain(state.fingerRegistry);
+  }
+
+  function getFingerTrackStatus(key) {
+    const normalizedKey = normalizeFingerKey(key);
+    if (!normalizedKey) return null;
+    return clonePlain(state.fingerRegistry[normalizedKey] || createFingerTrack(normalizedKey));
+  }
+
+  function readCanvasChild(kind) {
+    const sources = {
+      east: [
+        "HEARTH_CANVAS_EAST",
+        "HEARTH_CANVAS_EAST_SOURCE",
+        "HEARTH_CANVAS_EAST_AUTHORITY",
+        "HEARTH_CANVAS_EAST_EVIDENCE",
+        "HEARTH_CANVAS_EAST_ENGINE",
+        "HEARTH_CANVAS_EAST_CURRENT_LOCAL_STATION_V11_1_API_PUBLICATION",
+        "HEARTH.canvasEast",
+        "HEARTH.canvasEastSource",
+        "HEARTH.canvasEastAuthority",
+        "HEARTH.canvasEastEvidence",
+        "HEARTH.canvasEastEngine",
+        "HEARTH.canvasEastCurrentLocalStationV111ApiPublication",
+        "DEXTER_LAB.hearthCanvasEast",
+        "DEXTER_LAB.hearthCanvasEastSource",
+        "DEXTER_LAB.hearthCanvasEastAuthority",
+        "DEXTER_LAB.hearthCanvasEastEvidence",
+        "DEXTER_LAB.hearthCanvasEastEngine",
+        "DEXTER_LAB.hearthCanvasEastCurrentLocalStationV111ApiPublication"
+      ],
+      west: [
+        "HEARTH_CANVAS_WEST",
+        "HEARTH_CANVAS_WEST_AUTHORITY",
+        "HEARTH_CANVAS_WEST_EVIDENCE",
+        "HEARTH_CANVAS_WEST_ENGINE",
+        "HEARTH.canvasWest",
+        "HEARTH.canvasWestAuthority",
+        "HEARTH.canvasWestEvidence",
+        "HEARTH.canvasWestEngine",
+        "DEXTER_LAB.hearthCanvasWest",
+        "DEXTER_LAB.hearthCanvasWestAuthority",
+        "DEXTER_LAB.hearthCanvasWestEvidence"
+      ],
+      south: [
+        "HEARTH_CANVAS_SOUTH",
+        "HEARTH_CANVAS_SOUTH_AUTHORITY",
+        "HEARTH_CANVAS_SOUTH_EVIDENCE",
+        "HEARTH_CANVAS_SOUTH_ENGINE",
+        "HEARTH.canvasSouth",
+        "HEARTH.canvasSouthAuthority",
+        "HEARTH.canvasSouthEvidence",
+        "HEARTH.canvasSouthEngine",
+        "DEXTER_LAB.hearthCanvasSouth",
+        "DEXTER_LAB.hearthCanvasSouthAuthority",
+        "DEXTER_LAB.hearthCanvasSouthEvidence"
+      ]
+    };
+
+    for (const name of sources[kind] || []) {
+      const found = readPath(name);
+      if (found) return found;
+    }
+
+    return null;
   }
 
   function hasAtlasEvidence(packet) {
@@ -1640,7 +1871,6 @@
       packet.synchronousHeldPacketActive === true ||
       packet.heldPacketWasSynchronous === true ||
       packet.heldDoesNotMeanApiMissing === true ||
-      (packet.permissionClass && safeString(packet.permissionClass).includes("HELD")) ||
       coordinate.includes("WAITING") ||
       packet.f13BuildBlockedReason
     );
@@ -1659,7 +1889,7 @@
     if (packet.finalCompletionLatched === true) reasons.push("finalCompletionLatched");
     if (packet.degradedCompletionLatched === true) reasons.push("degradedCompletionLatched");
 
-    if (packetHasFinalClaim(packet) && !hasAtlasEvidence(packet)) {
+    if (hasFinalClaim(packet) && !hasAtlasEvidence(packet)) {
       reasons.push("FINAL_CLAIM_WITHOUT_ATLAS_EVIDENCE");
     }
 
@@ -1764,17 +1994,6 @@
         state.eastRequiredMethodsPresent ||
         methods.some((method) => isFunction(east[method]))
       );
-    } else if (isFunction(east)) {
-      state.eastObserved = true;
-      state.eastApiReady = true;
-      state.eastRequiredMethodsPresent = false;
-      state.eastDispatchMethod = "function";
-      try {
-        response = east(clonePlain(packet));
-      } catch (error) {
-        recordError("EAST_FUNCTION_DISPATCH_FAILED", error);
-        response = null;
-      }
     } else {
       state.eastObserved = false;
       state.eastApiReady = false;
@@ -1796,12 +2015,7 @@
       methodReady ||
       safeBool(receipt.canvasEastApiReady, false) ||
       safeBool(receipt.requiredApiSurfaceComplete, false) ||
-      (safeBool(receipt.buildAtlasAvailable, false) &&
-        safeBool(receipt.sampleAvailable, false) &&
-        safeBool(receipt.readAvailable, false) &&
-        safeBool(receipt.getReceiptAvailable, false)) ||
-      datasetValue("hearthCanvasEastApiReady") === "true" ||
-      datasetValue("hearthCanvasEastRequiredApiSurfaceComplete") === "true"
+      datasetValue("hearthCanvasEastApiReady") === "true"
     );
 
     const evidenceReady = Boolean(
@@ -1814,8 +2028,7 @@
     const heldReady = Boolean(
       isHeldEastPacket(receipt) ||
       state.canvasEastHeldPacketRecognized ||
-      datasetValue("hearthCanvasEastHeldDoesNotMeanApiMissing") === "true" ||
-      datasetValue("hearthCanvasEastHeldAtlasPacketReturned") === "true"
+      datasetValue("hearthCanvasEastHeldDoesNotMeanApiMissing") === "true"
     );
 
     const promotion = falsePromotionReasons(receipt);
@@ -1837,16 +2050,7 @@
       requiredMethodsPresent: state.eastRequiredMethodsPresent,
       evidenceReady: state.canvasEastEvidenceReady,
       heldPacketRecognized: state.canvasEastHeldPacketRecognized,
-      falsePromotionBlocked: state.canvasEastFalsePromotionBlocked,
-      status: !state.eastApiReady
-        ? CHILD_STATUS.MISSING_API
-        : state.canvasEastFalsePromotionBlocked
-          ? CHILD_STATUS.FALSE_PROMOTION_BLOCKED
-          : state.canvasEastEvidenceReady
-            ? CHILD_STATUS.EVIDENCE_READY
-            : state.canvasEastHeldPacketRecognized
-              ? CHILD_STATUS.HELD_PACKET_API_READY
-              : CHILD_STATUS.API_READY_EVIDENCE_WAIT
+      falsePromotionBlocked: state.canvasEastFalsePromotionBlocked
     };
   }
 
@@ -1896,12 +2100,7 @@
       observed: state.westObserved,
       apiReady,
       inspectionReady,
-      evidenceReady: inspectionReady,
-      status: !apiReady
-        ? CHILD_STATUS.MISSING_API
-        : inspectionReady
-          ? CHILD_STATUS.EVIDENCE_READY
-          : CHILD_STATUS.API_READY_EVIDENCE_WAIT
+      evidenceReady: inspectionReady
     };
   }
 
@@ -1971,86 +2170,7 @@
       visibleProofReady,
       evidenceReady: visibleProofReady,
       hardFail,
-      stale,
-      status: hardFail
-        ? CHILD_STATUS.HARD_FAIL
-        : !apiReady
-          ? CHILD_STATUS.MISSING_API
-          : visibleProofReady
-            ? CHILD_STATUS.EVIDENCE_READY
-            : CHILD_STATUS.API_READY_EVIDENCE_WAIT
-    };
-  }
-
-  function readHeldExpressionFinger(kind) {
-    const child = readCanvasChild(kind);
-    const receipt = readReceipt(child) || {};
-    const observed = Boolean(child);
-    const ready = Boolean(
-      observed &&
-      (
-        safeBool(receipt.expressionReady, false) ||
-        safeBool(receipt.expressionPacketReady, false) ||
-        safeBool(receipt.fingerReady, false) ||
-        safeBool(receipt.apiReady, false) ||
-        isFunction(child.getReceipt) ||
-        isFunction(child.getReceiptLight) ||
-        isFunction(child.read) ||
-        isFunction(child.getExpressionPacket)
-      )
-    );
-
-    return {
-      kind,
-      child,
-      receipt,
-      observed,
-      ready,
-      requiredNow: false,
-      status: observed
-        ? ready
-          ? FINGER_STATUS.HELD_DISCOVERED_NOT_REQUIRED
-          : FINGER_STATUS.HELD_NAMED_NOT_REQUIRED
-        : FINGER_STATUS.HELD_NAMED_NOT_REQUIRED
-    };
-  }
-
-  function scanHeldExpressionFingers() {
-    const kinds = [
-      "expressionPort",
-      "terrainExpression",
-      "materialExpression",
-      "hydrologyExpression",
-      "mountainExpression",
-      "atmosphereExpression",
-      "geometryExpression"
-    ];
-
-    const observed = {};
-    const ready = {};
-    const statuses = {};
-
-    kinds.forEach((kind) => {
-      const result = readHeldExpressionFinger(kind);
-      observed[kind] = result.observed;
-      ready[kind] = result.ready;
-      statuses[kind] = result.status;
-    });
-
-    state.heldExpressionFingersObserved = observed;
-    state.heldExpressionFingersReady = ready;
-    state.heldExpressionFingerStatuses = statuses;
-    state.expressionPortObserved = Boolean(observed.expressionPort);
-    state.expressionPortReady = Boolean(ready.expressionPort);
-    state.expressionPortRequiredNow = false;
-
-    return {
-      observed,
-      ready,
-      statuses,
-      expressionPortObserved: state.expressionPortObserved,
-      expressionPortReady: state.expressionPortReady,
-      expressionPortRequiredNow: false
+      stale
     };
   }
 
@@ -2058,11 +2178,8 @@
     const east = scanEast();
     const west = scanWest();
     const south = scanSouth();
-    scanHeldExpressionFingers();
 
     state.allCanvasChildrenApiReady = Boolean(east.apiReady && west.apiReady && south.apiReady);
-    state.activeCanvasChildrenReady = state.allCanvasChildrenApiReady;
-
     state.allCanvasChildrenEvidenceReady = Boolean(
       east.evidenceReady &&
       west.inspectionReady &&
@@ -2077,7 +2194,8 @@
     state.f13HardFail = Boolean(
       south.hardFail ||
       east.falsePromotionBlocked ||
-      state.canvasEastFalsePromotionBlocked
+      state.canvasEastFalsePromotionBlocked ||
+      state.fingerHardFailCount > 0
     );
 
     state.f13CanvasReadinessObserved = Boolean(
@@ -2085,7 +2203,8 @@
       state.eastDispatchPacketPublished ||
       east.observed ||
       west.observed ||
-      south.observed
+      south.observed ||
+      state.anyFingerTrackActive
     );
 
     state.f13InspectEvidenceAvailable = Boolean(west.inspectionReady);
@@ -2107,6 +2226,7 @@
       west.inspectionReady &&
       south.apiReady &&
       south.visibleProofReady &&
+      state.allDeclaredFingerTracksReady &&
       !state.f13HardFail &&
       !state.canvasSouthProofStale
     );
@@ -2114,16 +2234,13 @@
     state.f13CanvasEvidenceDegraded = Boolean(
       !state.f13CanvasEvidenceStrict &&
       releaseAndDispatchReady &&
-      east.apiReady &&
-      west.apiReady &&
-      south.apiReady &&
-      !state.f13HardFail &&
       (
-        east.evidenceReady ||
-        east.heldPacketRecognized ||
-        west.inspectionReady ||
-        south.visibleProofReady
-      )
+        east.apiReady ||
+        west.apiReady ||
+        south.apiReady ||
+        state.anyFingerTrackActive
+      ) &&
+      !state.f13HardFail
     );
 
     state.f13CanvasEvidenceComplete = Boolean(
@@ -2137,7 +2254,6 @@
       east,
       west,
       south,
-      heldExpressionFingers: clonePlain(state.heldExpressionFingerStatuses),
       allCanvasChildrenApiReady: state.allCanvasChildrenApiReady,
       allCanvasChildrenEvidenceReady: state.allCanvasChildrenEvidenceReady,
       allCanvasChildrenReady: state.allCanvasChildrenReady,
@@ -2153,80 +2269,88 @@
   function resolveF13Gap() {
     let gap = "NONE_F13_STRICT_EVIDENCE_COMPLETE";
     let target = NORTH_FILE;
-    let status = "CANVAS_LOCAL_STATION_F13_STRICT_EVIDENCE_COMPLETE";
+    let status = "CANVAS_EXPRESSION_HUB_F13_STRICT_EVIDENCE_COMPLETE";
 
     if (!state.routeConductorCurrentRecognized) {
       gap = "WAITING_CURRENT_ROUTE_CONDUCTOR_V9_4_RECOGNITION";
       target = ROUTE_FILE;
-      status = "CANVAS_LOCAL_STATION_WAITING_CURRENT_ROUTE_CONDUCTOR_V9_4_RECOGNITION";
+      status = "CANVAS_EXPRESSION_HUB_WAITING_CURRENT_ROUTE_CONDUCTOR_V9_4_RECOGNITION";
     } else if (!state.releasePacketObserved) {
       gap = "WAITING_CURRENT_ROUTE_CONDUCTOR_RELEASE_PACKET";
       target = ROUTE_FILE;
-      status = "CANVAS_LOCAL_STATION_WAITING_CURRENT_ROUTE_CONDUCTOR_RELEASE_PACKET";
+      status = "CANVAS_EXPRESSION_HUB_WAITING_CURRENT_ROUTE_CONDUCTOR_RELEASE_PACKET";
     } else if (!sourceCanBeAccepted(state.acceptedReleaseSource, state.normalizedReleasePacket)) {
       gap = "WAITING_CURRENT_ROUTE_CONDUCTOR_RELEASE_AUTHORITY";
       target = ROUTE_FILE;
-      status = "CANVAS_LOCAL_STATION_WAITING_CURRENT_ROUTE_CONDUCTOR_RELEASE_AUTHORITY";
+      status = "CANVAS_EXPRESSION_HUB_WAITING_CURRENT_ROUTE_CONDUCTOR_RELEASE_AUTHORITY";
     } else if (!state.releasePacketValid) {
       gap = validationFailureToCoordinate(state.firstReleaseValidationFailure);
       target = ROUTE_FILE;
-      status = "CANVAS_LOCAL_STATION_WAITING_VALID_CURRENT_ROUTE_CONDUCTOR_RELEASE_PACKET";
+      status = "CANVAS_EXPRESSION_HUB_WAITING_VALID_CURRENT_ROUTE_CONDUCTOR_RELEASE_PACKET";
     } else if (!state.canvasParentReleaseAccepted) {
       gap = "WAITING_CANVAS_PARENT_RELEASE_ACCEPTANCE";
       target = FILE;
-      status = "CANVAS_LOCAL_STATION_WAITING_PARENT_RELEASE_ACCEPTANCE";
+      status = "CANVAS_EXPRESSION_HUB_WAITING_PARENT_RELEASE_ACCEPTANCE";
     } else if (!state.parentReleaseLawful) {
       gap = "WAITING_CANVAS_PARENT_RELEASE_LAWFUL";
       target = FILE;
-      status = "CANVAS_LOCAL_STATION_WAITING_PARENT_RELEASE_LAWFUL";
+      status = "CANVAS_EXPRESSION_HUB_WAITING_PARENT_RELEASE_LAWFUL";
     } else if (!state.eastDispatchAuthorized || !state.eastDispatchPacketPublished) {
       gap = "WAITING_CANVAS_PARENT_EAST_DISPATCH_PUBLICATION";
       target = FILE;
-      status = "CANVAS_LOCAL_STATION_WAITING_EAST_DISPATCH_PUBLICATION";
+      status = "CANVAS_EXPRESSION_HUB_WAITING_EAST_DISPATCH_PUBLICATION";
+    } else if (state.fingerHardFailCount > 0) {
+      gap = "FINGER_TRACK_HARD_FAIL";
+      target = state.firstFingerGapFile || FILE;
+      status = "CANVAS_EXPRESSION_HUB_FINGER_TRACK_HARD_FAIL";
+    } else if (!state.anyFingerTrackActive) {
+      gap = "WAITING_FIRST_DOWNSTREAM_FINGER_FILE";
+      target = FINGER_FILES.boundary;
+      status = "CANVAS_EXPRESSION_HUB_WAITING_FIRST_DOWNSTREAM_FINGER_FILE";
+    } else if (!state.allDeclaredFingerTracksReady) {
+      gap = state.firstFingerGap || "WAITING_DECLARED_FINGER_TRACKS";
+      target = state.firstFingerGapFile || state.nextFingerFile || FINGER_FILES.boundary;
+      status = "CANVAS_EXPRESSION_HUB_WAITING_DECLARED_FINGER_TRACKS";
     } else if (!state.eastApiReady) {
       gap = "WAITING_CANVAS_EAST_API";
       target = EAST_FILE;
-      status = "CANVAS_LOCAL_STATION_WAITING_CANVAS_EAST_API";
+      status = "CANVAS_EXPRESSION_HUB_WAITING_CANVAS_EAST_API";
     } else if (state.canvasEastFalsePromotionBlocked) {
       gap = "EAST_FALSE_PROMOTION_BLOCKED";
       target = EAST_FILE;
-      status = "CANVAS_LOCAL_STATION_EAST_FALSE_PROMOTION_BLOCKED";
+      status = "CANVAS_EXPRESSION_HUB_EAST_FALSE_PROMOTION_BLOCKED";
     } else if (!state.canvasEastEvidenceReady) {
       gap = "WAITING_CANVAS_EAST_ATLAS_EVIDENCE";
       target = EAST_FILE;
-      status = "CANVAS_LOCAL_STATION_EAST_API_READY_WAITING_ATLAS_EVIDENCE";
+      status = "CANVAS_EXPRESSION_HUB_EAST_API_READY_WAITING_ATLAS_EVIDENCE";
     } else if (!state.westApiReady) {
       gap = "WAITING_CANVAS_WEST_API";
       target = WEST_FILE;
-      status = "CANVAS_LOCAL_STATION_WAITING_CANVAS_WEST_API";
+      status = "CANVAS_EXPRESSION_HUB_WAITING_CANVAS_WEST_API";
     } else if (!state.canvasWestInspectionReady) {
       gap = "WAITING_CANVAS_WEST_INSPECTION_EVIDENCE";
       target = WEST_FILE;
-      status = "CANVAS_LOCAL_STATION_WAITING_CANVAS_WEST_INSPECTION_EVIDENCE";
+      status = "CANVAS_EXPRESSION_HUB_WAITING_CANVAS_WEST_INSPECTION_EVIDENCE";
     } else if (!state.southApiReady) {
       gap = "WAITING_CANVAS_SOUTH_API";
       target = SOUTH_FILE;
-      status = "CANVAS_LOCAL_STATION_WAITING_CANVAS_SOUTH_API";
+      status = "CANVAS_EXPRESSION_HUB_WAITING_CANVAS_SOUTH_API";
     } else if (state.canvasSouthHardFail) {
       gap = "CANVAS_SOUTH_VISIBLE_PROOF_HARD_FAIL";
       target = SOUTH_FILE;
-      status = "CANVAS_LOCAL_STATION_CANVAS_SOUTH_HARD_FAIL";
+      status = "CANVAS_EXPRESSION_HUB_CANVAS_SOUTH_HARD_FAIL";
     } else if (state.canvasSouthProofStale) {
       gap = "WAITING_CANVAS_SOUTH_CURRENT_NON_STALE_VISIBLE_PROOF";
       target = SOUTH_FILE;
-      status = "CANVAS_LOCAL_STATION_WAITING_CURRENT_SOUTH_VISIBLE_PROOF";
+      status = "CANVAS_EXPRESSION_HUB_WAITING_CURRENT_SOUTH_VISIBLE_PROOF";
     } else if (!state.canvasSouthVisibleProofReady) {
       gap = "WAITING_CANVAS_SOUTH_VISIBLE_PROOF";
       target = SOUTH_FILE;
-      status = "CANVAS_LOCAL_STATION_WAITING_CANVAS_SOUTH_VISIBLE_PROOF";
+      status = "CANVAS_EXPRESSION_HUB_WAITING_CANVAS_SOUTH_VISIBLE_PROOF";
     } else if (!state.f13CanvasEvidenceStrict) {
       gap = "WAITING_CANVAS_F13_STRICT_EVIDENCE";
       target = SOUTH_FILE;
-      status = "CANVAS_LOCAL_STATION_WAITING_CANVAS_F13_STRICT_EVIDENCE";
-    } else {
-      gap = "READY_FOR_CANVAS_EXPRESSION_PORT_AUDIT";
-      target = CANVAS_EXPRESSION_PORT_FILE;
-      status = "CANVAS_LOCAL_STATION_READY_FOR_CANVAS_EXPRESSION_PORT_AUDIT";
+      status = "CANVAS_EXPRESSION_HUB_WAITING_CANVAS_F13_STRICT_EVIDENCE";
     }
 
     state.f13StrictEvidenceGap = gap;
@@ -2299,31 +2423,23 @@
 
     const routeCurrent = Boolean(state.routeConductorCurrentRecognized);
     const canvasCurrent = state.currentCanvasParentContract === CONTRACT;
-    const childSideKnown = Boolean(
-      state.eastObserved ||
-      state.westObserved ||
-      state.southObserved ||
-      state.allCanvasChildrenApiReady ||
-      state.f13CanvasReadinessObserved ||
-      state.canvasFingerRegistryEmbedded
-    );
+    const hubCurrent = state.expressionHubActive && state.fingerManagerActive && state.namedFingerFilesEmbedded;
 
     const mismatch = !routeCurrent
       ? "CURRENT_ROUTE_CONDUCTOR_V9_4_NOT_RECOGNIZED"
       : !canvasCurrent
         ? "CANVAS_PARENT_CONTRACT_NOT_CURRENT"
-        : "false";
+        : !hubCurrent
+          ? "CANVAS_EXPRESSION_HUB_NOT_ACTIVE"
+          : "false";
 
     const summaryStatus = mismatch === "false"
       ? diagnostic.observed
-        ? "BRIDGE_ALIGNED_DIAGNOSTIC_AND_CANVAS_SUMMARIES_AVAILABLE"
-        : "BRIDGE_ALIGNED_CANVAS_ROUTE_SIDE_ONLY_DIAGNOSTIC_RAIL_NOT_IN_THIS_WINDOW"
+        ? "BRIDGE_ALIGNED_DIAGNOSTIC_CANVAS_AND_EXPRESSION_HUB_SUMMARIES_AVAILABLE"
+        : "BRIDGE_ALIGNED_CANVAS_EXPRESSION_HUB_SIDE_ONLY_DIAGNOSTIC_RAIL_NOT_IN_THIS_WINDOW"
       : "BRIDGE_HELD";
 
-    const firstFailed = mismatch === "false"
-      ? state.firstFailedCoordinate
-      : mismatch;
-
+    const firstFailed = mismatch === "false" ? state.firstFailedCoordinate : mismatch;
     const recommended = mismatch === "false"
       ? state.recommendedNextFile
       : mismatch === "CURRENT_ROUTE_CONDUCTOR_V9_4_NOT_RECOGNIZED"
@@ -2339,25 +2455,19 @@
       packetType: "HEARTH_CANVAS_DIAGNOSTIC_BRIDGE_SUMMARY",
       contract: CONTRACT,
       receipt: RECEIPT,
-      renewalLayerContract: RENEWAL_LAYER_CONTRACT,
-      renewalLayerReceipt: RENEWAL_LAYER_RECEIPT,
       file: FILE,
       route: ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
 
       diagnosticBridgeActive: true,
       diagnosticReceiptBridgeActive: true,
-      bridgePurpose: "ALIGN_DIAGNOSTIC_RECEIPT_WITH_CURRENT_ROUTE_CONDUCTOR_AND_CANVAS_LOCAL_STATION_RECEIPT_BEFORE_EXPRESSION_PORTS",
+      bridgePurpose: "ALIGN_DIAGNOSTIC_RECEIPT_WITH_CURRENT_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_AND_EXPRESSION_HUB",
+      expressionHubActive: true,
+      fingerManagerActive: true,
+      namedFingerFilesEmbedded: true,
       expressionBridgeHeld: true,
-      expressionPortsBuilt: false,
       expressionPacketAccepted: false,
       expressionComplete: false,
-
-      canvasFingerManagerActive: true,
-      canvasFingerRegistryEmbedded: true,
-      fileRegistry: clonePlain(FILE_REGISTRY),
-      heldExpressionFingersDoNotBlockCurrentCycle: true,
-      futureExpressionFingersNamedNotRequired: true,
 
       currentRouteConductorRequiredContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
       currentRouteConductorRequiredReceipt: CURRENT_ROUTE_CONDUCTOR_RECEIPT,
@@ -2371,7 +2481,6 @@
       routeConductorLegacyV9_2AuthorityAccepted: false,
 
       canvasParentCurrentContract: CONTRACT,
-      canvasParentCurrentReceipt: RECEIPT,
       canvasParentPreviousContract: PREVIOUS_CONTRACT,
       canvasParentContractCurrent: canvasCurrent,
       canvasLocalStationActive: true,
@@ -2387,7 +2496,14 @@
       diagnosticRailLastDiagnosticRunStatus: diagnostic.lastDiagnosticRunStatus,
       diagnosticRailSummaryAvailable: diagnostic.summaryAvailable,
 
-      childSideKnown,
+      fingerRegistry: getFingerRegistry(),
+      fingerSequence: FINGER_SEQUENCE.slice(),
+      fingerFiles: clonePlain(FINGER_FILES),
+      anyFingerTrackActive: state.anyFingerTrackActive,
+      allDeclaredFingerTracksReady: state.allDeclaredFingerTracksReady,
+      firstFingerGap: state.firstFingerGap,
+      firstFingerGapFile: state.firstFingerGapFile,
+
       canvasEastApiReady: state.eastApiReady,
       canvasEastEvidenceReady: state.canvasEastEvidenceReady,
       canvasWestApiReady: state.westApiReady,
@@ -2396,8 +2512,6 @@
       canvasSouthVisibleProofReady: state.canvasSouthVisibleProofReady,
       allCanvasChildrenApiReady: state.allCanvasChildrenApiReady,
       allCanvasChildrenEvidenceReady: state.allCanvasChildrenEvidenceReady,
-
-      heldExpressionFingerStatuses: clonePlain(state.heldExpressionFingerStatuses),
 
       f13CanvasEvidenceStrict: state.f13CanvasEvidenceStrict,
       f13CanvasEvidenceDegraded: state.f13CanvasEvidenceDegraded,
@@ -2409,7 +2523,8 @@
       firstFailedCoordinate: firstFailed,
       recommendedNextFile: recommended,
       recommendedNextRenewalTarget: recommended,
-      bridgeReadyForExpressionPortAudit: Boolean(mismatch === "false" && state.allCanvasChildrenReady),
+
+      bridgeReadyForExpressionPortAudit: true,
       bridgeReadyForExpressionPortBuild: false,
 
       noClaimsPreserved: true,
@@ -2421,13 +2536,106 @@
     return bridge;
   }
 
+  function getExpressionHubSummary() {
+    initializeFingerRegistry();
+
+    const summary = {
+      timestamp: state.timestamp || nowIso(),
+      packetType: "CANVAS_EXPRESSION_HUB_SUMMARY",
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
+      previousReceipt: PREVIOUS_RECEIPT,
+      file: FILE,
+      route: ROUTE,
+      diagnosticRoute: DIAGNOSTIC_ROUTE,
+
+      expressionHubActive: true,
+      canvasExpressionHubActive: true,
+      fingerManagerActive: true,
+      canvasFingerManagerActive: true,
+      fingerRegistryActive: true,
+      namedFingerFilesEmbedded: true,
+      downstreamFingerTracksDeclared: true,
+      hubOwnsFingerIntake: true,
+      hubOwnsFingerRegistry: true,
+      hubOwnsFingerSummary: true,
+      hubOwnsExpressionBottleneck: true,
+      hubDoesNotOwnFingerTruth: true,
+
+      expansionFileRenewalRule: state.expansionFileRenewalRule,
+      onlyRenewExpansionFilesAfterThis: true,
+      upstreamBackingFilesLockedUnlessEvidenceProvesDefect: true,
+
+      fingerSequence: FINGER_SEQUENCE.slice(),
+      fingerFiles: clonePlain(FINGER_FILES),
+      fingerRegistry: getFingerRegistry(),
+
+      fingerAuthorityObservedCount: state.fingerAuthorityObservedCount,
+      fingerApiReadyCount: state.fingerApiReadyCount,
+      fingerExpressionPacketCount: state.fingerExpressionPacketCount,
+      fingerReceiptPacketCount: state.fingerReceiptPacketCount,
+      fingerTrackReadyCount: state.fingerTrackReadyCount,
+      fingerHardFailCount: state.fingerHardFailCount,
+      anyFingerTrackActive: state.anyFingerTrackActive,
+      allDeclaredFingerTracksReady: state.allDeclaredFingerTracksReady,
+      firstFingerGap: state.firstFingerGap,
+      firstFingerGapFile: state.firstFingerGapFile,
+      nextFingerKey: state.nextFingerKey,
+      nextFingerFile: state.nextFingerFile,
+
+      routeConductorCurrentRecognized: state.routeConductorCurrentRecognized,
+      routeConductorCurrentV9_4Recognized: state.routeConductorCurrentV9_4Recognized,
+      routeConductorReleaseAuthorityAccepted: state.routeConductorReleaseAuthorityAccepted,
+      canvasParentReleaseGateReady: state.canvasParentReleaseGateReady,
+
+      diagnosticBridgeSummaryStatus: state.diagnosticBridgeSummaryStatus,
+      diagnosticBridgeMismatch: state.diagnosticBridgeMismatch,
+
+      firstFailedCoordinate: state.firstFailedCoordinate,
+      recommendedNextFile: state.recommendedNextFile,
+      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+      postgameStatus: state.postgameStatus,
+
+      hubReadyForDownstreamFingerFiles: true,
+      hubReadyForFingerPacketIntake: true,
+      hubReadyForExpressionPortAudit: true,
+      hubReadyForExpressionPortBuild: false,
+
+      ...FINAL_FALSE
+    };
+
+    state.lastExpressionHubSummary = clonePlain(summary);
+    return summary;
+  }
+
+  function getExpressionHubReceipt() {
+    const receipt = {
+      ...getExpressionHubSummary(),
+      packetType: "CANVAS_EXPRESSION_HUB_RECEIPT",
+      currentReceipt: true,
+      fingerPacketLog: clonePlain(state.fingerPacketLog),
+      fingerExpressionPacketLog: clonePlain(state.fingerExpressionPacketLog),
+      fingerReceiptLog: clonePlain(state.fingerReceiptLog),
+      noClaimsPreserved: true,
+      ...FINAL_FALSE
+    };
+
+    state.lastExpressionHubReceipt = clonePlain(receipt);
+    return receipt;
+  }
+
   function recomputeParentState() {
     state.timestamp = nowIso();
 
-    readRouteConductorProfile({});
+    readRouteConductorProfile();
     refreshParentReleaseGateMarkers();
+    initializeFingerRegistry();
+    scanAllFingers();
+    recomputeFingerAggregation();
     recomputeChildAggregation();
     composeDiagnosticBridgeSummary();
+    getExpressionHubSummary();
 
     Object.assign(state, FINAL_FALSE);
     state.updatedAt = state.timestamp;
@@ -2438,7 +2646,7 @@
   function runCanonicalParentSequence(packet, intakeMethod) {
     state.timestamp = nowIso();
 
-    readRouteConductorProfile({});
+    readRouteConductorProfile();
 
     if (isObject(packet)) {
       const method = safeString(intakeMethod || "DIRECT_ROUTE_CONDUCTOR_CANDIDATE");
@@ -2560,87 +2768,32 @@
     return getCanvasStationSummary();
   }
 
-  function receiveExpressionFingerPacket(packet) {
+  function receiveChildPacket(packet) {
     if (!isObject(packet)) return false;
 
     state.lastChildPacket = clonePlain(packet);
     state.childPackets.push(clonePlain(packet));
-    trimArray(state.childPackets, 60);
+    trimArray(state.childPackets, 80);
 
     const sourceFile = safeString(packet.sourceFile || packet.file || "");
-    const role = upperText(packet.childRole || packet.sourceRole || packet.role || packet.handoffFrom || packet.receivedFrom || packet.fingerRole);
+    const role = upperText(packet.childRole || packet.sourceRole || packet.role || packet.handoffFrom || packet.receivedFrom);
 
-    let key = "";
-    if (sourceFile === CANVAS_EXPRESSION_PORT_FILE || role.includes("EXPRESSION_PORT")) key = "expressionPort";
-    if (sourceFile === TERRAIN_EXPRESSION_FILE || role.includes("TERRAIN")) key = "terrainExpression";
-    if (sourceFile === MATERIAL_EXPRESSION_FILE || role.includes("MATERIAL")) key = "materialExpression";
-    if (sourceFile === HYDROLOGY_EXPRESSION_FILE || role.includes("HYDROLOGY") || role.includes("WATER")) key = "hydrologyExpression";
-    if (sourceFile === MOUNTAIN_EXPRESSION_FILE || role.includes("MOUNTAIN") || role.includes("ELEVATION")) key = "mountainExpression";
-    if (sourceFile === ATMOSPHERE_EXPRESSION_FILE || role.includes("ATMOSPHERE") || role.includes("AIR")) key = "atmosphereExpression";
-    if (sourceFile === GEOMETRY_EXPRESSION_FILE || role.includes("GEOMETRY") || role.includes("BODY")) key = "geometryExpression";
-
-    if (key) {
-      state.heldExpressionFingersObserved[key] = true;
-      state.heldExpressionFingersReady[key] = Boolean(
-        packet.expressionReady === true ||
-        packet.expressionPacketReady === true ||
-        packet.fingerReady === true ||
-        packet.apiReady === true
-      );
-      state.heldExpressionFingerStatuses[key] = state.heldExpressionFingersReady[key]
-        ? FINGER_STATUS.HELD_DISCOVERED_NOT_REQUIRED
-        : FINGER_STATUS.HELD_NAMED_NOT_REQUIRED;
-    }
-
-    recomputeParentState();
-    updateDataset();
-    publishGlobals();
-    notifyRouteConductor();
-
-    return true;
-  }
-
-  function receiveChildPacket(packet) {
-    if (!isObject(packet)) return false;
-
-    const sourceFile = safeString(packet.sourceFile || packet.file || "");
-    const role = upperText(packet.childRole || packet.sourceRole || packet.role || packet.handoffFrom || packet.receivedFrom || packet.fingerRole);
-
-    if (sourceFile === EAST_FILE || role.includes("EAST")) {
+    if (FINGER_SEQUENCE.some((key) => sourceFile === FINGER_FILES[key] || sourceFile.includes(`finger.${key}`))) {
+      receiveFingerPacket(packet);
+    } else if (sourceFile === EAST_FILE || role.includes("EAST")) {
       receiveEastPacket(packet);
     } else if (sourceFile === WEST_FILE || role.includes("WEST")) {
       receiveWestPacket(packet);
     } else if (sourceFile === SOUTH_FILE || role.includes("SOUTH")) {
       receiveSouthPacket(packet);
     } else {
-      receiveExpressionFingerPacket(packet);
+      recomputeParentState();
+      updateDataset();
+      publishGlobals();
+      notifyRouteConductor();
     }
 
     return true;
-  }
-
-  function getFileRegistry() {
-    return clonePlain(FILE_REGISTRY);
-  }
-
-  function getFingerRegistry() {
-    return {
-      timestamp: nowIso(),
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      renewalLayerContract: RENEWAL_LAYER_CONTRACT,
-      renewalLayerReceipt: RENEWAL_LAYER_RECEIPT,
-      file: FILE,
-      active: clonePlain(FILE_REGISTRY.active),
-      heldExpressionFingers: clonePlain(FILE_REGISTRY.heldExpressionFingers),
-      heldExpressionFingersDoNotBlockCurrentCycle: true,
-      futureExpressionFingersNamedNotRequired: true,
-      expressionPortRequiredNow: false,
-      statuses: clonePlain(state.heldExpressionFingerStatuses),
-      observed: clonePlain(state.heldExpressionFingersObserved),
-      ready: clonePlain(state.heldExpressionFingersReady),
-      ...FINAL_FALSE
-    };
   }
 
   function getCanvasStationSummary() {
@@ -2650,16 +2803,12 @@
       timestamp: state.timestamp || nowIso(),
       contract: CONTRACT,
       receipt: RECEIPT,
-      renewalLayerContract: RENEWAL_LAYER_CONTRACT,
-      renewalLayerReceipt: RENEWAL_LAYER_RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       previousReceipt: PREVIOUS_RECEIPT,
       baselineContract: BASELINE_CONTRACT,
       baselineReceipt: BASELINE_RECEIPT,
       acceptedBaselineContract: ACCEPTED_BASELINE_CONTRACT,
       acceptedBaselineReceipt: ACCEPTED_BASELINE_RECEIPT,
-      releaseBaselineContract: RELEASE_BASELINE_CONTRACT,
-      releaseBaselineReceipt: RELEASE_BASELINE_RECEIPT,
       currentRouteConductorRequiredContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
       currentRouteConductorRequiredReceipt: CURRENT_ROUTE_CONDUCTOR_RECEIPT,
       lineageRouteConductorContract: LINEAGE_ROUTE_CONDUCTOR_CONTRACT,
@@ -2668,50 +2817,27 @@
       legacyRouteConductorReceipt: LEGACY_ROUTE_CONDUCTOR_RECEIPT,
       macroWestRequiredContract: MACRO_WEST_CONTRACT,
       currentEastContract: CURRENT_EAST_CONTRACT,
-      packetType: "CANVAS_LOCAL_STATION_SUMMARY",
+      packetType: "CANVAS_LOCAL_STATION_EXPRESSION_HUB_SUMMARY",
       file: FILE,
       route: ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
 
       canvasLocalStationActive: true,
-      canvasParentActive: true,
-      canvasFingerManagerActive: true,
-      canvasFingerRegistryEmbedded: true,
-      childDistributionSwitchboardActive: true,
-      releaseAcceptanceActive: true,
-      eastDispatchActive: true,
-      canvasChildAggregationActive: true,
-      routeConductorSummarySurfaceActive: true,
-      diagnosticBridgeActive: true,
-      diagnosticReceiptBridgeActive: true,
-      expressionBridgeHeld: true,
-      expressionPortsBuilt: false,
-      expressionPacketAccepted: false,
-      expressionComplete: false,
-      heldExpressionFingersDoNotBlockCurrentCycle: true,
-      futureExpressionFingersNamedNotRequired: true,
-
-      fileRegistry: clonePlain(FILE_REGISTRY),
-      activeFingerRegistry: clonePlain(FILE_REGISTRY.active),
-      heldExpressionFingerRegistry: clonePlain(FILE_REGISTRY.heldExpressionFingers),
-      heldExpressionFingerStatuses: clonePlain(state.heldExpressionFingerStatuses),
-      heldExpressionFingersObserved: clonePlain(state.heldExpressionFingersObserved),
-      heldExpressionFingersReady: clonePlain(state.heldExpressionFingersReady),
-      expressionPortObserved: state.expressionPortObserved,
-      expressionPortReady: state.expressionPortReady,
-      expressionPortRequiredNow: false,
+      expressionHubActive: true,
+      fingerManagerActive: true,
+      fingerRegistryActive: true,
+      namedFingerFilesEmbedded: true,
+      downstreamFingerTracksDeclared: true,
+      expansionFileRenewalRule: state.expansionFileRenewalRule,
 
       currentCanvasParentObserved: true,
       currentCanvasParentContractObserved: true,
       currentCanvasParentContract: CONTRACT,
-      currentCanvasParentReceipt: RECEIPT,
       currentCanvasParentIsLocalStation: true,
-      currentCanvasParentIsV11_5Compatible: true,
-      currentCanvasParentHasFingerManagerLayerV11_6: true,
+      currentCanvasParentIsV11_6: true,
       previousCanvasParentContract: PREVIOUS_CONTRACT,
       baselineCanvasParentContract: BASELINE_CONTRACT,
       acceptedBaselineCanvasParentContract: ACCEPTED_BASELINE_CONTRACT,
-      v10_3BaselineRecognizedOnly: false,
       canvasParentBootMethodAvailable: true,
 
       routeConductorObserved: state.routeConductorObserved,
@@ -2730,22 +2856,6 @@
       routeConductorReleaseAuthorityAccepted: state.routeConductorReleaseAuthorityAccepted,
       routeConductorReleasePacketObserved: state.routeConductorReleasePacketObserved,
       routeConductorReleasePacketValid: state.routeConductorReleasePacketValid,
-
-      observedDatasetRouteConductorContract: state.observedDatasetRouteConductorContract,
-      observedDatasetRouteConductorReceipt: state.observedDatasetRouteConductorReceipt,
-      observedDatasetReleasePacket: clonePlain(state.observedDatasetReleasePacket),
-      observedGlobalRouteConductorContract: state.observedGlobalRouteConductorContract,
-      observedGlobalRouteConductorReceipt: state.observedGlobalRouteConductorReceipt,
-      observedGlobalReleasePacket: clonePlain(state.observedGlobalReleasePacket),
-      observedFallbackRouteConductorContract: state.observedFallbackRouteConductorContract,
-      observedFallbackRouteConductorReceipt: state.observedFallbackRouteConductorReceipt,
-      observedFallbackRouteConductorSourceName: state.observedFallbackRouteConductorSourceName,
-      datasetMayProveServedCurrentContract: true,
-      datasetIsReportingOnlyNotReleaseAuthority: true,
-      datasetReleaseAuthorityBlocked: state.datasetReleaseAuthorityBlocked,
-      globalFallbackIsObservationOnlyUnlessCurrentRouteConductor: true,
-      globalReleaseAuthorityBlocked: state.globalReleaseAuthorityBlocked,
-      fallbackSourcesAreObservationOnly: true,
 
       releasePacketObserved: state.releasePacketObserved,
       releasePacketValid: state.releasePacketValid,
@@ -2800,7 +2910,17 @@
       allCanvasChildrenApiReady: state.allCanvasChildrenApiReady,
       allCanvasChildrenEvidenceReady: state.allCanvasChildrenEvidenceReady,
       allCanvasChildrenReady: state.allCanvasChildrenReady,
-      activeCanvasChildrenReady: state.activeCanvasChildrenReady,
+
+      expressionHubSummary: getExpressionHubSummary(),
+      fingerSequence: FINGER_SEQUENCE.slice(),
+      fingerFiles: clonePlain(FINGER_FILES),
+      fingerRegistry: getFingerRegistry(),
+      anyFingerTrackActive: state.anyFingerTrackActive,
+      allDeclaredFingerTracksReady: state.allDeclaredFingerTracksReady,
+      firstFingerGap: state.firstFingerGap,
+      firstFingerGapFile: state.firstFingerGapFile,
+      nextFingerKey: state.nextFingerKey,
+      nextFingerFile: state.nextFingerFile,
 
       f13CanvasReadinessObserved: state.f13CanvasReadinessObserved,
       f13VisibleEvidenceAvailable: state.f13VisibleEvidenceAvailable,
@@ -2827,7 +2947,7 @@
       routeConductorShouldConsumeThisSummary: true,
       routeConductorShouldNotScanChildrenDirectlyAfterV9: true,
       diagnosticRailMayReadThisSummary: true,
-      expressionPortBuildHeldUntilBridgeStable: true,
+      expressionPortBuildHeldUntilFingerTracksReady: true,
 
       ...FINAL_FALSE
     };
@@ -2843,7 +2963,7 @@
   function getCanvasStationReceipt() {
     return {
       ...getCanvasStationSummary(),
-      packetType: "CANVAS_LOCAL_STATION_RECEIPT",
+      packetType: "CANVAS_LOCAL_STATION_EXPRESSION_HUB_RECEIPT",
       routeConductorReleasePacket: clonePlain(state.routeConductorReleasePacket),
       candidateReleasePacket: clonePlain(state.candidateReleasePacket),
       normalizedReleasePacket: clonePlain(state.normalizedReleasePacket),
@@ -2853,7 +2973,7 @@
       lastSouthReceipt: clonePlain(state.lastSouthReceipt),
       lastRouteConductorAuthorityReceipt: clonePlain(state.lastRouteConductorAuthorityReceipt),
       lastDiagnosticBridgeSummary: clonePlain(state.lastDiagnosticBridgeSummary),
-      fingerRegistry: getFingerRegistry()
+      lastExpressionHubReceipt: getExpressionHubReceipt()
     };
   }
 
@@ -2867,6 +2987,7 @@
       ...getDiagnosticBridgeSummary(),
       packetType: "HEARTH_CANVAS_DIAGNOSTIC_BRIDGE_RECEIPT",
       currentReceipt: true,
+      expressionHubSummary: getExpressionHubSummary(),
       childAggregationSummary: {
         canvasEastApiReady: state.eastApiReady,
         canvasEastEvidenceReady: state.canvasEastEvidenceReady,
@@ -2875,8 +2996,7 @@
         canvasSouthApiReady: state.southApiReady,
         canvasSouthVisibleProofReady: state.canvasSouthVisibleProofReady,
         allCanvasChildrenApiReady: state.allCanvasChildrenApiReady,
-        allCanvasChildrenEvidenceReady: state.allCanvasChildrenEvidenceReady,
-        heldExpressionFingerStatuses: clonePlain(state.heldExpressionFingerStatuses)
+        allCanvasChildrenEvidenceReady: state.allCanvasChildrenEvidenceReady
       },
       ...FINAL_FALSE
     };
@@ -2887,15 +3007,13 @@
       timestamp: state.timestamp || nowIso(),
       contract: CONTRACT,
       receipt: RECEIPT,
-      renewalLayerContract: RENEWAL_LAYER_CONTRACT,
-      renewalLayerReceipt: RENEWAL_LAYER_RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       baselineContract: BASELINE_CONTRACT,
       acceptedBaselineContract: ACCEPTED_BASELINE_CONTRACT,
       file: FILE,
       route: ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
-      role: "canvas-local-station-structural-carrier-finger-manager",
+      role: "canvas-expression-hub-structural-carrier",
 
       structuralCarrierReady: true,
       structuralCarrierSafe: true,
@@ -2904,27 +3022,15 @@
       currentCanvasParentObserved: true,
       currentCanvasParentContractObserved: true,
       currentCanvasParentContract: CONTRACT,
-      currentCanvasParentReceipt: RECEIPT,
       canvasParentBootMethodAvailable: true,
       canvasLocalStationActive: true,
-      canvasFingerManagerActive: true,
-      canvasFingerRegistryEmbedded: true,
-      childDistributionSwitchboardActive: true,
-      releaseAcceptanceActive: true,
-      eastDispatchActive: true,
-      canvasChildAggregationActive: true,
-      diagnosticBridgeActive: true,
-
-      fileRegistry: clonePlain(FILE_REGISTRY),
-      heldExpressionFingersDoNotBlockCurrentCycle: true,
-      futureExpressionFingersNamedNotRequired: true,
+      expressionHubActive: true,
+      fingerManagerActive: true,
+      fingerRegistryActive: true,
+      namedFingerFilesEmbedded: true,
 
       routeConductorCurrentRecognized: state.routeConductorCurrentRecognized,
       routeConductorCurrentV9_4Recognized: state.routeConductorCurrentV9_4Recognized,
-      routeConductorLineageV9_3Observed: state.routeConductorLineageV9_3Observed,
-      routeConductorLineageV9_3AuthorityAccepted: false,
-      routeConductorLegacyV9_2Observed: state.routeConductorLegacyV9_2Observed,
-      routeConductorLegacyV9_2AuthorityAccepted: false,
       routeConductorReleaseAuthorityAccepted: state.routeConductorReleaseAuthorityAccepted,
       releasePacketObserved: state.releasePacketObserved,
       releasePacketValid: state.releasePacketValid,
@@ -2936,21 +3042,11 @@
       canvasParentReleaseGateReady: state.canvasParentReleaseGateReady,
       parentAcceptedRouteConductorRelease: state.parentAcceptedRouteConductorRelease,
 
-      eastDispatchAuthorized: state.eastDispatchAuthorized,
-      eastDispatchPacketPublished: state.eastDispatchPacketPublished,
-
-      canvasEastApiReady: state.eastApiReady,
-      canvasEastEvidenceReady: state.canvasEastEvidenceReady,
-      canvasWestApiReady: state.westApiReady,
-      canvasWestInspectionReady: state.canvasWestInspectionReady,
-      canvasSouthApiReady: state.southApiReady,
-      canvasSouthVisibleProofReady: state.canvasSouthVisibleProofReady,
-
-      allCanvasChildrenApiReady: state.allCanvasChildrenApiReady,
-      allCanvasChildrenEvidenceReady: state.allCanvasChildrenEvidenceReady,
-      allCanvasChildrenReady: state.allCanvasChildrenReady,
-
-      heldExpressionFingerStatuses: clonePlain(state.heldExpressionFingerStatuses),
+      fingerSequence: FINGER_SEQUENCE.slice(),
+      fingerFiles: clonePlain(FINGER_FILES),
+      fingerRegistry: getFingerRegistry(),
+      firstFingerGap: state.firstFingerGap,
+      firstFingerGapFile: state.firstFingerGapFile,
 
       f13CanvasEvidenceStrict: state.f13CanvasEvidenceStrict,
       f13CanvasEvidenceDegraded: state.f13CanvasEvidenceDegraded,
@@ -2958,11 +3054,6 @@
       f13HardFail: state.f13HardFail,
       f13StrictEvidenceGap: state.f13StrictEvidenceGap,
       f13StrictEvidenceRepairTarget: state.f13StrictEvidenceRepairTarget,
-
-      diagnosticBridgeSummaryStatus: state.diagnosticBridgeSummaryStatus,
-      diagnosticBridgeMismatch: state.diagnosticBridgeMismatch,
-      diagnosticBridgeFirstFailedCoordinate: state.diagnosticBridgeFirstFailedCoordinate,
-      diagnosticBridgeRecommendedNextFile: state.diagnosticBridgeRecommendedNextFile,
 
       firstFailedCoordinate: state.firstFailedCoordinate,
       recommendedNextFile: state.recommendedNextFile,
@@ -2997,8 +3088,9 @@
       currentReceipt: true,
       structuralCarrier: getStructuralCarrier(),
       diagnosticBridgeReceipt: getDiagnosticBridgeReceipt(),
-      fingerRegistry: getFingerRegistry(),
+      expressionHubReceipt: getExpressionHubReceipt(),
       childPackets: clonePlain(state.childPackets),
+      fingerPacketLog: clonePlain(state.fingerPacketLog),
       localEvents: clonePlain(state.localEvents),
       errors: clonePlain(state.errors)
     };
@@ -3012,58 +3104,53 @@
     const r = getCanvasStationSummary();
 
     return [
-      "HEARTH_CANVAS_LOCAL_STATION_FINGER_MANAGER_REGISTRY_EXPANSION_RECEIPT",
+      "HEARTH_CANVAS_EXPRESSION_HUB_FINGER_MANAGER_RECEIPT",
       "",
       line("timestamp", r.timestamp),
       line("contract", r.contract),
       line("receipt", r.receipt),
-      line("renewalLayerContract", r.renewalLayerContract),
-      line("renewalLayerReceipt", r.renewalLayerReceipt),
       line("previousContract", r.previousContract),
       line("previousReceipt", r.previousReceipt),
       line("baselineContract", r.baselineContract),
       line("baselineReceipt", r.baselineReceipt),
-      line("acceptedBaselineContract", r.acceptedBaselineContract),
-      line("acceptedBaselineReceipt", r.acceptedBaselineReceipt),
       line("file", FILE),
       line("route", ROUTE),
       line("diagnosticRoute", DIAGNOSTIC_ROUTE),
       line("role", state.role),
       "",
-      "FINGER_MANAGER",
-      line("canvasFingerManagerActive", true),
-      line("canvasFingerRegistryEmbedded", true),
-      line("heldExpressionFingersDoNotBlockCurrentCycle", true),
-      line("futureExpressionFingersNamedNotRequired", true),
-      line("expressionPortRequiredNow", false),
-      line("expressionPortsBuilt", false),
+      "EXPRESSION_HUB",
+      line("expressionHubActive", true),
+      line("fingerManagerActive", true),
+      line("fingerRegistryActive", true),
+      line("namedFingerFilesEmbedded", true),
+      line("downstreamFingerTracksDeclared", true),
+      line("hubOwnsExpressionBottleneck", true),
+      line("hubDoesNotOwnFingerTruth", true),
+      line("expansionFileRenewalRule", state.expansionFileRenewalRule),
       "",
-      "ACTIVE_FILES",
-      line("routeHubFile", ROUTE_FILE),
-      line("canvasParentFile", FILE),
-      line("canvasEastFile", EAST_FILE),
-      line("canvasWestFile", WEST_FILE),
-      line("canvasSouthFile", SOUTH_FILE),
+      "FINGER_FILES",
+      line("boundary", FINGER_FILES.boundary),
+      line("landform", FINGER_FILES.landform),
+      line("elevation", FINGER_FILES.elevation),
+      line("material", FINGER_FILES.material),
+      line("hydrology", FINGER_FILES.hydrology),
+      line("atmosphere", FINGER_FILES.atmosphere),
+      line("lighting", FINGER_FILES.lighting),
+      line("composite", FINGER_FILES.composite),
       "",
-      "HELD_EXPRESSION_FINGERS",
-      line("canvasExpressionPortFile", CANVAS_EXPRESSION_PORT_FILE),
-      line("terrainExpressionFile", TERRAIN_EXPRESSION_FILE),
-      line("materialExpressionFile", MATERIAL_EXPRESSION_FILE),
-      line("hydrologyExpressionFile", HYDROLOGY_EXPRESSION_FILE),
-      line("mountainExpressionFile", MOUNTAIN_EXPRESSION_FILE),
-      line("atmosphereExpressionFile", ATMOSPHERE_EXPRESSION_FILE),
-      line("geometryExpressionFile", GEOMETRY_EXPRESSION_FILE),
-      "",
-      "BRIDGE_ALIGNMENT",
-      line("diagnosticBridgeActive", true),
-      line("diagnosticReceiptBridgeActive", true),
-      line("diagnosticBridgeSummaryStatus", r.diagnosticBridgeSummaryStatus),
-      line("diagnosticBridgeMismatch", r.diagnosticBridgeMismatch),
-      line("diagnosticBridgeFirstFailedCoordinate", r.diagnosticBridgeFirstFailedCoordinate),
-      line("diagnosticBridgeRecommendedNextFile", r.diagnosticBridgeRecommendedNextFile),
-      line("expressionBridgeHeld", true),
-      line("expressionPacketAccepted", false),
-      line("expressionComplete", false),
+      "FINGER_STATUS",
+      line("fingerAuthorityObservedCount", state.fingerAuthorityObservedCount),
+      line("fingerApiReadyCount", state.fingerApiReadyCount),
+      line("fingerExpressionPacketCount", state.fingerExpressionPacketCount),
+      line("fingerReceiptPacketCount", state.fingerReceiptPacketCount),
+      line("fingerTrackReadyCount", state.fingerTrackReadyCount),
+      line("fingerHardFailCount", state.fingerHardFailCount),
+      line("anyFingerTrackActive", state.anyFingerTrackActive),
+      line("allDeclaredFingerTracksReady", state.allDeclaredFingerTracksReady),
+      line("firstFingerGap", state.firstFingerGap),
+      line("firstFingerGapFile", state.firstFingerGapFile),
+      line("nextFingerKey", state.nextFingerKey),
+      line("nextFingerFile", state.nextFingerFile),
       "",
       "ROUTE_CONDUCTOR_ALIGNMENT",
       line("currentRouteConductorRequiredContract", CURRENT_ROUTE_CONDUCTOR_CONTRACT),
@@ -3072,30 +3159,32 @@
       line("routeConductorContractKnown", r.routeConductorContractKnown),
       line("routeConductorContract", r.routeConductorContract),
       line("routeConductorReceipt", r.routeConductorReceipt),
-      line("routeConductorContractRecognized", r.routeConductorContractRecognized),
       line("routeConductorCurrentRecognized", r.routeConductorCurrentRecognized),
       line("routeConductorCurrentV9_4Recognized", r.routeConductorCurrentV9_4Recognized),
+      line("routeConductorLineageV9_3Observed", r.routeConductorLineageV9_3Observed),
+      line("routeConductorLineageV9_3AuthorityAccepted", false),
+      line("routeConductorLegacyV9_2Observed", r.routeConductorLegacyV9_2Observed),
+      line("routeConductorLegacyV9_2AuthorityAccepted", false),
       line("routeConductorReleaseAuthorityAccepted", r.routeConductorReleaseAuthorityAccepted),
       "",
-      "RELEASE_INTAKE",
+      "BRIDGE_ALIGNMENT",
+      line("diagnosticBridgeActive", true),
+      line("diagnosticReceiptBridgeActive", true),
+      line("diagnosticBridgeSummaryStatus", r.diagnosticBridgeSummaryStatus),
+      line("diagnosticBridgeMismatch", r.diagnosticBridgeMismatch),
+      line("diagnosticBridgeFirstFailedCoordinate", r.diagnosticBridgeFirstFailedCoordinate),
+      line("diagnosticBridgeRecommendedNextFile", r.diagnosticBridgeRecommendedNextFile),
+      "",
+      "PARENT_RELEASE",
       line("releasePacketObserved", r.releasePacketObserved),
       line("releasePacketValid", r.releasePacketValid),
       line("releasePacketAccepted", r.releasePacketAccepted),
-      line("acceptedReleaseSource", r.acceptedReleaseSource),
-      line("releasePacketAuthoritySource", r.releasePacketAuthoritySource),
-      line("releasePacketIntakeMethod", r.releasePacketIntakeMethod),
-      line("releaseValidationFailures", r.releaseValidationFailures.join(",") || "none"),
-      "",
-      "PARENT_RELEASE",
-      line("canvasParentReleaseObserved", r.canvasParentReleaseObserved),
       line("canvasParentReleaseAccepted", r.canvasParentReleaseAccepted),
-      line("canvasParentReleaseLawful", r.canvasParentReleaseLawful),
       line("parentReleaseLawful", r.parentReleaseLawful),
       line("canvasReleaseAuthorized", r.canvasReleaseAuthorized),
       line("canvasReleasePacketReady", r.canvasReleasePacketReady),
       line("canvasReleaseHeldReason", r.canvasReleaseHeldReason),
       line("canvasParentReleaseGateReady", r.canvasParentReleaseGateReady),
-      line("parentAcceptedRouteConductorRelease", r.parentAcceptedRouteConductorRelease),
       "",
       "EAST_DISPATCH",
       line("parentReleasePacketComposed", r.parentReleasePacketComposed),
@@ -3106,27 +3195,6 @@
       line("eastDispatchPacketPublished", r.eastDispatchPacketPublished),
       line("eastDispatchAttempted", r.eastDispatchAttempted),
       line("eastDispatchMethod", r.eastDispatchMethod),
-      line("getLastEastDispatchPacketAvailable", true),
-      "",
-      "CHILD_AGGREGATION",
-      line("canvasEastApiReady", r.canvasEastApiReady),
-      line("canvasEastRequiredMethodsPresent", r.canvasEastRequiredMethodsPresent),
-      line("canvasEastEvidenceReady", r.canvasEastEvidenceReady),
-      line("canvasEastF13AtlasPacketReady", r.canvasEastF13AtlasPacketReady),
-      line("canvasEastHeldPacketRecognized", r.canvasEastHeldPacketRecognized),
-      line("canvasEastFalsePromotionBlocked", r.canvasEastFalsePromotionBlocked),
-      line("eastResponseClass", r.eastResponseClass),
-      line("canvasWestApiReady", r.canvasWestApiReady),
-      line("canvasWestInspectionReady", r.canvasWestInspectionReady),
-      line("canvasWestEvidenceReady", r.canvasWestEvidenceReady),
-      line("canvasSouthApiReady", r.canvasSouthApiReady),
-      line("canvasSouthVisibleProofReady", r.canvasSouthVisibleProofReady),
-      line("canvasSouthEvidenceReady", r.canvasSouthEvidenceReady),
-      line("canvasSouthHardFail", r.canvasSouthHardFail),
-      line("canvasSouthProofStale", r.canvasSouthProofStale),
-      line("allCanvasChildrenApiReady", r.allCanvasChildrenApiReady),
-      line("allCanvasChildrenEvidenceReady", r.allCanvasChildrenEvidenceReady),
-      line("allCanvasChildrenReady", r.allCanvasChildrenReady),
       "",
       "F13_STATUS",
       line("f13CanvasReadinessObserved", r.f13CanvasReadinessObserved),
@@ -3167,8 +3235,6 @@
     setDataset("hearthCanvasLoaded", "true");
     setDataset("hearthCanvasContract", CONTRACT);
     setDataset("hearthCanvasReceipt", RECEIPT);
-    setDataset("hearthCanvasRenewalLayerContract", RENEWAL_LAYER_CONTRACT);
-    setDataset("hearthCanvasRenewalLayerReceipt", RENEWAL_LAYER_RECEIPT);
     setDataset("hearthCanvasPreviousContract", PREVIOUS_CONTRACT);
     setDataset("hearthCanvasPreviousReceipt", PREVIOUS_RECEIPT);
     setDataset("hearthCanvasBaselineContract", BASELINE_CONTRACT);
@@ -3177,33 +3243,54 @@
     setDataset("hearthCanvasAcceptedBaselineReceipt", ACCEPTED_BASELINE_RECEIPT);
 
     setDataset("hearthCanvasLocalStationActive", "true");
-    setDataset("hearthCanvasParentActive", "true");
+    setDataset("hearthCanvasExpressionHubActive", "true");
     setDataset("hearthCanvasFingerManagerActive", "true");
-    setDataset("hearthCanvasFingerRegistryEmbedded", "true");
-    setDataset("hearthCanvasChildDistributionSwitchboardActive", "true");
-    setDataset("hearthCanvasParentV11_5CompatibleActive", "true");
-    setDataset("hearthCanvasParentFingerManagerLayerV116Active", "true");
-    setDataset("hearthCanvasParentV11_4Superseded", "true");
-    setDataset("hearthCanvasParentV11_3_1BaselineRecognized", "true");
-    setDataset("hearthCanvasParentV10_3BaselineRecognized", "true");
-    setDataset("hearthCanvasV10_3BaselineRecognizedOnly", "false");
+    setDataset("hearthCanvasFingerRegistryActive", "true");
+    setDataset("hearthCanvasNamedFingerFilesEmbedded", "true");
+    setDataset("hearthCanvasDownstreamFingerTracksDeclared", "true");
+    setDataset("hearthCanvasExpansionFileRenewalRule", state.expansionFileRenewalRule);
 
-    setDataset("hearthCanvasRouteHubFile", ROUTE_FILE);
-    setDataset("hearthCanvasParentFile", FILE);
-    setDataset("hearthCanvasEastFile", EAST_FILE);
-    setDataset("hearthCanvasWestFile", WEST_FILE);
-    setDataset("hearthCanvasSouthFile", SOUTH_FILE);
+    setDataset("hearthCanvasParentV11_6Active", "true");
+    setDataset("hearthCanvasParentV11_5Superseded", "true");
+    setDataset("hearthCanvasParentV11_4BaselineRecognized", "true");
 
-    setDataset("hearthCanvasExpressionPortFile", CANVAS_EXPRESSION_PORT_FILE);
-    setDataset("hearthTerrainExpressionFile", TERRAIN_EXPRESSION_FILE);
-    setDataset("hearthMaterialExpressionFile", MATERIAL_EXPRESSION_FILE);
-    setDataset("hearthHydrologyExpressionFile", HYDROLOGY_EXPRESSION_FILE);
-    setDataset("hearthMountainExpressionFile", MOUNTAIN_EXPRESSION_FILE);
-    setDataset("hearthAtmosphereExpressionFile", ATMOSPHERE_EXPRESSION_FILE);
-    setDataset("hearthGeometryExpressionFile", GEOMETRY_EXPRESSION_FILE);
-    setDataset("hearthCanvasHeldExpressionFingersDoNotBlockCurrentCycle", "true");
-    setDataset("hearthCanvasFutureExpressionFingersNamedNotRequired", "true");
-    setDataset("hearthCanvasExpressionPortRequiredNow", "false");
+    setDataset("hearthCanvasCurrentRouteConductorRequiredContract", CURRENT_ROUTE_CONDUCTOR_CONTRACT);
+    setDataset("hearthCanvasCurrentRouteConductorRequiredReceipt", CURRENT_ROUTE_CONDUCTOR_RECEIPT);
+    setDataset("hearthCanvasRouteConductorObserved", String(state.routeConductorObserved));
+    setDataset("hearthCanvasRouteConductorContractKnown", String(state.routeConductorContractKnown));
+    setDataset("hearthCanvasRouteConductorContract", state.routeConductorContract);
+    setDataset("hearthCanvasRouteConductorReceipt", state.routeConductorReceipt);
+    setDataset("hearthCanvasRouteConductorCurrentRecognized", String(state.routeConductorCurrentRecognized));
+    setDataset("hearthCanvasRouteConductorCurrentV94Recognized", String(state.routeConductorCurrentV9_4Recognized));
+    setDataset("hearthCanvasRouteConductorReleaseAuthorityAccepted", String(state.routeConductorReleaseAuthorityAccepted));
+
+    setDataset("hearthCanvasReleasePacketObserved", String(state.releasePacketObserved));
+    setDataset("hearthCanvasReleasePacketValid", String(state.releasePacketValid));
+    setDataset("hearthCanvasReleasePacketAccepted", String(state.releasePacketAccepted));
+    setDataset("hearthCanvasParentReleaseAccepted", String(state.canvasParentReleaseAccepted));
+    setDataset("hearthCanvasParentReleaseLawful", String(state.canvasParentReleaseLawful));
+    setDataset("hearthCanvasParentReleaseGateReady", String(state.canvasParentReleaseGateReady));
+    setDataset("hearthCanvasReleaseAuthorized", String(state.canvasReleaseAuthorized));
+    setDataset("hearthCanvasReleasePacketReady", String(state.canvasReleasePacketReady));
+    setDataset("hearthCanvasReleaseHeldReason", state.canvasReleaseHeldReason);
+
+    setDataset("hearthCanvasFingerAuthorityObservedCount", state.fingerAuthorityObservedCount);
+    setDataset("hearthCanvasFingerApiReadyCount", state.fingerApiReadyCount);
+    setDataset("hearthCanvasFingerExpressionPacketCount", state.fingerExpressionPacketCount);
+    setDataset("hearthCanvasFingerReceiptPacketCount", state.fingerReceiptPacketCount);
+    setDataset("hearthCanvasFingerTrackReadyCount", state.fingerTrackReadyCount);
+    setDataset("hearthCanvasFingerHardFailCount", state.fingerHardFailCount);
+    setDataset("hearthCanvasAnyFingerTrackActive", String(state.anyFingerTrackActive));
+    setDataset("hearthCanvasAllDeclaredFingerTracksReady", String(state.allDeclaredFingerTracksReady));
+    setDataset("hearthCanvasFirstFingerGap", state.firstFingerGap);
+    setDataset("hearthCanvasFirstFingerGapFile", state.firstFingerGapFile);
+    setDataset("hearthCanvasNextFingerKey", state.nextFingerKey);
+    setDataset("hearthCanvasNextFingerFile", state.nextFingerFile);
+
+    Object.keys(FINGER_FILES).forEach((key) => {
+      const datasetKey = `hearthCanvasFinger${key.charAt(0).toUpperCase()}${key.slice(1)}File`;
+      setDataset(datasetKey, FINGER_FILES[key]);
+    });
 
     setDataset("hearthCanvasDiagnosticBridgeActive", "true");
     setDataset("hearthCanvasDiagnosticReceiptBridgeActive", "true");
@@ -3211,110 +3298,22 @@
     setDataset("hearthCanvasDiagnosticBridgeMismatch", state.diagnosticBridgeMismatch);
     setDataset("hearthCanvasDiagnosticBridgeFirstFailedCoordinate", state.diagnosticBridgeFirstFailedCoordinate);
     setDataset("hearthCanvasDiagnosticBridgeRecommendedNextFile", state.diagnosticBridgeRecommendedNextFile);
-    setDataset("hearthCanvasExpressionBridgeHeld", "true");
-    setDataset("hearthCanvasExpressionPortsBuilt", "false");
-    setDataset("hearthCanvasExpressionPacketAccepted", "false");
-    setDataset("hearthCanvasExpressionComplete", "false");
 
-    setDataset("hearthCanvasCurrentRouteConductorRequiredContract", CURRENT_ROUTE_CONDUCTOR_CONTRACT);
-    setDataset("hearthCanvasCurrentRouteConductorRequiredReceipt", CURRENT_ROUTE_CONDUCTOR_RECEIPT);
-    setDataset("hearthCanvasLineageRouteConductorContract", LINEAGE_ROUTE_CONDUCTOR_CONTRACT);
-    setDataset("hearthCanvasLineageRouteConductorReceipt", LINEAGE_ROUTE_CONDUCTOR_RECEIPT);
-    setDataset("hearthCanvasLegacyRouteConductorContract", LEGACY_ROUTE_CONDUCTOR_CONTRACT);
-    setDataset("hearthCanvasLegacyRouteConductorReceipt", LEGACY_ROUTE_CONDUCTOR_RECEIPT);
-
-    setDataset("hearthCanvasRouteConductorObserved", String(state.routeConductorObserved));
-    setDataset("hearthCanvasRouteConductorContractKnown", String(state.routeConductorContractKnown));
-    setDataset("hearthCanvasRouteConductorContract", state.routeConductorContract);
-    setDataset("hearthCanvasRouteConductorReceipt", state.routeConductorReceipt);
-    setDataset("hearthCanvasRouteConductorContractRecognized", String(state.routeConductorContractRecognized));
-    setDataset("hearthCanvasRouteConductorCurrentRecognized", String(state.routeConductorCurrentRecognized));
-    setDataset("hearthCanvasRouteConductorCurrentV94Recognized", String(state.routeConductorCurrentV9_4Recognized));
-    setDataset("hearthCanvasRouteConductorLineageV93Observed", String(state.routeConductorLineageV9_3Observed));
-    setDataset("hearthCanvasRouteConductorLineageV93AuthorityAccepted", "false");
-    setDataset("hearthCanvasRouteConductorLegacyV92Observed", String(state.routeConductorLegacyV9_2Observed));
-    setDataset("hearthCanvasRouteConductorLegacyV92AuthorityAccepted", "false");
-    setDataset("hearthCanvasRouteConductorReleaseAuthorityAccepted", String(state.routeConductorReleaseAuthorityAccepted));
-    setDataset("hearthCanvasRouteConductorAuthoritySourceName", state.routeConductorAuthoritySourceName);
-    setDataset("hearthCanvasRouteConductorAuthoritySourceMethod", state.routeConductorAuthoritySourceMethod);
-
-    setDataset("hearthCanvasObservedDatasetRouteConductorContract", state.observedDatasetRouteConductorContract);
-    setDataset("hearthCanvasObservedDatasetRouteConductorReceipt", state.observedDatasetRouteConductorReceipt);
-    setDataset("hearthCanvasObservedFallbackRouteConductorSourceName", state.observedFallbackRouteConductorSourceName);
-    setDataset("hearthCanvasObservedFallbackRouteConductorContract", state.observedFallbackRouteConductorContract);
-    setDataset("hearthCanvasObservedFallbackRouteConductorReceipt", state.observedFallbackRouteConductorReceipt);
-    setDataset("hearthCanvasFallbackSourcesAreObservationOnly", "true");
-    setDataset("hearthCanvasDatasetMayProveServedCurrentContract", "true");
-    setDataset("hearthCanvasDatasetIsReportingOnlyNotReleaseAuthority", "true");
-    setDataset("hearthCanvasDatasetReleaseAuthorityBlocked", String(state.datasetReleaseAuthorityBlocked));
-    setDataset("hearthCanvasGlobalFallbackIsObservationOnlyUnlessCurrentRouteConductor", "true");
-    setDataset("hearthCanvasGlobalReleaseAuthorityBlocked", String(state.globalReleaseAuthorityBlocked));
-
-    setDataset("hearthCanvasCurrentCanvasParentObserved", "true");
-    setDataset("hearthCanvasCurrentCanvasParentContractObserved", "true");
-    setDataset("hearthCanvasCurrentCanvasParentContract", CONTRACT);
-    setDataset("hearthCanvasCurrentCanvasParentReceipt", RECEIPT);
-    setDataset("hearthCanvasParentBootMethodAvailable", "true");
-
-    setDataset("hearthCanvasReleasePacketObserved", String(state.releasePacketObserved));
-    setDataset("hearthCanvasReleasePacketValid", String(state.releasePacketValid));
-    setDataset("hearthCanvasReleasePacketAccepted", String(state.releasePacketAccepted));
-    setDataset("hearthCanvasAcceptedReleaseSource", state.acceptedReleaseSource);
-    setDataset("hearthCanvasReleasePacketAuthoritySource", state.releasePacketAuthoritySource);
-    setDataset("hearthCanvasReleasePacketIntakeMethod", state.releasePacketIntakeMethod);
-    setDataset("hearthCanvasCandidateReleaseIntakeMethod", state.candidateReleaseIntakeMethod);
-
-    setDataset("hearthCanvasParentReleaseObserved", String(state.canvasParentReleaseObserved));
-    setDataset("hearthCanvasParentReleaseAccepted", String(state.canvasParentReleaseAccepted));
-    setDataset("hearthCanvasParentReleaseLawful", String(state.canvasParentReleaseLawful));
-    setDataset("hearthCanvasParentReleaseGateReady", String(state.canvasParentReleaseGateReady));
-    setDataset("hearthCanvasParentAcceptedRouteConductorRelease", String(state.parentAcceptedRouteConductorRelease));
-    setDataset("hearthCanvasReleaseAuthorized", String(state.canvasReleaseAuthorized));
-    setDataset("hearthCanvasReleasePacketReady", String(state.canvasReleasePacketReady));
-    setDataset("hearthCanvasReleaseHeldReason", state.canvasReleaseHeldReason);
-
-    setDataset("hearthCanvasParentReleasePacketComposed", String(state.parentReleasePacketComposed));
-    setDataset("hearthCanvasParentReleasePacketPublishedForEast", String(state.parentReleasePacketPublishedForEast));
-    setDataset("hearthCanvasParentReleasePacketSentToEast", String(state.parentReleasePacketSentToEast));
-    setDataset("hearthCanvasParentReleasePacketLawful", String(state.parentReleasePacketLawful));
     setDataset("hearthCanvasEastDispatchAuthorized", String(state.eastDispatchAuthorized));
     setDataset("hearthCanvasEastDispatchPacketPublished", String(state.eastDispatchPacketPublished));
     setDataset("hearthCanvasEastDispatchAttempted", String(state.eastDispatchAttempted));
     setDataset("hearthCanvasEastDispatchMethod", state.eastDispatchMethod);
-    setDataset("hearthCanvasGetLastEastDispatchPacketAvailable", "true");
 
-    setDataset("hearthCanvasEastObserved", String(state.eastObserved));
     setDataset("hearthCanvasEastApiReady", String(state.eastApiReady));
-    setDataset("hearthCanvasEastRequiredMethodsPresent", String(state.eastRequiredMethodsPresent));
     setDataset("hearthCanvasEastEvidenceReady", String(state.canvasEastEvidenceReady));
-    setDataset("hearthCanvasEastF13AtlasPacketReady", String(state.canvasEastF13AtlasPacketReady));
-    setDataset("hearthCanvasEastHeldPacketRecognized", String(state.canvasEastHeldPacketRecognized));
-    setDataset("hearthCanvasEastFalsePromotionBlocked", String(state.canvasEastFalsePromotionBlocked));
-    setDataset("hearthCanvasEastResponseClass", state.eastResponseClass);
-
-    setDataset("hearthCanvasWestObserved", String(state.westObserved));
     setDataset("hearthCanvasWestApiReady", String(state.westApiReady));
     setDataset("hearthCanvasWestInspectionReady", String(state.canvasWestInspectionReady));
-    setDataset("hearthCanvasWestEvidenceReady", String(state.canvasWestEvidenceReady));
-
-    setDataset("hearthCanvasSouthObserved", String(state.southObserved));
     setDataset("hearthCanvasSouthApiReady", String(state.southApiReady));
     setDataset("hearthCanvasSouthVisibleProofReady", String(state.canvasSouthVisibleProofReady));
-    setDataset("hearthCanvasSouthEvidenceReady", String(state.canvasSouthEvidenceReady));
-    setDataset("hearthCanvasSouthHardFail", String(state.canvasSouthHardFail));
-    setDataset("hearthCanvasSouthProofStale", String(state.canvasSouthProofStale));
 
-    setDataset("hearthCanvasAllChildrenApiReady", String(state.allCanvasChildrenApiReady));
-    setDataset("hearthCanvasAllChildrenEvidenceReady", String(state.allCanvasChildrenEvidenceReady));
-    setDataset("hearthCanvasAllChildrenReady", String(state.allCanvasChildrenReady));
-
-    setDataset("hearthCanvasF13ReadinessObserved", String(state.f13CanvasReadinessObserved));
-    setDataset("hearthCanvasF13VisibleEvidenceAvailable", String(state.f13VisibleEvidenceAvailable));
-    setDataset("hearthCanvasF13InspectEvidenceAvailable", String(state.f13InspectEvidenceAvailable));
     setDataset("hearthCanvasF13EvidenceStrict", String(state.f13CanvasEvidenceStrict));
     setDataset("hearthCanvasF13EvidenceDegraded", String(state.f13CanvasEvidenceDegraded));
     setDataset("hearthCanvasF13EvidenceComplete", String(state.f13CanvasEvidenceComplete));
-    setDataset("hearthCanvasF13CanvasEvidenceComplete", String(state.f13CanvasEvidenceComplete));
     setDataset("hearthCanvasF13HardFail", String(state.f13HardFail));
     setDataset("hearthCanvasF13StrictEvidenceGap", state.f13StrictEvidenceGap);
     setDataset("hearthCanvasF13StrictEvidenceRepairTarget", state.f13StrictEvidenceRepairTarget);
@@ -3356,6 +3355,7 @@
     hearth.canvasChildDistributionSwitchboard = api;
     hearth.canvasParentReleaseAcceptanceEastDispatchSwitchboard = api;
     hearth.canvasDiagnosticBridge = api;
+    hearth.canvasExpressionHub = api;
     hearth.canvasFingerManager = api;
 
     root.HEARTH_CANVAS = api;
@@ -3366,8 +3366,8 @@
     root.HEARTH_CANVAS_STATION = api;
     root.HEARTH_CANVAS_CHILD_DISTRIBUTION_SWITCHBOARD = api;
     root.HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD = api;
-    root.HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD = api;
     root.HEARTH_CANVAS_DIAGNOSTIC_BRIDGE = api;
+    root.HEARTH_CANVAS_EXPRESSION_HUB = api;
     root.HEARTH_CANVAS_FINGER_MANAGER = api;
 
     lab.hearthCanvas = api;
@@ -3378,48 +3378,43 @@
     lab.hearthCanvasChildDistributionSwitchboard = api;
     lab.hearthCanvasParentReleaseAcceptanceEastDispatchSwitchboard = api;
     lab.hearthCanvasDiagnosticBridge = api;
+    lab.hearthCanvasExpressionHub = api;
     lab.hearthCanvasFingerManager = api;
 
     const light = getReceiptLight();
     const full = getReceipt();
     const bridge = getDiagnosticBridgeReceipt();
-    const registry = getFingerRegistry();
+    const hubReceipt = getExpressionHubReceipt();
 
     root.HEARTH_CANVAS_RECEIPT = light;
     root.HEARTH_CANVAS_PARENT_RECEIPT = light;
     root.HEARTH_CANVAS_LOCAL_STATION_RECEIPT = full;
     root.HEARTH_CANVAS_STATION_RECEIPT = full;
     root.HEARTH_CANVAS_CHILD_DISTRIBUTION_SWITCHBOARD_RECEIPT = full;
-    root.HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_RECEIPT = full;
-    root.HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_4_DIAGNOSTIC_BRIDGE_ALIGNMENT_RECEIPT = full;
-    root.HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_4_DIAGNOSTIC_BRIDGE_ALIGNMENT_RECEIPT_v11_5 = full;
-    root.HEARTH_CANVAS_LOCAL_STATION_FINGER_MANAGER_REGISTRY_EXPANSION_RECEIPT = full;
-    root.HEARTH_CANVAS_LOCAL_STATION_FINGER_MANAGER_REGISTRY_EXPANSION_RECEIPT_v11_6 = full;
-    root.HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD_RECEIPT = full;
+    root.HEARTH_CANVAS_EXPRESSION_HUB_RECEIPT = hubReceipt;
+    root.HEARTH_CANVAS_FINGER_MANAGER_RECEIPT = hubReceipt;
+    root.HEARTH_CANVAS_EXPRESSION_HUB_FINGER_MANAGER_RECEIPT = full;
+    root.HEARTH_CANVAS_EXPRESSION_HUB_FINGER_MANAGER_RECEIPT_v11_6 = full;
     root.HEARTH_CANVAS_DIAGNOSTIC_BRIDGE_RECEIPT = bridge;
     root.HEARTH_CANVAS_DIAGNOSTIC_BRIDGE_SUMMARY = clonePlain(state.lastDiagnosticBridgeSummary);
-    root.HEARTH_CANVAS_FINGER_REGISTRY = registry;
-    root.HEARTH_CANVAS_FINGER_MANAGER_RECEIPT = registry;
 
     hearth.canvasReceipt = light;
     hearth.canvasParentReceipt = light;
     hearth.canvasLocalStationReceipt = full;
     hearth.canvasStationReceipt = full;
-    hearth.canvasChildDistributionSwitchboardReceipt = full;
+    hearth.canvasExpressionHubReceipt = hubReceipt;
+    hearth.canvasFingerManagerReceipt = hubReceipt;
     hearth.canvasDiagnosticBridgeReceipt = bridge;
     hearth.canvasDiagnosticBridgeSummary = clonePlain(state.lastDiagnosticBridgeSummary);
-    hearth.canvasFingerRegistry = registry;
-    hearth.canvasFingerManagerReceipt = registry;
 
     lab.hearthCanvasReceipt = light;
     lab.hearthCanvasParentReceipt = light;
     lab.hearthCanvasLocalStationReceipt = full;
     lab.hearthCanvasStationReceipt = full;
-    lab.hearthCanvasChildDistributionSwitchboardReceipt = full;
+    lab.hearthCanvasExpressionHubReceipt = hubReceipt;
+    lab.hearthCanvasFingerManagerReceipt = hubReceipt;
     lab.hearthCanvasDiagnosticBridgeReceipt = bridge;
     lab.hearthCanvasDiagnosticBridgeSummary = clonePlain(state.lastDiagnosticBridgeSummary);
-    lab.hearthCanvasFingerRegistry = registry;
-    lab.hearthCanvasFingerManagerReceipt = registry;
 
     hearth.canvasStructuralCarrier = getStructuralCarrier();
     hearth.canvasCarrier = getStructuralCarrier();
@@ -3433,7 +3428,6 @@
       publishEastDispatchPacket(state.lastEastDispatchPacket);
     }
 
-    state.fingerRegistryPublished = true;
     state.publishedAt = state.publishedAt || nowIso();
     state.updatedAt = nowIso();
 
@@ -3446,19 +3440,16 @@
     const candidates = [
       readPath("HEARTH_ROUTE_CONDUCTOR"),
       readPath("HEARTH.routeConductor"),
-      readPath("HEARTH.routeHub"),
       readPath("DEXTER_LAB.hearthRouteConductor"),
-      readPath("DEXTER_LAB.hearthRouteHub"),
       readPath("HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT"),
       readPath("HEARTH.routeConductorCanvasLocalStationBridgeAlignment"),
       readPath("DEXTER_LAB.hearthRouteConductorCanvasLocalStationBridgeAlignment"),
-      root.HEARTH_ROUTE_CONDUCTOR,
-      root.HEARTH_ROUTE_HUB,
-      readPath("HEARTH.routeConductorControlOwnershipPassiveWatchdogRepair"),
-      readPath("DEXTER_LAB.hearthRouteConductorControlOwnershipPassiveWatchdogRepair")
+      root.HEARTH_ROUTE_CONDUCTOR
     ];
 
     const methods = [
+      "receiveCanvasExpressionHubSummary",
+      "receiveCanvasFingerManagerSummary",
       "receiveCanvasStationSummary",
       "receiveCanvasLocalStationSummary",
       "receiveCanvasParentSummary",
@@ -3501,8 +3492,9 @@
   function bootAudit(options = {}) {
     state.timestamp = nowIso();
 
+    initializeFingerRegistry();
     publishGlobals();
-    readRouteConductorProfile(options || {});
+    readRouteConductorProfile();
 
     const rawPacket = readRouteConductorReleasePacket(options || {});
 
@@ -3517,26 +3509,21 @@
 
     state.bootAuditComplete = true;
 
-    record("CANVAS_LOCAL_STATION_FINGER_MANAGER_REGISTRY_EXPANSION_BOOT_AUDIT_COMPLETE", {
+    record("CANVAS_EXPRESSION_HUB_FINGER_MANAGER_BOOT_AUDIT_COMPLETE", {
       routeConductorCurrentRecognized: state.routeConductorCurrentRecognized,
       routeConductorCurrentV9_4Recognized: state.routeConductorCurrentV9_4Recognized,
       routeConductorReleaseAuthorityAccepted: state.routeConductorReleaseAuthorityAccepted,
       releasePacketObserved: state.releasePacketObserved,
       releasePacketValid: state.releasePacketValid,
       releasePacketAccepted: state.releasePacketAccepted,
-      acceptedReleaseSource: state.acceptedReleaseSource,
       canvasParentReleaseAccepted: state.canvasParentReleaseAccepted,
       eastDispatchPacketPublished: state.eastDispatchPacketPublished,
       diagnosticBridgeSummaryStatus: state.diagnosticBridgeSummaryStatus,
-      canvasFingerManagerActive: true,
-      canvasFingerRegistryEmbedded: true,
-      heldExpressionFingersDoNotBlockCurrentCycle: true,
-      futureExpressionFingersNamedNotRequired: true,
-      expressionBridgeHeld: true,
-      expressionPortsBuilt: false,
-      getLastEastDispatchPacketAvailable: true,
-      canvasEastApiReady: state.eastApiReady,
-      canvasEastEvidenceReady: state.canvasEastEvidenceReady,
+      expressionHubActive: true,
+      fingerManagerActive: true,
+      namedFingerFilesEmbedded: true,
+      firstFingerGap: state.firstFingerGap,
+      nextFingerFile: state.nextFingerFile,
       f13StrictEvidenceGap: state.f13StrictEvidenceGap,
       recommendedNextFile: state.recommendedNextFile,
       visualPassClaimed: false
@@ -3564,16 +3551,12 @@
   Object.assign(api, {
     CONTRACT,
     RECEIPT,
-    RENEWAL_LAYER_CONTRACT,
-    RENEWAL_LAYER_RECEIPT,
     PREVIOUS_CONTRACT,
     PREVIOUS_RECEIPT,
     BASELINE_CONTRACT,
     BASELINE_RECEIPT,
     ACCEPTED_BASELINE_CONTRACT,
     ACCEPTED_BASELINE_RECEIPT,
-    RELEASE_BASELINE_CONTRACT,
-    RELEASE_BASELINE_RECEIPT,
     CURRENT_ROUTE_CONDUCTOR_CONTRACT,
     CURRENT_ROUTE_CONDUCTOR_RECEIPT,
     LINEAGE_ROUTE_CONDUCTOR_CONTRACT,
@@ -3586,34 +3569,26 @@
     TARGET_FILE,
     ROUTE_FILE,
     INDEX_FILE,
-    HTML_FILE,
     EAST_FILE,
     WEST_FILE,
     SOUTH_FILE,
-    CANVAS_EXPRESSION_PORT_FILE,
-    TERRAIN_EXPRESSION_FILE,
-    MATERIAL_EXPRESSION_FILE,
-    HYDROLOGY_EXPRESSION_FILE,
-    MOUNTAIN_EXPRESSION_FILE,
-    ATMOSPHERE_EXPRESSION_FILE,
-    GEOMETRY_EXPRESSION_FILE,
     MACRO_WEST_FILE,
     NORTH_FILE,
     ROUTE,
     DIAGNOSTIC_ROUTE,
+    FINGER_FILES,
+    FINGER_SEQUENCE,
+    FINGER_ROLES,
 
     REQUIRED_RELEASE,
     RELEASE_SOURCE,
     CHILD_STATUS,
     EAST_RESULT_CLASS,
-    CANVAS_CHILD_SEQUENCE,
-    FILE_REGISTRY,
     FINGER_STATUS,
+    CANVAS_CHILD_SEQUENCE,
 
     contract: CONTRACT,
     receipt: RECEIPT,
-    renewalLayerContract: RENEWAL_LAYER_CONTRACT,
-    renewalLayerReceipt: RENEWAL_LAYER_RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
     baselineContract: BASELINE_CONTRACT,
@@ -3643,7 +3618,22 @@
     receiveEastPacket,
     receiveWestPacket,
     receiveSouthPacket,
+
+    registerFinger,
+    readFingerAuthority,
+    scanFinger,
+    scanAllFingers,
+    receiveFingerPacket,
     receiveExpressionFingerPacket,
+    receiveFingerReceipt,
+    receiveCanvasFingerPacket,
+    receiveCanvasExpressionPacket,
+    receiveCanvasFingerReceipt,
+    recomputeFingerAggregation,
+    getFingerRegistry,
+    getFingerTrackStatus,
+    getExpressionHubSummary,
+    getExpressionHubReceipt,
 
     normalizeReleasePacket,
     validateReleasePacket,
@@ -3658,7 +3648,6 @@
     scanEast,
     scanWest,
     scanSouth,
-    scanHeldExpressionFingers,
     recomputeChildAggregation,
     recomputeParentState,
     resolveF13Gap,
@@ -3677,9 +3666,6 @@
     getCanvasCarrier,
     getCarrierReceipt,
 
-    getFileRegistry,
-    getFingerRegistry,
-
     getReceipt,
     getReceiptLight,
     getReceiptText,
@@ -3691,16 +3677,20 @@
 
     supportsCanvasLocalStation: true,
     supportsChildDistributionSwitchboard: true,
-    supportsCanvasFingerManager: true,
-    supportsCanvasFingerRegistry: true,
-    supportsHeldExpressionFingerRegistry: true,
     supportsRouteConductorReleasePacketIntake: true,
     supportsCurrentRouteConductorV9_4Authority: true,
     supportsLineageRouteConductorV9_3ObservationOnly: true,
     supportsLegacyRouteConductorV9_2ObservationOnly: true,
     supportsDiagnosticBridgeSummary: true,
     supportsDiagnosticReceiptBridge: true,
-    supportsExpressionHeldUntilBridgeStable: true,
+    supportsExpressionHub: true,
+    supportsCanvasFingerManager: true,
+    supportsFingerRegistry: true,
+    supportsNamedFingerFiles: true,
+    supportsFingerExpressionReceiptSeparation: true,
+    supportsFingerPacketIntake: true,
+    supportsExpansionFileRenewalRule: true,
+    supportsExpressionHeldUntilFingerTracksReady: true,
     supportsDatasetCurrentContractRecognition: true,
     supportsDatasetReportingOnlyNotReleaseAuthority: true,
     supportsGlobalObservationOnlyNotAuthority: true,
@@ -3711,14 +3701,10 @@
     supportsCanvasChildAggregation: true,
     supportsEastApiEvidenceSeparation: true,
     supportsHeldPacketDoesNotDemoteApi: true,
-    supportsHeldExpressionFingersDoNotBlockCurrentCycle: true,
-    supportsFutureExpressionFingersNamedNotRequired: true,
     supportsRouteConductorSummarySurface: true,
-    supportsDatasetFallbackBlankPacketBlock: true,
     supportsLastEastDispatchPacketGetter: true,
 
     ownsCanvasParentIdentity: true,
-    ownsCanvasFingerManagerRegistry: true,
     ownsRouteConductorReleasePacketIntake: true,
     ownsParentReleaseAcceptance: true,
     ownsEastDispatchPacket: true,
@@ -3726,6 +3712,11 @@
     ownsCanvasChildAggregateReadiness: true,
     ownsCanvasStationSummary: true,
     ownsDiagnosticBridgeSummary: true,
+    ownsExpressionHub: true,
+    ownsFingerManager: true,
+    ownsFingerRegistry: true,
+    ownsFingerIntake: true,
+    ownsFingerSummary: true,
 
     ownsRouteConductorSwitching: false,
     ownsDiagnosticRailCaseSelection: false,
@@ -3733,15 +3724,12 @@
     ownsEastAtlasTruth: false,
     ownsWestInspectionTruth: false,
     ownsSouthVisibleProofTruth: false,
+    ownsFingerTruth: false,
     ownsMaterialTruth: false,
     ownsElevationTruth: false,
     ownsHydrologyTruth: false,
     ownsTerrainTruth: false,
     ownsMountainTruth: false,
-    ownsAtmosphereTruth: false,
-    ownsGeometryTruth: false,
-    ownsExpressionPortBuild: false,
-    ownsRendering: false,
     ownsF13: false,
     ownsF21: false,
     ownsReadyText: false,
@@ -3757,6 +3745,7 @@
 
   try {
     state.timestamp = nowIso();
+    initializeFingerRegistry();
     updateDataset();
     publishGlobals();
 
@@ -3770,7 +3759,7 @@
       bootAudit({});
     }
   } catch (error) {
-    recordError("CANVAS_LOCAL_STATION_FINGER_MANAGER_REGISTRY_EXPANSION_INITIALIZATION_FAILED", error);
+    recordError("CANVAS_EXPRESSION_HUB_FINGER_MANAGER_INITIALIZATION_FAILED", error);
 
     try {
       publishGlobals();

@@ -1,19 +1,17 @@
 // /assets/hearth/hearth.diagnostic.east.js
-// HEARTH_DIAGNOSTIC_EAST_INDEX_CONTRACT_EXTRACTION_ALIGNMENT_TNT_v2
+// HEARTH_DIAGNOSTIC_EAST_ROUTE_CONDUCTOR_V9_4_EXPECTATION_ALIGNMENT_TNT_v2
 // Full-file replacement.
 // Parent-visible EAST contract preserved for NORTH validation:
 // HEARTH_DIAGNOSTIC_RAIL_EAST_SERVED_SOURCE_EVIDENCE_TNT_v1
 // Diagnostic rail EAST child only.
 // Purpose:
-// - Preserve served-source evidence for the Hearth diagnostic rail.
-// - Correct index.js contract recognition from stale v5_3 lineage to current v5_4 primary contract.
-// - Recognize HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4 as current.
-// - Preserve HEARTH_INDEX_JS_CONTROL_SURFACE_EARLY_ACTIVATION_SHIELD_TNT_v5_3 as previous accepted index lineage only.
-// - Extract primary JS contracts from const CONTRACT before scanning for expected/lineage strings.
-// - Prefer the actual HTML-discovered index.js script URL, including cache key, before bare source fallback.
-// - Preserve current HTML contract alignment to HEARTH_HTML_SINGLE_FLOATING_DIAGNOSTIC_DOORWAY_NO_DUPLICATE_TOP_BANNER_TNT_v2_4.
-// - Preserve route conductor v9_3 served-source confirmation even when hearth.js is not directly listed as an HTML script.
-// - Prevent false CASE_5 when stale expected-contract drift is the only issue.
+// - Renew Diagnostic EAST source-read expectations to the current served Route Conductor v9_4 contract.
+// - Preserve Route Conductor v9_3 as accepted lineage, not a cache mismatch.
+// - Preserve Index v5_4 as current and Index v5_3 as accepted lineage.
+// - Preserve HTML v2_4 as current and HTML v2_2 / v2_1 as accepted lineage.
+// - Fetch index.js from the HTML script src when present.
+// - Fetch hearth.js directly when the HTML does not list it as a direct script tag.
+// - Prevent false CASE_5 when direct source fetch confirms the current Route Conductor contract.
 // - Support CASE_5 evidence only for NORTH adjudication.
 // - Preserve protected production files as read-only observation targets.
 // - Preserve no F13, no F21, no ready text, no visual pass, no generated image, no GraphicBox, no WebGL.
@@ -37,12 +35,11 @@
   "use strict";
 
   const CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_EAST_SERVED_SOURCE_EVIDENCE_TNT_v1";
-  const ALIGNMENT_CONTRACT = "HEARTH_DIAGNOSTIC_EAST_INDEX_CONTRACT_EXTRACTION_ALIGNMENT_TNT_v2";
-  const RECEIPT = "HEARTH_DIAGNOSTIC_EAST_INDEX_CONTRACT_EXTRACTION_ALIGNMENT_RECEIPT_v2";
+  const ALIGNMENT_CONTRACT = "HEARTH_DIAGNOSTIC_EAST_ROUTE_CONDUCTOR_V9_4_EXPECTATION_ALIGNMENT_TNT_v2";
+  const RECEIPT = "HEARTH_DIAGNOSTIC_EAST_ROUTE_CONDUCTOR_V9_4_EXPECTATION_ALIGNMENT_RECEIPT_v2";
   const PREVIOUS_ALIGNMENT_CONTRACT = "HEARTH_DIAGNOSTIC_EAST_HTML_CONTRACT_ALIGNMENT_TNT_v1";
-  const PREVIOUS_ALIGNMENT_RECEIPT = "HEARTH_DIAGNOSTIC_EAST_HTML_CONTRACT_ALIGNMENT_RECEIPT_v1";
-  const PREVIOUS_PARENT_VISIBLE_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_EAST_SERVED_SOURCE_EVIDENCE_TNT_v1";
-  const VERSION = "2026-06-03.hearth-diagnostic-east-index-contract-extraction-alignment-v2";
+  const PREVIOUS_RECEIPT = "HEARTH_DIAGNOSTIC_EAST_HTML_CONTRACT_ALIGNMENT_RECEIPT_v1";
+  const VERSION = "2026-06-03.hearth-diagnostic-east-route-conductor-v9-4-expectation-alignment-v2";
 
   const FILE = "/assets/hearth/hearth.diagnostic.east.js";
   const TARGET_ROUTE = "/showroom/globe/hearth/";
@@ -54,23 +51,26 @@
 
   const CURRENT_EXPECTED_HTML_CONTRACT =
     "HEARTH_HTML_SINGLE_FLOATING_DIAGNOSTIC_DOORWAY_NO_DUPLICATE_TOP_BANNER_TNT_v2_4";
-
   const ACCEPTED_LINEAGE_HTML_CONTRACT =
     "HEARTH_HTML_PARALLEL_DIAGNOSTIC_RAIL_NATIVE_ACCESS_DOORWAY_TNT_v2_2";
-
   const PREVIOUS_ACCEPTED_HTML_CONTRACT =
     "HEARTH_HTML_CONTROL_SURFACE_CACHE_KEY_TOUCH_BINDING_REPAIR_TNT_v2_1";
 
   const CURRENT_EXPECTED_INDEX_JS_CONTRACT =
     "HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4";
-
-  const PREVIOUS_ACCEPTED_INDEX_JS_CONTRACT =
+  const ACCEPTED_LINEAGE_INDEX_JS_CONTRACT =
     "HEARTH_INDEX_JS_CONTROL_SURFACE_EARLY_ACTIVATION_SHIELD_TNT_v5_3";
+
+  const CURRENT_EXPECTED_ROUTE_CONDUCTOR_CONTRACT =
+    "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_TNT_v9_4";
+  const ACCEPTED_LINEAGE_ROUTE_CONDUCTOR_CONTRACT =
+    "HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_TNT_v9_3";
+  const PREVIOUS_ROUTE_CONDUCTOR_CONTRACT =
+    "HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_TNT_v9_2";
 
   const EXPECTED_HTML_CONTRACT = CURRENT_EXPECTED_HTML_CONTRACT;
   const EXPECTED_INDEX_JS_CONTRACT = CURRENT_EXPECTED_INDEX_JS_CONTRACT;
-  const EXPECTED_ROUTE_CONDUCTOR_CONTRACT =
-    "HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_TNT_v9_3";
+  const EXPECTED_ROUTE_CONDUCTOR_CONTRACT = CURRENT_EXPECTED_ROUTE_CONDUCTOR_CONTRACT;
 
   const FALLBACK = Object.freeze({
     UNKNOWN: "UNKNOWN",
@@ -106,6 +106,18 @@
     UNKNOWN: FALLBACK.UNKNOWN
   });
 
+  const FINAL_FALSE = Object.freeze({
+    f13Claimed: false,
+    f21EligibleForNorth: false,
+    f21ClaimedByDiagnosticRail: false,
+    readyTextAllowed: false,
+    readyTextClaimedByDiagnosticRail: false,
+    visualPassClaimed: false,
+    generatedImage: false,
+    graphicBox: false,
+    webGL: false
+  });
+
   const root = typeof window !== "undefined" ? window : globalThis;
 
   let lastState = null;
@@ -136,8 +148,8 @@
     return safeString(value, fallback).replace(/\s+/g, " ").trim();
   }
 
-  function bounded(value, limit = 1000) {
-    return safeString(value).replace(/\s+/g, " ").trim().slice(0, limit);
+  function bounded(value, limit = 1200) {
+    return safeTrim(value).slice(0, limit);
   }
 
   function packetSafe(value, fallback = FALLBACK.UNKNOWN) {
@@ -156,7 +168,7 @@
   }
 
   function addNote(state, note) {
-    const clean = bounded(note, 1000);
+    const clean = bounded(note, 1200);
     if (!clean) return;
     if (!state.eastSecondaryEvidenceNotes.includes(clean)) {
       state.eastSecondaryEvidenceNotes.push(clean);
@@ -165,9 +177,7 @@
 
   function normalizeError(error, prefix) {
     const name = error && error.name ? safeString(error.name) : "ERROR";
-    const message = error && error.message
-      ? safeString(error.message)
-      : safeString(error, "UNKNOWN_ERROR");
+    const message = error && error.message ? safeString(error.message) : safeString(error, "UNKNOWN_ERROR");
     return `${prefix || "ERROR"}:${bounded(`${name}:${message}`, 500)}`;
   }
 
@@ -178,7 +188,8 @@
       eastAlignmentContract: ALIGNMENT_CONTRACT,
       eastReceipt: RECEIPT,
       previousAlignmentContract: PREVIOUS_ALIGNMENT_CONTRACT,
-      previousAlignmentReceipt: PREVIOUS_ALIGNMENT_RECEIPT,
+      previousReceipt: PREVIOUS_RECEIPT,
+      version: VERSION,
 
       eastSourceReadComplete: "false",
       eastSourceReadStatus: FALLBACK.UNKNOWN,
@@ -192,26 +203,36 @@
       previousAcceptedHtmlContract: PREVIOUS_ACCEPTED_HTML_CONTRACT,
 
       currentExpectedIndexJsContract: CURRENT_EXPECTED_INDEX_JS_CONTRACT,
-      previousAcceptedIndexJsContract: PREVIOUS_ACCEPTED_INDEX_JS_CONTRACT,
+      acceptedLineageIndexJsContract: ACCEPTED_LINEAGE_INDEX_JS_CONTRACT,
+
+      currentExpectedRouteConductorContract: CURRENT_EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
+      acceptedLineageRouteConductorContract: ACCEPTED_LINEAGE_ROUTE_CONDUCTOR_CONTRACT,
+      previousRouteConductorContract: PREVIOUS_ROUTE_CONDUCTOR_CONTRACT,
 
       servedHtmlContract: FALLBACK.UNKNOWN,
       servedIndexJsContract: FALLBACK.UNKNOWN,
       servedRouteConductorContract: FALLBACK.UNKNOWN,
 
       observedHtmlContract: FALLBACK.UNKNOWN,
+      observedIndexJsContract: FALLBACK.UNKNOWN,
+      observedRouteConductorContract: FALLBACK.UNKNOWN,
+
       currentHtmlContractRecognized: FALLBACK.UNKNOWN,
-      acceptedLineageHtmlRecognized: FALLBACK.UNKNOWN,
-      previousAcceptedHtmlRecognized: FALLBACK.UNKNOWN,
+      acceptedHtmlLineageRecognized: FALLBACK.UNKNOWN,
+      previousHtmlLineageRecognized: FALLBACK.UNKNOWN,
       htmlContractMismatch: FALLBACK.UNKNOWN,
       staleExpectedHtmlContractDriftPrevented: FALLBACK.UNKNOWN,
 
-      observedIndexJsContract: FALLBACK.UNKNOWN,
       currentIndexJsContractRecognized: FALLBACK.UNKNOWN,
-      previousAcceptedIndexJsRecognized: FALLBACK.UNKNOWN,
+      acceptedIndexJsLineageRecognized: FALLBACK.UNKNOWN,
       indexJsContractMismatch: FALLBACK.UNKNOWN,
       staleExpectedIndexJsContractDriftPrevented: FALLBACK.UNKNOWN,
-      indexJsPrimaryContractExtractionMethod: FALLBACK.UNKNOWN,
-      indexJsLineageEvidence: FALLBACK.UNKNOWN,
+
+      currentRouteConductorContractRecognized: FALLBACK.UNKNOWN,
+      acceptedRouteConductorLineageRecognized: FALLBACK.UNKNOWN,
+      previousRouteConductorLineageRecognized: FALLBACK.UNKNOWN,
+      routeConductorContractMismatch: FALLBACK.UNKNOWN,
+      staleExpectedRouteConductorContractDriftPrevented: FALLBACK.UNKNOWN,
 
       domDatasetContract: FALLBACK.UNKNOWN,
       metaContract: FALLBACK.UNKNOWN,
@@ -246,56 +267,18 @@
       eastOwnsDiagnosticRouteLoad: false,
       eastReportsToNorth: true,
 
-      f13Claimed: false,
-      f21EligibleForNorth: false,
-      f21ClaimedByDiagnosticRail: false,
-      readyTextAllowed: false,
-      readyTextClaimedByDiagnosticRail: false,
-      visualPassClaimed: false,
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false
+      ...FINAL_FALSE
     };
-  }
-
-  function getOrigin() {
-    try {
-      if (root.location && root.location.origin) return root.location.origin;
-    } catch (_error) {}
-    return "https://diamondgatebridge.com";
-  }
-
-  function normalizeFetchUrl(url) {
-    const raw = safeString(url, "");
-    if (!raw || raw === FALLBACK.UNKNOWN || raw === FALLBACK.NOT_FOUND || raw === FALLBACK.UNREADABLE) {
-      return "";
-    }
-
-    try {
-      const base = `${getOrigin()}${TARGET_ROUTE}`;
-      const parsed = new URL(raw, base);
-      return `${parsed.pathname || ""}${parsed.search || ""}`;
-    } catch (_error) {
-      return raw;
-    }
   }
 
   async function fetchText(url, state, label) {
     try {
-      const fetchUrl = normalizeFetchUrl(url) || url;
-
       if (!isFunction(root.fetch)) {
         addNote(state, `${label}_FETCH_UNAVAILABLE`);
-        return {
-          ok: false,
-          status: FALLBACK.UNREADABLE,
-          text: "",
-          error: "FETCH_UNAVAILABLE",
-          url: fetchUrl
-        };
+        return { ok: false, status: FALLBACK.UNREADABLE, text: "", error: "FETCH_UNAVAILABLE" };
       }
 
-      const response = await root.fetch(fetchUrl, {
+      const response = await root.fetch(url, {
         method: "GET",
         credentials: "same-origin",
         cache: "no-store"
@@ -303,13 +286,7 @@
 
       if (!response) {
         addNote(state, `${label}_FETCH_FAILED:NO_RESPONSE`);
-        return {
-          ok: false,
-          status: FALLBACK.FAILED,
-          text: "",
-          error: "NO_RESPONSE",
-          url: fetchUrl
-        };
+        return { ok: false, status: FALLBACK.FAILED, text: "", error: "NO_RESPONSE" };
       }
 
       if (!response.ok) {
@@ -319,30 +296,16 @@
           ok: false,
           status: response.status === 404 ? FALLBACK.NOT_FOUND : FALLBACK.FAILED,
           text: "",
-          error: statusText,
-          url: fetchUrl
+          error: statusText
         };
       }
 
       const text = await response.text();
-
-      return {
-        ok: true,
-        status: FALLBACK.COMPLETE,
-        text: safeString(text),
-        error: "",
-        url: fetchUrl
-      };
+      return { ok: true, status: FALLBACK.COMPLETE, text: safeString(text), error: "" };
     } catch (error) {
       const normalized = normalizeError(error, `${label}_FETCH_ERROR`);
       addNote(state, normalized);
-      return {
-        ok: false,
-        status: FALLBACK.FAILED,
-        text: "",
-        error: normalized,
-        url: safeString(url)
-      };
+      return { ok: false, status: FALLBACK.FAILED, text: "", error: normalized };
     }
   }
 
@@ -373,20 +336,15 @@
     ]);
 
     let exactContract = FALLBACK.UNKNOWN;
-
-    if (text.includes(CURRENT_EXPECTED_HTML_CONTRACT)) {
-      exactContract = CURRENT_EXPECTED_HTML_CONTRACT;
-    } else if (text.includes(ACCEPTED_LINEAGE_HTML_CONTRACT)) {
-      exactContract = ACCEPTED_LINEAGE_HTML_CONTRACT;
-    } else if (text.includes(PREVIOUS_ACCEPTED_HTML_CONTRACT)) {
-      exactContract = PREVIOUS_ACCEPTED_HTML_CONTRACT;
-    }
+    if (text.includes(CURRENT_EXPECTED_HTML_CONTRACT)) exactContract = CURRENT_EXPECTED_HTML_CONTRACT;
+    else if (text.includes(ACCEPTED_LINEAGE_HTML_CONTRACT)) exactContract = ACCEPTED_LINEAGE_HTML_CONTRACT;
+    else if (text.includes(PREVIOUS_ACCEPTED_HTML_CONTRACT)) exactContract = PREVIOUS_ACCEPTED_HTML_CONTRACT;
 
     const genericContract = findFirst(text, [
       /\bHEARTH_HTML_[A-Z0-9_]+_TNT_v[0-9A-Za-z_.-]+\b/
     ]);
 
-    const chosen = dataContract !== FALLBACK.UNKNOWN
+    const contract = dataContract !== FALLBACK.UNKNOWN
       ? dataContract
       : metaContract !== FALLBACK.UNKNOWN
         ? metaContract
@@ -394,82 +352,31 @@
           ? exactContract
           : genericContract;
 
-    return {
-      contract: chosen,
-      domDatasetContract: dataContract,
-      metaContract,
-      exactContract,
-      genericContract
-    };
+    return { contract, domDatasetContract: dataContract, metaContract, exactContract, genericContract };
   }
 
-  function extractPrimaryConstContract(source) {
+  function extractJsContract(source, expectedContracts, genericPrefix) {
     const text = safeString(source);
-    const constContract = text.match(/\b(?:const|let|var)\s+CONTRACT\s*=\s*["']([^"']+)["']/);
-    if (constContract && constContract[1]) {
-      return {
-        contract: packetSafe(constContract[1]),
-        method: "PRIMARY_CONST_CONTRACT"
-      };
+    const expected = Array.isArray(expectedContracts) ? expectedContracts : [expectedContracts].filter(Boolean);
+
+    for (const contract of expected) {
+      if (contract && text.includes(contract)) return contract;
     }
 
-    return {
-      contract: FALLBACK.UNKNOWN,
-      method: FALLBACK.UNKNOWN
-    };
-  }
-
-  function extractJsContract(source, currentExpectedContract, genericPrefix, lineageContracts = []) {
-    const text = safeString(source);
-
-    const primary = extractPrimaryConstContract(text);
-    if (primary.contract !== FALLBACK.UNKNOWN) return primary;
+    const constContract = text.match(/\b(?:const|let|var)\s+CONTRACT\s*=\s*["']([^"']+)["']/);
+    if (constContract && constContract[1]) return packetSafe(constContract[1]);
 
     const objectContract = text.match(/\bcontract\s*:\s*["']([^"']+_TNT_v[0-9A-Za-z_.-]+)["']/i);
-    if (objectContract && objectContract[1]) {
-      return {
-        contract: packetSafe(objectContract[1]),
-        method: "OBJECT_CONTRACT_FIELD"
-      };
-    }
+    if (objectContract && objectContract[1]) return packetSafe(objectContract[1]);
 
     const assignmentContract = text.match(/\bcontract\s*=\s*["']([^"']+_TNT_v[0-9A-Za-z_.-]+)["']/i);
-    if (assignmentContract && assignmentContract[1]) {
-      return {
-        contract: packetSafe(assignmentContract[1]),
-        method: "ASSIGNMENT_CONTRACT_FIELD"
-      };
-    }
-
-    if (currentExpectedContract && text.includes(currentExpectedContract)) {
-      return {
-        contract: currentExpectedContract,
-        method: "CURRENT_EXPECTED_CONTRACT_STRING_FALLBACK"
-      };
-    }
-
-    for (const lineage of lineageContracts || []) {
-      if (lineage && text.includes(lineage)) {
-        return {
-          contract: lineage,
-          method: "LINEAGE_CONTRACT_STRING_FALLBACK"
-        };
-      }
-    }
+    if (assignmentContract && assignmentContract[1]) return packetSafe(assignmentContract[1]);
 
     const prefix = safeString(genericPrefix || "HEARTH");
     const generic = text.match(new RegExp(`\\b${prefix}_[A-Z0-9_]+_TNT_v[0-9A-Za-z_.-]+\\b`));
-    if (generic && generic[0]) {
-      return {
-        contract: packetSafe(generic[0]),
-        method: "GENERIC_PREFIX_CONTRACT_FALLBACK"
-      };
-    }
+    if (generic && generic[0]) return packetSafe(generic[0]);
 
-    return {
-      contract: FALLBACK.UNKNOWN,
-      method: FALLBACK.UNKNOWN
-    };
+    return FALLBACK.UNKNOWN;
   }
 
   function parseScriptSources(htmlSource) {
@@ -485,6 +392,13 @@
     return sources;
   }
 
+  function getOrigin() {
+    try {
+      if (root.location && root.location.origin) return root.location.origin;
+    } catch (_error) {}
+    return "https://diamondgatebridge.com";
+  }
+
   function normalizeScriptSource(src) {
     const original = safeString(src);
     const base = `${getOrigin()}${TARGET_ROUTE}`;
@@ -498,9 +412,9 @@
         pathname,
         basename,
         search: url.search || "",
+        absoluteFetchPath: `${pathname}${url.search || ""}`,
         routePath: pathname.startsWith(TARGET_ROUTE),
-        cacheKeyed: Boolean(url.search),
-        fetchUrl: `${pathname}${url.search || ""}`
+        cacheKeyed: Boolean(url.search)
       };
     } catch (_error) {
       const clean = original.split("#")[0];
@@ -511,9 +425,9 @@
         pathname: noQuery,
         basename,
         search: clean.includes("?") ? clean.slice(clean.indexOf("?")) : "",
+        absoluteFetchPath: clean,
         routePath: noQuery.startsWith(TARGET_ROUTE) || !noQuery.startsWith("/"),
-        cacheKeyed: clean.includes("?"),
-        fetchUrl: clean
+        cacheKeyed: clean.includes("?")
       };
     }
   }
@@ -526,7 +440,6 @@
     if (normalized.routePath) return true;
 
     const original = normalized.original;
-
     if (original === wanted) return true;
     if (original === `./${wanted}`) return true;
     if (original.startsWith(`${wanted}?`)) return true;
@@ -540,57 +453,37 @@
     const matches = [];
 
     for (const src of sources) {
-      if (isRouteAwareScriptMatch(src, basename)) {
-        const normalized = normalizeScriptSource(src);
-        matches.push(src);
+      if (!isRouteAwareScriptMatch(src, basename)) continue;
 
-        if (normalized.cacheKeyed) {
-          addNote(state, `${notePrefix}_CACHE_KEY_DETECTED`);
-        }
+      const normalized = normalizeScriptSource(src);
+      matches.push(src);
 
-        if (
-          src === basename ||
-          src === `./${basename}` ||
-          src.startsWith(`${basename}?`) ||
-          src.startsWith(`./${basename}?`)
-        ) {
-          addNote(state, `${notePrefix}_RELATIVE_PATH_DETECTED`);
-        }
+      if (normalized.cacheKeyed) addNote(state, `${notePrefix}_CACHE_KEY_DETECTED`);
+      if (src === basename || src === `./${basename}` || src.startsWith(`${basename}?`) || src.startsWith(`./${basename}?`)) {
+        addNote(state, `${notePrefix}_RELATIVE_PATH_DETECTED`);
       }
     }
 
-    if (matches.length) return matches.join(" | ");
-
-    return FALLBACK.NOT_FOUND;
+    return matches.length ? matches[0] : FALLBACK.NOT_FOUND;
   }
 
-  function firstScriptFetchUrl(scriptSrc, fallbackUrl) {
-    const raw = safeString(scriptSrc);
-    if (
-      !raw ||
-      raw === FALLBACK.UNKNOWN ||
-      raw === FALLBACK.NOT_FOUND ||
-      raw === FALLBACK.UNREADABLE ||
-      raw === FALLBACK.FAILED
-    ) {
-      return fallbackUrl;
+  function scriptSrcToFetchUrl(src, fallbackFile, state, notePrefix) {
+    if (!src || src === FALLBACK.UNKNOWN || src === FALLBACK.NOT_FOUND || src === FALLBACK.UNREADABLE) {
+      addNote(state, `${notePrefix}_FETCH_FALLBACK_DIRECT_FILE`);
+      return fallbackFile;
     }
 
-    const first = raw.split("|").map((part) => part.trim()).filter(Boolean)[0];
-    if (!first) return fallbackUrl;
-
-    const normalized = normalizeScriptSource(first);
-    return normalized.fetchUrl || fallbackUrl;
+    const normalized = normalizeScriptSource(src);
+    addNote(state, `${notePrefix}_FETCH_URL_FROM_HTML_SCRIPT_SRC`);
+    return normalized.absoluteFetchPath || fallbackFile;
   }
 
   function readCacheKeyEvidence(indexScriptSrc, routeConductorScriptSrc) {
     const values = [indexScriptSrc, routeConductorScriptSrc]
       .map((value) => safeString(value))
-      .filter(Boolean)
-      .filter((value) => value !== FALLBACK.UNKNOWN && value !== FALLBACK.NOT_FOUND && value !== FALLBACK.UNREADABLE);
+      .filter((value) => value && value !== FALLBACK.UNKNOWN && value !== FALLBACK.NOT_FOUND && value !== FALLBACK.UNREADABLE);
 
     const keyed = values.filter((value) => value.includes("?"));
-
     return keyed.length ? keyed.join(" | ") : FALLBACK.NOT_FOUND;
   }
 
@@ -607,105 +500,56 @@
     );
   }
 
-  function htmlContractRecognized(contract) {
-    return (
-      contract === CURRENT_EXPECTED_HTML_CONTRACT ||
-      contract === ACCEPTED_LINEAGE_HTML_CONTRACT ||
-      contract === PREVIOUS_ACCEPTED_HTML_CONTRACT
-    );
+  function scopeLabel(scope) {
+    return scope.replace(/[A-Z]/g, (match, index) => (index ? "_" : "") + match).toUpperCase();
   }
 
-  function evaluateHtmlAlignment(state) {
-    const observed = state.servedHtmlContract;
+  function evaluateContractRecognition(state, scope, observed, current, lineage, previous) {
+    const currentKey = `current${scope}ContractRecognized`;
+    const lineageKey = `accepted${scope}LineageRecognized`;
+    const previousKey = `previous${scope}LineageRecognized`;
+    const mismatchKey = `${scope.charAt(0).toLowerCase()}${scope.slice(1)}ContractMismatch`;
+    const staleKey = `staleExpected${scope}ContractDriftPrevented`;
+    const label = scopeLabel(scope);
 
-    state.observedHtmlContract = observed;
-
-    state.currentHtmlContractRecognized =
-      observed === CURRENT_EXPECTED_HTML_CONTRACT ? "true" : "false";
-
-    state.acceptedLineageHtmlRecognized =
-      observed === ACCEPTED_LINEAGE_HTML_CONTRACT ? "true" : "false";
-
-    state.previousAcceptedHtmlRecognized =
-      observed === PREVIOUS_ACCEPTED_HTML_CONTRACT ? "true" : "false";
+    state[currentKey] = observed === current ? "true" : "false";
+    state[lineageKey] = lineage && observed === lineage ? "true" : "false";
+    if (previousKey in state) state[previousKey] = previous && observed === previous ? "true" : "false";
 
     if (!isConfidentContract(observed)) {
-      state.htmlContractMismatch = FALLBACK.UNKNOWN;
-      state.staleExpectedHtmlContractDriftPrevented = FALLBACK.UNKNOWN;
-      return;
+      state[mismatchKey] = FALLBACK.UNKNOWN;
+      state[staleKey] = FALLBACK.UNKNOWN;
+      return { recognized: false, current: false, lineage: false, previous: false, mismatch: FALLBACK.UNKNOWN };
     }
 
-    if (observed === CURRENT_EXPECTED_HTML_CONTRACT) {
-      state.htmlContractMismatch = "false";
-      state.staleExpectedHtmlContractDriftPrevented = "true";
-      addNote(state, "CURRENT_EXPECTED_HTML_CONTRACT_RECOGNIZED");
-      addNote(state, "STALE_EXPECTED_HTML_CONTRACT_DRIFT_PREVENTED");
-      return;
+    if (observed === current) {
+      state[mismatchKey] = "false";
+      state[staleKey] = "true";
+      addNote(state, `CURRENT_EXPECTED_${label}_CONTRACT_RECOGNIZED`);
+      addNote(state, `STALE_EXPECTED_${label}_CONTRACT_DRIFT_PREVENTED`);
+      return { recognized: true, current: true, lineage: false, previous: false, mismatch: "false" };
     }
 
-    if (observed === ACCEPTED_LINEAGE_HTML_CONTRACT) {
-      state.htmlContractMismatch = "false";
-      state.staleExpectedHtmlContractDriftPrevented = "true";
-      addNote(state, "ACCEPTED_LINEAGE_HTML_CONTRACT_RECOGNIZED");
-      addNote(state, "HTML_LINEAGE_NOT_TREATED_AS_CURRENT_FAILURE");
-      return;
+    if (lineage && observed === lineage) {
+      state[mismatchKey] = "false";
+      state[staleKey] = "true";
+      addNote(state, `ACCEPTED_${label}_CONTRACT_LINEAGE_RECOGNIZED`);
+      addNote(state, `${label}_LINEAGE_NOT_TREATED_AS_CURRENT_FAILURE`);
+      return { recognized: true, current: false, lineage: true, previous: false, mismatch: "false" };
     }
 
-    if (observed === PREVIOUS_ACCEPTED_HTML_CONTRACT) {
-      state.htmlContractMismatch = FALLBACK.UNKNOWN;
-      state.staleExpectedHtmlContractDriftPrevented = "true";
-      addNote(state, "PREVIOUS_ACCEPTED_HTML_CONTRACT_RECOGNIZED");
-      addNote(state, "PREVIOUS_HTML_LINEAGE_RECOGNIZED_NOT_CURRENT_SUCCESS");
-      return;
+    if (previous && observed === previous) {
+      state[mismatchKey] = "false";
+      state[staleKey] = "true";
+      addNote(state, `PREVIOUS_${label}_CONTRACT_LINEAGE_RECOGNIZED`);
+      addNote(state, `PREVIOUS_${label}_LINEAGE_NOT_TREATED_AS_CURRENT_FAILURE`);
+      return { recognized: true, current: false, lineage: false, previous: true, mismatch: "false" };
     }
 
-    state.htmlContractMismatch = "true";
-    addNote(state, "HTML_CONTRACT_MISMATCH");
-  }
-
-  function evaluateIndexAlignment(state, indexSource) {
-    const observed = state.servedIndexJsContract;
-    const text = safeString(indexSource);
-
-    state.observedIndexJsContract = observed;
-    state.currentIndexJsContractRecognized =
-      observed === CURRENT_EXPECTED_INDEX_JS_CONTRACT ? "true" : "false";
-
-    state.previousAcceptedIndexJsRecognized =
-      text.includes(PREVIOUS_ACCEPTED_INDEX_JS_CONTRACT) ? "true" : "false";
-
-    state.indexJsLineageEvidence = state.previousAcceptedIndexJsRecognized === "true"
-      ? PREVIOUS_ACCEPTED_INDEX_JS_CONTRACT
-      : FALLBACK.NOT_FOUND;
-
-    if (state.previousAcceptedIndexJsRecognized === "true") {
-      addNote(state, "PREVIOUS_ACCEPTED_INDEX_JS_CONTRACT_LINEAGE_RECOGNIZED");
-    }
-
-    if (!isConfidentContract(observed)) {
-      state.indexJsContractMismatch = FALLBACK.UNKNOWN;
-      state.staleExpectedIndexJsContractDriftPrevented = FALLBACK.UNKNOWN;
-      return;
-    }
-
-    if (observed === CURRENT_EXPECTED_INDEX_JS_CONTRACT) {
-      state.indexJsContractMismatch = "false";
-      state.staleExpectedIndexJsContractDriftPrevented = "true";
-      addNote(state, "CURRENT_EXPECTED_INDEX_JS_CONTRACT_RECOGNIZED");
-      addNote(state, "STALE_EXPECTED_INDEX_JS_CONTRACT_DRIFT_PREVENTED");
-      return;
-    }
-
-    if (observed === PREVIOUS_ACCEPTED_INDEX_JS_CONTRACT) {
-      state.indexJsContractMismatch = "true";
-      state.staleExpectedIndexJsContractDriftPrevented = "true";
-      addNote(state, "PREVIOUS_INDEX_JS_CONTRACT_SERVED_AS_PRIMARY");
-      addNote(state, "INDEX_JS_RENEWAL_REQUIRED_IF_PRIMARY_CONTRACT_IS_V5_3");
-      return;
-    }
-
-    state.indexJsContractMismatch = "true";
-    addNote(state, "INDEX_JS_CONTRACT_MISMATCH");
+    state[mismatchKey] = "true";
+    state[staleKey] = "false";
+    addNote(state, `${label}_CONTRACT_MISMATCH`);
+    return { recognized: false, current: false, lineage: false, previous: false, mismatch: "true" };
   }
 
   function evaluateReadStatus(state) {
@@ -755,78 +599,73 @@
     }
   }
 
-  function evaluateMismatch(state, indexSource) {
-    evaluateHtmlAlignment(state);
-    evaluateIndexAlignment(state, indexSource);
+  function evaluateMismatch(state) {
+    state.observedHtmlContract = state.servedHtmlContract;
+    state.observedIndexJsContract = state.servedIndexJsContract;
+    state.observedRouteConductorContract = state.servedRouteConductorContract;
 
-    const htmlConfident = isConfidentContract(state.servedHtmlContract);
-    const indexConfident = isConfidentContract(state.servedIndexJsContract);
-    const routeConfident = isConfidentContract(state.servedRouteConductorContract);
-
-    const htmlMismatch = (
-      htmlConfident &&
-      !htmlContractRecognized(state.servedHtmlContract) &&
-      state.htmlContractMismatch === "true"
+    const html = evaluateContractRecognition(
+      state,
+      "Html",
+      state.servedHtmlContract,
+      CURRENT_EXPECTED_HTML_CONTRACT,
+      ACCEPTED_LINEAGE_HTML_CONTRACT,
+      PREVIOUS_ACCEPTED_HTML_CONTRACT
     );
 
-    const indexMismatch = (
-      indexConfident &&
-      state.servedIndexJsContract !== CURRENT_EXPECTED_INDEX_JS_CONTRACT
+    const index = evaluateContractRecognition(
+      state,
+      "IndexJs",
+      state.servedIndexJsContract,
+      CURRENT_EXPECTED_INDEX_JS_CONTRACT,
+      ACCEPTED_LINEAGE_INDEX_JS_CONTRACT,
+      ""
     );
 
-    const routeMismatch = (
-      routeConfident &&
-      state.servedRouteConductorContract !== EXPECTED_ROUTE_CONDUCTOR_CONTRACT
+    const route = evaluateContractRecognition(
+      state,
+      "RouteConductor",
+      state.servedRouteConductorContract,
+      CURRENT_EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
+      ACCEPTED_LINEAGE_ROUTE_CONDUCTOR_CONTRACT,
+      PREVIOUS_ROUTE_CONDUCTOR_CONTRACT
     );
-
-    if (indexMismatch && state.servedIndexJsContract !== PREVIOUS_ACCEPTED_INDEX_JS_CONTRACT) {
-      addNote(state, "INDEX_JS_CONTRACT_MISMATCH");
-    }
-
-    if (routeMismatch) addNote(state, "ROUTE_CONDUCTOR_CONTRACT_MISMATCH");
 
     if (state.indexScriptSrc === FALLBACK.NOT_FOUND) {
       addNote(state, "INDEX_SCRIPT_SRC_NOT_FOUND");
     }
 
-    const routeConductorContractMatched = (
-      routeConfident &&
-      state.servedRouteConductorContract === EXPECTED_ROUTE_CONDUCTOR_CONTRACT
-    );
-
     if (state.routeConductorScriptSrc === FALLBACK.NOT_FOUND) {
-      if (routeConductorContractMatched) {
-        addNote(state, "ROUTE_CONDUCTOR_SCRIPT_SRC_NOT_DIRECTLY_LOADED_BY_HTML");
-        addNote(state, "ROUTE_CONDUCTOR_CONTRACT_FETCHED_AND_MATCHED_NO_FALSE_CASE_5");
-      } else {
-        addNote(state, "ROUTE_CONDUCTOR_SCRIPT_SRC_NOT_FOUND");
+      addNote(state, "ROUTE_CONDUCTOR_SCRIPT_SRC_NOT_DIRECTLY_LOADED_BY_HTML");
+      if (route.recognized) {
+        addNote(state, "ROUTE_CONDUCTOR_SOURCE_FETCH_FALLBACK_DIRECT_FILE_MATCHED_NO_FALSE_CASE_5");
       }
     }
 
-    const indexScriptMissingMaterial = (
+    const indexScriptMissingMaterial = Boolean(
       state.htmlSourceReadStatus === FALLBACK.COMPLETE &&
-      state.indexScriptSrc === FALLBACK.NOT_FOUND
+      state.indexScriptSrc === FALLBACK.NOT_FOUND &&
+      !index.recognized
     );
 
-    const routeScriptMissingMaterial = (
+    const routeScriptMissingMaterial = Boolean(
       state.htmlSourceReadStatus === FALLBACK.COMPLETE &&
       state.routeConductorScriptSrc === FALLBACK.NOT_FOUND &&
-      !routeConductorContractMatched
+      !route.recognized
     );
 
-    const scriptAnomalyClearAndMaterial =
-      indexScriptMissingMaterial || routeScriptMissingMaterial;
+    const contractMismatch = Boolean(
+      html.mismatch === "true" ||
+      index.mismatch === "true" ||
+      route.mismatch === "true"
+    );
 
-    const contractMismatch = htmlMismatch || indexMismatch || routeMismatch;
+    const scriptAnomalyClearAndMaterial = indexScriptMissingMaterial || routeScriptMissingMaterial;
 
     if (contractMismatch || scriptAnomalyClearAndMaterial) {
       state.cacheOrServedContractMismatch = MISMATCH.TRUE;
       state.case5Support = CASE5.TRUE;
-
-      if (scriptAnomalyClearAndMaterial) {
-        addNote(state, "SCRIPT_SOURCE_ANOMALY_CLEAR_AND_MATERIAL");
-      }
-
+      if (scriptAnomalyClearAndMaterial) addNote(state, "SCRIPT_SOURCE_ANOMALY_CLEAR_AND_MATERIAL");
       addNote(state, "CASE_5_SUPPORT_TRUE");
       return;
     }
@@ -853,22 +692,25 @@
       EAST_CONTRACT: CONTRACT,
       EAST_ALIGNMENT_CONTRACT: ALIGNMENT_CONTRACT,
       EAST_RECEIPT: RECEIPT,
-      PREVIOUS_ALIGNMENT_CONTRACT,
-      PREVIOUS_ALIGNMENT_RECEIPT,
+      EAST_VERSION: VERSION,
 
       EAST_SOURCE_READ_COMPLETE: state.eastSourceReadComplete,
       EAST_SOURCE_READ_STATUS: state.eastSourceReadStatus,
 
-      EXPECTED_HTML_CONTRACT,
-      EXPECTED_INDEX_JS_CONTRACT,
-      EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
+      EXPECTED_HTML_CONTRACT: state.expectedHtmlContract,
+      EXPECTED_INDEX_JS_CONTRACT: state.expectedIndexJsContract,
+      EXPECTED_ROUTE_CONDUCTOR_CONTRACT: state.expectedRouteConductorContract,
 
       CURRENT_EXPECTED_HTML_CONTRACT: state.currentExpectedHtmlContract,
       ACCEPTED_LINEAGE_HTML_CONTRACT: state.acceptedLineageHtmlContract,
       PREVIOUS_ACCEPTED_HTML_CONTRACT: state.previousAcceptedHtmlContract,
 
       CURRENT_EXPECTED_INDEX_JS_CONTRACT: state.currentExpectedIndexJsContract,
-      PREVIOUS_ACCEPTED_INDEX_JS_CONTRACT: state.previousAcceptedIndexJsContract,
+      ACCEPTED_LINEAGE_INDEX_JS_CONTRACT: state.acceptedLineageIndexJsContract,
+
+      CURRENT_EXPECTED_ROUTE_CONDUCTOR_CONTRACT: state.currentExpectedRouteConductorContract,
+      ACCEPTED_LINEAGE_ROUTE_CONDUCTOR_CONTRACT: state.acceptedLineageRouteConductorContract,
+      PREVIOUS_ROUTE_CONDUCTOR_CONTRACT: state.previousRouteConductorContract,
 
       SERVED_HTML_CONTRACT: state.servedHtmlContract,
       SERVED_INDEX_JS_CONTRACT: state.servedIndexJsContract,
@@ -876,18 +718,23 @@
 
       OBSERVED_HTML_CONTRACT: state.observedHtmlContract,
       CURRENT_HTML_CONTRACT_RECOGNIZED: state.currentHtmlContractRecognized,
-      ACCEPTED_LINEAGE_HTML_RECOGNIZED: state.acceptedLineageHtmlRecognized,
-      PREVIOUS_ACCEPTED_HTML_RECOGNIZED: state.previousAcceptedHtmlRecognized,
+      ACCEPTED_HTML_LINEAGE_RECOGNIZED: state.acceptedHtmlLineageRecognized,
+      PREVIOUS_HTML_LINEAGE_RECOGNIZED: state.previousHtmlLineageRecognized,
       HTML_CONTRACT_MISMATCH: state.htmlContractMismatch,
       STALE_EXPECTED_HTML_CONTRACT_DRIFT_PREVENTED: state.staleExpectedHtmlContractDriftPrevented,
 
       OBSERVED_INDEX_JS_CONTRACT: state.observedIndexJsContract,
       CURRENT_INDEX_JS_CONTRACT_RECOGNIZED: state.currentIndexJsContractRecognized,
-      PREVIOUS_ACCEPTED_INDEX_JS_RECOGNIZED: state.previousAcceptedIndexJsRecognized,
+      ACCEPTED_INDEX_JS_LINEAGE_RECOGNIZED: state.acceptedIndexJsLineageRecognized,
       INDEX_JS_CONTRACT_MISMATCH: state.indexJsContractMismatch,
       STALE_EXPECTED_INDEX_JS_CONTRACT_DRIFT_PREVENTED: state.staleExpectedIndexJsContractDriftPrevented,
-      INDEX_JS_PRIMARY_CONTRACT_EXTRACTION_METHOD: state.indexJsPrimaryContractExtractionMethod,
-      INDEX_JS_LINEAGE_EVIDENCE: state.indexJsLineageEvidence,
+
+      OBSERVED_ROUTE_CONDUCTOR_CONTRACT: state.observedRouteConductorContract,
+      CURRENT_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED: state.currentRouteConductorContractRecognized,
+      ACCEPTED_ROUTE_CONDUCTOR_LINEAGE_RECOGNIZED: state.acceptedRouteConductorLineageRecognized,
+      PREVIOUS_ROUTE_CONDUCTOR_LINEAGE_RECOGNIZED: state.previousRouteConductorLineageRecognized,
+      ROUTE_CONDUCTOR_CONTRACT_MISMATCH: state.routeConductorContractMismatch,
+      STALE_EXPECTED_ROUTE_CONDUCTOR_CONTRACT_DRIFT_PREVENTED: state.staleExpectedRouteConductorContractDriftPrevented,
 
       INDEX_SCRIPT_SRC: state.indexScriptSrc,
       ROUTE_CONDUCTOR_SCRIPT_SRC: state.routeConductorScriptSrc,
@@ -927,7 +774,6 @@
 
     try {
       const html = await fetchText(TARGET_HTML_FILE, state, "HTML");
-
       state.htmlSourceReadStatus = html.status;
 
       if (html.ok) {
@@ -938,16 +784,11 @@
 
         state.indexScriptSrc = extractScriptSrc(html.text, "index.js", state, "INDEX_SCRIPT_SRC");
         state.routeConductorScriptSrc = extractScriptSrc(html.text, "hearth.js", state, "ROUTE_CONDUCTOR_SCRIPT_SRC");
-
         state.cacheKeyEvidence = readCacheKeyEvidence(state.indexScriptSrc, state.routeConductorScriptSrc);
 
-        if (state.servedHtmlContract === FALLBACK.UNKNOWN) {
-          addNote(state, "HTML_CONTRACT_UNKNOWN");
-        }
+        if (state.servedHtmlContract === FALLBACK.UNKNOWN) addNote(state, "HTML_CONTRACT_UNKNOWN");
       } else {
-        state.servedHtmlContract = html.status === FALLBACK.NOT_FOUND
-          ? FALLBACK.NOT_FOUND
-          : FALLBACK.UNREADABLE;
+        state.servedHtmlContract = html.status === FALLBACK.NOT_FOUND ? FALLBACK.NOT_FOUND : FALLBACK.UNREADABLE;
         state.observedHtmlContract = state.servedHtmlContract;
         state.domDatasetContract = FALLBACK.UNREADABLE;
         state.metaContract = FALLBACK.UNREADABLE;
@@ -956,18 +797,19 @@
         state.cacheKeyEvidence = FALLBACK.UNREADABLE;
       }
 
-      state.indexSourceFetchUrl = firstScriptFetchUrl(state.indexScriptSrc, TARGET_INDEX_JS_FILE);
-      state.routeConductorSourceFetchUrl = firstScriptFetchUrl(state.routeConductorScriptSrc, TARGET_ROUTE_CONDUCTOR_FILE);
+      state.indexSourceFetchUrl = scriptSrcToFetchUrl(
+        state.indexScriptSrc,
+        TARGET_INDEX_JS_FILE,
+        state,
+        "INDEX_SOURCE"
+      );
 
-      if (state.indexSourceFetchUrl !== TARGET_INDEX_JS_FILE) {
-        addNote(state, "INDEX_SOURCE_FETCH_URL_FROM_HTML_SCRIPT_SRC");
-      }
-
-      if (state.routeConductorSourceFetchUrl !== TARGET_ROUTE_CONDUCTOR_FILE) {
-        addNote(state, "ROUTE_CONDUCTOR_SOURCE_FETCH_URL_FROM_HTML_SCRIPT_SRC");
-      } else if (state.routeConductorScriptSrc === FALLBACK.NOT_FOUND) {
-        addNote(state, "ROUTE_CONDUCTOR_SOURCE_FETCH_FALLBACK_DIRECT_FILE");
-      }
+      state.routeConductorSourceFetchUrl = scriptSrcToFetchUrl(
+        state.routeConductorScriptSrc,
+        TARGET_ROUTE_CONDUCTOR_FILE,
+        state,
+        "ROUTE_CONDUCTOR_SOURCE"
+      );
 
       const indexJs = await fetchText(state.indexSourceFetchUrl, state, "INDEX_JS");
       const routeConductor = await fetchText(state.routeConductorSourceFetchUrl, state, "ROUTE_CONDUCTOR");
@@ -976,48 +818,34 @@
       state.routeConductorSourceReadStatus = routeConductor.status;
 
       if (indexJs.ok) {
-        const indexContract = extractJsContract(
+        state.servedIndexJsContract = extractJsContract(
           indexJs.text,
-          CURRENT_EXPECTED_INDEX_JS_CONTRACT,
-          "HEARTH_INDEX_JS",
-          [PREVIOUS_ACCEPTED_INDEX_JS_CONTRACT]
+          [CURRENT_EXPECTED_INDEX_JS_CONTRACT, ACCEPTED_LINEAGE_INDEX_JS_CONTRACT],
+          "HEARTH_INDEX_JS"
         );
-
-        state.servedIndexJsContract = indexContract.contract;
-        state.indexJsPrimaryContractExtractionMethod = indexContract.method;
         state.scriptContract = state.servedIndexJsContract;
-
-        if (state.servedIndexJsContract === FALLBACK.UNKNOWN) {
-          addNote(state, "INDEX_JS_CONTRACT_UNKNOWN");
-        }
+        if (state.servedIndexJsContract === FALLBACK.UNKNOWN) addNote(state, "INDEX_JS_CONTRACT_UNKNOWN");
       } else {
-        state.servedIndexJsContract = indexJs.status === FALLBACK.NOT_FOUND
-          ? FALLBACK.NOT_FOUND
-          : FALLBACK.UNREADABLE;
-        state.indexJsPrimaryContractExtractionMethod = FALLBACK.UNREADABLE;
+        state.servedIndexJsContract = indexJs.status === FALLBACK.NOT_FOUND ? FALLBACK.NOT_FOUND : FALLBACK.UNREADABLE;
       }
 
       if (routeConductor.ok) {
-        const routeContract = extractJsContract(
+        state.servedRouteConductorContract = extractJsContract(
           routeConductor.text,
-          EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
-          "HEARTH_ROUTE_CONDUCTOR",
-          []
+          [
+            CURRENT_EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
+            ACCEPTED_LINEAGE_ROUTE_CONDUCTOR_CONTRACT,
+            PREVIOUS_ROUTE_CONDUCTOR_CONTRACT
+          ],
+          "HEARTH_ROUTE_CONDUCTOR"
         );
-
-        state.servedRouteConductorContract = routeContract.contract;
-
-        if (state.servedRouteConductorContract === FALLBACK.UNKNOWN) {
-          addNote(state, "ROUTE_CONDUCTOR_CONTRACT_UNKNOWN");
-        }
+        if (state.servedRouteConductorContract === FALLBACK.UNKNOWN) addNote(state, "ROUTE_CONDUCTOR_CONTRACT_UNKNOWN");
       } else {
-        state.servedRouteConductorContract = routeConductor.status === FALLBACK.NOT_FOUND
-          ? FALLBACK.NOT_FOUND
-          : FALLBACK.UNREADABLE;
+        state.servedRouteConductorContract = routeConductor.status === FALLBACK.NOT_FOUND ? FALLBACK.NOT_FOUND : FALLBACK.UNREADABLE;
       }
 
       evaluateReadStatus(state);
-      evaluateMismatch(state, indexJs.ok ? indexJs.text : "");
+      evaluateMismatch(state);
 
       state.eastStatus = state.eastSourceReadStatus === FALLBACK.COMPLETE
         ? STATUS.COMPLETE
@@ -1026,7 +854,6 @@
           : STATUS.PARTIAL;
 
       state.updatedAt = nowIso();
-
       publish(state);
 
       return {
@@ -1048,7 +875,6 @@
       state.case5Support = CASE5.UNKNOWN;
       addNote(state, normalizeError(error, "EAST_SOURCE_READ_TOP_LEVEL_ERROR"));
       state.updatedAt = nowIso();
-
       publish(state);
 
       return {
@@ -1072,8 +898,7 @@
       alignmentContract: ALIGNMENT_CONTRACT,
       receipt: RECEIPT,
       previousAlignmentContract: PREVIOUS_ALIGNMENT_CONTRACT,
-      previousAlignmentReceipt: PREVIOUS_ALIGNMENT_RECEIPT,
-      previousParentVisibleContract: PREVIOUS_PARENT_VISIBLE_CONTRACT,
+      previousReceipt: PREVIOUS_RECEIPT,
       version: VERSION,
       file: FILE,
       targetRoute: TARGET_ROUTE,
@@ -1089,25 +914,37 @@
       hearthRepairAuthorized: false,
       case5EvidenceSupportOnly: true,
 
-      currentExpectedHtmlContract: CURRENT_EXPECTED_HTML_CONTRACT,
-      acceptedLineageHtmlContract: ACCEPTED_LINEAGE_HTML_CONTRACT,
-      previousAcceptedHtmlContract: PREVIOUS_ACCEPTED_HTML_CONTRACT,
+      expectedHtmlContract: state.expectedHtmlContract,
+      expectedIndexJsContract: state.expectedIndexJsContract,
+      expectedRouteConductorContract: state.expectedRouteConductorContract,
+
+      currentExpectedHtmlContract: state.currentExpectedHtmlContract,
+      acceptedLineageHtmlContract: state.acceptedLineageHtmlContract,
+      previousAcceptedHtmlContract: state.previousAcceptedHtmlContract,
       observedHtmlContract: state.observedHtmlContract,
       currentHtmlContractRecognized: state.currentHtmlContractRecognized,
-      acceptedLineageHtmlRecognized: state.acceptedLineageHtmlRecognized,
-      previousAcceptedHtmlRecognized: state.previousAcceptedHtmlRecognized,
+      acceptedHtmlLineageRecognized: state.acceptedHtmlLineageRecognized,
+      previousHtmlLineageRecognized: state.previousHtmlLineageRecognized,
       htmlContractMismatch: state.htmlContractMismatch,
       staleExpectedHtmlContractDriftPrevented: state.staleExpectedHtmlContractDriftPrevented,
 
-      currentExpectedIndexJsContract: CURRENT_EXPECTED_INDEX_JS_CONTRACT,
-      previousAcceptedIndexJsContract: PREVIOUS_ACCEPTED_INDEX_JS_CONTRACT,
+      currentExpectedIndexJsContract: state.currentExpectedIndexJsContract,
+      acceptedLineageIndexJsContract: state.acceptedLineageIndexJsContract,
       observedIndexJsContract: state.observedIndexJsContract,
       currentIndexJsContractRecognized: state.currentIndexJsContractRecognized,
-      previousAcceptedIndexJsRecognized: state.previousAcceptedIndexJsRecognized,
+      acceptedIndexJsLineageRecognized: state.acceptedIndexJsLineageRecognized,
       indexJsContractMismatch: state.indexJsContractMismatch,
       staleExpectedIndexJsContractDriftPrevented: state.staleExpectedIndexJsContractDriftPrevented,
-      indexJsPrimaryContractExtractionMethod: state.indexJsPrimaryContractExtractionMethod,
-      indexJsLineageEvidence: state.indexJsLineageEvidence,
+
+      currentExpectedRouteConductorContract: state.currentExpectedRouteConductorContract,
+      acceptedLineageRouteConductorContract: state.acceptedLineageRouteConductorContract,
+      previousRouteConductorContract: state.previousRouteConductorContract,
+      observedRouteConductorContract: state.observedRouteConductorContract,
+      currentRouteConductorContractRecognized: state.currentRouteConductorContractRecognized,
+      acceptedRouteConductorLineageRecognized: state.acceptedRouteConductorLineageRecognized,
+      previousRouteConductorLineageRecognized: state.previousRouteConductorLineageRecognized,
+      routeConductorContractMismatch: state.routeConductorContractMismatch,
+      staleExpectedRouteConductorContractDriftPrevented: state.staleExpectedRouteConductorContractDriftPrevented,
 
       sourceReadAttempted: state.sourceReadAttempted,
       sourceReadComplete: state.sourceReadComplete,
@@ -1115,6 +952,7 @@
       sourceReadFailed: state.sourceReadFailed,
       sourceEvidenceStatus: state.sourceEvidenceStatus,
       servedSourceContract: state.servedHtmlContract,
+      servedHtmlContract: state.servedHtmlContract,
       servedIndexJsContract: state.servedIndexJsContract,
       servedRouteConductorContract: state.servedRouteConductorContract,
       domDatasetContract: state.domDatasetContract,
@@ -1125,9 +963,9 @@
       routeConductorScriptSrc: state.routeConductorScriptSrc,
       indexSourceFetchUrl: state.indexSourceFetchUrl,
       routeConductorSourceFetchUrl: state.routeConductorSourceFetchUrl,
-
       cacheOrServedContractMismatch: state.cacheOrServedContractMismatch,
       case5Support: state.case5Support,
+      eastSecondaryEvidenceNotes: state.eastSecondaryEvidenceNotes.join(" | ") || "none",
 
       eastOwnsFinalCase: false,
       eastOwnsRepair: false,
@@ -1144,9 +982,9 @@
       servedIndexJsReadOwned: true,
       servedRouteConductorReadOwned: true,
       contractExtractionOwned: true,
-      primaryConstContractExtractionFirst: true,
       scriptSourceExtractionOwned: true,
       routeAwareScriptMatchingOwned: true,
+      directRouteConductorFallbackFetchOwned: true,
       cacheOrServedContractMismatchEvidenceOwned: true,
 
       renderedTargetProbingOwned: false,
@@ -1159,15 +997,7 @@
       packetFormattingOwned: false,
       diagnosticUiOwned: false,
 
-      f13Claimed: false,
-      f21EligibleForNorth: false,
-      f21ClaimedByDiagnosticRail: false,
-      readyTextAllowed: false,
-      readyTextClaimedByDiagnosticRail: false,
-      visualPassClaimed: false,
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
+      ...FINAL_FALSE,
 
       lastEastStatus: lastEvidencePacket ? lastEvidencePacket.EAST_STATUS : STATUS.READY,
       lastEastSourceReadStatus: lastEvidencePacket ? lastEvidencePacket.EAST_SOURCE_READ_STATUS : FALLBACK.UNKNOWN,
@@ -1187,12 +1017,17 @@
     root.HEARTH = root.HEARTH || {};
     root.HEARTH.diagnosticEast = api;
     root.HEARTH.diagnosticRailEast = api;
+    root.HEARTH.diagnosticEastReceipt = getEastReceipt();
+    root.HEARTH.diagnosticRailEastReceipt = getEastReceipt();
+    root.HEARTH.diagnosticEastEvidence = clonePlain(lastEvidencePacket);
+    root.HEARTH.diagnosticRailEastEvidence = clonePlain(lastEvidencePacket);
 
     root.HEARTH_DIAGNOSTIC_EAST = api;
     root.HEARTH_DIAGNOSTIC_RAIL_EAST = api;
-
     root.HEARTH_DIAGNOSTIC_EAST_RECEIPT = getEastReceipt();
     root.HEARTH_DIAGNOSTIC_RAIL_EAST_RECEIPT = getEastReceipt();
+    root.HEARTH_DIAGNOSTIC_EAST_EVIDENCE = clonePlain(lastEvidencePacket);
+    root.HEARTH_DIAGNOSTIC_RAIL_EAST_EVIDENCE = clonePlain(lastEvidencePacket);
   }
 
   const api = Object.freeze({
@@ -1200,35 +1035,21 @@
     alignmentContract: ALIGNMENT_CONTRACT,
     receipt: RECEIPT,
     previousAlignmentContract: PREVIOUS_ALIGNMENT_CONTRACT,
-    previousAlignmentReceipt: PREVIOUS_ALIGNMENT_RECEIPT,
+    previousReceipt: PREVIOUS_RECEIPT,
     version: VERSION,
     file: FILE,
     targetRoute: TARGET_ROUTE,
     diagnosticRoute: DIAGNOSTIC_ROUTE,
 
-    currentExpectedHtmlContract: CURRENT_EXPECTED_HTML_CONTRACT,
-    currentExpectedIndexJsContract: CURRENT_EXPECTED_INDEX_JS_CONTRACT,
-    previousAcceptedIndexJsContract: PREVIOUS_ACCEPTED_INDEX_JS_CONTRACT,
+    expectedHtmlContract: EXPECTED_HTML_CONTRACT,
+    expectedIndexJsContract: EXPECTED_INDEX_JS_CONTRACT,
     expectedRouteConductorContract: EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
 
     runEastSourceRead,
     getEastReceipt,
     getEastState,
 
-    primaryConstContractExtractionFirst: true,
-    htmlDiscoveredIndexScriptFetchPreferred: true,
-    staleIndexV5_3LineagePreservedNotCurrent: true,
-    case5EvidenceSupportOnly: true,
-
-    f13Claimed: false,
-    f21EligibleForNorth: false,
-    f21ClaimedByDiagnosticRail: false,
-    readyTextAllowed: false,
-    readyTextClaimedByDiagnosticRail: false,
-    visualPassClaimed: false,
-    generatedImage: false,
-    graphicBox: false,
-    webGL: false
+    ...FINAL_FALSE
   });
 
   publish(makeState());

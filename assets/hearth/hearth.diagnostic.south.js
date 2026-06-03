@@ -2,13 +2,17 @@
 // HEARTH_DIAGNOSTIC_RAIL_SOUTH_REPORT_PACKET_OUTPUT_TNT_v1
 // Full-file replacement.
 // Diagnostic rail SOUTH child only.
+// Internal implementation renewal:
+// HEARTH_DIAGNOSTIC_SOUTH_NORTH_ANCHOR_MEANING_PRESERVATION_TNT_v2
 // Purpose:
-// - Provide report-output / packet-expression support for the Hearth diagnostic rail.
+// - Preserve SOUTH parent-visible report-output contract.
 // - Receive final diagnostic meaning from NORTH.
+// - Preserve NORTH-selected PRIMARY_CASE, CALIBRATION_STATUS, calibration hold/release fields, and recommendations exactly.
+// - Accept NORTH v3 anchor-schema fields, WEST rendered-proof namespace fields, EAST current-spread fields, NEWS Alignment fields, and Fibonacci Synchronization fields.
 // - Normalize packet-safe fields without inventing evidence.
 // - Compose compact summary and full packet text.
 // - Preserve SOUTH output notes separately from diagnostic evidence notes unless NORTH explicitly merges them.
-// - Preserve no F13, no F21, no ready text, no visual pass, no generated image, no GraphicBox, no WebGL.
+// - Preserve no F13 claim, no F21 claim, no ready text, no visual pass, no generated image, no GraphicBox, no WebGL.
 // Does not own:
 // - served-source evidence collection
 // - rendered-target evidence collection
@@ -18,6 +22,7 @@
 // - runtime release inspection
 // - synthetic activation
 // - final PRIMARY_CASE selection
+// - calibration decision
 // - final recommendation selection
 // - diagnostic UI
 // - Hearth repair
@@ -25,13 +30,24 @@
 // - runtime restart
 // - Canvas release
 // - Macro West release
+// - North latch
 
 (() => {
   "use strict";
 
   const CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_SOUTH_REPORT_PACKET_OUTPUT_TNT_v1";
   const RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_SOUTH_REPORT_PACKET_OUTPUT_RECEIPT_v1";
-  const VERSION = "2026-06-02.hearth-diagnostic-rail-south-report-packet-output-v1";
+
+  const IMPLEMENTATION_CONTRACT =
+    "HEARTH_DIAGNOSTIC_SOUTH_NORTH_ANCHOR_MEANING_PRESERVATION_TNT_v2";
+  const IMPLEMENTATION_RECEIPT =
+    "HEARTH_DIAGNOSTIC_SOUTH_NORTH_ANCHOR_MEANING_PRESERVATION_RECEIPT_v2";
+
+  const PREVIOUS_IMPLEMENTATION_CONTRACT =
+    "HEARTH_DIAGNOSTIC_RAIL_SOUTH_REPORT_PACKET_OUTPUT_TNT_v1";
+
+  const VERSION =
+    "2026-06-03.hearth-diagnostic-south-north-anchor-meaning-preservation-v2";
 
   const FILE = "/assets/hearth/hearth.diagnostic.south.js";
   const TARGET_ROUTE = "/showroom/globe/hearth/";
@@ -60,11 +76,12 @@
     FAILED: "FAILED"
   });
 
-  const REQUIRED_PACKET_FIELDS = Object.freeze([
+  const CORE_PACKET_FIELDS = Object.freeze([
     "PACKET_NAME",
     "TARGET_ROUTE",
     "DIAGNOSTIC_ROUTE",
     "DIAGNOSTIC_TIMESTAMP",
+
     "DIAGNOSTIC_TARGET_ACCESS_STATUS",
     "DIAGNOSTIC_TARGET_ACCESS_ERROR",
 
@@ -105,18 +122,140 @@
     "INDEX_SUPPRESSES_VISIBLE_CONTROLS",
 
     "RUNTIME_RELEASE_STATE",
-    "RUNTIME_RELEASE_IS_LOCK",
+    "RUNTIME_RELEASE_IS_LOCK"
+  ]);
 
+  const NORTH_MEANING_FIELDS = Object.freeze([
     "PRIMARY_CASE",
+    "CALIBRATION_STATUS",
+    "CALIBRATION_HOLD_REASON",
+    "DIAGNOSTIC_RAIL_CLEAN",
+    "CALIBRATION_POINT_REACHED",
     "SECONDARY_EVIDENCE_NOTES",
+    "NORTH_SECONDARY_EVIDENCE_NOTES",
     "RECOMMENDED_NEXT_OWNER",
     "RECOMMENDED_NEXT_FILE",
     "RECOMMENDED_NEXT_ACTION"
   ]);
 
-  const OPTIONAL_TRACE_FIELDS = Object.freeze([
+  const CONTRACT_TRACE_FIELDS = Object.freeze([
+    "NORTH_CONTRACT",
+    "NORTH_RECEIPT",
+    "PREVIOUS_NORTH_CONTRACT",
+    "BASELINE_NORTH_CONTRACT",
+    "EAST_ALIGNMENT_CONTRACT",
+    "WEST_IMPLEMENTATION_CONTRACT",
+    "CURRENT_EXPECTED_HTML_CONTRACT",
+    "CURRENT_EXPECTED_INDEX_JS_CONTRACT",
+    "CURRENT_EXPECTED_ROUTE_CONDUCTOR_CONTRACT",
+    "PRIMARY_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED",
+    "ROUTE_CONDUCTOR_V9_5_PRIMARY_NOT_TREATED_AS_CASE_5",
+    "ROUTE_CONDUCTOR_V9_4_LINEAGE_ACCEPTED",
+    "EAST_CURRENT_SPREAD_ALIGNMENT_RECOGNIZED"
+  ]);
+
+  const WEST_RENDERED_PROOF_FIELDS = Object.freeze([
+    "SHOW_RECEIPT_RECT",
+    "SHOW_RECEIPT_CENTER_POINT",
+    "TARGET_VIEWPORT_WIDTH",
+    "TARGET_VIEWPORT_HEIGHT",
+    "CENTER_POINT_IN_VIEWPORT",
+    "ELEMENT_FROM_POINT_AVAILABLE",
+    "ELEMENT_FROM_POINT_RESULT",
+    "BUTTON_POINTER_EVENTS",
+    "HIT_TEST_UNREADABLE_REASON",
+    "FRAME_RECT",
+    "FRAME_VISIBLE_TO_DIAGNOSTIC_ROUTE",
+
+    "NAMESPACE_RENDERED_PROOF_CANDIDATES_FOUND",
+    "NAMESPACE_RENDERED_PROOF_CANDIDATE_PATHS",
+    "NAMESPACE_RENDERED_PROOF_CANDIDATE_SELECTED",
+    "NAMESPACE_RENDERED_PROOF_CANDIDATE_SCORE",
+
+    "ROUTE_CONDUCTOR_AUTHORITY_SOURCE",
+    "ROUTE_CONDUCTOR_CONTRACT",
+    "ROUTE_CONDUCTOR_RECEIPT",
+    "ROUTE_CONDUCTOR_V9_5_DETECTED",
+    "ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED",
+    "ROUTE_CONDUCTOR_LINEAGE_ACCEPTED",
+    "ROUTE_CONDUCTOR_CONTRACT_READABLE_IN_RENDERED_TARGET",
+
+    "CURRENT_CANVAS_PARENT_CONTRACT",
+    "CURRENT_CANVAS_PARENT_RECEIPT",
+    "CURRENT_CANVAS_PARENT_RECOGNIZED",
+
+    "EXPRESSION_HUB_ACTIVE",
+    "FINGER_MANAGER_ACTIVE",
+    "FINGER_REGISTRY_ACTIVE",
+    "VISIBLE_BASE_GLOBE_CARRIER_ACTIVE",
+    "CANVAS_MOUNTED",
+    "CANVAS_DRAW_COMPLETE",
+    "BASE_GLOBE_DRAW_COMPLETE",
+    "BASE_GLOBE_VISIBLE_CARRIER_READY",
+    "ROUTE_RECEIPT_VISIBLE_PLANET_PROOF_READY",
+    "ROUTE_RECEIPT_VISIBLE_PLANET_PROOF_SOURCE",
+
+    "PLANET_STAGE_PRESENT",
+    "PLANET_STAGE_RECT",
+    "PLANET_STAGE_RECT_NONZERO",
+    "CANVAS_MOUNT_PRESENT",
+    "CANVAS_MOUNT_RECT",
+    "CANVAS_MOUNT_RECT_NONZERO",
+    "CANVAS_ELEMENT_PRESENT",
+    "CANVAS_ELEMENT_FOUND",
+    "CANVAS_RECT",
+    "CANVAS_RECT_NONZERO",
+    "CANVAS_ATTRIBUTE_WIDTH",
+    "CANVAS_ATTRIBUTE_HEIGHT",
+    "CANVAS_DRAW_EVIDENCE_PRESENT",
+    "DOM_VISIBLE_PLANET_PROOF_READY",
+    "STAGE_MOUNT_DOM_PROOF_READY",
+
+    "RENDERED_PLANET_PROOF_INSPECTED",
+    "RENDERED_PLANET_PROOF_READY",
+    "RENDERED_PLANET_PROOF_FULLY_INSPECTED",
+    "WEST_RENDERED_PROOF_SPREAD_COMPLETE",
+    "VISIBLE_PLANET_PROOF_READY",
+    "VISIBLE_PLANET_PROOF_SOURCE",
+    "DATA_PROOF_READ_COMPLETE",
+    "DATA_PROOF_READ_STATUS",
+    "ROUTE_CONDUCTOR_DATA_PROOF_READ",
+
+    "F13_CANVAS_EVIDENCE_COMPLETE",
+    "F13_CANVAS_EVIDENCE_STRICT",
+    "F13_CANVAS_EVIDENCE_DEGRADED",
+    "F13_HARD_FAIL",
+    "F13_STRICT_EVIDENCE_GAP",
+    "POSTGAME_STATUS",
+
+    "FLOATING_ANCHOR_HIT_TEST_NON_CONTROLLING"
+  ]);
+
+  const ALIGNMENT_FIELDS = Object.freeze([
+    "NEWS_ALIGNMENT_PROTOCOL",
+    "NEWS_ALIGNMENT_STATUS",
+    "NEWS_ALIGNMENT_SCORE",
+    "NEWS_ALIGNMENT_FIRST_FAILED_STAGE",
+
+    "FIBONACCI_SYNCHRONIZATION_PROTOCOL",
+    "FIBONACCI_SYNCHRONIZATION_STATUS",
+    "FIBONACCI_SYNCHRONIZATION_SCORE",
+    "FIBONACCI_SYNCHRONIZATION_FIRST_FAILED_STAGE"
+  ]);
+
+  const CHILD_STATUS_FIELDS = Object.freeze([
     "EAST_SOURCE_READ_STATUS",
     "WEST_RENDERED_READ_STATUS",
+    "SOUTH_OUTPUT_STATUS",
+
+    "EAST_RECEIPT_VALID",
+    "WEST_RECEIPT_VALID",
+    "SOUTH_RECEIPT_VALID",
+    "EAST_EVIDENCE_VALID",
+    "WEST_EVIDENCE_VALID",
+    "SOUTH_OUTPUT_VALID",
+    "SOUTH_MEANING_PRESERVED",
+
     "CASE_1_SUPPORT",
     "CASE_2_SUPPORT",
     "CASE_3_SUPPORT",
@@ -126,18 +265,26 @@
     "CASE_7_SUPPORT"
   ]);
 
-  const NO_CLAIM_FIELDS = Object.freeze([
-    "f21EligibleForNorth",
-    "f21ClaimedByDiagnosticRail",
-    "readyTextAllowed",
-    "readyTextClaimedByDiagnosticRail",
-    "visualPassClaimed",
-    "generatedImage",
-    "graphicBox",
-    "webGL"
+  const NO_CLAIM_FIELD_VALUES = Object.freeze({
+    f13Claimed: "false",
+    f21EligibleForNorth: "false",
+    f21ClaimedByDiagnosticRail: "false",
+    readyTextAllowed: "false",
+    readyTextClaimedByDiagnosticRail: "false",
+    visualPassClaimed: "false",
+    generatedImage: "false",
+    graphicBox: "false",
+    webGL: "false"
+  });
+
+  const INTERNAL_OPTION_FIELDS = Object.freeze([
+    "includeOptionalTraceFields",
+    "includeNoClaimFieldsInPacket",
+    "mergeSouthOutputNotesIntoEvidenceNotes"
   ]);
 
   const root = typeof window !== "undefined" ? window : globalThis;
+  const api = {};
 
   let lastState = null;
   let lastReport = null;
@@ -159,19 +306,22 @@
     return String(value);
   }
 
-  function safeTrim(value, fallback = "") {
-    return safeString(value, fallback).replace(/\s+/g, " ").trim();
-  }
-
   function bounded(value, limit = 4000) {
-    return safeString(value).replace(/\n/g, " ").replace(/\s+/g, " ").trim().slice(0, limit);
+    return safeString(value)
+      .replace(/\n/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .slice(0, limit);
   }
 
   function packetValue(value, fallback = FALLBACK.UNKNOWN) {
     if (value === undefined || value === null || value === "") return fallback;
 
     if (Array.isArray(value)) {
-      const joined = value.map((entry) => bounded(entry, 1000)).filter(Boolean).join(" | ");
+      const joined = value
+        .map((entry) => bounded(entry, 1000))
+        .filter(Boolean)
+        .join(" | ");
       return joined || fallback;
     }
 
@@ -218,33 +368,66 @@
     return fallback;
   }
 
+  function hasValue(input, key) {
+    if (!isObject(input)) return false;
+
+    if (Object.prototype.hasOwnProperty.call(input, key)) {
+      return input[key] !== undefined && input[key] !== null && input[key] !== "";
+    }
+
+    const lower = key.toLowerCase();
+
+    for (const candidate of Object.keys(input)) {
+      if (candidate.toLowerCase() === lower) {
+        return input[candidate] !== undefined && input[candidate] !== null && input[candidate] !== "";
+      }
+    }
+
+    return false;
+  }
+
+  function line(key, value) {
+    return `${normalizeKey(key)}=${packetValue(value)}`;
+  }
+
   function addOutputNote(state, note) {
     const clean = bounded(note, 1000);
     if (!clean) return;
+
     if (!state.southSecondaryOutputNotes.includes(clean)) {
       state.southSecondaryOutputNotes.push(clean);
     }
   }
 
   function normalizeNoteInput(value) {
-    if (value === undefined || value === null || value === "" || value === FALLBACK.UNKNOWN) return [];
+    if (
+      value === undefined ||
+      value === null ||
+      value === "" ||
+      value === FALLBACK.UNKNOWN ||
+      value === FALLBACK.NONE
+    ) {
+      return [];
+    }
 
     if (Array.isArray(value)) {
       return value.map((entry) => bounded(entry, 1000)).filter(Boolean);
     }
 
-    const text = safeString(value);
-    if (!text || text === FALLBACK.NONE) return [];
-
-    return text
+    return safeString(value)
       .split("|")
       .map((entry) => bounded(entry, 1000))
       .filter(Boolean);
   }
 
+  function pushUnique(list, value) {
+    const clean = bounded(value, 1000);
+    if (!clean || clean === FALLBACK.NONE) return;
+    if (!list.includes(clean)) list.push(clean);
+  }
+
   function serializeEvidenceNotes(input, state, options) {
     const notes = [];
-    const seen = new Set();
 
     const sources = [
       getValue(input, "SECONDARY_EVIDENCE_NOTES", ""),
@@ -254,25 +437,49 @@
     ];
 
     for (const source of sources) {
-      const entries = normalizeNoteInput(source);
-      for (const entry of entries) {
-        if (!seen.has(entry)) {
-          seen.add(entry);
-          notes.push(entry);
-        }
-      }
+      for (const entry of normalizeNoteInput(source)) pushUnique(notes, entry);
     }
 
     if (options && options.mergeSouthOutputNotesIntoEvidenceNotes === true) {
-      for (const entry of state.southSecondaryOutputNotes) {
-        if (!seen.has(entry)) {
-          seen.add(entry);
-          notes.push(entry);
-        }
-      }
+      for (const entry of state.southSecondaryOutputNotes) pushUnique(notes, entry);
     }
 
     return notes.length ? notes.join(" | ") : FALLBACK.NONE;
+  }
+
+  function orderedFields(options) {
+    const fields = [];
+
+    for (const field of CORE_PACKET_FIELDS) pushUnique(fields, field);
+    for (const field of NORTH_MEANING_FIELDS) pushUnique(fields, field);
+
+    if (!options || options.includeOptionalTraceFields !== false) {
+      for (const field of CONTRACT_TRACE_FIELDS) pushUnique(fields, field);
+      for (const field of WEST_RENDERED_PROOF_FIELDS) pushUnique(fields, field);
+      for (const field of ALIGNMENT_FIELDS) pushUnique(fields, field);
+      for (const field of CHILD_STATUS_FIELDS) pushUnique(fields, field);
+    }
+
+    if (options && options.includeNoClaimFieldsInPacket === true) {
+      for (const field of Object.keys(NO_CLAIM_FIELD_VALUES)) pushUnique(fields, field);
+    }
+
+    return fields;
+  }
+
+  function copySourceFieldsFirst(source, report) {
+    if (!isObject(source)) return;
+
+    for (const key of Object.keys(source)) {
+      if (INTERNAL_OPTION_FIELDS.includes(key)) continue;
+      report[key] = packetValue(source[key], FALLBACK.UNKNOWN);
+    }
+  }
+
+  function ensureField(report, source, field, fallback = FALLBACK.UNKNOWN) {
+    if (report[field] === undefined || report[field] === null || report[field] === "") {
+      report[field] = getValue(source, field, fallback);
+    }
   }
 
   function makeState() {
@@ -280,9 +487,14 @@
       southStatus: STATUS.READY,
       southContract: CONTRACT,
       southReceipt: RECEIPT,
+      implementationContract: IMPLEMENTATION_CONTRACT,
+      implementationReceipt: IMPLEMENTATION_RECEIPT,
+      previousImplementationContract: PREVIOUS_IMPLEMENTATION_CONTRACT,
 
       southOutputComplete: "false",
       southOutputStatus: FALLBACK.UNKNOWN,
+      southMeaningPreservationStatus: FALLBACK.UNKNOWN,
+      southPacketFieldCount: 0,
       southSecondaryOutputNotes: [],
 
       reportObject: {},
@@ -291,6 +503,7 @@
 
       updatedAt: nowIso(),
 
+      f13Claimed: false,
       f21EligibleForNorth: false,
       f21ClaimedByDiagnosticRail: false,
       readyTextAllowed: false,
@@ -302,137 +515,131 @@
     };
   }
 
-  function normalizeReportObject(input, state, options) {
+  function normalizeReportObject(input, state, options = {}) {
     const source = isObject(input) ? input : {};
     const report = {};
 
-    if (!isObject(input)) {
-      addOutputNote(state, "SOUTH_INPUT_NOT_OBJECT");
-    }
+    if (!isObject(input)) addOutputNote(state, "SOUTH_INPUT_NOT_OBJECT");
 
-    for (const field of REQUIRED_PACKET_FIELDS) {
-      report[field] = getValue(source, field, FALLBACK.UNKNOWN);
-    }
+    copySourceFieldsFirst(source, report);
 
-    report.PACKET_NAME = report.PACKET_NAME === FALLBACK.UNKNOWN ? REPORT_PACKET : report.PACKET_NAME;
-    report.TARGET_ROUTE = report.TARGET_ROUTE === FALLBACK.UNKNOWN ? TARGET_ROUTE : report.TARGET_ROUTE;
-    report.DIAGNOSTIC_ROUTE = report.DIAGNOSTIC_ROUTE === FALLBACK.UNKNOWN ? DIAGNOSTIC_ROUTE : report.DIAGNOSTIC_ROUTE;
+    ensureField(report, source, "PACKET_NAME", REPORT_PACKET);
+    ensureField(report, source, "TARGET_ROUTE", TARGET_ROUTE);
+    ensureField(report, source, "DIAGNOSTIC_ROUTE", DIAGNOSTIC_ROUTE);
 
-    const suppliedTimestamp = getValue(source, "DIAGNOSTIC_TIMESTAMP", "");
-    if (suppliedTimestamp) {
-      report.DIAGNOSTIC_TIMESTAMP = suppliedTimestamp;
-    } else {
+    if (!hasValue(source, "DIAGNOSTIC_TIMESTAMP")) {
       report.DIAGNOSTIC_TIMESTAMP = nowIso() || FALLBACK.UNKNOWN;
       addOutputNote(state, "SOUTH_TIMESTAMP_SUBSTITUTED");
+    } else {
+      report.DIAGNOSTIC_TIMESTAMP = getValue(source, "DIAGNOSTIC_TIMESTAMP", FALLBACK.UNKNOWN);
     }
 
-    report.PRIMARY_CASE = getValue(source, "PRIMARY_CASE", FALLBACK.UNKNOWN);
-    report.RECOMMENDED_NEXT_OWNER = getValue(source, "RECOMMENDED_NEXT_OWNER", FALLBACK.UNKNOWN);
-    report.RECOMMENDED_NEXT_FILE = getValue(source, "RECOMMENDED_NEXT_FILE", FALLBACK.UNKNOWN);
-    report.RECOMMENDED_NEXT_ACTION = getValue(source, "RECOMMENDED_NEXT_ACTION", FALLBACK.UNKNOWN);
-
-    report.SECONDARY_EVIDENCE_NOTES = serializeEvidenceNotes(source, state, options || {});
-
-    for (const field of OPTIONAL_TRACE_FIELDS) {
-      if (Object.prototype.hasOwnProperty.call(source, field)) {
-        report[field] = getValue(source, field, FALLBACK.UNKNOWN);
-      }
+    for (const field of CORE_PACKET_FIELDS) {
+      ensureField(report, source, field, FALLBACK.UNKNOWN);
     }
+
+    for (const field of NORTH_MEANING_FIELDS) {
+      ensureField(report, source, field, FALLBACK.UNKNOWN);
+    }
+
+    if (!options || options.includeOptionalTraceFields !== false) {
+      for (const field of CONTRACT_TRACE_FIELDS) ensureField(report, source, field, FALLBACK.UNKNOWN);
+      for (const field of WEST_RENDERED_PROOF_FIELDS) ensureField(report, source, field, FALLBACK.UNKNOWN);
+      for (const field of ALIGNMENT_FIELDS) ensureField(report, source, field, FALLBACK.UNKNOWN);
+      for (const field of CHILD_STATUS_FIELDS) ensureField(report, source, field, FALLBACK.UNKNOWN);
+    }
+
+    report.SECONDARY_EVIDENCE_NOTES = serializeEvidenceNotes(source, state, options);
 
     if (options && options.includeNoClaimFieldsInPacket === true) {
-      report.f21EligibleForNorth = "false";
-      report.f21ClaimedByDiagnosticRail = "false";
-      report.readyTextAllowed = "false";
-      report.readyTextClaimedByDiagnosticRail = "false";
-      report.visualPassClaimed = "false";
-      report.generatedImage = "false";
-      report.graphicBox = "false";
-      report.webGL = "false";
+      for (const [field, value] of Object.entries(NO_CLAIM_FIELD_VALUES)) {
+        report[field] = value;
+      }
     }
 
     return report;
   }
 
-  function determineOutputStatus(input, report, state) {
-    if (!isObject(input)) return STATUS.PARTIAL;
-
-    const requiredMeaningFields = [
+  function requiredMeaningComplete(report) {
+    const required = [
       "PRIMARY_CASE",
+      "CALIBRATION_STATUS",
+      "CALIBRATION_HOLD_REASON",
+      "DIAGNOSTIC_RAIL_CLEAN",
+      "CALIBRATION_POINT_REACHED",
       "RECOMMENDED_NEXT_OWNER",
       "RECOMMENDED_NEXT_FILE",
       "RECOMMENDED_NEXT_ACTION"
     ];
 
-    const missingMeaning = requiredMeaningFields.some((field) => {
+    return required.every((field) => {
       const value = report[field];
-      return value === FALLBACK.UNKNOWN || value === "" || value === undefined || value === null;
+      return value !== undefined &&
+        value !== null &&
+        value !== "" &&
+        value !== FALLBACK.UNKNOWN;
     });
+  }
 
-    if (missingMeaning) {
+  function determineOutputStatus(input, report, state) {
+    if (!isObject(input)) {
+      addOutputNote(state, "SOUTH_INPUT_OBJECT_REQUIRED_FOR_COMPLETE_OUTPUT");
+      return STATUS.PARTIAL;
+    }
+
+    if (!requiredMeaningComplete(report)) {
       addOutputNote(state, "SOUTH_INPUT_FINAL_MEANING_PARTIAL");
       return STATUS.PARTIAL;
     }
 
-    const requiredAccessFields = [
-      "DIAGNOSTIC_TARGET_ACCESS_STATUS",
-      "CACHE_OR_SERVED_CONTRACT_MISMATCH",
-      "SHOW_RECEIPT_BUTTON_EXISTS",
-      "SHOW_RECEIPT_TARGET_IS_BUTTON",
-      "RUNTIME_RELEASE_IS_LOCK"
-    ];
-
-    const partialAccess = requiredAccessFields.some((field) => {
-      const value = report[field];
-      return value === FALLBACK.UNKNOWN || value === FALLBACK.PARTIAL || value === FALLBACK.UNREADABLE || value === FALLBACK.INACCESSIBLE;
-    });
-
-    if (partialAccess) {
-      addOutputNote(state, "SOUTH_INPUT_EVIDENCE_PARTIAL");
-      return STATUS.PARTIAL;
-    }
+    state.southMeaningPreservationStatus = "PRESERVED_NORTH_ANCHOR_MEANING";
+    addOutputNote(state, "SOUTH_PRESERVED_NORTH_PRIMARY_CASE_CALIBRATION_AND_RECOMMENDATION");
 
     return STATUS.COMPLETE;
   }
 
-  function line(key, value) {
-    return `${normalizeKey(key)}=${packetValue(value)}`;
-  }
-
-  function composeFullPacketText(report, options) {
+  function composeFullPacketText(report, options = {}) {
     const lines = [];
+    const used = new Set();
 
-    for (const field of REQUIRED_PACKET_FIELDS) {
+    for (const field of orderedFields(options)) {
       lines.push(line(field, report[field]));
+      used.add(field);
     }
 
-    if (options && options.includeOptionalTraceFields === true) {
-      for (const field of OPTIONAL_TRACE_FIELDS) {
-        if (Object.prototype.hasOwnProperty.call(report, field)) {
-          lines.push(line(field, report[field]));
-        }
-      }
-    }
+    if (!options || options.includeOptionalTraceFields !== false) {
+      const extras = Object.keys(report)
+        .filter((field) => !used.has(field))
+        .filter((field) => !INTERNAL_OPTION_FIELDS.includes(field))
+        .sort();
 
-    if (options && options.includeNoClaimFieldsInPacket === true) {
-      for (const field of NO_CLAIM_FIELDS) {
-        lines.push(line(field, "false"));
+      for (const field of extras) {
+        lines.push(line(field, report[field]));
+        used.add(field);
       }
     }
 
     return lines.join("\n");
   }
 
-  function composeCompactSummary(input) {
+  function composeCompactSummary(input = {}) {
     const source = isObject(input) ? input : {};
 
     const fields = [
       "TARGET_ROUTE",
-      "DIAGNOSTIC_TARGET_ACCESS_STATUS",
+      "SERVED_ROUTE_CONDUCTOR_CONTRACT",
       "CACHE_OR_SERVED_CONTRACT_MISMATCH",
-      "SHOW_RECEIPT_BUTTON_EXISTS",
-      "SHOW_RECEIPT_TARGET_IS_BUTTON",
-      "RUNTIME_RELEASE_IS_LOCK",
       "PRIMARY_CASE",
+      "CALIBRATION_STATUS",
+      "CALIBRATION_POINT_REACHED",
+      "DIAGNOSTIC_RAIL_CLEAN",
+      "WEST_RENDERED_READ_STATUS",
+      "WEST_RENDERED_PROOF_SPREAD_COMPLETE",
+      "RENDERED_PLANET_PROOF_FULLY_INSPECTED",
+      "SOUTH_OUTPUT_STATUS",
+      "SOUTH_MEANING_PRESERVED",
+      "NEWS_ALIGNMENT_STATUS",
+      "FIBONACCI_SYNCHRONIZATION_STATUS",
       "RECOMMENDED_NEXT_OWNER",
       "RECOMMENDED_NEXT_FILE",
       "RECOMMENDED_NEXT_ACTION"
@@ -446,8 +653,13 @@
       SOUTH_STATUS: state.southStatus,
       SOUTH_CONTRACT: CONTRACT,
       SOUTH_RECEIPT: RECEIPT,
+      SOUTH_IMPLEMENTATION_CONTRACT: IMPLEMENTATION_CONTRACT,
+      SOUTH_IMPLEMENTATION_RECEIPT: IMPLEMENTATION_RECEIPT,
+      SOUTH_PREVIOUS_IMPLEMENTATION_CONTRACT: PREVIOUS_IMPLEMENTATION_CONTRACT,
       SOUTH_OUTPUT_COMPLETE: state.southOutputComplete,
       SOUTH_OUTPUT_STATUS: state.southOutputStatus,
+      SOUTH_MEANING_PRESERVATION_STATUS: state.southMeaningPreservationStatus,
+      SOUTH_PACKET_FIELD_COUNT: state.southPacketFieldCount,
       REPORT_OBJECT: clonePlain(state.reportObject),
       COMPACT_SUMMARY: state.compactSummary,
       FULL_PACKET_TEXT: state.fullPacketText,
@@ -463,12 +675,19 @@
     try {
       const report = normalizeReportObject(input, state, options);
       const outputStatus = determineOutputStatus(input, report, state);
+
+      report.SOUTH_OUTPUT_STATUS = outputStatus;
+      report.SOUTH_MEANING_PRESERVED = outputStatus === STATUS.COMPLETE ? "true" : "false";
+      report.SOUTH_IMPLEMENTATION_CONTRACT = IMPLEMENTATION_CONTRACT;
+      report.SOUTH_IMPLEMENTATION_RECEIPT = IMPLEMENTATION_RECEIPT;
+
       const fullPacketText = composeFullPacketText(report, options);
       const compactSummary = composeCompactSummary(report);
 
       state.reportObject = report;
       state.compactSummary = compactSummary;
       state.fullPacketText = fullPacketText;
+      state.southPacketFieldCount = Object.keys(report).length;
       state.southOutputStatus = outputStatus;
       state.southOutputComplete = outputStatus === STATUS.COMPLETE ? "true" : "false";
       state.southStatus = outputStatus === STATUS.COMPLETE ? STATUS.COMPLETE : STATUS.PARTIAL;
@@ -480,6 +699,8 @@
         ok: true,
         contract: CONTRACT,
         receipt: RECEIPT,
+        implementationContract: IMPLEMENTATION_CONTRACT,
+        implementationReceipt: IMPLEMENTATION_RECEIPT,
         output: clonePlain(makeOutputObject(state)),
         state: clonePlain(lastState)
       };
@@ -487,12 +708,19 @@
       state.southStatus = STATUS.FAILED;
       state.southOutputStatus = STATUS.FAILED;
       state.southOutputComplete = "false";
-      addOutputNote(state, `SOUTH_COMPOSE_ERROR:${bounded(error && error.message ? error.message : error, 800)}`);
+      state.southMeaningPreservationStatus = "FAILED";
+      addOutputNote(state, `SOUTH_COMPOSE_ERROR:${bounded(error && error.message ? error.message : error, 1000)}`);
 
       const fallbackReport = normalizeReportObject({}, state, options || {});
+      fallbackReport.SOUTH_OUTPUT_STATUS = STATUS.FAILED;
+      fallbackReport.SOUTH_MEANING_PRESERVED = "false";
+      fallbackReport.SOUTH_IMPLEMENTATION_CONTRACT = IMPLEMENTATION_CONTRACT;
+      fallbackReport.SOUTH_IMPLEMENTATION_RECEIPT = IMPLEMENTATION_RECEIPT;
+
       state.reportObject = fallbackReport;
       state.compactSummary = composeCompactSummary(fallbackReport);
       state.fullPacketText = composeFullPacketText(fallbackReport, options || {});
+      state.southPacketFieldCount = Object.keys(fallbackReport).length;
       state.updatedAt = nowIso();
 
       publish(state);
@@ -501,6 +729,8 @@
         ok: false,
         contract: CONTRACT,
         receipt: RECEIPT,
+        implementationContract: IMPLEMENTATION_CONTRACT,
+        implementationReceipt: IMPLEMENTATION_RECEIPT,
         error: bounded(error && error.message ? error.message : error, 1000),
         output: clonePlain(makeOutputObject(state)),
         state: clonePlain(lastState)
@@ -509,10 +739,16 @@
   }
 
   function getSouthReceipt() {
+    const state = lastState || makeState();
+    const output = lastReport || makeOutputObject(state);
+
     return {
       childRole: "SOUTH_REPORT_PACKET_OUTPUT",
       contract: CONTRACT,
       receipt: RECEIPT,
+      implementationContract: IMPLEMENTATION_CONTRACT,
+      implementationReceipt: IMPLEMENTATION_RECEIPT,
+      previousImplementationContract: PREVIOUS_IMPLEMENTATION_CONTRACT,
       version: VERSION,
       file: FILE,
       targetRoute: TARGET_ROUTE,
@@ -522,6 +758,7 @@
       servesNorth: true,
       finalPrimaryCaseAuthority: false,
       finalRecommendationAuthority: false,
+      calibrationDecisionAuthority: false,
       servedSourceAuthority: false,
       renderedTargetAuthority: false,
       case5Authority: false,
@@ -542,8 +779,15 @@
       compactSummaryOwned: true,
       secondaryEvidenceSerializationOwned: true,
       packetSafeFallbackNormalizationOwned: true,
+      northAnchorMeaningPreservationOwned: true,
+      calibrationFieldsPreserved: true,
+      newsAlignmentFieldsPreserved: true,
+      fibonacciSynchronizationFieldsPreserved: true,
+      westRenderedProofFieldsPreserved: true,
+      eastCurrentSpreadFieldsPreserved: true,
       southOutputNotesRemainSeparate: true,
 
+      f13Claimed: false,
       f21EligibleForNorth: false,
       f21ClaimedByDiagnosticRail: false,
       readyTextAllowed: false,
@@ -553,8 +797,10 @@
       graphicBox: false,
       webGL: false,
 
-      lastSouthStatus: lastReport ? lastReport.SOUTH_STATUS : STATUS.READY,
-      lastSouthOutputStatus: lastReport ? lastReport.SOUTH_OUTPUT_STATUS : FALLBACK.UNKNOWN,
+      lastSouthStatus: output.SOUTH_STATUS || STATUS.READY,
+      lastSouthOutputStatus: output.SOUTH_OUTPUT_STATUS || FALLBACK.UNKNOWN,
+      lastSouthOutputComplete: output.SOUTH_OUTPUT_COMPLETE || "false",
+      lastSouthMeaningPreservationStatus: output.SOUTH_MEANING_PRESERVATION_STATUS || FALLBACK.UNKNOWN,
       updatedAt: nowIso()
     };
   }
@@ -570,17 +816,25 @@
     root.HEARTH = root.HEARTH || {};
     root.HEARTH.diagnosticSouth = api;
     root.HEARTH.diagnosticRailSouth = api;
+    root.HEARTH.diagnosticSouthReceipt = getSouthReceipt();
+    root.HEARTH.diagnosticRailSouthReceipt = getSouthReceipt();
+    root.HEARTH.diagnosticSouthOutput = clonePlain(lastReport);
+    root.HEARTH.diagnosticRailSouthOutput = clonePlain(lastReport);
 
     root.HEARTH_DIAGNOSTIC_SOUTH = api;
     root.HEARTH_DIAGNOSTIC_RAIL_SOUTH = api;
-
     root.HEARTH_DIAGNOSTIC_SOUTH_RECEIPT = getSouthReceipt();
     root.HEARTH_DIAGNOSTIC_RAIL_SOUTH_RECEIPT = getSouthReceipt();
+    root.HEARTH_DIAGNOSTIC_SOUTH_OUTPUT = clonePlain(lastReport);
+    root.HEARTH_DIAGNOSTIC_RAIL_SOUTH_OUTPUT = clonePlain(lastReport);
   }
 
-  const api = Object.freeze({
+  Object.assign(api, {
     contract: CONTRACT,
     receipt: RECEIPT,
+    implementationContract: IMPLEMENTATION_CONTRACT,
+    implementationReceipt: IMPLEMENTATION_RECEIPT,
+    previousImplementationContract: PREVIOUS_IMPLEMENTATION_CONTRACT,
     version: VERSION,
     file: FILE,
     targetRoute: TARGET_ROUTE,
@@ -592,6 +846,25 @@
     getSouthReceipt,
     getSouthState,
 
+    supportsNorthAnchorMeaningPreservation: true,
+    supportsCalibrationFieldPreservation: true,
+    supportsNewsAlignmentFieldPreservation: true,
+    supportsFibonacciSynchronizationFieldPreservation: true,
+    supportsWestRenderedProofFieldPreservation: true,
+    supportsEastCurrentSpreadFieldPreservation: true,
+
+    finalPrimaryCaseAuthority: false,
+    finalRecommendationAuthority: false,
+    calibrationDecisionAuthority: false,
+    packetFormattingAuthority: true,
+    diagnosticUiAuthority: false,
+    productionMutationAuthorized: false,
+    hearthRepairAuthorized: false,
+    runtimeRestartAuthorized: false,
+    canvasReleaseAuthorized: false,
+    macroWestReleaseAuthorized: false,
+
+    f13Claimed: false,
     f21EligibleForNorth: false,
     f21ClaimedByDiagnosticRail: false,
     readyTextAllowed: false,

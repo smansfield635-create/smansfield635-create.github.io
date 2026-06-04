@@ -3,13 +3,13 @@
 // Full-file replacement.
 // Diagnostic rail EAST child only.
 // Internal implementation:
-// HEARTH_DIAGNOSTIC_EAST_ROUTE_CONDUCTOR_PRIMARY_COMPATIBILITY_SPLIT_TNT_v4
-// Missing-construct baseline file.
+// HEARTH_DIAGNOSTIC_EAST_PLANETARY_CONTROL_FOOTPRINT_SOURCE_READER_TNT_v5
 // Purpose:
-// - Create the required EAST diagnostic child file.
 // - Serve NORTH with receipt-bearing served-source evidence.
-// - Read current DOM/script/dataset evidence when available.
+// - Read the Hearth target iframe/window, not the diagnostic receiver window.
 // - Recognize current Hearth HTML, Index, and Route Conductor spread without false CASE_5.
+// - Publish planetary-control footprint fields before /assets/hearth/hearth.controls.js exists.
+// - Treat missing controls as EXPECTED_NOT_YET_BUILT, not failure, not CASE_5.
 // - Preserve EAST as served-source evidence only.
 // - Preserve NORTH as final PRIMARY_CASE and recommendation authority.
 // - Preserve WEST as rendered-target authority.
@@ -39,17 +39,19 @@
   const RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_EAST_SERVED_SOURCE_EVIDENCE_RECEIPT_v1";
 
   const IMPLEMENTATION_CONTRACT =
-    "HEARTH_DIAGNOSTIC_EAST_ROUTE_CONDUCTOR_PRIMARY_COMPATIBILITY_SPLIT_TNT_v4";
+    "HEARTH_DIAGNOSTIC_EAST_PLANETARY_CONTROL_FOOTPRINT_SOURCE_READER_TNT_v5";
   const IMPLEMENTATION_RECEIPT =
-    "HEARTH_DIAGNOSTIC_EAST_ROUTE_CONDUCTOR_PRIMARY_COMPATIBILITY_SPLIT_RECEIPT_v4";
+    "HEARTH_DIAGNOSTIC_EAST_PLANETARY_CONTROL_FOOTPRINT_SOURCE_READER_RECEIPT_v5";
 
   const PREVIOUS_IMPLEMENTATION_CONTRACT =
+    "HEARTH_DIAGNOSTIC_EAST_ROUTE_CONDUCTOR_PRIMARY_COMPATIBILITY_SPLIT_TNT_v4";
+  const LINEAGE_IMPLEMENTATION_CONTRACT =
     "HEARTH_DIAGNOSTIC_EAST_HEARTH_INDEX_CONTEXT_CURRENT_SPREAD_ALIGNMENT_TNT_v3";
   const BASELINE_IMPLEMENTATION_CONTRACT =
     "HEARTH_DIAGNOSTIC_RAIL_EAST_SERVED_SOURCE_EVIDENCE_TNT_v1";
 
   const VERSION =
-    "2026-06-04.hearth-diagnostic-east-missing-construct-baseline-current-spread-v4";
+    "2026-06-04.hearth-diagnostic-east-planetary-control-footprint-source-reader-v5";
 
   const FILE = "/assets/hearth/hearth.diagnostic.east.js";
   const TARGET_ROUTE = "/showroom/globe/hearth/";
@@ -57,6 +59,9 @@
 
   const CURRENT_HTML_CONTRACT =
     "HEARTH_HTML_FULL_PLANET_VISIBILITY_DOWNSTREAM_SHELL_ALIGNMENT_TNT_v4";
+
+  const DIAGNOSTIC_RECEIVER_CONTRACT =
+    "HEARTH_DIAGNOSTIC_ROUTE_PLANETARY_BUILD_OBSERVER_RECEIVER_TNT_v2_2";
 
   const ACCEPTED_HTML_CONTRACTS = Object.freeze([
     "HEARTH_HTML_FULL_PLANET_VISIBILITY_DOWNSTREAM_SHELL_ALIGNMENT_TNT_v4",
@@ -94,8 +99,21 @@
     "HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_TNT_v9_2"
   ]);
 
-  const EXPECTED_INDEX_SRC = "/showroom/globe/hearth/index.js";
-  const EXPECTED_ROUTE_CONDUCTOR_SRC = "/showroom/globe/hearth/hearth.js";
+  const CONTROL_FILE = "/assets/hearth/hearth.controls.js";
+  const HEARTH_JS_CONTROL_FUNNEL_FILE = "/showroom/globe/hearth/hearth.js";
+  const INDEX_JS_FILE = "/showroom/globe/hearth/index.js";
+  const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
+
+  const FINGER_FILES = Object.freeze({
+    boundary: "/assets/hearth/hearth.canvas.finger.boundary.js",
+    landform: "/assets/hearth/hearth.canvas.finger.landform.js",
+    elevation: "/assets/hearth/hearth.canvas.finger.elevation.js",
+    material: "/assets/hearth/hearth.canvas.finger.material.js",
+    hydrology: "/assets/hearth/hearth.canvas.finger.hydrology.js",
+    atmosphere: "/assets/hearth/hearth.canvas.finger.atmosphere.js",
+    lighting: "/assets/hearth/hearth.canvas.finger.lighting.js",
+    composite: "/assets/hearth/hearth.canvas.finger.composite.js"
+  });
 
   const FALLBACK = Object.freeze({
     UNKNOWN: "UNKNOWN",
@@ -105,6 +123,10 @@
     INACCESSIBLE: "INACCESSIBLE",
     NOT_APPLICABLE: "NOT_APPLICABLE",
     INSUFFICIENT_EVIDENCE: "INSUFFICIENT_EVIDENCE",
+    EXPECTED_NOT_YET_BUILT: "EXPECTED_NOT_YET_BUILT",
+    EXPECTED_NOT_YET_WIRED: "EXPECTED_NOT_YET_WIRED",
+    WAITING_CONTROL_FILE: "WAITING_CONTROL_FILE",
+    READY: "READY",
     PARTIAL: "PARTIAL",
     FAILED: "FAILED",
     COMPLETE: "COMPLETE",
@@ -193,7 +215,7 @@
 
   function addNote(state, note) {
     const clean = bounded(note, 1600);
-    if (!clean) return;
+    if (!state || !Array.isArray(state.eastSecondaryEvidenceNotes) || !clean) return;
     if (!state.eastSecondaryEvidenceNotes.includes(clean)) {
       state.eastSecondaryEvidenceNotes.push(clean);
     }
@@ -258,31 +280,56 @@
     return undefined;
   }
 
-  function normalizeSrc(src) {
+  function normalizeSrc(src, targetWindow) {
     const text = safeString(src);
     if (!text) return "";
+
     try {
-      const url = new URL(text, root.location && root.location.origin ? root.location.origin : "https://diamondgatebridge.com");
+      const origin =
+        targetWindow && targetWindow.location && targetWindow.location.origin
+          ? targetWindow.location.origin
+          : root.location && root.location.origin
+            ? root.location.origin
+            : "https://diamondgatebridge.com";
+
+      const url = new URL(text, origin);
       return `${url.pathname}${url.search || ""}`;
     } catch (_error) {
       return text;
     }
   }
 
-  function scriptContains(script, path) {
-    const src = normalizeSrc(script && script.getAttribute ? script.getAttribute("src") : "");
-    return Boolean(src && src.includes(path));
+  function scriptMatches(script, path, targetWindow) {
+    const src = normalizeSrc(script && script.getAttribute ? script.getAttribute("src") : "", targetWindow);
+    if (!src) return false;
+
+    const cleanPath = safeString(path);
+    const fileName = cleanPath.split("/").filter(Boolean).pop();
+
+    return Boolean(
+      src.includes(cleanPath) ||
+      (fileName && src.endsWith(`/${fileName}`)) ||
+      (fileName && src.includes(`/${fileName}?`))
+    );
   }
 
-  function findScriptByPath(targetDocument, path) {
+  function findScriptByPaths(targetDocument, paths, targetWindow) {
     const scripts = qa(targetDocument, "script[src]");
-    return scripts.find((script) => scriptContains(script, path)) || null;
+    return scripts.find((script) => paths.some((path) => scriptMatches(script, path, targetWindow))) || null;
   }
 
-  function readCacheKeyFromSrc(src) {
+  function readCacheKeyFromSrc(src, targetWindow) {
     const text = safeString(src);
+
     try {
-      const url = new URL(text, root.location && root.location.origin ? root.location.origin : "https://diamondgatebridge.com");
+      const origin =
+        targetWindow && targetWindow.location && targetWindow.location.origin
+          ? targetWindow.location.origin
+          : root.location && root.location.origin
+            ? root.location.origin
+            : "https://diamondgatebridge.com";
+
+      const url = new URL(text, origin);
       return url.searchParams.get("v") || url.searchParams.get("cache") || url.searchParams.get("version") || "";
     } catch (_error) {
       const match = text.match(/[?&](?:v|cache|version)=([^&]+)/);
@@ -323,7 +370,9 @@
             result.CONTRACT,
             result.currentContract,
             result.currentRouteConductorContract,
-            result.routeConductorContract
+            result.routeConductorContract,
+            result.canvasContract,
+            result.controlsContract
           );
           if (contract) return safeString(contract);
         }
@@ -335,12 +384,56 @@
       authority.CONTRACT,
       authority.currentContract,
       authority.currentRouteConductorContract,
-      authority.routeConductorContract
+      authority.routeConductorContract,
+      authority.canvasContract,
+      authority.controlsContract
     ), "");
   }
 
-  function findRouteConductorAuthority() {
-    const paths = [
+  function readAuthorityReceipt(authority) {
+    if (!authority || !isObject(authority)) return null;
+
+    const methods = [
+      "getReceiptLight",
+      "getReceipt",
+      "getRoutePrimaryGateReceipt",
+      "getRouteCycleReceipt",
+      "getControlsReceipt",
+      "getState",
+      "getStatus",
+      "getReport"
+    ];
+
+    for (const method of methods) {
+      if (!isFunction(authority[method])) continue;
+
+      try {
+        const result = method === "getReceiptLight" ? authority[method](false) : authority[method]();
+        if (isObject(result)) return result;
+      } catch (_error) {}
+    }
+
+    if (isObject(authority.receipt)) return authority.receipt;
+    if (isObject(authority.receiptPacket)) return authority.receiptPacket;
+
+    return null;
+  }
+
+  function findWindowAuthority(targetWindow, paths) {
+    const win = targetWindow || root;
+
+    for (const path of paths) {
+      const value = readPath(win, path);
+      if (value && isObject(value)) {
+        return { path, authority: value, contract: readAuthorityContract(value), receipt: readAuthorityReceipt(value) };
+      }
+    }
+
+    return { path: "NONE", authority: null, contract: "", receipt: null };
+  }
+
+  function findRouteConductorAuthority(targetWindow) {
+    const found = findWindowAuthority(targetWindow, [
       "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION",
       "HEARTH_ROUTE_CONDUCTOR",
       "HEARTH_SOUTH_ROUTE_CONDUCTOR",
@@ -353,29 +446,27 @@
       "HEARTH.routeConductorCanvasLocalStationBridgeAlignment",
       "DEXTER_LAB.hearthRouteConductor",
       "DEXTER_LAB.hearthSouthRouteConductor"
-    ];
+    ]);
 
-    for (const path of paths) {
-      const value = readPath(root, path);
-      if (value && isObject(value)) {
-        return { path, authority: value, contract: readAuthorityContract(value) };
+    if (found.authority || found.contract) return found;
+
+    try {
+      const markerContract = safeString((targetWindow || root).__HEARTH_ROUTE_CONDUCTOR_CONTRACT__ || "");
+      if (markerContract) {
+        return {
+          path: "__HEARTH_ROUTE_CONDUCTOR_CONTRACT__",
+          authority: null,
+          contract: markerContract,
+          receipt: null
+        };
       }
-    }
+    } catch (_error) {}
 
-    const markerContract = safeString(root.__HEARTH_ROUTE_CONDUCTOR_CONTRACT__ || "");
-    if (markerContract) {
-      return {
-        path: "__HEARTH_ROUTE_CONDUCTOR_CONTRACT__",
-        authority: null,
-        contract: markerContract
-      };
-    }
-
-    return { path: "NONE", authority: null, contract: "" };
+    return found;
   }
 
-  function findIndexAuthority() {
-    const paths = [
+  function findIndexAuthority(targetWindow) {
+    return findWindowAuthority(targetWindow, [
       "HEARTH_INDEX_JS",
       "HEARTH_INDEX_BRIDGE",
       "HEARTH_FRONTEND_BUTTON_AUTHORITY_RESET",
@@ -386,16 +477,43 @@
       "HEARTH.buttonAuthority",
       "DEXTER_LAB.hearthIndexJs",
       "DEXTER_LAB.hearthFrontendButtonAuthorityReset"
-    ];
+    ]);
+  }
 
-    for (const path of paths) {
-      const value = readPath(root, path);
-      if (value && isObject(value)) {
-        return { path, authority: value, contract: readAuthorityContract(value) };
-      }
-    }
+  function findControlsAuthority(targetWindow) {
+    return findWindowAuthority(targetWindow, [
+      "HEARTH_CONTROLS",
+      "HEARTH_PLANET_CONTROLS",
+      "HEARTH_MOTION_TOUCH_CONTROLS",
+      "HEARTH.controls",
+      "HEARTH.planetControls",
+      "HEARTH.motionTouchControls",
+      "HEARTH.viewControls",
+      "HEARTH.hearthControls",
+      "DEXTER_LAB.hearthControls",
+      "DEXTER_LAB.hearthPlanetControls",
+      "DEXTER_LAB.hearthMotionTouchControls"
+    ]);
+  }
 
-    return { path: "NONE", authority: null, contract: "" };
+  function findCanvasAuthority(targetWindow) {
+    return findWindowAuthority(targetWindow, [
+      "HEARTH_CANVAS_EXPRESSION_HUB_VISIBLE_BASE_GLOBE_CARRIER",
+      "HEARTH_CANVAS_VISIBLE_BASE_GLOBE_CARRIER",
+      "HEARTH_CANVAS_BASE_GLOBE_CARRIER",
+      "HEARTH_CANVAS_VISIBLE_PLANET",
+      "HEARTH_CANVAS_EXPRESSION_HUB",
+      "HEARTH_CANVAS_FINGER_MANAGER",
+      "HEARTH_CANVAS_LOCAL_STATION",
+      "HEARTH_CANVAS",
+      "HEARTH.canvasExpressionHubVisibleBaseGlobeCarrier",
+      "HEARTH.canvasVisibleBaseGlobeCarrier",
+      "HEARTH.canvasVisiblePlanet",
+      "HEARTH.canvasExpressionHub",
+      "HEARTH.canvasFingerManager",
+      "HEARTH.canvasLocalStation",
+      "HEARTH.canvas"
+    ]);
   }
 
   function routeMatches(targetWindow) {
@@ -408,9 +526,53 @@
     }
   }
 
-  function hasHearthSignals(targetDocument) {
+  function diagnosticRouteMatches(targetWindow) {
+    try {
+      const win = targetWindow || root;
+      const path = win.location && win.location.pathname ? win.location.pathname : "";
+      return path === DIAGNOSTIC_ROUTE || path === DIAGNOSTIC_ROUTE.replace(/\/$/, "");
+    } catch (_error) {
+      return false;
+    }
+  }
+
+  function documentRoute(targetDocument) {
+    try {
+      const dataset = readDataset(targetDocument);
+      const bodyDataset = readBodyDataset(targetDocument);
+      return safeString(firstDefined(
+        dataset.route,
+        targetDocument.documentElement && targetDocument.documentElement.getAttribute("data-route"),
+        bodyDataset.route
+      ), "");
+    } catch (_error) {
+      return "";
+    }
+  }
+
+  function isDiagnosticReceiverDocument(targetDocument, targetWindow) {
+    const route = documentRoute(targetDocument);
+    const dataset = readDataset(targetDocument);
+    const contract = safeString(firstDefined(
+      dataset.contract,
+      targetDocument && targetDocument.documentElement
+        ? targetDocument.documentElement.getAttribute("data-contract")
+        : ""
+    ), "");
+
+    return Boolean(
+      diagnosticRouteMatches(targetWindow) ||
+      route === DIAGNOSTIC_ROUTE ||
+      route === DIAGNOSTIC_ROUTE.replace(/\/$/, "") ||
+      contract === DIAGNOSTIC_RECEIVER_CONTRACT ||
+      /diagnostic/i.test(safeString(dataset.page || ""))
+    );
+  }
+
+  function hasHearthSignals(targetDocument, targetWindow) {
     try {
       if (!targetDocument || !targetDocument.documentElement) return false;
+      if (isDiagnosticReceiverDocument(targetDocument, targetWindow)) return false;
 
       const html = targetDocument.documentElement;
       const body = targetDocument.body;
@@ -428,9 +590,10 @@
         route === TARGET_ROUTE.replace(/\/$/, "") ||
         bodyRoute === TARGET_ROUTE ||
         bodyRoute === TARGET_ROUTE.replace(/\/$/, "") ||
+        routeMatches(targetWindow) ||
         /hearth/i.test(page) ||
         /hearth/i.test(alias) ||
-        /planet factory|planet engine|mirrorland formation/i.test(context) ||
+        /planet factory|planet engine|mirrorland formation|visible globe/i.test(context) ||
         q(targetDocument, "#hearthCanvasMount") ||
         q(targetDocument, "[data-hearth-canvas-mount]") ||
         q(targetDocument, "#hearthGlobeStage") ||
@@ -441,23 +604,65 @@
     }
   }
 
+  function findDiagnosticTargetFrame(sourceDocument) {
+    if (!sourceDocument) return null;
+
+    return (
+      q(sourceDocument, "#hearthDiagnosticTargetFrame") ||
+      q(sourceDocument, "iframe[data-hearth-diagnostic-target-frame='true']") ||
+      q(sourceDocument, "iframe[src='/showroom/globe/hearth/']") ||
+      q(sourceDocument, "iframe[src*='/showroom/globe/hearth/']")
+    );
+  }
+
+  function readFrame(frame, state) {
+    try {
+      if (!frame) return null;
+
+      const targetWindow = frame.contentWindow || null;
+      const targetDocument = targetWindow ? targetWindow.document : null;
+
+      if (targetDocument && targetDocument.documentElement) {
+        return {
+          targetDocument,
+          targetWindow,
+          source: "diagnosticTargetFrame"
+        };
+      }
+
+      addNote(state, "EAST_TARGET_FRAME_FOUND_BUT_DOCUMENT_INACCESSIBLE");
+      return null;
+    } catch (error) {
+      addNote(state, `EAST_TARGET_FRAME_BLOCKED:${bounded(error && error.message ? error.message : error, 700)}`);
+      return null;
+    }
+  }
+
   function resolveTargetDocument(options, state) {
     const opts = options || {};
 
     if (opts.targetDocument && opts.targetDocument.documentElement) {
       const targetWindow = opts.targetDocument.defaultView || opts.targetWindow || null;
-      state.diagnosticTargetAccessStatus = "SOURCE_TARGET_DOCUMENT_SUPPLIED";
-      return { targetDocument: opts.targetDocument, targetWindow, source: "options.targetDocument" };
+
+      if (!isDiagnosticReceiverDocument(opts.targetDocument, targetWindow)) {
+        state.diagnosticTargetAccessStatus = "SOURCE_TARGET_DOCUMENT_SUPPLIED";
+        return { targetDocument: opts.targetDocument, targetWindow, source: "options.targetDocument" };
+      }
+
+      addNote(state, "EAST_IGNORED_SUPPLIED_DIAGNOSTIC_RECEIVER_DOCUMENT_AS_TARGET");
     }
 
     if (opts.targetWindow) {
       try {
         const targetWindow = opts.targetWindow;
         const targetDocument = targetWindow.document;
-        if (targetDocument && targetDocument.documentElement) {
+
+        if (targetDocument && targetDocument.documentElement && !isDiagnosticReceiverDocument(targetDocument, targetWindow)) {
           state.diagnosticTargetAccessStatus = "SOURCE_TARGET_WINDOW_SUPPLIED";
           return { targetDocument, targetWindow, source: "options.targetWindow" };
         }
+
+        addNote(state, "EAST_IGNORED_SUPPLIED_DIAGNOSTIC_RECEIVER_WINDOW_AS_TARGET");
       } catch (error) {
         state.diagnosticTargetAccessStatus = "TARGET_WINDOW_BLOCKED";
         state.diagnosticTargetAccessError = `TARGET_WINDOW_BLOCKED:${bounded(error && error.message ? error.message : error, 700)}`;
@@ -466,38 +671,34 @@
     }
 
     if (opts.frameElement) {
-      try {
-        const frame = opts.frameElement;
-        const targetWindow = frame.contentWindow || null;
-        const targetDocument = targetWindow ? targetWindow.document : null;
+      const fromOptionFrame = readFrame(opts.frameElement, state);
 
-        if (targetDocument && targetDocument.documentElement) {
-          state.diagnosticTargetAccessStatus = "SOURCE_TARGET_FRAME_SUPPLIED";
-          return { targetDocument, targetWindow, source: "options.frameElement" };
-        }
-
-        state.diagnosticTargetAccessStatus = "TARGET_FRAME_BLOCKED";
-        state.diagnosticTargetAccessError = "TARGET_FRAME_DOCUMENT_INACCESSIBLE";
-        addNote(state, "EAST_TARGET_FRAME_DOCUMENT_INACCESSIBLE");
-      } catch (error) {
-        state.diagnosticTargetAccessStatus = "TARGET_FRAME_BLOCKED";
-        state.diagnosticTargetAccessError = `TARGET_FRAME_BLOCKED:${bounded(error && error.message ? error.message : error, 700)}`;
-        addNote(state, state.diagnosticTargetAccessError);
+      if (fromOptionFrame && !isDiagnosticReceiverDocument(fromOptionFrame.targetDocument, fromOptionFrame.targetWindow)) {
+        state.diagnosticTargetAccessStatus = "SOURCE_TARGET_FRAME_SUPPLIED";
+        return fromOptionFrame;
       }
     }
 
-    if (doc && doc.documentElement && (routeMatches(root) || hasHearthSignals(doc))) {
-      state.diagnosticTargetAccessStatus = "SOURCE_CURRENT_DOCUMENT";
-      return { targetDocument: doc, targetWindow: root, source: "currentDocument" };
+    const diagnosticFrame = findDiagnosticTargetFrame(doc);
+    const fromDiscoveredFrame = readFrame(diagnosticFrame, state);
+
+    if (fromDiscoveredFrame && !isDiagnosticReceiverDocument(fromDiscoveredFrame.targetDocument, fromDiscoveredFrame.targetWindow)) {
+      state.diagnosticTargetAccessStatus = "SOURCE_DISCOVERED_DIAGNOSTIC_TARGET_FRAME";
+      return fromDiscoveredFrame;
     }
 
-    state.diagnosticTargetAccessStatus = "SOURCE_ONLY_NO_RENDERED_DOCUMENT";
-    state.diagnosticTargetAccessError = "NO_TARGET_DOCUMENT_AVAILABLE_TO_EAST";
-    addNote(state, "EAST_SOURCE_ONLY_BASELINE_NO_TARGET_DOCUMENT_AVAILABLE");
+    if (doc && doc.documentElement && !isDiagnosticReceiverDocument(doc, root) && (routeMatches(root) || hasHearthSignals(doc, root))) {
+      state.diagnosticTargetAccessStatus = "SOURCE_CURRENT_HEARTH_DOCUMENT";
+      return { targetDocument: doc, targetWindow: root, source: "currentHearthDocument" };
+    }
+
+    state.diagnosticTargetAccessStatus = "SOURCE_ONLY_NO_HEARTH_TARGET_DOCUMENT";
+    state.diagnosticTargetAccessError = "NO_HEARTH_TARGET_DOCUMENT_AVAILABLE_TO_EAST";
+    addNote(state, "EAST_SOURCE_ONLY_BASELINE_NO_HEARTH_TARGET_DOCUMENT_AVAILABLE");
     return { targetDocument: null, targetWindow: null, source: "none" };
   }
 
-  function readHtmlEvidence(targetDocument, state) {
+  function readHtmlEvidence(targetDocument, targetWindow, state) {
     if (!targetDocument || !targetDocument.documentElement) {
       state.expectedHtmlContract = CURRENT_HTML_CONTRACT;
       state.servedHtmlContract = FALLBACK.UNKNOWN;
@@ -520,7 +721,14 @@
     state.expectedHtmlContract = CURRENT_HTML_CONTRACT;
     state.currentExpectedHtmlContract = CURRENT_HTML_CONTRACT;
     state.servedHtmlContract = served;
-    state.htmlContractRecognized = contractRecognized(served, ACCEPTED_HTML_CONTRACTS);
+
+    if (served === DIAGNOSTIC_RECEIVER_CONTRACT || isDiagnosticReceiverDocument(targetDocument, targetWindow)) {
+      state.htmlContractRecognized = FALLBACK.UNKNOWN;
+      state.servedHtmlContract = FALLBACK.UNKNOWN;
+      addNote(state, "DIAGNOSTIC_RECEIVER_HTML_CONTRACT_IGNORED_AS_NON_TARGET_SOURCE");
+    } else {
+      state.htmlContractRecognized = contractRecognized(served, ACCEPTED_HTML_CONTRACTS);
+    }
 
     if (state.htmlContractRecognized === "true") {
       addNote(state, "HTML_CONTRACT_RECOGNIZED_CURRENT_OR_ACCEPTED_LINEAGE");
@@ -542,20 +750,23 @@
     ), FALLBACK.UNKNOWN);
   }
 
-  function readIndexEvidence(targetDocument, state) {
+  function readIndexEvidence(targetDocument, targetWindow, state) {
     const target = targetDocument || doc;
-    const indexAuthority = findIndexAuthority();
-    const script = target ? findScriptByPath(target, EXPECTED_INDEX_SRC) : null;
-    const src = script ? normalizeSrc(script.getAttribute("src")) : FALLBACK.NOT_FOUND;
-    const cacheKey = script ? readCacheKeyFromSrc(script.getAttribute("src")) : "";
+    const indexAuthority = findIndexAuthority(targetWindow);
+    const script = target
+      ? findScriptByPaths(target, [INDEX_JS_FILE, "index.js"], targetWindow)
+      : null;
+
+    const src = script ? normalizeSrc(script.getAttribute("src"), targetWindow) : FALLBACK.NOT_FOUND;
+    const cacheKey = script ? readCacheKeyFromSrc(script.getAttribute("src"), targetWindow) : "";
 
     const dataset = target ? readDataset(target) : {};
     const authorityContract = indexAuthority.contract || "";
     const scriptContract = safeString(firstDefined(
-      cacheKey,
+      script && script.dataset ? script.dataset.hearthIndexJsContract : "",
       script && script.dataset ? script.dataset.jsSelectorCacheKey : "",
       script && script.dataset ? script.dataset.hearthDiagnosticExpectedContract : "",
-      script && script.dataset ? script.dataset.hearthIndexJsContract : "",
+      cacheKey,
       dataset.hearthIndexJsContract,
       dataset.expectedIndexJsContract,
       dataset.selectorCacheBust
@@ -583,27 +794,30 @@
     }
 
     if (!script && !authorityContract) {
-      addNote(state, "INDEX_SCRIPT_OR_AUTHORITY_NOT_FOUND_BY_EAST_BASELINE");
+      addNote(state, "INDEX_SCRIPT_OR_AUTHORITY_NOT_FOUND_IN_HEARTH_TARGET");
     }
   }
 
-  function readRouteConductorEvidence(targetDocument, state) {
+  function readRouteConductorEvidence(targetDocument, targetWindow, state) {
     const target = targetDocument || doc;
-    const conductor = findRouteConductorAuthority();
-    const script = target ? findScriptByPath(target, EXPECTED_ROUTE_CONDUCTOR_SRC) : null;
-    const src = script ? normalizeSrc(script.getAttribute("src")) : FALLBACK.NOT_FOUND;
-    const cacheKey = script ? readCacheKeyFromSrc(script.getAttribute("src")) : "";
+    const conductor = findRouteConductorAuthority(targetWindow);
+    const script = target
+      ? findScriptByPaths(target, [HEARTH_JS_CONTROL_FUNNEL_FILE, "hearth.js"], targetWindow)
+      : null;
+
+    const src = script ? normalizeSrc(script.getAttribute("src"), targetWindow) : FALLBACK.NOT_FOUND;
+    const cacheKey = script ? readCacheKeyFromSrc(script.getAttribute("src"), targetWindow) : "";
 
     const dataset = target ? readDataset(target) : {};
     const authorityContract = conductor.contract || "";
     const scriptContract = safeString(firstDefined(
-      cacheKey,
       script && script.dataset ? script.dataset.routeConductorCurrentContract : "",
+      script && script.dataset ? script.dataset.hearthRouteConductorContract : "",
       script && script.dataset ? script.dataset.hearthDiagnosticExpectedContract : "",
+      cacheKey,
       dataset.hearthRouteConductorContract,
       dataset.routeConductorCurrentContract,
       dataset.expectedRouteConductorContract,
-      dataset.routeConductorCurrentContract,
       dataset.routeConductorCurrent
     ), "");
 
@@ -639,10 +853,6 @@
     state.routeConductorV94LineageAccepted = boolText(v94 || v95 || v96);
 
     if (v96) {
-      addNote("unused");
-    }
-
-    if (v96) {
       addNote(state, "PRIMARY_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED");
       addNote(state, "CURRENT_EXPECTED_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED");
       addNote(state, "ROUTE_CONDUCTOR_V9_6_PRIMARY_NOT_TREATED_AS_CASE_5");
@@ -661,7 +871,146 @@
     }
 
     if (!script && !authorityContract) {
-      addNote(state, "ROUTE_CONDUCTOR_SCRIPT_OR_AUTHORITY_NOT_FOUND_BY_EAST_BASELINE");
+      addNote(state, "ROUTE_CONDUCTOR_SCRIPT_OR_AUTHORITY_NOT_FOUND_IN_HEARTH_TARGET");
+    }
+  }
+
+  function readCanvasAndFingerFootprint(targetDocument, targetWindow, state) {
+    const target = targetDocument || doc;
+    const canvasAuthority = findCanvasAuthority(targetWindow);
+    const canvasScript = target ? findScriptByPaths(target, [CANVAS_FILE, "hearth.canvas.js"], targetWindow) : null;
+    const canvasReceipt = canvasAuthority.receipt || {};
+    const dataset = target ? readDataset(target) : {};
+
+    state.canvasFile = CANVAS_FILE;
+    state.canvasScriptPresent = boolText(Boolean(canvasScript));
+    state.canvasAuthoritySource = canvasAuthority.path;
+    state.canvasContract = safeString(firstDefined(
+      canvasAuthority.contract,
+      canvasReceipt.contract,
+      canvasReceipt.CONTRACT,
+      dataset.hearthCanvasContract
+    ), FALLBACK.UNKNOWN);
+
+    state.canvasAuthorityStatus = canvasAuthority.authority || canvasAuthority.contract || canvasScript
+      ? "CANVAS_SOURCE_FOOTPRINT_OBSERVED"
+      : FALLBACK.UNKNOWN;
+
+    state.visiblePlanetSourceStatus = (
+      canvasReceipt.visiblePlanetProofReady === true ||
+      canvasReceipt.baseGlobeVisibleCarrierReady === true ||
+      dataset.hearthCanvasVisiblePlanetProofReady === "true" ||
+      dataset.hearthSouthVisiblePlanetProofReady === "true"
+    )
+      ? "VISIBLE_PLANET_SOURCE_PROOF_OBSERVED"
+      : "VISIBLE_PLANET_SOURCE_PROOF_NOT_REQUIRED_BY_EAST";
+
+    const fingerStatuses = {};
+    Object.keys(FINGER_FILES).forEach((key) => {
+      const file = FINGER_FILES[key];
+      const script = target ? findScriptByPaths(target, [file, file.split("/").pop()], targetWindow) : null;
+      fingerStatuses[key] = {
+        file,
+        scriptPresent: Boolean(script),
+        status: script ? "SCRIPT_PRESENT" : "EXPECTED_OR_EMBEDDED_NOT_CONFIRMED_BY_EAST"
+      };
+    });
+
+    state.fingerFileFootprint = fingerStatuses;
+    state.planetaryFileFootprintActive = true;
+  }
+
+  function controlAuthorityHasMotion(authority, receipt) {
+    if (!authority && !receipt) return false;
+
+    return Boolean(
+      isFunction(authority && authority.attach) ||
+      isFunction(authority && authority.mount) ||
+      isFunction(authority && authority.start) ||
+      isFunction(authority && authority.boot) ||
+      isFunction(authority && authority.enableMotionTouch) ||
+      isFunction(authority && authority.bindMotionTouch) ||
+      isFunction(authority && authority.bindDrag) ||
+      (receipt && (
+        receipt.motionTouchReady === true ||
+        receipt.dragReady === true ||
+        receipt.viewControlReady === true ||
+        receipt.controlsReady === true
+      ))
+    );
+  }
+
+  function readControlFootprint(targetDocument, targetWindow, state) {
+    const target = targetDocument || doc;
+    const controls = findControlsAuthority(targetWindow);
+    const receipt = controls.receipt || {};
+    const script = target ? findScriptByPaths(target, [CONTROL_FILE, "hearth.controls.js"], targetWindow) : null;
+    const src = script ? normalizeSrc(script.getAttribute("src"), targetWindow) : FALLBACK.NOT_FOUND;
+    const dataset = target ? readDataset(target) : {};
+
+    const controlContract = safeString(firstDefined(
+      controls.contract,
+      receipt.contract,
+      receipt.CONTRACT,
+      dataset.hearthControlsContract,
+      dataset.hearthControlContract
+    ), "");
+
+    const controlsPresent = Boolean(script || controls.authority || controlContract);
+    const motionReady = controlAuthorityHasMotion(controls.authority, receipt);
+
+    state.planetaryControlSchemaActive = true;
+    state.planetaryControlFootprintActive = true;
+
+    state.controlFile = CONTROL_FILE;
+    state.controlFileExpected = true;
+    state.controlScriptSrc = src;
+    state.controlScriptPresent = boolText(Boolean(script));
+    state.controlAuthoritySource = controls.path;
+    state.controlContract = controlContract || FALLBACK.UNKNOWN;
+
+    state.controlFileStatus = controlsPresent
+      ? motionReady
+        ? "CONTROL_FILE_LOADED_AND_MOTION_TOUCH_READY"
+        : "CONTROL_FILE_PRESENT_HANDSHAKE_PENDING"
+      : FALLBACK.EXPECTED_NOT_YET_BUILT;
+
+    state.controlAbsenceIsFailure = "false";
+    state.controlAbsenceIsCase5 = "false";
+    state.controlAbsenceBlocksVisiblePlanet = "false";
+    state.controlAbsenceBlocksMotionTouch = controlsPresent && motionReady ? "false" : "true";
+
+    state.hearthJsControlFunnelFile = HEARTH_JS_CONTROL_FUNNEL_FILE;
+    state.hearthJsControlFunnelStatus = state.routeConductorContractRecognized === "true"
+      ? "ROUTE_CONDUCTOR_FUNNEL_RECOGNIZED"
+      : state.servedRouteConductorContract !== FALLBACK.UNKNOWN
+        ? "ROUTE_CONDUCTOR_FUNNEL_PRESENT_BUT_CONTRACT_NOT_RECOGNIZED"
+        : FALLBACK.EXPECTED_NOT_YET_WIRED;
+
+    state.hearthJsControlHandshakeStatus = controlsPresent
+      ? motionReady
+        ? "CONTROL_HANDSHAKE_READY"
+        : "CONTROL_FILE_PRESENT_WAITING_ROUTE_HANDSHAKE"
+      : FALLBACK.EXPECTED_NOT_YET_WIRED;
+
+    state.indexJsControlDisposition = "INDEX_OWNS_BUTTON_AUTHORITY_ONLY";
+    state.indexJsControlLoadSlotStatus = "INDEX_DOES_NOT_OWN_PLANETARY_MOTION_TOUCH";
+
+    state.motionTouchStatus = controlsPresent && motionReady ? FALLBACK.READY : FALLBACK.WAITING_CONTROL_FILE;
+    state.dragStatus = controlsPresent && motionReady ? FALLBACK.READY : FALLBACK.WAITING_CONTROL_FILE;
+    state.viewControlStatus = controlsPresent && motionReady ? FALLBACK.READY : FALLBACK.WAITING_CONTROL_FILE;
+
+    state.visiblePlanetBlockedByControlAbsence = "false";
+    state.motionTouchBlockedByControlAbsence = state.controlAbsenceBlocksMotionTouch;
+
+    if (!controlsPresent) {
+      addNote(state, "EAST_CONTROL_FILE_EXPECTED_NOT_YET_BUILT");
+      addNote(state, "EAST_CONTROL_ABSENCE_NOT_TREATED_AS_CASE_5");
+      addNote(state, "EAST_CONTROL_ABSENCE_BLOCKS_MOTION_TOUCH_NOT_VISIBLE_PLANET");
+    } else if (motionReady) {
+      addNote(state, "EAST_CONTROL_FILE_PRESENT_AND_MOTION_TOUCH_READY");
+    } else {
+      addNote(state, "EAST_CONTROL_FILE_PRESENT_HANDSHAKE_PENDING");
     }
   }
 
@@ -704,6 +1053,7 @@
       implementationContract: IMPLEMENTATION_CONTRACT,
       implementationReceipt: IMPLEMENTATION_RECEIPT,
       previousImplementationContract: PREVIOUS_IMPLEMENTATION_CONTRACT,
+      lineageImplementationContract: LINEAGE_IMPLEMENTATION_CONTRACT,
       baselineImplementationContract: BASELINE_IMPLEMENTATION_CONTRACT,
       version: VERSION,
       file: FILE,
@@ -715,6 +1065,7 @@
 
       diagnosticTargetAccessStatus: FALLBACK.UNKNOWN,
       diagnosticTargetAccessError: "",
+      targetDocumentSource: FALLBACK.UNKNOWN,
 
       expectedHtmlContract: CURRENT_HTML_CONTRACT,
       expectedIndexJsContract: CURRENT_INDEX_JS_CONTRACT,
@@ -752,6 +1103,42 @@
       cacheOrServedContractMismatch: FALLBACK.UNKNOWN,
       case5Support: FALLBACK.INSUFFICIENT_EVIDENCE,
 
+      planetaryControlSchemaActive: true,
+      planetaryControlFootprintActive: true,
+      controlFile: CONTROL_FILE,
+      controlFileExpected: true,
+      controlFileStatus: FALLBACK.EXPECTED_NOT_YET_BUILT,
+      controlScriptSrc: FALLBACK.NOT_FOUND,
+      controlScriptPresent: "false",
+      controlAuthoritySource: "NONE",
+      controlContract: FALLBACK.UNKNOWN,
+      controlAbsenceIsFailure: "false",
+      controlAbsenceIsCase5: "false",
+      controlAbsenceBlocksVisiblePlanet: "false",
+      controlAbsenceBlocksMotionTouch: "true",
+
+      hearthJsControlFunnelFile: HEARTH_JS_CONTROL_FUNNEL_FILE,
+      hearthJsControlFunnelStatus: FALLBACK.EXPECTED_NOT_YET_WIRED,
+      hearthJsControlHandshakeStatus: FALLBACK.EXPECTED_NOT_YET_WIRED,
+      indexJsControlDisposition: "INDEX_OWNS_BUTTON_AUTHORITY_ONLY",
+      indexJsControlLoadSlotStatus: "INDEX_DOES_NOT_OWN_PLANETARY_MOTION_TOUCH",
+
+      motionTouchStatus: FALLBACK.WAITING_CONTROL_FILE,
+      dragStatus: FALLBACK.WAITING_CONTROL_FILE,
+      viewControlStatus: FALLBACK.WAITING_CONTROL_FILE,
+      visiblePlanetBlockedByControlAbsence: "false",
+      motionTouchBlockedByControlAbsence: "true",
+
+      canvasFile: CANVAS_FILE,
+      canvasScriptPresent: FALLBACK.UNKNOWN,
+      canvasAuthoritySource: FALLBACK.UNKNOWN,
+      canvasContract: FALLBACK.UNKNOWN,
+      canvasAuthorityStatus: FALLBACK.UNKNOWN,
+      visiblePlanetSourceStatus: FALLBACK.UNKNOWN,
+
+      planetaryFileFootprintActive: true,
+      fingerFileFootprint: {},
+
       eastSecondaryEvidenceNotes: [],
 
       readOnlyInspectionComplete: false,
@@ -778,6 +1165,7 @@
       EAST_IMPLEMENTATION_CONTRACT: IMPLEMENTATION_CONTRACT,
       EAST_IMPLEMENTATION_RECEIPT: IMPLEMENTATION_RECEIPT,
       EAST_PREVIOUS_IMPLEMENTATION_CONTRACT: PREVIOUS_IMPLEMENTATION_CONTRACT,
+      EAST_LINEAGE_IMPLEMENTATION_CONTRACT: LINEAGE_IMPLEMENTATION_CONTRACT,
       EAST_BASELINE_IMPLEMENTATION_CONTRACT: BASELINE_IMPLEMENTATION_CONTRACT,
       EAST_VERSION: VERSION,
 
@@ -786,6 +1174,7 @@
 
       DIAGNOSTIC_TARGET_ACCESS_STATUS: state.diagnosticTargetAccessStatus,
       DIAGNOSTIC_TARGET_ACCESS_ERROR: state.diagnosticTargetAccessError,
+      TARGET_DOCUMENT_SOURCE: state.targetDocumentSource,
 
       EXPECTED_HTML_CONTRACT: state.expectedHtmlContract,
       EXPECTED_INDEX_JS_CONTRACT: state.expectedIndexJsContract,
@@ -822,6 +1211,42 @@
       CACHE_OR_SERVED_CONTRACT_MISMATCH: state.cacheOrServedContractMismatch,
       CASE_5_SUPPORT: state.case5Support,
 
+      PLANETARY_CONTROL_SCHEMA_ACTIVE: state.planetaryControlSchemaActive,
+      PLANETARY_CONTROL_FOOTPRINT_ACTIVE: state.planetaryControlFootprintActive,
+      CONTROL_FILE: state.controlFile,
+      CONTROL_FILE_EXPECTED: state.controlFileExpected,
+      CONTROL_FILE_STATUS: state.controlFileStatus,
+      CONTROL_SCRIPT_SRC: state.controlScriptSrc,
+      CONTROL_SCRIPT_PRESENT: state.controlScriptPresent,
+      CONTROL_AUTHORITY_SOURCE: state.controlAuthoritySource,
+      CONTROL_CONTRACT: state.controlContract,
+      CONTROL_ABSENCE_IS_FAILURE: state.controlAbsenceIsFailure,
+      CONTROL_ABSENCE_IS_CASE_5: state.controlAbsenceIsCase5,
+      CONTROL_ABSENCE_BLOCKS_VISIBLE_PLANET: state.controlAbsenceBlocksVisiblePlanet,
+      CONTROL_ABSENCE_BLOCKS_MOTION_TOUCH: state.controlAbsenceBlocksMotionTouch,
+
+      HEARTH_JS_CONTROL_FUNNEL_FILE: state.hearthJsControlFunnelFile,
+      HEARTH_JS_CONTROL_FUNNEL_STATUS: state.hearthJsControlFunnelStatus,
+      HEARTH_JS_CONTROL_HANDSHAKE_STATUS: state.hearthJsControlHandshakeStatus,
+      INDEX_JS_CONTROL_DISPOSITION: state.indexJsControlDisposition,
+      INDEX_JS_CONTROL_LOAD_SLOT_STATUS: state.indexJsControlLoadSlotStatus,
+
+      MOTION_TOUCH_STATUS: state.motionTouchStatus,
+      DRAG_STATUS: state.dragStatus,
+      VIEW_CONTROL_STATUS: state.viewControlStatus,
+      VISIBLE_PLANET_BLOCKED_BY_CONTROL_ABSENCE: state.visiblePlanetBlockedByControlAbsence,
+      MOTION_TOUCH_BLOCKED_BY_CONTROL_ABSENCE: state.motionTouchBlockedByControlAbsence,
+
+      CANVAS_FILE: state.canvasFile,
+      CANVAS_SCRIPT_PRESENT: state.canvasScriptPresent,
+      CANVAS_AUTHORITY_SOURCE: state.canvasAuthoritySource,
+      CANVAS_CONTRACT: state.canvasContract,
+      CANVAS_AUTHORITY_STATUS: state.canvasAuthorityStatus,
+      VISIBLE_PLANET_SOURCE_STATUS: state.visiblePlanetSourceStatus,
+
+      PLANETARY_FILE_FOOTPRINT_ACTIVE: state.planetaryFileFootprintActive,
+      FINGER_FILE_FOOTPRINT: clonePlain(state.fingerFileFootprint),
+
       EAST_SECONDARY_EVIDENCE_NOTES: state.eastSecondaryEvidenceNotes.length
         ? state.eastSecondaryEvidenceNotes.join(" | ")
         : FALLBACK.NONE,
@@ -848,24 +1273,36 @@
       const targetDocument = target.targetDocument;
       const targetWindow = target.targetWindow || (targetDocument ? targetDocument.defaultView : null);
 
-      if (targetDocument && !hasHearthSignals(targetDocument) && !routeMatches(targetWindow)) {
+      state.targetDocumentSource = target.source || FALLBACK.UNKNOWN;
+
+      if (targetDocument && !hasHearthSignals(targetDocument, targetWindow) && !routeMatches(targetWindow)) {
         addNote(state, "TARGET_DOCUMENT_ACCESSIBLE_BUT_HEARTH_SIGNALS_NOT_CONFIRMED");
       }
 
-      readHtmlEvidence(targetDocument, state);
-      readIndexEvidence(targetDocument, state);
-      readRouteConductorEvidence(targetDocument, state);
+      readHtmlEvidence(targetDocument, targetWindow, state);
+      readIndexEvidence(targetDocument, targetWindow, state);
+      readRouteConductorEvidence(targetDocument, targetWindow, state);
+      readControlFootprint(targetDocument, targetWindow, state);
+      readCanvasAndFingerFootprint(targetDocument, targetWindow, state);
       deriveMismatch(state);
 
       state.eastCurrentSpreadAlignmentRecognized = boolText(
         state.htmlContractRecognized === "true" &&
-        state.indexContractRecognized === "true" &&
-        state.routeConductorContractRecognized === "true"
+        (
+          state.indexContractRecognized === "true" ||
+          state.servedIndexJsContract === FALLBACK.UNKNOWN
+        ) &&
+        (
+          state.routeConductorContractRecognized === "true" ||
+          state.primaryRouteConductorContractRecognized === "true"
+        )
       );
 
       if (state.eastCurrentSpreadAlignmentRecognized === "true") {
         addNote(state, "EAST_CURRENT_SPREAD_ALIGNMENT_RECOGNIZED");
       }
+
+      addNote(state, "EAST_PLANETARY_CONTROL_FOOTPRINT_SOURCE_READ_COMPLETE");
 
       state.eastSourceReadComplete = "true";
       state.eastSourceReadStatus = FALLBACK.COMPLETE;
@@ -919,6 +1356,7 @@
       implementationContract: IMPLEMENTATION_CONTRACT,
       implementationReceipt: IMPLEMENTATION_RECEIPT,
       previousImplementationContract: PREVIOUS_IMPLEMENTATION_CONTRACT,
+      lineageImplementationContract: LINEAGE_IMPLEMENTATION_CONTRACT,
       baselineImplementationContract: BASELINE_IMPLEMENTATION_CONTRACT,
       version: VERSION,
       file: FILE,
@@ -946,18 +1384,29 @@
       getEastReceiptApiAvailable: true,
       getEastStateApiAvailable: true,
 
-      missingConstructBaselineFileCreated: true,
       currentSpreadCompatibilityOwned: true,
       servedSourceEvidenceOnlyOwned: true,
       contractRecognitionOwned: true,
       cacheMismatchEvidenceOwned: true,
       falseCase5PreventionOwned: true,
+      targetWindowScopedReadOwned: true,
+      diagnosticReceiverHtmlIgnoredAsTargetOwned: true,
+      planetaryControlFootprintReadOwned: true,
+      missingControlsExpectedNotYetBuiltOwned: true,
+      controlAbsenceNotCase5Owned: true,
+      motionTouchAbsenceFootprintOwned: true,
 
       currentHtmlContract: CURRENT_HTML_CONTRACT,
       currentIndexJsContract: CURRENT_INDEX_JS_CONTRACT,
       currentRouteConductorContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
       compatRouteConductorContract: COMPAT_ROUTE_CONDUCTOR_CONTRACT,
       lineageRouteConductorContract: LINEAGE_ROUTE_CONDUCTOR_CONTRACT,
+
+      controlFile: CONTROL_FILE,
+      hearthJsControlFunnelFile: HEARTH_JS_CONTROL_FUNNEL_FILE,
+      indexJsFile: INDEX_JS_FILE,
+      canvasFile: CANVAS_FILE,
+
       acceptedHtmlContracts: ACCEPTED_HTML_CONTRACTS.slice(),
       acceptedIndexJsContracts: ACCEPTED_INDEX_JS_CONTRACTS.slice(),
       acceptedRouteConductorContracts: ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS.slice(),
@@ -973,6 +1422,11 @@
       lastServedRouteConductorContract: lastEvidencePacket
         ? lastEvidencePacket.SERVED_ROUTE_CONDUCTOR_CONTRACT
         : FALLBACK.UNKNOWN,
+      lastControlFileStatus: lastEvidencePacket ? lastEvidencePacket.CONTROL_FILE_STATUS : FALLBACK.EXPECTED_NOT_YET_BUILT,
+      lastMotionTouchStatus: lastEvidencePacket ? lastEvidencePacket.MOTION_TOUCH_STATUS : FALLBACK.WAITING_CONTROL_FILE,
+      lastHearthJsControlHandshakeStatus: lastEvidencePacket
+        ? lastEvidencePacket.HEARTH_JS_CONTROL_HANDSHAKE_STATUS
+        : FALLBACK.EXPECTED_NOT_YET_WIRED,
 
       ...FINAL_FALSE,
 
@@ -1010,6 +1464,7 @@
     implementationContract: IMPLEMENTATION_CONTRACT,
     implementationReceipt: IMPLEMENTATION_RECEIPT,
     previousImplementationContract: PREVIOUS_IMPLEMENTATION_CONTRACT,
+    lineageImplementationContract: LINEAGE_IMPLEMENTATION_CONTRACT,
     baselineImplementationContract: BASELINE_IMPLEMENTATION_CONTRACT,
     version: VERSION,
     file: FILE,
@@ -1021,6 +1476,12 @@
     currentRouteConductorContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
     compatRouteConductorContract: COMPAT_ROUTE_CONDUCTOR_CONTRACT,
     lineageRouteConductorContract: LINEAGE_ROUTE_CONDUCTOR_CONTRACT,
+
+    controlFile: CONTROL_FILE,
+    hearthJsControlFunnelFile: HEARTH_JS_CONTROL_FUNNEL_FILE,
+    indexJsFile: INDEX_JS_FILE,
+    canvasFile: CANVAS_FILE,
+    fingerFiles: clonePlain(FINGER_FILES),
 
     acceptedHtmlContracts: ACCEPTED_HTML_CONTRACTS.slice(),
     acceptedIndexJsContracts: ACCEPTED_INDEX_JS_CONTRACTS.slice(),
@@ -1037,9 +1498,16 @@
     supportsRouteConductorV94Lineage: true,
     supportsFalseCase5Prevention: true,
     supportsNorthOnlyAdjudication: true,
+    supportsTargetWindowScopedRead: true,
+    supportsDiagnosticReceiverHtmlNonTargetGuard: true,
+    supportsPlanetaryControlFootprint: true,
+    supportsExpectedMissingControlFile: true,
+    supportsMotionTouchFootprint: true,
+    supportsPlanetaryFileFootprint: true,
 
     ownsServedSourceEvidence: true,
     ownsCase5EvidenceSupportOnly: true,
+    ownsPlanetaryControlFootprintEvidence: true,
     ownsRenderedTargetEvidence: false,
     ownsFinalPrimaryCase: false,
     ownsRecommendation: false,

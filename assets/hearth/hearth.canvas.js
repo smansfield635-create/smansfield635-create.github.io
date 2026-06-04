@@ -1,17 +1,17 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_TNT_v12_1
+// HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_TNT_v12_2
 // Full-file replacement.
-// Canvas Hub / visible-expression receiver / planetary view-control receiver only.
+// Canvas Hub / visible-expression receiver / fast planetary view-control receiver only.
 // Purpose:
-// - Preserve the v12 Canvas Hub visible-expression stack.
+// - Preserve the v12_1 Canvas Hub planetary view-control receiver.
 // - Preserve downstream Composite, Hex Four-Pair Authority, Hex Surface Renderer, and finger-file awareness.
 // - Recognize Route Conductor v9_7 as current.
 // - Preserve v9_6, v9_5, and v9_4 route-conductor lineage/compatibility.
-// - Add public Canvas receiver methods for controls.js planetary view-control packets.
-// - Apply yaw, pitch, zoom, and phase view state to the visible canvas.
-// - Redraw through existing public expression renderers when available.
-// - Provide immediate CSS-level visible motion even when downstream renderers ignore view state.
-// - Publish diagnostic-readable control packet intake, view state, canvas proof, and no-claim receipt.
+// - Accept controls.js planetary view-control packets.
+// - Apply yaw, pitch, zoom, and phase immediately through CSS transform.
+// - Defer expensive renderer redraw, support scans, receipt rebuilds, and route-conductor notification until after input quiets.
+// - Prevent every drag/touch packet from forcing full canvas redraw.
+// - Publish diagnostic-readable fast-transform and deferred-render receipts.
 // Preserve:
 // - no terrain truth ownership
 // - no hydrology truth ownership
@@ -33,14 +33,14 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_TNT_v12_1";
-  const RECEIPT = "HEARTH_CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_RECEIPT_v12_1";
+  const CONTRACT = "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_TNT_v12_2";
+  const RECEIPT = "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_RECEIPT_v12_2";
 
-  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_TNT_v12";
-  const PREVIOUS_RECEIPT = "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_RECEIPT_v12";
+  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_TNT_v12_1";
+  const PREVIOUS_RECEIPT = "HEARTH_CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_RECEIPT_v12_1";
 
-  const BASELINE_CONTRACT = "HEARTH_CANVAS_EXPRESSION_HUB_VISIBLE_BASE_GLOBE_CARRIER_TNT_v11_7";
-  const BASELINE_RECEIPT = "HEARTH_CANVAS_EXPRESSION_HUB_VISIBLE_BASE_GLOBE_CARRIER_RECEIPT_v11_7";
+  const BASELINE_CONTRACT = "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_TNT_v12";
+  const BASELINE_RECEIPT = "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_RECEIPT_v12";
 
   const CURRENT_ROUTE_CONDUCTOR_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION_TNT_v9_7";
   const CURRENT_ROUTE_CONDUCTOR_RECEIPT = "HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION_RECEIPT_v9_7";
@@ -67,6 +67,10 @@
   const COMPOSITE_FILE = "/assets/hearth/hearth.canvas.finger.composite.js";
   const HEX_FOUR_PAIR_FILE = "/assets/hearth/hearth.hex.four-pair.authority.js";
   const HEX_SURFACE_FILE = "/assets/hearth/hearth.hex.surface.js";
+
+  const FAST_TRANSFORM_DELAY_MS = 0;
+  const DEFERRED_RENDER_DELAY_MS = 220;
+  const DEFERRED_RENDER_MAX_WAIT_MS = 900;
 
   const FINGER_FILES = Object.freeze({
     boundary: "/assets/hearth/hearth.canvas.finger.boundary.js",
@@ -163,19 +167,21 @@
     timestamp: "",
     updatedAt: "",
     publishedAt: "",
+
     contract: CONTRACT,
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
     baselineContract: BASELINE_CONTRACT,
     baselineReceipt: BASELINE_RECEIPT,
+
     file: FILE,
     route: ROUTE,
     diagnosticRoute: DIAGNOSTIC_ROUTE,
     indexFile: INDEX_FILE,
     routeFile: ROUTE_FILE,
     controlFile: CONTROL_FILE,
-    role: "Canvas Hub / Planetary View Control Receiver",
+    role: "Canvas Hub / Fast View Transform / Deferred Render Receiver",
 
     canvasHubLoaded: true,
     canvasHubActive: true,
@@ -186,8 +192,12 @@
     canvasFingerManagerActive: true,
     fingerRegistryActive: true,
     threeFileStretchActive: true,
+
     planetaryViewControlReceiverActive: true,
     viewControlPacketReceiverReady: true,
+    fastViewTransformActive: true,
+    deferredRendererActive: true,
+    expensiveRedrawDetachedFromInputPacket: true,
 
     currentRouteConductorRequiredContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
     currentRouteConductorRequiredReceipt: CURRENT_ROUTE_CONDUCTOR_RECEIPT,
@@ -204,6 +214,7 @@
     globeStageFound: false,
     globeStageSelector: "NONE",
     globeStageRectNonzero: false,
+
     canvasMountAttempted: false,
     canvasMountFound: false,
     canvasMountSelector: "NONE",
@@ -290,16 +301,30 @@
     controlPacketLastSource: "NONE",
     lastControlPacket: null,
     lastViewPacket: null,
+
+    fastTransformAttemptCount: 0,
+    fastTransformAppliedCount: 0,
+    fastTransformLastAppliedAt: "",
+    fastTransformLastReason: "NOT_RUN",
     viewTransformApplied: false,
     viewTransformCss: "",
+
+    deferredRenderScheduled: false,
+    deferredRenderReason: "NONE",
+    deferredRenderStartedAt: "",
+    deferredRenderLastRunAt: "",
+    deferredRenderRunCount: 0,
+    deferredRenderSkippedDuringInputCount: 0,
+    deferredRenderLastResult: "NOT_RUN",
+
     viewRedrawScheduled: false,
     viewRedrawCount: 0,
-    viewMotionStatus: "VIEW_CONTROL_RECEIVER_READY",
+    viewMotionStatus: "FAST_VIEW_TRANSFORM_RECEIVER_READY",
     touchRuntimeStatus: "WAITING_CONTROL_PACKET",
     dragRuntimeStatus: "WAITING_CONTROL_PACKET",
     zoomRuntimeStatus: "WAITING_CONTROL_PACKET",
     keyboardRuntimeStatus: "WAITING_CONTROL_PACKET",
-    planetaryViewInputStatus: "CANVAS_VIEW_RECEIVER_READY",
+    planetaryViewInputStatus: "CANVAS_FAST_VIEW_RECEIVER_READY",
 
     f13CanvasReadinessObserved: false,
     f13VisibleEvidenceAvailable: false,
@@ -314,7 +339,7 @@
     recommendedNextFile: FILE,
     recommendedNextAction: "RUN_CANVAS_HUB",
     recommendedNextRenewalTarget: FILE,
-    postgameStatus: "CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_NOT_STARTED",
+    postgameStatus: "CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_NOT_STARTED",
 
     routeConductorReleasePacket: null,
     routeConductorReleasePacketObserved: false,
@@ -328,7 +353,9 @@
     ...FINAL_FALSE
   };
 
-  let redrawTimer = 0;
+  let deferredRenderTimer = 0;
+  let deferredRenderMaxTimer = 0;
+  let transformTimer = 0;
   let supportLoadPromise = null;
 
   function nowIso() {
@@ -382,7 +409,12 @@
   }
 
   function record(event, detail = {}) {
-    const item = { at: nowIso(), event: safeString(event, "CANVAS_HUB_EVENT"), detail: clonePlain(detail) };
+    const item = {
+      at: nowIso(),
+      event: safeString(event, "CANVAS_HUB_EVENT"),
+      detail: clonePlain(detail)
+    };
+
     state.localEvents.push(item);
     trimArray(state.localEvents, 220);
     state.updatedAt = item.at;
@@ -396,6 +428,7 @@
       message: error && error.message ? String(error.message) : safeString(error),
       detail: clonePlain(detail)
     };
+
     state.errors.push(item);
     trimArray(state.errors, 120);
     state.updatedAt = item.at;
@@ -410,10 +443,12 @@
   function readPath(path) {
     const parts = safeString(path).split(".");
     let cursor = root;
+
     for (const part of parts) {
       if (!cursor || cursor[part] === undefined || cursor[part] === null) return null;
       cursor = cursor[part];
     }
+
     return cursor || null;
   }
 
@@ -443,7 +478,10 @@
   }
 
   function safeInvoke(target, method, args = []) {
-    if (!target || !isFunction(target[method])) return { ok: false, value: null, error: `method-unavailable:${method}` };
+    if (!target || !isFunction(target[method])) {
+      return { ok: false, value: null, error: `method-unavailable:${method}` };
+    }
+
     try {
       return { ok: true, value: target[method](...(Array.isArray(args) ? args : [args])), error: "" };
     } catch (error) {
@@ -453,6 +491,7 @@
 
   function readReceipt(authority) {
     if (!authority || !isObject(authority)) return null;
+    if (authority === api) return null;
 
     const methods = [
       "getCanvasStationReceiptLight",
@@ -486,17 +525,20 @@
 
   function firstElement(selectors) {
     if (!doc) return { element: null, selector: "NONE" };
+
     for (const selector of selectors) {
       try {
         const element = doc.querySelector(selector);
         if (element) return { element, selector };
       } catch (_error) {}
     }
+
     return { element: null, selector: "NONE" };
   }
 
   function rectNonzero(element) {
     if (!element || !isFunction(element.getBoundingClientRect)) return false;
+
     try {
       const rect = element.getBoundingClientRect();
       return Boolean(rect && rect.width > 0 && rect.height > 0);
@@ -542,6 +584,7 @@
         const found =
           (mount && mount.querySelector ? mount.querySelector(selector) : null) ||
           (stage && stage.querySelector ? stage.querySelector(selector) : null);
+
         if (found && found.tagName && found.tagName.toLowerCase() === "canvas") return found;
       } catch (_error) {}
     }
@@ -567,29 +610,56 @@
     canvas.style.transformOrigin = "50% 50%";
     canvas.style.willChange = "transform";
     canvas.style.touchAction = "none";
+    canvas.style.contain = "layout paint style";
+    canvas.style.backfaceVisibility = "hidden";
   }
 
-  function applyCanvasViewTransform() {
+  function applyCanvasViewTransform(reason = "view-transform") {
     const canvas = state.canvasElement;
     if (!canvas || !canvas.style) return false;
 
-    const rotate = safeNumber(view.yaw, 0);
+    state.fastTransformAttemptCount += 1;
+
+    const yaw = safeNumber(view.yaw, 0);
     const zoom = clamp(safeNumber(view.zoom, 1), view.minZoom, view.maxZoom);
     const pitch = clamp(safeNumber(view.pitch, 0), view.minPitch, view.maxPitch);
     const shift = Math.round(pitch * 18);
 
-    const css = `rotate(${rotate}rad) translateY(${shift}px) scale(${zoom})`;
-    canvas.style.transform = css;
+    const css = `translate3d(0, ${shift}px, 0) rotate(${yaw}rad) scale(${zoom})`;
 
+    canvas.style.transform = css;
     canvas.dataset.hearthViewYaw = String(view.yaw);
     canvas.dataset.hearthViewPitch = String(view.pitch);
     canvas.dataset.hearthViewZoom = String(view.zoom);
     canvas.dataset.hearthViewPhase = String(view.phase);
     canvas.dataset.hearthViewTransformApplied = "true";
+    canvas.dataset.hearthFastViewTransformActive = "true";
+    canvas.dataset.hearthDeferredRendererActive = "true";
 
     state.viewTransformApplied = true;
     state.viewTransformCss = css;
-    view.lastAppliedAt = nowIso();
+    state.fastTransformAppliedCount += 1;
+    state.fastTransformLastAppliedAt = nowIso();
+    state.fastTransformLastReason = reason;
+    view.lastAppliedAt = state.fastTransformLastAppliedAt;
+
+    return true;
+  }
+
+  function scheduleFastTransform(reason = "fast-transform") {
+    if (FAST_TRANSFORM_DELAY_MS === 0) {
+      return applyCanvasViewTransform(reason);
+    }
+
+    if (transformTimer) return true;
+
+    const runner = () => {
+      transformTimer = 0;
+      applyCanvasViewTransform(reason);
+    };
+
+    if (root.requestAnimationFrame) transformTimer = root.requestAnimationFrame(runner);
+    else transformTimer = root.setTimeout(runner, FAST_TRANSFORM_DELAY_MS);
 
     return true;
   }
@@ -657,13 +727,16 @@
     canvas.dataset.hearthCanvasContract = CONTRACT;
     canvas.dataset.hearthCanvasReceipt = RECEIPT;
     canvas.dataset.hearthCanvasPreviousContract = PREVIOUS_CONTRACT;
+    canvas.dataset.hearthCanvasBaselineContract = BASELINE_CONTRACT;
     canvas.dataset.hearthPlanetaryViewControlReceiverActive = "true";
+    canvas.dataset.hearthFastViewTransformActive = "true";
+    canvas.dataset.hearthDeferredRendererActive = "true";
     canvas.dataset.generatedImage = "false";
     canvas.dataset.graphicBox = "false";
     canvas.dataset.webgl = "false";
     canvas.dataset.visualPassClaimed = "false";
 
-    const ctx = canvas.getContext ? canvas.getContext("2d", { alpha: true, willReadFrequently: true }) : null;
+    const ctx = canvas.getContext ? canvas.getContext("2d", { alpha: true, willReadFrequently: false }) : null;
 
     state.canvasElementFound = true;
     state.canvasRectNonzero = rectNonzero(canvas) || Boolean(canvas.width > 0 && canvas.height > 0);
@@ -675,7 +748,7 @@
     state.canvasMountElement = mount;
     state.globeStageElement = stage;
 
-    applyCanvasViewTransform();
+    applyCanvasViewTransform("ensure-canvas");
 
     return { canvas, ctx, mount, stage };
   }
@@ -686,7 +759,7 @@
     try {
       const w = canvas.width;
       const h = canvas.height;
-      const sampleSize = Math.max(1, Math.min(24, Math.floor(Math.min(w, h) / 32)));
+      const sampleSize = Math.max(1, Math.min(18, Math.floor(Math.min(w, h) / 42)));
       const x = Math.max(0, Math.floor(w / 2 - sampleSize / 2));
       const y = Math.max(0, Math.floor(h / 2 - sampleSize / 2));
       const data = ctx.getImageData(x, y, sampleSize, sampleSize).data;
@@ -777,7 +850,7 @@
       }
 
       state.holdingFieldDrawComplete = true;
-      applyCanvasViewTransform();
+      applyCanvasViewTransform("holding-field");
       return true;
     } catch (error) {
       state.holdingFieldDrawComplete = false;
@@ -793,6 +866,7 @@
       ["DEXTER_LAB.hearthRouteConductor", readPath("DEXTER_LAB.hearthRouteConductor")],
       ["HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION", readPath("HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION")],
       ["HEARTH.routeConductorControlHandshakeIntegration", readPath("HEARTH.routeConductorControlHandshakeIntegration")],
+      ["DEXTER_LAB.hearthRouteConductorControlHandshakeIntegration", readPath("DEXTER_LAB.hearthRouteConductorControlHandshakeIntegration")],
       ["HEARTH_ROUTE_CONDUCTOR_RECEIPT", readPath("HEARTH_ROUTE_CONDUCTOR_RECEIPT")],
       ["HEARTH.routeConductorReceipt", readPath("HEARTH.routeConductorReceipt")],
       ["HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION", readPath("HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION")],
@@ -818,6 +892,7 @@
 
     for (const [name, candidate] of routeConductorCandidates()) {
       if (!candidate) continue;
+
       observed = true;
 
       const pair = readContractPair(candidate);
@@ -839,7 +914,8 @@
       datasetValue("hearthRouteConductorCurrentContract") ||
       datasetValue("routeConductorCurrentContract") ||
       datasetValue("routeConductorContract") ||
-      datasetValue("hearthSouthJsRouteConductorContract");
+      datasetValue("hearthSouthJsRouteConductorContract") ||
+      datasetValue("hearthCanvasRouteConductorContract");
 
     if (datasetContract && !contract) contract = datasetContract;
     if (datasetContract) observed = true;
@@ -909,9 +985,11 @@
 
   function findDrawMethod(target, methods) {
     if (!target || !isObject(target)) return "NONE";
+
     for (const method of methods) {
       if (isFunction(target[method])) return method;
     }
+
     return "NONE";
   }
 
@@ -986,7 +1064,9 @@
       if (found && isFunction(found.wideProbe)) {
         wideProbeAvailable = true;
         validationReceipt = found.wideProbe({ rows: 5, columns: 9 });
+
         if (validationReceipt && validationReceipt.everyPixelHasFourPairSet === true) everyPixelHasFourPairSet = true;
+
         if (validationReceipt && validationReceipt.failedCount === 0) {
           bodyBound = true;
           allowedToFloat = false;
@@ -1043,6 +1123,7 @@
 
   function normalizeFingerKey(value) {
     const raw = safeString(value).trim().toLowerCase();
+
     if (!raw) return "";
     if (FINGER_FILES[raw]) return raw;
     if (raw.includes("boundary") || raw.includes("shape")) return "boundary";
@@ -1057,11 +1138,13 @@
     if (raw.includes("atmosphere") || raw.includes("air")) return "atmosphere";
     if (raw.includes("lighting") || raw.includes("shadow")) return "lighting";
     if (raw.includes("composite") || raw.includes("carrier")) return "composite";
+
     return raw.replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
   }
 
   function createFingerTrack(key) {
     const normalizedKey = normalizeFingerKey(key);
+
     return {
       key: normalizedKey,
       file: FINGER_FILES[normalizedKey] || "",
@@ -1086,6 +1169,7 @@
     for (const key of FINGER_SEQUENCE) {
       if (!state.fingerRegistry[key]) state.fingerRegistry[key] = createFingerTrack(key);
     }
+
     return state.fingerRegistry;
   }
 
@@ -1105,6 +1189,7 @@
     if (direct) return direct;
 
     const file = safeString(packet.file || packet.sourceFile || packet.targetFile || packet.destinationFile || "");
+
     for (const key of FINGER_SEQUENCE) {
       if (file === FINGER_FILES[key] || file.includes(`finger.${key}`)) return key;
     }
@@ -1114,6 +1199,7 @@
 
   function hasFinalClaim(packet) {
     if (!isObject(packet)) return false;
+
     return Boolean(
       packet.finalPageProof === true ||
       packet.finalRouteProof === true ||
@@ -1133,6 +1219,7 @@
 
   function packetHasExpressionContent(packet) {
     if (!isObject(packet)) return false;
+
     return Boolean(
       packet.expressionPacket ||
       packet.expressionPayload ||
@@ -1158,6 +1245,7 @@
 
   function packetHasReceiptContent(packet) {
     if (!isObject(packet)) return false;
+
     return Boolean(
       packet.receipt ||
       packet.RECEIPT ||
@@ -1249,7 +1337,9 @@
 
   function scanAllFingers() {
     initializeFingerRegistry();
+
     for (const key of FINGER_SEQUENCE) scanFinger(key);
+
     recomputeFingerAggregation();
     return getFingerRegistry();
   }
@@ -1258,6 +1348,7 @@
     initializeFingerRegistry();
 
     const tracks = FINGER_SEQUENCE.map((key) => state.fingerRegistry[key]).filter(Boolean);
+
     state.fingerAuthorityObservedCount = tracks.filter((track) => track.authorityObserved).length;
     state.fingerApiReadyCount = tracks.filter((track) => track.apiReady).length;
     state.fingerExpressionPacketCount = tracks.filter((track) => track.expressionPacketReceived).length;
@@ -1285,6 +1376,7 @@
     if (!isObject(packet)) return false;
 
     const key = inferFingerKeyFromPacket(packet);
+
     if (!key) {
       recordError("FINGER_PACKET_REJECTED_NO_KEY", "No finger key could be inferred", { packet });
       return false;
@@ -1315,7 +1407,7 @@
     };
 
     recomputeFingerAggregation();
-    scheduleViewRedraw("finger-packet-received");
+    scheduleDeferredRender("finger-packet-received");
     updateDataset();
     publishGlobals();
 
@@ -1368,6 +1460,8 @@
       pitch: view.pitch,
       zoom: view.zoom,
       phase: view.phase,
+      fastViewTransformActive: true,
+      deferredRendererActive: true,
       hexFourPairAuthority: detectHexFourPairAuthority().api,
       hexSurfaceRenderer: detectHexSurfaceRenderer().api,
       canvasHub: api,
@@ -1393,6 +1487,8 @@
       receipt: RECEIPT,
       preferredVisibleExpression: true,
       viewState: clonePlain(view),
+      fastViewTransformActive: true,
+      deferredRendererActive: true,
       finalVisualPassClaimed: false,
       visualPassClaimed: false
     }]);
@@ -1424,7 +1520,7 @@
       state.visiblePlanetProofSource = "COMPOSITE";
       state.visiblePlanetProofReason = "COMPOSITE_DRAW_COMPLETE";
       state.canvasDrawComplete = true;
-      applyCanvasViewTransform();
+      applyCanvasViewTransform("composite-draw-complete");
       return true;
     }
 
@@ -1450,6 +1546,8 @@
       receipt: RECEIPT,
       supportVisibleExpression: true,
       viewState: clonePlain(view),
+      fastViewTransformActive: true,
+      deferredRendererActive: true,
       finalVisualPassClaimed: false,
       visualPassClaimed: false
     }]);
@@ -1481,7 +1579,7 @@
       state.visiblePlanetProofSource = "HEX_SURFACE_RENDERER";
       state.visiblePlanetProofReason = "HEX_SURFACE_RENDERER_DRAW_COMPLETE";
       state.canvasDrawComplete = true;
-      applyCanvasViewTransform();
+      applyCanvasViewTransform("hex-surface-draw-complete");
       return true;
     }
 
@@ -1526,7 +1624,10 @@
     state.recommendedNextRenewalTarget = FILE;
     state.postgameStatus = status;
 
-    if (state.visiblePlanetProofReady) state.recommendedNextAction = "OBSERVE_VIEW_CONTROL_RECEIVER";
+    if (state.visiblePlanetProofReady) {
+      state.recommendedNextAction = "OBSERVE_FAST_VIEW_TRANSFORM_RECEIVER";
+    }
+
     return { gap, status };
   }
 
@@ -1556,7 +1657,12 @@
       resolveF13Gap();
       updateDataset();
       publishGlobals();
-      record("CANVAS_HUB_VISIBLE_EXPRESSION_COMPLETE", { source: "COMPOSITE", reason, viewState: clonePlain(view) });
+      record("CANVAS_HUB_VISIBLE_EXPRESSION_COMPLETE", {
+        source: "COMPOSITE",
+        reason,
+        viewState: clonePlain(view),
+        deferredRendererActive: true
+      });
       return true;
     }
 
@@ -1564,7 +1670,12 @@
       resolveF13Gap();
       updateDataset();
       publishGlobals();
-      record("CANVAS_HUB_VISIBLE_EXPRESSION_COMPLETE", { source: "HEX_SURFACE_RENDERER", reason, viewState: clonePlain(view) });
+      record("CANVAS_HUB_VISIBLE_EXPRESSION_COMPLETE", {
+        source: "HEX_SURFACE_RENDERER",
+        reason,
+        viewState: clonePlain(view),
+        deferredRendererActive: true
+      });
       return true;
     }
 
@@ -1595,24 +1706,61 @@
     return false;
   }
 
-  function scheduleViewRedraw(reason = "view-redraw") {
+  function clearDeferredRenderTimers() {
+    if (deferredRenderTimer) {
+      try {
+        root.clearTimeout(deferredRenderTimer);
+      } catch (_error) {}
+      deferredRenderTimer = 0;
+    }
+
+    if (deferredRenderMaxTimer) {
+      try {
+        root.clearTimeout(deferredRenderMaxTimer);
+      } catch (_error) {}
+      deferredRenderMaxTimer = 0;
+    }
+  }
+
+  function runDeferredRender(reason = "deferred-render") {
+    clearDeferredRenderTimers();
+
+    state.deferredRenderScheduled = false;
+    state.viewRedrawScheduled = false;
+    state.deferredRenderRunCount += 1;
+    state.viewRedrawCount += 1;
+    state.deferredRenderLastRunAt = nowIso();
+
+    view.phase += 0.012;
+
+    const ok = drawVisibleExpression(`deferred-render:${reason || state.deferredRenderReason}`);
+    state.deferredRenderLastResult = ok ? "DEFERRED_RENDER_COMPLETE" : "DEFERRED_RENDER_HELD";
+
+    notifyRouteConductor();
+
+    updateDataset();
+    publishGlobals();
+
+    return ok;
+  }
+
+  function scheduleDeferredRender(reason = "view-control-packet") {
+    state.deferredRenderScheduled = true;
     state.viewRedrawScheduled = true;
+    state.deferredRenderReason = safeString(reason, "view-control-packet");
+    state.deferredRenderStartedAt = state.deferredRenderStartedAt || nowIso();
 
-    if (redrawTimer) return true;
+    if (deferredRenderTimer) {
+      try {
+        root.clearTimeout(deferredRenderTimer);
+      } catch (_error) {}
+      state.deferredRenderSkippedDuringInputCount += 1;
+    }
 
-    const runner = () => {
-      redrawTimer = 0;
-      state.viewRedrawScheduled = false;
-      state.viewRedrawCount += 1;
-      view.phase += 0.012;
-      applyCanvasViewTransform();
-      drawVisibleExpression(reason);
-    };
+    deferredRenderTimer = root.setTimeout(() => runDeferredRender(state.deferredRenderReason), DEFERRED_RENDER_DELAY_MS);
 
-    if (root.requestAnimationFrame) {
-      redrawTimer = root.requestAnimationFrame(runner);
-    } else {
-      redrawTimer = root.setTimeout(runner, 32);
+    if (!deferredRenderMaxTimer) {
+      deferredRenderMaxTimer = root.setTimeout(() => runDeferredRender("max-wait"), DEFERRED_RENDER_MAX_WAIT_MS);
     }
 
     return true;
@@ -1620,6 +1768,7 @@
 
   function forbiddenControlClaim(packet) {
     if (!isObject(packet)) return false;
+
     return Boolean(
       packet.f13Claimed === true ||
       packet.f13CanvasClaimed === true ||
@@ -1672,7 +1821,7 @@
     };
   }
 
-  function applyNormalizedViewControl(packet) {
+  function applyFastViewPacket(packet) {
     if (packet.viewState) {
       view.yaw = safeNumber(packet.viewState.yaw, view.yaw);
       view.pitch = clamp(safeNumber(packet.viewState.pitch, view.pitch), packet.viewState.minPitch, packet.viewState.maxPitch);
@@ -1693,20 +1842,29 @@
     state.lastControlPacket = clonePlain(packet.raw || packet);
     state.lastViewPacket = clonePlain(packet);
     state.controlPacketLastSource = packet.sourceFile || CONTROL_FILE;
-    state.controlPacketDeliveryStatus = "CONTROL_PACKET_ACCEPTED_BY_CANVAS";
-    state.controlPacketDeliveryMethod = "planetary-view-control-receiver";
+    state.controlPacketDeliveryStatus = "CONTROL_PACKET_ACCEPTED_FAST_TRANSFORM_APPLIED";
+    state.controlPacketDeliveryMethod = "fast-view-transform-deferred-render-receiver";
     state.controlPacketLastAcceptedAt = packet.receivedAt;
-    state.viewMotionStatus = "VIEW_CONTROL_MOTION_APPLIED";
-    state.touchRuntimeStatus = packet.inputType.includes("pointer") || packet.inputType.includes("touch") ? "TOUCH_RUNTIME_PACKET_APPLIED" : state.touchRuntimeStatus;
-    state.dragRuntimeStatus = packet.inputType.includes("drag") ? "DRAG_RUNTIME_PACKET_APPLIED" : state.dragRuntimeStatus;
-    state.zoomRuntimeStatus = packet.inputType.includes("zoom") || packet.deltaZoom !== 0 ? "ZOOM_RUNTIME_PACKET_APPLIED" : state.zoomRuntimeStatus;
-    state.keyboardRuntimeStatus = packet.inputType.includes("keyboard") ? "KEYBOARD_RUNTIME_PACKET_APPLIED" : state.keyboardRuntimeStatus;
-    state.planetaryViewInputStatus = "PLANETARY_VIEW_INPUT_PACKET_APPLIED";
+    state.viewMotionStatus = "FAST_VIEW_TRANSFORM_APPLIED";
+    state.touchRuntimeStatus = packet.inputType.includes("pointer") || packet.inputType.includes("touch")
+      ? "TOUCH_RUNTIME_FAST_TRANSFORM_APPLIED"
+      : state.touchRuntimeStatus;
+    state.dragRuntimeStatus = packet.inputType.includes("drag")
+      ? "DRAG_RUNTIME_FAST_TRANSFORM_APPLIED"
+      : state.dragRuntimeStatus;
+    state.zoomRuntimeStatus = packet.inputType.includes("zoom") || packet.deltaZoom !== 0
+      ? "ZOOM_RUNTIME_FAST_TRANSFORM_APPLIED"
+      : state.zoomRuntimeStatus;
+    state.keyboardRuntimeStatus = packet.inputType.includes("keyboard")
+      ? "KEYBOARD_RUNTIME_FAST_TRANSFORM_APPLIED"
+      : state.keyboardRuntimeStatus;
+    state.planetaryViewInputStatus = "PLANETARY_VIEW_INPUT_FAST_TRANSFORM_APPLIED";
 
-    applyCanvasViewTransform();
+    ensureCanvas();
+    scheduleFastTransform(`control-packet:${packet.inputType}`);
     publishViewGlobals();
-    updateDataset();
-    scheduleViewRedraw(`control-packet:${packet.inputType}`);
+    updateFastControlDataset();
+    scheduleDeferredRender(`control-packet:${packet.inputType}`);
 
     return getControlViewReceipt();
   }
@@ -1720,7 +1878,7 @@
       state.controlPacketLastRejectionReason = "CONTROL_PACKET_NOT_OBJECT";
       state.controlPacketDeliveryStatus = "CONTROL_PACKET_REJECTED";
       record("CANVAS_CONTROL_PACKET_REJECTED", { reason: state.controlPacketLastRejectionReason });
-      updateDataset();
+      updateFastControlDataset();
       return getControlViewReceipt();
     }
 
@@ -1730,22 +1888,23 @@
       state.controlPacketLastRejectionReason = "CONTROL_PACKET_CONTAINS_FORBIDDEN_CLAIM";
       state.controlPacketDeliveryStatus = "CONTROL_PACKET_REJECTED";
       record("CANVAS_CONTROL_PACKET_REJECTED", { reason: state.controlPacketLastRejectionReason });
-      updateDataset();
+      updateFastControlDataset();
       return getControlViewReceipt();
     }
 
     const normalized = normalizeControlPacket(packet);
     state.controlPacketAcceptedCount += 1;
 
-    record("CANVAS_CONTROL_PACKET_ACCEPTED", {
+    record("CANVAS_CONTROL_PACKET_ACCEPTED_FAST_PATH", {
       inputType: normalized.inputType,
       deltaYaw: normalized.deltaYaw,
       deltaPitch: normalized.deltaPitch,
       deltaZoom: normalized.deltaZoom,
-      sourceFile: normalized.sourceFile
+      sourceFile: normalized.sourceFile,
+      expensiveRedrawDeferred: true
     });
 
-    return applyNormalizedViewControl(normalized);
+    return applyFastViewPacket(normalized);
   }
 
   function consumePlanetaryControlPacket(packet = {}) {
@@ -1829,10 +1988,16 @@
       contract: CONTRACT,
       receipt: RECEIPT,
       sourceFile: FILE,
+      fastViewTransformActive: true,
+      deferredRendererActive: true,
+      expensiveRedrawDetachedFromInputPacket: true,
       viewState: clonePlain(view),
       controlPacketCount: state.controlPacketCount,
       controlPacketAcceptedCount: state.controlPacketAcceptedCount,
       controlPacketDeliveryStatus: state.controlPacketDeliveryStatus,
+      fastTransformAppliedCount: state.fastTransformAppliedCount,
+      deferredRenderScheduled: state.deferredRenderScheduled,
+      deferredRenderRunCount: state.deferredRenderRunCount,
       updatedAt: nowIso(),
       ...FINAL_FALSE
     };
@@ -1848,13 +2013,20 @@
 
   function getControlViewReceipt() {
     return {
-      packetType: "HEARTH_CANVAS_PLANETARY_VIEW_CONTROL_RECEIVER_RECEIPT",
+      packetType: "HEARTH_CANVAS_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_RECEIPT",
       contract: CONTRACT,
       receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
+      previousReceipt: PREVIOUS_RECEIPT,
       file: FILE,
       controlFile: CONTROL_FILE,
+
       planetaryViewControlReceiverActive: true,
       viewControlPacketReceiverReady: true,
+      fastViewTransformActive: true,
+      deferredRendererActive: true,
+      expensiveRedrawDetachedFromInputPacket: true,
+
       controlPacketCount: state.controlPacketCount,
       controlPacketAcceptedCount: state.controlPacketAcceptedCount,
       controlPacketRejectedCount: state.controlPacketRejectedCount,
@@ -1864,9 +2036,24 @@
       controlPacketLastRejectedAt: state.controlPacketLastRejectedAt,
       controlPacketLastRejectionReason: state.controlPacketLastRejectionReason,
       controlPacketLastSource: state.controlPacketLastSource,
+
       viewState: clonePlain(view),
       viewTransformApplied: state.viewTransformApplied,
       viewTransformCss: state.viewTransformCss,
+
+      fastTransformAttemptCount: state.fastTransformAttemptCount,
+      fastTransformAppliedCount: state.fastTransformAppliedCount,
+      fastTransformLastAppliedAt: state.fastTransformLastAppliedAt,
+      fastTransformLastReason: state.fastTransformLastReason,
+
+      deferredRenderScheduled: state.deferredRenderScheduled,
+      deferredRenderReason: state.deferredRenderReason,
+      deferredRenderStartedAt: state.deferredRenderStartedAt,
+      deferredRenderLastRunAt: state.deferredRenderLastRunAt,
+      deferredRenderRunCount: state.deferredRenderRunCount,
+      deferredRenderSkippedDuringInputCount: state.deferredRenderSkippedDuringInputCount,
+      deferredRenderLastResult: state.deferredRenderLastResult,
+
       viewRedrawScheduled: state.viewRedrawScheduled,
       viewRedrawCount: state.viewRedrawCount,
       viewMotionStatus: state.viewMotionStatus,
@@ -1875,6 +2062,7 @@
       zoomRuntimeStatus: state.zoomRuntimeStatus,
       keyboardRuntimeStatus: state.keyboardRuntimeStatus,
       planetaryViewInputStatus: state.planetaryViewInputStatus,
+
       ownsControlRuntimeTruth: false,
       ownsInputAdmission: false,
       ownsPointerInput: false,
@@ -1884,6 +2072,8 @@
       ownsKeyboardInput: false,
       ownsViewProjectionApplication: true,
       ownsCanvasRedrawFromViewState: true,
+      ownsFinalPlanetTruth: false,
+
       ...FINAL_FALSE,
       updatedAt: nowIso()
     };
@@ -1972,7 +2162,7 @@
     state.routeConductorReleasePacket = clonePlain(packet || {});
     state.routeConductorReleasePacketObserved = isObject(packet);
     refreshState();
-    scheduleViewRedraw("route-conductor-release-packet");
+    scheduleDeferredRender("route-conductor-release-packet");
     return getReceipt();
   }
 
@@ -1999,8 +2189,10 @@
 
   function receiveChildPacket(packet = {}) {
     if (!isObject(packet)) return false;
+
     const key = inferFingerKeyFromPacket(packet);
     if (key && FINGER_FILES[key]) return receiveFingerPacket(packet);
+
     refreshState();
     updateDataset();
     publishGlobals();
@@ -2012,6 +2204,7 @@
     state.canvasEastEvidenceReady = packet && isObject(packet)
       ? packet.canvasEastEvidenceReady === true || packet.atlasReady === true
       : state.canvasEastEvidenceReady;
+
     refreshState();
     return getCanvasStationSummary();
   }
@@ -2021,6 +2214,7 @@
     state.canvasWestInspectionReady = packet && isObject(packet)
       ? packet.canvasWestInspectionReady === true || packet.inspectionReady === true
       : state.canvasWestInspectionReady;
+
     refreshState();
     return getCanvasStationSummary();
   }
@@ -2030,6 +2224,7 @@
     state.canvasSouthVisibleProofReady = packet && isObject(packet)
       ? packet.canvasSouthVisibleProofReady === true || packet.visiblePlanetAvailable === true || packet.imageRendered === true
       : state.canvasSouthVisibleProofReady;
+
     refreshState();
     return getCanvasStationSummary();
   }
@@ -2040,7 +2235,7 @@
 
     return {
       timestamp: state.timestamp || nowIso(),
-      packetType: "CANVAS_EXPRESSION_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_SUMMARY",
+      packetType: "CANVAS_EXPRESSION_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_SUMMARY",
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
@@ -2057,6 +2252,8 @@
       fingerManagerActive: true,
       threeFileStretchActive: true,
       planetaryViewControlReceiverActive: true,
+      fastViewTransformActive: true,
+      deferredRendererActive: true,
 
       compositeFile: COMPOSITE_FILE,
       hexFourPairFile: HEX_FOUR_PAIR_FILE,
@@ -2106,7 +2303,7 @@
   function getExpressionHubReceipt() {
     return {
       ...getExpressionHubSummary(),
-      packetType: "CANVAS_EXPRESSION_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_RECEIPT",
+      packetType: "CANVAS_EXPRESSION_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIPT",
       currentReceipt: true,
       noClaimsPreserved: true,
       ...FINAL_FALSE
@@ -2118,7 +2315,7 @@
 
     return {
       timestamp: state.timestamp || nowIso(),
-      packetType: "CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_SUMMARY",
+      packetType: "CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_SUMMARY",
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
@@ -2143,6 +2340,9 @@
       threeFileStretchActive: true,
       planetaryViewControlReceiverActive: true,
       viewControlPacketReceiverReady: true,
+      fastViewTransformActive: true,
+      deferredRendererActive: true,
+      expensiveRedrawDetachedFromInputPacket: true,
 
       currentRouteConductorRequiredContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
       currentRouteConductorRequiredReceipt: CURRENT_ROUTE_CONDUCTOR_RECEIPT,
@@ -2250,7 +2450,7 @@
   function getCanvasStationReceipt() {
     return {
       ...getCanvasStationSummary(),
-      packetType: "CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_RECEIPT",
+      packetType: "CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIPT",
       currentReceipt: true,
       compositeDrawReceipt: clonePlain(state.compositeDrawReceipt),
       hexFourPairValidationReceipt: clonePlain(state.hexFourPairValidationReceipt),
@@ -2279,6 +2479,8 @@
       structuralCarrierSafe: true,
       canvasHubActive: true,
       planetaryViewControlReceiverActive: true,
+      fastViewTransformActive: true,
+      deferredRendererActive: true,
       canvasMountFound: state.canvasMountFound,
       canvasElementFound: state.canvasElementFound,
       visiblePlanetProofReady: state.visiblePlanetProofReady,
@@ -2328,7 +2530,7 @@
     const c = getControlViewReceipt();
 
     return [
-      "HEARTH_CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_RECEIPT",
+      "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_RECEIPT",
       "",
       line("timestamp", r.timestamp),
       line("contract", r.contract),
@@ -2368,9 +2570,12 @@
       line("visiblePlanetProofSource", r.visiblePlanetProofSource),
       line("visiblePlanetProofReason", r.visiblePlanetProofReason),
       "",
-      "PLANETARY_VIEW_CONTROL",
+      "FAST_VIEW_TRANSFORM",
       line("planetaryViewControlReceiverActive", c.planetaryViewControlReceiverActive),
       line("viewControlPacketReceiverReady", c.viewControlPacketReceiverReady),
+      line("fastViewTransformActive", c.fastViewTransformActive),
+      line("deferredRendererActive", c.deferredRendererActive),
+      line("expensiveRedrawDetachedFromInputPacket", c.expensiveRedrawDetachedFromInputPacket),
       line("controlPacketCount", c.controlPacketCount),
       line("controlPacketAcceptedCount", c.controlPacketAcceptedCount),
       line("controlPacketRejectedCount", c.controlPacketRejectedCount),
@@ -2380,6 +2585,16 @@
       line("viewZoom", c.viewState.zoom),
       line("viewPhase", c.viewState.phase),
       line("viewTransformApplied", c.viewTransformApplied),
+      line("fastTransformAppliedCount", c.fastTransformAppliedCount),
+      line("fastTransformLastAppliedAt", c.fastTransformLastAppliedAt),
+      line("fastTransformLastReason", c.fastTransformLastReason),
+      "",
+      "DEFERRED_RENDER",
+      line("deferredRenderScheduled", c.deferredRenderScheduled),
+      line("deferredRenderReason", c.deferredRenderReason),
+      line("deferredRenderRunCount", c.deferredRenderRunCount),
+      line("deferredRenderSkippedDuringInputCount", c.deferredRenderSkippedDuringInputCount),
+      line("deferredRenderLastResult", c.deferredRenderLastResult),
       line("viewRedrawCount", c.viewRedrawCount),
       line("viewMotionStatus", c.viewMotionStatus),
       line("touchRuntimeStatus", c.touchRuntimeStatus),
@@ -2419,12 +2634,53 @@
     ].join("\n");
   }
 
+  function updateFastControlDataset() {
+    setDataset("hearthCanvasControlPacketCount", String(state.controlPacketCount));
+    setDataset("hearthCanvasControlPacketAcceptedCount", String(state.controlPacketAcceptedCount));
+    setDataset("hearthCanvasControlPacketRejectedCount", String(state.controlPacketRejectedCount));
+    setDataset("hearthCanvasControlPacketDeliveryStatus", state.controlPacketDeliveryStatus);
+
+    setDataset("hearthCanvasFastViewTransformActive", "true");
+    setDataset("hearthCanvasDeferredRendererActive", "true");
+    setDataset("hearthCanvasExpensiveRedrawDetachedFromInputPacket", "true");
+
+    setDataset("hearthCanvasViewYaw", String(view.yaw));
+    setDataset("hearthCanvasViewPitch", String(view.pitch));
+    setDataset("hearthCanvasViewZoom", String(view.zoom));
+    setDataset("hearthCanvasViewPhase", String(view.phase));
+    setDataset("hearthCanvasViewTransformApplied", String(state.viewTransformApplied));
+    setDataset("hearthCanvasFastTransformAppliedCount", String(state.fastTransformAppliedCount));
+    setDataset("hearthCanvasFastTransformLastAppliedAt", state.fastTransformLastAppliedAt);
+    setDataset("hearthCanvasViewMotionStatus", state.viewMotionStatus);
+    setDataset("hearthCanvasTouchRuntimeStatus", state.touchRuntimeStatus);
+    setDataset("hearthCanvasDragRuntimeStatus", state.dragRuntimeStatus);
+    setDataset("hearthCanvasZoomRuntimeStatus", state.zoomRuntimeStatus);
+    setDataset("hearthCanvasPlanetaryViewInputStatus", state.planetaryViewInputStatus);
+    setDataset("hearthCanvasDeferredRenderScheduled", String(state.deferredRenderScheduled));
+    setDataset("hearthCanvasDeferredRenderRunCount", String(state.deferredRenderRunCount));
+    setDataset("hearthCanvasDeferredRenderSkippedDuringInputCount", String(state.deferredRenderSkippedDuringInputCount));
+
+    setDataset("hearthCanvasF13Claimed", "false");
+    setDataset("hearthCanvasF21EligibleForNorth", "false");
+    setDataset("hearthCanvasF21Claimed", "false");
+    setDataset("hearthCanvasReadyTextAllowed", "false");
+    setDataset("hearthCanvasReadyTextClaimed", "false");
+    setDataset("generatedImage", "false");
+    setDataset("graphicBox", "false");
+    setDataset("webgl", "false");
+    setDataset("visualPassClaimed", "false");
+
+    return true;
+  }
+
   function updateDataset() {
     setDataset("hearthCanvasLoaded", "true");
     setDataset("hearthCanvasContract", CONTRACT);
     setDataset("hearthCanvasReceipt", RECEIPT);
     setDataset("hearthCanvasPreviousContract", PREVIOUS_CONTRACT);
     setDataset("hearthCanvasPreviousReceipt", PREVIOUS_RECEIPT);
+    setDataset("hearthCanvasBaselineContract", BASELINE_CONTRACT);
+    setDataset("hearthCanvasBaselineReceipt", BASELINE_RECEIPT);
 
     setDataset("hearthCanvasHubLoaded", "true");
     setDataset("hearthCanvasHubActive", "true");
@@ -2433,6 +2689,9 @@
     setDataset("hearthCanvasThreeFileStretchActive", "true");
     setDataset("hearthCanvasPlanetaryViewControlReceiverActive", "true");
     setDataset("hearthCanvasViewControlPacketReceiverReady", "true");
+    setDataset("hearthCanvasFastViewTransformActive", "true");
+    setDataset("hearthCanvasDeferredRendererActive", "true");
+    setDataset("hearthCanvasExpensiveRedrawDetachedFromInputPacket", "true");
 
     setDataset("hearthCanvasCurrentRouteConductorRequiredContract", CURRENT_ROUTE_CONDUCTOR_CONTRACT);
     setDataset("hearthCanvasRouteConductorObserved", String(state.routeConductorObserved));
@@ -2463,20 +2722,7 @@
     setDataset("hearthCanvasDomVisiblePlanetProofReady", String(state.domVisiblePlanetProofReady));
     setDataset("hearthCanvasStageMountDomProofReady", String(state.stageMountDomProofReady));
 
-    setDataset("hearthCanvasControlPacketCount", String(state.controlPacketCount));
-    setDataset("hearthCanvasControlPacketAcceptedCount", String(state.controlPacketAcceptedCount));
-    setDataset("hearthCanvasControlPacketRejectedCount", String(state.controlPacketRejectedCount));
-    setDataset("hearthCanvasControlPacketDeliveryStatus", state.controlPacketDeliveryStatus);
-    setDataset("hearthCanvasViewYaw", String(view.yaw));
-    setDataset("hearthCanvasViewPitch", String(view.pitch));
-    setDataset("hearthCanvasViewZoom", String(view.zoom));
-    setDataset("hearthCanvasViewPhase", String(view.phase));
-    setDataset("hearthCanvasViewTransformApplied", String(state.viewTransformApplied));
-    setDataset("hearthCanvasViewMotionStatus", state.viewMotionStatus);
-    setDataset("hearthCanvasTouchRuntimeStatus", state.touchRuntimeStatus);
-    setDataset("hearthCanvasDragRuntimeStatus", state.dragRuntimeStatus);
-    setDataset("hearthCanvasZoomRuntimeStatus", state.zoomRuntimeStatus);
-    setDataset("hearthCanvasPlanetaryViewInputStatus", state.planetaryViewInputStatus);
+    updateFastControlDataset();
 
     setDataset("hearthCanvasF13EvidenceStrict", String(state.f13CanvasEvidenceStrict));
     setDataset("hearthCanvasF13EvidenceDegraded", String(state.f13CanvasEvidenceDegraded));
@@ -2521,6 +2767,8 @@
     hearth.canvasExpressionHub = api;
     hearth.canvasFingerManager = api;
     hearth.canvasPlanetaryViewControlReceiver = api;
+    hearth.canvasFastViewTransformReceiver = api;
+    hearth.canvasDeferredRenderReceiver = api;
 
     root.HEARTH_CANVAS = api;
     root.HEARTH_CANVAS_PARENT = api;
@@ -2532,6 +2780,8 @@
     root.HEARTH_CANVAS_EXPRESSION_HUB = api;
     root.HEARTH_CANVAS_FINGER_MANAGER = api;
     root.HEARTH_CANVAS_PLANETARY_VIEW_CONTROL_RECEIVER = api;
+    root.HEARTH_CANVAS_FAST_VIEW_TRANSFORM_RECEIVER = api;
+    root.HEARTH_CANVAS_DEFERRED_RENDER_RECEIVER = api;
 
     lab.hearthCanvas = api;
     lab.hearthCanvasParent = api;
@@ -2542,6 +2792,8 @@
     lab.hearthCanvasExpressionHub = api;
     lab.hearthCanvasFingerManager = api;
     lab.hearthCanvasPlanetaryViewControlReceiver = api;
+    lab.hearthCanvasFastViewTransformReceiver = api;
+    lab.hearthCanvasDeferredRenderReceiver = api;
 
     const light = getReceiptLight();
     const full = getReceipt();
@@ -2556,8 +2808,9 @@
     root.HEARTH_CANVAS_EXPRESSION_HUB_RECEIPT = hubReceipt;
     root.HEARTH_CANVAS_FINGER_MANAGER_RECEIPT = hubReceipt;
     root.HEARTH_CANVAS_PLANETARY_VIEW_CONTROL_RECEIVER_RECEIPT = controlReceipt;
-    root.HEARTH_CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_RECEIPT = full;
-    root.HEARTH_CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_RECEIPT_v12_1 = full;
+    root.HEARTH_CANVAS_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_RECEIPT = full;
+    root.HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_RECEIPT = full;
+    root.HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_RECEIPT_v12_2 = full;
 
     hearth.canvasReceipt = light;
     hearth.canvasParentReceipt = light;
@@ -2567,6 +2820,7 @@
     hearth.canvasExpressionHubReceipt = hubReceipt;
     hearth.canvasFingerManagerReceipt = hubReceipt;
     hearth.canvasPlanetaryViewControlReceiverReceipt = controlReceipt;
+    hearth.canvasFastViewTransformDeferredRenderReceiverReceipt = full;
 
     lab.hearthCanvasReceipt = light;
     lab.hearthCanvasParentReceipt = light;
@@ -2576,6 +2830,7 @@
     lab.hearthCanvasExpressionHubReceipt = hubReceipt;
     lab.hearthCanvasFingerManagerReceipt = hubReceipt;
     lab.hearthCanvasPlanetaryViewControlReceiverReceipt = controlReceipt;
+    lab.hearthCanvasFastViewTransformDeferredRenderReceiverReceipt = full;
 
     root.HEARTH_CANVAS_STRUCTURAL_CARRIER = getStructuralCarrier();
     root.HEARTH_CANVAS_CARRIER = getStructuralCarrier();
@@ -2621,6 +2876,7 @@
         if (!isFunction(target[method])) continue;
 
         const result = safeInvoke(target, method, [clonePlain(summary)]);
+
         if (result.ok) {
           state.routeConductorNotified = true;
           state.routeConductorNotifyMethod = method;
@@ -2665,13 +2921,14 @@
 
     state.bootAuditComplete = true;
 
-    record("CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_BOOT_AUDIT_COMPLETE", {
+    record("CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_BOOT_AUDIT_COMPLETE", {
       canvasMountFound: state.canvasMountFound,
       canvasElementFound: state.canvasElementFound,
       visiblePlanetProofReady: state.visiblePlanetProofReady,
       visiblePlanetProofSource: state.visiblePlanetProofSource,
       controlPacketCount: state.controlPacketCount,
-      viewTransformApplied: state.viewTransformApplied,
+      fastTransformAppliedCount: state.fastTransformAppliedCount,
+      deferredRenderRunCount: state.deferredRenderRunCount,
       firstFailedCoordinate: state.firstFailedCoordinate,
       recommendedNextFile: state.recommendedNextFile,
       visualPassClaimed: false
@@ -2763,7 +3020,9 @@
     drawVisibleExpression,
     mountBaseGlobeCarrier,
     drawBaseGlobe,
-    scheduleViewRedraw,
+    scheduleDeferredRender,
+    runDeferredRender,
+    applyCanvasViewTransform,
 
     readRouteConductorProfile,
     readRouteConductorReleasePacket,
@@ -2829,6 +3088,7 @@
     getReceiptText,
 
     updateDataset,
+    updateFastControlDataset,
     publishGlobals,
     publishViewGlobals,
     notifyRouteConductor,
@@ -2847,6 +3107,9 @@
     supportsControlPacketIntake: true,
     supportsViewStateApplication: true,
     supportsCssLevelVisibleMotion: true,
+    supportsFastViewTransform: true,
+    supportsDeferredRenderer: true,
+    supportsExpensiveRedrawDetachedFromInputPacket: true,
     supportsRendererRedrawFromViewState: true,
     supportsNoWebGL: true,
     supportsNoGeneratedImage: true,
@@ -2899,7 +3162,7 @@
       bootAudit({ reason: "no-document-runtime" });
     }
   } catch (error) {
-    recordError("CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_INITIALIZATION_FAILED", error);
+    recordError("CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_INITIALIZATION_FAILED", error);
 
     try {
       updateDataset();

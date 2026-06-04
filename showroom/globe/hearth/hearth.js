@@ -1,20 +1,23 @@
 // /showroom/globe/hearth/hearth.js
-// HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_TNT_v9_6
+// HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION_TNT_v9_7
 // Full-file replacement.
-// Route Conductor / NEWS Alignment / Fibonacci Synchronization / Visible Globe Proof Ingestion.
+// Route Conductor / NEWS Alignment / Fibonacci Synchronization / Visible Globe Proof Ingestion / Control Handshake Integration.
 // Purpose:
-// - Preserve v9_5 visible-globe proof ingestion baseline as the jump point.
-// - Preserve v9_4 compatibility surface for existing diagnostic and Canvas expectations.
-// - Add strict NEWS alignment protocol.
-// - Add Fibonacci synchronization audit.
-// - Publish first failed gate, first failed coordinate, and lawful next-file recommendation.
-// - Consume Canvas expression hub, finger manager, and visible-globe proof summaries by contract or lawful proof shape.
-// - Preserve route conductor boundaries: synchronization, release packet composition, summary ingestion, receipt publication.
-// - Never claim F21 latch, ready text, completion, final visual pass, generated image, GraphicBox, or WebGL.
+// - Preserve v9_6 NEWS/Fibonacci/visible-globe proof synchronization baseline.
+// - Preserve v9_5 visible-globe proof ingestion compatibility surface.
+// - Preserve v9_4 Canvas local-station compatibility surface.
+// - Add route-conductor-owned control handshake expectation for /assets/hearth/hearth.controls.js.
+// - Publish the JS integration funnel: index.js -> hearth.js -> hearth.controls.js -> hearth.canvas.js.
+// - Treat control-file absence as expected until the control file is built.
+// - Never treat expected control absence as CASE_5, cache failure, visible-globe failure, or Canvas drawing failure.
+// - Block only planetary view input/motion/touch/drag status when the control file is absent.
+// - Preserve route conductor boundaries: synchronization, release packet composition, summary ingestion, receipt publication, control handshake packet composition.
+// - Never claim control readiness, motion readiness, touch readiness, drag readiness, F21 latch, ready text, completion, final visual pass, generated image, GraphicBox, or WebGL.
 // Does not own:
 // - HTML shell
 // - index button authority
 // - diagnostic rail case selection
+// - control-file implementation
 // - Canvas drawing
 // - Canvas expression truth
 // - Canvas finger truth
@@ -27,11 +30,14 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_TNT_v9_6";
-  const RECEIPT = "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_RECEIPT_v9_6";
+  const CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION_TNT_v9_7";
+  const RECEIPT = "HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION_RECEIPT_v9_7";
 
-  const PREVIOUS_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_TNT_v9_5";
-  const PREVIOUS_RECEIPT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_RECEIPT_v9_5";
+  const PREVIOUS_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_TNT_v9_6";
+  const PREVIOUS_RECEIPT = "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_RECEIPT_v9_6";
+
+  const LINEAGE_V9_5_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_TNT_v9_5";
+  const LINEAGE_V9_5_RECEIPT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_RECEIPT_v9_5";
 
   const COMPAT_V9_4_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_TNT_v9_4";
   const COMPAT_V9_4_RECEIPT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_RECEIPT_v9_4";
@@ -40,7 +46,7 @@
   const LINEAGE_V9_2_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_TNT_v9_2";
   const BASELINE_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CENTRAL_STATION_SWITCHBOARD_WEST_V4_2_SOUTH_OUTPUT_ALIGNMENT_TNT_v8_2";
 
-  const VERSION = "2026-06-03.hearth-route-conductor-news-fibonacci-visible-globe-proof-synchronization-v9-6";
+  const VERSION = "2026-06-04.hearth-route-conductor-control-handshake-integration-v9-7";
 
   const FILE = "/showroom/globe/hearth/hearth.js";
   const ROUTE = "/showroom/globe/hearth/";
@@ -48,11 +54,27 @@
   const INDEX_FILE = "/showroom/globe/hearth/index.js";
   const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
   const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
+  const CONTROL_FILE = "/assets/hearth/hearth.controls.js";
   const MACRO_WEST_FILE = "/assets/lab/runtime-table.west.js";
   const NORTH_FILE = "/assets/lab/runtime-table.js";
 
-  const EXPECTED_HTML_CONTRACT = "HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_RECEIPT_TARGET_RESTORATION_TNT_v2_6";
+  const EXPECTED_HTML_CONTRACT = "HEARTH_HTML_FULL_PLANET_VISIBILITY_DOWNSTREAM_SHELL_ALIGNMENT_TNT_v4";
   const EXPECTED_INDEX_CONTRACT = "HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4";
+  const EXPECTED_CONTROL_CONTRACT = "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE_TNT_v1";
+  const EXPECTED_CONTROL_RECEIPT = "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE_RECEIPT_v1";
+
+  const JS_INTEGRATION_FUNNEL = `${INDEX_FILE} -> ${FILE} -> ${CONTROL_FILE} -> ${CANVAS_FILE}`;
+
+  const ACCEPTED_HTML_CONTRACTS = Object.freeze([
+    "HEARTH_HTML_FULL_PLANET_VISIBILITY_DOWNSTREAM_SHELL_ALIGNMENT_TNT_v4",
+    "HEARTH_HTML_PLANET_FACTORY_MIRRORLAND_PUBLIC_SHELL_TNT_v3",
+    "HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_RECEIPT_TARGET_RESTORATION_TNT_v2_6",
+    "HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_OPTIMAL_STANDARD_TNT_v2_5",
+    "HEARTH_HTML_SINGLE_FLOATING_DIAGNOSTIC_DOORWAY_NO_DUPLICATE_TOP_BANNER_TNT_v2_4",
+    "HEARTH_HTML_PARALLEL_DIAGNOSTIC_RAIL_TOP_PRIORITY_NATIVE_ACCESS_DOORWAY_TNT_v2_3",
+    "HEARTH_HTML_PARALLEL_DIAGNOSTIC_RAIL_NATIVE_ACCESS_DOORWAY_TNT_v2_2",
+    "HEARTH_HTML_CONTROL_SURFACE_CACHE_KEY_TOUCH_BINDING_REPAIR_TNT_v2_1"
+  ]);
 
   const ACTIVE_CANVAS_CONTRACTS = Object.freeze([
     "HEARTH_CANVAS_EXPRESSION_HUB_VISIBLE_BASE_GLOBE_CARRIER_TNT_v11_7",
@@ -70,6 +92,10 @@
 
   const CANVAS_BASELINE_CONTRACTS = Object.freeze([
     "HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD_TNT_v10_3"
+  ]);
+
+  const ACTIVE_CONTROL_CONTRACTS = Object.freeze([
+    EXPECTED_CONTROL_CONTRACT
   ]);
 
   const FINGER_FILES = Object.freeze({
@@ -98,12 +124,14 @@
     NORTH: "checkpoint-validation-north-only-latch-boundary",
     EAST: "ignition-intake-index-selector",
     WEST: "admissibility-inspection-release-permission",
-    SOUTH: "output-visible-proof-route-publication"
+    SOUTH: "output-visible-proof-route-publication",
+    CONTROL: "planetary-view-input-handshake-waiting"
   });
 
   const NEWS_CYCLES = Object.freeze({
     CYCLE_1: "NORTH_EAST_WEST_SOUTH_NORTH",
-    CYCLE_2: "NORTH_EAST_SOUTH_WEST_CANVAS"
+    CYCLE_2: "NORTH_EAST_SOUTH_WEST_CANVAS",
+    CONTROL_EXTENSION: "INDEX_ROUTE_CONTROL_CANVAS_HANDSHAKE"
   });
 
   const GATE_IDS = Object.freeze({
@@ -115,7 +143,8 @@
     VISIBLE_GLOBE: "VISIBLE_GLOBE_GATE",
     FINGER_TRACK: "FINGER_TRACK_GATE",
     F13_EVIDENCE: "F13_EVIDENCE_GATE",
-    F21_BOUNDARY: "F21_NORTH_ONLY_BOUNDARY_GATE"
+    F21_BOUNDARY: "F21_NORTH_ONLY_BOUNDARY_GATE",
+    CONTROL_HANDSHAKE: "CONTROL_HANDSHAKE_GATE"
   });
 
   const GATE_ORDER = Object.freeze([
@@ -127,7 +156,8 @@
     GATE_IDS.VISIBLE_GLOBE,
     GATE_IDS.FINGER_TRACK,
     GATE_IDS.F13_EVIDENCE,
-    GATE_IDS.F21_BOUNDARY
+    GATE_IDS.F21_BOUNDARY,
+    GATE_IDS.CONTROL_HANDSHAKE
   ]);
 
   const FIBONACCI = Object.freeze({
@@ -137,7 +167,8 @@
     F5: "Index selector loaded and bound",
     F8: "Route conductor self-duty active",
     F13: "Canvas and finger evidence observed",
-    F21: "North-only latch boundary eligible or held"
+    F21: "North-only latch boundary eligible or held",
+    CONTROL_EXTENSION: "Control handshake is a post-F21 construction-guide extension, not a completion latch"
   });
 
   const NO_CLAIMS = Object.freeze({
@@ -148,6 +179,10 @@
     degradedCompletionLatched: false,
     readyTextAllowed: false,
     readyTextClaimed: false,
+    controlReadyClaimed: false,
+    motionReadyClaimed: false,
+    touchReadyClaimed: false,
+    dragReadyClaimed: false,
     generatedImage: false,
     graphicBox: false,
     webGL: false,
@@ -175,6 +210,8 @@
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
+    lineageV95Contract: LINEAGE_V9_5_CONTRACT,
+    lineageV95Receipt: LINEAGE_V9_5_RECEIPT,
     compatibilityRouteConductorContract: COMPAT_V9_4_CONTRACT,
     compatibilityRouteConductorReceipt: COMPAT_V9_4_RECEIPT,
     version: VERSION,
@@ -184,6 +221,7 @@
 
     newsAlignmentActive: true,
     fibonacciSynchronizationActive: true,
+    controlHandshakeIntegrationActive: true,
     activeNewsCycle: NEWS_CYCLES.CYCLE_2,
     activeFibonacci: "F8",
 
@@ -191,13 +229,15 @@
     booting: false,
     startedAt: "",
     updatedAt: "",
-    latestEvent: "HEARTH_ROUTE_CONDUCTOR_V9_6_LOADED",
+    latestEvent: "HEARTH_ROUTE_CONDUCTOR_V9_7_LOADED",
 
     currentPacket: null,
     currentReceipt: null,
     currentReceiptText: "",
     currentCanvasSummary: null,
+    currentControlSummary: null,
     currentCanvasReleasePacket: null,
+    currentControlHandshakePacket: null,
     currentCompatibilityReceipt: null,
 
     chronologicalGateCount: GATE_ORDER.length,
@@ -212,6 +252,10 @@
     fibonacciSynchronizationDegraded: false,
     fibonacciSynchronizationHardFail: false,
     fibonacciSynchronizationHoldReason: "WAITING_BOOT",
+
+    controlHandshakeRequired: true,
+    controlHandshakeStatus: "WAITING_BOOT",
+    controlIntegrationStatus: "WAITING_BOOT",
 
     firstFailedCoordinate: "WAITING_BOOT",
     recommendedNextFile: FILE,
@@ -390,6 +434,9 @@
       "getReceipt",
       "getRoutePrimaryGateReceipt",
       "getRouteCycleReceipt",
+      "getControlReceipt",
+      "getControlHandshakeReceipt",
+      "getControlHandshakeSummary",
       "getCanvasStationReceiptLight",
       "getCanvasStationReceipt",
       "getCanvasStationSummary",
@@ -418,6 +465,8 @@
 
     if (isObject(authority.receipt)) return authority.receipt;
     if (isObject(authority.receiptPacket)) return authority.receiptPacket;
+    if (isObject(authority.controlReceipt)) return authority.controlReceipt;
+    if (isObject(authority.controlHandshakeReceipt)) return authority.controlHandshakeReceipt;
     if (isObject(authority.visiblePlanetReceipt)) return authority.visiblePlanetReceipt;
     if (isObject(authority.visibleBaseGlobeReceipt)) return authority.visibleBaseGlobeReceipt;
     if (isObject(authority.expressionHubReceipt)) return authority.expressionHubReceipt;
@@ -472,6 +521,8 @@
       targetFile: packet.targetFile,
       handoffTo: packet.handoffTo,
       canvasReleaseAuthorized: packet.canvasReleaseAuthorized,
+      controlHandshakeRequired: packet.controlHandshakeRequired,
+      controlHandshakeReady: packet.controlHandshakeReady,
       macroWestGateReady: packet.macroWestGateReady,
       canvasHubGateReady: packet.canvasHubGateReady,
       visibleGlobeGateReady: packet.visibleGlobeGateReady,
@@ -488,6 +539,26 @@
       recommendedNextFile: safeString(nextFile, FILE),
       evidence: clonePlain(evidence)
     };
+  }
+
+  function scriptByPath(path) {
+    if (!doc) return null;
+    const scripts = qa("script[src]");
+    return scripts.find((script) => {
+      try {
+        const src = script.getAttribute("src") || "";
+        const url = new URL(src, root.location && root.location.origin ? root.location.origin : "https://diamondgatebridge.com");
+        return url.pathname === path || url.pathname.endsWith(path);
+      } catch (_error) {
+        const src = script.getAttribute("src") || "";
+        return src.includes(path);
+      }
+    }) || null;
+  }
+
+  function scriptSrc(path) {
+    const script = scriptByPath(path);
+    return script ? safeString(script.getAttribute("src"), "") : "";
   }
 
   function scanHtmlGate() {
@@ -516,10 +587,12 @@
     const contextActive = (
       datasetValue("planetEnginePage") === "true" ||
       datasetValue("planetaryTemplateDevelopmentPage") === "true" ||
-      datasetValue("pageContext").includes("Planet Engine")
+      datasetValue("pageContext").includes("Planet Engine") ||
+      datasetValue("pageContext").includes("Planet Factory") ||
+      datasetValue("publicFacingPurpose").includes("Planet")
     );
 
-    const contractRecognized = contract === EXPECTED_HTML_CONTRACT;
+    const contractRecognized = ACCEPTED_HTML_CONTRACTS.includes(contract);
     const receiverTargetsReady = Boolean(receiptPanel && receiptText && routeStatus && diagnosticAnchor);
     const visibleMountReady = Boolean(mount && stage);
 
@@ -543,6 +616,7 @@
       {
         servedHtmlContract: contract || "UNKNOWN",
         expectedHtmlContract: EXPECTED_HTML_CONTRACT,
+        acceptedHtmlContracts: ACCEPTED_HTML_CONTRACTS.slice(),
         contextActive,
         receiverTargetsReady,
         visibleMountReady,
@@ -645,7 +719,8 @@
       found.value ||
       receipt.contract ||
       datasetValue("hearthIndexJsLoaded") === "true" ||
-      datasetValue("hearthFrontendButtonAuthorityRestored") === "true"
+      datasetValue("hearthFrontendButtonAuthorityRestored") === "true" ||
+      scriptByPath(INDEX_FILE)
     );
 
     const contractReady = !observedContract || observedContract === EXPECTED_INDEX_CONTRACT;
@@ -685,6 +760,7 @@
         indexAuthorityObserved: observed,
         observedIndexContract: observedContract || "UNKNOWN",
         expectedIndexContract: EXPECTED_INDEX_CONTRACT,
+        indexScriptSrc: scriptSrc(INDEX_FILE) || "UNKNOWN",
         contractReady,
         carrierHostAdmissibilityReady: carrierHostReady,
         carrierHostAdmissibilityPacketReady: carrierHostReady,
@@ -704,8 +780,10 @@
 
     const apiPresent = Boolean(
       root.HEARTH_ROUTE_CONDUCTOR === api ||
+      root.HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION === api ||
       root.HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION === api ||
       (root.HEARTH && root.HEARTH.routeConductor === api) ||
+      (root.HEARTH && root.HEARTH.routeConductorControlHandshakeIntegration === api) ||
       (root.HEARTH && root.HEARTH.routeConductorNewsFibonacciVisibleGlobeProofSynchronization === api) ||
       (root.DEXTER_LAB && root.DEXTER_LAB.hearthRouteConductor === api)
     );
@@ -736,6 +814,7 @@
         routeConductorApiPresent: apiPresent,
         routeConductorReceiptPresent: receiptPresent,
         routeConductorRuntimeActive: true,
+        routeConductorContract: CONTRACT,
         activeFibonacci: "F8"
       }
     );
@@ -800,6 +879,8 @@
         indexGateReady: indexGate.passed,
         routeF8GateReady: routeGate.passed,
         visibleGlobeProofIngestionRequested: true,
+        controlHandshakeIntegrationActive: true,
+        controlHandshakeDoesNotBlockVisibleGlobe: true,
         newsAlignmentActive: true,
         fibonacciSynchronizationActive: true,
         ...NO_CLAIMS
@@ -821,7 +902,8 @@
             routeConductorContract: CONTRACT,
             activeNewsCycle: NEWS_CYCLES.CYCLE_2,
             activeFibonacci: "F13N",
-            visibleGlobeProofIngestionRequested: true
+            visibleGlobeProofIngestionRequested: true,
+            controlHandshakeIntegrationActive: true
           });
 
           if (isObject(output)) {
@@ -1499,6 +1581,225 @@
     };
   }
 
+  function readControlAuthority() {
+    return firstGlobal([
+      "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE",
+      "HEARTH_CONTROLS",
+      "HEARTH_CONTROL_AUTHORITY",
+      "HEARTH_PLANETARY_VIEW_CONTROLS",
+      "HEARTH.controlsPlanetaryViewInputHandshake",
+      "HEARTH.controls",
+      "HEARTH.controlAuthority",
+      "HEARTH.planetaryViewControls",
+      "DEXTER_LAB.hearthControlsPlanetaryViewInputHandshake",
+      "DEXTER_LAB.hearthControls",
+      "DEXTER_LAB.hearthControlAuthority"
+    ]);
+  }
+
+  function readControlSummaryFromAuthority(authority) {
+    if (!authority || !isObject(authority)) return { method: "NONE", summary: null };
+
+    const methods = [
+      "getControlReceipt",
+      "getControlHandshakeReceipt",
+      "getControlSummary",
+      "getControlState",
+      "getReceiptLight",
+      "getReceipt",
+      "getStatus",
+      "getReport",
+      "getState"
+    ];
+
+    for (const method of methods) {
+      if (!isFunction(authority[method])) continue;
+      try {
+        const output = method === "getReceiptLight" ? authority[method](false) : authority[method]();
+        if (isObject(output)) return { method, summary: output };
+      } catch (error) {
+        recordError("CONTROL_SUMMARY_METHOD_FAILED", error, { method });
+      }
+    }
+
+    if (authority.contract || authority.CONTRACT || authority.receipt || authority.RECEIPT) {
+      return { method: "direct-authority-object", summary: authority };
+    }
+
+    return { method: "NONE", summary: null };
+  }
+
+  function normalizeControlSummary(inputSummary, method, authority, sourceName) {
+    const summary = isObject(inputSummary) ? inputSummary : {};
+    const script = scriptByPath(CONTROL_FILE);
+    const scriptPresent = Boolean(script);
+    const scriptSource = script ? safeString(script.getAttribute("src"), "") : "";
+
+    const contract = safeString(firstDefined(
+      summary.controlContract,
+      summary.controlsContract,
+      summary.contract,
+      summary.CONTRACT,
+      authority && authority.controlContract,
+      authority && authority.contract,
+      authority && authority.CONTRACT,
+      datasetValue("hearthControlContract"),
+      datasetValue("hearthControlsContract"),
+      datasetValue("hearthPlanetaryControlContract")
+    ), "");
+
+    const receipt = safeString(firstDefined(
+      summary.controlReceipt,
+      summary.controlsReceipt,
+      summary.receipt,
+      summary.RECEIPT,
+      authority && authority.controlReceipt,
+      authority && authority.receipt,
+      authority && authority.RECEIPT,
+      datasetValue("hearthControlReceipt"),
+      datasetValue("hearthControlsReceipt"),
+      datasetValue("hearthPlanetaryControlReceipt")
+    ), "");
+
+    const observed = Boolean(
+      authority ||
+      contract ||
+      receipt ||
+      scriptPresent ||
+      datasetValue("hearthControlsLoaded") === "true" ||
+      datasetValue("hearthControlFilePresent") === "true"
+    );
+
+    const contractAccepted = Boolean(contract && ACTIVE_CONTROL_CONTRACTS.includes(contract));
+
+    const receiverApiReady = Boolean(contractAccepted && authority && (
+      isFunction(authority.consumeRouteConductorControlHandshake) ||
+      isFunction(authority.receiveRouteConductorControlHandshake) ||
+      isFunction(authority.receiveControlHandshakePacket) ||
+      isFunction(authority.acceptControlHandshakePacket) ||
+      isFunction(authority.boot) ||
+      isFunction(authority.init) ||
+      isFunction(authority.start)
+    ));
+
+    const absenceExpected = !observed && !scriptPresent;
+    const filePresent = Boolean(observed || scriptPresent);
+    const handshakeReady = Boolean(filePresent && contractAccepted && receiverApiReady);
+
+    const handshakeStatus = handshakeReady
+      ? "CONTROL_HANDSHAKE_READY"
+      : absenceExpected
+        ? "WAITING_CONTROL_FILE_BUILD"
+        : !contractAccepted
+          ? "WAITING_EXPECTED_CONTROL_CONTRACT"
+          : "WAITING_CONTROL_HANDSHAKE_RECEIVER";
+
+    const integrationStatus = handshakeReady
+      ? "ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_READY"
+      : absenceExpected
+        ? "ROUTE_CONDUCTOR_WAITING_CONTROL_FILE_BUILD"
+        : !contractAccepted
+          ? "ROUTE_CONDUCTOR_WAITING_EXPECTED_CONTROL_CONTRACT"
+          : "ROUTE_CONDUCTOR_WAITING_CONTROL_HANDSHAKE_RECEIVER";
+
+    const blockedStatus = absenceExpected
+      ? "BLOCKED_BY_EXPECTED_CONTROL_ABSENCE"
+      : handshakeReady
+        ? "WAITING_CONTROL_RUNTIME_CONFIRMATION"
+        : "BLOCKED_BY_CONTROL_HANDSHAKE_INCOMPLETE";
+
+    return {
+      authority,
+      sourceName,
+      method,
+      raw: clonePlain(summary),
+
+      planetaryControlLifecycleSchemaActive: true,
+      planetaryControlFootprintStatus: "ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_FOOTPRINT_AUTHORED",
+      planetaryControlDiagnosticStatus: handshakeReady ? "CONTROL_HANDSHAKE_READY" : "CONTROL_HANDSHAKE_WAITING",
+      planetaryControlGateStatus: handshakeReady ? "CONTROL_GATE_READY" : "CONTROL_GATE_WAITING",
+
+      expectedControlFile: CONTROL_FILE,
+      expectedControlContract: EXPECTED_CONTROL_CONTRACT,
+      expectedControlReceipt: EXPECTED_CONTROL_RECEIPT,
+      controlFile: CONTROL_FILE,
+      controlFilePresent: filePresent,
+      controlFileSrc: scriptSource || "NOT_FOUND",
+      controlFileContract: contract || "",
+      controlFileReceipt: receipt || "",
+      controlFileAuthoritySource: sourceName || "NONE",
+      controlFileExpectedNotYetBuilt: absenceExpected,
+      controlFileAbsenceExpected: absenceExpected,
+      controlFileAbsenceNotTreatedAsCase5: true,
+      controlFileAbsenceBlocksMotionTouchNotVisiblePlanet: true,
+
+      controlHandshakeRequired: true,
+      controlHandshakeReady: handshakeReady,
+      controlHandshakeStatus: handshakeStatus,
+      controlHandshakeTarget: CONTROL_FILE,
+      controlHandshakeFunnelOwner: "route-conductor",
+      controlHandshakeReceiverObserved: Boolean(authority),
+      controlHandshakeReceiverApiReady: receiverApiReady,
+
+      jsIntegrationFunnel: JS_INTEGRATION_FUNNEL,
+      jsIndexFile: INDEX_FILE,
+      jsIndexContract: EXPECTED_INDEX_CONTRACT,
+      jsRouteConductorFile: FILE,
+      jsRouteConductorContract: CONTRACT,
+      jsControlFile: CONTROL_FILE,
+      jsControlContract: EXPECTED_CONTROL_CONTRACT,
+      jsCanvasFile: CANVAS_FILE,
+
+      routeConductorControlIntegrationStatus: integrationStatus,
+      routeConductorControlHandshakeRequired: true,
+      routeConductorControlHandshakeTarget: CONTROL_FILE,
+      routeConductorControlFunnelOwner: "route-conductor",
+
+      planetaryViewControlStatus: handshakeReady ? "CONTROL_HANDSHAKE_READY_WAITING_RUNTIME_CONFIRMATION" : blockedStatus,
+      planetaryViewTouchStatus: handshakeReady ? "WAITING_CONTROL_TOUCH_RUNTIME_CONFIRMATION" : blockedStatus,
+      planetaryViewDragStatus: handshakeReady ? "WAITING_CONTROL_DRAG_RUNTIME_CONFIRMATION" : blockedStatus,
+      planetaryViewMotionStatus: handshakeReady ? "WAITING_CONTROL_MOTION_RUNTIME_CONFIRMATION" : blockedStatus,
+      planetaryViewZoomStatus: handshakeReady ? "WAITING_CONTROL_ZOOM_RUNTIME_CONFIRMATION" : blockedStatus,
+      planetaryViewInputStatus: handshakeReady ? "WAITING_CONTROL_INPUT_RUNTIME_CONFIRMATION" : blockedStatus,
+
+      planetaryFilesTrackStatus: "VISIBLE_PLANET_FILES_TRACKED_BY_CANVAS_AND_FINGERS",
+      planetaryFingersTrackStatus: "CANVAS_FINGER_TRACK_PRESERVED",
+      planetaryCanvasTrackStatus: "VISIBLE_GLOBE_CANVAS_TRACK_PRESERVED",
+      planetaryViewTrackStatus: handshakeReady ? "PLANETARY_VIEW_CONTROL_TRACK_HANDSHAKE_READY" : "PLANETARY_VIEW_CONTROL_TRACK_WAITING_CONTROL_FILE",
+
+      planetaryControlRecommendedNextFile: handshakeReady ? "NONE" : CONTROL_FILE,
+      planetaryControlRecommendedNextAction: handshakeReady
+        ? "VERIFY_CONTROL_RUNTIME_TOUCH_DRAG_MOTION_WITHOUT_CLAIMING_FINAL_VISUAL_PASS"
+        : "BUILD_CONTROL_FILE_TO_RECEIVE_ROUTE_CONDUCTOR_HANDSHAKE",
+
+      controlDoesNotBlockVisiblePlanet: true,
+      controlDoesNotAuthorizeCanvasDrawing: true,
+      controlDoesNotClaimMotionReadiness: true,
+      controlDoesNotClaimTouchReadiness: true,
+      controlDoesNotClaimDragReadiness: true
+    };
+  }
+
+  function readControlHandshakeGate() {
+    const found = readControlAuthority();
+    const read = readControlSummaryFromAuthority(found.value);
+    const control = normalizeControlSummary(read.summary || {}, read.method, found.value, found.name);
+    state.currentControlSummary = clonePlain(control);
+
+    return {
+      gate: gate(
+        GATE_IDS.CONTROL_HANDSHAKE,
+        control.controlHandshakeReady,
+        control.controlHandshakeReady
+          ? "WAITING_CONTROL_HANDSHAKE_GATE"
+          : control.controlHandshakeStatus,
+        control.controlHandshakeReady ? CONTROL_FILE : CONTROL_FILE,
+        control
+      ),
+      control
+    };
+  }
+
   function readCanvasGate(macroWestGate) {
     const found = readCanvasAuthority();
     const read = readCanvasSummaryFromAuthority(found.value);
@@ -1683,6 +1984,9 @@
     const fingerGate = readFingerTrackGate(visibleGate, canvas);
     const f13Gate = readF13Gate(fingerGate, canvas);
     const f21Gate = readF21BoundaryGate(f13Gate, canvas);
+    const controlResult = readControlHandshakeGate();
+    const controlGate = controlResult.gate;
+    const control = controlResult.control;
 
     const gates = [
       htmlGate,
@@ -1693,7 +1997,8 @@
       visibleGate,
       fingerGate,
       f13Gate,
-      f21Gate
+      f21Gate,
+      controlGate
     ];
 
     let firstFailed = null;
@@ -1711,6 +2016,7 @@
     return {
       gates,
       canvas,
+      control,
       chronologicalGateCount: gates.length,
       chronologicalGatesSatisfied: satisfied,
       chronologicalFirstFailedGate: firstFailed ? firstFailed.id : "NONE",
@@ -1755,6 +2061,8 @@
 
     return {
       fibonacciLadder: ladder,
+      controlHandshakeOutsideFibonacciLatch: true,
+      controlHandshakeFibonacciExtensionLabel: FIBONACCI.CONTROL_EXTENSION,
       fibonacciSynchronizationScore: score,
       fibonacciSynchronizationExpected: 100,
       fibonacciSynchronizationSatisfied: score,
@@ -1799,25 +2107,46 @@
 
     cycleTwo.passed = Boolean(cycleTwo.north && cycleTwo.east && cycleTwo.south && cycleTwo.west && cycleTwo.canvas);
 
+    const controlExtension = {
+      route: NEWS_CYCLES.CONTROL_EXTENSION,
+      index: Boolean(byId[GATE_IDS.INDEX_HOST] && byId[GATE_IDS.INDEX_HOST].passed),
+      routeConductor: Boolean(byId[GATE_IDS.ROUTE_F8] && byId[GATE_IDS.ROUTE_F8].passed),
+      control: Boolean(byId[GATE_IDS.CONTROL_HANDSHAKE] && byId[GATE_IDS.CONTROL_HANDSHAKE].passed),
+      canvas: Boolean(byId[GATE_IDS.CANVAS_HUB] && byId[GATE_IDS.CANVAS_HUB].passed),
+      visibleGlobeNotBlockedByControl: Boolean(board.canvas && board.canvas.visiblePlanetProofReady)
+    };
+
+    controlExtension.passed = Boolean(controlExtension.index && controlExtension.routeConductor && controlExtension.control && controlExtension.canvas);
+
     return {
       newsAlignmentActive: true,
       northRole: NEWS.NORTH,
       eastRole: NEWS.EAST,
       westRole: NEWS.WEST,
       southRole: NEWS.SOUTH,
+      controlRole: NEWS.CONTROL,
       cycleOne,
       cycleTwo,
+      controlExtension,
       activeNewsCycle: NEWS_CYCLES.CYCLE_2,
       newsGatePassedBeforeF21: Boolean(cycleOne.passed && cycleTwo.passed && byId[GATE_IDS.F13_EVIDENCE] && byId[GATE_IDS.F13_EVIDENCE].passed),
-      newsGateDegradedBeforeF21: Boolean(cycleTwo.canvas && board.canvas && board.canvas.f13CanvasEvidenceDegraded && !board.canvas.f13CanvasEvidenceStrict)
+      newsGateDegradedBeforeF21: Boolean(cycleTwo.canvas && board.canvas && board.canvas.f13CanvasEvidenceDegraded && !board.canvas.f13CanvasEvidenceStrict),
+      controlHandshakeDoesNotBlockVisibleGlobe: true
     };
   }
 
   function selectPostgameStatus(board, fibonacci) {
     const canvas = board.canvas || {};
+    const control = board.control || {};
 
-    if (board.chronologicalFirstFailedGate === "NONE") return "NEWS_FIBONACCI_VISIBLE_GLOBE_CHAIN_READY_FOR_NORTH";
     if (canvas.f13HardFail) return "CANVAS_F13_HARD_FAIL";
+    if (canvas.visiblePlanetProofReady && control.controlHandshakeStatus === "WAITING_CONTROL_FILE_BUILD") {
+      return "VISIBLE_GLOBE_PROOF_READY_CONTROL_HANDSHAKE_WAITING";
+    }
+    if (canvas.visiblePlanetProofReady && control.controlHandshakeReady) {
+      return "VISIBLE_GLOBE_PROOF_READY_CONTROL_HANDSHAKE_READY";
+    }
+    if (board.chronologicalFirstFailedGate === "NONE") return "NEWS_FIBONACCI_VISIBLE_GLOBE_CONTROL_HANDSHAKE_READY_FOR_NORTH";
     if (canvas.visiblePlanetProofReady && canvas.f13CanvasEvidenceStrict) return "VISIBLE_GLOBE_PROOF_INGESTED_STRICT_F13_COMPLETE";
     if (canvas.visiblePlanetProofReady && canvas.f13CanvasEvidenceDegraded) return "VISIBLE_GLOBE_PROOF_INGESTED_STRICT_F13_PENDING";
     if (canvas.expressionHubActive || canvas.fingerManagerActive) return "CANVAS_EXPRESSION_HUB_ACTIVE_WAITING_VISIBLE_GLOBE_PROOF";
@@ -1832,6 +2161,7 @@
     });
 
     const canvas = board.canvas || {};
+    const control = board.control || {};
 
     const authorized = Boolean(
       gates[GATE_IDS.INDEX_HOST].passed &&
@@ -1847,6 +2177,8 @@
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       previousReceipt: PREVIOUS_RECEIPT,
+      lineageV95Contract: LINEAGE_V9_5_CONTRACT,
+      lineageV95Receipt: LINEAGE_V9_5_RECEIPT,
       compatibilityRouteConductorContract: COMPAT_V9_4_CONTRACT,
       compatibilityRouteConductorReceipt: COMPAT_V9_4_RECEIPT,
 
@@ -1861,6 +2193,10 @@
 
       newsAlignmentActive: true,
       fibonacciSynchronizationActive: true,
+      controlHandshakeIntegrationActive: true,
+      controlHandshakeDoesNotBlockVisibleGlobe: true,
+      controlHandshakeStatus: control.controlHandshakeStatus || "UNKNOWN",
+
       newsGatePassedBeforeF21: news.newsGatePassedBeforeF21,
       newsGateDegradedBeforeF21: news.newsGateDegradedBeforeF21,
       fibonacciSynchronizationScore: fibonacci.fibonacciSynchronizationScore,
@@ -1891,6 +2227,73 @@
     };
 
     state.currentCanvasReleasePacket = clonePlain(packet);
+    return packet;
+  }
+
+  function composeControlHandshakePacket(board, news, fibonacci) {
+    const control = board.control || {};
+    const canvas = board.canvas || {};
+
+    const packet = {
+      packetType: "ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_PACKET",
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
+      previousReceipt: PREVIOUS_RECEIPT,
+
+      sourceFile: FILE,
+      destinationFile: CONTROL_FILE,
+      targetFile: CONTROL_FILE,
+      expectedControlFile: CONTROL_FILE,
+      expectedControlContract: EXPECTED_CONTROL_CONTRACT,
+      expectedControlReceipt: EXPECTED_CONTROL_RECEIPT,
+
+      jsIntegrationFunnel: JS_INTEGRATION_FUNNEL,
+      jsIndexFile: INDEX_FILE,
+      jsIndexContract: EXPECTED_INDEX_CONTRACT,
+      jsRouteConductorFile: FILE,
+      jsRouteConductorContract: CONTRACT,
+      jsControlFile: CONTROL_FILE,
+      jsControlContract: EXPECTED_CONTROL_CONTRACT,
+      jsCanvasFile: CANVAS_FILE,
+
+      controlHandshakeRequired: true,
+      controlHandshakeReady: control.controlHandshakeReady === true,
+      controlHandshakeStatus: control.controlHandshakeStatus || "WAITING_CONTROL_FILE_BUILD",
+      controlHandshakeTarget: CONTROL_FILE,
+      controlHandshakeFunnelOwner: "route-conductor",
+      routeConductorControlIntegrationStatus: control.routeConductorControlIntegrationStatus || "ROUTE_CONDUCTOR_WAITING_CONTROL_FILE_BUILD",
+      routeConductorControlHandshakeRequired: true,
+      routeConductorControlHandshakeTarget: CONTROL_FILE,
+      routeConductorControlFunnelOwner: "route-conductor",
+
+      controlFilePresent: control.controlFilePresent === true,
+      controlFileExpectedNotYetBuilt: control.controlFileExpectedNotYetBuilt === true,
+      controlFileAbsenceExpected: control.controlFileAbsenceExpected === true,
+      controlFileAbsenceNotTreatedAsCase5: true,
+      controlFileAbsenceBlocksMotionTouchNotVisiblePlanet: true,
+      controlDoesNotBlockVisiblePlanet: true,
+
+      visiblePlanetProofReady: canvas.visiblePlanetProofReady === true,
+      visiblePlanetProofSource: canvas.visiblePlanetProofSource || "NONE",
+
+      planetaryViewTouchStatus: control.planetaryViewTouchStatus || "BLOCKED_BY_EXPECTED_CONTROL_ABSENCE",
+      planetaryViewDragStatus: control.planetaryViewDragStatus || "BLOCKED_BY_EXPECTED_CONTROL_ABSENCE",
+      planetaryViewMotionStatus: control.planetaryViewMotionStatus || "BLOCKED_BY_EXPECTED_CONTROL_ABSENCE",
+      planetaryViewZoomStatus: control.planetaryViewZoomStatus || "BLOCKED_BY_EXPECTED_CONTROL_ABSENCE",
+      planetaryViewInputStatus: control.planetaryViewInputStatus || "BLOCKED_BY_EXPECTED_CONTROL_ABSENCE",
+
+      newsAlignmentActive: true,
+      fibonacciSynchronizationActive: true,
+      controlHandshakeOutsideFibonacciLatch: true,
+      fibonacciSynchronizationScore: fibonacci.fibonacciSynchronizationScore,
+      activeNewsCycle: NEWS_CYCLES.CONTROL_EXTENSION,
+
+      composedAt: nowIso(),
+      ...NO_CLAIMS
+    };
+
+    state.currentControlHandshakePacket = clonePlain(packet);
     return packet;
   }
 
@@ -1958,7 +2361,7 @@
         state.canvasReleaseDeliveryMethod = method;
         state.canvasReleaseAcceptedByCanvas = accepted;
 
-        record("CANVAS_RELEASE_DELIVERED_BY_ROUTE_CONDUCTOR_V9_6", {
+        record("CANVAS_RELEASE_DELIVERED_BY_ROUTE_CONDUCTOR_V9_7", {
           method,
           accepted,
           currentCanvasParentContract: receipt.currentCanvasParentContract || receipt.contract || "",
@@ -1985,13 +2388,115 @@
     };
   }
 
+  function deliverControlHandshakeToControl(control, packet) {
+    if (!packet || packet.controlHandshakeRequired !== true) {
+      return {
+        delivered: false,
+        accepted: false,
+        method: "NONE",
+        reason: "CONTROL_HANDSHAKE_PACKET_NOT_REQUIRED"
+      };
+    }
+
+    if (!control || !isObject(control.authority)) {
+      return {
+        delivered: false,
+        accepted: false,
+        method: "NONE",
+        reason: packet.controlFileExpectedNotYetBuilt ? "WAITING_CONTROL_FILE_BUILD" : "WAITING_CONTROL_AUTHORITY"
+      };
+    }
+
+    if (packet.controlHandshakeReady !== true) {
+      return {
+        delivered: false,
+        accepted: false,
+        method: "NONE",
+        reason: packet.controlHandshakeStatus || "WAITING_CONTROL_HANDSHAKE_READY"
+      };
+    }
+
+    const signature = packetSignature(packet);
+
+    if (state.lastControlHandshakePacketSignature === signature && state.controlHandshakeAcceptedByControl === true) {
+      return {
+        delivered: false,
+        accepted: true,
+        method: state.controlHandshakeDeliveryMethod || "previous-accepted-control-handshake",
+        reason: "CONTROL_HANDSHAKE_DUPLICATE_DELIVERY_BLOCKED"
+      };
+    }
+
+    const methods = [
+      "consumeRouteConductorControlHandshake",
+      "receiveRouteConductorControlHandshake",
+      "receiveControlHandshakePacket",
+      "acceptControlHandshakePacket",
+      "boot",
+      "init",
+      "start"
+    ];
+
+    for (const method of methods) {
+      if (!isFunction(control.authority[method])) continue;
+
+      try {
+        const result = method === "boot" || method === "init" || method === "start"
+          ? control.authority[method]({ routeConductorControlHandshakePacket: clonePlain(packet) })
+          : control.authority[method](clonePlain(packet));
+
+        const receipt = isObject(result) ? result : readAuthorityReceipt(control.authority) || {};
+        const accepted = Boolean(
+          safeBool(firstDefined(receipt.controlHandshakeAccepted, receipt.routeConductorControlHandshakeAccepted), false) ||
+          safeBool(firstDefined(receipt.controlHandshakeReady, receipt.planetaryViewInputHandshakeReady), false)
+        );
+
+        state.lastControlHandshakePacketSignature = signature;
+        state.controlHandshakeDeliveryMethod = method;
+        state.controlHandshakeAcceptedByControl = accepted;
+
+        record("CONTROL_HANDSHAKE_DELIVERED_BY_ROUTE_CONDUCTOR_V9_7", {
+          method,
+          accepted,
+          controlContract: receipt.controlContract || receipt.contract || "",
+          controlHandshakeReady: receipt.controlHandshakeReady === true
+        });
+
+        return {
+          delivered: true,
+          accepted,
+          method,
+          reason: accepted ? "CONTROL_ACCEPTED_ROUTE_CONDUCTOR_HANDSHAKE" : "CONTROL_RETURNED_WITHOUT_ACCEPTANCE",
+          receipt: clonePlain(receipt)
+        };
+      } catch (error) {
+        recordError("CONTROL_HANDSHAKE_METHOD_FAILED", error, { method });
+      }
+    }
+
+    return {
+      delivered: false,
+      accepted: false,
+      method: "NONE",
+      reason: "CONTROL_HANDSHAKE_RECEIVER_MISSING"
+    };
+  }
+
   function composePrimaryPacket(options = {}) {
     const board = composeGateBoard();
     const news = composeNewsAudit(board);
     const fibonacci = composeFibonacciAudit(board);
     const releasePacket = composeCanvasReleasePacket(board, news, fibonacci);
+    const controlHandshakePacket = composeControlHandshakePacket(board, news, fibonacci);
 
     let delivery = {
+      delivered: false,
+      accepted: false,
+      method: "NONE",
+      reason: "DELIVERY_NOT_REQUESTED"
+    };
+
+    let controlDelivery = {
       delivered: false,
       accepted: false,
       method: "NONE",
@@ -2002,6 +2507,17 @@
       delivery = deliverReleaseToCanvas(board.canvas, releasePacket);
     }
 
+    if (options.allowDelivery === true && controlHandshakePacket.controlHandshakeReady) {
+      controlDelivery = deliverControlHandshakeToControl(board.control, controlHandshakePacket);
+    } else if (options.allowDelivery === true && !controlHandshakePacket.controlHandshakeReady) {
+      controlDelivery = {
+        delivered: false,
+        accepted: false,
+        method: "NONE",
+        reason: controlHandshakePacket.controlHandshakeStatus || "WAITING_CONTROL_HANDSHAKE_READY"
+      };
+    }
+
     const postgameStatus = selectPostgameStatus(board, fibonacci);
 
     const gatesById = {};
@@ -2010,6 +2526,7 @@
     });
 
     const canvas = board.canvas || {};
+    const control = board.control || {};
     const f21EligibleForNorth = Boolean(gatesById[GATE_IDS.F21_BOUNDARY] && gatesById[GATE_IDS.F21_BOUNDARY].passed);
 
     return {
@@ -2017,6 +2534,8 @@
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       previousReceipt: PREVIOUS_RECEIPT,
+      lineageV95Contract: LINEAGE_V9_5_CONTRACT,
+      lineageV95Receipt: LINEAGE_V9_5_RECEIPT,
       compatibilityRouteConductorContract: COMPAT_V9_4_CONTRACT,
       compatibilityRouteConductorReceipt: COMPAT_V9_4_RECEIPT,
       lineageV93Contract: LINEAGE_V9_3_CONTRACT,
@@ -2028,14 +2547,19 @@
       htmlFile: HTML_FILE,
       indexFile: INDEX_FILE,
       canvasFile: CANVAS_FILE,
+      controlFile: CONTROL_FILE,
+      expectedControlFile: CONTROL_FILE,
+      expectedControlContract: EXPECTED_CONTROL_CONTRACT,
+      expectedControlReceipt: EXPECTED_CONTROL_RECEIPT,
       macroWestFile: MACRO_WEST_FILE,
       northFile: NORTH_FILE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
 
-      role: "route-conductor-news-fibonacci-visible-globe-proof-synchronization",
+      role: "route-conductor-control-handshake-integration-news-fibonacci-visible-globe-proof-synchronization",
 
       newsAlignmentActive: true,
       fibonacciSynchronizationActive: true,
+      controlHandshakeIntegrationActive: true,
       activeNewsCycle: NEWS_CYCLES.CYCLE_2,
       activeFibonacci: "F8",
       news,
@@ -2065,6 +2589,7 @@
       fingerTrackGateReady: gatesById[GATE_IDS.FINGER_TRACK].passed,
       f13EvidenceGateReady: gatesById[GATE_IDS.F13_EVIDENCE].passed,
       f21BoundaryGateReady: gatesById[GATE_IDS.F21_BOUNDARY].passed,
+      controlHandshakeGateReady: gatesById[GATE_IDS.CONTROL_HANDSHAKE].passed,
 
       currentCanvasParentObserved: canvas.currentCanvasParentObserved === true,
       currentCanvasParentContractObserved: canvas.currentCanvasParentContractObserved === true,
@@ -2118,6 +2643,58 @@
       f13StrictEvidenceGap: canvas.f13StrictEvidenceGap || "",
       f13StrictEvidenceRepairTarget: canvas.f13StrictEvidenceRepairTarget || "",
 
+      planetaryControlLifecycleSchemaActive: control.planetaryControlLifecycleSchemaActive === true,
+      planetaryControlFootprintStatus: control.planetaryControlFootprintStatus || "UNKNOWN",
+      planetaryControlDiagnosticStatus: control.planetaryControlDiagnosticStatus || "UNKNOWN",
+      planetaryControlGateStatus: control.planetaryControlGateStatus || "UNKNOWN",
+
+      controlFile: CONTROL_FILE,
+      controlFilePresent: control.controlFilePresent === true,
+      controlFileSrc: control.controlFileSrc || "NOT_FOUND",
+      controlFileContract: control.controlFileContract || "",
+      controlFileReceipt: control.controlFileReceipt || "",
+      controlFileAuthoritySource: control.controlFileAuthoritySource || "NONE",
+      controlFileExpectedNotYetBuilt: control.controlFileExpectedNotYetBuilt === true,
+      controlFileAbsenceExpected: control.controlFileAbsenceExpected === true,
+      controlFileAbsenceNotTreatedAsCase5: true,
+      controlFileAbsenceBlocksMotionTouchNotVisiblePlanet: true,
+
+      controlHandshakeRequired: true,
+      controlHandshakeReady: control.controlHandshakeReady === true,
+      controlHandshakeStatus: control.controlHandshakeStatus || "WAITING_CONTROL_FILE_BUILD",
+      controlHandshakeTarget: CONTROL_FILE,
+      controlHandshakeFunnelOwner: "route-conductor",
+      controlHandshakeReceiverObserved: control.controlHandshakeReceiverObserved === true,
+      controlHandshakeReceiverApiReady: control.controlHandshakeReceiverApiReady === true,
+
+      jsIntegrationFunnel: JS_INTEGRATION_FUNNEL,
+      jsIndexFile: INDEX_FILE,
+      jsIndexContract: EXPECTED_INDEX_CONTRACT,
+      jsRouteConductorFile: FILE,
+      jsRouteConductorContract: CONTRACT,
+      jsControlFile: CONTROL_FILE,
+      jsControlContract: EXPECTED_CONTROL_CONTRACT,
+      jsCanvasFile: CANVAS_FILE,
+
+      routeConductorControlIntegrationStatus: control.routeConductorControlIntegrationStatus || "ROUTE_CONDUCTOR_WAITING_CONTROL_FILE_BUILD",
+      routeConductorControlHandshakeRequired: true,
+      routeConductorControlHandshakeTarget: CONTROL_FILE,
+      routeConductorControlFunnelOwner: "route-conductor",
+
+      planetaryViewControlStatus: control.planetaryViewControlStatus || "BLOCKED_BY_EXPECTED_CONTROL_ABSENCE",
+      planetaryViewTouchStatus: control.planetaryViewTouchStatus || "BLOCKED_BY_EXPECTED_CONTROL_ABSENCE",
+      planetaryViewDragStatus: control.planetaryViewDragStatus || "BLOCKED_BY_EXPECTED_CONTROL_ABSENCE",
+      planetaryViewMotionStatus: control.planetaryViewMotionStatus || "BLOCKED_BY_EXPECTED_CONTROL_ABSENCE",
+      planetaryViewZoomStatus: control.planetaryViewZoomStatus || "BLOCKED_BY_EXPECTED_CONTROL_ABSENCE",
+      planetaryViewInputStatus: control.planetaryViewInputStatus || "BLOCKED_BY_EXPECTED_CONTROL_ABSENCE",
+
+      planetaryFilesTrackStatus: control.planetaryFilesTrackStatus || "VISIBLE_PLANET_FILES_TRACKED_BY_CANVAS_AND_FINGERS",
+      planetaryFingersTrackStatus: control.planetaryFingersTrackStatus || "CANVAS_FINGER_TRACK_PRESERVED",
+      planetaryCanvasTrackStatus: control.planetaryCanvasTrackStatus || "VISIBLE_GLOBE_CANVAS_TRACK_PRESERVED",
+      planetaryViewTrackStatus: control.planetaryViewTrackStatus || "PLANETARY_VIEW_CONTROL_TRACK_WAITING_CONTROL_FILE",
+      planetaryControlRecommendedNextFile: control.planetaryControlRecommendedNextFile || CONTROL_FILE,
+      planetaryControlRecommendedNextAction: control.planetaryControlRecommendedNextAction || "BUILD_CONTROL_FILE_TO_RECEIVE_ROUTE_CONDUCTOR_HANDSHAKE",
+
       canvasReleasePacket: clonePlain(releasePacket),
       canvasReleaseAuthorized: releasePacket.canvasReleaseAuthorized === true,
       canvasReleasePacketReady: releasePacket.canvasReleasePacketReady === true,
@@ -2126,6 +2703,13 @@
       canvasReleaseAcceptedByCanvas: delivery.accepted === true,
       canvasReleaseDeliveryMethod: delivery.method,
       canvasReleaseDeliveryReason: delivery.reason,
+
+      controlHandshakePacket: clonePlain(controlHandshakePacket),
+      controlHandshakePacketReady: true,
+      controlHandshakePacketDelivered: controlDelivery.delivered === true,
+      controlHandshakeAcceptedByControl: controlDelivery.accepted === true,
+      controlHandshakeDeliveryMethod: controlDelivery.method,
+      controlHandshakeDeliveryReason: controlDelivery.reason,
 
       f21EligibleForNorth,
       f21EligibilityPosture: f21EligibleForNorth ? "ELIGIBLE_FOR_NORTH_REVIEW_ONLY" : "HELD_BEFORE_NORTH",
@@ -2139,6 +2723,7 @@
 
       activeCanvasContracts: ACTIVE_CANVAS_CONTRACTS.slice(),
       recognizedCanvasBaselineContracts: CANVAS_BASELINE_CONTRACTS.slice(),
+      activeControlContracts: ACTIVE_CONTROL_CONTRACTS.slice(),
       fingerFiles: clonePlain(FINGER_FILES),
       fingerSequence: FINGER_SEQUENCE.slice(),
 
@@ -2167,11 +2752,16 @@
     state.fibonacciSynchronizationHardFail = packet.fibonacciSynchronizationHardFail;
     state.fibonacciSynchronizationHoldReason = packet.fibonacciSynchronizationHoldReason;
 
+    state.controlHandshakeRequired = packet.controlHandshakeRequired;
+    state.controlHandshakeStatus = packet.controlHandshakeStatus;
+    state.controlIntegrationStatus = packet.routeConductorControlIntegrationStatus;
+
     state.firstFailedCoordinate = packet.firstFailedCoordinate;
     state.recommendedNextFile = packet.recommendedNextFile;
     state.recommendedNextRenewalTarget = packet.recommendedNextRenewalTarget;
     state.postgameStatus = packet.postgameStatus;
     state.currentCanvasReleasePacket = clonePlain(packet.canvasReleasePacket);
+    state.currentControlHandshakePacket = clonePlain(packet.controlHandshakePacket);
     state.updatedAt = nowIso();
 
     updateDataset(packet);
@@ -2181,7 +2771,7 @@
   function refresh(options = {}) {
     const packet = composePrimaryPacket({ allowDelivery: options.allowDelivery !== false });
     updateStateFromPacket(packet);
-    publishGlobals("refresh-v9-6-news-fibonacci", false);
+    publishGlobals("refresh-v9-7-control-handshake", false);
     scheduleRender();
     return getReceiptLight(false);
   }
@@ -2190,15 +2780,16 @@
     const packet = composePrimaryPacket({ allowDelivery: false });
     updateStateFromPacket(packet);
 
-    record("ROUTE_CONDUCTOR_V9_6_PASSIVE_NEWS_FIBONACCI_OBSERVATION", {
+    record("ROUTE_CONDUCTOR_V9_7_PASSIVE_NEWS_FIBONACCI_CONTROL_OBSERVATION", {
       chronologicalFirstFailedGate: packet.chronologicalFirstFailedGate,
       chronologicalFirstFailedCoordinate: packet.chronologicalFirstFailedCoordinate,
       fibonacciSynchronizationScore: packet.fibonacciSynchronizationScore,
+      controlHandshakeStatus: packet.controlHandshakeStatus,
       recommendedNextFile: packet.recommendedNextFile,
       postgameStatus: packet.postgameStatus
     });
 
-    publishGlobals("passive-v9-6-news-fibonacci", false);
+    publishGlobals("passive-v9-7-control-handshake", false);
     scheduleRender();
     return getReceiptLight(false);
   }
@@ -2207,7 +2798,7 @@
     const normalized = normalizeCanvasSummary(summary || {}, methodName || "receiveCanvasSummary", null, "PUSHED_CANVAS_SUMMARY");
     state.currentCanvasSummary = clonePlain(normalized);
 
-    record("CANVAS_SUMMARY_RECEIVED_BY_ROUTE_CONDUCTOR_V9_6", {
+    record("CANVAS_SUMMARY_RECEIVED_BY_ROUTE_CONDUCTOR_V9_7", {
       methodName,
       currentCanvasParentContract: normalized.currentCanvasParentContract,
       canvasContractAccepted: normalized.canvasContractAccepted,
@@ -2215,6 +2806,21 @@
       fingerManagerActive: normalized.fingerManagerActive,
       visiblePlanetProofReady: normalized.visiblePlanetProofReady,
       f13StrictEvidenceGap: normalized.f13StrictEvidenceGap
+    });
+
+    return refresh({ allowDelivery: false });
+  }
+
+  function receiveControlSummary(summary, methodName) {
+    const normalized = normalizeControlSummary(summary || {}, methodName || "receiveControlSummary", null, "PUSHED_CONTROL_SUMMARY");
+    state.currentControlSummary = clonePlain(normalized);
+
+    record("CONTROL_SUMMARY_RECEIVED_BY_ROUTE_CONDUCTOR_V9_7", {
+      methodName,
+      controlFileContract: normalized.controlFileContract,
+      controlHandshakeReady: normalized.controlHandshakeReady,
+      controlHandshakeStatus: normalized.controlHandshakeStatus,
+      routeConductorControlIntegrationStatus: normalized.routeConductorControlIntegrationStatus
     });
 
     return refresh({ allowDelivery: false });
@@ -2256,8 +2862,24 @@
     return receiveCanvasSummary(summary, "receiveCanvasVisibleProof");
   }
 
+  function receiveControlReceipt(summary) {
+    return receiveControlSummary(summary, "receiveControlReceipt");
+  }
+
+  function receiveControlHandshakeReceipt(summary) {
+    return receiveControlSummary(summary, "receiveControlHandshakeReceipt");
+  }
+
+  function receivePlanetaryViewControlReceipt(summary) {
+    return receiveControlSummary(summary, "receivePlanetaryViewControlReceipt");
+  }
+
   function reconcileCanvas(summary) {
     return receiveCanvasSummary(summary, "reconcileCanvas");
+  }
+
+  function reconcileControl(summary) {
+    return receiveControlSummary(summary, "reconcileControl");
   }
 
   function composeReceipt(packet) {
@@ -2265,10 +2887,11 @@
 
     return {
       ...clonePlain(p),
-      authority: "hearth-route-conductor-news-fibonacci-visible-globe-proof-synchronization",
+      authority: "hearth-route-conductor-control-handshake-integration",
       receiptComposed: true,
       currentReceipt: true,
       noFinalClaimsPreserved: true,
+      controlHandshakeIntegrationReceipt: true,
       updatedAt: nowIso(),
       ...NO_CLAIMS
     };
@@ -2285,8 +2908,10 @@
       compatibilitySurfaceForCanvasParentsExpectingV9_4: true,
       supersededByContract: CONTRACT,
       supersededByReceipt: RECEIPT,
-      previousV95Contract: PREVIOUS_CONTRACT,
-      previousV95Receipt: PREVIOUS_RECEIPT,
+      previousV96Contract: PREVIOUS_CONTRACT,
+      previousV96Receipt: PREVIOUS_RECEIPT,
+      previousV95Contract: LINEAGE_V9_5_CONTRACT,
+      previousV95Receipt: LINEAGE_V9_5_RECEIPT,
 
       routeConductorContract: COMPAT_V9_4_CONTRACT,
       routeConductorReceipt: COMPAT_V9_4_RECEIPT,
@@ -2304,6 +2929,12 @@
       westCanvasReleaseApproved: p.macroWestGateReady === true,
       handoffTo: p.canvasReleaseAuthorized === true ? "CANVAS" : "",
       destinationFile: CANVAS_FILE,
+
+      controlHandshakeIntegrationActive: true,
+      controlHandshakeStatus: p.controlHandshakeStatus,
+      controlFile: CONTROL_FILE,
+      expectedControlContract: EXPECTED_CONTROL_CONTRACT,
+      controlDoesNotBlockVisiblePlanet: true,
 
       newsAlignmentActive: true,
       fibonacciSynchronizationActive: true,
@@ -2337,7 +2968,12 @@
       receiveVisibleGlobeReceiptAvailable: true,
       receiveVisiblePlanetReceiptAvailable: true,
       receiveCanvasVisibleProofAvailable: true,
+      receiveControlSummaryAvailable: true,
+      receiveControlReceiptAvailable: true,
+      receiveControlHandshakeReceiptAvailable: true,
+      receivePlanetaryViewControlReceiptAvailable: true,
       reconcileCanvasAvailable: true,
+      reconcileControlAvailable: true,
       compatibilityReceiptV94Available: true,
       renderCount: state.renderCount,
       watchdogTicks: state.watchdogTicks,
@@ -2364,6 +3000,7 @@
         html: HTML_FILE,
         index: INDEX_FILE,
         routeConductor: FILE,
+        control: CONTROL_FILE,
         macroWest: MACRO_WEST_FILE,
         canvas: CANVAS_FILE,
         north: NORTH_FILE,
@@ -2384,13 +3021,15 @@
     ].join("\n")).join("\n");
 
     return [
-      "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_RECEIPT",
+      "HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION_RECEIPT",
       "",
       "HEADER",
       line("contract", r.contract || CONTRACT),
       line("receipt", r.receipt || RECEIPT),
       line("previousContract", r.previousContract || PREVIOUS_CONTRACT),
       line("previousReceipt", r.previousReceipt || PREVIOUS_RECEIPT),
+      line("lineageV95Contract", LINEAGE_V9_5_CONTRACT),
+      line("lineageV95Receipt", LINEAGE_V9_5_RECEIPT),
       line("compatibilityRouteConductorContract", COMPAT_V9_4_CONTRACT),
       line("compatibilityRouteConductorReceipt", COMPAT_V9_4_RECEIPT),
       line("lineageV93Contract", LINEAGE_V9_3_CONTRACT),
@@ -2407,17 +3046,23 @@
       line("eastRole", NEWS.EAST),
       line("westRole", NEWS.WEST),
       line("southRole", NEWS.SOUTH),
+      line("controlRole", NEWS.CONTROL),
       line("cycleOneRoute", NEWS_CYCLES.CYCLE_1),
       line("cycleOnePassed", r.news && r.news.cycleOne ? r.news.cycleOne.passed : false),
       line("cycleTwoRoute", NEWS_CYCLES.CYCLE_2),
       line("cycleTwoPassed", r.news && r.news.cycleTwo ? r.news.cycleTwo.passed : false),
+      line("controlExtensionRoute", NEWS_CYCLES.CONTROL_EXTENSION),
+      line("controlExtensionPassed", r.news && r.news.controlExtension ? r.news.controlExtension.passed : false),
       line("activeNewsCycle", r.activeNewsCycle || NEWS_CYCLES.CYCLE_2),
       line("newsGatePassedBeforeF21", r.news ? r.news.newsGatePassedBeforeF21 : false),
       line("newsGateDegradedBeforeF21", r.news ? r.news.newsGateDegradedBeforeF21 : false),
+      line("controlHandshakeDoesNotBlockVisibleGlobe", true),
       "",
       "FIBONACCI_SYNCHRONIZATION",
       line("fibonacciSynchronizationActive", true),
       line("activeFibonacci", r.activeFibonacci || "F8"),
+      line("controlHandshakeOutsideFibonacciLatch", true),
+      line("controlHandshakeFibonacciExtensionLabel", FIBONACCI.CONTROL_EXTENSION),
       line("chronologicalGateCount", r.chronologicalGateCount),
       line("chronologicalGatesSatisfied", r.chronologicalGatesSatisfied),
       line("chronologicalFirstFailedGate", r.chronologicalFirstFailedGate),
@@ -2432,6 +3077,56 @@
       "",
       "GATES",
       gateLines,
+      "",
+      "CONTROL_HANDSHAKE",
+      line("planetaryControlLifecycleSchemaActive", r.planetaryControlLifecycleSchemaActive),
+      line("planetaryControlFootprintStatus", r.planetaryControlFootprintStatus),
+      line("planetaryControlDiagnosticStatus", r.planetaryControlDiagnosticStatus),
+      line("planetaryControlGateStatus", r.planetaryControlGateStatus),
+      line("expectedControlFile", r.expectedControlFile),
+      line("expectedControlContract", r.expectedControlContract),
+      line("expectedControlReceipt", r.expectedControlReceipt),
+      line("controlFile", r.controlFile),
+      line("controlFilePresent", r.controlFilePresent),
+      line("controlFileSrc", r.controlFileSrc),
+      line("controlFileContract", r.controlFileContract),
+      line("controlFileReceipt", r.controlFileReceipt),
+      line("controlFileAuthoritySource", r.controlFileAuthoritySource),
+      line("controlFileExpectedNotYetBuilt", r.controlFileExpectedNotYetBuilt),
+      line("controlFileAbsenceExpected", r.controlFileAbsenceExpected),
+      line("controlFileAbsenceNotTreatedAsCase5", r.controlFileAbsenceNotTreatedAsCase5),
+      line("controlFileAbsenceBlocksMotionTouchNotVisiblePlanet", r.controlFileAbsenceBlocksMotionTouchNotVisiblePlanet),
+      line("controlHandshakeRequired", r.controlHandshakeRequired),
+      line("controlHandshakeReady", r.controlHandshakeReady),
+      line("controlHandshakeStatus", r.controlHandshakeStatus),
+      line("controlHandshakeTarget", r.controlHandshakeTarget),
+      line("controlHandshakeFunnelOwner", r.controlHandshakeFunnelOwner),
+      line("controlHandshakeReceiverObserved", r.controlHandshakeReceiverObserved),
+      line("controlHandshakeReceiverApiReady", r.controlHandshakeReceiverApiReady),
+      line("jsIntegrationFunnel", r.jsIntegrationFunnel),
+      line("jsIndexFile", r.jsIndexFile),
+      line("jsIndexContract", r.jsIndexContract),
+      line("jsRouteConductorFile", r.jsRouteConductorFile),
+      line("jsRouteConductorContract", r.jsRouteConductorContract),
+      line("jsControlFile", r.jsControlFile),
+      line("jsControlContract", r.jsControlContract),
+      line("jsCanvasFile", r.jsCanvasFile),
+      line("routeConductorControlIntegrationStatus", r.routeConductorControlIntegrationStatus),
+      line("routeConductorControlHandshakeRequired", r.routeConductorControlHandshakeRequired),
+      line("routeConductorControlHandshakeTarget", r.routeConductorControlHandshakeTarget),
+      line("routeConductorControlFunnelOwner", r.routeConductorControlFunnelOwner),
+      line("planetaryViewControlStatus", r.planetaryViewControlStatus),
+      line("planetaryViewTouchStatus", r.planetaryViewTouchStatus),
+      line("planetaryViewDragStatus", r.planetaryViewDragStatus),
+      line("planetaryViewMotionStatus", r.planetaryViewMotionStatus),
+      line("planetaryViewZoomStatus", r.planetaryViewZoomStatus),
+      line("planetaryViewInputStatus", r.planetaryViewInputStatus),
+      line("planetaryFilesTrackStatus", r.planetaryFilesTrackStatus),
+      line("planetaryFingersTrackStatus", r.planetaryFingersTrackStatus),
+      line("planetaryCanvasTrackStatus", r.planetaryCanvasTrackStatus),
+      line("planetaryViewTrackStatus", r.planetaryViewTrackStatus),
+      line("planetaryControlRecommendedNextFile", r.planetaryControlRecommendedNextFile),
+      line("planetaryControlRecommendedNextAction", r.planetaryControlRecommendedNextAction),
       "",
       "CANVAS_SPREAD",
       line("currentCanvasParentObserved", r.currentCanvasParentObserved),
@@ -2494,6 +3189,13 @@
       line("canvasReleaseDeliveryMethod", r.canvasReleaseDeliveryMethod),
       line("canvasReleaseDeliveryReason", r.canvasReleaseDeliveryReason),
       "",
+      "CONTROL_HANDSHAKE_PACKET",
+      line("controlHandshakePacketReady", r.controlHandshakePacketReady),
+      line("controlHandshakePacketDelivered", r.controlHandshakePacketDelivered),
+      line("controlHandshakeAcceptedByControl", r.controlHandshakeAcceptedByControl),
+      line("controlHandshakeDeliveryMethod", r.controlHandshakeDeliveryMethod),
+      line("controlHandshakeDeliveryReason", r.controlHandshakeDeliveryReason),
+      "",
       "F21_NORTH_ONLY_BOUNDARY",
       line("f21EligibleForNorth", r.f21EligibleForNorth),
       line("f21EligibilityPosture", r.f21EligibilityPosture),
@@ -2517,6 +3219,10 @@
       line("degradedCompletionLatched", false),
       line("readyTextAllowed", false),
       line("readyTextClaimed", false),
+      line("controlReadyClaimed", false),
+      line("motionReadyClaimed", false),
+      line("touchReadyClaimed", false),
+      line("dragReadyClaimed", false),
       line("generatedImage", false),
       line("graphicBox", false),
       line("webGL", false),
@@ -2536,17 +3242,23 @@
     const r = getReceiptLight(false);
 
     return [
-      "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_STATUS",
+      "HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION_STATUS",
       line("contract", r.contract),
       line("receipt", r.receipt),
       line("newsAlignmentActive", r.newsAlignmentActive),
       line("fibonacciSynchronizationActive", r.fibonacciSynchronizationActive),
+      line("controlHandshakeIntegrationActive", r.controlHandshakeIntegrationActive),
       line("chronologicalFirstFailedGate", r.chronologicalFirstFailedGate),
       line("chronologicalFirstFailedCoordinate", r.chronologicalFirstFailedCoordinate),
       line("fibonacciSynchronizationScore", r.fibonacciSynchronizationScore),
       line("currentCanvasParentContract", r.currentCanvasParentContract),
       line("visiblePlanetProofReady", r.visiblePlanetProofReady),
       line("f13CanvasEvidenceComplete", r.f13CanvasEvidenceComplete),
+      line("controlHandshakeStatus", r.controlHandshakeStatus),
+      line("routeConductorControlIntegrationStatus", r.routeConductorControlIntegrationStatus),
+      line("planetaryViewTouchStatus", r.planetaryViewTouchStatus),
+      line("planetaryViewDragStatus", r.planetaryViewDragStatus),
+      line("planetaryViewMotionStatus", r.planetaryViewMotionStatus),
       line("recommendedNextFile", r.recommendedNextFile),
       line("postgameStatus", r.postgameStatus),
       line("visualPassClaimed", false),
@@ -2562,14 +3274,18 @@
     setDataset("hearthRouteConductorReceipt", RECEIPT);
     setDataset("hearthRouteConductorPreviousContract", PREVIOUS_CONTRACT);
     setDataset("hearthRouteConductorPreviousReceipt", PREVIOUS_RECEIPT);
+    setDataset("hearthRouteConductorLineageV95Contract", LINEAGE_V9_5_CONTRACT);
+    setDataset("hearthRouteConductorLineageV95Receipt", LINEAGE_V9_5_RECEIPT);
     setDataset("hearthRouteConductorCompatibilityContract", COMPAT_V9_4_CONTRACT);
     setDataset("hearthRouteConductorCompatibilityReceipt", COMPAT_V9_4_RECEIPT);
     setDataset("hearthRouteConductorVersion", VERSION);
 
     setDataset("hearthRouteConductorNewsAlignmentActive", "true");
     setDataset("hearthRouteConductorFibonacciSynchronizationActive", "true");
+    setDataset("hearthRouteConductorControlHandshakeIntegrationActive", "true");
     setDataset("hearthRouteConductorCycleOneRoute", NEWS_CYCLES.CYCLE_1);
     setDataset("hearthRouteConductorCycleTwoRoute", NEWS_CYCLES.CYCLE_2);
+    setDataset("hearthRouteConductorControlExtensionRoute", NEWS_CYCLES.CONTROL_EXTENSION);
     setDataset("hearthRouteConductorActiveNewsCycle", NEWS_CYCLES.CYCLE_2);
     setDataset("hearthRouteConductorActiveFibonacci", packet.activeFibonacci || "F8");
 
@@ -2583,6 +3299,7 @@
     setDataset("hearthSouthFingerTrackGateReady", String(packet.fingerTrackGateReady === true));
     setDataset("hearthSouthF13CanvasEvidenceComplete", String(packet.f13CanvasEvidenceComplete === true));
     setDataset("hearthSouthF21EligibleForNorth", String(packet.f21EligibleForNorth === true));
+    setDataset("hearthSouthControlHandshakeGateReady", String(packet.controlHandshakeGateReady === true));
 
     setDataset("hearthSouthCurrentCanvasParentObserved", String(packet.currentCanvasParentObserved === true));
     setDataset("hearthSouthCurrentCanvasParentContractObserved", String(packet.currentCanvasParentContractObserved === true));
@@ -2595,6 +3312,59 @@
     setDataset("hearthSouthVisiblePlanetProofSource", packet.visiblePlanetProofSource || "NONE");
     setDataset("hearthSouthF13StrictEvidenceGap", packet.f13StrictEvidenceGap || "");
     setDataset("hearthSouthF13StrictEvidenceRepairTarget", packet.f13StrictEvidenceRepairTarget || "");
+
+    setDataset("hearthSouthPlanetaryControlLifecycleSchemaActive", String(packet.planetaryControlLifecycleSchemaActive === true));
+    setDataset("hearthSouthPlanetaryControlFootprintStatus", packet.planetaryControlFootprintStatus || "");
+    setDataset("hearthSouthPlanetaryControlDiagnosticStatus", packet.planetaryControlDiagnosticStatus || "");
+    setDataset("hearthSouthPlanetaryControlGateStatus", packet.planetaryControlGateStatus || "");
+    setDataset("hearthSouthExpectedControlFile", CONTROL_FILE);
+    setDataset("hearthSouthExpectedControlContract", EXPECTED_CONTROL_CONTRACT);
+    setDataset("hearthSouthExpectedControlReceipt", EXPECTED_CONTROL_RECEIPT);
+    setDataset("hearthSouthControlFile", CONTROL_FILE);
+    setDataset("hearthSouthControlFilePresent", String(packet.controlFilePresent === true));
+    setDataset("hearthSouthControlFileSrc", packet.controlFileSrc || "NOT_FOUND");
+    setDataset("hearthSouthControlFileContract", packet.controlFileContract || "");
+    setDataset("hearthSouthControlFileReceipt", packet.controlFileReceipt || "");
+    setDataset("hearthSouthControlFileAuthoritySource", packet.controlFileAuthoritySource || "NONE");
+    setDataset("hearthSouthControlFileExpectedNotYetBuilt", String(packet.controlFileExpectedNotYetBuilt === true));
+    setDataset("hearthSouthControlFileAbsenceExpected", String(packet.controlFileAbsenceExpected === true));
+    setDataset("hearthSouthControlFileAbsenceNotTreatedAsCase5", "true");
+    setDataset("hearthSouthControlFileAbsenceBlocksMotionTouchNotVisiblePlanet", "true");
+
+    setDataset("hearthSouthControlHandshakeRequired", "true");
+    setDataset("hearthSouthControlHandshakeReady", String(packet.controlHandshakeReady === true));
+    setDataset("hearthSouthControlHandshakeStatus", packet.controlHandshakeStatus || "");
+    setDataset("hearthSouthControlHandshakeTarget", CONTROL_FILE);
+    setDataset("hearthSouthControlHandshakeFunnelOwner", "route-conductor");
+    setDataset("hearthSouthControlHandshakeReceiverObserved", String(packet.controlHandshakeReceiverObserved === true));
+    setDataset("hearthSouthControlHandshakeReceiverApiReady", String(packet.controlHandshakeReceiverApiReady === true));
+
+    setDataset("hearthSouthJsIntegrationFunnel", JS_INTEGRATION_FUNNEL);
+    setDataset("hearthSouthJsIndexFile", INDEX_FILE);
+    setDataset("hearthSouthJsIndexContract", EXPECTED_INDEX_CONTRACT);
+    setDataset("hearthSouthJsRouteConductorFile", FILE);
+    setDataset("hearthSouthJsRouteConductorContract", CONTRACT);
+    setDataset("hearthSouthJsControlFile", CONTROL_FILE);
+    setDataset("hearthSouthJsControlContract", EXPECTED_CONTROL_CONTRACT);
+    setDataset("hearthSouthJsCanvasFile", CANVAS_FILE);
+
+    setDataset("hearthSouthRouteConductorControlIntegrationStatus", packet.routeConductorControlIntegrationStatus || "");
+    setDataset("hearthSouthRouteConductorControlHandshakeRequired", "true");
+    setDataset("hearthSouthRouteConductorControlHandshakeTarget", CONTROL_FILE);
+    setDataset("hearthSouthRouteConductorControlFunnelOwner", "route-conductor");
+
+    setDataset("hearthSouthPlanetaryViewControlStatus", packet.planetaryViewControlStatus || "");
+    setDataset("hearthSouthPlanetaryViewTouchStatus", packet.planetaryViewTouchStatus || "");
+    setDataset("hearthSouthPlanetaryViewDragStatus", packet.planetaryViewDragStatus || "");
+    setDataset("hearthSouthPlanetaryViewMotionStatus", packet.planetaryViewMotionStatus || "");
+    setDataset("hearthSouthPlanetaryViewZoomStatus", packet.planetaryViewZoomStatus || "");
+    setDataset("hearthSouthPlanetaryViewInputStatus", packet.planetaryViewInputStatus || "");
+    setDataset("hearthSouthPlanetaryFilesTrackStatus", packet.planetaryFilesTrackStatus || "");
+    setDataset("hearthSouthPlanetaryFingersTrackStatus", packet.planetaryFingersTrackStatus || "");
+    setDataset("hearthSouthPlanetaryCanvasTrackStatus", packet.planetaryCanvasTrackStatus || "");
+    setDataset("hearthSouthPlanetaryViewTrackStatus", packet.planetaryViewTrackStatus || "");
+    setDataset("hearthSouthPlanetaryControlRecommendedNextFile", packet.planetaryControlRecommendedNextFile || CONTROL_FILE);
+    setDataset("hearthSouthPlanetaryControlRecommendedNextAction", packet.planetaryControlRecommendedNextAction || "");
 
     setDataset("hearthSouthFingerAuthorityObservedCount", String(packet.fingerAuthorityObservedCount || 0));
     setDataset("hearthSouthFingerApiReadyCount", String(packet.fingerApiReadyCount || 0));
@@ -2627,6 +3397,12 @@
     setDataset("hearthSouthCanvasReleaseAcceptedByCanvas", String(packet.canvasReleaseAcceptedByCanvas === true));
     setDataset("hearthSouthCanvasReleaseDeliveryMethod", packet.canvasReleaseDeliveryMethod || "NONE");
 
+    setDataset("hearthSouthControlHandshakePacketReady", String(packet.controlHandshakePacketReady === true));
+    setDataset("hearthSouthControlHandshakePacketDelivered", String(packet.controlHandshakePacketDelivered === true));
+    setDataset("hearthSouthControlHandshakeAcceptedByControl", String(packet.controlHandshakeAcceptedByControl === true));
+    setDataset("hearthSouthControlHandshakeDeliveryMethod", packet.controlHandshakeDeliveryMethod || "NONE");
+    setDataset("hearthSouthControlHandshakeDeliveryReason", packet.controlHandshakeDeliveryReason || "");
+
     setDataset("hearthSouthFirstFailedCoordinate", packet.firstFailedCoordinate || "");
     setDataset("hearthSouthRecommendedNextFile", packet.recommendedNextFile || "");
     setDataset("hearthSouthRecommendedNextRenewalTarget", packet.recommendedNextRenewalTarget || "");
@@ -2637,6 +3413,10 @@
     setDataset("hearthSouthCompletionLatched", "false");
     setDataset("hearthSouthReadyTextAllowed", "false");
     setDataset("hearthSouthReadyTextClaimed", "false");
+    setDataset("hearthSouthControlReadyClaimed", "false");
+    setDataset("hearthSouthMotionReadyClaimed", "false");
+    setDataset("hearthSouthTouchReadyClaimed", "false");
+    setDataset("hearthSouthDragReadyClaimed", "false");
     setDataset("generatedImage", "false");
     setDataset("graphicBox", "false");
     setDataset("webgl", "false");
@@ -2653,19 +3433,20 @@
       ["HUB", "Canvas hub", r.canvasHubGateReady ? "READY" : r.currentCanvasParentObserved ? "OBSERVED" : "WAITING"],
       ["GLOBE", "Visible globe", r.visibleGlobeGateReady ? "PROOF" : r.visiblePlanetProofReady ? "DEGRADED" : "WAITING"],
       ["F13", "F13 evidence", r.f13EvidenceGateReady ? "READY" : r.f13CanvasEvidenceDegraded ? "DEGRADED" : "WAITING"],
+      ["CONTROL", "View controls", r.controlHandshakeGateReady ? "HANDSHAKE" : r.controlFileExpectedNotYetBuilt ? "EXPECTED" : "WAITING"],
       ["NEXT", "Next file", r.recommendedNextFile || FILE]
     ];
 
     return rows.map(([code, label, status]) => {
       const progress =
-        status === "READY" || status === "RELEASE" || status === "PROOF" ? 100 :
-          status === "DEGRADED" || status === "OBSERVED" ? 68 :
+        status === "READY" || status === "RELEASE" || status === "PROOF" || status === "HANDSHAKE" ? 100 :
+          status === "DEGRADED" || status === "OBSERVED" || status === "EXPECTED" ? 68 :
             status === "WAITING" ? 30 : 50;
 
       return [
         `<section class="hearth-ledger-lane" data-lane="${code}" data-status="${String(status).replace(/"/g, "")}">`,
         `<div class="hearth-ledger-lane-top">`,
-        `<span class="hearth-ledger-lane-title"><strong>${code} · ${label}</strong><span>NEWS + Fibonacci v9.6</span></span>`,
+        `<span class="hearth-ledger-lane-title"><strong>${code} · ${label}</strong><span>NEWS + Fibonacci + Control v9.7</span></span>`,
         `<span class="hearth-ledger-lane-status">${status}</span>`,
         `</div>`,
         `<div class="hearth-ledger-lane-track"><span class="hearth-ledger-lane-fill" style="width:${progress}%"></span></div>`,
@@ -2683,8 +3464,8 @@
     const r = state.currentPacket || getReceiptLight(false);
     const progress = Math.max(0, Math.min(100, safeNumber(r.fibonacciSynchronizationScore, 0)));
 
-    if (refs.stage) refs.stage.textContent = `${NEWS_CYCLES.CYCLE_2} · ${r.activeFibonacci || "F8"} · NEWS/Fibonacci`;
-    if (refs.heartbeat) refs.heartbeat.textContent = `${r.postgameStatus || "NEWS_FIBONACCI_ACTIVE"} · next=${r.recommendedNextFile || FILE}`;
+    if (refs.stage) refs.stage.textContent = `${NEWS_CYCLES.CYCLE_2} · ${r.activeFibonacci || "F8"} · Control handshake`;
+    if (refs.heartbeat) refs.heartbeat.textContent = `${r.postgameStatus || "CONTROL_HANDSHAKE_ACTIVE"} · next=${r.recommendedNextFile || FILE}`;
     if (refs.latest) refs.latest.textContent = `latest=${CONTRACT}`;
     if (refs.fill) refs.fill.style.width = `${progress}%`;
     if (refs.percent) refs.percent.textContent = `${Math.round(progress)}%`;
@@ -2712,6 +3493,7 @@
     root.__HEARTH_ROUTE_CONDUCTOR_RECEIPT__ = RECEIPT;
     root.__HEARTH_ROUTE_CONDUCTOR_PREVIOUS_CONTRACT__ = PREVIOUS_CONTRACT;
     root.__HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_SYNCHRONIZATION__ = true;
+    root.__HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION__ = true;
     root.__HEARTH_ROUTE_CONDUCTOR_MARKER_IS_HYDRATION_PROOF__ = false;
     updateDataset(state.currentPacket || {});
   }
@@ -2719,13 +3501,13 @@
   function globalsNeedRepublish() {
     return !(
       root.HEARTH_ROUTE_CONDUCTOR === api &&
-      root.HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION === api &&
+      root.HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION === api &&
       root.HEARTH_ROUTE_CONDUCTOR_RECEIPT &&
       root.HEARTH_ROUTE_CONDUCTOR_RECEIPT.receipt === RECEIPT
     );
   }
 
-  function publishGlobals(reason = "publish-globals-v9-6", force = false) {
+  function publishGlobals(reason = "publish-globals-v9-7", force = false) {
     if (!force && !globalsNeedRepublish()) {
       updateDataset(state.currentPacket || {});
       return false;
@@ -2738,6 +3520,7 @@
     root.HearthRouteConductor = api;
     root.HEARTH_SOUTH_ROUTE_CONDUCTOR = api;
     root.HEARTH_ROUTE_CONDUCTOR_PRIMARY_GATE = api;
+    root.HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION = api;
     root.HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION = api;
     root.HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION = api;
     root.HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT = api;
@@ -2745,6 +3528,7 @@
     hearth.routeConductor = api;
     hearth.southRouteConductor = api;
     hearth.routeConductorPrimaryGate = api;
+    hearth.routeConductorControlHandshakeIntegration = api;
     hearth.routeConductorNewsFibonacciVisibleGlobeProofSynchronization = api;
     hearth.routeConductorCanvasExpressionHubVisibleGlobeProofIngestion = api;
     hearth.routeConductorCanvasLocalStationBridgeAlignment = api;
@@ -2752,6 +3536,7 @@
     lab.hearthRouteConductor = api;
     lab.hearthSouthRouteConductor = api;
     lab.hearthRouteConductorPrimaryGate = api;
+    lab.hearthRouteConductorControlHandshakeIntegration = api;
     lab.hearthRouteConductorNewsFibonacciVisibleGlobeProofSynchronization = api;
     lab.hearthRouteConductorCanvasExpressionHubVisibleGlobeProofIngestion = api;
     lab.hearthRouteConductorCanvasLocalStationBridgeAlignment = api;
@@ -2762,6 +3547,9 @@
     root.HEARTH_ROUTE_CONDUCTOR_RECEIPT = receiptLight;
     root.HEARTH_SOUTH_ROUTE_CONDUCTOR_RECEIPT = receiptLight;
     root.HEARTH_ROUTE_CONDUCTOR_PRIMARY_GATE_RECEIPT = receiptLight;
+    root.HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION_RECEIPT = receiptLight;
+    root.HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION_RECEIPT_v9_7 = receiptLight;
+
     root.HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_RECEIPT = receiptLight;
     root.HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_RECEIPT_v9_6 = receiptLight;
 
@@ -2772,6 +3560,7 @@
     hearth.routeConductorReceipt = receiptLight;
     hearth.southRouteConductorReceipt = receiptLight;
     hearth.routeConductorPrimaryGateReceipt = receiptLight;
+    hearth.routeConductorControlHandshakeIntegrationReceipt = receiptLight;
     hearth.routeConductorNewsFibonacciVisibleGlobeProofSynchronizationReceipt = receiptLight;
     hearth.routeConductorCanvasExpressionHubVisibleGlobeProofIngestionReceipt = receiptLight;
     hearth.routeConductorCanvasLocalStationBridgeAlignmentReceipt = compatibility;
@@ -2779,6 +3568,7 @@
     lab.hearthRouteConductorReceipt = receiptLight;
     lab.hearthSouthRouteConductorReceipt = receiptLight;
     lab.hearthRouteConductorPrimaryGateReceipt = receiptLight;
+    lab.hearthRouteConductorControlHandshakeIntegrationReceipt = receiptLight;
     lab.hearthRouteConductorNewsFibonacciVisibleGlobeProofSynchronizationReceipt = receiptLight;
     lab.hearthRouteConductorCanvasLocalStationBridgeAlignmentReceipt = compatibility;
 
@@ -2789,12 +3579,21 @@
       hearth.canvasReleasePacket = clonePlain(state.currentCanvasReleasePacket);
     }
 
+    if (state.currentControlHandshakePacket) {
+      root.HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_PACKET = clonePlain(state.currentControlHandshakePacket);
+      root.HEARTH_CONTROL_HANDSHAKE_PACKET = clonePlain(state.currentControlHandshakePacket);
+      hearth.routeConductorControlHandshakePacket = clonePlain(state.currentControlHandshakePacket);
+      hearth.controlHandshakePacket = clonePlain(state.currentControlHandshakePacket);
+    }
+
     record(reason, {
       force,
       contract: CONTRACT,
       chronologicalFirstFailedGate: state.chronologicalFirstFailedGate,
       chronologicalFirstFailedCoordinate: state.chronologicalFirstFailedCoordinate,
       fibonacciSynchronizationScore: state.fibonacciSynchronizationScore,
+      controlHandshakeStatus: state.controlHandshakeStatus,
+      controlIntegrationStatus: state.controlIntegrationStatus,
       recommendedNextFile: state.recommendedNextFile
     });
 
@@ -2811,17 +3610,18 @@
       observePassive();
 
       if (globalsNeedRepublish()) {
-        publishGlobals("watchdog-v9-6-conditional-republish", false);
+        publishGlobals("watchdog-v9-7-conditional-republish", false);
       }
 
       if (
         state.watchdogTicks >= 18 ||
-        (state.currentPacket && state.currentPacket.f21EligibleForNorth === true)
+        (state.currentPacket && state.currentPacket.controlHandshakeAcceptedByControl === true)
       ) {
         root.clearInterval(watchdogTimer);
         watchdogTimer = 0;
-        record("WATCHDOG_STOPPED_V9_6", {
+        record("WATCHDOG_STOPPED_V9_7", {
           watchdogTicks: state.watchdogTicks,
+          controlHandshakeAcceptedByControl: state.currentPacket && state.currentPacket.controlHandshakeAcceptedByControl === true,
           f21EligibleForNorth: state.currentPacket && state.currentPacket.f21EligibleForNorth === true
         });
       }
@@ -2837,20 +3637,20 @@
       state.booting = true;
       state.startedAt = nowIso();
       state.updatedAt = state.startedAt;
-      state.postgameStatus = "BOOTING_NEWS_FIBONACCI_ROUTE_CONDUCTOR_V9_6";
+      state.postgameStatus = "BOOTING_CONTROL_HANDSHAKE_ROUTE_CONDUCTOR_V9_7";
 
       publishEarlyMarker();
-      publishGlobals("boot-early-v9-6-api-publication", true);
+      publishGlobals("boot-early-v9-7-api-publication", true);
       refresh({ allowDelivery: true });
 
       state.booting = false;
       state.booted = true;
 
-      publishGlobals("boot-complete-v9-6-api-publication", true);
+      publishGlobals("boot-complete-v9-7-api-publication", true);
       render();
       startWatchdog();
 
-      record("HEARTH_ROUTE_CONDUCTOR_V9_6_BOOTED", {
+      record("HEARTH_ROUTE_CONDUCTOR_V9_7_BOOTED", {
         route: ROUTE,
         contract: CONTRACT,
         previousContract: PREVIOUS_CONTRACT,
@@ -2858,6 +3658,7 @@
         chronologicalFirstFailedGate: state.chronologicalFirstFailedGate,
         chronologicalFirstFailedCoordinate: state.chronologicalFirstFailedCoordinate,
         fibonacciSynchronizationScore: state.fibonacciSynchronizationScore,
+        controlHandshakeStatus: state.controlHandshakeStatus,
         recommendedNextFile: state.recommendedNextFile,
         visualPassClaimed: false
       });
@@ -2879,7 +3680,7 @@
       renderTimer = 0;
     }
 
-    record("HEARTH_ROUTE_CONDUCTOR_V9_6_DISPOSED", { reason });
+    record("HEARTH_ROUTE_CONDUCTOR_V9_7_DISPOSED", { reason });
     render();
 
     return getReceipt();
@@ -2901,20 +3702,31 @@
     return getCanvasReleasePacket();
   }
 
+  function getControlHandshakePacket() {
+    return clonePlain(state.currentControlHandshakePacket || (state.currentPacket && state.currentPacket.controlHandshakePacket) || null);
+  }
+
+  function getControlPacket() {
+    return getControlHandshakePacket();
+  }
+
   function getRouteCycleReceipt() {
     const r = getReceiptLight(false);
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      cycleReceipt: "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_CYCLE_RECEIPT_v9_6",
+      cycleReceipt: "HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_CYCLE_RECEIPT_v9_7",
       cycleOneRoute: NEWS_CYCLES.CYCLE_1,
       cycleTwoRoute: NEWS_CYCLES.CYCLE_2,
+      controlExtensionRoute: NEWS_CYCLES.CONTROL_EXTENSION,
       activeNewsCycle: NEWS_CYCLES.CYCLE_2,
       newsAlignmentActive: true,
       fibonacciSynchronizationActive: true,
+      controlHandshakeIntegrationActive: true,
       chronologicalFirstFailedGate: r.chronologicalFirstFailedGate,
       chronologicalFirstFailedCoordinate: r.chronologicalFirstFailedCoordinate,
       fibonacciSynchronizationScore: r.fibonacciSynchronizationScore,
+      controlHandshakeStatus: r.controlHandshakeStatus,
       recommendedNextFile: r.recommendedNextFile,
       postgameStatus: r.postgameStatus,
       updatedAt: nowIso(),
@@ -2933,12 +3745,20 @@
     RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
+    lineageV95Contract: LINEAGE_V9_5_CONTRACT,
+    lineageV95Receipt: LINEAGE_V9_5_RECEIPT,
     compatibilityRouteConductorContract: COMPAT_V9_4_CONTRACT,
     compatibilityRouteConductorReceipt: COMPAT_V9_4_RECEIPT,
     version: VERSION,
     file: FILE,
     route: ROUTE,
     diagnosticRoute: DIAGNOSTIC_ROUTE,
+
+    controlFile: CONTROL_FILE,
+    expectedControlFile: CONTROL_FILE,
+    expectedControlContract: EXPECTED_CONTROL_CONTRACT,
+    expectedControlReceipt: EXPECTED_CONTROL_RECEIPT,
+    jsIntegrationFunnel: JS_INTEGRATION_FUNNEL,
 
     NEWS,
     NEWS_CYCLES,
@@ -2947,6 +3767,7 @@
     FIBONACCI,
     ACTIVE_CANVAS_CONTRACTS,
     CANVAS_BASELINE_CONTRACTS,
+    ACTIVE_CONTROL_CONTRACTS,
     FINGER_FILES,
     FINGER_SEQUENCE,
 
@@ -2966,11 +3787,17 @@
     readCanvasAuthority,
     readCanvasSummaryFromAuthority,
     normalizeCanvasSummary,
+    readControlAuthority,
+    readControlSummaryFromAuthority,
+    normalizeControlSummary,
+    readControlHandshakeGate,
     composeGateBoard,
     composeNewsAudit,
     composeFibonacciAudit,
     composeCanvasReleasePacket,
+    composeControlHandshakePacket,
     deliverReleaseToCanvas,
+    deliverControlHandshakeToControl,
 
     receiveCanvasSummary,
     receiveCanvasStationSummary,
@@ -2982,12 +3809,19 @@
     receiveVisibleGlobeReceipt,
     receiveVisiblePlanetReceipt,
     receiveCanvasVisibleProof,
+    receiveControlSummary,
+    receiveControlReceipt,
+    receiveControlHandshakeReceipt,
+    receivePlanetaryViewControlReceipt,
     reconcileCanvas,
+    reconcileControl,
 
     getCanvasReleasePacket,
     getReleasePacket,
     getCanvasHandoffPacket,
     getHandoffPacket,
+    getControlHandshakePacket,
+    getControlPacket,
 
     composeReceipt,
     composeReceiptText,
@@ -3007,23 +3841,35 @@
     supportsFibonacciSynchronizationAudit: true,
     supportsVisibleGlobeProofIngestion: true,
     supportsCanvasExpressionHubSpreadRecognition: true,
+    supportsControlHandshakeIntegration: true,
+    supportsPlanetaryViewControlFootprint: true,
+    supportsControlAbsenceExpectedPosture: true,
+    supportsControlAbsenceNotCase5: true,
     supportsCompatibilityReceiptV94: true,
+    supportsPreviousV96Lineage: true,
     supportsPreviousV95Lineage: true,
     supportsRouteReceiptChainPublication: true,
     supportsCanvasReleasePacketComposition: true,
+    supportsControlHandshakePacketComposition: true,
     supportsF21EligibilityPostureOnly: true,
 
     ownsRouteConductorRuntime: true,
     ownsNewsChronology: true,
     ownsFibonacciSynchronization: true,
     ownsCanvasReleasePacketComposition: true,
+    ownsControlHandshakePacketComposition: true,
+    ownsControlHandshakeExpectation: true,
+    ownsControlIntegrationFunnelPublication: true,
     ownsCanvasSummaryIngestion: true,
+    ownsControlSummaryIngestion: true,
     ownsVisibleGlobeProofIngestion: true,
     ownsRouteReceiptPublication: true,
 
     ownsHtmlShell: false,
     ownsIndexButtonAuthority: false,
     ownsDiagnosticRailCaseSelection: false,
+    ownsControlFileImplementation: false,
+    ownsControlRuntimeTruth: false,
     ownsCanvasDrawing: false,
     ownsCanvasExpressionTruth: false,
     ownsCanvasFingerTruth: false,
@@ -3041,7 +3887,7 @@
   });
 
   publishEarlyMarker();
-  publishGlobals("immediate-v9-6-api-publication", true);
+  publishGlobals("immediate-v9-7-api-publication", true);
 
   if (doc) {
     if (doc.readyState === "loading") {

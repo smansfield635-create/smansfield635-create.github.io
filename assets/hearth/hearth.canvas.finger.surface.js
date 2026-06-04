@@ -1,33 +1,39 @@
 // /assets/hearth/hearth.canvas.finger.surface.js
-// HEARTH_CANVAS_FINGER_SURFACE_POINTER_FINGER_EXTERNAL_EXPRESSION_SOCKET_TNT_v2
+// HEARTH_CANVAS_FINGER_SURFACE_POINTER_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_TNT_v3
 // Full-file replacement.
-// Canvas Finger 3 / Surface / Pointer Finger / External Expression Socket.
+// Canvas Finger 3 / Surface / Pointer Finger / Internal + External Expression Socket.
 // Previous:
-// HEARTH_CANVAS_FINGER_SURFACE_FIRST_MATERIAL_DIFFERENTIATION_TNT_v1
+// HEARTH_CANVAS_FINGER_SURFACE_POINTER_FINGER_EXTERNAL_EXPRESSION_SOCKET_TNT_v2
 // Purpose:
 // - Preserve Surface as Canvas Finger 3.
-// - Renew Surface into the Pointer Finger: the single external donor-expression intake socket.
-// - Receive external canvas/archive/donor expression packets through Surface first.
-// - Classify incoming expression into internal categories.
-// - Integrate only lawful surface-visible expression directly.
-// - Route non-surface categories to existing internal fingers/files when receivers exist.
-// - Hold recognized packets safely when the receiving file is not yet renewed or unavailable.
+// - Preserve Surface as the Pointer Finger.
+// - Preserve the single external donor-expression intake socket.
+// - Add internal expression intake for Composite, World Expression, Canvas Finger, and expansion packets.
+// - Accept Composite registration methods expected by /assets/hearth/hearth.canvas.finger.composite.js.
+// - Receive internal finger output without classifying it as an outside donor.
+// - Maintain separate ledgers for external donor traffic and internal finger/canvas traffic.
 // - Preserve Boundary Finger and Mass Finger consumption.
 // - Preserve first material differentiation and visible surface contribution APIs.
 // - Preserve Canvas hub registration without becoming the Canvas parent.
-// - Do not mutate HTML, index.js, route conductor, diagnostic rail, Canvas parent, Boundary Finger, Mass Finger, Light Finger, Inspect Finger, materials, composition, air channel, cliffs, or any donor file.
-// - Do not claim final terrain truth, hydrology truth, material truth, elevation truth, F13, F21, ready text, completion latch, final visual pass, generated image, GraphicBox, or WebGL.
+// - Hold or route only when receiving authority is unavailable.
+// - Do not mutate HTML, index.js, route conductor, diagnostic rail, Canvas parent, Boundary Finger, Mass Finger,
+//   Light Finger, Inspect Finger, Composite Finger, materials, composition, air channel, cliffs, or any donor file.
+// - Do not claim final terrain truth, hydrology truth, material truth, elevation truth, composite truth,
+//   F13, F21, ready text, completion latch, final visual pass, generated image, GraphicBox, or WebGL.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_FINGER_EXTERNAL_EXPRESSION_SOCKET_TNT_v2";
-  const RECEIPT = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_FINGER_EXTERNAL_EXPRESSION_SOCKET_RECEIPT_v2";
-  const PACKET = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_FINGER_EXTERNAL_EXPRESSION_SOCKET_PACKET_v2";
+  const CONTRACT = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_TNT_v3";
+  const RECEIPT = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_RECEIPT_v3";
+  const PACKET = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_PACKET_v3";
 
-  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_FINGER_SURFACE_FIRST_MATERIAL_DIFFERENTIATION_TNT_v1";
-  const PREVIOUS_RECEIPT = "HEARTH_CANVAS_FINGER_SURFACE_FIRST_MATERIAL_DIFFERENTIATION_RECEIPT_v1";
-  const PREVIOUS_PACKET = "HEARTH_CANVAS_FINGER_SURFACE_FIRST_MATERIAL_DIFFERENTIATION_PACKET_v1";
+  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_FINGER_EXTERNAL_EXPRESSION_SOCKET_TNT_v2";
+  const PREVIOUS_RECEIPT = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_FINGER_EXTERNAL_EXPRESSION_SOCKET_RECEIPT_v2";
+  const PREVIOUS_PACKET = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_FINGER_EXTERNAL_EXPRESSION_SOCKET_PACKET_v2";
+
+  const BASELINE_CONTRACT = "HEARTH_CANVAS_FINGER_SURFACE_FIRST_MATERIAL_DIFFERENTIATION_TNT_v1";
+  const BASELINE_RECEIPT = "HEARTH_CANVAS_FINGER_SURFACE_FIRST_MATERIAL_DIFFERENTIATION_RECEIPT_v1";
 
   const FILE = "/assets/hearth/hearth.canvas.finger.surface.js";
   const ROUTE = "/showroom/globe/hearth/";
@@ -38,6 +44,7 @@
   const MASS_FILE = "/assets/hearth/hearth.canvas.finger.mass.js";
   const LIGHT_FILE = "/assets/hearth/hearth.canvas.finger.light.js";
   const INSPECT_FILE = "/assets/hearth/hearth.canvas.finger.inspect.js";
+  const COMPOSITE_FILE = "/assets/hearth/hearth.canvas.finger.composite.js";
 
   const MATERIALS_FILE = "/assets/hearth/hearth.materials.js";
   const COMPOSITION_FILE = "/assets/hearth/hearth.composition.js";
@@ -47,7 +54,7 @@
   const NEXT_FILE = LIGHT_FILE;
 
   const FINGER_NAME = "surface";
-  const FINGER_ROLE = "pointer-finger-external-expression-socket";
+  const FINGER_ROLE = "pointer-finger-internal-external-expression-socket";
   const FINGER_ORDER = 3;
   const FINGER_STRETCH_TOTAL = 5;
 
@@ -69,8 +76,11 @@
     hydrologyTruthClaimed: false,
     materialTruthClaimed: false,
     elevationTruthClaimed: false,
+    compositeTruthClaimed: false,
+    finalCompositeTruthClaimed: false,
     biomeTruthClaimed: false,
     settlementTruthClaimed: false,
+    expressionComplete: false,
     finalVisualPassClaimed: false,
     visualPassClaimed: false,
     generatedImage: false,
@@ -84,6 +94,8 @@
     BOUNDARY: "boundary",
     LIGHT: "light",
     INSPECT: "inspect",
+    COMPOSITE: "composite",
+    WORLD_EXPRESSION: "world-expression",
     MATERIALS: "materials",
     COMPOSITION: "composition",
     AIR_CHANNEL: "air-channel",
@@ -94,9 +106,12 @@
 
   const ROUTING_STATUS = Object.freeze({
     INTEGRATED_BY_SURFACE: "INTEGRATED_BY_SURFACE",
+    INTERNAL_ACCEPTED_BY_SURFACE: "INTERNAL_ACCEPTED_BY_SURFACE",
+    INTERNAL_HELD_BY_SURFACE: "INTERNAL_HELD_BY_SURFACE",
     ROUTED_TO_RECEIVER: "ROUTED_TO_RECEIVER",
     HELD_FOR_RECEIVER_RENEWAL: "HELD_FOR_RECEIVER_RENEWAL",
-    REJECTED_UNCLASSIFIED: "REJECTED_UNCLASSIFIED"
+    REJECTED_UNCLASSIFIED: "REJECTED_UNCLASSIFIED",
+    REJECTED_FORBIDDEN_CLAIM: "REJECTED_FORBIDDEN_CLAIM"
   });
 
   const FINGER_STRETCH_REGISTRY = Object.freeze([
@@ -116,7 +131,7 @@
       order: 3,
       name: "surface",
       file: FILE,
-      role: "pointer finger, external expression socket, surface-visible synthesis"
+      role: "pointer finger, internal/external expression socket, surface-visible synthesis"
     }),
     Object.freeze({
       order: 4,
@@ -135,16 +150,27 @@
   const HUB_SOURCE_NAMES = Object.freeze([
     "HEARTH.canvas",
     "HEARTH.canvasParent",
+    "HEARTH.canvasHub",
     "HEARTH.canvasExpressionHub",
+    "HEARTH.canvasFingerManager",
     "HEARTH_CANVAS",
     "HEARTH_CANVAS_PARENT",
-    "HEARTH_CANVAS_EXPRESSION_HUB"
+    "HEARTH_CANVAS_HUB",
+    "HEARTH_CANVAS_EXPRESSION_HUB",
+    "HEARTH_CANVAS_FINGER_MANAGER",
+    "DEXTER_LAB.hearthCanvas",
+    "DEXTER_LAB.hearthCanvasParent",
+    "DEXTER_LAB.hearthCanvasHub",
+    "DEXTER_LAB.hearthCanvasExpressionHub",
+    "DEXTER_LAB.hearthCanvasFingerManager"
   ]);
 
   const HUB_INTAKE_METHODS = Object.freeze([
     "receiveFingerPacket",
     "receiveCanvasFingerPacket",
     "receiveSurfaceFingerPacket",
+    "receiveInternalFingerPacket",
+    "receiveExpansionFingerPacket",
     "registerCanvasFinger",
     "registerExpressionFinger",
     "receiveExpressionPacket",
@@ -155,14 +181,18 @@
     "HEARTH.canvasFingerBoundary",
     "HEARTH.canvasBoundaryFinger",
     "HEARTH_CANVAS_FINGER_BOUNDARY",
-    "HEARTH_CANVAS_BOUNDARY_FINGER"
+    "HEARTH_CANVAS_BOUNDARY_FINGER",
+    "DEXTER_LAB.hearthCanvasFingerBoundary",
+    "DEXTER_LAB.hearthCanvasBoundaryFinger"
   ]);
 
   const MASS_SOURCE_NAMES = Object.freeze([
     "HEARTH.canvasFingerMass",
     "HEARTH.canvasMassFinger",
     "HEARTH_CANVAS_FINGER_MASS",
-    "HEARTH_CANVAS_MASS_FINGER"
+    "HEARTH_CANVAS_MASS_FINGER",
+    "DEXTER_LAB.hearthCanvasFingerMass",
+    "DEXTER_LAB.hearthCanvasMassFinger"
   ]);
 
   const TARGET_RECEIVERS = Object.freeze({
@@ -205,7 +235,9 @@
         "HEARTH.canvasFingerLight",
         "HEARTH.canvasLightFinger",
         "HEARTH_CANVAS_FINGER_LIGHT",
-        "HEARTH_CANVAS_LIGHT_FINGER"
+        "HEARTH_CANVAS_LIGHT_FINGER",
+        "DEXTER_LAB.hearthCanvasFingerLight",
+        "DEXTER_LAB.hearthCanvasLightFinger"
       ]),
       methods: Object.freeze([
         "receiveSurfacePointerPacket",
@@ -225,7 +257,9 @@
         "HEARTH.canvasFingerInspect",
         "HEARTH.canvasInspectFinger",
         "HEARTH_CANVAS_FINGER_INSPECT",
-        "HEARTH_CANVAS_INSPECT_FINGER"
+        "HEARTH_CANVAS_INSPECT_FINGER",
+        "DEXTER_LAB.hearthCanvasFingerInspect",
+        "DEXTER_LAB.hearthCanvasInspectFinger"
       ]),
       methods: Object.freeze([
         "receiveSurfacePointerPacket",
@@ -338,6 +372,36 @@
       surfaceOwnsCategory: true,
       globalPaths: Object.freeze([]),
       methods: Object.freeze([])
+    }),
+    [CATEGORY.COMPOSITE]: Object.freeze({
+      category: CATEGORY.COMPOSITE,
+      file: COMPOSITE_FILE,
+      authority: "composite/world-expression assembly",
+      surfaceOwnsCategory: false,
+      internalOnly: true,
+      globalPaths: Object.freeze([
+        "HEARTH.canvasFingerComposite",
+        "HEARTH.canvasCompositeFinger",
+        "HEARTH_CANVAS_FINGER_COMPOSITE",
+        "HEARTH_CANVAS_COMPOSITE_FINGER",
+        "DEXTER_LAB.hearthCanvasFingerComposite",
+        "DEXTER_LAB.hearthCanvasCompositeFinger"
+      ]),
+      methods: Object.freeze([])
+    }),
+    [CATEGORY.WORLD_EXPRESSION]: Object.freeze({
+      category: CATEGORY.WORLD_EXPRESSION,
+      file: COMPOSITE_FILE,
+      authority: "assembled world expression packet",
+      surfaceOwnsCategory: false,
+      internalOnly: true,
+      globalPaths: Object.freeze([
+        "HEARTH.worldExpressionPacket",
+        "HEARTH_CANVAS_WORLD_EXPRESSION_PACKET",
+        "HEARTH_WORLD_EXPRESSION_PACKET",
+        "DEXTER_LAB.hearthWorldExpressionPacket"
+      ]),
+      methods: Object.freeze([])
     })
   });
 
@@ -357,6 +421,14 @@
     [CATEGORY.INSPECT]: Object.freeze([
       "inspect", "inspection", "click", "select", "hover", "readability", "proof",
       "viewer", "hit", "target", "label", "interaction", "control"
+    ]),
+    [CATEGORY.COMPOSITE]: Object.freeze([
+      "composite", "world expression", "world-expression", "assembled world",
+      "visible world", "composite model", "composite packet", "composite finger"
+    ]),
+    [CATEGORY.WORLD_EXPRESSION]: Object.freeze([
+      "world expression", "world-expression", "worldexpression", "world expression packet",
+      "planet expression", "visible planet expression", "assembled expression"
     ]),
     [CATEGORY.MATERIALS]: Object.freeze([
       "material", "mineral", "texture", "color", "soil", "rock", "crust",
@@ -399,6 +471,8 @@
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
     previousPacket: PREVIOUS_PACKET,
+    baselineContract: BASELINE_CONTRACT,
+    baselineReceipt: BASELINE_RECEIPT,
 
     file: FILE,
     route: ROUTE,
@@ -408,6 +482,7 @@
     massFile: MASS_FILE,
     lightFile: LIGHT_FILE,
     inspectFile: INSPECT_FILE,
+    compositeFile: COMPOSITE_FILE,
     materialsFile: MATERIALS_FILE,
     compositionFile: COMPOSITION_FILE,
     airChannelFile: AIR_CHANNEL_FILE,
@@ -422,7 +497,12 @@
     surfaceFingerActive: true,
     pointerFingerActive: true,
     externalExpressionSocketActive: true,
+    internalExpressionSocketActive: true,
+    internalExternalExpressionSocketActive: true,
     singleExternalInputReceiver: true,
+    internalFingerPacketReceiver: true,
+    compositePacketReceiver: true,
+    worldExpressionPacketReceiver: true,
     firstMaterialDifferentiationActive: true,
 
     boundaryDependencyExpected: true,
@@ -451,11 +531,26 @@
     heldExpressionCount: 0,
     rejectedExpressionCount: 0,
 
+    internalIntakeReady: true,
+    internalIntakeCount: 0,
+    internalAcceptedCount: 0,
+    internalHeldCount: 0,
+    internalRejectedCount: 0,
+    compositeInternalPacketCount: 0,
+    worldExpressionInternalPacketCount: 0,
+    internalSurfaceBridgeCount: 0,
+
     latestExternalPacketId: "NONE",
     latestExternalPacketCategory: "NONE",
     latestExternalPacketStatus: "NONE",
 
+    latestInternalPacketId: "NONE",
+    latestInternalPacketCategory: "NONE",
+    latestInternalPacketStatus: "NONE",
+    latestInternalPacketSourceFile: "NONE",
+
     categoryCounts: {},
+    internalCategoryCounts: {},
     registeredReceivers: {},
 
     externalIntakeLedger: [],
@@ -464,6 +559,15 @@
     heldDonorQueue: [],
     rejectedDonorQueue: [],
     surfaceIntegratedDonors: [],
+
+    internalIntakeLedger: [],
+    internalAcceptedLedger: [],
+    internalHeldQueue: [],
+    internalRejectedQueue: [],
+    compositeInternalPackets: [],
+    worldExpressionInternalPackets: [],
+    internalSurfaceBridgeFields: [],
+
     surfaceFormationFields: [],
     surfaceMaterialFamilies: [],
 
@@ -487,6 +591,8 @@
     surfaceModel: null,
     surfacePacket: null,
     pointerFingerPacket: null,
+    internalExpressionPacket: null,
+    compositeBridgePacket: null,
     lastRegistrationResponse: null,
     localEvents: [],
     errors: [],
@@ -521,6 +627,13 @@
   function safeNumber(value, fallback = 0) {
     const number = Number(value);
     return Number.isFinite(number) ? number : fallback;
+  }
+
+  function safeBool(value, fallback = false) {
+    if (typeof value === "boolean") return value;
+    if (value === true || value === 1 || value === "1" || value === "true" || value === "TRUE") return true;
+    if (value === false || value === 0 || value === "0" || value === "false" || value === "FALSE") return false;
+    return fallback;
   }
 
   function clamp(value, min, max) {
@@ -560,7 +673,7 @@
     };
 
     state.localEvents.push(item);
-    trimArray(state.localEvents, 160);
+    trimArray(state.localEvents, 180);
     state.updatedAt = item.at;
     return item;
   }
@@ -574,7 +687,7 @@
     };
 
     state.errors.push(item);
-    trimArray(state.errors, 100);
+    trimArray(state.errors, 120);
     state.updatedAt = item.at;
     return item;
   }
@@ -616,6 +729,10 @@
     return `SURFACE_POINTER_EXTERNAL_${String(state.externalIntakeCount + 1).padStart(4, "0")}`;
   }
 
+  function nextInternalId() {
+    return `SURFACE_POINTER_INTERNAL_${String(state.internalIntakeCount + 1).padStart(4, "0")}`;
+  }
+
   function getObjectText(value, limit = 8000) {
     try {
       if (typeof value === "string") return bounded(value, limit);
@@ -623,6 +740,41 @@
     } catch (_error) {
       return bounded(String(value), limit);
     }
+  }
+
+  function line(key, value) {
+    return `${key}=${value === undefined || value === null ? "" : String(value)}`;
+  }
+
+  function hasForbiddenClaim(packet) {
+    if (!isObject(packet)) return false;
+
+    return Boolean(
+      packet.f13Claimed === true ||
+      packet.f13EligibleForCanvas === true ||
+      packet.f13ClaimedByCanvasParent === true ||
+      packet.f21Claimed === true ||
+      packet.f21EligibleForNorth === true ||
+      packet.f21SubmittedToNorth === true ||
+      packet.f21EligibilitySubmittedToNorth === true ||
+      packet.completionLatched === true ||
+      packet.finalCompletionLatched === true ||
+      packet.degradedCompletionLatched === true ||
+      packet.readyTextClaimed === true ||
+      packet.readyTextAllowed === true ||
+      packet.terrainTruthClaimed === true ||
+      packet.hydrologyTruthClaimed === true ||
+      packet.materialTruthClaimed === true ||
+      packet.elevationTruthClaimed === true ||
+      packet.compositeTruthClaimed === true ||
+      packet.finalCompositeTruthClaimed === true ||
+      packet.finalVisualPassClaimed === true ||
+      packet.visualPassClaimed === true ||
+      packet.generatedImage === true ||
+      packet.graphicBox === true ||
+      packet.webGL === true ||
+      packet.webgl === true
+    );
   }
 
   function getExplicitCategory(input) {
@@ -635,6 +787,9 @@
       input.expressionDomain ||
       input.targetCategory ||
       input.routeCategory ||
+      input.fingerName ||
+      input.fingerKey ||
+      input.finger ||
       ""
     ).trim().toLowerCase();
   }
@@ -643,6 +798,8 @@
     const text = safeString(category).trim().toLowerCase();
 
     if (!text) return CATEGORY.UNKNOWN;
+    if (text.includes("world-expression") || text.includes("world expression") || text.includes("worldexpression")) return CATEGORY.WORLD_EXPRESSION;
+    if (text.includes("composite")) return CATEGORY.COMPOSITE;
     if (text.includes("hydro") || text.includes("waterline") || text.includes("coast") || text.includes("shore")) return CATEGORY.HYDROLOGY_INTERFACE;
     if (text.includes("air") || text.includes("atmosphere") || text.includes("haze")) return CATEGORY.AIR_CHANNEL;
     if (text.includes("material") || text.includes("mineral") || text.includes("texture")) return CATEGORY.MATERIALS;
@@ -661,7 +818,7 @@
     return CATEGORY.UNKNOWN;
   }
 
-  function classifyExternalExpression(input = {}, options = {}) {
+  function classifyByKeywords(input = {}, options = {}) {
     const explicit = normalizeCategory(options.category || getExplicitCategory(input));
     const text = getObjectText(input, 10000).toLowerCase();
     const scores = {};
@@ -683,6 +840,10 @@
     }
 
     if (isObject(input)) {
+      if (input.packetType && safeString(input.packetType).toUpperCase().includes("WORLD_EXPRESSION")) scores[CATEGORY.WORLD_EXPRESSION] += 16;
+      if (input.packetType && safeString(input.packetType).toUpperCase().includes("COMPOSITE")) scores[CATEGORY.COMPOSITE] += 16;
+      if (input.compositeModel || input.worldExpressionModel || input.compositePacket) scores[CATEGORY.COMPOSITE] += 10;
+      if (input.worldExpressionPacket || input.worldExpressionNodes || input.compositeNodes) scores[CATEGORY.WORLD_EXPRESSION] += 10;
       if (Array.isArray(input.surfaceSeeds) || Array.isArray(input.surfaceFormationFields)) scores[CATEGORY.SURFACE] += 5;
       if (Array.isArray(input.materialBands) || Array.isArray(input.materialFamilies)) scores[CATEGORY.MATERIALS] += 5;
       if (Array.isArray(input.massAnchors) || isObject(input.massModel)) scores[CATEGORY.MASS] += 5;
@@ -721,6 +882,39 @@
     };
   }
 
+  function classifyExternalExpression(input = {}, options = {}) {
+    return {
+      ...classifyByKeywords(input, options),
+      classificationLane: "external-donor"
+    };
+  }
+
+  function classifyInternalExpression(input = {}, options = {}) {
+    const result = classifyByKeywords(input, options);
+
+    if (result.category === CATEGORY.UNKNOWN) {
+      const packetType = safeString(input.packetType || input.packetName || "").toUpperCase();
+      const sourceFile = safeString(input.sourceFile || input.file || "").toLowerCase();
+
+      if (packetType.includes("COMPOSITE") || sourceFile.includes("composite")) {
+        result.category = CATEGORY.COMPOSITE;
+        result.confidence = "STRUCTURAL";
+        result.score = Math.max(result.score, 8);
+        result.classificationComplete = true;
+      } else if (packetType.includes("WORLD_EXPRESSION")) {
+        result.category = CATEGORY.WORLD_EXPRESSION;
+        result.confidence = "STRUCTURAL";
+        result.score = Math.max(result.score, 8);
+        result.classificationComplete = true;
+      }
+    }
+
+    return {
+      ...result,
+      classificationLane: "internal-finger"
+    };
+  }
+
   function normalizeExternalExpression(input = {}, options = {}) {
     const id = safeString(options.id || input.id || input.donorId || input.packetId || nextExternalId());
     const sourceName = safeString(options.sourceName || input.sourceName || input.donorName || input.name || "EXTERNAL_DONOR_EXPRESSION");
@@ -750,9 +944,68 @@
     };
   }
 
+  function normalizeInternalExpression(input = {}, options = {}) {
+    const id = safeString(options.id || input.id || input.packetId || input.packetName || nextInternalId());
+    const sourceName = safeString(options.sourceName || input.sourceName || input.fingerName || input.name || "INTERNAL_FINGER_EXPRESSION");
+    const sourceFile = safeString(options.sourceFile || input.sourceFile || input.file || "UNKNOWN");
+    const sourceContract = safeString(options.sourceContract || input.sourceContract || input.contract || "UNKNOWN");
+    const sourceReceipt = safeString(options.sourceReceipt || input.sourceReceipt || input.receipt || "UNKNOWN");
+
+    return {
+      id,
+      receivedAt: nowIso(),
+      packetType: "HEARTH_SURFACE_POINTER_INTERNAL_EXPRESSION_INTAKE_PACKET",
+      pointerContract: CONTRACT,
+      pointerReceipt: RECEIPT,
+      pointerFile: FILE,
+      sourceName,
+      sourceFile,
+      sourceContract,
+      sourceReceipt,
+      requestedCategory: safeString(options.category || getExplicitCategory(input) || "UNKNOWN"),
+      payload: clonePlain(input),
+      payloadSummary: getObjectText(input, 2600),
+      internalInformationReceivedThroughSurfacePointer: true,
+      externalInformationReceivedThroughSurfaceOnly: false,
+      surfaceOwnsRouting: true,
+      surfaceOwnsInternalSocket: true,
+      surfaceOwnsFinalCategoryTruth: false,
+      ...FINAL_FALSE
+    };
+  }
+
   function incrementCategory(category) {
     const key = category || CATEGORY.UNKNOWN;
     state.categoryCounts[key] = safeNumber(state.categoryCounts[key], 0) + 1;
+  }
+
+  function incrementInternalCategory(category) {
+    const key = category || CATEGORY.UNKNOWN;
+    state.internalCategoryCounts[key] = safeNumber(state.internalCategoryCounts[key], 0) + 1;
+  }
+
+  function findRegisteredReceiver(category) {
+    const entry = state.registeredReceivers[category];
+
+    if (entry && isObject(entry.receiver)) {
+      return {
+        receiver: entry.receiver,
+        sourceName: entry.name || `REGISTERED:${category}`
+      };
+    }
+
+    return { receiver: null, sourceName: "NONE" };
+  }
+
+  function findCategoryReceiver(route) {
+    const registered = findRegisteredReceiver(route.category);
+    if (registered.receiver) return registered;
+
+    const found = findSource(route.globalPaths || []);
+    return {
+      receiver: found.source,
+      sourceName: found.sourceName
+    };
   }
 
   function buildRouteEnvelope(normalized, classification, route) {
@@ -779,97 +1032,6 @@
       surfaceOwnsCategoryAuthority: Boolean(route && route.surfaceOwnsCategory === true),
       ...FINAL_FALSE
     };
-  }
-
-  function findRegisteredReceiver(category) {
-    const entry = state.registeredReceivers[category];
-    if (entry && isObject(entry.receiver)) {
-      return {
-        receiver: entry.receiver,
-        sourceName: entry.name || `REGISTERED:${category}`
-      };
-    }
-
-    return { receiver: null, sourceName: "NONE" };
-  }
-
-  function findCategoryReceiver(route) {
-    const registered = findRegisteredReceiver(route.category);
-    if (registered.receiver) return registered;
-
-    const found = findSource(route.globalPaths || []);
-    return {
-      receiver: found.source,
-      sourceName: found.sourceName
-    };
-  }
-
-  function routeToExistingReceiver(normalized, classification) {
-    const route = TARGET_RECEIVERS[classification.category];
-
-    if (!route) {
-      return holdDonor(normalized, classification, "NO_ROUTE_FOR_CATEGORY");
-    }
-
-    if (route.surfaceOwnsCategory === true) {
-      return integrateSurfaceVisibleExpression(normalized, classification, route);
-    }
-
-    const found = findCategoryReceiver(route);
-    const envelope = buildRouteEnvelope(normalized, classification, route);
-
-    if (!found.receiver) {
-      return holdDonor(normalized, classification, "RECEIVER_NOT_AVAILABLE");
-    }
-
-    for (const method of route.methods || []) {
-      if (!isFunction(found.receiver[method])) continue;
-
-      try {
-        const response = found.receiver[method](clonePlain(envelope));
-
-        const accepted = response !== false;
-
-        const routed = {
-          id: normalized.id,
-          category: classification.category,
-          status: accepted ? ROUTING_STATUS.ROUTED_TO_RECEIVER : ROUTING_STATUS.HELD_FOR_RECEIVER_RENEWAL,
-          receiverSourceName: found.sourceName,
-          receiverFile: route.file,
-          method,
-          response: clonePlain(response),
-          routedAt: nowIso(),
-          ...FINAL_FALSE
-        };
-
-        if (accepted) {
-          state.routedLedger.push(routed);
-          trimArray(state.routedLedger, 120);
-          state.routedExpressionCount += 1;
-          state.latestExternalPacketStatus = ROUTING_STATUS.ROUTED_TO_RECEIVER;
-
-          record("SURFACE_POINTER_ROUTED_EXTERNAL_EXPRESSION", routed);
-          return routed;
-        }
-
-        return holdDonor(normalized, classification, "RECEIVER_REJECTED_PACKET", {
-          receiverSourceName: found.sourceName,
-          receiverFile: route.file,
-          method
-        });
-      } catch (error) {
-        recordError("SURFACE_POINTER_RECEIVER_METHOD_FAILED", error, {
-          category: classification.category,
-          receiverSourceName: found.sourceName,
-          method
-        });
-      }
-    }
-
-    return holdDonor(normalized, classification, "RECEIVER_METHOD_NOT_AVAILABLE", {
-      receiverSourceName: found.sourceName,
-      receiverFile: route.file
-    });
   }
 
   function holdDonor(normalized, classification, reason, detail = {}) {
@@ -907,7 +1069,7 @@
       id: normalized.id,
       category: classification.category,
       confidence: classification.confidence,
-      status: ROUTING_STATUS.REJECTED_UNCLASSIFIED,
+      status: reason === "FORBIDDEN_CLAIM" ? ROUTING_STATUS.REJECTED_FORBIDDEN_CLAIM : ROUTING_STATUS.REJECTED_UNCLASSIFIED,
       rejectedReason: reason,
       sourceName: normalized.sourceName,
       sourceFile: normalized.sourceFile,
@@ -920,9 +1082,59 @@
     state.rejectedDonorQueue.push(rejected);
     trimArray(state.rejectedDonorQueue, 100);
     state.rejectedExpressionCount += 1;
-    state.latestExternalPacketStatus = ROUTING_STATUS.REJECTED_UNCLASSIFIED;
+    state.latestExternalPacketStatus = rejected.status;
 
     record("SURFACE_POINTER_REJECTED_EXTERNAL_EXPRESSION", rejected);
+    return rejected;
+  }
+
+  function holdInternal(normalized, classification, reason, detail = {}) {
+    const held = {
+      id: normalized.id,
+      category: classification.category,
+      confidence: classification.confidence,
+      status: ROUTING_STATUS.INTERNAL_HELD_BY_SURFACE,
+      heldReason: reason,
+      sourceName: normalized.sourceName,
+      sourceFile: normalized.sourceFile,
+      sourceContract: normalized.sourceContract,
+      payloadSummary: normalized.payloadSummary,
+      payload: clonePlain(normalized.payload),
+      detail: clonePlain(detail),
+      heldAt: nowIso(),
+      ...FINAL_FALSE
+    };
+
+    state.internalHeldQueue.push(held);
+    trimArray(state.internalHeldQueue, 160);
+    state.internalHeldCount += 1;
+    state.latestInternalPacketStatus = ROUTING_STATUS.INTERNAL_HELD_BY_SURFACE;
+
+    record("SURFACE_POINTER_HELD_INTERNAL_EXPRESSION", held);
+    return held;
+  }
+
+  function rejectInternal(normalized, classification, reason) {
+    const rejected = {
+      id: normalized.id,
+      category: classification.category,
+      confidence: classification.confidence,
+      status: reason === "FORBIDDEN_CLAIM" ? ROUTING_STATUS.REJECTED_FORBIDDEN_CLAIM : ROUTING_STATUS.REJECTED_UNCLASSIFIED,
+      rejectedReason: reason,
+      sourceName: normalized.sourceName,
+      sourceFile: normalized.sourceFile,
+      sourceContract: normalized.sourceContract,
+      payloadSummary: normalized.payloadSummary,
+      rejectedAt: nowIso(),
+      ...FINAL_FALSE
+    };
+
+    state.internalRejectedQueue.push(rejected);
+    trimArray(state.internalRejectedQueue, 100);
+    state.internalRejectedCount += 1;
+    state.latestInternalPacketStatus = rejected.status;
+
+    record("SURFACE_POINTER_REJECTED_INTERNAL_EXPRESSION", rejected);
     return rejected;
   }
 
@@ -969,6 +1181,69 @@
     return fields;
   }
 
+  function extractCompositeBridgeFields(payload, classification) {
+    const source = isObject(payload) ? payload : {};
+    const model = isObject(source.compositeModel)
+      ? source.compositeModel
+      : isObject(source.worldExpressionModel)
+        ? source.worldExpressionModel
+        : isObject(source.compositePacket) && isObject(source.compositePacket.compositeModel)
+          ? source.compositePacket.compositeModel
+          : isObject(source.worldExpressionPacket) && isObject(source.worldExpressionPacket.compositeModel)
+            ? source.worldExpressionPacket.compositeModel
+            : isObject(source.worldExpressionPacket) && isObject(source.worldExpressionPacket.worldExpressionModel)
+              ? source.worldExpressionPacket.worldExpressionModel
+              : source;
+
+    const nodes = Array.isArray(model.compositeNodes)
+      ? model.compositeNodes
+      : Array.isArray(model.worldExpressionNodes)
+        ? model.worldExpressionNodes
+        : Array.isArray(source.compositeNodes)
+          ? source.compositeNodes
+          : [];
+
+    const fields = [];
+
+    if (nodes.length) {
+      const step = Math.max(1, Math.floor(nodes.length / 24));
+
+      for (let index = 0; index < nodes.length && fields.length < 32; index += step) {
+        const node = nodes[index];
+        if (!isObject(node)) continue;
+
+        fields.push({
+          id: safeString(node.id || `SURFACE_INTERNAL_COMPOSITE_FIELD_${fields.length + 1}`),
+          x: clamp(node.x ?? ((safeNumber(node.col, 8) + 0.5) / 16), 0, 1),
+          y: clamp(node.y ?? ((safeNumber(node.row, 8) + 0.5) / 16), 0, 1),
+          scale: clamp(0.045 + safeNumber(node.visibleScore, 0.4) * 0.09, 0.035, 0.18),
+          value: clamp(safeNumber(node.visibleScore, 0.54), 0, 1),
+          donorCategory: classification.category,
+          donorConfidence: classification.confidence,
+          compositeClass: safeString(node.compositeClass || ""),
+          sourceNodeId: safeString(node.id || ""),
+          ownsTruth: false
+        });
+      }
+    }
+
+    if (!fields.length) {
+      fields.push({
+        id: `SURFACE_INTERNAL_COMPOSITE_BRIDGE_${state.internalSurfaceBridgeCount + 1}`,
+        x: 0.5,
+        y: 0.5,
+        scale: 0.23,
+        value: 0.58,
+        donorCategory: classification.category,
+        donorConfidence: classification.confidence,
+        compositeClass: "composite-bridge-fallback",
+        ownsTruth: false
+      });
+    }
+
+    return fields;
+  }
+
   function integrateSurfaceVisibleExpression(normalized, classification, route) {
     const fields = extractSurfaceFormationField(normalized.payload, classification);
 
@@ -982,7 +1257,7 @@
       });
     }
 
-    trimArray(state.surfaceFormationFields, 160);
+    trimArray(state.surfaceFormationFields, 180);
 
     const family = {
       id: `SURFACE_POINTER_FAMILY_${state.surfaceIntegratedCount + 1}`,
@@ -1000,7 +1275,7 @@
     };
 
     state.surfaceMaterialFamilies.push(family);
-    trimArray(state.surfaceMaterialFamilies, 120);
+    trimArray(state.surfaceMaterialFamilies, 140);
 
     const integrated = {
       id: normalized.id,
@@ -1016,7 +1291,7 @@
     };
 
     state.surfaceIntegratedDonors.push(integrated);
-    trimArray(state.surfaceIntegratedDonors, 120);
+    trimArray(state.surfaceIntegratedDonors, 140);
     state.surfaceIntegratedCount += 1;
     state.latestExternalPacketStatus = ROUTING_STATUS.INTEGRATED_BY_SURFACE;
 
@@ -1027,8 +1302,141 @@
     return integrated;
   }
 
+  function acceptInternalExpression(normalized, classification) {
+    const fields = extractCompositeBridgeFields(normalized.payload, classification);
+
+    for (const field of fields) {
+      state.internalSurfaceBridgeFields.push({
+        ...field,
+        internalPacketId: normalized.id,
+        sourceName: normalized.sourceName,
+        sourceFile: normalized.sourceFile,
+        integratedAt: nowIso()
+      });
+    }
+
+    trimArray(state.internalSurfaceBridgeFields, 180);
+    state.internalSurfaceBridgeCount += fields.length;
+
+    const accepted = {
+      id: normalized.id,
+      category: classification.category,
+      status: ROUTING_STATUS.INTERNAL_ACCEPTED_BY_SURFACE,
+      acceptedFields: fields.length,
+      sourceName: normalized.sourceName,
+      sourceFile: normalized.sourceFile,
+      sourceContract: normalized.sourceContract,
+      acceptedAt: nowIso(),
+      internalPacketStored: true,
+      treatedAsExternalDonor: false,
+      surfaceOwnsCompositeTruth: false,
+      surfaceOwnsWorldExpressionTruth: false,
+      ...FINAL_FALSE
+    };
+
+    state.internalAcceptedLedger.push(accepted);
+    trimArray(state.internalAcceptedLedger, 160);
+    state.internalAcceptedCount += 1;
+    state.latestInternalPacketStatus = ROUTING_STATUS.INTERNAL_ACCEPTED_BY_SURFACE;
+
+    state.internalExpressionPacket = clonePlain(normalized.payload);
+
+    if (classification.category === CATEGORY.COMPOSITE) {
+      state.compositeInternalPacketCount += 1;
+      state.compositeInternalPackets.push(clonePlain(normalized.payload));
+      trimArray(state.compositeInternalPackets, 40);
+      state.compositeBridgePacket = clonePlain(normalized.payload);
+    }
+
+    if (classification.category === CATEGORY.WORLD_EXPRESSION) {
+      state.worldExpressionInternalPacketCount += 1;
+      state.worldExpressionInternalPackets.push(clonePlain(normalized.payload));
+      trimArray(state.worldExpressionInternalPackets, 40);
+      state.compositeBridgePacket = clonePlain(normalized.payload);
+    }
+
+    buildSurfaceModel({ rebuildFromInternalFields: true });
+    buildSurfacePacket();
+    buildPointerFingerPacket();
+
+    record("SURFACE_POINTER_ACCEPTED_INTERNAL_EXPRESSION", accepted);
+    return accepted;
+  }
+
+  function routeToExistingReceiver(normalized, classification) {
+    const route = TARGET_RECEIVERS[classification.category];
+
+    if (!route) {
+      return holdDonor(normalized, classification, "NO_ROUTE_FOR_CATEGORY");
+    }
+
+    if (route.internalOnly === true) {
+      return holdDonor(normalized, classification, "CATEGORY_INTERNAL_ONLY_NOT_EXTERNAL_DONOR");
+    }
+
+    if (route.surfaceOwnsCategory === true) {
+      return integrateSurfaceVisibleExpression(normalized, classification, route);
+    }
+
+    const found = findCategoryReceiver(route);
+    const envelope = buildRouteEnvelope(normalized, classification, route);
+
+    if (!found.receiver) {
+      return holdDonor(normalized, classification, "RECEIVER_NOT_AVAILABLE");
+    }
+
+    for (const method of route.methods || []) {
+      if (!isFunction(found.receiver[method])) continue;
+
+      try {
+        const response = found.receiver[method](clonePlain(envelope));
+        const accepted = response !== false;
+
+        const routed = {
+          id: normalized.id,
+          category: classification.category,
+          status: accepted ? ROUTING_STATUS.ROUTED_TO_RECEIVER : ROUTING_STATUS.HELD_FOR_RECEIVER_RENEWAL,
+          receiverSourceName: found.sourceName,
+          receiverFile: route.file,
+          method,
+          response: clonePlain(response),
+          routedAt: nowIso(),
+          ...FINAL_FALSE
+        };
+
+        if (accepted) {
+          state.routedLedger.push(routed);
+          trimArray(state.routedLedger, 140);
+          state.routedExpressionCount += 1;
+          state.latestExternalPacketStatus = ROUTING_STATUS.ROUTED_TO_RECEIVER;
+
+          record("SURFACE_POINTER_ROUTED_EXTERNAL_EXPRESSION", routed);
+          return routed;
+        }
+
+        return holdDonor(normalized, classification, "RECEIVER_REJECTED_PACKET", {
+          receiverSourceName: found.sourceName,
+          receiverFile: route.file,
+          method
+        });
+      } catch (error) {
+        recordError("SURFACE_POINTER_RECEIVER_METHOD_FAILED", error, {
+          category: classification.category,
+          receiverSourceName: found.sourceName,
+          method
+        });
+      }
+    }
+
+    return holdDonor(normalized, classification, "RECEIVER_METHOD_NOT_AVAILABLE", {
+      receiverSourceName: found.sourceName,
+      receiverFile: route.file
+    });
+  }
+
   function receiveExternalExpression(input = {}, options = {}) {
-    const normalized = normalizeExternalExpression(input, options);
+    const rawInput = isObject(input) ? input : {};
+    const normalized = normalizeExternalExpression(rawInput, options);
     const classification = classifyExternalExpression(normalized.payload, options);
 
     state.externalIntakeCount += 1;
@@ -1047,7 +1455,7 @@
       receivedAt: normalized.receivedAt,
       ...FINAL_FALSE
     });
-    trimArray(state.externalIntakeLedger, 160);
+    trimArray(state.externalIntakeLedger, 180);
 
     state.classifiedLedger.push({
       id: normalized.id,
@@ -1058,11 +1466,13 @@
       classifiedAt: nowIso(),
       ...FINAL_FALSE
     });
-    trimArray(state.classifiedLedger, 160);
+    trimArray(state.classifiedLedger, 180);
 
     let result;
 
-    if (!classification.classificationComplete || classification.category === CATEGORY.UNKNOWN) {
+    if (hasForbiddenClaim(rawInput)) {
+      result = rejectDonor(normalized, classification, "FORBIDDEN_CLAIM");
+    } else if (!classification.classificationComplete || classification.category === CATEGORY.UNKNOWN) {
       result = rejectDonor(normalized, classification, "CATEGORY_UNCLASSIFIED");
     } else {
       result = routeToExistingReceiver(normalized, classification);
@@ -1072,7 +1482,7 @@
     publishGlobals();
 
     return {
-      ok: result.status !== ROUTING_STATUS.REJECTED_UNCLASSIFIED,
+      ok: result.status !== ROUTING_STATUS.REJECTED_UNCLASSIFIED && result.status !== ROUTING_STATUS.REJECTED_FORBIDDEN_CLAIM,
       contract: CONTRACT,
       receipt: RECEIPT,
       packet: PACKET,
@@ -1081,6 +1491,68 @@
       routingResult: clonePlain(result),
       surfacePointerSocketActive: true,
       externalInformationReceivedThroughSurfaceOnly: true,
+      internalExpressionSocketActive: true,
+      ...FINAL_FALSE
+    };
+  }
+
+  function receiveInternalExpression(input = {}, options = {}) {
+    const rawInput = isObject(input) ? input : {};
+    const normalized = normalizeInternalExpression(rawInput, options);
+    const classification = classifyInternalExpression(normalized.payload, options);
+
+    state.internalIntakeCount += 1;
+    state.latestInternalPacketId = normalized.id;
+    state.latestInternalPacketCategory = classification.category;
+    state.latestInternalPacketSourceFile = normalized.sourceFile;
+
+    incrementInternalCategory(classification.category);
+
+    state.internalIntakeLedger.push({
+      id: normalized.id,
+      sourceName: normalized.sourceName,
+      sourceFile: normalized.sourceFile,
+      sourceContract: normalized.sourceContract,
+      requestedCategory: normalized.requestedCategory,
+      category: classification.category,
+      receivedAt: normalized.receivedAt,
+      treatedAsExternalDonor: false,
+      ...FINAL_FALSE
+    });
+    trimArray(state.internalIntakeLedger, 180);
+
+    let result;
+
+    if (hasForbiddenClaim(rawInput)) {
+      result = rejectInternal(normalized, classification, "FORBIDDEN_CLAIM");
+    } else if (!classification.classificationComplete || classification.category === CATEGORY.UNKNOWN) {
+      result = holdInternal(normalized, classification, "INTERNAL_CATEGORY_UNCLASSIFIED");
+    } else if (
+      classification.category === CATEGORY.COMPOSITE ||
+      classification.category === CATEGORY.WORLD_EXPRESSION ||
+      classification.category === CATEGORY.SURFACE ||
+      classification.category === CATEGORY.HYDROLOGY_INTERFACE
+    ) {
+      result = acceptInternalExpression(normalized, classification);
+    } else {
+      result = holdInternal(normalized, classification, "INTERNAL_CATEGORY_ACKNOWLEDGED_NON_SURFACE_BRIDGE");
+    }
+
+    updateDataset();
+    publishGlobals();
+
+    return {
+      ok: result.status !== ROUTING_STATUS.REJECTED_UNCLASSIFIED && result.status !== ROUTING_STATUS.REJECTED_FORBIDDEN_CLAIM,
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      packet: PACKET,
+      internalPacketId: normalized.id,
+      classification,
+      routingResult: clonePlain(result),
+      internalExpressionSocketActive: true,
+      treatedAsExternalDonor: false,
+      surfacePointerOwnsCompositeTruth: false,
+      surfacePointerOwnsWorldExpressionTruth: false,
       ...FINAL_FALSE
     };
   }
@@ -1100,6 +1572,85 @@
     return receiveExternalExpression(input, {
       ...options,
       sourceName: options.sourceName || "ARCHIVE_EXPRESSION_DONOR"
+    });
+  }
+
+  function receiveInternalFingerPacket(packet = {}, options = {}) {
+    return receiveInternalExpression(packet, {
+      ...options,
+      sourceName: options.sourceName || "INTERNAL_FINGER_PACKET"
+    });
+  }
+
+  function receiveExpansionFingerPacket(packet = {}, options = {}) {
+    return receiveInternalExpression(packet, {
+      ...options,
+      sourceName: options.sourceName || "EXPANSION_FINGER_PACKET"
+    });
+  }
+
+  function receiveCompositeFingerPacket(packet = {}, options = {}) {
+    return receiveInternalExpression(packet, {
+      ...options,
+      category: CATEGORY.COMPOSITE,
+      sourceName: options.sourceName || "COMPOSITE_FINGER_PACKET",
+      sourceFile: options.sourceFile || COMPOSITE_FILE
+    });
+  }
+
+  function receiveCompositePacket(packet = {}, options = {}) {
+    return receiveCompositeFingerPacket(packet, options);
+  }
+
+  function receiveWorldExpressionPacket(packet = {}, options = {}) {
+    return receiveInternalExpression(packet, {
+      ...options,
+      category: CATEGORY.WORLD_EXPRESSION,
+      sourceName: options.sourceName || "WORLD_EXPRESSION_PACKET",
+      sourceFile: options.sourceFile || COMPOSITE_FILE
+    });
+  }
+
+  function receiveFingerPacket(packet = {}, options = {}) {
+    return receiveInternalExpression(packet, {
+      ...options,
+      sourceName: options.sourceName || "GENERIC_FINGER_PACKET"
+    });
+  }
+
+  function receiveCanvasFingerPacket(packet = {}, options = {}) {
+    return receiveInternalExpression(packet, {
+      ...options,
+      sourceName: options.sourceName || "CANVAS_FINGER_PACKET"
+    });
+  }
+
+  function receiveExpressionPacket(packet = {}, options = {}) {
+    return receiveInternalExpression(packet, {
+      ...options,
+      sourceName: options.sourceName || "EXPRESSION_PACKET"
+    });
+  }
+
+  function receiveCanvasExpressionPacket(packet = {}, options = {}) {
+    return receiveInternalExpression(packet, {
+      ...options,
+      sourceName: options.sourceName || "CANVAS_EXPRESSION_PACKET"
+    });
+  }
+
+  function receiveSurfacePointerPacket(packet = {}, options = {}) {
+    return receiveInternalExpression(packet, {
+      ...options,
+      sourceName: options.sourceName || "SURFACE_POINTER_PACKET"
+    });
+  }
+
+  function registerExpressionFinger(packet = {}, options = {}) {
+    return receiveInternalExpression(packet, {
+      ...options,
+      sourceName: options.sourceName || "REGISTERED_EXPRESSION_FINGER",
+      sourceFile: options.sourceFile || safeString(packet.sourceFile || packet.file || "UNKNOWN")
     });
   }
 
@@ -1155,7 +1706,9 @@
             file: route.file,
             authority: route.authority,
             surfaceOwnsCategory: route.surfaceOwnsCategory,
+            internalOnly: route.internalOnly === true,
             externalEntryPoint: FILE,
+            internalEntryPoint: FILE,
             receiverRegistered: Boolean(state.registeredReceivers[category]),
             globalPaths: clonePlain(route.globalPaths || []),
             methods: clonePlain(route.methods || [])
@@ -1165,7 +1718,9 @@
             file: "UNKNOWN",
             authority: "UNKNOWN",
             surfaceOwnsCategory: false,
+            internalOnly: false,
             externalEntryPoint: FILE,
+            internalEntryPoint: FILE,
             receiverRegistered: false,
             globalPaths: [],
             methods: []
@@ -1181,6 +1736,14 @@
 
   function getRejectedDonorQueue() {
     return clonePlain(state.rejectedDonorQueue);
+  }
+
+  function getInternalHeldQueue() {
+    return clonePlain(state.internalHeldQueue);
+  }
+
+  function getInternalRejectedQueue() {
+    return clonePlain(state.internalRejectedQueue);
   }
 
   function getExternalIntakeReceipt() {
@@ -1223,11 +1786,56 @@
       surfaceOwnsBoundary: false,
       surfaceOwnsLight: false,
       surfaceOwnsInspect: false,
+      surfaceOwnsComposite: false,
       surfaceOwnsMaterials: false,
       surfaceOwnsComposition: false,
       surfaceOwnsAirChannel: false,
       surfaceOwnsCliffs: false,
       surfaceOwnsHydrologyTruth: false,
+
+      noClaimsPreserved: true,
+      ...FINAL_FALSE
+    };
+  }
+
+  function getInternalIntakeReceipt() {
+    return {
+      receiptType: "HEARTH_SURFACE_POINTER_INTERNAL_EXPRESSION_SOCKET_RECEIPT",
+      timestamp: nowIso(),
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      packet: PACKET,
+      previousContract: PREVIOUS_CONTRACT,
+      file: FILE,
+      route: ROUTE,
+      diagnosticRoute: DIAGNOSTIC_ROUTE,
+
+      pointerFingerActive: state.pointerFingerActive,
+      internalExpressionSocketActive: state.internalExpressionSocketActive,
+      internalFingerPacketReceiver: state.internalFingerPacketReceiver,
+      compositePacketReceiver: state.compositePacketReceiver,
+      worldExpressionPacketReceiver: state.worldExpressionPacketReceiver,
+      internalIntakeReady: state.internalIntakeReady,
+
+      internalIntakeCount: state.internalIntakeCount,
+      internalAcceptedCount: state.internalAcceptedCount,
+      internalHeldCount: state.internalHeldCount,
+      internalRejectedCount: state.internalRejectedCount,
+      compositeInternalPacketCount: state.compositeInternalPacketCount,
+      worldExpressionInternalPacketCount: state.worldExpressionInternalPacketCount,
+      internalSurfaceBridgeCount: state.internalSurfaceBridgeCount,
+      internalCategoryCounts: clonePlain(state.internalCategoryCounts),
+
+      latestInternalPacketId: state.latestInternalPacketId,
+      latestInternalPacketCategory: state.latestInternalPacketCategory,
+      latestInternalPacketStatus: state.latestInternalPacketStatus,
+      latestInternalPacketSourceFile: state.latestInternalPacketSourceFile,
+
+      treatedAsExternalDonor: false,
+      compositePacketAcceptedBySurfacePointer: state.compositeInternalPacketCount > 0,
+      worldExpressionPacketAcceptedBySurfacePointer: state.worldExpressionInternalPacketCount > 0,
+      surfaceOwnsCompositeTruth: false,
+      surfaceOwnsWorldExpressionTruth: false,
 
       noClaimsPreserved: true,
       ...FINAL_FALSE
@@ -1462,11 +2070,25 @@
         donorCategory: field.donorCategory,
         sourceName: field.sourceName,
         ownsTruth: false
+      })),
+      ...state.internalSurfaceBridgeFields.map((field) => ({
+        id: field.id,
+        x: clamp(field.x, 0, 1),
+        y: clamp(field.y, 0, 1),
+        scale: clamp(field.scale, 0.02, 0.6),
+        value: clamp(field.value, 0, 1),
+        internalPacketId: field.internalPacketId,
+        donorCategory: field.donorCategory,
+        compositeClass: field.compositeClass,
+        sourceName: field.sourceName,
+        ownsTruth: false
       }))
     ];
 
     const model = {
-      modelType: "HEARTH_BASE_GLOBE_SURFACE_POINTER_FINGER_MODEL",
+      modelType: "HEARTH_BASE_GLOBE_SURFACE_POINTER_INTERNAL_EXTERNAL_SOCKET_MODEL",
+      contract: CONTRACT,
+      receipt: RECEIPT,
       centerX,
       centerY,
       radius,
@@ -1486,21 +2108,30 @@
       surfaceSeeds: surfaceFields,
       surfaceFormationFields: clonePlain(surfaceFields),
 
-      surfaceMode: "POINTER_FINGER_EXTERNAL_SOCKET_WITH_FIRST_PASS_MATERIAL_DIFFERENTIATION",
+      surfaceMode: "POINTER_FINGER_INTERNAL_EXTERNAL_SOCKET_WITH_FIRST_PASS_MATERIAL_DIFFERENTIATION",
       surfaceCoordinateSpace: "normalized-0-to-1",
       projection: "front-facing-base-globe",
 
       externalExpressionSocketActive: true,
       singleExternalInputReceiver: true,
+      internalExpressionSocketActive: true,
+      internalFingerPacketReceiver: true,
+      compositePacketReceiver: true,
+      worldExpressionPacketReceiver: true,
+
       surfaceIntegratedDonorCount: state.surfaceIntegratedDonors.length,
       heldDonorQueueCount: state.heldDonorQueue.length,
+      internalAcceptedCount: state.internalAcceptedCount,
+      internalHeldCount: state.internalHeldCount,
+      compositeInternalPacketCount: state.compositeInternalPacketCount,
+      worldExpressionInternalPacketCount: state.worldExpressionInternalPacketCount,
+      internalSurfaceBridgeCount: state.internalSurfaceBridgeCount,
 
       terrainTruthClaim: false,
       hydrologyTruthClaim: false,
       materialTruthClaim: false,
       elevationTruthClaim: false,
-      biomeTruthClaim: false,
-      settlementTruthClaim: false,
+      compositeTruthClaim: false,
       finalGeometryClaim: false,
       finalVisualClaim: false
     };
@@ -1620,10 +2251,13 @@
       materialClass: value.materialClass,
       firstSurfaceDifferentiationReady: true,
       pointerFingerSocketActive: true,
+      internalExpressionSocketActive: true,
+      externalExpressionSocketActive: true,
       terrainTruthClaim: false,
       hydrologyTruthClaim: false,
       materialTruthClaim: false,
       elevationTruthClaim: false,
+      compositeTruthClaim: false,
       finalVisualClaim: false
     };
   }
@@ -1689,6 +2323,8 @@
 
         if (donorCategory === CATEGORY.HYDROLOGY_INTERFACE) {
           fill = "rgba(74, 124, 132, 0.22)";
+        } else if (donorCategory === CATEGORY.COMPOSITE || donorCategory === CATEGORY.WORLD_EXPRESSION) {
+          fill = "rgba(122, 138, 104, 0.20)";
         } else if (value >= 0.7) {
           fill = "rgba(143, 126, 82, 0.30)";
         } else if (value >= 0.52) {
@@ -1780,61 +2416,18 @@
     };
   }
 
-  function buildPointerFingerPacket(options = {}) {
-    const surfacePacket = buildSurfacePacket(options);
-
-    const packet = {
-      packetType: "HEARTH_CANVAS_SURFACE_POINTER_FINGER_SOCKET_PACKET",
-      packetName: PACKET,
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      previousContract: PREVIOUS_CONTRACT,
-      file: FILE,
-      route: ROUTE,
-      diagnosticRoute: DIAGNOSTIC_ROUTE,
-      parentHubFile: PARENT_HUB_FILE,
-
-      fingerName: FINGER_NAME,
-      fingerRole: FINGER_ROLE,
-      fingerOrder: FINGER_ORDER,
-      fingerStretchTotal: FINGER_STRETCH_TOTAL,
-      fingerStretchRegistry: clonePlain(FINGER_STRETCH_REGISTRY),
-
-      pointerFingerActive: true,
-      externalExpressionSocketActive: true,
-      singleExternalInputReceiver: true,
-      externalIntakeReady: true,
-
-      externalIntakeReceipt: getExternalIntakeReceipt(),
-      routingMap: getRoutingMap(),
-      surfacePacket: clonePlain(surfacePacket),
-
-      heldDonorQueueCount: state.heldDonorQueue.length,
-      rejectedDonorQueueCount: state.rejectedDonorQueue.length,
-      routedExpressionCount: state.routedExpressionCount,
-      surfaceIntegratedCount: state.surfaceIntegratedCount,
-
-      noClaimsPreserved: true,
-      ...FINAL_FALSE,
-      updatedAt: nowIso()
-    };
-
-    state.pointerFingerPacket = clonePlain(packet);
-    state.pointerFingerPacketReady = true;
-
-    return packet;
-  }
-
   function buildSurfacePacket(options = {}) {
     const model = buildSurfaceModel(options);
 
     const packet = {
-      packetType: "HEARTH_CANVAS_SURFACE_FINGER_PACKET",
+      packetType: "HEARTH_CANVAS_SURFACE_POINTER_INTERNAL_EXTERNAL_SOCKET_PACKET",
       packetName: PACKET,
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       previousReceipt: PREVIOUS_RECEIPT,
+      baselineContract: BASELINE_CONTRACT,
+      baselineReceipt: BASELINE_RECEIPT,
       file: FILE,
       route: ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
@@ -1858,10 +2451,19 @@
       massPacketObserved: state.massPacketObserved,
       massModelObserved: state.massModelObserved,
 
+      compositeFile: COMPOSITE_FILE,
+      compositeInternalPacketCount: state.compositeInternalPacketCount,
+      worldExpressionInternalPacketCount: state.worldExpressionInternalPacketCount,
+
       surfaceFingerActive: true,
       pointerFingerActive: true,
       externalExpressionSocketActive: true,
+      internalExpressionSocketActive: true,
+      internalExternalExpressionSocketActive: true,
       singleExternalInputReceiver: true,
+      internalFingerPacketReceiver: true,
+      compositePacketReceiver: true,
+      worldExpressionPacketReceiver: true,
       firstMaterialDifferentiationActive: true,
       surfaceModelReady: true,
       firstSurfaceDifferentiationReady: true,
@@ -1883,15 +2485,33 @@
       getHeldDonorQueueAvailable: true,
       getExternalIntakeReceiptAvailable: true,
 
+      internalIntakeReady: true,
+      receiveInternalExpressionAvailable: true,
+      receiveInternalFingerPacketAvailable: true,
+      receiveExpansionFingerPacketAvailable: true,
+      receiveCompositeFingerPacketAvailable: true,
+      receiveWorldExpressionPacketAvailable: true,
+      receiveFingerPacketAvailable: true,
+      receiveCanvasFingerPacketAvailable: true,
+      receiveExpressionPacketAvailable: true,
+      registerExpressionFingerAvailable: true,
+      getInternalIntakeReceiptAvailable: true,
+
       hubRegistrationAttempted: state.hubRegistrationAttempted,
       hubRegistrationAccepted: state.hubRegistrationAccepted,
       hubRegistrationMethod: state.hubRegistrationMethod,
       hubRegistrationHeldReason: state.hubRegistrationHeldReason,
 
-      recommendedNextFile: state.heldDonorQueue.length ? FILE : NEXT_FILE,
-      recommendedNextRenewalTarget: state.heldDonorQueue.length ? "RECEIVER_CATEGORY_FROM_HELD_DONOR_QUEUE" : NEXT_FILE,
+      recommendedNextFile: state.heldDonorQueue.length ? FILE : state.compositeInternalPacketCount ? INSPECT_FILE : NEXT_FILE,
+      recommendedNextRenewalTarget: state.heldDonorQueue.length
+        ? "RECEIVER_CATEGORY_FROM_HELD_DONOR_QUEUE"
+        : state.compositeInternalPacketCount
+          ? INSPECT_FILE
+          : NEXT_FILE,
       firstFailedCoordinate: state.hubRegistrationAccepted
-        ? "WAITING_EXTERNAL_DONOR_EXPRESSION_OR_LIGHT_FINGER"
+        ? state.compositeInternalPacketCount
+          ? "COMPOSITE_INTERNAL_EXPRESSION_ACCEPTED_WAITING_INSPECT_OR_LIGHT"
+          : "WAITING_EXTERNAL_DONOR_EXPRESSION_OR_LIGHT_FINGER"
         : "WAITING_CANVAS_HUB_SURFACE_FINGER_INTAKE",
       noClaimsPreserved: true,
 
@@ -1906,6 +2526,75 @@
     state.roughTerrainTintReady = true;
     state.shallowMaterialVariationReady = true;
     state.visibleContributionAvailable = true;
+
+    if (state.hubRegistrationAccepted) {
+      state.firstFailedCoordinate = packet.firstFailedCoordinate;
+      state.recommendedNextFile = packet.recommendedNextFile;
+      state.recommendedNextRenewalTarget = packet.recommendedNextRenewalTarget;
+      state.postgameStatus = state.compositeInternalPacketCount
+        ? "SURFACE_POINTER_ACCEPTED_COMPOSITE_INTERNAL_EXPRESSION"
+        : "SURFACE_POINTER_SOCKET_READY";
+    }
+
+    return packet;
+  }
+
+  function buildPointerFingerPacket(options = {}) {
+    const surfacePacket = buildSurfacePacket(options);
+
+    const packet = {
+      packetType: "HEARTH_CANVAS_SURFACE_POINTER_FINGER_INTERNAL_EXTERNAL_SOCKET_PACKET",
+      packetName: PACKET,
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
+      previousReceipt: PREVIOUS_RECEIPT,
+      baselineContract: BASELINE_CONTRACT,
+      file: FILE,
+      route: ROUTE,
+      diagnosticRoute: DIAGNOSTIC_ROUTE,
+      parentHubFile: PARENT_HUB_FILE,
+
+      fingerName: FINGER_NAME,
+      fingerRole: FINGER_ROLE,
+      fingerOrder: FINGER_ORDER,
+      fingerStretchTotal: FINGER_STRETCH_TOTAL,
+      fingerStretchRegistry: clonePlain(FINGER_STRETCH_REGISTRY),
+
+      pointerFingerActive: true,
+      externalExpressionSocketActive: true,
+      internalExpressionSocketActive: true,
+      internalExternalExpressionSocketActive: true,
+      singleExternalInputReceiver: true,
+      internalFingerPacketReceiver: true,
+      compositePacketReceiver: true,
+      worldExpressionPacketReceiver: true,
+
+      externalIntakeReady: true,
+      internalIntakeReady: true,
+      externalIntakeReceipt: getExternalIntakeReceipt(),
+      internalIntakeReceipt: getInternalIntakeReceipt(),
+      routingMap: getRoutingMap(),
+      surfacePacket: clonePlain(surfacePacket),
+
+      heldDonorQueueCount: state.heldDonorQueue.length,
+      rejectedDonorQueueCount: state.rejectedDonorQueue.length,
+      routedExpressionCount: state.routedExpressionCount,
+      surfaceIntegratedCount: state.surfaceIntegratedCount,
+
+      internalHeldQueueCount: state.internalHeldQueue.length,
+      internalRejectedQueueCount: state.internalRejectedQueue.length,
+      internalAcceptedCount: state.internalAcceptedCount,
+      compositeInternalPacketCount: state.compositeInternalPacketCount,
+      worldExpressionInternalPacketCount: state.worldExpressionInternalPacketCount,
+
+      noClaimsPreserved: true,
+      ...FINAL_FALSE,
+      updatedAt: nowIso()
+    };
+
+    state.pointerFingerPacket = clonePlain(packet);
+    state.pointerFingerPacketReady = true;
 
     return packet;
   }
@@ -1937,7 +2626,7 @@
     state.hubRegistrationMethod = "NONE";
     state.hubRegistrationError = "";
 
-    if (!found.hub) {
+    if (!found.hub || found.hub === api) {
       state.hubRegistrationHeldReason = "CANVAS_HUB_NOT_FOUND";
       state.firstFailedCoordinate = "WAITING_CANVAS_HUB";
       state.recommendedNextFile = PARENT_HUB_FILE;
@@ -1963,10 +2652,14 @@
         state.lastRegistrationResponse = clonePlain(response);
 
         if (state.hubRegistrationAccepted) {
-          state.firstFailedCoordinate = "WAITING_EXTERNAL_DONOR_EXPRESSION_OR_LIGHT_FINGER";
-          state.recommendedNextFile = NEXT_FILE;
-          state.recommendedNextRenewalTarget = NEXT_FILE;
-          state.postgameStatus = "SURFACE_POINTER_FINGER_ACCEPTED_BY_CANVAS_HUB_SOCKET_READY";
+          state.firstFailedCoordinate = state.compositeInternalPacketCount
+            ? "COMPOSITE_INTERNAL_EXPRESSION_ACCEPTED_WAITING_INSPECT_OR_LIGHT"
+            : "WAITING_EXTERNAL_DONOR_EXPRESSION_OR_LIGHT_FINGER";
+          state.recommendedNextFile = state.compositeInternalPacketCount ? INSPECT_FILE : NEXT_FILE;
+          state.recommendedNextRenewalTarget = state.recommendedNextFile;
+          state.postgameStatus = state.compositeInternalPacketCount
+            ? "SURFACE_POINTER_FINGER_ACCEPTED_BY_CANVAS_HUB_COMPOSITE_SOCKET_READY"
+            : "SURFACE_POINTER_FINGER_ACCEPTED_BY_CANVAS_HUB_SOCKET_READY";
         } else {
           state.firstFailedCoordinate = "CANVAS_HUB_REJECTED_SURFACE_POINTER_PACKET";
           state.recommendedNextFile = PARENT_HUB_FILE;
@@ -2026,6 +2719,8 @@
       packet: PACKET,
       previousContract: PREVIOUS_CONTRACT,
       previousReceipt: PREVIOUS_RECEIPT,
+      baselineContract: BASELINE_CONTRACT,
+      baselineReceipt: BASELINE_RECEIPT,
       file: FILE,
       route: ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
@@ -2035,6 +2730,7 @@
       massFile: MASS_FILE,
       lightFile: LIGHT_FILE,
       inspectFile: INSPECT_FILE,
+      compositeFile: COMPOSITE_FILE,
       materialsFile: MATERIALS_FILE,
       compositionFile: COMPOSITION_FILE,
       airChannelFile: AIR_CHANNEL_FILE,
@@ -2049,7 +2745,12 @@
       surfaceFingerActive: state.surfaceFingerActive,
       pointerFingerActive: state.pointerFingerActive,
       externalExpressionSocketActive: state.externalExpressionSocketActive,
+      internalExpressionSocketActive: state.internalExpressionSocketActive,
+      internalExternalExpressionSocketActive: state.internalExternalExpressionSocketActive,
       singleExternalInputReceiver: state.singleExternalInputReceiver,
+      internalFingerPacketReceiver: state.internalFingerPacketReceiver,
+      compositePacketReceiver: state.compositePacketReceiver,
+      worldExpressionPacketReceiver: state.worldExpressionPacketReceiver,
       firstMaterialDifferentiationActive: state.firstMaterialDifferentiationActive,
 
       boundaryDependencyExpected: state.boundaryDependencyExpected,
@@ -2081,6 +2782,19 @@
       latestExternalPacketCategory: state.latestExternalPacketCategory,
       latestExternalPacketStatus: state.latestExternalPacketStatus,
 
+      internalIntakeReady: state.internalIntakeReady,
+      internalIntakeCount: state.internalIntakeCount,
+      internalAcceptedCount: state.internalAcceptedCount,
+      internalHeldCount: state.internalHeldCount,
+      internalRejectedCount: state.internalRejectedCount,
+      compositeInternalPacketCount: state.compositeInternalPacketCount,
+      worldExpressionInternalPacketCount: state.worldExpressionInternalPacketCount,
+      internalSurfaceBridgeCount: state.internalSurfaceBridgeCount,
+      latestInternalPacketId: state.latestInternalPacketId,
+      latestInternalPacketCategory: state.latestInternalPacketCategory,
+      latestInternalPacketStatus: state.latestInternalPacketStatus,
+      latestInternalPacketSourceFile: state.latestInternalPacketSourceFile,
+
       hubDetected: state.hubDetected,
       hubSourceName: state.hubSourceName,
       hubRegistrationAttempted: state.hubRegistrationAttempted,
@@ -2092,15 +2806,31 @@
       sampleAvailable: true,
       sampleSurfaceAvailable: true,
       drawToCanvasAvailable: true,
+
       receiveExternalExpressionAvailable: true,
       receiveExternalDonorExpressionAvailable: true,
       receiveCanvasDonorExpressionAvailable: true,
       receiveArchiveExpressionAvailable: true,
       classifyExternalExpressionAvailable: true,
+
+      receiveInternalExpressionAvailable: true,
+      receiveInternalFingerPacketAvailable: true,
+      receiveExpansionFingerPacketAvailable: true,
+      receiveCompositeFingerPacketAvailable: true,
+      receiveWorldExpressionPacketAvailable: true,
+      receiveFingerPacketAvailable: true,
+      receiveCanvasFingerPacketAvailable: true,
+      receiveExpressionPacketAvailable: true,
+      registerExpressionFingerAvailable: true,
+
       registerExpressionReceiverAvailable: true,
       getRoutingMapAvailable: true,
       getHeldDonorQueueAvailable: true,
+      getRejectedDonorQueueAvailable: true,
+      getInternalHeldQueueAvailable: true,
+      getInternalRejectedQueueAvailable: true,
       getExternalIntakeReceiptAvailable: true,
+      getInternalIntakeReceiptAvailable: true,
 
       firstFailedCoordinate: state.firstFailedCoordinate,
       recommendedNextFile: state.recommendedNextFile,
@@ -2123,15 +2853,25 @@
       surfaceModel: clonePlain(state.surfaceModel),
       surfacePacket: clonePlain(state.surfacePacket),
       pointerFingerPacket: clonePlain(state.pointerFingerPacket),
+      internalExpressionPacket: clonePlain(state.internalExpressionPacket),
+      compositeBridgePacket: clonePlain(state.compositeBridgePacket),
       fingerStretchRegistry: clonePlain(FINGER_STRETCH_REGISTRY),
       routingMap: getRoutingMap(),
       externalIntakeReceipt: getExternalIntakeReceipt(),
+      internalIntakeReceipt: getInternalIntakeReceipt(),
       externalIntakeLedger: clonePlain(state.externalIntakeLedger),
       classifiedLedger: clonePlain(state.classifiedLedger),
       routedLedger: clonePlain(state.routedLedger),
       heldDonorQueue: clonePlain(state.heldDonorQueue),
       rejectedDonorQueue: clonePlain(state.rejectedDonorQueue),
       surfaceIntegratedDonors: clonePlain(state.surfaceIntegratedDonors),
+      internalIntakeLedger: clonePlain(state.internalIntakeLedger),
+      internalAcceptedLedger: clonePlain(state.internalAcceptedLedger),
+      internalHeldQueue: clonePlain(state.internalHeldQueue),
+      internalRejectedQueue: clonePlain(state.internalRejectedQueue),
+      compositeInternalPackets: clonePlain(state.compositeInternalPackets),
+      worldExpressionInternalPackets: clonePlain(state.worldExpressionInternalPackets),
+      internalSurfaceBridgeFields: clonePlain(state.internalSurfaceBridgeFields),
       surfaceFormationFields: clonePlain(state.surfaceFormationFields),
       surfaceMaterialFamilies: clonePlain(state.surfaceMaterialFamilies),
       registeredReceiverCategories: Object.keys(state.registeredReceivers),
@@ -2146,21 +2886,19 @@
     };
   }
 
-  function line(key, value) {
-    return `${key}=${value === undefined || value === null ? "" : String(value)}`;
-  }
-
   function getReceiptText() {
     const r = getReceiptLight();
 
     return [
-      "HEARTH_CANVAS_FINGER_SURFACE_POINTER_FINGER_EXTERNAL_EXPRESSION_SOCKET_RECEIPT",
+      "HEARTH_CANVAS_FINGER_SURFACE_POINTER_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_RECEIPT",
       "",
       line("timestamp", r.timestamp),
       line("contract", r.contract),
       line("receipt", r.receipt),
       line("packet", r.packet),
       line("previousContract", r.previousContract),
+      line("previousReceipt", r.previousReceipt),
+      line("baselineContract", r.baselineContract),
       line("file", r.file),
       line("route", r.route),
       line("diagnosticRoute", r.diagnosticRoute),
@@ -2173,7 +2911,12 @@
       line("fingerStretchTotal", r.fingerStretchTotal),
       line("pointerFingerActive", r.pointerFingerActive),
       line("externalExpressionSocketActive", r.externalExpressionSocketActive),
+      line("internalExpressionSocketActive", r.internalExpressionSocketActive),
+      line("internalExternalExpressionSocketActive", r.internalExternalExpressionSocketActive),
       line("singleExternalInputReceiver", r.singleExternalInputReceiver),
+      line("internalFingerPacketReceiver", r.internalFingerPacketReceiver),
+      line("compositePacketReceiver", r.compositePacketReceiver),
+      line("worldExpressionPacketReceiver", r.worldExpressionPacketReceiver),
       "",
       "BOUNDARY_DEPENDENCY",
       line("boundaryDependencyExpected", r.boundaryDependencyExpected),
@@ -2211,6 +2954,20 @@
       line("latestExternalPacketCategory", r.latestExternalPacketCategory),
       line("latestExternalPacketStatus", r.latestExternalPacketStatus),
       "",
+      "INTERNAL_SOCKET",
+      line("internalIntakeReady", r.internalIntakeReady),
+      line("internalIntakeCount", r.internalIntakeCount),
+      line("internalAcceptedCount", r.internalAcceptedCount),
+      line("internalHeldCount", r.internalHeldCount),
+      line("internalRejectedCount", r.internalRejectedCount),
+      line("compositeInternalPacketCount", r.compositeInternalPacketCount),
+      line("worldExpressionInternalPacketCount", r.worldExpressionInternalPacketCount),
+      line("internalSurfaceBridgeCount", r.internalSurfaceBridgeCount),
+      line("latestInternalPacketId", r.latestInternalPacketId),
+      line("latestInternalPacketCategory", r.latestInternalPacketCategory),
+      line("latestInternalPacketStatus", r.latestInternalPacketStatus),
+      line("latestInternalPacketSourceFile", r.latestInternalPacketSourceFile),
+      "",
       "HUB_REGISTRATION",
       line("hubDetected", r.hubDetected),
       line("hubSourceName", r.hubSourceName),
@@ -2225,10 +2982,19 @@
       line("sampleSurfaceAvailable", r.sampleSurfaceAvailable),
       line("drawToCanvasAvailable", r.drawToCanvasAvailable),
       line("receiveExternalExpressionAvailable", r.receiveExternalExpressionAvailable),
+      line("receiveInternalFingerPacketAvailable", r.receiveInternalFingerPacketAvailable),
+      line("receiveExpansionFingerPacketAvailable", r.receiveExpansionFingerPacketAvailable),
+      line("receiveCompositeFingerPacketAvailable", r.receiveCompositeFingerPacketAvailable),
+      line("receiveWorldExpressionPacketAvailable", r.receiveWorldExpressionPacketAvailable),
+      line("receiveFingerPacketAvailable", r.receiveFingerPacketAvailable),
+      line("receiveCanvasFingerPacketAvailable", r.receiveCanvasFingerPacketAvailable),
+      line("receiveExpressionPacketAvailable", r.receiveExpressionPacketAvailable),
+      line("registerExpressionFingerAvailable", r.registerExpressionFingerAvailable),
       line("classifyExternalExpressionAvailable", r.classifyExternalExpressionAvailable),
       line("registerExpressionReceiverAvailable", r.registerExpressionReceiverAvailable),
       line("getRoutingMapAvailable", r.getRoutingMapAvailable),
       line("getHeldDonorQueueAvailable", r.getHeldDonorQueueAvailable),
+      line("getInternalHeldQueueAvailable", r.getInternalHeldQueueAvailable),
       "",
       "NEXT",
       line("firstFailedCoordinate", r.firstFailedCoordinate),
@@ -2246,6 +3012,8 @@
       line("hydrologyTruthClaimed", false),
       line("materialTruthClaimed", false),
       line("elevationTruthClaimed", false),
+      line("compositeTruthClaimed", false),
+      line("finalCompositeTruthClaimed", false),
       line("biomeTruthClaimed", false),
       line("settlementTruthClaimed", false),
       line("visualPassClaimed", false),
@@ -2260,11 +3028,18 @@
     setDataset("hearthCanvasFingerSurfaceContract", CONTRACT);
     setDataset("hearthCanvasFingerSurfaceReceipt", RECEIPT);
     setDataset("hearthCanvasFingerSurfacePreviousContract", PREVIOUS_CONTRACT);
+    setDataset("hearthCanvasFingerSurfacePreviousReceipt", PREVIOUS_RECEIPT);
+    setDataset("hearthCanvasFingerSurfaceBaselineContract", BASELINE_CONTRACT);
     setDataset("hearthCanvasFingerSurfaceFile", FILE);
     setDataset("hearthCanvasFingerSurfaceActive", String(state.surfaceFingerActive));
     setDataset("hearthCanvasFingerSurfacePointerFingerActive", String(state.pointerFingerActive));
     setDataset("hearthCanvasFingerSurfaceExternalExpressionSocketActive", String(state.externalExpressionSocketActive));
+    setDataset("hearthCanvasFingerSurfaceInternalExpressionSocketActive", String(state.internalExpressionSocketActive));
+    setDataset("hearthCanvasFingerSurfaceInternalExternalExpressionSocketActive", String(state.internalExternalExpressionSocketActive));
     setDataset("hearthCanvasFingerSurfaceSingleExternalInputReceiver", String(state.singleExternalInputReceiver));
+    setDataset("hearthCanvasFingerSurfaceInternalFingerPacketReceiver", String(state.internalFingerPacketReceiver));
+    setDataset("hearthCanvasFingerSurfaceCompositePacketReceiver", String(state.compositePacketReceiver));
+    setDataset("hearthCanvasFingerSurfaceWorldExpressionPacketReceiver", String(state.worldExpressionPacketReceiver));
     setDataset("hearthCanvasFingerSurfaceFirstMaterialDifferentiationActive", String(state.firstMaterialDifferentiationActive));
 
     setDataset("hearthCanvasFingerSurfaceBoundaryDependencyExpected", String(state.boundaryDependencyExpected));
@@ -2296,6 +3071,19 @@
     setDataset("hearthCanvasFingerSurfaceLatestExternalPacketCategory", state.latestExternalPacketCategory);
     setDataset("hearthCanvasFingerSurfaceLatestExternalPacketStatus", state.latestExternalPacketStatus);
 
+    setDataset("hearthCanvasFingerSurfaceInternalIntakeReady", String(state.internalIntakeReady));
+    setDataset("hearthCanvasFingerSurfaceInternalIntakeCount", String(state.internalIntakeCount));
+    setDataset("hearthCanvasFingerSurfaceInternalAcceptedCount", String(state.internalAcceptedCount));
+    setDataset("hearthCanvasFingerSurfaceInternalHeldCount", String(state.internalHeldCount));
+    setDataset("hearthCanvasFingerSurfaceInternalRejectedCount", String(state.internalRejectedCount));
+    setDataset("hearthCanvasFingerSurfaceCompositeInternalPacketCount", String(state.compositeInternalPacketCount));
+    setDataset("hearthCanvasFingerSurfaceWorldExpressionInternalPacketCount", String(state.worldExpressionInternalPacketCount));
+    setDataset("hearthCanvasFingerSurfaceInternalSurfaceBridgeCount", String(state.internalSurfaceBridgeCount));
+    setDataset("hearthCanvasFingerSurfaceLatestInternalPacketId", state.latestInternalPacketId);
+    setDataset("hearthCanvasFingerSurfaceLatestInternalPacketCategory", state.latestInternalPacketCategory);
+    setDataset("hearthCanvasFingerSurfaceLatestInternalPacketStatus", state.latestInternalPacketStatus);
+    setDataset("hearthCanvasFingerSurfaceLatestInternalPacketSourceFile", state.latestInternalPacketSourceFile);
+
     setDataset("hearthCanvasFingerSurfaceHubDetected", String(state.hubDetected));
     setDataset("hearthCanvasFingerSurfaceHubSourceName", state.hubSourceName);
     setDataset("hearthCanvasFingerSurfaceHubRegistrationAttempted", String(state.hubRegistrationAttempted));
@@ -2315,6 +3103,8 @@
     setDataset("hearthCanvasFingerSurfaceHydrologyTruthClaimed", "false");
     setDataset("hearthCanvasFingerSurfaceMaterialTruthClaimed", "false");
     setDataset("hearthCanvasFingerSurfaceElevationTruthClaimed", "false");
+    setDataset("hearthCanvasFingerSurfaceCompositeTruthClaimed", "false");
+    setDataset("hearthCanvasFingerSurfaceFinalCompositeTruthClaimed", "false");
     setDataset("hearthCanvasFingerSurfaceBiomeTruthClaimed", "false");
     setDataset("hearthCanvasFingerSurfaceSettlementTruthClaimed", "false");
     setDataset("hearthCanvasFingerSurfaceVisualPassClaimed", "false");
@@ -2327,27 +3117,47 @@
 
   function publishGlobals() {
     const hearth = ensureObject(root, "HEARTH");
+    const lab = ensureObject(root, "DEXTER_LAB");
 
     hearth.canvasFingerSurface = api;
     hearth.canvasSurfaceFinger = api;
     hearth.canvasFingerSurfacePointer = api;
     hearth.canvasPointerFinger = api;
-
+    hearth.canvasFingerSurfaceInternalExternalSocket = api;
     hearth.canvasFingerSurfaceReceipt = getReceiptLight();
     hearth.canvasFingerSurfacePacket = getSurfacePacket();
     hearth.canvasFingerSurfacePointerPacket = getPointerFingerPacket();
+    hearth.canvasFingerSurfaceInternalIntakeReceipt = getInternalIntakeReceipt();
+    hearth.canvasFingerSurfaceExternalIntakeReceipt = getExternalIntakeReceipt();
+
+    lab.hearthCanvasFingerSurface = api;
+    lab.hearthCanvasSurfaceFinger = api;
+    lab.hearthCanvasFingerSurfacePointer = api;
+    lab.hearthCanvasPointerFinger = api;
+    lab.hearthCanvasFingerSurfaceInternalExternalSocket = api;
+    lab.hearthCanvasFingerSurfaceReceipt = getReceiptLight();
+    lab.hearthCanvasFingerSurfacePacket = getSurfacePacket();
+    lab.hearthCanvasFingerSurfacePointerPacket = getPointerFingerPacket();
+    lab.hearthCanvasFingerSurfaceInternalIntakeReceipt = getInternalIntakeReceipt();
+    lab.hearthCanvasFingerSurfaceExternalIntakeReceipt = getExternalIntakeReceipt();
 
     root.HEARTH_CANVAS_FINGER_SURFACE = api;
     root.HEARTH_CANVAS_SURFACE_FINGER = api;
     root.HEARTH_CANVAS_FINGER_SURFACE_POINTER = api;
     root.HEARTH_CANVAS_POINTER_FINGER = api;
+    root.HEARTH_CANVAS_FINGER_SURFACE_INTERNAL_EXTERNAL_SOCKET = api;
 
     root.HEARTH_CANVAS_FINGER_SURFACE_RECEIPT = getReceiptLight();
+    root.HEARTH_CANVAS_FINGER_SURFACE_POINTER_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_RECEIPT = getReceipt();
+    root.HEARTH_CANVAS_FINGER_SURFACE_POINTER_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_RECEIPT_v3 = getReceipt();
+
     root.HEARTH_CANVAS_FINGER_SURFACE_POINTER_FINGER_EXTERNAL_EXPRESSION_SOCKET_RECEIPT = getReceipt();
     root.HEARTH_CANVAS_FINGER_SURFACE_POINTER_FINGER_EXTERNAL_EXPRESSION_SOCKET_RECEIPT_v2 = getReceipt();
 
     root.HEARTH_CANVAS_FINGER_SURFACE_PACKET = getSurfacePacket();
     root.HEARTH_CANVAS_FINGER_SURFACE_POINTER_PACKET = getPointerFingerPacket();
+    root.HEARTH_CANVAS_FINGER_SURFACE_INTERNAL_INTAKE_RECEIPT = getInternalIntakeReceipt();
+    root.HEARTH_CANVAS_FINGER_SURFACE_EXTERNAL_INTAKE_RECEIPT = getExternalIntakeReceipt();
 
     state.publishedAt = state.publishedAt || nowIso();
     state.updatedAt = nowIso();
@@ -2363,6 +3173,7 @@
     buildSurfaceModel(options);
     buildSurfacePacket(options);
     buildPointerFingerPacket(options);
+    updateDataset();
     publishGlobals();
 
     registerWithCanvasHub(options);
@@ -2373,13 +3184,15 @@
     updateDataset();
     publishGlobals();
 
-    record("SURFACE_POINTER_FINGER_BOOT_COMPLETE", {
+    record("SURFACE_POINTER_INTERNAL_EXTERNAL_SOCKET_BOOT_COMPLETE", {
       boundaryDependencyObserved: state.boundaryDependencyObserved,
       massDependencyObserved: state.massDependencyObserved,
       hubDetected: state.hubDetected,
       hubRegistrationAccepted: state.hubRegistrationAccepted,
       externalExpressionSocketActive: state.externalExpressionSocketActive,
-      singleExternalInputReceiver: state.singleExternalInputReceiver,
+      internalExpressionSocketActive: state.internalExpressionSocketActive,
+      compositePacketReceiver: state.compositePacketReceiver,
+      worldExpressionPacketReceiver: state.worldExpressionPacketReceiver,
       firstFailedCoordinate: state.firstFailedCoordinate,
       recommendedNextFile: state.recommendedNextFile
     });
@@ -2406,6 +3219,8 @@
     PREVIOUS_CONTRACT,
     PREVIOUS_RECEIPT,
     PREVIOUS_PACKET,
+    BASELINE_CONTRACT,
+    BASELINE_RECEIPT,
     FILE,
     ROUTE,
     DIAGNOSTIC_ROUTE,
@@ -2415,16 +3230,21 @@
     NEXT_FILE,
     LIGHT_FILE,
     INSPECT_FILE,
+    COMPOSITE_FILE,
     MATERIALS_FILE,
     COMPOSITION_FILE,
     AIR_CHANNEL_FILE,
     CLIFFS_FILE,
+    CATEGORY,
+    ROUTING_STATUS,
 
     contract: CONTRACT,
     receipt: RECEIPT,
     packet: PACKET,
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
+    baselineContract: BASELINE_CONTRACT,
+    baselineReceipt: BASELINE_RECEIPT,
     file: FILE,
     route: ROUTE,
     diagnosticRoute: DIAGNOSTIC_ROUTE,
@@ -2433,6 +3253,7 @@
     massFile: MASS_FILE,
     lightFile: LIGHT_FILE,
     inspectFile: INSPECT_FILE,
+    compositeFile: COMPOSITE_FILE,
     materialsFile: MATERIALS_FILE,
     compositionFile: COMPOSITION_FILE,
     airChannelFile: AIR_CHANNEL_FILE,
@@ -2468,11 +3289,29 @@
     receiveCanvasDonorExpression,
     receiveArchiveExpression,
     classifyExternalExpression,
+
+    receiveInternalExpression,
+    classifyInternalExpression,
+    receiveInternalFingerPacket,
+    receiveExpansionFingerPacket,
+    receiveCompositeFingerPacket,
+    receiveCompositePacket,
+    receiveWorldExpressionPacket,
+    receiveFingerPacket,
+    receiveCanvasFingerPacket,
+    receiveExpressionPacket,
+    receiveCanvasExpressionPacket,
+    receiveSurfacePointerPacket,
+    registerExpressionFinger,
+
     registerExpressionReceiver,
     getRoutingMap,
     getHeldDonorQueue,
     getRejectedDonorQueue,
+    getInternalHeldQueue,
+    getInternalRejectedQueue,
     getExternalIntakeReceipt,
+    getInternalIntakeReceipt,
 
     getState,
     read,
@@ -2487,8 +3326,15 @@
     supportsPointerFingerSocket: true,
     supportsExternalExpressionIntake: true,
     supportsSingleExternalInputReceiver: true,
+    supportsInternalExpressionIntake: true,
+    supportsInternalFingerPacketReceiver: true,
+    supportsCompositeFingerPacketReceiver: true,
+    supportsWorldExpressionPacketReceiver: true,
+    supportsExpansionFingerPacketReceiver: true,
+    supportsCompositeRegistrationMethods: true,
     supportsExternalDonorRouting: true,
     supportsHeldDonorQueue: true,
+    supportsInternalHeldQueue: true,
     supportsRegisteredInternalReceivers: true,
     supportsFirstMaterialDifferentiation: true,
     supportsSurfaceExpressionPacket: true,
@@ -2502,7 +3348,9 @@
     ownsSurfaceFingerIdentity: true,
     ownsPointerFingerSocket: true,
     ownsExternalExpressionIntake: true,
+    ownsInternalExpressionIntake: true,
     ownsExternalExpressionRouting: true,
+    ownsInternalExpressionReceipt: true,
     ownsSurfaceExpressionPacket: true,
     ownsFirstMaterialDifferentiation: true,
     ownsCanvasHub: false,
@@ -2510,6 +3358,9 @@
     ownsMassFinger: false,
     ownsLightFinger: false,
     ownsInspectFinger: false,
+    ownsCompositeFinger: false,
+    ownsCompositeTruth: false,
+    ownsWorldExpressionTruth: false,
     ownsMaterialsAuthority: false,
     ownsCompositionAuthority: false,
     ownsAirChannelAuthority: false,
@@ -2552,7 +3403,7 @@
       boot({});
     }
   } catch (error) {
-    recordError("SURFACE_POINTER_FINGER_INITIALIZATION_FAILED", error);
+    recordError("SURFACE_POINTER_INTERNAL_EXTERNAL_SOCKET_INITIALIZATION_FAILED", error);
 
     try {
       updateDataset();

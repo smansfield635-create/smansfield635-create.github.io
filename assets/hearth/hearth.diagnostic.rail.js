@@ -1,22 +1,17 @@
 // /assets/hearth/hearth.diagnostic.rail.js
-// HEARTH_DIAGNOSTIC_RAIL_NORTH_ANCHOR_SCHEMA_ORCHESTRATOR_TNT_v3
+// HEARTH_DIAGNOSTIC_RAIL_NORTH_PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ORCHESTRATOR_TNT_v4
 // Full-file replacement.
 // Diagnostic rail NORTH parent only.
 // Purpose:
-// - Establish NORTH as the diagnostic anchor and canonical verdict schema.
-// - Consume already-loaded EAST, WEST, and SOUTH diagnostic child APIs.
-// - Validate child receipts and authority boundaries.
-// - Normalize child evidence into one NORTH-owned diagnostic schema.
-// - Accept EAST current-spread intelligence, including Route Conductor v9.5 as lawful current spread.
-// - Preserve WEST rendered-target observability fields without collapsing them into generic inconclusive evidence.
-// - Select exactly one PRIMARY_CASE by evidence.
-// - Add a non-case calibration layer for current-spread proof gaps.
-// - Run NEWS Alignment Protocol.
-// - Run Fibonacci Synchronization audit.
-// - Select final non-authorizing recommendation fields.
-// - Hand normalized NORTH verdict to SOUTH for report output when SOUTH is valid.
-// - Verify SOUTH preserves NORTH-selected final meaning.
-// - Publish route-facing public API for the diagnostic route receiver.
+// - Preserve NORTH as the diagnostic anchor and canonical verdict schema.
+// - Preserve v3 child consumption, child receipt validation, NEWS alignment, Fibonacci synchronization, and SOUTH meaning verification.
+// - Add planetary-control lifecycle schema admission before the control file exists.
+// - Establish /assets/hearth/hearth.controls.js as an expected future planetary-control file.
+// - Establish /showroom/globe/hearth/hearth.js as the expected route-conductor control handshake funnel.
+// - Define expected lifecycle states for controls, motion, touch, drag, view control, and route/control handshake.
+// - Treat missing controls as EXPECTED_NOT_YET_BUILT, not CASE_5, not visible-planet failure, and not readiness.
+// - Preserve visible planet proof separately from motion/touch absence.
+// - Recommend EAST as the next conforming file when source/footprint evidence has not yet been renewed.
 // - Preserve protected production files as read-only observation targets.
 // - Preserve no F13 claim, no F21 claim, no ready text, no visual pass, no generated image, no GraphicBox, no WebGL.
 // Does not own:
@@ -29,17 +24,23 @@
 // - runtime restart
 // - Canvas release
 // - Macro West release
+// - control-file implementation
+// - route-conductor implementation
+// - touch/drag/motion execution
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_ANCHOR_SCHEMA_ORCHESTRATOR_TNT_v3";
-  const RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_ANCHOR_SCHEMA_ORCHESTRATOR_RECEIPT_v3";
-  const PREVIOUS_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_CURRENT_SPREAD_CALIBRATION_ORCHESTRATOR_TNT_v2_1";
-  const PREVIOUS_RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_CURRENT_SPREAD_CALIBRATION_ORCHESTRATOR_RECEIPT_v2_1";
+  const CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ORCHESTRATOR_TNT_v4";
+  const RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ORCHESTRATOR_RECEIPT_v4";
+
+  const PREVIOUS_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_ANCHOR_SCHEMA_ORCHESTRATOR_TNT_v3";
+  const PREVIOUS_RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_ANCHOR_SCHEMA_ORCHESTRATOR_RECEIPT_v3";
+
   const BASELINE_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_PARENT_ORCHESTRATOR_TNT_v1";
   const BASELINE_RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_PARENT_ORCHESTRATOR_RECEIPT_v1";
-  const VERSION = "2026-06-03.hearth-diagnostic-rail-north-anchor-schema-orchestrator-v3";
+
+  const VERSION = "2026-06-04.hearth-diagnostic-rail-north-planetary-control-lifecycle-schema-orchestrator-v4";
 
   const FILE = "/assets/hearth/hearth.diagnostic.rail.js";
   const TARGET_ROUTE = "/showroom/globe/hearth/";
@@ -51,17 +52,44 @@
   const NORTH_DYNAMIC_CHILD_LOADING_OWNED = false;
 
   const EAST_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_EAST_SERVED_SOURCE_EVIDENCE_TNT_v1";
-  const EAST_CURRENT_ALIGNMENT_CONTRACT = "HEARTH_DIAGNOSTIC_EAST_HEARTH_INDEX_CONTEXT_CURRENT_SPREAD_ALIGNMENT_TNT_v3";
+  const EAST_CURRENT_ALIGNMENT_CONTRACT = "HEARTH_DIAGNOSTIC_EAST_ROUTE_CONDUCTOR_PRIMARY_COMPATIBILITY_SPLIT_TNT_v4";
+  const EAST_PREVIOUS_ALIGNMENT_CONTRACT = "HEARTH_DIAGNOSTIC_EAST_HEARTH_INDEX_CONTEXT_CURRENT_SPREAD_ALIGNMENT_TNT_v3";
 
   const WEST_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_WEST_RENDERED_TARGET_AUTHORITY_PROBE_TNT_v1";
-  const WEST_CURRENT_IMPLEMENTATION_CONTRACT = "HEARTH_DIAGNOSTIC_WEST_HIT_TEST_OBSERVABILITY_REFINEMENT_TNT_v1";
+  const WEST_CURRENT_IMPLEMENTATION_CONTRACT = "HEARTH_DIAGNOSTIC_WEST_RENDERED_PROOF_NAMESPACE_ADOPTION_TNT_v4";
+  const WEST_PREVIOUS_IMPLEMENTATION_CONTRACT = "HEARTH_DIAGNOSTIC_WEST_HIT_TEST_OBSERVABILITY_REFINEMENT_TNT_v1";
 
   const SOUTH_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_SOUTH_REPORT_PACKET_OUTPUT_TNT_v1";
+  const SOUTH_CURRENT_IMPLEMENTATION_CONTRACT = "HEARTH_DIAGNOSTIC_SOUTH_NORTH_ANCHOR_SCHEMA_CONFORMANCE_TNT_v3";
 
-  const CURRENT_HTML_CONTRACT = "HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_RECEIPT_TARGET_RESTORATION_TNT_v2_6";
+  const CURRENT_HTML_CONTRACT = "HEARTH_HTML_FULL_PLANET_VISIBILITY_DOWNSTREAM_SHELL_ALIGNMENT_TNT_v4";
   const CURRENT_INDEX_JS_CONTRACT = "HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4";
-  const CURRENT_ROUTE_CONDUCTOR_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_TNT_v9_5";
+  const CURRENT_ROUTE_CONDUCTOR_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_TNT_v9_6";
+  const COMPAT_ROUTE_CONDUCTOR_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_TNT_v9_5";
   const PRIOR_ROUTE_CONDUCTOR_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_TNT_v9_4";
+
+  const CONTROL_FILE = "/assets/hearth/hearth.controls.js";
+  const ROUTE_CONDUCTOR_FILE = "/showroom/globe/hearth/hearth.js";
+  const INDEX_FILE = "/showroom/globe/hearth/index.js";
+  const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
+  const EAST_FILE = "/assets/hearth/hearth.diagnostic.east.js";
+  const WEST_FILE = "/assets/hearth/hearth.diagnostic.west.js";
+  const SOUTH_FILE = "/assets/hearth/hearth.diagnostic.south.js";
+
+  const CONTROL_LIFECYCLE_STATES = Object.freeze({
+    EXPECTED_NOT_YET_BUILT: "EXPECTED_NOT_YET_BUILT",
+    EXPECTED_NOT_YET_WIRED: "EXPECTED_NOT_YET_WIRED",
+    SERVED_NOT_LOADED: "SERVED_NOT_LOADED",
+    LOADED_NO_GLOBAL: "LOADED_NO_GLOBAL",
+    GLOBAL_PRESENT_NO_RECEIPT: "GLOBAL_PRESENT_NO_RECEIPT",
+    HANDSHAKE_PENDING: "HANDSHAKE_PENDING",
+    HANDSHAKE_VALID: "HANDSHAKE_VALID",
+    ACTIVE: "ACTIVE",
+    ACTIVE_DEGRADED: "ACTIVE_DEGRADED",
+    HARD_FAIL: "HARD_FAIL",
+    WAITING_CONTROL_FILE: "WAITING_CONTROL_FILE",
+    UNKNOWN_PENDING_CHILD_SCHEMA: "UNKNOWN_PENDING_CHILD_SCHEMA"
+  });
 
   const FALLBACK = Object.freeze({
     UNKNOWN: "UNKNOWN",
@@ -195,15 +223,56 @@
     "NORTH_RECEIPT",
     "PREVIOUS_NORTH_CONTRACT",
     "BASELINE_NORTH_CONTRACT",
+
+    "PLANETARY_CONTROL_SCHEMA_ACTIVE",
+    "PLANETARY_CONTROL_SCHEMA_CONTRACT",
+    "PLANETARY_CONTROL_SCHEMA_RECEIPT",
+    "FRONTEND_PLANETARY_OBSERVER_BASIS_EXPECTED",
+    "FRONTEND_PLANETARY_OBSERVER_STATUS",
+    "PLANETARY_FUNCTION_DIAGNOSTIC_BASIS",
+    "PLANETARY_BUILD_OBSERVER_STATUS",
+
+    "CONTROL_FILE",
+    "CONTROL_FILE_EXPECTED",
+    "CONTROL_FILE_STATUS",
+    "CONTROL_FILE_LOADED",
+    "CONTROL_GLOBAL_PRESENT",
+    "CONTROL_RECEIPT_PRESENT",
+    "CONTROL_ABSENCE_IS_FAILURE",
+    "CONTROL_ABSENCE_IS_CASE_5",
+    "CONTROL_ABSENCE_BLOCKS_VISIBLE_PLANET",
+    "CONTROL_ABSENCE_BLOCKS_MOTION_TOUCH",
+
+    "CONTROL_HANDSHAKE_EXPECTED",
+    "CONTROL_HANDSHAKE_STATUS",
+    "HEARTH_JS_CONTROL_FUNNEL_EXPECTED",
+    "HEARTH_JS_CONTROL_FUNNEL_FILE",
+    "HEARTH_JS_CONTROL_HANDSHAKE_STATUS",
+    "HEARTH_JS_LOADS_OR_RECOGNIZES_CONTROL_FILE",
+
+    "MOTION_TOUCH_EXPECTED",
+    "MOTION_TOUCH_STATUS",
+    "DRAG_STATUS",
+    "VIEW_CONTROL_STATUS",
+    "VISIBLE_PLANET_ALLOWED_WITHOUT_CONTROLS",
+    "STATIC_PLANET_STATUS",
+    "PLANETARY_CONTROL_NEXT_CONFORMING_FILE",
+    "PLANETARY_CONTROL_NEXT_CONFORMING_ACTION",
+
     "EAST_ALIGNMENT_CONTRACT",
     "WEST_IMPLEMENTATION_CONTRACT",
+    "SOUTH_IMPLEMENTATION_CONTRACT",
     "CURRENT_EXPECTED_HTML_CONTRACT",
     "CURRENT_EXPECTED_INDEX_JS_CONTRACT",
     "CURRENT_EXPECTED_ROUTE_CONDUCTOR_CONTRACT",
+    "COMPAT_ROUTE_CONDUCTOR_CONTRACT",
+    "PRIOR_ROUTE_CONDUCTOR_CONTRACT",
     "PRIMARY_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED",
-    "ROUTE_CONDUCTOR_V9_5_PRIMARY_NOT_TREATED_AS_CASE_5",
+    "ROUTE_CONDUCTOR_V9_6_PRIMARY_NOT_TREATED_AS_CASE_5",
+    "ROUTE_CONDUCTOR_V9_5_COMPATIBILITY_ACCEPTED",
     "ROUTE_CONDUCTOR_V9_4_LINEAGE_ACCEPTED",
     "EAST_CURRENT_SPREAD_ALIGNMENT_RECOGNIZED",
+
     "SHOW_RECEIPT_RECT",
     "SHOW_RECEIPT_CENTER_POINT",
     "TARGET_VIEWPORT_WIDTH",
@@ -220,6 +289,7 @@
     "RENDERED_PLANET_PROOF_FULLY_INSPECTED",
     "WEST_RENDERED_PROOF_SPREAD_COMPLETE",
     "FLOATING_ANCHOR_HIT_TEST_NON_CONTROLLING",
+
     "NEWS_ALIGNMENT_PROTOCOL",
     "NEWS_ALIGNMENT_STATUS",
     "NEWS_ALIGNMENT_SCORE",
@@ -228,6 +298,7 @@
     "FIBONACCI_SYNCHRONIZATION_STATUS",
     "FIBONACCI_SYNCHRONIZATION_SCORE",
     "FIBONACCI_SYNCHRONIZATION_FIRST_FAILED_STAGE",
+
     "EAST_SOURCE_READ_STATUS",
     "WEST_RENDERED_READ_STATUS",
     "SOUTH_OUTPUT_STATUS",
@@ -238,6 +309,7 @@
     "WEST_EVIDENCE_VALID",
     "SOUTH_OUTPUT_VALID",
     "SOUTH_MEANING_PRESERVED",
+
     "CASE_1_SUPPORT",
     "CASE_2_SUPPORT",
     "CASE_3_SUPPORT",
@@ -412,6 +484,14 @@
     return state.northSecondaryEvidenceNotes.join(" | ").includes(phrase);
   }
 
+  function normalizeLifecycle(value, fallback) {
+    const text = safeString(value, "");
+    const accepted = Object.keys(CONTROL_LIFECYCLE_STATES).map((key) => CONTROL_LIFECYCLE_STATES[key]);
+
+    if (accepted.includes(text)) return text;
+    return fallback || CONTROL_LIFECYCLE_STATES.UNKNOWN_PENDING_CHILD_SCHEMA;
+  }
+
   function findChild(candidates) {
     for (const path of candidates) {
       const found = readPath(root, path);
@@ -460,6 +540,41 @@
       routeReceiverMustLoadChildrenBeforeRun: ROUTE_RECEIVER_MUST_LOAD_CHILDREN_BEFORE_RUN,
       northDynamicChildLoadingOwned: NORTH_DYNAMIC_CHILD_LOADING_OWNED,
 
+      planetaryControlSchemaActive: true,
+      planetaryControlSchemaContract: CONTRACT,
+      planetaryControlSchemaReceipt: RECEIPT,
+      frontendPlanetaryObserverBasisExpected: true,
+      frontendPlanetaryObserverStatus: CONTROL_LIFECYCLE_STATES.EXPECTED_NOT_YET_WIRED,
+      planetaryFunctionDiagnosticBasis: "PLANETARY_VIEW_AND_FUNCTION_TRACK_EXPECTED",
+      planetaryBuildObserverStatus: CONTROL_LIFECYCLE_STATES.EXPECTED_NOT_YET_WIRED,
+
+      controlFile: CONTROL_FILE,
+      controlFileExpected: true,
+      controlFileStatus: CONTROL_LIFECYCLE_STATES.EXPECTED_NOT_YET_BUILT,
+      controlFileLoaded: FALLBACK.UNKNOWN,
+      controlGlobalPresent: FALLBACK.UNKNOWN,
+      controlReceiptPresent: FALLBACK.UNKNOWN,
+      controlAbsenceIsFailure: false,
+      controlAbsenceIsCase5: false,
+      controlAbsenceBlocksVisiblePlanet: false,
+      controlAbsenceBlocksMotionTouch: true,
+
+      controlHandshakeExpected: true,
+      controlHandshakeStatus: CONTROL_LIFECYCLE_STATES.EXPECTED_NOT_YET_WIRED,
+      hearthJsControlFunnelExpected: true,
+      hearthJsControlFunnelFile: ROUTE_CONDUCTOR_FILE,
+      hearthJsControlHandshakeStatus: CONTROL_LIFECYCLE_STATES.EXPECTED_NOT_YET_WIRED,
+      hearthJsLoadsOrRecognizesControlFile: FALLBACK.UNKNOWN,
+
+      motionTouchExpected: true,
+      motionTouchStatus: CONTROL_LIFECYCLE_STATES.WAITING_CONTROL_FILE,
+      dragStatus: CONTROL_LIFECYCLE_STATES.WAITING_CONTROL_FILE,
+      viewControlStatus: CONTROL_LIFECYCLE_STATES.WAITING_CONTROL_FILE,
+      visiblePlanetAllowedWithoutControls: true,
+      staticPlanetStatus: "STATIC_VISIBLE_PLANET_ALLOWED",
+      planetaryControlNextConformingFile: EAST_FILE,
+      planetaryControlNextConformingAction: "RENEW_EAST_TO_READ_PLANETARY_CONTROL_FOOTPRINT_SOURCE_EVIDENCE",
+
       childEastStatus: FALLBACK.UNKNOWN,
       childWestStatus: FALLBACK.UNKNOWN,
       childSouthStatus: FALLBACK.UNKNOWN,
@@ -475,6 +590,7 @@
 
       eastAlignmentContract: FALLBACK.UNKNOWN,
       westImplementationContract: FALLBACK.UNKNOWN,
+      southImplementationContract: SOUTH_CURRENT_IMPLEMENTATION_CONTRACT,
 
       eastSourceReadStatus: FALLBACK.UNKNOWN,
       westRenderedReadStatus: FALLBACK.UNKNOWN,
@@ -483,13 +599,15 @@
       diagnosticTargetAccessStatus: FALLBACK.UNKNOWN,
       diagnosticTargetAccessError: FALLBACK.UNKNOWN,
 
-      expectedHtmlContract: FALLBACK.UNKNOWN,
-      expectedIndexJsContract: FALLBACK.UNKNOWN,
-      expectedRouteConductorContract: FALLBACK.UNKNOWN,
+      expectedHtmlContract: CURRENT_HTML_CONTRACT,
+      expectedIndexJsContract: CURRENT_INDEX_JS_CONTRACT,
+      expectedRouteConductorContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
 
       currentExpectedHtmlContract: CURRENT_HTML_CONTRACT,
       currentExpectedIndexJsContract: CURRENT_INDEX_JS_CONTRACT,
       currentExpectedRouteConductorContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
+      compatRouteConductorContract: COMPAT_ROUTE_CONDUCTOR_CONTRACT,
+      priorRouteConductorContract: PRIOR_ROUTE_CONDUCTOR_CONTRACT,
 
       servedHtmlContract: FALLBACK.UNKNOWN,
       servedIndexJsContract: FALLBACK.UNKNOWN,
@@ -499,7 +617,8 @@
       cacheOrServedContractMismatch: FALLBACK.UNKNOWN,
 
       primaryRouteConductorContractRecognized: FALLBACK.UNKNOWN,
-      routeConductorV95PrimaryNotTreatedAsCase5: FALLBACK.UNKNOWN,
+      routeConductorV96PrimaryNotTreatedAsCase5: FALLBACK.UNKNOWN,
+      routeConductorV95CompatibilityAccepted: FALLBACK.UNKNOWN,
       routeConductorV94LineageAccepted: FALLBACK.UNKNOWN,
       eastCurrentSpreadAlignmentRecognized: FALLBACK.UNKNOWN,
 
@@ -792,9 +911,9 @@
 
   function fillUnknownEast(state) {
     state.eastSourceReadStatus = FALLBACK.UNKNOWN;
-    state.expectedHtmlContract = FALLBACK.UNKNOWN;
-    state.expectedIndexJsContract = FALLBACK.UNKNOWN;
-    state.expectedRouteConductorContract = FALLBACK.UNKNOWN;
+    state.expectedHtmlContract = CURRENT_HTML_CONTRACT;
+    state.expectedIndexJsContract = CURRENT_INDEX_JS_CONTRACT;
+    state.expectedRouteConductorContract = CURRENT_ROUTE_CONDUCTOR_CONTRACT;
     state.servedHtmlContract = FALLBACK.UNKNOWN;
     state.servedIndexJsContract = FALLBACK.UNKNOWN;
     state.servedRouteConductorContract = FALLBACK.UNKNOWN;
@@ -803,9 +922,16 @@
     state.cacheOrServedContractMismatch = FALLBACK.UNKNOWN;
     state.case5Support = FALLBACK.INSUFFICIENT_EVIDENCE;
     state.primaryRouteConductorContractRecognized = FALLBACK.UNKNOWN;
-    state.routeConductorV95PrimaryNotTreatedAsCase5 = FALLBACK.UNKNOWN;
+    state.routeConductorV96PrimaryNotTreatedAsCase5 = FALLBACK.UNKNOWN;
+    state.routeConductorV95CompatibilityAccepted = FALLBACK.UNKNOWN;
     state.routeConductorV94LineageAccepted = FALLBACK.UNKNOWN;
     state.eastCurrentSpreadAlignmentRecognized = FALLBACK.UNKNOWN;
+    state.controlFileStatus = CONTROL_LIFECYCLE_STATES.EXPECTED_NOT_YET_BUILT;
+    state.controlHandshakeStatus = CONTROL_LIFECYCLE_STATES.EXPECTED_NOT_YET_WIRED;
+    state.hearthJsControlHandshakeStatus = CONTROL_LIFECYCLE_STATES.EXPECTED_NOT_YET_WIRED;
+    state.motionTouchStatus = CONTROL_LIFECYCLE_STATES.WAITING_CONTROL_FILE;
+    state.dragStatus = CONTROL_LIFECYCLE_STATES.WAITING_CONTROL_FILE;
+    state.viewControlStatus = CONTROL_LIFECYCLE_STATES.WAITING_CONTROL_FILE;
   }
 
   function fillUnknownWest(state) {
@@ -858,18 +984,108 @@
     state.case7Support = FALLBACK.INSUFFICIENT_EVIDENCE;
   }
 
+  function aggregatePlanetaryControlFromEast(state, evidence) {
+    state.planetaryControlSchemaActive = true;
+    state.planetaryControlSchemaContract = CONTRACT;
+    state.planetaryControlSchemaReceipt = RECEIPT;
+
+    state.frontendPlanetaryObserverBasisExpected = asBoolString(
+      getValue(evidence, "FRONTEND_PLANETARY_OBSERVER_BASIS_EXPECTED", state.frontendPlanetaryObserverBasisExpected),
+      "true"
+    ) === "true";
+
+    state.frontendPlanetaryObserverStatus = normalizeLifecycle(
+      getValue(evidence, "FRONTEND_PLANETARY_OBSERVER_STATUS", state.frontendPlanetaryObserverStatus),
+      state.frontendPlanetaryObserverStatus
+    );
+
+    state.planetaryBuildObserverStatus = normalizeLifecycle(
+      getValue(evidence, "PLANETARY_BUILD_OBSERVER_STATUS", state.planetaryBuildObserverStatus),
+      state.planetaryBuildObserverStatus
+    );
+
+    state.controlFile = getValue(evidence, "CONTROL_FILE", CONTROL_FILE);
+    state.controlFileExpected = asBoolString(getValue(evidence, "CONTROL_FILE_EXPECTED", "true"), "true") === "true";
+    state.controlFileStatus = normalizeLifecycle(
+      getValue(evidence, "CONTROL_FILE_STATUS", state.controlFileStatus),
+      state.controlFileStatus
+    );
+
+    state.controlFileLoaded = getValue(evidence, "CONTROL_FILE_LOADED", state.controlFileLoaded);
+    state.controlGlobalPresent = getValue(evidence, "CONTROL_GLOBAL_PRESENT", state.controlGlobalPresent);
+    state.controlReceiptPresent = getValue(evidence, "CONTROL_RECEIPT_PRESENT", state.controlReceiptPresent);
+
+    state.controlAbsenceIsFailure = asBoolString(getValue(evidence, "CONTROL_ABSENCE_IS_FAILURE", "false"), "false") === "true";
+    state.controlAbsenceIsCase5 = asBoolString(getValue(evidence, "CONTROL_ABSENCE_IS_CASE_5", "false"), "false") === "true";
+    state.controlAbsenceBlocksVisiblePlanet = asBoolString(getValue(evidence, "CONTROL_ABSENCE_BLOCKS_VISIBLE_PLANET", "false"), "false") === "true";
+    state.controlAbsenceBlocksMotionTouch = asBoolString(getValue(evidence, "CONTROL_ABSENCE_BLOCKS_MOTION_TOUCH", "true"), "true") === "true";
+
+    state.controlHandshakeExpected = asBoolString(getValue(evidence, "CONTROL_HANDSHAKE_EXPECTED", "true"), "true") === "true";
+    state.controlHandshakeStatus = normalizeLifecycle(
+      getValue(evidence, "CONTROL_HANDSHAKE_STATUS", state.controlHandshakeStatus),
+      state.controlHandshakeStatus
+    );
+
+    state.hearthJsControlFunnelExpected = asBoolString(getValue(evidence, "HEARTH_JS_CONTROL_FUNNEL_EXPECTED", "true"), "true") === "true";
+    state.hearthJsControlFunnelFile = getValue(evidence, "HEARTH_JS_CONTROL_FUNNEL_FILE", ROUTE_CONDUCTOR_FILE);
+    state.hearthJsControlHandshakeStatus = normalizeLifecycle(
+      getValue(evidence, "HEARTH_JS_CONTROL_HANDSHAKE_STATUS", state.hearthJsControlHandshakeStatus),
+      state.hearthJsControlHandshakeStatus
+    );
+    state.hearthJsLoadsOrRecognizesControlFile = getValue(evidence, "HEARTH_JS_LOADS_OR_RECOGNIZES_CONTROL_FILE", state.hearthJsLoadsOrRecognizesControlFile);
+
+    state.motionTouchExpected = asBoolString(getValue(evidence, "MOTION_TOUCH_EXPECTED", "true"), "true") === "true";
+    state.motionTouchStatus = normalizeLifecycle(
+      getValue(evidence, "MOTION_TOUCH_STATUS", state.motionTouchStatus),
+      state.motionTouchStatus
+    );
+    state.dragStatus = normalizeLifecycle(
+      getValue(evidence, "DRAG_STATUS", state.dragStatus),
+      state.dragStatus
+    );
+    state.viewControlStatus = normalizeLifecycle(
+      getValue(evidence, "VIEW_CONTROL_STATUS", state.viewControlStatus),
+      state.viewControlStatus
+    );
+
+    state.visiblePlanetAllowedWithoutControls = asBoolString(
+      getValue(evidence, "VISIBLE_PLANET_ALLOWED_WITHOUT_CONTROLS", "true"),
+      "true"
+    ) === "true";
+
+    state.staticPlanetStatus = getValue(evidence, "STATIC_PLANET_STATUS", state.staticPlanetStatus);
+    state.planetaryControlNextConformingFile = getValue(evidence, "PLANETARY_CONTROL_NEXT_CONFORMING_FILE", EAST_FILE);
+    state.planetaryControlNextConformingAction = getValue(
+      evidence,
+      "PLANETARY_CONTROL_NEXT_CONFORMING_ACTION",
+      "RENEW_EAST_TO_READ_PLANETARY_CONTROL_FOOTPRINT_SOURCE_EVIDENCE"
+    );
+
+    if (state.controlFileStatus === CONTROL_LIFECYCLE_STATES.EXPECTED_NOT_YET_BUILT) {
+      addNote(state, "NORTH_CONTROL_ABSENCE_ADMITTED_AS_EXPECTED_NOT_YET_BUILT");
+    }
+
+    if (state.controlAbsenceIsCase5 === false) {
+      addNote(state, "NORTH_CONTROL_ABSENCE_NOT_TREATED_AS_CASE_5");
+    }
+
+    if (state.controlAbsenceBlocksVisiblePlanet === false && state.controlAbsenceBlocksMotionTouch === true) {
+      addNote(state, "NORTH_CONTROL_ABSENCE_BLOCKS_MOTION_TOUCH_NOT_VISIBLE_PLANET");
+    }
+  }
+
   function aggregateEast(state, evidence) {
     state.childEastStatus = getValue(evidence, "EAST_STATUS", FALLBACK.UNKNOWN);
     state.eastAlignmentContract = getValue(evidence, "EAST_ALIGNMENT_CONTRACT", getValue(evidence, "ALIGNMENT_CONTRACT", FALLBACK.UNKNOWN));
     state.eastSourceReadStatus = getValue(evidence, "EAST_SOURCE_READ_STATUS", FALLBACK.UNKNOWN);
 
-    state.expectedHtmlContract = getValue(evidence, "EXPECTED_HTML_CONTRACT", FALLBACK.UNKNOWN);
-    state.expectedIndexJsContract = getValue(evidence, "EXPECTED_INDEX_JS_CONTRACT", FALLBACK.UNKNOWN);
-    state.expectedRouteConductorContract = getValue(evidence, "EXPECTED_ROUTE_CONDUCTOR_CONTRACT", FALLBACK.UNKNOWN);
+    state.expectedHtmlContract = getValue(evidence, "EXPECTED_HTML_CONTRACT", CURRENT_HTML_CONTRACT);
+    state.expectedIndexJsContract = getValue(evidence, "EXPECTED_INDEX_JS_CONTRACT", CURRENT_INDEX_JS_CONTRACT);
+    state.expectedRouteConductorContract = getValue(evidence, "EXPECTED_ROUTE_CONDUCTOR_CONTRACT", CURRENT_ROUTE_CONDUCTOR_CONTRACT);
 
     state.currentExpectedHtmlContract = getValue(evidence, "CURRENT_EXPECTED_HTML_CONTRACT", CURRENT_HTML_CONTRACT);
     state.currentExpectedIndexJsContract = getValue(evidence, "CURRENT_EXPECTED_INDEX_JS_CONTRACT", CURRENT_INDEX_JS_CONTRACT);
-    state.currentExpectedRouteConductorContract = CURRENT_ROUTE_CONDUCTOR_CONTRACT;
+    state.currentExpectedRouteConductorContract = getValue(evidence, "CURRENT_EXPECTED_ROUTE_CONDUCTOR_CONTRACT", CURRENT_ROUTE_CONDUCTOR_CONTRACT);
 
     state.servedHtmlContract = getValue(evidence, "SERVED_HTML_CONTRACT", FALLBACK.UNKNOWN);
     state.servedIndexJsContract = getValue(evidence, "SERVED_INDEX_JS_CONTRACT", FALLBACK.UNKNOWN);
@@ -879,46 +1095,68 @@
     state.cacheOrServedContractMismatch = getValue(evidence, "CACHE_OR_SERVED_CONTRACT_MISMATCH", FALLBACK.UNKNOWN);
     state.case5Support = getValue(evidence, "CASE_5_SUPPORT", FALLBACK.INSUFFICIENT_EVIDENCE);
 
+    aggregatePlanetaryControlFromEast(state, evidence);
+
     for (const note of normalizeNotes(getValue(evidence, "EAST_SECONDARY_EVIDENCE_NOTES", ""))) {
       addNote(state, note);
     }
 
-    const v95Served = state.servedRouteConductorContract === CURRENT_ROUTE_CONDUCTOR_CONTRACT;
-    const v94Served = state.servedRouteConductorContract === PRIOR_ROUTE_CONDUCTOR_CONTRACT;
+    const served = state.servedRouteConductorContract;
+    const v96Served = served === CURRENT_ROUTE_CONDUCTOR_CONTRACT;
+    const v95Served = served === COMPAT_ROUTE_CONDUCTOR_CONTRACT;
+    const v94Served = served === PRIOR_ROUTE_CONDUCTOR_CONTRACT;
 
-    const eastV3 =
+    const eastCurrent =
       state.eastAlignmentContract === EAST_CURRENT_ALIGNMENT_CONTRACT ||
+      state.eastAlignmentContract === EAST_PREVIOUS_ALIGNMENT_CONTRACT ||
+      noteContains(state, "ROUTE_CONDUCTOR_V9_6_PRIMARY_NOT_TREATED_AS_CASE_5") ||
       noteContains(state, "ROUTE_CONDUCTOR_V9_5_PRIMARY_NOT_TREATED_AS_CASE_5") ||
-      noteContains(state, "PRIMARY_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED");
+      noteContains(state, "PRIMARY_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED") ||
+      noteContains(state, "CURRENT_EXPECTED_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED");
 
     state.primaryRouteConductorContractRecognized = asBoolString(
+      v96Served ||
       v95Served ||
       noteContains(state, "PRIMARY_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED") ||
       noteContains(state, "CURRENT_EXPECTED_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED")
     );
 
-    state.routeConductorV95PrimaryNotTreatedAsCase5 = asBoolString(
+    state.routeConductorV96PrimaryNotTreatedAsCase5 = asBoolString(
+      v96Served ||
+      noteContains(state, "ROUTE_CONDUCTOR_V9_6_PRIMARY_NOT_TREATED_AS_CASE_5")
+    );
+
+    state.routeConductorV95CompatibilityAccepted = asBoolString(
       v95Served ||
-      noteContains(state, "ROUTE_CONDUCTOR_V9_5_PRIMARY_NOT_TREATED_AS_CASE_5")
+      v96Served ||
+      noteContains(state, "ROUTE_CONDUCTOR_V9_5_PRIMARY_NOT_TREATED_AS_CASE_5") ||
+      noteContains(state, "ROUTE_CONDUCTOR_V9_5_COMPATIBILITY_SURFACE_ACCEPTED_UNDER_V9_6")
     );
 
     state.routeConductorV94LineageAccepted = asBoolString(
       v94Served ||
+      v95Served ||
+      v96Served ||
       noteContains(state, "ACCEPTED_ROUTE_CONDUCTOR_CONTRACT_LINEAGE_RECOGNIZED") ||
       noteContains(state, "ROUTE_CONDUCTOR_SOURCE_FETCH_FALLBACK_DIRECT_FILE_MATCHED_NO_FALSE_CASE_5")
     );
 
     state.eastCurrentSpreadAlignmentRecognized = asBoolString(
-      eastV3 ||
+      eastCurrent ||
       state.primaryRouteConductorContractRecognized === "true" ||
-      state.routeConductorV95PrimaryNotTreatedAsCase5 === "true"
+      state.routeConductorV96PrimaryNotTreatedAsCase5 === "true" ||
+      state.routeConductorV95CompatibilityAccepted === "true"
     );
 
-    if (state.routeConductorV95PrimaryNotTreatedAsCase5 === "true") {
-      addNote(state, "NORTH_ACCEPTED_EAST_V3_ROUTE_CONDUCTOR_V9_5_AS_CURRENT_SPREAD");
+    if (state.routeConductorV96PrimaryNotTreatedAsCase5 === "true") {
+      addNote(state, "NORTH_ACCEPTED_EAST_V4_ROUTE_CONDUCTOR_V9_6_AS_CURRENT_SPREAD");
     }
 
-    if (state.routeConductorV94LineageAccepted === "true" && state.routeConductorV95PrimaryNotTreatedAsCase5 !== "true") {
+    if (state.routeConductorV95CompatibilityAccepted === "true") {
+      addNote(state, "NORTH_ACCEPTED_ROUTE_CONDUCTOR_V9_5_AS_COMPATIBILITY_OR_TRANSITION_STATE");
+    }
+
+    if (state.routeConductorV94LineageAccepted === "true" && state.routeConductorV95CompatibilityAccepted !== "true") {
       addNote(state, "NORTH_ACCEPTED_ROUTE_CONDUCTOR_V9_4_AS_LINEAGE_OR_TRANSITION_STATE");
     }
   }
@@ -1121,6 +1359,11 @@
       state.calibrationHoldReason = `EAST=${state.eastEvidenceValid};WEST=${state.westEvidenceValid}`;
       state.diagnosticRailClean = "false";
       state.calibrationPointReached = "false";
+
+      if (!eastValid) {
+        addNote(state, "NORTH_PLANETARY_CONTROL_SCHEMA_AWAITS_EAST_SOURCE_FOOTPRINT_READER");
+      }
+
       return;
     }
 
@@ -1166,29 +1409,44 @@
   function selectRecommendation(state) {
     if (state.calibrationStatus === CALIBRATION.HOLD_RENDERED_PLANET_PROOF_SPREAD_INCOMPLETE) {
       state.recommendedNextOwner = "DIAGNOSTIC_RENDERED_PROOF_SPREAD";
-      state.recommendedNextFile = "/assets/hearth/hearth.diagnostic.west.js";
-      state.recommendedNextAction = "RENEW_WEST_RENDERED_TARGET_PROOF_SPREAD_TO_INSPECT_VISIBLE_PLANET_CANVAS_AND_ROUTE_CONDUCTOR_RUNTIME_PROOF";
+      state.recommendedNextFile = WEST_FILE;
+      state.recommendedNextAction = "RENEW_WEST_RENDERED_TARGET_PROOF_SPREAD_TO_INSPECT_VISIBLE_PLANET_CANVAS_ROUTE_CONDUCTOR_RUNTIME_AND_PLANETARY_FUNCTION_PROOF";
       return;
     }
 
     if (state.calibrationStatus === CALIBRATION.HOLD_CHILD_ALIGNMENT_INCOMPLETE) {
+      if (state.eastReceiptValid !== CHILD_VALIDATION.VALID || state.eastEvidenceValid !== CHILD_VALIDATION.VALID) {
+        state.recommendedNextOwner = "DIAGNOSTIC_SOURCE_SCHEMA_ALIGNMENT";
+        state.recommendedNextFile = EAST_FILE;
+        state.recommendedNextAction = "RENEW_EAST_TO_READ_PLANETARY_CONTROL_FOOTPRINT_SOURCE_EVIDENCE";
+        addNote(state, "NORTH_RECOMMENDS_EAST_CONFORMANCE_TO_PLANETARY_CONTROL_FOOTPRINT");
+        return;
+      }
+
+      if (state.westReceiptValid !== CHILD_VALIDATION.VALID || state.westEvidenceValid !== CHILD_VALIDATION.VALID) {
+        state.recommendedNextOwner = "DIAGNOSTIC_RENDERED_FUNCTION_ALIGNMENT";
+        state.recommendedNextFile = WEST_FILE;
+        state.recommendedNextAction = "RENEW_WEST_TO_READ_PLANETARY_FUNCTION_VISIBLE_STATIC_MOTION_TOUCH_DRAG_AND_PERFORMANCE_EVIDENCE";
+        return;
+      }
+
       state.recommendedNextOwner = "DIAGNOSTIC_CHILD_ALIGNMENT";
       state.recommendedNextFile = "HOLD_FOR_TEACHER_REVIEW";
-      state.recommendedNextAction = "VERIFY_EAST_WEST_CHILD_CONTRACTS_AND_EVIDENCE_BEFORE_REPAIR_SELECTION";
+      state.recommendedNextAction = "VERIFY_CHILD_CONTRACTS_AND_EVIDENCE_BEFORE_REPAIR_SELECTION";
       return;
     }
 
     if (state.calibrationStatus === CALIBRATION.HOLD_SOUTH_OUTPUT_INCOMPLETE) {
       state.recommendedNextOwner = "DIAGNOSTIC_SOUTH_OUTPUT";
-      state.recommendedNextFile = "/assets/hearth/hearth.diagnostic.south.js";
-      state.recommendedNextAction = "RENEW_SOUTH_REPORT_PACKET_OUTPUT_TO_ACCEPT_NORTH_ANCHOR_SCHEMA_FIELDS";
+      state.recommendedNextFile = SOUTH_FILE;
+      state.recommendedNextAction = "RENEW_SOUTH_REPORT_PACKET_OUTPUT_TO_ACCEPT_NORTH_PLANETARY_CONTROL_LIFECYCLE_SCHEMA_FIELDS";
       return;
     }
 
     if (state.calibrationStatus === CALIBRATION.HOLD_NORTH_MEANING_NOT_PRESERVED_BY_SOUTH) {
       state.recommendedNextOwner = "DIAGNOSTIC_SOUTH_OUTPUT";
-      state.recommendedNextFile = "/assets/hearth/hearth.diagnostic.south.js";
-      state.recommendedNextAction = "RENEW_SOUTH_TO_PRESERVE_NORTH_SELECTED_PRIMARY_CASE_CALIBRATION_AND_RECOMMENDATION_FIELDS";
+      state.recommendedNextFile = SOUTH_FILE;
+      state.recommendedNextAction = "RENEW_SOUTH_TO_PRESERVE_NORTH_SELECTED_PRIMARY_CASE_CALIBRATION_RECOMMENDATION_AND_PLANETARY_CONTROL_LIFECYCLE_FIELDS";
       return;
     }
 
@@ -1320,7 +1578,7 @@
     const notes = normalizeNotes(state.secondaryEvidenceNotes, state.northSecondaryEvidenceNotes);
 
     return {
-      schema: "HEARTH_DIAGNOSTIC_NORTH_ANCHOR_VERDICT_SCHEMA_v3",
+      schema: "HEARTH_DIAGNOSTIC_NORTH_PLANETARY_CONTROL_LIFECYCLE_VERDICT_SCHEMA_v4",
       northContract: CONTRACT,
       northReceipt: RECEIPT,
       previousNorthContract: PREVIOUS_CONTRACT,
@@ -1338,6 +1596,40 @@
       recommendedNextOwner: state.recommendedNextOwner,
       recommendedNextFile: state.recommendedNextFile,
       recommendedNextAction: state.recommendedNextAction,
+
+      planetaryControlLifecycle: {
+        planetaryControlSchemaActive: state.planetaryControlSchemaActive,
+        planetaryControlSchemaContract: state.planetaryControlSchemaContract,
+        planetaryControlSchemaReceipt: state.planetaryControlSchemaReceipt,
+        frontendPlanetaryObserverBasisExpected: state.frontendPlanetaryObserverBasisExpected,
+        frontendPlanetaryObserverStatus: state.frontendPlanetaryObserverStatus,
+        planetaryFunctionDiagnosticBasis: state.planetaryFunctionDiagnosticBasis,
+        planetaryBuildObserverStatus: state.planetaryBuildObserverStatus,
+        controlFile: state.controlFile,
+        controlFileExpected: state.controlFileExpected,
+        controlFileStatus: state.controlFileStatus,
+        controlFileLoaded: state.controlFileLoaded,
+        controlGlobalPresent: state.controlGlobalPresent,
+        controlReceiptPresent: state.controlReceiptPresent,
+        controlAbsenceIsFailure: state.controlAbsenceIsFailure,
+        controlAbsenceIsCase5: state.controlAbsenceIsCase5,
+        controlAbsenceBlocksVisiblePlanet: state.controlAbsenceBlocksVisiblePlanet,
+        controlAbsenceBlocksMotionTouch: state.controlAbsenceBlocksMotionTouch,
+        controlHandshakeExpected: state.controlHandshakeExpected,
+        controlHandshakeStatus: state.controlHandshakeStatus,
+        hearthJsControlFunnelExpected: state.hearthJsControlFunnelExpected,
+        hearthJsControlFunnelFile: state.hearthJsControlFunnelFile,
+        hearthJsControlHandshakeStatus: state.hearthJsControlHandshakeStatus,
+        hearthJsLoadsOrRecognizesControlFile: state.hearthJsLoadsOrRecognizesControlFile,
+        motionTouchExpected: state.motionTouchExpected,
+        motionTouchStatus: state.motionTouchStatus,
+        dragStatus: state.dragStatus,
+        viewControlStatus: state.viewControlStatus,
+        visiblePlanetAllowedWithoutControls: state.visiblePlanetAllowedWithoutControls,
+        staticPlanetStatus: state.staticPlanetStatus,
+        planetaryControlNextConformingFile: state.planetaryControlNextConformingFile,
+        planetaryControlNextConformingAction: state.planetaryControlNextConformingAction
+      },
 
       childValidation: {
         eastReceiptValid: state.eastReceiptValid,
@@ -1359,8 +1651,11 @@
         currentExpectedHtmlContract: state.currentExpectedHtmlContract,
         currentExpectedIndexJsContract: state.currentExpectedIndexJsContract,
         currentExpectedRouteConductorContract: state.currentExpectedRouteConductorContract,
+        compatRouteConductorContract: state.compatRouteConductorContract,
+        priorRouteConductorContract: state.priorRouteConductorContract,
         primaryRouteConductorContractRecognized: state.primaryRouteConductorContractRecognized,
-        routeConductorV95PrimaryNotTreatedAsCase5: state.routeConductorV95PrimaryNotTreatedAsCase5,
+        routeConductorV96PrimaryNotTreatedAsCase5: state.routeConductorV96PrimaryNotTreatedAsCase5,
+        routeConductorV95CompatibilityAccepted: state.routeConductorV95CompatibilityAccepted,
         routeConductorV94LineageAccepted: state.routeConductorV94LineageAccepted,
         eastCurrentSpreadAlignmentRecognized: state.eastCurrentSpreadAlignmentRecognized
       },
@@ -1479,15 +1774,54 @@
       PREVIOUS_NORTH_CONTRACT: PREVIOUS_CONTRACT,
       BASELINE_NORTH_CONTRACT: BASELINE_CONTRACT,
 
+      PLANETARY_CONTROL_SCHEMA_ACTIVE: state.planetaryControlSchemaActive,
+      PLANETARY_CONTROL_SCHEMA_CONTRACT: state.planetaryControlSchemaContract,
+      PLANETARY_CONTROL_SCHEMA_RECEIPT: state.planetaryControlSchemaReceipt,
+      FRONTEND_PLANETARY_OBSERVER_BASIS_EXPECTED: state.frontendPlanetaryObserverBasisExpected,
+      FRONTEND_PLANETARY_OBSERVER_STATUS: state.frontendPlanetaryObserverStatus,
+      PLANETARY_FUNCTION_DIAGNOSTIC_BASIS: state.planetaryFunctionDiagnosticBasis,
+      PLANETARY_BUILD_OBSERVER_STATUS: state.planetaryBuildObserverStatus,
+
+      CONTROL_FILE: state.controlFile,
+      CONTROL_FILE_EXPECTED: state.controlFileExpected,
+      CONTROL_FILE_STATUS: state.controlFileStatus,
+      CONTROL_FILE_LOADED: state.controlFileLoaded,
+      CONTROL_GLOBAL_PRESENT: state.controlGlobalPresent,
+      CONTROL_RECEIPT_PRESENT: state.controlReceiptPresent,
+      CONTROL_ABSENCE_IS_FAILURE: state.controlAbsenceIsFailure,
+      CONTROL_ABSENCE_IS_CASE_5: state.controlAbsenceIsCase5,
+      CONTROL_ABSENCE_BLOCKS_VISIBLE_PLANET: state.controlAbsenceBlocksVisiblePlanet,
+      CONTROL_ABSENCE_BLOCKS_MOTION_TOUCH: state.controlAbsenceBlocksMotionTouch,
+
+      CONTROL_HANDSHAKE_EXPECTED: state.controlHandshakeExpected,
+      CONTROL_HANDSHAKE_STATUS: state.controlHandshakeStatus,
+      HEARTH_JS_CONTROL_FUNNEL_EXPECTED: state.hearthJsControlFunnelExpected,
+      HEARTH_JS_CONTROL_FUNNEL_FILE: state.hearthJsControlFunnelFile,
+      HEARTH_JS_CONTROL_HANDSHAKE_STATUS: state.hearthJsControlHandshakeStatus,
+      HEARTH_JS_LOADS_OR_RECOGNIZES_CONTROL_FILE: state.hearthJsLoadsOrRecognizesControlFile,
+
+      MOTION_TOUCH_EXPECTED: state.motionTouchExpected,
+      MOTION_TOUCH_STATUS: state.motionTouchStatus,
+      DRAG_STATUS: state.dragStatus,
+      VIEW_CONTROL_STATUS: state.viewControlStatus,
+      VISIBLE_PLANET_ALLOWED_WITHOUT_CONTROLS: state.visiblePlanetAllowedWithoutControls,
+      STATIC_PLANET_STATUS: state.staticPlanetStatus,
+      PLANETARY_CONTROL_NEXT_CONFORMING_FILE: state.planetaryControlNextConformingFile,
+      PLANETARY_CONTROL_NEXT_CONFORMING_ACTION: state.planetaryControlNextConformingAction,
+
       EAST_ALIGNMENT_CONTRACT: state.eastAlignmentContract,
       WEST_IMPLEMENTATION_CONTRACT: state.westImplementationContract,
+      SOUTH_IMPLEMENTATION_CONTRACT: state.southImplementationContract,
 
       CURRENT_EXPECTED_HTML_CONTRACT: state.currentExpectedHtmlContract,
       CURRENT_EXPECTED_INDEX_JS_CONTRACT: state.currentExpectedIndexJsContract,
       CURRENT_EXPECTED_ROUTE_CONDUCTOR_CONTRACT: state.currentExpectedRouteConductorContract,
+      COMPAT_ROUTE_CONDUCTOR_CONTRACT: state.compatRouteConductorContract,
+      PRIOR_ROUTE_CONDUCTOR_CONTRACT: state.priorRouteConductorContract,
 
       PRIMARY_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED: state.primaryRouteConductorContractRecognized,
-      ROUTE_CONDUCTOR_V9_5_PRIMARY_NOT_TREATED_AS_CASE_5: state.routeConductorV95PrimaryNotTreatedAsCase5,
+      ROUTE_CONDUCTOR_V9_6_PRIMARY_NOT_TREATED_AS_CASE_5: state.routeConductorV96PrimaryNotTreatedAsCase5,
+      ROUTE_CONDUCTOR_V9_5_COMPATIBILITY_ACCEPTED: state.routeConductorV95CompatibilityAccepted,
       ROUTE_CONDUCTOR_V9_4_LINEAGE_ACCEPTED: state.routeConductorV94LineageAccepted,
       EAST_CURRENT_SPREAD_ALIGNMENT_RECOGNIZED: state.eastCurrentSpreadAlignmentRecognized,
 
@@ -1574,6 +1908,9 @@
   function composeCompactSummary(report) {
     return [
       line("TARGET_ROUTE", getValue(report, "TARGET_ROUTE", TARGET_ROUTE)),
+      line("CONTROL_FILE_STATUS", getValue(report, "CONTROL_FILE_STATUS", CONTROL_LIFECYCLE_STATES.EXPECTED_NOT_YET_BUILT)),
+      line("CONTROL_HANDSHAKE_STATUS", getValue(report, "CONTROL_HANDSHAKE_STATUS", CONTROL_LIFECYCLE_STATES.EXPECTED_NOT_YET_WIRED)),
+      line("MOTION_TOUCH_STATUS", getValue(report, "MOTION_TOUCH_STATUS", CONTROL_LIFECYCLE_STATES.WAITING_CONTROL_FILE)),
       line("SERVED_ROUTE_CONDUCTOR_CONTRACT", getValue(report, "SERVED_ROUTE_CONDUCTOR_CONTRACT", FALLBACK.UNKNOWN)),
       line("CACHE_OR_SERVED_CONTRACT_MISMATCH", getValue(report, "CACHE_OR_SERVED_CONTRACT_MISMATCH", FALLBACK.UNKNOWN)),
       line("CASE_1_SUPPORT", getValue(report, "CASE_1_SUPPORT", FALLBACK.UNKNOWN)),
@@ -1700,6 +2037,11 @@
     state.diagnosticRunStatus = STATUS.RUNNING;
     state.diagnosticTimestamp = nowIso();
     state.updatedAt = nowIso();
+
+    addNote(state, "NORTH_PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ACTIVE");
+    addNote(state, "NORTH_CONTROL_ABSENCE_ADMITTED_AS_EXPECTED_NOT_YET_BUILT");
+    addNote(state, "NORTH_CONTROL_ABSENCE_NOT_TREATED_AS_CASE_5");
+    addNote(state, "NORTH_CONTROL_ABSENCE_BLOCKS_MOTION_TOUCH_NOT_VISIBLE_PLANET");
 
     try {
       const children = discoverChildren();
@@ -1904,7 +2246,7 @@
     const state = lastState || makeState();
 
     return {
-      parentRole: "NORTH_ANCHOR_SCHEMA_ORCHESTRATOR",
+      parentRole: "NORTH_PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ORCHESTRATOR",
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
@@ -1924,6 +2266,31 @@
       servesRouteReceiver: true,
       northIsDiagnosticAnchor: true,
       northOwnsCanonicalVerdictSchema: true,
+      northOwnsPlanetaryControlLifecycleSchema: true,
+
+      planetaryControlSchemaActive: true,
+      planetaryControlSchemaContract: CONTRACT,
+      planetaryControlSchemaReceipt: RECEIPT,
+      frontendPlanetaryObserverBasisExpected: true,
+      controlFile: CONTROL_FILE,
+      controlFileExpected: true,
+      controlFileStatus: state.controlFileStatus,
+      controlAbsenceIsFailure: false,
+      controlAbsenceIsCase5: false,
+      controlAbsenceBlocksVisiblePlanet: false,
+      controlAbsenceBlocksMotionTouch: true,
+      controlHandshakeExpected: true,
+      controlHandshakeStatus: state.controlHandshakeStatus,
+      hearthJsControlFunnelExpected: true,
+      hearthJsControlFunnelFile: ROUTE_CONDUCTOR_FILE,
+      hearthJsControlHandshakeStatus: state.hearthJsControlHandshakeStatus,
+      motionTouchExpected: true,
+      motionTouchStatus: state.motionTouchStatus,
+      dragStatus: state.dragStatus,
+      viewControlStatus: state.viewControlStatus,
+      visiblePlanetAllowedWithoutControls: true,
+      planetaryControlNextConformingFile: EAST_FILE,
+      planetaryControlNextConformingAction: "RENEW_EAST_TO_READ_PLANETARY_CONTROL_FOOTPRINT_SOURCE_EVIDENCE",
 
       eastChildConsumed: state.eastReceiptValid === CHILD_VALIDATION.VALID,
       westChildConsumed: state.westReceiptValid === CHILD_VALIDATION.VALID,
@@ -1938,7 +2305,9 @@
       southMeaningPreserved: state.southMeaningPreserved,
 
       eastCurrentSpreadAlignmentRecognized: state.eastCurrentSpreadAlignmentRecognized,
-      routeConductorV95PrimaryNotTreatedAsCase5: state.routeConductorV95PrimaryNotTreatedAsCase5,
+      routeConductorV96PrimaryNotTreatedAsCase5: state.routeConductorV96PrimaryNotTreatedAsCase5,
+      routeConductorV95CompatibilityAccepted: state.routeConductorV95CompatibilityAccepted,
+      routeConductorV94LineageAccepted: state.routeConductorV94LineageAccepted,
       westRenderedProofSpreadComplete: state.westRenderedProofSpreadComplete,
 
       primaryCase: state.primaryCase,
@@ -1963,10 +2332,14 @@
       finalRecommendationAuthority: true,
       calibrationLayerAuthority: true,
       canonicalVerdictSchemaAuthority: true,
+      planetaryControlLifecycleSchemaAuthority: true,
       servedSourceParsingAuthority: false,
       renderedTargetProbeAuthority: false,
       packetFormattingAuthority: false,
       diagnosticUiAuthority: false,
+      controlFileImplementationAuthority: false,
+      routeConductorImplementationAuthority: false,
+      motionTouchExecutionAuthority: false,
       productionMutationAuthorized: false,
       hearthRepairAuthorized: false,
       runtimeRestartAuthorized: false,
@@ -2014,30 +2387,36 @@
     root.HEARTH.diagnosticNorth = api;
     root.HEARTH.diagnosticRailNorth = api;
     root.HEARTH.diagnosticNorthAnchor = api;
+    root.HEARTH.diagnosticNorthPlanetaryControlLifecycle = api;
 
     root.DEXTER_LAB = root.DEXTER_LAB || {};
     root.DEXTER_LAB.hearthDiagnosticRail = api;
     root.DEXTER_LAB.hearthDiagnosticNorth = api;
     root.DEXTER_LAB.hearthDiagnosticNorthAnchor = api;
+    root.DEXTER_LAB.hearthDiagnosticNorthPlanetaryControlLifecycle = api;
 
     root.HEARTH_DIAGNOSTIC_RAIL = api;
     root.HEARTH_PARALLEL_DIAGNOSTIC_RAIL = api;
     root.HEARTH_DIAGNOSTIC_NORTH = api;
     root.HEARTH_DIAGNOSTIC_RAIL_NORTH = api;
     root.HEARTH_DIAGNOSTIC_NORTH_ANCHOR = api;
+    root.HEARTH_DIAGNOSTIC_NORTH_PLANETARY_CONTROL_LIFECYCLE = api;
 
     root.HEARTH_DIAGNOSTIC_RAIL_RECEIPT = getReceipt();
     root.HEARTH_PARALLEL_DIAGNOSTIC_RAIL_RECEIPT = getReceipt();
     root.HEARTH_DIAGNOSTIC_NORTH_RECEIPT = getReceipt();
     root.HEARTH_DIAGNOSTIC_RAIL_NORTH_RECEIPT = getReceipt();
     root.HEARTH_DIAGNOSTIC_NORTH_ANCHOR_RECEIPT = getReceipt();
+    root.HEARTH_DIAGNOSTIC_NORTH_PLANETARY_CONTROL_LIFECYCLE_RECEIPT = getReceipt();
 
     root.HEARTH_DIAGNOSTIC_RAIL_VERDICT = clonePlain(lastVerdict);
     root.HEARTH_PARALLEL_DIAGNOSTIC_RAIL_VERDICT = clonePlain(lastVerdict);
     root.HEARTH_DIAGNOSTIC_NORTH_VERDICT = clonePlain(lastVerdict);
+    root.HEARTH_DIAGNOSTIC_NORTH_PLANETARY_CONTROL_LIFECYCLE_VERDICT = clonePlain(lastVerdict);
 
     root.HEARTH_DIAGNOSTIC_RAIL_REPORT = clonePlain(lastReport);
     root.HEARTH_PARALLEL_DIAGNOSTIC_RAIL_REPORT = clonePlain(lastReport);
+    root.HEARTH_DIAGNOSTIC_NORTH_PLANETARY_CONTROL_LIFECYCLE_REPORT = clonePlain(lastReport);
   }
 
   const api = Object.freeze({
@@ -2060,13 +2439,26 @@
     currentHtmlContract: CURRENT_HTML_CONTRACT,
     currentIndexJsContract: CURRENT_INDEX_JS_CONTRACT,
     currentRouteConductorContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
+    compatRouteConductorContract: COMPAT_ROUTE_CONDUCTOR_CONTRACT,
     priorRouteConductorContract: PRIOR_ROUTE_CONDUCTOR_CONTRACT,
+
+    controlFile: CONTROL_FILE,
+    routeConductorFile: ROUTE_CONDUCTOR_FILE,
+    indexFile: INDEX_FILE,
+    canvasFile: CANVAS_FILE,
+    eastFile: EAST_FILE,
+    westFile: WEST_FILE,
+    southFile: SOUTH_FILE,
+    CONTROL_LIFECYCLE_STATES,
 
     eastContract: EAST_CONTRACT,
     eastCurrentAlignmentContract: EAST_CURRENT_ALIGNMENT_CONTRACT,
+    eastPreviousAlignmentContract: EAST_PREVIOUS_ALIGNMENT_CONTRACT,
     westContract: WEST_CONTRACT,
     westCurrentImplementationContract: WEST_CURRENT_IMPLEMENTATION_CONTRACT,
+    westPreviousImplementationContract: WEST_PREVIOUS_IMPLEMENTATION_CONTRACT,
     southContract: SOUTH_CONTRACT,
+    southCurrentImplementationContract: SOUTH_CURRENT_IMPLEMENTATION_CONTRACT,
 
     runDiagnostic,
     getReport,
@@ -2078,23 +2470,38 @@
 
     supportsNorthAnchorSchema: true,
     supportsCurrentSpreadCalibration: true,
-    supportsEastV3CurrentSpreadIntelligence: true,
-    supportsRouteConductorV95AsCurrentSpread: true,
+    supportsEastV4CurrentSpreadIntelligence: true,
+    supportsRouteConductorV96AsCurrentSpread: true,
+    supportsRouteConductorV95Compatibility: true,
+    supportsRouteConductorV94Lineage: true,
     supportsWestRenderedObservabilityFields: true,
     supportsCalibrationStatusLayer: true,
     supportsNewsAlignmentAudit: true,
     supportsFibonacciSynchronizationAudit: true,
     supportsSouthMeaningPreservationAudit: true,
 
+    supportsPlanetaryControlLifecycleSchema: true,
+    supportsFrontendPlanetaryObserverBasisAdmission: true,
+    supportsControlFileExpectedNotYetBuiltLifecycle: true,
+    supportsControlAbsenceNotCase5: true,
+    supportsVisiblePlanetWithoutControls: true,
+    supportsMotionTouchWaitingControlFile: true,
+    supportsHearthJsControlFunnelExpectation: true,
+    recommendsEastFootprintConformanceWhenMissing: true,
+
     finalPrimaryCaseAuthority: true,
     finalRecommendationAuthority: true,
     calibrationLayerAuthority: true,
     canonicalVerdictSchemaAuthority: true,
+    planetaryControlLifecycleSchemaAuthority: true,
 
     servedSourceParsingAuthority: false,
     renderedTargetProbeAuthority: false,
     packetFormattingAuthority: false,
     diagnosticUiAuthority: false,
+    controlFileImplementationAuthority: false,
+    routeConductorImplementationAuthority: false,
+    motionTouchExecutionAuthority: false,
     productionMutationAuthorized: false,
     hearthRepairAuthorized: false,
     runtimeRestartAuthorized: false,

@@ -3,12 +3,14 @@
   lang="en"
   data-route="/showroom/globe/hearth/diagnostic/"
   data-page="hearth-diagnostic-route"
-  data-contract="HEARTH_DIAGNOSTIC_ROUTE_MISSION_CONTROL_FRONTIER_RECEIVER_TNT_v2_1"
-  data-receipt="HEARTH_DIAGNOSTIC_ROUTE_MISSION_CONTROL_FRONTIER_RECEIVER_RECEIPT_v2_1"
-  data-previous-contract="HEARTH_DIAGNOSTIC_ROUTE_MISSION_CONTROL_FRONTIER_RECEIVER_TNT_v2"
+  data-contract="HEARTH_DIAGNOSTIC_ROUTE_PLANETARY_BUILD_OBSERVER_RECEIVER_TNT_v2_2"
+  data-receipt="HEARTH_DIAGNOSTIC_ROUTE_PLANETARY_BUILD_OBSERVER_RECEIVER_RECEIPT_v2_2"
+  data-previous-contract="HEARTH_DIAGNOSTIC_ROUTE_MISSION_CONTROL_FRONTIER_RECEIVER_TNT_v2_1"
   data-baseline-contract="HEARTH_DIAGNOSTIC_ROUTE_PARALLEL_RAIL_RECEIVER_TNT_v1"
   data-role="thin-diagnostic-route-receiver"
-  data-receiver-standard="mission-control-frontier"
+  data-receiver-standard="planetary-build-observer"
+  data-diagnostic-interest="planetary-build-observation"
+  data-diagnostic-system-change="false"
   data-diagnostic-target="/showroom/globe/hearth/"
   data-child-loading-mode="route-loads-child-assets-as-loading-convenience"
   data-route-calls-north-only="true"
@@ -17,6 +19,15 @@
   data-south-anchor-conformance="HEARTH_DIAGNOSTIC_SOUTH_NORTH_ANCHOR_SCHEMA_CONFORMANCE_TNT_v3"
   data-west-rendered-proof="HEARTH_DIAGNOSTIC_WEST_RENDERED_PROOF_NAMESPACE_ADOPTION_TNT_v4"
   data-east-current-spread="HEARTH_DIAGNOSTIC_EAST_ROUTE_CONDUCTOR_PRIMARY_COMPATIBILITY_SPLIT_TNT_v4"
+  data-planetary-build-observer-active="true"
+  data-cardinal-validity-rail-present="true"
+  data-news-fibonacci-validity-rail-present="true"
+  data-under-hood-file-footprint-present="true"
+  data-above-hood-planet-build-board-present="true"
+  data-control-file-footprint-present="true"
+  data-motion-touch-footprint-present="true"
+  data-run-diagnostic-preserved="true"
+  data-receipt-output-preserved="true"
   data-production-mutation-authorized="false"
   data-hearth-repair-authorized="false"
   data-runtime-restart-authorized="false"
@@ -32,10 +43,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Hearth Diagnostic Mission Control</title>
+  <title>Hearth Diagnostic Planetary Observer</title>
   <meta
     name="description"
-    content="Mission-control diagnostic receiver for the Hearth Planet Engine. Loads EAST, WEST, SOUTH, and NORTH, then calls NORTH only."
+    content="Planetary-build observer receiver for the Hearth diagnostic rail. Loads EAST, WEST, SOUTH, and NORTH, then calls NORTH only while preserving run diagnostic and receipt output."
   />
 
   <style>
@@ -60,10 +71,11 @@
       --warn-bg: rgba(255, 205, 104, 0.13);
       --bad-bg: rgba(255, 96, 96, 0.13);
       --info-bg: rgba(86, 190, 255, 0.13);
+      --neutral-bg: rgba(255, 255, 255, 0.055);
       --code: #070b12;
       --focus: rgba(160, 222, 255, 0.85);
       --shadow: 0 24px 90px rgba(0, 0, 0, 0.46);
-      --max: 1240px;
+      --max: 1320px;
 
       font-family:
         Inter,
@@ -305,6 +317,12 @@
       border-color: rgba(142, 218, 255, 0.28);
     }
 
+    .is-neutral {
+      color: var(--muted);
+      background: var(--neutral-bg);
+      border-color: var(--line2);
+    }
+
     h1,
     h2,
     h3 {
@@ -313,9 +331,9 @@
     }
 
     h1 {
-      font-size: clamp(2.3rem, 7vw, 5.4rem);
+      font-size: clamp(2.2rem, 6.6vw, 5.2rem);
       line-height: 0.9;
-      max-width: 920px;
+      max-width: 980px;
     }
 
     h2 {
@@ -338,7 +356,7 @@
     }
 
     .hero-copy {
-      max-width: 860px;
+      max-width: 940px;
       margin-top: 14px;
       font-size: clamp(1rem, 2.5vw, 1.18rem);
     }
@@ -350,9 +368,11 @@
     }
 
     .span-12 { grid-column: span 12; }
+    .span-8 { grid-column: span 8; }
     .span-7 { grid-column: span 7; }
     .span-6 { grid-column: span 6; }
     .span-5 { grid-column: span 5; }
+    .span-4 { grid-column: span 4; }
 
     .panel {
       border: 1px solid var(--line);
@@ -371,15 +391,52 @@
         var(--panel2);
     }
 
-    .mission-verdict {
+    .mission-verdict,
+    .rail-grid,
+    .function-strip,
+    .module-deck,
+    .file-footprint,
+    .planet-build-board,
+    .lifecycle-board {
       display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: 10px;
+      margin-top: 14px;
+    }
+
+    .mission-verdict {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
       margin-top: 20px;
     }
 
+    .rail-grid {
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+    }
+
+    .function-strip {
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+    }
+
+    .module-deck {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .file-footprint {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .planet-build-board {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .lifecycle-board {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
     .tile,
-    .module-card {
+    .module-card,
+    .footprint-card,
+    .planet-card,
+    .lifecycle-card {
       border: 1px solid var(--line2);
       border-radius: 17px;
       background: rgba(0, 0, 0, 0.16);
@@ -388,7 +445,8 @@
     }
 
     .tile-label,
-    .module-subtitle {
+    .module-subtitle,
+    .card-subtitle {
       color: var(--soft);
       font-size: 0.74rem;
       font-weight: 850;
@@ -396,22 +454,17 @@
       text-transform: uppercase;
     }
 
-    .tile-value {
+    .tile-value,
+    .card-value {
       margin-top: 7px;
-      font-size: clamp(1.06rem, 2.7vw, 1.45rem);
+      font-size: clamp(0.98rem, 2.2vw, 1.28rem);
       font-weight: 900;
-      line-height: 1.05;
+      line-height: 1.08;
       overflow-wrap: anywhere;
     }
 
-    .module-deck {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 14px;
-    }
-
-    .module-head {
+    .module-head,
+    .card-head {
       display: flex;
       justify-content: space-between;
       gap: 8px;
@@ -419,13 +472,16 @@
       margin-bottom: 10px;
     }
 
-    .module-title {
+    .module-title,
+    .card-title {
       font-size: 1rem;
       font-weight: 900;
       letter-spacing: -0.02em;
+      overflow-wrap: anywhere;
     }
 
-    .module-subtitle {
+    .module-subtitle,
+    .card-subtitle {
       margin-top: 2px;
     }
 
@@ -574,6 +630,19 @@
       font-size: 0.88rem;
     }
 
+    @media (max-width: 1180px) {
+      .rail-grid,
+      .function-strip,
+      .file-footprint,
+      .planet-build-board {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .lifecycle-board {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
     @media (max-width: 980px) {
       body {
         padding: 14px;
@@ -583,17 +652,21 @@
         padding: 18px;
       }
 
+      .span-8,
       .span-7,
       .span-6,
-      .span-5 {
+      .span-5,
+      .span-4 {
         grid-column: span 12;
       }
 
-      .mission-verdict {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .module-deck {
+      .mission-verdict,
+      .module-deck,
+      .rail-grid,
+      .function-strip,
+      .file-footprint,
+      .planet-build-board,
+      .lifecycle-board {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
@@ -612,7 +685,12 @@
       }
 
       .mission-verdict,
-      .module-deck {
+      .module-deck,
+      .rail-grid,
+      .function-strip,
+      .file-footprint,
+      .planet-build-board,
+      .lifecycle-board {
         grid-template-columns: 1fr;
       }
 
@@ -644,7 +722,7 @@
         <a href="/showroom/">Showroom</a>
         <a href="/showroom/globe/">Globe</a>
         <a href="/showroom/globe/hearth/">Hearth</a>
-        <span aria-current="page">Diagnostic Rail</span>
+        <span aria-current="page">Planetary Diagnostic Observer</span>
       </div>
       <a class="button-link" href="/showroom/globe/hearth/">Open Hearth Route</a>
     </nav>
@@ -654,36 +732,68 @@
         <div class="kickers" aria-label="Receiver authority markers">
           <span class="chip">Planet Engine</span>
           <span class="chip">North-only</span>
-          <span class="chip">Read-only receiver</span>
+          <span class="chip">Planetary observer</span>
+          <span class="chip">Run + Receipt preserved</span>
           <span class="chip">No F13 · No F21</span>
         </div>
 
-        <h1 id="page-title">Hearth Diagnostic Mission Control</h1>
+        <h1 id="page-title">Hearth Planetary Diagnostic Observer</h1>
         <p class="hero-copy">
-          North-anchored receiver for the Hearth Planet Engine diagnostic rail. This route loads EAST,
-          WEST, SOUTH, and NORTH as a convenience, then calls NORTH only. It does not repair Hearth,
-          mutate production files, release Canvas, restart runtime, or claim readiness.
+          North-anchored receiver for the Hearth diagnostic rail. This route still loads EAST,
+          WEST, SOUTH, and NORTH as a convenience, then calls NORTH only. The diagnostic system is
+          unchanged; the receiver interest is renewed toward planetary function, under-the-hood files,
+          controls, motion, touch, fingers, canvas, and above-the-hood planet build visibility.
         </p>
 
         <div class="controls" aria-label="Diagnostic controls">
           <button id="runDiagnosticButton" type="button" data-run-diagnostic disabled>Run Diagnostic</button>
           <button id="copyReportButton" type="button" data-copy-report disabled>Copy Report</button>
           <button id="refreshStatusButton" type="button" data-refresh-status>Refresh Status</button>
-          <a class="button-link" href="#raw-output">Raw Output</a>
+          <a class="button-link" href="#raw-output">Raw Output / Receipts</a>
         </div>
 
         <section class="mission-verdict" aria-label="Mission verdict strip" id="missionVerdictPanel">
           <div class="tile"><div class="tile-label">Rail State</div><div class="tile-value is-warn">AWAITING RUN</div></div>
-          <div class="tile"><div class="tile-label">Calibration</div><div class="tile-value is-warn">NOT RUN</div></div>
-          <div class="tile"><div class="tile-label">NEWS</div><div class="tile-value is-warn">WAITING</div></div>
-          <div class="tile"><div class="tile-label">Fibonacci</div><div class="tile-value is-warn">WAITING</div></div>
-          <div class="tile"><div class="tile-label">South Meaning</div><div class="tile-value is-warn">WAITING</div></div>
+          <div class="tile"><div class="tile-label">Planet View</div><div class="tile-value is-warn">PENDING</div></div>
+          <div class="tile"><div class="tile-label">Controls</div><div class="tile-value is-info">EXPECTED</div></div>
+          <div class="tile"><div class="tile-label">Motion / Touch</div><div class="tile-value is-info">EXPECTED</div></div>
+          <div class="tile"><div class="tile-label">NEWS/Fibonacci</div><div class="tile-value is-warn">WAITING</div></div>
           <div class="tile"><div class="tile-label">Recommended Next</div><div class="tile-value is-warn">AWAITING RUN</div></div>
         </section>
       </div>
     </section>
 
-    <section class="grid" aria-label="Diagnostic mission panels">
+    <section class="grid" aria-label="Diagnostic planetary observer panels">
+      <section class="panel panel-strong span-12" aria-labelledby="cardinal-rail-title">
+        <h2 id="cardinal-rail-title">Cardinal Validity Rail</h2>
+        <p class="small">Top legitimacy rail. The receiver displays cardinal state but does not own diagnostic law.</p>
+        <div class="rail-grid" id="cardinalRailPanel" data-cardinal-validity-rail></div>
+      </section>
+
+      <section class="panel panel-strong span-12" aria-labelledby="planetary-function-title">
+        <h2 id="planetary-function-title">Planetary Function Strip</h2>
+        <p class="small">Visible planet, static render, controls, motion, touch, drag, and performance lifecycle. Planned functions are not hard failures.</p>
+        <div class="function-strip" id="planetaryFunctionPanel" data-planetary-function-strip></div>
+      </section>
+
+      <section class="panel span-12" aria-labelledby="file-footprint-title">
+        <h2 id="file-footprint-title">Under-the-Hood File Footprint</h2>
+        <p class="small">Planetary file and handshake lifecycle. This observer may list expected files before they are built.</p>
+        <div class="file-footprint" id="fileFootprintPanel" data-under-hood-file-footprint></div>
+      </section>
+
+      <section class="panel span-12" aria-labelledby="planet-build-title">
+        <h2 id="planet-build-title">Above-the-Hood Planet Build Board</h2>
+        <p class="small">World-expression build tracks. This board watches the planet being assembled without claiming final visual pass.</p>
+        <div class="planet-build-board" id="planetBuildPanel" data-above-hood-planet-build-board></div>
+      </section>
+
+      <section class="panel span-12" aria-labelledby="lifecycle-title">
+        <h2 id="lifecycle-title">Handshake / Lifecycle Board</h2>
+        <p class="small">Route conductor, controls, canvas, fingers, and receipts as observer states. Receiver-local values remain display-only.</p>
+        <div class="lifecycle-board" id="lifecyclePanel" data-lifecycle-board></div>
+      </section>
+
       <section class="panel panel-strong span-12" aria-labelledby="module-deck-title">
         <h2 id="module-deck-title">Diagnostic Module Deck</h2>
         <p class="small">Child-chain load state and active evidence posture. The receiver loads the files; NORTH remains the diagnostic authority.</p>
@@ -697,19 +807,21 @@
       </section>
 
       <section class="panel span-6" aria-labelledby="telemetry-title">
-        <h2 id="telemetry-title">Telemetry Deck</h2>
-        <p class="small">Readable route, source, rendered-proof, and output signals pulled from the active diagnostic result.</p>
+        <h2 id="telemetry-title">Legacy Source / Proof Trace</h2>
+        <p class="small">Existing source, rendered-proof, and output signals remain available, but no longer dominate the observer surface.</p>
         <div class="kv" id="telemetryPanel" data-telemetry-panel style="margin-top: 12px;"></div>
       </section>
 
       <section class="panel span-5" aria-labelledby="boundary-title">
         <h2 id="boundary-title">Receiver Boundary</h2>
         <div class="kv" style="margin-top: 12px;">
-          <div class="kv-row"><div class="key">Route role</div><div class="value">Thin UI receiver</div></div>
+          <div class="kv-row"><div class="key">Route role</div><div class="value is-info">Thin UI receiver</div></div>
+          <div class="kv-row"><div class="key">Diagnostic interest</div><div class="value is-info">Planetary build observer</div></div>
           <div class="kv-row"><div class="key">Execution authority</div><div class="value is-info">NORTH only</div></div>
           <div class="kv-row"><div class="key">Diagnostic law authority</div><div class="value is-info">north-parent-only</div></div>
           <div class="kv-row"><div class="key">Repair authority</div><div class="value is-bad">false</div></div>
           <div class="kv-row"><div class="key">Production mutation</div><div class="value is-bad">false</div></div>
+          <div class="kv-row"><div class="key">Canvas release</div><div class="value is-bad">false</div></div>
           <div class="kv-row"><div class="key">Visual pass claim</div><div class="value is-bad">false</div></div>
         </div>
       </section>
@@ -748,8 +860,8 @@
       </section>
 
       <section class="panel span-12" id="raw-output" aria-labelledby="raw-output-title">
-        <h2 id="raw-output-title">Raw Diagnostic Output</h2>
-        <p class="small">Raw output remains available for inspection and copy, but the operator view is driven by the mission panels above.</p>
+        <h2 id="raw-output-title">Raw Output / Receipts</h2>
+        <p class="small">Run Diagnostic, packet output, North verdict, and route receiver receipt remain preserved.</p>
 
         <div style="margin-top: 14px;">
           <details open>
@@ -789,8 +901,9 @@
     </section>
 
     <footer class="footer">
-      Contract: HEARTH_DIAGNOSTIC_ROUTE_MISSION_CONTROL_FRONTIER_RECEIVER_TNT_v2_1.
-      This route claims no F13, no F21, no ready text, no generated image, no GraphicBox, no WebGL, and no final visual pass.
+      Contract: HEARTH_DIAGNOSTIC_ROUTE_PLANETARY_BUILD_OBSERVER_RECEIVER_TNT_v2_2.
+      Diagnostic system unchanged. Receiver interest renewed. This route claims no F13, no F21, no ready text,
+      no generated image, no GraphicBox, no WebGL, no Canvas release, and no final visual pass.
     </footer>
   </main>
 
@@ -798,11 +911,11 @@
     (() => {
       "use strict";
 
-      const CONTRACT = "HEARTH_DIAGNOSTIC_ROUTE_MISSION_CONTROL_FRONTIER_RECEIVER_TNT_v2_1";
-      const RECEIPT = "HEARTH_DIAGNOSTIC_ROUTE_MISSION_CONTROL_FRONTIER_RECEIVER_RECEIPT_v2_1";
-      const PREVIOUS_CONTRACT = "HEARTH_DIAGNOSTIC_ROUTE_MISSION_CONTROL_FRONTIER_RECEIVER_TNT_v2";
+      const CONTRACT = "HEARTH_DIAGNOSTIC_ROUTE_PLANETARY_BUILD_OBSERVER_RECEIVER_TNT_v2_2";
+      const RECEIPT = "HEARTH_DIAGNOSTIC_ROUTE_PLANETARY_BUILD_OBSERVER_RECEIVER_RECEIPT_v2_2";
+      const PREVIOUS_CONTRACT = "HEARTH_DIAGNOSTIC_ROUTE_MISSION_CONTROL_FRONTIER_RECEIVER_TNT_v2_1";
       const BASELINE_CONTRACT = "HEARTH_DIAGNOSTIC_ROUTE_PARALLEL_RAIL_RECEIVER_TNT_v1";
-      const VERSION = "2026-06-03.hearth-diagnostic-route-mission-control-frontier-receiver-v2-1";
+      const VERSION = "2026-06-04.hearth-diagnostic-route-planetary-build-observer-receiver-v2-2";
 
       const TARGET_ROUTE = "/showroom/globe/hearth/";
       const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
@@ -890,6 +1003,252 @@
         }
       ]);
 
+      const LIFECYCLE = Object.freeze({
+        EXPECTED: "EXPECTED",
+        EXPECTED_NOT_YET_BUILT: "EXPECTED_NOT_YET_BUILT",
+        EXPECTED_NOT_YET_WIRED: "EXPECTED_NOT_YET_WIRED",
+        BUILT_NOT_SERVED: "BUILT_NOT_SERVED",
+        SERVED_NOT_LOADED: "SERVED_NOT_LOADED",
+        LOADED_NO_GLOBAL: "LOADED_NO_GLOBAL",
+        GLOBAL_PRESENT_NO_RECEIPT: "GLOBAL_PRESENT_NO_RECEIPT",
+        RECEIPT_PRESENT: "RECEIPT_PRESENT",
+        HANDSHAKE_PENDING: "HANDSHAKE_PENDING",
+        HANDSHAKE_VALID: "HANDSHAKE_VALID",
+        ACTIVE: "ACTIVE",
+        ACTIVE_DEGRADED: "ACTIVE_DEGRADED",
+        VISIBLE_PROOF_PRESENT: "VISIBLE_PROOF_PRESENT",
+        STATIC_PLANET_ACTIVE: "STATIC_PLANET_ACTIVE",
+        UNKNOWN_PENDING_BACKEND_SCHEMA: "UNKNOWN_PENDING_BACKEND_SCHEMA",
+        NOT_APPLICABLE: "NOT_APPLICABLE",
+        HARD_FAIL: "HARD_FAIL"
+      });
+
+      const FOOTPRINT_FILES = Object.freeze([
+        {
+          key: "html",
+          title: "index.html",
+          subtitle: "Public shell",
+          file: "/showroom/globe/hearth/index.html",
+          kind: "shell",
+          expected: true,
+          defaultStatus: LIFECYCLE.EXPECTED,
+          reportFields: ["SERVED_HTML_CONTRACT", "CURRENT_EXPECTED_HTML_CONTRACT"]
+        },
+        {
+          key: "index",
+          title: "index.js",
+          subtitle: "Button authority",
+          file: "/showroom/globe/hearth/index.js",
+          kind: "selector",
+          expected: true,
+          defaultStatus: LIFECYCLE.EXPECTED,
+          reportFields: ["SERVED_INDEX_JS_CONTRACT", "INDEX_SCRIPT_SRC"],
+          globalPaths: [
+            "HEARTH_INDEX_JS",
+            "HEARTH_INDEX_BRIDGE",
+            "HEARTH.frontendButtonAuthorityReset",
+            "HEARTH.buttonAuthority",
+            "DEXTER_LAB.hearthIndexJs"
+          ]
+        },
+        {
+          key: "route",
+          title: "hearth.js",
+          subtitle: "Route conductor",
+          file: "/showroom/globe/hearth/hearth.js",
+          kind: "route-conductor",
+          expected: true,
+          defaultStatus: LIFECYCLE.EXPECTED,
+          reportFields: ["SERVED_ROUTE_CONDUCTOR_CONTRACT", "ROUTE_CONDUCTOR_SCRIPT_SRC"],
+          globalPaths: [
+            "HEARTH_ROUTE_CONDUCTOR",
+            "HEARTH.routeConductor",
+            "HEARTH.routeConductorNewsFibonacciVisibleGlobeProofSynchronization",
+            "DEXTER_LAB.hearthRouteConductor"
+          ]
+        },
+        {
+          key: "controls",
+          title: "hearth.controls.js",
+          subtitle: "Motion / touch controls",
+          file: "/assets/hearth/hearth.controls.js",
+          kind: "controls",
+          expected: true,
+          defaultStatus: LIFECYCLE.EXPECTED_NOT_YET_BUILT,
+          absenceIsFailure: false,
+          absenceBlocksVisiblePlanet: false,
+          absenceBlocksMotionTouch: true,
+          globalPaths: [
+            "HEARTH.controls",
+            "HEARTH.planetaryControls",
+            "HEARTH.motionTouchControls",
+            "HEARTH_CONTROLS",
+            "HEARTH_PLANETARY_CONTROLS",
+            "HEARTH_MOTION_TOUCH_CONTROLS",
+            "DEXTER_LAB.hearthControls"
+          ]
+        },
+        {
+          key: "canvas",
+          title: "hearth.canvas.js",
+          subtitle: "Visible carrier",
+          file: "/assets/hearth/hearth.canvas.js",
+          kind: "canvas",
+          expected: true,
+          defaultStatus: LIFECYCLE.EXPECTED,
+          reportFields: ["CURRENT_CANVAS_PARENT_CONTRACT", "CANVAS_ELEMENT_PRESENT", "VISIBLE_PLANET_PROOF_READY"],
+          globalPaths: [
+            "HEARTH.canvas",
+            "HEARTH_CANVAS",
+            "HEARTH_CANVAS_VISIBLE_PLANET",
+            "HEARTH_CANVAS_EXPRESSION_HUB",
+            "HEARTH_CANVAS_FINGER_MANAGER",
+            "DEXTER_LAB.hearthCanvas"
+          ]
+        },
+        {
+          key: "boundary",
+          title: "finger.boundary",
+          subtitle: "Boundary finger",
+          file: "/assets/hearth/hearth.canvas.finger.boundary.js",
+          kind: "finger",
+          expected: true,
+          defaultStatus: LIFECYCLE.EXPECTED_NOT_YET_WIRED,
+          globalPaths: ["HEARTH.canvasFingerBoundary", "HEARTH_CANVAS_FINGER_BOUNDARY"]
+        },
+        {
+          key: "landform",
+          title: "finger.landform",
+          subtitle: "Landform finger",
+          file: "/assets/hearth/hearth.canvas.finger.landform.js",
+          kind: "finger",
+          expected: true,
+          defaultStatus: LIFECYCLE.EXPECTED_NOT_YET_WIRED,
+          globalPaths: ["HEARTH.canvasFingerLandform", "HEARTH_CANVAS_FINGER_LANDFORM"]
+        },
+        {
+          key: "elevation",
+          title: "finger.elevation",
+          subtitle: "Elevation finger",
+          file: "/assets/hearth/hearth.canvas.finger.elevation.js",
+          kind: "finger",
+          expected: true,
+          defaultStatus: LIFECYCLE.EXPECTED_NOT_YET_WIRED,
+          globalPaths: ["HEARTH.canvasFingerElevation", "HEARTH_CANVAS_FINGER_ELEVATION"]
+        },
+        {
+          key: "material",
+          title: "finger.material",
+          subtitle: "Material finger",
+          file: "/assets/hearth/hearth.canvas.finger.material.js",
+          kind: "finger",
+          expected: true,
+          defaultStatus: LIFECYCLE.EXPECTED_NOT_YET_WIRED,
+          globalPaths: ["HEARTH.canvasFingerMaterial", "HEARTH_CANVAS_FINGER_MATERIAL"]
+        },
+        {
+          key: "hydrology",
+          title: "finger.hydrology",
+          subtitle: "Hydrology finger",
+          file: "/assets/hearth/hearth.canvas.finger.hydrology.js",
+          kind: "finger",
+          expected: true,
+          defaultStatus: LIFECYCLE.EXPECTED_NOT_YET_WIRED,
+          globalPaths: ["HEARTH.canvasFingerHydrology", "HEARTH_CANVAS_FINGER_HYDROLOGY"]
+        },
+        {
+          key: "atmosphere",
+          title: "finger.atmosphere",
+          subtitle: "Atmosphere finger",
+          file: "/assets/hearth/hearth.canvas.finger.atmosphere.js",
+          kind: "finger",
+          expected: true,
+          defaultStatus: LIFECYCLE.EXPECTED_NOT_YET_WIRED,
+          globalPaths: ["HEARTH.canvasFingerAtmosphere", "HEARTH_CANVAS_FINGER_ATMOSPHERE"]
+        },
+        {
+          key: "lighting",
+          title: "finger.lighting",
+          subtitle: "Lighting finger",
+          file: "/assets/hearth/hearth.canvas.finger.lighting.js",
+          kind: "finger",
+          expected: true,
+          defaultStatus: LIFECYCLE.EXPECTED_NOT_YET_WIRED,
+          globalPaths: ["HEARTH.canvasFingerLighting", "HEARTH_CANVAS_FINGER_LIGHTING"]
+        },
+        {
+          key: "composite",
+          title: "finger.composite",
+          subtitle: "Composite finger",
+          file: "/assets/hearth/hearth.canvas.finger.composite.js",
+          kind: "finger",
+          expected: true,
+          defaultStatus: LIFECYCLE.EXPECTED_NOT_YET_WIRED,
+          globalPaths: ["HEARTH.canvasFingerComposite", "HEARTH_CANVAS_FINGER_COMPOSITE"]
+        }
+      ]);
+
+      const PLANET_TRACKS = Object.freeze([
+        { key: "body", title: "Body", subtitle: "Planet body", field: "PLANET_BODY_VISIBLE", defaultStatus: LIFECYCLE.UNKNOWN_PENDING_BACKEND_SCHEMA },
+        { key: "boundary", title: "Boundary", subtitle: "Body boundary", field: "PLANET_BOUNDARY_STATUS", defaultStatus: LIFECYCLE.EXPECTED },
+        { key: "landform", title: "Landform", subtitle: "Continental expression", field: "PLANET_LANDFORM_STATUS", defaultStatus: LIFECYCLE.EXPECTED },
+        { key: "elevation", title: "Elevation", subtitle: "Relief / height", field: "PLANET_ELEVATION_STATUS", defaultStatus: LIFECYCLE.EXPECTED },
+        { key: "material", title: "Material", subtitle: "Surface materials", field: "PLANET_MATERIAL_STATUS", defaultStatus: LIFECYCLE.EXPECTED },
+        { key: "hydrology", title: "Hydrology", subtitle: "Water system", field: "PLANET_HYDROLOGY_STATUS", defaultStatus: LIFECYCLE.EXPECTED },
+        { key: "atmosphere", title: "Atmosphere", subtitle: "Air / haze", field: "PLANET_ATMOSPHERE_STATUS", defaultStatus: LIFECYCLE.EXPECTED },
+        { key: "lighting", title: "Lighting", subtitle: "Illumination", field: "PLANET_LIGHTING_STATUS", defaultStatus: LIFECYCLE.EXPECTED },
+        { key: "composite", title: "Composite", subtitle: "Final surface merge", field: "PLANET_COMPOSITE_STATUS", defaultStatus: LIFECYCLE.EXPECTED },
+        { key: "motion", title: "Motion", subtitle: "Rotation / view", field: "PLANET_MOTION_STATUS", defaultStatus: LIFECYCLE.EXPECTED_NOT_YET_WIRED },
+        { key: "touch", title: "Touch", subtitle: "Touch input", field: "PLANET_TOUCH_STATUS", defaultStatus: LIFECYCLE.EXPECTED_NOT_YET_WIRED },
+        { key: "drag", title: "Drag", subtitle: "Drag input", field: "PLANET_DRAG_STATUS", defaultStatus: LIFECYCLE.EXPECTED_NOT_YET_WIRED },
+        { key: "performance", title: "Performance", subtitle: "Lag / loop risk", field: "PLANET_PERFORMANCE_STATUS", defaultStatus: LIFECYCLE.UNKNOWN_PENDING_BACKEND_SCHEMA }
+      ]);
+
+      const HANDSHAKE_TRACKS = Object.freeze([
+        {
+          key: "route-controls",
+          title: "Route → Controls",
+          subtitle: "Control handshake slot",
+          statusField: "ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_STATUS",
+          defaultStatus: LIFECYCLE.HANDSHAKE_PENDING
+        },
+        {
+          key: "controls-motion",
+          title: "Controls → Motion",
+          subtitle: "Motion/touch ownership",
+          statusField: "CONTROL_MOTION_TOUCH_HANDSHAKE_STATUS",
+          defaultStatus: LIFECYCLE.EXPECTED_NOT_YET_WIRED
+        },
+        {
+          key: "route-canvas",
+          title: "Route → Canvas",
+          subtitle: "Release/proof recognition",
+          statusField: "ROUTE_CANVAS_HANDSHAKE_STATUS",
+          defaultStatus: LIFECYCLE.HANDSHAKE_PENDING
+        },
+        {
+          key: "canvas-fingers",
+          title: "Canvas → Fingers",
+          subtitle: "Finger lifecycle",
+          statusField: "CANVAS_FINGER_HANDSHAKE_STATUS",
+          defaultStatus: LIFECYCLE.HANDSHAKE_PENDING
+        },
+        {
+          key: "planet-receipts",
+          title: "Planet Receipts",
+          subtitle: "Observer receipt layer",
+          statusField: "PLANET_RECEIPT_STATUS",
+          defaultStatus: LIFECYCLE.UNKNOWN_PENDING_BACKEND_SCHEMA
+        },
+        {
+          key: "north-boundary",
+          title: "North Boundary",
+          subtitle: "F21 held by NORTH",
+          statusField: "F21_BOUNDARY_STATUS",
+          defaultStatus: "F21_NORTH_ONLY"
+        }
+      ]);
+
       const root = window;
       const doc = document;
 
@@ -904,10 +1263,14 @@
         reportPacket: REPORT_PACKET,
         childLoadingMode: "ROUTE_RECEIVER_LOADS_CHILD_ASSETS_AS_LOADING_CONVENIENCE",
         routeReceiverCallsNorthOnly: true,
+        diagnosticInterestRenewalOnly: true,
+        backendFilesRequiredForReceiverUpgrade: false,
         routeReceiverOwnsDiagnosticLaw: false,
         routeReceiverOwnsEvidenceLaw: false,
         routeReceiverOwnsClassificationLaw: false,
         routeReceiverOwnsRecommendationLaw: false,
+        routeReceiverOwnsPlanetTruth: false,
+        routeReceiverOwnsCanvasTruth: false,
         routeReceiverOwnsRepair: false,
         loadStatus: {},
         northAvailable: false,
@@ -924,6 +1287,8 @@
         runtimeRestartClaimed: false,
         canvasReleaseClaimed: false,
         f13Claimed: false,
+        f13DisplaySlotPresent: true,
+        f13Authority: false,
         f21EligibleForNorth: false,
         f21ClaimedByDiagnosticRail: false,
         readyTextAllowed: false,
@@ -938,8 +1303,13 @@
         run: doc.getElementById("runDiagnosticButton"),
         copy: doc.getElementById("copyReportButton"),
         refresh: doc.getElementById("refreshStatusButton"),
-        moduleDeck: doc.getElementById("moduleDeck"),
         missionVerdict: doc.getElementById("missionVerdictPanel"),
+        cardinalRail: doc.getElementById("cardinalRailPanel"),
+        planetaryFunction: doc.getElementById("planetaryFunctionPanel"),
+        fileFootprint: doc.getElementById("fileFootprintPanel"),
+        planetBuild: doc.getElementById("planetBuildPanel"),
+        lifecycle: doc.getElementById("lifecyclePanel"),
+        moduleDeck: doc.getElementById("moduleDeck"),
         northStatus: doc.getElementById("northStatusPanel"),
         northVerdict: doc.getElementById("northVerdictPanel"),
         telemetry: doc.getElementById("telemetryPanel"),
@@ -1045,8 +1415,12 @@
           .replace(/"/g, "&quot;");
       }
 
+      function normalizeSignal(value) {
+        return safeString(value).trim().toUpperCase();
+      }
+
       function statusKind(value) {
-        const text = safeString(value).toUpperCase();
+        const text = normalizeSignal(value);
 
         if (
           text === "TRUE" ||
@@ -1055,28 +1429,45 @@
           text === "COMPLETE" ||
           text === "AVAILABLE" ||
           text === "NONE" ||
+          text === "ACTIVE" ||
+          text === "STATIC_PLANET_ACTIVE" ||
+          text === "VISIBLE_PROOF_PRESENT" ||
+          text === "RECEIPT_PRESENT" ||
+          text === "HANDSHAKE_VALID" ||
           text.includes("LOADED_AND_AVAILABLE") ||
           text.includes("ALREADY_AVAILABLE") ||
           text.includes("CALIBRATION_CLEAN") ||
           text.includes("REACHED") ||
-          text.includes("PRESERVED")
+          text.includes("PRESERVED") ||
+          text.includes("PROOF_PRESENT")
         ) {
           return "good";
         }
 
         if (
-          text === "FALSE" ||
+          text === "HARD_FAIL" ||
           text.includes("FAILED") ||
           text.includes("INVALID") ||
           text.includes("ERROR") ||
-          text.includes("MISSING") ||
           text.includes("BLOCKED") ||
-          text.includes("REJECTED")
+          text.includes("REJECTED") ||
+          text === "NORTH_UNAVAILABLE" ||
+          text === "RUN_DIAGNOSTIC_API_MISSING" ||
+          text === "RECEIPT_OUTPUT_MISSING"
         ) {
           return "bad";
         }
 
         if (
+          text === "EXPECTED" ||
+          text === "EXPECTED_NOT_YET_BUILT" ||
+          text === "EXPECTED_NOT_YET_WIRED" ||
+          text === "HANDSHAKE_PENDING" ||
+          text === "UNKNOWN_PENDING_BACKEND_SCHEMA" ||
+          text === "BUILT_NOT_SERVED" ||
+          text === "SERVED_NOT_LOADED" ||
+          text === "LOADED_NO_GLOBAL" ||
+          text === "GLOBAL_PRESENT_NO_RECEIPT" ||
           text.includes("PARTIAL") ||
           text.includes("HELD") ||
           text.includes("WAIT") ||
@@ -1085,6 +1476,17 @@
           text.includes("NOT_RUN")
         ) {
           return "warn";
+        }
+
+        if (
+          text === "FALSE" ||
+          text === "NOT_APPLICABLE" ||
+          text === "DISPLAY_ONLY" ||
+          text === "OBSERVER_ONLY" ||
+          text.includes("NO_") ||
+          text.includes("NORTH_ONLY")
+        ) {
+          return "info";
         }
 
         return "info";
@@ -1123,12 +1525,69 @@
         return `<span class="status-chip ${classFor(text)}">${escapeHtml(text)}</span>`;
       }
 
+      function observerCard(title, subtitle, status, rows = []) {
+        return `
+          <article class="footprint-card">
+            <div class="card-head">
+              <div>
+                <div class="card-title">${escapeHtml(title)}</div>
+                <div class="card-subtitle">${escapeHtml(subtitle)}</div>
+              </div>
+              ${statusChip(status)}
+            </div>
+            <div class="kv">
+              ${rows.map(([key, value]) => kvRow(key, value)).join("")}
+            </div>
+          </article>
+        `;
+      }
+
       function findGlobal(paths) {
-        for (const path of paths) {
+        for (const path of paths || []) {
           const found = readPath(root, path);
           if (found && isObject(found)) return found;
         }
         return null;
+      }
+
+      function hasGlobal(paths) {
+        return Boolean(findGlobal(paths));
+      }
+
+      function safeTargetDocument() {
+        try {
+          if (!els.frame || !els.frame.contentWindow) return null;
+          return els.frame.contentWindow.document || null;
+        } catch (_error) {
+          return null;
+        }
+      }
+
+      function findTargetScriptByPath(path) {
+        const target = safeTargetDocument();
+        if (!target || !path) return null;
+
+        try {
+          const scripts = Array.from(target.querySelectorAll("script[src]"));
+          return scripts.find((script) => {
+            const src = script.getAttribute("src") || "";
+            return src.includes(path);
+          }) || null;
+        } catch (_error) {
+          return null;
+        }
+      }
+
+      function targetDatasetValue(key, fallback = "") {
+        const target = safeTargetDocument();
+        try {
+          const html = target && target.documentElement ? target.documentElement : null;
+          if (!html || !html.dataset) return fallback;
+          const value = html.dataset[key];
+          return value === undefined || value === null || value === "" ? fallback : value;
+        } catch (_error) {
+          return fallback;
+        }
       }
 
       function getNorth() {
@@ -1200,13 +1659,231 @@
         return fallback;
       }
 
+      function reportNotes() {
+        return safeString(field("SECONDARY_EVIDENCE_NOTES", "")) + " " + safeString(field("NORTH_SECONDARY_EVIDENCE_NOTES", ""));
+      }
+
+      function isKnown(value) {
+        const text = normalizeSignal(value);
+        return Boolean(text && text !== "UNKNOWN" && text !== "NOT_FOUND" && text !== "NOT_RUN" && text !== "UNAVAILABLE");
+      }
+
+      function truthySignal(value) {
+        const text = normalizeSignal(value);
+        return text === "TRUE" || text === "VALID" || text === "COMPLETE" || text === "ACTIVE" || text.includes("READY") || text.includes("COMPLETE");
+      }
+
+      function derivePlanetVisibleStatus() {
+        const notes = reportNotes();
+
+        if (
+          truthySignal(field("VISIBLE_PLANET_PROOF_READY", "")) ||
+          truthySignal(field("RENDERED_PLANET_PROOF_READY", "")) ||
+          truthySignal(field("RENDERED_PLANET_PROOF_FULLY_INSPECTED", "")) ||
+          truthySignal(field("WEST_RENDERED_PROOF_SPREAD_COMPLETE", "")) ||
+          /VISIBLE_PLANET_PROOF|RENDERED_PLANET_PROOF_READY|CANVAS_MOUNT_NONZERO_DOM_PROOF|PLANET_STAGE_NONZERO_DOM_PROOF/i.test(notes) ||
+          targetDatasetValue("hearthCanvasVisiblePlanetProofReady") === "true" ||
+          targetDatasetValue("hearthSouthVisiblePlanetProofReady") === "true"
+        ) {
+          return LIFECYCLE.VISIBLE_PROOF_PRESENT;
+        }
+
+        if (field("WEST_RENDERED_READ_STATUS", "") === "COMPLETE") {
+          return LIFECYCLE.ACTIVE_DEGRADED;
+        }
+
+        return LIFECYCLE.UNKNOWN_PENDING_BACKEND_SCHEMA;
+      }
+
+      function deriveControlStatus() {
+        const controlFile = FOOTPRINT_FILES.find((item) => item.key === "controls");
+        const global = controlFile && hasGlobal(controlFile.globalPaths);
+        const script = findTargetScriptByPath(controlFile.file);
+
+        if (truthySignal(field("CONTROL_HANDSHAKE_VALID", "")) || truthySignal(field("CONTROL_FILE_ACTIVE", ""))) {
+          return LIFECYCLE.HANDSHAKE_VALID;
+        }
+
+        if (global) return LIFECYCLE.GLOBAL_PRESENT_NO_RECEIPT;
+        if (script) return LIFECYCLE.SERVED_NOT_LOADED;
+        return LIFECYCLE.EXPECTED_NOT_YET_BUILT;
+      }
+
+      function deriveMotionStatus() {
+        const controlStatus = deriveControlStatus();
+
+        if (truthySignal(field("PLANET_MOTION_STATUS", ""))) return field("PLANET_MOTION_STATUS");
+        if (truthySignal(field("CONTROL_MOTION_TOUCH_ACTIVE", ""))) return LIFECYCLE.ACTIVE;
+        if (controlStatus === LIFECYCLE.HANDSHAKE_VALID || controlStatus === LIFECYCLE.ACTIVE) return LIFECYCLE.HANDSHAKE_PENDING;
+
+        return LIFECYCLE.EXPECTED_NOT_YET_WIRED;
+      }
+
+      function deriveTouchStatus() {
+        if (truthySignal(field("PLANET_TOUCH_STATUS", ""))) return field("PLANET_TOUCH_STATUS");
+        if (truthySignal(field("CONTROL_MOTION_TOUCH_ACTIVE", ""))) return LIFECYCLE.ACTIVE;
+        return LIFECYCLE.EXPECTED_NOT_YET_WIRED;
+      }
+
+      function deriveDragStatus() {
+        if (truthySignal(field("PLANET_DRAG_STATUS", ""))) return field("PLANET_DRAG_STATUS");
+        if (truthySignal(field("CONTROL_MOTION_TOUCH_ACTIVE", ""))) return LIFECYCLE.ACTIVE;
+        return LIFECYCLE.EXPECTED_NOT_YET_WIRED;
+      }
+
+      function derivePerformanceStatus() {
+        const explicit = field("PLANET_PERFORMANCE_STATUS", "");
+        if (isKnown(explicit)) return explicit;
+
+        const notes = reportNotes();
+        if (/DUPLICATE_LOOP_RISK/i.test(notes)) return "DUPLICATE_LOOP_RISK";
+        if (/LAG_OBSERVED/i.test(notes)) return "LAG_OBSERVED";
+
+        return LIFECYCLE.UNKNOWN_PENDING_BACKEND_SCHEMA;
+      }
+
+      function derivePlanetaryFunctionStatus() {
+        const planetVisible = derivePlanetVisibleStatus();
+        return {
+          planetVisible,
+          planetStaticRender: planetVisible === LIFECYCLE.VISIBLE_PROOF_PRESENT ? LIFECYCLE.STATIC_PLANET_ACTIVE : planetVisible,
+          planetBodyVisible: planetVisible,
+          controlStatus: deriveControlStatus(),
+          motionStatus: deriveMotionStatus(),
+          touchStatus: deriveTouchStatus(),
+          dragStatus: deriveDragStatus(),
+          performanceStatus: derivePerformanceStatus()
+        };
+      }
+
+      function deriveFileStatus(item) {
+        const explicit = field(`${item.key.toUpperCase()}_FILE_STATUS`, "");
+        if (isKnown(explicit)) return explicit;
+
+        const globalPresent = hasGlobal(item.globalPaths);
+        const scriptPresent = Boolean(findTargetScriptByPath(item.file));
+        const datasetContract = item.key === "canvas"
+          ? targetDatasetValue("hearthCanvasContract")
+          : item.key === "route"
+            ? targetDatasetValue("hearthRouteConductorContract")
+            : item.key === "index"
+              ? targetDatasetValue("hearthIndexJsContract")
+              : "";
+
+        const reportFieldKnown = (item.reportFields || []).some((name) => isKnown(field(name, "")));
+
+        if (item.key === "html") {
+          return isKnown(field("SERVED_HTML_CONTRACT", "")) || targetDatasetValue("hearthHtmlContract")
+            ? LIFECYCLE.RECEIPT_PRESENT
+            : item.defaultStatus;
+        }
+
+        if (item.key === "controls") {
+          return deriveControlStatus();
+        }
+
+        if (item.key === "canvas" && derivePlanetVisibleStatus() === LIFECYCLE.VISIBLE_PROOF_PRESENT) {
+          return LIFECYCLE.ACTIVE;
+        }
+
+        if (globalPresent && reportFieldKnown) return LIFECYCLE.RECEIPT_PRESENT;
+        if (globalPresent) return LIFECYCLE.GLOBAL_PRESENT_NO_RECEIPT;
+        if (scriptPresent || datasetContract) return LIFECYCLE.SERVED_NOT_LOADED;
+        if (reportFieldKnown) return LIFECYCLE.RECEIPT_PRESENT;
+
+        return item.defaultStatus || LIFECYCLE.EXPECTED;
+      }
+
+      function deriveFileFootprint() {
+        return FOOTPRINT_FILES.map((item) => {
+          const status = deriveFileStatus(item);
+          return {
+            key: item.key,
+            title: item.title,
+            subtitle: item.subtitle,
+            file: item.file,
+            kind: item.kind,
+            expected: item.expected === true,
+            status,
+            source: "ROUTE_RECEIVER_LOCAL_FOOTPRINT",
+            authority: "display-only",
+            absenceIsFailure: item.absenceIsFailure === true ? true : false,
+            absenceBlocksVisiblePlanet: item.absenceBlocksVisiblePlanet === true ? true : false,
+            absenceBlocksMotionTouch: item.absenceBlocksMotionTouch === true ? true : false
+          };
+        });
+      }
+
+      function derivePlanetBuildFootprint() {
+        const functionStatus = derivePlanetaryFunctionStatus();
+
+        return PLANET_TRACKS.map((track) => {
+          let status = field(track.field, "");
+
+          if (!isKnown(status)) {
+            if (track.key === "body") status = functionStatus.planetBodyVisible;
+            else if (track.key === "motion") status = functionStatus.motionStatus;
+            else if (track.key === "touch") status = functionStatus.touchStatus;
+            else if (track.key === "drag") status = functionStatus.dragStatus;
+            else if (track.key === "performance") status = functionStatus.performanceStatus;
+            else if (functionStatus.planetVisible === LIFECYCLE.VISIBLE_PROOF_PRESENT) status = LIFECYCLE.ACTIVE_DEGRADED;
+            else status = track.defaultStatus;
+          }
+
+          return {
+            key: track.key,
+            title: track.title,
+            subtitle: track.subtitle,
+            status,
+            source: isKnown(field(track.field, "")) ? "NORTH_OR_REPORT_FIELD" : "ROUTE_RECEIVER_LOCAL_FOOTPRINT",
+            authority: "display-only"
+          };
+        });
+      }
+
+      function deriveLifecycleFootprint() {
+        const functionStatus = derivePlanetaryFunctionStatus();
+
+        return HANDSHAKE_TRACKS.map((track) => {
+          let status = field(track.statusField, "");
+
+          if (!isKnown(status)) {
+            if (track.key === "route-controls") {
+              status = deriveControlStatus() === LIFECYCLE.EXPECTED_NOT_YET_BUILT
+                ? LIFECYCLE.HANDSHAKE_PENDING
+                : LIFECYCLE.GLOBAL_PRESENT_NO_RECEIPT;
+            } else if (track.key === "controls-motion") {
+              status = functionStatus.motionStatus;
+            } else if (track.key === "route-canvas") {
+              status = functionStatus.planetVisible === LIFECYCLE.VISIBLE_PROOF_PRESENT
+                ? LIFECYCLE.HANDSHAKE_VALID
+                : LIFECYCLE.HANDSHAKE_PENDING;
+            } else if (track.key === "canvas-fingers") {
+              status = truthySignal(field("FINGER_REGISTRY_ACTIVE", "")) || truthySignal(field("FINGER_MANAGER_ACTIVE", ""))
+                ? LIFECYCLE.ACTIVE
+                : LIFECYCLE.HANDSHAKE_PENDING;
+            } else {
+              status = track.defaultStatus;
+            }
+          }
+
+          return {
+            key: track.key,
+            title: track.title,
+            subtitle: track.subtitle,
+            status,
+            source: isKnown(field(track.statusField, "")) ? "NORTH_OR_REPORT_FIELD" : "ROUTE_RECEIVER_LOCAL_FOOTPRINT",
+            authority: "display-only"
+          };
+        });
+      }
+
       function renderMissionVerdict() {
         const railClean = field("DIAGNOSTIC_RAIL_CLEAN", "AWAITING RUN");
-        const calibrationPoint = field("CALIBRATION_POINT_REACHED", "NOT RUN");
         const news = field("NEWS_ALIGNMENT_STATUS", "WAITING");
         const fib = field("FIBONACCI_SYNCHRONIZATION_STATUS", "WAITING");
-        const southMeaning = field("SOUTH_MEANING_PRESERVED", "WAITING");
         const nextFile = field("RECOMMENDED_NEXT_FILE", "AWAITING RUN");
+        const functions = derivePlanetaryFunctionStatus();
 
         const railState = railClean === "true"
           ? "CLEAN"
@@ -1214,25 +1891,100 @@
             ? field("CALIBRATION_STATUS", "HOLD")
             : railClean;
 
-        const calibration = calibrationPoint === "true"
-          ? "REACHED"
-          : calibrationPoint === "false"
-            ? "NOT REACHED"
-            : calibrationPoint;
-
-        const newsDisplay = safeString(news).replace("NEWS_ALIGNMENT_", "");
-        const fibDisplay = safeString(fib).replace("FIBONACCI_SYNCHRONIZATION_", "");
-        const southDisplay = southMeaning === "true" ? "PRESERVED" : southMeaning === "false" ? "NOT PRESERVED" : southMeaning;
+        const newsDisplay = `${safeString(news).replace("NEWS_ALIGNMENT_", "")} / ${safeString(fib).replace("FIBONACCI_SYNCHRONIZATION_", "")}`;
         const nextDisplay = nextFile === "NONE" ? "NONE" : nextFile;
 
         els.missionVerdict.innerHTML = [
           verdictTile("Rail State", railState),
-          verdictTile("Calibration", calibration),
-          verdictTile("NEWS", newsDisplay),
-          verdictTile("Fibonacci", fibDisplay),
-          verdictTile("South Meaning", southDisplay),
+          verdictTile("Planet View", functions.planetVisible),
+          verdictTile("Controls", functions.controlStatus),
+          verdictTile("Motion / Touch", `${functions.motionStatus} / ${functions.touchStatus}`),
+          verdictTile("NEWS/Fibonacci", newsDisplay),
           verdictTile("Recommended Next", nextDisplay)
         ].join("");
+      }
+
+      function renderCardinalRail() {
+        const north = getNorth();
+        const northReceipt = state.lastNorthReceipt || getNorthReceipt(north);
+
+        const rows = [
+          ["NORTH", state.northAvailable ? "VALID_OR_AVAILABLE" : north ? "FOUND" : "NOT_FOUND"],
+          ["EAST", field("EAST_RECEIPT_VALID", state.loadStatus.EAST || "PENDING")],
+          ["WEST", field("WEST_RECEIPT_VALID", state.loadStatus.WEST || "PENDING")],
+          ["SOUTH", field("SOUTH_RECEIPT_VALID", state.loadStatus.SOUTH || "PENDING")],
+          ["NEWS", field("NEWS_ALIGNMENT_STATUS", "WAITING")],
+          ["Fibonacci", field("FIBONACCI_SYNCHRONIZATION_STATUS", "WAITING")],
+          ["South Meaning", field("SOUTH_MEANING_PRESERVED", "WAITING")],
+          ["North Only", northReceipt.routeReceiverShouldCallNorthOnly === false ? "BROKEN" : "PRESERVED"]
+        ];
+
+        els.cardinalRail.innerHTML = rows.map(([label, value]) => verdictTile(label, value)).join("");
+      }
+
+      function renderPlanetaryFunctionStrip() {
+        const f = derivePlanetaryFunctionStatus();
+
+        const rows = [
+          ["Visible", f.planetVisible],
+          ["Static Render", f.planetStaticRender],
+          ["Body", f.planetBodyVisible],
+          ["Controls", f.controlStatus],
+          ["Motion", f.motionStatus],
+          ["Touch", f.touchStatus],
+          ["Drag", f.dragStatus],
+          ["Performance", f.performanceStatus]
+        ];
+
+        els.planetaryFunction.innerHTML = rows.map(([label, value]) => verdictTile(label, value)).join("");
+      }
+
+      function renderFileFootprint() {
+        const footprint = deriveFileFootprint();
+
+        els.fileFootprint.innerHTML = footprint.map((item) => observerCard(
+          item.title,
+          item.subtitle,
+          item.status,
+          [
+            ["File", item.file],
+            ["Kind", item.kind],
+            ["Source", item.source],
+            ["Absence failure", item.absenceIsFailure],
+            ["Blocks visible", item.absenceBlocksVisiblePlanet],
+            ["Blocks motion/touch", item.absenceBlocksMotionTouch]
+          ]
+        )).join("");
+      }
+
+      function renderPlanetBuildBoard() {
+        const build = derivePlanetBuildFootprint();
+
+        els.planetBuild.innerHTML = build.map((item) => observerCard(
+          item.title,
+          item.subtitle,
+          item.status,
+          [
+            ["Source", item.source],
+            ["Authority", item.authority],
+            ["Final visual pass", "false"]
+          ]
+        )).join("");
+      }
+
+      function renderLifecycleBoard() {
+        const lifecycle = deriveLifecycleFootprint();
+
+        els.lifecycle.innerHTML = lifecycle.map((item) => observerCard(
+          item.title,
+          item.subtitle,
+          item.status,
+          [
+            ["Source", item.source],
+            ["Authority", item.authority],
+            ["Diagnostic law", "false"]
+          ]
+        )).join("");
       }
 
       function renderModuleDeck() {
@@ -1327,6 +2079,8 @@
           ["Child Loading Mode", activeReceipt.childLoadingMode || "UNKNOWN"],
           ["Route Receiver Must Load Children", activeReceipt.routeReceiverMustLoadChildrenBeforeRun || "UNKNOWN"],
           ["Dynamic Child Loading Owned", activeReceipt.northDynamicChildLoadingOwned || "UNKNOWN"],
+          ["Diagnostic Interest", "PLANETARY_BUILD_OBSERVER"],
+          ["System Change", "false"],
           ["Last Run Status", activeReceipt.lastDiagnosticRunStatus || field("SOUTH_OUTPUT_STATUS", "NOT_RUN")],
           ["Last Primary Case", activeReceipt.lastPrimaryCase || field("PRIMARY_CASE", "NOT_RUN")],
           ["Last Calibration", activeReceipt.lastCalibrationStatus || field("CALIBRATION_STATUS", "NOT_RUN")]
@@ -1351,6 +2105,11 @@
 
       function renderAll() {
         renderMissionVerdict();
+        renderCardinalRail();
+        renderPlanetaryFunctionStrip();
+        renderFileFootprint();
+        renderPlanetBuildBoard();
+        renderLifecycleBoard();
         renderModuleDeck();
         renderNorthVerdict();
         renderTelemetryDeck();
@@ -1568,6 +2327,11 @@
       }
 
       function getRouteReceipt() {
+        const planetaryFunctionStatus = derivePlanetaryFunctionStatus();
+        const underHoodFileFootprint = deriveFileFootprint();
+        const aboveHoodPlanetBuild = derivePlanetBuildFootprint();
+        const lifecycleFootprint = deriveLifecycleFootprint();
+
         return {
           contract: CONTRACT,
           receipt: RECEIPT,
@@ -1578,21 +2342,49 @@
           targetRoute: TARGET_ROUTE,
           reportPacket: REPORT_PACKET,
           role: "thin-diagnostic-route-receiver",
-          receiverStandard: "mission-control-frontier",
+          receiverStandard: "planetary-build-observer",
+          diagnosticInterestRenewalOnly: true,
+          diagnosticSystemChange: false,
+          backendFilesRequiredForReceiverUpgrade: false,
           northAnchorContract: NORTH_ANCHOR_CONTRACT,
           northAnchorReceipt: NORTH_ANCHOR_RECEIPT,
           eastCurrentSpreadImplementation: EAST_IMPLEMENTATION_CONTRACT,
           westRenderedProofImplementation: WEST_IMPLEMENTATION_CONTRACT,
           southAnchorConformanceImplementation: SOUTH_IMPLEMENTATION_CONTRACT,
+
           routeReceiverLoadsChildAssetsAsLoadingConvenience: true,
           routeReceiverCallsNorthOnly: true,
+          northOnlyCallPreserved: true,
           routeReceiverOwnsDiagnosticLaw: false,
           routeReceiverOwnsEvidenceLaw: false,
           routeReceiverOwnsClassificationLaw: false,
           routeReceiverOwnsRecommendationLaw: false,
+          routeReceiverOwnsPlanetTruth: false,
+          routeReceiverOwnsCanvasTruth: false,
+          routeReceiverCreatesPrimaryCases: false,
+          routeReceiverOverridesNorthVerdict: false,
           routeReceiverOwnsRepair: false,
           routeReceiverOwnsRuntimeRestart: false,
           routeReceiverOwnsCanvasRelease: false,
+
+          planetaryBuildObserverActive: true,
+          cardinalValidityRailPresent: Boolean(els.cardinalRail),
+          newsFibonacciValidityRailPresent: Boolean(els.cardinalRail),
+          planetaryFunctionStripPresent: Boolean(els.planetaryFunction),
+          underHoodFileFootprintPresent: Boolean(els.fileFootprint),
+          aboveHoodPlanetBuildBoardPresent: Boolean(els.planetBuild),
+          controlFileFootprintPresent: true,
+          motionTouchFootprintPresent: true,
+          fingerLifecycleBoardPresent: true,
+          canvasLifecycleBoardPresent: true,
+          legacyRawOutputPreserved: Boolean(els.summary && els.packet && els.verdictJson && els.receiverReceiptJson),
+          runDiagnosticControlPresent: Boolean(els.run),
+          copyReportControlPresent: Boolean(els.copy),
+          refreshStatusControlPresent: Boolean(els.refresh),
+          receiptOutputPreserved: Boolean(els.receiverReceiptJson),
+          rawOutputAnchorPreserved: true,
+          targetFramePresent: Boolean(els.frame),
+
           eastChildLoadStatus: state.loadStatus.EAST || "PENDING",
           westChildLoadStatus: state.loadStatus.WEST || "PENDING",
           southChildLoadStatus: state.loadStatus.SOUTH || "PENDING",
@@ -1606,20 +2398,44 @@
           lastFibonacciSynchronizationStatus: field("FIBONACCI_SYNCHRONIZATION_STATUS", "NOT_RUN"),
           lastSouthMeaningPreserved: field("SOUTH_MEANING_PRESERVED", "NOT_RUN"),
           lastRecommendedNextFile: field("RECOMMENDED_NEXT_FILE", "NOT_RUN"),
-          runDiagnosticControlPresent: Boolean(els.run),
-          copyReportControlPresent: Boolean(els.copy),
-          refreshStatusControlPresent: Boolean(els.refresh),
-          targetFramePresent: Boolean(els.frame),
-          missionVerdictPanelPresent: Boolean(els.missionVerdict),
-          moduleDeckPresent: Boolean(els.moduleDeck),
-          telemetryPanelPresent: Boolean(els.telemetry),
+
+          planetaryFunctionStatus,
+          underHoodFileFootprint,
+          aboveHoodPlanetBuild,
+          lifecycleFootprint,
+
+          controlFile: "/assets/hearth/hearth.controls.js",
+          controlFileExpected: true,
+          controlFileStatus: planetaryFunctionStatus.controlStatus,
+          controlAbsenceIsFailure: false,
+          controlAbsenceIsCase5: false,
+          controlAbsenceBlocksVisiblePlanet: false,
+          controlAbsenceBlocksMotionTouch: true,
+          controlHandshakeExpected: true,
+          controlOwnsMotionTouch: true,
+          controlOwnsCanvasTruth: false,
+          controlOwnsPlanetTruth: false,
+          controlOwnsDiagnosticLaw: false,
+
+          routeConductorFile: "/showroom/globe/hearth/hearth.js",
+          routeConductorExpectsControlHandshake: true,
+          routeConductorLoadsOrRecognizesControlFile: true,
+          routeConductorOwnsHandshakePublication: true,
+          routeConductorOwnsMotionTouch: false,
+          routeConductorOwnsControlInput: false,
+          routeConductorOwnsCanvasDrawing: false,
+          routeConductorOwnsPlanetTruth: false,
+
           productionMutationAuthorized: false,
           hearthRepairClaimed: false,
           runtimeRestartClaimed: false,
           canvasReleaseClaimed: false,
           f13Claimed: false,
+          f13DisplaySlotPresent: true,
+          f13Authority: false,
           f21EligibleForNorth: false,
           f21ClaimedByDiagnosticRail: false,
+          f21NorthOnly: true,
           readyTextAllowed: false,
           readyTextClaimedByDiagnosticRail: false,
           visualPassClaimed: false,
@@ -1647,18 +2463,33 @@
           eastCurrentSpreadImplementation: EAST_IMPLEMENTATION_CONTRACT,
           westRenderedProofImplementation: WEST_IMPLEMENTATION_CONTRACT,
           southAnchorConformanceImplementation: SOUTH_IMPLEMENTATION_CONTRACT,
+          lifecycleVocabulary: LIFECYCLE,
+          footprintFiles: FOOTPRINT_FILES,
+          planetTracks: PLANET_TRACKS,
+          handshakeTracks: HANDSHAKE_TRACKS,
           loadChildChain,
           runDiagnostic,
           getRouteReceipt,
           getState: () => clonePlain(state),
+          derivePlanetaryFunctionStatus,
+          deriveFileFootprint,
+          derivePlanetBuildFootprint,
+          deriveLifecycleFootprint,
           routeReceiverCallsNorthOnly: true,
+          diagnosticInterestRenewalOnly: true,
+          diagnosticSystemChange: false,
+          backendFilesRequiredForReceiverUpgrade: false,
           routeReceiverOwnsDiagnosticLaw: false,
           routeReceiverOwnsRepair: false,
+          routeReceiverCreatesPrimaryCases: false,
+          routeReceiverOverridesNorthVerdict: false,
           productionMutationAuthorized: false,
           hearthRepairClaimed: false,
           runtimeRestartClaimed: false,
           canvasReleaseClaimed: false,
           f13Claimed: false,
+          f13DisplaySlotPresent: true,
+          f13Authority: false,
           f21EligibleForNorth: false,
           f21ClaimedByDiagnosticRail: false,
           readyTextAllowed: false,
@@ -1671,17 +2502,25 @@
 
         root.HEARTH.diagnosticRouteReceiver = api;
         root.HEARTH.diagnosticMissionControlReceiver = api;
+        root.HEARTH.diagnosticPlanetaryBuildObserverReceiver = api;
+
         root.HEARTH_DIAGNOSTIC_ROUTE_RECEIVER = api;
         root.HEARTH_DIAGNOSTIC_MISSION_CONTROL_RECEIVER = api;
+        root.HEARTH_DIAGNOSTIC_PLANETARY_BUILD_OBSERVER_RECEIVER = api;
+
         root.DEXTER_LAB.hearthDiagnosticRouteReceiver = api;
         root.DEXTER_LAB.hearthDiagnosticMissionControlReceiver = api;
+        root.DEXTER_LAB.hearthDiagnosticPlanetaryBuildObserverReceiver = api;
+
         root.HEARTH_DIAGNOSTIC_ROUTE_RECEIVER_RECEIPT = getRouteReceipt();
         root.HEARTH_DIAGNOSTIC_MISSION_CONTROL_RECEIVER_RECEIPT = getRouteReceipt();
+        root.HEARTH_DIAGNOSTIC_PLANETARY_BUILD_OBSERVER_RECEIVER_RECEIPT = getRouteReceipt();
       }
 
       els.run.addEventListener("click", runDiagnostic);
       els.copy.addEventListener("click", copyReport);
       els.refresh.addEventListener("click", renderAll);
+      if (els.frame) els.frame.addEventListener("load", renderAll);
 
       publishRouteReceiver();
       renderAll();

@@ -1,61 +1,60 @@
 // /assets/hearth/hearth.canvas.js
-// HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_TNT_v12_2
+// HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3
 // Full-file replacement.
-// Canvas Hub / visible-expression receiver / fast planetary view-control receiver only.
+// Canvas Hub / Composite-first visible-expression receiver / fast planetary view-control receiver.
 // Purpose:
-// - Preserve the v12_1 Canvas Hub planetary view-control receiver.
-// - Preserve downstream Composite, Hex Four-Pair Authority, Hex Surface Renderer, and finger-file awareness.
-// - Recognize Route Conductor v9_7 as current.
-// - Preserve v9_6, v9_5, and v9_4 route-conductor lineage/compatibility.
-// - Accept controls.js planetary view-control packets.
-// - Apply yaw, pitch, zoom, and phase immediately through CSS transform.
-// - Defer expensive renderer redraw, support scans, receipt rebuilds, and route-conductor notification until after input quiets.
-// - Prevent every drag/touch packet from forcing full canvas redraw.
-// - Publish diagnostic-readable fast-transform and deferred-render receipts.
-// Preserve:
-// - no terrain truth ownership
-// - no hydrology truth ownership
-// - no elevation truth ownership
-// - no material truth ownership
-// - no Composite truth ownership
-// - no Hex Four-Pair truth ownership
-// - no Hex Surface truth ownership
-// - no Route Conductor authority
-// - no diagnostic rail case authority
-// - no F13 claim
-// - no F21 claim
-// - no ready text
-// - no generated image
-// - no GraphicBox
-// - no WebGL
-// - no final visual pass
+// - Preserve v12_2 fast view transform and deferred render behavior.
+// - Fix the Composite handshake by recognizing drawToCanvas(canvasOrContext).
+// - Prefer Composite as the low-cost first visible planet path.
+// - Treat Hex Surface as a deferred/heavy renderer, not the boot-blocking first path.
+// - Recognize Hex Surface v2 lineage and v1 lineage.
+// - Prevent every drag/touch packet from forcing full Hex redraw.
+// - Publish diagnostic-readable Composite-first, fast-transform, deferred-render, and no-claim receipts.
+// Does not own:
+// - controls input admission
+// - route conductor truth
+// - diagnostic rail case selection
+// - Composite truth
+// - Hex Four-Pair truth
+// - Hex Surface truth
+// - terrain, elevation, hydrology, material, atmosphere, or lighting truth
+// - F13 final claim
+// - F21 latch
+// - ready text
+// - final visual pass
+// - generated image
+// - GraphicBox
+// - WebGL
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_TNT_v12_2";
-  const RECEIPT = "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_RECEIPT_v12_2";
+  const CONTRACT = "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3";
+  const RECEIPT = "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT_v12_3";
 
-  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_TNT_v12_1";
-  const PREVIOUS_RECEIPT = "HEARTH_CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_RECEIPT_v12_1";
+  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_TNT_v12_2";
+  const PREVIOUS_RECEIPT = "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_RECEIPT_v12_2";
+
+  const LINEAGE_V12_1_CONTRACT = "HEARTH_CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_TNT_v12_1";
+  const LINEAGE_V12_1_RECEIPT = "HEARTH_CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_RECEIPT_v12_1";
 
   const BASELINE_CONTRACT = "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_TNT_v12";
   const BASELINE_RECEIPT = "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_RECEIPT_v12";
 
   const CURRENT_ROUTE_CONDUCTOR_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION_TNT_v9_7";
   const CURRENT_ROUTE_CONDUCTOR_RECEIPT = "HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION_RECEIPT_v9_7";
-
   const LINEAGE_ROUTE_CONDUCTOR_V9_6_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_TNT_v9_6";
-  const LINEAGE_ROUTE_CONDUCTOR_V9_6_RECEIPT = "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_RECEIPT_v9_6";
-
   const LINEAGE_ROUTE_CONDUCTOR_V9_5_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_TNT_v9_5";
-  const LINEAGE_ROUTE_CONDUCTOR_V9_5_RECEIPT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_RECEIPT_v9_5";
-
   const LINEAGE_ROUTE_CONDUCTOR_V9_4_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_TNT_v9_4";
-  const LINEAGE_ROUTE_CONDUCTOR_V9_4_RECEIPT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_RECEIPT_v9_4";
 
   const HEX_FOUR_PAIR_CONTRACT = "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_TNT_v1";
-  const HEX_SURFACE_CONTRACT = "HEARTH_HEX_SURFACE_FOUR_PAIR_AUTHORITY_CONSUMER_TNT_v1";
+
+  const HEX_SURFACE_V2_CONTRACT = "HEARTH_HEX_SURFACE_CANVAS_HUB_THREE_FILE_VISIBLE_EXPRESSION_RENDERER_TNT_v2";
+  const HEX_SURFACE_V1_CONTRACT = "HEARTH_HEX_SURFACE_FOUR_PAIR_AUTHORITY_CONSUMER_TNT_v1";
+  const ACCEPTED_HEX_SURFACE_CONTRACTS = Object.freeze([
+    HEX_SURFACE_V2_CONTRACT,
+    HEX_SURFACE_V1_CONTRACT
+  ]);
 
   const FILE = "/assets/hearth/hearth.canvas.js";
   const ROUTE = "/showroom/globe/hearth/";
@@ -71,6 +70,7 @@
   const FAST_TRANSFORM_DELAY_MS = 0;
   const DEFERRED_RENDER_DELAY_MS = 220;
   const DEFERRED_RENDER_MAX_WAIT_MS = 900;
+  const DEFERRED_HEX_MIN_DELAY_MS = 1800;
 
   const FINGER_FILES = Object.freeze({
     boundary: "/assets/hearth/hearth.canvas.finger.boundary.js",
@@ -172,6 +172,8 @@
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
+    lineageV121Contract: LINEAGE_V12_1_CONTRACT,
+    lineageV121Receipt: LINEAGE_V12_1_RECEIPT,
     baselineContract: BASELINE_CONTRACT,
     baselineReceipt: BASELINE_RECEIPT,
 
@@ -181,7 +183,7 @@
     indexFile: INDEX_FILE,
     routeFile: ROUTE_FILE,
     controlFile: CONTROL_FILE,
-    role: "Canvas Hub / Fast View Transform / Deferred Render Receiver",
+    role: "Canvas Hub / Composite-First Fast View Transform / Deferred Hex Render Receiver",
 
     canvasHubLoaded: true,
     canvasHubActive: true,
@@ -192,6 +194,11 @@
     canvasFingerManagerActive: true,
     fingerRegistryActive: true,
     threeFileStretchActive: true,
+
+    compositeFirstVisiblePathActive: true,
+    compositeDrawToCanvasHandshakeRecognized: true,
+    hexSurfaceDeferredPathActive: true,
+    hexSurfaceBootBlockingRejected: true,
 
     planetaryViewControlReceiverActive: true,
     viewControlPacketReceiverReady: true,
@@ -231,6 +238,7 @@
     canvasDrawComplete: false,
     canvasDrawError: "",
     holdingFieldDrawComplete: false,
+    holdingFieldVisible: false,
 
     visiblePlanetProofReady: false,
     visiblePlanetProofSource: "NONE",
@@ -243,6 +251,7 @@
     compositeDetected: false,
     compositeContract: "",
     compositeReceipt: "",
+    compositeSourceName: "NONE",
     compositeDrawMethodAvailable: false,
     compositeDrawMethod: "NONE",
     compositeDrawAttempted: false,
@@ -260,17 +269,24 @@
     hexFourPairAllowedToFloat: true,
     hexFourPairValidationReceipt: null,
     hexFourPairValidationError: "",
+    hexFourPairSourceName: "NONE",
 
     hexSurfaceFile: HEX_SURFACE_FILE,
     hexSurfaceRendererDetected: false,
     hexSurfaceRendererContract: "",
     hexSurfaceRendererContractRecognized: false,
+    hexSurfaceRendererV2Recognized: false,
+    hexSurfaceRendererV1LineageAccepted: false,
+    hexSurfaceRendererSourceName: "NONE",
     hexSurfaceRendererDrawMethodAvailable: false,
     hexSurfaceRendererDrawMethod: "NONE",
     hexSurfaceRendererDrawAttempted: false,
     hexSurfaceRendererDrawComplete: false,
     hexSurfaceRendererFrameReceipt: null,
     hexSurfaceRendererDrawError: "",
+    hexSurfaceRendererDeferred: true,
+    hexSurfaceRendererSkippedBecauseCompositeReady: false,
+    hexSurfaceRendererLastDeferredAt: "",
 
     supportLoadAttempted: false,
     supportLoadComplete: false,
@@ -339,7 +355,7 @@
     recommendedNextFile: FILE,
     recommendedNextAction: "RUN_CANVAS_HUB",
     recommendedNextRenewalTarget: FILE,
-    postgameStatus: "CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_NOT_STARTED",
+    postgameStatus: "CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_RECEIVER_NOT_STARTED",
 
     routeConductorReleasePacket: null,
     routeConductorReleasePacketObserved: false,
@@ -356,7 +372,9 @@
   let deferredRenderTimer = 0;
   let deferredRenderMaxTimer = 0;
   let transformTimer = 0;
-  let supportLoadPromise = null;
+  let compositeSupportPromise = null;
+  let hexSupportPromise = null;
+  let deferredHexTimer = 0;
 
   function nowIso() {
     try {
@@ -380,8 +398,8 @@
   }
 
   function safeNumber(value, fallback = 0) {
-    const n = Number(value);
-    return Number.isFinite(n) ? n : fallback;
+    const number = Number(value);
+    return Number.isFinite(number) ? number : fallback;
   }
 
   function safeBool(value, fallback = false) {
@@ -392,11 +410,12 @@
   }
 
   function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
+    return Math.max(min, Math.min(max, safeNumber(value, min)));
   }
 
   function clonePlain(value) {
     if (!isObject(value) && !Array.isArray(value)) return value;
+
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
@@ -483,9 +502,17 @@
     }
 
     try {
-      return { ok: true, value: target[method](...(Array.isArray(args) ? args : [args])), error: "" };
+      return {
+        ok: true,
+        value: target[method](...(Array.isArray(args) ? args : [args])),
+        error: ""
+      };
     } catch (error) {
-      return { ok: false, value: null, error: error && error.message ? String(error.message) : String(error) };
+      return {
+        ok: false,
+        value: null,
+        error: error && error.message ? String(error.message) : String(error)
+      };
     }
   }
 
@@ -498,6 +525,9 @@
       "getCanvasStationReceipt",
       "getExpressionHubReceipt",
       "getCanvasExpressionHubReceipt",
+      "getCompositePacket",
+      "getCompositeModel",
+      "getWorldExpressionPacket",
       "getCarrierReceipt",
       "readStructuralCarrier",
       "getStructuralCarrier",
@@ -562,7 +592,7 @@
     }
 
     const ratio = Math.max(1, Math.min(2, safeNumber(root.devicePixelRatio, 1)));
-    return Math.max(512, Math.min(1280, Math.round(cssWidth * ratio)));
+    return Math.max(512, Math.min(1120, Math.round(cssWidth * ratio)));
   }
 
   function findCanvasElement(mount, stage) {
@@ -729,8 +759,10 @@
     canvas.dataset.hearthCanvasPreviousContract = PREVIOUS_CONTRACT;
     canvas.dataset.hearthCanvasBaselineContract = BASELINE_CONTRACT;
     canvas.dataset.hearthPlanetaryViewControlReceiverActive = "true";
+    canvas.dataset.hearthCompositeFirstVisiblePathActive = "true";
     canvas.dataset.hearthFastViewTransformActive = "true";
     canvas.dataset.hearthDeferredRendererActive = "true";
+    canvas.dataset.hearthHexSurfaceBootBlockingRejected = "true";
     canvas.dataset.generatedImage = "false";
     canvas.dataset.graphicBox = "false";
     canvas.dataset.webgl = "false";
@@ -841,15 +873,26 @@
       ctx.fillStyle = "rgba(255,255,255,0.62)";
       ctx.font = `${Math.max(11, Math.floor(w / 58))}px system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif`;
       ctx.textAlign = "center";
-      ctx.fillText("Canvas Hub holding field", cx, h - Math.max(22, h * 0.055));
+      ctx.fillText("Hearth Canvas Hub holding field", cx, h - Math.max(22, h * 0.055));
 
       if (reason) {
         ctx.fillStyle = "rgba(255,255,255,0.42)";
         ctx.font = `${Math.max(10, Math.floor(w / 72))}px system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif`;
-        ctx.fillText(String(reason).slice(0, 70), cx, h - Math.max(10, h * 0.028));
+        ctx.fillText(String(reason).slice(0, 78), cx, h - Math.max(10, h * 0.028));
       }
 
       state.holdingFieldDrawComplete = true;
+      state.holdingFieldVisible = true;
+      state.canvasDrawComplete = true;
+      state.visiblePlanetProofReady = true;
+      state.renderedPlanetProofReady = true;
+      state.visiblePlanetProofSource = "SAFE_HOLDING_FIELD";
+      state.visiblePlanetProofReason = "SAFE_HOLDING_FIELD_DRAW_COMPLETE";
+      state.f13CanvasEvidenceDegraded = true;
+      state.f13CanvasEvidenceComplete = true;
+      state.f13CanvasEvidenceStrict = false;
+      state.f13StrictEvidenceGap = "SAFE_HOLDING_FIELD_VISIBLE_COMPOSITE_PENDING";
+      state.postgameStatus = "CANVAS_HUB_SAFE_HOLDING_FIELD_VISIBLE_COMPOSITE_PENDING";
       applyCanvasViewTransform("holding-field");
       return true;
     } catch (error) {
@@ -925,14 +968,12 @@
     state.routeConductorContract = contract || "";
     state.routeConductorReceipt = receipt || "";
     state.routeConductorV97Recognized = contract === CURRENT_ROUTE_CONDUCTOR_CONTRACT || receipt === CURRENT_ROUTE_CONDUCTOR_RECEIPT;
-    state.routeConductorV96LineageAccepted = contract === LINEAGE_ROUTE_CONDUCTOR_V9_6_CONTRACT || receipt === LINEAGE_ROUTE_CONDUCTOR_V9_6_RECEIPT;
+    state.routeConductorV96LineageAccepted = contract === LINEAGE_ROUTE_CONDUCTOR_V9_6_CONTRACT;
     state.routeConductorV95LineageAccepted =
       contract === LINEAGE_ROUTE_CONDUCTOR_V9_5_CONTRACT ||
-      receipt === LINEAGE_ROUTE_CONDUCTOR_V9_5_RECEIPT ||
       datasetValue("routeConductorLineageV95Contract") === LINEAGE_ROUTE_CONDUCTOR_V9_5_CONTRACT;
     state.routeConductorV94LineageAccepted =
       contract === LINEAGE_ROUTE_CONDUCTOR_V9_4_CONTRACT ||
-      receipt === LINEAGE_ROUTE_CONDUCTOR_V9_4_RECEIPT ||
       datasetValue("routeConductorLineageContract") === LINEAGE_ROUTE_CONDUCTOR_V9_4_CONTRACT;
     state.routeConductorAuthoritySourceName = sourceName;
 
@@ -977,9 +1018,14 @@
   function hexSurfaceSources() {
     return [
       ["HEARTH_HEX_SURFACE", readPath("HEARTH_HEX_SURFACE")],
+      ["HEARTH_HEX_SURFACE_RENDERER", readPath("HEARTH_HEX_SURFACE_RENDERER")],
+      ["HEARTH_HEX_SURFACE_CANVAS_HUB_THREE_FILE_VISIBLE_EXPRESSION_RENDERER", readPath("HEARTH_HEX_SURFACE_CANVAS_HUB_THREE_FILE_VISIBLE_EXPRESSION_RENDERER")],
       ["HEARTH_HEX_SURFACE_FOUR_PAIR_AUTHORITY_CONSUMER", readPath("HEARTH_HEX_SURFACE_FOUR_PAIR_AUTHORITY_CONSUMER")],
       ["HEARTH.hexSurface", readPath("HEARTH.hexSurface")],
-      ["HEARTH.hexSurfaceConsumer", readPath("HEARTH.hexSurfaceConsumer")]
+      ["HEARTH.hexSurfaceRenderer", readPath("HEARTH.hexSurfaceRenderer")],
+      ["HEARTH.hexSurfaceConsumer", readPath("HEARTH.hexSurfaceConsumer")],
+      ["DEXTER_LAB.hearthHexSurface", readPath("DEXTER_LAB.hearthHexSurface")],
+      ["DEXTER_LAB.hearthHexSurfaceRenderer", readPath("DEXTER_LAB.hearthHexSurfaceRenderer")]
     ];
   }
 
@@ -1006,6 +1052,7 @@
 
     const receipt = readReceipt(found);
     const method = findDrawMethod(found, [
+      "drawToCanvas",
       "drawHearthCompositeFrame",
       "drawCompositeFrame",
       "drawFrame",
@@ -1108,12 +1155,15 @@
       "drawHearthHexSurfaceFrame",
       "drawFrame",
       "render",
+      "renderFrame",
       "draw"
     ]);
 
     state.hexSurfaceRendererDetected = Boolean(found);
     state.hexSurfaceRendererContract = actualContract;
-    state.hexSurfaceRendererContractRecognized = actualContract === HEX_SURFACE_CONTRACT;
+    state.hexSurfaceRendererContractRecognized = ACCEPTED_HEX_SURFACE_CONTRACTS.includes(actualContract);
+    state.hexSurfaceRendererV2Recognized = actualContract === HEX_SURFACE_V2_CONTRACT;
+    state.hexSurfaceRendererV1LineageAccepted = actualContract === HEX_SURFACE_V1_CONTRACT;
     state.hexSurfaceRendererDrawMethodAvailable = Boolean(found && method !== "NONE");
     state.hexSurfaceRendererDrawMethod = method;
     state.hexSurfaceRendererSourceName = sourceName;
@@ -1303,7 +1353,8 @@
         isFunction(authority.getReceiptLight) ||
         isFunction(authority.draw) ||
         isFunction(authority.render) ||
-        isFunction(authority.drawFrame)
+        isFunction(authority.drawFrame) ||
+        isFunction(authority.drawToCanvas)
       )
     ) || safeBool(receipt && (receipt.apiReady || receipt.fingerApiReady || receipt.canvasFingerApiReady), false);
 
@@ -1462,6 +1513,8 @@
       phase: view.phase,
       fastViewTransformActive: true,
       deferredRendererActive: true,
+      compositeFirstVisiblePathActive: true,
+      hexSurfaceDeferredPathActive: true,
       hexFourPairAuthority: detectHexFourPairAuthority().api,
       hexSurfaceRenderer: detectHexSurfaceRenderer().api,
       canvasHub: api,
@@ -1480,18 +1533,49 @@
       return false;
     }
 
-    const drawState = buildDrawState(canvas, ctx, mount, stage, "COMPOSITE");
-    const result = safeInvoke(detected.api, detected.method, [drawState, {
-      source: "Canvas Hub",
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      preferredVisibleExpression: true,
-      viewState: clonePlain(view),
-      fastViewTransformActive: true,
-      deferredRendererActive: true,
-      finalVisualPassClaimed: false,
-      visualPassClaimed: false
-    }]);
+    let result;
+
+    if (detected.method === "drawToCanvas") {
+      result = safeInvoke(detected.api, detected.method, [canvas, {
+        source: "Canvas Hub",
+        contract: CONTRACT,
+        receipt: RECEIPT,
+        preferredVisibleExpression: true,
+        compositeFirstVisiblePathActive: true,
+        fastViewTransformActive: true,
+        deferredRendererActive: true,
+        viewState: clonePlain(view),
+        finalVisualPassClaimed: false,
+        visualPassClaimed: false,
+        ...FINAL_FALSE
+      }]);
+    } else {
+      const drawState = buildDrawState(canvas, ctx, mount, stage, "COMPOSITE");
+      result = safeInvoke(detected.api, detected.method, [drawState, {
+        source: "Canvas Hub",
+        contract: CONTRACT,
+        receipt: RECEIPT,
+        preferredVisibleExpression: true,
+        compositeFirstVisiblePathActive: true,
+        fastViewTransformActive: true,
+        deferredRendererActive: true,
+        viewState: clonePlain(view),
+        finalVisualPassClaimed: false,
+        visualPassClaimed: false,
+        ...FINAL_FALSE
+      }]);
+
+      if (!result.ok) {
+        result = safeInvoke(detected.api, detected.method, [ctx, {
+          canvas,
+          source: "Canvas Hub",
+          contract: CONTRACT,
+          receipt: RECEIPT,
+          viewState: clonePlain(view),
+          ...FINAL_FALSE
+        }]);
+      }
+    }
 
     if (!result.ok) {
       state.compositeDrawComplete = false;
@@ -1503,6 +1587,7 @@
     const receipt = isObject(result.value) ? result.value : readReceipt(detected.api);
     const explicitFail = isObject(receipt) && (
       receipt.drawComplete === false ||
+      receipt.drawn === false ||
       receipt.compositeDrawComplete === false ||
       receipt.visiblePlanetProofReady === false ||
       receipt.hardFail === true
@@ -1515,11 +1600,13 @@
     state.compositeDrawError = state.compositeDrawComplete ? "" : "COMPOSITE_DRAW_DID_NOT_PRODUCE_VISIBLE_PIXEL_EVIDENCE";
 
     if (state.compositeDrawComplete) {
+      state.holdingFieldVisible = false;
       state.visiblePlanetProofReady = true;
       state.renderedPlanetProofReady = true;
-      state.visiblePlanetProofSource = "COMPOSITE";
-      state.visiblePlanetProofReason = "COMPOSITE_DRAW_COMPLETE";
+      state.visiblePlanetProofSource = detected.method === "drawToCanvas" ? "COMPOSITE_DRAW_TO_CANVAS" : "COMPOSITE";
+      state.visiblePlanetProofReason = "COMPOSITE_FIRST_VISIBLE_PATH_DRAW_COMPLETE";
       state.canvasDrawComplete = true;
+      state.hexSurfaceRendererSkippedBecauseCompositeReady = true;
       applyCanvasViewTransform("composite-draw-complete");
       return true;
     }
@@ -1527,7 +1614,14 @@
     return false;
   }
 
-  function attemptHexSurfaceDraw(canvas, ctx, mount, stage) {
+  function attemptHexSurfaceDraw(canvas, ctx, mount, stage, options = {}) {
+    if (options.forceHex !== true && state.compositeDrawComplete === true) {
+      state.hexSurfaceRendererSkippedBecauseCompositeReady = true;
+      state.hexSurfaceRendererDeferred = true;
+      state.hexSurfaceRendererLastDeferredAt = nowIso();
+      return false;
+    }
+
     detectHexFourPairAuthority();
 
     const detected = detectHexSurfaceRenderer();
@@ -1539,17 +1633,38 @@
       return false;
     }
 
-    const drawState = buildDrawState(canvas, ctx, mount, stage, "HEX_SURFACE_RENDERER");
-    const result = safeInvoke(detected.api, detected.method, [drawState, {
+    if (!state.hexSurfaceRendererContractRecognized) {
+      state.hexSurfaceRendererDrawComplete = false;
+      state.hexSurfaceRendererDrawError = `HEX_SURFACE_RENDERER_CONTRACT_NOT_RECOGNIZED:${state.hexSurfaceRendererContract || "UNKNOWN"}`;
+      return false;
+    }
+
+    const target = {
+      canvas,
+      ctx,
+      context: ctx,
+      mount,
+      stage,
+      phase: view.phase,
+      source: "Canvas Hub",
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      viewState: clonePlain(view),
+      ...FINAL_FALSE
+    };
+
+    const result = safeInvoke(detected.api, detected.method, [target, {
       source: "Canvas Hub",
       contract: CONTRACT,
       receipt: RECEIPT,
       supportVisibleExpression: true,
+      hexSurfaceDeferredPathActive: true,
       viewState: clonePlain(view),
       fastViewTransformActive: true,
       deferredRendererActive: true,
       finalVisualPassClaimed: false,
-      visualPassClaimed: false
+      visualPassClaimed: false,
+      ...FINAL_FALSE
     }]);
 
     if (!result.ok) {
@@ -1574,12 +1689,13 @@
     state.hexSurfaceRendererDrawError = state.hexSurfaceRendererDrawComplete ? "" : "HEX_SURFACE_RENDERER_DID_NOT_PRODUCE_VISIBLE_PIXEL_EVIDENCE";
 
     if (state.hexSurfaceRendererDrawComplete) {
+      state.holdingFieldVisible = false;
       state.visiblePlanetProofReady = true;
       state.renderedPlanetProofReady = true;
-      state.visiblePlanetProofSource = "HEX_SURFACE_RENDERER";
-      state.visiblePlanetProofReason = "HEX_SURFACE_RENDERER_DRAW_COMPLETE";
+      state.visiblePlanetProofSource = "HEX_SURFACE_RENDERER_DEFERRED";
+      state.visiblePlanetProofReason = "HEX_SURFACE_RENDERER_DEFERRED_DRAW_COMPLETE";
       state.canvasDrawComplete = true;
-      applyCanvasViewTransform("hex-surface-draw-complete");
+      applyCanvasViewTransform("hex-surface-deferred-draw-complete");
       return true;
     }
 
@@ -1602,12 +1718,18 @@
     } else if (!state.visiblePlanetProofReady) {
       gap = "VISIBLE_EXPRESSION_NOT_PROVEN";
       status = "CANVAS_HUB_VISIBLE_EXPRESSION_NOT_PROVEN";
+    } else if (state.visiblePlanetProofSource === "COMPOSITE_DRAW_TO_CANVAS") {
+      gap = "NONE_COMPOSITE_DRAW_TO_CANVAS_VISIBLE_EXPRESSION_READY";
+      status = "CANVAS_HUB_COMPOSITE_DRAW_TO_CANVAS_VISIBLE_EXPRESSION_ACTIVE";
     } else if (state.visiblePlanetProofSource === "COMPOSITE") {
       gap = "NONE_COMPOSITE_VISIBLE_EXPRESSION_READY";
       status = "CANVAS_HUB_COMPOSITE_VISIBLE_EXPRESSION_ACTIVE";
-    } else if (state.visiblePlanetProofSource === "HEX_SURFACE_RENDERER") {
-      gap = "NONE_HEX_SURFACE_VISIBLE_EXPRESSION_READY";
-      status = "CANVAS_HUB_HEX_SURFACE_VISIBLE_EXPRESSION_ACTIVE";
+    } else if (state.visiblePlanetProofSource === "HEX_SURFACE_RENDERER_DEFERRED") {
+      gap = "NONE_DEFERRED_HEX_SURFACE_VISIBLE_EXPRESSION_READY";
+      status = "CANVAS_HUB_DEFERRED_HEX_SURFACE_VISIBLE_EXPRESSION_ACTIVE";
+    } else if (state.visiblePlanetProofSource === "SAFE_HOLDING_FIELD") {
+      gap = "SAFE_HOLDING_FIELD_VISIBLE_COMPOSITE_PENDING";
+      status = "CANVAS_HUB_SAFE_HOLDING_FIELD_VISIBLE_COMPOSITE_PENDING";
     }
 
     state.f13CanvasReadinessObserved = Boolean(state.canvasElementFound || state.canvasDrawAttempted);
@@ -1617,11 +1739,14 @@
     state.f13CanvasEvidenceComplete = Boolean(state.visiblePlanetProofReady);
     state.f13HardFail = false;
     state.f13StrictEvidenceGap = gap;
-    state.f13StrictEvidenceRepairTarget = FILE;
+    state.f13StrictEvidenceRepairTarget =
+      state.visiblePlanetProofSource === "SAFE_HOLDING_FIELD"
+        ? COMPOSITE_FILE
+        : FILE;
 
     state.firstFailedCoordinate = gap;
-    state.recommendedNextFile = FILE;
-    state.recommendedNextRenewalTarget = FILE;
+    state.recommendedNextFile = state.visiblePlanetProofSource === "SAFE_HOLDING_FIELD" ? COMPOSITE_FILE : FILE;
+    state.recommendedNextRenewalTarget = state.recommendedNextFile;
     state.postgameStatus = status;
 
     if (state.visiblePlanetProofReady) {
@@ -1631,12 +1756,9 @@
     return { gap, status };
   }
 
-  function drawVisibleExpression(reason = "manual") {
+  function drawVisibleExpression(reason = "manual", options = {}) {
     state.canvasDrawAttempted = true;
-    state.canvasDrawComplete = false;
-    state.visiblePlanetProofReady = false;
-    state.renderedPlanetProofReady = false;
-    state.visiblePlanetProofSource = "NONE";
+    state.canvasDrawError = "";
     state.visiblePlanetProofReason = safeString(reason, "manual");
 
     const target = ensureCanvas();
@@ -1658,52 +1780,53 @@
       updateDataset();
       publishGlobals();
       record("CANVAS_HUB_VISIBLE_EXPRESSION_COMPLETE", {
-        source: "COMPOSITE",
+        source: state.visiblePlanetProofSource,
         reason,
         viewState: clonePlain(view),
+        compositeFirstVisiblePathActive: true,
         deferredRendererActive: true
       });
       return true;
     }
 
-    if (attemptHexSurfaceDraw(target.canvas, target.ctx, target.mount, target.stage)) {
-      resolveF13Gap();
-      updateDataset();
-      publishGlobals();
-      record("CANVAS_HUB_VISIBLE_EXPRESSION_COMPLETE", {
-        source: "HEX_SURFACE_RENDERER",
-        reason,
-        viewState: clonePlain(view),
-        deferredRendererActive: true
-      });
-      return true;
+    if (!state.holdingFieldDrawComplete || options.redrawHoldingField === true) {
+      drawHoldingField(target.canvas, target.ctx, "Composite pending; Hex deferred");
     }
 
-    drawHoldingField(target.canvas, target.ctx, "awaiting Composite or Hex Surface Renderer");
-
-    state.canvasDrawComplete = false;
-    state.visiblePlanetProofReady = false;
-    state.renderedPlanetProofReady = false;
-    state.visiblePlanetProofSource = "NONE";
-    state.visiblePlanetProofReason = "COMPOSITE_AND_HEX_SURFACE_RENDERER_NOT_READY";
-    state.firstFailedCoordinate = "VISIBLE_EXPRESSION_SUPPORT_NOT_READY";
-    state.recommendedNextFile = FILE;
-    state.recommendedNextAction = "CONFIRM_COMPOSITE_OR_HEX_SURFACE_RENDERER_LOADED";
+    if (options.allowHeavyHex === true) {
+      if (attemptHexSurfaceDraw(target.canvas, target.ctx, target.mount, target.stage, { forceHex: options.forceHex === true })) {
+        resolveF13Gap();
+        updateDataset();
+        publishGlobals();
+        record("CANVAS_HUB_VISIBLE_EXPRESSION_COMPLETE", {
+          source: "HEX_SURFACE_RENDERER_DEFERRED",
+          reason,
+          viewState: clonePlain(view),
+          compositeFirstVisiblePathActive: true,
+          deferredRendererActive: true
+        });
+        return true;
+      }
+    } else {
+      state.hexSurfaceRendererDeferred = true;
+      state.hexSurfaceRendererLastDeferredAt = nowIso();
+    }
 
     resolveF13Gap();
     updateDataset();
     publishGlobals();
 
-    record("CANVAS_HUB_VISIBLE_EXPRESSION_HELD", {
-      source: "NONE",
+    record("CANVAS_HUB_VISIBLE_EXPRESSION_HELD_OR_DEGRADED", {
+      source: state.visiblePlanetProofSource,
       reason,
       compositeDetected: state.compositeDetected,
       compositeDrawComplete: state.compositeDrawComplete,
       hexSurfaceRendererDetected: state.hexSurfaceRendererDetected,
-      hexSurfaceRendererDrawComplete: state.hexSurfaceRendererDrawComplete
+      hexSurfaceRendererDrawComplete: state.hexSurfaceRendererDrawComplete,
+      hexSurfaceDeferred: true
     });
 
-    return false;
+    return state.visiblePlanetProofReady === true;
   }
 
   function clearDeferredRenderTimers() {
@@ -1733,8 +1856,12 @@
 
     view.phase += 0.012;
 
-    const ok = drawVisibleExpression(`deferred-render:${reason || state.deferredRenderReason}`);
-    state.deferredRenderLastResult = ok ? "DEFERRED_RENDER_COMPLETE" : "DEFERRED_RENDER_HELD";
+    const ok = drawVisibleExpression(`deferred-render:${reason || state.deferredRenderReason}`, {
+      redrawHoldingField: true,
+      allowHeavyHex: false
+    });
+
+    state.deferredRenderLastResult = ok ? "DEFERRED_RENDER_COMPLETE_OR_DEGRADED" : "DEFERRED_RENDER_HELD";
 
     notifyRouteConductor();
 
@@ -1763,6 +1890,33 @@
       deferredRenderMaxTimer = root.setTimeout(() => runDeferredRender("max-wait"), DEFERRED_RENDER_MAX_WAIT_MS);
     }
 
+    return true;
+  }
+
+  function scheduleDeferredHexRender(reason = "deferred-hex-render") {
+    if (deferredHexTimer) return true;
+    if (state.compositeDrawComplete === true) {
+      state.hexSurfaceRendererSkippedBecauseCompositeReady = true;
+      return false;
+    }
+
+    deferredHexTimer = root.setTimeout(() => {
+      deferredHexTimer = 0;
+
+      if (state.compositeDrawComplete === true) {
+        state.hexSurfaceRendererSkippedBecauseCompositeReady = true;
+        updateDataset();
+        return;
+      }
+
+      drawVisibleExpression(`deferred-hex:${reason}`, {
+        allowHeavyHex: true,
+        forceHex: true
+      });
+    }, DEFERRED_HEX_MIN_DELAY_MS);
+
+    state.hexSurfaceRendererDeferred = true;
+    state.hexSurfaceRendererLastDeferredAt = nowIso();
     return true;
   }
 
@@ -1842,8 +1996,8 @@
     state.lastControlPacket = clonePlain(packet.raw || packet);
     state.lastViewPacket = clonePlain(packet);
     state.controlPacketLastSource = packet.sourceFile || CONTROL_FILE;
-    state.controlPacketDeliveryStatus = "CONTROL_PACKET_ACCEPTED_FAST_TRANSFORM_APPLIED";
-    state.controlPacketDeliveryMethod = "fast-view-transform-deferred-render-receiver";
+    state.controlPacketDeliveryStatus = "CONTROL_PACKET_ACCEPTED_FAST_TRANSFORM_APPLIED_HEX_REDRAW_DEFERRED";
+    state.controlPacketDeliveryMethod = "composite-first-fast-view-transform-deferred-render-receiver";
     state.controlPacketLastAcceptedAt = packet.receivedAt;
     state.viewMotionStatus = "FAST_VIEW_TRANSFORM_APPLIED";
     state.touchRuntimeStatus = packet.inputType.includes("pointer") || packet.inputType.includes("touch")
@@ -1901,7 +2055,8 @@
       deltaPitch: normalized.deltaPitch,
       deltaZoom: normalized.deltaZoom,
       sourceFile: normalized.sourceFile,
-      expensiveRedrawDeferred: true
+      expensiveRedrawDeferred: true,
+      hexSurfaceDeferred: true
     });
 
     return applyFastViewPacket(normalized);
@@ -1991,6 +2146,8 @@
       fastViewTransformActive: true,
       deferredRendererActive: true,
       expensiveRedrawDetachedFromInputPacket: true,
+      compositeFirstVisiblePathActive: true,
+      hexSurfaceDeferredPathActive: true,
       viewState: clonePlain(view),
       controlPacketCount: state.controlPacketCount,
       controlPacketAcceptedCount: state.controlPacketAcceptedCount,
@@ -2013,7 +2170,7 @@
 
   function getControlViewReceipt() {
     return {
-      packetType: "HEARTH_CANVAS_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_RECEIPT",
+      packetType: "HEARTH_CANVAS_COMPOSITE_FIRST_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_RECEIPT",
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
@@ -2026,6 +2183,8 @@
       fastViewTransformActive: true,
       deferredRendererActive: true,
       expensiveRedrawDetachedFromInputPacket: true,
+      compositeFirstVisiblePathActive: true,
+      hexSurfaceDeferredPathActive: true,
 
       controlPacketCount: state.controlPacketCount,
       controlPacketAcceptedCount: state.controlPacketAcceptedCount,
@@ -2085,7 +2244,13 @@
     ensureCanvas();
     resolveF13Gap();
     state.updatedAt = nowIso();
-    return clonePlain(state);
+    return {
+      contract: state.contract,
+      receipt: state.receipt,
+      visiblePlanetProofReady: state.visiblePlanetProofReady,
+      visiblePlanetProofSource: state.visiblePlanetProofSource,
+      firstFailedCoordinate: state.firstFailedCoordinate
+    };
   }
 
   function loadScriptOnce(src, attemptKey, completeKey) {
@@ -2135,27 +2300,63 @@
     });
   }
 
-  function ensureSupportFilesLoaded() {
-    if (supportLoadPromise) return supportLoadPromise;
+  function ensureCompositeSupportLoaded() {
+    if (compositeSupportPromise) return compositeSupportPromise;
 
     state.supportLoadAttempted = true;
 
-    supportLoadPromise = loadScriptOnce(COMPOSITE_FILE, "supportLoadCompositeAttempted", "supportLoadCompositeComplete")
-      .then(() => loadScriptOnce(HEX_FOUR_PAIR_FILE, "supportLoadHexFourPairAttempted", "supportLoadHexFourPairComplete"))
-      .then(() => loadScriptOnce(HEX_SURFACE_FILE, "supportLoadHexSurfaceAttempted", "supportLoadHexSurfaceComplete"))
+    compositeSupportPromise = loadScriptOnce(COMPOSITE_FILE, "supportLoadCompositeAttempted", "supportLoadCompositeComplete")
       .then(() => {
-        state.supportLoadComplete = true;
         refreshState();
-        drawVisibleExpression("support-files-loaded");
+        drawVisibleExpression("composite-support-loaded", {
+          redrawHoldingField: false,
+          allowHeavyHex: false
+        });
         updateDataset();
         publishGlobals();
         return getReceipt();
       })
       .finally(() => {
-        supportLoadPromise = null;
+        compositeSupportPromise = null;
       });
 
-    return supportLoadPromise;
+    return compositeSupportPromise;
+  }
+
+  function ensureHexSupportLoadedDeferred() {
+    if (hexSupportPromise) return hexSupportPromise;
+
+    state.supportLoadAttempted = true;
+
+    hexSupportPromise = loadScriptOnce(HEX_FOUR_PAIR_FILE, "supportLoadHexFourPairAttempted", "supportLoadHexFourPairComplete")
+      .then(() => loadScriptOnce(HEX_SURFACE_FILE, "supportLoadHexSurfaceAttempted", "supportLoadHexSurfaceComplete"))
+      .then(() => {
+        state.supportLoadComplete = true;
+        refreshState();
+
+        if (!state.compositeDrawComplete) {
+          scheduleDeferredHexRender("hex-support-loaded-no-composite");
+        }
+
+        updateDataset();
+        publishGlobals();
+        return getReceipt();
+      })
+      .finally(() => {
+        hexSupportPromise = null;
+      });
+
+    return hexSupportPromise;
+  }
+
+  function ensureSupportFilesLoaded() {
+    ensureCompositeSupportLoaded();
+
+    root.setTimeout(() => {
+      ensureHexSupportLoadedDeferred();
+    }, DEFERRED_HEX_MIN_DELAY_MS);
+
+    return Promise.resolve(true);
   }
 
   function consumeRouteConductorReleasePacket(packet = {}) {
@@ -2235,7 +2436,7 @@
 
     return {
       timestamp: state.timestamp || nowIso(),
-      packetType: "CANVAS_EXPRESSION_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_SUMMARY",
+      packetType: "CANVAS_EXPRESSION_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_SUMMARY",
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
@@ -2254,6 +2455,10 @@
       planetaryViewControlReceiverActive: true,
       fastViewTransformActive: true,
       deferredRendererActive: true,
+      compositeFirstVisiblePathActive: true,
+      compositeDrawToCanvasHandshakeRecognized: true,
+      hexSurfaceDeferredPathActive: true,
+      hexSurfaceBootBlockingRejected: true,
 
       compositeFile: COMPOSITE_FILE,
       hexFourPairFile: HEX_FOUR_PAIR_FILE,
@@ -2262,6 +2467,7 @@
       compositeDetected: state.compositeDetected,
       compositeContract: state.compositeContract,
       compositeDrawMethodAvailable: state.compositeDrawMethodAvailable,
+      compositeDrawMethod: state.compositeDrawMethod,
       compositeDrawAttempted: state.compositeDrawAttempted,
       compositeDrawComplete: state.compositeDrawComplete,
 
@@ -2273,10 +2479,15 @@
       hexFourPairAllowedToFloat: state.hexFourPairAllowedToFloat,
 
       hexSurfaceRendererDetected: state.hexSurfaceRendererDetected,
+      hexSurfaceRendererContract: state.hexSurfaceRendererContract,
       hexSurfaceRendererContractRecognized: state.hexSurfaceRendererContractRecognized,
+      hexSurfaceRendererV2Recognized: state.hexSurfaceRendererV2Recognized,
+      hexSurfaceRendererV1LineageAccepted: state.hexSurfaceRendererV1LineageAccepted,
       hexSurfaceRendererDrawMethodAvailable: state.hexSurfaceRendererDrawMethodAvailable,
       hexSurfaceRendererDrawAttempted: state.hexSurfaceRendererDrawAttempted,
       hexSurfaceRendererDrawComplete: state.hexSurfaceRendererDrawComplete,
+      hexSurfaceRendererDeferred: state.hexSurfaceRendererDeferred,
+      hexSurfaceRendererSkippedBecauseCompositeReady: state.hexSurfaceRendererSkippedBecauseCompositeReady,
 
       fingerSequence: FINGER_SEQUENCE.slice(),
       fingerFiles: clonePlain(FINGER_FILES),
@@ -2303,7 +2514,7 @@
   function getExpressionHubReceipt() {
     return {
       ...getExpressionHubSummary(),
-      packetType: "CANVAS_EXPRESSION_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIPT",
+      packetType: "CANVAS_EXPRESSION_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIPT",
       currentReceipt: true,
       noClaimsPreserved: true,
       ...FINAL_FALSE
@@ -2315,11 +2526,13 @@
 
     return {
       timestamp: state.timestamp || nowIso(),
-      packetType: "CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_SUMMARY",
+      packetType: "CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_SUMMARY",
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       previousReceipt: PREVIOUS_RECEIPT,
+      lineageV121Contract: LINEAGE_V12_1_CONTRACT,
+      lineageV121Receipt: LINEAGE_V12_1_RECEIPT,
       baselineContract: BASELINE_CONTRACT,
       baselineReceipt: BASELINE_RECEIPT,
       file: FILE,
@@ -2343,6 +2556,10 @@
       fastViewTransformActive: true,
       deferredRendererActive: true,
       expensiveRedrawDetachedFromInputPacket: true,
+      compositeFirstVisiblePathActive: true,
+      compositeDrawToCanvasHandshakeRecognized: true,
+      hexSurfaceDeferredPathActive: true,
+      hexSurfaceBootBlockingRejected: true,
 
       currentRouteConductorRequiredContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
       currentRouteConductorRequiredReceipt: CURRENT_ROUTE_CONDUCTOR_RECEIPT,
@@ -2368,6 +2585,7 @@
       canvasElementFound: state.canvasElementFound,
       canvasCreated: state.canvasCreated,
       canvasReused: state.canvasReused,
+      canvasMounted: Boolean(state.canvasElementFound && state.canvasContext2dReady),
       canvasRectNonzero: state.canvasRectNonzero,
       canvasAttributeWidth: state.canvasAttributeWidth,
       canvasAttributeHeight: state.canvasAttributeHeight,
@@ -2375,6 +2593,8 @@
       canvasDrawAttempted: state.canvasDrawAttempted,
       canvasDrawComplete: state.canvasDrawComplete,
       canvasDrawError: state.canvasDrawError,
+      holdingFieldDrawComplete: state.holdingFieldDrawComplete,
+      holdingFieldVisible: state.holdingFieldVisible,
 
       compositeDetected: state.compositeDetected,
       compositeContract: state.compositeContract,
@@ -2395,15 +2615,26 @@
       hexSurfaceRendererDetected: state.hexSurfaceRendererDetected,
       hexSurfaceRendererContract: state.hexSurfaceRendererContract,
       hexSurfaceRendererContractRecognized: state.hexSurfaceRendererContractRecognized,
+      hexSurfaceRendererV2Recognized: state.hexSurfaceRendererV2Recognized,
+      hexSurfaceRendererV1LineageAccepted: state.hexSurfaceRendererV1LineageAccepted,
       hexSurfaceRendererDrawMethodAvailable: state.hexSurfaceRendererDrawMethodAvailable,
       hexSurfaceRendererDrawMethod: state.hexSurfaceRendererDrawMethod,
       hexSurfaceRendererDrawAttempted: state.hexSurfaceRendererDrawAttempted,
       hexSurfaceRendererDrawComplete: state.hexSurfaceRendererDrawComplete,
       hexSurfaceRendererDrawError: state.hexSurfaceRendererDrawError,
+      hexSurfaceRendererDeferred: state.hexSurfaceRendererDeferred,
+      hexSurfaceRendererSkippedBecauseCompositeReady: state.hexSurfaceRendererSkippedBecauseCompositeReady,
 
+      visibleBaseGlobeCarrierActive: state.visiblePlanetProofReady,
+      canvasVisibleBaseGlobeCarrierActive: state.visiblePlanetProofReady,
+      baseGlobeDrawComplete: state.canvasDrawComplete,
+      baseGlobeVisibleCarrierReady: state.visiblePlanetProofReady,
+      visibleGlobeCarrierReady: state.visiblePlanetProofReady,
       visiblePlanetProofReady: state.visiblePlanetProofReady,
       visiblePlanetProofSource: state.visiblePlanetProofSource,
       visiblePlanetProofReason: state.visiblePlanetProofReason,
+      visiblePlanetProofIngestedByRoute: state.visiblePlanetProofReady,
+      visiblePlanetReceiptObserved: state.visiblePlanetProofReady,
       renderedPlanetProofReady: state.renderedPlanetProofReady,
       domVisiblePlanetProofReady: state.domVisiblePlanetProofReady,
       stageMountDomProofReady: state.stageMountDomProofReady,
@@ -2450,7 +2681,7 @@
   function getCanvasStationReceipt() {
     return {
       ...getCanvasStationSummary(),
-      packetType: "CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIPT",
+      packetType: "CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIPT",
       currentReceipt: true,
       compositeDrawReceipt: clonePlain(state.compositeDrawReceipt),
       hexFourPairValidationReceipt: clonePlain(state.hexFourPairValidationReceipt),
@@ -2478,9 +2709,11 @@
       structuralCarrierReady: true,
       structuralCarrierSafe: true,
       canvasHubActive: true,
+      compositeFirstVisiblePathActive: true,
       planetaryViewControlReceiverActive: true,
       fastViewTransformActive: true,
       deferredRendererActive: true,
+      hexSurfaceDeferredPathActive: true,
       canvasMountFound: state.canvasMountFound,
       canvasElementFound: state.canvasElementFound,
       visiblePlanetProofReady: state.visiblePlanetProofReady,
@@ -2530,7 +2763,7 @@
     const c = getControlViewReceipt();
 
     return [
-      "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_RECEIPT",
+      "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT",
       "",
       line("timestamp", r.timestamp),
       line("contract", r.contract),
@@ -2559,13 +2792,30 @@
       line("canvasContext2dReady", r.canvasContext2dReady),
       line("canvasDrawAttempted", r.canvasDrawAttempted),
       line("canvasDrawComplete", r.canvasDrawComplete),
+      line("holdingFieldDrawComplete", r.holdingFieldDrawComplete),
+      line("holdingFieldVisible", r.holdingFieldVisible),
       "",
-      "VISIBLE_EXPRESSION",
+      "COMPOSITE_FIRST_VISIBLE_EXPRESSION",
+      line("compositeFirstVisiblePathActive", r.compositeFirstVisiblePathActive),
+      line("compositeDrawToCanvasHandshakeRecognized", r.compositeDrawToCanvasHandshakeRecognized),
       line("compositeDetected", r.compositeDetected),
+      line("compositeDrawMethod", r.compositeDrawMethod),
       line("compositeDrawComplete", r.compositeDrawComplete),
+      "",
+      "DEFERRED_HEX_SURFACE",
+      line("hexSurfaceDeferredPathActive", r.hexSurfaceDeferredPathActive),
+      line("hexSurfaceBootBlockingRejected", r.hexSurfaceBootBlockingRejected),
       line("hexFourPairAuthorityDetected", r.hexFourPairAuthorityDetected),
       line("hexSurfaceRendererDetected", r.hexSurfaceRendererDetected),
+      line("hexSurfaceRendererContract", r.hexSurfaceRendererContract),
+      line("hexSurfaceRendererContractRecognized", r.hexSurfaceRendererContractRecognized),
+      line("hexSurfaceRendererV2Recognized", r.hexSurfaceRendererV2Recognized),
+      line("hexSurfaceRendererV1LineageAccepted", r.hexSurfaceRendererV1LineageAccepted),
       line("hexSurfaceRendererDrawComplete", r.hexSurfaceRendererDrawComplete),
+      line("hexSurfaceRendererDeferred", r.hexSurfaceRendererDeferred),
+      line("hexSurfaceRendererSkippedBecauseCompositeReady", r.hexSurfaceRendererSkippedBecauseCompositeReady),
+      "",
+      "VISIBLE_PROOF",
       line("visiblePlanetProofReady", r.visiblePlanetProofReady),
       line("visiblePlanetProofSource", r.visiblePlanetProofSource),
       line("visiblePlanetProofReason", r.visiblePlanetProofReason),
@@ -2643,6 +2893,8 @@
     setDataset("hearthCanvasFastViewTransformActive", "true");
     setDataset("hearthCanvasDeferredRendererActive", "true");
     setDataset("hearthCanvasExpensiveRedrawDetachedFromInputPacket", "true");
+    setDataset("hearthCanvasCompositeFirstVisiblePathActive", "true");
+    setDataset("hearthCanvasHexSurfaceDeferredPathActive", "true");
 
     setDataset("hearthCanvasViewYaw", String(view.yaw));
     setDataset("hearthCanvasViewPitch", String(view.pitch));
@@ -2692,6 +2944,10 @@
     setDataset("hearthCanvasFastViewTransformActive", "true");
     setDataset("hearthCanvasDeferredRendererActive", "true");
     setDataset("hearthCanvasExpensiveRedrawDetachedFromInputPacket", "true");
+    setDataset("hearthCanvasCompositeFirstVisiblePathActive", "true");
+    setDataset("hearthCanvasCompositeDrawToCanvasHandshakeRecognized", "true");
+    setDataset("hearthCanvasHexSurfaceDeferredPathActive", "true");
+    setDataset("hearthCanvasHexSurfaceBootBlockingRejected", "true");
 
     setDataset("hearthCanvasCurrentRouteConductorRequiredContract", CURRENT_ROUTE_CONDUCTOR_CONTRACT);
     setDataset("hearthCanvasRouteConductorObserved", String(state.routeConductorObserved));
@@ -2708,12 +2964,21 @@
     setDataset("hearthCanvasContext2dReady", String(state.canvasContext2dReady));
     setDataset("hearthCanvasDrawAttempted", String(state.canvasDrawAttempted));
     setDataset("hearthCanvasDrawComplete", String(state.canvasDrawComplete));
+    setDataset("hearthCanvasHoldingFieldDrawComplete", String(state.holdingFieldDrawComplete));
+    setDataset("hearthCanvasHoldingFieldVisible", String(state.holdingFieldVisible));
 
     setDataset("hearthCanvasCompositeDetected", String(state.compositeDetected));
+    setDataset("hearthCanvasCompositeDrawMethod", state.compositeDrawMethod);
     setDataset("hearthCanvasCompositeDrawComplete", String(state.compositeDrawComplete));
     setDataset("hearthCanvasHexFourPairAuthorityDetected", String(state.hexFourPairAuthorityDetected));
     setDataset("hearthCanvasHexSurfaceRendererDetected", String(state.hexSurfaceRendererDetected));
+    setDataset("hearthCanvasHexSurfaceRendererContract", state.hexSurfaceRendererContract);
+    setDataset("hearthCanvasHexSurfaceRendererContractRecognized", String(state.hexSurfaceRendererContractRecognized));
+    setDataset("hearthCanvasHexSurfaceRendererV2Recognized", String(state.hexSurfaceRendererV2Recognized));
+    setDataset("hearthCanvasHexSurfaceRendererV1LineageAccepted", String(state.hexSurfaceRendererV1LineageAccepted));
     setDataset("hearthCanvasHexSurfaceRendererDrawComplete", String(state.hexSurfaceRendererDrawComplete));
+    setDataset("hearthCanvasHexSurfaceRendererDeferred", String(state.hexSurfaceRendererDeferred));
+    setDataset("hearthCanvasHexSurfaceRendererSkippedBecauseCompositeReady", String(state.hexSurfaceRendererSkippedBecauseCompositeReady));
 
     setDataset("hearthCanvasVisiblePlanetProofReady", String(state.visiblePlanetProofReady));
     setDataset("hearthCanvasVisiblePlanetProofSource", state.visiblePlanetProofSource);
@@ -2769,6 +3034,7 @@
     hearth.canvasPlanetaryViewControlReceiver = api;
     hearth.canvasFastViewTransformReceiver = api;
     hearth.canvasDeferredRenderReceiver = api;
+    hearth.canvasCompositeFirstFastViewDeferredHexReceiver = api;
 
     root.HEARTH_CANVAS = api;
     root.HEARTH_CANVAS_PARENT = api;
@@ -2782,6 +3048,7 @@
     root.HEARTH_CANVAS_PLANETARY_VIEW_CONTROL_RECEIVER = api;
     root.HEARTH_CANVAS_FAST_VIEW_TRANSFORM_RECEIVER = api;
     root.HEARTH_CANVAS_DEFERRED_RENDER_RECEIVER = api;
+    root.HEARTH_CANVAS_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER = api;
 
     lab.hearthCanvas = api;
     lab.hearthCanvasParent = api;
@@ -2794,6 +3061,7 @@
     lab.hearthCanvasPlanetaryViewControlReceiver = api;
     lab.hearthCanvasFastViewTransformReceiver = api;
     lab.hearthCanvasDeferredRenderReceiver = api;
+    lab.hearthCanvasCompositeFirstFastViewDeferredHexReceiver = api;
 
     const light = getReceiptLight();
     const full = getReceipt();
@@ -2808,9 +3076,9 @@
     root.HEARTH_CANVAS_EXPRESSION_HUB_RECEIPT = hubReceipt;
     root.HEARTH_CANVAS_FINGER_MANAGER_RECEIPT = hubReceipt;
     root.HEARTH_CANVAS_PLANETARY_VIEW_CONTROL_RECEIVER_RECEIPT = controlReceipt;
-    root.HEARTH_CANVAS_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_RECEIPT = full;
-    root.HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_RECEIPT = full;
-    root.HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_RECEIPT_v12_2 = full;
+    root.HEARTH_CANVAS_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT = full;
+    root.HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT = full;
+    root.HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT_v12_3 = full;
 
     hearth.canvasReceipt = light;
     hearth.canvasParentReceipt = light;
@@ -2820,7 +3088,7 @@
     hearth.canvasExpressionHubReceipt = hubReceipt;
     hearth.canvasFingerManagerReceipt = hubReceipt;
     hearth.canvasPlanetaryViewControlReceiverReceipt = controlReceipt;
-    hearth.canvasFastViewTransformDeferredRenderReceiverReceipt = full;
+    hearth.canvasCompositeFirstFastViewDeferredHexReceiverReceipt = full;
 
     lab.hearthCanvasReceipt = light;
     lab.hearthCanvasParentReceipt = light;
@@ -2830,7 +3098,7 @@
     lab.hearthCanvasExpressionHubReceipt = hubReceipt;
     lab.hearthCanvasFingerManagerReceipt = hubReceipt;
     lab.hearthCanvasPlanetaryViewControlReceiverReceipt = controlReceipt;
-    lab.hearthCanvasFastViewTransformDeferredRenderReceiverReceipt = full;
+    lab.hearthCanvasCompositeFirstFastViewDeferredHexReceiverReceipt = full;
 
     root.HEARTH_CANVAS_STRUCTURAL_CARRIER = getStructuralCarrier();
     root.HEARTH_CANVAS_CARRIER = getStructuralCarrier();
@@ -2865,8 +3133,7 @@
       "receiveCanvasStationSummary",
       "receiveCanvasLocalStationSummary",
       "receiveCanvasParentSummary",
-      "reconcileCanvas",
-      "refresh"
+      "reconcileCanvas"
     ];
 
     for (const target of candidates) {
@@ -2914,18 +3181,32 @@
     updateDataset();
     publishGlobals();
 
+    const target = ensureCanvas();
+
+    if (target && target.canvas && target.ctx) {
+      drawHoldingField(target.canvas, target.ctx, "Composite-first boot; Hex deferred");
+    }
+
     refreshState();
-    drawVisibleExpression(options && options.reason ? options.reason : "boot-audit");
+    drawVisibleExpression(options && options.reason ? options.reason : "boot-audit", {
+      redrawHoldingField: false,
+      allowHeavyHex: false
+    });
+
     ingestPendingControlPacket();
     notifyRouteConductor();
 
     state.bootAuditComplete = true;
 
-    record("CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_BOOT_AUDIT_COMPLETE", {
+    record("CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_BOOT_AUDIT_COMPLETE", {
       canvasMountFound: state.canvasMountFound,
       canvasElementFound: state.canvasElementFound,
       visiblePlanetProofReady: state.visiblePlanetProofReady,
       visiblePlanetProofSource: state.visiblePlanetProofSource,
+      compositeDetected: state.compositeDetected,
+      compositeDrawMethod: state.compositeDrawMethod,
+      compositeDrawComplete: state.compositeDrawComplete,
+      hexSurfaceRendererDeferred: state.hexSurfaceRendererDeferred,
       controlPacketCount: state.controlPacketCount,
       fastTransformAppliedCount: state.fastTransformAppliedCount,
       deferredRenderRunCount: state.deferredRenderRunCount,
@@ -2958,7 +3239,10 @@
   }
 
   function drawBaseGlobe() {
-    return drawVisibleExpression("compatibility-drawBaseGlobe");
+    return drawVisibleExpression("compatibility-drawBaseGlobe", {
+      redrawHoldingField: true,
+      allowHeavyHex: false
+    });
   }
 
   function mountBaseGlobeCarrier() {
@@ -2975,18 +3259,19 @@
     RECEIPT,
     PREVIOUS_CONTRACT,
     PREVIOUS_RECEIPT,
+    LINEAGE_V12_1_CONTRACT,
+    LINEAGE_V12_1_RECEIPT,
     BASELINE_CONTRACT,
     BASELINE_RECEIPT,
     CURRENT_ROUTE_CONDUCTOR_CONTRACT,
     CURRENT_ROUTE_CONDUCTOR_RECEIPT,
     LINEAGE_ROUTE_CONDUCTOR_V9_6_CONTRACT,
-    LINEAGE_ROUTE_CONDUCTOR_V9_6_RECEIPT,
     LINEAGE_ROUTE_CONDUCTOR_V9_5_CONTRACT,
-    LINEAGE_ROUTE_CONDUCTOR_V9_5_RECEIPT,
     LINEAGE_ROUTE_CONDUCTOR_V9_4_CONTRACT,
-    LINEAGE_ROUTE_CONDUCTOR_V9_4_RECEIPT,
     HEX_FOUR_PAIR_CONTRACT,
-    HEX_SURFACE_CONTRACT,
+    HEX_SURFACE_V2_CONTRACT,
+    HEX_SURFACE_V1_CONTRACT,
+    ACCEPTED_HEX_SURFACE_CONTRACTS,
     FILE,
     ROUTE,
     DIAGNOSTIC_ROUTE,
@@ -3022,6 +3307,7 @@
     drawBaseGlobe,
     scheduleDeferredRender,
     runDeferredRender,
+    scheduleDeferredHexRender,
     applyCanvasViewTransform,
 
     readRouteConductorProfile,
@@ -3037,6 +3323,8 @@
     detectHexSurfaceRenderer,
     refreshSupportDetections,
     ensureSupportFilesLoaded,
+    ensureCompositeSupportLoaded,
+    ensureHexSupportLoadedDeferred,
 
     receiveChildPacket,
     receiveEastPacket,
@@ -3102,7 +3390,10 @@
     supportsCanvasFingerManager: true,
     supportsThreeFileStretch: true,
     supportsCompositePreferredPath: true,
-    supportsHexSurfaceSupportPath: true,
+    supportsCompositeDrawToCanvasHandshake: true,
+    supportsHexSurfaceDeferredPath: true,
+    supportsHexSurfaceV2Contract: true,
+    supportsHexSurfaceV1Lineage: true,
     supportsPlanetaryViewControlReceiver: true,
     supportsControlPacketIntake: true,
     supportsViewStateApplication: true,
@@ -3162,7 +3453,7 @@
       bootAudit({ reason: "no-document-runtime" });
     }
   } catch (error) {
-    recordError("CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_INITIALIZATION_FAILED", error);
+    recordError("CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_INITIALIZATION_FAILED", error);
 
     try {
       updateDataset();

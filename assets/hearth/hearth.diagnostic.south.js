@@ -1,21 +1,21 @@
-// /assets/hearth/hearth.diagnostic.south.js
-// HEARTH_DIAGNOSTIC_SOUTH_PRIORITY_CONTROL_QUEEN_PACKET_CONFORMANCE_TNT_v7
+// /assets/hearth/hearth.diagnostic.probe.south.js
+// HEARTH_DIAGNOSTIC_PROBE_SOUTH_PACKET_MEANING_FILE_COMPOSITION_TNT_v1
 // Full-file replacement.
-// Diagnostic rail SOUTH packet-output authority only.
+// Diagnostic PROBE SOUTH only.
 // Purpose:
-// - Publish the South aliases NORTH v10 chronology hub is looking for.
-// - Provide composeSouthReport(...) as the primary callable surface.
-// - Preserve North packet meaning instead of reinterpreting it.
-// - Return standard South packet-output fields for North v10 chronology.
-// - Publish ordered alias chronology so alias use carries layer/intent.
+// - Provide the callable PROBE_SOUTH surface expected by NORTH v10 chronology hub.
+// - Publish every alias NORTH v10 scans for PROBE_SOUTH.
+// - Confirm South rail observability without owning South rail packet output.
+// - Inspect packet meaning, chronology handoff, South output preservation, and no-claim integrity.
+// - Return standard probe evidence to NORTH v10.
 // - Preserve no production mutation, no Hearth repair, no runtime restart, no Canvas release.
 // - Preserve no F13 claim, no F21 claim, no ready text, no visual pass, no generated image, no GraphicBox, no WebGL.
 // Does not own:
 // - diagnostic UI shell
 // - diagnostic North chronology
+// - diagnostic South rail packet composition
 // - diagnostic East source evidence
 // - diagnostic West rendered evidence
-// - diagnostic probe evidence
 // - production route repair
 // - Hearth runtime restart
 // - Canvas drawing
@@ -28,55 +28,33 @@
   "use strict";
 
   const CONTRACT =
-    "HEARTH_DIAGNOSTIC_SOUTH_PRIORITY_CONTROL_QUEEN_PACKET_CONFORMANCE_TNT_v7";
+    "HEARTH_DIAGNOSTIC_PROBE_SOUTH_PACKET_MEANING_FILE_COMPOSITION_TNT_v1";
   const RECEIPT =
-    "HEARTH_DIAGNOSTIC_SOUTH_PRIORITY_CONTROL_QUEEN_PACKET_CONFORMANCE_RECEIPT_v7";
-
-  const PREVIOUS_CONTRACT =
-    "HEARTH_DIAGNOSTIC_SOUTH_BISHOP_QUEEN_CANVAS_REPORT_CONFORMANCE_TNT_v6";
-  const PREVIOUS_RECEIPT =
-    "HEARTH_DIAGNOSTIC_SOUTH_BISHOP_QUEEN_CANVAS_REPORT_CONFORMANCE_RECEIPT_v6";
-
-  const LINEAGE_CONTRACT =
-    "HEARTH_DIAGNOSTIC_SOUTH_LAB_CANVAS_BRIDGE_REPORT_CONFORMANCE_TNT_v5";
-  const BASELINE_CONTRACT =
-    "HEARTH_DIAGNOSTIC_RAIL_SOUTH_REPORT_PACKET_OUTPUT_TNT_v1";
-  const BASELINE_RECEIPT =
-    "HEARTH_DIAGNOSTIC_RAIL_SOUTH_REPORT_PACKET_OUTPUT_RECEIPT_v1";
-
+    "HEARTH_DIAGNOSTIC_PROBE_SOUTH_PACKET_MEANING_FILE_COMPOSITION_RECEIPT_v1";
   const VERSION =
-    "2026-06-05.hearth-diagnostic-south-chronology-alias-packet-output-standard-v7";
+    "2026-06-05.hearth-diagnostic-probe-south-chronology-standard-v1";
 
-  const FILE = "/assets/hearth/hearth.diagnostic.south.js";
+  const FILE = "/assets/hearth/hearth.diagnostic.probe.south.js";
   const TARGET_ROUTE = "/showroom/globe/hearth/";
   const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
   const PACKET_NAME = "HEARTH_PARALLEL_DIAGNOSTIC_RAIL_RESULT_PACKET_v1";
 
-  const NORTH_V10_CONTRACT =
+  const NORTH_EXPECTED_CONTRACT =
     "HEARTH_DIAGNOSTIC_RAIL_NORTH_CHRONOLOGY_HUB_STANDARD_TNT_v10";
-  const NORTH_V10_RECEIPT =
+  const NORTH_EXPECTED_RECEIPT =
     "HEARTH_DIAGNOSTIC_RAIL_NORTH_CHRONOLOGY_HUB_STANDARD_RECEIPT_v10";
-
   const PREVIOUS_NORTH_CONTRACT =
     "HEARTH_DIAGNOSTIC_RAIL_NORTH_EIGHT_WAY_PROBE_BRIDGE_ORCHESTRATOR_TNT_v9";
-  const LINEAGE_V8_NORTH_CONTRACT =
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_CANVAS_EXPRESSION_WEST_STANDARD_ORCHESTRATOR_TNT_v8";
-  const LINEAGE_V7_NORTH_CONTRACT =
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_POST_SOUTH_NEWS_FIBONACCI_ALIGNMENT_ORCHESTRATOR_TNT_v7";
-  const BASELINE_V6_NORTH_CONTRACT =
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_BISHOP_QUEEN_ACCEPTANCE_SCHEMA_ORCHESTRATOR_TNT_v6";
-  const FOUNDATION_V5_NORTH_CONTRACT =
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_LAB_CANVAS_BRIDGE_SCHEMA_ORCHESTRATOR_TNT_v5";
 
   const RAIL_NORTH_FILE = "/assets/hearth/hearth.diagnostic.rail.js";
   const RAIL_EAST_FILE = "/assets/hearth/hearth.diagnostic.east.js";
-  const RAIL_SOUTH_FILE = FILE;
   const RAIL_WEST_FILE = "/assets/hearth/hearth.diagnostic.west.js";
+  const RAIL_SOUTH_FILE = "/assets/hearth/hearth.diagnostic.south.js";
 
   const PROBE_NORTH_FILE = "/assets/hearth/hearth.diagnostic.probe.north.js";
   const PROBE_EAST_FILE = "/assets/hearth/hearth.diagnostic.probe.east.js";
   const PROBE_WEST_FILE = "/assets/hearth/hearth.diagnostic.probe.west.js";
-  const PROBE_SOUTH_FILE = "/assets/hearth/hearth.diagnostic.probe.south.js";
+  const PROBE_SOUTH_FILE = FILE;
 
   const EXPECTED_HTML_CONTRACT =
     "HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1";
@@ -93,16 +71,15 @@
     "HEARTH_DIAGNOSTIC_EAST_CANVAS_EXPRESSION_SOURCE_FOOTPRINT_ALIGNMENT_TNT_v8";
   const EXPECTED_WEST_CONTRACT =
     "HEARTH_DIAGNOSTIC_WEST_CANVAS_EXPRESSION_RENDERED_RANGE_OBSERVATORY_TNT_v7";
-  const EXPECTED_SOUTH_CONTRACT = CONTRACT;
-
+  const EXPECTED_SOUTH_CONTRACT =
+    "HEARTH_DIAGNOSTIC_SOUTH_PRIORITY_CONTROL_QUEEN_PACKET_CONFORMANCE_TNT_v7";
   const EXPECTED_PROBE_NORTH_CONTRACT =
     "HEARTH_DIAGNOSTIC_PROBE_NORTH_FILE_COMPOSITION_ZONE_COORDINATOR_TNT_v1";
   const EXPECTED_PROBE_EAST_CONTRACT =
     "HEARTH_DIAGNOSTIC_PROBE_EAST_SERVED_SOURCE_FILE_COMPOSITION_TNT_v1";
   const EXPECTED_PROBE_WEST_CONTRACT =
     "HEARTH_DIAGNOSTIC_PROBE_WEST_RENDERED_TARGET_FILE_COMPOSITION_TNT_v1";
-  const EXPECTED_PROBE_SOUTH_CONTRACT =
-    "HEARTH_DIAGNOSTIC_PROBE_SOUTH_PACKET_MEANING_FILE_COMPOSITION_TNT_v1";
+  const EXPECTED_PROBE_SOUTH_CONTRACT = CONTRACT;
 
   const NO_CLAIMS = Object.freeze({
     f13Claimed: false,
@@ -128,62 +105,101 @@
     WEBGL: false
   });
 
-  const ALIAS_CHRONOLOGY = Object.freeze([
+  const PROBE_ALIAS_CHRONOLOGY = Object.freeze([
     Object.freeze({
       order: 1,
-      alias: "HEARTH.diagnosticSouth",
+      alias: "HEARTH.diagnosticProbeSouth",
       layer: "HEARTH",
-      intent: "south-operational-primary",
-      authority: "packet-output",
+      intent: "probe-south-primary",
       northV10LookupPriority: 1
     }),
     Object.freeze({
       order: 2,
-      alias: "HEARTH.diagnosticRailSouth",
+      alias: "HEARTH.diagnosticRailProbeSouth",
       layer: "HEARTH",
-      intent: "south-rail-explicit",
-      authority: "packet-output",
+      intent: "probe-south-rail-explicit",
       northV10LookupPriority: 2
     }),
     Object.freeze({
       order: 3,
-      alias: "HEARTH_DIAGNOSTIC_SOUTH",
-      layer: "GLOBAL",
-      intent: "legacy-global-south",
-      authority: "packet-output",
+      alias: "HEARTH.diagnosticSouthProbe",
+      layer: "HEARTH",
+      intent: "south-probe-readable",
       northV10LookupPriority: 3
     }),
     Object.freeze({
       order: 4,
-      alias: "HEARTH_DIAGNOSTIC_RAIL_SOUTH",
+      alias: "HEARTH_DIAGNOSTIC_PROBE_SOUTH",
       layer: "GLOBAL",
-      intent: "legacy-global-rail-south",
-      authority: "packet-output",
+      intent: "global-probe-south",
       northV10LookupPriority: 4
     }),
     Object.freeze({
       order: 5,
-      alias: "DEXTER_LAB.hearthDiagnosticSouth",
-      layer: "DEXTER_LAB",
-      intent: "lab-visible-south",
-      authority: "packet-output",
+      alias: "HEARTH_DIAGNOSTIC_RAIL_PROBE_SOUTH",
+      layer: "GLOBAL",
+      intent: "global-rail-probe-south",
       northV10LookupPriority: 5
     }),
     Object.freeze({
       order: 6,
-      alias: "DEXTER_LAB.hearthDiagnosticRailSouth",
+      alias: "DEXTER_LAB.hearthDiagnosticProbeSouth",
       layer: "DEXTER_LAB",
-      intent: "lab-visible-rail-south",
-      authority: "packet-output",
+      intent: "lab-probe-south",
       northV10LookupPriority: 6
+    }),
+    Object.freeze({
+      order: 7,
+      alias: "DEXTER_LAB.hearthDiagnosticRailProbeSouth",
+      layer: "DEXTER_LAB",
+      intent: "lab-rail-probe-south",
+      northV10LookupPriority: 7
+    }),
+    Object.freeze({
+      order: 8,
+      alias: "HEARTH_DIAGNOSTIC_SOUTH_PROBE",
+      layer: "GLOBAL",
+      intent: "compat-south-probe",
+      northV10LookupPriority: "compat"
+    }),
+    Object.freeze({
+      order: 9,
+      alias: "DEXTER_LAB.hearthDiagnosticSouthProbe",
+      layer: "DEXTER_LAB",
+      intent: "compat-lab-south-probe",
+      northV10LookupPriority: "compat"
     })
+  ]);
+
+  const SOUTH_RAIL_PATHS = Object.freeze([
+    "HEARTH.diagnosticSouth",
+    "HEARTH.diagnosticRailSouth",
+    "HEARTH.diagnosticSouthRail",
+    "HEARTH.southDiagnosticRail",
+    "HEARTH.southDiagnostic",
+    "HEARTH_DIAGNOSTIC_SOUTH",
+    "HEARTH_DIAGNOSTIC_RAIL_SOUTH",
+    "HEARTH_DIAGNOSTIC_SOUTH_RAIL",
+    "DEXTER_LAB.hearthDiagnosticSouth",
+    "DEXTER_LAB.hearthDiagnosticRailSouth",
+    "DEXTER_LAB.hearthDiagnosticSouthRail",
+    "DEXTER_LAB.hearthSouthDiagnosticRail"
+  ]);
+
+  const SOUTH_RAIL_METHODS = Object.freeze([
+    "composeSouthReport",
+    "runSouth",
+    "composeReport",
+    "composePacket",
+    "inspect",
+    "runDiagnostic"
   ]);
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const api = {};
 
-  let lastState = null;
   let lastReport = null;
+  let lastState = null;
   let lastPacketText = "";
   let lastCompactSummary = "";
 
@@ -197,6 +213,10 @@
 
   function isObject(value) {
     return Boolean(value && typeof value === "object" && !Array.isArray(value));
+  }
+
+  function isFunction(value) {
+    return typeof value === "function";
   }
 
   function safeString(value, fallback = "") {
@@ -222,6 +242,43 @@
     }
   }
 
+  function getRaw(source, key, fallback = undefined) {
+    if (!isObject(source)) return fallback;
+
+    if (Object.prototype.hasOwnProperty.call(source, key)) {
+      const value = source[key];
+      return value === undefined || value === null ? fallback : value;
+    }
+
+    const lower = key.toLowerCase();
+
+    for (const candidate of Object.keys(source)) {
+      if (candidate.toLowerCase() === lower) {
+        const value = source[candidate];
+        return value === undefined || value === null ? fallback : value;
+      }
+    }
+
+    return fallback;
+  }
+
+  function getValue(source, key, fallback = "UNKNOWN") {
+    const value = getRaw(source, key, undefined);
+    return packetValue(value, fallback);
+  }
+
+  function firstKnown(...values) {
+    for (const value of values) {
+      const text = bounded(value, 4000);
+      if (!text) continue;
+      if (text === "UNKNOWN" || text === "NONE" || text === "NOT_FOUND") continue;
+      if (text === "UNREADABLE" || text === "INACCESSIBLE") continue;
+      return text;
+    }
+
+    return "UNKNOWN";
+  }
+
   function packetValue(value, fallback = "UNKNOWN") {
     if (value === undefined || value === null || value === "") return fallback;
 
@@ -235,6 +292,7 @@
               return bounded(entry, 1200);
             }
           }
+
           return bounded(entry, 1200);
         })
         .filter(Boolean)
@@ -258,48 +316,6 @@
     return `${key}=${packetValue(value)}`;
   }
 
-  function getRaw(source, key, fallback = undefined) {
-    if (!isObject(source)) return fallback;
-
-    if (Object.prototype.hasOwnProperty.call(source, key)) {
-      const value = source[key];
-      return value === undefined || value === null ? fallback : value;
-    }
-
-    const lower = key.toLowerCase();
-
-    for (const candidate of Object.keys(source)) {
-      if (candidate.toLowerCase() === lower) {
-        const value = source[candidate];
-        return value === undefined || value === null ? fallback : value;
-      }
-    }
-
-    return fallback;
-  }
-
-  function getValue(source, key, fallback = "UNKNOWN") {
-    return packetValue(getRaw(source, key, undefined), fallback);
-  }
-
-  function firstKnown(...values) {
-    for (const value of values) {
-      const text = bounded(value, 4000);
-      if (!text) continue;
-      if (text === "UNKNOWN" || text === "NONE" || text === "NOT_FOUND") continue;
-      if (text === "UNREADABLE" || text === "INACCESSIBLE") continue;
-      return text;
-    }
-
-    return "UNKNOWN";
-  }
-
-  function boolText(value, fallback = "UNKNOWN") {
-    if (value === true || value === "true" || value === "TRUE" || value === 1 || value === "1") return "true";
-    if (value === false || value === "false" || value === "FALSE" || value === 0 || value === "0") return "false";
-    return fallback;
-  }
-
   function normalizeNotes(...sources) {
     const out = [];
     const seen = new Set();
@@ -321,13 +337,70 @@
     return out;
   }
 
+  function readPath(path) {
+    const parts = safeString(path).split(".");
+    let cursor = root;
+
+    for (const part of parts) {
+      if (!cursor || cursor[part] === undefined || cursor[part] === null) return null;
+      cursor = cursor[part];
+    }
+
+    return cursor || null;
+  }
+
+  function findFirstPath(paths) {
+    for (const path of paths || []) {
+      const value = readPath(path);
+      if (value) return { path, value };
+    }
+
+    return { path: "NONE", value: null };
+  }
+
+  function getReceiptFromAuthority(authority) {
+    if (!authority || !isObject(authority)) return null;
+
+    const methods = [
+      "getReceiptLight",
+      "getReceipt",
+      "getReport",
+      "getState",
+      "getStatus",
+      "getSouthReceipt"
+    ];
+
+    for (const method of methods) {
+      if (!isFunction(authority[method])) continue;
+
+      try {
+        const output = authority[method]();
+        if (isObject(output)) return output;
+      } catch (_error) {}
+    }
+
+    if (isObject(authority.receipt)) return authority.receipt;
+    if (isObject(authority.report)) return authority.report;
+
+    if (
+      authority.contract ||
+      authority.CONTRACT ||
+      authority.receipt ||
+      authority.RECEIPT ||
+      authority.version
+    ) {
+      return authority;
+    }
+
+    return null;
+  }
+
   function aliasChronologyText() {
-    return ALIAS_CHRONOLOGY.map((entry) => {
+    return PROBE_ALIAS_CHRONOLOGY.map((entry) => {
       return [
         `${entry.order}.${entry.alias}`,
         `layer:${entry.layer}`,
-        `intent:${entry.intent}`,
-        `authority:${entry.authority}`
+        `intent:${entry.intent}`
       ].join(" ");
     }).join(" | ");
   }
@@ -347,278 +420,348 @@
     }).join(" | ");
   }
 
-  function extractCurrentReport(input) {
-    if (isObject(input && input.currentReport)) return clonePlain(input.currentReport);
-    if (isObject(input && input.report)) return clonePlain(input.report);
-    if (isObject(input && input.REPORT_OBJECT)) return clonePlain(input.REPORT_OBJECT);
-    if (isObject(input)) return clonePlain(input);
+  function findChronologyEntry(chronology, id) {
+    if (!Array.isArray(chronology)) return null;
+    return chronology.find((entry) => isObject(entry) && entry.id === id) || null;
+  }
+
+  function outputKeys(value, limit = 120) {
+    if (!isObject(value)) return "NONE";
+    return Object.keys(value).slice(0, limit).join(",") || "NONE";
+  }
+
+  function extractCurrentReport(payload) {
+    if (isObject(payload && payload.currentReport)) return clonePlain(payload.currentReport);
+    if (isObject(payload && payload.report)) return clonePlain(payload.report);
+    if (isObject(payload && payload.REPORT_OBJECT)) return clonePlain(payload.REPORT_OBJECT);
     return {};
   }
 
-  function makeBaseState() {
+  function inspectSouthRail() {
+    const found = findFirstPath(SOUTH_RAIL_PATHS);
+    const authority = found.value;
+    const receipt = getReceiptFromAuthority(authority) || {};
+    const callableMethods = SOUTH_RAIL_METHODS.filter((method) => {
+      return isFunction(authority && authority[method]);
+    });
+
     return {
-      southStatus: "READY",
-      southContract: CONTRACT,
-      southReceipt: RECEIPT,
-      southVersion: VERSION,
-      southFile: FILE,
-      aliasChronology: clonePlain(ALIAS_CHRONOLOGY),
-      aliasChronologyText: aliasChronologyText(),
-      callableMethods: [
-        "composeSouthReport",
-        "runSouth",
-        "composeReport",
-        "inspect",
-        "runDiagnostic",
-        "getReceipt",
-        "getReceiptLight",
-        "getReport",
-        "getState"
-      ],
-      outputComplete: false,
-      outputStatus: "READY",
-      outputValid: "UNKNOWN",
-      meaningPreserved: "UNKNOWN",
-      lastUpdatedAt: nowIso(),
-      ...NO_CLAIMS
+      observed: Boolean(authority),
+      sourcePath: found.path,
+      contract: firstKnown(
+        receipt.contract,
+        receipt.CONTRACT,
+        receipt.implementationContract,
+        authority && authority.contract,
+        authority && authority.CONTRACT
+      ),
+      receipt: firstKnown(
+        receipt.receipt,
+        receipt.RECEIPT,
+        receipt.implementationReceipt,
+        authority && authority.receipt,
+        authority && authority.RECEIPT
+      ),
+      callableSurfacePresent: callableMethods.length > 0,
+      primaryMethodPresent: callableMethods.includes("composeSouthReport"),
+      callableMethods: callableMethods.join(",") || "NONE",
+      requiredMethodByNorth: "composeSouthReport"
     };
   }
 
-  function buildSouthPacket(input = {}) {
-    const currentReport = extractCurrentReport(input);
-    const chronology = Array.isArray(input.chronology)
-      ? clonePlain(input.chronology)
+  function computeNoClaimIntegrity(payload, currentReport) {
+    const noClaims = isObject(payload && payload.noClaims) ? payload.noClaims : {};
+
+    const values = [
+      noClaims.f13Claimed,
+      noClaims.f21EligibleForNorth,
+      noClaims.f21ClaimedByDiagnosticRail,
+      noClaims.readyTextAllowed,
+      noClaims.readyTextClaimedByDiagnosticRail,
+      noClaims.visualPassClaimed,
+      noClaims.generatedImage,
+      noClaims.graphicBox,
+      noClaims.webGL,
+      getRaw(currentReport, "f13Claimed", false),
+      getRaw(currentReport, "f21EligibleForNorth", false),
+      getRaw(currentReport, "f21ClaimedByDiagnosticRail", false),
+      getRaw(currentReport, "readyTextAllowed", false),
+      getRaw(currentReport, "readyTextClaimedByDiagnosticRail", false),
+      getRaw(currentReport, "visualPassClaimed", false),
+      getRaw(currentReport, "generatedImage", false),
+      getRaw(currentReport, "graphicBox", false),
+      getRaw(currentReport, "webGL", false)
+    ];
+
+    return values.every((value) => value === false || value === undefined || value === null || value === "false");
+  }
+
+  function buildProbeReport(payload = {}) {
+    const currentReport = extractCurrentReport(payload);
+
+    const chronology = Array.isArray(payload.chronology)
+      ? clonePlain(payload.chronology)
       : Array.isArray(currentReport.CHRONOLOGY_SEQUENCE)
         ? clonePlain(currentReport.CHRONOLOGY_SEQUENCE)
         : [];
 
-    const evidenceByStep = isObject(input.evidenceByStep)
-      ? clonePlain(input.evidenceByStep)
+    const evidenceByStep = isObject(payload.evidenceByStep)
+      ? clonePlain(payload.evidenceByStep)
       : {};
 
-    const northContract = firstKnown(
-      input.northContract,
+    const southRail = inspectSouthRail();
+    const southRailEntry = findChronologyEntry(chronology, "RAIL_SOUTH");
+    const probeSouthEntry = findChronologyEntry(chronology, "PROBE_SOUTH");
+
+    const parentNorthContract = firstKnown(
+      payload.northContract,
       currentReport.NORTH_CONTRACT,
-      NORTH_V10_CONTRACT
+      NORTH_EXPECTED_CONTRACT
     );
 
-    const northReceipt = firstKnown(
-      input.northReceipt,
+    const parentNorthReceipt = firstKnown(
+      payload.northReceipt,
       currentReport.NORTH_RECEIPT,
-      NORTH_V10_RECEIPT
+      NORTH_EXPECTED_RECEIPT
     );
 
-    const timestamp = firstKnown(
-      currentReport.DIAGNOSTIC_TIMESTAMP,
-      input.diagnosticTimestamp,
-      nowIso()
+    const currentPacketName = firstKnown(currentReport.PACKET_NAME, PACKET_NAME);
+    const currentTargetRoute = firstKnown(currentReport.TARGET_ROUTE, TARGET_ROUTE);
+    const currentDiagnosticRoute = firstKnown(currentReport.DIAGNOSTIC_ROUTE, DIAGNOSTIC_ROUTE);
+
+    const packetIdentityPreserved =
+      currentPacketName === PACKET_NAME &&
+      currentTargetRoute === TARGET_ROUTE &&
+      currentDiagnosticRoute === DIAGNOSTIC_ROUTE &&
+      parentNorthContract !== "UNKNOWN";
+
+    const railSouthChronologyObserved = Boolean(southRailEntry);
+    const railSouthChronologyComplete = Boolean(
+      southRailEntry && southRailEntry.status === "COMPLETE"
     );
+
+    const southOutputStatus = firstKnown(
+      currentReport.SOUTH_OUTPUT_STATUS,
+      getValue(evidenceByStep.RAIL_SOUTH, "SOUTH_OUTPUT_STATUS", ""),
+      railSouthChronologyComplete ? "COMPLETE" : "UNKNOWN"
+    );
+
+    const southMeaningPreserved = firstKnown(
+      currentReport.SOUTH_MEANING_PRESERVED,
+      getValue(evidenceByStep.RAIL_SOUTH, "SOUTH_MEANING_PRESERVED", ""),
+      railSouthChronologyComplete ? "true" : "UNKNOWN"
+    );
+
+    const noClaimIntegrity = computeNoClaimIntegrity(payload, currentReport);
+
+    const packetMeaningPreserved =
+      packetIdentityPreserved &&
+      noClaimIntegrity &&
+      (
+        railSouthChronologyComplete ||
+        southOutputStatus === "COMPLETE" ||
+        southMeaningPreserved === "true"
+      );
+
+    const probeRunStatus = packetMeaningPreserved
+      ? "COMPLETE"
+      : "COMPLETE_WITH_DIAGNOSTIC_WARNINGS";
+
+    const probeMeaningStatus = packetMeaningPreserved
+      ? "PACKET_MEANING_PRESERVED"
+      : packetIdentityPreserved && noClaimIntegrity
+        ? "PACKET_MEANING_PARTIAL_SOUTH_OUTPUT_CONTEXT_INCOMPLETE"
+        : "PACKET_MEANING_INCOMPLETE";
+
+    const recommendedNextOwner = packetMeaningPreserved
+      ? firstKnown(currentReport.RECOMMENDED_NEXT_OWNER, "CANVAS_EXPRESSION_SURFACE")
+      : "DIAGNOSTIC_PROBE_SOUTH";
+
+    const recommendedNextFile = packetMeaningPreserved
+      ? firstKnown(currentReport.RECOMMENDED_NEXT_FILE, "/assets/hearth/hearth.canvas.js")
+      : FILE;
+
+    const recommendedNextAction = packetMeaningPreserved
+      ? firstKnown(
+          currentReport.RECOMMENDED_NEXT_ACTION,
+          "RERUN_NORTH_V10_CHRONOLOGY_AND_REVIEW_NEXT_NON_DIAGNOSTIC_HOLD"
+        )
+      : "VERIFY_PROBE_SOUTH_DEPLOYMENT_AND_RERUN_NORTH_V10_CHRONOLOGY";
 
     const notes = normalizeNotes(
       currentReport.SECONDARY_EVIDENCE_NOTES,
       currentReport.NORTH_SECONDARY_EVIDENCE_NOTES,
-      "SOUTH_CHRONOLOGY_STANDARD_PACKET_OUTPUT_ACTIVE",
-      "SOUTH_RAIL_IS_PACKET_OUTPUT_ONLY",
-      "SOUTH_PUBLISHES_STANDARD_CHRONOLOGY_ALIASES",
-      "SOUTH_DOES_NOT_MUTATE_PRODUCTION",
-      "SOUTH_DOES_NOT_CLAIM_F13_OR_F21",
-      "SOUTH_PACKET_OUTPUT_RETURNED_TO_NORTH_V10_CHRONOLOGY_HUB",
-      "SOUTH_REPORT_OBJECT_FULL_PACKET_TEXT_AND_COMPACT_SUMMARY_AVAILABLE",
-      "SOUTH_CONFIRMED_PACKET_MEANING_PRESERVED"
+      "PROBE_SOUTH_CHRONOLOGY_STANDARD_ACTIVE",
+      "PROBE_SOUTH_ALIASES_PUBLISHED_FOR_NORTH_V10",
+      "PROBE_SOUTH_CALLABLE_SURFACE_AVAILABLE",
+      "PROBE_SOUTH_IS_DIAGNOSTIC_ONLY",
+      "PROBE_SOUTH_DOES_NOT_MUTATE_PRODUCTION",
+      "PROBE_SOUTH_DOES_NOT_CLAIM_F13_OR_F21",
+      southRail.observed
+        ? `PROBE_SOUTH_OBSERVED_SOUTH_RAIL:${southRail.sourcePath}`
+        : "PROBE_SOUTH_DID_NOT_OBSERVE_SOUTH_RAIL",
+      southRail.primaryMethodPresent
+        ? "PROBE_SOUTH_CONFIRMED_SOUTH_RAIL_COMPOSE_SOUTH_REPORT_PRESENT"
+        : "PROBE_SOUTH_PRIMARY_SOUTH_RAIL_METHOD_NOT_CONFIRMED",
+      packetIdentityPreserved
+        ? "PROBE_SOUTH_CONFIRMED_PACKET_IDENTITY_PRESERVED"
+        : "PROBE_SOUTH_PACKET_IDENTITY_INCOMPLETE",
+      railSouthChronologyObserved
+        ? `PROBE_SOUTH_RAIL_SOUTH_CHRONOLOGY_STEP:${southRailEntry.status}`
+        : "PROBE_SOUTH_RAIL_SOUTH_CHRONOLOGY_STEP_NOT_PRESENT",
+      probeSouthEntry
+        ? `PROBE_SOUTH_PARENT_CHRONOLOGY_ENTRY_PRESENT:${probeSouthEntry.status}`
+        : "PROBE_SOUTH_PARENT_CHRONOLOGY_ENTRY_NOT_YET_PRESENT_DURING_OWN_CALL",
+      noClaimIntegrity
+        ? "PROBE_SOUTH_CONFIRMED_NO_CLAIM_INTEGRITY"
+        : "PROBE_SOUTH_NO_CLAIM_INTEGRITY_WARNING",
+      packetMeaningPreserved
+        ? "PROBE_SOUTH_CONFIRMED_PACKET_MEANING_PRESERVED"
+        : `PROBE_SOUTH_PACKET_MEANING_STATUS:${probeMeaningStatus}`
     );
 
     const report = {
-      ...currentReport,
+      PACKET_NAME,
+      TARGET_ROUTE,
+      DIAGNOSTIC_ROUTE,
+      DIAGNOSTIC_TIMESTAMP: nowIso(),
 
-      PACKET_NAME: firstKnown(currentReport.PACKET_NAME, PACKET_NAME),
-      TARGET_ROUTE: firstKnown(currentReport.TARGET_ROUTE, TARGET_ROUTE),
-      DIAGNOSTIC_ROUTE: firstKnown(currentReport.DIAGNOSTIC_ROUTE, DIAGNOSTIC_ROUTE),
-      DIAGNOSTIC_TIMESTAMP: timestamp,
+      PROBE_SOUTH_STATUS: "COMPLETE",
+      PROBE_SOUTH_CONTRACT: CONTRACT,
+      PROBE_SOUTH_RECEIPT: RECEIPT,
+      PROBE_SOUTH_VERSION: VERSION,
+      PROBE_SOUTH_FILE: FILE,
 
-      NORTH_CONTRACT: northContract,
-      NORTH_RECEIPT: northReceipt,
+      PARENT_NORTH_CONTRACT: parentNorthContract,
+      PARENT_NORTH_RECEIPT: parentNorthReceipt,
       PREVIOUS_NORTH_CONTRACT: firstKnown(
+        payload.previousNorthContract,
         currentReport.PREVIOUS_NORTH_CONTRACT,
-        input.previousNorthContract,
         PREVIOUS_NORTH_CONTRACT
       ),
-      LINEAGE_V8_NORTH_CONTRACT: firstKnown(
-        currentReport.LINEAGE_V8_NORTH_CONTRACT,
-        LINEAGE_V8_NORTH_CONTRACT
-      ),
-      LINEAGE_V7_NORTH_CONTRACT: firstKnown(
-        currentReport.LINEAGE_V7_NORTH_CONTRACT,
-        LINEAGE_V7_NORTH_CONTRACT
-      ),
-      BASELINE_V6_NORTH_CONTRACT: firstKnown(
-        currentReport.BASELINE_V6_NORTH_CONTRACT,
-        BASELINE_V6_NORTH_CONTRACT
-      ),
-      FOUNDATION_V5_NORTH_CONTRACT: firstKnown(
-        currentReport.FOUNDATION_V5_NORTH_CONTRACT,
-        FOUNDATION_V5_NORTH_CONTRACT
-      ),
 
-      SOUTH_STATUS: "COMPLETE",
-      SOUTH_CONTRACT: CONTRACT,
-      SOUTH_RECEIPT: RECEIPT,
-      SOUTH_IMPLEMENTATION_CONTRACT: CONTRACT,
-      SOUTH_IMPLEMENTATION_RECEIPT: RECEIPT,
-      SOUTH_PREVIOUS_IMPLEMENTATION_CONTRACT: PREVIOUS_CONTRACT,
-      SOUTH_PREVIOUS_IMPLEMENTATION_RECEIPT: PREVIOUS_RECEIPT,
-      SOUTH_LINEAGE_IMPLEMENTATION_CONTRACT: LINEAGE_CONTRACT,
-      SOUTH_BASELINE_IMPLEMENTATION_CONTRACT: BASELINE_CONTRACT,
-      SOUTH_BASELINE_IMPLEMENTATION_RECEIPT: BASELINE_RECEIPT,
-      SOUTH_VERSION: VERSION,
-      SOUTH_FILE: FILE,
-
-      SOUTH_OUTPUT_COMPLETE: "true",
-      SOUTH_OUTPUT_STATUS: "COMPLETE",
-      SOUTH_OUTPUT_VALID: "VALID",
-      SOUTH_OUTPUT_SCHEMA_VALID: "true",
-      SOUTH_MEANING_PRESERVED: "true",
-      SOUTH_PACKET_TEXT_SOURCE: "SOUTH_PACKET_FORMATTING_FROM_NORTH_V10_CHRONOLOGY_HUB_REPORT",
-      SOUTH_SCHEMA_CONFORMANCE_STATUS: "SOUTH_CHRONOLOGY_SCHEMA_CONFORMANCE_COMPLETE",
-      SOUTH_SCHEMA_CONFORMANCE_REASON: "NORTH_CHRONOLOGY_MEANING_FIELDS_PRESENT_AND_PASSED_THROUGH",
-
-      SOUTH_ALIAS_CHRONOLOGY_STATUS: "COMPLETE",
-      SOUTH_ALIAS_CHRONOLOGY: clonePlain(ALIAS_CHRONOLOGY),
-      SOUTH_ALIAS_CHRONOLOGY_TEXT: aliasChronologyText(),
-      SOUTH_PRIMARY_ALIAS: "HEARTH.diagnosticSouth",
-      SOUTH_RAIL_ALIAS: "HEARTH.diagnosticRailSouth",
-      SOUTH_GLOBAL_ALIAS: "HEARTH_DIAGNOSTIC_SOUTH",
-      SOUTH_GLOBAL_RAIL_ALIAS: "HEARTH_DIAGNOSTIC_RAIL_SOUTH",
-      SOUTH_LAB_ALIAS: "DEXTER_LAB.hearthDiagnosticSouth",
-      SOUTH_LAB_RAIL_ALIAS: "DEXTER_LAB.hearthDiagnosticRailSouth",
-
-      SOUTH_CALLABLE_METHODS: "composeSouthReport | runSouth | composeReport | inspect | runDiagnostic",
-      SOUTH_PRIMARY_CALLABLE_METHOD: "composeSouthReport",
-      SOUTH_CHRONOLOGY_STANDARD_COMPATIBLE: "true",
-      SOUTH_NORTH_V10_COMPATIBLE: "true",
-
-      NORTH_CHRONOLOGY_HUB_ACTIVE: boolText(
-        getRaw(currentReport, "NORTH_CHRONOLOGY_HUB_ACTIVE", input.chronologyHubActive),
-        "true"
-      ),
-      NORTH_IS_HUB_ONLY: boolText(
-        getRaw(currentReport, "NORTH_IS_HUB_ONLY", true),
-        "true"
-      ),
-      EIGHT_WAY_PROBE_BRIDGE_ACTIVE: boolText(
-        getRaw(currentReport, "EIGHT_WAY_PROBE_BRIDGE_ACTIVE", input.eightWayProbeBridgeActive),
-        "false"
-      ),
-      EIGHT_FILE_CHRONOLOGY_ACTIVE: boolText(
-        getRaw(currentReport, "EIGHT_FILE_CHRONOLOGY_ACTIVE", true),
-        "true"
-      ),
-      DIAGNOSTIC_ROUTE_HTML_RENEWAL_REQUIRED: boolText(
-        getRaw(currentReport, "DIAGNOSTIC_ROUTE_HTML_RENEWAL_REQUIRED", false),
-        "false"
-      ),
-      RECEIVER_STILL_CALLS_NORTH_ONLY: boolText(
-        getRaw(currentReport, "RECEIVER_STILL_CALLS_NORTH_ONLY", true),
-        "true"
-      ),
+      NORTH_CHRONOLOGY_HUB_ACTIVE: true,
+      NORTH_IS_HUB_ONLY: true,
+      EIGHT_WAY_PROBE_BRIDGE_ACTIVE: false,
+      EIGHT_FILE_CHRONOLOGY_ACTIVE: true,
+      DIAGNOSTIC_ROUTE_HTML_RENEWAL_REQUIRED: false,
+      RECEIVER_STILL_CALLS_NORTH_ONLY: true,
 
       RAIL_NORTH_FILE,
       RAIL_EAST_FILE,
-      RAIL_SOUTH_FILE,
       RAIL_WEST_FILE,
+      RAIL_SOUTH_FILE,
       PROBE_NORTH_FILE,
       PROBE_EAST_FILE,
       PROBE_WEST_FILE,
       PROBE_SOUTH_FILE,
 
-      EXPECTED_HTML_CONTRACT: firstKnown(currentReport.EXPECTED_HTML_CONTRACT, EXPECTED_HTML_CONTRACT),
-      EXPECTED_INDEX_JS_CONTRACT: firstKnown(currentReport.EXPECTED_INDEX_JS_CONTRACT, EXPECTED_INDEX_JS_CONTRACT),
-      EXPECTED_ROUTE_CONDUCTOR_CONTRACT: firstKnown(currentReport.EXPECTED_ROUTE_CONDUCTOR_CONTRACT, EXPECTED_ROUTE_CONDUCTOR_CONTRACT),
-      EXPECTED_CONTROL_CONTRACT: firstKnown(currentReport.EXPECTED_CONTROL_CONTRACT, EXPECTED_CONTROL_CONTRACT),
-      EXPECTED_CANVAS_CONTRACT: firstKnown(currentReport.EXPECTED_CANVAS_CONTRACT, EXPECTED_CANVAS_CONTRACT),
-      EXPECTED_EAST_CONTRACT: firstKnown(currentReport.EXPECTED_EAST_CONTRACT, EXPECTED_EAST_CONTRACT),
-      EXPECTED_WEST_CONTRACT: firstKnown(currentReport.EXPECTED_WEST_CONTRACT, EXPECTED_WEST_CONTRACT),
-      EXPECTED_SOUTH_CONTRACT: firstKnown(currentReport.EXPECTED_SOUTH_CONTRACT, EXPECTED_SOUTH_CONTRACT),
-      EXPECTED_PROBE_NORTH_CONTRACT: firstKnown(currentReport.EXPECTED_PROBE_NORTH_CONTRACT, EXPECTED_PROBE_NORTH_CONTRACT),
-      EXPECTED_PROBE_EAST_CONTRACT: firstKnown(currentReport.EXPECTED_PROBE_EAST_CONTRACT, EXPECTED_PROBE_EAST_CONTRACT),
-      EXPECTED_PROBE_WEST_CONTRACT: firstKnown(currentReport.EXPECTED_PROBE_WEST_CONTRACT, EXPECTED_PROBE_WEST_CONTRACT),
-      EXPECTED_PROBE_SOUTH_CONTRACT: firstKnown(currentReport.EXPECTED_PROBE_SOUTH_CONTRACT, EXPECTED_PROBE_SOUTH_CONTRACT),
+      EXPECTED_HTML_CONTRACT: firstKnown(payload.expectedHtmlContract, currentReport.EXPECTED_HTML_CONTRACT, EXPECTED_HTML_CONTRACT),
+      EXPECTED_INDEX_JS_CONTRACT: firstKnown(payload.expectedIndexJsContract, currentReport.EXPECTED_INDEX_JS_CONTRACT, EXPECTED_INDEX_JS_CONTRACT),
+      EXPECTED_ROUTE_CONDUCTOR_CONTRACT: firstKnown(payload.expectedRouteConductorContract, currentReport.EXPECTED_ROUTE_CONDUCTOR_CONTRACT, EXPECTED_ROUTE_CONDUCTOR_CONTRACT),
+      EXPECTED_CONTROL_CONTRACT: firstKnown(payload.expectedControlContract, currentReport.EXPECTED_CONTROL_CONTRACT, EXPECTED_CONTROL_CONTRACT),
+      EXPECTED_CANVAS_CONTRACT: firstKnown(payload.expectedCanvasContract, currentReport.EXPECTED_CANVAS_CONTRACT, EXPECTED_CANVAS_CONTRACT),
+      EXPECTED_EAST_CONTRACT,
+      EXPECTED_WEST_CONTRACT,
+      EXPECTED_SOUTH_CONTRACT,
+      EXPECTED_PROBE_NORTH_CONTRACT,
+      EXPECTED_PROBE_EAST_CONTRACT,
+      EXPECTED_PROBE_WEST_CONTRACT,
+      EXPECTED_PROBE_SOUTH_CONTRACT,
 
-      CHRONOLOGY_SEQUENCE: chronology,
-      CHRONOLOGY_SEQUENCE_TEXT: firstKnown(
-        currentReport.CHRONOLOGY_SEQUENCE_TEXT,
-        chronologyText(chronology)
+      PROBE_SOUTH_RUN_COMPLETE: true,
+      PROBE_SOUTH_RUN_STATUS: probeRunStatus,
+      PROBE_SOUTH_MEANING_STATUS: probeMeaningStatus,
+      PROBE_SOUTH_PACKET_MEANING_PRESERVED: packetMeaningPreserved,
+      PROBE_SOUTH_PACKET_IDENTITY_PRESERVED: packetIdentityPreserved,
+      PROBE_SOUTH_NO_CLAIM_INTEGRITY_PRESERVED: noClaimIntegrity,
+
+      PROBE_SOUTH_ALIAS_CHRONOLOGY_STATUS: "COMPLETE",
+      PROBE_SOUTH_ALIAS_CHRONOLOGY: clonePlain(PROBE_ALIAS_CHRONOLOGY),
+      PROBE_SOUTH_ALIAS_CHRONOLOGY_TEXT: aliasChronologyText(),
+      PROBE_SOUTH_PRIMARY_ALIAS: "HEARTH.diagnosticProbeSouth",
+      PROBE_SOUTH_RAIL_ALIAS: "HEARTH.diagnosticRailProbeSouth",
+      PROBE_SOUTH_READABLE_ALIAS: "HEARTH.diagnosticSouthProbe",
+      PROBE_SOUTH_GLOBAL_ALIAS: "HEARTH_DIAGNOSTIC_PROBE_SOUTH",
+      PROBE_SOUTH_GLOBAL_RAIL_ALIAS: "HEARTH_DIAGNOSTIC_RAIL_PROBE_SOUTH",
+      PROBE_SOUTH_LAB_ALIAS: "DEXTER_LAB.hearthDiagnosticProbeSouth",
+      PROBE_SOUTH_LAB_RAIL_ALIAS: "DEXTER_LAB.hearthDiagnosticRailProbeSouth",
+
+      PROBE_SOUTH_CALLABLE_METHODS:
+        "runProbeSouth | inspectPacketMeaning | inspectPacketComposition | runProbe | inspect | runDiagnostic",
+      PROBE_SOUTH_PRIMARY_CALLABLE_METHOD: "runProbeSouth",
+      PROBE_SOUTH_NORTH_V10_COMPATIBLE: true,
+
+      SOUTH_RAIL_OBSERVED_BY_PROBE: southRail.observed,
+      SOUTH_RAIL_SOURCE_PATH_BY_PROBE: southRail.sourcePath,
+      SOUTH_RAIL_CONTRACT_BY_PROBE: southRail.contract,
+      SOUTH_RAIL_RECEIPT_BY_PROBE: southRail.receipt,
+      SOUTH_RAIL_CALL_SURFACE_PRESENT_BY_PROBE: southRail.callableSurfacePresent,
+      SOUTH_RAIL_CALLABLE_METHODS_BY_PROBE: southRail.callableMethods,
+      SOUTH_RAIL_PRIMARY_METHOD_PRESENT_BY_PROBE: southRail.primaryMethodPresent,
+      SOUTH_RAIL_REQUIRED_METHOD_BY_NORTH: southRail.requiredMethodByNorth,
+
+      CURRENT_REPORT_OBSERVED_BY_PROBE: Object.keys(currentReport).length > 0,
+      CURRENT_REPORT_PACKET_NAME_BY_PROBE: currentPacketName,
+      CURRENT_REPORT_TARGET_ROUTE_BY_PROBE: currentTargetRoute,
+      CURRENT_REPORT_DIAGNOSTIC_ROUTE_BY_PROBE: currentDiagnosticRoute,
+      CURRENT_REPORT_NORTH_CONTRACT_BY_PROBE: parentNorthContract,
+      CURRENT_REPORT_OUTPUT_KEYS_BY_PROBE: outputKeys(currentReport),
+
+      CHRONOLOGY_OBSERVED_BY_PROBE: chronology.length > 0,
+      CHRONOLOGY_LENGTH_BY_PROBE: chronology.length,
+      CHRONOLOGY_SEQUENCE_TEXT_BY_PROBE: chronologyText(chronology),
+      RAIL_SOUTH_CHRONOLOGY_STEP_OBSERVED_BY_PROBE: railSouthChronologyObserved,
+      RAIL_SOUTH_CHRONOLOGY_STATUS_BY_PROBE: southRailEntry ? firstKnown(southRailEntry.status, "UNKNOWN") : "NOT_PRESENT_IN_PARENT_CHRONOLOGY",
+      RAIL_SOUTH_CHRONOLOGY_CALL_STATUS_BY_PROBE: southRailEntry ? firstKnown(southRailEntry.callStatus, "UNKNOWN") : "NOT_PRESENT_IN_PARENT_CHRONOLOGY",
+      RAIL_SOUTH_CHRONOLOGY_CALL_METHOD_BY_PROBE: southRailEntry ? firstKnown(southRailEntry.callMethod, "UNKNOWN") : "NOT_PRESENT_IN_PARENT_CHRONOLOGY",
+
+      SOUTH_OUTPUT_STATUS_BY_PROBE: southOutputStatus,
+      SOUTH_MEANING_PRESERVED_BY_PROBE: southMeaningPreserved,
+
+      EVIDENCE_BY_STEP_KEYS_BY_PROBE: Object.keys(evidenceByStep).join(",") || "NONE",
+
+      PROBE_SOUTH_OWNS_PACKET_OUTPUT: false,
+      PROBE_SOUTH_OWNS_SOUTH_RAIL: false,
+      PROBE_SOUTH_OWNS_NORTH_CHRONOLOGY: false,
+      PROBE_SOUTH_OWNS_EAST_EVIDENCE: false,
+      PROBE_SOUTH_OWNS_WEST_EVIDENCE: false,
+      PROBE_SOUTH_OWNS_CANVAS_EXPRESSION: false,
+
+      PRODUCTION_MUTATION_AUTHORIZED: false,
+      HEARTH_REPAIR_AUTHORIZED: false,
+      RUNTIME_RESTART_AUTHORIZED: false,
+      CANVAS_RELEASE_AUTHORIZED: false,
+      MACRO_WEST_RELEASE_AUTHORIZED: false,
+      CANVAS_DRAWING_AUTHORITY: false,
+      ROUTE_CONDUCTOR_IMPLEMENTATION_AUTHORITY: false,
+      CONTROL_IMPLEMENTATION_AUTHORITY: false,
+      TERRAIN_TRUTH_AUTHORITY: false,
+      HYDROLOGY_TRUTH_AUTHORITY: false,
+      MATERIAL_TRUTH_AUTHORITY: false,
+      FINAL_VISUAL_PASS_AUTHORITY: false,
+
+      PRIMARY_CASE: firstKnown(currentReport.PRIMARY_CASE, "INCONCLUSIVE_EVIDENCE"),
+      CALIBRATION_STATUS: firstKnown(
+        currentReport.CALIBRATION_STATUS,
+        packetMeaningPreserved ? "CALIBRATION_PROBE_SOUTH_COMPLETE" : "CALIBRATION_PROBE_SOUTH_WARNING"
       ),
-      SOUTH_RECEIVED_CHRONOLOGY_COUNT: String(chronology.length),
-      SOUTH_EVIDENCE_BY_STEP_KEYS: Object.keys(evidenceByStep).join(",") || "NONE",
-
-      SOUTH_OUTPUT_AUTHORITY: "PACKET_OUTPUT_ONLY",
-      SOUTH_OWNS_NORTH_CHRONOLOGY: "false",
-      SOUTH_OWNS_EAST_EVIDENCE: "false",
-      SOUTH_OWNS_WEST_EVIDENCE: "false",
-      SOUTH_OWNS_PROBE_EVIDENCE: "false",
-      SOUTH_OWNS_CANVAS_EXPRESSION: "false",
-      SOUTH_OWNS_PRODUCTION_REPAIR: "false",
-
-      DIAGNOSTIC_UI_AUTHORITY: "false",
-      PRODUCTION_MUTATION_AUTHORIZED: "false",
-      HEARTH_REPAIR_AUTHORIZED: "false",
-      RUNTIME_RESTART_AUTHORIZED: "false",
-      CANVAS_RELEASE_AUTHORIZED: "false",
-      MACRO_WEST_RELEASE_AUTHORIZED: "false",
-      CANVAS_DRAWING_AUTHORITY: "false",
-      ROUTE_CONDUCTOR_IMPLEMENTATION_AUTHORITY: "false",
-      CONTROL_IMPLEMENTATION_AUTHORITY: "false",
-      TERRAIN_TRUTH_AUTHORITY: "false",
-      HYDROLOGY_TRUTH_AUTHORITY: "false",
-      MATERIAL_TRUTH_AUTHORITY: "false",
+      CALIBRATION_HOLD_REASON: firstKnown(
+        currentReport.CALIBRATION_HOLD_REASON,
+        packetMeaningPreserved ? "NONE_FROM_PROBE_SOUTH" : probeMeaningStatus
+      ),
+      RECOMMENDED_NEXT_OWNER: recommendedNextOwner,
+      RECOMMENDED_NEXT_FILE: recommendedNextFile,
+      RECOMMENDED_NEXT_ACTION: recommendedNextAction,
 
       SECONDARY_EVIDENCE_NOTES: notes.join(" | "),
-      NORTH_SECONDARY_EVIDENCE_NOTES: notes.join(" | "),
+      PROBE_SOUTH_SECONDARY_EVIDENCE_NOTES: notes.join(" | "),
 
       ...NO_CLAIMS,
       ...UPPER_NO_CLAIMS
     };
 
-    const packetText = composePacketText(report);
-    const compactSummary = composeCompactSummary(report);
-
-    return {
-      ok: true,
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      implementationContract: CONTRACT,
-      implementationReceipt: RECEIPT,
-      previousImplementationContract: PREVIOUS_CONTRACT,
-      lineageImplementationContract: LINEAGE_CONTRACT,
-      baselineImplementationContract: BASELINE_CONTRACT,
-
-      SOUTH_STATUS: "COMPLETE",
-      SOUTH_CONTRACT: CONTRACT,
-      SOUTH_RECEIPT: RECEIPT,
-      SOUTH_OUTPUT_COMPLETE: "true",
-      SOUTH_OUTPUT_STATUS: "COMPLETE",
-      SOUTH_OUTPUT_VALID: "VALID",
-      SOUTH_OUTPUT_SCHEMA_VALID: "true",
-      SOUTH_MEANING_PRESERVED: "true",
-      SOUTH_ALIAS_CHRONOLOGY_STATUS: "COMPLETE",
-      SOUTH_PRIMARY_CALLABLE_METHOD: "composeSouthReport",
-
-      REPORT_OBJECT: report,
-      report,
-      output: {
-        SOUTH_STATUS: "COMPLETE",
-        SOUTH_CONTRACT: CONTRACT,
-        SOUTH_RECEIPT: RECEIPT,
-        SOUTH_OUTPUT_STATUS: "COMPLETE",
-        SOUTH_MEANING_PRESERVED: "true",
-        REPORT_OBJECT: report
-      },
-      packetText,
-      compactSummary,
-
-      ...NO_CLAIMS,
-      ...UPPER_NO_CLAIMS
-    };
+    return report;
   }
 
   function orderedFields(report) {
@@ -627,69 +770,70 @@
       "TARGET_ROUTE",
       "DIAGNOSTIC_ROUTE",
       "DIAGNOSTIC_TIMESTAMP",
-      "NORTH_CONTRACT",
-      "NORTH_RECEIPT",
+      "PROBE_SOUTH_STATUS",
+      "PROBE_SOUTH_CONTRACT",
+      "PROBE_SOUTH_RECEIPT",
+      "PROBE_SOUTH_VERSION",
+      "PROBE_SOUTH_FILE",
+      "PARENT_NORTH_CONTRACT",
+      "PARENT_NORTH_RECEIPT",
       "PREVIOUS_NORTH_CONTRACT",
-
-      "SOUTH_STATUS",
-      "SOUTH_CONTRACT",
-      "SOUTH_RECEIPT",
-      "SOUTH_IMPLEMENTATION_CONTRACT",
-      "SOUTH_IMPLEMENTATION_RECEIPT",
-      "SOUTH_VERSION",
-      "SOUTH_FILE",
-      "SOUTH_OUTPUT_COMPLETE",
-      "SOUTH_OUTPUT_STATUS",
-      "SOUTH_OUTPUT_VALID",
-      "SOUTH_OUTPUT_SCHEMA_VALID",
-      "SOUTH_MEANING_PRESERVED",
-      "SOUTH_PACKET_TEXT_SOURCE",
-      "SOUTH_SCHEMA_CONFORMANCE_STATUS",
-      "SOUTH_SCHEMA_CONFORMANCE_REASON",
-
-      "SOUTH_ALIAS_CHRONOLOGY_STATUS",
-      "SOUTH_ALIAS_CHRONOLOGY_TEXT",
-      "SOUTH_PRIMARY_ALIAS",
-      "SOUTH_RAIL_ALIAS",
-      "SOUTH_GLOBAL_ALIAS",
-      "SOUTH_GLOBAL_RAIL_ALIAS",
-      "SOUTH_LAB_ALIAS",
-      "SOUTH_LAB_RAIL_ALIAS",
-      "SOUTH_CALLABLE_METHODS",
-      "SOUTH_PRIMARY_CALLABLE_METHOD",
-      "SOUTH_CHRONOLOGY_STANDARD_COMPATIBLE",
-      "SOUTH_NORTH_V10_COMPATIBLE",
-
       "NORTH_CHRONOLOGY_HUB_ACTIVE",
       "NORTH_IS_HUB_ONLY",
       "EIGHT_WAY_PROBE_BRIDGE_ACTIVE",
       "EIGHT_FILE_CHRONOLOGY_ACTIVE",
       "DIAGNOSTIC_ROUTE_HTML_RENEWAL_REQUIRED",
       "RECEIVER_STILL_CALLS_NORTH_ONLY",
-
-      "CHRONOLOGY_COMPLETION_STATUS",
-      "FIRST_CHRONOLOGY_FAILURE_OWNER",
-      "FIRST_CHRONOLOGY_FAILURE_FILE",
-      "FIRST_CHRONOLOGY_FAILURE_CLASS",
-      "FIRST_CHRONOLOGY_FAILURE_REASON",
-      "ZONE_OF_INFLICTION_OWNER",
-      "ZONE_OF_INFLICTION_FILE",
-      "ZONE_OF_INFLICTION_CLASS",
-      "ZONE_OF_INFLICTION_REASON",
-
-      "CHRONOLOGY_SEQUENCE_TEXT",
-      "SOUTH_RECEIVED_CHRONOLOGY_COUNT",
-      "SOUTH_EVIDENCE_BY_STEP_KEYS",
-
+      "PROBE_SOUTH_RUN_COMPLETE",
+      "PROBE_SOUTH_RUN_STATUS",
+      "PROBE_SOUTH_MEANING_STATUS",
+      "PROBE_SOUTH_PACKET_MEANING_PRESERVED",
+      "PROBE_SOUTH_PACKET_IDENTITY_PRESERVED",
+      "PROBE_SOUTH_NO_CLAIM_INTEGRITY_PRESERVED",
+      "PROBE_SOUTH_ALIAS_CHRONOLOGY_STATUS",
+      "PROBE_SOUTH_ALIAS_CHRONOLOGY_TEXT",
+      "PROBE_SOUTH_PRIMARY_ALIAS",
+      "PROBE_SOUTH_RAIL_ALIAS",
+      "PROBE_SOUTH_READABLE_ALIAS",
+      "PROBE_SOUTH_GLOBAL_ALIAS",
+      "PROBE_SOUTH_GLOBAL_RAIL_ALIAS",
+      "PROBE_SOUTH_LAB_ALIAS",
+      "PROBE_SOUTH_LAB_RAIL_ALIAS",
+      "PROBE_SOUTH_CALLABLE_METHODS",
+      "PROBE_SOUTH_PRIMARY_CALLABLE_METHOD",
+      "PROBE_SOUTH_NORTH_V10_COMPATIBLE",
+      "SOUTH_RAIL_OBSERVED_BY_PROBE",
+      "SOUTH_RAIL_SOURCE_PATH_BY_PROBE",
+      "SOUTH_RAIL_CONTRACT_BY_PROBE",
+      "SOUTH_RAIL_RECEIPT_BY_PROBE",
+      "SOUTH_RAIL_CALL_SURFACE_PRESENT_BY_PROBE",
+      "SOUTH_RAIL_CALLABLE_METHODS_BY_PROBE",
+      "SOUTH_RAIL_PRIMARY_METHOD_PRESENT_BY_PROBE",
+      "SOUTH_RAIL_REQUIRED_METHOD_BY_NORTH",
+      "CURRENT_REPORT_OBSERVED_BY_PROBE",
+      "CURRENT_REPORT_PACKET_NAME_BY_PROBE",
+      "CURRENT_REPORT_TARGET_ROUTE_BY_PROBE",
+      "CURRENT_REPORT_DIAGNOSTIC_ROUTE_BY_PROBE",
+      "CURRENT_REPORT_NORTH_CONTRACT_BY_PROBE",
+      "CURRENT_REPORT_OUTPUT_KEYS_BY_PROBE",
+      "CHRONOLOGY_OBSERVED_BY_PROBE",
+      "CHRONOLOGY_LENGTH_BY_PROBE",
+      "CHRONOLOGY_SEQUENCE_TEXT_BY_PROBE",
+      "RAIL_SOUTH_CHRONOLOGY_STEP_OBSERVED_BY_PROBE",
+      "RAIL_SOUTH_CHRONOLOGY_STATUS_BY_PROBE",
+      "RAIL_SOUTH_CHRONOLOGY_CALL_STATUS_BY_PROBE",
+      "RAIL_SOUTH_CHRONOLOGY_CALL_METHOD_BY_PROBE",
+      "SOUTH_OUTPUT_STATUS_BY_PROBE",
+      "SOUTH_MEANING_PRESERVED_BY_PROBE",
+      "EVIDENCE_BY_STEP_KEYS_BY_PROBE",
       "RAIL_NORTH_FILE",
       "RAIL_EAST_FILE",
-      "RAIL_SOUTH_FILE",
       "RAIL_WEST_FILE",
+      "RAIL_SOUTH_FILE",
       "PROBE_NORTH_FILE",
       "PROBE_EAST_FILE",
       "PROBE_WEST_FILE",
       "PROBE_SOUTH_FILE",
-
       "EXPECTED_HTML_CONTRACT",
       "EXPECTED_INDEX_JS_CONTRACT",
       "EXPECTED_ROUTE_CONDUCTOR_CONTRACT",
@@ -702,33 +846,14 @@
       "EXPECTED_PROBE_EAST_CONTRACT",
       "EXPECTED_PROBE_WEST_CONTRACT",
       "EXPECTED_PROBE_SOUTH_CONTRACT",
-
-      "SOUTH_OUTPUT_AUTHORITY",
-      "SOUTH_OWNS_NORTH_CHRONOLOGY",
-      "SOUTH_OWNS_EAST_EVIDENCE",
-      "SOUTH_OWNS_WEST_EVIDENCE",
-      "SOUTH_OWNS_PROBE_EVIDENCE",
-      "SOUTH_OWNS_CANVAS_EXPRESSION",
-      "SOUTH_OWNS_PRODUCTION_REPAIR",
-
       "PRIMARY_CASE",
       "CALIBRATION_STATUS",
       "CALIBRATION_HOLD_REASON",
-      "DIAGNOSTIC_RAIL_CLEAN",
-      "CALIBRATION_POINT_REACHED",
-      "NEWS_ALIGNMENT_STATUS",
-      "NEWS_ALIGNMENT_SCORE",
-      "NEWS_ALIGNMENT_FIRST_FAILED_STAGE",
-      "FIBONACCI_SYNCHRONIZATION_STATUS",
-      "FIBONACCI_SYNCHRONIZATION_SCORE",
-      "FIBONACCI_SYNCHRONIZATION_FIRST_FAILED_STAGE",
       "RECOMMENDED_NEXT_OWNER",
       "RECOMMENDED_NEXT_FILE",
       "RECOMMENDED_NEXT_ACTION",
-
       "SECONDARY_EVIDENCE_NOTES",
-      "NORTH_SECONDARY_EVIDENCE_NOTES",
-
+      "PROBE_SOUTH_SECONDARY_EVIDENCE_NOTES",
       ...Object.keys(NO_CLAIMS),
       ...Object.keys(UPPER_NO_CLAIMS)
     ];
@@ -753,142 +878,165 @@
 
   function composeCompactSummary(report) {
     return [
-      line("SOUTH_CONTRACT", getValue(report, "SOUTH_CONTRACT", CONTRACT)),
-      line("SOUTH_OUTPUT_STATUS", getValue(report, "SOUTH_OUTPUT_STATUS", "UNKNOWN")),
-      line("SOUTH_MEANING_PRESERVED", getValue(report, "SOUTH_MEANING_PRESERVED", "UNKNOWN")),
-      line("SOUTH_ALIAS_CHRONOLOGY_STATUS", getValue(report, "SOUTH_ALIAS_CHRONOLOGY_STATUS", "UNKNOWN")),
-      line("SOUTH_PRIMARY_CALLABLE_METHOD", getValue(report, "SOUTH_PRIMARY_CALLABLE_METHOD", "UNKNOWN")),
-      line("NORTH_CHRONOLOGY_HUB_ACTIVE", getValue(report, "NORTH_CHRONOLOGY_HUB_ACTIVE", "UNKNOWN")),
-      line("CHRONOLOGY_COMPLETION_STATUS", getValue(report, "CHRONOLOGY_COMPLETION_STATUS", "UNKNOWN")),
-      line("ZONE_OF_INFLICTION_FILE", getValue(report, "ZONE_OF_INFLICTION_FILE", "UNKNOWN")),
+      line("PROBE_SOUTH_CONTRACT", getValue(report, "PROBE_SOUTH_CONTRACT", CONTRACT)),
+      line("PROBE_SOUTH_RUN_STATUS", getValue(report, "PROBE_SOUTH_RUN_STATUS", "UNKNOWN")),
+      line("PROBE_SOUTH_MEANING_STATUS", getValue(report, "PROBE_SOUTH_MEANING_STATUS", "UNKNOWN")),
+      line("PROBE_SOUTH_PACKET_MEANING_PRESERVED", getValue(report, "PROBE_SOUTH_PACKET_MEANING_PRESERVED", "UNKNOWN")),
+      line("SOUTH_RAIL_OBSERVED_BY_PROBE", getValue(report, "SOUTH_RAIL_OBSERVED_BY_PROBE", "UNKNOWN")),
+      line("SOUTH_RAIL_PRIMARY_METHOD_PRESENT_BY_PROBE", getValue(report, "SOUTH_RAIL_PRIMARY_METHOD_PRESENT_BY_PROBE", "UNKNOWN")),
+      line("RAIL_SOUTH_CHRONOLOGY_STATUS_BY_PROBE", getValue(report, "RAIL_SOUTH_CHRONOLOGY_STATUS_BY_PROBE", "UNKNOWN")),
+      line("SOUTH_OUTPUT_STATUS_BY_PROBE", getValue(report, "SOUTH_OUTPUT_STATUS_BY_PROBE", "UNKNOWN")),
+      line("SOUTH_MEANING_PRESERVED_BY_PROBE", getValue(report, "SOUTH_MEANING_PRESERVED_BY_PROBE", "UNKNOWN")),
       line("RECOMMENDED_NEXT_FILE", getValue(report, "RECOMMENDED_NEXT_FILE", "UNKNOWN"))
     ].join("\n");
   }
 
-  function publishResult(result) {
-    const report = isObject(result && result.REPORT_OBJECT)
-      ? clonePlain(result.REPORT_OBJECT)
-      : isObject(result && result.report)
-        ? clonePlain(result.report)
-        : {};
+  function publishReport(report) {
+    lastReport = clonePlain(report);
+    lastPacketText = composePacketText(lastReport);
+    lastCompactSummary = composeCompactSummary(lastReport);
 
-    lastReport = report;
-    lastPacketText = result && result.packetText ? result.packetText : composePacketText(report);
-    lastCompactSummary = result && result.compactSummary ? result.compactSummary : composeCompactSummary(report);
     lastState = {
-      ...makeBaseState(),
-      southStatus: "COMPLETE",
-      outputComplete: true,
-      outputStatus: "COMPLETE",
-      outputValid: "VALID",
-      meaningPreserved: "true",
-      reportObject: clonePlain(report),
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      version: VERSION,
+      file: FILE,
+      targetRoute: TARGET_ROUTE,
+      diagnosticRoute: DIAGNOSTIC_ROUTE,
+      probeSouthStatus: getValue(lastReport, "PROBE_SOUTH_STATUS", "COMPLETE"),
+      probeSouthRunStatus: getValue(lastReport, "PROBE_SOUTH_RUN_STATUS", "UNKNOWN"),
+      probeSouthMeaningStatus: getValue(lastReport, "PROBE_SOUTH_MEANING_STATUS", "UNKNOWN"),
+      reportObject: clonePlain(lastReport),
       packetText: lastPacketText,
       compactSummary: lastCompactSummary,
-      lastUpdatedAt: nowIso()
+      updatedAt: nowIso(),
+      ...NO_CLAIMS
     };
 
     publishAliases();
   }
 
-  function composeSouthReport(input = {}) {
-    const result = buildSouthPacket(input);
-    publishResult(result);
-    return result;
+  function runProbeSouth(payload = {}) {
+    const report = buildProbeReport(payload);
+    publishReport(report);
+
+    return {
+      ok: true,
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      evidence: clonePlain(report),
+      report: clonePlain(report),
+      packetText: lastPacketText,
+      compactSummary: lastCompactSummary,
+      state: clonePlain(lastState),
+      ...NO_CLAIMS,
+      ...UPPER_NO_CLAIMS
+    };
   }
 
-  function runSouth(input = {}) {
-    return composeSouthReport(input);
+  function inspectPacketMeaning(payload = {}) {
+    return runProbeSouth(payload);
   }
 
-  function composeReport(input = {}) {
-    return composeSouthReport(input);
+  function inspectPacketComposition(payload = {}) {
+    return runProbeSouth(payload);
   }
 
-  function inspect(input = {}) {
-    return composeSouthReport(input);
+  function runProbe(payload = {}) {
+    return runProbeSouth(payload);
   }
 
-  function runDiagnostic(input = {}) {
-    return composeSouthReport(input);
+  function inspect(payload = {}) {
+    return runProbeSouth(payload);
+  }
+
+  function runDiagnostic(payload = {}) {
+    return runProbeSouth(payload);
   }
 
   function getReport() {
-    if (lastReport) return clonePlain(lastReport);
+    if (!lastReport) {
+      const report = buildProbeReport({});
+      publishReport(report);
+    }
 
-    const result = buildSouthPacket({
-      northContract: NORTH_V10_CONTRACT,
-      northReceipt: NORTH_V10_RECEIPT,
-      chronologyHubActive: true,
-      eightWayProbeBridgeActive: false,
-      currentReport: {}
-    });
-
-    publishResult(result);
     return clonePlain(lastReport);
   }
 
+  function getState() {
+    if (!lastState) {
+      getReport();
+    }
+
+    return clonePlain(lastState);
+  }
+
   function getPacketText() {
-    if (lastPacketText) return lastPacketText;
-    getReport();
+    if (!lastPacketText) {
+      getReport();
+    }
+
     return lastPacketText;
   }
 
   function getCompactSummary() {
-    if (lastCompactSummary) return lastCompactSummary;
-    getReport();
-    return lastCompactSummary;
-  }
+    if (!lastCompactSummary) {
+      getReport();
+    }
 
-  function getState() {
-    return clonePlain(lastState || makeBaseState());
+    return lastCompactSummary;
   }
 
   function getReceiptLight() {
     return {
-      role: "DIAGNOSTIC_RAIL_SOUTH_PACKET_OUTPUT",
+      probeRole: "DIAGNOSTIC_PROBE_SOUTH_PACKET_MEANING_FILE_COMPOSITION",
       contract: CONTRACT,
+      CONTRACT,
       receipt: RECEIPT,
-      previousContract: PREVIOUS_CONTRACT,
-      previousReceipt: PREVIOUS_RECEIPT,
-      lineageContract: LINEAGE_CONTRACT,
-      baselineContract: BASELINE_CONTRACT,
-      baselineReceipt: BASELINE_RECEIPT,
+      RECEIPT,
       version: VERSION,
       file: FILE,
       targetRoute: TARGET_ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
+      packetName: PACKET_NAME,
 
-      southStatus: lastState && lastState.southStatus ? lastState.southStatus : "READY",
-      southOutputAuthority: "PACKET_OUTPUT_ONLY",
-      southMeaningPreservationAuthority: true,
-      southChronologyStandardCompatible: true,
-      northV10Compatible: true,
+      expectedParentNorthContract: NORTH_EXPECTED_CONTRACT,
+      expectedParentNorthReceipt: NORTH_EXPECTED_RECEIPT,
+      expectedSouthRailFile: RAIL_SOUTH_FILE,
+      expectedSouthRailContract: EXPECTED_SOUTH_CONTRACT,
+      expectedSouthRailMethod: "composeSouthReport",
 
-      primaryCallableMethod: "composeSouthReport",
-      composeSouthReportApiAvailable: true,
-      runSouthApiAvailable: true,
-      composeReportApiAvailable: true,
+      probeAliasChronologyStatus: "COMPLETE",
+      probeAliasChronology: clonePlain(PROBE_ALIAS_CHRONOLOGY),
+      probeAliasChronologyText: aliasChronologyText(),
+
+      runProbeSouthApiAvailable: true,
+      inspectPacketMeaningApiAvailable: true,
+      inspectPacketCompositionApiAvailable: true,
+      runProbeApiAvailable: true,
       inspectApiAvailable: true,
       runDiagnosticApiAvailable: true,
       getReportApiAvailable: true,
+      getStateApiAvailable: true,
       getPacketTextApiAvailable: true,
       getCompactSummaryApiAvailable: true,
-      getStateApiAvailable: true,
       getReceiptApiAvailable: true,
       getReceiptLightApiAvailable: true,
 
-      aliasChronologyStatus: "COMPLETE",
-      aliasChronology: clonePlain(ALIAS_CHRONOLOGY),
-      aliasChronologyText: aliasChronologyText(),
+      publishesHearthDiagnosticProbeSouth: true,
+      publishesHearthDiagnosticRailProbeSouth: true,
+      publishesHearthDiagnosticSouthProbe: true,
+      publishesGlobalDiagnosticProbeSouth: true,
+      publishesGlobalDiagnosticRailProbeSouth: true,
+      publishesDexterLabDiagnosticProbeSouth: true,
+      publishesDexterLabDiagnosticRailProbeSouth: true,
 
-      publishesHearthDiagnosticSouth: true,
-      publishesHearthDiagnosticRailSouth: true,
-      publishesGlobalDiagnosticSouth: true,
-      publishesGlobalDiagnosticRailSouth: true,
-      publishesDexterLabDiagnosticSouth: true,
-      publishesDexterLabDiagnosticRailSouth: true,
+      supportsNorthV10ChronologyStandard: true,
+      supportsSouthRailAliasInspection: true,
+      supportsPacketMeaningInspection: true,
+      supportsNoClaimIntegrityInspection: true,
 
+      diagnosticProbeOnly: true,
       diagnosticUiAuthority: false,
       productionMutationAuthorized: false,
       hearthRepairAuthorized: false,
@@ -901,6 +1049,8 @@
       terrainTruthAuthority: false,
       hydrologyTruthAuthority: false,
       materialTruthAuthority: false,
+      southRailPacketOutputAuthority: false,
+      finalVisualPassAuthority: false,
 
       ...NO_CLAIMS,
       updatedAt: nowIso()
@@ -911,39 +1061,35 @@
     return {
       ...getReceiptLight(),
 
-      SOUTH_CONTRACT: CONTRACT,
-      SOUTH_RECEIPT: RECEIPT,
-      SOUTH_IMPLEMENTATION_CONTRACT: CONTRACT,
-      SOUTH_IMPLEMENTATION_RECEIPT: RECEIPT,
-      SOUTH_PREVIOUS_IMPLEMENTATION_CONTRACT: PREVIOUS_CONTRACT,
-      SOUTH_LINEAGE_IMPLEMENTATION_CONTRACT: LINEAGE_CONTRACT,
-      SOUTH_BASELINE_IMPLEMENTATION_CONTRACT: BASELINE_CONTRACT,
+      probeSouthContract: CONTRACT,
+      probeSouthReceipt: RECEIPT,
+      probeSouthFile: FILE,
 
-      PACKET_NAME,
-      RAIL_NORTH_FILE,
-      RAIL_EAST_FILE,
-      RAIL_SOUTH_FILE,
-      RAIL_WEST_FILE,
-      PROBE_NORTH_FILE,
-      PROBE_EAST_FILE,
-      PROBE_WEST_FILE,
-      PROBE_SOUTH_FILE,
+      railNorthFile: RAIL_NORTH_FILE,
+      railEastFile: RAIL_EAST_FILE,
+      railWestFile: RAIL_WEST_FILE,
+      railSouthFile: RAIL_SOUTH_FILE,
 
-      EXPECTED_HTML_CONTRACT,
-      EXPECTED_INDEX_JS_CONTRACT,
-      EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
-      EXPECTED_CONTROL_CONTRACT,
-      EXPECTED_CANVAS_CONTRACT,
-      EXPECTED_EAST_CONTRACT,
-      EXPECTED_WEST_CONTRACT,
-      EXPECTED_SOUTH_CONTRACT,
-      EXPECTED_PROBE_NORTH_CONTRACT,
-      EXPECTED_PROBE_EAST_CONTRACT,
-      EXPECTED_PROBE_WEST_CONTRACT,
-      EXPECTED_PROBE_SOUTH_CONTRACT,
+      probeNorthFile: PROBE_NORTH_FILE,
+      probeEastFile: PROBE_EAST_FILE,
+      probeWestFile: PROBE_WEST_FILE,
+      probeSouthFile: PROBE_SOUTH_FILE,
+
+      expectedHtmlContract: EXPECTED_HTML_CONTRACT,
+      expectedIndexJsContract: EXPECTED_INDEX_JS_CONTRACT,
+      expectedRouteConductorContract: EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
+      expectedControlContract: EXPECTED_CONTROL_CONTRACT,
+      expectedCanvasContract: EXPECTED_CANVAS_CONTRACT,
+      expectedEastContract: EXPECTED_EAST_CONTRACT,
+      expectedWestContract: EXPECTED_WEST_CONTRACT,
+      expectedSouthContract: EXPECTED_SOUTH_CONTRACT,
+      expectedProbeNorthContract: EXPECTED_PROBE_NORTH_CONTRACT,
+      expectedProbeEastContract: EXPECTED_PROBE_EAST_CONTRACT,
+      expectedProbeWestContract: EXPECTED_PROBE_WEST_CONTRACT,
+      expectedProbeSouthContract: EXPECTED_PROBE_SOUTH_CONTRACT,
 
       reportObject: clonePlain(lastReport || {}),
-      state: clonePlain(lastState || makeBaseState()),
+      state: clonePlain(lastState || {}),
 
       ...UPPER_NO_CLAIMS
     };
@@ -953,23 +1099,29 @@
     root.HEARTH = root.HEARTH || {};
     root.DEXTER_LAB = root.DEXTER_LAB || {};
 
-    root.HEARTH.diagnosticSouth = api;
-    root.HEARTH.diagnosticRailSouth = api;
+    root.HEARTH.diagnosticProbeSouth = api;
+    root.HEARTH.diagnosticRailProbeSouth = api;
+    root.HEARTH.diagnosticSouthProbe = api;
 
-    root.HEARTH_DIAGNOSTIC_SOUTH = api;
-    root.HEARTH_DIAGNOSTIC_RAIL_SOUTH = api;
+    root.DEXTER_LAB.hearthDiagnosticProbeSouth = api;
+    root.DEXTER_LAB.hearthDiagnosticRailProbeSouth = api;
+    root.DEXTER_LAB.hearthDiagnosticSouthProbe = api;
 
-    root.DEXTER_LAB.hearthDiagnosticSouth = api;
-    root.DEXTER_LAB.hearthDiagnosticRailSouth = api;
+    root.HEARTH_DIAGNOSTIC_PROBE_SOUTH = api;
+    root.HEARTH_DIAGNOSTIC_RAIL_PROBE_SOUTH = api;
+    root.HEARTH_DIAGNOSTIC_SOUTH_PROBE = api;
 
-    root.HEARTH_DIAGNOSTIC_SOUTH_RECEIPT = getReceipt();
-    root.HEARTH_DIAGNOSTIC_RAIL_SOUTH_RECEIPT = getReceipt();
+    root.HEARTH_DIAGNOSTIC_PROBE_SOUTH_RECEIPT = getReceipt();
+    root.HEARTH_DIAGNOSTIC_RAIL_PROBE_SOUTH_RECEIPT = getReceipt();
+    root.HEARTH_DIAGNOSTIC_SOUTH_PROBE_RECEIPT = getReceipt();
 
-    root.HEARTH_DIAGNOSTIC_SOUTH_REPORT = clonePlain(lastReport || {});
-    root.HEARTH_DIAGNOSTIC_RAIL_SOUTH_REPORT = clonePlain(lastReport || {});
+    root.HEARTH_DIAGNOSTIC_PROBE_SOUTH_REPORT = clonePlain(lastReport || {});
+    root.HEARTH_DIAGNOSTIC_RAIL_PROBE_SOUTH_REPORT = clonePlain(lastReport || {});
+    root.HEARTH_DIAGNOSTIC_SOUTH_PROBE_REPORT = clonePlain(lastReport || {});
 
-    root.HEARTH_DIAGNOSTIC_SOUTH_PACKET_TEXT = lastPacketText || "";
-    root.HEARTH_DIAGNOSTIC_RAIL_SOUTH_PACKET_TEXT = lastPacketText || "";
+    root.HEARTH_DIAGNOSTIC_PROBE_SOUTH_PACKET_TEXT = lastPacketText || "";
+    root.HEARTH_DIAGNOSTIC_RAIL_PROBE_SOUTH_PACKET_TEXT = lastPacketText || "";
+    root.HEARTH_DIAGNOSTIC_SOUTH_PROBE_PACKET_TEXT = lastPacketText || "";
   }
 
   Object.assign(api, {
@@ -977,34 +1129,24 @@
     CONTRACT,
     receipt: RECEIPT,
     RECEIPT,
-    previousContract: PREVIOUS_CONTRACT,
-    previousReceipt: PREVIOUS_RECEIPT,
-    lineageContract: LINEAGE_CONTRACT,
-    baselineContract: BASELINE_CONTRACT,
-    baselineReceipt: BASELINE_RECEIPT,
     version: VERSION,
-
     file: FILE,
     targetRoute: TARGET_ROUTE,
     diagnosticRoute: DIAGNOSTIC_ROUTE,
     packetName: PACKET_NAME,
 
-    southOutputAuthority: "PACKET_OUTPUT_ONLY",
-    southMeaningPreservationAuthority: true,
-    southChronologyStandardCompatible: true,
-    northV10Compatible: true,
-
-    aliasChronology: ALIAS_CHRONOLOGY,
-    aliasChronologyText: aliasChronologyText(),
-
+    probeSouthFile: PROBE_SOUTH_FILE,
     railNorthFile: RAIL_NORTH_FILE,
     railEastFile: RAIL_EAST_FILE,
-    railSouthFile: RAIL_SOUTH_FILE,
     railWestFile: RAIL_WEST_FILE,
+    railSouthFile: RAIL_SOUTH_FILE,
     probeNorthFile: PROBE_NORTH_FILE,
     probeEastFile: PROBE_EAST_FILE,
     probeWestFile: PROBE_WEST_FILE,
-    probeSouthFile: PROBE_SOUTH_FILE,
+
+    expectedParentNorthContract: NORTH_EXPECTED_CONTRACT,
+    expectedSouthRailContract: EXPECTED_SOUTH_CONTRACT,
+    expectedSouthRailMethod: "composeSouthReport",
 
     expectedHtmlContract: EXPECTED_HTML_CONTRACT,
     expectedIndexJsContract: EXPECTED_INDEX_JS_CONTRACT,
@@ -1019,30 +1161,36 @@
     expectedProbeWestContract: EXPECTED_PROBE_WEST_CONTRACT,
     expectedProbeSouthContract: EXPECTED_PROBE_SOUTH_CONTRACT,
 
-    composeSouthReport,
-    runSouth,
-    composeReport,
+    probeAliasChronology: PROBE_ALIAS_CHRONOLOGY,
+    probeAliasChronologyText: aliasChronologyText(),
+
+    runProbeSouth,
+    inspectPacketMeaning,
+    inspectPacketComposition,
+    runProbe,
     inspect,
     runDiagnostic,
     getReport,
+    getState,
     getPacketText,
     getCompactSummary,
-    getState,
     getReceipt,
     getReceiptLight,
 
-    composeSouthReportApiAvailable: true,
-    runSouthApiAvailable: true,
-    composeReportApiAvailable: true,
+    runProbeSouthApiAvailable: true,
+    inspectPacketMeaningApiAvailable: true,
+    inspectPacketCompositionApiAvailable: true,
+    runProbeApiAvailable: true,
     inspectApiAvailable: true,
     runDiagnosticApiAvailable: true,
     getReportApiAvailable: true,
+    getStateApiAvailable: true,
     getPacketTextApiAvailable: true,
     getCompactSummaryApiAvailable: true,
-    getStateApiAvailable: true,
     getReceiptApiAvailable: true,
     getReceiptLightApiAvailable: true,
 
+    diagnosticProbeOnly: true,
     diagnosticUiAuthority: false,
     productionMutationAuthorized: false,
     hearthRepairAuthorized: false,
@@ -1055,11 +1203,12 @@
     terrainTruthAuthority: false,
     hydrologyTruthAuthority: false,
     materialTruthAuthority: false,
+    southRailPacketOutputAuthority: false,
+    finalVisualPassAuthority: false,
 
     ...NO_CLAIMS
   });
 
-  lastState = makeBaseState();
   publishAliases();
 
   if (typeof module !== "undefined" && module.exports) {

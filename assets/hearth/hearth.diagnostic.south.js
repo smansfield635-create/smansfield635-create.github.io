@@ -3,16 +3,16 @@
 // Full-file replacement.
 // Diagnostic rail SOUTH child only.
 // Internal implementation renewal:
-// HEARTH_DIAGNOSTIC_SOUTH_BISHOP_QUEEN_CANVAS_REPORT_CONFORMANCE_TNT_v6
+// HEARTH_DIAGNOSTIC_SOUTH_PRIORITY_CONTROL_QUEEN_PACKET_CONFORMANCE_TNT_v7
 // Purpose:
 // - Preserve SOUTH external child contract required by NORTH.
-// - Conform SOUTH output to NORTH v5 lab/canvas bridge schema.
+// - Preserve SOUTH as report-output authority only.
+// - Correct SOUTH packet projection priority so confirmed EAST/WEST/NORTH evidence is not overwritten by stale UNKNOWN or expected-absence fields.
+// - Treat EAST/WEST control-present-and-motion-touch-ready evidence as stronger than older expected-not-yet-built fallback fields.
+// - Project North Bishop/Queen acceptance, route-conductor current-spread acceptance, rendered planet proof, and queen handshake into formal fields.
 // - Preserve NORTH-selected PRIMARY_CASE, calibration fields, recommendation fields, NEWS fields, Fibonacci fields, and no-claim boundaries.
-// - Print planetary-control lifecycle fields as formal report fields, not only secondary notes.
-// - Preserve future control-file footprint as expected-not-yet-built when NORTH/EAST declare that posture.
+// - Print planetary-control lifecycle, Lab/canvas bridge, bishop bridge, queen handshake, and four-way canvas handoff fields as formal report fields.
 // - Preserve JS integration funnel: index.js -> hearth.js -> hearth.controls.js -> canvas.
-// - Preserve diagnostic lab/canvas bridge language as report-output only.
-// - Preserve bishop-lane, bishop pointer-finger, queen handshake, and four-way canvas handoff fields as report-output only.
 // - Produce a North-valid output object with REPORT_OBJECT, FULL_PACKET_TEXT, COMPACT_SUMMARY, and SOUTH_OUTPUT_STATUS.
 // - Close F13 as packet-output conformance only.
 // - Preserve no F13 canvas claim, no F21 claim, no ready text, no visual pass, no generated image, no GraphicBox, no WebGL.
@@ -37,6 +37,7 @@
 // - lab-table implementation
 // - canvas implementation
 // - bishop-lane implementation
+// - queen implementation
 
 (() => {
   "use strict";
@@ -45,28 +46,30 @@
   const RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_SOUTH_REPORT_PACKET_OUTPUT_RECEIPT_v1";
 
   const IMPLEMENTATION_CONTRACT =
-    "HEARTH_DIAGNOSTIC_SOUTH_BISHOP_QUEEN_CANVAS_REPORT_CONFORMANCE_TNT_v6";
+    "HEARTH_DIAGNOSTIC_SOUTH_PRIORITY_CONTROL_QUEEN_PACKET_CONFORMANCE_TNT_v7";
   const IMPLEMENTATION_RECEIPT =
-    "HEARTH_DIAGNOSTIC_SOUTH_BISHOP_QUEEN_CANVAS_REPORT_CONFORMANCE_RECEIPT_v6";
+    "HEARTH_DIAGNOSTIC_SOUTH_PRIORITY_CONTROL_QUEEN_PACKET_CONFORMANCE_RECEIPT_v7";
 
   const PREVIOUS_IMPLEMENTATION_CONTRACT =
-    "HEARTH_DIAGNOSTIC_SOUTH_LAB_CANVAS_BRIDGE_REPORT_CONFORMANCE_TNT_v5";
+    "HEARTH_DIAGNOSTIC_SOUTH_BISHOP_QUEEN_CANVAS_REPORT_CONFORMANCE_TNT_v6";
   const LINEAGE_IMPLEMENTATION_CONTRACT =
-    "HEARTH_DIAGNOSTIC_SOUTH_PLANETARY_CONTROL_LIFECYCLE_REPORT_CONFORMANCE_TNT_v4";
+    "HEARTH_DIAGNOSTIC_SOUTH_LAB_CANVAS_BRIDGE_REPORT_CONFORMANCE_TNT_v5";
   const BASELINE_IMPLEMENTATION_CONTRACT =
     "HEARTH_DIAGNOSTIC_RAIL_SOUTH_REPORT_PACKET_OUTPUT_TNT_v1";
 
   const NORTH_ANCHOR_CONTRACT =
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_LAB_CANVAS_BRIDGE_SCHEMA_ORCHESTRATOR_TNT_v5";
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_BISHOP_QUEEN_ACCEPTANCE_SCHEMA_ORCHESTRATOR_TNT_v6";
   const NORTH_ANCHOR_RECEIPT =
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_LAB_CANVAS_BRIDGE_SCHEMA_ORCHESTRATOR_RECEIPT_v5";
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_BISHOP_QUEEN_ACCEPTANCE_SCHEMA_ORCHESTRATOR_RECEIPT_v6";
   const PREVIOUS_NORTH_ANCHOR_CONTRACT =
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ORCHESTRATOR_TNT_v4";
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_LAB_CANVAS_BRIDGE_SCHEMA_ORCHESTRATOR_TNT_v5";
   const PREVIOUS_NORTH_ANCHOR_RECEIPT =
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ORCHESTRATOR_RECEIPT_v4";
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_LAB_CANVAS_BRIDGE_SCHEMA_ORCHESTRATOR_RECEIPT_v5";
+  const BASELINE_NORTH_ANCHOR_CONTRACT =
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ORCHESTRATOR_TNT_v4";
 
   const VERSION =
-    "2026-06-04.hearth-diagnostic-south-bishop-queen-canvas-report-conformance-v6";
+    "2026-06-05.hearth-diagnostic-south-priority-control-queen-packet-conformance-v7";
 
   const FILE = "/assets/hearth/hearth.diagnostic.south.js";
   const TARGET_ROUTE = "/showroom/globe/hearth/";
@@ -79,6 +82,8 @@
   const EXPECTED_ROUTE_CONDUCTOR_FILE = "/showroom/globe/hearth/hearth.js";
   const EXPECTED_ROUTE_CONDUCTOR_CONTRACT =
     "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_TNT_v9_9";
+  const SCRIPT_CACHE_ROUTE_CONDUCTOR_CONTRACT =
+    "HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION_TNT_v9_7";
   const COMPAT_ROUTE_CONDUCTOR_CONTRACT =
     "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_TNT_v9_6";
   const LINEAGE_ROUTE_CONDUCTOR_CONTRACT =
@@ -108,13 +113,17 @@
     INACCESSIBLE: "INACCESSIBLE",
     NOT_APPLICABLE: "NOT_APPLICABLE",
     INSUFFICIENT_EVIDENCE: "INSUFFICIENT_EVIDENCE",
+    EXPECTED: "EXPECTED",
     EXPECTED_NOT_YET_BUILT: "EXPECTED_NOT_YET_BUILT",
     EXPECTED_NOT_YET_WIRED: "EXPECTED_NOT_YET_WIRED",
     WAITING_CONTROL_FILE: "WAITING_CONTROL_FILE",
+    HANDSHAKE_PENDING: "HANDSHAKE_PENDING",
+    HANDSHAKE_VALID: "HANDSHAKE_VALID",
     PARTIAL: "PARTIAL",
     FAILED: "FAILED",
     COMPLETE: "COMPLETE",
     HELD: "HELD",
+    READY: "READY",
     NONE: "none"
   });
 
@@ -142,20 +151,16 @@
     "DIAGNOSTIC_TIMESTAMP",
     "DIAGNOSTIC_TARGET_ACCESS_STATUS",
     "DIAGNOSTIC_TARGET_ACCESS_ERROR",
-
     "EXPECTED_HTML_CONTRACT",
     "EXPECTED_INDEX_JS_CONTRACT",
     "EXPECTED_ROUTE_CONDUCTOR_CONTRACT",
-
     "SERVED_HTML_CONTRACT",
     "SERVED_INDEX_JS_CONTRACT",
     "SERVED_ROUTE_CONDUCTOR_CONTRACT",
     "INDEX_SCRIPT_SRC",
     "ROUTE_CONDUCTOR_SCRIPT_SRC",
     "CACHE_OR_SERVED_CONTRACT_MISMATCH",
-
     "CURRENT_VISIBLE_HEARTH_STATUS",
-
     "SHOW_RECEIPT_SELECTOR_MATCHED",
     "SHOW_RECEIPT_BUTTON_EXISTS",
     "SHOW_RECEIPT_HIT_TEST_TARGET",
@@ -163,34 +168,27 @@
     "SHOW_RECEIPT_HIT_TEST_TARGET_TAG",
     "SHOW_RECEIPT_TARGET_IS_BUTTON",
     "TARGET_POINTER_EVENTS",
-
     "RECEIPT_PANEL_EXISTS",
     "RECEIPT_TEXT_NODE_EXISTS",
     "RECEIPT_PANEL_STATE_BEFORE_ACTION",
     "RECEIPT_PANEL_STATE_AFTER_ACTION",
     "SHOW_RECEIPT_ACTION_RESULT",
-
     "ANCESTOR_BLOCKER_FOUND",
     "ANCESTOR_BLOCKER_DETAIL",
     "OVERLAY_ABOVE_CONTROL",
     "OVERLAY_OWNER",
-
     "GLOBAL_EVENT_SUPPRESSION_FOUND",
     "LIKELY_SUPPRESSION_OWNER",
     "INDEX_SUPPRESSES_VISIBLE_CONTROLS",
-
     "RUNTIME_RELEASE_STATE",
     "RUNTIME_RELEASE_IS_LOCK",
-
     "PRIMARY_CASE",
     "CALIBRATION_STATUS",
     "CALIBRATION_HOLD_REASON",
     "DIAGNOSTIC_RAIL_CLEAN",
     "CALIBRATION_POINT_REACHED",
-
     "SECONDARY_EVIDENCE_NOTES",
     "NORTH_SECONDARY_EVIDENCE_NOTES",
-
     "RECOMMENDED_NEXT_OWNER",
     "RECOMMENDED_NEXT_FILE",
     "RECOMMENDED_NEXT_ACTION"
@@ -201,19 +199,19 @@
     "NORTH_RECEIPT",
     "PREVIOUS_NORTH_CONTRACT",
     "BASELINE_NORTH_CONTRACT",
-
     "EAST_ALIGNMENT_CONTRACT",
     "WEST_IMPLEMENTATION_CONTRACT",
     "SOUTH_IMPLEMENTATION_CONTRACT",
-
     "CURRENT_EXPECTED_HTML_CONTRACT",
     "CURRENT_EXPECTED_INDEX_JS_CONTRACT",
     "CURRENT_EXPECTED_ROUTE_CONDUCTOR_CONTRACT",
+    "SCRIPT_CACHE_ROUTE_CONDUCTOR_CONTRACT",
     "COMPAT_ROUTE_CONDUCTOR_CONTRACT",
     "PRIOR_ROUTE_CONDUCTOR_CONTRACT",
     "PRIMARY_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED",
     "ROUTE_CONDUCTOR_V9_9_PRIMARY_NOT_TREATED_AS_CASE_5",
     "ROUTE_CONDUCTOR_V9_9_BISHOP_QUEEN_CANVAS_RECOGNIZED",
+    "ROUTE_CONDUCTOR_V9_7_SCRIPT_CACHE_ACCEPTED",
     "ROUTE_CONDUCTOR_V9_6_PRIMARY_NOT_TREATED_AS_CASE_5",
     "ROUTE_CONDUCTOR_V9_6_COMPATIBILITY_ACCEPTED",
     "ROUTE_CONDUCTOR_V9_5_PRIMARY_NOT_TREATED_AS_CASE_5",
@@ -221,7 +219,6 @@
     "ROUTE_CONDUCTOR_V9_5_LINEAGE_ACCEPTED",
     "ROUTE_CONDUCTOR_V9_4_LINEAGE_ACCEPTED",
     "EAST_CURRENT_SPREAD_ALIGNMENT_RECOGNIZED",
-
     "SHOW_RECEIPT_RECT",
     "SHOW_RECEIPT_CENTER_POINT",
     "TARGET_VIEWPORT_WIDTH",
@@ -233,27 +230,22 @@
     "HIT_TEST_UNREADABLE_REASON",
     "FRAME_RECT",
     "FRAME_VISIBLE_TO_DIAGNOSTIC_ROUTE",
-
     "CANVAS_ELEMENT_FOUND",
     "ROUTE_CONDUCTOR_CONTRACT_READABLE_IN_RENDERED_TARGET",
     "RENDERED_PLANET_PROOF_FULLY_INSPECTED",
     "WEST_RENDERED_PROOF_SPREAD_COMPLETE",
     "FLOATING_ANCHOR_HIT_TEST_NON_CONTROLLING",
-
     "NEWS_ALIGNMENT_PROTOCOL",
     "NEWS_ALIGNMENT_STATUS",
     "NEWS_ALIGNMENT_SCORE",
     "NEWS_ALIGNMENT_FIRST_FAILED_STAGE",
-
     "FIBONACCI_SYNCHRONIZATION_PROTOCOL",
     "FIBONACCI_SYNCHRONIZATION_STATUS",
     "FIBONACCI_SYNCHRONIZATION_SCORE",
     "FIBONACCI_SYNCHRONIZATION_FIRST_FAILED_STAGE",
-
     "EAST_SOURCE_READ_STATUS",
     "WEST_RENDERED_READ_STATUS",
     "SOUTH_OUTPUT_STATUS",
-
     "EAST_RECEIPT_VALID",
     "WEST_RECEIPT_VALID",
     "SOUTH_RECEIPT_VALID",
@@ -261,7 +253,6 @@
     "WEST_EVIDENCE_VALID",
     "SOUTH_OUTPUT_VALID",
     "SOUTH_MEANING_PRESERVED",
-
     "CASE_1_SUPPORT",
     "CASE_2_SUPPORT",
     "CASE_3_SUPPORT",
@@ -279,7 +270,6 @@
     "FRONTEND_PLANETARY_OBSERVER_STATUS",
     "PLANETARY_FUNCTION_DIAGNOSTIC_BASIS",
     "PLANETARY_BUILD_OBSERVER_STATUS",
-
     "CONTROL_FILE",
     "CONTROL_FILE_EXPECTED",
     "CONTROL_FILE_STATUS",
@@ -290,14 +280,12 @@
     "CONTROL_ABSENCE_IS_CASE_5",
     "CONTROL_ABSENCE_BLOCKS_VISIBLE_PLANET",
     "CONTROL_ABSENCE_BLOCKS_MOTION_TOUCH",
-
     "CONTROL_HANDSHAKE_EXPECTED",
     "CONTROL_HANDSHAKE_STATUS",
     "HEARTH_JS_CONTROL_FUNNEL_EXPECTED",
     "HEARTH_JS_CONTROL_FUNNEL_FILE",
     "HEARTH_JS_CONTROL_HANDSHAKE_STATUS",
     "HEARTH_JS_LOADS_OR_RECOGNIZES_CONTROL_FILE",
-
     "MOTION_TOUCH_EXPECTED",
     "MOTION_TOUCH_STATUS",
     "DRAG_STATUS",
@@ -313,7 +301,6 @@
     "PLANETARY_CONTROL_FOOTPRINT_STATUS",
     "PLANETARY_CONTROL_DIAGNOSTIC_STATUS",
     "PLANETARY_CONTROL_GATE_STATUS",
-
     "EXPECTED_CONTROL_FILE",
     "EXPECTED_CONTROL_CONTRACT",
     "CONTROL_FILE_PRESENT",
@@ -321,17 +308,14 @@
     "CONTROL_FILE_CONTRACT",
     "CONTROL_FILE_RECEIPT",
     "CONTROL_FILE_AUTHORITY_SOURCE",
-
     "CONTROL_FILE_EXPECTED_NOT_YET_BUILT",
     "CONTROL_FILE_ABSENCE_EXPECTED",
     "CONTROL_FILE_ABSENCE_NOT_TREATED_AS_CASE_5",
     "CONTROL_FILE_ABSENCE_BLOCKS_MOTION_TOUCH_NOT_VISIBLE_PLANET",
-
     "CONTROL_FILE_HANDSHAKE_STATUS",
     "CONTROL_FILE_HANDSHAKE_REQUIRED",
     "CONTROL_FILE_HANDSHAKE_TARGET",
     "CONTROL_FILE_HANDSHAKE_FUNNEL_OWNER",
-
     "JS_INTEGRATION_FUNNEL",
     "JS_INDEX_FILE",
     "JS_INDEX_CONTRACT",
@@ -340,24 +324,20 @@
     "JS_CONTROL_FILE",
     "JS_CONTROL_CONTRACT",
     "JS_CANVAS_FILE",
-
     "ROUTE_CONDUCTOR_CONTROL_INTEGRATION_STATUS",
     "ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_REQUIRED",
     "ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_TARGET",
     "ROUTE_CONDUCTOR_CONTROL_FUNNEL_OWNER",
-
     "PLANETARY_VIEW_CONTROL_STATUS",
     "PLANETARY_VIEW_TOUCH_STATUS",
     "PLANETARY_VIEW_DRAG_STATUS",
     "PLANETARY_VIEW_MOTION_STATUS",
     "PLANETARY_VIEW_ZOOM_STATUS",
     "PLANETARY_VIEW_INPUT_STATUS",
-
     "PLANETARY_FILES_TRACK_STATUS",
     "PLANETARY_FINGERS_TRACK_STATUS",
     "PLANETARY_CANVAS_TRACK_STATUS",
     "PLANETARY_VIEW_TRACK_STATUS",
-
     "PLANETARY_CONTROL_RECOMMENDED_NEXT_FILE",
     "PLANETARY_CONTROL_RECOMMENDED_NEXT_ACTION"
   ]);
@@ -367,7 +347,6 @@
     "NAMESPACE_RENDERED_PROOF_CANDIDATE_PATHS",
     "NAMESPACE_RENDERED_PROOF_CANDIDATE_SELECTED",
     "NAMESPACE_RENDERED_PROOF_CANDIDATE_SCORE",
-
     "ROUTE_CONDUCTOR_AUTHORITY_SOURCE",
     "ROUTE_CONDUCTOR_CONTRACT",
     "ROUTE_CONDUCTOR_RECEIPT",
@@ -376,11 +355,9 @@
     "ROUTE_CONDUCTOR_V9_5_DETECTED",
     "ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED",
     "ROUTE_CONDUCTOR_LINEAGE_ACCEPTED",
-
     "CURRENT_CANVAS_PARENT_CONTRACT",
     "CURRENT_CANVAS_PARENT_RECEIPT",
     "CURRENT_CANVAS_PARENT_RECOGNIZED",
-
     "EXPRESSION_HUB_ACTIVE",
     "FINGER_MANAGER_ACTIVE",
     "FINGER_REGISTRY_ACTIVE",
@@ -391,7 +368,6 @@
     "BASE_GLOBE_VISIBLE_CARRIER_READY",
     "ROUTE_RECEIPT_VISIBLE_PLANET_PROOF_READY",
     "ROUTE_RECEIPT_VISIBLE_PLANET_PROOF_SOURCE",
-
     "PLANET_STAGE_PRESENT",
     "PLANET_STAGE_RECT",
     "PLANET_STAGE_RECT_NONZERO",
@@ -406,7 +382,6 @@
     "CANVAS_DRAW_EVIDENCE_PRESENT",
     "DOM_VISIBLE_PLANET_PROOF_READY",
     "STAGE_MOUNT_DOM_PROOF_READY",
-
     "RENDERED_PLANET_PROOF_INSPECTED",
     "RENDERED_PLANET_PROOF_READY",
     "VISIBLE_PLANET_PROOF_READY",
@@ -414,7 +389,6 @@
     "DATA_PROOF_READ_COMPLETE",
     "DATA_PROOF_READ_STATUS",
     "ROUTE_CONDUCTOR_DATA_PROOF_READ",
-
     "F13_CANVAS_EVIDENCE_COMPLETE",
     "F13_CANVAS_EVIDENCE_STRICT",
     "F13_CANVAS_EVIDENCE_DEGRADED",
@@ -434,12 +408,10 @@
     "LAB_TABLE_FIBONACCI_STATUS",
     "LAB_TABLE_CYCLE_STATUS",
     "LAB_TABLE_GATE_STATUS",
-
     "DIAGNOSTIC_LAB_MIRROR_STATUS",
     "DIAGNOSTIC_LAB_GAUGE_STATUS",
     "DIAGNOSTIC_GAUGE_BRIDGE_STATUS",
     "DIAGNOSTIC_GAUGE_AUTHORITY_SOURCE",
-
     "CANVAS_AUTHORITY_SOURCE",
     "CANVAS_AUTHORITY_CONTRACT",
     "CANVAS_AUTHORITY_RECEIPT",
@@ -448,7 +420,6 @@
     "CANVAS_HANDOFF_STATUS",
     "CANVAS_HANDOFF_TARGET",
     "CANVAS_HANDOFF_RECEIPT",
-
     "LAB_TO_CANVAS_BRIDGE_STATUS",
     "LAB_TO_CANVAS_SHARED_LANGUAGE_STATUS",
     "LAB_TO_CANVAS_TRANSLATION_STATUS",
@@ -465,22 +436,18 @@
     "BISHOP_LANE_COUNT",
     "BISHOP_LANE_EXPECTED_COUNT",
     "BISHOP_LANE_SHARED_LANGUAGE_STATUS",
-
     "BISHOP_NORTH_LANE_STATUS",
     "BISHOP_EAST_LANE_STATUS",
     "BISHOP_SOUTH_LANE_STATUS",
     "BISHOP_WEST_LANE_STATUS",
-
     "BISHOP_NORTH_AUTHORITY_SOURCE",
     "BISHOP_EAST_AUTHORITY_SOURCE",
     "BISHOP_SOUTH_AUTHORITY_SOURCE",
     "BISHOP_WEST_AUTHORITY_SOURCE",
-
     "BISHOP_NORTH_RECEIPT_STATUS",
     "BISHOP_EAST_RECEIPT_STATUS",
     "BISHOP_SOUTH_RECEIPT_STATUS",
     "BISHOP_WEST_RECEIPT_STATUS",
-
     "BISHOP_SUBJECT_FILE_INDEX_STATUS",
     "BISHOP_CHILD_FILE_INDEX_STATUS",
     "BISHOP_READS_SUBJECT_FILES",
@@ -513,27 +480,21 @@
     "BISHOP_QUEEN_CANVAS_RECOGNITION_STATUS",
     "BISHOP_QUEEN_CANVAS_FUNNEL_STATUS",
     "BISHOP_QUEEN_CANVAS_AUTHORITY_SOURCE",
-
     "QUEEN_HANDSHAKE_STATUS",
     "QUEEN_HANDSHAKE_ACCEPTED",
     "QUEEN_VISIBLE_GLOBE_PROOF_READY",
     "QUEEN_CANVAS_RECOGNITION_STATUS",
-
     "BISHOP_AUTHORITY_STATUS",
     "BISHOP_POINTER_FINGER_LANGUAGE_ACTIVE",
     "BISHOP_POINTER_FINGER_AUTHORITY_STATUS",
     "BISHOP_CHILD_FILE_KNOWLEDGE_BOUNDARY",
     "BISHOP_HUBS_OPAQUE_TO_DIAGNOSTIC",
-
     "CANVAS_RECEIVER_BISHOP_AUTHORITY_STATUS",
     "CANVAS_RECEIVER_VISIBLE_PROOF_STATUS",
     "CANVAS_RECEIVER_RECOGNITION_FUNNEL_STATUS",
-
-    "ROUTE_CONDUCTOR_V9_9_PRIMARY_NOT_TREATED_AS_CASE_5",
-    "ROUTE_CONDUCTOR_V9_9_BISHOP_QUEEN_CANVAS_RECOGNIZED",
-    "ROUTE_CONDUCTOR_V9_6_COMPATIBILITY_ACCEPTED",
-    "ROUTE_CONDUCTOR_V9_5_LINEAGE_ACCEPTED",
-    "ROUTE_CONDUCTOR_V9_4_LINEAGE_ACCEPTED"
+    "SOUTH_PRIORITY_CONTROL_EVIDENCE_STATUS",
+    "SOUTH_PRIORITY_QUEEN_EVIDENCE_STATUS",
+    "SOUTH_PRIORITY_DERELICT_FIX_STATUS"
   ]);
 
   const SOUTH_SCHEMA_FIELDS = Object.freeze([
@@ -605,11 +566,59 @@
     ...UPPER_NO_CLAIM_FIELDS
   ]));
 
+  const CONTROL_READY_MARKERS = Object.freeze([
+    "EAST_CONTROL_FILE_PRESENT_AND_MOTION_TOUCH_READY",
+    "WEST_CONTROL_FILE_PRESENT_AND_MOTION_TOUCH_READY",
+    "CONTROL_FILE_PRESENT_AND_MOTION_TOUCH_READY",
+    "CONTROL_HANDSHAKE_READY",
+    "CONTROL_FILE_LOADED_AND_MOTION_TOUCH_READY",
+    "MOTION_TOUCH_READY",
+    "DRAG_READY",
+    "VIEW_CONTROL_READY"
+  ]);
+
+  const CONTROL_ABSENCE_MARKERS = Object.freeze([
+    "NORTH_CONTROL_ABSENCE_ADMITTED_AS_EXPECTED_NOT_YET_BUILT",
+    "EAST_CONTROL_FILE_EXPECTED_NOT_YET_BUILT",
+    "NORTH_CONTROL_ABSENCE_NOT_TREATED_AS_CASE_5",
+    "EAST_CONTROL_ABSENCE_NOT_TREATED_AS_CASE_5"
+  ]);
+
+  const QUEEN_ACCEPTANCE_MARKERS = Object.freeze([
+    "NORTH_BISHOP_QUEEN_ACCEPTANCE_SCHEMA_ACTIVE",
+    "NORTH_ACCEPTED_ROUTE_CONDUCTOR_BISHOP_QUEEN_V9_9_OR_LINEAGE_AS_CURRENT_SPREAD",
+    "ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNIZED",
+    "BISHOP_QUEEN_CANVAS_RECOGNIZED",
+    "VISIBLE_GLOBE_PROOF_READY_QUEEN_HANDSHAKE_ACCEPTED",
+    "VISIBLE_GLOBE_PROOF_READY_CONTROL_HANDSHAKE_ACCEPTED"
+  ]);
+
+  const ROUTE_RECOGNITION_MARKERS = Object.freeze([
+    "ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED_CURRENT_OR_ACCEPTED_LINEAGE",
+    "ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED_CURRENT_OR_ACCEPTED_LINEAGE:HEARTH_ROUTE_CONDUCTOR_CONTROL_FILE_ADMISSION_AND_HANDSHAKE_DELIVERY_TNT_v9_8",
+    "NORTH_ACCEPTED_ROUTE_CONDUCTOR_BISHOP_QUEEN_V9_9_OR_LINEAGE_AS_CURRENT_SPREAD",
+    "CASE_5_OVERRIDDEN_BY_NORTH_V6_ACCEPTED_CURRENT_SPREAD_AND_NON_BLOCKING_CACHE_KEY",
+    "PRIMARY_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED",
+    "CURRENT_EXPECTED_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED"
+  ]);
+
+  const VISIBLE_PROOF_MARKERS = Object.freeze([
+    "RENDERED_PLANET_PROOF_READY",
+    "RENDERED_PLANET_PROOF_FULLY_INSPECTED",
+    "WEST_RENDERED_PROOF_SPREAD_COMPLETE",
+    "PLANET_STAGE_NONZERO_DOM_PROOF",
+    "CANVAS_MOUNT_NONZERO_DOM_PROOF",
+    "VISIBLE_PLANET_PROOF_READY",
+    "BASE_GLOBE_VISIBLE_CARRIER_READY",
+    "ROUTE_RECEIPT_VISIBLE_PLANET_PROOF_READY"
+  ]);
+
   const root = typeof window !== "undefined" ? window : globalThis;
 
   let lastState = null;
   let lastReport = null;
   let lastOutput = null;
+  let api = null;
 
   function unique(values) {
     const out = [];
@@ -659,7 +668,7 @@
 
     if (isObject(value)) {
       try {
-        return bounded(JSON.stringify(value), 16000) || fallback;
+        return bounded(JSON.stringify(value), 20000) || fallback;
       } catch (_error) {
         return bounded(String(value), 4000) || fallback;
       }
@@ -697,24 +706,29 @@
     return raw === undefined || raw === null || raw === "" ? fallback : packetValue(raw, fallback);
   }
 
-  function isKnown(value) {
-    return !(
-      value === undefined ||
-      value === null ||
-      value === "" ||
-      value === FALLBACK.UNKNOWN ||
-      value === FALLBACK.NOT_FOUND ||
-      value === FALLBACK.UNREADABLE ||
-      value === FALLBACK.INACCESSIBLE
+  function unknownish(value) {
+    const text = safeString(value).trim();
+
+    return (
+      text === "" ||
+      text === FALLBACK.UNKNOWN ||
+      text === FALLBACK.NOT_FOUND ||
+      text === FALLBACK.UNREADABLE ||
+      text === FALLBACK.INACCESSIBLE ||
+      text === FALLBACK.INSUFFICIENT_EVIDENCE
     );
   }
 
-  function line(key, value) {
-    return `${key}=${packetValue(value)}`;
+  function knownValue(input, key, fallback = FALLBACK.UNKNOWN) {
+    const value = getValue(input, key, fallback);
+    return unknownish(value) ? fallback : value;
   }
 
-  function boolText(value) {
-    return value ? "true" : "false";
+  function firstKnown(...values) {
+    for (const value of values) {
+      if (!unknownish(value)) return value;
+    }
+    return FALLBACK.UNKNOWN;
   }
 
   function textIsTrue(value) {
@@ -723,6 +737,25 @@
 
   function textIsFalse(value) {
     return value === false || value === "false" || value === "FALSE" || value === 0 || value === "0";
+  }
+
+  function boolText(value) {
+    return value ? "true" : "false";
+  }
+
+  function line(key, value) {
+    return `${key}=${packetValue(value)}`;
+  }
+
+  function setDefault(report, key, value) {
+    const existing = getRawValue(report, key, undefined);
+    if (existing === undefined || existing === null || existing === "" || unknownish(existing)) {
+      report[key] = packetValue(value);
+    }
+  }
+
+  function setPriority(report, key, value) {
+    report[key] = packetValue(value);
   }
 
   function addOutputNote(state, note) {
@@ -746,12 +779,12 @@
     }
 
     if (Array.isArray(value)) {
-      return value.map((entry) => bounded(entry, 1200)).filter(Boolean);
+      return value.map((entry) => bounded(entry, 1400)).filter(Boolean);
     }
 
     return safeString(value)
       .split("|")
-      .map((entry) => bounded(entry, 1200))
+      .map((entry) => bounded(entry, 1400))
       .filter(Boolean)
       .filter((entry) => entry !== FALLBACK.NONE);
   }
@@ -786,47 +819,75 @@
     for (const source of sources) {
       for (const entry of normalizeNoteInput(source)) {
         if (suppressImportedNote(entry)) continue;
-
-        if (!seen.has(entry)) {
-          seen.add(entry);
-          notes.push(entry);
-        }
+        if (seen.has(entry)) continue;
+        seen.add(entry);
+        notes.push(entry);
       }
     }
 
     if (options && options.mergeSouthOutputNotesIntoEvidenceNotes === true) {
       for (const entry of state.southSecondaryOutputNotes) {
-        if (!seen.has(entry)) {
-          seen.add(entry);
-          notes.push(entry);
-        }
+        if (seen.has(entry)) continue;
+        seen.add(entry);
+        notes.push(entry);
       }
     }
 
     return notes.length ? notes.join(" | ") : FALLBACK.NONE;
   }
 
-  function notesContain(report, phrase) {
-    const text = [
+  function reportText(report) {
+    const parts = [
       getValue(report, "SECONDARY_EVIDENCE_NOTES", ""),
       getValue(report, "NORTH_SECONDARY_EVIDENCE_NOTES", ""),
       getValue(report, "EAST_SECONDARY_EVIDENCE_NOTES", ""),
-      getValue(report, "WEST_SECONDARY_EVIDENCE_NOTES", "")
-    ].join(" | ");
+      getValue(report, "WEST_SECONDARY_EVIDENCE_NOTES", ""),
+      getValue(report, "RUNTIME_RELEASE_STATE", ""),
+      getValue(report, "CURRENT_VISIBLE_HEARTH_STATUS", ""),
+      getValue(report, "SERVED_ROUTE_CONDUCTOR_CONTRACT", ""),
+      getValue(report, "ROUTE_CONDUCTOR_CONTRACT", ""),
+      getValue(report, "NORTH_CONTRACT", "")
+    ];
 
-    return text.includes(phrase);
+    return parts.join(" | ");
   }
 
-  function inferBooleanText(report, field, trueNotes, falseNotes, fallback = FALLBACK.UNKNOWN) {
+  function notesContain(report, phrase) {
+    return reportText(report).includes(phrase);
+  }
+
+  function containsAny(report, markers) {
+    const text = reportText(report);
+    return (markers || []).some((marker) => text.includes(marker));
+  }
+
+  function valueSuggestsReady(value) {
+    const text = safeString(value).toUpperCase();
+
+    return (
+      text === "TRUE" ||
+      text === "READY" ||
+      text === "VALID" ||
+      text === "COMPLETE" ||
+      text === "ACTIVE" ||
+      text.includes("READY") ||
+      text.includes("VALID") ||
+      text.includes("COMPLETE") ||
+      text.includes("HANDSHAKE_VALID") ||
+      text.includes("PROOF_READY")
+    );
+  }
+
+  function inferBooleanText(report, field, trueMarkers, falseMarkers, fallback = FALLBACK.UNKNOWN) {
     const explicit = getValue(report, field, "");
     if (textIsTrue(explicit)) return "true";
     if (textIsFalse(explicit)) return "false";
 
-    for (const note of trueNotes || []) {
+    for (const note of trueMarkers || []) {
       if (notesContain(report, note)) return "true";
     }
 
-    for (const note of falseNotes || []) {
+    for (const note of falseMarkers || []) {
       if (notesContain(report, note)) return "false";
     }
 
@@ -898,412 +959,296 @@
     return true;
   }
 
-  function controlPresentFromReport(report) {
-    const present = getValue(report, "CONTROL_FILE_PRESENT", "");
-    if (textIsTrue(present)) return "true";
-    if (textIsFalse(present)) return "false";
+  function detectControlPriority(report) {
+    const hasReadyNote = containsAny(report, CONTROL_READY_MARKERS);
 
-    const loaded = getValue(report, "CONTROL_FILE_LOADED", "");
-    const global = getValue(report, "CONTROL_GLOBAL_PRESENT", "");
-    const receipt = getValue(report, "CONTROL_RECEIPT_PRESENT", "");
-    const status = getValue(report, "CONTROL_FILE_STATUS", "");
+    const explicitPresent = getValue(report, "CONTROL_FILE_PRESENT", "");
+    const explicitLoaded = getValue(report, "CONTROL_FILE_LOADED", "");
+    const explicitGlobal = getValue(report, "CONTROL_GLOBAL_PRESENT", "");
+    const explicitReceipt = getValue(report, "CONTROL_RECEIPT_PRESENT", "");
+    const explicitStatus = getValue(report, "CONTROL_FILE_STATUS", "");
+    const explicitMotion = getValue(report, "MOTION_TOUCH_STATUS", "");
+    const explicitDrag = getValue(report, "DRAG_STATUS", "");
+    const explicitView = getValue(report, "VIEW_CONTROL_STATUS", "");
+    const explicitHandshake = getValue(report, "CONTROL_HANDSHAKE_STATUS", "");
+    const explicitJsHandshake = getValue(report, "HEARTH_JS_CONTROL_HANDSHAKE_STATUS", "");
 
-    if (textIsTrue(loaded) || textIsTrue(global) || textIsTrue(receipt)) return "true";
+    const presentByExplicit =
+      textIsTrue(explicitPresent) ||
+      textIsTrue(explicitLoaded) ||
+      textIsTrue(explicitGlobal) ||
+      textIsTrue(explicitReceipt);
 
-    if (
-      status === FALLBACK.EXPECTED_NOT_YET_BUILT ||
-      status === "EXPECTED_NOT_YET_BUILT" ||
-      status === FALLBACK.WAITING_CONTROL_FILE ||
-      notesContain(report, "NORTH_CONTROL_ABSENCE_ADMITTED_AS_EXPECTED_NOT_YET_BUILT") ||
-      notesContain(report, "EAST_CONTROL_FILE_EXPECTED_NOT_YET_BUILT")
-    ) {
-      return "false";
+    const readyByExplicit =
+      valueSuggestsReady(explicitStatus) ||
+      valueSuggestsReady(explicitMotion) ||
+      valueSuggestsReady(explicitDrag) ||
+      valueSuggestsReady(explicitView) ||
+      valueSuggestsReady(explicitHandshake) ||
+      valueSuggestsReady(explicitJsHandshake);
+
+    const absenceExpected =
+      containsAny(report, CONTROL_ABSENCE_MARKERS) ||
+      explicitStatus === FALLBACK.EXPECTED_NOT_YET_BUILT ||
+      explicitStatus === FALLBACK.WAITING_CONTROL_FILE ||
+      textIsFalse(explicitPresent);
+
+    if (hasReadyNote || presentByExplicit || readyByExplicit) {
+      return {
+        present: true,
+        ready: hasReadyNote || readyByExplicit,
+        status: hasReadyNote || readyByExplicit
+          ? "CONTROL_FILE_PRESENT_AND_MOTION_TOUCH_READY"
+          : "CONTROL_FILE_PRESENT_HANDSHAKE_PENDING",
+        source: hasReadyNote ? "EAST_WEST_READY_NOTE_PRIORITY" : "EXPLICIT_CONTROL_FIELD_PRIORITY",
+        absenceExpected: false
+      };
     }
 
-    return FALLBACK.UNKNOWN;
+    if (absenceExpected) {
+      return {
+        present: false,
+        ready: false,
+        status: FALLBACK.EXPECTED_NOT_YET_BUILT,
+        source: "EXPECTED_ABSENCE_PRIORITY",
+        absenceExpected: true
+      };
+    }
+
+    return {
+      present: null,
+      ready: false,
+      status: FALLBACK.UNKNOWN,
+      source: FALLBACK.UNKNOWN,
+      absenceExpected: false
+    };
+  }
+
+  function detectRouteConductorRecognition(report) {
+    const servedRoute = getValue(report, "SERVED_ROUTE_CONDUCTOR_CONTRACT", FALLBACK.UNKNOWN);
+    const renderedRoute = getValue(report, "ROUTE_CONDUCTOR_CONTRACT", FALLBACK.UNKNOWN);
+    const authorityContract = getValue(report, "ROUTE_CONDUCTOR_AUTHORITY_CONTRACT", FALLBACK.UNKNOWN);
+
+    const directCurrent =
+      servedRoute === EXPECTED_ROUTE_CONDUCTOR_CONTRACT ||
+      renderedRoute === EXPECTED_ROUTE_CONDUCTOR_CONTRACT ||
+      authorityContract === EXPECTED_ROUTE_CONDUCTOR_CONTRACT;
+
+    const scriptTransition =
+      servedRoute === SCRIPT_CACHE_ROUTE_CONDUCTOR_CONTRACT ||
+      renderedRoute === SCRIPT_CACHE_ROUTE_CONDUCTOR_CONTRACT ||
+      authorityContract === SCRIPT_CACHE_ROUTE_CONDUCTOR_CONTRACT;
+
+    const lineage =
+      servedRoute === COMPAT_ROUTE_CONDUCTOR_CONTRACT ||
+      servedRoute === LINEAGE_ROUTE_CONDUCTOR_CONTRACT ||
+      servedRoute === PRIOR_ROUTE_CONDUCTOR_CONTRACT ||
+      renderedRoute === COMPAT_ROUTE_CONDUCTOR_CONTRACT ||
+      renderedRoute === LINEAGE_ROUTE_CONDUCTOR_CONTRACT ||
+      renderedRoute === PRIOR_ROUTE_CONDUCTOR_CONTRACT ||
+      authorityContract === COMPAT_ROUTE_CONDUCTOR_CONTRACT ||
+      authorityContract === LINEAGE_ROUTE_CONDUCTOR_CONTRACT ||
+      authorityContract === PRIOR_ROUTE_CONDUCTOR_CONTRACT;
+
+    const noteAccepted = containsAny(report, ROUTE_RECOGNITION_MARKERS);
+    const fieldRecognized = textIsTrue(getValue(report, "PRIMARY_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED", ""));
+
+    return {
+      recognized: directCurrent || scriptTransition || lineage || noteAccepted || fieldRecognized,
+      directCurrent,
+      scriptTransition,
+      lineage,
+      noteAccepted,
+      source: directCurrent
+        ? "ROUTE_CONDUCTOR_V9_9_DIRECT"
+        : scriptTransition
+          ? "ROUTE_CONDUCTOR_V9_7_SCRIPT_CACHE_TRANSITION"
+          : lineage
+            ? "ROUTE_CONDUCTOR_ACCEPTED_LINEAGE"
+            : noteAccepted
+              ? "NORTH_ACCEPTED_CURRENT_SPREAD_NOTE"
+              : fieldRecognized
+                ? "PRIMARY_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED_FIELD"
+                : FALLBACK.UNKNOWN
+    };
+  }
+
+  function detectVisibleProof(report) {
+    const proofMarkers = containsAny(report, VISIBLE_PROOF_MARKERS);
+
+    const explicit =
+      textIsTrue(getValue(report, "RENDERED_PLANET_PROOF_READY", "")) ||
+      textIsTrue(getValue(report, "RENDERED_PLANET_PROOF_FULLY_INSPECTED", "")) ||
+      textIsTrue(getValue(report, "WEST_RENDERED_PROOF_SPREAD_COMPLETE", "")) ||
+      textIsTrue(getValue(report, "VISIBLE_PLANET_PROOF_READY", "")) ||
+      textIsTrue(getValue(report, "DOM_VISIBLE_PLANET_PROOF_READY", "")) ||
+      textIsTrue(getValue(report, "STAGE_MOUNT_DOM_PROOF_READY", "")) ||
+      textIsTrue(getValue(report, "ROUTE_RECEIPT_VISIBLE_PLANET_PROOF_READY", ""));
+
+    return {
+      ready: proofMarkers || explicit,
+      source: explicit ? "EXPLICIT_RENDERED_PROOF_FIELD" : proofMarkers ? "RENDERED_PROOF_NOTE_PRIORITY" : FALLBACK.UNKNOWN
+    };
   }
 
   function projectPlanetaryControlFields(report, state) {
-    const northSchemaActive = inferBooleanText(
-      report,
-      "PLANETARY_CONTROL_SCHEMA_ACTIVE",
-      ["NORTH_PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ACTIVE"],
-      [],
-      "true"
-    );
+    const control = detectControlPriority(report);
 
-    const controlStatus = getValue(report, "CONTROL_FILE_STATUS", FALLBACK.UNKNOWN);
+    setDefault(report, "PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ACTIVE", "true");
+    setDefault(report, "PLANETARY_CONTROL_SCHEMA_ACTIVE", "true");
+    setDefault(report, "PLANETARY_CONTROL_SCHEMA_CONTRACT", getValue(report, "NORTH_CONTRACT", NORTH_ANCHOR_CONTRACT));
+    setDefault(report, "PLANETARY_CONTROL_SCHEMA_RECEIPT", getValue(report, "NORTH_RECEIPT", NORTH_ANCHOR_RECEIPT));
 
-    const controlExpectedNotYetBuilt = inferBooleanText(
-      report,
-      "CONTROL_FILE_EXPECTED_NOT_YET_BUILT",
-      [
-        "NORTH_CONTROL_ABSENCE_ADMITTED_AS_EXPECTED_NOT_YET_BUILT",
-        "EAST_CONTROL_FILE_EXPECTED_NOT_YET_BUILT"
-      ],
-      [],
-      controlStatus === FALLBACK.EXPECTED_NOT_YET_BUILT ? "true" : FALLBACK.UNKNOWN
-    );
+    setDefault(report, "EXPECTED_CONTROL_FILE", EXPECTED_CONTROL_FILE);
+    setDefault(report, "EXPECTED_CONTROL_CONTRACT", EXPECTED_CONTROL_CONTRACT);
+    setDefault(report, "CONTROL_FILE", EXPECTED_CONTROL_FILE);
+    setDefault(report, "CONTROL_FILE_EXPECTED", "true");
 
-    const controlAbsenceExpected = inferBooleanText(
-      report,
-      "CONTROL_FILE_ABSENCE_EXPECTED",
-      [
-        "NORTH_CONTROL_ABSENCE_ADMITTED_AS_EXPECTED_NOT_YET_BUILT",
-        "EAST_CONTROL_FILE_EXPECTED_NOT_YET_BUILT"
-      ],
-      [],
-      controlExpectedNotYetBuilt
-    );
+    if (control.present === true) {
+      setPriority(report, "CONTROL_FILE_PRESENT", "true");
+      setPriority(report, "CONTROL_FILE_STATUS", control.status);
+      setDefault(report, "CONTROL_FILE_SRC", getValue(report, "CONTROL_SCRIPT_SRC", EXPECTED_CONTROL_FILE));
+      setDefault(report, "CONTROL_FILE_CONTRACT", getValue(report, "CONTROL_CONTRACT", EXPECTED_CONTROL_CONTRACT));
+      setDefault(report, "CONTROL_FILE_RECEIPT", getValue(report, "CONTROL_RECEIPT_PRESENT", "CONTROL_RECEIPT_OR_READY_EVIDENCE_PRESENT"));
+      setDefault(report, "CONTROL_FILE_AUTHORITY_SOURCE", getValue(report, "CONTROL_AUTHORITY_SOURCE", "EAST_OR_WEST_READY_EVIDENCE"));
 
-    const controlAbsenceNotCase5 = inferBooleanText(
-      report,
-      "CONTROL_FILE_ABSENCE_NOT_TREATED_AS_CASE_5",
-      [
-        "NORTH_CONTROL_ABSENCE_NOT_TREATED_AS_CASE_5",
-        "EAST_CONTROL_ABSENCE_NOT_TREATED_AS_CASE_5"
-      ],
-      [],
-      textIsFalse(getValue(report, "CONTROL_ABSENCE_IS_CASE_5", "")) ? "true" : FALLBACK.UNKNOWN
-    );
+      setPriority(report, "CONTROL_FILE_EXPECTED_NOT_YET_BUILT", "false");
+      setPriority(report, "CONTROL_FILE_ABSENCE_EXPECTED", "false");
+      setPriority(report, "CONTROL_ABSENCE_IS_FAILURE", "false");
+      setPriority(report, "CONTROL_ABSENCE_IS_CASE_5", "false");
+      setPriority(report, "CONTROL_ABSENCE_BLOCKS_VISIBLE_PLANET", "false");
+      setPriority(report, "CONTROL_ABSENCE_BLOCKS_MOTION_TOUCH", "false");
+      setPriority(report, "CONTROL_FILE_ABSENCE_NOT_TREATED_AS_CASE_5", "true");
+      setPriority(report, "CONTROL_FILE_ABSENCE_BLOCKS_MOTION_TOUCH_NOT_VISIBLE_PLANET", "false");
 
-    const controlBlocksMotionTouchNotVisible = inferBooleanText(
-      report,
-      "CONTROL_FILE_ABSENCE_BLOCKS_MOTION_TOUCH_NOT_VISIBLE_PLANET",
-      [
-        "NORTH_CONTROL_ABSENCE_BLOCKS_MOTION_TOUCH_NOT_VISIBLE_PLANET",
-        "EAST_CONTROL_ABSENCE_BLOCKS_MOTION_TOUCH_NOT_VISIBLE_PLANET"
-      ],
-      [],
-      textIsTrue(getValue(report, "CONTROL_ABSENCE_BLOCKS_MOTION_TOUCH", "")) &&
-      textIsFalse(getValue(report, "CONTROL_ABSENCE_BLOCKS_VISIBLE_PLANET", ""))
-        ? "true"
-        : FALLBACK.UNKNOWN
-    );
+      setPriority(report, "CONTROL_HANDSHAKE_STATUS", control.ready ? "CONTROL_HANDSHAKE_READY" : FALLBACK.HANDSHAKE_PENDING);
+      setPriority(report, "CONTROL_FILE_HANDSHAKE_STATUS", control.ready ? "CONTROL_HANDSHAKE_READY" : FALLBACK.HANDSHAKE_PENDING);
+      setPriority(report, "HEARTH_JS_CONTROL_HANDSHAKE_STATUS", control.ready ? "CONTROL_HANDSHAKE_READY" : FALLBACK.HANDSHAKE_PENDING);
+      setPriority(report, "ROUTE_CONDUCTOR_CONTROL_INTEGRATION_STATUS", control.ready ? "ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_READY" : FALLBACK.HANDSHAKE_PENDING);
 
-    const controlFilePresent = controlPresentFromReport(report);
+      setPriority(report, "MOTION_TOUCH_STATUS", control.ready ? FALLBACK.READY : FALLBACK.HANDSHAKE_PENDING);
+      setPriority(report, "DRAG_STATUS", control.ready ? FALLBACK.READY : FALLBACK.HANDSHAKE_PENDING);
+      setPriority(report, "VIEW_CONTROL_STATUS", control.ready ? FALLBACK.READY : FALLBACK.HANDSHAKE_PENDING);
 
-    report.PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ACTIVE = getValue(
-      report,
-      "PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ACTIVE",
-      northSchemaActive
-    );
+      setPriority(report, "PLANETARY_VIEW_CONTROL_STATUS", control.ready ? FALLBACK.READY : FALLBACK.HANDSHAKE_PENDING);
+      setPriority(report, "PLANETARY_VIEW_TOUCH_STATUS", control.ready ? FALLBACK.READY : FALLBACK.HANDSHAKE_PENDING);
+      setPriority(report, "PLANETARY_VIEW_DRAG_STATUS", control.ready ? FALLBACK.READY : FALLBACK.HANDSHAKE_PENDING);
+      setPriority(report, "PLANETARY_VIEW_MOTION_STATUS", control.ready ? FALLBACK.READY : FALLBACK.HANDSHAKE_PENDING);
+      setPriority(report, "PLANETARY_VIEW_ZOOM_STATUS", control.ready ? "READY_OR_NOT_OWNED_BY_SOUTH" : FALLBACK.HANDSHAKE_PENDING);
+      setPriority(report, "PLANETARY_VIEW_INPUT_STATUS", control.ready ? FALLBACK.READY : FALLBACK.HANDSHAKE_PENDING);
 
-    report.PLANETARY_CONTROL_SCHEMA_ACTIVE = getValue(
-      report,
-      "PLANETARY_CONTROL_SCHEMA_ACTIVE",
-      northSchemaActive
-    );
+      setPriority(report, "PLANETARY_CONTROL_FOOTPRINT_STATUS", "CONTROL_FILE_PRESENT_PRIORITY_CONFIRMED");
+      setPriority(report, "PLANETARY_CONTROL_DIAGNOSTIC_STATUS", "CONTROL_DIAGNOSTIC_FOOTPRINT_ACTIVE_PRESENT");
+      setPriority(report, "PLANETARY_CONTROL_GATE_STATUS", control.ready ? "CONTROL_GATE_HANDSHAKE_READY" : "CONTROL_GATE_HANDSHAKE_PENDING");
 
-    report.PLANETARY_CONTROL_SCHEMA_CONTRACT = getValue(
-      report,
-      "PLANETARY_CONTROL_SCHEMA_CONTRACT",
-      NORTH_ANCHOR_CONTRACT
-    );
+      setPriority(report, "SOUTH_PRIORITY_CONTROL_EVIDENCE_STATUS", "UPSTREAM_CONTROL_READY_EVIDENCE_ACCEPTED_OVER_STALE_ABSENCE");
+      addOutputNote(state, "SOUTH_PRIORITY_ACCEPTED_CONTROL_PRESENT_OVER_STALE_EXPECTED_ABSENCE");
+    } else if (control.present === false) {
+      setPriority(report, "CONTROL_FILE_PRESENT", "false");
+      setDefault(report, "CONTROL_FILE_STATUS", FALLBACK.EXPECTED_NOT_YET_BUILT);
+      setDefault(report, "CONTROL_FILE_SRC", FALLBACK.NOT_FOUND);
+      setDefault(report, "CONTROL_FILE_CONTRACT", FALLBACK.EXPECTED_NOT_YET_BUILT);
+      setDefault(report, "CONTROL_FILE_RECEIPT", FALLBACK.EXPECTED_NOT_YET_BUILT);
+      setDefault(report, "CONTROL_FILE_AUTHORITY_SOURCE", FALLBACK.NOT_FOUND);
 
-    report.PLANETARY_CONTROL_SCHEMA_RECEIPT = getValue(
-      report,
-      "PLANETARY_CONTROL_SCHEMA_RECEIPT",
-      NORTH_ANCHOR_RECEIPT
-    );
+      setPriority(report, "CONTROL_FILE_EXPECTED_NOT_YET_BUILT", "true");
+      setPriority(report, "CONTROL_FILE_ABSENCE_EXPECTED", "true");
+      setPriority(report, "CONTROL_ABSENCE_IS_FAILURE", "false");
+      setPriority(report, "CONTROL_ABSENCE_IS_CASE_5", "false");
+      setPriority(report, "CONTROL_ABSENCE_BLOCKS_VISIBLE_PLANET", "false");
 
-    report.PLANETARY_CONTROL_FOOTPRINT_STATUS = getValue(
-      report,
-      "PLANETARY_CONTROL_FOOTPRINT_STATUS",
-      controlExpectedNotYetBuilt === "true"
-        ? "FOOTPRINT_ESTABLISHED_EXPECTED_NOT_BUILT"
-        : FALLBACK.UNKNOWN
-    );
+      setDefault(report, "CONTROL_FILE_ABSENCE_NOT_TREATED_AS_CASE_5", "true");
+      setDefault(report, "CONTROL_FILE_ABSENCE_BLOCKS_MOTION_TOUCH_NOT_VISIBLE_PLANET", "true");
 
-    report.PLANETARY_CONTROL_DIAGNOSTIC_STATUS = getValue(
-      report,
-      "PLANETARY_CONTROL_DIAGNOSTIC_STATUS",
-      controlExpectedNotYetBuilt === "true"
-        ? "CONTROL_DIAGNOSTIC_FOOTPRINT_ACTIVE"
-        : FALLBACK.UNKNOWN
-    );
+      setDefault(report, "CONTROL_HANDSHAKE_STATUS", FALLBACK.EXPECTED_NOT_YET_WIRED);
+      setDefault(report, "CONTROL_FILE_HANDSHAKE_STATUS", FALLBACK.WAITING_CONTROL_FILE);
+      setDefault(report, "HEARTH_JS_CONTROL_HANDSHAKE_STATUS", FALLBACK.EXPECTED_NOT_YET_WIRED);
+      setDefault(report, "ROUTE_CONDUCTOR_CONTROL_INTEGRATION_STATUS", "ROUTE_CONDUCTOR_WAITING_CONTROL_HANDSHAKE");
 
-    report.PLANETARY_CONTROL_GATE_STATUS = getValue(
-      report,
-      "PLANETARY_CONTROL_GATE_STATUS",
-      controlExpectedNotYetBuilt === "true"
-        ? "CONTROL_GATE_EXPECTED_WAITING_HANDSHAKE"
-        : FALLBACK.UNKNOWN
-    );
+      setDefault(report, "MOTION_TOUCH_STATUS", FALLBACK.WAITING_CONTROL_FILE);
+      setDefault(report, "DRAG_STATUS", FALLBACK.WAITING_CONTROL_FILE);
+      setDefault(report, "VIEW_CONTROL_STATUS", FALLBACK.WAITING_CONTROL_FILE);
 
-    report.EXPECTED_CONTROL_FILE = getValue(report, "EXPECTED_CONTROL_FILE", EXPECTED_CONTROL_FILE);
-    report.EXPECTED_CONTROL_CONTRACT = getValue(report, "EXPECTED_CONTROL_CONTRACT", EXPECTED_CONTROL_CONTRACT);
-    report.CONTROL_FILE = getValue(report, "CONTROL_FILE", EXPECTED_CONTROL_FILE);
-    report.CONTROL_FILE_EXPECTED = getValue(report, "CONTROL_FILE_EXPECTED", "true");
-    report.CONTROL_FILE_PRESENT = controlFilePresent;
+      setDefault(report, "PLANETARY_VIEW_CONTROL_STATUS", FALLBACK.WAITING_CONTROL_FILE);
+      setDefault(report, "PLANETARY_VIEW_TOUCH_STATUS", "BLOCKED_BY_EXPECTED_CONTROL_ABSENCE");
+      setDefault(report, "PLANETARY_VIEW_DRAG_STATUS", "BLOCKED_BY_EXPECTED_CONTROL_ABSENCE");
+      setDefault(report, "PLANETARY_VIEW_MOTION_STATUS", "BLOCKED_BY_EXPECTED_CONTROL_ABSENCE");
+      setDefault(report, "PLANETARY_VIEW_ZOOM_STATUS", FALLBACK.WAITING_CONTROL_FILE);
+      setDefault(report, "PLANETARY_VIEW_INPUT_STATUS", FALLBACK.WAITING_CONTROL_FILE);
 
-    report.CONTROL_FILE_SRC = getValue(
-      report,
-      "CONTROL_FILE_SRC",
-      controlFilePresent === "false" ? FALLBACK.NOT_FOUND : FALLBACK.UNKNOWN
-    );
+      setDefault(report, "PLANETARY_CONTROL_FOOTPRINT_STATUS", "FOOTPRINT_ESTABLISHED_EXPECTED_NOT_BUILT");
+      setDefault(report, "PLANETARY_CONTROL_DIAGNOSTIC_STATUS", "CONTROL_DIAGNOSTIC_FOOTPRINT_ACTIVE");
+      setDefault(report, "PLANETARY_CONTROL_GATE_STATUS", "CONTROL_GATE_EXPECTED_WAITING_HANDSHAKE");
 
-    report.CONTROL_FILE_CONTRACT = getValue(
-      report,
-      "CONTROL_FILE_CONTRACT",
-      controlFilePresent === "false" ? FALLBACK.EXPECTED_NOT_YET_BUILT : FALLBACK.UNKNOWN
-    );
+      setPriority(report, "SOUTH_PRIORITY_CONTROL_EVIDENCE_STATUS", "EXPECTED_CONTROL_ABSENCE_PRESERVED_NO_READY_COUNTEREVIDENCE");
+      addOutputNote(state, "SOUTH_PRESERVED_EXPECTED_CONTROL_ABSENCE_ONLY_AFTER_READY_COUNTEREVIDENCE_CHECK");
+    } else {
+      setDefault(report, "CONTROL_FILE_PRESENT", FALLBACK.UNKNOWN);
+      setDefault(report, "CONTROL_FILE_STATUS", FALLBACK.UNKNOWN);
+      setDefault(report, "CONTROL_FILE_EXPECTED_NOT_YET_BUILT", FALLBACK.UNKNOWN);
+      setDefault(report, "CONTROL_FILE_ABSENCE_EXPECTED", FALLBACK.UNKNOWN);
+      setDefault(report, "CONTROL_FILE_ABSENCE_NOT_TREATED_AS_CASE_5", FALLBACK.UNKNOWN);
+      setDefault(report, "CONTROL_FILE_ABSENCE_BLOCKS_MOTION_TOUCH_NOT_VISIBLE_PLANET", FALLBACK.UNKNOWN);
+      setPriority(report, "SOUTH_PRIORITY_CONTROL_EVIDENCE_STATUS", "CONTROL_EVIDENCE_INSUFFICIENT");
+    }
 
-    report.CONTROL_FILE_RECEIPT = getValue(
-      report,
-      "CONTROL_FILE_RECEIPT",
-      controlFilePresent === "false" ? FALLBACK.EXPECTED_NOT_YET_BUILT : FALLBACK.UNKNOWN
-    );
+    setDefault(report, "CONTROL_FILE_HANDSHAKE_REQUIRED", getValue(report, "CONTROL_HANDSHAKE_EXPECTED", "true"));
+    setDefault(report, "CONTROL_FILE_HANDSHAKE_TARGET", EXPECTED_ROUTE_CONDUCTOR_FILE);
+    setDefault(report, "CONTROL_FILE_HANDSHAKE_FUNNEL_OWNER", CONTROL_FUNNEL_OWNER);
 
-    report.CONTROL_FILE_AUTHORITY_SOURCE = getValue(
-      report,
-      "CONTROL_FILE_AUTHORITY_SOURCE",
-      controlFilePresent === "false" ? FALLBACK.NOT_FOUND : FALLBACK.UNKNOWN
-    );
+    setDefault(report, "HEARTH_JS_CONTROL_FUNNEL_EXPECTED", "true");
+    setDefault(report, "HEARTH_JS_CONTROL_FUNNEL_FILE", EXPECTED_ROUTE_CONDUCTOR_FILE);
+    setDefault(report, "HEARTH_JS_LOADS_OR_RECOGNIZES_CONTROL_FILE", control.present === true ? "true" : FALLBACK.UNKNOWN);
 
-    report.CONTROL_FILE_EXPECTED_NOT_YET_BUILT = controlExpectedNotYetBuilt;
-    report.CONTROL_FILE_ABSENCE_EXPECTED = controlAbsenceExpected;
-    report.CONTROL_FILE_ABSENCE_NOT_TREATED_AS_CASE_5 = controlAbsenceNotCase5;
-    report.CONTROL_FILE_ABSENCE_BLOCKS_MOTION_TOUCH_NOT_VISIBLE_PLANET = controlBlocksMotionTouchNotVisible;
+    setDefault(report, "JS_INTEGRATION_FUNNEL", JS_INTEGRATION_FUNNEL);
+    setDefault(report, "JS_INDEX_FILE", EXPECTED_INDEX_FILE);
+    setDefault(report, "JS_INDEX_CONTRACT", EXPECTED_INDEX_CONTRACT);
+    setDefault(report, "JS_ROUTE_CONDUCTOR_FILE", EXPECTED_ROUTE_CONDUCTOR_FILE);
+    setDefault(report, "JS_ROUTE_CONDUCTOR_CONTRACT", EXPECTED_ROUTE_CONDUCTOR_CONTRACT);
+    setDefault(report, "JS_CONTROL_FILE", EXPECTED_CONTROL_FILE);
+    setDefault(report, "JS_CONTROL_CONTRACT", EXPECTED_CONTROL_CONTRACT);
+    setDefault(report, "JS_CANVAS_FILE", EXPECTED_CANVAS_FILE);
 
-    report.CONTROL_FILE_HANDSHAKE_STATUS = getValue(
-      report,
-      "CONTROL_FILE_HANDSHAKE_STATUS",
-      getValue(report, "CONTROL_HANDSHAKE_STATUS",
-        controlFilePresent === "false" ? FALLBACK.WAITING_CONTROL_FILE : FALLBACK.UNKNOWN
-      )
-    );
+    setDefault(report, "ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_REQUIRED", "true");
+    setDefault(report, "ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_TARGET", EXPECTED_CONTROL_FILE);
+    setDefault(report, "ROUTE_CONDUCTOR_CONTROL_FUNNEL_OWNER", CONTROL_FUNNEL_OWNER);
 
-    report.CONTROL_FILE_HANDSHAKE_REQUIRED = getValue(
-      report,
-      "CONTROL_FILE_HANDSHAKE_REQUIRED",
-      getValue(report, "CONTROL_HANDSHAKE_EXPECTED", "true")
-    );
+    setDefault(report, "VISIBLE_PLANET_ALLOWED_WITHOUT_CONTROLS", "true");
+    setDefault(report, "STATIC_PLANET_STATUS", "STATIC_VISIBLE_PLANET_ALLOWED");
 
-    report.CONTROL_FILE_HANDSHAKE_TARGET = getValue(
-      report,
-      "CONTROL_FILE_HANDSHAKE_TARGET",
-      EXPECTED_ROUTE_CONDUCTOR_FILE
-    );
+    setDefault(report, "PLANETARY_FILES_TRACK_STATUS", "TRACK_READY_FOR_PLANETARY_FILE_FOOTPRINTS");
+    setDefault(report, "PLANETARY_FINGERS_TRACK_STATUS", "TRACK_READY_FOR_FINGER_FILE_FOOTPRINTS");
+    setDefault(report, "PLANETARY_CANVAS_TRACK_STATUS", "TRACK_READY_FOR_CANVAS_FOOTPRINTS");
+    setDefault(report, "PLANETARY_VIEW_TRACK_STATUS", control.present === true ? "VISIBLE_PLANET_AND_CONTROL_TRACK_PRESENT" : "VISIBLE_PLANET_PRESENT_VIEW_CONTROLS_WAITING");
 
-    report.CONTROL_FILE_HANDSHAKE_FUNNEL_OWNER = getValue(
-      report,
-      "CONTROL_FILE_HANDSHAKE_FUNNEL_OWNER",
-      CONTROL_FUNNEL_OWNER
-    );
-
-    report.JS_INTEGRATION_FUNNEL = getValue(report, "JS_INTEGRATION_FUNNEL", JS_INTEGRATION_FUNNEL);
-    report.JS_INDEX_FILE = getValue(report, "JS_INDEX_FILE", EXPECTED_INDEX_FILE);
-    report.JS_INDEX_CONTRACT = getValue(report, "JS_INDEX_CONTRACT", EXPECTED_INDEX_CONTRACT);
-    report.JS_ROUTE_CONDUCTOR_FILE = getValue(report, "JS_ROUTE_CONDUCTOR_FILE", EXPECTED_ROUTE_CONDUCTOR_FILE);
-    report.JS_ROUTE_CONDUCTOR_CONTRACT = getValue(
-      report,
-      "JS_ROUTE_CONDUCTOR_CONTRACT",
-      EXPECTED_ROUTE_CONDUCTOR_CONTRACT
-    );
-    report.JS_CONTROL_FILE = getValue(report, "JS_CONTROL_FILE", EXPECTED_CONTROL_FILE);
-    report.JS_CONTROL_CONTRACT = getValue(report, "JS_CONTROL_CONTRACT", EXPECTED_CONTROL_CONTRACT);
-    report.JS_CANVAS_FILE = getValue(report, "JS_CANVAS_FILE", EXPECTED_CANVAS_FILE);
-
-    report.ROUTE_CONDUCTOR_CONTROL_INTEGRATION_STATUS = getValue(
-      report,
-      "ROUTE_CONDUCTOR_CONTROL_INTEGRATION_STATUS",
-      getValue(report, "HEARTH_JS_CONTROL_HANDSHAKE_STATUS",
-        controlFilePresent === "false" ? "ROUTE_CONDUCTOR_WAITING_CONTROL_HANDSHAKE" : FALLBACK.UNKNOWN
-      )
-    );
-
-    report.ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_REQUIRED = getValue(
-      report,
-      "ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_REQUIRED",
-      "true"
-    );
-
-    report.ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_TARGET = getValue(
-      report,
-      "ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_TARGET",
-      EXPECTED_CONTROL_FILE
-    );
-
-    report.ROUTE_CONDUCTOR_CONTROL_FUNNEL_OWNER = getValue(
-      report,
-      "ROUTE_CONDUCTOR_CONTROL_FUNNEL_OWNER",
-      CONTROL_FUNNEL_OWNER
-    );
-
-    report.PLANETARY_VIEW_CONTROL_STATUS = getValue(
-      report,
-      "PLANETARY_VIEW_CONTROL_STATUS",
-      getValue(report, "VIEW_CONTROL_STATUS",
-        controlFilePresent === "false" ? FALLBACK.WAITING_CONTROL_FILE : FALLBACK.UNKNOWN
-      )
-    );
-
-    report.PLANETARY_VIEW_TOUCH_STATUS = getValue(
-      report,
-      "PLANETARY_VIEW_TOUCH_STATUS",
-      controlFilePresent === "false"
-        ? "BLOCKED_BY_EXPECTED_CONTROL_ABSENCE"
-        : FALLBACK.UNKNOWN
-    );
-
-    report.PLANETARY_VIEW_DRAG_STATUS = getValue(
-      report,
-      "PLANETARY_VIEW_DRAG_STATUS",
-      getValue(report, "DRAG_STATUS",
-        controlFilePresent === "false" ? "BLOCKED_BY_EXPECTED_CONTROL_ABSENCE" : FALLBACK.UNKNOWN
-      )
-    );
-
-    report.PLANETARY_VIEW_MOTION_STATUS = getValue(
-      report,
-      "PLANETARY_VIEW_MOTION_STATUS",
-      getValue(report, "MOTION_TOUCH_STATUS",
-        controlFilePresent === "false" ? "BLOCKED_BY_EXPECTED_CONTROL_ABSENCE" : FALLBACK.UNKNOWN
-      )
-    );
-
-    report.PLANETARY_VIEW_ZOOM_STATUS = getValue(
-      report,
-      "PLANETARY_VIEW_ZOOM_STATUS",
-      controlFilePresent === "false" ? FALLBACK.WAITING_CONTROL_FILE : FALLBACK.UNKNOWN
-    );
-
-    report.PLANETARY_VIEW_INPUT_STATUS = getValue(
-      report,
-      "PLANETARY_VIEW_INPUT_STATUS",
-      controlFilePresent === "false" ? FALLBACK.WAITING_CONTROL_FILE : FALLBACK.UNKNOWN
-    );
-
-    report.PLANETARY_FILES_TRACK_STATUS = getValue(
-      report,
-      "PLANETARY_FILES_TRACK_STATUS",
-      "TRACK_READY_FOR_PLANETARY_FILE_FOOTPRINTS"
-    );
-
-    report.PLANETARY_FINGERS_TRACK_STATUS = getValue(
-      report,
-      "PLANETARY_FINGERS_TRACK_STATUS",
-      "TRACK_READY_FOR_FINGER_FILE_FOOTPRINTS"
-    );
-
-    report.PLANETARY_CANVAS_TRACK_STATUS = getValue(
-      report,
-      "PLANETARY_CANVAS_TRACK_STATUS",
-      "TRACK_READY_FOR_CANVAS_FOOTPRINTS"
-    );
-
-    report.PLANETARY_VIEW_TRACK_STATUS = getValue(
-      report,
-      "PLANETARY_VIEW_TRACK_STATUS",
-      controlFilePresent === "false" ? "VISIBLE_PLANET_PRESENT_VIEW_CONTROLS_WAITING" : FALLBACK.UNKNOWN
-    );
-
-    report.PLANETARY_CONTROL_RECOMMENDED_NEXT_FILE = getValue(
-      report,
-      "PLANETARY_CONTROL_RECOMMENDED_NEXT_FILE",
-      getValue(report, "PLANETARY_CONTROL_NEXT_CONFORMING_FILE", EXPECTED_CONTROL_FILE)
-    );
-
-    report.PLANETARY_CONTROL_RECOMMENDED_NEXT_ACTION = getValue(
+    setDefault(report, "PLANETARY_CONTROL_RECOMMENDED_NEXT_FILE", knownValue(report, "PLANETARY_CONTROL_NEXT_CONFORMING_FILE", EXPECTED_CONTROL_FILE));
+    setDefault(
       report,
       "PLANETARY_CONTROL_RECOMMENDED_NEXT_ACTION",
-      getValue(
-        report,
-        "PLANETARY_CONTROL_NEXT_CONFORMING_ACTION",
-        "BUILD_CONTROL_FILE_HANDSHAKE_AFTER_DIAGNOSTIC_TRACK_FORMALIZES_CONTROL_FOOTPRINT"
-      )
+      knownValue(report, "PLANETARY_CONTROL_NEXT_CONFORMING_ACTION", "BUILD_OR_VERIFY_CONTROL_FILE_HANDSHAKE_AFTER_PRIORITY_EVIDENCE_CHECK")
     );
-
-    if (controlExpectedNotYetBuilt === "true") {
-      addOutputNote(state, "SOUTH_FORMALIZED_PLANETARY_CONTROL_FOOTPRINT_FIELDS");
-    }
-
-    if (controlAbsenceNotCase5 === "true") {
-      addOutputNote(state, "SOUTH_CONFIRMED_CONTROL_ABSENCE_NOT_CASE_5");
-    }
-
-    if (controlBlocksMotionTouchNotVisible === "true") {
-      addOutputNote(state, "SOUTH_CONFIRMED_CONTROL_ABSENCE_BLOCKS_MOTION_TOUCH_NOT_VISIBLE_PLANET");
-    }
   }
 
   function projectLabCanvasBridgeFields(report, state) {
-    report.LAB_BRIDGE_SCHEMA_ACTIVE = getValue(report, "LAB_BRIDGE_SCHEMA_ACTIVE", "true");
-    report.LAB_BRIDGE_STATUS = getValue(report, "LAB_BRIDGE_STATUS", "REPORT_OUTPUT_ONLY");
-    report.DIAGNOSTIC_LAB_MIRROR_STATUS = getValue(
-      report,
-      "DIAGNOSTIC_LAB_MIRROR_STATUS",
-      "DIAGNOSTIC_REPORT_MIRRORS_LAB_CANVAS_BRIDGE_LANGUAGE"
-    );
+    setDefault(report, "LAB_BRIDGE_SCHEMA_ACTIVE", "true");
+    setDefault(report, "LAB_BRIDGE_STATUS", "REPORT_OUTPUT_ONLY");
 
-    report.LAB_TO_CANVAS_SHARED_LANGUAGE_STATUS = getValue(
-      report,
-      "LAB_TO_CANVAS_SHARED_LANGUAGE_STATUS",
-      "SHARED_LANGUAGE_PRESERVED_AS_REPORT_FIELDS"
-    );
+    setDefault(report, "DIAGNOSTIC_LAB_MIRROR_STATUS", "DIAGNOSTIC_REPORT_MIRRORS_LAB_CANVAS_BRIDGE_LANGUAGE");
+    setDefault(report, "LAB_TO_CANVAS_SHARED_LANGUAGE_STATUS", "SHARED_LANGUAGE_PRESERVED_AS_REPORT_FIELDS");
+    setDefault(report, "LAB_CANVAS_AUTHORITY_BOUNDARY_STATUS", "SOUTH_REPORTS_ONLY_DOES_NOT_AUTHORIZE_LAB_OR_CANVAS");
+    setDefault(report, "LAB_CANVAS_BRIDGE_NOT_AUTHORITY", "true");
+    setDefault(report, "LAB_CANVAS_BRIDGE_OUTPUT_ONLY", "true");
 
-    report.LAB_CANVAS_AUTHORITY_BOUNDARY_STATUS = getValue(
-      report,
-      "LAB_CANVAS_AUTHORITY_BOUNDARY_STATUS",
-      "SOUTH_REPORTS_ONLY_DOES_NOT_AUTHORIZE_LAB_OR_CANVAS"
-    );
+    setDefault(report, "BISHOP_BRIDGE_SCHEMA_ACTIVE", "true");
+    setDefault(report, "BISHOP_BRIDGE_STATUS", "REPORT_OUTPUT_ONLY");
+    setDefault(report, "BISHOP_LANE_EXPECTED_COUNT", "4");
+    setDefault(report, "WEST_TRUSTS_BISHOP_HUBS_ONLY", "true");
+    setDefault(report, "BISHOP_WEST_AUTHORITY_BOUNDARY_PRESERVED", "true");
 
-    report.LAB_CANVAS_BRIDGE_NOT_AUTHORITY = getValue(
-      report,
-      "LAB_CANVAS_BRIDGE_NOT_AUTHORITY",
-      "true"
-    );
-
-    report.LAB_CANVAS_BRIDGE_OUTPUT_ONLY = getValue(
-      report,
-      "LAB_CANVAS_BRIDGE_OUTPUT_ONLY",
-      "true"
-    );
-
-    report.BISHOP_BRIDGE_SCHEMA_ACTIVE = getValue(report, "BISHOP_BRIDGE_SCHEMA_ACTIVE", "true");
-    report.BISHOP_BRIDGE_STATUS = getValue(
-      report,
-      "BISHOP_BRIDGE_STATUS",
-      "REPORT_OUTPUT_ONLY"
-    );
-
-    report.BISHOP_LANE_EXPECTED_COUNT = getValue(report, "BISHOP_LANE_EXPECTED_COUNT", "4");
-    report.WEST_TRUSTS_BISHOP_HUBS_ONLY = getValue(
-      report,
-      "WEST_TRUSTS_BISHOP_HUBS_ONLY",
-      "true"
-    );
-
-    report.BISHOP_WEST_AUTHORITY_BOUNDARY_PRESERVED = getValue(
-      report,
-      "BISHOP_WEST_AUTHORITY_BOUNDARY_PRESERVED",
-      "true"
-    );
-
-    report.FOUR_WAY_CANVAS_HANDOFF_SCHEMA_ACTIVE = getValue(
-      report,
-      "FOUR_WAY_CANVAS_HANDOFF_SCHEMA_ACTIVE",
-      "true"
-    );
-
-    report.TWO_CYCLE_PREMISE_PRESERVED = getValue(
-      report,
-      "TWO_CYCLE_PREMISE_PRESERVED",
-      "true"
-    );
-
-    report.SECOND_CYCLE_CANVAS_HANDOFF_PRESERVED = getValue(
-      report,
-      "SECOND_CYCLE_CANVAS_HANDOFF_PRESERVED",
-      "true"
-    );
-
-    report.FOUR_WAY_CANVAS_HANDOFF_STATUS = getValue(
-      report,
-      "FOUR_WAY_CANVAS_HANDOFF_STATUS",
-      getValue(report, "CANVAS_HANDOFF_STATUS", "REPORT_OUTPUT_WAITING_WEST_OR_NORTH_EVIDENCE")
-    );
+    setDefault(report, "FOUR_WAY_CANVAS_HANDOFF_SCHEMA_ACTIVE", "true");
+    setDefault(report, "TWO_CYCLE_PREMISE_PRESERVED", "true");
+    setDefault(report, "SECOND_CYCLE_CANVAS_HANDOFF_PRESERVED", "true");
+    setDefault(report, "FOUR_WAY_CANVAS_HANDOFF_STATUS", knownValue(report, "CANVAS_HANDOFF_STATUS", "REPORT_OUTPUT_WAITING_WEST_OR_NORTH_EVIDENCE"));
 
     addOutputNote(state, "SOUTH_PRESERVED_LAB_CANVAS_BRIDGE_REPORT_LANGUAGE");
     addOutputNote(state, "SOUTH_PRESERVED_BISHOP_BRIDGE_REPORT_LANGUAGE");
@@ -1311,161 +1256,90 @@
   }
 
   function projectBishopQueenCanvasFields(report, state) {
-    const servedRoute = getValue(report, "SERVED_ROUTE_CONDUCTOR_CONTRACT", FALLBACK.UNKNOWN);
-    const renderedRoute = getValue(report, "ROUTE_CONDUCTOR_CONTRACT", FALLBACK.UNKNOWN);
+    const route = detectRouteConductorRecognition(report);
+    const proof = detectVisibleProof(report);
+    const control = detectControlPriority(report);
 
-    const v99Recognized =
-      servedRoute === EXPECTED_ROUTE_CONDUCTOR_CONTRACT ||
-      renderedRoute === EXPECTED_ROUTE_CONDUCTOR_CONTRACT ||
-      notesContain(report, "ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNIZED") ||
-      notesContain(report, "VISIBLE_GLOBE_PROOF_READY_QUEEN_HANDSHAKE_ACCEPTED") ||
-      notesContain(report, "WAITING_CARDINAL_WEST_BISHOP_AUTHORITY") ||
-      notesContain(report, "WAITING_CANVAS_RECEIVER_BISHOP_AUTHORITY_OR_VISIBLE_PROOF");
+    const queenMarkerAccepted = containsAny(report, QUEEN_ACCEPTANCE_MARKERS);
+    const queenAccepted = Boolean((route.recognized && proof.ready) || queenMarkerAccepted);
 
-    const queenAccepted =
-      notesContain(report, "VISIBLE_GLOBE_PROOF_READY_QUEEN_HANDSHAKE_ACCEPTED") ||
-      getValue(report, "QUEEN_HANDSHAKE_ACCEPTED", FALLBACK.UNKNOWN) === "true";
+    setDefault(report, "BISHOP_QUEEN_CANVAS_SCHEMA_ACTIVE", route.recognized || queenMarkerAccepted ? "true" : FALLBACK.UNKNOWN);
 
-    report.BISHOP_QUEEN_CANVAS_SCHEMA_ACTIVE = getValue(
-      report,
-      "BISHOP_QUEEN_CANVAS_SCHEMA_ACTIVE",
-      "true"
-    );
+    if (route.recognized || queenMarkerAccepted) {
+      setPriority(report, "BISHOP_QUEEN_CANVAS_RECOGNITION_STATUS", "RECOGNIZED_BY_NORTH_EAST_WEST_PRIORITY");
+      setPriority(report, "BISHOP_QUEEN_CANVAS_FUNNEL_STATUS", "FUNNEL_RECOGNIZED_CURRENT_SPREAD_OR_ACCEPTED_LINEAGE");
+      setDefault(report, "BISHOP_QUEEN_CANVAS_AUTHORITY_SOURCE", firstKnown(
+        getValue(report, "ROUTE_CONDUCTOR_AUTHORITY_SOURCE", FALLBACK.UNKNOWN),
+        EXPECTED_ROUTE_CONDUCTOR_FILE
+      ));
 
-    report.BISHOP_QUEEN_CANVAS_RECOGNITION_STATUS = getValue(
-      report,
-      "BISHOP_QUEEN_CANVAS_RECOGNITION_STATUS",
-      v99Recognized ? "RECOGNIZED" : FALLBACK.UNKNOWN
-    );
+      setPriority(report, "ROUTE_CONDUCTOR_V9_9_PRIMARY_NOT_TREATED_AS_CASE_5", "true");
+      setPriority(report, "ROUTE_CONDUCTOR_V9_9_BISHOP_QUEEN_CANVAS_RECOGNIZED", "true");
+      setPriority(report, "ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED", "true");
+      setPriority(report, "PRIMARY_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED", "true");
 
-    report.BISHOP_QUEEN_CANVAS_FUNNEL_STATUS = getValue(
-      report,
-      "BISHOP_QUEEN_CANVAS_FUNNEL_STATUS",
-      v99Recognized ? "FUNNEL_RECOGNIZED" : FALLBACK.UNKNOWN
-    );
+      if (route.scriptTransition || route.recognized) {
+        setPriority(report, "ROUTE_CONDUCTOR_V9_7_SCRIPT_CACHE_ACCEPTED", "true");
+      }
 
-    report.BISHOP_QUEEN_CANVAS_AUTHORITY_SOURCE = getValue(
-      report,
-      "BISHOP_QUEEN_CANVAS_AUTHORITY_SOURCE",
-      v99Recognized ? EXPECTED_ROUTE_CONDUCTOR_FILE : FALLBACK.UNKNOWN
-    );
+      if (route.lineage || route.recognized) {
+        setPriority(report, "ROUTE_CONDUCTOR_V9_6_PRIMARY_NOT_TREATED_AS_CASE_5", "true");
+        setPriority(report, "ROUTE_CONDUCTOR_V9_6_COMPATIBILITY_ACCEPTED", "true");
+        setPriority(report, "ROUTE_CONDUCTOR_V9_5_PRIMARY_NOT_TREATED_AS_CASE_5", "true");
+        setPriority(report, "ROUTE_CONDUCTOR_V9_5_COMPATIBILITY_ACCEPTED", "true");
+        setPriority(report, "ROUTE_CONDUCTOR_V9_5_LINEAGE_ACCEPTED", "true");
+        setPriority(report, "ROUTE_CONDUCTOR_V9_4_LINEAGE_ACCEPTED", "true");
+      }
+    } else {
+      setDefault(report, "BISHOP_QUEEN_CANVAS_RECOGNITION_STATUS", FALLBACK.UNKNOWN);
+      setDefault(report, "BISHOP_QUEEN_CANVAS_FUNNEL_STATUS", FALLBACK.UNKNOWN);
+      setDefault(report, "BISHOP_QUEEN_CANVAS_AUTHORITY_SOURCE", FALLBACK.UNKNOWN);
+    }
 
-    report.QUEEN_HANDSHAKE_STATUS = getValue(
-      report,
-      "QUEEN_HANDSHAKE_STATUS",
-      queenAccepted ? "QUEEN_HANDSHAKE_ACCEPTED" : FALLBACK.UNKNOWN
-    );
+    if (queenAccepted) {
+      setPriority(report, "QUEEN_HANDSHAKE_STATUS", control.present === true
+        ? "QUEEN_HANDSHAKE_ACCEPTED_CONTROL_AND_VISIBLE_PROOF_PRIORITY"
+        : "QUEEN_HANDSHAKE_ACCEPTED_VISIBLE_PROOF_PRIORITY");
+      setPriority(report, "QUEEN_HANDSHAKE_ACCEPTED", "true");
+      setPriority(report, "QUEEN_VISIBLE_GLOBE_PROOF_READY", proof.ready ? "true" : FALLBACK.UNKNOWN);
+      setPriority(report, "QUEEN_CANVAS_RECOGNITION_STATUS", "QUEEN_RECOGNIZES_RENDERED_VISIBLE_GLOBE_PROOF");
+      setPriority(report, "SOUTH_PRIORITY_QUEEN_EVIDENCE_STATUS", "QUEEN_ACCEPTANCE_PROJECTED_FROM_NORTH_WEST_PROOF");
+      addOutputNote(state, "SOUTH_PROJECTED_QUEEN_ACCEPTANCE_FROM_PRIORITY_EVIDENCE");
+    } else if (route.recognized) {
+      setDefault(report, "QUEEN_HANDSHAKE_STATUS", "QUEEN_RECOGNITION_PRESENT_WAITING_EXPLICIT_HANDSHAKE");
+      setDefault(report, "QUEEN_HANDSHAKE_ACCEPTED", FALLBACK.UNKNOWN);
+      setDefault(report, "QUEEN_VISIBLE_GLOBE_PROOF_READY", proof.ready ? "true" : FALLBACK.UNKNOWN);
+      setDefault(report, "QUEEN_CANVAS_RECOGNITION_STATUS", "QUEEN_RECOGNITION_PRESENT");
+      setPriority(report, "SOUTH_PRIORITY_QUEEN_EVIDENCE_STATUS", "QUEEN_RECOGNITION_PRESENT_HANDSHAKE_NOT_EXPLICIT");
+    } else {
+      setDefault(report, "QUEEN_HANDSHAKE_STATUS", FALLBACK.UNKNOWN);
+      setDefault(report, "QUEEN_HANDSHAKE_ACCEPTED", FALLBACK.UNKNOWN);
+      setDefault(report, "QUEEN_VISIBLE_GLOBE_PROOF_READY", proof.ready ? "true" : FALLBACK.UNKNOWN);
+      setDefault(report, "QUEEN_CANVAS_RECOGNITION_STATUS", FALLBACK.UNKNOWN);
+      setPriority(report, "SOUTH_PRIORITY_QUEEN_EVIDENCE_STATUS", "QUEEN_EVIDENCE_INSUFFICIENT");
+    }
 
-    report.QUEEN_HANDSHAKE_ACCEPTED = getValue(
-      report,
-      "QUEEN_HANDSHAKE_ACCEPTED",
-      queenAccepted ? "true" : FALLBACK.UNKNOWN
-    );
+    setDefault(report, "BISHOP_AUTHORITY_STATUS", containsAny(report, ["NORTH_READS_BISHOP_HUBS_AS_OPAQUE_AUTHORITIES_ONLY"])
+      ? "BISHOP_HUBS_OPAQUE_READ_ONLY_PRIORITY_PRESERVED"
+      : FALLBACK.UNKNOWN);
 
-    report.QUEEN_VISIBLE_GLOBE_PROOF_READY = getValue(
-      report,
-      "QUEEN_VISIBLE_GLOBE_PROOF_READY",
-      getValue(report, "VISIBLE_PLANET_PROOF_READY", FALLBACK.UNKNOWN)
-    );
+    setDefault(report, "BISHOP_POINTER_FINGER_LANGUAGE_ACTIVE", "true");
+    setDefault(report, "BISHOP_POINTER_FINGER_AUTHORITY_STATUS", "BISHOP_STATUS_ADMITTED_AS_POINTER_FINGER_LANGUAGE");
+    setDefault(report, "BISHOP_CHILD_FILE_KNOWLEDGE_BOUNDARY", "OWNED_BY_BISHOPS_NOT_DIAGNOSTIC_SOUTH");
+    setDefault(report, "BISHOP_HUBS_OPAQUE_TO_DIAGNOSTIC", "true");
 
-    report.QUEEN_CANVAS_RECOGNITION_STATUS = getValue(
-      report,
-      "QUEEN_CANVAS_RECOGNITION_STATUS",
-      v99Recognized ? "QUEEN_RECOGNIZES_CANVAS_RECEIVER" : FALLBACK.UNKNOWN
-    );
+    setDefault(report, "CANVAS_RECEIVER_BISHOP_AUTHORITY_STATUS", containsAny(report, ["WAITING_CANVAS_RECEIVER_BISHOP_AUTHORITY_OR_VISIBLE_PROOF"])
+      ? "WAITING_CANVAS_RECEIVER_BISHOP_AUTHORITY_OR_VISIBLE_PROOF"
+      : route.recognized
+        ? "CANVAS_RECEIVER_BISHOP_AUTHORITY_RECOGNIZED_AS_ROUTE_FUNNEL_LANGUAGE"
+        : FALLBACK.UNKNOWN);
 
-    report.BISHOP_AUTHORITY_STATUS = getValue(
-      report,
-      "BISHOP_AUTHORITY_STATUS",
-      notesContain(report, "WAITING_CARDINAL_WEST_BISHOP_AUTHORITY")
-        ? "WAITING_CARDINAL_WEST_BISHOP_AUTHORITY"
-        : FALLBACK.UNKNOWN
-    );
+    setDefault(report, "CANVAS_RECEIVER_VISIBLE_PROOF_STATUS", proof.ready ? "VISIBLE_PROOF_READY_PRIORITY_CONFIRMED" : FALLBACK.UNKNOWN);
+    setDefault(report, "CANVAS_RECEIVER_RECOGNITION_FUNNEL_STATUS", route.recognized ? "CANVAS_RECEIVER_FUNNEL_RECOGNIZED" : FALLBACK.UNKNOWN);
 
-    report.BISHOP_POINTER_FINGER_LANGUAGE_ACTIVE = getValue(
-      report,
-      "BISHOP_POINTER_FINGER_LANGUAGE_ACTIVE",
-      "true"
-    );
-
-    report.BISHOP_POINTER_FINGER_AUTHORITY_STATUS = getValue(
-      report,
-      "BISHOP_POINTER_FINGER_AUTHORITY_STATUS",
-      "BISHOP_STATUS_ADMITTED_AS_POINTER_FINGER_LANGUAGE"
-    );
-
-    report.BISHOP_CHILD_FILE_KNOWLEDGE_BOUNDARY = getValue(
-      report,
-      "BISHOP_CHILD_FILE_KNOWLEDGE_BOUNDARY",
-      "OWNED_BY_BISHOPS_NOT_DIAGNOSTIC_SOUTH"
-    );
-
-    report.BISHOP_HUBS_OPAQUE_TO_DIAGNOSTIC = getValue(
-      report,
-      "BISHOP_HUBS_OPAQUE_TO_DIAGNOSTIC",
-      "true"
-    );
-
-    report.CANVAS_RECEIVER_BISHOP_AUTHORITY_STATUS = getValue(
-      report,
-      "CANVAS_RECEIVER_BISHOP_AUTHORITY_STATUS",
-      notesContain(report, "WAITING_CANVAS_RECEIVER_BISHOP_AUTHORITY_OR_VISIBLE_PROOF")
-        ? "WAITING_CANVAS_RECEIVER_BISHOP_AUTHORITY_OR_VISIBLE_PROOF"
-        : FALLBACK.UNKNOWN
-    );
-
-    report.CANVAS_RECEIVER_VISIBLE_PROOF_STATUS = getValue(
-      report,
-      "CANVAS_RECEIVER_VISIBLE_PROOF_STATUS",
-      getValue(report, "VISIBLE_PLANET_PROOF_READY", FALLBACK.UNKNOWN)
-    );
-
-    report.CANVAS_RECEIVER_RECOGNITION_FUNNEL_STATUS = getValue(
-      report,
-      "CANVAS_RECEIVER_RECOGNITION_FUNNEL_STATUS",
-      v99Recognized ? "CANVAS_RECEIVER_FUNNEL_RECOGNIZED" : FALLBACK.UNKNOWN
-    );
-
-    report.ROUTE_CONDUCTOR_V9_9_PRIMARY_NOT_TREATED_AS_CASE_5 = getValue(
-      report,
-      "ROUTE_CONDUCTOR_V9_9_PRIMARY_NOT_TREATED_AS_CASE_5",
-      v99Recognized ? "true" : FALLBACK.UNKNOWN
-    );
-
-    report.ROUTE_CONDUCTOR_V9_9_BISHOP_QUEEN_CANVAS_RECOGNIZED = getValue(
-      report,
-      "ROUTE_CONDUCTOR_V9_9_BISHOP_QUEEN_CANVAS_RECOGNIZED",
-      v99Recognized ? "true" : FALLBACK.UNKNOWN
-    );
-
-    report.ROUTE_CONDUCTOR_V9_6_COMPATIBILITY_ACCEPTED = getValue(
-      report,
-      "ROUTE_CONDUCTOR_V9_6_COMPATIBILITY_ACCEPTED",
-      servedRoute === COMPAT_ROUTE_CONDUCTOR_CONTRACT ||
-      renderedRoute === COMPAT_ROUTE_CONDUCTOR_CONTRACT
-        ? "true"
-        : FALLBACK.UNKNOWN
-    );
-
-    report.ROUTE_CONDUCTOR_V9_5_LINEAGE_ACCEPTED = getValue(
-      report,
-      "ROUTE_CONDUCTOR_V9_5_LINEAGE_ACCEPTED",
-      servedRoute === LINEAGE_ROUTE_CONDUCTOR_CONTRACT ||
-      renderedRoute === LINEAGE_ROUTE_CONDUCTOR_CONTRACT
-        ? "true"
-        : FALLBACK.UNKNOWN
-    );
-
-    report.ROUTE_CONDUCTOR_V9_4_LINEAGE_ACCEPTED = getValue(
-      report,
-      "ROUTE_CONDUCTOR_V9_4_LINEAGE_ACCEPTED",
-      servedRoute === PRIOR_ROUTE_CONDUCTOR_CONTRACT ||
-      renderedRoute === PRIOR_ROUTE_CONDUCTOR_CONTRACT
-        ? "true"
-        : getValue(report, "ROUTE_CONDUCTOR_V9_4_LINEAGE_ACCEPTED", FALLBACK.UNKNOWN)
-    );
-
+    setPriority(report, "SOUTH_PRIORITY_DERELICT_FIX_STATUS", "ACTIVE_UNKNOWN_FALLBACK_NO_LONGER_OVERRIDES_PRIORITY_EVIDENCE");
     addOutputNote(state, "SOUTH_PRESERVED_BISHOP_QUEEN_CANVAS_REPORT_LANGUAGE");
+    addOutputNote(state, "SOUTH_DERELICT_FIX_PRIORITY_PROJECTION_APPLIED");
   }
 
   function preserveNewsFibonacciFields(report, source) {
@@ -1486,58 +1360,30 @@
     for (const field of [...newsFields, ...fibFields]) {
       const incoming = getValue(source, field, FALLBACK.UNKNOWN);
 
-      if (isKnown(incoming)) {
+      if (!unknownish(incoming)) {
         report[field] = incoming;
       }
     }
 
-    report.NEWS_ALIGNMENT_PROTOCOL = getValue(
+    setDefault(
       report,
       "NEWS_ALIGNMENT_PROTOCOL",
-      "NORTH_START -> LAB_AUTHORITY_READ -> EAST_SOURCE -> WEST_RENDERED -> MACRO_WEST_BRIDGE_READ -> CANVAS_LOCAL_STATION_READ -> NORTH_ADJUDICATION -> SOUTH_OUTPUT -> NORTH_VERIFY"
+      "NORTH_START -> LAB_AUTHORITY_READ -> EAST_SOURCE -> WEST_RENDERED -> MODERN_CONTRACT_ACCEPTANCE -> MACRO_WEST_BRIDGE_READ -> CANVAS_LOCAL_STATION_READ -> NORTH_ADJUDICATION -> SOUTH_OUTPUT -> NORTH_VERIFY"
     );
 
-    report.NEWS_ALIGNMENT_STATUS = getValue(
-      report,
-      "NEWS_ALIGNMENT_STATUS",
-      FALLBACK.UNKNOWN
-    );
+    setDefault(report, "NEWS_ALIGNMENT_STATUS", FALLBACK.UNKNOWN);
+    setDefault(report, "NEWS_ALIGNMENT_SCORE", FALLBACK.UNKNOWN);
+    setDefault(report, "NEWS_ALIGNMENT_FIRST_FAILED_STAGE", FALLBACK.UNKNOWN);
 
-    report.NEWS_ALIGNMENT_SCORE = getValue(
-      report,
-      "NEWS_ALIGNMENT_SCORE",
-      FALLBACK.UNKNOWN
-    );
-
-    report.NEWS_ALIGNMENT_FIRST_FAILED_STAGE = getValue(
-      report,
-      "NEWS_ALIGNMENT_FIRST_FAILED_STAGE",
-      FALLBACK.UNKNOWN
-    );
-
-    report.FIBONACCI_SYNCHRONIZATION_PROTOCOL = getValue(
+    setDefault(
       report,
       "FIBONACCI_SYNCHRONIZATION_PROTOCOL",
-      "F1 target context -> F2 child validation -> F3 EAST source evidence -> F5 WEST rendered evidence -> F8 NORTH adjudication -> F13 SOUTH packet output and Macro West bridge visibility -> F21 no-claim receiver boundary"
+      "F1 target context -> F2 child validation -> F3 EAST source evidence -> F5 WEST rendered evidence -> F8 NORTH adjudication -> F13 SOUTH packet output and bridge visibility -> F21 no-claim receiver boundary"
     );
 
-    report.FIBONACCI_SYNCHRONIZATION_STATUS = getValue(
-      report,
-      "FIBONACCI_SYNCHRONIZATION_STATUS",
-      FALLBACK.UNKNOWN
-    );
-
-    report.FIBONACCI_SYNCHRONIZATION_SCORE = getValue(
-      report,
-      "FIBONACCI_SYNCHRONIZATION_SCORE",
-      FALLBACK.UNKNOWN
-    );
-
-    report.FIBONACCI_SYNCHRONIZATION_FIRST_FAILED_STAGE = getValue(
-      report,
-      "FIBONACCI_SYNCHRONIZATION_FIRST_FAILED_STAGE",
-      FALLBACK.UNKNOWN
-    );
+    setDefault(report, "FIBONACCI_SYNCHRONIZATION_STATUS", FALLBACK.UNKNOWN);
+    setDefault(report, "FIBONACCI_SYNCHRONIZATION_SCORE", FALLBACK.UNKNOWN);
+    setDefault(report, "FIBONACCI_SYNCHRONIZATION_FIRST_FAILED_STAGE", FALLBACK.UNKNOWN);
   }
 
   function updateNorthVerdictProjection(report, options, meaningPreserved) {
@@ -1547,7 +1393,7 @@
 
     const verdict = isObject(incomingVerdict) ? clonePlain(incomingVerdict) : {};
 
-    verdict.schema = verdict.schema || "HEARTH_DIAGNOSTIC_NORTH_LAB_CANVAS_BISHOP_QUEEN_VERDICT_SCHEMA_v5";
+    verdict.schema = verdict.schema || "HEARTH_DIAGNOSTIC_NORTH_BISHOP_QUEEN_PRIORITY_VERDICT_SCHEMA_v6";
     verdict.northContract = verdict.northContract || getValue(report, "NORTH_CONTRACT", NORTH_ANCHOR_CONTRACT);
     verdict.northReceipt = verdict.northReceipt || getValue(report, "NORTH_RECEIPT", NORTH_ANCHOR_RECEIPT);
     verdict.previousNorthContract = verdict.previousNorthContract || getValue(report, "PREVIOUS_NORTH_CONTRACT", PREVIOUS_NORTH_ANCHOR_CONTRACT);
@@ -1565,15 +1411,18 @@
     verdict.recommendedNextFile = verdict.recommendedNextFile || getValue(report, "RECOMMENDED_NEXT_FILE", FALLBACK.UNKNOWN);
     verdict.recommendedNextAction = verdict.recommendedNextAction || getValue(report, "RECOMMENDED_NEXT_ACTION", FALLBACK.UNKNOWN);
 
-    verdict.bishopQueenCanvasConformance = {
+    verdict.southPriorityProjection = {
       southContract: CONTRACT,
       southReceipt: RECEIPT,
       southImplementationContract: IMPLEMENTATION_CONTRACT,
       southImplementationReceipt: IMPLEMENTATION_RECEIPT,
-      bishopQueenCanvasSchemaActive: getValue(report, "BISHOP_QUEEN_CANVAS_SCHEMA_ACTIVE", "true"),
-      bishopPointerFingerLanguageActive: getValue(report, "BISHOP_POINTER_FINGER_LANGUAGE_ACTIVE", "true"),
+      controlEvidenceStatus: getValue(report, "SOUTH_PRIORITY_CONTROL_EVIDENCE_STATUS", FALLBACK.UNKNOWN),
+      queenEvidenceStatus: getValue(report, "SOUTH_PRIORITY_QUEEN_EVIDENCE_STATUS", FALLBACK.UNKNOWN),
+      derelictFixStatus: getValue(report, "SOUTH_PRIORITY_DERELICT_FIX_STATUS", FALLBACK.UNKNOWN),
+      controlFilePresent: getValue(report, "CONTROL_FILE_PRESENT", FALLBACK.UNKNOWN),
+      controlFileStatus: getValue(report, "CONTROL_FILE_STATUS", FALLBACK.UNKNOWN),
       queenHandshakeStatus: getValue(report, "QUEEN_HANDSHAKE_STATUS", FALLBACK.UNKNOWN),
-      routeConductorV99Recognized: getValue(report, "ROUTE_CONDUCTOR_V9_9_BISHOP_QUEEN_CANVAS_RECOGNIZED", FALLBACK.UNKNOWN),
+      routeConductorBishopQueenRecognized: getValue(report, "ROUTE_CONDUCTOR_V9_9_BISHOP_QUEEN_CANVAS_RECOGNIZED", FALLBACK.UNKNOWN),
       packetFormattingAuthority: true,
       finalPrimaryCaseAuthority: false,
       finalRecommendationAuthority: false,
@@ -1625,14 +1474,6 @@
 
     const report = clonePlain(source);
 
-    for (const field of ALL_PACKET_FIELDS) {
-      if (field === "NORTH_VERDICT") continue;
-
-      if (!Object.prototype.hasOwnProperty.call(report, field)) {
-        report[field] = getValue(source, field, FALLBACK.UNKNOWN);
-      }
-    }
-
     report.PACKET_NAME = getValue(source, "PACKET_NAME", REPORT_PACKET);
     report.TARGET_ROUTE = getValue(source, "TARGET_ROUTE", TARGET_ROUTE);
     report.DIAGNOSTIC_ROUTE = getValue(source, "DIAGNOSTIC_ROUTE", DIAGNOSTIC_ROUTE);
@@ -1641,7 +1482,7 @@
     report.NORTH_CONTRACT = getValue(source, "NORTH_CONTRACT", NORTH_ANCHOR_CONTRACT);
     report.NORTH_RECEIPT = getValue(source, "NORTH_RECEIPT", NORTH_ANCHOR_RECEIPT);
     report.PREVIOUS_NORTH_CONTRACT = getValue(source, "PREVIOUS_NORTH_CONTRACT", PREVIOUS_NORTH_ANCHOR_CONTRACT);
-    report.BASELINE_NORTH_CONTRACT = getValue(source, "BASELINE_NORTH_CONTRACT", PREVIOUS_NORTH_ANCHOR_CONTRACT);
+    report.BASELINE_NORTH_CONTRACT = getValue(source, "BASELINE_NORTH_CONTRACT", BASELINE_NORTH_ANCHOR_CONTRACT);
 
     report.SOUTH_IMPLEMENTATION_CONTRACT = IMPLEMENTATION_CONTRACT;
     report.SOUTH_IMPLEMENTATION_RECEIPT = IMPLEMENTATION_RECEIPT;
@@ -1653,70 +1494,13 @@
     report.SOUTH_PREVIOUS_ANCHOR_NORTH_CONTRACT = PREVIOUS_NORTH_ANCHOR_CONTRACT;
     report.SOUTH_PREVIOUS_ANCHOR_NORTH_RECEIPT = PREVIOUS_NORTH_ANCHOR_RECEIPT;
 
-    report.CURRENT_EXPECTED_ROUTE_CONDUCTOR_CONTRACT = getValue(
-      source,
-      "CURRENT_EXPECTED_ROUTE_CONDUCTOR_CONTRACT",
-      EXPECTED_ROUTE_CONDUCTOR_CONTRACT
-    );
+    setDefault(report, "CURRENT_EXPECTED_ROUTE_CONDUCTOR_CONTRACT", EXPECTED_ROUTE_CONDUCTOR_CONTRACT);
+    setDefault(report, "SCRIPT_CACHE_ROUTE_CONDUCTOR_CONTRACT", SCRIPT_CACHE_ROUTE_CONDUCTOR_CONTRACT);
+    setDefault(report, "COMPAT_ROUTE_CONDUCTOR_CONTRACT", COMPAT_ROUTE_CONDUCTOR_CONTRACT);
+    setDefault(report, "PRIOR_ROUTE_CONDUCTOR_CONTRACT", PRIOR_ROUTE_CONDUCTOR_CONTRACT);
 
-    report.COMPAT_ROUTE_CONDUCTOR_CONTRACT = getValue(
-      source,
-      "COMPAT_ROUTE_CONDUCTOR_CONTRACT",
-      COMPAT_ROUTE_CONDUCTOR_CONTRACT
-    );
-
-    report.PRIOR_ROUTE_CONDUCTOR_CONTRACT = getValue(
-      source,
-      "PRIOR_ROUTE_CONDUCTOR_CONTRACT",
-      PRIOR_ROUTE_CONDUCTOR_CONTRACT
-    );
-
-    const servedRoute = getValue(report, "SERVED_ROUTE_CONDUCTOR_CONTRACT", FALLBACK.UNKNOWN);
-
-    if (servedRoute === EXPECTED_ROUTE_CONDUCTOR_CONTRACT) {
-      report.ROUTE_CONDUCTOR_V9_9_PRIMARY_NOT_TREATED_AS_CASE_5 = getValue(
-        report,
-        "ROUTE_CONDUCTOR_V9_9_PRIMARY_NOT_TREATED_AS_CASE_5",
-        "true"
-      );
-      report.ROUTE_CONDUCTOR_V9_9_BISHOP_QUEEN_CANVAS_RECOGNIZED = getValue(
-        report,
-        "ROUTE_CONDUCTOR_V9_9_BISHOP_QUEEN_CANVAS_RECOGNIZED",
-        "true"
-      );
-    }
-
-    if (servedRoute === COMPAT_ROUTE_CONDUCTOR_CONTRACT) {
-      report.ROUTE_CONDUCTOR_V9_6_COMPATIBILITY_ACCEPTED = getValue(
-        report,
-        "ROUTE_CONDUCTOR_V9_6_COMPATIBILITY_ACCEPTED",
-        "true"
-      );
-    }
-
-    if (servedRoute === LINEAGE_ROUTE_CONDUCTOR_CONTRACT) {
-      report.ROUTE_CONDUCTOR_V9_5_LINEAGE_ACCEPTED = getValue(
-        report,
-        "ROUTE_CONDUCTOR_V9_5_LINEAGE_ACCEPTED",
-        "true"
-      );
-    }
-
-    if (servedRoute === PRIOR_ROUTE_CONDUCTOR_CONTRACT) {
-      report.ROUTE_CONDUCTOR_V9_4_LINEAGE_ACCEPTED = getValue(
-        report,
-        "ROUTE_CONDUCTOR_V9_4_LINEAGE_ACCEPTED",
-        "true"
-      );
-    }
-
-    for (const field of NO_CLAIM_FIELDS) {
-      report[field] = "false";
-    }
-
-    for (const field of UPPER_NO_CLAIM_FIELDS) {
-      report[field] = "false";
-    }
+    for (const field of NO_CLAIM_FIELDS) report[field] = "false";
+    for (const field of UPPER_NO_CLAIM_FIELDS) report[field] = "false";
 
     report.SECONDARY_EVIDENCE_NOTES = serializeEvidenceNotes(source, state, options || {});
     report.NORTH_SECONDARY_EVIDENCE_NOTES = getValue(
@@ -1748,7 +1532,7 @@
     report.SOUTH_MEANING_PRESERVED = boolText(meaningPreserved);
     report.SOUTH_OUTPUT_SCHEMA_VALID = "true";
     report.SOUTH_PACKET_TEXT_SOURCE =
-      "SOUTH_PACKET_FORMATTING_FROM_NORTH_LAB_CANVAS_BISHOP_QUEEN_SCHEMA";
+      "SOUTH_PACKET_FORMATTING_FROM_NORTH_BISHOP_QUEEN_PRIORITY_SCHEMA";
     report.SOUTH_SCHEMA_CONFORMANCE_STATUS = hasMeaning
       ? "SOUTH_SCHEMA_CONFORMANCE_COMPLETE"
       : "SOUTH_SCHEMA_CONFORMANCE_PARTIAL";
@@ -1789,10 +1573,15 @@
     const fields = [
       "TARGET_ROUTE",
       "SERVED_ROUTE_CONDUCTOR_CONTRACT",
+      "PRIMARY_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED",
       "ROUTE_CONDUCTOR_V9_9_BISHOP_QUEEN_CANVAS_RECOGNIZED",
       "BISHOP_QUEEN_CANVAS_RECOGNITION_STATUS",
       "QUEEN_HANDSHAKE_STATUS",
-      "BISHOP_POINTER_FINGER_LANGUAGE_ACTIVE",
+      "QUEEN_HANDSHAKE_ACCEPTED",
+      "QUEEN_VISIBLE_GLOBE_PROOF_READY",
+      "SOUTH_PRIORITY_CONTROL_EVIDENCE_STATUS",
+      "SOUTH_PRIORITY_QUEEN_EVIDENCE_STATUS",
+      "SOUTH_PRIORITY_DERELICT_FIX_STATUS",
       "CACHE_OR_SERVED_CONTRACT_MISMATCH",
       "PLANETARY_CONTROL_FOOTPRINT_STATUS",
       "CONTROL_FILE_STATUS",
@@ -1800,11 +1589,19 @@
       "CONTROL_FILE_EXPECTED_NOT_YET_BUILT",
       "CONTROL_FILE_ABSENCE_NOT_TREATED_AS_CASE_5",
       "CONTROL_FILE_HANDSHAKE_STATUS",
+      "MOTION_TOUCH_STATUS",
+      "DRAG_STATUS",
+      "VIEW_CONTROL_STATUS",
       "PLANETARY_VIEW_CONTROL_STATUS",
+      "PLANETARY_VIEW_TOUCH_STATUS",
+      "PLANETARY_VIEW_DRAG_STATUS",
+      "PLANETARY_VIEW_MOTION_STATUS",
       "LAB_BRIDGE_STATUS",
       "BISHOP_BRIDGE_STATUS",
       "FOUR_WAY_CANVAS_HANDOFF_STATUS",
       "WEST_RENDERED_READ_STATUS",
+      "RENDERED_PLANET_PROOF_FULLY_INSPECTED",
+      "WEST_RENDERED_PROOF_SPREAD_COMPLETE",
       "SOUTH_OUTPUT_STATUS",
       "SOUTH_OUTPUT_VALID",
       "SOUTH_MEANING_PRESERVED",
@@ -1817,9 +1614,7 @@
       "PRIMARY_CASE",
       "RECOMMENDED_NEXT_OWNER",
       "RECOMMENDED_NEXT_FILE",
-      "RECOMMENDED_NEXT_ACTION",
-      "PLANETARY_CONTROL_RECOMMENDED_NEXT_FILE",
-      "PLANETARY_CONTROL_RECOMMENDED_NEXT_ACTION"
+      "RECOMMENDED_NEXT_ACTION"
     ];
 
     return fields.map((field) => line(field, getValue(source, field, FALLBACK.UNKNOWN))).join("\n");
@@ -2013,6 +1808,7 @@
       controlFileImplementationAuthority: false,
       labTableImplementationAuthority: false,
       bishopLaneImplementationAuthority: false,
+      queenImplementationAuthority: false,
       canvasImplementationAuthority: false,
 
       composeSouthReportApiAvailable: true,
@@ -2020,10 +1816,14 @@
       getSouthReceiptApiAvailable: true,
       getSouthStateApiAvailable: true,
 
+      priorityProjectionOwned: true,
+      unknownFallbackNoLongerOverridesPriorityEvidence: true,
+      controlReadyEvidencePriorityOwned: true,
+      queenEvidenceProjectionOwned: true,
       externalContractPreservedForNorthValidation: true,
-      northV5LabCanvasBridgeConformanceOwned: true,
+      northV6BishopQueenAcceptanceConformanceOwned: true,
+      northV5LabCanvasBridgeConformancePreserved: true,
       northV4PlanetaryControlLifecycleConformancePreserved: true,
-      northV3AnchorSchemaBackwardReferencePreserved: true,
       labCanvasBridgeReportConformanceOwned: true,
       bishopBridgeReportConformanceOwned: true,
       bishopQueenCanvasReportConformanceOwned: true,
@@ -2038,18 +1838,11 @@
       packetSafeFallbackNormalizationOwned: true,
       southOutputNotesRemainSeparate: true,
 
-      planetaryControlFormalFieldsOwned: true,
-      planetaryControlFootprintPrintoutOwned: true,
-      controlAbsenceExpectedPrintoutOwned: true,
-      controlAbsenceNotCase5PrintoutOwned: true,
-      jsIntegrationFunnelPrintoutOwned: true,
-      routeConductorControlHandshakePrintoutOwned: true,
-      planetaryViewStatusPrintoutOwned: true,
-
       expectedControlFile: EXPECTED_CONTROL_FILE,
       expectedControlContract: EXPECTED_CONTROL_CONTRACT,
       expectedRouteConductorFile: EXPECTED_ROUTE_CONDUCTOR_FILE,
       expectedRouteConductorContract: EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
+      scriptCacheRouteConductorContract: SCRIPT_CACHE_ROUTE_CONDUCTOR_CONTRACT,
       compatRouteConductorContract: COMPAT_ROUTE_CONDUCTOR_CONTRACT,
       lineageRouteConductorContract: LINEAGE_ROUTE_CONDUCTOR_CONTRACT,
       priorRouteConductorContract: PRIOR_ROUTE_CONDUCTOR_CONTRACT,
@@ -2092,6 +1885,7 @@
     root.HEARTH = root.HEARTH || {};
     root.HEARTH.diagnosticSouth = api;
     root.HEARTH.diagnosticRailSouth = api;
+    root.HEARTH.diagnosticSouthPriorityControlQueenPacketConformance = api;
     root.HEARTH.diagnosticSouthReceipt = getSouthReceipt();
     root.HEARTH.diagnosticRailSouthReceipt = getSouthReceipt();
     root.HEARTH.diagnosticSouthOutput = clonePlain(lastOutput);
@@ -2099,8 +1893,14 @@
     root.HEARTH.diagnosticSouthReport = clonePlain(lastReport);
     root.HEARTH.diagnosticRailSouthReport = clonePlain(lastReport);
 
+    root.DEXTER_LAB = root.DEXTER_LAB || {};
+    root.DEXTER_LAB.hearthDiagnosticSouth = api;
+    root.DEXTER_LAB.hearthDiagnosticRailSouth = api;
+    root.DEXTER_LAB.hearthDiagnosticSouthPriorityControlQueenPacketConformance = api;
+
     root.HEARTH_DIAGNOSTIC_SOUTH = api;
     root.HEARTH_DIAGNOSTIC_RAIL_SOUTH = api;
+    root.HEARTH_DIAGNOSTIC_SOUTH_PRIORITY_CONTROL_QUEEN_PACKET_CONFORMANCE = api;
     root.HEARTH_DIAGNOSTIC_SOUTH_RECEIPT = getSouthReceipt();
     root.HEARTH_DIAGNOSTIC_RAIL_SOUTH_RECEIPT = getSouthReceipt();
     root.HEARTH_DIAGNOSTIC_SOUTH_OUTPUT = clonePlain(lastOutput);
@@ -2109,7 +1909,7 @@
     root.HEARTH_DIAGNOSTIC_RAIL_SOUTH_REPORT = clonePlain(lastReport);
   }
 
-  const api = Object.freeze({
+  api = Object.freeze({
     contract: CONTRACT,
     receipt: RECEIPT,
     implementationContract: IMPLEMENTATION_CONTRACT,
@@ -2131,6 +1931,7 @@
     expectedControlContract: EXPECTED_CONTROL_CONTRACT,
     expectedRouteConductorFile: EXPECTED_ROUTE_CONDUCTOR_FILE,
     expectedRouteConductorContract: EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
+    scriptCacheRouteConductorContract: SCRIPT_CACHE_ROUTE_CONDUCTOR_CONTRACT,
     compatRouteConductorContract: COMPAT_ROUTE_CONDUCTOR_CONTRACT,
     lineageRouteConductorContract: LINEAGE_ROUTE_CONDUCTOR_CONTRACT,
     priorRouteConductorContract: PRIOR_ROUTE_CONDUCTOR_CONTRACT,
@@ -2146,9 +1947,9 @@
     getSouthState,
 
     supportsNorthAnchorSchemaConformance: true,
+    supportsNorthV6BishopQueenAcceptanceSerialization: true,
     supportsNorthV5LabCanvasBridgeSerialization: true,
     supportsNorthV4PlanetaryControlLifecycleSerialization: true,
-    supportsNorthV3VerdictBackwardReference: true,
     supportsSouthOutputValidClosureProjection: true,
     supportsNewsAlignmentPacketPreservation: true,
     supportsFibonacciSynchronizationPacketPreservation: true,
@@ -2156,6 +1957,10 @@
     supportsFullPacketTextForNorthValidation: true,
     supportsCompactSummaryForNorthValidation: true,
     supportsMeaningPreservationAudit: true,
+    supportsPriorityEvidenceProjection: true,
+    supportsControlReadyEvidencePriority: true,
+    supportsQueenHandshakeProjection: true,
+    supportsDerelictUnknownFallbackFix: true,
     supportsPlanetaryControlFormalFields: true,
     supportsControlFileExpectedNotBuiltFootprint: true,
     supportsControlAbsenceNotCase5Footprint: true,
@@ -2166,7 +1971,6 @@
     supportsBishopBridgeReportConformance: true,
     supportsBishopQueenCanvasReportConformance: true,
     supportsBishopPointerFingerLanguage: true,
-    supportsQueenHandshakeReportConformance: true,
     supportsFourWayCanvasHandoffReportConformance: true,
     supportsTwoCyclePremisePreservation: true,
 
@@ -2185,6 +1989,7 @@
     controlFileImplementationAuthority: false,
     labTableImplementationAuthority: false,
     bishopLaneImplementationAuthority: false,
+    queenImplementationAuthority: false,
     canvasImplementationAuthority: false,
 
     f13Claimed: false,

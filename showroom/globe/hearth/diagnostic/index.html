@@ -3,29 +3,30 @@
   lang="en"
   data-route="/showroom/globe/hearth/diagnostic/"
   data-page="hearth-diagnostic-route"
-  data-contract="HEARTH_DIAGNOSTIC_ROUTE_MIRRORLAND_PLANET_ENGINE_OBSERVATORY_PRIORITY_CONSTELLATION_TNT_v4"
-  data-receipt="HEARTH_DIAGNOSTIC_ROUTE_MIRRORLAND_PLANET_ENGINE_OBSERVATORY_PRIORITY_CONSTELLATION_RECEIPT_v4"
-  data-previous-contract="HEARTH_DIAGNOSTIC_ROUTE_MIRRORLAND_PLANET_ENGINE_OBSERVATORY_GAUGE_CONSTELLATION_TNT_v3"
+  data-contract="HEARTH_DIAGNOSTIC_ROUTE_CANVAS_EXPRESSION_OBSERVATORY_RECEIVER_TNT_v5"
+  data-receipt="HEARTH_DIAGNOSTIC_ROUTE_CANVAS_EXPRESSION_OBSERVATORY_RECEIVER_RECEIPT_v5"
+  data-previous-contract="HEARTH_DIAGNOSTIC_ROUTE_MIRRORLAND_PLANET_ENGINE_OBSERVATORY_PRIORITY_CONSTELLATION_TNT_v4"
   data-baseline-contract="HEARTH_DIAGNOSTIC_ROUTE_PARALLEL_RAIL_RECEIVER_TNT_v1"
   data-role="thin-diagnostic-route-receiver"
-  data-receiver-standard="mirrorland-planet-engine-observatory-priority-constellation"
-  data-diagnostic-interest="planetary-build-observation"
+  data-receiver-standard="canvas-expression-observatory-receiver"
+  data-diagnostic-interest="canvas-expression-motion-surface-observation"
   data-diagnostic-system-change="false"
   data-diagnostic-target="/showroom/globe/hearth/"
   data-child-loading-mode="route-loads-child-assets-as-loading-convenience"
   data-route-calls-north-only="true"
   data-diagnostic-law-authority="north-parent-only"
-  data-north-anchor-contract="HEARTH_DIAGNOSTIC_RAIL_NORTH_BISHOP_QUEEN_ACCEPTANCE_SCHEMA_ORCHESTRATOR_TNT_v6"
+  data-north-anchor-contract="HEARTH_DIAGNOSTIC_RAIL_NORTH_POST_SOUTH_NEWS_FIBONACCI_ALIGNMENT_ORCHESTRATOR_TNT_v7"
   data-east-source-contract="HEARTH_DIAGNOSTIC_RAIL_EAST_SERVED_SOURCE_EVIDENCE_TNT_v1"
   data-east-implementation-contract="HEARTH_DIAGNOSTIC_EAST_CURRENT_SERVED_SPREAD_BISHOP_CANVAS_SOURCE_FOOTPRINT_ALIGNMENT_TNT_v7"
   data-west-rendered-contract="HEARTH_DIAGNOSTIC_RAIL_WEST_RENDERED_TARGET_AUTHORITY_PROBE_TNT_v1"
   data-west-implementation-contract="HEARTH_DIAGNOSTIC_WEST_BISHOP_QUEEN_CANVAS_RENDERED_PROOF_ALIGNMENT_TNT_v6"
   data-south-output-contract="HEARTH_DIAGNOSTIC_RAIL_SOUTH_REPORT_PACKET_OUTPUT_TNT_v1"
-  data-south-implementation-contract="HEARTH_DIAGNOSTIC_SOUTH_BISHOP_QUEEN_CANVAS_REPORT_CONFORMANCE_TNT_v6"
-  data-mirrorland-narrative-active="true"
-  data-planet-engine-observatory-active="true"
+  data-south-implementation-contract="HEARTH_DIAGNOSTIC_SOUTH_PRIORITY_CONTROL_QUEEN_PACKET_CONFORMANCE_TNT_v7"
+  data-calibrated-news-fibonacci-visible="true"
+  data-canvas-expression-observatory-active="true"
+  data-expression-diagnostics-active="true"
   data-gauge-constellation-active="true"
-  data-priority-order="north-verdict receiver-alignment local-display-footprint child-load-visibility source-rendered-trace raw-output"
+  data-priority-order="north-verdict calibrated-alignment expression-board canvas-footprint motion-touch-drag rendered-proof raw-output"
   data-animated-gauges-display-only="true"
   data-no-request-animation-frame="true"
   data-run-diagnostic-preserved="true"
@@ -45,24 +46,24 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Hearth Diagnostic Observatory</title>
+  <title>Hearth Canvas Expression Observatory</title>
   <meta
     name="description"
-    content="Mirrorland planet-engine observatory receiver for the Hearth diagnostic rail. Loads EAST, WEST, SOUTH, and NORTH, then calls NORTH only."
+    content="Canvas expression observatory receiver for the Hearth diagnostic rail. Preserves calibrated NEWS/Fibonacci status while shifting diagnostic interest toward canvas, expression, motion, surface, and rendered proof."
   />
 
   <style>
     :root {
       color-scheme: dark;
-      --bg: #04070b;
-      --bg2: #08111b;
-      --panel: rgba(14, 22, 33, 0.78);
-      --panel2: rgba(24, 36, 52, 0.84);
-      --line: rgba(219, 236, 255, 0.18);
-      --line2: rgba(219, 236, 255, 0.1);
-      --text: rgba(248, 251, 255, 0.96);
-      --muted: rgba(215, 228, 244, 0.7);
-      --soft: rgba(215, 228, 244, 0.48);
+      --bg: #030609;
+      --bg2: #07111a;
+      --panel: rgba(12, 20, 31, 0.82);
+      --panel2: rgba(22, 34, 49, 0.88);
+      --line: rgba(220, 238, 255, 0.18);
+      --line2: rgba(220, 238, 255, 0.1);
+      --text: rgba(248, 251, 255, 0.97);
+      --muted: rgba(215, 228, 244, 0.72);
+      --soft: rgba(215, 228, 244, 0.5);
       --good: #9ef0c1;
       --warn: #ffd37a;
       --bad: #ff9b9b;
@@ -73,9 +74,9 @@
       --bad-bg: rgba(255, 96, 96, 0.13);
       --info-bg: rgba(86, 190, 255, 0.13);
       --violet-bg: rgba(181, 143, 255, 0.13);
-      --code: #060a10;
+      --code: #050910;
       --focus: rgba(160, 222, 255, 0.88);
-      --shadow: 0 24px 90px rgba(0, 0, 0, 0.48);
+      --shadow: 0 24px 90px rgba(0, 0, 0, 0.5);
       --max: 1440px;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
@@ -87,10 +88,10 @@
       margin: 0;
       min-height: 100%;
       background:
-        radial-gradient(circle at 11% 9%, rgba(76, 138, 255, 0.2), transparent 32rem),
-        radial-gradient(circle at 86% 6%, rgba(255, 194, 120, 0.13), transparent 30rem),
+        radial-gradient(circle at 9% 10%, rgba(76, 138, 255, 0.2), transparent 32rem),
+        radial-gradient(circle at 86% 7%, rgba(255, 194, 120, 0.14), transparent 30rem),
         radial-gradient(circle at 50% 88%, rgba(60, 235, 190, 0.08), transparent 32rem),
-        linear-gradient(180deg, #080b10 0%, var(--bg) 55%, #020406 100%);
+        linear-gradient(180deg, #070b10 0%, var(--bg) 56%, #020406 100%);
       color: var(--text);
     }
 
@@ -104,9 +105,9 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
-      opacity: 0.3;
+      opacity: 0.26;
       background:
-        linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(rgba(255, 255, 255, 0.026) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
       background-size: 52px 52px;
       mask-image: radial-gradient(circle at 50% 16%, black, transparent 72%);
@@ -195,7 +196,7 @@
 
     button[disabled] {
       cursor: not-allowed;
-      opacity: 0.5;
+      opacity: 0.52;
     }
 
     button:focus-visible,
@@ -288,13 +289,13 @@
     }
 
     h1 {
-      font-size: clamp(2.25rem, 6.8vw, 5.45rem);
+      font-size: clamp(2.15rem, 6.6vw, 5.2rem);
       line-height: 0.9;
-      max-width: 1080px;
+      max-width: 1120px;
     }
 
     h2 {
-      font-size: clamp(1.1rem, 2.2vw, 1.72rem);
+      font-size: clamp(1.08rem, 2.2vw, 1.72rem);
       line-height: 1.05;
     }
 
@@ -305,7 +306,7 @@
     }
 
     .hero-copy {
-      max-width: 1030px;
+      max-width: 1060px;
       margin-top: 14px;
       font-size: clamp(1rem, 2.5vw, 1.18rem);
     }
@@ -314,7 +315,7 @@
     .gauge-constellation,
     .module-deck,
     .footprint-grid,
-    .planet-grid,
+    .expression-grid,
     .lifecycle-grid {
       display: grid;
       gap: 10px;
@@ -325,7 +326,7 @@
     .gauge-constellation { grid-template-columns: repeat(8, minmax(0, 1fr)); }
     .module-deck { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .footprint-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-    .planet-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    .expression-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .lifecycle-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 
     .panel-stack {
@@ -616,7 +617,7 @@
       .summary-strip,
       .gauge-constellation,
       .footprint-grid,
-      .planet-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .expression-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .lifecycle-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .split { grid-template-columns: 1fr; }
     }
@@ -628,7 +629,7 @@
       .summary-strip,
       .gauge-constellation,
       .footprint-grid,
-      .planet-grid,
+      .expression-grid,
       .lifecycle-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
@@ -640,7 +641,7 @@
       .summary-strip,
       .gauge-constellation,
       .footprint-grid,
-      .planet-grid,
+      .expression-grid,
       .lifecycle-grid { grid-template-columns: 1fr; }
       .kv-row { grid-template-columns: 1fr; gap: 3px; }
       .controls button,
@@ -660,7 +661,7 @@
         <a href="/showroom/">Showroom</a>
         <a href="/showroom/globe/">Globe</a>
         <a href="/showroom/globe/hearth/">Hearth</a>
-        <span aria-current="page">Diagnostic Observatory</span>
+        <span aria-current="page">Expression Observatory</span>
       </div>
       <a class="button-link" href="/showroom/globe/hearth/">Open Hearth Route</a>
     </nav>
@@ -668,18 +669,19 @@
     <section class="hero" aria-labelledby="page-title">
       <div class="hero-inner">
         <div class="kickers" aria-label="Receiver authority markers">
-          <span class="chip">Mirrorland Observatory</span>
-          <span class="chip">Planet Engine</span>
-          <span class="chip">Priority Constellation</span>
+          <span class="chip">Canvas Expression Observatory</span>
+          <span class="chip">Calibrated NEWS/Fibonacci Display</span>
           <span class="chip">North-only</span>
+          <span class="chip">Receiver only</span>
           <span class="chip">No F13 · No F21</span>
         </div>
 
-        <h1 id="page-title">Hearth Diagnostic Observatory</h1>
+        <h1 id="page-title">Hearth Canvas Expression Observatory</h1>
         <p class="hero-copy">
-          Mirrorland receiver for the Hearth planet-engine diagnostic rail. This route displays the gauges,
-          file tracks, handshakes, target viewport, and raw packets without becoming diagnostic authority.
-          It loads EAST, WEST, SOUTH, and NORTH as a convenience, then calls NORTH only.
+          Receiver for the calibrated Hearth diagnostic rail. NEWS and Fibonacci alignment remain visible,
+          while the diagnostic interest shifts toward canvas expression, rendered proof, surface readability,
+          motion, touch, drag, and expression handoff evidence. This route loads the children as a convenience,
+          then calls NORTH only.
         </p>
 
         <div class="controls" aria-label="Diagnostic controls">
@@ -691,10 +693,10 @@
 
         <section class="summary-strip" aria-label="Mission verdict strip" id="missionVerdictPanel">
           <div class="tile"><div class="tile-label">North Ruling</div><div class="tile-value is-warn">AWAITING RUN</div></div>
-          <div class="tile"><div class="tile-label">Receiver Alignment</div><div class="tile-value is-info">DISPLAY ONLY</div></div>
-          <div class="tile"><div class="tile-label">Planet View</div><div class="tile-value is-warn">PENDING</div></div>
-          <div class="tile"><div class="tile-label">Controls</div><div class="tile-value is-info">EXPECTED</div></div>
           <div class="tile"><div class="tile-label">NEWS/Fibonacci</div><div class="tile-value is-warn">WAITING</div></div>
+          <div class="tile"><div class="tile-label">Expression</div><div class="tile-value is-warn">PENDING</div></div>
+          <div class="tile"><div class="tile-label">Canvas</div><div class="tile-value is-warn">PENDING</div></div>
+          <div class="tile"><div class="tile-label">Motion</div><div class="tile-value is-warn">PENDING</div></div>
           <div class="tile"><div class="tile-label">Next File</div><div class="tile-value is-warn">AWAITING RUN</div></div>
         </section>
       </div>
@@ -702,9 +704,11 @@
 
     <section class="panel-stack" aria-label="Diagnostic observatory panels">
       <details class="panel" open>
-        <summary><h2>Priority Ruling Board</h2></summary>
+        <summary><h2>Calibrated Ruling Board</h2></summary>
         <div class="panel-body">
-          <p class="panel-lede small">Top-level ruling is displayed from NORTH. Receiver-local UI alignment is shown separately and does not assign fault upward.</p>
+          <p class="panel-lede small">
+            NORTH remains the authority. This receiver displays the calibrated ruling and does not assign repair, release, or expression authority.
+          </p>
           <div class="split" style="margin-top: 14px;">
             <section>
               <h2>North Verdict Anchor</h2>
@@ -719,9 +723,11 @@
       </details>
 
       <details class="panel" open>
-        <summary><h2>Gauge Constellation</h2></summary>
+        <summary><h2>Alignment Gauge Constellation</h2></summary>
         <div class="panel-body">
-          <p class="panel-lede small">Animated CSS-only gauges. Display-only. No Canvas, no WebGL, no requestAnimationFrame, no visual-pass claim.</p>
+          <p class="panel-lede small">
+            CSS-only display gauges. NEWS/Fibonacci stay visible as calibration state while expression diagnostics become the active display interest.
+          </p>
           <div class="gauge-constellation" id="gaugeConstellationPanel"></div>
         </div>
       </details>
@@ -729,31 +735,39 @@
       <details class="panel" open>
         <summary><h2>Cardinal Module Deck</h2></summary>
         <div class="panel-body">
-          <p class="panel-lede small">Child-chain load state and active evidence posture. Receiver loads the files; NORTH remains the diagnostic authority.</p>
+          <p class="panel-lede small">
+            Child-chain load state and evidence posture. Receiver loads EAST, WEST, SOUTH, and NORTH, but calls NORTH only.
+          </p>
           <div class="module-deck" id="moduleDeck"></div>
         </div>
       </details>
 
-      <details class="panel">
-        <summary><h2>Local Display Footprint</h2></summary>
+      <details class="panel" open>
+        <summary><h2>Canvas Expression Board</h2></summary>
         <div class="panel-body">
-          <p class="panel-lede small">Under-the-hood file and UI footprint. Expected missing pieces are tracked as local visibility states, not leader-level blame.</p>
+          <p class="panel-lede small">
+            Expression-focused display track: canvas carrier, rendered proof, expression hub, visible base globe, surface evidence, motion, touch, drag, and performance.
+          </p>
+          <div class="expression-grid" id="expressionBoard"></div>
+        </div>
+      </details>
+
+      <details class="panel">
+        <summary><h2>Canvas / Finger Footprint</h2></summary>
+        <div class="panel-body">
+          <p class="panel-lede small">
+            File footprint display only. This board does not invent source authority; unknown lanes remain evidence-pending, not failure.
+          </p>
           <div class="footprint-grid" id="fileFootprintPanel"></div>
         </div>
       </details>
 
       <details class="panel">
-        <summary><h2>Planet Build Board</h2></summary>
+        <summary><h2>Motion / Touch / Drag Lifecycle</h2></summary>
         <div class="panel-body">
-          <p class="panel-lede small">World-expression tracks from the planet engine. This route observes the build without claiming final visual pass.</p>
-          <div class="planet-grid" id="planetBuildPanel"></div>
-        </div>
-      </details>
-
-      <details class="panel">
-        <summary><h2>Handshake / Lifecycle Board</h2></summary>
-        <div class="panel-body">
-          <p class="panel-lede small">Route conductor, controls, canvas, fingers, bishops, Lab bridge, and receipts as observer states.</p>
+          <p class="panel-lede small">
+            Control handshake and view-input states are displayed from the packet when available. Receiver does not attach handlers.
+          </p>
           <div class="lifecycle-grid" id="lifecyclePanel"></div>
         </div>
       </details>
@@ -761,7 +775,9 @@
       <details class="panel">
         <summary><h2>Source / Rendered Proof Trace</h2></summary>
         <div class="panel-body">
-          <p class="panel-lede small">Served source, rendered-proof, cache-key, and SOUTH output signals remain available without dominating the UI.</p>
+          <p class="panel-lede small">
+            Served source, rendered proof, cache-key, control, canvas, and SOUTH output signals remain available without dominating the expression view.
+          </p>
           <div class="kv" id="tracePanel" style="margin-top: 12px;"></div>
         </div>
       </details>
@@ -771,7 +787,7 @@
         <div class="panel-body">
           <div class="kv" style="margin-top: 12px;">
             <div class="kv-row"><div class="key">Route role</div><div class="value is-info">Thin UI receiver</div></div>
-            <div class="kv-row"><div class="key">Diagnostic interest</div><div class="value is-info">Mirrorland planet-engine observatory</div></div>
+            <div class="kv-row"><div class="key">Diagnostic interest</div><div class="value is-info">Canvas expression / motion / surface observation</div></div>
             <div class="kv-row"><div class="key">Execution authority</div><div class="value is-info">NORTH only</div></div>
             <div class="kv-row"><div class="key">Diagnostic law authority</div><div class="value is-info">north-parent-only</div></div>
             <div class="kv-row"><div class="key">Repair authority</div><div class="value is-bad">false</div></div>
@@ -794,7 +810,7 @@
         <summary><h2>Rendered Target Viewport</h2></summary>
         <div class="panel-body">
           <p class="panel-lede small">
-            Same-origin diagnostic viewport used by WEST when browser policy allows. This viewport is read-only and hosted by the diagnostic receiver.
+            Same-origin viewport used by WEST when browser policy allows. This viewport is read-only and hosted by the diagnostic receiver.
           </p>
 
           <div class="target-frame-shell">
@@ -858,7 +874,7 @@
     </section>
 
     <footer class="footer">
-      Contract: HEARTH_DIAGNOSTIC_ROUTE_MIRRORLAND_PLANET_ENGINE_OBSERVATORY_PRIORITY_CONSTELLATION_TNT_v4.
+      Contract: HEARTH_DIAGNOSTIC_ROUTE_CANVAS_EXPRESSION_OBSERVATORY_RECEIVER_TNT_v5.
       Receiver only. No F13, no F21, no ready text, no generated image, no GraphicBox, no WebGL, no Canvas release, and no final visual pass.
     </footer>
   </main>
@@ -867,18 +883,18 @@
     (() => {
       "use strict";
 
-      const CONTRACT = "HEARTH_DIAGNOSTIC_ROUTE_MIRRORLAND_PLANET_ENGINE_OBSERVATORY_PRIORITY_CONSTELLATION_TNT_v4";
-      const RECEIPT = "HEARTH_DIAGNOSTIC_ROUTE_MIRRORLAND_PLANET_ENGINE_OBSERVATORY_PRIORITY_CONSTELLATION_RECEIPT_v4";
-      const PREVIOUS_CONTRACT = "HEARTH_DIAGNOSTIC_ROUTE_MIRRORLAND_PLANET_ENGINE_OBSERVATORY_GAUGE_CONSTELLATION_TNT_v3";
+      const CONTRACT = "HEARTH_DIAGNOSTIC_ROUTE_CANVAS_EXPRESSION_OBSERVATORY_RECEIVER_TNT_v5";
+      const RECEIPT = "HEARTH_DIAGNOSTIC_ROUTE_CANVAS_EXPRESSION_OBSERVATORY_RECEIVER_RECEIPT_v5";
+      const PREVIOUS_CONTRACT = "HEARTH_DIAGNOSTIC_ROUTE_MIRRORLAND_PLANET_ENGINE_OBSERVATORY_PRIORITY_CONSTELLATION_TNT_v4";
       const BASELINE_CONTRACT = "HEARTH_DIAGNOSTIC_ROUTE_PARALLEL_RAIL_RECEIVER_TNT_v1";
-      const VERSION = "2026-06-05.hearth-diagnostic-route-mirrorland-planet-engine-observatory-priority-constellation-v4";
+      const VERSION = "2026-06-05.hearth-diagnostic-route-canvas-expression-observatory-receiver-v5";
 
       const TARGET_ROUTE = "/showroom/globe/hearth/";
       const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
       const REPORT_PACKET = "HEARTH_PARALLEL_DIAGNOSTIC_RAIL_RESULT_PACKET_v1";
 
-      const NORTH_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_BISHOP_QUEEN_ACCEPTANCE_SCHEMA_ORCHESTRATOR_TNT_v6";
-      const NORTH_RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_BISHOP_QUEEN_ACCEPTANCE_SCHEMA_ORCHESTRATOR_RECEIPT_v6";
+      const NORTH_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_POST_SOUTH_NEWS_FIBONACCI_ALIGNMENT_ORCHESTRATOR_TNT_v7";
+      const NORTH_RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_POST_SOUTH_NEWS_FIBONACCI_ALIGNMENT_ORCHESTRATOR_RECEIPT_v7";
 
       const CHILD_SCRIPTS = Object.freeze([
         {
@@ -890,7 +906,14 @@
           evidenceField: "EAST_EVIDENCE_VALID",
           receiptField: "EAST_RECEIPT_VALID",
           statusField: "EAST_SOURCE_READ_STATUS",
-          globalPaths: ["HEARTH.diagnosticEast", "HEARTH.diagnosticRailEast", "HEARTH_DIAGNOSTIC_EAST", "HEARTH_DIAGNOSTIC_RAIL_EAST"]
+          globalPaths: [
+            "HEARTH.diagnosticEast",
+            "HEARTH.diagnosticRailEast",
+            "HEARTH_DIAGNOSTIC_EAST",
+            "HEARTH_DIAGNOSTIC_RAIL_EAST",
+            "DEXTER_LAB.hearthDiagnosticEast",
+            "DEXTER_LAB.hearthDiagnosticRailEast"
+          ]
         },
         {
           name: "WEST",
@@ -901,18 +924,32 @@
           evidenceField: "WEST_EVIDENCE_VALID",
           receiptField: "WEST_RECEIPT_VALID",
           statusField: "WEST_RENDERED_READ_STATUS",
-          globalPaths: ["HEARTH.diagnosticWest", "HEARTH.diagnosticRailWest", "HEARTH_DIAGNOSTIC_WEST", "HEARTH_DIAGNOSTIC_RAIL_WEST"]
+          globalPaths: [
+            "HEARTH.diagnosticWest",
+            "HEARTH.diagnosticRailWest",
+            "HEARTH_DIAGNOSTIC_WEST",
+            "HEARTH_DIAGNOSTIC_RAIL_WEST",
+            "DEXTER_LAB.hearthDiagnosticWest",
+            "DEXTER_LAB.hearthDiagnosticRailWest"
+          ]
         },
         {
           name: "SOUTH",
           title: "Report Output",
           file: "/assets/hearth/hearth.diagnostic.south.js",
           contract: "HEARTH_DIAGNOSTIC_RAIL_SOUTH_REPORT_PACKET_OUTPUT_TNT_v1",
-          implementationContract: "HEARTH_DIAGNOSTIC_SOUTH_BISHOP_QUEEN_CANVAS_REPORT_CONFORMANCE_TNT_v6",
+          implementationContract: "HEARTH_DIAGNOSTIC_SOUTH_PRIORITY_CONTROL_QUEEN_PACKET_CONFORMANCE_TNT_v7",
           evidenceField: "SOUTH_OUTPUT_VALID",
           receiptField: "SOUTH_RECEIPT_VALID",
           statusField: "SOUTH_OUTPUT_STATUS",
-          globalPaths: ["HEARTH.diagnosticSouth", "HEARTH.diagnosticRailSouth", "HEARTH_DIAGNOSTIC_SOUTH", "HEARTH_DIAGNOSTIC_RAIL_SOUTH"]
+          globalPaths: [
+            "HEARTH.diagnosticSouth",
+            "HEARTH.diagnosticRailSouth",
+            "HEARTH_DIAGNOSTIC_SOUTH",
+            "HEARTH_DIAGNOSTIC_RAIL_SOUTH",
+            "DEXTER_LAB.hearthDiagnosticSouth",
+            "DEXTER_LAB.hearthDiagnosticRailSouth"
+          ]
         },
         {
           name: "NORTH",
@@ -929,17 +966,15 @@
             "HEARTH.diagnosticNorth",
             "HEARTH.diagnosticRailNorth",
             "HEARTH.diagnosticNorthAnchor",
-            "HEARTH.diagnosticNorthBishopQueenAcceptance",
-            "DEXTER_LAB.hearthDiagnosticRail",
-            "DEXTER_LAB.hearthDiagnosticNorth",
-            "DEXTER_LAB.hearthDiagnosticNorthAnchor",
-            "DEXTER_LAB.hearthDiagnosticNorthBishopQueenAcceptance",
+            "HEARTH.diagnosticNorthPostSouthNewsFibonacciAlignment",
             "HEARTH_DIAGNOSTIC_RAIL",
             "HEARTH_PARALLEL_DIAGNOSTIC_RAIL",
             "HEARTH_DIAGNOSTIC_NORTH",
             "HEARTH_DIAGNOSTIC_RAIL_NORTH",
-            "HEARTH_DIAGNOSTIC_NORTH_ANCHOR",
-            "HEARTH_DIAGNOSTIC_NORTH_BISHOP_QUEEN_ACCEPTANCE"
+            "HEARTH_DIAGNOSTIC_NORTH_POST_SOUTH_NEWS_FIBONACCI_ALIGNMENT",
+            "DEXTER_LAB.hearthDiagnosticRail",
+            "DEXTER_LAB.hearthDiagnosticNorth",
+            "DEXTER_LAB.hearthDiagnosticNorthPostSouthNewsFibonacciAlignment"
           ]
         }
       ]);
@@ -949,41 +984,48 @@
         ["Index JS", "/showroom/globe/hearth/index.js", "SERVED_INDEX_JS_CONTRACT", "button authority"],
         ["Route Conductor", "/showroom/globe/hearth/hearth.js", "SERVED_ROUTE_CONDUCTOR_CONTRACT", "route conductor"],
         ["Controls", "/assets/hearth/hearth.controls.js", "CONTROL_FILE_STATUS", "motion / touch"],
+        ["Hex Four-Pair Authority", "/assets/hearth/hearth.hex.four-pair.authority.js", "HEX_FOUR_PAIR_AUTHORITY_STATUS", "expression source"],
+        ["Hex Surface", "/assets/hearth/hearth.hex.surface.js", "HEX_SURFACE_STATUS", "expression surface"],
         ["Canvas", "/assets/hearth/hearth.canvas.js", "CURRENT_CANVAS_PARENT_CONTRACT", "visible carrier"],
-        ["Boundary Finger", "/assets/hearth/hearth.canvas.finger.boundary.js", "PLANET_BOUNDARY_STATUS", "finger"],
-        ["Mass Finger", "/assets/hearth/hearth.canvas.finger.mass.js", "PLANET_MASS_STATUS", "finger"],
-        ["Surface Finger", "/assets/hearth/hearth.canvas.finger.surface.js", "PLANET_SURFACE_STATUS", "finger"],
-        ["Pointer Finger", "/assets/hearth/hearth.canvas.finger.pointer.js", "PLANET_POINTER_STATUS", "finger"],
-        ["Light Finger", "/assets/hearth/hearth.canvas.finger.light.js", "PLANET_LIGHT_STATUS", "finger"],
-        ["Inspect Finger", "/assets/hearth/hearth.canvas.finger.inspect.js", "PLANET_INSPECT_STATUS", "finger"],
-        ["Composite Finger", "/assets/hearth/hearth.canvas.finger.composite.js", "PLANET_COMPOSITE_STATUS", "finger"]
+        ["Boundary Finger", "/assets/hearth/hearth.canvas.finger.boundary.js", "BOUNDARY_FINGER_STATUS", "finger"],
+        ["Mass Finger", "/assets/hearth/hearth.canvas.finger.mass.js", "MASS_FINGER_STATUS", "finger"],
+        ["Surface Finger", "/assets/hearth/hearth.canvas.finger.surface.js", "SURFACE_FINGER_STATUS", "finger"],
+        ["Light Finger", "/assets/hearth/hearth.canvas.finger.light.js", "LIGHT_FINGER_STATUS", "finger"],
+        ["Inspect Finger", "/assets/hearth/hearth.canvas.finger.inspect.js", "INSPECT_FINGER_STATUS", "finger"],
+        ["Composite Finger", "/assets/hearth/hearth.canvas.finger.composite.js", "COMPOSITE_FINGER_STATUS", "finger"]
       ]);
 
-      const PLANET_TRACKS = Object.freeze([
-        ["Body", "VISIBLE_PLANET_PROOF_READY", "Planet body"],
-        ["Boundary", "PLANET_STAGE_RECT_NONZERO", "Body boundary"],
-        ["Mass", "PLANET_MASS_STATUS", "Planet mass"],
-        ["Surface", "PLANET_SURFACE_STATUS", "Surface expression"],
-        ["Pointer", "PLANET_POINTER_STATUS", "Pointer/finger language"],
-        ["Light", "PLANET_LIGHT_STATUS", "Illumination"],
-        ["Inspect", "PLANET_INSPECT_STATUS", "Inspection lane"],
-        ["Composite", "PLANET_COMPOSITE_STATUS", "Final surface merge"],
+      const EXPRESSION_TRACKS = Object.freeze([
+        ["Visible Proof", "VISIBLE_PLANET_PROOF_READY", "Rendered planet proof"],
+        ["Rendered Inspection", "RENDERED_PLANET_PROOF_FULLY_INSPECTED", "WEST rendered inspection"],
+        ["Stage DOM", "STAGE_MOUNT_DOM_PROOF_READY", "Stage and mount"],
+        ["Canvas Mount", "CANVAS_MOUNT_RECT_NONZERO", "Canvas receiver footprint"],
+        ["Canvas Element", "CANVAS_ELEMENT_PRESENT", "Element-level proof"],
+        ["Expression Hub", "EXPRESSION_HUB_ACTIVE", "Canvas expression hub"],
+        ["Finger Manager", "FINGER_MANAGER_ACTIVE", "Finger lifecycle"],
+        ["Finger Registry", "FINGER_REGISTRY_ACTIVE", "Child expression registry"],
+        ["Base Globe Carrier", "VISIBLE_BASE_GLOBE_CARRIER_ACTIVE", "Visible globe carrier"],
+        ["Canvas Draw", "CANVAS_DRAW_COMPLETE", "Draw evidence"],
+        ["Base Globe Draw", "BASE_GLOBE_DRAW_COMPLETE", "Base globe draw"],
+        ["Surface Readability", "SURFACE_EXPRESSION_STATUS", "Surface / material / elevation focus"],
         ["Motion", "MOTION_TOUCH_STATUS", "Rotation / view"],
-        ["Touch", "PLANETARY_VIEW_TOUCH_STATUS", "Touch input"],
+        ["Touch", "PLANETARY_VIEW_TOUCH_STATUS", "Touch admission"],
         ["Drag", "DRAG_STATUS", "Drag input"],
-        ["Performance", "PLANET_PERFORMANCE_STATUS", "Lag / loop risk"]
+        ["Expression Target", "PLANETARY_VIEW_TRACK_STATUS", "Next diagnostic interest"]
       ]);
 
       const LIFECYCLE_TRACKS = Object.freeze([
         ["Route → Controls", "ROUTE_CONDUCTOR_CONTROL_INTEGRATION_STATUS", "Control handshake"],
         ["Controls → Motion", "MOTION_TOUCH_STATUS", "Motion/touch ownership"],
+        ["Touch", "PLANETARY_VIEW_TOUCH_STATUS", "Touch input"],
+        ["Drag", "DRAG_STATUS", "Drag input"],
+        ["View Control", "VIEW_CONTROL_STATUS", "View control"],
         ["Route → Canvas", "FOUR_WAY_CANVAS_HANDOFF_STATUS", "Canvas handoff"],
-        ["Canvas → Fingers", "FINGER_MANAGER_ACTIVE", "Finger lifecycle"],
-        ["Lab Bridge", "LAB_CANVAS_BRIDGE_STATUS", "Shared language"],
-        ["Bishop Bridge", "BISHOP_BRIDGE_STATUS", "Opaque bishop hubs"],
+        ["Canvas Receiver", "CANVAS_RECEIVER_RECOGNITION_FUNNEL_STATUS", "Receiver funnel"],
         ["Queen Funnel", "BISHOP_QUEEN_CANVAS_FUNNEL_STATUS", "Recognition funnel"],
         ["NEWS", "NEWS_ALIGNMENT_STATUS", "Sequence rail"],
         ["Fibonacci", "FIBONACCI_SYNCHRONIZATION_STATUS", "Cycle rail"],
+        ["F13 Boundary", "F13_CLAIMED", "Packet output only"],
         ["F21 Boundary", "F21_CLAIMED_BY_DIAGNOSTIC_RAIL", "North-only boundary"]
       ]);
 
@@ -1016,7 +1058,7 @@
         gauges: doc.getElementById("gaugeConstellationPanel"),
         modules: doc.getElementById("moduleDeck"),
         files: doc.getElementById("fileFootprintPanel"),
-        planet: doc.getElementById("planetBuildPanel"),
+        expression: doc.getElementById("expressionBoard"),
         lifecycle: doc.getElementById("lifecyclePanel"),
         northVerdict: doc.getElementById("northVerdictPanel"),
         receiverAlignment: doc.getElementById("receiverAlignmentPanel"),
@@ -1102,11 +1144,21 @@
         const reportValue = getValue(activeReport(), key, undefined);
         if (reportValue !== undefined && reportValue !== null && reportValue !== "") return reportValue;
 
-        const camel = key.toLowerCase().replace(/_([a-z])/g, (_match, letter) => letter.toUpperCase());
-        const verdictValue = getValue(activeVerdict(), camel, undefined);
+        const verdictValue = getValue(activeVerdict(), key, undefined);
         if (verdictValue !== undefined && verdictValue !== null && verdictValue !== "") return verdictValue;
 
+        const camel = key.toLowerCase().replace(/_([a-z])/g, (_match, letter) => letter.toUpperCase());
+        const camelVerdictValue = getValue(activeVerdict(), camel, undefined);
+        if (camelVerdictValue !== undefined && camelVerdictValue !== null && camelVerdictValue !== "") return camelVerdictValue;
+
         return fallback;
+      }
+
+      function noteText() {
+        return [
+          field("SECONDARY_EVIDENCE_NOTES", ""),
+          field("NORTH_SECONDARY_EVIDENCE_NOTES", "")
+        ].join(" | ");
       }
 
       function normalizeSignal(value) {
@@ -1123,13 +1175,18 @@
           text === "COMPLETE" ||
           text === "AVAILABLE" ||
           text === "ACTIVE" ||
+          text === "NONE" ||
           text.includes("READY") ||
           text.includes("LOADED_AND_AVAILABLE") ||
           text.includes("CALIBRATION_CLEAN") ||
           text.includes("REACHED") ||
           text.includes("PRESERVED") ||
-          text.includes("PROOF") ||
-          text.includes("HANDSHAKE_VALID")
+          text.includes("PROOF_READY") ||
+          text.includes("PROOF_PRESENT") ||
+          text.includes("HANDSHAKE_VALID") ||
+          text.includes("HANDSHAKE_READY") ||
+          text.includes("ALIGNMENT_COMPLETE") ||
+          text.includes("SYNCHRONIZATION_COMPLETE")
         ) return "good";
 
         if (
@@ -1150,7 +1207,8 @@
           text.includes("HELD") ||
           text.includes("UNKNOWN") ||
           text.includes("NOT_RUN") ||
-          text.includes("NOT_YET")
+          text.includes("NOT_YET") ||
+          text.includes("EVIDENCE_PENDING")
         ) return "warn";
 
         return "info";
@@ -1297,8 +1355,21 @@
         );
       }
 
+      function calibratedAlignmentStatus() {
+        const news = field("NEWS_ALIGNMENT_STATUS", "");
+        const fib = field("FIBONACCI_SYNCHRONIZATION_STATUS", "");
+
+        if (
+          normalizeSignal(news).includes("COMPLETE") &&
+          normalizeSignal(fib).includes("COMPLETE")
+        ) return "CALIBRATED_COMPLETE";
+
+        if (news || fib) return `${news || "NEWS_UNKNOWN"} / ${fib || "FIBONACCI_UNKNOWN"}`;
+        return "WAITING";
+      }
+
       function visiblePlanetStatus() {
-        const notes = `${field("SECONDARY_EVIDENCE_NOTES", "")} ${field("NORTH_SECONDARY_EVIDENCE_NOTES", "")}`;
+        const notes = noteText();
 
         if (
           normalizeSignal(field("VISIBLE_PLANET_PROOF_READY", "")) === "TRUE" ||
@@ -1311,41 +1382,96 @@
         ) return "VISIBLE_PROOF_PRESENT";
 
         if (field("WEST_RENDERED_READ_STATUS", "") === "COMPLETE") return "ACTIVE_DEGRADED";
-        return "UNKNOWN_PENDING_BACKEND_SCHEMA";
+        return "EVIDENCE_PENDING";
+      }
+
+      function expressionStatus() {
+        const notes = noteText();
+
+        if (/BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_RENDERED_PROOF_PRESENT|RENDERED_PLANET_PROOF_READY|VISIBLE_PROOF_READY_PRIORITY_CONFIRMED/i.test(notes)) {
+          return "EXPRESSION_EVIDENCE_PRESENT";
+        }
+
+        if (visiblePlanetStatus() === "VISIBLE_PROOF_PRESENT") return "EXPRESSION_EVIDENCE_PRESENT";
+        if (field("WEST_RENDERED_READ_STATUS", "") === "COMPLETE") return "EXPRESSION_READ_COMPLETE_WITH_GAPS";
+        return "EVIDENCE_PENDING";
+      }
+
+      function canvasStatus() {
+        const notes = noteText();
+
+        if (
+          /CANVAS_MOUNT_NONZERO_DOM_PROOF|CANVAS_LOCAL_STATION|CANVAS_RECEIVER_FUNNEL_RECOGNIZED/i.test(notes) ||
+          normalizeSignal(field("CANVAS_MOUNT_RECT_NONZERO", "")) === "TRUE" ||
+          normalizeSignal(field("STAGE_MOUNT_DOM_PROOF_READY", "")) === "TRUE"
+        ) return "CANVAS_FOOTPRINT_PRESENT";
+
+        if (findTargetScriptByPath("/assets/hearth/hearth.canvas.js")) return "CANVAS_SCRIPT_PRESENT";
+        return "EVIDENCE_PENDING";
       }
 
       function controlStatus() {
         const explicit = field("CONTROL_FILE_STATUS", "");
         if (explicit && explicit !== "NOT_RUN" && explicit !== "UNKNOWN") return explicit;
 
-        if (findTargetScriptByPath("/assets/hearth/hearth.controls.js")) return "SERVED_NOT_LOADED";
+        if (findTargetScriptByPath("/assets/hearth/hearth.controls.js")) return "CONTROL_SCRIPT_PRESENT";
         return "EXPECTED_NOT_YET_BUILT";
       }
 
       function motionStatus() {
         const explicit = field("MOTION_TOUCH_STATUS", "");
         if (explicit && explicit !== "NOT_RUN" && explicit !== "UNKNOWN") return explicit;
-        return controlStatus() === "EXPECTED_NOT_YET_BUILT" ? "WAITING_CONTROL_FILE" : "HANDSHAKE_PENDING";
+        return controlStatus().includes("READY") || controlStatus().includes("PRESENT") ? "HANDSHAKE_PENDING" : "WAITING_CONTROL_FILE";
       }
 
       function touchStatus() {
         const explicit = field("PLANETARY_VIEW_TOUCH_STATUS", "");
         if (explicit && explicit !== "NOT_RUN" && explicit !== "UNKNOWN") return explicit;
-        return controlStatus() === "EXPECTED_NOT_YET_BUILT" ? "WAITING_CONTROL_FILE" : "HANDSHAKE_PENDING";
+        return motionStatus();
       }
 
       function dragStatus() {
         const explicit = field("DRAG_STATUS", "");
         if (explicit && explicit !== "NOT_RUN" && explicit !== "UNKNOWN") return explicit;
-        return controlStatus() === "EXPECTED_NOT_YET_BUILT" ? "WAITING_CONTROL_FILE" : "HANDSHAKE_PENDING";
+        return motionStatus();
+      }
+
+      function expressionFieldStatus(key, title) {
+        const explicit = field(key, "");
+        const notes = noteText();
+
+        if (explicit && explicit !== "NOT_RUN" && explicit !== "UNKNOWN") return explicit;
+
+        if (title === "Visible Proof") return visiblePlanetStatus();
+        if (title === "Rendered Inspection") return field("RENDERED_PLANET_PROOF_FULLY_INSPECTED", visiblePlanetStatus());
+        if (title === "Canvas Mount") return canvasStatus();
+        if (title === "Canvas Element") {
+          if (/CANVAS_ELEMENT_NOT_FOUND_DOM_ONLY/i.test(notes)) return "DOM_PROOF_WITH_CANVAS_ELEMENT_NOT_FOUND";
+          if (/CANVAS_ELEMENT_FOUND/i.test(notes)) return "CANVAS_ELEMENT_FOUND";
+          return "EVIDENCE_PENDING";
+        }
+        if (title === "Expression Hub") {
+          if (/EXPRESSION_HUB|BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_RENDERED_PROOF_PRESENT/i.test(notes)) return "EXPRESSION_HUB_LANGUAGE_PRESENT";
+          return expressionStatus();
+        }
+        if (title === "Finger Manager" || title === "Finger Registry") {
+          if (/MODERN_FINGER_VOCABULARY|FINGER_MANAGER|FINGER_REGISTRY/i.test(notes)) return "FINGER_LANGUAGE_PRESENT";
+          return "EVIDENCE_PENDING";
+        }
+        if (title === "Base Globe Carrier") return visiblePlanetStatus();
+        if (title === "Canvas Draw" || title === "Base Globe Draw") return visiblePlanetStatus();
+        if (title === "Surface Readability") return "NEXT_EXPRESSION_DIAGNOSTIC_INTEREST";
+        if (title === "Motion") return motionStatus();
+        if (title === "Touch") return touchStatus();
+        if (title === "Drag") return dragStatus();
+        if (title === "Expression Target") return "CANVAS_EXPRESSION_OBSERVATION_ACTIVE";
+
+        return "EVIDENCE_PENDING";
       }
 
       function renderMission() {
         const railClean = field("DIAGNOSTIC_RAIL_CLEAN", "AWAITING RUN");
         const primaryCase = field("PRIMARY_CASE", "AWAITING RUN");
-        const receiverAlignment = getReceiverAlignmentStatus();
-        const news = safeString(field("NEWS_ALIGNMENT_STATUS", "WAITING")).replace("NEWS_ALIGNMENT_", "");
-        const fib = safeString(field("FIBONACCI_SYNCHRONIZATION_STATUS", "WAITING")).replace("FIBONACCI_SYNCHRONIZATION_", "");
 
         const northRuling = railClean === "true"
           ? primaryCase === "INCONCLUSIVE_EVIDENCE"
@@ -1357,10 +1483,10 @@
 
         els.mission.innerHTML = [
           tile("North Ruling", northRuling),
-          tile("Receiver Alignment", receiverAlignment),
-          tile("Planet View", visiblePlanetStatus()),
-          tile("Controls", controlStatus()),
-          tile("NEWS/Fibonacci", `${news} / ${fib}`),
+          tile("NEWS/Fibonacci", calibratedAlignmentStatus()),
+          tile("Expression", expressionStatus()),
+          tile("Canvas", canvasStatus()),
+          tile("Motion", motionStatus()),
           tile("Next File", field("RECOMMENDED_NEXT_FILE", "AWAITING RUN"))
         ].join("");
       }
@@ -1368,13 +1494,13 @@
       function renderGauges() {
         const rows = [
           ["North", field("NORTH_CONTRACT", state.northAvailable ? NORTH_CONTRACT : "PENDING"), "Verdict anchor"],
-          ["Receiver", getReceiverAlignmentStatus(), "Display alignment"],
-          ["East", field("EAST_EVIDENCE_VALID", state.loadStatus.EAST || "PENDING"), "Served source"],
-          ["West", field("WEST_EVIDENCE_VALID", state.loadStatus.WEST || "PENDING"), "Rendered proof"],
-          ["South", field("SOUTH_OUTPUT_VALID", state.loadStatus.SOUTH || "PENDING"), "Packet output"],
-          ["Planet", visiblePlanetStatus(), "Visible carrier"],
-          ["Controls", controlStatus(), "View input"],
-          ["Fibonacci", field("FIBONACCI_SYNCHRONIZATION_STATUS", "WAITING"), "Cycle"]
+          ["NEWS", field("NEWS_ALIGNMENT_STATUS", "WAITING"), "Sequence"],
+          ["Fibonacci", field("FIBONACCI_SYNCHRONIZATION_STATUS", "WAITING"), "Cycle"],
+          ["Expression", expressionStatus(), "Active interest"],
+          ["Canvas", canvasStatus(), "Visible carrier"],
+          ["Motion", motionStatus(), "View input"],
+          ["Touch", touchStatus(), "Touch input"],
+          ["Drag", dragStatus(), "Drag input"]
         ];
 
         els.gauges.innerHTML = rows.map(([title, status, subtitle]) => gauge(title, subtitle, status, [
@@ -1416,8 +1542,12 @@
         }
 
         if (file === "/assets/hearth/hearth.controls.js") return controlStatus();
+        if (file === "/assets/hearth/hearth.canvas.js") return canvasStatus();
         if (findTargetScriptByPath(file)) return "SCRIPT_PRESENT";
-        return file.includes("finger") ? "EXPECTED_NOT_YET_WIRED" : "EXPECTED";
+
+        if (file.includes("finger")) return "EXPECTED_OR_EMBEDDED_NOT_CONFIRMED";
+        if (file.includes("hex")) return "EXPECTED_OR_CHAIN_NOT_CONFIRMED";
+        return "EXPECTED";
       }
 
       function renderFiles() {
@@ -1432,20 +1562,14 @@
         }).join("");
       }
 
-      function renderPlanet() {
-        els.planet.innerHTML = PLANET_TRACKS.map(([title, fieldName, subtitle]) => {
-          let status = field(fieldName, "");
-          if (!status || status === "NOT_RUN" || status === "UNKNOWN") {
-            if (title === "Body") status = visiblePlanetStatus();
-            else if (title === "Motion") status = motionStatus();
-            else if (title === "Touch") status = touchStatus();
-            else if (title === "Drag") status = dragStatus();
-            else status = visiblePlanetStatus() === "VISIBLE_PROOF_PRESENT" ? "ACTIVE_DEGRADED" : "EXPECTED";
-          }
+      function renderExpression() {
+        els.expression.innerHTML = EXPRESSION_TRACKS.map(([title, fieldName, subtitle]) => {
+          const status = expressionFieldStatus(fieldName, title);
 
           return card(title, subtitle, status, [
             ["Signal", fieldName],
             ["Source", "North/West packet or receiver footprint"],
+            ["Diagnostic interest", "canvas-expression"],
             ["Visual pass", "false"]
           ]);
         }).join("");
@@ -1454,11 +1578,18 @@
       function renderLifecycle() {
         els.lifecycle.innerHTML = LIFECYCLE_TRACKS.map(([title, fieldName, subtitle]) => {
           let status = field(fieldName, "");
+
           if (!status || status === "NOT_RUN" || status === "UNKNOWN") {
-            if (title === "Route → Controls") status = controlStatus() === "EXPECTED_NOT_YET_BUILT" ? "HANDSHAKE_PENDING" : "EXPECTED";
+            if (title === "Route → Controls") status = controlStatus().includes("READY") ? "HANDSHAKE_READY" : "HANDSHAKE_PENDING";
             else if (title === "Controls → Motion") status = motionStatus();
-            else if (title === "Route → Canvas") status = visiblePlanetStatus() === "VISIBLE_PROOF_PRESENT" ? "HANDSHAKE_VALID" : "HANDSHAKE_PENDING";
-            else if (title === "F21 Boundary") status = "F21_NORTH_ONLY";
+            else if (title === "Touch") status = touchStatus();
+            else if (title === "Drag") status = dragStatus();
+            else if (title === "View Control") status = field("VIEW_CONTROL_STATUS", motionStatus());
+            else if (title === "Route → Canvas") status = canvasStatus();
+            else if (title === "Canvas Receiver") status = expressionStatus();
+            else if (title === "Queen Funnel") status = field("QUEEN_HANDSHAKE_STATUS", expressionStatus());
+            else if (title === "F13 Boundary") status = "FALSE_PACKET_OUTPUT_ONLY";
+            else if (title === "F21 Boundary") status = "FALSE_NORTH_ONLY";
             else status = "EXPECTED_OR_PENDING";
           }
 
@@ -1477,6 +1608,8 @@
           ["Hold Reason", field("CALIBRATION_HOLD_REASON")],
           ["Diagnostic Rail Clean", field("DIAGNOSTIC_RAIL_CLEAN")],
           ["Calibration Point", field("CALIBRATION_POINT_REACHED")],
+          ["NEWS", field("NEWS_ALIGNMENT_STATUS")],
+          ["Fibonacci", field("FIBONACCI_SYNCHRONIZATION_STATUS")],
           ["Recommended Owner", field("RECOMMENDED_NEXT_OWNER")],
           ["Recommended File", field("RECOMMENDED_NEXT_FILE")],
           ["Recommended Action", field("RECOMMENDED_NEXT_ACTION")]
@@ -1496,8 +1629,11 @@
 
       function renderReceiverAlignment() {
         els.receiverAlignment.innerHTML = [
-          ["Priority order", "North verdict → receiver alignment → local display footprint → child load visibility → trace"],
+          ["Priority order", "North verdict → calibrated alignment → expression board → canvas footprint → lifecycle → trace"],
           ["Receiver alignment", getReceiverAlignmentStatus()],
+          ["Diagnostic interest", "canvas-expression-motion-surface-observation"],
+          ["NEWS/Fibonacci role", "calibrated display"],
+          ["Active display focus", "canvas expression"],
           ["North-only call", "true"],
           ["UI assigns fault upward", "false"],
           ["Gauge authority", "display-only"],
@@ -1516,9 +1652,13 @@
           ["Served Route Conductor", field("SERVED_ROUTE_CONDUCTOR_CONTRACT")],
           ["Expected Route Conductor", field("EXPECTED_ROUTE_CONDUCTOR_CONTRACT")],
           ["Cache Mismatch", field("CACHE_OR_SERVED_CONTRACT_MISMATCH")],
+          ["Control File", field("CONTROL_FILE_STATUS")],
+          ["Control Handshake", field("CONTROL_HANDSHAKE_STATUS")],
           ["Runtime Release Lock", field("RUNTIME_RELEASE_IS_LOCK")],
           ["Rendered Proof Inspected", field("RENDERED_PLANET_PROOF_FULLY_INSPECTED")],
           ["West Proof Spread", field("WEST_RENDERED_PROOF_SPREAD_COMPLETE")],
+          ["Canvas Element", field("CANVAS_ELEMENT_FOUND", field("CANVAS_ELEMENT_PRESENT", "UNKNOWN"))],
+          ["Queen Handshake", field("QUEEN_HANDSHAKE_STATUS")],
           ["South Output Valid", field("SOUTH_OUTPUT_VALID")],
           ["South Meaning Preserved", field("SOUTH_MEANING_PRESERVED")]
         ].map(([key, value]) => kvRow(key, value)).join("");
@@ -1540,7 +1680,7 @@
           ["Child Loading", activeReceipt.childLoadingMode || "ROUTE_LOADS_CHILD_ASSETS_AS_LOADING_CONVENIENCE"],
           ["North dynamic loading owned", activeReceipt.northDynamicChildLoadingOwned || "false"],
           ["Receiver calls North only", "true"],
-          ["Diagnostic interest", "MIRRORLAND_PLANET_ENGINE_OBSERVATORY"],
+          ["Diagnostic interest", "CANVAS_EXPRESSION_OBSERVATION"],
           ["System change", "false"],
           ["Last Run", activeReceipt.lastDiagnosticRunStatus || field("SOUTH_OUTPUT_STATUS", "NOT_RUN")],
           ["Last Primary Case", activeReceipt.lastPrimaryCase || field("PRIMARY_CASE", "NOT_RUN")],
@@ -1562,8 +1702,8 @@
         renderMission();
         renderGauges();
         renderModules();
+        renderExpression();
         renderFiles();
-        renderPlanet();
         renderLifecycle();
         renderNorthVerdict();
         renderReceiverAlignment();
@@ -1686,7 +1826,7 @@
             SECONDARY_EVIDENCE_NOTES: "NORTH_RUN_DIAGNOSTIC_API_NOT_AVAILABLE",
             RECOMMENDED_NEXT_OWNER: "DIAGNOSTIC_CHILD_ALIGNMENT",
             RECOMMENDED_NEXT_FILE: "HOLD_FOR_TEACHER_REVIEW",
-            RECOMMENDED_NEXT_ACTION: "LOAD_OR_VERIFY_NORTH_BISHOP_QUEEN_ACCEPTANCE_SCHEMA_ORCHESTRATOR"
+            RECOMMENDED_NEXT_ACTION: "LOAD_OR_VERIFY_NORTH_POST_SOUTH_NEWS_FIBONACCI_ALIGNMENT_ORCHESTRATOR"
           };
           state.lastPacketText = Object.entries(state.lastReport).map(([key, value]) => `${key}=${value}`).join("\n");
           state.lastCompactSummary = "PRIMARY_CASE=INCONCLUSIVE_EVIDENCE\nERROR=NORTH_RUN_DIAGNOSTIC_API_NOT_AVAILABLE";
@@ -1705,7 +1845,9 @@
             syntheticActivationPermittedByNorth: false,
             includeOptionalTraceFields: true,
             includeNorthVerdict: true,
-            includeNoClaimFieldsInPacket: false
+            includeNoClaimFieldsInPacket: false,
+            diagnosticInterest: "canvas-expression-motion-surface-observation",
+            receiverContract: CONTRACT
           });
 
           state.lastRunOk = Boolean(result && result.ok);
@@ -1785,18 +1927,22 @@
           reportPacket: REPORT_PACKET,
 
           role: "thin-diagnostic-route-receiver",
-          receiverStandard: "mirrorland-planet-engine-observatory-priority-constellation",
-          mirrorlandNarrativeActive: true,
-          planetEngineObservatoryActive: true,
+          receiverStandard: "canvas-expression-observatory-receiver",
+          diagnosticInterest: "canvas-expression-motion-surface-observation",
+          canvasExpressionObservatoryActive: true,
+          expressionDiagnosticsActive: true,
+          calibratedNewsFibonacciVisible: true,
           gaugeConstellationActive: true,
           priorityOrder: [
             "north-verdict",
-            "receiver-alignment",
-            "local-display-footprint",
-            "child-load-visibility",
-            "source-rendered-trace",
+            "calibrated-alignment",
+            "expression-board",
+            "canvas-footprint",
+            "motion-touch-drag",
+            "rendered-proof",
             "raw-output"
           ],
+
           upwardFaultAssignment: false,
           receiverAlignmentLanguageActive: true,
           derelictLanguageUsed: false,
@@ -1818,6 +1964,7 @@
           routeReceiverOwnsRecommendationLaw: false,
           routeReceiverOwnsPlanetTruth: false,
           routeReceiverOwnsCanvasTruth: false,
+          routeReceiverOwnsExpressionTruth: false,
           routeReceiverCreatesPrimaryCases: false,
           routeReceiverOverridesNorthVerdict: false,
           routeReceiverOwnsRepair: false,
@@ -1852,6 +1999,9 @@
           lastCalibrationPointReached: field("CALIBRATION_POINT_REACHED", "NOT_RUN"),
           lastNewsAlignmentStatus: field("NEWS_ALIGNMENT_STATUS", "NOT_RUN"),
           lastFibonacciSynchronizationStatus: field("FIBONACCI_SYNCHRONIZATION_STATUS", "NOT_RUN"),
+          lastExpressionStatus: expressionStatus(),
+          lastCanvasStatus: canvasStatus(),
+          lastMotionTouchStatus: motionStatus(),
           lastSouthMeaningPreserved: field("SOUTH_MEANING_PRESERVED", "NOT_RUN"),
           lastRecommendedNextFile: field("RECOMMENDED_NEXT_FILE", "NOT_RUN"),
 
@@ -1861,7 +2011,6 @@
           controlAbsenceIsFailure: false,
           controlAbsenceIsCase5: false,
           controlAbsenceBlocksVisiblePlanet: false,
-          controlAbsenceBlocksMotionTouch: true,
 
           productionMutationAuthorized: false,
           hearthRepairClaimed: false,
@@ -1905,11 +2054,12 @@
 
           routeReceiverCallsNorthOnly: true,
           diagnosticInterestRenewalOnly: true,
+          diagnosticInterest: "canvas-expression-motion-surface-observation",
           diagnosticSystemChange: false,
-          mirrorlandNarrativeActive: true,
-          planetEngineObservatoryActive: true,
+          canvasExpressionObservatoryActive: true,
+          expressionDiagnosticsActive: true,
+          calibratedNewsFibonacciVisible: true,
           gaugeConstellationActive: true,
-          priorityConstellationActive: true,
           animatedGaugesDisplayOnly: true,
           requestAnimationFrameUsed: false,
           canvasAnimationUsed: false,
@@ -1921,6 +2071,8 @@
           routeReceiverOwnsRepair: false,
           routeReceiverCreatesPrimaryCases: false,
           routeReceiverOverridesNorthVerdict: false,
+          routeReceiverOwnsCanvasTruth: false,
+          routeReceiverOwnsExpressionTruth: false,
           productionMutationAuthorized: false,
           hearthRepairClaimed: false,
           runtimeRestartClaimed: false,
@@ -1938,24 +2090,22 @@
         });
 
         root.HEARTH.diagnosticRouteReceiver = api;
-        root.HEARTH.diagnosticPlanetaryBuildObserverReceiver = api;
-        root.HEARTH.diagnosticMirrorlandPlanetEngineObservatoryReceiver = api;
-        root.HEARTH.diagnosticMirrorlandPlanetEngineObservatoryPriorityConstellation = api;
+        root.HEARTH.diagnosticCanvasExpressionObservatoryReceiver = api;
+        root.HEARTH.diagnosticExpressionObservatoryReceiver = api;
+        root.HEARTH.diagnosticMirrorlandCanvasExpressionObservatory = api;
 
         root.HEARTH_DIAGNOSTIC_ROUTE_RECEIVER = api;
-        root.HEARTH_DIAGNOSTIC_PLANETARY_BUILD_OBSERVER_RECEIVER = api;
-        root.HEARTH_DIAGNOSTIC_MIRRORLAND_PLANET_ENGINE_OBSERVATORY_RECEIVER = api;
-        root.HEARTH_DIAGNOSTIC_MIRRORLAND_PLANET_ENGINE_OBSERVATORY_PRIORITY_CONSTELLATION = api;
+        root.HEARTH_DIAGNOSTIC_CANVAS_EXPRESSION_OBSERVATORY_RECEIVER = api;
+        root.HEARTH_DIAGNOSTIC_EXPRESSION_OBSERVATORY_RECEIVER = api;
+        root.HEARTH_DIAGNOSTIC_MIRRORLAND_CANVAS_EXPRESSION_OBSERVATORY = api;
 
         root.DEXTER_LAB.hearthDiagnosticRouteReceiver = api;
-        root.DEXTER_LAB.hearthDiagnosticPlanetaryBuildObserverReceiver = api;
-        root.DEXTER_LAB.hearthDiagnosticMirrorlandPlanetEngineObservatoryReceiver = api;
-        root.DEXTER_LAB.hearthDiagnosticMirrorlandPlanetEngineObservatoryPriorityConstellation = api;
+        root.DEXTER_LAB.hearthDiagnosticCanvasExpressionObservatoryReceiver = api;
+        root.DEXTER_LAB.hearthDiagnosticExpressionObservatoryReceiver = api;
 
         root.HEARTH_DIAGNOSTIC_ROUTE_RECEIVER_RECEIPT = getRouteReceipt();
-        root.HEARTH_DIAGNOSTIC_PLANETARY_BUILD_OBSERVER_RECEIVER_RECEIPT = getRouteReceipt();
-        root.HEARTH_DIAGNOSTIC_MIRRORLAND_PLANET_ENGINE_OBSERVATORY_RECEIPT = getRouteReceipt();
-        root.HEARTH_DIAGNOSTIC_MIRRORLAND_PLANET_ENGINE_OBSERVATORY_PRIORITY_CONSTELLATION_RECEIPT = getRouteReceipt();
+        root.HEARTH_DIAGNOSTIC_CANVAS_EXPRESSION_OBSERVATORY_RECEIPT = getRouteReceipt();
+        root.HEARTH_DIAGNOSTIC_EXPRESSION_OBSERVATORY_RECEIPT = getRouteReceipt();
       }
 
       els.run.addEventListener("click", runDiagnostic);

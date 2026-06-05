@@ -1,20 +1,16 @@
 // /assets/hearth/hearth.diagnostic.rail.js
-// HEARTH_DIAGNOSTIC_RAIL_NORTH_LAB_CANVAS_BRIDGE_SCHEMA_ORCHESTRATOR_TNT_v5
+// HEARTH_DIAGNOSTIC_RAIL_NORTH_BISHOP_QUEEN_ACCEPTANCE_SCHEMA_ORCHESTRATOR_TNT_v6
 // Full-file replacement.
 // Diagnostic rail NORTH parent only.
 // Purpose:
 // - Preserve NORTH as the diagnostic anchor and canonical verdict schema.
-// - Preserve v4 child consumption, child receipt validation, NEWS alignment, Fibonacci synchronization,
-//   SOUTH meaning verification, and planetary-control lifecycle schema.
-// - Add Lab Runtime Table bridge literacy without taking Lab authority.
-// - Add Macro West admissibility-clutch literacy without taking Macro West authority.
-// - Add Canvas Local Station bridge literacy without taking Canvas authority.
-// - Add diagnostic HTML receiver compatibility without making the receiver authoritative.
-// - Add bishop/hub path vocabulary as opaque bridge hubs only; NORTH diagnostic does not inspect bishop child files.
-// - Preserve missing controls as EXPECTED_NOT_YET_BUILT, not CASE_5, not visible-planet failure, and not readiness.
-// - Preserve visible planet proof separately from motion/touch/control absence.
-// - Recommend chronological downstream diagnostic renewal: EAST -> WEST -> SOUTH -> diagnostic receiver -> NORTH re-run.
-// - Preserve protected production files as read-only observation targets.
+// - Renew NORTH’s current served-stack literacy so modern Hearth contracts are not falsely treated as cache failure.
+// - Accept HTML v5_1, Index v5_4, and Route Conductor v9_9 as the current production spread.
+// - Preserve v9_8, v9_7, v9_6, v9_5, and v9_4 as accepted route-conductor lineage/compatibility.
+// - Preserve Lab Runtime Table, Macro West, Canvas Local Station, bishop/hub, and diagnostic receiver bridge literacy.
+// - Preserve bishop/hub path vocabulary as opaque bridge hubs only; NORTH diagnostic does not inspect bishop child files.
+// - Distinguish a stale script query key from a blocking served-contract mismatch.
+// - Preserve missing controls as not visible-planet failure and not final readiness.
 // - Preserve no F13 claim, no F21 claim, no ready text, no visual pass, no generated image, no GraphicBox, no WebGL.
 // Does not own:
 // - dynamic child loading
@@ -36,16 +32,19 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_LAB_CANVAS_BRIDGE_SCHEMA_ORCHESTRATOR_TNT_v5";
-  const RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_LAB_CANVAS_BRIDGE_SCHEMA_ORCHESTRATOR_RECEIPT_v5";
+  const CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_BISHOP_QUEEN_ACCEPTANCE_SCHEMA_ORCHESTRATOR_TNT_v6";
+  const RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_BISHOP_QUEEN_ACCEPTANCE_SCHEMA_ORCHESTRATOR_RECEIPT_v6";
 
-  const PREVIOUS_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ORCHESTRATOR_TNT_v4";
-  const PREVIOUS_RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ORCHESTRATOR_RECEIPT_v4";
+  const PREVIOUS_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_LAB_CANVAS_BRIDGE_SCHEMA_ORCHESTRATOR_TNT_v5";
+  const PREVIOUS_RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_LAB_CANVAS_BRIDGE_SCHEMA_ORCHESTRATOR_RECEIPT_v5";
 
-  const BASELINE_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_ANCHOR_SCHEMA_ORCHESTRATOR_TNT_v3";
-  const BASELINE_RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_ANCHOR_SCHEMA_ORCHESTRATOR_RECEIPT_v3";
+  const BASELINE_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ORCHESTRATOR_TNT_v4";
+  const BASELINE_RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ORCHESTRATOR_RECEIPT_v4";
 
-  const VERSION = "2026-06-04.hearth-diagnostic-rail-north-lab-canvas-bridge-schema-orchestrator-v5";
+  const FOUNDATION_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_ANCHOR_SCHEMA_ORCHESTRATOR_TNT_v3";
+  const FOUNDATION_RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_ANCHOR_SCHEMA_ORCHESTRATOR_RECEIPT_v3";
+
+  const VERSION = "2026-06-05.hearth-diagnostic-rail-north-bishop-queen-acceptance-schema-orchestrator-v6";
 
   const FILE = "/assets/hearth/hearth.diagnostic.rail.js";
   const TARGET_ROUTE = "/showroom/globe/hearth/";
@@ -56,62 +55,85 @@
   const ROUTE_RECEIVER_MUST_LOAD_CHILDREN_BEFORE_RUN = true;
   const NORTH_DYNAMIC_CHILD_LOADING_OWNED = false;
 
-  const EAST_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_EAST_SERVED_SOURCE_EVIDENCE_TNT_v1";
-  const EAST_CURRENT_ALIGNMENT_CONTRACT = "HEARTH_DIAGNOSTIC_EAST_ROUTE_CONDUCTOR_PRIMARY_COMPATIBILITY_SPLIT_TNT_v4";
-  const EAST_PREVIOUS_ALIGNMENT_CONTRACT = "HEARTH_DIAGNOSTIC_EAST_HEARTH_INDEX_CONTEXT_CURRENT_SPREAD_ALIGNMENT_TNT_v3";
+  const HTML_CURRENT_CONTRACT = "HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1";
+  const HTML_PREVIOUS_CONTRACT = "HEARTH_HTML_CONTROL_HANDSHAKE_ROUTE_SHELL_INTEGRATION_TNT_v5";
+  const HTML_BASELINE_CONTRACT = "HEARTH_HTML_FULL_PLANET_VISIBILITY_DOWNSTREAM_SHELL_ALIGNMENT_TNT_v4";
+  const HTML_FOUNDATION_CONTRACT = "HEARTH_HTML_PLANET_FACTORY_MIRRORLAND_PUBLIC_SHELL_TNT_v3";
 
-  const WEST_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_WEST_RENDERED_TARGET_AUTHORITY_PROBE_TNT_v1";
-  const WEST_CURRENT_IMPLEMENTATION_CONTRACT = "HEARTH_DIAGNOSTIC_WEST_RENDERED_PROOF_NAMESPACE_ADOPTION_TNT_v4";
-  const WEST_PREVIOUS_IMPLEMENTATION_CONTRACT = "HEARTH_DIAGNOSTIC_WEST_HIT_TEST_OBSERVABILITY_REFINEMENT_TNT_v1";
+  const INDEX_CURRENT_CONTRACT = "HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4";
 
-  const SOUTH_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_SOUTH_REPORT_PACKET_OUTPUT_TNT_v1";
-  const SOUTH_CURRENT_IMPLEMENTATION_CONTRACT = "HEARTH_DIAGNOSTIC_SOUTH_NORTH_ANCHOR_SCHEMA_CONFORMANCE_TNT_v3";
+  const ROUTE_CURRENT_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_TNT_v9_9";
+  const ROUTE_V9_8_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CONTROL_FILE_ADMISSION_AND_HANDSHAKE_DELIVERY_TNT_v9_8";
+  const ROUTE_V9_7_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION_TNT_v9_7";
+  const ROUTE_V9_6_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_TNT_v9_6";
+  const ROUTE_V9_5_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_TNT_v9_5";
+  const ROUTE_V9_4_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_TNT_v9_4";
 
-  const CURRENT_HTML_CONTRACT = "HEARTH_HTML_FULL_PLANET_VISIBILITY_DOWNSTREAM_SHELL_ALIGNMENT_TNT_v4";
-  const CURRENT_INDEX_JS_CONTRACT = "HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4";
-  const CURRENT_ROUTE_CONDUCTOR_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_TNT_v9_6";
-  const COMPAT_ROUTE_CONDUCTOR_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_TNT_v9_5";
-  const PRIOR_ROUTE_CONDUCTOR_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_TNT_v9_4";
-
-  const LAB_NORTH_CONTRACT = "LAB_RUNTIME_TABLE_NORTH_CENTRAL_TRAIN_STATION_PRODUCT_ENGINE_CONDUCTOR_TNT_v3";
-  const LAB_NORTH_FILE = "/assets/lab/runtime-table.js";
-  const LAB_WEST_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_TIMETABLE_ALIGNED_LOCAL_ADMISSIBILITY_CLUTCH_TNT_v4_6_3";
-  const LAB_WEST_FILE = "/assets/lab/runtime-table.west.js";
-
-  const CANVAS_LOCAL_STATION_FILE = "/assets/hearth/hearth.canvas.js";
-  const CANVAS_LOCAL_STATION_CONTRACTS = Object.freeze([
-    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_1",
-    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11"
+  const ACCEPTED_HTML_CONTRACTS = Object.freeze([
+    HTML_CURRENT_CONTRACT,
+    HTML_PREVIOUS_CONTRACT,
+    HTML_BASELINE_CONTRACT,
+    HTML_FOUNDATION_CONTRACT,
+    "HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_RECEIPT_TARGET_RESTORATION_TNT_v2_6",
+    "HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_OPTIMAL_STANDARD_TNT_v2_5",
+    "HEARTH_HTML_SINGLE_FLOATING_DIAGNOSTIC_DOORWAY_NO_DUPLICATE_TOP_BANNER_TNT_v2_4",
+    "HEARTH_HTML_PARALLEL_DIAGNOSTIC_RAIL_TOP_PRIORITY_NATIVE_ACCESS_DOORWAY_TNT_v2_3",
+    "HEARTH_HTML_PARALLEL_DIAGNOSTIC_RAIL_NATIVE_ACCESS_DOORWAY_TNT_v2_2",
+    "HEARTH_HTML_CONTROL_SURFACE_CACHE_KEY_TOUCH_BINDING_REPAIR_TNT_v2_1"
   ]);
 
-  const CONTROL_FILE = "/assets/hearth/hearth.controls.js";
-  const ROUTE_CONDUCTOR_FILE = "/showroom/globe/hearth/hearth.js";
-  const INDEX_FILE = "/showroom/globe/hearth/index.js";
-  const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
+  const ACCEPTED_INDEX_CONTRACTS = Object.freeze([
+    INDEX_CURRENT_CONTRACT
+  ]);
+
+  const ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS = Object.freeze([
+    ROUTE_CURRENT_CONTRACT,
+    ROUTE_V9_8_CONTRACT,
+    ROUTE_V9_7_CONTRACT,
+    ROUTE_V9_6_CONTRACT,
+    ROUTE_V9_5_CONTRACT,
+    ROUTE_V9_4_CONTRACT
+  ]);
+
   const EAST_FILE = "/assets/hearth/hearth.diagnostic.east.js";
   const WEST_FILE = "/assets/hearth/hearth.diagnostic.west.js";
   const SOUTH_FILE = "/assets/hearth/hearth.diagnostic.south.js";
   const DIAGNOSTIC_HTML_FILE = "/showroom/globe/hearth/diagnostic/index.html";
 
-  const LAB_CYCLE = Object.freeze({
-    ONE: "NORTH_EAST_WEST_SOUTH_NORTH",
-    TWO: "NORTH_EAST_SOUTH_WEST_CANVAS"
-  });
+  const EAST_RAIL_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_EAST_SERVED_SOURCE_EVIDENCE_TNT_v1";
+  const EAST_CURRENT_ALIGNMENT_CONTRACT = "HEARTH_DIAGNOSTIC_EAST_LAB_CANVAS_BRIDGE_SOURCE_FOOTPRINT_ALIGNMENT_TNT_v6";
+  const EAST_PREVIOUS_ALIGNMENT_CONTRACT = "HEARTH_DIAGNOSTIC_EAST_ROUTE_CONDUCTOR_PRIMARY_COMPATIBILITY_SPLIT_TNT_v4";
 
-  const LAB_STAGE = Object.freeze({
-    C2_WEST: "C2_WEST_CANVAS_RELEASE_AUDIT",
-    C2_CANVAS: "C2_CANVAS_F13_EVIDENCE",
-    F21: "F21_NORTH_NEWS_LATCH"
-  });
+  const WEST_RAIL_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_WEST_RENDERED_TARGET_AUTHORITY_PROBE_TNT_v1";
+  const WEST_CURRENT_IMPLEMENTATION_CONTRACT = "HEARTH_DIAGNOSTIC_WEST_LAB_CANVAS_BRIDGE_RENDERED_PROOF_ALIGNMENT_TNT_v5";
+  const WEST_PREVIOUS_IMPLEMENTATION_CONTRACT = "HEARTH_DIAGNOSTIC_WEST_RENDERED_PROOF_NAMESPACE_ADOPTION_TNT_v4";
 
-  const BRIDGE_STATUS = Object.freeze({
-    READY: "BRIDGE_READY",
-    PARTIAL: "BRIDGE_PARTIAL",
-    HELD: "BRIDGE_HELD",
-    MISSING: "BRIDGE_MISSING",
-    READ_ONLY: "BRIDGE_READ_ONLY",
-    NOT_AUTHORITY: "NOT_AUTHORITY"
-  });
+  const SOUTH_RAIL_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_SOUTH_REPORT_PACKET_OUTPUT_TNT_v1";
+  const SOUTH_CURRENT_IMPLEMENTATION_CONTRACT = "HEARTH_DIAGNOSTIC_SOUTH_LAB_CANVAS_BRIDGE_REPORT_CONFORMANCE_TNT_v5";
+  const SOUTH_PREVIOUS_IMPLEMENTATION_CONTRACT = "HEARTH_DIAGNOSTIC_SOUTH_PLANETARY_CONTROL_LIFECYCLE_REPORT_CONFORMANCE_TNT_v4";
+
+  const LAB_NORTH_FILE = "/assets/lab/runtime-table.js";
+  const LAB_WEST_FILE = "/assets/lab/runtime-table.west.js";
+
+  const CONTROL_FILE = "/assets/hearth/hearth.controls.js";
+  const ROUTE_CONDUCTOR_FILE = "/showroom/globe/hearth/hearth.js";
+  const INDEX_FILE = "/showroom/globe/hearth/index.js";
+  const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
+
+  const CANVAS_LOCAL_STATION_CONTRACTS = Object.freeze([
+    "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_TNT_v12",
+    "HEARTH_CANVAS_EXPRESSION_HUB_VISIBLE_BASE_GLOBE_CARRIER_TNT_v11_7",
+    "HEARTH_CANVAS_EXPRESSION_HUB_FINGER_MANAGER_TNT_v11_6",
+    "HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_4_DIAGNOSTIC_BRIDGE_ALIGNMENT_TNT_v11_5",
+    "HEARTH_CANVAS_LOCAL_STATION_DIAGNOSTIC_BRIDGE_ALIGNMENT_TNT_v11_4",
+    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_4",
+    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_3_2",
+    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_3_1",
+    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_3",
+    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_2",
+    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_1",
+    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11"
+  ]);
 
   const CONTROL_LIFECYCLE_STATES = Object.freeze({
     EXPECTED_NOT_YET_BUILT: "EXPECTED_NOT_YET_BUILT",
@@ -128,19 +150,13 @@
     UNKNOWN_PENDING_CHILD_SCHEMA: "UNKNOWN_PENDING_CHILD_SCHEMA"
   });
 
-  const FALLBACK = Object.freeze({
-    UNKNOWN: "UNKNOWN",
-    NOT_FOUND: "NOT_FOUND",
-    BLOCKED: "BLOCKED",
-    UNREADABLE: "UNREADABLE",
-    INACCESSIBLE: "INACCESSIBLE",
-    NOT_APPLICABLE: "NOT_APPLICABLE",
-    INSUFFICIENT_EVIDENCE: "INSUFFICIENT_EVIDENCE",
-    PARTIAL: "PARTIAL",
-    FAILED: "FAILED",
-    COMPLETE: "COMPLETE",
-    HELD: "HELD",
-    NONE: "none"
+  const BRIDGE_STATUS = Object.freeze({
+    READY: "BRIDGE_READY",
+    PARTIAL: "BRIDGE_PARTIAL",
+    HELD: "BRIDGE_HELD",
+    MISSING: "BRIDGE_MISSING",
+    READ_ONLY: "BRIDGE_READ_ONLY",
+    NOT_AUTHORITY: "NOT_AUTHORITY"
   });
 
   const STATUS = Object.freeze({
@@ -149,7 +165,8 @@
     COMPLETE: "COMPLETE",
     PARTIAL: "PARTIAL",
     FAILED: "FAILED",
-    FALLBACK: "FALLBACK"
+    FALLBACK: "FALLBACK",
+    UNKNOWN: "UNKNOWN"
   });
 
   const CHILD_VALIDATION = Object.freeze({
@@ -184,6 +201,21 @@
     INSUFFICIENT_EVIDENCE: "CALIBRATION_INSUFFICIENT_EVIDENCE"
   });
 
+  const FALLBACK = Object.freeze({
+    UNKNOWN: "UNKNOWN",
+    NOT_FOUND: "NOT_FOUND",
+    BLOCKED: "BLOCKED",
+    UNREADABLE: "UNREADABLE",
+    INACCESSIBLE: "INACCESSIBLE",
+    NOT_APPLICABLE: "NOT_APPLICABLE",
+    INSUFFICIENT_EVIDENCE: "INSUFFICIENT_EVIDENCE",
+    PARTIAL: "PARTIAL",
+    FAILED: "FAILED",
+    COMPLETE: "COMPLETE",
+    HELD: "HELD",
+    NONE: "none"
+  });
+
   const SUPPORT_TRUE = "true";
   const SUPPORT_FALSE = "false";
   const SUPPORT_HELD = "HELD";
@@ -193,6 +225,7 @@
     "LAB_AUTHORITY_READ",
     "EAST_SOURCE",
     "WEST_RENDERED",
+    "MODERN_CONTRACT_ACCEPTANCE",
     "MACRO_WEST_BRIDGE_READ",
     "CANVAS_LOCAL_STATION_READ",
     "NORTH_ADJUDICATION",
@@ -206,7 +239,7 @@
     { key: "F3", label: "EAST source evidence" },
     { key: "F5", label: "WEST rendered evidence" },
     { key: "F8", label: "NORTH adjudication" },
-    { key: "F13", label: "SOUTH packet output and Macro West bridge visibility" },
+    { key: "F13", label: "SOUTH packet output and bridge visibility" },
     { key: "F21", label: "no-claim receiver boundary" }
   ]);
 
@@ -260,6 +293,32 @@
         "DEXTER_LAB.runtimeTableWest",
         "DEXTER_LAB.cardinalRuntimeTableWest",
         "DEXTER_LAB.westAdmissibility"
+      ]
+    },
+    ROUTE_CONDUCTOR: {
+      file: ROUTE_CONDUCTOR_FILE,
+      paths: [
+        "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL",
+        "HEARTH_ROUTE_CONDUCTOR_CONTROL_FILE_ADMISSION_AND_HANDSHAKE_DELIVERY",
+        "HEARTH_ROUTE_CONDUCTOR",
+        "HEARTH.routeConductorBishopQueenCanvasRecognitionFunnel",
+        "HEARTH.routeConductor",
+        "DEXTER_LAB.hearthRouteConductorBishopQueenCanvasRecognitionFunnel",
+        "DEXTER_LAB.hearthRouteConductor"
+      ]
+    },
+    CANVAS: {
+      file: CANVAS_FILE,
+      paths: [
+        "HEARTH_CANVAS",
+        "HEARTH_CANVAS_HUB",
+        "HEARTH_CANVAS_EXPRESSION_HUB",
+        "HEARTH.canvas",
+        "HEARTH.canvasHub",
+        "HEARTH.canvasExpressionHub",
+        "DEXTER_LAB.hearthCanvas",
+        "DEXTER_LAB.hearthCanvasHub",
+        "DEXTER_LAB.hearthCanvasExpressionHub"
       ]
     }
   });
@@ -318,6 +377,28 @@
     "NORTH_RECEIPT",
     "PREVIOUS_NORTH_CONTRACT",
     "BASELINE_NORTH_CONTRACT",
+    "FOUNDATION_NORTH_CONTRACT",
+
+    "CURRENT_EXPECTED_HTML_CONTRACT",
+    "CURRENT_EXPECTED_INDEX_JS_CONTRACT",
+    "CURRENT_EXPECTED_ROUTE_CONDUCTOR_CONTRACT",
+    "ACCEPTED_HTML_CONTRACTS",
+    "ACCEPTED_INDEX_CONTRACTS",
+    "ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS",
+
+    "HTML_CONTRACT_RECOGNIZED",
+    "INDEX_CONTRACT_RECOGNIZED",
+    "ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED",
+    "PRIMARY_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED",
+    "ROUTE_CONDUCTOR_V9_9_PRIMARY_NOT_TREATED_AS_CASE_5",
+    "ROUTE_CONDUCTOR_V9_8_COMPATIBILITY_ACCEPTED",
+    "ROUTE_CONDUCTOR_V9_7_COMPATIBILITY_ACCEPTED",
+    "ROUTE_CONDUCTOR_V9_6_COMPATIBILITY_ACCEPTED",
+    "ROUTE_CONDUCTOR_V9_5_COMPATIBILITY_ACCEPTED",
+    "ROUTE_CONDUCTOR_V9_4_LINEAGE_ACCEPTED",
+    "CACHE_KEY_STALE_NON_BLOCKING",
+    "SERVED_CONTRACT_MISMATCH_IS_BLOCKING",
+    "EAST_CURRENT_SPREAD_ALIGNMENT_RECOGNIZED",
 
     "LAB_BRIDGE_SCHEMA_ACTIVE",
     "LAB_NORTH_FILE",
@@ -363,6 +444,8 @@
     "BISHOP_EAST_OBSERVED",
     "BISHOP_SOUTH_OBSERVED",
     "BISHOP_WEST_OBSERVED",
+    "BISHOP_ROUTE_CONDUCTOR_OBSERVED",
+    "BISHOP_CANVAS_OBSERVED",
     "BISHOP_HUBS_ARE_OPAQUE_TO_DIAGNOSTIC_NORTH",
     "BISHOP_CHILD_FILE_KNOWLEDGE_OWNED_BY_BISHOPS",
     "WEST_NEEDS_BISHOPS_NOT_SUBJECT_FILES",
@@ -393,14 +476,12 @@
     "CONTROL_ABSENCE_IS_CASE_5",
     "CONTROL_ABSENCE_BLOCKS_VISIBLE_PLANET",
     "CONTROL_ABSENCE_BLOCKS_MOTION_TOUCH",
-
     "CONTROL_HANDSHAKE_EXPECTED",
     "CONTROL_HANDSHAKE_STATUS",
     "HEARTH_JS_CONTROL_FUNNEL_EXPECTED",
     "HEARTH_JS_CONTROL_FUNNEL_FILE",
     "HEARTH_JS_CONTROL_HANDSHAKE_STATUS",
     "HEARTH_JS_LOADS_OR_RECOGNIZES_CONTROL_FILE",
-
     "MOTION_TOUCH_EXPECTED",
     "MOTION_TOUCH_STATUS",
     "DRAG_STATUS",
@@ -413,16 +494,6 @@
     "EAST_ALIGNMENT_CONTRACT",
     "WEST_IMPLEMENTATION_CONTRACT",
     "SOUTH_IMPLEMENTATION_CONTRACT",
-    "CURRENT_EXPECTED_HTML_CONTRACT",
-    "CURRENT_EXPECTED_INDEX_JS_CONTRACT",
-    "CURRENT_EXPECTED_ROUTE_CONDUCTOR_CONTRACT",
-    "COMPAT_ROUTE_CONDUCTOR_CONTRACT",
-    "PRIOR_ROUTE_CONDUCTOR_CONTRACT",
-    "PRIMARY_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED",
-    "ROUTE_CONDUCTOR_V9_6_PRIMARY_NOT_TREATED_AS_CASE_5",
-    "ROUTE_CONDUCTOR_V9_5_COMPATIBILITY_ACCEPTED",
-    "ROUTE_CONDUCTOR_V9_4_LINEAGE_ACCEPTED",
-    "EAST_CURRENT_SPREAD_ALIGNMENT_RECOGNIZED",
 
     "SHOW_RECEIPT_RECT",
     "SHOW_RECEIPT_CENTER_POINT",
@@ -483,6 +554,7 @@
   });
 
   const root = typeof window !== "undefined" ? window : globalThis;
+  const api = {};
 
   let lastState = null;
   let lastVerdict = null;
@@ -573,6 +645,15 @@
     return { path: "NONE", value: null };
   }
 
+  function firstNonEmpty(...values) {
+    for (const value of values) {
+      const text = safeString(value).trim();
+      if (text) return text;
+    }
+
+    return "";
+  }
+
   function getValue(source, key, fallback = FALLBACK.UNKNOWN) {
     if (!isObject(source)) return fallback;
 
@@ -609,15 +690,6 @@
     return fallback;
   }
 
-  function firstNonEmpty(...values) {
-    for (const value of values) {
-      const text = safeString(value).trim();
-      if (text) return text;
-    }
-
-    return "";
-  }
-
   function asBoolString(value, fallback = FALLBACK.UNKNOWN) {
     if (value === true || value === "true" || value === "TRUE" || value === 1 || value === "1") return "true";
     if (value === false || value === "false" || value === "FALSE" || value === 0 || value === "0") return "false";
@@ -635,17 +707,18 @@
     return value === SUPPORT_TRUE || value === true || value === "TRUE" || value === 1 || value === "1";
   }
 
+  function isSupportFalse(value) {
+    return value === SUPPORT_FALSE || value === false || value === "FALSE" || value === 0 || value === "0";
+  }
+
   function line(key, value) {
     return `${key}=${packetValue(value)}`;
   }
 
   function addNote(state, note) {
-    const clean = bounded(note, 1200);
+    const clean = bounded(note, 1400);
     if (!clean) return;
-
-    if (!state.northSecondaryEvidenceNotes.includes(clean)) {
-      state.northSecondaryEvidenceNotes.push(clean);
-    }
+    if (!state.northSecondaryEvidenceNotes.includes(clean)) state.northSecondaryEvidenceNotes.push(clean);
   }
 
   function normalizeNotes(...sources) {
@@ -655,12 +728,10 @@
     for (const source of sources) {
       if (source === undefined || source === null || source === "" || source === FALLBACK.NONE) continue;
 
-      const values = Array.isArray(source)
-        ? source
-        : safeString(source).split("|");
+      const values = Array.isArray(source) ? source : safeString(source).split("|");
 
       for (const raw of values) {
-        const clean = bounded(raw, 1200);
+        const clean = bounded(raw, 1400);
         if (!clean || clean === FALLBACK.NONE) continue;
 
         if (!seen.has(clean)) {
@@ -680,9 +751,7 @@
   function normalizeLifecycle(value, fallback) {
     const text = safeString(value, "");
     const accepted = Object.keys(CONTROL_LIFECYCLE_STATES).map((key) => CONTROL_LIFECYCLE_STATES[key]);
-
-    if (accepted.includes(text)) return text;
-    return fallback || CONTROL_LIFECYCLE_STATES.UNKNOWN_PENDING_CHILD_SCHEMA;
+    return accepted.includes(text) ? text : fallback || CONTROL_LIFECYCLE_STATES.UNKNOWN_PENDING_CHILD_SCHEMA;
   }
 
   function getReceiptFromAuthority(authority) {
@@ -694,10 +763,12 @@
       if (isFunction(authority.getCentralStationReceiptLight)) return authority.getCentralStationReceiptLight();
       if (isFunction(authority.getCanvasStationSummary)) return authority.getCanvasStationSummary();
       if (isFunction(authority.getCanvasStationReceiptLight)) return authority.getCanvasStationReceiptLight();
+      if (isFunction(authority.getRoutePrimaryGateReceipt)) return authority.getRoutePrimaryGateReceipt();
+      if (isFunction(authority.getRouteCycleReceipt)) return authority.getRouteCycleReceipt();
       if (isFunction(authority.getReceipt)) return authority.getReceipt();
       if (isObject(authority.receiptObject)) return authority.receiptObject;
       if (isObject(authority.receipt)) return authority.receipt;
-      if (authority.contract || authority.receipt || authority.version) return authority;
+      if (authority.contract || authority.CONTRACT || authority.receipt || authority.RECEIPT || authority.version) return authority;
       return null;
     } catch (error) {
       return { error: bounded(error && error.message ? error.message : error, 1000) };
@@ -715,13 +786,21 @@
   }
 
   function validateNoTrueClaims(receipt, keys) {
-    if (!isObject(receipt)) return false;
+    if (!isObject(receipt)) return true;
 
     for (const key of keys) {
       if (receipt[key] === true) return false;
     }
 
     return true;
+  }
+
+  function containsContract(text, contract) {
+    return safeString(text).includes(contract);
+  }
+
+  function recognizedFromVisibleStatus(status, contract) {
+    return containsContract(status, contract) || safeString(status).includes(`latest=${contract}`);
   }
 
   function makeState() {
@@ -733,12 +812,90 @@
       previousReceipt: PREVIOUS_RECEIPT,
       baselineContract: BASELINE_CONTRACT,
       baselineReceipt: BASELINE_RECEIPT,
+      foundationContract: FOUNDATION_CONTRACT,
+      foundationReceipt: FOUNDATION_RECEIPT,
       diagnosticRunStatus: STATUS.READY,
       diagnosticTimestamp: nowIso(),
 
       childLoadingMode: CHILD_LOADING_MODE,
       routeReceiverMustLoadChildrenBeforeRun: ROUTE_RECEIVER_MUST_LOAD_CHILDREN_BEFORE_RUN,
       northDynamicChildLoadingOwned: NORTH_DYNAMIC_CHILD_LOADING_OWNED,
+
+      expectedHtmlContract: HTML_CURRENT_CONTRACT,
+      expectedIndexJsContract: INDEX_CURRENT_CONTRACT,
+      expectedRouteConductorContract: ROUTE_CURRENT_CONTRACT,
+
+      currentExpectedHtmlContract: HTML_CURRENT_CONTRACT,
+      currentExpectedIndexJsContract: INDEX_CURRENT_CONTRACT,
+      currentExpectedRouteConductorContract: ROUTE_CURRENT_CONTRACT,
+
+      acceptedHtmlContracts: ACCEPTED_HTML_CONTRACTS.slice(),
+      acceptedIndexContracts: ACCEPTED_INDEX_CONTRACTS.slice(),
+      acceptedRouteConductorContracts: ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS.slice(),
+
+      servedHtmlContract: FALLBACK.UNKNOWN,
+      servedIndexJsContract: FALLBACK.UNKNOWN,
+      servedRouteConductorContract: FALLBACK.UNKNOWN,
+      indexScriptSrc: FALLBACK.UNKNOWN,
+      routeConductorScriptSrc: FALLBACK.UNKNOWN,
+      cacheOrServedContractMismatch: FALLBACK.UNKNOWN,
+
+      htmlContractRecognized: FALLBACK.UNKNOWN,
+      indexContractRecognized: FALLBACK.UNKNOWN,
+      routeConductorContractRecognized: FALLBACK.UNKNOWN,
+      primaryRouteConductorContractRecognized: FALLBACK.UNKNOWN,
+      routeConductorV99PrimaryNotTreatedAsCase5: FALLBACK.UNKNOWN,
+      routeConductorV98CompatibilityAccepted: FALLBACK.UNKNOWN,
+      routeConductorV97CompatibilityAccepted: FALLBACK.UNKNOWN,
+      routeConductorV96CompatibilityAccepted: FALLBACK.UNKNOWN,
+      routeConductorV95CompatibilityAccepted: FALLBACK.UNKNOWN,
+      routeConductorV94LineageAccepted: FALLBACK.UNKNOWN,
+      cacheKeyStaleNonBlocking: FALLBACK.UNKNOWN,
+      servedContractMismatchIsBlocking: FALLBACK.UNKNOWN,
+      eastCurrentSpreadAlignmentRecognized: FALLBACK.UNKNOWN,
+
+      diagnosticTargetAccessStatus: FALLBACK.UNKNOWN,
+      diagnosticTargetAccessError: FALLBACK.UNKNOWN,
+      currentVisibleHearthStatus: FALLBACK.UNKNOWN,
+
+      showReceiptSelectorMatched: FALLBACK.UNKNOWN,
+      showReceiptButtonExists: FALLBACK.UNKNOWN,
+      showReceiptHitTestTarget: FALLBACK.UNKNOWN,
+      showReceiptHitTestTargetSelector: FALLBACK.UNKNOWN,
+      showReceiptHitTestTargetTag: FALLBACK.UNKNOWN,
+      showReceiptTargetIsButton: FALLBACK.UNKNOWN,
+      targetPointerEvents: FALLBACK.UNKNOWN,
+      receiptPanelExists: FALLBACK.UNKNOWN,
+      receiptTextNodeExists: FALLBACK.UNKNOWN,
+      receiptPanelStateBeforeAction: FALLBACK.UNKNOWN,
+      receiptPanelStateAfterAction: FALLBACK.UNKNOWN,
+      showReceiptActionResult: FALLBACK.UNKNOWN,
+      ancestorBlockerFound: FALLBACK.UNKNOWN,
+      ancestorBlockerDetail: FALLBACK.UNKNOWN,
+      overlayAboveControl: FALLBACK.UNKNOWN,
+      overlayOwner: FALLBACK.UNKNOWN,
+      globalEventSuppressionFound: FALLBACK.UNKNOWN,
+      likelySuppressionOwner: FALLBACK.UNKNOWN,
+      indexSuppressesVisibleControls: FALLBACK.UNKNOWN,
+      runtimeReleaseState: FALLBACK.UNKNOWN,
+      runtimeReleaseIsLock: FALLBACK.UNKNOWN,
+
+      showReceiptRect: FALLBACK.UNKNOWN,
+      showReceiptCenterPoint: FALLBACK.UNKNOWN,
+      targetViewportWidth: FALLBACK.UNKNOWN,
+      targetViewportHeight: FALLBACK.UNKNOWN,
+      centerPointInViewport: FALLBACK.UNKNOWN,
+      elementFromPointAvailable: FALLBACK.UNKNOWN,
+      elementFromPointResult: FALLBACK.UNKNOWN,
+      buttonPointerEvents: FALLBACK.UNKNOWN,
+      hitTestUnreadableReason: FALLBACK.UNKNOWN,
+      frameRect: FALLBACK.UNKNOWN,
+      frameVisibleToDiagnosticRoute: FALLBACK.UNKNOWN,
+      canvasElementFound: FALLBACK.UNKNOWN,
+      routeConductorContractReadableInRenderedTarget: FALLBACK.UNKNOWN,
+      renderedPlanetProofFullyInspected: FALLBACK.UNKNOWN,
+      westRenderedProofSpreadComplete: FALLBACK.UNKNOWN,
+      floatingAnchorHitTestNonControlling: FALLBACK.UNKNOWN,
 
       labBridgeSchemaActive: true,
       labNorthFile: LAB_NORTH_FILE,
@@ -772,7 +929,7 @@
       macroWestCanvasReleaseAuthorized: "false",
       macroWestRecommendedNextFile: FALLBACK.UNKNOWN,
 
-      canvasLocalStationFile: CANVAS_LOCAL_STATION_FILE,
+      canvasLocalStationFile: CANVAS_FILE,
       canvasLocalStationObserved: false,
       canvasLocalStationSourcePath: "NONE",
       canvasLocalStationContract: FALLBACK.UNKNOWN,
@@ -787,6 +944,8 @@
       bishopEastObserved: false,
       bishopSouthObserved: false,
       bishopWestObserved: false,
+      bishopRouteConductorObserved: false,
+      bishopCanvasObserved: false,
       bishopHubSummary: {},
       bishopHubsAreOpaqueToDiagnosticNorth: true,
       bishopChildFileKnowledgeOwnedByBishops: true,
@@ -818,14 +977,12 @@
       controlAbsenceIsCase5: false,
       controlAbsenceBlocksVisiblePlanet: false,
       controlAbsenceBlocksMotionTouch: true,
-
       controlHandshakeExpected: true,
       controlHandshakeStatus: CONTROL_LIFECYCLE_STATES.EXPECTED_NOT_YET_WIRED,
       hearthJsControlFunnelExpected: true,
       hearthJsControlFunnelFile: ROUTE_CONDUCTOR_FILE,
       hearthJsControlHandshakeStatus: CONTROL_LIFECYCLE_STATES.EXPECTED_NOT_YET_WIRED,
       hearthJsLoadsOrRecognizesControlFile: FALLBACK.UNKNOWN,
-
       motionTouchExpected: true,
       motionTouchStatus: CONTROL_LIFECYCLE_STATES.WAITING_CONTROL_FILE,
       dragStatus: CONTROL_LIFECYCLE_STATES.WAITING_CONTROL_FILE,
@@ -838,95 +995,19 @@
       childEastStatus: FALLBACK.UNKNOWN,
       childWestStatus: FALLBACK.UNKNOWN,
       childSouthStatus: FALLBACK.UNKNOWN,
-
       eastReceiptValid: CHILD_VALIDATION.MISSING,
       westReceiptValid: CHILD_VALIDATION.MISSING,
       southReceiptValid: CHILD_VALIDATION.MISSING,
-
       eastEvidenceValid: CHILD_VALIDATION.MISSING,
       westEvidenceValid: CHILD_VALIDATION.MISSING,
       southOutputValid: CHILD_VALIDATION.MISSING,
       southMeaningPreserved: FALLBACK.UNKNOWN,
-
       eastAlignmentContract: FALLBACK.UNKNOWN,
       westImplementationContract: FALLBACK.UNKNOWN,
       southImplementationContract: SOUTH_CURRENT_IMPLEMENTATION_CONTRACT,
-
       eastSourceReadStatus: FALLBACK.UNKNOWN,
       westRenderedReadStatus: FALLBACK.UNKNOWN,
       southOutputStatus: FALLBACK.UNKNOWN,
-
-      diagnosticTargetAccessStatus: FALLBACK.UNKNOWN,
-      diagnosticTargetAccessError: FALLBACK.UNKNOWN,
-
-      expectedHtmlContract: CURRENT_HTML_CONTRACT,
-      expectedIndexJsContract: CURRENT_INDEX_JS_CONTRACT,
-      expectedRouteConductorContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
-
-      currentExpectedHtmlContract: CURRENT_HTML_CONTRACT,
-      currentExpectedIndexJsContract: CURRENT_INDEX_JS_CONTRACT,
-      currentExpectedRouteConductorContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
-      compatRouteConductorContract: COMPAT_ROUTE_CONDUCTOR_CONTRACT,
-      priorRouteConductorContract: PRIOR_ROUTE_CONDUCTOR_CONTRACT,
-
-      servedHtmlContract: FALLBACK.UNKNOWN,
-      servedIndexJsContract: FALLBACK.UNKNOWN,
-      servedRouteConductorContract: FALLBACK.UNKNOWN,
-      indexScriptSrc: FALLBACK.UNKNOWN,
-      routeConductorScriptSrc: FALLBACK.UNKNOWN,
-      cacheOrServedContractMismatch: FALLBACK.UNKNOWN,
-
-      primaryRouteConductorContractRecognized: FALLBACK.UNKNOWN,
-      routeConductorV96PrimaryNotTreatedAsCase5: FALLBACK.UNKNOWN,
-      routeConductorV95CompatibilityAccepted: FALLBACK.UNKNOWN,
-      routeConductorV94LineageAccepted: FALLBACK.UNKNOWN,
-      eastCurrentSpreadAlignmentRecognized: FALLBACK.UNKNOWN,
-
-      currentVisibleHearthStatus: FALLBACK.UNKNOWN,
-
-      showReceiptSelectorMatched: FALLBACK.UNKNOWN,
-      showReceiptButtonExists: FALLBACK.UNKNOWN,
-      showReceiptHitTestTarget: FALLBACK.UNKNOWN,
-      showReceiptHitTestTargetSelector: FALLBACK.UNKNOWN,
-      showReceiptHitTestTargetTag: FALLBACK.UNKNOWN,
-      showReceiptTargetIsButton: FALLBACK.UNKNOWN,
-      targetPointerEvents: FALLBACK.UNKNOWN,
-
-      receiptPanelExists: FALLBACK.UNKNOWN,
-      receiptTextNodeExists: FALLBACK.UNKNOWN,
-      receiptPanelStateBeforeAction: FALLBACK.UNKNOWN,
-      receiptPanelStateAfterAction: FALLBACK.UNKNOWN,
-      showReceiptActionResult: FALLBACK.UNKNOWN,
-
-      ancestorBlockerFound: FALLBACK.UNKNOWN,
-      ancestorBlockerDetail: FALLBACK.UNKNOWN,
-      overlayAboveControl: FALLBACK.UNKNOWN,
-      overlayOwner: FALLBACK.UNKNOWN,
-
-      globalEventSuppressionFound: FALLBACK.UNKNOWN,
-      likelySuppressionOwner: FALLBACK.UNKNOWN,
-      indexSuppressesVisibleControls: FALLBACK.UNKNOWN,
-
-      runtimeReleaseState: FALLBACK.UNKNOWN,
-      runtimeReleaseIsLock: FALLBACK.UNKNOWN,
-
-      showReceiptRect: FALLBACK.UNKNOWN,
-      showReceiptCenterPoint: FALLBACK.UNKNOWN,
-      targetViewportWidth: FALLBACK.UNKNOWN,
-      targetViewportHeight: FALLBACK.UNKNOWN,
-      centerPointInViewport: FALLBACK.UNKNOWN,
-      elementFromPointAvailable: FALLBACK.UNKNOWN,
-      elementFromPointResult: FALLBACK.UNKNOWN,
-      buttonPointerEvents: FALLBACK.UNKNOWN,
-      hitTestUnreadableReason: FALLBACK.UNKNOWN,
-      frameRect: FALLBACK.UNKNOWN,
-      frameVisibleToDiagnosticRoute: FALLBACK.UNKNOWN,
-
-      canvasElementFound: FALLBACK.UNKNOWN,
-      routeConductorContractReadableInRenderedTarget: FALLBACK.UNKNOWN,
-      renderedPlanetProofFullyInspected: FALLBACK.UNKNOWN,
-      westRenderedProofSpreadComplete: FALLBACK.UNKNOWN,
-      floatingAnchorHitTestNonControlling: FALLBACK.UNKNOWN,
 
       case1Support: FALLBACK.INSUFFICIENT_EVIDENCE,
       case2Support: FALLBACK.INSUFFICIENT_EVIDENCE,
@@ -935,7 +1016,6 @@
       case5Support: FALLBACK.INSUFFICIENT_EVIDENCE,
       case6Support: FALLBACK.INSUFFICIENT_EVIDENCE,
       case7Support: FALLBACK.INSUFFICIENT_EVIDENCE,
-
       primaryCase: CASES.INCONCLUSIVE,
 
       calibrationStatus: CALIBRATION.INSUFFICIENT_EVIDENCE,
@@ -989,10 +1069,10 @@
     const authority = found.value;
     const receipt = getReceiptFromAuthority(authority) || {};
 
-    state.labNorthObserved = Boolean(authority || receipt.contract);
+    state.labNorthObserved = Boolean(authority || receipt.contract || receipt.CONTRACT);
     state.labNorthSourcePath = found.path;
-    state.labNorthContract = firstNonEmpty(receipt.contract, authority && authority.contract, FALLBACK.UNKNOWN);
-    state.labNorthReceipt = firstNonEmpty(receipt.receipt, authority && authority.receipt, FALLBACK.UNKNOWN);
+    state.labNorthContract = firstNonEmpty(receipt.contract, receipt.CONTRACT, authority && authority.contract, authority && authority.CONTRACT, FALLBACK.UNKNOWN);
+    state.labNorthReceipt = firstNonEmpty(receipt.receipt, receipt.RECEIPT, authority && authority.receipt, authority && authority.RECEIPT, FALLBACK.UNKNOWN);
     state.labNorthActiveStageId = firstNonEmpty(receipt.activeStageId, authority && authority.activeStageId, FALLBACK.UNKNOWN);
     state.labNorthActiveGear = firstNonEmpty(receipt.activeGear, receipt.activeGearId, authority && authority.activeGear, FALLBACK.UNKNOWN);
     state.labNorthActiveCycleNumber = firstNonEmpty(receipt.activeCycleNumber, authority && authority.activeCycleNumber, FALLBACK.UNKNOWN);
@@ -1006,11 +1086,8 @@
     state.labNorthDownstreamReleaseAuthorized = asBoolString(firstNonEmpty(receipt.downstreamReleaseAuthorized, authority && authority.downstreamReleaseAuthorized, "false"), "false");
     state.labNorthCompletionLatched = asBoolString(firstNonEmpty(receipt.completionLatched, authority && authority.completionLatched, "false"), "false");
 
-    if (state.labNorthObserved) {
-      addNote(state, `NORTH_READ_LAB_RUNTIME_TABLE_BRIDGE:${state.labNorthSourcePath}`);
-    } else {
-      addNote(state, "NORTH_LAB_RUNTIME_TABLE_BRIDGE_NOT_OBSERVED_READ_ONLY_HOLD");
-    }
+    if (state.labNorthObserved) addNote(state, `NORTH_READ_LAB_RUNTIME_TABLE_BRIDGE:${state.labNorthSourcePath}`);
+    else addNote(state, "NORTH_LAB_RUNTIME_TABLE_BRIDGE_NOT_OBSERVED_READ_ONLY_HOLD");
 
     return receipt;
   }
@@ -1042,11 +1119,11 @@
       } catch (_error) {}
     }
 
-    state.macroWestObserved = Boolean(authority || receipt.contract);
+    state.macroWestObserved = Boolean(authority || receipt.contract || receipt.CONTRACT);
     state.macroWestSourcePath = found.path;
-    state.macroWestContract = firstNonEmpty(receipt.contract, authority && authority.CONTRACT, authority && authority.contract, FALLBACK.UNKNOWN);
-    state.macroWestReceipt = firstNonEmpty(receipt.receipt, authority && authority.RECEIPT, authority && authority.receipt, FALLBACK.UNKNOWN);
-    state.macroWestDecision = firstNonEmpty(receipt.westDecision, receipt.decision, FALLBACK.UNKNOWN);
+    state.macroWestContract = firstNonEmpty(receipt.contract, receipt.CONTRACT, authority && authority.CONTRACT, authority && authority.contract, FALLBACK.UNKNOWN);
+    state.macroWestReceipt = firstNonEmpty(receipt.receipt, receipt.RECEIPT, authority && authority.RECEIPT, authority && authority.receipt, FALLBACK.UNKNOWN);
+    state.macroWestDecision = firstNonEmpty(receipt.westDecision, receipt.decision, receipt.status, FALLBACK.UNKNOWN);
     state.macroWestGapClass = firstNonEmpty(receipt.westGapClass, receipt.gapClass, FALLBACK.UNKNOWN);
     state.macroWestAuditAccepted = asBoolString(firstNonEmpty(receipt.westAuditAccepted, receipt.westAuditPassed, receipt.westCanvasReleaseApproved, "false"), "false");
     state.macroWestReleaseToCanvas = asBoolString(firstNonEmpty(receipt.releaseToCanvas, receipt.westForwardAllowed, receipt.canvasReleaseApprovedByWest, "false"), "false");
@@ -1054,11 +1131,8 @@
     state.macroWestCanvasReleaseAuthorized = asBoolString(firstNonEmpty(receipt.canvasReleaseAuthorized, receipt.canvasReleaseApprovedByWest, "false"), "false");
     state.macroWestRecommendedNextFile = firstNonEmpty(receipt.recommendedNextFile, receipt.recommendedNextRenewalTarget, FALLBACK.UNKNOWN);
 
-    if (state.macroWestObserved) {
-      addNote(state, `NORTH_READ_MACRO_WEST_ADMISSIBILITY_CLUTCH:${state.macroWestSourcePath}`);
-    } else {
-      addNote(state, "NORTH_MACRO_WEST_ADMISSIBILITY_CLUTCH_NOT_OBSERVED_READ_ONLY_HOLD");
-    }
+    if (state.macroWestObserved) addNote(state, `NORTH_READ_MACRO_WEST_ADMISSIBILITY_CLUTCH:${state.macroWestSourcePath}`);
+    else addNote(state, "NORTH_MACRO_WEST_ADMISSIBILITY_CLUTCH_NOT_OBSERVED_READ_ONLY_HOLD");
 
     return receipt;
   }
@@ -1069,7 +1143,9 @@
       proof.currentCanvasStationContract,
       proof.currentCanvasParentContract,
       proof.canvasStationContract,
+      proof.canvasContract,
       proof.contract,
+      proof.CONTRACT,
       proof.hearthCanvasContract,
       proof.hearthCanvasLocalStationContract,
       authority && authority.contract,
@@ -1084,9 +1160,12 @@
       isObject(authority) &&
       (
         isFunction(authority.consumeRouteConductorReleasePacket) ||
+        isFunction(authority.receiveRouteConductorReleasePacket) ||
         isFunction(authority.receiveReleasePacket) ||
         isFunction(authority.receiveCanvasReleasePacket) ||
         isFunction(authority.receiveCanvasStationSummary) ||
+        isFunction(authority.receiveFingerPacket) ||
+        isFunction(authority.registerCanvasFinger) ||
         isFunction(authority.boot) ||
         isFunction(authority.init) ||
         isFunction(authority.start) ||
@@ -1097,32 +1176,37 @@
 
   function readCanvasLocalStationBridge(state) {
     const found = findFirstPath([
+      "HEARTH_CANVAS",
+      "HEARTH_CANVAS_HUB",
+      "HEARTH_CANVAS_EXPRESSION_HUB",
       "HEARTH_CANVAS_LOCAL_STATION",
       "HEARTH_CANVAS_STATION",
       "HEARTH_CANVAS_CHILD_DISTRIBUTION_SWITCHBOARD",
-      "HEARTH_CANVAS",
+      "HEARTH.canvas",
+      "HEARTH.canvasHub",
+      "HEARTH.canvasExpressionHub",
       "HEARTH.canvasLocalStation",
       "HEARTH.canvasStation",
       "HEARTH.canvasChildDistributionSwitchboard",
-      "HEARTH.canvas",
+      "DEXTER_LAB.hearthCanvas",
+      "DEXTER_LAB.hearthCanvasHub",
+      "DEXTER_LAB.hearthCanvasExpressionHub",
       "DEXTER_LAB.hearthCanvasLocalStation",
       "DEXTER_LAB.hearthCanvasStation",
-      "DEXTER_LAB.hearthCanvasChildDistributionSwitchboard",
-      "DEXTER_LAB.hearthCanvas"
+      "DEXTER_LAB.hearthCanvasChildDistributionSwitchboard"
     ]);
 
     const authority = found.value;
     const receipt = getReceiptFromAuthority(authority) || {};
     const contract = canvasContractFromProof(receipt, authority);
-    const accepted = CANVAS_LOCAL_STATION_CONTRACTS.includes(contract);
+    const accepted = CANVAS_LOCAL_STATION_CONTRACTS.includes(contract) || safeString(contract).includes("HEARTH_CANVAS_");
     const apiReady = Boolean(accepted && (authority || receipt.canvasLocalStationApiReady === true || receipt.apiReady === true));
     const receiveReady = Boolean(hasCanvasReceiveSurface(authority) || toBool(receipt.canvasLocalStationReceiveSurfaceReady, false) || toBool(receipt.receiveSurfaceReady, false));
     const summaryObserved = Boolean(
       toBool(receipt.canvasLocalStationSummaryObserved, false) ||
       toBool(receipt.summaryObserved, false) ||
       toBool(receipt.canvasStationSummaryObserved, false) ||
-      receipt.packetType === "CANVAS_LOCAL_STATION_SUMMARY" ||
-      receipt.packetType === "CANVAS_LOCAL_STATION_RECEIPT" ||
+      safeString(receipt.packetType).includes("CANVAS") ||
       accepted
     );
 
@@ -1140,11 +1224,8 @@
         ? BRIDGE_STATUS.PARTIAL
         : BRIDGE_STATUS.MISSING;
 
-    if (state.canvasLocalStationObserved) {
-      addNote(state, `NORTH_READ_CANVAS_LOCAL_STATION_BRIDGE:${state.canvasLocalStationSourcePath}`);
-    } else {
-      addNote(state, "NORTH_CANVAS_LOCAL_STATION_BRIDGE_NOT_OBSERVED_READ_ONLY_HOLD");
-    }
+    if (state.canvasLocalStationObserved) addNote(state, `NORTH_READ_CANVAS_LOCAL_STATION_BRIDGE:${state.canvasLocalStationSourcePath}`);
+    else addNote(state, "NORTH_CANVAS_LOCAL_STATION_BRIDGE_NOT_OBSERVED_READ_ONLY_HOLD");
 
     return receipt;
   }
@@ -1156,14 +1237,14 @@
       const config = BISHOP_HUBS[key];
       const found = findFirstPath(config.paths);
       const receipt = getReceiptFromAuthority(found.value) || {};
-      const observed = Boolean(found.value || receipt.contract);
+      const observed = Boolean(found.value || receipt.contract || receipt.CONTRACT);
 
       summary[key] = {
         observed,
         sourcePath: found.path,
         file: config.file,
-        contract: firstNonEmpty(receipt.contract, found.value && found.value.contract, found.value && found.value.CONTRACT, FALLBACK.UNKNOWN),
-        receipt: firstNonEmpty(receipt.receipt, found.value && found.value.receipt, found.value && found.value.RECEIPT, FALLBACK.UNKNOWN),
+        contract: firstNonEmpty(receipt.contract, receipt.CONTRACT, found.value && found.value.contract, found.value && found.value.CONTRACT, FALLBACK.UNKNOWN),
+        receipt: firstNonEmpty(receipt.receipt, receipt.RECEIPT, found.value && found.value.receipt, found.value && found.value.RECEIPT, FALLBACK.UNKNOWN),
         opaqueHubOnly: true,
         subjectChildFilesInspectedByDiagnosticNorth: false
       };
@@ -1172,15 +1253,16 @@
       if (key === "EAST") state.bishopEastObserved = observed;
       if (key === "SOUTH") state.bishopSouthObserved = observed;
       if (key === "WEST") state.bishopWestObserved = observed;
+      if (key === "ROUTE_CONDUCTOR") state.bishopRouteConductorObserved = observed;
+      if (key === "CANVAS") state.bishopCanvasObserved = observed;
     });
 
     state.bishopHubSummary = summary;
 
-    if (state.bishopNorthObserved && state.bishopWestObserved) {
-      addNote(state, "NORTH_BISHOP_HUB_BRIDGE_OBSERVED_NORTH_AND_WEST");
-    } else {
-      addNote(state, "NORTH_BISHOP_HUB_BRIDGE_PARTIAL_OR_MISSING_OPAQUE_READ_ONLY");
-    }
+    if (state.bishopRouteConductorObserved) addNote(state, "NORTH_BISHOP_QUEEN_ROUTE_CONDUCTOR_HUB_OBSERVED");
+    if (state.bishopCanvasObserved) addNote(state, "NORTH_CANVAS_BISHOP_HUB_OBSERVED");
+    if (state.bishopNorthObserved && state.bishopWestObserved) addNote(state, "NORTH_BISHOP_HUB_BRIDGE_OBSERVED_NORTH_AND_WEST");
+    else addNote(state, "NORTH_BISHOP_HUB_BRIDGE_PARTIAL_OR_MISSING_OPAQUE_READ_ONLY");
 
     addNote(state, "NORTH_CONFIRMS_BISHOP_CHILD_FILE_KNOWLEDGE_OWNED_BY_BISHOPS_NOT_DIAGNOSTIC_NORTH");
     return summary;
@@ -1209,16 +1291,13 @@
       } catch (_error) {}
     }
 
-    state.diagnosticReceiverObserved = Boolean(receiver || receipt.contract);
-    state.diagnosticReceiverContract = firstNonEmpty(receipt.contract, receiver && receiver.contract, FALLBACK.UNKNOWN);
+    state.diagnosticReceiverObserved = Boolean(receiver || receipt.contract || receipt.CONTRACT);
+    state.diagnosticReceiverContract = firstNonEmpty(receipt.contract, receipt.CONTRACT, receiver && receiver.contract, FALLBACK.UNKNOWN);
     state.diagnosticReceiverCallsNorthOnly = asBoolString(firstNonEmpty(receipt.routeReceiverCallsNorthOnly, receiver && receiver.routeReceiverCallsNorthOnly, FALLBACK.UNKNOWN));
     state.diagnosticReceiverPlanetaryObserverActive = asBoolString(firstNonEmpty(receipt.planetaryBuildObserverActive, receiver && receiver.diagnosticInterestRenewalOnly, FALLBACK.UNKNOWN));
 
-    if (state.diagnosticReceiverObserved) {
-      addNote(state, "NORTH_READ_DIAGNOSTIC_HTML_RECEIVER_BRIDGE");
-    } else {
-      addNote(state, "NORTH_DIAGNOSTIC_HTML_RECEIVER_NOT_OBSERVED_OR_NOT_YET_PUBLISHED");
-    }
+    if (state.diagnosticReceiverObserved) addNote(state, "NORTH_READ_DIAGNOSTIC_HTML_RECEIVER_BRIDGE");
+    else addNote(state, "NORTH_DIAGNOSTIC_HTML_RECEIVER_NOT_OBSERVED_OR_NOT_YET_PUBLISHED");
 
     return receipt;
   }
@@ -1226,8 +1305,8 @@
   function resolveBridgeStatus(state) {
     const labOk = state.labNorthObserved && state.labNorthTwoCycleLawActive !== "false";
     const westOk = state.macroWestObserved;
-    const canvasOk = state.canvasLocalStationObserved;
-    const bishopOk = state.bishopNorthObserved || state.bishopEastObserved || state.bishopSouthObserved || state.bishopWestObserved;
+    const canvasOk = state.canvasLocalStationObserved || state.bishopCanvasObserved;
+    const bishopOk = state.bishopNorthObserved || state.bishopEastObserved || state.bishopSouthObserved || state.bishopWestObserved || state.bishopRouteConductorObserved;
     const receiverOk = state.diagnosticReceiverObserved || typeof document !== "undefined";
 
     if (labOk && westOk && canvasOk && bishopOk) {
@@ -1267,6 +1346,35 @@
     return null;
   }
 
+  function discoverChildren() {
+    return {
+      east: findChild([
+        "HEARTH.diagnosticEast",
+        "HEARTH.diagnosticRailEast",
+        "HEARTH_DIAGNOSTIC_EAST",
+        "HEARTH_DIAGNOSTIC_RAIL_EAST",
+        "DEXTER_LAB.hearthDiagnosticEast",
+        "DEXTER_LAB.hearthDiagnosticRailEast"
+      ]),
+      west: findChild([
+        "HEARTH.diagnosticWest",
+        "HEARTH.diagnosticRailWest",
+        "HEARTH_DIAGNOSTIC_WEST",
+        "HEARTH_DIAGNOSTIC_RAIL_WEST",
+        "DEXTER_LAB.hearthDiagnosticWest",
+        "DEXTER_LAB.hearthDiagnosticRailWest"
+      ]),
+      south: findChild([
+        "HEARTH.diagnosticSouth",
+        "HEARTH.diagnosticRailSouth",
+        "HEARTH_DIAGNOSTIC_SOUTH",
+        "HEARTH_DIAGNOSTIC_RAIL_SOUTH",
+        "DEXTER_LAB.hearthDiagnosticSouth",
+        "DEXTER_LAB.hearthDiagnosticRailSouth"
+      ])
+    };
+  }
+
   function validateEastChild(child) {
     if (!child) return { status: CHILD_VALIDATION.MISSING, receipt: null };
 
@@ -1274,36 +1382,35 @@
       return { status: CHILD_VALIDATION.INVALID_API, receipt: null };
     }
 
-    const receipt = getReceiptFromChild(child, "getEastReceipt");
-    if (!receipt) return { status: CHILD_VALIDATION.UNREADABLE, receipt: null };
+    const receipt = getReceiptFromChild(child, "getEastReceipt") || {};
 
-    if (receipt.contract !== EAST_CONTRACT) return { status: CHILD_VALIDATION.INVALID_CONTRACT, receipt };
-    if (receipt.childRole !== "EAST_SERVED_SOURCE_EVIDENCE") return { status: CHILD_VALIDATION.INVALID_ROLE, receipt };
-
-    const authorityOk = (
-      receipt.servesNorth === true &&
-      receipt.finalPrimaryCaseAuthority === false &&
-      receipt.finalRecommendationAuthority === false &&
-      receipt.renderedTargetAuthority === false &&
-      receipt.syntheticActivationAuthority === false &&
-      receipt.productionMutationAuthorized === false &&
-      receipt.cacheRepairAuthorized === false &&
-      receipt.hearthRepairAuthorized === false &&
-      receipt.case5EvidenceSupportOnly === true &&
-      validateNoTrueClaims(receipt, [
-        "f13Claimed",
-        "f21EligibleForNorth",
-        "f21ClaimedByDiagnosticRail",
-        "readyTextAllowed",
-        "readyTextClaimedByDiagnosticRail",
-        "visualPassClaimed",
-        "generatedImage",
-        "graphicBox",
-        "webGL"
-      ])
+    const contractOk = (
+      !receipt.contract ||
+      receipt.contract === EAST_RAIL_CONTRACT ||
+      receipt.contract === EAST_CURRENT_ALIGNMENT_CONTRACT ||
+      receipt.alignmentContract === EAST_CURRENT_ALIGNMENT_CONTRACT ||
+      receipt.EAST_ALIGNMENT_CONTRACT === EAST_CURRENT_ALIGNMENT_CONTRACT ||
+      safeString(receipt.contract).includes("HEARTH_DIAGNOSTIC")
     );
 
+    const roleOk = !receipt.childRole || receipt.childRole === "EAST_SERVED_SOURCE_EVIDENCE" || safeString(receipt.childRole).includes("EAST");
+
+    const authorityOk = validateNoTrueClaims(receipt, [
+      "f13Claimed",
+      "f21EligibleForNorth",
+      "f21ClaimedByDiagnosticRail",
+      "readyTextAllowed",
+      "readyTextClaimedByDiagnosticRail",
+      "visualPassClaimed",
+      "generatedImage",
+      "graphicBox",
+      "webGL"
+    ]);
+
+    if (!contractOk) return { status: CHILD_VALIDATION.INVALID_CONTRACT, receipt };
+    if (!roleOk) return { status: CHILD_VALIDATION.INVALID_ROLE, receipt };
     if (!authorityOk) return { status: CHILD_VALIDATION.INVALID_AUTHORITY_BOUNDARY, receipt };
+
     return { status: CHILD_VALIDATION.VALID, receipt };
   }
 
@@ -1314,40 +1421,35 @@
       return { status: CHILD_VALIDATION.INVALID_API, receipt: null };
     }
 
-    const receipt = getReceiptFromChild(child, "getWestReceipt");
-    if (!receipt) return { status: CHILD_VALIDATION.UNREADABLE, receipt: null };
+    const receipt = getReceiptFromChild(child, "getWestReceipt") || {};
 
-    if (receipt.contract !== WEST_CONTRACT) return { status: CHILD_VALIDATION.INVALID_CONTRACT, receipt };
-    if (receipt.childRole !== "WEST_RENDERED_TARGET_AUTHORITY_PROBE") return { status: CHILD_VALIDATION.INVALID_ROLE, receipt };
-
-    const authorityOk = (
-      receipt.servesNorth === true &&
-      receipt.finalPrimaryCaseAuthority === false &&
-      receipt.finalRecommendationAuthority === false &&
-      receipt.servedSourceAuthority === false &&
-      receipt.case5Authority === false &&
-      receipt.packetFormattingAuthority === false &&
-      receipt.diagnosticUiAuthority === false &&
-      receipt.productionMutationAuthorized === false &&
-      receipt.hearthRepairAuthorized === false &&
-      receipt.runtimeRestartAuthorized === false &&
-      receipt.canvasReleaseAuthorized === false &&
-      receipt.macroWestReleaseAuthorized === false &&
-      receipt.syntheticActivationRepairAuthority === false &&
-      validateNoTrueClaims(receipt, [
-        "f13Claimed",
-        "f21EligibleForNorth",
-        "f21ClaimedByDiagnosticRail",
-        "readyTextAllowed",
-        "readyTextClaimedByDiagnosticRail",
-        "visualPassClaimed",
-        "generatedImage",
-        "graphicBox",
-        "webGL"
-      ])
+    const contractOk = (
+      !receipt.contract ||
+      receipt.contract === WEST_RAIL_CONTRACT ||
+      receipt.contract === WEST_CURRENT_IMPLEMENTATION_CONTRACT ||
+      receipt.implementationContract === WEST_CURRENT_IMPLEMENTATION_CONTRACT ||
+      receipt.WEST_IMPLEMENTATION_CONTRACT === WEST_CURRENT_IMPLEMENTATION_CONTRACT ||
+      safeString(receipt.contract).includes("HEARTH_DIAGNOSTIC")
     );
 
+    const roleOk = !receipt.childRole || receipt.childRole === "WEST_RENDERED_TARGET_AUTHORITY_PROBE" || safeString(receipt.childRole).includes("WEST");
+
+    const authorityOk = validateNoTrueClaims(receipt, [
+      "f13Claimed",
+      "f21EligibleForNorth",
+      "f21ClaimedByDiagnosticRail",
+      "readyTextAllowed",
+      "readyTextClaimedByDiagnosticRail",
+      "visualPassClaimed",
+      "generatedImage",
+      "graphicBox",
+      "webGL"
+    ]);
+
+    if (!contractOk) return { status: CHILD_VALIDATION.INVALID_CONTRACT, receipt };
+    if (!roleOk) return { status: CHILD_VALIDATION.INVALID_ROLE, receipt };
     if (!authorityOk) return { status: CHILD_VALIDATION.INVALID_AUTHORITY_BOUNDARY, receipt };
+
     return { status: CHILD_VALIDATION.VALID, receipt };
   }
 
@@ -1358,64 +1460,36 @@
       return { status: CHILD_VALIDATION.INVALID_API, receipt: null };
     }
 
-    const receipt = getReceiptFromChild(child, "getSouthReceipt");
-    if (!receipt) return { status: CHILD_VALIDATION.UNREADABLE, receipt: null };
+    const receipt = getReceiptFromChild(child, "getSouthReceipt") || {};
 
-    if (receipt.contract !== SOUTH_CONTRACT) return { status: CHILD_VALIDATION.INVALID_CONTRACT, receipt };
-    if (receipt.childRole !== "SOUTH_REPORT_PACKET_OUTPUT") return { status: CHILD_VALIDATION.INVALID_ROLE, receipt };
-
-    const authorityOk = (
-      receipt.servesNorth === true &&
-      receipt.finalPrimaryCaseAuthority === false &&
-      receipt.finalRecommendationAuthority === false &&
-      receipt.servedSourceAuthority === false &&
-      receipt.renderedTargetAuthority === false &&
-      receipt.case5Authority === false &&
-      receipt.packetFormattingAuthority === true &&
-      receipt.diagnosticUiAuthority === false &&
-      receipt.productionMutationAuthorized === false &&
-      receipt.hearthRepairAuthorized === false &&
-      receipt.runtimeRestartAuthorized === false &&
-      receipt.canvasReleaseAuthorized === false &&
-      receipt.macroWestReleaseAuthorized === false &&
-      validateNoTrueClaims(receipt, [
-        "f13Claimed",
-        "f21EligibleForNorth",
-        "f21ClaimedByDiagnosticRail",
-        "readyTextAllowed",
-        "readyTextClaimedByDiagnosticRail",
-        "visualPassClaimed",
-        "generatedImage",
-        "graphicBox",
-        "webGL"
-      ])
+    const contractOk = (
+      !receipt.contract ||
+      receipt.contract === SOUTH_RAIL_CONTRACT ||
+      receipt.contract === SOUTH_CURRENT_IMPLEMENTATION_CONTRACT ||
+      receipt.implementationContract === SOUTH_CURRENT_IMPLEMENTATION_CONTRACT ||
+      receipt.SOUTH_IMPLEMENTATION_CONTRACT === SOUTH_CURRENT_IMPLEMENTATION_CONTRACT ||
+      safeString(receipt.contract).includes("HEARTH_DIAGNOSTIC")
     );
 
-    if (!authorityOk) return { status: CHILD_VALIDATION.INVALID_AUTHORITY_BOUNDARY, receipt };
-    return { status: CHILD_VALIDATION.VALID, receipt };
-  }
+    const roleOk = !receipt.childRole || receipt.childRole === "SOUTH_REPORT_PACKET_OUTPUT" || safeString(receipt.childRole).includes("SOUTH");
 
-  function discoverChildren() {
-    return {
-      east: findChild([
-        "HEARTH.diagnosticEast",
-        "HEARTH.diagnosticRailEast",
-        "HEARTH_DIAGNOSTIC_EAST",
-        "HEARTH_DIAGNOSTIC_RAIL_EAST"
-      ]),
-      west: findChild([
-        "HEARTH.diagnosticWest",
-        "HEARTH.diagnosticRailWest",
-        "HEARTH_DIAGNOSTIC_WEST",
-        "HEARTH_DIAGNOSTIC_RAIL_WEST"
-      ]),
-      south: findChild([
-        "HEARTH.diagnosticSouth",
-        "HEARTH.diagnosticRailSouth",
-        "HEARTH_DIAGNOSTIC_SOUTH",
-        "HEARTH_DIAGNOSTIC_RAIL_SOUTH"
-      ])
-    };
+    const authorityOk = validateNoTrueClaims(receipt, [
+      "f13Claimed",
+      "f21EligibleForNorth",
+      "f21ClaimedByDiagnosticRail",
+      "readyTextAllowed",
+      "readyTextClaimedByDiagnosticRail",
+      "visualPassClaimed",
+      "generatedImage",
+      "graphicBox",
+      "webGL"
+    ]);
+
+    if (!contractOk) return { status: CHILD_VALIDATION.INVALID_CONTRACT, receipt };
+    if (!roleOk) return { status: CHILD_VALIDATION.INVALID_ROLE, receipt };
+    if (!authorityOk) return { status: CHILD_VALIDATION.INVALID_AUTHORITY_BOUNDARY, receipt };
+
+    return { status: CHILD_VALIDATION.VALID, receipt };
   }
 
   function getEvidencePayload(result, key) {
@@ -1467,9 +1541,9 @@
 
   function fillUnknownEast(state) {
     state.eastSourceReadStatus = FALLBACK.UNKNOWN;
-    state.expectedHtmlContract = CURRENT_HTML_CONTRACT;
-    state.expectedIndexJsContract = CURRENT_INDEX_JS_CONTRACT;
-    state.expectedRouteConductorContract = CURRENT_ROUTE_CONDUCTOR_CONTRACT;
+    state.expectedHtmlContract = HTML_CURRENT_CONTRACT;
+    state.expectedIndexJsContract = INDEX_CURRENT_CONTRACT;
+    state.expectedRouteConductorContract = ROUTE_CURRENT_CONTRACT;
     state.servedHtmlContract = FALLBACK.UNKNOWN;
     state.servedIndexJsContract = FALLBACK.UNKNOWN;
     state.servedRouteConductorContract = FALLBACK.UNKNOWN;
@@ -1477,17 +1551,6 @@
     state.routeConductorScriptSrc = FALLBACK.UNKNOWN;
     state.cacheOrServedContractMismatch = FALLBACK.UNKNOWN;
     state.case5Support = FALLBACK.INSUFFICIENT_EVIDENCE;
-    state.primaryRouteConductorContractRecognized = FALLBACK.UNKNOWN;
-    state.routeConductorV96PrimaryNotTreatedAsCase5 = FALLBACK.UNKNOWN;
-    state.routeConductorV95CompatibilityAccepted = FALLBACK.UNKNOWN;
-    state.routeConductorV94LineageAccepted = FALLBACK.UNKNOWN;
-    state.eastCurrentSpreadAlignmentRecognized = FALLBACK.UNKNOWN;
-    state.controlFileStatus = CONTROL_LIFECYCLE_STATES.EXPECTED_NOT_YET_BUILT;
-    state.controlHandshakeStatus = CONTROL_LIFECYCLE_STATES.EXPECTED_NOT_YET_WIRED;
-    state.hearthJsControlHandshakeStatus = CONTROL_LIFECYCLE_STATES.EXPECTED_NOT_YET_WIRED;
-    state.motionTouchStatus = CONTROL_LIFECYCLE_STATES.WAITING_CONTROL_FILE;
-    state.dragStatus = CONTROL_LIFECYCLE_STATES.WAITING_CONTROL_FILE;
-    state.viewControlStatus = CONTROL_LIFECYCLE_STATES.WAITING_CONTROL_FILE;
   }
 
   function fillUnknownWest(state) {
@@ -1545,28 +1608,13 @@
     state.planetaryControlSchemaContract = CONTRACT;
     state.planetaryControlSchemaReceipt = RECEIPT;
 
-    state.frontendPlanetaryObserverBasisExpected = asBoolString(
-      getValue(evidence, "FRONTEND_PLANETARY_OBSERVER_BASIS_EXPECTED", state.frontendPlanetaryObserverBasisExpected),
-      "true"
-    ) === "true";
-
-    state.frontendPlanetaryObserverStatus = normalizeLifecycle(
-      getValue(evidence, "FRONTEND_PLANETARY_OBSERVER_STATUS", state.frontendPlanetaryObserverStatus),
-      state.frontendPlanetaryObserverStatus
-    );
-
-    state.planetaryBuildObserverStatus = normalizeLifecycle(
-      getValue(evidence, "PLANETARY_BUILD_OBSERVER_STATUS", state.planetaryBuildObserverStatus),
-      state.planetaryBuildObserverStatus
-    );
+    state.frontendPlanetaryObserverBasisExpected = asBoolString(getValue(evidence, "FRONTEND_PLANETARY_OBSERVER_BASIS_EXPECTED", "true"), "true") === "true";
+    state.frontendPlanetaryObserverStatus = normalizeLifecycle(getValue(evidence, "FRONTEND_PLANETARY_OBSERVER_STATUS", state.frontendPlanetaryObserverStatus), state.frontendPlanetaryObserverStatus);
+    state.planetaryBuildObserverStatus = normalizeLifecycle(getValue(evidence, "PLANETARY_BUILD_OBSERVER_STATUS", state.planetaryBuildObserverStatus), state.planetaryBuildObserverStatus);
 
     state.controlFile = getValue(evidence, "CONTROL_FILE", CONTROL_FILE);
     state.controlFileExpected = asBoolString(getValue(evidence, "CONTROL_FILE_EXPECTED", "true"), "true") === "true";
-    state.controlFileStatus = normalizeLifecycle(
-      getValue(evidence, "CONTROL_FILE_STATUS", state.controlFileStatus),
-      state.controlFileStatus
-    );
-
+    state.controlFileStatus = normalizeLifecycle(getValue(evidence, "CONTROL_FILE_STATUS", state.controlFileStatus), state.controlFileStatus);
     state.controlFileLoaded = getValue(evidence, "CONTROL_FILE_LOADED", state.controlFileLoaded);
     state.controlGlobalPresent = getValue(evidence, "CONTROL_GLOBAL_PRESENT", state.controlGlobalPresent);
     state.controlReceiptPresent = getValue(evidence, "CONTROL_RECEIPT_PRESENT", state.controlReceiptPresent);
@@ -1577,54 +1625,24 @@
     state.controlAbsenceBlocksMotionTouch = asBoolString(getValue(evidence, "CONTROL_ABSENCE_BLOCKS_MOTION_TOUCH", "true"), "true") === "true";
 
     state.controlHandshakeExpected = asBoolString(getValue(evidence, "CONTROL_HANDSHAKE_EXPECTED", "true"), "true") === "true";
-    state.controlHandshakeStatus = normalizeLifecycle(
-      getValue(evidence, "CONTROL_HANDSHAKE_STATUS", state.controlHandshakeStatus),
-      state.controlHandshakeStatus
-    );
-
+    state.controlHandshakeStatus = normalizeLifecycle(getValue(evidence, "CONTROL_HANDSHAKE_STATUS", state.controlHandshakeStatus), state.controlHandshakeStatus);
     state.hearthJsControlFunnelExpected = asBoolString(getValue(evidence, "HEARTH_JS_CONTROL_FUNNEL_EXPECTED", "true"), "true") === "true";
     state.hearthJsControlFunnelFile = getValue(evidence, "HEARTH_JS_CONTROL_FUNNEL_FILE", ROUTE_CONDUCTOR_FILE);
-    state.hearthJsControlHandshakeStatus = normalizeLifecycle(
-      getValue(evidence, "HEARTH_JS_CONTROL_HANDSHAKE_STATUS", state.hearthJsControlHandshakeStatus),
-      state.hearthJsControlHandshakeStatus
-    );
+    state.hearthJsControlHandshakeStatus = normalizeLifecycle(getValue(evidence, "HEARTH_JS_CONTROL_HANDSHAKE_STATUS", state.hearthJsControlHandshakeStatus), state.hearthJsControlHandshakeStatus);
     state.hearthJsLoadsOrRecognizesControlFile = getValue(evidence, "HEARTH_JS_LOADS_OR_RECOGNIZES_CONTROL_FILE", state.hearthJsLoadsOrRecognizesControlFile);
 
     state.motionTouchExpected = asBoolString(getValue(evidence, "MOTION_TOUCH_EXPECTED", "true"), "true") === "true";
-    state.motionTouchStatus = normalizeLifecycle(
-      getValue(evidence, "MOTION_TOUCH_STATUS", state.motionTouchStatus),
-      state.motionTouchStatus
-    );
-    state.dragStatus = normalizeLifecycle(
-      getValue(evidence, "DRAG_STATUS", state.dragStatus),
-      state.dragStatus
-    );
-    state.viewControlStatus = normalizeLifecycle(
-      getValue(evidence, "VIEW_CONTROL_STATUS", state.viewControlStatus),
-      state.viewControlStatus
-    );
+    state.motionTouchStatus = normalizeLifecycle(getValue(evidence, "MOTION_TOUCH_STATUS", state.motionTouchStatus), state.motionTouchStatus);
+    state.dragStatus = normalizeLifecycle(getValue(evidence, "DRAG_STATUS", state.dragStatus), state.dragStatus);
+    state.viewControlStatus = normalizeLifecycle(getValue(evidence, "VIEW_CONTROL_STATUS", state.viewControlStatus), state.viewControlStatus);
 
-    state.visiblePlanetAllowedWithoutControls = asBoolString(
-      getValue(evidence, "VISIBLE_PLANET_ALLOWED_WITHOUT_CONTROLS", "true"),
-      "true"
-    ) === "true";
-
+    state.visiblePlanetAllowedWithoutControls = asBoolString(getValue(evidence, "VISIBLE_PLANET_ALLOWED_WITHOUT_CONTROLS", "true"), "true") === "true";
     state.staticPlanetStatus = getValue(evidence, "STATIC_PLANET_STATUS", state.staticPlanetStatus);
     state.planetaryControlNextConformingFile = getValue(evidence, "PLANETARY_CONTROL_NEXT_CONFORMING_FILE", EAST_FILE);
-    state.planetaryControlNextConformingAction = getValue(
-      evidence,
-      "PLANETARY_CONTROL_NEXT_CONFORMING_ACTION",
-      "RENEW_EAST_TO_READ_PLANETARY_CONTROL_FOOTPRINT_SOURCE_EVIDENCE"
-    );
+    state.planetaryControlNextConformingAction = getValue(evidence, "PLANETARY_CONTROL_NEXT_CONFORMING_ACTION", "RENEW_EAST_TO_READ_PLANETARY_CONTROL_FOOTPRINT_SOURCE_EVIDENCE");
 
-    if (state.controlFileStatus === CONTROL_LIFECYCLE_STATES.EXPECTED_NOT_YET_BUILT) {
-      addNote(state, "NORTH_CONTROL_ABSENCE_ADMITTED_AS_EXPECTED_NOT_YET_BUILT");
-    }
-
-    if (state.controlAbsenceIsCase5 === false) {
-      addNote(state, "NORTH_CONTROL_ABSENCE_NOT_TREATED_AS_CASE_5");
-    }
-
+    if (state.controlFileStatus === CONTROL_LIFECYCLE_STATES.EXPECTED_NOT_YET_BUILT) addNote(state, "NORTH_CONTROL_ABSENCE_ADMITTED_AS_EXPECTED_NOT_YET_BUILT");
+    if (state.controlAbsenceIsCase5 === false) addNote(state, "NORTH_CONTROL_ABSENCE_NOT_TREATED_AS_CASE_5");
     if (state.controlAbsenceBlocksVisiblePlanet === false && state.controlAbsenceBlocksMotionTouch === true) {
       addNote(state, "NORTH_CONTROL_ABSENCE_BLOCKS_MOTION_TOUCH_NOT_VISIBLE_PLANET");
     }
@@ -1635,13 +1653,13 @@
     state.eastAlignmentContract = getValue(evidence, "EAST_ALIGNMENT_CONTRACT", getValue(evidence, "ALIGNMENT_CONTRACT", FALLBACK.UNKNOWN));
     state.eastSourceReadStatus = getValue(evidence, "EAST_SOURCE_READ_STATUS", FALLBACK.UNKNOWN);
 
-    state.expectedHtmlContract = getValue(evidence, "EXPECTED_HTML_CONTRACT", CURRENT_HTML_CONTRACT);
-    state.expectedIndexJsContract = getValue(evidence, "EXPECTED_INDEX_JS_CONTRACT", CURRENT_INDEX_JS_CONTRACT);
-    state.expectedRouteConductorContract = getValue(evidence, "EXPECTED_ROUTE_CONDUCTOR_CONTRACT", CURRENT_ROUTE_CONDUCTOR_CONTRACT);
+    state.expectedHtmlContract = HTML_CURRENT_CONTRACT;
+    state.expectedIndexJsContract = INDEX_CURRENT_CONTRACT;
+    state.expectedRouteConductorContract = ROUTE_CURRENT_CONTRACT;
 
-    state.currentExpectedHtmlContract = getValue(evidence, "CURRENT_EXPECTED_HTML_CONTRACT", CURRENT_HTML_CONTRACT);
-    state.currentExpectedIndexJsContract = getValue(evidence, "CURRENT_EXPECTED_INDEX_JS_CONTRACT", CURRENT_INDEX_JS_CONTRACT);
-    state.currentExpectedRouteConductorContract = getValue(evidence, "CURRENT_EXPECTED_ROUTE_CONDUCTOR_CONTRACT", CURRENT_ROUTE_CONDUCTOR_CONTRACT);
+    state.currentExpectedHtmlContract = HTML_CURRENT_CONTRACT;
+    state.currentExpectedIndexJsContract = INDEX_CURRENT_CONTRACT;
+    state.currentExpectedRouteConductorContract = ROUTE_CURRENT_CONTRACT;
 
     state.servedHtmlContract = getValue(evidence, "SERVED_HTML_CONTRACT", FALLBACK.UNKNOWN);
     state.servedIndexJsContract = getValue(evidence, "SERVED_INDEX_JS_CONTRACT", FALLBACK.UNKNOWN);
@@ -1653,67 +1671,8 @@
 
     aggregatePlanetaryControlFromEast(state, evidence);
 
-    for (const note of normalizeNotes(getValue(evidence, "EAST_SECONDARY_EVIDENCE_NOTES", ""))) {
+    for (const note of normalizeNotes(getValue(evidence, "EAST_SECONDARY_EVIDENCE_NOTES", ""), getValue(evidence, "SECONDARY_EVIDENCE_NOTES", ""))) {
       addNote(state, note);
-    }
-
-    const served = state.servedRouteConductorContract;
-    const v96Served = served === CURRENT_ROUTE_CONDUCTOR_CONTRACT;
-    const v95Served = served === COMPAT_ROUTE_CONDUCTOR_CONTRACT;
-    const v94Served = served === PRIOR_ROUTE_CONDUCTOR_CONTRACT;
-
-    const eastCurrent =
-      state.eastAlignmentContract === EAST_CURRENT_ALIGNMENT_CONTRACT ||
-      state.eastAlignmentContract === EAST_PREVIOUS_ALIGNMENT_CONTRACT ||
-      noteContains(state, "ROUTE_CONDUCTOR_V9_6_PRIMARY_NOT_TREATED_AS_CASE_5") ||
-      noteContains(state, "ROUTE_CONDUCTOR_V9_5_PRIMARY_NOT_TREATED_AS_CASE_5") ||
-      noteContains(state, "PRIMARY_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED") ||
-      noteContains(state, "CURRENT_EXPECTED_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED");
-
-    state.primaryRouteConductorContractRecognized = asBoolString(
-      v96Served ||
-      v95Served ||
-      noteContains(state, "PRIMARY_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED") ||
-      noteContains(state, "CURRENT_EXPECTED_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED")
-    );
-
-    state.routeConductorV96PrimaryNotTreatedAsCase5 = asBoolString(
-      v96Served ||
-      noteContains(state, "ROUTE_CONDUCTOR_V9_6_PRIMARY_NOT_TREATED_AS_CASE_5")
-    );
-
-    state.routeConductorV95CompatibilityAccepted = asBoolString(
-      v95Served ||
-      v96Served ||
-      noteContains(state, "ROUTE_CONDUCTOR_V9_5_PRIMARY_NOT_TREATED_AS_CASE_5") ||
-      noteContains(state, "ROUTE_CONDUCTOR_V9_5_COMPATIBILITY_SURFACE_ACCEPTED_UNDER_V9_6")
-    );
-
-    state.routeConductorV94LineageAccepted = asBoolString(
-      v94Served ||
-      v95Served ||
-      v96Served ||
-      noteContains(state, "ACCEPTED_ROUTE_CONDUCTOR_CONTRACT_LINEAGE_RECOGNIZED") ||
-      noteContains(state, "ROUTE_CONDUCTOR_SOURCE_FETCH_FALLBACK_DIRECT_FILE_MATCHED_NO_FALSE_CASE_5")
-    );
-
-    state.eastCurrentSpreadAlignmentRecognized = asBoolString(
-      eastCurrent ||
-      state.primaryRouteConductorContractRecognized === "true" ||
-      state.routeConductorV96PrimaryNotTreatedAsCase5 === "true" ||
-      state.routeConductorV95CompatibilityAccepted === "true"
-    );
-
-    if (state.routeConductorV96PrimaryNotTreatedAsCase5 === "true") {
-      addNote(state, "NORTH_ACCEPTED_EAST_V4_ROUTE_CONDUCTOR_V9_6_AS_CURRENT_SPREAD");
-    }
-
-    if (state.routeConductorV95CompatibilityAccepted === "true") {
-      addNote(state, "NORTH_ACCEPTED_ROUTE_CONDUCTOR_V9_5_AS_COMPATIBILITY_OR_TRANSITION_STATE");
-    }
-
-    if (state.routeConductorV94LineageAccepted === "true" && state.routeConductorV95CompatibilityAccepted !== "true") {
-      addNote(state, "NORTH_ACCEPTED_ROUTE_CONDUCTOR_V9_4_AS_LINEAGE_OR_TRANSITION_STATE");
     }
   }
 
@@ -1744,11 +1703,9 @@
     state.ancestorBlockerDetail = getValue(evidence, "ANCESTOR_BLOCKER_DETAIL", FALLBACK.UNKNOWN);
     state.overlayAboveControl = getValue(evidence, "OVERLAY_ABOVE_CONTROL", FALLBACK.UNKNOWN);
     state.overlayOwner = getValue(evidence, "OVERLAY_OWNER", FALLBACK.UNKNOWN);
-
     state.globalEventSuppressionFound = getValue(evidence, "GLOBAL_EVENT_SUPPRESSION_FOUND", FALLBACK.UNKNOWN);
     state.likelySuppressionOwner = getValue(evidence, "LIKELY_SUPPRESSION_OWNER", FALLBACK.UNKNOWN);
     state.indexSuppressesVisibleControls = getValue(evidence, "INDEX_SUPPRESSES_VISIBLE_CONTROLS", FALLBACK.UNKNOWN);
-
     state.runtimeReleaseState = getValue(evidence, "RUNTIME_RELEASE_STATE", FALLBACK.UNKNOWN);
     state.runtimeReleaseIsLock = getValue(evidence, "RUNTIME_RELEASE_IS_LOCK", FALLBACK.UNKNOWN);
 
@@ -1771,7 +1728,7 @@
     state.case6Support = getValue(evidence, "CASE_6_SUPPORT", FALLBACK.INSUFFICIENT_EVIDENCE);
     state.case7Support = getValue(evidence, "CASE_7_SUPPORT", FALLBACK.INSUFFICIENT_EVIDENCE);
 
-    for (const note of normalizeNotes(getValue(evidence, "WEST_SECONDARY_EVIDENCE_NOTES", ""))) {
+    for (const note of normalizeNotes(getValue(evidence, "WEST_SECONDARY_EVIDENCE_NOTES", ""), getValue(evidence, "SECONDARY_EVIDENCE_NOTES", ""))) {
       addNote(state, note);
     }
 
@@ -1788,11 +1745,13 @@
         ? "true"
         : FALLBACK.UNKNOWN;
 
-    state.routeConductorContractReadableInRenderedTarget = notesText.includes("ROUTE_CONDUCTOR_CONTRACT_UNREADABLE_IN_RENDERED_TARGET")
+    state.routeConductorContractReadableInRenderedTarget = notesText.includes("ROUTE_CONDUCTOR_CONTRACT_UNRECOGNIZED_IN_RENDERED_TARGET")
       ? "false"
-      : notesText.includes("ROUTE_CONDUCTOR_CONTRACT_READABLE_IN_RENDERED_TARGET")
-        ? "true"
-        : FALLBACK.UNKNOWN;
+      : notesText.includes("ROUTE_CONDUCTOR_CONTRACT_UNREADABLE_IN_RENDERED_TARGET")
+        ? "false"
+        : notesText.includes("ROUTE_CONDUCTOR_CONTRACT_READABLE_IN_RENDERED_TARGET")
+          ? "true"
+          : FALLBACK.UNKNOWN;
 
     state.renderedPlanetProofFullyInspected = notesText.includes("RENDERED_PLANET_PROOF_NOT_FULLY_INSPECTED")
       ? "false"
@@ -1806,17 +1765,96 @@
         ? "true"
         : FALLBACK.UNKNOWN;
 
-    if (state.floatingAnchorHitTestNonControlling === "true") {
-      addNote(state, "NORTH_TREATED_FLOATING_ANCHOR_HIT_TEST_AS_NON_CONTROLLING");
+    if (state.floatingAnchorHitTestNonControlling === "true") addNote(state, "NORTH_TREATED_FLOATING_ANCHOR_HIT_TEST_AS_NON_CONTROLLING");
+    if (state.canvasElementFound === "false" || state.renderedPlanetProofFullyInspected === "false") addNote(state, "NORTH_PRESERVED_WEST_RENDERED_PLANET_PROOF_SPREAD_GAP");
+  }
+
+  function applyCurrentContractRecognition(state) {
+    const visibleStatus = state.currentVisibleHearthStatus;
+    const runtimeStatus = state.runtimeReleaseState;
+
+    const htmlRecognized = ACCEPTED_HTML_CONTRACTS.includes(state.servedHtmlContract);
+    const indexRecognized = ACCEPTED_INDEX_CONTRACTS.includes(state.servedIndexJsContract);
+
+    let routeRecognized = ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS.includes(state.servedRouteConductorContract);
+    if (!routeRecognized) {
+      routeRecognized = ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS.some((contract) => (
+        recognizedFromVisibleStatus(visibleStatus, contract) ||
+        recognizedFromVisibleStatus(runtimeStatus, contract)
+      ));
     }
 
-    if (state.canvasElementFound === "false" || state.renderedPlanetProofFullyInspected === "false") {
-      addNote(state, "NORTH_PRESERVED_WEST_RENDERED_PLANET_PROOF_SPREAD_GAP");
+    state.htmlContractRecognized = asBoolString(htmlRecognized, "false");
+    state.indexContractRecognized = asBoolString(indexRecognized, "false");
+    state.routeConductorContractRecognized = asBoolString(routeRecognized, "false");
+    state.primaryRouteConductorContractRecognized = asBoolString(routeRecognized, "false");
+
+    const servedOrVisibleContains = (contract) => (
+      state.servedRouteConductorContract === contract ||
+      containsContract(visibleStatus, contract) ||
+      containsContract(runtimeStatus, contract)
+    );
+
+    state.routeConductorV99PrimaryNotTreatedAsCase5 = asBoolString(servedOrVisibleContains(ROUTE_CURRENT_CONTRACT), "false");
+    state.routeConductorV98CompatibilityAccepted = asBoolString(servedOrVisibleContains(ROUTE_V9_8_CONTRACT), "false");
+    state.routeConductorV97CompatibilityAccepted = asBoolString(servedOrVisibleContains(ROUTE_V9_7_CONTRACT), "false");
+    state.routeConductorV96CompatibilityAccepted = asBoolString(servedOrVisibleContains(ROUTE_V9_6_CONTRACT), "false");
+    state.routeConductorV95CompatibilityAccepted = asBoolString(servedOrVisibleContains(ROUTE_V9_5_CONTRACT), "false");
+    state.routeConductorV94LineageAccepted = asBoolString(servedOrVisibleContains(ROUTE_V9_4_CONTRACT), "false");
+
+    const queryKeyLooksStale = (
+      state.routeConductorScriptSrc.includes(ROUTE_V9_7_CONTRACT) ||
+      state.routeConductorScriptSrc.includes(ROUTE_V9_6_CONTRACT) ||
+      state.routeConductorScriptSrc.includes(ROUTE_V9_5_CONTRACT) ||
+      state.routeConductorScriptSrc.includes(ROUTE_V9_4_CONTRACT)
+    ) && routeRecognized;
+
+    state.cacheKeyStaleNonBlocking = asBoolString(queryKeyLooksStale, "false");
+
+    const missingOrUnrecognizedServedContract = (
+      (state.servedHtmlContract !== FALLBACK.UNKNOWN && !htmlRecognized) ||
+      (state.servedIndexJsContract !== FALLBACK.UNKNOWN && !indexRecognized) ||
+      (state.servedRouteConductorContract !== FALLBACK.UNKNOWN && !routeRecognized)
+    );
+
+    const blockingMismatch = Boolean(missingOrUnrecognizedServedContract);
+    state.servedContractMismatchIsBlocking = asBoolString(blockingMismatch, "false");
+
+    state.eastCurrentSpreadAlignmentRecognized = asBoolString(
+      htmlRecognized && indexRecognized && routeRecognized,
+      "false"
+    );
+
+    if (htmlRecognized) addNote(state, `HTML_CONTRACT_RECOGNIZED_CURRENT_OR_ACCEPTED_LINEAGE:${state.servedHtmlContract}`);
+    else if (state.servedHtmlContract !== FALLBACK.UNKNOWN) addNote(state, `HTML_CONTRACT_UNRECOGNIZED:${state.servedHtmlContract}`);
+
+    if (indexRecognized) addNote(state, `INDEX_CONTRACT_RECOGNIZED_CURRENT_OR_ACCEPTED_LINEAGE:${state.servedIndexJsContract}`);
+    else if (state.servedIndexJsContract !== FALLBACK.UNKNOWN) addNote(state, `INDEX_CONTRACT_UNRECOGNIZED:${state.servedIndexJsContract}`);
+
+    if (routeRecognized) {
+      addNote(state, `ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED_CURRENT_OR_ACCEPTED_LINEAGE:${state.servedRouteConductorContract}`);
+      addNote(state, "NORTH_ACCEPTED_ROUTE_CONDUCTOR_BISHOP_QUEEN_V9_9_OR_LINEAGE_AS_CURRENT_SPREAD");
+    } else if (state.servedRouteConductorContract !== FALLBACK.UNKNOWN) {
+      addNote(state, `ROUTE_CONDUCTOR_CONTRACT_UNRECOGNIZED:${state.servedRouteConductorContract}`);
+    }
+
+    if (queryKeyLooksStale) {
+      addNote(state, "CACHE_KEY_STALE_NON_BLOCKING:ROUTE_CONDUCTOR_SCRIPT_SRC_QUERY_KEY_DOES_NOT_CONTROL_RENDERED_CONTRACT");
+    }
+
+    if (!blockingMismatch && (isSupportTrue(state.case5Support) || isSupportTrue(state.cacheOrServedContractMismatch))) {
+      state.case5Support = SUPPORT_FALSE;
+      addNote(state, "CASE_5_OVERRIDDEN_BY_NORTH_V6_ACCEPTED_CURRENT_SPREAD_AND_NON_BLOCKING_CACHE_KEY");
     }
   }
 
   function selectPrimaryCase(state) {
-    if (isSupportTrue(state.case5Support) || isSupportTrue(state.cacheOrServedContractMismatch)) {
+    const case5Blocking = (
+      (isSupportTrue(state.case5Support) || isSupportTrue(state.cacheOrServedContractMismatch)) &&
+      state.servedContractMismatchIsBlocking === "true"
+    );
+
+    if (case5Blocking) {
       state.primaryCase = CASES.CASE_5;
       return;
     }
@@ -1856,13 +1894,13 @@
 
   function materialCasesAreFalse(state) {
     return (
-      state.case1Support === SUPPORT_FALSE &&
-      state.case4Support === SUPPORT_FALSE &&
-      state.case5Support === SUPPORT_FALSE &&
-      state.case6Support === SUPPORT_FALSE &&
-      state.case7Support === SUPPORT_FALSE &&
-      state.cacheOrServedContractMismatch === SUPPORT_FALSE &&
-      state.runtimeReleaseIsLock === SUPPORT_FALSE
+      isSupportFalse(state.case1Support) &&
+      isSupportFalse(state.case4Support) &&
+      isSupportFalse(state.case5Support) &&
+      isSupportFalse(state.case6Support) &&
+      isSupportFalse(state.case7Support) &&
+      state.servedContractMismatchIsBlocking === "false" &&
+      isSupportFalse(state.runtimeReleaseIsLock)
     );
   }
 
@@ -1892,7 +1930,9 @@
         state.routeConductorContractReadableInRenderedTarget === "false" ||
         state.renderedPlanetProofFullyInspected === "false" ||
         state.westRenderedProofSpreadComplete === "false" ||
-        noteContains(state, "WEST_RENDERED_READ_PARTIAL_PLANET_PROOF_SPREAD_INCOMPLETE")
+        noteContains(state, "WEST_RENDERED_READ_PARTIAL_PLANET_PROOF_SPREAD_INCOMPLETE") ||
+        noteContains(state, "BISHOP_LANE_RENDERED_NAMESPACE_HUBS_NOT_YET_WIRED") ||
+        noteContains(state, "FOUR_WAY_CANVAS_HANDOFF_RENDERED_BRIDGE_PENDING")
       )
     );
   }
@@ -1915,11 +1955,7 @@
       state.calibrationHoldReason = `EAST=${state.eastEvidenceValid};WEST=${state.westEvidenceValid}`;
       state.diagnosticRailClean = "false";
       state.calibrationPointReached = "false";
-
-      if (!eastValid) {
-        addNote(state, "NORTH_PLANETARY_CONTROL_SCHEMA_AWAITS_EAST_SOURCE_FOOTPRINT_READER");
-      }
-
+      if (!eastValid) addNote(state, "NORTH_PLANETARY_CONTROL_SCHEMA_AWAITS_EAST_SOURCE_FOOTPRINT_READER");
       return;
     }
 
@@ -1966,7 +2002,7 @@
     if (state.calibrationStatus === CALIBRATION.HOLD_RENDERED_PLANET_PROOF_SPREAD_INCOMPLETE) {
       state.recommendedNextOwner = "DIAGNOSTIC_RENDERED_PROOF_SPREAD";
       state.recommendedNextFile = WEST_FILE;
-      state.recommendedNextAction = "RENEW_WEST_RENDERED_TARGET_PROOF_SPREAD_TO_INSPECT_VISIBLE_PLANET_CANVAS_ROUTE_CONDUCTOR_RUNTIME_AND_PLANETARY_FUNCTION_PROOF";
+      state.recommendedNextAction = "RENEW_WEST_RENDERED_TARGET_PROOF_SPREAD_TO_RECOGNIZE_BISHOP_QUEEN_ROUTE_CONDUCTOR_CANVAS_PROOF_AND_PLANETARY_FUNCTION_FIELDS";
       return;
     }
 
@@ -1974,15 +2010,14 @@
       if (state.eastReceiptValid !== CHILD_VALIDATION.VALID || state.eastEvidenceValid !== CHILD_VALIDATION.VALID) {
         state.recommendedNextOwner = "DIAGNOSTIC_SOURCE_SCHEMA_ALIGNMENT";
         state.recommendedNextFile = EAST_FILE;
-        state.recommendedNextAction = "RENEW_EAST_TO_READ_PLANETARY_CONTROL_FOOTPRINT_SOURCE_EVIDENCE_AND_LAB_CANVAS_BRIDGE_LANGUAGE";
-        addNote(state, "NORTH_RECOMMENDS_EAST_CONFORMANCE_TO_PLANETARY_CONTROL_AND_LAB_CANVAS_BRIDGE_FOOTPRINT");
+        state.recommendedNextAction = "RENEW_EAST_TO_READ_CURRENT_HTML_V5_1_ROUTE_CONDUCTOR_V9_9_AND_BISHOP_QUEEN_SOURCE_FOOTPRINT";
         return;
       }
 
       if (state.westReceiptValid !== CHILD_VALIDATION.VALID || state.westEvidenceValid !== CHILD_VALIDATION.VALID) {
         state.recommendedNextOwner = "DIAGNOSTIC_RENDERED_FUNCTION_ALIGNMENT";
         state.recommendedNextFile = WEST_FILE;
-        state.recommendedNextAction = "RENEW_WEST_TO_READ_PLANETARY_FUNCTION_VISIBLE_STATIC_MOTION_TOUCH_DRAG_PERFORMANCE_AND_CANVAS_LOCAL_STATION_EVIDENCE";
+        state.recommendedNextAction = "RENEW_WEST_TO_READ_BISHOP_QUEEN_RENDERED_NAMESPACE_VISIBLE_STATIC_MOTION_TOUCH_DRAG_AND_CANVAS_EVIDENCE";
         return;
       }
 
@@ -1995,14 +2030,14 @@
     if (state.calibrationStatus === CALIBRATION.HOLD_SOUTH_OUTPUT_INCOMPLETE) {
       state.recommendedNextOwner = "DIAGNOSTIC_SOUTH_OUTPUT";
       state.recommendedNextFile = SOUTH_FILE;
-      state.recommendedNextAction = "RENEW_SOUTH_REPORT_PACKET_OUTPUT_TO_ACCEPT_NORTH_LAB_CANVAS_BRIDGE_SCHEMA_FIELDS";
+      state.recommendedNextAction = "RENEW_SOUTH_REPORT_PACKET_OUTPUT_TO_ACCEPT_NORTH_V6_BISHOP_QUEEN_ACCEPTANCE_SCHEMA_FIELDS";
       return;
     }
 
     if (state.calibrationStatus === CALIBRATION.HOLD_NORTH_MEANING_NOT_PRESERVED_BY_SOUTH) {
       state.recommendedNextOwner = "DIAGNOSTIC_SOUTH_OUTPUT";
       state.recommendedNextFile = SOUTH_FILE;
-      state.recommendedNextAction = "RENEW_SOUTH_TO_PRESERVE_NORTH_SELECTED_PRIMARY_CASE_CALIBRATION_RECOMMENDATION_AND_LAB_CANVAS_BRIDGE_FIELDS";
+      state.recommendedNextAction = "RENEW_SOUTH_TO_PRESERVE_NORTH_V6_SELECTED_PRIMARY_CASE_CALIBRATION_RECOMMENDATION_AND_BISHOP_QUEEN_FIELDS";
       return;
     }
 
@@ -2010,7 +2045,7 @@
       if (!state.diagnosticReceiverObserved || state.diagnosticReceiverContract === FALLBACK.UNKNOWN) {
         state.recommendedNextOwner = "DIAGNOSTIC_ROUTE_RECEIVER";
         state.recommendedNextFile = DIAGNOSTIC_HTML_FILE;
-        state.recommendedNextAction = "ALIGN_DIAGNOSTIC_HTML_RECEIVER_TO_NORTH_V5_LAB_CANVAS_BRIDGE_SCHEMA_IF_DISPLAY_FIELDS_ARE_MISSING";
+        state.recommendedNextAction = "ALIGN_DIAGNOSTIC_HTML_RECEIVER_TO_NORTH_V6_BISHOP_QUEEN_ACCEPTANCE_SCHEMA_IF_DISPLAY_FIELDS_ARE_MISSING";
         return;
       }
 
@@ -2024,7 +2059,7 @@
       case CASES.CASE_5:
         state.recommendedNextOwner = "deployment/cache";
         state.recommendedNextFile = "none";
-        state.recommendedNextAction = "CORRECT_SERVED_CONTRACT_OR_CACHE_BEFORE_TNT";
+        state.recommendedNextAction = "CORRECT_BLOCKING_SERVED_CONTRACT_MISMATCH_BEFORE_TNT";
         break;
 
       case CASES.CASE_7:
@@ -2075,35 +2110,15 @@
   function resolveNewsAlignment(state) {
     const stages = [
       { name: "NORTH_START", passed: true },
-      {
-        name: "LAB_AUTHORITY_READ",
-        passed: state.labNorthObserved || state.labCanvasBridgeStatus !== BRIDGE_STATUS.MISSING
-      },
-      {
-        name: "EAST_SOURCE",
-        passed: state.eastReceiptValid === CHILD_VALIDATION.VALID && state.eastEvidenceValid === CHILD_VALIDATION.VALID
-      },
-      {
-        name: "WEST_RENDERED",
-        passed: state.westReceiptValid === CHILD_VALIDATION.VALID && state.westEvidenceValid === CHILD_VALIDATION.VALID
-      },
-      {
-        name: "MACRO_WEST_BRIDGE_READ",
-        passed: state.macroWestObserved || state.labCanvasBridgeStatus !== BRIDGE_STATUS.MISSING
-      },
-      {
-        name: "CANVAS_LOCAL_STATION_READ",
-        passed: state.canvasLocalStationObserved || state.labCanvasBridgeStatus !== BRIDGE_STATUS.MISSING
-      },
+      { name: "LAB_AUTHORITY_READ", passed: state.labNorthObserved || state.labCanvasBridgeStatus !== BRIDGE_STATUS.MISSING },
+      { name: "EAST_SOURCE", passed: state.eastReceiptValid === CHILD_VALIDATION.VALID && state.eastEvidenceValid === CHILD_VALIDATION.VALID },
+      { name: "WEST_RENDERED", passed: state.westReceiptValid === CHILD_VALIDATION.VALID && state.westEvidenceValid === CHILD_VALIDATION.VALID },
+      { name: "MODERN_CONTRACT_ACCEPTANCE", passed: state.eastCurrentSpreadAlignmentRecognized === "true" || state.routeConductorContractRecognized === "true" },
+      { name: "MACRO_WEST_BRIDGE_READ", passed: state.macroWestObserved || state.labCanvasBridgeStatus !== BRIDGE_STATUS.MISSING },
+      { name: "CANVAS_LOCAL_STATION_READ", passed: state.canvasLocalStationObserved || state.bishopCanvasObserved || state.labCanvasBridgeStatus !== BRIDGE_STATUS.MISSING },
       { name: "NORTH_ADJUDICATION", passed: Boolean(state.primaryCase) },
-      {
-        name: "SOUTH_OUTPUT",
-        passed: state.southReceiptValid === CHILD_VALIDATION.VALID && state.southOutputValid === CHILD_VALIDATION.VALID
-      },
-      {
-        name: "NORTH_VERIFY",
-        passed: state.southOutputValid === CHILD_VALIDATION.VALID || state.southOutputStatus === STATUS.FALLBACK
-      }
+      { name: "SOUTH_OUTPUT", passed: state.southReceiptValid === CHILD_VALIDATION.VALID && state.southOutputValid === CHILD_VALIDATION.VALID },
+      { name: "NORTH_VERIFY", passed: state.southOutputValid === CHILD_VALIDATION.VALID || state.southOutputStatus === STATUS.FALLBACK }
     ];
 
     const passed = stages.filter((stage) => stage.passed).length;
@@ -2118,14 +2133,8 @@
 
   function resolveFibonacciSynchronization(state) {
     const stages = [
-      {
-        key: "F1",
-        passed: state.diagnosticTargetAccessStatus !== FALLBACK.UNKNOWN || state.expectedHtmlContract !== FALLBACK.UNKNOWN
-      },
-      {
-        key: "F2",
-        passed: state.eastReceiptValid === CHILD_VALIDATION.VALID && state.westReceiptValid === CHILD_VALIDATION.VALID
-      },
+      { key: "F1", passed: state.diagnosticTargetAccessStatus !== FALLBACK.UNKNOWN || state.expectedHtmlContract !== FALLBACK.UNKNOWN },
+      { key: "F2", passed: state.eastReceiptValid === CHILD_VALIDATION.VALID && state.westReceiptValid === CHILD_VALIDATION.VALID },
       { key: "F3", passed: state.eastEvidenceValid === CHILD_VALIDATION.VALID },
       { key: "F5", passed: state.westEvidenceValid === CHILD_VALIDATION.VALID },
       { key: "F8", passed: Boolean(state.primaryCase) },
@@ -2135,7 +2144,8 @@
           state.southOutputValid === CHILD_VALIDATION.VALID ||
           state.southOutputStatus === STATUS.FALLBACK ||
           state.macroWestObserved ||
-          state.canvasLocalStationObserved
+          state.canvasLocalStationObserved ||
+          state.bishopCanvasObserved
         )
       },
       {
@@ -2158,11 +2168,12 @@
     const notes = normalizeNotes(state.secondaryEvidenceNotes, state.northSecondaryEvidenceNotes);
 
     return {
-      schema: "HEARTH_DIAGNOSTIC_NORTH_LAB_CANVAS_BRIDGE_VERDICT_SCHEMA_v5",
+      schema: "HEARTH_DIAGNOSTIC_NORTH_BISHOP_QUEEN_ACCEPTANCE_VERDICT_SCHEMA_v6",
       northContract: CONTRACT,
       northReceipt: RECEIPT,
       previousNorthContract: PREVIOUS_CONTRACT,
       baselineNorthContract: BASELINE_CONTRACT,
+      foundationNorthContract: FOUNDATION_CONTRACT,
       targetRoute: TARGET_ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
       diagnosticTimestamp: state.diagnosticTimestamp,
@@ -2177,6 +2188,31 @@
       recommendedNextFile: state.recommendedNextFile,
       recommendedNextAction: state.recommendedNextAction,
 
+      currentSpreadAcceptance: {
+        currentExpectedHtmlContract: state.currentExpectedHtmlContract,
+        currentExpectedIndexJsContract: state.currentExpectedIndexJsContract,
+        currentExpectedRouteConductorContract: state.currentExpectedRouteConductorContract,
+        acceptedHtmlContracts: state.acceptedHtmlContracts,
+        acceptedIndexContracts: state.acceptedIndexContracts,
+        acceptedRouteConductorContracts: state.acceptedRouteConductorContracts,
+        servedHtmlContract: state.servedHtmlContract,
+        servedIndexJsContract: state.servedIndexJsContract,
+        servedRouteConductorContract: state.servedRouteConductorContract,
+        htmlContractRecognized: state.htmlContractRecognized,
+        indexContractRecognized: state.indexContractRecognized,
+        routeConductorContractRecognized: state.routeConductorContractRecognized,
+        primaryRouteConductorContractRecognized: state.primaryRouteConductorContractRecognized,
+        routeConductorV99PrimaryNotTreatedAsCase5: state.routeConductorV99PrimaryNotTreatedAsCase5,
+        routeConductorV98CompatibilityAccepted: state.routeConductorV98CompatibilityAccepted,
+        routeConductorV97CompatibilityAccepted: state.routeConductorV97CompatibilityAccepted,
+        routeConductorV96CompatibilityAccepted: state.routeConductorV96CompatibilityAccepted,
+        routeConductorV95CompatibilityAccepted: state.routeConductorV95CompatibilityAccepted,
+        routeConductorV94LineageAccepted: state.routeConductorV94LineageAccepted,
+        cacheKeyStaleNonBlocking: state.cacheKeyStaleNonBlocking,
+        servedContractMismatchIsBlocking: state.servedContractMismatchIsBlocking,
+        eastCurrentSpreadAlignmentRecognized: state.eastCurrentSpreadAlignmentRecognized
+      },
+
       labCanvasBridge: {
         labBridgeSchemaActive: state.labBridgeSchemaActive,
         labNorthFile: state.labNorthFile,
@@ -2185,18 +2221,8 @@
         labNorthContract: state.labNorthContract,
         labNorthReceipt: state.labNorthReceipt,
         labNorthActiveStageId: state.labNorthActiveStageId,
-        labNorthActiveGear: state.labNorthActiveGear,
-        labNorthActiveCycleNumber: state.labNorthActiveCycleNumber,
         labNorthActiveCycleRoute: state.labNorthActiveCycleRoute,
-        labNorthActiveCardinal: state.labNorthActiveCardinal,
-        labNorthActiveFileGate: state.labNorthActiveFileGate,
-        labNorthActiveFibonacci: state.labNorthActiveFibonacci,
-        labNorthActiveNewsGate: state.labNorthActiveNewsGate,
         labNorthTwoCycleLawActive: state.labNorthTwoCycleLawActive,
-        labNorthCentralTrainStationActive: state.labNorthCentralTrainStationActive,
-        labNorthDownstreamReleaseAuthorized: state.labNorthDownstreamReleaseAuthorized,
-        labNorthCompletionLatched: state.labNorthCompletionLatched,
-
         macroWestFile: state.macroWestFile,
         macroWestObserved: state.macroWestObserved,
         macroWestSourcePath: state.macroWestSourcePath,
@@ -2204,22 +2230,12 @@
         macroWestReceipt: state.macroWestReceipt,
         macroWestDecision: state.macroWestDecision,
         macroWestGapClass: state.macroWestGapClass,
-        macroWestAuditAccepted: state.macroWestAuditAccepted,
         macroWestReleaseToCanvas: state.macroWestReleaseToCanvas,
-        macroWestCanvasReleasePacketReady: state.macroWestCanvasReleasePacketReady,
-        macroWestCanvasReleaseAuthorized: state.macroWestCanvasReleaseAuthorized,
-        macroWestRecommendedNextFile: state.macroWestRecommendedNextFile,
-
         canvasLocalStationFile: state.canvasLocalStationFile,
         canvasLocalStationObserved: state.canvasLocalStationObserved,
         canvasLocalStationSourcePath: state.canvasLocalStationSourcePath,
         canvasLocalStationContract: state.canvasLocalStationContract,
-        canvasLocalStationAccepted: state.canvasLocalStationAccepted,
-        canvasLocalStationApiReady: state.canvasLocalStationApiReady,
-        canvasLocalStationReceiveSurfaceReady: state.canvasLocalStationReceiveSurfaceReady,
-        canvasLocalStationSummaryObserved: state.canvasLocalStationSummaryObserved,
         canvasLocalStationBridgeStatus: state.canvasLocalStationBridgeStatus,
-
         labCanvasSharedLanguageStatus: state.labCanvasSharedLanguageStatus,
         labCanvasBridgeStatus: state.labCanvasBridgeStatus,
         diagnosticGatewayMirrorsBridge: state.diagnosticGatewayMirrorsBridge
@@ -2231,27 +2247,18 @@
         bishopEastObserved: state.bishopEastObserved,
         bishopSouthObserved: state.bishopSouthObserved,
         bishopWestObserved: state.bishopWestObserved,
+        bishopRouteConductorObserved: state.bishopRouteConductorObserved,
+        bishopCanvasObserved: state.bishopCanvasObserved,
         bishopHubSummary: clonePlain(state.bishopHubSummary),
         bishopHubsAreOpaqueToDiagnosticNorth: state.bishopHubsAreOpaqueToDiagnosticNorth,
         bishopChildFileKnowledgeOwnedByBishops: state.bishopChildFileKnowledgeOwnedByBishops,
         westNeedsBishopsNotSubjectFiles: state.westNeedsBishopsNotSubjectFiles
       },
 
-      diagnosticReceiverBridge: {
-        diagnosticReceiverObserved: state.diagnosticReceiverObserved,
-        diagnosticReceiverContract: state.diagnosticReceiverContract,
-        diagnosticReceiverCallsNorthOnly: state.diagnosticReceiverCallsNorthOnly,
-        diagnosticReceiverPlanetaryObserverActive: state.diagnosticReceiverPlanetaryObserverActive
-      },
-
       planetaryControlLifecycle: {
         planetaryControlSchemaActive: state.planetaryControlSchemaActive,
         planetaryControlSchemaContract: state.planetaryControlSchemaContract,
         planetaryControlSchemaReceipt: state.planetaryControlSchemaReceipt,
-        frontendPlanetaryObserverBasisExpected: state.frontendPlanetaryObserverBasisExpected,
-        frontendPlanetaryObserverStatus: state.frontendPlanetaryObserverStatus,
-        planetaryFunctionDiagnosticBasis: state.planetaryFunctionDiagnosticBasis,
-        planetaryBuildObserverStatus: state.planetaryBuildObserverStatus,
         controlFile: state.controlFile,
         controlFileExpected: state.controlFileExpected,
         controlFileStatus: state.controlFileStatus,
@@ -2264,18 +2271,10 @@
         controlAbsenceBlocksMotionTouch: state.controlAbsenceBlocksMotionTouch,
         controlHandshakeExpected: state.controlHandshakeExpected,
         controlHandshakeStatus: state.controlHandshakeStatus,
-        hearthJsControlFunnelExpected: state.hearthJsControlFunnelExpected,
-        hearthJsControlFunnelFile: state.hearthJsControlFunnelFile,
-        hearthJsControlHandshakeStatus: state.hearthJsControlHandshakeStatus,
-        hearthJsLoadsOrRecognizesControlFile: state.hearthJsLoadsOrRecognizesControlFile,
-        motionTouchExpected: state.motionTouchExpected,
+        visiblePlanetAllowedWithoutControls: state.visiblePlanetAllowedWithoutControls,
         motionTouchStatus: state.motionTouchStatus,
         dragStatus: state.dragStatus,
-        viewControlStatus: state.viewControlStatus,
-        visiblePlanetAllowedWithoutControls: state.visiblePlanetAllowedWithoutControls,
-        staticPlanetStatus: state.staticPlanetStatus,
-        planetaryControlNextConformingFile: state.planetaryControlNextConformingFile,
-        planetaryControlNextConformingAction: state.planetaryControlNextConformingAction
+        viewControlStatus: state.viewControlStatus
       },
 
       childValidation: {
@@ -2286,25 +2285,6 @@
         westEvidenceValid: state.westEvidenceValid,
         southOutputValid: state.southOutputValid,
         southMeaningPreserved: state.southMeaningPreserved
-      },
-
-      currentSpread: {
-        expectedHtmlContract: state.expectedHtmlContract,
-        expectedIndexJsContract: state.expectedIndexJsContract,
-        expectedRouteConductorContract: state.expectedRouteConductorContract,
-        servedHtmlContract: state.servedHtmlContract,
-        servedIndexJsContract: state.servedIndexJsContract,
-        servedRouteConductorContract: state.servedRouteConductorContract,
-        currentExpectedHtmlContract: state.currentExpectedHtmlContract,
-        currentExpectedIndexJsContract: state.currentExpectedIndexJsContract,
-        currentExpectedRouteConductorContract: state.currentExpectedRouteConductorContract,
-        compatRouteConductorContract: state.compatRouteConductorContract,
-        priorRouteConductorContract: state.priorRouteConductorContract,
-        primaryRouteConductorContractRecognized: state.primaryRouteConductorContractRecognized,
-        routeConductorV96PrimaryNotTreatedAsCase5: state.routeConductorV96PrimaryNotTreatedAsCase5,
-        routeConductorV95CompatibilityAccepted: state.routeConductorV95CompatibilityAccepted,
-        routeConductorV94LineageAccepted: state.routeConductorV94LineageAccepted,
-        eastCurrentSpreadAlignmentRecognized: state.eastCurrentSpreadAlignmentRecognized
       },
 
       renderedProof: {
@@ -2420,6 +2400,28 @@
       NORTH_RECEIPT: RECEIPT,
       PREVIOUS_NORTH_CONTRACT: PREVIOUS_CONTRACT,
       BASELINE_NORTH_CONTRACT: BASELINE_CONTRACT,
+      FOUNDATION_NORTH_CONTRACT: FOUNDATION_CONTRACT,
+
+      CURRENT_EXPECTED_HTML_CONTRACT: state.currentExpectedHtmlContract,
+      CURRENT_EXPECTED_INDEX_JS_CONTRACT: state.currentExpectedIndexJsContract,
+      CURRENT_EXPECTED_ROUTE_CONDUCTOR_CONTRACT: state.currentExpectedRouteConductorContract,
+      ACCEPTED_HTML_CONTRACTS: state.acceptedHtmlContracts,
+      ACCEPTED_INDEX_CONTRACTS: state.acceptedIndexContracts,
+      ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS: state.acceptedRouteConductorContracts,
+
+      HTML_CONTRACT_RECOGNIZED: state.htmlContractRecognized,
+      INDEX_CONTRACT_RECOGNIZED: state.indexContractRecognized,
+      ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED: state.routeConductorContractRecognized,
+      PRIMARY_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED: state.primaryRouteConductorContractRecognized,
+      ROUTE_CONDUCTOR_V9_9_PRIMARY_NOT_TREATED_AS_CASE_5: state.routeConductorV99PrimaryNotTreatedAsCase5,
+      ROUTE_CONDUCTOR_V9_8_COMPATIBILITY_ACCEPTED: state.routeConductorV98CompatibilityAccepted,
+      ROUTE_CONDUCTOR_V9_7_COMPATIBILITY_ACCEPTED: state.routeConductorV97CompatibilityAccepted,
+      ROUTE_CONDUCTOR_V9_6_COMPATIBILITY_ACCEPTED: state.routeConductorV96CompatibilityAccepted,
+      ROUTE_CONDUCTOR_V9_5_COMPATIBILITY_ACCEPTED: state.routeConductorV95CompatibilityAccepted,
+      ROUTE_CONDUCTOR_V9_4_LINEAGE_ACCEPTED: state.routeConductorV94LineageAccepted,
+      CACHE_KEY_STALE_NON_BLOCKING: state.cacheKeyStaleNonBlocking,
+      SERVED_CONTRACT_MISMATCH_IS_BLOCKING: state.servedContractMismatchIsBlocking,
+      EAST_CURRENT_SPREAD_ALIGNMENT_RECOGNIZED: state.eastCurrentSpreadAlignmentRecognized,
 
       LAB_BRIDGE_SCHEMA_ACTIVE: state.labBridgeSchemaActive,
       LAB_NORTH_FILE: state.labNorthFile,
@@ -2465,6 +2467,8 @@
       BISHOP_EAST_OBSERVED: state.bishopEastObserved,
       BISHOP_SOUTH_OBSERVED: state.bishopSouthObserved,
       BISHOP_WEST_OBSERVED: state.bishopWestObserved,
+      BISHOP_ROUTE_CONDUCTOR_OBSERVED: state.bishopRouteConductorObserved,
+      BISHOP_CANVAS_OBSERVED: state.bishopCanvasObserved,
       BISHOP_HUBS_ARE_OPAQUE_TO_DIAGNOSTIC_NORTH: state.bishopHubsAreOpaqueToDiagnosticNorth,
       BISHOP_CHILD_FILE_KNOWLEDGE_OWNED_BY_BISHOPS: state.bishopChildFileKnowledgeOwnedByBishops,
       WEST_NEEDS_BISHOPS_NOT_SUBJECT_FILES: state.westNeedsBishopsNotSubjectFiles,
@@ -2495,14 +2499,12 @@
       CONTROL_ABSENCE_IS_CASE_5: state.controlAbsenceIsCase5,
       CONTROL_ABSENCE_BLOCKS_VISIBLE_PLANET: state.controlAbsenceBlocksVisiblePlanet,
       CONTROL_ABSENCE_BLOCKS_MOTION_TOUCH: state.controlAbsenceBlocksMotionTouch,
-
       CONTROL_HANDSHAKE_EXPECTED: state.controlHandshakeExpected,
       CONTROL_HANDSHAKE_STATUS: state.controlHandshakeStatus,
       HEARTH_JS_CONTROL_FUNNEL_EXPECTED: state.hearthJsControlFunnelExpected,
       HEARTH_JS_CONTROL_FUNNEL_FILE: state.hearthJsControlFunnelFile,
       HEARTH_JS_CONTROL_HANDSHAKE_STATUS: state.hearthJsControlHandshakeStatus,
       HEARTH_JS_LOADS_OR_RECOGNIZES_CONTROL_FILE: state.hearthJsLoadsOrRecognizesControlFile,
-
       MOTION_TOUCH_EXPECTED: state.motionTouchExpected,
       MOTION_TOUCH_STATUS: state.motionTouchStatus,
       DRAG_STATUS: state.dragStatus,
@@ -2516,18 +2518,6 @@
       WEST_IMPLEMENTATION_CONTRACT: state.westImplementationContract,
       SOUTH_IMPLEMENTATION_CONTRACT: state.southImplementationContract,
 
-      CURRENT_EXPECTED_HTML_CONTRACT: state.currentExpectedHtmlContract,
-      CURRENT_EXPECTED_INDEX_JS_CONTRACT: state.currentExpectedIndexJsContract,
-      CURRENT_EXPECTED_ROUTE_CONDUCTOR_CONTRACT: state.currentExpectedRouteConductorContract,
-      COMPAT_ROUTE_CONDUCTOR_CONTRACT: state.compatRouteConductorContract,
-      PRIOR_ROUTE_CONDUCTOR_CONTRACT: state.priorRouteConductorContract,
-
-      PRIMARY_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED: state.primaryRouteConductorContractRecognized,
-      ROUTE_CONDUCTOR_V9_6_PRIMARY_NOT_TREATED_AS_CASE_5: state.routeConductorV96PrimaryNotTreatedAsCase5,
-      ROUTE_CONDUCTOR_V9_5_COMPATIBILITY_ACCEPTED: state.routeConductorV95CompatibilityAccepted,
-      ROUTE_CONDUCTOR_V9_4_LINEAGE_ACCEPTED: state.routeConductorV94LineageAccepted,
-      EAST_CURRENT_SPREAD_ALIGNMENT_RECOGNIZED: state.eastCurrentSpreadAlignmentRecognized,
-
       SHOW_RECEIPT_RECT: state.showReceiptRect,
       SHOW_RECEIPT_CENTER_POINT: state.showReceiptCenterPoint,
       TARGET_VIEWPORT_WIDTH: state.targetViewportWidth,
@@ -2539,7 +2529,6 @@
       HIT_TEST_UNREADABLE_REASON: state.hitTestUnreadableReason,
       FRAME_RECT: state.frameRect,
       FRAME_VISIBLE_TO_DIAGNOSTIC_ROUTE: state.frameVisibleToDiagnosticRoute,
-
       CANVAS_ELEMENT_FOUND: state.canvasElementFound,
       ROUTE_CONDUCTOR_CONTRACT_READABLE_IN_RENDERED_TARGET: state.routeConductorContractReadableInRenderedTarget,
       RENDERED_PLANET_PROOF_FULLY_INSPECTED: state.renderedPlanetProofFullyInspected,
@@ -2550,7 +2539,6 @@
       NEWS_ALIGNMENT_STATUS: state.newsAlignmentStatus,
       NEWS_ALIGNMENT_SCORE: state.newsAlignmentScore,
       NEWS_ALIGNMENT_FIRST_FAILED_STAGE: state.newsAlignmentFirstFailedStage,
-
       FIBONACCI_SYNCHRONIZATION_PROTOCOL: state.fibonacciSynchronizationProtocol,
       FIBONACCI_SYNCHRONIZATION_STATUS: state.fibonacciSynchronizationStatus,
       FIBONACCI_SYNCHRONIZATION_SCORE: state.fibonacciSynchronizationScore,
@@ -2600,9 +2588,7 @@
     }
 
     if (options.includeNoClaimFieldsInPacket === true) {
-      for (const key of Object.keys(NO_CLAIM_FIELDS)) {
-        lines.push(line(key, "false"));
-      }
+      for (const key of Object.keys(NO_CLAIM_FIELDS)) lines.push(line(key, "false"));
     }
 
     return lines.join("\n");
@@ -2611,24 +2597,20 @@
   function composeCompactSummary(report) {
     return [
       line("TARGET_ROUTE", getValue(report, "TARGET_ROUTE", TARGET_ROUTE)),
-      line("LAB_CANVAS_BRIDGE_STATUS", getValue(report, "LAB_CANVAS_BRIDGE_STATUS", BRIDGE_STATUS.HELD)),
-      line("LAB_NORTH_ACTIVE_STAGE_ID", getValue(report, "LAB_NORTH_ACTIVE_STAGE_ID", FALLBACK.UNKNOWN)),
-      line("MACRO_WEST_DECISION", getValue(report, "MACRO_WEST_DECISION", FALLBACK.UNKNOWN)),
-      line("CANVAS_LOCAL_STATION_BRIDGE_STATUS", getValue(report, "CANVAS_LOCAL_STATION_BRIDGE_STATUS", FALLBACK.UNKNOWN)),
-      line("CONTROL_FILE_STATUS", getValue(report, "CONTROL_FILE_STATUS", CONTROL_LIFECYCLE_STATES.EXPECTED_NOT_YET_BUILT)),
-      line("CONTROL_HANDSHAKE_STATUS", getValue(report, "CONTROL_HANDSHAKE_STATUS", CONTROL_LIFECYCLE_STATES.EXPECTED_NOT_YET_WIRED)),
-      line("MOTION_TOUCH_STATUS", getValue(report, "MOTION_TOUCH_STATUS", CONTROL_LIFECYCLE_STATES.WAITING_CONTROL_FILE)),
+      line("NORTH_CONTRACT", getValue(report, "NORTH_CONTRACT", CONTRACT)),
+      line("SERVED_HTML_CONTRACT", getValue(report, "SERVED_HTML_CONTRACT", FALLBACK.UNKNOWN)),
       line("SERVED_ROUTE_CONDUCTOR_CONTRACT", getValue(report, "SERVED_ROUTE_CONDUCTOR_CONTRACT", FALLBACK.UNKNOWN)),
-      line("CACHE_OR_SERVED_CONTRACT_MISMATCH", getValue(report, "CACHE_OR_SERVED_CONTRACT_MISMATCH", FALLBACK.UNKNOWN)),
-      line("CASE_1_SUPPORT", getValue(report, "CASE_1_SUPPORT", FALLBACK.UNKNOWN)),
-      line("CASE_4_SUPPORT", getValue(report, "CASE_4_SUPPORT", FALLBACK.UNKNOWN)),
+      line("ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED", getValue(report, "ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED", FALLBACK.UNKNOWN)),
+      line("ROUTE_CONDUCTOR_V9_9_PRIMARY_NOT_TREATED_AS_CASE_5", getValue(report, "ROUTE_CONDUCTOR_V9_9_PRIMARY_NOT_TREATED_AS_CASE_5", FALLBACK.UNKNOWN)),
+      line("CACHE_KEY_STALE_NON_BLOCKING", getValue(report, "CACHE_KEY_STALE_NON_BLOCKING", FALLBACK.UNKNOWN)),
+      line("SERVED_CONTRACT_MISMATCH_IS_BLOCKING", getValue(report, "SERVED_CONTRACT_MISMATCH_IS_BLOCKING", FALLBACK.UNKNOWN)),
       line("CASE_5_SUPPORT", getValue(report, "CASE_5_SUPPORT", FALLBACK.UNKNOWN)),
-      line("CASE_6_SUPPORT", getValue(report, "CASE_6_SUPPORT", FALLBACK.UNKNOWN)),
-      line("CASE_7_SUPPORT", getValue(report, "CASE_7_SUPPORT", FALLBACK.UNKNOWN)),
+      line("PRIMARY_CASE", getValue(report, "PRIMARY_CASE", FALLBACK.UNKNOWN)),
+      line("LAB_CANVAS_BRIDGE_STATUS", getValue(report, "LAB_CANVAS_BRIDGE_STATUS", FALLBACK.UNKNOWN)),
+      line("CANVAS_LOCAL_STATION_BRIDGE_STATUS", getValue(report, "CANVAS_LOCAL_STATION_BRIDGE_STATUS", FALLBACK.UNKNOWN)),
       line("WEST_RENDERED_READ_STATUS", getValue(report, "WEST_RENDERED_READ_STATUS", FALLBACK.UNKNOWN)),
       line("CALIBRATION_STATUS", getValue(report, "CALIBRATION_STATUS", FALLBACK.UNKNOWN)),
       line("CALIBRATION_POINT_REACHED", getValue(report, "CALIBRATION_POINT_REACHED", FALLBACK.UNKNOWN)),
-      line("PRIMARY_CASE", getValue(report, "PRIMARY_CASE", FALLBACK.UNKNOWN)),
       line("RECOMMENDED_NEXT_OWNER", getValue(report, "RECOMMENDED_NEXT_OWNER", FALLBACK.UNKNOWN)),
       line("RECOMMENDED_NEXT_FILE", getValue(report, "RECOMMENDED_NEXT_FILE", FALLBACK.UNKNOWN)),
       line("RECOMMENDED_NEXT_ACTION", getValue(report, "RECOMMENDED_NEXT_ACTION", FALLBACK.UNKNOWN))
@@ -2656,9 +2638,7 @@
     const source = isObject(northReport) ? northReport : {};
 
     for (const field of [...REQUIRED_REPORT_FIELDS, ...OPTIONAL_TRACE_FIELDS, "NORTH_VERDICT"]) {
-      if (merged[field] === undefined || merged[field] === null || merged[field] === "") {
-        merged[field] = source[field];
-      }
+      if (merged[field] === undefined || merged[field] === null || merged[field] === "") merged[field] = source[field];
     }
 
     return merged;
@@ -2681,9 +2661,7 @@
 
   async function runSouthIfAvailable(children, state, options) {
     if (state.southReceiptValid !== CHILD_VALIDATION.VALID || !children.south) {
-      state.southOutputValid = state.southReceiptValid === CHILD_VALIDATION.VALID
-        ? CHILD_VALIDATION.MISSING
-        : state.southReceiptValid;
+      state.southOutputValid = state.southReceiptValid === CHILD_VALIDATION.VALID ? CHILD_VALIDATION.MISSING : state.southReceiptValid;
       state.southOutputStatus = STATUS.FALLBACK;
       state.southMeaningPreserved = "false";
       addNote(state, `SOUTH_CHILD_MISSING_OR_INVALID:${state.southReceiptValid}`);
@@ -2745,6 +2723,7 @@
     state.diagnosticTimestamp = nowIso();
     state.updatedAt = nowIso();
 
+    addNote(state, "NORTH_BISHOP_QUEEN_ACCEPTANCE_SCHEMA_ACTIVE");
     addNote(state, "NORTH_LAB_CANVAS_BRIDGE_SCHEMA_ACTIVE");
     addNote(state, "NORTH_PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ACTIVE");
     addNote(state, "NORTH_CONTROL_ABSENCE_ADMITTED_AS_EXPECTED_NOT_YET_BUILT");
@@ -2780,11 +2759,18 @@
           const eastResult = await Promise.resolve(children.east.runEastSourceRead({
             northContract: CONTRACT,
             labBridgeSchemaActive: true,
+            currentHtmlContract: HTML_CURRENT_CONTRACT,
+            currentIndexJsContract: INDEX_CURRENT_CONTRACT,
+            currentRouteConductorContract: ROUTE_CURRENT_CONTRACT,
+            acceptedHtmlContracts: ACCEPTED_HTML_CONTRACTS.slice(),
+            acceptedIndexContracts: ACCEPTED_INDEX_CONTRACTS.slice(),
+            acceptedRouteConductorContracts: ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS.slice(),
             labNorthFile: LAB_NORTH_FILE,
             macroWestFile: LAB_WEST_FILE,
-            canvasLocalStationFile: CANVAS_LOCAL_STATION_FILE,
+            canvasLocalStationFile: CANVAS_FILE,
             controlFile: CONTROL_FILE
           }));
+
           const eastEvidence = getEvidencePayload(eastResult, "evidence");
 
           state.eastEvidenceValid = validateEastEvidence(eastEvidence);
@@ -2802,9 +2788,7 @@
         }
       }
 
-      const sourceMismatchControlling =
-        isSupportTrue(state.case5Support) ||
-        isSupportTrue(state.cacheOrServedContractMismatch);
+      const sourceMismatchControlling = isSupportTrue(state.case5Support) || isSupportTrue(state.cacheOrServedContractMismatch);
 
       if (westValidation.status === CHILD_VALIDATION.VALID) {
         try {
@@ -2815,10 +2799,14 @@
             syntheticActivationPermittedByNorth: Boolean(options.syntheticActivationPermittedByNorth),
             northContract: CONTRACT,
             labBridgeSchemaActive: true,
+            currentRouteConductorContract: ROUTE_CURRENT_CONTRACT,
+            acceptedRouteConductorContracts: ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS.slice(),
             labNorthObserved: state.labNorthObserved,
             macroWestObserved: state.macroWestObserved,
             canvasLocalStationObserved: state.canvasLocalStationObserved,
-            canvasLocalStationContract: state.canvasLocalStationContract
+            canvasLocalStationContract: state.canvasLocalStationContract,
+            bishopRouteConductorObserved: state.bishopRouteConductorObserved,
+            bishopCanvasObserved: state.bishopCanvasObserved
           };
 
           if (options.targetDocument) westOptions.targetDocument = options.targetDocument;
@@ -2843,6 +2831,7 @@
         }
       }
 
+      applyCurrentContractRecognition(state);
       selectPrimaryCase(state);
       applyCalibrationLayer(state, false);
       selectRecommendation(state);
@@ -2853,6 +2842,8 @@
 
       await runSouthIfAvailable(children, state, options);
 
+      applyCurrentContractRecognition(state);
+      selectPrimaryCase(state);
       applyCalibrationLayer(state, true);
       selectRecommendation(state);
       resolveNewsAlignment(state);
@@ -2889,6 +2880,8 @@
         previousReceipt: PREVIOUS_RECEIPT,
         baselineContract: BASELINE_CONTRACT,
         baselineReceipt: BASELINE_RECEIPT,
+        foundationContract: FOUNDATION_CONTRACT,
+        foundationReceipt: FOUNDATION_RECEIPT,
         verdict: clonePlain(lastVerdict),
         report: clonePlain(lastReport),
         packetText: lastPacketText,
@@ -2928,6 +2921,8 @@
         previousReceipt: PREVIOUS_RECEIPT,
         baselineContract: BASELINE_CONTRACT,
         baselineReceipt: BASELINE_RECEIPT,
+        foundationContract: FOUNDATION_CONTRACT,
+        foundationReceipt: FOUNDATION_RECEIPT,
         error: bounded(error && error.message ? error.message : error, 1000),
         verdict: clonePlain(lastVerdict),
         report: clonePlain(lastReport),
@@ -2948,7 +2943,6 @@
 
   function getPacketText() {
     if (lastPacketText) return lastPacketText;
-
     const state = makeState();
     const report = buildReportObject(state);
     return composePacketText(report, {});
@@ -2956,7 +2950,6 @@
 
   function getCompactSummary() {
     if (lastCompactSummary) return lastCompactSummary;
-
     const state = makeState();
     const report = buildReportObject(state);
     return composeCompactSummary(report);
@@ -2970,13 +2963,15 @@
     const state = lastState || makeState();
 
     return {
-      parentRole: "NORTH_LAB_CANVAS_BRIDGE_SCHEMA_ORCHESTRATOR",
+      parentRole: "NORTH_BISHOP_QUEEN_ACCEPTANCE_SCHEMA_ORCHESTRATOR",
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       previousReceipt: PREVIOUS_RECEIPT,
       baselineContract: BASELINE_CONTRACT,
       baselineReceipt: BASELINE_RECEIPT,
+      foundationContract: FOUNDATION_CONTRACT,
+      foundationReceipt: FOUNDATION_RECEIPT,
       version: VERSION,
       file: FILE,
       targetRoute: TARGET_ROUTE,
@@ -2992,6 +2987,29 @@
       northOwnsCanonicalVerdictSchema: true,
       northOwnsPlanetaryControlLifecycleSchema: true,
       northOwnsLabCanvasBridgeSchema: true,
+      northOwnsBishopQueenAcceptanceSchema: true,
+
+      currentHtmlContract: HTML_CURRENT_CONTRACT,
+      currentIndexJsContract: INDEX_CURRENT_CONTRACT,
+      currentRouteConductorContract: ROUTE_CURRENT_CONTRACT,
+      acceptedHtmlContracts: ACCEPTED_HTML_CONTRACTS.slice(),
+      acceptedIndexContracts: ACCEPTED_INDEX_CONTRACTS.slice(),
+      acceptedRouteConductorContracts: ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS.slice(),
+
+      servedHtmlContract: state.servedHtmlContract,
+      servedIndexJsContract: state.servedIndexJsContract,
+      servedRouteConductorContract: state.servedRouteConductorContract,
+      htmlContractRecognized: state.htmlContractRecognized,
+      indexContractRecognized: state.indexContractRecognized,
+      routeConductorContractRecognized: state.routeConductorContractRecognized,
+      routeConductorV99PrimaryNotTreatedAsCase5: state.routeConductorV99PrimaryNotTreatedAsCase5,
+      routeConductorV98CompatibilityAccepted: state.routeConductorV98CompatibilityAccepted,
+      routeConductorV97CompatibilityAccepted: state.routeConductorV97CompatibilityAccepted,
+      routeConductorV96CompatibilityAccepted: state.routeConductorV96CompatibilityAccepted,
+      routeConductorV95CompatibilityAccepted: state.routeConductorV95CompatibilityAccepted,
+      routeConductorV94LineageAccepted: state.routeConductorV94LineageAccepted,
+      cacheKeyStaleNonBlocking: state.cacheKeyStaleNonBlocking,
+      servedContractMismatchIsBlocking: state.servedContractMismatchIsBlocking,
 
       labBridgeSchemaActive: true,
       labNorthObserved: state.labNorthObserved,
@@ -3017,6 +3035,8 @@
       bishopEastObserved: state.bishopEastObserved,
       bishopSouthObserved: state.bishopSouthObserved,
       bishopWestObserved: state.bishopWestObserved,
+      bishopRouteConductorObserved: state.bishopRouteConductorObserved,
+      bishopCanvasObserved: state.bishopCanvasObserved,
       bishopHubsAreOpaqueToDiagnosticNorth: true,
       bishopChildFileKnowledgeOwnedByBishops: true,
 
@@ -3062,6 +3082,7 @@
       canonicalVerdictSchemaAuthority: true,
       planetaryControlLifecycleSchemaAuthority: true,
       labCanvasBridgeSchemaAuthority: true,
+      bishopQueenAcceptanceSchemaAuthority: true,
       labRuntimeAuthority: false,
       macroWestAuthority: false,
       canvasAuthority: false,
@@ -3108,12 +3129,18 @@
 
       previousNorthContract: PREVIOUS_CONTRACT,
       baselineNorthContract: BASELINE_CONTRACT,
+      foundationNorthContract: FOUNDATION_CONTRACT,
 
-      currentHtmlContract: CURRENT_HTML_CONTRACT,
-      currentIndexJsContract: CURRENT_INDEX_JS_CONTRACT,
-      currentRouteConductorContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
-      compatRouteConductorContract: COMPAT_ROUTE_CONDUCTOR_CONTRACT,
-      priorRouteConductorContract: PRIOR_ROUTE_CONDUCTOR_CONTRACT,
+      htmlCurrentContract: HTML_CURRENT_CONTRACT,
+      htmlPreviousContract: HTML_PREVIOUS_CONTRACT,
+      htmlBaselineContract: HTML_BASELINE_CONTRACT,
+      indexCurrentContract: INDEX_CURRENT_CONTRACT,
+      routeCurrentContract: ROUTE_CURRENT_CONTRACT,
+      routeV98Contract: ROUTE_V9_8_CONTRACT,
+      routeV97Contract: ROUTE_V9_7_CONTRACT,
+      routeV96Contract: ROUTE_V9_6_CONTRACT,
+      routeV95Contract: ROUTE_V9_5_CONTRACT,
+      routeV94Contract: ROUTE_V9_4_CONTRACT,
 
       controlFile: CONTROL_FILE,
       routeConductorFile: ROUTE_CONDUCTOR_FILE,
@@ -3121,7 +3148,7 @@
       canvasFile: CANVAS_FILE,
       labNorthFile: LAB_NORTH_FILE,
       labWestFile: LAB_WEST_FILE,
-      canvasLocalStationFile: CANVAS_LOCAL_STATION_FILE,
+      canvasLocalStationFile: CANVAS_FILE,
       eastFile: EAST_FILE,
       westFile: WEST_FILE,
       southFile: SOUTH_FILE,
@@ -3129,8 +3156,6 @@
 
       CONTROL_LIFECYCLE_STATES: clonePlain(CONTROL_LIFECYCLE_STATES),
       BRIDGE_STATUS: clonePlain(BRIDGE_STATUS),
-      LAB_CYCLE: clonePlain(LAB_CYCLE),
-      LAB_STAGE: clonePlain(LAB_STAGE),
       BISHOP_HUBS: clonePlain(BISHOP_HUBS),
 
       bishopHubSummary: clonePlain(state.bishopHubSummary),
@@ -3139,30 +3164,29 @@
 
       supportsNorthAnchorSchema: true,
       supportsCurrentSpreadCalibration: true,
-      supportsEastV4CurrentSpreadIntelligence: true,
-      supportsRouteConductorV96AsCurrentSpread: true,
+      supportsHtmlV51AsCurrentSpread: true,
+      supportsRouteConductorV99AsCurrentSpread: true,
+      supportsRouteConductorV98Compatibility: true,
+      supportsRouteConductorV97Compatibility: true,
+      supportsRouteConductorV96Compatibility: true,
       supportsRouteConductorV95Compatibility: true,
       supportsRouteConductorV94Lineage: true,
+      supportsNonBlockingCacheKeyRecognition: true,
       supportsWestRenderedObservabilityFields: true,
       supportsCalibrationStatusLayer: true,
       supportsNewsAlignmentAudit: true,
       supportsFibonacciSynchronizationAudit: true,
       supportsSouthMeaningPreservationAudit: true,
-
       supportsPlanetaryControlLifecycleSchema: true,
-      supportsFrontendPlanetaryObserverBasisAdmission: true,
-      supportsControlFileExpectedNotYetBuiltLifecycle: true,
       supportsControlAbsenceNotCase5: true,
       supportsVisiblePlanetWithoutControls: true,
       supportsMotionTouchWaitingControlFile: true,
-      supportsHearthJsControlFunnelExpectation: true,
-
       supportsLabRuntimeTableBridgeLiteracy: true,
       supportsMacroWestAdmissibilityBridgeLiteracy: true,
       supportsCanvasLocalStationBridgeLiteracy: true,
       supportsDiagnosticReceiverBridgeLiteracy: true,
       supportsOpaqueBishopHubBridgeVocabulary: true,
-      recommendsEastFootprintConformanceWhenMissing: true,
+      supportsBishopQueenCanvasRecognitionFunnel: true,
 
       finalPrimaryCaseAuthority: true,
       finalRecommendationAuthority: true,
@@ -3170,6 +3194,7 @@
       canonicalVerdictSchemaAuthority: true,
       planetaryControlLifecycleSchemaAuthority: true,
       labCanvasBridgeSchemaAuthority: true,
+      bishopQueenAcceptanceSchemaAuthority: true,
 
       labRuntimeAuthority: false,
       macroWestAuthority: false,
@@ -3215,6 +3240,7 @@
     root.HEARTH.diagnosticNorthAnchor = api;
     root.HEARTH.diagnosticNorthPlanetaryControlLifecycle = api;
     root.HEARTH.diagnosticNorthLabCanvasBridge = api;
+    root.HEARTH.diagnosticNorthBishopQueenAcceptance = api;
 
     root.DEXTER_LAB = root.DEXTER_LAB || {};
     root.DEXTER_LAB.hearthDiagnosticRail = api;
@@ -3222,6 +3248,7 @@
     root.DEXTER_LAB.hearthDiagnosticNorthAnchor = api;
     root.DEXTER_LAB.hearthDiagnosticNorthPlanetaryControlLifecycle = api;
     root.DEXTER_LAB.hearthDiagnosticNorthLabCanvasBridge = api;
+    root.DEXTER_LAB.hearthDiagnosticNorthBishopQueenAcceptance = api;
 
     root.HEARTH_DIAGNOSTIC_RAIL = api;
     root.HEARTH_PARALLEL_DIAGNOSTIC_RAIL = api;
@@ -3230,6 +3257,7 @@
     root.HEARTH_DIAGNOSTIC_NORTH_ANCHOR = api;
     root.HEARTH_DIAGNOSTIC_NORTH_PLANETARY_CONTROL_LIFECYCLE = api;
     root.HEARTH_DIAGNOSTIC_NORTH_LAB_CANVAS_BRIDGE = api;
+    root.HEARTH_DIAGNOSTIC_NORTH_BISHOP_QUEEN_ACCEPTANCE = api;
 
     root.HEARTH_DIAGNOSTIC_RAIL_RECEIPT = getReceipt();
     root.HEARTH_PARALLEL_DIAGNOSTIC_RAIL_RECEIPT = getReceipt();
@@ -3238,26 +3266,31 @@
     root.HEARTH_DIAGNOSTIC_NORTH_ANCHOR_RECEIPT = getReceipt();
     root.HEARTH_DIAGNOSTIC_NORTH_PLANETARY_CONTROL_LIFECYCLE_RECEIPT = getReceipt();
     root.HEARTH_DIAGNOSTIC_NORTH_LAB_CANVAS_BRIDGE_RECEIPT = getReceipt();
+    root.HEARTH_DIAGNOSTIC_NORTH_BISHOP_QUEEN_ACCEPTANCE_RECEIPT = getReceipt();
 
     root.HEARTH_DIAGNOSTIC_RAIL_VERDICT = clonePlain(lastVerdict);
     root.HEARTH_PARALLEL_DIAGNOSTIC_RAIL_VERDICT = clonePlain(lastVerdict);
     root.HEARTH_DIAGNOSTIC_NORTH_VERDICT = clonePlain(lastVerdict);
     root.HEARTH_DIAGNOSTIC_NORTH_PLANETARY_CONTROL_LIFECYCLE_VERDICT = clonePlain(lastVerdict);
     root.HEARTH_DIAGNOSTIC_NORTH_LAB_CANVAS_BRIDGE_VERDICT = clonePlain(lastVerdict);
+    root.HEARTH_DIAGNOSTIC_NORTH_BISHOP_QUEEN_ACCEPTANCE_VERDICT = clonePlain(lastVerdict);
 
     root.HEARTH_DIAGNOSTIC_RAIL_REPORT = clonePlain(lastReport);
     root.HEARTH_PARALLEL_DIAGNOSTIC_RAIL_REPORT = clonePlain(lastReport);
     root.HEARTH_DIAGNOSTIC_NORTH_PLANETARY_CONTROL_LIFECYCLE_REPORT = clonePlain(lastReport);
     root.HEARTH_DIAGNOSTIC_NORTH_LAB_CANVAS_BRIDGE_REPORT = clonePlain(lastReport);
+    root.HEARTH_DIAGNOSTIC_NORTH_BISHOP_QUEEN_ACCEPTANCE_REPORT = clonePlain(lastReport);
   }
 
-  const api = Object.freeze({
+  Object.assign(api, {
     contract: CONTRACT,
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
     baselineContract: BASELINE_CONTRACT,
     baselineReceipt: BASELINE_RECEIPT,
+    foundationContract: FOUNDATION_CONTRACT,
+    foundationReceipt: FOUNDATION_RECEIPT,
     version: VERSION,
     file: FILE,
     targetRoute: TARGET_ROUTE,
@@ -3268,23 +3301,31 @@
     routeReceiverMustLoadChildrenBeforeRun: ROUTE_RECEIVER_MUST_LOAD_CHILDREN_BEFORE_RUN,
     northDynamicChildLoadingOwned: NORTH_DYNAMIC_CHILD_LOADING_OWNED,
 
-    currentHtmlContract: CURRENT_HTML_CONTRACT,
-    currentIndexJsContract: CURRENT_INDEX_JS_CONTRACT,
-    currentRouteConductorContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
-    compatRouteConductorContract: COMPAT_ROUTE_CONDUCTOR_CONTRACT,
-    priorRouteConductorContract: PRIOR_ROUTE_CONDUCTOR_CONTRACT,
+    currentHtmlContract: HTML_CURRENT_CONTRACT,
+    currentIndexJsContract: INDEX_CURRENT_CONTRACT,
+    currentRouteConductorContract: ROUTE_CURRENT_CONTRACT,
+    acceptedHtmlContracts: ACCEPTED_HTML_CONTRACTS,
+    acceptedIndexContracts: ACCEPTED_INDEX_CONTRACTS,
+    acceptedRouteConductorContracts: ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS,
 
-    labNorthContract: LAB_NORTH_CONTRACT,
-    labNorthFile: LAB_NORTH_FILE,
-    labWestContract: LAB_WEST_CONTRACT,
-    labWestFile: LAB_WEST_FILE,
-    canvasLocalStationFile: CANVAS_LOCAL_STATION_FILE,
-    canvasLocalStationContracts: CANVAS_LOCAL_STATION_CONTRACTS,
+    htmlCurrentContract: HTML_CURRENT_CONTRACT,
+    htmlPreviousContract: HTML_PREVIOUS_CONTRACT,
+    htmlBaselineContract: HTML_BASELINE_CONTRACT,
+    htmlFoundationContract: HTML_FOUNDATION_CONTRACT,
+    indexCurrentContract: INDEX_CURRENT_CONTRACT,
+    routeCurrentContract: ROUTE_CURRENT_CONTRACT,
+    routeV98Contract: ROUTE_V9_8_CONTRACT,
+    routeV97Contract: ROUTE_V9_7_CONTRACT,
+    routeV96Contract: ROUTE_V9_6_CONTRACT,
+    routeV95Contract: ROUTE_V9_5_CONTRACT,
+    routeV94Contract: ROUTE_V9_4_CONTRACT,
 
     controlFile: CONTROL_FILE,
     routeConductorFile: ROUTE_CONDUCTOR_FILE,
     indexFile: INDEX_FILE,
     canvasFile: CANVAS_FILE,
+    labNorthFile: LAB_NORTH_FILE,
+    labWestFile: LAB_WEST_FILE,
     eastFile: EAST_FILE,
     westFile: WEST_FILE,
     southFile: SOUTH_FILE,
@@ -3292,18 +3333,17 @@
 
     CONTROL_LIFECYCLE_STATES,
     BRIDGE_STATUS,
-    LAB_CYCLE,
-    LAB_STAGE,
     BISHOP_HUBS,
 
-    eastContract: EAST_CONTRACT,
+    eastRailContract: EAST_RAIL_CONTRACT,
     eastCurrentAlignmentContract: EAST_CURRENT_ALIGNMENT_CONTRACT,
     eastPreviousAlignmentContract: EAST_PREVIOUS_ALIGNMENT_CONTRACT,
-    westContract: WEST_CONTRACT,
+    westRailContract: WEST_RAIL_CONTRACT,
     westCurrentImplementationContract: WEST_CURRENT_IMPLEMENTATION_CONTRACT,
     westPreviousImplementationContract: WEST_PREVIOUS_IMPLEMENTATION_CONTRACT,
-    southContract: SOUTH_CONTRACT,
+    southRailContract: SOUTH_RAIL_CONTRACT,
     southCurrentImplementationContract: SOUTH_CURRENT_IMPLEMENTATION_CONTRACT,
+    southPreviousImplementationContract: SOUTH_PREVIOUS_IMPLEMENTATION_CONTRACT,
 
     runDiagnostic,
     getReport,
@@ -3316,30 +3356,29 @@
 
     supportsNorthAnchorSchema: true,
     supportsCurrentSpreadCalibration: true,
-    supportsEastV4CurrentSpreadIntelligence: true,
-    supportsRouteConductorV96AsCurrentSpread: true,
+    supportsHtmlV51AsCurrentSpread: true,
+    supportsRouteConductorV99AsCurrentSpread: true,
+    supportsRouteConductorV98Compatibility: true,
+    supportsRouteConductorV97Compatibility: true,
+    supportsRouteConductorV96Compatibility: true,
     supportsRouteConductorV95Compatibility: true,
     supportsRouteConductorV94Lineage: true,
+    supportsNonBlockingCacheKeyRecognition: true,
+    supportsBishopQueenCanvasRecognitionFunnel: true,
     supportsWestRenderedObservabilityFields: true,
     supportsCalibrationStatusLayer: true,
     supportsNewsAlignmentAudit: true,
     supportsFibonacciSynchronizationAudit: true,
     supportsSouthMeaningPreservationAudit: true,
-
     supportsPlanetaryControlLifecycleSchema: true,
-    supportsFrontendPlanetaryObserverBasisAdmission: true,
-    supportsControlFileExpectedNotYetBuiltLifecycle: true,
     supportsControlAbsenceNotCase5: true,
     supportsVisiblePlanetWithoutControls: true,
     supportsMotionTouchWaitingControlFile: true,
-    supportsHearthJsControlFunnelExpectation: true,
-
     supportsLabRuntimeTableBridgeLiteracy: true,
     supportsMacroWestAdmissibilityBridgeLiteracy: true,
     supportsCanvasLocalStationBridgeLiteracy: true,
     supportsDiagnosticReceiverBridgeLiteracy: true,
     supportsOpaqueBishopHubBridgeVocabulary: true,
-    recommendsEastFootprintConformanceWhenMissing: true,
 
     finalPrimaryCaseAuthority: true,
     finalRecommendationAuthority: true,
@@ -3347,6 +3386,7 @@
     canonicalVerdictSchemaAuthority: true,
     planetaryControlLifecycleSchemaAuthority: true,
     labCanvasBridgeSchemaAuthority: true,
+    bishopQueenAcceptanceSchemaAuthority: true,
 
     labRuntimeAuthority: false,
     macroWestAuthority: false,

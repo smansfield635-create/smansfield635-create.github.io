@@ -3,29 +3,30 @@
   lang="en"
   data-route="/showroom/globe/hearth/diagnostic/"
   data-page="hearth-diagnostic-route"
-  data-contract="HEARTH_DIAGNOSTIC_ROUTE_PLANETARY_BUILD_OBSERVER_RECEIVER_TNT_v2_2"
-  data-receipt="HEARTH_DIAGNOSTIC_ROUTE_PLANETARY_BUILD_OBSERVER_RECEIVER_RECEIPT_v2_2"
-  data-previous-contract="HEARTH_DIAGNOSTIC_ROUTE_MISSION_CONTROL_FRONTIER_RECEIVER_TNT_v2_1"
+  data-contract="HEARTH_DIAGNOSTIC_ROUTE_MIRRORLAND_PLANET_ENGINE_OBSERVATORY_GAUGE_CONSTELLATION_TNT_v3"
+  data-receipt="HEARTH_DIAGNOSTIC_ROUTE_MIRRORLAND_PLANET_ENGINE_OBSERVATORY_GAUGE_CONSTELLATION_RECEIPT_v3"
+  data-previous-contract="HEARTH_DIAGNOSTIC_ROUTE_PLANETARY_BUILD_OBSERVER_RECEIVER_TNT_v2_2"
   data-baseline-contract="HEARTH_DIAGNOSTIC_ROUTE_PARALLEL_RAIL_RECEIVER_TNT_v1"
   data-role="thin-diagnostic-route-receiver"
-  data-receiver-standard="planetary-build-observer"
+  data-receiver-standard="mirrorland-planet-engine-observatory"
   data-diagnostic-interest="planetary-build-observation"
   data-diagnostic-system-change="false"
   data-diagnostic-target="/showroom/globe/hearth/"
   data-child-loading-mode="route-loads-child-assets-as-loading-convenience"
   data-route-calls-north-only="true"
   data-diagnostic-law-authority="north-parent-only"
-  data-north-anchor-contract="HEARTH_DIAGNOSTIC_RAIL_NORTH_ANCHOR_SCHEMA_ORCHESTRATOR_TNT_v3"
-  data-south-anchor-conformance="HEARTH_DIAGNOSTIC_SOUTH_NORTH_ANCHOR_SCHEMA_CONFORMANCE_TNT_v3"
-  data-west-rendered-proof="HEARTH_DIAGNOSTIC_WEST_RENDERED_PROOF_NAMESPACE_ADOPTION_TNT_v4"
-  data-east-current-spread="HEARTH_DIAGNOSTIC_EAST_ROUTE_CONDUCTOR_PRIMARY_COMPATIBILITY_SPLIT_TNT_v4"
-  data-planetary-build-observer-active="true"
-  data-cardinal-validity-rail-present="true"
-  data-news-fibonacci-validity-rail-present="true"
-  data-under-hood-file-footprint-present="true"
-  data-above-hood-planet-build-board-present="true"
-  data-control-file-footprint-present="true"
-  data-motion-touch-footprint-present="true"
+  data-north-anchor-contract="HEARTH_DIAGNOSTIC_RAIL_NORTH_LAB_CANVAS_BRIDGE_SCHEMA_ORCHESTRATOR_TNT_v5"
+  data-east-source-contract="HEARTH_DIAGNOSTIC_RAIL_EAST_SERVED_SOURCE_EVIDENCE_TNT_v1"
+  data-east-implementation-contract="HEARTH_DIAGNOSTIC_EAST_LAB_CANVAS_BRIDGE_SOURCE_FOOTPRINT_ALIGNMENT_TNT_v6"
+  data-west-rendered-contract="HEARTH_DIAGNOSTIC_RAIL_WEST_RENDERED_TARGET_AUTHORITY_PROBE_TNT_v1"
+  data-west-implementation-contract="HEARTH_DIAGNOSTIC_WEST_LAB_CANVAS_BRIDGE_RENDERED_PROOF_ALIGNMENT_TNT_v5"
+  data-south-output-contract="HEARTH_DIAGNOSTIC_RAIL_SOUTH_REPORT_PACKET_OUTPUT_TNT_v1"
+  data-south-implementation-contract="HEARTH_DIAGNOSTIC_SOUTH_LAB_CANVAS_BRIDGE_REPORT_CONFORMANCE_TNT_v5"
+  data-mirrorland-narrative-active="true"
+  data-planet-engine-observatory-active="true"
+  data-gauge-constellation-active="true"
+  data-animated-gauges-display-only="true"
+  data-no-request-animation-frame="true"
   data-run-diagnostic-preserved="true"
   data-receipt-output-preserved="true"
   data-production-mutation-authorized="false"
@@ -43,63 +44,52 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Hearth Diagnostic Planetary Observer</title>
+  <title>Hearth Diagnostic Observatory</title>
   <meta
     name="description"
-    content="Planetary-build observer receiver for the Hearth diagnostic rail. Loads EAST, WEST, SOUTH, and NORTH, then calls NORTH only while preserving run diagnostic and receipt output."
+    content="Mirrorland planet-engine observatory receiver for the Hearth diagnostic rail. Loads EAST, WEST, SOUTH, and NORTH, then calls NORTH only."
   />
 
   <style>
     :root {
       color-scheme: dark;
-
-      --bg: #05070b;
-      --bg2: #0a0f18;
-      --panel: rgba(18, 25, 36, 0.74);
-      --panel2: rgba(30, 41, 58, 0.8);
-      --line: rgba(220, 236, 255, 0.18);
-      --line2: rgba(220, 236, 255, 0.1);
-      --hot: rgba(120, 215, 255, 0.42);
+      --bg: #04070b;
+      --bg2: #08111b;
+      --panel: rgba(14, 22, 33, 0.78);
+      --panel2: rgba(24, 36, 52, 0.84);
+      --line: rgba(219, 236, 255, 0.18);
+      --line2: rgba(219, 236, 255, 0.1);
       --text: rgba(248, 251, 255, 0.96);
-      --muted: rgba(217, 228, 242, 0.68);
-      --soft: rgba(217, 228, 242, 0.48);
+      --muted: rgba(215, 228, 244, 0.7);
+      --soft: rgba(215, 228, 244, 0.48);
       --good: #9ef0c1;
       --warn: #ffd37a;
       --bad: #ff9b9b;
       --info: #8edaff;
+      --violet: #c6a9ff;
       --good-bg: rgba(68, 232, 149, 0.13);
       --warn-bg: rgba(255, 205, 104, 0.13);
       --bad-bg: rgba(255, 96, 96, 0.13);
       --info-bg: rgba(86, 190, 255, 0.13);
-      --neutral-bg: rgba(255, 255, 255, 0.055);
-      --code: #070b12;
-      --focus: rgba(160, 222, 255, 0.85);
-      --shadow: 0 24px 90px rgba(0, 0, 0, 0.46);
-      --max: 1320px;
-
-      font-family:
-        Inter,
-        ui-sans-serif,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
+      --violet-bg: rgba(181, 143, 255, 0.13);
+      --code: #060a10;
+      --focus: rgba(160, 222, 255, 0.88);
+      --shadow: 0 24px 90px rgba(0, 0, 0, 0.48);
+      --max: 1420px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html,
     body {
       margin: 0;
       min-height: 100%;
       background:
-        radial-gradient(circle at 15% 8%, rgba(76, 138, 255, 0.2), transparent 32rem),
-        radial-gradient(circle at 92% 2%, rgba(255, 194, 120, 0.13), transparent 30rem),
-        radial-gradient(circle at 50% 82%, rgba(60, 235, 190, 0.08), transparent 32rem),
-        linear-gradient(180deg, #080b10 0%, var(--bg) 55%, #030508 100%);
+        radial-gradient(circle at 11% 9%, rgba(76, 138, 255, 0.2), transparent 32rem),
+        radial-gradient(circle at 86% 6%, rgba(255, 194, 120, 0.13), transparent 30rem),
+        radial-gradient(circle at 50% 88%, rgba(60, 235, 190, 0.08), transparent 32rem),
+        linear-gradient(180deg, #080b10 0%, var(--bg) 55%, #020406 100%);
       color: var(--text);
     }
 
@@ -113,23 +103,21 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
-      opacity: 0.28;
+      opacity: 0.3;
       background:
         linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.016) 1px, transparent 1px);
-      background-size: 48px 48px;
-      mask-image: radial-gradient(circle at 52% 20%, black, transparent 72%);
+        linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+      background-size: 52px 52px;
+      mask-image: radial-gradient(circle at 50% 16%, black, transparent 72%);
     }
 
-    a {
-      color: inherit;
-    }
+    a { color: inherit; }
 
     .skip-link {
       position: absolute;
       left: 12px;
       top: -90px;
-      z-index: 30;
+      z-index: 40;
       padding: 10px 12px;
       border-radius: 12px;
       background: #fff;
@@ -138,9 +126,7 @@
       text-decoration: none;
     }
 
-    .skip-link:focus {
-      top: 12px;
-    }
+    .skip-link:focus { top: 12px; }
 
     .shell {
       width: min(var(--max), 100%);
@@ -152,9 +138,9 @@
     .topbar {
       display: flex;
       flex-wrap: wrap;
-      align-items: center;
       justify-content: space-between;
       gap: 12px;
+      align-items: center;
       margin-bottom: 16px;
     }
 
@@ -196,16 +182,14 @@
       gap: 8px;
       cursor: pointer;
       font: inherit;
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.07));
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.07));
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
     }
 
     .button-link:hover,
     button:hover {
-      border-color: var(--hot);
-      background:
-        linear-gradient(180deg, rgba(142, 218, 255, 0.18), rgba(255, 255, 255, 0.08));
+      border-color: rgba(142, 218, 255, 0.5);
+      background: linear-gradient(180deg, rgba(142, 218, 255, 0.18), rgba(255, 255, 255, 0.08));
     }
 
     button[disabled] {
@@ -224,10 +208,10 @@
 
     .hero {
       border: 1px solid var(--line);
-      border-radius: 30px;
+      border-radius: 32px;
       background:
-        linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.035)),
-        rgba(9, 13, 21, 0.76);
+        linear-gradient(135deg, rgba(255, 255, 255, 0.105), rgba(255, 255, 255, 0.036)),
+        rgba(9, 13, 21, 0.78);
       box-shadow: var(--shadow);
       overflow: hidden;
       position: relative;
@@ -240,8 +224,9 @@
       inset: 0;
       pointer-events: none;
       background:
-        linear-gradient(90deg, transparent, rgba(120, 214, 255, 0.15), transparent),
-        radial-gradient(circle at 8% 12%, rgba(104, 174, 255, 0.18), transparent 23rem);
+        linear-gradient(100deg, transparent, rgba(120, 214, 255, 0.14), transparent),
+        radial-gradient(circle at 8% 12%, rgba(104, 174, 255, 0.18), transparent 23rem),
+        radial-gradient(circle at 92% 16%, rgba(198, 169, 255, 0.12), transparent 24rem);
     }
 
     .hero-inner {
@@ -257,13 +242,8 @@
       gap: 10px;
     }
 
-    .kickers {
-      margin-bottom: 14px;
-    }
-
-    .controls {
-      margin-top: 18px;
-    }
+    .kickers { margin-bottom: 14px; }
+    .controls { margin-top: 18px; }
 
     .chip,
     .status-chip {
@@ -276,8 +256,8 @@
       padding: 6px 10px;
       background: rgba(255, 255, 255, 0.055);
       color: var(--muted);
-      font-size: 0.8rem;
-      font-weight: 750;
+      font-size: 0.78rem;
+      font-weight: 780;
       letter-spacing: 0.03em;
       text-transform: uppercase;
       overflow-wrap: anywhere;
@@ -293,35 +273,11 @@
       flex: 0 0 auto;
     }
 
-    .is-good {
-      color: var(--good);
-      background: var(--good-bg);
-      border-color: rgba(158, 240, 193, 0.28);
-    }
-
-    .is-warn {
-      color: var(--warn);
-      background: var(--warn-bg);
-      border-color: rgba(255, 211, 122, 0.28);
-    }
-
-    .is-bad {
-      color: var(--bad);
-      background: var(--bad-bg);
-      border-color: rgba(255, 155, 155, 0.28);
-    }
-
-    .is-info {
-      color: var(--info);
-      background: var(--info-bg);
-      border-color: rgba(142, 218, 255, 0.28);
-    }
-
-    .is-neutral {
-      color: var(--muted);
-      background: var(--neutral-bg);
-      border-color: var(--line2);
-    }
+    .is-good { color: var(--good); background: var(--good-bg); border-color: rgba(158, 240, 193, 0.28); }
+    .is-warn { color: var(--warn); background: var(--warn-bg); border-color: rgba(255, 211, 122, 0.28); }
+    .is-bad { color: var(--bad); background: var(--bad-bg); border-color: rgba(255, 155, 155, 0.28); }
+    .is-info { color: var(--info); background: var(--info-bg); border-color: rgba(142, 218, 255, 0.28); }
+    .is-violet { color: var(--violet); background: var(--violet-bg); border-color: rgba(198, 169, 255, 0.28); }
 
     h1,
     h2,
@@ -331,13 +287,13 @@
     }
 
     h1 {
-      font-size: clamp(2.2rem, 6.6vw, 5.2rem);
+      font-size: clamp(2.25rem, 6.8vw, 5.45rem);
       line-height: 0.9;
-      max-width: 980px;
+      max-width: 1050px;
     }
 
     h2 {
-      font-size: clamp(1.15rem, 2.3vw, 1.7rem);
+      font-size: clamp(1.1rem, 2.2vw, 1.72rem);
       line-height: 1.05;
     }
 
@@ -356,7 +312,7 @@
     }
 
     .hero-copy {
-      max-width: 940px;
+      max-width: 980px;
       margin-top: 14px;
       font-size: clamp(1rem, 2.5vw, 1.18rem);
     }
@@ -376,7 +332,7 @@
 
     .panel {
       border: 1px solid var(--line);
-      border-radius: 22px;
+      border-radius: 24px;
       background: var(--panel);
       box-shadow: 0 16px 54px rgba(0, 0, 0, 0.22);
       padding: 16px;
@@ -391,61 +347,34 @@
         var(--panel2);
     }
 
-    .mission-verdict,
-    .rail-grid,
-    .function-strip,
+    .summary-strip,
+    .gauge-constellation,
     .module-deck,
-    .file-footprint,
-    .planet-build-board,
-    .lifecycle-board {
+    .footprint-grid,
+    .planet-grid,
+    .lifecycle-grid {
       display: grid;
       gap: 10px;
       margin-top: 14px;
     }
 
-    .mission-verdict {
-      grid-template-columns: repeat(6, minmax(0, 1fr));
-      margin-top: 20px;
-    }
-
-    .rail-grid {
-      grid-template-columns: repeat(8, minmax(0, 1fr));
-    }
-
-    .function-strip {
-      grid-template-columns: repeat(8, minmax(0, 1fr));
-    }
-
-    .module-deck {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .file-footprint {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .planet-build-board {
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-    }
-
-    .lifecycle-board {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
+    .summary-strip { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    .gauge-constellation { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+    .module-deck { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .footprint-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .planet-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    .lifecycle-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 
     .tile,
-    .module-card,
-    .footprint-card,
-    .planet-card,
-    .lifecycle-card {
+    .card {
       border: 1px solid var(--line2);
-      border-radius: 17px;
+      border-radius: 18px;
       background: rgba(0, 0, 0, 0.16);
       padding: 13px;
       min-width: 0;
     }
 
     .tile-label,
-    .module-subtitle,
     .card-subtitle {
       color: var(--soft);
       font-size: 0.74rem;
@@ -454,16 +383,14 @@
       text-transform: uppercase;
     }
 
-    .tile-value,
-    .card-value {
+    .tile-value {
       margin-top: 7px;
-      font-size: clamp(0.98rem, 2.2vw, 1.28rem);
+      font-size: clamp(0.98rem, 2.2vw, 1.25rem);
       font-weight: 900;
       line-height: 1.08;
       overflow-wrap: anywhere;
     }
 
-    .module-head,
     .card-head {
       display: flex;
       justify-content: space-between;
@@ -472,7 +399,6 @@
       margin-bottom: 10px;
     }
 
-    .module-title,
     .card-title {
       font-size: 1rem;
       font-weight: 900;
@@ -480,14 +406,67 @@
       overflow-wrap: anywhere;
     }
 
-    .module-subtitle,
-    .card-subtitle {
-      margin-top: 2px;
+    .card-subtitle { margin-top: 2px; }
+
+    .gauge {
+      position: relative;
+      min-height: 170px;
+      display: grid;
+      align-content: space-between;
+      overflow: hidden;
     }
 
-    .kv {
-      display: grid;
+    .gauge::before {
+      content: "";
+      width: 92px;
+      height: 92px;
+      border-radius: 50%;
+      margin: 0 auto 12px;
+      display: block;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(8, 12, 19, 0.96) 0 45%, transparent 46%),
+        conic-gradient(from 0deg, currentColor calc(var(--p, 40) * 1%), rgba(255, 255, 255, 0.08) 0);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.08),
+        inset 0 0 28px rgba(255, 255, 255, 0.08),
+        0 0 30px rgba(142, 218, 255, 0.08);
+      animation: gauge-breathe 4.8s ease-in-out infinite;
     }
+
+    .gauge::after {
+      content: "";
+      position: absolute;
+      top: 22px;
+      left: calc(50% - 3px);
+      width: 6px;
+      height: 46px;
+      border-radius: 999px;
+      background: currentColor;
+      transform-origin: 50% 38px;
+      transform: rotate(calc((var(--p, 40) * 1.8deg) - 90deg));
+      box-shadow: 0 0 15px currentColor;
+      opacity: 0.68;
+      animation: gauge-needle 3.9s ease-in-out infinite;
+    }
+
+    @keyframes gauge-breathe {
+      0%, 100% { filter: brightness(0.94); transform: scale(0.985); }
+      50% { filter: brightness(1.16); transform: scale(1.015); }
+    }
+
+    @keyframes gauge-needle {
+      0%, 100% { opacity: 0.58; }
+      50% { opacity: 0.88; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .gauge::before,
+      .gauge::after {
+        animation: none;
+      }
+    }
+
+    .kv { display: grid; }
 
     .kv-row {
       display: grid;
@@ -504,15 +483,8 @@
       padding-top: 0;
     }
 
-    .key {
-      color: var(--soft);
-      overflow-wrap: anywhere;
-    }
-
-    .value {
-      color: var(--text);
-      overflow-wrap: anywhere;
-    }
+    .key { color: var(--soft); overflow-wrap: anywhere; }
+    .value { color: var(--text); overflow-wrap: anywhere; }
 
     .small {
       font-size: 0.88rem;
@@ -522,14 +494,7 @@
     .mono,
     pre,
     textarea {
-      font-family:
-        ui-monospace,
-        SFMono-Regular,
-        Menlo,
-        Monaco,
-        Consolas,
-        "Liberation Mono",
-        monospace;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
     }
 
     .target-frame-shell {
@@ -563,14 +528,12 @@
 
     details {
       border: 1px solid var(--line2);
-      border-radius: 16px;
+      border-radius: 18px;
       background: rgba(0, 0, 0, 0.14);
       overflow: hidden;
     }
 
-    details + details {
-      margin-top: 10px;
-    }
+    details + details { margin-top: 10px; }
 
     summary {
       cursor: pointer;
@@ -581,9 +544,7 @@
       list-style: none;
     }
 
-    summary::-webkit-details-marker {
-      display: none;
-    }
+    summary::-webkit-details-marker { display: none; }
 
     summary::after {
       content: "Open";
@@ -595,13 +556,9 @@
       padding-left: 14px;
     }
 
-    details[open] summary::after {
-      content: "Close";
-    }
+    details[open] summary::after { content: "Close"; }
 
-    .drawer-body {
-      padding: 0 14px 14px;
-    }
+    .drawer-body { padding: 0 14px 14px; }
 
     pre,
     textarea {
@@ -631,83 +588,43 @@
     }
 
     @media (max-width: 1180px) {
-      .rail-grid,
-      .function-strip,
-      .file-footprint,
-      .planet-build-board {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-
-      .lifecycle-board {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+      .summary-strip,
+      .gauge-constellation,
+      .footprint-grid,
+      .planet-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .lifecycle-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
     @media (max-width: 980px) {
-      body {
-        padding: 14px;
-      }
-
-      .hero-inner {
-        padding: 18px;
-      }
-
+      body { padding: 14px; }
+      .hero-inner { padding: 18px; }
       .span-8,
       .span-7,
       .span-6,
       .span-5,
-      .span-4 {
-        grid-column: span 12;
-      }
-
-      .mission-verdict,
+      .span-4 { grid-column: span 12; }
       .module-deck,
-      .rail-grid,
-      .function-strip,
-      .file-footprint,
-      .planet-build-board,
-      .lifecycle-board {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+      .summary-strip,
+      .gauge-constellation,
+      .footprint-grid,
+      .planet-grid,
+      .lifecycle-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
     @media (max-width: 560px) {
-      body {
-        padding: 12px;
-      }
-
-      .topbar {
-        align-items: stretch;
-      }
-
-      .button-link {
-        width: 100%;
-      }
-
-      .mission-verdict,
+      body { padding: 12px; }
+      .topbar { align-items: stretch; }
+      .button-link { width: 100%; }
       .module-deck,
-      .rail-grid,
-      .function-strip,
-      .file-footprint,
-      .planet-build-board,
-      .lifecycle-board {
-        grid-template-columns: 1fr;
-      }
-
-      .kv-row {
-        grid-template-columns: 1fr;
-        gap: 3px;
-      }
-
+      .summary-strip,
+      .gauge-constellation,
+      .footprint-grid,
+      .planet-grid,
+      .lifecycle-grid { grid-template-columns: 1fr; }
+      .kv-row { grid-template-columns: 1fr; gap: 3px; }
       .controls button,
-      .controls .button-link {
-        flex: 1 1 100%;
-      }
-
-      .target-frame {
-        min-height: 420px;
-        height: 58vh;
-      }
+      .controls .button-link { flex: 1 1 100%; }
+      .target-frame { min-height: 420px; height: 58vh; }
     }
   </style>
 </head>
@@ -722,7 +639,7 @@
         <a href="/showroom/">Showroom</a>
         <a href="/showroom/globe/">Globe</a>
         <a href="/showroom/globe/hearth/">Hearth</a>
-        <span aria-current="page">Planetary Diagnostic Observer</span>
+        <span aria-current="page">Diagnostic Observatory</span>
       </div>
       <a class="button-link" href="/showroom/globe/hearth/">Open Hearth Route</a>
     </nav>
@@ -730,19 +647,18 @@
     <section class="hero" aria-labelledby="page-title">
       <div class="hero-inner">
         <div class="kickers" aria-label="Receiver authority markers">
+          <span class="chip">Mirrorland Observatory</span>
           <span class="chip">Planet Engine</span>
+          <span class="chip">Gauge Constellation</span>
           <span class="chip">North-only</span>
-          <span class="chip">Planetary observer</span>
-          <span class="chip">Run + Receipt preserved</span>
           <span class="chip">No F13 · No F21</span>
         </div>
 
-        <h1 id="page-title">Hearth Planetary Diagnostic Observer</h1>
+        <h1 id="page-title">Hearth Diagnostic Observatory</h1>
         <p class="hero-copy">
-          North-anchored receiver for the Hearth diagnostic rail. This route still loads EAST,
-          WEST, SOUTH, and NORTH as a convenience, then calls NORTH only. The diagnostic system is
-          unchanged; the receiver interest is renewed toward planetary function, under-the-hood files,
-          controls, motion, touch, fingers, canvas, and above-the-hood planet build visibility.
+          Mirrorland receiver for the Hearth planet-engine diagnostic rail. This route displays the gauges,
+          file tracks, handshakes, and raw packets without becoming the diagnostic authority. It loads EAST,
+          WEST, SOUTH, and NORTH as a convenience, then calls NORTH only.
         </p>
 
         <div class="controls" aria-label="Diagnostic controls">
@@ -752,71 +668,65 @@
           <a class="button-link" href="#raw-output">Raw Output / Receipts</a>
         </div>
 
-        <section class="mission-verdict" aria-label="Mission verdict strip" id="missionVerdictPanel">
+        <section class="summary-strip" aria-label="Mission verdict strip" id="missionVerdictPanel">
           <div class="tile"><div class="tile-label">Rail State</div><div class="tile-value is-warn">AWAITING RUN</div></div>
           <div class="tile"><div class="tile-label">Planet View</div><div class="tile-value is-warn">PENDING</div></div>
           <div class="tile"><div class="tile-label">Controls</div><div class="tile-value is-info">EXPECTED</div></div>
           <div class="tile"><div class="tile-label">Motion / Touch</div><div class="tile-value is-info">EXPECTED</div></div>
           <div class="tile"><div class="tile-label">NEWS/Fibonacci</div><div class="tile-value is-warn">WAITING</div></div>
-          <div class="tile"><div class="tile-label">Recommended Next</div><div class="tile-value is-warn">AWAITING RUN</div></div>
+          <div class="tile"><div class="tile-label">Next File</div><div class="tile-value is-warn">AWAITING RUN</div></div>
         </section>
       </div>
     </section>
 
-    <section class="grid" aria-label="Diagnostic planetary observer panels">
-      <section class="panel panel-strong span-12" aria-labelledby="cardinal-rail-title">
-        <h2 id="cardinal-rail-title">Cardinal Validity Rail</h2>
-        <p class="small">Top legitimacy rail. The receiver displays cardinal state but does not own diagnostic law.</p>
-        <div class="rail-grid" id="cardinalRailPanel" data-cardinal-validity-rail></div>
+    <section class="grid" aria-label="Diagnostic observatory panels">
+      <section class="panel panel-strong span-12" aria-labelledby="gauge-title">
+        <h2 id="gauge-title">Gauge Constellation</h2>
+        <p class="small">Animated CSS-only gauges. Display-only. No Canvas, no WebGL, no requestAnimationFrame, no visual-pass claim.</p>
+        <div class="gauge-constellation" id="gaugeConstellationPanel"></div>
       </section>
 
-      <section class="panel panel-strong span-12" aria-labelledby="planetary-function-title">
-        <h2 id="planetary-function-title">Planetary Function Strip</h2>
-        <p class="small">Visible planet, static render, controls, motion, touch, drag, and performance lifecycle. Planned functions are not hard failures.</p>
-        <div class="function-strip" id="planetaryFunctionPanel" data-planetary-function-strip></div>
+      <section class="panel panel-strong span-12" aria-labelledby="module-deck-title">
+        <h2 id="module-deck-title">Cardinal Module Deck</h2>
+        <p class="small">Child-chain load state and active evidence posture. Receiver loads the files; NORTH remains the diagnostic authority.</p>
+        <div class="module-deck" id="moduleDeck"></div>
       </section>
 
       <section class="panel span-12" aria-labelledby="file-footprint-title">
         <h2 id="file-footprint-title">Under-the-Hood File Footprint</h2>
-        <p class="small">Planetary file and handshake lifecycle. This observer may list expected files before they are built.</p>
-        <div class="file-footprint" id="fileFootprintPanel" data-under-hood-file-footprint></div>
+        <p class="small">Planetary file and handshake lifecycle. Expected missing control files are not treated as visible-planet failure.</p>
+        <div class="footprint-grid" id="fileFootprintPanel"></div>
       </section>
 
       <section class="panel span-12" aria-labelledby="planet-build-title">
         <h2 id="planet-build-title">Above-the-Hood Planet Build Board</h2>
-        <p class="small">World-expression build tracks. This board watches the planet being assembled without claiming final visual pass.</p>
-        <div class="planet-build-board" id="planetBuildPanel" data-above-hood-planet-build-board></div>
+        <p class="small">World-expression tracks from the planet engine. This route observes the build without claiming final visual pass.</p>
+        <div class="planet-grid" id="planetBuildPanel"></div>
       </section>
 
       <section class="panel span-12" aria-labelledby="lifecycle-title">
         <h2 id="lifecycle-title">Handshake / Lifecycle Board</h2>
-        <p class="small">Route conductor, controls, canvas, fingers, and receipts as observer states. Receiver-local values remain display-only.</p>
-        <div class="lifecycle-board" id="lifecyclePanel" data-lifecycle-board></div>
-      </section>
-
-      <section class="panel panel-strong span-12" aria-labelledby="module-deck-title">
-        <h2 id="module-deck-title">Diagnostic Module Deck</h2>
-        <p class="small">Child-chain load state and active evidence posture. The receiver loads the files; NORTH remains the diagnostic authority.</p>
-        <div class="module-deck" id="moduleDeck" data-module-deck></div>
+        <p class="small">Route conductor, controls, canvas, fingers, bishops, Lab bridge, and receipts as observer states.</p>
+        <div class="lifecycle-grid" id="lifecyclePanel"></div>
       </section>
 
       <section class="panel span-6" aria-labelledby="north-verdict-title">
         <h2 id="north-verdict-title">North Verdict Anchor</h2>
-        <p class="small">NORTH-owned meaning, calibration, and recommendation rendered from the active report or active North verdict.</p>
-        <div class="kv" id="northVerdictPanel" data-north-verdict-panel style="margin-top: 12px;"></div>
+        <p class="small">NORTH-owned meaning, calibration, and recommendation rendered from the active report or North verdict.</p>
+        <div class="kv" id="northVerdictPanel" style="margin-top: 12px;"></div>
       </section>
 
-      <section class="panel span-6" aria-labelledby="telemetry-title">
-        <h2 id="telemetry-title">Legacy Source / Proof Trace</h2>
-        <p class="small">Existing source, rendered-proof, and output signals remain available, but no longer dominate the observer surface.</p>
-        <div class="kv" id="telemetryPanel" data-telemetry-panel style="margin-top: 12px;"></div>
+      <section class="panel span-6" aria-labelledby="trace-title">
+        <h2 id="trace-title">Source / Rendered Proof Trace</h2>
+        <p class="small">Served source, rendered-proof, and SOUTH output signals remain available without dominating the UI.</p>
+        <div class="kv" id="tracePanel" style="margin-top: 12px;"></div>
       </section>
 
       <section class="panel span-5" aria-labelledby="boundary-title">
         <h2 id="boundary-title">Receiver Boundary</h2>
         <div class="kv" style="margin-top: 12px;">
           <div class="kv-row"><div class="key">Route role</div><div class="value is-info">Thin UI receiver</div></div>
-          <div class="kv-row"><div class="key">Diagnostic interest</div><div class="value is-info">Planetary build observer</div></div>
+          <div class="kv-row"><div class="key">Diagnostic interest</div><div class="value is-info">Mirrorland planet-engine observatory</div></div>
           <div class="kv-row"><div class="key">Execution authority</div><div class="value is-info">NORTH only</div></div>
           <div class="kv-row"><div class="key">Diagnostic law authority</div><div class="value is-info">north-parent-only</div></div>
           <div class="kv-row"><div class="key">Repair authority</div><div class="value is-bad">false</div></div>
@@ -829,13 +739,13 @@
       <section class="panel span-7" aria-labelledby="route-status-title">
         <h2 id="route-status-title">North API / Route Status</h2>
         <p class="small">Current loaded North anchor and receiver-local run status.</p>
-        <div class="kv" id="northStatusPanel" data-north-status-panel style="margin-top: 12px;"></div>
+        <div class="kv" id="northStatusPanel" style="margin-top: 12px;"></div>
       </section>
 
       <section class="panel span-12" aria-labelledby="target-title">
         <h2 id="target-title">Rendered Target Viewport</h2>
         <p class="small">
-          Same-origin diagnostic viewport used by WEST when browser policy allows. This viewport is read-only and hosted by the diagnostic route receiver.
+          Same-origin diagnostic viewport used by WEST when browser policy allows. This viewport is read-only and hosted by the diagnostic receiver.
         </p>
 
         <div class="target-frame-shell">
@@ -867,33 +777,28 @@
           <details open>
             <summary>Compact Summary</summary>
             <div class="drawer-body">
-              <pre id="compactSummary" data-compact-summary>COMPACT_SUMMARY=NOT_RUN</pre>
+              <pre id="compactSummary">COMPACT_SUMMARY=NOT_RUN</pre>
             </div>
           </details>
 
           <details>
             <summary>Full Diagnostic Packet</summary>
             <div class="drawer-body">
-              <textarea
-                id="packetOutput"
-                data-packet-output
-                spellcheck="false"
-                aria-label="Full diagnostic packet output"
-              >FULL_PACKET_TEXT=NOT_RUN</textarea>
+              <textarea id="packetOutput" spellcheck="false" aria-label="Full diagnostic packet output">FULL_PACKET_TEXT=NOT_RUN</textarea>
             </div>
           </details>
 
           <details>
             <summary>North Verdict JSON</summary>
             <div class="drawer-body">
-              <pre id="northVerdictJson" data-north-verdict-json>NORTH_VERDICT=NOT_RUN</pre>
+              <pre id="northVerdictJson">NORTH_VERDICT=NOT_RUN</pre>
             </div>
           </details>
 
           <details>
             <summary>Route Receiver Receipt</summary>
             <div class="drawer-body">
-              <pre id="receiverReceiptJson" data-route-receiver-receipt-json>ROUTE_RECEIVER_RECEIPT=INITIALIZING</pre>
+              <pre id="receiverReceiptJson">ROUTE_RECEIVER_RECEIPT=INITIALIZING</pre>
             </div>
           </details>
         </div>
@@ -901,9 +806,8 @@
     </section>
 
     <footer class="footer">
-      Contract: HEARTH_DIAGNOSTIC_ROUTE_PLANETARY_BUILD_OBSERVER_RECEIVER_TNT_v2_2.
-      Diagnostic system unchanged. Receiver interest renewed. This route claims no F13, no F21, no ready text,
-      no generated image, no GraphicBox, no WebGL, no Canvas release, and no final visual pass.
+      Contract: HEARTH_DIAGNOSTIC_ROUTE_MIRRORLAND_PLANET_ENGINE_OBSERVATORY_GAUGE_CONSTELLATION_TNT_v3.
+      Receiver only. No F13, no F21, no ready text, no generated image, no GraphicBox, no WebGL, no Canvas release, and no final visual pass.
     </footer>
   </main>
 
@@ -911,77 +815,59 @@
     (() => {
       "use strict";
 
-      const CONTRACT = "HEARTH_DIAGNOSTIC_ROUTE_PLANETARY_BUILD_OBSERVER_RECEIVER_TNT_v2_2";
-      const RECEIPT = "HEARTH_DIAGNOSTIC_ROUTE_PLANETARY_BUILD_OBSERVER_RECEIVER_RECEIPT_v2_2";
-      const PREVIOUS_CONTRACT = "HEARTH_DIAGNOSTIC_ROUTE_MISSION_CONTROL_FRONTIER_RECEIVER_TNT_v2_1";
+      const CONTRACT = "HEARTH_DIAGNOSTIC_ROUTE_MIRRORLAND_PLANET_ENGINE_OBSERVATORY_GAUGE_CONSTELLATION_TNT_v3";
+      const RECEIPT = "HEARTH_DIAGNOSTIC_ROUTE_MIRRORLAND_PLANET_ENGINE_OBSERVATORY_GAUGE_CONSTELLATION_RECEIPT_v3";
+      const PREVIOUS_CONTRACT = "HEARTH_DIAGNOSTIC_ROUTE_PLANETARY_BUILD_OBSERVER_RECEIVER_TNT_v2_2";
       const BASELINE_CONTRACT = "HEARTH_DIAGNOSTIC_ROUTE_PARALLEL_RAIL_RECEIVER_TNT_v1";
-      const VERSION = "2026-06-04.hearth-diagnostic-route-planetary-build-observer-receiver-v2-2";
+      const VERSION = "2026-06-05.hearth-diagnostic-route-mirrorland-planet-engine-observatory-gauge-constellation-v3";
 
       const TARGET_ROUTE = "/showroom/globe/hearth/";
       const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
       const REPORT_PACKET = "HEARTH_PARALLEL_DIAGNOSTIC_RAIL_RESULT_PACKET_v1";
 
-      const NORTH_ANCHOR_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_ANCHOR_SCHEMA_ORCHESTRATOR_TNT_v3";
-      const NORTH_ANCHOR_RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_ANCHOR_SCHEMA_ORCHESTRATOR_RECEIPT_v3";
-      const EAST_IMPLEMENTATION_CONTRACT = "HEARTH_DIAGNOSTIC_EAST_ROUTE_CONDUCTOR_PRIMARY_COMPATIBILITY_SPLIT_TNT_v4";
-      const WEST_IMPLEMENTATION_CONTRACT = "HEARTH_DIAGNOSTIC_WEST_RENDERED_PROOF_NAMESPACE_ADOPTION_TNT_v4";
-      const SOUTH_IMPLEMENTATION_CONTRACT = "HEARTH_DIAGNOSTIC_SOUTH_NORTH_ANCHOR_SCHEMA_CONFORMANCE_TNT_v3";
+      const NORTH_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_LAB_CANVAS_BRIDGE_SCHEMA_ORCHESTRATOR_TNT_v5";
+      const NORTH_RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_LAB_CANVAS_BRIDGE_SCHEMA_ORCHESTRATOR_RECEIPT_v5";
 
       const CHILD_SCRIPTS = Object.freeze([
         {
           name: "EAST",
-          title: "Source Truth",
+          title: "Source Footprint",
           file: "/assets/hearth/hearth.diagnostic.east.js",
           contract: "HEARTH_DIAGNOSTIC_RAIL_EAST_SERVED_SOURCE_EVIDENCE_TNT_v1",
-          implementationContract: EAST_IMPLEMENTATION_CONTRACT,
+          implementationContract: "HEARTH_DIAGNOSTIC_EAST_LAB_CANVAS_BRIDGE_SOURCE_FOOTPRINT_ALIGNMENT_TNT_v6",
           evidenceField: "EAST_EVIDENCE_VALID",
           receiptField: "EAST_RECEIPT_VALID",
           statusField: "EAST_SOURCE_READ_STATUS",
-          globalPaths: [
-            "HEARTH.diagnosticEast",
-            "HEARTH.diagnosticRailEast",
-            "HEARTH_DIAGNOSTIC_EAST",
-            "HEARTH_DIAGNOSTIC_RAIL_EAST"
-          ]
+          globalPaths: ["HEARTH.diagnosticEast", "HEARTH.diagnosticRailEast", "HEARTH_DIAGNOSTIC_EAST", "HEARTH_DIAGNOSTIC_RAIL_EAST"]
         },
         {
           name: "WEST",
           title: "Rendered Proof",
           file: "/assets/hearth/hearth.diagnostic.west.js",
           contract: "HEARTH_DIAGNOSTIC_RAIL_WEST_RENDERED_TARGET_AUTHORITY_PROBE_TNT_v1",
-          implementationContract: WEST_IMPLEMENTATION_CONTRACT,
+          implementationContract: "HEARTH_DIAGNOSTIC_WEST_LAB_CANVAS_BRIDGE_RENDERED_PROOF_ALIGNMENT_TNT_v5",
           evidenceField: "WEST_EVIDENCE_VALID",
           receiptField: "WEST_RECEIPT_VALID",
           statusField: "WEST_RENDERED_READ_STATUS",
-          globalPaths: [
-            "HEARTH.diagnosticWest",
-            "HEARTH.diagnosticRailWest",
-            "HEARTH_DIAGNOSTIC_WEST",
-            "HEARTH_DIAGNOSTIC_RAIL_WEST"
-          ]
+          globalPaths: ["HEARTH.diagnosticWest", "HEARTH.diagnosticRailWest", "HEARTH_DIAGNOSTIC_WEST", "HEARTH_DIAGNOSTIC_RAIL_WEST"]
         },
         {
           name: "SOUTH",
-          title: "Output Carrier",
+          title: "Report Output",
           file: "/assets/hearth/hearth.diagnostic.south.js",
           contract: "HEARTH_DIAGNOSTIC_RAIL_SOUTH_REPORT_PACKET_OUTPUT_TNT_v1",
-          implementationContract: SOUTH_IMPLEMENTATION_CONTRACT,
+          implementationContract: "HEARTH_DIAGNOSTIC_SOUTH_LAB_CANVAS_BRIDGE_REPORT_CONFORMANCE_TNT_v5",
           evidenceField: "SOUTH_OUTPUT_VALID",
           receiptField: "SOUTH_RECEIPT_VALID",
           statusField: "SOUTH_OUTPUT_STATUS",
-          globalPaths: [
-            "HEARTH.diagnosticSouth",
-            "HEARTH.diagnosticRailSouth",
-            "HEARTH_DIAGNOSTIC_SOUTH",
-            "HEARTH_DIAGNOSTIC_RAIL_SOUTH"
-          ]
+          globalPaths: ["HEARTH.diagnosticSouth", "HEARTH.diagnosticRailSouth", "HEARTH_DIAGNOSTIC_SOUTH", "HEARTH_DIAGNOSTIC_RAIL_SOUTH"]
         },
         {
           name: "NORTH",
           title: "Verdict Anchor",
           file: "/assets/hearth/hearth.diagnostic.rail.js",
-          contract: NORTH_ANCHOR_CONTRACT,
-          implementationContract: NORTH_ANCHOR_CONTRACT,
+          contract: NORTH_CONTRACT,
+          implementationContract: NORTH_CONTRACT,
           evidenceField: "NORTH_CONTRACT",
           receiptField: "NORTH_RECEIPT",
           statusField: "CALIBRATION_STATUS",
@@ -990,288 +876,67 @@
             "HEARTH.parallelDiagnosticRail",
             "HEARTH.diagnosticNorth",
             "HEARTH.diagnosticRailNorth",
-            "HEARTH.diagnosticNorthAnchor",
+            "HEARTH.diagnosticNorthLabCanvasBridge",
             "DEXTER_LAB.hearthDiagnosticRail",
             "DEXTER_LAB.hearthDiagnosticNorth",
-            "DEXTER_LAB.hearthDiagnosticNorthAnchor",
+            "DEXTER_LAB.hearthDiagnosticNorthLabCanvasBridge",
             "HEARTH_DIAGNOSTIC_RAIL",
             "HEARTH_PARALLEL_DIAGNOSTIC_RAIL",
             "HEARTH_DIAGNOSTIC_NORTH",
             "HEARTH_DIAGNOSTIC_RAIL_NORTH",
-            "HEARTH_DIAGNOSTIC_NORTH_ANCHOR"
+            "HEARTH_DIAGNOSTIC_NORTH_LAB_CANVAS_BRIDGE"
           ]
         }
       ]);
 
-      const LIFECYCLE = Object.freeze({
-        EXPECTED: "EXPECTED",
-        EXPECTED_NOT_YET_BUILT: "EXPECTED_NOT_YET_BUILT",
-        EXPECTED_NOT_YET_WIRED: "EXPECTED_NOT_YET_WIRED",
-        BUILT_NOT_SERVED: "BUILT_NOT_SERVED",
-        SERVED_NOT_LOADED: "SERVED_NOT_LOADED",
-        LOADED_NO_GLOBAL: "LOADED_NO_GLOBAL",
-        GLOBAL_PRESENT_NO_RECEIPT: "GLOBAL_PRESENT_NO_RECEIPT",
-        RECEIPT_PRESENT: "RECEIPT_PRESENT",
-        HANDSHAKE_PENDING: "HANDSHAKE_PENDING",
-        HANDSHAKE_VALID: "HANDSHAKE_VALID",
-        ACTIVE: "ACTIVE",
-        ACTIVE_DEGRADED: "ACTIVE_DEGRADED",
-        VISIBLE_PROOF_PRESENT: "VISIBLE_PROOF_PRESENT",
-        STATIC_PLANET_ACTIVE: "STATIC_PLANET_ACTIVE",
-        UNKNOWN_PENDING_BACKEND_SCHEMA: "UNKNOWN_PENDING_BACKEND_SCHEMA",
-        NOT_APPLICABLE: "NOT_APPLICABLE",
-        HARD_FAIL: "HARD_FAIL"
-      });
-
       const FOOTPRINT_FILES = Object.freeze([
-        {
-          key: "html",
-          title: "index.html",
-          subtitle: "Public shell",
-          file: "/showroom/globe/hearth/index.html",
-          kind: "shell",
-          expected: true,
-          defaultStatus: LIFECYCLE.EXPECTED,
-          reportFields: ["SERVED_HTML_CONTRACT", "CURRENT_EXPECTED_HTML_CONTRACT"]
-        },
-        {
-          key: "index",
-          title: "index.js",
-          subtitle: "Button authority",
-          file: "/showroom/globe/hearth/index.js",
-          kind: "selector",
-          expected: true,
-          defaultStatus: LIFECYCLE.EXPECTED,
-          reportFields: ["SERVED_INDEX_JS_CONTRACT", "INDEX_SCRIPT_SRC"],
-          globalPaths: [
-            "HEARTH_INDEX_JS",
-            "HEARTH_INDEX_BRIDGE",
-            "HEARTH.frontendButtonAuthorityReset",
-            "HEARTH.buttonAuthority",
-            "DEXTER_LAB.hearthIndexJs"
-          ]
-        },
-        {
-          key: "route",
-          title: "hearth.js",
-          subtitle: "Route conductor",
-          file: "/showroom/globe/hearth/hearth.js",
-          kind: "route-conductor",
-          expected: true,
-          defaultStatus: LIFECYCLE.EXPECTED,
-          reportFields: ["SERVED_ROUTE_CONDUCTOR_CONTRACT", "ROUTE_CONDUCTOR_SCRIPT_SRC"],
-          globalPaths: [
-            "HEARTH_ROUTE_CONDUCTOR",
-            "HEARTH.routeConductor",
-            "HEARTH.routeConductorNewsFibonacciVisibleGlobeProofSynchronization",
-            "DEXTER_LAB.hearthRouteConductor"
-          ]
-        },
-        {
-          key: "controls",
-          title: "hearth.controls.js",
-          subtitle: "Motion / touch controls",
-          file: "/assets/hearth/hearth.controls.js",
-          kind: "controls",
-          expected: true,
-          defaultStatus: LIFECYCLE.EXPECTED_NOT_YET_BUILT,
-          absenceIsFailure: false,
-          absenceBlocksVisiblePlanet: false,
-          absenceBlocksMotionTouch: true,
-          globalPaths: [
-            "HEARTH.controls",
-            "HEARTH.planetaryControls",
-            "HEARTH.motionTouchControls",
-            "HEARTH_CONTROLS",
-            "HEARTH_PLANETARY_CONTROLS",
-            "HEARTH_MOTION_TOUCH_CONTROLS",
-            "DEXTER_LAB.hearthControls"
-          ]
-        },
-        {
-          key: "canvas",
-          title: "hearth.canvas.js",
-          subtitle: "Visible carrier",
-          file: "/assets/hearth/hearth.canvas.js",
-          kind: "canvas",
-          expected: true,
-          defaultStatus: LIFECYCLE.EXPECTED,
-          reportFields: ["CURRENT_CANVAS_PARENT_CONTRACT", "CANVAS_ELEMENT_PRESENT", "VISIBLE_PLANET_PROOF_READY"],
-          globalPaths: [
-            "HEARTH.canvas",
-            "HEARTH_CANVAS",
-            "HEARTH_CANVAS_VISIBLE_PLANET",
-            "HEARTH_CANVAS_EXPRESSION_HUB",
-            "HEARTH_CANVAS_FINGER_MANAGER",
-            "DEXTER_LAB.hearthCanvas"
-          ]
-        },
-        {
-          key: "boundary",
-          title: "finger.boundary",
-          subtitle: "Boundary finger",
-          file: "/assets/hearth/hearth.canvas.finger.boundary.js",
-          kind: "finger",
-          expected: true,
-          defaultStatus: LIFECYCLE.EXPECTED_NOT_YET_WIRED,
-          globalPaths: ["HEARTH.canvasFingerBoundary", "HEARTH_CANVAS_FINGER_BOUNDARY"]
-        },
-        {
-          key: "landform",
-          title: "finger.landform",
-          subtitle: "Landform finger",
-          file: "/assets/hearth/hearth.canvas.finger.landform.js",
-          kind: "finger",
-          expected: true,
-          defaultStatus: LIFECYCLE.EXPECTED_NOT_YET_WIRED,
-          globalPaths: ["HEARTH.canvasFingerLandform", "HEARTH_CANVAS_FINGER_LANDFORM"]
-        },
-        {
-          key: "elevation",
-          title: "finger.elevation",
-          subtitle: "Elevation finger",
-          file: "/assets/hearth/hearth.canvas.finger.elevation.js",
-          kind: "finger",
-          expected: true,
-          defaultStatus: LIFECYCLE.EXPECTED_NOT_YET_WIRED,
-          globalPaths: ["HEARTH.canvasFingerElevation", "HEARTH_CANVAS_FINGER_ELEVATION"]
-        },
-        {
-          key: "material",
-          title: "finger.material",
-          subtitle: "Material finger",
-          file: "/assets/hearth/hearth.canvas.finger.material.js",
-          kind: "finger",
-          expected: true,
-          defaultStatus: LIFECYCLE.EXPECTED_NOT_YET_WIRED,
-          globalPaths: ["HEARTH.canvasFingerMaterial", "HEARTH_CANVAS_FINGER_MATERIAL"]
-        },
-        {
-          key: "hydrology",
-          title: "finger.hydrology",
-          subtitle: "Hydrology finger",
-          file: "/assets/hearth/hearth.canvas.finger.hydrology.js",
-          kind: "finger",
-          expected: true,
-          defaultStatus: LIFECYCLE.EXPECTED_NOT_YET_WIRED,
-          globalPaths: ["HEARTH.canvasFingerHydrology", "HEARTH_CANVAS_FINGER_HYDROLOGY"]
-        },
-        {
-          key: "atmosphere",
-          title: "finger.atmosphere",
-          subtitle: "Atmosphere finger",
-          file: "/assets/hearth/hearth.canvas.finger.atmosphere.js",
-          kind: "finger",
-          expected: true,
-          defaultStatus: LIFECYCLE.EXPECTED_NOT_YET_WIRED,
-          globalPaths: ["HEARTH.canvasFingerAtmosphere", "HEARTH_CANVAS_FINGER_ATMOSPHERE"]
-        },
-        {
-          key: "lighting",
-          title: "finger.lighting",
-          subtitle: "Lighting finger",
-          file: "/assets/hearth/hearth.canvas.finger.lighting.js",
-          kind: "finger",
-          expected: true,
-          defaultStatus: LIFECYCLE.EXPECTED_NOT_YET_WIRED,
-          globalPaths: ["HEARTH.canvasFingerLighting", "HEARTH_CANVAS_FINGER_LIGHTING"]
-        },
-        {
-          key: "composite",
-          title: "finger.composite",
-          subtitle: "Composite finger",
-          file: "/assets/hearth/hearth.canvas.finger.composite.js",
-          kind: "finger",
-          expected: true,
-          defaultStatus: LIFECYCLE.EXPECTED_NOT_YET_WIRED,
-          globalPaths: ["HEARTH.canvasFingerComposite", "HEARTH_CANVAS_FINGER_COMPOSITE"]
-        }
+        ["HTML Shell", "/showroom/globe/hearth/index.html", "SERVED_HTML_CONTRACT", "shell"],
+        ["Index JS", "/showroom/globe/hearth/index.js", "SERVED_INDEX_JS_CONTRACT", "button authority"],
+        ["Route Conductor", "/showroom/globe/hearth/hearth.js", "SERVED_ROUTE_CONDUCTOR_CONTRACT", "route conductor"],
+        ["Controls", "/assets/hearth/hearth.controls.js", "CONTROL_FILE_STATUS", "motion / touch"],
+        ["Canvas", "/assets/hearth/hearth.canvas.js", "CURRENT_CANVAS_PARENT_CONTRACT", "visible carrier"],
+        ["Boundary Finger", "/assets/hearth/hearth.canvas.finger.boundary.js", "PLANET_BOUNDARY_STATUS", "finger"],
+        ["Landform Finger", "/assets/hearth/hearth.canvas.finger.landform.js", "PLANET_LANDFORM_STATUS", "finger"],
+        ["Elevation Finger", "/assets/hearth/hearth.canvas.finger.elevation.js", "PLANET_ELEVATION_STATUS", "finger"],
+        ["Material Finger", "/assets/hearth/hearth.canvas.finger.material.js", "PLANET_MATERIAL_STATUS", "finger"],
+        ["Hydrology Finger", "/assets/hearth/hearth.canvas.finger.hydrology.js", "PLANET_HYDROLOGY_STATUS", "finger"],
+        ["Atmosphere Finger", "/assets/hearth/hearth.canvas.finger.atmosphere.js", "PLANET_ATMOSPHERE_STATUS", "finger"],
+        ["Lighting Finger", "/assets/hearth/hearth.canvas.finger.lighting.js", "PLANET_LIGHTING_STATUS", "finger"],
+        ["Composite Finger", "/assets/hearth/hearth.canvas.finger.composite.js", "PLANET_COMPOSITE_STATUS", "finger"]
       ]);
 
       const PLANET_TRACKS = Object.freeze([
-        { key: "body", title: "Body", subtitle: "Planet body", field: "PLANET_BODY_VISIBLE", defaultStatus: LIFECYCLE.UNKNOWN_PENDING_BACKEND_SCHEMA },
-        { key: "boundary", title: "Boundary", subtitle: "Body boundary", field: "PLANET_BOUNDARY_STATUS", defaultStatus: LIFECYCLE.EXPECTED },
-        { key: "landform", title: "Landform", subtitle: "Continental expression", field: "PLANET_LANDFORM_STATUS", defaultStatus: LIFECYCLE.EXPECTED },
-        { key: "elevation", title: "Elevation", subtitle: "Relief / height", field: "PLANET_ELEVATION_STATUS", defaultStatus: LIFECYCLE.EXPECTED },
-        { key: "material", title: "Material", subtitle: "Surface materials", field: "PLANET_MATERIAL_STATUS", defaultStatus: LIFECYCLE.EXPECTED },
-        { key: "hydrology", title: "Hydrology", subtitle: "Water system", field: "PLANET_HYDROLOGY_STATUS", defaultStatus: LIFECYCLE.EXPECTED },
-        { key: "atmosphere", title: "Atmosphere", subtitle: "Air / haze", field: "PLANET_ATMOSPHERE_STATUS", defaultStatus: LIFECYCLE.EXPECTED },
-        { key: "lighting", title: "Lighting", subtitle: "Illumination", field: "PLANET_LIGHTING_STATUS", defaultStatus: LIFECYCLE.EXPECTED },
-        { key: "composite", title: "Composite", subtitle: "Final surface merge", field: "PLANET_COMPOSITE_STATUS", defaultStatus: LIFECYCLE.EXPECTED },
-        { key: "motion", title: "Motion", subtitle: "Rotation / view", field: "PLANET_MOTION_STATUS", defaultStatus: LIFECYCLE.EXPECTED_NOT_YET_WIRED },
-        { key: "touch", title: "Touch", subtitle: "Touch input", field: "PLANET_TOUCH_STATUS", defaultStatus: LIFECYCLE.EXPECTED_NOT_YET_WIRED },
-        { key: "drag", title: "Drag", subtitle: "Drag input", field: "PLANET_DRAG_STATUS", defaultStatus: LIFECYCLE.EXPECTED_NOT_YET_WIRED },
-        { key: "performance", title: "Performance", subtitle: "Lag / loop risk", field: "PLANET_PERFORMANCE_STATUS", defaultStatus: LIFECYCLE.UNKNOWN_PENDING_BACKEND_SCHEMA }
+        ["Body", "VISIBLE_PLANET_PROOF_READY", "Planet body"],
+        ["Boundary", "PLANET_STAGE_RECT_NONZERO", "Body boundary"],
+        ["Landform", "PLANET_LANDFORM_STATUS", "Continental expression"],
+        ["Elevation", "PLANET_ELEVATION_STATUS", "Relief / height"],
+        ["Material", "PLANET_MATERIAL_STATUS", "Surface materials"],
+        ["Hydrology", "PLANET_HYDROLOGY_STATUS", "Water system"],
+        ["Atmosphere", "PLANET_ATMOSPHERE_STATUS", "Air / haze"],
+        ["Lighting", "PLANET_LIGHTING_STATUS", "Illumination"],
+        ["Composite", "PLANET_COMPOSITE_STATUS", "Final surface merge"],
+        ["Motion", "MOTION_TOUCH_STATUS", "Rotation / view"],
+        ["Touch", "PLANETARY_VIEW_TOUCH_STATUS", "Touch input"],
+        ["Drag", "DRAG_STATUS", "Drag input"],
+        ["Performance", "PLANET_PERFORMANCE_STATUS", "Lag / loop risk"]
       ]);
 
-      const HANDSHAKE_TRACKS = Object.freeze([
-        {
-          key: "route-controls",
-          title: "Route → Controls",
-          subtitle: "Control handshake slot",
-          statusField: "ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_STATUS",
-          defaultStatus: LIFECYCLE.HANDSHAKE_PENDING
-        },
-        {
-          key: "controls-motion",
-          title: "Controls → Motion",
-          subtitle: "Motion/touch ownership",
-          statusField: "CONTROL_MOTION_TOUCH_HANDSHAKE_STATUS",
-          defaultStatus: LIFECYCLE.EXPECTED_NOT_YET_WIRED
-        },
-        {
-          key: "route-canvas",
-          title: "Route → Canvas",
-          subtitle: "Release/proof recognition",
-          statusField: "ROUTE_CANVAS_HANDSHAKE_STATUS",
-          defaultStatus: LIFECYCLE.HANDSHAKE_PENDING
-        },
-        {
-          key: "canvas-fingers",
-          title: "Canvas → Fingers",
-          subtitle: "Finger lifecycle",
-          statusField: "CANVAS_FINGER_HANDSHAKE_STATUS",
-          defaultStatus: LIFECYCLE.HANDSHAKE_PENDING
-        },
-        {
-          key: "planet-receipts",
-          title: "Planet Receipts",
-          subtitle: "Observer receipt layer",
-          statusField: "PLANET_RECEIPT_STATUS",
-          defaultStatus: LIFECYCLE.UNKNOWN_PENDING_BACKEND_SCHEMA
-        },
-        {
-          key: "north-boundary",
-          title: "North Boundary",
-          subtitle: "F21 held by NORTH",
-          statusField: "F21_BOUNDARY_STATUS",
-          defaultStatus: "F21_NORTH_ONLY"
-        }
+      const LIFECYCLE_TRACKS = Object.freeze([
+        ["Route → Controls", "ROUTE_CONDUCTOR_CONTROL_INTEGRATION_STATUS", "Control handshake"],
+        ["Controls → Motion", "MOTION_TOUCH_STATUS", "Motion/touch ownership"],
+        ["Route → Canvas", "FOUR_WAY_CANVAS_HANDOFF_STATUS", "Canvas handoff"],
+        ["Canvas → Fingers", "FINGER_MANAGER_ACTIVE", "Finger lifecycle"],
+        ["Lab Bridge", "LAB_CANVAS_BRIDGE_STATUS", "Shared language"],
+        ["Bishop Bridge", "BISHOP_BRIDGE_STATUS", "Opaque bishop hubs"],
+        ["NEWS", "NEWS_ALIGNMENT_STATUS", "Sequence rail"],
+        ["Fibonacci", "FIBONACCI_SYNCHRONIZATION_STATUS", "Cycle rail"],
+        ["F21 Boundary", "F21_CLAIMED_BY_DIAGNOSTIC_RAIL", "North-only boundary"]
       ]);
 
       const root = window;
       const doc = document;
 
       const state = {
-        contract: CONTRACT,
-        receipt: RECEIPT,
-        previousContract: PREVIOUS_CONTRACT,
-        baselineContract: BASELINE_CONTRACT,
-        version: VERSION,
-        targetRoute: TARGET_ROUTE,
-        diagnosticRoute: DIAGNOSTIC_ROUTE,
-        reportPacket: REPORT_PACKET,
-        childLoadingMode: "ROUTE_RECEIVER_LOADS_CHILD_ASSETS_AS_LOADING_CONVENIENCE",
-        routeReceiverCallsNorthOnly: true,
-        diagnosticInterestRenewalOnly: true,
-        backendFilesRequiredForReceiverUpgrade: false,
-        routeReceiverOwnsDiagnosticLaw: false,
-        routeReceiverOwnsEvidenceLaw: false,
-        routeReceiverOwnsClassificationLaw: false,
-        routeReceiverOwnsRecommendationLaw: false,
-        routeReceiverOwnsPlanetTruth: false,
-        routeReceiverOwnsCanvasTruth: false,
-        routeReceiverOwnsRepair: false,
         loadStatus: {},
         northAvailable: false,
         lastRunOk: false,
@@ -1280,52 +945,32 @@
         lastNorthReceipt: null,
         lastPacketText: "FULL_PACKET_TEXT=NOT_RUN",
         lastCompactSummary: "COMPACT_SUMMARY=NOT_RUN",
-        lastError: "",
         lastUpdatedAt: "",
-        productionMutationAuthorized: false,
-        hearthRepairClaimed: false,
-        runtimeRestartClaimed: false,
-        canvasReleaseClaimed: false,
-        f13Claimed: false,
-        f13DisplaySlotPresent: true,
-        f13Authority: false,
-        f21EligibleForNorth: false,
-        f21ClaimedByDiagnosticRail: false,
-        readyTextAllowed: false,
-        readyTextClaimedByDiagnosticRail: false,
-        visualPassClaimed: false,
-        generatedImage: false,
-        graphicBox: false,
-        webGL: false
+        lastError: ""
       };
 
       const els = {
         run: doc.getElementById("runDiagnosticButton"),
         copy: doc.getElementById("copyReportButton"),
         refresh: doc.getElementById("refreshStatusButton"),
-        missionVerdict: doc.getElementById("missionVerdictPanel"),
-        cardinalRail: doc.getElementById("cardinalRailPanel"),
-        planetaryFunction: doc.getElementById("planetaryFunctionPanel"),
-        fileFootprint: doc.getElementById("fileFootprintPanel"),
-        planetBuild: doc.getElementById("planetBuildPanel"),
-        lifecycle: doc.getElementById("lifecyclePanel"),
-        moduleDeck: doc.getElementById("moduleDeck"),
-        northStatus: doc.getElementById("northStatusPanel"),
-        northVerdict: doc.getElementById("northVerdictPanel"),
-        telemetry: doc.getElementById("telemetryPanel"),
         summary: doc.getElementById("compactSummary"),
         packet: doc.getElementById("packetOutput"),
         verdictJson: doc.getElementById("northVerdictJson"),
         receiverReceiptJson: doc.getElementById("receiverReceiptJson"),
-        frame: doc.getElementById("hearthDiagnosticTargetFrame")
+        frame: doc.getElementById("hearthDiagnosticTargetFrame"),
+        mission: doc.getElementById("missionVerdictPanel"),
+        gauges: doc.getElementById("gaugeConstellationPanel"),
+        modules: doc.getElementById("moduleDeck"),
+        files: doc.getElementById("fileFootprintPanel"),
+        planet: doc.getElementById("planetBuildPanel"),
+        lifecycle: doc.getElementById("lifecyclePanel"),
+        northVerdict: doc.getElementById("northVerdictPanel"),
+        trace: doc.getElementById("tracePanel"),
+        northStatus: doc.getElementById("northStatusPanel")
       };
 
       function nowIso() {
-        try {
-          return new Date().toISOString();
-        } catch (_error) {
-          return "";
-        }
+        try { return new Date().toISOString(); } catch (_error) { return ""; }
       }
 
       function isObject(value) {
@@ -1342,17 +987,12 @@
       }
 
       function bounded(value, limit = 1800) {
-        return safeString(value)
-          .replace(/\n/g, " ")
-          .replace(/\s+/g, " ")
-          .trim()
-          .slice(0, limit);
+        return safeString(value).replace(/\n/g, " ").replace(/\s+/g, " ").trim().slice(0, limit);
       }
 
       function clonePlain(value) {
-        try {
-          return JSON.parse(JSON.stringify(value));
-        } catch (_error) {
+        try { return JSON.parse(JSON.stringify(value)); }
+        catch (_error) {
           if (Array.isArray(value)) return value.slice();
           if (isObject(value)) return { ...value };
           return value;
@@ -1363,12 +1003,10 @@
         try {
           const parts = safeString(path).split(".");
           let cursor = base;
-
           for (const part of parts) {
             if (!cursor || cursor[part] === undefined || cursor[part] === null) return null;
             cursor = cursor[part];
           }
-
           return cursor || null;
         } catch (_error) {
           return null;
@@ -1384,7 +1022,6 @@
         }
 
         const lower = key.toLowerCase();
-
         for (const candidate of Object.keys(source)) {
           if (candidate.toLowerCase() === lower) {
             const value = source[candidate];
@@ -1393,251 +1030,6 @@
         }
 
         return fallback;
-      }
-
-      function asText(value, fallback = "UNKNOWN") {
-        if (value === undefined || value === null || value === "") return fallback;
-        if (isObject(value)) {
-          try {
-            return JSON.stringify(value);
-          } catch (_error) {
-            return fallback;
-          }
-        }
-        return safeString(value, fallback);
-      }
-
-      function escapeHtml(value) {
-        return asText(value, "")
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;");
-      }
-
-      function normalizeSignal(value) {
-        return safeString(value).trim().toUpperCase();
-      }
-
-      function statusKind(value) {
-        const text = normalizeSignal(value);
-
-        if (
-          text === "TRUE" ||
-          text === "CLEAN" ||
-          text === "VALID" ||
-          text === "COMPLETE" ||
-          text === "AVAILABLE" ||
-          text === "NONE" ||
-          text === "ACTIVE" ||
-          text === "STATIC_PLANET_ACTIVE" ||
-          text === "VISIBLE_PROOF_PRESENT" ||
-          text === "RECEIPT_PRESENT" ||
-          text === "HANDSHAKE_VALID" ||
-          text.includes("LOADED_AND_AVAILABLE") ||
-          text.includes("ALREADY_AVAILABLE") ||
-          text.includes("CALIBRATION_CLEAN") ||
-          text.includes("REACHED") ||
-          text.includes("PRESERVED") ||
-          text.includes("PROOF_PRESENT")
-        ) {
-          return "good";
-        }
-
-        if (
-          text === "HARD_FAIL" ||
-          text.includes("FAILED") ||
-          text.includes("INVALID") ||
-          text.includes("ERROR") ||
-          text.includes("BLOCKED") ||
-          text.includes("REJECTED") ||
-          text === "NORTH_UNAVAILABLE" ||
-          text === "RUN_DIAGNOSTIC_API_MISSING" ||
-          text === "RECEIPT_OUTPUT_MISSING"
-        ) {
-          return "bad";
-        }
-
-        if (
-          text === "EXPECTED" ||
-          text === "EXPECTED_NOT_YET_BUILT" ||
-          text === "EXPECTED_NOT_YET_WIRED" ||
-          text === "HANDSHAKE_PENDING" ||
-          text === "UNKNOWN_PENDING_BACKEND_SCHEMA" ||
-          text === "BUILT_NOT_SERVED" ||
-          text === "SERVED_NOT_LOADED" ||
-          text === "LOADED_NO_GLOBAL" ||
-          text === "GLOBAL_PRESENT_NO_RECEIPT" ||
-          text.includes("PARTIAL") ||
-          text.includes("HELD") ||
-          text.includes("WAIT") ||
-          text.includes("PENDING") ||
-          text.includes("UNKNOWN") ||
-          text.includes("NOT_RUN")
-        ) {
-          return "warn";
-        }
-
-        if (
-          text === "FALSE" ||
-          text === "NOT_APPLICABLE" ||
-          text === "DISPLAY_ONLY" ||
-          text === "OBSERVER_ONLY" ||
-          text.includes("NO_") ||
-          text.includes("NORTH_ONLY")
-        ) {
-          return "info";
-        }
-
-        return "info";
-      }
-
-      function classFor(value) {
-        const kind = statusKind(value);
-        if (kind === "good") return "is-good";
-        if (kind === "bad") return "is-bad";
-        if (kind === "warn") return "is-warn";
-        return "is-info";
-      }
-
-      function kvRow(key, value) {
-        const text = asText(value, "UNKNOWN");
-        return `
-          <div class="kv-row">
-            <div class="key">${escapeHtml(key)}</div>
-            <div class="value ${classFor(text)}">${escapeHtml(text)}</div>
-          </div>
-        `;
-      }
-
-      function verdictTile(label, value) {
-        const text = asText(value, "AWAITING RUN");
-        return `
-          <div class="tile">
-            <div class="tile-label">${escapeHtml(label)}</div>
-            <div class="tile-value ${classFor(text)}">${escapeHtml(text)}</div>
-          </div>
-        `;
-      }
-
-      function statusChip(value) {
-        const text = asText(value, "UNKNOWN");
-        return `<span class="status-chip ${classFor(text)}">${escapeHtml(text)}</span>`;
-      }
-
-      function observerCard(title, subtitle, status, rows = []) {
-        return `
-          <article class="footprint-card">
-            <div class="card-head">
-              <div>
-                <div class="card-title">${escapeHtml(title)}</div>
-                <div class="card-subtitle">${escapeHtml(subtitle)}</div>
-              </div>
-              ${statusChip(status)}
-            </div>
-            <div class="kv">
-              ${rows.map(([key, value]) => kvRow(key, value)).join("")}
-            </div>
-          </article>
-        `;
-      }
-
-      function findGlobal(paths) {
-        for (const path of paths || []) {
-          const found = readPath(root, path);
-          if (found && isObject(found)) return found;
-        }
-        return null;
-      }
-
-      function hasGlobal(paths) {
-        return Boolean(findGlobal(paths));
-      }
-
-      function safeTargetDocument() {
-        try {
-          if (!els.frame || !els.frame.contentWindow) return null;
-          return els.frame.contentWindow.document || null;
-        } catch (_error) {
-          return null;
-        }
-      }
-
-      function findTargetScriptByPath(path) {
-        const target = safeTargetDocument();
-        if (!target || !path) return null;
-
-        try {
-          const scripts = Array.from(target.querySelectorAll("script[src]"));
-          return scripts.find((script) => {
-            const src = script.getAttribute("src") || "";
-            return src.includes(path);
-          }) || null;
-        } catch (_error) {
-          return null;
-        }
-      }
-
-      function targetDatasetValue(key, fallback = "") {
-        const target = safeTargetDocument();
-        try {
-          const html = target && target.documentElement ? target.documentElement : null;
-          if (!html || !html.dataset) return fallback;
-          const value = html.dataset[key];
-          return value === undefined || value === null || value === "" ? fallback : value;
-        } catch (_error) {
-          return fallback;
-        }
-      }
-
-      function getNorth() {
-        return findGlobal([
-          "HEARTH.diagnosticRail",
-          "HEARTH.parallelDiagnosticRail",
-          "HEARTH.diagnosticNorth",
-          "HEARTH.diagnosticRailNorth",
-          "HEARTH.diagnosticNorthAnchor",
-          "DEXTER_LAB.hearthDiagnosticRail",
-          "DEXTER_LAB.hearthDiagnosticNorth",
-          "DEXTER_LAB.hearthDiagnosticNorthAnchor",
-          "HEARTH_DIAGNOSTIC_RAIL",
-          "HEARTH_PARALLEL_DIAGNOSTIC_RAIL",
-          "HEARTH_DIAGNOSTIC_NORTH",
-          "HEARTH_DIAGNOSTIC_RAIL_NORTH",
-          "HEARTH_DIAGNOSTIC_NORTH_ANCHOR"
-        ]);
-      }
-
-      function getNorthReceipt(north) {
-        try {
-          if (north && isFunction(north.getReceipt)) return north.getReceipt();
-        } catch (error) {
-          return { error: bounded(error && error.message ? error.message : error) };
-        }
-
-        return {};
-      }
-
-      function getNorthVerdict(north, result) {
-        if (result && isObject(result.verdict)) return result.verdict;
-
-        try {
-          if (north && isFunction(north.getNorthVerdict)) return north.getNorthVerdict();
-        } catch (_error) {}
-
-        try {
-          const verdict =
-            readPath(root, "HEARTH_DIAGNOSTIC_NORTH_VERDICT") ||
-            readPath(root, "HEARTH_DIAGNOSTIC_RAIL_VERDICT") ||
-            readPath(root, "HEARTH_PARALLEL_DIAGNOSTIC_RAIL_VERDICT");
-          if (isObject(verdict)) return verdict;
-        } catch (_error) {}
-
-        return null;
-      }
-
-      function childLoaded(child) {
-        return Boolean(findGlobal(child.globalPaths));
       }
 
       function activeReport() {
@@ -1659,379 +1051,360 @@
         return fallback;
       }
 
-      function reportNotes() {
-        return safeString(field("SECONDARY_EVIDENCE_NOTES", "")) + " " + safeString(field("NORTH_SECONDARY_EVIDENCE_NOTES", ""));
+      function normalizeSignal(value) {
+        return safeString(value).trim().toUpperCase();
       }
 
-      function isKnown(value) {
+      function statusKind(value) {
         const text = normalizeSignal(value);
-        return Boolean(text && text !== "UNKNOWN" && text !== "NOT_FOUND" && text !== "NOT_RUN" && text !== "UNAVAILABLE");
-      }
-
-      function truthySignal(value) {
-        const text = normalizeSignal(value);
-        return text === "TRUE" || text === "VALID" || text === "COMPLETE" || text === "ACTIVE" || text.includes("READY") || text.includes("COMPLETE");
-      }
-
-      function derivePlanetVisibleStatus() {
-        const notes = reportNotes();
 
         if (
-          truthySignal(field("VISIBLE_PLANET_PROOF_READY", "")) ||
-          truthySignal(field("RENDERED_PLANET_PROOF_READY", "")) ||
-          truthySignal(field("RENDERED_PLANET_PROOF_FULLY_INSPECTED", "")) ||
-          truthySignal(field("WEST_RENDERED_PROOF_SPREAD_COMPLETE", "")) ||
+          text === "TRUE" ||
+          text === "CLEAN" ||
+          text === "VALID" ||
+          text === "COMPLETE" ||
+          text === "AVAILABLE" ||
+          text === "ACTIVE" ||
+          text.includes("READY") ||
+          text.includes("LOADED_AND_AVAILABLE") ||
+          text.includes("CALIBRATION_CLEAN") ||
+          text.includes("REACHED") ||
+          text.includes("PRESERVED") ||
+          text.includes("PROOF") ||
+          text.includes("HANDSHAKE_VALID")
+        ) return "good";
+
+        if (
+          text.includes("FAILED") ||
+          text.includes("INVALID") ||
+          text.includes("ERROR") ||
+          text.includes("BLOCKED") ||
+          text.includes("REJECTED") ||
+          text.includes("HARD_FAIL") ||
+          text === "NORTH_UNAVAILABLE"
+        ) return "bad";
+
+        if (
+          text.includes("EXPECTED") ||
+          text.includes("PENDING") ||
+          text.includes("WAIT") ||
+          text.includes("PARTIAL") ||
+          text.includes("HELD") ||
+          text.includes("UNKNOWN") ||
+          text.includes("NOT_RUN") ||
+          text.includes("NOT_YET")
+        ) return "warn";
+
+        return "info";
+      }
+
+      function classFor(value) {
+        const kind = statusKind(value);
+        if (kind === "good") return "is-good";
+        if (kind === "bad") return "is-bad";
+        if (kind === "warn") return "is-warn";
+        return "is-info";
+      }
+
+      function scoreFor(value) {
+        const kind = statusKind(value);
+        if (kind === "good") return 88;
+        if (kind === "bad") return 18;
+        if (kind === "warn") return 48;
+        return 64;
+      }
+
+      function escapeHtml(value) {
+        return safeString(value, "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function kvRow(key, value) {
+        const text = safeString(value, "UNKNOWN");
+        return `<div class="kv-row"><div class="key">${escapeHtml(key)}</div><div class="value ${classFor(text)}">${escapeHtml(text)}</div></div>`;
+      }
+
+      function statusChip(value) {
+        const text = safeString(value, "UNKNOWN");
+        return `<span class="status-chip ${classFor(text)}">${escapeHtml(text)}</span>`;
+      }
+
+      function tile(label, value) {
+        const text = safeString(value, "UNKNOWN");
+        return `<div class="tile"><div class="tile-label">${escapeHtml(label)}</div><div class="tile-value ${classFor(text)}">${escapeHtml(text)}</div></div>`;
+      }
+
+      function card(title, subtitle, status, rows) {
+        return `
+          <article class="card">
+            <div class="card-head">
+              <div>
+                <div class="card-title">${escapeHtml(title)}</div>
+                <div class="card-subtitle">${escapeHtml(subtitle)}</div>
+              </div>
+              ${statusChip(status)}
+            </div>
+            <div class="kv">${(rows || []).map(([k, v]) => kvRow(k, v)).join("")}</div>
+          </article>
+        `;
+      }
+
+      function gauge(title, subtitle, status, rows) {
+        const p = scoreFor(status);
+        return `
+          <article class="card gauge ${classFor(status)}" style="--p:${p}">
+            <div>
+              <div class="card-title">${escapeHtml(title)}</div>
+              <div class="card-subtitle">${escapeHtml(subtitle)}</div>
+            </div>
+            <div class="kv">${(rows || []).map(([k, v]) => kvRow(k, v)).join("")}</div>
+          </article>
+        `;
+      }
+
+      function findGlobal(paths) {
+        for (const path of paths || []) {
+          const found = readPath(root, path);
+          if (found && isObject(found)) return found;
+        }
+        return null;
+      }
+
+      function childLoaded(child) {
+        return Boolean(findGlobal(child.globalPaths));
+      }
+
+      function safeTargetDocument() {
+        try {
+          if (!els.frame || !els.frame.contentWindow) return null;
+          return els.frame.contentWindow.document || null;
+        } catch (_error) {
+          return null;
+        }
+      }
+
+      function findTargetScriptByPath(path) {
+        const target = safeTargetDocument();
+        if (!target || !path) return null;
+
+        try {
+          const scripts = Array.from(target.querySelectorAll("script[src]"));
+          return scripts.find((script) => safeString(script.getAttribute("src")).includes(path)) || null;
+        } catch (_error) {
+          return null;
+        }
+      }
+
+      function targetDatasetValue(key, fallback = "") {
+        const target = safeTargetDocument();
+        try {
+          const html = target && target.documentElement ? target.documentElement : null;
+          if (!html || !html.dataset) return fallback;
+          const value = html.dataset[key];
+          return value === undefined || value === null || value === "" ? fallback : value;
+        } catch (_error) {
+          return fallback;
+        }
+      }
+
+      function getNorth() {
+        return findGlobal(CHILD_SCRIPTS.find((child) => child.name === "NORTH").globalPaths);
+      }
+
+      function getNorthReceipt(north) {
+        try {
+          if (north && isFunction(north.getReceipt)) return north.getReceipt();
+          if (north && isFunction(north.getReceiptLight)) return north.getReceiptLight();
+        } catch (error) {
+          return { error: bounded(error && error.message ? error.message : error) };
+        }
+        return {};
+      }
+
+      function getNorthVerdict(north, result) {
+        if (result && isObject(result.verdict)) return result.verdict;
+
+        try {
+          if (north && isFunction(north.getNorthVerdict)) return north.getNorthVerdict();
+        } catch (_error) {}
+
+        return (
+          readPath(root, "HEARTH_DIAGNOSTIC_NORTH_VERDICT") ||
+          readPath(root, "HEARTH_DIAGNOSTIC_RAIL_VERDICT") ||
+          readPath(root, "HEARTH_PARALLEL_DIAGNOSTIC_RAIL_VERDICT") ||
+          null
+        );
+      }
+
+      function visiblePlanetStatus() {
+        const notes = `${field("SECONDARY_EVIDENCE_NOTES", "")} ${field("NORTH_SECONDARY_EVIDENCE_NOTES", "")}`;
+
+        if (
+          normalizeSignal(field("VISIBLE_PLANET_PROOF_READY", "")) === "TRUE" ||
+          normalizeSignal(field("RENDERED_PLANET_PROOF_READY", "")) === "TRUE" ||
+          normalizeSignal(field("RENDERED_PLANET_PROOF_FULLY_INSPECTED", "")) === "TRUE" ||
+          normalizeSignal(field("WEST_RENDERED_PROOF_SPREAD_COMPLETE", "")) === "TRUE" ||
           /VISIBLE_PLANET_PROOF|RENDERED_PLANET_PROOF_READY|CANVAS_MOUNT_NONZERO_DOM_PROOF|PLANET_STAGE_NONZERO_DOM_PROOF/i.test(notes) ||
           targetDatasetValue("hearthCanvasVisiblePlanetProofReady") === "true" ||
           targetDatasetValue("hearthSouthVisiblePlanetProofReady") === "true"
-        ) {
-          return LIFECYCLE.VISIBLE_PROOF_PRESENT;
-        }
+        ) return "VISIBLE_PROOF_PRESENT";
 
-        if (field("WEST_RENDERED_READ_STATUS", "") === "COMPLETE") {
-          return LIFECYCLE.ACTIVE_DEGRADED;
-        }
-
-        return LIFECYCLE.UNKNOWN_PENDING_BACKEND_SCHEMA;
+        if (field("WEST_RENDERED_READ_STATUS", "") === "COMPLETE") return "ACTIVE_DEGRADED";
+        return "UNKNOWN_PENDING_BACKEND_SCHEMA";
       }
 
-      function deriveControlStatus() {
-        const controlFile = FOOTPRINT_FILES.find((item) => item.key === "controls");
-        const global = controlFile && hasGlobal(controlFile.globalPaths);
-        const script = findTargetScriptByPath(controlFile.file);
+      function controlStatus() {
+        const explicit = field("CONTROL_FILE_STATUS", "");
+        if (explicit && explicit !== "NOT_RUN" && explicit !== "UNKNOWN") return explicit;
 
-        if (truthySignal(field("CONTROL_HANDSHAKE_VALID", "")) || truthySignal(field("CONTROL_FILE_ACTIVE", ""))) {
-          return LIFECYCLE.HANDSHAKE_VALID;
-        }
-
-        if (global) return LIFECYCLE.GLOBAL_PRESENT_NO_RECEIPT;
-        if (script) return LIFECYCLE.SERVED_NOT_LOADED;
-        return LIFECYCLE.EXPECTED_NOT_YET_BUILT;
+        if (findTargetScriptByPath("/assets/hearth/hearth.controls.js")) return "SERVED_NOT_LOADED";
+        return "EXPECTED_NOT_YET_BUILT";
       }
 
-      function deriveMotionStatus() {
-        const controlStatus = deriveControlStatus();
-
-        if (truthySignal(field("PLANET_MOTION_STATUS", ""))) return field("PLANET_MOTION_STATUS");
-        if (truthySignal(field("CONTROL_MOTION_TOUCH_ACTIVE", ""))) return LIFECYCLE.ACTIVE;
-        if (controlStatus === LIFECYCLE.HANDSHAKE_VALID || controlStatus === LIFECYCLE.ACTIVE) return LIFECYCLE.HANDSHAKE_PENDING;
-
-        return LIFECYCLE.EXPECTED_NOT_YET_WIRED;
+      function motionStatus() {
+        const explicit = field("MOTION_TOUCH_STATUS", "");
+        if (explicit && explicit !== "NOT_RUN" && explicit !== "UNKNOWN") return explicit;
+        return controlStatus() === "EXPECTED_NOT_YET_BUILT" ? "WAITING_CONTROL_FILE" : "HANDSHAKE_PENDING";
       }
 
-      function deriveTouchStatus() {
-        if (truthySignal(field("PLANET_TOUCH_STATUS", ""))) return field("PLANET_TOUCH_STATUS");
-        if (truthySignal(field("CONTROL_MOTION_TOUCH_ACTIVE", ""))) return LIFECYCLE.ACTIVE;
-        return LIFECYCLE.EXPECTED_NOT_YET_WIRED;
+      function touchStatus() {
+        const explicit = field("PLANETARY_VIEW_TOUCH_STATUS", "");
+        if (explicit && explicit !== "NOT_RUN" && explicit !== "UNKNOWN") return explicit;
+        return controlStatus() === "EXPECTED_NOT_YET_BUILT" ? "WAITING_CONTROL_FILE" : "HANDSHAKE_PENDING";
       }
 
-      function deriveDragStatus() {
-        if (truthySignal(field("PLANET_DRAG_STATUS", ""))) return field("PLANET_DRAG_STATUS");
-        if (truthySignal(field("CONTROL_MOTION_TOUCH_ACTIVE", ""))) return LIFECYCLE.ACTIVE;
-        return LIFECYCLE.EXPECTED_NOT_YET_WIRED;
+      function dragStatus() {
+        const explicit = field("DRAG_STATUS", "");
+        if (explicit && explicit !== "NOT_RUN" && explicit !== "UNKNOWN") return explicit;
+        return controlStatus() === "EXPECTED_NOT_YET_BUILT" ? "WAITING_CONTROL_FILE" : "HANDSHAKE_PENDING";
       }
 
-      function derivePerformanceStatus() {
-        const explicit = field("PLANET_PERFORMANCE_STATUS", "");
-        if (isKnown(explicit)) return explicit;
-
-        const notes = reportNotes();
-        if (/DUPLICATE_LOOP_RISK/i.test(notes)) return "DUPLICATE_LOOP_RISK";
-        if (/LAG_OBSERVED/i.test(notes)) return "LAG_OBSERVED";
-
-        return LIFECYCLE.UNKNOWN_PENDING_BACKEND_SCHEMA;
-      }
-
-      function derivePlanetaryFunctionStatus() {
-        const planetVisible = derivePlanetVisibleStatus();
-        return {
-          planetVisible,
-          planetStaticRender: planetVisible === LIFECYCLE.VISIBLE_PROOF_PRESENT ? LIFECYCLE.STATIC_PLANET_ACTIVE : planetVisible,
-          planetBodyVisible: planetVisible,
-          controlStatus: deriveControlStatus(),
-          motionStatus: deriveMotionStatus(),
-          touchStatus: deriveTouchStatus(),
-          dragStatus: deriveDragStatus(),
-          performanceStatus: derivePerformanceStatus()
-        };
-      }
-
-      function deriveFileStatus(item) {
-        const explicit = field(`${item.key.toUpperCase()}_FILE_STATUS`, "");
-        if (isKnown(explicit)) return explicit;
-
-        const globalPresent = hasGlobal(item.globalPaths);
-        const scriptPresent = Boolean(findTargetScriptByPath(item.file));
-        const datasetContract = item.key === "canvas"
-          ? targetDatasetValue("hearthCanvasContract")
-          : item.key === "route"
-            ? targetDatasetValue("hearthRouteConductorContract")
-            : item.key === "index"
-              ? targetDatasetValue("hearthIndexJsContract")
-              : "";
-
-        const reportFieldKnown = (item.reportFields || []).some((name) => isKnown(field(name, "")));
-
-        if (item.key === "html") {
-          return isKnown(field("SERVED_HTML_CONTRACT", "")) || targetDatasetValue("hearthHtmlContract")
-            ? LIFECYCLE.RECEIPT_PRESENT
-            : item.defaultStatus;
-        }
-
-        if (item.key === "controls") {
-          return deriveControlStatus();
-        }
-
-        if (item.key === "canvas" && derivePlanetVisibleStatus() === LIFECYCLE.VISIBLE_PROOF_PRESENT) {
-          return LIFECYCLE.ACTIVE;
-        }
-
-        if (globalPresent && reportFieldKnown) return LIFECYCLE.RECEIPT_PRESENT;
-        if (globalPresent) return LIFECYCLE.GLOBAL_PRESENT_NO_RECEIPT;
-        if (scriptPresent || datasetContract) return LIFECYCLE.SERVED_NOT_LOADED;
-        if (reportFieldKnown) return LIFECYCLE.RECEIPT_PRESENT;
-
-        return item.defaultStatus || LIFECYCLE.EXPECTED;
-      }
-
-      function deriveFileFootprint() {
-        return FOOTPRINT_FILES.map((item) => {
-          const status = deriveFileStatus(item);
-          return {
-            key: item.key,
-            title: item.title,
-            subtitle: item.subtitle,
-            file: item.file,
-            kind: item.kind,
-            expected: item.expected === true,
-            status,
-            source: "ROUTE_RECEIVER_LOCAL_FOOTPRINT",
-            authority: "display-only",
-            absenceIsFailure: item.absenceIsFailure === true ? true : false,
-            absenceBlocksVisiblePlanet: item.absenceBlocksVisiblePlanet === true ? true : false,
-            absenceBlocksMotionTouch: item.absenceBlocksMotionTouch === true ? true : false
-          };
-        });
-      }
-
-      function derivePlanetBuildFootprint() {
-        const functionStatus = derivePlanetaryFunctionStatus();
-
-        return PLANET_TRACKS.map((track) => {
-          let status = field(track.field, "");
-
-          if (!isKnown(status)) {
-            if (track.key === "body") status = functionStatus.planetBodyVisible;
-            else if (track.key === "motion") status = functionStatus.motionStatus;
-            else if (track.key === "touch") status = functionStatus.touchStatus;
-            else if (track.key === "drag") status = functionStatus.dragStatus;
-            else if (track.key === "performance") status = functionStatus.performanceStatus;
-            else if (functionStatus.planetVisible === LIFECYCLE.VISIBLE_PROOF_PRESENT) status = LIFECYCLE.ACTIVE_DEGRADED;
-            else status = track.defaultStatus;
-          }
-
-          return {
-            key: track.key,
-            title: track.title,
-            subtitle: track.subtitle,
-            status,
-            source: isKnown(field(track.field, "")) ? "NORTH_OR_REPORT_FIELD" : "ROUTE_RECEIVER_LOCAL_FOOTPRINT",
-            authority: "display-only"
-          };
-        });
-      }
-
-      function deriveLifecycleFootprint() {
-        const functionStatus = derivePlanetaryFunctionStatus();
-
-        return HANDSHAKE_TRACKS.map((track) => {
-          let status = field(track.statusField, "");
-
-          if (!isKnown(status)) {
-            if (track.key === "route-controls") {
-              status = deriveControlStatus() === LIFECYCLE.EXPECTED_NOT_YET_BUILT
-                ? LIFECYCLE.HANDSHAKE_PENDING
-                : LIFECYCLE.GLOBAL_PRESENT_NO_RECEIPT;
-            } else if (track.key === "controls-motion") {
-              status = functionStatus.motionStatus;
-            } else if (track.key === "route-canvas") {
-              status = functionStatus.planetVisible === LIFECYCLE.VISIBLE_PROOF_PRESENT
-                ? LIFECYCLE.HANDSHAKE_VALID
-                : LIFECYCLE.HANDSHAKE_PENDING;
-            } else if (track.key === "canvas-fingers") {
-              status = truthySignal(field("FINGER_REGISTRY_ACTIVE", "")) || truthySignal(field("FINGER_MANAGER_ACTIVE", ""))
-                ? LIFECYCLE.ACTIVE
-                : LIFECYCLE.HANDSHAKE_PENDING;
-            } else {
-              status = track.defaultStatus;
-            }
-          }
-
-          return {
-            key: track.key,
-            title: track.title,
-            subtitle: track.subtitle,
-            status,
-            source: isKnown(field(track.statusField, "")) ? "NORTH_OR_REPORT_FIELD" : "ROUTE_RECEIVER_LOCAL_FOOTPRINT",
-            authority: "display-only"
-          };
-        });
-      }
-
-      function renderMissionVerdict() {
+      function renderMission() {
         const railClean = field("DIAGNOSTIC_RAIL_CLEAN", "AWAITING RUN");
-        const news = field("NEWS_ALIGNMENT_STATUS", "WAITING");
-        const fib = field("FIBONACCI_SYNCHRONIZATION_STATUS", "WAITING");
-        const nextFile = field("RECOMMENDED_NEXT_FILE", "AWAITING RUN");
-        const functions = derivePlanetaryFunctionStatus();
+        const railState = railClean === "true" ? "CLEAN" : railClean === "false" ? field("CALIBRATION_STATUS", "HOLD") : railClean;
+        const news = safeString(field("NEWS_ALIGNMENT_STATUS", "WAITING")).replace("NEWS_ALIGNMENT_", "");
+        const fib = safeString(field("FIBONACCI_SYNCHRONIZATION_STATUS", "WAITING")).replace("FIBONACCI_SYNCHRONIZATION_", "");
 
-        const railState = railClean === "true"
-          ? "CLEAN"
-          : railClean === "false"
-            ? field("CALIBRATION_STATUS", "HOLD")
-            : railClean;
-
-        const newsDisplay = `${safeString(news).replace("NEWS_ALIGNMENT_", "")} / ${safeString(fib).replace("FIBONACCI_SYNCHRONIZATION_", "")}`;
-        const nextDisplay = nextFile === "NONE" ? "NONE" : nextFile;
-
-        els.missionVerdict.innerHTML = [
-          verdictTile("Rail State", railState),
-          verdictTile("Planet View", functions.planetVisible),
-          verdictTile("Controls", functions.controlStatus),
-          verdictTile("Motion / Touch", `${functions.motionStatus} / ${functions.touchStatus}`),
-          verdictTile("NEWS/Fibonacci", newsDisplay),
-          verdictTile("Recommended Next", nextDisplay)
+        els.mission.innerHTML = [
+          tile("Rail State", railState),
+          tile("Planet View", visiblePlanetStatus()),
+          tile("Controls", controlStatus()),
+          tile("Motion / Touch", `${motionStatus()} / ${touchStatus()}`),
+          tile("NEWS/Fibonacci", `${news} / ${fib}`),
+          tile("Next File", field("RECOMMENDED_NEXT_FILE", "AWAITING RUN"))
         ].join("");
       }
 
-      function renderCardinalRail() {
-        const north = getNorth();
-        const northReceipt = state.lastNorthReceipt || getNorthReceipt(north);
-
+      function renderGauges() {
         const rows = [
-          ["NORTH", state.northAvailable ? "VALID_OR_AVAILABLE" : north ? "FOUND" : "NOT_FOUND"],
-          ["EAST", field("EAST_RECEIPT_VALID", state.loadStatus.EAST || "PENDING")],
-          ["WEST", field("WEST_RECEIPT_VALID", state.loadStatus.WEST || "PENDING")],
-          ["SOUTH", field("SOUTH_RECEIPT_VALID", state.loadStatus.SOUTH || "PENDING")],
-          ["NEWS", field("NEWS_ALIGNMENT_STATUS", "WAITING")],
-          ["Fibonacci", field("FIBONACCI_SYNCHRONIZATION_STATUS", "WAITING")],
-          ["South Meaning", field("SOUTH_MEANING_PRESERVED", "WAITING")],
-          ["North Only", northReceipt.routeReceiverShouldCallNorthOnly === false ? "BROKEN" : "PRESERVED"]
+          ["North", field("NORTH_CONTRACT", state.northAvailable ? NORTH_CONTRACT : "PENDING"), "Verdict anchor"],
+          ["East", field("EAST_EVIDENCE_VALID", state.loadStatus.EAST || "PENDING"), "Served source"],
+          ["West", field("WEST_EVIDENCE_VALID", state.loadStatus.WEST || "PENDING"), "Rendered proof"],
+          ["South", field("SOUTH_OUTPUT_VALID", state.loadStatus.SOUTH || "PENDING"), "Packet output"],
+          ["Planet", visiblePlanetStatus(), "Visible carrier"],
+          ["Controls", controlStatus(), "View input"],
+          ["NEWS", field("NEWS_ALIGNMENT_STATUS", "WAITING"), "Sequence"],
+          ["Fibonacci", field("FIBONACCI_SYNCHRONIZATION_STATUS", "WAITING"), "Cycle"]
         ];
 
-        els.cardinalRail.innerHTML = rows.map(([label, value]) => verdictTile(label, value)).join("");
+        els.gauges.innerHTML = rows.map(([title, status, subtitle]) => gauge(title, subtitle, status, [
+          ["Status", status],
+          ["Authority", title === "North" ? "NORTH" : "display-only"]
+        ])).join("");
       }
 
-      function renderPlanetaryFunctionStrip() {
-        const f = derivePlanetaryFunctionStatus();
-
-        const rows = [
-          ["Visible", f.planetVisible],
-          ["Static Render", f.planetStaticRender],
-          ["Body", f.planetBodyVisible],
-          ["Controls", f.controlStatus],
-          ["Motion", f.motionStatus],
-          ["Touch", f.touchStatus],
-          ["Drag", f.dragStatus],
-          ["Performance", f.performanceStatus]
-        ];
-
-        els.planetaryFunction.innerHTML = rows.map(([label, value]) => verdictTile(label, value)).join("");
-      }
-
-      function renderFileFootprint() {
-        const footprint = deriveFileFootprint();
-
-        els.fileFootprint.innerHTML = footprint.map((item) => observerCard(
-          item.title,
-          item.subtitle,
-          item.status,
-          [
-            ["File", item.file],
-            ["Kind", item.kind],
-            ["Source", item.source],
-            ["Absence failure", item.absenceIsFailure],
-            ["Blocks visible", item.absenceBlocksVisiblePlanet],
-            ["Blocks motion/touch", item.absenceBlocksMotionTouch]
-          ]
-        )).join("");
-      }
-
-      function renderPlanetBuildBoard() {
-        const build = derivePlanetBuildFootprint();
-
-        els.planetBuild.innerHTML = build.map((item) => observerCard(
-          item.title,
-          item.subtitle,
-          item.status,
-          [
-            ["Source", item.source],
-            ["Authority", item.authority],
-            ["Final visual pass", "false"]
-          ]
-        )).join("");
-      }
-
-      function renderLifecycleBoard() {
-        const lifecycle = deriveLifecycleFootprint();
-
-        els.lifecycle.innerHTML = lifecycle.map((item) => observerCard(
-          item.title,
-          item.subtitle,
-          item.status,
-          [
-            ["Source", item.source],
-            ["Authority", item.authority],
-            ["Diagnostic law", "false"]
-          ]
-        )).join("");
-      }
-
-      function renderModuleDeck() {
+      function renderModules() {
         const report = activeReport();
 
-        els.moduleDeck.innerHTML = CHILD_SCRIPTS.map((child) => {
+        els.modules.innerHTML = CHILD_SCRIPTS.map((child) => {
           const load = state.loadStatus[child.name] || "PENDING";
           const receipt = child.name === "NORTH"
             ? getValue(report, child.receiptField, state.lastNorthReceipt ? state.lastNorthReceipt.receipt || state.lastNorthReceipt.contract || "AVAILABLE" : "NOT_RUN")
             : getValue(report, child.receiptField, "NOT_RUN");
 
           const evidence = child.name === "NORTH"
-            ? getValue(report, "NORTH_CONTRACT", NORTH_ANCHOR_CONTRACT)
+            ? getValue(report, "NORTH_CONTRACT", NORTH_CONTRACT)
             : getValue(report, child.evidenceField, "NOT_RUN");
 
           const runtimeStatus = getValue(report, child.statusField, "NOT_RUN");
 
-          const implementation = child.name === "NORTH"
-            ? getValue(report, "NORTH_CONTRACT", child.contract)
-            : child.name === "WEST"
-              ? getValue(report, "WEST_IMPLEMENTATION_CONTRACT", child.implementationContract)
-              : child.name === "SOUTH"
-                ? getValue(report, "SOUTH_IMPLEMENTATION_CONTRACT", child.implementationContract)
-                : getValue(report, "EAST_ALIGNMENT_CONTRACT", child.implementationContract);
+          return card(child.name, child.title, load, [
+            ["Receipt", receipt],
+            [child.name === "SOUTH" ? "Output" : "Evidence", evidence],
+            ["Status", runtimeStatus],
+            ["Implementation", child.implementationContract]
+          ]);
+        }).join("");
+      }
 
-          return `
-            <article class="module-card" aria-label="${escapeHtml(child.name)} ${escapeHtml(child.title)}">
-              <div class="module-head">
-                <div>
-                  <div class="module-title">${escapeHtml(child.name)}</div>
-                  <div class="module-subtitle">${escapeHtml(child.title)}</div>
-                </div>
-                ${statusChip(load)}
-              </div>
-              <div class="kv">
-                ${kvRow("Receipt", receipt)}
-                ${kvRow(child.name === "SOUTH" ? "Output" : "Evidence", evidence)}
-                ${kvRow("Status", runtimeStatus)}
-                ${kvRow("Implementation", implementation)}
-              </div>
-            </article>
-          `;
+      function fileStatus(file, key) {
+        const explicit = field(key, "");
+        if (explicit && explicit !== "NOT_RUN" && explicit !== "UNKNOWN") return explicit;
+
+        if (file === "/showroom/globe/hearth/index.html") {
+          return targetDatasetValue("contract") || field("SERVED_HTML_CONTRACT", "EXPECTED");
+        }
+
+        if (file === "/assets/hearth/hearth.controls.js") return controlStatus();
+        if (findTargetScriptByPath(file)) return "SCRIPT_PRESENT";
+        return file.includes("finger") ? "EXPECTED_NOT_YET_WIRED" : "EXPECTED";
+      }
+
+      function renderFiles() {
+        els.files.innerHTML = FOOTPRINT_FILES.map(([title, file, fieldName, kind]) => {
+          const status = fileStatus(file, fieldName);
+          return card(title, kind, status, [
+            ["File", file],
+            ["Status field", fieldName],
+            ["Source", "receiver display footprint"],
+            ["Authority", "false"]
+          ]);
+        }).join("");
+      }
+
+      function renderPlanet() {
+        els.planet.innerHTML = PLANET_TRACKS.map(([title, fieldName, subtitle]) => {
+          let status = field(fieldName, "");
+          if (!status || status === "NOT_RUN" || status === "UNKNOWN") {
+            if (title === "Body") status = visiblePlanetStatus();
+            else if (title === "Motion") status = motionStatus();
+            else if (title === "Touch") status = touchStatus();
+            else if (title === "Drag") status = dragStatus();
+            else status = visiblePlanetStatus() === "VISIBLE_PROOF_PRESENT" ? "ACTIVE_DEGRADED" : "EXPECTED";
+          }
+
+          return card(title, subtitle, status, [
+            ["Signal", fieldName],
+            ["Source", "North/West packet or receiver footprint"],
+            ["Visual pass", "false"]
+          ]);
+        }).join("");
+      }
+
+      function renderLifecycle() {
+        els.lifecycle.innerHTML = LIFECYCLE_TRACKS.map(([title, fieldName, subtitle]) => {
+          let status = field(fieldName, "");
+          if (!status || status === "NOT_RUN" || status === "UNKNOWN") {
+            if (title === "Route → Controls") status = controlStatus() === "EXPECTED_NOT_YET_BUILT" ? "HANDSHAKE_PENDING" : "EXPECTED";
+            else if (title === "Controls → Motion") status = motionStatus();
+            else if (title === "Route → Canvas") status = visiblePlanetStatus() === "VISIBLE_PROOF_PRESENT" ? "HANDSHAKE_VALID" : "HANDSHAKE_PENDING";
+            else if (title === "F21 Boundary") status = "F21_NORTH_ONLY";
+            else status = "EXPECTED_OR_PENDING";
+          }
+
+          return card(title, subtitle, status, [
+            ["Signal", fieldName],
+            ["Diagnostic law", "false"],
+            ["Receiver authority", "display-only"]
+          ]);
         }).join("");
       }
 
       function renderNorthVerdict() {
-        const rows = [
+        els.northVerdict.innerHTML = [
           ["Primary Case", field("PRIMARY_CASE")],
           ["Calibration Status", field("CALIBRATION_STATUS")],
           ["Hold Reason", field("CALIBRATION_HOLD_REASON")],
@@ -2040,13 +1413,11 @@
           ["Recommended Owner", field("RECOMMENDED_NEXT_OWNER")],
           ["Recommended File", field("RECOMMENDED_NEXT_FILE")],
           ["Recommended Action", field("RECOMMENDED_NEXT_ACTION")]
-        ];
-
-        els.northVerdict.innerHTML = rows.map(([key, value]) => kvRow(key, value)).join("");
+        ].map(([key, value]) => kvRow(key, value)).join("");
       }
 
-      function renderTelemetryDeck() {
-        const rows = [
+      function renderTrace() {
+        els.trace.innerHTML = [
           ["Target Access", field("DIAGNOSTIC_TARGET_ACCESS_STATUS")],
           ["Served HTML", field("SERVED_HTML_CONTRACT")],
           ["Served Index JS", field("SERVED_INDEX_JS_CONTRACT")],
@@ -2057,9 +1428,7 @@
           ["West Proof Spread", field("WEST_RENDERED_PROOF_SPREAD_COMPLETE")],
           ["South Output Valid", field("SOUTH_OUTPUT_VALID")],
           ["South Meaning Preserved", field("SOUTH_MEANING_PRESERVED")]
-        ];
-
-        els.telemetry.innerHTML = rows.map(([key, value]) => kvRow(key, value)).join("");
+        ].map(([key, value]) => kvRow(key, value)).join("");
       }
 
       function renderNorthStatus() {
@@ -2071,50 +1440,42 @@
 
         const activeReceipt = state.lastNorthReceipt || {};
 
-        const rows = [
+        els.northStatus.innerHTML = [
           ["NORTH API", state.northAvailable ? "AVAILABLE" : north ? "FOUND_BUT_RUN_API_MISSING" : "NOT_FOUND"],
           ["Active Contract", activeReceipt.contract || (north && north.contract) || "UNKNOWN"],
-          ["Expected Anchor", NORTH_ANCHOR_CONTRACT],
-          ["North Anchor", activeReceipt.northIsDiagnosticAnchor || activeReceipt.canonicalVerdictSchemaAuthority || "UNKNOWN"],
-          ["Child Loading Mode", activeReceipt.childLoadingMode || "UNKNOWN"],
-          ["Route Receiver Must Load Children", activeReceipt.routeReceiverMustLoadChildrenBeforeRun || "UNKNOWN"],
-          ["Dynamic Child Loading Owned", activeReceipt.northDynamicChildLoadingOwned || "UNKNOWN"],
-          ["Diagnostic Interest", "PLANETARY_BUILD_OBSERVER"],
-          ["System Change", "false"],
-          ["Last Run Status", activeReceipt.lastDiagnosticRunStatus || field("SOUTH_OUTPUT_STATUS", "NOT_RUN")],
+          ["Expected Contract", NORTH_CONTRACT],
+          ["Child Loading", activeReceipt.childLoadingMode || "ROUTE_LOADS_CHILD_ASSETS_AS_LOADING_CONVENIENCE"],
+          ["North dynamic loading owned", activeReceipt.northDynamicChildLoadingOwned || "false"],
+          ["Receiver calls North only", "true"],
+          ["Diagnostic interest", "MIRRORLAND_PLANET_ENGINE_OBSERVATORY"],
+          ["System change", "false"],
+          ["Last Run", activeReceipt.lastDiagnosticRunStatus || field("SOUTH_OUTPUT_STATUS", "NOT_RUN")],
           ["Last Primary Case", activeReceipt.lastPrimaryCase || field("PRIMARY_CASE", "NOT_RUN")],
           ["Last Calibration", activeReceipt.lastCalibrationStatus || field("CALIBRATION_STATUS", "NOT_RUN")]
-        ];
-
-        els.northStatus.innerHTML = rows.map(([key, value]) => kvRow(key, value)).join("");
+        ].map(([key, value]) => kvRow(key, value)).join("");
 
         els.run.disabled = !state.northAvailable;
         els.copy.disabled = !state.lastPacketText || state.lastPacketText === "FULL_PACKET_TEXT=NOT_RUN";
       }
 
-      function renderRawOutputs() {
+      function renderRaw() {
         els.summary.textContent = state.lastCompactSummary || "COMPACT_SUMMARY=NOT_RUN";
         els.packet.value = state.lastPacketText || "FULL_PACKET_TEXT=NOT_RUN";
-
-        els.verdictJson.textContent = state.lastVerdict
-          ? JSON.stringify(state.lastVerdict, null, 2)
-          : "NORTH_VERDICT=NOT_RUN";
-
+        els.verdictJson.textContent = state.lastVerdict ? JSON.stringify(state.lastVerdict, null, 2) : "NORTH_VERDICT=NOT_RUN";
         els.receiverReceiptJson.textContent = JSON.stringify(getRouteReceipt(), null, 2);
       }
 
       function renderAll() {
-        renderMissionVerdict();
-        renderCardinalRail();
-        renderPlanetaryFunctionStrip();
-        renderFileFootprint();
-        renderPlanetBuildBoard();
-        renderLifecycleBoard();
-        renderModuleDeck();
+        renderMission();
+        renderGauges();
+        renderModules();
+        renderFiles();
+        renderPlanet();
+        renderLifecycle();
         renderNorthVerdict();
-        renderTelemetryDeck();
+        renderTrace();
         renderNorthStatus();
-        renderRawOutputs();
+        renderRaw();
         publishRouteReceiver();
       }
 
@@ -2128,8 +1489,7 @@
           }
 
           const script = existing || doc.createElement("script");
-          const cacheKey = encodeURIComponent(contract || CONTRACT);
-          script.src = `${src}?v=${cacheKey}`;
+          script.src = `${src}?v=${encodeURIComponent(contract || CONTRACT)}`;
           script.async = false;
           script.defer = false;
           script.dataset.hearthDiagnosticScript = src;
@@ -2188,14 +1548,11 @@
           }
         } catch (_error) {}
 
-        try {
-          const report =
-            readPath(root, "HEARTH_DIAGNOSTIC_RAIL_REPORT") ||
-            readPath(root, "HEARTH_PARALLEL_DIAGNOSTIC_RAIL_REPORT");
-          if (isObject(report)) return report;
-        } catch (_error) {}
-
-        return null;
+        return (
+          readPath(root, "HEARTH_DIAGNOSTIC_RAIL_REPORT") ||
+          readPath(root, "HEARTH_PARALLEL_DIAGNOSTIC_RAIL_REPORT") ||
+          null
+        );
       }
 
       function normalizePacketText(north, result) {
@@ -2223,20 +1580,21 @@
 
         if (!north || !isFunction(north.runDiagnostic)) {
           state.lastError = "NORTH_RUN_DIAGNOSTIC_API_NOT_AVAILABLE";
-          state.lastPacketText = [
-            "PACKET_NAME=HEARTH_PARALLEL_DIAGNOSTIC_RAIL_RESULT_PACKET_v1",
-            `TARGET_ROUTE=${TARGET_ROUTE}`,
-            `DIAGNOSTIC_ROUTE=${DIAGNOSTIC_ROUTE}`,
-            `DIAGNOSTIC_TIMESTAMP=${nowIso()}`,
-            "PRIMARY_CASE=INCONCLUSIVE_EVIDENCE",
-            "CALIBRATION_STATUS=CALIBRATION_HOLD_CHILD_ALIGNMENT_INCOMPLETE",
-            "DIAGNOSTIC_RAIL_CLEAN=false",
-            "CALIBRATION_POINT_REACHED=false",
-            "SECONDARY_EVIDENCE_NOTES=NORTH_RUN_DIAGNOSTIC_API_NOT_AVAILABLE",
-            "RECOMMENDED_NEXT_OWNER=DIAGNOSTIC_CHILD_ALIGNMENT",
-            "RECOMMENDED_NEXT_FILE=HOLD_FOR_TEACHER_REVIEW",
-            "RECOMMENDED_NEXT_ACTION=LOAD_OR_VERIFY_NORTH_ANCHOR_SCHEMA_ORCHESTRATOR"
-          ].join("\n");
+          state.lastReport = {
+            PACKET_NAME: REPORT_PACKET,
+            TARGET_ROUTE,
+            DIAGNOSTIC_ROUTE,
+            DIAGNOSTIC_TIMESTAMP: nowIso(),
+            PRIMARY_CASE: "INCONCLUSIVE_EVIDENCE",
+            CALIBRATION_STATUS: "CALIBRATION_HOLD_CHILD_ALIGNMENT_INCOMPLETE",
+            DIAGNOSTIC_RAIL_CLEAN: "false",
+            CALIBRATION_POINT_REACHED: "false",
+            SECONDARY_EVIDENCE_NOTES: "NORTH_RUN_DIAGNOSTIC_API_NOT_AVAILABLE",
+            RECOMMENDED_NEXT_OWNER: "DIAGNOSTIC_CHILD_ALIGNMENT",
+            RECOMMENDED_NEXT_FILE: "HOLD_FOR_TEACHER_REVIEW",
+            RECOMMENDED_NEXT_ACTION: "LOAD_OR_VERIFY_NORTH_LAB_CANVAS_BRIDGE_SCHEMA_ORCHESTRATOR"
+          };
+          state.lastPacketText = Object.entries(state.lastReport).map(([key, value]) => `${key}=${value}`).join("\n");
           state.lastCompactSummary = "PRIMARY_CASE=INCONCLUSIVE_EVIDENCE\nERROR=NORTH_RUN_DIAGNOSTIC_API_NOT_AVAILABLE";
           renderAll();
           return;
@@ -2302,7 +1660,6 @@
 
       async function copyReport() {
         const text = els.packet && els.packet.value ? els.packet.value : state.lastPacketText || "";
-
         if (!text || text === "FULL_PACKET_TEXT=NOT_RUN") return;
 
         try {
@@ -2315,23 +1672,14 @@
           }
 
           els.copy.textContent = "Copied";
-          setTimeout(() => {
-            els.copy.textContent = "Copy Report";
-          }, 1200);
+          setTimeout(() => { els.copy.textContent = "Copy Report"; }, 1200);
         } catch (_error) {
           els.copy.textContent = "Copy Failed";
-          setTimeout(() => {
-            els.copy.textContent = "Copy Report";
-          }, 1400);
+          setTimeout(() => { els.copy.textContent = "Copy Report"; }, 1400);
         }
       }
 
       function getRouteReceipt() {
-        const planetaryFunctionStatus = derivePlanetaryFunctionStatus();
-        const underHoodFileFootprint = deriveFileFootprint();
-        const aboveHoodPlanetBuild = derivePlanetBuildFootprint();
-        const lifecycleFootprint = deriveLifecycleFootprint();
-
         return {
           contract: CONTRACT,
           receipt: RECEIPT,
@@ -2341,16 +1689,19 @@
           route: DIAGNOSTIC_ROUTE,
           targetRoute: TARGET_ROUTE,
           reportPacket: REPORT_PACKET,
+
           role: "thin-diagnostic-route-receiver",
-          receiverStandard: "planetary-build-observer",
-          diagnosticInterestRenewalOnly: true,
-          diagnosticSystemChange: false,
-          backendFilesRequiredForReceiverUpgrade: false,
-          northAnchorContract: NORTH_ANCHOR_CONTRACT,
-          northAnchorReceipt: NORTH_ANCHOR_RECEIPT,
-          eastCurrentSpreadImplementation: EAST_IMPLEMENTATION_CONTRACT,
-          westRenderedProofImplementation: WEST_IMPLEMENTATION_CONTRACT,
-          southAnchorConformanceImplementation: SOUTH_IMPLEMENTATION_CONTRACT,
+          receiverStandard: "mirrorland-planet-engine-observatory",
+          mirrorlandNarrativeActive: true,
+          planetEngineObservatoryActive: true,
+          gaugeConstellationActive: true,
+          animatedGaugesDisplayOnly: true,
+          cssAnimationOnly: true,
+          requestAnimationFrameUsed: false,
+          canvasAnimationUsed: false,
+          webGLUsed: false,
+          graphicBoxUsed: false,
+          generatedImageUsed: false,
 
           routeReceiverLoadsChildAssetsAsLoadingConvenience: true,
           routeReceiverCallsNorthOnly: true,
@@ -2367,23 +1718,14 @@
           routeReceiverOwnsRuntimeRestart: false,
           routeReceiverOwnsCanvasRelease: false,
 
-          planetaryBuildObserverActive: true,
-          cardinalValidityRailPresent: Boolean(els.cardinalRail),
-          newsFibonacciValidityRailPresent: Boolean(els.cardinalRail),
-          planetaryFunctionStripPresent: Boolean(els.planetaryFunction),
-          underHoodFileFootprintPresent: Boolean(els.fileFootprint),
-          aboveHoodPlanetBuildBoardPresent: Boolean(els.planetBuild),
-          controlFileFootprintPresent: true,
-          motionTouchFootprintPresent: true,
-          fingerLifecycleBoardPresent: true,
-          canvasLifecycleBoardPresent: true,
-          legacyRawOutputPreserved: Boolean(els.summary && els.packet && els.verdictJson && els.receiverReceiptJson),
-          runDiagnosticControlPresent: Boolean(els.run),
-          copyReportControlPresent: Boolean(els.copy),
-          refreshStatusControlPresent: Boolean(els.refresh),
-          receiptOutputPreserved: Boolean(els.receiverReceiptJson),
-          rawOutputAnchorPreserved: true,
-          targetFramePresent: Boolean(els.frame),
+          northContract: NORTH_CONTRACT,
+          northReceipt: NORTH_RECEIPT,
+          eastContract: CHILD_SCRIPTS[0].contract,
+          eastImplementationContract: CHILD_SCRIPTS[0].implementationContract,
+          westContract: CHILD_SCRIPTS[1].contract,
+          westImplementationContract: CHILD_SCRIPTS[1].implementationContract,
+          southContract: CHILD_SCRIPTS[2].contract,
+          southImplementationContract: CHILD_SCRIPTS[2].implementationContract,
 
           eastChildLoadStatus: state.loadStatus.EAST || "PENDING",
           westChildLoadStatus: state.loadStatus.WEST || "PENDING",
@@ -2391,6 +1733,13 @@
           northParentLoadStatus: state.loadStatus.NORTH || "PENDING",
           northAvailable: state.northAvailable,
           northActiveContract: state.lastNorthReceipt ? state.lastNorthReceipt.contract || "UNKNOWN" : "UNKNOWN",
+
+          runDiagnosticControlPresent: Boolean(els.run),
+          copyReportControlPresent: Boolean(els.copy),
+          refreshStatusControlPresent: Boolean(els.refresh),
+          rawOutputPreserved: Boolean(els.summary && els.packet && els.verdictJson && els.receiverReceiptJson),
+          targetFramePresent: Boolean(els.frame),
+
           lastRunOk: state.lastRunOk,
           lastDiagnosticRailClean: field("DIAGNOSTIC_RAIL_CLEAN", "NOT_RUN"),
           lastCalibrationPointReached: field("CALIBRATION_POINT_REACHED", "NOT_RUN"),
@@ -2399,32 +1748,13 @@
           lastSouthMeaningPreserved: field("SOUTH_MEANING_PRESERVED", "NOT_RUN"),
           lastRecommendedNextFile: field("RECOMMENDED_NEXT_FILE", "NOT_RUN"),
 
-          planetaryFunctionStatus,
-          underHoodFileFootprint,
-          aboveHoodPlanetBuild,
-          lifecycleFootprint,
-
           controlFile: "/assets/hearth/hearth.controls.js",
           controlFileExpected: true,
-          controlFileStatus: planetaryFunctionStatus.controlStatus,
+          controlFileStatus: controlStatus(),
           controlAbsenceIsFailure: false,
           controlAbsenceIsCase5: false,
           controlAbsenceBlocksVisiblePlanet: false,
           controlAbsenceBlocksMotionTouch: true,
-          controlHandshakeExpected: true,
-          controlOwnsMotionTouch: true,
-          controlOwnsCanvasTruth: false,
-          controlOwnsPlanetTruth: false,
-          controlOwnsDiagnosticLaw: false,
-
-          routeConductorFile: "/showroom/globe/hearth/hearth.js",
-          routeConductorExpectsControlHandshake: true,
-          routeConductorLoadsOrRecognizesControlFile: true,
-          routeConductorOwnsHandshakePublication: true,
-          routeConductorOwnsMotionTouch: false,
-          routeConductorOwnsControlInput: false,
-          routeConductorOwnsCanvasDrawing: false,
-          routeConductorOwnsPlanetTruth: false,
 
           productionMutationAuthorized: false,
           hearthRepairClaimed: false,
@@ -2442,6 +1772,7 @@
           generatedImage: false,
           graphicBox: false,
           webGL: false,
+
           updatedAt: nowIso()
         };
       }
@@ -2459,26 +1790,24 @@
           targetRoute: TARGET_ROUTE,
           diagnosticRoute: DIAGNOSTIC_ROUTE,
           reportPacket: REPORT_PACKET,
-          northAnchorContract: NORTH_ANCHOR_CONTRACT,
-          eastCurrentSpreadImplementation: EAST_IMPLEMENTATION_CONTRACT,
-          westRenderedProofImplementation: WEST_IMPLEMENTATION_CONTRACT,
-          southAnchorConformanceImplementation: SOUTH_IMPLEMENTATION_CONTRACT,
-          lifecycleVocabulary: LIFECYCLE,
-          footprintFiles: FOOTPRINT_FILES,
-          planetTracks: PLANET_TRACKS,
-          handshakeTracks: HANDSHAKE_TRACKS,
+
           loadChildChain,
           runDiagnostic,
           getRouteReceipt,
           getState: () => clonePlain(state),
-          derivePlanetaryFunctionStatus,
-          deriveFileFootprint,
-          derivePlanetBuildFootprint,
-          deriveLifecycleFootprint,
+
           routeReceiverCallsNorthOnly: true,
           diagnosticInterestRenewalOnly: true,
           diagnosticSystemChange: false,
-          backendFilesRequiredForReceiverUpgrade: false,
+          mirrorlandNarrativeActive: true,
+          planetEngineObservatoryActive: true,
+          gaugeConstellationActive: true,
+          animatedGaugesDisplayOnly: true,
+          requestAnimationFrameUsed: false,
+          canvasAnimationUsed: false,
+          webGLUsed: false,
+          graphicBoxUsed: false,
+
           routeReceiverOwnsDiagnosticLaw: false,
           routeReceiverOwnsRepair: false,
           routeReceiverCreatesPrimaryCases: false,
@@ -2488,7 +1817,6 @@
           runtimeRestartClaimed: false,
           canvasReleaseClaimed: false,
           f13Claimed: false,
-          f13DisplaySlotPresent: true,
           f13Authority: false,
           f21EligibleForNorth: false,
           f21ClaimedByDiagnosticRail: false,
@@ -2501,20 +1829,20 @@
         });
 
         root.HEARTH.diagnosticRouteReceiver = api;
-        root.HEARTH.diagnosticMissionControlReceiver = api;
         root.HEARTH.diagnosticPlanetaryBuildObserverReceiver = api;
+        root.HEARTH.diagnosticMirrorlandPlanetEngineObservatoryReceiver = api;
 
         root.HEARTH_DIAGNOSTIC_ROUTE_RECEIVER = api;
-        root.HEARTH_DIAGNOSTIC_MISSION_CONTROL_RECEIVER = api;
         root.HEARTH_DIAGNOSTIC_PLANETARY_BUILD_OBSERVER_RECEIVER = api;
+        root.HEARTH_DIAGNOSTIC_MIRRORLAND_PLANET_ENGINE_OBSERVATORY_RECEIVER = api;
 
         root.DEXTER_LAB.hearthDiagnosticRouteReceiver = api;
-        root.DEXTER_LAB.hearthDiagnosticMissionControlReceiver = api;
         root.DEXTER_LAB.hearthDiagnosticPlanetaryBuildObserverReceiver = api;
+        root.DEXTER_LAB.hearthDiagnosticMirrorlandPlanetEngineObservatoryReceiver = api;
 
         root.HEARTH_DIAGNOSTIC_ROUTE_RECEIVER_RECEIPT = getRouteReceipt();
-        root.HEARTH_DIAGNOSTIC_MISSION_CONTROL_RECEIVER_RECEIPT = getRouteReceipt();
         root.HEARTH_DIAGNOSTIC_PLANETARY_BUILD_OBSERVER_RECEIVER_RECEIPT = getRouteReceipt();
+        root.HEARTH_DIAGNOSTIC_MIRRORLAND_PLANET_ENGINE_OBSERVATORY_RECEIPT = getRouteReceipt();
       }
 
       els.run.addEventListener("click", runDiagnostic);
@@ -2524,7 +1852,6 @@
 
       publishRouteReceiver();
       renderAll();
-
       loadChildChain().then(renderAll);
     })();
   </script>

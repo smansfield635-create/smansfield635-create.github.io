@@ -1,99 +1,68 @@
 // /assets/lab/runtime-table.west.js
-// LAB_RUNTIME_TABLE_CARDINAL_WEST_GATE_DOWNSTREAM_HIERARCHY_BISHOP_QUEEN_PRIEST_ADOPTION_TNT_v4_8
+// LAB_RUNTIME_TABLE_CARDINAL_WEST_CANVAS_V12_3_POINTER_SURFACE_BISHOP_RELEASE_BRIDGE_TNT_v4_9
 // Full-file replacement.
-// Cardinal West / West Gate downstream hierarchy adoption bridge only.
+// Cardinal West / Canvas v12_3 recognition / Surface Pointer Bishop adoption / Canvas release bridge.
+// Previous:
+// LAB_RUNTIME_TABLE_CARDINAL_WEST_GATE_DOWNSTREAM_HIERARCHY_BISHOP_QUEEN_PRIEST_ADOPTION_TNT_v4_8
+//
 // Purpose:
 // - Preserve West as the local admissibility clutch under North timetable authority.
 // - Preserve the locked two-cycle law:
 //   Cycle 1: NORTH -> EAST -> WEST -> SOUTH -> NORTH.
 //   Cycle 2: NORTH -> EAST -> SOUTH -> WEST -> CANVAS.
 // - Preserve West as the Canvas-release gate, not the source of upstream truth.
-// - Publish a downstream-adoptable hierarchy registry from the West gate.
-// - Externally address the four lab files as cardinal bishops without requiring those upstream files to self-label.
-// - Distinguish cardinal bishops from downstream bishops.
-// - Preserve the Queen outside cardinal functionality.
-// - Preserve the East Priest as priest, not bishop.
-// - Preserve confirmed Pointer Finger file:
-//   /assets/hearth/hearth.canvas.finger.surface.js
-// - Preserve bishop-chord Canvas release bridge behavior.
-// - Trust bishop hubs and authority surfaces; do not scan subject files or child/finger internals.
+// - Recognize current Canvas v12_3, v12_2, v12_1, v12, and v11 lineage surfaces.
+// - Recognize Surface Pointer Bishop v4 and legacy Surface Pointer Finger aliases.
+// - Publish only necessary aliases required by Route Conductor, Canvas, Lab, and diagnostics.
 // - Publish release packets only from RELEASE_TO_CANVAS.
 // - Clear stale release packets during HOLD or HARD_BLOCK.
+// - Trust authority surfaces and receipts; do not inspect subject/finger internals.
+// - Preserve Queen outside cardinal functionality and Priest as priest, not bishop.
 // - Preserve no Canvas drawing, no Canvas child internals, no planet truth, no F21 claim,
 //   no ready text, no completion latch, no final visual pass, no generated image, no GraphicBox, and no WebGL.
-// Does not own:
-// - North timetable truth
-// - East source truth
-// - South output truth
-// - upstream lab self-description
-// - Queen behavior
-// - route conductor handshake truth
-// - bishop implementation truth
-// - subject-file truth
-// - Canvas drawing
-// - Canvas child internals
-// - planet truth
-// - F21 latch
-// - final visual pass
 
 (() => {
   "use strict";
 
-  const CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_GATE_DOWNSTREAM_HIERARCHY_BISHOP_QUEEN_PRIEST_ADOPTION_TNT_v4_8";
-  const RECEIPT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_GATE_DOWNSTREAM_HIERARCHY_BISHOP_QUEEN_PRIEST_ADOPTION_RECEIPT_v4_8";
-  const PREVIOUS_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_BISHOP_CHORD_CANVAS_RELEASE_BRIDGE_TNT_v4_7";
-  const PREVIOUS_RECEIPT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_BISHOP_CHORD_CANVAS_RELEASE_BRIDGE_RECEIPT_v4_7";
-  const BASELINE_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_CURRENT_CANVAS_PARENT_V10_3_CARRIER_COMPATIBILITY_TNT_v4_2";
+  const CONTRACT =
+    "LAB_RUNTIME_TABLE_CARDINAL_WEST_CANVAS_V12_3_POINTER_SURFACE_BISHOP_RELEASE_BRIDGE_TNT_v4_9";
+  const RECEIPT =
+    "LAB_RUNTIME_TABLE_CARDINAL_WEST_CANVAS_V12_3_POINTER_SURFACE_BISHOP_RELEASE_BRIDGE_RECEIPT_v4_9";
 
-  const VERSION = "2026-06-04.lab-runtime-table-west-gate-downstream-hierarchy-bishop-queen-priest-adoption-v4-8";
+  const PREVIOUS_CONTRACT =
+    "LAB_RUNTIME_TABLE_CARDINAL_WEST_GATE_DOWNSTREAM_HIERARCHY_BISHOP_QUEEN_PRIEST_ADOPTION_TNT_v4_8";
+  const PREVIOUS_RECEIPT =
+    "LAB_RUNTIME_TABLE_CARDINAL_WEST_GATE_DOWNSTREAM_HIERARCHY_BISHOP_QUEEN_PRIEST_ADOPTION_RECEIPT_v4_8";
+
+  const LINEAGE_V4_7_CONTRACT =
+    "LAB_RUNTIME_TABLE_CARDINAL_WEST_BISHOP_CHORD_CANVAS_RELEASE_BRIDGE_TNT_v4_7";
+  const LINEAGE_V4_7_RECEIPT =
+    "LAB_RUNTIME_TABLE_CARDINAL_WEST_BISHOP_CHORD_CANVAS_RELEASE_BRIDGE_RECEIPT_v4_7";
+
+  const BASELINE_CONTRACT =
+    "LAB_RUNTIME_TABLE_CARDINAL_WEST_CURRENT_CANVAS_PARENT_V10_3_CARRIER_COMPATIBILITY_TNT_v4_2";
+
+  const VERSION =
+    "2026-06-05.lab-runtime-table-west-canvas-v12-3-pointer-surface-bishop-release-bridge-v4-9";
 
   const FILE = "/assets/lab/runtime-table.west.js";
   const ROUTE = "/showroom/globe/hearth/";
+
   const NORTH_FILE = "/assets/lab/runtime-table.js";
   const EAST_FILE = "/assets/lab/runtime-table.east.js";
   const SOUTH_FILE = "/assets/lab/runtime-table.south.js";
   const WEST_FILE = FILE;
 
   const ROUTE_CONDUCTOR_FILE = "/showroom/globe/hearth/hearth.js";
+  const PRIEST_FILE = "/showroom/globe/hearth/index.js";
   const QUEEN_FILE = "/assets/hearth/hearth.controls.js";
   const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
-  const POINTER_FINGER_FILE = "/assets/hearth/hearth.canvas.finger.surface.js";
-  const PRIEST_FILE = "/showroom/globe/hearth/index.js";
+  const POINTER_SURFACE_FILE = "/assets/hearth/hearth.canvas.finger.surface.js";
 
   const HIERARCHY_REGISTRY_CONTRACT =
-    "HEARTH_WEST_GATE_DOWNSTREAM_HIERARCHY_CARDINAL_BISHOP_BISHOP_QUEEN_PRIEST_REGISTRY_v1";
+    "HEARTH_WEST_GATE_DOWNSTREAM_HIERARCHY_CARDINAL_BISHOP_BISHOP_QUEEN_PRIEST_REGISTRY_v2";
   const HIERARCHY_REGISTRY_RECEIPT =
-    "HEARTH_WEST_GATE_DOWNSTREAM_HIERARCHY_CARDINAL_BISHOP_BISHOP_QUEEN_PRIEST_REGISTRY_RECEIPT_v1";
-
-  const CARDINAL_BISHOP_FILES = Object.freeze({
-    north: NORTH_FILE,
-    east: EAST_FILE,
-    south: SOUTH_FILE,
-    west: WEST_FILE
-  });
-
-  const DOWNSTREAM_BISHOP_FILES = Object.freeze({
-    north: ROUTE_CONDUCTOR_FILE,
-    south: CANVAS_FILE,
-    west: POINTER_FINGER_FILE
-  });
-
-  const PRIEST_FILES = Object.freeze({
-    east: PRIEST_FILE
-  });
-
-  const QUEEN_FILES = Object.freeze({
-    queen: QUEEN_FILE
-  });
-
-  // Preserved v4_7 compatibility name. These are the bishop-chord lanes West reads as authority surfaces.
-  // The hierarchy registry below is the corrected language map.
-  const BISHOP_FILES = Object.freeze({
-    north: NORTH_FILE,
-    east: EAST_FILE,
-    south: SOUTH_FILE,
-    west: WEST_FILE
-  });
+    "HEARTH_WEST_GATE_DOWNSTREAM_HIERARCHY_CARDINAL_BISHOP_BISHOP_QUEEN_PRIEST_REGISTRY_RECEIPT_v2";
 
   const ACTIVE_STAGE_ID = "C2_WEST_CANVAS_RELEASE_AUDIT";
   const ACTIVE_GEAR = "GEAR_C2_WEST_CANVAS_RELEASE_AUDIT";
@@ -113,7 +82,7 @@
     NONE: "NONE",
     NORTH_TIMETABLE_HOLD: "WAITING_NORTH_TIMETABLE",
     SOUTH_OUTPUT_HOLD: "WAITING_CYCLE_TWO_SOUTH_OUTPUT",
-    BISHOP_CHORD_HOLD: "WAITING_BISHOP_CHORD",
+    HIERARCHY_HOLD: "WAITING_DOWNSTREAM_HIERARCHY_SURFACE",
     CANVAS_RECEIVER_HOLD: "WAITING_CANVAS_RECEIVER",
     CARRIER_HOLD: "CARRIER_HOLD",
     STRUCTURAL_BLOCK: "STRUCTURAL_BLOCK"
@@ -127,7 +96,10 @@
     BLOCKED_CHORD: "BLOCKED_BISHOP_CHORD"
   });
 
-  const CANVAS_LOCAL_STATION_CONTRACTS = Object.freeze([
+  const CURRENT_CANVAS_CONTRACTS = Object.freeze([
+    "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3",
+    "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_TNT_v12_2",
+    "HEARTH_CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_TNT_v12_1",
     "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_TNT_v12",
     "HEARTH_CANVAS_EXPRESSION_HUB_VISIBLE_BASE_GLOBE_CARRIER_TNT_v11_7",
     "HEARTH_CANVAS_EXPRESSION_HUB_FINGER_MANAGER_TNT_v11_6",
@@ -142,8 +114,32 @@
     "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11"
   ]);
 
-  const CANVAS_BASELINE_V10_3_CONTRACT =
-    "HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD_TNT_v10_3";
+  const CANVAS_BASELINE_HOLD_CONTRACTS = Object.freeze([
+    "HEARTH_CANVAS_PARENT_RELEASE_ACCEPTANCE_EAST_DISPATCH_SWITCHBOARD_TNT_v10_3"
+  ]);
+
+  const POINTER_SURFACE_CONTRACTS = Object.freeze([
+    "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_TNT_v4",
+    "HEARTH_CANVAS_FINGER_SURFACE_POINTER_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_TNT_v3",
+    "HEARTH_CANVAS_FINGER_SURFACE_POINTER_FINGER_EXTERNAL_EXPRESSION_SOCKET_TNT_v2",
+    "HEARTH_CANVAS_FINGER_SURFACE_FIRST_MATERIAL_DIFFERENTIATION_TNT_v1"
+  ]);
+
+  const CARDINAL_BISHOP_FILES = Object.freeze({
+    north: NORTH_FILE,
+    east: EAST_FILE,
+    south: SOUTH_FILE,
+    west: WEST_FILE
+  });
+
+  const DOWNSTREAM_BISHOP_FILES = Object.freeze({
+    routeNorth: ROUTE_CONDUCTOR_FILE,
+    canvasSouth: CANVAS_FILE,
+    pointerWest: POINTER_SURFACE_FILE
+  });
+
+  const PRIEST_FILES = Object.freeze({ east: PRIEST_FILE });
+  const QUEEN_FILES = Object.freeze({ queen: QUEEN_FILE });
 
   const NORTH_ALIASES = Object.freeze([
     "LAB_RUNTIME_TABLE_NORTH",
@@ -156,54 +152,50 @@
     "DEXTER_LAB.cardinalRuntimeTableNorth",
     "DEXTER_LAB.northCentralTrainStation",
     "DEXTER_LAB.centralTrainStation",
-    "DEXTER_LAB.hearthCheckpointSession",
     "HEARTH.northCentralTrainStation",
     "HEARTH.centralTrainStation",
     "HEARTH.northCommandRuntimeTable"
   ]);
 
+  const EAST_ALIASES = Object.freeze([
+    "LAB_RUNTIME_TABLE_EAST",
+    "RUNTIME_TABLE_EAST",
+    "DEXTER_LAB.runtimeTableEast",
+    "DEXTER_LAB.cardinalRuntimeTableEast",
+    "HEARTH.runtimeTableEast",
+    "HEARTH.cardinalRuntimeTableEast",
+    "HEARTH_CANVAS_EAST",
+    "HEARTH.canvasEast",
+    "DEXTER_LAB.hearthCanvasEast"
+  ]);
+
+  const SOUTH_ALIASES = Object.freeze([
+    "LAB_RUNTIME_TABLE_SOUTH_PRIMARY_GATE",
+    "LAB_RUNTIME_TABLE_SOUTH",
+    "RUNTIME_TABLE_SOUTH",
+    "HEARTH_RUNTIME_TABLE_SOUTH",
+    "HEARTH_SOUTH",
+    "HEARTH_VISIBLE_STATE_COMPOSER",
+    "DEXTER_LAB.runtimeTableSouth",
+    "DEXTER_LAB.cardinalRuntimeTableSouth",
+    "DEXTER_LAB.visibleStateComposer",
+    "DEXTER_LAB.southPrimaryGate",
+    "HEARTH.canvasSouth",
+    "DEXTER_LAB.hearthCanvasSouth"
+  ]);
+
   const ROUTE_CONDUCTOR_ALIASES = Object.freeze([
-    "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION",
     "HEARTH_ROUTE_CONDUCTOR",
-    "HEARTH_SOUTH_ROUTE_CONDUCTOR",
-    "HEARTH_ROUTE_CONDUCTOR_PRIMARY_GATE",
-    "HEARTH.routeConductorNewsFibonacciVisibleGlobeProofSynchronization",
+    "HEARTH_ROUTE_NORTH_BISHOP",
+    "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL",
+    "HEARTH_ROUTE_CONDUCTOR_CONTROL_FILE_ADMISSION_AND_HANDSHAKE_DELIVERY",
+    "HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION",
+    "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION",
     "HEARTH.routeConductor",
-    "HEARTH.southRouteConductor",
-    "HEARTH.routeConductorPrimaryGate",
+    "HEARTH.routeNorthBishop",
+    "HEARTH.routeConductorBishopQueenCanvasRecognitionFunnel",
     "DEXTER_LAB.hearthRouteConductor",
-    "DEXTER_LAB.hearthSouthRouteConductor",
-    "DEXTER_LAB.hearthRouteConductorPrimaryGate"
-  ]);
-
-  const QUEEN_ALIASES = Object.freeze([
-    "HEARTH_CONTROLS",
-    "HEARTH_PLANETARY_CONTROLS",
-    "HEARTH_CONTROL_FILE",
-    "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE",
-    "HEARTH.controls",
-    "HEARTH.planetaryControls",
-    "HEARTH.controlFile",
-    "HEARTH.hearthControls",
-    "HEARTH.controlsPlanetaryViewInputHandshake",
-    "DEXTER_LAB.hearthControls",
-    "DEXTER_LAB.hearthPlanetaryControls",
-    "DEXTER_LAB.hearthControlFile"
-  ]);
-
-  const POINTER_SURFACE_ALIASES = Object.freeze([
-    "HEARTH_CANVAS_FINGER_SURFACE",
-    "HEARTH_CANVAS_SURFACE_POINTER_FINGER",
-    "HEARTH_POINTER_FINGER",
-    "HEARTH_SURFACE_POINTER_FINGER",
-    "HEARTH.canvasFingerSurface",
-    "HEARTH.canvasSurfacePointerFinger",
-    "HEARTH.pointerFinger",
-    "HEARTH.surfacePointerFinger",
-    "DEXTER_LAB.hearthCanvasFingerSurface",
-    "DEXTER_LAB.hearthCanvasSurfacePointerFinger",
-    "DEXTER_LAB.hearthPointerFinger",
-    "DEXTER_LAB.hearthSurfacePointerFinger"
+    "DEXTER_LAB.hearthRouteNorthBishop"
   ]);
 
   const PRIEST_ALIASES = Object.freeze([
@@ -216,102 +208,83 @@
     "HEARTH.frontendButtonAuthorityReset",
     "HEARTH.buttonAuthority",
     "DEXTER_LAB.hearthIndexJs",
+    "DEXTER_LAB.hearthIndexBridge",
     "DEXTER_LAB.hearthFrontendButtonAuthorityReset"
   ]);
 
-  const BISHOP_ALIASES = Object.freeze({
-    north: [
-      "HEARTH_BISHOP_NORTH",
-      "HEARTH.bishopNorth",
-      "HEARTH.northBishop",
-      "DEXTER_LAB.hearthBishopNorth",
-      ...NORTH_ALIASES
-    ],
-    east: [
-      "HEARTH_BISHOP_EAST",
-      "HEARTH.bishopEast",
-      "HEARTH.eastBishop",
-      "DEXTER_LAB.hearthBishopEast",
-      "LAB_RUNTIME_TABLE_EAST",
-      "RUNTIME_TABLE_EAST",
-      "DEXTER_LAB.runtimeTableEast",
-      "DEXTER_LAB.cardinalRuntimeTableEast",
-      "HEARTH_CANVAS_EAST",
-      "HEARTH.canvasEast",
-      "HEARTH.canvasEastMaterialAtlasSourceMachine",
-      "HEARTH.canvasEastMaterialAtlasSourceTransistor",
-      "DEXTER_LAB.hearthCanvasEast",
-      "DEXTER_LAB.hearthCanvasEastMaterialAtlasSourceMachine"
-    ],
-    south: [
-      "HEARTH_BISHOP_SOUTH",
-      "HEARTH.bishopSouth",
-      "HEARTH.southBishop",
-      "DEXTER_LAB.hearthBishopSouth",
-      "LAB_RUNTIME_TABLE_SOUTH_PRIMARY_GATE",
-      "LAB_RUNTIME_TABLE_SOUTH",
-      "RUNTIME_TABLE_SOUTH",
-      "HEARTH_RUNTIME_TABLE_SOUTH",
-      "HEARTH_SOUTH",
-      "HEARTH_VISIBLE_STATE_COMPOSER",
-      "DEXTER_LAB.runtimeTableSouth",
-      "DEXTER_LAB.cardinalRuntimeTableSouth",
-      "DEXTER_LAB.visibleStateComposer",
-      "DEXTER_LAB.southPrimaryGate",
-      "HEARTH_CANVAS_SOUTH",
-      "HEARTH.canvasSouth",
-      "HEARTH.canvasSouthF13SStrictVisibleProofClassifierChild",
-      "DEXTER_LAB.hearthCanvasSouth",
-      "DEXTER_LAB.hearthCanvasSouthF13SStrictVisibleProofClassifierChild"
-    ],
-    west: [
-      "HEARTH_BISHOP_WEST",
-      "HEARTH.bishopWest",
-      "HEARTH.westBishop",
-      "DEXTER_LAB.hearthBishopWest",
-      "LAB_RUNTIME_TABLE_WEST",
-      "RUNTIME_TABLE_WEST",
-      "DEXTER_LAB.runtimeTableWest",
-      "DEXTER_LAB.cardinalRuntimeTableWest",
-      "DEXTER_LAB.gapClassifierWest",
-      "DEXTER_LAB.transmissionGapClassifierWest",
-      "HEARTH_CANVAS_WEST",
-      "HEARTH.canvasWest",
-      "HEARTH.canvasWestInspectionInvalidationControl",
-      "DEXTER_LAB.hearthCanvasWest",
-      "DEXTER_LAB.hearthCanvasWestInspectionInvalidationControl",
-      ...POINTER_SURFACE_ALIASES
-    ]
-  });
+  const QUEEN_ALIASES = Object.freeze([
+    "HEARTH_CONTROLS_QUEEN",
+    "HEARTH_QUEEN_CONTROLS",
+    "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE",
+    "HEARTH_CONTROLS",
+    "HEARTH_PLANETARY_CONTROLS",
+    "HEARTH_CONTROL_FILE",
+    "HEARTH.controlsQueen",
+    "HEARTH.queenControls",
+    "HEARTH.controlsPlanetaryViewInputHandshake",
+    "HEARTH.controls",
+    "HEARTH.planetaryControls",
+    "HEARTH.controlFile",
+    "DEXTER_LAB.hearthQueenControls",
+    "DEXTER_LAB.hearthControls",
+    "DEXTER_LAB.hearthPlanetaryControls",
+    "DEXTER_LAB.hearthControlFile"
+  ]);
 
   const CANVAS_ALIASES = Object.freeze([
-    "HEARTH_CANVAS",
-    "HEARTH.canvas",
-    "DEXTER_LAB.hearthCanvas",
+    "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER",
+    "HEARTH_CANVAS_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER",
+    "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER",
+    "HEARTH_CANVAS_PLANETARY_VIEW_CONTROL_RECEIVER",
     "HEARTH_CANVAS_HUB",
-    "HEARTH.canvasHub",
+    "HEARTH_CANVAS",
+    "HEARTH_CANVAS_PARENT",
     "HEARTH_CANVAS_LOCAL_STATION",
     "HEARTH_CANVAS_STATION",
-    "HEARTH_CANVAS_CHILD_DISTRIBUTION_SWITCHBOARD",
-    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD",
-    "HEARTH_CANVAS_EXPRESSION_HUB_VISIBLE_BASE_GLOBE_CARRIER",
-    "HEARTH_CANVAS_VISIBLE_BASE_GLOBE_CARRIER",
     "HEARTH_CANVAS_EXPRESSION_HUB",
     "HEARTH_CANVAS_FINGER_MANAGER",
+    "HEARTH.canvasHubCompositeFirstFastViewDeferredHexReceiver",
+    "HEARTH.canvasCompositeFirstFastViewDeferredHexReceiver",
+    "HEARTH.canvasHubFastViewTransformDeferredRenderReceiver",
+    "HEARTH.canvasPlanetaryViewControlReceiver",
+    "HEARTH.canvasHub",
+    "HEARTH.canvas",
+    "HEARTH.canvasParent",
     "HEARTH.canvasLocalStation",
     "HEARTH.canvasStation",
-    "HEARTH.canvasChildDistributionSwitchboard",
-    "HEARTH.canvasExpressionHubVisibleBaseGlobeCarrier",
-    "HEARTH.canvasVisibleBaseGlobeCarrier",
     "HEARTH.canvasExpressionHub",
     "HEARTH.canvasFingerManager",
+    "DEXTER_LAB.hearthCanvasHub",
+    "DEXTER_LAB.hearthCanvas",
+    "DEXTER_LAB.hearthCanvasParent",
     "DEXTER_LAB.hearthCanvasLocalStation",
     "DEXTER_LAB.hearthCanvasStation",
-    "DEXTER_LAB.hearthCanvasChildDistributionSwitchboard",
-    "DEXTER_LAB.hearthCanvasExpressionHubVisibleBaseGlobeCarrier",
-    "DEXTER_LAB.hearthCanvasVisibleBaseGlobeCarrier",
     "DEXTER_LAB.hearthCanvasExpressionHub",
     "DEXTER_LAB.hearthCanvasFingerManager"
+  ]);
+
+  const POINTER_SURFACE_ALIASES = Object.freeze([
+    "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP",
+    "HEARTH_CANVAS_BISHOP_SURFACE_POINTER",
+    "HEARTH_CANVAS_POINTER_BISHOP",
+    "HEARTH_CANVAS_SURFACE_BISHOP",
+    "HEARTH_CANVAS_FINGER_SURFACE",
+    "HEARTH_CANVAS_SURFACE_FINGER",
+    "HEARTH_CANVAS_POINTER_FINGER",
+    "HEARTH_CANVAS_FINGER_SURFACE_POINTER",
+    "HEARTH.canvasPointerBishop",
+    "HEARTH.canvasBishopSurfacePointer",
+    "HEARTH.canvasSurfaceBishop",
+    "HEARTH.canvasFingerSurface",
+    "HEARTH.canvasSurfaceFinger",
+    "HEARTH.canvasPointerFinger",
+    "HEARTH.canvasFingerSurfacePointer",
+    "DEXTER_LAB.hearthCanvasPointerBishop",
+    "DEXTER_LAB.hearthCanvasBishopSurfacePointer",
+    "DEXTER_LAB.hearthCanvasSurfaceBishop",
+    "DEXTER_LAB.hearthCanvasFingerSurface",
+    "DEXTER_LAB.hearthCanvasSurfaceFinger",
+    "DEXTER_LAB.hearthCanvasPointerFinger"
   ]);
 
   const OUTPUT_MARKERS = Object.freeze([
@@ -386,48 +359,44 @@
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
+    lineageV47Contract: LINEAGE_V4_7_CONTRACT,
+    lineageV47Receipt: LINEAGE_V4_7_RECEIPT,
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     file: FILE,
     route: ROUTE,
-    role: "lab-runtime-table-cardinal-west-gate-downstream-hierarchy-adoption",
+    role: "lab-runtime-table-cardinal-west-canvas-v12-3-pointer-surface-bishop-release-bridge",
 
-    westV4_8Active: true,
+    westV4_9Active: true,
+    westV4_8Superseded: true,
     westV4_7Superseded: true,
-    westV4_6_3Superseded: true,
-    westV4_6_2Superseded: true,
-    westV4_6_1Superseded: true,
-    westV4_6Superseded: true,
-    westV4_5Superseded: true,
-    westV4_4Superseded: true,
-    westV4_3Superseded: true,
-    westV4_2Superseded: true,
 
     westGateLanguageActive: true,
     westGateOwnsUpstreamTruth: false,
     upstreamCardinalSelfNamingRequired: false,
+
     hierarchyRegistryActive: true,
     hierarchyRegistryContract: HIERARCHY_REGISTRY_CONTRACT,
     hierarchyRegistryReceipt: HIERARCHY_REGISTRY_RECEIPT,
     hierarchyRegistryPublished: false,
-    hierarchyRegistryAdoptionMode: "WEST_GATE_DOWNSTREAM_ADOPTION",
+
     cardinalBishopTermOwnedByHierarchyMap: true,
-    highBishopTermRejected: true,
+    downstreamBishopTermActive: true,
     queenExcludedFromCardinalFunctionality: true,
     priestNotBishop: true,
-    pointerFingerFileConfirmed: POINTER_FINGER_FILE,
 
-    downstreamNorthBishopObserved: false,
-    downstreamSouthBishopObserved: false,
-    downstreamWestBishopObserved: false,
-    eastPriestObserved: false,
+    routeConductorObserved: false,
+    priestObserved: false,
     queenObserved: false,
-    queenHandshakeSurfaceObserved: false,
+    canvasObserved: false,
+    pointerSurfaceObserved: false,
+    pointerSurfaceContract: "",
+    pointerSurfaceAccepted: false,
+    pointerSurfaceHardBlock: false,
+
     hierarchySurfaceObservedCount: 0,
-    hierarchySurfaceRequiredCount: 5,
     hierarchySurfaceStatus: "HIERARCHY_REGISTRY_PUBLISHED_SURFACES_OPTIONAL",
 
-    northTimetableAlignmentActive: true,
     northTimetableObserved: false,
     northSourceMethod: "NONE",
     northActiveStageId: "",
@@ -471,7 +440,6 @@
     bishopChordReadyCount: 0,
     bishopChordObservedCount: 0,
     bishopChordRequiredCount: 4,
-    bishopChordRequiredLanes: ["north", "east", "south", "west"],
     bishopChordGap: "WAITING_BISHOP_CHORD",
     bishopChordSourceMethod: "NONE",
     bishopChordReleaseMode: "NONE",
@@ -480,15 +448,23 @@
     currentCanvasParentObserved: false,
     currentCanvasParentContractObserved: false,
     currentCanvasParentContract: "",
-    currentCanvasParentIsLocalStation: false,
-    canvasLocalStationContractAccepted: false,
+    currentCanvasParentReceipt: "",
+    currentCanvasParentIsCurrentCanvas: false,
+    canvasContractAccepted: false,
+    canvasV123Recognized: false,
+    canvasV122Recognized: false,
+    canvasV121Recognized: false,
+    canvasV12LineageAccepted: false,
+    canvasV11LineageAccepted: false,
     canvasBaselineV10_3Recognized: false,
     v10_3BaselineRecognizedOnly: false,
-    v11OrNewerRequiredForLocalStationPass: true,
     canvasReceiverApiReady: false,
-    canvasLocalStationSummaryObserved: false,
-    canvasLocalStationReceiveSurfaceReady: false,
-    canvasLocalStationSourceMethod: "NONE",
+    canvasReceiveSurfaceReady: false,
+    canvasSummaryObserved: false,
+    canvasVisibleProofReady: false,
+    canvasMounted: false,
+    canvasDrawComplete: false,
+    canvasSourceMethod: "NONE",
     selectedCanvasProofRank: 99,
     selectedCanvasProofUnsafe: false,
 
@@ -497,7 +473,7 @@
     preReleaseCarrierAdmissible: false,
     carrierHardBlock: false,
     carrierHeld: true,
-    carrierHoldReason: "WAITING_NORTH_TIMETABLE_C2_WEST_AUDIT",
+    carrierHoldReason: "WAITING_CANVAS_V12_3_PROOF",
     explicitUnsafeFields: [],
 
     westAuditObserved: true,
@@ -510,7 +486,6 @@
     westForwardAllowed: false,
     westCanvasReleaseApproved: false,
 
-    fourWayCanvasHandoffActive: true,
     canvasReleaseAuthorized: false,
     canvasReleasePacketReady: false,
     canvasReleaseApprovedByWest: false,
@@ -525,24 +500,25 @@
 
     lastInput: null,
     lastNorthEvidence: null,
+    lastHierarchyRegistry: null,
+    lastHierarchySurface: null,
     lastBishopChord: null,
     lastCanvasProof: null,
     lastCanvasCandidates: [],
-    lastHierarchyRegistry: null,
-    lastHierarchySurface: null,
+    lastPointerSurfaceProof: null,
     lastReceipt: null,
 
     ...NO_CLAIMS
   };
 
-  function root() {
+  function rootRef() {
     if (typeof window !== "undefined") return window;
     if (typeof globalThis !== "undefined") return globalThis;
     return {};
   }
 
   function documentRef() {
-    const w = root();
+    const w = rootRef();
     return w.document || null;
   }
 
@@ -566,15 +542,15 @@
     return Boolean(value) && Object.prototype.hasOwnProperty.call(value, key);
   }
 
-  function trimText(value) {
+  function text(value) {
     if (value === undefined || value === null) return "";
     return String(value).trim();
   }
 
   function firstNonEmpty(...values) {
     for (const value of values) {
-      const text = trimText(value);
-      if (text) return text;
+      const candidate = text(value);
+      if (candidate) return candidate;
     }
     return "";
   }
@@ -582,37 +558,33 @@
   function toBool(value) {
     if (value === true) return true;
     if (value === false) return false;
-    if (value === 1) return true;
-    if (value === 0) return false;
-    if (value === "1") return true;
-    if (value === "0") return false;
+    if (value === 1 || value === "1") return true;
+    if (value === 0 || value === "0") return false;
+
     if (typeof value === "string") {
-      const text = value.trim().toLowerCase();
-      if (text === "true" || text === "yes" || text === "pass" || text === "ready" || text === "accepted") return true;
-      if (text === "false" || text === "no" || text === "fail" || text === "held") return false;
+      const v = value.trim().toLowerCase();
+      if (v === "true" || v === "yes" || v === "pass" || v === "ready" || v === "accepted") return true;
+      if (v === "false" || v === "no" || v === "fail" || v === "held") return false;
     }
+
     return false;
   }
 
-  function isExplicitFalse(value) {
-    if (value === false) return true;
-    if (value === 0) return true;
-    if (value === "0") return true;
+  function explicitFalse(value) {
+    if (value === false || value === 0 || value === "0") return true;
     if (typeof value === "string") return value.trim().toLowerCase() === "false";
     return false;
   }
 
-  function isExplicitTrue(value) {
-    if (value === true) return true;
-    if (value === 1) return true;
-    if (value === "1") return true;
+  function explicitTrue(value) {
+    if (value === true || value === 1 || value === "1") return true;
     if (typeof value === "string") return value.trim().toLowerCase() === "true";
     return false;
   }
 
   function toNumber(value, fallback = 0) {
-    const n = Number(value);
-    return Number.isFinite(n) ? n : fallback;
+    const number = Number(value);
+    return Number.isFinite(number) ? number : fallback;
   }
 
   function clonePlain(value) {
@@ -631,7 +603,7 @@
 
   function readPath(path) {
     const parts = String(path || "").split(".");
-    let cursor = root();
+    let cursor = rootRef();
 
     for (const part of parts) {
       if (!cursor || cursor[part] === undefined || cursor[part] === null) return null;
@@ -655,7 +627,7 @@
 
   function q(selector) {
     const doc = documentRef();
-    if (!doc || !selector) return null;
+    if (!doc) return null;
     try {
       return doc.querySelector(selector);
     } catch (_error) {
@@ -665,20 +637,22 @@
 
   function readFirst(source, keys) {
     if (!isObject(source)) return undefined;
+
     for (const key of keys) {
       if (own(source, key) && source[key] !== undefined && source[key] !== null && String(source[key]).trim() !== "") {
         return source[key];
       }
     }
+
     return undefined;
   }
 
-  function readBoolField(source, keys) {
+  function readBool(source, keys) {
     const value = readFirst(source, keys);
     return value === undefined ? false : toBool(value);
   }
 
-  function readNumberField(source, keys, fallback = 0) {
+  function readNumber(source, keys, fallback = 0) {
     const value = readFirst(source, keys);
     return value === undefined ? fallback : toNumber(value, fallback);
   }
@@ -690,57 +664,6 @@
       return fallback;
     }
     return fallback;
-  }
-
-  function methodReceipt(authority, methodNames, arg) {
-    if (!authority || !isObject(authority)) return null;
-
-    for (const methodName of methodNames) {
-      if (!isFunction(authority[methodName])) continue;
-
-      const result = safeCall(() => arg === undefined ? authority[methodName]() : authority[methodName](arg), null);
-      if (isObject(result)) return { method: methodName, receipt: result };
-    }
-
-    return null;
-  }
-
-  function readAuthorityReceipt(authority) {
-    if (!authority || !isObject(authority)) return null;
-
-    const called = methodReceipt(authority, [
-      "getReceiptLight",
-      "getReceipt",
-      "getTransmissionReceipt",
-      "getNorthCommandReceipt",
-      "getActiveGateState",
-      "getCentralStationReceiptLight",
-      "getCanvasStationSummary",
-      "getCanvasStationReceiptLight",
-      "getCanvasStationReceipt",
-      "getExpressionHubSummary",
-      "getExpressionHubReceipt",
-      "getVisiblePlanetReceipt",
-      "getVisibleGlobeReceipt",
-      "getControlReceipt",
-      "getControlsReceipt",
-      "getStatus",
-      "getReport",
-      "getState"
-    ]);
-
-    if (called) return { method: called.method, receipt: called.receipt };
-
-    if (isObject(authority.receipt)) return { method: "receipt", receipt: authority.receipt };
-    if (isObject(authority.receiptPacket)) return { method: "receiptPacket", receipt: authority.receiptPacket };
-    if (isObject(authority.canvasStationSummary)) return { method: "canvasStationSummary", receipt: authority.canvasStationSummary };
-    if (isObject(authority.stationSummary)) return { method: "stationSummary", receipt: authority.stationSummary };
-
-    if (authority.contract || authority.CONTRACT || authority.receipt || authority.RECEIPT || authority.version) {
-      return { method: "authorityObject", receipt: authority };
-    }
-
-    return null;
   }
 
   function firstAuthority(names) {
@@ -768,73 +691,145 @@
     }
   }
 
-  function unsafeFieldsFromProof(proof) {
-    const p = isObject(proof) ? proof : {};
-    const fields = [];
+  function readAuthorityReceipt(authority) {
+    if (!authority || !isObject(authority)) return { method: "NONE", receipt: null };
 
-    TRUE_ONLY_UNSAFE_KEYS.forEach((key) => {
-      if (own(p, key) && isExplicitTrue(p[key])) fields.push(key);
-    });
+    const methods = [
+      "getReceiptLight",
+      "getReceipt",
+      "getTransmissionReceipt",
+      "getNorthCommandReceipt",
+      "getActiveGateState",
+      "getCentralStationReceiptLight",
+      "getCanvasStationSummary",
+      "getCanvasStationReceiptLight",
+      "getCanvasStationReceipt",
+      "getExpressionHubSummary",
+      "getExpressionHubReceipt",
+      "getVisiblePlanetReceipt",
+      "getVisibleGlobeReceipt",
+      "getBishopPacket",
+      "getPointerBishopPacket",
+      "getPointerFingerPacket",
+      "getSurfacePacket",
+      "getControlReceipt",
+      "getControlsReceipt",
+      "getStatus",
+      "getReport",
+      "getState"
+    ];
 
-    FALSE_IS_UNSAFE_KEYS.forEach((key) => {
-      if (own(p, key) && isExplicitFalse(p[key])) fields.push(key);
-    });
+    for (const method of methods) {
+      if (!isFunction(authority[method])) continue;
 
-    NON_EMPTY_ERROR_KEYS.forEach((key) => {
-      if (own(p, key) && trimText(p[key])) fields.push(key);
-    });
+      const result = safeCall(() => method === "getReceiptLight" || method === "getCanvasStationReceiptLight"
+        ? authority[method](false)
+        : authority[method](), null);
 
-    const v2Observed =
-      (own(p, "canvasParentV2Observed") && isExplicitTrue(p.canvasParentV2Observed)) ||
-      (own(p, "hearthCanvasParentV2Observed") && isExplicitTrue(p.hearthCanvasParentV2Observed));
+      if (isObject(result)) return { method, receipt: result };
+    }
 
-    const staleFalsePositiveBlocked =
-      readBoolField(p, [
-        "hearthCanvasStaleParentV2FalsePositiveBlocked",
-        "canvasStaleParentV2FalsePositiveBlocked",
-        "staleCanvasV2FalsePositiveBlocked"
-      ]);
+    if (isObject(authority.receipt)) return { method: "receipt", receipt: authority.receipt };
+    if (isObject(authority.receiptPacket)) return { method: "receiptPacket", receipt: authority.receiptPacket };
+    if (isObject(authority.canvasStationSummary)) return { method: "canvasStationSummary", receipt: authority.canvasStationSummary };
+    if (authority.contract || authority.CONTRACT || authority.receipt || authority.RECEIPT || authority.version) {
+      return { method: "authorityObject", receipt: authority };
+    }
 
-    if (v2Observed && !staleFalsePositiveBlocked) fields.push("canvasParentV2Observed");
-
-    return fields;
+    return { method: "NONE", receipt: null };
   }
 
   function contractFromProof(proof) {
     const p = isObject(proof) ? proof : {};
-
     return firstNonEmpty(
-      p.canvasLocalStationContract,
-      p.currentCanvasStationContract,
       p.currentCanvasParentContract,
-      p.canvasStationContract,
+      p.canvasLocalStationContract,
+      p.canvasContract,
+      p.hearthCanvasContract,
       p.controlContract,
       p.controlsContract,
       p.bishopContract,
+      p.pointerBishopContract,
+      p.surfaceContract,
+      p.fingerContract,
       p.priestContract,
       p.queenContract,
       p.contract,
-      p.CONTRACT,
-      p.hearthCanvasContract,
-      p.hearthCanvasLocalStationContract,
-      p.hearthCanvasCurrentCanvasStationContract,
-      p.hearthCanvasCurrentCanvasParentContract
+      p.CONTRACT
     );
   }
 
   function receiptFromProof(proof) {
     const p = isObject(proof) ? proof : {};
     return firstNonEmpty(
-      p.bishopReceipt,
-      p.priestReceipt,
-      p.queenReceipt,
-      p.canvasLocalStationReceipt,
-      p.currentCanvasStationReceipt,
       p.currentCanvasParentReceipt,
-      p.canvasStationReceipt,
+      p.canvasLocalStationReceipt,
+      p.canvasReceipt,
+      p.hearthCanvasReceipt,
+      p.bishopReceipt,
+      p.pointerBishopReceipt,
+      p.surfaceReceipt,
+      p.fingerReceipt,
+      p.queenReceipt,
       p.receipt,
-      p.RECEIPT,
-      p.hearthCanvasReceipt
+      p.RECEIPT
+    );
+  }
+
+  function unsafeFieldsFromProof(proof) {
+    const p = isObject(proof) ? proof : {};
+    const fields = [];
+
+    TRUE_ONLY_UNSAFE_KEYS.forEach((key) => {
+      if (own(p, key) && explicitTrue(p[key])) fields.push(key);
+    });
+
+    FALSE_IS_UNSAFE_KEYS.forEach((key) => {
+      if (own(p, key) && explicitFalse(p[key])) fields.push(key);
+    });
+
+    NON_EMPTY_ERROR_KEYS.forEach((key) => {
+      if (own(p, key) && text(p[key])) fields.push(key);
+    });
+
+    const v2Observed =
+      (own(p, "canvasParentV2Observed") && explicitTrue(p.canvasParentV2Observed)) ||
+      (own(p, "hearthCanvasParentV2Observed") && explicitTrue(p.hearthCanvasParentV2Observed));
+
+    const staleFalsePositiveBlocked = readBool(p, [
+      "hearthCanvasStaleParentV2FalsePositiveBlocked",
+      "canvasStaleParentV2FalsePositiveBlocked",
+      "staleCanvasV2FalsePositiveBlocked"
+    ]);
+
+    if (v2Observed && !staleFalsePositiveBlocked) fields.push("canvasParentV2Observed");
+
+    return fields;
+  }
+
+  function hasReceiveSurface(authority) {
+    if (!authority || !isObject(authority)) return false;
+
+    return Boolean(
+      isFunction(authority.consumeRouteConductorReleasePacket) ||
+      isFunction(authority.receiveRouteConductorReleasePacket) ||
+      isFunction(authority.consumeReleasePacket) ||
+      isFunction(authority.receiveReleasePacket) ||
+      isFunction(authority.receiveCanvasReleasePacket) ||
+      isFunction(authority.receiveCanvasParentPacket) ||
+      isFunction(authority.acceptReleasePacket) ||
+      isFunction(authority.receiveBishopPacket) ||
+      isFunction(authority.receiveCanvasBishopPacket) ||
+      isFunction(authority.registerCanvasBishop) ||
+      isFunction(authority.registerExpressionBishop) ||
+      isFunction(authority.receiveFingerPacket) ||
+      isFunction(authority.receiveCanvasFingerPacket) ||
+      isFunction(authority.registerCanvasFinger) ||
+      isFunction(authority.registerExpressionFinger) ||
+      isFunction(authority.boot) ||
+      isFunction(authority.init) ||
+      isFunction(authority.start) ||
+      isFunction(authority.mount)
     );
   }
 
@@ -853,7 +848,9 @@
       westGateOwnsUpstreamTruth: false,
       upstreamCardinalSelfNamingRequired: false,
       cardinalBishopTermOwnedByHierarchyMap: true,
-      highBishopTermRejected: true,
+      downstreamBishopTermActive: true,
+      queenExcludedFromCardinalFunctionality: true,
+      priestNotBishop: true,
 
       cardinalBishops: {
         north: {
@@ -881,38 +878,28 @@
           address: "WEST",
           rank: "CARDINAL_BISHOP",
           file: WEST_FILE,
-          selfLabelRequired: false,
           westGate: true
         }
       },
 
-      queen: {
-        rank: "QUEEN",
-        file: QUEEN_FILE,
-        address: "NON_CARDINAL_CONTROL_RECEIVER",
-        excludedFromCardinalFunctionality: true,
-        receivesHandshake: true,
-        ownsViewInputAfterAdmission: true
-      },
-
       downstreamBishops: {
-        north: {
+        routeNorth: {
           address: "NORTH",
           rank: "DOWNSTREAM_BISHOP",
           file: ROUTE_CONDUCTOR_FILE,
-          role: "ROUTE_CONDUCTOR_HANDSHAKE_AUTHORITY"
+          role: "ROUTE_CONDUCTOR_HANDSHAKE_AND_CANVAS_RELEASE_FUNNEL"
         },
-        south: {
+        canvasSouth: {
           address: "SOUTH",
           rank: "DOWNSTREAM_BISHOP",
           file: CANVAS_FILE,
           role: "CANVAS_RECEIVER_OUTPUT_CARRIER"
         },
-        west: {
-          address: "WEST",
-          rank: "DOWNSTREAM_BISHOP",
-          file: POINTER_FINGER_FILE,
-          role: "SURFACE_POINTER_FINGER"
+        pointerWest: {
+          address: "WEST_POINTER",
+          rank: "NON_CARDINAL_POINTER_BISHOP",
+          file: POINTER_SURFACE_FILE,
+          role: "SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_EXPRESSION_SOCKET"
         }
       },
 
@@ -926,12 +913,22 @@
         }
       },
 
+      queen: {
+        rank: "QUEEN",
+        file: QUEEN_FILE,
+        address: "NON_CARDINAL_CONTROL_RECEIVER",
+        excludedFromCardinalFunctionality: true,
+        receivesHandshake: true,
+        ownsViewInputAfterAdmission: true
+      },
+
       rules: {
         westMayPublishDownstreamRegistry: true,
         downstreamMayAdoptWestGateRegistry: true,
         westDoesNotRenameUpstreamInternals: true,
         westDoesNotOwnQueenBehavior: true,
-        westDoesNotInspectFingerChildren: true,
+        westDoesNotInspectSubjectFiles: true,
+        westDoesNotInspectFingerInternals: true,
         bishopsOwnSubjectFiles: true,
         queenOutsideCardinalFunctionality: true,
         priestNotBishop: true,
@@ -942,64 +939,9 @@
     };
   }
 
-  function readHierarchySurface() {
-    const routeConductor = firstAuthority(ROUTE_CONDUCTOR_ALIASES);
-    const queen = firstAuthority(QUEEN_ALIASES);
-    const canvas = firstAuthority(CANVAS_ALIASES);
-    const pointer = firstAuthority(POINTER_SURFACE_ALIASES);
-    const priest = firstAuthority(PRIEST_ALIASES);
-
-    const routeConductorObserved = Boolean(routeConductor.authority || scriptPresentForPath(ROUTE_CONDUCTOR_FILE));
-    const queenObserved = Boolean(queen.authority || scriptPresentForPath(QUEEN_FILE));
-    const canvasObserved = Boolean(canvas.authority || scriptPresentForPath(CANVAS_FILE) || q("#hearthCanvasMount") || q("[data-hearth-canvas-mount]"));
-    const pointerObserved = Boolean(pointer.authority || scriptPresentForPath(POINTER_FINGER_FILE));
-    const priestObserved = Boolean(priest.authority || scriptPresentForPath(PRIEST_FILE) || scriptPresentForPath("index.js"));
-
-    const count = [
-      routeConductorObserved,
-      queenObserved,
-      canvasObserved,
-      pointerObserved,
-      priestObserved
-    ].filter(Boolean).length;
-
-    state.downstreamNorthBishopObserved = routeConductorObserved;
-    state.downstreamSouthBishopObserved = canvasObserved;
-    state.downstreamWestBishopObserved = pointerObserved;
-    state.eastPriestObserved = priestObserved;
-    state.queenObserved = queenObserved;
-    state.queenHandshakeSurfaceObserved = queenObserved;
-    state.hierarchySurfaceObservedCount = count;
-    state.hierarchySurfaceStatus = count >= 3
-      ? "HIERARCHY_SURFACES_PARTIALLY_OBSERVED_DOWNSTREAM_ADOPTION_READY"
-      : "HIERARCHY_REGISTRY_PUBLISHED_SURFACES_OPTIONAL";
-
-    const surface = {
-      contract: HIERARCHY_REGISTRY_CONTRACT,
-      receipt: HIERARCHY_REGISTRY_RECEIPT,
-      sourceFile: FILE,
-      downstreamNorthBishopObserved: routeConductorObserved,
-      downstreamNorthBishopSource: routeConductor.name,
-      downstreamSouthBishopObserved: canvasObserved,
-      downstreamSouthBishopSource: canvas.name,
-      downstreamWestBishopObserved: pointerObserved,
-      downstreamWestBishopSource: pointer.name,
-      eastPriestObserved: priestObserved,
-      eastPriestSource: priest.name,
-      queenObserved,
-      queenSource: queen.name,
-      hierarchySurfaceObservedCount: count,
-      hierarchySurfaceRequiredCount: 5,
-      hierarchySurfaceStatus: state.hierarchySurfaceStatus
-    };
-
-    state.lastHierarchySurface = clonePlain(surface);
-    return surface;
-  }
-
   function publishHierarchyRegistry() {
-    const w = root();
-    const h = ensureObject(w, "HEARTH");
+    const w = rootRef();
+    const hearth = ensureObject(w, "HEARTH");
     const lab = ensureObject(w, "DEXTER_LAB");
     const registry = composeHierarchyRegistry();
 
@@ -1010,12 +952,12 @@
     w.HEARTH_HIERARCHY_REGISTRY = clonePlain(registry);
     w.LAB_RUNTIME_TABLE_WEST_HIERARCHY_REGISTRY = clonePlain(registry);
 
-    h.westGateDownstreamHierarchyRegistry = clonePlain(registry);
-    h.hierarchyRegistry = clonePlain(registry);
-    h.cardinalBishopHierarchy = clonePlain(registry.cardinalBishops);
-    h.downstreamBishopHierarchy = clonePlain(registry.downstreamBishops);
-    h.queenHierarchy = clonePlain(registry.queen);
-    h.priestHierarchy = clonePlain(registry.priest);
+    hearth.westGateDownstreamHierarchyRegistry = clonePlain(registry);
+    hearth.hierarchyRegistry = clonePlain(registry);
+    hearth.cardinalBishopHierarchy = clonePlain(registry.cardinalBishops);
+    hearth.downstreamBishopHierarchy = clonePlain(registry.downstreamBishops);
+    hearth.queenHierarchy = clonePlain(registry.queen);
+    hearth.priestHierarchy = clonePlain(registry.priest);
 
     lab.hearthWestGateDownstreamHierarchyRegistry = clonePlain(registry);
     lab.hearthHierarchyRegistry = clonePlain(registry);
@@ -1023,26 +965,73 @@
     return registry;
   }
 
+  function readHierarchySurface() {
+    const routeConductor = firstAuthority(ROUTE_CONDUCTOR_ALIASES);
+    const priest = firstAuthority(PRIEST_ALIASES);
+    const queen = firstAuthority(QUEEN_ALIASES);
+    const canvas = firstAuthority(CANVAS_ALIASES);
+    const pointer = firstAuthority(POINTER_SURFACE_ALIASES);
+
+    const routeConductorObserved = Boolean(routeConductor.authority || scriptPresentForPath(ROUTE_CONDUCTOR_FILE));
+    const priestObserved = Boolean(priest.authority || scriptPresentForPath(PRIEST_FILE) || scriptPresentForPath("index.js"));
+    const queenObserved = Boolean(queen.authority || scriptPresentForPath(QUEEN_FILE));
+    const canvasObserved = Boolean(canvas.authority || scriptPresentForPath(CANVAS_FILE) || q("#hearthCanvasMount") || q("[data-hearth-canvas-mount]"));
+    const pointerObserved = Boolean(pointer.authority || scriptPresentForPath(POINTER_SURFACE_FILE));
+
+    const count = [
+      routeConductorObserved,
+      priestObserved,
+      queenObserved,
+      canvasObserved,
+      pointerObserved
+    ].filter(Boolean).length;
+
+    state.routeConductorObserved = routeConductorObserved;
+    state.priestObserved = priestObserved;
+    state.queenObserved = queenObserved;
+    state.canvasObserved = canvasObserved;
+    state.pointerSurfaceObserved = pointerObserved;
+    state.hierarchySurfaceObservedCount = count;
+    state.hierarchySurfaceStatus = count >= 3
+      ? "HIERARCHY_SURFACES_PARTIALLY_OBSERVED_DOWNSTREAM_ADOPTION_READY"
+      : "HIERARCHY_REGISTRY_PUBLISHED_SURFACES_OPTIONAL";
+
+    const surface = {
+      contract: HIERARCHY_REGISTRY_CONTRACT,
+      receipt: HIERARCHY_REGISTRY_RECEIPT,
+      sourceFile: FILE,
+      routeConductorObserved,
+      routeConductorSource: routeConductor.name,
+      eastPriestObserved: priestObserved,
+      eastPriestSource: priest.name,
+      queenObserved,
+      queenSource: queen.name,
+      canvasReceiverObserved: canvasObserved,
+      canvasReceiverSource: canvas.name,
+      pointerSurfaceBishopObserved: pointerObserved,
+      pointerSurfaceBishopSource: pointer.name,
+      hierarchySurfaceObservedCount: count,
+      hierarchySurfaceRequiredCount: 5,
+      hierarchySurfaceStatus: state.hierarchySurfaceStatus
+    };
+
+    state.lastHierarchySurface = clonePlain(surface);
+    return surface;
+  }
+
   function readNorthAuthorityReceipt() {
     const found = firstAuthority(NORTH_ALIASES);
 
     if (found.authority) {
       const read = readAuthorityReceipt(found.authority);
-      if (read && isObject(read.receipt)) {
-        return {
-          sourceMethod: `${found.name}.${read.method}`,
-          proof: read.receipt
-        };
-      }
-
       return {
-        sourceMethod: found.name,
-        proof: found.authority
+        sourceMethod: `${found.name}.${read.method}`,
+        proof: read.receipt || found.authority
       };
     }
 
-    const w = root();
-    const directReceipts = [
+    const w = rootRef();
+    const direct = [
       ["LAB_RUNTIME_TABLE_NORTH_TRANSMISSION_RECEIPT", w.LAB_RUNTIME_TABLE_NORTH_TRANSMISSION_RECEIPT],
       ["HEARTH_NORTH_COMMAND_RUNTIME_TABLE_RECEIPT", w.HEARTH_NORTH_COMMAND_RUNTIME_TABLE_RECEIPT],
       ["HEARTH_NORTH_CYCLICAL_CHECKPOINT_RECEIPT", w.HEARTH_NORTH_CYCLICAL_CHECKPOINT_RECEIPT],
@@ -1050,78 +1039,29 @@
       ["HEARTH_NORTH_CENTRAL_STATION_RECEIPT", w.HEARTH_NORTH_CENTRAL_STATION_RECEIPT]
     ];
 
-    for (const [name, proof] of directReceipts) {
-      if (isObject(proof)) {
-        return {
-          sourceMethod: name,
-          proof
-        };
-      }
+    for (const [name, proof] of direct) {
+      if (isObject(proof)) return { sourceMethod: name, proof };
     }
 
-    return {
-      sourceMethod: "NONE",
-      proof: null
-    };
+    return { sourceMethod: "NONE", proof: null };
   }
 
   function normalizeNorthTimetable(source, sourceMethod) {
-    const s = isObject(source) ? source : {};
     const ds = dataset();
+    const s = isObject(source) ? source : {};
     const merged = { ...ds, ...s };
 
     const normalized = {
       northTimetableObserved: Boolean(source),
       northSourceMethod: sourceMethod || "NONE",
-      northActiveStageId: trimText(readFirst(merged, [
-        "activeStageId",
-        "northActiveStageId",
-        "hearthNorthActiveStageId",
-        "stageId"
-      ])),
-      northActiveGearId: trimText(readFirst(merged, [
-        "activeGear",
-        "activeGearId",
-        "northActiveGear",
-        "northActiveGearId",
-        "hearthNorthActiveGear",
-        "hearthNorthActiveGearId",
-        "gear",
-        "gearId"
-      ])),
-      northActiveCycleNumber: readNumberField(merged, [
-        "activeCycleNumber",
-        "cycleNumber",
-        "northActiveCycleNumber",
-        "hearthNorthActiveCycleNumber"
-      ], 0),
-      northActiveCycleRoute: trimText(readFirst(merged, [
-        "activeCycleRoute",
-        "cycleRoute",
-        "northActiveCycleRoute",
-        "hearthNorthActiveCycleRoute"
-      ])),
-      northActiveCardinal: trimText(readFirst(merged, [
-        "activeCardinal",
-        "northActiveCardinal",
-        "hearthNorthActiveCardinal"
-      ])),
-      northActiveFileGate: trimText(readFirst(merged, [
-        "activeFileGate",
-        "fileGate",
-        "northActiveFileGate",
-        "hearthNorthActiveFileGate"
-      ])),
-      northActiveFibonacci: trimText(readFirst(merged, [
-        "activeFibonacci",
-        "northActiveFibonacci",
-        "hearthNorthActiveFibonacci"
-      ])),
-      northActiveNewsGate: trimText(readFirst(merged, [
-        "activeNewsGate",
-        "northActiveNewsGate",
-        "hearthNorthActiveNewsGate"
-      ]))
+      northActiveStageId: text(readFirst(merged, ["activeStageId", "northActiveStageId", "hearthNorthActiveStageId", "stageId"])),
+      northActiveGearId: text(readFirst(merged, ["activeGear", "activeGearId", "northActiveGear", "northActiveGearId", "hearthNorthActiveGear", "hearthNorthActiveGearId"])),
+      northActiveCycleNumber: readNumber(merged, ["activeCycleNumber", "cycleNumber", "northActiveCycleNumber", "hearthNorthActiveCycleNumber"], 0),
+      northActiveCycleRoute: text(readFirst(merged, ["activeCycleRoute", "cycleRoute", "northActiveCycleRoute", "hearthNorthActiveCycleRoute"])),
+      northActiveCardinal: text(readFirst(merged, ["activeCardinal", "northActiveCardinal", "hearthNorthActiveCardinal"])),
+      northActiveFileGate: text(readFirst(merged, ["activeFileGate", "fileGate", "northActiveFileGate", "hearthNorthActiveFileGate"])),
+      northActiveFibonacci: text(readFirst(merged, ["activeFibonacci", "northActiveFibonacci", "hearthNorthActiveFibonacci"])),
+      northActiveNewsGate: text(readFirst(merged, ["activeNewsGate", "northActiveNewsGate", "hearthNorthActiveNewsGate"]))
     };
 
     normalized.northC2WestAuditAligned = Boolean(
@@ -1166,7 +1106,7 @@
     const ds = dataset();
     const merged = { ...ds, ...packet };
 
-    let cycleNumber = readNumberField(merged, [
+    let cycleNumber = readNumber(merged, [
       "cycleNumber",
       "activeCycleNumber",
       "hearthCycleNumber",
@@ -1175,7 +1115,7 @@
       "hearthWestCycleNumber"
     ], 0);
 
-    let cycleRoute = trimText(readFirst(merged, [
+    let cycleRoute = text(readFirst(merged, [
       "cycleRoute",
       "activeCycleRoute",
       "hearthCycleRoute",
@@ -1184,22 +1124,30 @@
       "hearthWestCycleRoute"
     ]));
 
-    const activeNewsCycle = trimText(readFirst(merged, [
+    const activeNewsCycle = text(readFirst(merged, [
       "activeNewsCycle",
       "hearthRouteConductorActiveNewsCycle"
     ]));
 
-    const event = trimText(readFirst(merged, ["event", "checkpointEvent", "packetType"]));
+    const event = text(readFirst(merged, ["event", "checkpointEvent", "packetType", "type"]));
 
-    if (!cycleNumber && (activeNewsCycle === ACTIVE_CYCLE_ROUTE || activeNewsCycle === "CYCLE_2" || event.includes("CYCLE_2"))) {
+    const routeConductorAdmissibilityEvent = Boolean(
+      event === "NEWS_CYCLE_2_CANVAS_RELEASE_ADMISSIBILITY" ||
+      event === "ROUTE_CONDUCTOR_NEWS_FIBONACCI_CANVAS_RELEASE_PACKET" ||
+      event.includes("CANVAS_RELEASE_ADMISSIBILITY") ||
+      packet.visibleGlobeProofIngestionRequested === true ||
+      packet.bishopQueenCanvasRecognitionFunnelActive === true
+    );
+
+    if (!cycleNumber && (activeNewsCycle === ACTIVE_CYCLE_ROUTE || activeNewsCycle === "CYCLE_2" || event.includes("CYCLE_2") || routeConductorAdmissibilityEvent)) {
       cycleNumber = 2;
     }
 
-    if (!cycleRoute && (activeNewsCycle === ACTIVE_CYCLE_ROUTE || activeNewsCycle === "CYCLE_2" || event.includes("CYCLE_2"))) {
+    if (!cycleRoute && (activeNewsCycle === ACTIVE_CYCLE_ROUTE || activeNewsCycle === "CYCLE_2" || event.includes("CYCLE_2") || routeConductorAdmissibilityEvent)) {
       cycleRoute = ACTIVE_CYCLE_ROUTE;
     }
 
-    const receivedFrom = trimText(readFirst(merged, [
+    const receivedFrom = text(readFirst(merged, [
       "receivedFrom",
       "sourceCardinal",
       "hearthReceivedFrom",
@@ -1208,7 +1156,7 @@
       "hearthWestReceivedFrom"
     ]));
 
-    const handoffTo = trimText(readFirst(merged, [
+    const handoffTo = text(readFirst(merged, [
       "handoffTo",
       "targetCardinal",
       "activeCycleHandoffTarget",
@@ -1218,18 +1166,18 @@
       "hearthWestHandoffTo"
     ]));
 
-    const sourceCardinal = trimText(readFirst(merged, [
+    const sourceCardinal = text(readFirst(merged, [
       "sourceCardinal",
       "primaryCardinal",
       "activeCycleInputCardinal"
     ]));
 
-    const targetCardinal = trimText(readFirst(merged, [
+    const targetCardinal = text(readFirst(merged, [
       "targetCardinal",
       "activeCycleHandoffTarget"
     ]));
 
-    const activeCycleInputCardinal = trimText(readFirst(merged, [
+    const activeCycleInputCardinal = text(readFirst(merged, [
       "activeCycleInputCardinal",
       "sourceCardinal",
       "hearthActiveCycleInputCardinal",
@@ -1237,34 +1185,39 @@
       "hearthSouthActiveCycleInputCardinal"
     ]));
 
-    const activeCycleHandoffTarget = trimText(readFirst(merged, [
+    const activeCycleHandoffTarget = text(readFirst(merged, [
       "activeCycleHandoffTarget",
       "targetCardinal",
       "hearthActiveCycleHandoffTarget",
       "hearthRouteConductorActiveCycleHandoffTarget"
     ]));
 
-    const indexPairReady = readBoolField(merged, [
+    const indexPairReady = readBool(merged, [
       "indexPairReady",
       "indexGateReady",
+      "indexPriestGateReady",
       "hearthIndexPairReady",
       "hearthRouteConductorIndexPairReady",
-      "hearthSouthIndexPairReady"
+      "hearthSouthIndexPairReady",
+      "hearthSouthIndexPriestGateReady"
     ]);
 
-    const carrierHostAdmissibilityReady = readBoolField(merged, [
+    const carrierHostAdmissibilityReady = readBool(merged, [
       "carrierHostAdmissibilityReady",
       "hearthCarrierHostAdmissibilityReady",
       "hearthRouteConductorCarrierHostAdmissibilityReady",
       "hearthSouthCarrierHostAdmissibilityReady"
     ]);
 
-    const f8SelfDutySatisfied = readBoolField(merged, [
+    const f8SelfDutySatisfied = readBool(merged, [
       "f8SelfDutySatisfied",
       "routeF8GateReady",
+      "routeNorthBishopGateReady",
       "hearthF8SelfDutySatisfied",
       "hearthRouteConductorF8SelfDutySatisfied",
-      "hearthSouthF8SelfDutySatisfied"
+      "hearthSouthF8SelfDutySatisfied",
+      "hearthSouthRouteF8GateReady",
+      "hearthSouthRouteNorthBishopGateReady"
     ]);
 
     const explicitMarkers = [];
@@ -1289,12 +1242,6 @@
     const sourceIsSouth = receivedFrom === "SOUTH" || activeCycleInputCardinal === "SOUTH" || sourceCardinal === "SOUTH";
     const targetIsWest = handoffTo === "WEST" || activeCycleHandoffTarget === "WEST" || targetCardinal === "WEST";
 
-    const routeConductorAdmissibilityEvent = Boolean(
-      event === "NEWS_CYCLE_2_CANVAS_RELEASE_ADMISSIBILITY" ||
-      event === "ROUTE_CONDUCTOR_NEWS_FIBONACCI_CANVAS_RELEASE_PACKET" ||
-      event.includes("CANVAS_RELEASE_ADMISSIBILITY")
-    );
-
     const observed = Boolean((routeAligned && sourceIsSouth && targetIsWest) || routeConductorAdmissibilityEvent);
     const admissible = Boolean(
       observed &&
@@ -1312,9 +1259,9 @@
     state.targetCardinal = targetCardinal;
     state.activeCycleInputCardinal = activeCycleInputCardinal;
     state.activeCycleHandoffTarget = activeCycleHandoffTarget;
-    state.indexPairReady = indexPairReady;
-    state.carrierHostAdmissibilityReady = carrierHostAdmissibilityReady;
-    state.f8SelfDutySatisfied = f8SelfDutySatisfied;
+    state.indexPairReady = indexPairReady || routeConductorAdmissibilityEvent;
+    state.carrierHostAdmissibilityReady = carrierHostAdmissibilityReady || routeConductorAdmissibilityEvent;
+    state.f8SelfDutySatisfied = f8SelfDutySatisfied || routeConductorAdmissibilityEvent;
     state.southOutputReady = outputReady || routeConductorAdmissibilityEvent;
     state.explicitSouthOutputMarkerObserved = outputReady;
     state.explicitSouthOutputMarkers = explicitMarkers.slice();
@@ -1336,105 +1283,58 @@
       targetCardinal,
       activeCycleInputCardinal,
       activeCycleHandoffTarget,
-      indexPairReady,
-      carrierHostAdmissibilityReady,
-      f8SelfDutySatisfied,
+      indexPairReady: state.indexPairReady,
+      carrierHostAdmissibilityReady: state.carrierHostAdmissibilityReady,
+      f8SelfDutySatisfied: state.f8SelfDutySatisfied,
       explicitMarkers,
       routeConductorAdmissibilityEvent,
       observed,
       admissible
     });
 
-    return {
-      cycleNumber,
-      cycleRoute,
-      receivedFrom,
-      handoffTo,
-      sourceCardinal,
-      targetCardinal,
-      activeCycleInputCardinal,
-      activeCycleHandoffTarget,
-      indexPairReady,
-      carrierHostAdmissibilityReady,
-      f8SelfDutySatisfied,
-      southOutputReady: state.southOutputReady,
-      explicitSouthOutputMarkers: explicitMarkers,
-      routeConductorAdmissibilityEvent,
-      cycleTwoSouthOutputObserved: observed,
-      cycleTwoSouthOutputAdmissible: admissible
-    };
+    return clonePlain(state.lastInput);
   }
 
   function inputCallsWestForCycleTwoAudit(input) {
     const normalized = normalizeCycleInput(input);
-    return Boolean(normalized.cycleTwoSouthOutputObserved || normalized.routeConductorAdmissibilityEvent);
+    return Boolean(normalized.observed || normalized.routeConductorAdmissibilityEvent);
   }
 
   function isNorthCallingWestForCycleTwoCanvasAudit(input) {
     const north = readNorthTimetableLight();
     const inputAligned = inputCallsWestForCycleTwoAudit(input);
+
     state.northC2WestAuditAligned = Boolean(north.northC2WestAuditAligned || inputAligned);
     return state.northC2WestAuditAligned;
   }
 
-  function hasReceiveSurface(api) {
-    if (!api || !isObject(api)) return false;
-
-    return Boolean(
-      isFunction(api.consumeRouteConductorReleasePacket) ||
-      isFunction(api.receiveRouteConductorReleasePacket) ||
-      isFunction(api.receiveReleasePacket) ||
-      isFunction(api.receiveCanvasReleasePacket) ||
-      isFunction(api.receiveCanvasStationSummary) ||
-      isFunction(api.consumeBishopChordReleasePacket) ||
-      isFunction(api.receiveBishopChordReleasePacket) ||
-      isFunction(api.receivePlanetaryControlPacket) ||
-      isFunction(api.consumePlanetaryControlPacket) ||
-      isFunction(api.receiveControlsPacket) ||
-      isFunction(api.consumeControlsPacket) ||
-      isFunction(api.boot) ||
-      isFunction(api.init) ||
-      isFunction(api.start) ||
-      isFunction(api.mount)
-    );
-  }
-
-  function normalizeBishopLane(laneKey) {
-    const aliases = BISHOP_ALIASES[laneKey] || [];
+  function normalizeAuthorityLane(lane, aliases, file) {
     const found = firstAuthority(aliases);
-    const read = found.authority ? readAuthorityReceipt(found.authority) : null;
-    const proof = read && isObject(read.receipt) ? read.receipt : {};
+    const read = found.authority ? readAuthorityReceipt(found.authority) : { method: "NONE", receipt: null };
+    const proof = read.receipt || {};
     const contract = contractFromProof(proof) || firstNonEmpty(found.authority && found.authority.contract, found.authority && found.authority.CONTRACT);
     const receipt = receiptFromProof(proof) || firstNonEmpty(found.authority && found.authority.receipt, found.authority && found.authority.RECEIPT);
     const unsafeFields = unsafeFieldsFromProof(proof);
 
     const hardBlock = Boolean(
       unsafeFields.length ||
-      readBoolField(proof, ["hardBlock", "blocked", "bishopHardBlock", "f13HardFail", "visibleContentHardFail"])
+      readBool(proof, ["hardBlock", "blocked", "bishopHardBlock", "f13HardFail", "visibleContentHardFail"])
     );
 
-    const explicitReady = Boolean(
-      readBoolField(proof, [
-        "bishopReady",
-        "bishopLaneReady",
-        "ready",
-        "accepted",
-        "apiReady",
-        "authorityReady",
-        "canvasEastApiReady",
-        "canvasWestApiReady",
-        "canvasSouthApiReady",
-        "canvasLocalStationApiReady",
-        "visibleProofReady",
-        "visiblePlanetProofReady",
-        "f13CanvasEvidenceComplete",
-        "canvasF13EvidenceComplete",
-        "westAuditAccepted",
-        "westCanvasReleaseApproved",
-        "northC2WestAuditAligned",
-        "centralTrainStationActive"
-      ])
-    );
+    const explicitReady = readBool(proof, [
+      "bishopReady",
+      "bishopLaneReady",
+      "ready",
+      "accepted",
+      "apiReady",
+      "authorityReady",
+      "westAuditAccepted",
+      "westCanvasReleaseApproved",
+      "northC2WestAuditAligned",
+      "centralTrainStationActive",
+      "visiblePlanetProofReady",
+      "f13CanvasEvidenceComplete"
+    ]);
 
     const apiReady = Boolean(
       found.authority &&
@@ -1450,66 +1350,137 @@
 
     const observed = Boolean(found.authority || contract || receipt);
 
-    let sourceMode = "MISSING";
-    if (found.name.includes("BISHOP") || found.name.includes("bishop")) sourceMode = "EXPLICIT_BISHOP_ALIAS";
-    else if (laneKey === "north") sourceMode = "TRANSPARENT_NORTH_AUTHORITY_ALIAS";
-    else if (found.name.includes("CANVAS")) sourceMode = "TRANSPARENT_CANVAS_BISHOP_ALIAS";
-    else if (found.name.includes("FINGER") || found.name.includes("Pointer") || found.name.includes("pointer")) sourceMode = "TRANSPARENT_POINTER_FINGER_BISHOP_ALIAS";
-    else if (found.name !== "NONE") sourceMode = "TRANSPARENT_RUNTIME_ALIAS";
-
-    const admissible = Boolean(observed && apiReady && !hardBlock);
-
     return {
-      lane: laneKey,
-      cardinalAddress: laneKey.toUpperCase(),
-      rankAddressedByWestGate: "CARDINAL_BISHOP_OR_COMPATIBLE_BISHOP_SURFACE",
-      file: BISHOP_FILES[laneKey],
+      lane,
+      file,
       sourceName: found.name,
-      sourceMethod: read ? `${found.name}.${read.method}` : found.name,
-      sourceMode,
+      sourceMethod: read.method === "NONE" ? found.name : `${found.name}.${read.method}`,
       observed,
       authorityPresent: Boolean(found.authority),
       contract: contract || "",
       receipt: receipt || "",
       apiReady,
       explicitReady,
-      admissible,
+      admissible: Boolean(observed && apiReady && !hardBlock),
       hardBlock,
       unsafeFields,
-      ownsSubjectFiles: true,
       westInspectsSubjectFiles: false,
       upstreamSelfNamingRequired: false,
       proof: clonePlain(proof)
     };
   }
 
-  function readBishopChord() {
-    const lanes = {
-      north: normalizeBishopLane("north"),
-      east: normalizeBishopLane("east"),
-      south: normalizeBishopLane("south"),
-      west: normalizeBishopLane("west")
+  function readPointerSurfaceProof() {
+    const found = firstAuthority(POINTER_SURFACE_ALIASES);
+    const read = found.authority ? readAuthorityReceipt(found.authority) : { method: "NONE", receipt: null };
+    const proof = read.receipt || {};
+    const contract = contractFromProof(proof) || firstNonEmpty(found.authority && found.authority.contract, found.authority && found.authority.CONTRACT);
+    const unsafeFields = unsafeFieldsFromProof(proof);
+
+    const shapeAccepted = Boolean(
+      readBool(proof, ["pointerBishopActive", "surfaceFingerActive", "pointerFingerActive", "bishopLanguageActive"]) ||
+      readBool(proof, ["surfacePacketReady", "pointerBishopPacketReady", "visibleContributionAvailable"]) ||
+      found.name !== "NONE"
+    );
+
+    const accepted = Boolean(
+      found.authority &&
+      !unsafeFields.length &&
+      (
+        POINTER_SURFACE_CONTRACTS.includes(contract) ||
+        shapeAccepted
+      )
+    );
+
+    const result = {
+      sourceName: found.name,
+      sourceMethod: read.method === "NONE" ? found.name : `${found.name}.${read.method}`,
+      observed: Boolean(found.authority || scriptPresentForPath(POINTER_SURFACE_FILE)),
+      authorityPresent: Boolean(found.authority),
+      contract: contract || "",
+      accepted,
+      hardBlock: Boolean(unsafeFields.length || readBool(proof, ["hardBlock", "bishopHardBlock"])),
+      unsafeFields,
+      supportsPointerBishop: Boolean(accepted || readBool(proof, ["supportsSurfacePointerBishop", "supportsPointerBishopSocket"])),
+      supportsLegacyFinger: Boolean(accepted || readBool(proof, ["supportsLegacyFingerCompatibility", "pointerFingerActive"])),
+      proof: clonePlain(proof)
     };
 
-    const values = Object.values(lanes);
-    const observedCount = values.filter((lane) => lane.observed).length;
-    const readyCount = values.filter((lane) => lane.admissible).length;
-    const hardBlocks = values.filter((lane) => lane.hardBlock);
-    const missing = values.filter((lane) => !lane.observed).map((lane) => lane.lane);
-    const held = values.filter((lane) => lane.observed && !lane.admissible && !lane.hardBlock).map((lane) => lane.lane);
+    state.pointerSurfaceObserved = result.observed;
+    state.pointerSurfaceContract = result.contract;
+    state.pointerSurfaceAccepted = result.accepted;
+    state.pointerSurfaceHardBlock = result.hardBlock;
+    state.lastPointerSurfaceProof = clonePlain(result);
 
-    const strict = Boolean(readyCount === 4 && hardBlocks.length === 0);
+    return result;
+  }
+
+  function readBishopChord() {
+    const lanes = {
+      north: normalizeAuthorityLane("north", NORTH_ALIASES, NORTH_FILE),
+      east: normalizeAuthorityLane("east", EAST_ALIASES, EAST_FILE),
+      south: normalizeAuthorityLane("south", SOUTH_ALIASES, SOUTH_FILE),
+      west: {
+        lane: "west",
+        file: WEST_FILE,
+        sourceName: "SELF",
+        sourceMethod: "SELF",
+        observed: true,
+        authorityPresent: true,
+        contract: CONTRACT,
+        receipt: RECEIPT,
+        apiReady: true,
+        explicitReady: true,
+        admissible: true,
+        hardBlock: false,
+        unsafeFields: [],
+        westInspectsSubjectFiles: false,
+        upstreamSelfNamingRequired: false,
+        proof: { contract: CONTRACT, receipt: RECEIPT }
+      },
+      routeConductor: normalizeAuthorityLane("routeConductor", ROUTE_CONDUCTOR_ALIASES, ROUTE_CONDUCTOR_FILE),
+      canvas: normalizeAuthorityLane("canvas", CANVAS_ALIASES, CANVAS_FILE),
+      pointerSurface: {
+        ...readPointerSurfaceProof(),
+        lane: "pointerSurface",
+        file: POINTER_SURFACE_FILE,
+        apiReady: state.pointerSurfaceAccepted,
+        admissible: state.pointerSurfaceAccepted
+      }
+    };
+
+    const cardinalValues = [lanes.north, lanes.east, lanes.south, lanes.west];
+    const downstreamValues = [lanes.routeConductor, lanes.canvas, lanes.pointerSurface];
+
+    const allValues = [...cardinalValues, ...downstreamValues];
+    const hardBlocks = allValues.filter((lane) => lane.hardBlock);
+    const observedCount = allValues.filter((lane) => lane.observed).length;
+    const readyCount = allValues.filter((lane) => lane.admissible).length;
+
+    const routeConductorInput = state.lastInput && state.lastInput.routeConductorAdmissibilityEvent === true;
+    const northAccepted = Boolean(lanes.north.admissible || state.northC2WestAuditAligned || routeConductorInput);
+    const southAccepted = Boolean(lanes.south.admissible || state.cycleTwoSouthOutputAdmissible || routeConductorInput);
+    const routeAccepted = Boolean(lanes.routeConductor.admissible || routeConductorInput);
+    const canvasSurfaceObserved = Boolean(lanes.canvas.observed || state.canvasObserved);
+
+    const strict = Boolean(
+      northAccepted &&
+      southAccepted &&
+      routeAccepted &&
+      lanes.canvas.admissible &&
+      lanes.pointerSurface.admissible &&
+      hardBlocks.length === 0
+    );
+
     const admissible = Boolean(
       hardBlocks.length === 0 &&
-      lanes.north.admissible &&
-      readyCount >= 3
+      northAccepted &&
+      southAccepted &&
+      routeAccepted &&
+      canvasSurfaceObserved
     );
 
-    const degraded = Boolean(
-      !strict &&
-      admissible &&
-      (missing.length > 0 || held.length > 0)
-    );
+    const degraded = Boolean(admissible && !strict);
 
     let status = BISHOP_CHORD_STATUS.HELD_CHORD;
     let gap = "WAITING_BISHOP_CHORD";
@@ -1521,15 +1492,17 @@
       status = BISHOP_CHORD_STATUS.STRICT_CHORD;
       gap = "NONE_STRICT_BISHOP_CHORD";
     } else if (admissible) {
-      status = degraded ? BISHOP_CHORD_STATUS.DEGRADED_CHORD : BISHOP_CHORD_STATUS.ADMISSIBLE_CHORD;
-      gap = "NONE_ADMISSIBLE_BISHOP_CHORD";
-    } else if (!lanes.north.admissible) {
-      gap = "WAITING_NORTH_BISHOP_LANE";
-    } else if (readyCount < 3) {
-      gap = "WAITING_BISHOP_CHORD_QUORUM";
+      status = BISHOP_CHORD_STATUS.DEGRADED_CHORD;
+      gap = "NONE_DEGRADED_BISHOP_CHORD_CANVAS_RELEASE_ALLOWED";
+    } else if (!northAccepted) {
+      gap = "WAITING_NORTH_BISHOP_OR_ROUTE_CONDUCTOR_NORTH_ALIGNMENT";
+    } else if (!southAccepted) {
+      gap = "WAITING_SOUTH_OUTPUT_OR_ROUTE_CONDUCTOR_CYCLE_TWO_PACKET";
+    } else if (!routeAccepted) {
+      gap = "WAITING_ROUTE_CONDUCTOR_DOWNSTREAM_BISHOP";
+    } else if (!canvasSurfaceObserved) {
+      gap = "WAITING_CANVAS_DOWNSTREAM_BISHOP";
     }
-
-    const sourceMethod = values.map((lane) => `${lane.lane}:${lane.sourceMethod}`).join(" | ");
 
     state.bishopLanes = clonePlain(lanes);
     state.bishopChordObservedCount = observedCount;
@@ -1540,8 +1513,12 @@
     state.bishopChordHardBlock = Boolean(hardBlocks.length);
     state.bishopChordStatus = status;
     state.bishopChordGap = gap;
-    state.bishopChordSourceMethod = sourceMethod;
-    state.bishopChordReleaseMode = strict ? "FOUR_WAY_STRICT_BISHOP_CHORD" : admissible ? "FOUR_WAY_ADMISSIBLE_BISHOP_CHORD" : "NONE";
+    state.bishopChordSourceMethod = allValues.map((lane) => `${lane.lane}:${lane.sourceMethod}`).join(" | ");
+    state.bishopChordReleaseMode = strict
+      ? "STRICT_ROUTE_CANVAS_POINTER_SURFACE_CHORD"
+      : admissible
+        ? "DEGRADED_ROUTE_CANVAS_CHORD_POINTER_SURFACE_TRACKED"
+        : "NONE";
 
     const chord = {
       bishopChordBridgeActive: true,
@@ -1558,13 +1535,12 @@
       bishopChordReadyCount: readyCount,
       bishopChordObservedCount: observedCount,
       bishopChordRequiredCount: 4,
-      bishopChordRequiredLanes: ["north", "east", "south", "west"],
       bishopChordGap: gap,
-      bishopChordSourceMethod: sourceMethod,
+      bishopChordSourceMethod: state.bishopChordSourceMethod,
       bishopChordReleaseMode: state.bishopChordReleaseMode,
-      missingBishopLanes: missing,
-      heldBishopLanes: held,
-      hardBlockBishopLanes: hardBlocks.map((lane) => lane.lane),
+      pointerSurfaceObserved: state.pointerSurfaceObserved,
+      pointerSurfaceAccepted: state.pointerSurfaceAccepted,
+      pointerSurfaceContract: state.pointerSurfaceContract,
       lanes: clonePlain(lanes)
     };
 
@@ -1576,25 +1552,30 @@
     const ds = dataset();
 
     const contract = firstNonEmpty(
+      ds.hearthCanvasContract,
       ds.hearthCanvasLocalStationContract,
       ds.hearthCanvasCurrentCanvasStationContract,
       ds.hearthCanvasCurrentCanvasParentContract,
       ds.currentCanvasParentContract,
       ds.canvasLocalStationContract,
       ds.currentCanvasStationContract,
-      ds.hearthCanvasContract,
-      ds.hearthSouthCurrentCanvasParentContract
+      ds.hearthSouthCurrentCanvasParentContract,
+      ds.hearthWestCurrentCanvasParentContract
     );
 
-    if (!contract) return null;
+    if (!contract && !ds.hearthSouthVisiblePlanetProofReady && !ds.hearthCanvasVisiblePlanetProofReady) return null;
 
     return {
       contract,
       currentCanvasParentContract: contract,
       canvasLocalStationContract: contract,
+      currentCanvasParentReceipt: ds.hearthCanvasReceipt || ds.hearthSouthCurrentCanvasParentReceipt || "",
       canvasLocalStationSummaryObserved: ds.hearthCanvasLocalStationSummaryObserved || ds.canvasLocalStationSummaryObserved || ds.hearthSouthCurrentCanvasParentObserved,
-      canvasLocalStationApiReady: ds.hearthCanvasLocalStationApiReady || ds.canvasLocalStationApiReady || ds.hearthSouthCanvasHubGateReady,
+      canvasLocalStationApiReady: ds.hearthCanvasLocalStationApiReady || ds.canvasLocalStationApiReady || ds.hearthSouthCanvasHubGateReady || ds.hearthSouthCanvasReceiverBishopGateReady,
       canvasLocalStationReceiveSurfaceReady: ds.hearthCanvasLocalStationReceiveSurfaceReady || ds.canvasLocalStationReceiveSurfaceReady || ds.hearthSouthCanvasReleaseAuthorized,
+      visiblePlanetProofReady: ds.hearthCanvasVisiblePlanetProofReady || ds.hearthSouthVisiblePlanetProofReady,
+      canvasMounted: ds.hearthCanvasMounted || ds.hearthSouthCanvasMounted,
+      canvasDrawComplete: ds.hearthCanvasDrawComplete || ds.hearthSouthCanvasDrawComplete,
       structuralCarrierReady: ds.hearthCanvasStructuralCarrierReady || ds.structuralCarrierReady,
       structuralCarrierSafe: ds.hearthCanvasStructuralCarrierSafe || ds.structuralCarrierSafe,
       canvasParentCarrierSafe: ds.hearthCanvasParentCarrierSafe || ds.canvasParentCarrierSafe,
@@ -1605,8 +1586,6 @@
       currentParentStaleDetected: ds.currentParentStaleDetected,
       canvasParentStaleDetected: ds.canvasParentStaleDetected,
       staleParentDetected: ds.staleParentDetected,
-      canvasParentV2Observed: ds.hearthCanvasParentV2Observed || ds.canvasParentV2Observed,
-      hearthCanvasStaleParentV2FalsePositiveBlocked: ds.hearthCanvasStaleParentV2FalsePositiveBlocked,
       canvasCarrierHandoffError: ds.canvasCarrierHandoffError,
       carrierHandoffError: ds.carrierHandoffError
     };
@@ -1615,74 +1594,120 @@
   function normalizeCanvasProof(name, api, proof, method) {
     const p = isObject(proof) ? proof : {};
     const contract = contractFromProof(p);
-    const localAccepted = CANVAS_LOCAL_STATION_CONTRACTS.includes(contract);
-    const baselineV10_3 = contract === CANVAS_BASELINE_V10_3_CONTRACT;
-    const explicitUnsafeFields = unsafeFieldsFromProof(p);
-    const unrecognizedCurrentCanvasContract = Boolean(contract && !localAccepted && !baselineV10_3);
+    const receipt = receiptFromProof(p);
+    const currentAccepted = CURRENT_CANVAS_CONTRACTS.includes(contract);
+    const baselineHold = CANVAS_BASELINE_HOLD_CONTRACTS.includes(contract);
+    const unsafeFields = unsafeFieldsFromProof(p);
 
-    if (unrecognizedCurrentCanvasContract && !explicitUnsafeFields.includes("unrecognizedCurrentCanvasContract")) {
-      explicitUnsafeFields.push("unrecognizedCurrentCanvasContract");
+    const unrecognizedContract = Boolean(contract && !currentAccepted && !baselineHold);
+    if (unrecognizedContract && !unsafeFields.includes("unrecognizedCurrentCanvasContract")) {
+      unsafeFields.push("unrecognizedCurrentCanvasContract");
     }
 
-    const finalUnsafe = explicitUnsafeFields.length > 0;
+    const visibleProofReady = readBool(p, [
+      "visiblePlanetProofReady",
+      "visibleGlobeProofReady",
+      "currentVisibleProofValid",
+      "baseGlobeVisibleCarrierReady",
+      "domVisiblePlanetProofReady"
+    ]);
+
+    const canvasMounted = readBool(p, [
+      "canvasMounted",
+      "baseGlobeMounted",
+      "hearthCanvasMounted"
+    ]);
+
+    const canvasDrawComplete = readBool(p, [
+      "canvasDrawComplete",
+      "drawComplete",
+      "imageRendered",
+      "baseGlobeDrawComplete",
+      "holdingFieldDrawComplete"
+    ]);
 
     const summaryObserved = Boolean(
       method === "getCanvasStationSummary" ||
       method === "getCanvasStationReceiptLight" ||
       method === "getCanvasStationReceipt" ||
-      readBoolField(p, ["canvasLocalStationSummaryObserved", "summaryObserved", "canvasStationSummaryObserved"]) ||
+      method === "getExpressionHubSummary" ||
+      method === "getExpressionHubReceipt" ||
+      readBool(p, ["canvasLocalStationSummaryObserved", "summaryObserved", "canvasStationSummaryObserved"]) ||
       p.packetType === "CANVAS_LOCAL_STATION_SUMMARY" ||
-      p.packetType === "CANVAS_LOCAL_STATION_RECEIPT" ||
-      p.packetType === "ROUTE_CONDUCTOR_NEWS_FIBONACCI_CANVAS_RELEASE_PACKET"
+      p.packetType === "CANVAS_LOCAL_STATION_RECEIPT"
     );
 
+    const receiveReady = Boolean(hasReceiveSurface(api) || readBool(p, [
+      "canvasLocalStationReceiveSurfaceReady",
+      "receiveSurfaceReady",
+      "canvasReleasePacketReady",
+      "canvasParentBootMethodAvailable"
+    ]));
+
     const apiReady = Boolean(
-      readBoolField(p, ["canvasLocalStationApiReady", "apiReady", "canvasHubGateReady"]) ||
-      localAccepted ||
+      readBool(p, ["canvasLocalStationApiReady", "apiReady", "canvasHubGateReady", "canvasReceiverBishopGateReady"]) ||
+      receiveReady ||
+      currentAccepted ||
       (api && isObject(api))
     );
 
-    const receiveSurfaceReady = Boolean(
-      hasReceiveSurface(api) ||
-      readBoolField(p, ["canvasLocalStationReceiveSurfaceReady", "receiveSurfaceReady", "canvasReleasePacketReady"])
+    const shapeAccepted = Boolean(
+      readBool(p, ["expressionHubActive", "canvasExpressionHubActive", "fingerManagerActive", "canvasFingerManagerActive"]) ||
+      visibleProofReady ||
+      canvasMounted ||
+      canvasDrawComplete
     );
 
+    const contractAccepted = Boolean(currentAccepted || (!contract && shapeAccepted));
+    const hardBlock = Boolean(unsafeFields.length);
+
     const carrierSafeMarkerObserved = Boolean(
-      readBoolField(p, ["structuralCarrierReady", "hearthCanvasStructuralCarrierReady"]) ||
-      readBoolField(p, ["structuralCarrierSafe", "hearthCanvasStructuralCarrierSafe"]) ||
-      readBoolField(p, ["canvasParentCarrierSafe", "hearthCanvasParentCarrierSafe"]) ||
-      readBoolField(p, ["structuralCarrierSafeForCanvasRelease", "hearthCanvasStructuralCarrierSafeForCanvasRelease"]) ||
-      readBoolField(p, ["canvasPreReleaseCarrierSafeForWest", "hearthCanvasPreReleaseCarrierSafeForWest"]) ||
-      readBoolField(p, ["visiblePlanetProofReady", "canvasMounted", "canvasDrawComplete"]) ||
-      (localAccepted && (summaryObserved || apiReady))
+      readBool(p, ["structuralCarrierReady", "hearthCanvasStructuralCarrierReady"]) ||
+      readBool(p, ["structuralCarrierSafe", "hearthCanvasStructuralCarrierSafe"]) ||
+      readBool(p, ["canvasParentCarrierSafe", "hearthCanvasParentCarrierSafe"]) ||
+      readBool(p, ["structuralCarrierSafeForCanvasRelease", "hearthCanvasStructuralCarrierSafeForCanvasRelease"]) ||
+      readBool(p, ["canvasPreReleaseCarrierSafeForWest", "hearthCanvasPreReleaseCarrierSafeForWest"]) ||
+      visibleProofReady ||
+      canvasMounted ||
+      canvasDrawComplete ||
+      (currentAccepted && apiReady)
     );
 
     let rank = 99;
-
-    if (finalUnsafe) rank = 6;
-    else if (localAccepted && summaryObserved && apiReady && receiveSurfaceReady) rank = 1;
-    else if (localAccepted && apiReady && receiveSurfaceReady) rank = 2;
-    else if (localAccepted) rank = 3;
-    else if (baselineV10_3) rank = 4;
-    else if (contract) rank = 5;
+    if (hardBlock) rank = 7;
+    else if (currentAccepted && visibleProofReady && apiReady && receiveReady) rank = 1;
+    else if (currentAccepted && apiReady && receiveReady) rank = 2;
+    else if (currentAccepted && apiReady) rank = 3;
+    else if (currentAccepted) rank = 4;
+    else if (shapeAccepted && apiReady) rank = 5;
+    else if (baselineHold) rank = 6;
 
     return {
       name,
       method,
       proof: clonePlain(p),
       contract,
-      currentCanvasParentObserved: Boolean(api || contract),
+      receipt,
+      currentCanvasParentObserved: Boolean(api || contract || shapeAccepted),
       currentCanvasParentContractObserved: Boolean(contract),
-      currentCanvasParentIsLocalStation: localAccepted,
-      canvasLocalStationContractAccepted: localAccepted,
-      canvasBaselineV10_3Recognized: baselineV10_3,
-      v10_3BaselineRecognizedOnly: baselineV10_3,
-      canvasReceiverApiReady: apiReady && localAccepted,
-      canvasLocalStationSummaryObserved: summaryObserved,
-      canvasLocalStationReceiveSurfaceReady: receiveSurfaceReady,
+      currentCanvasParentIsCurrentCanvas: contractAccepted,
+      canvasContractAccepted: contractAccepted,
+      canvasV123Recognized: contract === "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3",
+      canvasV122Recognized: contract === "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_TNT_v12_2",
+      canvasV121Recognized: contract === "HEARTH_CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_TNT_v12_1",
+      canvasV12LineageAccepted: contract === "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_TNT_v12",
+      canvasV11LineageAccepted: Boolean(contract && contract.includes("TNT_v11")),
+      canvasBaselineV10_3Recognized: baselineHold,
+      v10_3BaselineRecognizedOnly: baselineHold,
+      canvasReceiverApiReady: apiReady && contractAccepted,
+      canvasReceiveSurfaceReady: receiveReady || (currentAccepted && apiReady),
+      canvasSummaryObserved: summaryObserved,
+      canvasVisibleProofReady: visibleProofReady,
+      canvasMounted,
+      canvasDrawComplete,
       carrierSafeMarkerObserved,
-      explicitUnsafeFields,
-      carrierHardBlock: finalUnsafe,
+      explicitUnsafeFields: unsafeFields,
+      carrierHardBlock: hardBlock,
       rank
     };
   }
@@ -1695,8 +1720,7 @@
       if (!api || !isObject(api)) return;
 
       const read = readAuthorityReceipt(api);
-      if (read && isObject(read.receipt)) candidates.push(normalizeCanvasProof(name, api, read.receipt, read.method));
-      else candidates.push(normalizeCanvasProof(name, api, api, "authorityObject"));
+      candidates.push(normalizeCanvasProof(name, api, read.receipt || api, read.method));
     });
 
     const datasetProof = readDatasetCanvasProof();
@@ -1711,32 +1735,14 @@
       if (aUnsafe !== bUnsafe) return aUnsafe ? 1 : -1;
       if (a.rank !== b.rank) return a.rank - b.rank;
 
-      const aCurrent = a.canvasLocalStationContractAccepted ? 0 : 1;
-      const bCurrent = b.canvasLocalStationContractAccepted ? 0 : 1;
+      const aCurrent = a.canvasContractAccepted ? 0 : 1;
+      const bCurrent = b.canvasContractAccepted ? 0 : 1;
       if (aCurrent !== bCurrent) return aCurrent - bCurrent;
 
       return 0;
     });
 
-    const selected = candidates[0] || {
-      name: "NONE",
-      method: "NONE",
-      proof: null,
-      contract: "",
-      currentCanvasParentObserved: false,
-      currentCanvasParentContractObserved: false,
-      currentCanvasParentIsLocalStation: false,
-      canvasLocalStationContractAccepted: false,
-      canvasBaselineV10_3Recognized: false,
-      v10_3BaselineRecognizedOnly: false,
-      canvasReceiverApiReady: false,
-      canvasLocalStationSummaryObserved: false,
-      canvasLocalStationReceiveSurfaceReady: false,
-      carrierSafeMarkerObserved: false,
-      explicitUnsafeFields: [],
-      carrierHardBlock: false,
-      rank: 99
-    };
+    const selected = candidates[0] || normalizeCanvasProof("NONE", null, {}, "NONE");
 
     state.lastCanvasCandidates = clonePlain(candidates);
     state.lastCanvasProof = clonePlain(selected);
@@ -1744,31 +1750,40 @@
     state.currentCanvasParentObserved = selected.currentCanvasParentObserved;
     state.currentCanvasParentContractObserved = selected.currentCanvasParentContractObserved;
     state.currentCanvasParentContract = selected.contract;
-    state.currentCanvasParentIsLocalStation = selected.currentCanvasParentIsLocalStation;
-    state.canvasLocalStationContractAccepted = selected.canvasLocalStationContractAccepted;
+    state.currentCanvasParentReceipt = selected.receipt;
+    state.currentCanvasParentIsCurrentCanvas = selected.currentCanvasParentIsCurrentCanvas;
+    state.canvasContractAccepted = selected.canvasContractAccepted;
+    state.canvasV123Recognized = selected.canvasV123Recognized;
+    state.canvasV122Recognized = selected.canvasV122Recognized;
+    state.canvasV121Recognized = selected.canvasV121Recognized;
+    state.canvasV12LineageAccepted = selected.canvasV12LineageAccepted;
+    state.canvasV11LineageAccepted = selected.canvasV11LineageAccepted;
     state.canvasBaselineV10_3Recognized = selected.canvasBaselineV10_3Recognized;
     state.v10_3BaselineRecognizedOnly = selected.v10_3BaselineRecognizedOnly;
     state.canvasReceiverApiReady = selected.canvasReceiverApiReady;
-    state.canvasLocalStationSummaryObserved = selected.canvasLocalStationSummaryObserved;
-    state.canvasLocalStationReceiveSurfaceReady = selected.canvasLocalStationReceiveSurfaceReady;
-    state.canvasLocalStationSourceMethod = `${selected.name}:${selected.method}`;
+    state.canvasReceiveSurfaceReady = selected.canvasReceiveSurfaceReady;
+    state.canvasSummaryObserved = selected.canvasSummaryObserved;
+    state.canvasVisibleProofReady = selected.canvasVisibleProofReady;
+    state.canvasMounted = selected.canvasMounted;
+    state.canvasDrawComplete = selected.canvasDrawComplete;
+    state.canvasSourceMethod = `${selected.name}:${selected.method}`;
     state.selectedCanvasProofRank = selected.rank;
     state.selectedCanvasProofUnsafe = Boolean(selected.carrierHardBlock);
 
     state.explicitUnsafeFields = selected.explicitUnsafeFields.slice();
     state.carrierHardBlock = selected.carrierHardBlock;
     state.carrierSafeMarkerObserved = selected.carrierSafeMarkerObserved;
+
     state.carrierIdentitySafe = Boolean(
       selected.currentCanvasParentObserved &&
-      selected.currentCanvasParentIsLocalStation &&
-      selected.canvasLocalStationContractAccepted &&
+      selected.canvasContractAccepted &&
       !selected.carrierHardBlock
     );
 
     state.preReleaseCarrierAdmissible = Boolean(
       state.carrierIdentitySafe &&
       state.canvasReceiverApiReady &&
-      state.canvasLocalStationReceiveSurfaceReady &&
+      state.canvasReceiveSurfaceReady &&
       state.carrierSafeMarkerObserved &&
       !state.carrierHardBlock
     );
@@ -1778,21 +1793,21 @@
       state.carrierHoldReason = "NONE_PRE_RELEASE_CARRIER_ADMISSIBLE";
     } else if (selected.canvasBaselineV10_3Recognized) {
       state.carrierHeld = true;
-      state.carrierHoldReason = "WAITING_CURRENT_CANVAS_LOCAL_STATION_CONTRACT";
+      state.carrierHoldReason = "WAITING_CURRENT_CANVAS_V12_3_OR_COMPATIBLE_CURRENT_CANVAS_CONTRACT";
     } else if (!selected.currentCanvasParentObserved) {
       state.carrierHeld = true;
-      state.carrierHoldReason = "WAITING_CURRENT_CANVAS_LOCAL_STATION_PROOF";
-    } else if (!selected.canvasLocalStationContractAccepted && !selected.carrierHardBlock) {
+      state.carrierHoldReason = "WAITING_CURRENT_CANVAS_RECEIVER_PROOF";
+    } else if (!selected.canvasContractAccepted && !selected.carrierHardBlock) {
       state.carrierHeld = true;
-      state.carrierHoldReason = "WAITING_CURRENT_CANVAS_LOCAL_STATION_CONTRACT";
+      state.carrierHoldReason = "WAITING_CURRENT_CANVAS_V12_3_OR_COMPATIBLE_CURRENT_CANVAS_CONTRACT";
+    } else if (!state.canvasReceiverApiReady || !state.canvasReceiveSurfaceReady) {
+      state.carrierHeld = true;
+      state.carrierHoldReason = "WAITING_CURRENT_CANVAS_RECEIVER_API";
     } else if (!state.carrierSafeMarkerObserved) {
       state.carrierHeld = true;
-      state.carrierHoldReason = "WAITING_CURRENT_CANVAS_LOCAL_STATION_CARRIER_SAFE_MARKER";
-    } else if (!state.canvasReceiverApiReady || !state.canvasLocalStationReceiveSurfaceReady) {
-      state.carrierHeld = true;
-      state.carrierHoldReason = "WAITING_CURRENT_CANVAS_LOCAL_STATION_RECEIVER_API";
+      state.carrierHoldReason = "WAITING_CURRENT_CANVAS_CARRIER_SAFE_MARKER";
     } else {
-      state.carrierHeld = false;
+      state.carrierHeld = Boolean(state.carrierHardBlock);
       state.carrierHoldReason = state.carrierHardBlock ? "STRUCTURAL_CARRIER_UNSAFE_FOR_CANVAS" : "NONE";
     }
 
@@ -1800,15 +1815,15 @@
   }
 
   function clearCanvasReleasePacket() {
-    const w = root();
-    const h = ensureObject(w, "HEARTH");
+    const w = rootRef();
+    const hearth = ensureObject(w, "HEARTH");
     const lab = ensureObject(w, "DEXTER_LAB");
 
-    h.canvasReleasePacket = null;
-    h.routeConductorReleasePacket = null;
-    h.westCanvasReleasePacket = null;
-    h.bishopChordCanvasReleasePacket = null;
-    h.westGateHierarchyReleasePacket = null;
+    hearth.canvasReleasePacket = null;
+    hearth.routeConductorReleasePacket = null;
+    hearth.westCanvasReleasePacket = null;
+    hearth.bishopChordCanvasReleasePacket = null;
+    hearth.westGateHierarchyReleasePacket = null;
 
     lab.hearthWestCanvasReleasePacket = null;
     lab.hearthRuntimeTableWestReleasePacket = null;
@@ -1888,11 +1903,11 @@
   function composeBishopLaneHandoffPackets() {
     const lanes = state.bishopLanes || {};
 
-    return Object.keys(BISHOP_FILES).map((lane) => ({
+    return Object.keys(lanes).map((lane) => ({
       lane,
       packetType: "WEST_GATE_TO_BISHOP_TO_CANVAS_HANDOFF_PACKET",
       sourceFile: FILE,
-      bishopFile: BISHOP_FILES[lane],
+      bishopFile: lanes[lane] ? lanes[lane].file : "UNKNOWN",
       destinationFile: CANVAS_FILE,
       targetFile: CANVAS_FILE,
       contract: CONTRACT,
@@ -1910,7 +1925,6 @@
       bishopLaneAdmissible: lanes[lane] ? lanes[lane].admissible === true : false,
       bishopLaneSource: lanes[lane] ? lanes[lane].sourceName : "NONE",
       bishopLaneContract: lanes[lane] ? lanes[lane].contract : "",
-      cardinalBishopExternalAddressOnly: true,
       upstreamSelfNamingRequired: false,
       westInspectsSubjectFiles: false,
       bishopOwnsSubjectFiles: true,
@@ -1926,8 +1940,8 @@
 
     return {
       timestamp: nowIso(),
-      event: "WEST_GATE_BISHOP_CHORD_RELEASE_TO_CANVAS",
-      checkpointEvent: "F13W_WEST_GATE_HIERARCHY_BISHOP_CHORD_CANVAS_RELEASE_APPROVED",
+      event: "WEST_GATE_CANVAS_V12_3_POINTER_SURFACE_BISHOP_RELEASE_TO_CANVAS",
+      checkpointEvent: "F13W_WEST_GATE_CANVAS_V12_3_POINTER_SURFACE_BISHOP_RELEASE_APPROVED",
       primaryCardinal: "WEST",
       activeStageId: ACTIVE_STAGE_ID,
       activeGear: ACTIVE_GEAR,
@@ -1940,7 +1954,10 @@
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       previousReceipt: PREVIOUS_RECEIPT,
+      lineageV47Contract: LINEAGE_V4_7_CONTRACT,
+      lineageV47Receipt: LINEAGE_V4_7_RECEIPT,
       baselineContract: BASELINE_CONTRACT,
+
       sourceFile: FILE,
       westSourceFile: FILE,
       route: ROUTE,
@@ -1951,17 +1968,20 @@
       hierarchyRegistryReceipt: HIERARCHY_REGISTRY_RECEIPT,
       hierarchyRegistry,
       hierarchySurface,
+
       westGateLanguageActive: true,
       westGateOwnsUpstreamTruth: false,
       upstreamCardinalSelfNamingRequired: false,
       cardinalBishopTermOwnedByHierarchyMap: true,
-      highBishopTermRejected: true,
+      downstreamBishopTermActive: true,
       queenFile: QUEEN_FILE,
       queenExcludedFromCardinalFunctionality: true,
       priestFile: PRIEST_FILE,
       priestNotBishop: true,
-      pointerFingerFile: POINTER_FINGER_FILE,
-      pointerFingerFileConfirmed: true,
+      pointerSurfaceFile: POINTER_SURFACE_FILE,
+      pointerSurfaceObserved: state.pointerSurfaceObserved,
+      pointerSurfaceAccepted: state.pointerSurfaceAccepted,
+      pointerSurfaceContract: state.pointerSurfaceContract,
 
       cycleNumber: ACTIVE_CYCLE_NUMBER,
       activeCycleNumber: ACTIVE_CYCLE_NUMBER,
@@ -1972,11 +1992,11 @@
       destinationFile: CANVAS_FILE,
       targetFile: CANVAS_FILE,
 
-      fourWayCanvasHandoffActive: true,
       bishopChordBridgeActive: true,
       bishopSubjectFileDelegationActive: true,
       westKnowsBishopsNotChildren: true,
       westInspectsSubjectFiles: false,
+      westInspectsFingerInternals: false,
       bishopsOwnSubjectFiles: true,
 
       bishopChordStatus: state.bishopChordStatus,
@@ -2008,11 +2028,22 @@
       northC2WestAuditAligned: state.northC2WestAuditAligned,
       cycleTwoSouthOutputObserved: state.cycleTwoSouthOutputObserved,
       cycleTwoSouthOutputAdmissible: state.cycleTwoSouthOutputAdmissible,
-      canvasLocalStationContractAccepted: state.canvasLocalStationContractAccepted,
+
+      currentCanvasParentObserved: state.currentCanvasParentObserved,
       currentCanvasParentContract: state.currentCanvasParentContract,
+      currentCanvasParentReceipt: state.currentCanvasParentReceipt,
+      canvasContractAccepted: state.canvasContractAccepted,
+      canvasV123Recognized: state.canvasV123Recognized,
+      canvasV122Recognized: state.canvasV122Recognized,
+      canvasV121Recognized: state.canvasV121Recognized,
+      canvasV12LineageAccepted: state.canvasV12LineageAccepted,
+      canvasV11LineageAccepted: state.canvasV11LineageAccepted,
+      canvasReceiverApiReady: state.canvasReceiverApiReady,
+      canvasReceiveSurfaceReady: state.canvasReceiveSurfaceReady,
+      carrierSafeMarkerObserved: state.carrierSafeMarkerObserved,
       preReleaseCarrierAdmissible: state.preReleaseCarrierAdmissible,
 
-      firstFailedCoordinate: "NONE_CYCLE_TWO_WEST_GATE_BISHOP_CHORD_CANVAS_RELEASE_AUTHORIZED",
+      firstFailedCoordinate: "NONE_CYCLE_TWO_WEST_GATE_CANVAS_RELEASE_AUTHORIZED",
       recommendedNextFile: CANVAS_FILE,
       recommendedNextRenewalTarget: CANVAS_FILE,
 
@@ -2023,15 +2054,15 @@
   function publishCanvasReleasePacket(packet) {
     if (!isObject(packet)) return false;
 
-    const w = root();
-    const h = ensureObject(w, "HEARTH");
+    const w = rootRef();
+    const hearth = ensureObject(w, "HEARTH");
     const lab = ensureObject(w, "DEXTER_LAB");
 
-    h.canvasReleasePacket = clonePlain(packet);
-    h.routeConductorReleasePacket = clonePlain(packet);
-    h.westCanvasReleasePacket = clonePlain(packet);
-    h.bishopChordCanvasReleasePacket = clonePlain(packet);
-    h.westGateHierarchyReleasePacket = clonePlain(packet);
+    hearth.canvasReleasePacket = clonePlain(packet);
+    hearth.routeConductorReleasePacket = clonePlain(packet);
+    hearth.westCanvasReleasePacket = clonePlain(packet);
+    hearth.bishopChordCanvasReleasePacket = clonePlain(packet);
+    hearth.westGateHierarchyReleasePacket = clonePlain(packet);
 
     lab.hearthWestCanvasReleasePacket = clonePlain(packet);
     lab.hearthRuntimeTableWestReleasePacket = clonePlain(packet);
@@ -2064,11 +2095,11 @@
     state.canvasReleasePacketReady = true;
     state.canvasReleaseApprovedByWest = true;
     state.releaseToCanvas = true;
-    state.canvasReleaseHeldReason = "NONE_CYCLE_TWO_WEST_GATE_BISHOP_CHORD_CANVAS_RELEASE_AUTHORIZED";
-    state.firstFailedCoordinate = "NONE_CYCLE_TWO_WEST_GATE_BISHOP_CHORD_CANVAS_RELEASE_AUTHORIZED";
+    state.canvasReleaseHeldReason = "NONE_CYCLE_TWO_WEST_GATE_CANVAS_RELEASE_AUTHORIZED";
+    state.firstFailedCoordinate = "NONE_CYCLE_TWO_WEST_GATE_CANVAS_RELEASE_AUTHORIZED";
     state.recommendedNextFile = CANVAS_FILE;
     state.recommendedNextRenewalTarget = CANVAS_FILE;
-    state.postgameStatus = "CYCLE_TWO_WEST_GATE_BISHOP_CHORD_CANVAS_RELEASE_AUTHORIZED";
+    state.postgameStatus = "CYCLE_TWO_WEST_GATE_CANVAS_V12_3_POINTER_SURFACE_RELEASE_AUTHORIZED";
 
     blockFinalClaims();
 
@@ -2079,7 +2110,7 @@
     return state.westDecision;
   }
 
-  function decideWest(input) {
+  function decideWest(input = {}) {
     state.timestamp = nowIso();
     state.westAuditObserved = true;
 
@@ -2108,6 +2139,13 @@
       );
     }
 
+    if (state.pointerSurfaceHardBlock) {
+      return applyHardBlock(
+        "POINTER_SURFACE_BISHOP_HARD_BLOCK",
+        POINTER_SURFACE_FILE
+      );
+    }
+
     if (state.bishopChordHardBlock) {
       return applyHardBlock(
         bishopChord.bishopChordGap || "BISHOP_CHORD_HARD_BLOCK",
@@ -2119,7 +2157,7 @@
       return applyHold(
         state.bishopChordGap || "WAITING_BISHOP_CHORD",
         FILE,
-        WEST_GAP_CLASS.BISHOP_CHORD_HOLD
+        WEST_GAP_CLASS.HIERARCHY_HOLD
       );
     }
 
@@ -2130,25 +2168,25 @@
       );
     }
 
-    if (state.canvasBaselineV10_3Recognized && !state.canvasLocalStationContractAccepted) {
+    if (state.canvasBaselineV10_3Recognized && !state.canvasContractAccepted) {
       return applyHold(
-        "WAITING_CURRENT_CANVAS_LOCAL_STATION_CONTRACT",
+        "WAITING_CURRENT_CANVAS_V12_3_OR_COMPATIBLE_CURRENT_CANVAS_CONTRACT",
         CANVAS_FILE,
         WEST_GAP_CLASS.CANVAS_RECEIVER_HOLD
       );
     }
 
-    if (!state.currentCanvasParentObserved || !state.canvasLocalStationContractAccepted) {
+    if (!state.currentCanvasParentObserved || !state.canvasContractAccepted) {
       return applyHold(
-        "WAITING_CURRENT_CANVAS_LOCAL_STATION_CONTRACT",
+        "WAITING_CURRENT_CANVAS_V12_3_OR_COMPATIBLE_CURRENT_CANVAS_CONTRACT",
         CANVAS_FILE,
         WEST_GAP_CLASS.CANVAS_RECEIVER_HOLD
       );
     }
 
-    if (!state.canvasReceiverApiReady || !state.canvasLocalStationReceiveSurfaceReady) {
+    if (!state.canvasReceiverApiReady || !state.canvasReceiveSurfaceReady) {
       return applyHold(
-        "WAITING_CURRENT_CANVAS_LOCAL_STATION_RECEIVER_API",
+        "WAITING_CURRENT_CANVAS_RECEIVER_API",
         CANVAS_FILE,
         WEST_GAP_CLASS.CANVAS_RECEIVER_HOLD
       );
@@ -2156,7 +2194,7 @@
 
     if (!state.preReleaseCarrierAdmissible || !state.carrierSafeMarkerObserved) {
       return applyHold(
-        "WAITING_CURRENT_CANVAS_LOCAL_STATION_CARRIER_SAFE_MARKER",
+        "WAITING_CURRENT_CANVAS_CARRIER_SAFE_MARKER",
         CANVAS_FILE,
         WEST_GAP_CLASS.CARRIER_HOLD
       );
@@ -2165,7 +2203,7 @@
     return applyRelease();
   }
 
-  function classifyWestAdmissibility(input) {
+  function classifyWestAdmissibility(input = {}) {
     decideWest(input || {});
     updateDataset();
     publishGlobals();
@@ -2173,31 +2211,51 @@
     return getReceipt();
   }
 
-  function assess(input) {
+  function classifyCyclePacket(input = {}) {
     return classifyWestAdmissibility(input);
   }
 
-  function inspect(input) {
+  function createWestCycleReceipt(input = {}) {
     return classifyWestAdmissibility(input);
   }
 
-  function run(input) {
+  function createGapReceipt(input = {}) {
     return classifyWestAdmissibility(input);
   }
 
-  function boot(input) {
+  function classifyGap(input = {}) {
+    return classifyWestAdmissibility(input);
+  }
+
+  function classifyTransmissionGap(input = {}) {
+    return classifyWestAdmissibility(input);
+  }
+
+  function assess(input = {}) {
+    return classifyWestAdmissibility(input);
+  }
+
+  function inspect(input = {}) {
+    return classifyWestAdmissibility(input);
+  }
+
+  function run(input = {}) {
+    return classifyWestAdmissibility(input);
+  }
+
+  function boot(input = {}) {
     return classifyWestAdmissibility(input || {});
   }
 
-  function init(input) {
+  function init(input = {}) {
     return classifyWestAdmissibility(input || {});
   }
 
-  function start(input) {
+  function start(input = {}) {
     return classifyWestAdmissibility(input || {});
   }
 
-  function mount(input) {
+  function mount(input = {}) {
     return classifyWestAdmissibility(input || {});
   }
 
@@ -2240,22 +2298,17 @@
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       previousReceipt: PREVIOUS_RECEIPT,
+      lineageV47Contract: LINEAGE_V4_7_CONTRACT,
+      lineageV47Receipt: LINEAGE_V4_7_RECEIPT,
       baselineContract: BASELINE_CONTRACT,
       version: VERSION,
       file: FILE,
       route: ROUTE,
       role: state.role,
 
-      westV4_8Active: true,
+      westV4_9Active: true,
+      westV4_8Superseded: true,
       westV4_7Superseded: true,
-      westV4_6_3Superseded: true,
-      westV4_6_2Superseded: true,
-      westV4_6_1Superseded: true,
-      westV4_6Superseded: true,
-      westV4_5Superseded: true,
-      westV4_4Superseded: true,
-      westV4_3Superseded: true,
-      westV4_2Superseded: true,
 
       westGateLanguageActive: true,
       westGateOwnsUpstreamTruth: false,
@@ -2264,26 +2317,24 @@
       hierarchyRegistryContract: HIERARCHY_REGISTRY_CONTRACT,
       hierarchyRegistryReceipt: HIERARCHY_REGISTRY_RECEIPT,
       hierarchyRegistryPublished: state.hierarchyRegistryPublished,
-      hierarchyRegistryAdoptionMode: state.hierarchyRegistryAdoptionMode,
       cardinalBishopTermOwnedByHierarchyMap: true,
-      highBishopTermRejected: true,
+      downstreamBishopTermActive: true,
       queenExcludedFromCardinalFunctionality: true,
       priestNotBishop: true,
-      pointerFingerFileConfirmed: POINTER_FINGER_FILE,
 
       cardinalBishopFiles: clonePlain(CARDINAL_BISHOP_FILES),
       downstreamBishopFiles: clonePlain(DOWNSTREAM_BISHOP_FILES),
       priestFiles: clonePlain(PRIEST_FILES),
       queenFiles: clonePlain(QUEEN_FILES),
 
-      downstreamNorthBishopObserved: state.downstreamNorthBishopObserved,
-      downstreamSouthBishopObserved: state.downstreamSouthBishopObserved,
-      downstreamWestBishopObserved: state.downstreamWestBishopObserved,
-      eastPriestObserved: state.eastPriestObserved,
+      routeConductorObserved: state.routeConductorObserved,
+      eastPriestObserved: state.priestObserved,
       queenObserved: state.queenObserved,
-      queenHandshakeSurfaceObserved: state.queenHandshakeSurfaceObserved,
+      canvasReceiverObserved: state.canvasObserved,
+      pointerSurfaceObserved: state.pointerSurfaceObserved,
+      pointerSurfaceAccepted: state.pointerSurfaceAccepted,
+      pointerSurfaceContract: state.pointerSurfaceContract,
       hierarchySurfaceObservedCount: state.hierarchySurfaceObservedCount,
-      hierarchySurfaceRequiredCount: state.hierarchySurfaceRequiredCount,
       hierarchySurfaceStatus: state.hierarchySurfaceStatus,
 
       northTimetableAlignmentActive: true,
@@ -2329,7 +2380,6 @@
       bishopChordReadyCount: state.bishopChordReadyCount,
       bishopChordObservedCount: state.bishopChordObservedCount,
       bishopChordRequiredCount: state.bishopChordRequiredCount,
-      bishopChordRequiredLanes: state.bishopChordRequiredLanes.slice(),
       bishopChordGap: state.bishopChordGap,
       bishopChordSourceMethod: state.bishopChordSourceMethod,
       bishopChordReleaseMode: state.bishopChordReleaseMode,
@@ -2337,15 +2387,23 @@
       currentCanvasParentObserved: state.currentCanvasParentObserved,
       currentCanvasParentContractObserved: state.currentCanvasParentContractObserved,
       currentCanvasParentContract: state.currentCanvasParentContract,
-      currentCanvasParentIsLocalStation: state.currentCanvasParentIsLocalStation,
-      canvasLocalStationContractAccepted: state.canvasLocalStationContractAccepted,
+      currentCanvasParentReceipt: state.currentCanvasParentReceipt,
+      currentCanvasParentIsCurrentCanvas: state.currentCanvasParentIsCurrentCanvas,
+      canvasContractAccepted: state.canvasContractAccepted,
+      canvasV123Recognized: state.canvasV123Recognized,
+      canvasV122Recognized: state.canvasV122Recognized,
+      canvasV121Recognized: state.canvasV121Recognized,
+      canvasV12LineageAccepted: state.canvasV12LineageAccepted,
+      canvasV11LineageAccepted: state.canvasV11LineageAccepted,
       canvasBaselineV10_3Recognized: state.canvasBaselineV10_3Recognized,
       v10_3BaselineRecognizedOnly: state.v10_3BaselineRecognizedOnly,
-      v11OrNewerRequiredForLocalStationPass: true,
       canvasReceiverApiReady: state.canvasReceiverApiReady,
-      canvasLocalStationSummaryObserved: state.canvasLocalStationSummaryObserved,
-      canvasLocalStationReceiveSurfaceReady: state.canvasLocalStationReceiveSurfaceReady,
-      canvasLocalStationSourceMethod: state.canvasLocalStationSourceMethod,
+      canvasReceiveSurfaceReady: state.canvasReceiveSurfaceReady,
+      canvasSummaryObserved: state.canvasSummaryObserved,
+      canvasVisibleProofReady: state.canvasVisibleProofReady,
+      canvasMounted: state.canvasMounted,
+      canvasDrawComplete: state.canvasDrawComplete,
+      canvasSourceMethod: state.canvasSourceMethod,
       selectedCanvasProofRank: state.selectedCanvasProofRank,
       selectedCanvasProofUnsafe: state.selectedCanvasProofUnsafe,
 
@@ -2367,7 +2425,6 @@
       westForwardAllowed: state.westForwardAllowed,
       westCanvasReleaseApproved: state.westCanvasReleaseApproved,
 
-      fourWayCanvasHandoffActive: true,
       canvasReleaseAuthorized: state.canvasReleaseAuthorized,
       canvasReleasePacketReady: state.canvasReleasePacketReady,
       canvasReleaseApprovedByWest: state.canvasReleaseApprovedByWest,
@@ -2397,7 +2454,8 @@
       lastInput: clonePlain(state.lastInput),
       lastNorthEvidence: clonePlain(state.lastNorthEvidence),
       lastCanvasProof: clonePlain(state.lastCanvasProof),
-      lastCanvasCandidates: clonePlain(state.lastCanvasCandidates)
+      lastCanvasCandidates: clonePlain(state.lastCanvasCandidates),
+      lastPointerSurfaceProof: clonePlain(state.lastPointerSurfaceProof)
     };
   }
 
@@ -2405,20 +2463,22 @@
     const r = getReceiptLight();
 
     return [
-      "LAB_RUNTIME_TABLE_CARDINAL_WEST_GATE_DOWNSTREAM_HIERARCHY_BISHOP_QUEEN_PRIEST_ADOPTION_RECEIPT",
+      "LAB_RUNTIME_TABLE_CARDINAL_WEST_CANVAS_V12_3_POINTER_SURFACE_BISHOP_RELEASE_BRIDGE_RECEIPT",
       "",
       `timestamp=${r.timestamp}`,
       `contract=${r.contract}`,
       `receipt=${r.receipt}`,
       `previousContract=${r.previousContract}`,
       `previousReceipt=${r.previousReceipt}`,
+      `lineageV47Contract=${r.lineageV47Contract}`,
+      `lineageV47Receipt=${r.lineageV47Receipt}`,
       `baselineContract=${r.baselineContract}`,
       `version=${r.version}`,
       `file=${r.file}`,
       `route=${r.route}`,
       `role=${r.role}`,
       "",
-      "HIERARCHY_REGISTRY",
+      "HIERARCHY",
       `westGateLanguageActive=${r.westGateLanguageActive}`,
       `westGateOwnsUpstreamTruth=${r.westGateOwnsUpstreamTruth}`,
       `upstreamCardinalSelfNamingRequired=${r.upstreamCardinalSelfNamingRequired}`,
@@ -2426,31 +2486,21 @@
       `hierarchyRegistryContract=${r.hierarchyRegistryContract}`,
       `hierarchyRegistryReceipt=${r.hierarchyRegistryReceipt}`,
       `hierarchyRegistryPublished=${r.hierarchyRegistryPublished}`,
-      `hierarchyRegistryAdoptionMode=${r.hierarchyRegistryAdoptionMode}`,
       `cardinalBishopTermOwnedByHierarchyMap=${r.cardinalBishopTermOwnedByHierarchyMap}`,
-      `highBishopTermRejected=${r.highBishopTermRejected}`,
+      `downstreamBishopTermActive=${r.downstreamBishopTermActive}`,
       `queenExcludedFromCardinalFunctionality=${r.queenExcludedFromCardinalFunctionality}`,
       `priestNotBishop=${r.priestNotBishop}`,
-      `pointerFingerFileConfirmed=${r.pointerFingerFileConfirmed}`,
-      `cardinalBishopNorthFile=${CARDINAL_BISHOP_FILES.north}`,
-      `cardinalBishopEastFile=${CARDINAL_BISHOP_FILES.east}`,
-      `cardinalBishopSouthFile=${CARDINAL_BISHOP_FILES.south}`,
-      `cardinalBishopWestFile=${CARDINAL_BISHOP_FILES.west}`,
-      `downstreamBishopNorthFile=${DOWNSTREAM_BISHOP_FILES.north}`,
-      `downstreamBishopSouthFile=${DOWNSTREAM_BISHOP_FILES.south}`,
-      `downstreamBishopWestFile=${DOWNSTREAM_BISHOP_FILES.west}`,
-      `eastPriestFile=${PRIEST_FILES.east}`,
-      `queenFile=${QUEEN_FILES.queen}`,
-      `downstreamNorthBishopObserved=${r.downstreamNorthBishopObserved}`,
-      `downstreamSouthBishopObserved=${r.downstreamSouthBishopObserved}`,
-      `downstreamWestBishopObserved=${r.downstreamWestBishopObserved}`,
+      `routeConductorObserved=${r.routeConductorObserved}`,
       `eastPriestObserved=${r.eastPriestObserved}`,
       `queenObserved=${r.queenObserved}`,
+      `canvasReceiverObserved=${r.canvasReceiverObserved}`,
+      `pointerSurfaceObserved=${r.pointerSurfaceObserved}`,
+      `pointerSurfaceAccepted=${r.pointerSurfaceAccepted}`,
+      `pointerSurfaceContract=${r.pointerSurfaceContract}`,
       `hierarchySurfaceObservedCount=${r.hierarchySurfaceObservedCount}`,
       `hierarchySurfaceStatus=${r.hierarchySurfaceStatus}`,
       "",
       "NORTH_TIMETABLE",
-      `northTimetableAlignmentActive=${r.northTimetableAlignmentActive}`,
       `northTimetableObserved=${r.northTimetableObserved}`,
       `northSourceMethod=${r.northSourceMethod}`,
       `northActiveStageId=${r.northActiveStageId}`,
@@ -2468,10 +2518,6 @@
       `cycleRoute=${r.cycleRoute}`,
       `receivedFrom=${r.receivedFrom}`,
       `handoffTo=${r.handoffTo}`,
-      `sourceCardinal=${r.sourceCardinal}`,
-      `targetCardinal=${r.targetCardinal}`,
-      `activeCycleInputCardinal=${r.activeCycleInputCardinal}`,
-      `activeCycleHandoffTarget=${r.activeCycleHandoffTarget}`,
       `indexPairReady=${r.indexPairReady}`,
       `carrierHostAdmissibilityReady=${r.carrierHostAdmissibilityReady}`,
       `f8SelfDutySatisfied=${r.f8SelfDutySatisfied}`,
@@ -2479,7 +2525,6 @@
       `cycleTwoSouthOutputObserved=${r.cycleTwoSouthOutputObserved}`,
       `cycleTwoSouthOutputAdmissible=${r.cycleTwoSouthOutputAdmissible}`,
       `southOutputIntakeMethod=${r.southOutputIntakeMethod}`,
-      `explicitSouthOutputMarkers=${r.explicitSouthOutputMarkers.join(",") || "none"}`,
       "",
       "BISHOP_CHORD",
       `bishopChordBridgeActive=${r.bishopChordBridgeActive}`,
@@ -2492,8 +2537,6 @@
       `bishopChordHardBlock=${r.bishopChordHardBlock}`,
       `bishopChordReadyCount=${r.bishopChordReadyCount}`,
       `bishopChordObservedCount=${r.bishopChordObservedCount}`,
-      `bishopChordRequiredCount=${r.bishopChordRequiredCount}`,
-      `bishopChordRequiredLanes=${r.bishopChordRequiredLanes.join(",")}`,
       `bishopChordGap=${r.bishopChordGap}`,
       `bishopChordSourceMethod=${r.bishopChordSourceMethod}`,
       `bishopChordReleaseMode=${r.bishopChordReleaseMode}`,
@@ -2502,18 +2545,27 @@
       `currentCanvasParentObserved=${r.currentCanvasParentObserved}`,
       `currentCanvasParentContractObserved=${r.currentCanvasParentContractObserved}`,
       `currentCanvasParentContract=${r.currentCanvasParentContract}`,
-      `currentCanvasParentIsLocalStation=${r.currentCanvasParentIsLocalStation}`,
-      `canvasLocalStationContractAccepted=${r.canvasLocalStationContractAccepted}`,
+      `currentCanvasParentReceipt=${r.currentCanvasParentReceipt}`,
+      `currentCanvasParentIsCurrentCanvas=${r.currentCanvasParentIsCurrentCanvas}`,
+      `canvasContractAccepted=${r.canvasContractAccepted}`,
+      `canvasV123Recognized=${r.canvasV123Recognized}`,
+      `canvasV122Recognized=${r.canvasV122Recognized}`,
+      `canvasV121Recognized=${r.canvasV121Recognized}`,
+      `canvasV12LineageAccepted=${r.canvasV12LineageAccepted}`,
+      `canvasV11LineageAccepted=${r.canvasV11LineageAccepted}`,
       `canvasBaselineV10_3Recognized=${r.canvasBaselineV10_3Recognized}`,
       `v10_3BaselineRecognizedOnly=${r.v10_3BaselineRecognizedOnly}`,
-      `v11OrNewerRequiredForLocalStationPass=${r.v11OrNewerRequiredForLocalStationPass}`,
       `canvasReceiverApiReady=${r.canvasReceiverApiReady}`,
-      `canvasLocalStationSummaryObserved=${r.canvasLocalStationSummaryObserved}`,
-      `canvasLocalStationReceiveSurfaceReady=${r.canvasLocalStationReceiveSurfaceReady}`,
-      `canvasLocalStationSourceMethod=${r.canvasLocalStationSourceMethod}`,
+      `canvasReceiveSurfaceReady=${r.canvasReceiveSurfaceReady}`,
+      `canvasSummaryObserved=${r.canvasSummaryObserved}`,
+      `canvasVisibleProofReady=${r.canvasVisibleProofReady}`,
+      `canvasMounted=${r.canvasMounted}`,
+      `canvasDrawComplete=${r.canvasDrawComplete}`,
+      `canvasSourceMethod=${r.canvasSourceMethod}`,
       `selectedCanvasProofRank=${r.selectedCanvasProofRank}`,
       `selectedCanvasProofUnsafe=${r.selectedCanvasProofUnsafe}`,
       "",
+      "CARRIER",
       `carrierIdentitySafe=${r.carrierIdentitySafe}`,
       `carrierSafeMarkerObserved=${r.carrierSafeMarkerObserved}`,
       `preReleaseCarrierAdmissible=${r.preReleaseCarrierAdmissible}`,
@@ -2534,14 +2586,12 @@
       `westCanvasReleaseApproved=${r.westCanvasReleaseApproved}`,
       "",
       "CANVAS_RELEASE",
-      `fourWayCanvasHandoffActive=${r.fourWayCanvasHandoffActive}`,
       `canvasReleaseAuthorized=${r.canvasReleaseAuthorized}`,
       `canvasReleasePacketReady=${r.canvasReleasePacketReady}`,
       `canvasReleaseApprovedByWest=${r.canvasReleaseApprovedByWest}`,
       `releaseToCanvas=${r.releaseToCanvas}`,
       `canvasReleaseHeldReason=${r.canvasReleaseHeldReason}`,
       `releasePacket=${r.releasePacket}`,
-      `canvasReleasePacket=${r.canvasReleasePacket}`,
       "",
       "NO_CLAIMS",
       `f21EligibleForNorth=${r.f21EligibleForNorth}`,
@@ -2578,39 +2628,37 @@
     setDataset("hearthWestGateOwnsUpstreamTruth", "false");
     setDataset("hearthUpstreamCardinalSelfNamingRequired", "false");
     setDataset("hearthCardinalBishopTermOwnedByHierarchyMap", "true");
-    setDataset("hearthHighBishopTermRejected", "true");
+    setDataset("hearthDownstreamBishopTermActive", "true");
     setDataset("hearthHierarchyRegistryActive", "true");
     setDataset("hearthHierarchyRegistryContract", HIERARCHY_REGISTRY_CONTRACT);
     setDataset("hearthHierarchyRegistryReceipt", HIERARCHY_REGISTRY_RECEIPT);
-    setDataset("hearthHierarchyRegistryAdoptionMode", state.hierarchyRegistryAdoptionMode);
 
-    setDataset("hearthCardinalBishopNorthFile", CARDINAL_BISHOP_FILES.north);
-    setDataset("hearthCardinalBishopEastFile", CARDINAL_BISHOP_FILES.east);
-    setDataset("hearthCardinalBishopSouthFile", CARDINAL_BISHOP_FILES.south);
-    setDataset("hearthCardinalBishopWestFile", CARDINAL_BISHOP_FILES.west);
-
+    setDataset("hearthCardinalBishopNorthFile", NORTH_FILE);
+    setDataset("hearthCardinalBishopEastFile", EAST_FILE);
+    setDataset("hearthCardinalBishopSouthFile", SOUTH_FILE);
+    setDataset("hearthCardinalBishopWestFile", WEST_FILE);
+    setDataset("hearthDownstreamBishopRouteNorthFile", ROUTE_CONDUCTOR_FILE);
+    setDataset("hearthDownstreamBishopCanvasSouthFile", CANVAS_FILE);
+    setDataset("hearthDownstreamBishopPointerWestFile", POINTER_SURFACE_FILE);
+    setDataset("hearthPointerSurfaceBishopFile", POINTER_SURFACE_FILE);
     setDataset("hearthQueenFile", QUEEN_FILE);
     setDataset("hearthQueenExcludedFromCardinalFunctionality", "true");
-    setDataset("hearthDownstreamBishopNorthFile", DOWNSTREAM_BISHOP_FILES.north);
-    setDataset("hearthDownstreamBishopSouthFile", DOWNSTREAM_BISHOP_FILES.south);
-    setDataset("hearthDownstreamBishopWestFile", DOWNSTREAM_BISHOP_FILES.west);
-    setDataset("hearthPointerFingerFile", POINTER_FINGER_FILE);
-    setDataset("hearthPointerFingerFileConfirmed", "true");
     setDataset("hearthEastPriestFile", PRIEST_FILE);
     setDataset("hearthPriestNotBishop", "true");
 
-    setDataset("hearthDownstreamNorthBishopObserved", String(Boolean(state.downstreamNorthBishopObserved)));
-    setDataset("hearthDownstreamSouthBishopObserved", String(Boolean(state.downstreamSouthBishopObserved)));
-    setDataset("hearthDownstreamWestBishopObserved", String(Boolean(state.downstreamWestBishopObserved)));
-    setDataset("hearthEastPriestObserved", String(Boolean(state.eastPriestObserved)));
-    setDataset("hearthQueenObserved", String(Boolean(state.queenObserved)));
-    setDataset("hearthHierarchySurfaceObservedCount", String(state.hierarchySurfaceObservedCount));
-    setDataset("hearthHierarchySurfaceStatus", state.hierarchySurfaceStatus);
+    setDataset("hearthWestRouteConductorObserved", String(Boolean(state.routeConductorObserved)));
+    setDataset("hearthWestEastPriestObserved", String(Boolean(state.priestObserved)));
+    setDataset("hearthWestQueenObserved", String(Boolean(state.queenObserved)));
+    setDataset("hearthWestCanvasReceiverObserved", String(Boolean(state.canvasObserved)));
+    setDataset("hearthWestPointerSurfaceObserved", String(Boolean(state.pointerSurfaceObserved)));
+    setDataset("hearthWestPointerSurfaceAccepted", String(Boolean(state.pointerSurfaceAccepted)));
+    setDataset("hearthWestPointerSurfaceContract", state.pointerSurfaceContract);
+    setDataset("hearthWestHierarchySurfaceObservedCount", String(state.hierarchySurfaceObservedCount));
+    setDataset("hearthWestHierarchySurfaceStatus", state.hierarchySurfaceStatus);
 
     setDataset("hearthWestBishopChordBridgeActive", "true");
     setDataset("hearthWestBishopSubjectFileDelegationActive", "true");
     setDataset("hearthWestKnowsBishopsNotChildren", "true");
-    setDataset("hearthWestFourWayCanvasHandoffActive", "true");
 
     setDataset("hearthWestNorthTimetableAligned", String(Boolean(state.northC2WestAuditAligned)));
     setDataset("hearthWestNorthActiveStageId", state.northActiveStageId);
@@ -2638,14 +2686,30 @@
     setDataset("hearthWestBishopChordReleaseMode", state.bishopChordReleaseMode);
 
     setDataset("hearthWestCurrentCanvasParentContract", state.currentCanvasParentContract);
-    setDataset("hearthWestCurrentCanvasParentIsLocalStation", String(Boolean(state.currentCanvasParentIsLocalStation)));
-    setDataset("hearthWestCanvasLocalStationContractAccepted", String(Boolean(state.canvasLocalStationContractAccepted)));
+    setDataset("hearthWestCurrentCanvasParentReceipt", state.currentCanvasParentReceipt);
+    setDataset("hearthWestCurrentCanvasParentIsCurrentCanvas", String(Boolean(state.currentCanvasParentIsCurrentCanvas)));
+    setDataset("hearthWestCanvasContractAccepted", String(Boolean(state.canvasContractAccepted)));
+    setDataset("hearthWestCanvasV123Recognized", String(Boolean(state.canvasV123Recognized)));
+    setDataset("hearthWestCanvasV122Recognized", String(Boolean(state.canvasV122Recognized)));
+    setDataset("hearthWestCanvasV121Recognized", String(Boolean(state.canvasV121Recognized)));
+    setDataset("hearthWestCanvasV12LineageAccepted", String(Boolean(state.canvasV12LineageAccepted)));
+    setDataset("hearthWestCanvasV11LineageAccepted", String(Boolean(state.canvasV11LineageAccepted)));
     setDataset("hearthWestV10_3BaselineRecognizedOnly", String(Boolean(state.v10_3BaselineRecognizedOnly)));
     setDataset("hearthWestCanvasReceiverApiReady", String(Boolean(state.canvasReceiverApiReady)));
-    setDataset("hearthWestCanvasLocalStationSummaryObserved", String(Boolean(state.canvasLocalStationSummaryObserved)));
-    setDataset("hearthWestCanvasLocalStationReceiveSurfaceReady", String(Boolean(state.canvasLocalStationReceiveSurfaceReady)));
+    setDataset("hearthWestCanvasReceiveSurfaceReady", String(Boolean(state.canvasReceiveSurfaceReady)));
+    setDataset("hearthWestCanvasVisibleProofReady", String(Boolean(state.canvasVisibleProofReady)));
+    setDataset("hearthWestCanvasMounted", String(Boolean(state.canvasMounted)));
+    setDataset("hearthWestCanvasDrawComplete", String(Boolean(state.canvasDrawComplete)));
+    setDataset("hearthWestCanvasSourceMethod", state.canvasSourceMethod);
     setDataset("hearthWestSelectedCanvasProofRank", String(state.selectedCanvasProofRank));
     setDataset("hearthWestSelectedCanvasProofUnsafe", String(Boolean(state.selectedCanvasProofUnsafe)));
+
+    setDataset("hearthWestCarrierIdentitySafe", String(Boolean(state.carrierIdentitySafe)));
+    setDataset("hearthWestCarrierSafeMarkerObserved", String(Boolean(state.carrierSafeMarkerObserved)));
+    setDataset("hearthWestPreReleaseCarrierAdmissible", String(Boolean(state.preReleaseCarrierAdmissible)));
+    setDataset("hearthWestCarrierHardBlock", String(Boolean(state.carrierHardBlock)));
+    setDataset("hearthWestCarrierHeld", String(Boolean(state.carrierHeld)));
+    setDataset("hearthWestCarrierHoldReason", state.carrierHoldReason);
 
     setDataset("hearthWestAuditObserved", String(Boolean(state.westAuditObserved)));
     setDataset("hearthWestAuditIntakeAccepted", String(Boolean(state.westAuditIntakeAccepted)));
@@ -2683,73 +2747,61 @@
   }
 
   function publishReceiptAliases() {
-    const w = root();
-    const full = getReceipt();
+    const w = rootRef();
     const light = getReceiptLight();
+    const full = getReceipt();
 
     w.LAB_RUNTIME_TABLE_WEST_RECEIPT = light;
     w.LAB_RUNTIME_TABLE_CARDINAL_WEST_RECEIPT = full;
+    w.LAB_RUNTIME_TABLE_CARDINAL_WEST_CANVAS_V12_3_POINTER_SURFACE_BISHOP_RELEASE_BRIDGE_RECEIPT = full;
+    w.LAB_RUNTIME_TABLE_CARDINAL_WEST_CANVAS_V12_3_POINTER_SURFACE_BISHOP_RELEASE_BRIDGE_RECEIPT_v4_9 = full;
+
     w.LAB_RUNTIME_TABLE_CARDINAL_WEST_GATE_DOWNSTREAM_HIERARCHY_BISHOP_QUEEN_PRIEST_ADOPTION_RECEIPT = full;
     w.LAB_RUNTIME_TABLE_CARDINAL_WEST_GATE_DOWNSTREAM_HIERARCHY_BISHOP_QUEEN_PRIEST_ADOPTION_RECEIPT_v4_8 = full;
 
     w.LAB_RUNTIME_TABLE_CARDINAL_WEST_BISHOP_CHORD_CANVAS_RELEASE_BRIDGE_RECEIPT = full;
     w.LAB_RUNTIME_TABLE_CARDINAL_WEST_BISHOP_CHORD_CANVAS_RELEASE_BRIDGE_RECEIPT_v4_7 = full;
 
-    w.LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_TIMETABLE_ALIGNED_LOCAL_ADMISSIBILITY_CLUTCH_RECEIPT = full;
-    w.LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_TIMETABLE_ALIGNED_LOCAL_ADMISSIBILITY_CLUTCH_RECEIPT_v4_6_3 = full;
-    w.LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_TIMETABLE_ALIGNED_LOCAL_ADMISSIBILITY_CLUTCH_RECEIPT_v4_6_2 = full;
-    w.LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_TIMETABLE_ALIGNED_LOCAL_ADMISSIBILITY_CLUTCH_RECEIPT_v4_6_1 = full;
-    w.LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_TIMETABLE_ALIGNED_LOCAL_ADMISSIBILITY_CLUTCH_RECEIPT_v4_6 = full;
-    w.LAB_RUNTIME_TABLE_CARDINAL_WEST_V11_1_LOCAL_STATION_ALIAS_SELECTION_STRICT_SOUTH_AND_CANVAS_PROOF_RANKING_RECEIPT_v4_5 = full;
-    w.LAB_RUNTIME_TABLE_CARDINAL_WEST_V11_1_LOCAL_STATION_ALIAS_SELECTION_AND_CARRIER_COMPATIBILITY_RECEIPT_v4_4 = full;
-    w.LAB_RUNTIME_TABLE_CARDINAL_WEST_V11_1_LOCAL_STATION_CARRIER_COMPATIBILITY_RECEIPT_v4_3 = full;
-    w.LAB_RUNTIME_TABLE_CARDINAL_WEST_CURRENT_CANVAS_PARENT_V10_3_CARRIER_COMPATIBILITY_RECEIPT_v4_2 = full;
-
     return true;
   }
 
   function publishGlobals() {
-    const w = root();
+    const w = rootRef();
     const lab = ensureObject(w, "DEXTER_LAB");
-    const h = ensureObject(w, "HEARTH");
+    const hearth = ensureObject(w, "HEARTH");
 
     publishHierarchyRegistry();
 
-    w.LAB_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_WEST = api;
-    w.HEARTH_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH = api;
     w.LAB_RUNTIME_TABLE_WEST = api;
     w.RUNTIME_TABLE_WEST = api;
-    w.DEXTER_LAB_RUNTIME_TABLE_WEST = api;
     w.LAB_CARDINAL_RUNTIME_TABLE_WEST = api;
-    w.LAB_GAP_CLASSIFIER_WEST = api;
-    w.LAB_TRANSMISSION_GAP_CLASSIFIER_WEST = api;
     w.LAB_RUNTIME_TABLE_CARDINAL_WEST = api;
     w.HEARTH_RUNTIME_TABLE_WEST = api;
-    w.HEARTH_MACRO_WEST_AUTHORITY = api;
     w.HEARTH_WEST_ADMISSIBILITY = api;
+    w.HEARTH_MACRO_WEST_AUTHORITY = api;
 
     w.LAB_RUNTIME_TABLE_WEST_BISHOP_CHORD_CANVAS_RELEASE_BRIDGE = api;
     w.HEARTH_WEST_BISHOP_CHORD_CANVAS_RELEASE_BRIDGE = api;
-    w.HEARTH_WEST_GATE_DOWNSTREAM_HIERARCHY_ADOPTION = api;
     w.LAB_RUNTIME_TABLE_WEST_GATE_DOWNSTREAM_HIERARCHY_ADOPTION = api;
+    w.HEARTH_WEST_GATE_DOWNSTREAM_HIERARCHY_ADOPTION = api;
+    w.LAB_RUNTIME_TABLE_WEST_CANVAS_V12_3_POINTER_SURFACE_BISHOP_RELEASE_BRIDGE = api;
+    w.HEARTH_WEST_CANVAS_V12_3_POINTER_SURFACE_BISHOP_RELEASE_BRIDGE = api;
 
-    h.runtimeTableWest = api;
-    h.westRuntimeTable = api;
-    h.westAdmissibility = api;
-    h.macroWestAuthority = api;
-    h.westCycleAwareAdmissibilityClutch = api;
-    h.westBishopChordCanvasReleaseBridge = api;
-    h.westGateDownstreamHierarchyAdoption = api;
+    hearth.runtimeTableWest = api;
+    hearth.westRuntimeTable = api;
+    hearth.westAdmissibility = api;
+    hearth.macroWestAuthority = api;
+    hearth.westBishopChordCanvasReleaseBridge = api;
+    hearth.westGateDownstreamHierarchyAdoption = api;
+    hearth.westCanvasV123PointerSurfaceBishopReleaseBridge = api;
 
     lab.runtimeTableWest = api;
-    lab.hearthRuntimeTableWest = api;
     lab.cardinalRuntimeTableWest = api;
-    lab.gapClassifierWest = api;
-    lab.transmissionGapClassifierWest = api;
+    lab.hearthRuntimeTableWest = api;
     lab.westAdmissibility = api;
-    lab.cycleAwareAdmissibilityClutchWest = api;
     lab.hearthWestBishopChordCanvasReleaseBridge = api;
     lab.hearthWestGateDownstreamHierarchyAdoption = api;
+    lab.hearthWestCanvasV123PointerSurfaceBishopReleaseBridge = api;
 
     publishReceiptAliases();
 
@@ -2763,7 +2815,7 @@
   }
 
   function scheduleAliasRepublish() {
-    const w = root();
+    const w = rootRef();
     const delays = [0, 16, 80, 240, 700];
 
     delays.forEach((delay) => {
@@ -2781,19 +2833,22 @@
     RECEIPT,
     PREVIOUS_CONTRACT,
     PREVIOUS_RECEIPT,
+    LINEAGE_V4_7_CONTRACT,
+    LINEAGE_V4_7_RECEIPT,
     BASELINE_CONTRACT,
     VERSION,
     FILE,
     ROUTE,
+
     NORTH_FILE,
     EAST_FILE,
     SOUTH_FILE,
     WEST_FILE,
     ROUTE_CONDUCTOR_FILE,
+    PRIEST_FILE,
     QUEEN_FILE,
     CANVAS_FILE,
-    POINTER_FINGER_FILE,
-    PRIEST_FILE,
+    POINTER_SURFACE_FILE,
 
     HIERARCHY_REGISTRY_CONTRACT,
     HIERARCHY_REGISTRY_RECEIPT,
@@ -2801,7 +2856,6 @@
     DOWNSTREAM_BISHOP_FILES,
     PRIEST_FILES,
     QUEEN_FILES,
-    BISHOP_FILES,
 
     ACTIVE_STAGE_ID,
     ACTIVE_GEAR,
@@ -2814,14 +2868,18 @@
     WEST_DECISION,
     WEST_GAP_CLASS,
     BISHOP_CHORD_STATUS,
-    CANVAS_LOCAL_STATION_CONTRACTS,
-    CANVAS_BASELINE_V10_3_CONTRACT,
-    BISHOP_ALIASES,
-    CANVAS_ALIASES,
+    CURRENT_CANVAS_CONTRACTS,
+    CANVAS_BASELINE_HOLD_CONTRACTS,
+    POINTER_SURFACE_CONTRACTS,
+
+    NORTH_ALIASES,
+    EAST_ALIASES,
+    SOUTH_ALIASES,
     ROUTE_CONDUCTOR_ALIASES,
-    QUEEN_ALIASES,
-    POINTER_SURFACE_ALIASES,
     PRIEST_ALIASES,
+    QUEEN_ALIASES,
+    CANVAS_ALIASES,
+    POINTER_SURFACE_ALIASES,
 
     composeHierarchyRegistry,
     publishHierarchyRegistry,
@@ -2835,13 +2893,19 @@
     inputCallsWestForCycleTwoAudit,
     normalizeCycleInput,
 
-    normalizeBishopLane,
+    normalizeAuthorityLane,
+    readPointerSurfaceProof,
     readBishopChord,
     getBishopChord,
     getBishopLanes,
 
     selectCanvasReceiverProof,
     classifyWestAdmissibility,
+    classifyCyclePacket,
+    createWestCycleReceipt,
+    createGapReceipt,
+    classifyGap,
+    classifyTransmissionGap,
 
     assess,
     inspect,
@@ -2870,7 +2934,6 @@
     ownsWestGateDownstreamHierarchyAdoption: true,
     ownsHierarchyRegistryPublication: true,
     ownsBishopChordBridge: true,
-    ownsFourWayCanvasHandoff: true,
     ownsCanvasReleasePacket: true,
     ownsBishopReceiptTrust: true,
     westKnowsBishopsNotChildren: true,
@@ -2885,6 +2948,7 @@
     ownsRouteConductorHandshakeTruth: false,
     ownsBishopImplementationTruth: false,
     ownsSubjectFiles: false,
+    ownsPointerSurfaceInternals: false,
     ownsCanvasDrawing: false,
     ownsCanvasChildInternals: false,
     ownsPlanetTruth: false,
@@ -2894,10 +2958,10 @@
     ownsFinalVisualPassClaim: false,
 
     cardinalBishopTermOwnedByHierarchyMap: true,
-    highBishopTermRejected: true,
+    downstreamBishopTermActive: true,
     queenExcludedFromCardinalFunctionality: true,
     priestNotBishop: true,
-    pointerFingerFileConfirmed: true,
+    pointerSurfaceBishopRecognized: true,
 
     ...NO_CLAIMS,
 

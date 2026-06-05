@@ -1,23 +1,23 @@
 // /showroom/globe/hearth/index.js
 // HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4
 // Internal controlled renewal:
-// HEARTH_INDEX_JS_VISIBLE_EXPRESSION_CHAIN_LOADER_BRIDGE_TNT_v5_4_2
+// HEARTH_INDEX_JS_PASSIVE_BUTTON_RECEIPT_CORRIDOR_ALIGNMENT_TNT_v5_4_3
 // Full-file replacement.
-// Index JS / front-end button authority reset / visible-expression loader bridge only.
+// Index JS / passive front-end button authority / receipt corridor / downstream observer only.
 // Served CONTRACT intentionally remains v5_4 to preserve HTML/EAST diagnostic expectations.
 // Supersedes internally:
-// - HEARTH_INDEX_JS_PAGE_RECEIPT_TARGET_BINDING_RENEWAL_TNT_v5_4_1
-// Adds:
-// - Loads/recognizes the downstream visible-expression chain from the index bridge:
-//   1. /assets/hearth/hearth.hex.four-pair.authority.js
-//   2. /assets/hearth/hearth.hex.surface.js
-//   3. /assets/hearth/hearth.canvas.js
-// - Calls the Canvas Hub only through its public API: boot/init/start/mount.
-// - Publishes loader receipts proving whether the chain is served, loaded, and boot-attempted.
+// - HEARTH_INDEX_JS_VISIBLE_EXPRESSION_CHAIN_LOADER_BRIDGE_TNT_v5_4_2
+// Correction:
+// - Retires active visible-expression chain loading from index.js.
+// - Does not inject Hex, Surface, Canvas, Controls, diagnostic rail, or source-stack scripts.
+// - Does not boot Canvas.
+// - Does not call route-conductor release/admission methods.
+// - Button presses are non-ignition events: UI action + receipt update only.
+// - Route conductor remains the owner of control-file admission.
+// - Canvas remains the owner of visible expression reception/render.
 // Preserves:
 // - visible Hearth front-end button and anchor functionality
 // - native navigation for diagnostic and portal anchors
-// - downstream/global suppression avoidance
 // - direct button binding
 // - duplicate activation protection
 // - receipt toggle
@@ -25,7 +25,7 @@
 // - inspect/diagnostic dock
 // - cockpit expansion
 // - emergency diagnostic anchor
-// - diagnostic child-chain loading held
+// - passive downstream/global observation receipts
 // - F13 held
 // - F21 held
 // - ready text held
@@ -37,38 +37,64 @@
 // - canvas drawing
 // - hex truth
 // - hex surface truth
+// - controls admission
 // - route conductor systemic authority
 // - diagnostic child-chain authority
 // - F13
 // - F21
 // - final visual pass
-// - production repair beyond front-end button authority and downstream asset loading
+// - production repair beyond front-end button authority and passive receipt observation
 
 (() => {
   "use strict";
 
   const CONTRACT = "HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4";
   const RECEIPT = "HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_RECEIPT_v5_4";
+
   const PREVIOUS_CONTRACT = "HEARTH_INDEX_JS_CONTROL_SURFACE_EARLY_ACTIVATION_SHIELD_TNT_v5_3";
+  const PREVIOUS_RENEWAL_CONTRACT = "HEARTH_INDEX_JS_VISIBLE_EXPRESSION_CHAIN_LOADER_BRIDGE_TNT_v5_4_2";
+  const PREVIOUS_RENEWAL_RECEIPT = "HEARTH_INDEX_JS_VISIBLE_EXPRESSION_CHAIN_LOADER_BRIDGE_RECEIPT_v5_4_2";
 
-  const PREVIOUS_RENEWAL_CONTRACT = "HEARTH_INDEX_JS_PAGE_RECEIPT_TARGET_BINDING_RENEWAL_TNT_v5_4_1";
-  const PREVIOUS_RENEWAL_RECEIPT = "HEARTH_INDEX_JS_PAGE_RECEIPT_TARGET_BINDING_RENEWAL_RECEIPT_v5_4_1";
-
-  const RENEWAL_CONTRACT = "HEARTH_INDEX_JS_VISIBLE_EXPRESSION_CHAIN_LOADER_BRIDGE_TNT_v5_4_2";
-  const RENEWAL_RECEIPT = "HEARTH_INDEX_JS_VISIBLE_EXPRESSION_CHAIN_LOADER_BRIDGE_RECEIPT_v5_4_2";
-  const VERSION = "2026-06-03.hearth-index-js-visible-expression-chain-loader-bridge-v5-4-2";
+  const RENEWAL_CONTRACT = "HEARTH_INDEX_JS_PASSIVE_BUTTON_RECEIPT_CORRIDOR_ALIGNMENT_TNT_v5_4_3";
+  const RENEWAL_RECEIPT = "HEARTH_INDEX_JS_PASSIVE_BUTTON_RECEIPT_CORRIDOR_ALIGNMENT_RECEIPT_v5_4_3";
+  const VERSION = "2026-06-04.hearth-index-js-passive-button-receipt-corridor-alignment-v5-4-3";
 
   const ROUTE = "/showroom/globe/hearth/";
   const FILE = "/showroom/globe/hearth/index.js";
   const HTML_FILE = "/showroom/globe/hearth/index.html";
+  const ROUTE_CONDUCTOR_FILE = "/showroom/globe/hearth/hearth.js";
   const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
 
-  const CURRENT_HTML_CONTRACT = "HEARTH_HTML_PLANET_FACTORY_MIRRORLAND_PUBLIC_SHELL_TNT_v3";
-  const LINEAGE_HTML_CONTRACT = "HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_RECEIPT_TARGET_RESTORATION_TNT_v2_6";
-  const PREVIOUS_HTML_CONTRACT = "HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_OPTIMAL_STANDARD_TNT_v2_5";
+  const CURRENT_HTML_CONTRACT = "HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1";
+  const PREVIOUS_HTML_CONTRACT = "HEARTH_HTML_CONTROL_HANDSHAKE_ROUTE_SHELL_INTEGRATION_TNT_v5";
+  const BASELINE_HTML_CONTRACT = "HEARTH_HTML_FULL_PLANET_VISIBILITY_DOWNSTREAM_SHELL_ALIGNMENT_TNT_v4";
+  const FOUNDATION_HTML_CONTRACT = "HEARTH_HTML_PLANET_FACTORY_MIRRORLAND_PUBLIC_SHELL_TNT_v3";
+
+  const CURRENT_ROUTE_CONDUCTOR_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION_TNT_v9_7";
+  const CURRENT_ROUTE_CONDUCTOR_RECEIPT = "HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION_RECEIPT_v9_7";
+
+  const CONTROL_FILE = "/assets/hearth/hearth.controls.js";
+  const CONTROL_CONTRACT = "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE_TNT_v1";
+  const CONTROL_RECEIPT = "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE_RECEIPT_v1";
+
+  const HEX_FOUR_PAIR_FILE = "/assets/hearth/hearth.hex.four-pair.authority.js";
+  const HEX_SURFACE_FILE = "/assets/hearth/hearth.hex.surface.js";
+  const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
+
+  const EXPECTED_HEX_FOUR_PAIR_CONTRACT = "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_TNT_v1";
+  const EXPECTED_HEX_SURFACE_CONTRACT = "HEARTH_HEX_SURFACE_FOUR_PAIR_AUTHORITY_CONSUMER_TNT_v1";
+
+  const ACCEPTED_CANVAS_CONTRACTS = Object.freeze([
+    "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_TNT_v12_2",
+    "HEARTH_CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_TNT_v12_1",
+    "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_TNT_v12"
+  ]);
 
   const ACCEPTED_HTML_CONTRACTS = Object.freeze([
-    "HEARTH_HTML_PLANET_FACTORY_MIRRORLAND_PUBLIC_SHELL_TNT_v3",
+    CURRENT_HTML_CONTRACT,
+    PREVIOUS_HTML_CONTRACT,
+    BASELINE_HTML_CONTRACT,
+    FOUNDATION_HTML_CONTRACT,
     "HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_RECEIPT_TARGET_RESTORATION_TNT_v2_6",
     "HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_OPTIMAL_STANDARD_TNT_v2_5",
     "HEARTH_HTML_SINGLE_FLOATING_DIAGNOSTIC_DOORWAY_NO_DUPLICATE_TOP_BANNER_TNT_v2_4",
@@ -77,37 +103,31 @@
     "HEARTH_HTML_CONTROL_SURFACE_CACHE_KEY_TOUCH_BINDING_REPAIR_TNT_v2_1"
   ]);
 
-  const HEX_FOUR_PAIR_FILE = "/assets/hearth/hearth.hex.four-pair.authority.js";
-  const HEX_SURFACE_FILE = "/assets/hearth/hearth.hex.surface.js";
-  const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
-
-  const EXPECTED_HEX_FOUR_PAIR_CONTRACT = "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_TNT_v1";
-  const EXPECTED_HEX_SURFACE_CONTRACT = "HEARTH_HEX_SURFACE_FOUR_PAIR_AUTHORITY_CONSUMER_TNT_v1";
-  const EXPECTED_CANVAS_CONTRACT = "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_TNT_v12";
-
-  const ASSET_CHAIN = Object.freeze([
-    {
-      key: "hexFourPairAuthority",
-      file: HEX_FOUR_PAIR_FILE,
-      expectedContract: EXPECTED_HEX_FOUR_PAIR_CONTRACT,
-      globalLabel: "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY",
-      resolverName: "resolveHexFourPairAuthority"
-    },
-    {
-      key: "hexSurface",
-      file: HEX_SURFACE_FILE,
-      expectedContract: EXPECTED_HEX_SURFACE_CONTRACT,
-      globalLabel: "HEARTH_HEX_SURFACE",
-      resolverName: "resolveHexSurface"
-    },
-    {
-      key: "canvasHub",
-      file: CANVAS_FILE,
-      expectedContract: EXPECTED_CANVAS_CONTRACT,
-      globalLabel: "HEARTH_CANVAS",
-      resolverName: "resolveCanvasHub"
-    }
-  ]);
+  const FINAL_FALSE = Object.freeze({
+    f13Claimed: false,
+    f13EligibleForCanvas: false,
+    f13ClaimedByIndex: false,
+    f13ClaimedByCanvasParent: false,
+    f21Claimed: false,
+    f21EligibleForNorth: false,
+    f21SubmittedToNorth: false,
+    f21EligibilitySubmittedToNorth: false,
+    readyTextAllowed: false,
+    readyTextClaimed: false,
+    controlReadyClaimed: false,
+    motionReadyClaimed: false,
+    touchReadyClaimed: false,
+    dragReadyClaimed: false,
+    downstreamReleaseClaimed: false,
+    completionLatched: false,
+    finalCompletionLatched: false,
+    degradedCompletionLatched: false,
+    visualPassClaimed: false,
+    finalVisualPassClaimed: false,
+    generatedImage: false,
+    graphicBox: false,
+    webGL: false
+  });
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
@@ -121,80 +141,110 @@
     renewalContract: RENEWAL_CONTRACT,
     renewalReceipt: RENEWAL_RECEIPT,
     version: VERSION,
+
     route: ROUTE,
     file: FILE,
     htmlFile: HTML_FILE,
+    routeConductorFile: ROUTE_CONDUCTOR_FILE,
     diagnosticRoute: DIAGNOSTIC_ROUTE,
+    controlFile: CONTROL_FILE,
+    canvasFile: CANVAS_FILE,
+    hexFourPairAuthorityFile: HEX_FOUR_PAIR_FILE,
+    hexSurfaceFile: HEX_SURFACE_FILE,
 
-    role: "frontend-button-authority-reset-visible-expression-chain-loader-bridge",
+    role: "passive-front-end-button-authority-receipt-corridor",
     currentHtmlContract: CURRENT_HTML_CONTRACT,
-    lineageHtmlContract: LINEAGE_HTML_CONTRACT,
     previousHtmlContract: PREVIOUS_HTML_CONTRACT,
+    baselineHtmlContract: BASELINE_HTML_CONTRACT,
+    foundationHtmlContract: FOUNDATION_HTML_CONTRACT,
     observedHtmlContract: "UNKNOWN",
     currentHtmlContractRecognized: false,
 
     bootStarted: false,
     bootComplete: false,
-    controlStyleInjected: false,
+    bootCount: 0,
+    startedAt: "",
+    updatedAt: "",
+
+    passiveButtonCorridorActive: true,
+    passiveReceiptCorridorActive: true,
+    passiveDownstreamObserverActive: true,
+    activeVisibleExpressionLoaderRetired: true,
+    visibleExpressionChainLoaderBridgeRetired: true,
+    noDynamicScriptInjection: true,
+    canvasBootSuppressedByIndex: true,
+    routeConductorAdmissionSuppressedByIndex: true,
+    controlAdmissionSuppressedByIndex: true,
 
     buttonAuthorityActive: true,
+    frontendButtonAuthorityRestored: true,
+    documentCaptureShieldActive: false,
     globalSuppressionAvoided: true,
-    windowDocumentCaptureSuppressionRetired: true,
+    windowDocumentCaptureSuppressionRetired: false,
     nativeAnchorDefaultPreserved: true,
     directButtonBindingActive: true,
     delegatedButtonBindingActive: true,
     detailsSummaryBindingActive: true,
+    duplicateActivationProtectionActive: true,
 
     pageReceiptTargetBindingActive: true,
     pageReceiptAvailable: false,
     activeReceiptSource: "INDEX_FALLBACK",
     copiedReceiptSource: "NONE",
     shownReceiptSource: "NONE",
+    receiptVisible: false,
 
-    visibleExpressionChainLoaderBridgeActive: true,
-    visibleExpressionChainLoadStarted: false,
-    visibleExpressionChainLoadComplete: false,
-    visibleExpressionChainLoadHeld: false,
-    visibleExpressionChainLoadHeldReason: "NOT_RUN",
-    visibleExpressionChainLoadAttemptCount: 0,
-    visibleExpressionChainLoadCompleteCount: 0,
-    visibleExpressionChainLoadLastReason: "NOT_RUN",
-    visibleExpressionChainLoadLastError: "",
-    visibleExpressionChainLoadPromiseActive: false,
+    downstreamObservationAttempted: false,
+    downstreamObservationCount: 0,
+    downstreamObservationLastReason: "NOT_RUN",
 
-    hexFourPairAuthorityFile: HEX_FOUR_PAIR_FILE,
-    hexSurfaceFile: HEX_SURFACE_FILE,
-    canvasFile: CANVAS_FILE,
+    routeConductorObserved: false,
+    routeConductorContract: "UNKNOWN",
+    routeConductorReceipt: "UNKNOWN",
+    routeConductorContractRecognized: false,
+    routeConductorOwnedByIndex: false,
+    routeConductorLoadedByIndex: false,
+    routeConductorHandoffByIndex: false,
 
-    hexFourPairAuthorityLoaded: false,
+    controlsObserved: false,
+    controlsContract: "UNKNOWN",
+    controlsReceipt: "UNKNOWN",
+    controlsContractRecognized: false,
+    controlsLoadedByIndex: false,
+    controlsAdmittedByIndex: false,
+
+    hexFourPairAuthorityObserved: false,
     hexFourPairAuthorityContract: "UNKNOWN",
     hexFourPairAuthorityContractRecognized: false,
-    hexFourPairAuthorityLoadStatus: "NOT_RUN",
-    hexFourPairAuthorityLoadError: "",
+    hexFourPairAuthorityObservationStatus: "PASSIVE_WAITING",
 
-    hexSurfaceLoaded: false,
+    hexSurfaceObserved: false,
     hexSurfaceContract: "UNKNOWN",
     hexSurfaceContractRecognized: false,
-    hexSurfaceLoadStatus: "NOT_RUN",
-    hexSurfaceLoadError: "",
+    hexSurfaceObservationStatus: "PASSIVE_WAITING",
 
-    canvasHubLoaded: false,
+    canvasHubObserved: false,
     canvasHubContract: "UNKNOWN",
     canvasHubContractRecognized: false,
-    canvasHubLoadStatus: "NOT_RUN",
-    canvasHubLoadError: "",
-
-    canvasBootAttempted: false,
-    canvasBootMethod: "NONE",
-    canvasBootResult: "NOT_RUN",
-    canvasBootError: "",
+    canvasHubObservationStatus: "PASSIVE_WAITING",
     canvasLoadedByIndex: false,
     canvasStartedByIndex: false,
     canvasBootedByIndex: false,
+    canvasBootAttempted: false,
+    canvasBootMethod: "NONE",
+    canvasBootResult: "PASSIVE_NOT_ATTEMPTED",
+    canvasBootError: "",
 
-    routeConductorLoadedByIndex: false,
-    routeConductorHandoffByIndex: false,
-    routeConductorOwnedByIndex: false,
+    visibleExpressionChainObserved: false,
+    visibleExpressionChainLoadStarted: false,
+    visibleExpressionChainLoadComplete: false,
+    visibleExpressionChainLoadHeld: false,
+    visibleExpressionChainLoadHeldReason: "PASSIVE_CORRIDOR_DOES_NOT_LOAD_ASSETS",
+    visibleExpressionChainLoadAttemptCount: 0,
+    visibleExpressionChainLoadCompleteCount: 0,
+    visibleExpressionChainLoadLastReason: "PASSIVE_OBSERVE_ONLY",
+    visibleExpressionChainLoadLastError: "",
+    visibleExpressionChainLoadPromiseActive: false,
 
     diagnosticRailLoadedByIndex: false,
     diagnosticRailOwnedByIndex: false,
@@ -204,6 +254,7 @@
     diagnosticAnchorBound: false,
     inspectPlanetBound: false,
     expandCockpitBound: false,
+    showDiagnosticBound: false,
     portalAnchorsBound: false,
     detailsDrawersBound: false,
 
@@ -219,21 +270,18 @@
     lastAction: "NOT_RUN",
     lastActionAt: "",
     lastError: "",
-    receiptVisible: false,
     inspectModeActive: false,
     cockpitMode: "diagnostic-dock",
 
-    f13Claimed: false,
-    f21Claimed: false,
-    readyTextClaimed: false,
-    visualPassClaimed: false,
-    generatedImage: false,
-    graphicBox: false,
-    webGL: false,
+    firstFailedCoordinate: "PASSIVE_INDEX_CORRIDOR_NO_DOWNSTREAM_FAILURE_CLAIM",
+    recommendedNextFile: ROUTE_CONDUCTOR_FILE,
+    recommendedNextAction: "READ_ROUTE_CONDUCTOR_OR_CANVAS_RECEIPT_IF_GLOBE_REMAINS_ABSENT",
+    postgameStatus: "INDEX_PASSIVE_BUTTON_RECEIPT_CORRIDOR_READY",
 
-    startedAt: "",
-    updatedAt: "",
-    events: []
+    events: [],
+    errors: [],
+
+    ...FINAL_FALSE
   };
 
   const refs = {
@@ -261,10 +309,8 @@
     htmlReceiptTargets: []
   };
 
-  const boundElements = typeof WeakSet !== "undefined" ? new WeakSet() : null;
   let lastActivationKey = "";
   let lastActivationAt = 0;
-  let visibleExpressionChainPromise = null;
 
   function nowIso() {
     try {
@@ -298,12 +344,18 @@
     return Boolean(value && typeof value === "object" && !Array.isArray(value));
   }
 
+  function isFunction(value) {
+    return typeof value === "function";
+  }
+
   function isElement(value) {
     return Boolean(value && value.nodeType === 1);
   }
 
-  function isFunction(value) {
-    return typeof value === "function";
+  function toElement(value) {
+    if (isElement(value)) return value;
+    if (value && value.parentElement) return value.parentElement;
+    return null;
   }
 
   function qs(selector) {
@@ -325,9 +377,10 @@
   }
 
   function closest(target, selector) {
-    if (!isElement(target) || !isFunction(target.closest)) return null;
+    const element = toElement(target);
+    if (!element || !isFunction(element.closest)) return null;
     try {
-      return target.closest(selector);
+      return element.closest(selector);
     } catch (_error) {
       return null;
     }
@@ -337,19 +390,18 @@
     return `${key}=${value === undefined || value === null ? "" : String(value)}`;
   }
 
-  function setDataset(node, key, value) {
-    if (!node || !node.dataset) return;
-    node.dataset[key] = value === undefined || value === null ? "" : String(value);
+  function clonePlain(value) {
+    if (!isObject(value) && !Array.isArray(value)) return value;
+    try {
+      return JSON.parse(JSON.stringify(value));
+    } catch (_error) {
+      return Array.isArray(value) ? value.slice() : Object.assign({}, value);
+    }
   }
 
-  function setText(node, text) {
-    if (!node) return;
-    node.textContent = safeString(text);
-  }
-
-  function trimEvents() {
-    if (state.events.length > 80) {
-      state.events.splice(0, state.events.length - 80);
+  function trimArray(array, max) {
+    if (Array.isArray(array) && array.length > max) {
+      array.splice(0, array.length - max);
     }
   }
 
@@ -361,18 +413,28 @@
     };
 
     state.events.push(item);
-    trimEvents();
+    trimArray(state.events, 100);
     state.updatedAt = item.at;
     return item;
   }
 
-  function clonePlain(value) {
-    if (!isObject(value) && !Array.isArray(value)) return value;
-    try {
-      return JSON.parse(JSON.stringify(value));
-    } catch (_error) {
-      return Array.isArray(value) ? value.slice() : Object.assign({}, value);
-    }
+  function recordError(code, error, detail = {}) {
+    const item = {
+      at: nowIso(),
+      code: safeString(code, "HEARTH_INDEX_ERROR"),
+      message: error && error.message ? String(error.message) : safeString(error),
+      detail: clonePlain(detail)
+    };
+
+    state.errors.push(item);
+    trimArray(state.errors, 80);
+    state.updatedAt = item.at;
+    return item;
+  }
+
+  function ensureObject(parent, key) {
+    if (!parent[key] || typeof parent[key] !== "object") parent[key] = {};
+    return parent[key];
   }
 
   function readPath(path) {
@@ -387,38 +449,132 @@
     return cursor || null;
   }
 
-  function getContract(value) {
+  function setDataset(node, key, value) {
+    if (!node || !node.dataset) return;
+    node.dataset[key] = value === undefined || value === null ? "" : String(value);
+  }
+
+  function setRootDataset(key, value) {
+    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
+    doc.documentElement.dataset[key] = value === undefined || value === null ? "" : String(value);
+  }
+
+  function setText(node, text) {
+    if (!node) return;
+    node.textContent = safeString(text);
+  }
+
+  function readDirectContract(value) {
     if (!isObject(value)) return "UNKNOWN";
 
-    let receipt = null;
-
-    const methods = ["getReceipt", "getReceiptLight", "getStatus", "getCanvasStationReceiptLight", "getCanvasStationReceipt"];
-
-    for (const method of methods) {
-      if (!isFunction(value[method])) continue;
-      try {
-        const result = value[method]();
-        if (isObject(result)) {
-          receipt = result;
-          break;
-        }
-      } catch (_error) {}
-    }
-
     return safeString(
-      (receipt && (receipt.contract || receipt.CONTRACT || receipt.currentContract)) ||
       value.contract ||
       value.CONTRACT ||
       value.currentContract ||
+      value.sourceContract ||
+      value.expectedContract ||
       "UNKNOWN",
       "UNKNOWN"
     );
   }
 
-  function contractMatches(actual, expected) {
+  function readDirectReceipt(value) {
+    if (!isObject(value)) return "UNKNOWN";
+
+    return safeString(
+      value.receipt ||
+      value.RECEIPT ||
+      value.currentReceipt ||
+      value.sourceReceipt ||
+      value.expectedReceipt ||
+      "UNKNOWN",
+      "UNKNOWN"
+    );
+  }
+
+  function contractRecognized(actual, accepted) {
     const a = safeString(actual, "");
-    const e = safeString(expected, "");
-    return Boolean(a && e && a === e);
+    if (!a || a === "UNKNOWN") return false;
+    if (Array.isArray(accepted)) return accepted.includes(a);
+    return a === safeString(accepted, "");
+  }
+
+  function getKnownReceiptObject(names) {
+    for (const name of names) {
+      const candidate = readPath(name);
+      if (candidate && isObject(candidate)) return candidate;
+    }
+    return null;
+  }
+
+  function resolveRouteConductor() {
+    return (
+      readPath("HEARTH_ROUTE_CONDUCTOR") ||
+      readPath("HEARTH.routeConductor") ||
+      readPath("DEXTER_LAB.hearthRouteConductor") ||
+      readPath("HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION") ||
+      readPath("HEARTH.routeConductorControlHandshakeIntegration") ||
+      readPath("DEXTER_LAB.hearthRouteConductorControlHandshakeIntegration") ||
+      null
+    );
+  }
+
+  function resolveControls() {
+    return (
+      readPath("HEARTH_CONTROLS") ||
+      readPath("HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE") ||
+      readPath("HEARTH.controls") ||
+      readPath("HEARTH.hearthControls") ||
+      readPath("DEXTER_LAB.hearthControls") ||
+      null
+    );
+  }
+
+  function resolveHexFourPairAuthority() {
+    return (
+      readPath("HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY") ||
+      readPath("HEARTH_HEX_FOUR_PAIR_AUTHORITY") ||
+      readPath("HEARTH_HEX_PIXEL_HANDSHAKE_AUTHORITY") ||
+      readPath("HEARTH_HEX_HANDSHAKE_AUTHORITY") ||
+      readPath("HEARTH_HEXGRID_AUTHORITY") ||
+      readPath("HEARTH.hexFourPairAuthority") ||
+      readPath("HEARTH.hexAuthority") ||
+      null
+    );
+  }
+
+  function resolveHexSurface() {
+    return (
+      readPath("HEARTH_HEX_SURFACE") ||
+      readPath("HEARTH_HEX_SURFACE_FOUR_PAIR_AUTHORITY_CONSUMER") ||
+      readPath("HEARTH.hexSurface") ||
+      readPath("HEARTH.hexSurfaceConsumer") ||
+      null
+    );
+  }
+
+  function resolveCanvasHub() {
+    return (
+      readPath("HEARTH_CANVAS") ||
+      readPath("HEARTH_CANVAS_PARENT") ||
+      readPath("HEARTH_CANVAS_AUTHORITY") ||
+      readPath("HEARTH_CANVAS_HUB") ||
+      readPath("HEARTH_CANVAS_LOCAL_STATION") ||
+      readPath("HEARTH_CANVAS_STATION") ||
+      readPath("HEARTH_CANVAS_EXPRESSION_HUB") ||
+      readPath("HEARTH_CANVAS_FINGER_MANAGER") ||
+      readPath("HEARTH.canvas") ||
+      readPath("HEARTH.canvasParent") ||
+      readPath("HEARTH.canvasHub") ||
+      readPath("HEARTH.canvasLocalStation") ||
+      readPath("HEARTH.canvasStation") ||
+      readPath("HEARTH.canvasExpressionHub") ||
+      readPath("DEXTER_LAB.hearthCanvas") ||
+      readPath("DEXTER_LAB.hearthCanvasParent") ||
+      readPath("DEXTER_LAB.hearthCanvasHub") ||
+      readPath("DEXTER_LAB.hearthCanvasExpressionHub") ||
+      null
+    );
   }
 
   function cleanReceiptText(value) {
@@ -455,9 +611,9 @@
       first.startsWith("HEARTH_HTML_") ||
       text.includes("target=/showroom/globe/hearth/index.html") ||
       text.includes("pageContext=Planet Factory · Mirrorland Formation Site") ||
-      text.includes("pageContext=Planet Engine and Planetary Template Development page") ||
       text.includes("visiblePlanetMountRequired=true") ||
-      text.includes("htmlOwnsPublicShell=true")
+      text.includes("htmlOwnsPublicShell=true") ||
+      text.includes("routeConductorOwnsControlFileAdmission=true")
     );
   }
 
@@ -487,92 +643,32 @@
 
     for (const item of list) {
       if (!item) continue;
+
       if (seen) {
         if (seen.has(item)) continue;
         seen.add(item);
       } else if (output.includes(item)) {
         continue;
       }
+
       output.push(item);
     }
 
     return output;
   }
 
-  function markAction(actionName) {
-    state.lastAction = actionName;
-    state.lastActionAt = nowIso();
-    state.updatedAt = state.lastActionAt;
-    publishDataset();
-    updateStatusLine(actionName);
-  }
-
-  function shouldIgnoreDuplicate(key) {
-    const at = nowMs();
-    if (key === lastActivationKey && at - lastActivationAt < 450) return true;
-    lastActivationKey = key;
-    lastActivationAt = at;
-    return false;
-  }
-
-  function stopForButton(event) {
-    if (!event) return;
-    try {
-      if (event.cancelable) event.preventDefault();
-    } catch (_error) {}
-    try {
-      if (isFunction(event.stopImmediatePropagation)) event.stopImmediatePropagation();
-      else if (isFunction(event.stopPropagation)) event.stopPropagation();
-    } catch (_error) {}
-  }
-
-  function protectNativeAnchor(event, anchor) {
-    if (!anchor) return;
-
-    try {
-      if (isFunction(event.stopImmediatePropagation)) event.stopImmediatePropagation();
-      else if (isFunction(event.stopPropagation)) event.stopPropagation();
-    } catch (_error) {}
-
-    if (event.type !== "click") return;
-
-    if (event.defaultPrevented) {
-      navigate(anchor.href || anchor.getAttribute("href") || DIAGNOSTIC_ROUTE);
-      return;
-    }
-
-    root.setTimeout(() => {
-      if (!doc || doc.visibilityState === "hidden") return;
-    }, 0);
-  }
-
-  function navigate(url) {
-    const target = safeString(url, "");
-    if (!target) return false;
-
-    try {
-      root.location.assign(target);
-      return true;
-    } catch (_error) {
-      try {
-        root.location.href = target;
-        return true;
-      } catch (error) {
-        state.lastError = error && error.message ? error.message : String(error);
-        return false;
-      }
-    }
-  }
-
   function refreshRefs() {
     refs.html = doc ? doc.documentElement : null;
     refs.body = doc ? doc.body : null;
+
     refs.stage = qs("#hearthGlobeStage") || qs("[data-hearth-globe-stage]");
     refs.mount = qs("#hearthCanvasMount") || qs("[data-hearth-canvas-mount]");
     refs.cockpit = qs("#hearthLoadCockpit") || qs("[data-hearth-load-cockpit]");
+
     refs.receiptPanel = qs("#hearthReceiptPanel") || qs("[data-hearth-receipt-box]");
     refs.receiptText = qs("[data-hearth-receipt-text]");
     refs.routeStatus = qs("#hearth-route-status") || qs("[data-hearth-route-status]");
+
     refs.copyButton = qs("[data-hearth-copy-diagnostic]");
     refs.toggleReceiptButton = qs("[data-hearth-toggle-receipt]");
     refs.inspectButton = qs("[data-hearth-inspect-planet]");
@@ -581,9 +677,11 @@
       qs("[data-hearth-south-show-diagnostic-tab]") ||
       qs("[data-hearth-east-show-diagnostic-tab]") ||
       qs("[data-hearth-show-diagnostic-tab]");
+
     refs.diagnosticAnchors = qsa("a[href='/showroom/globe/hearth/diagnostic/'], a[data-hearth-diagnostic-rail-native-anchor], a[data-hearth-diagnostic-rail-field]");
     refs.portalLinks = qsa("#hearthMapPortal a[href], [data-hearth-map-portal] a[href], .portal-link[href]");
     refs.summaries = qsa("details.drawer > summary, details > summary");
+
     refs.stageLabel = qs("[data-hearth-stage-label]");
     refs.heartbeatText = qs("[data-hearth-heartbeat-text]");
     refs.latestEvent = qs("[data-hearth-latest-event]");
@@ -591,17 +689,18 @@
     refs.progressPercent = qs("[data-hearth-main-progress-percent]");
 
     refs.htmlReceiptTargets = uniqueElements([
+      qs("#hearth-html-route-conductor-owns-control-handshake-shell-receipt"),
+      qs("#hearth-html-control-handshake-route-shell-integration-receipt"),
+      qs("#hearth-html-full-planet-visibility-downstream-shell-alignment-receipt"),
       qs("#hearth-html-planet-factory-mirrorland-public-shell-receipt"),
-      qs("#hearth-html-planet-engine-template-development-receipt-target-restoration-receipt"),
-      qs("#hearth-html-planet-engine-template-development-optimal-standard-receipt"),
-      qs("#hearth-html-single-floating-diagnostic-doorway-no-duplicate-top-banner-receipt"),
       ...qsa("template[data-hearth-html-receipt]"),
       ...qsa("template[data-route-receipt]"),
       ...qsa("[data-hearth-html-receipt]"),
       ...qsa("[data-route-receipt]"),
-      refs.receiptText,
       refs.routeStatus
     ]);
+
+    return refs;
   }
 
   function readHtmlContract() {
@@ -610,6 +709,7 @@
       doc.documentElement.dataset.contract ||
       doc.documentElement.dataset.hearthHtmlContract ||
       doc.documentElement.dataset.hearthShellContract ||
+      "UNKNOWN",
       "UNKNOWN"
     );
   }
@@ -629,38 +729,43 @@
     return [
       "HEARTH_HTML_DATASET_RECEIPT",
       line("contract", contract),
+      line("receipt", dataset.receipt || ""),
+      line("previousContract", dataset.previousContract || ""),
+      line("baselineContract", dataset.baselineContract || ""),
+      line("foundationContract", dataset.foundationContract || ""),
       line("route", dataset.route || ROUTE),
       line("target", HTML_FILE),
-      line("pageAlias", dataset.pageAlias || dataset.hearthAlias || "Hearth"),
+      line("pageAlias", dataset.pageAlias || "Hearth"),
       line("pageContext", dataset.pageContext || "UNKNOWN"),
       line("planetFactoryPage", dataset.planetFactoryPage || "UNKNOWN"),
       line("planetEnginePage", dataset.planetEnginePage || "UNKNOWN"),
       line("worldFormationStandardPage", dataset.worldFormationStandardPage || "UNKNOWN"),
+      line("fullPlanetVisibilityActive", dataset.fullPlanetVisibilityActive || "UNKNOWN"),
       line("visiblePlanetStagePrimary", dataset.visiblePlanetStagePrimary || "UNKNOWN"),
       line("visiblePlanetMountRequired", dataset.visiblePlanetMountRequired || "UNKNOWN"),
-      line("mount", dataset.mount || "#hearthCanvasMount"),
-      line("globeStage", dataset.globeStage || "#hearthGlobeStage"),
+      line("mount", "#hearthCanvasMount"),
+      line("globeStage", "#hearthGlobeStage"),
       line("htmlOwnsPublicShell", dataset.htmlOwnsPublicShell || "UNKNOWN"),
       line("htmlOwnsPlanetMount", dataset.htmlOwnsPlanetMount || "UNKNOWN"),
       line("htmlOwnsRuntime", dataset.htmlOwnsRuntime || "false"),
       line("htmlOwnsCanvasDrawing", dataset.htmlOwnsCanvasDrawing || "false"),
       line("htmlOwnsCanvasTruth", dataset.htmlOwnsCanvasTruth || "false"),
-      line("htmlOwnsFingerTruth", dataset.htmlOwnsFingerTruth || "false"),
       line("htmlOwnsRouteConductor", dataset.htmlOwnsRouteConductor || "false"),
-      line("htmlOwnsDiagnosticRail", dataset.htmlOwnsDiagnosticRail || "false"),
-      line("diagnosticRailRoute", dataset.diagnosticRailRoute || DIAGNOSTIC_ROUTE),
-      line("femaleJsSelector", dataset.femaleJsSelector || FILE),
-      line("selectorCacheBust", dataset.selectorCacheBust || CONTRACT),
+      line("htmlOwnsControlHandshakeTruth", dataset.htmlOwnsControlHandshakeTruth || "false"),
+      line("htmlLoadsIndex", dataset.htmlLoadsIndex || "UNKNOWN"),
+      line("htmlLoadsRouteConductor", dataset.htmlLoadsRouteConductor || "UNKNOWN"),
+      line("htmlLoadsControlFile", dataset.htmlLoadsControlFile || "false"),
+      line("routeConductorOwnsControlFileAdmission", dataset.routeConductorOwnsControlFileAdmission || "UNKNOWN"),
+      line("routeConductorOwnsControlHandshakeTruth", dataset.routeConductorOwnsControlHandshakeTruth || "UNKNOWN"),
+      line("controlDirectLoadSuppressedByHtml", dataset.controlDirectLoadSuppressedByHtml || "UNKNOWN"),
       line("expectedIndexJsContract", dataset.expectedIndexJsContract || CONTRACT),
-      line("expectedRouteConductorContract", dataset.expectedRouteConductorContract || "UNKNOWN"),
-      line("expectedCanvasParentContract", dataset.expectedCanvasParentContract || "UNKNOWN"),
-      line("routeConductorDelegated", dataset.routeConductorDelegated || "UNKNOWN"),
-      line("canvasF13Delegated", dataset.canvasF13Delegated || "UNKNOWN"),
-      line("fingersDownstream", dataset.fingersDownstream || "UNKNOWN"),
+      line("expectedRouteConductorContract", dataset.expectedRouteConductorContract || CURRENT_ROUTE_CONDUCTOR_CONTRACT),
+      line("expectedControlFile", dataset.expectedControlFile || CONTROL_FILE),
+      line("diagnosticRailRoute", dataset.diagnosticRailRoute || DIAGNOSTIC_ROUTE),
+      line("receiptPanel", dataset.receiptPanelSelector || "#hearthReceiptPanel"),
+      line("receiptText", dataset.receiptTextSelector || "[data-hearth-receipt-text]"),
       line("f13Claimed", dataset.f13Claimed || "false"),
-      line("f21NorthOnly", dataset.f21NorthOnly || "true"),
       line("f21Claimed", dataset.f21Claimed || "false"),
-      line("readyTextAllowed", dataset.readyTextAllowed || "false"),
       line("readyTextClaimed", dataset.readyTextClaimed || "false"),
       line("visualPassClaimed", dataset.visualPassClaimed || "false"),
       line("generatedImage", dataset.generatedImage || "false"),
@@ -680,9 +785,7 @@
         ok: true,
         source: target && target.id
           ? `HTML_RECEIPT_TARGET:#${target.id}`
-          : target && target.getAttribute
-            ? `HTML_RECEIPT_TARGET:${target.getAttribute("data-hearth-html-receipt") ? "data-hearth-html-receipt" : target.getAttribute("data-route-receipt") ? "data-route-receipt" : target.tagName || "node"}`
-            : "HTML_RECEIPT_TARGET",
+          : "HTML_RECEIPT_TARGET",
         text
       };
     }
@@ -724,16 +827,172 @@
     return fallback;
   }
 
+  function observeAuthority(label, resolver, acceptedContracts, receiptNames) {
+    const authority = resolver();
+    const receiptObject = getKnownReceiptObject(receiptNames || []);
+    const contract =
+      readDirectContract(authority) !== "UNKNOWN"
+        ? readDirectContract(authority)
+        : readDirectContract(receiptObject);
+    const receipt =
+      readDirectReceipt(authority) !== "UNKNOWN"
+        ? readDirectReceipt(authority)
+        : readDirectReceipt(receiptObject);
+
+    return {
+      label,
+      observed: Boolean(authority || receiptObject),
+      contract,
+      receipt,
+      recognized: contractRecognized(contract, acceptedContracts),
+      status: authority || receiptObject ? "OBSERVED_PASSIVELY" : "PASSIVE_WAITING"
+    };
+  }
+
+  function refreshVisibleExpressionChainState(reason = "passive-observe") {
+    state.downstreamObservationAttempted = true;
+    state.downstreamObservationCount += 1;
+    state.downstreamObservationLastReason = safeString(reason, "passive-observe");
+
+    const route = observeAuthority(
+      "routeConductor",
+      resolveRouteConductor,
+      CURRENT_ROUTE_CONDUCTOR_CONTRACT,
+      ["HEARTH_ROUTE_CONDUCTOR_RECEIPT", "HEARTH.routeConductorReceipt"]
+    );
+
+    state.routeConductorObserved = route.observed;
+    state.routeConductorContract = route.contract;
+    state.routeConductorReceipt = route.receipt;
+    state.routeConductorContractRecognized = route.recognized;
+
+    const controls = observeAuthority(
+      "controls",
+      resolveControls,
+      CONTROL_CONTRACT,
+      ["HEARTH_CONTROLS_RECEIPT", "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE_RECEIPT", "HEARTH.controlsReceipt"]
+    );
+
+    state.controlsObserved = controls.observed;
+    state.controlsContract = controls.contract;
+    state.controlsReceipt = controls.receipt;
+    state.controlsContractRecognized = controls.recognized;
+
+    const hexFourPair = observeAuthority(
+      "hexFourPairAuthority",
+      resolveHexFourPairAuthority,
+      EXPECTED_HEX_FOUR_PAIR_CONTRACT,
+      ["HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_RECEIPT", "HEARTH_HEX_FOUR_PAIR_RECEIPT"]
+    );
+
+    state.hexFourPairAuthorityObserved = hexFourPair.observed;
+    state.hexFourPairAuthorityContract = hexFourPair.contract;
+    state.hexFourPairAuthorityContractRecognized = hexFourPair.recognized;
+    state.hexFourPairAuthorityObservationStatus = hexFourPair.status;
+
+    const hexSurface = observeAuthority(
+      "hexSurface",
+      resolveHexSurface,
+      EXPECTED_HEX_SURFACE_CONTRACT,
+      ["HEARTH_HEX_SURFACE_RECEIPT", "HEARTH_HEX_SURFACE_FOUR_PAIR_AUTHORITY_CONSUMER_RECEIPT"]
+    );
+
+    state.hexSurfaceObserved = hexSurface.observed;
+    state.hexSurfaceContract = hexSurface.contract;
+    state.hexSurfaceContractRecognized = hexSurface.recognized;
+    state.hexSurfaceObservationStatus = hexSurface.status;
+
+    const canvas = observeAuthority(
+      "canvasHub",
+      resolveCanvasHub,
+      ACCEPTED_CANVAS_CONTRACTS,
+      ["HEARTH_CANVAS_RECEIPT", "HEARTH_CANVAS_HUB_RECEIPT", "HEARTH_CANVAS_STATION_RECEIPT"]
+    );
+
+    state.canvasHubObserved = canvas.observed;
+    state.canvasHubContract = canvas.contract;
+    state.canvasHubContractRecognized = canvas.recognized;
+    state.canvasHubObservationStatus = canvas.status;
+
+    state.visibleExpressionChainObserved = Boolean(
+      state.hexFourPairAuthorityObserved ||
+      state.hexSurfaceObserved ||
+      state.canvasHubObserved
+    );
+
+    state.visibleExpressionChainLoadComplete = Boolean(
+      state.hexFourPairAuthorityObserved &&
+      state.hexSurfaceObserved &&
+      state.canvasHubObserved
+    );
+
+    state.visibleExpressionChainLoadCompleteCount = state.visibleExpressionChainLoadComplete ? 1 : 0;
+    state.visibleExpressionChainLoadStarted = false;
+    state.visibleExpressionChainLoadHeld = false;
+    state.visibleExpressionChainLoadHeldReason = "PASSIVE_CORRIDOR_DOES_NOT_LOAD_ASSETS";
+    state.visibleExpressionChainLoadLastReason = "PASSIVE_OBSERVE_ONLY";
+    state.visibleExpressionChainLoadLastError = "";
+
+    if (state.canvasHubObserved) {
+      state.firstFailedCoordinate = "PASSIVE_INDEX_CORRIDOR_CLEAR_CANVAS_OBSERVED";
+      state.recommendedNextFile = ROUTE_CONDUCTOR_FILE;
+      state.recommendedNextAction = "READ_CANVAS_OR_ROUTE_CONDUCTOR_RECEIPT_IF_VISIBLE_GLOBE_REMAINS_ABSENT";
+      state.postgameStatus = "INDEX_PASSIVE_CORRIDOR_CANVAS_OBSERVED";
+    } else if (state.routeConductorObserved) {
+      state.firstFailedCoordinate = "CANVAS_HUB_NOT_OBSERVED_BY_PASSIVE_INDEX";
+      state.recommendedNextFile = ROUTE_CONDUCTOR_FILE;
+      state.recommendedNextAction = "AUDIT_ROUTE_CONDUCTOR_CANVAS_ADMISSION_OR_CANVAS_PUBLICATION";
+      state.postgameStatus = "INDEX_PASSIVE_CORRIDOR_ROUTE_CONDUCTOR_OBSERVED_CANVAS_WAITING";
+    } else {
+      state.firstFailedCoordinate = "ROUTE_CONDUCTOR_NOT_OBSERVED_BY_PASSIVE_INDEX";
+      state.recommendedNextFile = ROUTE_CONDUCTOR_FILE;
+      state.recommendedNextAction = "CONFIRM_HEARTH_JS_ROUTE_CONDUCTOR_LOAD";
+      state.postgameStatus = "INDEX_PASSIVE_CORRIDOR_WAITING_ROUTE_CONDUCTOR";
+    }
+
+    publishDataset();
+    return getVisibleExpressionChainReceipt();
+  }
+
+  function startVisibleExpressionChainBridge(reason = "passive-observe") {
+    record("VISIBLE_EXPRESSION_CHAIN_ACTIVE_LOADING_RETIRED", {
+      reason,
+      passiveObserverOnly: true,
+      noDynamicScriptInjection: true,
+      canvasBootSuppressedByIndex: true,
+      routeConductorAdmissionSuppressedByIndex: true
+    });
+
+    return Promise.resolve(refreshVisibleExpressionChainState(reason));
+  }
+
+  function loadVisibleExpressionChain(reason = "passive-observe") {
+    return startVisibleExpressionChainBridge(reason);
+  }
+
+  function callCanvasHubPublicApi(reason = "passive-observe") {
+    state.canvasBootAttempted = false;
+    state.canvasBootMethod = "NONE";
+    state.canvasBootResult = "PASSIVE_NOT_ATTEMPTED";
+    state.canvasBootError = "";
+    record("CANVAS_PUBLIC_API_CALL_SUPPRESSED_BY_PASSIVE_INDEX", {
+      reason,
+      canvasBootSuppressedByIndex: true,
+      indexOwnsCanvasDrawing: false
+    });
+    publishDataset();
+    return state.canvasBootResult;
+  }
+
   function injectControlAuthorityStyle() {
     if (!doc || !doc.head) return false;
 
-    if (qs("style[data-hearth-index-button-authority-reset-style]")) {
-      state.controlStyleInjected = true;
+    if (qs("style[data-hearth-index-passive-button-corridor-style]")) {
       return true;
     }
 
     const style = doc.createElement("style");
-    style.setAttribute("data-hearth-index-button-authority-reset-style", CONTRACT);
+    style.setAttribute("data-hearth-index-passive-button-corridor-style", RENEWAL_CONTRACT);
     style.textContent = `
       [data-hearth-load-cockpit],
       #hearthLoadCockpit {
@@ -778,34 +1037,12 @@
       }
 
       #hearthDiagnosticRailEmergencyAnchor {
-        position: fixed;
-        left: max(10px, env(safe-area-inset-left));
-        top: max(10px, env(safe-area-inset-top));
-        z-index: 100000;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 42px;
-        padding: 10px 14px;
-        border: 1px solid rgba(242, 198, 109, .8);
-        border-radius: 999px;
-        background: linear-gradient(135deg, #ffe8a3, #f2c66d);
-        color: #06101e;
-        font: 950 12px/1.1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        letter-spacing: .08em;
-        text-transform: uppercase;
-        text-decoration: none;
-        box-shadow: 0 16px 44px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.28);
-      }
-
-      #hearthDiagnosticRailEmergencyAnchor:focus-visible {
-        outline: 3px solid rgba(126, 216, 255, .9);
-        outline-offset: 4px;
+        pointer-events: auto !important;
+        touch-action: manipulation !important;
       }
     `;
 
     doc.head.appendChild(style);
-    state.controlStyleInjected = true;
     return true;
   }
 
@@ -818,153 +1055,86 @@
     anchor = doc.createElement("a");
     anchor.id = "hearthDiagnosticRailEmergencyAnchor";
     anchor.href = DIAGNOSTIC_ROUTE;
-    anchor.textContent = "Open Hearth Diagnostic Rail";
+    anchor.textContent = "Under the Hood";
     anchor.setAttribute("data-hearth-diagnostic-rail-native-anchor", "true");
-    anchor.setAttribute("data-hearth-index-emergency-diagnostic-anchor", CONTRACT);
-    anchor.setAttribute("aria-label", "Open Hearth Diagnostic Rail");
+    anchor.setAttribute("data-hearth-index-emergency-diagnostic-anchor", RENEWAL_CONTRACT);
+    anchor.setAttribute("aria-label", "Open Hearth under-the-hood diagnostic bay");
     doc.body.appendChild(anchor);
 
     return anchor;
   }
 
-  function bindOnce(element, type, handler, options) {
-    if (!element || !isFunction(element.addEventListener)) return false;
-
-    const key = `__hearth_${CONTRACT}_${RENEWAL_CONTRACT}_${type}`;
-    if (element[key]) return false;
-
-    try {
-      element.addEventListener(type, handler, options || false);
-      element[key] = true;
-      return true;
-    } catch (_error) {
-      try {
-        element.addEventListener(type, handler, false);
-        element[key] = true;
-        return true;
-      } catch (__error) {
-        return false;
-      }
-    }
-  }
-
   function markControl(element, actionName) {
     if (!element) return;
+
     setDataset(element, "hearthIndexButtonAuthorityReset", "true");
     setDataset(element, "hearthIndexButtonAuthorityContract", CONTRACT);
     setDataset(element, "hearthIndexButtonRenewalContract", RENEWAL_CONTRACT);
     setDataset(element, "hearthIndexButtonAction", actionName);
-    setDataset(element, "hearthRouteConductorOwnsControlBinding", "false");
+    setDataset(element, "hearthPassiveButtonCorridor", "true");
+    setDataset(element, "hearthButtonIgnitesRuntime", "false");
+    setDataset(element, "hearthRouteConductorOwnsControlBinding", "true");
     setDataset(element, "hearthNativeAnchorDefaultPreserved", "true");
   }
 
-  function bindButton(element, actionName, callback) {
-    if (!element) return false;
+  function markAllControls() {
+    refreshRefs();
 
-    markControl(element, actionName);
+    [
+      [refs.copyButton, "copyDiagnostic"],
+      [refs.toggleReceiptButton, "toggleReceipt"],
+      [refs.inspectButton, "inspectPlanet"],
+      [refs.collapseButton, "toggleCockpit"],
+      [refs.showDiagnosticTab, "showDiagnostic"]
+    ].forEach(([element, action]) => markControl(element, action));
 
-    if (boundElements && boundElements.has(element)) return true;
+    refs.diagnosticAnchors.forEach((anchor) => markControl(anchor, "openDiagnosticRail"));
+    refs.portalLinks.forEach((anchor) => markControl(anchor, "portalNativeNavigation"));
 
-    bindOnce(element, "pointerup", (event) => {
-      const key = `${actionName}:pointerup`;
-      if (shouldIgnoreDuplicate(key)) return;
-      stopForButton(event);
-      callback(event);
-    }, { capture: true, passive: false });
-
-    bindOnce(element, "touchend", (event) => {
-      const key = `${actionName}:touchend`;
-      if (shouldIgnoreDuplicate(key)) return;
-      stopForButton(event);
-      callback(event);
-    }, { capture: true, passive: false });
-
-    bindOnce(element, "click", (event) => {
-      const keyboardClick = Number(event.detail || 0) === 0;
-      const key = `${actionName}:click`;
-
-      if (!keyboardClick && shouldIgnoreDuplicate(key)) {
-        stopForButton(event);
-        return;
-      }
-
-      stopForButton(event);
-      callback(event);
-    }, { capture: true, passive: false });
-
-    bindOnce(element, "keydown", (event) => {
-      const key = event.key || "";
-      if (key !== "Enter" && key !== " ") return;
-      stopForButton(event);
-      callback(event);
-    }, { capture: true, passive: false });
-
-    if (boundElements) boundElements.add(element);
-    return true;
+    refs.summaries.forEach((summary) => {
+      setDataset(summary, "hearthIndexDrawerAuthorityReset", CONTRACT);
+      setDataset(summary, "hearthPassiveButtonCorridor", "true");
+      setDataset(summary, "hearthButtonIgnitesRuntime", "false");
+    });
   }
 
-  function bindAnchor(anchor, actionName = "nativeAnchor") {
-    if (!anchor) return false;
+  function shouldIgnoreDuplicate(key) {
+    const at = nowMs();
+    if (key === lastActivationKey && at - lastActivationAt < 420) return true;
 
-    markControl(anchor, actionName);
-
-    bindOnce(anchor, "pointerup", (event) => {
-      protectNativeAnchor(event, anchor);
-    }, { capture: true, passive: false });
-
-    bindOnce(anchor, "touchend", (event) => {
-      protectNativeAnchor(event, anchor);
-    }, { capture: true, passive: false });
-
-    bindOnce(anchor, "click", (event) => {
-      state.diagnosticAnchorCount += anchor.getAttribute("href") === DIAGNOSTIC_ROUTE ? 1 : 0;
-      state.portalNavigationCount += anchor.getAttribute("href") !== DIAGNOSTIC_ROUTE ? 1 : 0;
-      markAction(actionName);
-      protectNativeAnchor(event, anchor);
-    }, { capture: true, passive: false });
-
-    return true;
+    lastActivationKey = key;
+    lastActivationAt = at;
+    return false;
   }
 
-  function bindSummary(summary) {
-    if (!summary) return false;
+  function stopButtonEvent(event) {
+    if (!event) return;
 
-    setDataset(summary, "hearthIndexDrawerAuthorityReset", CONTRACT);
+    try {
+      if (event.cancelable) event.preventDefault();
+    } catch (_error) {}
 
-    bindOnce(summary, "click", (event) => {
-      const details = closest(summary, "details");
-      if (!details) return;
+    try {
+      if (isFunction(event.stopImmediatePropagation)) event.stopImmediatePropagation();
+      else if (isFunction(event.stopPropagation)) event.stopPropagation();
+    } catch (_error) {}
+  }
 
-      try {
-        event.preventDefault();
-        if (isFunction(event.stopImmediatePropagation)) event.stopImmediatePropagation();
-        else if (isFunction(event.stopPropagation)) event.stopPropagation();
-      } catch (_error) {}
+  function preserveAnchorDefaultButBlockStaleHandlers(event) {
+    if (!event) return;
 
-      details.open = !details.open;
-      state.drawerToggleCount += 1;
-      markAction("drawerToggle");
-    }, { capture: true, passive: false });
+    try {
+      if (isFunction(event.stopImmediatePropagation)) event.stopImmediatePropagation();
+      else if (isFunction(event.stopPropagation)) event.stopPropagation();
+    } catch (_error) {}
+  }
 
-    bindOnce(summary, "keydown", (event) => {
-      const key = event.key || "";
-      if (key !== "Enter" && key !== " ") return;
-
-      const details = closest(summary, "details");
-      if (!details) return;
-
-      try {
-        event.preventDefault();
-        if (isFunction(event.stopImmediatePropagation)) event.stopImmediatePropagation();
-        else if (isFunction(event.stopPropagation)) event.stopPropagation();
-      } catch (_error) {}
-
-      details.open = !details.open;
-      state.drawerToggleCount += 1;
-      markAction("drawerToggleKeyboard");
-    }, { capture: true, passive: false });
-
-    return true;
+  function markAction(actionName) {
+    state.lastAction = safeString(actionName, "action");
+    state.lastActionAt = nowIso();
+    state.updatedAt = state.lastActionAt;
+    publishDataset();
+    updateStatusLine(actionName);
   }
 
   async function copyText(text) {
@@ -977,6 +1147,7 @@
 
     try {
       if (!doc || !doc.body) return false;
+
       const area = doc.createElement("textarea");
       area.value = text;
       area.setAttribute("readonly", "readonly");
@@ -986,16 +1157,19 @@
       doc.body.appendChild(area);
       area.focus();
       area.select();
+
       const ok = doc.execCommand("copy");
       area.remove();
       return Boolean(ok);
     } catch (error) {
       state.lastError = error && error.message ? error.message : String(error);
+      recordError("COPY_DIAGNOSTIC_FAILED", error);
       return false;
     }
   }
 
   async function copyDiagnostic() {
+    refreshVisibleExpressionChainState("copyDiagnosticPassiveObserve");
     refreshRefs();
 
     const resolved = resolveActiveReceiptText();
@@ -1018,6 +1192,7 @@
   }
 
   function toggleReceiptPanel() {
+    refreshVisibleExpressionChainState("toggleReceiptPassiveObserve");
     refreshRefs();
 
     if (!refs.receiptPanel) {
@@ -1032,7 +1207,7 @@
 
     try {
       refs.receiptPanel.style.display = visible ? "block" : "none";
-      refs.receiptPanel.style.visibility = visible ? "visible" : "visible";
+      refs.receiptPanel.style.visibility = "visible";
     } catch (_error) {}
 
     const resolved = resolveActiveReceiptText();
@@ -1053,6 +1228,7 @@
   }
 
   function setInspectMode(active) {
+    refreshVisibleExpressionChainState("inspectModePassiveObserve");
     refreshRefs();
 
     state.inspectModeActive = Boolean(active);
@@ -1079,7 +1255,6 @@
     if (state.inspectModeActive) {
       state.inspectPlanetCount += 1;
       state.cockpitMode = "planet-inspect";
-      startVisibleExpressionChainBridge("inspectPlanet");
       markAction("inspectPlanet");
     } else {
       state.showDiagnosticCount += 1;
@@ -1091,6 +1266,7 @@
   }
 
   function toggleCockpitMode() {
+    refreshVisibleExpressionChainState("toggleCockpitPassiveObserve");
     refreshRefs();
 
     if (!refs.cockpit) {
@@ -1115,546 +1291,141 @@
     return true;
   }
 
-  function resolveHexFourPairAuthority() {
-    const candidates = [
-      readPath("HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY"),
-      readPath("HEARTH_HEX_FOUR_PAIR_AUTHORITY"),
-      readPath("HEARTH_HEX_PIXEL_HANDSHAKE_AUTHORITY"),
-      readPath("HEARTH_HEX_HANDSHAKE_AUTHORITY"),
-      readPath("HEARTH_HEXGRID_AUTHORITY"),
-      readPath("HEARTH.hexFourPairAuthority"),
-      readPath("HEARTH.hexAuthority")
-    ];
+  function toggleDrawer(summary) {
+    const details = closest(summary, "details");
 
-    return candidates.find((candidate) => (
-      isObject(candidate) &&
-      (
-        isFunction(candidate.sample) ||
-        isFunction(candidate.read) ||
-        isFunction(candidate.getCell) ||
-        isFunction(candidate.wideProbe) ||
-        isFunction(candidate.getReceipt)
-      )
-    )) || null;
-  }
-
-  function resolveHexSurface() {
-    const candidates = [
-      readPath("HEARTH_HEX_SURFACE"),
-      readPath("HEARTH_HEX_SURFACE_FOUR_PAIR_AUTHORITY_CONSUMER"),
-      readPath("HEARTH.hexSurface"),
-      readPath("HEARTH.hexSurfaceConsumer")
-    ];
-
-    return candidates.find((candidate) => (
-      isObject(candidate) &&
-      (
-        isFunction(candidate.drawHearthHexSurfaceFrame) ||
-        isFunction(candidate.drawFrame) ||
-        isFunction(candidate.getHearthHexSurfaceStatus) ||
-        isFunction(candidate.getStatus) ||
-        isFunction(candidate.getReceipt)
-      )
-    )) || null;
-  }
-
-  function resolveCanvasHub() {
-    const candidates = [
-      readPath("HEARTH_CANVAS"),
-      readPath("HEARTH_CANVAS_PARENT"),
-      readPath("HEARTH_CANVAS_AUTHORITY"),
-      readPath("HEARTH_CANVAS_LOCAL_STATION"),
-      readPath("HEARTH_CANVAS_STATION"),
-      readPath("HEARTH_CANVAS_EXPRESSION_HUB"),
-      readPath("HEARTH_CANVAS_FINGER_MANAGER"),
-      readPath("HEARTH_CANVAS_VISIBLE_BASE_GLOBE_CARRIER"),
-      readPath("HEARTH.canvas"),
-      readPath("HEARTH.canvasParent"),
-      readPath("HEARTH.canvasLocalStation"),
-      readPath("HEARTH.canvasStation"),
-      readPath("HEARTH.canvasExpressionHub"),
-      readPath("HEARTH.canvasVisibleBaseGlobeCarrier"),
-      readPath("DEXTER_LAB.hearthCanvas"),
-      readPath("DEXTER_LAB.hearthCanvasParent"),
-      readPath("DEXTER_LAB.hearthCanvasLocalStation"),
-      readPath("DEXTER_LAB.hearthCanvasStation"),
-      readPath("DEXTER_LAB.hearthCanvasExpressionHub"),
-      readPath("DEXTER_LAB.hearthCanvasVisibleBaseGlobeCarrier")
-    ];
-
-    return candidates.find((candidate) => (
-      isObject(candidate) &&
-      (
-        isFunction(candidate.boot) ||
-        isFunction(candidate.init) ||
-        isFunction(candidate.start) ||
-        isFunction(candidate.mount) ||
-        isFunction(candidate.drawBaseGlobe) ||
-        isFunction(candidate.getReceipt) ||
-        isFunction(candidate.getCanvasStationReceipt)
-      )
-    )) || null;
-  }
-
-  function resolverForKey(key) {
-    if (key === "hexFourPairAuthority") return resolveHexFourPairAuthority;
-    if (key === "hexSurface") return resolveHexSurface;
-    if (key === "canvasHub") return resolveCanvasHub;
-    return () => null;
-  }
-
-  function updateAssetState(key, authority, extra = {}) {
-    const loaded = Boolean(authority);
-    const actualContract = loaded ? getContract(authority) : "UNKNOWN";
-
-    if (key === "hexFourPairAuthority") {
-      state.hexFourPairAuthorityLoaded = loaded;
-      state.hexFourPairAuthorityContract = actualContract;
-      state.hexFourPairAuthorityContractRecognized = contractMatches(actualContract, EXPECTED_HEX_FOUR_PAIR_CONTRACT);
-      state.hexFourPairAuthorityLoadStatus = loaded ? "LOADED_AND_AVAILABLE" : (extra.status || state.hexFourPairAuthorityLoadStatus || "NOT_FOUND");
-      state.hexFourPairAuthorityLoadError = extra.error || "";
+    if (!details) {
+      state.lastError = "DRAWER_DETAILS_NOT_FOUND";
+      markAction("drawerToggleFailed");
+      return false;
     }
 
-    if (key === "hexSurface") {
-      state.hexSurfaceLoaded = loaded;
-      state.hexSurfaceContract = actualContract;
-      state.hexSurfaceContractRecognized = contractMatches(actualContract, EXPECTED_HEX_SURFACE_CONTRACT);
-      state.hexSurfaceLoadStatus = loaded ? "LOADED_AND_AVAILABLE" : (extra.status || state.hexSurfaceLoadStatus || "NOT_FOUND");
-      state.hexSurfaceLoadError = extra.error || "";
+    details.open = !details.open;
+    state.drawerToggleCount += 1;
+    markAction("drawerToggle");
+    return true;
+  }
+
+  function actionTargetFor(event) {
+    const target = event && event.target ? event.target : null;
+
+    const copy = closest(target, "[data-hearth-copy-diagnostic]");
+    if (copy) return { type: "button", action: "copyDiagnostic", element: copy };
+
+    const receipt = closest(target, "[data-hearth-toggle-receipt]");
+    if (receipt) return { type: "button", action: "toggleReceipt", element: receipt };
+
+    const inspect = closest(target, "[data-hearth-inspect-planet]");
+    if (inspect) return { type: "button", action: "inspectPlanet", element: inspect };
+
+    const collapse = closest(target, "[data-hearth-collapse-cockpit]");
+    if (collapse) return { type: "button", action: "toggleCockpit", element: collapse };
+
+    const showDiagnostic = closest(target, "[data-hearth-south-show-diagnostic-tab], [data-hearth-east-show-diagnostic-tab], [data-hearth-show-diagnostic-tab]");
+    if (showDiagnostic) return { type: "button", action: "showDiagnostic", element: showDiagnostic };
+
+    const summary = closest(target, "details.drawer > summary, details > summary");
+    if (summary) return { type: "summary", action: "drawerToggle", element: summary };
+
+    const anchor = closest(target, "a[href]");
+    if (anchor) {
+      const href = safeString(anchor.getAttribute("href") || anchor.href || "");
+      const diagnostic = href === DIAGNOSTIC_ROUTE || href.endsWith("/showroom/globe/hearth/diagnostic/");
+      return {
+        type: "anchor",
+        action: diagnostic ? "openDiagnosticRail" : "portalNativeNavigation",
+        element: anchor,
+        href,
+        diagnostic
+      };
     }
 
-    if (key === "canvasHub") {
-      state.canvasHubLoaded = loaded;
-      state.canvasHubContract = actualContract;
-      state.canvasHubContractRecognized = contractMatches(actualContract, EXPECTED_CANVAS_CONTRACT);
-      state.canvasHubLoadStatus = loaded ? "LOADED_AND_AVAILABLE" : (extra.status || state.canvasHubLoadStatus || "NOT_FOUND");
-      state.canvasHubLoadError = extra.error || "";
-      state.canvasLoadedByIndex = loaded;
+    return null;
+  }
+
+  function executeButtonAction(action) {
+    if (action === "copyDiagnostic") {
+      copyDiagnostic();
+      return true;
     }
 
-    publishDataset();
-    return loaded;
+    if (action === "toggleReceipt") return toggleReceiptPanel();
+    if (action === "inspectPlanet") return setInspectMode(!state.inspectModeActive);
+    if (action === "toggleCockpit") return toggleCockpitMode();
+    if (action === "showDiagnostic") return setInspectMode(false);
+
+    return false;
   }
 
-  function refreshVisibleExpressionChainState() {
-    updateAssetState("hexFourPairAuthority", resolveHexFourPairAuthority());
-    updateAssetState("hexSurface", resolveHexSurface());
-    updateAssetState("canvasHub", resolveCanvasHub());
+  function documentActivationCapture(event) {
+    const found = actionTargetFor(event);
+    if (!found) return;
 
-    state.visibleExpressionChainLoadComplete = Boolean(
-      state.hexFourPairAuthorityLoaded &&
-      state.hexSurfaceLoaded &&
-      state.canvasHubLoaded
-    );
+    const type = event.type || "";
+    const isKeyboard = type === "keydown";
+    const key = isKeyboard ? safeString(event.key || "") : "";
 
-    if (state.visibleExpressionChainLoadComplete) {
-      state.visibleExpressionChainLoadHeld = false;
-      state.visibleExpressionChainLoadHeldReason = "NONE";
+    if (isKeyboard && key !== "Enter" && key !== " ") return;
+
+    if (found.type === "anchor") {
+      if (type !== "click" && !isKeyboard) return;
+
+      if (found.diagnostic) state.diagnosticAnchorCount += 1;
+      else state.portalNavigationCount += 1;
+
+      markAction(found.action);
+      preserveAnchorDefaultButBlockStaleHandlers(event);
+      return;
     }
 
-    publishDataset();
-    return getVisibleExpressionChainReceipt();
-  }
+    if (found.type === "summary") {
+      if (type !== "click" && !isKeyboard) return;
 
-  function assetScriptId(file) {
-    return `hearth-index-visible-expression-loader-${safeString(file).replace(/[^a-zA-Z0-9]+/g, "-")}`;
-  }
-
-  function assetScriptSrc(file, cacheKey) {
-    const separator = safeString(file).includes("?") ? "&" : "?";
-    return `${file}${separator}v=${encodeURIComponent(cacheKey || RENEWAL_CONTRACT)}`;
-  }
-
-  function existingScriptForFile(file) {
-    if (!doc) return null;
-    const scripts = qsa("script[src]");
-    return scripts.find((script) => safeString(script.getAttribute("src")).includes(file)) || null;
-  }
-
-  function loadScriptForAsset(asset) {
-    return new Promise((resolve) => {
-      if (!doc || !doc.head) {
-        resolve({ ok: false, status: "DOCUMENT_HEAD_NOT_AVAILABLE", error: "document.head unavailable" });
+      const duplicateKey = `${found.action}:${type}:${key}`;
+      if (shouldIgnoreDuplicate(duplicateKey)) {
+        stopButtonEvent(event);
         return;
       }
 
-      const resolver = resolverForKey(asset.key);
-      const already = resolver();
+      stopButtonEvent(event);
+      toggleDrawer(found.element);
+      return;
+    }
 
-      if (already) {
-        updateAssetState(asset.key, already, { status: "ALREADY_AVAILABLE" });
-        resolve({ ok: true, status: "ALREADY_AVAILABLE", authority: already });
+    if (found.type === "button") {
+      if (type !== "click" && type !== "pointerup" && type !== "touchend" && !isKeyboard) return;
+
+      const duplicateKey = `${found.action}:${type}:${key}`;
+      if (shouldIgnoreDuplicate(duplicateKey)) {
+        stopButtonEvent(event);
         return;
       }
 
-      const existing = existingScriptForFile(asset.file);
-
-      if (existing && existing.dataset && existing.dataset.hearthIndexVisibleExpressionLoaded === "true") {
-        const authority = resolver();
-        updateAssetState(asset.key, authority, { status: authority ? "EXISTING_SCRIPT_AVAILABLE" : "EXISTING_SCRIPT_NO_AUTHORITY" });
-        resolve({ ok: Boolean(authority), status: authority ? "EXISTING_SCRIPT_AVAILABLE" : "EXISTING_SCRIPT_NO_AUTHORITY", authority });
-        return;
-      }
-
-      const script = existing || doc.createElement("script");
-
-      script.id = script.id || assetScriptId(asset.file);
-      script.async = false;
-      script.defer = false;
-      script.dataset.hearthIndexVisibleExpressionLoader = RENEWAL_CONTRACT;
-      script.dataset.hearthIndexVisibleExpressionAssetKey = asset.key;
-      script.dataset.hearthIndexVisibleExpressionAssetFile = asset.file;
-      script.dataset.hearthIndexVisibleExpressionExpectedContract = asset.expectedContract;
-
-      const done = (ok, status, error = "") => {
-        const authority = resolver();
-
-        if (script.dataset) {
-          script.dataset.hearthIndexVisibleExpressionLoaded = String(Boolean(authority));
-          script.dataset.hearthIndexVisibleExpressionLoadStatus = status;
-          script.dataset.hearthIndexVisibleExpressionLoadError = error;
-          script.dataset.hearthIndexVisibleExpressionActualContract = authority ? getContract(authority) : "UNKNOWN";
-        }
-
-        updateAssetState(asset.key, authority, { status, error });
-
-        resolve({
-          ok: Boolean(ok && authority),
-          status,
-          error,
-          authority: authority || null,
-          actualContract: authority ? getContract(authority) : "UNKNOWN"
-        });
-      };
-
-      script.onload = () => {
-        root.setTimeout(() => {
-          const authority = resolver();
-          done(Boolean(authority), authority ? "SCRIPT_LOADED_AUTHORITY_AVAILABLE" : "SCRIPT_LOADED_AUTHORITY_NOT_FOUND", authority ? "" : "authority global not found after script load");
-        }, 0);
-      };
-
-      script.onerror = () => {
-        done(false, "SCRIPT_LOAD_ERROR", `failed to load ${asset.file}`);
-      };
-
-      if (!existing) {
-        script.src = assetScriptSrc(asset.file, RENEWAL_CONTRACT);
-        doc.head.appendChild(script);
-      } else {
-        root.setTimeout(() => {
-          const authority = resolver();
-          done(Boolean(authority), authority ? "EXISTING_SCRIPT_AUTHORITY_AVAILABLE" : "EXISTING_SCRIPT_AUTHORITY_NOT_FOUND", authority ? "" : "existing script present but authority global not found");
-        }, 0);
-      }
-    });
-  }
-
-  async function loadVisibleExpressionChain(reason = "boot") {
-    state.visibleExpressionChainLoadStarted = true;
-    state.visibleExpressionChainLoadAttemptCount += 1;
-    state.visibleExpressionChainLoadLastReason = safeString(reason, "boot");
-    state.visibleExpressionChainLoadPromiseActive = true;
-    state.visibleExpressionChainLoadHeld = false;
-    state.visibleExpressionChainLoadHeldReason = "LOADING";
-    state.visibleExpressionChainLoadLastError = "";
-    publishDataset();
-
-    record("VISIBLE_EXPRESSION_CHAIN_LOAD_STARTED", {
-      reason,
-      files: ASSET_CHAIN.map((asset) => asset.file)
-    });
-
-    for (const asset of ASSET_CHAIN) {
-      const result = await loadScriptForAsset(asset);
-
-      record("VISIBLE_EXPRESSION_ASSET_LOAD_RESULT", {
-        key: asset.key,
-        file: asset.file,
-        ok: result.ok,
-        status: result.status,
-        actualContract: result.actualContract,
-        error: result.error || ""
-      });
-    }
-
-    refreshVisibleExpressionChainState();
-
-    if (!state.hexFourPairAuthorityLoaded) {
-      state.visibleExpressionChainLoadHeld = true;
-      state.visibleExpressionChainLoadHeldReason = "HEX_FOUR_PAIR_AUTHORITY_NOT_LOADED";
-    } else if (!state.hexSurfaceLoaded) {
-      state.visibleExpressionChainLoadHeld = true;
-      state.visibleExpressionChainLoadHeldReason = "HEX_SURFACE_NOT_LOADED";
-    } else if (!state.canvasHubLoaded) {
-      state.visibleExpressionChainLoadHeld = true;
-      state.visibleExpressionChainLoadHeldReason = "CANVAS_HUB_NOT_LOADED";
-    } else {
-      state.visibleExpressionChainLoadHeld = false;
-      state.visibleExpressionChainLoadHeldReason = "NONE";
-      state.visibleExpressionChainLoadComplete = true;
-      state.visibleExpressionChainLoadCompleteCount += 1;
-    }
-
-    const canvasResult = callCanvasHubPublicApi(reason);
-
-    state.visibleExpressionChainLoadPromiseActive = false;
-
-    if (state.visibleExpressionChainLoadHeld) {
-      state.visibleExpressionChainLoadLastError = state.visibleExpressionChainLoadHeldReason;
-    }
-
-    publishDataset();
-    publishGlobals();
-    updateStatusLine(`visibleExpressionChain:${state.visibleExpressionChainLoadHeld ? state.visibleExpressionChainLoadHeldReason : "complete"}`);
-
-    record("VISIBLE_EXPRESSION_CHAIN_LOAD_COMPLETE", {
-      reason,
-      complete: state.visibleExpressionChainLoadComplete,
-      held: state.visibleExpressionChainLoadHeld,
-      heldReason: state.visibleExpressionChainLoadHeldReason,
-      canvasBootResult: canvasResult
-    });
-
-    return getVisibleExpressionChainReceipt();
-  }
-
-  function startVisibleExpressionChainBridge(reason = "boot") {
-    if (visibleExpressionChainPromise) return visibleExpressionChainPromise;
-
-    visibleExpressionChainPromise = loadVisibleExpressionChain(reason)
-      .catch((error) => {
-        state.visibleExpressionChainLoadHeld = true;
-        state.visibleExpressionChainLoadHeldReason = "VISIBLE_EXPRESSION_CHAIN_EXCEPTION";
-        state.visibleExpressionChainLoadLastError = error && error.message ? error.message : String(error);
-        state.visibleExpressionChainLoadPromiseActive = false;
-        state.lastError = state.visibleExpressionChainLoadLastError;
-        record("VISIBLE_EXPRESSION_CHAIN_EXCEPTION", { error: state.visibleExpressionChainLoadLastError });
-        publishDataset();
-        return getVisibleExpressionChainReceipt();
-      })
-      .finally(() => {
-        visibleExpressionChainPromise = null;
-      });
-
-    return visibleExpressionChainPromise;
-  }
-
-  function callCanvasHubPublicApi(reason = "boot") {
-    const canvas = resolveCanvasHub();
-
-    state.canvasBootAttempted = true;
-    state.canvasBootMethod = "NONE";
-    state.canvasBootResult = "CANVAS_HUB_NOT_AVAILABLE";
-    state.canvasBootError = "";
-
-    if (!canvas) {
-      publishDataset();
-      return state.canvasBootResult;
-    }
-
-    const methods = ["boot", "init", "start", "mount"];
-
-    for (const method of methods) {
-      if (!isFunction(canvas[method])) continue;
-
-      state.canvasBootMethod = method;
-
-      try {
-        const result = canvas[method]({
-          source: "HEARTH_INDEX_VISIBLE_EXPRESSION_CHAIN_LOADER_BRIDGE",
-          sourceFile: FILE,
-          contract: CONTRACT,
-          renewalContract: RENEWAL_CONTRACT,
-          reason,
-          hexFourPairAuthorityLoaded: state.hexFourPairAuthorityLoaded,
-          hexSurfaceLoaded: state.hexSurfaceLoaded,
-          canvasHubLoaded: state.canvasHubLoaded,
-          indexOwnsCanvasDrawing: false,
-          indexOwnsHexTruth: false,
-          indexOwnsVisualPass: false,
-          f13Claimed: false,
-          f21Claimed: false,
-          visualPassClaimed: false
-        });
-
-        state.canvasBootResult = result === false ? "PUBLIC_API_RETURNED_FALSE" : "PUBLIC_API_CALLED";
-        state.canvasBootedByIndex = true;
-        state.canvasStartedByIndex = true;
-        state.canvasLoadedByIndex = true;
-        publishDataset();
-        return state.canvasBootResult;
-      } catch (error) {
-        try {
-          canvas[method]();
-          state.canvasBootResult = "PUBLIC_API_CALLED_WITHOUT_OPTIONS";
-          state.canvasBootedByIndex = true;
-          state.canvasStartedByIndex = true;
-          state.canvasLoadedByIndex = true;
-          state.canvasBootError = "";
-          publishDataset();
-          return state.canvasBootResult;
-        } catch (fallbackError) {
-          state.canvasBootResult = "PUBLIC_API_ERROR";
-          state.canvasBootError = fallbackError && fallbackError.message
-            ? fallbackError.message
-            : error && error.message
-              ? error.message
-              : String(fallbackError || error);
-          publishDataset();
-          return state.canvasBootResult;
-        }
-      }
-    }
-
-    if (isFunction(canvas.drawBaseGlobe)) {
-      try {
-        canvas.drawBaseGlobe();
-        state.canvasBootMethod = "drawBaseGlobe";
-        state.canvasBootResult = "PUBLIC_FALLBACK_DRAW_BASE_GLOBE_CALLED";
-        state.canvasBootedByIndex = true;
-        state.canvasStartedByIndex = true;
-        state.canvasLoadedByIndex = true;
-        publishDataset();
-        return state.canvasBootResult;
-      } catch (error) {
-        state.canvasBootMethod = "drawBaseGlobe";
-        state.canvasBootResult = "PUBLIC_FALLBACK_DRAW_BASE_GLOBE_ERROR";
-        state.canvasBootError = error && error.message ? error.message : String(error);
-        publishDataset();
-        return state.canvasBootResult;
-      }
-    }
-
-    state.canvasBootResult = "NO_PUBLIC_CANVAS_BOOT_METHOD";
-    publishDataset();
-    return state.canvasBootResult;
-  }
-
-  function updateStatusLine(message = "") {
-    refreshRefs();
-
-    if (refs.stageLabel) refs.stageLabel.textContent = "F3 · Front-end button authority restored";
-
-    if (refs.heartbeatText) {
-      refs.heartbeatText.textContent = [
-        "buttons=functional",
-        "native-anchors=preserved",
-        "page-receipt-target=bound",
-        "visible-expression-chain=loading-bridge",
-        `canvas=${state.canvasHubLoaded ? "loaded" : "waiting"}`,
-        `last=${message || state.lastAction}`
-      ].join(" · ");
-    }
-
-    if (refs.latestEvent) {
-      refs.latestEvent.textContent = `latest=${state.observedHtmlContract && state.observedHtmlContract !== "UNKNOWN" ? state.observedHtmlContract : CONTRACT}`;
-    }
-
-    if (refs.progressFill) refs.progressFill.style.width = state.canvasHubLoaded ? "55%" : "34%";
-    if (refs.progressPercent) refs.progressPercent.textContent = state.canvasHubLoaded ? "55%" : "34%";
-
-    if (refs.routeStatus) {
-      const resolved = resolveActiveReceiptText();
-      refs.routeStatus.textContent = resolved.text || getIndexReceiptText();
+      stopButtonEvent(event);
+      executeButtonAction(found.action);
     }
   }
 
-  function publishDataset() {
-    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
+  function bindDocumentCaptureShield() {
+    if (!doc || doc.__hearthIndexPassiveButtonCorridorCaptureShield) {
+      state.documentCaptureShieldActive = Boolean(doc && doc.__hearthIndexPassiveButtonCorridorCaptureShield);
+      return state.documentCaptureShieldActive;
+    }
 
-    const html = doc.documentElement;
-
-    html.dataset.hearthIndexJsLoaded = "true";
-    html.dataset.hearthIndexJsContract = CONTRACT;
-    html.dataset.hearthIndexJsReceipt = RECEIPT;
-    html.dataset.hearthIndexJsPreviousContract = PREVIOUS_CONTRACT;
-    html.dataset.hearthIndexJsPreviousRenewalContract = PREVIOUS_RENEWAL_CONTRACT;
-    html.dataset.hearthIndexJsPreviousRenewalReceipt = PREVIOUS_RENEWAL_RECEIPT;
-    html.dataset.hearthIndexJsRenewalContract = RENEWAL_CONTRACT;
-    html.dataset.hearthIndexJsRenewalReceipt = RENEWAL_RECEIPT;
-    html.dataset.hearthIndexJsVersion = VERSION;
-
-    html.dataset.hearthIndexButtonAuthorityResetActive = "true";
-    html.dataset.hearthFrontendButtonAuthorityRestored = "true";
-    html.dataset.hearthWindowDocumentCaptureSuppressionRetired = "true";
-    html.dataset.hearthNativeAnchorDefaultPreserved = "true";
-    html.dataset.hearthDirectButtonBindingActive = "true";
-
-    html.dataset.hearthPageReceiptTargetBindingActive = "true";
-    html.dataset.hearthPageReceiptAvailable = String(state.pageReceiptAvailable);
-    html.dataset.hearthActiveReceiptSource = state.activeReceiptSource;
-    html.dataset.hearthCopiedReceiptSource = state.copiedReceiptSource;
-    html.dataset.hearthShownReceiptSource = state.shownReceiptSource;
-    html.dataset.hearthCurrentHtmlContractRecognized = String(state.currentHtmlContractRecognized);
-    html.dataset.hearthObservedHtmlContract = state.observedHtmlContract;
-
-    html.dataset.hearthVisibleExpressionChainLoaderBridgeActive = "true";
-    html.dataset.hearthVisibleExpressionChainLoadStarted = String(state.visibleExpressionChainLoadStarted);
-    html.dataset.hearthVisibleExpressionChainLoadComplete = String(state.visibleExpressionChainLoadComplete);
-    html.dataset.hearthVisibleExpressionChainLoadHeld = String(state.visibleExpressionChainLoadHeld);
-    html.dataset.hearthVisibleExpressionChainLoadHeldReason = state.visibleExpressionChainLoadHeldReason;
-    html.dataset.hearthVisibleExpressionChainLoadAttemptCount = String(state.visibleExpressionChainLoadAttemptCount);
-    html.dataset.hearthVisibleExpressionChainLoadCompleteCount = String(state.visibleExpressionChainLoadCompleteCount);
-    html.dataset.hearthVisibleExpressionChainLoadLastReason = state.visibleExpressionChainLoadLastReason;
-    html.dataset.hearthVisibleExpressionChainLoadLastError = state.visibleExpressionChainLoadLastError;
-    html.dataset.hearthVisibleExpressionChainLoadPromiseActive = String(state.visibleExpressionChainLoadPromiseActive);
-
-    html.dataset.hearthHexFourPairAuthorityFile = HEX_FOUR_PAIR_FILE;
-    html.dataset.hearthHexFourPairAuthorityLoaded = String(state.hexFourPairAuthorityLoaded);
-    html.dataset.hearthHexFourPairAuthorityContract = state.hexFourPairAuthorityContract;
-    html.dataset.hearthHexFourPairAuthorityExpectedContract = EXPECTED_HEX_FOUR_PAIR_CONTRACT;
-    html.dataset.hearthHexFourPairAuthorityContractRecognized = String(state.hexFourPairAuthorityContractRecognized);
-    html.dataset.hearthHexFourPairAuthorityLoadStatus = state.hexFourPairAuthorityLoadStatus;
-    html.dataset.hearthHexFourPairAuthorityLoadError = state.hexFourPairAuthorityLoadError;
-
-    html.dataset.hearthHexSurfaceFile = HEX_SURFACE_FILE;
-    html.dataset.hearthHexSurfaceLoaded = String(state.hexSurfaceLoaded);
-    html.dataset.hearthHexSurfaceContract = state.hexSurfaceContract;
-    html.dataset.hearthHexSurfaceExpectedContract = EXPECTED_HEX_SURFACE_CONTRACT;
-    html.dataset.hearthHexSurfaceContractRecognized = String(state.hexSurfaceContractRecognized);
-    html.dataset.hearthHexSurfaceLoadStatus = state.hexSurfaceLoadStatus;
-    html.dataset.hearthHexSurfaceLoadError = state.hexSurfaceLoadError;
-
-    html.dataset.hearthCanvasFile = CANVAS_FILE;
-    html.dataset.hearthCanvasHubLoaded = String(state.canvasHubLoaded);
-    html.dataset.hearthCanvasHubContract = state.canvasHubContract;
-    html.dataset.hearthCanvasHubExpectedContract = EXPECTED_CANVAS_CONTRACT;
-    html.dataset.hearthCanvasHubContractRecognized = String(state.canvasHubContractRecognized);
-    html.dataset.hearthCanvasHubLoadStatus = state.canvasHubLoadStatus;
-    html.dataset.hearthCanvasHubLoadError = state.canvasHubLoadError;
-
-    html.dataset.hearthCanvasBootAttempted = String(state.canvasBootAttempted);
-    html.dataset.hearthCanvasBootMethod = state.canvasBootMethod;
-    html.dataset.hearthCanvasBootResult = state.canvasBootResult;
-    html.dataset.hearthCanvasBootError = state.canvasBootError;
-    html.dataset.hearthCanvasLoadedByIndex = String(state.canvasLoadedByIndex);
-    html.dataset.hearthCanvasStartedByIndex = String(state.canvasStartedByIndex);
-    html.dataset.hearthCanvasBootedByIndex = String(state.canvasBootedByIndex);
-
-    html.dataset.hearthRouteConductorLoadedByIndex = "false";
-    html.dataset.hearthRouteConductorHandoffByIndex = "false";
-    html.dataset.hearthRouteConductorOwnedByIndex = "false";
-    html.dataset.hearthDiagnosticRailLoadedByIndex = "false";
-    html.dataset.hearthDiagnosticRailOwnedByIndex = "false";
-
-    html.dataset.hearthCopyDiagnosticBound = String(state.copyDiagnosticBound);
-    html.dataset.hearthToggleReceiptBound = String(state.toggleReceiptBound);
-    html.dataset.hearthDiagnosticAnchorBound = String(state.diagnosticAnchorBound);
-    html.dataset.hearthInspectPlanetBound = String(state.inspectPlanetBound);
-    html.dataset.hearthExpandCockpitBound = String(state.expandCockpitBound);
-    html.dataset.hearthPortalAnchorsBound = String(state.portalAnchorsBound);
-    html.dataset.hearthDetailsDrawersBound = String(state.detailsDrawersBound);
-    html.dataset.hearthLastButtonAction = state.lastAction;
-    html.dataset.hearthLastButtonActionAt = state.lastActionAt;
-
-    html.dataset.hearthF13Claimed = "false";
-    html.dataset.hearthF21Claimed = "false";
-    html.dataset.hearthReadyTextClaimed = "false";
-    html.dataset.visualPassClaimed = "false";
-    html.dataset.generatedImage = "false";
-    html.dataset.graphicBox = "false";
-    html.dataset.webgl = "false";
+    try {
+      doc.addEventListener("click", documentActivationCapture, { capture: true, passive: false });
+      doc.addEventListener("pointerup", documentActivationCapture, { capture: true, passive: false });
+      doc.addEventListener("touchend", documentActivationCapture, { capture: true, passive: false });
+      doc.addEventListener("keydown", documentActivationCapture, { capture: true, passive: false });
+      doc.__hearthIndexPassiveButtonCorridorCaptureShield = true;
+      state.documentCaptureShieldActive = true;
+      state.windowDocumentCaptureSuppressionRetired = true;
+      return true;
+    } catch (error) {
+      recordError("DOCUMENT_CAPTURE_SHIELD_BIND_FAILED", error);
+      state.documentCaptureShieldActive = false;
+      return false;
+    }
   }
 
   function bindControls() {
@@ -1662,20 +1433,14 @@
     injectControlAuthorityStyle();
     ensureEmergencyDiagnosticAnchor();
     refreshRefs();
+    markAllControls();
+    bindDocumentCaptureShield();
 
-    state.copyDiagnosticBound = bindButton(refs.copyButton, "copyDiagnostic", copyDiagnostic);
-    state.toggleReceiptBound = bindButton(refs.toggleReceiptButton, "toggleReceipt", toggleReceiptPanel);
-    state.inspectPlanetBound = bindButton(refs.inspectButton, "inspectPlanet", () => setInspectMode(!state.inspectModeActive));
-    state.expandCockpitBound = bindButton(refs.collapseButton, "toggleCockpit", toggleCockpitMode);
-
-    if (refs.showDiagnosticTab) {
-      bindButton(refs.showDiagnosticTab, "showDiagnostic", () => setInspectMode(false));
-    }
-
-    refs.diagnosticAnchors.forEach((anchor) => bindAnchor(anchor, "openDiagnosticRail"));
-    refs.portalLinks.forEach((anchor) => bindAnchor(anchor, "portalNativeNavigation"));
-    refs.summaries.forEach(bindSummary);
-
+    state.copyDiagnosticBound = Boolean(refs.copyButton);
+    state.toggleReceiptBound = Boolean(refs.toggleReceiptButton);
+    state.inspectPlanetBound = Boolean(refs.inspectButton);
+    state.expandCockpitBound = Boolean(refs.collapseButton);
+    state.showDiagnosticBound = Boolean(refs.showDiagnosticTab);
     state.diagnosticAnchorBound = refs.diagnosticAnchors.length > 0;
     state.portalAnchorsBound = refs.portalLinks.length > 0;
     state.detailsDrawersBound = refs.summaries.length > 0;
@@ -1696,13 +1461,14 @@
     state.pageReceiptAvailable = Boolean(pageReceipt.ok && pageReceipt.text);
     state.activeReceiptSource = pageReceipt.ok ? pageReceipt.source : "INDEX_FALLBACK";
 
-    refreshVisibleExpressionChainState();
+    refreshVisibleExpressionChainState("auditHtml");
 
     return {
       observedHtmlContract: state.observedHtmlContract,
       currentHtmlContractRecognized: state.currentHtmlContractRecognized,
       pageReceiptAvailable: state.pageReceiptAvailable,
       activeReceiptSource: state.activeReceiptSource,
+
       copyButtonPresent: Boolean(refs.copyButton),
       toggleReceiptButtonPresent: Boolean(refs.toggleReceiptButton),
       diagnosticAnchorsPresent: refs.diagnosticAnchors.length,
@@ -1713,48 +1479,183 @@
       receiptPanelPresent: Boolean(refs.receiptPanel),
       receiptTextPresent: Boolean(refs.receiptText),
       htmlReceiptTargetsPresent: refs.htmlReceiptTargets.length,
-      visibleExpressionChainLoaderBridgeActive: true,
-      hexFourPairAuthorityLoaded: state.hexFourPairAuthorityLoaded,
-      hexSurfaceLoaded: state.hexSurfaceLoaded,
-      canvasHubLoaded: state.canvasHubLoaded,
-      canvasBootAttempted: state.canvasBootAttempted,
-      canvasBootResult: state.canvasBootResult
+
+      routeConductorObserved: state.routeConductorObserved,
+      controlsObserved: state.controlsObserved,
+      hexFourPairAuthorityObserved: state.hexFourPairAuthorityObserved,
+      hexSurfaceObserved: state.hexSurfaceObserved,
+      canvasHubObserved: state.canvasHubObserved,
+
+      passiveButtonCorridorActive: true,
+      activeVisibleExpressionLoaderRetired: true,
+      noDynamicScriptInjection: true,
+      canvasBootSuppressedByIndex: true
     };
   }
 
-  function boot() {
-    if (state.bootStarted) return getReceipt();
+  function updateStatusLine(message = "") {
+    refreshRefs();
 
-    state.bootStarted = true;
-    state.startedAt = nowIso();
-    state.updatedAt = state.startedAt;
+    if (refs.stageLabel) {
+      refs.stageLabel.textContent = "Passive button corridor · receipt authority";
+    }
 
-    auditHtml();
-    bindControls();
-    startVisibleExpressionChainBridge("boot");
+    if (refs.heartbeatText) {
+      refs.heartbeatText.textContent = [
+        "buttons=passive-corridor",
+        "native-anchors=preserved",
+        "page-receipt-target=bound",
+        "loader=retired",
+        `route=${state.routeConductorObserved ? "observed" : "waiting"}`,
+        `canvas=${state.canvasHubObserved ? "observed" : "waiting"}`,
+        `last=${message || state.lastAction}`
+      ].join(" · ");
+    }
 
-    state.bootComplete = true;
+    if (refs.latestEvent) {
+      refs.latestEvent.textContent = `latest=${RENEWAL_CONTRACT}`;
+    }
 
-    publishGlobals();
-    markAction("bootComplete");
+    const percent = state.canvasHubObserved ? "55%" : state.routeConductorObserved ? "44%" : "34%";
 
-    root.setTimeout(() => {
-      auditHtml();
-      bindControls();
-      startVisibleExpressionChainBridge("postBootRebind");
-      publishGlobals();
-      markAction("postBootRebind");
-    }, 350);
+    if (refs.progressFill) refs.progressFill.style.width = percent;
+    if (refs.progressPercent) refs.progressPercent.textContent = percent;
 
-    root.setTimeout(() => {
-      auditHtml();
-      bindControls();
-      startVisibleExpressionChainBridge("lateRebind");
-      publishGlobals();
-      markAction("lateRebind");
-    }, 1200);
+    if (refs.routeStatus) {
+      const resolved = resolveActiveReceiptText();
+      refs.routeStatus.textContent = resolved.text || getIndexReceiptText();
+    }
+  }
 
-    return getReceipt();
+  function publishDataset() {
+    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return false;
+
+    const html = doc.documentElement;
+
+    html.dataset.hearthIndexJsLoaded = "true";
+    html.dataset.hearthIndexJsContract = CONTRACT;
+    html.dataset.hearthIndexJsReceipt = RECEIPT;
+    html.dataset.hearthIndexJsPreviousContract = PREVIOUS_CONTRACT;
+    html.dataset.hearthIndexJsPreviousRenewalContract = PREVIOUS_RENEWAL_CONTRACT;
+    html.dataset.hearthIndexJsPreviousRenewalReceipt = PREVIOUS_RENEWAL_RECEIPT;
+    html.dataset.hearthIndexJsRenewalContract = RENEWAL_CONTRACT;
+    html.dataset.hearthIndexJsRenewalReceipt = RENEWAL_RECEIPT;
+    html.dataset.hearthIndexJsVersion = VERSION;
+
+    html.dataset.hearthIndexPassiveButtonCorridorActive = "true";
+    html.dataset.hearthIndexPassiveReceiptCorridorActive = "true";
+    html.dataset.hearthIndexPassiveDownstreamObserverActive = "true";
+    html.dataset.hearthIndexActiveVisibleExpressionLoaderRetired = "true";
+    html.dataset.hearthIndexVisibleExpressionChainLoaderBridgeRetired = "true";
+    html.dataset.hearthIndexNoDynamicScriptInjection = "true";
+    html.dataset.hearthIndexCanvasBootSuppressed = "true";
+    html.dataset.hearthIndexRouteConductorAdmissionSuppressed = "true";
+    html.dataset.hearthIndexControlAdmissionSuppressed = "true";
+
+    html.dataset.hearthIndexButtonAuthorityResetActive = "true";
+    html.dataset.hearthFrontendButtonAuthorityRestored = "true";
+    html.dataset.hearthDocumentCaptureShieldActive = String(state.documentCaptureShieldActive);
+    html.dataset.hearthWindowDocumentCaptureSuppressionRetired = String(state.windowDocumentCaptureSuppressionRetired);
+    html.dataset.hearthNativeAnchorDefaultPreserved = "true";
+    html.dataset.hearthDirectButtonBindingActive = "true";
+    html.dataset.hearthDuplicateActivationProtectionActive = "true";
+
+    html.dataset.hearthPageReceiptTargetBindingActive = "true";
+    html.dataset.hearthPageReceiptAvailable = String(state.pageReceiptAvailable);
+    html.dataset.hearthActiveReceiptSource = state.activeReceiptSource;
+    html.dataset.hearthCopiedReceiptSource = state.copiedReceiptSource;
+    html.dataset.hearthShownReceiptSource = state.shownReceiptSource;
+    html.dataset.hearthCurrentHtmlContractRecognized = String(state.currentHtmlContractRecognized);
+    html.dataset.hearthObservedHtmlContract = state.observedHtmlContract;
+
+    html.dataset.hearthRouteConductorObservedByIndex = String(state.routeConductorObserved);
+    html.dataset.hearthRouteConductorContractObservedByIndex = state.routeConductorContract;
+    html.dataset.hearthRouteConductorContractRecognizedByIndex = String(state.routeConductorContractRecognized);
+    html.dataset.hearthRouteConductorLoadedByIndex = "false";
+    html.dataset.hearthRouteConductorHandoffByIndex = "false";
+    html.dataset.hearthRouteConductorOwnedByIndex = "false";
+
+    html.dataset.hearthControlsObservedByIndex = String(state.controlsObserved);
+    html.dataset.hearthControlsContractObservedByIndex = state.controlsContract;
+    html.dataset.hearthControlsContractRecognizedByIndex = String(state.controlsContractRecognized);
+    html.dataset.hearthControlsLoadedByIndex = "false";
+    html.dataset.hearthControlsAdmittedByIndex = "false";
+
+    html.dataset.hearthHexFourPairAuthorityFile = HEX_FOUR_PAIR_FILE;
+    html.dataset.hearthHexFourPairAuthorityObserved = String(state.hexFourPairAuthorityObserved);
+    html.dataset.hearthHexFourPairAuthorityContract = state.hexFourPairAuthorityContract;
+    html.dataset.hearthHexFourPairAuthorityExpectedContract = EXPECTED_HEX_FOUR_PAIR_CONTRACT;
+    html.dataset.hearthHexFourPairAuthorityContractRecognized = String(state.hexFourPairAuthorityContractRecognized);
+    html.dataset.hearthHexFourPairAuthorityObservationStatus = state.hexFourPairAuthorityObservationStatus;
+
+    html.dataset.hearthHexSurfaceFile = HEX_SURFACE_FILE;
+    html.dataset.hearthHexSurfaceObserved = String(state.hexSurfaceObserved);
+    html.dataset.hearthHexSurfaceContract = state.hexSurfaceContract;
+    html.dataset.hearthHexSurfaceExpectedContract = EXPECTED_HEX_SURFACE_CONTRACT;
+    html.dataset.hearthHexSurfaceContractRecognized = String(state.hexSurfaceContractRecognized);
+    html.dataset.hearthHexSurfaceObservationStatus = state.hexSurfaceObservationStatus;
+
+    html.dataset.hearthCanvasFile = CANVAS_FILE;
+    html.dataset.hearthCanvasHubObserved = String(state.canvasHubObserved);
+    html.dataset.hearthCanvasHubContract = state.canvasHubContract;
+    html.dataset.hearthCanvasHubAcceptedContracts = ACCEPTED_CANVAS_CONTRACTS.join("|");
+    html.dataset.hearthCanvasHubContractRecognized = String(state.canvasHubContractRecognized);
+    html.dataset.hearthCanvasHubObservationStatus = state.canvasHubObservationStatus;
+
+    html.dataset.hearthVisibleExpressionChainObserved = String(state.visibleExpressionChainObserved);
+    html.dataset.hearthVisibleExpressionChainLoadStarted = "false";
+    html.dataset.hearthVisibleExpressionChainLoadComplete = String(state.visibleExpressionChainLoadComplete);
+    html.dataset.hearthVisibleExpressionChainLoadHeld = "false";
+    html.dataset.hearthVisibleExpressionChainLoadHeldReason = state.visibleExpressionChainLoadHeldReason;
+    html.dataset.hearthVisibleExpressionChainLoadAttemptCount = "0";
+    html.dataset.hearthVisibleExpressionChainLoadCompleteCount = String(state.visibleExpressionChainLoadCompleteCount);
+    html.dataset.hearthVisibleExpressionChainLoadLastReason = state.visibleExpressionChainLoadLastReason;
+    html.dataset.hearthVisibleExpressionChainLoadLastError = state.visibleExpressionChainLoadLastError;
+    html.dataset.hearthVisibleExpressionChainLoadPromiseActive = "false";
+
+    html.dataset.hearthCanvasBootAttempted = "false";
+    html.dataset.hearthCanvasBootMethod = "NONE";
+    html.dataset.hearthCanvasBootResult = "PASSIVE_NOT_ATTEMPTED";
+    html.dataset.hearthCanvasBootError = "";
+    html.dataset.hearthCanvasLoadedByIndex = "false";
+    html.dataset.hearthCanvasStartedByIndex = "false";
+    html.dataset.hearthCanvasBootedByIndex = "false";
+
+    html.dataset.hearthDiagnosticRailLoadedByIndex = "false";
+    html.dataset.hearthDiagnosticRailOwnedByIndex = "false";
+
+    html.dataset.hearthCopyDiagnosticBound = String(state.copyDiagnosticBound);
+    html.dataset.hearthToggleReceiptBound = String(state.toggleReceiptBound);
+    html.dataset.hearthDiagnosticAnchorBound = String(state.diagnosticAnchorBound);
+    html.dataset.hearthInspectPlanetBound = String(state.inspectPlanetBound);
+    html.dataset.hearthExpandCockpitBound = String(state.expandCockpitBound);
+    html.dataset.hearthShowDiagnosticBound = String(state.showDiagnosticBound);
+    html.dataset.hearthPortalAnchorsBound = String(state.portalAnchorsBound);
+    html.dataset.hearthDetailsDrawersBound = String(state.detailsDrawersBound);
+
+    html.dataset.hearthLastButtonAction = state.lastAction;
+    html.dataset.hearthLastButtonActionAt = state.lastActionAt;
+
+    html.dataset.hearthIndexFirstFailedCoordinate = state.firstFailedCoordinate;
+    html.dataset.hearthIndexRecommendedNextFile = state.recommendedNextFile;
+    html.dataset.hearthIndexRecommendedNextAction = state.recommendedNextAction;
+    html.dataset.hearthIndexPostgameStatus = state.postgameStatus;
+
+    html.dataset.hearthF13Claimed = "false";
+    html.dataset.hearthF21Claimed = "false";
+    html.dataset.hearthReadyTextAllowed = "false";
+    html.dataset.hearthReadyTextClaimed = "false";
+    html.dataset.hearthControlReadyClaimed = "false";
+    html.dataset.hearthMotionReadyClaimed = "false";
+    html.dataset.hearthTouchReadyClaimed = "false";
+    html.dataset.hearthDragReadyClaimed = "false";
+    html.dataset.hearthDownstreamReleaseClaimed = "false";
+    html.dataset.visualPassClaimed = "false";
+    html.dataset.generatedImage = "false";
+    html.dataset.graphicBox = "false";
+    html.dataset.webgl = "false";
+
+    return true;
   }
 
   function getVisibleExpressionChainReceipt() {
@@ -1763,69 +1664,85 @@
       receipt: RECEIPT,
       renewalContract: RENEWAL_CONTRACT,
       renewalReceipt: RENEWAL_RECEIPT,
-      packetType: "HEARTH_INDEX_VISIBLE_EXPRESSION_CHAIN_LOADER_BRIDGE_RECEIPT",
+      packetType: "HEARTH_INDEX_PASSIVE_DOWNSTREAM_OBSERVER_RECEIPT",
       route: ROUTE,
       file: FILE,
 
-      visibleExpressionChainLoaderBridgeActive: true,
-      visibleExpressionChainLoadStarted: state.visibleExpressionChainLoadStarted,
+      passiveDownstreamObserverActive: true,
+      activeVisibleExpressionLoaderRetired: true,
+      visibleExpressionChainLoaderBridgeRetired: true,
+      noDynamicScriptInjection: true,
+      indexDoesNotLoadAssets: true,
+      indexDoesNotBootCanvas: true,
+      indexDoesNotAdmitControls: true,
+      routeConductorOwnsControlAdmission: true,
+
+      visibleExpressionChainObserved: state.visibleExpressionChainObserved,
+      visibleExpressionChainLoadStarted: false,
       visibleExpressionChainLoadComplete: state.visibleExpressionChainLoadComplete,
-      visibleExpressionChainLoadHeld: state.visibleExpressionChainLoadHeld,
+      visibleExpressionChainLoadHeld: false,
       visibleExpressionChainLoadHeldReason: state.visibleExpressionChainLoadHeldReason,
-      visibleExpressionChainLoadAttemptCount: state.visibleExpressionChainLoadAttemptCount,
+      visibleExpressionChainLoadAttemptCount: 0,
       visibleExpressionChainLoadCompleteCount: state.visibleExpressionChainLoadCompleteCount,
       visibleExpressionChainLoadLastReason: state.visibleExpressionChainLoadLastReason,
       visibleExpressionChainLoadLastError: state.visibleExpressionChainLoadLastError,
 
+      routeConductorFile: ROUTE_CONDUCTOR_FILE,
+      routeConductorObserved: state.routeConductorObserved,
+      routeConductorContract: state.routeConductorContract,
+      routeConductorReceipt: state.routeConductorReceipt,
+      routeConductorExpectedContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
+      routeConductorContractRecognized: state.routeConductorContractRecognized,
+      routeConductorLoadedByIndex: false,
+      routeConductorHandoffByIndex: false,
+      routeConductorOwnedByIndex: false,
+
+      controlFile: CONTROL_FILE,
+      controlsObserved: state.controlsObserved,
+      controlsContract: state.controlsContract,
+      controlsReceipt: state.controlsReceipt,
+      controlsExpectedContract: CONTROL_CONTRACT,
+      controlsContractRecognized: state.controlsContractRecognized,
+      controlsLoadedByIndex: false,
+      controlsAdmittedByIndex: false,
+
       hexFourPairAuthorityFile: HEX_FOUR_PAIR_FILE,
-      hexFourPairAuthorityLoaded: state.hexFourPairAuthorityLoaded,
+      hexFourPairAuthorityObserved: state.hexFourPairAuthorityObserved,
       hexFourPairAuthorityContract: state.hexFourPairAuthorityContract,
       hexFourPairAuthorityExpectedContract: EXPECTED_HEX_FOUR_PAIR_CONTRACT,
       hexFourPairAuthorityContractRecognized: state.hexFourPairAuthorityContractRecognized,
-      hexFourPairAuthorityLoadStatus: state.hexFourPairAuthorityLoadStatus,
-      hexFourPairAuthorityLoadError: state.hexFourPairAuthorityLoadError,
+      hexFourPairAuthorityObservationStatus: state.hexFourPairAuthorityObservationStatus,
 
       hexSurfaceFile: HEX_SURFACE_FILE,
-      hexSurfaceLoaded: state.hexSurfaceLoaded,
+      hexSurfaceObserved: state.hexSurfaceObserved,
       hexSurfaceContract: state.hexSurfaceContract,
       hexSurfaceExpectedContract: EXPECTED_HEX_SURFACE_CONTRACT,
       hexSurfaceContractRecognized: state.hexSurfaceContractRecognized,
-      hexSurfaceLoadStatus: state.hexSurfaceLoadStatus,
-      hexSurfaceLoadError: state.hexSurfaceLoadError,
+      hexSurfaceObservationStatus: state.hexSurfaceObservationStatus,
 
       canvasFile: CANVAS_FILE,
-      canvasHubLoaded: state.canvasHubLoaded,
+      canvasHubObserved: state.canvasHubObserved,
       canvasHubContract: state.canvasHubContract,
-      canvasHubExpectedContract: EXPECTED_CANVAS_CONTRACT,
+      canvasHubAcceptedContracts: ACCEPTED_CANVAS_CONTRACTS.slice(),
       canvasHubContractRecognized: state.canvasHubContractRecognized,
-      canvasHubLoadStatus: state.canvasHubLoadStatus,
-      canvasHubLoadError: state.canvasHubLoadError,
+      canvasHubObservationStatus: state.canvasHubObservationStatus,
 
-      canvasBootAttempted: state.canvasBootAttempted,
-      canvasBootMethod: state.canvasBootMethod,
-      canvasBootResult: state.canvasBootResult,
-      canvasBootError: state.canvasBootError,
-      canvasLoadedByIndex: state.canvasLoadedByIndex,
-      canvasStartedByIndex: state.canvasStartedByIndex,
-      canvasBootedByIndex: state.canvasBootedByIndex,
+      canvasBootAttempted: false,
+      canvasBootMethod: "NONE",
+      canvasBootResult: "PASSIVE_NOT_ATTEMPTED",
+      canvasBootError: "",
+      canvasLoadedByIndex: false,
+      canvasStartedByIndex: false,
+      canvasBootedByIndex: false,
 
       indexOwnsCanvasDrawing: false,
       indexOwnsCanvasTruth: false,
       indexOwnsHexTruth: false,
       indexOwnsHexSurfaceTruth: false,
       indexOwnsRouteConductorAuthority: false,
-      routeConductorLoadedByIndex: false,
-      routeConductorHandoffByIndex: false,
-      routeConductorOwnedByIndex: false,
+      indexOwnsControlAdmission: false,
 
-      f13Claimed: false,
-      f21Claimed: false,
-      readyTextClaimed: false,
-      visualPassClaimed: false,
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-
+      ...FINAL_FALSE,
       updatedAt: state.updatedAt || nowIso()
     };
   }
@@ -1843,27 +1760,41 @@
       route: ROUTE,
       file: FILE,
       htmlFile: HTML_FILE,
+      routeConductorFile: ROUTE_CONDUCTOR_FILE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
 
       role: state.role,
       currentHtmlContract: CURRENT_HTML_CONTRACT,
-      lineageHtmlContract: LINEAGE_HTML_CONTRACT,
       previousHtmlContract: PREVIOUS_HTML_CONTRACT,
+      baselineHtmlContract: BASELINE_HTML_CONTRACT,
+      foundationHtmlContract: FOUNDATION_HTML_CONTRACT,
       observedHtmlContract: state.observedHtmlContract,
       currentHtmlContractRecognized: state.currentHtmlContractRecognized,
 
       bootStarted: state.bootStarted,
       bootComplete: state.bootComplete,
-      controlStyleInjected: state.controlStyleInjected,
+      bootCount: state.bootCount,
+
+      passiveButtonCorridorActive: true,
+      passiveReceiptCorridorActive: true,
+      passiveDownstreamObserverActive: true,
+      activeVisibleExpressionLoaderRetired: true,
+      visibleExpressionChainLoaderBridgeRetired: true,
+      noDynamicScriptInjection: true,
+      canvasBootSuppressedByIndex: true,
+      routeConductorAdmissionSuppressedByIndex: true,
+      controlAdmissionSuppressedByIndex: true,
 
       buttonAuthorityActive: true,
       frontendButtonAuthorityRestored: true,
+      documentCaptureShieldActive: state.documentCaptureShieldActive,
       globalSuppressionAvoided: true,
-      windowDocumentCaptureSuppressionRetired: true,
+      windowDocumentCaptureSuppressionRetired: state.windowDocumentCaptureSuppressionRetired,
       nativeAnchorDefaultPreserved: true,
       directButtonBindingActive: true,
       delegatedButtonBindingActive: true,
       detailsSummaryBindingActive: true,
+      duplicateActivationProtectionActive: true,
 
       pageReceiptTargetBindingActive: true,
       pageReceiptAvailable: state.pageReceiptAvailable,
@@ -1873,36 +1804,39 @@
 
       visibleExpressionChainReceipt: getVisibleExpressionChainReceipt(),
 
-      visibleExpressionChainLoaderBridgeActive: true,
-      visibleExpressionChainLoadStarted: state.visibleExpressionChainLoadStarted,
-      visibleExpressionChainLoadComplete: state.visibleExpressionChainLoadComplete,
-      visibleExpressionChainLoadHeld: state.visibleExpressionChainLoadHeld,
-      visibleExpressionChainLoadHeldReason: state.visibleExpressionChainLoadHeldReason,
+      routeConductorObserved: state.routeConductorObserved,
+      routeConductorContract: state.routeConductorContract,
+      routeConductorContractRecognized: state.routeConductorContractRecognized,
 
-      hexFourPairAuthorityLoaded: state.hexFourPairAuthorityLoaded,
+      controlsObserved: state.controlsObserved,
+      controlsContract: state.controlsContract,
+      controlsContractRecognized: state.controlsContractRecognized,
+
+      hexFourPairAuthorityObserved: state.hexFourPairAuthorityObserved,
       hexFourPairAuthorityContract: state.hexFourPairAuthorityContract,
       hexFourPairAuthorityContractRecognized: state.hexFourPairAuthorityContractRecognized,
 
-      hexSurfaceLoaded: state.hexSurfaceLoaded,
+      hexSurfaceObserved: state.hexSurfaceObserved,
       hexSurfaceContract: state.hexSurfaceContract,
       hexSurfaceContractRecognized: state.hexSurfaceContractRecognized,
 
-      canvasHubLoaded: state.canvasHubLoaded,
+      canvasHubObserved: state.canvasHubObserved,
       canvasHubContract: state.canvasHubContract,
       canvasHubContractRecognized: state.canvasHubContractRecognized,
-      canvasBootAttempted: state.canvasBootAttempted,
-      canvasBootMethod: state.canvasBootMethod,
-      canvasBootResult: state.canvasBootResult,
-      canvasBootError: state.canvasBootError,
-      canvasLoadedByIndex: state.canvasLoadedByIndex,
-      canvasStartedByIndex: state.canvasStartedByIndex,
-      canvasBootedByIndex: state.canvasBootedByIndex,
+      canvasBootAttempted: false,
+      canvasBootMethod: "NONE",
+      canvasBootResult: "PASSIVE_NOT_ATTEMPTED",
+      canvasBootError: "",
+      canvasLoadedByIndex: false,
+      canvasStartedByIndex: false,
+      canvasBootedByIndex: false,
 
       copyDiagnosticBound: state.copyDiagnosticBound,
       toggleReceiptBound: state.toggleReceiptBound,
       diagnosticAnchorBound: state.diagnosticAnchorBound,
       inspectPlanetBound: state.inspectPlanetBound,
       expandCockpitBound: state.expandCockpitBound,
+      showDiagnosticBound: state.showDiagnosticBound,
       portalAnchorsBound: state.portalAnchorsBound,
       detailsDrawersBound: state.detailsDrawersBound,
 
@@ -1922,6 +1856,11 @@
       lastActionAt: state.lastActionAt,
       lastError: state.lastError,
 
+      firstFailedCoordinate: state.firstFailedCoordinate,
+      recommendedNextFile: state.recommendedNextFile,
+      recommendedNextAction: state.recommendedNextAction,
+      postgameStatus: state.postgameStatus,
+
       routeConductorLoadedByIndex: false,
       routeConductorHandoffByIndex: false,
       routeConductorOwnedByIndex: false,
@@ -1931,24 +1870,21 @@
       htmlOwnsVisibleShell: true,
       indexCreatesVisibleShell: false,
       indexOwnsButtonBindingOnly: false,
-      indexOwnsButtonBindingAndLoaderBridgeOnly: true,
+      indexOwnsPassiveButtonAndReceiptCorridorOnly: true,
       indexOwnsRuntimeRelease: false,
       indexOwnsCanvasDrawing: false,
       indexOwnsCanvasTruth: false,
       indexOwnsHexTruth: false,
       indexOwnsHexSurfaceTruth: false,
       indexOwnsRouteConductorHandoff: false,
+      indexOwnsControlAdmission: false,
       indexOwnsPageReceiptSelection: true,
       indexOwnsPageReceiptTruth: false,
 
-      f13Claimed: false,
-      f21Claimed: false,
-      readyTextClaimed: false,
-      visualPassClaimed: false,
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
+      localEvents: clonePlain(state.events),
+      errors: clonePlain(state.errors),
 
+      ...FINAL_FALSE,
       startedAt: state.startedAt,
       updatedAt: state.updatedAt || nowIso()
     };
@@ -1971,17 +1907,30 @@
       line("route", r.route),
       line("file", r.file),
       line("htmlFile", r.htmlFile),
+      line("routeConductorFile", r.routeConductorFile),
       line("diagnosticRoute", r.diagnosticRoute),
       "",
       "HTML_ALIGNMENT",
       line("currentHtmlContract", r.currentHtmlContract),
-      line("lineageHtmlContract", r.lineageHtmlContract),
       line("previousHtmlContract", r.previousHtmlContract),
+      line("baselineHtmlContract", r.baselineHtmlContract),
+      line("foundationHtmlContract", r.foundationHtmlContract),
       line("observedHtmlContract", r.observedHtmlContract),
       line("currentHtmlContractRecognized", r.currentHtmlContractRecognized),
       "",
-      "VISIBLE_EXPRESSION_CHAIN_LOADER_BRIDGE",
-      line("visibleExpressionChainLoaderBridgeActive", c.visibleExpressionChainLoaderBridgeActive),
+      "PASSIVE_CORRIDOR",
+      line("passiveButtonCorridorActive", r.passiveButtonCorridorActive),
+      line("passiveReceiptCorridorActive", r.passiveReceiptCorridorActive),
+      line("passiveDownstreamObserverActive", r.passiveDownstreamObserverActive),
+      line("activeVisibleExpressionLoaderRetired", r.activeVisibleExpressionLoaderRetired),
+      line("visibleExpressionChainLoaderBridgeRetired", r.visibleExpressionChainLoaderBridgeRetired),
+      line("noDynamicScriptInjection", r.noDynamicScriptInjection),
+      line("canvasBootSuppressedByIndex", r.canvasBootSuppressedByIndex),
+      line("routeConductorAdmissionSuppressedByIndex", r.routeConductorAdmissionSuppressedByIndex),
+      line("controlAdmissionSuppressedByIndex", r.controlAdmissionSuppressedByIndex),
+      "",
+      "PASSIVE_DOWNSTREAM_OBSERVATION",
+      line("visibleExpressionChainObserved", c.visibleExpressionChainObserved),
       line("visibleExpressionChainLoadStarted", c.visibleExpressionChainLoadStarted),
       line("visibleExpressionChainLoadComplete", c.visibleExpressionChainLoadComplete),
       line("visibleExpressionChainLoadHeld", c.visibleExpressionChainLoadHeld),
@@ -1991,30 +1940,46 @@
       line("visibleExpressionChainLoadLastReason", c.visibleExpressionChainLoadLastReason),
       line("visibleExpressionChainLoadLastError", c.visibleExpressionChainLoadLastError),
       "",
-      "VISIBLE_EXPRESSION_CHAIN_FILES",
+      "ROUTE_CONDUCTOR",
+      line("routeConductorObserved", c.routeConductorObserved),
+      line("routeConductorContract", c.routeConductorContract),
+      line("routeConductorReceipt", c.routeConductorReceipt),
+      line("routeConductorExpectedContract", c.routeConductorExpectedContract),
+      line("routeConductorContractRecognized", c.routeConductorContractRecognized),
+      line("routeConductorLoadedByIndex", c.routeConductorLoadedByIndex),
+      line("routeConductorHandoffByIndex", c.routeConductorHandoffByIndex),
+      line("routeConductorOwnedByIndex", c.routeConductorOwnedByIndex),
+      "",
+      "CONTROLS",
+      line("controlFile", c.controlFile),
+      line("controlsObserved", c.controlsObserved),
+      line("controlsContract", c.controlsContract),
+      line("controlsReceipt", c.controlsReceipt),
+      line("controlsExpectedContract", c.controlsExpectedContract),
+      line("controlsContractRecognized", c.controlsContractRecognized),
+      line("controlsLoadedByIndex", c.controlsLoadedByIndex),
+      line("controlsAdmittedByIndex", c.controlsAdmittedByIndex),
+      "",
+      "VISIBLE_EXPRESSION_SUBJECTS",
       line("hexFourPairAuthorityFile", c.hexFourPairAuthorityFile),
-      line("hexFourPairAuthorityLoaded", c.hexFourPairAuthorityLoaded),
+      line("hexFourPairAuthorityObserved", c.hexFourPairAuthorityObserved),
       line("hexFourPairAuthorityContract", c.hexFourPairAuthorityContract),
       line("hexFourPairAuthorityExpectedContract", c.hexFourPairAuthorityExpectedContract),
       line("hexFourPairAuthorityContractRecognized", c.hexFourPairAuthorityContractRecognized),
-      line("hexFourPairAuthorityLoadStatus", c.hexFourPairAuthorityLoadStatus),
-      line("hexFourPairAuthorityLoadError", c.hexFourPairAuthorityLoadError),
+      line("hexFourPairAuthorityObservationStatus", c.hexFourPairAuthorityObservationStatus),
       line("hexSurfaceFile", c.hexSurfaceFile),
-      line("hexSurfaceLoaded", c.hexSurfaceLoaded),
+      line("hexSurfaceObserved", c.hexSurfaceObserved),
       line("hexSurfaceContract", c.hexSurfaceContract),
       line("hexSurfaceExpectedContract", c.hexSurfaceExpectedContract),
       line("hexSurfaceContractRecognized", c.hexSurfaceContractRecognized),
-      line("hexSurfaceLoadStatus", c.hexSurfaceLoadStatus),
-      line("hexSurfaceLoadError", c.hexSurfaceLoadError),
+      line("hexSurfaceObservationStatus", c.hexSurfaceObservationStatus),
       line("canvasFile", c.canvasFile),
-      line("canvasHubLoaded", c.canvasHubLoaded),
+      line("canvasHubObserved", c.canvasHubObserved),
       line("canvasHubContract", c.canvasHubContract),
-      line("canvasHubExpectedContract", c.canvasHubExpectedContract),
       line("canvasHubContractRecognized", c.canvasHubContractRecognized),
-      line("canvasHubLoadStatus", c.canvasHubLoadStatus),
-      line("canvasHubLoadError", c.canvasHubLoadError),
+      line("canvasHubObservationStatus", c.canvasHubObservationStatus),
       "",
-      "CANVAS_PUBLIC_API_CALL",
+      "CANVAS_PUBLIC_API",
       line("canvasBootAttempted", c.canvasBootAttempted),
       line("canvasBootMethod", c.canvasBootMethod),
       line("canvasBootResult", c.canvasBootResult),
@@ -2035,11 +2000,14 @@
       "BUTTON_AUTHORITY",
       line("buttonAuthorityActive", r.buttonAuthorityActive),
       line("frontendButtonAuthorityRestored", r.frontendButtonAuthorityRestored),
+      line("documentCaptureShieldActive", r.documentCaptureShieldActive),
       line("globalSuppressionAvoided", r.globalSuppressionAvoided),
       line("windowDocumentCaptureSuppressionRetired", r.windowDocumentCaptureSuppressionRetired),
       line("nativeAnchorDefaultPreserved", r.nativeAnchorDefaultPreserved),
       line("directButtonBindingActive", r.directButtonBindingActive),
+      line("delegatedButtonBindingActive", r.delegatedButtonBindingActive),
       line("detailsSummaryBindingActive", r.detailsSummaryBindingActive),
+      line("duplicateActivationProtectionActive", r.duplicateActivationProtectionActive),
       "",
       "BOUND_CONTROLS",
       line("copyDiagnosticBound", r.copyDiagnosticBound),
@@ -2047,6 +2015,7 @@
       line("diagnosticAnchorBound", r.diagnosticAnchorBound),
       line("inspectPlanetBound", r.inspectPlanetBound),
       line("expandCockpitBound", r.expandCockpitBound),
+      line("showDiagnosticBound", r.showDiagnosticBound),
       line("portalAnchorsBound", r.portalAnchorsBound),
       line("detailsDrawersBound", r.detailsDrawersBound),
       "",
@@ -2068,17 +2037,24 @@
       line("lastActionAt", r.lastActionAt),
       line("lastError", r.lastError),
       "",
+      "NEXT",
+      line("firstFailedCoordinate", r.firstFailedCoordinate),
+      line("recommendedNextFile", r.recommendedNextFile),
+      line("recommendedNextAction", r.recommendedNextAction),
+      line("postgameStatus", r.postgameStatus),
+      "",
       "OWNERSHIP",
       line("htmlOwnsVisibleShell", r.htmlOwnsVisibleShell),
       line("indexCreatesVisibleShell", r.indexCreatesVisibleShell),
       line("indexOwnsButtonBindingOnly", r.indexOwnsButtonBindingOnly),
-      line("indexOwnsButtonBindingAndLoaderBridgeOnly", r.indexOwnsButtonBindingAndLoaderBridgeOnly),
+      line("indexOwnsPassiveButtonAndReceiptCorridorOnly", r.indexOwnsPassiveButtonAndReceiptCorridorOnly),
       line("indexOwnsRuntimeRelease", r.indexOwnsRuntimeRelease),
       line("indexOwnsCanvasDrawing", r.indexOwnsCanvasDrawing),
       line("indexOwnsCanvasTruth", r.indexOwnsCanvasTruth),
       line("indexOwnsHexTruth", r.indexOwnsHexTruth),
       line("indexOwnsHexSurfaceTruth", r.indexOwnsHexSurfaceTruth),
       line("indexOwnsRouteConductorHandoff", r.indexOwnsRouteConductorHandoff),
+      line("indexOwnsControlAdmission", r.indexOwnsControlAdmission),
       line("routeConductorLoadedByIndex", r.routeConductorLoadedByIndex),
       line("routeConductorHandoffByIndex", r.routeConductorHandoffByIndex),
       line("routeConductorOwnedByIndex", r.routeConductorOwnedByIndex),
@@ -2086,13 +2062,23 @@
       line("diagnosticRailOwnedByIndex", r.diagnosticRailOwnedByIndex),
       "",
       "NO_CLAIMS",
-      line("f13Claimed", r.f13Claimed),
-      line("f21Claimed", r.f21Claimed),
-      line("readyTextClaimed", r.readyTextClaimed),
-      line("visualPassClaimed", r.visualPassClaimed),
-      line("generatedImage", r.generatedImage),
-      line("graphicBox", r.graphicBox),
-      line("webGL", r.webGL),
+      line("f13Claimed", false),
+      line("f13EligibleForCanvas", false),
+      line("f21Claimed", false),
+      line("f21EligibleForNorth", false),
+      line("readyTextAllowed", false),
+      line("readyTextClaimed", false),
+      line("controlReadyClaimed", false),
+      line("motionReadyClaimed", false),
+      line("touchReadyClaimed", false),
+      line("dragReadyClaimed", false),
+      line("downstreamReleaseClaimed", false),
+      line("completionLatched", false),
+      line("visualPassClaimed", false),
+      line("finalVisualPassClaimed", false),
+      line("generatedImage", false),
+      line("graphicBox", false),
+      line("webGL", false),
       "",
       line("startedAt", r.startedAt),
       line("updatedAt", r.updatedAt)
@@ -2112,36 +2098,112 @@
   }
 
   function publishGlobals() {
-    root.HEARTH = root.HEARTH || {};
-    root.DEXTER_LAB = root.DEXTER_LAB || {};
+    const hearth = ensureObject(root, "HEARTH");
+    const lab = ensureObject(root, "DEXTER_LAB");
 
-    root.HEARTH.indexJs = api;
-    root.HEARTH.indexBridge = api;
-    root.HEARTH.frontendButtonAuthorityReset = api;
-    root.HEARTH.buttonAuthority = api;
-    root.HEARTH.visibleExpressionChainLoaderBridge = api;
-    root.HEARTH.indexJsReceipt = getReceipt();
-    root.HEARTH.indexJsReceiptText = getIndexReceiptText;
-    root.HEARTH.indexJsPageReceiptText = getPageReceiptText;
-    root.HEARTH.indexJsActiveReceiptText = getActiveReceiptText;
-    root.HEARTH.visibleExpressionChainReceipt = getVisibleExpressionChainReceipt;
+    hearth.indexJs = api;
+    hearth.indexBridge = api;
+    hearth.frontendButtonAuthorityReset = api;
+    hearth.buttonAuthority = api;
+    hearth.passiveButtonReceiptCorridor = api;
+    hearth.visibleExpressionChainLoaderBridge = api;
+    hearth.visibleExpressionChainPassiveObserver = api;
 
-    root.DEXTER_LAB.hearthIndexJs = api;
-    root.DEXTER_LAB.hearthFrontendButtonAuthorityReset = api;
-    root.DEXTER_LAB.hearthVisibleExpressionChainLoaderBridge = api;
+    hearth.indexJsReceipt = getReceipt();
+    hearth.indexJsReceiptText = getIndexReceiptText;
+    hearth.indexJsPageReceiptText = getPageReceiptText;
+    hearth.indexJsActiveReceiptText = getActiveReceiptText;
+    hearth.visibleExpressionChainReceipt = getVisibleExpressionChainReceipt;
+
+    lab.hearthIndexJs = api;
+    lab.hearthFrontendButtonAuthorityReset = api;
+    lab.hearthPassiveButtonReceiptCorridor = api;
+    lab.hearthVisibleExpressionChainPassiveObserver = api;
 
     root.HEARTH_INDEX_JS = api;
     root.HEARTH_INDEX_BRIDGE = api;
     root.HEARTH_FRONTEND_BUTTON_AUTHORITY_RESET = api;
     root.HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET = api;
+    root.HEARTH_INDEX_JS_PASSIVE_BUTTON_RECEIPT_CORRIDOR_ALIGNMENT = api;
     root.HEARTH_INDEX_JS_VISIBLE_EXPRESSION_CHAIN_LOADER_BRIDGE = api;
+    root.HEARTH_INDEX_JS_VISIBLE_EXPRESSION_CHAIN_PASSIVE_OBSERVER = api;
 
     root.HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_RECEIPT = getReceipt();
+    root.HEARTH_INDEX_JS_PASSIVE_BUTTON_RECEIPT_CORRIDOR_ALIGNMENT_RECEIPT = getReceipt();
     root.HEARTH_INDEX_JS_PAGE_RECEIPT_TARGET_BINDING_RECEIPT = getReceipt();
     root.HEARTH_INDEX_JS_VISIBLE_EXPRESSION_CHAIN_LOADER_BRIDGE_RECEIPT = getVisibleExpressionChainReceipt();
+    root.HEARTH_INDEX_JS_VISIBLE_EXPRESSION_CHAIN_PASSIVE_OBSERVER_RECEIPT = getVisibleExpressionChainReceipt();
+
+    return api;
+  }
+
+  function boot() {
+    if (state.bootStarted) return getReceipt();
+
+    state.bootStarted = true;
+    state.bootCount += 1;
+    state.startedAt = nowIso();
+    state.updatedAt = state.startedAt;
+
+    auditHtml();
+    bindControls();
+
+    state.bootComplete = true;
+    publishGlobals();
+    markAction("bootComplete");
+
+    root.setTimeout(() => {
+      auditHtml();
+      bindControls();
+      publishGlobals();
+      markAction("postBootPassiveRebind");
+    }, 350);
+
+    root.setTimeout(() => {
+      auditHtml();
+      bindControls();
+      publishGlobals();
+      markAction("latePassiveRebind");
+    }, 1200);
+
+    record("INDEX_PASSIVE_BUTTON_RECEIPT_CORRIDOR_BOOT_COMPLETE", {
+      passiveButtonCorridorActive: true,
+      activeVisibleExpressionLoaderRetired: true,
+      noDynamicScriptInjection: true,
+      canvasBootSuppressedByIndex: true,
+      routeConductorObserved: state.routeConductorObserved,
+      canvasHubObserved: state.canvasHubObserved,
+      firstFailedCoordinate: state.firstFailedCoordinate,
+      recommendedNextFile: state.recommendedNextFile
+    });
+
+    return getReceipt();
   }
 
   const api = Object.freeze({
+    CONTRACT,
+    RECEIPT,
+    PREVIOUS_CONTRACT,
+    PREVIOUS_RENEWAL_CONTRACT,
+    PREVIOUS_RENEWAL_RECEIPT,
+    RENEWAL_CONTRACT,
+    RENEWAL_RECEIPT,
+    VERSION,
+    ROUTE,
+    FILE,
+    HTML_FILE,
+    ROUTE_CONDUCTOR_FILE,
+    DIAGNOSTIC_ROUTE,
+    CONTROL_FILE,
+    CONTROL_CONTRACT,
+    CONTROL_RECEIPT,
+    HEX_FOUR_PAIR_FILE,
+    HEX_SURFACE_FILE,
+    CANVAS_FILE,
+    CURRENT_HTML_CONTRACT,
+    CURRENT_ROUTE_CONDUCTOR_CONTRACT,
+    CURRENT_ROUTE_CONDUCTOR_RECEIPT,
+
     contract: CONTRACT,
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
@@ -2152,6 +2214,8 @@
     version: VERSION,
     route: ROUTE,
     file: FILE,
+    htmlFile: HTML_FILE,
+    routeConductorFile: ROUTE_CONDUCTOR_FILE,
     diagnosticRoute: DIAGNOSTIC_ROUTE,
 
     boot,
@@ -2160,6 +2224,7 @@
     run: boot,
     bindControls,
     auditHtml,
+
     copyDiagnostic,
     toggleReceiptPanel,
     setInspectMode,
@@ -2168,6 +2233,8 @@
     startVisibleExpressionChainBridge,
     loadVisibleExpressionChain,
     refreshVisibleExpressionChainState,
+    resolveRouteConductor,
+    resolveControls,
     resolveHexFourPairAuthority,
     resolveHexSurface,
     resolveCanvasHub,
@@ -2180,19 +2247,25 @@
     getActiveReceiptText,
     getVisibleExpressionChainReceipt,
     publishGlobals,
+    publishDataset,
+
+    passiveButtonCorridorActive: true,
+    passiveReceiptCorridorActive: true,
+    passiveDownstreamObserverActive: true,
+    activeVisibleExpressionLoaderRetired: true,
+    visibleExpressionChainLoaderBridgeRetired: true,
+    noDynamicScriptInjection: true,
 
     buttonAuthorityActive: true,
     frontendButtonAuthorityRestored: true,
     pageReceiptTargetBindingActive: true,
-    visibleExpressionChainLoaderBridgeActive: true,
-
-    hexFourPairAuthorityFile: HEX_FOUR_PAIR_FILE,
-    hexSurfaceFile: HEX_SURFACE_FILE,
-    canvasFile: CANVAS_FILE,
+    visibleExpressionChainObserverActive: true,
 
     routeConductorLoadedByIndex: false,
     routeConductorHandoffByIndex: false,
     routeConductorOwnedByIndex: false,
+    controlsLoadedByIndex: false,
+    controlsAdmittedByIndex: false,
     diagnosticRailLoadedByIndex: false,
     diagnosticRailOwnedByIndex: false,
 
@@ -2201,28 +2274,33 @@
     indexOwnsHexTruth: false,
     indexOwnsHexSurfaceTruth: false,
     indexOwnsRouteConductorAuthority: false,
+    indexOwnsControlAdmission: false,
 
-    f13Claimed: false,
-    f21Claimed: false,
-    readyTextClaimed: false,
-    visualPassClaimed: false,
-    generatedImage: false,
-    graphicBox: false,
-    webGL: false,
+    ...FINAL_FALSE,
 
     get state() {
       return state;
     }
   });
 
-  publishGlobals();
+  try {
+    publishDataset();
+    publishGlobals();
 
-  if (doc) {
-    if (doc.readyState === "loading") {
-      doc.addEventListener("DOMContentLoaded", boot, { once: true });
-    } else {
-      boot();
+    if (doc) {
+      if (doc.readyState === "loading") {
+        doc.addEventListener("DOMContentLoaded", boot, { once: true });
+      } else {
+        boot();
+      }
     }
+  } catch (error) {
+    recordError("INDEX_PASSIVE_BUTTON_RECEIPT_CORRIDOR_INITIALIZATION_FAILED", error);
+
+    try {
+      publishDataset();
+      publishGlobals();
+    } catch (_fallbackError) {}
   }
 
   if (typeof module !== "undefined" && module.exports) {

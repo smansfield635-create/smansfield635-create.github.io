@@ -3,15 +3,17 @@
 // Full-file replacement.
 // Diagnostic rail SOUTH child only.
 // Internal implementation renewal:
-// HEARTH_DIAGNOSTIC_SOUTH_PLANETARY_CONTROL_LIFECYCLE_REPORT_CONFORMANCE_TNT_v4
+// HEARTH_DIAGNOSTIC_SOUTH_LAB_CANVAS_BRIDGE_REPORT_CONFORMANCE_TNT_v5
 // Purpose:
 // - Preserve SOUTH external child contract required by NORTH.
 // - Conform SOUTH output to NORTH v4 planetary-control lifecycle schema.
 // - Receive NORTH-owned report/verdict meaning without reinterpretation.
 // - Preserve NORTH-selected PRIMARY_CASE, calibration fields, recommendation fields, NEWS fields, Fibonacci fields, and no-claim boundaries.
 // - Print planetary-control lifecycle fields as formal report fields, not only secondary notes.
-// - Preserve the future control-file footprint as expected-not-yet-built when NORTH/EAST declare that posture.
-// - Preserve the JS integration funnel: index.js -> hearth.js -> hearth.controls.js -> canvas.
+// - Preserve future control-file footprint as expected-not-yet-built when NORTH/EAST declare that posture.
+// - Preserve JS integration funnel: index.js -> hearth.js -> hearth.controls.js -> canvas.
+// - Preserve diagnostic lab/canvas bridge language as report-output only.
+// - Preserve bishop-lane and four-way canvas handoff fields as report-output only when supplied by NORTH/WEST.
 // - Produce a North-valid output object with REPORT_OBJECT, FULL_PACKET_TEXT, COMPACT_SUMMARY, and SOUTH_OUTPUT_STATUS.
 // - Close F13 as packet-output conformance only.
 // - Preserve no F13 canvas claim, no F21 claim, no ready text, no visual pass, no generated image, no GraphicBox, no WebGL.
@@ -33,6 +35,9 @@
 // - Macro West release
 // - North latch
 // - control-file implementation
+// - lab-table implementation
+// - canvas implementation
+// - bishop-lane implementation
 
 (() => {
   "use strict";
@@ -40,17 +45,29 @@
   const CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_SOUTH_REPORT_PACKET_OUTPUT_TNT_v1";
   const RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_SOUTH_REPORT_PACKET_OUTPUT_RECEIPT_v1";
 
-  const IMPLEMENTATION_CONTRACT = "HEARTH_DIAGNOSTIC_SOUTH_PLANETARY_CONTROL_LIFECYCLE_REPORT_CONFORMANCE_TNT_v4";
-  const IMPLEMENTATION_RECEIPT = "HEARTH_DIAGNOSTIC_SOUTH_PLANETARY_CONTROL_LIFECYCLE_REPORT_CONFORMANCE_RECEIPT_v4";
-  const PREVIOUS_IMPLEMENTATION_CONTRACT = "HEARTH_DIAGNOSTIC_SOUTH_NORTH_ANCHOR_SCHEMA_CONFORMANCE_TNT_v3";
-  const BASELINE_IMPLEMENTATION_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_SOUTH_REPORT_PACKET_OUTPUT_TNT_v1";
+  const IMPLEMENTATION_CONTRACT =
+    "HEARTH_DIAGNOSTIC_SOUTH_LAB_CANVAS_BRIDGE_REPORT_CONFORMANCE_TNT_v5";
+  const IMPLEMENTATION_RECEIPT =
+    "HEARTH_DIAGNOSTIC_SOUTH_LAB_CANVAS_BRIDGE_REPORT_CONFORMANCE_RECEIPT_v5";
 
-  const NORTH_ANCHOR_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ORCHESTRATOR_TNT_v4";
-  const NORTH_ANCHOR_RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ORCHESTRATOR_RECEIPT_v4";
-  const PREVIOUS_NORTH_ANCHOR_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_ANCHOR_SCHEMA_ORCHESTRATOR_TNT_v3";
-  const PREVIOUS_NORTH_ANCHOR_RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_ANCHOR_SCHEMA_ORCHESTRATOR_RECEIPT_v3";
+  const PREVIOUS_IMPLEMENTATION_CONTRACT =
+    "HEARTH_DIAGNOSTIC_SOUTH_PLANETARY_CONTROL_LIFECYCLE_REPORT_CONFORMANCE_TNT_v4";
+  const LINEAGE_IMPLEMENTATION_CONTRACT =
+    "HEARTH_DIAGNOSTIC_SOUTH_NORTH_ANCHOR_SCHEMA_CONFORMANCE_TNT_v3";
+  const BASELINE_IMPLEMENTATION_CONTRACT =
+    "HEARTH_DIAGNOSTIC_RAIL_SOUTH_REPORT_PACKET_OUTPUT_TNT_v1";
 
-  const VERSION = "2026-06-04.hearth-diagnostic-south-planetary-control-lifecycle-report-conformance-v4";
+  const NORTH_ANCHOR_CONTRACT =
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ORCHESTRATOR_TNT_v4";
+  const NORTH_ANCHOR_RECEIPT =
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ORCHESTRATOR_RECEIPT_v4";
+  const PREVIOUS_NORTH_ANCHOR_CONTRACT =
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_ANCHOR_SCHEMA_ORCHESTRATOR_TNT_v3";
+  const PREVIOUS_NORTH_ANCHOR_RECEIPT =
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_ANCHOR_SCHEMA_ORCHESTRATOR_RECEIPT_v3";
+
+  const VERSION =
+    "2026-06-04.hearth-diagnostic-south-lab-canvas-bridge-report-conformance-v5";
 
   const FILE = "/assets/hearth/hearth.diagnostic.south.js";
   const TARGET_ROUTE = "/showroom/globe/hearth/";
@@ -60,10 +77,15 @@
   const EXPECTED_CONTROL_FILE = "/assets/hearth/hearth.controls.js";
   const EXPECTED_CONTROL_CONTRACT = "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE_TNT_v1";
   const EXPECTED_ROUTE_CONDUCTOR_FILE = "/showroom/globe/hearth/hearth.js";
-  const EXPECTED_ROUTE_CONDUCTOR_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_TNT_v9_6";
-  const COMPAT_ROUTE_CONDUCTOR_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_TNT_v9_5";
+  const EXPECTED_ROUTE_CONDUCTOR_CONTRACT =
+    "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_TNT_v9_6";
+  const COMPAT_ROUTE_CONDUCTOR_CONTRACT =
+    "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_TNT_v9_5";
+  const LINEAGE_ROUTE_CONDUCTOR_CONTRACT =
+    "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_TNT_v9_4";
   const EXPECTED_INDEX_FILE = "/showroom/globe/hearth/index.js";
-  const EXPECTED_INDEX_CONTRACT = "HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4";
+  const EXPECTED_INDEX_CONTRACT =
+    "HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4";
   const EXPECTED_CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
 
   const JS_INTEGRATION_FUNNEL = [
@@ -83,6 +105,9 @@
     INACCESSIBLE: "INACCESSIBLE",
     NOT_APPLICABLE: "NOT_APPLICABLE",
     INSUFFICIENT_EVIDENCE: "INSUFFICIENT_EVIDENCE",
+    EXPECTED_NOT_YET_BUILT: "EXPECTED_NOT_YET_BUILT",
+    EXPECTED_NOT_YET_WIRED: "EXPECTED_NOT_YET_WIRED",
+    WAITING_CONTROL_FILE: "WAITING_CONTROL_FILE",
     PARTIAL: "PARTIAL",
     FAILED: "FAILED",
     COMPLETE: "COMPLETE",
@@ -161,6 +186,8 @@
     "CALIBRATION_POINT_REACHED",
 
     "SECONDARY_EVIDENCE_NOTES",
+    "NORTH_SECONDARY_EVIDENCE_NOTES",
+
     "RECOMMENDED_NEXT_OWNER",
     "RECOMMENDED_NEXT_FILE",
     "RECOMMENDED_NEXT_ACTION"
@@ -174,13 +201,17 @@
 
     "EAST_ALIGNMENT_CONTRACT",
     "WEST_IMPLEMENTATION_CONTRACT",
+    "SOUTH_IMPLEMENTATION_CONTRACT",
 
     "CURRENT_EXPECTED_HTML_CONTRACT",
     "CURRENT_EXPECTED_INDEX_JS_CONTRACT",
     "CURRENT_EXPECTED_ROUTE_CONDUCTOR_CONTRACT",
+    "COMPAT_ROUTE_CONDUCTOR_CONTRACT",
+    "PRIOR_ROUTE_CONDUCTOR_CONTRACT",
     "PRIMARY_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED",
     "ROUTE_CONDUCTOR_V9_6_PRIMARY_NOT_TREATED_AS_CASE_5",
     "ROUTE_CONDUCTOR_V9_5_PRIMARY_NOT_TREATED_AS_CASE_5",
+    "ROUTE_CONDUCTOR_V9_5_COMPATIBILITY_ACCEPTED",
     "ROUTE_CONDUCTOR_V9_4_LINEAGE_ACCEPTED",
     "EAST_CURRENT_SPREAD_ALIGNMENT_RECOGNIZED",
 
@@ -233,7 +264,44 @@
     "CASE_7_SUPPORT"
   ]);
 
-  const PLANETARY_CONTROL_FIELDS = Object.freeze([
+  const NORTH_PLANETARY_LIFECYCLE_FIELDS = Object.freeze([
+    "PLANETARY_CONTROL_SCHEMA_ACTIVE",
+    "PLANETARY_CONTROL_SCHEMA_CONTRACT",
+    "PLANETARY_CONTROL_SCHEMA_RECEIPT",
+    "FRONTEND_PLANETARY_OBSERVER_BASIS_EXPECTED",
+    "FRONTEND_PLANETARY_OBSERVER_STATUS",
+    "PLANETARY_FUNCTION_DIAGNOSTIC_BASIS",
+    "PLANETARY_BUILD_OBSERVER_STATUS",
+
+    "CONTROL_FILE",
+    "CONTROL_FILE_EXPECTED",
+    "CONTROL_FILE_STATUS",
+    "CONTROL_FILE_LOADED",
+    "CONTROL_GLOBAL_PRESENT",
+    "CONTROL_RECEIPT_PRESENT",
+    "CONTROL_ABSENCE_IS_FAILURE",
+    "CONTROL_ABSENCE_IS_CASE_5",
+    "CONTROL_ABSENCE_BLOCKS_VISIBLE_PLANET",
+    "CONTROL_ABSENCE_BLOCKS_MOTION_TOUCH",
+
+    "CONTROL_HANDSHAKE_EXPECTED",
+    "CONTROL_HANDSHAKE_STATUS",
+    "HEARTH_JS_CONTROL_FUNNEL_EXPECTED",
+    "HEARTH_JS_CONTROL_FUNNEL_FILE",
+    "HEARTH_JS_CONTROL_HANDSHAKE_STATUS",
+    "HEARTH_JS_LOADS_OR_RECOGNIZES_CONTROL_FILE",
+
+    "MOTION_TOUCH_EXPECTED",
+    "MOTION_TOUCH_STATUS",
+    "DRAG_STATUS",
+    "VIEW_CONTROL_STATUS",
+    "VISIBLE_PLANET_ALLOWED_WITHOUT_CONTROLS",
+    "STATIC_PLANET_STATUS",
+    "PLANETARY_CONTROL_NEXT_CONFORMING_FILE",
+    "PLANETARY_CONTROL_NEXT_CONFORMING_ACTION"
+  ]);
+
+  const PLANETARY_CONTROL_REPORT_FIELDS = Object.freeze([
     "PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ACTIVE",
     "PLANETARY_CONTROL_FOOTPRINT_STATUS",
     "PLANETARY_CONTROL_DIAGNOSTIC_STATUS",
@@ -241,7 +309,6 @@
 
     "EXPECTED_CONTROL_FILE",
     "EXPECTED_CONTROL_CONTRACT",
-    "CONTROL_FILE",
     "CONTROL_FILE_PRESENT",
     "CONTROL_FILE_SRC",
     "CONTROL_FILE_CONTRACT",
@@ -298,6 +365,7 @@
     "ROUTE_CONDUCTOR_CONTRACT",
     "ROUTE_CONDUCTOR_RECEIPT",
     "ROUTE_CONDUCTOR_V9_5_DETECTED",
+    "ROUTE_CONDUCTOR_V9_6_DETECTED",
     "ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED",
     "ROUTE_CONDUCTOR_LINEAGE_ACCEPTED",
 
@@ -347,10 +415,96 @@
     "POSTGAME_STATUS"
   ]);
 
+  const LAB_CANVAS_BRIDGE_FIELDS = Object.freeze([
+    "LAB_BRIDGE_SCHEMA_ACTIVE",
+    "LAB_BRIDGE_STATUS",
+    "LAB_AUTHORITY_SOURCE",
+    "LAB_TABLE_AUTHORITY_SOURCE",
+    "LAB_TABLE_CONTRACT",
+    "LAB_TABLE_RECEIPT",
+    "LAB_TABLE_NEWS_STATUS",
+    "LAB_TABLE_FIBONACCI_STATUS",
+    "LAB_TABLE_CYCLE_STATUS",
+    "LAB_TABLE_GATE_STATUS",
+
+    "DIAGNOSTIC_LAB_MIRROR_STATUS",
+    "DIAGNOSTIC_LAB_GAUGE_STATUS",
+    "DIAGNOSTIC_GAUGE_BRIDGE_STATUS",
+    "DIAGNOSTIC_GAUGE_AUTHORITY_SOURCE",
+
+    "CANVAS_AUTHORITY_SOURCE",
+    "CANVAS_AUTHORITY_CONTRACT",
+    "CANVAS_AUTHORITY_RECEIPT",
+    "CANVAS_AUTHORITY_BRIDGE_STATUS",
+    "CANVAS_OUTPUT_CARRIER_STATUS",
+    "CANVAS_HANDOFF_STATUS",
+    "CANVAS_HANDOFF_TARGET",
+    "CANVAS_HANDOFF_RECEIPT",
+
+    "LAB_TO_CANVAS_BRIDGE_STATUS",
+    "LAB_TO_CANVAS_SHARED_LANGUAGE_STATUS",
+    "LAB_TO_CANVAS_TRANSLATION_STATUS",
+    "LAB_CANVAS_AUTHORITY_BOUNDARY_STATUS",
+    "LAB_CANVAS_BRIDGE_NOT_AUTHORITY",
+    "LAB_CANVAS_BRIDGE_OUTPUT_ONLY"
+  ]);
+
+  const BISHOP_BRIDGE_FIELDS = Object.freeze([
+    "BISHOP_BRIDGE_SCHEMA_ACTIVE",
+    "BISHOP_BRIDGE_STATUS",
+    "BISHOP_AUTHORITY_SOURCE",
+    "BISHOP_LANE_STATUS",
+    "BISHOP_LANE_COUNT",
+    "BISHOP_LANE_EXPECTED_COUNT",
+    "BISHOP_LANE_SHARED_LANGUAGE_STATUS",
+
+    "BISHOP_NORTH_LANE_STATUS",
+    "BISHOP_EAST_LANE_STATUS",
+    "BISHOP_SOUTH_LANE_STATUS",
+    "BISHOP_WEST_LANE_STATUS",
+
+    "BISHOP_NORTH_AUTHORITY_SOURCE",
+    "BISHOP_EAST_AUTHORITY_SOURCE",
+    "BISHOP_SOUTH_AUTHORITY_SOURCE",
+    "BISHOP_WEST_AUTHORITY_SOURCE",
+
+    "BISHOP_NORTH_RECEIPT_STATUS",
+    "BISHOP_EAST_RECEIPT_STATUS",
+    "BISHOP_SOUTH_RECEIPT_STATUS",
+    "BISHOP_WEST_RECEIPT_STATUS",
+
+    "BISHOP_SUBJECT_FILE_INDEX_STATUS",
+    "BISHOP_CHILD_FILE_INDEX_STATUS",
+    "BISHOP_READS_SUBJECT_FILES",
+    "BISHOP_READS_CHILD_FILES",
+    "WEST_TRUSTS_BISHOP_HUBS_ONLY",
+    "BISHOP_WEST_AUTHORITY_BOUNDARY_PRESERVED"
+  ]);
+
+  const FOUR_WAY_CANVAS_HANDOFF_FIELDS = Object.freeze([
+    "FOUR_WAY_CANVAS_HANDOFF_SCHEMA_ACTIVE",
+    "FOUR_WAY_CANVAS_HANDOFF_STATUS",
+    "CANVAS_HANDOFF_NORTH_STATUS",
+    "CANVAS_HANDOFF_EAST_STATUS",
+    "CANVAS_HANDOFF_SOUTH_STATUS",
+    "CANVAS_HANDOFF_WEST_STATUS",
+    "CANVAS_HANDOFF_NORTH_SOURCE",
+    "CANVAS_HANDOFF_EAST_SOURCE",
+    "CANVAS_HANDOFF_SOUTH_SOURCE",
+    "CANVAS_HANDOFF_WEST_SOURCE",
+    "CANVAS_HANDOFF_AGGREGATE_STATUS",
+    "SECOND_CYCLE_CANVAS_HANDOFF_PRESERVED",
+    "TWO_CYCLE_PREMISE_PRESERVED",
+    "CYCLE_1_ROUTE_STATUS",
+    "CYCLE_2_ROUTE_STATUS",
+    "CYCLE_2_CANVAS_HANDOFF_STATUS"
+  ]);
+
   const SOUTH_SCHEMA_FIELDS = Object.freeze([
     "SOUTH_IMPLEMENTATION_CONTRACT",
     "SOUTH_IMPLEMENTATION_RECEIPT",
     "SOUTH_PREVIOUS_IMPLEMENTATION_CONTRACT",
+    "SOUTH_LINEAGE_IMPLEMENTATION_CONTRACT",
     "SOUTH_BASELINE_IMPLEMENTATION_CONTRACT",
     "SOUTH_ANCHOR_NORTH_CONTRACT",
     "SOUTH_ANCHOR_NORTH_RECEIPT",
@@ -377,6 +531,18 @@
     "webGL"
   ]);
 
+  const UPPER_NO_CLAIM_FIELDS = Object.freeze([
+    "F13_CLAIMED",
+    "F21_ELIGIBLE_FOR_NORTH",
+    "F21_CLAIMED_BY_DIAGNOSTIC_RAIL",
+    "READY_TEXT_ALLOWED",
+    "READY_TEXT_CLAIMED_BY_DIAGNOSTIC_RAIL",
+    "VISUAL_PASS_CLAIMED",
+    "GENERATED_IMAGE",
+    "GRAPHIC_BOX",
+    "WEBGL"
+  ]);
+
   const NORTH_MEANING_FIELDS = Object.freeze([
     "PRIMARY_CASE",
     "CALIBRATION_STATUS",
@@ -391,10 +557,15 @@
   const ALL_PACKET_FIELDS = Object.freeze(unique([
     ...REQUIRED_PACKET_FIELDS,
     ...NORTH_OPTIONAL_TRACE_FIELDS,
-    ...PLANETARY_CONTROL_FIELDS,
+    ...NORTH_PLANETARY_LIFECYCLE_FIELDS,
+    ...PLANETARY_CONTROL_REPORT_FIELDS,
     ...RENDERED_PROOF_EXTENSION_FIELDS,
+    ...LAB_CANVAS_BRIDGE_FIELDS,
+    ...BISHOP_BRIDGE_FIELDS,
+    ...FOUR_WAY_CANVAS_HANDOFF_FIELDS,
     ...SOUTH_SCHEMA_FIELDS,
-    ...NO_CLAIM_FIELDS
+    ...NO_CLAIM_FIELDS,
+    ...UPPER_NO_CLAIM_FIELDS
   ]));
 
   const root = typeof window !== "undefined" ? window : globalThis;
@@ -451,7 +622,7 @@
 
     if (isObject(value)) {
       try {
-        return bounded(JSON.stringify(value), 12000) || fallback;
+        return bounded(JSON.stringify(value), 16000) || fallback;
       } catch (_error) {
         return bounded(String(value), 4000) || fallback;
       }
@@ -489,6 +660,18 @@
     return raw === undefined || raw === null || raw === "" ? fallback : packetValue(raw, fallback);
   }
 
+  function isKnown(value) {
+    return !(
+      value === undefined ||
+      value === null ||
+      value === "" ||
+      value === FALLBACK.UNKNOWN ||
+      value === FALLBACK.NOT_FOUND ||
+      value === FALLBACK.UNREADABLE ||
+      value === FALLBACK.INACCESSIBLE
+    );
+  }
+
   function line(key, value) {
     return `${key}=${packetValue(value)}`;
   }
@@ -497,15 +680,12 @@
     return value ? "true" : "false";
   }
 
-  function known(value) {
-    return !(
-      value === undefined ||
-      value === null ||
-      value === "" ||
-      value === FALLBACK.UNKNOWN ||
-      value === FALLBACK.NOT_FOUND ||
-      value === FALLBACK.UNREADABLE
-    );
+  function textIsTrue(value) {
+    return value === true || value === "true" || value === "TRUE" || value === 1 || value === "1";
+  }
+
+  function textIsFalse(value) {
+    return value === false || value === "false" || value === "FALSE" || value === 0 || value === "0";
   }
 
   function addOutputNote(state, note) {
@@ -518,7 +698,13 @@
   }
 
   function normalizeNoteInput(value) {
-    if (value === undefined || value === null || value === "" || value === FALLBACK.UNKNOWN || value === FALLBACK.NONE) {
+    if (
+      value === undefined ||
+      value === null ||
+      value === "" ||
+      value === FALLBACK.UNKNOWN ||
+      value === FALLBACK.NONE
+    ) {
       return [];
     }
 
@@ -552,7 +738,9 @@
       getRawValue(input, "WEST_SECONDARY_EVIDENCE_NOTES", "")
     ];
 
-    const verdict = getRawValue(input, "NORTH_VERDICT", options && options.northVerdict ? options.northVerdict : null);
+    const verdict =
+      getRawValue(input, "NORTH_VERDICT", null) ||
+      (options && isObject(options.northVerdict) ? options.northVerdict : null);
 
     if (isObject(verdict) && Array.isArray(verdict.notes)) {
       sources.push(verdict.notes);
@@ -584,7 +772,9 @@
   function notesContain(report, phrase) {
     const text = [
       getValue(report, "SECONDARY_EVIDENCE_NOTES", ""),
-      getValue(report, "NORTH_SECONDARY_EVIDENCE_NOTES", "")
+      getValue(report, "NORTH_SECONDARY_EVIDENCE_NOTES", ""),
+      getValue(report, "EAST_SECONDARY_EVIDENCE_NOTES", ""),
+      getValue(report, "WEST_SECONDARY_EVIDENCE_NOTES", "")
     ].join(" | ");
 
     return text.includes(phrase);
@@ -592,7 +782,8 @@
 
   function inferBooleanText(report, field, trueNotes, falseNotes, fallback = FALLBACK.UNKNOWN) {
     const explicit = getValue(report, field, "");
-    if (explicit === "true" || explicit === "false") return explicit;
+    if (textIsTrue(explicit)) return "true";
+    if (textIsFalse(explicit)) return "false";
 
     for (const note of trueNotes || []) {
       if (notesContain(report, note)) return "true";
@@ -613,6 +804,7 @@
       implementationContract: IMPLEMENTATION_CONTRACT,
       implementationReceipt: IMPLEMENTATION_RECEIPT,
       previousImplementationContract: PREVIOUS_IMPLEMENTATION_CONTRACT,
+      lineageImplementationContract: LINEAGE_IMPLEMENTATION_CONTRACT,
       baselineImplementationContract: BASELINE_IMPLEMENTATION_CONTRACT,
       anchorNorthContract: NORTH_ANCHOR_CONTRACT,
       anchorNorthReceipt: NORTH_ANCHOR_RECEIPT,
@@ -649,6 +841,7 @@
   function meaningFieldsPresent(report) {
     for (const field of NORTH_MEANING_FIELDS) {
       const value = getValue(report, field, FALLBACK.UNKNOWN);
+
       if (value === FALLBACK.UNKNOWN || value === "" || value === FALLBACK.NOT_FOUND) {
         return false;
       }
@@ -668,83 +861,209 @@
     return true;
   }
 
+  function controlPresentFromReport(report) {
+    const present = getValue(report, "CONTROL_FILE_PRESENT", "");
+    if (textIsTrue(present)) return "true";
+    if (textIsFalse(present)) return "false";
+
+    const loaded = getValue(report, "CONTROL_FILE_LOADED", "");
+    const global = getValue(report, "CONTROL_GLOBAL_PRESENT", "");
+    const receipt = getValue(report, "CONTROL_RECEIPT_PRESENT", "");
+    const status = getValue(report, "CONTROL_FILE_STATUS", "");
+
+    if (textIsTrue(loaded) || textIsTrue(global) || textIsTrue(receipt)) return "true";
+
+    if (
+      status === FALLBACK.EXPECTED_NOT_YET_BUILT ||
+      status === "EXPECTED_NOT_YET_BUILT" ||
+      status === FALLBACK.WAITING_CONTROL_FILE ||
+      notesContain(report, "NORTH_CONTROL_ABSENCE_ADMITTED_AS_EXPECTED_NOT_YET_BUILT") ||
+      notesContain(report, "EAST_CONTROL_FILE_EXPECTED_NOT_YET_BUILT")
+    ) {
+      return "false";
+    }
+
+    return FALLBACK.UNKNOWN;
+  }
+
   function projectPlanetaryControlFields(report, state) {
-    const controlExpectedByNorth = inferBooleanText(report, "CONTROL_FILE_EXPECTED_NOT_YET_BUILT", [
-      "NORTH_CONTROL_ABSENCE_ADMITTED_AS_EXPECTED_NOT_YET_BUILT",
-      "EAST_CONTROL_FILE_EXPECTED_NOT_YET_BUILT"
-    ], [], FALLBACK.UNKNOWN);
+    const northSchemaActive = inferBooleanText(
+      report,
+      "PLANETARY_CONTROL_SCHEMA_ACTIVE",
+      ["NORTH_PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ACTIVE"],
+      [],
+      "true"
+    );
 
-    const controlAbsenceExpected = inferBooleanText(report, "CONTROL_FILE_ABSENCE_EXPECTED", [
-      "NORTH_CONTROL_ABSENCE_ADMITTED_AS_EXPECTED_NOT_YET_BUILT",
-      "EAST_CONTROL_FILE_EXPECTED_NOT_YET_BUILT"
-    ], [], FALLBACK.UNKNOWN);
+    const controlStatus = getValue(report, "CONTROL_FILE_STATUS", FALLBACK.UNKNOWN);
 
-    const controlAbsenceNotCase5 = inferBooleanText(report, "CONTROL_FILE_ABSENCE_NOT_TREATED_AS_CASE_5", [
-      "NORTH_CONTROL_ABSENCE_NOT_TREATED_AS_CASE_5",
-      "EAST_CONTROL_ABSENCE_NOT_TREATED_AS_CASE_5"
-    ], [], FALLBACK.UNKNOWN);
+    const controlExpectedNotYetBuilt = inferBooleanText(
+      report,
+      "CONTROL_FILE_EXPECTED_NOT_YET_BUILT",
+      [
+        "NORTH_CONTROL_ABSENCE_ADMITTED_AS_EXPECTED_NOT_YET_BUILT",
+        "EAST_CONTROL_FILE_EXPECTED_NOT_YET_BUILT"
+      ],
+      [],
+      controlStatus === FALLBACK.EXPECTED_NOT_YET_BUILT ? "true" : FALLBACK.UNKNOWN
+    );
 
-    const controlAbsenceBlocksMotionTouch = inferBooleanText(report, "CONTROL_FILE_ABSENCE_BLOCKS_MOTION_TOUCH_NOT_VISIBLE_PLANET", [
-      "NORTH_CONTROL_ABSENCE_BLOCKS_MOTION_TOUCH_NOT_VISIBLE_PLANET",
-      "EAST_CONTROL_ABSENCE_BLOCKS_MOTION_TOUCH_NOT_VISIBLE_PLANET"
-    ], [], FALLBACK.UNKNOWN);
+    const controlAbsenceExpected = inferBooleanText(
+      report,
+      "CONTROL_FILE_ABSENCE_EXPECTED",
+      [
+        "NORTH_CONTROL_ABSENCE_ADMITTED_AS_EXPECTED_NOT_YET_BUILT",
+        "EAST_CONTROL_FILE_EXPECTED_NOT_YET_BUILT"
+      ],
+      [],
+      controlExpectedNotYetBuilt
+    );
 
-    const lifecycleActive = inferBooleanText(report, "PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ACTIVE", [
-      "NORTH_PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ACTIVE"
-    ], [], "true");
+    const controlAbsenceNotCase5 = inferBooleanText(
+      report,
+      "CONTROL_FILE_ABSENCE_NOT_TREATED_AS_CASE_5",
+      [
+        "NORTH_CONTROL_ABSENCE_NOT_TREATED_AS_CASE_5",
+        "EAST_CONTROL_ABSENCE_NOT_TREATED_AS_CASE_5"
+      ],
+      [],
+      textIsFalse(getValue(report, "CONTROL_ABSENCE_IS_CASE_5", "")) ? "true" : FALLBACK.UNKNOWN
+    );
 
-    const footprintComplete = inferBooleanText(report, "PLANETARY_CONTROL_FOOTPRINT_STATUS", [
-      "EAST_PLANETARY_CONTROL_FOOTPRINT_SOURCE_READ_COMPLETE"
-    ], [], FALLBACK.UNKNOWN);
+    const controlBlocksMotionTouchNotVisible = inferBooleanText(
+      report,
+      "CONTROL_FILE_ABSENCE_BLOCKS_MOTION_TOUCH_NOT_VISIBLE_PLANET",
+      [
+        "NORTH_CONTROL_ABSENCE_BLOCKS_MOTION_TOUCH_NOT_VISIBLE_PLANET",
+        "EAST_CONTROL_ABSENCE_BLOCKS_MOTION_TOUCH_NOT_VISIBLE_PLANET"
+      ],
+      [],
+      textIsTrue(getValue(report, "CONTROL_ABSENCE_BLOCKS_MOTION_TOUCH", "")) &&
+      textIsFalse(getValue(report, "CONTROL_ABSENCE_BLOCKS_VISIBLE_PLANET", ""))
+        ? "true"
+        : FALLBACK.UNKNOWN
+    );
 
-    const controlFilePresent = getValue(report, "CONTROL_FILE_PRESENT", controlExpectedByNorth === "true" ? "false" : FALLBACK.UNKNOWN);
+    const controlFilePresent = controlPresentFromReport(report);
 
-    report.PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ACTIVE = lifecycleActive;
-    report.PLANETARY_CONTROL_FOOTPRINT_STATUS = footprintComplete === "true"
-      ? "FOOTPRINT_SOURCE_READ_COMPLETE"
-      : getValue(report, "PLANETARY_CONTROL_FOOTPRINT_STATUS", controlExpectedByNorth === "true" ? "FOOTPRINT_ESTABLISHED_EXPECTED_NOT_BUILT" : FALLBACK.UNKNOWN);
+    report.PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ACTIVE = getValue(
+      report,
+      "PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ACTIVE",
+      northSchemaActive
+    );
+
+    report.PLANETARY_CONTROL_SCHEMA_ACTIVE = getValue(
+      report,
+      "PLANETARY_CONTROL_SCHEMA_ACTIVE",
+      northSchemaActive
+    );
+
+    report.PLANETARY_CONTROL_SCHEMA_CONTRACT = getValue(
+      report,
+      "PLANETARY_CONTROL_SCHEMA_CONTRACT",
+      NORTH_ANCHOR_CONTRACT
+    );
+
+    report.PLANETARY_CONTROL_SCHEMA_RECEIPT = getValue(
+      report,
+      "PLANETARY_CONTROL_SCHEMA_RECEIPT",
+      NORTH_ANCHOR_RECEIPT
+    );
+
+    report.PLANETARY_CONTROL_FOOTPRINT_STATUS = getValue(
+      report,
+      "PLANETARY_CONTROL_FOOTPRINT_STATUS",
+      controlExpectedNotYetBuilt === "true"
+        ? "FOOTPRINT_ESTABLISHED_EXPECTED_NOT_BUILT"
+        : FALLBACK.UNKNOWN
+    );
 
     report.PLANETARY_CONTROL_DIAGNOSTIC_STATUS = getValue(
       report,
       "PLANETARY_CONTROL_DIAGNOSTIC_STATUS",
-      controlExpectedByNorth === "true" ? "CONTROL_DIAGNOSTIC_FOOTPRINT_ACTIVE" : FALLBACK.UNKNOWN
+      controlExpectedNotYetBuilt === "true"
+        ? "CONTROL_DIAGNOSTIC_FOOTPRINT_ACTIVE"
+        : FALLBACK.UNKNOWN
     );
 
     report.PLANETARY_CONTROL_GATE_STATUS = getValue(
       report,
       "PLANETARY_CONTROL_GATE_STATUS",
-      controlExpectedByNorth === "true" ? "CONTROL_GATE_EXPECTED_WAITING_HANDSHAKE" : FALLBACK.UNKNOWN
+      controlExpectedNotYetBuilt === "true"
+        ? "CONTROL_GATE_EXPECTED_WAITING_HANDSHAKE"
+        : FALLBACK.UNKNOWN
     );
 
     report.EXPECTED_CONTROL_FILE = getValue(report, "EXPECTED_CONTROL_FILE", EXPECTED_CONTROL_FILE);
     report.EXPECTED_CONTROL_CONTRACT = getValue(report, "EXPECTED_CONTROL_CONTRACT", EXPECTED_CONTROL_CONTRACT);
     report.CONTROL_FILE = getValue(report, "CONTROL_FILE", EXPECTED_CONTROL_FILE);
+    report.CONTROL_FILE_EXPECTED = getValue(report, "CONTROL_FILE_EXPECTED", "true");
     report.CONTROL_FILE_PRESENT = controlFilePresent;
-    report.CONTROL_FILE_SRC = getValue(report, "CONTROL_FILE_SRC", controlFilePresent === "false" ? FALLBACK.NOT_FOUND : FALLBACK.UNKNOWN);
-    report.CONTROL_FILE_CONTRACT = getValue(report, "CONTROL_FILE_CONTRACT", controlFilePresent === "false" ? "EXPECTED_NOT_YET_BUILT" : FALLBACK.UNKNOWN);
-    report.CONTROL_FILE_RECEIPT = getValue(report, "CONTROL_FILE_RECEIPT", controlFilePresent === "false" ? "EXPECTED_NOT_YET_BUILT" : FALLBACK.UNKNOWN);
-    report.CONTROL_FILE_AUTHORITY_SOURCE = getValue(report, "CONTROL_FILE_AUTHORITY_SOURCE", controlFilePresent === "false" ? FALLBACK.NOT_FOUND : FALLBACK.UNKNOWN);
 
-    report.CONTROL_FILE_EXPECTED_NOT_YET_BUILT = controlExpectedByNorth;
+    report.CONTROL_FILE_SRC = getValue(
+      report,
+      "CONTROL_FILE_SRC",
+      controlFilePresent === "false" ? FALLBACK.NOT_FOUND : FALLBACK.UNKNOWN
+    );
+
+    report.CONTROL_FILE_CONTRACT = getValue(
+      report,
+      "CONTROL_FILE_CONTRACT",
+      controlFilePresent === "false" ? FALLBACK.EXPECTED_NOT_YET_BUILT : FALLBACK.UNKNOWN
+    );
+
+    report.CONTROL_FILE_RECEIPT = getValue(
+      report,
+      "CONTROL_FILE_RECEIPT",
+      controlFilePresent === "false" ? FALLBACK.EXPECTED_NOT_YET_BUILT : FALLBACK.UNKNOWN
+    );
+
+    report.CONTROL_FILE_AUTHORITY_SOURCE = getValue(
+      report,
+      "CONTROL_FILE_AUTHORITY_SOURCE",
+      controlFilePresent === "false" ? FALLBACK.NOT_FOUND : FALLBACK.UNKNOWN
+    );
+
+    report.CONTROL_FILE_EXPECTED_NOT_YET_BUILT = controlExpectedNotYetBuilt;
     report.CONTROL_FILE_ABSENCE_EXPECTED = controlAbsenceExpected;
     report.CONTROL_FILE_ABSENCE_NOT_TREATED_AS_CASE_5 = controlAbsenceNotCase5;
-    report.CONTROL_FILE_ABSENCE_BLOCKS_MOTION_TOUCH_NOT_VISIBLE_PLANET = controlAbsenceBlocksMotionTouch;
+    report.CONTROL_FILE_ABSENCE_BLOCKS_MOTION_TOUCH_NOT_VISIBLE_PLANET = controlBlocksMotionTouchNotVisible;
 
     report.CONTROL_FILE_HANDSHAKE_STATUS = getValue(
       report,
       "CONTROL_FILE_HANDSHAKE_STATUS",
-      controlFilePresent === "false" ? "WAITING_CONTROL_FILE_BUILD" : FALLBACK.UNKNOWN
+      getValue(report, "CONTROL_HANDSHAKE_STATUS",
+        controlFilePresent === "false" ? FALLBACK.WAITING_CONTROL_FILE : FALLBACK.UNKNOWN
+      )
     );
 
-    report.CONTROL_FILE_HANDSHAKE_REQUIRED = getValue(report, "CONTROL_FILE_HANDSHAKE_REQUIRED", "true");
-    report.CONTROL_FILE_HANDSHAKE_TARGET = getValue(report, "CONTROL_FILE_HANDSHAKE_TARGET", EXPECTED_ROUTE_CONDUCTOR_FILE);
-    report.CONTROL_FILE_HANDSHAKE_FUNNEL_OWNER = getValue(report, "CONTROL_FILE_HANDSHAKE_FUNNEL_OWNER", CONTROL_FUNNEL_OWNER);
+    report.CONTROL_FILE_HANDSHAKE_REQUIRED = getValue(
+      report,
+      "CONTROL_FILE_HANDSHAKE_REQUIRED",
+      getValue(report, "CONTROL_HANDSHAKE_EXPECTED", "true")
+    );
+
+    report.CONTROL_FILE_HANDSHAKE_TARGET = getValue(
+      report,
+      "CONTROL_FILE_HANDSHAKE_TARGET",
+      EXPECTED_ROUTE_CONDUCTOR_FILE
+    );
+
+    report.CONTROL_FILE_HANDSHAKE_FUNNEL_OWNER = getValue(
+      report,
+      "CONTROL_FILE_HANDSHAKE_FUNNEL_OWNER",
+      CONTROL_FUNNEL_OWNER
+    );
 
     report.JS_INTEGRATION_FUNNEL = getValue(report, "JS_INTEGRATION_FUNNEL", JS_INTEGRATION_FUNNEL);
     report.JS_INDEX_FILE = getValue(report, "JS_INDEX_FILE", EXPECTED_INDEX_FILE);
     report.JS_INDEX_CONTRACT = getValue(report, "JS_INDEX_CONTRACT", EXPECTED_INDEX_CONTRACT);
     report.JS_ROUTE_CONDUCTOR_FILE = getValue(report, "JS_ROUTE_CONDUCTOR_FILE", EXPECTED_ROUTE_CONDUCTOR_FILE);
-    report.JS_ROUTE_CONDUCTOR_CONTRACT = getValue(report, "JS_ROUTE_CONDUCTOR_CONTRACT", EXPECTED_ROUTE_CONDUCTOR_CONTRACT);
+    report.JS_ROUTE_CONDUCTOR_CONTRACT = getValue(
+      report,
+      "JS_ROUTE_CONDUCTOR_CONTRACT",
+      EXPECTED_ROUTE_CONDUCTOR_CONTRACT
+    );
     report.JS_CONTROL_FILE = getValue(report, "JS_CONTROL_FILE", EXPECTED_CONTROL_FILE);
     report.JS_CONTROL_CONTRACT = getValue(report, "JS_CONTROL_CONTRACT", EXPECTED_CONTROL_CONTRACT);
     report.JS_CANVAS_FILE = getValue(report, "JS_CANVAS_FILE", EXPECTED_CANVAS_FILE);
@@ -752,47 +1071,71 @@
     report.ROUTE_CONDUCTOR_CONTROL_INTEGRATION_STATUS = getValue(
       report,
       "ROUTE_CONDUCTOR_CONTROL_INTEGRATION_STATUS",
-      controlFilePresent === "false" ? "ROUTE_CONDUCTOR_WAITING_CONTROL_HANDSHAKE" : FALLBACK.UNKNOWN
+      getValue(report, "HEARTH_JS_CONTROL_HANDSHAKE_STATUS",
+        controlFilePresent === "false" ? "ROUTE_CONDUCTOR_WAITING_CONTROL_HANDSHAKE" : FALLBACK.UNKNOWN
+      )
     );
 
-    report.ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_REQUIRED = getValue(report, "ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_REQUIRED", "true");
-    report.ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_TARGET = getValue(report, "ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_TARGET", EXPECTED_CONTROL_FILE);
-    report.ROUTE_CONDUCTOR_CONTROL_FUNNEL_OWNER = getValue(report, "ROUTE_CONDUCTOR_CONTROL_FUNNEL_OWNER", CONTROL_FUNNEL_OWNER);
+    report.ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_REQUIRED = getValue(
+      report,
+      "ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_REQUIRED",
+      "true"
+    );
+
+    report.ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_TARGET = getValue(
+      report,
+      "ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_TARGET",
+      EXPECTED_CONTROL_FILE
+    );
+
+    report.ROUTE_CONDUCTOR_CONTROL_FUNNEL_OWNER = getValue(
+      report,
+      "ROUTE_CONDUCTOR_CONTROL_FUNNEL_OWNER",
+      CONTROL_FUNNEL_OWNER
+    );
 
     report.PLANETARY_VIEW_CONTROL_STATUS = getValue(
       report,
       "PLANETARY_VIEW_CONTROL_STATUS",
-      controlFilePresent === "false" ? "WAITING_CONTROL_FILE" : FALLBACK.UNKNOWN
+      getValue(report, "VIEW_CONTROL_STATUS",
+        controlFilePresent === "false" ? FALLBACK.WAITING_CONTROL_FILE : FALLBACK.UNKNOWN
+      )
     );
 
     report.PLANETARY_VIEW_TOUCH_STATUS = getValue(
       report,
       "PLANETARY_VIEW_TOUCH_STATUS",
-      controlFilePresent === "false" ? "BLOCKED_BY_EXPECTED_CONTROL_ABSENCE" : FALLBACK.UNKNOWN
+      controlFilePresent === "false"
+        ? "BLOCKED_BY_EXPECTED_CONTROL_ABSENCE"
+        : FALLBACK.UNKNOWN
     );
 
     report.PLANETARY_VIEW_DRAG_STATUS = getValue(
       report,
       "PLANETARY_VIEW_DRAG_STATUS",
-      controlFilePresent === "false" ? "BLOCKED_BY_EXPECTED_CONTROL_ABSENCE" : FALLBACK.UNKNOWN
+      getValue(report, "DRAG_STATUS",
+        controlFilePresent === "false" ? "BLOCKED_BY_EXPECTED_CONTROL_ABSENCE" : FALLBACK.UNKNOWN
+      )
     );
 
     report.PLANETARY_VIEW_MOTION_STATUS = getValue(
       report,
       "PLANETARY_VIEW_MOTION_STATUS",
-      controlFilePresent === "false" ? "BLOCKED_BY_EXPECTED_CONTROL_ABSENCE" : FALLBACK.UNKNOWN
+      getValue(report, "MOTION_TOUCH_STATUS",
+        controlFilePresent === "false" ? "BLOCKED_BY_EXPECTED_CONTROL_ABSENCE" : FALLBACK.UNKNOWN
+      )
     );
 
     report.PLANETARY_VIEW_ZOOM_STATUS = getValue(
       report,
       "PLANETARY_VIEW_ZOOM_STATUS",
-      controlFilePresent === "false" ? "WAITING_CONTROL_FILE" : FALLBACK.UNKNOWN
+      controlFilePresent === "false" ? FALLBACK.WAITING_CONTROL_FILE : FALLBACK.UNKNOWN
     );
 
     report.PLANETARY_VIEW_INPUT_STATUS = getValue(
       report,
       "PLANETARY_VIEW_INPUT_STATUS",
-      controlFilePresent === "false" ? "WAITING_CONTROL_FILE" : FALLBACK.UNKNOWN
+      controlFilePresent === "false" ? FALLBACK.WAITING_CONTROL_FILE : FALLBACK.UNKNOWN
     );
 
     report.PLANETARY_FILES_TRACK_STATUS = getValue(
@@ -822,22 +1165,184 @@
     report.PLANETARY_CONTROL_RECOMMENDED_NEXT_FILE = getValue(
       report,
       "PLANETARY_CONTROL_RECOMMENDED_NEXT_FILE",
-      EXPECTED_CONTROL_FILE
+      getValue(report, "PLANETARY_CONTROL_NEXT_CONFORMING_FILE", EXPECTED_CONTROL_FILE)
     );
 
     report.PLANETARY_CONTROL_RECOMMENDED_NEXT_ACTION = getValue(
       report,
       "PLANETARY_CONTROL_RECOMMENDED_NEXT_ACTION",
-      "BUILD_CONTROL_FILE_HANDSHAKE_AFTER_DIAGNOSTIC_TRACK_FORMALIZES_CONTROL_FOOTPRINT"
+      getValue(
+        report,
+        "PLANETARY_CONTROL_NEXT_CONFORMING_ACTION",
+        "BUILD_CONTROL_FILE_HANDSHAKE_AFTER_DIAGNOSTIC_TRACK_FORMALIZES_CONTROL_FOOTPRINT"
+      )
     );
 
-    if (controlExpectedByNorth === "true") {
+    if (controlExpectedNotYetBuilt === "true") {
       addOutputNote(state, "SOUTH_FORMALIZED_PLANETARY_CONTROL_FOOTPRINT_FIELDS");
     }
 
     if (controlAbsenceNotCase5 === "true") {
       addOutputNote(state, "SOUTH_CONFIRMED_CONTROL_ABSENCE_NOT_CASE_5");
     }
+
+    if (controlBlocksMotionTouchNotVisible === "true") {
+      addOutputNote(state, "SOUTH_CONFIRMED_CONTROL_ABSENCE_BLOCKS_MOTION_TOUCH_NOT_VISIBLE_PLANET");
+    }
+  }
+
+  function projectLabCanvasBridgeFields(report, state) {
+    report.LAB_BRIDGE_SCHEMA_ACTIVE = getValue(report, "LAB_BRIDGE_SCHEMA_ACTIVE", "true");
+    report.LAB_BRIDGE_STATUS = getValue(report, "LAB_BRIDGE_STATUS", "REPORT_OUTPUT_ONLY");
+    report.DIAGNOSTIC_LAB_MIRROR_STATUS = getValue(
+      report,
+      "DIAGNOSTIC_LAB_MIRROR_STATUS",
+      "DIAGNOSTIC_REPORT_MIRRORS_LAB_CANVAS_BRIDGE_LANGUAGE"
+    );
+
+    report.LAB_TO_CANVAS_SHARED_LANGUAGE_STATUS = getValue(
+      report,
+      "LAB_TO_CANVAS_SHARED_LANGUAGE_STATUS",
+      "SHARED_LANGUAGE_PRESERVED_AS_REPORT_FIELDS"
+    );
+
+    report.LAB_CANVAS_AUTHORITY_BOUNDARY_STATUS = getValue(
+      report,
+      "LAB_CANVAS_AUTHORITY_BOUNDARY_STATUS",
+      "SOUTH_REPORTS_ONLY_DOES_NOT_AUTHORIZE_LAB_OR_CANVAS"
+    );
+
+    report.LAB_CANVAS_BRIDGE_NOT_AUTHORITY = getValue(
+      report,
+      "LAB_CANVAS_BRIDGE_NOT_AUTHORITY",
+      "true"
+    );
+
+    report.LAB_CANVAS_BRIDGE_OUTPUT_ONLY = getValue(
+      report,
+      "LAB_CANVAS_BRIDGE_OUTPUT_ONLY",
+      "true"
+    );
+
+    report.BISHOP_BRIDGE_SCHEMA_ACTIVE = getValue(report, "BISHOP_BRIDGE_SCHEMA_ACTIVE", "true");
+    report.BISHOP_BRIDGE_STATUS = getValue(
+      report,
+      "BISHOP_BRIDGE_STATUS",
+      "REPORT_OUTPUT_ONLY"
+    );
+
+    report.BISHOP_LANE_EXPECTED_COUNT = getValue(report, "BISHOP_LANE_EXPECTED_COUNT", "4");
+    report.WEST_TRUSTS_BISHOP_HUBS_ONLY = getValue(
+      report,
+      "WEST_TRUSTS_BISHOP_HUBS_ONLY",
+      "true"
+    );
+
+    report.BISHOP_WEST_AUTHORITY_BOUNDARY_PRESERVED = getValue(
+      report,
+      "BISHOP_WEST_AUTHORITY_BOUNDARY_PRESERVED",
+      "true"
+    );
+
+    report.FOUR_WAY_CANVAS_HANDOFF_SCHEMA_ACTIVE = getValue(
+      report,
+      "FOUR_WAY_CANVAS_HANDOFF_SCHEMA_ACTIVE",
+      "true"
+    );
+
+    report.TWO_CYCLE_PREMISE_PRESERVED = getValue(
+      report,
+      "TWO_CYCLE_PREMISE_PRESERVED",
+      "true"
+    );
+
+    report.SECOND_CYCLE_CANVAS_HANDOFF_PRESERVED = getValue(
+      report,
+      "SECOND_CYCLE_CANVAS_HANDOFF_PRESERVED",
+      "true"
+    );
+
+    report.FOUR_WAY_CANVAS_HANDOFF_STATUS = getValue(
+      report,
+      "FOUR_WAY_CANVAS_HANDOFF_STATUS",
+      getValue(report, "CANVAS_HANDOFF_STATUS", "REPORT_OUTPUT_WAITING_WEST_OR_NORTH_EVIDENCE")
+    );
+
+    addOutputNote(state, "SOUTH_PRESERVED_LAB_CANVAS_BRIDGE_REPORT_LANGUAGE");
+    addOutputNote(state, "SOUTH_PRESERVED_BISHOP_BRIDGE_REPORT_LANGUAGE");
+    addOutputNote(state, "SOUTH_PRESERVED_TWO_CYCLE_AND_FOUR_WAY_CANVAS_HANDOFF_FIELDS");
+  }
+
+  function preserveNewsFibonacciFields(report, source) {
+    const newsFields = [
+      "NEWS_ALIGNMENT_PROTOCOL",
+      "NEWS_ALIGNMENT_STATUS",
+      "NEWS_ALIGNMENT_SCORE",
+      "NEWS_ALIGNMENT_FIRST_FAILED_STAGE"
+    ];
+
+    const fibFields = [
+      "FIBONACCI_SYNCHRONIZATION_PROTOCOL",
+      "FIBONACCI_SYNCHRONIZATION_STATUS",
+      "FIBONACCI_SYNCHRONIZATION_SCORE",
+      "FIBONACCI_SYNCHRONIZATION_FIRST_FAILED_STAGE"
+    ];
+
+    for (const field of [...newsFields, ...fibFields]) {
+      const incoming = getValue(source, field, FALLBACK.UNKNOWN);
+
+      if (isKnown(incoming)) {
+        report[field] = incoming;
+      }
+    }
+
+    report.NEWS_ALIGNMENT_PROTOCOL = getValue(
+      report,
+      "NEWS_ALIGNMENT_PROTOCOL",
+      "NORTH_START -> EAST_SOURCE -> WEST_RENDERED -> NORTH_ADJUDICATION -> SOUTH_OUTPUT -> NORTH_VERIFY"
+    );
+
+    report.NEWS_ALIGNMENT_STATUS = getValue(
+      report,
+      "NEWS_ALIGNMENT_STATUS",
+      FALLBACK.UNKNOWN
+    );
+
+    report.NEWS_ALIGNMENT_SCORE = getValue(
+      report,
+      "NEWS_ALIGNMENT_SCORE",
+      FALLBACK.UNKNOWN
+    );
+
+    report.NEWS_ALIGNMENT_FIRST_FAILED_STAGE = getValue(
+      report,
+      "NEWS_ALIGNMENT_FIRST_FAILED_STAGE",
+      FALLBACK.UNKNOWN
+    );
+
+    report.FIBONACCI_SYNCHRONIZATION_PROTOCOL = getValue(
+      report,
+      "FIBONACCI_SYNCHRONIZATION_PROTOCOL",
+      "F1 target context -> F2 child validation -> F3 EAST source evidence -> F5 WEST rendered evidence -> F8 NORTH adjudication -> F13 SOUTH packet output -> F21 no-claim receiver boundary"
+    );
+
+    report.FIBONACCI_SYNCHRONIZATION_STATUS = getValue(
+      report,
+      "FIBONACCI_SYNCHRONIZATION_STATUS",
+      FALLBACK.UNKNOWN
+    );
+
+    report.FIBONACCI_SYNCHRONIZATION_SCORE = getValue(
+      report,
+      "FIBONACCI_SYNCHRONIZATION_SCORE",
+      FALLBACK.UNKNOWN
+    );
+
+    report.FIBONACCI_SYNCHRONIZATION_FIRST_FAILED_STAGE = getValue(
+      report,
+      "FIBONACCI_SYNCHRONIZATION_FIRST_FAILED_STAGE",
+      FALLBACK.UNKNOWN
+    );
   }
 
   function updateNorthVerdictProjection(report, options, meaningPreserved) {
@@ -848,58 +1353,40 @@
     const verdict = isObject(incomingVerdict) ? clonePlain(incomingVerdict) : {};
 
     verdict.schema = verdict.schema || "HEARTH_DIAGNOSTIC_NORTH_PLANETARY_CONTROL_LIFECYCLE_VERDICT_SCHEMA_v4";
-    verdict.northContract = getValue(report, "NORTH_CONTRACT", NORTH_ANCHOR_CONTRACT);
-    verdict.northReceipt = getValue(report, "NORTH_RECEIPT", NORTH_ANCHOR_RECEIPT);
-    verdict.previousNorthContract = getValue(report, "PREVIOUS_NORTH_CONTRACT", PREVIOUS_NORTH_ANCHOR_CONTRACT);
-    verdict.targetRoute = getValue(report, "TARGET_ROUTE", TARGET_ROUTE);
-    verdict.diagnosticRoute = getValue(report, "DIAGNOSTIC_ROUTE", DIAGNOSTIC_ROUTE);
-    verdict.diagnosticTimestamp = getValue(report, "DIAGNOSTIC_TIMESTAMP", nowIso());
+    verdict.northContract = verdict.northContract || getValue(report, "NORTH_CONTRACT", NORTH_ANCHOR_CONTRACT);
+    verdict.northReceipt = verdict.northReceipt || getValue(report, "NORTH_RECEIPT", NORTH_ANCHOR_RECEIPT);
+    verdict.previousNorthContract = verdict.previousNorthContract || getValue(report, "PREVIOUS_NORTH_CONTRACT", PREVIOUS_NORTH_ANCHOR_CONTRACT);
+    verdict.targetRoute = verdict.targetRoute || getValue(report, "TARGET_ROUTE", TARGET_ROUTE);
+    verdict.diagnosticRoute = verdict.diagnosticRoute || getValue(report, "DIAGNOSTIC_ROUTE", DIAGNOSTIC_ROUTE);
+    verdict.diagnosticTimestamp = verdict.diagnosticTimestamp || getValue(report, "DIAGNOSTIC_TIMESTAMP", nowIso());
 
-    verdict.primaryCase = getValue(report, "PRIMARY_CASE", verdict.primaryCase || FALLBACK.UNKNOWN);
-    verdict.calibrationStatus = getValue(report, "CALIBRATION_STATUS", verdict.calibrationStatus || FALLBACK.UNKNOWN);
-    verdict.calibrationHoldReason = getValue(report, "CALIBRATION_HOLD_REASON", verdict.calibrationHoldReason || FALLBACK.UNKNOWN);
-    verdict.diagnosticRailClean = getValue(report, "DIAGNOSTIC_RAIL_CLEAN", verdict.diagnosticRailClean || FALLBACK.UNKNOWN);
-    verdict.calibrationPointReached = getValue(report, "CALIBRATION_POINT_REACHED", verdict.calibrationPointReached || FALLBACK.UNKNOWN);
+    verdict.primaryCase = verdict.primaryCase || getValue(report, "PRIMARY_CASE", FALLBACK.UNKNOWN);
+    verdict.calibrationStatus = verdict.calibrationStatus || getValue(report, "CALIBRATION_STATUS", FALLBACK.UNKNOWN);
+    verdict.calibrationHoldReason = verdict.calibrationHoldReason || getValue(report, "CALIBRATION_HOLD_REASON", FALLBACK.UNKNOWN);
+    verdict.diagnosticRailClean = verdict.diagnosticRailClean || getValue(report, "DIAGNOSTIC_RAIL_CLEAN", FALLBACK.UNKNOWN);
+    verdict.calibrationPointReached = verdict.calibrationPointReached || getValue(report, "CALIBRATION_POINT_REACHED", FALLBACK.UNKNOWN);
 
-    verdict.recommendedNextOwner = getValue(report, "RECOMMENDED_NEXT_OWNER", verdict.recommendedNextOwner || FALLBACK.UNKNOWN);
-    verdict.recommendedNextFile = getValue(report, "RECOMMENDED_NEXT_FILE", verdict.recommendedNextFile || FALLBACK.UNKNOWN);
-    verdict.recommendedNextAction = getValue(report, "RECOMMENDED_NEXT_ACTION", verdict.recommendedNextAction || FALLBACK.UNKNOWN);
+    verdict.recommendedNextOwner = verdict.recommendedNextOwner || getValue(report, "RECOMMENDED_NEXT_OWNER", FALLBACK.UNKNOWN);
+    verdict.recommendedNextFile = verdict.recommendedNextFile || getValue(report, "RECOMMENDED_NEXT_FILE", FALLBACK.UNKNOWN);
+    verdict.recommendedNextAction = verdict.recommendedNextAction || getValue(report, "RECOMMENDED_NEXT_ACTION", FALLBACK.UNKNOWN);
 
-    verdict.childValidation = isObject(verdict.childValidation) ? verdict.childValidation : {};
-    verdict.childValidation.eastReceiptValid = getValue(report, "EAST_RECEIPT_VALID", verdict.childValidation.eastReceiptValid || FALLBACK.UNKNOWN);
-    verdict.childValidation.westReceiptValid = getValue(report, "WEST_RECEIPT_VALID", verdict.childValidation.westReceiptValid || FALLBACK.UNKNOWN);
-    verdict.childValidation.southReceiptValid = CHILD_VALIDATION.VALID;
-    verdict.childValidation.eastEvidenceValid = getValue(report, "EAST_EVIDENCE_VALID", verdict.childValidation.eastEvidenceValid || FALLBACK.UNKNOWN);
-    verdict.childValidation.westEvidenceValid = getValue(report, "WEST_EVIDENCE_VALID", verdict.childValidation.westEvidenceValid || FALLBACK.UNKNOWN);
-    verdict.childValidation.southOutputValid = CHILD_VALIDATION.VALID;
-    verdict.childValidation.southMeaningPreserved = boolText(Boolean(meaningPreserved));
-
-    verdict.newsAlignment = isObject(verdict.newsAlignment) ? verdict.newsAlignment : {};
-    verdict.newsAlignment.protocol = getValue(report, "NEWS_ALIGNMENT_PROTOCOL", verdict.newsAlignment.protocol || FALLBACK.UNKNOWN);
-    verdict.newsAlignment.status = getValue(report, "NEWS_ALIGNMENT_STATUS", verdict.newsAlignment.status || FALLBACK.UNKNOWN);
-    verdict.newsAlignment.score = getValue(report, "NEWS_ALIGNMENT_SCORE", verdict.newsAlignment.score || FALLBACK.UNKNOWN);
-    verdict.newsAlignment.firstFailedStage = getValue(report, "NEWS_ALIGNMENT_FIRST_FAILED_STAGE", verdict.newsAlignment.firstFailedStage || FALLBACK.UNKNOWN);
-
-    verdict.fibonacciSynchronization = isObject(verdict.fibonacciSynchronization) ? verdict.fibonacciSynchronization : {};
-    verdict.fibonacciSynchronization.protocol = getValue(report, "FIBONACCI_SYNCHRONIZATION_PROTOCOL", verdict.fibonacciSynchronization.protocol || FALLBACK.UNKNOWN);
-    verdict.fibonacciSynchronization.status = getValue(report, "FIBONACCI_SYNCHRONIZATION_STATUS", verdict.fibonacciSynchronization.status || FALLBACK.UNKNOWN);
-    verdict.fibonacciSynchronization.score = getValue(report, "FIBONACCI_SYNCHRONIZATION_SCORE", verdict.fibonacciSynchronization.score || FALLBACK.UNKNOWN);
-    verdict.fibonacciSynchronization.firstFailedStage = getValue(report, "FIBONACCI_SYNCHRONIZATION_FIRST_FAILED_STAGE", verdict.fibonacciSynchronization.firstFailedStage || FALLBACK.UNKNOWN);
-
-    verdict.planetaryControl = isObject(verdict.planetaryControl) ? verdict.planetaryControl : {};
-    verdict.planetaryControl.lifecycleSchemaActive = getValue(report, "PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ACTIVE", FALLBACK.UNKNOWN);
-    verdict.planetaryControl.footprintStatus = getValue(report, "PLANETARY_CONTROL_FOOTPRINT_STATUS", FALLBACK.UNKNOWN);
-    verdict.planetaryControl.expectedControlFile = getValue(report, "EXPECTED_CONTROL_FILE", EXPECTED_CONTROL_FILE);
-    verdict.planetaryControl.expectedControlContract = getValue(report, "EXPECTED_CONTROL_CONTRACT", EXPECTED_CONTROL_CONTRACT);
-    verdict.planetaryControl.controlFilePresent = getValue(report, "CONTROL_FILE_PRESENT", FALLBACK.UNKNOWN);
-    verdict.planetaryControl.controlFileExpectedNotYetBuilt = getValue(report, "CONTROL_FILE_EXPECTED_NOT_YET_BUILT", FALLBACK.UNKNOWN);
-    verdict.planetaryControl.controlFileAbsenceNotCase5 = getValue(report, "CONTROL_FILE_ABSENCE_NOT_TREATED_AS_CASE_5", FALLBACK.UNKNOWN);
-    verdict.planetaryControl.controlFileAbsenceBlocksMotionTouchNotVisiblePlanet = getValue(report, "CONTROL_FILE_ABSENCE_BLOCKS_MOTION_TOUCH_NOT_VISIBLE_PLANET", FALLBACK.UNKNOWN);
-    verdict.planetaryControl.jsIntegrationFunnel = getValue(report, "JS_INTEGRATION_FUNNEL", JS_INTEGRATION_FUNNEL);
-    verdict.planetaryControl.routeConductorControlIntegrationStatus = getValue(report, "ROUTE_CONDUCTOR_CONTROL_INTEGRATION_STATUS", FALLBACK.UNKNOWN);
-    verdict.planetaryControl.planetaryViewControlStatus = getValue(report, "PLANETARY_VIEW_CONTROL_STATUS", FALLBACK.UNKNOWN);
-    verdict.planetaryControl.recommendedNextFile = getValue(report, "PLANETARY_CONTROL_RECOMMENDED_NEXT_FILE", EXPECTED_CONTROL_FILE);
-    verdict.planetaryControl.recommendedNextAction = getValue(report, "PLANETARY_CONTROL_RECOMMENDED_NEXT_ACTION", FALLBACK.UNKNOWN);
+    verdict.southOutputConformance = {
+      southContract: CONTRACT,
+      southReceipt: RECEIPT,
+      southImplementationContract: IMPLEMENTATION_CONTRACT,
+      southImplementationReceipt: IMPLEMENTATION_RECEIPT,
+      southOutputValid: CHILD_VALIDATION.VALID,
+      southMeaningPreserved: boolText(Boolean(meaningPreserved)),
+      packetFormattingAuthority: true,
+      finalPrimaryCaseAuthority: false,
+      finalRecommendationAuthority: false,
+      diagnosticUiAuthority: false,
+      productionMutationAuthorized: false,
+      hearthRepairAuthorized: false,
+      runtimeRestartAuthorized: false,
+      canvasReleaseAuthorized: false,
+      macroWestReleaseAuthorized: false
+    };
 
     verdict.f13Claimed = false;
     verdict.f21EligibleForNorth = false;
@@ -912,110 +1399,6 @@
     verdict.webGL = false;
 
     return verdict;
-  }
-
-  function stagePass(value, required) {
-    if (required === "VALID") return value === CHILD_VALIDATION.VALID;
-    if (required === "COMPLETE") return value === FALLBACK.COMPLETE || value === STATUS.COMPLETE;
-    if (required === "TRUE") return value === "true" || value === true;
-    if (required === "FALSE") return value === "false" || value === false;
-    if (required === "KNOWN") return known(value);
-    return false;
-  }
-
-  function projectNewsAlignment(report) {
-    const stages = [
-      { name: "NORTH_START", passed: true },
-      {
-        name: "EAST_SOURCE",
-        passed:
-          stagePass(getValue(report, "EAST_RECEIPT_VALID", FALLBACK.UNKNOWN), "VALID") &&
-          stagePass(getValue(report, "EAST_EVIDENCE_VALID", FALLBACK.UNKNOWN), "VALID")
-      },
-      {
-        name: "WEST_RENDERED",
-        passed:
-          stagePass(getValue(report, "WEST_RECEIPT_VALID", FALLBACK.UNKNOWN), "VALID") &&
-          stagePass(getValue(report, "WEST_EVIDENCE_VALID", FALLBACK.UNKNOWN), "VALID")
-      },
-      {
-        name: "NORTH_ADJUDICATION",
-        passed: stagePass(getValue(report, "PRIMARY_CASE", FALLBACK.UNKNOWN), "KNOWN")
-      },
-      {
-        name: "SOUTH_OUTPUT",
-        passed: getValue(report, "SOUTH_OUTPUT_VALID", FALLBACK.UNKNOWN) === CHILD_VALIDATION.VALID
-      },
-      {
-        name: "NORTH_VERIFY",
-        passed: getValue(report, "SOUTH_MEANING_PRESERVED", FALLBACK.UNKNOWN) === "true"
-      }
-    ];
-
-    const passed = stages.filter((stage) => stage.passed).length;
-    const firstFailed = stages.find((stage) => !stage.passed);
-
-    report.NEWS_ALIGNMENT_PROTOCOL = getValue(
-      report,
-      "NEWS_ALIGNMENT_PROTOCOL",
-      "NORTH_START -> EAST_SOURCE -> WEST_RENDERED -> NORTH_ADJUDICATION -> SOUTH_OUTPUT -> NORTH_VERIFY"
-    );
-    report.NEWS_ALIGNMENT_STATUS = firstFailed ? "NEWS_ALIGNMENT_PARTIAL" : "NEWS_ALIGNMENT_COMPLETE";
-    report.NEWS_ALIGNMENT_SCORE = String(Math.round((passed / stages.length) * 100));
-    report.NEWS_ALIGNMENT_FIRST_FAILED_STAGE = firstFailed ? firstFailed.name : "NONE";
-  }
-
-  function projectFibonacciSynchronization(report) {
-    const stages = [
-      {
-        key: "F1",
-        passed:
-          getValue(report, "DIAGNOSTIC_TARGET_ACCESS_STATUS", FALLBACK.UNKNOWN) !== FALLBACK.UNKNOWN ||
-          getValue(report, "EXPECTED_HTML_CONTRACT", FALLBACK.UNKNOWN) !== FALLBACK.UNKNOWN
-      },
-      {
-        key: "F2",
-        passed:
-          getValue(report, "EAST_RECEIPT_VALID", FALLBACK.UNKNOWN) === CHILD_VALIDATION.VALID &&
-          getValue(report, "WEST_RECEIPT_VALID", FALLBACK.UNKNOWN) === CHILD_VALIDATION.VALID
-      },
-      {
-        key: "F3",
-        passed: getValue(report, "EAST_EVIDENCE_VALID", FALLBACK.UNKNOWN) === CHILD_VALIDATION.VALID
-      },
-      {
-        key: "F5",
-        passed: getValue(report, "WEST_EVIDENCE_VALID", FALLBACK.UNKNOWN) === CHILD_VALIDATION.VALID
-      },
-      {
-        key: "F8",
-        passed: getValue(report, "PRIMARY_CASE", FALLBACK.UNKNOWN) !== FALLBACK.UNKNOWN
-      },
-      {
-        key: "F13",
-        passed: getValue(report, "SOUTH_OUTPUT_VALID", FALLBACK.UNKNOWN) === CHILD_VALIDATION.VALID
-      },
-      {
-        key: "F21",
-        passed:
-          getValue(report, "f21EligibleForNorth", "false") === "false" &&
-          getValue(report, "f21ClaimedByDiagnosticRail", "false") === "false"
-      }
-    ];
-
-    const passed = stages.filter((stage) => stage.passed).length;
-    const firstFailed = stages.find((stage) => !stage.passed);
-
-    report.FIBONACCI_SYNCHRONIZATION_PROTOCOL = getValue(
-      report,
-      "FIBONACCI_SYNCHRONIZATION_PROTOCOL",
-      "F1 target context -> F2 child validation -> F3 EAST source evidence -> F5 WEST rendered evidence -> F8 NORTH adjudication -> F13 SOUTH packet output -> F21 no-claim receiver boundary"
-    );
-    report.FIBONACCI_SYNCHRONIZATION_STATUS = firstFailed
-      ? "FIBONACCI_SYNCHRONIZATION_PARTIAL"
-      : "FIBONACCI_SYNCHRONIZATION_COMPLETE";
-    report.FIBONACCI_SYNCHRONIZATION_SCORE = String(Math.round((passed / stages.length) * 100));
-    report.FIBONACCI_SYNCHRONIZATION_FIRST_FAILED_STAGE = firstFailed ? firstFailed.key : "NONE";
   }
 
   function normalizeReportObject(input, state, options) {
@@ -1043,10 +1426,12 @@
     report.NORTH_CONTRACT = getValue(source, "NORTH_CONTRACT", NORTH_ANCHOR_CONTRACT);
     report.NORTH_RECEIPT = getValue(source, "NORTH_RECEIPT", NORTH_ANCHOR_RECEIPT);
     report.PREVIOUS_NORTH_CONTRACT = getValue(source, "PREVIOUS_NORTH_CONTRACT", PREVIOUS_NORTH_ANCHOR_CONTRACT);
+    report.BASELINE_NORTH_CONTRACT = getValue(source, "BASELINE_NORTH_CONTRACT", PREVIOUS_NORTH_ANCHOR_CONTRACT);
 
     report.SOUTH_IMPLEMENTATION_CONTRACT = IMPLEMENTATION_CONTRACT;
     report.SOUTH_IMPLEMENTATION_RECEIPT = IMPLEMENTATION_RECEIPT;
     report.SOUTH_PREVIOUS_IMPLEMENTATION_CONTRACT = PREVIOUS_IMPLEMENTATION_CONTRACT;
+    report.SOUTH_LINEAGE_IMPLEMENTATION_CONTRACT = LINEAGE_IMPLEMENTATION_CONTRACT;
     report.SOUTH_BASELINE_IMPLEMENTATION_CONTRACT = BASELINE_IMPLEMENTATION_CONTRACT;
     report.SOUTH_ANCHOR_NORTH_CONTRACT = NORTH_ANCHOR_CONTRACT;
     report.SOUTH_ANCHOR_NORTH_RECEIPT = NORTH_ANCHOR_RECEIPT;
@@ -1059,10 +1444,37 @@
       EXPECTED_ROUTE_CONDUCTOR_CONTRACT
     );
 
-    if (getValue(report, "SERVED_ROUTE_CONDUCTOR_CONTRACT", FALLBACK.UNKNOWN) === COMPAT_ROUTE_CONDUCTOR_CONTRACT) {
+    report.COMPAT_ROUTE_CONDUCTOR_CONTRACT = getValue(
+      source,
+      "COMPAT_ROUTE_CONDUCTOR_CONTRACT",
+      COMPAT_ROUTE_CONDUCTOR_CONTRACT
+    );
+
+    report.PRIOR_ROUTE_CONDUCTOR_CONTRACT = getValue(
+      source,
+      "PRIOR_ROUTE_CONDUCTOR_CONTRACT",
+      LINEAGE_ROUTE_CONDUCTOR_CONTRACT
+    );
+
+    const servedRoute = getValue(report, "SERVED_ROUTE_CONDUCTOR_CONTRACT", FALLBACK.UNKNOWN);
+
+    if (servedRoute === EXPECTED_ROUTE_CONDUCTOR_CONTRACT) {
+      report.ROUTE_CONDUCTOR_V9_6_PRIMARY_NOT_TREATED_AS_CASE_5 = getValue(
+        report,
+        "ROUTE_CONDUCTOR_V9_6_PRIMARY_NOT_TREATED_AS_CASE_5",
+        "true"
+      );
+    }
+
+    if (servedRoute === COMPAT_ROUTE_CONDUCTOR_CONTRACT) {
       report.ROUTE_CONDUCTOR_V9_5_PRIMARY_NOT_TREATED_AS_CASE_5 = getValue(
         report,
         "ROUTE_CONDUCTOR_V9_5_PRIMARY_NOT_TREATED_AS_CASE_5",
+        "true"
+      );
+      report.ROUTE_CONDUCTOR_V9_5_COMPATIBILITY_ACCEPTED = getValue(
+        report,
+        "ROUTE_CONDUCTOR_V9_5_COMPATIBILITY_ACCEPTED",
         "true"
       );
       report.ROUTE_CONDUCTOR_V9_4_LINEAGE_ACCEPTED = getValue(
@@ -1072,15 +1484,13 @@
       );
     }
 
-    report.f13Claimed = "false";
-    report.f21EligibleForNorth = "false";
-    report.f21ClaimedByDiagnosticRail = "false";
-    report.readyTextAllowed = "false";
-    report.readyTextClaimedByDiagnosticRail = "false";
-    report.visualPassClaimed = "false";
-    report.generatedImage = "false";
-    report.graphicBox = "false";
-    report.webGL = "false";
+    for (const field of NO_CLAIM_FIELDS) {
+      report[field] = "false";
+    }
+
+    for (const field of UPPER_NO_CLAIM_FIELDS) {
+      report[field] = "false";
+    }
 
     report.SECONDARY_EVIDENCE_NOTES = serializeEvidenceNotes(source, state, options || {});
     report.NORTH_SECONDARY_EVIDENCE_NOTES = getValue(
@@ -1090,6 +1500,8 @@
     );
 
     projectPlanetaryControlFields(report, state);
+    projectLabCanvasBridgeFields(report, state);
+    preserveNewsFibonacciFields(report, source);
 
     const hasMeaning = meaningFieldsPresent(report);
     const meaningPreserved = hasMeaning && preserveMeaningFromSource(source, report);
@@ -1105,22 +1517,21 @@
     report.SOUTH_OUTPUT_COMPLETE = hasMeaning ? "true" : "false";
     report.SOUTH_OUTPUT_STATUS = hasMeaning ? STATUS.COMPLETE : STATUS.PARTIAL;
     report.SOUTH_OUTPUT_VALID = CHILD_VALIDATION.VALID;
+    report.SOUTH_RECEIPT_VALID = CHILD_VALIDATION.VALID;
     report.SOUTH_MEANING_PRESERVED = boolText(meaningPreserved);
     report.SOUTH_OUTPUT_SCHEMA_VALID = "true";
-    report.SOUTH_PACKET_TEXT_SOURCE = "SOUTH_PACKET_FORMATTING_FROM_NORTH_PLANETARY_CONTROL_LIFECYCLE_SCHEMA";
+    report.SOUTH_PACKET_TEXT_SOURCE =
+      "SOUTH_PACKET_FORMATTING_FROM_NORTH_PLANETARY_CONTROL_AND_LAB_CANVAS_BRIDGE_SCHEMA";
     report.SOUTH_SCHEMA_CONFORMANCE_STATUS = hasMeaning
       ? "SOUTH_SCHEMA_CONFORMANCE_COMPLETE"
       : "SOUTH_SCHEMA_CONFORMANCE_PARTIAL";
     report.SOUTH_SCHEMA_CONFORMANCE_REASON = hasMeaning
-      ? "NORTH_PLANETARY_CONTROL_LIFECYCLE_MEANING_FIELDS_PRESENT_AND_PASSED_THROUGH"
-      : "NORTH_PLANETARY_CONTROL_LIFECYCLE_MEANING_FIELDS_INCOMPLETE";
+      ? "NORTH_MEANING_FIELDS_PRESENT_AND_PASSED_THROUGH"
+      : "NORTH_MEANING_FIELDS_INCOMPLETE";
 
-    if (getValue(report, "SOUTH_RECEIPT_VALID", FALLBACK.UNKNOWN) === FALLBACK.UNKNOWN) {
-      report.SOUTH_RECEIPT_VALID = CHILD_VALIDATION.VALID;
-    }
-
-    projectNewsAlignment(report);
-    projectFibonacciSynchronization(report);
+    report.SOUTH_SECONDARY_OUTPUT_NOTES = state.southSecondaryOutputNotes.length
+      ? state.southSecondaryOutputNotes.join(" | ")
+      : FALLBACK.NONE;
 
     report.NORTH_VERDICT = updateNorthVerdictProjection(report, options || {}, meaningPreserved);
 
@@ -1153,10 +1564,15 @@
       "SERVED_ROUTE_CONDUCTOR_CONTRACT",
       "CACHE_OR_SERVED_CONTRACT_MISMATCH",
       "PLANETARY_CONTROL_FOOTPRINT_STATUS",
+      "CONTROL_FILE_STATUS",
       "CONTROL_FILE_PRESENT",
+      "CONTROL_FILE_EXPECTED_NOT_YET_BUILT",
       "CONTROL_FILE_ABSENCE_NOT_TREATED_AS_CASE_5",
       "CONTROL_FILE_HANDSHAKE_STATUS",
       "PLANETARY_VIEW_CONTROL_STATUS",
+      "LAB_BRIDGE_STATUS",
+      "BISHOP_BRIDGE_STATUS",
+      "FOUR_WAY_CANVAS_HANDOFF_STATUS",
       "WEST_RENDERED_READ_STATUS",
       "SOUTH_OUTPUT_STATUS",
       "SOUTH_OUTPUT_VALID",
@@ -1186,6 +1602,7 @@
       SOUTH_IMPLEMENTATION_CONTRACT: IMPLEMENTATION_CONTRACT,
       SOUTH_IMPLEMENTATION_RECEIPT: IMPLEMENTATION_RECEIPT,
       SOUTH_PREVIOUS_IMPLEMENTATION_CONTRACT: PREVIOUS_IMPLEMENTATION_CONTRACT,
+      SOUTH_LINEAGE_IMPLEMENTATION_CONTRACT: LINEAGE_IMPLEMENTATION_CONTRACT,
       SOUTH_BASELINE_IMPLEMENTATION_CONTRACT: BASELINE_IMPLEMENTATION_CONTRACT,
       SOUTH_ANCHOR_NORTH_CONTRACT: NORTH_ANCHOR_CONTRACT,
       SOUTH_ANCHOR_NORTH_RECEIPT: NORTH_ANCHOR_RECEIPT,
@@ -1194,6 +1611,7 @@
 
       SOUTH_OUTPUT_COMPLETE: state.southOutputComplete,
       SOUTH_OUTPUT_STATUS: state.southOutputStatus,
+      SOUTH_OUTPUT_VALID: CHILD_VALIDATION.VALID,
       SOUTH_OUTPUT_SCHEMA_VALID: state.southOutputSchemaValid,
       SOUTH_MEANING_PRESERVED: state.southMeaningPreserved,
       SOUTH_SCHEMA_CONFORMANCE_STATUS: state.southSchemaConformanceStatus,
@@ -1252,6 +1670,7 @@
         implementationContract: IMPLEMENTATION_CONTRACT,
         implementationReceipt: IMPLEMENTATION_RECEIPT,
         previousImplementationContract: PREVIOUS_IMPLEMENTATION_CONTRACT,
+        lineageImplementationContract: LINEAGE_IMPLEMENTATION_CONTRACT,
         baselineImplementationContract: BASELINE_IMPLEMENTATION_CONTRACT,
         anchorNorthContract: NORTH_ANCHOR_CONTRACT,
         anchorNorthReceipt: NORTH_ANCHOR_RECEIPT,
@@ -1270,18 +1689,42 @@
 
       addOutputNote(state, `SOUTH_COMPOSE_ERROR:${bounded(error && error.message ? error.message : error, 1000)}`);
 
-      const fallbackReport = normalizeReportObject({}, state, options || {});
-      fallbackReport.SOUTH_OUTPUT_STATUS = STATUS.FAILED;
-      fallbackReport.SOUTH_OUTPUT_COMPLETE = "false";
-      fallbackReport.SOUTH_OUTPUT_SCHEMA_VALID = "false";
-      fallbackReport.SOUTH_MEANING_PRESERVED = "false";
-      fallbackReport.SOUTH_SCHEMA_CONFORMANCE_STATUS = "SOUTH_SCHEMA_CONFORMANCE_FAILED";
-      fallbackReport.SOUTH_SCHEMA_CONFORMANCE_REASON = "SOUTH_COMPOSE_ERROR";
-      fallbackReport.SOUTH_PACKET_TEXT_SOURCE = "SOUTH_ERROR_FALLBACK_PACKET";
+      const fallbackReport = {
+        PACKET_NAME: REPORT_PACKET,
+        TARGET_ROUTE,
+        DIAGNOSTIC_ROUTE,
+        DIAGNOSTIC_TIMESTAMP: nowIso(),
+        PRIMARY_CASE: FALLBACK.UNKNOWN,
+        CALIBRATION_STATUS: FALLBACK.UNKNOWN,
+        CALIBRATION_HOLD_REASON: "SOUTH_COMPOSE_ERROR",
+        DIAGNOSTIC_RAIL_CLEAN: "false",
+        CALIBRATION_POINT_REACHED: "false",
+        RECOMMENDED_NEXT_OWNER: FALLBACK.INSUFFICIENT_EVIDENCE,
+        RECOMMENDED_NEXT_FILE: "HOLD_FOR_TEACHER_REVIEW",
+        RECOMMENDED_NEXT_ACTION: "REVIEW_SOUTH_PACKET_OUTPUT_CONFORMANCE",
+        SOUTH_OUTPUT_STATUS: STATUS.FAILED,
+        SOUTH_OUTPUT_COMPLETE: "false",
+        SOUTH_OUTPUT_VALID: CHILD_VALIDATION.UNREADABLE,
+        SOUTH_OUTPUT_SCHEMA_VALID: "false",
+        SOUTH_MEANING_PRESERVED: "false",
+        SOUTH_SCHEMA_CONFORMANCE_STATUS: "SOUTH_SCHEMA_CONFORMANCE_FAILED",
+        SOUTH_SCHEMA_CONFORMANCE_REASON: "SOUTH_COMPOSE_ERROR",
+        SOUTH_PACKET_TEXT_SOURCE: "SOUTH_ERROR_FALLBACK_PACKET",
+        SOUTH_SECONDARY_OUTPUT_NOTES: state.southSecondaryOutputNotes.join(" | ") || FALLBACK.NONE,
+        f13Claimed: "false",
+        f21EligibleForNorth: "false",
+        f21ClaimedByDiagnosticRail: "false",
+        readyTextAllowed: "false",
+        readyTextClaimedByDiagnosticRail: "false",
+        visualPassClaimed: "false",
+        generatedImage: "false",
+        graphicBox: "false",
+        webGL: "false"
+      };
 
       state.reportObject = fallbackReport;
       state.compactSummary = composeCompactSummary(fallbackReport);
-      state.fullPacketText = composeFullPacketText(fallbackReport, options || {});
+      state.fullPacketText = Object.keys(fallbackReport).map((key) => line(key, fallbackReport[key])).join("\n");
       state.updatedAt = nowIso();
 
       publish(state);
@@ -1309,6 +1752,7 @@
       implementationContract: IMPLEMENTATION_CONTRACT,
       implementationReceipt: IMPLEMENTATION_RECEIPT,
       previousImplementationContract: PREVIOUS_IMPLEMENTATION_CONTRACT,
+      lineageImplementationContract: LINEAGE_IMPLEMENTATION_CONTRACT,
       baselineImplementationContract: BASELINE_IMPLEMENTATION_CONTRACT,
       anchorNorthContract: NORTH_ANCHOR_CONTRACT,
       anchorNorthReceipt: NORTH_ANCHOR_RECEIPT,
@@ -1334,6 +1778,9 @@
       canvasReleaseAuthorized: false,
       macroWestReleaseAuthorized: false,
       controlFileImplementationAuthority: false,
+      labTableImplementationAuthority: false,
+      bishopLaneImplementationAuthority: false,
+      canvasImplementationAuthority: false,
 
       composeSouthReportApiAvailable: true,
       composeCompactSummaryApiAvailable: true,
@@ -1343,6 +1790,10 @@
       externalContractPreservedForNorthValidation: true,
       northV4PlanetaryControlLifecycleConformanceOwned: true,
       northV3AnchorSchemaBackwardReferencePreserved: true,
+      labCanvasBridgeReportConformanceOwned: true,
+      bishopBridgeReportConformanceOwned: true,
+      fourWayCanvasHandoffReportConformanceOwned: true,
+
       fullPacketTextOwned: true,
       compactSummaryOwned: true,
       reportObjectOwned: true,
@@ -1363,6 +1814,8 @@
       expectedControlContract: EXPECTED_CONTROL_CONTRACT,
       expectedRouteConductorFile: EXPECTED_ROUTE_CONDUCTOR_FILE,
       expectedRouteConductorContract: EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
+      compatRouteConductorContract: COMPAT_ROUTE_CONDUCTOR_CONTRACT,
+      lineageRouteConductorContract: LINEAGE_ROUTE_CONDUCTOR_CONTRACT,
       expectedIndexFile: EXPECTED_INDEX_FILE,
       expectedIndexContract: EXPECTED_INDEX_CONTRACT,
       expectedCanvasFile: EXPECTED_CANVAS_FILE,
@@ -1397,7 +1850,7 @@
   function publish(state) {
     lastState = clonePlain(state);
     lastOutput = makeOutputObject(state);
-    lastReport = clonePlain(lastOutput);
+    lastReport = clonePlain(state.reportObject || {});
 
     root.HEARTH = root.HEARTH || {};
     root.HEARTH.diagnosticSouth = api;
@@ -1406,6 +1859,8 @@
     root.HEARTH.diagnosticRailSouthReceipt = getSouthReceipt();
     root.HEARTH.diagnosticSouthOutput = clonePlain(lastOutput);
     root.HEARTH.diagnosticRailSouthOutput = clonePlain(lastOutput);
+    root.HEARTH.diagnosticSouthReport = clonePlain(lastReport);
+    root.HEARTH.diagnosticRailSouthReport = clonePlain(lastReport);
 
     root.HEARTH_DIAGNOSTIC_SOUTH = api;
     root.HEARTH_DIAGNOSTIC_RAIL_SOUTH = api;
@@ -1413,6 +1868,8 @@
     root.HEARTH_DIAGNOSTIC_RAIL_SOUTH_RECEIPT = getSouthReceipt();
     root.HEARTH_DIAGNOSTIC_SOUTH_OUTPUT = clonePlain(lastOutput);
     root.HEARTH_DIAGNOSTIC_RAIL_SOUTH_OUTPUT = clonePlain(lastOutput);
+    root.HEARTH_DIAGNOSTIC_SOUTH_REPORT = clonePlain(lastReport);
+    root.HEARTH_DIAGNOSTIC_RAIL_SOUTH_REPORT = clonePlain(lastReport);
   }
 
   const api = Object.freeze({
@@ -1421,6 +1878,7 @@
     implementationContract: IMPLEMENTATION_CONTRACT,
     implementationReceipt: IMPLEMENTATION_RECEIPT,
     previousImplementationContract: PREVIOUS_IMPLEMENTATION_CONTRACT,
+    lineageImplementationContract: LINEAGE_IMPLEMENTATION_CONTRACT,
     baselineImplementationContract: BASELINE_IMPLEMENTATION_CONTRACT,
     anchorNorthContract: NORTH_ANCHOR_CONTRACT,
     anchorNorthReceipt: NORTH_ANCHOR_RECEIPT,
@@ -1437,6 +1895,7 @@
     expectedRouteConductorFile: EXPECTED_ROUTE_CONDUCTOR_FILE,
     expectedRouteConductorContract: EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
     compatRouteConductorContract: COMPAT_ROUTE_CONDUCTOR_CONTRACT,
+    lineageRouteConductorContract: LINEAGE_ROUTE_CONDUCTOR_CONTRACT,
     expectedIndexFile: EXPECTED_INDEX_FILE,
     expectedIndexContract: EXPECTED_INDEX_CONTRACT,
     expectedCanvasFile: EXPECTED_CANVAS_FILE,
@@ -1452,8 +1911,8 @@
     supportsNorthV4PlanetaryControlLifecycleSerialization: true,
     supportsNorthV3VerdictBackwardReference: true,
     supportsSouthOutputValidClosureProjection: true,
-    supportsNewsAlignmentPacketProjection: true,
-    supportsFibonacciSynchronizationPacketProjection: true,
+    supportsNewsAlignmentPacketPreservation: true,
+    supportsFibonacciSynchronizationPacketPreservation: true,
     supportsReportObjectShapeForNorthValidation: true,
     supportsFullPacketTextForNorthValidation: true,
     supportsCompactSummaryForNorthValidation: true,
@@ -1464,6 +1923,10 @@
     supportsJsIntegrationFunnelPrintout: true,
     supportsRouteConductorControlHandshakePrintout: true,
     supportsPlanetaryViewTrackPrintout: true,
+    supportsLabCanvasBridgeReportConformance: true,
+    supportsBishopBridgeReportConformance: true,
+    supportsFourWayCanvasHandoffReportConformance: true,
+    supportsTwoCyclePremisePreservation: true,
 
     finalPrimaryCaseAuthority: false,
     finalRecommendationAuthority: false,
@@ -1478,6 +1941,9 @@
     canvasReleaseAuthorized: false,
     macroWestReleaseAuthorized: false,
     controlFileImplementationAuthority: false,
+    labTableImplementationAuthority: false,
+    bishopLaneImplementationAuthority: false,
+    canvasImplementationAuthority: false,
 
     f13Claimed: false,
     f21EligibleForNorth: false,

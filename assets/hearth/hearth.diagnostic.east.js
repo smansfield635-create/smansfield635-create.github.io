@@ -1,44 +1,20 @@
 // /assets/hearth/hearth.diagnostic.east.js
 // HEARTH_DIAGNOSTIC_RAIL_EAST_SERVED_SOURCE_EVIDENCE_TNT_v1
 // Full-file replacement.
-// Diagnostic rail EAST child only.
 // Internal implementation:
-// HEARTH_DIAGNOSTIC_EAST_LAB_CANVAS_BRIDGE_SOURCE_FOOTPRINT_ALIGNMENT_TNT_v6
+// HEARTH_DIAGNOSTIC_EAST_CURRENT_SERVED_SPREAD_BISHOP_CANVAS_SOURCE_FOOTPRINT_ALIGNMENT_TNT_v7
 // Purpose:
 // - Preserve EAST as served-source evidence only.
-// - Serve NORTH with receipt-bearing source-footprint evidence.
-// - Read the Hearth target iframe/window, not the diagnostic receiver window.
-// - Recognize current Hearth HTML, Index, and Route Conductor spread without false CASE_5.
-// - Preserve planetary-control footprint fields before /assets/hearth/hearth.controls.js exists.
+// - Recognize current Hearth HTML v5_1 and Route Conductor v9_9 without false CASE_5.
+// - Preserve v4/v5_4/v9_7/v9_6/v9_5/v9_4 lineage as accepted transition where source evidence proves it.
+// - Treat route-conductor rendered/global authority as stronger than script cache query text.
+// - Preserve planetary-control footprint fields before or after /assets/hearth/hearth.controls.js exists.
 // - Treat missing controls as EXPECTED_NOT_YET_BUILT, not failure, not CASE_5.
-// - Add Lab Runtime Table source-footprint recognition.
-// - Add Macro West bridge source-footprint recognition.
-// - Add Canvas authority / Canvas Local Station / Canvas child-lane source-footprint recognition.
-// - Add bishop hub path vocabulary as expected bridge paths without making EAST responsible for bishop internals.
-// - Publish shared lab/canvas/diagnostic bridge language for NORTH, WEST, SOUTH, route receiver, and Canvas authority.
+// - Add Lab Runtime Table, Macro West, Canvas Local Station, bishop hub, and modern finger source-footprint language.
 // - Preserve NORTH as final PRIMARY_CASE and recommendation authority.
 // - Preserve WEST as rendered-target authority.
 // - Preserve SOUTH as report-output authority.
 // - Preserve no repair, no cache mutation, no F13, no F21, no ready text, no visual pass, no generated image, no GraphicBox, no WebGL.
-// Does not own:
-// - rendered-target probing
-// - hit-test inspection
-// - pointer-events inspection
-// - overlay inspection
-// - runtime release inspection
-// - synthetic activation
-// - final PRIMARY_CASE selection
-// - final recommendation selection
-// - diagnostic UI
-// - Hearth repair
-// - production mutation
-// - runtime restart
-// - Canvas release
-// - Macro West release
-// - Lab Runtime Table authority
-// - bishop internals
-// - Canvas drawing
-// - North latch
 
 (() => {
   "use strict";
@@ -47,32 +23,37 @@
   const RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_EAST_SERVED_SOURCE_EVIDENCE_RECEIPT_v1";
 
   const IMPLEMENTATION_CONTRACT =
-    "HEARTH_DIAGNOSTIC_EAST_LAB_CANVAS_BRIDGE_SOURCE_FOOTPRINT_ALIGNMENT_TNT_v6";
+    "HEARTH_DIAGNOSTIC_EAST_CURRENT_SERVED_SPREAD_BISHOP_CANVAS_SOURCE_FOOTPRINT_ALIGNMENT_TNT_v7";
   const IMPLEMENTATION_RECEIPT =
-    "HEARTH_DIAGNOSTIC_EAST_LAB_CANVAS_BRIDGE_SOURCE_FOOTPRINT_ALIGNMENT_RECEIPT_v6";
+    "HEARTH_DIAGNOSTIC_EAST_CURRENT_SERVED_SPREAD_BISHOP_CANVAS_SOURCE_FOOTPRINT_ALIGNMENT_RECEIPT_v7";
 
   const PREVIOUS_IMPLEMENTATION_CONTRACT =
-    "HEARTH_DIAGNOSTIC_EAST_PLANETARY_CONTROL_FOOTPRINT_SOURCE_READER_TNT_v5";
+    "HEARTH_DIAGNOSTIC_EAST_LAB_CANVAS_BRIDGE_SOURCE_FOOTPRINT_ALIGNMENT_TNT_v6";
   const LINEAGE_IMPLEMENTATION_CONTRACT =
-    "HEARTH_DIAGNOSTIC_EAST_ROUTE_CONDUCTOR_PRIMARY_COMPATIBILITY_SPLIT_TNT_v4";
+    "HEARTH_DIAGNOSTIC_EAST_PLANETARY_CONTROL_FOOTPRINT_SOURCE_READER_TNT_v5";
   const BASELINE_IMPLEMENTATION_CONTRACT =
     "HEARTH_DIAGNOSTIC_RAIL_EAST_SERVED_SOURCE_EVIDENCE_TNT_v1";
 
   const VERSION =
-    "2026-06-04.hearth-diagnostic-east-lab-canvas-bridge-source-footprint-alignment-v6";
+    "2026-06-05.hearth-diagnostic-east-current-served-spread-bishop-canvas-source-footprint-alignment-v7";
 
   const FILE = "/assets/hearth/hearth.diagnostic.east.js";
   const TARGET_ROUTE = "/showroom/globe/hearth/";
   const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
 
   const CURRENT_HTML_CONTRACT =
+    "HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1";
+  const PREVIOUS_HTML_CONTRACT =
     "HEARTH_HTML_FULL_PLANET_VISIBILITY_DOWNSTREAM_SHELL_ALIGNMENT_TNT_v4";
+  const FOUNDATION_HTML_CONTRACT =
+    "HEARTH_HTML_PLANET_FACTORY_MIRRORLAND_PUBLIC_SHELL_TNT_v3";
   const DIAGNOSTIC_RECEIVER_CONTRACT =
     "HEARTH_DIAGNOSTIC_ROUTE_PLANETARY_BUILD_OBSERVER_RECEIVER_TNT_v2_2";
 
   const ACCEPTED_HTML_CONTRACTS = Object.freeze([
-    "HEARTH_HTML_FULL_PLANET_VISIBILITY_DOWNSTREAM_SHELL_ALIGNMENT_TNT_v4",
-    "HEARTH_HTML_PLANET_FACTORY_MIRRORLAND_PUBLIC_SHELL_TNT_v3",
+    CURRENT_HTML_CONTRACT,
+    PREVIOUS_HTML_CONTRACT,
+    FOUNDATION_HTML_CONTRACT,
     "HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_RECEIPT_TARGET_RESTORATION_TNT_v2_6",
     "HEARTH_HTML_PLANET_ENGINE_TEMPLATE_DEVELOPMENT_OPTIMAL_STANDARD_TNT_v2_5",
     "HEARTH_HTML_SINGLE_FLOATING_DIAGNOSTIC_DOORWAY_NO_DUPLICATE_TOP_BANNER_TNT_v2_4",
@@ -85,23 +66,29 @@
     "HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4";
 
   const ACCEPTED_INDEX_JS_CONTRACTS = Object.freeze([
-    "HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4",
+    CURRENT_INDEX_JS_CONTRACT,
+    "HEARTH_INDEX_JS_VISIBLE_EXPRESSION_CHAIN_LOADER_BRIDGE_TNT_v5_4_2",
+    "HEARTH_INDEX_JS_PAGE_RECEIPT_TARGET_BINDING_RENEWAL_TNT_v5_4_1",
     "HEARTH_INDEX_JS_CONTROL_SURFACE_EARLY_ACTIVATION_SHIELD_TNT_v5_3"
   ]);
 
   const CURRENT_ROUTE_CONDUCTOR_CONTRACT =
+    "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_TNT_v9_9";
+  const SCRIPT_CACHE_ROUTE_CONDUCTOR_CONTRACT =
+    "HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION_TNT_v9_7";
+  const NEWS_ROUTE_CONDUCTOR_CONTRACT =
     "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_TNT_v9_6";
-
   const COMPAT_ROUTE_CONDUCTOR_CONTRACT =
     "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_TNT_v9_5";
-
   const LINEAGE_ROUTE_CONDUCTOR_CONTRACT =
     "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_TNT_v9_4";
 
   const ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS = Object.freeze([
-    "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_TNT_v9_6",
-    "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_TNT_v9_5",
-    "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_TNT_v9_4",
+    CURRENT_ROUTE_CONDUCTOR_CONTRACT,
+    SCRIPT_CACHE_ROUTE_CONDUCTOR_CONTRACT,
+    NEWS_ROUTE_CONDUCTOR_CONTRACT,
+    COMPAT_ROUTE_CONDUCTOR_CONTRACT,
+    LINEAGE_ROUTE_CONDUCTOR_CONTRACT,
     "HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_TNT_v9_3",
     "HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_TNT_v9_2"
   ]);
@@ -117,6 +104,29 @@
     east: "/assets/lab/runtime-table.east.js",
     south: "/assets/lab/runtime-table.south.js",
     west: "/assets/lab/runtime-table.west.js"
+  });
+
+  const MODERN_FINGER_FILES = Object.freeze({
+    boundary: "/assets/hearth/hearth.canvas.finger.boundary.js",
+    mass: "/assets/hearth/hearth.canvas.finger.mass.js",
+    surfacePointer: "/assets/hearth/hearth.canvas.finger.surface.js",
+    light: "/assets/hearth/hearth.canvas.finger.light.js",
+    inspect: "/assets/hearth/hearth.canvas.finger.inspect.js",
+    composite: "/assets/hearth/hearth.canvas.finger.composite.js"
+  });
+
+  const LEGACY_FINGER_FILES = Object.freeze({
+    landform: "/assets/hearth/hearth.canvas.finger.landform.js",
+    elevation: "/assets/hearth/hearth.canvas.finger.elevation.js",
+    material: "/assets/hearth/hearth.canvas.finger.material.js",
+    hydrology: "/assets/hearth/hearth.canvas.finger.hydrology.js",
+    atmosphere: "/assets/hearth/hearth.canvas.finger.atmosphere.js",
+    lighting: "/assets/hearth/hearth.canvas.finger.lighting.js"
+  });
+
+  const FINGER_FILES = Object.freeze({
+    ...MODERN_FINGER_FILES,
+    ...LEGACY_FINGER_FILES
   });
 
   const LAB_GLOBALS = Object.freeze({
@@ -167,10 +177,15 @@
       "LAB_CARDINAL_RUNTIME_TABLE_WEST",
       "LAB_GAP_CLASSIFIER_WEST",
       "LAB_TRANSMISSION_GAP_CLASSIFIER_WEST",
+      "LAB_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_WEST",
+      "HEARTH_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH",
+      "HEARTH_RUNTIME_TABLE_WEST",
+      "HEARTH_WEST_ADMISSIBILITY",
       "DEXTER_LAB.runtimeTableWest",
       "DEXTER_LAB.cardinalRuntimeTableWest",
       "DEXTER_LAB.gapClassifierWest",
-      "DEXTER_LAB.transmissionGapClassifierWest"
+      "DEXTER_LAB.transmissionGapClassifierWest",
+      "DEXTER_LAB.westAdmissibility"
     ]
   });
 
@@ -186,28 +201,35 @@
     "LAB_RUNTIME_TABLE_WEST",
     "LAB_GAP_CLASSIFIER_WEST",
     "DEXTER_LAB.runtimeTableWest",
-    "DEXTER_LAB.gapClassifierWest"
+    "DEXTER_LAB.gapClassifierWest",
+    "DEXTER_LAB.westAdmissibility"
   ]);
 
   const CANVAS_GLOBALS = Object.freeze({
     parent: [
+      "HEARTH_CANVAS_LOCAL_STATION",
+      "HEARTH_CANVAS_STATION",
+      "HEARTH_CANVAS_CHILD_DISTRIBUTION_SWITCHBOARD",
       "HEARTH_CANVAS_EXPRESSION_HUB_VISIBLE_BASE_GLOBE_CARRIER",
       "HEARTH_CANVAS_VISIBLE_BASE_GLOBE_CARRIER",
       "HEARTH_CANVAS_BASE_GLOBE_CARRIER",
       "HEARTH_CANVAS_VISIBLE_PLANET",
       "HEARTH_CANVAS_EXPRESSION_HUB",
       "HEARTH_CANVAS_FINGER_MANAGER",
-      "HEARTH_CANVAS_LOCAL_STATION",
       "HEARTH_CANVAS",
+      "HEARTH.canvasLocalStation",
+      "HEARTH.canvasStation",
+      "HEARTH.canvasChildDistributionSwitchboard",
       "HEARTH.canvasExpressionHubVisibleBaseGlobeCarrier",
       "HEARTH.canvasVisibleBaseGlobeCarrier",
       "HEARTH.canvasVisiblePlanet",
       "HEARTH.canvasExpressionHub",
       "HEARTH.canvasFingerManager",
-      "HEARTH.canvasLocalStation",
       "HEARTH.canvas",
-      "DEXTER_LAB.hearthCanvas",
-      "DEXTER_LAB.hearthCanvasNorth"
+      "DEXTER_LAB.hearthCanvasLocalStation",
+      "DEXTER_LAB.hearthCanvasStation",
+      "DEXTER_LAB.hearthCanvasChildDistributionSwitchboard",
+      "DEXTER_LAB.hearthCanvas"
     ],
     north: [
       "HEARTH_CANVAS_NORTH",
@@ -239,17 +261,6 @@
       "DEXTER_LAB.hearthCanvasWest",
       "DEXTER_LAB.hearthCanvasWestInspectionInvalidationControl"
     ]
-  });
-
-  const FINGER_FILES = Object.freeze({
-    boundary: "/assets/hearth/hearth.canvas.finger.boundary.js",
-    landform: "/assets/hearth/hearth.canvas.finger.landform.js",
-    elevation: "/assets/hearth/hearth.canvas.finger.elevation.js",
-    material: "/assets/hearth/hearth.canvas.finger.material.js",
-    hydrology: "/assets/hearth/hearth.canvas.finger.hydrology.js",
-    atmosphere: "/assets/hearth/hearth.canvas.finger.atmosphere.js",
-    lighting: "/assets/hearth/hearth.canvas.finger.lighting.js",
-    composite: "/assets/hearth/hearth.canvas.finger.composite.js"
   });
 
   const BISHOP_HUBS = Object.freeze({
@@ -380,7 +391,7 @@
     return safeString(value, fallback).replace(/\s+/g, " ").trim();
   }
 
-  function bounded(value, limit = 2200) {
+  function bounded(value, limit = 2400) {
     return safeTrim(value).slice(0, limit);
   }
 
@@ -403,10 +414,7 @@
   function addNote(state, note) {
     const clean = bounded(note, 1600);
     if (!state || !Array.isArray(state.eastSecondaryEvidenceNotes) || !clean) return;
-
-    if (!state.eastSecondaryEvidenceNotes.includes(clean)) {
-      state.eastSecondaryEvidenceNotes.push(clean);
-    }
+    if (!state.eastSecondaryEvidenceNotes.includes(clean)) state.eastSecondaryEvidenceNotes.push(clean);
   }
 
   function readPath(base, path) {
@@ -535,56 +543,6 @@
     return accepted.includes(c) ? "true" : "false";
   }
 
-  function readAuthorityContract(authority) {
-    if (!authority || !isObject(authority)) return "";
-
-    const methods = [
-      "getReceiptLight",
-      "getReceipt",
-      "getRoutePrimaryGateReceipt",
-      "getRouteCycleReceipt",
-      "getCentralStationReceiptLight",
-      "getCentralStationReceipt",
-      "getStatus",
-      "getReport",
-      "getState"
-    ];
-
-    for (const method of methods) {
-      if (!isFunction(authority[method])) continue;
-
-      try {
-        const result = method === "getReceiptLight" ? authority[method](false) : authority[method]();
-        if (isObject(result)) {
-          const contract = firstDefined(
-            result.contract,
-            result.CONTRACT,
-            result.currentContract,
-            result.currentRouteConductorContract,
-            result.routeConductorContract,
-            result.canvasContract,
-            result.controlsContract,
-            result.implementationContract,
-            result.stationReceipt
-          );
-
-          if (contract) return safeString(contract);
-        }
-      } catch (_error) {}
-    }
-
-    return safeString(firstDefined(
-      authority.contract,
-      authority.CONTRACT,
-      authority.currentContract,
-      authority.currentRouteConductorContract,
-      authority.routeConductorContract,
-      authority.canvasContract,
-      authority.controlsContract,
-      authority.implementationContract
-    ), "");
-  }
-
   function readAuthorityReceipt(authority) {
     if (!authority || !isObject(authority)) return null;
 
@@ -595,6 +553,8 @@
       "getRouteCycleReceipt",
       "getCentralStationReceiptLight",
       "getCentralStationReceipt",
+      "getCanvasStationSummary",
+      "getCanvasStationReceiptLight",
       "getControlsReceipt",
       "getState",
       "getStatus",
@@ -612,8 +572,35 @@
 
     if (isObject(authority.receipt)) return authority.receipt;
     if (isObject(authority.receiptPacket)) return authority.receiptPacket;
+    if (isObject(authority.state)) return authority.state;
 
     return null;
+  }
+
+  function readAuthorityContract(authority) {
+    if (!authority || !isObject(authority)) return "";
+
+    const receipt = readAuthorityReceipt(authority) || {};
+
+    return safeString(firstDefined(
+      receipt.contract,
+      receipt.CONTRACT,
+      receipt.currentContract,
+      receipt.currentRouteConductorContract,
+      receipt.routeConductorContract,
+      receipt.canvasContract,
+      receipt.controlsContract,
+      receipt.implementationContract,
+      receipt.stationReceipt,
+      authority.contract,
+      authority.CONTRACT,
+      authority.currentContract,
+      authority.currentRouteConductorContract,
+      authority.routeConductorContract,
+      authority.canvasContract,
+      authority.controlsContract,
+      authority.implementationContract
+    ), "");
   }
 
   function findWindowAuthority(targetWindow, paths) {
@@ -656,6 +643,12 @@
 
   function findRouteConductorAuthority(targetWindow) {
     const found = findWindowAuthority(targetWindow, [
+      "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL",
+      "HEARTH.routeConductorBishopQueenCanvasRecognitionFunnel",
+      "DEXTER_LAB.hearthRouteConductorBishopQueenCanvasRecognitionFunnel",
+      "HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION",
+      "HEARTH.routeConductorControlHandshakeIntegration",
+      "DEXTER_LAB.hearthRouteConductorControlHandshakeIntegration",
       "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION",
       "HEARTH_ROUTE_CONDUCTOR",
       "HEARTH_SOUTH_ROUTE_CONDUCTOR",
@@ -799,7 +792,7 @@
         routeMatches(targetWindow) ||
         /hearth/i.test(page) ||
         /hearth/i.test(alias) ||
-        /planet factory|planet engine|mirrorland formation|visible globe/i.test(context) ||
+        /planet factory|planet engine|mirrorland formation|visible globe|visible planet/i.test(context) ||
         q(targetDocument, "#hearthCanvasMount") ||
         q(targetDocument, "[data-hearth-canvas-mount]") ||
         q(targetDocument, "#hearthGlobeStage") ||
@@ -901,12 +894,14 @@
     state.diagnosticTargetAccessStatus = "SOURCE_ONLY_NO_HEARTH_TARGET_DOCUMENT";
     state.diagnosticTargetAccessError = "NO_HEARTH_TARGET_DOCUMENT_AVAILABLE_TO_EAST";
     addNote(state, "EAST_SOURCE_ONLY_BASELINE_NO_HEARTH_TARGET_DOCUMENT_AVAILABLE");
+
     return { targetDocument: null, targetWindow: null, source: "none" };
   }
 
   function readHtmlEvidence(targetDocument, targetWindow, state) {
     if (!targetDocument || !targetDocument.documentElement) {
       state.expectedHtmlContract = CURRENT_HTML_CONTRACT;
+      state.currentExpectedHtmlContract = CURRENT_HTML_CONTRACT;
       state.servedHtmlContract = FALLBACK.UNKNOWN;
       state.htmlContractRecognized = FALLBACK.UNKNOWN;
       return;
@@ -926,6 +921,8 @@
 
     state.expectedHtmlContract = CURRENT_HTML_CONTRACT;
     state.currentExpectedHtmlContract = CURRENT_HTML_CONTRACT;
+    state.previousHtmlContract = PREVIOUS_HTML_CONTRACT;
+    state.foundationHtmlContract = FOUNDATION_HTML_CONTRACT;
     state.servedHtmlContract = served;
 
     if (served === DIAGNOSTIC_RECEIVER_CONTRACT || isDiagnosticReceiverDocument(targetDocument, targetWindow)) {
@@ -937,7 +934,8 @@
     }
 
     if (state.htmlContractRecognized === "true") {
-      addNote(state, "HTML_CONTRACT_RECOGNIZED_CURRENT_OR_ACCEPTED_LINEAGE");
+      if (served === CURRENT_HTML_CONTRACT) addNote(state, "HTML_CONTRACT_RECOGNIZED_CURRENT_V5_1");
+      else addNote(state, "HTML_CONTRACT_RECOGNIZED_ACCEPTED_LINEAGE");
     } else if (state.htmlContractRecognized === "false") {
       addNote(state, `HTML_CONTRACT_UNRECOGNIZED:${served}`);
     }
@@ -965,9 +963,9 @@
 
     const src = script ? normalizeSrc(script.getAttribute("src"), targetWindow) : FALLBACK.NOT_FOUND;
     const cacheKey = script ? readCacheKeyFromSrc(script.getAttribute("src"), targetWindow) : "";
-
     const dataset = target ? readDataset(target) : {};
     const authorityContract = indexAuthority.contract || "";
+
     const scriptContract = safeString(firstDefined(
       script && script.dataset ? script.dataset.hearthIndexJsContract : "",
       script && script.dataset ? script.dataset.jsSelectorCacheKey : "",
@@ -1013,9 +1011,9 @@
 
     const src = script ? normalizeSrc(script.getAttribute("src"), targetWindow) : FALLBACK.NOT_FOUND;
     const cacheKey = script ? readCacheKeyFromSrc(script.getAttribute("src"), targetWindow) : "";
-
     const dataset = target ? readDataset(target) : {};
     const authorityContract = conductor.contract || "";
+
     const scriptContract = safeString(firstDefined(
       script && script.dataset ? script.dataset.routeConductorCurrentContract : "",
       script && script.dataset ? script.dataset.hearthRouteConductorContract : "",
@@ -1038,36 +1036,61 @@
 
     state.expectedRouteConductorContract = CURRENT_ROUTE_CONDUCTOR_CONTRACT;
     state.currentExpectedRouteConductorContract = CURRENT_ROUTE_CONDUCTOR_CONTRACT;
+    state.scriptCacheRouteConductorContract = SCRIPT_CACHE_ROUTE_CONDUCTOR_CONTRACT;
+    state.newsRouteConductorContract = NEWS_ROUTE_CONDUCTOR_CONTRACT;
     state.compatRouteConductorContract = COMPAT_ROUTE_CONDUCTOR_CONTRACT;
     state.lineageRouteConductorContract = LINEAGE_ROUTE_CONDUCTOR_CONTRACT;
     state.servedRouteConductorContract = served;
     state.routeConductorScriptSrc = src;
     state.routeConductorScriptPresent = boolText(Boolean(script));
     state.routeConductorAuthoritySource = conductor.path;
+    state.routeConductorScriptCacheKey = cacheKey || FALLBACK.UNKNOWN;
+    state.routeConductorAuthorityContract = authorityContract || FALLBACK.UNKNOWN;
     state.routeConductorContractRecognized = contractRecognized(served, ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS);
 
-    const v96 = served === CURRENT_ROUTE_CONDUCTOR_CONTRACT;
+    const v99 = served === CURRENT_ROUTE_CONDUCTOR_CONTRACT;
+    const v97 = served === SCRIPT_CACHE_ROUTE_CONDUCTOR_CONTRACT;
+    const v96 = served === NEWS_ROUTE_CONDUCTOR_CONTRACT;
     const v95 = served === COMPAT_ROUTE_CONDUCTOR_CONTRACT;
     const v94 = served === LINEAGE_ROUTE_CONDUCTOR_CONTRACT;
 
     state.primaryRouteConductorContractRecognized = boolText(
-      v96 || v95 || v94 || state.routeConductorContractRecognized === "true",
+      v99 || v97 || v96 || v95 || v94 || state.routeConductorContractRecognized === "true",
       state.routeConductorContractRecognized
     );
 
-    state.routeConductorV96PrimaryNotTreatedAsCase5 = boolText(v96 || v95);
-    state.routeConductorV95CompatibilityAccepted = boolText(v96 || v95);
-    state.routeConductorV95PrimaryNotTreatedAsCase5 = boolText(v96 || v95);
-    state.routeConductorV94LineageAccepted = boolText(v94 || v95 || v96);
+    state.routeConductorV99PrimaryNotTreatedAsCase5 = boolText(v99);
+    state.routeConductorV97ScriptCacheAccepted = boolText(v99 || v97);
+    state.routeConductorV96PrimaryNotTreatedAsCase5 = boolText(v99 || v97 || v96);
+    state.routeConductorV95CompatibilityAccepted = boolText(v99 || v97 || v96 || v95);
+    state.routeConductorV95PrimaryNotTreatedAsCase5 = boolText(v99 || v97 || v96 || v95);
+    state.routeConductorV94LineageAccepted = boolText(v99 || v97 || v96 || v95 || v94);
 
-    if (v96) {
+    if (authorityContract && cacheKey && authorityContract !== cacheKey) {
+      addNote(state, `ROUTE_CONDUCTOR_RENDERED_AUTHORITY_OVERRIDES_SCRIPT_CACHE:${authorityContract}>${cacheKey}`);
+    }
+
+    if (v99) {
       addNote(state, "PRIMARY_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED");
       addNote(state, "CURRENT_EXPECTED_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED");
+      addNote(state, "ROUTE_CONDUCTOR_V9_9_PRIMARY_NOT_TREATED_AS_CASE_5");
+      addNote(state, "ROUTE_CONDUCTOR_V9_7_SCRIPT_CACHE_ACCEPTED_AS_TRANSITION");
+      addNote(state, "ROUTE_CONDUCTOR_V9_6_PRIMARY_NOT_TREATED_AS_CASE_5");
+      addNote(state, "ROUTE_CONDUCTOR_V9_5_PRIMARY_NOT_TREATED_AS_CASE_5");
+      addNote(state, "ROUTE_CONDUCTOR_V9_5_COMPATIBILITY_SURFACE_ACCEPTED_UNDER_V9_6");
+      addNote(state, "ACCEPTED_ROUTE_CONDUCTOR_CONTRACT_LINEAGE_RECOGNIZED");
+    } else if (v97) {
+      addNote(state, "PRIMARY_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED");
+      addNote(state, "ROUTE_CONDUCTOR_V9_7_SCRIPT_CACHE_ACCEPTED_AS_TRANSITION");
+      addNote(state, "ROUTE_CONDUCTOR_V9_6_PRIMARY_NOT_TREATED_AS_CASE_5");
+      addNote(state, "ROUTE_CONDUCTOR_V9_5_PRIMARY_NOT_TREATED_AS_CASE_5");
+      addNote(state, "ACCEPTED_ROUTE_CONDUCTOR_CONTRACT_LINEAGE_RECOGNIZED");
+    } else if (v96) {
+      addNote(state, "PRIMARY_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED");
       addNote(state, "ROUTE_CONDUCTOR_V9_6_PRIMARY_NOT_TREATED_AS_CASE_5");
       addNote(state, "ROUTE_CONDUCTOR_V9_5_COMPATIBILITY_SURFACE_ACCEPTED_UNDER_V9_6");
     } else if (v95) {
       addNote(state, "PRIMARY_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED");
-      addNote(state, "CURRENT_EXPECTED_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED");
       addNote(state, "ROUTE_CONDUCTOR_V9_5_PRIMARY_NOT_TREATED_AS_CASE_5");
     } else if (v94) {
       addNote(state, "ACCEPTED_ROUTE_CONDUCTOR_CONTRACT_LINEAGE_RECOGNIZED");
@@ -1098,7 +1121,9 @@
         receipt.motionTouchReady === true ||
         receipt.dragReady === true ||
         receipt.viewControlReady === true ||
-        receipt.controlsReady === true
+        receipt.controlsReady === true ||
+        receipt.touchReady === true ||
+        receipt.motionReady === true
       ))
     );
   }
@@ -1212,7 +1237,10 @@
     state.labRuntimeTableSouthContract = footprint.south.contract;
     state.labRuntimeTableWestContract = footprint.west.contract;
 
-    state.labTwoCycleLanguageRecognized = Boolean(footprint.north.status !== FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST)
+    state.labTwoCycleLanguageRecognized = Boolean(
+      footprint.north.status !== FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST ||
+      footprint.west.status !== FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST
+    )
       ? "true"
       : FALLBACK.UNKNOWN;
 
@@ -1339,6 +1367,7 @@
     Object.keys(FINGER_FILES).forEach((key) => {
       const file = FINGER_FILES[key];
       const script = target ? findScriptByPaths(target, [file, file.split("/").pop()], targetWindow) : null;
+
       fingerStatuses[key] = {
         file,
         scriptPresent: Boolean(script),
@@ -1347,9 +1376,12 @@
     });
 
     state.fingerFileFootprint = fingerStatuses;
+    state.modernFingerVocabularyActive = true;
+    state.surfacePointerFingerVocabularyActive = true;
     state.planetaryFileFootprintActive = true;
 
     addNote(state, "EAST_CANVAS_AUTHORITY_AND_FOUR_WAY_HANDOFF_SOURCE_FOOTPRINT_READ_COMPLETE");
+    addNote(state, "EAST_MODERN_FINGER_VOCABULARY_BOUNDARY_MASS_SURFACE_POINTER_LIGHT_INSPECT_COMPOSITE_ACTIVE");
 
     if (state.canvasFourWayHandoffStatus === "CANVAS_FOUR_WAY_HANDOFF_SOURCE_FOOTPRINT_OBSERVED") {
       addNote(state, "EAST_CANVAS_FOUR_WAY_HANDOFF_SOURCE_FOOTPRINT_OBSERVED");
@@ -1468,6 +1500,10 @@
       currentExpectedHtmlContract: CURRENT_HTML_CONTRACT,
       currentExpectedIndexJsContract: CURRENT_INDEX_JS_CONTRACT,
       currentExpectedRouteConductorContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
+      previousHtmlContract: PREVIOUS_HTML_CONTRACT,
+      foundationHtmlContract: FOUNDATION_HTML_CONTRACT,
+      scriptCacheRouteConductorContract: SCRIPT_CACHE_ROUTE_CONDUCTOR_CONTRACT,
+      newsRouteConductorContract: NEWS_ROUTE_CONDUCTOR_CONTRACT,
       compatRouteConductorContract: COMPAT_ROUTE_CONDUCTOR_CONTRACT,
       lineageRouteConductorContract: LINEAGE_ROUTE_CONDUCTOR_CONTRACT,
 
@@ -1480,6 +1516,8 @@
       routeConductorContractRecognized: FALLBACK.UNKNOWN,
 
       primaryRouteConductorContractRecognized: FALLBACK.UNKNOWN,
+      routeConductorV99PrimaryNotTreatedAsCase5: FALLBACK.UNKNOWN,
+      routeConductorV97ScriptCacheAccepted: FALLBACK.UNKNOWN,
       routeConductorV96PrimaryNotTreatedAsCase5: FALLBACK.UNKNOWN,
       routeConductorV95CompatibilityAccepted: FALLBACK.UNKNOWN,
       routeConductorV95PrimaryNotTreatedAsCase5: FALLBACK.UNKNOWN,
@@ -1488,6 +1526,8 @@
 
       indexScriptSrc: FALLBACK.UNKNOWN,
       routeConductorScriptSrc: FALLBACK.UNKNOWN,
+      routeConductorScriptCacheKey: FALLBACK.UNKNOWN,
+      routeConductorAuthorityContract: FALLBACK.UNKNOWN,
       indexScriptPresent: FALLBACK.UNKNOWN,
       routeConductorScriptPresent: FALLBACK.UNKNOWN,
       indexAuthoritySource: FALLBACK.UNKNOWN,
@@ -1572,6 +1612,8 @@
       canvasWestLaneStatus: FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST,
 
       planetaryFileFootprintActive: true,
+      modernFingerVocabularyActive: true,
+      surfacePointerFingerVocabularyActive: true,
       fingerFileFootprint: {},
 
       bishopHubVocabularyActive: true,
@@ -1631,6 +1673,10 @@
       CURRENT_EXPECTED_HTML_CONTRACT: state.currentExpectedHtmlContract,
       CURRENT_EXPECTED_INDEX_JS_CONTRACT: state.currentExpectedIndexJsContract,
       CURRENT_EXPECTED_ROUTE_CONDUCTOR_CONTRACT: state.currentExpectedRouteConductorContract,
+      PREVIOUS_HTML_CONTRACT: state.previousHtmlContract,
+      FOUNDATION_HTML_CONTRACT: state.foundationHtmlContract,
+      SCRIPT_CACHE_ROUTE_CONDUCTOR_CONTRACT: state.scriptCacheRouteConductorContract,
+      NEWS_ROUTE_CONDUCTOR_CONTRACT: state.newsRouteConductorContract,
       COMPAT_ROUTE_CONDUCTOR_CONTRACT: state.compatRouteConductorContract,
       PRIOR_ROUTE_CONDUCTOR_CONTRACT: state.lineageRouteConductorContract,
 
@@ -1640,6 +1686,8 @@
 
       INDEX_SCRIPT_SRC: state.indexScriptSrc,
       ROUTE_CONDUCTOR_SCRIPT_SRC: state.routeConductorScriptSrc,
+      ROUTE_CONDUCTOR_SCRIPT_CACHE_KEY: state.routeConductorScriptCacheKey,
+      ROUTE_CONDUCTOR_AUTHORITY_CONTRACT: state.routeConductorAuthorityContract,
       INDEX_SCRIPT_PRESENT: state.indexScriptPresent,
       ROUTE_CONDUCTOR_SCRIPT_PRESENT: state.routeConductorScriptPresent,
 
@@ -1651,6 +1699,8 @@
       ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED: state.routeConductorContractRecognized,
 
       PRIMARY_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED: state.primaryRouteConductorContractRecognized,
+      ROUTE_CONDUCTOR_V9_9_PRIMARY_NOT_TREATED_AS_CASE_5: state.routeConductorV99PrimaryNotTreatedAsCase5,
+      ROUTE_CONDUCTOR_V9_7_SCRIPT_CACHE_ACCEPTED: state.routeConductorV97ScriptCacheAccepted,
       ROUTE_CONDUCTOR_V9_6_PRIMARY_NOT_TREATED_AS_CASE_5: state.routeConductorV96PrimaryNotTreatedAsCase5,
       ROUTE_CONDUCTOR_V9_5_COMPATIBILITY_ACCEPTED: state.routeConductorV95CompatibilityAccepted,
       ROUTE_CONDUCTOR_V9_5_PRIMARY_NOT_TREATED_AS_CASE_5: state.routeConductorV95PrimaryNotTreatedAsCase5,
@@ -1740,6 +1790,8 @@
       CANVAS_WEST_LANE_STATUS: state.canvasWestLaneStatus,
 
       PLANETARY_FILE_FOOTPRINT_ACTIVE: state.planetaryFileFootprintActive,
+      MODERN_FINGER_VOCABULARY_ACTIVE: state.modernFingerVocabularyActive,
+      SURFACE_POINTER_FINGER_VOCABULARY_ACTIVE: state.surfacePointerFingerVocabularyActive,
       FINGER_FILE_FOOTPRINT: clonePlain(state.fingerFileFootprint),
 
       BISHOP_HUB_VOCABULARY_ACTIVE: state.bishopHubVocabularyActive,
@@ -1811,7 +1863,7 @@
         addNote(state, "EAST_CURRENT_SPREAD_ALIGNMENT_RECOGNIZED");
       }
 
-      addNote(state, "EAST_LAB_CANVAS_BRIDGE_SOURCE_FOOTPRINT_ALIGNMENT_COMPLETE");
+      addNote(state, "EAST_CURRENT_SERVED_SPREAD_BISHOP_CANVAS_SOURCE_FOOTPRINT_ALIGNMENT_COMPLETE");
 
       state.eastSourceReadComplete = "true";
       state.eastSourceReadStatus = FALLBACK.COMPLETE;
@@ -1856,8 +1908,6 @@
   }
 
   function getEastReceipt() {
-    const state = lastState || makeState();
-
     return {
       childRole: "EAST_SERVED_SOURCE_EVIDENCE",
       contract: CONTRACT,
@@ -1916,10 +1966,16 @@
       bishopHubPathVocabularyOwned: true,
       bishopInternalSubjectFileOwnership: false,
       bishopInternalInspectionOwned: false,
+      modernFingerVocabularyOwned: true,
+      surfacePointerFingerVocabularyOwned: true,
 
       currentHtmlContract: CURRENT_HTML_CONTRACT,
+      previousHtmlContract: PREVIOUS_HTML_CONTRACT,
+      foundationHtmlContract: FOUNDATION_HTML_CONTRACT,
       currentIndexJsContract: CURRENT_INDEX_JS_CONTRACT,
       currentRouteConductorContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
+      scriptCacheRouteConductorContract: SCRIPT_CACHE_ROUTE_CONDUCTOR_CONTRACT,
+      newsRouteConductorContract: NEWS_ROUTE_CONDUCTOR_CONTRACT,
       compatRouteConductorContract: COMPAT_ROUTE_CONDUCTOR_CONTRACT,
       lineageRouteConductorContract: LINEAGE_ROUTE_CONDUCTOR_CONTRACT,
 
@@ -1931,6 +1987,8 @@
       labFiles: clonePlain(LAB_FILES),
       bishopHubs: clonePlain(BISHOP_HUBS),
       fingerFiles: clonePlain(FINGER_FILES),
+      modernFingerFiles: clonePlain(MODERN_FINGER_FILES),
+      legacyFingerFiles: clonePlain(LEGACY_FINGER_FILES),
 
       acceptedHtmlContracts: ACCEPTED_HTML_CONTRACTS.slice(),
       acceptedIndexJsContracts: ACCEPTED_INDEX_JS_CONTRACTS.slice(),
@@ -1982,6 +2040,7 @@
     root.HEARTH = root.HEARTH || {};
     root.HEARTH.diagnosticEast = api;
     root.HEARTH.diagnosticRailEast = api;
+    root.HEARTH.diagnosticEastCurrentServedSpreadBishopCanvasSourceFootprint = api;
     root.HEARTH.diagnosticEastLabCanvasBridgeSourceFootprint = api;
     root.HEARTH.diagnosticEastReceipt = getEastReceipt();
     root.HEARTH.diagnosticRailEastReceipt = getEastReceipt();
@@ -1991,10 +2050,12 @@
     root.DEXTER_LAB = root.DEXTER_LAB || {};
     root.DEXTER_LAB.hearthDiagnosticEast = api;
     root.DEXTER_LAB.hearthDiagnosticRailEast = api;
+    root.DEXTER_LAB.hearthDiagnosticEastCurrentServedSpreadBishopCanvasSourceFootprint = api;
     root.DEXTER_LAB.hearthDiagnosticEastLabCanvasBridgeSourceFootprint = api;
 
     root.HEARTH_DIAGNOSTIC_EAST = api;
     root.HEARTH_DIAGNOSTIC_RAIL_EAST = api;
+    root.HEARTH_DIAGNOSTIC_EAST_CURRENT_SERVED_SPREAD_BISHOP_CANVAS_SOURCE_FOOTPRINT = api;
     root.HEARTH_DIAGNOSTIC_EAST_LAB_CANVAS_BRIDGE_SOURCE_FOOTPRINT = api;
     root.HEARTH_DIAGNOSTIC_EAST_RECEIPT = getEastReceipt();
     root.HEARTH_DIAGNOSTIC_RAIL_EAST_RECEIPT = getEastReceipt();
@@ -2016,8 +2077,12 @@
     diagnosticRoute: DIAGNOSTIC_ROUTE,
 
     currentHtmlContract: CURRENT_HTML_CONTRACT,
+    previousHtmlContract: PREVIOUS_HTML_CONTRACT,
+    foundationHtmlContract: FOUNDATION_HTML_CONTRACT,
     currentIndexJsContract: CURRENT_INDEX_JS_CONTRACT,
     currentRouteConductorContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
+    scriptCacheRouteConductorContract: SCRIPT_CACHE_ROUTE_CONDUCTOR_CONTRACT,
+    newsRouteConductorContract: NEWS_ROUTE_CONDUCTOR_CONTRACT,
     compatRouteConductorContract: COMPAT_ROUTE_CONDUCTOR_CONTRACT,
     lineageRouteConductorContract: LINEAGE_ROUTE_CONDUCTOR_CONTRACT,
 
@@ -2030,6 +2095,8 @@
     canvasGlobals: clonePlain(CANVAS_GLOBALS),
     bishopHubs: clonePlain(BISHOP_HUBS),
     fingerFiles: clonePlain(FINGER_FILES),
+    modernFingerFiles: clonePlain(MODERN_FINGER_FILES),
+    legacyFingerFiles: clonePlain(LEGACY_FINGER_FILES),
 
     acceptedHtmlContracts: ACCEPTED_HTML_CONTRACTS.slice(),
     acceptedIndexJsContracts: ACCEPTED_INDEX_JS_CONTRACTS.slice(),
@@ -2041,7 +2108,10 @@
 
     supportsServedSourceEvidence: true,
     supportsCurrentSpreadCompatibilitySplit: true,
-    supportsRouteConductorV96CurrentSpread: true,
+    supportsHtmlV51CurrentSpread: true,
+    supportsRouteConductorV99CurrentSpread: true,
+    supportsRouteConductorV97ScriptCacheTransition: true,
+    supportsRouteConductorV96Lineage: true,
     supportsRouteConductorV95Compatibility: true,
     supportsRouteConductorV94Lineage: true,
     supportsFalseCase5Prevention: true,
@@ -2061,6 +2131,8 @@
     supportsCanvasFourWayHandoffFootprint: true,
     supportsBishopHubVocabulary: true,
     supportsBishopInternalsAsNonEastResponsibility: true,
+    supportsModernFingerVocabulary: true,
+    supportsSurfacePointerFingerVocabulary: true,
 
     ownsServedSourceEvidence: true,
     ownsCase5EvidenceSupportOnly: true,
@@ -2069,6 +2141,8 @@
     ownsMacroWestBridgeSourceFootprintEvidence: true,
     ownsCanvasAuthoritySourceFootprintEvidence: true,
     ownsBishopHubPathVocabulary: true,
+    ownsModernFingerVocabulary: true,
+    ownsSurfacePointerFingerVocabulary: true,
 
     ownsRenderedTargetEvidence: false,
     ownsFinalPrimaryCase: false,

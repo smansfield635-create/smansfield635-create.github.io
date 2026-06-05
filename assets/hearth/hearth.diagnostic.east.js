@@ -3,14 +3,19 @@
 // Full-file replacement.
 // Diagnostic rail EAST child only.
 // Internal implementation:
-// HEARTH_DIAGNOSTIC_EAST_PLANETARY_CONTROL_FOOTPRINT_SOURCE_READER_TNT_v5
+// HEARTH_DIAGNOSTIC_EAST_LAB_CANVAS_BRIDGE_SOURCE_FOOTPRINT_ALIGNMENT_TNT_v6
 // Purpose:
-// - Serve NORTH with receipt-bearing served-source evidence.
+// - Preserve EAST as served-source evidence only.
+// - Serve NORTH with receipt-bearing source-footprint evidence.
 // - Read the Hearth target iframe/window, not the diagnostic receiver window.
 // - Recognize current Hearth HTML, Index, and Route Conductor spread without false CASE_5.
-// - Publish planetary-control footprint fields before /assets/hearth/hearth.controls.js exists.
+// - Preserve planetary-control footprint fields before /assets/hearth/hearth.controls.js exists.
 // - Treat missing controls as EXPECTED_NOT_YET_BUILT, not failure, not CASE_5.
-// - Preserve EAST as served-source evidence only.
+// - Add Lab Runtime Table source-footprint recognition.
+// - Add Macro West bridge source-footprint recognition.
+// - Add Canvas authority / Canvas Local Station / Canvas child-lane source-footprint recognition.
+// - Add bishop hub path vocabulary as expected bridge paths without making EAST responsible for bishop internals.
+// - Publish shared lab/canvas/diagnostic bridge language for NORTH, WEST, SOUTH, route receiver, and Canvas authority.
 // - Preserve NORTH as final PRIMARY_CASE and recommendation authority.
 // - Preserve WEST as rendered-target authority.
 // - Preserve SOUTH as report-output authority.
@@ -30,6 +35,9 @@
 // - runtime restart
 // - Canvas release
 // - Macro West release
+// - Lab Runtime Table authority
+// - bishop internals
+// - Canvas drawing
 // - North latch
 
 (() => {
@@ -39,19 +47,19 @@
   const RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_EAST_SERVED_SOURCE_EVIDENCE_RECEIPT_v1";
 
   const IMPLEMENTATION_CONTRACT =
-    "HEARTH_DIAGNOSTIC_EAST_PLANETARY_CONTROL_FOOTPRINT_SOURCE_READER_TNT_v5";
+    "HEARTH_DIAGNOSTIC_EAST_LAB_CANVAS_BRIDGE_SOURCE_FOOTPRINT_ALIGNMENT_TNT_v6";
   const IMPLEMENTATION_RECEIPT =
-    "HEARTH_DIAGNOSTIC_EAST_PLANETARY_CONTROL_FOOTPRINT_SOURCE_READER_RECEIPT_v5";
+    "HEARTH_DIAGNOSTIC_EAST_LAB_CANVAS_BRIDGE_SOURCE_FOOTPRINT_ALIGNMENT_RECEIPT_v6";
 
   const PREVIOUS_IMPLEMENTATION_CONTRACT =
-    "HEARTH_DIAGNOSTIC_EAST_ROUTE_CONDUCTOR_PRIMARY_COMPATIBILITY_SPLIT_TNT_v4";
+    "HEARTH_DIAGNOSTIC_EAST_PLANETARY_CONTROL_FOOTPRINT_SOURCE_READER_TNT_v5";
   const LINEAGE_IMPLEMENTATION_CONTRACT =
-    "HEARTH_DIAGNOSTIC_EAST_HEARTH_INDEX_CONTEXT_CURRENT_SPREAD_ALIGNMENT_TNT_v3";
+    "HEARTH_DIAGNOSTIC_EAST_ROUTE_CONDUCTOR_PRIMARY_COMPATIBILITY_SPLIT_TNT_v4";
   const BASELINE_IMPLEMENTATION_CONTRACT =
     "HEARTH_DIAGNOSTIC_RAIL_EAST_SERVED_SOURCE_EVIDENCE_TNT_v1";
 
   const VERSION =
-    "2026-06-04.hearth-diagnostic-east-planetary-control-footprint-source-reader-v5";
+    "2026-06-04.hearth-diagnostic-east-lab-canvas-bridge-source-footprint-alignment-v6";
 
   const FILE = "/assets/hearth/hearth.diagnostic.east.js";
   const TARGET_ROUTE = "/showroom/globe/hearth/";
@@ -59,7 +67,6 @@
 
   const CURRENT_HTML_CONTRACT =
     "HEARTH_HTML_FULL_PLANET_VISIBILITY_DOWNSTREAM_SHELL_ALIGNMENT_TNT_v4";
-
   const DIAGNOSTIC_RECEIVER_CONTRACT =
     "HEARTH_DIAGNOSTIC_ROUTE_PLANETARY_BUILD_OBSERVER_RECEIVER_TNT_v2_2";
 
@@ -103,6 +110,136 @@
   const HEARTH_JS_CONTROL_FUNNEL_FILE = "/showroom/globe/hearth/hearth.js";
   const INDEX_JS_FILE = "/showroom/globe/hearth/index.js";
   const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
+  const MACRO_WEST_HANDOFF_FILE = "/assets/hearth/hearth.west.index-handoff.table.js";
+
+  const LAB_FILES = Object.freeze({
+    north: "/assets/lab/runtime-table.js",
+    east: "/assets/lab/runtime-table.east.js",
+    south: "/assets/lab/runtime-table.south.js",
+    west: "/assets/lab/runtime-table.west.js"
+  });
+
+  const LAB_GLOBALS = Object.freeze({
+    north: [
+      "LAB_RUNTIME_TABLE",
+      "LAB_RUNTIME_TABLE_NORTH",
+      "LAB_CARDINAL_RUNTIME_TABLE_NORTH",
+      "LAB_CENTRAL_TRAIN_STATION",
+      "LAB_RUNTIME_TABLE_NORTH_CENTRAL_TRAIN_STATION",
+      "HEARTH_NORTH_COMMAND_RUNTIME_TABLE",
+      "HEARTH_NORTH_COMMAND",
+      "HEARTH.northCommandRuntimeTable",
+      "HEARTH.northCentralTrainStation",
+      "HEARTH.centralTrainStation",
+      "DEXTER_LAB.runtimeTable",
+      "DEXTER_LAB.cardinalRuntimeTableNorth",
+      "DEXTER_LAB.centralTrainStation",
+      "DEXTER_LAB.northCentralTrainStation"
+    ],
+    east: [
+      "LAB_RUNTIME_TABLE_EAST",
+      "RUNTIME_TABLE_EAST",
+      "LAB_CARDINAL_RUNTIME_TABLE_EAST",
+      "LAB_CHECKPOINT_GOVERNOR_EAST",
+      "HEARTH_EAST_FIBONACCI_MAGNIFIER",
+      "DEXTER_LAB.runtimeTableEast",
+      "DEXTER_LAB.cardinalRuntimeTableEast",
+      "DEXTER_LAB.checkpointGovernorEast"
+    ],
+    south: [
+      "LAB_RUNTIME_TABLE_SOUTH_PRIMARY_GATE",
+      "LAB_RUNTIME_TABLE_SOUTH",
+      "RUNTIME_TABLE_SOUTH",
+      "LAB_CARDINAL_RUNTIME_TABLE_SOUTH",
+      "LAB_VISIBLE_STATE_COMPOSER_SOUTH",
+      "HEARTH_RUNTIME_TABLE_SOUTH",
+      "HEARTH_SOUTH",
+      "HEARTH_VISIBLE_STATE_COMPOSER",
+      "DEXTER_LAB.runtimeTableSouth",
+      "DEXTER_LAB.cardinalRuntimeTableSouth",
+      "DEXTER_LAB.south",
+      "DEXTER_LAB.visibleStateComposer",
+      "DEXTER_LAB.southPrimaryGate"
+    ],
+    west: [
+      "LAB_RUNTIME_TABLE_WEST",
+      "RUNTIME_TABLE_WEST",
+      "LAB_CARDINAL_RUNTIME_TABLE_WEST",
+      "LAB_GAP_CLASSIFIER_WEST",
+      "LAB_TRANSMISSION_GAP_CLASSIFIER_WEST",
+      "DEXTER_LAB.runtimeTableWest",
+      "DEXTER_LAB.cardinalRuntimeTableWest",
+      "DEXTER_LAB.gapClassifierWest",
+      "DEXTER_LAB.transmissionGapClassifierWest"
+    ]
+  });
+
+  const MACRO_WEST_GLOBALS = Object.freeze([
+    "HEARTH_WEST_INDEX_HANDOFF_TABLE",
+    "HEARTH_WEST_INDEX_HANDOFF",
+    "HEARTH.westIndexHandoffTable",
+    "HEARTH.westIndexHandoff",
+    "HEARTH.macroWestBridge",
+    "HEARTH.westBishopCanvasBridge",
+    "DEXTER_LAB.hearthWestIndexHandoffTable",
+    "DEXTER_LAB.hearthMacroWestBridge",
+    "LAB_RUNTIME_TABLE_WEST",
+    "LAB_GAP_CLASSIFIER_WEST",
+    "DEXTER_LAB.runtimeTableWest",
+    "DEXTER_LAB.gapClassifierWest"
+  ]);
+
+  const CANVAS_GLOBALS = Object.freeze({
+    parent: [
+      "HEARTH_CANVAS_EXPRESSION_HUB_VISIBLE_BASE_GLOBE_CARRIER",
+      "HEARTH_CANVAS_VISIBLE_BASE_GLOBE_CARRIER",
+      "HEARTH_CANVAS_BASE_GLOBE_CARRIER",
+      "HEARTH_CANVAS_VISIBLE_PLANET",
+      "HEARTH_CANVAS_EXPRESSION_HUB",
+      "HEARTH_CANVAS_FINGER_MANAGER",
+      "HEARTH_CANVAS_LOCAL_STATION",
+      "HEARTH_CANVAS",
+      "HEARTH.canvasExpressionHubVisibleBaseGlobeCarrier",
+      "HEARTH.canvasVisibleBaseGlobeCarrier",
+      "HEARTH.canvasVisiblePlanet",
+      "HEARTH.canvasExpressionHub",
+      "HEARTH.canvasFingerManager",
+      "HEARTH.canvasLocalStation",
+      "HEARTH.canvas",
+      "DEXTER_LAB.hearthCanvas",
+      "DEXTER_LAB.hearthCanvasNorth"
+    ],
+    north: [
+      "HEARTH_CANVAS_NORTH",
+      "HEARTH.canvasNorth",
+      "HEARTH.canvasParentGovernedF13EvidenceReceiver",
+      "HEARTH.canvasParentChildReconciliationF13EvidenceReceiver",
+      "DEXTER_LAB.hearthCanvasNorth",
+      "DEXTER_LAB.hearthCanvasParentGovernedF13EvidenceReceiver"
+    ],
+    east: [
+      "HEARTH_CANVAS_EAST",
+      "HEARTH.canvasEast",
+      "HEARTH.canvasEastMaterialAtlasSourceMachine",
+      "HEARTH.canvasEastMaterialAtlasSourceTransistor",
+      "DEXTER_LAB.hearthCanvasEast",
+      "DEXTER_LAB.hearthCanvasEastMaterialAtlasSourceMachine"
+    ],
+    south: [
+      "HEARTH_CANVAS_SOUTH",
+      "HEARTH.canvasSouth",
+      "HEARTH.canvasSouthF13SStrictVisibleProofClassifierChild",
+      "DEXTER_LAB.hearthCanvasSouth",
+      "DEXTER_LAB.hearthCanvasSouthF13SStrictVisibleProofClassifierChild"
+    ],
+    west: [
+      "HEARTH_CANVAS_WEST",
+      "HEARTH.canvasWest",
+      "HEARTH.canvasWestInspectionInvalidationControl",
+      "DEXTER_LAB.hearthCanvasWest",
+      "DEXTER_LAB.hearthCanvasWestInspectionInvalidationControl"
+    ]
+  });
 
   const FINGER_FILES = Object.freeze({
     boundary: "/assets/hearth/hearth.canvas.finger.boundary.js",
@@ -115,6 +252,53 @@
     composite: "/assets/hearth/hearth.canvas.finger.composite.js"
   });
 
+  const BISHOP_HUBS = Object.freeze({
+    north: {
+      file: "/assets/hearth/hearth.bishop.north.js",
+      globals: [
+        "HEARTH_BISHOP_NORTH",
+        "HEARTH_NORTH_BISHOP",
+        "HEARTH.bishopNorth",
+        "HEARTH.northBishop",
+        "HEARTH.bishops.north",
+        "DEXTER_LAB.hearthBishopNorth"
+      ]
+    },
+    east: {
+      file: "/assets/hearth/hearth.bishop.east.js",
+      globals: [
+        "HEARTH_BISHOP_EAST",
+        "HEARTH_EAST_BISHOP",
+        "HEARTH.bishopEast",
+        "HEARTH.eastBishop",
+        "HEARTH.bishops.east",
+        "DEXTER_LAB.hearthBishopEast"
+      ]
+    },
+    south: {
+      file: "/assets/hearth/hearth.bishop.south.js",
+      globals: [
+        "HEARTH_BISHOP_SOUTH",
+        "HEARTH_SOUTH_BISHOP",
+        "HEARTH.bishopSouth",
+        "HEARTH.southBishop",
+        "HEARTH.bishops.south",
+        "DEXTER_LAB.hearthBishopSouth"
+      ]
+    },
+    west: {
+      file: "/assets/hearth/hearth.bishop.west.js",
+      globals: [
+        "HEARTH_BISHOP_WEST",
+        "HEARTH_WEST_BISHOP",
+        "HEARTH.bishopWest",
+        "HEARTH.westBishop",
+        "HEARTH.bishops.west",
+        "DEXTER_LAB.hearthBishopWest"
+      ]
+    }
+  });
+
   const FALLBACK = Object.freeze({
     UNKNOWN: "UNKNOWN",
     NOT_FOUND: "NOT_FOUND",
@@ -123,8 +307,11 @@
     INACCESSIBLE: "INACCESSIBLE",
     NOT_APPLICABLE: "NOT_APPLICABLE",
     INSUFFICIENT_EVIDENCE: "INSUFFICIENT_EVIDENCE",
+    EXPECTED: "EXPECTED",
     EXPECTED_NOT_YET_BUILT: "EXPECTED_NOT_YET_BUILT",
     EXPECTED_NOT_YET_WIRED: "EXPECTED_NOT_YET_WIRED",
+    EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST: "EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST",
+    BRIDGE_NOT_CONFIRMED_BY_EAST: "BRIDGE_NOT_CONFIRMED_BY_EAST",
     WAITING_CONTROL_FILE: "WAITING_CONTROL_FILE",
     READY: "READY",
     PARTIAL: "PARTIAL",
@@ -216,6 +403,7 @@
   function addNote(state, note) {
     const clean = bounded(note, 1600);
     if (!state || !Array.isArray(state.eastSecondaryEvidenceNotes) || !clean) return;
+
     if (!state.eastSecondaryEvidenceNotes.includes(clean)) {
       state.eastSecondaryEvidenceNotes.push(clean);
     }
@@ -339,6 +527,7 @@
 
   function contractRecognized(contract, accepted) {
     const c = safeString(contract);
+
     if (!c || c === FALLBACK.UNKNOWN || c === FALLBACK.NOT_FOUND || c === FALLBACK.UNREADABLE) {
       return FALLBACK.UNKNOWN;
     }
@@ -354,6 +543,8 @@
       "getReceipt",
       "getRoutePrimaryGateReceipt",
       "getRouteCycleReceipt",
+      "getCentralStationReceiptLight",
+      "getCentralStationReceipt",
       "getStatus",
       "getReport",
       "getState"
@@ -372,8 +563,11 @@
             result.currentRouteConductorContract,
             result.routeConductorContract,
             result.canvasContract,
-            result.controlsContract
+            result.controlsContract,
+            result.implementationContract,
+            result.stationReceipt
           );
+
           if (contract) return safeString(contract);
         }
       } catch (_error) {}
@@ -386,7 +580,8 @@
       authority.currentRouteConductorContract,
       authority.routeConductorContract,
       authority.canvasContract,
-      authority.controlsContract
+      authority.controlsContract,
+      authority.implementationContract
     ), "");
   }
 
@@ -398,6 +593,8 @@
       "getReceipt",
       "getRoutePrimaryGateReceipt",
       "getRouteCycleReceipt",
+      "getCentralStationReceiptLight",
+      "getCentralStationReceipt",
       "getControlsReceipt",
       "getState",
       "getStatus",
@@ -425,11 +622,36 @@
     for (const path of paths) {
       const value = readPath(win, path);
       if (value && isObject(value)) {
-        return { path, authority: value, contract: readAuthorityContract(value), receipt: readAuthorityReceipt(value) };
+        return {
+          path,
+          authority: value,
+          contract: readAuthorityContract(value),
+          receipt: readAuthorityReceipt(value)
+        };
       }
     }
 
     return { path: "NONE", authority: null, contract: "", receipt: null };
+  }
+
+  function readScriptFootprint(targetDocument, targetWindow, file) {
+    const script = targetDocument ? findScriptByPaths(targetDocument, [file, file.split("/").pop()], targetWindow) : null;
+    const src = script ? normalizeSrc(script.getAttribute("src"), targetWindow) : FALLBACK.NOT_FOUND;
+    const cacheKey = script ? readCacheKeyFromSrc(script.getAttribute("src"), targetWindow) : "";
+
+    return {
+      script,
+      present: Boolean(script),
+      src,
+      cacheKey
+    };
+  }
+
+  function classifySourcePresence(scriptPresent, authorityFound, contract) {
+    if (authorityFound && contract) return "AUTHORITY_AND_CONTRACT_PRESENT";
+    if (authorityFound) return "AUTHORITY_PRESENT";
+    if (scriptPresent) return "SCRIPT_PRESENT";
+    return FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST;
   }
 
   function findRouteConductorAuthority(targetWindow) {
@@ -497,23 +719,7 @@
   }
 
   function findCanvasAuthority(targetWindow) {
-    return findWindowAuthority(targetWindow, [
-      "HEARTH_CANVAS_EXPRESSION_HUB_VISIBLE_BASE_GLOBE_CARRIER",
-      "HEARTH_CANVAS_VISIBLE_BASE_GLOBE_CARRIER",
-      "HEARTH_CANVAS_BASE_GLOBE_CARRIER",
-      "HEARTH_CANVAS_VISIBLE_PLANET",
-      "HEARTH_CANVAS_EXPRESSION_HUB",
-      "HEARTH_CANVAS_FINGER_MANAGER",
-      "HEARTH_CANVAS_LOCAL_STATION",
-      "HEARTH_CANVAS",
-      "HEARTH.canvasExpressionHubVisibleBaseGlobeCarrier",
-      "HEARTH.canvasVisibleBaseGlobeCarrier",
-      "HEARTH.canvasVisiblePlanet",
-      "HEARTH.canvasExpressionHub",
-      "HEARTH.canvasFingerManager",
-      "HEARTH.canvasLocalStation",
-      "HEARTH.canvas"
-    ]);
+    return findWindowAuthority(targetWindow, CANVAS_GLOBALS.parent);
   }
 
   function routeMatches(targetWindow) {
@@ -849,6 +1055,8 @@
       state.routeConductorContractRecognized
     );
 
+    state.routeConductorV96PrimaryNotTreatedAsCase5 = boolText(v96 || v95);
+    state.routeConductorV95CompatibilityAccepted = boolText(v96 || v95);
     state.routeConductorV95PrimaryNotTreatedAsCase5 = boolText(v96 || v95);
     state.routeConductorV94LineageAccepted = boolText(v94 || v95 || v96);
 
@@ -873,51 +1081,6 @@
     if (!script && !authorityContract) {
       addNote(state, "ROUTE_CONDUCTOR_SCRIPT_OR_AUTHORITY_NOT_FOUND_IN_HEARTH_TARGET");
     }
-  }
-
-  function readCanvasAndFingerFootprint(targetDocument, targetWindow, state) {
-    const target = targetDocument || doc;
-    const canvasAuthority = findCanvasAuthority(targetWindow);
-    const canvasScript = target ? findScriptByPaths(target, [CANVAS_FILE, "hearth.canvas.js"], targetWindow) : null;
-    const canvasReceipt = canvasAuthority.receipt || {};
-    const dataset = target ? readDataset(target) : {};
-
-    state.canvasFile = CANVAS_FILE;
-    state.canvasScriptPresent = boolText(Boolean(canvasScript));
-    state.canvasAuthoritySource = canvasAuthority.path;
-    state.canvasContract = safeString(firstDefined(
-      canvasAuthority.contract,
-      canvasReceipt.contract,
-      canvasReceipt.CONTRACT,
-      dataset.hearthCanvasContract
-    ), FALLBACK.UNKNOWN);
-
-    state.canvasAuthorityStatus = canvasAuthority.authority || canvasAuthority.contract || canvasScript
-      ? "CANVAS_SOURCE_FOOTPRINT_OBSERVED"
-      : FALLBACK.UNKNOWN;
-
-    state.visiblePlanetSourceStatus = (
-      canvasReceipt.visiblePlanetProofReady === true ||
-      canvasReceipt.baseGlobeVisibleCarrierReady === true ||
-      dataset.hearthCanvasVisiblePlanetProofReady === "true" ||
-      dataset.hearthSouthVisiblePlanetProofReady === "true"
-    )
-      ? "VISIBLE_PLANET_SOURCE_PROOF_OBSERVED"
-      : "VISIBLE_PLANET_SOURCE_PROOF_NOT_REQUIRED_BY_EAST";
-
-    const fingerStatuses = {};
-    Object.keys(FINGER_FILES).forEach((key) => {
-      const file = FINGER_FILES[key];
-      const script = target ? findScriptByPaths(target, [file, file.split("/").pop()], targetWindow) : null;
-      fingerStatuses[key] = {
-        file,
-        scriptPresent: Boolean(script),
-        status: script ? "SCRIPT_PRESENT" : "EXPECTED_OR_EMBEDDED_NOT_CONFIRMED_BY_EAST"
-      };
-    });
-
-    state.fingerFileFootprint = fingerStatuses;
-    state.planetaryFileFootprintActive = true;
   }
 
   function controlAuthorityHasMotion(authority, receipt) {
@@ -1014,6 +1177,237 @@
     }
   }
 
+  function readLabBridgeFootprint(targetDocument, targetWindow, state) {
+    const footprint = {};
+
+    Object.keys(LAB_FILES).forEach((key) => {
+      const file = LAB_FILES[key];
+      const script = readScriptFootprint(targetDocument, targetWindow, file);
+      const authority = findWindowAuthority(targetWindow, LAB_GLOBALS[key] || []);
+      const contract = safeString(firstDefined(authority.contract, script.cacheKey), FALLBACK.UNKNOWN);
+
+      footprint[key] = {
+        file,
+        scriptPresent: script.present,
+        scriptSrc: script.src,
+        authoritySource: authority.path,
+        contract,
+        status: classifySourcePresence(script.present, Boolean(authority.authority), contract)
+      };
+    });
+
+    state.labBridgeFootprint = footprint;
+    state.labRuntimeTableNorthFile = LAB_FILES.north;
+    state.labRuntimeTableEastFile = LAB_FILES.east;
+    state.labRuntimeTableSouthFile = LAB_FILES.south;
+    state.labRuntimeTableWestFile = LAB_FILES.west;
+
+    state.labRuntimeTableNorthStatus = footprint.north.status;
+    state.labRuntimeTableEastStatus = footprint.east.status;
+    state.labRuntimeTableSouthStatus = footprint.south.status;
+    state.labRuntimeTableWestStatus = footprint.west.status;
+
+    state.labRuntimeTableNorthContract = footprint.north.contract;
+    state.labRuntimeTableEastContract = footprint.east.contract;
+    state.labRuntimeTableSouthContract = footprint.south.contract;
+    state.labRuntimeTableWestContract = footprint.west.contract;
+
+    state.labTwoCycleLanguageRecognized = Boolean(footprint.north.status !== FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST)
+      ? "true"
+      : FALLBACK.UNKNOWN;
+
+    state.labCanvasSharedLanguageStatus = state.labTwoCycleLanguageRecognized === "true"
+      ? "LAB_RUNTIME_TABLE_LANGUAGE_SOURCE_FOOTPRINT_OBSERVED"
+      : FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST;
+
+    state.labBridgeAbsenceIsFailure = "false";
+    state.labBridgeAbsenceIsCase5 = "false";
+
+    addNote(state, "EAST_LAB_RUNTIME_TABLE_BRIDGE_SOURCE_FOOTPRINT_READ_COMPLETE");
+
+    if (state.labTwoCycleLanguageRecognized === "true") {
+      addNote(state, "EAST_LAB_TWO_CYCLE_LANGUAGE_SOURCE_FOOTPRINT_OBSERVED");
+    } else {
+      addNote(state, "EAST_LAB_TWO_CYCLE_LANGUAGE_NOT_CONFIRMED_BUT_NOT_FAILURE");
+    }
+  }
+
+  function readMacroWestBridgeFootprint(targetDocument, targetWindow, state) {
+    const handoffScript = readScriptFootprint(targetDocument, targetWindow, MACRO_WEST_HANDOFF_FILE);
+    const labWestScript = readScriptFootprint(targetDocument, targetWindow, LAB_FILES.west);
+    const authority = findWindowAuthority(targetWindow, MACRO_WEST_GLOBALS);
+    const contract = safeString(firstDefined(authority.contract, handoffScript.cacheKey, labWestScript.cacheKey), FALLBACK.UNKNOWN);
+
+    state.macroWestBridgeFile = MACRO_WEST_HANDOFF_FILE;
+    state.macroWestBridgeScriptPresent = boolText(handoffScript.present || labWestScript.present);
+    state.macroWestBridgeAuthoritySource = authority.path;
+    state.macroWestBridgeContract = contract;
+    state.macroWestBridgeStatus = classifySourcePresence(
+      handoffScript.present || labWestScript.present,
+      Boolean(authority.authority),
+      contract
+    );
+
+    state.westAnointingBridgeLanguageExpected = true;
+    state.westAnointingBridgeSourceFootprintStatus = state.macroWestBridgeStatus;
+    state.westKnowsBishopsByHubBoundaryOnly = true;
+    state.westDoesNotNeedBishopInternals = true;
+    state.bishopInternalsReadByEast = false;
+    state.bishopInternalsReadByWestRequired = false;
+
+    addNote(state, "EAST_MACRO_WEST_BRIDGE_SOURCE_FOOTPRINT_READ_COMPLETE");
+
+    if (state.macroWestBridgeStatus !== FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST) {
+      addNote(state, "EAST_MACRO_WEST_BRIDGE_SOURCE_FOOTPRINT_OBSERVED");
+    } else {
+      addNote(state, "EAST_MACRO_WEST_BRIDGE_NOT_CONFIRMED_BUT_NOT_FAILURE");
+    }
+  }
+
+  function readCanvasAndFingerFootprint(targetDocument, targetWindow, state) {
+    const target = targetDocument || doc;
+    const canvasAuthority = findCanvasAuthority(targetWindow);
+    const canvasScript = target ? findScriptByPaths(target, [CANVAS_FILE, "hearth.canvas.js"], targetWindow) : null;
+    const canvasReceipt = canvasAuthority.receipt || {};
+    const dataset = target ? readDataset(target) : {};
+
+    state.canvasFile = CANVAS_FILE;
+    state.canvasScriptPresent = boolText(Boolean(canvasScript));
+    state.canvasAuthoritySource = canvasAuthority.path;
+    state.canvasContract = safeString(firstDefined(
+      canvasAuthority.contract,
+      canvasReceipt.contract,
+      canvasReceipt.CONTRACT,
+      dataset.hearthCanvasContract
+    ), FALLBACK.UNKNOWN);
+
+    state.canvasAuthorityStatus = canvasAuthority.authority || canvasAuthority.contract || canvasScript
+      ? "CANVAS_SOURCE_FOOTPRINT_OBSERVED"
+      : FALLBACK.UNKNOWN;
+
+    state.canvasLocalStationStatus = (
+      canvasAuthority.path.includes("LOCAL_STATION") ||
+      canvasAuthority.path.includes("canvasLocalStation") ||
+      canvasReceipt.localStationReady === true ||
+      canvasReceipt.canvasLocalStationReady === true ||
+      dataset.hearthCanvasLocalStationReady === "true"
+    )
+      ? "CANVAS_LOCAL_STATION_SOURCE_FOOTPRINT_OBSERVED"
+      : FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST;
+
+    state.visiblePlanetSourceStatus = (
+      canvasReceipt.visiblePlanetProofReady === true ||
+      canvasReceipt.baseGlobeVisibleCarrierReady === true ||
+      dataset.hearthCanvasVisiblePlanetProofReady === "true" ||
+      dataset.hearthSouthVisiblePlanetProofReady === "true"
+    )
+      ? "VISIBLE_PLANET_SOURCE_PROOF_OBSERVED"
+      : "VISIBLE_PLANET_SOURCE_PROOF_NOT_REQUIRED_BY_EAST";
+
+    const childFootprint = {};
+    ["north", "east", "south", "west"].forEach((key) => {
+      const found = findWindowAuthority(targetWindow, CANVAS_GLOBALS[key] || []);
+      childFootprint[key] = {
+        authoritySource: found.path,
+        contract: found.contract || FALLBACK.UNKNOWN,
+        receiptPresent: Boolean(found.receipt),
+        status: found.authority || found.contract || found.receipt
+          ? "CANVAS_CHILD_LANE_SOURCE_FOOTPRINT_OBSERVED"
+          : FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST
+      };
+    });
+
+    state.canvasChildLaneFootprint = childFootprint;
+    state.canvasNorthLaneStatus = childFootprint.north.status;
+    state.canvasEastLaneStatus = childFootprint.east.status;
+    state.canvasSouthLaneStatus = childFootprint.south.status;
+    state.canvasWestLaneStatus = childFootprint.west.status;
+
+    const observedLaneCount = Object.keys(childFootprint).filter((key) => (
+      childFootprint[key].status === "CANVAS_CHILD_LANE_SOURCE_FOOTPRINT_OBSERVED"
+    )).length;
+
+    state.canvasFourWayHandoffExpected = true;
+    state.canvasFourWayHandoffObservedLaneCount = observedLaneCount;
+    state.canvasFourWayHandoffStatus = observedLaneCount >= 4
+      ? "CANVAS_FOUR_WAY_HANDOFF_SOURCE_FOOTPRINT_OBSERVED"
+      : observedLaneCount > 0
+        ? "CANVAS_FOUR_WAY_HANDOFF_PARTIAL_SOURCE_FOOTPRINT_OBSERVED"
+        : FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST;
+
+    const fingerStatuses = {};
+    Object.keys(FINGER_FILES).forEach((key) => {
+      const file = FINGER_FILES[key];
+      const script = target ? findScriptByPaths(target, [file, file.split("/").pop()], targetWindow) : null;
+      fingerStatuses[key] = {
+        file,
+        scriptPresent: Boolean(script),
+        status: script ? "SCRIPT_PRESENT" : "EXPECTED_OR_EMBEDDED_NOT_CONFIRMED_BY_EAST"
+      };
+    });
+
+    state.fingerFileFootprint = fingerStatuses;
+    state.planetaryFileFootprintActive = true;
+
+    addNote(state, "EAST_CANVAS_AUTHORITY_AND_FOUR_WAY_HANDOFF_SOURCE_FOOTPRINT_READ_COMPLETE");
+
+    if (state.canvasFourWayHandoffStatus === "CANVAS_FOUR_WAY_HANDOFF_SOURCE_FOOTPRINT_OBSERVED") {
+      addNote(state, "EAST_CANVAS_FOUR_WAY_HANDOFF_SOURCE_FOOTPRINT_OBSERVED");
+    } else if (state.canvasFourWayHandoffStatus === "CANVAS_FOUR_WAY_HANDOFF_PARTIAL_SOURCE_FOOTPRINT_OBSERVED") {
+      addNote(state, "EAST_CANVAS_FOUR_WAY_HANDOFF_PARTIAL_SOURCE_FOOTPRINT_OBSERVED");
+    } else {
+      addNote(state, "EAST_CANVAS_FOUR_WAY_HANDOFF_NOT_CONFIRMED_BUT_NOT_FAILURE");
+    }
+  }
+
+  function readBishopHubFootprint(targetDocument, targetWindow, state) {
+    const footprint = {};
+
+    Object.keys(BISHOP_HUBS).forEach((key) => {
+      const hub = BISHOP_HUBS[key];
+      const script = readScriptFootprint(targetDocument, targetWindow, hub.file);
+      const authority = findWindowAuthority(targetWindow, hub.globals || []);
+      const contract = safeString(firstDefined(authority.contract, script.cacheKey), FALLBACK.UNKNOWN);
+
+      footprint[key] = {
+        file: hub.file,
+        scriptPresent: script.present,
+        scriptSrc: script.src,
+        authoritySource: authority.path,
+        contract,
+        status: classifySourcePresence(script.present, Boolean(authority.authority), contract)
+      };
+    });
+
+    state.bishopHubFootprint = footprint;
+    state.bishopHubVocabularyActive = true;
+    state.bishopHubAbsenceIsFailure = "false";
+    state.bishopHubAbsenceIsCase5 = "false";
+    state.bishopNorthHubStatus = footprint.north.status;
+    state.bishopEastHubStatus = footprint.east.status;
+    state.bishopSouthHubStatus = footprint.south.status;
+    state.bishopWestHubStatus = footprint.west.status;
+
+    const observed = Object.keys(footprint).filter((key) => (
+      footprint[key].status !== FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST
+    )).length;
+
+    state.bishopHubObservedCount = observed;
+    state.bishopHubBridgeStatus = observed >= 4
+      ? "BISHOP_HUB_FOUR_WAY_SOURCE_FOOTPRINT_OBSERVED"
+      : observed > 0
+        ? "BISHOP_HUB_PARTIAL_SOURCE_FOOTPRINT_OBSERVED"
+        : FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST;
+
+    addNote(state, "EAST_BISHOP_HUB_PATH_VOCABULARY_ADMITTED_WITHOUT_INTERNAL_OWNERSHIP");
+
+    if (observed > 0) {
+      addNote(state, "EAST_BISHOP_HUB_SOURCE_FOOTPRINT_PARTIALLY_OBSERVED");
+    } else {
+      addNote(state, "EAST_BISHOP_HUBS_NOT_CONFIRMED_BUT_NOT_FAILURE");
+    }
+  }
+
   function deriveMismatch(state) {
     const htmlKnown = state.servedHtmlContract !== FALLBACK.UNKNOWN && state.servedHtmlContract !== FALLBACK.NOT_FOUND;
     const indexKnown = state.servedIndexJsContract !== FALLBACK.UNKNOWN && state.servedIndexJsContract !== FALLBACK.NOT_FOUND;
@@ -1086,6 +1480,8 @@
       routeConductorContractRecognized: FALLBACK.UNKNOWN,
 
       primaryRouteConductorContractRecognized: FALLBACK.UNKNOWN,
+      routeConductorV96PrimaryNotTreatedAsCase5: FALLBACK.UNKNOWN,
+      routeConductorV95CompatibilityAccepted: FALLBACK.UNKNOWN,
       routeConductorV95PrimaryNotTreatedAsCase5: FALLBACK.UNKNOWN,
       routeConductorV94LineageAccepted: FALLBACK.UNKNOWN,
       eastCurrentSpreadAlignmentRecognized: FALLBACK.UNKNOWN,
@@ -1129,18 +1525,69 @@
       visiblePlanetBlockedByControlAbsence: "false",
       motionTouchBlockedByControlAbsence: "true",
 
+      labBridgeFootprint: {},
+      labRuntimeTableNorthFile: LAB_FILES.north,
+      labRuntimeTableEastFile: LAB_FILES.east,
+      labRuntimeTableSouthFile: LAB_FILES.south,
+      labRuntimeTableWestFile: LAB_FILES.west,
+      labRuntimeTableNorthStatus: FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST,
+      labRuntimeTableEastStatus: FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST,
+      labRuntimeTableSouthStatus: FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST,
+      labRuntimeTableWestStatus: FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST,
+      labRuntimeTableNorthContract: FALLBACK.UNKNOWN,
+      labRuntimeTableEastContract: FALLBACK.UNKNOWN,
+      labRuntimeTableSouthContract: FALLBACK.UNKNOWN,
+      labRuntimeTableWestContract: FALLBACK.UNKNOWN,
+      labTwoCycleLanguageRecognized: FALLBACK.UNKNOWN,
+      labCanvasSharedLanguageStatus: FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST,
+      labBridgeAbsenceIsFailure: "false",
+      labBridgeAbsenceIsCase5: "false",
+
+      macroWestBridgeFile: MACRO_WEST_HANDOFF_FILE,
+      macroWestBridgeScriptPresent: FALLBACK.UNKNOWN,
+      macroWestBridgeAuthoritySource: FALLBACK.UNKNOWN,
+      macroWestBridgeContract: FALLBACK.UNKNOWN,
+      macroWestBridgeStatus: FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST,
+      westAnointingBridgeLanguageExpected: true,
+      westAnointingBridgeSourceFootprintStatus: FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST,
+      westKnowsBishopsByHubBoundaryOnly: true,
+      westDoesNotNeedBishopInternals: true,
+      bishopInternalsReadByEast: false,
+      bishopInternalsReadByWestRequired: false,
+
       canvasFile: CANVAS_FILE,
       canvasScriptPresent: FALLBACK.UNKNOWN,
       canvasAuthoritySource: FALLBACK.UNKNOWN,
       canvasContract: FALLBACK.UNKNOWN,
       canvasAuthorityStatus: FALLBACK.UNKNOWN,
+      canvasLocalStationStatus: FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST,
       visiblePlanetSourceStatus: FALLBACK.UNKNOWN,
+      canvasChildLaneFootprint: {},
+      canvasFourWayHandoffExpected: true,
+      canvasFourWayHandoffObservedLaneCount: 0,
+      canvasFourWayHandoffStatus: FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST,
+      canvasNorthLaneStatus: FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST,
+      canvasEastLaneStatus: FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST,
+      canvasSouthLaneStatus: FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST,
+      canvasWestLaneStatus: FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST,
 
       planetaryFileFootprintActive: true,
       fingerFileFootprint: {},
 
-      eastSecondaryEvidenceNotes: [],
+      bishopHubVocabularyActive: true,
+      bishopHubFootprint: {},
+      bishopHubAbsenceIsFailure: "false",
+      bishopHubAbsenceIsCase5: "false",
+      bishopNorthHubStatus: FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST,
+      bishopEastHubStatus: FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST,
+      bishopSouthHubStatus: FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST,
+      bishopWestHubStatus: FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST,
+      bishopHubObservedCount: 0,
+      bishopHubBridgeStatus: FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST,
 
+      diagnosticLabCanvasBridgeLanguageActive: true,
+      diagnosticGaugeAuthorityBridgeLanguageActive: true,
+      sourceFootprintBridgeOnly: true,
       readOnlyInspectionComplete: false,
       servedSourceAuthorityOnly: true,
       renderedTargetAuthority: false,
@@ -1149,6 +1596,7 @@
       cacheRepairAuthorized: false,
       hearthRepairAuthorized: false,
 
+      eastSecondaryEvidenceNotes: [],
       updatedAt: nowIso(),
 
       ...FINAL_FALSE
@@ -1183,6 +1631,8 @@
       CURRENT_EXPECTED_HTML_CONTRACT: state.currentExpectedHtmlContract,
       CURRENT_EXPECTED_INDEX_JS_CONTRACT: state.currentExpectedIndexJsContract,
       CURRENT_EXPECTED_ROUTE_CONDUCTOR_CONTRACT: state.currentExpectedRouteConductorContract,
+      COMPAT_ROUTE_CONDUCTOR_CONTRACT: state.compatRouteConductorContract,
+      PRIOR_ROUTE_CONDUCTOR_CONTRACT: state.lineageRouteConductorContract,
 
       SERVED_HTML_CONTRACT: state.servedHtmlContract,
       SERVED_INDEX_JS_CONTRACT: state.servedIndexJsContract,
@@ -1201,6 +1651,8 @@
       ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED: state.routeConductorContractRecognized,
 
       PRIMARY_ROUTE_CONDUCTOR_CONTRACT_RECOGNIZED: state.primaryRouteConductorContractRecognized,
+      ROUTE_CONDUCTOR_V9_6_PRIMARY_NOT_TREATED_AS_CASE_5: state.routeConductorV96PrimaryNotTreatedAsCase5,
+      ROUTE_CONDUCTOR_V9_5_COMPATIBILITY_ACCEPTED: state.routeConductorV95CompatibilityAccepted,
       ROUTE_CONDUCTOR_V9_5_PRIMARY_NOT_TREATED_AS_CASE_5: state.routeConductorV95PrimaryNotTreatedAsCase5,
       ROUTE_CONDUCTOR_V9_4_LINEAGE_ACCEPTED: state.routeConductorV94LineageAccepted,
       EAST_CURRENT_SPREAD_ALIGNMENT_RECOGNIZED: state.eastCurrentSpreadAlignmentRecognized,
@@ -1237,15 +1689,69 @@
       VISIBLE_PLANET_BLOCKED_BY_CONTROL_ABSENCE: state.visiblePlanetBlockedByControlAbsence,
       MOTION_TOUCH_BLOCKED_BY_CONTROL_ABSENCE: state.motionTouchBlockedByControlAbsence,
 
+      DIAGNOSTIC_LAB_CANVAS_BRIDGE_LANGUAGE_ACTIVE: state.diagnosticLabCanvasBridgeLanguageActive,
+      DIAGNOSTIC_GAUGE_AUTHORITY_BRIDGE_LANGUAGE_ACTIVE: state.diagnosticGaugeAuthorityBridgeLanguageActive,
+      SOURCE_FOOTPRINT_BRIDGE_ONLY: state.sourceFootprintBridgeOnly,
+
+      LAB_BRIDGE_FOOTPRINT: clonePlain(state.labBridgeFootprint),
+      LAB_RUNTIME_TABLE_NORTH_FILE: state.labRuntimeTableNorthFile,
+      LAB_RUNTIME_TABLE_EAST_FILE: state.labRuntimeTableEastFile,
+      LAB_RUNTIME_TABLE_SOUTH_FILE: state.labRuntimeTableSouthFile,
+      LAB_RUNTIME_TABLE_WEST_FILE: state.labRuntimeTableWestFile,
+      LAB_RUNTIME_TABLE_NORTH_STATUS: state.labRuntimeTableNorthStatus,
+      LAB_RUNTIME_TABLE_EAST_STATUS: state.labRuntimeTableEastStatus,
+      LAB_RUNTIME_TABLE_SOUTH_STATUS: state.labRuntimeTableSouthStatus,
+      LAB_RUNTIME_TABLE_WEST_STATUS: state.labRuntimeTableWestStatus,
+      LAB_RUNTIME_TABLE_NORTH_CONTRACT: state.labRuntimeTableNorthContract,
+      LAB_RUNTIME_TABLE_EAST_CONTRACT: state.labRuntimeTableEastContract,
+      LAB_RUNTIME_TABLE_SOUTH_CONTRACT: state.labRuntimeTableSouthContract,
+      LAB_RUNTIME_TABLE_WEST_CONTRACT: state.labRuntimeTableWestContract,
+      LAB_TWO_CYCLE_LANGUAGE_RECOGNIZED: state.labTwoCycleLanguageRecognized,
+      LAB_CANVAS_SHARED_LANGUAGE_STATUS: state.labCanvasSharedLanguageStatus,
+      LAB_BRIDGE_ABSENCE_IS_FAILURE: state.labBridgeAbsenceIsFailure,
+      LAB_BRIDGE_ABSENCE_IS_CASE_5: state.labBridgeAbsenceIsCase5,
+
+      MACRO_WEST_BRIDGE_FILE: state.macroWestBridgeFile,
+      MACRO_WEST_BRIDGE_SCRIPT_PRESENT: state.macroWestBridgeScriptPresent,
+      MACRO_WEST_BRIDGE_AUTHORITY_SOURCE: state.macroWestBridgeAuthoritySource,
+      MACRO_WEST_BRIDGE_CONTRACT: state.macroWestBridgeContract,
+      MACRO_WEST_BRIDGE_STATUS: state.macroWestBridgeStatus,
+      WEST_ANOINTING_BRIDGE_LANGUAGE_EXPECTED: state.westAnointingBridgeLanguageExpected,
+      WEST_ANOINTING_BRIDGE_SOURCE_FOOTPRINT_STATUS: state.westAnointingBridgeSourceFootprintStatus,
+      WEST_KNOWS_BISHOPS_BY_HUB_BOUNDARY_ONLY: state.westKnowsBishopsByHubBoundaryOnly,
+      WEST_DOES_NOT_NEED_BISHOP_INTERNALS: state.westDoesNotNeedBishopInternals,
+      BISHOP_INTERNALS_READ_BY_EAST: state.bishopInternalsReadByEast,
+      BISHOP_INTERNALS_READ_BY_WEST_REQUIRED: state.bishopInternalsReadByWestRequired,
+
       CANVAS_FILE: state.canvasFile,
       CANVAS_SCRIPT_PRESENT: state.canvasScriptPresent,
       CANVAS_AUTHORITY_SOURCE: state.canvasAuthoritySource,
       CANVAS_CONTRACT: state.canvasContract,
       CANVAS_AUTHORITY_STATUS: state.canvasAuthorityStatus,
+      CANVAS_LOCAL_STATION_STATUS: state.canvasLocalStationStatus,
       VISIBLE_PLANET_SOURCE_STATUS: state.visiblePlanetSourceStatus,
+      CANVAS_CHILD_LANE_FOOTPRINT: clonePlain(state.canvasChildLaneFootprint),
+      CANVAS_FOUR_WAY_HANDOFF_EXPECTED: state.canvasFourWayHandoffExpected,
+      CANVAS_FOUR_WAY_HANDOFF_OBSERVED_LANE_COUNT: state.canvasFourWayHandoffObservedLaneCount,
+      CANVAS_FOUR_WAY_HANDOFF_STATUS: state.canvasFourWayHandoffStatus,
+      CANVAS_NORTH_LANE_STATUS: state.canvasNorthLaneStatus,
+      CANVAS_EAST_LANE_STATUS: state.canvasEastLaneStatus,
+      CANVAS_SOUTH_LANE_STATUS: state.canvasSouthLaneStatus,
+      CANVAS_WEST_LANE_STATUS: state.canvasWestLaneStatus,
 
       PLANETARY_FILE_FOOTPRINT_ACTIVE: state.planetaryFileFootprintActive,
       FINGER_FILE_FOOTPRINT: clonePlain(state.fingerFileFootprint),
+
+      BISHOP_HUB_VOCABULARY_ACTIVE: state.bishopHubVocabularyActive,
+      BISHOP_HUB_FOOTPRINT: clonePlain(state.bishopHubFootprint),
+      BISHOP_HUB_ABSENCE_IS_FAILURE: state.bishopHubAbsenceIsFailure,
+      BISHOP_HUB_ABSENCE_IS_CASE_5: state.bishopHubAbsenceIsCase5,
+      BISHOP_NORTH_HUB_STATUS: state.bishopNorthHubStatus,
+      BISHOP_EAST_HUB_STATUS: state.bishopEastHubStatus,
+      BISHOP_SOUTH_HUB_STATUS: state.bishopSouthHubStatus,
+      BISHOP_WEST_HUB_STATUS: state.bishopWestHubStatus,
+      BISHOP_HUB_OBSERVED_COUNT: state.bishopHubObservedCount,
+      BISHOP_HUB_BRIDGE_STATUS: state.bishopHubBridgeStatus,
 
       EAST_SECONDARY_EVIDENCE_NOTES: state.eastSecondaryEvidenceNotes.length
         ? state.eastSecondaryEvidenceNotes.join(" | ")
@@ -1283,7 +1789,10 @@
       readIndexEvidence(targetDocument, targetWindow, state);
       readRouteConductorEvidence(targetDocument, targetWindow, state);
       readControlFootprint(targetDocument, targetWindow, state);
+      readLabBridgeFootprint(targetDocument, targetWindow, state);
+      readMacroWestBridgeFootprint(targetDocument, targetWindow, state);
       readCanvasAndFingerFootprint(targetDocument, targetWindow, state);
+      readBishopHubFootprint(targetDocument, targetWindow, state);
       deriveMismatch(state);
 
       state.eastCurrentSpreadAlignmentRecognized = boolText(
@@ -1302,7 +1811,7 @@
         addNote(state, "EAST_CURRENT_SPREAD_ALIGNMENT_RECOGNIZED");
       }
 
-      addNote(state, "EAST_PLANETARY_CONTROL_FOOTPRINT_SOURCE_READ_COMPLETE");
+      addNote(state, "EAST_LAB_CANVAS_BRIDGE_SOURCE_FOOTPRINT_ALIGNMENT_COMPLETE");
 
       state.eastSourceReadComplete = "true";
       state.eastSourceReadStatus = FALLBACK.COMPLETE;
@@ -1396,6 +1905,18 @@
       controlAbsenceNotCase5Owned: true,
       motionTouchAbsenceFootprintOwned: true,
 
+      labBridgeSourceFootprintOwned: true,
+      labRuntimeTableAuthorityOwned: false,
+      labTwoCycleLanguageReadOnlyObserved: true,
+      macroWestBridgeSourceFootprintOwned: true,
+      macroWestReleaseAuthorityOwned: false,
+      canvasAuthoritySourceFootprintOwned: true,
+      canvasDrawingAuthorityOwned: false,
+      canvasFourWayHandoffSourceFootprintOwned: true,
+      bishopHubPathVocabularyOwned: true,
+      bishopInternalSubjectFileOwnership: false,
+      bishopInternalInspectionOwned: false,
+
       currentHtmlContract: CURRENT_HTML_CONTRACT,
       currentIndexJsContract: CURRENT_INDEX_JS_CONTRACT,
       currentRouteConductorContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
@@ -1406,6 +1927,10 @@
       hearthJsControlFunnelFile: HEARTH_JS_CONTROL_FUNNEL_FILE,
       indexJsFile: INDEX_JS_FILE,
       canvasFile: CANVAS_FILE,
+      macroWestBridgeFile: MACRO_WEST_HANDOFF_FILE,
+      labFiles: clonePlain(LAB_FILES),
+      bishopHubs: clonePlain(BISHOP_HUBS),
+      fingerFiles: clonePlain(FINGER_FILES),
 
       acceptedHtmlContracts: ACCEPTED_HTML_CONTRACTS.slice(),
       acceptedIndexJsContracts: ACCEPTED_INDEX_JS_CONTRACTS.slice(),
@@ -1427,6 +1952,18 @@
       lastHearthJsControlHandshakeStatus: lastEvidencePacket
         ? lastEvidencePacket.HEARTH_JS_CONTROL_HANDSHAKE_STATUS
         : FALLBACK.EXPECTED_NOT_YET_WIRED,
+      lastLabCanvasSharedLanguageStatus: lastEvidencePacket
+        ? lastEvidencePacket.LAB_CANVAS_SHARED_LANGUAGE_STATUS
+        : FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST,
+      lastMacroWestBridgeStatus: lastEvidencePacket
+        ? lastEvidencePacket.MACRO_WEST_BRIDGE_STATUS
+        : FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST,
+      lastCanvasFourWayHandoffStatus: lastEvidencePacket
+        ? lastEvidencePacket.CANVAS_FOUR_WAY_HANDOFF_STATUS
+        : FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST,
+      lastBishopHubBridgeStatus: lastEvidencePacket
+        ? lastEvidencePacket.BISHOP_HUB_BRIDGE_STATUS
+        : FALLBACK.EXPECTED_OR_BRIDGE_NOT_CONFIRMED_BY_EAST,
 
       ...FINAL_FALSE,
 
@@ -1445,13 +1982,20 @@
     root.HEARTH = root.HEARTH || {};
     root.HEARTH.diagnosticEast = api;
     root.HEARTH.diagnosticRailEast = api;
+    root.HEARTH.diagnosticEastLabCanvasBridgeSourceFootprint = api;
     root.HEARTH.diagnosticEastReceipt = getEastReceipt();
     root.HEARTH.diagnosticRailEastReceipt = getEastReceipt();
     root.HEARTH.diagnosticEastEvidence = clonePlain(lastEvidencePacket);
     root.HEARTH.diagnosticRailEastEvidence = clonePlain(lastEvidencePacket);
 
+    root.DEXTER_LAB = root.DEXTER_LAB || {};
+    root.DEXTER_LAB.hearthDiagnosticEast = api;
+    root.DEXTER_LAB.hearthDiagnosticRailEast = api;
+    root.DEXTER_LAB.hearthDiagnosticEastLabCanvasBridgeSourceFootprint = api;
+
     root.HEARTH_DIAGNOSTIC_EAST = api;
     root.HEARTH_DIAGNOSTIC_RAIL_EAST = api;
+    root.HEARTH_DIAGNOSTIC_EAST_LAB_CANVAS_BRIDGE_SOURCE_FOOTPRINT = api;
     root.HEARTH_DIAGNOSTIC_EAST_RECEIPT = getEastReceipt();
     root.HEARTH_DIAGNOSTIC_RAIL_EAST_RECEIPT = getEastReceipt();
     root.HEARTH_DIAGNOSTIC_EAST_EVIDENCE = clonePlain(lastEvidencePacket);
@@ -1481,6 +2025,10 @@
     hearthJsControlFunnelFile: HEARTH_JS_CONTROL_FUNNEL_FILE,
     indexJsFile: INDEX_JS_FILE,
     canvasFile: CANVAS_FILE,
+    macroWestBridgeFile: MACRO_WEST_HANDOFF_FILE,
+    labFiles: clonePlain(LAB_FILES),
+    canvasGlobals: clonePlain(CANVAS_GLOBALS),
+    bishopHubs: clonePlain(BISHOP_HUBS),
     fingerFiles: clonePlain(FINGER_FILES),
 
     acceptedHtmlContracts: ACCEPTED_HTML_CONTRACTS.slice(),
@@ -1505,9 +2053,23 @@
     supportsMotionTouchFootprint: true,
     supportsPlanetaryFileFootprint: true,
 
+    supportsLabRuntimeTableBridgeFootprint: true,
+    supportsLabCanvasSharedLanguageFootprint: true,
+    supportsMacroWestBridgeFootprint: true,
+    supportsCanvasAuthorityFootprint: true,
+    supportsCanvasLocalStationFootprint: true,
+    supportsCanvasFourWayHandoffFootprint: true,
+    supportsBishopHubVocabulary: true,
+    supportsBishopInternalsAsNonEastResponsibility: true,
+
     ownsServedSourceEvidence: true,
     ownsCase5EvidenceSupportOnly: true,
     ownsPlanetaryControlFootprintEvidence: true,
+    ownsLabBridgeSourceFootprintEvidence: true,
+    ownsMacroWestBridgeSourceFootprintEvidence: true,
+    ownsCanvasAuthoritySourceFootprintEvidence: true,
+    ownsBishopHubPathVocabulary: true,
+
     ownsRenderedTargetEvidence: false,
     ownsFinalPrimaryCase: false,
     ownsRecommendation: false,
@@ -1515,6 +2077,10 @@
     ownsCacheRepair: false,
     ownsRuntimeRestart: false,
     ownsCanvasRelease: false,
+    ownsMacroWestRelease: false,
+    ownsLabRuntimeAuthority: false,
+    ownsBishopInternals: false,
+    ownsCanvasDrawing: false,
     ownsF13: false,
     ownsF21: false,
 

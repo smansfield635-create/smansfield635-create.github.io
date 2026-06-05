@@ -2,23 +2,25 @@
 // HEARTH_DIAGNOSTIC_RAIL_WEST_RENDERED_TARGET_AUTHORITY_PROBE_TNT_v1
 // Full-file replacement.
 // Internal implementation renewal:
-// HEARTH_DIAGNOSTIC_WEST_BISHOP_QUEEN_CANVAS_RENDERED_PROOF_ALIGNMENT_TNT_v6
+// HEARTH_DIAGNOSTIC_WEST_CANVAS_EXPRESSION_RENDERED_RANGE_OBSERVATORY_TNT_v7
 // Purpose:
 // - Preserve WEST parent-visible rendered-target authority contract.
-// - Renew WEST into the current Bishop / Queen / Canvas rendered-proof mirror.
-// - Recognize Route Conductor v9_9 as current.
-// - Recognize Route Conductor v9_7 and v9_6 as accepted transition evidence.
-// - Recognize Route Conductor v9_5 as compatibility and v9_4 as lineage.
-// - Recognize current Hearth HTML v5_1 and Index v5_4 without false rendered degradation.
-// - Preserve Hearth HTML v4 as accepted lineage/baseline.
+// - Renew WEST from general rendered-proof alignment into Canvas / expression observatory range.
+// - Keep Route Conductor v9_9, v9_8, v9_7, v9_6, v9_5, and v9_4 literacy.
+// - Keep current Hearth HTML v5_1 and Index v5_4 literacy.
 // - Read the Hearth target iframe/window, not the diagnostic receiver window.
-// - Adopt runtime namespace candidates as rendered proof for Route Conductor, Bishop/Queen funnel,
-//   Lab table, Canvas parent, finger manager, visible/base globe carrier, controls lifecycle,
-//   bishop/lane hubs, and four-way canvas handoff.
-// - Treat visible stage, mount, canvas, namespace receipt, and bridge-language proof as admissible rendered evidence.
-// - Keep Show Receipt / hit-test observability as secondary non-controlling evidence when offscreen.
-// - Publish rendered planet-proof, lab-bridge, control-lifecycle, bishop-lane, and canvas-handoff evidence for NORTH.
-// - Preserve EAST as CASE_5 served-source lane.
+// - Expand rendered diagnostics toward:
+//   - visible stage / mount / canvas / DOM expression surface
+//   - Canvas parent / expression hub / finger manager / visible base globe carrier
+//   - boundary, mass, surface, pointer, light, inspect, and composite finger footprints
+//   - control lifecycle, motion/touch/drag readiness
+//   - bishop/queen/canvas recognition funnel
+//   - four-way canvas handoff language
+//   - canvas pixel-sample evidence when safe and available
+//   - DOM-surface expression evidence when no literal <canvas> exists
+// - Preserve hit-test / Show Receipt observability as secondary non-controlling evidence when offscreen.
+// - Publish expression bottleneck anchors for NORTH without selecting final repair.
+// - Preserve EAST as served-source / CASE_5 lane.
 // - Preserve NORTH as final PRIMARY_CASE and recommendation authority.
 // - Preserve SOUTH as report-output / meaning-preservation lane.
 // - Preserve no F13 claim, no F21 claim, no ready text, no visual pass, no generated image, no GraphicBox, no WebGL.
@@ -37,6 +39,8 @@
 // - North latch
 // - control implementation
 // - bishop implementation
+// - terrain/material/hydrology truth
+// - expression repair
 
 (() => {
   "use strict";
@@ -45,19 +49,19 @@
   const RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_WEST_RENDERED_TARGET_AUTHORITY_PROBE_RECEIPT_v1";
 
   const IMPLEMENTATION_CONTRACT =
-    "HEARTH_DIAGNOSTIC_WEST_BISHOP_QUEEN_CANVAS_RENDERED_PROOF_ALIGNMENT_TNT_v6";
+    "HEARTH_DIAGNOSTIC_WEST_CANVAS_EXPRESSION_RENDERED_RANGE_OBSERVATORY_TNT_v7";
   const IMPLEMENTATION_RECEIPT =
-    "HEARTH_DIAGNOSTIC_WEST_BISHOP_QUEEN_CANVAS_RENDERED_PROOF_ALIGNMENT_RECEIPT_v6";
+    "HEARTH_DIAGNOSTIC_WEST_CANVAS_EXPRESSION_RENDERED_RANGE_OBSERVATORY_RECEIPT_v7";
 
   const PREVIOUS_IMPLEMENTATION_CONTRACT =
-    "HEARTH_DIAGNOSTIC_WEST_LAB_CANVAS_BRIDGE_RENDERED_PROOF_ALIGNMENT_TNT_v5";
+    "HEARTH_DIAGNOSTIC_WEST_BISHOP_QUEEN_CANVAS_RENDERED_PROOF_ALIGNMENT_TNT_v6";
   const LINEAGE_IMPLEMENTATION_CONTRACT =
-    "HEARTH_DIAGNOSTIC_WEST_RENDERED_PROOF_NAMESPACE_ADOPTION_TNT_v4";
+    "HEARTH_DIAGNOSTIC_WEST_LAB_CANVAS_BRIDGE_RENDERED_PROOF_ALIGNMENT_TNT_v5";
   const BASELINE_IMPLEMENTATION_CONTRACT =
-    "HEARTH_DIAGNOSTIC_WEST_HIT_TEST_OBSERVABILITY_REFINEMENT_TNT_v1";
+    "HEARTH_DIAGNOSTIC_WEST_RENDERED_PROOF_NAMESPACE_ADOPTION_TNT_v4";
 
   const VERSION =
-    "2026-06-05.hearth-diagnostic-west-bishop-queen-canvas-rendered-proof-alignment-v6";
+    "2026-06-05.hearth-diagnostic-west-canvas-expression-rendered-range-observatory-v7";
 
   const FILE = "/assets/hearth/hearth.diagnostic.west.js";
   const TARGET_ROUTE = "/showroom/globe/hearth/";
@@ -65,9 +69,31 @@
 
   const CURRENT_HTML_CONTRACT =
     "HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1";
+  const CURRENT_INDEX_JS_CONTRACT =
+    "HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4";
+  const CURRENT_ROUTE_CONDUCTOR_CONTRACT =
+    "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_TNT_v9_9";
+  const CURRENT_ROUTE_CONDUCTOR_RECEIPT =
+    "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_RECEIPT_v9_9";
+
+  const ROUTE_V9_8_CONTRACT =
+    "HEARTH_ROUTE_CONDUCTOR_CONTROL_FILE_ADMISSION_AND_HANDSHAKE_DELIVERY_TNT_v9_8";
+  const ROUTE_V9_7_CONTRACT =
+    "HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION_TNT_v9_7";
+  const ROUTE_V9_6_CONTRACT =
+    "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_TNT_v9_6";
+  const ROUTE_V9_5_CONTRACT =
+    "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_TNT_v9_5";
+  const ROUTE_V9_4_CONTRACT =
+    "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_TNT_v9_4";
+
+  const CONTROL_FILE = "/assets/hearth/hearth.controls.js";
+  const ROUTE_CONDUCTOR_FILE = "/showroom/globe/hearth/hearth.js";
+  const INDEX_JS_FILE = "/showroom/globe/hearth/index.js";
+  const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
 
   const ACCEPTED_HTML_CONTRACTS = Object.freeze([
-    "HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1",
+    CURRENT_HTML_CONTRACT,
     "HEARTH_HTML_CONTROL_HANDSHAKE_ROUTE_SHELL_INTEGRATION_TNT_v5",
     "HEARTH_HTML_FULL_PLANET_VISIBILITY_DOWNSTREAM_SHELL_ALIGNMENT_TNT_v4",
     "HEARTH_HTML_PLANET_FACTORY_MIRRORLAND_PUBLIC_SHELL_TNT_v3",
@@ -78,48 +104,32 @@
     "HEARTH_HTML_PARALLEL_DIAGNOSTIC_RAIL_NATIVE_ACCESS_DOORWAY_TNT_v2_2"
   ]);
 
-  const DIAGNOSTIC_RECEIVER_CONTRACT =
-    "HEARTH_DIAGNOSTIC_ROUTE_PLANETARY_BUILD_OBSERVER_RECEIVER_TNT_v2_2";
-
-  const CURRENT_INDEX_JS_CONTRACT =
-    "HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4";
-
   const ACCEPTED_INDEX_JS_CONTRACTS = Object.freeze([
-    "HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4",
+    CURRENT_INDEX_JS_CONTRACT,
+    "HEARTH_INDEX_JS_VISIBLE_EXPRESSION_CHAIN_LOADER_BRIDGE_TNT_v5_4_2",
+    "HEARTH_INDEX_JS_PAGE_RECEIPT_TARGET_BINDING_RENEWAL_TNT_v5_4_1",
     "HEARTH_INDEX_JS_CONTROL_SURFACE_EARLY_ACTIVATION_SHIELD_TNT_v5_3"
   ]);
 
-  const CURRENT_ROUTE_CONDUCTOR_CONTRACT =
-    "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_TNT_v9_9";
-
-  const CURRENT_ROUTE_CONDUCTOR_RECEIPT =
-    "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_RECEIPT_v9_9";
-
   const TRANSITION_ROUTE_CONDUCTOR_CONTRACTS = Object.freeze([
-    "HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION_TNT_v9_7",
-    "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_TNT_v9_6"
-  ]);
-
-  const COMPAT_ROUTE_CONDUCTOR_CONTRACT =
-    "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_TNT_v9_5";
-
-  const COMPAT_ROUTE_CONDUCTOR_RECEIPT =
-    "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_RECEIPT_v9_5";
-
-  const ACCEPTED_ROUTE_CONDUCTOR_LINEAGE = Object.freeze([
-    "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_TNT_v9_4",
-    "HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_TNT_v9_3",
-    "HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_TNT_v9_2"
+    ROUTE_V9_8_CONTRACT,
+    ROUTE_V9_7_CONTRACT,
+    ROUTE_V9_6_CONTRACT
   ]);
 
   const ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS = Object.freeze([
     CURRENT_ROUTE_CONDUCTOR_CONTRACT,
-    ...TRANSITION_ROUTE_CONDUCTOR_CONTRACTS,
-    COMPAT_ROUTE_CONDUCTOR_CONTRACT,
-    ...ACCEPTED_ROUTE_CONDUCTOR_LINEAGE
+    ROUTE_V9_8_CONTRACT,
+    ROUTE_V9_7_CONTRACT,
+    ROUTE_V9_6_CONTRACT,
+    ROUTE_V9_5_CONTRACT,
+    ROUTE_V9_4_CONTRACT,
+    "HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_TNT_v9_3",
+    "HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_TNT_v9_2"
   ]);
 
   const CURRENT_CANVAS_PARENT_CONTRACTS = Object.freeze([
+    "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_TNT_v12",
     "HEARTH_CANVAS_EXPRESSION_HUB_VISIBLE_BASE_GLOBE_CARRIER_TNT_v11_7",
     "HEARTH_CANVAS_EXPRESSION_HUB_FINGER_MANAGER_TNT_v11_6",
     "HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_4_DIAGNOSTIC_BRIDGE_ALIGNMENT_TNT_v11_5",
@@ -134,11 +144,6 @@
     "HEARTH_CANVAS_HEX_FOUR_PAIR_BODY_BOUNDARY_CARRIER_TNT_v1",
     "HEARTH_CANVAS_RUNTIME_TABLE_DIRECTED_VISIBLE_CARRIER_TNT_v1"
   ]);
-
-  const CONTROL_FILE = "/assets/hearth/hearth.controls.js";
-  const ROUTE_CONDUCTOR_FILE = "/showroom/globe/hearth/hearth.js";
-  const INDEX_JS_FILE = "/showroom/globe/hearth/index.js";
-  const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
 
   const SHOW_RECEIPT_SELECTOR = "[data-hearth-toggle-receipt]";
   const RECEIPT_PANEL_SELECTOR = "#hearthReceiptPanel, [data-hearth-receipt-box]";
@@ -158,7 +163,9 @@
     "[data-hearth-globe-stage]",
     "[data-hearth-planet-engine-stage]",
     "[data-hearth-planetary-template-development-stage]",
-    "[data-hearth-visible-globe-stage]"
+    "[data-hearth-visible-globe-stage]",
+    "[data-hearth-expression-stage]",
+    "[data-hearth-canvas-stage]"
   ]);
 
   const PLANET_MOUNT_SELECTORS = Object.freeze([
@@ -166,7 +173,9 @@
     "[data-hearth-canvas-mount]",
     "[data-hearth-visible-planet-mount]",
     "[data-hearth-planet-engine-mount]",
-    "[data-hearth-visible-globe-mount]"
+    "[data-hearth-visible-globe-mount]",
+    "[data-hearth-expression-mount]",
+    "[data-hearth-canvas-expression-mount]"
   ]);
 
   const CANVAS_SELECTORS = Object.freeze([
@@ -175,7 +184,27 @@
     "canvas[data-hearth-planet-canvas='true']",
     "#hearthCanvasMount canvas",
     "[data-hearth-canvas-mount] canvas",
+    "[data-hearth-visible-planet-mount] canvas",
+    "[data-hearth-expression-mount] canvas",
     "canvas"
+  ]);
+
+  const EXPRESSION_SURFACE_SELECTORS = Object.freeze([
+    "[data-hearth-canvas-texture='true']",
+    "[data-hearth-visible-planet='true']",
+    "[data-hearth-visible-globe='true']",
+    "[data-hearth-visible-globe-carrier]",
+    "[data-hearth-base-globe-carrier]",
+    "[data-hearth-canvas-surface]",
+    "[data-hearth-expression-surface]",
+    "[data-hearth-planet-surface]",
+    "[data-hearth-surface-layer]",
+    "[data-hearth-land-layer]",
+    "[data-hearth-water-layer]",
+    "[data-hearth-ocean-layer]",
+    "[data-hearth-atmosphere-layer]",
+    "svg[data-hearth-planet-svg]",
+    "svg[data-hearth-visible-globe]"
   ]);
 
   const ROUTE_CONDUCTOR_PATHS = Object.freeze([
@@ -183,6 +212,7 @@
     "HEARTH.hearthRouteConductorBishopQueenCanvasRecognitionFunnel",
     "HEARTH.routeConductor",
     "HEARTH.southRouteConductor",
+    "HEARTH.routeConductorControlFileAdmissionAndHandshakeDelivery",
     "HEARTH.routeConductorNewsFibonacciVisibleGlobeProofSynchronization",
     "HEARTH.routeConductorControlHandshakeIntegration",
     "HEARTH.routeConductorCanvasExpressionHubVisibleGlobeProofIngestion",
@@ -193,6 +223,7 @@
     "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL",
     "HEARTH_ROUTE_CONDUCTOR",
     "HEARTH_SOUTH_ROUTE_CONDUCTOR",
+    "HEARTH_ROUTE_CONDUCTOR_CONTROL_FILE_ADMISSION_AND_HANDSHAKE_DELIVERY",
     "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION",
     "HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION",
     "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION"
@@ -222,6 +253,65 @@
     "HEARTH_VISIBLE_BASE_GLOBE_CARRIER",
     "HEARTH_PLANET_ENGINE"
   ]);
+
+  const FINGER_AUTHORITY_PATHS = Object.freeze({
+    boundary: [
+      "HEARTH.canvasFingerBoundary",
+      "HEARTH.boundaryFinger",
+      "HEARTH.boundary",
+      "DEXTER_LAB.hearthCanvasFingerBoundary",
+      "HEARTH_CANVAS_FINGER_BOUNDARY",
+      "HEARTH_BOUNDARY_FINGER"
+    ],
+    mass: [
+      "HEARTH.canvasFingerMass",
+      "HEARTH.massFinger",
+      "HEARTH.mass",
+      "DEXTER_LAB.hearthCanvasFingerMass",
+      "HEARTH_CANVAS_FINGER_MASS",
+      "HEARTH_MASS_FINGER"
+    ],
+    surface: [
+      "HEARTH.canvasFingerSurface",
+      "HEARTH.surfaceFinger",
+      "HEARTH.surface",
+      "DEXTER_LAB.hearthCanvasFingerSurface",
+      "HEARTH_CANVAS_FINGER_SURFACE",
+      "HEARTH_SURFACE_FINGER"
+    ],
+    pointer: [
+      "HEARTH.canvasFingerPointer",
+      "HEARTH.pointerFinger",
+      "HEARTH.pointer",
+      "DEXTER_LAB.hearthCanvasFingerPointer",
+      "HEARTH_CANVAS_FINGER_POINTER",
+      "HEARTH_POINTER_FINGER"
+    ],
+    light: [
+      "HEARTH.canvasFingerLight",
+      "HEARTH.lightFinger",
+      "HEARTH.light",
+      "DEXTER_LAB.hearthCanvasFingerLight",
+      "HEARTH_CANVAS_FINGER_LIGHT",
+      "HEARTH_LIGHT_FINGER"
+    ],
+    inspect: [
+      "HEARTH.canvasFingerInspect",
+      "HEARTH.inspectFinger",
+      "HEARTH.inspect",
+      "DEXTER_LAB.hearthCanvasFingerInspect",
+      "HEARTH_CANVAS_FINGER_INSPECT",
+      "HEARTH_INSPECT_FINGER"
+    ],
+    composite: [
+      "HEARTH.canvasFingerComposite",
+      "HEARTH.compositeFinger",
+      "HEARTH.composite",
+      "DEXTER_LAB.hearthCanvasFingerComposite",
+      "HEARTH_CANVAS_FINGER_COMPOSITE",
+      "HEARTH_COMPOSITE_FINGER"
+    ]
+  });
 
   const LAB_AUTHORITY_PATHS = Object.freeze([
     "DEXTER_LAB.hearthRouteConductorBishopQueenCanvasRecognitionFunnel",
@@ -566,6 +656,8 @@
         "data-hearth-route-status",
         "data-hearth-globe-stage",
         "data-hearth-canvas-mount",
+        "data-hearth-expression-surface",
+        "data-hearth-canvas-surface",
         "data-hearth-stage-label",
         "data-hearth-visible-planet-mount",
         "data-hearth-planet-engine-stage",
@@ -621,6 +713,8 @@
       "getRoutePrimaryGateReceipt",
       "getRouteCycleReceipt",
       "getControlsReceipt",
+      "getCanvasStationSummary",
+      "getCanvasStationReceiptLight",
       "getStatus",
       "getReport",
       "getState",
@@ -637,8 +731,9 @@
     }
 
     if (isObject(authority.receiptPacket)) return authority.receiptPacket;
+    if (isObject(authority.receiptObject)) return authority.receiptObject;
     if (isObject(authority.receipt)) return authority.receipt;
-    if (authority.contract || authority.receipt || authority.version) return authority;
+    if (authority.contract || authority.CONTRACT || authority.receipt || authority.RECEIPT || authority.version) return authority;
 
     return null;
   }
@@ -681,6 +776,14 @@
     }
   }
 
+  function datasetFromElement(el) {
+    try {
+      return el && el.dataset ? el.dataset : {};
+    } catch (_error) {
+      return {};
+    }
+  }
+
   function currentPathMatchesTarget(targetWindow) {
     try {
       const win = targetWindow || root;
@@ -701,7 +804,6 @@
       const route = safeString(firstDefined(dataset.route, html.getAttribute("data-route")), "");
       const page = safeString(firstDefined(dataset.page, html.getAttribute("data-page")), "");
       const contract = safeString(firstDefined(dataset.contract, html.getAttribute("data-contract")), "");
-
       const path = targetWindow && targetWindow.location ? safeString(targetWindow.location.pathname, "") : "";
 
       return Boolean(
@@ -709,7 +811,7 @@
         path === DIAGNOSTIC_ROUTE.replace(/\/$/, "") ||
         route === DIAGNOSTIC_ROUTE ||
         route === DIAGNOSTIC_ROUTE.replace(/\/$/, "") ||
-        contract === DIAGNOSTIC_RECEIVER_CONTRACT ||
+        /HEARTH_DIAGNOSTIC_ROUTE/i.test(contract) ||
         /diagnostic/i.test(page)
       );
     } catch (_error) {
@@ -736,10 +838,11 @@
       if (bodyRoute === TARGET_ROUTE || bodyRoute === TARGET_ROUTE.replace(/\/$/, "")) return true;
       if (/hearth/i.test(page)) return true;
       if (/hearth/i.test(alias)) return true;
-      if (/planet engine|planet factory|visible globe|mirrorland formation/i.test(context)) return true;
+      if (/planet engine|planet factory|visible globe|mirrorland formation|canvas expression/i.test(context)) return true;
       if (q(targetDocument, SHOW_RECEIPT_SELECTOR)) return true;
       if (qFirst(targetDocument, PLANET_STAGE_SELECTORS)) return true;
       if (qFirst(targetDocument, PLANET_MOUNT_SELECTORS)) return true;
+      if (qFirst(targetDocument, EXPRESSION_SURFACE_SELECTORS)) return true;
 
       return false;
     } catch (_error) {
@@ -826,7 +929,7 @@
       const targetWindow = targetDocument.defaultView || opts.targetWindow || null;
 
       state.diagnosticTargetAccessStatus = ACCESS.RENDERED_TARGET_ACCESSIBLE;
-      state.diagnosticTargetAccessError = "";
+      state.diagnosticTargetAccessError = FALLBACK.UNKNOWN;
 
       if (!validateHearthTarget(targetDocument, targetWindow, state)) {
         return { targetDocument: null, targetWindow: null, accessStatus: state.diagnosticTargetAccessStatus };
@@ -842,7 +945,7 @@
 
         if (targetDocument && targetDocument.documentElement) {
           state.diagnosticTargetAccessStatus = ACCESS.RENDERED_TARGET_ACCESSIBLE;
-          state.diagnosticTargetAccessError = "";
+          state.diagnosticTargetAccessError = FALLBACK.UNKNOWN;
 
           if (!validateHearthTarget(targetDocument, targetWindow, state)) {
             return { targetDocument: null, targetWindow: null, accessStatus: state.diagnosticTargetAccessStatus };
@@ -871,7 +974,7 @@
 
       const targetWindow = frame.contentWindow || targetDocument.defaultView || null;
       state.diagnosticTargetAccessStatus = ACCESS.RENDERED_TARGET_ACCESSIBLE;
-      state.diagnosticTargetAccessError = "";
+      state.diagnosticTargetAccessError = FALLBACK.UNKNOWN;
 
       if (!validateHearthTarget(targetDocument, targetWindow, state)) {
         return { targetDocument: null, targetWindow: null, accessStatus: state.diagnosticTargetAccessStatus };
@@ -882,7 +985,7 @@
 
     if (doc && doc.documentElement && currentPathMatchesTarget(root)) {
       state.diagnosticTargetAccessStatus = ACCESS.RENDERED_TARGET_ACCESSIBLE;
-      state.diagnosticTargetAccessError = "";
+      state.diagnosticTargetAccessError = FALLBACK.UNKNOWN;
 
       if (!validateHearthTarget(doc, root, state)) {
         return { targetDocument: null, targetWindow: null, accessStatus: state.diagnosticTargetAccessStatus };
@@ -985,7 +1088,7 @@
 
       if (rect.width <= 0 || rect.height <= 0) {
         state.hitTestUnreadableReason = "SHOW_RECEIPT_RECT_EMPTY_OR_ZERO_SIZE";
-        addNote(state, "SHOW_RECEIPT_RECT_EMPTY_OR_ZERO_SIZE_NON_CONTROLLING_FOR_PLANET_PROOF");
+        addNote(state, "SHOW_RECEIPT_RECT_EMPTY_OR_ZERO_SIZE_NON_CONTROLLING_FOR_EXPRESSION_PROOF");
         return { error: "SHOW_RECEIPT_RECT_EMPTY_OR_ZERO_SIZE", rect };
       }
 
@@ -1008,7 +1111,7 @@
       if (!isFunction(targetDocument.elementFromPoint)) {
         state.hitTestUnreadableReason = "ELEMENT_FROM_POINT_UNAVAILABLE";
         state.showReceiptHitTestNonControlling = "true";
-        addNote(state, "ELEMENT_FROM_POINT_UNAVAILABLE_NON_CONTROLLING_FOR_PLANET_PROOF");
+        addNote(state, "ELEMENT_FROM_POINT_UNAVAILABLE_NON_CONTROLLING_FOR_EXPRESSION_PROOF");
         return { error: "ELEMENT_FROM_POINT_UNAVAILABLE", x, y, rect, targetDocument };
       }
 
@@ -1018,7 +1121,7 @@
         state.elementFromPointResult = "NULL";
         state.hitTestUnreadableReason = "ELEMENT_FROM_POINT_RETURNED_NULL";
         state.showReceiptHitTestNonControlling = "true";
-        addNote(state, "ELEMENT_FROM_POINT_RETURNED_NULL_NON_CONTROLLING_FOR_PLANET_PROOF");
+        addNote(state, "ELEMENT_FROM_POINT_RETURNED_NULL_NON_CONTROLLING_FOR_EXPRESSION_PROOF");
         return { error: "ELEMENT_FROM_POINT_RETURNED_NULL", x, y, rect, targetDocument };
       }
 
@@ -1031,7 +1134,7 @@
       const normalized = normalizeError(error, "HIT_TEST_ERROR");
       state.hitTestUnreadableReason = normalized;
       state.showReceiptHitTestNonControlling = "true";
-      addNote(state, `${normalized}_NON_CONTROLLING_FOR_PLANET_PROOF`);
+      addNote(state, `${normalized}_NON_CONTROLLING_FOR_EXPRESSION_PROOF`);
       return { error: normalized };
     }
   }
@@ -1170,56 +1273,6 @@
     addNote(state, `OVERLAY_OR_LAYER_ABOVE_SHOW_RECEIPT:${state.overlayOwner}`);
   }
 
-  function readCurrentVisibleProofDom(targetDocument, state) {
-    const stage = qFirst(targetDocument, PLANET_STAGE_SELECTORS);
-    const mount = qFirst(targetDocument, PLANET_MOUNT_SELECTORS);
-    const canvas = qFirst(targetDocument, CANVAS_SELECTORS);
-
-    const stageRect = stage && stage.getBoundingClientRect ? stage.getBoundingClientRect() : null;
-    const mountRect = mount && mount.getBoundingClientRect ? mount.getBoundingClientRect() : null;
-    const canvasRect = canvas && canvas.getBoundingClientRect ? canvas.getBoundingClientRect() : null;
-
-    const canvasAttrWidth = canvas ? Number(canvas.width || 0) : 0;
-    const canvasAttrHeight = canvas ? Number(canvas.height || 0) : 0;
-
-    const stageNonZero = Boolean(stageRect && stageRect.width > 0 && stageRect.height > 0);
-    const mountNonZero = Boolean(mountRect && mountRect.width > 0 && mountRect.height > 0);
-    const canvasRectNonZero = Boolean(
-      canvas &&
-      (
-        (canvasAttrWidth > 0 && canvasAttrHeight > 0) ||
-        (canvasRect && canvasRect.width > 0 && canvasRect.height > 0)
-      )
-    );
-
-    state.planetStagePresent = boolText(Boolean(stage));
-    state.planetStageRect = rectToPacket(stageRect);
-    state.planetStageRectNonZero = boolText(stageNonZero);
-
-    state.canvasMountPresent = boolText(Boolean(mount));
-    state.canvasMountRect = rectToPacket(mountRect);
-    state.canvasMountRectNonZero = boolText(mountNonZero);
-
-    state.canvasElementPresent = boolText(Boolean(canvas));
-    state.canvasElementFound = boolText(Boolean(canvas));
-    state.canvasRect = rectToPacket(canvasRect);
-    state.canvasRectNonZero = boolText(canvasRectNonZero);
-    state.canvasAttributeWidth = canvas ? String(Math.round(canvasAttrWidth || 0)) : FALLBACK.NOT_FOUND;
-    state.canvasAttributeHeight = canvas ? String(Math.round(canvasAttrHeight || 0)) : FALLBACK.NOT_FOUND;
-
-    state.canvasDrawEvidencePresent = boolText(canvasRectNonZero);
-    state.domVisiblePlanetProofReady = boolText(Boolean(stageNonZero && mountNonZero && canvasRectNonZero));
-    state.stageMountDomProofReady = boolText(Boolean(stageNonZero && mountNonZero));
-
-    if (stageNonZero) addNote(state, "PLANET_STAGE_NONZERO_DOM_PROOF");
-    if (mountNonZero) addNote(state, "CANVAS_MOUNT_NONZERO_DOM_PROOF");
-    if (canvasRectNonZero) addNote(state, "CANVAS_ELEMENT_NONZERO_DOM_PROOF");
-    if (!stage) addNote(state, "PLANET_STAGE_NOT_FOUND");
-    if (!mount) addNote(state, "CANVAS_MOUNT_NOT_FOUND");
-    if (!canvas) addNote(state, "CANVAS_ELEMENT_NOT_FOUND_DOM_ONLY");
-    if (canvas && !canvasRectNonZero) addNote(state, "CANVAS_ELEMENT_PRESENT_BUT_ZERO_SIZE");
-  }
-
   function readAuthorityContract(authority) {
     if (!authority || !isObject(authority)) return "";
 
@@ -1231,6 +1284,7 @@
       receipt && receipt.currentRouteConductorContract,
       receipt && receipt.routeConductorContract,
       receipt && receipt.canvasContract,
+      receipt && receipt.currentCanvasParentContract,
       receipt && receipt.controlsContract,
       authority.contract,
       authority.CONTRACT,
@@ -1238,6 +1292,7 @@
       authority.currentRouteConductorContract,
       authority.routeConductorContract,
       authority.canvasContract,
+      authority.currentCanvasParentContract,
       authority.controlsContract
     );
 
@@ -1327,9 +1382,9 @@
     const paths = [
       ...ROUTE_CONDUCTOR_PATHS,
       ...CANVAS_AUTHORITY_PATHS,
-      ...LAB_AUTHORITY_PATHS,
       ...CONTROL_AUTHORITY_PATHS,
       ...QUEEN_PATHS,
+      ...Object.keys(FINGER_AUTHORITY_PATHS).flatMap((key) => FINGER_AUTHORITY_PATHS[key]),
       "HEARTH.routeConductorReceipt",
       "HEARTH.southRouteConductorReceipt",
       "HEARTH.canvasReceipt",
@@ -1360,14 +1415,14 @@
 
     for (const key of Object.keys(hearth)) {
       const lower = key.toLowerCase();
-      if (!/route|conductor|bishop|queen|canvas|globe|planet|finger|carrier|engine|control|runtime|lab/.test(lower)) continue;
+      if (!/route|conductor|bishop|queen|canvas|globe|planet|finger|carrier|engine|control|runtime|lab|expression|surface|boundary|mass|light|inspect|composite/.test(lower)) continue;
       const value = hearth[key];
       if (value && isObject(value)) candidates.push({ path: `HEARTH.${key}`, value, receipt: callReceiptMethod(value) || value });
     }
 
     for (const key of Object.keys(dexter)) {
       const lower = key.toLowerCase();
-      if (!/hearth|route|conductor|bishop|queen|canvas|globe|planet|finger|carrier|engine|control|runtime|lab/.test(lower)) continue;
+      if (!/hearth|route|conductor|bishop|queen|canvas|globe|planet|finger|carrier|engine|control|runtime|lab|expression|surface|boundary|mass|light|inspect|composite/.test(lower)) continue;
       const value = dexter[key];
       if (value && isObject(value)) candidates.push({ path: `DEXTER_LAB.${key}`, value, receipt: callReceiptMethod(value) || value });
     }
@@ -1390,8 +1445,8 @@
     if (!c || c === FALLBACK.UNKNOWN || c === FALLBACK.NOT_FOUND || c === FALLBACK.UNREADABLE) return FALLBACK.UNKNOWN;
     if (c === CURRENT_ROUTE_CONDUCTOR_CONTRACT) return "current";
     if (TRANSITION_ROUTE_CONDUCTOR_CONTRACTS.includes(c)) return "transition";
-    if (c === COMPAT_ROUTE_CONDUCTOR_CONTRACT) return "compat";
-    if (ACCEPTED_ROUTE_CONDUCTOR_LINEAGE.includes(c)) return "lineage";
+    if (c === ROUTE_V9_5_CONTRACT) return "compat";
+    if (c === ROUTE_V9_4_CONTRACT || ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS.includes(c)) return "lineage";
     return "false";
   }
 
@@ -1403,28 +1458,29 @@
   function canvasContractRecognized(contract) {
     const c = safeString(contract);
     if (!c || c === FALLBACK.UNKNOWN || c === FALLBACK.NOT_FOUND || c === FALLBACK.UNREADABLE) return FALLBACK.UNKNOWN;
-    return CURRENT_CANVAS_PARENT_CONTRACTS.includes(c) ? "true" : "false";
+    return CURRENT_CANVAS_PARENT_CONTRACTS.includes(c) || c.includes("HEARTH_CANVAS_") ? "true" : "false";
   }
 
   function scoreCandidate(candidate) {
     const receipt = candidate.receipt || {};
     const path = candidate.path || "";
     const contract = safeString(getReceiptValue(receipt, ["contract", "CONTRACT", "currentRouteConductorContract"], ""));
-    const currentCanvasParentContract = safeString(getReceiptValue(receipt, ["currentCanvasParentContract", "canvasContract", "currentCanvasContract"], ""));
+    const canvasContract = safeString(getReceiptValue(receipt, ["currentCanvasParentContract", "canvasContract", "currentCanvasContract"], ""));
 
     let score = 0;
 
     if (/bishop.*queen|queen.*canvas|recognition.*funnel/i.test(path)) score += 12;
-    if (/route|conductor/i.test(path)) score += 6;
-    if (/canvas|globe|planet|finger|carrier|engine/i.test(path)) score += 4;
+    if (/route|conductor/i.test(path)) score += 7;
+    if (/canvas|globe|planet|finger|carrier|engine|expression/i.test(path)) score += 6;
+    if (/surface|boundary|mass|light|inspect|composite/i.test(path)) score += 5;
     if (/lab|runtime/i.test(path)) score += 2;
     if (/bishop|queen/i.test(path)) score += 3;
 
     if (contract === CURRENT_ROUTE_CONDUCTOR_CONTRACT) score += 14;
     if (TRANSITION_ROUTE_CONDUCTOR_CONTRACTS.includes(contract)) score += 8;
-    if (contract === COMPAT_ROUTE_CONDUCTOR_CONTRACT) score += 5;
-    if (ACCEPTED_ROUTE_CONDUCTOR_LINEAGE.includes(contract)) score += 2;
-    if (CURRENT_CANVAS_PARENT_CONTRACTS.includes(currentCanvasParentContract)) score += 5;
+    if (contract === ROUTE_V9_5_CONTRACT) score += 5;
+    if (contract === ROUTE_V9_4_CONTRACT) score += 2;
+    if (CURRENT_CANVAS_PARENT_CONTRACTS.includes(canvasContract) || canvasContract.includes("HEARTH_CANVAS_")) score += 7;
 
     const truthyKeys = [
       "bishopQueenCanvasRecognitionFunnelActive",
@@ -1447,12 +1503,11 @@
       "baseGlobeVisibleCarrierReady",
       "visiblePlanetProofReady",
       "renderedPlanetProofReady",
+      "canvasExpressionProofReady",
+      "expressionSurfaceReady",
+      "surfaceExpressionReady",
       "f13CanvasEvidenceComplete",
-      "fourWayCanvasHandoffActive",
-      "northBishopActive",
-      "eastBishopActive",
-      "southBishopActive",
-      "westBishopActive"
+      "fourWayCanvasHandoffActive"
     ];
 
     for (const key of truthyKeys) {
@@ -1477,7 +1532,7 @@
     return { best, score: bestScore };
   }
 
-  function readHtmlAndIndexRenderedRecognition(targetDocument, targetWindow, state) {
+  function readRenderedContracts(targetDocument, targetWindow, state) {
     const dataset = readDataset(targetDocument);
     const bodyDataset = readBodyDataset(targetDocument);
     const html = targetDocument && targetDocument.documentElement;
@@ -1531,7 +1586,7 @@
     const receipt = source.receipt || {};
 
     state.namespaceRenderedProofCandidatesFound = String(candidates.length);
-    state.namespaceRenderedProofCandidatePaths = candidates.map((candidate) => candidate.path).slice(0, 36).join(" | ") || FALLBACK.NONE;
+    state.namespaceRenderedProofCandidatePaths = candidates.map((candidate) => candidate.path).slice(0, 48).join(" | ") || FALLBACK.NONE;
     state.namespaceRenderedProofCandidateSelected = source.path || "NONE";
     state.namespaceRenderedProofCandidateScore = String(chosen.score || 0);
 
@@ -1690,8 +1745,9 @@
     state.routeConductorContract = routeConductorContract;
     state.routeConductorReceipt = routeConductorReceipt;
     state.routeConductorV99Detected = boolText(currentRoute);
-    state.routeConductorV97TransitionDetected = boolText(routeConductorContract === "HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION_TNT_v9_7");
-    state.routeConductorV96TransitionDetected = boolText(routeConductorContract === "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_TNT_v9_6");
+    state.routeConductorV98TransitionDetected = boolText(routeConductorContract === ROUTE_V9_8_CONTRACT);
+    state.routeConductorV97TransitionDetected = boolText(routeConductorContract === ROUTE_V9_7_CONTRACT);
+    state.routeConductorV96TransitionDetected = boolText(routeConductorContract === ROUTE_V9_6_CONTRACT);
     state.routeConductorV95CompatDetected = boolText(compatRoute);
     state.routeConductorContractRecognized = recognition;
     state.routeConductorLineageAccepted = boolText(lineageRoute);
@@ -1770,6 +1826,358 @@
     }
 
     if (canvasParentRecognized) addNote(state, "CURRENT_CANVAS_PARENT_CONTRACT_RECOGNIZED_IN_RENDERED_TARGET");
+  }
+
+  function readCurrentVisibleProofDom(targetDocument, state) {
+    const stage = qFirst(targetDocument, PLANET_STAGE_SELECTORS);
+    const mount = qFirst(targetDocument, PLANET_MOUNT_SELECTORS);
+    const canvas = qFirst(targetDocument, CANVAS_SELECTORS);
+    const expressionSurface = qFirst(targetDocument, EXPRESSION_SURFACE_SELECTORS);
+
+    const stageRect = stage && stage.getBoundingClientRect ? stage.getBoundingClientRect() : null;
+    const mountRect = mount && mount.getBoundingClientRect ? mount.getBoundingClientRect() : null;
+    const canvasRect = canvas && canvas.getBoundingClientRect ? canvas.getBoundingClientRect() : null;
+    const surfaceRect = expressionSurface && expressionSurface.getBoundingClientRect ? expressionSurface.getBoundingClientRect() : null;
+
+    const canvasAttrWidth = canvas ? Number(canvas.width || 0) : 0;
+    const canvasAttrHeight = canvas ? Number(canvas.height || 0) : 0;
+
+    const stageNonZero = Boolean(stageRect && stageRect.width > 0 && stageRect.height > 0);
+    const mountNonZero = Boolean(mountRect && mountRect.width > 0 && mountRect.height > 0);
+    const canvasRectNonZero = Boolean(
+      canvas &&
+      (
+        (canvasAttrWidth > 0 && canvasAttrHeight > 0) ||
+        (canvasRect && canvasRect.width > 0 && canvasRect.height > 0)
+      )
+    );
+    const surfaceNonZero = Boolean(surfaceRect && surfaceRect.width > 0 && surfaceRect.height > 0);
+
+    state.planetStagePresent = boolText(Boolean(stage));
+    state.planetStageSelector = selectorFor(stage);
+    state.planetStageRect = rectToPacket(stageRect);
+    state.planetStageRectNonZero = boolText(stageNonZero);
+
+    state.canvasMountPresent = boolText(Boolean(mount));
+    state.canvasMountSelector = selectorFor(mount);
+    state.canvasMountRect = rectToPacket(mountRect);
+    state.canvasMountRectNonZero = boolText(mountNonZero);
+
+    state.canvasElementPresent = boolText(Boolean(canvas));
+    state.canvasElementFound = boolText(Boolean(canvas));
+    state.canvasElementSelector = selectorFor(canvas);
+    state.canvasRect = rectToPacket(canvasRect);
+    state.canvasRectNonZero = boolText(canvasRectNonZero);
+    state.canvasAttributeWidth = canvas ? String(Math.round(canvasAttrWidth || 0)) : FALLBACK.NOT_FOUND;
+    state.canvasAttributeHeight = canvas ? String(Math.round(canvasAttrHeight || 0)) : FALLBACK.NOT_FOUND;
+
+    state.expressionSurfacePresent = boolText(Boolean(expressionSurface));
+    state.expressionSurfaceSelector = selectorFor(expressionSurface);
+    state.expressionSurfaceRect = rectToPacket(surfaceRect);
+    state.expressionSurfaceRectNonZero = boolText(surfaceNonZero);
+
+    state.canvasDrawEvidencePresent = boolText(canvasRectNonZero || surfaceNonZero);
+    state.domVisiblePlanetProofReady = boolText(Boolean(stageNonZero && mountNonZero && (canvasRectNonZero || surfaceNonZero)));
+    state.stageMountDomProofReady = boolText(Boolean(stageNonZero && mountNonZero));
+    state.domExpressionSurfaceProofReady = boolText(Boolean(surfaceNonZero || canvasRectNonZero));
+
+    if (stageNonZero) addNote(state, "PLANET_STAGE_NONZERO_DOM_PROOF");
+    if (mountNonZero) addNote(state, "CANVAS_MOUNT_NONZERO_DOM_PROOF");
+    if (canvasRectNonZero) addNote(state, "CANVAS_ELEMENT_NONZERO_DOM_PROOF");
+    if (surfaceNonZero) addNote(state, "EXPRESSION_SURFACE_NONZERO_DOM_PROOF");
+    if (!stage) addNote(state, "PLANET_STAGE_NOT_FOUND");
+    if (!mount) addNote(state, "CANVAS_MOUNT_NOT_FOUND");
+    if (!canvas) addNote(state, "CANVAS_ELEMENT_NOT_FOUND_DOM_ONLY");
+    if (canvas && !canvasRectNonZero) addNote(state, "CANVAS_ELEMENT_PRESENT_BUT_ZERO_SIZE");
+    if (!expressionSurface) addNote(state, "EXPRESSION_SURFACE_SELECTOR_NOT_FOUND_DOM_ONLY");
+
+    return { stage, mount, canvas, expressionSurface };
+  }
+
+  function readPixelSample(canvas, state) {
+    if (!canvas) {
+      state.canvasPixelSampleStatus = "NO_CANVAS_ELEMENT_DOM_SURFACE_ONLY";
+      state.canvasPixelSampleReadable = "false";
+      state.canvasPixelNonEmpty = FALLBACK.UNKNOWN;
+      state.canvasPixelUniqueColorCount = "0";
+      state.canvasPixelAlphaCoverageApprox = FALLBACK.UNKNOWN;
+      state.canvasPixelLuminanceRange = FALLBACK.UNKNOWN;
+      state.canvasPixelVarianceStatus = "NO_PIXEL_SAMPLE";
+      return;
+    }
+
+    const w = Number(canvas.width || 0);
+    const h = Number(canvas.height || 0);
+
+    if (!(w > 0 && h > 0)) {
+      state.canvasPixelSampleStatus = "CANVAS_ZERO_ATTRIBUTE_SIZE";
+      state.canvasPixelSampleReadable = "false";
+      state.canvasPixelNonEmpty = "false";
+      state.canvasPixelUniqueColorCount = "0";
+      state.canvasPixelAlphaCoverageApprox = "0";
+      state.canvasPixelLuminanceRange = "0";
+      state.canvasPixelVarianceStatus = "PIXEL_SAMPLE_UNAVAILABLE_ZERO_SIZE";
+      addNote(state, "CANVAS_PIXEL_SAMPLE_HELD_ZERO_ATTRIBUTE_SIZE");
+      return;
+    }
+
+    if (!isFunction(canvas.getContext)) {
+      state.canvasPixelSampleStatus = "CANVAS_GET_CONTEXT_UNAVAILABLE";
+      state.canvasPixelSampleReadable = "false";
+      state.canvasPixelNonEmpty = FALLBACK.UNKNOWN;
+      state.canvasPixelUniqueColorCount = "0";
+      state.canvasPixelAlphaCoverageApprox = FALLBACK.UNKNOWN;
+      state.canvasPixelLuminanceRange = FALLBACK.UNKNOWN;
+      state.canvasPixelVarianceStatus = "PIXEL_SAMPLE_UNAVAILABLE_NO_CONTEXT";
+      addNote(state, "CANVAS_PIXEL_SAMPLE_HELD_NO_GET_CONTEXT");
+      return;
+    }
+
+    try {
+      const ctx = canvas.getContext("2d", { willReadFrequently: true });
+      if (!ctx || !isFunction(ctx.getImageData)) {
+        state.canvasPixelSampleStatus = "CANVAS_2D_CONTEXT_UNAVAILABLE";
+        state.canvasPixelSampleReadable = "false";
+        state.canvasPixelNonEmpty = FALLBACK.UNKNOWN;
+        state.canvasPixelUniqueColorCount = "0";
+        state.canvasPixelAlphaCoverageApprox = FALLBACK.UNKNOWN;
+        state.canvasPixelLuminanceRange = FALLBACK.UNKNOWN;
+        state.canvasPixelVarianceStatus = "PIXEL_SAMPLE_UNAVAILABLE_NO_2D_CONTEXT";
+        addNote(state, "CANVAS_PIXEL_SAMPLE_HELD_NO_2D_CONTEXT");
+        return;
+      }
+
+      const sampleCols = Math.max(1, Math.min(12, Math.floor(w)));
+      const sampleRows = Math.max(1, Math.min(12, Math.floor(h)));
+      const colors = new Set();
+      let alphaPixels = 0;
+      let total = 0;
+      let minLum = 255;
+      let maxLum = 0;
+
+      for (let yy = 0; yy < sampleRows; yy += 1) {
+        for (let xx = 0; xx < sampleCols; xx += 1) {
+          const x = Math.max(0, Math.min(w - 1, Math.round((xx + 0.5) * w / sampleCols)));
+          const y = Math.max(0, Math.min(h - 1, Math.round((yy + 0.5) * h / sampleRows)));
+          const data = ctx.getImageData(x, y, 1, 1).data;
+          const r = data[0] || 0;
+          const g = data[1] || 0;
+          const b = data[2] || 0;
+          const a = data[3] || 0;
+
+          total += 1;
+          if (a > 0) alphaPixels += 1;
+
+          const key = `${r >> 4},${g >> 4},${b >> 4},${a > 0 ? 1 : 0}`;
+          colors.add(key);
+
+          const lum = Math.round((r * 0.2126) + (g * 0.7152) + (b * 0.0722));
+          minLum = Math.min(minLum, lum);
+          maxLum = Math.max(maxLum, lum);
+        }
+      }
+
+      const coverage = total > 0 ? Math.round((alphaPixels / total) * 100) : 0;
+      const range = Math.max(0, maxLum - minLum);
+      const uniqueCount = colors.size;
+
+      state.canvasPixelSampleStatus = "PIXEL_SAMPLE_READ";
+      state.canvasPixelSampleReadable = "true";
+      state.canvasPixelNonEmpty = boolText(alphaPixels > 0);
+      state.canvasPixelUniqueColorCount = String(uniqueCount);
+      state.canvasPixelAlphaCoverageApprox = `${coverage}%`;
+      state.canvasPixelLuminanceRange = String(range);
+      state.canvasPixelVarianceStatus = uniqueCount >= 6 && range >= 12
+        ? "PIXEL_VARIANCE_PRESENT"
+        : alphaPixels > 0
+          ? "PIXEL_NONEMPTY_LOW_VARIANCE"
+          : "PIXEL_EMPTY_OR_TRANSPARENT";
+
+      if (alphaPixels > 0) addNote(state, "CANVAS_PIXEL_SAMPLE_NONEMPTY");
+      if (uniqueCount >= 6 && range >= 12) addNote(state, "CANVAS_PIXEL_SAMPLE_VARIANCE_PRESENT");
+    } catch (error) {
+      state.canvasPixelSampleStatus = normalizeError(error, "CANVAS_PIXEL_SAMPLE_BLOCKED_OR_TAINTED");
+      state.canvasPixelSampleReadable = "false";
+      state.canvasPixelNonEmpty = FALLBACK.UNKNOWN;
+      state.canvasPixelUniqueColorCount = "0";
+      state.canvasPixelAlphaCoverageApprox = FALLBACK.UNKNOWN;
+      state.canvasPixelLuminanceRange = FALLBACK.UNKNOWN;
+      state.canvasPixelVarianceStatus = "PIXEL_SAMPLE_UNREADABLE_NON_CONTROLLING";
+      addNote(state, "CANVAS_PIXEL_SAMPLE_UNREADABLE_NON_CONTROLLING");
+    }
+  }
+
+  function readExpressionDataSignals(targetDocument, targetWindow, nodes, state) {
+    const htmlData = readDataset(targetDocument);
+    const bodyData = readBodyDataset(targetDocument);
+    const stageData = datasetFromElement(nodes.stage);
+    const mountData = datasetFromElement(nodes.mount);
+    const canvasData = datasetFromElement(nodes.canvas);
+    const surfaceData = datasetFromElement(nodes.expressionSurface);
+
+    const combined = { ...htmlData, ...bodyData, ...stageData, ...mountData, ...canvasData, ...surfaceData };
+
+    const candidates = readNamespaceCandidates(targetWindow);
+    const selected = chooseBestCandidate(candidates).best;
+    const receipt = selected && selected.receipt ? selected.receipt : {};
+
+    const signalValue = (keys, fallback = FALLBACK.UNKNOWN) => {
+      for (const key of keys) {
+        if (combined[key] !== undefined && combined[key] !== null && combined[key] !== "") return combined[key];
+        const receiptValue = getReceiptValue(receipt, [key], undefined);
+        if (receiptValue !== undefined && receiptValue !== null && receiptValue !== "") return receiptValue;
+      }
+      return fallback;
+    };
+
+    state.canvasExpressionObservatoryActive = true;
+    state.canvasExpressionDiagnosticScope =
+      "stage,mount,canvas,dom-surface,pixel-sample,expression-hub,fingers,visible-carrier,controls,bishop-queen,canvas-handoff";
+
+    state.expressionHubStatus = boolText(
+      safeBool(signalValue(["expressionHubActive", "canvasExpressionHubActive", "hearthCanvasExpressionHubActive"], false), false) ||
+      state.expressionHubActive === "true"
+    );
+
+    state.fingerManagerStatus = boolText(
+      safeBool(signalValue(["fingerManagerActive", "canvasFingerManagerActive", "hearthCanvasFingerManagerActive"], false), false) ||
+      state.fingerManagerActive === "true"
+    );
+
+    state.visibleBaseGlobeCarrierStatus = boolText(
+      safeBool(signalValue(["visibleBaseGlobeCarrierActive", "canvasVisibleBaseGlobeCarrierActive", "hearthCanvasVisibleBaseGlobeCarrierActive"], false), false) ||
+      state.visibleBaseGlobeCarrierActive === "true"
+    );
+
+    state.expressionSurfaceStatus = state.domExpressionSurfaceProofReady === "true"
+      ? FALLBACK.ACTIVE
+      : state.stageMountDomProofReady === "true"
+        ? FALLBACK.ACTIVE_DEGRADED
+        : FALLBACK.HANDSHAKE_PENDING;
+
+    state.landExpressionStatus = safeString(signalValue([
+      "hearthLandExpressionStatus",
+      "landExpressionStatus",
+      "landChannelStatus",
+      "landStatus",
+      "landRendered"
+    ], FALLBACK.UNKNOWN));
+
+    state.waterExpressionStatus = safeString(signalValue([
+      "hearthWaterExpressionStatus",
+      "waterExpressionStatus",
+      "waterChannelStatus",
+      "oceanStatus",
+      "waterRendered"
+    ], FALLBACK.UNKNOWN));
+
+    state.airExpressionStatus = safeString(signalValue([
+      "hearthAirExpressionStatus",
+      "airExpressionStatus",
+      "atmosphereStatus",
+      "cloudStatus",
+      "airRendered"
+    ], FALLBACK.UNKNOWN));
+
+    state.elevationExpressionStatus = safeString(signalValue([
+      "hearthElevationExpressionStatus",
+      "elevationExpressionStatus",
+      "elevationStatus",
+      "terrainElevationStatus"
+    ], FALLBACK.UNKNOWN));
+
+    state.materialExpressionStatus = safeString(signalValue([
+      "hearthMaterialExpressionStatus",
+      "materialExpressionStatus",
+      "materialsStatus",
+      "terrainMaterialStatus"
+    ], FALLBACK.UNKNOWN));
+
+    state.projectionExpressionStatus = safeString(signalValue([
+      "hearthProjectionExpressionStatus",
+      "projectionExpressionStatus",
+      "sphereProjectionStatus",
+      "planetProjectionStatus"
+    ], FALLBACK.UNKNOWN));
+
+    state.canvasExpressionPacketStatus = safeString(signalValue([
+      "canvasExpressionPacketStatus",
+      "expressionPacketStatus",
+      "visibleExpressionPacketStatus",
+      "renderPacketStatus"
+    ], FALLBACK.UNKNOWN));
+
+    state.canvasExpressionReceiptStatus = safeString(signalValue([
+      "canvasExpressionReceiptStatus",
+      "expressionReceiptStatus",
+      "visibleExpressionReceiptStatus",
+      "renderReceiptStatus"
+    ], FALLBACK.UNKNOWN));
+
+    const expressionSignals = [
+      state.expressionHubStatus,
+      state.fingerManagerStatus,
+      state.visibleBaseGlobeCarrierStatus,
+      state.landExpressionStatus,
+      state.waterExpressionStatus,
+      state.airExpressionStatus,
+      state.elevationExpressionStatus,
+      state.materialExpressionStatus,
+      state.projectionExpressionStatus,
+      state.canvasExpressionPacketStatus,
+      state.canvasExpressionReceiptStatus
+    ].join(" | ");
+
+    state.canvasExpressionDataSignalsPresent = /ACTIVE|READY|VALID|COMPLETE|PRESENT|true/i.test(expressionSignals) ? "true" : "false";
+
+    if (state.canvasExpressionDataSignalsPresent === "true") addNote(state, "CANVAS_EXPRESSION_DATA_SIGNALS_PRESENT");
+  }
+
+  function readFingerProof(targetWindow, state) {
+    const proof = {};
+    let activeCount = 0;
+    let observedCount = 0;
+
+    for (const finger of Object.keys(FINGER_AUTHORITY_PATHS)) {
+      const found = findAuthority(targetWindow, FINGER_AUTHORITY_PATHS[finger]);
+      const receipt = found.receipt || {};
+      const contract = safeString(firstDefined(found.contract, getReceiptValue(receipt, ["contract", "CONTRACT"], "")), FALLBACK.UNKNOWN);
+      const active = Boolean(
+        found.authority ||
+        found.path !== "NONE" ||
+        safeBool(getReceiptValue(receipt, ["active", "ready", "fingerActive", `${finger}Active`, `${finger}Ready`], false), false)
+      );
+
+      if (found.path !== "NONE") observedCount += 1;
+      if (active) activeCount += 1;
+
+      proof[finger] = {
+        source: found.path,
+        contract,
+        status: active ? FALLBACK.ACTIVE : FALLBACK.EXPECTED_NOT_YET_WIRED,
+        receiptPresent: Boolean(Object.keys(receipt).length)
+      };
+
+      const camel = `${finger}FingerStatus`;
+      const sourceKey = `${finger}FingerAuthoritySource`;
+      const contractKey = `${finger}FingerContract`;
+
+      state[sourceKey] = found.path;
+      state[contractKey] = contract;
+      state[camel] = active ? FALLBACK.ACTIVE : FALLBACK.EXPECTED_NOT_YET_WIRED;
+    }
+
+    state.canvasFingerProof = proof;
+    state.canvasFingerObservedCount = String(observedCount);
+    state.canvasFingerActiveCount = String(activeCount);
+    state.canvasFingerExpressionStatus = activeCount >= 3
+      ? FALLBACK.ACTIVE
+      : activeCount > 0
+        ? FALLBACK.ACTIVE_DEGRADED
+        : FALLBACK.EXPECTED_NOT_YET_WIRED;
+
+    if (activeCount > 0) addNote(state, `CANVAS_FINGER_EXPRESSION_PROOF_ACTIVE_COUNT:${activeCount}`);
+    else addNote(state, "CANVAS_FINGER_EXPRESSION_PROOF_NOT_YET_WIRED_OR_OPAQUE");
   }
 
   function readLabBridgeProof(targetWindow, state) {
@@ -1880,9 +2288,11 @@
         ? FALLBACK.HANDSHAKE_VALID
         : FALLBACK.HANDSHAKE_PENDING
       : FALLBACK.EXPECTED_NOT_YET_WIRED;
+
     state.hearthJsLoadsOrRecognizesControlFile = boolText(
       controlsPresent ||
       state.routeConductorV99Detected === "true" ||
+      state.routeConductorV98TransitionDetected === "true" ||
       state.routeConductorV97TransitionDetected === "true" ||
       state.routeConductorV96TransitionDetected === "true" ||
       state.routeConductorV95CompatDetected === "true"
@@ -1967,14 +2377,20 @@
     const canvasBridge = Boolean(
       state.currentCanvasParentRecognized === "true" ||
       state.expressionHubActive === "true" ||
+      state.expressionHubStatus === "true" ||
       state.fingerManagerActive === "true" ||
+      state.fingerManagerStatus === "true" ||
       state.fingerRegistryActive === "true" ||
       state.visibleBaseGlobeCarrierActive === "true" ||
+      state.visibleBaseGlobeCarrierStatus === "true" ||
       state.canvasMounted === "true" ||
       state.canvasDrawComplete === "true" ||
       state.baseGlobeDrawComplete === "true" ||
       state.baseGlobeVisibleCarrierReady === "true" ||
-      state.domVisiblePlanetProofReady === "true"
+      state.domVisiblePlanetProofReady === "true" ||
+      state.domExpressionSurfaceProofReady === "true" ||
+      state.canvasFingerExpressionStatus === FALLBACK.ACTIVE ||
+      state.canvasFingerExpressionStatus === FALLBACK.ACTIVE_DEGRADED
     );
 
     const labBridge = Boolean(
@@ -1996,12 +2412,14 @@
       ? bishopBridge || queenBridge
         ? FALLBACK.ACTIVE
         : FALLBACK.ACTIVE_DEGRADED
-      : FALLBACK.HANDSHAKE_PENDING;
+      : canvasBridge
+        ? FALLBACK.ACTIVE_DEGRADED
+        : FALLBACK.HANDSHAKE_PENDING;
 
     if (state.fourWayCanvasHandoffStatus === FALLBACK.ACTIVE) {
       addNote(state, "FOUR_WAY_CANVAS_HANDOFF_RENDERED_BRIDGE_ACTIVE");
     } else if (state.fourWayCanvasHandoffStatus === FALLBACK.ACTIVE_DEGRADED) {
-      addNote(state, "FOUR_WAY_CANVAS_HANDOFF_RENDERED_BRIDGE_ACTIVE_DEGRADED_BISHOPS_OR_QUEEN_OPTIONAL_PARTIAL");
+      addNote(state, "FOUR_WAY_CANVAS_HANDOFF_RENDERED_BRIDGE_ACTIVE_DEGRADED_BISHOPS_OR_LAB_OPTIONAL_PARTIAL");
     } else {
       addNote(state, "FOUR_WAY_CANVAS_HANDOFF_RENDERED_BRIDGE_PENDING");
     }
@@ -2055,14 +2473,74 @@
     }
   }
 
+  function deriveCanvasExpressionProof(state) {
+    const domExpression = state.domExpressionSurfaceProofReady === "true";
+    const domCanvas = state.canvasRectNonZero === "true";
+    const pixelProof = state.canvasPixelNonEmpty === "true";
+    const pixelVariance = state.canvasPixelVarianceStatus === "PIXEL_VARIANCE_PRESENT";
+    const namespaceExpression = Boolean(
+      state.expressionHubStatus === "true" ||
+      state.fingerManagerStatus === "true" ||
+      state.visibleBaseGlobeCarrierStatus === "true" ||
+      state.canvasExpressionDataSignalsPresent === "true" ||
+      state.canvasFingerExpressionStatus === FALLBACK.ACTIVE ||
+      state.canvasFingerExpressionStatus === FALLBACK.ACTIVE_DEGRADED
+    );
+
+    const expressionSurfaceReady = Boolean(domExpression || domCanvas || pixelProof || namespaceExpression);
+    const expressionRichnessReady = Boolean(pixelVariance || namespaceExpression || state.canvasFingerExpressionStatus === FALLBACK.ACTIVE);
+
+    state.canvasExpressionSurfaceReady = boolText(expressionSurfaceReady);
+    state.canvasExpressionRichnessReady = boolText(expressionRichnessReady);
+
+    if (expressionSurfaceReady && expressionRichnessReady) {
+      state.canvasExpressionProofStatus = FALLBACK.ACTIVE;
+      state.canvasExpressionBottleneckClass = "EXPRESSION_SURFACE_AND_NAMESPACE_OR_PIXEL_VARIANCE_PRESENT";
+      addNote(state, "CANVAS_EXPRESSION_PROOF_ACTIVE");
+      return;
+    }
+
+    if (expressionSurfaceReady) {
+      state.canvasExpressionProofStatus = FALLBACK.ACTIVE_DEGRADED;
+
+      if (state.canvasElementFound === "false" && state.expressionSurfacePresent === "true") {
+        state.canvasExpressionBottleneckClass = "DOM_EXPRESSION_SURFACE_PRESENT_LITERAL_CANVAS_NOT_FOUND";
+        addNote(state, "CANVAS_EXPRESSION_ANCHOR_DOM_SURFACE_PRESENT_LITERAL_CANVAS_NOT_FOUND");
+        return;
+      }
+
+      if (state.canvasPixelSampleReadable === "true" && state.canvasPixelVarianceStatus === "PIXEL_NONEMPTY_LOW_VARIANCE") {
+        state.canvasExpressionBottleneckClass = "CANVAS_PIXEL_NONEMPTY_LOW_VARIANCE";
+        addNote(state, "CANVAS_EXPRESSION_ANCHOR_PIXEL_NONEMPTY_LOW_VARIANCE");
+        return;
+      }
+
+      state.canvasExpressionBottleneckClass = "EXPRESSION_SURFACE_PRESENT_DEGRADED_OR_OPAQUE_NAMESPACE";
+      addNote(state, "CANVAS_EXPRESSION_ANCHOR_SURFACE_PRESENT_DEGRADED_OR_OPAQUE");
+      return;
+    }
+
+    if (state.stageMountDomProofReady === "true") {
+      state.canvasExpressionProofStatus = FALLBACK.HANDSHAKE_PENDING;
+      state.canvasExpressionBottleneckClass = "STAGE_AND_MOUNT_PRESENT_EXPRESSION_SURFACE_NOT_PROVEN";
+      addNote(state, "CANVAS_EXPRESSION_ANCHOR_STAGE_MOUNT_PRESENT_EXPRESSION_SURFACE_NOT_PROVEN");
+      return;
+    }
+
+    state.canvasExpressionProofStatus = FALLBACK.EXPECTED_NOT_YET_WIRED;
+    state.canvasExpressionBottleneckClass = "NO_STAGE_MOUNT_CANVAS_OR_EXPRESSION_SURFACE_PROVEN";
+    addNote(state, "CANVAS_EXPRESSION_ANCHOR_NO_STAGE_MOUNT_CANVAS_OR_SURFACE_PROVEN");
+  }
+
   function deriveRenderedPlanetProof(state) {
     const stageMountProof = state.stageMountDomProofReady === "true";
     const domCanvasProof = state.domVisiblePlanetProofReady === "true";
+    const domExpressionProof = state.domExpressionSurfaceProofReady === "true";
     const routeProof = state.routeReceiptVisiblePlanetProofReady === "true";
 
     const namespaceProof = Number(state.namespaceRenderedProofCandidatesFound || 0) > 0;
     const currentRoute = state.routeConductorV99Detected === "true";
-    const transitionRoute = state.routeConductorV97TransitionDetected === "true" || state.routeConductorV96TransitionDetected === "true";
+    const transitionRoute = state.routeConductorV98TransitionDetected === "true" || state.routeConductorV97TransitionDetected === "true" || state.routeConductorV96TransitionDetected === "true";
     const compatRoute = state.routeConductorV95CompatDetected === "true";
     const lineageRoute = state.routeConductorLineageAccepted === "true";
     const currentCanvasParent = state.currentCanvasParentRecognized === "true";
@@ -2070,6 +2548,7 @@
     const bishopQueenFunnel = state.bishopQueenCanvasRecognitionFunnelActive === "true";
     const queenBridge = state.queenCanvasStatus === FALLBACK.ACTIVE;
     const fourWayHandoff = state.fourWayCanvasHandoffStatus === FALLBACK.ACTIVE || state.fourWayCanvasHandoffStatus === FALLBACK.ACTIVE_DEGRADED;
+    const canvasExpression = state.canvasExpressionProofStatus === FALLBACK.ACTIVE || state.canvasExpressionProofStatus === FALLBACK.ACTIVE_DEGRADED;
 
     const routeCarrier = (
       state.expressionHubActive === "true" ||
@@ -2090,6 +2569,7 @@
       (
         stageMountProof ||
         domCanvasProof ||
+        domExpressionProof ||
         routeProof ||
         namespaceProof ||
         currentRoute ||
@@ -2102,7 +2582,8 @@
         routeDataProof ||
         routeCarrier ||
         labBridge ||
-        fourWayHandoff
+        fourWayHandoff ||
+        canvasExpression
       )
     );
 
@@ -2111,6 +2592,8 @@
       (
         routeProof ||
         domCanvasProof ||
+        domExpressionProof ||
+        canvasExpression ||
         (stageMountProof && namespaceProof) ||
         (stageMountProof && routeDataProof) ||
         (stageMountProof && currentRoute) ||
@@ -2137,21 +2620,25 @@
         ? state.routeReceiptVisiblePlanetProofSource || "ROUTE_CONDUCTOR_RECEIPT_VISIBLE_PLANET_PROOF"
         : domCanvasProof
           ? "DOM_STAGE_MOUNT_CANVAS_NONZERO"
-          : bishopQueenFunnel
-            ? "BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_RENDERED_PROOF"
-            : fourWayHandoff
-              ? "FOUR_WAY_CANVAS_HANDOFF_RENDERED_BRIDGE"
-              : labBridge
-                ? "LAB_CANVAS_BRIDGE_RENDERED_NAMESPACE"
-                : stageMountProof && namespaceProof
-                  ? "STAGE_MOUNT_NAMESPACE_RENDERED_PROOF_ADOPTION"
-                  : currentRoute
-                    ? "ROUTE_CONDUCTOR_V9_9_RENDERED_DATA_PROOF"
-                    : transitionRoute
-                      ? "ROUTE_CONDUCTOR_TRANSITION_RENDERED_DATA_PROOF"
-                      : compatRoute
-                        ? "ROUTE_CONDUCTOR_V9_5_RENDERED_DATA_PROOF"
-                        : "RENDERED_DATA_PROOF_SHAPE"
+          : domExpressionProof
+            ? "DOM_EXPRESSION_SURFACE_NONZERO"
+            : canvasExpression
+              ? `CANVAS_EXPRESSION_PROOF:${state.canvasExpressionBottleneckClass}`
+              : bishopQueenFunnel
+                ? "BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_RENDERED_PROOF"
+                : fourWayHandoff
+                  ? "FOUR_WAY_CANVAS_HANDOFF_RENDERED_BRIDGE"
+                  : labBridge
+                    ? "LAB_CANVAS_BRIDGE_RENDERED_NAMESPACE"
+                    : stageMountProof && namespaceProof
+                      ? "STAGE_MOUNT_NAMESPACE_RENDERED_PROOF_ADOPTION"
+                      : currentRoute
+                        ? "ROUTE_CONDUCTOR_V9_9_RENDERED_DATA_PROOF"
+                        : transitionRoute
+                          ? "ROUTE_CONDUCTOR_TRANSITION_RENDERED_DATA_PROOF"
+                          : compatRoute
+                            ? "ROUTE_CONDUCTOR_V9_5_RENDERED_DATA_PROOF"
+                            : "RENDERED_DATA_PROOF_SHAPE"
       : proofInspected
         ? "RENDERED_PROOF_INSPECTED_NOT_READY"
         : FALLBACK.UNKNOWN;
@@ -2246,13 +2733,13 @@
     if (dataComplete) {
       state.westRenderedReadComplete = "true";
       state.westRenderedReadStatus = FALLBACK.COMPLETE;
-      addNote(state, "WEST_RENDERED_READ_COMPLETE_BY_BISHOP_QUEEN_CANVAS_RENDERED_PROOF_ALIGNMENT");
+      addNote(state, "WEST_RENDERED_READ_COMPLETE_BY_CANVAS_EXPRESSION_RENDERED_RANGE_OBSERVATORY");
       return;
     }
 
     state.westRenderedReadComplete = "false";
     state.westRenderedReadStatus = FALLBACK.PARTIAL;
-    addNote(state, "WEST_RENDERED_READ_PARTIAL_PLANET_PROOF_SPREAD_INCOMPLETE");
+    addNote(state, "WEST_RENDERED_READ_PARTIAL_CANVAS_EXPRESSION_PROOF_RANGE_INCOMPLETE");
   }
 
   function makeState() {
@@ -2274,7 +2761,7 @@
       westRenderedReadStatus: FALLBACK.UNKNOWN,
 
       diagnosticTargetAccessStatus: ACCESS.UNKNOWN,
-      diagnosticTargetAccessError: "",
+      diagnosticTargetAccessError: FALLBACK.UNKNOWN,
       hearthTargetConfirmed: false,
 
       currentHtmlContract: CURRENT_HTML_CONTRACT,
@@ -2282,7 +2769,7 @@
       currentRouteConductorContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
       currentRouteConductorReceipt: CURRENT_ROUTE_CONDUCTOR_RECEIPT,
       transitionRouteConductorContracts: TRANSITION_ROUTE_CONDUCTOR_CONTRACTS.slice(),
-      compatRouteConductorContract: COMPAT_ROUTE_CONDUCTOR_CONTRACT,
+      compatRouteConductorContract: ROUTE_V9_5_CONTRACT,
       currentVisibleHearthStatus: FALLBACK.UNKNOWN,
 
       renderedHtmlContract: FALLBACK.UNKNOWN,
@@ -2342,6 +2829,7 @@
       routeConductorContract: FALLBACK.UNKNOWN,
       routeConductorReceipt: FALLBACK.UNKNOWN,
       routeConductorV99Detected: FALLBACK.UNKNOWN,
+      routeConductorV98TransitionDetected: FALLBACK.UNKNOWN,
       routeConductorV97TransitionDetected: FALLBACK.UNKNOWN,
       routeConductorV96TransitionDetected: FALLBACK.UNKNOWN,
       routeConductorV95CompatDetected: FALLBACK.UNKNOWN,
@@ -2368,13 +2856,16 @@
       routeReceiptVisiblePlanetProofSource: FALLBACK.UNKNOWN,
 
       planetStagePresent: FALLBACK.UNKNOWN,
+      planetStageSelector: FALLBACK.UNKNOWN,
       planetStageRect: FALLBACK.UNKNOWN,
       planetStageRectNonZero: FALLBACK.UNKNOWN,
       canvasMountPresent: FALLBACK.UNKNOWN,
+      canvasMountSelector: FALLBACK.UNKNOWN,
       canvasMountRect: FALLBACK.UNKNOWN,
       canvasMountRectNonZero: FALLBACK.UNKNOWN,
       canvasElementPresent: FALLBACK.UNKNOWN,
       canvasElementFound: FALLBACK.UNKNOWN,
+      canvasElementSelector: FALLBACK.UNKNOWN,
       canvasRect: FALLBACK.UNKNOWN,
       canvasRectNonZero: FALLBACK.UNKNOWN,
       canvasAttributeWidth: FALLBACK.UNKNOWN,
@@ -2382,6 +2873,44 @@
       canvasDrawEvidencePresent: FALLBACK.UNKNOWN,
       domVisiblePlanetProofReady: FALLBACK.UNKNOWN,
       stageMountDomProofReady: FALLBACK.UNKNOWN,
+      expressionSurfacePresent: FALLBACK.UNKNOWN,
+      expressionSurfaceSelector: FALLBACK.UNKNOWN,
+      expressionSurfaceRect: FALLBACK.UNKNOWN,
+      expressionSurfaceRectNonZero: FALLBACK.UNKNOWN,
+      domExpressionSurfaceProofReady: FALLBACK.UNKNOWN,
+
+      canvasPixelSampleStatus: FALLBACK.UNKNOWN,
+      canvasPixelSampleReadable: FALLBACK.UNKNOWN,
+      canvasPixelNonEmpty: FALLBACK.UNKNOWN,
+      canvasPixelUniqueColorCount: "0",
+      canvasPixelAlphaCoverageApprox: FALLBACK.UNKNOWN,
+      canvasPixelLuminanceRange: FALLBACK.UNKNOWN,
+      canvasPixelVarianceStatus: FALLBACK.UNKNOWN,
+
+      canvasExpressionObservatoryActive: true,
+      canvasExpressionDiagnosticScope: FALLBACK.UNKNOWN,
+      canvasExpressionSurfaceReady: FALLBACK.UNKNOWN,
+      canvasExpressionRichnessReady: FALLBACK.UNKNOWN,
+      canvasExpressionProofStatus: FALLBACK.UNKNOWN,
+      canvasExpressionBottleneckClass: FALLBACK.UNKNOWN,
+      canvasExpressionDataSignalsPresent: FALLBACK.UNKNOWN,
+      expressionSurfaceStatus: FALLBACK.UNKNOWN,
+      expressionHubStatus: FALLBACK.UNKNOWN,
+      fingerManagerStatus: FALLBACK.UNKNOWN,
+      visibleBaseGlobeCarrierStatus: FALLBACK.UNKNOWN,
+      landExpressionStatus: FALLBACK.UNKNOWN,
+      waterExpressionStatus: FALLBACK.UNKNOWN,
+      airExpressionStatus: FALLBACK.UNKNOWN,
+      elevationExpressionStatus: FALLBACK.UNKNOWN,
+      materialExpressionStatus: FALLBACK.UNKNOWN,
+      projectionExpressionStatus: FALLBACK.UNKNOWN,
+      canvasExpressionPacketStatus: FALLBACK.UNKNOWN,
+      canvasExpressionReceiptStatus: FALLBACK.UNKNOWN,
+
+      canvasFingerProof: {},
+      canvasFingerObservedCount: "0",
+      canvasFingerActiveCount: "0",
+      canvasFingerExpressionStatus: FALLBACK.UNKNOWN,
 
       labBridgeAuthoritySource: FALLBACK.UNKNOWN,
       labBridgeContract: FALLBACK.UNKNOWN,
@@ -2531,6 +3060,8 @@
     state.visiblePlanetProofSource = FALLBACK.INACCESSIBLE;
     state.dataProofReadComplete = "false";
     state.dataProofReadStatus = FALLBACK.INACCESSIBLE;
+    state.canvasExpressionProofStatus = FALLBACK.INACCESSIBLE;
+    state.canvasExpressionBottleneckClass = "RENDERED_TARGET_INACCESSIBLE";
   }
 
   function makeEvidencePacket(state) {
@@ -2615,6 +3146,7 @@
       ROUTE_CONDUCTOR_CONTRACT: state.routeConductorContract,
       ROUTE_CONDUCTOR_RECEIPT: state.routeConductorReceipt,
       ROUTE_CONDUCTOR_V9_9_DETECTED: state.routeConductorV99Detected,
+      ROUTE_CONDUCTOR_V9_8_TRANSITION_DETECTED: state.routeConductorV98TransitionDetected,
       ROUTE_CONDUCTOR_V9_7_TRANSITION_DETECTED: state.routeConductorV97TransitionDetected,
       ROUTE_CONDUCTOR_V9_6_TRANSITION_DETECTED: state.routeConductorV96TransitionDetected,
       ROUTE_CONDUCTOR_V9_5_COMPAT_DETECTED: state.routeConductorV95CompatDetected,
@@ -2641,13 +3173,16 @@
       ROUTE_RECEIPT_VISIBLE_PLANET_PROOF_SOURCE: state.routeReceiptVisiblePlanetProofSource,
 
       PLANET_STAGE_PRESENT: state.planetStagePresent,
+      PLANET_STAGE_SELECTOR: state.planetStageSelector,
       PLANET_STAGE_RECT: state.planetStageRect,
       PLANET_STAGE_RECT_NONZERO: state.planetStageRectNonZero,
       CANVAS_MOUNT_PRESENT: state.canvasMountPresent,
+      CANVAS_MOUNT_SELECTOR: state.canvasMountSelector,
       CANVAS_MOUNT_RECT: state.canvasMountRect,
       CANVAS_MOUNT_RECT_NONZERO: state.canvasMountRectNonZero,
       CANVAS_ELEMENT_PRESENT: state.canvasElementPresent,
       CANVAS_ELEMENT_FOUND: state.canvasElementFound,
+      CANVAS_ELEMENT_SELECTOR: state.canvasElementSelector,
       CANVAS_RECT: state.canvasRect,
       CANVAS_RECT_NONZERO: state.canvasRectNonZero,
       CANVAS_ATTRIBUTE_WIDTH: state.canvasAttributeWidth,
@@ -2655,6 +3190,44 @@
       CANVAS_DRAW_EVIDENCE_PRESENT: state.canvasDrawEvidencePresent,
       DOM_VISIBLE_PLANET_PROOF_READY: state.domVisiblePlanetProofReady,
       STAGE_MOUNT_DOM_PROOF_READY: state.stageMountDomProofReady,
+      EXPRESSION_SURFACE_PRESENT: state.expressionSurfacePresent,
+      EXPRESSION_SURFACE_SELECTOR: state.expressionSurfaceSelector,
+      EXPRESSION_SURFACE_RECT: state.expressionSurfaceRect,
+      EXPRESSION_SURFACE_RECT_NONZERO: state.expressionSurfaceRectNonZero,
+      DOM_EXPRESSION_SURFACE_PROOF_READY: state.domExpressionSurfaceProofReady,
+
+      CANVAS_EXPRESSION_OBSERVATORY_ACTIVE: state.canvasExpressionObservatoryActive,
+      CANVAS_EXPRESSION_DIAGNOSTIC_SCOPE: state.canvasExpressionDiagnosticScope,
+      CANVAS_EXPRESSION_SURFACE_READY: state.canvasExpressionSurfaceReady,
+      CANVAS_EXPRESSION_RICHNESS_READY: state.canvasExpressionRichnessReady,
+      CANVAS_EXPRESSION_PROOF_STATUS: state.canvasExpressionProofStatus,
+      CANVAS_EXPRESSION_BOTTLENECK_CLASS: state.canvasExpressionBottleneckClass,
+      CANVAS_EXPRESSION_DATA_SIGNALS_PRESENT: state.canvasExpressionDataSignalsPresent,
+      EXPRESSION_SURFACE_STATUS: state.expressionSurfaceStatus,
+      EXPRESSION_HUB_STATUS: state.expressionHubStatus,
+      FINGER_MANAGER_STATUS: state.fingerManagerStatus,
+      VISIBLE_BASE_GLOBE_CARRIER_STATUS: state.visibleBaseGlobeCarrierStatus,
+      LAND_EXPRESSION_STATUS: state.landExpressionStatus,
+      WATER_EXPRESSION_STATUS: state.waterExpressionStatus,
+      AIR_EXPRESSION_STATUS: state.airExpressionStatus,
+      ELEVATION_EXPRESSION_STATUS: state.elevationExpressionStatus,
+      MATERIAL_EXPRESSION_STATUS: state.materialExpressionStatus,
+      PROJECTION_EXPRESSION_STATUS: state.projectionExpressionStatus,
+      CANVAS_EXPRESSION_PACKET_STATUS: state.canvasExpressionPacketStatus,
+      CANVAS_EXPRESSION_RECEIPT_STATUS: state.canvasExpressionReceiptStatus,
+
+      CANVAS_PIXEL_SAMPLE_STATUS: state.canvasPixelSampleStatus,
+      CANVAS_PIXEL_SAMPLE_READABLE: state.canvasPixelSampleReadable,
+      CANVAS_PIXEL_NONEMPTY: state.canvasPixelNonEmpty,
+      CANVAS_PIXEL_UNIQUE_COLOR_COUNT: state.canvasPixelUniqueColorCount,
+      CANVAS_PIXEL_ALPHA_COVERAGE_APPROX: state.canvasPixelAlphaCoverageApprox,
+      CANVAS_PIXEL_LUMINANCE_RANGE: state.canvasPixelLuminanceRange,
+      CANVAS_PIXEL_VARIANCE_STATUS: state.canvasPixelVarianceStatus,
+
+      CANVAS_FINGER_PROOF: clonePlain(state.canvasFingerProof),
+      CANVAS_FINGER_OBSERVED_COUNT: state.canvasFingerObservedCount,
+      CANVAS_FINGER_ACTIVE_COUNT: state.canvasFingerActiveCount,
+      CANVAS_FINGER_EXPRESSION_STATUS: state.canvasFingerExpressionStatus,
 
       LAB_BRIDGE_AUTHORITY_SOURCE: state.labBridgeAuthoritySource,
       LAB_BRIDGE_CONTRACT: state.labBridgeContract,
@@ -2793,19 +3366,27 @@
       const targetDocument = target.targetDocument;
       const targetWindow = target.targetWindow || targetDocument.defaultView || null;
 
-      readHtmlAndIndexRenderedRecognition(targetDocument, targetWindow, state);
+      readRenderedContracts(targetDocument, targetWindow, state);
 
       const rendered = readRenderedDom(targetDocument, state);
       const hit = readHitTestAndPointer(rendered.button, state);
 
       readAncestorBlockers(rendered.button, state);
       readOverlay(rendered.button, hit, state);
-      readCurrentVisibleProofDom(targetDocument, state);
+
+      const visibleNodes = readCurrentVisibleProofDom(targetDocument, state);
+
       readRouteConductorProof(targetDocument, targetWindow, state);
+      readFingerProof(targetWindow, state);
       readLabBridgeProof(targetWindow, state);
       readControlLifecycleProof(targetDocument, targetWindow, state);
       readBishopLaneProof(targetWindow, state);
       readQueenProof(targetWindow, state);
+
+      readPixelSample(visibleNodes.canvas, state);
+      readExpressionDataSignals(targetDocument, targetWindow, visibleNodes, state);
+      deriveCanvasExpressionProof(state);
+
       deriveFourWayCanvasHandoff(state);
       readRuntimeRelease(targetDocument, targetWindow, state);
 
@@ -2893,6 +3474,7 @@
       syntheticActivationRepairAuthority: false,
 
       renderedTargetAuthorityProbeOwned: true,
+      canvasExpressionRenderedRangeObservatoryOwned: true,
       bishopQueenCanvasRenderedProofAlignmentOwned: true,
       labCanvasBridgeRenderedProofAlignmentOwned: true,
       renderedProofNamespaceAdoptionOwned: true,
@@ -2911,15 +3493,19 @@
       planetStageReadOwned: true,
       canvasMountReadOwned: true,
       canvasElementReadOwned: true,
+      domExpressionSurfaceReadOwned: true,
+      canvasPixelSampleReadOwnedWhenSafe: true,
       namespaceRenderedProofCandidateReadOwned: true,
       routeConductorRenderedDataProofReadOwned: true,
       labBridgeRenderedNamespaceReadOwned: true,
       canvasAuthorityRenderedNamespaceReadOwned: true,
+      fingerAuthorityRenderedNamespaceReadOwned: true,
       controlLifecycleRenderedNamespaceReadOwned: true,
       bishopLaneRenderedNamespaceReadOwned: true,
       queenCanvasRenderedNamespaceReadOwned: true,
       fourWayCanvasHandoffRenderedReadOwned: true,
       visiblePlanetProofReadOwned: true,
+      expressionBottleneckAnchorPublicationOwned: true,
       globalSuppressionReadOwnedWhereSafelyAvailable: true,
       runtimeReleaseReadOwnedWhereSafelyAvailable: true,
       syntheticActivationAllowedByDefault: false,
@@ -2931,16 +3517,16 @@
       currentRouteConductorContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
       currentRouteConductorReceipt: CURRENT_ROUTE_CONDUCTOR_RECEIPT,
       transitionRouteConductorContracts: TRANSITION_ROUTE_CONDUCTOR_CONTRACTS.slice(),
-      compatRouteConductorContract: COMPAT_ROUTE_CONDUCTOR_CONTRACT,
-      compatRouteConductorReceipt: COMPAT_ROUTE_CONDUCTOR_RECEIPT,
+      compatRouteConductorContract: ROUTE_V9_5_CONTRACT,
       acceptedRouteConductorContracts: ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS.slice(),
-      acceptedRouteConductorLineage: ACCEPTED_ROUTE_CONDUCTOR_LINEAGE.slice(),
       currentCanvasParentContracts: CURRENT_CANVAS_PARENT_CONTRACTS.slice(),
 
       controlFile: CONTROL_FILE,
       routeConductorFile: ROUTE_CONDUCTOR_FILE,
       indexJsFile: INDEX_JS_FILE,
       canvasFile: CANVAS_FILE,
+      expressionSurfaceSelectors: EXPRESSION_SURFACE_SELECTORS.slice(),
+      fingerAuthorityPaths: clonePlain(FINGER_AUTHORITY_PATHS),
 
       runWestRenderedReadApiAvailable: true,
       getWestReceiptApiAvailable: true,
@@ -2952,9 +3538,14 @@
       lastRenderedPlanetProofFullyInspected: lastEvidencePacket ? lastEvidencePacket.RENDERED_PLANET_PROOF_FULLY_INSPECTED : FALLBACK.UNKNOWN,
       lastWestRenderedProofSpreadComplete: lastEvidencePacket ? lastEvidencePacket.WEST_RENDERED_PROOF_SPREAD_COMPLETE : FALLBACK.UNKNOWN,
       lastVisiblePlanetProofReady: lastEvidencePacket ? lastEvidencePacket.VISIBLE_PLANET_PROOF_READY : FALLBACK.UNKNOWN,
+      lastCanvasExpressionProofStatus: lastEvidencePacket ? lastEvidencePacket.CANVAS_EXPRESSION_PROOF_STATUS : FALLBACK.UNKNOWN,
+      lastCanvasExpressionBottleneckClass: lastEvidencePacket ? lastEvidencePacket.CANVAS_EXPRESSION_BOTTLENECK_CLASS : FALLBACK.UNKNOWN,
+      lastCanvasPixelVarianceStatus: lastEvidencePacket ? lastEvidencePacket.CANVAS_PIXEL_VARIANCE_STATUS : FALLBACK.UNKNOWN,
+      lastCanvasFingerExpressionStatus: lastEvidencePacket ? lastEvidencePacket.CANVAS_FINGER_EXPRESSION_STATUS : FALLBACK.UNKNOWN,
       lastNamespaceRenderedProofCandidatesFound: lastEvidencePacket ? lastEvidencePacket.NAMESPACE_RENDERED_PROOF_CANDIDATES_FOUND : FALLBACK.UNKNOWN,
       lastRouteConductorContract: lastEvidencePacket ? lastEvidencePacket.ROUTE_CONDUCTOR_CONTRACT : FALLBACK.UNKNOWN,
       lastRouteConductorV99Detected: lastEvidencePacket ? lastEvidencePacket.ROUTE_CONDUCTOR_V9_9_DETECTED : FALLBACK.UNKNOWN,
+      lastRouteConductorV98TransitionDetected: lastEvidencePacket ? lastEvidencePacket.ROUTE_CONDUCTOR_V9_8_TRANSITION_DETECTED : FALLBACK.UNKNOWN,
       lastRouteConductorV97TransitionDetected: lastEvidencePacket ? lastEvidencePacket.ROUTE_CONDUCTOR_V9_7_TRANSITION_DETECTED : FALLBACK.UNKNOWN,
       lastRouteConductorV96TransitionDetected: lastEvidencePacket ? lastEvidencePacket.ROUTE_CONDUCTOR_V9_6_TRANSITION_DETECTED : FALLBACK.UNKNOWN,
       lastRouteConductorV95CompatDetected: lastEvidencePacket ? lastEvidencePacket.ROUTE_CONDUCTOR_V9_5_COMPAT_DETECTED : FALLBACK.UNKNOWN,
@@ -2992,6 +3583,7 @@
     root.HEARTH.diagnosticWest = api;
     root.HEARTH.diagnosticRailWest = api;
     root.HEARTH.diagnosticWestBishopQueenCanvasRenderedProof = api;
+    root.HEARTH.diagnosticWestCanvasExpressionRenderedRangeObservatory = api;
     root.HEARTH.diagnosticWestReceipt = getWestReceipt();
     root.HEARTH.diagnosticRailWestReceipt = getWestReceipt();
     root.HEARTH.diagnosticWestEvidence = clonePlain(lastEvidencePacket);
@@ -3001,10 +3593,12 @@
     root.DEXTER_LAB.hearthDiagnosticWest = api;
     root.DEXTER_LAB.hearthDiagnosticRailWest = api;
     root.DEXTER_LAB.hearthDiagnosticWestBishopQueenCanvasRenderedProof = api;
+    root.DEXTER_LAB.hearthDiagnosticWestCanvasExpressionRenderedRangeObservatory = api;
 
     root.HEARTH_DIAGNOSTIC_WEST = api;
     root.HEARTH_DIAGNOSTIC_RAIL_WEST = api;
     root.HEARTH_DIAGNOSTIC_WEST_BISHOP_QUEEN_CANVAS_RENDERED_PROOF = api;
+    root.HEARTH_DIAGNOSTIC_WEST_CANVAS_EXPRESSION_RENDERED_RANGE_OBSERVATORY = api;
     root.HEARTH_DIAGNOSTIC_WEST_RECEIPT = getWestReceipt();
     root.HEARTH_DIAGNOSTIC_RAIL_WEST_RECEIPT = getWestReceipt();
     root.HEARTH_DIAGNOSTIC_WEST_EVIDENCE = clonePlain(lastEvidencePacket);
@@ -3030,11 +3624,14 @@
     acceptedIndexJsContracts: ACCEPTED_INDEX_JS_CONTRACTS.slice(),
     currentRouteConductorContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
     currentRouteConductorReceipt: CURRENT_ROUTE_CONDUCTOR_RECEIPT,
+    routeV98Contract: ROUTE_V9_8_CONTRACT,
+    routeV97Contract: ROUTE_V9_7_CONTRACT,
+    routeV96Contract: ROUTE_V9_6_CONTRACT,
+    routeV95Contract: ROUTE_V9_5_CONTRACT,
+    routeV94Contract: ROUTE_V9_4_CONTRACT,
     transitionRouteConductorContracts: TRANSITION_ROUTE_CONDUCTOR_CONTRACTS.slice(),
-    compatRouteConductorContract: COMPAT_ROUTE_CONDUCTOR_CONTRACT,
-    compatRouteConductorReceipt: COMPAT_ROUTE_CONDUCTOR_RECEIPT,
+    compatRouteConductorContract: ROUTE_V9_5_CONTRACT,
     acceptedRouteConductorContracts: ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS.slice(),
-    acceptedRouteConductorLineage: ACCEPTED_ROUTE_CONDUCTOR_LINEAGE.slice(),
     currentCanvasParentContracts: CURRENT_CANVAS_PARENT_CONTRACTS.slice(),
 
     controlFile: CONTROL_FILE,
@@ -3048,6 +3645,8 @@
     controlAuthorityPaths: CONTROL_AUTHORITY_PATHS.slice(),
     bishopLanePaths: clonePlain(BISHOP_LANE_PATHS),
     queenPaths: QUEEN_PATHS.slice(),
+    expressionSurfaceSelectors: EXPRESSION_SURFACE_SELECTORS.slice(),
+    fingerAuthorityPaths: clonePlain(FINGER_AUTHORITY_PATHS),
 
     runWestRenderedRead,
     getWestReceipt,
@@ -3056,13 +3655,19 @@
     supportsRenderedProofNamespaceAdoption: true,
     supportsBishopQueenCanvasRenderedProofAlignment: true,
     supportsLabCanvasBridgeRenderedProofAlignment: true,
+    supportsCanvasExpressionRenderedRangeObservatory: true,
     supportsRenderedPlanetProofSpreadAlignment: true,
     supportsShowReceiptHitTestNonControllingWhenOffscreen: true,
     supportsRouteConductorV99RenderedDataProofRead: true,
+    supportsRouteConductorV98TransitionRenderedDataProofRead: true,
     supportsRouteConductorV97TransitionRenderedDataProofRead: true,
     supportsRouteConductorV96TransitionRenderedDataProofRead: true,
     supportsRouteConductorV95CompatibilityRenderedDataProofRead: true,
     supportsCanvasParentRenderedProofRead: true,
+    supportsCanvasDomSurfaceRead: true,
+    supportsCanvasPixelSampleReadWhenSafe: true,
+    supportsCanvasExpressionBottleneckAnchorPublication: true,
+    supportsFingerRenderedProofRead: true,
     supportsLabBridgeRenderedProofRead: true,
     supportsControlLifecycleRenderedProofRead: true,
     supportsBishopLaneRenderedProofRead: true,
@@ -3073,6 +3678,8 @@
 
     ownsRenderedTargetEvidence: true,
     ownsRenderedPlanetProofEvidence: true,
+    ownsCanvasExpressionRenderedEvidence: true,
+    ownsExpressionBottleneckAnchors: true,
     ownsBishopQueenCanvasRenderedEvidence: true,
     ownsLabCanvasBridgeRenderedEvidence: true,
     ownsControlLifecycleRenderedEvidence: true,

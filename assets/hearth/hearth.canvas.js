@@ -1,22 +1,31 @@
 // /assets/hearth/hearth.canvas.js
 // HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3
+// Internal renewal:
+// HEARTH_CANVAS_DOWNSTREAM_BISHOP_OUTPUT_CARRIER_WEST_GATE_HIERARCHY_ADOPTION_TNT_v12_4
 // Full-file replacement.
-// Canvas Hub / Composite-first visible-expression receiver / fast planetary view-control receiver.
+// Canvas Hub / downstream Canvas receiver-output-carrier bishop / Composite-first visible-expression receiver.
 // Purpose:
-// - Preserve v12_2 fast view transform and deferred render behavior.
-// - Fix the Composite handshake by recognizing drawToCanvas(canvasOrContext).
-// - Prefer Composite as the low-cost first visible planet path.
-// - Treat Hex Surface as a deferred/heavy renderer, not the boot-blocking first path.
-// - Recognize Hex Surface v2 lineage and v1 lineage.
-// - Prevent every drag/touch packet from forcing full Hex redraw.
-// - Publish diagnostic-readable Composite-first, fast-transform, deferred-render, and no-claim receipts.
+// - Preserve the public Canvas Hub contract expected by Route Conductor, Controls Queen, diagnostics, and LabWest.
+// - Adopt West-gate hierarchy language without redesigning rendering.
+// - Classify this file as the downstream Canvas receiver/output-carrier bishop.
+// - Preserve Composite-first visible path, drawToCanvas(canvasOrContext), fast view transform, and deferred Hex render.
+// - Accept Route Conductor v9_8 and v9_7 lineage.
+// - Recognize Controls Queen hierarchy/superconductor language as opaque input-context authority.
+// - Recognize LabWest cardinal-bishop West-gate hierarchy language as opaque release/admissibility context.
+// - Recognize pointer finger file path without making Canvas own pointer/finger truth.
+// - Preserve Canvas as receiver/output carrier only.
+// - Preserve no terrain truth, no hydrology truth, no elevation truth, no material truth, no F13 final claim,
+//   no F21 latch, no ready text, no final visual pass, no generated image, no GraphicBox, and no WebGL.
 // Does not own:
 // - controls input admission
-// - route conductor truth
+// - route conductor handshake truth
+// - LabWest admissibility truth
 // - diagnostic rail case selection
 // - Composite truth
 // - Hex Four-Pair truth
 // - Hex Surface truth
+// - finger truth
+// - pointer truth
 // - terrain, elevation, hydrology, material, atmosphere, or lighting truth
 // - F13 final claim
 // - F21 latch
@@ -32,6 +41,11 @@
   const CONTRACT = "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3";
   const RECEIPT = "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT_v12_3";
 
+  const INTERNAL_IMPLEMENTATION_CONTRACT =
+    "HEARTH_CANVAS_DOWNSTREAM_BISHOP_OUTPUT_CARRIER_WEST_GATE_HIERARCHY_ADOPTION_TNT_v12_4";
+  const INTERNAL_IMPLEMENTATION_RECEIPT =
+    "HEARTH_CANVAS_DOWNSTREAM_BISHOP_OUTPUT_CARRIER_WEST_GATE_HIERARCHY_ADOPTION_RECEIPT_v12_4";
+
   const PREVIOUS_CONTRACT = "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_TNT_v12_2";
   const PREVIOUS_RECEIPT = "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_RECEIPT_v12_2";
 
@@ -41,16 +55,55 @@
   const BASELINE_CONTRACT = "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_TNT_v12";
   const BASELINE_RECEIPT = "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_RECEIPT_v12";
 
-  const CURRENT_ROUTE_CONDUCTOR_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION_TNT_v9_7";
-  const CURRENT_ROUTE_CONDUCTOR_RECEIPT = "HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION_RECEIPT_v9_7";
-  const LINEAGE_ROUTE_CONDUCTOR_V9_6_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_TNT_v9_6";
-  const LINEAGE_ROUTE_CONDUCTOR_V9_5_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_TNT_v9_5";
-  const LINEAGE_ROUTE_CONDUCTOR_V9_4_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_TNT_v9_4";
+  const CURRENT_ROUTE_CONDUCTOR_CONTRACT =
+    "HEARTH_ROUTE_CONDUCTOR_CONTROL_FILE_ADMISSION_AND_HANDSHAKE_DELIVERY_TNT_v9_8";
+  const CURRENT_ROUTE_CONDUCTOR_RECEIPT =
+    "HEARTH_ROUTE_CONDUCTOR_CONTROL_FILE_ADMISSION_AND_HANDSHAKE_DELIVERY_RECEIPT_v9_8";
+  const LINEAGE_ROUTE_CONDUCTOR_V9_7_CONTRACT =
+    "HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION_TNT_v9_7";
+  const LINEAGE_ROUTE_CONDUCTOR_V9_6_CONTRACT =
+    "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_TNT_v9_6";
+  const LINEAGE_ROUTE_CONDUCTOR_V9_5_CONTRACT =
+    "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_TNT_v9_5";
+  const LINEAGE_ROUTE_CONDUCTOR_V9_4_CONTRACT =
+    "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_TNT_v9_4";
+
+  const ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS = Object.freeze([
+    CURRENT_ROUTE_CONDUCTOR_CONTRACT,
+    LINEAGE_ROUTE_CONDUCTOR_V9_7_CONTRACT,
+    LINEAGE_ROUTE_CONDUCTOR_V9_6_CONTRACT,
+    LINEAGE_ROUTE_CONDUCTOR_V9_5_CONTRACT,
+    LINEAGE_ROUTE_CONDUCTOR_V9_4_CONTRACT,
+    "HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_TNT_v9_3",
+    "HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_TNT_v9_2"
+  ]);
+
+  const WEST_GATE_HIERARCHY_CONTRACT =
+    "LAB_RUNTIME_TABLE_CARDINAL_WEST_GATE_DOWNSTREAM_HIERARCHY_BISHOP_QUEEN_PRIEST_ADOPTION_TNT_v4_8";
+  const WEST_GATE_HIERARCHY_RECEIPT =
+    "LAB_RUNTIME_TABLE_CARDINAL_WEST_GATE_DOWNSTREAM_HIERARCHY_BISHOP_QUEEN_PRIEST_ADOPTION_RECEIPT_v4_8";
+  const LABWEST_BISHOP_CHORD_CONTRACT =
+    "LAB_RUNTIME_TABLE_CARDINAL_WEST_BISHOP_CHORD_CANVAS_RELEASE_BRIDGE_TNT_v4_7";
+
+  const QUEEN_HIERARCHY_CONTRACT =
+    "HEARTH_CONTROLS_QUEEN_WEST_GATE_HIERARCHY_SUPERCONDUCTOR_VIEW_INPUT_BRIDGE_TNT_v2";
+  const QUEEN_BISHOP_CHORD_CONTRACT =
+    "HEARTH_CONTROLS_QUEEN_BISHOP_CHORD_SUPERCONDUCTOR_VIEW_INPUT_BRIDGE_TNT_v2";
+  const QUEEN_PUBLIC_CONTRACT =
+    "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE_TNT_v1";
+
+  const ACCEPTED_QUEEN_CONTRACTS = Object.freeze([
+    QUEEN_HIERARCHY_CONTRACT,
+    QUEEN_BISHOP_CHORD_CONTRACT,
+    QUEEN_PUBLIC_CONTRACT
+  ]);
 
   const HEX_FOUR_PAIR_CONTRACT = "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_TNT_v1";
 
-  const HEX_SURFACE_V2_CONTRACT = "HEARTH_HEX_SURFACE_CANVAS_HUB_THREE_FILE_VISIBLE_EXPRESSION_RENDERER_TNT_v2";
-  const HEX_SURFACE_V1_CONTRACT = "HEARTH_HEX_SURFACE_FOUR_PAIR_AUTHORITY_CONSUMER_TNT_v1";
+  const HEX_SURFACE_V2_CONTRACT =
+    "HEARTH_HEX_SURFACE_CANVAS_HUB_THREE_FILE_VISIBLE_EXPRESSION_RENDERER_TNT_v2";
+  const HEX_SURFACE_V1_CONTRACT =
+    "HEARTH_HEX_SURFACE_FOUR_PAIR_AUTHORITY_CONSUMER_TNT_v1";
   const ACCEPTED_HEX_SURFACE_CONTRACTS = Object.freeze([
     HEX_SURFACE_V2_CONTRACT,
     HEX_SURFACE_V1_CONTRACT
@@ -67,15 +120,42 @@
   const HEX_FOUR_PAIR_FILE = "/assets/hearth/hearth.hex.four-pair.authority.js";
   const HEX_SURFACE_FILE = "/assets/hearth/hearth.hex.surface.js";
 
+  const POINTER_FINGER_FILE = "/assets/hearth/hearth.canvas.finger.surface.js";
+
   const FAST_TRANSFORM_DELAY_MS = 0;
   const DEFERRED_RENDER_DELAY_MS = 220;
   const DEFERRED_RENDER_MAX_WAIT_MS = 900;
   const DEFERRED_HEX_MIN_DELAY_MS = 1800;
 
+  const HIERARCHY_ROLE = Object.freeze({
+    rank: "DOWNSTREAM_BISHOP",
+    title: "Canvas receiver/output carrier bishop",
+    cardinalAddress: "SOUTH",
+    definitiveFile: FILE,
+    definitiveContract: CONTRACT,
+    definitiveReceipt: RECEIPT,
+    internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
+    internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
+    queenFile: CONTROL_FILE,
+    routeConductorBishopFile: ROUTE_FILE,
+    indexPriestFile: INDEX_FILE,
+    pointerFingerBishopFile: POINTER_FINGER_FILE,
+    labWestGateFile: "/assets/lab/runtime-table.west.js",
+    ownsOutputCarrier: true,
+    ownsCanvasReceiver: true,
+    ownsInputAdmission: false,
+    ownsRouteConductorHandshakeTruth: false,
+    ownsLabWestAdmissibilityTruth: false,
+    ownsQueenTruth: false,
+    ownsFingerTruth: false,
+    ownsPointerTruth: false,
+    ownsPlanetTruth: false
+  });
+
   const FINGER_FILES = Object.freeze({
     boundary: "/assets/hearth/hearth.canvas.finger.boundary.js",
     mass: "/assets/hearth/hearth.canvas.finger.mass.js",
-    surface: "/assets/hearth/hearth.canvas.finger.surface.js",
+    surface: POINTER_FINGER_FILE,
     light: "/assets/hearth/hearth.canvas.finger.light.js",
     inspect: "/assets/hearth/hearth.canvas.finger.inspect.js",
     landform: "/assets/hearth/hearth.canvas.finger.landform.js",
@@ -170,6 +250,8 @@
 
     contract: CONTRACT,
     receipt: RECEIPT,
+    internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
+    internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
     lineageV121Contract: LINEAGE_V12_1_CONTRACT,
@@ -183,7 +265,43 @@
     indexFile: INDEX_FILE,
     routeFile: ROUTE_FILE,
     controlFile: CONTROL_FILE,
-    role: "Canvas Hub / Composite-First Fast View Transform / Deferred Hex Render Receiver",
+    role: "Canvas Hub / downstream Canvas receiver-output-carrier bishop / Composite-first fast view receiver",
+
+    hierarchyLanguageActive: true,
+    downstreamBishopLanguageActive: true,
+    westGateHierarchyLanguageActive: true,
+    canvasReceiverOutputCarrierBishopActive: true,
+    hierarchyRank: HIERARCHY_ROLE.rank,
+    hierarchyTitle: HIERARCHY_ROLE.title,
+    cardinalAddress: HIERARCHY_ROLE.cardinalAddress,
+    definitiveFile: FILE,
+    definitiveContract: CONTRACT,
+    definitiveReceipt: RECEIPT,
+
+    labWestGateObserved: false,
+    labWestGateAuthoritySource: "NONE",
+    labWestGateContract: "",
+    labWestGateReceipt: "",
+    labWestGateContractRecognized: false,
+    labWestBishopChordLineageRecognized: false,
+    westGateHierarchyStatus: "WEST_GATE_HIERARCHY_NOT_OBSERVED",
+
+    queenObserved: false,
+    queenAuthoritySource: "NONE",
+    queenContract: "",
+    queenReceipt: "",
+    queenContractRecognized: false,
+    queenHandshakeAccepted: false,
+    queenInputAdmissionOpen: false,
+    queenSuperconductorLanguageObserved: false,
+    queenBridgeStatus: "QUEEN_NOT_OBSERVED",
+
+    routeConductorBishopObserved: false,
+    routeConductorBishopStatus: "ROUTE_CONDUCTOR_BISHOP_NOT_OBSERVED",
+    indexPriestObserved: false,
+    indexPriestStatus: "INDEX_PRIEST_NOT_OBSERVED",
+    pointerFingerBishopObserved: false,
+    pointerFingerBishopStatus: "POINTER_FINGER_BISHOP_NOT_OBSERVED",
 
     canvasHubLoaded: true,
     canvasHubActive: true,
@@ -212,7 +330,8 @@
     routeConductorContractKnown: false,
     routeConductorContract: "",
     routeConductorReceipt: "",
-    routeConductorV97Recognized: false,
+    routeConductorV98Recognized: false,
+    routeConductorV97LineageAccepted: false,
     routeConductorV96LineageAccepted: false,
     routeConductorV95LineageAccepted: false,
     routeConductorV94LineageAccepted: false,
@@ -362,6 +481,7 @@
     routeConductorNotified: false,
     routeConductorNotifyMethod: "NONE",
 
+    hierarchyContextPacket: null,
     localEvents: [],
     errors: [],
     bootAuditComplete: false,
@@ -435,7 +555,7 @@
     };
 
     state.localEvents.push(item);
-    trimArray(state.localEvents, 220);
+    trimArray(state.localEvents, 240);
     state.updatedAt = item.at;
     return item;
   }
@@ -449,7 +569,7 @@
     };
 
     state.errors.push(item);
-    trimArray(state.errors, 120);
+    trimArray(state.errors, 140);
     state.updatedAt = item.at;
     return item;
   }
@@ -488,12 +608,32 @@
 
   function contractOf(value) {
     if (!isObject(value)) return "";
-    return safeString(value.contract || value.CONTRACT || value.currentContract || value.sourceContract || "");
+    return safeString(
+      value.contract ||
+      value.CONTRACT ||
+      value.currentContract ||
+      value.sourceContract ||
+      value.internalImplementationContract ||
+      value.currentRouteConductorContract ||
+      value.routeConductorContract ||
+      value.hearthCanvasContract ||
+      ""
+    );
   }
 
   function receiptOf(value) {
     if (!isObject(value)) return "";
-    return safeString(value.receipt || value.RECEIPT || value.currentReceipt || value.sourceReceipt || "");
+    return safeString(
+      value.receipt ||
+      value.RECEIPT ||
+      value.currentReceipt ||
+      value.sourceReceipt ||
+      value.internalImplementationReceipt ||
+      value.currentRouteConductorReceipt ||
+      value.routeConductorReceipt ||
+      value.hearthCanvasReceipt ||
+      ""
+    );
   }
 
   function safeInvoke(target, method, args = []) {
@@ -532,6 +672,10 @@
       "readStructuralCarrier",
       "getStructuralCarrier",
       "getCanvasCarrier",
+      "getQueenBridgeState",
+      "getControlViewReceipt",
+      "getControlsReceipt",
+      "getControlReceipt",
       "getReceiptLight",
       "getReceipt",
       "getStatus",
@@ -548,6 +692,7 @@
     if (isObject(authority.receiptPacket)) return authority.receiptPacket;
     if (isObject(authority.receiptObject)) return authority.receiptObject;
     if (isObject(authority.receipt)) return authority.receipt;
+    if (isObject(authority.canvasStationSummary)) return authority.canvasStationSummary;
     if (authority.contract || authority.CONTRACT || authority.receipt || authority.RECEIPT || authority.version) return authority;
 
     return null;
@@ -575,6 +720,416 @@
     } catch (_error) {
       return false;
     }
+  }
+
+  function firstAuthority(names) {
+    for (const name of names) {
+      const value = readPath(name);
+      if (value && isObject(value)) return { name, authority: value };
+    }
+
+    return { name: "NONE", authority: null };
+  }
+
+  function westGateAuthorityAliases() {
+    return [
+      "LAB_RUNTIME_TABLE_CARDINAL_WEST_GATE_DOWNSTREAM_HIERARCHY_BISHOP_QUEEN_PRIEST_ADOPTION",
+      "LAB_RUNTIME_TABLE_WEST_GATE_HIERARCHY",
+      "HEARTH_WEST_GATE_HIERARCHY",
+      "LAB_RUNTIME_TABLE_WEST_BISHOP_CHORD_CANVAS_RELEASE_BRIDGE",
+      "HEARTH_WEST_BISHOP_CHORD_CANVAS_RELEASE_BRIDGE",
+      "HEARTH_WEST_ANOINTED_BISHOP_CHORD_BRIDGE",
+      "LAB_RUNTIME_TABLE_WEST",
+      "RUNTIME_TABLE_WEST",
+      "DEXTER_LAB_RUNTIME_TABLE_WEST",
+      "LAB_CARDINAL_RUNTIME_TABLE_WEST",
+      "LAB_GAP_CLASSIFIER_WEST",
+      "LAB_TRANSMISSION_GAP_CLASSIFIER_WEST",
+      "LAB_RUNTIME_TABLE_CARDINAL_WEST",
+      "HEARTH_RUNTIME_TABLE_WEST",
+      "HEARTH_MACRO_WEST_AUTHORITY",
+      "HEARTH_WEST_ADMISSIBILITY",
+      "HEARTH.runtimeTableWest",
+      "HEARTH.westRuntimeTable",
+      "HEARTH.westAdmissibility",
+      "HEARTH.macroWestAuthority",
+      "HEARTH.westGateHierarchy",
+      "HEARTH.westBishopChordCanvasReleaseBridge",
+      "HEARTH.westAnointedBishopChordBridge",
+      "DEXTER_LAB.runtimeTableWest",
+      "DEXTER_LAB.hearthRuntimeTableWest",
+      "DEXTER_LAB.cardinalRuntimeTableWest",
+      "DEXTER_LAB.gapClassifierWest",
+      "DEXTER_LAB.transmissionGapClassifierWest",
+      "DEXTER_LAB.westAdmissibility",
+      "DEXTER_LAB.hearthWestGateHierarchy",
+      "DEXTER_LAB.hearthWestBishopChordCanvasReleaseBridge",
+      "DEXTER_LAB.hearthWestAnointedBishopChordBridge"
+    ];
+  }
+
+  function queenAuthorityAliases() {
+    return [
+      "HEARTH_CONTROLS_QUEEN",
+      "HEARTH_QUEEN_CONTROLS",
+      "HEARTH_QUEEN_SUPERCONDUCTOR_CONTROLS",
+      "HEARTH_CONTROLS",
+      "HEARTH_PLANETARY_CONTROLS",
+      "HEARTH_CONTROL_FILE",
+      "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE",
+      "HEARTH.controlsQueen",
+      "HEARTH.queenControls",
+      "HEARTH.queenSuperconductorControls",
+      "HEARTH.controls",
+      "HEARTH.planetaryControls",
+      "HEARTH.controlFile",
+      "DEXTER_LAB.hearthQueenControls",
+      "DEXTER_LAB.hearthQueenSuperconductorControls",
+      "DEXTER_LAB.hearthControls",
+      "DEXTER_LAB.hearthPlanetaryControls",
+      "DEXTER_LAB.hearthControlFile"
+    ];
+  }
+
+  function indexPriestAliases() {
+    return [
+      "HEARTH_INDEX_PRIEST",
+      "HEARTH.indexPriest",
+      "DEXTER_LAB.hearthIndexPriest",
+      "HEARTH_INDEX",
+      "HEARTH_INDEX_JS",
+      "HEARTH.index",
+      "DEXTER_LAB.hearthIndex"
+    ];
+  }
+
+  function routeConductorCandidates() {
+    return [
+      ["HEARTH_ROUTE_CONDUCTOR", readPath("HEARTH_ROUTE_CONDUCTOR")],
+      ["HEARTH.routeConductor", readPath("HEARTH.routeConductor")],
+      ["DEXTER_LAB.hearthRouteConductor", readPath("DEXTER_LAB.hearthRouteConductor")],
+      ["HEARTH_ROUTE_CONDUCTOR_CONTROL_FILE_ADMISSION_AND_HANDSHAKE_DELIVERY", readPath("HEARTH_ROUTE_CONDUCTOR_CONTROL_FILE_ADMISSION_AND_HANDSHAKE_DELIVERY")],
+      ["HEARTH.routeConductorControlFileAdmissionAndHandshakeDelivery", readPath("HEARTH.routeConductorControlFileAdmissionAndHandshakeDelivery")],
+      ["DEXTER_LAB.hearthRouteConductorControlFileAdmissionAndHandshakeDelivery", readPath("DEXTER_LAB.hearthRouteConductorControlFileAdmissionAndHandshakeDelivery")],
+      ["HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION", readPath("HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION")],
+      ["HEARTH.routeConductorControlHandshakeIntegration", readPath("HEARTH.routeConductorControlHandshakeIntegration")],
+      ["DEXTER_LAB.hearthRouteConductorControlHandshakeIntegration", readPath("DEXTER_LAB.hearthRouteConductorControlHandshakeIntegration")],
+      ["HEARTH_ROUTE_CONDUCTOR_RECEIPT", readPath("HEARTH_ROUTE_CONDUCTOR_RECEIPT")],
+      ["HEARTH.routeConductorReceipt", readPath("HEARTH.routeConductorReceipt")],
+      ["HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION", readPath("HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION")],
+      ["HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION", readPath("HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION")],
+      ["HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT", readPath("HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT")]
+    ];
+  }
+
+  function readContractPair(candidate) {
+    const receipt = readReceipt(candidate) || (isObject(candidate) ? candidate : null);
+    return {
+      contract: contractOf(receipt || candidate),
+      receipt: receiptOf(receipt || candidate),
+      body: receipt
+    };
+  }
+
+  function readRouteConductorProfile() {
+    let observed = false;
+    let contract = "";
+    let receipt = "";
+    let sourceName = "NONE";
+
+    for (const [name, candidate] of routeConductorCandidates()) {
+      if (!candidate) continue;
+
+      observed = true;
+
+      const pair = readContractPair(candidate);
+      if (!contract && pair.contract) contract = pair.contract;
+      if (!receipt && pair.receipt) receipt = pair.receipt;
+
+      if (pair.contract === CURRENT_ROUTE_CONDUCTOR_CONTRACT || pair.receipt === CURRENT_ROUTE_CONDUCTOR_RECEIPT) {
+        contract = pair.contract || CURRENT_ROUTE_CONDUCTOR_CONTRACT;
+        receipt = pair.receipt || CURRENT_ROUTE_CONDUCTOR_RECEIPT;
+        sourceName = name;
+        break;
+      }
+
+      if (sourceName === "NONE") sourceName = name;
+    }
+
+    const datasetContract =
+      datasetValue("hearthRouteConductorContract") ||
+      datasetValue("hearthRouteConductorCurrentContract") ||
+      datasetValue("routeConductorCurrentContract") ||
+      datasetValue("routeConductorContract") ||
+      datasetValue("hearthSouthJsRouteConductorContract") ||
+      datasetValue("hearthCanvasRouteConductorContract");
+
+    const datasetReceipt =
+      datasetValue("hearthRouteConductorReceipt") ||
+      datasetValue("routeConductorCurrentReceipt") ||
+      datasetValue("routeConductorReceipt");
+
+    if (datasetContract) {
+      contract = contract || datasetContract;
+      observed = true;
+    }
+
+    if (datasetReceipt) receipt = receipt || datasetReceipt;
+
+    state.routeConductorObserved = observed;
+    state.routeConductorBishopObserved = observed;
+    state.routeConductorContractKnown = Boolean(contract);
+    state.routeConductorContract = contract || "";
+    state.routeConductorReceipt = receipt || "";
+    state.routeConductorV98Recognized = contract === CURRENT_ROUTE_CONDUCTOR_CONTRACT || receipt === CURRENT_ROUTE_CONDUCTOR_RECEIPT;
+    state.routeConductorV97LineageAccepted = contract === LINEAGE_ROUTE_CONDUCTOR_V9_7_CONTRACT;
+    state.routeConductorV96LineageAccepted = contract === LINEAGE_ROUTE_CONDUCTOR_V9_6_CONTRACT;
+    state.routeConductorV95LineageAccepted =
+      contract === LINEAGE_ROUTE_CONDUCTOR_V9_5_CONTRACT ||
+      datasetValue("routeConductorLineageV95Contract") === LINEAGE_ROUTE_CONDUCTOR_V9_5_CONTRACT;
+    state.routeConductorV94LineageAccepted =
+      contract === LINEAGE_ROUTE_CONDUCTOR_V9_4_CONTRACT ||
+      datasetValue("routeConductorLineageContract") === LINEAGE_ROUTE_CONDUCTOR_V9_4_CONTRACT;
+    state.routeConductorAuthoritySourceName = sourceName;
+    state.routeConductorBishopStatus = observed
+      ? "NORTH_DOWNSTREAM_BISHOP_ROUTE_CONDUCTOR_OBSERVED"
+      : "ROUTE_CONDUCTOR_BISHOP_NOT_OBSERVED";
+
+    return {
+      observed,
+      contract,
+      receipt,
+      routeConductorV98Recognized: state.routeConductorV98Recognized,
+      routeConductorV97LineageAccepted: state.routeConductorV97LineageAccepted,
+      routeConductorV96LineageAccepted: state.routeConductorV96LineageAccepted,
+      routeConductorV95LineageAccepted: state.routeConductorV95LineageAccepted,
+      routeConductorV94LineageAccepted: state.routeConductorV94LineageAccepted,
+      sourceName
+    };
+  }
+
+  function readWestGateHierarchy() {
+    const found = firstAuthority(westGateAuthorityAliases());
+    const receipt = readReceipt(found.authority) || {};
+    const contract =
+      contractOf(receipt) ||
+      (found.authority && contractOf(found.authority)) ||
+      datasetValue("hearthWestGateHierarchyContract") ||
+      datasetValue("hearthWestRuntimeTableContract") ||
+      datasetValue("labRuntimeTableWestContract");
+
+    const receiptName =
+      receiptOf(receipt) ||
+      (found.authority && receiptOf(found.authority)) ||
+      datasetValue("hearthWestGateHierarchyReceipt") ||
+      datasetValue("hearthWestRuntimeTableReceipt") ||
+      datasetValue("labRuntimeTableWestReceipt");
+
+    const observed = Boolean(
+      found.authority ||
+      contract ||
+      datasetValue("hearthWestBishopChordBridgeActive") === "true" ||
+      datasetValue("hearthWestGateHierarchyActive") === "true"
+    );
+
+    state.labWestGateObserved = observed;
+    state.labWestGateAuthoritySource = found.name;
+    state.labWestGateContract = contract || "";
+    state.labWestGateReceipt = receiptName || "";
+    state.labWestGateContractRecognized = contract === WEST_GATE_HIERARCHY_CONTRACT || receiptName === WEST_GATE_HIERARCHY_RECEIPT;
+    state.labWestBishopChordLineageRecognized = contract === LABWEST_BISHOP_CHORD_CONTRACT;
+    state.westGateHierarchyStatus = observed
+      ? state.labWestGateContractRecognized
+        ? "WEST_GATE_HIERARCHY_CONTRACT_RECOGNIZED"
+        : state.labWestBishopChordLineageRecognized
+          ? "WEST_GATE_BISHOP_CHORD_LINEAGE_RECOGNIZED"
+          : "WEST_GATE_HIERARCHY_LANGUAGE_OBSERVED"
+      : "WEST_GATE_HIERARCHY_NOT_OBSERVED";
+
+    return {
+      observed,
+      authoritySource: found.name,
+      contract: state.labWestGateContract,
+      receipt: state.labWestGateReceipt,
+      contractRecognized: state.labWestGateContractRecognized,
+      bishopChordLineageRecognized: state.labWestBishopChordLineageRecognized,
+      status: state.westGateHierarchyStatus,
+      receiptBody: clonePlain(receipt)
+    };
+  }
+
+  function readQueenControlsProfile() {
+    const found = firstAuthority(queenAuthorityAliases());
+    const receipt = readReceipt(found.authority) || {};
+
+    const contract =
+      contractOf(receipt) ||
+      (found.authority && contractOf(found.authority)) ||
+      datasetValue("hearthControlsInternalImplementationContract") ||
+      datasetValue("hearthControlsContract") ||
+      datasetValue("hearthControlFileContract");
+
+    const receiptName =
+      receiptOf(receipt) ||
+      (found.authority && receiptOf(found.authority)) ||
+      datasetValue("hearthControlsInternalImplementationReceipt") ||
+      datasetValue("hearthControlsReceipt") ||
+      datasetValue("hearthControlFileReceipt");
+
+    const observed = Boolean(found.authority || contract || datasetValue("hearthControlsLoaded") === "true");
+
+    state.queenObserved = observed;
+    state.queenAuthoritySource = found.name;
+    state.queenContract = contract || "";
+    state.queenReceipt = receiptName || "";
+    state.queenContractRecognized = ACCEPTED_QUEEN_CONTRACTS.includes(contract);
+    state.queenHandshakeAccepted = safeBool(receipt.handshakeAccepted, safeBool(datasetValue("hearthControlHandshakeStatus") === "ACCEPTED_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE", false));
+    state.queenInputAdmissionOpen = safeBool(receipt.inputAdmissionOpen, safeBool(datasetValue("hearthPlanetaryViewInputStatus") === "PLANETARY_VIEW_INPUT_ADMITTED", false));
+    state.queenSuperconductorLanguageObserved = Boolean(
+      safeBool(receipt.supportsQueenSuperconductorLanguage, false) ||
+      safeBool(receipt.queenSuperconductorLanguageActive, false) ||
+      datasetValue("hearthQueenSuperconductorLanguageActive") === "true" ||
+      datasetValue("hearthControlsLabWestSuperconductorStatus") !== ""
+    );
+
+    state.queenBridgeStatus = observed
+      ? state.queenContractRecognized
+        ? "QUEEN_CONTROLS_CONTRACT_RECOGNIZED"
+        : "QUEEN_CONTROLS_OBSERVED_UNRECOGNIZED_CONTRACT"
+      : "QUEEN_NOT_OBSERVED";
+
+    return {
+      observed,
+      authoritySource: found.name,
+      contract: state.queenContract,
+      receipt: state.queenReceipt,
+      contractRecognized: state.queenContractRecognized,
+      handshakeAccepted: state.queenHandshakeAccepted,
+      inputAdmissionOpen: state.queenInputAdmissionOpen,
+      queenSuperconductorLanguageObserved: state.queenSuperconductorLanguageObserved,
+      status: state.queenBridgeStatus,
+      receiptBody: clonePlain(receipt)
+    };
+  }
+
+  function readIndexPriestProfile() {
+    const found = firstAuthority(indexPriestAliases());
+    const contract =
+      contractOf(readReceipt(found.authority) || found.authority) ||
+      datasetValue("hearthIndexContract") ||
+      datasetValue("servedIndexJsContract");
+
+    const observed = Boolean(
+      found.authority ||
+      contract ||
+      datasetValue("hearthIndexLoaded") === "true" ||
+      datasetValue("hearthIndexScriptLoaded") === "true"
+    );
+
+    state.indexPriestObserved = observed;
+    state.indexPriestStatus = observed
+      ? "EAST_PRIEST_INDEX_BRIDGE_OBSERVED"
+      : "INDEX_PRIEST_NOT_OBSERVED";
+
+    return {
+      observed,
+      authoritySource: found.name,
+      contract: contract || "",
+      status: state.indexPriestStatus
+    };
+  }
+
+  function readPointerFingerBishopProfile() {
+    const track = state.fingerRegistry.surface || null;
+    const source = readFingerAuthority("surface");
+    const receipt = readReceipt(source.authority) || {};
+    const contract = contractOf(receipt || source.authority);
+    const observed = Boolean(
+      source.authority ||
+      (track && track.authorityObserved) ||
+      (track && track.trackReady) ||
+      contract
+    );
+
+    state.pointerFingerBishopObserved = observed;
+    state.pointerFingerBishopStatus = observed
+      ? "POINTER_FINGER_BISHOP_SURFACE_FILE_OBSERVED"
+      : "POINTER_FINGER_BISHOP_NOT_OBSERVED";
+
+    return {
+      observed,
+      authoritySource: source.name,
+      file: POINTER_FINGER_FILE,
+      contract: contract || "",
+      trackReady: Boolean(track && track.trackReady),
+      status: state.pointerFingerBishopStatus
+    };
+  }
+
+  function readHierarchyContext() {
+    const westGate = readWestGateHierarchy();
+    const queen = readQueenControlsProfile();
+    const routeBishop = readRouteConductorProfile();
+    const indexPriest = readIndexPriestProfile();
+    const pointerFingerBishop = readPointerFingerBishopProfile();
+
+    const context = {
+      packetType: "HEARTH_CANVAS_DOWNSTREAM_BISHOP_OUTPUT_CARRIER_HIERARCHY_CONTEXT",
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
+      internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
+      file: FILE,
+      route: ROUTE,
+
+      hierarchyLanguageActive: true,
+      downstreamBishopLanguageActive: true,
+      westGateHierarchyLanguageActive: true,
+      rank: HIERARCHY_ROLE.rank,
+      title: HIERARCHY_ROLE.title,
+      cardinalAddress: HIERARCHY_ROLE.cardinalAddress,
+      definitiveFile: FILE,
+      definitiveContract: CONTRACT,
+      definitiveReceipt: RECEIPT,
+
+      westGate,
+      queen,
+      routeConductorBishop: {
+        observed: routeBishop.observed,
+        file: ROUTE_FILE,
+        cardinalAddress: "NORTH",
+        status: state.routeConductorBishopStatus,
+        contract: state.routeConductorContract,
+        receipt: state.routeConductorReceipt,
+        v98Recognized: state.routeConductorV98Recognized,
+        v97LineageAccepted: state.routeConductorV97LineageAccepted
+      },
+      indexPriest: {
+        ...indexPriest,
+        file: INDEX_FILE,
+        cardinalAddress: "EAST",
+        rank: "PRIEST"
+      },
+      pointerFingerBishop: {
+        ...pointerFingerBishop,
+        cardinalAddress: "LOWER_SURFACE_POINTER",
+        rank: "DOWNSTREAM_POINTER_FINGER_BISHOP"
+      },
+
+      canvasOwnsOutputCarrier: true,
+      canvasOwnsInputAdmission: false,
+      canvasOwnsRouteConductorHandshakeTruth: false,
+      canvasOwnsLabWestAdmissibilityTruth: false,
+      canvasOwnsQueenTruth: false,
+      canvasOwnsFingerTruth: false,
+      canvasOwnsPointerTruth: false,
+
+      ...FINAL_FALSE,
+      updatedAt: nowIso()
+    };
+
+    state.hierarchyContextPacket = clonePlain(context);
+    return context;
   }
 
   function choosePixelSize(container) {
@@ -665,6 +1220,8 @@
     canvas.dataset.hearthViewTransformApplied = "true";
     canvas.dataset.hearthFastViewTransformActive = "true";
     canvas.dataset.hearthDeferredRendererActive = "true";
+    canvas.dataset.hearthCanvasDownstreamBishop = "true";
+    canvas.dataset.hearthCanvasCardinalAddress = HIERARCHY_ROLE.cardinalAddress;
 
     state.viewTransformApplied = true;
     state.viewTransformCss = css;
@@ -756,8 +1313,14 @@
     canvas.dataset.hearthCanvasHub = "true";
     canvas.dataset.hearthCanvasContract = CONTRACT;
     canvas.dataset.hearthCanvasReceipt = RECEIPT;
+    canvas.dataset.hearthCanvasInternalImplementationContract = INTERNAL_IMPLEMENTATION_CONTRACT;
+    canvas.dataset.hearthCanvasInternalImplementationReceipt = INTERNAL_IMPLEMENTATION_RECEIPT;
     canvas.dataset.hearthCanvasPreviousContract = PREVIOUS_CONTRACT;
     canvas.dataset.hearthCanvasBaselineContract = BASELINE_CONTRACT;
+    canvas.dataset.hearthCanvasDownstreamBishop = "true";
+    canvas.dataset.hearthCanvasHierarchyRank = HIERARCHY_ROLE.rank;
+    canvas.dataset.hearthCanvasCardinalAddress = HIERARCHY_ROLE.cardinalAddress;
+    canvas.dataset.hearthCanvasOutputCarrierBishop = "true";
     canvas.dataset.hearthPlanetaryViewControlReceiverActive = "true";
     canvas.dataset.hearthCompositeFirstVisiblePathActive = "true";
     canvas.dataset.hearthFastViewTransformActive = "true";
@@ -900,93 +1463,6 @@
       recordError("HOLDING_FIELD_DRAW_FAILED", error);
       return false;
     }
-  }
-
-  function routeConductorCandidates() {
-    return [
-      ["HEARTH_ROUTE_CONDUCTOR", readPath("HEARTH_ROUTE_CONDUCTOR")],
-      ["HEARTH.routeConductor", readPath("HEARTH.routeConductor")],
-      ["DEXTER_LAB.hearthRouteConductor", readPath("DEXTER_LAB.hearthRouteConductor")],
-      ["HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION", readPath("HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION")],
-      ["HEARTH.routeConductorControlHandshakeIntegration", readPath("HEARTH.routeConductorControlHandshakeIntegration")],
-      ["DEXTER_LAB.hearthRouteConductorControlHandshakeIntegration", readPath("DEXTER_LAB.hearthRouteConductorControlHandshakeIntegration")],
-      ["HEARTH_ROUTE_CONDUCTOR_RECEIPT", readPath("HEARTH_ROUTE_CONDUCTOR_RECEIPT")],
-      ["HEARTH.routeConductorReceipt", readPath("HEARTH.routeConductorReceipt")],
-      ["HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION", readPath("HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION")],
-      ["HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION", readPath("HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION")],
-      ["HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT", readPath("HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT")]
-    ];
-  }
-
-  function readContractPair(candidate) {
-    const receipt = readReceipt(candidate) || (isObject(candidate) ? candidate : null);
-    return {
-      contract: contractOf(receipt || candidate),
-      receipt: receiptOf(receipt || candidate),
-      body: receipt
-    };
-  }
-
-  function readRouteConductorProfile() {
-    let observed = false;
-    let contract = "";
-    let receipt = "";
-    let sourceName = "NONE";
-
-    for (const [name, candidate] of routeConductorCandidates()) {
-      if (!candidate) continue;
-
-      observed = true;
-
-      const pair = readContractPair(candidate);
-      if (!contract && pair.contract) contract = pair.contract;
-      if (!receipt && pair.receipt) receipt = pair.receipt;
-
-      if (pair.contract === CURRENT_ROUTE_CONDUCTOR_CONTRACT || pair.receipt === CURRENT_ROUTE_CONDUCTOR_RECEIPT) {
-        contract = pair.contract || CURRENT_ROUTE_CONDUCTOR_CONTRACT;
-        receipt = pair.receipt || CURRENT_ROUTE_CONDUCTOR_RECEIPT;
-        sourceName = name;
-        break;
-      }
-
-      if (sourceName === "NONE") sourceName = name;
-    }
-
-    const datasetContract =
-      datasetValue("hearthRouteConductorContract") ||
-      datasetValue("hearthRouteConductorCurrentContract") ||
-      datasetValue("routeConductorCurrentContract") ||
-      datasetValue("routeConductorContract") ||
-      datasetValue("hearthSouthJsRouteConductorContract") ||
-      datasetValue("hearthCanvasRouteConductorContract");
-
-    if (datasetContract && !contract) contract = datasetContract;
-    if (datasetContract) observed = true;
-
-    state.routeConductorObserved = observed;
-    state.routeConductorContractKnown = Boolean(contract);
-    state.routeConductorContract = contract || "";
-    state.routeConductorReceipt = receipt || "";
-    state.routeConductorV97Recognized = contract === CURRENT_ROUTE_CONDUCTOR_CONTRACT || receipt === CURRENT_ROUTE_CONDUCTOR_RECEIPT;
-    state.routeConductorV96LineageAccepted = contract === LINEAGE_ROUTE_CONDUCTOR_V9_6_CONTRACT;
-    state.routeConductorV95LineageAccepted =
-      contract === LINEAGE_ROUTE_CONDUCTOR_V9_5_CONTRACT ||
-      datasetValue("routeConductorLineageV95Contract") === LINEAGE_ROUTE_CONDUCTOR_V9_5_CONTRACT;
-    state.routeConductorV94LineageAccepted =
-      contract === LINEAGE_ROUTE_CONDUCTOR_V9_4_CONTRACT ||
-      datasetValue("routeConductorLineageContract") === LINEAGE_ROUTE_CONDUCTOR_V9_4_CONTRACT;
-    state.routeConductorAuthoritySourceName = sourceName;
-
-    return {
-      observed,
-      contract,
-      receipt,
-      routeConductorV97Recognized: state.routeConductorV97Recognized,
-      routeConductorV96LineageAccepted: state.routeConductorV96LineageAccepted,
-      routeConductorV95LineageAccepted: state.routeConductorV95LineageAccepted,
-      routeConductorV94LineageAccepted: state.routeConductorV94LineageAccepted,
-      sourceName
-    };
   }
 
   function compositeSources() {
@@ -1178,7 +1654,7 @@
     if (FINGER_FILES[raw]) return raw;
     if (raw.includes("boundary") || raw.includes("shape")) return "boundary";
     if (raw.includes("mass") || raw.includes("body")) return "mass";
-    if (raw.includes("surface")) return "surface";
+    if (raw.includes("surface") || raw.includes("pointer")) return "surface";
     if (raw === "light" || raw.includes("base-light")) return "light";
     if (raw.includes("inspect")) return "inspect";
     if (raw.includes("landform") || raw.includes("landmass")) return "landform";
@@ -1207,6 +1683,8 @@
       hardFail: false,
       status: "DECLARED_WAITING_FILE",
       firstGap: "WAITING_DOWNSTREAM_FINGER_FILE",
+      rank: normalizedKey === "surface" ? "DOWNSTREAM_POINTER_FINGER_BISHOP" : "DOWNSTREAM_FINGER_BISHOP",
+      cardinalAddress: normalizedKey === "surface" ? "LOWER_SURFACE_POINTER" : "FINGER_TRACK",
       ownsTruth: false,
       ownedByCanvasHub: false,
       canvasHubManagesTrack: true,
@@ -1318,11 +1796,14 @@
     const names = [
       `HEARTH_CANVAS_FINGER_${upper}`,
       `HEARTH_CANVAS_${upper}_FINGER`,
+      normalizedKey === "surface" ? "HEARTH_POINTER_FINGER" : "",
+      normalizedKey === "surface" ? "HEARTH_CANVAS_POINTER_FINGER" : "",
+      normalizedKey === "surface" ? "HEARTH.canvasPointerFinger" : "",
       `HEARTH.canvasFinger${camel}`,
       `HEARTH.canvas${camel}Finger`,
       `DEXTER_LAB.hearthCanvasFinger${camel}`,
       `DEXTER_LAB.hearthCanvas${camel}Finger`
-    ];
+    ].filter(Boolean);
 
     for (const name of names) {
       const authority = readPath(name);
@@ -1392,6 +1873,7 @@
     for (const key of FINGER_SEQUENCE) scanFinger(key);
 
     recomputeFingerAggregation();
+    readPointerFingerBishopProfile();
     return getFingerRegistry();
   }
 
@@ -1458,6 +1940,7 @@
     };
 
     recomputeFingerAggregation();
+    readPointerFingerBishopProfile();
     scheduleDeferredRender("finger-packet-received");
     updateDataset();
     publishGlobals();
@@ -1490,6 +1973,7 @@
     detectHexFourPairAuthority();
     detectHexSurfaceRenderer();
     scanAllFingers();
+    readHierarchyContext();
     return true;
   }
 
@@ -1501,11 +1985,14 @@
       mount,
       stage,
       mode,
-      source: "Canvas Hub",
+      source: "Canvas Hub downstream bishop",
       contract: CONTRACT,
       receipt: RECEIPT,
+      internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
+      internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
       route: ROUTE,
       file: FILE,
+      hierarchyContext: readHierarchyContext(),
       viewState: clonePlain(view),
       yaw: view.yaw,
       pitch: view.pitch,
@@ -1537,9 +2024,12 @@
 
     if (detected.method === "drawToCanvas") {
       result = safeInvoke(detected.api, detected.method, [canvas, {
-        source: "Canvas Hub",
+        source: "Canvas Hub downstream bishop",
         contract: CONTRACT,
         receipt: RECEIPT,
+        internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
+        internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
+        hierarchyContext: readHierarchyContext(),
         preferredVisibleExpression: true,
         compositeFirstVisiblePathActive: true,
         fastViewTransformActive: true,
@@ -1552,7 +2042,7 @@
     } else {
       const drawState = buildDrawState(canvas, ctx, mount, stage, "COMPOSITE");
       result = safeInvoke(detected.api, detected.method, [drawState, {
-        source: "Canvas Hub",
+        source: "Canvas Hub downstream bishop",
         contract: CONTRACT,
         receipt: RECEIPT,
         preferredVisibleExpression: true,
@@ -1568,7 +2058,7 @@
       if (!result.ok) {
         result = safeInvoke(detected.api, detected.method, [ctx, {
           canvas,
-          source: "Canvas Hub",
+          source: "Canvas Hub downstream bishop",
           contract: CONTRACT,
           receipt: RECEIPT,
           viewState: clonePlain(view),
@@ -1646,15 +2136,18 @@
       mount,
       stage,
       phase: view.phase,
-      source: "Canvas Hub",
+      source: "Canvas Hub downstream bishop",
       contract: CONTRACT,
       receipt: RECEIPT,
+      internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
+      internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
+      hierarchyContext: readHierarchyContext(),
       viewState: clonePlain(view),
       ...FINAL_FALSE
     };
 
     const result = safeInvoke(detected.api, detected.method, [target, {
-      source: "Canvas Hub",
+      source: "Canvas Hub downstream bishop",
       contract: CONTRACT,
       receipt: RECEIPT,
       supportVisibleExpression: true,
@@ -1783,6 +2276,7 @@
         source: state.visiblePlanetProofSource,
         reason,
         viewState: clonePlain(view),
+        hierarchyRole: HIERARCHY_ROLE.title,
         compositeFirstVisiblePathActive: true,
         deferredRendererActive: true
       });
@@ -1802,6 +2296,7 @@
           source: "HEX_SURFACE_RENDERER_DEFERRED",
           reason,
           viewState: clonePlain(view),
+          hierarchyRole: HIERARCHY_ROLE.title,
           compositeFirstVisiblePathActive: true,
           deferredRendererActive: true
         });
@@ -1946,6 +2441,12 @@
     const input = isObject(packet) ? packet : {};
     const viewState = isObject(input.viewState) ? input.viewState : null;
 
+    if (isObject(input.queenBridge)) {
+      state.queenObserved = true;
+      state.queenBridgeStatus = "QUEEN_CONTEXT_OBSERVED_IN_CONTROL_PACKET";
+      state.queenSuperconductorLanguageObserved = safeBool(input.queenBridge.queenSuperconductorLanguageActive, state.queenSuperconductorLanguageObserved);
+    }
+
     return {
       packetType: safeString(input.packetType || input.type || "CANVAS_VIEW_CONTROL_PACKET"),
       sourceFile: safeString(input.sourceFile || input.controlsFile || CONTROL_FILE),
@@ -1959,6 +2460,8 @@
       rawDy: input.rawDy !== undefined ? safeNumber(input.rawDy, 0) : undefined,
       rawWheelY: input.rawWheelY !== undefined ? safeNumber(input.rawWheelY, 0) : undefined,
       key: safeString(input.key || ""),
+      queenBridge: isObject(input.queenBridge) ? clonePlain(input.queenBridge) : null,
+      hierarchyContext: isObject(input.hierarchyContext) ? clonePlain(input.hierarchyContext) : null,
       viewState: viewState ? {
         yaw: safeNumber(viewState.yaw, view.yaw),
         pitch: safeNumber(viewState.pitch, view.pitch),
@@ -1997,7 +2500,7 @@
     state.lastViewPacket = clonePlain(packet);
     state.controlPacketLastSource = packet.sourceFile || CONTROL_FILE;
     state.controlPacketDeliveryStatus = "CONTROL_PACKET_ACCEPTED_FAST_TRANSFORM_APPLIED_HEX_REDRAW_DEFERRED";
-    state.controlPacketDeliveryMethod = "composite-first-fast-view-transform-deferred-render-receiver";
+    state.controlPacketDeliveryMethod = "downstream-bishop-composite-first-fast-view-transform-deferred-render-receiver";
     state.controlPacketLastAcceptedAt = packet.receivedAt;
     state.viewMotionStatus = "FAST_VIEW_TRANSFORM_APPLIED";
     state.touchRuntimeStatus = packet.inputType.includes("pointer") || packet.inputType.includes("touch")
@@ -2025,6 +2528,7 @@
 
   function receivePlanetaryControlPacket(packet = {}) {
     state.controlPacketCount += 1;
+    readQueenControlsProfile();
 
     if (!isObject(packet)) {
       state.controlPacketRejectedCount += 1;
@@ -2055,6 +2559,7 @@
       deltaPitch: normalized.deltaPitch,
       deltaZoom: normalized.deltaZoom,
       sourceFile: normalized.sourceFile,
+      hierarchyRole: HIERARCHY_ROLE.title,
       expensiveRedrawDeferred: true,
       hexSurfaceDeferred: true
     });
@@ -2099,6 +2604,7 @@
       deltaPitch: safeNumber(delta.deltaPitch, 0),
       deltaZoom: safeNumber(delta.deltaZoom, 0),
       viewState: isObject(delta.viewState) ? delta.viewState : undefined,
+      hierarchyContext: readHierarchyContext(),
       ...FINAL_FALSE
     });
   }
@@ -2122,6 +2628,7 @@
         minZoom: view.minZoom,
         maxZoom: view.maxZoom
       },
+      hierarchyContext: readHierarchyContext(),
       ...FINAL_FALSE
     });
   }
@@ -2142,7 +2649,10 @@
       packetType: "HEARTH_CANVAS_VIEW_STATE_PACKET",
       contract: CONTRACT,
       receipt: RECEIPT,
+      internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
+      internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
       sourceFile: FILE,
+      hierarchyContext: clonePlain(state.hierarchyContextPacket || readHierarchyContext()),
       fastViewTransformActive: true,
       deferredRendererActive: true,
       expensiveRedrawDetachedFromInputPacket: true,
@@ -2170,13 +2680,22 @@
 
   function getControlViewReceipt() {
     return {
-      packetType: "HEARTH_CANVAS_COMPOSITE_FIRST_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_RECEIPT",
+      packetType: "HEARTH_CANVAS_DOWNSTREAM_BISHOP_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_RECEIPT",
       contract: CONTRACT,
       receipt: RECEIPT,
+      internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
+      internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       previousReceipt: PREVIOUS_RECEIPT,
       file: FILE,
       controlFile: CONTROL_FILE,
+
+      hierarchyLanguageActive: true,
+      downstreamBishopLanguageActive: true,
+      rank: HIERARCHY_ROLE.rank,
+      cardinalAddress: HIERARCHY_ROLE.cardinalAddress,
+      title: HIERARCHY_ROLE.title,
+      hierarchyContext: clonePlain(state.hierarchyContextPacket || readHierarchyContext()),
 
       planetaryViewControlReceiverActive: true,
       viewControlPacketReceiverReady: true,
@@ -2239,6 +2758,7 @@
   }
 
   function refreshState() {
+    readHierarchyContext();
     readRouteConductorProfile();
     refreshSupportDetections();
     ensureCanvas();
@@ -2247,6 +2767,10 @@
     return {
       contract: state.contract,
       receipt: state.receipt,
+      internalImplementationContract: state.internalImplementationContract,
+      internalImplementationReceipt: state.internalImplementationReceipt,
+      hierarchyRank: state.hierarchyRank,
+      cardinalAddress: state.cardinalAddress,
       visiblePlanetProofReady: state.visiblePlanetProofReady,
       visiblePlanetProofSource: state.visiblePlanetProofSource,
       firstFailedCoordinate: state.firstFailedCoordinate
@@ -2280,6 +2804,7 @@
       script.defer = false;
       script.setAttribute("data-hearth-canvas-hub-support", "true");
       script.setAttribute("data-contract", CONTRACT);
+      script.setAttribute("data-hearth-hierarchy-context", INTERNAL_IMPLEMENTATION_CONTRACT);
 
       script.onload = () => {
         state[completeKey] = true;
@@ -2362,6 +2887,11 @@
   function consumeRouteConductorReleasePacket(packet = {}) {
     state.routeConductorReleasePacket = clonePlain(packet || {});
     state.routeConductorReleasePacketObserved = isObject(packet);
+
+    if (isObject(packet) && isObject(packet.hierarchyContext)) {
+      state.hierarchyContextPacket = clonePlain(packet.hierarchyContext);
+    }
+
     refreshState();
     scheduleDeferredRender("route-conductor-release-packet");
     return getReceipt();
@@ -2386,6 +2916,51 @@
   function readRouteConductorReleasePacket() {
     readRouteConductorProfile();
     return clonePlain(state.routeConductorReleasePacket || null);
+  }
+
+  function receiveHierarchyContext(packet = {}) {
+    if (!isObject(packet)) return getHierarchyContext();
+
+    state.hierarchyContextPacket = clonePlain({
+      ...readHierarchyContext(),
+      receivedPacket: clonePlain(packet),
+      receivedAt: nowIso()
+    });
+
+    updateDataset();
+    publishGlobals();
+    return getHierarchyContext();
+  }
+
+  function consumeHierarchyContext(packet = {}) {
+    return receiveHierarchyContext(packet);
+  }
+
+  function receiveBishopContext(packet = {}) {
+    return receiveHierarchyContext(packet);
+  }
+
+  function consumeBishopContext(packet = {}) {
+    return receiveHierarchyContext(packet);
+  }
+
+  function receiveQueenContext(packet = {}) {
+    if (isObject(packet)) {
+      state.queenObserved = true;
+      state.queenBridgeStatus = "QUEEN_CONTEXT_RECEIVED_BY_CANVAS_BISHOP";
+      state.queenSuperconductorLanguageObserved = safeBool(packet.queenSuperconductorLanguageActive, state.queenSuperconductorLanguageObserved);
+    }
+
+    return receiveHierarchyContext({
+      queenContext: clonePlain(packet),
+      receivedBy: FILE,
+      receiverRank: HIERARCHY_ROLE.rank,
+      ...FINAL_FALSE
+    });
+  }
+
+  function consumeQueenContext(packet = {}) {
+    return receiveQueenContext(packet);
   }
 
   function receiveChildPacket(packet = {}) {
@@ -2430,6 +3005,10 @@
     return getCanvasStationSummary();
   }
 
+  function getHierarchyContext() {
+    return clonePlain(state.hierarchyContextPacket || readHierarchyContext());
+  }
+
   function getExpressionHubSummary() {
     refreshSupportDetections();
     recomputeFingerAggregation();
@@ -2439,6 +3018,8 @@
       packetType: "CANVAS_EXPRESSION_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_SUMMARY",
       contract: CONTRACT,
       receipt: RECEIPT,
+      internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
+      internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       previousReceipt: PREVIOUS_RECEIPT,
       baselineContract: BASELINE_CONTRACT,
@@ -2446,6 +3027,11 @@
       file: FILE,
       route: ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
+
+      hierarchyContext: getHierarchyContext(),
+      canvasReceiverOutputCarrierBishopActive: true,
+      rank: HIERARCHY_ROLE.rank,
+      cardinalAddress: HIERARCHY_ROLE.cardinalAddress,
 
       canvasHubLoaded: true,
       canvasHubActive: true,
@@ -2463,6 +3049,7 @@
       compositeFile: COMPOSITE_FILE,
       hexFourPairFile: HEX_FOUR_PAIR_FILE,
       hexSurfaceFile: HEX_SURFACE_FILE,
+      pointerFingerFile: POINTER_FINGER_FILE,
 
       compositeDetected: state.compositeDetected,
       compositeContract: state.compositeContract,
@@ -2526,9 +3113,11 @@
 
     return {
       timestamp: state.timestamp || nowIso(),
-      packetType: "CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_SUMMARY",
+      packetType: "CANVAS_HUB_DOWNSTREAM_BISHOP_OUTPUT_CARRIER_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_SUMMARY",
       contract: CONTRACT,
       receipt: RECEIPT,
+      internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
+      internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       previousReceipt: PREVIOUS_RECEIPT,
       lineageV121Contract: LINEAGE_V12_1_CONTRACT,
@@ -2541,6 +3130,28 @@
       indexFile: INDEX_FILE,
       routeFile: ROUTE_FILE,
       controlFile: CONTROL_FILE,
+
+      hierarchyLanguageActive: true,
+      downstreamBishopLanguageActive: true,
+      westGateHierarchyLanguageActive: true,
+      canvasReceiverOutputCarrierBishopActive: true,
+      hierarchyRank: HIERARCHY_ROLE.rank,
+      hierarchyTitle: HIERARCHY_ROLE.title,
+      cardinalAddress: HIERARCHY_ROLE.cardinalAddress,
+      hierarchyContext: getHierarchyContext(),
+      westGateHierarchyObserved: state.labWestGateObserved,
+      westGateHierarchyStatus: state.westGateHierarchyStatus,
+      westGateHierarchyContract: state.labWestGateContract,
+      queenObserved: state.queenObserved,
+      queenBridgeStatus: state.queenBridgeStatus,
+      queenContract: state.queenContract,
+      routeConductorBishopObserved: state.routeConductorBishopObserved,
+      routeConductorBishopStatus: state.routeConductorBishopStatus,
+      indexPriestObserved: state.indexPriestObserved,
+      indexPriestStatus: state.indexPriestStatus,
+      pointerFingerBishopObserved: state.pointerFingerBishopObserved,
+      pointerFingerBishopStatus: state.pointerFingerBishopStatus,
+      pointerFingerFile: POINTER_FINGER_FILE,
 
       canvasHubLoaded: true,
       canvasHubActive: true,
@@ -2563,14 +3174,17 @@
 
       currentRouteConductorRequiredContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
       currentRouteConductorRequiredReceipt: CURRENT_ROUTE_CONDUCTOR_RECEIPT,
+      routeConductorV97LineageContract: LINEAGE_ROUTE_CONDUCTOR_V9_7_CONTRACT,
       previousRouteConductorV96Contract: LINEAGE_ROUTE_CONDUCTOR_V9_6_CONTRACT,
       lineageRouteConductorV95Contract: LINEAGE_ROUTE_CONDUCTOR_V9_5_CONTRACT,
       lineageRouteConductorV94Contract: LINEAGE_ROUTE_CONDUCTOR_V9_4_CONTRACT,
+      acceptedRouteConductorContracts: ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS.slice(),
       routeConductorObserved: state.routeConductorObserved,
       routeConductorContractKnown: state.routeConductorContractKnown,
       routeConductorContract: state.routeConductorContract,
       routeConductorReceipt: state.routeConductorReceipt,
-      routeConductorV97Recognized: state.routeConductorV97Recognized,
+      routeConductorV98Recognized: state.routeConductorV98Recognized,
+      routeConductorV97LineageAccepted: state.routeConductorV97LineageAccepted,
       routeConductorV96LineageAccepted: state.routeConductorV96LineageAccepted,
       routeConductorV95LineageAccepted: state.routeConductorV95LineageAccepted,
       routeConductorV94LineageAccepted: state.routeConductorV94LineageAccepted,
@@ -2669,6 +3283,29 @@
       routeConductorShouldConsumeThisSummary: true,
       diagnosticRailMayReadThisSummary: true,
 
+      ownsCanvasHubIdentity: true,
+      ownsCanvasParentIdentity: true,
+      ownsExpressionHub: true,
+      ownsFingerManager: true,
+      ownsFingerRegistry: true,
+      ownsFingerIntake: true,
+      ownsVisibleCanvasPlacement: true,
+      ownsOutputCarrier: true,
+      ownsViewProjectionApplication: true,
+      ownsCanvasRedrawFromViewState: true,
+
+      ownsInputAdmission: false,
+      ownsRouteConductorHandshakeTruth: false,
+      ownsLabWestAdmissibilityTruth: false,
+      ownsQueenTruth: false,
+      ownsFingerTruth: false,
+      ownsPointerTruth: false,
+      ownsFinalPlanetTruth: false,
+      ownsCompositeTruth: false,
+      ownsHexFourPairTruth: false,
+      ownsHexSurfaceTruth: false,
+      ownsDiagnosticRailCaseSelection: false,
+
       noClaimsPreserved: true,
       ...FINAL_FALSE
     };
@@ -2681,13 +3318,14 @@
   function getCanvasStationReceipt() {
     return {
       ...getCanvasStationSummary(),
-      packetType: "CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIPT",
+      packetType: "CANVAS_HUB_DOWNSTREAM_BISHOP_OUTPUT_CARRIER_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIPT",
       currentReceipt: true,
       compositeDrawReceipt: clonePlain(state.compositeDrawReceipt),
       hexFourPairValidationReceipt: clonePlain(state.hexFourPairValidationReceipt),
       hexSurfaceRendererFrameReceipt: clonePlain(state.hexSurfaceRendererFrameReceipt),
       expressionHubReceipt: getExpressionHubReceipt(),
       controlViewReceipt: getControlViewReceipt(),
+      hierarchyContext: getHierarchyContext(),
       localEvents: clonePlain(state.localEvents),
       errors: clonePlain(state.errors),
       supportLoadErrors: clonePlain(state.supportLoadErrors),
@@ -2701,14 +3339,20 @@
       timestamp: state.timestamp || nowIso(),
       contract: CONTRACT,
       receipt: RECEIPT,
+      internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
+      internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       baselineContract: BASELINE_CONTRACT,
       file: FILE,
       route: ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
+      hierarchyContext: getHierarchyContext(),
       structuralCarrierReady: true,
       structuralCarrierSafe: true,
       canvasHubActive: true,
+      canvasReceiverOutputCarrierBishopActive: true,
+      hierarchyRank: HIERARCHY_ROLE.rank,
+      cardinalAddress: HIERARCHY_ROLE.cardinalAddress,
       compositeFirstVisiblePathActive: true,
       planetaryViewControlReceiverActive: true,
       fastViewTransformActive: true,
@@ -2753,6 +3397,7 @@
       structuralCarrier: getStructuralCarrier(),
       expressionHubReceipt: getExpressionHubReceipt(),
       controlViewReceipt: getControlViewReceipt(),
+      hierarchyContext: getHierarchyContext(),
       noClaimsPreserved: true,
       ...FINAL_FALSE
     };
@@ -2763,11 +3408,13 @@
     const c = getControlViewReceipt();
 
     return [
-      "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT",
+      "HEARTH_CANVAS_DOWNSTREAM_BISHOP_OUTPUT_CARRIER_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT",
       "",
       line("timestamp", r.timestamp),
       line("contract", r.contract),
       line("receipt", r.receipt),
+      line("internalImplementationContract", r.internalImplementationContract),
+      line("internalImplementationReceipt", r.internalImplementationReceipt),
       line("previousContract", r.previousContract),
       line("previousReceipt", r.previousReceipt),
       line("baselineContract", r.baselineContract),
@@ -2776,11 +3423,37 @@
       line("route", ROUTE),
       line("diagnosticRoute", DIAGNOSTIC_ROUTE),
       "",
+      "HIERARCHY",
+      line("hierarchyLanguageActive", true),
+      line("downstreamBishopLanguageActive", true),
+      line("westGateHierarchyLanguageActive", true),
+      line("canvasReceiverOutputCarrierBishopActive", true),
+      line("hierarchyRank", r.hierarchyRank),
+      line("hierarchyTitle", r.hierarchyTitle),
+      line("cardinalAddress", r.cardinalAddress),
+      line("definitiveFile", FILE),
+      line("definitiveContract", CONTRACT),
+      line("definitiveReceipt", RECEIPT),
+      line("westGateHierarchyObserved", r.westGateHierarchyObserved),
+      line("westGateHierarchyStatus", r.westGateHierarchyStatus),
+      line("westGateHierarchyContract", r.westGateHierarchyContract),
+      line("queenObserved", r.queenObserved),
+      line("queenBridgeStatus", r.queenBridgeStatus),
+      line("queenContract", r.queenContract),
+      line("routeConductorBishopObserved", r.routeConductorBishopObserved),
+      line("routeConductorBishopStatus", r.routeConductorBishopStatus),
+      line("indexPriestObserved", r.indexPriestObserved),
+      line("indexPriestStatus", r.indexPriestStatus),
+      line("pointerFingerBishopObserved", r.pointerFingerBishopObserved),
+      line("pointerFingerBishopStatus", r.pointerFingerBishopStatus),
+      line("pointerFingerFile", POINTER_FINGER_FILE),
+      "",
       "ROUTE_CONDUCTOR",
       line("currentRouteConductorRequiredContract", CURRENT_ROUTE_CONDUCTOR_CONTRACT),
       line("routeConductorObserved", r.routeConductorObserved),
       line("routeConductorContract", r.routeConductorContract),
-      line("routeConductorV97Recognized", r.routeConductorV97Recognized),
+      line("routeConductorV98Recognized", r.routeConductorV98Recognized),
+      line("routeConductorV97LineageAccepted", r.routeConductorV97LineageAccepted),
       line("routeConductorV96LineageAccepted", r.routeConductorV96LineageAccepted),
       line("routeConductorV95LineageAccepted", r.routeConductorV95LineageAccepted),
       line("routeConductorV94LineageAccepted", r.routeConductorV94LineageAccepted),
@@ -2859,6 +3532,16 @@
       line("f13HardFail", r.f13HardFail),
       line("f13StrictEvidenceGap", r.f13StrictEvidenceGap),
       "",
+      "BOUNDARIES",
+      line("ownsOutputCarrier", true),
+      line("ownsInputAdmission", false),
+      line("ownsRouteConductorHandshakeTruth", false),
+      line("ownsLabWestAdmissibilityTruth", false),
+      line("ownsQueenTruth", false),
+      line("ownsFingerTruth", false),
+      line("ownsPointerTruth", false),
+      line("ownsFinalPlanetTruth", false),
+      "",
       "NEXT",
       line("firstFailedCoordinate", r.firstFailedCoordinate),
       line("recommendedNextFile", r.recommendedNextFile),
@@ -2882,6 +3565,51 @@
       line("graphicBox", false),
       line("webGL", false)
     ].join("\n");
+  }
+
+  function updateHierarchyDataset() {
+    setDataset("hearthCanvasHierarchyLanguageActive", "true");
+    setDataset("hearthCanvasDownstreamBishopLanguageActive", "true");
+    setDataset("hearthCanvasWestGateHierarchyLanguageActive", "true");
+    setDataset("hearthCanvasReceiverOutputCarrierBishopActive", "true");
+    setDataset("hearthCanvasHierarchyRank", HIERARCHY_ROLE.rank);
+    setDataset("hearthCanvasHierarchyTitle", HIERARCHY_ROLE.title);
+    setDataset("hearthCanvasCardinalAddress", HIERARCHY_ROLE.cardinalAddress);
+    setDataset("hearthCanvasDefinitiveFile", FILE);
+    setDataset("hearthCanvasDefinitiveContract", CONTRACT);
+    setDataset("hearthCanvasDefinitiveReceipt", RECEIPT);
+    setDataset("hearthCanvasInternalImplementationContract", INTERNAL_IMPLEMENTATION_CONTRACT);
+    setDataset("hearthCanvasInternalImplementationReceipt", INTERNAL_IMPLEMENTATION_RECEIPT);
+
+    setDataset("hearthCanvasWestGateHierarchyObserved", String(Boolean(state.labWestGateObserved)));
+    setDataset("hearthCanvasWestGateHierarchyStatus", state.westGateHierarchyStatus);
+    setDataset("hearthCanvasWestGateHierarchyContract", state.labWestGateContract);
+    setDataset("hearthCanvasWestGateHierarchyReceipt", state.labWestGateReceipt);
+    setDataset("hearthCanvasWestGateHierarchyContractRecognized", String(Boolean(state.labWestGateContractRecognized)));
+    setDataset("hearthCanvasWestGateBishopChordLineageRecognized", String(Boolean(state.labWestBishopChordLineageRecognized)));
+
+    setDataset("hearthCanvasQueenObserved", String(Boolean(state.queenObserved)));
+    setDataset("hearthCanvasQueenBridgeStatus", state.queenBridgeStatus);
+    setDataset("hearthCanvasQueenContract", state.queenContract);
+    setDataset("hearthCanvasQueenReceipt", state.queenReceipt);
+    setDataset("hearthCanvasQueenContractRecognized", String(Boolean(state.queenContractRecognized)));
+    setDataset("hearthCanvasQueenSuperconductorLanguageObserved", String(Boolean(state.queenSuperconductorLanguageObserved)));
+
+    setDataset("hearthCanvasRouteConductorBishopObserved", String(Boolean(state.routeConductorBishopObserved)));
+    setDataset("hearthCanvasRouteConductorBishopStatus", state.routeConductorBishopStatus);
+    setDataset("hearthCanvasIndexPriestObserved", String(Boolean(state.indexPriestObserved)));
+    setDataset("hearthCanvasIndexPriestStatus", state.indexPriestStatus);
+    setDataset("hearthCanvasPointerFingerBishopObserved", String(Boolean(state.pointerFingerBishopObserved)));
+    setDataset("hearthCanvasPointerFingerBishopStatus", state.pointerFingerBishopStatus);
+    setDataset("hearthCanvasPointerFingerFile", POINTER_FINGER_FILE);
+
+    setDataset("hearthCanvasOwnsOutputCarrier", "true");
+    setDataset("hearthCanvasOwnsInputAdmission", "false");
+    setDataset("hearthCanvasOwnsRouteConductorHandshakeTruth", "false");
+    setDataset("hearthCanvasOwnsLabWestAdmissibilityTruth", "false");
+    setDataset("hearthCanvasOwnsQueenTruth", "false");
+    setDataset("hearthCanvasOwnsFingerTruth", "false");
+    setDataset("hearthCanvasOwnsPointerTruth", "false");
   }
 
   function updateFastControlDataset() {
@@ -2926,6 +3654,8 @@
   }
 
   function updateDataset() {
+    readHierarchyContext();
+
     setDataset("hearthCanvasLoaded", "true");
     setDataset("hearthCanvasContract", CONTRACT);
     setDataset("hearthCanvasReceipt", RECEIPT);
@@ -2933,6 +3663,8 @@
     setDataset("hearthCanvasPreviousReceipt", PREVIOUS_RECEIPT);
     setDataset("hearthCanvasBaselineContract", BASELINE_CONTRACT);
     setDataset("hearthCanvasBaselineReceipt", BASELINE_RECEIPT);
+
+    updateHierarchyDataset();
 
     setDataset("hearthCanvasHubLoaded", "true");
     setDataset("hearthCanvasHubActive", "true");
@@ -2952,7 +3684,8 @@
     setDataset("hearthCanvasCurrentRouteConductorRequiredContract", CURRENT_ROUTE_CONDUCTOR_CONTRACT);
     setDataset("hearthCanvasRouteConductorObserved", String(state.routeConductorObserved));
     setDataset("hearthCanvasRouteConductorContract", state.routeConductorContract);
-    setDataset("hearthCanvasRouteConductorV97Recognized", String(state.routeConductorV97Recognized));
+    setDataset("hearthCanvasRouteConductorV98Recognized", String(state.routeConductorV98Recognized));
+    setDataset("hearthCanvasRouteConductorV97LineageAccepted", String(state.routeConductorV97LineageAccepted));
     setDataset("hearthCanvasRouteConductorV96LineageAccepted", String(state.routeConductorV96LineageAccepted));
     setDataset("hearthCanvasRouteConductorV95LineageAccepted", String(state.routeConductorV95LineageAccepted));
     setDataset("hearthCanvasRouteConductorV94LineageAccepted", String(state.routeConductorV94LineageAccepted));
@@ -3035,6 +3768,8 @@
     hearth.canvasFastViewTransformReceiver = api;
     hearth.canvasDeferredRenderReceiver = api;
     hearth.canvasCompositeFirstFastViewDeferredHexReceiver = api;
+    hearth.canvasDownstreamBishop = api;
+    hearth.canvasOutputCarrierBishop = api;
 
     root.HEARTH_CANVAS = api;
     root.HEARTH_CANVAS_PARENT = api;
@@ -3049,6 +3784,9 @@
     root.HEARTH_CANVAS_FAST_VIEW_TRANSFORM_RECEIVER = api;
     root.HEARTH_CANVAS_DEFERRED_RENDER_RECEIVER = api;
     root.HEARTH_CANVAS_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER = api;
+    root.HEARTH_CANVAS_DOWNSTREAM_BISHOP = api;
+    root.HEARTH_CANVAS_OUTPUT_CARRIER_BISHOP = api;
+    root.HEARTH_CANVAS_DOWNSTREAM_BISHOP_OUTPUT_CARRIER_WEST_GATE_HIERARCHY_ADOPTION = api;
 
     lab.hearthCanvas = api;
     lab.hearthCanvasParent = api;
@@ -3062,11 +3800,14 @@
     lab.hearthCanvasFastViewTransformReceiver = api;
     lab.hearthCanvasDeferredRenderReceiver = api;
     lab.hearthCanvasCompositeFirstFastViewDeferredHexReceiver = api;
+    lab.hearthCanvasDownstreamBishop = api;
+    lab.hearthCanvasOutputCarrierBishop = api;
 
     const light = getReceiptLight();
     const full = getReceipt();
     const hubReceipt = getExpressionHubReceipt();
     const controlReceipt = getControlViewReceipt();
+    const hierarchyContext = getHierarchyContext();
 
     root.HEARTH_CANVAS_RECEIPT = light;
     root.HEARTH_CANVAS_PARENT_RECEIPT = light;
@@ -3079,6 +3820,10 @@
     root.HEARTH_CANVAS_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT = full;
     root.HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT = full;
     root.HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT_v12_3 = full;
+    root.HEARTH_CANVAS_DOWNSTREAM_BISHOP_RECEIPT = full;
+    root.HEARTH_CANVAS_OUTPUT_CARRIER_BISHOP_RECEIPT = full;
+    root.HEARTH_CANVAS_DOWNSTREAM_BISHOP_OUTPUT_CARRIER_WEST_GATE_HIERARCHY_ADOPTION_RECEIPT = full;
+    root.HEARTH_CANVAS_HIERARCHY_CONTEXT = hierarchyContext;
 
     hearth.canvasReceipt = light;
     hearth.canvasParentReceipt = light;
@@ -3089,6 +3834,9 @@
     hearth.canvasFingerManagerReceipt = hubReceipt;
     hearth.canvasPlanetaryViewControlReceiverReceipt = controlReceipt;
     hearth.canvasCompositeFirstFastViewDeferredHexReceiverReceipt = full;
+    hearth.canvasDownstreamBishopReceipt = full;
+    hearth.canvasOutputCarrierBishopReceipt = full;
+    hearth.canvasHierarchyContext = hierarchyContext;
 
     lab.hearthCanvasReceipt = light;
     lab.hearthCanvasParentReceipt = light;
@@ -3099,6 +3847,9 @@
     lab.hearthCanvasFingerManagerReceipt = hubReceipt;
     lab.hearthCanvasPlanetaryViewControlReceiverReceipt = controlReceipt;
     lab.hearthCanvasCompositeFirstFastViewDeferredHexReceiverReceipt = full;
+    lab.hearthCanvasDownstreamBishopReceipt = full;
+    lab.hearthCanvasOutputCarrierBishopReceipt = full;
+    lab.hearthCanvasHierarchyContext = hierarchyContext;
 
     root.HEARTH_CANVAS_STRUCTURAL_CARRIER = getStructuralCarrier();
     root.HEARTH_CANVAS_CARRIER = getStructuralCarrier();
@@ -3119,6 +3870,9 @@
       readPath("HEARTH_ROUTE_CONDUCTOR"),
       readPath("HEARTH.routeConductor"),
       readPath("DEXTER_LAB.hearthRouteConductor"),
+      readPath("HEARTH_ROUTE_CONDUCTOR_CONTROL_FILE_ADMISSION_AND_HANDSHAKE_DELIVERY"),
+      readPath("HEARTH.routeConductorControlFileAdmissionAndHandshakeDelivery"),
+      readPath("DEXTER_LAB.hearthRouteConductorControlFileAdmissionAndHandshakeDelivery"),
       readPath("HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION"),
       readPath("HEARTH.routeConductorControlHandshakeIntegration"),
       readPath("DEXTER_LAB.hearthRouteConductorControlHandshakeIntegration"),
@@ -3133,6 +3887,8 @@
       "receiveCanvasStationSummary",
       "receiveCanvasLocalStationSummary",
       "receiveCanvasParentSummary",
+      "receiveCanvasDownstreamBishopSummary",
+      "receiveHierarchyContext",
       "reconcileCanvas"
     ];
 
@@ -3162,9 +3918,13 @@
       readPath("HEARTH_CONTROLS_VIEW_PACKET") ||
       readPath("HEARTH_PLANETARY_VIEW_CONTROL_PACKET") ||
       readPath("HEARTH_CONTROLS_LAST_DELTA_PACKET") ||
+      readPath("HEARTH_QUEEN_CONTROLS_VIEW_PACKET") ||
+      readPath("HEARTH_QUEEN_SUPERCONDUCTOR_VIEW_PACKET") ||
       readPath("HEARTH.controlsViewPacket") ||
       readPath("HEARTH.planetaryViewControlPacket") ||
-      readPath("HEARTH.controlsLastDeltaPacket");
+      readPath("HEARTH.controlsLastDeltaPacket") ||
+      readPath("HEARTH.queenControlsViewPacket") ||
+      readPath("HEARTH.queenSuperconductorViewPacket");
 
     if (isObject(pending)) {
       receivePlanetaryControlPacket(pending);
@@ -3178,6 +3938,7 @@
     state.timestamp = nowIso();
 
     initializeFingerRegistry();
+    readHierarchyContext();
     updateDataset();
     publishGlobals();
 
@@ -3198,7 +3959,13 @@
 
     state.bootAuditComplete = true;
 
-    record("CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_BOOT_AUDIT_COMPLETE", {
+    record("CANVAS_HUB_DOWNSTREAM_BISHOP_OUTPUT_CARRIER_WEST_GATE_HIERARCHY_BOOT_AUDIT_COMPLETE", {
+      hierarchyRank: HIERARCHY_ROLE.rank,
+      cardinalAddress: HIERARCHY_ROLE.cardinalAddress,
+      westGateHierarchyObserved: state.labWestGateObserved,
+      queenObserved: state.queenObserved,
+      routeConductorBishopObserved: state.routeConductorBishopObserved,
+      pointerFingerBishopObserved: state.pointerFingerBishopObserved,
       canvasMountFound: state.canvasMountFound,
       canvasElementFound: state.canvasElementFound,
       visiblePlanetProofReady: state.visiblePlanetProofReady,
@@ -3257,21 +4024,36 @@
   Object.assign(api, {
     CONTRACT,
     RECEIPT,
+    INTERNAL_IMPLEMENTATION_CONTRACT,
+    INTERNAL_IMPLEMENTATION_RECEIPT,
     PREVIOUS_CONTRACT,
     PREVIOUS_RECEIPT,
     LINEAGE_V12_1_CONTRACT,
     LINEAGE_V12_1_RECEIPT,
     BASELINE_CONTRACT,
     BASELINE_RECEIPT,
+
     CURRENT_ROUTE_CONDUCTOR_CONTRACT,
     CURRENT_ROUTE_CONDUCTOR_RECEIPT,
+    LINEAGE_ROUTE_CONDUCTOR_V9_7_CONTRACT,
     LINEAGE_ROUTE_CONDUCTOR_V9_6_CONTRACT,
     LINEAGE_ROUTE_CONDUCTOR_V9_5_CONTRACT,
     LINEAGE_ROUTE_CONDUCTOR_V9_4_CONTRACT,
+    ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS,
+
+    WEST_GATE_HIERARCHY_CONTRACT,
+    WEST_GATE_HIERARCHY_RECEIPT,
+    LABWEST_BISHOP_CHORD_CONTRACT,
+    QUEEN_HIERARCHY_CONTRACT,
+    QUEEN_BISHOP_CHORD_CONTRACT,
+    QUEEN_PUBLIC_CONTRACT,
+    ACCEPTED_QUEEN_CONTRACTS,
+
     HEX_FOUR_PAIR_CONTRACT,
     HEX_SURFACE_V2_CONTRACT,
     HEX_SURFACE_V1_CONTRACT,
     ACCEPTED_HEX_SURFACE_CONTRACTS,
+
     FILE,
     ROUTE,
     DIAGNOSTIC_ROUTE,
@@ -3281,11 +4063,15 @@
     COMPOSITE_FILE,
     HEX_FOUR_PAIR_FILE,
     HEX_SURFACE_FILE,
+    POINTER_FINGER_FILE,
+    HIERARCHY_ROLE,
     FINGER_FILES,
     FINGER_SEQUENCE,
 
     contract: CONTRACT,
     receipt: RECEIPT,
+    internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
+    internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
     baselineContract: BASELINE_CONTRACT,
@@ -3309,6 +4095,19 @@
     runDeferredRender,
     scheduleDeferredHexRender,
     applyCanvasViewTransform,
+
+    readHierarchyContext,
+    getHierarchyContext,
+    readWestGateHierarchy,
+    readQueenControlsProfile,
+    readIndexPriestProfile,
+    readPointerFingerBishopProfile,
+    receiveHierarchyContext,
+    consumeHierarchyContext,
+    receiveBishopContext,
+    consumeBishopContext,
+    receiveQueenContext,
+    consumeQueenContext,
 
     readRouteConductorProfile,
     readRouteConductorReleasePacket,
@@ -3376,6 +4175,7 @@
     getReceiptText,
 
     updateDataset,
+    updateHierarchyDataset,
     updateFastControlDataset,
     publishGlobals,
     publishViewGlobals,
@@ -3383,6 +4183,15 @@
     recomputeAll,
     refreshState,
     resolveF13Gap,
+
+    supportsHierarchyLanguage: true,
+    supportsWestGateHierarchyLanguage: true,
+    supportsDownstreamBishopLanguage: true,
+    supportsCanvasOutputCarrierBishop: true,
+    supportsQueenSuperconductorContext: true,
+    supportsRouteConductorV98Contract: true,
+    supportsRouteConductorV97Lineage: true,
+    supportsPointerFingerBishopPath: true,
 
     supportsCanvasHub: true,
     supportsCanvasLocalStation: true,
@@ -3413,14 +4222,20 @@
     ownsFingerRegistry: true,
     ownsFingerIntake: true,
     ownsVisibleCanvasPlacement: true,
+    ownsOutputCarrier: true,
     ownsViewProjectionApplication: true,
     ownsCanvasRedrawFromViewState: true,
+
     ownsFinalPlanetTruth: false,
     ownsCompositeTruth: false,
     ownsHexFourPairTruth: false,
     ownsHexSurfaceTruth: false,
     ownsFingerTruth: false,
+    ownsPointerTruth: false,
     ownsRouteConductorSwitching: false,
+    ownsRouteConductorHandshakeTruth: false,
+    ownsLabWestAdmissibilityTruth: false,
+    ownsQueenTruth: false,
     ownsControlRuntimeTruth: false,
     ownsInputAdmission: false,
     ownsDiagnosticRailCaseSelection: false,
@@ -3440,6 +4255,7 @@
   try {
     state.timestamp = nowIso();
     initializeFingerRegistry();
+    readHierarchyContext();
     updateDataset();
     publishGlobals();
 
@@ -3453,7 +4269,7 @@
       bootAudit({ reason: "no-document-runtime" });
     }
   } catch (error) {
-    recordError("CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_INITIALIZATION_FAILED", error);
+    recordError("CANVAS_HUB_DOWNSTREAM_BISHOP_OUTPUT_CARRIER_WEST_GATE_HIERARCHY_INITIALIZATION_FAILED", error);
 
     try {
       updateDataset();

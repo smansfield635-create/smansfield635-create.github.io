@@ -1,36 +1,41 @@
 // /assets/hearth/hearth.canvas.finger.surface.js
-// HEARTH_CANVAS_FINGER_SURFACE_POINTER_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_TNT_v3
+// HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_TNT_v4
 // Full-file replacement.
-// Canvas Finger 3 / Surface / Pointer Finger / Internal + External Expression Socket.
+// Canvas Finger 3 / Surface / Pointer Finger / non-cardinal Bishop / Internal + External Expression Socket.
 // Previous:
-// HEARTH_CANVAS_FINGER_SURFACE_POINTER_FINGER_EXTERNAL_EXPRESSION_SOCKET_TNT_v2
+// HEARTH_CANVAS_FINGER_SURFACE_POINTER_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_TNT_v3
 // Purpose:
 // - Preserve Surface as Canvas Finger 3.
 // - Preserve Surface as the Pointer Finger.
+// - Upgrade Surface into the non-cardinal Pointer Bishop language standard.
 // - Preserve the single external donor-expression intake socket.
-// - Add internal expression intake for Composite, World Expression, Canvas Finger, and expansion packets.
+// - Preserve internal expression intake for Composite, World Expression, Canvas Finger, and expansion packets.
 // - Accept Composite registration methods expected by /assets/hearth/hearth.canvas.finger.composite.js.
 // - Receive internal finger output without classifying it as an outside donor.
 // - Maintain separate ledgers for external donor traffic and internal finger/canvas traffic.
 // - Preserve Boundary Finger and Mass Finger consumption.
 // - Preserve first material differentiation and visible surface contribution APIs.
-// - Preserve Canvas hub registration without becoming the Canvas parent.
+// - Preserve Canvas Hub registration without becoming the Canvas parent.
+// - Publish both legacy finger aliases and renewed bishop aliases.
 // - Hold or route only when receiving authority is unavailable.
 // - Do not mutate HTML, index.js, route conductor, diagnostic rail, Canvas parent, Boundary Finger, Mass Finger,
-//   Light Finger, Inspect Finger, Composite Finger, materials, composition, air channel, cliffs, or any donor file.
+//   Light Finger, Inspect Finger, Composite Finger, materials, composition, air channel, cliffs, or donor files.
 // - Do not claim final terrain truth, hydrology truth, material truth, elevation truth, composite truth,
 //   F13, F21, ready text, completion latch, final visual pass, generated image, GraphicBox, or WebGL.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_TNT_v3";
-  const RECEIPT = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_RECEIPT_v3";
-  const PACKET = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_PACKET_v3";
+  const CONTRACT = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_TNT_v4";
+  const RECEIPT = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_RECEIPT_v4";
+  const PACKET = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_PACKET_v4";
 
-  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_FINGER_EXTERNAL_EXPRESSION_SOCKET_TNT_v2";
-  const PREVIOUS_RECEIPT = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_FINGER_EXTERNAL_EXPRESSION_SOCKET_RECEIPT_v2";
-  const PREVIOUS_PACKET = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_FINGER_EXTERNAL_EXPRESSION_SOCKET_PACKET_v2";
+  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_TNT_v3";
+  const PREVIOUS_RECEIPT = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_RECEIPT_v3";
+  const PREVIOUS_PACKET = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_PACKET_v3";
+
+  const LINEAGE_V2_CONTRACT = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_FINGER_EXTERNAL_EXPRESSION_SOCKET_TNT_v2";
+  const LINEAGE_V2_RECEIPT = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_FINGER_EXTERNAL_EXPRESSION_SOCKET_RECEIPT_v2";
 
   const BASELINE_CONTRACT = "HEARTH_CANVAS_FINGER_SURFACE_FIRST_MATERIAL_DIFFERENTIATION_TNT_v1";
   const BASELINE_RECEIPT = "HEARTH_CANVAS_FINGER_SURFACE_FIRST_MATERIAL_DIFFERENTIATION_RECEIPT_v1";
@@ -57,6 +62,18 @@
   const FINGER_ROLE = "pointer-finger-internal-external-expression-socket";
   const FINGER_ORDER = 3;
   const FINGER_STRETCH_TOTAL = 5;
+
+  const BISHOP_NAME = "surface";
+  const BISHOP_TITLE = "Surface Pointer Bishop";
+  const BISHOP_ROLE = "pointer-bishop-internal-external-expression-socket";
+  const BISHOP_RANK = "non-cardinal-bishop";
+  const BISHOP_ORDER = 3;
+  const BISHOP_ADDRESS = "surface.pointer";
+  const BISHOP_DIRECTION = "POINTER";
+  const BISHOP_CARDINAL_DISPOSITION = "NON_CARDINAL_POINTER";
+  const BISHOP_SUBJECT_FILE = FILE;
+  const BISHOP_PARENT = PARENT_HUB_FILE;
+  const BISHOP_CANONICAL_STATUS = "BISHOP_LANGUAGE_ADOPTED_WITH_LEGACY_FINGER_COMPATIBILITY";
 
   const FINAL_FALSE = Object.freeze({
     f13Claimed: false,
@@ -118,30 +135,43 @@
     Object.freeze({
       order: 1,
       name: "boundary",
+      bishopName: "boundary",
+      bishopRank: "non-cardinal-bishop",
       file: BOUNDARY_FILE,
       role: "base globe containment, visible body edge, boundary envelope"
     }),
     Object.freeze({
       order: 2,
       name: "mass",
+      bishopName: "mass",
+      bishopRank: "non-cardinal-bishop",
       file: MASS_FILE,
       role: "physical body mass, broad body structure, early land/body support"
     }),
     Object.freeze({
       order: 3,
       name: "surface",
+      bishopName: BISHOP_NAME,
+      bishopTitle: BISHOP_TITLE,
+      bishopRank: BISHOP_RANK,
+      bishopAddress: BISHOP_ADDRESS,
+      bishopDirection: BISHOP_DIRECTION,
       file: FILE,
-      role: "pointer finger, internal/external expression socket, surface-visible synthesis"
+      role: "pointer bishop, pointer finger, internal/external expression socket, surface-visible synthesis"
     }),
     Object.freeze({
       order: 4,
       name: "light",
+      bishopName: "light",
+      bishopRank: "non-cardinal-bishop",
       file: LIGHT_FILE,
       role: "visibility, light, chamber realism, atmosphere-edge readability"
     }),
     Object.freeze({
       order: 5,
       name: "inspect",
+      bishopName: "inspect",
+      bishopRank: "non-cardinal-bishop",
       file: INSPECT_FILE,
       role: "expression-finger inspection receipt without diagnostic rail takeover"
     })
@@ -153,19 +183,28 @@
     "HEARTH.canvasHub",
     "HEARTH.canvasExpressionHub",
     "HEARTH.canvasFingerManager",
+    "HEARTH.canvasBishopManager",
     "HEARTH_CANVAS",
     "HEARTH_CANVAS_PARENT",
     "HEARTH_CANVAS_HUB",
     "HEARTH_CANVAS_EXPRESSION_HUB",
     "HEARTH_CANVAS_FINGER_MANAGER",
+    "HEARTH_CANVAS_BISHOP_MANAGER",
     "DEXTER_LAB.hearthCanvas",
     "DEXTER_LAB.hearthCanvasParent",
     "DEXTER_LAB.hearthCanvasHub",
     "DEXTER_LAB.hearthCanvasExpressionHub",
-    "DEXTER_LAB.hearthCanvasFingerManager"
+    "DEXTER_LAB.hearthCanvasFingerManager",
+    "DEXTER_LAB.hearthCanvasBishopManager"
   ]);
 
   const HUB_INTAKE_METHODS = Object.freeze([
+    "receiveBishopPacket",
+    "receiveCanvasBishopPacket",
+    "receivePointerBishopPacket",
+    "receiveSurfaceBishopPacket",
+    "registerCanvasBishop",
+    "registerExpressionBishop",
     "receiveFingerPacket",
     "receiveCanvasFingerPacket",
     "receiveSurfaceFingerPacket",
@@ -180,19 +219,31 @@
   const BOUNDARY_SOURCE_NAMES = Object.freeze([
     "HEARTH.canvasFingerBoundary",
     "HEARTH.canvasBoundaryFinger",
+    "HEARTH.canvasBishopBoundary",
+    "HEARTH.canvasBoundaryBishop",
     "HEARTH_CANVAS_FINGER_BOUNDARY",
     "HEARTH_CANVAS_BOUNDARY_FINGER",
+    "HEARTH_CANVAS_BISHOP_BOUNDARY",
+    "HEARTH_CANVAS_BOUNDARY_BISHOP",
     "DEXTER_LAB.hearthCanvasFingerBoundary",
-    "DEXTER_LAB.hearthCanvasBoundaryFinger"
+    "DEXTER_LAB.hearthCanvasBoundaryFinger",
+    "DEXTER_LAB.hearthCanvasBishopBoundary",
+    "DEXTER_LAB.hearthCanvasBoundaryBishop"
   ]);
 
   const MASS_SOURCE_NAMES = Object.freeze([
     "HEARTH.canvasFingerMass",
     "HEARTH.canvasMassFinger",
+    "HEARTH.canvasBishopMass",
+    "HEARTH.canvasMassBishop",
     "HEARTH_CANVAS_FINGER_MASS",
     "HEARTH_CANVAS_MASS_FINGER",
+    "HEARTH_CANVAS_BISHOP_MASS",
+    "HEARTH_CANVAS_MASS_BISHOP",
     "DEXTER_LAB.hearthCanvasFingerMass",
-    "DEXTER_LAB.hearthCanvasMassFinger"
+    "DEXTER_LAB.hearthCanvasMassFinger",
+    "DEXTER_LAB.hearthCanvasBishopMass",
+    "DEXTER_LAB.hearthCanvasMassBishop"
   ]);
 
   const TARGET_RECEIVERS = Object.freeze({
@@ -203,6 +254,7 @@
       surfaceOwnsCategory: false,
       globalPaths: BOUNDARY_SOURCE_NAMES,
       methods: Object.freeze([
+        "receiveSurfacePointerBishopPacket",
         "receiveSurfacePointerPacket",
         "receivePointerFingerPacket",
         "receiveExternalExpression",
@@ -218,6 +270,7 @@
       surfaceOwnsCategory: false,
       globalPaths: MASS_SOURCE_NAMES,
       methods: Object.freeze([
+        "receiveSurfacePointerBishopPacket",
         "receiveSurfacePointerPacket",
         "receivePointerFingerPacket",
         "receiveExternalExpression",
@@ -234,12 +287,19 @@
       globalPaths: Object.freeze([
         "HEARTH.canvasFingerLight",
         "HEARTH.canvasLightFinger",
+        "HEARTH.canvasBishopLight",
+        "HEARTH.canvasLightBishop",
         "HEARTH_CANVAS_FINGER_LIGHT",
         "HEARTH_CANVAS_LIGHT_FINGER",
+        "HEARTH_CANVAS_BISHOP_LIGHT",
+        "HEARTH_CANVAS_LIGHT_BISHOP",
         "DEXTER_LAB.hearthCanvasFingerLight",
-        "DEXTER_LAB.hearthCanvasLightFinger"
+        "DEXTER_LAB.hearthCanvasLightFinger",
+        "DEXTER_LAB.hearthCanvasBishopLight",
+        "DEXTER_LAB.hearthCanvasLightBishop"
       ]),
       methods: Object.freeze([
+        "receiveSurfacePointerBishopPacket",
         "receiveSurfacePointerPacket",
         "receivePointerFingerPacket",
         "receiveExternalExpression",
@@ -256,12 +316,19 @@
       globalPaths: Object.freeze([
         "HEARTH.canvasFingerInspect",
         "HEARTH.canvasInspectFinger",
+        "HEARTH.canvasBishopInspect",
+        "HEARTH.canvasInspectBishop",
         "HEARTH_CANVAS_FINGER_INSPECT",
         "HEARTH_CANVAS_INSPECT_FINGER",
+        "HEARTH_CANVAS_BISHOP_INSPECT",
+        "HEARTH_CANVAS_INSPECT_BISHOP",
         "DEXTER_LAB.hearthCanvasFingerInspect",
-        "DEXTER_LAB.hearthCanvasInspectFinger"
+        "DEXTER_LAB.hearthCanvasInspectFinger",
+        "DEXTER_LAB.hearthCanvasBishopInspect",
+        "DEXTER_LAB.hearthCanvasInspectBishop"
       ]),
       methods: Object.freeze([
+        "receiveSurfacePointerBishopPacket",
         "receiveSurfacePointerPacket",
         "receivePointerFingerPacket",
         "receiveExternalExpression",
@@ -284,6 +351,7 @@
         "HEARTH_CANVAS_MATERIAL_AUTHORITY"
       ]),
       methods: Object.freeze([
+        "receiveSurfacePointerBishopPacket",
         "receiveSurfacePointerPacket",
         "receivePointerFingerPacket",
         "receiveExternalExpression",
@@ -305,6 +373,7 @@
         "HEARTH_PLANET_COMPOSITION"
       ]),
       methods: Object.freeze([
+        "receiveSurfacePointerBishopPacket",
         "receiveSurfacePointerPacket",
         "receivePointerFingerPacket",
         "receiveExternalExpression",
@@ -326,6 +395,7 @@
         "HEARTH_ATMOSPHERE_CHANNEL"
       ]),
       methods: Object.freeze([
+        "receiveSurfacePointerBishopPacket",
         "receiveSurfacePointerPacket",
         "receivePointerFingerPacket",
         "receiveExternalExpression",
@@ -348,6 +418,7 @@
         "HEARTH_RELIEF_CLIFFS"
       ]),
       methods: Object.freeze([
+        "receiveSurfacePointerBishopPacket",
         "receiveSurfacePointerPacket",
         "receivePointerFingerPacket",
         "receiveExternalExpression",
@@ -382,10 +453,16 @@
       globalPaths: Object.freeze([
         "HEARTH.canvasFingerComposite",
         "HEARTH.canvasCompositeFinger",
+        "HEARTH.canvasBishopComposite",
+        "HEARTH.canvasCompositeBishop",
         "HEARTH_CANVAS_FINGER_COMPOSITE",
         "HEARTH_CANVAS_COMPOSITE_FINGER",
+        "HEARTH_CANVAS_BISHOP_COMPOSITE",
+        "HEARTH_CANVAS_COMPOSITE_BISHOP",
         "DEXTER_LAB.hearthCanvasFingerComposite",
-        "DEXTER_LAB.hearthCanvasCompositeFinger"
+        "DEXTER_LAB.hearthCanvasCompositeFinger",
+        "DEXTER_LAB.hearthCanvasBishopComposite",
+        "DEXTER_LAB.hearthCanvasCompositeBishop"
       ]),
       methods: Object.freeze([])
     }),
@@ -406,54 +483,18 @@
   });
 
   const KEYWORDS = Object.freeze({
-    [CATEGORY.MASS]: Object.freeze([
-      "mass", "volume", "body", "sphere", "planet body", "physical", "pressure",
-      "core", "weight", "density", "land shape", "body shape", "formation pressure"
-    ]),
-    [CATEGORY.BOUNDARY]: Object.freeze([
-      "boundary", "silhouette", "edge", "containment", "rim", "outline",
-      "sphere edge", "body edge", "clip", "mask", "envelope"
-    ]),
-    [CATEGORY.LIGHT]: Object.freeze([
-      "light", "shadow", "shade", "glow", "illumination", "sun", "specular",
-      "atmosphere edge", "horizon light", "visibility", "chamber light"
-    ]),
-    [CATEGORY.INSPECT]: Object.freeze([
-      "inspect", "inspection", "click", "select", "hover", "readability", "proof",
-      "viewer", "hit", "target", "label", "interaction", "control"
-    ]),
-    [CATEGORY.COMPOSITE]: Object.freeze([
-      "composite", "world expression", "world-expression", "assembled world",
-      "visible world", "composite model", "composite packet", "composite finger"
-    ]),
-    [CATEGORY.WORLD_EXPRESSION]: Object.freeze([
-      "world expression", "world-expression", "worldexpression", "world expression packet",
-      "planet expression", "visible planet expression", "assembled expression"
-    ]),
-    [CATEGORY.MATERIALS]: Object.freeze([
-      "material", "mineral", "texture", "color", "soil", "rock", "crust",
-      "palette", "surface color", "tone", "grain", "sediment"
-    ]),
-    [CATEGORY.COMPOSITION]: Object.freeze([
-      "composition", "layer", "strata", "mantle", "crust", "internal",
-      "structure", "planetary structure", "substrate", "lattice"
-    ]),
-    [CATEGORY.AIR_CHANNEL]: Object.freeze([
-      "air", "atmosphere", "haze", "fog", "pressure", "sky", "breath",
-      "air channel", "vapor", "mist", "cloud", "aerosol"
-    ]),
-    [CATEGORY.CLIFFS]: Object.freeze([
-      "cliff", "cliffs", "escarpment", "ridge", "relief", "vertical",
-      "slope", "wall", "mountain edge", "drop", "ravine"
-    ]),
-    [CATEGORY.HYDROLOGY_INTERFACE]: Object.freeze([
-      "waterline", "wet", "shore", "coast", "basin", "shelf", "ocean interface",
-      "hydrology interface", "dry", "submerged", "water contact"
-    ]),
-    [CATEGORY.SURFACE]: Object.freeze([
-      "surface", "terrain", "land", "field", "patch", "zone", "formation",
-      "visible surface", "skin", "planet surface", "factory surface"
-    ])
+    [CATEGORY.MASS]: Object.freeze(["mass", "volume", "body", "sphere", "physical", "pressure", "core", "weight", "density", "land shape", "body shape"]),
+    [CATEGORY.BOUNDARY]: Object.freeze(["boundary", "silhouette", "edge", "containment", "rim", "outline", "sphere edge", "body edge", "clip", "mask", "envelope"]),
+    [CATEGORY.LIGHT]: Object.freeze(["light", "shadow", "shade", "glow", "illumination", "sun", "specular", "atmosphere edge", "horizon light", "visibility"]),
+    [CATEGORY.INSPECT]: Object.freeze(["inspect", "inspection", "click", "select", "hover", "readability", "proof", "viewer", "hit", "target", "label", "interaction", "control"]),
+    [CATEGORY.COMPOSITE]: Object.freeze(["composite", "world expression", "world-expression", "assembled world", "visible world", "composite model", "composite packet", "composite finger", "composite bishop"]),
+    [CATEGORY.WORLD_EXPRESSION]: Object.freeze(["world expression", "world-expression", "worldexpression", "planet expression", "visible planet expression", "assembled expression"]),
+    [CATEGORY.MATERIALS]: Object.freeze(["material", "mineral", "texture", "color", "soil", "rock", "crust", "palette", "surface color", "tone", "grain", "sediment"]),
+    [CATEGORY.COMPOSITION]: Object.freeze(["composition", "layer", "strata", "mantle", "crust", "internal", "structure", "planetary structure", "substrate", "lattice"]),
+    [CATEGORY.AIR_CHANNEL]: Object.freeze(["air", "atmosphere", "haze", "fog", "pressure", "sky", "breath", "air channel", "vapor", "mist", "cloud"]),
+    [CATEGORY.CLIFFS]: Object.freeze(["cliff", "cliffs", "escarpment", "ridge", "relief", "vertical", "slope", "wall", "mountain edge", "drop", "ravine"]),
+    [CATEGORY.HYDROLOGY_INTERFACE]: Object.freeze(["waterline", "wet", "shore", "coast", "basin", "shelf", "ocean interface", "hydrology interface", "dry", "submerged", "water contact"]),
+    [CATEGORY.SURFACE]: Object.freeze(["surface", "terrain", "land", "field", "patch", "zone", "formation", "visible surface", "skin", "planet surface", "factory surface", "pointer bishop"])
   });
 
   const root = typeof window !== "undefined" ? window : globalThis;
@@ -471,6 +512,8 @@
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
     previousPacket: PREVIOUS_PACKET,
+    lineageV2Contract: LINEAGE_V2_CONTRACT,
+    lineageV2Receipt: LINEAGE_V2_RECEIPT,
     baselineContract: BASELINE_CONTRACT,
     baselineReceipt: BASELINE_RECEIPT,
 
@@ -493,14 +536,32 @@
     fingerOrder: FINGER_ORDER,
     fingerStretchTotal: FINGER_STRETCH_TOTAL,
 
+    bishopName: BISHOP_NAME,
+    bishopTitle: BISHOP_TITLE,
+    bishopRole: BISHOP_ROLE,
+    bishopRank: BISHOP_RANK,
+    bishopOrder: BISHOP_ORDER,
+    bishopAddress: BISHOP_ADDRESS,
+    bishopDirection: BISHOP_DIRECTION,
+    bishopCardinalDisposition: BISHOP_CARDINAL_DISPOSITION,
+    bishopSubjectFile: BISHOP_SUBJECT_FILE,
+    bishopParent: BISHOP_PARENT,
+    bishopCanonicalStatus: BISHOP_CANONICAL_STATUS,
+
     surfaceFingerLoaded: true,
     surfaceFingerActive: true,
     pointerFingerActive: true,
+    pointerBishopActive: true,
+    bishopLanguageActive: true,
+    nonCardinalBishopLanguageActive: true,
+    legacyFingerCompatibilityActive: true,
+
     externalExpressionSocketActive: true,
     internalExpressionSocketActive: true,
     internalExternalExpressionSocketActive: true,
     singleExternalInputReceiver: true,
     internalFingerPacketReceiver: true,
+    internalBishopPacketReceiver: true,
     compositePacketReceiver: true,
     worldExpressionPacketReceiver: true,
     firstMaterialDifferentiationActive: true,
@@ -521,6 +582,7 @@
     shallowMaterialVariationReady: false,
     surfacePacketReady: false,
     pointerFingerPacketReady: false,
+    pointerBishopPacketReady: false,
     visibleContributionAvailable: false,
 
     externalIntakeReady: true,
@@ -579,10 +641,10 @@
     hubRegistrationHeldReason: "NOT_ATTEMPTED",
     hubRegistrationError: "",
 
-    firstFailedCoordinate: "SURFACE_POINTER_FINGER_NOT_BOOTED",
+    firstFailedCoordinate: "SURFACE_POINTER_BISHOP_NOT_BOOTED",
     recommendedNextFile: FILE,
     recommendedNextRenewalTarget: FILE,
-    postgameStatus: "SURFACE_POINTER_FINGER_WAITING_BOOT",
+    postgameStatus: "SURFACE_POINTER_BISHOP_WAITING_BOOT",
 
     boundaryPacket: null,
     boundaryModel: null,
@@ -591,6 +653,7 @@
     surfaceModel: null,
     surfacePacket: null,
     pointerFingerPacket: null,
+    pointerBishopPacket: null,
     internalExpressionPacket: null,
     compositeBridgePacket: null,
     lastRegistrationResponse: null,
@@ -637,8 +700,7 @@
   }
 
   function clamp(value, min, max) {
-    const number = safeNumber(value, min);
-    return Math.max(min, Math.min(max, number));
+    return Math.max(min, Math.min(max, safeNumber(value, min)));
   }
 
   function clonePlain(value) {
@@ -665,10 +727,14 @@
     }
   }
 
+  function line(key, value) {
+    return `${key}=${value === undefined || value === null ? "" : String(value)}`;
+  }
+
   function record(event, detail = {}) {
     const item = {
       at: nowIso(),
-      event: safeString(event, "SURFACE_POINTER_FINGER_EVENT"),
+      event: safeString(event, "SURFACE_POINTER_BISHOP_EVENT"),
       detail: clonePlain(detail)
     };
 
@@ -681,7 +747,7 @@
   function recordError(code, error, detail = {}) {
     const item = {
       at: nowIso(),
-      code: safeString(code, "SURFACE_POINTER_FINGER_ERROR"),
+      code: safeString(code, "SURFACE_POINTER_BISHOP_ERROR"),
       message: error && error.message ? String(error.message) : safeString(error),
       detail: clonePlain(detail)
     };
@@ -717,20 +783,18 @@
   function findSource(sourceNames) {
     for (const sourceName of sourceNames) {
       const candidate = readPath(sourceName);
-      if (candidate && isObject(candidate)) {
-        return { source: candidate, sourceName };
-      }
+      if (candidate && isObject(candidate)) return { source: candidate, sourceName };
     }
 
     return { source: null, sourceName: "NONE" };
   }
 
   function nextExternalId() {
-    return `SURFACE_POINTER_EXTERNAL_${String(state.externalIntakeCount + 1).padStart(4, "0")}`;
+    return `SURFACE_POINTER_BISHOP_EXTERNAL_${String(state.externalIntakeCount + 1).padStart(4, "0")}`;
   }
 
   function nextInternalId() {
-    return `SURFACE_POINTER_INTERNAL_${String(state.internalIntakeCount + 1).padStart(4, "0")}`;
+    return `SURFACE_POINTER_BISHOP_INTERNAL_${String(state.internalIntakeCount + 1).padStart(4, "0")}`;
   }
 
   function getObjectText(value, limit = 8000) {
@@ -740,10 +804,6 @@
     } catch (_error) {
       return bounded(String(value), limit);
     }
-  }
-
-  function line(key, value) {
-    return `${key}=${value === undefined || value === null ? "" : String(value)}`;
   }
 
   function hasForbiddenClaim(packet) {
@@ -787,6 +847,9 @@
       input.expressionDomain ||
       input.targetCategory ||
       input.routeCategory ||
+      input.bishopName ||
+      input.bishopKey ||
+      input.bishop ||
       input.fingerName ||
       input.fingerKey ||
       input.finger ||
@@ -809,7 +872,7 @@
     if (text.includes("light") || text.includes("shadow") || text.includes("illumination")) return CATEGORY.LIGHT;
     if (text.includes("boundary") || text.includes("edge") || text.includes("silhouette")) return CATEGORY.BOUNDARY;
     if (text.includes("mass") || text.includes("body") || text.includes("volume")) return CATEGORY.MASS;
-    if (text.includes("surface") || text.includes("terrain") || text.includes("land")) return CATEGORY.SURFACE;
+    if (text.includes("surface") || text.includes("pointer") || text.includes("terrain") || text.includes("land")) return CATEGORY.SURFACE;
 
     for (const key of Object.values(CATEGORY)) {
       if (text === key) return key;
@@ -823,25 +886,24 @@
     const text = getObjectText(input, 10000).toLowerCase();
     const scores = {};
 
-    for (const category of Object.values(CATEGORY)) {
-      scores[category] = 0;
-    }
+    for (const category of Object.values(CATEGORY)) scores[category] = 0;
 
-    if (explicit !== CATEGORY.UNKNOWN) {
-      scores[explicit] += 12;
-    }
+    if (explicit !== CATEGORY.UNKNOWN) scores[explicit] += 12;
 
     for (const [category, words] of Object.entries(KEYWORDS)) {
       for (const word of words) {
-        if (text.includes(word.toLowerCase())) {
-          scores[category] += 1;
-        }
+        if (text.includes(word.toLowerCase())) scores[category] += 1;
       }
     }
 
     if (isObject(input)) {
-      if (input.packetType && safeString(input.packetType).toUpperCase().includes("WORLD_EXPRESSION")) scores[CATEGORY.WORLD_EXPRESSION] += 16;
-      if (input.packetType && safeString(input.packetType).toUpperCase().includes("COMPOSITE")) scores[CATEGORY.COMPOSITE] += 16;
+      const packetType = safeString(input.packetType || input.packetName || "").toUpperCase();
+      const sourceFile = safeString(input.sourceFile || input.file || "").toLowerCase();
+
+      if (packetType.includes("WORLD_EXPRESSION")) scores[CATEGORY.WORLD_EXPRESSION] += 16;
+      if (packetType.includes("COMPOSITE")) scores[CATEGORY.COMPOSITE] += 16;
+      if (packetType.includes("BISHOP") || packetType.includes("FINGER")) scores[CATEGORY.SURFACE] += 2;
+      if (sourceFile.includes("composite")) scores[CATEGORY.COMPOSITE] += 8;
       if (input.compositeModel || input.worldExpressionModel || input.compositePacket) scores[CATEGORY.COMPOSITE] += 10;
       if (input.worldExpressionPacket || input.worldExpressionNodes || input.compositeNodes) scores[CATEGORY.WORLD_EXPRESSION] += 10;
       if (Array.isArray(input.surfaceSeeds) || Array.isArray(input.surfaceFormationFields)) scores[CATEGORY.SURFACE] += 5;
@@ -878,6 +940,8 @@
       classificationComplete: category !== CATEGORY.UNKNOWN,
       surfacePointerOwnsFinalCategoryAuthority: false,
       surfacePointerOwnsRoutingAuthority: true,
+      pointerBishopOwnsFinalCategoryAuthority: false,
+      pointerBishopOwnsRoutingAuthority: true,
       ...FINAL_FALSE
     };
   }
@@ -906,12 +970,17 @@
         result.confidence = "STRUCTURAL";
         result.score = Math.max(result.score, 8);
         result.classificationComplete = true;
+      } else if (packetType.includes("BISHOP") || packetType.includes("FINGER")) {
+        result.category = CATEGORY.SURFACE;
+        result.confidence = "STRUCTURAL";
+        result.score = Math.max(result.score, 5);
+        result.classificationComplete = true;
       }
     }
 
     return {
       ...result,
-      classificationLane: "internal-finger"
+      classificationLane: "internal-bishop-finger"
     };
   }
 
@@ -925,10 +994,14 @@
     return {
       id,
       receivedAt: nowIso(),
-      packetType: "HEARTH_SURFACE_POINTER_EXTERNAL_EXPRESSION_INTAKE_PACKET",
+      packetType: "HEARTH_SURFACE_POINTER_BISHOP_EXTERNAL_EXPRESSION_INTAKE_PACKET",
       pointerContract: CONTRACT,
       pointerReceipt: RECEIPT,
       pointerFile: FILE,
+      bishopName: BISHOP_NAME,
+      bishopRole: BISHOP_ROLE,
+      bishopRank: BISHOP_RANK,
+      bishopAddress: BISHOP_ADDRESS,
       sourceName,
       sourceFile,
       sourceContract,
@@ -939,14 +1012,16 @@
       externalInformationReceivedThroughSurfaceOnly: true,
       surfaceOwnsRouting: true,
       surfaceOwnsExternalSocket: true,
+      pointerBishopOwnsExternalSocket: true,
       surfaceOwnsFinalCategoryTruth: false,
+      pointerBishopOwnsFinalCategoryTruth: false,
       ...FINAL_FALSE
     };
   }
 
   function normalizeInternalExpression(input = {}, options = {}) {
     const id = safeString(options.id || input.id || input.packetId || input.packetName || nextInternalId());
-    const sourceName = safeString(options.sourceName || input.sourceName || input.fingerName || input.name || "INTERNAL_FINGER_EXPRESSION");
+    const sourceName = safeString(options.sourceName || input.sourceName || input.fingerName || input.bishopName || input.name || "INTERNAL_BISHOP_FINGER_EXPRESSION");
     const sourceFile = safeString(options.sourceFile || input.sourceFile || input.file || "UNKNOWN");
     const sourceContract = safeString(options.sourceContract || input.sourceContract || input.contract || "UNKNOWN");
     const sourceReceipt = safeString(options.sourceReceipt || input.sourceReceipt || input.receipt || "UNKNOWN");
@@ -954,10 +1029,14 @@
     return {
       id,
       receivedAt: nowIso(),
-      packetType: "HEARTH_SURFACE_POINTER_INTERNAL_EXPRESSION_INTAKE_PACKET",
+      packetType: "HEARTH_SURFACE_POINTER_BISHOP_INTERNAL_EXPRESSION_INTAKE_PACKET",
       pointerContract: CONTRACT,
       pointerReceipt: RECEIPT,
       pointerFile: FILE,
+      bishopName: BISHOP_NAME,
+      bishopRole: BISHOP_ROLE,
+      bishopRank: BISHOP_RANK,
+      bishopAddress: BISHOP_ADDRESS,
       sourceName,
       sourceFile,
       sourceContract,
@@ -969,7 +1048,9 @@
       externalInformationReceivedThroughSurfaceOnly: false,
       surfaceOwnsRouting: true,
       surfaceOwnsInternalSocket: true,
+      pointerBishopOwnsInternalSocket: true,
       surfaceOwnsFinalCategoryTruth: false,
+      pointerBishopOwnsFinalCategoryTruth: false,
       ...FINAL_FALSE
     };
   }
@@ -1010,10 +1091,14 @@
 
   function buildRouteEnvelope(normalized, classification, route) {
     return {
-      packetType: "HEARTH_SURFACE_POINTER_ROUTED_EXPRESSION_PACKET",
+      packetType: "HEARTH_SURFACE_POINTER_BISHOP_ROUTED_EXPRESSION_PACKET",
       pointerContract: CONTRACT,
       pointerReceipt: RECEIPT,
       pointerFile: FILE,
+      bishopName: BISHOP_NAME,
+      bishopRole: BISHOP_ROLE,
+      bishopRank: BISHOP_RANK,
+      bishopAddress: BISHOP_ADDRESS,
       externalPacketId: normalized.id,
       routedAt: nowIso(),
       category: classification.category,
@@ -1028,8 +1113,10 @@
       payload: clonePlain(normalized.payload),
       payloadSummary: normalized.payloadSummary,
       surfacePointerOwnsRouting: true,
+      pointerBishopOwnsRouting: true,
       receivingFileOwnsCategoryAuthority: Boolean(route && route.surfaceOwnsCategory === false),
       surfaceOwnsCategoryAuthority: Boolean(route && route.surfaceOwnsCategory === true),
+      pointerBishopOwnsCategoryAuthority: Boolean(route && route.surfaceOwnsCategory === true),
       ...FINAL_FALSE
     };
   }
@@ -1060,7 +1147,7 @@
     state.heldExpressionCount += 1;
     state.latestExternalPacketStatus = ROUTING_STATUS.HELD_FOR_RECEIVER_RENEWAL;
 
-    record("SURFACE_POINTER_HELD_EXTERNAL_EXPRESSION", held);
+    record("SURFACE_POINTER_BISHOP_HELD_EXTERNAL_EXPRESSION", held);
     return held;
   }
 
@@ -1084,7 +1171,7 @@
     state.rejectedExpressionCount += 1;
     state.latestExternalPacketStatus = rejected.status;
 
-    record("SURFACE_POINTER_REJECTED_EXTERNAL_EXPRESSION", rejected);
+    record("SURFACE_POINTER_BISHOP_REJECTED_EXTERNAL_EXPRESSION", rejected);
     return rejected;
   }
 
@@ -1110,7 +1197,7 @@
     state.internalHeldCount += 1;
     state.latestInternalPacketStatus = ROUTING_STATUS.INTERNAL_HELD_BY_SURFACE;
 
-    record("SURFACE_POINTER_HELD_INTERNAL_EXPRESSION", held);
+    record("SURFACE_POINTER_BISHOP_HELD_INTERNAL_EXPRESSION", held);
     return held;
   }
 
@@ -1134,7 +1221,7 @@
     state.internalRejectedCount += 1;
     state.latestInternalPacketStatus = rejected.status;
 
-    record("SURFACE_POINTER_REJECTED_INTERNAL_EXPRESSION", rejected);
+    record("SURFACE_POINTER_BISHOP_REJECTED_INTERNAL_EXPRESSION", rejected);
     return rejected;
   }
 
@@ -1154,7 +1241,7 @@
       if (!isObject(entry)) continue;
 
       fields.push({
-        id: safeString(entry.id || entry.name || `SURFACE_DONOR_FIELD_${fields.length + 1}`),
+        id: safeString(entry.id || entry.name || `SURFACE_POINTER_BISHOP_DONOR_FIELD_${fields.length + 1}`),
         x: clamp(entry.x ?? entry.cx ?? entry.centerX ?? 0.5, 0, 1),
         y: clamp(entry.y ?? entry.cy ?? entry.centerY ?? 0.5, 0, 1),
         scale: clamp(entry.scale ?? entry.radius ?? entry.size ?? 0.16, 0.02, 0.6),
@@ -1167,7 +1254,7 @@
 
     if (!fields.length) {
       fields.push({
-        id: `SURFACE_POINTER_DONOR_${state.surfaceIntegratedCount + 1}`,
+        id: `SURFACE_POINTER_BISHOP_DONOR_${state.surfaceIntegratedCount + 1}`,
         x: 0.5,
         y: 0.5,
         scale: classification.category === CATEGORY.HYDROLOGY_INTERFACE ? 0.24 : 0.2,
@@ -1213,7 +1300,7 @@
         if (!isObject(node)) continue;
 
         fields.push({
-          id: safeString(node.id || `SURFACE_INTERNAL_COMPOSITE_FIELD_${fields.length + 1}`),
+          id: safeString(node.id || `SURFACE_POINTER_BISHOP_INTERNAL_COMPOSITE_FIELD_${fields.length + 1}`),
           x: clamp(node.x ?? ((safeNumber(node.col, 8) + 0.5) / 16), 0, 1),
           y: clamp(node.y ?? ((safeNumber(node.row, 8) + 0.5) / 16), 0, 1),
           scale: clamp(0.045 + safeNumber(node.visibleScore, 0.4) * 0.09, 0.035, 0.18),
@@ -1229,7 +1316,7 @@
 
     if (!fields.length) {
       fields.push({
-        id: `SURFACE_INTERNAL_COMPOSITE_BRIDGE_${state.internalSurfaceBridgeCount + 1}`,
+        id: `SURFACE_POINTER_BISHOP_INTERNAL_COMPOSITE_BRIDGE_${state.internalSurfaceBridgeCount + 1}`,
         x: 0.5,
         y: 0.5,
         scale: 0.23,
@@ -1260,7 +1347,7 @@
     trimArray(state.surfaceFormationFields, 180);
 
     const family = {
-      id: `SURFACE_POINTER_FAMILY_${state.surfaceIntegratedCount + 1}`,
+      id: `SURFACE_POINTER_BISHOP_FAMILY_${state.surfaceIntegratedCount + 1}`,
       category: classification.category,
       label: classification.category === CATEGORY.HYDROLOGY_INTERFACE
         ? "wet-dry-contact-visible-interface"
@@ -1297,8 +1384,9 @@
 
     buildSurfaceModel({ rebuildFromPointerFields: true });
     buildSurfacePacket();
+    buildPointerBishopPacket();
 
-    record("SURFACE_POINTER_INTEGRATED_SURFACE_VISIBLE_EXPRESSION", integrated);
+    record("SURFACE_POINTER_BISHOP_INTEGRATED_SURFACE_VISIBLE_EXPRESSION", integrated);
     return integrated;
   }
 
@@ -1331,6 +1419,8 @@
       treatedAsExternalDonor: false,
       surfaceOwnsCompositeTruth: false,
       surfaceOwnsWorldExpressionTruth: false,
+      pointerBishopOwnsCompositeTruth: false,
+      pointerBishopOwnsWorldExpressionTruth: false,
       ...FINAL_FALSE
     };
 
@@ -1358,17 +1448,16 @@
     buildSurfaceModel({ rebuildFromInternalFields: true });
     buildSurfacePacket();
     buildPointerFingerPacket();
+    buildPointerBishopPacket();
 
-    record("SURFACE_POINTER_ACCEPTED_INTERNAL_EXPRESSION", accepted);
+    record("SURFACE_POINTER_BISHOP_ACCEPTED_INTERNAL_EXPRESSION", accepted);
     return accepted;
   }
 
   function routeToExistingReceiver(normalized, classification) {
     const route = TARGET_RECEIVERS[classification.category];
 
-    if (!route) {
-      return holdDonor(normalized, classification, "NO_ROUTE_FOR_CATEGORY");
-    }
+    if (!route) return holdDonor(normalized, classification, "NO_ROUTE_FOR_CATEGORY");
 
     if (route.internalOnly === true) {
       return holdDonor(normalized, classification, "CATEGORY_INTERNAL_ONLY_NOT_EXTERNAL_DONOR");
@@ -1410,7 +1499,7 @@
           state.routedExpressionCount += 1;
           state.latestExternalPacketStatus = ROUTING_STATUS.ROUTED_TO_RECEIVER;
 
-          record("SURFACE_POINTER_ROUTED_EXTERNAL_EXPRESSION", routed);
+          record("SURFACE_POINTER_BISHOP_ROUTED_EXTERNAL_EXPRESSION", routed);
           return routed;
         }
 
@@ -1420,7 +1509,7 @@
           method
         });
       } catch (error) {
-        recordError("SURFACE_POINTER_RECEIVER_METHOD_FAILED", error, {
+        recordError("SURFACE_POINTER_BISHOP_RECEIVER_METHOD_FAILED", error, {
           category: classification.category,
           receiverSourceName: found.sourceName,
           method
@@ -1490,6 +1579,7 @@
       classification,
       routingResult: clonePlain(result),
       surfacePointerSocketActive: true,
+      pointerBishopSocketActive: true,
       externalInformationReceivedThroughSurfaceOnly: true,
       internalExpressionSocketActive: true,
       ...FINAL_FALSE
@@ -1552,7 +1642,9 @@
       internalExpressionSocketActive: true,
       treatedAsExternalDonor: false,
       surfacePointerOwnsCompositeTruth: false,
+      pointerBishopOwnsCompositeTruth: false,
       surfacePointerOwnsWorldExpressionTruth: false,
+      pointerBishopOwnsWorldExpressionTruth: false,
       ...FINAL_FALSE
     };
   }
@@ -1582,10 +1674,24 @@
     });
   }
 
+  function receiveInternalBishopPacket(packet = {}, options = {}) {
+    return receiveInternalExpression(packet, {
+      ...options,
+      sourceName: options.sourceName || "INTERNAL_BISHOP_PACKET"
+    });
+  }
+
   function receiveExpansionFingerPacket(packet = {}, options = {}) {
     return receiveInternalExpression(packet, {
       ...options,
       sourceName: options.sourceName || "EXPANSION_FINGER_PACKET"
+    });
+  }
+
+  function receiveExpansionBishopPacket(packet = {}, options = {}) {
+    return receiveInternalExpression(packet, {
+      ...options,
+      sourceName: options.sourceName || "EXPANSION_BISHOP_PACKET"
     });
   }
 
@@ -1594,6 +1700,15 @@
       ...options,
       category: CATEGORY.COMPOSITE,
       sourceName: options.sourceName || "COMPOSITE_FINGER_PACKET",
+      sourceFile: options.sourceFile || COMPOSITE_FILE
+    });
+  }
+
+  function receiveCompositeBishopPacket(packet = {}, options = {}) {
+    return receiveInternalExpression(packet, {
+      ...options,
+      category: CATEGORY.COMPOSITE,
+      sourceName: options.sourceName || "COMPOSITE_BISHOP_PACKET",
       sourceFile: options.sourceFile || COMPOSITE_FILE
     });
   }
@@ -1618,10 +1733,24 @@
     });
   }
 
+  function receiveBishopPacket(packet = {}, options = {}) {
+    return receiveInternalExpression(packet, {
+      ...options,
+      sourceName: options.sourceName || "GENERIC_BISHOP_PACKET"
+    });
+  }
+
   function receiveCanvasFingerPacket(packet = {}, options = {}) {
     return receiveInternalExpression(packet, {
       ...options,
       sourceName: options.sourceName || "CANVAS_FINGER_PACKET"
+    });
+  }
+
+  function receiveCanvasBishopPacket(packet = {}, options = {}) {
+    return receiveInternalExpression(packet, {
+      ...options,
+      sourceName: options.sourceName || "CANVAS_BISHOP_PACKET"
     });
   }
 
@@ -1646,10 +1775,25 @@
     });
   }
 
+  function receiveSurfacePointerBishopPacket(packet = {}, options = {}) {
+    return receiveInternalExpression(packet, {
+      ...options,
+      sourceName: options.sourceName || "SURFACE_POINTER_BISHOP_PACKET"
+    });
+  }
+
   function registerExpressionFinger(packet = {}, options = {}) {
     return receiveInternalExpression(packet, {
       ...options,
       sourceName: options.sourceName || "REGISTERED_EXPRESSION_FINGER",
+      sourceFile: options.sourceFile || safeString(packet.sourceFile || packet.file || "UNKNOWN")
+    });
+  }
+
+  function registerExpressionBishop(packet = {}, options = {}) {
+    return receiveInternalExpression(packet, {
+      ...options,
+      sourceName: options.sourceName || "REGISTERED_EXPRESSION_BISHOP",
       sourceFile: options.sourceFile || safeString(packet.sourceFile || packet.file || "UNKNOWN")
     });
   }
@@ -1675,7 +1819,7 @@
       registeredAt: nowIso()
     };
 
-    record("SURFACE_POINTER_REGISTERED_INTERNAL_RECEIVER", {
+    record("SURFACE_POINTER_BISHOP_REGISTERED_INTERNAL_RECEIVER", {
       category: normalized,
       name: state.registeredReceivers[normalized].name,
       file: state.registeredReceivers[normalized].file
@@ -1706,6 +1850,7 @@
             file: route.file,
             authority: route.authority,
             surfaceOwnsCategory: route.surfaceOwnsCategory,
+            pointerBishopOwnsCategory: route.surfaceOwnsCategory,
             internalOnly: route.internalOnly === true,
             externalEntryPoint: FILE,
             internalEntryPoint: FILE,
@@ -1718,6 +1863,7 @@
             file: "UNKNOWN",
             authority: "UNKNOWN",
             surfaceOwnsCategory: false,
+            pointerBishopOwnsCategory: false,
             internalOnly: false,
             externalEntryPoint: FILE,
             internalEntryPoint: FILE,
@@ -1748,7 +1894,7 @@
 
   function getExternalIntakeReceipt() {
     return {
-      receiptType: "HEARTH_SURFACE_POINTER_EXTERNAL_EXPRESSION_SOCKET_RECEIPT",
+      receiptType: "HEARTH_SURFACE_POINTER_BISHOP_EXTERNAL_EXPRESSION_SOCKET_RECEIPT",
       timestamp: nowIso(),
       contract: CONTRACT,
       receipt: RECEIPT,
@@ -1758,7 +1904,16 @@
       route: ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
 
+      bishopName: BISHOP_NAME,
+      bishopTitle: BISHOP_TITLE,
+      bishopRole: BISHOP_ROLE,
+      bishopRank: BISHOP_RANK,
+      bishopAddress: BISHOP_ADDRESS,
+      bishopDirection: BISHOP_DIRECTION,
+      bishopCardinalDisposition: BISHOP_CARDINAL_DISPOSITION,
+
       pointerFingerActive: state.pointerFingerActive,
+      pointerBishopActive: state.pointerBishopActive,
       externalExpressionSocketActive: state.externalExpressionSocketActive,
       singleExternalInputReceiver: state.singleExternalInputReceiver,
       externalIntakeReady: state.externalIntakeReady,
@@ -1780,13 +1935,17 @@
       rejectedDonorQueueCount: state.rejectedDonorQueue.length,
 
       surfaceOwnsRouting: true,
+      pointerBishopOwnsRouting: true,
       surfaceOwnsSurfaceVisibleSynthesis: true,
+      pointerBishopOwnsSurfaceVisibleSynthesis: true,
       surfaceOwnsAllExternalIntake: true,
+      pointerBishopOwnsAllExternalIntake: true,
       surfaceOwnsMass: false,
       surfaceOwnsBoundary: false,
       surfaceOwnsLight: false,
       surfaceOwnsInspect: false,
       surfaceOwnsComposite: false,
+      pointerBishopOwnsComposite: false,
       surfaceOwnsMaterials: false,
       surfaceOwnsComposition: false,
       surfaceOwnsAirChannel: false,
@@ -1800,7 +1959,7 @@
 
   function getInternalIntakeReceipt() {
     return {
-      receiptType: "HEARTH_SURFACE_POINTER_INTERNAL_EXPRESSION_SOCKET_RECEIPT",
+      receiptType: "HEARTH_SURFACE_POINTER_BISHOP_INTERNAL_EXPRESSION_SOCKET_RECEIPT",
       timestamp: nowIso(),
       contract: CONTRACT,
       receipt: RECEIPT,
@@ -1810,9 +1969,19 @@
       route: ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
 
+      bishopName: BISHOP_NAME,
+      bishopTitle: BISHOP_TITLE,
+      bishopRole: BISHOP_ROLE,
+      bishopRank: BISHOP_RANK,
+      bishopAddress: BISHOP_ADDRESS,
+      bishopDirection: BISHOP_DIRECTION,
+      bishopCardinalDisposition: BISHOP_CARDINAL_DISPOSITION,
+
       pointerFingerActive: state.pointerFingerActive,
+      pointerBishopActive: state.pointerBishopActive,
       internalExpressionSocketActive: state.internalExpressionSocketActive,
       internalFingerPacketReceiver: state.internalFingerPacketReceiver,
+      internalBishopPacketReceiver: state.internalBishopPacketReceiver,
       compositePacketReceiver: state.compositePacketReceiver,
       worldExpressionPacketReceiver: state.worldExpressionPacketReceiver,
       internalIntakeReady: state.internalIntakeReady,
@@ -1833,9 +2002,13 @@
 
       treatedAsExternalDonor: false,
       compositePacketAcceptedBySurfacePointer: state.compositeInternalPacketCount > 0,
+      compositePacketAcceptedByPointerBishop: state.compositeInternalPacketCount > 0,
       worldExpressionPacketAcceptedBySurfacePointer: state.worldExpressionInternalPacketCount > 0,
+      worldExpressionPacketAcceptedByPointerBishop: state.worldExpressionInternalPacketCount > 0,
       surfaceOwnsCompositeTruth: false,
+      pointerBishopOwnsCompositeTruth: false,
       surfaceOwnsWorldExpressionTruth: false,
+      pointerBishopOwnsWorldExpressionTruth: false,
 
       noClaimsPreserved: true,
       ...FINAL_FALSE
@@ -1867,16 +2040,16 @@
     try {
       if (isFunction(found.source.getBoundaryPacket)) {
         packet = found.source.getBoundaryPacket();
+      } else if (isFunction(found.source.getBishopPacket)) {
+        packet = found.source.getBishopPacket();
       } else if (isFunction(found.source.getReceipt)) {
         receipt = found.source.getReceipt();
-        packet = receipt && receipt.boundaryPacket ? receipt.boundaryPacket : null;
+        packet = receipt && (receipt.boundaryPacket || receipt.bishopPacket) ? (receipt.boundaryPacket || receipt.bishopPacket) : null;
       } else if (isFunction(found.source.getReceiptLight)) {
         receipt = found.source.getReceiptLight();
       }
     } catch (error) {
-      recordError("SURFACE_POINTER_BOUNDARY_READ_FAILED", error, {
-        sourceName: found.sourceName
-      });
+      recordError("SURFACE_POINTER_BISHOP_BOUNDARY_READ_FAILED", error, { sourceName: found.sourceName });
     }
 
     const model = packet && packet.boundaryModel
@@ -1923,16 +2096,16 @@
     try {
       if (isFunction(found.source.getMassPacket)) {
         packet = found.source.getMassPacket();
+      } else if (isFunction(found.source.getBishopPacket)) {
+        packet = found.source.getBishopPacket();
       } else if (isFunction(found.source.getReceipt)) {
         receipt = found.source.getReceipt();
-        packet = receipt && receipt.massPacket ? receipt.massPacket : null;
+        packet = receipt && (receipt.massPacket || receipt.bishopPacket) ? (receipt.massPacket || receipt.bishopPacket) : null;
       } else if (isFunction(found.source.getReceiptLight)) {
         receipt = found.source.getReceiptLight();
       }
     } catch (error) {
-      recordError("SURFACE_POINTER_MASS_READ_FAILED", error, {
-        sourceName: found.sourceName
-      });
+      recordError("SURFACE_POINTER_BISHOP_MASS_READ_FAILED", error, { sourceName: found.sourceName });
     }
 
     const model = packet && packet.massModel
@@ -1956,7 +2129,7 @@
 
   function defaultBoundaryModel() {
     return {
-      modelType: "HEARTH_BASE_GLOBE_BOUNDARY_MODEL_FALLBACK_FOR_SURFACE_POINTER_FINGER",
+      modelType: "HEARTH_BASE_GLOBE_BOUNDARY_MODEL_FALLBACK_FOR_SURFACE_POINTER_BISHOP",
       centerX: 0.5,
       centerY: 0.5,
       radius: 0.47,
@@ -1973,14 +2146,14 @@
     const b = boundaryModel || defaultBoundaryModel();
 
     return {
-      modelType: "HEARTH_BASE_GLOBE_MASS_MODEL_FALLBACK_FOR_SURFACE_POINTER_FINGER",
+      modelType: "HEARTH_BASE_GLOBE_MASS_MODEL_FALLBACK_FOR_SURFACE_POINTER_BISHOP",
       centerX: safeNumber(b.centerX, 0.5),
       centerY: safeNumber(b.centerY, 0.5),
       radius: safeNumber(b.radius, 0.47),
       massAnchors: [
-        { id: "SURFACE_POINTER_FALLBACK_NW", x: 0.35, y: 0.39, scale: 0.22, weight: 0.7 },
-        { id: "SURFACE_POINTER_FALLBACK_C", x: 0.5, y: 0.52, scale: 0.25, weight: 0.8 },
-        { id: "SURFACE_POINTER_FALLBACK_SE", x: 0.61, y: 0.64, scale: 0.2, weight: 0.62 }
+        { id: "SURFACE_POINTER_BISHOP_FALLBACK_NW", x: 0.35, y: 0.39, scale: 0.22, weight: 0.7 },
+        { id: "SURFACE_POINTER_BISHOP_FALLBACK_C", x: 0.5, y: 0.52, scale: 0.25, weight: 0.8 },
+        { id: "SURFACE_POINTER_BISHOP_FALLBACK_SE", x: 0.61, y: 0.64, scale: 0.2, weight: 0.62 }
       ],
       fallbackUsed: true,
       terrainTruthClaim: false,
@@ -1992,45 +2165,21 @@
 
   function baseMaterialFamilies() {
     return [
-      {
-        id: "SURFACE_DRY_HIGH_TONE",
-        label: "dry-rock-soil-first-pass",
-        threshold: 0.62,
-        tint: "rock-soil",
-        ownsTruth: false
-      },
-      {
-        id: "SURFACE_MID_BODY_TONE",
-        label: "weathered-ground-first-pass",
-        threshold: 0.38,
-        tint: "weathered-ground",
-        ownsTruth: false
-      },
-      {
-        id: "SURFACE_LOW_BODY_TONE",
-        label: "low-shadow-shelf-first-pass",
-        threshold: 0.18,
-        tint: "low-body-shadow",
-        ownsTruth: false
-      },
-      {
-        id: "SURFACE_BOUNDARY_EDGE_TONE",
-        label: "body-edge-readability",
-        threshold: 0.05,
-        tint: "edge-readability",
-        ownsTruth: false
-      }
+      { id: "SURFACE_DRY_HIGH_TONE", label: "dry-rock-soil-first-pass", threshold: 0.62, tint: "rock-soil", ownsTruth: false },
+      { id: "SURFACE_MID_BODY_TONE", label: "weathered-ground-first-pass", threshold: 0.38, tint: "weathered-ground", ownsTruth: false },
+      { id: "SURFACE_LOW_BODY_TONE", label: "low-shadow-shelf-first-pass", threshold: 0.18, tint: "low-body-shadow", ownsTruth: false },
+      { id: "SURFACE_BOUNDARY_EDGE_TONE", label: "body-edge-readability", threshold: 0.05, tint: "edge-readability", ownsTruth: false }
     ];
   }
 
   function baseSurfaceFields(centerX, centerY, radius) {
     return [
-      { id: "SURFACE_NORTHWEST_PATCH", x: centerX - radius * 0.3, y: centerY - radius * 0.18, scale: 0.17, value: 0.72 },
-      { id: "SURFACE_NORTH_PATCH", x: centerX + radius * 0.02, y: centerY - radius * 0.33, scale: 0.13, value: 0.48 },
-      { id: "SURFACE_EAST_PATCH", x: centerX + radius * 0.3, y: centerY - radius * 0.05, scale: 0.16, value: 0.66 },
-      { id: "SURFACE_CENTER_PATCH", x: centerX - radius * 0.02, y: centerY + radius * 0.04, scale: 0.22, value: 0.82 },
-      { id: "SURFACE_SOUTHWEST_PATCH", x: centerX - radius * 0.21, y: centerY + radius * 0.35, scale: 0.14, value: 0.44 },
-      { id: "SURFACE_SOUTHEAST_PATCH", x: centerX + radius * 0.24, y: centerY + radius * 0.28, scale: 0.15, value: 0.58 }
+      { id: "SURFACE_POINTER_BISHOP_NORTHWEST_PATCH", x: centerX - radius * 0.3, y: centerY - radius * 0.18, scale: 0.17, value: 0.72 },
+      { id: "SURFACE_POINTER_BISHOP_NORTH_PATCH", x: centerX + radius * 0.02, y: centerY - radius * 0.33, scale: 0.13, value: 0.48 },
+      { id: "SURFACE_POINTER_BISHOP_EAST_PATCH", x: centerX + radius * 0.3, y: centerY - radius * 0.05, scale: 0.16, value: 0.66 },
+      { id: "SURFACE_POINTER_BISHOP_CENTER_PATCH", x: centerX - radius * 0.02, y: centerY + radius * 0.04, scale: 0.22, value: 0.82 },
+      { id: "SURFACE_POINTER_BISHOP_SOUTHWEST_PATCH", x: centerX - radius * 0.21, y: centerY + radius * 0.35, scale: 0.14, value: 0.44 },
+      { id: "SURFACE_POINTER_BISHOP_SOUTHEAST_PATCH", x: centerX + radius * 0.24, y: centerY + radius * 0.28, scale: 0.15, value: 0.58 }
     ];
   }
 
@@ -2086,7 +2235,7 @@
     ];
 
     const model = {
-      modelType: "HEARTH_BASE_GLOBE_SURFACE_POINTER_INTERNAL_EXTERNAL_SOCKET_MODEL",
+      modelType: "HEARTH_BASE_GLOBE_SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_SOCKET_MODEL",
       contract: CONTRACT,
       receipt: RECEIPT,
       centerX,
@@ -2094,6 +2243,13 @@
       radius,
       boundaryModel: clonePlain(boundaryModel),
       massModel: clonePlain(massModel),
+
+      bishopName: BISHOP_NAME,
+      bishopRole: BISHOP_ROLE,
+      bishopRank: BISHOP_RANK,
+      bishopAddress: BISHOP_ADDRESS,
+      bishopDirection: BISHOP_DIRECTION,
+      bishopCardinalDisposition: BISHOP_CARDINAL_DISPOSITION,
 
       boundaryDependencyObserved: boundaryEvidence.observed,
       boundaryPacketObserved: Boolean(boundaryEvidence.packet),
@@ -2108,7 +2264,7 @@
       surfaceSeeds: surfaceFields,
       surfaceFormationFields: clonePlain(surfaceFields),
 
-      surfaceMode: "POINTER_FINGER_INTERNAL_EXTERNAL_SOCKET_WITH_FIRST_PASS_MATERIAL_DIFFERENTIATION",
+      surfaceMode: "POINTER_BISHOP_INTERNAL_EXTERNAL_SOCKET_WITH_FIRST_PASS_MATERIAL_DIFFERENTIATION",
       surfaceCoordinateSpace: "normalized-0-to-1",
       projection: "front-facing-base-globe",
 
@@ -2116,6 +2272,7 @@
       singleExternalInputReceiver: true,
       internalExpressionSocketActive: true,
       internalFingerPacketReceiver: true,
+      internalBishopPacketReceiver: true,
       compositePacketReceiver: true,
       worldExpressionPacketReceiver: true,
 
@@ -2251,6 +2408,7 @@
       materialClass: value.materialClass,
       firstSurfaceDifferentiationReady: true,
       pointerFingerSocketActive: true,
+      pointerBishopSocketActive: true,
       internalExpressionSocketActive: true,
       externalExpressionSocketActive: true,
       terrainTruthClaim: false,
@@ -2264,11 +2422,14 @@
 
   function sample(x, y, options = {}) {
     return {
-      packetType: "HEARTH_CANVAS_SURFACE_POINTER_FINGER_SAMPLE",
+      packetType: "HEARTH_CANVAS_SURFACE_POINTER_BISHOP_SAMPLE",
       contract: CONTRACT,
       receipt: RECEIPT,
       file: FILE,
       fingerName: FINGER_NAME,
+      bishopName: BISHOP_NAME,
+      bishopRole: BISHOP_ROLE,
+      bishopRank: BISHOP_RANK,
       surface: sampleSurface(x, y, options.width, options.height),
       ...FINAL_FALSE
     };
@@ -2363,7 +2524,7 @@
 
       context.restore();
 
-      record("SURFACE_POINTER_DRAW_TO_CANVAS_COMPLETE", {
+      record("SURFACE_POINTER_BISHOP_DRAW_TO_CANVAS_COMPLETE", {
         width,
         height,
         fields: (model.surfaceFormationFields || []).length,
@@ -2376,7 +2537,9 @@
         receipt: RECEIPT,
         file: FILE,
         fingerName: FINGER_NAME,
+        bishopName: BISHOP_NAME,
         pointerFingerActive: true,
+        pointerBishopActive: true,
         visibleContributionAvailable: true,
         finalVisualClaim: false,
         ...FINAL_FALSE
@@ -2386,7 +2549,7 @@
         context.restore();
       } catch (_restoreError) {}
 
-      recordError("SURFACE_POINTER_DRAW_TO_CANVAS_FAILED", error);
+      recordError("SURFACE_POINTER_BISHOP_DRAW_TO_CANVAS_FAILED", error);
 
       return {
         drawn: false,
@@ -2403,29 +2566,25 @@
     for (const sourceName of HUB_SOURCE_NAMES) {
       const candidate = readPath(sourceName);
       if (candidate && isObject(candidate)) {
-        return {
-          hub: candidate,
-          sourceName
-        };
+        return { hub: candidate, sourceName };
       }
     }
 
-    return {
-      hub: null,
-      sourceName: "NONE"
-    };
+    return { hub: null, sourceName: "NONE" };
   }
 
   function buildSurfacePacket(options = {}) {
     const model = buildSurfaceModel(options);
 
     const packet = {
-      packetType: "HEARTH_CANVAS_SURFACE_POINTER_INTERNAL_EXTERNAL_SOCKET_PACKET",
+      packetType: "HEARTH_CANVAS_SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_SOCKET_PACKET",
       packetName: PACKET,
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       previousReceipt: PREVIOUS_RECEIPT,
+      lineageV2Contract: LINEAGE_V2_CONTRACT,
+      lineageV2Receipt: LINEAGE_V2_RECEIPT,
       baselineContract: BASELINE_CONTRACT,
       baselineReceipt: BASELINE_RECEIPT,
       file: FILE,
@@ -2438,6 +2597,18 @@
       fingerOrder: FINGER_ORDER,
       fingerStretchTotal: FINGER_STRETCH_TOTAL,
       fingerStretchRegistry: clonePlain(FINGER_STRETCH_REGISTRY),
+
+      bishopName: BISHOP_NAME,
+      bishopTitle: BISHOP_TITLE,
+      bishopRole: BISHOP_ROLE,
+      bishopRank: BISHOP_RANK,
+      bishopOrder: BISHOP_ORDER,
+      bishopAddress: BISHOP_ADDRESS,
+      bishopDirection: BISHOP_DIRECTION,
+      bishopCardinalDisposition: BISHOP_CARDINAL_DISPOSITION,
+      bishopSubjectFile: BISHOP_SUBJECT_FILE,
+      bishopParent: BISHOP_PARENT,
+      bishopCanonicalStatus: BISHOP_CANONICAL_STATUS,
 
       boundaryFile: BOUNDARY_FILE,
       boundaryDependencyExpected: true,
@@ -2457,11 +2628,16 @@
 
       surfaceFingerActive: true,
       pointerFingerActive: true,
+      pointerBishopActive: true,
+      bishopLanguageActive: true,
+      nonCardinalBishopLanguageActive: true,
+      legacyFingerCompatibilityActive: true,
       externalExpressionSocketActive: true,
       internalExpressionSocketActive: true,
       internalExternalExpressionSocketActive: true,
       singleExternalInputReceiver: true,
       internalFingerPacketReceiver: true,
+      internalBishopPacketReceiver: true,
       compositePacketReceiver: true,
       worldExpressionPacketReceiver: true,
       firstMaterialDifferentiationActive: true,
@@ -2470,6 +2646,8 @@
       roughTerrainTintReady: true,
       shallowMaterialVariationReady: true,
       surfacePacketReady: true,
+      pointerFingerPacketReady: true,
+      pointerBishopPacketReady: true,
       visibleContributionAvailable: true,
 
       surfaceModel: clonePlain(model),
@@ -2488,13 +2666,19 @@
       internalIntakeReady: true,
       receiveInternalExpressionAvailable: true,
       receiveInternalFingerPacketAvailable: true,
+      receiveInternalBishopPacketAvailable: true,
       receiveExpansionFingerPacketAvailable: true,
+      receiveExpansionBishopPacketAvailable: true,
       receiveCompositeFingerPacketAvailable: true,
+      receiveCompositeBishopPacketAvailable: true,
       receiveWorldExpressionPacketAvailable: true,
       receiveFingerPacketAvailable: true,
+      receiveBishopPacketAvailable: true,
       receiveCanvasFingerPacketAvailable: true,
+      receiveCanvasBishopPacketAvailable: true,
       receiveExpressionPacketAvailable: true,
       registerExpressionFingerAvailable: true,
+      registerExpressionBishopAvailable: true,
       getInternalIntakeReceiptAvailable: true,
 
       hubRegistrationAttempted: state.hubRegistrationAttempted,
@@ -2511,8 +2695,8 @@
       firstFailedCoordinate: state.hubRegistrationAccepted
         ? state.compositeInternalPacketCount
           ? "COMPOSITE_INTERNAL_EXPRESSION_ACCEPTED_WAITING_INSPECT_OR_LIGHT"
-          : "WAITING_EXTERNAL_DONOR_EXPRESSION_OR_LIGHT_FINGER"
-        : "WAITING_CANVAS_HUB_SURFACE_FINGER_INTAKE",
+          : "WAITING_EXTERNAL_DONOR_EXPRESSION_OR_LIGHT_BISHOP"
+        : "WAITING_CANVAS_HUB_SURFACE_POINTER_BISHOP_INTAKE",
       noClaimsPreserved: true,
 
       ...FINAL_FALSE,
@@ -2532,8 +2716,8 @@
       state.recommendedNextFile = packet.recommendedNextFile;
       state.recommendedNextRenewalTarget = packet.recommendedNextRenewalTarget;
       state.postgameStatus = state.compositeInternalPacketCount
-        ? "SURFACE_POINTER_ACCEPTED_COMPOSITE_INTERNAL_EXPRESSION"
-        : "SURFACE_POINTER_SOCKET_READY";
+        ? "SURFACE_POINTER_BISHOP_ACCEPTED_COMPOSITE_INTERNAL_EXPRESSION"
+        : "SURFACE_POINTER_BISHOP_SOCKET_READY";
     }
 
     return packet;
@@ -2543,7 +2727,7 @@
     const surfacePacket = buildSurfacePacket(options);
 
     const packet = {
-      packetType: "HEARTH_CANVAS_SURFACE_POINTER_FINGER_INTERNAL_EXTERNAL_SOCKET_PACKET",
+      packetType: "HEARTH_CANVAS_SURFACE_POINTER_FINGER_COMPATIBILITY_PACKET",
       packetName: PACKET,
       contract: CONTRACT,
       receipt: RECEIPT,
@@ -2561,7 +2745,14 @@
       fingerStretchTotal: FINGER_STRETCH_TOTAL,
       fingerStretchRegistry: clonePlain(FINGER_STRETCH_REGISTRY),
 
+      bishopName: BISHOP_NAME,
+      bishopRole: BISHOP_ROLE,
+      bishopRank: BISHOP_RANK,
+      bishopAddress: BISHOP_ADDRESS,
+      bishopLanguageActive: true,
+
       pointerFingerActive: true,
+      pointerBishopActive: true,
       externalExpressionSocketActive: true,
       internalExpressionSocketActive: true,
       internalExternalExpressionSocketActive: true,
@@ -2599,24 +2790,86 @@
     return packet;
   }
 
-  function getSurfacePacket(options = {}) {
-    if (!state.surfacePacket || options.rebuild === true) {
-      return buildSurfacePacket(options);
-    }
+  function buildPointerBishopPacket(options = {}) {
+    const surfacePacket = buildSurfacePacket(options);
 
+    const packet = {
+      packetType: "HEARTH_CANVAS_SURFACE_POINTER_BISHOP_PACKET",
+      packetName: PACKET,
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
+      previousReceipt: PREVIOUS_RECEIPT,
+      baselineContract: BASELINE_CONTRACT,
+      file: FILE,
+      route: ROUTE,
+      diagnosticRoute: DIAGNOSTIC_ROUTE,
+      parentHubFile: PARENT_HUB_FILE,
+
+      bishopName: BISHOP_NAME,
+      bishopTitle: BISHOP_TITLE,
+      bishopRole: BISHOP_ROLE,
+      bishopRank: BISHOP_RANK,
+      bishopOrder: BISHOP_ORDER,
+      bishopAddress: BISHOP_ADDRESS,
+      bishopDirection: BISHOP_DIRECTION,
+      bishopCardinalDisposition: BISHOP_CARDINAL_DISPOSITION,
+      bishopSubjectFile: BISHOP_SUBJECT_FILE,
+      bishopParent: BISHOP_PARENT,
+      bishopCanonicalStatus: BISHOP_CANONICAL_STATUS,
+
+      legacyFingerName: FINGER_NAME,
+      legacyFingerRole: FINGER_ROLE,
+      legacyFingerOrder: FINGER_ORDER,
+      legacyFingerCompatibilityActive: true,
+
+      pointerBishopActive: true,
+      pointerFingerActive: true,
+      externalExpressionSocketActive: true,
+      internalExpressionSocketActive: true,
+      internalBishopPacketReceiver: true,
+      internalFingerPacketReceiver: true,
+      compositePacketReceiver: true,
+      worldExpressionPacketReceiver: true,
+
+      surfacePacket: clonePlain(surfacePacket),
+      externalIntakeReceipt: getExternalIntakeReceipt(),
+      internalIntakeReceipt: getInternalIntakeReceipt(),
+      routingMap: getRoutingMap(),
+
+      noClaimsPreserved: true,
+      ...FINAL_FALSE,
+      updatedAt: nowIso()
+    };
+
+    state.pointerBishopPacket = clonePlain(packet);
+    state.pointerBishopPacketReady = true;
+
+    return packet;
+  }
+
+  function getSurfacePacket(options = {}) {
+    if (!state.surfacePacket || options.rebuild === true) return buildSurfacePacket(options);
     return clonePlain(state.surfacePacket);
   }
 
   function getPointerFingerPacket(options = {}) {
-    if (!state.pointerFingerPacket || options.rebuild === true) {
-      return buildPointerFingerPacket(options);
-    }
-
+    if (!state.pointerFingerPacket || options.rebuild === true) return buildPointerFingerPacket(options);
     return clonePlain(state.pointerFingerPacket);
+  }
+
+  function getPointerBishopPacket(options = {}) {
+    if (!state.pointerBishopPacket || options.rebuild === true) return buildPointerBishopPacket(options);
+    return clonePlain(state.pointerBishopPacket);
+  }
+
+  function getBishopPacket(options = {}) {
+    return getPointerBishopPacket(options);
   }
 
   function registerWithCanvasHub(options = {}) {
     const packet = buildSurfacePacket(options);
+    const bishopPacket = buildPointerBishopPacket(options);
     const found = findCanvasHub();
 
     state.hubDetected = Boolean(found.hub);
@@ -2631,9 +2884,9 @@
       state.firstFailedCoordinate = "WAITING_CANVAS_HUB";
       state.recommendedNextFile = PARENT_HUB_FILE;
       state.recommendedNextRenewalTarget = PARENT_HUB_FILE;
-      state.postgameStatus = "SURFACE_POINTER_FINGER_HELD_CANVAS_HUB_NOT_FOUND";
+      state.postgameStatus = "SURFACE_POINTER_BISHOP_HELD_CANVAS_HUB_NOT_FOUND";
 
-      record("SURFACE_POINTER_HUB_NOT_FOUND", {
+      record("SURFACE_POINTER_BISHOP_HUB_NOT_FOUND", {
         attemptedSources: clonePlain(HUB_SOURCE_NAMES)
       });
 
@@ -2644,30 +2897,31 @@
       if (!isFunction(found.hub[method])) continue;
 
       try {
-        const response = found.hub[method](clonePlain(packet));
+        const payload = method.toLowerCase().includes("bishop") ? bishopPacket : packet;
+        const response = found.hub[method](clonePlain(payload));
 
         state.hubRegistrationAccepted = response !== false;
         state.hubRegistrationMethod = method;
-        state.hubRegistrationHeldReason = state.hubRegistrationAccepted ? "NONE" : "CANVAS_HUB_REJECTED_SURFACE_POINTER_PACKET";
+        state.hubRegistrationHeldReason = state.hubRegistrationAccepted ? "NONE" : "CANVAS_HUB_REJECTED_SURFACE_POINTER_BISHOP_PACKET";
         state.lastRegistrationResponse = clonePlain(response);
 
         if (state.hubRegistrationAccepted) {
           state.firstFailedCoordinate = state.compositeInternalPacketCount
             ? "COMPOSITE_INTERNAL_EXPRESSION_ACCEPTED_WAITING_INSPECT_OR_LIGHT"
-            : "WAITING_EXTERNAL_DONOR_EXPRESSION_OR_LIGHT_FINGER";
+            : "WAITING_EXTERNAL_DONOR_EXPRESSION_OR_LIGHT_BISHOP";
           state.recommendedNextFile = state.compositeInternalPacketCount ? INSPECT_FILE : NEXT_FILE;
           state.recommendedNextRenewalTarget = state.recommendedNextFile;
           state.postgameStatus = state.compositeInternalPacketCount
-            ? "SURFACE_POINTER_FINGER_ACCEPTED_BY_CANVAS_HUB_COMPOSITE_SOCKET_READY"
-            : "SURFACE_POINTER_FINGER_ACCEPTED_BY_CANVAS_HUB_SOCKET_READY";
+            ? "SURFACE_POINTER_BISHOP_ACCEPTED_BY_CANVAS_HUB_COMPOSITE_SOCKET_READY"
+            : "SURFACE_POINTER_BISHOP_ACCEPTED_BY_CANVAS_HUB_SOCKET_READY";
         } else {
-          state.firstFailedCoordinate = "CANVAS_HUB_REJECTED_SURFACE_POINTER_PACKET";
+          state.firstFailedCoordinate = "CANVAS_HUB_REJECTED_SURFACE_POINTER_BISHOP_PACKET";
           state.recommendedNextFile = PARENT_HUB_FILE;
           state.recommendedNextRenewalTarget = PARENT_HUB_FILE;
-          state.postgameStatus = "SURFACE_POINTER_FINGER_HELD_CANVAS_HUB_REJECTED_PACKET";
+          state.postgameStatus = "SURFACE_POINTER_BISHOP_HELD_CANVAS_HUB_REJECTED_PACKET";
         }
 
-        record("SURFACE_POINTER_HUB_REGISTRATION_ATTEMPT_COMPLETE", {
+        record("SURFACE_POINTER_BISHOP_HUB_REGISTRATION_ATTEMPT_COMPLETE", {
           hubSourceName: found.sourceName,
           method,
           accepted: state.hubRegistrationAccepted
@@ -2675,10 +2929,11 @@
 
         buildSurfacePacket(options);
         buildPointerFingerPacket(options);
+        buildPointerBishopPacket(options);
         return state.hubRegistrationAccepted;
       } catch (error) {
         state.hubRegistrationError = error && error.message ? String(error.message) : String(error);
-        recordError("SURFACE_POINTER_HUB_REGISTRATION_METHOD_FAILED", error, {
+        recordError("SURFACE_POINTER_BISHOP_HUB_REGISTRATION_METHOD_FAILED", error, {
           hubSourceName: found.sourceName,
           method
         });
@@ -2691,15 +2946,16 @@
     state.firstFailedCoordinate = "CANVAS_HUB_INTAKE_NOT_FOUND";
     state.recommendedNextFile = PARENT_HUB_FILE;
     state.recommendedNextRenewalTarget = PARENT_HUB_FILE;
-    state.postgameStatus = "SURFACE_POINTER_FINGER_HELD_CANVAS_HUB_INTAKE_NOT_FOUND";
+    state.postgameStatus = "SURFACE_POINTER_BISHOP_HELD_CANVAS_HUB_INTAKE_NOT_FOUND";
 
-    record("SURFACE_POINTER_HUB_INTAKE_NOT_FOUND", {
+    record("SURFACE_POINTER_BISHOP_HUB_INTAKE_NOT_FOUND", {
       hubSourceName: found.sourceName,
       attemptedMethods: clonePlain(HUB_INTAKE_METHODS)
     });
 
     buildSurfacePacket(options);
     buildPointerFingerPacket(options);
+    buildPointerBishopPacket(options);
     return false;
   }
 
@@ -2719,6 +2975,8 @@
       packet: PACKET,
       previousContract: PREVIOUS_CONTRACT,
       previousReceipt: PREVIOUS_RECEIPT,
+      lineageV2Contract: LINEAGE_V2_CONTRACT,
+      lineageV2Receipt: LINEAGE_V2_RECEIPT,
       baselineContract: BASELINE_CONTRACT,
       baselineReceipt: BASELINE_RECEIPT,
       file: FILE,
@@ -2741,14 +2999,31 @@
       fingerOrder: FINGER_ORDER,
       fingerStretchTotal: FINGER_STRETCH_TOTAL,
 
+      bishopName: BISHOP_NAME,
+      bishopTitle: BISHOP_TITLE,
+      bishopRole: BISHOP_ROLE,
+      bishopRank: BISHOP_RANK,
+      bishopOrder: BISHOP_ORDER,
+      bishopAddress: BISHOP_ADDRESS,
+      bishopDirection: BISHOP_DIRECTION,
+      bishopCardinalDisposition: BISHOP_CARDINAL_DISPOSITION,
+      bishopSubjectFile: BISHOP_SUBJECT_FILE,
+      bishopParent: BISHOP_PARENT,
+      bishopCanonicalStatus: BISHOP_CANONICAL_STATUS,
+      bishopLanguageActive: state.bishopLanguageActive,
+      nonCardinalBishopLanguageActive: state.nonCardinalBishopLanguageActive,
+      legacyFingerCompatibilityActive: state.legacyFingerCompatibilityActive,
+
       surfaceFingerLoaded: state.surfaceFingerLoaded,
       surfaceFingerActive: state.surfaceFingerActive,
       pointerFingerActive: state.pointerFingerActive,
+      pointerBishopActive: state.pointerBishopActive,
       externalExpressionSocketActive: state.externalExpressionSocketActive,
       internalExpressionSocketActive: state.internalExpressionSocketActive,
       internalExternalExpressionSocketActive: state.internalExternalExpressionSocketActive,
       singleExternalInputReceiver: state.singleExternalInputReceiver,
       internalFingerPacketReceiver: state.internalFingerPacketReceiver,
+      internalBishopPacketReceiver: state.internalBishopPacketReceiver,
       compositePacketReceiver: state.compositePacketReceiver,
       worldExpressionPacketReceiver: state.worldExpressionPacketReceiver,
       firstMaterialDifferentiationActive: state.firstMaterialDifferentiationActive,
@@ -2769,6 +3044,7 @@
       shallowMaterialVariationReady: state.shallowMaterialVariationReady,
       surfacePacketReady: state.surfacePacketReady,
       pointerFingerPacketReady: state.pointerFingerPacketReady,
+      pointerBishopPacketReady: state.pointerBishopPacketReady,
       visibleContributionAvailable: state.visibleContributionAvailable,
 
       externalIntakeReady: state.externalIntakeReady,
@@ -2814,14 +3090,21 @@
       classifyExternalExpressionAvailable: true,
 
       receiveInternalExpressionAvailable: true,
+      classifyInternalExpressionAvailable: true,
       receiveInternalFingerPacketAvailable: true,
+      receiveInternalBishopPacketAvailable: true,
       receiveExpansionFingerPacketAvailable: true,
+      receiveExpansionBishopPacketAvailable: true,
       receiveCompositeFingerPacketAvailable: true,
+      receiveCompositeBishopPacketAvailable: true,
       receiveWorldExpressionPacketAvailable: true,
       receiveFingerPacketAvailable: true,
+      receiveBishopPacketAvailable: true,
       receiveCanvasFingerPacketAvailable: true,
+      receiveCanvasBishopPacketAvailable: true,
       receiveExpressionPacketAvailable: true,
       registerExpressionFingerAvailable: true,
+      registerExpressionBishopAvailable: true,
 
       registerExpressionReceiverAvailable: true,
       getRoutingMapAvailable: true,
@@ -2853,6 +3136,8 @@
       surfaceModel: clonePlain(state.surfaceModel),
       surfacePacket: clonePlain(state.surfacePacket),
       pointerFingerPacket: clonePlain(state.pointerFingerPacket),
+      pointerBishopPacket: clonePlain(state.pointerBishopPacket),
+      bishopPacket: clonePlain(state.pointerBishopPacket),
       internalExpressionPacket: clonePlain(state.internalExpressionPacket),
       compositeBridgePacket: clonePlain(state.compositeBridgePacket),
       fingerStretchRegistry: clonePlain(FINGER_STRETCH_REGISTRY),
@@ -2890,7 +3175,7 @@
     const r = getReceiptLight();
 
     return [
-      "HEARTH_CANVAS_FINGER_SURFACE_POINTER_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_RECEIPT",
+      "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_RECEIPT",
       "",
       line("timestamp", r.timestamp),
       line("contract", r.contract),
@@ -2898,23 +3183,41 @@
       line("packet", r.packet),
       line("previousContract", r.previousContract),
       line("previousReceipt", r.previousReceipt),
+      line("lineageV2Contract", r.lineageV2Contract),
       line("baselineContract", r.baselineContract),
       line("file", r.file),
       line("route", r.route),
       line("diagnosticRoute", r.diagnosticRoute),
       line("parentHubFile", r.parentHubFile),
       "",
-      "FINGER",
+      "BISHOP",
+      line("bishopName", r.bishopName),
+      line("bishopTitle", r.bishopTitle),
+      line("bishopRole", r.bishopRole),
+      line("bishopRank", r.bishopRank),
+      line("bishopOrder", r.bishopOrder),
+      line("bishopAddress", r.bishopAddress),
+      line("bishopDirection", r.bishopDirection),
+      line("bishopCardinalDisposition", r.bishopCardinalDisposition),
+      line("bishopSubjectFile", r.bishopSubjectFile),
+      line("bishopCanonicalStatus", r.bishopCanonicalStatus),
+      line("bishopLanguageActive", r.bishopLanguageActive),
+      line("nonCardinalBishopLanguageActive", r.nonCardinalBishopLanguageActive),
+      line("legacyFingerCompatibilityActive", r.legacyFingerCompatibilityActive),
+      "",
+      "FINGER_COMPATIBILITY",
       line("fingerName", r.fingerName),
       line("fingerRole", r.fingerRole),
       line("fingerOrder", r.fingerOrder),
       line("fingerStretchTotal", r.fingerStretchTotal),
       line("pointerFingerActive", r.pointerFingerActive),
+      line("pointerBishopActive", r.pointerBishopActive),
       line("externalExpressionSocketActive", r.externalExpressionSocketActive),
       line("internalExpressionSocketActive", r.internalExpressionSocketActive),
       line("internalExternalExpressionSocketActive", r.internalExternalExpressionSocketActive),
       line("singleExternalInputReceiver", r.singleExternalInputReceiver),
       line("internalFingerPacketReceiver", r.internalFingerPacketReceiver),
+      line("internalBishopPacketReceiver", r.internalBishopPacketReceiver),
       line("compositePacketReceiver", r.compositePacketReceiver),
       line("worldExpressionPacketReceiver", r.worldExpressionPacketReceiver),
       "",
@@ -2940,6 +3243,7 @@
       line("shallowMaterialVariationReady", r.shallowMaterialVariationReady),
       line("surfacePacketReady", r.surfacePacketReady),
       line("pointerFingerPacketReady", r.pointerFingerPacketReady),
+      line("pointerBishopPacketReady", r.pointerBishopPacketReady),
       line("visibleContributionAvailable", r.visibleContributionAvailable),
       "",
       "EXTERNAL_SOCKET",
@@ -2977,25 +3281,6 @@
       line("hubRegistrationHeldReason", r.hubRegistrationHeldReason),
       line("hubRegistrationError", r.hubRegistrationError),
       "",
-      "API",
-      line("sampleAvailable", r.sampleAvailable),
-      line("sampleSurfaceAvailable", r.sampleSurfaceAvailable),
-      line("drawToCanvasAvailable", r.drawToCanvasAvailable),
-      line("receiveExternalExpressionAvailable", r.receiveExternalExpressionAvailable),
-      line("receiveInternalFingerPacketAvailable", r.receiveInternalFingerPacketAvailable),
-      line("receiveExpansionFingerPacketAvailable", r.receiveExpansionFingerPacketAvailable),
-      line("receiveCompositeFingerPacketAvailable", r.receiveCompositeFingerPacketAvailable),
-      line("receiveWorldExpressionPacketAvailable", r.receiveWorldExpressionPacketAvailable),
-      line("receiveFingerPacketAvailable", r.receiveFingerPacketAvailable),
-      line("receiveCanvasFingerPacketAvailable", r.receiveCanvasFingerPacketAvailable),
-      line("receiveExpressionPacketAvailable", r.receiveExpressionPacketAvailable),
-      line("registerExpressionFingerAvailable", r.registerExpressionFingerAvailable),
-      line("classifyExternalExpressionAvailable", r.classifyExternalExpressionAvailable),
-      line("registerExpressionReceiverAvailable", r.registerExpressionReceiverAvailable),
-      line("getRoutingMapAvailable", r.getRoutingMapAvailable),
-      line("getHeldDonorQueueAvailable", r.getHeldDonorQueueAvailable),
-      line("getInternalHeldQueueAvailable", r.getInternalHeldQueueAvailable),
-      "",
       "NEXT",
       line("firstFailedCoordinate", r.firstFailedCoordinate),
       line("recommendedNextFile", r.recommendedNextFile),
@@ -3031,13 +3316,28 @@
     setDataset("hearthCanvasFingerSurfacePreviousReceipt", PREVIOUS_RECEIPT);
     setDataset("hearthCanvasFingerSurfaceBaselineContract", BASELINE_CONTRACT);
     setDataset("hearthCanvasFingerSurfaceFile", FILE);
+
+    setDataset("hearthCanvasFingerSurfaceBishopLanguageActive", "true");
+    setDataset("hearthCanvasFingerSurfaceBishopName", BISHOP_NAME);
+    setDataset("hearthCanvasFingerSurfaceBishopTitle", BISHOP_TITLE);
+    setDataset("hearthCanvasFingerSurfaceBishopRole", BISHOP_ROLE);
+    setDataset("hearthCanvasFingerSurfaceBishopRank", BISHOP_RANK);
+    setDataset("hearthCanvasFingerSurfaceBishopOrder", String(BISHOP_ORDER));
+    setDataset("hearthCanvasFingerSurfaceBishopAddress", BISHOP_ADDRESS);
+    setDataset("hearthCanvasFingerSurfaceBishopDirection", BISHOP_DIRECTION);
+    setDataset("hearthCanvasFingerSurfaceBishopCardinalDisposition", BISHOP_CARDINAL_DISPOSITION);
+    setDataset("hearthCanvasFingerSurfaceBishopCanonicalStatus", BISHOP_CANONICAL_STATUS);
+
     setDataset("hearthCanvasFingerSurfaceActive", String(state.surfaceFingerActive));
     setDataset("hearthCanvasFingerSurfacePointerFingerActive", String(state.pointerFingerActive));
+    setDataset("hearthCanvasFingerSurfacePointerBishopActive", String(state.pointerBishopActive));
+    setDataset("hearthCanvasFingerSurfaceLegacyFingerCompatibilityActive", String(state.legacyFingerCompatibilityActive));
     setDataset("hearthCanvasFingerSurfaceExternalExpressionSocketActive", String(state.externalExpressionSocketActive));
     setDataset("hearthCanvasFingerSurfaceInternalExpressionSocketActive", String(state.internalExpressionSocketActive));
     setDataset("hearthCanvasFingerSurfaceInternalExternalExpressionSocketActive", String(state.internalExternalExpressionSocketActive));
     setDataset("hearthCanvasFingerSurfaceSingleExternalInputReceiver", String(state.singleExternalInputReceiver));
     setDataset("hearthCanvasFingerSurfaceInternalFingerPacketReceiver", String(state.internalFingerPacketReceiver));
+    setDataset("hearthCanvasFingerSurfaceInternalBishopPacketReceiver", String(state.internalBishopPacketReceiver));
     setDataset("hearthCanvasFingerSurfaceCompositePacketReceiver", String(state.compositePacketReceiver));
     setDataset("hearthCanvasFingerSurfaceWorldExpressionPacketReceiver", String(state.worldExpressionPacketReceiver));
     setDataset("hearthCanvasFingerSurfaceFirstMaterialDifferentiationActive", String(state.firstMaterialDifferentiationActive));
@@ -3058,6 +3358,7 @@
     setDataset("hearthCanvasFingerSurfaceShallowMaterialVariationReady", String(state.shallowMaterialVariationReady));
     setDataset("hearthCanvasFingerSurfacePacketReady", String(state.surfacePacketReady));
     setDataset("hearthCanvasFingerSurfacePointerFingerPacketReady", String(state.pointerFingerPacketReady));
+    setDataset("hearthCanvasFingerSurfacePointerBishopPacketReady", String(state.pointerBishopPacketReady));
     setDataset("hearthCanvasFingerSurfaceVisibleContributionAvailable", String(state.visibleContributionAvailable));
 
     setDataset("hearthCanvasFingerSurfaceExternalIntakeReady", String(state.externalIntakeReady));
@@ -3124,9 +3425,19 @@
     hearth.canvasFingerSurfacePointer = api;
     hearth.canvasPointerFinger = api;
     hearth.canvasFingerSurfaceInternalExternalSocket = api;
+
+    hearth.canvasBishopSurface = api;
+    hearth.canvasSurfaceBishop = api;
+    hearth.canvasBishopSurfacePointer = api;
+    hearth.canvasPointerBishop = api;
+    hearth.canvasBishopSurfaceInternalExternalSocket = api;
+
     hearth.canvasFingerSurfaceReceipt = getReceiptLight();
+    hearth.canvasSurfaceBishopReceipt = getReceiptLight();
+    hearth.canvasPointerBishopReceipt = getReceiptLight();
     hearth.canvasFingerSurfacePacket = getSurfacePacket();
     hearth.canvasFingerSurfacePointerPacket = getPointerFingerPacket();
+    hearth.canvasPointerBishopPacket = getPointerBishopPacket();
     hearth.canvasFingerSurfaceInternalIntakeReceipt = getInternalIntakeReceipt();
     hearth.canvasFingerSurfaceExternalIntakeReceipt = getExternalIntakeReceipt();
 
@@ -3135,9 +3446,19 @@
     lab.hearthCanvasFingerSurfacePointer = api;
     lab.hearthCanvasPointerFinger = api;
     lab.hearthCanvasFingerSurfaceInternalExternalSocket = api;
+
+    lab.hearthCanvasBishopSurface = api;
+    lab.hearthCanvasSurfaceBishop = api;
+    lab.hearthCanvasBishopSurfacePointer = api;
+    lab.hearthCanvasPointerBishop = api;
+    lab.hearthCanvasBishopSurfaceInternalExternalSocket = api;
+
     lab.hearthCanvasFingerSurfaceReceipt = getReceiptLight();
+    lab.hearthCanvasSurfaceBishopReceipt = getReceiptLight();
+    lab.hearthCanvasPointerBishopReceipt = getReceiptLight();
     lab.hearthCanvasFingerSurfacePacket = getSurfacePacket();
     lab.hearthCanvasFingerSurfacePointerPacket = getPointerFingerPacket();
+    lab.hearthCanvasPointerBishopPacket = getPointerBishopPacket();
     lab.hearthCanvasFingerSurfaceInternalIntakeReceipt = getInternalIntakeReceipt();
     lab.hearthCanvasFingerSurfaceExternalIntakeReceipt = getExternalIntakeReceipt();
 
@@ -3147,7 +3468,20 @@
     root.HEARTH_CANVAS_POINTER_FINGER = api;
     root.HEARTH_CANVAS_FINGER_SURFACE_INTERNAL_EXTERNAL_SOCKET = api;
 
+    root.HEARTH_CANVAS_BISHOP_SURFACE = api;
+    root.HEARTH_CANVAS_SURFACE_BISHOP = api;
+    root.HEARTH_CANVAS_BISHOP_SURFACE_POINTER = api;
+    root.HEARTH_CANVAS_POINTER_BISHOP = api;
+    root.HEARTH_CANVAS_BISHOP_SURFACE_INTERNAL_EXTERNAL_SOCKET = api;
+    root.HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP = api;
+
     root.HEARTH_CANVAS_FINGER_SURFACE_RECEIPT = getReceiptLight();
+    root.HEARTH_CANVAS_BISHOP_SURFACE_RECEIPT = getReceiptLight();
+    root.HEARTH_CANVAS_POINTER_BISHOP_RECEIPT = getReceiptLight();
+
+    root.HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_RECEIPT = getReceipt();
+    root.HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_RECEIPT_v4 = getReceipt();
+
     root.HEARTH_CANVAS_FINGER_SURFACE_POINTER_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_RECEIPT = getReceipt();
     root.HEARTH_CANVAS_FINGER_SURFACE_POINTER_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_RECEIPT_v3 = getReceipt();
 
@@ -3156,6 +3490,8 @@
 
     root.HEARTH_CANVAS_FINGER_SURFACE_PACKET = getSurfacePacket();
     root.HEARTH_CANVAS_FINGER_SURFACE_POINTER_PACKET = getPointerFingerPacket();
+    root.HEARTH_CANVAS_POINTER_BISHOP_PACKET = getPointerBishopPacket();
+    root.HEARTH_CANVAS_SURFACE_BISHOP_PACKET = getPointerBishopPacket();
     root.HEARTH_CANVAS_FINGER_SURFACE_INTERNAL_INTAKE_RECEIPT = getInternalIntakeReceipt();
     root.HEARTH_CANVAS_FINGER_SURFACE_EXTERNAL_INTAKE_RECEIPT = getExternalIntakeReceipt();
 
@@ -3173,6 +3509,7 @@
     buildSurfaceModel(options);
     buildSurfacePacket(options);
     buildPointerFingerPacket(options);
+    buildPointerBishopPacket(options);
     updateDataset();
     publishGlobals();
 
@@ -3184,7 +3521,7 @@
     updateDataset();
     publishGlobals();
 
-    record("SURFACE_POINTER_INTERNAL_EXTERNAL_SOCKET_BOOT_COMPLETE", {
+    record("SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_SOCKET_BOOT_COMPLETE", {
       boundaryDependencyObserved: state.boundaryDependencyObserved,
       massDependencyObserved: state.massDependencyObserved,
       hubDetected: state.hubDetected,
@@ -3193,6 +3530,8 @@
       internalExpressionSocketActive: state.internalExpressionSocketActive,
       compositePacketReceiver: state.compositePacketReceiver,
       worldExpressionPacketReceiver: state.worldExpressionPacketReceiver,
+      pointerBishopActive: state.pointerBishopActive,
+      bishopLanguageActive: state.bishopLanguageActive,
       firstFailedCoordinate: state.firstFailedCoordinate,
       recommendedNextFile: state.recommendedNextFile
     });
@@ -3219,6 +3558,8 @@
     PREVIOUS_CONTRACT,
     PREVIOUS_RECEIPT,
     PREVIOUS_PACKET,
+    LINEAGE_V2_CONTRACT,
+    LINEAGE_V2_RECEIPT,
     BASELINE_CONTRACT,
     BASELINE_RECEIPT,
     FILE,
@@ -3243,6 +3584,8 @@
     packet: PACKET,
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
+    lineageV2Contract: LINEAGE_V2_CONTRACT,
+    lineageV2Receipt: LINEAGE_V2_RECEIPT,
     baselineContract: BASELINE_CONTRACT,
     baselineReceipt: BASELINE_RECEIPT,
     file: FILE,
@@ -3265,6 +3608,18 @@
     fingerStretchTotal: FINGER_STRETCH_TOTAL,
     fingerStretchRegistry: FINGER_STRETCH_REGISTRY,
 
+    bishopName: BISHOP_NAME,
+    bishopTitle: BISHOP_TITLE,
+    bishopRole: BISHOP_ROLE,
+    bishopRank: BISHOP_RANK,
+    bishopOrder: BISHOP_ORDER,
+    bishopAddress: BISHOP_ADDRESS,
+    bishopDirection: BISHOP_DIRECTION,
+    bishopCardinalDisposition: BISHOP_CARDINAL_DISPOSITION,
+    bishopSubjectFile: BISHOP_SUBJECT_FILE,
+    bishopParent: BISHOP_PARENT,
+    bishopCanonicalStatus: BISHOP_CANONICAL_STATUS,
+
     boot,
     init,
     start,
@@ -3275,8 +3630,11 @@
     buildSurfaceModel,
     buildSurfacePacket,
     buildPointerFingerPacket,
+    buildPointerBishopPacket,
     getSurfacePacket,
     getPointerFingerPacket,
+    getPointerBishopPacket,
+    getBishopPacket,
     registerWithCanvasHub,
     findCanvasHub,
 
@@ -3293,16 +3651,23 @@
     receiveInternalExpression,
     classifyInternalExpression,
     receiveInternalFingerPacket,
+    receiveInternalBishopPacket,
     receiveExpansionFingerPacket,
+    receiveExpansionBishopPacket,
     receiveCompositeFingerPacket,
+    receiveCompositeBishopPacket,
     receiveCompositePacket,
     receiveWorldExpressionPacket,
     receiveFingerPacket,
+    receiveBishopPacket,
     receiveCanvasFingerPacket,
+    receiveCanvasBishopPacket,
     receiveExpressionPacket,
     receiveCanvasExpressionPacket,
     receiveSurfacePointerPacket,
+    receiveSurfacePointerBishopPacket,
     registerExpressionFinger,
+    registerExpressionBishop,
 
     registerExpressionReceiver,
     getRoutingMap,
@@ -3324,13 +3689,20 @@
 
     supportsCanvasFingerSurface: true,
     supportsPointerFingerSocket: true,
+    supportsSurfacePointerBishop: true,
+    supportsPointerBishopSocket: true,
+    supportsNonCardinalBishopLanguage: true,
+    supportsLegacyFingerCompatibility: true,
     supportsExternalExpressionIntake: true,
     supportsSingleExternalInputReceiver: true,
     supportsInternalExpressionIntake: true,
     supportsInternalFingerPacketReceiver: true,
+    supportsInternalBishopPacketReceiver: true,
     supportsCompositeFingerPacketReceiver: true,
+    supportsCompositeBishopPacketReceiver: true,
     supportsWorldExpressionPacketReceiver: true,
     supportsExpansionFingerPacketReceiver: true,
+    supportsExpansionBishopPacketReceiver: true,
     supportsCompositeRegistrationMethods: true,
     supportsExternalDonorRouting: true,
     supportsHeldDonorQueue: true,
@@ -3338,6 +3710,7 @@
     supportsRegisteredInternalReceivers: true,
     supportsFirstMaterialDifferentiation: true,
     supportsSurfaceExpressionPacket: true,
+    supportsPointerBishopPacket: true,
     supportsBoundaryFingerConsumption: true,
     supportsMassFingerConsumption: true,
     supportsCanvasHubRegistration: true,
@@ -3346,19 +3719,27 @@
     supportsNoFinalClaims: true,
 
     ownsSurfaceFingerIdentity: true,
+    ownsSurfacePointerBishopIdentity: true,
     ownsPointerFingerSocket: true,
+    ownsPointerBishopSocket: true,
     ownsExternalExpressionIntake: true,
     ownsInternalExpressionIntake: true,
     ownsExternalExpressionRouting: true,
     ownsInternalExpressionReceipt: true,
     ownsSurfaceExpressionPacket: true,
+    ownsPointerBishopPacket: true,
     ownsFirstMaterialDifferentiation: true,
     ownsCanvasHub: false,
     ownsBoundaryFinger: false,
+    ownsBoundaryBishop: false,
     ownsMassFinger: false,
+    ownsMassBishop: false,
     ownsLightFinger: false,
+    ownsLightBishop: false,
     ownsInspectFinger: false,
+    ownsInspectBishop: false,
     ownsCompositeFinger: false,
+    ownsCompositeBishop: false,
     ownsCompositeTruth: false,
     ownsWorldExpressionTruth: false,
     ownsMaterialsAuthority: false,
@@ -3390,6 +3771,7 @@
     buildSurfaceModel();
     buildSurfacePacket();
     buildPointerFingerPacket();
+    buildPointerBishopPacket();
     updateDataset();
     publishGlobals();
 
@@ -3403,7 +3785,7 @@
       boot({});
     }
   } catch (error) {
-    recordError("SURFACE_POINTER_INTERNAL_EXTERNAL_SOCKET_INITIALIZATION_FAILED", error);
+    recordError("SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_SOCKET_INITIALIZATION_FAILED", error);
 
     try {
       updateDataset();

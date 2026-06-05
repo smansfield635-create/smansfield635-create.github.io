@@ -1,17 +1,19 @@
 // /assets/hearth/hearth.diagnostic.rail.js
-// HEARTH_DIAGNOSTIC_RAIL_NORTH_PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ORCHESTRATOR_TNT_v4
+// HEARTH_DIAGNOSTIC_RAIL_NORTH_LAB_CANVAS_BRIDGE_SCHEMA_ORCHESTRATOR_TNT_v5
 // Full-file replacement.
 // Diagnostic rail NORTH parent only.
 // Purpose:
 // - Preserve NORTH as the diagnostic anchor and canonical verdict schema.
-// - Preserve v3 child consumption, child receipt validation, NEWS alignment, Fibonacci synchronization, and SOUTH meaning verification.
-// - Add planetary-control lifecycle schema admission before the control file exists.
-// - Establish /assets/hearth/hearth.controls.js as an expected future planetary-control file.
-// - Establish /showroom/globe/hearth/hearth.js as the expected route-conductor control handshake funnel.
-// - Define expected lifecycle states for controls, motion, touch, drag, view control, and route/control handshake.
-// - Treat missing controls as EXPECTED_NOT_YET_BUILT, not CASE_5, not visible-planet failure, and not readiness.
-// - Preserve visible planet proof separately from motion/touch absence.
-// - Recommend EAST as the next conforming file when source/footprint evidence has not yet been renewed.
+// - Preserve v4 child consumption, child receipt validation, NEWS alignment, Fibonacci synchronization,
+//   SOUTH meaning verification, and planetary-control lifecycle schema.
+// - Add Lab Runtime Table bridge literacy without taking Lab authority.
+// - Add Macro West admissibility-clutch literacy without taking Macro West authority.
+// - Add Canvas Local Station bridge literacy without taking Canvas authority.
+// - Add diagnostic HTML receiver compatibility without making the receiver authoritative.
+// - Add bishop/hub path vocabulary as opaque bridge hubs only; NORTH diagnostic does not inspect bishop child files.
+// - Preserve missing controls as EXPECTED_NOT_YET_BUILT, not CASE_5, not visible-planet failure, and not readiness.
+// - Preserve visible planet proof separately from motion/touch/control absence.
+// - Recommend chronological downstream diagnostic renewal: EAST -> WEST -> SOUTH -> diagnostic receiver -> NORTH re-run.
 // - Preserve protected production files as read-only observation targets.
 // - Preserve no F13 claim, no F21 claim, no ready text, no visual pass, no generated image, no GraphicBox, no WebGL.
 // Does not own:
@@ -24,6 +26,9 @@
 // - runtime restart
 // - Canvas release
 // - Macro West release
+// - Lab two-cycle authority
+// - Canvas Local Station authority
+// - bishop child-file knowledge
 // - control-file implementation
 // - route-conductor implementation
 // - touch/drag/motion execution
@@ -31,16 +36,16 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ORCHESTRATOR_TNT_v4";
-  const RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ORCHESTRATOR_RECEIPT_v4";
+  const CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_LAB_CANVAS_BRIDGE_SCHEMA_ORCHESTRATOR_TNT_v5";
+  const RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_LAB_CANVAS_BRIDGE_SCHEMA_ORCHESTRATOR_RECEIPT_v5";
 
-  const PREVIOUS_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_ANCHOR_SCHEMA_ORCHESTRATOR_TNT_v3";
-  const PREVIOUS_RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_ANCHOR_SCHEMA_ORCHESTRATOR_RECEIPT_v3";
+  const PREVIOUS_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ORCHESTRATOR_TNT_v4";
+  const PREVIOUS_RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ORCHESTRATOR_RECEIPT_v4";
 
-  const BASELINE_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_PARENT_ORCHESTRATOR_TNT_v1";
-  const BASELINE_RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_PARENT_ORCHESTRATOR_RECEIPT_v1";
+  const BASELINE_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_ANCHOR_SCHEMA_ORCHESTRATOR_TNT_v3";
+  const BASELINE_RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_NORTH_ANCHOR_SCHEMA_ORCHESTRATOR_RECEIPT_v3";
 
-  const VERSION = "2026-06-04.hearth-diagnostic-rail-north-planetary-control-lifecycle-schema-orchestrator-v4";
+  const VERSION = "2026-06-04.hearth-diagnostic-rail-north-lab-canvas-bridge-schema-orchestrator-v5";
 
   const FILE = "/assets/hearth/hearth.diagnostic.rail.js";
   const TARGET_ROUTE = "/showroom/globe/hearth/";
@@ -68,6 +73,17 @@
   const COMPAT_ROUTE_CONDUCTOR_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_TNT_v9_5";
   const PRIOR_ROUTE_CONDUCTOR_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_TNT_v9_4";
 
+  const LAB_NORTH_CONTRACT = "LAB_RUNTIME_TABLE_NORTH_CENTRAL_TRAIN_STATION_PRODUCT_ENGINE_CONDUCTOR_TNT_v3";
+  const LAB_NORTH_FILE = "/assets/lab/runtime-table.js";
+  const LAB_WEST_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_TIMETABLE_ALIGNED_LOCAL_ADMISSIBILITY_CLUTCH_TNT_v4_6_3";
+  const LAB_WEST_FILE = "/assets/lab/runtime-table.west.js";
+
+  const CANVAS_LOCAL_STATION_FILE = "/assets/hearth/hearth.canvas.js";
+  const CANVAS_LOCAL_STATION_CONTRACTS = Object.freeze([
+    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_1",
+    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11"
+  ]);
+
   const CONTROL_FILE = "/assets/hearth/hearth.controls.js";
   const ROUTE_CONDUCTOR_FILE = "/showroom/globe/hearth/hearth.js";
   const INDEX_FILE = "/showroom/globe/hearth/index.js";
@@ -75,6 +91,27 @@
   const EAST_FILE = "/assets/hearth/hearth.diagnostic.east.js";
   const WEST_FILE = "/assets/hearth/hearth.diagnostic.west.js";
   const SOUTH_FILE = "/assets/hearth/hearth.diagnostic.south.js";
+  const DIAGNOSTIC_HTML_FILE = "/showroom/globe/hearth/diagnostic/index.html";
+
+  const LAB_CYCLE = Object.freeze({
+    ONE: "NORTH_EAST_WEST_SOUTH_NORTH",
+    TWO: "NORTH_EAST_SOUTH_WEST_CANVAS"
+  });
+
+  const LAB_STAGE = Object.freeze({
+    C2_WEST: "C2_WEST_CANVAS_RELEASE_AUDIT",
+    C2_CANVAS: "C2_CANVAS_F13_EVIDENCE",
+    F21: "F21_NORTH_NEWS_LATCH"
+  });
+
+  const BRIDGE_STATUS = Object.freeze({
+    READY: "BRIDGE_READY",
+    PARTIAL: "BRIDGE_PARTIAL",
+    HELD: "BRIDGE_HELD",
+    MISSING: "BRIDGE_MISSING",
+    READ_ONLY: "BRIDGE_READ_ONLY",
+    NOT_AUTHORITY: "NOT_AUTHORITY"
+  });
 
   const CONTROL_LIFECYCLE_STATES = Object.freeze({
     EXPECTED_NOT_YET_BUILT: "EXPECTED_NOT_YET_BUILT",
@@ -142,6 +179,7 @@
     HOLD_CHILD_ALIGNMENT_INCOMPLETE: "CALIBRATION_HOLD_CHILD_ALIGNMENT_INCOMPLETE",
     HOLD_SOUTH_OUTPUT_INCOMPLETE: "CALIBRATION_HOLD_SOUTH_OUTPUT_INCOMPLETE",
     HOLD_NORTH_MEANING_NOT_PRESERVED_BY_SOUTH: "CALIBRATION_HOLD_NORTH_MEANING_NOT_PRESERVED_BY_SOUTH",
+    HOLD_LAB_CANVAS_BRIDGE_PARTIAL: "CALIBRATION_HOLD_LAB_CANVAS_BRIDGE_PARTIAL",
     NOT_APPLICABLE_CASE_CONTROLS: "CALIBRATION_NOT_APPLICABLE_PRIMARY_CASE_CONTROLS",
     INSUFFICIENT_EVIDENCE: "CALIBRATION_INSUFFICIENT_EVIDENCE"
   });
@@ -152,8 +190,11 @@
 
   const NEWS_STAGES = Object.freeze([
     "NORTH_START",
+    "LAB_AUTHORITY_READ",
     "EAST_SOURCE",
     "WEST_RENDERED",
+    "MACRO_WEST_BRIDGE_READ",
+    "CANVAS_LOCAL_STATION_READ",
     "NORTH_ADJUDICATION",
     "SOUTH_OUTPUT",
     "NORTH_VERIFY"
@@ -165,9 +206,63 @@
     { key: "F3", label: "EAST source evidence" },
     { key: "F5", label: "WEST rendered evidence" },
     { key: "F8", label: "NORTH adjudication" },
-    { key: "F13", label: "SOUTH packet output" },
+    { key: "F13", label: "SOUTH packet output and Macro West bridge visibility" },
     { key: "F21", label: "no-claim receiver boundary" }
   ]);
+
+  const BISHOP_HUBS = Object.freeze({
+    NORTH: {
+      file: LAB_NORTH_FILE,
+      paths: [
+        "LAB_RUNTIME_TABLE_NORTH",
+        "LAB_RUNTIME_TABLE",
+        "HEARTH_NORTH_COMMAND_RUNTIME_TABLE",
+        "HEARTH.northCentralTrainStation",
+        "HEARTH.northCommandRuntimeTable",
+        "DEXTER_LAB.runtimeTable",
+        "DEXTER_LAB.cardinalRuntimeTableNorth",
+        "DEXTER_LAB.northCentralTrainStation"
+      ]
+    },
+    EAST: {
+      file: "/assets/lab/runtime-table.east.js",
+      paths: [
+        "LAB_RUNTIME_TABLE_EAST",
+        "RUNTIME_TABLE_EAST",
+        "HEARTH_EAST_FIBONACCI_MAGNIFIER",
+        "DEXTER_LAB.runtimeTableEast",
+        "DEXTER_LAB.cardinalRuntimeTableEast",
+        "DEXTER_LAB.checkpointGovernorEast"
+      ]
+    },
+    SOUTH: {
+      file: "/assets/lab/runtime-table.south.js",
+      paths: [
+        "LAB_RUNTIME_TABLE_SOUTH",
+        "LAB_RUNTIME_TABLE_SOUTH_PRIMARY_GATE",
+        "HEARTH_RUNTIME_TABLE_SOUTH",
+        "HEARTH_SOUTH",
+        "HEARTH_VISIBLE_STATE_COMPOSER",
+        "DEXTER_LAB.runtimeTableSouth",
+        "DEXTER_LAB.cardinalRuntimeTableSouth",
+        "DEXTER_LAB.visibleStateComposer"
+      ]
+    },
+    WEST: {
+      file: LAB_WEST_FILE,
+      paths: [
+        "LAB_RUNTIME_TABLE_WEST",
+        "RUNTIME_TABLE_WEST",
+        "LAB_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_WEST",
+        "HEARTH_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH",
+        "HEARTH_RUNTIME_TABLE_WEST",
+        "HEARTH_WEST_ADMISSIBILITY",
+        "DEXTER_LAB.runtimeTableWest",
+        "DEXTER_LAB.cardinalRuntimeTableWest",
+        "DEXTER_LAB.westAdmissibility"
+      ]
+    }
+  });
 
   const REQUIRED_REPORT_FIELDS = Object.freeze([
     "PACKET_NAME",
@@ -223,6 +318,62 @@
     "NORTH_RECEIPT",
     "PREVIOUS_NORTH_CONTRACT",
     "BASELINE_NORTH_CONTRACT",
+
+    "LAB_BRIDGE_SCHEMA_ACTIVE",
+    "LAB_NORTH_FILE",
+    "LAB_NORTH_OBSERVED",
+    "LAB_NORTH_CONTRACT",
+    "LAB_NORTH_RECEIPT",
+    "LAB_NORTH_ACTIVE_STAGE_ID",
+    "LAB_NORTH_ACTIVE_GEAR",
+    "LAB_NORTH_ACTIVE_CYCLE_NUMBER",
+    "LAB_NORTH_ACTIVE_CYCLE_ROUTE",
+    "LAB_NORTH_ACTIVE_CARDINAL",
+    "LAB_NORTH_ACTIVE_FILE_GATE",
+    "LAB_NORTH_ACTIVE_FIBONACCI",
+    "LAB_NORTH_ACTIVE_NEWS_GATE",
+    "LAB_NORTH_TWO_CYCLE_LAW_ACTIVE",
+    "LAB_NORTH_CENTRAL_TRAIN_STATION_ACTIVE",
+    "LAB_NORTH_DOWNSTREAM_RELEASE_AUTHORIZED",
+    "LAB_NORTH_COMPLETION_LATCHED",
+
+    "MACRO_WEST_FILE",
+    "MACRO_WEST_OBSERVED",
+    "MACRO_WEST_CONTRACT",
+    "MACRO_WEST_RECEIPT",
+    "MACRO_WEST_DECISION",
+    "MACRO_WEST_GAP_CLASS",
+    "MACRO_WEST_AUDIT_ACCEPTED",
+    "MACRO_WEST_RELEASE_TO_CANVAS",
+    "MACRO_WEST_CANVAS_RELEASE_PACKET_READY",
+    "MACRO_WEST_CANVAS_RELEASE_AUTHORIZED",
+    "MACRO_WEST_RECOMMENDED_NEXT_FILE",
+
+    "CANVAS_LOCAL_STATION_FILE",
+    "CANVAS_LOCAL_STATION_OBSERVED",
+    "CANVAS_LOCAL_STATION_CONTRACT",
+    "CANVAS_LOCAL_STATION_ACCEPTED",
+    "CANVAS_LOCAL_STATION_API_READY",
+    "CANVAS_LOCAL_STATION_RECEIVE_SURFACE_READY",
+    "CANVAS_LOCAL_STATION_SUMMARY_OBSERVED",
+    "CANVAS_LOCAL_STATION_BRIDGE_STATUS",
+
+    "BISHOP_HUB_BRIDGE_SCHEMA_ACTIVE",
+    "BISHOP_NORTH_OBSERVED",
+    "BISHOP_EAST_OBSERVED",
+    "BISHOP_SOUTH_OBSERVED",
+    "BISHOP_WEST_OBSERVED",
+    "BISHOP_HUBS_ARE_OPAQUE_TO_DIAGNOSTIC_NORTH",
+    "BISHOP_CHILD_FILE_KNOWLEDGE_OWNED_BY_BISHOPS",
+    "WEST_NEEDS_BISHOPS_NOT_SUBJECT_FILES",
+
+    "LAB_CANVAS_SHARED_LANGUAGE_STATUS",
+    "LAB_CANVAS_BRIDGE_STATUS",
+    "DIAGNOSTIC_GATEWAY_MIRRORS_BRIDGE",
+    "DIAGNOSTIC_RECEIVER_OBSERVED",
+    "DIAGNOSTIC_RECEIVER_CONTRACT",
+    "DIAGNOSTIC_RECEIVER_CALLS_NORTH_ONLY",
+    "DIAGNOSTIC_RECEIVER_PLANETARY_OBSERVER_ACTIVE",
 
     "PLANETARY_CONTROL_SCHEMA_ACTIVE",
     "PLANETARY_CONTROL_SCHEMA_CONTRACT",
@@ -413,6 +564,15 @@
     }
   }
 
+  function findFirstPath(paths) {
+    for (const path of paths || []) {
+      const found = readPath(root, path);
+      if (found && isObject(found)) return { path, value: found };
+    }
+
+    return { path: "NONE", value: null };
+  }
+
   function getValue(source, key, fallback = FALLBACK.UNKNOWN) {
     if (!isObject(source)) return fallback;
 
@@ -431,10 +591,43 @@
     return fallback;
   }
 
+  function getRaw(source, key, fallback = undefined) {
+    if (!isObject(source)) return fallback;
+
+    if (Object.prototype.hasOwnProperty.call(source, key)) {
+      return source[key] === undefined || source[key] === null ? fallback : source[key];
+    }
+
+    const lower = key.toLowerCase();
+
+    for (const candidate of Object.keys(source)) {
+      if (candidate.toLowerCase() === lower) {
+        return source[candidate] === undefined || source[candidate] === null ? fallback : source[candidate];
+      }
+    }
+
+    return fallback;
+  }
+
+  function firstNonEmpty(...values) {
+    for (const value of values) {
+      const text = safeString(value).trim();
+      if (text) return text;
+    }
+
+    return "";
+  }
+
   function asBoolString(value, fallback = FALLBACK.UNKNOWN) {
     if (value === true || value === "true" || value === "TRUE" || value === 1 || value === "1") return "true";
     if (value === false || value === "false" || value === "FALSE" || value === 0 || value === "0") return "false";
     if (value === FALLBACK.HELD || value === SUPPORT_HELD) return SUPPORT_HELD;
+    return fallback;
+  }
+
+  function toBool(value, fallback = false) {
+    if (value === true || value === "true" || value === "TRUE" || value === 1 || value === "1") return true;
+    if (value === false || value === "false" || value === "FALSE" || value === 0 || value === "0") return false;
     return fallback;
   }
 
@@ -492,23 +685,30 @@
     return fallback || CONTROL_LIFECYCLE_STATES.UNKNOWN_PENDING_CHILD_SCHEMA;
   }
 
-  function findChild(candidates) {
-    for (const path of candidates) {
-      const found = readPath(root, path);
-      if (found && isObject(found)) return found;
+  function getReceiptFromAuthority(authority) {
+    try {
+      if (!authority || !isObject(authority)) return null;
+      if (isFunction(authority.getReceiptLight)) return authority.getReceiptLight();
+      if (isFunction(authority.getTransmissionReceipt)) return authority.getTransmissionReceipt();
+      if (isFunction(authority.getNorthCommandReceipt)) return authority.getNorthCommandReceipt();
+      if (isFunction(authority.getCentralStationReceiptLight)) return authority.getCentralStationReceiptLight();
+      if (isFunction(authority.getCanvasStationSummary)) return authority.getCanvasStationSummary();
+      if (isFunction(authority.getCanvasStationReceiptLight)) return authority.getCanvasStationReceiptLight();
+      if (isFunction(authority.getReceipt)) return authority.getReceipt();
+      if (isObject(authority.receiptObject)) return authority.receiptObject;
+      if (isObject(authority.receipt)) return authority.receipt;
+      if (authority.contract || authority.receipt || authority.version) return authority;
+      return null;
+    } catch (error) {
+      return { error: bounded(error && error.message ? error.message : error, 1000) };
     }
-
-    return null;
   }
 
   function getReceiptFromChild(child, method) {
     try {
       if (!child || !isObject(child)) return null;
       if (method && isFunction(child[method])) return child[method]();
-      if (isFunction(child.getReceipt)) return child.getReceipt();
-      if (isObject(child.receiptObject)) return child.receiptObject;
-      if (isObject(child.receipt)) return child.receipt;
-      return null;
+      return getReceiptFromAuthority(child);
     } catch (_error) {
       return null;
     }
@@ -540,12 +740,72 @@
       routeReceiverMustLoadChildrenBeforeRun: ROUTE_RECEIVER_MUST_LOAD_CHILDREN_BEFORE_RUN,
       northDynamicChildLoadingOwned: NORTH_DYNAMIC_CHILD_LOADING_OWNED,
 
+      labBridgeSchemaActive: true,
+      labNorthFile: LAB_NORTH_FILE,
+      labNorthObserved: false,
+      labNorthSourcePath: "NONE",
+      labNorthContract: FALLBACK.UNKNOWN,
+      labNorthReceipt: FALLBACK.UNKNOWN,
+      labNorthActiveStageId: FALLBACK.UNKNOWN,
+      labNorthActiveGear: FALLBACK.UNKNOWN,
+      labNorthActiveCycleNumber: FALLBACK.UNKNOWN,
+      labNorthActiveCycleRoute: FALLBACK.UNKNOWN,
+      labNorthActiveCardinal: FALLBACK.UNKNOWN,
+      labNorthActiveFileGate: FALLBACK.UNKNOWN,
+      labNorthActiveFibonacci: FALLBACK.UNKNOWN,
+      labNorthActiveNewsGate: FALLBACK.UNKNOWN,
+      labNorthTwoCycleLawActive: FALLBACK.UNKNOWN,
+      labNorthCentralTrainStationActive: FALLBACK.UNKNOWN,
+      labNorthDownstreamReleaseAuthorized: "false",
+      labNorthCompletionLatched: "false",
+
+      macroWestFile: LAB_WEST_FILE,
+      macroWestObserved: false,
+      macroWestSourcePath: "NONE",
+      macroWestContract: FALLBACK.UNKNOWN,
+      macroWestReceipt: FALLBACK.UNKNOWN,
+      macroWestDecision: FALLBACK.UNKNOWN,
+      macroWestGapClass: FALLBACK.UNKNOWN,
+      macroWestAuditAccepted: "false",
+      macroWestReleaseToCanvas: "false",
+      macroWestCanvasReleasePacketReady: "false",
+      macroWestCanvasReleaseAuthorized: "false",
+      macroWestRecommendedNextFile: FALLBACK.UNKNOWN,
+
+      canvasLocalStationFile: CANVAS_LOCAL_STATION_FILE,
+      canvasLocalStationObserved: false,
+      canvasLocalStationSourcePath: "NONE",
+      canvasLocalStationContract: FALLBACK.UNKNOWN,
+      canvasLocalStationAccepted: "false",
+      canvasLocalStationApiReady: "false",
+      canvasLocalStationReceiveSurfaceReady: "false",
+      canvasLocalStationSummaryObserved: "false",
+      canvasLocalStationBridgeStatus: BRIDGE_STATUS.MISSING,
+
+      bishopHubBridgeSchemaActive: true,
+      bishopNorthObserved: false,
+      bishopEastObserved: false,
+      bishopSouthObserved: false,
+      bishopWestObserved: false,
+      bishopHubSummary: {},
+      bishopHubsAreOpaqueToDiagnosticNorth: true,
+      bishopChildFileKnowledgeOwnedByBishops: true,
+      westNeedsBishopsNotSubjectFiles: true,
+
+      labCanvasSharedLanguageStatus: BRIDGE_STATUS.HELD,
+      labCanvasBridgeStatus: BRIDGE_STATUS.HELD,
+      diagnosticGatewayMirrorsBridge: true,
+      diagnosticReceiverObserved: false,
+      diagnosticReceiverContract: FALLBACK.UNKNOWN,
+      diagnosticReceiverCallsNorthOnly: FALLBACK.UNKNOWN,
+      diagnosticReceiverPlanetaryObserverActive: FALLBACK.UNKNOWN,
+
       planetaryControlSchemaActive: true,
       planetaryControlSchemaContract: CONTRACT,
       planetaryControlSchemaReceipt: RECEIPT,
       frontendPlanetaryObserverBasisExpected: true,
       frontendPlanetaryObserverStatus: CONTROL_LIFECYCLE_STATES.EXPECTED_NOT_YET_WIRED,
-      planetaryFunctionDiagnosticBasis: "PLANETARY_VIEW_AND_FUNCTION_TRACK_EXPECTED",
+      planetaryFunctionDiagnosticBasis: "PLANETARY_VIEW_FUNCTION_LAB_CANVAS_BRIDGE_TRACK_EXPECTED",
       planetaryBuildObserverStatus: CONTROL_LIFECYCLE_STATES.EXPECTED_NOT_YET_WIRED,
 
       controlFile: CONTROL_FILE,
@@ -709,6 +969,302 @@
 
       updatedAt: nowIso()
     };
+  }
+
+  function readLabNorthBridge(state) {
+    const found = findFirstPath([
+      "LAB_RUNTIME_TABLE_NORTH",
+      "LAB_RUNTIME_TABLE",
+      "HEARTH_NORTH_COMMAND_RUNTIME_TABLE",
+      "HEARTH_NORTH_COMMAND",
+      "LAB_RUNTIME_TABLE_NORTH_CENTRAL_TRAIN_STATION",
+      "DEXTER_LAB.runtimeTable",
+      "DEXTER_LAB.cardinalRuntimeTableNorth",
+      "DEXTER_LAB.northCentralTrainStation",
+      "DEXTER_LAB.hearthCheckpointSession",
+      "HEARTH.northCentralTrainStation",
+      "HEARTH.northCommandRuntimeTable"
+    ]);
+
+    const authority = found.value;
+    const receipt = getReceiptFromAuthority(authority) || {};
+
+    state.labNorthObserved = Boolean(authority || receipt.contract);
+    state.labNorthSourcePath = found.path;
+    state.labNorthContract = firstNonEmpty(receipt.contract, authority && authority.contract, FALLBACK.UNKNOWN);
+    state.labNorthReceipt = firstNonEmpty(receipt.receipt, authority && authority.receipt, FALLBACK.UNKNOWN);
+    state.labNorthActiveStageId = firstNonEmpty(receipt.activeStageId, authority && authority.activeStageId, FALLBACK.UNKNOWN);
+    state.labNorthActiveGear = firstNonEmpty(receipt.activeGear, receipt.activeGearId, authority && authority.activeGear, FALLBACK.UNKNOWN);
+    state.labNorthActiveCycleNumber = firstNonEmpty(receipt.activeCycleNumber, authority && authority.activeCycleNumber, FALLBACK.UNKNOWN);
+    state.labNorthActiveCycleRoute = firstNonEmpty(receipt.activeCycleRoute, authority && authority.activeCycleRoute, FALLBACK.UNKNOWN);
+    state.labNorthActiveCardinal = firstNonEmpty(receipt.activeCardinal, authority && authority.activeCardinal, FALLBACK.UNKNOWN);
+    state.labNorthActiveFileGate = firstNonEmpty(receipt.activeFileGate, authority && authority.activeFileGate, FALLBACK.UNKNOWN);
+    state.labNorthActiveFibonacci = firstNonEmpty(receipt.activeFibonacci, authority && authority.activeFibonacci, FALLBACK.UNKNOWN);
+    state.labNorthActiveNewsGate = firstNonEmpty(receipt.activeNewsGate, authority && authority.activeNewsGate, FALLBACK.UNKNOWN);
+    state.labNorthTwoCycleLawActive = asBoolString(firstNonEmpty(receipt.twoCycleRuntimeLawActive, authority && authority.twoCycleRuntimeLawActive, FALLBACK.UNKNOWN));
+    state.labNorthCentralTrainStationActive = asBoolString(firstNonEmpty(receipt.centralTrainStationActive, authority && authority.centralTrainStationActive, FALLBACK.UNKNOWN));
+    state.labNorthDownstreamReleaseAuthorized = asBoolString(firstNonEmpty(receipt.downstreamReleaseAuthorized, authority && authority.downstreamReleaseAuthorized, "false"), "false");
+    state.labNorthCompletionLatched = asBoolString(firstNonEmpty(receipt.completionLatched, authority && authority.completionLatched, "false"), "false");
+
+    if (state.labNorthObserved) {
+      addNote(state, `NORTH_READ_LAB_RUNTIME_TABLE_BRIDGE:${state.labNorthSourcePath}`);
+    } else {
+      addNote(state, "NORTH_LAB_RUNTIME_TABLE_BRIDGE_NOT_OBSERVED_READ_ONLY_HOLD");
+    }
+
+    return receipt;
+  }
+
+  function readMacroWestBridge(state) {
+    const found = findFirstPath([
+      "LAB_RUNTIME_TABLE_WEST",
+      "RUNTIME_TABLE_WEST",
+      "LAB_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_WEST",
+      "HEARTH_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH",
+      "HEARTH_RUNTIME_TABLE_WEST",
+      "HEARTH_WEST_ADMISSIBILITY",
+      "HEARTH.westRuntimeTable",
+      "HEARTH.runtimeTableWest",
+      "HEARTH.westAdmissibility",
+      "DEXTER_LAB.runtimeTableWest",
+      "DEXTER_LAB.cardinalRuntimeTableWest",
+      "DEXTER_LAB.hearthRuntimeTableWest",
+      "DEXTER_LAB.westAdmissibility"
+    ]);
+
+    const authority = found.value;
+    let receipt = getReceiptFromAuthority(authority) || {};
+
+    if (authority && isFunction(authority.classifyWestAdmissibility)) {
+      try {
+        const light = authority.classifyWestAdmissibility({});
+        if (isObject(light)) receipt = light;
+      } catch (_error) {}
+    }
+
+    state.macroWestObserved = Boolean(authority || receipt.contract);
+    state.macroWestSourcePath = found.path;
+    state.macroWestContract = firstNonEmpty(receipt.contract, authority && authority.CONTRACT, authority && authority.contract, FALLBACK.UNKNOWN);
+    state.macroWestReceipt = firstNonEmpty(receipt.receipt, authority && authority.RECEIPT, authority && authority.receipt, FALLBACK.UNKNOWN);
+    state.macroWestDecision = firstNonEmpty(receipt.westDecision, receipt.decision, FALLBACK.UNKNOWN);
+    state.macroWestGapClass = firstNonEmpty(receipt.westGapClass, receipt.gapClass, FALLBACK.UNKNOWN);
+    state.macroWestAuditAccepted = asBoolString(firstNonEmpty(receipt.westAuditAccepted, receipt.westAuditPassed, receipt.westCanvasReleaseApproved, "false"), "false");
+    state.macroWestReleaseToCanvas = asBoolString(firstNonEmpty(receipt.releaseToCanvas, receipt.westForwardAllowed, receipt.canvasReleaseApprovedByWest, "false"), "false");
+    state.macroWestCanvasReleasePacketReady = asBoolString(firstNonEmpty(receipt.canvasReleasePacketReady, receipt.releasePacket === "present", "false"), "false");
+    state.macroWestCanvasReleaseAuthorized = asBoolString(firstNonEmpty(receipt.canvasReleaseAuthorized, receipt.canvasReleaseApprovedByWest, "false"), "false");
+    state.macroWestRecommendedNextFile = firstNonEmpty(receipt.recommendedNextFile, receipt.recommendedNextRenewalTarget, FALLBACK.UNKNOWN);
+
+    if (state.macroWestObserved) {
+      addNote(state, `NORTH_READ_MACRO_WEST_ADMISSIBILITY_CLUTCH:${state.macroWestSourcePath}`);
+    } else {
+      addNote(state, "NORTH_MACRO_WEST_ADMISSIBILITY_CLUTCH_NOT_OBSERVED_READ_ONLY_HOLD");
+    }
+
+    return receipt;
+  }
+
+  function canvasContractFromProof(proof, authority) {
+    return firstNonEmpty(
+      proof.canvasLocalStationContract,
+      proof.currentCanvasStationContract,
+      proof.currentCanvasParentContract,
+      proof.canvasStationContract,
+      proof.contract,
+      proof.hearthCanvasContract,
+      proof.hearthCanvasLocalStationContract,
+      authority && authority.contract,
+      authority && authority.CONTRACT,
+      FALLBACK.UNKNOWN
+    );
+  }
+
+  function hasCanvasReceiveSurface(authority) {
+    return Boolean(
+      authority &&
+      isObject(authority) &&
+      (
+        isFunction(authority.consumeRouteConductorReleasePacket) ||
+        isFunction(authority.receiveReleasePacket) ||
+        isFunction(authority.receiveCanvasReleasePacket) ||
+        isFunction(authority.receiveCanvasStationSummary) ||
+        isFunction(authority.boot) ||
+        isFunction(authority.init) ||
+        isFunction(authority.start) ||
+        isFunction(authority.mount)
+      )
+    );
+  }
+
+  function readCanvasLocalStationBridge(state) {
+    const found = findFirstPath([
+      "HEARTH_CANVAS_LOCAL_STATION",
+      "HEARTH_CANVAS_STATION",
+      "HEARTH_CANVAS_CHILD_DISTRIBUTION_SWITCHBOARD",
+      "HEARTH_CANVAS",
+      "HEARTH.canvasLocalStation",
+      "HEARTH.canvasStation",
+      "HEARTH.canvasChildDistributionSwitchboard",
+      "HEARTH.canvas",
+      "DEXTER_LAB.hearthCanvasLocalStation",
+      "DEXTER_LAB.hearthCanvasStation",
+      "DEXTER_LAB.hearthCanvasChildDistributionSwitchboard",
+      "DEXTER_LAB.hearthCanvas"
+    ]);
+
+    const authority = found.value;
+    const receipt = getReceiptFromAuthority(authority) || {};
+    const contract = canvasContractFromProof(receipt, authority);
+    const accepted = CANVAS_LOCAL_STATION_CONTRACTS.includes(contract);
+    const apiReady = Boolean(accepted && (authority || receipt.canvasLocalStationApiReady === true || receipt.apiReady === true));
+    const receiveReady = Boolean(hasCanvasReceiveSurface(authority) || toBool(receipt.canvasLocalStationReceiveSurfaceReady, false) || toBool(receipt.receiveSurfaceReady, false));
+    const summaryObserved = Boolean(
+      toBool(receipt.canvasLocalStationSummaryObserved, false) ||
+      toBool(receipt.summaryObserved, false) ||
+      toBool(receipt.canvasStationSummaryObserved, false) ||
+      receipt.packetType === "CANVAS_LOCAL_STATION_SUMMARY" ||
+      receipt.packetType === "CANVAS_LOCAL_STATION_RECEIPT" ||
+      accepted
+    );
+
+    state.canvasLocalStationObserved = Boolean(authority || contract !== FALLBACK.UNKNOWN);
+    state.canvasLocalStationSourcePath = found.path;
+    state.canvasLocalStationContract = contract;
+    state.canvasLocalStationAccepted = asBoolString(accepted, "false");
+    state.canvasLocalStationApiReady = asBoolString(apiReady, "false");
+    state.canvasLocalStationReceiveSurfaceReady = asBoolString(receiveReady, "false");
+    state.canvasLocalStationSummaryObserved = asBoolString(summaryObserved, "false");
+
+    state.canvasLocalStationBridgeStatus = accepted && apiReady && receiveReady
+      ? BRIDGE_STATUS.READY
+      : state.canvasLocalStationObserved
+        ? BRIDGE_STATUS.PARTIAL
+        : BRIDGE_STATUS.MISSING;
+
+    if (state.canvasLocalStationObserved) {
+      addNote(state, `NORTH_READ_CANVAS_LOCAL_STATION_BRIDGE:${state.canvasLocalStationSourcePath}`);
+    } else {
+      addNote(state, "NORTH_CANVAS_LOCAL_STATION_BRIDGE_NOT_OBSERVED_READ_ONLY_HOLD");
+    }
+
+    return receipt;
+  }
+
+  function readBishopHubBridge(state) {
+    const summary = {};
+
+    Object.keys(BISHOP_HUBS).forEach((key) => {
+      const config = BISHOP_HUBS[key];
+      const found = findFirstPath(config.paths);
+      const receipt = getReceiptFromAuthority(found.value) || {};
+      const observed = Boolean(found.value || receipt.contract);
+
+      summary[key] = {
+        observed,
+        sourcePath: found.path,
+        file: config.file,
+        contract: firstNonEmpty(receipt.contract, found.value && found.value.contract, found.value && found.value.CONTRACT, FALLBACK.UNKNOWN),
+        receipt: firstNonEmpty(receipt.receipt, found.value && found.value.receipt, found.value && found.value.RECEIPT, FALLBACK.UNKNOWN),
+        opaqueHubOnly: true,
+        subjectChildFilesInspectedByDiagnosticNorth: false
+      };
+
+      if (key === "NORTH") state.bishopNorthObserved = observed;
+      if (key === "EAST") state.bishopEastObserved = observed;
+      if (key === "SOUTH") state.bishopSouthObserved = observed;
+      if (key === "WEST") state.bishopWestObserved = observed;
+    });
+
+    state.bishopHubSummary = summary;
+
+    if (state.bishopNorthObserved && state.bishopWestObserved) {
+      addNote(state, "NORTH_BISHOP_HUB_BRIDGE_OBSERVED_NORTH_AND_WEST");
+    } else {
+      addNote(state, "NORTH_BISHOP_HUB_BRIDGE_PARTIAL_OR_MISSING_OPAQUE_READ_ONLY");
+    }
+
+    addNote(state, "NORTH_CONFIRMS_BISHOP_CHILD_FILE_KNOWLEDGE_OWNED_BY_BISHOPS_NOT_DIAGNOSTIC_NORTH");
+    return summary;
+  }
+
+  function readDiagnosticReceiverBridge(state) {
+    const found = findFirstPath([
+      "HEARTH.diagnosticPlanetaryBuildObserverReceiver",
+      "HEARTH.diagnosticRouteReceiver",
+      "HEARTH.diagnosticMissionControlReceiver",
+      "HEARTH_DIAGNOSTIC_PLANETARY_BUILD_OBSERVER_RECEIVER",
+      "HEARTH_DIAGNOSTIC_ROUTE_RECEIVER",
+      "HEARTH_DIAGNOSTIC_MISSION_CONTROL_RECEIVER",
+      "DEXTER_LAB.hearthDiagnosticPlanetaryBuildObserverReceiver",
+      "DEXTER_LAB.hearthDiagnosticRouteReceiver",
+      "DEXTER_LAB.hearthDiagnosticMissionControlReceiver"
+    ]);
+
+    const receiver = found.value;
+    let receipt = getReceiptFromAuthority(receiver) || {};
+
+    if (receiver && isFunction(receiver.getRouteReceipt)) {
+      try {
+        const r = receiver.getRouteReceipt();
+        if (isObject(r)) receipt = r;
+      } catch (_error) {}
+    }
+
+    state.diagnosticReceiverObserved = Boolean(receiver || receipt.contract);
+    state.diagnosticReceiverContract = firstNonEmpty(receipt.contract, receiver && receiver.contract, FALLBACK.UNKNOWN);
+    state.diagnosticReceiverCallsNorthOnly = asBoolString(firstNonEmpty(receipt.routeReceiverCallsNorthOnly, receiver && receiver.routeReceiverCallsNorthOnly, FALLBACK.UNKNOWN));
+    state.diagnosticReceiverPlanetaryObserverActive = asBoolString(firstNonEmpty(receipt.planetaryBuildObserverActive, receiver && receiver.diagnosticInterestRenewalOnly, FALLBACK.UNKNOWN));
+
+    if (state.diagnosticReceiverObserved) {
+      addNote(state, "NORTH_READ_DIAGNOSTIC_HTML_RECEIVER_BRIDGE");
+    } else {
+      addNote(state, "NORTH_DIAGNOSTIC_HTML_RECEIVER_NOT_OBSERVED_OR_NOT_YET_PUBLISHED");
+    }
+
+    return receipt;
+  }
+
+  function resolveBridgeStatus(state) {
+    const labOk = state.labNorthObserved && state.labNorthTwoCycleLawActive !== "false";
+    const westOk = state.macroWestObserved;
+    const canvasOk = state.canvasLocalStationObserved;
+    const bishopOk = state.bishopNorthObserved || state.bishopEastObserved || state.bishopSouthObserved || state.bishopWestObserved;
+    const receiverOk = state.diagnosticReceiverObserved || typeof document !== "undefined";
+
+    if (labOk && westOk && canvasOk && bishopOk) {
+      state.labCanvasSharedLanguageStatus = BRIDGE_STATUS.READY;
+      state.labCanvasBridgeStatus = BRIDGE_STATUS.READY;
+      addNote(state, "NORTH_LAB_CANVAS_SHARED_LANGUAGE_READY");
+      return;
+    }
+
+    if (labOk && (westOk || canvasOk || bishopOk || receiverOk)) {
+      state.labCanvasSharedLanguageStatus = BRIDGE_STATUS.PARTIAL;
+      state.labCanvasBridgeStatus = BRIDGE_STATUS.PARTIAL;
+      addNote(state, "NORTH_LAB_CANVAS_SHARED_LANGUAGE_PARTIAL_DIAGNOSTIC_CAN_CONTINUE");
+      return;
+    }
+
+    state.labCanvasSharedLanguageStatus = BRIDGE_STATUS.HELD;
+    state.labCanvasBridgeStatus = BRIDGE_STATUS.HELD;
+    addNote(state, "NORTH_LAB_CANVAS_SHARED_LANGUAGE_HELD_FOR_BRIDGE_VISIBILITY");
+  }
+
+  function readBridgeLayer(state) {
+    readLabNorthBridge(state);
+    readMacroWestBridge(state);
+    readCanvasLocalStationBridge(state);
+    readBishopHubBridge(state);
+    readDiagnosticReceiverBridge(state);
+    resolveBridgeStatus(state);
+  }
+
+  function findChild(candidates) {
+    for (const path of candidates) {
+      const found = readPath(root, path);
+      if (found && isObject(found)) return found;
+    }
+
+    return null;
   }
 
   function validateEastChild(child) {
@@ -1418,15 +1974,15 @@
       if (state.eastReceiptValid !== CHILD_VALIDATION.VALID || state.eastEvidenceValid !== CHILD_VALIDATION.VALID) {
         state.recommendedNextOwner = "DIAGNOSTIC_SOURCE_SCHEMA_ALIGNMENT";
         state.recommendedNextFile = EAST_FILE;
-        state.recommendedNextAction = "RENEW_EAST_TO_READ_PLANETARY_CONTROL_FOOTPRINT_SOURCE_EVIDENCE";
-        addNote(state, "NORTH_RECOMMENDS_EAST_CONFORMANCE_TO_PLANETARY_CONTROL_FOOTPRINT");
+        state.recommendedNextAction = "RENEW_EAST_TO_READ_PLANETARY_CONTROL_FOOTPRINT_SOURCE_EVIDENCE_AND_LAB_CANVAS_BRIDGE_LANGUAGE";
+        addNote(state, "NORTH_RECOMMENDS_EAST_CONFORMANCE_TO_PLANETARY_CONTROL_AND_LAB_CANVAS_BRIDGE_FOOTPRINT");
         return;
       }
 
       if (state.westReceiptValid !== CHILD_VALIDATION.VALID || state.westEvidenceValid !== CHILD_VALIDATION.VALID) {
         state.recommendedNextOwner = "DIAGNOSTIC_RENDERED_FUNCTION_ALIGNMENT";
         state.recommendedNextFile = WEST_FILE;
-        state.recommendedNextAction = "RENEW_WEST_TO_READ_PLANETARY_FUNCTION_VISIBLE_STATIC_MOTION_TOUCH_DRAG_AND_PERFORMANCE_EVIDENCE";
+        state.recommendedNextAction = "RENEW_WEST_TO_READ_PLANETARY_FUNCTION_VISIBLE_STATIC_MOTION_TOUCH_DRAG_PERFORMANCE_AND_CANVAS_LOCAL_STATION_EVIDENCE";
         return;
       }
 
@@ -1439,18 +1995,25 @@
     if (state.calibrationStatus === CALIBRATION.HOLD_SOUTH_OUTPUT_INCOMPLETE) {
       state.recommendedNextOwner = "DIAGNOSTIC_SOUTH_OUTPUT";
       state.recommendedNextFile = SOUTH_FILE;
-      state.recommendedNextAction = "RENEW_SOUTH_REPORT_PACKET_OUTPUT_TO_ACCEPT_NORTH_PLANETARY_CONTROL_LIFECYCLE_SCHEMA_FIELDS";
+      state.recommendedNextAction = "RENEW_SOUTH_REPORT_PACKET_OUTPUT_TO_ACCEPT_NORTH_LAB_CANVAS_BRIDGE_SCHEMA_FIELDS";
       return;
     }
 
     if (state.calibrationStatus === CALIBRATION.HOLD_NORTH_MEANING_NOT_PRESERVED_BY_SOUTH) {
       state.recommendedNextOwner = "DIAGNOSTIC_SOUTH_OUTPUT";
       state.recommendedNextFile = SOUTH_FILE;
-      state.recommendedNextAction = "RENEW_SOUTH_TO_PRESERVE_NORTH_SELECTED_PRIMARY_CASE_CALIBRATION_RECOMMENDATION_AND_PLANETARY_CONTROL_LIFECYCLE_FIELDS";
+      state.recommendedNextAction = "RENEW_SOUTH_TO_PRESERVE_NORTH_SELECTED_PRIMARY_CASE_CALIBRATION_RECOMMENDATION_AND_LAB_CANVAS_BRIDGE_FIELDS";
       return;
     }
 
     if (state.calibrationStatus === CALIBRATION.CLEAN) {
+      if (!state.diagnosticReceiverObserved || state.diagnosticReceiverContract === FALLBACK.UNKNOWN) {
+        state.recommendedNextOwner = "DIAGNOSTIC_ROUTE_RECEIVER";
+        state.recommendedNextFile = DIAGNOSTIC_HTML_FILE;
+        state.recommendedNextAction = "ALIGN_DIAGNOSTIC_HTML_RECEIVER_TO_NORTH_V5_LAB_CANVAS_BRIDGE_SCHEMA_IF_DISPLAY_FIELDS_ARE_MISSING";
+        return;
+      }
+
       state.recommendedNextOwner = "NEXT_TASK_READY";
       state.recommendedNextFile = "NONE";
       state.recommendedNextAction = "DIAGNOSTIC_RAIL_CALIBRATION_POINT_REACHED";
@@ -1513,12 +2076,24 @@
     const stages = [
       { name: "NORTH_START", passed: true },
       {
+        name: "LAB_AUTHORITY_READ",
+        passed: state.labNorthObserved || state.labCanvasBridgeStatus !== BRIDGE_STATUS.MISSING
+      },
+      {
         name: "EAST_SOURCE",
         passed: state.eastReceiptValid === CHILD_VALIDATION.VALID && state.eastEvidenceValid === CHILD_VALIDATION.VALID
       },
       {
         name: "WEST_RENDERED",
         passed: state.westReceiptValid === CHILD_VALIDATION.VALID && state.westEvidenceValid === CHILD_VALIDATION.VALID
+      },
+      {
+        name: "MACRO_WEST_BRIDGE_READ",
+        passed: state.macroWestObserved || state.labCanvasBridgeStatus !== BRIDGE_STATUS.MISSING
+      },
+      {
+        name: "CANVAS_LOCAL_STATION_READ",
+        passed: state.canvasLocalStationObserved || state.labCanvasBridgeStatus !== BRIDGE_STATUS.MISSING
       },
       { name: "NORTH_ADJUDICATION", passed: Boolean(state.primaryCase) },
       {
@@ -1556,7 +2131,12 @@
       { key: "F8", passed: Boolean(state.primaryCase) },
       {
         key: "F13",
-        passed: state.southOutputValid === CHILD_VALIDATION.VALID || state.southOutputStatus === STATUS.FALLBACK
+        passed: (
+          state.southOutputValid === CHILD_VALIDATION.VALID ||
+          state.southOutputStatus === STATUS.FALLBACK ||
+          state.macroWestObserved ||
+          state.canvasLocalStationObserved
+        )
       },
       {
         key: "F21",
@@ -1578,7 +2158,7 @@
     const notes = normalizeNotes(state.secondaryEvidenceNotes, state.northSecondaryEvidenceNotes);
 
     return {
-      schema: "HEARTH_DIAGNOSTIC_NORTH_PLANETARY_CONTROL_LIFECYCLE_VERDICT_SCHEMA_v4",
+      schema: "HEARTH_DIAGNOSTIC_NORTH_LAB_CANVAS_BRIDGE_VERDICT_SCHEMA_v5",
       northContract: CONTRACT,
       northReceipt: RECEIPT,
       previousNorthContract: PREVIOUS_CONTRACT,
@@ -1596,6 +2176,73 @@
       recommendedNextOwner: state.recommendedNextOwner,
       recommendedNextFile: state.recommendedNextFile,
       recommendedNextAction: state.recommendedNextAction,
+
+      labCanvasBridge: {
+        labBridgeSchemaActive: state.labBridgeSchemaActive,
+        labNorthFile: state.labNorthFile,
+        labNorthObserved: state.labNorthObserved,
+        labNorthSourcePath: state.labNorthSourcePath,
+        labNorthContract: state.labNorthContract,
+        labNorthReceipt: state.labNorthReceipt,
+        labNorthActiveStageId: state.labNorthActiveStageId,
+        labNorthActiveGear: state.labNorthActiveGear,
+        labNorthActiveCycleNumber: state.labNorthActiveCycleNumber,
+        labNorthActiveCycleRoute: state.labNorthActiveCycleRoute,
+        labNorthActiveCardinal: state.labNorthActiveCardinal,
+        labNorthActiveFileGate: state.labNorthActiveFileGate,
+        labNorthActiveFibonacci: state.labNorthActiveFibonacci,
+        labNorthActiveNewsGate: state.labNorthActiveNewsGate,
+        labNorthTwoCycleLawActive: state.labNorthTwoCycleLawActive,
+        labNorthCentralTrainStationActive: state.labNorthCentralTrainStationActive,
+        labNorthDownstreamReleaseAuthorized: state.labNorthDownstreamReleaseAuthorized,
+        labNorthCompletionLatched: state.labNorthCompletionLatched,
+
+        macroWestFile: state.macroWestFile,
+        macroWestObserved: state.macroWestObserved,
+        macroWestSourcePath: state.macroWestSourcePath,
+        macroWestContract: state.macroWestContract,
+        macroWestReceipt: state.macroWestReceipt,
+        macroWestDecision: state.macroWestDecision,
+        macroWestGapClass: state.macroWestGapClass,
+        macroWestAuditAccepted: state.macroWestAuditAccepted,
+        macroWestReleaseToCanvas: state.macroWestReleaseToCanvas,
+        macroWestCanvasReleasePacketReady: state.macroWestCanvasReleasePacketReady,
+        macroWestCanvasReleaseAuthorized: state.macroWestCanvasReleaseAuthorized,
+        macroWestRecommendedNextFile: state.macroWestRecommendedNextFile,
+
+        canvasLocalStationFile: state.canvasLocalStationFile,
+        canvasLocalStationObserved: state.canvasLocalStationObserved,
+        canvasLocalStationSourcePath: state.canvasLocalStationSourcePath,
+        canvasLocalStationContract: state.canvasLocalStationContract,
+        canvasLocalStationAccepted: state.canvasLocalStationAccepted,
+        canvasLocalStationApiReady: state.canvasLocalStationApiReady,
+        canvasLocalStationReceiveSurfaceReady: state.canvasLocalStationReceiveSurfaceReady,
+        canvasLocalStationSummaryObserved: state.canvasLocalStationSummaryObserved,
+        canvasLocalStationBridgeStatus: state.canvasLocalStationBridgeStatus,
+
+        labCanvasSharedLanguageStatus: state.labCanvasSharedLanguageStatus,
+        labCanvasBridgeStatus: state.labCanvasBridgeStatus,
+        diagnosticGatewayMirrorsBridge: state.diagnosticGatewayMirrorsBridge
+      },
+
+      bishopHubBridge: {
+        bishopHubBridgeSchemaActive: state.bishopHubBridgeSchemaActive,
+        bishopNorthObserved: state.bishopNorthObserved,
+        bishopEastObserved: state.bishopEastObserved,
+        bishopSouthObserved: state.bishopSouthObserved,
+        bishopWestObserved: state.bishopWestObserved,
+        bishopHubSummary: clonePlain(state.bishopHubSummary),
+        bishopHubsAreOpaqueToDiagnosticNorth: state.bishopHubsAreOpaqueToDiagnosticNorth,
+        bishopChildFileKnowledgeOwnedByBishops: state.bishopChildFileKnowledgeOwnedByBishops,
+        westNeedsBishopsNotSubjectFiles: state.westNeedsBishopsNotSubjectFiles
+      },
+
+      diagnosticReceiverBridge: {
+        diagnosticReceiverObserved: state.diagnosticReceiverObserved,
+        diagnosticReceiverContract: state.diagnosticReceiverContract,
+        diagnosticReceiverCallsNorthOnly: state.diagnosticReceiverCallsNorthOnly,
+        diagnosticReceiverPlanetaryObserverActive: state.diagnosticReceiverPlanetaryObserverActive
+      },
 
       planetaryControlLifecycle: {
         planetaryControlSchemaActive: state.planetaryControlSchemaActive,
@@ -1774,6 +2421,62 @@
       PREVIOUS_NORTH_CONTRACT: PREVIOUS_CONTRACT,
       BASELINE_NORTH_CONTRACT: BASELINE_CONTRACT,
 
+      LAB_BRIDGE_SCHEMA_ACTIVE: state.labBridgeSchemaActive,
+      LAB_NORTH_FILE: state.labNorthFile,
+      LAB_NORTH_OBSERVED: state.labNorthObserved,
+      LAB_NORTH_CONTRACT: state.labNorthContract,
+      LAB_NORTH_RECEIPT: state.labNorthReceipt,
+      LAB_NORTH_ACTIVE_STAGE_ID: state.labNorthActiveStageId,
+      LAB_NORTH_ACTIVE_GEAR: state.labNorthActiveGear,
+      LAB_NORTH_ACTIVE_CYCLE_NUMBER: state.labNorthActiveCycleNumber,
+      LAB_NORTH_ACTIVE_CYCLE_ROUTE: state.labNorthActiveCycleRoute,
+      LAB_NORTH_ACTIVE_CARDINAL: state.labNorthActiveCardinal,
+      LAB_NORTH_ACTIVE_FILE_GATE: state.labNorthActiveFileGate,
+      LAB_NORTH_ACTIVE_FIBONACCI: state.labNorthActiveFibonacci,
+      LAB_NORTH_ACTIVE_NEWS_GATE: state.labNorthActiveNewsGate,
+      LAB_NORTH_TWO_CYCLE_LAW_ACTIVE: state.labNorthTwoCycleLawActive,
+      LAB_NORTH_CENTRAL_TRAIN_STATION_ACTIVE: state.labNorthCentralTrainStationActive,
+      LAB_NORTH_DOWNSTREAM_RELEASE_AUTHORIZED: state.labNorthDownstreamReleaseAuthorized,
+      LAB_NORTH_COMPLETION_LATCHED: state.labNorthCompletionLatched,
+
+      MACRO_WEST_FILE: state.macroWestFile,
+      MACRO_WEST_OBSERVED: state.macroWestObserved,
+      MACRO_WEST_CONTRACT: state.macroWestContract,
+      MACRO_WEST_RECEIPT: state.macroWestReceipt,
+      MACRO_WEST_DECISION: state.macroWestDecision,
+      MACRO_WEST_GAP_CLASS: state.macroWestGapClass,
+      MACRO_WEST_AUDIT_ACCEPTED: state.macroWestAuditAccepted,
+      MACRO_WEST_RELEASE_TO_CANVAS: state.macroWestReleaseToCanvas,
+      MACRO_WEST_CANVAS_RELEASE_PACKET_READY: state.macroWestCanvasReleasePacketReady,
+      MACRO_WEST_CANVAS_RELEASE_AUTHORIZED: state.macroWestCanvasReleaseAuthorized,
+      MACRO_WEST_RECOMMENDED_NEXT_FILE: state.macroWestRecommendedNextFile,
+
+      CANVAS_LOCAL_STATION_FILE: state.canvasLocalStationFile,
+      CANVAS_LOCAL_STATION_OBSERVED: state.canvasLocalStationObserved,
+      CANVAS_LOCAL_STATION_CONTRACT: state.canvasLocalStationContract,
+      CANVAS_LOCAL_STATION_ACCEPTED: state.canvasLocalStationAccepted,
+      CANVAS_LOCAL_STATION_API_READY: state.canvasLocalStationApiReady,
+      CANVAS_LOCAL_STATION_RECEIVE_SURFACE_READY: state.canvasLocalStationReceiveSurfaceReady,
+      CANVAS_LOCAL_STATION_SUMMARY_OBSERVED: state.canvasLocalStationSummaryObserved,
+      CANVAS_LOCAL_STATION_BRIDGE_STATUS: state.canvasLocalStationBridgeStatus,
+
+      BISHOP_HUB_BRIDGE_SCHEMA_ACTIVE: state.bishopHubBridgeSchemaActive,
+      BISHOP_NORTH_OBSERVED: state.bishopNorthObserved,
+      BISHOP_EAST_OBSERVED: state.bishopEastObserved,
+      BISHOP_SOUTH_OBSERVED: state.bishopSouthObserved,
+      BISHOP_WEST_OBSERVED: state.bishopWestObserved,
+      BISHOP_HUBS_ARE_OPAQUE_TO_DIAGNOSTIC_NORTH: state.bishopHubsAreOpaqueToDiagnosticNorth,
+      BISHOP_CHILD_FILE_KNOWLEDGE_OWNED_BY_BISHOPS: state.bishopChildFileKnowledgeOwnedByBishops,
+      WEST_NEEDS_BISHOPS_NOT_SUBJECT_FILES: state.westNeedsBishopsNotSubjectFiles,
+
+      LAB_CANVAS_SHARED_LANGUAGE_STATUS: state.labCanvasSharedLanguageStatus,
+      LAB_CANVAS_BRIDGE_STATUS: state.labCanvasBridgeStatus,
+      DIAGNOSTIC_GATEWAY_MIRRORS_BRIDGE: state.diagnosticGatewayMirrorsBridge,
+      DIAGNOSTIC_RECEIVER_OBSERVED: state.diagnosticReceiverObserved,
+      DIAGNOSTIC_RECEIVER_CONTRACT: state.diagnosticReceiverContract,
+      DIAGNOSTIC_RECEIVER_CALLS_NORTH_ONLY: state.diagnosticReceiverCallsNorthOnly,
+      DIAGNOSTIC_RECEIVER_PLANETARY_OBSERVER_ACTIVE: state.diagnosticReceiverPlanetaryObserverActive,
+
       PLANETARY_CONTROL_SCHEMA_ACTIVE: state.planetaryControlSchemaActive,
       PLANETARY_CONTROL_SCHEMA_CONTRACT: state.planetaryControlSchemaContract,
       PLANETARY_CONTROL_SCHEMA_RECEIPT: state.planetaryControlSchemaReceipt,
@@ -1908,6 +2611,10 @@
   function composeCompactSummary(report) {
     return [
       line("TARGET_ROUTE", getValue(report, "TARGET_ROUTE", TARGET_ROUTE)),
+      line("LAB_CANVAS_BRIDGE_STATUS", getValue(report, "LAB_CANVAS_BRIDGE_STATUS", BRIDGE_STATUS.HELD)),
+      line("LAB_NORTH_ACTIVE_STAGE_ID", getValue(report, "LAB_NORTH_ACTIVE_STAGE_ID", FALLBACK.UNKNOWN)),
+      line("MACRO_WEST_DECISION", getValue(report, "MACRO_WEST_DECISION", FALLBACK.UNKNOWN)),
+      line("CANVAS_LOCAL_STATION_BRIDGE_STATUS", getValue(report, "CANVAS_LOCAL_STATION_BRIDGE_STATUS", FALLBACK.UNKNOWN)),
       line("CONTROL_FILE_STATUS", getValue(report, "CONTROL_FILE_STATUS", CONTROL_LIFECYCLE_STATES.EXPECTED_NOT_YET_BUILT)),
       line("CONTROL_HANDSHAKE_STATUS", getValue(report, "CONTROL_HANDSHAKE_STATUS", CONTROL_LIFECYCLE_STATES.EXPECTED_NOT_YET_WIRED)),
       line("MOTION_TOUCH_STATUS", getValue(report, "MOTION_TOUCH_STATUS", CONTROL_LIFECYCLE_STATES.WAITING_CONTROL_FILE)),
@@ -2038,12 +2745,16 @@
     state.diagnosticTimestamp = nowIso();
     state.updatedAt = nowIso();
 
+    addNote(state, "NORTH_LAB_CANVAS_BRIDGE_SCHEMA_ACTIVE");
     addNote(state, "NORTH_PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ACTIVE");
     addNote(state, "NORTH_CONTROL_ABSENCE_ADMITTED_AS_EXPECTED_NOT_YET_BUILT");
     addNote(state, "NORTH_CONTROL_ABSENCE_NOT_TREATED_AS_CASE_5");
     addNote(state, "NORTH_CONTROL_ABSENCE_BLOCKS_MOTION_TOUCH_NOT_VISIBLE_PLANET");
+    addNote(state, "NORTH_READS_BISHOP_HUBS_AS_OPAQUE_AUTHORITIES_ONLY");
 
     try {
+      readBridgeLayer(state);
+
       const children = discoverChildren();
 
       const eastValidation = validateEastChild(children.east);
@@ -2066,7 +2777,14 @@
 
       if (eastValidation.status === CHILD_VALIDATION.VALID) {
         try {
-          const eastResult = await Promise.resolve(children.east.runEastSourceRead());
+          const eastResult = await Promise.resolve(children.east.runEastSourceRead({
+            northContract: CONTRACT,
+            labBridgeSchemaActive: true,
+            labNorthFile: LAB_NORTH_FILE,
+            macroWestFile: LAB_WEST_FILE,
+            canvasLocalStationFile: CANVAS_LOCAL_STATION_FILE,
+            controlFile: CONTROL_FILE
+          }));
           const eastEvidence = getEvidencePayload(eastResult, "evidence");
 
           state.eastEvidenceValid = validateEastEvidence(eastEvidence);
@@ -2094,7 +2812,13 @@
             sourceMismatchControlling,
             allowSyntheticActivation: Boolean(options.allowSyntheticActivation),
             northPermitsSyntheticActivation: Boolean(options.northPermitsSyntheticActivation),
-            syntheticActivationPermittedByNorth: Boolean(options.syntheticActivationPermittedByNorth)
+            syntheticActivationPermittedByNorth: Boolean(options.syntheticActivationPermittedByNorth),
+            northContract: CONTRACT,
+            labBridgeSchemaActive: true,
+            labNorthObserved: state.labNorthObserved,
+            macroWestObserved: state.macroWestObserved,
+            canvasLocalStationObserved: state.canvasLocalStationObserved,
+            canvasLocalStationContract: state.canvasLocalStationContract
           };
 
           if (options.targetDocument) westOptions.targetDocument = options.targetDocument;
@@ -2242,11 +2966,11 @@
     return clonePlain(lastState || makeState());
   }
 
-  function getReceipt() {
+  function getReceiptLight() {
     const state = lastState || makeState();
 
     return {
-      parentRole: "NORTH_PLANETARY_CONTROL_LIFECYCLE_SCHEMA_ORCHESTRATOR",
+      parentRole: "NORTH_LAB_CANVAS_BRIDGE_SCHEMA_ORCHESTRATOR",
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
@@ -2267,34 +2991,47 @@
       northIsDiagnosticAnchor: true,
       northOwnsCanonicalVerdictSchema: true,
       northOwnsPlanetaryControlLifecycleSchema: true,
+      northOwnsLabCanvasBridgeSchema: true,
 
-      planetaryControlSchemaActive: true,
-      planetaryControlSchemaContract: CONTRACT,
-      planetaryControlSchemaReceipt: RECEIPT,
-      frontendPlanetaryObserverBasisExpected: true,
-      controlFile: CONTROL_FILE,
-      controlFileExpected: true,
+      labBridgeSchemaActive: true,
+      labNorthObserved: state.labNorthObserved,
+      labNorthContract: state.labNorthContract,
+      labNorthActiveStageId: state.labNorthActiveStageId,
+      labNorthActiveCycleRoute: state.labNorthActiveCycleRoute,
+      labNorthTwoCycleLawActive: state.labNorthTwoCycleLawActive,
+      labNorthCentralTrainStationActive: state.labNorthCentralTrainStationActive,
+
+      macroWestObserved: state.macroWestObserved,
+      macroWestContract: state.macroWestContract,
+      macroWestDecision: state.macroWestDecision,
+      macroWestGapClass: state.macroWestGapClass,
+      macroWestReleaseToCanvas: state.macroWestReleaseToCanvas,
+
+      canvasLocalStationObserved: state.canvasLocalStationObserved,
+      canvasLocalStationContract: state.canvasLocalStationContract,
+      canvasLocalStationAccepted: state.canvasLocalStationAccepted,
+      canvasLocalStationBridgeStatus: state.canvasLocalStationBridgeStatus,
+
+      bishopHubBridgeSchemaActive: true,
+      bishopNorthObserved: state.bishopNorthObserved,
+      bishopEastObserved: state.bishopEastObserved,
+      bishopSouthObserved: state.bishopSouthObserved,
+      bishopWestObserved: state.bishopWestObserved,
+      bishopHubsAreOpaqueToDiagnosticNorth: true,
+      bishopChildFileKnowledgeOwnedByBishops: true,
+
+      labCanvasSharedLanguageStatus: state.labCanvasSharedLanguageStatus,
+      labCanvasBridgeStatus: state.labCanvasBridgeStatus,
+      diagnosticGatewayMirrorsBridge: true,
+
+      diagnosticReceiverObserved: state.diagnosticReceiverObserved,
+      diagnosticReceiverContract: state.diagnosticReceiverContract,
+      diagnosticReceiverCallsNorthOnly: state.diagnosticReceiverCallsNorthOnly,
+
       controlFileStatus: state.controlFileStatus,
-      controlAbsenceIsFailure: false,
-      controlAbsenceIsCase5: false,
-      controlAbsenceBlocksVisiblePlanet: false,
-      controlAbsenceBlocksMotionTouch: true,
-      controlHandshakeExpected: true,
       controlHandshakeStatus: state.controlHandshakeStatus,
-      hearthJsControlFunnelExpected: true,
-      hearthJsControlFunnelFile: ROUTE_CONDUCTOR_FILE,
-      hearthJsControlHandshakeStatus: state.hearthJsControlHandshakeStatus,
-      motionTouchExpected: true,
       motionTouchStatus: state.motionTouchStatus,
-      dragStatus: state.dragStatus,
-      viewControlStatus: state.viewControlStatus,
       visiblePlanetAllowedWithoutControls: true,
-      planetaryControlNextConformingFile: EAST_FILE,
-      planetaryControlNextConformingAction: "RENEW_EAST_TO_READ_PLANETARY_CONTROL_FOOTPRINT_SOURCE_EVIDENCE",
-
-      eastChildConsumed: state.eastReceiptValid === CHILD_VALIDATION.VALID,
-      westChildConsumed: state.westReceiptValid === CHILD_VALIDATION.VALID,
-      southChildConsumed: state.southReceiptValid === CHILD_VALIDATION.VALID,
 
       eastReceiptValid: state.eastReceiptValid,
       westReceiptValid: state.westReceiptValid,
@@ -2304,12 +3041,6 @@
       southOutputValid: state.southOutputValid,
       southMeaningPreserved: state.southMeaningPreserved,
 
-      eastCurrentSpreadAlignmentRecognized: state.eastCurrentSpreadAlignmentRecognized,
-      routeConductorV96PrimaryNotTreatedAsCase5: state.routeConductorV96PrimaryNotTreatedAsCase5,
-      routeConductorV95CompatibilityAccepted: state.routeConductorV95CompatibilityAccepted,
-      routeConductorV94LineageAccepted: state.routeConductorV94LineageAccepted,
-      westRenderedProofSpreadComplete: state.westRenderedProofSpreadComplete,
-
       primaryCase: state.primaryCase,
       calibrationStatus: state.calibrationStatus,
       calibrationHoldReason: state.calibrationHoldReason,
@@ -2318,11 +3049,8 @@
 
       newsAlignmentStatus: state.newsAlignmentStatus,
       newsAlignmentScore: state.newsAlignmentScore,
-      newsAlignmentFirstFailedStage: state.newsAlignmentFirstFailedStage,
-
       fibonacciSynchronizationStatus: state.fibonacciSynchronizationStatus,
       fibonacciSynchronizationScore: state.fibonacciSynchronizationScore,
-      fibonacciSynchronizationFirstFailedStage: state.fibonacciSynchronizationFirstFailedStage,
 
       recommendedNextOwner: state.recommendedNextOwner,
       recommendedNextFile: state.recommendedNextFile,
@@ -2333,6 +3061,11 @@
       calibrationLayerAuthority: true,
       canonicalVerdictSchemaAuthority: true,
       planetaryControlLifecycleSchemaAuthority: true,
+      labCanvasBridgeSchemaAuthority: true,
+      labRuntimeAuthority: false,
+      macroWestAuthority: false,
+      canvasAuthority: false,
+      bishopChildFileAuthority: false,
       servedSourceParsingAuthority: false,
       renderedTargetProbeAuthority: false,
       packetFormattingAuthority: false,
@@ -2352,6 +3085,7 @@
       getPacketTextApiAvailable: true,
       getCompactSummaryApiAvailable: true,
       getReceiptApiAvailable: true,
+      getReceiptLightApiAvailable: true,
       getStateApiAvailable: true,
 
       routeReceiverShouldCallNorthOnly: true,
@@ -2363,6 +3097,98 @@
       lastPrimaryCase: state.primaryCase,
       lastCalibrationStatus: state.calibrationStatus,
       updatedAt: nowIso()
+    };
+  }
+
+  function getReceipt() {
+    const state = lastState || makeState();
+
+    return {
+      ...getReceiptLight(),
+
+      previousNorthContract: PREVIOUS_CONTRACT,
+      baselineNorthContract: BASELINE_CONTRACT,
+
+      currentHtmlContract: CURRENT_HTML_CONTRACT,
+      currentIndexJsContract: CURRENT_INDEX_JS_CONTRACT,
+      currentRouteConductorContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
+      compatRouteConductorContract: COMPAT_ROUTE_CONDUCTOR_CONTRACT,
+      priorRouteConductorContract: PRIOR_ROUTE_CONDUCTOR_CONTRACT,
+
+      controlFile: CONTROL_FILE,
+      routeConductorFile: ROUTE_CONDUCTOR_FILE,
+      indexFile: INDEX_FILE,
+      canvasFile: CANVAS_FILE,
+      labNorthFile: LAB_NORTH_FILE,
+      labWestFile: LAB_WEST_FILE,
+      canvasLocalStationFile: CANVAS_LOCAL_STATION_FILE,
+      eastFile: EAST_FILE,
+      westFile: WEST_FILE,
+      southFile: SOUTH_FILE,
+      diagnosticHtmlFile: DIAGNOSTIC_HTML_FILE,
+
+      CONTROL_LIFECYCLE_STATES: clonePlain(CONTROL_LIFECYCLE_STATES),
+      BRIDGE_STATUS: clonePlain(BRIDGE_STATUS),
+      LAB_CYCLE: clonePlain(LAB_CYCLE),
+      LAB_STAGE: clonePlain(LAB_STAGE),
+      BISHOP_HUBS: clonePlain(BISHOP_HUBS),
+
+      bishopHubSummary: clonePlain(state.bishopHubSummary),
+      northVerdict: clonePlain(state.northVerdict),
+      reportObject: clonePlain(state.reportObject),
+
+      supportsNorthAnchorSchema: true,
+      supportsCurrentSpreadCalibration: true,
+      supportsEastV4CurrentSpreadIntelligence: true,
+      supportsRouteConductorV96AsCurrentSpread: true,
+      supportsRouteConductorV95Compatibility: true,
+      supportsRouteConductorV94Lineage: true,
+      supportsWestRenderedObservabilityFields: true,
+      supportsCalibrationStatusLayer: true,
+      supportsNewsAlignmentAudit: true,
+      supportsFibonacciSynchronizationAudit: true,
+      supportsSouthMeaningPreservationAudit: true,
+
+      supportsPlanetaryControlLifecycleSchema: true,
+      supportsFrontendPlanetaryObserverBasisAdmission: true,
+      supportsControlFileExpectedNotYetBuiltLifecycle: true,
+      supportsControlAbsenceNotCase5: true,
+      supportsVisiblePlanetWithoutControls: true,
+      supportsMotionTouchWaitingControlFile: true,
+      supportsHearthJsControlFunnelExpectation: true,
+
+      supportsLabRuntimeTableBridgeLiteracy: true,
+      supportsMacroWestAdmissibilityBridgeLiteracy: true,
+      supportsCanvasLocalStationBridgeLiteracy: true,
+      supportsDiagnosticReceiverBridgeLiteracy: true,
+      supportsOpaqueBishopHubBridgeVocabulary: true,
+      recommendsEastFootprintConformanceWhenMissing: true,
+
+      finalPrimaryCaseAuthority: true,
+      finalRecommendationAuthority: true,
+      calibrationLayerAuthority: true,
+      canonicalVerdictSchemaAuthority: true,
+      planetaryControlLifecycleSchemaAuthority: true,
+      labCanvasBridgeSchemaAuthority: true,
+
+      labRuntimeAuthority: false,
+      macroWestAuthority: false,
+      canvasAuthority: false,
+      bishopChildFileAuthority: false,
+      servedSourceParsingAuthority: false,
+      renderedTargetProbeAuthority: false,
+      packetFormattingAuthority: false,
+      diagnosticUiAuthority: false,
+      controlFileImplementationAuthority: false,
+      routeConductorImplementationAuthority: false,
+      motionTouchExecutionAuthority: false,
+      productionMutationAuthorized: false,
+      hearthRepairAuthorized: false,
+      runtimeRestartAuthorized: false,
+      canvasReleaseAuthorized: false,
+      macroWestReleaseAuthorized: false,
+
+      ...NO_CLAIM_FIELDS
     };
   }
 
@@ -2388,12 +3214,14 @@
     root.HEARTH.diagnosticRailNorth = api;
     root.HEARTH.diagnosticNorthAnchor = api;
     root.HEARTH.diagnosticNorthPlanetaryControlLifecycle = api;
+    root.HEARTH.diagnosticNorthLabCanvasBridge = api;
 
     root.DEXTER_LAB = root.DEXTER_LAB || {};
     root.DEXTER_LAB.hearthDiagnosticRail = api;
     root.DEXTER_LAB.hearthDiagnosticNorth = api;
     root.DEXTER_LAB.hearthDiagnosticNorthAnchor = api;
     root.DEXTER_LAB.hearthDiagnosticNorthPlanetaryControlLifecycle = api;
+    root.DEXTER_LAB.hearthDiagnosticNorthLabCanvasBridge = api;
 
     root.HEARTH_DIAGNOSTIC_RAIL = api;
     root.HEARTH_PARALLEL_DIAGNOSTIC_RAIL = api;
@@ -2401,6 +3229,7 @@
     root.HEARTH_DIAGNOSTIC_RAIL_NORTH = api;
     root.HEARTH_DIAGNOSTIC_NORTH_ANCHOR = api;
     root.HEARTH_DIAGNOSTIC_NORTH_PLANETARY_CONTROL_LIFECYCLE = api;
+    root.HEARTH_DIAGNOSTIC_NORTH_LAB_CANVAS_BRIDGE = api;
 
     root.HEARTH_DIAGNOSTIC_RAIL_RECEIPT = getReceipt();
     root.HEARTH_PARALLEL_DIAGNOSTIC_RAIL_RECEIPT = getReceipt();
@@ -2408,15 +3237,18 @@
     root.HEARTH_DIAGNOSTIC_RAIL_NORTH_RECEIPT = getReceipt();
     root.HEARTH_DIAGNOSTIC_NORTH_ANCHOR_RECEIPT = getReceipt();
     root.HEARTH_DIAGNOSTIC_NORTH_PLANETARY_CONTROL_LIFECYCLE_RECEIPT = getReceipt();
+    root.HEARTH_DIAGNOSTIC_NORTH_LAB_CANVAS_BRIDGE_RECEIPT = getReceipt();
 
     root.HEARTH_DIAGNOSTIC_RAIL_VERDICT = clonePlain(lastVerdict);
     root.HEARTH_PARALLEL_DIAGNOSTIC_RAIL_VERDICT = clonePlain(lastVerdict);
     root.HEARTH_DIAGNOSTIC_NORTH_VERDICT = clonePlain(lastVerdict);
     root.HEARTH_DIAGNOSTIC_NORTH_PLANETARY_CONTROL_LIFECYCLE_VERDICT = clonePlain(lastVerdict);
+    root.HEARTH_DIAGNOSTIC_NORTH_LAB_CANVAS_BRIDGE_VERDICT = clonePlain(lastVerdict);
 
     root.HEARTH_DIAGNOSTIC_RAIL_REPORT = clonePlain(lastReport);
     root.HEARTH_PARALLEL_DIAGNOSTIC_RAIL_REPORT = clonePlain(lastReport);
     root.HEARTH_DIAGNOSTIC_NORTH_PLANETARY_CONTROL_LIFECYCLE_REPORT = clonePlain(lastReport);
+    root.HEARTH_DIAGNOSTIC_NORTH_LAB_CANVAS_BRIDGE_REPORT = clonePlain(lastReport);
   }
 
   const api = Object.freeze({
@@ -2442,6 +3274,13 @@
     compatRouteConductorContract: COMPAT_ROUTE_CONDUCTOR_CONTRACT,
     priorRouteConductorContract: PRIOR_ROUTE_CONDUCTOR_CONTRACT,
 
+    labNorthContract: LAB_NORTH_CONTRACT,
+    labNorthFile: LAB_NORTH_FILE,
+    labWestContract: LAB_WEST_CONTRACT,
+    labWestFile: LAB_WEST_FILE,
+    canvasLocalStationFile: CANVAS_LOCAL_STATION_FILE,
+    canvasLocalStationContracts: CANVAS_LOCAL_STATION_CONTRACTS,
+
     controlFile: CONTROL_FILE,
     routeConductorFile: ROUTE_CONDUCTOR_FILE,
     indexFile: INDEX_FILE,
@@ -2449,7 +3288,13 @@
     eastFile: EAST_FILE,
     westFile: WEST_FILE,
     southFile: SOUTH_FILE,
+    diagnosticHtmlFile: DIAGNOSTIC_HTML_FILE,
+
     CONTROL_LIFECYCLE_STATES,
+    BRIDGE_STATUS,
+    LAB_CYCLE,
+    LAB_STAGE,
+    BISHOP_HUBS,
 
     eastContract: EAST_CONTRACT,
     eastCurrentAlignmentContract: EAST_CURRENT_ALIGNMENT_CONTRACT,
@@ -2466,6 +3311,7 @@
     getPacketText,
     getCompactSummary,
     getReceipt,
+    getReceiptLight,
     getState,
 
     supportsNorthAnchorSchema: true,
@@ -2487,6 +3333,12 @@
     supportsVisiblePlanetWithoutControls: true,
     supportsMotionTouchWaitingControlFile: true,
     supportsHearthJsControlFunnelExpectation: true,
+
+    supportsLabRuntimeTableBridgeLiteracy: true,
+    supportsMacroWestAdmissibilityBridgeLiteracy: true,
+    supportsCanvasLocalStationBridgeLiteracy: true,
+    supportsDiagnosticReceiverBridgeLiteracy: true,
+    supportsOpaqueBishopHubBridgeVocabulary: true,
     recommendsEastFootprintConformanceWhenMissing: true,
 
     finalPrimaryCaseAuthority: true,
@@ -2494,7 +3346,12 @@
     calibrationLayerAuthority: true,
     canonicalVerdictSchemaAuthority: true,
     planetaryControlLifecycleSchemaAuthority: true,
+    labCanvasBridgeSchemaAuthority: true,
 
+    labRuntimeAuthority: false,
+    macroWestAuthority: false,
+    canvasAuthority: false,
+    bishopChildFileAuthority: false,
     servedSourceParsingAuthority: false,
     renderedTargetProbeAuthority: false,
     packetFormattingAuthority: false,

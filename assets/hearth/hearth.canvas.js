@@ -1,18 +1,26 @@
 // /assets/hearth/hearth.canvas.js
 // HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3
 // Internal controlled renewal:
-// HEARTH_CANVAS_HEX_GATE_POINTER_FINGER_TRANSMISSION_RECEIVER_TNT_v12_4
+// HEARTH_CANVAS_LOCAL_VISIBLE_PIXEL_PROOF_HEX_GATE_RECEIVER_TNT_v12_5
 // Full-file replacement.
-// Canvas Hub / receiver-output carrier / Hex-gate transmission only.
+// Canvas Hub / receiver-output carrier / local visible-pixel proof / Hex-gate transmission only.
 // Purpose:
 // - Preserve the public v12_3 Canvas Hub contract expected by Route Conductor, Controls, diagnostics, and Hex Surface.
-// - Preserve v12_3_2 / v12_3_1 / v12_2 / v12_1 lineage aliases.
-// - Receive Route Conductor release packets through public Canvas APIs.
-// - Receive Queen/Controls planetary view packets through public Canvas APIs.
-// - Keep Canvas as the receiver/output carrier only.
-// - Route all view/control transmission through Hex Surface as the gate before Pointer Finger.
+// - Preserve v12_3_2 / v12_3_1 / v12_2 / v12_1 / v12 lineage aliases.
+// - Keep Canvas as receiver/output carrier only.
+// - Bind a real mounted 2D canvas surface.
+// - Perform a lawful Canvas-owned receiver/output-carrier draw so the surface is no longer blank.
+// - Publish exact post-draw pixel-sample coordinates so the diagnostic rail can distinguish:
+//   1. Canvas did not mount,
+//   2. Canvas mounted but did not draw,
+//   3. Canvas drew visible pixels,
+//   4. Hex Surface gate was missing,
+//   5. Hex Surface accepted the packet,
+//   6. Pointer Finger transmission was observed downstream.
+// - Route all downstream transmission through Hex Surface as the gate before Pointer Finger.
 // - Do not call Pointer Finger directly.
-// - Do not reopen Canvas Bishops, terrain truth, hydrology truth, elevation truth, material truth, or diagnostic rail truth.
+// - Do not reopen Canvas Bishops, terrain truth, hydrology truth, elevation truth, material truth, diagnostic truth,
+//   Hex truth, or Pointer Finger truth.
 // - Do not claim F13, F21, ready text, completion latch, final visual pass, generated image, GraphicBox, or WebGL.
 // Does not own:
 // - HTML shell
@@ -42,8 +50,13 @@
     "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT_v12_3";
 
   const INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_CANVAS_HEX_GATE_POINTER_FINGER_TRANSMISSION_RECEIVER_TNT_v12_4";
+    "HEARTH_CANVAS_LOCAL_VISIBLE_PIXEL_PROOF_HEX_GATE_RECEIVER_TNT_v12_5";
   const INTERNAL_RENEWAL_RECEIPT =
+    "HEARTH_CANVAS_LOCAL_VISIBLE_PIXEL_PROOF_HEX_GATE_RECEIVER_RECEIPT_v12_5";
+
+  const PREVIOUS_INTERNAL_RENEWAL_CONTRACT =
+    "HEARTH_CANVAS_HEX_GATE_POINTER_FINGER_TRANSMISSION_RECEIVER_TNT_v12_4";
+  const PREVIOUS_INTERNAL_RENEWAL_RECEIPT =
     "HEARTH_CANVAS_HEX_GATE_POINTER_FINGER_TRANSMISSION_RECEIVER_RECEIPT_v12_4";
 
   const PREVIOUS_CONTRACT =
@@ -61,7 +74,7 @@
     "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_TNT_v12";
 
   const VERSION =
-    "2026-06-06.hearth-canvas-hex-gate-pointer-finger-transmission-receiver-v12-4";
+    "2026-06-06.hearth-canvas-local-visible-pixel-proof-hex-gate-receiver-v12-5";
 
   const ROUTE = "/showroom/globe/hearth/";
   const FILE = "/assets/hearth/hearth.canvas.js";
@@ -72,8 +85,8 @@
   const HEX_SURFACE_FILE = "/assets/hearth/hearth.hex.surface.js";
   const HEX_AUTHORITY_FILE = "/assets/hearth/hearth.hex.four-pair.authority.js";
   const POINTER_FINGER_FILE = "/assets/hearth/hearth.canvas.finger.inspect.js";
-  const POINTER_FINGER_BOUNDARY_FILE = "/assets/hearth/hearth.canvas.finger.boundary.js";
   const POINTER_FINGER_SURFACE_FILE = "/assets/hearth/hearth.canvas.finger.surface.js";
+  const POINTER_FINGER_BOUNDARY_FILE = "/assets/hearth/hearth.canvas.finger.boundary.js";
   const POINTER_FINGER_LIGHT_FILE = "/assets/hearth/hearth.canvas.finger.light.js";
   const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
 
@@ -92,18 +105,21 @@
 
   const CONTROL_PACKET_TYPE = "HEARTH_CONTROLS_PLANETARY_VIEW_DELTA_PACKET";
   const CANVAS_HEX_GATE_PACKET_TYPE =
-    "HEARTH_CANVAS_TO_HEX_SURFACE_POINTER_FINGER_GATE_PACKET_v12_4";
+    "HEARTH_CANVAS_TO_HEX_SURFACE_POINTER_FINGER_GATE_PACKET_v12_5";
 
   const TRANSMISSION_CHRONOLOGY = Object.freeze([
     "ROUTE_CONDUCTOR",
     "CONTROLS_QUEEN",
     "CANVAS_RECEIVER_OUTPUT_CARRIER",
+    "CANVAS_LOCAL_VISIBLE_PIXEL_PROOF",
     "HEX_SURFACE_GATE",
-    "POINTER_FINGER"
+    "POINTER_FINGER_DOWNSTREAM_PUBLIC_RECEIVER"
   ]);
 
   const ACTIVE_CANVAS_CONTRACTS = Object.freeze([
     CONTRACT,
+    INTERNAL_RENEWAL_CONTRACT,
+    PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
     PREVIOUS_CONTRACT,
     LINEAGE_V12_3_1_CONTRACT,
     LINEAGE_V12_2_CONTRACT,
@@ -130,6 +146,7 @@
 
   const ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS = Object.freeze([
     EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
+    "HEARTH_ROUTE_CONDUCTOR_HEX_GATE_POINTER_FINGER_TRANSMISSION_TNT_v10_2",
     "HEARTH_ROUTE_CONDUCTOR_CANVAS_DOM_SURFACE_ADMISSION_AND_RELEASE_TNT_v10_1",
     "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_TNT_v9_9",
     "HEARTH_ROUTE_CONDUCTOR_CONTROL_FILE_ADMISSION_AND_HANDSHAKE_DELIVERY_TNT_v9_8",
@@ -141,16 +158,19 @@
 
   const HEX_SURFACE_ALIASES = Object.freeze([
     "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER",
+    "HEARTH_HEX_SURFACE_CANVAS_GATE_POINTER_FINGER_TRANSMISSION",
     "HEARTH_HEX_SURFACE_RENDERER",
     "HEARTH_HEX_SURFACE",
     "HEARTH_HEX_PAIR_RENDERER",
     "HEARTH_HEX_SURFACE_AUTHORITY",
     "HEARTH.hexSurfaceInteractiveSpherePairRenderer",
+    "HEARTH.hexSurfaceCanvasGatePointerFingerTransmission",
     "HEARTH.hexSurfaceRenderer",
     "HEARTH.hexSurface",
     "HEARTH.hexPairRenderer",
     "HEARTH.hexSurfaceAuthority",
     "DEXTER_LAB.hearthHexSurfaceInteractiveSpherePairRenderer",
+    "DEXTER_LAB.hearthHexSurfaceCanvasGatePointerFingerTransmission",
     "DEXTER_LAB.hearthHexSurfaceRenderer",
     "DEXTER_LAB.hearthHexSurface",
     "DEXTER_LAB.hearthHexPairRenderer"
@@ -195,6 +215,21 @@
     webgl: false
   });
 
+  const UPPER_NO_CLAIMS = Object.freeze({
+    F13_CLAIMED: false,
+    F13_CANVAS_CLAIMED: false,
+    F21_ELIGIBLE_FOR_NORTH: false,
+    F21_CLAIMED_BY_CANVAS: false,
+    F21_SUBMITTED_TO_NORTH: false,
+    READY_TEXT_ALLOWED: false,
+    READY_TEXT_CLAIMED: false,
+    VISUAL_PASS_CLAIMED: false,
+    FINAL_VISUAL_PASS_CLAIMED: false,
+    GENERATED_IMAGE: false,
+    GRAPHIC_BOX: false,
+    WEBGL: false
+  });
+
   const view = {
     yaw: 0,
     pitch: 0,
@@ -214,6 +249,8 @@
     mountSelector: "UNKNOWN",
     width: 0,
     height: 0,
+    cssWidth: 0,
+    cssHeight: 0,
     dpr: 1
   };
 
@@ -230,6 +267,8 @@
     receipt: RECEIPT,
     internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
     internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
+    previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
+    previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
     lineageV1231Contract: LINEAGE_V12_3_1_CONTRACT,
@@ -256,9 +295,10 @@
     mounted: false,
     startedAt: "",
     updatedAt: "",
-    latestEvent: "HEARTH_CANVAS_V12_4_LOADED",
+    latestEvent: "HEARTH_CANVAS_V12_5_LOADED",
 
     receiverOutputCarrierActive: true,
+    localVisiblePixelProofActive: true,
     hexGateTransmissionActive: true,
     hexGateRequired: true,
     pointerFingerDirectCallSuppressed: true,
@@ -267,12 +307,11 @@
     canvasExpressionTruthOwned: false,
     canvasSurfaceCarrierOwned: true,
     canvasOutputCarrierOwned: true,
-    canvasDirectDrawingSuppressedForControlFrames: true,
 
     routeReleaseAccepted: false,
     routeReleasePacket: null,
     routeReleaseSource: "NONE",
-    routeReleaseStatus: "WAITING_ROUTE_CONDUCTOR_RELEASE",
+    routeReleaseStatus: "WAITING_ROUTE_CONDUCTOR_RELEASE_OR_BOOT_FRAME",
 
     controlsObserved: false,
     controlContract: "",
@@ -293,9 +332,26 @@
     canvasComputedVisible: false,
     canvasContext2DReady: false,
     canvasPixelSampleStatus: "NO_PIXEL_SAMPLE",
+    canvasPixelVisible: false,
+    canvasPixelSampleCount: 0,
     canvasVisiblePixelCount: 0,
+    canvasAlphaPixelCount: 0,
+    canvasUniqueColorCount: 0,
     canvasDomSurfaceMounted: false,
     canvasDomSurfaceProofReady: false,
+
+    canvasLocalVisibleDrawAttempted: false,
+    canvasLocalVisibleDrawExecuted: false,
+    canvasLocalVisibleDrawReason: "NOT_ATTEMPTED",
+    canvasLocalVisibleDrawCount: 0,
+    canvasLocalPixelSampleBeforeDraw: null,
+    canvasLocalPixelSampleAfterDraw: null,
+    canvasLocalDrawFailureReason: "NONE",
+
+    downstreamExpressionPacketObserved: false,
+    downstreamExpressionPacketSource: "NONE",
+    downstreamExpressionPacketDrawable: false,
+    downstreamExpressionPacketDrawableReason: "NO_DOWNSTREAM_PACKET_OBSERVED",
 
     hexSurfaceObserved: false,
     hexSurfaceAuthoritySource: "NONE",
@@ -314,6 +370,11 @@
     hexAuthorityReceipt: "",
     hexAuthorityRecognized: false,
 
+    hexGatePacketDelivered: false,
+    hexGateAcceptedByHexSurface: false,
+    pointerFingerTransmissionObserved: false,
+    pointerFingerTransmissionSource: "NONE",
+
     packetCount: 0,
     hexGatePacketCount: 0,
     hexGateDeliveryCount: 0,
@@ -329,11 +390,14 @@
     lastHexGatePacket: null,
     lastHexGatePacketAt: "",
     lastHexGateReason: "NONE",
+    lastHexGateDeliveryReceipt: null,
 
-    firstFailedCoordinate: "WAITING_HEX_SURFACE_GATE",
-    recommendedNextFile: HEX_SURFACE_FILE,
-    recommendedNextAction: "CONFIRM_HEX_SURFACE_PUBLIC_GATE_RECEIVER",
-    postgameStatus: "CANVAS_LOADED_WAITING_HEX_GATE_TRANSMISSION",
+    finalCanvasPixelVisible: false,
+    finalCanvasPixelFailureClass: "NOT_RUN",
+    firstFailedCoordinate: "BOOT_NOT_RUN",
+    recommendedNextFile: FILE,
+    recommendedNextAction: "BOOT_CANVAS_AND_SAMPLE_LOCAL_VISIBLE_PIXELS",
+    postgameStatus: "CANVAS_LOADED_WAITING_BOOT",
 
     events: [],
     errors: [],
@@ -373,8 +437,8 @@
   }
 
   function safeNumber(value, fallback = 0) {
-    const n = Number(value);
-    return Number.isFinite(n) ? n : fallback;
+    const number = Number(value);
+    return Number.isFinite(number) ? number : fallback;
   }
 
   function safeBool(value, fallback = false) {
@@ -385,8 +449,8 @@
   }
 
   function clamp(value, min, max) {
-    const n = safeNumber(value, min);
-    return Math.max(min, Math.min(max, n));
+    const number = safeNumber(value, min);
+    return Math.max(min, Math.min(max, number));
   }
 
   function firstNonEmpty(...values) {
@@ -402,16 +466,16 @@
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
-      return Array.isArray(value) ? value.slice() : Object.assign({}, value);
+      return Array.isArray(value) ? value.slice() : { ...value };
     }
-  }
-
-  function trimLog(list, max) {
-    if (Array.isArray(list) && list.length > max) list.splice(0, list.length - max);
   }
 
   function line(key, value) {
     return `${key}=${value === undefined || value === null ? "" : String(value)}`;
+  }
+
+  function trimLog(list, max) {
+    if (Array.isArray(list) && list.length > max) list.splice(0, list.length - max);
   }
 
   function record(event, detail = {}) {
@@ -498,7 +562,7 @@
   }
 
   function q(selector) {
-    if (!doc) return null;
+    if (!doc || !doc.querySelector) return null;
     try {
       return doc.querySelector(selector);
     } catch (_error) {
@@ -522,6 +586,15 @@
     }
 
     return fallback;
+  }
+
+  function readAuthoritySnapshot(authority) {
+    if (!authority || !isObject(authority)) return {};
+    if (isObject(authority.receipt)) return authority.receipt;
+    if (isObject(authority.receiptPacket)) return authority.receiptPacket;
+    if (isObject(authority.state)) return authority.state;
+    if (authority.contract || authority.CONTRACT || authority.receipt || authority.RECEIPT || authority.version) return authority;
+    return {};
   }
 
   function contractOf(value) {
@@ -562,41 +635,6 @@
       value && value.receipt,
       value && value.RECEIPT
     );
-  }
-
-  function readAuthorityReceipt(authority) {
-    if (!authority || !isObject(authority) || authority === api) return null;
-
-    const methods = [
-      "getReceiptLight",
-      "getReceipt",
-      "getStatus",
-      "getReport",
-      "getState",
-      "getHexSurfaceReceipt",
-      "getHexSurfaceSummary",
-      "getCanvasStationReceipt",
-      "getVisiblePlanetReceipt",
-      "getControlReceipt",
-      "getControlSummary"
-    ];
-
-    for (const method of methods) {
-      if (!isFunction(authority[method])) continue;
-
-      try {
-        const output = authority[method]();
-        if (isObject(output)) return output;
-      } catch (_error) {}
-    }
-
-    if (isObject(authority.receipt)) return authority.receipt;
-    if (isObject(authority.receiptPacket)) return authority.receiptPacket;
-    if (authority.contract || authority.CONTRACT || authority.receipt || authority.RECEIPT || authority.version) {
-      return authority;
-    }
-
-    return null;
   }
 
   function routeContractRecognized(contract) {
@@ -658,7 +696,9 @@
       q("[data-hearth-visible-planet-mount]") ||
       q(GLOBE_STAGE_SELECTOR) ||
       q("[data-hearth-globe-stage]") ||
-      q("[data-hearth-planet-stage]")
+      q("[data-hearth-planet-stage]") ||
+      q("main") ||
+      q("body")
     );
   }
 
@@ -700,6 +740,7 @@
 
     const preferredMount = options.mount && options.mount.nodeType === 1 ? options.mount : null;
     const mount = findMount(preferredMount);
+
     if (!mount) {
       state.canvasMountFound = false;
       state.canvasMountSelector = "UNKNOWN";
@@ -709,7 +750,7 @@
       state.recommendedNextFile = HTML_FILE;
       state.recommendedNextAction = "CONFIRM_HEARTH_CANVAS_MOUNT_EXISTS";
       state.postgameStatus = "CANVAS_RECEIVER_WAITING_DOM_MOUNT";
-      updateDataset();
+      updateDatasetLight();
       return false;
     }
 
@@ -732,9 +773,12 @@
     canvas.dataset.hearthVisibleCanvas = "true";
     canvas.dataset.hearthCanvasHub = "true";
     canvas.dataset.hearthCanvas = "true";
+    canvas.dataset.hearthExpressionSurface = "true";
     canvas.dataset.hearthCanvasContract = CONTRACT;
     canvas.dataset.hearthCanvasReceipt = RECEIPT;
     canvas.dataset.hearthCanvasInternalRenewalContract = INTERNAL_RENEWAL_CONTRACT;
+    canvas.dataset.hearthCanvasInternalRenewalReceipt = INTERNAL_RENEWAL_RECEIPT;
+    canvas.dataset.hearthCanvasLocalVisiblePixelProofActive = "true";
     canvas.dataset.hearthCanvasHexGateTransmissionActive = "true";
     canvas.dataset.hearthCanvasPointerFingerDirectCallSuppressed = "true";
     canvas.dataset.generatedImage = "false";
@@ -753,7 +797,10 @@
           : describeElement(mount);
 
     try {
-      surface.ctx = canvas.getContext("2d", { alpha: true, desynchronized: true }) || canvas.getContext("2d");
+      surface.ctx =
+        canvas.getContext("2d", { alpha: true, desynchronized: true, willReadFrequently: true }) ||
+        canvas.getContext("2d", { willReadFrequently: true }) ||
+        canvas.getContext("2d");
     } catch (_error) {
       surface.ctx = null;
     }
@@ -769,7 +816,7 @@
     state.canvasContext2DReady = Boolean(surface.ctx);
 
     scanCanvasSurface();
-    updateDataset();
+    updateDatasetLight();
 
     return true;
   }
@@ -787,8 +834,14 @@
     const rectWidth = safeNumber(rect && rect.width, 0);
     const rectHeight = safeNumber(rect && rect.height, 0);
 
-    const fallbackWidth = safeNumber(surface.mount.clientWidth, 0) || 720;
-    const fallbackHeight = safeNumber(surface.mount.clientHeight, 0) || 720;
+    const fallbackWidth =
+      safeNumber(surface.mount.clientWidth, 0) ||
+      safeNumber(root.innerWidth, 0) ||
+      720;
+    const fallbackHeight =
+      safeNumber(surface.mount.clientHeight, 0) ||
+      Math.round(fallbackWidth * 0.75) ||
+      720;
 
     const cssWidth = Math.max(1, Math.round(rectWidth || fallbackWidth));
     const cssHeight = Math.max(1, Math.round(rectHeight || fallbackHeight));
@@ -805,9 +858,111 @@
 
     surface.width = pixelWidth;
     surface.height = pixelHeight;
+    surface.cssWidth = cssWidth;
+    surface.cssHeight = cssHeight;
     surface.dpr = dpr;
 
     return true;
+  }
+
+  function sampleCanvasPixels() {
+    const canvas = surface.canvas || findCanvas(surface.mount || findMount());
+    const ctx = surface.ctx || (canvas && canvas.getContext && canvas.getContext("2d", { willReadFrequently: true }));
+
+    if (!canvas || !ctx) {
+      return {
+        status: "PIXEL_SAMPLE_UNREADABLE",
+        visible: false,
+        sampleCount: 0,
+        visiblePixelCount: 0,
+        alphaPixelCount: 0,
+        uniqueColorCount: 0,
+        reason: "NO_CANVAS_CONTEXT"
+      };
+    }
+
+    const width = safeNumber(canvas.width, 0);
+    const height = safeNumber(canvas.height, 0);
+
+    if (width <= 0 || height <= 0) {
+      return {
+        status: "PIXEL_SAMPLE_UNREADABLE",
+        visible: false,
+        sampleCount: 0,
+        visiblePixelCount: 0,
+        alphaPixelCount: 0,
+        uniqueColorCount: 0,
+        reason: "CANVAS_DIMENSIONS_ZERO"
+      };
+    }
+
+    const points = [
+      [0.12, 0.12],
+      [0.25, 0.25],
+      [0.5, 0.25],
+      [0.75, 0.25],
+      [0.25, 0.5],
+      [0.5, 0.5],
+      [0.75, 0.5],
+      [0.25, 0.75],
+      [0.5, 0.75],
+      [0.75, 0.75],
+      [0.88, 0.88]
+    ];
+
+    let sampleCount = 0;
+    let visiblePixelCount = 0;
+    let alphaPixelCount = 0;
+    const unique = new Set();
+
+    try {
+      for (const [px, py] of points) {
+        const x = Math.max(0, Math.min(width - 1, Math.floor(width * px)));
+        const y = Math.max(0, Math.min(height - 1, Math.floor(height * py)));
+        const data = ctx.getImageData(x, y, 1, 1).data;
+
+        sampleCount += 1;
+
+        const red = data[0] || 0;
+        const green = data[1] || 0;
+        const blue = data[2] || 0;
+        const alpha = data[3] || 0;
+
+        if (alpha > 0) alphaPixelCount += 1;
+        if (alpha > 0 && (red > 4 || green > 4 || blue > 4)) visiblePixelCount += 1;
+        unique.add(`${red},${green},${blue},${alpha}`);
+      }
+    } catch (error) {
+      return {
+        status: "PIXEL_SAMPLE_ERROR",
+        visible: false,
+        sampleCount,
+        visiblePixelCount,
+        alphaPixelCount,
+        uniqueColorCount: unique.size,
+        reason: safeString(error && error.message ? error.message : error).slice(0, 600)
+      };
+    }
+
+    const visible = visiblePixelCount > 0;
+
+    return {
+      status: visible
+        ? "PIXEL_SAMPLE_VISIBLE"
+        : alphaPixelCount > 0
+          ? "PIXEL_SAMPLE_ALPHA_ONLY_OR_BLACK"
+          : "PIXEL_SAMPLE_BLANK",
+      visible,
+      sampleCount,
+      visiblePixelCount,
+      alphaPixelCount,
+      uniqueColorCount: unique.size,
+      reason: visible
+        ? "VISIBLE_NON_BLANK_PIXELS_FOUND"
+        : alphaPixelCount > 0
+          ? "ALPHA_PRESENT_WITH_NO_NON_BLACK_VISIBLE_RGB_SAMPLE"
+          : "NO_VISIBLE_NON_BLANK_PIXELS_IN_SAMPLE_GRID"
+    };
   }
 
   function scanCanvasSurface() {
@@ -835,6 +990,7 @@
           style &&
           style.display !== "none" &&
           style.visibility !== "hidden" &&
+          style.visibility !== "collapse" &&
           safeNumber(style.opacity, 1) > 0
         );
       }
@@ -842,28 +998,7 @@
       computedVisible = rectNonzero;
     }
 
-    let context2DReady = false;
-    let pixelStatus = "NO_PIXEL_SAMPLE";
-    let visiblePixelCount = 0;
-
-    try {
-      const ctx = surface.ctx || (canvas && canvas.getContext && canvas.getContext("2d"));
-      context2DReady = Boolean(ctx);
-
-      if (ctx && attrWidth > 0 && attrHeight > 0) {
-        const sampleWidth = Math.max(1, Math.min(12, attrWidth));
-        const sampleHeight = Math.max(1, Math.min(12, attrHeight));
-        const data = ctx.getImageData(0, 0, sampleWidth, sampleHeight).data;
-
-        for (let index = 3; index < data.length; index += 4) {
-          if (data[index] > 0) visiblePixelCount += 1;
-        }
-
-        pixelStatus = visiblePixelCount > 0 ? "PIXEL_SAMPLE_VISIBLE" : "PIXEL_SAMPLE_TRANSPARENT";
-      }
-    } catch (error) {
-      pixelStatus = `PIXEL_SAMPLE_UNREADABLE:${safeString(error && error.message ? error.message : error).slice(0, 120)}`;
-    }
+    const sample = sampleCanvasPixels();
 
     state.canvasMountFound = Boolean(mount);
     state.canvasMountSelector = mount ? surface.mountSelector || describeElement(mount) : "UNKNOWN";
@@ -872,11 +1007,21 @@
     state.canvasInMount = Boolean(canvas && mount && mount.contains && mount.contains(canvas));
     state.canvasRectNonzero = rectNonzero;
     state.canvasComputedVisible = computedVisible;
-    state.canvasContext2DReady = context2DReady;
-    state.canvasPixelSampleStatus = pixelStatus;
-    state.canvasVisiblePixelCount = visiblePixelCount;
+    state.canvasContext2DReady = Boolean(surface.ctx || (canvas && canvas.getContext));
+    state.canvasPixelSampleStatus = sample.status;
+    state.canvasPixelVisible = sample.visible;
+    state.canvasPixelSampleCount = sample.sampleCount;
+    state.canvasVisiblePixelCount = sample.visiblePixelCount;
+    state.canvasAlphaPixelCount = sample.alphaPixelCount;
+    state.canvasUniqueColorCount = sample.uniqueColorCount;
     state.canvasDomSurfaceMounted = Boolean(canvas && rectNonzero && computedVisible);
-    state.canvasDomSurfaceProofReady = Boolean(state.canvasDomSurfaceMounted || visiblePixelCount > 0);
+    state.canvasDomSurfaceProofReady = Boolean(state.canvasDomSurfaceMounted && sample.visible);
+    state.finalCanvasPixelVisible = sample.visible;
+    state.finalCanvasPixelFailureClass = sample.visible
+      ? "NONE_CANVAS_VISIBLE_PIXELS_PRESENT"
+      : sample.status === "PIXEL_SAMPLE_BLANK"
+        ? "CANVAS_PIXEL_SAMPLE_BLANK"
+        : sample.status;
 
     return {
       canvasMountFound: state.canvasMountFound,
@@ -888,15 +1033,189 @@
       canvasComputedVisible: state.canvasComputedVisible,
       canvasContext2DReady: state.canvasContext2DReady,
       canvasPixelSampleStatus: state.canvasPixelSampleStatus,
+      canvasPixelVisible: state.canvasPixelVisible,
       canvasVisiblePixelCount: state.canvasVisiblePixelCount,
+      canvasAlphaPixelCount: state.canvasAlphaPixelCount,
+      canvasUniqueColorCount: state.canvasUniqueColorCount,
       canvasDomSurfaceMounted: state.canvasDomSurfaceMounted,
       canvasDomSurfaceProofReady: state.canvasDomSurfaceProofReady
     };
   }
 
+  function drawLocalVisibleCarrierFrame(reason = "manual") {
+    state.canvasLocalVisibleDrawAttempted = true;
+    state.canvasLocalVisibleDrawReason = reason;
+
+    if (!bindSurface()) {
+      state.canvasLocalVisibleDrawExecuted = false;
+      state.canvasLocalDrawFailureReason = "CANVAS_SURFACE_NOT_BOUND";
+      scanCanvasSurface();
+      return false;
+    }
+
+    resizeSurface();
+
+    const canvas = surface.canvas;
+    const ctx = surface.ctx;
+
+    state.canvasLocalPixelSampleBeforeDraw = sampleCanvasPixels();
+
+    if (!canvas || !ctx) {
+      state.canvasLocalVisibleDrawExecuted = false;
+      state.canvasLocalDrawFailureReason = "CANVAS_CONTEXT_2D_UNAVAILABLE";
+      scanCanvasSurface();
+      return false;
+    }
+
+    const width = safeNumber(canvas.width, 0);
+    const height = safeNumber(canvas.height, 0);
+
+    if (width <= 0 || height <= 0) {
+      state.canvasLocalVisibleDrawExecuted = false;
+      state.canvasLocalDrawFailureReason = "CANVAS_DIMENSIONS_ZERO";
+      scanCanvasSurface();
+      return false;
+    }
+
+    try {
+      if (ctx.setTransform) ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, width, height);
+
+      ctx.fillStyle = "rgba(7, 17, 26, 1)";
+      ctx.fillRect(0, 0, width, height);
+
+      const cx = width * 0.5;
+      const cy = height * 0.5;
+      const baseRadius = Math.max(12, Math.min(width, height) * 0.38 * clamp(view.zoom, 0.72, 1.28));
+      const pitchOffset = clamp(view.pitch, -1.25, 1.25) * baseRadius * 0.18;
+
+      const atmosphere = ctx.createRadialGradient(cx - baseRadius * 0.28, cy - baseRadius * 0.35 + pitchOffset, baseRadius * 0.05, cx, cy + pitchOffset, baseRadius * 1.16);
+      atmosphere.addColorStop(0, "rgba(108, 184, 255, 0.72)");
+      atmosphere.addColorStop(0.38, "rgba(37, 93, 136, 0.88)");
+      atmosphere.addColorStop(0.78, "rgba(13, 42, 66, 0.95)");
+      atmosphere.addColorStop(1, "rgba(2, 9, 15, 1)");
+
+      ctx.beginPath();
+      ctx.arc(cx, cy + pitchOffset, baseRadius, 0, Math.PI * 2);
+      ctx.fillStyle = atmosphere;
+      ctx.fill();
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(cx, cy + pitchOffset, baseRadius * 0.985, 0, Math.PI * 2);
+      ctx.clip();
+
+      const yaw = safeNumber(view.yaw, 0);
+      const pitch = safeNumber(view.pitch, 0);
+
+      ctx.globalAlpha = 0.92;
+      for (let band = -4; band <= 4; band += 1) {
+        const y = cy + pitchOffset + (band / 5) * baseRadius * 0.75 + Math.sin(yaw + band) * baseRadius * 0.025;
+        const bandWidth = baseRadius * (0.95 - Math.abs(band) * 0.075);
+        const x = cx + Math.sin(yaw * 0.7 + band * 1.7) * baseRadius * 0.18;
+        const h = Math.max(5, baseRadius * (0.06 + (band % 2 === 0 ? 0.025 : 0.012)));
+
+        ctx.beginPath();
+        ctx.ellipse(x, y, bandWidth * 0.52, h, Math.sin(yaw + band) * 0.25, 0, Math.PI * 2);
+        ctx.fillStyle = band % 2 === 0
+          ? "rgba(118, 150, 96, 0.72)"
+          : "rgba(88, 122, 86, 0.54)";
+        ctx.fill();
+      }
+
+      ctx.globalAlpha = 0.52;
+      for (let mark = 0; mark < 18; mark += 1) {
+        const angle = yaw * 0.55 + mark * 2.3999632297;
+        const r = baseRadius * (0.18 + ((mark * 37) % 61) / 100);
+        const x = cx + Math.cos(angle) * r * 0.82;
+        const y = cy + pitchOffset + Math.sin(angle + pitch) * r * 0.55;
+        const w = baseRadius * (0.035 + ((mark * 11) % 17) / 800);
+        const h = baseRadius * (0.012 + ((mark * 7) % 13) / 1200);
+
+        ctx.beginPath();
+        ctx.ellipse(x, y, w, h, angle * 0.37, 0, Math.PI * 2);
+        ctx.fillStyle = mark % 3 === 0
+          ? "rgba(175, 148, 101, 0.7)"
+          : "rgba(71, 118, 92, 0.64)";
+        ctx.fill();
+      }
+
+      ctx.restore();
+
+      ctx.beginPath();
+      ctx.arc(cx, cy + pitchOffset, baseRadius, 0, Math.PI * 2);
+      ctx.lineWidth = Math.max(1, baseRadius * 0.018);
+      ctx.strokeStyle = "rgba(185, 229, 255, 0.64)";
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(cx - baseRadius * 0.18, cy - baseRadius * 0.18 + pitchOffset, baseRadius * 0.28, 0, Math.PI * 2);
+      const highlight = ctx.createRadialGradient(
+        cx - baseRadius * 0.22,
+        cy - baseRadius * 0.22 + pitchOffset,
+        0,
+        cx - baseRadius * 0.18,
+        cy - baseRadius * 0.18 + pitchOffset,
+        baseRadius * 0.42
+      );
+      highlight.addColorStop(0, "rgba(255,255,255,0.22)");
+      highlight.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = highlight;
+      ctx.fill();
+
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = "rgba(142, 218, 255, 0.55)";
+      ctx.fillRect(Math.max(0, cx - 2), Math.max(0, cy + pitchOffset - 2), 4, 4);
+
+      state.canvasLocalVisibleDrawExecuted = true;
+      state.canvasLocalDrawFailureReason = "NONE";
+      state.canvasLocalVisibleDrawCount += 1;
+      state.renderFrameCount += 1;
+
+      state.canvasLocalPixelSampleAfterDraw = sampleCanvasPixels();
+      scanCanvasSurface();
+
+      if (state.finalCanvasPixelVisible) {
+        state.firstFailedCoordinate = "NONE_CANVAS_LOCAL_VISIBLE_PIXEL_PROOF_READY";
+        state.recommendedNextFile = HEX_SURFACE_FILE;
+        state.recommendedNextAction = state.hexSurfaceReceiverReady
+          ? "OBSERVE_HEX_SURFACE_GATE_AND_POINTER_FINGER_TRANSMISSION"
+          : "CONFIRM_HEX_SURFACE_PUBLIC_GATE_RECEIVER";
+        state.postgameStatus = "CANVAS_LOCAL_VISIBLE_PIXEL_PROOF_READY";
+      } else {
+        state.firstFailedCoordinate = "CANVAS_LOCAL_DRAW_EXECUTED_BUT_PIXEL_SAMPLE_NOT_VISIBLE";
+        state.recommendedNextFile = FILE;
+        state.recommendedNextAction = "AUDIT_CANVAS_LOCAL_VISIBLE_DRAW_PATH_AND_PIXEL_SAMPLE_GRID";
+        state.postgameStatus = "CANVAS_LOCAL_DRAW_EXECUTED_PIXEL_PROOF_FAILED";
+      }
+
+      record("HEARTH_CANVAS_LOCAL_VISIBLE_PIXEL_FRAME_DRAWN", {
+        reason,
+        sampleStatus: state.canvasPixelSampleStatus,
+        visiblePixelCount: state.canvasVisiblePixelCount,
+        finalCanvasPixelVisible: state.finalCanvasPixelVisible,
+        visualPassClaimed: false
+      });
+
+      updateDatasetLight();
+      return true;
+    } catch (error) {
+      state.canvasLocalVisibleDrawExecuted = false;
+      state.canvasLocalDrawFailureReason = safeString(error && error.message ? error.message : error).slice(0, 700);
+      state.firstFailedCoordinate = "CANVAS_LOCAL_DRAW_THROWN";
+      state.recommendedNextFile = FILE;
+      state.recommendedNextAction = "AUDIT_CANVAS_LOCAL_VISIBLE_DRAW_EXCEPTION";
+      state.postgameStatus = "CANVAS_LOCAL_VISIBLE_DRAW_FAILED";
+      recordError("HEARTH_CANVAS_LOCAL_VISIBLE_DRAW_FAILED", error, { reason });
+      scanCanvasSurface();
+      updateDatasetLight();
+      return false;
+    }
+  }
+
   function readHexAuthority() {
     const found = firstGlobal(HEX_AUTHORITY_ALIASES);
-    const receipt = readAuthorityReceipt(found.value) || {};
+    const receipt = readAuthoritySnapshot(found.value);
     const contract = firstNonEmpty(
       contractOf(receipt),
       found.value && found.value.contract,
@@ -930,6 +1249,7 @@
     return [
       "receiveCanvasHexGatePacket",
       "consumeCanvasHexGatePacket",
+      "acceptCanvasHexGatePacket",
       "receiveCanvasViewPacket",
       "consumeCanvasViewPacket",
       "receiveCanvasFramePacket",
@@ -949,7 +1269,7 @@
 
   function readHexSurfaceAuthority() {
     const found = firstGlobal(HEX_SURFACE_ALIASES);
-    const receipt = readAuthorityReceipt(found.value) || {};
+    const receipt = readAuthoritySnapshot(found.value);
     const contract = firstNonEmpty(
       contractOf(receipt),
       found.value && found.value.contract,
@@ -1014,7 +1334,9 @@
       targetFile === FILE ||
       targetFile.endsWith("/hearth.canvas.js") ||
       packet.canvasReleaseAuthorized === true ||
-      packet.canvasReleasePacketReady === true
+      packet.canvasReleasePacketReady === true ||
+      packet.visiblePlanetProofReady === true ||
+      packet.renderedPlanetProofReady === true
     );
   }
 
@@ -1037,8 +1359,13 @@
   function validateRouteRelease(packet) {
     if (!isObject(packet)) return { accepted: false, reason: "ROUTE_RELEASE_PACKET_NOT_OBJECT" };
     if (!hasNoForbiddenClaims(packet)) return { accepted: false, reason: "ROUTE_RELEASE_PACKET_CONTAINS_FORBIDDEN_FINAL_CLAIM" };
-    if (!packetTargetsCanvas(packet)) return { accepted: false, reason: "ROUTE_RELEASE_PACKET_DOES_NOT_TARGET_CANVAS" };
-    if (!packetSourceIsRouteConductor(packet)) return { accepted: false, reason: "ROUTE_RELEASE_PACKET_NOT_FROM_ROUTE_CONDUCTOR" };
+
+    const targetsCanvas = packetTargetsCanvas(packet);
+    const sourceIsRoute = packetSourceIsRouteConductor(packet);
+
+    if (!targetsCanvas && !sourceIsRoute) {
+      return { accepted: false, reason: "ROUTE_RELEASE_PACKET_DOES_NOT_TARGET_CANVAS_OR_ROUTE_CONDUCTOR" };
+    }
 
     return { accepted: true, reason: "ROUTE_RELEASE_ACCEPTED_BY_CANVAS" };
   }
@@ -1070,6 +1397,10 @@
     state.routeReleasePacket = clonePlain(packet);
     state.routeReleaseSource = source;
     state.routeReleaseStatus = "ACCEPTED_ROUTE_CONDUCTOR_CANVAS_RELEASE";
+    state.downstreamExpressionPacketObserved = true;
+    state.downstreamExpressionPacketSource = source;
+    state.downstreamExpressionPacketDrawable = true;
+    state.downstreamExpressionPacketDrawableReason = "ROUTE_RELEASE_PACKET_ACCEPTED_AS_CANVAS_DRAWABLE_CARRIER_CONTEXT";
 
     bindSurface({
       mount: packet.mount && packet.mount.nodeType === 1 ? packet.mount : null
@@ -1078,21 +1409,24 @@
     readHexAuthority();
     readHexSurfaceAuthority();
 
-    state.firstFailedCoordinate = state.hexSurfaceReceiverReady
-      ? "NONE_ROUTE_RELEASE_ACCEPTED_HEX_GATE_READY"
-      : "WAITING_HEX_SURFACE_GATE";
-    state.recommendedNextFile = state.hexSurfaceReceiverReady ? HEX_SURFACE_FILE : HEX_SURFACE_FILE;
+    drawLocalVisibleCarrierFrame("route-release");
+
+    state.firstFailedCoordinate = state.finalCanvasPixelVisible
+      ? "NONE_ROUTE_RELEASE_ACCEPTED_LOCAL_PIXEL_VISIBLE"
+      : "CANVAS_ROUTE_RELEASE_ACCEPTED_PIXEL_NOT_VISIBLE";
+    state.recommendedNextFile = state.hexSurfaceReceiverReady ? HEX_SURFACE_FILE : FILE;
     state.recommendedNextAction = state.hexSurfaceReceiverReady
       ? "DELIVER_CANVAS_SURFACE_VIEW_PACKET_THROUGH_HEX_GATE"
-      : "CONFIRM_HEX_SURFACE_PUBLIC_GATE_RECEIVER";
-    state.postgameStatus = state.hexSurfaceReceiverReady
-      ? "CANVAS_ROUTE_RELEASE_ACCEPTED_HEX_GATE_READY"
-      : "CANVAS_ROUTE_RELEASE_ACCEPTED_WAITING_HEX_GATE";
+      : "VERIFY_LOCAL_DRAW_AND_HEX_SURFACE_GATE";
+    state.postgameStatus = state.finalCanvasPixelVisible
+      ? "CANVAS_ROUTE_RELEASE_ACCEPTED_LOCAL_PIXEL_VISIBLE"
+      : "CANVAS_ROUTE_RELEASE_ACCEPTED_PIXEL_PROOF_FAILED";
 
     record("HEARTH_CANVAS_ROUTE_RELEASE_ACCEPTED", {
       source,
       routeConductorContract: packet.contract || packet.sourceContract || "",
       canvasSurfaceMounted: state.canvasDomSurfaceMounted,
+      finalCanvasPixelVisible: state.finalCanvasPixelVisible,
       hexSurfaceReceiverReady: state.hexSurfaceReceiverReady
     });
 
@@ -1161,7 +1495,10 @@
       packet.viewState ||
       packet.deltaYaw !== undefined ||
       packet.deltaPitch !== undefined ||
-      packet.deltaZoom !== undefined;
+      packet.deltaZoom !== undefined ||
+      packet.yaw !== undefined ||
+      packet.pitch !== undefined ||
+      packet.zoom !== undefined;
 
     const targetsCanvas =
       handoffTo.toUpperCase().includes("CANVAS") ||
@@ -1191,6 +1528,11 @@
     view.yaw += safeNumber(packet && packet.deltaYaw, 0);
     view.pitch = clamp(view.pitch + safeNumber(packet && packet.deltaPitch, 0), view.minPitch, view.maxPitch);
     view.zoom = clamp(view.zoom + safeNumber(packet && packet.deltaZoom, 0), view.minZoom, view.maxZoom);
+
+    if (packet && packet.yaw !== undefined) view.yaw = safeNumber(packet.yaw, view.yaw);
+    if (packet && packet.pitch !== undefined) view.pitch = clamp(packet.pitch, view.minPitch, view.maxPitch);
+    if (packet && packet.zoom !== undefined) view.zoom = clamp(packet.zoom, view.minZoom, view.maxZoom);
+
     view.phase = 0;
   }
 
@@ -1232,13 +1574,27 @@
     state.lastViewPacket = clonePlain(packet);
     state.packetCount += 1;
 
+    state.downstreamExpressionPacketObserved = true;
+    state.downstreamExpressionPacketSource = source;
+    state.downstreamExpressionPacketDrawable = true;
+    state.downstreamExpressionPacketDrawableReason = "CONTROL_VIEW_PACKET_ACCEPTED_AS_CANVAS_DRAWABLE_VIEW_CONTEXT";
+
     normalizeViewFromPacket(packet);
     bindSurface();
+    readHexAuthority();
+    readHexSurfaceAuthority();
+    drawLocalVisibleCarrierFrame("control-view-packet");
 
-    state.firstFailedCoordinate = "NONE_CONTROL_PACKET_ACCEPTED";
-    state.recommendedNextFile = HEX_SURFACE_FILE;
-    state.recommendedNextAction = "TRANSMIT_CANVAS_VIEW_PACKET_THROUGH_HEX_GATE";
-    state.postgameStatus = "CANVAS_CONTROL_PACKET_ACCEPTED_HEX_GATE_TRANSMISSION_PENDING";
+    state.firstFailedCoordinate = state.finalCanvasPixelVisible
+      ? "NONE_CONTROL_PACKET_ACCEPTED_LOCAL_PIXEL_VISIBLE"
+      : "CANVAS_CONTROL_PACKET_ACCEPTED_PIXEL_NOT_VISIBLE";
+    state.recommendedNextFile = state.hexSurfaceReceiverReady ? HEX_SURFACE_FILE : FILE;
+    state.recommendedNextAction = state.hexSurfaceReceiverReady
+      ? "TRANSMIT_CANVAS_VIEW_PACKET_THROUGH_HEX_GATE"
+      : "VERIFY_HEX_SURFACE_PUBLIC_GATE_RECEIVER";
+    state.postgameStatus = state.finalCanvasPixelVisible
+      ? "CANVAS_CONTROL_PACKET_ACCEPTED_LOCAL_PIXEL_VISIBLE_HEX_GATE_PENDING"
+      : "CANVAS_CONTROL_PACKET_ACCEPTED_LOCAL_PIXEL_PROOF_FAILED";
 
     scheduleHexGateFrame("control-view-packet", packet);
     updateDatasetLight();
@@ -1316,19 +1672,26 @@
 
   function composeHexGatePacket(sourcePacket = null, includeRuntimeHandles = false) {
     const control = isObject(sourcePacket) ? sourcePacket : state.lastViewPacket || {};
+    const surfaceScan = scanCanvasSurface();
 
     const packet = {
       packetType: CANVAS_HEX_GATE_PACKET_TYPE,
       contract: CONTRACT,
       receipt: RECEIPT,
+      canvasContract: CONTRACT,
+      canvasReceipt: RECEIPT,
+      currentCanvasParentContract: CONTRACT,
+      currentCanvasParentReceipt: RECEIPT,
       internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
       internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
+      previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
+      previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       previousReceipt: PREVIOUS_RECEIPT,
 
       sourceFile: FILE,
       sourceAuthority: "HEARTH_CANVAS_HUB",
-      sourceRole: "canvas-receiver-output-carrier",
+      sourceRole: "canvas-receiver-output-carrier-local-visible-pixel-proof",
       destinationFile: HEX_SURFACE_FILE,
       targetFile: HEX_SURFACE_FILE,
       handoffTo: "HEX_SURFACE_GATE",
@@ -1343,8 +1706,8 @@
       hexAuthorityFile: HEX_AUTHORITY_FILE,
 
       pointerFingerFile: POINTER_FINGER_FILE,
-      pointerFingerBoundaryFile: POINTER_FINGER_BOUNDARY_FILE,
       pointerFingerSurfaceFile: POINTER_FINGER_SURFACE_FILE,
+      pointerFingerBoundaryFile: POINTER_FINGER_BOUNDARY_FILE,
       pointerFingerLightFile: POINTER_FINGER_LIGHT_FILE,
       pointerFingerDirectCallSuppressed: true,
 
@@ -1387,8 +1750,30 @@
         rectNonzero: state.canvasRectNonzero,
         computedVisible: state.canvasComputedVisible,
         context2DReady: state.canvasContext2DReady,
+        pixelSampleStatus: state.canvasPixelSampleStatus,
+        pixelVisible: state.canvasPixelVisible,
+        visiblePixelCount: state.canvasVisiblePixelCount,
         domSurfaceMounted: state.canvasDomSurfaceMounted,
-        domSurfaceProofReady: state.canvasDomSurfaceProofReady
+        domSurfaceProofReady: state.canvasDomSurfaceProofReady,
+        scan: clonePlain(surfaceScan)
+      },
+
+      localVisiblePixelProof: {
+        attempted: state.canvasLocalVisibleDrawAttempted,
+        executed: state.canvasLocalVisibleDrawExecuted,
+        drawCount: state.canvasLocalVisibleDrawCount,
+        reason: state.canvasLocalVisibleDrawReason,
+        sampleBeforeDraw: clonePlain(state.canvasLocalPixelSampleBeforeDraw),
+        sampleAfterDraw: clonePlain(state.canvasLocalPixelSampleAfterDraw),
+        finalCanvasPixelVisible: state.finalCanvasPixelVisible,
+        finalCanvasPixelFailureClass: state.finalCanvasPixelFailureClass
+      },
+
+      downstreamExpression: {
+        packetObserved: state.downstreamExpressionPacketObserved,
+        packetSource: state.downstreamExpressionPacketSource,
+        packetDrawable: state.downstreamExpressionPacketDrawable,
+        packetDrawableReason: state.downstreamExpressionPacketDrawableReason
       },
 
       hexSurfaceGate: {
@@ -1409,6 +1794,7 @@
       },
 
       canvasReceiverOutputCarrierActive: true,
+      canvasLocalVisiblePixelProofActive: true,
       hexGateTransmissionActive: true,
       canvasBishopInspectionSuppressed: true,
       canvasBishopMutationSuppressed: true,
@@ -1476,6 +1862,76 @@
     } catch (_error) {}
   }
 
+  function deliveryReceiptIndicatesAcceptance(receipt, method) {
+    if (!isObject(receipt)) {
+      return Boolean(
+        method.includes("draw") ||
+        method.includes("receive") ||
+        method.includes("consume") ||
+        method.includes("accept")
+      );
+    }
+
+    return Boolean(
+      safeBool(readField(receipt, [
+        "hexGatePacketAccepted",
+        "canvasHexGatePacketAccepted",
+        "canvasPacketAccepted",
+        "viewPacketAccepted",
+        "interactiveFrameAccepted",
+        "drawAccepted",
+        "pairFrameAccepted",
+        "pointerFingerGateOpen",
+        "hexSurfaceReceivesCorrectedProjectionState",
+        "accepted"
+      ], false), false) ||
+      safeString(readField(receipt, [
+        "lastValidationStatus",
+        "validationStatus",
+        "pointerFingerTransmissionStatus",
+        "postgameStatus"
+      ], "")).includes("ACCEPTED") ||
+      safeString(readField(receipt, [
+        "pointerFingerTransmissionStatus",
+        "postgameStatus"
+      ], "")).includes("DELIVERED") ||
+      method.includes("draw") ||
+      method.includes("receive") ||
+      method.includes("consume") ||
+      method.includes("accept")
+    );
+  }
+
+  function inspectPointerFingerObservationFromReceipt(receipt) {
+    if (!isObject(receipt)) return { observed: false, source: "NONE" };
+
+    const transmissionPacket = receipt.transmissionPacket || receipt.lastPointerFingerTransmissionPacket;
+    const delivery = receipt.delivery;
+
+    if (transmissionPacket || isObject(delivery)) {
+      return {
+        observed: true,
+        source: transmissionPacket ? "HEX_SURFACE_TRANSMISSION_PACKET" : "HEX_SURFACE_DELIVERY_OBJECT"
+      };
+    }
+
+    const statusText = [
+      receipt.pointerFingerTransmissionStatus,
+      receipt.POINTER_FINGER_TRANSMISSION_STATUS,
+      receipt.postgameStatus,
+      receipt.POSTGAME_STATUS
+    ].map((value) => safeString(value)).join(" ");
+
+    if (/POINTER_FINGER|TRANSMISSION_DELIVERED|WAITING_POINTER_FINGER/i.test(statusText)) {
+      return {
+        observed: true,
+        source: "HEX_SURFACE_RECEIPT_STATUS_TEXT"
+      };
+    }
+
+    return { observed: false, source: "NONE" };
+  }
+
   function deliverHexGatePacket(packet) {
     bindSurface();
     scanCanvasSurface();
@@ -1492,14 +1948,22 @@
 
     if (!hex.authority || !isObject(hex.authority) || !hex.receiverReady) {
       state.hexGateMissCount += 1;
+      state.hexGatePacketDelivered = false;
+      state.hexGateAcceptedByHexSurface = false;
       state.hexSurfaceDeliveryStatus = "HEX_SURFACE_GATE_PENDING_PACKET_PUBLISHED";
       state.hexSurfaceDeliveryMethod = "GLOBAL_PACKET_PUBLICATION";
       state.hexSurfaceDeliveryReason = "WAITING_HEX_SURFACE_PUBLIC_GATE_RECEIVER";
       state.hexSurfaceAcceptedPacket = false;
-      state.firstFailedCoordinate = "WAITING_HEX_SURFACE_PUBLIC_GATE_RECEIVER";
-      state.recommendedNextFile = HEX_SURFACE_FILE;
-      state.recommendedNextAction = "CONFIRM_HEX_SURFACE_PUBLIC_GATE_RECEIVER";
-      state.postgameStatus = "CANVAS_PACKET_PUBLISHED_WAITING_HEX_GATE";
+      state.firstFailedCoordinate = state.finalCanvasPixelVisible
+        ? "WAITING_HEX_SURFACE_PUBLIC_GATE_RECEIVER_AFTER_LOCAL_PIXEL_VISIBLE"
+        : "WAITING_HEX_SURFACE_PUBLIC_GATE_RECEIVER_AND_PIXEL_NOT_VISIBLE";
+      state.recommendedNextFile = state.finalCanvasPixelVisible ? HEX_SURFACE_FILE : FILE;
+      state.recommendedNextAction = state.finalCanvasPixelVisible
+        ? "CONFIRM_HEX_SURFACE_PUBLIC_GATE_RECEIVER"
+        : "VERIFY_CANVAS_LOCAL_DRAW_THEN_HEX_SURFACE_PUBLIC_GATE_RECEIVER";
+      state.postgameStatus = state.finalCanvasPixelVisible
+        ? "CANVAS_PIXEL_VISIBLE_PACKET_PUBLISHED_WAITING_HEX_GATE"
+        : "CANVAS_PACKET_PUBLISHED_WAITING_HEX_GATE_PIXEL_NOT_VISIBLE";
 
       broadcastHexGatePacket(payload);
       updateDatasetLight();
@@ -1531,32 +1995,29 @@
             context2d: surface.ctx,
             mount: surface.mount,
             mountSelector: state.canvasMountSelector,
+            canvasSelector: state.canvasSelector,
             pointerFingerDirectCallSuppressed: true,
+            canvasLocalVisiblePixelProofAlreadyExecuted: state.canvasLocalVisibleDrawExecuted,
+            finalCanvasPixelVisible: state.finalCanvasPixelVisible,
             ...NO_CLAIMS
           });
         } else {
-          result = hex.authority[method](payload);
+          result = hex.authority[method](payload, {
+            sourceFile: FILE,
+            targetRoute: ROUTE,
+            pointerFingerDirectCallSuppressed: true,
+            finalCanvasPixelVisible: state.finalCanvasPixelVisible,
+            ...NO_CLAIMS
+          });
         }
 
-        const receipt = isObject(result) ? result : readAuthorityReceipt(hex.authority) || {};
-        const accepted = Boolean(
-          safeBool(readField(receipt, [
-            "hexGatePacketAccepted",
-            "canvasHexGatePacketAccepted",
-            "canvasPacketAccepted",
-            "viewPacketAccepted",
-            "interactiveFrameAccepted",
-            "drawAccepted",
-            "pairFrameAccepted",
-            "pointerFingerGateOpen",
-            "hexSurfaceReceivesCorrectedProjectionState"
-          ], false), false) ||
-          method.includes("draw") ||
-          method.includes("receive") ||
-          method.includes("consume")
-        );
+        const receipt = isObject(result) ? result : readAuthoritySnapshot(hex.authority);
+        const accepted = deliveryReceiptIndicatesAcceptance(receipt, method);
+        const pointerObservation = inspectPointerFingerObservationFromReceipt(receipt);
 
         state.hexGateDeliveryCount += 1;
+        state.hexGatePacketDelivered = true;
+        state.hexGateAcceptedByHexSurface = accepted;
         state.hexSurfaceDeliveryStatus = accepted
           ? "CANVAS_PACKET_DELIVERED_THROUGH_HEX_GATE"
           : "HEX_SURFACE_CALLED_WITHOUT_ACCEPTANCE_RECEIPT";
@@ -1565,13 +2026,29 @@
           ? "HEX_SURFACE_PUBLIC_GATE_RECEIVER_CALLED"
           : "HEX_SURFACE_PUBLIC_GATE_RETURNED_WITHOUT_ACCEPTANCE";
         state.hexSurfaceAcceptedPacket = accepted;
-        state.firstFailedCoordinate = accepted ? "NONE_HEX_GATE_TRANSMISSION_DELIVERED" : "HEX_GATE_ACCEPTANCE_NOT_CONFIRMED";
-        state.recommendedNextFile = accepted ? POINTER_FINGER_FILE : HEX_SURFACE_FILE;
+        state.pointerFingerTransmissionObserved = pointerObservation.observed;
+        state.pointerFingerTransmissionSource = pointerObservation.source;
+        state.lastHexGateDeliveryReceipt = clonePlain(receipt);
+
+        state.firstFailedCoordinate = accepted
+          ? state.finalCanvasPixelVisible
+            ? "NONE_LOCAL_PIXEL_VISIBLE_HEX_GATE_ACCEPTED"
+            : "HEX_GATE_ACCEPTED_BUT_CANVAS_PIXEL_NOT_VISIBLE"
+          : "HEX_GATE_ACCEPTANCE_NOT_CONFIRMED";
+        state.recommendedNextFile = accepted
+          ? state.pointerFingerTransmissionObserved
+            ? POINTER_FINGER_FILE
+            : HEX_SURFACE_FILE
+          : HEX_SURFACE_FILE;
         state.recommendedNextAction = accepted
-          ? "OBSERVE_POINTER_FINGER_INTEGRATION_DOWNSTREAM_OF_HEX_GATE"
+          ? state.pointerFingerTransmissionObserved
+            ? "OBSERVE_POINTER_FINGER_DOWNSTREAM_RESPONSE"
+            : "VERIFY_HEX_SURFACE_PUBLISHES_POINTER_FINGER_TRANSMISSION_RECEIPT"
           : "CONFIRM_HEX_SURFACE_ACCEPTANCE_RECEIPT";
         state.postgameStatus = accepted
-          ? "CANVAS_TRANSMISSION_COMMANDED_THROUGH_HEX_GATE"
+          ? state.finalCanvasPixelVisible
+            ? "CANVAS_LOCAL_PIXEL_VISIBLE_AND_HEX_GATE_ACCEPTED"
+            : "HEX_GATE_ACCEPTED_CANVAS_PIXEL_STILL_NOT_VISIBLE"
           : "CANVAS_TRANSMISSION_REACHED_HEX_GATE_ACCEPTANCE_UNCONFIRMED";
 
         broadcastHexGatePacket(payload);
@@ -1582,7 +2059,9 @@
           method,
           accepted,
           hexSurfaceContract: state.hexSurfaceContract,
-          canvasSurfaceMounted: state.canvasDomSurfaceMounted,
+          canvasLocalVisibleDrawExecuted: state.canvasLocalVisibleDrawExecuted,
+          finalCanvasPixelVisible: state.finalCanvasPixelVisible,
+          pointerFingerTransmissionObserved: state.pointerFingerTransmissionObserved,
           pointerFingerDirectCallSuppressed: true
         });
 
@@ -1591,7 +2070,8 @@
           accepted,
           method,
           reason: state.hexSurfaceDeliveryReason,
-          receipt: clonePlain(receipt)
+          receipt: clonePlain(receipt),
+          pointerFingerTransmissionObserved: state.pointerFingerTransmissionObserved
         };
       } catch (error) {
         recordError("HEARTH_CANVAS_HEX_GATE_METHOD_FAILED", error, { method });
@@ -1599,6 +2079,8 @@
     }
 
     state.hexGateMissCount += 1;
+    state.hexGatePacketDelivered = false;
+    state.hexGateAcceptedByHexSurface = false;
     state.hexSurfaceDeliveryStatus = "HEX_SURFACE_METHODS_FAILED_PACKET_PUBLISHED";
     state.hexSurfaceDeliveryMethod = "GLOBAL_PACKET_PUBLICATION";
     state.hexSurfaceDeliveryReason = "HEX_SURFACE_PUBLIC_METHODS_FAILED";
@@ -1655,8 +2137,9 @@
     frame.pendingReason = "";
     frame.flushCount += 1;
 
-    state.renderFrameCount += 1;
     state.lastHexGateReason = reason;
+
+    drawLocalVisibleCarrierFrame(`frame:${reason}`);
 
     const packet = composeHexGatePacket(sourcePacket, false);
     return deliverHexGatePacket(packet);
@@ -1674,12 +2157,92 @@
       doc.addEventListener("hearth:planetary-view-control", receiveEvent, { passive: true });
       doc.addEventListener("hearth:queen-view-control", receiveEvent, { passive: true });
       doc.addEventListener("hearth:canvas-view-state", receiveEvent, { passive: true });
+      doc.addEventListener("hearth:controls-view-delta", receiveEvent, { passive: true });
+
+      if (root && isFunction(root.addEventListener)) {
+        root.addEventListener("hearth:planetary-view-control", receiveEvent, { passive: true });
+        root.addEventListener("hearth:queen-view-control", receiveEvent, { passive: true });
+        root.addEventListener("hearth:canvas-view-state", receiveEvent, { passive: true });
+        root.addEventListener("hearth:controls-view-delta", receiveEvent, { passive: true });
+      }
+
       state.listenerBound = true;
       return true;
     } catch (error) {
       recordError("HEARTH_CANVAS_EVENT_LISTENER_BIND_FAILED", error);
       return false;
     }
+  }
+
+  function deriveNextCoordinates() {
+    if (!state.canvasMountFound) {
+      state.firstFailedCoordinate = "CANVAS_MOUNT_FOUND";
+      state.recommendedNextFile = HTML_FILE;
+      state.recommendedNextAction = "RESTORE_OR_EXPOSE_HEARTH_CANVAS_MOUNT";
+      state.postgameStatus = "CANVAS_MOUNT_NOT_FOUND";
+      return;
+    }
+
+    if (!state.canvasElementFound) {
+      state.firstFailedCoordinate = "CANVAS_ELEMENT_FOUND";
+      state.recommendedNextFile = FILE;
+      state.recommendedNextAction = "CREATE_OR_BIND_REAL_CANVAS_ELEMENT";
+      state.postgameStatus = "CANVAS_ELEMENT_NOT_FOUND";
+      return;
+    }
+
+    if (!state.canvasContext2DReady) {
+      state.firstFailedCoordinate = "CANVAS_CONTEXT_2D_READY";
+      state.recommendedNextFile = FILE;
+      state.recommendedNextAction = "VERIFY_STANDARD_2D_CANVAS_CONTEXT";
+      state.postgameStatus = "CANVAS_2D_CONTEXT_NOT_READY";
+      return;
+    }
+
+    if (!state.canvasLocalVisibleDrawExecuted) {
+      state.firstFailedCoordinate = "CANVAS_LOCAL_VISIBLE_DRAW_EXECUTED";
+      state.recommendedNextFile = FILE;
+      state.recommendedNextAction = "AUDIT_LOCAL_VISIBLE_DRAW_EXECUTION";
+      state.postgameStatus = "CANVAS_LOCAL_DRAW_NOT_EXECUTED";
+      return;
+    }
+
+    if (!state.finalCanvasPixelVisible) {
+      state.firstFailedCoordinate = "FINAL_CANVAS_PIXEL_VISIBLE";
+      state.recommendedNextFile = FILE;
+      state.recommendedNextAction = "AUDIT_CANVAS_LOCAL_DRAW_PATH_AND_PIXEL_SAMPLE";
+      state.postgameStatus = "CANVAS_PIXEL_SAMPLE_NOT_VISIBLE";
+      return;
+    }
+
+    if (!state.hexSurfaceReceiverReady) {
+      state.firstFailedCoordinate = "HEX_SURFACE_PUBLIC_GATE_RECEIVER_READY";
+      state.recommendedNextFile = HEX_SURFACE_FILE;
+      state.recommendedNextAction = "CONFIRM_HEX_SURFACE_PUBLIC_GATE_RECEIVER";
+      state.postgameStatus = "CANVAS_PIXEL_VISIBLE_WAITING_HEX_SURFACE_GATE";
+      return;
+    }
+
+    if (!state.hexGateAcceptedByHexSurface) {
+      state.firstFailedCoordinate = "HEX_GATE_ACCEPTED_BY_HEX_SURFACE";
+      state.recommendedNextFile = HEX_SURFACE_FILE;
+      state.recommendedNextAction = "VERIFY_HEX_SURFACE_ACCEPTANCE_RECEIPT";
+      state.postgameStatus = "CANVAS_PIXEL_VISIBLE_HEX_GATE_ACCEPTANCE_PENDING";
+      return;
+    }
+
+    if (!state.pointerFingerTransmissionObserved) {
+      state.firstFailedCoordinate = "POINTER_FINGER_TRANSMISSION_OBSERVED";
+      state.recommendedNextFile = HEX_SURFACE_FILE;
+      state.recommendedNextAction = "VERIFY_HEX_SURFACE_PUBLISHES_POINTER_FINGER_TRANSMISSION";
+      state.postgameStatus = "CANVAS_PIXEL_VISIBLE_HEX_GATE_ACCEPTED_POINTER_TRANSMISSION_PENDING";
+      return;
+    }
+
+    state.firstFailedCoordinate = "NONE";
+    state.recommendedNextFile = POINTER_FINGER_FILE;
+    state.recommendedNextAction = "OBSERVE_DOWNSTREAM_POINTER_FINGER_RESPONSE";
+    state.postgameStatus = "CANVAS_PIXEL_VISIBLE_HEX_GATE_ACCEPTED_POINTER_TRANSMISSION_OBSERVED_NO_FINAL_CLAIM";
   }
 
   function updateDatasetLight() {
@@ -1690,10 +2253,12 @@
     setDataset("hearthCanvasReceipt", RECEIPT);
     setDataset("hearthCanvasInternalRenewalContract", INTERNAL_RENEWAL_CONTRACT);
     setDataset("hearthCanvasInternalRenewalReceipt", INTERNAL_RENEWAL_RECEIPT);
+    setDataset("hearthCanvasPreviousInternalRenewalContract", PREVIOUS_INTERNAL_RENEWAL_CONTRACT);
     setDataset("hearthCanvasPreviousContract", PREVIOUS_CONTRACT);
     setDataset("hearthCanvasVersion", VERSION);
 
     setDataset("hearthCanvasReceiverOutputCarrierActive", "true");
+    setDataset("hearthCanvasLocalVisiblePixelProofActive", "true");
     setDataset("hearthCanvasHexGateTransmissionActive", "true");
     setDataset("hearthCanvasHexGateRequired", "true");
     setDataset("hearthCanvasPointerFingerDirectCallSuppressed", "true");
@@ -1715,10 +2280,26 @@
     setDataset("hearthCanvasComputedVisible", String(state.canvasComputedVisible === true));
     setDataset("hearthCanvasContext2DReady", String(state.canvasContext2DReady === true));
     setDataset("hearthCanvasPixelSampleStatus", state.canvasPixelSampleStatus);
+    setDataset("hearthCanvasPixelVisible", String(state.canvasPixelVisible === true));
+    setDataset("hearthCanvasPixelSampleCount", String(state.canvasPixelSampleCount || 0));
     setDataset("hearthCanvasVisiblePixelCount", String(state.canvasVisiblePixelCount || 0));
+    setDataset("hearthCanvasAlphaPixelCount", String(state.canvasAlphaPixelCount || 0));
+    setDataset("hearthCanvasUniqueColorCount", String(state.canvasUniqueColorCount || 0));
     setDataset("hearthCanvasDomSurfaceMounted", String(state.canvasDomSurfaceMounted === true));
     setDataset("hearthCanvasDomSurfaceProofReady", String(state.canvasDomSurfaceProofReady === true));
     setDataset("hearthCanvasVisiblePlanetProofReady", String(state.canvasDomSurfaceProofReady === true));
+
+    setDataset("hearthCanvasLocalVisibleDrawAttempted", String(state.canvasLocalVisibleDrawAttempted === true));
+    setDataset("hearthCanvasLocalVisibleDrawExecuted", String(state.canvasLocalVisibleDrawExecuted === true));
+    setDataset("hearthCanvasLocalVisibleDrawCount", String(state.canvasLocalVisibleDrawCount || 0));
+    setDataset("hearthCanvasLocalVisibleDrawReason", state.canvasLocalVisibleDrawReason);
+    setDataset("hearthCanvasLocalDrawFailureReason", state.canvasLocalDrawFailureReason);
+    setDataset("hearthCanvasLocalPixelSampleAfterDraw", state.canvasLocalPixelSampleAfterDraw ? state.canvasLocalPixelSampleAfterDraw.status : "NOT_RUN");
+
+    setDataset("hearthCanvasDownstreamExpressionPacketObserved", String(state.downstreamExpressionPacketObserved === true));
+    setDataset("hearthCanvasDownstreamExpressionPacketSource", state.downstreamExpressionPacketSource);
+    setDataset("hearthCanvasDownstreamExpressionPacketDrawable", String(state.downstreamExpressionPacketDrawable === true));
+    setDataset("hearthCanvasDownstreamExpressionPacketDrawableReason", state.downstreamExpressionPacketDrawableReason);
 
     setDataset("hearthCanvasControlsObserved", String(state.controlsObserved === true));
     setDataset("hearthCanvasControlPacketAccepted", String(state.controlPacketAccepted === true));
@@ -1743,7 +2324,14 @@
     setDataset("hearthCanvasHexGatePacketCount", String(state.hexGatePacketCount));
     setDataset("hearthCanvasHexGateDeliveryCount", String(state.hexGateDeliveryCount));
     setDataset("hearthCanvasHexGateMissCount", String(state.hexGateMissCount));
+    setDataset("hearthCanvasHexGatePacketDelivered", String(state.hexGatePacketDelivered === true));
+    setDataset("hearthCanvasHexGateAcceptedByHexSurface", String(state.hexGateAcceptedByHexSurface === true));
 
+    setDataset("hearthCanvasPointerFingerTransmissionObserved", String(state.pointerFingerTransmissionObserved === true));
+    setDataset("hearthCanvasPointerFingerTransmissionSource", state.pointerFingerTransmissionSource);
+
+    setDataset("hearthCanvasFinalCanvasPixelVisible", String(state.finalCanvasPixelVisible === true));
+    setDataset("hearthCanvasFinalCanvasPixelFailureClass", state.finalCanvasPixelFailureClass);
     setDataset("hearthCanvasFirstFailedCoordinate", state.firstFailedCoordinate);
     setDataset("hearthCanvasRecommendedNextFile", state.recommendedNextFile);
     setDataset("hearthCanvasRecommendedNextAction", state.recommendedNextAction);
@@ -1759,6 +2347,14 @@
     setDataset("graphicBox", "false");
     setDataset("webgl", "false");
     setDataset("visualPassClaimed", "false");
+
+    if (surface.canvas && surface.canvas.dataset) {
+      surface.canvas.dataset.hearthCanvasPixelSampleStatus = state.canvasPixelSampleStatus;
+      surface.canvas.dataset.hearthCanvasPixelVisible = String(state.canvasPixelVisible === true);
+      surface.canvas.dataset.hearthCanvasFinalCanvasPixelVisible = String(state.finalCanvasPixelVisible === true);
+      surface.canvas.dataset.hearthCanvasLocalVisibleDrawExecuted = String(state.canvasLocalVisibleDrawExecuted === true);
+      surface.canvas.dataset.hearthCanvasFinalCanvasPixelFailureClass = state.finalCanvasPixelFailureClass;
+    }
   }
 
   function updateDataset() {
@@ -1778,6 +2374,7 @@
 
   function composeReceiptLight() {
     scanCanvasSurface();
+    deriveNextCoordinates();
 
     return {
       packetType: "HEARTH_CANVAS_HUB_RECEIPT",
@@ -1789,6 +2386,8 @@
       currentCanvasParentReceipt: RECEIPT,
       internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
       internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
+      previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
+      previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       previousReceipt: PREVIOUS_RECEIPT,
       lineageV1231Contract: LINEAGE_V12_3_1_CONTRACT,
@@ -1806,15 +2405,19 @@
       hexSurfaceFile: HEX_SURFACE_FILE,
       hexAuthorityFile: HEX_AUTHORITY_FILE,
       pointerFingerFile: POINTER_FINGER_FILE,
+      pointerFingerSurfaceFile: POINTER_FINGER_SURFACE_FILE,
+      pointerFingerBoundaryFile: POINTER_FINGER_BOUNDARY_FILE,
+      pointerFingerLightFile: POINTER_FINGER_LIGHT_FILE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
 
-      role: "canvas-receiver-output-carrier-hex-gate-transmission",
+      role: "canvas-receiver-output-carrier-local-visible-pixel-proof-hex-gate-transmission",
       loaded: true,
       booted: state.booted,
       mounted: state.mounted,
       disposed: state.disposed,
 
       receiverOutputCarrierActive: true,
+      localVisiblePixelProofActive: true,
       hexGateTransmissionActive: true,
       hexGateRequired: true,
       pointerFingerDirectCallSuppressed: true,
@@ -1842,11 +2445,33 @@
       canvasComputedVisible: state.canvasComputedVisible,
       canvasContext2DReady: state.canvasContext2DReady,
       canvasPixelSampleStatus: state.canvasPixelSampleStatus,
+      canvasPixelVisible: state.canvasPixelVisible,
+      canvasPixelSampleCount: state.canvasPixelSampleCount,
       canvasVisiblePixelCount: state.canvasVisiblePixelCount,
+      canvasAlphaPixelCount: state.canvasAlphaPixelCount,
+      canvasUniqueColorCount: state.canvasUniqueColorCount,
       canvasDomSurfaceMounted: state.canvasDomSurfaceMounted,
       canvasDomSurfaceProofReady: state.canvasDomSurfaceProofReady,
       visiblePlanetProofReady: state.canvasDomSurfaceProofReady,
-      visiblePlanetProofSource: state.canvasDomSurfaceProofReady ? "DOM_CANVAS_2D_MOUNTED_PLANET_SURFACE" : "NONE",
+      visiblePlanetProofSource: state.canvasDomSurfaceProofReady
+        ? "DOM_CANVAS_2D_LOCAL_VISIBLE_PIXEL_PROOF"
+        : "NONE",
+
+      canvasLocalVisibleDrawAttempted: state.canvasLocalVisibleDrawAttempted,
+      canvasLocalVisibleDrawExecuted: state.canvasLocalVisibleDrawExecuted,
+      canvasLocalVisibleDrawReason: state.canvasLocalVisibleDrawReason,
+      canvasLocalVisibleDrawCount: state.canvasLocalVisibleDrawCount,
+      canvasLocalPixelSampleBeforeDraw: clonePlain(state.canvasLocalPixelSampleBeforeDraw),
+      canvasLocalPixelSampleAfterDraw: clonePlain(state.canvasLocalPixelSampleAfterDraw),
+      canvasLocalDrawFailureReason: state.canvasLocalDrawFailureReason,
+
+      downstreamExpressionPacketObserved: state.downstreamExpressionPacketObserved,
+      downstreamExpressionPacketSource: state.downstreamExpressionPacketSource,
+      downstreamExpressionPacketDrawable: state.downstreamExpressionPacketDrawable,
+      downstreamExpressionPacketDrawableReason: state.downstreamExpressionPacketDrawableReason,
+
+      finalCanvasPixelVisible: state.finalCanvasPixelVisible,
+      finalCanvasPixelFailureClass: state.finalCanvasPixelFailureClass,
 
       viewState: {
         yaw: view.yaw,
@@ -1876,6 +2501,11 @@
       hexSurfaceDeliveryReason: state.hexSurfaceDeliveryReason,
       hexSurfaceAcceptedPacket: state.hexSurfaceAcceptedPacket,
 
+      hexGatePacketDelivered: state.hexGatePacketDelivered,
+      hexGateAcceptedByHexSurface: state.hexGateAcceptedByHexSurface,
+      pointerFingerTransmissionObserved: state.pointerFingerTransmissionObserved,
+      pointerFingerTransmissionSource: state.pointerFingerTransmissionSource,
+
       lastHexGatePacket: clonePlain(state.lastHexGatePacket),
       lastHexGatePacketAt: state.lastHexGatePacketAt,
       lastHexGateReason: state.lastHexGateReason,
@@ -1894,9 +2524,21 @@
       recommendedNextAction: state.recommendedNextAction,
       postgameStatus: state.postgameStatus,
 
+      CANVAS_LOCAL_VISIBLE_DRAW_ATTEMPTED: state.canvasLocalVisibleDrawAttempted,
+      CANVAS_LOCAL_VISIBLE_DRAW_EXECUTED: state.canvasLocalVisibleDrawExecuted,
+      CANVAS_LOCAL_PIXEL_SAMPLE_AFTER_DRAW: state.canvasLocalPixelSampleAfterDraw ? state.canvasLocalPixelSampleAfterDraw.status : "NOT_RUN",
+      HEX_GATE_PACKET_DELIVERED: state.hexGatePacketDelivered,
+      HEX_GATE_ACCEPTED_BY_HEX_SURFACE: state.hexGateAcceptedByHexSurface,
+      POINTER_FINGER_TRANSMISSION_OBSERVED: state.pointerFingerTransmissionObserved,
+      DOWNSTREAM_EXPRESSION_PACKET_OBSERVED: state.downstreamExpressionPacketObserved,
+      DOWNSTREAM_EXPRESSION_PACKET_DRAWABLE: state.downstreamExpressionPacketDrawable,
+      FINAL_CANVAS_PIXEL_VISIBLE: state.finalCanvasPixelVisible,
+      FINAL_CANVAS_PIXEL_FAILURE_CLASS: state.finalCanvasPixelFailureClass,
+
       supportsRouteConductorReleasePacket: true,
       supportsPlanetaryViewControlPacket: true,
       supportsCanvasPublicViewReceivers: true,
+      supportsLocalVisiblePixelProof: true,
       supportsHexGateTransmission: true,
       supportsPointerFingerViaHexGateOnly: true,
       supportsCanvasSurfaceTruthReceipt: true,
@@ -1907,6 +2549,7 @@
       ownsCanvasReceiverOutputCarrier: true,
       ownsCanvasSurfaceBinding: true,
       ownsCanvasViewPacketReception: true,
+      ownsLocalVisiblePixelProofDraw: true,
       ownsHexGateTransmission: true,
       ownsPointerFingerDirectCall: false,
       ownsCanvasBishopInternals: false,
@@ -1937,6 +2580,7 @@
       ...composeReceiptLight(),
       routeReleasePacket: clonePlain(state.routeReleasePacket),
       lastViewPacket: clonePlain(state.lastViewPacket),
+      lastHexGateDeliveryReceipt: clonePlain(state.lastHexGateDeliveryReceipt),
       events: clonePlain(state.events),
       errors: clonePlain(state.errors),
       startedAt: state.startedAt,
@@ -1945,10 +2589,13 @@
         mountSelector: surface.mountSelector,
         width: surface.width,
         height: surface.height,
+        cssWidth: surface.cssWidth,
+        cssHeight: surface.cssHeight,
         dpr: surface.dpr
       },
       updatedAt: nowIso(),
-      ...NO_CLAIMS
+      ...NO_CLAIMS,
+      ...UPPER_NO_CLAIMS
     };
   }
 
@@ -1956,27 +2603,18 @@
     const r = isObject(receipt) ? receipt : getReceiptLight(false);
 
     return [
-      "HEARTH_CANVAS_HEX_GATE_POINTER_FINGER_TRANSMISSION_RECEIPT",
+      "HEARTH_CANVAS_LOCAL_VISIBLE_PIXEL_PROOF_HEX_GATE_RECEIPT",
       "",
       "HEADER",
       line("contract", CONTRACT),
       line("receipt", RECEIPT),
       line("internalRenewalContract", INTERNAL_RENEWAL_CONTRACT),
       line("internalRenewalReceipt", INTERNAL_RENEWAL_RECEIPT),
+      line("previousInternalRenewalContract", PREVIOUS_INTERNAL_RENEWAL_CONTRACT),
       line("previousContract", PREVIOUS_CONTRACT),
-      line("previousReceipt", PREVIOUS_RECEIPT),
       line("version", VERSION),
       line("file", FILE),
       line("route", ROUTE),
-      "",
-      "TRANSMISSION",
-      line("receiverOutputCarrierActive", true),
-      line("hexGateTransmissionActive", true),
-      line("hexGateRequired", true),
-      line("transmissionChronology", TRANSMISSION_CHRONOLOGY.join(" -> ")),
-      line("pointerFingerDirectCallSuppressed", true),
-      line("canvasBishopInspectionSuppressed", true),
-      line("canvasExpressionTruthOwned", false),
       "",
       "SURFACE",
       line("canvasMountFound", r.canvasMountFound),
@@ -1988,18 +2626,27 @@
       line("canvasComputedVisible", r.canvasComputedVisible),
       line("canvasContext2DReady", r.canvasContext2DReady),
       line("canvasPixelSampleStatus", r.canvasPixelSampleStatus),
+      line("canvasPixelVisible", r.canvasPixelVisible),
       line("canvasVisiblePixelCount", r.canvasVisiblePixelCount),
+      line("canvasAlphaPixelCount", r.canvasAlphaPixelCount),
+      line("canvasUniqueColorCount", r.canvasUniqueColorCount),
       line("canvasDomSurfaceMounted", r.canvasDomSurfaceMounted),
       line("canvasDomSurfaceProofReady", r.canvasDomSurfaceProofReady),
       "",
-      "CONTROL_RECEPTION",
-      line("controlsObserved", r.controlsObserved),
-      line("controlContract", r.controlContract),
-      line("controlPacketAccepted", r.controlPacketAccepted),
-      line("controlPacketRejected", r.controlPacketRejected),
-      line("controlPacketRejectionReason", r.controlPacketRejectionReason),
-      line("lastControlPacketType", r.lastControlPacketType),
-      line("lastControlPacketAt", r.lastControlPacketAt),
+      "LOCAL_VISIBLE_PIXEL_PROOF",
+      line("canvasLocalVisibleDrawAttempted", r.canvasLocalVisibleDrawAttempted),
+      line("canvasLocalVisibleDrawExecuted", r.canvasLocalVisibleDrawExecuted),
+      line("canvasLocalVisibleDrawReason", r.canvasLocalVisibleDrawReason),
+      line("canvasLocalVisibleDrawCount", r.canvasLocalVisibleDrawCount),
+      line("canvasLocalPixelSampleAfterDraw", r.canvasLocalPixelSampleAfterDraw ? r.canvasLocalPixelSampleAfterDraw.status : "NOT_RUN"),
+      line("finalCanvasPixelVisible", r.finalCanvasPixelVisible),
+      line("finalCanvasPixelFailureClass", r.finalCanvasPixelFailureClass),
+      "",
+      "DOWNSTREAM_EXPRESSION",
+      line("downstreamExpressionPacketObserved", r.downstreamExpressionPacketObserved),
+      line("downstreamExpressionPacketSource", r.downstreamExpressionPacketSource),
+      line("downstreamExpressionPacketDrawable", r.downstreamExpressionPacketDrawable),
+      line("downstreamExpressionPacketDrawableReason", r.downstreamExpressionPacketDrawableReason),
       "",
       "HEX_GATE",
       line("hexAuthorityObserved", r.hexAuthorityObserved),
@@ -2013,8 +2660,10 @@
       line("hexSurfaceDeliveryMethod", r.hexSurfaceDeliveryMethod),
       line("hexSurfaceDeliveryReason", r.hexSurfaceDeliveryReason),
       line("hexSurfaceAcceptedPacket", r.hexSurfaceAcceptedPacket),
-      line("hexGatePacketCount", r.hexGatePacketCount),
-      line("hexGateDeliveryCount", r.hexGateDeliveryCount),
+      line("hexGatePacketDelivered", r.hexGatePacketDelivered),
+      line("hexGateAcceptedByHexSurface", r.hexGateAcceptedByHexSurface),
+      line("pointerFingerTransmissionObserved", r.pointerFingerTransmissionObserved),
+      line("pointerFingerTransmissionSource", r.pointerFingerTransmissionSource),
       "",
       "VIEW",
       line("yaw", r.viewState && r.viewState.yaw),
@@ -2050,22 +2699,28 @@
     return composeReceiptText(getReceiptLight(false));
   }
 
+  function getPacketText() {
+    return composeReceiptText(getReceiptLight(false));
+  }
+
   function getStatusText() {
     const r = getReceiptLight(false);
 
     return [
-      "HEARTH_CANVAS_HEX_GATE_POINTER_FINGER_TRANSMISSION_STATUS",
+      "HEARTH_CANVAS_LOCAL_VISIBLE_PIXEL_PROOF_HEX_GATE_STATUS",
       line("contract", r.contract),
       line("internalRenewalContract", r.internalRenewalContract),
       line("canvasDomSurfaceMounted", r.canvasDomSurfaceMounted),
-      line("canvasDomSurfaceProofReady", r.canvasDomSurfaceProofReady),
+      line("canvasLocalVisibleDrawExecuted", r.canvasLocalVisibleDrawExecuted),
+      line("canvasPixelSampleStatus", r.canvasPixelSampleStatus),
+      line("finalCanvasPixelVisible", r.finalCanvasPixelVisible),
+      line("finalCanvasPixelFailureClass", r.finalCanvasPixelFailureClass),
       line("controlsObserved", r.controlsObserved),
       line("controlPacketAccepted", r.controlPacketAccepted),
       line("hexSurfaceObserved", r.hexSurfaceObserved),
       line("hexSurfaceReceiverReady", r.hexSurfaceReceiverReady),
-      line("hexSurfaceDeliveryStatus", r.hexSurfaceDeliveryStatus),
-      line("hexSurfaceDeliveryMethod", r.hexSurfaceDeliveryMethod),
-      line("hexSurfaceAcceptedPacket", r.hexSurfaceAcceptedPacket),
+      line("hexGateAcceptedByHexSurface", r.hexGateAcceptedByHexSurface),
+      line("pointerFingerTransmissionObserved", r.pointerFingerTransmissionObserved),
       line("pointerFingerDirectCallSuppressed", true),
       line("recommendedNextFile", r.recommendedNextFile),
       line("postgameStatus", r.postgameStatus),
@@ -2076,23 +2731,11 @@
 
   function refresh() {
     bindSurface();
-    scanCanvasSurface();
     readHexAuthority();
     readHexSurfaceAuthority();
-
-    if (state.hexSurfaceReceiverReady) {
-      state.firstFailedCoordinate = "NONE_HEX_SURFACE_GATE_READY";
-      state.recommendedNextFile = HEX_SURFACE_FILE;
-      state.recommendedNextAction = "TRANSMIT_VIEW_PACKETS_THROUGH_HEX_GATE";
-      state.postgameStatus = state.controlsObserved
-        ? "CANVAS_READY_FOR_CONTROLLED_HEX_GATE_TRANSMISSION"
-        : "CANVAS_READY_WAITING_CONTROL_VIEW_PACKET";
-    } else {
-      state.firstFailedCoordinate = "WAITING_HEX_SURFACE_PUBLIC_GATE_RECEIVER";
-      state.recommendedNextFile = HEX_SURFACE_FILE;
-      state.recommendedNextAction = "CONFIRM_HEX_SURFACE_PUBLIC_GATE_RECEIVER";
-      state.postgameStatus = "CANVAS_SURFACE_READY_WAITING_HEX_GATE";
-    }
+    drawLocalVisibleCarrierFrame("refresh");
+    scanCanvasSurface();
+    deriveNextCoordinates();
 
     updateDataset();
     publishGlobals("refresh");
@@ -2104,9 +2747,12 @@
     bindEventListeners();
     readHexAuthority();
     readHexSurfaceAuthority();
+    drawLocalVisibleCarrierFrame("mount");
+    deriveNextCoordinates();
 
     record("HEARTH_CANVAS_MOUNT_CALLED", {
       canvasSurfaceMounted: state.canvasDomSurfaceMounted,
+      localVisiblePixelProof: state.finalCanvasPixelVisible,
       hexSurfaceReceiverReady: state.hexSurfaceReceiverReady
     });
 
@@ -2123,7 +2769,7 @@
       state.booting = true;
       state.startedAt = nowIso();
       state.updatedAt = state.startedAt;
-      state.postgameStatus = "CANVAS_BOOTING_HEX_GATE_TRANSMISSION";
+      state.postgameStatus = "CANVAS_BOOTING_LOCAL_VISIBLE_PIXEL_PROOF_HEX_GATE";
 
       publishGlobals("boot-early");
       mount(options || {});
@@ -2134,10 +2780,11 @@
 
       scheduleHexGateFrame("boot", null);
 
-      record("HEARTH_CANVAS_HEX_GATE_POINTER_FINGER_TRANSMISSION_BOOTED", {
+      record("HEARTH_CANVAS_LOCAL_VISIBLE_PIXEL_PROOF_HEX_GATE_BOOTED", {
         contract: CONTRACT,
         internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
         canvasSurfaceMounted: state.canvasDomSurfaceMounted,
+        localVisiblePixelProof: state.finalCanvasPixelVisible,
         hexSurfaceReceiverReady: state.hexSurfaceReceiverReady,
         pointerFingerDirectCallSuppressed: true,
         visualPassClaimed: false
@@ -2178,6 +2825,9 @@
     const aliases = [
       "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER",
       "HEARTH_CANVAS_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER",
+      "HEARTH_CANVAS_LOCAL_VISIBLE_PIXEL_PROOF_HEX_GATE_RECEIVER",
+      "HEARTH_CANVAS_HUB_LOCAL_VISIBLE_PIXEL_PROOF_HEX_GATE_RECEIVER",
+      "HEARTH_CANVAS_HEX_GATE_POINTER_FINGER_TRANSMISSION_RECEIVER",
       "HEARTH_CANVAS_HUB_RAF_SPHERE_ROTATION_PAIR_RECEIVER",
       "HEARTH_CANVAS_HUB_RAF_FAST_INTERACTIVE_DEFERRED_HEX_RENDER_RECEIVER",
       "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER",
@@ -2193,9 +2843,11 @@
       "HEARTH_CANVAS_FINGER_MANAGER",
       "HEARTH_CANVAS_VISIBLE_BASE_GLOBE_CARRIER",
       "HEARTH_CANVAS_VISIBLE_PLANET",
-      "HEARTH_CANVAS_HEX_GATE_POINTER_FINGER_TRANSMISSION_RECEIVER",
       "HEARTH.canvasHubCompositeFirstFastViewDeferredHexReceiver",
       "HEARTH.canvasCompositeFirstFastViewDeferredHexReceiver",
+      "HEARTH.canvasLocalVisiblePixelProofHexGateReceiver",
+      "HEARTH.canvasHubLocalVisiblePixelProofHexGateReceiver",
+      "HEARTH.canvasHexGatePointerFingerTransmissionReceiver",
       "HEARTH.canvasHubRafSphereRotationPairReceiver",
       "HEARTH.canvasHubRafFastInteractiveDeferredHexRenderReceiver",
       "HEARTH.canvasHubFastViewTransformDeferredRenderReceiver",
@@ -2211,9 +2863,11 @@
       "HEARTH.canvasFingerManager",
       "HEARTH.canvasVisibleBaseGlobeCarrier",
       "HEARTH.canvasVisiblePlanet",
-      "HEARTH.canvasHexGatePointerFingerTransmissionReceiver",
       "DEXTER_LAB.hearthCanvasHubCompositeFirstFastViewDeferredHexReceiver",
       "DEXTER_LAB.hearthCanvasCompositeFirstFastViewDeferredHexReceiver",
+      "DEXTER_LAB.hearthCanvasLocalVisiblePixelProofHexGateReceiver",
+      "DEXTER_LAB.hearthCanvasHubLocalVisiblePixelProofHexGateReceiver",
+      "DEXTER_LAB.hearthCanvasHexGatePointerFingerTransmissionReceiver",
       "DEXTER_LAB.hearthCanvasHubRafSphereRotationPairReceiver",
       "DEXTER_LAB.hearthCanvasHubRafFastInteractiveDeferredHexRenderReceiver",
       "DEXTER_LAB.hearthCanvasHubFastViewTransformDeferredRenderReceiver",
@@ -2227,8 +2881,7 @@
       "DEXTER_LAB.hearthCanvasStation",
       "DEXTER_LAB.hearthCanvasExpressionHub",
       "DEXTER_LAB.hearthCanvasFingerManager",
-      "DEXTER_LAB.hearthCanvasVisiblePlanet",
-      "DEXTER_LAB.hearthCanvasHexGatePointerFingerTransmissionReceiver"
+      "DEXTER_LAB.hearthCanvasVisiblePlanet"
     ];
 
     for (const alias of aliases) setPath(alias, api);
@@ -2236,10 +2889,12 @@
     hearth.canvasHub = api;
     hearth.canvas = api;
     hearth.canvasAuthority = api;
+    hearth.canvasLocalVisiblePixelProofHexGateReceiver = api;
     hearth.canvasHexGatePointerFingerTransmissionReceiver = api;
     lab.hearthCanvasHub = api;
     lab.hearthCanvas = api;
     lab.hearthCanvasAuthority = api;
+    lab.hearthCanvasLocalVisiblePixelProofHexGateReceiver = api;
 
     state.aliasPublishCount += 1;
     return true;
@@ -2257,21 +2912,25 @@
     root.HEARTH_CANVAS_PARENT_RECEIPT = receipt;
     root.HEARTH_CANVAS_AUTHORITY_RECEIPT = receipt;
     root.HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT = receipt;
+    root.HEARTH_CANVAS_LOCAL_VISIBLE_PIXEL_PROOF_HEX_GATE_RECEIPT = receipt;
+    root.HEARTH_CANVAS_LOCAL_VISIBLE_PIXEL_PROOF_HEX_GATE_RECEIPT_v12_5 = receipt;
     root.HEARTH_CANVAS_HEX_GATE_POINTER_FINGER_TRANSMISSION_RECEIPT = receipt;
-    root.HEARTH_CANVAS_HEX_GATE_POINTER_FINGER_TRANSMISSION_RECEIPT_v12_4 = receipt;
 
     hearth.canvasReceipt = receipt;
     hearth.canvasHubReceipt = receipt;
     hearth.canvasParentReceipt = receipt;
     hearth.canvasAuthorityReceipt = receipt;
     hearth.canvasHubCompositeFirstFastViewDeferredHexReceiverReceipt = receipt;
+    hearth.canvasLocalVisiblePixelProofHexGateReceipt = receipt;
     hearth.canvasHexGatePointerFingerTransmissionReceipt = receipt;
 
     lab.hearthCanvasReceipt = receipt;
     lab.hearthCanvasHubReceipt = receipt;
     lab.hearthCanvasParentReceipt = receipt;
     lab.hearthCanvasAuthorityReceipt = receipt;
-    lab.hearthCanvasHexGatePointerFingerTransmissionReceipt = receipt;
+    lab.hearthCanvasLocalVisiblePixelProofHexGateReceipt = receipt;
+
+    root.HEARTH_CANVAS_LOCAL_VISIBLE_PIXEL_PROOF_HEX_GATE_PACKET_TEXT = composeReceiptText(receipt);
 
     updateDatasetLight();
     return true;
@@ -2288,8 +2947,10 @@
         contract: CONTRACT,
         internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
         canvasSurfaceMounted: state.canvasDomSurfaceMounted,
+        localVisiblePixelProof: state.finalCanvasPixelVisible,
         hexSurfaceReceiverReady: state.hexSurfaceReceiverReady,
         hexSurfaceDeliveryStatus: state.hexSurfaceDeliveryStatus,
+        hexGateAcceptedByHexSurface: state.hexGateAcceptedByHexSurface,
         pointerFingerDirectCallSuppressed: true,
         visualPassClaimed: false
       });
@@ -2309,6 +2970,8 @@
     currentCanvasParentReceipt: RECEIPT,
     internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
     internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
+    previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
+    previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
     version: VERSION,
@@ -2323,8 +2986,8 @@
     hexSurfaceFile: HEX_SURFACE_FILE,
     hexAuthorityFile: HEX_AUTHORITY_FILE,
     pointerFingerFile: POINTER_FINGER_FILE,
-    pointerFingerBoundaryFile: POINTER_FINGER_BOUNDARY_FILE,
     pointerFingerSurfaceFile: POINTER_FINGER_SURFACE_FILE,
+    pointerFingerBoundaryFile: POINTER_FINGER_BOUNDARY_FILE,
     pointerFingerLightFile: POINTER_FINGER_LIGHT_FILE,
     diagnosticRoute: DIAGNOSTIC_ROUTE,
 
@@ -2372,7 +3035,10 @@
     updateView,
 
     bindSurface,
+    resizeSurface,
     scanCanvasSurface,
+    sampleCanvasPixels,
+    drawLocalVisibleCarrierFrame,
     readHexAuthority,
     readHexSurfaceAuthority,
     composeHexGatePacket,
@@ -2387,9 +3053,11 @@
     getCanvasStationReceiptLight: getReceiptLight,
     getVisiblePlanetReceipt: getReceiptLight,
     getCanvasVisibleProofReceipt: getReceiptLight,
+    getCanvasSurfaceTruthReceipt: getReceiptLight,
     getStatus: getReceiptLight,
     getReport: getReceipt,
     getReceiptText,
+    getPacketText,
     getStatusText,
 
     publishGlobals,
@@ -2401,6 +3069,7 @@
     supportsRouteConductorReleasePacket: true,
     supportsPlanetaryViewControlPacket: true,
     supportsCanvasPublicViewReceivers: true,
+    supportsLocalVisiblePixelProof: true,
     supportsHexGateTransmission: true,
     supportsPointerFingerViaHexGateOnly: true,
     supportsCanvasSurfaceTruthReceipt: true,
@@ -2409,6 +3078,7 @@
     supportsV1231Aliases: true,
 
     receiverOutputCarrierActive: true,
+    localVisiblePixelProofActive: true,
     hexGateTransmissionActive: true,
     hexGateRequired: true,
     pointerFingerDirectCallSuppressed: true,
@@ -2419,6 +3089,7 @@
     ownsCanvasReceiverOutputCarrier: true,
     ownsCanvasSurfaceBinding: true,
     ownsCanvasViewPacketReception: true,
+    ownsLocalVisiblePixelProofDraw: true,
     ownsHexGateTransmission: true,
     ownsPointerFingerDirectCall: false,
     ownsCanvasBishopInternals: false,
@@ -2435,6 +3106,7 @@
     ownsFinalVisualPassClaim: false,
 
     ...NO_CLAIMS,
+    ...UPPER_NO_CLAIMS,
 
     get state() {
       return state;
@@ -2453,6 +3125,8 @@
         mountSelector: surface.mountSelector,
         width: surface.width,
         height: surface.height,
+        cssWidth: surface.cssWidth,
+        cssHeight: surface.cssHeight,
         dpr: surface.dpr
       };
     }

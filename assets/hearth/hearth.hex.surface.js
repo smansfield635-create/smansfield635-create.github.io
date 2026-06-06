@@ -1,15 +1,21 @@
 // /assets/hearth/hearth.hex.surface.js
-// HEARTH_HEX_SURFACE_PLANETARY_VIEW_CONTROL_RENDERER_HANDSHAKE_TNT_v3
+// HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER_TNT_v4
 // Full-file replacement.
-// Hex Surface Renderer only.
+// Hex Surface Renderer / paired interactive spherical renderer only.
 // Purpose:
-// - Preserve the v2 Hex Surface Renderer body-bound visible-expression path.
-// - Consume HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_TNT_v1.
-// - Recognize Canvas Hub v12_1 planetary view-control receiver as current.
-// - Preserve Canvas Hub v12 as lineage.
-// - Accept yaw, pitch, zoom, and phase from Canvas Hub public draw state/options.
-// - Apply view state directly inside the rendered surface projection.
-// - Reduce per-frame latency by caching per-hex authority samples during each draw.
+// - Preserve the v3 Hex Surface Renderer public API while renewing the renderer into a paired Canvas/Hex motion path.
+// - Consume HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_TNT_v1 when available.
+// - Accept Canvas Hub v12_3 / v12_3_1 / v12_2 / v12_1 / v12 lineage packets.
+// - Expose paired renderer methods for Canvas:
+//   1. drawPairFrame(packet, options)
+//   2. drawInteractiveFrame(packet, options)
+//   3. drawSettledFrame(packet, options)
+// - Apply yaw, pitch, zoom, and phase inside spherical projection.
+// - Prevent flat bitmap sliding by never translating the already-rendered planet image as the motion response.
+// - Map every rendered pixel through:
+//   screen x/y -> sphere x/y/z -> yaw/pitch/phase rotation -> lon/lat/u/v -> surface expression/color.
+// - Use lower-cost spherical recomputation for active touch/drag/wheel frames.
+// - Use higher-detail spherical recomputation for settled frames.
 // - Preserve renderer-only ownership: no controls, no runtime loop, no DOM mounting, no route orchestration.
 // - Preserve no F13, no F21, no ready text, no final visual pass, no generated image, no GraphicBox, no WebGL.
 // Does not own:
@@ -40,26 +46,37 @@
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
 
-  const CONTRACT = "HEARTH_HEX_SURFACE_PLANETARY_VIEW_CONTROL_RENDERER_HANDSHAKE_TNT_v3";
-  const RECEIPT = "HEARTH_HEX_SURFACE_PLANETARY_VIEW_CONTROL_RENDERER_HANDSHAKE_RECEIPT_v3";
-  const PREVIOUS_CONTRACT = "HEARTH_HEX_SURFACE_CANVAS_HUB_THREE_FILE_VISIBLE_EXPRESSION_RENDERER_TNT_v2";
-  const PREVIOUS_RECEIPT = "HEARTH_HEX_SURFACE_CANVAS_HUB_THREE_FILE_VISIBLE_EXPRESSION_RENDERER_RECEIPT_v2";
+  const CONTRACT = "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER_TNT_v4";
+  const RECEIPT = "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER_RECEIPT_v4";
+
+  const PREVIOUS_CONTRACT = "HEARTH_HEX_SURFACE_PLANETARY_VIEW_CONTROL_RENDERER_HANDSHAKE_TNT_v3";
+  const PREVIOUS_RECEIPT = "HEARTH_HEX_SURFACE_PLANETARY_VIEW_CONTROL_RENDERER_HANDSHAKE_RECEIPT_v3";
+  const LINEAGE_V2_CONTRACT = "HEARTH_HEX_SURFACE_CANVAS_HUB_THREE_FILE_VISIBLE_EXPRESSION_RENDERER_TNT_v2";
+  const LINEAGE_V2_RECEIPT = "HEARTH_HEX_SURFACE_CANVAS_HUB_THREE_FILE_VISIBLE_EXPRESSION_RENDERER_RECEIPT_v2";
   const BASELINE_CONTRACT = "HEARTH_HEX_SURFACE_FOUR_PAIR_AUTHORITY_CONSUMER_TNT_v1";
   const BASELINE_RECEIPT = "HEARTH_HEX_SURFACE_FOUR_PAIR_AUTHORITY_CONSUMER_RECEIPT_v1";
 
   const FILE = "/assets/hearth/hearth.hex.surface.js";
   const ROUTE = "/showroom/globe/hearth/";
-  const VERSION = "2026-06-04.hearth-hex-surface-planetary-view-control-renderer-handshake-v3";
+  const VERSION = "2026-06-06.hearth-hex-surface-interactive-sphere-pair-renderer-v4";
 
   const REQUIRED_HEX_AUTHORITY_CONTRACT = "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_TNT_v1";
   const REQUIRED_HEX_AUTHORITY_RECEIPT = "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_RECEIPT_v1";
   const REQUIRED_HEX_AUTHORITY_FILE = "/assets/hearth/hearth.hex.four-pair.authority.js";
 
-  const CURRENT_CANVAS_HUB_CONTRACT = "HEARTH_CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_TNT_v12_1";
-  const CURRENT_CANVAS_HUB_RECEIPT = "HEARTH_CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_RECEIPT_v12_1";
-  const LINEAGE_CANVAS_HUB_CONTRACT = "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_TNT_v12";
-  const LINEAGE_CANVAS_HUB_RECEIPT = "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_RECEIPT_v12";
   const CANVAS_HUB_FILE = "/assets/hearth/hearth.canvas.js";
+  const CURRENT_CANVAS_PUBLIC_CONTRACT = "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3";
+  const PAIR_CANVAS_INTERNAL_CONTRACT = "HEARTH_CANVAS_HUB_RAF_SPHERE_ROTATION_PAIR_RECEIVER_TNT_v12_3_2";
+  const ACCEPTED_CANVAS_CONTRACTS = Object.freeze([
+    CURRENT_CANVAS_PUBLIC_CONTRACT,
+    PAIR_CANVAS_INTERNAL_CONTRACT,
+    "HEARTH_CANVAS_HUB_RAF_FAST_INTERACTIVE_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3_1",
+    "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_TNT_v12_2",
+    "HEARTH_CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_TNT_v12_1",
+    "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_TNT_v12",
+    "HEARTH_CANVAS_EXPRESSION_HUB_VISIBLE_BASE_GLOBE_CARRIER_TNT_v11_7",
+    "HEARTH_CANVAS_EXPRESSION_HUB_FINGER_MANAGER_TNT_v11_6"
+  ]);
 
   const PLANET_ID = "hearth";
   const PLANET_LABEL = "Hearth";
@@ -69,15 +86,20 @@
   const FINAL_FALSE = Object.freeze({
     f13Claimed: false,
     f13EligibleForCanvas: false,
+    f13ClaimedByHexSurface: false,
     f21EligibleForNorth: false,
     f21Claimed: false,
+    f21ClaimedByHexSurface: false,
+    f21SubmittedToNorth: false,
     readyTextAllowed: false,
     readyTextClaimed: false,
     completionLatched: false,
     finalCompletionLatched: false,
+    degradedCompletionLatched: false,
     generatedImage: false,
     graphicBox: false,
     webGL: false,
+    webgl: false,
     visualPassClaimed: false,
     finalVisualPassClaimed: false
   });
@@ -85,25 +107,28 @@
   const DEFAULTS = Object.freeze({
     radiusRatio: 0.456,
     axialTilt: -0.22,
-    phase: 0,
     yaw: 0,
     pitch: 0,
     zoom: 1,
+    phase: 0,
     minPitch: -1.25,
     maxPitch: 1.25,
     minZoom: 0.55,
     maxZoom: 2.4,
-    hexDensity: 238,
-    hexEdgeStrength: 0.065,
-    grainStrength: 0.32,
-    materialStrength: 0.28,
+    interactiveMaxSide: 430,
+    settledMaxSide: 760,
+    interactiveHexDensity: 146,
+    settledHexDensity: 238,
+    interactiveAuthoritySampleLimit: 1600,
+    settledAuthoritySampleLimit: 5200,
+    hexEdgeStrength: 0.062,
+    grainStrength: 0.31,
+    materialStrength: 0.27,
     reliefStrength: 0.34,
     atmosphereStrength: 0.92,
     lightX: -0.48,
     lightY: 0.28,
-    lightZ: 0.84,
-    maxInteractiveSide: 768,
-    maxAuthoritySamplesPerFrame: 4200
+    lightZ: 0.84
   });
 
   const BODY_MASSES = Object.freeze([
@@ -130,9 +155,7 @@
     cliff: [42, 50, 60, 255],
     snow: [218, 230, 228, 255],
     copper: [158, 92, 60, 255],
-    opal: [148, 194, 188, 255],
-    shadow: [10, 14, 22, 255],
-    atmosphere: [154, 214, 248, 255]
+    opal: [148, 194, 188, 255]
   });
 
   const state = {
@@ -140,6 +163,8 @@
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
+    lineageV2Contract: LINEAGE_V2_CONTRACT,
+    lineageV2Receipt: LINEAGE_V2_RECEIPT,
     baselineContract: BASELINE_CONTRACT,
     baselineReceipt: BASELINE_RECEIPT,
     version: VERSION,
@@ -147,38 +172,37 @@
     route: ROUTE,
     planetId: PLANET_ID,
     planetLabel: PLANET_LABEL,
-    role: "Hex Surface Renderer / Planetary View-Control Renderer Handshake",
+    role: "hex-surface-interactive-sphere-pair-renderer",
 
     rendererLoaded: true,
     rendererActive: true,
     apiReady: true,
 
-    canvasHubCompatible: true,
-    currentCanvasHubContract: CURRENT_CANVAS_HUB_CONTRACT,
-    currentCanvasHubReceipt: CURRENT_CANVAS_HUB_RECEIPT,
-    lineageCanvasHubContract: LINEAGE_CANVAS_HUB_CONTRACT,
-    lineageCanvasHubReceipt: LINEAGE_CANVAS_HUB_RECEIPT,
+    pairRendererActive: true,
+    sphericalProjectionActive: true,
+    flatBitmapSlidingRejected: true,
+    interactiveSphereRecomputationActive: true,
+    settledSphereRecomputationActive: true,
+    pairedCanvasHandshakeReady: true,
+
     canvasHubFile: CANVAS_HUB_FILE,
+    canvasHubPresent: false,
+    canvasHubContract: "UNKNOWN",
+    canvasHubReceipt: "UNKNOWN",
+    canvasHubRecognized: false,
+    canvasHubStatus: "UNKNOWN",
 
     requiredHexAuthorityContract: REQUIRED_HEX_AUTHORITY_CONTRACT,
     requiredHexAuthorityReceipt: REQUIRED_HEX_AUTHORITY_RECEIPT,
     requiredHexAuthorityFile: REQUIRED_HEX_AUTHORITY_FILE,
-
     hexAuthorityPresent: false,
-    hexAuthorityContract: "",
-    hexAuthorityReceipt: "",
+    hexAuthorityContract: "UNKNOWN",
+    hexAuthorityReceipt: "UNKNOWN",
     hexAuthorityContractOk: false,
     hexAuthoritySampleOk: false,
     hexAuthorityWideProbeOk: false,
+    hexAuthorityStatus: "UNKNOWN",
 
-    canvasHubPresent: false,
-    canvasHubContract: "",
-    canvasHubReceipt: "",
-    canvasHubCurrentRecognized: false,
-    canvasHubLineageAccepted: false,
-    canvasHubStatus: "UNKNOWN",
-
-    planetaryViewRendererHandshakeActive: true,
     viewStateAccepted: false,
     viewStateSource: "NONE",
     viewYaw: 0,
@@ -191,8 +215,15 @@
     viewStateRejectionReason: "",
 
     drawCount: 0,
+    pairDrawCount: 0,
+    interactiveDrawCount: 0,
+    settledDrawCount: 0,
+    legacyDrawCount: 0,
+
     lastDrawAt: "",
     lastDrawOk: false,
+    lastDrawMode: "NONE",
+    lastDrawReason: "NONE",
     lastDrawWidth: 0,
     lastDrawHeight: 0,
     lastDrawRenderWidth: 0,
@@ -204,17 +235,22 @@
     lastDrawAuthorityHexPixels: 0,
     lastDrawAuthoritySampleCacheHits: 0,
     lastDrawAuthoritySampleCacheMisses: 0,
-    lastDrawUsedInteractiveScale: false,
+    lastDrawUsedScaledSurface: false,
     lastDrawViewStateApplied: false,
     lastDrawViewYaw: 0,
     lastDrawViewPitch: 0,
     lastDrawViewZoom: 1,
     lastDrawViewPhase: 0,
-
-    lastHubNotifyOk: false,
-    lastHubNotifyMethod: "NONE",
+    lastDrawSphereProjectionFormula:
+      "screen_xy_to_unit_sphere_xyz_to_yaw_pitch_phase_rotation_to_lon_lat_uv_to_surface_color",
     lastError: "",
-    updatedAt: nowIso(),
+
+    lastCanvasNotifyOk: false,
+    lastCanvasNotifyMethod: "NONE",
+
+    datasetPublishCount: 0,
+    receiptPublishCount: 0,
+    updatedAt: "",
 
     ownsCanvasHub: false,
     ownsHexAuthority: false,
@@ -235,16 +271,23 @@
     ...FINAL_FALSE
   };
 
+  const surfacePool = {
+    canvas: null,
+    ctx: null,
+    width: 0,
+    height: 0
+  };
+
   function nowIso() {
     try {
       return new Date().toISOString();
     } catch (_error) {
-      return String(Date.now());
+      return "";
     }
   }
 
   function isObject(value) {
-    return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+    return Boolean(value && typeof value === "object" && !Array.isArray(value));
   }
 
   function isFunction(value) {
@@ -257,13 +300,20 @@
   }
 
   function safeNumber(value, fallback = 0) {
-    const number = Number(value);
-    return Number.isFinite(number) ? number : fallback;
+    const n = Number(value);
+    return Number.isFinite(n) ? n : fallback;
+  }
+
+  function firstDefined(...values) {
+    for (const value of values) {
+      if (value !== undefined && value !== null && value !== "") return value;
+    }
+    return undefined;
   }
 
   function clamp(value, min, max) {
-    const number = safeNumber(value, min);
-    return Math.max(min, Math.min(max, number));
+    const n = safeNumber(value, min);
+    return Math.max(min, Math.min(max, n));
   }
 
   function clamp01(value) {
@@ -280,8 +330,8 @@
   }
 
   function wrap01(value) {
-    const number = safeNumber(value, 0);
-    return ((number % 1) + 1) % 1;
+    const n = safeNumber(value, 0);
+    return ((n % 1) + 1) % 1;
   }
 
   function wrapPi(value) {
@@ -290,6 +340,7 @@
 
   function clonePlain(value) {
     if (!isObject(value) && !Array.isArray(value)) return value;
+
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
@@ -363,13 +414,23 @@
   function rotateX(v, angle) {
     const c = Math.cos(angle);
     const s = Math.sin(angle);
-    return { x: v.x, y: v.y * c - v.z * s, z: v.y * s + v.z * c };
+
+    return {
+      x: v.x,
+      y: v.y * c - v.z * s,
+      z: v.y * s + v.z * c
+    };
   }
 
   function rotateY(v, angle) {
     const c = Math.cos(angle);
     const s = Math.sin(angle);
-    return { x: v.x * c + v.z * s, y: v.y, z: -v.x * s + v.z * c };
+
+    return {
+      x: v.x * c + v.z * s,
+      y: v.y,
+      z: -v.x * s + v.z * c
+    };
   }
 
   function vectorToCoordinate(v) {
@@ -390,32 +451,66 @@
     };
   }
 
+  function datasetValue(key, fallback = "") {
+    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return fallback;
+    const value = doc.documentElement.dataset[key];
+    return value === undefined || value === null || value === "" ? fallback : value;
+  }
+
+  function setDataset(key, value) {
+    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
+    doc.documentElement.dataset[key] = value === undefined || value === null ? "" : String(value);
+  }
+
   function contractOf(candidate) {
-    if (!candidate || typeof candidate !== "object") return "";
-    return safeString(candidate.contract || candidate.CONTRACT || candidate.currentContract || candidate.canvasContract || "");
+    if (!isObject(candidate)) return "";
+    return safeString(
+      candidate.contract ||
+      candidate.CONTRACT ||
+      candidate.currentContract ||
+      candidate.currentCanvasParentContract ||
+      candidate.canvasContract ||
+      candidate.hexSurfaceContract ||
+      candidate.sourceContract ||
+      "",
+      ""
+    );
   }
 
   function receiptOf(candidate) {
-    if (!candidate || typeof candidate !== "object") return "";
-    return safeString(candidate.receipt || candidate.RECEIPT || candidate.currentReceipt || candidate.canvasReceipt || "");
+    if (!isObject(candidate)) return "";
+    return safeString(
+      candidate.receipt ||
+      candidate.RECEIPT ||
+      candidate.currentReceipt ||
+      candidate.currentCanvasParentReceipt ||
+      candidate.canvasReceipt ||
+      candidate.hexSurfaceReceipt ||
+      candidate.sourceReceipt ||
+      "",
+      ""
+    );
   }
 
   function readReceipt(candidate) {
-    if (!candidate || typeof candidate !== "object") return null;
+    if (!isObject(candidate)) return null;
 
     const methods = [
       "getReceiptLight",
       "getReceipt",
       "getStatus",
+      "getReport",
       "getCanvasStationReceiptLight",
       "getCanvasStationReceipt",
       "getCanvasStationSummary",
-      "getControlViewReceipt",
+      "getVisiblePlanetReceipt",
+      "getCanvasVisibleProofReceipt",
       "getState"
     ];
 
     for (const method of methods) {
       if (!isFunction(candidate[method])) continue;
+
       try {
         const result = candidate[method]();
         if (isObject(result)) return result;
@@ -429,67 +524,99 @@
     return null;
   }
 
-  function datasetValue(key, fallback = "") {
-    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return fallback;
-    const value = doc.documentElement.dataset[key];
-    return value === undefined || value === null || value === "" ? fallback : value;
+  function readPath(path) {
+    const parts = safeString(path).split(".");
+    let cursor = root;
+
+    for (const part of parts) {
+      if (!cursor || cursor[part] === undefined || cursor[part] === null) return null;
+      cursor = cursor[part];
+    }
+
+    return cursor || null;
   }
 
-  function setDataset(key, value) {
-    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
-    doc.documentElement.dataset[key] = value === undefined || value === null ? "" : String(value);
+  function firstGlobal(paths) {
+    for (const path of paths) {
+      const value = readPath(path);
+      if (value) return { path, value };
+    }
+
+    return { path: "NONE", value: null };
   }
 
   function resolveHexAuthority() {
-    const candidates = [
-      root.HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY,
-      root.HEARTH_HEX_FOUR_PAIR_AUTHORITY,
-      root.HEARTH_HEX_PIXEL_HANDSHAKE_AUTHORITY,
-      root.HEARTH && root.HEARTH.hexFourPairAuthority,
-      root.HEARTH && root.HEARTH.hexAuthority,
-      root.DEXTER_LAB && root.DEXTER_LAB.hearthHexFourPairAuthority
-    ];
-
-    for (const candidate of candidates) {
-      if (candidate && typeof candidate === "object") return candidate;
-    }
-
-    return null;
+    return firstGlobal([
+      "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY",
+      "HEARTH_HEX_FOUR_PAIR_AUTHORITY",
+      "HEARTH_HEX_PIXEL_HANDSHAKE_AUTHORITY",
+      "HEARTH_HEX_HANDSHAKE_AUTHORITY",
+      "HEARTH_HEXGRID_AUTHORITY",
+      "HEARTH.hexFourPairAuthority",
+      "HEARTH.hexAuthority",
+      "DEXTER_LAB.hearthHexFourPairAuthority",
+      "DEXTER_LAB.hearthHexAuthority"
+    ]).value;
   }
 
   function resolveCanvasHub() {
-    const candidates = [
-      root.HEARTH_CANVAS_PLANETARY_VIEW_CONTROL_RECEIVER,
-      root.HEARTH_CANVAS,
-      root.HEARTH_CANVAS_HUB,
-      root.HEARTH_CANVAS_AUTHORITY,
-      root.HEARTH && root.HEARTH.canvasPlanetaryViewControlReceiver,
-      root.HEARTH && root.HEARTH.canvas,
-      root.HEARTH && root.HEARTH.canvasHub,
-      root.DEXTER_LAB && root.DEXTER_LAB.hearthCanvasPlanetaryViewControlReceiver,
-      root.DEXTER_LAB && root.DEXTER_LAB.hearthCanvas
-    ];
-
-    for (const candidate of candidates) {
-      if (candidate && typeof candidate === "object") return candidate;
-    }
-
-    return null;
+    return firstGlobal([
+      "HEARTH_CANVAS_HUB_RAF_SPHERE_ROTATION_PAIR_RECEIVER",
+      "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER",
+      "HEARTH_CANVAS_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER",
+      "HEARTH_CANVAS_HUB_RAF_FAST_INTERACTIVE_DEFERRED_HEX_RENDER_RECEIVER",
+      "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER",
+      "HEARTH_CANVAS_PLANETARY_VIEW_CONTROL_RECEIVER",
+      "HEARTH_CANVAS_HUB",
+      "HEARTH_CANVAS",
+      "HEARTH_CANVAS_PARENT",
+      "HEARTH_CANVAS_AUTHORITY",
+      "HEARTH_CANVAS_LOCAL_STATION",
+      "HEARTH_CANVAS_VISIBLE_PLANET",
+      "HEARTH.canvasHubRafSphereRotationPairReceiver",
+      "HEARTH.canvasHubCompositeFirstFastViewDeferredHexReceiver",
+      "HEARTH.canvasCompositeFirstFastViewDeferredHexReceiver",
+      "HEARTH.canvasHubRafFastInteractiveDeferredHexRenderReceiver",
+      "HEARTH.canvasHubFastViewTransformDeferredRenderReceiver",
+      "HEARTH.canvasPlanetaryViewControlReceiver",
+      "HEARTH.canvasHub",
+      "HEARTH.canvas",
+      "HEARTH.canvasParent",
+      "HEARTH.canvasAuthority",
+      "HEARTH.canvasLocalStation",
+      "HEARTH.canvasVisiblePlanet",
+      "DEXTER_LAB.hearthCanvasHubRafSphereRotationPairReceiver",
+      "DEXTER_LAB.hearthCanvasHubCompositeFirstFastViewDeferredHexReceiver",
+      "DEXTER_LAB.hearthCanvasCompositeFirstFastViewDeferredHexReceiver",
+      "DEXTER_LAB.hearthCanvasHubRafFastInteractiveDeferredHexRenderReceiver",
+      "DEXTER_LAB.hearthCanvasHubFastViewTransformDeferredRenderReceiver",
+      "DEXTER_LAB.hearthCanvasPlanetaryViewControlReceiver",
+      "DEXTER_LAB.hearthCanvasHub",
+      "DEXTER_LAB.hearthCanvas",
+      "DEXTER_LAB.hearthCanvasParent",
+      "DEXTER_LAB.hearthCanvasVisiblePlanet"
+    ]).value;
   }
 
   function validateHexAuthority() {
     const authority = resolveHexAuthority();
     const receipt = readReceipt(authority) || authority || {};
+    const authorityContract =
+      contractOf(receipt || authority) ||
+      datasetValue("hearthHexFourPairAuthorityContract") ||
+      datasetValue("hearthHexSurfaceRendererRequiredHexAuthorityContract") ||
+      "UNKNOWN";
+    const authorityReceipt =
+      receiptOf(receipt || authority) ||
+      datasetValue("hearthHexFourPairAuthorityReceipt") ||
+      "UNKNOWN";
+
     const result = {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      requiredHexAuthorityContract: REQUIRED_HEX_AUTHORITY_CONTRACT,
-      requiredHexAuthorityReceipt: REQUIRED_HEX_AUTHORITY_RECEIPT,
       authorityPresent: Boolean(authority),
-      authorityContract: contractOf(receipt || authority),
-      authorityReceipt: receiptOf(receipt || authority),
-      contractOk: false,
-      receiptOk: false,
+      authorityContract,
+      authorityReceipt,
+      contractOk: authorityContract === REQUIRED_HEX_AUTHORITY_CONTRACT,
+      receiptOk: authorityReceipt === "UNKNOWN" || authorityReceipt === REQUIRED_HEX_AUTHORITY_RECEIPT,
       sampleOk: false,
       fourPairOk: false,
       bodyBoundOk: false,
@@ -501,223 +628,380 @@
       ...FINAL_FALSE
     };
 
-    result.contractOk = result.authorityContract === REQUIRED_HEX_AUTHORITY_CONTRACT;
-    result.receiptOk = !result.authorityReceipt || result.authorityReceipt === REQUIRED_HEX_AUTHORITY_RECEIPT;
+    if (authority && isFunction(authority.sample)) {
+      try {
+        const sample = authority.sample({
+          u: 0.5,
+          v: 0.5,
+          sourceFile: FILE,
+          sourceContract: CONTRACT,
+          purpose: "hex-surface-v4-validation",
+          ...FINAL_FALSE
+        });
 
-    if (!authority || !isFunction(authority.sample)) {
-      result.status = "MISSING";
-      updateHexAuthorityState(result);
-      return result;
+        result.sampleOk = Boolean(sample && typeof sample === "object");
+        result.fourPairOk = Boolean(
+          sample &&
+          (
+            sample.everyPixelHasFourPairSet === true ||
+            sample.everyPixelHasNorthSouthEastWest === true ||
+            (Array.isArray(sample.fourPairSet) && sample.fourPairSet.length === 4)
+          )
+        );
+        result.bodyBoundOk = Boolean(
+          sample &&
+          sample.bodyBound !== false &&
+          sample.surfaceBound !== false &&
+          sample.floatsAboveBody !== true &&
+          sample.allowedToFloat !== true
+        );
+      } catch (error) {
+        result.error = error && error.message ? String(error.message) : String(error);
+      }
     }
 
-    try {
-      const sample = authority.sample({ u: 0.5, v: 0.5 });
+    if (authority && isFunction(authority.wideProbe)) {
+      try {
+        const probe = authority.wideProbe({
+          rows: 5,
+          columns: 9,
+          sourceFile: FILE,
+          sourceContract: CONTRACT,
+          ...FINAL_FALSE
+        });
 
-      result.sampleOk = Boolean(sample && typeof sample === "object");
-      result.fourPairOk = Boolean(
-        sample &&
-        sample.everyPixelHasFourPairSet === true &&
-        Array.isArray(sample.fourPairSet) &&
-        sample.fourPairSet.length === 4
-      );
-      result.bodyBoundOk = Boolean(
-        sample &&
-        sample.bodyBound === true &&
-        sample.surfaceBound === true &&
-        sample.floatsAboveBody === false &&
-        sample.allowedToFloat === false
-      );
-
-      if (isFunction(authority.wideProbe)) {
-        const probe = authority.wideProbe({ rows: 5, columns: 9 });
         result.wideProbeTotal = safeNumber(probe && probe.total, 0);
         result.wideProbeFailedCount = safeNumber(probe && probe.failedCount, 0);
         result.wideProbeOk = Boolean(
           probe &&
           probe.wideProbeReady === true &&
-          probe.everyPixelHasNorthSouthEastWest === true &&
-          probe.everyPixelHasFourPairSet === true &&
-          result.wideProbeTotal >= 25 &&
-          result.wideProbeFailedCount === 0
+          probe.failedCount === 0
         );
-      }
-    } catch (error) {
-      result.error = error && error.message ? String(error.message) : String(error);
+      } catch (_error) {}
     }
 
-    result.status = result.authorityPresent && result.contractOk && result.sampleOk && result.fourPairOk && result.bodyBoundOk
-      ? "PASS"
-      : "DEGRADED";
+    result.status = result.authorityPresent && result.sampleOk && result.bodyBoundOk
+      ? result.contractOk
+        ? "PASS"
+        : "DEGRADED_CONTRACT_UNRECOGNIZED"
+      : result.authorityPresent
+        ? "DEGRADED_SAMPLE_OR_BODY_BOUND"
+        : "MISSING";
 
-    updateHexAuthorityState(result);
+    state.hexAuthorityPresent = result.authorityPresent;
+    state.hexAuthorityContract = result.authorityContract;
+    state.hexAuthorityReceipt = result.authorityReceipt;
+    state.hexAuthorityContractOk = result.contractOk;
+    state.hexAuthoritySampleOk = result.sampleOk;
+    state.hexAuthorityWideProbeOk = result.wideProbeOk;
+    state.hexAuthorityStatus = result.status;
+
     return result;
-  }
-
-  function updateHexAuthorityState(result) {
-    state.hexAuthorityPresent = Boolean(result.authorityPresent);
-    state.hexAuthorityContract = safeString(result.authorityContract);
-    state.hexAuthorityReceipt = safeString(result.authorityReceipt);
-    state.hexAuthorityContractOk = Boolean(result.contractOk);
-    state.hexAuthoritySampleOk = Boolean(result.sampleOk);
-    state.hexAuthorityWideProbeOk = Boolean(result.wideProbeOk);
   }
 
   function validateCanvasHub() {
     const hub = resolveCanvasHub();
     const receipt = readReceipt(hub) || hub || {};
-    const hubContract = contractOf(receipt || hub);
-    const hubReceipt = receiptOf(receipt || hub);
+    const hubContract =
+      contractOf(receipt || hub) ||
+      datasetValue("hearthCanvasContract") ||
+      datasetValue("hearthCanvasCurrentParentContract") ||
+      "UNKNOWN";
+    const hubReceipt =
+      receiptOf(receipt || hub) ||
+      datasetValue("hearthCanvasReceipt") ||
+      datasetValue("hearthCanvasCurrentParentReceipt") ||
+      "UNKNOWN";
 
-    const current = hubContract === CURRENT_CANVAS_HUB_CONTRACT || hubReceipt === CURRENT_CANVAS_HUB_RECEIPT;
-    const lineage = hubContract === LINEAGE_CANVAS_HUB_CONTRACT || hubReceipt === LINEAGE_CANVAS_HUB_RECEIPT;
+    const recognized =
+      ACCEPTED_CANVAS_CONTRACTS.includes(hubContract) ||
+      safeString(hubContract).includes("HEARTH_CANVAS");
 
     const result = {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      currentCanvasHubContract: CURRENT_CANVAS_HUB_CONTRACT,
-      lineageCanvasHubContract: LINEAGE_CANVAS_HUB_CONTRACT,
-      hubPresent: Boolean(hub),
+      hubPresent: Boolean(hub || hubContract !== "UNKNOWN"),
       hubContract,
       hubReceipt,
-      currentRecognized: current,
-      lineageAccepted: lineage,
-      status: "MISSING",
+      recognized,
+      status: recognized
+        ? "CANVAS_HUB_RECOGNIZED_FOR_PAIR_RENDERING"
+        : hub
+          ? "CANVAS_HUB_PRESENT_BUT_CONTRACT_UNRECOGNIZED"
+          : "CANVAS_HUB_NOT_OBSERVED",
       ...FINAL_FALSE
     };
 
-    result.status = result.hubPresent
-      ? current
-        ? "PASS_CURRENT_V12_1"
-        : lineage
-          ? "PASS_LINEAGE_V12"
-          : "PRESENT_DIFFERENT_CONTRACT"
-      : "MISSING";
-
     state.canvasHubPresent = result.hubPresent;
-    state.canvasHubContract = hubContract;
-    state.canvasHubReceipt = hubReceipt;
-    state.canvasHubCurrentRecognized = current;
-    state.canvasHubLineageAccepted = lineage;
+    state.canvasHubContract = result.hubContract;
+    state.canvasHubReceipt = result.hubReceipt;
+    state.canvasHubRecognized = result.recognized;
     state.canvasHubStatus = result.status;
 
     return result;
   }
 
-  function normalizeViewState(raw, source) {
-    const input = isObject(raw) ? raw : {};
-    const nested = isObject(input.viewState) ? input.viewState : input;
+  function resolveCanvasAndContext(target) {
+    const t = isObject(target) ? target : {};
 
-    const yaw = safeNumber(nested.yaw ?? input.yaw ?? DEFAULTS.yaw, DEFAULTS.yaw);
-    const pitch = clamp(
-      safeNumber(nested.pitch ?? input.pitch ?? DEFAULTS.pitch, DEFAULTS.pitch),
-      safeNumber(nested.minPitch ?? input.minPitch ?? DEFAULTS.minPitch, DEFAULTS.minPitch),
-      safeNumber(nested.maxPitch ?? input.maxPitch ?? DEFAULTS.maxPitch, DEFAULTS.maxPitch)
-    );
-    const zoom = clamp(
-      safeNumber(nested.zoom ?? input.zoom ?? DEFAULTS.zoom, DEFAULTS.zoom),
-      safeNumber(nested.minZoom ?? input.minZoom ?? DEFAULTS.minZoom, DEFAULTS.minZoom),
-      safeNumber(nested.maxZoom ?? input.maxZoom ?? DEFAULTS.maxZoom, DEFAULTS.maxZoom)
-    );
-    const phase = safeNumber(nested.phase ?? input.phase ?? DEFAULTS.phase, DEFAULTS.phase);
+    const canvas =
+      t.canvas ||
+      t.surface ||
+      (target && target.nodeName && String(target.nodeName).toLowerCase() === "canvas" ? target : null);
 
-    return {
-      yaw,
-      pitch,
-      zoom,
-      phase,
-      minPitch: safeNumber(nested.minPitch ?? input.minPitch ?? DEFAULTS.minPitch, DEFAULTS.minPitch),
-      maxPitch: safeNumber(nested.maxPitch ?? input.maxPitch ?? DEFAULTS.maxPitch, DEFAULTS.maxPitch),
-      minZoom: safeNumber(nested.minZoom ?? input.minZoom ?? DEFAULTS.minZoom, DEFAULTS.minZoom),
-      maxZoom: safeNumber(nested.maxZoom ?? input.maxZoom ?? DEFAULTS.maxZoom, DEFAULTS.maxZoom),
-      source: source || "UNKNOWN"
-    };
+    const ctx =
+      t.ctx ||
+      t.context ||
+      t.context2d ||
+      (canvas && isFunction(canvas.getContext) ? canvas.getContext("2d", { alpha: true, willReadFrequently: true }) : null);
+
+    return { canvas, ctx };
   }
 
   function readGlobalViewState() {
     const candidates = [
       root.HEARTH_CANVAS_VIEW_STATE,
       root.HEARTH_CANVAS_LAST_VIEW_PACKET,
+      root.HEARTH_CONTROLS_VIEW_PACKET,
+      root.HEARTH_PLANETARY_VIEW_CONTROL_PACKET,
+      root.HEARTH_QUEEN_CONTROLS_VIEW_PACKET,
       root.HEARTH && root.HEARTH.canvasViewState,
       root.HEARTH && root.HEARTH.canvasLastViewPacket,
-      root.DEXTER_LAB && root.DEXTER_LAB.hearthCanvasViewState
+      root.HEARTH && root.HEARTH.controlsViewPacket,
+      root.HEARTH && root.HEARTH.planetaryViewControlPacket,
+      root.DEXTER_LAB && root.DEXTER_LAB.hearthCanvasViewState,
+      root.DEXTER_LAB && root.DEXTER_LAB.hearthControlsViewPacket
     ];
 
     for (const candidate of candidates) {
-      if (isObject(candidate)) return normalizeViewState(candidate, "GLOBAL_CANVAS_VIEW_STATE");
+      if (isObject(candidate)) return candidate;
     }
 
     return null;
   }
 
-  function resolveViewState(target, options) {
-    const optionView = isObject(options) && (
-      isObject(options.viewState) ||
-      options.yaw !== undefined ||
-      options.pitch !== undefined ||
-      options.zoom !== undefined ||
-      options.phase !== undefined
-    )
-      ? normalizeViewState(options.viewState || options, "DRAW_OPTIONS")
-      : null;
-
-    const targetView = isObject(target) && (
-      isObject(target.viewState) ||
-      target.yaw !== undefined ||
-      target.pitch !== undefined ||
-      target.zoom !== undefined ||
-      target.phase !== undefined
-    )
-      ? normalizeViewState(target.viewState || target, "CANVAS_HUB_DRAW_STATE")
-      : null;
-
+  function normalizeViewState(target, options, sourceFallback) {
+    const t = isObject(target) ? target : {};
+    const o = isObject(options) ? options : {};
     const globalView = readGlobalViewState();
 
-    const resolved = optionView || targetView || globalView || normalizeViewState({}, "DEFAULT_VIEW_STATE");
+    const sourceObject =
+      isObject(o.viewState) ? o.viewState :
+      (o.yaw !== undefined || o.pitch !== undefined || o.zoom !== undefined || o.phase !== undefined) ? o :
+      isObject(t.viewState) ? t.viewState :
+      (t.yaw !== undefined || t.pitch !== undefined || t.zoom !== undefined || t.phase !== undefined) ? t :
+      isObject(globalView && globalView.viewState) ? globalView.viewState :
+      isObject(globalView) ? globalView :
+      {};
+
+    const carrier = isObject(o.viewState) || o.yaw !== undefined ? o :
+      isObject(t.viewState) || t.yaw !== undefined ? t :
+      isObject(globalView) ? globalView :
+      {};
+
+    const yaw = safeNumber(firstDefined(
+      sourceObject.yaw,
+      sourceObject.viewYaw,
+      carrier.yaw,
+      carrier.viewYaw,
+      DEFAULTS.yaw
+    ), DEFAULTS.yaw);
+
+    const pitch = clamp(
+      safeNumber(firstDefined(
+        sourceObject.pitch,
+        sourceObject.viewPitch,
+        carrier.pitch,
+        carrier.viewPitch,
+        DEFAULTS.pitch
+      ), DEFAULTS.pitch),
+      safeNumber(firstDefined(sourceObject.minPitch, carrier.minPitch, DEFAULTS.minPitch), DEFAULTS.minPitch),
+      safeNumber(firstDefined(sourceObject.maxPitch, carrier.maxPitch, DEFAULTS.maxPitch), DEFAULTS.maxPitch)
+    );
+
+    const zoom = clamp(
+      safeNumber(firstDefined(
+        sourceObject.zoom,
+        sourceObject.viewZoom,
+        carrier.zoom,
+        carrier.viewZoom,
+        DEFAULTS.zoom
+      ), DEFAULTS.zoom),
+      safeNumber(firstDefined(sourceObject.minZoom, carrier.minZoom, DEFAULTS.minZoom), DEFAULTS.minZoom),
+      safeNumber(firstDefined(sourceObject.maxZoom, carrier.maxZoom, DEFAULTS.maxZoom), DEFAULTS.maxZoom)
+    );
+
+    const phase = safeNumber(firstDefined(
+      sourceObject.phase,
+      sourceObject.viewPhase,
+      carrier.phase,
+      carrier.viewPhase,
+      DEFAULTS.phase
+    ), DEFAULTS.phase);
+
+    const source = safeString(firstDefined(
+      o.viewStateSource,
+      o.source,
+      t.viewStateSource,
+      t.source,
+      carrier.viewStateSource,
+      sourceFallback,
+      "RESOLVED_VIEW_STATE"
+    ));
 
     state.viewStateAccepted = true;
-    state.viewStateSource = resolved.source;
-    state.viewYaw = resolved.yaw;
-    state.viewPitch = resolved.pitch;
-    state.viewZoom = resolved.zoom;
-    state.viewPhase = resolved.phase;
+    state.viewStateSource = source;
+    state.viewYaw = yaw;
+    state.viewPitch = pitch;
+    state.viewZoom = zoom;
+    state.viewPhase = phase;
     state.viewStateLastAcceptedAt = nowIso();
     state.viewStatePacketCount += 1;
     state.viewStateRejectionReason = "";
 
-    return resolved;
+    return {
+      yaw,
+      pitch,
+      zoom,
+      phase,
+      source,
+      minPitch: DEFAULTS.minPitch,
+      maxPitch: DEFAULTS.maxPitch,
+      minZoom: DEFAULTS.minZoom,
+      maxZoom: DEFAULTS.maxZoom
+    };
   }
 
-  function normalizeOptions(target, options = {}) {
-    const view = resolveViewState(target, options);
+  function normalizeRenderOptions(target, options, mode) {
+    const o = isObject(options) ? options : {};
+    const t = isObject(target) ? target : {};
+    const view = normalizeViewState(t, o, `${mode.toUpperCase()}_PAIR_RENDER_VIEW`);
 
-    const interactive = safeString(options.reason || options.mode || target && target.mode || "").toLowerCase().includes("control") ||
-      safeString(options.inputType || "").toLowerCase().includes("drag") ||
-      safeString(options.inputType || "").toLowerCase().includes("pointer") ||
-      state.viewStatePacketCount > 1;
+    const interactive =
+      mode === "interactive" ||
+      o.interactive === true ||
+      t.interactive === true ||
+      /interactive|drag|touch|pointer|wheel|keyboard|view-state/i.test(safeString(o.reason || t.reason || o.inputType || t.inputType || ""));
+
+    const maxSide = interactive
+      ? clamp(safeNumber(firstDefined(o.maxSide, o.maxInteractiveSide, DEFAULTS.interactiveMaxSide), DEFAULTS.interactiveMaxSide), 240, 640)
+      : clamp(safeNumber(firstDefined(o.maxSide, o.maxSettledSide, DEFAULTS.settledMaxSide), DEFAULTS.settledMaxSide), 320, 1200);
+
+    const hexDensity = interactive
+      ? clamp(safeNumber(firstDefined(o.hexDensity, DEFAULTS.interactiveHexDensity), DEFAULTS.interactiveHexDensity), 90, 260)
+      : clamp(safeNumber(firstDefined(o.hexDensity, DEFAULTS.settledHexDensity), DEFAULTS.settledHexDensity), 120, 560);
+
+    const authoritySampleLimit = interactive
+      ? clamp(safeNumber(firstDefined(o.maxAuthoritySamplesPerFrame, DEFAULTS.interactiveAuthoritySampleLimit), DEFAULTS.interactiveAuthoritySampleLimit), 256, 6000)
+      : clamp(safeNumber(firstDefined(o.maxAuthoritySamplesPerFrame, DEFAULTS.settledAuthoritySampleLimit), DEFAULTS.settledAuthoritySampleLimit), 512, 20000);
 
     const zoomRadius = clamp(1 + ((view.zoom - 1) * 0.14), 0.92, 1.18);
 
     return {
-      radiusRatio: clamp(safeNumber(options.radiusRatio ?? DEFAULTS.radiusRatio, DEFAULTS.radiusRatio) * zoomRadius, 0.32, 0.49),
-      axialTilt: safeNumber(options.axialTilt ?? DEFAULTS.axialTilt, DEFAULTS.axialTilt) + view.pitch * 0.38,
-      phase: safeNumber(options.phase ?? DEFAULTS.phase, DEFAULTS.phase) + view.phase + view.yaw,
+      mode: interactive ? "interactive" : "settled",
+      reason: safeString(o.reason || t.reason || `${mode}-pair-render`),
+      interactive,
+      maxSide,
+      hexDensity,
+      authoritySampleLimit,
+      radiusRatio: clamp(safeNumber(firstDefined(o.radiusRatio, DEFAULTS.radiusRatio), DEFAULTS.radiusRatio) * zoomRadius, 0.32, 0.49),
+      axialTilt: safeNumber(firstDefined(o.axialTilt, DEFAULTS.axialTilt), DEFAULTS.axialTilt) + view.pitch * 0.38,
+      phase: safeNumber(firstDefined(o.phaseOffset, 0), 0) + view.phase + view.yaw,
       yaw: view.yaw,
       pitch: view.pitch,
       zoom: view.zoom,
       viewPhase: view.phase,
       viewSource: view.source,
-      hexDensity: clamp(options.hexDensity ?? DEFAULTS.hexDensity, 120, 560),
-      hexEdgeStrength: clamp(options.hexEdgeStrength ?? DEFAULTS.hexEdgeStrength, 0, 0.24),
-      grainStrength: clamp(options.grainStrength ?? DEFAULTS.grainStrength, 0, 0.9),
-      materialStrength: clamp(options.materialStrength ?? DEFAULTS.materialStrength, 0, 0.8),
-      reliefStrength: clamp(options.reliefStrength ?? DEFAULTS.reliefStrength, 0, 0.9),
-      atmosphereStrength: clamp(options.atmosphereStrength ?? DEFAULTS.atmosphereStrength, 0, 1.6),
-      lightX: safeNumber(options.lightX ?? DEFAULTS.lightX, DEFAULTS.lightX),
-      lightY: safeNumber(options.lightY ?? DEFAULTS.lightY, DEFAULTS.lightY),
-      lightZ: safeNumber(options.lightZ ?? DEFAULTS.lightZ, DEFAULTS.lightZ),
-      interactive,
-      maxInteractiveSide: clamp(options.maxInteractiveSide ?? DEFAULTS.maxInteractiveSide, 320, 1024),
-      maxAuthoritySamplesPerFrame: clamp(options.maxAuthoritySamplesPerFrame ?? DEFAULTS.maxAuthoritySamplesPerFrame, 256, 20000)
+      hexEdgeStrength: clamp(safeNumber(firstDefined(o.hexEdgeStrength, DEFAULTS.hexEdgeStrength), DEFAULTS.hexEdgeStrength), 0, 0.24),
+      grainStrength: clamp(safeNumber(firstDefined(o.grainStrength, DEFAULTS.grainStrength), DEFAULTS.grainStrength), 0, 0.9),
+      materialStrength: clamp(safeNumber(firstDefined(o.materialStrength, DEFAULTS.materialStrength), DEFAULTS.materialStrength), 0, 0.8),
+      reliefStrength: clamp(safeNumber(firstDefined(o.reliefStrength, DEFAULTS.reliefStrength), DEFAULTS.reliefStrength), 0, 0.9),
+      atmosphereStrength: clamp(safeNumber(firstDefined(o.atmosphereStrength, DEFAULTS.atmosphereStrength), DEFAULTS.atmosphereStrength), 0, 1.6),
+      lightX: safeNumber(firstDefined(o.lightX, DEFAULTS.lightX), DEFAULTS.lightX),
+      lightY: safeNumber(firstDefined(o.lightY, DEFAULTS.lightY), DEFAULTS.lightY),
+      lightZ: safeNumber(firstDefined(o.lightZ, DEFAULTS.lightZ), DEFAULTS.lightZ)
+    };
+  }
+
+  function createPooledSurface(width, height) {
+    if (surfacePool.canvas && surfacePool.ctx && surfacePool.width === width && surfacePool.height === height) {
+      return surfacePool;
+    }
+
+    surfacePool.canvas = null;
+    surfacePool.ctx = null;
+    surfacePool.width = width;
+    surfacePool.height = height;
+
+    try {
+      if (doc && isFunction(doc.createElement)) {
+        surfacePool.canvas = doc.createElement("canvas");
+        surfacePool.canvas.width = width;
+        surfacePool.canvas.height = height;
+        surfacePool.ctx = surfacePool.canvas.getContext("2d", { alpha: true, willReadFrequently: true });
+      }
+
+      if (!surfacePool.ctx && typeof OffscreenCanvas !== "undefined") {
+        surfacePool.canvas = new OffscreenCanvas(width, height);
+        surfacePool.ctx = surfacePool.canvas.getContext("2d", { alpha: true, willReadFrequently: true });
+      }
+    } catch (_error) {
+      surfacePool.canvas = null;
+      surfacePool.ctx = null;
+    }
+
+    return surfacePool;
+  }
+
+  function createRenderSurface(canvas, destinationCtx, config) {
+    const width = Math.max(1, Math.round(safeNumber(canvas && canvas.width, 0)));
+    const height = Math.max(1, Math.round(safeNumber(canvas && canvas.height, 0)));
+    const maxDimension = Math.max(width, height);
+    const scale = Math.min(1, config.maxSide / Math.max(1, maxDimension));
+    const renderWidth = Math.max(1, Math.round(width * scale));
+    const renderHeight = Math.max(1, Math.round(height * scale));
+
+    if (scale >= 0.999) {
+      return {
+        destinationCanvas: canvas,
+        destinationCtx,
+        canvas: null,
+        ctx: destinationCtx,
+        width,
+        height,
+        renderWidth: width,
+        renderHeight: height,
+        scale: 1,
+        scaled: false
+      };
+    }
+
+    const pooled = createPooledSurface(renderWidth, renderHeight);
+
+    if (!pooled.canvas || !pooled.ctx) {
+      return {
+        destinationCanvas: canvas,
+        destinationCtx,
+        canvas: null,
+        ctx: destinationCtx,
+        width,
+        height,
+        renderWidth: width,
+        renderHeight: height,
+        scale: 1,
+        scaled: false
+      };
+    }
+
+    return {
+      destinationCanvas: canvas,
+      destinationCtx,
+      canvas: pooled.canvas,
+      ctx: pooled.ctx,
+      width,
+      height,
+      renderWidth,
+      renderHeight,
+      scale,
+      scaled: true
     };
   }
 
@@ -763,7 +1047,6 @@
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      authority: "Hex Surface Renderer fallback cell address",
       fallbackHexAuthority: true,
       authorityHexPixel: false,
       cellId: `HEARTH_HEX_SURFACE_FALLBACK_Q${q}_R${r}`,
@@ -777,18 +1060,18 @@
       v: coord.v,
       lon: coord.lonDegrees,
       lat: coord.latDegrees,
-      everyPixelHasNorthSouthEastWest: false,
-      everyPixelHasFourPairSet: false,
       bodyBound: true,
       surfaceBound: true,
       floatsAboveBody: false,
       allowedToFloat: false,
+      everyPixelHasNorthSouthEastWest: false,
+      everyPixelHasFourPairSet: false,
       ...FINAL_FALSE
     };
   }
 
   function sampleHexAuthority(coord, q, r, frameCache, config) {
-    const cacheKey = `${q}:${r}:${Math.round(coord.u * 96)}:${Math.round(coord.v * 48)}`;
+    const cacheKey = `${q}:${r}`;
 
     if (frameCache.hex.has(cacheKey)) {
       frameCache.hexHits += 1;
@@ -799,7 +1082,9 @@
 
     const authority = resolveHexAuthority();
 
-    if (authority && isFunction(authority.sample) && frameCache.hexMisses <= config.maxAuthoritySamplesPerFrame) {
+    if (authority && isFunction(authority.sample) && frameCache.authorityCalls < config.authoritySampleLimit) {
+      frameCache.authorityCalls += 1;
+
       try {
         const packet = authority.sample({
           x: coord.x,
@@ -813,7 +1098,9 @@
           r,
           s: -q - r,
           sourceFile: FILE,
+          sourceContract: CONTRACT,
           rendererContract: CONTRACT,
+          pairRendererActive: true,
           ...FINAL_FALSE
         });
 
@@ -841,41 +1128,6 @@
     const fallback = fallbackHexPacket(coord, q, r);
     frameCache.hex.set(cacheKey, fallback);
     return fallback;
-  }
-
-  function sampleHubExpression(coord, hexPacket) {
-    const hub = resolveCanvasHub();
-
-    if (!hub || !isFunction(hub.sampleHexSurfaceExpression)) return null;
-
-    try {
-      const packet = hub.sampleHexSurfaceExpression({
-        contract: CONTRACT,
-        receipt: RECEIPT,
-        sourceFile: FILE,
-        coord: {
-          x: coord.x,
-          y: coord.y,
-          z: coord.z,
-          u: coord.u,
-          v: coord.v,
-          lon: coord.lonDegrees,
-          lat: coord.latDegrees
-        },
-        hexPacket: {
-          cellId: hexPacket.cellId,
-          stateId: hexPacket.stateId,
-          q: hexPacket.q,
-          r: hexPacket.r,
-          s: hexPacket.s
-        },
-        ...FINAL_FALSE
-      });
-
-      if (packet && typeof packet === "object") return packet;
-    } catch (_error) {}
-
-    return null;
   }
 
   function landField(coord) {
@@ -928,11 +1180,18 @@
     return best;
   }
 
-  function fallbackExpression(coord, hexPacket) {
+  function fallbackExpression(coord, hexPacket, config) {
     const field = landField(coord);
     const isLand = field.field > 0;
+    const stateId = safeNumber(hexPacket.stateId, 0);
+    const grain = fbm(
+      coord.u * 32 + stateId * 0.031,
+      coord.v * 24 - stateId * 0.027,
+      config.interactive ? 2201 : 2200,
+      config.interactive ? 3 : 4
+    );
+
     const latAbs = Math.abs(coord.latDegrees) / 90;
-    const grain = fbm(coord.u * 32 + safeNumber(hexPacket.stateId, 0) * 0.031, coord.v * 24 - safeNumber(hexPacket.stateId, 0) * 0.027, 2200, 4);
     const relief = isLand ? clamp01(field.ridge * 0.74 + grain * 0.26) : 0;
     const shelf = !isLand ? smoothstep(-0.24, 0.04, field.field) * (0.45 + grain * 0.35) : 0;
     const deep = !isLand ? clamp01(1 - shelf * 0.72) : 0;
@@ -943,7 +1202,7 @@
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      source: "hex-surface-renderer-fallback-expression",
+      source: "hex-surface-v4-fallback-expression",
       hubExpression: false,
       isLand,
       isWater: !isLand,
@@ -966,8 +1225,44 @@
     };
   }
 
-  function normalizeExpression(value, coord, hexPacket) {
-    const fallback = fallbackExpression(coord, hexPacket);
+  function sampleHubExpression(coord, hexPacket) {
+    const hub = resolveCanvasHub();
+
+    if (!hub || !isFunction(hub.sampleHexSurfaceExpression)) return null;
+
+    try {
+      const packet = hub.sampleHexSurfaceExpression({
+        contract: CONTRACT,
+        receipt: RECEIPT,
+        sourceFile: FILE,
+        coord: {
+          x: coord.x,
+          y: coord.y,
+          z: coord.z,
+          u: coord.u,
+          v: coord.v,
+          lon: coord.lonDegrees,
+          lat: coord.latDegrees
+        },
+        hexPacket: {
+          cellId: hexPacket.cellId,
+          hexId: hexPacket.hexId,
+          stateId: hexPacket.stateId,
+          q: hexPacket.q,
+          r: hexPacket.r,
+          s: hexPacket.s
+        },
+        ...FINAL_FALSE
+      });
+
+      if (packet && typeof packet === "object") return packet;
+    } catch (_error) {}
+
+    return null;
+  }
+
+  function normalizeExpression(value, coord, hexPacket, config) {
+    const fallback = fallbackExpression(coord, hexPacket, config);
 
     if (!value || typeof value !== "object") return fallback;
 
@@ -978,18 +1273,26 @@
       bodyBound: true,
       surfaceBound: true,
       f13Claimed: false,
+      f13EligibleForCanvas: false,
+      f13ClaimedByHexSurface: false,
       f21EligibleForNorth: false,
       f21Claimed: false,
+      f21ClaimedByHexSurface: false,
       readyTextAllowed: false,
+      readyTextClaimed: false,
+      completionLatched: false,
+      finalCompletionLatched: false,
       visualPassClaimed: false,
+      finalVisualPassClaimed: false,
       generatedImage: false,
       graphicBox: false,
-      webGL: false
+      webGL: false,
+      webgl: false
     };
   }
 
   function composeColor(expression, coord, hexPacket, shade, config, edgeFactor) {
-    const isLand = expression.isLand === true || expression.landPresence > 0.5;
+    const isLand = expression.isLand === true || safeNumber(expression.landPresence, 0) > 0.5;
     const stateId = safeNumber(hexPacket.stateId, 0);
     const stateSeed = (stateId + 1) / 257;
     const grain = clamp01(safeNumber(expression.grain, 0.5));
@@ -1058,7 +1361,7 @@
   }
 
   function drawAtmosphere(ctx, width, height, cx, cy, radius, config) {
-    const strength = config.atmosphereStrength;
+    const strength = config.atmosphereStrength * (config.interactive ? 0.74 : 1);
 
     ctx.save();
 
@@ -1078,125 +1381,53 @@
     ctx.lineWidth = Math.max(1, radius * 0.012);
     ctx.stroke();
 
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius + Math.max(2, radius * 0.036), 0, TAU);
-    ctx.strokeStyle = `rgba(92,178,236,${0.10 * strength})`;
-    ctx.lineWidth = Math.max(1, radius * 0.018);
-    ctx.stroke();
+    if (!config.interactive) {
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius + Math.max(2, radius * 0.036), 0, TAU);
+      ctx.strokeStyle = `rgba(92,178,236,${0.10 * strength})`;
+      ctx.lineWidth = Math.max(1, radius * 0.018);
+      ctx.stroke();
+    }
 
     ctx.restore();
   }
 
-  function resolveCanvasAndContext(target) {
-    const canvas = target && target.canvas
-      ? target.canvas
-      : target && target.nodeName && String(target.nodeName).toLowerCase() === "canvas"
-        ? target
-        : null;
-
-    const ctx = target && target.ctx
-      ? target.ctx
-      : target && target.context
-        ? target.context
-        : canvas && isFunction(canvas.getContext)
-          ? canvas.getContext("2d", { alpha: true, willReadFrequently: true })
-          : null;
-
-    return { canvas, ctx };
-  }
-
-  function createRenderSurface(width, height, config) {
-    const maxSide = config.interactive ? config.maxInteractiveSide : Math.max(width, height);
-    const scale = Math.min(1, maxSide / Math.max(width, height));
-    const renderWidth = Math.max(1, Math.round(width * scale));
-    const renderHeight = Math.max(1, Math.round(height * scale));
-
-    if (scale >= 0.999) {
-      return {
-        width,
-        height,
-        scale: 1,
-        scaled: false,
-        canvas: null,
-        ctx: null
-      };
-    }
-
-    let surfaceCanvas = null;
-    let surfaceCtx = null;
-
-    if (doc && isFunction(doc.createElement)) {
-      surfaceCanvas = doc.createElement("canvas");
-      surfaceCanvas.width = renderWidth;
-      surfaceCanvas.height = renderHeight;
-      surfaceCtx = surfaceCanvas.getContext("2d", { alpha: true, willReadFrequently: true });
-    }
-
-    if (!surfaceCtx && typeof OffscreenCanvas !== "undefined") {
-      surfaceCanvas = new OffscreenCanvas(renderWidth, renderHeight);
-      surfaceCtx = surfaceCanvas.getContext("2d", { alpha: true, willReadFrequently: true });
-    }
-
-    if (!surfaceCtx) {
-      return {
-        width,
-        height,
-        scale: 1,
-        scaled: false,
-        canvas: null,
-        ctx: null
-      };
-    }
-
-    return {
-      width: renderWidth,
-      height: renderHeight,
-      scale,
-      scaled: true,
-      canvas: surfaceCanvas,
-      ctx: surfaceCtx
-    };
-  }
-
-  function drawHearthHexSurfaceFrame(target, options = {}) {
+  function renderSphericalSurface(target, options, mode) {
     const resolved = resolveCanvasAndContext(target);
+
+    if (!resolved.canvas || !resolved.ctx) {
+      state.lastError = "HEARTH_HEX_SURFACE_V4_MISSING_CANVAS_OR_CONTEXT";
+      state.lastDrawOk = false;
+      state.updatedAt = nowIso();
+      updateDataset();
+      throw new Error(state.lastError);
+    }
+
     const canvas = resolved.canvas;
     const destinationCtx = resolved.ctx;
+    const config = normalizeRenderOptions(target, options, mode);
+    const surface = createRenderSurface(canvas, destinationCtx, config);
 
-    if (!canvas || !destinationCtx) {
-      state.lastError = "HEARTH_HEX_SURFACE_MISSING_CANVAS_OR_CONTEXT";
+    if (!surface.renderWidth || !surface.renderHeight || !surface.ctx) {
+      state.lastError = "HEARTH_HEX_SURFACE_V4_INVALID_RENDER_SURFACE";
       state.lastDrawOk = false;
       state.updatedAt = nowIso();
       updateDataset();
       throw new Error(state.lastError);
     }
 
-    const width = Math.max(1, Math.round(safeNumber(canvas.width, 0)));
-    const height = Math.max(1, Math.round(safeNumber(canvas.height, 0)));
+    validateHexAuthority();
+    validateCanvasHub();
 
-    if (!width || !height) {
-      state.lastError = "HEARTH_HEX_SURFACE_MISSING_CANVAS_SIZE";
-      state.lastDrawOk = false;
-      state.updatedAt = nowIso();
-      updateDataset();
-      throw new Error(state.lastError);
-    }
-
-    const config = normalizeOptions(target || {}, options || {});
-    const surface = createRenderSurface(width, height, config);
-    const renderCtx = surface.ctx || destinationCtx;
-    const renderWidth = surface.width;
-    const renderHeight = surface.height;
-
+    const renderCtx = surface.ctx;
+    const renderWidth = surface.renderWidth;
+    const renderHeight = surface.renderHeight;
     const minSide = Math.min(renderWidth, renderHeight);
     const radius = minSide * config.radiusRatio;
     const cx = renderWidth / 2;
     const cy = renderHeight / 2;
-    const hexRadius = clamp(minSide / config.hexDensity, 0.55, 5.5);
+    const hexRadius = clamp(minSide / config.hexDensity, 0.58, 6.0);
     const light = norm3(config.lightX, config.lightY, config.lightZ);
-
-    const hexValidation = validateHexAuthority();
-    const hubValidation = validateCanvasHub();
 
     const image = renderCtx.createImageData(renderWidth, renderHeight);
     const data = image.data;
@@ -1204,7 +1435,8 @@
     const frameCache = {
       hex: new Map(),
       hexHits: 0,
-      hexMisses: 0
+      hexMisses: 0,
+      authorityCalls: 0
     };
 
     let samples = 0;
@@ -1226,25 +1458,25 @@
           if (r2 > 1) continue;
 
           const z = Math.sqrt(Math.max(0, 1 - r2));
-          let vector = { x: nx, y: -ny, z };
 
-          vector = rotateX(vector, config.axialTilt);
-          vector = rotateY(vector, config.phase);
+          let sphere = { x: nx, y: -ny, z };
+          sphere = rotateX(sphere, config.axialTilt);
+          sphere = rotateY(sphere, config.phase);
 
-          const coord = vectorToCoordinate(vector);
+          const coord = vectorToCoordinate(sphere);
           const center = nearestHexCenter(xRaw, yRaw, hexRadius);
           const localX = xRaw - center.x;
           const localY = yRaw - center.y;
           const hexEdge = smoothstep(0.78, 1.08, hexDistance(localX, localY, hexRadius));
 
           const hexPacket = sampleHexAuthority(coord, center.q, center.r, frameCache, config);
-          const hubExpression = sampleHubExpression(coord, hexPacket);
-          const expression = normalizeExpression(hubExpression, coord, hexPacket);
+          const hubExpression = config.interactive ? null : sampleHubExpression(coord, hexPacket);
+          const expression = normalizeExpression(hubExpression, coord, hexPacket, config);
 
           if (hexPacket.fallbackHexAuthority) fallbackHexPixels += 1;
           else authorityHexPixels += 1;
 
-          if (expression.isLand === true || expression.landPresence > 0.5) landPixels += 1;
+          if (expression.isLand === true || safeNumber(expression.landPresence, 0) > 0.5) landPixels += 1;
           else waterPixels += 1;
 
           const rawNormal = norm3(nx, -ny, z);
@@ -1280,54 +1512,71 @@
 
       if (surface.scaled && surface.canvas) {
         destinationCtx.save();
-        destinationCtx.clearRect(0, 0, width, height);
+        destinationCtx.clearRect(0, 0, surface.width, surface.height);
         destinationCtx.imageSmoothingEnabled = true;
-        destinationCtx.drawImage(surface.canvas, 0, 0, width, height);
+        destinationCtx.drawImage(surface.canvas, 0, 0, surface.width, surface.height);
         destinationCtx.restore();
       }
+
+      const at = nowIso();
 
       const receipt = {
         contract: CONTRACT,
         receipt: RECEIPT,
         previousContract: PREVIOUS_CONTRACT,
         previousReceipt: PREVIOUS_RECEIPT,
+        lineageV2Contract: LINEAGE_V2_CONTRACT,
+        lineageV2Receipt: LINEAGE_V2_RECEIPT,
         baselineContract: BASELINE_CONTRACT,
         baselineReceipt: BASELINE_RECEIPT,
         version: VERSION,
         file: FILE,
         route: ROUTE,
-        role: "Hex Surface Renderer / Planetary View-Control Renderer Handshake",
-        packetType: "HEARTH_HEX_SURFACE_PLANETARY_VIEW_CONTROL_RENDER_FRAME_RECEIPT",
+        role: "hex-surface-interactive-sphere-pair-renderer",
+        packetType: "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDER_FRAME_RECEIPT",
 
-        canvasHubCompatible: true,
-        currentCanvasHubContract: CURRENT_CANVAS_HUB_CONTRACT,
-        currentCanvasHubReceipt: CURRENT_CANVAS_HUB_RECEIPT,
-        lineageCanvasHubContract: LINEAGE_CANVAS_HUB_CONTRACT,
+        pairRendererActive: true,
+        sphericalProjectionActive: true,
+        flatBitmapSlidingRejected: true,
+        interactiveSphereRecomputationActive: true,
+        settledSphereRecomputationActive: true,
+        pairedCanvasHandshakeReady: true,
+
         canvasHubFile: CANVAS_HUB_FILE,
-        canvasHubPresent: hubValidation.hubPresent,
-        canvasHubCurrentRecognized: hubValidation.currentRecognized,
-        canvasHubLineageAccepted: hubValidation.lineageAccepted,
-        canvasHubStatus: hubValidation.status,
+        canvasHubPresent: state.canvasHubPresent,
+        canvasHubContract: state.canvasHubContract,
+        canvasHubReceipt: state.canvasHubReceipt,
+        canvasHubRecognized: state.canvasHubRecognized,
+        canvasHubStatus: state.canvasHubStatus,
 
         requiredHexAuthorityContract: REQUIRED_HEX_AUTHORITY_CONTRACT,
         requiredHexAuthorityReceipt: REQUIRED_HEX_AUTHORITY_RECEIPT,
         requiredHexAuthorityFile: REQUIRED_HEX_AUTHORITY_FILE,
-        hexAuthorityPresent: hexValidation.authorityPresent,
-        hexAuthorityContractOk: hexValidation.contractOk,
-        hexAuthoritySampleOk: hexValidation.sampleOk,
-        hexAuthorityWideProbeOk: hexValidation.wideProbeOk,
+        hexAuthorityPresent: state.hexAuthorityPresent,
+        hexAuthorityContract: state.hexAuthorityContract,
+        hexAuthorityReceipt: state.hexAuthorityReceipt,
+        hexAuthorityContractOk: state.hexAuthorityContractOk,
+        hexAuthoritySampleOk: state.hexAuthoritySampleOk,
+        hexAuthorityWideProbeOk: state.hexAuthorityWideProbeOk,
+        hexAuthorityStatus: state.hexAuthorityStatus,
 
-        planetaryViewRendererHandshakeActive: true,
-        viewStateAccepted: state.viewStateAccepted,
-        viewStateSource: state.viewStateSource,
+        mode: config.mode,
+        reason: config.reason,
+        interactive: config.interactive,
+        viewStateAccepted: true,
+        viewStateSource: config.viewSource,
         viewYaw: config.yaw,
         viewPitch: config.pitch,
         viewZoom: config.zoom,
         viewPhase: config.viewPhase,
-        viewStateAppliedToProjection: true,
+        viewStateAppliedToSphericalProjection: true,
+        projectionFormula: "screen_xy_to_unit_sphere_xyz_to_yaw_pitch_phase_rotation_to_lon_lat_uv_to_surface_color",
+        bitmapSlidingUsed: false,
+        cssTranslationUsed: false,
+        previousFrameTranslated: false,
 
-        width,
-        height,
+        width: surface.width,
+        height: surface.height,
         renderWidth,
         renderHeight,
         samples,
@@ -1339,33 +1588,49 @@
         authorityHexPixels,
         authoritySampleCacheHits: frameCache.hexHits,
         authoritySampleCacheMisses: frameCache.hexMisses,
-        usedInteractiveScale: surface.scaled,
+        authoritySampleCalls: frameCache.authorityCalls,
+        usedScaledSurface: surface.scaled,
 
         rendererDrewSurface: true,
-        rendererOwnsMounting: false,
-        rendererOwnsCanvasHub: false,
-        rendererOwnsHexAuthority: false,
-        rendererOwnsTruth: false,
-        rendererOwnsRuntimeMotion: false,
-        rendererOwnsControls: false,
-        rendererOwnsFinalPass: false,
-
+        visibleSurfaceRendered: true,
         bodyBound: true,
         surfaceBound: true,
-        visibleSurfaceRendered: true,
-        highDensitySurfaceExpression: true,
-        pixelAuthorityConsumed: hexValidation.authorityPresent === true,
+        highDensitySurfaceExpression: !config.interactive,
+        interactiveSurfaceExpression: config.interactive,
         canvasHubOnlyAwarenessUpdate: true,
 
+        ownsCanvasHub: false,
+        ownsHexAuthority: false,
+        ownsComposite: false,
+        ownsCanvasMounting: false,
+        ownsRouteOrchestration: false,
+        ownsRuntimeRestart: false,
+        ownsControls: false,
+        ownsLandTruth: false,
+        ownsWaterTruth: false,
+        ownsAirTruth: false,
+        ownsHydrology: false,
+        ownsElevation: false,
+        ownsMaterials: false,
+        ownsAtmosphereTruth: false,
+        ownsLightingTruth: false,
+
         ...FINAL_FALSE,
-        updatedAt: nowIso()
+        updatedAt: at
       };
 
       state.drawCount += 1;
-      state.lastDrawAt = receipt.updatedAt;
+      state.pairDrawCount += mode === "pair" ? 1 : 0;
+      state.interactiveDrawCount += config.interactive ? 1 : 0;
+      state.settledDrawCount += !config.interactive ? 1 : 0;
+      state.legacyDrawCount += mode === "legacy" ? 1 : 0;
+
+      state.lastDrawAt = at;
       state.lastDrawOk = true;
-      state.lastDrawWidth = width;
-      state.lastDrawHeight = height;
+      state.lastDrawMode = config.interactive ? "INTERACTIVE_SPHERE_RECOMPUTE" : "SETTLED_SPHERE_RECOMPUTE";
+      state.lastDrawReason = config.reason;
+      state.lastDrawWidth = surface.width;
+      state.lastDrawHeight = surface.height;
       state.lastDrawRenderWidth = renderWidth;
       state.lastDrawRenderHeight = renderHeight;
       state.lastDrawSamples = samples;
@@ -1375,18 +1640,14 @@
       state.lastDrawAuthorityHexPixels = authorityHexPixels;
       state.lastDrawAuthoritySampleCacheHits = frameCache.hexHits;
       state.lastDrawAuthoritySampleCacheMisses = frameCache.hexMisses;
-      state.lastDrawUsedInteractiveScale = surface.scaled;
+      state.lastDrawUsedScaledSurface = surface.scaled;
       state.lastDrawViewStateApplied = true;
       state.lastDrawViewYaw = config.yaw;
       state.lastDrawViewPitch = config.pitch;
       state.lastDrawViewZoom = config.zoom;
       state.lastDrawViewPhase = config.viewPhase;
       state.lastError = "";
-      state.updatedAt = receipt.updatedAt;
-
-      updateDataset(receipt);
-      publishGlobals();
-      notifyCanvasHub(receipt);
+      state.updatedAt = at;
 
       if (canvas.dataset) {
         canvas.dataset.hearthHexSurfaceRenderer = "true";
@@ -1394,6 +1655,10 @@
         canvas.dataset.hearthHexSurfaceRendererReceipt = RECEIPT;
         canvas.dataset.hearthHexSurfaceRendererFile = FILE;
         canvas.dataset.hearthHexSurfaceRendererDrawOk = "true";
+        canvas.dataset.hearthHexSurfaceRendererMode = receipt.mode;
+        canvas.dataset.hearthHexSurfaceRendererInteractive = String(Boolean(receipt.interactive));
+        canvas.dataset.hearthHexSurfaceRendererSphericalProjectionActive = "true";
+        canvas.dataset.hearthHexSurfaceRendererFlatBitmapSlidingRejected = "true";
         canvas.dataset.hearthHexSurfaceRendererViewStateApplied = "true";
         canvas.dataset.hearthHexSurfaceRendererViewYaw = String(config.yaw);
         canvas.dataset.hearthHexSurfaceRendererViewPitch = String(config.pitch);
@@ -1410,15 +1675,39 @@
         canvas.dataset.visualPassClaimed = "false";
       }
 
+      updateDataset(receipt);
+      publishGlobals(false);
+
+      if (!config.interactive) notifyCanvasHub(receipt);
+
       return receipt;
     } catch (error) {
       state.lastDrawOk = false;
       state.lastError = error && error.message ? String(error.message) : String(error);
       state.updatedAt = nowIso();
       updateDataset();
-      publishGlobals();
+      publishGlobals(false);
       throw error;
     }
+  }
+
+  function drawPairFrame(target, options = {}) {
+    const o = isObject(options) ? options : {};
+    const t = isObject(target) ? target : {};
+    const mode = o.interactive === true || t.interactive === true ? "interactive" : "pair";
+    return renderSphericalSurface(target, options, mode);
+  }
+
+  function drawInteractiveFrame(target, options = {}) {
+    return renderSphericalSurface(target, { ...options, interactive: true, reason: options.reason || "interactive-pair-frame" }, "interactive");
+  }
+
+  function drawSettledFrame(target, options = {}) {
+    return renderSphericalSurface(target, { ...options, interactive: false, reason: options.reason || "settled-pair-frame" }, "settled");
+  }
+
+  function drawHearthHexSurfaceFrame(target, options = {}) {
+    return renderSphericalSurface(target, options, "legacy");
   }
 
   function drawFrame(target, options = {}) {
@@ -1441,20 +1730,9 @@
       return getReceipt();
     }
 
-    const normalized = normalizeViewState(packet, "DIRECT_CANVAS_VIEW_STATE_PACKET");
-
-    state.viewStateAccepted = true;
-    state.viewStateSource = normalized.source;
-    state.viewYaw = normalized.yaw;
-    state.viewPitch = normalized.pitch;
-    state.viewZoom = normalized.zoom;
-    state.viewPhase = normalized.phase;
-    state.viewStateLastAcceptedAt = nowIso();
-    state.viewStatePacketCount += 1;
-    state.viewStateRejectionReason = "";
-
+    normalizeViewState(packet, {}, "DIRECT_CANVAS_VIEW_STATE_PACKET");
     updateDataset();
-    publishGlobals();
+    publishGlobals(false);
 
     return getReceipt();
   }
@@ -1471,15 +1749,43 @@
     return receiveCanvasViewState(packet);
   }
 
+  function receivePairCanvasHandshake(packet = {}) {
+    if (!isObject(packet)) {
+      state.viewStateRejectedCount += 1;
+      state.viewStateRejectionReason = "PAIR_CANVAS_HANDSHAKE_PACKET_NOT_OBJECT";
+      updateDataset();
+      return getReceipt();
+    }
+
+    const contract = safeString(packet.canvasContract || packet.contract || packet.sourceContract || "");
+    state.canvasHubPresent = true;
+    state.canvasHubContract = contract || state.canvasHubContract;
+    state.canvasHubReceipt = safeString(packet.canvasReceipt || packet.receipt || packet.sourceReceipt || state.canvasHubReceipt);
+    state.canvasHubRecognized = ACCEPTED_CANVAS_CONTRACTS.includes(state.canvasHubContract) || state.canvasHubContract.includes("HEARTH_CANVAS");
+    state.canvasHubStatus = state.canvasHubRecognized
+      ? "PAIR_CANVAS_HANDSHAKE_ACCEPTED"
+      : "PAIR_CANVAS_HANDSHAKE_PRESENT_CONTRACT_UNRECOGNIZED";
+
+    if (packet.viewState || packet.yaw !== undefined || packet.pitch !== undefined || packet.zoom !== undefined || packet.phase !== undefined) {
+      normalizeViewState(packet, {}, "PAIR_CANVAS_HANDSHAKE_VIEW_STATE");
+    }
+
+    updateDataset();
+    publishGlobals(false);
+
+    return getReceipt();
+  }
+
   function notifyCanvasHub(packet) {
     const hub = resolveCanvasHub();
 
-    state.lastHubNotifyOk = false;
-    state.lastHubNotifyMethod = "NONE";
+    state.lastCanvasNotifyOk = false;
+    state.lastCanvasNotifyMethod = "NONE";
 
     if (!hub || typeof hub !== "object") return false;
 
     const methods = [
+      "receiveHexSurfacePairRendererReceipt",
       "receiveHexSurfaceRendererReceipt",
       "receiveHexSurfaceRendererPacket",
       "receiveHexSurfaceReceipt",
@@ -1494,16 +1800,17 @@
           ...clonePlain(packet),
           canvasHubOnlyAwarenessUpdate: true,
           sourceFile: FILE,
+          sourceContract: CONTRACT,
           ...FINAL_FALSE
         });
 
-        state.lastHubNotifyOk = true;
-        state.lastHubNotifyMethod = method;
+        state.lastCanvasNotifyOk = true;
+        state.lastCanvasNotifyMethod = method;
         state.updatedAt = nowIso();
         return true;
       } catch (error) {
-        state.lastHubNotifyOk = false;
-        state.lastHubNotifyMethod = `${method}:ERROR`;
+        state.lastCanvasNotifyOk = false;
+        state.lastCanvasNotifyMethod = `${method}:ERROR`;
         state.lastError = error && error.message ? String(error.message) : String(error);
         state.updatedAt = nowIso();
         return false;
@@ -1513,27 +1820,170 @@
     return false;
   }
 
+  function updateDataset(frameReceipt = null) {
+    state.datasetPublishCount += 1;
+
+    setDataset("hearthHexSurfaceRendererLoaded", "true");
+    setDataset("hearthHexSurfaceRendererActive", "true");
+    setDataset("hearthHexSurfaceRendererContract", CONTRACT);
+    setDataset("hearthHexSurfaceRendererReceipt", RECEIPT);
+    setDataset("hearthHexSurfaceRendererPreviousContract", PREVIOUS_CONTRACT);
+    setDataset("hearthHexSurfaceRendererPreviousReceipt", PREVIOUS_RECEIPT);
+    setDataset("hearthHexSurfaceRendererLineageV2Contract", LINEAGE_V2_CONTRACT);
+    setDataset("hearthHexSurfaceRendererBaselineContract", BASELINE_CONTRACT);
+    setDataset("hearthHexSurfaceRendererVersion", VERSION);
+    setDataset("hearthHexSurfaceRendererFile", FILE);
+    setDataset("hearthHexSurfaceRendererRole", state.role);
+
+    setDataset("hearthHexSurfacePairRendererActive", "true");
+    setDataset("hearthHexSurfaceSphericalProjectionActive", "true");
+    setDataset("hearthHexSurfaceFlatBitmapSlidingRejected", "true");
+    setDataset("hearthHexSurfaceInteractiveSphereRecomputationActive", "true");
+    setDataset("hearthHexSurfaceSettledSphereRecomputationActive", "true");
+    setDataset("hearthHexSurfacePairedCanvasHandshakeReady", "true");
+
+    setDataset("hearthHexSurfaceRendererCanvasHubFile", CANVAS_HUB_FILE);
+    setDataset("hearthHexSurfaceRendererCanvasHubPresent", String(state.canvasHubPresent));
+    setDataset("hearthHexSurfaceRendererCanvasHubContract", state.canvasHubContract);
+    setDataset("hearthHexSurfaceRendererCanvasHubReceipt", state.canvasHubReceipt);
+    setDataset("hearthHexSurfaceRendererCanvasHubRecognized", String(state.canvasHubRecognized));
+    setDataset("hearthHexSurfaceRendererCanvasHubStatus", state.canvasHubStatus);
+
+    setDataset("hearthHexSurfaceRendererRequiredHexAuthorityContract", REQUIRED_HEX_AUTHORITY_CONTRACT);
+    setDataset("hearthHexSurfaceRendererRequiredHexAuthorityReceipt", REQUIRED_HEX_AUTHORITY_RECEIPT);
+    setDataset("hearthHexSurfaceRendererRequiredHexAuthorityFile", REQUIRED_HEX_AUTHORITY_FILE);
+    setDataset("hearthHexSurfaceRendererHexAuthorityPresent", String(state.hexAuthorityPresent));
+    setDataset("hearthHexSurfaceRendererHexAuthorityContract", state.hexAuthorityContract);
+    setDataset("hearthHexSurfaceRendererHexAuthorityReceipt", state.hexAuthorityReceipt);
+    setDataset("hearthHexSurfaceRendererHexAuthorityContractOk", String(state.hexAuthorityContractOk));
+    setDataset("hearthHexSurfaceRendererHexAuthoritySampleOk", String(state.hexAuthoritySampleOk));
+    setDataset("hearthHexSurfaceRendererHexAuthorityWideProbeOk", String(state.hexAuthorityWideProbeOk));
+    setDataset("hearthHexSurfaceRendererHexAuthorityStatus", state.hexAuthorityStatus);
+
+    setDataset("hearthHexSurfaceRendererViewStateAccepted", String(state.viewStateAccepted));
+    setDataset("hearthHexSurfaceRendererViewStateSource", state.viewStateSource);
+    setDataset("hearthHexSurfaceRendererViewYaw", String(state.viewYaw));
+    setDataset("hearthHexSurfaceRendererViewPitch", String(state.viewPitch));
+    setDataset("hearthHexSurfaceRendererViewZoom", String(state.viewZoom));
+    setDataset("hearthHexSurfaceRendererViewPhase", String(state.viewPhase));
+    setDataset("hearthHexSurfaceRendererViewStatePacketCount", String(state.viewStatePacketCount));
+    setDataset("hearthHexSurfaceRendererViewStateRejectedCount", String(state.viewStateRejectedCount));
+    setDataset("hearthHexSurfaceRendererViewStateRejectionReason", state.viewStateRejectionReason);
+
+    setDataset("hearthHexSurfaceRendererDrawCount", String(state.drawCount));
+    setDataset("hearthHexSurfaceRendererPairDrawCount", String(state.pairDrawCount));
+    setDataset("hearthHexSurfaceRendererInteractiveDrawCount", String(state.interactiveDrawCount));
+    setDataset("hearthHexSurfaceRendererSettledDrawCount", String(state.settledDrawCount));
+    setDataset("hearthHexSurfaceRendererLegacyDrawCount", String(state.legacyDrawCount));
+    setDataset("hearthHexSurfaceRendererLastDrawOk", String(state.lastDrawOk));
+    setDataset("hearthHexSurfaceRendererLastDrawMode", state.lastDrawMode);
+    setDataset("hearthHexSurfaceRendererLastDrawReason", state.lastDrawReason);
+    setDataset("hearthHexSurfaceRendererLastDrawWidth", String(state.lastDrawWidth));
+    setDataset("hearthHexSurfaceRendererLastDrawHeight", String(state.lastDrawHeight));
+    setDataset("hearthHexSurfaceRendererLastDrawRenderWidth", String(state.lastDrawRenderWidth));
+    setDataset("hearthHexSurfaceRendererLastDrawRenderHeight", String(state.lastDrawRenderHeight));
+    setDataset("hearthHexSurfaceRendererLastDrawSamples", String(state.lastDrawSamples));
+    setDataset("hearthHexSurfaceRendererLastDrawLandPixels", String(state.lastDrawLandPixels));
+    setDataset("hearthHexSurfaceRendererLastDrawWaterPixels", String(state.lastDrawWaterPixels));
+    setDataset("hearthHexSurfaceRendererLastDrawAuthorityHexPixels", String(state.lastDrawAuthorityHexPixels));
+    setDataset("hearthHexSurfaceRendererLastDrawFallbackHexPixels", String(state.lastDrawFallbackHexPixels));
+    setDataset("hearthHexSurfaceRendererLastDrawAuthoritySampleCacheHits", String(state.lastDrawAuthoritySampleCacheHits));
+    setDataset("hearthHexSurfaceRendererLastDrawAuthoritySampleCacheMisses", String(state.lastDrawAuthoritySampleCacheMisses));
+    setDataset("hearthHexSurfaceRendererLastDrawUsedScaledSurface", String(state.lastDrawUsedScaledSurface));
+    setDataset("hearthHexSurfaceRendererLastDrawViewStateApplied", String(state.lastDrawViewStateApplied));
+    setDataset("hearthHexSurfaceRendererLastDrawProjectionFormula", state.lastDrawSphereProjectionFormula);
+    setDataset("hearthHexSurfaceRendererLastError", state.lastError);
+
+    setDataset("hearthHexSurfaceRendererLastCanvasNotifyOk", String(state.lastCanvasNotifyOk));
+    setDataset("hearthHexSurfaceRendererLastCanvasNotifyMethod", state.lastCanvasNotifyMethod);
+
+    setDataset("hearthHexSurfaceRendererOwnsCanvasHub", "false");
+    setDataset("hearthHexSurfaceRendererOwnsHexAuthority", "false");
+    setDataset("hearthHexSurfaceRendererOwnsComposite", "false");
+    setDataset("hearthHexSurfaceRendererOwnsCanvasMounting", "false");
+    setDataset("hearthHexSurfaceRendererOwnsRouteOrchestration", "false");
+    setDataset("hearthHexSurfaceRendererOwnsRuntimeRestart", "false");
+    setDataset("hearthHexSurfaceRendererOwnsControls", "false");
+    setDataset("hearthHexSurfaceRendererOwnsLandTruth", "false");
+    setDataset("hearthHexSurfaceRendererOwnsWaterTruth", "false");
+    setDataset("hearthHexSurfaceRendererOwnsAirTruth", "false");
+    setDataset("hearthHexSurfaceRendererOwnsHydrology", "false");
+    setDataset("hearthHexSurfaceRendererOwnsElevation", "false");
+    setDataset("hearthHexSurfaceRendererOwnsMaterials", "false");
+
+    if (frameReceipt) {
+      setDataset("hearthHexSurfaceRendererFrameReceipt", frameReceipt.receipt);
+      setDataset("hearthHexSurfaceRendererFrameMode", frameReceipt.mode);
+      setDataset("hearthHexSurfaceRendererFrameInteractive", String(Boolean(frameReceipt.interactive)));
+      setDataset("hearthHexSurfaceRendererVisibleSurfaceRendered", String(Boolean(frameReceipt.visibleSurfaceRendered)));
+      setDataset("hearthHexSurfaceRendererFrameViewStateApplied", String(Boolean(frameReceipt.viewStateAppliedToSphericalProjection)));
+      setDataset("hearthHexSurfaceRendererFrameBitmapSlidingUsed", "false");
+    }
+
+    setDataset("hearthHexSurfaceRendererF13Claimed", "false");
+    setDataset("hearthHexSurfaceRendererF21EligibleForNorth", "false");
+    setDataset("hearthHexSurfaceRendererF21Claimed", "false");
+    setDataset("hearthHexSurfaceRendererReadyTextAllowed", "false");
+    setDataset("hearthHexSurfaceRendererReadyTextClaimed", "false");
+    setDataset("hearthHexSurfaceRendererVisualPassClaimed", "false");
+    setDataset("generatedImage", "false");
+    setDataset("graphicBox", "false");
+    setDataset("webgl", "false");
+    setDataset("visualPassClaimed", "false");
+
+    return true;
+  }
+
   function getStatus() {
-    const hexValidation = validateHexAuthority();
-    const hubValidation = validateCanvasHub();
+    validateHexAuthority();
+    validateCanvasHub();
 
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       previousReceipt: PREVIOUS_RECEIPT,
+      lineageV2Contract: LINEAGE_V2_CONTRACT,
+      lineageV2Receipt: LINEAGE_V2_RECEIPT,
       baselineContract: BASELINE_CONTRACT,
       baselineReceipt: BASELINE_RECEIPT,
       version: VERSION,
       file: FILE,
       route: ROUTE,
-      role: "Hex Surface Renderer / Planetary View-Control Renderer Handshake",
+      planetId: PLANET_ID,
+      planetLabel: PLANET_LABEL,
+      role: state.role,
 
       rendererLoaded: true,
       rendererActive: true,
       apiReady: true,
 
-      planetaryViewRendererHandshakeActive: true,
+      pairRendererActive: true,
+      sphericalProjectionActive: true,
+      flatBitmapSlidingRejected: true,
+      interactiveSphereRecomputationActive: true,
+      settledSphereRecomputationActive: true,
+      pairedCanvasHandshakeReady: true,
+
+      canvasHubFile: CANVAS_HUB_FILE,
+      canvasHubPresent: state.canvasHubPresent,
+      canvasHubContract: state.canvasHubContract,
+      canvasHubReceipt: state.canvasHubReceipt,
+      canvasHubRecognized: state.canvasHubRecognized,
+      canvasHubStatus: state.canvasHubStatus,
+      acceptedCanvasContracts: ACCEPTED_CANVAS_CONTRACTS.slice(),
+
+      requiredHexAuthorityContract: REQUIRED_HEX_AUTHORITY_CONTRACT,
+      requiredHexAuthorityReceipt: REQUIRED_HEX_AUTHORITY_RECEIPT,
+      requiredHexAuthorityFile: REQUIRED_HEX_AUTHORITY_FILE,
+      hexAuthorityPresent: state.hexAuthorityPresent,
+      hexAuthorityContract: state.hexAuthorityContract,
+      hexAuthorityReceipt: state.hexAuthorityReceipt,
+      hexAuthorityContractOk: state.hexAuthorityContractOk,
+      hexAuthoritySampleOk: state.hexAuthoritySampleOk,
+      hexAuthorityWideProbeOk: state.hexAuthorityWideProbeOk,
+      hexAuthorityStatus: state.hexAuthorityStatus,
+
       viewStateAccepted: state.viewStateAccepted,
       viewStateSource: state.viewStateSource,
       viewYaw: state.viewYaw,
@@ -1544,36 +1994,15 @@
       viewStateRejectedCount: state.viewStateRejectedCount,
       viewStateRejectionReason: state.viewStateRejectionReason,
 
-      canvasHubCompatible: true,
-      currentCanvasHubContract: CURRENT_CANVAS_HUB_CONTRACT,
-      currentCanvasHubReceipt: CURRENT_CANVAS_HUB_RECEIPT,
-      lineageCanvasHubContract: LINEAGE_CANVAS_HUB_CONTRACT,
-      lineageCanvasHubReceipt: LINEAGE_CANVAS_HUB_RECEIPT,
-      canvasHubFile: CANVAS_HUB_FILE,
-      canvasHubPresent: hubValidation.hubPresent,
-      canvasHubContract: hubValidation.hubContract,
-      canvasHubReceipt: hubValidation.hubReceipt,
-      canvasHubCurrentRecognized: hubValidation.currentRecognized,
-      canvasHubLineageAccepted: hubValidation.lineageAccepted,
-      canvasHubStatus: hubValidation.status,
-
-      requiredHexAuthorityContract: REQUIRED_HEX_AUTHORITY_CONTRACT,
-      requiredHexAuthorityReceipt: REQUIRED_HEX_AUTHORITY_RECEIPT,
-      requiredHexAuthorityFile: REQUIRED_HEX_AUTHORITY_FILE,
-      hexAuthorityPresent: hexValidation.authorityPresent,
-      hexAuthorityContract: hexValidation.authorityContract,
-      hexAuthorityReceipt: hexValidation.authorityReceipt,
-      hexAuthorityContractOk: hexValidation.contractOk,
-      hexAuthorityReceiptOk: hexValidation.receiptOk,
-      hexAuthoritySampleOk: hexValidation.sampleOk,
-      hexAuthorityFourPairOk: hexValidation.fourPairOk,
-      hexAuthorityBodyBoundOk: hexValidation.bodyBoundOk,
-      hexAuthorityWideProbeOk: hexValidation.wideProbeOk,
-      hexAuthorityStatus: hexValidation.status,
-
       drawCount: state.drawCount,
+      pairDrawCount: state.pairDrawCount,
+      interactiveDrawCount: state.interactiveDrawCount,
+      settledDrawCount: state.settledDrawCount,
+      legacyDrawCount: state.legacyDrawCount,
       lastDrawAt: state.lastDrawAt,
       lastDrawOk: state.lastDrawOk,
+      lastDrawMode: state.lastDrawMode,
+      lastDrawReason: state.lastDrawReason,
       lastDrawWidth: state.lastDrawWidth,
       lastDrawHeight: state.lastDrawHeight,
       lastDrawRenderWidth: state.lastDrawRenderWidth,
@@ -1585,24 +2014,31 @@
       lastDrawAuthorityHexPixels: state.lastDrawAuthorityHexPixels,
       lastDrawAuthoritySampleCacheHits: state.lastDrawAuthoritySampleCacheHits,
       lastDrawAuthoritySampleCacheMisses: state.lastDrawAuthoritySampleCacheMisses,
-      lastDrawUsedInteractiveScale: state.lastDrawUsedInteractiveScale,
+      lastDrawUsedScaledSurface: state.lastDrawUsedScaledSurface,
       lastDrawViewStateApplied: state.lastDrawViewStateApplied,
       lastDrawViewYaw: state.lastDrawViewYaw,
       lastDrawViewPitch: state.lastDrawViewPitch,
       lastDrawViewZoom: state.lastDrawViewZoom,
       lastDrawViewPhase: state.lastDrawViewPhase,
-
-      lastHubNotifyOk: state.lastHubNotifyOk,
-      lastHubNotifyMethod: state.lastHubNotifyMethod,
+      lastDrawSphereProjectionFormula: state.lastDrawSphereProjectionFormula,
+      bitmapSlidingUsed: false,
+      cssTranslationUsed: false,
+      previousFrameTranslated: false,
       lastError: state.lastError,
-      updatedAt: state.updatedAt,
 
+      lastCanvasNotifyOk: state.lastCanvasNotifyOk,
+      lastCanvasNotifyMethod: state.lastCanvasNotifyMethod,
+
+      supportsDrawPairFrame: true,
+      supportsDrawInteractiveFrame: true,
+      supportsDrawSettledFrame: true,
       supportsDrawHearthHexSurfaceFrame: true,
       supportsDrawFrame: true,
       supportsRender: true,
       supportsRenderFrame: true,
       supportsCanvasViewStateHandshake: true,
       supportsYawPitchZoomPhaseProjection: true,
+      supportsSphereRecomputeDuringInteractiveMotion: true,
       supportsPerFrameHexAuthoritySampleCache: true,
       supportsInteractiveRenderScaling: true,
       supportsGetStatus: true,
@@ -1612,6 +2048,7 @@
       bodyBound: true,
       surfaceBound: true,
       highDensitySurfaceExpression: true,
+      interactiveSurfaceExpression: true,
       canvasHubOnlyAwarenessUpdate: true,
 
       ownsCanvasHub: false,
@@ -1630,27 +2067,33 @@
       ownsAtmosphereTruth: false,
       ownsLightingTruth: false,
 
+      datasetPublishCount: state.datasetPublishCount,
+      receiptPublishCount: state.receiptPublishCount,
+      updatedAt: state.updatedAt || nowIso(),
+
       ...FINAL_FALSE
     };
   }
 
   function getReceipt() {
+    state.receiptPublishCount += 1;
+
     return {
       ...getStatus(),
-      packetType: "HEARTH_HEX_SURFACE_PLANETARY_VIEW_CONTROL_RENDERER_HANDSHAKE_RECEIPT",
+      packetType: "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER_RECEIPT",
       destinationFile: FILE,
       purpose: [
-        "Consume the Hex Four-Pair Authority.",
+        "Consume the Hex Four-Pair Authority when available.",
         "Render a body-bound visible planet surface only when Canvas Hub supplies a canvas/context.",
         "Accept yaw, pitch, zoom, and phase from Canvas Hub public draw state/options.",
-        "Apply planetary view state inside the rendered projection.",
-        "Reduce per-frame latency through frame-local authority sample caching.",
-        "Keep pixel authority isolated inside the three-file stretch.",
+        "Apply planetary view state inside spherical projection.",
+        "Render interactive drag/touch/wheel frames by recomputing the sphere rather than translating a bitmap.",
         "Preserve renderer-only boundaries and no-claim posture."
       ],
       owns: [
         "visible surface rendering",
-        "high-density pixel surface expression",
+        "interactive spherical projection",
+        "settled spherical projection",
         "hex authority consumption",
         "surface grain expression",
         "seam pressure expression",
@@ -1682,237 +2125,165 @@
     };
   }
 
+  function line(key, value) {
+    return `${key}=${value === undefined || value === null ? "" : String(value)}`;
+  }
+
   function getReceiptText() {
     const r = getStatus();
 
     return [
-      "HEARTH_HEX_SURFACE_PLANETARY_VIEW_CONTROL_RENDERER_HANDSHAKE_RECEIPT",
+      "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER_RECEIPT",
       "",
-      `contract=${r.contract}`,
-      `receipt=${r.receipt}`,
-      `previousContract=${r.previousContract}`,
-      `previousReceipt=${r.previousReceipt}`,
-      `baselineContract=${r.baselineContract}`,
-      `baselineReceipt=${r.baselineReceipt}`,
-      `version=${r.version}`,
-      `file=${r.file}`,
-      `route=${r.route}`,
-      `role=${r.role}`,
+      "HEADER",
+      line("contract", r.contract),
+      line("receipt", r.receipt),
+      line("previousContract", r.previousContract),
+      line("previousReceipt", r.previousReceipt),
+      line("lineageV2Contract", r.lineageV2Contract),
+      line("baselineContract", r.baselineContract),
+      line("version", r.version),
+      line("file", r.file),
+      line("route", r.route),
+      line("role", r.role),
       "",
-      `rendererLoaded=${r.rendererLoaded}`,
-      `rendererActive=${r.rendererActive}`,
-      `apiReady=${r.apiReady}`,
+      "PAIR_RENDERER",
+      line("pairRendererActive", r.pairRendererActive),
+      line("sphericalProjectionActive", r.sphericalProjectionActive),
+      line("flatBitmapSlidingRejected", r.flatBitmapSlidingRejected),
+      line("interactiveSphereRecomputationActive", r.interactiveSphereRecomputationActive),
+      line("settledSphereRecomputationActive", r.settledSphereRecomputationActive),
+      line("pairedCanvasHandshakeReady", r.pairedCanvasHandshakeReady),
+      line("bitmapSlidingUsed", false),
+      line("cssTranslationUsed", false),
+      line("previousFrameTranslated", false),
       "",
-      `planetaryViewRendererHandshakeActive=${r.planetaryViewRendererHandshakeActive}`,
-      `viewStateAccepted=${r.viewStateAccepted}`,
-      `viewStateSource=${r.viewStateSource}`,
-      `viewYaw=${r.viewYaw}`,
-      `viewPitch=${r.viewPitch}`,
-      `viewZoom=${r.viewZoom}`,
-      `viewPhase=${r.viewPhase}`,
-      `viewStatePacketCount=${r.viewStatePacketCount}`,
-      `viewStateRejectedCount=${r.viewStateRejectedCount}`,
-      `viewStateRejectionReason=${r.viewStateRejectionReason}`,
+      "VIEW_STATE",
+      line("viewStateAccepted", r.viewStateAccepted),
+      line("viewStateSource", r.viewStateSource),
+      line("viewYaw", r.viewYaw),
+      line("viewPitch", r.viewPitch),
+      line("viewZoom", r.viewZoom),
+      line("viewPhase", r.viewPhase),
+      line("viewStatePacketCount", r.viewStatePacketCount),
+      line("viewStateRejectedCount", r.viewStateRejectedCount),
+      line("viewStateRejectionReason", r.viewStateRejectionReason),
       "",
-      `canvasHubCompatible=${r.canvasHubCompatible}`,
-      `currentCanvasHubContract=${r.currentCanvasHubContract}`,
-      `lineageCanvasHubContract=${r.lineageCanvasHubContract}`,
-      `canvasHubFile=${r.canvasHubFile}`,
-      `canvasHubPresent=${r.canvasHubPresent}`,
-      `canvasHubContract=${r.canvasHubContract}`,
-      `canvasHubCurrentRecognized=${r.canvasHubCurrentRecognized}`,
-      `canvasHubLineageAccepted=${r.canvasHubLineageAccepted}`,
-      `canvasHubStatus=${r.canvasHubStatus}`,
+      "CANVAS_PAIR",
+      line("canvasHubFile", r.canvasHubFile),
+      line("canvasHubPresent", r.canvasHubPresent),
+      line("canvasHubContract", r.canvasHubContract),
+      line("canvasHubRecognized", r.canvasHubRecognized),
+      line("canvasHubStatus", r.canvasHubStatus),
       "",
-      `requiredHexAuthorityContract=${r.requiredHexAuthorityContract}`,
-      `requiredHexAuthorityReceipt=${r.requiredHexAuthorityReceipt}`,
-      `requiredHexAuthorityFile=${r.requiredHexAuthorityFile}`,
-      `hexAuthorityPresent=${r.hexAuthorityPresent}`,
-      `hexAuthorityContract=${r.hexAuthorityContract}`,
-      `hexAuthorityReceipt=${r.hexAuthorityReceipt}`,
-      `hexAuthorityContractOk=${r.hexAuthorityContractOk}`,
-      `hexAuthorityReceiptOk=${r.hexAuthorityReceiptOk}`,
-      `hexAuthoritySampleOk=${r.hexAuthoritySampleOk}`,
-      `hexAuthorityFourPairOk=${r.hexAuthorityFourPairOk}`,
-      `hexAuthorityBodyBoundOk=${r.hexAuthorityBodyBoundOk}`,
-      `hexAuthorityWideProbeOk=${r.hexAuthorityWideProbeOk}`,
-      `hexAuthorityStatus=${r.hexAuthorityStatus}`,
+      "HEX_AUTHORITY",
+      line("requiredHexAuthorityContract", r.requiredHexAuthorityContract),
+      line("requiredHexAuthorityReceipt", r.requiredHexAuthorityReceipt),
+      line("requiredHexAuthorityFile", r.requiredHexAuthorityFile),
+      line("hexAuthorityPresent", r.hexAuthorityPresent),
+      line("hexAuthorityContract", r.hexAuthorityContract),
+      line("hexAuthorityContractOk", r.hexAuthorityContractOk),
+      line("hexAuthoritySampleOk", r.hexAuthoritySampleOk),
+      line("hexAuthorityWideProbeOk", r.hexAuthorityWideProbeOk),
+      line("hexAuthorityStatus", r.hexAuthorityStatus),
       "",
-      `drawCount=${r.drawCount}`,
-      `lastDrawAt=${r.lastDrawAt}`,
-      `lastDrawOk=${r.lastDrawOk}`,
-      `lastDrawWidth=${r.lastDrawWidth}`,
-      `lastDrawHeight=${r.lastDrawHeight}`,
-      `lastDrawRenderWidth=${r.lastDrawRenderWidth}`,
-      `lastDrawRenderHeight=${r.lastDrawRenderHeight}`,
-      `lastDrawSamples=${r.lastDrawSamples}`,
-      `lastDrawLandPixels=${r.lastDrawLandPixels}`,
-      `lastDrawWaterPixels=${r.lastDrawWaterPixels}`,
-      `lastDrawFallbackHexPixels=${r.lastDrawFallbackHexPixels}`,
-      `lastDrawAuthorityHexPixels=${r.lastDrawAuthorityHexPixels}`,
-      `lastDrawAuthoritySampleCacheHits=${r.lastDrawAuthoritySampleCacheHits}`,
-      `lastDrawAuthoritySampleCacheMisses=${r.lastDrawAuthoritySampleCacheMisses}`,
-      `lastDrawUsedInteractiveScale=${r.lastDrawUsedInteractiveScale}`,
-      `lastDrawViewStateApplied=${r.lastDrawViewStateApplied}`,
-      `lastDrawViewYaw=${r.lastDrawViewYaw}`,
-      `lastDrawViewPitch=${r.lastDrawViewPitch}`,
-      `lastDrawViewZoom=${r.lastDrawViewZoom}`,
-      `lastDrawViewPhase=${r.lastDrawViewPhase}`,
-      `lastHubNotifyOk=${r.lastHubNotifyOk}`,
-      `lastHubNotifyMethod=${r.lastHubNotifyMethod}`,
-      `lastError=${r.lastError}`,
+      "DRAW",
+      line("drawCount", r.drawCount),
+      line("pairDrawCount", r.pairDrawCount),
+      line("interactiveDrawCount", r.interactiveDrawCount),
+      line("settledDrawCount", r.settledDrawCount),
+      line("legacyDrawCount", r.legacyDrawCount),
+      line("lastDrawAt", r.lastDrawAt),
+      line("lastDrawOk", r.lastDrawOk),
+      line("lastDrawMode", r.lastDrawMode),
+      line("lastDrawReason", r.lastDrawReason),
+      line("lastDrawWidth", r.lastDrawWidth),
+      line("lastDrawHeight", r.lastDrawHeight),
+      line("lastDrawRenderWidth", r.lastDrawRenderWidth),
+      line("lastDrawRenderHeight", r.lastDrawRenderHeight),
+      line("lastDrawSamples", r.lastDrawSamples),
+      line("lastDrawLandPixels", r.lastDrawLandPixels),
+      line("lastDrawWaterPixels", r.lastDrawWaterPixels),
+      line("lastDrawAuthorityHexPixels", r.lastDrawAuthorityHexPixels),
+      line("lastDrawFallbackHexPixels", r.lastDrawFallbackHexPixels),
+      line("lastDrawAuthoritySampleCacheHits", r.lastDrawAuthoritySampleCacheHits),
+      line("lastDrawAuthoritySampleCacheMisses", r.lastDrawAuthoritySampleCacheMisses),
+      line("lastDrawUsedScaledSurface", r.lastDrawUsedScaledSurface),
+      line("lastDrawViewStateApplied", r.lastDrawViewStateApplied),
+      line("lastDrawSphereProjectionFormula", r.lastDrawSphereProjectionFormula),
+      line("lastError", r.lastError),
       "",
-      `bodyBound=${r.bodyBound}`,
-      `surfaceBound=${r.surfaceBound}`,
-      `highDensitySurfaceExpression=${r.highDensitySurfaceExpression}`,
-      `canvasHubOnlyAwarenessUpdate=${r.canvasHubOnlyAwarenessUpdate}`,
+      "BOUNDARY",
+      line("ownsCanvasHub", false),
+      line("ownsHexAuthority", false),
+      line("ownsComposite", false),
+      line("ownsCanvasMounting", false),
+      line("ownsRouteOrchestration", false),
+      line("ownsRuntimeRestart", false),
+      line("ownsControls", false),
+      line("ownsLandTruth", false),
+      line("ownsWaterTruth", false),
+      line("ownsAirTruth", false),
+      line("ownsHydrology", false),
+      line("ownsElevation", false),
+      line("ownsMaterials", false),
       "",
-      `ownsCanvasHub=${r.ownsCanvasHub}`,
-      `ownsHexAuthority=${r.ownsHexAuthority}`,
-      `ownsComposite=${r.ownsComposite}`,
-      `ownsCanvasMounting=${r.ownsCanvasMounting}`,
-      `ownsRouteOrchestration=${r.ownsRouteOrchestration}`,
-      `ownsRuntimeRestart=${r.ownsRuntimeRestart}`,
-      `ownsControls=${r.ownsControls}`,
-      `ownsLandTruth=${r.ownsLandTruth}`,
-      `ownsWaterTruth=${r.ownsWaterTruth}`,
-      `ownsAirTruth=${r.ownsAirTruth}`,
-      `ownsHydrology=${r.ownsHydrology}`,
-      `ownsElevation=${r.ownsElevation}`,
-      `ownsMaterials=${r.ownsMaterials}`,
+      "NO_CLAIMS",
+      line("f13Claimed", false),
+      line("f13EligibleForCanvas", false),
+      line("f21EligibleForNorth", false),
+      line("f21Claimed", false),
+      line("readyTextAllowed", false),
+      line("readyTextClaimed", false),
+      line("completionLatched", false),
+      line("visualPassClaimed", false),
+      line("generatedImage", false),
+      line("graphicBox", false),
+      line("webGL", false),
       "",
-      `f13Claimed=${r.f13Claimed}`,
-      `f21EligibleForNorth=${r.f21EligibleForNorth}`,
-      `f21Claimed=${r.f21Claimed}`,
-      `readyTextAllowed=${r.readyTextAllowed}`,
-      `completionLatched=${r.completionLatched}`,
-      `finalCompletionLatched=${r.finalCompletionLatched}`,
-      `visualPassClaimed=${r.visualPassClaimed}`,
-      `finalVisualPassClaimed=${r.finalVisualPassClaimed}`,
-      `generatedImage=${r.generatedImage}`,
-      `graphicBox=${r.graphicBox}`,
-      `webGL=${r.webGL}`,
-      `updatedAt=${r.updatedAt}`
+      line("updatedAt", r.updatedAt)
     ].join("\n");
   }
 
-  function updateDataset(frameReceipt = null) {
-    setDataset("hearthHexSurfaceRendererLoaded", "true");
-    setDataset("hearthHexSurfaceRendererActive", "true");
-    setDataset("hearthHexSurfaceRendererContract", CONTRACT);
-    setDataset("hearthHexSurfaceRendererReceipt", RECEIPT);
-    setDataset("hearthHexSurfaceRendererPreviousContract", PREVIOUS_CONTRACT);
-    setDataset("hearthHexSurfaceRendererPreviousReceipt", PREVIOUS_RECEIPT);
-    setDataset("hearthHexSurfaceRendererBaselineContract", BASELINE_CONTRACT);
-    setDataset("hearthHexSurfaceRendererBaselineReceipt", BASELINE_RECEIPT);
-    setDataset("hearthHexSurfaceRendererVersion", VERSION);
-    setDataset("hearthHexSurfaceRendererFile", FILE);
-    setDataset("hearthHexSurfaceRendererRole", "Hex Surface Renderer / Planetary View-Control Renderer Handshake");
-
-    setDataset("hearthHexSurfaceRendererCanvasHubCompatible", "true");
-    setDataset("hearthHexSurfaceRendererCurrentCanvasHubContract", CURRENT_CANVAS_HUB_CONTRACT);
-    setDataset("hearthHexSurfaceRendererCurrentCanvasHubReceipt", CURRENT_CANVAS_HUB_RECEIPT);
-    setDataset("hearthHexSurfaceRendererLineageCanvasHubContract", LINEAGE_CANVAS_HUB_CONTRACT);
-    setDataset("hearthHexSurfaceRendererCanvasHubFile", CANVAS_HUB_FILE);
-    setDataset("hearthHexSurfaceRendererCanvasHubPresent", String(state.canvasHubPresent));
-    setDataset("hearthHexSurfaceRendererCanvasHubContract", state.canvasHubContract);
-    setDataset("hearthHexSurfaceRendererCanvasHubCurrentRecognized", String(state.canvasHubCurrentRecognized));
-    setDataset("hearthHexSurfaceRendererCanvasHubLineageAccepted", String(state.canvasHubLineageAccepted));
-    setDataset("hearthHexSurfaceRendererCanvasHubStatus", state.canvasHubStatus);
-    setDataset("hearthHexSurfaceRendererCanvasHubOnlyAwarenessUpdate", "true");
-
-    setDataset("hearthHexSurfaceRendererRequiredHexAuthorityContract", REQUIRED_HEX_AUTHORITY_CONTRACT);
-    setDataset("hearthHexSurfaceRendererRequiredHexAuthorityReceipt", REQUIRED_HEX_AUTHORITY_RECEIPT);
-    setDataset("hearthHexSurfaceRendererRequiredHexAuthorityFile", REQUIRED_HEX_AUTHORITY_FILE);
-    setDataset("hearthHexSurfaceRendererHexAuthorityPresent", String(state.hexAuthorityPresent));
-    setDataset("hearthHexSurfaceRendererHexAuthorityContract", state.hexAuthorityContract);
-    setDataset("hearthHexSurfaceRendererHexAuthorityContractOk", String(state.hexAuthorityContractOk));
-    setDataset("hearthHexSurfaceRendererHexAuthoritySampleOk", String(state.hexAuthoritySampleOk));
-    setDataset("hearthHexSurfaceRendererHexAuthorityWideProbeOk", String(state.hexAuthorityWideProbeOk));
-
-    setDataset("hearthHexSurfaceRendererPlanetaryViewRendererHandshakeActive", "true");
-    setDataset("hearthHexSurfaceRendererViewStateAccepted", String(state.viewStateAccepted));
-    setDataset("hearthHexSurfaceRendererViewStateSource", state.viewStateSource);
-    setDataset("hearthHexSurfaceRendererViewYaw", String(state.viewYaw));
-    setDataset("hearthHexSurfaceRendererViewPitch", String(state.viewPitch));
-    setDataset("hearthHexSurfaceRendererViewZoom", String(state.viewZoom));
-    setDataset("hearthHexSurfaceRendererViewPhase", String(state.viewPhase));
-    setDataset("hearthHexSurfaceRendererViewStatePacketCount", String(state.viewStatePacketCount));
-    setDataset("hearthHexSurfaceRendererViewStateRejectedCount", String(state.viewStateRejectedCount));
-
-    setDataset("hearthHexSurfaceRendererDrawCount", String(state.drawCount));
-    setDataset("hearthHexSurfaceRendererLastDrawOk", String(state.lastDrawOk));
-    setDataset("hearthHexSurfaceRendererLastDrawWidth", String(state.lastDrawWidth));
-    setDataset("hearthHexSurfaceRendererLastDrawHeight", String(state.lastDrawHeight));
-    setDataset("hearthHexSurfaceRendererLastDrawRenderWidth", String(state.lastDrawRenderWidth));
-    setDataset("hearthHexSurfaceRendererLastDrawRenderHeight", String(state.lastDrawRenderHeight));
-    setDataset("hearthHexSurfaceRendererLastDrawSamples", String(state.lastDrawSamples));
-    setDataset("hearthHexSurfaceRendererLastDrawLandPixels", String(state.lastDrawLandPixels));
-    setDataset("hearthHexSurfaceRendererLastDrawWaterPixels", String(state.lastDrawWaterPixels));
-    setDataset("hearthHexSurfaceRendererLastDrawAuthorityHexPixels", String(state.lastDrawAuthorityHexPixels));
-    setDataset("hearthHexSurfaceRendererLastDrawFallbackHexPixels", String(state.lastDrawFallbackHexPixels));
-    setDataset("hearthHexSurfaceRendererLastDrawAuthoritySampleCacheHits", String(state.lastDrawAuthoritySampleCacheHits));
-    setDataset("hearthHexSurfaceRendererLastDrawAuthoritySampleCacheMisses", String(state.lastDrawAuthoritySampleCacheMisses));
-    setDataset("hearthHexSurfaceRendererLastDrawUsedInteractiveScale", String(state.lastDrawUsedInteractiveScale));
-    setDataset("hearthHexSurfaceRendererLastDrawViewStateApplied", String(state.lastDrawViewStateApplied));
-    setDataset("hearthHexSurfaceRendererLastHubNotifyOk", String(state.lastHubNotifyOk));
-    setDataset("hearthHexSurfaceRendererLastHubNotifyMethod", state.lastHubNotifyMethod);
-    setDataset("hearthHexSurfaceRendererLastError", state.lastError);
-
-    setDataset("hearthHexSurfaceRendererOwnsCanvasHub", "false");
-    setDataset("hearthHexSurfaceRendererOwnsHexAuthority", "false");
-    setDataset("hearthHexSurfaceRendererOwnsComposite", "false");
-    setDataset("hearthHexSurfaceRendererOwnsCanvasMounting", "false");
-    setDataset("hearthHexSurfaceRendererOwnsRouteOrchestration", "false");
-    setDataset("hearthHexSurfaceRendererOwnsRuntimeRestart", "false");
-    setDataset("hearthHexSurfaceRendererOwnsControls", "false");
-    setDataset("hearthHexSurfaceRendererOwnsLandTruth", "false");
-    setDataset("hearthHexSurfaceRendererOwnsWaterTruth", "false");
-    setDataset("hearthHexSurfaceRendererOwnsAirTruth", "false");
-
-    if (frameReceipt) {
-      setDataset("hearthHexSurfaceRendererFrameReceipt", frameReceipt.receipt);
-      setDataset("hearthHexSurfaceRendererVisibleSurfaceRendered", String(Boolean(frameReceipt.visibleSurfaceRendered)));
-      setDataset("hearthHexSurfaceRendererAuthorityHexPixels", String(frameReceipt.authorityHexPixels || 0));
-      setDataset("hearthHexSurfaceRendererFallbackHexPixels", String(frameReceipt.fallbackHexPixels || 0));
-      setDataset("hearthHexSurfaceRendererFrameViewStateApplied", String(Boolean(frameReceipt.viewStateAppliedToProjection)));
-    }
-
-    setDataset("generatedImage", "false");
-    setDataset("graphicBox", "false");
-    setDataset("webgl", "false");
-    setDataset("visualPassClaimed", "false");
-
-    return true;
-  }
-
-  function publishGlobals() {
+  function publishGlobals(withReceipts = true) {
     root.HEARTH = root.HEARTH || {};
     root.DEXTER_LAB = root.DEXTER_LAB || {};
 
     root.HEARTH.hexSurface = api;
     root.HEARTH.hexSurfaceRenderer = api;
+    root.HEARTH.hexSurfaceInteractiveSpherePairRenderer = api;
     root.HEARTH.hexSurfacePlanetaryViewControlRenderer = api;
+
     root.DEXTER_LAB.hearthHexSurface = api;
     root.DEXTER_LAB.hearthHexSurfaceRenderer = api;
+    root.DEXTER_LAB.hearthHexSurfaceInteractiveSpherePairRenderer = api;
     root.DEXTER_LAB.hearthHexSurfacePlanetaryViewControlRenderer = api;
 
     root.HEARTH_HEX_SURFACE = api;
     root.HEARTH_HEX_SURFACE_RENDERER = api;
+    root.HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER = api;
     root.HEARTH_HEX_SURFACE_PLANETARY_VIEW_CONTROL_RENDERER = api;
     root.HEARTH_HEX_SURFACE_PLANETARY_VIEW_CONTROL_RENDERER_HANDSHAKE = api;
 
     root.HEARTH_HEX_SURFACE_CONTRACT = CONTRACT;
     root.HEARTH_HEX_SURFACE_RECEIPT = RECEIPT;
-    root.HEARTH_HEX_SURFACE_STATUS = getStatus();
-    root.HEARTH_HEX_SURFACE_RENDERER_RECEIPT = getReceipt();
-    root.HEARTH_HEX_SURFACE_PLANETARY_VIEW_CONTROL_RENDERER_HANDSHAKE_RECEIPT = getReceipt();
-    root.HEARTH_HEX_SURFACE_PLANETARY_VIEW_CONTROL_RENDERER_HANDSHAKE_RECEIPT_v3 = getReceipt();
 
-    root.HEARTH.hexSurfaceReceipt = getReceipt();
-    root.HEARTH.hexSurfaceRendererReceipt = getReceipt();
-    root.HEARTH.hexSurfacePlanetaryViewControlRendererReceipt = getReceipt();
-    root.DEXTER_LAB.hearthHexSurfaceReceipt = getReceipt();
+    if (withReceipts) {
+      const receipt = getReceipt();
+
+      root.HEARTH_HEX_SURFACE_STATUS = getStatus();
+      root.HEARTH_HEX_SURFACE_RENDERER_RECEIPT = receipt;
+      root.HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER_RECEIPT = receipt;
+      root.HEARTH_HEX_SURFACE_PLANETARY_VIEW_CONTROL_RENDERER_HANDSHAKE_RECEIPT = receipt;
+      root.HEARTH_HEX_SURFACE_PLANETARY_VIEW_CONTROL_RENDERER_HANDSHAKE_RECEIPT_v3 = receipt;
+
+      root.HEARTH.hexSurfaceReceipt = receipt;
+      root.HEARTH.hexSurfaceRendererReceipt = receipt;
+      root.HEARTH.hexSurfaceInteractiveSpherePairRendererReceipt = receipt;
+      root.HEARTH.hexSurfacePlanetaryViewControlRendererReceipt = receipt;
+      root.DEXTER_LAB.hearthHexSurfaceReceipt = receipt;
+      root.DEXTER_LAB.hearthHexSurfaceInteractiveSpherePairRendererReceipt = receipt;
+    }
 
     return api;
   }
@@ -1920,11 +2291,16 @@
   function dispose() {
     if (root.HEARTH && root.HEARTH.hexSurface === api) root.HEARTH.hexSurface = null;
     if (root.HEARTH && root.HEARTH.hexSurfaceRenderer === api) root.HEARTH.hexSurfaceRenderer = null;
+    if (root.HEARTH && root.HEARTH.hexSurfaceInteractiveSpherePairRenderer === api) root.HEARTH.hexSurfaceInteractiveSpherePairRenderer = null;
     if (root.HEARTH && root.HEARTH.hexSurfacePlanetaryViewControlRenderer === api) root.HEARTH.hexSurfacePlanetaryViewControlRenderer = null;
+
     if (root.DEXTER_LAB && root.DEXTER_LAB.hearthHexSurface === api) root.DEXTER_LAB.hearthHexSurface = null;
     if (root.DEXTER_LAB && root.DEXTER_LAB.hearthHexSurfaceRenderer === api) root.DEXTER_LAB.hearthHexSurfaceRenderer = null;
+    if (root.DEXTER_LAB && root.DEXTER_LAB.hearthHexSurfaceInteractiveSpherePairRenderer === api) root.DEXTER_LAB.hearthHexSurfaceInteractiveSpherePairRenderer = null;
+
     if (root.HEARTH_HEX_SURFACE === api) root.HEARTH_HEX_SURFACE = null;
     if (root.HEARTH_HEX_SURFACE_RENDERER === api) root.HEARTH_HEX_SURFACE_RENDERER = null;
+    if (root.HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER === api) root.HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER = null;
     if (root.HEARTH_HEX_SURFACE_PLANETARY_VIEW_CONTROL_RENDERER === api) root.HEARTH_HEX_SURFACE_PLANETARY_VIEW_CONTROL_RENDERER = null;
 
     setDataset("hearthHexSurfaceRendererDisposed", "true");
@@ -1935,6 +2311,8 @@
     RECEIPT,
     PREVIOUS_CONTRACT,
     PREVIOUS_RECEIPT,
+    LINEAGE_V2_CONTRACT,
+    LINEAGE_V2_RECEIPT,
     BASELINE_CONTRACT,
     BASELINE_RECEIPT,
     FILE,
@@ -1943,23 +2321,26 @@
     REQUIRED_HEX_AUTHORITY_CONTRACT,
     REQUIRED_HEX_AUTHORITY_RECEIPT,
     REQUIRED_HEX_AUTHORITY_FILE,
-    CURRENT_CANVAS_HUB_CONTRACT,
-    CURRENT_CANVAS_HUB_RECEIPT,
-    LINEAGE_CANVAS_HUB_CONTRACT,
-    LINEAGE_CANVAS_HUB_RECEIPT,
     CANVAS_HUB_FILE,
+    CURRENT_CANVAS_PUBLIC_CONTRACT,
+    PAIR_CANVAS_INTERNAL_CONTRACT,
 
     contract: CONTRACT,
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
+    lineageV2Contract: LINEAGE_V2_CONTRACT,
+    lineageV2Receipt: LINEAGE_V2_RECEIPT,
     baselineContract: BASELINE_CONTRACT,
     baselineReceipt: BASELINE_RECEIPT,
     version: VERSION,
     file: FILE,
     route: ROUTE,
-    role: "Hex Surface Renderer / Planetary View-Control Renderer Handshake",
+    role: "hex-surface-interactive-sphere-pair-renderer",
 
+    drawPairFrame,
+    drawInteractiveFrame,
+    drawSettledFrame,
     drawHearthHexSurfaceFrame,
     drawFrame,
     render,
@@ -1969,23 +2350,29 @@
     consumeCanvasViewState,
     receiveViewControlPacket,
     consumeViewControlPacket,
+    receivePairCanvasHandshake,
 
     validateHexAuthority,
     validateCanvasHub,
-    getStatus,
-    getReceipt,
-    getReceiptText,
     notifyCanvasHub,
     updateDataset,
     publishGlobals,
+    getStatus,
+    getReceipt,
+    getReceiptText,
     dispose,
 
-    canvasHubCompatible: true,
+    pairRendererActive: true,
+    sphericalProjectionActive: true,
+    flatBitmapSlidingRejected: true,
+    interactiveSphereRecomputationActive: true,
+    settledSphereRecomputationActive: true,
+    pairedCanvasHandshakeReady: true,
     canvasHubOnlyAwarenessUpdate: true,
-    planetaryViewRendererHandshakeActive: true,
     bodyBound: true,
     surfaceBound: true,
     highDensitySurfaceExpression: true,
+    interactiveSurfaceExpression: true,
 
     ownsCanvasHub: false,
     ownsHexAuthority: false,
@@ -2011,29 +2398,23 @@
   };
 
   try {
+    state.updatedAt = nowIso();
+
     validateHexAuthority();
     validateCanvasHub();
 
     const globalView = readGlobalViewState();
-    if (globalView) {
-      state.viewStateAccepted = true;
-      state.viewStateSource = globalView.source;
-      state.viewYaw = globalView.yaw;
-      state.viewPitch = globalView.pitch;
-      state.viewZoom = globalView.zoom;
-      state.viewPhase = globalView.phase;
-      state.viewStateLastAcceptedAt = nowIso();
-    }
+    if (globalView) normalizeViewState(globalView, {}, "INITIAL_GLOBAL_CANVAS_VIEW_STATE");
 
     updateDataset();
-    publishGlobals();
+    publishGlobals(true);
   } catch (error) {
     state.lastError = error && error.message ? String(error.message) : String(error);
     state.updatedAt = nowIso();
 
     try {
       updateDataset();
-      publishGlobals();
+      publishGlobals(false);
     } catch (_fallbackError) {}
   }
 

@@ -1,49 +1,63 @@
 // /assets/hearth/hearth.canvas.finger.surface.js
-// HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_TNT_v4
+// HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_HEX_EXPRESSION_SOCKET_TNT_v5
 // Full-file replacement.
-// Canvas Finger 3 / Surface / Pointer Finger / non-cardinal Bishop / Internal + External Expression Socket.
+// Canvas Finger 3 / Surface / Pointer Finger / non-cardinal Surface Pointer Bishop / Hex Expression Socket.
 // Previous:
-// HEARTH_CANVAS_FINGER_SURFACE_POINTER_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_TNT_v3
+// HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_TNT_v4
 // Purpose:
 // - Preserve Surface as Canvas Finger 3.
 // - Preserve Surface as the Pointer Finger.
-// - Upgrade Surface into the non-cardinal Pointer Bishop language standard.
-// - Preserve the single external donor-expression intake socket.
-// - Preserve internal expression intake for Composite, World Expression, Canvas Finger, and expansion packets.
-// - Accept Composite registration methods expected by /assets/hearth/hearth.canvas.finger.composite.js.
-// - Receive internal finger output without classifying it as an outside donor.
-// - Maintain separate ledgers for external donor traffic and internal finger/canvas traffic.
-// - Preserve Boundary Finger and Mass Finger consumption.
-// - Preserve first material differentiation and visible surface contribution APIs.
-// - Preserve Canvas Hub registration without becoming the Canvas parent.
-// - Publish both legacy finger aliases and renewed bishop aliases.
-// - Hold or route only when receiving authority is unavailable.
-// - Do not mutate HTML, index.js, route conductor, diagnostic rail, Canvas parent, Boundary Finger, Mass Finger,
-//   Light Finger, Inspect Finger, Composite Finger, materials, composition, air channel, cliffs, or donor files.
-// - Do not claim final terrain truth, hydrology truth, material truth, elevation truth, composite truth,
-//   F13, F21, ready text, completion latch, final visual pass, generated image, GraphicBox, or WebGL.
+// - Preserve non-cardinal Pointer Bishop language.
+// - Preserve legacy v1/v2/v3/v4 aliases and receipt expectations.
+// - Make Surface the explicit expression authority consumed by Hex Surface.
+// - Provide renderable terrain/water/material/elevation-style expression packets to Hex Surface.
+// - Expose Hex Surface expression-serving methods:
+//   1. sampleHexSurfaceExpression(packet)
+//   2. sampleSurfaceExpression(packet)
+//   3. getRenderableSurfaceExpression(packet)
+//   4. getSurfaceExpressionAt(packet)
+// - Keep Hex Surface responsible for projection and canvas drawing.
+// - Keep this file responsible for surface expression data only.
+// - Preserve internal finger/composite/world-expression intake.
+// - Preserve external donor intake and held/routed ledgers.
+// - Preserve Canvas Hub registration without becoming Canvas parent.
+// - Do not draw canvas.
+// - Do not mount DOM.
+// - Do not mutate HTML, index.js, route conductor, diagnostic rail, Canvas parent, Hex Surface,
+//   Hex Four-Pair Authority, Boundary Finger, Mass Finger, Light Finger, Inspect Finger,
+//   Composite Finger, materials, composition, air channel, cliffs, or donor files.
+// - Do not claim final terrain truth, hydrology truth, material truth, elevation truth,
+//   composite truth, F13, F21, ready text, completion latch, final visual pass,
+//   generated image, GraphicBox, or WebGL.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_TNT_v4";
-  const RECEIPT = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_RECEIPT_v4";
-  const PACKET = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_PACKET_v4";
+  const root = typeof window !== "undefined" ? window : globalThis;
+  const doc = root.document || null;
 
-  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_TNT_v3";
-  const PREVIOUS_RECEIPT = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_RECEIPT_v3";
-  const PREVIOUS_PACKET = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_PACKET_v3";
+  const CONTRACT = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_HEX_EXPRESSION_SOCKET_TNT_v5";
+  const RECEIPT = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_HEX_EXPRESSION_SOCKET_RECEIPT_v5";
+  const PACKET = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_HEX_EXPRESSION_SOCKET_PACKET_v5";
 
+  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_TNT_v4";
+  const PREVIOUS_RECEIPT = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_RECEIPT_v4";
+  const PREVIOUS_PACKET = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_PACKET_v4";
+
+  const LINEAGE_V3_CONTRACT = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_TNT_v3";
+  const LINEAGE_V3_RECEIPT = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_RECEIPT_v3";
   const LINEAGE_V2_CONTRACT = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_FINGER_EXTERNAL_EXPRESSION_SOCKET_TNT_v2";
   const LINEAGE_V2_RECEIPT = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_FINGER_EXTERNAL_EXPRESSION_SOCKET_RECEIPT_v2";
-
   const BASELINE_CONTRACT = "HEARTH_CANVAS_FINGER_SURFACE_FIRST_MATERIAL_DIFFERENTIATION_TNT_v1";
   const BASELINE_RECEIPT = "HEARTH_CANVAS_FINGER_SURFACE_FIRST_MATERIAL_DIFFERENTIATION_RECEIPT_v1";
 
   const FILE = "/assets/hearth/hearth.canvas.finger.surface.js";
   const ROUTE = "/showroom/globe/hearth/";
   const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
+
   const PARENT_HUB_FILE = "/assets/hearth/hearth.canvas.js";
+  const HEX_SURFACE_FILE = "/assets/hearth/hearth.hex.surface.js";
+  const HEX_AUTHORITY_FILE = "/assets/hearth/hearth.hex.four-pair.authority.js";
 
   const BOUNDARY_FILE = "/assets/hearth/hearth.canvas.finger.boundary.js";
   const MASS_FILE = "/assets/hearth/hearth.canvas.finger.mass.js";
@@ -56,16 +70,16 @@
   const AIR_CHANNEL_FILE = "/assets/hearth/hearth.air.channel.js";
   const CLIFFS_FILE = "/assets/hearth/hearth.cliffs.js";
 
-  const NEXT_FILE = LIGHT_FILE;
+  const NEXT_FILE = HEX_SURFACE_FILE;
 
   const FINGER_NAME = "surface";
-  const FINGER_ROLE = "pointer-finger-internal-external-expression-socket";
+  const FINGER_ROLE = "pointer-finger-hex-expression-socket";
   const FINGER_ORDER = 3;
   const FINGER_STRETCH_TOTAL = 5;
 
   const BISHOP_NAME = "surface";
   const BISHOP_TITLE = "Surface Pointer Bishop";
-  const BISHOP_ROLE = "pointer-bishop-internal-external-expression-socket";
+  const BISHOP_ROLE = "pointer-bishop-hex-expression-socket";
   const BISHOP_RANK = "non-cardinal-bishop";
   const BISHOP_ORDER = 3;
   const BISHOP_ADDRESS = "surface.pointer";
@@ -73,12 +87,16 @@
   const BISHOP_CARDINAL_DISPOSITION = "NON_CARDINAL_POINTER";
   const BISHOP_SUBJECT_FILE = FILE;
   const BISHOP_PARENT = PARENT_HUB_FILE;
-  const BISHOP_CANONICAL_STATUS = "BISHOP_LANGUAGE_ADOPTED_WITH_LEGACY_FINGER_COMPATIBILITY";
+  const BISHOP_CANONICAL_STATUS = "HEX_EXPRESSION_SOCKET_WITH_LEGACY_FINGER_COMPATIBILITY";
+
+  const HEX_SURFACE_REQUIRED_CONTRACT = "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER_TNT_v4";
+  const HEX_SURFACE_NEXT_EXPECTED_CONTRACT = "HEARTH_HEX_SURFACE_POINTER_BISHOP_EXPRESSION_CONSUMER_TNT_v5";
 
   const FINAL_FALSE = Object.freeze({
     f13Claimed: false,
     f13EligibleForCanvas: false,
     f13ClaimedByCanvasParent: false,
+    f13ClaimedBySurfacePointerBishop: false,
     f21Claimed: false,
     f21EligibleForNorth: false,
     f21SubmittedToNorth: false,
@@ -102,7 +120,8 @@
     visualPassClaimed: false,
     generatedImage: false,
     graphicBox: false,
-    webGL: false
+    webGL: false,
+    webgl: false
   });
 
   const CATEGORY = Object.freeze({
@@ -118,6 +137,7 @@
     AIR_CHANNEL: "air-channel",
     CLIFFS: "cliffs",
     HYDROLOGY_INTERFACE: "hydrology-interface",
+    HEX_SURFACE: "hex-surface",
     UNKNOWN: "unknown"
   });
 
@@ -157,7 +177,7 @@
       bishopAddress: BISHOP_ADDRESS,
       bishopDirection: BISHOP_DIRECTION,
       file: FILE,
-      role: "pointer bishop, pointer finger, internal/external expression socket, surface-visible synthesis"
+      role: "pointer bishop, pointer finger, hex expression socket, surface-expression authority"
     }),
     Object.freeze({
       order: 4,
@@ -175,6 +195,33 @@
       file: INSPECT_FILE,
       role: "expression-finger inspection receipt without diagnostic rail takeover"
     })
+  ]);
+
+  const COLOR = Object.freeze({
+    abyss: [2, 10, 28, 255],
+    deep: [4, 28, 70, 255],
+    ocean: [8, 68, 122, 255],
+    shelf: [30, 128, 146, 255],
+    foam: [104, 176, 170, 255],
+    landLow: [86, 116, 70, 255],
+    landWarm: [144, 132, 78, 255],
+    landWet: [36, 104, 66, 255],
+    ridge: [92, 88, 78, 255],
+    granite: [138, 132, 118, 255],
+    cliff: [42, 50, 60, 255],
+    snow: [218, 230, 228, 255],
+    copper: [158, 92, 60, 255],
+    opal: [148, 194, 188, 255]
+  });
+
+  const BODY_MASSES = Object.freeze([
+    Object.freeze({ key: "north-crown-mass", lat: 78, lon: -20, rx: 42, ry: 13, angle: -10 }),
+    Object.freeze({ key: "equatorial-great-mass", lat: 1, lon: -8, rx: 64, ry: 28, angle: -8 }),
+    Object.freeze({ key: "northwest-temperate-mass", lat: 44, lon: -104, rx: 32, ry: 17, angle: 28 }),
+    Object.freeze({ key: "northeast-broken-shelf-mass", lat: 34, lon: 104, rx: 34, ry: 16, angle: -24 }),
+    Object.freeze({ key: "southeast-warm-mass", lat: -24, lon: 142, rx: 38, ry: 20, angle: 18 }),
+    Object.freeze({ key: "southwest-ridge-mass", lat: -38, lon: -122, rx: 36, ry: 18, angle: -30 }),
+    Object.freeze({ key: "south-transitional-mass", lat: -59, lon: 36, rx: 40, ry: 14, angle: 9 })
   ]);
 
   const HUB_SOURCE_NAMES = Object.freeze([
@@ -199,6 +246,8 @@
   ]);
 
   const HUB_INTAKE_METHODS = Object.freeze([
+    "receiveSurfaceExpressionAuthority",
+    "receiveHexExpressionAuthority",
     "receiveBishopPacket",
     "receiveCanvasBishopPacket",
     "receivePointerBishopPacket",
@@ -214,6 +263,21 @@
     "registerExpressionFinger",
     "receiveExpressionPacket",
     "receiveChildPacket"
+  ]);
+
+  const HEX_SURFACE_SOURCE_NAMES = Object.freeze([
+    "HEARTH.hexSurface",
+    "HEARTH.hexSurfaceRenderer",
+    "HEARTH.hexSurfaceInteractiveSpherePairRenderer",
+    "HEARTH.hexSurfacePlanetaryViewControlRenderer",
+    "HEARTH_HEX_SURFACE",
+    "HEARTH_HEX_SURFACE_RENDERER",
+    "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER",
+    "HEARTH_HEX_SURFACE_PLANETARY_VIEW_CONTROL_RENDERER",
+    "DEXTER_LAB.hearthHexSurface",
+    "DEXTER_LAB.hearthHexSurfaceRenderer",
+    "DEXTER_LAB.hearthHexSurfaceInteractiveSpherePairRenderer",
+    "DEXTER_LAB.hearthHexSurfacePlanetaryViewControlRenderer"
   ]);
 
   const BOUNDARY_SOURCE_NAMES = Object.freeze([
@@ -246,242 +310,6 @@
     "DEXTER_LAB.hearthCanvasMassBishop"
   ]);
 
-  const TARGET_RECEIVERS = Object.freeze({
-    [CATEGORY.BOUNDARY]: Object.freeze({
-      category: CATEGORY.BOUNDARY,
-      file: BOUNDARY_FILE,
-      authority: "boundary/silhouette/containment",
-      surfaceOwnsCategory: false,
-      globalPaths: BOUNDARY_SOURCE_NAMES,
-      methods: Object.freeze([
-        "receiveSurfacePointerBishopPacket",
-        "receiveSurfacePointerPacket",
-        "receivePointerFingerPacket",
-        "receiveExternalExpression",
-        "receiveExpressionPacket",
-        "receiveBoundaryExpressionPacket",
-        "receiveChildPacket"
-      ])
-    }),
-    [CATEGORY.MASS]: Object.freeze({
-      category: CATEGORY.MASS,
-      file: MASS_FILE,
-      authority: "body/mass/volume/physical pressure",
-      surfaceOwnsCategory: false,
-      globalPaths: MASS_SOURCE_NAMES,
-      methods: Object.freeze([
-        "receiveSurfacePointerBishopPacket",
-        "receiveSurfacePointerPacket",
-        "receivePointerFingerPacket",
-        "receiveExternalExpression",
-        "receiveExpressionPacket",
-        "receiveMassExpressionPacket",
-        "receiveChildPacket"
-      ])
-    }),
-    [CATEGORY.LIGHT]: Object.freeze({
-      category: CATEGORY.LIGHT,
-      file: LIGHT_FILE,
-      authority: "light/shadow/chamber visibility/atmosphere edge",
-      surfaceOwnsCategory: false,
-      globalPaths: Object.freeze([
-        "HEARTH.canvasFingerLight",
-        "HEARTH.canvasLightFinger",
-        "HEARTH.canvasBishopLight",
-        "HEARTH.canvasLightBishop",
-        "HEARTH_CANVAS_FINGER_LIGHT",
-        "HEARTH_CANVAS_LIGHT_FINGER",
-        "HEARTH_CANVAS_BISHOP_LIGHT",
-        "HEARTH_CANVAS_LIGHT_BISHOP",
-        "DEXTER_LAB.hearthCanvasFingerLight",
-        "DEXTER_LAB.hearthCanvasLightFinger",
-        "DEXTER_LAB.hearthCanvasBishopLight",
-        "DEXTER_LAB.hearthCanvasLightBishop"
-      ]),
-      methods: Object.freeze([
-        "receiveSurfacePointerBishopPacket",
-        "receiveSurfacePointerPacket",
-        "receivePointerFingerPacket",
-        "receiveExternalExpression",
-        "receiveExpressionPacket",
-        "receiveLightExpressionPacket",
-        "receiveChildPacket"
-      ])
-    }),
-    [CATEGORY.INSPECT]: Object.freeze({
-      category: CATEGORY.INSPECT,
-      file: INSPECT_FILE,
-      authority: "inspection/readability/click-facing proof",
-      surfaceOwnsCategory: false,
-      globalPaths: Object.freeze([
-        "HEARTH.canvasFingerInspect",
-        "HEARTH.canvasInspectFinger",
-        "HEARTH.canvasBishopInspect",
-        "HEARTH.canvasInspectBishop",
-        "HEARTH_CANVAS_FINGER_INSPECT",
-        "HEARTH_CANVAS_INSPECT_FINGER",
-        "HEARTH_CANVAS_BISHOP_INSPECT",
-        "HEARTH_CANVAS_INSPECT_BISHOP",
-        "DEXTER_LAB.hearthCanvasFingerInspect",
-        "DEXTER_LAB.hearthCanvasInspectFinger",
-        "DEXTER_LAB.hearthCanvasBishopInspect",
-        "DEXTER_LAB.hearthCanvasInspectBishop"
-      ]),
-      methods: Object.freeze([
-        "receiveSurfacePointerBishopPacket",
-        "receiveSurfacePointerPacket",
-        "receivePointerFingerPacket",
-        "receiveExternalExpression",
-        "receiveExpressionPacket",
-        "receiveInspectExpressionPacket",
-        "receiveClickExpressionPacket",
-        "receiveChildPacket"
-      ])
-    }),
-    [CATEGORY.MATERIALS]: Object.freeze({
-      category: CATEGORY.MATERIALS,
-      file: MATERIALS_FILE,
-      authority: "material/mineral/color/texture families",
-      surfaceOwnsCategory: false,
-      globalPaths: Object.freeze([
-        "HEARTH.materials",
-        "HEARTH.hearthMaterials",
-        "HEARTH_MATERIALS",
-        "HEARTH_CANVAS_MATERIALS",
-        "HEARTH_CANVAS_MATERIAL_AUTHORITY"
-      ]),
-      methods: Object.freeze([
-        "receiveSurfacePointerBishopPacket",
-        "receiveSurfacePointerPacket",
-        "receivePointerFingerPacket",
-        "receiveExternalExpression",
-        "receiveExpressionPacket",
-        "receiveMaterialExpressionPacket",
-        "receiveChildPacket"
-      ])
-    }),
-    [CATEGORY.COMPOSITION]: Object.freeze({
-      category: CATEGORY.COMPOSITION,
-      file: COMPOSITION_FILE,
-      authority: "planetary composition/layered structure/internal formation",
-      surfaceOwnsCategory: false,
-      globalPaths: Object.freeze([
-        "HEARTH.composition",
-        "HEARTH.hearthComposition",
-        "HEARTH_COMPOSITION",
-        "HEARTH_CANVAS_COMPOSITION",
-        "HEARTH_PLANET_COMPOSITION"
-      ]),
-      methods: Object.freeze([
-        "receiveSurfacePointerBishopPacket",
-        "receiveSurfacePointerPacket",
-        "receivePointerFingerPacket",
-        "receiveExternalExpression",
-        "receiveExpressionPacket",
-        "receiveCompositionExpressionPacket",
-        "receiveChildPacket"
-      ])
-    }),
-    [CATEGORY.AIR_CHANNEL]: Object.freeze({
-      category: CATEGORY.AIR_CHANNEL,
-      file: AIR_CHANNEL_FILE,
-      authority: "air channel/pressure/haze/sky shell/atmosphere behavior",
-      surfaceOwnsCategory: false,
-      globalPaths: Object.freeze([
-        "HEARTH.airChannel",
-        "HEARTH.hearthAirChannel",
-        "HEARTH_AIR_CHANNEL",
-        "HEARTH_CANVAS_AIR_CHANNEL",
-        "HEARTH_ATMOSPHERE_CHANNEL"
-      ]),
-      methods: Object.freeze([
-        "receiveSurfacePointerBishopPacket",
-        "receiveSurfacePointerPacket",
-        "receivePointerFingerPacket",
-        "receiveExternalExpression",
-        "receiveExpressionPacket",
-        "receiveAirChannelExpressionPacket",
-        "receiveAtmosphereExpressionPacket",
-        "receiveChildPacket"
-      ])
-    }),
-    [CATEGORY.CLIFFS]: Object.freeze({
-      category: CATEGORY.CLIFFS,
-      file: CLIFFS_FILE,
-      authority: "cliffs/escarpments/vertical relief/edge relief",
-      surfaceOwnsCategory: false,
-      globalPaths: Object.freeze([
-        "HEARTH.cliffs",
-        "HEARTH.hearthCliffs",
-        "HEARTH_CLIFFS",
-        "HEARTH_CANVAS_CLIFFS",
-        "HEARTH_RELIEF_CLIFFS"
-      ]),
-      methods: Object.freeze([
-        "receiveSurfacePointerBishopPacket",
-        "receiveSurfacePointerPacket",
-        "receivePointerFingerPacket",
-        "receiveExternalExpression",
-        "receiveExpressionPacket",
-        "receiveCliffExpressionPacket",
-        "receiveReliefExpressionPacket",
-        "receiveChildPacket"
-      ])
-    }),
-    [CATEGORY.SURFACE]: Object.freeze({
-      category: CATEGORY.SURFACE,
-      file: FILE,
-      authority: "surface-visible synthesis and external intake routing",
-      surfaceOwnsCategory: true,
-      globalPaths: Object.freeze([]),
-      methods: Object.freeze([])
-    }),
-    [CATEGORY.HYDROLOGY_INTERFACE]: Object.freeze({
-      category: CATEGORY.HYDROLOGY_INTERFACE,
-      file: FILE,
-      authority: "visible wet/dry contact only; hydrology truth not owned",
-      surfaceOwnsCategory: true,
-      globalPaths: Object.freeze([]),
-      methods: Object.freeze([])
-    }),
-    [CATEGORY.COMPOSITE]: Object.freeze({
-      category: CATEGORY.COMPOSITE,
-      file: COMPOSITE_FILE,
-      authority: "composite/world-expression assembly",
-      surfaceOwnsCategory: false,
-      internalOnly: true,
-      globalPaths: Object.freeze([
-        "HEARTH.canvasFingerComposite",
-        "HEARTH.canvasCompositeFinger",
-        "HEARTH.canvasBishopComposite",
-        "HEARTH.canvasCompositeBishop",
-        "HEARTH_CANVAS_FINGER_COMPOSITE",
-        "HEARTH_CANVAS_COMPOSITE_FINGER",
-        "HEARTH_CANVAS_BISHOP_COMPOSITE",
-        "HEARTH_CANVAS_COMPOSITE_BISHOP",
-        "DEXTER_LAB.hearthCanvasFingerComposite",
-        "DEXTER_LAB.hearthCanvasCompositeFinger",
-        "DEXTER_LAB.hearthCanvasBishopComposite",
-        "DEXTER_LAB.hearthCanvasCompositeBishop"
-      ]),
-      methods: Object.freeze([])
-    }),
-    [CATEGORY.WORLD_EXPRESSION]: Object.freeze({
-      category: CATEGORY.WORLD_EXPRESSION,
-      file: COMPOSITE_FILE,
-      authority: "assembled world expression packet",
-      surfaceOwnsCategory: false,
-      internalOnly: true,
-      globalPaths: Object.freeze([
-        "HEARTH.worldExpressionPacket",
-        "HEARTH_CANVAS_WORLD_EXPRESSION_PACKET",
-        "HEARTH_WORLD_EXPRESSION_PACKET",
-        "DEXTER_LAB.hearthWorldExpressionPacket"
-      ]),
-      methods: Object.freeze([])
-    })
-  });
-
   const KEYWORDS = Object.freeze({
     [CATEGORY.MASS]: Object.freeze(["mass", "volume", "body", "sphere", "physical", "pressure", "core", "weight", "density", "land shape", "body shape"]),
     [CATEGORY.BOUNDARY]: Object.freeze(["boundary", "silhouette", "edge", "containment", "rim", "outline", "sphere edge", "body edge", "clip", "mask", "envelope"]),
@@ -494,11 +322,10 @@
     [CATEGORY.AIR_CHANNEL]: Object.freeze(["air", "atmosphere", "haze", "fog", "pressure", "sky", "breath", "air channel", "vapor", "mist", "cloud"]),
     [CATEGORY.CLIFFS]: Object.freeze(["cliff", "cliffs", "escarpment", "ridge", "relief", "vertical", "slope", "wall", "mountain edge", "drop", "ravine"]),
     [CATEGORY.HYDROLOGY_INTERFACE]: Object.freeze(["waterline", "wet", "shore", "coast", "basin", "shelf", "ocean interface", "hydrology interface", "dry", "submerged", "water contact"]),
-    [CATEGORY.SURFACE]: Object.freeze(["surface", "terrain", "land", "field", "patch", "zone", "formation", "visible surface", "skin", "planet surface", "factory surface", "pointer bishop"])
+    [CATEGORY.SURFACE]: Object.freeze(["surface", "terrain", "land", "field", "patch", "zone", "formation", "visible surface", "skin", "planet surface", "factory surface", "pointer bishop"]),
+    [CATEGORY.HEX_SURFACE]: Object.freeze(["hex surface", "hex-surface", "renderer", "spherical projection", "projection consumer"])
   });
 
-  const root = typeof window !== "undefined" ? window : globalThis;
-  const doc = root.document || null;
   const api = {};
 
   const state = {
@@ -512,6 +339,8 @@
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
     previousPacket: PREVIOUS_PACKET,
+    lineageV3Contract: LINEAGE_V3_CONTRACT,
+    lineageV3Receipt: LINEAGE_V3_RECEIPT,
     lineageV2Contract: LINEAGE_V2_CONTRACT,
     lineageV2Receipt: LINEAGE_V2_RECEIPT,
     baselineContract: BASELINE_CONTRACT,
@@ -521,6 +350,8 @@
     route: ROUTE,
     diagnosticRoute: DIAGNOSTIC_ROUTE,
     parentHubFile: PARENT_HUB_FILE,
+    hexSurfaceFile: HEX_SURFACE_FILE,
+    hexAuthorityFile: HEX_AUTHORITY_FILE,
     boundaryFile: BOUNDARY_FILE,
     massFile: MASS_FILE,
     lightFile: LIGHT_FILE,
@@ -556,6 +387,13 @@
     nonCardinalBishopLanguageActive: true,
     legacyFingerCompatibilityActive: true,
 
+    hexExpressionSocketActive: true,
+    hexSurfaceExpressionAuthority: true,
+    hexSurfaceConsumerExpected: true,
+    hexSurfaceProjectionDelegated: true,
+    canvasDrawingDelegatedToHexSurface: true,
+    directCanvasDrawingSuppressed: true,
+
     externalExpressionSocketActive: true,
     internalExpressionSocketActive: true,
     internalExternalExpressionSocketActive: true,
@@ -576,6 +414,14 @@
     massPacketObserved: false,
     massModelObserved: false,
 
+    hexSurfaceObserved: false,
+    hexSurfaceContract: "UNKNOWN",
+    hexSurfaceRecognized: false,
+    hexSurfaceHandshakeAttempted: false,
+    hexSurfaceHandshakeAccepted: false,
+    hexSurfaceHandshakeMethod: "NONE",
+    hexSurfaceHandshakeError: "",
+
     surfaceModelReady: false,
     firstSurfaceDifferentiationReady: false,
     roughTerrainTintReady: false,
@@ -584,6 +430,12 @@
     pointerFingerPacketReady: false,
     pointerBishopPacketReady: false,
     visibleContributionAvailable: false,
+
+    surfaceExpressionReady: false,
+    hexSurfaceExpressionReady: false,
+    sampleHexSurfaceExpressionReady: true,
+    sampleSurfaceExpressionReady: true,
+    renderableSurfaceExpressionReady: true,
 
     externalIntakeReady: true,
     externalIntakeCount: 0,
@@ -601,6 +453,16 @@
     compositeInternalPacketCount: 0,
     worldExpressionInternalPacketCount: 0,
     internalSurfaceBridgeCount: 0,
+
+    hexExpressionRequestCount: 0,
+    hexExpressionServedCount: 0,
+    hexExpressionRejectedCount: 0,
+    latestHexExpressionAt: "",
+    latestHexExpressionRequestSource: "NONE",
+    latestHexExpressionCellId: "NONE",
+    latestHexExpressionMaterialClass: "NONE",
+    latestHexExpressionLandPresence: 0,
+    latestHexExpressionWaterPresence: 0,
 
     latestExternalPacketId: "NONE",
     latestExternalPacketCategory: "NONE",
@@ -632,6 +494,8 @@
 
     surfaceFormationFields: [],
     surfaceMaterialFamilies: [],
+
+    hexExpressionLedger: [],
 
     hubDetected: false,
     hubSourceName: "NONE",
@@ -692,15 +556,50 @@
     return Number.isFinite(number) ? number : fallback;
   }
 
-  function safeBool(value, fallback = false) {
-    if (typeof value === "boolean") return value;
-    if (value === true || value === 1 || value === "1" || value === "true" || value === "TRUE") return true;
-    if (value === false || value === 0 || value === "0" || value === "false" || value === "FALSE") return false;
-    return fallback;
-  }
-
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, safeNumber(value, min)));
+  }
+
+  function clamp01(value) {
+    return clamp(value, 0, 1);
+  }
+
+  function lerp(a, b, t) {
+    return a + (b - a) * clamp01(t);
+  }
+
+  function mixColor(a, b, t) {
+    const k = clamp01(t);
+    return [
+      Math.round(lerp(a[0], b[0], k)),
+      Math.round(lerp(a[1], b[1], k)),
+      Math.round(lerp(a[2], b[2], k)),
+      Math.round(lerp(a[3] === undefined ? 255 : a[3], b[3] === undefined ? 255 : b[3], k))
+    ];
+  }
+
+  function multiplyColor(color, amount) {
+    const k = clamp(amount, 0, 2);
+    return [
+      clamp(Math.round(color[0] * k), 0, 255),
+      clamp(Math.round(color[1] * k), 0, 255),
+      clamp(Math.round(color[2] * k), 0, 255),
+      color[3] === undefined ? 255 : color[3]
+    ];
+  }
+
+  function wrap01(value) {
+    const n = safeNumber(value, 0);
+    return ((n % 1) + 1) % 1;
+  }
+
+  function wrapDeg(value) {
+    const n = safeNumber(value, 0);
+    return ((((n + 180) % 360) + 360) % 360) - 180;
+  }
+
+  function degDistance(a, b) {
+    return wrapDeg(safeNumber(a, 0) - safeNumber(b, 0));
   }
 
   function clonePlain(value) {
@@ -721,6 +620,15 @@
       .slice(0, limit);
   }
 
+  function getObjectText(value, limit = 8000) {
+    try {
+      if (typeof value === "string") return bounded(value, limit);
+      return bounded(JSON.stringify(value), limit);
+    } catch (_error) {
+      return bounded(String(value), limit);
+    }
+  }
+
   function trimArray(array, max) {
     if (Array.isArray(array) && array.length > max) {
       array.splice(0, array.length - max);
@@ -731,10 +639,53 @@
     return `${key}=${value === undefined || value === null ? "" : String(value)}`;
   }
 
-  function record(event, detail = {}) {
+  function hash2(x, y, seed) {
+    const n = Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123;
+    return n - Math.floor(n);
+  }
+
+  function valueNoise(x, y, seed) {
+    const ix = Math.floor(x);
+    const iy = Math.floor(y);
+    const fx = x - ix;
+    const fy = y - iy;
+
+    const a = hash2(ix, iy, seed);
+    const b = hash2(ix + 1, iy, seed);
+    const c = hash2(ix, iy + 1, seed);
+    const d = hash2(ix + 1, iy + 1, seed);
+
+    const ux = fx * fx * (3 - 2 * fx);
+    const uy = fy * fy * (3 - 2 * fy);
+
+    return lerp(lerp(a, b, ux), lerp(c, d, ux), uy);
+  }
+
+  function fbm(x, y, seed, octaves) {
+    let total = 0;
+    let amplitude = 0.54;
+    let frequency = 1;
+    let norm = 0;
+
+    for (let i = 0; i < octaves; i += 1) {
+      total += valueNoise(x * frequency, y * frequency, seed + i * 31.17) * amplitude;
+      norm += amplitude;
+      amplitude *= 0.5;
+      frequency *= 2.03;
+    }
+
+    return total / Math.max(0.000001, norm);
+  }
+
+  function smoothstep(edge0, edge1, value) {
+    const t = clamp01((value - edge0) / Math.max(0.000001, edge1 - edge0));
+    return t * t * (3 - 2 * t);
+  }
+
+  function record(eventName, detail = {}) {
     const item = {
       at: nowIso(),
-      event: safeString(event, "SURFACE_POINTER_BISHOP_EVENT"),
+      event: safeString(eventName, "SURFACE_POINTER_BISHOP_EVENT"),
       detail: clonePlain(detail)
     };
 
@@ -789,21 +740,60 @@
     return { source: null, sourceName: "NONE" };
   }
 
-  function nextExternalId() {
-    return `SURFACE_POINTER_BISHOP_EXTERNAL_${String(state.externalIntakeCount + 1).padStart(4, "0")}`;
+  function contractOf(candidate) {
+    if (!isObject(candidate)) return "";
+    return safeString(
+      candidate.contract ||
+      candidate.CONTRACT ||
+      candidate.currentContract ||
+      candidate.sourceContract ||
+      candidate.canvasContract ||
+      candidate.hexSurfaceContract ||
+      "",
+      ""
+    );
   }
 
-  function nextInternalId() {
-    return `SURFACE_POINTER_BISHOP_INTERNAL_${String(state.internalIntakeCount + 1).padStart(4, "0")}`;
+  function receiptOf(candidate) {
+    if (!isObject(candidate)) return "";
+    return safeString(
+      candidate.receipt ||
+      candidate.RECEIPT ||
+      candidate.currentReceipt ||
+      candidate.sourceReceipt ||
+      candidate.canvasReceipt ||
+      candidate.hexSurfaceReceipt ||
+      "",
+      ""
+    );
   }
 
-  function getObjectText(value, limit = 8000) {
-    try {
-      if (typeof value === "string") return bounded(value, limit);
-      return bounded(JSON.stringify(value), limit);
-    } catch (_error) {
-      return bounded(String(value), limit);
+  function readReceipt(candidate) {
+    if (!isObject(candidate)) return null;
+
+    const methods = [
+      "getReceiptLight",
+      "getReceipt",
+      "getStatus",
+      "getReport",
+      "getState",
+      "read"
+    ];
+
+    for (const method of methods) {
+      if (!isFunction(candidate[method])) continue;
+
+      try {
+        const result = candidate[method]();
+        if (isObject(result)) return result;
+      } catch (_error) {}
     }
+
+    if (isObject(candidate.receipt)) return candidate.receipt;
+    if (isObject(candidate.receiptPacket)) return candidate.receiptPacket;
+    if (candidate.contract || candidate.CONTRACT || candidate.receipt || candidate.RECEIPT) return candidate;
+
+    return null;
   }
 
   function hasForbiddenClaim(packet) {
@@ -813,6 +803,7 @@
       packet.f13Claimed === true ||
       packet.f13EligibleForCanvas === true ||
       packet.f13ClaimedByCanvasParent === true ||
+      packet.f13ClaimedBySurfacePointerBishop === true ||
       packet.f21Claimed === true ||
       packet.f21EligibleForNorth === true ||
       packet.f21SubmittedToNorth === true ||
@@ -837,30 +828,11 @@
     );
   }
 
-  function getExplicitCategory(input) {
-    if (!isObject(input)) return "";
-
-    return safeString(
-      input.category ||
-      input.expressionCategory ||
-      input.domain ||
-      input.expressionDomain ||
-      input.targetCategory ||
-      input.routeCategory ||
-      input.bishopName ||
-      input.bishopKey ||
-      input.bishop ||
-      input.fingerName ||
-      input.fingerKey ||
-      input.finger ||
-      ""
-    ).trim().toLowerCase();
-  }
-
   function normalizeCategory(category) {
     const text = safeString(category).trim().toLowerCase();
 
     if (!text) return CATEGORY.UNKNOWN;
+    if (text.includes("hex") && text.includes("surface")) return CATEGORY.HEX_SURFACE;
     if (text.includes("world-expression") || text.includes("world expression") || text.includes("worldexpression")) return CATEGORY.WORLD_EXPRESSION;
     if (text.includes("composite")) return CATEGORY.COMPOSITE;
     if (text.includes("hydro") || text.includes("waterline") || text.includes("coast") || text.includes("shore")) return CATEGORY.HYDROLOGY_INTERFACE;
@@ -879,6 +851,26 @@
     }
 
     return CATEGORY.UNKNOWN;
+  }
+
+  function getExplicitCategory(input) {
+    if (!isObject(input)) return "";
+
+    return safeString(
+      input.category ||
+      input.expressionCategory ||
+      input.domain ||
+      input.expressionDomain ||
+      input.targetCategory ||
+      input.routeCategory ||
+      input.bishopName ||
+      input.bishopKey ||
+      input.bishop ||
+      input.fingerName ||
+      input.fingerKey ||
+      input.finger ||
+      ""
+    ).trim().toLowerCase();
   }
 
   function classifyByKeywords(input = {}, options = {}) {
@@ -900,6 +892,7 @@
       const packetType = safeString(input.packetType || input.packetName || "").toUpperCase();
       const sourceFile = safeString(input.sourceFile || input.file || "").toLowerCase();
 
+      if (packetType.includes("HEX_SURFACE") || sourceFile.includes("hearth.hex.surface")) scores[CATEGORY.HEX_SURFACE] += 16;
       if (packetType.includes("WORLD_EXPRESSION")) scores[CATEGORY.WORLD_EXPRESSION] += 16;
       if (packetType.includes("COMPOSITE")) scores[CATEGORY.COMPOSITE] += 16;
       if (packetType.includes("BISHOP") || packetType.includes("FINGER")) scores[CATEGORY.SURFACE] += 2;
@@ -984,6 +977,14 @@
     };
   }
 
+  function nextExternalId() {
+    return `SURFACE_POINTER_BISHOP_EXTERNAL_${String(state.externalIntakeCount + 1).padStart(4, "0")}`;
+  }
+
+  function nextInternalId() {
+    return `SURFACE_POINTER_BISHOP_INTERNAL_${String(state.internalIntakeCount + 1).padStart(4, "0")}`;
+  }
+
   function normalizeExternalExpression(input = {}, options = {}) {
     const id = safeString(options.id || input.id || input.donorId || input.packetId || nextExternalId());
     const sourceName = safeString(options.sourceName || input.sourceName || input.donorName || input.name || "EXTERNAL_DONOR_EXPRESSION");
@@ -1065,73 +1066,888 @@
     state.internalCategoryCounts[key] = safeNumber(state.internalCategoryCounts[key], 0) + 1;
   }
 
-  function findRegisteredReceiver(category) {
-    const entry = state.registeredReceivers[category];
+  function extractSurfaceFormationField(payload, classification) {
+    const source = isObject(payload) ? payload : {};
+    const fields = [];
 
-    if (entry && isObject(entry.receiver)) {
+    const directFields = Array.isArray(source.surfaceFormationFields)
+      ? source.surfaceFormationFields
+      : Array.isArray(source.surfaceSeeds)
+        ? source.surfaceSeeds
+        : Array.isArray(source.fields)
+          ? source.fields
+          : [];
+
+    for (const entry of directFields.slice(0, 64)) {
+      if (!isObject(entry)) continue;
+
+      fields.push({
+        id: safeString(entry.id || entry.name || `SURFACE_POINTER_BISHOP_DONOR_FIELD_${fields.length + 1}`),
+        u: clamp(entry.u ?? entry.x ?? entry.cx ?? entry.centerX ?? 0.5, 0, 1),
+        v: clamp(entry.v ?? entry.y ?? entry.cy ?? entry.centerY ?? 0.5, 0, 1),
+        lon: safeNumber(entry.lon ?? ((clamp(entry.u ?? entry.x ?? 0.5, 0, 1) * 360) - 180), 0),
+        lat: safeNumber(entry.lat ?? (90 - clamp(entry.v ?? entry.y ?? 0.5, 0, 1) * 180), 0),
+        scale: clamp(entry.scale ?? entry.radius ?? entry.size ?? 0.16, 0.02, 0.8),
+        value: clamp(entry.value ?? entry.weight ?? entry.strength ?? 0.55, 0, 1),
+        donorCategory: classification.category,
+        donorConfidence: classification.confidence,
+        ownsTruth: false
+      });
+    }
+
+    if (!fields.length) {
+      fields.push({
+        id: `SURFACE_POINTER_BISHOP_DONOR_${state.surfaceIntegratedCount + 1}`,
+        u: 0.5,
+        v: 0.5,
+        lon: 0,
+        lat: 0,
+        scale: classification.category === CATEGORY.HYDROLOGY_INTERFACE ? 0.24 : 0.2,
+        value: classification.category === CATEGORY.HYDROLOGY_INTERFACE ? 0.42 : 0.56,
+        donorCategory: classification.category,
+        donorConfidence: classification.confidence,
+        ownsTruth: false
+      });
+    }
+
+    return fields;
+  }
+
+  function extractCompositeBridgeFields(payload, classification) {
+    const source = isObject(payload) ? payload : {};
+    const model = isObject(source.compositeModel)
+      ? source.compositeModel
+      : isObject(source.worldExpressionModel)
+        ? source.worldExpressionModel
+        : isObject(source.compositePacket) && isObject(source.compositePacket.compositeModel)
+          ? source.compositePacket.compositeModel
+          : isObject(source.worldExpressionPacket) && isObject(source.worldExpressionPacket.compositeModel)
+            ? source.worldExpressionPacket.compositeModel
+            : isObject(source.worldExpressionPacket) && isObject(source.worldExpressionPacket.worldExpressionModel)
+              ? source.worldExpressionPacket.worldExpressionModel
+              : source;
+
+    const nodes = Array.isArray(model.compositeNodes)
+      ? model.compositeNodes
+      : Array.isArray(model.worldExpressionNodes)
+        ? model.worldExpressionNodes
+        : Array.isArray(source.compositeNodes)
+          ? source.compositeNodes
+          : [];
+
+    const fields = [];
+
+    if (nodes.length) {
+      const step = Math.max(1, Math.floor(nodes.length / 48));
+
+      for (let index = 0; index < nodes.length && fields.length < 64; index += step) {
+        const node = nodes[index];
+        if (!isObject(node)) continue;
+
+        const u = clamp(node.u ?? node.x ?? ((safeNumber(node.col, 8) + 0.5) / 16), 0, 1);
+        const v = clamp(node.v ?? node.y ?? ((safeNumber(node.row, 8) + 0.5) / 16), 0, 1);
+
+        fields.push({
+          id: safeString(node.id || `SURFACE_POINTER_BISHOP_INTERNAL_COMPOSITE_FIELD_${fields.length + 1}`),
+          u,
+          v,
+          lon: safeNumber(node.lon ?? (u * 360 - 180), 0),
+          lat: safeNumber(node.lat ?? (90 - v * 180), 0),
+          scale: clamp(0.045 + safeNumber(node.visibleScore, 0.4) * 0.09, 0.035, 0.28),
+          value: clamp(safeNumber(node.visibleScore, 0.54), 0, 1),
+          donorCategory: classification.category,
+          donorConfidence: classification.confidence,
+          compositeClass: safeString(node.compositeClass || ""),
+          sourceNodeId: safeString(node.id || ""),
+          ownsTruth: false
+        });
+      }
+    }
+
+    if (!fields.length) {
+      fields.push({
+        id: `SURFACE_POINTER_BISHOP_INTERNAL_COMPOSITE_BRIDGE_${state.internalSurfaceBridgeCount + 1}`,
+        u: 0.5,
+        v: 0.5,
+        lon: 0,
+        lat: 0,
+        scale: 0.23,
+        value: 0.58,
+        donorCategory: classification.category,
+        donorConfidence: classification.confidence,
+        compositeClass: "composite-bridge-standard",
+        ownsTruth: false
+      });
+    }
+
+    return fields;
+  }
+
+  function readBoundaryEvidence() {
+    const found = findSource(BOUNDARY_SOURCE_NAMES);
+
+    state.boundaryDependencyObserved = Boolean(found.source);
+
+    if (!found.source) {
+      state.boundaryPacketObserved = false;
+      state.boundaryModelObserved = false;
+      state.boundaryPacket = null;
+      state.boundaryModel = null;
+
       return {
-        receiver: entry.receiver,
-        sourceName: entry.name || `REGISTERED:${category}`
+        observed: false,
+        sourceName: "NONE",
+        packet: null,
+        model: null
       };
     }
 
-    return { receiver: null, sourceName: "NONE" };
-  }
+    let packet = null;
+    let receipt = null;
 
-  function findCategoryReceiver(route) {
-    const registered = findRegisteredReceiver(route.category);
-    if (registered.receiver) return registered;
+    try {
+      if (isFunction(found.source.getBoundaryPacket)) {
+        packet = found.source.getBoundaryPacket();
+      } else if (isFunction(found.source.getBishopPacket)) {
+        packet = found.source.getBishopPacket();
+      } else if (isFunction(found.source.getReceipt)) {
+        receipt = found.source.getReceipt();
+        packet = receipt && (receipt.boundaryPacket || receipt.bishopPacket) ? (receipt.boundaryPacket || receipt.bishopPacket) : null;
+      } else if (isFunction(found.source.getReceiptLight)) {
+        receipt = found.source.getReceiptLight();
+      }
+    } catch (error) {
+      recordError("SURFACE_POINTER_BISHOP_BOUNDARY_READ_FAILED", error, { sourceName: found.sourceName });
+    }
 
-    const found = findSource(route.globalPaths || []);
+    const model = packet && packet.boundaryModel
+      ? packet.boundaryModel
+      : receipt && receipt.boundaryModel
+        ? receipt.boundaryModel
+        : null;
+
+    state.boundaryPacketObserved = Boolean(packet);
+    state.boundaryModelObserved = Boolean(model);
+    state.boundaryPacket = clonePlain(packet);
+    state.boundaryModel = clonePlain(model);
+
     return {
-      receiver: found.source,
-      sourceName: found.sourceName
+      observed: true,
+      sourceName: found.sourceName,
+      packet: clonePlain(packet),
+      model: clonePlain(model)
     };
   }
 
-  function buildRouteEnvelope(normalized, classification, route) {
+  function readMassEvidence() {
+    const found = findSource(MASS_SOURCE_NAMES);
+
+    state.massDependencyObserved = Boolean(found.source);
+
+    if (!found.source) {
+      state.massPacketObserved = false;
+      state.massModelObserved = false;
+      state.massPacket = null;
+      state.massModel = null;
+
+      return {
+        observed: false,
+        sourceName: "NONE",
+        packet: null,
+        model: null
+      };
+    }
+
+    let packet = null;
+    let receipt = null;
+
+    try {
+      if (isFunction(found.source.getMassPacket)) {
+        packet = found.source.getMassPacket();
+      } else if (isFunction(found.source.getBishopPacket)) {
+        packet = found.source.getBishopPacket();
+      } else if (isFunction(found.source.getReceipt)) {
+        receipt = found.source.getReceipt();
+        packet = receipt && (receipt.massPacket || receipt.bishopPacket) ? (receipt.massPacket || receipt.bishopPacket) : null;
+      } else if (isFunction(found.source.getReceiptLight)) {
+        receipt = found.source.getReceiptLight();
+      }
+    } catch (error) {
+      recordError("SURFACE_POINTER_BISHOP_MASS_READ_FAILED", error, { sourceName: found.sourceName });
+    }
+
+    const model = packet && packet.massModel
+      ? packet.massModel
+      : receipt && receipt.massModel
+        ? receipt.massModel
+        : null;
+
+    state.massPacketObserved = Boolean(packet);
+    state.massModelObserved = Boolean(model);
+    state.massPacket = clonePlain(packet);
+    state.massModel = clonePlain(model);
+
     return {
-      packetType: "HEARTH_SURFACE_POINTER_BISHOP_ROUTED_EXPRESSION_PACKET",
-      pointerContract: CONTRACT,
-      pointerReceipt: RECEIPT,
-      pointerFile: FILE,
+      observed: true,
+      sourceName: found.sourceName,
+      packet: clonePlain(packet),
+      model: clonePlain(model)
+    };
+  }
+
+  function standardBoundaryModel() {
+    return {
+      modelType: "HEARTH_SURFACE_POINTER_BISHOP_STANDARD_BOUNDARY_MODEL",
+      centerX: 0.5,
+      centerY: 0.5,
+      radius: 0.47,
+      innerRadius: 0.427,
+      outerRadius: 0.486,
+      edgeSoftness: 0.055,
+      localStandardUsed: true,
+      finalGeometryClaim: false,
+      finalVisualClaim: false
+    };
+  }
+
+  function standardMassModel(boundaryModel) {
+    const b = boundaryModel || standardBoundaryModel();
+
+    return {
+      modelType: "HEARTH_SURFACE_POINTER_BISHOP_STANDARD_MASS_MODEL",
+      centerX: safeNumber(b.centerX, 0.5),
+      centerY: safeNumber(b.centerY, 0.5),
+      radius: safeNumber(b.radius, 0.47),
+      massAnchors: [
+        { id: "SURFACE_POINTER_BISHOP_NW", u: 0.35, v: 0.39, lon: -54, lat: 20, scale: 0.22, weight: 0.7 },
+        { id: "SURFACE_POINTER_BISHOP_C", u: 0.5, v: 0.52, lon: 0, lat: -4, scale: 0.25, weight: 0.8 },
+        { id: "SURFACE_POINTER_BISHOP_SE", u: 0.61, v: 0.64, lon: 40, lat: -26, scale: 0.2, weight: 0.62 }
+      ],
+      localStandardUsed: true,
+      terrainTruthClaim: false,
+      materialTruthClaim: false,
+      elevationTruthClaim: false,
+      finalVisualClaim: false
+    };
+  }
+
+  function baseMaterialFamilies() {
+    return [
+      { id: "SURFACE_DRY_HIGH_TONE", label: "dry-rock-soil-first-pass", threshold: 0.62, tint: "rock-soil", ownsTruth: false },
+      { id: "SURFACE_MID_BODY_TONE", label: "weathered-ground-first-pass", threshold: 0.38, tint: "weathered-ground", ownsTruth: false },
+      { id: "SURFACE_LOW_BODY_TONE", label: "low-shadow-shelf-first-pass", threshold: 0.18, tint: "low-body-shadow", ownsTruth: false },
+      { id: "SURFACE_BOUNDARY_EDGE_TONE", label: "body-edge-readability", threshold: 0.05, tint: "edge-readability", ownsTruth: false }
+    ];
+  }
+
+  function baseSurfaceFields() {
+    return BODY_MASSES.map((mass, index) => ({
+      id: `SURFACE_POINTER_BISHOP_${mass.key.toUpperCase()}`,
+      u: wrap01((mass.lon + 180) / 360),
+      v: clamp01((90 - mass.lat) / 180),
+      lon: mass.lon,
+      lat: mass.lat,
+      scale: clamp((mass.rx + mass.ry) / 360, 0.06, 0.36),
+      value: clamp(0.48 + index * 0.035, 0.38, 0.78),
+      donorCategory: CATEGORY.SURFACE,
+      donorConfidence: "STANDARD",
+      ownsTruth: false
+    }));
+  }
+
+  function buildSurfaceModel(options = {}) {
+    const boundaryEvidence = readBoundaryEvidence();
+    const massEvidence = readMassEvidence();
+
+    const boundaryModel = boundaryEvidence.model || standardBoundaryModel();
+    const massModel = massEvidence.model || standardMassModel(boundaryModel);
+
+    const materialFamilies = [
+      ...baseMaterialFamilies(),
+      ...state.surfaceMaterialFamilies.map((family) => ({
+        id: family.id,
+        label: family.label,
+        threshold: family.category === CATEGORY.HYDROLOGY_INTERFACE ? 0.24 : 0.5,
+        tint: family.category,
+        ownsTruth: false,
+        sourceName: family.sourceName,
+        sourceFile: family.sourceFile
+      }))
+    ];
+
+    const surfaceFields = [
+      ...baseSurfaceFields(),
+      ...state.surfaceFormationFields.map((field) => ({
+        id: field.id,
+        u: clamp(field.u, 0, 1),
+        v: clamp(field.v, 0, 1),
+        lon: safeNumber(field.lon, field.u * 360 - 180),
+        lat: safeNumber(field.lat, 90 - field.v * 180),
+        scale: clamp(field.scale, 0.02, 0.8),
+        value: clamp(field.value, 0, 1),
+        externalPacketId: field.externalPacketId,
+        donorCategory: field.donorCategory,
+        sourceName: field.sourceName,
+        ownsTruth: false
+      })),
+      ...state.internalSurfaceBridgeFields.map((field) => ({
+        id: field.id,
+        u: clamp(field.u, 0, 1),
+        v: clamp(field.v, 0, 1),
+        lon: safeNumber(field.lon, field.u * 360 - 180),
+        lat: safeNumber(field.lat, 90 - field.v * 180),
+        scale: clamp(field.scale, 0.02, 0.8),
+        value: clamp(field.value, 0, 1),
+        internalPacketId: field.internalPacketId,
+        donorCategory: field.donorCategory,
+        compositeClass: field.compositeClass,
+        sourceName: field.sourceName,
+        ownsTruth: false
+      }))
+    ];
+
+    const model = {
+      modelType: "HEARTH_SURFACE_POINTER_BISHOP_HEX_EXPRESSION_SOCKET_MODEL",
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      file: FILE,
+      route: ROUTE,
+
       bishopName: BISHOP_NAME,
       bishopRole: BISHOP_ROLE,
       bishopRank: BISHOP_RANK,
       bishopAddress: BISHOP_ADDRESS,
-      externalPacketId: normalized.id,
-      routedAt: nowIso(),
-      category: classification.category,
-      confidence: classification.confidence,
-      score: classification.score,
-      targetFile: route ? route.file : "NONE",
-      targetAuthority: route ? route.authority : "NONE",
-      sourceName: normalized.sourceName,
-      sourceFile: normalized.sourceFile,
-      sourceContract: normalized.sourceContract,
-      sourceReceipt: normalized.sourceReceipt,
-      payload: clonePlain(normalized.payload),
-      payloadSummary: normalized.payloadSummary,
-      surfacePointerOwnsRouting: true,
-      pointerBishopOwnsRouting: true,
-      receivingFileOwnsCategoryAuthority: Boolean(route && route.surfaceOwnsCategory === false),
-      surfaceOwnsCategoryAuthority: Boolean(route && route.surfaceOwnsCategory === true),
-      pointerBishopOwnsCategoryAuthority: Boolean(route && route.surfaceOwnsCategory === true),
+      bishopDirection: BISHOP_DIRECTION,
+      bishopCardinalDisposition: BISHOP_CARDINAL_DISPOSITION,
+
+      hexExpressionSocketActive: true,
+      hexSurfaceExpressionAuthority: true,
+      hexSurfaceProjectionDelegated: true,
+      canvasDrawingDelegatedToHexSurface: true,
+      directCanvasDrawingSuppressed: true,
+
+      boundaryModel: clonePlain(boundaryModel),
+      massModel: clonePlain(massModel),
+
+      boundaryDependencyObserved: boundaryEvidence.observed,
+      boundaryPacketObserved: Boolean(boundaryEvidence.packet),
+      boundaryModelObserved: Boolean(boundaryEvidence.model),
+
+      massDependencyObserved: massEvidence.observed,
+      massPacketObserved: Boolean(massEvidence.packet),
+      massModelObserved: Boolean(massEvidence.model),
+
+      materialBands: materialFamilies,
+      surfaceMaterialFamilies: clonePlain(materialFamilies),
+      surfaceSeeds: surfaceFields,
+      surfaceFormationFields: clonePlain(surfaceFields),
+
+      surfaceMode: "POINTER_BISHOP_HEX_EXPRESSION_SOCKET",
+      surfaceCoordinateSpace: "lon-lat-u-v",
+      projectionOwner: HEX_SURFACE_FILE,
+      canvasDrawingOwner: HEX_SURFACE_FILE,
+
+      externalExpressionSocketActive: true,
+      singleExternalInputReceiver: true,
+      internalExpressionSocketActive: true,
+      internalFingerPacketReceiver: true,
+      internalBishopPacketReceiver: true,
+      compositePacketReceiver: true,
+      worldExpressionPacketReceiver: true,
+
+      surfaceIntegratedDonorCount: state.surfaceIntegratedDonors.length,
+      heldDonorQueueCount: state.heldDonorQueue.length,
+      internalAcceptedCount: state.internalAcceptedCount,
+      internalHeldCount: state.internalHeldCount,
+      compositeInternalPacketCount: state.compositeInternalPacketCount,
+      worldExpressionInternalPacketCount: state.worldExpressionInternalPacketCount,
+      internalSurfaceBridgeCount: state.internalSurfaceBridgeCount,
+
+      terrainTruthClaim: false,
+      hydrologyTruthClaim: false,
+      materialTruthClaim: false,
+      elevationTruthClaim: false,
+      compositeTruthClaim: false,
+      finalGeometryClaim: false,
+      finalVisualClaim: false
+    };
+
+    state.surfaceModel = clonePlain(model);
+    state.surfaceModelReady = true;
+    state.firstSurfaceDifferentiationReady = true;
+    state.roughTerrainTintReady = true;
+    state.shallowMaterialVariationReady = true;
+    state.visibleContributionAvailable = true;
+    state.surfaceExpressionReady = true;
+    state.hexSurfaceExpressionReady = true;
+
+    return model;
+  }
+
+  function normalizeCoord(input = {}) {
+    const packet = isObject(input) ? input : {};
+    const coord = isObject(packet.coord) ? packet.coord : packet;
+
+    let u = coord.u;
+    let v = coord.v;
+    let lon = coord.lon;
+    let lat = coord.lat;
+
+    if (lon === undefined && coord.longitude !== undefined) lon = coord.longitude;
+    if (lat === undefined && coord.latitude !== undefined) lat = coord.latitude;
+
+    if ((u === undefined || v === undefined) && lon !== undefined && lat !== undefined) {
+      u = wrap01((safeNumber(lon, 0) + 180) / 360);
+      v = clamp01((90 - safeNumber(lat, 0)) / 180);
+    }
+
+    if ((lon === undefined || lat === undefined) && u !== undefined && v !== undefined) {
+      lon = wrapDeg(wrap01(u) * 360 - 180);
+      lat = 90 - clamp01(v) * 180;
+    }
+
+    if ((u === undefined || v === undefined) && coord.x !== undefined && coord.y !== undefined) {
+      u = clamp01(coord.x);
+      v = clamp01(coord.y);
+      lon = wrapDeg(u * 360 - 180);
+      lat = 90 - v * 180;
+    }
+
+    u = wrap01(u === undefined ? 0.5 : u);
+    v = clamp01(v === undefined ? 0.5 : v);
+    lon = wrapDeg(lon === undefined ? u * 360 - 180 : lon);
+    lat = clamp(lat === undefined ? 90 - v * 180 : lat, -90, 90);
+
+    return {
+      u,
+      v,
+      lon,
+      lat,
+      lonDegrees: lon,
+      latDegrees: lat,
+      x: coord.x,
+      y: coord.y,
+      z: coord.z
+    };
+  }
+
+  function fieldInfluence(coord, field) {
+    const lonDistance = degDistance(coord.lon, safeNumber(field.lon, field.u * 360 - 180)) / 180;
+    const latDistance = (coord.lat - safeNumber(field.lat, 90 - field.v * 180)) / 90;
+    const scale = Math.max(0.0001, safeNumber(field.scale, 0.16));
+    const d2 = (lonDistance * lonDistance) + (latDistance * latDistance);
+    return Math.exp(-(d2 / (2 * scale * scale))) * safeNumber(field.value, 0.5);
+  }
+
+  function bodyMassField(coord) {
+    let best = {
+      field: -999,
+      massKey: "",
+      coast: 0,
+      ridge: 0,
+      basin: 0,
+      mineral: 0
+    };
+
+    for (let i = 0; i < BODY_MASSES.length; i += 1) {
+      const mass = BODY_MASSES[i];
+      const dx = degDistance(coord.lon, mass.lon) * Math.cos(mass.lat * Math.PI / 180);
+      const dy = coord.lat - mass.lat;
+      const ca = Math.cos(mass.angle * Math.PI / 180);
+      const sa = Math.sin(mass.angle * Math.PI / 180);
+      const x = dx * ca - dy * sa;
+      const y = dx * sa + dy * ca;
+      const nx = x / mass.rx;
+      const ny = y / mass.ry;
+      const theta = Math.atan2(ny, nx);
+      const dist = Math.sqrt(nx * nx + ny * ny);
+
+      const angularCut =
+        Math.sin(theta * (5 + i) + i * 0.71) * 0.055 +
+        Math.sin(theta * (9 + i) - i * 0.43) * 0.038;
+
+      const fracture = (fbm(coord.u * 18 + i * 3.1, coord.v * 12 - i * 2.4, 710 + i * 53, 4) - 0.5) * 0.22;
+      const bayCut = smoothstep(0.58, 0.92, fbm(coord.u * 36 - i * 2.7, coord.v * 26 + i * 4.2, 910 + i * 79, 3)) * 0.11;
+      const field = 1 - dist + angularCut + fracture - bayCut;
+
+      if (field > best.field) {
+        const ridge = smoothstep(0.44, 0.91, fbm(coord.u * 12 + i, coord.v * 15 - i, 1200 + i * 41, 5));
+        const basin = smoothstep(0.10, 0.38, 1 - ridge);
+        const mineral = smoothstep(0.62, 0.96, fbm(coord.u * 44 + i * 2, coord.v * 41 - i * 3, 1500 + i * 83, 3));
+
+        best = {
+          field,
+          massKey: mass.key,
+          coast: smoothstep(0, 0.88, 1 - clamp(Math.abs(field) * 16, 0, 1)),
+          ridge,
+          basin,
+          mineral
+        };
+      }
+    }
+
+    return best;
+  }
+
+  function composeExpressionColor(expression) {
+    const isLand = expression.isLand === true;
+    const grain = clamp01(expression.grain);
+    const relief = clamp01(expression.relief);
+    const coast = clamp01(expression.coast);
+    const mineral = clamp01(expression.mineral);
+    const cold = clamp01(expression.cold);
+    const arid = clamp01(expression.arid);
+    const wet = clamp01(expression.wet);
+    const shelf = clamp01(expression.shelf);
+    const deep = clamp01(expression.deep);
+    const basin = clamp01(expression.basin);
+
+    let color;
+
+    if (isLand) {
+      color = COLOR.landLow.slice();
+      color = mixColor(color, COLOR.landWarm, arid * 0.42);
+      color = mixColor(color, COLOR.landWet, wet * 0.38);
+      color = mixColor(color, COLOR.ridge, relief * 0.34);
+      color = mixColor(color, COLOR.granite, relief * relief * 0.30);
+      color = mixColor(color, COLOR.cliff, clamp01(relief * coast) * 0.24);
+      color = mixColor(color, COLOR.snow, cold * relief * 0.48);
+      color = mixColor(color, COLOR.copper, mineral * 0.08);
+      color = mixColor(color, COLOR.opal, mineral * coast * 0.10);
+    } else {
+      color = COLOR.ocean.slice();
+      color = mixColor(color, COLOR.deep, deep * 0.55);
+      color = mixColor(color, COLOR.abyss, deep * deep * 0.36);
+      color = mixColor(color, COLOR.shelf, shelf * 0.58);
+      color = mixColor(color, COLOR.foam, shelf * coast * 0.16);
+    }
+
+    const micro =
+      (grain - 0.5) * 0.31 +
+      (relief - 0.5) * (isLand ? 0.18 : 0.04) -
+      basin * (isLand ? 0.07 : 0.02);
+
+    return multiplyColor(color, clamp(1 + micro, 0.72, 1.28));
+  }
+
+  function materialClassFor(expression) {
+    if (expression.isWater) {
+      if (expression.shelf > 0.55) return "shallow-shelf-water";
+      if (expression.deep > 0.78) return "deep-ocean-basin";
+      return "ocean-body";
+    }
+
+    if (expression.cold > 0.72 && expression.relief > 0.48) return "cold-highland";
+    if (expression.relief > 0.72) return "ridge-and-cliff";
+    if (expression.arid > 0.64) return "dry-rock-soil";
+    if (expression.wet > 0.58) return "wet-weathered-ground";
+    return "weathered-land-body";
+  }
+
+  function sampleSurfaceExpression(input = {}, options = {}) {
+    const request = isObject(input) ? input : {};
+    const model = state.surfaceModel || buildSurfaceModel();
+    const coord = normalizeCoord(request);
+    const hexPacket = isObject(request.hexPacket) ? request.hexPacket : request;
+
+    state.hexExpressionRequestCount += 1;
+
+    if (hasForbiddenClaim(request)) {
+      state.hexExpressionRejectedCount += 1;
+      state.updatedAt = nowIso();
+
+      return {
+        ok: false,
+        rejected: true,
+        rejectedReason: "FORBIDDEN_CLAIM",
+        contract: CONTRACT,
+        receipt: RECEIPT,
+        file: FILE,
+        sourceFile: FILE,
+        consumerFile: HEX_SURFACE_FILE,
+        surfaceExpressionAuthority: true,
+        ...FINAL_FALSE
+      };
+    }
+
+    const bodyField = bodyMassField(coord);
+
+    let donorInfluence = 0;
+    let hydrologyInterface = 0;
+    let compositeInfluence = 0;
+
+    const fields = Array.isArray(model.surfaceFormationFields) ? model.surfaceFormationFields : [];
+
+    for (const field of fields) {
+      const influence = fieldInfluence(coord, field);
+      donorInfluence += influence;
+
+      if (field.donorCategory === CATEGORY.HYDROLOGY_INTERFACE) hydrologyInterface += influence;
+      if (field.donorCategory === CATEGORY.COMPOSITE || field.donorCategory === CATEGORY.WORLD_EXPRESSION) {
+        compositeInfluence += influence;
+      }
+    }
+
+    const grain = fbm(coord.u * 32 + safeNumber(hexPacket.stateId, 0) * 0.031, coord.v * 24 - safeNumber(hexPacket.stateId, 0) * 0.027, 2200, 4);
+    const localVariation = (grain - 0.5) * 0.18;
+    const field = bodyField.field + donorInfluence * 0.12 + compositeInfluence * 0.10 - hydrologyInterface * 0.08 + localVariation * 0.42;
+
+    const isLand = field > 0;
+    const coast = smoothstep(0, 0.88, 1 - clamp(Math.abs(field) * 16, 0, 1));
+    const latAbs = Math.abs(coord.lat) / 90;
+    const relief = isLand ? clamp01(bodyField.ridge * 0.72 + grain * 0.24 + compositeInfluence * 0.12) : 0;
+    const shelf = !isLand ? smoothstep(-0.24, 0.04, field) * (0.45 + grain * 0.35 + hydrologyInterface * 0.10) : 0;
+    const deep = !isLand ? clamp01(1 - shelf * 0.72) : 0;
+    const cold = smoothstep(0.68, 0.98, latAbs);
+    const arid = isLand ? smoothstep(0.62, 0.88, fbm(coord.u * 7, coord.v * 5, 2500, 3)) * (1 - cold * 0.4) : 0;
+    const wet = isLand ? smoothstep(0.50, 0.86, fbm(coord.u * 9 + 8, coord.v * 8 - 4, 2600, 3)) * (1 - arid * 0.45) : 0;
+    const mineral = clamp01(bodyField.mineral + compositeInfluence * 0.08);
+    const basin = clamp01(bodyField.basin);
+    const elevation = isLand ? clamp01(0.42 + relief * 0.42 + donorInfluence * 0.06 - coast * 0.10) : clamp01(-0.18 + shelf * 0.20 - deep * 0.28);
+    const landPresence = isLand ? clamp01(0.5 + field * 0.55) : clamp01(0.5 + field * 0.15);
+    const waterPresence = clamp01(1 - landPresence);
+
+    const expressionBase = {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      packet: PACKET,
+      previousContract: PREVIOUS_CONTRACT,
+      file: FILE,
+      route: ROUTE,
+
+      packetType: "HEARTH_SURFACE_POINTER_BISHOP_HEX_SURFACE_EXPRESSION_PACKET",
+      expressionSource: "SURFACE_POINTER_BISHOP",
+      sourceFile: FILE,
+      sourceContract: CONTRACT,
+      sourceReceipt: RECEIPT,
+      consumerFile: HEX_SURFACE_FILE,
+
+      bishopName: BISHOP_NAME,
+      bishopTitle: BISHOP_TITLE,
+      bishopRole: BISHOP_ROLE,
+      bishopRank: BISHOP_RANK,
+      bishopAddress: BISHOP_ADDRESS,
+      bishopDirection: BISHOP_DIRECTION,
+
+      hexExpressionSocketActive: true,
+      surfaceExpressionAuthority: true,
+      hexSurfaceExpressionAuthority: true,
+      hexSurfaceConsumerExpected: true,
+      hexSurfaceProjectionDelegated: true,
+      canvasDrawingDelegatedToHexSurface: true,
+      directCanvasDrawingSuppressed: true,
+
+      coord: {
+        u: coord.u,
+        v: coord.v,
+        lon: coord.lon,
+        lat: coord.lat,
+        lonDegrees: coord.lon,
+        latDegrees: coord.lat,
+        x: coord.x,
+        y: coord.y,
+        z: coord.z
+      },
+
+      hexPacket: {
+        cellId: safeString(hexPacket.cellId || hexPacket.hexId || "UNKNOWN"),
+        hexId: safeString(hexPacket.hexId || hexPacket.cellId || "UNKNOWN"),
+        stateId: safeNumber(hexPacket.stateId, 0),
+        stateClass: safeString(hexPacket.stateClass || ""),
+        q: safeNumber(hexPacket.q, 0),
+        r: safeNumber(hexPacket.r, 0),
+        s: safeNumber(hexPacket.s, 0)
+      },
+
+      isLand,
+      isWater: !isLand,
+      landPresence,
+      waterPresence,
+      field,
+      massKey: bodyField.massKey,
+      coast,
+      ridge: bodyField.ridge,
+      relief,
+      basin,
+      shelf,
+      deep,
+      cold,
+      arid,
+      wet,
+      mineral,
+      grain,
+      elevation,
+      donorInfluence: clamp01(donorInfluence),
+      hydrologyInterfaceInfluence: clamp01(hydrologyInterface),
+      compositeInfluence: clamp01(compositeInfluence),
+
+      bodyBound: true,
+      surfaceBound: true,
+      floatsAboveBody: false,
+      allowedToFloat: false,
+
+      terrainTruthClaimed: false,
+      hydrologyTruthClaimed: false,
+      materialTruthClaimed: false,
+      elevationTruthClaimed: false,
+      compositeTruthClaimed: false,
+
+      ...FINAL_FALSE
+    };
+
+    const rgb = composeExpressionColor(expressionBase);
+    const materialClass = materialClassFor(expressionBase);
+
+    const expression = {
+      ...expressionBase,
+      rgb,
+      color: rgb,
+      materialClass,
+      materialFamily: materialClass,
+      ok: true,
+      rejected: false,
+      expressionReady: true,
+      renderableByHexSurface: true,
+      projectionRequired: true,
+      canvasDrawRequiredDownstream: true
+    };
+
+    state.hexExpressionServedCount += 1;
+    state.latestHexExpressionAt = nowIso();
+    state.latestHexExpressionRequestSource = safeString(request.sourceFile || request.consumerFile || "HEX_SURFACE_OR_RENDERER");
+    state.latestHexExpressionCellId = expression.hexPacket.cellId;
+    state.latestHexExpressionMaterialClass = materialClass;
+    state.latestHexExpressionLandPresence = landPresence;
+    state.latestHexExpressionWaterPresence = waterPresence;
+    state.updatedAt = state.latestHexExpressionAt;
+
+    state.hexExpressionLedger.push({
+      at: state.latestHexExpressionAt,
+      cellId: expression.hexPacket.cellId,
+      stateId: expression.hexPacket.stateId,
+      u: coord.u,
+      v: coord.v,
+      lon: coord.lon,
+      lat: coord.lat,
+      materialClass,
+      isLand,
+      landPresence,
+      waterPresence,
+      source: state.latestHexExpressionRequestSource,
+      ...FINAL_FALSE
+    });
+    trimArray(state.hexExpressionLedger, 160);
+
+    updateDataset();
+
+    return expression;
+  }
+
+  function sampleHexSurfaceExpression(packet = {}, options = {}) {
+    return sampleSurfaceExpression(packet, {
+      ...options,
+      sourceName: options.sourceName || "HEX_SURFACE_EXPRESSION_REQUEST"
+    });
+  }
+
+  function getRenderableSurfaceExpression(packet = {}, options = {}) {
+    return sampleSurfaceExpression(packet, options);
+  }
+
+  function getSurfaceExpressionAt(packet = {}, options = {}) {
+    return sampleSurfaceExpression(packet, options);
+  }
+
+  function receiveHexSurfaceExpressionRequest(packet = {}, options = {}) {
+    return sampleHexSurfaceExpression(packet, options);
+  }
+
+  function sample(packet = {}, options = {}) {
+    return sampleSurfaceExpression(packet, options);
+  }
+
+  function drawToCanvas() {
+    return {
+      drawn: false,
+      reason: "SURFACE_POINTER_BISHOP_DOES_NOT_DRAW_CANVAS_HEX_SURFACE_OWNS_PROJECTION_AND_DRAWING",
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      file: FILE,
+      projectionOwner: HEX_SURFACE_FILE,
+      canvasDrawingOwner: HEX_SURFACE_FILE,
+      directCanvasDrawingSuppressed: true,
       ...FINAL_FALSE
     };
   }
 
-  function holdDonor(normalized, classification, reason, detail = {}) {
-    const route = TARGET_RECEIVERS[classification.category] || null;
+  function integrateSurfaceVisibleExpression(normalized, classification) {
+    const fields = extractSurfaceFormationField(normalized.payload, classification);
 
+    for (const field of fields) {
+      state.surfaceFormationFields.push({
+        ...field,
+        externalPacketId: normalized.id,
+        sourceName: normalized.sourceName,
+        sourceFile: normalized.sourceFile,
+        integratedAt: nowIso()
+      });
+    }
+
+    trimArray(state.surfaceFormationFields, 180);
+
+    const family = {
+      id: `SURFACE_POINTER_BISHOP_FAMILY_${state.surfaceIntegratedCount + 1}`,
+      category: classification.category,
+      label: classification.category === CATEGORY.HYDROLOGY_INTERFACE
+        ? "wet-dry-contact-visible-interface"
+        : "surface-visible-donor-expression",
+      sourceName: normalized.sourceName,
+      sourceFile: normalized.sourceFile,
+      ownsTruth: false,
+      materialTruthClaim: false,
+      terrainTruthClaim: false,
+      hydrologyTruthClaim: false,
+      integratedAt: nowIso()
+    };
+
+    state.surfaceMaterialFamilies.push(family);
+    trimArray(state.surfaceMaterialFamilies, 140);
+
+    const integrated = {
+      id: normalized.id,
+      category: classification.category,
+      status: ROUTING_STATUS.INTEGRATED_BY_SURFACE,
+      integratedFields: fields.length,
+      targetFile: FILE,
+      targetAuthority: "surface-expression",
+      sourceName: normalized.sourceName,
+      sourceFile: normalized.sourceFile,
+      integratedAt: nowIso(),
+      ...FINAL_FALSE
+    };
+
+    state.surfaceIntegratedDonors.push(integrated);
+    trimArray(state.surfaceIntegratedDonors, 140);
+    state.surfaceIntegratedCount += 1;
+    state.latestExternalPacketStatus = ROUTING_STATUS.INTEGRATED_BY_SURFACE;
+
+    buildSurfaceModel({ rebuildFromPointerFields: true });
+    buildSurfacePacket();
+    buildPointerBishopPacket();
+
+    record("SURFACE_POINTER_BISHOP_INTEGRATED_SURFACE_VISIBLE_EXPRESSION", integrated);
+    return integrated;
+  }
+
+  function holdDonor(normalized, classification, reason, detail = {}) {
     const held = {
       id: normalized.id,
       category: classification.category,
       confidence: classification.confidence,
       status: ROUTING_STATUS.HELD_FOR_RECEIVER_RENEWAL,
       heldReason: reason,
-      targetFile: route ? route.file : "UNKNOWN",
-      targetAuthority: route ? route.authority : "UNKNOWN",
+      targetFile: FILE,
+      targetAuthority: "surface-expression-or-downstream-receiver",
       sourceName: normalized.sourceName,
       sourceFile: normalized.sourceFile,
       sourceContract: normalized.sourceContract,
@@ -1225,171 +2041,6 @@
     return rejected;
   }
 
-  function extractSurfaceFormationField(payload, classification) {
-    const source = isObject(payload) ? payload : {};
-    const fields = [];
-
-    const directFields = Array.isArray(source.surfaceFormationFields)
-      ? source.surfaceFormationFields
-      : Array.isArray(source.surfaceSeeds)
-        ? source.surfaceSeeds
-        : Array.isArray(source.fields)
-          ? source.fields
-          : [];
-
-    for (const entry of directFields.slice(0, 48)) {
-      if (!isObject(entry)) continue;
-
-      fields.push({
-        id: safeString(entry.id || entry.name || `SURFACE_POINTER_BISHOP_DONOR_FIELD_${fields.length + 1}`),
-        x: clamp(entry.x ?? entry.cx ?? entry.centerX ?? 0.5, 0, 1),
-        y: clamp(entry.y ?? entry.cy ?? entry.centerY ?? 0.5, 0, 1),
-        scale: clamp(entry.scale ?? entry.radius ?? entry.size ?? 0.16, 0.02, 0.6),
-        value: clamp(entry.value ?? entry.weight ?? entry.strength ?? 0.55, 0, 1),
-        donorCategory: classification.category,
-        donorConfidence: classification.confidence,
-        ownsTruth: false
-      });
-    }
-
-    if (!fields.length) {
-      fields.push({
-        id: `SURFACE_POINTER_BISHOP_DONOR_${state.surfaceIntegratedCount + 1}`,
-        x: 0.5,
-        y: 0.5,
-        scale: classification.category === CATEGORY.HYDROLOGY_INTERFACE ? 0.24 : 0.2,
-        value: classification.category === CATEGORY.HYDROLOGY_INTERFACE ? 0.42 : 0.56,
-        donorCategory: classification.category,
-        donorConfidence: classification.confidence,
-        ownsTruth: false
-      });
-    }
-
-    return fields;
-  }
-
-  function extractCompositeBridgeFields(payload, classification) {
-    const source = isObject(payload) ? payload : {};
-    const model = isObject(source.compositeModel)
-      ? source.compositeModel
-      : isObject(source.worldExpressionModel)
-        ? source.worldExpressionModel
-        : isObject(source.compositePacket) && isObject(source.compositePacket.compositeModel)
-          ? source.compositePacket.compositeModel
-          : isObject(source.worldExpressionPacket) && isObject(source.worldExpressionPacket.compositeModel)
-            ? source.worldExpressionPacket.compositeModel
-            : isObject(source.worldExpressionPacket) && isObject(source.worldExpressionPacket.worldExpressionModel)
-              ? source.worldExpressionPacket.worldExpressionModel
-              : source;
-
-    const nodes = Array.isArray(model.compositeNodes)
-      ? model.compositeNodes
-      : Array.isArray(model.worldExpressionNodes)
-        ? model.worldExpressionNodes
-        : Array.isArray(source.compositeNodes)
-          ? source.compositeNodes
-          : [];
-
-    const fields = [];
-
-    if (nodes.length) {
-      const step = Math.max(1, Math.floor(nodes.length / 24));
-
-      for (let index = 0; index < nodes.length && fields.length < 32; index += step) {
-        const node = nodes[index];
-        if (!isObject(node)) continue;
-
-        fields.push({
-          id: safeString(node.id || `SURFACE_POINTER_BISHOP_INTERNAL_COMPOSITE_FIELD_${fields.length + 1}`),
-          x: clamp(node.x ?? ((safeNumber(node.col, 8) + 0.5) / 16), 0, 1),
-          y: clamp(node.y ?? ((safeNumber(node.row, 8) + 0.5) / 16), 0, 1),
-          scale: clamp(0.045 + safeNumber(node.visibleScore, 0.4) * 0.09, 0.035, 0.18),
-          value: clamp(safeNumber(node.visibleScore, 0.54), 0, 1),
-          donorCategory: classification.category,
-          donorConfidence: classification.confidence,
-          compositeClass: safeString(node.compositeClass || ""),
-          sourceNodeId: safeString(node.id || ""),
-          ownsTruth: false
-        });
-      }
-    }
-
-    if (!fields.length) {
-      fields.push({
-        id: `SURFACE_POINTER_BISHOP_INTERNAL_COMPOSITE_BRIDGE_${state.internalSurfaceBridgeCount + 1}`,
-        x: 0.5,
-        y: 0.5,
-        scale: 0.23,
-        value: 0.58,
-        donorCategory: classification.category,
-        donorConfidence: classification.confidence,
-        compositeClass: "composite-bridge-fallback",
-        ownsTruth: false
-      });
-    }
-
-    return fields;
-  }
-
-  function integrateSurfaceVisibleExpression(normalized, classification, route) {
-    const fields = extractSurfaceFormationField(normalized.payload, classification);
-
-    for (const field of fields) {
-      state.surfaceFormationFields.push({
-        ...field,
-        externalPacketId: normalized.id,
-        sourceName: normalized.sourceName,
-        sourceFile: normalized.sourceFile,
-        integratedAt: nowIso()
-      });
-    }
-
-    trimArray(state.surfaceFormationFields, 180);
-
-    const family = {
-      id: `SURFACE_POINTER_BISHOP_FAMILY_${state.surfaceIntegratedCount + 1}`,
-      category: classification.category,
-      label: classification.category === CATEGORY.HYDROLOGY_INTERFACE
-        ? "wet-dry-contact-visible-interface"
-        : "surface-visible-donor-expression",
-      sourceName: normalized.sourceName,
-      sourceFile: normalized.sourceFile,
-      ownsTruth: false,
-      materialTruthClaim: false,
-      terrainTruthClaim: false,
-      hydrologyTruthClaim: false,
-      integratedAt: nowIso()
-    };
-
-    state.surfaceMaterialFamilies.push(family);
-    trimArray(state.surfaceMaterialFamilies, 140);
-
-    const integrated = {
-      id: normalized.id,
-      category: classification.category,
-      status: ROUTING_STATUS.INTEGRATED_BY_SURFACE,
-      integratedFields: fields.length,
-      targetFile: route.file,
-      targetAuthority: route.authority,
-      sourceName: normalized.sourceName,
-      sourceFile: normalized.sourceFile,
-      integratedAt: nowIso(),
-      ...FINAL_FALSE
-    };
-
-    state.surfaceIntegratedDonors.push(integrated);
-    trimArray(state.surfaceIntegratedDonors, 140);
-    state.surfaceIntegratedCount += 1;
-    state.latestExternalPacketStatus = ROUTING_STATUS.INTEGRATED_BY_SURFACE;
-
-    buildSurfaceModel({ rebuildFromPointerFields: true });
-    buildSurfacePacket();
-    buildPointerBishopPacket();
-
-    record("SURFACE_POINTER_BISHOP_INTEGRATED_SURFACE_VISIBLE_EXPRESSION", integrated);
-    return integrated;
-  }
-
   function acceptInternalExpression(normalized, classification) {
     const fields = extractCompositeBridgeFields(normalized.payload, classification);
 
@@ -1454,73 +2105,20 @@
     return accepted;
   }
 
-  function routeToExistingReceiver(normalized, classification) {
-    const route = TARGET_RECEIVERS[classification.category];
-
-    if (!route) return holdDonor(normalized, classification, "NO_ROUTE_FOR_CATEGORY");
-
-    if (route.internalOnly === true) {
-      return holdDonor(normalized, classification, "CATEGORY_INTERNAL_ONLY_NOT_EXTERNAL_DONOR");
+  function routeExternalExpression(normalized, classification) {
+    if (
+      classification.category === CATEGORY.SURFACE ||
+      classification.category === CATEGORY.HYDROLOGY_INTERFACE ||
+      classification.category === CATEGORY.MATERIALS ||
+      classification.category === CATEGORY.COMPOSITION ||
+      classification.category === CATEGORY.CLIFFS ||
+      classification.category === CATEGORY.AIR_CHANNEL ||
+      classification.category === CATEGORY.HEX_SURFACE
+    ) {
+      return integrateSurfaceVisibleExpression(normalized, classification);
     }
 
-    if (route.surfaceOwnsCategory === true) {
-      return integrateSurfaceVisibleExpression(normalized, classification, route);
-    }
-
-    const found = findCategoryReceiver(route);
-    const envelope = buildRouteEnvelope(normalized, classification, route);
-
-    if (!found.receiver) {
-      return holdDonor(normalized, classification, "RECEIVER_NOT_AVAILABLE");
-    }
-
-    for (const method of route.methods || []) {
-      if (!isFunction(found.receiver[method])) continue;
-
-      try {
-        const response = found.receiver[method](clonePlain(envelope));
-        const accepted = response !== false;
-
-        const routed = {
-          id: normalized.id,
-          category: classification.category,
-          status: accepted ? ROUTING_STATUS.ROUTED_TO_RECEIVER : ROUTING_STATUS.HELD_FOR_RECEIVER_RENEWAL,
-          receiverSourceName: found.sourceName,
-          receiverFile: route.file,
-          method,
-          response: clonePlain(response),
-          routedAt: nowIso(),
-          ...FINAL_FALSE
-        };
-
-        if (accepted) {
-          state.routedLedger.push(routed);
-          trimArray(state.routedLedger, 140);
-          state.routedExpressionCount += 1;
-          state.latestExternalPacketStatus = ROUTING_STATUS.ROUTED_TO_RECEIVER;
-
-          record("SURFACE_POINTER_BISHOP_ROUTED_EXTERNAL_EXPRESSION", routed);
-          return routed;
-        }
-
-        return holdDonor(normalized, classification, "RECEIVER_REJECTED_PACKET", {
-          receiverSourceName: found.sourceName,
-          receiverFile: route.file,
-          method
-        });
-      } catch (error) {
-        recordError("SURFACE_POINTER_BISHOP_RECEIVER_METHOD_FAILED", error, {
-          category: classification.category,
-          receiverSourceName: found.sourceName,
-          method
-        });
-      }
-    }
-
-    return holdDonor(normalized, classification, "RECEIVER_METHOD_NOT_AVAILABLE", {
-      receiverSourceName: found.sourceName,
-      receiverFile: route.file
-    });
+    return holdDonor(normalized, classification, "CATEGORY_ACKNOWLEDGED_NO_DIRECT_RECEIVER_IN_SURFACE_POINTER_BISHOP_v5");
   }
 
   function receiveExternalExpression(input = {}, options = {}) {
@@ -1564,7 +2162,7 @@
     } else if (!classification.classificationComplete || classification.category === CATEGORY.UNKNOWN) {
       result = rejectDonor(normalized, classification, "CATEGORY_UNCLASSIFIED");
     } else {
-      result = routeToExistingReceiver(normalized, classification);
+      result = routeExternalExpression(normalized, classification);
     }
 
     updateDataset();
@@ -1582,6 +2180,7 @@
       pointerBishopSocketActive: true,
       externalInformationReceivedThroughSurfaceOnly: true,
       internalExpressionSocketActive: true,
+      hexExpressionSocketActive: true,
       ...FINAL_FALSE
     };
   }
@@ -1621,7 +2220,12 @@
       classification.category === CATEGORY.COMPOSITE ||
       classification.category === CATEGORY.WORLD_EXPRESSION ||
       classification.category === CATEGORY.SURFACE ||
-      classification.category === CATEGORY.HYDROLOGY_INTERFACE
+      classification.category === CATEGORY.HYDROLOGY_INTERFACE ||
+      classification.category === CATEGORY.HEX_SURFACE ||
+      classification.category === CATEGORY.MATERIALS ||
+      classification.category === CATEGORY.COMPOSITION ||
+      classification.category === CATEGORY.CLIFFS ||
+      classification.category === CATEGORY.AIR_CHANNEL
     ) {
       result = acceptInternalExpression(normalized, classification);
     } else {
@@ -1640,6 +2244,7 @@
       classification,
       routingResult: clonePlain(result),
       internalExpressionSocketActive: true,
+      hexExpressionSocketActive: true,
       treatedAsExternalDonor: false,
       surfacePointerOwnsCompositeTruth: false,
       pointerBishopOwnsCompositeTruth: false,
@@ -1838,42 +2443,111 @@
   }
 
   function getRoutingMap() {
-    const map = {};
-
-    for (const category of Object.values(CATEGORY)) {
-      if (category === CATEGORY.UNKNOWN) continue;
-
-      const route = TARGET_RECEIVERS[category] || null;
-      map[category] = route
-        ? {
-            category,
-            file: route.file,
-            authority: route.authority,
-            surfaceOwnsCategory: route.surfaceOwnsCategory,
-            pointerBishopOwnsCategory: route.surfaceOwnsCategory,
-            internalOnly: route.internalOnly === true,
-            externalEntryPoint: FILE,
-            internalEntryPoint: FILE,
-            receiverRegistered: Boolean(state.registeredReceivers[category]),
-            globalPaths: clonePlain(route.globalPaths || []),
-            methods: clonePlain(route.methods || [])
-          }
-        : {
-            category,
-            file: "UNKNOWN",
-            authority: "UNKNOWN",
-            surfaceOwnsCategory: false,
-            pointerBishopOwnsCategory: false,
-            internalOnly: false,
-            externalEntryPoint: FILE,
-            internalEntryPoint: FILE,
-            receiverRegistered: false,
-            globalPaths: [],
-            methods: []
-          };
-    }
-
-    return map;
+    return {
+      [CATEGORY.SURFACE]: {
+        category: CATEGORY.SURFACE,
+        file: FILE,
+        authority: "surface-expression-authority",
+        surfaceOwnsCategory: true,
+        pointerBishopOwnsCategory: true,
+        externalEntryPoint: FILE,
+        internalEntryPoint: FILE,
+        hexExpressionSocketActive: true
+      },
+      [CATEGORY.HEX_SURFACE]: {
+        category: CATEGORY.HEX_SURFACE,
+        file: HEX_SURFACE_FILE,
+        authority: "projection-and-canvas-drawing-consumer",
+        surfaceOwnsCategory: false,
+        pointerBishopOwnsCategory: false,
+        expressionProvider: FILE,
+        projectionOwner: HEX_SURFACE_FILE,
+        canvasDrawingOwner: HEX_SURFACE_FILE
+      },
+      [CATEGORY.COMPOSITE]: {
+        category: CATEGORY.COMPOSITE,
+        file: COMPOSITE_FILE,
+        authority: "composite/world-expression assembly",
+        surfaceOwnsCategory: false,
+        pointerBishopOwnsCategory: false,
+        internalOnly: true
+      },
+      [CATEGORY.WORLD_EXPRESSION]: {
+        category: CATEGORY.WORLD_EXPRESSION,
+        file: COMPOSITE_FILE,
+        authority: "assembled world expression packet",
+        surfaceOwnsCategory: false,
+        pointerBishopOwnsCategory: false,
+        internalOnly: true
+      },
+      [CATEGORY.HYDROLOGY_INTERFACE]: {
+        category: CATEGORY.HYDROLOGY_INTERFACE,
+        file: FILE,
+        authority: "visible wet/dry contact expression only; hydrology truth not owned",
+        surfaceOwnsCategory: true,
+        pointerBishopOwnsCategory: true
+      },
+      [CATEGORY.MATERIALS]: {
+        category: CATEGORY.MATERIALS,
+        file: MATERIALS_FILE,
+        authority: "material/mineral/color/texture families",
+        surfaceOwnsCategory: false,
+        pointerBishopOwnsCategory: false,
+        surfaceMayIntegrateVisibleContribution: true
+      },
+      [CATEGORY.COMPOSITION]: {
+        category: CATEGORY.COMPOSITION,
+        file: COMPOSITION_FILE,
+        authority: "planetary composition/layered structure/internal formation",
+        surfaceOwnsCategory: false,
+        pointerBishopOwnsCategory: false,
+        surfaceMayIntegrateVisibleContribution: true
+      },
+      [CATEGORY.AIR_CHANNEL]: {
+        category: CATEGORY.AIR_CHANNEL,
+        file: AIR_CHANNEL_FILE,
+        authority: "air channel/pressure/haze/sky shell/atmosphere behavior",
+        surfaceOwnsCategory: false,
+        pointerBishopOwnsCategory: false,
+        surfaceMayIntegrateVisibleContribution: true
+      },
+      [CATEGORY.CLIFFS]: {
+        category: CATEGORY.CLIFFS,
+        file: CLIFFS_FILE,
+        authority: "cliffs/escarpments/vertical relief/edge relief",
+        surfaceOwnsCategory: false,
+        pointerBishopOwnsCategory: false,
+        surfaceMayIntegrateVisibleContribution: true
+      },
+      [CATEGORY.BOUNDARY]: {
+        category: CATEGORY.BOUNDARY,
+        file: BOUNDARY_FILE,
+        authority: "boundary/silhouette/containment",
+        surfaceOwnsCategory: false,
+        pointerBishopOwnsCategory: false
+      },
+      [CATEGORY.MASS]: {
+        category: CATEGORY.MASS,
+        file: MASS_FILE,
+        authority: "body/mass/volume/physical pressure",
+        surfaceOwnsCategory: false,
+        pointerBishopOwnsCategory: false
+      },
+      [CATEGORY.LIGHT]: {
+        category: CATEGORY.LIGHT,
+        file: LIGHT_FILE,
+        authority: "light/shadow/chamber visibility/atmosphere edge",
+        surfaceOwnsCategory: false,
+        pointerBishopOwnsCategory: false
+      },
+      [CATEGORY.INSPECT]: {
+        category: CATEGORY.INSPECT,
+        file: INSPECT_FILE,
+        authority: "inspection/readability/click-facing proof",
+        surfaceOwnsCategory: false,
+        pointerBishopOwnsCategory: false
+      }
+    };
   }
 
   function getHeldDonorQueue() {
@@ -2015,574 +2689,66 @@
     };
   }
 
-  function readBoundaryEvidence() {
-    const found = findSource(BOUNDARY_SOURCE_NAMES);
-
-    state.boundaryDependencyObserved = Boolean(found.source);
-
-    if (!found.source) {
-      state.boundaryPacketObserved = false;
-      state.boundaryModelObserved = false;
-      state.boundaryPacket = null;
-      state.boundaryModel = null;
-
-      return {
-        observed: false,
-        sourceName: "NONE",
-        packet: null,
-        model: null
-      };
-    }
-
-    let packet = null;
-    let receipt = null;
-
-    try {
-      if (isFunction(found.source.getBoundaryPacket)) {
-        packet = found.source.getBoundaryPacket();
-      } else if (isFunction(found.source.getBishopPacket)) {
-        packet = found.source.getBishopPacket();
-      } else if (isFunction(found.source.getReceipt)) {
-        receipt = found.source.getReceipt();
-        packet = receipt && (receipt.boundaryPacket || receipt.bishopPacket) ? (receipt.boundaryPacket || receipt.bishopPacket) : null;
-      } else if (isFunction(found.source.getReceiptLight)) {
-        receipt = found.source.getReceiptLight();
-      }
-    } catch (error) {
-      recordError("SURFACE_POINTER_BISHOP_BOUNDARY_READ_FAILED", error, { sourceName: found.sourceName });
-    }
-
-    const model = packet && packet.boundaryModel
-      ? packet.boundaryModel
-      : receipt && receipt.boundaryModel
-        ? receipt.boundaryModel
-        : null;
-
-    state.boundaryPacketObserved = Boolean(packet);
-    state.boundaryModelObserved = Boolean(model);
-    state.boundaryPacket = clonePlain(packet);
-    state.boundaryModel = clonePlain(model);
-
+  function getHexExpressionReceipt() {
     return {
-      observed: true,
-      sourceName: found.sourceName,
-      packet: clonePlain(packet),
-      model: clonePlain(model)
-    };
-  }
-
-  function readMassEvidence() {
-    const found = findSource(MASS_SOURCE_NAMES);
-
-    state.massDependencyObserved = Boolean(found.source);
-
-    if (!found.source) {
-      state.massPacketObserved = false;
-      state.massModelObserved = false;
-      state.massPacket = null;
-      state.massModel = null;
-
-      return {
-        observed: false,
-        sourceName: "NONE",
-        packet: null,
-        model: null
-      };
-    }
-
-    let packet = null;
-    let receipt = null;
-
-    try {
-      if (isFunction(found.source.getMassPacket)) {
-        packet = found.source.getMassPacket();
-      } else if (isFunction(found.source.getBishopPacket)) {
-        packet = found.source.getBishopPacket();
-      } else if (isFunction(found.source.getReceipt)) {
-        receipt = found.source.getReceipt();
-        packet = receipt && (receipt.massPacket || receipt.bishopPacket) ? (receipt.massPacket || receipt.bishopPacket) : null;
-      } else if (isFunction(found.source.getReceiptLight)) {
-        receipt = found.source.getReceiptLight();
-      }
-    } catch (error) {
-      recordError("SURFACE_POINTER_BISHOP_MASS_READ_FAILED", error, { sourceName: found.sourceName });
-    }
-
-    const model = packet && packet.massModel
-      ? packet.massModel
-      : receipt && receipt.massModel
-        ? receipt.massModel
-        : null;
-
-    state.massPacketObserved = Boolean(packet);
-    state.massModelObserved = Boolean(model);
-    state.massPacket = clonePlain(packet);
-    state.massModel = clonePlain(model);
-
-    return {
-      observed: true,
-      sourceName: found.sourceName,
-      packet: clonePlain(packet),
-      model: clonePlain(model)
-    };
-  }
-
-  function defaultBoundaryModel() {
-    return {
-      modelType: "HEARTH_BASE_GLOBE_BOUNDARY_MODEL_FALLBACK_FOR_SURFACE_POINTER_BISHOP",
-      centerX: 0.5,
-      centerY: 0.5,
-      radius: 0.47,
-      innerRadius: 0.427,
-      outerRadius: 0.486,
-      edgeSoftness: 0.055,
-      fallbackUsed: true,
-      finalGeometryClaim: false,
-      finalVisualClaim: false
-    };
-  }
-
-  function defaultMassModel(boundaryModel) {
-    const b = boundaryModel || defaultBoundaryModel();
-
-    return {
-      modelType: "HEARTH_BASE_GLOBE_MASS_MODEL_FALLBACK_FOR_SURFACE_POINTER_BISHOP",
-      centerX: safeNumber(b.centerX, 0.5),
-      centerY: safeNumber(b.centerY, 0.5),
-      radius: safeNumber(b.radius, 0.47),
-      massAnchors: [
-        { id: "SURFACE_POINTER_BISHOP_FALLBACK_NW", x: 0.35, y: 0.39, scale: 0.22, weight: 0.7 },
-        { id: "SURFACE_POINTER_BISHOP_FALLBACK_C", x: 0.5, y: 0.52, scale: 0.25, weight: 0.8 },
-        { id: "SURFACE_POINTER_BISHOP_FALLBACK_SE", x: 0.61, y: 0.64, scale: 0.2, weight: 0.62 }
-      ],
-      fallbackUsed: true,
-      terrainTruthClaim: false,
-      materialTruthClaim: false,
-      elevationTruthClaim: false,
-      finalVisualClaim: false
-    };
-  }
-
-  function baseMaterialFamilies() {
-    return [
-      { id: "SURFACE_DRY_HIGH_TONE", label: "dry-rock-soil-first-pass", threshold: 0.62, tint: "rock-soil", ownsTruth: false },
-      { id: "SURFACE_MID_BODY_TONE", label: "weathered-ground-first-pass", threshold: 0.38, tint: "weathered-ground", ownsTruth: false },
-      { id: "SURFACE_LOW_BODY_TONE", label: "low-shadow-shelf-first-pass", threshold: 0.18, tint: "low-body-shadow", ownsTruth: false },
-      { id: "SURFACE_BOUNDARY_EDGE_TONE", label: "body-edge-readability", threshold: 0.05, tint: "edge-readability", ownsTruth: false }
-    ];
-  }
-
-  function baseSurfaceFields(centerX, centerY, radius) {
-    return [
-      { id: "SURFACE_POINTER_BISHOP_NORTHWEST_PATCH", x: centerX - radius * 0.3, y: centerY - radius * 0.18, scale: 0.17, value: 0.72 },
-      { id: "SURFACE_POINTER_BISHOP_NORTH_PATCH", x: centerX + radius * 0.02, y: centerY - radius * 0.33, scale: 0.13, value: 0.48 },
-      { id: "SURFACE_POINTER_BISHOP_EAST_PATCH", x: centerX + radius * 0.3, y: centerY - radius * 0.05, scale: 0.16, value: 0.66 },
-      { id: "SURFACE_POINTER_BISHOP_CENTER_PATCH", x: centerX - radius * 0.02, y: centerY + radius * 0.04, scale: 0.22, value: 0.82 },
-      { id: "SURFACE_POINTER_BISHOP_SOUTHWEST_PATCH", x: centerX - radius * 0.21, y: centerY + radius * 0.35, scale: 0.14, value: 0.44 },
-      { id: "SURFACE_POINTER_BISHOP_SOUTHEAST_PATCH", x: centerX + radius * 0.24, y: centerY + radius * 0.28, scale: 0.15, value: 0.58 }
-    ];
-  }
-
-  function buildSurfaceModel(options = {}) {
-    const boundaryEvidence = readBoundaryEvidence();
-    const massEvidence = readMassEvidence();
-
-    const boundaryModel = boundaryEvidence.model || defaultBoundaryModel();
-    const massModel = massEvidence.model || defaultMassModel(boundaryModel);
-
-    const centerX = clamp(options.centerX ?? massModel.centerX ?? boundaryModel.centerX ?? 0.5, 0, 1);
-    const centerY = clamp(options.centerY ?? massModel.centerY ?? boundaryModel.centerY ?? 0.5, 0, 1);
-    const radius = clamp(options.radius ?? massModel.radius ?? boundaryModel.radius ?? 0.47, 0.05, 0.5);
-
-    const materialFamilies = [
-      ...baseMaterialFamilies(),
-      ...state.surfaceMaterialFamilies.map((family) => ({
-        id: family.id,
-        label: family.label,
-        threshold: family.category === CATEGORY.HYDROLOGY_INTERFACE ? 0.24 : 0.5,
-        tint: family.category,
-        ownsTruth: false,
-        sourceName: family.sourceName,
-        sourceFile: family.sourceFile
-      }))
-    ];
-
-    const surfaceFields = [
-      ...baseSurfaceFields(centerX, centerY, radius),
-      ...state.surfaceFormationFields.map((field) => ({
-        id: field.id,
-        x: clamp(field.x, 0, 1),
-        y: clamp(field.y, 0, 1),
-        scale: clamp(field.scale, 0.02, 0.6),
-        value: clamp(field.value, 0, 1),
-        externalPacketId: field.externalPacketId,
-        donorCategory: field.donorCategory,
-        sourceName: field.sourceName,
-        ownsTruth: false
-      })),
-      ...state.internalSurfaceBridgeFields.map((field) => ({
-        id: field.id,
-        x: clamp(field.x, 0, 1),
-        y: clamp(field.y, 0, 1),
-        scale: clamp(field.scale, 0.02, 0.6),
-        value: clamp(field.value, 0, 1),
-        internalPacketId: field.internalPacketId,
-        donorCategory: field.donorCategory,
-        compositeClass: field.compositeClass,
-        sourceName: field.sourceName,
-        ownsTruth: false
-      }))
-    ];
-
-    const model = {
-      modelType: "HEARTH_BASE_GLOBE_SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_SOCKET_MODEL",
+      receiptType: "HEARTH_SURFACE_POINTER_BISHOP_HEX_EXPRESSION_SOCKET_RECEIPT",
+      timestamp: nowIso(),
       contract: CONTRACT,
       receipt: RECEIPT,
-      centerX,
-      centerY,
-      radius,
-      boundaryModel: clonePlain(boundaryModel),
-      massModel: clonePlain(massModel),
-
-      bishopName: BISHOP_NAME,
-      bishopRole: BISHOP_ROLE,
-      bishopRank: BISHOP_RANK,
-      bishopAddress: BISHOP_ADDRESS,
-      bishopDirection: BISHOP_DIRECTION,
-      bishopCardinalDisposition: BISHOP_CARDINAL_DISPOSITION,
-
-      boundaryDependencyObserved: boundaryEvidence.observed,
-      boundaryPacketObserved: Boolean(boundaryEvidence.packet),
-      boundaryModelObserved: Boolean(boundaryEvidence.model),
-
-      massDependencyObserved: massEvidence.observed,
-      massPacketObserved: Boolean(massEvidence.packet),
-      massModelObserved: Boolean(massEvidence.model),
-
-      materialBands: materialFamilies,
-      surfaceMaterialFamilies: clonePlain(materialFamilies),
-      surfaceSeeds: surfaceFields,
-      surfaceFormationFields: clonePlain(surfaceFields),
-
-      surfaceMode: "POINTER_BISHOP_INTERNAL_EXTERNAL_SOCKET_WITH_FIRST_PASS_MATERIAL_DIFFERENTIATION",
-      surfaceCoordinateSpace: "normalized-0-to-1",
-      projection: "front-facing-base-globe",
-
-      externalExpressionSocketActive: true,
-      singleExternalInputReceiver: true,
-      internalExpressionSocketActive: true,
-      internalFingerPacketReceiver: true,
-      internalBishopPacketReceiver: true,
-      compositePacketReceiver: true,
-      worldExpressionPacketReceiver: true,
-
-      surfaceIntegratedDonorCount: state.surfaceIntegratedDonors.length,
-      heldDonorQueueCount: state.heldDonorQueue.length,
-      internalAcceptedCount: state.internalAcceptedCount,
-      internalHeldCount: state.internalHeldCount,
-      compositeInternalPacketCount: state.compositeInternalPacketCount,
-      worldExpressionInternalPacketCount: state.worldExpressionInternalPacketCount,
-      internalSurfaceBridgeCount: state.internalSurfaceBridgeCount,
-
-      terrainTruthClaim: false,
-      hydrologyTruthClaim: false,
-      materialTruthClaim: false,
-      elevationTruthClaim: false,
-      compositeTruthClaim: false,
-      finalGeometryClaim: false,
-      finalVisualClaim: false
-    };
-
-    state.surfaceModel = clonePlain(model);
-    state.surfaceModelReady = true;
-    state.firstSurfaceDifferentiationReady = true;
-    state.roughTerrainTintReady = true;
-    state.shallowMaterialVariationReady = true;
-    state.visibleContributionAvailable = true;
-
-    return model;
-  }
-
-  function normalizePoint(x, y, width, height) {
-    let nx = safeNumber(x, 0);
-    let ny = safeNumber(y, 0);
-
-    const w = safeNumber(width, 0);
-    const h = safeNumber(height, 0);
-
-    if ((nx > 1 || ny > 1) && w > 0 && h > 0) {
-      nx = nx / w;
-      ny = ny / h;
-    }
-
-    return {
-      x: clamp(nx, 0, 1),
-      y: clamp(ny, 0, 1)
-    };
-  }
-
-  function sampleBoundaryContainment(point, model) {
-    const boundary = model && model.boundaryModel ? model.boundaryModel : defaultBoundaryModel();
-    const dx = point.x - safeNumber(boundary.centerX, 0.5);
-    const dy = point.y - safeNumber(boundary.centerY, 0.5);
-    const distance = Math.sqrt((dx * dx) + (dy * dy));
-    const radius = safeNumber(boundary.radius, 0.47);
-    const outerRadius = safeNumber(boundary.outerRadius, radius * 1.035);
-
-    if (distance <= radius) return 1;
-    if (distance >= outerRadius) return 0;
-
-    const span = Math.max(0.0001, outerRadius - radius);
-    return clamp(1 - ((distance - radius) / span), 0, 1);
-  }
-
-  function sampleMassInfluence(point, model) {
-    const massModel = model && model.massModel ? model.massModel : defaultMassModel(model && model.boundaryModel);
-    const anchors = Array.isArray(massModel.massAnchors) ? massModel.massAnchors : [];
-    const radius = safeNumber(massModel.radius, 0.47);
-
-    let mass = 0;
-
-    for (const anchor of anchors) {
-      const dx = point.x - safeNumber(anchor.x, 0.5);
-      const dy = point.y - safeNumber(anchor.y, 0.5);
-      const d = Math.sqrt((dx * dx) + (dy * dy));
-      const scale = Math.max(0.0001, safeNumber(anchor.scale, 0.18) * radius);
-      mass += Math.exp(-((d * d) / (2 * scale * scale))) * safeNumber(anchor.weight, 0.5);
-    }
-
-    return clamp(mass, 0, 1);
-  }
-
-  function sampleSurfaceValue(point, model) {
-    const containment = sampleBoundaryContainment(point, model);
-    const mass = sampleMassInfluence(point, model);
-
-    let fieldValue = 0;
-
-    for (const seed of model.surfaceFormationFields || model.surfaceSeeds || []) {
-      const dx = point.x - safeNumber(seed.x, 0.5);
-      const dy = point.y - safeNumber(seed.y, 0.5);
-      const d = Math.sqrt((dx * dx) + (dy * dy));
-      const scale = Math.max(0.0001, safeNumber(seed.scale, 0.16) * model.radius);
-      fieldValue += Math.exp(-((d * d) / (2 * scale * scale))) * safeNumber(seed.value, 0.5);
-    }
-
-    const latitudeBias = clamp(1 - Math.abs(point.y - model.centerY) * 1.6, 0, 1);
-    const radialBias = containment;
-
-    const surface = clamp(
-      ((mass * 0.42) + (fieldValue * 0.46) + (latitudeBias * 0.12)) * radialBias,
-      0,
-      1
-    );
-
-    let materialClass = "outside-body";
-
-    if (containment > 0) {
-      if (surface >= 0.62) materialClass = "dry-rock-soil-first-pass";
-      else if (surface >= 0.38) materialClass = "weathered-ground-first-pass";
-      else if (surface >= 0.18) materialClass = "low-body-shadow-first-pass";
-      else materialClass = "edge-readability-first-pass";
-    }
-
-    return {
-      containment,
-      mass,
-      surface,
-      materialClass
-    };
-  }
-
-  function sampleSurface(x, y, width, height) {
-    const model = state.surfaceModel || buildSurfaceModel();
-    const point = normalizePoint(x, y, width, height);
-    const value = sampleSurfaceValue(point, model);
-
-    return {
-      x: point.x,
-      y: point.y,
-      containment: value.containment,
-      mass: value.mass,
-      surface: value.surface,
-      materialClass: value.materialClass,
-      firstSurfaceDifferentiationReady: true,
-      pointerFingerSocketActive: true,
-      pointerBishopSocketActive: true,
-      internalExpressionSocketActive: true,
-      externalExpressionSocketActive: true,
-      terrainTruthClaim: false,
-      hydrologyTruthClaim: false,
-      materialTruthClaim: false,
-      elevationTruthClaim: false,
-      compositeTruthClaim: false,
-      finalVisualClaim: false
-    };
-  }
-
-  function sample(x, y, options = {}) {
-    return {
-      packetType: "HEARTH_CANVAS_SURFACE_POINTER_BISHOP_SAMPLE",
-      contract: CONTRACT,
-      receipt: RECEIPT,
+      packet: PACKET,
       file: FILE,
-      fingerName: FINGER_NAME,
-      bishopName: BISHOP_NAME,
-      bishopRole: BISHOP_ROLE,
-      bishopRank: BISHOP_RANK,
-      surface: sampleSurface(x, y, options.width, options.height),
+      route: ROUTE,
+      hexSurfaceFile: HEX_SURFACE_FILE,
+      hexAuthorityFile: HEX_AUTHORITY_FILE,
+
+      hexExpressionSocketActive: state.hexExpressionSocketActive,
+      surfaceExpressionAuthority: state.hexSurfaceExpressionAuthority,
+      hexSurfaceConsumerExpected: state.hexSurfaceConsumerExpected,
+      hexSurfaceProjectionDelegated: state.hexSurfaceProjectionDelegated,
+      canvasDrawingDelegatedToHexSurface: state.canvasDrawingDelegatedToHexSurface,
+      directCanvasDrawingSuppressed: state.directCanvasDrawingSuppressed,
+
+      sampleHexSurfaceExpressionAvailable: true,
+      sampleSurfaceExpressionAvailable: true,
+      getRenderableSurfaceExpressionAvailable: true,
+      getSurfaceExpressionAtAvailable: true,
+      receiveHexSurfaceExpressionRequestAvailable: true,
+
+      hexExpressionRequestCount: state.hexExpressionRequestCount,
+      hexExpressionServedCount: state.hexExpressionServedCount,
+      hexExpressionRejectedCount: state.hexExpressionRejectedCount,
+      latestHexExpressionAt: state.latestHexExpressionAt,
+      latestHexExpressionRequestSource: state.latestHexExpressionRequestSource,
+      latestHexExpressionCellId: state.latestHexExpressionCellId,
+      latestHexExpressionMaterialClass: state.latestHexExpressionMaterialClass,
+      latestHexExpressionLandPresence: state.latestHexExpressionLandPresence,
+      latestHexExpressionWaterPresence: state.latestHexExpressionWaterPresence,
+
+      hexSurfaceObserved: state.hexSurfaceObserved,
+      hexSurfaceContract: state.hexSurfaceContract,
+      hexSurfaceRecognized: state.hexSurfaceRecognized,
+      hexSurfaceHandshakeAttempted: state.hexSurfaceHandshakeAttempted,
+      hexSurfaceHandshakeAccepted: state.hexSurfaceHandshakeAccepted,
+      hexSurfaceHandshakeMethod: state.hexSurfaceHandshakeMethod,
+      hexSurfaceHandshakeError: state.hexSurfaceHandshakeError,
+
+      noClaimsPreserved: true,
       ...FINAL_FALSE
     };
-  }
-
-  function drawToCanvas(canvasOrContext, options = {}) {
-    const target = canvasOrContext || null;
-    const context = target && isFunction(target.getContext)
-      ? target.getContext("2d")
-      : target && isFunction(target.beginPath)
-        ? target
-        : null;
-
-    if (!context) {
-      return {
-        drawn: false,
-        reason: "NO_2D_CANVAS_CONTEXT",
-        contract: CONTRACT,
-        receipt: RECEIPT,
-        ...FINAL_FALSE
-      };
-    }
-
-    const canvas = context.canvas || target;
-    const width = safeNumber(options.width || (canvas && canvas.width), 0);
-    const height = safeNumber(options.height || (canvas && canvas.height), 0);
-
-    if (!width || !height) {
-      return {
-        drawn: false,
-        reason: "CANVAS_DIMENSIONS_UNAVAILABLE",
-        contract: CONTRACT,
-        receipt: RECEIPT,
-        ...FINAL_FALSE
-      };
-    }
-
-    const model = state.surfaceModel || buildSurfaceModel(options);
-    const minSide = Math.min(width, height);
-
-    try {
-      context.save();
-
-      for (const seed of model.surfaceFormationFields || model.surfaceSeeds || []) {
-        const cx = safeNumber(seed.x, 0.5) * width;
-        const cy = safeNumber(seed.y, 0.5) * height;
-        const r = Math.max(1, safeNumber(seed.scale, 0.16) * model.radius * minSide * 2.15);
-        const value = safeNumber(seed.value, 0.5);
-        const donorCategory = safeString(seed.donorCategory || "");
-
-        let fill = "rgba(112, 116, 87, 0.22)";
-
-        if (donorCategory === CATEGORY.HYDROLOGY_INTERFACE) {
-          fill = "rgba(74, 124, 132, 0.22)";
-        } else if (donorCategory === CATEGORY.COMPOSITE || donorCategory === CATEGORY.WORLD_EXPRESSION) {
-          fill = "rgba(122, 138, 104, 0.20)";
-        } else if (value >= 0.7) {
-          fill = "rgba(143, 126, 82, 0.30)";
-        } else if (value >= 0.52) {
-          fill = "rgba(108, 132, 91, 0.24)";
-        } else {
-          fill = "rgba(77, 91, 82, 0.20)";
-        }
-
-        context.globalAlpha = clamp(options.surfaceOpacity ?? 0.58, 0, 0.72);
-        context.beginPath();
-        context.ellipse(
-          cx,
-          cy,
-          r * clamp(options.ellipseX ?? 1.28, 0.5, 2.4),
-          r * clamp(options.ellipseY ?? 0.72, 0.35, 2.2),
-          safeNumber(options.rotation ?? -0.22, 0),
-          0,
-          Math.PI * 2
-        );
-        context.fillStyle = fill;
-        context.fill();
-      }
-
-      context.globalAlpha = clamp(options.bodyGlazeOpacity ?? 0.12, 0, 0.28);
-      context.beginPath();
-      context.arc(model.centerX * width, model.centerY * height, model.radius * minSide * 0.985, 0, Math.PI * 2);
-      context.fillStyle = "rgba(121, 105, 72, 0.12)";
-      context.fill();
-
-      context.globalAlpha = clamp(options.edgeSurfaceOpacity ?? 0.2, 0, 0.35);
-      context.lineWidth = Math.max(1, minSide * 0.006);
-      context.beginPath();
-      context.arc(model.centerX * width, model.centerY * height, model.radius * minSide * 0.998, 0, Math.PI * 2);
-      context.strokeStyle = "rgba(199, 175, 105, 0.24)";
-      context.stroke();
-
-      context.restore();
-
-      record("SURFACE_POINTER_BISHOP_DRAW_TO_CANVAS_COMPLETE", {
-        width,
-        height,
-        fields: (model.surfaceFormationFields || []).length,
-        finalVisualClaim: false
-      });
-
-      return {
-        drawn: true,
-        contract: CONTRACT,
-        receipt: RECEIPT,
-        file: FILE,
-        fingerName: FINGER_NAME,
-        bishopName: BISHOP_NAME,
-        pointerFingerActive: true,
-        pointerBishopActive: true,
-        visibleContributionAvailable: true,
-        finalVisualClaim: false,
-        ...FINAL_FALSE
-      };
-    } catch (error) {
-      try {
-        context.restore();
-      } catch (_restoreError) {}
-
-      recordError("SURFACE_POINTER_BISHOP_DRAW_TO_CANVAS_FAILED", error);
-
-      return {
-        drawn: false,
-        reason: "DRAW_FAILED",
-        error: error && error.message ? String(error.message) : String(error),
-        contract: CONTRACT,
-        receipt: RECEIPT,
-        ...FINAL_FALSE
-      };
-    }
-  }
-
-  function findCanvasHub() {
-    for (const sourceName of HUB_SOURCE_NAMES) {
-      const candidate = readPath(sourceName);
-      if (candidate && isObject(candidate)) {
-        return { hub: candidate, sourceName };
-      }
-    }
-
-    return { hub: null, sourceName: "NONE" };
   }
 
   function buildSurfacePacket(options = {}) {
     const model = buildSurfaceModel(options);
 
     const packet = {
-      packetType: "HEARTH_CANVAS_SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_SOCKET_PACKET",
+      packetType: "HEARTH_CANVAS_SURFACE_POINTER_BISHOP_HEX_EXPRESSION_SOCKET_PACKET",
       packetName: PACKET,
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       previousReceipt: PREVIOUS_RECEIPT,
+      lineageV3Contract: LINEAGE_V3_CONTRACT,
+      lineageV3Receipt: LINEAGE_V3_RECEIPT,
       lineageV2Contract: LINEAGE_V2_CONTRACT,
       lineageV2Receipt: LINEAGE_V2_RECEIPT,
       baselineContract: BASELINE_CONTRACT,
@@ -2591,6 +2757,8 @@
       route: ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
       parentHubFile: PARENT_HUB_FILE,
+      hexSurfaceFile: HEX_SURFACE_FILE,
+      hexAuthorityFile: HEX_AUTHORITY_FILE,
 
       fingerName: FINGER_NAME,
       fingerRole: FINGER_ROLE,
@@ -2632,6 +2800,14 @@
       bishopLanguageActive: true,
       nonCardinalBishopLanguageActive: true,
       legacyFingerCompatibilityActive: true,
+
+      hexExpressionSocketActive: true,
+      hexSurfaceExpressionAuthority: true,
+      hexSurfaceConsumerExpected: true,
+      hexSurfaceProjectionDelegated: true,
+      canvasDrawingDelegatedToHexSurface: true,
+      directCanvasDrawingSuppressed: true,
+
       externalExpressionSocketActive: true,
       internalExpressionSocketActive: true,
       internalExternalExpressionSocketActive: true,
@@ -2653,7 +2829,12 @@
       surfaceModel: clonePlain(model),
       sampleAvailable: true,
       sampleSurfaceAvailable: true,
+      sampleHexSurfaceExpressionAvailable: true,
+      getRenderableSurfaceExpressionAvailable: true,
+      getSurfaceExpressionAtAvailable: true,
+      receiveHexSurfaceExpressionRequestAvailable: true,
       drawToCanvasAvailable: true,
+      drawToCanvasSuppressed: true,
 
       externalIntakeReady: true,
       receiveExternalExpressionAvailable: true,
@@ -2681,22 +2862,22 @@
       registerExpressionBishopAvailable: true,
       getInternalIntakeReceiptAvailable: true,
 
+      hexExpressionReceipt: getHexExpressionReceipt(),
+
       hubRegistrationAttempted: state.hubRegistrationAttempted,
       hubRegistrationAccepted: state.hubRegistrationAccepted,
       hubRegistrationMethod: state.hubRegistrationMethod,
       hubRegistrationHeldReason: state.hubRegistrationHeldReason,
 
-      recommendedNextFile: state.heldDonorQueue.length ? FILE : state.compositeInternalPacketCount ? INSPECT_FILE : NEXT_FILE,
-      recommendedNextRenewalTarget: state.heldDonorQueue.length
-        ? "RECEIVER_CATEGORY_FROM_HELD_DONOR_QUEUE"
-        : state.compositeInternalPacketCount
-          ? INSPECT_FILE
-          : NEXT_FILE,
-      firstFailedCoordinate: state.hubRegistrationAccepted
-        ? state.compositeInternalPacketCount
-          ? "COMPOSITE_INTERNAL_EXPRESSION_ACCEPTED_WAITING_INSPECT_OR_LIGHT"
-          : "WAITING_EXTERNAL_DONOR_EXPRESSION_OR_LIGHT_BISHOP"
-        : "WAITING_CANVAS_HUB_SURFACE_POINTER_BISHOP_INTAKE",
+      hexSurfaceHandshakeAttempted: state.hexSurfaceHandshakeAttempted,
+      hexSurfaceHandshakeAccepted: state.hexSurfaceHandshakeAccepted,
+      hexSurfaceHandshakeMethod: state.hexSurfaceHandshakeMethod,
+
+      recommendedNextFile: HEX_SURFACE_FILE,
+      recommendedNextRenewalTarget: HEX_SURFACE_FILE,
+      firstFailedCoordinate: state.hexSurfaceHandshakeAccepted
+        ? "HEX_SURFACE_HANDSHAKE_ACCEPTED_WAITING_HEX_SURFACE_CONSUMER_RENEWAL"
+        : "WAITING_HEX_SURFACE_EXPRESSION_CONSUMER_HANDSHAKE",
       noClaimsPreserved: true,
 
       ...FINAL_FALSE,
@@ -2710,15 +2891,15 @@
     state.roughTerrainTintReady = true;
     state.shallowMaterialVariationReady = true;
     state.visibleContributionAvailable = true;
+    state.surfaceExpressionReady = true;
+    state.hexSurfaceExpressionReady = true;
 
-    if (state.hubRegistrationAccepted) {
-      state.firstFailedCoordinate = packet.firstFailedCoordinate;
-      state.recommendedNextFile = packet.recommendedNextFile;
-      state.recommendedNextRenewalTarget = packet.recommendedNextRenewalTarget;
-      state.postgameStatus = state.compositeInternalPacketCount
-        ? "SURFACE_POINTER_BISHOP_ACCEPTED_COMPOSITE_INTERNAL_EXPRESSION"
-        : "SURFACE_POINTER_BISHOP_SOCKET_READY";
-    }
+    state.firstFailedCoordinate = packet.firstFailedCoordinate;
+    state.recommendedNextFile = packet.recommendedNextFile;
+    state.recommendedNextRenewalTarget = packet.recommendedNextRenewalTarget;
+    state.postgameStatus = state.hexSurfaceHandshakeAccepted
+      ? "SURFACE_POINTER_BISHOP_HEX_EXPRESSION_SOCKET_ACCEPTED"
+      : "SURFACE_POINTER_BISHOP_HEX_EXPRESSION_SOCKET_READY_WAITING_HEX_SURFACE";
 
     return packet;
   }
@@ -2727,7 +2908,7 @@
     const surfacePacket = buildSurfacePacket(options);
 
     const packet = {
-      packetType: "HEARTH_CANVAS_SURFACE_POINTER_FINGER_COMPATIBILITY_PACKET",
+      packetType: "HEARTH_CANVAS_SURFACE_POINTER_FINGER_HEX_EXPRESSION_COMPATIBILITY_PACKET",
       packetName: PACKET,
       contract: CONTRACT,
       receipt: RECEIPT,
@@ -2738,6 +2919,7 @@
       route: ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
       parentHubFile: PARENT_HUB_FILE,
+      hexSurfaceFile: HEX_SURFACE_FILE,
 
       fingerName: FINGER_NAME,
       fingerRole: FINGER_ROLE,
@@ -2753,6 +2935,7 @@
 
       pointerFingerActive: true,
       pointerBishopActive: true,
+      hexExpressionSocketActive: true,
       externalExpressionSocketActive: true,
       internalExpressionSocketActive: true,
       internalExternalExpressionSocketActive: true,
@@ -2765,19 +2948,9 @@
       internalIntakeReady: true,
       externalIntakeReceipt: getExternalIntakeReceipt(),
       internalIntakeReceipt: getInternalIntakeReceipt(),
+      hexExpressionReceipt: getHexExpressionReceipt(),
       routingMap: getRoutingMap(),
       surfacePacket: clonePlain(surfacePacket),
-
-      heldDonorQueueCount: state.heldDonorQueue.length,
-      rejectedDonorQueueCount: state.rejectedDonorQueue.length,
-      routedExpressionCount: state.routedExpressionCount,
-      surfaceIntegratedCount: state.surfaceIntegratedCount,
-
-      internalHeldQueueCount: state.internalHeldQueue.length,
-      internalRejectedQueueCount: state.internalRejectedQueue.length,
-      internalAcceptedCount: state.internalAcceptedCount,
-      compositeInternalPacketCount: state.compositeInternalPacketCount,
-      worldExpressionInternalPacketCount: state.worldExpressionInternalPacketCount,
 
       noClaimsPreserved: true,
       ...FINAL_FALSE,
@@ -2794,7 +2967,7 @@
     const surfacePacket = buildSurfacePacket(options);
 
     const packet = {
-      packetType: "HEARTH_CANVAS_SURFACE_POINTER_BISHOP_PACKET",
+      packetType: "HEARTH_CANVAS_SURFACE_POINTER_BISHOP_HEX_EXPRESSION_SOCKET_PACKET",
       packetName: PACKET,
       contract: CONTRACT,
       receipt: RECEIPT,
@@ -2805,6 +2978,7 @@
       route: ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
       parentHubFile: PARENT_HUB_FILE,
+      hexSurfaceFile: HEX_SURFACE_FILE,
 
       bishopName: BISHOP_NAME,
       bishopTitle: BISHOP_TITLE,
@@ -2825,6 +2999,13 @@
 
       pointerBishopActive: true,
       pointerFingerActive: true,
+      hexExpressionSocketActive: true,
+      hexSurfaceExpressionAuthority: true,
+      hexSurfaceConsumerExpected: true,
+      hexSurfaceProjectionDelegated: true,
+      canvasDrawingDelegatedToHexSurface: true,
+      directCanvasDrawingSuppressed: true,
+
       externalExpressionSocketActive: true,
       internalExpressionSocketActive: true,
       internalBishopPacketReceiver: true,
@@ -2832,9 +3013,15 @@
       compositePacketReceiver: true,
       worldExpressionPacketReceiver: true,
 
+      sampleHexSurfaceExpressionAvailable: true,
+      sampleSurfaceExpressionAvailable: true,
+      getRenderableSurfaceExpressionAvailable: true,
+      getSurfaceExpressionAtAvailable: true,
+
       surfacePacket: clonePlain(surfacePacket),
       externalIntakeReceipt: getExternalIntakeReceipt(),
       internalIntakeReceipt: getInternalIntakeReceipt(),
+      hexExpressionReceipt: getHexExpressionReceipt(),
       routingMap: getRoutingMap(),
 
       noClaimsPreserved: true,
@@ -2867,24 +3054,119 @@
     return getPointerBishopPacket(options);
   }
 
+  function findCanvasHub() {
+    return findSource(HUB_SOURCE_NAMES);
+  }
+
+  function findHexSurface() {
+    const found = findSource(HEX_SURFACE_SOURCE_NAMES);
+    const receipt = readReceipt(found.source) || found.source || {};
+    const contract = contractOf(receipt || found.source) || "UNKNOWN";
+
+    state.hexSurfaceObserved = Boolean(found.source);
+    state.hexSurfaceContract = contract;
+    state.hexSurfaceRecognized =
+      contract === HEX_SURFACE_REQUIRED_CONTRACT ||
+      contract === HEX_SURFACE_NEXT_EXPECTED_CONTRACT ||
+      safeString(contract).includes("HEARTH_HEX_SURFACE");
+
+    return {
+      source: found.source,
+      sourceName: found.sourceName,
+      contract,
+      recognized: state.hexSurfaceRecognized
+    };
+  }
+
+  function registerWithHexSurface(options = {}) {
+    const found = findHexSurface();
+
+    state.hexSurfaceHandshakeAttempted = true;
+    state.hexSurfaceHandshakeAccepted = false;
+    state.hexSurfaceHandshakeMethod = "NONE";
+    state.hexSurfaceHandshakeError = "";
+
+    if (!found.source || found.source === api) {
+      state.hexSurfaceHandshakeMethod = "NONE";
+      state.hexSurfaceHandshakeAccepted = false;
+      state.firstFailedCoordinate = "HEX_SURFACE_NOT_FOUND";
+      state.recommendedNextFile = HEX_SURFACE_FILE;
+      state.recommendedNextRenewalTarget = HEX_SURFACE_FILE;
+      state.postgameStatus = "SURFACE_POINTER_BISHOP_READY_HEX_SURFACE_NOT_FOUND";
+      return false;
+    }
+
+    const methods = [
+      "receiveSurfaceExpressionAuthority",
+      "receiveSurfacePointerBishopExpressionAuthority",
+      "receiveSurfacePointerBishopPacket",
+      "receiveSurfaceExpressionPacket",
+      "receiveExpressionPacket",
+      "receiveBishopPacket"
+    ];
+
+    const payload = getPointerBishopPacket(options);
+
+    for (const method of methods) {
+      if (!isFunction(found.source[method])) continue;
+
+      try {
+        const response = found.source[method](clonePlain(payload));
+        state.hexSurfaceHandshakeAccepted = response !== false;
+        state.hexSurfaceHandshakeMethod = method;
+        state.postgameStatus = state.hexSurfaceHandshakeAccepted
+          ? "SURFACE_POINTER_BISHOP_ACCEPTED_BY_HEX_SURFACE"
+          : "SURFACE_POINTER_BISHOP_HEX_SURFACE_REJECTED_PACKET";
+        state.firstFailedCoordinate = state.hexSurfaceHandshakeAccepted
+          ? "HEX_SURFACE_HANDSHAKE_ACCEPTED_WAITING_CONSUMER_RENEWAL"
+          : "HEX_SURFACE_REJECTED_SURFACE_POINTER_BISHOP_PACKET";
+        state.recommendedNextFile = HEX_SURFACE_FILE;
+        state.recommendedNextRenewalTarget = HEX_SURFACE_FILE;
+
+        record("SURFACE_POINTER_BISHOP_HEX_SURFACE_HANDSHAKE_ATTEMPT_COMPLETE", {
+          hexSurfaceSourceName: found.sourceName,
+          method,
+          accepted: state.hexSurfaceHandshakeAccepted
+        });
+
+        return state.hexSurfaceHandshakeAccepted;
+      } catch (error) {
+        state.hexSurfaceHandshakeError = error && error.message ? String(error.message) : String(error);
+        recordError("SURFACE_POINTER_BISHOP_HEX_SURFACE_HANDSHAKE_METHOD_FAILED", error, {
+          hexSurfaceSourceName: found.sourceName,
+          method
+        });
+      }
+    }
+
+    state.hexSurfaceHandshakeAccepted = false;
+    state.hexSurfaceHandshakeMethod = "NONE";
+    state.firstFailedCoordinate = "HEX_SURFACE_INTAKE_NOT_FOUND";
+    state.recommendedNextFile = HEX_SURFACE_FILE;
+    state.recommendedNextRenewalTarget = HEX_SURFACE_FILE;
+    state.postgameStatus = "SURFACE_POINTER_BISHOP_READY_HEX_SURFACE_INTAKE_NOT_FOUND";
+
+    return false;
+  }
+
   function registerWithCanvasHub(options = {}) {
     const packet = buildSurfacePacket(options);
     const bishopPacket = buildPointerBishopPacket(options);
     const found = findCanvasHub();
 
-    state.hubDetected = Boolean(found.hub);
+    state.hubDetected = Boolean(found.source);
     state.hubSourceName = found.sourceName;
     state.hubRegistrationAttempted = true;
     state.hubRegistrationAccepted = false;
     state.hubRegistrationMethod = "NONE";
     state.hubRegistrationError = "";
 
-    if (!found.hub || found.hub === api) {
+    if (!found.source || found.source === api) {
       state.hubRegistrationHeldReason = "CANVAS_HUB_NOT_FOUND";
-      state.firstFailedCoordinate = "WAITING_CANVAS_HUB";
-      state.recommendedNextFile = PARENT_HUB_FILE;
-      state.recommendedNextRenewalTarget = PARENT_HUB_FILE;
-      state.postgameStatus = "SURFACE_POINTER_BISHOP_HELD_CANVAS_HUB_NOT_FOUND";
+      state.firstFailedCoordinate = "WAITING_CANVAS_HUB_OR_HEX_SURFACE";
+      state.recommendedNextFile = HEX_SURFACE_FILE;
+      state.recommendedNextRenewalTarget = HEX_SURFACE_FILE;
+      state.postgameStatus = "SURFACE_POINTER_BISHOP_READY_CANVAS_HUB_NOT_FOUND";
 
       record("SURFACE_POINTER_BISHOP_HUB_NOT_FOUND", {
         attemptedSources: clonePlain(HUB_SOURCE_NAMES)
@@ -2894,11 +3176,11 @@
     }
 
     for (const method of HUB_INTAKE_METHODS) {
-      if (!isFunction(found.hub[method])) continue;
+      if (!isFunction(found.source[method])) continue;
 
       try {
         const payload = method.toLowerCase().includes("bishop") ? bishopPacket : packet;
-        const response = found.hub[method](clonePlain(payload));
+        const response = found.source[method](clonePlain(payload));
 
         state.hubRegistrationAccepted = response !== false;
         state.hubRegistrationMethod = method;
@@ -2906,19 +3188,15 @@
         state.lastRegistrationResponse = clonePlain(response);
 
         if (state.hubRegistrationAccepted) {
-          state.firstFailedCoordinate = state.compositeInternalPacketCount
-            ? "COMPOSITE_INTERNAL_EXPRESSION_ACCEPTED_WAITING_INSPECT_OR_LIGHT"
-            : "WAITING_EXTERNAL_DONOR_EXPRESSION_OR_LIGHT_BISHOP";
-          state.recommendedNextFile = state.compositeInternalPacketCount ? INSPECT_FILE : NEXT_FILE;
-          state.recommendedNextRenewalTarget = state.recommendedNextFile;
-          state.postgameStatus = state.compositeInternalPacketCount
-            ? "SURFACE_POINTER_BISHOP_ACCEPTED_BY_CANVAS_HUB_COMPOSITE_SOCKET_READY"
-            : "SURFACE_POINTER_BISHOP_ACCEPTED_BY_CANVAS_HUB_SOCKET_READY";
+          state.firstFailedCoordinate = "SURFACE_POINTER_BISHOP_REGISTERED_WAITING_HEX_SURFACE_CONSUMER";
+          state.recommendedNextFile = HEX_SURFACE_FILE;
+          state.recommendedNextRenewalTarget = HEX_SURFACE_FILE;
+          state.postgameStatus = "SURFACE_POINTER_BISHOP_ACCEPTED_BY_CANVAS_HUB_HEX_SOCKET_READY";
         } else {
           state.firstFailedCoordinate = "CANVAS_HUB_REJECTED_SURFACE_POINTER_BISHOP_PACKET";
-          state.recommendedNextFile = PARENT_HUB_FILE;
-          state.recommendedNextRenewalTarget = PARENT_HUB_FILE;
-          state.postgameStatus = "SURFACE_POINTER_BISHOP_HELD_CANVAS_HUB_REJECTED_PACKET";
+          state.recommendedNextFile = HEX_SURFACE_FILE;
+          state.recommendedNextRenewalTarget = HEX_SURFACE_FILE;
+          state.postgameStatus = "SURFACE_POINTER_BISHOP_READY_CANVAS_HUB_REJECTED_PACKET";
         }
 
         record("SURFACE_POINTER_BISHOP_HUB_REGISTRATION_ATTEMPT_COMPLETE", {
@@ -2944,9 +3222,9 @@
     state.hubRegistrationMethod = "NONE";
     state.hubRegistrationHeldReason = "CANVAS_HUB_INTAKE_NOT_FOUND";
     state.firstFailedCoordinate = "CANVAS_HUB_INTAKE_NOT_FOUND";
-    state.recommendedNextFile = PARENT_HUB_FILE;
-    state.recommendedNextRenewalTarget = PARENT_HUB_FILE;
-    state.postgameStatus = "SURFACE_POINTER_BISHOP_HELD_CANVAS_HUB_INTAKE_NOT_FOUND";
+    state.recommendedNextFile = HEX_SURFACE_FILE;
+    state.recommendedNextRenewalTarget = HEX_SURFACE_FILE;
+    state.postgameStatus = "SURFACE_POINTER_BISHOP_READY_CANVAS_HUB_INTAKE_NOT_FOUND";
 
     record("SURFACE_POINTER_BISHOP_HUB_INTAKE_NOT_FOUND", {
       hubSourceName: found.sourceName,
@@ -2975,6 +3253,8 @@
       packet: PACKET,
       previousContract: PREVIOUS_CONTRACT,
       previousReceipt: PREVIOUS_RECEIPT,
+      lineageV3Contract: LINEAGE_V3_CONTRACT,
+      lineageV3Receipt: LINEAGE_V3_RECEIPT,
       lineageV2Contract: LINEAGE_V2_CONTRACT,
       lineageV2Receipt: LINEAGE_V2_RECEIPT,
       baselineContract: BASELINE_CONTRACT,
@@ -2983,6 +3263,8 @@
       route: ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
       parentHubFile: PARENT_HUB_FILE,
+      hexSurfaceFile: HEX_SURFACE_FILE,
+      hexAuthorityFile: HEX_AUTHORITY_FILE,
 
       boundaryFile: BOUNDARY_FILE,
       massFile: MASS_FILE,
@@ -3018,6 +3300,14 @@
       surfaceFingerActive: state.surfaceFingerActive,
       pointerFingerActive: state.pointerFingerActive,
       pointerBishopActive: state.pointerBishopActive,
+
+      hexExpressionSocketActive: state.hexExpressionSocketActive,
+      hexSurfaceExpressionAuthority: state.hexSurfaceExpressionAuthority,
+      hexSurfaceConsumerExpected: state.hexSurfaceConsumerExpected,
+      hexSurfaceProjectionDelegated: state.hexSurfaceProjectionDelegated,
+      canvasDrawingDelegatedToHexSurface: state.canvasDrawingDelegatedToHexSurface,
+      directCanvasDrawingSuppressed: state.directCanvasDrawingSuppressed,
+
       externalExpressionSocketActive: state.externalExpressionSocketActive,
       internalExpressionSocketActive: state.internalExpressionSocketActive,
       internalExternalExpressionSocketActive: state.internalExternalExpressionSocketActive,
@@ -3046,6 +3336,21 @@
       pointerFingerPacketReady: state.pointerFingerPacketReady,
       pointerBishopPacketReady: state.pointerBishopPacketReady,
       visibleContributionAvailable: state.visibleContributionAvailable,
+      surfaceExpressionReady: state.surfaceExpressionReady,
+      hexSurfaceExpressionReady: state.hexSurfaceExpressionReady,
+
+      sampleHexSurfaceExpressionReady: state.sampleHexSurfaceExpressionReady,
+      sampleSurfaceExpressionReady: state.sampleSurfaceExpressionReady,
+      renderableSurfaceExpressionReady: state.renderableSurfaceExpressionReady,
+      hexExpressionRequestCount: state.hexExpressionRequestCount,
+      hexExpressionServedCount: state.hexExpressionServedCount,
+      hexExpressionRejectedCount: state.hexExpressionRejectedCount,
+      latestHexExpressionAt: state.latestHexExpressionAt,
+      latestHexExpressionRequestSource: state.latestHexExpressionRequestSource,
+      latestHexExpressionCellId: state.latestHexExpressionCellId,
+      latestHexExpressionMaterialClass: state.latestHexExpressionMaterialClass,
+      latestHexExpressionLandPresence: state.latestHexExpressionLandPresence,
+      latestHexExpressionWaterPresence: state.latestHexExpressionWaterPresence,
 
       externalIntakeReady: state.externalIntakeReady,
       externalIntakeCount: state.externalIntakeCount,
@@ -3079,9 +3384,22 @@
       hubRegistrationHeldReason: state.hubRegistrationHeldReason,
       hubRegistrationError: state.hubRegistrationError,
 
+      hexSurfaceObserved: state.hexSurfaceObserved,
+      hexSurfaceContract: state.hexSurfaceContract,
+      hexSurfaceRecognized: state.hexSurfaceRecognized,
+      hexSurfaceHandshakeAttempted: state.hexSurfaceHandshakeAttempted,
+      hexSurfaceHandshakeAccepted: state.hexSurfaceHandshakeAccepted,
+      hexSurfaceHandshakeMethod: state.hexSurfaceHandshakeMethod,
+      hexSurfaceHandshakeError: state.hexSurfaceHandshakeError,
+
       sampleAvailable: true,
       sampleSurfaceAvailable: true,
+      sampleHexSurfaceExpressionAvailable: true,
+      getRenderableSurfaceExpressionAvailable: true,
+      getSurfaceExpressionAtAvailable: true,
+      receiveHexSurfaceExpressionRequestAvailable: true,
       drawToCanvasAvailable: true,
+      drawToCanvasSuppressed: true,
 
       receiveExternalExpressionAvailable: true,
       receiveExternalDonorExpressionAvailable: true,
@@ -3114,6 +3432,7 @@
       getInternalRejectedQueueAvailable: true,
       getExternalIntakeReceiptAvailable: true,
       getInternalIntakeReceiptAvailable: true,
+      getHexExpressionReceiptAvailable: true,
 
       firstFailedCoordinate: state.firstFailedCoordinate,
       recommendedNextFile: state.recommendedNextFile,
@@ -3144,6 +3463,7 @@
       routingMap: getRoutingMap(),
       externalIntakeReceipt: getExternalIntakeReceipt(),
       internalIntakeReceipt: getInternalIntakeReceipt(),
+      hexExpressionReceipt: getHexExpressionReceipt(),
       externalIntakeLedger: clonePlain(state.externalIntakeLedger),
       classifiedLedger: clonePlain(state.classifiedLedger),
       routedLedger: clonePlain(state.routedLedger),
@@ -3159,9 +3479,11 @@
       internalSurfaceBridgeFields: clonePlain(state.internalSurfaceBridgeFields),
       surfaceFormationFields: clonePlain(state.surfaceFormationFields),
       surfaceMaterialFamilies: clonePlain(state.surfaceMaterialFamilies),
+      hexExpressionLedger: clonePlain(state.hexExpressionLedger),
       registeredReceiverCategories: Object.keys(state.registeredReceivers),
       hubSourceNames: clonePlain(HUB_SOURCE_NAMES),
       hubIntakeMethods: clonePlain(HUB_INTAKE_METHODS),
+      hexSurfaceSourceNames: clonePlain(HEX_SURFACE_SOURCE_NAMES),
       boundarySourceNames: clonePlain(BOUNDARY_SOURCE_NAMES),
       massSourceNames: clonePlain(MASS_SOURCE_NAMES),
       lastRegistrationResponse: clonePlain(state.lastRegistrationResponse),
@@ -3175,7 +3497,7 @@
     const r = getReceiptLight();
 
     return [
-      "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_RECEIPT",
+      "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_HEX_EXPRESSION_SOCKET_RECEIPT",
       "",
       line("timestamp", r.timestamp),
       line("contract", r.contract),
@@ -3183,12 +3505,15 @@
       line("packet", r.packet),
       line("previousContract", r.previousContract),
       line("previousReceipt", r.previousReceipt),
+      line("lineageV3Contract", r.lineageV3Contract),
       line("lineageV2Contract", r.lineageV2Contract),
       line("baselineContract", r.baselineContract),
       line("file", r.file),
       line("route", r.route),
       line("diagnosticRoute", r.diagnosticRoute),
       line("parentHubFile", r.parentHubFile),
+      line("hexSurfaceFile", r.hexSurfaceFile),
+      line("hexAuthorityFile", r.hexAuthorityFile),
       "",
       "BISHOP",
       line("bishopName", r.bishopName),
@@ -3204,6 +3529,24 @@
       line("bishopLanguageActive", r.bishopLanguageActive),
       line("nonCardinalBishopLanguageActive", r.nonCardinalBishopLanguageActive),
       line("legacyFingerCompatibilityActive", r.legacyFingerCompatibilityActive),
+      "",
+      "HEX_EXPRESSION_SOCKET",
+      line("hexExpressionSocketActive", r.hexExpressionSocketActive),
+      line("hexSurfaceExpressionAuthority", r.hexSurfaceExpressionAuthority),
+      line("hexSurfaceConsumerExpected", r.hexSurfaceConsumerExpected),
+      line("hexSurfaceProjectionDelegated", r.hexSurfaceProjectionDelegated),
+      line("canvasDrawingDelegatedToHexSurface", r.canvasDrawingDelegatedToHexSurface),
+      line("directCanvasDrawingSuppressed", r.directCanvasDrawingSuppressed),
+      line("sampleHexSurfaceExpressionAvailable", r.sampleHexSurfaceExpressionAvailable),
+      line("sampleSurfaceExpressionAvailable", r.sampleSurfaceExpressionAvailable),
+      line("getRenderableSurfaceExpressionAvailable", r.getRenderableSurfaceExpressionAvailable),
+      line("getSurfaceExpressionAtAvailable", r.getSurfaceExpressionAtAvailable),
+      line("hexExpressionRequestCount", r.hexExpressionRequestCount),
+      line("hexExpressionServedCount", r.hexExpressionServedCount),
+      line("hexExpressionRejectedCount", r.hexExpressionRejectedCount),
+      line("latestHexExpressionAt", r.latestHexExpressionAt),
+      line("latestHexExpressionCellId", r.latestHexExpressionCellId),
+      line("latestHexExpressionMaterialClass", r.latestHexExpressionMaterialClass),
       "",
       "FINGER_COMPATIBILITY",
       line("fingerName", r.fingerName),
@@ -3245,6 +3588,8 @@
       line("pointerFingerPacketReady", r.pointerFingerPacketReady),
       line("pointerBishopPacketReady", r.pointerBishopPacketReady),
       line("visibleContributionAvailable", r.visibleContributionAvailable),
+      line("surfaceExpressionReady", r.surfaceExpressionReady),
+      line("hexSurfaceExpressionReady", r.hexSurfaceExpressionReady),
       "",
       "EXTERNAL_SOCKET",
       line("externalIntakeReady", r.externalIntakeReady),
@@ -3281,6 +3626,15 @@
       line("hubRegistrationHeldReason", r.hubRegistrationHeldReason),
       line("hubRegistrationError", r.hubRegistrationError),
       "",
+      "HEX_SURFACE_HANDSHAKE",
+      line("hexSurfaceObserved", r.hexSurfaceObserved),
+      line("hexSurfaceContract", r.hexSurfaceContract),
+      line("hexSurfaceRecognized", r.hexSurfaceRecognized),
+      line("hexSurfaceHandshakeAttempted", r.hexSurfaceHandshakeAttempted),
+      line("hexSurfaceHandshakeAccepted", r.hexSurfaceHandshakeAccepted),
+      line("hexSurfaceHandshakeMethod", r.hexSurfaceHandshakeMethod),
+      line("hexSurfaceHandshakeError", r.hexSurfaceHandshakeError),
+      "",
       "NEXT",
       line("firstFailedCoordinate", r.firstFailedCoordinate),
       line("recommendedNextFile", r.recommendedNextFile),
@@ -3314,6 +3668,8 @@
     setDataset("hearthCanvasFingerSurfaceReceipt", RECEIPT);
     setDataset("hearthCanvasFingerSurfacePreviousContract", PREVIOUS_CONTRACT);
     setDataset("hearthCanvasFingerSurfacePreviousReceipt", PREVIOUS_RECEIPT);
+    setDataset("hearthCanvasFingerSurfaceLineageV3Contract", LINEAGE_V3_CONTRACT);
+    setDataset("hearthCanvasFingerSurfaceLineageV2Contract", LINEAGE_V2_CONTRACT);
     setDataset("hearthCanvasFingerSurfaceBaselineContract", BASELINE_CONTRACT);
     setDataset("hearthCanvasFingerSurfaceFile", FILE);
 
@@ -3332,6 +3688,14 @@
     setDataset("hearthCanvasFingerSurfacePointerFingerActive", String(state.pointerFingerActive));
     setDataset("hearthCanvasFingerSurfacePointerBishopActive", String(state.pointerBishopActive));
     setDataset("hearthCanvasFingerSurfaceLegacyFingerCompatibilityActive", String(state.legacyFingerCompatibilityActive));
+
+    setDataset("hearthCanvasFingerSurfaceHexExpressionSocketActive", String(state.hexExpressionSocketActive));
+    setDataset("hearthCanvasFingerSurfaceHexSurfaceExpressionAuthority", String(state.hexSurfaceExpressionAuthority));
+    setDataset("hearthCanvasFingerSurfaceHexSurfaceConsumerExpected", String(state.hexSurfaceConsumerExpected));
+    setDataset("hearthCanvasFingerSurfaceHexSurfaceProjectionDelegated", String(state.hexSurfaceProjectionDelegated));
+    setDataset("hearthCanvasFingerSurfaceCanvasDrawingDelegatedToHexSurface", String(state.canvasDrawingDelegatedToHexSurface));
+    setDataset("hearthCanvasFingerSurfaceDirectCanvasDrawingSuppressed", String(state.directCanvasDrawingSuppressed));
+
     setDataset("hearthCanvasFingerSurfaceExternalExpressionSocketActive", String(state.externalExpressionSocketActive));
     setDataset("hearthCanvasFingerSurfaceInternalExpressionSocketActive", String(state.internalExpressionSocketActive));
     setDataset("hearthCanvasFingerSurfaceInternalExternalExpressionSocketActive", String(state.internalExternalExpressionSocketActive));
@@ -3360,6 +3724,21 @@
     setDataset("hearthCanvasFingerSurfacePointerFingerPacketReady", String(state.pointerFingerPacketReady));
     setDataset("hearthCanvasFingerSurfacePointerBishopPacketReady", String(state.pointerBishopPacketReady));
     setDataset("hearthCanvasFingerSurfaceVisibleContributionAvailable", String(state.visibleContributionAvailable));
+    setDataset("hearthCanvasFingerSurfaceSurfaceExpressionReady", String(state.surfaceExpressionReady));
+    setDataset("hearthCanvasFingerSurfaceHexSurfaceExpressionReady", String(state.hexSurfaceExpressionReady));
+
+    setDataset("hearthCanvasFingerSurfaceSampleHexSurfaceExpressionReady", String(state.sampleHexSurfaceExpressionReady));
+    setDataset("hearthCanvasFingerSurfaceSampleSurfaceExpressionReady", String(state.sampleSurfaceExpressionReady));
+    setDataset("hearthCanvasFingerSurfaceRenderableSurfaceExpressionReady", String(state.renderableSurfaceExpressionReady));
+    setDataset("hearthCanvasFingerSurfaceHexExpressionRequestCount", String(state.hexExpressionRequestCount));
+    setDataset("hearthCanvasFingerSurfaceHexExpressionServedCount", String(state.hexExpressionServedCount));
+    setDataset("hearthCanvasFingerSurfaceHexExpressionRejectedCount", String(state.hexExpressionRejectedCount));
+    setDataset("hearthCanvasFingerSurfaceLatestHexExpressionAt", state.latestHexExpressionAt);
+    setDataset("hearthCanvasFingerSurfaceLatestHexExpressionRequestSource", state.latestHexExpressionRequestSource);
+    setDataset("hearthCanvasFingerSurfaceLatestHexExpressionCellId", state.latestHexExpressionCellId);
+    setDataset("hearthCanvasFingerSurfaceLatestHexExpressionMaterialClass", state.latestHexExpressionMaterialClass);
+    setDataset("hearthCanvasFingerSurfaceLatestHexExpressionLandPresence", String(state.latestHexExpressionLandPresence));
+    setDataset("hearthCanvasFingerSurfaceLatestHexExpressionWaterPresence", String(state.latestHexExpressionWaterPresence));
 
     setDataset("hearthCanvasFingerSurfaceExternalIntakeReady", String(state.externalIntakeReady));
     setDataset("hearthCanvasFingerSurfaceExternalIntakeCount", String(state.externalIntakeCount));
@@ -3391,6 +3770,14 @@
     setDataset("hearthCanvasFingerSurfaceHubRegistrationAccepted", String(state.hubRegistrationAccepted));
     setDataset("hearthCanvasFingerSurfaceHubRegistrationMethod", state.hubRegistrationMethod);
     setDataset("hearthCanvasFingerSurfaceHubRegistrationHeldReason", state.hubRegistrationHeldReason);
+
+    setDataset("hearthCanvasFingerSurfaceHexSurfaceObserved", String(state.hexSurfaceObserved));
+    setDataset("hearthCanvasFingerSurfaceHexSurfaceContract", state.hexSurfaceContract);
+    setDataset("hearthCanvasFingerSurfaceHexSurfaceRecognized", String(state.hexSurfaceRecognized));
+    setDataset("hearthCanvasFingerSurfaceHexSurfaceHandshakeAttempted", String(state.hexSurfaceHandshakeAttempted));
+    setDataset("hearthCanvasFingerSurfaceHexSurfaceHandshakeAccepted", String(state.hexSurfaceHandshakeAccepted));
+    setDataset("hearthCanvasFingerSurfaceHexSurfaceHandshakeMethod", state.hexSurfaceHandshakeMethod);
+    setDataset("hearthCanvasFingerSurfaceHexSurfaceHandshakeError", state.hexSurfaceHandshakeError);
 
     setDataset("hearthCanvasFingerSurfaceFirstFailedCoordinate", state.firstFailedCoordinate);
     setDataset("hearthCanvasFingerSurfaceRecommendedNextFile", state.recommendedNextFile);
@@ -3432,6 +3819,12 @@
     hearth.canvasPointerBishop = api;
     hearth.canvasBishopSurfaceInternalExternalSocket = api;
 
+    hearth.surfaceExpressionAuthority = api;
+    hearth.hearthSurfaceExpressionAuthority = api;
+    hearth.hexSurfaceExpressionAuthority = api;
+    hearth.canvasFingerSurfaceHexExpressionSocket = api;
+    hearth.canvasSurfacePointerBishopHexExpressionSocket = api;
+
     hearth.canvasFingerSurfaceReceipt = getReceiptLight();
     hearth.canvasSurfaceBishopReceipt = getReceiptLight();
     hearth.canvasPointerBishopReceipt = getReceiptLight();
@@ -3440,6 +3833,7 @@
     hearth.canvasPointerBishopPacket = getPointerBishopPacket();
     hearth.canvasFingerSurfaceInternalIntakeReceipt = getInternalIntakeReceipt();
     hearth.canvasFingerSurfaceExternalIntakeReceipt = getExternalIntakeReceipt();
+    hearth.canvasFingerSurfaceHexExpressionReceipt = getHexExpressionReceipt();
 
     lab.hearthCanvasFingerSurface = api;
     lab.hearthCanvasSurfaceFinger = api;
@@ -3453,6 +3847,11 @@
     lab.hearthCanvasPointerBishop = api;
     lab.hearthCanvasBishopSurfaceInternalExternalSocket = api;
 
+    lab.hearthSurfaceExpressionAuthority = api;
+    lab.hearthHexSurfaceExpressionAuthority = api;
+    lab.hearthCanvasFingerSurfaceHexExpressionSocket = api;
+    lab.hearthCanvasSurfacePointerBishopHexExpressionSocket = api;
+
     lab.hearthCanvasFingerSurfaceReceipt = getReceiptLight();
     lab.hearthCanvasSurfaceBishopReceipt = getReceiptLight();
     lab.hearthCanvasPointerBishopReceipt = getReceiptLight();
@@ -3461,6 +3860,7 @@
     lab.hearthCanvasPointerBishopPacket = getPointerBishopPacket();
     lab.hearthCanvasFingerSurfaceInternalIntakeReceipt = getInternalIntakeReceipt();
     lab.hearthCanvasFingerSurfaceExternalIntakeReceipt = getExternalIntakeReceipt();
+    lab.hearthCanvasFingerSurfaceHexExpressionReceipt = getHexExpressionReceipt();
 
     root.HEARTH_CANVAS_FINGER_SURFACE = api;
     root.HEARTH_CANVAS_SURFACE_FINGER = api;
@@ -3475,9 +3875,18 @@
     root.HEARTH_CANVAS_BISHOP_SURFACE_INTERNAL_EXTERNAL_SOCKET = api;
     root.HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP = api;
 
+    root.HEARTH_SURFACE_EXPRESSION_AUTHORITY = api;
+    root.HEARTH_HEX_SURFACE_EXPRESSION_AUTHORITY = api;
+    root.HEARTH_CANVAS_FINGER_SURFACE_HEX_EXPRESSION_SOCKET = api;
+    root.HEARTH_CANVAS_SURFACE_POINTER_BISHOP_HEX_EXPRESSION_SOCKET = api;
+    root.HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_HEX_EXPRESSION_SOCKET = api;
+
     root.HEARTH_CANVAS_FINGER_SURFACE_RECEIPT = getReceiptLight();
     root.HEARTH_CANVAS_BISHOP_SURFACE_RECEIPT = getReceiptLight();
     root.HEARTH_CANVAS_POINTER_BISHOP_RECEIPT = getReceiptLight();
+
+    root.HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_HEX_EXPRESSION_SOCKET_RECEIPT = getReceipt();
+    root.HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_HEX_EXPRESSION_SOCKET_RECEIPT_v5 = getReceipt();
 
     root.HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_RECEIPT = getReceipt();
     root.HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_RECEIPT_v4 = getReceipt();
@@ -3494,6 +3903,7 @@
     root.HEARTH_CANVAS_SURFACE_BISHOP_PACKET = getPointerBishopPacket();
     root.HEARTH_CANVAS_FINGER_SURFACE_INTERNAL_INTAKE_RECEIPT = getInternalIntakeReceipt();
     root.HEARTH_CANVAS_FINGER_SURFACE_EXTERNAL_INTAKE_RECEIPT = getExternalIntakeReceipt();
+    root.HEARTH_CANVAS_FINGER_SURFACE_HEX_EXPRESSION_RECEIPT = getHexExpressionReceipt();
 
     state.publishedAt = state.publishedAt || nowIso();
     state.updatedAt = nowIso();
@@ -3514,6 +3924,7 @@
     publishGlobals();
 
     registerWithCanvasHub(options);
+    registerWithHexSurface(options);
 
     state.booted = true;
     state.mounted = true;
@@ -3521,13 +3932,16 @@
     updateDataset();
     publishGlobals();
 
-    record("SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_SOCKET_BOOT_COMPLETE", {
+    record("SURFACE_POINTER_BISHOP_HEX_EXPRESSION_SOCKET_BOOT_COMPLETE", {
       boundaryDependencyObserved: state.boundaryDependencyObserved,
       massDependencyObserved: state.massDependencyObserved,
       hubDetected: state.hubDetected,
       hubRegistrationAccepted: state.hubRegistrationAccepted,
+      hexSurfaceObserved: state.hexSurfaceObserved,
+      hexSurfaceHandshakeAccepted: state.hexSurfaceHandshakeAccepted,
       externalExpressionSocketActive: state.externalExpressionSocketActive,
       internalExpressionSocketActive: state.internalExpressionSocketActive,
+      hexExpressionSocketActive: state.hexExpressionSocketActive,
       compositePacketReceiver: state.compositePacketReceiver,
       worldExpressionPacketReceiver: state.worldExpressionPacketReceiver,
       pointerBishopActive: state.pointerBishopActive,
@@ -3558,6 +3972,8 @@
     PREVIOUS_CONTRACT,
     PREVIOUS_RECEIPT,
     PREVIOUS_PACKET,
+    LINEAGE_V3_CONTRACT,
+    LINEAGE_V3_RECEIPT,
     LINEAGE_V2_CONTRACT,
     LINEAGE_V2_RECEIPT,
     BASELINE_CONTRACT,
@@ -3566,6 +3982,8 @@
     ROUTE,
     DIAGNOSTIC_ROUTE,
     PARENT_HUB_FILE,
+    HEX_SURFACE_FILE,
+    HEX_AUTHORITY_FILE,
     BOUNDARY_FILE,
     MASS_FILE,
     NEXT_FILE,
@@ -3584,6 +4002,8 @@
     packet: PACKET,
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
+    lineageV3Contract: LINEAGE_V3_CONTRACT,
+    lineageV3Receipt: LINEAGE_V3_RECEIPT,
     lineageV2Contract: LINEAGE_V2_CONTRACT,
     lineageV2Receipt: LINEAGE_V2_RECEIPT,
     baselineContract: BASELINE_CONTRACT,
@@ -3592,6 +4012,8 @@
     route: ROUTE,
     diagnosticRoute: DIAGNOSTIC_ROUTE,
     parentHubFile: PARENT_HUB_FILE,
+    hexSurfaceFile: HEX_SURFACE_FILE,
+    hexAuthorityFile: HEX_AUTHORITY_FILE,
     boundaryFile: BOUNDARY_FILE,
     massFile: MASS_FILE,
     lightFile: LIGHT_FILE,
@@ -3636,10 +4058,16 @@
     getPointerBishopPacket,
     getBishopPacket,
     registerWithCanvasHub,
+    registerWithHexSurface,
     findCanvasHub,
+    findHexSurface,
 
     sample,
-    sampleSurface,
+    sampleSurfaceExpression,
+    sampleHexSurfaceExpression,
+    getRenderableSurfaceExpression,
+    getSurfaceExpressionAt,
+    receiveHexSurfaceExpressionRequest,
     drawToCanvas,
 
     receiveExternalExpression,
@@ -3677,6 +4105,7 @@
     getInternalRejectedQueue,
     getExternalIntakeReceipt,
     getInternalIntakeReceipt,
+    getHexExpressionReceipt,
 
     getState,
     read,
@@ -3715,6 +4144,11 @@
     supportsMassFingerConsumption: true,
     supportsCanvasHubRegistration: true,
     supportsVisibleSurfaceContribution: true,
+    supportsHexExpressionSocket: true,
+    supportsHexSurfaceExpressionAuthority: true,
+    supportsSampleHexSurfaceExpression: true,
+    supportsSampleSurfaceExpression: true,
+    supportsRenderableSurfaceExpression: true,
     supportsReceiptText: true,
     supportsNoFinalClaims: true,
 
@@ -3729,7 +4163,12 @@
     ownsSurfaceExpressionPacket: true,
     ownsPointerBishopPacket: true,
     ownsFirstMaterialDifferentiation: true,
+    ownsHexExpressionSocket: true,
+    ownsHexSurfaceExpressionAuthority: true,
     ownsCanvasHub: false,
+    ownsHexSurfaceProjection: false,
+    ownsCanvasDrawing: false,
+    ownsCanvasMounting: false,
     ownsBoundaryFinger: false,
     ownsBoundaryBishop: false,
     ownsMassFinger: false,
@@ -3755,6 +4194,13 @@
     ownsBiomeTruth: false,
     ownsSettlementTruth: false,
     ownsFinalVisualPassClaim: false,
+
+    hexExpressionSocketActive: true,
+    hexSurfaceExpressionAuthority: true,
+    hexSurfaceConsumerExpected: true,
+    hexSurfaceProjectionDelegated: true,
+    canvasDrawingDelegatedToHexSurface: true,
+    directCanvasDrawingSuppressed: true,
 
     ...FINAL_FALSE,
 
@@ -3785,7 +4231,7 @@
       boot({});
     }
   } catch (error) {
-    recordError("SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_SOCKET_INITIALIZATION_FAILED", error);
+    recordError("SURFACE_POINTER_BISHOP_HEX_EXPRESSION_SOCKET_INITIALIZATION_FAILED", error);
 
     try {
       updateDataset();

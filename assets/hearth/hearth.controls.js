@@ -1,7 +1,7 @@
 // /assets/hearth/hearth.controls.js
 // HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE_TNT_v1
 // Internal renewal:
-// HEARTH_CONTROLS_SMOOTH_POINTER_DELTA_CANVAS_FRAME_ALIGNMENT_TNT_v4
+// HEARTH_CONTROLS_SMOOTH_POINTER_DELTA_CANVAS_FRAME_ALIGNMENT_TNT_v4_1
 // Full-file replacement.
 // Planetary Controls / Queen view-input authority only.
 // Purpose:
@@ -10,8 +10,12 @@
 // - Preserve compatibility with Route Conductor v10, v9_9, v9_8, v9_7, v9_6, v9_5, and v9_4.
 // - Correct horizontal drag polarity so finger-right turns the visible globe right.
 // - Coalesce pointer/touch/wheel/keyboard deltas through requestAnimationFrame.
-// - Cache Canvas public receiver lookup during active input to remove per-move authority discovery lag.
-// - Publish lightweight view packets during drag; preserve full receipts for boot, handshake, bind, refresh, and dispose.
+// - Cache and prewarm Canvas public receiver lookup during active input.
+// - Publish lightweight view packets during drag.
+// - Preserve full receipts for boot, handshake, bind, refresh, and dispose.
+// - Keep per-frame Canvas delivery limited to view/control receiver APIs only.
+// - Do not call Canvas lifecycle, mount, boot, start, init, render, drawFrame, or drawVisibleExpression from per-frame input.
+// - Keep packet phase at 0 so yaw is not double-applied by Canvas/Hex Surface.
 // - Forward view-control delta packets to Canvas through public Canvas APIs only.
 // - Preserve Canvas as receiver/output carrier.
 // - Preserve no terrain truth, hydrology truth, elevation truth, material truth,
@@ -28,20 +32,23 @@
   const RECEIPT = "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE_RECEIPT_v1";
 
   const INTERNAL_IMPLEMENTATION_CONTRACT =
-    "HEARTH_CONTROLS_SMOOTH_POINTER_DELTA_CANVAS_FRAME_ALIGNMENT_TNT_v4";
+    "HEARTH_CONTROLS_SMOOTH_POINTER_DELTA_CANVAS_FRAME_ALIGNMENT_TNT_v4_1";
   const INTERNAL_IMPLEMENTATION_RECEIPT =
-    "HEARTH_CONTROLS_SMOOTH_POINTER_DELTA_CANVAS_FRAME_ALIGNMENT_RECEIPT_v4";
+    "HEARTH_CONTROLS_SMOOTH_POINTER_DELTA_CANVAS_FRAME_ALIGNMENT_RECEIPT_v4_1";
 
   const PREVIOUS_IMPLEMENTATION_CONTRACT =
-    "HEARTH_CONTROLS_QUEEN_V9_9_NEWS_FIBONACCI_CANVAS_DELTA_ALIGNMENT_TNT_v3";
+    "HEARTH_CONTROLS_SMOOTH_POINTER_DELTA_CANVAS_FRAME_ALIGNMENT_TNT_v4";
   const PREVIOUS_IMPLEMENTATION_RECEIPT =
-    "HEARTH_CONTROLS_QUEEN_V9_9_NEWS_FIBONACCI_CANVAS_DELTA_ALIGNMENT_RECEIPT_v3";
+    "HEARTH_CONTROLS_SMOOTH_POINTER_DELTA_CANVAS_FRAME_ALIGNMENT_RECEIPT_v4";
+
+  const LINEAGE_IMPLEMENTATION_CONTRACT =
+    "HEARTH_CONTROLS_QUEEN_V9_9_NEWS_FIBONACCI_CANVAS_DELTA_ALIGNMENT_TNT_v3";
 
   const BASELINE_IMPLEMENTATION_CONTRACT =
     "HEARTH_CONTROLS_QUEEN_WEST_GATE_HIERARCHY_SUPERCONDUCTOR_VIEW_INPUT_BRIDGE_TNT_v2";
 
   const VERSION =
-    "2026-06-06.hearth-controls-smooth-pointer-delta-canvas-frame-alignment-v4";
+    "2026-06-06.hearth-controls-smooth-pointer-delta-canvas-frame-alignment-v4-1";
 
   const FILE = "/assets/hearth/hearth.controls.js";
   const ROUTE = "/showroom/globe/hearth/";
@@ -115,9 +122,9 @@
   const HIERARCHY_REGISTRY_RECEIPT =
     "HEARTH_WEST_GATE_DOWNSTREAM_HIERARCHY_CARDINAL_BISHOP_BISHOP_QUEEN_PRIEST_REGISTRY_RECEIPT_v1";
 
-  const CONTROL_PACKET = "HEARTH_CONTROLS_PLANETARY_VIEW_DELTA_PACKET_v4";
-  const HANDSHAKE_PACKET = "HEARTH_ROUTE_CONDUCTOR_TO_QUEEN_CONTROLS_HANDSHAKE_PACKET_v4";
-  const QUEEN_PACKET = "HEARTH_QUEEN_CONTROLS_VIEW_PACKET_v4";
+  const CONTROL_PACKET = "HEARTH_CONTROLS_PLANETARY_VIEW_DELTA_PACKET_v4_1";
+  const HANDSHAKE_PACKET = "HEARTH_ROUTE_CONDUCTOR_TO_QUEEN_CONTROLS_HANDSHAKE_PACKET_v4_1";
+  const QUEEN_PACKET = "HEARTH_QUEEN_CONTROLS_VIEW_PACKET_v4_1";
 
   const HANDSHAKE_STATUS = Object.freeze({
     WAITING_ROUTE_CONDUCTOR_AUTHORITY: "WAITING_ROUTE_CONDUCTOR_AUTHORITY",
@@ -161,13 +168,13 @@
 
   const INPUT_TUNING = Object.freeze({
     horizontalPolarity: -1,
-    pointerYawScale: 0.006,
-    pointerPitchScale: 0.006,
+    pointerYawScale: 0.0068,
+    pointerPitchScale: 0.0054,
     wheelZoomScale: -0.0012,
     keyboardYawStep: 0.06,
     keyboardPitchStep: 0.06,
     keyboardZoomStep: 0.08,
-    receiverCacheMs: 900,
+    receiverCacheMs: 1800,
     watchdogIntervalMs: 900,
     watchdogMaxTicks: 60,
     minPointerDelta: 0.01
@@ -185,7 +192,6 @@
     "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION",
     "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION",
     "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT",
-
     "HEARTH.routeConductorShowtimeNewsFibonacciQueenCanvasSync",
     "HEARTH.routeConductorBishopQueenCanvasRecognitionFunnel",
     "HEARTH.routeConductor",
@@ -197,7 +203,6 @@
     "HEARTH.routeConductorNewsFibonacciVisibleGlobeProofSynchronization",
     "HEARTH.routeConductorCanvasExpressionHubVisibleGlobeProofIngestion",
     "HEARTH.routeConductorCanvasLocalStationBridgeAlignment",
-
     "DEXTER_LAB.hearthRouteConductorShowtimeNewsFibonacciQueenCanvasSync",
     "DEXTER_LAB.hearthRouteConductorBishopQueenCanvasRecognitionFunnel",
     "DEXTER_LAB.hearthRouteConductor",
@@ -227,7 +232,6 @@
     "HEARTH_CANVAS_FINGER_MANAGER",
     "HEARTH_CANVAS_VISIBLE_BASE_GLOBE_CARRIER",
     "HEARTH_CANVAS_VISIBLE_PLANET",
-
     "HEARTH.canvasHubCompositeFirstFastViewDeferredHexReceiver",
     "HEARTH.canvasCompositeFirstFastViewDeferredHexReceiver",
     "HEARTH.canvasHubFastViewTransformDeferredRenderReceiver",
@@ -243,7 +247,6 @@
     "HEARTH.canvasFingerManager",
     "HEARTH.canvasVisibleBaseGlobeCarrier",
     "HEARTH.canvasVisiblePlanet",
-
     "DEXTER_LAB.hearthCanvasHubCompositeFirstFastViewDeferredHexReceiver",
     "DEXTER_LAB.hearthCanvasCompositeFirstFastViewDeferredHexReceiver",
     "DEXTER_LAB.hearthCanvasHubFastViewTransformDeferredRenderReceiver",
@@ -273,13 +276,11 @@
     "LAB_RUNTIME_TABLE_CARDINAL_WEST_GATE_DOWNSTREAM_HIERARCHY_BISHOP_QUEEN_PRIEST_ADOPTION_RECEIPT_v4_8",
     "LAB_RUNTIME_TABLE_WEST_BISHOP_CHORD_CANVAS_RELEASE_BRIDGE",
     "LAB_RUNTIME_TABLE_WEST_CANVAS_V12_3_POINTER_SURFACE_BISHOP_RELEASE_BRIDGE",
-
     "HEARTH.runtimeTableWest",
     "HEARTH.westRuntimeTable",
     "HEARTH.westAdmissibility",
     "HEARTH.westBishopChordCanvasReleaseBridge",
     "HEARTH.westGateDownstreamHierarchyAdoption",
-
     "DEXTER_LAB.runtimeTableWest",
     "DEXTER_LAB.cardinalRuntimeTableWest",
     "DEXTER_LAB.hearthRuntimeTableWest",
@@ -313,7 +314,6 @@
     "HEARTH_QUEEN_CONTROLS",
     "HEARTH_QUEEN_SUPERCONDUCTOR_CONTROLS",
     "HEARTH_CONTROLS_SMOOTH_POINTER_DELTA_CANVAS_FRAME_ALIGNMENT",
-
     "HEARTH.controls",
     "HEARTH.planetaryControls",
     "HEARTH.controlFile",
@@ -324,7 +324,6 @@
     "HEARTH.queenControls",
     "HEARTH.queenSuperconductorControls",
     "HEARTH.controlsSmoothPointerDeltaCanvasFrameAlignment",
-
     "DEXTER_LAB.hearthControls",
     "DEXTER_LAB.hearthPlanetaryControls",
     "DEXTER_LAB.hearthControlFile",
@@ -342,6 +341,7 @@
     yaw: 0,
     pitch: 0,
     zoom: 1,
+    phase: 0,
     minPitch: -1.25,
     maxPitch: 1.25,
     minZoom: 0.55,
@@ -384,7 +384,10 @@
     method: "",
     expiresAt: 0,
     missCount: 0,
-    hitCount: 0
+    hitCount: 0,
+    prewarmCount: 0,
+    prewarmStatus: "NOT_RUN",
+    prewarmAt: ""
   };
 
   const state = {
@@ -394,6 +397,7 @@
     internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
     previousImplementationContract: PREVIOUS_IMPLEMENTATION_CONTRACT,
     previousImplementationReceipt: PREVIOUS_IMPLEMENTATION_RECEIPT,
+    lineageImplementationContract: LINEAGE_IMPLEMENTATION_CONTRACT,
     baselineImplementationContract: BASELINE_IMPLEMENTATION_CONTRACT,
     version: VERSION,
     file: FILE,
@@ -412,7 +416,7 @@
     disposed: false,
     startedAt: "",
     updatedAt: "",
-    latestEvent: "HEARTH_CONTROLS_V4_LOADED",
+    latestEvent: "HEARTH_CONTROLS_V4_1_LOADED",
 
     queenControlBridgeActive: true,
     queenSuperconductorLanguageActive: true,
@@ -432,8 +436,11 @@
     smoothInputRenewalActive: true,
     requestAnimationFrameCoalescingActive: true,
     canvasReceiverCacheActive: true,
+    canvasReceiverPrewarmActive: true,
     horizontalDragPolarityCorrected: true,
     pointerRightTurnsGlobeRight: true,
+    packetPhaseFixedAtZero: true,
+    canvasLifecycleCallsSuppressedDuringDragFrames: true,
     fullReceiptSuppressedDuringDragFrames: true,
 
     handshakeRequired: true,
@@ -476,6 +483,8 @@
     canvasReceiverCacheMethod: "NONE",
     canvasReceiverCacheHits: 0,
     canvasReceiverCacheMisses: 0,
+    canvasReceiverPrewarmStatus: "NOT_RUN",
+    canvasReceiverPrewarmCount: 0,
 
     labWestObserved: false,
     labWestAuthoritySource: "NONE",
@@ -925,11 +934,7 @@
   function readCanvasAuthority(force = false) {
     const now = nowMs();
 
-    if (
-      !force &&
-      receiverCache.authority &&
-      receiverCache.expiresAt > now
-    ) {
+    if (!force && receiverCache.authority && receiverCache.expiresAt > now) {
       receiverCache.hitCount += 1;
       state.canvasReceiverCacheHits = receiverCache.hitCount;
       state.canvasReceiverCacheStatus = "HIT";
@@ -981,7 +986,6 @@
     receiverCache.authoritySource = found.name;
     receiverCache.contract = contract;
     receiverCache.receipt = receiptName;
-    receiverCache.method = "";
     receiverCache.expiresAt = now + INPUT_TUNING.receiverCacheMs;
 
     return {
@@ -1003,6 +1007,75 @@
     receiverCache.expiresAt = 0;
     state.canvasReceiverCacheStatus = `INVALIDATED:${reason}`;
     state.canvasReceiverCacheMethod = "NONE";
+  }
+
+  function getCanvasReceiverMethods() {
+    return [
+      "receivePlanetaryViewControlPacket",
+      "consumePlanetaryViewControlPacket",
+      "receiveViewControlPacket",
+      "consumeViewControlPacket",
+      "receiveCanvasViewState",
+      "consumeCanvasViewState",
+      "receiveViewState",
+      "setViewState",
+      "applyViewState",
+      "receiveControlPacket",
+      "receiveControlViewPacket",
+      "receiveControlsPacket",
+      "receivePlanetaryControlPacket",
+      "receiveViewDelta",
+      "applyViewDelta",
+      "setView",
+      "updateView"
+    ];
+  }
+
+  function resolveCanvasReceiverMethod(authority) {
+    if (!authority || !isObject(authority)) return "";
+
+    if (
+      receiverCache.authority === authority &&
+      receiverCache.method &&
+      isFunction(authority[receiverCache.method])
+    ) {
+      return receiverCache.method;
+    }
+
+    for (const method of getCanvasReceiverMethods()) {
+      if (isFunction(authority[method])) {
+        receiverCache.method = method;
+        state.canvasReceiverCacheMethod = method;
+        return method;
+      }
+    }
+
+    receiverCache.method = "";
+    state.canvasReceiverCacheMethod = "NONE";
+    return "";
+  }
+
+  function prewarmCanvasReceiver(reason = "pointerdown") {
+    const canvas = readCanvasAuthority(true);
+    const method = resolveCanvasReceiverMethod(canvas.authority);
+
+    receiverCache.prewarmCount += 1;
+    receiverCache.prewarmAt = nowIso();
+    receiverCache.prewarmStatus = method ? "PREWARMED" : "NO_PUBLIC_VIEW_RECEIVER_FOUND";
+
+    state.canvasReceiverPrewarmCount = receiverCache.prewarmCount;
+    state.canvasReceiverPrewarmStatus = receiverCache.prewarmStatus;
+    state.canvasReceiverCacheMethod = method || "NONE";
+
+    updateDatasetLight();
+
+    return {
+      prewarmed: Boolean(method),
+      method,
+      reason,
+      canvasAuthoritySource: canvas.name,
+      canvasContract: canvas.contract
+    };
   }
 
   function readHierarchyRegistry() {
@@ -1499,14 +1572,12 @@
       "HEARTH_PLANETARY_CONTROL_HANDSHAKE_PACKET",
       "HEARTH_CONTROLS_HANDSHAKE_PACKET",
       "HEARTH_CONTROL_HANDSHAKE_PACKET",
-
       "HEARTH.routeConductorQueenControlHandshakePacket",
       "HEARTH.queenControlHandshakePacket",
       "HEARTH.routeConductorControlHandshakePacket",
       "HEARTH.controlHandshakePacket",
       "HEARTH.controlsHandshakePacket",
       "HEARTH.planetaryControlHandshakePacket",
-
       "DEXTER_LAB.hearthRouteConductorQueenControlHandshakePacket",
       "DEXTER_LAB.hearthQueenControlHandshakePacket",
       "DEXTER_LAB.hearthControlHandshakePacket",
@@ -1541,6 +1612,7 @@
     });
 
     bindInputIfAdmitted();
+    prewarmCanvasReceiver("handshake-accepted");
     publishGlobals("handshake-accepted");
 
     return getReceiptLight(false);
@@ -1728,8 +1800,15 @@
     input.restoreTabIndex = target.getAttribute ? target.getAttribute("tabindex") : null;
 
     try {
-      if (target.style) target.style.touchAction = "none";
-      if (target.setAttribute && !target.hasAttribute("tabindex")) target.setAttribute("tabindex", "0");
+      if (target.style) {
+        target.style.touchAction = "none";
+        target.style.userSelect = "none";
+        target.style.webkitUserSelect = "none";
+      }
+
+      if (target.setAttribute && !target.hasAttribute("tabindex")) {
+        target.setAttribute("tabindex", "0");
+      }
     } catch (_error) {}
 
     input.handlers.pointerdown = onPointerDown;
@@ -1758,9 +1837,13 @@
         handshakeStatus: state.handshakeStatus,
         smoothInputRenewalActive: true,
         requestAnimationFrameCoalescingActive: true,
-        horizontalDragPolarityCorrected: true
+        canvasReceiverPrewarmActive: true,
+        horizontalDragPolarityCorrected: true,
+        packetPhaseFixedAtZero: true,
+        canvasLifecycleCallsSuppressedDuringDragFrames: true
       });
 
+      prewarmCanvasReceiver("input-bound");
       publishGlobals("input-bound");
       return true;
     } catch (error) {
@@ -1827,6 +1910,8 @@
     input.lastX = safeNumber(event.clientX, 0);
     input.lastY = safeNumber(event.clientY, 0);
     state.lastInputType = "pointerdown";
+
+    prewarmCanvasReceiver("pointerdown");
 
     try {
       if (event.currentTarget && isFunction(event.currentTarget.setPointerCapture)) {
@@ -1899,6 +1984,8 @@
     state.rawInputEventCount += 1;
     state.lastInputType = "wheel-zoom";
 
+    prewarmCanvasReceiver("wheel");
+
     queueViewDelta({
       inputType: "wheel-zoom",
       deltaYaw: 0,
@@ -1938,6 +2025,8 @@
 
     state.rawInputEventCount += 1;
     state.lastInputType = "keyboard-view";
+
+    prewarmCanvasReceiver("keyboard");
 
     queueViewDelta({
       inputType: "keyboard-view",
@@ -2059,8 +2148,11 @@
       smoothInputRenewalActive: true,
       requestAnimationFrameCoalescingActive: true,
       canvasReceiverCacheActive: true,
+      canvasReceiverPrewarmActive: true,
       horizontalDragPolarityCorrected: true,
       pointerRightTurnsGlobeRight: true,
+      packetPhaseFixedAtZero: true,
+      canvasLifecycleCallsSuppressedDuringDragFrames: true,
 
       newsAlignmentActive: true,
       fibonacciSynchronizationActive: true,
@@ -2152,7 +2244,7 @@
         yaw: view.yaw,
         pitch: view.pitch,
         zoom: view.zoom,
-        phase: view.yaw,
+        phase: 0,
         minPitch: view.minPitch,
         maxPitch: view.maxPitch,
         minZoom: view.minZoom,
@@ -2162,7 +2254,7 @@
       yaw: view.yaw,
       pitch: view.pitch,
       zoom: view.zoom,
-      phase: view.yaw,
+      phase: 0,
 
       queenBridge: composeQueenBridgeContext(),
       route: ROUTE,
@@ -2174,8 +2266,11 @@
       frameCoalesced: true,
       requestAnimationFrameCoalescingActive: true,
       canvasReceiverCacheActive: true,
+      canvasReceiverPrewarmActive: true,
       horizontalDragPolarityCorrected: true,
       pointerRightTurnsGlobeRight: true,
+      packetPhaseFixedAtZero: true,
+      canvasLifecycleCallsSuppressedDuringDragFrames: true,
       fullReceiptSuppressedDuringDragFrames: true,
 
       ...NO_CLAIMS
@@ -2192,6 +2287,7 @@
     view.yaw += safeNumber(delta.deltaYaw, 0);
     view.pitch = clamp(view.pitch + safeNumber(delta.deltaPitch, 0), view.minPitch, view.maxPitch);
     view.zoom = clamp(view.zoom + safeNumber(delta.deltaZoom, 0), view.minZoom, view.maxZoom);
+    view.phase = 0;
 
     state.lastInputType = delta.inputType || "view-delta";
 
@@ -2221,6 +2317,7 @@
     const lab = ensureObject(root, "DEXTER_LAB");
 
     const cloned = clonePlain(packet);
+    const viewState = clonePlain(packet.viewState);
 
     root.HEARTH_CONTROLS_VIEW_PACKET = cloned;
     root.HEARTH_PLANETARY_VIEW_CONTROL_PACKET = cloned;
@@ -2228,7 +2325,7 @@
     root.HEARTH_QUEEN_CONTROLS_VIEW_PACKET = cloned;
     root.HEARTH_QUEEN_SUPERCONDUCTOR_VIEW_PACKET = cloned;
 
-    root.HEARTH_CANVAS_VIEW_STATE = clonePlain(packet.viewState);
+    root.HEARTH_CANVAS_VIEW_STATE = viewState;
     root.HEARTH_CANVAS_LAST_VIEW_PACKET = cloned;
 
     hearth.controlsViewPacket = cloned;
@@ -2236,58 +2333,13 @@
     hearth.controlsLastDeltaPacket = cloned;
     hearth.queenControlsViewPacket = cloned;
     hearth.queenSuperconductorViewPacket = cloned;
-    hearth.canvasViewState = clonePlain(packet.viewState);
+    hearth.canvasViewState = viewState;
     hearth.canvasLastViewPacket = cloned;
 
     lab.hearthControlsViewPacket = cloned;
     lab.hearthPlanetaryViewControlPacket = cloned;
     lab.hearthQueenControlsViewPacket = cloned;
-    lab.hearthCanvasViewState = clonePlain(packet.viewState);
-  }
-
-  function getCanvasReceiverMethods() {
-    return [
-      "receivePlanetaryControlPacket",
-      "receiveControlsPacket",
-      "receiveControlPacket",
-      "receiveControlViewPacket",
-      "receiveViewControlPacket",
-      "receiveCanvasViewState",
-      "consumeCanvasViewState",
-      "receiveViewDelta",
-      "applyViewDelta",
-      "setView",
-      "updateView",
-      "drawVisibleExpression",
-      "render",
-      "drawFrame",
-      "start",
-      "boot",
-      "init",
-      "mount"
-    ];
-  }
-
-  function resolveCanvasReceiverMethod(authority) {
-    if (!authority || !isObject(authority)) return "";
-
-    if (receiverCache.authority === authority && receiverCache.method && isFunction(authority[receiverCache.method])) {
-      return receiverCache.method;
-    }
-
-    const methods = getCanvasReceiverMethods();
-
-    for (const method of methods) {
-      if (isFunction(authority[method])) {
-        receiverCache.method = method;
-        state.canvasReceiverCacheMethod = method;
-        return method;
-      }
-    }
-
-    receiverCache.method = "";
-    state.canvasReceiverCacheMethod = "NONE";
-    return "";
+    lab.hearthCanvasViewState = viewState;
   }
 
   function deliverControlPacketToCanvas(packet) {
@@ -2329,7 +2381,7 @@
 
       state.canvasDeliveryStatus = "CONTROL_PACKET_DELIVERED_TO_CANVAS";
       state.canvasDeliveryMethod = method;
-      state.canvasDeliveryReason = "CANVAS_PUBLIC_CONTROL_RECEIVER_CALLED";
+      state.canvasDeliveryReason = "CANVAS_PUBLIC_VIEW_CONTROL_RECEIVER_CALLED";
       state.deliveryCount += 1;
 
       if (result && isFunction(result.then)) {
@@ -2475,7 +2527,7 @@
       CONTROL_HANDSHAKE_TARGET: FILE,
       CONTROL_HANDSHAKE_FUNNEL_OWNER: "ROUTE_CONDUCTOR",
 
-      JS_INTEGRATION_FUNNEL: "INDEX_PASSIVE_CORRIDOR -> ROUTE_CONDUCTOR_V10_OR_V9_9 -> CONTROLS_QUEEN_V4 -> CANVAS",
+      JS_INTEGRATION_FUNNEL: "INDEX_PASSIVE_CORRIDOR -> ROUTE_CONDUCTOR_V10_OR_V9_9 -> CONTROLS_QUEEN_V4_1 -> CANVAS_VIEW_RECEIVER_ONLY",
       JS_INDEX_FILE: INDEX_FILE,
       JS_INDEX_CONTRACT: EXPECTED_INDEX_CONTRACT,
       JS_ROUTE_CONDUCTOR_FILE: ROUTE_CONDUCTOR_FILE,
@@ -2499,8 +2551,11 @@
       SMOOTH_INPUT_RENEWAL_ACTIVE: "true",
       REQUEST_ANIMATION_FRAME_COALESCING_ACTIVE: "true",
       CANVAS_RECEIVER_CACHE_ACTIVE: "true",
+      CANVAS_RECEIVER_PREWARM_ACTIVE: "true",
       HORIZONTAL_DRAG_POLARITY_CORRECTED: "true",
       POINTER_RIGHT_TURNS_GLOBE_RIGHT: "true",
+      PACKET_PHASE_FIXED_AT_ZERO: "true",
+      CANVAS_LIFECYCLE_CALLS_SUPPRESSED_DURING_DRAG_FRAMES: "true",
       FULL_RECEIPT_SUPPRESSED_DURING_DRAG_FRAMES: "true",
 
       POINTER_FINGER_FILE: POINTER_FINGER_FILE,
@@ -2557,6 +2612,8 @@
       CONTROL_RAW_INPUT_EVENT_COUNT: String(state.rawInputEventCount),
       CONTROL_RECEIVER_CACHE_STATUS: state.canvasReceiverCacheStatus,
       CONTROL_RECEIVER_CACHE_METHOD: state.canvasReceiverCacheMethod,
+      CONTROL_RECEIVER_PREWARM_STATUS: state.canvasReceiverPrewarmStatus,
+      CONTROL_RECEIVER_PREWARM_COUNT: String(state.canvasReceiverPrewarmCount),
 
       f13Claimed: "false",
       f13CanvasClaimed: "false",
@@ -2589,6 +2646,7 @@
       internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
       previousImplementationContract: PREVIOUS_IMPLEMENTATION_CONTRACT,
       previousImplementationReceipt: PREVIOUS_IMPLEMENTATION_RECEIPT,
+      lineageImplementationContract: LINEAGE_IMPLEMENTATION_CONTRACT,
       baselineImplementationContract: BASELINE_IMPLEMENTATION_CONTRACT,
       version: VERSION,
       file: FILE,
@@ -2601,7 +2659,7 @@
       labWestFile: LABWEST_FILE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
 
-      role: "queen-planetary-view-input-authority-smooth-frame-delta-aligned",
+      role: "queen-planetary-view-input-authority-smooth-frame-delta-aligned-v4-1",
 
       loaded: true,
       booted: state.booted,
@@ -2616,8 +2674,11 @@
       smoothInputRenewalActive: true,
       requestAnimationFrameCoalescingActive: true,
       canvasReceiverCacheActive: true,
+      canvasReceiverPrewarmActive: true,
       horizontalDragPolarityCorrected: true,
       pointerRightTurnsGlobeRight: true,
+      packetPhaseFixedAtZero: true,
+      canvasLifecycleCallsSuppressedDuringDragFrames: true,
       fullReceiptSuppressedDuringDragFrames: true,
       pointerYawScale: INPUT_TUNING.pointerYawScale,
       pointerPitchScale: INPUT_TUNING.pointerPitchScale,
@@ -2689,7 +2750,7 @@
         yaw: view.yaw,
         pitch: view.pitch,
         zoom: view.zoom,
-        phase: view.yaw,
+        phase: 0,
         minPitch: view.minPitch,
         maxPitch: view.maxPitch,
         minZoom: view.minZoom,
@@ -2708,6 +2769,8 @@
       canvasReceiverCacheMethod: state.canvasReceiverCacheMethod,
       canvasReceiverCacheHits: state.canvasReceiverCacheHits,
       canvasReceiverCacheMisses: state.canvasReceiverCacheMisses,
+      canvasReceiverPrewarmStatus: state.canvasReceiverPrewarmStatus,
+      canvasReceiverPrewarmCount: state.canvasReceiverPrewarmCount,
 
       lastInputType: state.lastInputType,
       lastDeltaPacket: clonePlain(state.lastDeltaPacket),
@@ -2749,7 +2812,10 @@
       supportsPointerFingerInspectAnchor: true,
       supportsRequestAnimationFrameCoalescing: true,
       supportsCanvasReceiverCache: true,
+      supportsCanvasReceiverPrewarm: true,
       supportsHorizontalDragPolarityCorrection: true,
+      supportsPacketPhaseZero: true,
+      suppressesCanvasLifecycleCallsDuringDragFrames: true,
 
       ownsInputAdmission: true,
       ownsPointerInput: true,
@@ -2821,6 +2887,7 @@
       line("internalImplementationReceipt", INTERNAL_IMPLEMENTATION_RECEIPT),
       line("previousImplementationContract", PREVIOUS_IMPLEMENTATION_CONTRACT),
       line("previousImplementationReceipt", PREVIOUS_IMPLEMENTATION_RECEIPT),
+      line("lineageImplementationContract", LINEAGE_IMPLEMENTATION_CONTRACT),
       line("baselineImplementationContract", BASELINE_IMPLEMENTATION_CONTRACT),
       line("version", VERSION),
       line("file", FILE),
@@ -2834,8 +2901,11 @@
       line("smoothInputRenewalActive", true),
       line("requestAnimationFrameCoalescingActive", true),
       line("canvasReceiverCacheActive", true),
+      line("canvasReceiverPrewarmActive", true),
       line("horizontalDragPolarityCorrected", true),
       line("pointerRightTurnsGlobeRight", true),
+      line("packetPhaseFixedAtZero", true),
+      line("canvasLifecycleCallsSuppressedDuringDragFrames", true),
       line("fullReceiptSuppressedDuringDragFrames", true),
       line("horizontalPolarity", INPUT_TUNING.horizontalPolarity),
       line("pointerYawScale", INPUT_TUNING.pointerYawScale),
@@ -2920,6 +2990,8 @@
       line("canvasReceiverCacheMethod", r.canvasReceiverCacheMethod),
       line("canvasReceiverCacheHits", r.canvasReceiverCacheHits),
       line("canvasReceiverCacheMisses", r.canvasReceiverCacheMisses),
+      line("canvasReceiverPrewarmStatus", r.canvasReceiverPrewarmStatus),
+      line("canvasReceiverPrewarmCount", r.canvasReceiverPrewarmCount),
       line("packetCount", r.packetCount),
       line("deliveryCount", r.deliveryCount),
       "",
@@ -2966,8 +3038,11 @@
       line("smoothInputRenewalActive", r.smoothInputRenewalActive),
       line("horizontalDragPolarityCorrected", r.horizontalDragPolarityCorrected),
       line("pointerRightTurnsGlobeRight", r.pointerRightTurnsGlobeRight),
+      line("packetPhaseFixedAtZero", r.packetPhaseFixedAtZero),
+      line("canvasLifecycleCallsSuppressedDuringDragFrames", r.canvasLifecycleCallsSuppressedDuringDragFrames),
       line("requestAnimationFrameCoalescingActive", r.requestAnimationFrameCoalescingActive),
       line("canvasReceiverCacheActive", r.canvasReceiverCacheActive),
+      line("canvasReceiverPrewarmActive", r.canvasReceiverPrewarmActive),
       line("routeConductorContract", r.routeConductorContract),
       line("canvasDeliveryStatus", r.canvasDeliveryStatus),
       line("canvasDeliveryMethod", r.canvasDeliveryMethod),
@@ -2998,7 +3073,10 @@
         method: receiverCache.method,
         expiresAt: receiverCache.expiresAt,
         missCount: receiverCache.missCount,
-        hitCount: receiverCache.hitCount
+        hitCount: receiverCache.hitCount,
+        prewarmCount: receiverCache.prewarmCount,
+        prewarmStatus: receiverCache.prewarmStatus,
+        prewarmAt: receiverCache.prewarmAt
       }
     };
   }
@@ -3023,6 +3101,7 @@
 
     if (!state.handshakeAccepted) observeHandshake();
     else if (!input.bound) bindInputIfAdmitted();
+    else prewarmCanvasReceiver("refresh");
 
     updateInputState();
     updateDataset();
@@ -3097,8 +3176,11 @@
     setDataset("hearthControlsSmoothInputRenewalActive", "true");
     setDataset("hearthControlsRequestAnimationFrameCoalescingActive", "true");
     setDataset("hearthControlsCanvasReceiverCacheActive", "true");
+    setDataset("hearthControlsCanvasReceiverPrewarmActive", "true");
     setDataset("hearthControlsHorizontalDragPolarityCorrected", "true");
     setDataset("hearthControlsPointerRightTurnsGlobeRight", "true");
+    setDataset("hearthControlsPacketPhaseFixedAtZero", "true");
+    setDataset("hearthControlsCanvasLifecycleCallsSuppressedDuringDragFrames", "true");
     setDataset("hearthControlsFullReceiptSuppressedDuringDragFrames", "true");
 
     setDataset("hearthControlHandshakeStatus", state.handshakeStatus);
@@ -3115,7 +3197,7 @@
     setDataset("hearthControlsViewYaw", String(view.yaw));
     setDataset("hearthControlsViewPitch", String(view.pitch));
     setDataset("hearthControlsViewZoom", String(view.zoom));
-    setDataset("hearthControlsViewPhase", String(view.yaw));
+    setDataset("hearthControlsViewPhase", "0");
 
     setDataset("hearthControlCanvasDeliveryStatus", state.canvasDeliveryStatus);
     setDataset("hearthControlCanvasDeliveryMethod", state.canvasDeliveryMethod);
@@ -3126,6 +3208,8 @@
     setDataset("hearthControlRawInputEventCount", String(state.rawInputEventCount));
     setDataset("hearthControlReceiverCacheStatus", state.canvasReceiverCacheStatus);
     setDataset("hearthControlReceiverCacheMethod", state.canvasReceiverCacheMethod);
+    setDataset("hearthControlReceiverPrewarmStatus", state.canvasReceiverPrewarmStatus);
+    setDataset("hearthControlReceiverPrewarmCount", String(state.canvasReceiverPrewarmCount));
 
     if (packet) {
       setDataset("hearthControlsLastInputType", packet.inputType || "");
@@ -3133,6 +3217,7 @@
       setDataset("hearthControlsLastDeltaPitch", String(packet.deltaPitch || 0));
       setDataset("hearthControlsLastDeltaZoom", String(packet.deltaZoom || 0));
       setDataset("hearthControlsLastFrameAt", packet.composedAt || "");
+      setDataset("hearthControlsLastFramePhase", "0");
     }
 
     setDataset("hearthControlsF13Claimed", "false");
@@ -3255,6 +3340,7 @@
     root.HEARTH_QUEEN_CONTROLS_RECEIPT = receipt;
     root.HEARTH_QUEEN_SUPERCONDUCTOR_CONTROLS_RECEIPT = receipt;
     root.HEARTH_CONTROLS_SMOOTH_POINTER_DELTA_CANVAS_FRAME_ALIGNMENT_RECEIPT = receipt;
+    root.HEARTH_CONTROLS_SMOOTH_POINTER_DELTA_CANVAS_FRAME_ALIGNMENT_RECEIPT_v4_1 = receipt;
     root.HEARTH_CONTROL_HANDSHAKE_RECEIPT = receipt;
     root.HEARTH_CONTROLS_HANDSHAKE_RECEIPT = receipt;
     root.HEARTH_QUEEN_CONTROL_HANDSHAKE_RECEIPT = receipt;
@@ -3303,6 +3389,8 @@
         inputBound: input.bound,
         pointerFingerFile: POINTER_FINGER_FILE,
         smoothInputRenewalActive: true,
+        packetPhaseFixedAtZero: true,
+        canvasLifecycleCallsSuppressedDuringDragFrames: true,
         visualPassClaimed: false
       });
     }
@@ -3319,7 +3407,7 @@
       state.booting = true;
       state.startedAt = nowIso();
       state.updatedAt = state.startedAt;
-      state.postgameStatus = "QUEEN_BOOTING_SMOOTH_FRAME_DELTA_ALIGNMENT";
+      state.postgameStatus = "QUEEN_BOOTING_SMOOTH_FRAME_DELTA_ALIGNMENT_V4_1";
 
       publishGlobals("boot-early");
       readRouteConductorAuthority();
@@ -3333,7 +3421,7 @@
       refresh();
       startWatchdog();
 
-      record("HEARTH_CONTROLS_SMOOTH_POINTER_DELTA_CANVAS_FRAME_ALIGNMENT_BOOTED", {
+      record("HEARTH_CONTROLS_SMOOTH_POINTER_DELTA_CANVAS_FRAME_ALIGNMENT_V4_1_BOOTED", {
         contract: CONTRACT,
         file: FILE,
         routeConductorContract: state.routeConductorContract,
@@ -3345,6 +3433,9 @@
         horizontalDragPolarityCorrected: true,
         requestAnimationFrameCoalescingActive: true,
         canvasReceiverCacheActive: true,
+        canvasReceiverPrewarmActive: true,
+        packetPhaseFixedAtZero: true,
+        canvasLifecycleCallsSuppressedDuringDragFrames: true,
         visualPassClaimed: false
       });
 
@@ -3364,6 +3455,7 @@
     internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
     previousImplementationContract: PREVIOUS_IMPLEMENTATION_CONTRACT,
     previousImplementationReceipt: PREVIOUS_IMPLEMENTATION_RECEIPT,
+    lineageImplementationContract: LINEAGE_IMPLEMENTATION_CONTRACT,
     baselineImplementationContract: BASELINE_IMPLEMENTATION_CONTRACT,
     version: VERSION,
     file: FILE,
@@ -3420,6 +3512,7 @@
     readRouteConductorAuthority,
     readCanvasAuthority,
     invalidateCanvasReceiverCache,
+    prewarmCanvasReceiver,
     readLabWestBishopBridge,
     readHierarchyRegistry,
     getQueenBridgeState,
@@ -3471,13 +3564,19 @@
     supportsPointerFingerInspectAnchor: true,
     supportsRequestAnimationFrameCoalescing: true,
     supportsCanvasReceiverCache: true,
+    supportsCanvasReceiverPrewarm: true,
     supportsHorizontalDragPolarityCorrection: true,
+    supportsPacketPhaseZero: true,
+    suppressesCanvasLifecycleCallsDuringDragFrames: true,
 
     smoothInputRenewalActive: true,
     requestAnimationFrameCoalescingActive: true,
     canvasReceiverCacheActive: true,
+    canvasReceiverPrewarmActive: true,
     horizontalDragPolarityCorrected: true,
     pointerRightTurnsGlobeRight: true,
+    packetPhaseFixedAtZero: true,
+    canvasLifecycleCallsSuppressedDuringDragFrames: true,
     fullReceiptSuppressedDuringDragFrames: true,
 
     ownsInputAdmission: true,
@@ -3543,7 +3642,7 @@
       boot();
     }
   } catch (error) {
-    recordError("HEARTH_CONTROLS_SMOOTH_POINTER_DELTA_INITIALIZATION_FAILED", error);
+    recordError("HEARTH_CONTROLS_SMOOTH_POINTER_DELTA_V4_1_INITIALIZATION_FAILED", error);
 
     try {
       publishGlobals("initialization-fallback-publication");

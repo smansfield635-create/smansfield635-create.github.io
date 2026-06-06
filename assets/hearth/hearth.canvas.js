@@ -1,19 +1,19 @@
 // /assets/hearth/hearth.canvas.js
 // HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3
 // Internal renewal:
-// HEARTH_CANVAS_HUB_RAF_FAST_INTERACTIVE_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3_1
+// HEARTH_CANVAS_HUB_ZERO_HEAVY_TOUCH_PATH_SETTLED_HEX_RENDER_RECEIVER_TNT_v12_3_2
 // Full-file replacement.
-// Canvas Hub / DOM canvas surface mounter / rAF fast interactive preview / deferred Hex render receiver.
+// Canvas Hub / DOM canvas surface mounter / zero-heavy-touch-path settled Hex render receiver.
 // Purpose:
 // - Preserve the public v12_3 Canvas Hub contract expected by Route Conductor, diagnostics, Controls, and Hex Surface.
 // - Create or bind the real DOM canvas surface inside #hearthCanvasMount.
 // - Publish the Canvas Hub namespace expected by Route Conductor, West diagnostic, Controls, and Hex Surface.
-// - Provide immediate 2D mounted planet proof before deferred Hex renderer availability.
+// - Provide one settled mounted planet proof, then cache it.
 // - Accept planetary view-control packets without owning controls.
-// - Remove setTimeout(40) motion latency from view-state reception.
-// - Use requestAnimationFrame for interactive motion response.
-// - Render a fast low-cost 2D preview during active drag/touch/wheel/keyboard input.
-// - Defer the full Hex Surface render until input settles.
+// - Remove heavy rendering from the active touch/drag/wheel/keyboard path.
+// - During active motion, return a tiny ACK and draw only a cached bitmap compositor preview.
+// - Defer full fallback/Hex render until input settles.
+// - Prevent yaw/phase double-counting.
 // - Throttle dataset/global receipt churn during active motion.
 // - Consume Hex Four-Pair Authority and Hex Surface Renderer when available.
 // - Accept Route Conductor release packets without owning route authority.
@@ -50,8 +50,13 @@
   const RECEIPT = "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT_v12_3";
 
   const INTERNAL_IMPLEMENTATION_CONTRACT =
-    "HEARTH_CANVAS_HUB_RAF_FAST_INTERACTIVE_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3_1";
+    "HEARTH_CANVAS_HUB_ZERO_HEAVY_TOUCH_PATH_SETTLED_HEX_RENDER_RECEIVER_TNT_v12_3_2";
   const INTERNAL_IMPLEMENTATION_RECEIPT =
+    "HEARTH_CANVAS_HUB_ZERO_HEAVY_TOUCH_PATH_SETTLED_HEX_RENDER_RECEIVER_RECEIPT_v12_3_2";
+
+  const PREVIOUS_INTERNAL_CONTRACT =
+    "HEARTH_CANVAS_HUB_RAF_FAST_INTERACTIVE_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3_1";
+  const PREVIOUS_INTERNAL_RECEIPT =
     "HEARTH_CANVAS_HUB_RAF_FAST_INTERACTIVE_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT_v12_3_1";
 
   const PREVIOUS_CONTRACT = "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_TNT_v12_2";
@@ -61,7 +66,8 @@
   const LINEAGE_V12_CONTRACT = "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_TNT_v12";
   const LINEAGE_V12_RECEIPT = "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_RECEIPT_v12";
 
-  const VERSION = "2026-06-06.hearth-canvas-hub-raf-fast-interactive-deferred-hex-render-receiver-v12-3-1";
+  const VERSION =
+    "2026-06-06.hearth-canvas-hub-zero-heavy-touch-path-settled-hex-render-receiver-v12-3-2";
 
   const ROUTE = "/showroom/globe/hearth/";
   const FILE = "/assets/hearth/hearth.canvas.js";
@@ -74,7 +80,6 @@
 
   const HEX_AUTHORITY_CONTRACT = "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_TNT_v1";
   const HEX_AUTHORITY_RECEIPT = "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_RECEIPT_v1";
-
   const HEX_SURFACE_CURRENT_CONTRACT = "HEARTH_HEX_SURFACE_PLANETARY_VIEW_CONTROL_RENDERER_HANDSHAKE_TNT_v3";
   const HEX_SURFACE_CURRENT_RECEIPT = "HEARTH_HEX_SURFACE_PLANETARY_VIEW_CONTROL_RENDERER_HANDSHAKE_RECEIPT_v3";
   const HEX_SURFACE_LINEAGE_V2_CONTRACT = "HEARTH_HEX_SURFACE_CANVAS_HUB_THREE_FILE_VISIBLE_EXPRESSION_RENDERER_TNT_v2";
@@ -88,11 +93,9 @@
 
   const TAU = Math.PI * 2;
   const DEG = Math.PI / 180;
-
-  const FAST_INTERACTIVE_SIDE = 384;
-  const SETTLED_FALLBACK_SIDE = 640;
-  const FULL_HEX_SETTLE_DELAY_MS = 150;
-  const RECEIPT_THROTTLE_MS = 240;
+  const SETTLED_RENDER_SIDE = 640;
+  const SETTLED_RENDER_DELAY_MS = 720;
+  const RECEIPT_THROTTLE_MS = 320;
 
   const ACCEPTED_HEX_SURFACE_CONTRACTS = Object.freeze([
     HEX_SURFACE_CURRENT_CONTRACT,
@@ -155,6 +158,8 @@
     receipt: RECEIPT,
     internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
     internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
+    previousInternalContract: PREVIOUS_INTERNAL_CONTRACT,
+    previousInternalReceipt: PREVIOUS_INTERNAL_RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
     lineageV121Contract: LINEAGE_V12_1_CONTRACT,
@@ -172,7 +177,7 @@
     hexAuthorityFile: HEX_AUTHORITY_FILE,
     hexSurfaceFile: HEX_SURFACE_FILE,
 
-    role: "canvas-hub-raf-fast-interactive-deferred-hex-render-receiver",
+    role: "canvas-hub-zero-heavy-touch-path-settled-hex-render-receiver",
     planetId: PLANET_ID,
     planetLabel: PLANET_LABEL,
 
@@ -209,8 +214,8 @@
     canvasViewportIntersecting: false,
 
     drawCount: 0,
-    fastDrawCount: 0,
-    fullDrawCount: 0,
+    compositorPreviewCount: 0,
+    settledDrawCount: 0,
     deferredHexDrawCount: 0,
     lastDrawAt: "",
     lastDrawReason: "NOT_RUN",
@@ -222,26 +227,41 @@
     holdingFieldDrawComplete: false,
     rendererDrawComplete: false,
 
-    rafSchedulerActive: true,
+    zeroHeavyTouchPathActive: true,
     requestAnimationFrameAvailable: false,
-    fastInteractivePreviewActive: true,
-    fastInteractivePreviewReady: false,
-    fastInteractiveFramePending: false,
-    fastInteractiveLastFrameAt: "",
-    fastInteractiveLastRenderWidth: 0,
-    fastInteractiveLastRenderHeight: 0,
-    fastInteractiveLastSamples: 0,
-    fastInteractiveLastReason: "NONE",
-    deferredHexRenderActive: true,
-    deferredHexSettleDelayMs: FULL_HEX_SETTLE_DELAY_MS,
-    deferredHexPending: false,
-    deferredHexLastScheduledAt: "",
-    deferredHexLastCompletedAt: "",
-    deferredHexLastReason: "NONE",
-    setTimeout40MotionPathRemoved: true,
     motionUsesRequestAnimationFrame: true,
-    fullHexRenderDeferredDuringInput: true,
-    datasetPublicationThrottledDuringMotion: true,
+    activeMotion: false,
+    activeMotionStartedAt: "",
+    activeMotionLastAt: "",
+    activeMotionInputType: "NONE",
+    cachedBitmapPreviewActive: true,
+    cachedBitmapReady: false,
+    cachedBitmapSource: "NONE",
+    cachedBitmapWidth: 0,
+    cachedBitmapHeight: 0,
+    cachedBitmapSettledYaw: 0,
+    cachedBitmapSettledPitch: 0,
+    cachedBitmapSettledZoom: 1,
+    cachedBitmapSettledPhase: 0,
+    compositorPreviewPending: false,
+    compositorPreviewLastAt: "",
+    compositorPreviewLastOffsetX: 0,
+    compositorPreviewLastScale: 1,
+    compositorPreviewLastRotation: 0,
+    settledRenderDelayMs: SETTLED_RENDER_DELAY_MS,
+    settledRenderPending: false,
+    settledRenderLastScheduledAt: "",
+    settledRenderLastCompletedAt: "",
+    heavyRenderDuringInputCount: 0,
+    hexRenderDuringInput: false,
+    fallbackProceduralRenderDuringInput: false,
+    imageDataAllocationDuringInput: false,
+    pixelSampleDuringInput: false,
+    routeNotifyDuringInput: false,
+    fullReceiptDuringInput: false,
+    fullDatasetPublishDuringInput: false,
+    phaseAddedToUserYaw: false,
+    effectiveYawDoubleCountRejected: true,
 
     canvasPixelSampleStatus: "NOT_RUN",
     canvasPixelSampleReadable: false,
@@ -310,6 +330,8 @@
     viewStateRejectionReason: "",
     lastControlPacketType: "NONE",
     lastControlInputType: "NONE",
+    lastMotionAckAt: "",
+    motionAckCount: 0,
 
     fingerAuthorityObservedCount: 0,
     fingerApiReadyCount: 0,
@@ -337,6 +359,7 @@
 
     receiptPublishCount: 0,
     datasetPublishCount: 0,
+    lightDatasetPublishCount: 0,
     localEvents: [],
     errors: [],
 
@@ -369,7 +392,7 @@
     ctx: null
   };
 
-  const scratch = {
+  const cache = {
     canvas: null,
     ctx: null,
     image: null,
@@ -377,9 +400,8 @@
     height: 0
   };
 
-  let interactiveRaf = 0;
-  let fullDrawRaf = 0;
-  let deferredHexTimer = 0;
+  let compositorRaf = 0;
+  let settledTimer = 0;
   let routeNotifyTimer = 0;
   let dependencyPromise = null;
   let lastReceiptPublishMs = 0;
@@ -417,13 +439,6 @@
   function safeNumber(value, fallback = 0) {
     const n = Number(value);
     return Number.isFinite(n) ? n : fallback;
-  }
-
-  function safeBool(value, fallback = false) {
-    if (typeof value === "boolean") return value;
-    if (value === true || value === 1 || value === "1" || value === "true" || value === "TRUE") return true;
-    if (value === false || value === 0 || value === "0" || value === "false" || value === "FALSE") return false;
-    return fallback;
   }
 
   function firstDefined(...values) {
@@ -701,12 +716,15 @@
   function resolveRouteConductor() {
     const found = firstGlobal([
       "HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC",
+      "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL",
       "HEARTH_ROUTE_CONDUCTOR",
       "HEARTH_ROUTE_NORTH_BISHOP",
       "HEARTH.routeConductorShowtimeNewsFibonacciQueenCanvasSync",
+      "HEARTH.routeConductorBishopQueenCanvasRecognitionFunnel",
       "HEARTH.routeConductor",
       "HEARTH.routeNorthBishop",
       "DEXTER_LAB.hearthRouteConductorShowtimeNewsFibonacciQueenCanvasSync",
+      "DEXTER_LAB.hearthRouteConductorBishopQueenCanvasRecognitionFunnel",
       "DEXTER_LAB.hearthRouteConductor",
       "DEXTER_LAB.hearthRouteNorthBishop"
     ]);
@@ -884,7 +902,7 @@
     canvas.style.pointerEvents = "auto";
     canvas.style.touchAction = "none";
     canvas.style.userSelect = "none";
-    canvas.style.willChange = "contents";
+    canvas.style.willChange = "transform, contents";
     canvas.style.transform = "translateZ(0)";
     canvas.style.backfaceVisibility = "hidden";
 
@@ -925,6 +943,29 @@
     }
   }
 
+  function updateCanvasRectState(canvas) {
+    state.canvasWidth = safeNumber(canvas && canvas.width, state.canvasWidth);
+    state.canvasHeight = safeNumber(canvas && canvas.height, state.canvasHeight);
+
+    try {
+      const rect = canvas && isFunction(canvas.getBoundingClientRect) ? canvas.getBoundingClientRect() : null;
+
+      state.canvasRectNonzero = Boolean(rect && rect.width > 0 && rect.height > 0);
+      state.canvasComputedVisible = Boolean(rect && rect.width > 0 && rect.height > 0);
+      state.canvasViewportIntersecting = Boolean(
+        rect &&
+        rect.bottom >= 0 &&
+        rect.right >= 0 &&
+        rect.top <= (root.innerHeight || rect.bottom) &&
+        rect.left <= (root.innerWidth || rect.right)
+      );
+    } catch (_error) {
+      state.canvasRectNonzero = true;
+      state.canvasComputedVisible = true;
+      state.canvasViewportIntersecting = true;
+    }
+  }
+
   function sizeCanvasToMount(canvas, force = false) {
     if (!canvas) return false;
 
@@ -956,37 +997,11 @@
       return true;
     }
 
-    if (canvas.width !== pixelSide) canvas.width = pixelSide;
-    if (canvas.height !== pixelSide) canvas.height = pixelSide;
-
-    state.canvasWidth = canvas.width;
-    state.canvasHeight = canvas.height;
+    canvas.width = pixelSide;
+    canvas.height = pixelSide;
 
     updateCanvasRectState(canvas);
     return true;
-  }
-
-  function updateCanvasRectState(canvas) {
-    state.canvasWidth = safeNumber(canvas && canvas.width, state.canvasWidth);
-    state.canvasHeight = safeNumber(canvas && canvas.height, state.canvasHeight);
-
-    try {
-      const rect = canvas && isFunction(canvas.getBoundingClientRect) ? canvas.getBoundingClientRect() : null;
-
-      state.canvasRectNonzero = Boolean(rect && rect.width > 0 && rect.height > 0);
-      state.canvasComputedVisible = Boolean(rect && rect.width > 0 && rect.height > 0);
-      state.canvasViewportIntersecting = Boolean(
-        rect &&
-        rect.bottom >= 0 &&
-        rect.right >= 0 &&
-        rect.top <= (root.innerHeight || rect.bottom) &&
-        rect.left <= (root.innerWidth || rect.right)
-      );
-    } catch (_error) {
-      state.canvasRectNonzero = true;
-      state.canvasComputedVisible = true;
-      state.canvasViewportIntersecting = true;
-    }
   }
 
   function mountCanvas(reason = "mountCanvas") {
@@ -1006,7 +1021,7 @@
       state.f13StrictEvidenceGap = "STRICT_FINGER_BISHOP_EVIDENCE_NOT_YET_WIRED";
     }
 
-    publishDataset();
+    publishDatasetThrottled(true);
     record("CANVAS_SURFACE_MOUNTED_OR_BOUND", {
       reason,
       canvasElementFound: state.canvasElementFound,
@@ -1158,11 +1173,11 @@
     return best;
   }
 
-  function fallbackSurfaceColor(coord, shade, edgeFactor, quality) {
+  function fallbackSurfaceColor(coord, shade, edgeFactor) {
     const field = landField(coord);
     const isLand = field.field > 0;
     const latAbs = Math.abs(coord.latDegrees) / 90;
-    const grain = fbm(coord.u * 32, coord.v * 24, 2200, quality === "fast" ? 3 : 4);
+    const grain = fbm(coord.u * 32, coord.v * 24, 2200, 4);
     const cold = smoothstep(0.68, 0.98, latAbs);
     const shelf = !isLand ? smoothstep(-0.24, 0.04, field.field) * (0.45 + grain * 0.35) : 0;
     const deep = !isLand ? clamp01(1 - shelf * 0.72) : 0;
@@ -1197,12 +1212,12 @@
     return multiplyColor(color, limb * light * seam);
   }
 
-  function drawAtmosphere(ctx, width, height, cx, cy, radius, fast) {
+  function drawAtmosphere(ctx, width, height, cx, cy, radius) {
     ctx.save();
 
     const glow = ctx.createRadialGradient(cx, cy, radius * 0.82, cx, cy, radius * 1.32);
     glow.addColorStop(0, "rgba(112,194,255,0.02)");
-    glow.addColorStop(0.46, fast ? "rgba(114,198,255,0.12)" : "rgba(114,198,255,0.16)");
+    glow.addColorStop(0.46, "rgba(114,198,255,0.16)");
     glow.addColorStop(1, "rgba(30,48,100,0)");
 
     ctx.fillStyle = glow;
@@ -1212,230 +1227,132 @@
 
     ctx.beginPath();
     ctx.arc(cx, cy, radius + Math.max(1, radius * 0.012), 0, TAU);
-    ctx.strokeStyle = fast ? "rgba(190,226,255,0.20)" : "rgba(190,226,255,0.28)";
+    ctx.strokeStyle = "rgba(190,226,255,0.28)";
     ctx.lineWidth = Math.max(1, radius * 0.012);
     ctx.stroke();
 
     ctx.restore();
   }
 
-  function ensureScratchSurface(width, height) {
-    if (scratch.canvas && scratch.ctx && scratch.width === width && scratch.height === height) {
-      if (!scratch.image || scratch.image.width !== width || scratch.image.height !== height) {
-        scratch.image = scratch.ctx.createImageData(width, height);
-      }
-      return scratch;
-    }
+  function ensureCacheSurface(width, height) {
+    if (cache.canvas && cache.ctx && cache.width === width && cache.height === height) return cache;
 
-    scratch.canvas = null;
-    scratch.ctx = null;
-    scratch.image = null;
-    scratch.width = width;
-    scratch.height = height;
+    cache.canvas = null;
+    cache.ctx = null;
+    cache.image = null;
+    cache.width = width;
+    cache.height = height;
 
     try {
-      if (doc && isFunction(doc.createElement)) {
-        scratch.canvas = doc.createElement("canvas");
-        scratch.canvas.width = width;
-        scratch.canvas.height = height;
-        scratch.ctx = scratch.canvas.getContext("2d", { alpha: true, willReadFrequently: true });
+      if (typeof OffscreenCanvas !== "undefined") {
+        cache.canvas = new OffscreenCanvas(width, height);
+        cache.ctx = cache.canvas.getContext("2d", { alpha: true, willReadFrequently: true });
+      } else if (doc && isFunction(doc.createElement)) {
+        cache.canvas = doc.createElement("canvas");
+        cache.canvas.width = width;
+        cache.canvas.height = height;
+        cache.ctx = cache.canvas.getContext("2d", { alpha: true, willReadFrequently: true });
       }
 
-      if (!scratch.ctx && typeof OffscreenCanvas !== "undefined") {
-        scratch.canvas = new OffscreenCanvas(width, height);
-        scratch.ctx = scratch.canvas.getContext("2d", { alpha: true, willReadFrequently: true });
-      }
-
-      if (scratch.ctx) {
-        scratch.image = scratch.ctx.createImageData(width, height);
+      if (cache.canvas) {
+        cache.canvas.width = width;
+        cache.canvas.height = height;
       }
     } catch (error) {
-      recordError("SCRATCH_SURFACE_CREATION_FAILED", error, { width, height });
+      recordError("CACHE_SURFACE_CREATION_FAILED", error, { width, height });
     }
 
-    return scratch;
+    return cache;
   }
 
-  function renderPlanetImageData(targetCtx, width, height, options = {}) {
-    const quality = options.quality || "fast";
-    const radiusRatio = quality === "fast" ? 0.454 : 0.456;
-    const cx = width / 2;
-    const cy = height / 2;
-    const radius = Math.min(width, height) * clamp(radiusRatio * (1 + (state.viewZoom - 1) * 0.12), 0.34, 0.49);
-    const image = targetCtx.createImageData(width, height);
-    const data = image.data;
-    const light = norm3(-0.48, 0.28, 0.84);
-
-    let samples = 0;
-
-    for (let py = 0; py < height; py += 1) {
-      const yRaw = py + 0.5 - cy;
-      const ny = yRaw / radius;
-
-      for (let px = 0; px < width; px += 1) {
-        const xRaw = px + 0.5 - cx;
-        const nx = xRaw / radius;
-        const r2 = nx * nx + ny * ny;
-
-        if (r2 > 1) continue;
-
-        const z = Math.sqrt(Math.max(0, 1 - r2));
-        let vector = { x: nx, y: -ny, z };
-
-        vector = rotateX(vector, -0.22 + state.viewPitch * 0.38);
-        vector = rotateY(vector, state.viewPhase + state.viewYaw);
-
-        const coord = vectorToCoordinate(vector);
-        const rawNormal = norm3(nx, -ny, z);
-        const lightValue = clamp01(rawNormal.x * light.x + rawNormal.y * light.y + rawNormal.z * light.z);
-        const edgeFactor = smoothstep(0.84, 1.0, Math.sqrt(r2));
-        const color = fallbackSurfaceColor(coord, { light: lightValue, depth: z }, edgeFactor, quality);
-        const index = (py * width + px) * 4;
-
-        data[index] = color[0];
-        data[index + 1] = color[1];
-        data[index + 2] = color[2];
-        data[index + 3] = color[3];
-
-        samples += 1;
-      }
-    }
-
-    return {
-      image,
-      samples,
-      radius,
-      cx,
-      cy
-    };
+  function effectiveRenderYaw() {
+    state.phaseAddedToUserYaw = false;
+    state.effectiveYawDoubleCountRejected = true;
+    return state.viewYaw;
   }
 
-  function drawFastInteractivePlanet(reason = "fast-interactive-preview") {
-    const canvas = refs.canvas || ensureCanvasSurface();
-    const ctx = refs.ctx || getContext2d(canvas);
-
-    if (!canvas || !ctx) {
-      state.lastDrawOk = false;
-      state.lastDrawError = "CANVAS_CONTEXT_2D_UNAVAILABLE_FOR_FAST_PREVIEW";
+  function renderSettledFallbackIntoCache(reason = "settled-fallback-cache-render") {
+    if (state.activeMotion) {
+      state.heavyRenderDuringInputCount += 1;
+      state.fallbackProceduralRenderDuringInput = true;
       return false;
     }
 
-    refs.ctx = ctx;
-    sizeCanvasToMount(canvas);
-
-    const width = canvas.width;
-    const height = canvas.height;
-    const side = clamp(Math.round(Math.min(width, height, FAST_INTERACTIVE_SIDE)), 240, FAST_INTERACTIVE_SIDE);
-    const surface = ensureScratchSurface(side, side);
-
-    if (!surface.ctx || !surface.canvas) {
-      return drawFallbackMountedPlanet("fast-preview-scratch-unavailable");
-    }
-
-    try {
-      const rendered = renderPlanetImageData(surface.ctx, side, side, { quality: "fast" });
-
-      surface.ctx.clearRect(0, 0, side, side);
-      surface.ctx.putImageData(rendered.image, 0, 0);
-      drawAtmosphere(surface.ctx, side, side, rendered.cx, rendered.cy, rendered.radius, true);
-
-      ctx.save();
-      ctx.clearRect(0, 0, width, height);
-      ctx.imageSmoothingEnabled = true;
-      ctx.drawImage(surface.canvas, 0, 0, width, height);
-      ctx.restore();
-
-      state.drawCount += 1;
-      state.fastDrawCount += 1;
-      state.lastDrawAt = nowIso();
-      state.lastDrawReason = reason;
-      state.lastDrawOk = true;
-      state.lastDrawMode = "DOM_CANVAS_2D_RAF_FAST_INTERACTIVE_PREVIEW";
-      state.lastDrawError = "";
-      state.fastInteractivePreviewReady = true;
-      state.fastInteractiveLastFrameAt = state.lastDrawAt;
-      state.fastInteractiveLastRenderWidth = side;
-      state.fastInteractiveLastRenderHeight = side;
-      state.fastInteractiveLastSamples = rendered.samples;
-      state.fastInteractiveLastReason = reason;
-
-      state.canvasDrawComplete = true;
-      state.baseGlobeDrawComplete = true;
-      state.holdingFieldDrawComplete = true;
-      state.visibleBaseGlobeCarrierActive = true;
-      state.canvasVisibleBaseGlobeCarrierActive = true;
-      state.baseGlobeVisibleCarrierReady = true;
-      state.visibleGlobeCarrierReady = true;
-      state.visiblePlanetProofSource = "DOM_CANVAS_2D_MOUNTED_PLANET_SURFACE";
-      state.updatedAt = state.lastDrawAt;
-
-      setNodeDataset(canvas, "hearthCanvasDrawComplete", "true");
-      setNodeDataset(canvas, "hearthCanvasBaseGlobeDrawComplete", "true");
-      setNodeDataset(canvas, "hearthCanvasFastInteractivePreviewReady", "true");
-      setNodeDataset(canvas, "hearthCanvasFastInteractiveLastRenderWidth", String(side));
-      setNodeDataset(canvas, "hearthCanvasFastInteractiveLastRenderHeight", String(side));
-      setNodeDataset(canvas, "hearthCanvasVisiblePlanetProofSource", state.visiblePlanetProofSource);
-      setNodeDataset(canvas, "hearthCanvasDrawSamples", String(rendered.samples));
-
-      if (!state.canvasPixelVisible || state.fastDrawCount <= 2) samplePixels();
-      else refreshProofFlags();
-
-      publishDatasetThrottled(false);
-      publishViewGlobalsLight();
-
-      return true;
-    } catch (error) {
-      state.lastDrawOk = false;
-      state.lastDrawError = error && error.message ? String(error.message) : String(error);
-      recordError("FAST_INTERACTIVE_PREVIEW_FAILED", error, { reason });
-      publishDatasetThrottled(false);
-      return false;
-    }
-  }
-
-  function drawFallbackMountedPlanet(reason = "settled-fallback-mounted-planet") {
-    const canvas = refs.canvas || ensureCanvasSurface();
-    const ctx = refs.ctx || getContext2d(canvas);
-
-    if (!canvas || !ctx) {
-      state.lastDrawOk = false;
-      state.lastDrawError = "CANVAS_CONTEXT_2D_UNAVAILABLE";
-      return false;
-    }
-
-    refs.ctx = ctx;
-    sizeCanvasToMount(canvas);
-
-    const width = canvas.width;
-    const height = canvas.height;
-    const renderSide = clamp(Math.round(Math.min(width, height, SETTLED_FALLBACK_SIDE)), 320, SETTLED_FALLBACK_SIDE);
-    const surface = ensureScratchSurface(renderSide, renderSide);
+    const side = SETTLED_RENDER_SIDE;
+    const surface = ensureCacheSurface(side, side);
 
     if (!surface.ctx || !surface.canvas) {
       state.lastDrawOk = false;
-      state.lastDrawError = "SETTLED_FALLBACK_SURFACE_UNAVAILABLE";
+      state.lastDrawError = "CACHE_SURFACE_UNAVAILABLE";
       return false;
     }
 
     try {
-      const rendered = renderPlanetImageData(surface.ctx, renderSide, renderSide, { quality: "settled" });
+      state.imageDataAllocationDuringInput = state.activeMotion ? true : state.imageDataAllocationDuringInput;
 
-      surface.ctx.clearRect(0, 0, renderSide, renderSide);
-      surface.ctx.putImageData(rendered.image, 0, 0);
-      drawAtmosphere(surface.ctx, renderSide, renderSide, rendered.cx, rendered.cy, rendered.radius, false);
+      const ctx = surface.ctx;
+      const image = ctx.createImageData(side, side);
+      const data = image.data;
+      const cx = side / 2;
+      const cy = side / 2;
+      const radius = side * clamp(0.456 * (1 + (state.viewZoom - 1) * 0.12), 0.34, 0.49);
+      const light = norm3(-0.48, 0.28, 0.84);
+      const yaw = effectiveRenderYaw();
 
-      ctx.save();
-      ctx.clearRect(0, 0, width, height);
-      ctx.imageSmoothingEnabled = true;
-      ctx.drawImage(surface.canvas, 0, 0, width, height);
-      ctx.restore();
+      let samples = 0;
+
+      for (let py = 0; py < side; py += 1) {
+        const yRaw = py + 0.5 - cy;
+        const ny = yRaw / radius;
+
+        for (let px = 0; px < side; px += 1) {
+          const xRaw = px + 0.5 - cx;
+          const nx = xRaw / radius;
+          const r2 = nx * nx + ny * ny;
+
+          if (r2 > 1) continue;
+
+          const z = Math.sqrt(Math.max(0, 1 - r2));
+          let vector = { x: nx, y: -ny, z };
+
+          vector = rotateX(vector, -0.22 + state.viewPitch * 0.38);
+          vector = rotateY(vector, yaw);
+
+          const coord = vectorToCoordinate(vector);
+          const rawNormal = norm3(nx, -ny, z);
+          const lightValue = clamp01(rawNormal.x * light.x + rawNormal.y * light.y + rawNormal.z * light.z);
+          const edgeFactor = smoothstep(0.84, 1.0, Math.sqrt(r2));
+          const color = fallbackSurfaceColor(coord, { light: lightValue, depth: z }, edgeFactor);
+          const index = (py * side + px) * 4;
+
+          data[index] = color[0];
+          data[index + 1] = color[1];
+          data[index + 2] = color[2];
+          data[index + 3] = color[3];
+
+          samples += 1;
+        }
+      }
+
+      ctx.clearRect(0, 0, side, side);
+      ctx.putImageData(image, 0, 0);
+      drawAtmosphere(ctx, side, side, cx, cy, radius);
+
+      state.cachedBitmapReady = true;
+      state.cachedBitmapSource = "DOM_CANVAS_2D_SETTLED_FALLBACK_CACHE";
+      state.cachedBitmapWidth = side;
+      state.cachedBitmapHeight = side;
+      state.cachedBitmapSettledYaw = state.viewYaw;
+      state.cachedBitmapSettledPitch = state.viewPitch;
+      state.cachedBitmapSettledZoom = state.viewZoom;
+      state.cachedBitmapSettledPhase = state.viewPhase;
 
       state.drawCount += 1;
-      state.fullDrawCount += 1;
+      state.settledDrawCount += 1;
       state.lastDrawAt = nowIso();
       state.lastDrawReason = reason;
       state.lastDrawOk = true;
-      state.lastDrawMode = "DOM_CANVAS_2D_SETTLED_FALLBACK_MOUNTED_PLANET";
+      state.lastDrawMode = "DOM_CANVAS_2D_SETTLED_FALLBACK_CACHE_RENDER";
       state.lastDrawError = "";
       state.canvasDrawComplete = true;
       state.baseGlobeDrawComplete = true;
@@ -1449,30 +1366,105 @@
       state.renderedPitch = state.viewPitch;
       state.renderedZoom = state.viewZoom;
       state.renderedPhase = state.viewPhase;
+      state.settledRenderLastCompletedAt = state.lastDrawAt;
       state.updatedAt = state.lastDrawAt;
 
-      setNodeDataset(canvas, "hearthCanvasDrawComplete", "true");
-      setNodeDataset(canvas, "hearthCanvasBaseGlobeDrawComplete", "true");
-      setNodeDataset(canvas, "hearthCanvasHoldingFieldDrawComplete", "true");
-      setNodeDataset(canvas, "hearthCanvasVisiblePlanetProofSource", state.visiblePlanetProofSource);
-      setNodeDataset(canvas, "hearthCanvasDrawSamples", String(rendered.samples));
+      record("SETTLED_FALLBACK_CACHE_RENDERED", {
+        reason,
+        samples,
+        side,
+        yaw: state.viewYaw,
+        pitch: state.viewPitch,
+        zoom: state.viewZoom
+      });
 
-      samplePixels();
-      publishDataset();
-      publishGlobals();
-
+      drawCachedBitmapToVisibleCanvas("settled-cache-presented");
       return true;
     } catch (error) {
       state.lastDrawOk = false;
       state.lastDrawError = error && error.message ? String(error.message) : String(error);
-      recordError("SETTLED_FALLBACK_DRAW_FAILED", error, { reason });
-      publishDataset();
-      publishGlobals();
+      recordError("SETTLED_FALLBACK_CACHE_RENDER_FAILED", error, { reason });
       return false;
     }
   }
 
-  function drawViaHexSurface(reason = "hex-surface-render") {
+  function drawCachedBitmapToVisibleCanvas(reason = "cached-bitmap-present") {
+    const canvas = refs.canvas || ensureCanvasSurface();
+    const ctx = refs.ctx || getContext2d(canvas);
+
+    if (!canvas || !ctx || !cache.canvas || !state.cachedBitmapReady) {
+      state.lastDrawOk = false;
+      state.lastDrawError = "CACHED_BITMAP_OR_VISIBLE_CANVAS_UNAVAILABLE";
+      return false;
+    }
+
+    refs.ctx = ctx;
+    sizeCanvasToMount(canvas);
+
+    const width = canvas.width;
+    const height = canvas.height;
+    const yawDelta = wrapPi(state.viewYaw - state.cachedBitmapSettledYaw);
+    const pitchDelta = clamp(state.viewPitch - state.cachedBitmapSettledPitch, -0.9, 0.9);
+    const zoomRatio = clamp(state.viewZoom / Math.max(0.001, state.cachedBitmapSettledZoom), 0.72, 1.36);
+
+    const offsetX = clamp(yawDelta * width * 0.09, -width * 0.12, width * 0.12);
+    const offsetY = clamp(pitchDelta * height * 0.06, -height * 0.08, height * 0.08);
+    const rotation = clamp(yawDelta * 0.05, -0.08, 0.08);
+    const scale = clamp(zoomRatio, 0.82, 1.22);
+
+    try {
+      ctx.save();
+      ctx.clearRect(0, 0, width, height);
+      ctx.translate(width / 2, height / 2);
+      ctx.rotate(rotation);
+      ctx.scale(scale, scale);
+      ctx.drawImage(cache.canvas, -width / 2 + offsetX, -height / 2 + offsetY, width, height);
+      ctx.restore();
+
+      state.drawCount += 1;
+      state.compositorPreviewCount += state.activeMotion ? 1 : 0;
+      state.lastDrawAt = nowIso();
+      state.lastDrawReason = reason;
+      state.lastDrawOk = true;
+      state.lastDrawMode = state.activeMotion
+        ? "CACHED_BITMAP_COMPOSITOR_TOUCH_PREVIEW"
+        : "CACHED_BITMAP_SETTLED_PRESENTATION";
+      state.lastDrawError = "";
+      state.compositorPreviewLastAt = state.lastDrawAt;
+      state.compositorPreviewLastOffsetX = offsetX;
+      state.compositorPreviewLastScale = scale;
+      state.compositorPreviewLastRotation = rotation;
+      state.canvasDrawComplete = true;
+      state.baseGlobeDrawComplete = true;
+      state.visiblePlanetProofSource = "DOM_CANVAS_2D_MOUNTED_PLANET_SURFACE";
+      state.updatedAt = state.lastDrawAt;
+
+      setNodeDataset(canvas, "hearthCanvasDrawComplete", "true");
+      setNodeDataset(canvas, "hearthCanvasBaseGlobeDrawComplete", "true");
+      setNodeDataset(canvas, "hearthCanvasCachedBitmapPreviewActive", "true");
+      setNodeDataset(canvas, "hearthCanvasLastDrawMode", state.lastDrawMode);
+      setNodeDataset(canvas, "hearthCanvasVisiblePlanetProofSource", state.visiblePlanetProofSource);
+
+      if (!state.activeMotion && !state.canvasPixelVisible) samplePixels();
+
+      publishViewDatasetLight();
+      publishViewGlobalsLight();
+      return true;
+    } catch (error) {
+      state.lastDrawOk = false;
+      state.lastDrawError = error && error.message ? String(error.message) : String(error);
+      recordError("CACHED_BITMAP_PRESENTATION_FAILED", error, { reason });
+      return false;
+    }
+  }
+
+  function drawViaHexSurface(reason = "deferred-hex-surface-render") {
+    if (state.activeMotion) {
+      state.heavyRenderDuringInputCount += 1;
+      state.hexRenderDuringInput = true;
+      return false;
+    }
+
     const canvas = refs.canvas || ensureCanvasSurface();
     const ctx = refs.ctx || getContext2d(canvas);
     const validation = validateHexSurface();
@@ -1486,13 +1478,14 @@
       canvas,
       ctx,
       context: ctx,
-      mode: "canvas-hub-deferred-hex-render",
+      mode: "canvas-hub-settled-deferred-hex-render",
       reason,
       viewState: getViewStatePacket(),
       yaw: state.viewYaw,
       pitch: state.viewPitch,
       zoom: state.viewZoom,
       phase: state.viewPhase,
+      effectiveYaw: effectiveRenderYaw(),
       sourceFile: FILE,
       sourceContract: CONTRACT,
       canvasHubContract: CONTRACT,
@@ -1502,13 +1495,15 @@
 
     const options = {
       reason,
-      mode: "canvas-hub-deferred-hex-render",
+      mode: "canvas-hub-settled-deferred-hex-render",
       viewState: getViewStatePacket(),
       yaw: state.viewYaw,
       pitch: state.viewPitch,
       zoom: state.viewZoom,
       phase: state.viewPhase,
+      effectiveYaw: effectiveRenderYaw(),
       interactive: false,
+      activeMotion: false,
       ...FINAL_FALSE
     };
 
@@ -1532,12 +1527,12 @@
       }
 
       state.drawCount += 1;
-      state.fullDrawCount += 1;
+      state.settledDrawCount += 1;
       state.deferredHexDrawCount += 1;
       state.lastDrawAt = nowIso();
       state.lastDrawReason = reason;
       state.lastDrawOk = true;
-      state.lastDrawMode = "HEX_SURFACE_RENDERER_DEFERRED_2D_MOUNTED_PLANET";
+      state.lastDrawMode = "HEX_SURFACE_RENDERER_SETTLED_DEFERRED_2D_MOUNTED_PLANET";
       state.lastDrawError = "";
       state.canvasDrawComplete = true;
       state.baseGlobeDrawComplete = true;
@@ -1547,8 +1542,8 @@
       state.baseGlobeVisibleCarrierReady = true;
       state.visibleGlobeCarrierReady = true;
       state.visiblePlanetProofSource = "DOM_CANVAS_2D_MOUNTED_PLANET_SURFACE";
-      state.deferredHexPending = false;
-      state.deferredHexLastCompletedAt = state.lastDrawAt;
+      state.settledRenderPending = false;
+      state.settledRenderLastCompletedAt = state.lastDrawAt;
       state.renderedYaw = state.viewYaw;
       state.renderedPitch = state.viewPitch;
       state.renderedZoom = state.viewZoom;
@@ -1565,8 +1560,9 @@
         setNodeDataset(canvas, "hearthHexSurfaceRendererContract", receipt.contract || validation.contract);
       }
 
+      refreshCacheFromVisibleCanvas("deferred-hex-render-cache-refresh");
       samplePixels();
-      publishDataset();
+      publishDatasetThrottled(true);
       publishGlobals();
       scheduleRouteNotify("deferred-hex-surface-render-complete");
 
@@ -1574,15 +1570,60 @@
     } catch (error) {
       state.lastDrawOk = false;
       state.lastDrawError = error && error.message ? String(error.message) : String(error);
-      state.deferredHexPending = false;
+      state.settledRenderPending = false;
       recordError("HEX_SURFACE_RENDER_FAILED", error, { reason });
-      publishDataset();
+      publishDatasetThrottled(true);
       publishGlobals();
       return false;
     }
   }
 
+  function refreshCacheFromVisibleCanvas(reason = "visible-canvas-cache-refresh") {
+    if (state.activeMotion) return false;
+
+    const canvas = refs.canvas || ensureCanvasSurface();
+    if (!canvas || !canvas.width || !canvas.height) return false;
+
+    const side = SETTLED_RENDER_SIDE;
+    const surface = ensureCacheSurface(side, side);
+    if (!surface.ctx || !surface.canvas) return false;
+
+    try {
+      surface.ctx.clearRect(0, 0, side, side);
+      surface.ctx.drawImage(canvas, 0, 0, side, side);
+
+      state.cachedBitmapReady = true;
+      state.cachedBitmapSource = reason;
+      state.cachedBitmapWidth = side;
+      state.cachedBitmapHeight = side;
+      state.cachedBitmapSettledYaw = state.viewYaw;
+      state.cachedBitmapSettledPitch = state.viewPitch;
+      state.cachedBitmapSettledZoom = state.viewZoom;
+      state.cachedBitmapSettledPhase = state.viewPhase;
+      return true;
+    } catch (error) {
+      recordError("VISIBLE_CANVAS_CACHE_REFRESH_FAILED", error, { reason });
+      return false;
+    }
+  }
+
+  function drawFallbackMountedPlanet(reason = "settled-fallback-mounted-planet") {
+    const ok = renderSettledFallbackIntoCache(reason);
+    if (!ok) return false;
+
+    samplePixels();
+    publishDatasetThrottled(true);
+    publishGlobals();
+    scheduleRouteNotify(reason);
+    return true;
+  }
+
   function samplePixels() {
+    if (state.activeMotion) {
+      state.pixelSampleDuringInput = true;
+      return false;
+    }
+
     const canvas = refs.canvas || ensureCanvasSurface();
     const ctx = refs.ctx || getContext2d(canvas);
 
@@ -1667,59 +1708,78 @@
   }
 
   function drawFrame(reason = "drawFrame") {
+    if (state.activeMotion) {
+      scheduleSettledRender(`${reason}:held-until-motion-settles`);
+      return getMotionAck(reason);
+    }
+
     mountCanvas(reason);
 
     const hexDrawn = drawViaHexSurface(reason);
-
-    if (!hexDrawn) {
-      drawFallbackMountedPlanet(reason);
-    }
+    if (!hexDrawn) drawFallbackMountedPlanet(reason);
 
     scheduleRouteNotify(reason);
     return getCanvasStationReceiptLight(false);
   }
 
   function scheduleDraw(reason = "scheduled-draw") {
-    if (fullDrawRaf) return;
-
-    fullDrawRaf = scheduleAnimationFrame(() => {
-      fullDrawRaf = 0;
-      drawFrame(reason);
-    });
-  }
-
-  function scheduleFastInteractiveFrame(reason = "view-state-interactive") {
-    state.fastInteractiveFramePending = true;
-
-    if (interactiveRaf) return;
-
-    interactiveRaf = scheduleAnimationFrame(() => {
-      interactiveRaf = 0;
-      state.fastInteractiveFramePending = false;
-      drawFastInteractivePlanet(reason);
-    });
-  }
-
-  function scheduleDeferredHexRender(reason = "view-state-settled") {
-    state.deferredHexPending = true;
-    state.deferredHexLastScheduledAt = nowIso();
-    state.deferredHexLastReason = reason;
-
-    if (deferredHexTimer && isFunction(root.clearTimeout)) {
-      root.clearTimeout(deferredHexTimer);
-      deferredHexTimer = 0;
-    }
-
-    if (!isFunction(root.setTimeout)) {
-      drawFrame(reason);
+    if (state.activeMotion) {
+      scheduleCompositorPreview(reason);
+      scheduleSettledRender(`${reason}:settled`);
       return;
     }
 
-    deferredHexTimer = root.setTimeout(() => {
-      deferredHexTimer = 0;
-      state.deferredHexPending = false;
-      drawFrame(reason);
-    }, FULL_HEX_SETTLE_DELAY_MS);
+    scheduleAnimationFrame(() => drawFrame(reason));
+  }
+
+  function scheduleCompositorPreview(reason = "compositor-preview") {
+    state.compositorPreviewPending = true;
+
+    if (compositorRaf) return;
+
+    compositorRaf = scheduleAnimationFrame(() => {
+      compositorRaf = 0;
+      state.compositorPreviewPending = false;
+
+      if (!state.cachedBitmapReady) {
+        drawFallbackMountedPlanet("missing-cache-before-preview");
+        return;
+      }
+
+      drawCachedBitmapToVisibleCanvas(reason);
+    });
+  }
+
+  function scheduleSettledRender(reason = "view-state-settled-render") {
+    state.settledRenderPending = true;
+    state.settledRenderLastScheduledAt = nowIso();
+
+    if (settledTimer && isFunction(root.clearTimeout)) {
+      root.clearTimeout(settledTimer);
+      settledTimer = 0;
+    }
+
+    if (!isFunction(root.setTimeout)) {
+      finishActiveMotionAndRender(reason);
+      return;
+    }
+
+    settledTimer = root.setTimeout(() => {
+      settledTimer = 0;
+      finishActiveMotionAndRender(reason);
+    }, SETTLED_RENDER_DELAY_MS);
+  }
+
+  function finishActiveMotionAndRender(reason = "settled-render") {
+    state.activeMotion = false;
+    state.settledRenderPending = false;
+
+    const hexDrawn = drawViaHexSurface(reason);
+    if (!hexDrawn) drawFallbackMountedPlanet(reason);
+
+    publishDatasetThrottled(true);
+    publishGlobals();
+    scheduleRouteNotify(reason);
   }
 
   function getViewStatePacket() {
@@ -1733,6 +1793,7 @@
       pitch: state.viewPitch,
       zoom: state.viewZoom,
       phase: state.viewPhase,
+      effectiveYaw: effectiveRenderYaw(),
       minPitch: -1.25,
       maxPitch: 1.25,
       minZoom: 0.55,
@@ -1758,6 +1819,12 @@
       if (nested.wheelDelta !== undefined) zoom += safeNumber(nested.wheelDelta, 0) * -0.001;
     }
 
+    if (Math.abs(phase - yaw) < 0.000001) {
+      phase = 0;
+      state.effectiveYawDoubleCountRejected = true;
+      state.phaseAddedToUserYaw = false;
+    }
+
     return {
       yaw,
       pitch: clamp(pitch, -1.25, 1.25),
@@ -1771,11 +1838,17 @@
     if (!isObject(packet)) {
       state.viewStateRejectedCount += 1;
       state.viewStateRejectionReason = "VIEW_STATE_PACKET_NOT_OBJECT";
-      publishDatasetThrottled(false);
-      return getCanvasStationReceiptLight(false);
+      publishViewDatasetLight();
+      return getMotionAck("rejected-non-object");
     }
 
     const view = normalizeViewState(packet, source);
+    const at = nowIso();
+
+    state.activeMotion = true;
+    state.activeMotionStartedAt = state.activeMotionStartedAt || at;
+    state.activeMotionLastAt = at;
+    state.activeMotionInputType = safeString(packet.inputType || "view-control");
 
     state.viewStateAccepted = true;
     state.viewStateSource = view.source;
@@ -1784,18 +1857,52 @@
     state.viewZoom = view.zoom;
     state.viewPhase = view.phase;
     state.viewStatePacketCount += 1;
-    state.viewStateLastAcceptedAt = nowIso();
+    state.viewStateLastAcceptedAt = at;
     state.viewStateRejectionReason = "";
     state.lastControlPacketType = safeString(packet.packetType || packet.type || "VIEW_STATE_PACKET");
     state.lastControlInputType = safeString(packet.inputType || "view-control");
 
     publishViewGlobalsLight();
+    publishViewDatasetLight();
 
-    scheduleFastInteractiveFrame("view-state-rAF-fast-preview");
-    scheduleDeferredHexRender("view-state-settled-deferred-hex-render");
-    publishDatasetThrottled(false);
+    scheduleCompositorPreview("active-motion-cached-bitmap-preview");
+    scheduleSettledRender("active-motion-settled-render");
 
-    return getCanvasStationReceiptLight(false);
+    return getMotionAck("view-state-accepted");
+  }
+
+  function getMotionAck(reason = "motion-ack") {
+    const at = nowIso();
+
+    state.lastMotionAckAt = at;
+    state.motionAckCount += 1;
+
+    return {
+      packetType: "HEARTH_CANVAS_MOTION_ACK",
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
+      sourceFile: FILE,
+      accepted: true,
+      reason,
+      motionAckReturned: true,
+      activeMotion: state.activeMotion,
+      zeroHeavyTouchPathActive: true,
+      heavyRenderDuringInputCount: state.heavyRenderDuringInputCount,
+      hexRenderDuringInput: state.hexRenderDuringInput,
+      fallbackProceduralRenderDuringInput: state.fallbackProceduralRenderDuringInput,
+      imageDataAllocationDuringInput: state.imageDataAllocationDuringInput,
+      pixelSampleDuringInput: state.pixelSampleDuringInput,
+      routeNotifyDuringInput: state.routeNotifyDuringInput,
+      fullReceiptDuringInput: state.fullReceiptDuringInput,
+      fullDatasetPublishDuringInput: state.fullDatasetPublishDuringInput,
+      phaseAddedToUserYaw: false,
+      effectiveYawDoubleCountRejected: true,
+      settledRenderDelayMs: SETTLED_RENDER_DELAY_MS,
+      viewState: getViewStatePacket(),
+      at,
+      ...FINAL_FALSE
+    };
   }
 
   function receiveCanvasViewState(packet) { return receiveViewState(packet, "CANVAS_VIEW_STATE_PACKET"); }
@@ -1803,6 +1910,7 @@
   function receiveViewControlPacket(packet) { return receiveViewState(packet, "VIEW_CONTROL_PACKET"); }
   function consumeViewControlPacket(packet) { return receiveViewState(packet, "CONSUME_VIEW_CONTROL_PACKET"); }
   function receivePlanetaryViewControlPacket(packet) { return receiveViewState(packet, "PLANETARY_VIEW_CONTROL_PACKET"); }
+  function receivePlanetaryControlPacket(packet) { return receiveViewState(packet, "PLANETARY_CONTROL_PACKET"); }
   function consumePlanetaryViewControlPacket(packet) { return receiveViewState(packet, "CONSUME_PLANETARY_VIEW_CONTROL_PACKET"); }
   function receiveControlsPacket(packet) { return receiveViewState(packet, "CONTROLS_PACKET"); }
   function receiveControlViewPacket(packet) { return receiveViewState(packet, "CONTROL_VIEW_PACKET"); }
@@ -1816,11 +1924,11 @@
 
   function drawVisibleExpression(packet = {}) {
     if (isObject(packet) && (packet.viewState || packet.yaw !== undefined || packet.deltaYaw !== undefined)) {
-      receiveViewState(packet, "DRAW_VISIBLE_EXPRESSION_VIEW_PACKET");
+      return receiveViewState(packet, "DRAW_VISIBLE_EXPRESSION_VIEW_PACKET");
     }
 
     scheduleDraw("draw-visible-expression");
-    return getCanvasStationReceiptLight(false);
+    return state.activeMotion ? getMotionAck("draw-visible-expression-held") : getCanvasStationReceiptLight(false);
   }
 
   function acceptReleasePacket(packet = {}, source = "ROUTE_CONDUCTOR_RELEASE_PACKET") {
@@ -1853,7 +1961,8 @@
       destinationFile: p.destinationFile || ""
     });
 
-    scheduleDraw("route-conductor-release-packet");
+    if (state.activeMotion) scheduleSettledRender("route-conductor-release-after-motion");
+    else scheduleDraw("route-conductor-release-packet");
 
     return {
       ...getCanvasStationReceiptLight(false),
@@ -1908,7 +2017,7 @@
     state.dependencyScriptAdmissionAttempted = true;
     state.dependencyScriptAdmissionStatus = "DEPENDENCY_ADMISSION_STARTED";
     state.dependencyScriptAdmissionReason = reason;
-    publishDataset();
+    publishDatasetThrottled(true);
 
     dependencyPromise = Promise.resolve()
       .then(() => {
@@ -1939,10 +2048,10 @@
         state.dependencyScriptAdmissionReason = reason;
         state.dependencyScriptLoadError = "";
 
-        publishDataset();
+        publishDatasetThrottled(true);
         publishGlobals();
 
-        scheduleDeferredHexRender("deferred-dependency-ready");
+        if (!state.activeMotion) scheduleSettledRender("deferred-dependency-ready");
 
         return ok;
       })
@@ -1950,7 +2059,7 @@
         state.dependencyScriptAdmissionStatus = "DEPENDENCY_ADMISSION_ERROR";
         state.dependencyScriptLoadError = error && error.message ? String(error.message) : String(error);
         recordError("CANVAS_DEPENDENCY_SCRIPT_ADMISSION_FAILED", error, { reason });
-        publishDataset();
+        publishDatasetThrottled(true);
         publishGlobals();
         return false;
       });
@@ -1959,6 +2068,11 @@
   }
 
   function scheduleRouteNotify(reason = "route-notify") {
+    if (state.activeMotion) {
+      state.routeNotifyDuringInput = true;
+      return;
+    }
+
     if (routeNotifyTimer || !isFunction(root.setTimeout)) return;
 
     routeNotifyTimer = root.setTimeout(() => {
@@ -1968,6 +2082,11 @@
   }
 
   function notifyRouteConductor(reason = "route-notify") {
+    if (state.activeMotion) {
+      state.routeNotifyDuringInput = true;
+      return false;
+    }
+
     const route = resolveRouteConductor();
 
     state.routeConductorObserved = Boolean(route);
@@ -1975,7 +2094,7 @@
     if (!route || !isObject(route)) {
       state.routeConductorNotifyStatus = "ROUTE_CONDUCTOR_NOT_OBSERVED";
       state.routeConductorNotifyMethod = "NONE";
-      publishDataset();
+      publishDatasetThrottled(true);
       return false;
     }
 
@@ -2008,7 +2127,7 @@
         state.routeConductorNotifyCount += 1;
         state.routeConductorNotifyMethod = method;
         state.routeConductorNotifyStatus = "ROUTE_CONDUCTOR_NOTIFIED";
-        publishDataset();
+        publishDatasetThrottled(true);
         return true;
       } catch (error) {
         recordError("ROUTE_CONDUCTOR_NOTIFY_METHOD_FAILED", error, { method, reason });
@@ -2017,7 +2136,7 @@
 
     state.routeConductorNotifyStatus = "ROUTE_CONDUCTOR_RECEIVE_METHOD_NOT_FOUND";
     state.routeConductorNotifyMethod = "NONE";
-    publishDataset();
+    publishDatasetThrottled(true);
     return false;
   }
 
@@ -2050,6 +2169,8 @@
       receipt: RECEIPT,
       internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
       internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
+      previousInternalContract: PREVIOUS_INTERNAL_CONTRACT,
+      previousInternalReceipt: PREVIOUS_INTERNAL_RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       previousReceipt: PREVIOUS_RECEIPT,
       lineageV121Contract: LINEAGE_V12_1_CONTRACT,
@@ -2066,7 +2187,7 @@
 
       packetType: "HEARTH_CANVAS_LOCAL_STATION_EXPRESSION_HUB_VISIBLE_BASE_GLOBE_RECEIPT",
       role: "canvas-local-station-expression-hub-visible-base-globe-carrier",
-      authority: "canvas-hub-raf-fast-interactive-deferred-hex-render-receiver",
+      authority: "canvas-hub-zero-heavy-touch-path-settled-hex-render-receiver",
 
       planetId: PLANET_ID,
       planetLabel: PLANET_LABEL,
@@ -2100,25 +2221,35 @@
       canvasSummaryShapeTrusted: true,
       canvasBaselineOnly: false,
 
-      rafSchedulerActive: true,
+      zeroHeavyTouchPathActive: true,
       requestAnimationFrameAvailable: state.requestAnimationFrameAvailable,
-      setTimeout40MotionPathRemoved: true,
       motionUsesRequestAnimationFrame: true,
-      fastInteractivePreviewActive: true,
-      fastInteractivePreviewReady: state.fastInteractivePreviewReady,
-      fastInteractiveFramePending: state.fastInteractiveFramePending,
-      fastInteractiveLastFrameAt: state.fastInteractiveLastFrameAt,
-      fastInteractiveLastRenderWidth: state.fastInteractiveLastRenderWidth,
-      fastInteractiveLastRenderHeight: state.fastInteractiveLastRenderHeight,
-      fastInteractiveLastSamples: state.fastInteractiveLastSamples,
-      fullHexRenderDeferredDuringInput: true,
-      deferredHexRenderActive: true,
-      deferredHexPending: state.deferredHexPending,
-      deferredHexSettleDelayMs: FULL_HEX_SETTLE_DELAY_MS,
-      deferredHexLastScheduledAt: state.deferredHexLastScheduledAt,
-      deferredHexLastCompletedAt: state.deferredHexLastCompletedAt,
-      deferredHexDrawCount: state.deferredHexDrawCount,
-      datasetPublicationThrottledDuringMotion: true,
+      activeMotion: state.activeMotion,
+      activeMotionStartedAt: state.activeMotionStartedAt,
+      activeMotionLastAt: state.activeMotionLastAt,
+      cachedBitmapPreviewActive: true,
+      cachedBitmapReady: state.cachedBitmapReady,
+      cachedBitmapSource: state.cachedBitmapSource,
+      cachedBitmapWidth: state.cachedBitmapWidth,
+      cachedBitmapHeight: state.cachedBitmapHeight,
+      compositorPreviewCount: state.compositorPreviewCount,
+      compositorPreviewLastAt: state.compositorPreviewLastAt,
+      settledRenderDelayMs: SETTLED_RENDER_DELAY_MS,
+      settledRenderPending: state.settledRenderPending,
+      settledRenderLastScheduledAt: state.settledRenderLastScheduledAt,
+      settledRenderLastCompletedAt: state.settledRenderLastCompletedAt,
+
+      heavyRenderDuringInputCount: state.heavyRenderDuringInputCount,
+      hexRenderDuringInput: state.hexRenderDuringInput,
+      fallbackProceduralRenderDuringInput: state.fallbackProceduralRenderDuringInput,
+      imageDataAllocationDuringInput: state.imageDataAllocationDuringInput,
+      pixelSampleDuringInput: state.pixelSampleDuringInput,
+      routeNotifyDuringInput: state.routeNotifyDuringInput,
+      fullReceiptDuringInput: state.fullReceiptDuringInput,
+      fullDatasetPublishDuringInput: state.fullDatasetPublishDuringInput,
+      phaseAddedToUserYaw: state.phaseAddedToUserYaw,
+      effectiveYawDoubleCountRejected: state.effectiveYawDoubleCountRejected,
+      motionAckReturned: state.motionAckCount > 0,
 
       visibleBaseGlobeCarrierActive: state.visibleBaseGlobeCarrierActive,
       canvasVisibleBaseGlobeCarrierActive: state.canvasVisibleBaseGlobeCarrierActive,
@@ -2157,8 +2288,8 @@
       canvasAlphaPixelCount: state.canvasAlphaPixelCount,
 
       drawCount: state.drawCount,
-      fastDrawCount: state.fastDrawCount,
-      fullDrawCount: state.fullDrawCount,
+      settledDrawCount: state.settledDrawCount,
+      deferredHexDrawCount: state.deferredHexDrawCount,
       lastDrawAt: state.lastDrawAt,
       lastDrawReason: state.lastDrawReason,
       lastDrawOk: state.lastDrawOk,
@@ -2201,6 +2332,8 @@
       viewStatePacketCount: state.viewStatePacketCount,
       lastControlPacketType: state.lastControlPacketType,
       lastControlInputType: state.lastControlInputType,
+      lastMotionAckAt: state.lastMotionAckAt,
+      motionAckCount: state.motionAckCount,
 
       namedFingerFilesEmbedded: true,
       downstreamFingerTracksDeclared: true,
@@ -2256,7 +2389,11 @@
   }
 
   function getCanvasStationReceiptLight(doRefresh = false) {
-    if (doRefresh) {
+    if (state.activeMotion) {
+      state.fullReceiptDuringInput = true;
+    }
+
+    if (doRefresh && !state.activeMotion) {
       validateHexAuthority();
       validateHexSurface();
       refreshRefs();
@@ -2284,6 +2421,8 @@
   function getState() { return state; }
 
   function getReceipt() {
+    if (state.activeMotion) state.fullReceiptDuringInput = true;
+
     return {
       ...getCanvasStationReceiptLight(false),
       currentReceipt: true,
@@ -2300,6 +2439,7 @@
         "receiveCanvasViewState",
         "receiveViewControlPacket",
         "receivePlanetaryViewControlPacket",
+        "receivePlanetaryControlPacket",
         "receiveControlPacket",
         "receiveControlsPacket",
         "receiveViewDelta",
@@ -2329,13 +2469,15 @@
     const r = getCanvasStationReceiptLight(false);
 
     return [
-      "HEARTH_CANVAS_HUB_RAF_FAST_INTERACTIVE_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT",
+      "HEARTH_CANVAS_HUB_ZERO_HEAVY_TOUCH_PATH_SETTLED_HEX_RENDER_RECEIVER_RECEIPT",
       "",
       "HEADER",
       line("contract", r.contract),
       line("receipt", r.receipt),
       line("internalImplementationContract", INTERNAL_IMPLEMENTATION_CONTRACT),
       line("internalImplementationReceipt", INTERNAL_IMPLEMENTATION_RECEIPT),
+      line("previousInternalContract", PREVIOUS_INTERNAL_CONTRACT),
+      line("previousInternalReceipt", PREVIOUS_INTERNAL_RECEIPT),
       line("previousContract", PREVIOUS_CONTRACT),
       line("previousReceipt", PREVIOUS_RECEIPT),
       line("lineageV121Contract", LINEAGE_V12_1_CONTRACT),
@@ -2344,20 +2486,30 @@
       line("file", FILE),
       line("route", ROUTE),
       "",
-      "MOTION_SCHEDULER",
-      line("rafSchedulerActive", r.rafSchedulerActive),
+      "ZERO_HEAVY_TOUCH_PATH",
+      line("zeroHeavyTouchPathActive", r.zeroHeavyTouchPathActive),
       line("requestAnimationFrameAvailable", r.requestAnimationFrameAvailable),
-      line("setTimeout40MotionPathRemoved", r.setTimeout40MotionPathRemoved),
       line("motionUsesRequestAnimationFrame", r.motionUsesRequestAnimationFrame),
-      line("fastInteractivePreviewActive", r.fastInteractivePreviewActive),
-      line("fastInteractivePreviewReady", r.fastInteractivePreviewReady),
-      line("fastInteractiveLastRenderWidth", r.fastInteractiveLastRenderWidth),
-      line("fastInteractiveLastRenderHeight", r.fastInteractiveLastRenderHeight),
-      line("fullHexRenderDeferredDuringInput", r.fullHexRenderDeferredDuringInput),
-      line("deferredHexPending", r.deferredHexPending),
-      line("deferredHexSettleDelayMs", r.deferredHexSettleDelayMs),
-      line("deferredHexDrawCount", r.deferredHexDrawCount),
-      line("datasetPublicationThrottledDuringMotion", r.datasetPublicationThrottledDuringMotion),
+      line("activeMotion", r.activeMotion),
+      line("cachedBitmapPreviewActive", r.cachedBitmapPreviewActive),
+      line("cachedBitmapReady", r.cachedBitmapReady),
+      line("cachedBitmapSource", r.cachedBitmapSource),
+      line("compositorPreviewCount", r.compositorPreviewCount),
+      line("settledRenderDelayMs", r.settledRenderDelayMs),
+      line("settledRenderPending", r.settledRenderPending),
+      "",
+      "INTERACTIVE_HOT_PATH_FORBIDDEN_WORK",
+      line("heavyRenderDuringInputCount", r.heavyRenderDuringInputCount),
+      line("hexRenderDuringInput", r.hexRenderDuringInput),
+      line("fallbackProceduralRenderDuringInput", r.fallbackProceduralRenderDuringInput),
+      line("imageDataAllocationDuringInput", r.imageDataAllocationDuringInput),
+      line("pixelSampleDuringInput", r.pixelSampleDuringInput),
+      line("routeNotifyDuringInput", r.routeNotifyDuringInput),
+      line("fullReceiptDuringInput", r.fullReceiptDuringInput),
+      line("fullDatasetPublishDuringInput", r.fullDatasetPublishDuringInput),
+      line("phaseAddedToUserYaw", r.phaseAddedToUserYaw),
+      line("effectiveYawDoubleCountRejected", r.effectiveYawDoubleCountRejected),
+      line("motionAckReturned", r.motionAckReturned),
       "",
       "DOM_SURFACE",
       line("canvasElementFound", r.canvasElementFound),
@@ -2442,6 +2594,11 @@
   function publishDatasetThrottled(force) {
     const ms = nowMs();
 
+    if (state.activeMotion && !force) {
+      publishViewDatasetLight();
+      return false;
+    }
+
     if (!force && ms - lastReceiptPublishMs < RECEIPT_THROTTLE_MS) {
       publishViewDatasetLight();
       return false;
@@ -2453,6 +2610,8 @@
   }
 
   function publishViewDatasetLight() {
+    state.lightDatasetPublishCount += 1;
+
     setDataset("hearthCanvasViewStateAccepted", String(state.viewStateAccepted));
     setDataset("hearthCanvasViewStateSource", state.viewStateSource);
     setDataset("hearthCanvasViewYaw", String(state.viewYaw));
@@ -2460,11 +2619,14 @@
     setDataset("hearthCanvasViewZoom", String(state.viewZoom));
     setDataset("hearthCanvasViewPhase", String(state.viewPhase));
     setDataset("hearthCanvasViewStatePacketCount", String(state.viewStatePacketCount));
-    setDataset("hearthCanvasFastInteractiveFramePending", String(state.fastInteractiveFramePending));
-    setDataset("hearthCanvasDeferredHexPending", String(state.deferredHexPending));
+    setDataset("hearthCanvasActiveMotion", String(state.activeMotion));
+    setDataset("hearthCanvasCachedBitmapReady", String(state.cachedBitmapReady));
+    setDataset("hearthCanvasCompositorPreviewPending", String(state.compositorPreviewPending));
+    setDataset("hearthCanvasCompositorPreviewCount", String(state.compositorPreviewCount));
+    setDataset("hearthCanvasSettledRenderPending", String(state.settledRenderPending));
+    setDataset("hearthCanvasHeavyRenderDuringInputCount", String(state.heavyRenderDuringInputCount));
     setDataset("hearthCanvasLastDrawMode", state.lastDrawMode);
-    setDataset("hearthCanvasFastDrawCount", String(state.fastDrawCount));
-    setDataset("hearthCanvasFullDrawCount", String(state.fullDrawCount));
+    setDataset("hearthCanvasMotionAckCount", String(state.motionAckCount));
     setDataset("visualPassClaimed", "false");
     setDataset("generatedImage", "false");
     setDataset("graphicBox", "false");
@@ -2472,6 +2634,10 @@
   }
 
   function publishDataset() {
+    if (state.activeMotion) {
+      state.fullDatasetPublishDuringInput = true;
+    }
+
     state.datasetPublishCount += 1;
 
     setDataset("hearthCanvasLoaded", "true");
@@ -2488,23 +2654,31 @@
     setDataset("hearthCanvasFile", FILE);
     setDataset("hearthCanvasVersion", VERSION);
 
-    setDataset("hearthCanvasRafSchedulerActive", "true");
+    setDataset("hearthCanvasZeroHeavyTouchPathActive", "true");
     setDataset("hearthCanvasRequestAnimationFrameAvailable", String(state.requestAnimationFrameAvailable));
-    setDataset("hearthCanvasSetTimeout40MotionPathRemoved", "true");
     setDataset("hearthCanvasMotionUsesRequestAnimationFrame", "true");
-    setDataset("hearthCanvasFastInteractivePreviewActive", "true");
-    setDataset("hearthCanvasFastInteractivePreviewReady", String(state.fastInteractivePreviewReady));
-    setDataset("hearthCanvasFastInteractiveLastFrameAt", state.fastInteractiveLastFrameAt);
-    setDataset("hearthCanvasFastInteractiveLastRenderWidth", String(state.fastInteractiveLastRenderWidth));
-    setDataset("hearthCanvasFastInteractiveLastRenderHeight", String(state.fastInteractiveLastRenderHeight));
-    setDataset("hearthCanvasFastInteractiveLastSamples", String(state.fastInteractiveLastSamples));
-    setDataset("hearthCanvasDeferredHexRenderActive", "true");
-    setDataset("hearthCanvasDeferredHexPending", String(state.deferredHexPending));
-    setDataset("hearthCanvasDeferredHexSettleDelayMs", String(FULL_HEX_SETTLE_DELAY_MS));
-    setDataset("hearthCanvasDeferredHexLastScheduledAt", state.deferredHexLastScheduledAt);
-    setDataset("hearthCanvasDeferredHexLastCompletedAt", state.deferredHexLastCompletedAt);
-    setDataset("hearthCanvasDeferredHexDrawCount", String(state.deferredHexDrawCount));
-    setDataset("hearthCanvasDatasetPublicationThrottledDuringMotion", "true");
+    setDataset("hearthCanvasActiveMotion", String(state.activeMotion));
+    setDataset("hearthCanvasCachedBitmapPreviewActive", "true");
+    setDataset("hearthCanvasCachedBitmapReady", String(state.cachedBitmapReady));
+    setDataset("hearthCanvasCachedBitmapSource", state.cachedBitmapSource);
+    setDataset("hearthCanvasCachedBitmapWidth", String(state.cachedBitmapWidth));
+    setDataset("hearthCanvasCachedBitmapHeight", String(state.cachedBitmapHeight));
+    setDataset("hearthCanvasCompositorPreviewCount", String(state.compositorPreviewCount));
+    setDataset("hearthCanvasSettledRenderDelayMs", String(SETTLED_RENDER_DELAY_MS));
+    setDataset("hearthCanvasSettledRenderPending", String(state.settledRenderPending));
+    setDataset("hearthCanvasSettledRenderLastScheduledAt", state.settledRenderLastScheduledAt);
+    setDataset("hearthCanvasSettledRenderLastCompletedAt", state.settledRenderLastCompletedAt);
+
+    setDataset("hearthCanvasHeavyRenderDuringInputCount", String(state.heavyRenderDuringInputCount));
+    setDataset("hearthCanvasHexRenderDuringInput", String(state.hexRenderDuringInput));
+    setDataset("hearthCanvasFallbackProceduralRenderDuringInput", String(state.fallbackProceduralRenderDuringInput));
+    setDataset("hearthCanvasImageDataAllocationDuringInput", String(state.imageDataAllocationDuringInput));
+    setDataset("hearthCanvasPixelSampleDuringInput", String(state.pixelSampleDuringInput));
+    setDataset("hearthCanvasRouteNotifyDuringInput", String(state.routeNotifyDuringInput));
+    setDataset("hearthCanvasFullReceiptDuringInput", String(state.fullReceiptDuringInput));
+    setDataset("hearthCanvasFullDatasetPublishDuringInput", String(state.fullDatasetPublishDuringInput));
+    setDataset("hearthCanvasPhaseAddedToUserYaw", "false");
+    setDataset("hearthCanvasEffectiveYawDoubleCountRejected", "true");
 
     setDataset("hearthCanvasElementFound", String(state.canvasElementFound));
     setDataset("hearthCanvasInMount", String(state.canvasInMount));
@@ -2524,8 +2698,8 @@
     setDataset("hearthCanvasHoldingFieldDrawComplete", String(state.holdingFieldDrawComplete));
     setDataset("hearthCanvasRendererDrawComplete", String(state.rendererDrawComplete));
     setDataset("hearthCanvasDrawCount", String(state.drawCount));
-    setDataset("hearthCanvasFastDrawCount", String(state.fastDrawCount));
-    setDataset("hearthCanvasFullDrawCount", String(state.fullDrawCount));
+    setDataset("hearthCanvasSettledDrawCount", String(state.settledDrawCount));
+    setDataset("hearthCanvasDeferredHexDrawCount", String(state.deferredHexDrawCount));
     setDataset("hearthCanvasLastDrawMode", state.lastDrawMode);
     setDataset("hearthCanvasLastDrawReason", state.lastDrawReason);
     setDataset("hearthCanvasLastDrawOk", String(state.lastDrawOk));
@@ -2573,6 +2747,8 @@
     setDataset("hearthCanvasViewStatePacketCount", String(state.viewStatePacketCount));
     setDataset("hearthCanvasLastControlPacketType", state.lastControlPacketType);
     setDataset("hearthCanvasLastControlInputType", state.lastControlInputType);
+    setDataset("hearthCanvasLastMotionAckAt", state.lastMotionAckAt);
+    setDataset("hearthCanvasMotionAckCount", String(state.motionAckCount));
 
     setDataset("hearthCanvasF13CanvasReadinessObserved", String(state.f13CanvasReadinessObserved));
     setDataset("hearthCanvasF13VisibleEvidenceAvailable", String(state.f13VisibleEvidenceAvailable));
@@ -2629,11 +2805,14 @@
   }
 
   function publishGlobals() {
+    if (state.activeMotion) return publishViewGlobalsLight();
+
     const hearth = ensureObject(root, "HEARTH");
     const lab = ensureObject(root, "DEXTER_LAB");
 
     root.HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER = api;
     root.HEARTH_CANVAS_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER = api;
+    root.HEARTH_CANVAS_HUB_ZERO_HEAVY_TOUCH_PATH_SETTLED_HEX_RENDER_RECEIVER = api;
     root.HEARTH_CANVAS_HUB_RAF_FAST_INTERACTIVE_DEFERRED_HEX_RENDER_RECEIVER = api;
     root.HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER = api;
     root.HEARTH_CANVAS_PLANETARY_VIEW_CONTROL_RECEIVER = api;
@@ -2650,6 +2829,7 @@
 
     hearth.canvasHubCompositeFirstFastViewDeferredHexReceiver = api;
     hearth.canvasCompositeFirstFastViewDeferredHexReceiver = api;
+    hearth.canvasHubZeroHeavyTouchPathSettledHexRenderReceiver = api;
     hearth.canvasHubRafFastInteractiveDeferredHexRenderReceiver = api;
     hearth.canvasHubFastViewTransformDeferredRenderReceiver = api;
     hearth.canvasPlanetaryViewControlReceiver = api;
@@ -2666,6 +2846,7 @@
 
     lab.hearthCanvasCompositeFirstFastViewDeferredHexReceiver = api;
     lab.hearthCanvasHubCompositeFirstFastViewDeferredHexReceiver = api;
+    lab.hearthCanvasHubZeroHeavyTouchPathSettledHexRenderReceiver = api;
     lab.hearthCanvasHubRafFastInteractiveDeferredHexRenderReceiver = api;
     lab.hearthCanvasHubFastViewTransformDeferredRenderReceiver = api;
     lab.hearthCanvasPlanetaryViewControlReceiver = api;
@@ -2684,7 +2865,7 @@
 
     root.HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT = receipt;
     root.HEARTH_CANVAS_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT = receipt;
-    root.HEARTH_CANVAS_HUB_RAF_FAST_INTERACTIVE_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT = receipt;
+    root.HEARTH_CANVAS_HUB_ZERO_HEAVY_TOUCH_PATH_SETTLED_HEX_RENDER_RECEIVER_RECEIPT = receipt;
     root.HEARTH_CANVAS_HUB_RECEIPT = receipt;
     root.HEARTH_CANVAS_RECEIPT = receipt;
     root.HEARTH_CANVAS_LOCAL_STATION_RECEIPT = receipt;
@@ -2697,7 +2878,7 @@
 
     hearth.canvasHubCompositeFirstFastViewDeferredHexReceiverReceipt = receipt;
     hearth.canvasCompositeFirstFastViewDeferredHexReceiverReceipt = receipt;
-    hearth.canvasHubRafFastInteractiveDeferredHexRenderReceiverReceipt = receipt;
+    hearth.canvasHubZeroHeavyTouchPathSettledHexRenderReceiverReceipt = receipt;
     hearth.canvasHubReceipt = receipt;
     hearth.canvasReceipt = receipt;
     hearth.canvasLocalStationReceipt = receipt;
@@ -2710,7 +2891,7 @@
 
     lab.hearthCanvasHubCompositeFirstFastViewDeferredHexReceiverReceipt = receipt;
     lab.hearthCanvasCompositeFirstFastViewDeferredHexReceiverReceipt = receipt;
-    lab.hearthCanvasHubRafFastInteractiveDeferredHexRenderReceiverReceipt = receipt;
+    lab.hearthCanvasHubZeroHeavyTouchPathSettledHexRenderReceiverReceipt = receipt;
     lab.hearthCanvasHubReceipt = receipt;
     lab.hearthCanvasReceipt = receipt;
     lab.hearthCanvasLocalStationReceipt = receipt;
@@ -2718,7 +2899,7 @@
     lab.hearthCanvasVisiblePlanetReceipt = receipt;
 
     publishViewGlobalsLight();
-    publishDataset();
+    publishDatasetThrottled(true);
 
     return api;
   }
@@ -2732,17 +2913,17 @@
     state.updatedAt = state.startedAt;
     state.requestAnimationFrameAvailable = isFunction(root.requestAnimationFrame);
 
-    publishDataset();
+    publishDatasetThrottled(true);
     publishGlobals();
 
     mountCanvas(reason);
-    drawFastInteractivePlanet("first-rAF-fast-mounted-view");
+    drawFallbackMountedPlanet("boot-settled-cache-prime");
 
     validateHexAuthority();
     validateHexSurface();
 
     ensureDependencyScripts("boot-deferred-hex-dependency-admission").then(() => {
-      scheduleDeferredHexRender("boot-deferred-hex-render");
+      if (!state.activeMotion) scheduleSettledRender("boot-deferred-hex-render");
     });
 
     if (root.addEventListener && !resizeBound) {
@@ -2759,18 +2940,18 @@
     state.bootComplete = true;
     state.updatedAt = nowIso();
 
-    publishDataset();
+    publishDatasetThrottled(true);
     publishGlobals();
     scheduleRouteNotify("canvas-boot-complete");
 
-    record("HEARTH_CANVAS_V12_3_1_RAF_FAST_INTERACTIVE_BOOT_COMPLETE", {
+    record("HEARTH_CANVAS_V12_3_2_ZERO_HEAVY_TOUCH_PATH_BOOT_COMPLETE", {
       canvasElementFound: state.canvasElementFound,
       canvasInMount: state.canvasInMount,
       canvasContext2dReady: state.canvasContext2dReady,
+      cachedBitmapReady: state.cachedBitmapReady,
       visiblePlanetProofReady: state.visiblePlanetProofReady,
-      setTimeout40MotionPathRemoved: true,
-      motionUsesRequestAnimationFrame: true,
-      fullHexRenderDeferredDuringInput: true,
+      zeroHeavyTouchPathActive: true,
+      settledRenderDelayMs: SETTLED_RENDER_DELAY_MS,
       noFinalClaimsPreserved: true
     });
 
@@ -2788,14 +2969,12 @@
   function run(reason = "run") { return boot(reason); }
 
   function dispose(reason = "dispose") {
-    cancelAnimationFrameSafe(interactiveRaf);
-    cancelAnimationFrameSafe(fullDrawRaf);
-    interactiveRaf = 0;
-    fullDrawRaf = 0;
+    cancelAnimationFrameSafe(compositorRaf);
+    compositorRaf = 0;
 
-    if (deferredHexTimer && isFunction(root.clearTimeout)) {
-      root.clearTimeout(deferredHexTimer);
-      deferredHexTimer = 0;
+    if (settledTimer && isFunction(root.clearTimeout)) {
+      root.clearTimeout(settledTimer);
+      settledTimer = 0;
     }
 
     if (routeNotifyTimer && isFunction(root.clearTimeout)) {
@@ -2803,10 +2982,11 @@
       routeNotifyTimer = 0;
     }
 
-    state.deferredHexPending = false;
+    state.activeMotion = false;
+    state.settledRenderPending = false;
 
-    record("HEARTH_CANVAS_V12_3_1_DISPOSED", { reason });
-    publishDataset();
+    record("HEARTH_CANVAS_V12_3_2_DISPOSED", { reason });
+    publishDatasetThrottled(true);
     publishGlobals();
 
     return getReceipt();
@@ -2817,6 +2997,8 @@
     RECEIPT,
     INTERNAL_IMPLEMENTATION_CONTRACT,
     INTERNAL_IMPLEMENTATION_RECEIPT,
+    PREVIOUS_INTERNAL_CONTRACT,
+    PREVIOUS_INTERNAL_RECEIPT,
     PREVIOUS_CONTRACT,
     PREVIOUS_RECEIPT,
     LINEAGE_V12_1_CONTRACT,
@@ -2841,12 +3023,14 @@
     receipt: RECEIPT,
     internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
     internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
+    previousInternalContract: PREVIOUS_INTERNAL_CONTRACT,
+    previousInternalReceipt: PREVIOUS_INTERNAL_RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
     version: VERSION,
     route: ROUTE,
     file: FILE,
-    role: "canvas-hub-raf-fast-interactive-deferred-hex-render-receiver",
+    role: "canvas-hub-zero-heavy-touch-path-settled-hex-render-receiver",
 
     boot,
     init,
@@ -2857,11 +3041,11 @@
     mountCanvas,
     drawFrame,
     scheduleDraw,
-    drawFastInteractivePlanet,
+    drawCachedBitmapToVisibleCanvas,
     drawFallbackMountedPlanet,
     drawViaHexSurface,
-    scheduleFastInteractiveFrame,
-    scheduleDeferredHexRender,
+    scheduleCompositorPreview,
+    scheduleSettledRender,
 
     receiveRouteConductorReleasePacket,
     consumeRouteConductorReleasePacket,
@@ -2877,6 +3061,7 @@
     receiveViewControlPacket,
     consumeViewControlPacket,
     receivePlanetaryViewControlPacket,
+    receivePlanetaryControlPacket,
     consumePlanetaryViewControlPacket,
     receiveControlsPacket,
     receiveControlViewPacket,
@@ -2889,6 +3074,7 @@
     updateView,
     drawVisibleExpression,
     getViewStatePacket,
+    getMotionAck,
 
     validateHexAuthority,
     validateHexSurface,
@@ -2933,11 +3119,10 @@
     canvasLocalStationApiReady: true,
     canvasParentBootMethodAvailable: true,
 
-    rafSchedulerActive: true,
-    fastInteractivePreviewActive: true,
-    deferredHexRenderActive: true,
-    setTimeout40MotionPathRemoved: true,
+    zeroHeavyTouchPathActive: true,
+    cachedBitmapPreviewActive: true,
     motionUsesRequestAnimationFrame: true,
+    settledRenderDelayMs: SETTLED_RENDER_DELAY_MS,
     fullHexRenderDeferredDuringInput: true,
     datasetPublicationThrottledDuringMotion: true,
 
@@ -2968,7 +3153,7 @@
   };
 
   try {
-    publishDataset();
+    publishDatasetThrottled(true);
     publishGlobals();
 
     if (doc) {
@@ -2982,10 +3167,10 @@
     }
   } catch (error) {
     state.lastDrawError = error && error.message ? String(error.message) : String(error);
-    recordError("HEARTH_CANVAS_V12_3_1_INITIALIZATION_FAILED", error);
+    recordError("HEARTH_CANVAS_V12_3_2_INITIALIZATION_FAILED", error);
 
     try {
-      publishDataset();
+      publishDatasetThrottled(true);
       publishGlobals();
     } catch (_fallbackError) {}
   }

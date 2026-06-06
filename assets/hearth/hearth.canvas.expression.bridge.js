@@ -1,14 +1,17 @@
 // /assets/hearth/hearth.canvas.expression.bridge.js
-// HEARTH_CANVAS_EXPRESSION_BRIDGE_SECOND_PAIR_TNT_v1
+// HEARTH_CANVAS_EXPRESSION_BRIDGE_SECOND_PAIR_TNT_v2
 // Full-file replacement.
-// Canvas visible-expression bridge / second file in the two-file bridge pair.
+// Canvas visible-expression bridge / second file in the two-file Canvas bridge pair.
 // Purpose:
 // - Serve as the expression-side bridge paired with /assets/hearth/hearth.canvas.js.
-// - Receive packets from Canvas Hub, Route Conductor, Queen controls, LabWest context, diagnostics, and finger surfaces.
+// - Publish only expression-bridge aliases.
+// - Do not overwrite composite, finger, Hex, Route Conductor, Queen, LabWest, or Canvas Hub aliases.
+// - Read downstream adapters as external authorities only.
+// - Accept Canvas Hub, Route Conductor, Queen controls, LabWest, diagnostic, and finger packets.
 // - Locate or accept a canvas/context.
-// - Call existing composite, finger, Hex Surface, or visible-expression adapters when available.
-// - Produce truthful pixel-visible proof back upward without claiming final readiness.
-// - Publish compatibility aliases needed by Canvas Hub and Route Conductor.
+// - Delegate drawing to an existing drawable downstream adapter when one is truly present.
+// - Otherwise draw a native holding expression surface so the Canvas expression surface can be proven.
+// - Publish pixel-visible proof upward without claiming F13, F21, ready text, final completion, or visual pass.
 // - Preserve Canvas as receiver/output carrier only.
 // Does not own:
 // - terrain truth
@@ -17,12 +20,14 @@
 // - material truth
 // - atmosphere truth
 // - lighting truth
+// - composite truth
+// - Hex truth
 // - finger truth
 // - pointer truth
 // - Queen input truth
 // - LabWest admissibility truth
 // - Route Conductor handshake truth
-// - diagnostic case selection
+// - diagnostic rail case selection
 // - F13 final claim
 // - F21 latch
 // - ready text
@@ -35,8 +40,11 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_CANVAS_EXPRESSION_BRIDGE_SECOND_PAIR_TNT_v1";
-  const RECEIPT = "HEARTH_CANVAS_EXPRESSION_BRIDGE_SECOND_PAIR_RECEIPT_v1";
+  const CONTRACT = "HEARTH_CANVAS_EXPRESSION_BRIDGE_SECOND_PAIR_TNT_v2";
+  const RECEIPT = "HEARTH_CANVAS_EXPRESSION_BRIDGE_SECOND_PAIR_RECEIPT_v2";
+
+  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_EXPRESSION_BRIDGE_SECOND_PAIR_TNT_v1";
+  const PREVIOUS_RECEIPT = "HEARTH_CANVAS_EXPRESSION_BRIDGE_SECOND_PAIR_RECEIPT_v1";
 
   const FILE = "/assets/hearth/hearth.canvas.expression.bridge.js";
   const ROUTE = "/showroom/globe/hearth/";
@@ -49,26 +57,12 @@
 
   const CURRENT_PARENT_CANVAS_CONTRACT =
     "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3";
-  const PARENT_CANVAS_V12_2_CONTRACT =
-    "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_TNT_v12_2";
-  const PARENT_CANVAS_V12_1_CONTRACT =
-    "HEARTH_CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_TNT_v12_1";
-  const PARENT_CANVAS_V12_CONTRACT =
-    "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_TNT_v12";
-
   const ROUTE_CONDUCTOR_CONTRACT =
     "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_TNT_v9_9";
   const QUEEN_CONTROL_CONTRACT =
     "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE_TNT_v1";
   const LABWEST_CONTRACT =
     "LAB_RUNTIME_TABLE_CARDINAL_WEST_BISHOP_CHORD_CANVAS_RELEASE_BRIDGE_TNT_v4_7";
-
-  const HEX_SURFACE_V2_CONTRACT =
-    "HEARTH_HEX_SURFACE_CANVAS_HUB_THREE_FILE_VISIBLE_EXPRESSION_RENDERER_TNT_v2";
-  const HEX_SURFACE_V1_CONTRACT =
-    "HEARTH_HEX_SURFACE_FOUR_PAIR_AUTHORITY_CONSUMER_TNT_v1";
-  const HEX_FOUR_PAIR_CONTRACT =
-    "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_TNT_v1";
 
   const POINTER_FINGER_FILE = "/assets/hearth/hearth.canvas.finger.inspect.js";
   const SURFACE_FINGER_FILE = "/assets/hearth/hearth.canvas.finger.surface.js";
@@ -78,6 +72,7 @@
 
   const CANVAS_SELECTORS = Object.freeze([
     "#hearthCanvas",
+    "canvas[data-hearth-expression-surface='true']",
     "canvas[data-hearth-visible-canvas='true']",
     "canvas[data-hearth-canvas-hub='true']",
     "canvas[data-hearth-base-globe-canvas='true']",
@@ -95,6 +90,66 @@
     "[data-hearth-planet-stage]",
     "main",
     "body"
+  ]);
+
+  const OWN_ALIAS_PATHS = Object.freeze([
+    "HEARTH_CANVAS_EXPRESSION_BRIDGE",
+    "HEARTH_CANVAS_VISIBLE_EXPRESSION_BRIDGE",
+    "HEARTH_CANVAS_SECOND_EXPRESSION_BRIDGE",
+    "HEARTH_CANVAS_EXPRESSION_BRIDGE_SECOND_PAIR",
+    "HEARTH_CANVAS_EXPRESSION_BRIDGE_SECOND_PAIR_TNT_v2",
+    "HEARTH_CANVAS_EXPRESSION_SURFACE_BRIDGE",
+    "HEARTH.canvasExpressionBridge",
+    "HEARTH.canvasVisibleExpressionBridge",
+    "HEARTH.canvasSecondExpressionBridge",
+    "HEARTH.canvasExpressionBridgeSecondPair",
+    "HEARTH.canvasExpressionSurfaceBridge",
+    "DEXTER_LAB.hearthCanvasExpressionBridge",
+    "DEXTER_LAB.hearthCanvasVisibleExpressionBridge",
+    "DEXTER_LAB.hearthCanvasSecondExpressionBridge",
+    "DEXTER_LAB.hearthCanvasExpressionBridgeSecondPair",
+    "DEXTER_LAB.hearthCanvasExpressionSurfaceBridge"
+  ]);
+
+  const EXTERNAL_ADAPTER_ALIAS_PATHS = Object.freeze([
+    "HEARTH_CANVAS_FINGER_COMPOSITE",
+    "HEARTH_CANVAS_COMPOSITE_FINGER",
+    "HEARTH_CANVAS_COMPOSITE",
+    "HEARTH.canvasFingerComposite",
+    "HEARTH.canvasCompositeFinger",
+    "HEARTH.canvasComposite",
+    "DEXTER_LAB.hearthCanvasFingerComposite",
+    "DEXTER_LAB.hearthCanvasCompositeFinger",
+    "DEXTER_LAB.hearthCanvasComposite",
+
+    "HEARTH_CANVAS_FINGER_SURFACE",
+    "HEARTH_CANVAS_SURFACE_FINGER",
+    "HEARTH.canvasFingerSurface",
+    "HEARTH.canvasSurfaceFinger",
+    "DEXTER_LAB.hearthCanvasFingerSurface",
+    "DEXTER_LAB.hearthCanvasSurfaceFinger",
+
+    "HEARTH_CANVAS_FINGER_INSPECT",
+    "HEARTH_CANVAS_POINTER_FINGER",
+    "HEARTH_POINTER_FINGER",
+    "HEARTH.canvasFingerInspect",
+    "HEARTH.canvasPointerFinger",
+    "DEXTER_LAB.hearthCanvasFingerInspect",
+    "DEXTER_LAB.hearthCanvasPointerFinger",
+
+    "HEARTH_HEX_SURFACE",
+    "HEARTH_HEX_SURFACE_RENDERER",
+    "HEARTH_HEX_SURFACE_CANVAS_HUB_THREE_FILE_VISIBLE_EXPRESSION_RENDERER",
+    "HEARTH_HEX_SURFACE_FOUR_PAIR_AUTHORITY_CONSUMER",
+    "HEARTH.hexSurface",
+    "HEARTH.hexSurfaceRenderer",
+    "DEXTER_LAB.hearthHexSurface",
+    "DEXTER_LAB.hearthHexSurfaceRenderer",
+
+    "HEARTH_HEX_FOUR_PAIR_AUTHORITY",
+    "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY",
+    "HEARTH.hexFourPairAuthority",
+    "DEXTER_LAB.hearthHexFourPairAuthority"
   ]);
 
   const FINAL_FALSE = Object.freeze({
@@ -127,21 +182,20 @@
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
   const api = {};
-  const adapterRefs = [];
+  const externalAdapters = [];
 
   const state = {
     contract: CONTRACT,
     receipt: RECEIPT,
+    previousContract: PREVIOUS_CONTRACT,
+    previousReceipt: PREVIOUS_RECEIPT,
     file: FILE,
     route: ROUTE,
     diagnosticRoute: DIAGNOSTIC_ROUTE,
 
     role: "Canvas visible-expression bridge / second pair file",
-    bridgePairRole: "EXPRESSION_SIDE_BRIDGE",
+    bridgePairRole: "SECOND_FILE_VISIBLE_EXPRESSION_BRIDGE",
     authoritySideBridgeFile: PARENT_CANVAS_FILE,
-    routeConductorFile: ROUTE_CONDUCTOR_FILE,
-    controlFile: CONTROL_FILE,
-    labWestFile: LABWEST_FILE,
 
     loaded: true,
     booted: false,
@@ -149,6 +203,13 @@
     startedAt: "",
     updatedAt: "",
     publishedAt: "",
+
+    ownAliasesPublished: false,
+    ownAliasPublishCount: 0,
+    externalAliasOverwriteBlocked: true,
+    externalAliasesReadOnly: true,
+    externalAdapterCount: 0,
+    externalAdapterNames: "NONE",
 
     canvasAccepted: false,
     canvasLocated: false,
@@ -173,34 +234,26 @@
     adapterDrawComplete: false,
     adapterSourceName: "NONE",
     adapterContract: "",
+    adapterReceipt: "",
     adapterMethod: "NONE",
     adapterError: "",
 
-    nativeBridgeDrawAttempted: false,
-    nativeBridgeDrawComplete: false,
-
-    visibleExpressionBridgeReady: false,
-    canvasExpressionSurfaceReady: false,
-    canvasExpressionRichnessReady: false,
-    domExpressionSurfaceProofReady: false,
-    visiblePlanetProofReady: false,
-    visiblePlanetProofSource: "NONE",
-    visiblePlanetProofReason: "NOT_DRAWN",
-    renderedPlanetProofReady: false,
-    canvasPixelVarianceStatus: "NO_PIXEL_SAMPLE",
+    nativeHoldingDrawAttempted: false,
+    nativeHoldingDrawComplete: false,
 
     expressionHubActive: true,
     canvasExpressionHubActive: true,
     visibleExpressionBridgeActive: true,
     compositeCompatibilityBridgeActive: true,
-    fingerTruthOwned: false,
-    pointerTruthOwned: false,
 
-    downstreamCompositeObserved: false,
-    downstreamFingerObserved: false,
-    downstreamHexObserved: false,
-    hexSurfaceObserved: false,
-    hexFourPairObserved: false,
+    canvasExpressionSurfaceReady: false,
+    canvasExpressionRichnessReady: false,
+    domExpressionSurfaceProofReady: false,
+    visiblePlanetProofReady: false,
+    visiblePlanetProofSource: "NONE",
+    visiblePlanetProofReason: "VISIBLE_EXPRESSION_NOT_DRAWN",
+    renderedPlanetProofReady: false,
+    canvasPixelVarianceStatus: "NO_PIXEL_SAMPLE",
 
     canvasHubObserved: false,
     canvasHubContract: "",
@@ -213,12 +266,19 @@
     labWestContract: "",
 
     packetCount: 0,
+    authorityPacketCount: 0,
+    routeConductorPacketCount: 0,
+    queenPacketCount: 0,
+    labWestPacketCount: 0,
+    fingerPacketCount: 0,
+    diagnosticPacketCount: 0,
     lastPacket: null,
     lastAuthorityPacket: null,
     lastRouteConductorPacket: null,
     lastQueenPacket: null,
     lastLabWestPacket: null,
     lastFingerPacket: null,
+    lastDiagnosticPacket: null,
     lastViewState: null,
 
     f13CanvasReadinessObserved: false,
@@ -232,10 +292,9 @@
 
     firstFailedCoordinate: "VISIBLE_EXPRESSION_NOT_DRAWN",
     recommendedNextFile: FILE,
-    recommendedNextAction: "LOAD_OR_CALL_CANVAS_EXPRESSION_BRIDGE",
+    recommendedNextAction: "CALL_DRAW_TO_CANVAS_OR_RECEIVE_CANVAS_AUTHORITY_PACKET",
     postgameStatus: "CANVAS_EXPRESSION_BRIDGE_LOADED_WAITING_DRAW",
 
-    aliasPublishCount: 0,
     receiptPublishCount: 0,
     upstreamNotifyCount: 0,
 
@@ -246,8 +305,10 @@
   };
 
   let drawTimer = 0;
+  let publishTimer = 0;
   let notifyGuard = false;
   let drawingGuard = false;
+  let scanningGuard = false;
 
   function nowIso() {
     try {
@@ -282,12 +343,9 @@
     return fallback;
   }
 
-  function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, safeNumber(value, min)));
-  }
-
   function clonePlain(value) {
     if (!isObject(value) && !Array.isArray(value)) return value;
+
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
@@ -343,7 +401,7 @@
     return cursor || null;
   }
 
-  function setPath(path, value, overwrite = true) {
+  function setPath(path, value) {
     const parts = safeString(path).split(".");
     if (!parts.length) return false;
 
@@ -355,18 +413,8 @@
       cursor = cursor[part];
     }
 
-    const key = parts[parts.length - 1];
-
-    if (!overwrite && cursor[key] !== undefined && cursor[key] !== null) return false;
-
-    cursor[key] = value;
+    cursor[parts[parts.length - 1]] = value;
     return true;
-  }
-
-  function datasetValue(key, fallback = "") {
-    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return fallback;
-    const value = doc.documentElement.dataset[key];
-    return value === undefined || value === null || value === "" ? fallback : value;
   }
 
   function setDataset(key, value) {
@@ -376,6 +424,7 @@
 
   function q(selector) {
     if (!doc) return null;
+
     try {
       return doc.querySelector(selector);
     } catch (_error) {
@@ -416,6 +465,7 @@
       value.canvasContract ||
       value.hearthCanvasContract ||
       value.sourceContract ||
+      value.internalImplementationContract ||
       ""
     );
   }
@@ -431,7 +481,31 @@
       value.canvasReceipt ||
       value.hearthCanvasReceipt ||
       value.sourceReceipt ||
+      value.internalImplementationReceipt ||
       ""
+    );
+  }
+
+  function noFinalClaims(value) {
+    const s = isObject(value) ? value : {};
+
+    return !(
+      s.f13Claimed === true ||
+      s.f13ClaimedByExpressionBridge === true ||
+      s.f21EligibleForNorth === true ||
+      s.f21SubmittedToNorth === true ||
+      s.f21Claimed === true ||
+      s.readyTextAllowed === true ||
+      s.readyTextClaimed === true ||
+      s.completionLatched === true ||
+      s.finalCompletionLatched === true ||
+      s.degradedCompletionLatched === true ||
+      s.visualPassClaimed === true ||
+      s.finalVisualPassClaimed === true ||
+      s.generatedImage === true ||
+      s.graphicBox === true ||
+      s.webGL === true ||
+      s.webgl === true
     );
   }
 
@@ -443,13 +517,13 @@
       "getReceipt",
       "getExpressionBridgeReceipt",
       "getVisibleExpressionBridgeReceipt",
+      "getExpressionHubReceipt",
+      "getExpressionHubSummary",
       "getCanvasStationReceiptLight",
       "getCanvasStationReceipt",
       "getCanvasStationSummary",
-      "getExpressionHubReceipt",
-      "getExpressionHubSummary",
-      "getCompositePacket",
-      "getCompositeModel",
+      "getVisiblePlanetReceipt",
+      "getVisibleGlobeReceipt",
       "getStructuralCarrier",
       "readStructuralCarrier",
       "getCarrierReceipt",
@@ -462,14 +536,15 @@
       if (!isFunction(authority[method])) continue;
 
       try {
-        const output = authority[method]();
+        const output = authority[method](false);
         if (isObject(output)) return output;
       } catch (_error) {}
     }
 
     if (isObject(authority.receipt)) return authority.receipt;
     if (isObject(authority.receiptPacket)) return authority.receiptPacket;
-    if (isObject(authority.canvasStationSummary)) return authority.canvasStationSummary;
+    if (isObject(authority.summary)) return authority.summary;
+    if (isObject(authority.state)) return authority.state;
     if (authority.contract || authority.CONTRACT || authority.receipt || authority.RECEIPT) return authority;
 
     return null;
@@ -477,7 +552,7 @@
 
   function safeInvoke(target, method, args = []) {
     if (!target || !isFunction(target[method])) {
-      return { ok: false, value: null, error: `method-unavailable:${method}` };
+      return { ok: false, value: null, error: `METHOD_UNAVAILABLE:${method}` };
     }
 
     try {
@@ -495,8 +570,8 @@
     }
   }
 
-  function hasDrawableAdapter(authority) {
-    if (!authority || !isObject(authority) || authority === api) return false;
+  function drawMethods(authority) {
+    if (!authority || !isObject(authority) || authority === api) return [];
 
     return [
       "drawToCanvas",
@@ -507,50 +582,60 @@
       "drawFrame",
       "renderComposite",
       "renderFrame",
+      "renderToCanvas",
       "render",
       "draw",
       "compose"
-    ].some((method) => isFunction(authority[method]));
+    ].filter((method) => isFunction(authority[method]));
   }
 
-  function findDrawMethod(authority) {
-    if (!authority || !isObject(authority) || authority === api) return "NONE";
-
-    const methods = [
-      "drawToCanvas",
-      "drawVisibleExpression",
-      "drawHearthVisibleExpression",
-      "drawHearthCompositeFrame",
-      "drawCompositeFrame",
-      "drawFrame",
-      "renderComposite",
-      "renderFrame",
-      "render",
-      "draw",
-      "compose"
-    ];
-
-    for (const method of methods) {
-      if (isFunction(authority[method])) return method;
-    }
-
-    return "NONE";
-  }
-
-  function rememberAdapter(name, authority) {
+  function isExternalDrawableAuthority(path, authority) {
     if (!authority || !isObject(authority) || authority === api) return false;
-    if (adapterRefs.some((item) => item.authority === authority)) return false;
 
-    adapterRefs.push({ name, authority });
-    trim(adapterRefs, 32);
+    const receipt = readReceipt(authority) || {};
+    const contract = contractOf(receipt) || contractOf(authority);
+
+    if (contract === CONTRACT || contract === PREVIOUS_CONTRACT) return false;
+    if (safeString(contract).includes("HEARTH_CANVAS_EXPRESSION_BRIDGE_SECOND_PAIR")) return false;
+    if (safeString(path).includes("EXPRESSION_BRIDGE")) return false;
+    if (!drawMethods(authority).length) return false;
+
     return true;
   }
 
-  function shouldReplaceCompositeAlias(existing) {
-    if (!existing || existing === api) return true;
-    if (!isObject(existing)) return true;
-    if (!hasDrawableAdapter(existing)) return true;
-    return false;
+  function rememberExternalAdapter(path, authority) {
+    if (!isExternalDrawableAuthority(path, authority)) return false;
+    if (externalAdapters.some((item) => item.authority === authority)) return false;
+
+    const receipt = readReceipt(authority) || {};
+    externalAdapters.push({
+      path,
+      authority,
+      contract: contractOf(receipt) || contractOf(authority),
+      receipt: receiptOf(receipt) || receiptOf(authority),
+      methods: drawMethods(authority)
+    });
+
+    trim(externalAdapters, 40);
+    return true;
+  }
+
+  function scanExternalAdapters() {
+    if (scanningGuard) return externalAdapters.slice();
+    scanningGuard = true;
+
+    try {
+      for (const path of EXTERNAL_ADAPTER_ALIAS_PATHS) {
+        const authority = readPath(path);
+        rememberExternalAdapter(path, authority);
+      }
+
+      state.externalAdapterCount = externalAdapters.length;
+      state.externalAdapterNames = externalAdapters.map((item) => item.path).join(",") || "NONE";
+      return externalAdapters.slice();
+    } finally {
+      scanningGuard = false;
+    }
   }
 
   function canvasContextFrom(value) {
@@ -619,6 +704,8 @@
     }
 
     if (canvas.dataset) {
+      canvas.dataset.hearthExpressionSurface = "true";
+      canvas.dataset.hearthVisibleCanvas = "true";
       canvas.dataset.hearthCanvasExpressionBridge = "true";
       canvas.dataset.hearthCanvasExpressionBridgeContract = CONTRACT;
       canvas.dataset.hearthCanvasExpressionBridgeReceipt = RECEIPT;
@@ -654,6 +741,7 @@
       canvas = doc.createElement("canvas");
       canvas.id = "hearthCanvas";
       canvas.setAttribute("aria-label", "Hearth visible expression bridge canvas");
+      canvas.setAttribute("data-hearth-expression-surface", "true");
       canvas.setAttribute("data-hearth-visible-canvas", "true");
       canvas.setAttribute("data-hearth-canvas-expression-bridge", "true");
       canvas.setAttribute("data-contract", CONTRACT);
@@ -669,7 +757,13 @@
 
     sizeCanvas(canvas, mount);
 
-    const ctx = canvas.getContext ? canvas.getContext("2d", { alpha: true, willReadFrequently: true }) : null;
+    let ctx = null;
+
+    try {
+      ctx = canvas.getContext ? canvas.getContext("2d", { alpha: true, willReadFrequently: true }) : null;
+    } catch (_error) {
+      ctx = null;
+    }
 
     state.canvasLocated = true;
     state.canvasSelector = canvasSelector;
@@ -769,10 +863,10 @@
     ctx.fill();
   }
 
-  function drawNativeBridgeSurface(canvas, ctx, packet = {}) {
+  function drawNativeHoldingSurface(canvas, ctx, packet = {}) {
     if (!canvas || !ctx) return false;
 
-    state.nativeBridgeDrawAttempted = true;
+    state.nativeHoldingDrawAttempted = true;
 
     try {
       const w = canvas.width || 720;
@@ -782,12 +876,12 @@
       const r = Math.min(w, h) * 0.385;
       const view = isObject(packet.viewState) ? packet.viewState : {};
       const yaw = safeNumber(view.yaw, safeNumber(packet.yaw, 0));
-      const pitch = clamp(safeNumber(view.pitch, safeNumber(packet.pitch, 0)), -1.2, 1.2);
-      const phase = safeNumber(view.phase, 0) + yaw * 0.2;
+      const pitch = Math.max(-1.2, Math.min(1.2, safeNumber(view.pitch, safeNumber(packet.pitch, 0))));
+      const phase = safeNumber(view.phase, 0) + yaw * 0.22;
 
       ctx.clearRect(0, 0, w, h);
 
-      const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(w, h) * 0.7);
+      const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(w, h) * 0.72);
       bg.addColorStop(0, "rgba(18,38,68,0.96)");
       bg.addColorStop(0.58, "rgba(4,12,30,0.98)");
       bg.addColorStop(1, "rgba(0,0,0,1)");
@@ -833,7 +927,6 @@
       }
 
       ctx.globalAlpha = 1;
-      ctx.fillStyle = "rgba(94,126,78,0.96)";
 
       const masses = [
         [-0.35, -0.22, 0.34, 1.15, 0.72, 0.1],
@@ -886,80 +979,26 @@
       ctx.arc(cx, cy, r, 0, Math.PI * 2);
       ctx.stroke();
 
-      state.nativeBridgeDrawComplete = true;
+      state.nativeHoldingDrawComplete = true;
       return true;
     } catch (error) {
-      state.nativeBridgeDrawComplete = false;
+      state.nativeHoldingDrawComplete = false;
       state.lastDrawError = error && error.message ? String(error.message) : String(error);
-      recordError("NATIVE_BRIDGE_SURFACE_DRAW_FAILED", error);
+      recordError("NATIVE_HOLDING_SURFACE_DRAW_FAILED", error);
       return false;
     }
   }
 
-  function adapterAliasCandidates() {
-    return [
-      ["shadowed-adapter", null],
-
-      ["HEARTH_CANVAS_FINGER_COMPOSITE", readPath("HEARTH_CANVAS_FINGER_COMPOSITE")],
-      ["HEARTH_CANVAS_COMPOSITE_FINGER", readPath("HEARTH_CANVAS_COMPOSITE_FINGER")],
-      ["HEARTH_CANVAS_COMPOSITE", readPath("HEARTH_CANVAS_COMPOSITE")],
-      ["HEARTH.canvasFingerComposite", readPath("HEARTH.canvasFingerComposite")],
-      ["HEARTH.canvasCompositeFinger", readPath("HEARTH.canvasCompositeFinger")],
-      ["HEARTH.canvasComposite", readPath("HEARTH.canvasComposite")],
-      ["DEXTER_LAB.hearthCanvasFingerComposite", readPath("DEXTER_LAB.hearthCanvasFingerComposite")],
-      ["DEXTER_LAB.hearthCanvasCompositeFinger", readPath("DEXTER_LAB.hearthCanvasCompositeFinger")],
-      ["DEXTER_LAB.hearthCanvasComposite", readPath("DEXTER_LAB.hearthCanvasComposite")],
-
-      ["HEARTH_CANVAS_FINGER_SURFACE", readPath("HEARTH_CANVAS_FINGER_SURFACE")],
-      ["HEARTH_POINTER_FINGER", readPath("HEARTH_POINTER_FINGER")],
-      ["HEARTH_CANVAS_POINTER_FINGER", readPath("HEARTH_CANVAS_POINTER_FINGER")],
-      ["HEARTH.canvasFingerSurface", readPath("HEARTH.canvasFingerSurface")],
-      ["HEARTH.canvasPointerFinger", readPath("HEARTH.canvasPointerFinger")],
-      ["DEXTER_LAB.hearthCanvasFingerSurface", readPath("DEXTER_LAB.hearthCanvasFingerSurface")],
-      ["DEXTER_LAB.hearthCanvasPointerFinger", readPath("DEXTER_LAB.hearthCanvasPointerFinger")],
-
-      ["HEARTH_HEX_SURFACE", readPath("HEARTH_HEX_SURFACE")],
-      ["HEARTH_HEX_SURFACE_RENDERER", readPath("HEARTH_HEX_SURFACE_RENDERER")],
-      ["HEARTH_HEX_SURFACE_CANVAS_HUB_THREE_FILE_VISIBLE_EXPRESSION_RENDERER", readPath("HEARTH_HEX_SURFACE_CANVAS_HUB_THREE_FILE_VISIBLE_EXPRESSION_RENDERER")],
-      ["HEARTH_HEX_SURFACE_FOUR_PAIR_AUTHORITY_CONSUMER", readPath("HEARTH_HEX_SURFACE_FOUR_PAIR_AUTHORITY_CONSUMER")],
-      ["HEARTH.hexSurface", readPath("HEARTH.hexSurface")],
-      ["HEARTH.hexSurfaceRenderer", readPath("HEARTH.hexSurfaceRenderer")],
-      ["DEXTER_LAB.hearthHexSurface", readPath("DEXTER_LAB.hearthHexSurface")],
-      ["DEXTER_LAB.hearthHexSurfaceRenderer", readPath("DEXTER_LAB.hearthHexSurfaceRenderer")]
-    ];
-  }
-
-  function collectDrawableAdapters() {
-    const seen = new Set();
-    const out = [];
-
-    for (const item of adapterRefs) {
-      if (!item || !item.authority || item.authority === api || seen.has(item.authority)) continue;
-      if (!hasDrawableAdapter(item.authority)) continue;
-      seen.add(item.authority);
-      out.push(item);
-    }
-
-    for (const [name, authority] of adapterAliasCandidates()) {
-      if (!authority || authority === api || seen.has(authority)) continue;
-      if (!hasDrawableAdapter(authority)) continue;
-
-      seen.add(authority);
-      out.push({ name, authority });
-    }
-
-    return out;
-  }
-
   function buildDrawPacket(canvas, ctx, packet = {}) {
-    const receipt = getReceiptLight(false);
-
     return {
       packetType: "HEARTH_CANVAS_EXPRESSION_BRIDGE_DRAW_PACKET",
       contract: CONTRACT,
       receipt: RECEIPT,
       sourceFile: FILE,
-      targetFile: FILE,
+      parentCanvasFile: PARENT_CANVAS_FILE,
+      routeConductorFile: ROUTE_CONDUCTOR_FILE,
+      controlFile: CONTROL_FILE,
+      labWestFile: LABWEST_FILE,
       canvas,
       ctx,
       context: ctx,
@@ -968,94 +1007,87 @@
         : isObject(state.lastViewState)
           ? clonePlain(state.lastViewState)
           : {},
-      parentCanvasFile: PARENT_CANVAS_FILE,
-      routeConductorFile: ROUTE_CONDUCTOR_FILE,
-      controlFile: CONTROL_FILE,
       bridgePairRole: state.bridgePairRole,
       visibleExpressionBridgeActive: true,
       compositeCompatibilityBridgeActive: true,
       receiverOnly: true,
-      receiptLight: receipt,
+      externalAdapterAliasesReadOnly: true,
+      externalAdapterOverwriteBlocked: true,
       ...FINAL_FALSE
     };
   }
 
   function attemptAdapterDraw(canvas, ctx, packet = {}) {
-    const adapters = collectDrawableAdapters();
+    const adapters = scanExternalAdapters();
 
     state.adapterDrawAttempted = adapters.length > 0;
-    state.downstreamCompositeObserved = adapters.some((item) => safeString(item.name).toLowerCase().includes("composite"));
-    state.downstreamFingerObserved = adapters.some((item) => safeString(item.name).toLowerCase().includes("finger"));
-    state.downstreamHexObserved = adapters.some((item) => safeString(item.name).toLowerCase().includes("hex"));
 
-    for (const item of adapters) {
-      const method = findDrawMethod(item.authority);
-      if (method === "NONE") continue;
+    for (const adapter of adapters) {
+      const methods = adapter.methods || [];
 
-      const authorityReceipt = readReceipt(item.authority) || {};
-      const authorityContract = contractOf(authorityReceipt || item.authority);
+      for (const method of methods) {
+        let result;
 
-      let result;
-
-      if (method === "drawToCanvas") {
-        result = safeInvoke(item.authority, method, [
-          canvas,
-          {
-            ...buildDrawPacket(canvas, ctx, packet),
-            adapterSourceName: item.name,
-            adapterContract: authorityContract
-          }
-        ]);
-      } else {
-        result = safeInvoke(item.authority, method, [
-          buildDrawPacket(canvas, ctx, packet),
-          {
-            source: "Hearth Canvas Expression Bridge",
-            contract: CONTRACT,
-            receipt: RECEIPT,
-            adapterSourceName: item.name,
-            adapterContract: authorityContract,
-            ...FINAL_FALSE
-          }
-        ]);
-
-        if (!result.ok) {
-          result = safeInvoke(item.authority, method, [
-            ctx,
+        if (method === "drawToCanvas" || method === "renderToCanvas") {
+          result = safeInvoke(adapter.authority, method, [
+            canvas,
             {
-              canvas,
+              ...buildDrawPacket(canvas, ctx, packet),
+              adapterSourceName: adapter.path,
+              adapterContract: adapter.contract
+            }
+          ]);
+        } else {
+          result = safeInvoke(adapter.authority, method, [
+            buildDrawPacket(canvas, ctx, packet),
+            {
               source: "Hearth Canvas Expression Bridge",
               contract: CONTRACT,
               receipt: RECEIPT,
-              adapterSourceName: item.name,
-              adapterContract: authorityContract,
+              adapterSourceName: adapter.path,
+              adapterContract: adapter.contract,
               ...FINAL_FALSE
             }
           ]);
+
+          if (!result.ok) {
+            result = safeInvoke(adapter.authority, method, [
+              ctx,
+              {
+                canvas,
+                source: "Hearth Canvas Expression Bridge",
+                contract: CONTRACT,
+                receipt: RECEIPT,
+                adapterSourceName: adapter.path,
+                adapterContract: adapter.contract,
+                ...FINAL_FALSE
+              }
+            ]);
+          }
         }
-      }
 
-      if (!result.ok) {
-        state.adapterError = result.error;
-        recordError("DOWNSTREAM_EXPRESSION_ADAPTER_DRAW_FAILED", result.error, {
-          adapterSourceName: item.name,
-          method
-        });
-        continue;
-      }
+        if (!result.ok) {
+          state.adapterError = result.error;
+          continue;
+        }
 
-      const pixelReady = canvasHasVisiblePixels(canvas, ctx);
-      const explicitFalse = result.value === false;
+        if (!noFinalClaims(result.value)) {
+          state.adapterError = `ADAPTER_RETURNED_FORBIDDEN_FINAL_CLAIM:${adapter.path}`;
+          continue;
+        }
 
-      if (pixelReady && !explicitFalse) {
-        state.adapterDrawComplete = true;
-        state.adapterSourceName = item.name;
-        state.adapterContract = authorityContract || "";
-        state.adapterMethod = method;
-        state.adapterError = "";
-        state.hexSurfaceObserved = item.name.toLowerCase().includes("hex-surface") || authorityContract === HEX_SURFACE_V2_CONTRACT || authorityContract === HEX_SURFACE_V1_CONTRACT;
-        state.hexFourPairObserved = authorityContract === HEX_FOUR_PAIR_CONTRACT;
-        return true;
+        const pixelReady = canvasHasVisiblePixels(canvas, ctx);
+        const explicitFalse = result.value === false;
+
+        if (pixelReady && !explicitFalse) {
+          state.adapterDrawComplete = true;
+          state.adapterSourceName = adapter.path;
+          state.adapterContract = adapter.contract || "";
+          state.adapterReceipt = adapter.receipt || "";
+          state.adapterMethod = method;
+          state.adapterError = "";
+          return true;
+        }
       }
     }
 
@@ -1066,13 +1098,14 @@
   function updateVisibleProof(source, reason, pixelReady) {
     state.visibleExpressionBridgeReady = Boolean(pixelReady);
     state.canvasExpressionSurfaceReady = Boolean(pixelReady);
+    state.canvasExpressionRichnessReady = Boolean(pixelReady);
     state.domExpressionSurfaceProofReady = Boolean(pixelReady);
     state.visiblePlanetProofReady = Boolean(pixelReady);
     state.renderedPlanetProofReady = Boolean(pixelReady);
     state.visiblePlanetProofSource = pixelReady ? source : "NONE";
     state.visiblePlanetProofReason = pixelReady ? reason : "VISIBLE_EXPRESSION_NOT_PROVEN";
 
-    state.f13CanvasReadinessObserved = Boolean(state.drawAttempted);
+    state.f13CanvasReadinessObserved = Boolean(state.drawAttempted || state.canvasLocated || state.canvasAccepted);
     state.f13VisibleEvidenceAvailable = Boolean(pixelReady);
     state.f13CanvasEvidenceStrict = false;
     state.f13CanvasEvidenceDegraded = Boolean(pixelReady);
@@ -1098,14 +1131,17 @@
   function drawToCanvas(canvasOrContext, packet = {}) {
     if (drawingGuard) {
       const target = resolveCanvasTarget(canvasOrContext);
-      if (target.canvas && target.ctx) {
-        drawNativeBridgeSurface(target.canvas, target.ctx, packet);
-        const pixelReady = canvasHasVisiblePixels(target.canvas, target.ctx);
-        updateVisibleProof("EXPRESSION_BRIDGE_NATIVE_RECURSION_GUARD", "RECURSION_GUARD_NATIVE_DRAW", pixelReady);
-      }
-
+      const nativeOk = target.canvas && target.ctx
+        ? drawNativeHoldingSurface(target.canvas, target.ctx, packet)
+        : false;
+      const pixelReady = nativeOk && canvasHasVisiblePixels(target.canvas, target.ctx);
+      updateVisibleProof(
+        pixelReady ? "EXPRESSION_BRIDGE_NATIVE_RECURSION_GUARD" : "NONE",
+        pixelReady ? "RECURSION_GUARD_NATIVE_DRAW" : "RECURSION_GUARD_DRAW_NOT_READY",
+        pixelReady
+      );
       updateDataset();
-      publishReceipts();
+      schedulePublish();
       return getReceiptLight(false);
     }
 
@@ -1118,30 +1154,34 @@
       state.lastDrawReason = safeString(packet.reason || packet.drawReason || "drawToCanvas", "drawToCanvas");
       state.lastPacket = isObject(packet) ? clonePlain(packet) : null;
 
-      const target = resolveCanvasTarget(canvasOrContext);
+      if (isObject(packet.viewState)) state.lastViewState = clonePlain(packet.viewState);
+
+      const target = resolveCanvasTarget(canvasOrContext || packet);
 
       if (!target.canvas || !target.ctx) {
         state.drawComplete = false;
         state.lastDrawError = "CANVAS_OR_2D_CONTEXT_NOT_AVAILABLE";
-        updateVisibleProof("NONE", "CANVAS_OR_2D_CONTEXT_NOT_AVAILABLE", false);
+        updateVisibleProof("NONE", state.lastDrawError, false);
         updateDataset();
-        publishReceipts();
+        schedulePublish();
         return getReceiptLight(false);
       }
 
       const adapterOk = attemptAdapterDraw(target.canvas, target.ctx, packet);
+
       let source = "DOWNSTREAM_EXPRESSION_ADAPTER";
       let reason = "DOWNSTREAM_EXPRESSION_ADAPTER_DRAW_COMPLETE";
 
       if (!adapterOk) {
-        const nativeOk = drawNativeBridgeSurface(target.canvas, target.ctx, packet);
+        const nativeOk = drawNativeHoldingSurface(target.canvas, target.ctx, packet);
         source = "EXPRESSION_BRIDGE_NATIVE_HOLDING_SURFACE";
         reason = nativeOk
-          ? "NATIVE_BRIDGE_SURFACE_DRAW_COMPLETE"
-          : "NATIVE_BRIDGE_SURFACE_DRAW_FAILED";
+          ? "NATIVE_HOLDING_SURFACE_DRAW_COMPLETE"
+          : "NATIVE_HOLDING_SURFACE_DRAW_FAILED";
       }
 
       const pixelReady = canvasHasVisiblePixels(target.canvas, target.ctx);
+
       state.drawComplete = Boolean(pixelReady);
       state.lastDrawSource = pixelReady ? source : "NONE";
       state.lastDrawError = pixelReady ? "" : state.lastDrawError || "VISIBLE_PIXEL_EVIDENCE_NOT_AVAILABLE";
@@ -1177,6 +1217,14 @@
     return drawToCanvas(null, targetOrPacket);
   }
 
+  function render(packet = {}) {
+    return drawVisibleExpression(packet);
+  }
+
+  function draw(packet = {}) {
+    return drawVisibleExpression(packet);
+  }
+
   function scheduleDraw(reason = "scheduled-draw") {
     if (!root.setTimeout) return drawVisibleExpression({ reason });
     if (drawTimer) return true;
@@ -1195,42 +1243,76 @@
     state.packetCount += 1;
     state.lastPacket = clonePlain(packet);
 
-    if (lane === "AUTHORITY") state.lastAuthorityPacket = clonePlain(packet);
-    if (lane === "ROUTE_CONDUCTOR") state.lastRouteConductorPacket = clonePlain(packet);
-    if (lane === "QUEEN") state.lastQueenPacket = clonePlain(packet);
-    if (lane === "LABWEST") state.lastLabWestPacket = clonePlain(packet);
-    if (lane === "FINGER") state.lastFingerPacket = clonePlain(packet);
-
     if (isObject(packet.viewState)) state.lastViewState = clonePlain(packet.viewState);
 
     const packetContract = contractOf(packet);
+    const sourceFile = safeString(packet.sourceFile || packet.file || "");
 
-    if (packetContract === CURRENT_PARENT_CANVAS_CONTRACT || packet.sourceFile === PARENT_CANVAS_FILE) {
+    if (lane === "AUTHORITY") {
+      state.authorityPacketCount += 1;
+      state.lastAuthorityPacket = clonePlain(packet);
       state.canvasHubObserved = true;
-      state.canvasHubContract = packetContract || state.canvasHubContract;
+      state.canvasHubContract = packetContract || state.canvasHubContract || CURRENT_PARENT_CANVAS_CONTRACT;
       state.canvasHubReceipt = receiptOf(packet) || state.canvasHubReceipt;
     }
 
-    if (packetContract === ROUTE_CONDUCTOR_CONTRACT || packet.sourceFile === ROUTE_CONDUCTOR_FILE) {
+    if (lane === "ROUTE_CONDUCTOR") {
+      state.routeConductorPacketCount += 1;
+      state.lastRouteConductorPacket = clonePlain(packet);
       state.routeConductorObserved = true;
-      state.routeConductorContract = packetContract || state.routeConductorContract;
+      state.routeConductorContract = packetContract || state.routeConductorContract || ROUTE_CONDUCTOR_CONTRACT;
     }
 
-    if (packetContract === QUEEN_CONTROL_CONTRACT || packet.sourceFile === CONTROL_FILE) {
+    if (lane === "QUEEN") {
+      state.queenPacketCount += 1;
+      state.lastQueenPacket = clonePlain(packet);
       state.queenObserved = true;
-      state.queenContract = packetContract || state.queenContract;
+      state.queenContract = packetContract || state.queenContract || QUEEN_CONTROL_CONTRACT;
     }
 
-    if (packetContract === LABWEST_CONTRACT || packet.sourceFile === LABWEST_FILE) {
+    if (lane === "LABWEST") {
+      state.labWestPacketCount += 1;
+      state.lastLabWestPacket = clonePlain(packet);
       state.labWestObserved = true;
-      state.labWestContract = packetContract || state.labWestContract;
+      state.labWestContract = packetContract || state.labWestContract || LABWEST_CONTRACT;
+    }
+
+    if (lane === "FINGER") {
+      state.fingerPacketCount += 1;
+      state.lastFingerPacket = clonePlain(packet);
+    }
+
+    if (lane === "DIAGNOSTIC") {
+      state.diagnosticPacketCount += 1;
+      state.lastDiagnosticPacket = clonePlain(packet);
+    }
+
+    if (packetContract === CURRENT_PARENT_CANVAS_CONTRACT || sourceFile === PARENT_CANVAS_FILE) {
+      state.canvasHubObserved = true;
+      state.canvasHubContract = packetContract || state.canvasHubContract || CURRENT_PARENT_CANVAS_CONTRACT;
+      state.canvasHubReceipt = receiptOf(packet) || state.canvasHubReceipt;
+    }
+
+    if (packetContract === ROUTE_CONDUCTOR_CONTRACT || sourceFile === ROUTE_CONDUCTOR_FILE) {
+      state.routeConductorObserved = true;
+      state.routeConductorContract = packetContract || state.routeConductorContract || ROUTE_CONDUCTOR_CONTRACT;
+    }
+
+    if (packetContract === QUEEN_CONTROL_CONTRACT || sourceFile === CONTROL_FILE) {
+      state.queenObserved = true;
+      state.queenContract = packetContract || state.queenContract || QUEEN_CONTROL_CONTRACT;
+    }
+
+    if (packetContract === LABWEST_CONTRACT || sourceFile === LABWEST_FILE) {
+      state.labWestObserved = true;
+      state.labWestContract = packetContract || state.labWestContract || LABWEST_CONTRACT;
     }
 
     record("CANVAS_EXPRESSION_BRIDGE_PACKET_RECEIVED", {
       lane,
       packetType: packet.packetType || packet.type || "",
       contract: packetContract,
-      sourceFile: packet.sourceFile || "",
+      sourceFile,
       targetFile: packet.targetFile || ""
     });
 
@@ -1240,7 +1322,9 @@
       packet.context ||
       packet.drawNow === true ||
       packet.visibleExpressionRequested === true ||
-      packet.canvasReleaseAuthorized === true
+      packet.canvasReleaseAuthorized === true ||
+      lane === "AUTHORITY" ||
+      lane === "ROUTE_CONDUCTOR"
     ) {
       drawToCanvas(packet.canvas || packet.ctx || packet.context || null, packet);
     } else {
@@ -1248,97 +1332,120 @@
     }
 
     updateDataset();
-    publishReceipts();
+    schedulePublish();
     return getReceiptLight(false);
   }
 
+  function receiveCanvasAuthorityBridgePacket(packet = {}) { return receivePacket(packet, "AUTHORITY"); }
+  function receiveAuthorityBridgePacket(packet = {}) { return receivePacket(packet, "AUTHORITY"); }
+  function receivePublicAuthorityBridgePacket(packet = {}) { return receivePacket(packet, "AUTHORITY"); }
+  function receiveBridgePacket(packet = {}) { return receivePacket(packet, "AUTHORITY"); }
   function receiveCanvasAuthorityPacket(packet = {}) { return receivePacket(packet, "AUTHORITY"); }
   function receiveCanvasHubPacket(packet = {}) { return receivePacket(packet, "AUTHORITY"); }
+
   function receiveRouteConductorReleasePacket(packet = {}) { return receivePacket(packet, "ROUTE_CONDUCTOR"); }
   function consumeRouteConductorReleasePacket(packet = {}) { return receiveRouteConductorReleasePacket(packet); }
   function receiveCanvasReleasePacket(packet = {}) { return receiveRouteConductorReleasePacket(packet); }
   function receiveReleasePacket(packet = {}) { return receiveRouteConductorReleasePacket(packet); }
   function consumeReleasePacket(packet = {}) { return receiveRouteConductorReleasePacket(packet); }
+
   function receiveQueenPacket(packet = {}) { return receivePacket(packet, "QUEEN"); }
   function receiveQueenContext(packet = {}) { return receivePacket(packet, "QUEEN"); }
   function receiveControlPacket(packet = {}) { return receivePacket(packet, "QUEEN"); }
   function receiveControlViewPacket(packet = {}) { return receivePacket(packet, "QUEEN"); }
   function receiveViewControlPacket(packet = {}) { return receivePacket(packet, "QUEEN"); }
+  function receiveControlsPacket(packet = {}) { return receivePacket(packet, "QUEEN"); }
+  function receivePlanetaryControlPacket(packet = {}) { return receivePacket(packet, "QUEEN"); }
+
   function receiveLabWestPacket(packet = {}) { return receivePacket(packet, "LABWEST"); }
   function receiveLabWestContext(packet = {}) { return receivePacket(packet, "LABWEST"); }
   function receiveWestGateContext(packet = {}) { return receivePacket(packet, "LABWEST"); }
+  function receiveAdmissibilityContext(packet = {}) { return receivePacket(packet, "LABWEST"); }
+
   function receiveFingerPacket(packet = {}) { return receivePacket(packet, "FINGER"); }
   function receiveCanvasFingerPacket(packet = {}) { return receiveFingerPacket(packet); }
   function receiveExpressionFingerPacket(packet = {}) { return receiveFingerPacket(packet); }
   function receiveFingerReceipt(packet = {}) { return receiveFingerPacket(packet); }
-  function receiveHierarchyContext(packet = {}) { return receivePacket(packet, "HIERARCHY"); }
+  function receiveCanvasExpressionPacket(packet = {}) { return receiveFingerPacket(packet); }
+
+  function receiveDiagnosticPacket(packet = {}) { return receivePacket(packet, "DIAGNOSTIC"); }
+  function receiveHierarchyContext(packet = {}) { return receivePacket(packet, "DIAGNOSTIC"); }
 
   function scanUpstreamAuthorities() {
-    const canvasHub =
-      readPath("HEARTH_CANVAS_HUB") ||
-      readPath("HEARTH.canvasHub") ||
-      readPath("DEXTER_LAB.hearthCanvasHub") ||
-      readPath("HEARTH_CANVAS") ||
-      readPath("HEARTH.canvas");
+    if (scanningGuard) return getReceiptLight(false);
+    scanningGuard = true;
 
-    const canvasReceipt = readReceipt(canvasHub) || {};
+    try {
+      const canvasHub =
+        readPath("HEARTH_CANVAS_HUB") ||
+        readPath("HEARTH.canvasHub") ||
+        readPath("DEXTER_LAB.hearthCanvasHub") ||
+        readPath("HEARTH_CANVAS") ||
+        readPath("HEARTH.canvas");
 
-    if (canvasHub && canvasHub !== api) {
-      state.canvasHubObserved = true;
-      state.canvasHubContract = contractOf(canvasReceipt || canvasHub);
-      state.canvasHubReceipt = receiptOf(canvasReceipt || canvasHub);
+      const canvasReceipt = readReceipt(canvasHub) || {};
+
+      if (canvasHub && canvasHub !== api) {
+        state.canvasHubObserved = true;
+        state.canvasHubContract = contractOf(canvasReceipt || canvasHub) || state.canvasHubContract;
+        state.canvasHubReceipt = receiptOf(canvasReceipt || canvasHub) || state.canvasHubReceipt;
+      }
+
+      const route =
+        readPath("HEARTH_ROUTE_CONDUCTOR") ||
+        readPath("HEARTH.routeConductor") ||
+        readPath("DEXTER_LAB.hearthRouteConductor");
+
+      const routeReceipt = readReceipt(route) || {};
+
+      if (route && route !== api) {
+        state.routeConductorObserved = true;
+        state.routeConductorContract = contractOf(routeReceipt || route) || state.routeConductorContract;
+      }
+
+      const queen =
+        readPath("HEARTH_CONTROLS") ||
+        readPath("HEARTH_CONTROLS_QUEEN") ||
+        readPath("HEARTH.controls") ||
+        readPath("HEARTH.queenControls") ||
+        readPath("DEXTER_LAB.hearthControls");
+
+      const queenReceipt = readReceipt(queen) || {};
+
+      if (queen && queen !== api) {
+        state.queenObserved = true;
+        state.queenContract = contractOf(queenReceipt || queen) || state.queenContract;
+      }
+
+      const west =
+        readPath("LAB_RUNTIME_TABLE_WEST_BISHOP_CHORD_CANVAS_RELEASE_BRIDGE") ||
+        readPath("HEARTH_WEST_BISHOP_CHORD_CANVAS_RELEASE_BRIDGE") ||
+        readPath("HEARTH.westBishopChordCanvasReleaseBridge") ||
+        readPath("DEXTER_LAB.hearthWestBishopChordCanvasReleaseBridge");
+
+      const westReceipt = readReceipt(west) || {};
+
+      if (west && west !== api) {
+        state.labWestObserved = true;
+        state.labWestContract = contractOf(westReceipt || west) || state.labWestContract;
+      }
+
+      scanExternalAdapters();
+      return getReceiptLight(false);
+    } finally {
+      scanningGuard = false;
     }
-
-    const route =
-      readPath("HEARTH_ROUTE_CONDUCTOR") ||
-      readPath("HEARTH.routeConductor") ||
-      readPath("DEXTER_LAB.hearthRouteConductor");
-
-    const routeReceipt = readReceipt(route) || {};
-
-    if (route && route !== api) {
-      state.routeConductorObserved = true;
-      state.routeConductorContract = contractOf(routeReceipt || route);
-    }
-
-    const queen =
-      readPath("HEARTH_CONTROLS") ||
-      readPath("HEARTH_CONTROLS_QUEEN") ||
-      readPath("HEARTH.controls") ||
-      readPath("HEARTH.queenControls") ||
-      readPath("DEXTER_LAB.hearthControls");
-
-    const queenReceipt = readReceipt(queen) || {};
-
-    if (queen && queen !== api) {
-      state.queenObserved = true;
-      state.queenContract = contractOf(queenReceipt || queen);
-    }
-
-    const west =
-      readPath("LAB_RUNTIME_TABLE_WEST_BISHOP_CHORD_CANVAS_RELEASE_BRIDGE") ||
-      readPath("HEARTH_WEST_BISHOP_CHORD_CANVAS_RELEASE_BRIDGE") ||
-      readPath("HEARTH.westBishopChordCanvasReleaseBridge") ||
-      readPath("DEXTER_LAB.hearthWestBishopChordCanvasReleaseBridge");
-
-    const westReceipt = readReceipt(west) || {};
-
-    if (west && west !== api) {
-      state.labWestObserved = true;
-      state.labWestContract = contractOf(westReceipt || west);
-    }
-
-    collectDrawableAdapters();
-    return getReceiptLight(false);
   }
 
-  function getReceiptLight(doScan = true) {
+  function getReceiptLight(doScan = false) {
     if (doScan) scanUpstreamAuthorities();
 
     return {
       packetType: "HEARTH_CANVAS_EXPRESSION_BRIDGE_SECOND_PAIR_RECEIPT_LIGHT",
       contract: CONTRACT,
       receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
+      previousReceipt: PREVIOUS_RECEIPT,
       file: FILE,
       route: ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
@@ -1357,13 +1464,12 @@
       visibleExpressionBridgeActive: true,
       compositeCompatibilityBridgeActive: true,
 
-      currentCanvasParentObserved: true,
-      currentCanvasParentContractObserved: true,
-      currentCanvasParentContract: CONTRACT,
-      currentCanvasParentReceipt: RECEIPT,
-      canvasContractAcceptedByShape: true,
-      canvasSummaryAcceptedByShape: true,
-      canvasSummaryShapeTrusted: true,
+      ownAliasesPublished: state.ownAliasesPublished,
+      ownAliasPublishCount: state.ownAliasPublishCount,
+      externalAliasOverwriteBlocked: true,
+      externalAliasesReadOnly: true,
+      externalAdapterCount: state.externalAdapterCount,
+      externalAdapterNames: state.externalAdapterNames,
 
       canvasAccepted: state.canvasAccepted,
       canvasLocated: state.canvasLocated,
@@ -1391,17 +1497,12 @@
       adapterDrawComplete: state.adapterDrawComplete,
       adapterSourceName: state.adapterSourceName,
       adapterContract: state.adapterContract,
+      adapterReceipt: state.adapterReceipt,
       adapterMethod: state.adapterMethod,
       adapterError: state.adapterError,
 
-      nativeBridgeDrawAttempted: state.nativeBridgeDrawAttempted,
-      nativeBridgeDrawComplete: state.nativeBridgeDrawComplete,
-
-      downstreamCompositeObserved: state.downstreamCompositeObserved,
-      downstreamFingerObserved: state.downstreamFingerObserved,
-      downstreamHexObserved: state.downstreamHexObserved,
-      hexSurfaceObserved: state.hexSurfaceObserved,
-      hexFourPairObserved: state.hexFourPairObserved,
+      nativeHoldingDrawAttempted: state.nativeHoldingDrawAttempted,
+      nativeHoldingDrawComplete: state.nativeHoldingDrawComplete,
 
       canvasHubObserved: state.canvasHubObserved,
       canvasHubContract: state.canvasHubContract,
@@ -1413,10 +1514,18 @@
       labWestObserved: state.labWestObserved,
       labWestContract: state.labWestContract,
 
-      visibleExpressionBridgeReady: state.visibleExpressionBridgeReady,
+      currentCanvasParentObserved: true,
+      currentCanvasParentContractObserved: true,
+      currentCanvasParentContract: CURRENT_PARENT_CANVAS_CONTRACT,
+      currentCanvasParentReceipt: "PARENT_CANVAS_RECEIPT_READ_UPSTREAM",
+      canvasContractAcceptedByShape: true,
+      canvasSummaryAcceptedByShape: true,
+      canvasSummaryShapeTrusted: true,
+
       canvasExpressionSurfaceReady: state.canvasExpressionSurfaceReady,
       canvasExpressionRichnessReady: state.canvasExpressionRichnessReady,
       domExpressionSurfaceProofReady: state.domExpressionSurfaceProofReady,
+      visibleExpressionBridgeReady: state.visibleExpressionBridgeReady,
       visibleBaseGlobeCarrierActive: state.visiblePlanetProofReady,
       canvasVisibleBaseGlobeCarrierActive: state.visiblePlanetProofReady,
       baseGlobeVisibleCarrierReady: state.visiblePlanetProofReady,
@@ -1444,21 +1553,32 @@
       postgameStatus: state.postgameStatus,
 
       packetCount: state.packetCount,
-      aliasPublishCount: state.aliasPublishCount,
+      authorityPacketCount: state.authorityPacketCount,
+      routeConductorPacketCount: state.routeConductorPacketCount,
+      queenPacketCount: state.queenPacketCount,
+      labWestPacketCount: state.labWestPacketCount,
+      fingerPacketCount: state.fingerPacketCount,
+      diagnosticPacketCount: state.diagnosticPacketCount,
       receiptPublishCount: state.receiptPublishCount,
       upstreamNotifyCount: state.upstreamNotifyCount,
       updatedAt: state.updatedAt || nowIso(),
 
+      ownsOwnExpressionBridgeAliases: true,
       ownsPracticalDrawingBridge: true,
       ownsCanvasPlacementFallback: true,
       ownsPixelProofPublication: true,
 
+      ownsCompositeAliases: false,
+      ownsFingerAliases: false,
+      ownsHexAliases: false,
       ownsTerrainTruth: false,
       ownsHydrologyTruth: false,
       ownsElevationTruth: false,
       ownsMaterialTruth: false,
       ownsAtmosphereTruth: false,
       ownsLightingTruth: false,
+      ownsCompositeTruth: false,
+      ownsHexTruth: false,
       ownsFingerTruth: false,
       ownsPointerTruth: false,
       ownsQueenTruth: false,
@@ -1475,13 +1595,21 @@
       ...getReceiptLight(false),
       packetType: "HEARTH_CANVAS_EXPRESSION_BRIDGE_SECOND_PAIR_RECEIPT",
       currentReceipt: true,
-      adapterRefs: adapterRefs.map((item) => item.name),
+      ownAliasPaths: OWN_ALIAS_PATHS.slice(),
+      externalAdapterAliasPathsReadOnly: EXTERNAL_ADAPTER_ALIAS_PATHS.slice(),
+      externalAdapters: externalAdapters.map((item) => ({
+        path: item.path,
+        contract: item.contract,
+        receipt: item.receipt,
+        methods: item.methods
+      })),
       lastPacket: clonePlain(state.lastPacket),
       lastAuthorityPacket: clonePlain(state.lastAuthorityPacket),
       lastRouteConductorPacket: clonePlain(state.lastRouteConductorPacket),
       lastQueenPacket: clonePlain(state.lastQueenPacket),
       lastLabWestPacket: clonePlain(state.lastLabWestPacket),
       lastFingerPacket: clonePlain(state.lastFingerPacket),
+      lastDiagnosticPacket: clonePlain(state.lastDiagnosticPacket),
       events: clonePlain(state.events),
       errors: clonePlain(state.errors),
       ...FINAL_FALSE
@@ -1496,10 +1624,19 @@
       "",
       `contract=${r.contract}`,
       `receipt=${r.receipt}`,
+      `previousContract=${r.previousContract}`,
+      `previousReceipt=${r.previousReceipt}`,
       `file=${FILE}`,
       `route=${ROUTE}`,
       `bridgePairRole=${state.bridgePairRole}`,
       `authoritySideBridgeFile=${PARENT_CANVAS_FILE}`,
+      "",
+      "ALIAS_BOUNDARY",
+      `ownAliasesPublished=${r.ownAliasesPublished}`,
+      `externalAliasOverwriteBlocked=${r.externalAliasOverwriteBlocked}`,
+      `externalAliasesReadOnly=${r.externalAliasesReadOnly}`,
+      `externalAdapterCount=${r.externalAdapterCount}`,
+      `externalAdapterNames=${r.externalAdapterNames}`,
       "",
       "DRAW",
       `canvasMounted=${r.canvasMounted}`,
@@ -1508,10 +1645,11 @@
       `drawComplete=${r.drawComplete}`,
       `lastDrawSource=${r.lastDrawSource}`,
       `adapterDrawComplete=${r.adapterDrawComplete}`,
-      `nativeBridgeDrawComplete=${r.nativeBridgeDrawComplete}`,
+      `nativeHoldingDrawComplete=${r.nativeHoldingDrawComplete}`,
       "",
       "VISIBLE_PROOF",
       `canvasExpressionSurfaceReady=${r.canvasExpressionSurfaceReady}`,
+      `canvasExpressionRichnessReady=${r.canvasExpressionRichnessReady}`,
       `domExpressionSurfaceProofReady=${r.domExpressionSurfaceProofReady}`,
       `visiblePlanetProofReady=${r.visiblePlanetProofReady}`,
       `visiblePlanetProofSource=${r.visiblePlanetProofSource}`,
@@ -1525,6 +1663,9 @@
       `f21EligibleForNorth=false`,
       "",
       "BOUNDARIES",
+      `ownsCompositeAliases=false`,
+      `ownsFingerAliases=false`,
+      `ownsHexAliases=false`,
       `ownsTerrainTruth=false`,
       `ownsHydrologyTruth=false`,
       `ownsElevationTruth=false`,
@@ -1551,9 +1692,16 @@
     setDataset("hearthCanvasExpressionBridgeLoaded", "true");
     setDataset("hearthCanvasExpressionBridgeContract", CONTRACT);
     setDataset("hearthCanvasExpressionBridgeReceipt", RECEIPT);
+    setDataset("hearthCanvasExpressionBridgePreviousContract", PREVIOUS_CONTRACT);
     setDataset("hearthCanvasExpressionBridgeFile", FILE);
     setDataset("hearthCanvasExpressionBridgePairRole", state.bridgePairRole);
     setDataset("hearthCanvasExpressionBridgeAuthoritySideFile", PARENT_CANVAS_FILE);
+
+    setDataset("hearthCanvasExpressionBridgeOwnAliasesPublished", String(state.ownAliasesPublished));
+    setDataset("hearthCanvasExpressionBridgeExternalAliasOverwriteBlocked", "true");
+    setDataset("hearthCanvasExpressionBridgeExternalAliasesReadOnly", "true");
+    setDataset("hearthCanvasExpressionBridgeExternalAdapterCount", String(state.externalAdapterCount));
+    setDataset("hearthCanvasExpressionBridgeExternalAdapterNames", state.externalAdapterNames);
 
     setDataset("hearthCanvasVisibleExpressionBridgeActive", "true");
     setDataset("hearthCanvasCompositeCompatibilityBridgeActive", "true");
@@ -1568,7 +1716,7 @@
     setDataset("hearthCanvasExpressionBridgeDrawComplete", String(state.drawComplete));
     setDataset("hearthCanvasExpressionBridgeLastDrawSource", state.lastDrawSource);
     setDataset("hearthCanvasExpressionBridgeAdapterDrawComplete", String(state.adapterDrawComplete));
-    setDataset("hearthCanvasExpressionBridgeNativeDrawComplete", String(state.nativeBridgeDrawComplete));
+    setDataset("hearthCanvasExpressionBridgeNativeHoldingDrawComplete", String(state.nativeHoldingDrawComplete));
 
     setDataset("hearthCanvasVisiblePlanetProofReady", String(state.visiblePlanetProofReady));
     setDataset("hearthCanvasVisiblePlanetProofSource", state.visiblePlanetProofSource);
@@ -1587,6 +1735,9 @@
     setDataset("hearthCanvasExpressionBridgeRecommendedNextAction", state.recommendedNextAction);
     setDataset("hearthCanvasExpressionBridgePostgameStatus", state.postgameStatus);
 
+    setDataset("hearthCanvasExpressionBridgeOwnsCompositeAliases", "false");
+    setDataset("hearthCanvasExpressionBridgeOwnsFingerAliases", "false");
+    setDataset("hearthCanvasExpressionBridgeOwnsHexAliases", "false");
     setDataset("hearthCanvasExpressionBridgeOwnsTerrainTruth", "false");
     setDataset("hearthCanvasExpressionBridgeOwnsHydrologyTruth", "false");
     setDataset("hearthCanvasExpressionBridgeOwnsElevationTruth", "false");
@@ -1609,47 +1760,20 @@
     setDataset("visualPassClaimed", "false");
   }
 
-  function publishApiAliases() {
-    const hearth = ensureObject(root, "HEARTH");
-    const lab = ensureObject(root, "DEXTER_LAB");
+  function publishOwnAliases() {
+    ensureObject(root, "HEARTH");
+    ensureObject(root, "DEXTER_LAB");
 
-    root.HEARTH_CANVAS_EXPRESSION_BRIDGE = api;
-    root.HEARTH_CANVAS_VISIBLE_EXPRESSION_BRIDGE = api;
-    root.HEARTH_CANVAS_EXPRESSION_BRIDGE_SECOND_PAIR = api;
-    root.HEARTH_CANVAS_EXPRESSION_BRIDGE_SECOND_PAIR_TNT_v1 = api;
-
-    hearth.canvasExpressionBridge = api;
-    hearth.canvasVisibleExpressionBridge = api;
-    hearth.canvasExpressionBridgeSecondPair = api;
-
-    lab.hearthCanvasExpressionBridge = api;
-    lab.hearthCanvasVisibleExpressionBridge = api;
-    lab.hearthCanvasExpressionBridgeSecondPair = api;
-
-    const compositeAliases = [
-      "HEARTH_CANVAS_FINGER_COMPOSITE",
-      "HEARTH_CANVAS_COMPOSITE_FINGER",
-      "HEARTH_CANVAS_COMPOSITE",
-      "HEARTH.canvasFingerComposite",
-      "HEARTH.canvasCompositeFinger",
-      "HEARTH.canvasComposite",
-      "DEXTER_LAB.hearthCanvasFingerComposite",
-      "DEXTER_LAB.hearthCanvasCompositeFinger",
-      "DEXTER_LAB.hearthCanvasComposite"
-    ];
-
-    for (const alias of compositeAliases) {
-      const existing = readPath(alias);
-      if (existing && existing !== api) rememberAdapter(alias, existing);
-
-      if (shouldReplaceCompositeAlias(existing)) {
-        setPath(alias, api, true);
-      }
+    for (const path of OWN_ALIAS_PATHS) {
+      setPath(path, api);
     }
 
-    state.aliasPublishCount += 1;
-    state.publishedAt = state.publishedAt || nowIso();
-    state.updatedAt = nowIso();
+    state.ownAliasesPublished = true;
+    state.ownAliasPublishCount += 1;
+    state.publishedAt = nowIso();
+    state.updatedAt = state.publishedAt;
+
+    return true;
   }
 
   function publishReceipts() {
@@ -1660,29 +1784,47 @@
 
     root.HEARTH_CANVAS_EXPRESSION_BRIDGE_RECEIPT = light;
     root.HEARTH_CANVAS_VISIBLE_EXPRESSION_BRIDGE_RECEIPT = light;
+    root.HEARTH_CANVAS_SECOND_EXPRESSION_BRIDGE_RECEIPT = light;
     root.HEARTH_CANVAS_EXPRESSION_BRIDGE_SECOND_PAIR_RECEIPT = full;
-    root.HEARTH_CANVAS_EXPRESSION_BRIDGE_SECOND_PAIR_RECEIPT_v1 = full;
+    root.HEARTH_CANVAS_EXPRESSION_BRIDGE_SECOND_PAIR_RECEIPT_v2 = full;
+    root.HEARTH_CANVAS_EXPRESSION_SURFACE_BRIDGE_RECEIPT = light;
 
     root.HEARTH_CANVAS_EXPRESSION_HUB_RECEIPT = light;
-    root.HEARTH_CANVAS_FINGER_COMPOSITE_RECEIPT = light;
     root.HEARTH_CANVAS_VISIBLE_PLANET_RECEIPT = light;
 
     hearth.canvasExpressionBridgeReceipt = light;
     hearth.canvasVisibleExpressionBridgeReceipt = light;
+    hearth.canvasSecondExpressionBridgeReceipt = light;
     hearth.canvasExpressionBridgeSecondPairReceipt = full;
+    hearth.canvasExpressionSurfaceBridgeReceipt = light;
     hearth.canvasExpressionHubReceipt = light;
-    hearth.canvasFingerCompositeReceipt = light;
     hearth.canvasVisiblePlanetReceipt = light;
 
     lab.hearthCanvasExpressionBridgeReceipt = light;
     lab.hearthCanvasVisibleExpressionBridgeReceipt = light;
+    lab.hearthCanvasSecondExpressionBridgeReceipt = light;
     lab.hearthCanvasExpressionBridgeSecondPairReceipt = full;
+    lab.hearthCanvasExpressionSurfaceBridgeReceipt = light;
     lab.hearthCanvasExpressionHubReceipt = light;
-    lab.hearthCanvasFingerCompositeReceipt = light;
     lab.hearthCanvasVisiblePlanetReceipt = light;
 
     state.receiptPublishCount += 1;
+    state.updatedAt = nowIso();
     updateDataset();
+
+    return true;
+  }
+
+  function schedulePublish() {
+    if (!root.setTimeout) return publishReceipts();
+    if (publishTimer) return true;
+
+    publishTimer = root.setTimeout(() => {
+      publishTimer = 0;
+      publishReceipts();
+    }, 60);
+
+    return true;
   }
 
   function notifyUpstream(reason = "notify-upstream") {
@@ -1711,9 +1853,8 @@
         "receiveVisiblePlanetReceipt",
         "receiveVisibleGlobeReceipt",
         "receiveCanvasVisibleProof",
-        "receiveFingerPacket",
-        "receiveExpressionFingerPacket",
         "receiveCanvasExpressionPacket",
+        "receiveExpressionFingerPacket",
         "reconcileCanvas"
       ];
 
@@ -1725,7 +1866,6 @@
             ...clonePlain(receipt),
             packetType: "HEARTH_CANVAS_EXPRESSION_BRIDGE_UPSTREAM_NOTICE",
             noticeReason: reason,
-            fingerKey: "composite",
             sourceFile: FILE,
             targetFile: PARENT_CANVAS_FILE,
             packetLane: "EXPRESSION",
@@ -1748,12 +1888,14 @@
     state.startedAt = state.startedAt || nowIso();
 
     try {
-      publishApiAliases();
+      publishOwnAliases();
+      scanExternalAdapters();
       scanUpstreamAuthorities();
       updateDataset();
       publishReceipts();
 
       const requestedDraw = options.drawNow !== false;
+
       if (requestedDraw) {
         scheduleDraw(options.reason || "boot");
       }
@@ -1768,6 +1910,9 @@
         contract: CONTRACT,
         file: FILE,
         requestedDraw,
+        ownAliasesPublished: state.ownAliasesPublished,
+        externalAliasOverwriteBlocked: true,
+        externalAdapterCount: state.externalAdapterCount,
         canvasHubObserved: state.canvasHubObserved,
         routeConductorObserved: state.routeConductorObserved
       });
@@ -1775,9 +1920,12 @@
       updateDataset();
       publishReceipts();
       notifyUpstream("boot");
+
       return getReceipt();
     } catch (error) {
       recordError("CANVAS_EXPRESSION_BRIDGE_BOOT_FAILED", error);
+      updateDataset();
+      publishReceipts();
       return getReceipt();
     } finally {
       state.booting = false;
@@ -1791,8 +1939,12 @@
   Object.assign(api, {
     CONTRACT,
     RECEIPT,
+    PREVIOUS_CONTRACT,
+    PREVIOUS_RECEIPT,
     contract: CONTRACT,
     receipt: RECEIPT,
+    previousContract: PREVIOUS_CONTRACT,
+    previousReceipt: PREVIOUS_RECEIPT,
     file: FILE,
     route: ROUTE,
     diagnosticRoute: DIAGNOSTIC_ROUTE,
@@ -1805,15 +1957,15 @@
     ROUTE_CONDUCTOR_CONTRACT,
     QUEEN_CONTROL_CONTRACT,
     LABWEST_CONTRACT,
-    HEX_SURFACE_V2_CONTRACT,
-    HEX_SURFACE_V1_CONTRACT,
-    HEX_FOUR_PAIR_CONTRACT,
 
     POINTER_FINGER_FILE,
     SURFACE_FINGER_FILE,
     COMPOSITE_FINGER_FILE,
     HEX_SURFACE_FILE,
     HEX_FOUR_PAIR_FILE,
+
+    OWN_ALIAS_PATHS,
+    EXTERNAL_ADAPTER_ALIAS_PATHS,
 
     boot,
     init,
@@ -1822,32 +1974,48 @@
 
     drawToCanvas,
     drawVisibleExpression,
+    render,
+    draw,
     scheduleDraw,
 
     receivePacket,
+    receiveCanvasAuthorityBridgePacket,
+    receiveAuthorityBridgePacket,
+    receivePublicAuthorityBridgePacket,
+    receiveBridgePacket,
     receiveCanvasAuthorityPacket,
     receiveCanvasHubPacket,
+
     receiveRouteConductorReleasePacket,
     consumeRouteConductorReleasePacket,
     receiveCanvasReleasePacket,
     receiveReleasePacket,
     consumeReleasePacket,
+
     receiveQueenPacket,
     receiveQueenContext,
     receiveControlPacket,
     receiveControlViewPacket,
     receiveViewControlPacket,
+    receiveControlsPacket,
+    receivePlanetaryControlPacket,
+
     receiveLabWestPacket,
     receiveLabWestContext,
     receiveWestGateContext,
+    receiveAdmissibilityContext,
+
     receiveFingerPacket,
     receiveCanvasFingerPacket,
     receiveExpressionFingerPacket,
     receiveFingerReceipt,
+    receiveCanvasExpressionPacket,
+
+    receiveDiagnosticPacket,
     receiveHierarchyContext,
 
+    scanExternalAdapters,
     scanUpstreamAuthorities,
-    collectDrawableAdapters,
     getReceiptLight,
     getReceipt,
     getExpressionBridgeReceipt: getReceipt,
@@ -1867,8 +2035,9 @@
     getReceiptText,
 
     updateDataset,
-    publishApiAliases,
+    publishOwnAliases,
     publishReceipts,
+    schedulePublish,
     notifyUpstream,
 
     supportsCanvasExpressionBridge: true,
@@ -1879,20 +2048,29 @@
     supportsCanvasLocationFallback: true,
     supportsPixelVisibleProof: true,
     supportsUpstreamReceiptPublication: true,
+    supportsOwnAliasPublicationOnly: true,
+    supportsExternalAdapterReadOnlyScan: true,
+    supportsNoExternalAliasOverwrite: true,
     supportsNoWebGL: true,
     supportsNoGeneratedImage: true,
     supportsNoGraphicBox: true,
 
+    ownsOwnExpressionBridgeAliases: true,
     ownsPracticalDrawingBridge: true,
     ownsCanvasPlacementFallback: true,
     ownsPixelProofPublication: true,
 
+    ownsCompositeAliases: false,
+    ownsFingerAliases: false,
+    ownsHexAliases: false,
     ownsTerrainTruth: false,
     ownsHydrologyTruth: false,
     ownsElevationTruth: false,
     ownsMaterialTruth: false,
     ownsAtmosphereTruth: false,
     ownsLightingTruth: false,
+    ownsCompositeTruth: false,
+    ownsHexTruth: false,
     ownsFingerTruth: false,
     ownsPointerTruth: false,
     ownsQueenTruth: false,
@@ -1913,7 +2091,7 @@
   });
 
   try {
-    publishApiAliases();
+    publishOwnAliases();
     updateDataset();
     publishReceipts();
 
@@ -1929,18 +2107,20 @@
 
     if (root.setTimeout) {
       root.setTimeout(() => {
-        publishApiAliases();
+        publishOwnAliases();
+        scanExternalAdapters();
         scanUpstreamAuthorities();
         scheduleDraw("post-publication-retry-1");
         notifyUpstream("post-publication-retry-1");
-      }, 320);
+      }, 260);
 
       root.setTimeout(() => {
-        publishApiAliases();
+        publishOwnAliases();
+        scanExternalAdapters();
         scanUpstreamAuthorities();
         scheduleDraw("post-publication-retry-2");
         notifyUpstream("post-publication-retry-2");
-      }, 1100);
+      }, 920);
     }
   } catch (error) {
     recordError("CANVAS_EXPRESSION_BRIDGE_INITIALIZATION_FAILED", error);

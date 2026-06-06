@@ -1,29 +1,24 @@
 // /showroom/globe/hearth/hearth.js
-// HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_TNT_v9_9
+// HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC_TNT_v10
 // Full-file replacement.
-// Route Conductor / North Bishop recognition funnel / Queen control admission / Canvas receiver release.
+// Route Conductor / Showtime NEWS-Fibonacci synchronization / Queen admission / Canvas receiver release.
 // Purpose:
+// - Preserve v9_9 bishop/queen/canvas recognition funnel as constraint baseline.
 // - Preserve v9_8 control-file admission and handshake delivery.
-// - Preserve v9_7/v9_8 compatibility surfaces.
-// - Adopt the cleaned hierarchy language:
-//   Cardinal Bishops: Lab North, Lab East, Lab South, Lab West.
-//   Route Conductor: North route bishop for this funnel.
-//   Canvas Hub: receiver/output bishop.
-//   Finger files: downstream finger bishops.
-//   Inspect finger: pointer-finger bishop.
-//   Index JS: priest.
-//   Controls: Queen.
-// - Recognize current Canvas v12_3 and v12_2/v12_1/v12 lineage.
-// - Recognize current LabWest v4_7 bishop-chord release bridge.
-// - Recognize current Queen controls bridge.
-// - Fix stale receipt publication by always republishing current receipts and packets.
-// - Preserve control admission as route-conductor duty when HTML suppresses direct control load.
+// - Preserve v9_7 control-handshake compatibility.
+// - Preserve v9_6 NEWS/Fibonacci visible-globe synchronization.
+// - Preserve v9_5 Canvas proof ingestion.
+// - Preserve v9_4 Canvas local-station compatibility receipt.
+// - Synchronize against stabilized Queen controls file.
+// - Keep Queen admission and Queen handshake as control-extension duties, not visible-globe blockers.
+// - Recognize Canvas v12_3 and v12_2/v12_1/v12 lineage.
+// - Publish fresh receipts every pass.
 // - Preserve Canvas as receiver/output carrier only.
 // - Preserve no terrain truth, hydrology truth, elevation truth, material truth, Canvas drawing authority,
 //   finger truth, F21 latch, ready text, completion latch, final visual pass, generated image, GraphicBox, or WebGL.
 // Does not own:
 // - HTML shell
-// - index button authority / priest implementation
+// - index priest / button authority implementation
 // - diagnostic rail case selection
 // - Queen implementation
 // - LabWest admissibility truth
@@ -42,28 +37,27 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_TNT_v9_9";
-  const RECEIPT = "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_RECEIPT_v9_9";
+  const CONTRACT = "HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC_TNT_v10";
+  const RECEIPT = "HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC_RECEIPT_v10";
 
-  const PREVIOUS_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CONTROL_FILE_ADMISSION_AND_HANDSHAKE_DELIVERY_TNT_v9_8";
-  const PREVIOUS_RECEIPT = "HEARTH_ROUTE_CONDUCTOR_CONTROL_FILE_ADMISSION_AND_HANDSHAKE_DELIVERY_RECEIPT_v9_8";
+  const PREVIOUS_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_TNT_v9_9";
+  const PREVIOUS_RECEIPT = "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_RECEIPT_v9_9";
 
+  const LINEAGE_V9_8_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CONTROL_FILE_ADMISSION_AND_HANDSHAKE_DELIVERY_TNT_v9_8";
+  const LINEAGE_V9_8_RECEIPT = "HEARTH_ROUTE_CONDUCTOR_CONTROL_FILE_ADMISSION_AND_HANDSHAKE_DELIVERY_RECEIPT_v9_8";
   const LINEAGE_V9_7_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION_TNT_v9_7";
   const LINEAGE_V9_7_RECEIPT = "HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION_RECEIPT_v9_7";
-
-  const BASELINE_V9_6_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_TNT_v9_6";
-  const BASELINE_V9_6_RECEIPT = "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_RECEIPT_v9_6";
-
+  const LINEAGE_V9_6_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_TNT_v9_6";
+  const LINEAGE_V9_6_RECEIPT = "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_RECEIPT_v9_6";
   const LINEAGE_V9_5_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_TNT_v9_5";
   const LINEAGE_V9_5_RECEIPT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_RECEIPT_v9_5";
-
   const COMPAT_V9_4_CONTRACT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_TNT_v9_4";
   const COMPAT_V9_4_RECEIPT = "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_RECEIPT_v9_4";
 
-  const VERSION = "2026-06-05.hearth-route-conductor-bishop-queen-canvas-recognition-funnel-v9-9";
+  const VERSION = "2026-06-05.hearth-route-conductor-showtime-news-fibonacci-queen-canvas-sync-v10";
 
-  const FILE = "/showroom/globe/hearth/hearth.js";
   const ROUTE = "/showroom/globe/hearth/";
+  const FILE = "/showroom/globe/hearth/hearth.js";
   const HTML_FILE = "/showroom/globe/hearth/index.html";
   const INDEX_FILE = "/showroom/globe/hearth/index.js";
   const CONTROL_FILE = "/assets/hearth/hearth.controls.js";
@@ -84,7 +78,7 @@
   const CONTROL_SCRIPT_SRC = `${CONTROL_FILE}?v=${encodeURIComponent(EXPECTED_CONTROL_CONTRACT)}`;
 
   const JS_INTEGRATION_FUNNEL = `${INDEX_FILE} -> ${FILE} -> ${CONTROL_FILE} -> ${CANVAS_FILE}`;
-  const HIERARCHY_VERSION = "HEARTH_BISHOP_QUEEN_PRIEST_CANVAS_RECOGNITION_HIERARCHY_v1";
+  const HIERARCHY_VERSION = "HEARTH_SHOWTIME_NEWS_FIBONACCI_BISHOP_QUEEN_CANVAS_SYNC_HIERARCHY_v10";
 
   const CURRENT_CANVAS_CONTRACT = "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3";
   const CANVAS_V12_2_CONTRACT = "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_TNT_v12_2";
@@ -109,8 +103,9 @@
   const ACTIVE_ROUTE_CONDUCTOR_CONTRACTS = Object.freeze([
     CONTRACT,
     PREVIOUS_CONTRACT,
+    LINEAGE_V9_8_CONTRACT,
     LINEAGE_V9_7_CONTRACT,
-    BASELINE_V9_6_CONTRACT,
+    LINEAGE_V9_6_CONTRACT,
     LINEAGE_V9_5_CONTRACT,
     COMPAT_V9_4_CONTRACT
   ]);
@@ -233,19 +228,21 @@
     "HEARTH_INDEX_BRIDGE",
     "HEARTH_FRONTEND_BUTTON_AUTHORITY_RESET",
     "HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET",
+    "HEARTH_INDEX_JS_PASSIVE_BUTTON_RECEIPT_CORRIDOR_ALIGNMENT",
     "HEARTH.indexJs",
     "HEARTH.indexBridge",
     "HEARTH.frontendButtonAuthorityReset",
     "HEARTH.buttonAuthority",
+    "HEARTH.passiveButtonReceiptCorridor",
     "DEXTER_LAB.hearthIndexJs",
     "DEXTER_LAB.hearthIndexBridge",
-    "DEXTER_LAB.hearthFrontendButtonAuthorityReset"
+    "DEXTER_LAB.hearthFrontendButtonAuthorityReset",
+    "DEXTER_LAB.hearthPassiveButtonReceiptCorridor"
   ]);
 
   const LABWEST_ALIASES = Object.freeze([
     "LAB_RUNTIME_TABLE_WEST_BISHOP_CHORD_CANVAS_RELEASE_BRIDGE",
     "HEARTH_WEST_BISHOP_CHORD_CANVAS_RELEASE_BRIDGE",
-    "HEARTH_WEST_ANOINTED_BISHOP_CHORD_BRIDGE",
     "LAB_RUNTIME_TABLE_CARDINAL_WEST_BISHOP_CHORD_CANVAS_RELEASE_BRIDGE",
     "LAB_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_WEST",
     "HEARTH_WEST_CYCLE_AWARE_ADMISSIBILITY_CLUTCH",
@@ -264,15 +261,13 @@
     "HEARTH.westAdmissibility",
     "HEARTH.macroWestAuthority",
     "HEARTH.westBishopChordCanvasReleaseBridge",
-    "HEARTH.westAnointedBishopChordBridge",
     "DEXTER_LAB.runtimeTableWest",
     "DEXTER_LAB.hearthRuntimeTableWest",
     "DEXTER_LAB.cardinalRuntimeTableWest",
     "DEXTER_LAB.gapClassifierWest",
     "DEXTER_LAB.transmissionGapClassifierWest",
     "DEXTER_LAB.westAdmissibility",
-    "DEXTER_LAB.hearthWestBishopChordCanvasReleaseBridge",
-    "DEXTER_LAB.hearthWestAnointedBishopChordBridge"
+    "DEXTER_LAB.hearthWestBishopChordCanvasReleaseBridge"
   ]);
 
   const CANVAS_ALIASES = Object.freeze([
@@ -327,6 +322,7 @@
     "HEARTH_CONTROLS_QUEEN",
     "HEARTH_QUEEN_CONTROLS",
     "HEARTH_QUEEN_SUPERCONDUCTOR_CONTROLS",
+    "HEARTH_CONTROLS_QUEEN_WEST_GATE_HIERARCHY",
     "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE",
     "HEARTH_CONTROLS",
     "HEARTH_PLANETARY_CONTROLS",
@@ -336,6 +332,7 @@
     "HEARTH.controlsQueen",
     "HEARTH.queenControls",
     "HEARTH.queenSuperconductorControls",
+    "HEARTH.controlsQueenWestGateHierarchy",
     "HEARTH.controlsPlanetaryViewInputHandshake",
     "HEARTH.controls",
     "HEARTH.planetaryControls",
@@ -344,6 +341,7 @@
     "HEARTH.planetaryViewControls",
     "DEXTER_LAB.hearthQueenControls",
     "DEXTER_LAB.hearthQueenSuperconductorControls",
+    "DEXTER_LAB.hearthControlsQueenWestGateHierarchy",
     "DEXTER_LAB.hearthControlsPlanetaryViewInputHandshake",
     "DEXTER_LAB.hearthControls",
     "DEXTER_LAB.hearthPlanetaryControls",
@@ -372,10 +370,12 @@
     receipt: RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
+    lineageV98Contract: LINEAGE_V9_8_CONTRACT,
+    lineageV98Receipt: LINEAGE_V9_8_RECEIPT,
     lineageV97Contract: LINEAGE_V9_7_CONTRACT,
     lineageV97Receipt: LINEAGE_V9_7_RECEIPT,
-    baselineV96Contract: BASELINE_V9_6_CONTRACT,
-    baselineV96Receipt: BASELINE_V9_6_RECEIPT,
+    lineageV96Contract: LINEAGE_V9_6_CONTRACT,
+    lineageV96Receipt: LINEAGE_V9_6_RECEIPT,
     lineageV95Contract: LINEAGE_V9_5_CONTRACT,
     lineageV95Receipt: LINEAGE_V9_5_RECEIPT,
     compatibilityRouteConductorContract: COMPAT_V9_4_CONTRACT,
@@ -383,39 +383,27 @@
     version: VERSION,
     file: FILE,
     route: ROUTE,
-    diagnosticRoute: DIAGNOSTIC_ROUTE,
-
-    hierarchyVersion: HIERARCHY_VERSION,
-    routeNorthBishopActive: true,
-    cardinalBishopLanguageActive: true,
-    downstreamBishopLanguageActive: true,
-    queenControlBridgeExpected: true,
-    indexPriestLanguageActive: true,
-    canvasReceiverBishopExpected: true,
-    pointerFingerBishopKey: POINTER_FINGER_KEY,
-    pointerFingerBishopFile: POINTER_FINGER_FILE,
-
-    newsAlignmentActive: true,
-    fibonacciSynchronizationActive: true,
-    controlFileAdmissionActive: true,
-    controlHandshakeDeliveryActive: true,
-    activeNewsCycle: NEWS_CYCLES.CYCLE_2,
-    activeFibonacci: "F8",
 
     booted: false,
     booting: false,
     startedAt: "",
     updatedAt: "",
-    latestEvent: "HEARTH_ROUTE_CONDUCTOR_V9_9_LOADED",
+    latestEvent: "HEARTH_ROUTE_CONDUCTOR_SHOWTIME_V10_LOADED",
+
+    hierarchyVersion: HIERARCHY_VERSION,
+    newsAlignmentActive: true,
+    fibonacciSynchronizationActive: true,
+    controlFileAdmissionActive: true,
+    controlHandshakeDeliveryActive: true,
 
     currentPacket: null,
     currentReceipt: null,
     currentReceiptText: "",
+    currentCompatibilityReceipt: null,
     currentCanvasSummary: null,
     currentQueenSummary: null,
     currentCanvasReleasePacket: null,
     currentControlHandshakePacket: null,
-    currentCompatibilityReceipt: null,
 
     chronologicalGateCount: GATE_ORDER.length,
     chronologicalGatesSatisfied: 0,
@@ -804,6 +792,7 @@
       s.readyTextAllowed === true ||
       s.readyTextClaimed === true ||
       s.visualPassClaimed === true ||
+      s.finalVisualPassClaimed === true ||
       s.generatedImage === true ||
       s.graphicBox === true ||
       s.webGL === true ||
@@ -971,6 +960,21 @@
 
     const contractReady = Boolean(!observedContract || observedContract === EXPECTED_INDEX_CONTRACT);
 
+    const passiveCorridorReady = Boolean(
+      safeBool(firstDefined(receipt.passiveButtonCorridorActive, receipt.passiveReceiptCorridorActive), false) ||
+      datasetValue("hearthIndexPassiveButtonCorridorActive") === "true" ||
+      datasetValue("hearthIndexPassiveReceiptCorridorActive") === "true" ||
+      datasetValue("hearthFrontendButtonAuthorityRestored") === "true" ||
+      observed
+    );
+
+    const loaderRetired = Boolean(
+      safeBool(firstDefined(receipt.activeVisibleExpressionLoaderRetired, receipt.noDynamicScriptInjection), false) ||
+      datasetValue("hearthIndexActiveVisibleExpressionLoaderRetired") === "true" ||
+      datasetValue("hearthIndexNoDynamicScriptInjection") === "true" ||
+      observed
+    );
+
     const carrierHostReady = Boolean(
       safeBool(firstDefined(receipt.carrierHostAdmissibilityReady, receipt.carrierHostReady), false) ||
       root.HEARTH_INDEX_CARRIER_HOST_ADMISSIBILITY_READY === true ||
@@ -986,7 +990,7 @@
       carrierHostReady
     );
 
-    const passed = Boolean(observed && contractReady && carrierHostReady && handoffReady);
+    const passed = Boolean(observed && contractReady && passiveCorridorReady && loaderRetired && carrierHostReady && handoffReady);
 
     return gate(
       GATE_IDS.INDEX_PRIEST,
@@ -995,11 +999,15 @@
         ? "WAITING_INDEX_PRIEST_AUTHORITY"
         : !contractReady
           ? "WAITING_EXPECTED_INDEX_PRIEST_CONTRACT"
-          : !carrierHostReady
-            ? "WAITING_INDEX_PRIEST_CARRIER_HOST_ADMISSIBILITY"
-            : !handoffReady
-              ? "WAITING_INDEX_PRIEST_HANDOFF_TO_ROUTE_BISHOP"
-              : "WAITING_INDEX_PRIEST_GATE",
+          : !passiveCorridorReady
+            ? "WAITING_INDEX_PRIEST_PASSIVE_CORRIDOR"
+            : !loaderRetired
+              ? "WAITING_INDEX_PRIEST_LOADER_RETIREMENT"
+              : !carrierHostReady
+                ? "WAITING_INDEX_PRIEST_CARRIER_HOST_ADMISSIBILITY"
+                : !handoffReady
+                  ? "WAITING_INDEX_PRIEST_HANDOFF_TO_ROUTE_BISHOP"
+                  : "WAITING_INDEX_PRIEST_GATE",
       INDEX_FILE,
       {
         indexPriestLanguageActive: true,
@@ -1009,9 +1017,13 @@
         expectedIndexContract: EXPECTED_INDEX_CONTRACT,
         indexScriptSrc: scriptSrc(INDEX_FILE) || "UNKNOWN",
         contractReady,
+        passiveCorridorReady,
+        loaderRetired,
         carrierHostAdmissibilityReady: carrierHostReady,
         indexPriestHandoffToRouteBishop: handoffReady,
         indexOwnsButtonBindingOnly: safeBool(firstDefined(receipt.indexOwnsButtonBindingOnly, true), true),
+        indexOwnsRuntimeRelease: false,
+        indexOwnsCanvasBoot: false,
         routeBishopOwnsButtonBinding: false
       }
     );
@@ -1026,12 +1038,13 @@
 
     const apiPresent = Boolean(
       root.HEARTH_ROUTE_CONDUCTOR === api ||
+      root.HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC === api ||
       root.HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL === api ||
       root.HEARTH_ROUTE_CONDUCTOR_CONTROL_FILE_ADMISSION_AND_HANDSHAKE_DELIVERY === api ||
       root.HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION === api ||
       (root.HEARTH && root.HEARTH.routeConductor === api) ||
       (root.HEARTH && root.HEARTH.routeNorthBishop === api) ||
-      (root.HEARTH && root.HEARTH.routeConductorBishopQueenCanvasRecognitionFunnel === api) ||
+      (root.HEARTH && root.HEARTH.routeConductorShowtimeNewsFibonacciQueenCanvasSync === api) ||
       (root.DEXTER_LAB && root.DEXTER_LAB.hearthRouteConductor === api)
     );
 
@@ -1089,7 +1102,7 @@
         routeF8GateReady: routeGate.passed,
         visibleGlobeProofIngestionRequested: true,
         queenControlBridgeExpected: true,
-        bishopQueenCanvasRecognitionFunnelActive: true,
+        showtimeNewsFibonacciSyncActive: true,
         newsAlignmentActive: true,
         fibonacciSynchronizationActive: true,
         ...NO_CLAIMS
@@ -1466,6 +1479,7 @@
       merged.currentCanvasParentContract,
       merged.canvasLocalStationContract,
       merged.canvasContract,
+      merged.currentCanvasContract,
       merged.contract,
       merged.CONTRACT,
       authority && authority.currentCanvasParentContract,
@@ -1480,6 +1494,7 @@
       merged.currentCanvasParentReceipt,
       merged.canvasLocalStationReceipt,
       merged.canvasReceipt,
+      merged.currentCanvasReceipt,
       merged.receipt,
       merged.RECEIPT,
       authority && authority.receipt,
@@ -2029,7 +2044,7 @@
         state.controlScriptAdmissionStatus = "QUEEN_SCRIPT_LOAD_COMPLETE_WAITING_AUTHORITY";
         state.controlScriptAdmissionReason = "SCRIPT_LOAD_EVENT";
         if (script.dataset) script.dataset.hearthRouteConductorControlLoaded = "true";
-        record("QUEEN_CONTROL_SCRIPT_LOAD_COMPLETE_BY_ROUTE_CONDUCTOR_V9_9", {
+        record("QUEEN_CONTROL_SCRIPT_LOAD_COMPLETE_BY_ROUTE_CONDUCTOR_V10", {
           src: CONTROL_SCRIPT_SRC,
           reason
         });
@@ -2042,12 +2057,12 @@
         state.controlScriptLoadError = "QUEEN_CONTROL_SCRIPT_LOAD_ERROR";
         state.controlScriptAdmissionStatus = "QUEEN_CONTROL_SCRIPT_LOAD_ERROR";
         state.controlScriptAdmissionReason = "SCRIPT_ERROR_EVENT";
-        recordError("QUEEN_CONTROL_SCRIPT_LOAD_ERROR_BY_ROUTE_CONDUCTOR_V9_9", "QUEEN_CONTROL_SCRIPT_LOAD_ERROR", {
+        recordError("QUEEN_CONTROL_SCRIPT_LOAD_ERROR_BY_ROUTE_CONDUCTOR_V10", "QUEEN_CONTROL_SCRIPT_LOAD_ERROR", {
           src: CONTROL_SCRIPT_SRC,
           reason
         });
         updateDataset(state.currentPacket || {});
-        publishGlobals("queen-control-script-load-error-v9-9", true);
+        publishGlobals("queen-control-script-load-error-v10", true);
       }, { once: true });
 
       const parent = doc.head || doc.documentElement || doc.body;
@@ -2060,7 +2075,7 @@
       state.controlScriptElementSrc = CONTROL_SCRIPT_SRC;
       state.controlScriptInjectedByRouteConductor = true;
 
-      record("QUEEN_CONTROL_SCRIPT_ADMITTED_BY_ROUTE_CONDUCTOR_V9_9", {
+      record("QUEEN_CONTROL_SCRIPT_ADMITTED_BY_ROUTE_CONDUCTOR_V10", {
         src: CONTROL_SCRIPT_SRC,
         reason
       });
@@ -2079,7 +2094,7 @@
       state.controlScriptAdmissionReason = error && error.message ? String(error.message) : String(error);
       state.controlScriptLoadError = state.controlScriptAdmissionReason;
 
-      recordError("QUEEN_CONTROL_SCRIPT_ADMISSION_FAILED_BY_ROUTE_CONDUCTOR_V9_9", error, {
+      recordError("QUEEN_CONTROL_SCRIPT_ADMISSION_FAILED_BY_ROUTE_CONDUCTOR_V10", error, {
         src: CONTROL_SCRIPT_SRC,
         reason
       });
@@ -2181,6 +2196,7 @@
 
     const queenReadsLabWestAsOpaqueSuperconductor = Boolean(
       safeBool(summary.queenReadsLabWestAsOpaqueSuperconductor, false) ||
+      safeBool(summary.queenReadsWestGateAsOpaqueSuperconductor, false) ||
       safeBool(summary.supportsLabWestBishopChordLanguage, false) ||
       safeString(summary.labWestSuperconductorStatus).includes("LABWEST") ||
       queenSuperconductorLanguageObserved
@@ -2446,7 +2462,7 @@
       { key: "F1", label: "HTML shell exists and route context is stable", passed: f1, file: HTML_FILE },
       { key: "F2", label: "Visible receiver mount exists", passed: f2, file: HTML_FILE },
       { key: "F3", label: "Planet Factory context active", passed: f3, file: HTML_FILE },
-      { key: "F5", label: "Index priest loaded and handed off", passed: f5, file: INDEX_FILE },
+      { key: "F5", label: "Index priest loaded, passive, and handed off", passed: f5, file: INDEX_FILE },
       { key: "F8", label: "Route North Bishop self-duty active", passed: f8, file: FILE },
       { key: "F13", label: "Canvas and finger bishop evidence observed", passed: f13, file: board.recommendedNextFile || CANVAS_FILE },
       { key: "F21", label: "North-only latch boundary eligible or held", passed: f21, file: LAB_NORTH_FILE }
@@ -2536,7 +2552,7 @@
       eastRole: "ignition-intake-index-priest",
       westRole: "cardinal-west-bishop-admissibility-release-permission",
       southRole: "output-visible-proof-route-publication",
-      routeNorthBishopRole: "route-conductor-recognition-admission-handshake-funnel",
+      routeNorthBishopRole: "showtime-route-conductor-recognition-admission-handshake-funnel",
       queenRole: "view-input-control-authority",
       canvasReceiverBishopRole: "receiver-output-carrier",
       pointerFingerBishopRole: "inspect-pointer-finger-track",
@@ -2587,15 +2603,17 @@
     );
 
     const packet = {
-      packetType: "ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RELEASE_PACKET",
+      packetType: "ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_CANVAS_RELEASE_PACKET",
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       previousReceipt: PREVIOUS_RECEIPT,
+      lineageV98Contract: LINEAGE_V9_8_CONTRACT,
+      lineageV98Receipt: LINEAGE_V9_8_RECEIPT,
       lineageV97Contract: LINEAGE_V9_7_CONTRACT,
       lineageV97Receipt: LINEAGE_V9_7_RECEIPT,
-      baselineV96Contract: BASELINE_V9_6_CONTRACT,
-      baselineV96Receipt: BASELINE_V9_6_RECEIPT,
+      lineageV96Contract: LINEAGE_V9_6_CONTRACT,
+      lineageV96Receipt: LINEAGE_V9_6_RECEIPT,
       lineageV95Contract: LINEAGE_V9_5_CONTRACT,
       lineageV95Receipt: LINEAGE_V9_5_RECEIPT,
       compatibilityRouteConductorContract: COMPAT_V9_4_CONTRACT,
@@ -2668,8 +2686,8 @@
     const canvas = board.canvas || {};
 
     const packet = {
-      packetType: "ROUTE_CONDUCTOR_QUEEN_CONTROL_HANDSHAKE_PACKET",
-      type: "HEARTH_ROUTE_CONDUCTOR_TO_QUEEN_CONTROLS_HANDSHAKE_PACKET_v2",
+      packetType: "ROUTE_CONDUCTOR_SHOWTIME_QUEEN_CONTROL_HANDSHAKE_PACKET",
+      type: "HEARTH_ROUTE_CONDUCTOR_TO_QUEEN_CONTROLS_HANDSHAKE_PACKET_v10",
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
@@ -2833,7 +2851,7 @@
         state.canvasReleaseDeliveryMethod = method;
         state.canvasReleaseAcceptedByCanvas = accepted;
 
-        record("CANVAS_RELEASE_DELIVERED_BY_ROUTE_CONDUCTOR_V9_9", {
+        record("CANVAS_RELEASE_DELIVERED_BY_ROUTE_CONDUCTOR_V10", {
           method,
           accepted,
           currentCanvasParentContract: receipt.currentCanvasParentContract || receipt.contract || "",
@@ -2936,7 +2954,7 @@
           ? "QUEEN_ACCEPTED_ROUTE_CONDUCTOR_HANDSHAKE"
           : "QUEEN_RETURNED_WITHOUT_ACCEPTANCE";
 
-        record("QUEEN_HANDSHAKE_DELIVERED_BY_ROUTE_CONDUCTOR_V9_9", {
+        record("QUEEN_HANDSHAKE_DELIVERED_BY_ROUTE_CONDUCTOR_V10", {
           method,
           accepted,
           queenContract: receipt.controlContract || receipt.contract || "",
@@ -2967,7 +2985,7 @@
   function composePrimaryPacket(options = {}) {
     if (options.allowAdmission !== false) {
       const queenFound = readQueenAuthority();
-      if (!queenFound.value) admitControlScript("compose-primary-packet-v9-9");
+      if (!queenFound.value) admitControlScript("compose-primary-packet-v10");
     }
 
     const board = composeGateBoard();
@@ -3021,10 +3039,12 @@
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       previousReceipt: PREVIOUS_RECEIPT,
+      lineageV98Contract: LINEAGE_V9_8_CONTRACT,
+      lineageV98Receipt: LINEAGE_V9_8_RECEIPT,
       lineageV97Contract: LINEAGE_V9_7_CONTRACT,
       lineageV97Receipt: LINEAGE_V9_7_RECEIPT,
-      baselineV96Contract: BASELINE_V9_6_CONTRACT,
-      baselineV96Receipt: BASELINE_V9_6_RECEIPT,
+      lineageV96Contract: LINEAGE_V9_6_CONTRACT,
+      lineageV96Receipt: LINEAGE_V9_6_RECEIPT,
       lineageV95Contract: LINEAGE_V9_5_CONTRACT,
       lineageV95Receipt: LINEAGE_V9_5_RECEIPT,
       compatibilityRouteConductorContract: COMPAT_V9_4_CONTRACT,
@@ -3044,7 +3064,7 @@
       diagnosticRoute: DIAGNOSTIC_ROUTE,
 
       hierarchyVersion: HIERARCHY_VERSION,
-      role: "route-conductor-north-bishop-queen-canvas-recognition-funnel",
+      role: "showtime-route-conductor-news-fibonacci-queen-canvas-sync",
 
       cardinalBishops: {
         north: LAB_NORTH_FILE,
@@ -3347,7 +3367,7 @@
     });
 
     updateStateFromPacket(packet);
-    publishGlobals("refresh-v9-9-bishop-queen-canvas-recognition", false);
+    publishGlobals("refresh-v10-showtime-news-fibonacci-queen-canvas-sync", false);
     scheduleRender();
     return getReceiptLight(false);
   }
@@ -3356,7 +3376,7 @@
     const packet = composePrimaryPacket({ allowAdmission: true, allowDelivery: true });
     updateStateFromPacket(packet);
 
-    record("ROUTE_CONDUCTOR_V9_9_PASSIVE_BISHOP_QUEEN_CANVAS_OBSERVATION", {
+    record("ROUTE_CONDUCTOR_V10_PASSIVE_SHOWTIME_NEWS_FIBONACCI_OBSERVATION", {
       chronologicalFirstFailedGate: packet.chronologicalFirstFailedGate,
       chronologicalFirstFailedCoordinate: packet.chronologicalFirstFailedCoordinate,
       fibonacciSynchronizationScore: packet.fibonacciSynchronizationScore,
@@ -3367,7 +3387,7 @@
       postgameStatus: packet.postgameStatus
     });
 
-    publishGlobals("passive-v9-9-bishop-queen-canvas-recognition", false);
+    publishGlobals("passive-v10-showtime-news-fibonacci-queen-canvas-sync", false);
     scheduleRender();
     return getReceiptLight(false);
   }
@@ -3376,7 +3396,7 @@
     const normalized = normalizeCanvasSummary(summary || {}, methodName || "receiveCanvasSummary", null, "PUSHED_CANVAS_RECEIVER_BISHOP_SUMMARY");
     state.currentCanvasSummary = clonePlain(normalized);
 
-    record("CANVAS_RECEIVER_BISHOP_SUMMARY_RECEIVED_BY_ROUTE_CONDUCTOR_V9_9", {
+    record("CANVAS_RECEIVER_BISHOP_SUMMARY_RECEIVED_BY_ROUTE_CONDUCTOR_V10", {
       methodName,
       currentCanvasParentContract: normalized.currentCanvasParentContract,
       canvasV123Recognized: normalized.canvasV123Recognized,
@@ -3394,7 +3414,7 @@
     const normalized = normalizeQueenSummary(summary || {}, methodName || "receiveQueenSummary", null, "PUSHED_QUEEN_SUMMARY");
     state.currentQueenSummary = clonePlain(normalized);
 
-    record("QUEEN_SUMMARY_RECEIVED_BY_ROUTE_CONDUCTOR_V9_9", {
+    record("QUEEN_SUMMARY_RECEIVED_BY_ROUTE_CONDUCTOR_V10", {
       methodName,
       queenContract: normalized.queenContract,
       queenSuperconductorLanguageActive: normalized.queenSuperconductorLanguageActive,
@@ -3433,11 +3453,11 @@
 
     return {
       ...clonePlain(p),
-      authority: "hearth-route-conductor-bishop-queen-canvas-recognition-funnel",
+      authority: "hearth-route-conductor-showtime-news-fibonacci-queen-canvas-sync",
       receiptComposed: true,
       currentReceipt: true,
       noFinalClaimsPreserved: true,
-      bishopQueenCanvasRecognitionReceipt: true,
+      showtimeNewsFibonacciQueenCanvasSyncReceipt: true,
       queenAdmissionReceipt: true,
       queenHandshakeDeliveryReceipt: true,
       staleReceiptPublicationBlocked: true,
@@ -3458,12 +3478,14 @@
       compatibilitySurfaceForCanvasParentsExpectingV9_4: true,
       supersededByContract: CONTRACT,
       supersededByReceipt: RECEIPT,
-      previousV98Contract: PREVIOUS_CONTRACT,
-      previousV98Receipt: PREVIOUS_RECEIPT,
+      previousV99Contract: PREVIOUS_CONTRACT,
+      previousV99Receipt: PREVIOUS_RECEIPT,
+      previousV98Contract: LINEAGE_V9_8_CONTRACT,
+      previousV98Receipt: LINEAGE_V9_8_RECEIPT,
       previousV97Contract: LINEAGE_V9_7_CONTRACT,
       previousV97Receipt: LINEAGE_V9_7_RECEIPT,
-      previousV96Contract: BASELINE_V9_6_CONTRACT,
-      previousV96Receipt: BASELINE_V9_6_RECEIPT,
+      previousV96Contract: LINEAGE_V9_6_CONTRACT,
+      previousV96Receipt: LINEAGE_V9_6_RECEIPT,
       previousV95Contract: LINEAGE_V9_5_CONTRACT,
       previousV95Receipt: LINEAGE_V9_5_RECEIPT,
 
@@ -3591,17 +3613,19 @@
     ].join("\n")).join("\n");
 
     return [
-      "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_RECEIPT",
+      "HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC_RECEIPT",
       "",
       "HEADER",
       line("contract", r.contract || CONTRACT),
       line("receipt", r.receipt || RECEIPT),
       line("previousContract", r.previousContract || PREVIOUS_CONTRACT),
       line("previousReceipt", r.previousReceipt || PREVIOUS_RECEIPT),
+      line("lineageV98Contract", LINEAGE_V9_8_CONTRACT),
+      line("lineageV98Receipt", LINEAGE_V9_8_RECEIPT),
       line("lineageV97Contract", LINEAGE_V9_7_CONTRACT),
       line("lineageV97Receipt", LINEAGE_V9_7_RECEIPT),
-      line("baselineV96Contract", BASELINE_V9_6_CONTRACT),
-      line("baselineV96Receipt", BASELINE_V9_6_RECEIPT),
+      line("lineageV96Contract", LINEAGE_V9_6_CONTRACT),
+      line("lineageV96Receipt", LINEAGE_V9_6_RECEIPT),
       line("lineageV95Contract", LINEAGE_V9_5_CONTRACT),
       line("lineageV95Receipt", LINEAGE_V9_5_RECEIPT),
       line("compatibilityRouteConductorContract", COMPAT_V9_4_CONTRACT),
@@ -3623,13 +3647,6 @@
       line("cardinalBishopWestFile", LAB_WEST_FILE),
       line("pointerFingerBishopKey", POINTER_FINGER_KEY),
       line("pointerFingerBishopFile", POINTER_FINGER_FILE),
-      "",
-      "HTML_ACCEPTANCE",
-      line("expectedHtmlContract", EXPECTED_HTML_CONTRACT),
-      line("htmlShellGateReady", r.htmlShellGateReady),
-      line("htmlLoadsControlFile", false),
-      line("controlDirectLoadSuppressedByHtml", true),
-      line("routeConductorOwnsControlFileAdmission", true),
       "",
       "NEWS_ALIGNMENT",
       line("newsAlignmentActive", true),
@@ -3665,51 +3682,7 @@
       "GATES",
       gateLines,
       "",
-      "CARDINAL_WEST_BISHOP",
-      line("cardinalWestBishopObserved", r.cardinalWestBishopObserved),
-      line("cardinalWestBishopContract", r.cardinalWestBishopContract),
-      line("labWestBishopChordLanguageObserved", r.labWestBishopChordLanguageObserved),
-      line("bishopChordBridgeActive", r.bishopChordBridgeActive),
-      line("bishopSubjectFileDelegationActive", r.bishopSubjectFileDelegationActive),
-      line("westKnowsBishopsNotChildren", r.westKnowsBishopsNotChildren),
-      line("bishopChordStatus", r.bishopChordStatus),
-      line("bishopChordAdmissible", r.bishopChordAdmissible),
-      "",
-      "QUEEN_ADMISSION",
-      line("queenControlBridgeActive", r.queenControlBridgeActive),
-      line("queenSuperconductorLanguageActive", r.queenSuperconductorLanguageActive),
-      line("queenReadsLabWestAsOpaqueSuperconductor", r.queenReadsLabWestAsOpaqueSuperconductor),
-      line("queenAuthorityObserved", r.queenAuthorityObserved),
-      line("queenAuthoritySource", r.queenAuthoritySource),
-      line("queenContract", r.queenContract),
-      line("queenReceipt", r.queenReceipt),
-      line("controlScriptAdmissionRequired", r.controlScriptAdmissionRequired),
-      line("controlScriptAdmissionAttempted", r.controlScriptAdmissionAttempted),
-      line("controlScriptAdmissionStatus", r.controlScriptAdmissionStatus),
-      line("controlScriptAdmissionReason", r.controlScriptAdmissionReason),
-      line("controlScriptElementFound", r.controlScriptElementFound),
-      line("controlScriptElementSrc", r.controlScriptElementSrc),
-      line("controlScriptInjectedByRouteConductor", r.controlScriptInjectedByRouteConductor),
-      line("controlScriptLoadComplete", r.controlScriptLoadComplete),
-      line("controlScriptLoadError", r.controlScriptLoadError),
-      line("controlFilePresent", r.controlFilePresent),
-      line("controlFileSrc", r.controlFileSrc),
-      line("controlFileContract", r.controlFileContract),
-      line("controlFileReceipt", r.controlFileReceipt),
-      line("controlFileAuthoritySource", r.controlFileAuthoritySource),
-      line("controlFileExpectedNotYetBuilt", r.controlFileExpectedNotYetBuilt),
-      line("controlFileAbsenceExpected", r.controlFileAbsenceExpected),
-      line("controlFileAbsenceNotTreatedAsCase5", r.controlFileAbsenceNotTreatedAsCase5),
-      line("controlFileAbsenceBlocksMotionTouchNotVisiblePlanet", r.controlFileAbsenceBlocksMotionTouchNotVisiblePlanet),
-      "",
       "QUEEN_HANDSHAKE",
-      line("planetaryControlLifecycleSchemaActive", r.planetaryControlLifecycleSchemaActive),
-      line("planetaryControlFootprintStatus", r.planetaryControlFootprintStatus),
-      line("planetaryControlDiagnosticStatus", r.planetaryControlDiagnosticStatus),
-      line("planetaryControlGateStatus", r.planetaryControlGateStatus),
-      line("expectedControlFile", r.expectedControlFile),
-      line("expectedControlContract", r.expectedControlContract),
-      line("expectedControlReceipt", r.expectedControlReceipt),
       line("controlHandshakeRequired", r.controlHandshakeRequired),
       line("controlHandshakeReady", r.controlHandshakeReady),
       line("controlHandshakeSatisfied", r.controlHandshakeSatisfied),
@@ -3724,57 +3697,22 @@
       line("controlHandshakeDeliveryStatus", r.controlHandshakeDeliveryStatus),
       line("controlHandshakeDeliveryMethod", r.controlHandshakeDeliveryMethod),
       line("controlHandshakeDeliveryReason", r.controlHandshakeDeliveryReason),
-      line("jsIntegrationFunnel", r.jsIntegrationFunnel),
-      line("routeConductorControlIntegrationStatus", r.routeConductorControlIntegrationStatus),
-      line("planetaryViewControlStatus", r.planetaryViewControlStatus),
-      line("planetaryViewTouchStatus", r.planetaryViewTouchStatus),
-      line("planetaryViewDragStatus", r.planetaryViewDragStatus),
-      line("planetaryViewMotionStatus", r.planetaryViewMotionStatus),
-      line("planetaryViewZoomStatus", r.planetaryViewZoomStatus),
-      line("planetaryViewInputStatus", r.planetaryViewInputStatus),
-      line("planetaryControlRecommendedNextFile", r.planetaryControlRecommendedNextFile),
-      line("planetaryControlRecommendedNextAction", r.planetaryControlRecommendedNextAction),
       "",
       "CANVAS_RECEIVER_BISHOP",
       line("currentCanvasParentObserved", r.currentCanvasParentObserved),
-      line("currentCanvasParentContractObserved", r.currentCanvasParentContractObserved),
       line("currentCanvasParentContract", r.currentCanvasParentContract),
-      line("currentCanvasParentReceipt", r.currentCanvasParentReceipt),
       line("canvasV123Recognized", r.canvasV123Recognized),
       line("canvasContractAccepted", r.canvasContractAccepted),
-      line("canvasSummaryAcceptedByContract", r.canvasSummaryAcceptedByContract),
-      line("canvasSummaryAcceptedByShape", r.canvasSummaryAcceptedByShape),
-      line("canvasSummaryShapeTrusted", r.canvasSummaryShapeTrusted),
       line("expressionHubActive", r.expressionHubActive),
       line("fingerManagerActive", r.fingerManagerActive),
       line("visiblePlanetProofReady", r.visiblePlanetProofReady),
       line("visiblePlanetProofSource", r.visiblePlanetProofSource),
       "",
-      "FINGER_BISHOPS",
-      line("fingerAuthorityObservedCount", r.fingerAuthorityObservedCount),
-      line("fingerApiReadyCount", r.fingerApiReadyCount),
-      line("fingerExpressionPacketCount", r.fingerExpressionPacketCount),
-      line("fingerReceiptPacketCount", r.fingerReceiptPacketCount),
-      line("fingerTrackReadyCount", r.fingerTrackReadyCount),
-      line("fingerHardFailCount", r.fingerHardFailCount),
-      line("pointerFingerObserved", r.pointerFingerObserved),
-      line("firstFingerGap", r.firstFingerGap),
-      line("firstFingerGapFile", r.firstFingerGapFile),
-      line("nextFingerKey", r.nextFingerKey),
-      line("nextFingerFile", r.nextFingerFile),
-      "",
-      "F13_EVIDENCE",
-      line("f13CanvasReadinessObserved", r.f13CanvasReadinessObserved),
-      line("f13VisibleEvidenceAvailable", r.f13VisibleEvidenceAvailable),
-      line("f13InspectEvidenceAvailable", r.f13InspectEvidenceAvailable),
+      "F13_F21",
       line("f13CanvasEvidenceStrict", r.f13CanvasEvidenceStrict),
       line("f13CanvasEvidenceDegraded", r.f13CanvasEvidenceDegraded),
       line("f13CanvasEvidenceComplete", r.f13CanvasEvidenceComplete),
       line("f13HardFail", r.f13HardFail),
-      line("f13StrictEvidenceGap", r.f13StrictEvidenceGap),
-      line("f13StrictEvidenceRepairTarget", r.f13StrictEvidenceRepairTarget),
-      "",
-      "F21_NORTH_ONLY_BOUNDARY",
       line("f21EligibleForNorth", r.f21EligibleForNorth),
       line("f21EligibilityPosture", r.f21EligibilityPosture),
       line("f21NorthOnly", true),
@@ -3826,7 +3764,7 @@
     const r = getReceiptLight(false);
 
     return [
-      "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_STATUS",
+      "HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC_STATUS",
       line("contract", r.contract),
       line("receipt", r.receipt),
       line("previousContract", r.previousContract),
@@ -3867,8 +3805,9 @@
     setDataset("hearthRouteConductorReceipt", RECEIPT);
     setDataset("hearthRouteConductorPreviousContract", PREVIOUS_CONTRACT);
     setDataset("hearthRouteConductorPreviousReceipt", PREVIOUS_RECEIPT);
+    setDataset("hearthRouteConductorLineageV98Contract", LINEAGE_V9_8_CONTRACT);
     setDataset("hearthRouteConductorLineageV97Contract", LINEAGE_V9_7_CONTRACT);
-    setDataset("hearthRouteConductorBaselineV96Contract", BASELINE_V9_6_CONTRACT);
+    setDataset("hearthRouteConductorBaselineV96Contract", LINEAGE_V9_6_CONTRACT);
     setDataset("hearthRouteConductorLineageV95Contract", LINEAGE_V9_5_CONTRACT);
     setDataset("hearthRouteConductorCompatibilityContract", COMPAT_V9_4_CONTRACT);
     setDataset("hearthRouteConductorVersion", VERSION);
@@ -4117,7 +4056,7 @@
       return [
         `<section class="hearth-ledger-lane" data-lane="${code}" data-status="${String(status).replace(/"/g, "")}">`,
         `<div class="hearth-ledger-lane-top">`,
-        `<span class="hearth-ledger-lane-title"><strong>${code} · ${label}</strong><span>NEWS + Fibonacci + Bishop/Queen recognition v9.9</span></span>`,
+        `<span class="hearth-ledger-lane-title"><strong>${code} · ${label}</strong><span>NEWS + Fibonacci + Showtime v10</span></span>`,
         `<span class="hearth-ledger-lane-status">${status}</span>`,
         `</div>`,
         `<div class="hearth-ledger-lane-track"><span class="hearth-ledger-lane-fill" style="width:${progress}%"></span></div>`,
@@ -4135,8 +4074,8 @@
     const r = state.currentPacket || getReceiptLight(false);
     const progress = Math.max(0, Math.min(100, safeNumber(r.fibonacciSynchronizationScore, 0)));
 
-    if (refs.stage) refs.stage.textContent = `${NEWS_CYCLES.CYCLE_2} · ${r.activeFibonacci || "F8"} · Bishop/Queen recognition`;
-    if (refs.heartbeat) refs.heartbeat.textContent = `${r.postgameStatus || "BISHOP_QUEEN_CANVAS_RECOGNITION_ACTIVE"} · next=${r.recommendedNextFile || FILE}`;
+    if (refs.stage) refs.stage.textContent = `${NEWS_CYCLES.CYCLE_2} · ${r.activeFibonacci || "F8"} · Showtime sync`;
+    if (refs.heartbeat) refs.heartbeat.textContent = `${r.postgameStatus || "SHOWTIME_NEWS_FIBONACCI_SYNC_ACTIVE"} · next=${r.recommendedNextFile || FILE}`;
     if (refs.latest) refs.latest.textContent = `latest=${CONTRACT}`;
     if (refs.fill) refs.fill.style.width = `${progress}%`;
     if (refs.percent) refs.percent.textContent = `${Math.round(progress)}%`;
@@ -4166,7 +4105,7 @@
     root.__HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_SYNCHRONIZATION__ = true;
     root.__HEARTH_ROUTE_CONDUCTOR_CONTROL_FILE_ADMISSION__ = true;
     root.__HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_DELIVERY__ = true;
-    root.__HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION__ = true;
+    root.__HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC__ = true;
     root.__HEARTH_ROUTE_CONDUCTOR_MARKER_IS_HYDRATION_PROOF__ = false;
     updateDataset(state.currentPacket || {});
   }
@@ -4180,6 +4119,7 @@
     root.HEARTH_SOUTH_ROUTE_CONDUCTOR = api;
     root.HEARTH_ROUTE_CONDUCTOR_PRIMARY_GATE = api;
     root.HEARTH_ROUTE_NORTH_BISHOP = api;
+    root.HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC = api;
     root.HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL = api;
 
     root.HEARTH_ROUTE_CONDUCTOR_CONTROL_FILE_ADMISSION_AND_HANDSHAKE_DELIVERY = api;
@@ -4192,6 +4132,7 @@
     hearth.southRouteConductor = api;
     hearth.routeConductorPrimaryGate = api;
     hearth.routeNorthBishop = api;
+    hearth.routeConductorShowtimeNewsFibonacciQueenCanvasSync = api;
     hearth.routeConductorBishopQueenCanvasRecognitionFunnel = api;
     hearth.routeConductorControlFileAdmissionAndHandshakeDelivery = api;
     hearth.routeConductorControlHandshakeIntegration = api;
@@ -4203,6 +4144,7 @@
     lab.hearthSouthRouteConductor = api;
     lab.hearthRouteConductorPrimaryGate = api;
     lab.hearthRouteNorthBishop = api;
+    lab.hearthRouteConductorShowtimeNewsFibonacciQueenCanvasSync = api;
     lab.hearthRouteConductorBishopQueenCanvasRecognitionFunnel = api;
     lab.hearthRouteConductorControlFileAdmissionAndHandshakeDelivery = api;
     lab.hearthRouteConductorControlHandshakeIntegration = api;
@@ -4224,18 +4166,17 @@
     root.HEARTH_SOUTH_ROUTE_CONDUCTOR_RECEIPT = receiptLight;
     root.HEARTH_ROUTE_CONDUCTOR_PRIMARY_GATE_RECEIPT = receiptLight;
     root.HEARTH_ROUTE_NORTH_BISHOP_RECEIPT = receiptLight;
+    root.HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC_RECEIPT = receiptLight;
+    root.HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC_RECEIPT_v10 = receiptLight;
     root.HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_RECEIPT = receiptLight;
     root.HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_RECEIPT_v9_9 = receiptLight;
 
     root.HEARTH_ROUTE_CONDUCTOR_CONTROL_FILE_ADMISSION_AND_HANDSHAKE_DELIVERY_RECEIPT = receiptLight;
     root.HEARTH_ROUTE_CONDUCTOR_CONTROL_FILE_ADMISSION_AND_HANDSHAKE_DELIVERY_RECEIPT_v9_8 = receiptLight;
-
     root.HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION_RECEIPT = receiptLight;
     root.HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION_RECEIPT_v9_7 = receiptLight;
-
     root.HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_RECEIPT = receiptLight;
     root.HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_RECEIPT_v9_6 = receiptLight;
-
     root.HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_RECEIPT = receiptLight;
     root.HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_RECEIPT = compatibility;
     root.HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_RECEIPT_v9_4 = compatibility;
@@ -4244,6 +4185,7 @@
     hearth.southRouteConductorReceipt = receiptLight;
     hearth.routeConductorPrimaryGateReceipt = receiptLight;
     hearth.routeNorthBishopReceipt = receiptLight;
+    hearth.routeConductorShowtimeNewsFibonacciQueenCanvasSyncReceipt = receiptLight;
     hearth.routeConductorBishopQueenCanvasRecognitionFunnelReceipt = receiptLight;
     hearth.routeConductorControlFileAdmissionAndHandshakeDeliveryReceipt = receiptLight;
     hearth.routeConductorControlHandshakeIntegrationReceipt = receiptLight;
@@ -4255,19 +4197,21 @@
     lab.hearthSouthRouteConductorReceipt = receiptLight;
     lab.hearthRouteConductorPrimaryGateReceipt = receiptLight;
     lab.hearthRouteNorthBishopReceipt = receiptLight;
+    lab.hearthRouteConductorShowtimeNewsFibonacciQueenCanvasSyncReceipt = receiptLight;
     lab.hearthRouteConductorBishopQueenCanvasRecognitionFunnelReceipt = receiptLight;
     lab.hearthRouteConductorControlFileAdmissionAndHandshakeDeliveryReceipt = receiptLight;
     lab.hearthRouteConductorControlHandshakeIntegrationReceipt = receiptLight;
     lab.hearthRouteConductorNewsFibonacciVisibleGlobeProofSynchronizationReceipt = receiptLight;
+    lab.hearthRouteConductorCanvasExpressionHubVisibleGlobeProofIngestionReceipt = receiptLight;
     lab.hearthRouteConductorCanvasLocalStationBridgeAlignmentReceipt = compatibility;
 
     if (state.currentCanvasReleasePacket) {
       root.HEARTH_ROUTE_CONDUCTOR_CANVAS_RELEASE_PACKET = clonePlain(state.currentCanvasReleasePacket);
       root.HEARTH_CANVAS_RELEASE_PACKET = clonePlain(state.currentCanvasReleasePacket);
-      root.HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RELEASE_PACKET = clonePlain(state.currentCanvasReleasePacket);
+      root.HEARTH_ROUTE_CONDUCTOR_SHOWTIME_CANVAS_RELEASE_PACKET = clonePlain(state.currentCanvasReleasePacket);
       hearth.routeConductorCanvasReleasePacket = clonePlain(state.currentCanvasReleasePacket);
       hearth.canvasReleasePacket = clonePlain(state.currentCanvasReleasePacket);
-      hearth.routeConductorBishopQueenCanvasReleasePacket = clonePlain(state.currentCanvasReleasePacket);
+      hearth.routeConductorShowtimeCanvasReleasePacket = clonePlain(state.currentCanvasReleasePacket);
     }
 
     if (state.currentControlHandshakePacket) {
@@ -4290,7 +4234,7 @@
     updateDataset(receiptLight);
   }
 
-  function publishGlobals(reason = "publish-globals-v9-9", force = false) {
+  function publishGlobals(reason = "publish-globals-v10", force = false) {
     publishApiAliases();
     publishReceiptAliases();
 
@@ -4334,7 +4278,7 @@
         root.clearInterval(admissionTimer);
         admissionTimer = 0;
 
-        record("QUEEN_ADMISSION_WATCHDOG_STOPPED_V9_9", {
+        record("QUEEN_ADMISSION_WATCHDOG_STOPPED_V10", {
           admissionTicks: state.admissionTicks,
           controlHandshakeAcceptedByQueen: state.controlHandshakeAcceptedByQueen === true,
           controlScriptAdmissionStatus: state.controlScriptAdmissionStatus
@@ -4357,7 +4301,7 @@
       ) {
         root.clearInterval(watchdogTimer);
         watchdogTimer = 0;
-        record("WATCHDOG_STOPPED_V9_9", {
+        record("WATCHDOG_STOPPED_V10", {
           watchdogTicks: state.watchdogTicks,
           controlHandshakeAcceptedByQueen: state.currentPacket && state.currentPacket.controlHandshakeAcceptedByQueen === true,
           f21EligibleForNorth: state.currentPacket && state.currentPacket.f21EligibleForNorth === true
@@ -4375,23 +4319,23 @@
       state.booting = true;
       state.startedAt = nowIso();
       state.updatedAt = state.startedAt;
-      state.postgameStatus = "BOOTING_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_V9_9";
+      state.postgameStatus = "BOOTING_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC_V10";
 
       publishEarlyMarker();
-      publishGlobals("boot-early-v9-9-api-publication", true);
+      publishGlobals("boot-early-v10-api-publication", true);
 
-      admitControlScript("boot-v9-9-route-conductor-queen-admission-duty");
+      admitControlScript("boot-v10-route-conductor-queen-admission-duty");
       refresh({ allowAdmission: true, allowDelivery: true });
 
       state.booting = false;
       state.booted = true;
 
-      publishGlobals("boot-complete-v9-9-api-publication", true);
+      publishGlobals("boot-complete-v10-api-publication", true);
       render();
       scheduleAdmissionWatchdog();
       startWatchdog();
 
-      record("HEARTH_ROUTE_CONDUCTOR_V9_9_BOOTED", {
+      record("HEARTH_ROUTE_CONDUCTOR_V10_BOOTED", {
         route: ROUTE,
         contract: CONTRACT,
         previousContract: PREVIOUS_CONTRACT,
@@ -4431,7 +4375,7 @@
       renderTimer = 0;
     }
 
-    record("HEARTH_ROUTE_CONDUCTOR_V9_9_DISPOSED", { reason });
+    record("HEARTH_ROUTE_CONDUCTOR_V10_DISPOSED", { reason });
     render();
 
     return getReceipt();
@@ -4441,48 +4385,26 @@
     return clonePlain(state.currentCanvasReleasePacket || (state.currentPacket && state.currentPacket.canvasReleasePacket) || null);
   }
 
-  function getReleasePacket() {
-    return getCanvasReleasePacket();
-  }
-
-  function getCanvasHandoffPacket() {
-    return getCanvasReleasePacket();
-  }
-
-  function getHandoffPacket() {
-    return getCanvasReleasePacket();
-  }
+  function getReleasePacket() { return getCanvasReleasePacket(); }
+  function getCanvasHandoffPacket() { return getCanvasReleasePacket(); }
+  function getHandoffPacket() { return getCanvasReleasePacket(); }
 
   function getControlHandshakePacket() {
     return clonePlain(state.currentControlHandshakePacket || (state.currentPacket && state.currentPacket.controlHandshakePacket) || null);
   }
 
-  function getControlsHandshakePacket() {
-    return getControlHandshakePacket();
-  }
-
-  function getPlanetaryControlHandshakePacket() {
-    return getControlHandshakePacket();
-  }
-
-  function getRouteConductorControlHandshakePacket() {
-    return getControlHandshakePacket();
-  }
-
-  function getQueenControlHandshakePacket() {
-    return getControlHandshakePacket();
-  }
-
-  function getControlPacket() {
-    return getControlHandshakePacket();
-  }
+  function getControlsHandshakePacket() { return getControlHandshakePacket(); }
+  function getPlanetaryControlHandshakePacket() { return getControlHandshakePacket(); }
+  function getRouteConductorControlHandshakePacket() { return getControlHandshakePacket(); }
+  function getQueenControlHandshakePacket() { return getControlHandshakePacket(); }
+  function getControlPacket() { return getControlHandshakePacket(); }
 
   function getRouteCycleReceipt() {
     const r = getReceiptLight(false);
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      cycleReceipt: "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_CYCLE_RECEIPT_v9_9",
+      cycleReceipt: "HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC_CYCLE_RECEIPT_v10",
       cycleOneRoute: NEWS_CYCLES.CYCLE_1,
       cycleTwoRoute: NEWS_CYCLES.CYCLE_2,
       controlExtensionRoute: NEWS_CYCLES.CONTROL_EXTENSION,
@@ -4516,10 +4438,12 @@
     RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
+    lineageV98Contract: LINEAGE_V9_8_CONTRACT,
+    lineageV98Receipt: LINEAGE_V9_8_RECEIPT,
     lineageV97Contract: LINEAGE_V9_7_CONTRACT,
     lineageV97Receipt: LINEAGE_V9_7_RECEIPT,
-    baselineV96Contract: BASELINE_V9_6_CONTRACT,
-    baselineV96Receipt: BASELINE_V9_6_RECEIPT,
+    lineageV96Contract: LINEAGE_V9_6_CONTRACT,
+    lineageV96Receipt: LINEAGE_V9_6_RECEIPT,
     lineageV95Contract: LINEAGE_V9_5_CONTRACT,
     lineageV95Receipt: LINEAGE_V9_5_RECEIPT,
     compatibilityRouteConductorContract: COMPAT_V9_4_CONTRACT,
@@ -4657,6 +4581,7 @@
     supportsLabWestBishopChordLanguage: true,
     supportsControlAbsenceNotCase5: true,
     supportsCompatibilityReceiptV94: true,
+    supportsPreviousV99Lineage: true,
     supportsPreviousV98Lineage: true,
     supportsPreviousV97Lineage: true,
     supportsPreviousV96Lineage: true,
@@ -4707,7 +4632,7 @@
   });
 
   publishEarlyMarker();
-  publishGlobals("immediate-v9-9-api-publication", true);
+  publishGlobals("immediate-v10-api-publication", true);
 
   if (doc) {
     if (doc.readyState === "loading") {

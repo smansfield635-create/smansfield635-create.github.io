@@ -1,18 +1,24 @@
 // /assets/hearth/hearth.canvas.js
 // HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3
 // Internal controlled renewal:
-// HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_TNT_v12_4
+// HEARTH_CANVAS_HUB_GOVERNED_SOURCE_PACKET_VISIBLE_2D_RECEIVER_TNT_v12_5
 // Full-file replacement.
-// Canvas Hub / live visible 2D surface identity unification only.
+// Canvas Hub / governed-source visible 2D receiver only.
 // Purpose:
 // - Preserve the public v12_3 Canvas Hub contract expected by route, diagnostics, controls, Hex Surface, and receipts.
-// - Renew the internal implementation so the visible canvas and expression canvas resolve to the same live 2D output surface.
-// - Ensure every Hearth canvas candidate inside the Hearth mount carries visible nonblank 2D pixels.
-// - Mark the same rendered surface with both data-hearth-visible-canvas="true" and data-hearth-expression-surface="true".
-// - Keep Canvas as receiver/output carrier only.
-// - Receive route/control/view packets and render a live 2D carrier surface without claiming terrain, hydrology, elevation, material, or final visual truth.
+// - Remove Canvas-local continent/source authorship as the primary image source.
+// - Treat Canvas as receiver/output carrier only.
+// - Discover and consume available Hearth governed source authorities when present:
+//   composition, elevation, hydrology, materials, terrain, land channel, water channel, air/atmosphere channel,
+//   ocean, tectonics, and hex/four-pair authority.
+// - Render visible 2D pixels from governed source samples when sample-compatible source authority is available.
+// - When governed source is missing or not sample-compatible, draw only a neutral non-authoring carrier shell
+//   and report the definitive source choke point instead of inventing continents.
+// - Preserve live canvas identity:
+//   data-hearth-visible-canvas="true"
+//   data-hearth-expression-surface="true"
 // - Forward lawful Canvas Hex Gate packets to /assets/hearth/hearth.hex.surface.js through public APIs only.
-// - Preserve controls as the input authority and Hex Surface as the Hex gate toward downstream pointer/finger instruments.
+// - Preserve controls as input authority and Hex Surface as Hex gate toward downstream pointer/finger instruments.
 // - Do not mutate HTML contract, route conductor ownership, control ownership, diagnostic chronology, source truth, or North readiness.
 // - Do not claim F13, F21, ready text, final completion, final visual pass, generated image, GraphicBox, or WebGL.
 
@@ -25,23 +31,23 @@
   const PUBLIC_CONTRACT =
     "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3";
   const PUBLIC_RECEIPT =
-    "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT_v12_3";
-
-  const INTERNAL_IMPLEMENTATION_CONTRACT =
-    "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_TNT_v12_4";
-  const INTERNAL_IMPLEMENTATION_RECEIPT =
-    "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_RECEIPT_v12_4";
-
-  const PREVIOUS_IMPLEMENTATION_CONTRACT =
-    "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3";
-  const PREVIOUS_IMPLEMENTATION_RECEIPT =
     "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIPT_v12_3";
 
+  const INTERNAL_IMPLEMENTATION_CONTRACT =
+    "HEARTH_CANVAS_HUB_GOVERNED_SOURCE_PACKET_VISIBLE_2D_RECEIVER_TNT_v12_5";
+  const INTERNAL_IMPLEMENTATION_RECEIPT =
+    "HEARTH_CANVAS_HUB_GOVERNED_SOURCE_PACKET_VISIBLE_2D_RECEIVER_RECEIPT_v12_5";
+
+  const PREVIOUS_IMPLEMENTATION_CONTRACT =
+    "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_TNT_v12_4";
+  const PREVIOUS_IMPLEMENTATION_RECEIPT =
+    "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_RECEIPT_v12_4";
+
   const LINEAGE_IMPLEMENTATION_CONTRACT =
-    "HEARTH_CANVAS_HUB_RAF_SPHERE_ROTATION_PAIR_RECEIVER_TNT_v12_3_2";
+    "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3";
 
   const VERSION =
-    "2026-06-06.hearth-canvas-live-surface-identity-unified-visible-2d-output-v12-4";
+    "2026-06-06.hearth-canvas-governed-source-packet-visible-2d-receiver-v12-5";
 
   const FILE = "/assets/hearth/hearth.canvas.js";
   const ROUTE = "/showroom/globe/hearth/";
@@ -52,6 +58,7 @@
   const CONTROL_FILE = "/assets/hearth/hearth.controls.js";
   const HEX_SURFACE_FILE = "/assets/hearth/hearth.hex.surface.js";
   const HEX_AUTHORITY_FILE = "/assets/hearth/hearth.hex.four-pair.authority.js";
+
   const POINTER_FINGER_SURFACE_FILE = "/assets/hearth/hearth.canvas.finger.surface.js";
   const POINTER_FINGER_BOUNDARY_FILE = "/assets/hearth/hearth.canvas.finger.boundary.js";
   const POINTER_FINGER_INSPECT_FILE = "/assets/hearth/hearth.canvas.finger.inspect.js";
@@ -65,11 +72,14 @@
     "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_TNT_v1";
 
   const CANVAS_HEX_GATE_PACKET =
-    "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_CANVAS_HEX_GATE_PACKET_v12_4";
+    "HEARTH_CANVAS_HUB_GOVERNED_SOURCE_CANVAS_HEX_GATE_PACKET_v12_5";
   const CANVAS_VIEW_PACKET =
-    "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_VIEW_PACKET_v12_4";
+    "HEARTH_CANVAS_HUB_GOVERNED_SOURCE_VIEW_PACKET_v12_5";
   const CANVAS_RENDER_PACKET =
-    "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_VISIBLE_2D_RENDER_PACKET_v12_4";
+    "HEARTH_CANVAS_HUB_GOVERNED_SOURCE_VISIBLE_2D_RENDER_PACKET_v12_5";
+
+  const TEXTURE_W = 512;
+  const TEXTURE_H = 256;
 
   const NO_CLAIMS = Object.freeze({
     f13Claimed: false,
@@ -154,7 +164,7 @@
     "HEARTH_CANVAS_EXPRESSION_HUB",
     "HEARTH_CANVAS_VISIBLE_PLANET",
     "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER",
-    "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT",
+    "HEARTH_CANVAS_HUB_GOVERNED_SOURCE_PACKET_VISIBLE_2D_RECEIVER",
     "HEARTH.canvas",
     "HEARTH.canvasHub",
     "HEARTH.canvasParent",
@@ -163,7 +173,7 @@
     "HEARTH.canvasExpressionHub",
     "HEARTH.canvasVisiblePlanet",
     "HEARTH.canvasHubCompositeFirstFastViewDeferredHexReceiver",
-    "HEARTH.canvasHubLiveSurfaceIdentityUnifiedVisible2dOutput",
+    "HEARTH.canvasHubGovernedSourcePacketVisible2dReceiver",
     "DEXTER_LAB.hearthCanvas",
     "DEXTER_LAB.hearthCanvasHub",
     "DEXTER_LAB.hearthCanvasParent",
@@ -171,7 +181,168 @@
     "DEXTER_LAB.hearthCanvasExpressionHub",
     "DEXTER_LAB.hearthCanvasVisiblePlanet",
     "DEXTER_LAB.hearthCanvasHubCompositeFirstFastViewDeferredHexReceiver",
-    "DEXTER_LAB.hearthCanvasHubLiveSurfaceIdentityUnifiedVisible2dOutput"
+    "DEXTER_LAB.hearthCanvasHubGovernedSourcePacketVisible2dReceiver"
+  ]);
+
+  const SOURCE_GROUPS = Object.freeze([
+    {
+      key: "composition",
+      role: "planet-composition",
+      aliases: [
+        "HEARTH_COMPOSITION",
+        "HEARTH.composition",
+        "HEARTH.compositionAuthority",
+        "DEXTER_LAB.hearthComposition"
+      ]
+    },
+    {
+      key: "elevation",
+      role: "elevation",
+      aliases: [
+        "HEARTH_ELEVATION",
+        "HEARTH.elevation",
+        "HEARTH.elevationAuthority",
+        "HEARTH.heightMap",
+        "DEXTER_LAB.hearthElevation"
+      ]
+    },
+    {
+      key: "hydrology",
+      role: "hydrology",
+      aliases: [
+        "HEARTH_HYDROLOGY",
+        "HEARTH.hydrology",
+        "HEARTH.hydrologyAuthority",
+        "HEARTH.waterMap",
+        "DEXTER_LAB.hearthHydrology"
+      ]
+    },
+    {
+      key: "materials",
+      role: "materials",
+      aliases: [
+        "HEARTH_MATERIALS",
+        "HEARTH.materials",
+        "HEARTH.materialAuthority",
+        "HEARTH.terrainMaterials",
+        "DEXTER_LAB.hearthMaterials"
+      ]
+    },
+    {
+      key: "terrain",
+      role: "terrain",
+      aliases: [
+        "HEARTH_TERRAIN",
+        "HEARTH.terrain",
+        "HEARTH.terrainAuthority",
+        "HEARTH.landmap",
+        "HEARTH.landMap",
+        "DEXTER_LAB.hearthTerrain"
+      ]
+    },
+    {
+      key: "landChannel",
+      role: "land-channel",
+      aliases: [
+        "HEARTH_LAND_CHANNEL",
+        "HEARTH.landChannel",
+        "HEARTH.canvasLandChannel",
+        "DEXTER_LAB.hearthLandChannel"
+      ]
+    },
+    {
+      key: "waterChannel",
+      role: "water-channel",
+      aliases: [
+        "HEARTH_WATER_CHANNEL",
+        "HEARTH.waterChannel",
+        "HEARTH.canvasWaterChannel",
+        "DEXTER_LAB.hearthWaterChannel"
+      ]
+    },
+    {
+      key: "airChannel",
+      role: "air-channel",
+      aliases: [
+        "HEARTH_AIR_CHANNEL",
+        "HEARTH.airChannel",
+        "HEARTH.atmosphere",
+        "HEARTH.atmosphereAuthority",
+        "DEXTER_LAB.hearthAirChannel"
+      ]
+    },
+    {
+      key: "ocean",
+      role: "ocean",
+      aliases: [
+        "HEARTH_OCEAN",
+        "HEARTH.ocean",
+        "HEARTH.oceanAuthority",
+        "DEXTER_LAB.hearthOcean"
+      ]
+    },
+    {
+      key: "tectonics",
+      role: "tectonics",
+      aliases: [
+        "HEARTH_TECTONICS",
+        "HEARTH.tectonics",
+        "HEARTH.tectonicsAuthority",
+        "DEXTER_LAB.hearthTectonics"
+      ]
+    },
+    {
+      key: "hexFourPairAuthority",
+      role: "hex-four-pair-authority",
+      aliases: [
+        "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY",
+        "HEARTH_HEX_FOUR_PAIR_AUTHORITY",
+        "HEARTH.hexFourPairPixelHandshakeAuthority",
+        "HEARTH.hexFourPairAuthority",
+        "DEXTER_LAB.hearthHexFourPairPixelHandshakeAuthority",
+        "DEXTER_LAB.hearthHexFourPairAuthority"
+      ]
+    }
+  ]);
+
+  const SAMPLE_METHODS = Object.freeze([
+    "sample",
+    "sampleAt",
+    "sampleLatLon",
+    "sampleLonLat",
+    "readSample",
+    "getSample",
+    "getCell",
+    "cellAt",
+    "readCell",
+    "lookup",
+    "classify",
+    "classifyAt",
+    "materialAt",
+    "hydrologyAt",
+    "elevationAt",
+    "heightAt",
+    "getHeight",
+    "getElevation",
+    "getStateAt",
+    "project",
+    "evaluate",
+    "query"
+  ]);
+
+  const ARRAY_KEYS = Object.freeze([
+    "samples",
+    "cells",
+    "map",
+    "atlas",
+    "tiles",
+    "states",
+    "grid",
+    "data",
+    "points",
+    "pixels",
+    "texture",
+    "values"
   ]);
 
   const state = {
@@ -215,6 +386,25 @@
     canvasCssHeight: 0,
     devicePixelRatio: 1,
 
+    sourceAuthorityObservedCount: 0,
+    sourceAuthorityNames: [],
+    sourceSampleCapableCount: 0,
+    sourceSampleCapableNames: [],
+    sourceAdapterStatus: "NOT_SCANNED",
+    activeSourceClass: "NOT_SCANNED",
+    activeSourceRole: "NONE",
+    activeSourceNames: [],
+    activeTextureBuilt: false,
+    activeTextureStatus: "NOT_BUILT",
+    activeTextureWidth: TEXTURE_W,
+    activeTextureHeight: TEXTURE_H,
+    sourceSampleSuccessCount: 0,
+    sourceSampleMissCount: 0,
+    sourceSampleErrorCount: 0,
+    sourceFallbackCarrierActive: false,
+    fallbackClass: "NONE",
+    fallbackReason: "NONE",
+
     drawLoopActive: false,
     rafId: 0,
     frameCount: 0,
@@ -254,7 +444,7 @@
     lastMountedAt: "",
     startedAt: "",
     updatedAt: "",
-    latestEvent: "HEARTH_CANVAS_HUB_V12_4_LOADED",
+    latestEvent: "HEARTH_CANVAS_HUB_V12_5_LOADED",
 
     pixelSampleStatus: "NOT_SAMPLED",
     pixelVisible: false,
@@ -279,7 +469,7 @@
     firstFailedCoordinate: "WAITING_BOOT",
     recommendedNextOwner: "CANVAS_HUB",
     recommendedNextFile: FILE,
-    recommendedNextAction: "BOOT_CANVAS_HUB_AND_DRAW_VISIBLE_2D_SURFACE",
+    recommendedNextAction: "BOOT_CANVAS_HUB_AND_DISCOVER_GOVERNED_SOURCE_STACK",
 
     events: [],
     errors: [],
@@ -289,6 +479,10 @@
   };
 
   const api = {};
+  let sourceAdapters = [];
+  let texture = null;
+  let textureMeta = null;
+  let lastFrameTime = 0;
 
   function nowIso() {
     try {
@@ -715,9 +909,7 @@
     const mount = getMount();
     const candidates = [];
 
-    if (mount) {
-      candidates.push(...safeQueryAll("canvas", mount));
-    }
+    if (mount) candidates.push(...safeQueryAll("canvas", mount));
 
     candidates.push(...safeQueryAll("canvas[data-hearth-visible-canvas='true']"));
     candidates.push(...safeQueryAll("canvas[data-hearth-expression-surface='true']"));
@@ -735,7 +927,7 @@
 
     const canvas = doc.createElement("canvas");
     canvas.id = "hearthVisibleExpressionCanvas";
-    canvas.setAttribute("aria-label", "Hearth visible 2D expression canvas");
+    canvas.setAttribute("aria-label", "Hearth governed-source visible 2D expression canvas");
     mount.appendChild(canvas);
 
     state.canvasCreatedByCanvasHub = true;
@@ -763,6 +955,7 @@
     canvas.dataset.hearthCanvasInternalImplementationContract = INTERNAL_IMPLEMENTATION_CONTRACT;
     canvas.dataset.hearthCanvasInternalImplementationReceipt = INTERNAL_IMPLEMENTATION_RECEIPT;
     canvas.dataset.hearthCanvasSurfaceIdentityUnified = "true";
+    canvas.dataset.hearthCanvasGovernedSourceReceiver = "true";
     canvas.dataset.hearthCanvasVisible2dOutputActive = "true";
     canvas.dataset.hearthCanvasGeneratedImage = "false";
     canvas.dataset.generatedImage = "false";
@@ -786,7 +979,7 @@
       canvas.setAttribute("data-webgl", "false");
       canvas.setAttribute("data-visual-pass-claimed", "false");
       canvas.setAttribute("role", "img");
-      canvas.setAttribute("aria-label", "Hearth live 2D planet carrier surface");
+      canvas.setAttribute("aria-label", "Hearth governed-source live 2D planet carrier surface");
     } catch (_error) {}
 
     state.visibleCanvasAttributeApplied = true;
@@ -833,21 +1026,15 @@
 
     try {
       mountRect = mount && isFunction(mount.getBoundingClientRect) ? mount.getBoundingClientRect() : null;
-    } catch (_error) {
-      mountRect = null;
-    }
+    } catch (_error) {}
 
     try {
       stageRect = stage && isFunction(stage.getBoundingClientRect) ? stage.getBoundingClientRect() : null;
-    } catch (_error) {
-      stageRect = null;
-    }
+    } catch (_error) {}
 
     try {
       canvasRect = canvas && isFunction(canvas.getBoundingClientRect) ? canvas.getBoundingClientRect() : null;
-    } catch (_error) {
-      canvasRect = null;
-    }
+    } catch (_error) {}
 
     const canvasRectSize = canvasRect ? Math.min(canvasRect.width || 0, canvasRect.height || 0) : 0;
     const mountSize = mountRect ? Math.min(mountRect.width || 0, mountRect.height || 0) : 0;
@@ -873,7 +1060,7 @@
     applyCanvasStyle(canvas, cssSize);
 
     const dpr = clamp(root.devicePixelRatio || 1, 1, 2);
-    const width = Math.max(238, Math.round(cssSize * dpr));
+    const width = Math.max(238, Math.min(760, Math.round(cssSize * dpr)));
     const height = width;
 
     if (canvas.width !== width || canvas.height !== height) {
@@ -908,9 +1095,7 @@
       height,
       dpr,
       id: canvas.id || "NONE",
-      selector: canvas.dataset && canvas.dataset.hearthExpressionSurface === "true"
-        ? "canvas[data-hearth-expression-surface='true']"
-        : "canvas[data-hearth-visible-canvas='true']"
+      selector: "canvas[data-hearth-expression-surface='true']"
     };
   }
 
@@ -985,15 +1170,11 @@
 
     try {
       rect = canvas.getBoundingClientRect();
-    } catch (_error) {
-      rect = null;
-    }
+    } catch (_error) {}
 
     try {
       style = root.getComputedStyle ? root.getComputedStyle(canvas) : null;
-    } catch (_error) {
-      style = null;
-    }
+    } catch (_error) {}
 
     const width = rect ? Number(rect.width || 0) : 0;
     const height = rect ? Number(rect.height || 0) : 0;
@@ -1015,6 +1196,735 @@
       rect.right > 0 &&
       rect.top < (root.innerHeight || 0) &&
       rect.bottom > 0;
+  }
+
+  function collectSourceAuthorities() {
+    const out = [];
+
+    for (const group of SOURCE_GROUPS) {
+      const found = firstGlobal(group.aliases);
+      if (!found.value) continue;
+
+      const receipt = readAuthorityReceipt(found.value) || {};
+      out.push({
+        key: group.key,
+        role: group.role,
+        name: found.name,
+        authority: found.value,
+        receipt,
+        contract: contractOf(receipt) || contractOf(found.value) || "UNKNOWN",
+        receiptName: receiptOf(receipt) || receiptOf(found.value) || "UNKNOWN"
+      });
+    }
+
+    state.sourceAuthorityObservedCount = out.length;
+    state.sourceAuthorityNames = out.map((item) => item.name);
+
+    return out;
+  }
+
+  function discoverGovernedSourceAdapters(reason = "discover") {
+    const authorities = collectSourceAuthorities();
+    const adapters = [];
+
+    for (const item of authorities) {
+      const adapter = makeSourceAdapter(item);
+      if (!adapter) continue;
+
+      const probe = probeAdapter(adapter);
+      adapter.sampleCapable = probe.sampleCapable;
+      adapter.probeReason = probe.reason;
+      adapter.probeSample = probe.sample;
+
+      if (probe.sampleCapable) adapters.push(adapter);
+    }
+
+    sourceAdapters = adapters;
+
+    state.sourceSampleCapableCount = adapters.length;
+    state.sourceSampleCapableNames = adapters.map((adapter) => `${adapter.key}:${adapter.sourceName}`);
+    state.sourceAdapterStatus = adapters.length
+      ? "SAMPLE_COMPATIBLE_GOVERNED_SOURCE_ADAPTERS_READY"
+      : authorities.length
+        ? "SOURCE_AUTHORITIES_OBSERVED_BUT_NOT_SAMPLE_COMPATIBLE"
+        : "NO_GOVERNED_SOURCE_AUTHORITIES_OBSERVED";
+
+    state.activeSourceClass = adapters.length
+      ? "GOVERNED_SOURCE_STACK_SAMPLE_ADAPTER"
+      : authorities.length
+        ? "SOURCE_STACK_OBSERVED_NOT_SAMPLE_COMPATIBLE"
+        : "NO_GOVERNED_SOURCE_OBSERVED";
+
+    state.activeSourceRole = adapters.length
+      ? adapters.map((adapter) => adapter.role).join("+")
+      : "NONE";
+
+    state.activeSourceNames = adapters.map((adapter) => adapter.sourceName);
+    state.sourceFallbackCarrierActive = adapters.length === 0;
+    state.fallbackClass = adapters.length === 0 ? "NEUTRAL_CARRIER_ONLY_NO_PLANET_SOURCE_TRUTH" : "NONE";
+    state.fallbackReason = adapters.length === 0
+      ? state.sourceAdapterStatus
+      : "NONE";
+
+    record("HEARTH_CANVAS_GOVERNED_SOURCE_ADAPTER_DISCOVERY_COMPLETE", {
+      reason,
+      sourceAuthorityObservedCount: state.sourceAuthorityObservedCount,
+      sourceSampleCapableCount: state.sourceSampleCapableCount,
+      activeSourceClass: state.activeSourceClass,
+      activeSourceNames: state.activeSourceNames
+    });
+
+    return adapters;
+  }
+
+  function makeSourceAdapter(source) {
+    if (!source || !source.authority) return null;
+
+    const arrayAdapter = makeArrayAdapter(source);
+    if (arrayAdapter) return arrayAdapter;
+
+    const methodAdapter = makeMethodAdapter(source);
+    if (methodAdapter) return methodAdapter;
+
+    return null;
+  }
+
+  function makeMethodAdapter(source) {
+    const authority = source.authority;
+    if (!authority || (!isObject(authority) && !isFunction(authority))) return null;
+
+    for (const method of SAMPLE_METHODS) {
+      if (!isFunction(authority[method])) continue;
+
+      return {
+        key: source.key,
+        role: source.role,
+        sourceName: source.name,
+        contract: source.contract,
+        receipt: source.receiptName,
+        kind: "method",
+        method,
+        sample(lon, lat, u, v) {
+          return callSampleMethod(authority, method, lon, lat, u, v);
+        }
+      };
+    }
+
+    return null;
+  }
+
+  function callSampleMethod(authority, method, lon, lat, u, v) {
+    const payload = {
+      lon,
+      lng: lon,
+      longitude: lon,
+      lat,
+      latitude: lat,
+      u,
+      v,
+      x: u,
+      y: v,
+      theta: lon,
+      phi: lat,
+      route: ROUTE,
+      receiver: FILE,
+      canvasReceiverOnly: true
+    };
+
+    try {
+      return authority[method](payload);
+    } catch (_firstError) {
+      try {
+        return authority[method](lon, lat);
+      } catch (_secondError) {
+        try {
+          return authority[method](u, v);
+        } catch (error) {
+          state.sourceSampleErrorCount += 1;
+          if (state.sourceSampleErrorCount < 12) {
+            recordError("HEARTH_CANVAS_SOURCE_SAMPLE_METHOD_FAILED", error, { method });
+          }
+          return null;
+        }
+      }
+    }
+  }
+
+  function makeArrayAdapter(source) {
+    const authority = source.authority;
+    if (!authority || !isObject(authority)) return null;
+
+    const found = findArrayLikeSource(authority);
+    if (!found) return null;
+
+    const width = Math.max(1, Math.floor(safeNumber(found.width, inferArrayWidth(found.data))));
+    const height = Math.max(1, Math.floor(safeNumber(found.height, Math.ceil(found.data.length / width))));
+
+    return {
+      key: source.key,
+      role: source.role,
+      sourceName: source.name,
+      contract: source.contract,
+      receipt: source.receiptName,
+      kind: "array",
+      arrayKey: found.key,
+      width,
+      height,
+      data: found.data,
+      sample(_lon, _lat, u, v) {
+        const x = clamp(Math.floor(u * width), 0, width - 1);
+        const y = clamp(Math.floor(v * height), 0, height - 1);
+        const index = y * width + x;
+        return found.data[index] !== undefined ? found.data[index] : null;
+      }
+    };
+  }
+
+  function findArrayLikeSource(authority) {
+    for (const key of ARRAY_KEYS) {
+      const value = authority[key];
+
+      if (Array.isArray(value) || ArrayBuffer.isView(value)) {
+        return {
+          key,
+          data: value,
+          width: safeNumber(authority.width || authority.mapWidth || authority.columns || authority.cols, inferArrayWidth(value)),
+          height: safeNumber(authority.height || authority.mapHeight || authority.rows, Math.ceil(value.length / inferArrayWidth(value)))
+        };
+      }
+
+      if (isObject(value)) {
+        for (const nestedKey of ARRAY_KEYS) {
+          const nested = value[nestedKey];
+          if (Array.isArray(nested) || ArrayBuffer.isView(nested)) {
+            return {
+              key: `${key}.${nestedKey}`,
+              data: nested,
+              width: safeNumber(value.width || value.mapWidth || value.columns || value.cols, authority.width, inferArrayWidth(nested)),
+              height: safeNumber(value.height || value.mapHeight || value.rows, authority.height, Math.ceil(nested.length / inferArrayWidth(nested)))
+            };
+          }
+        }
+      }
+    }
+
+    return null;
+  }
+
+  function inferArrayWidth(data) {
+    const len = data && data.length ? data.length : 256;
+    const rootLen = Math.sqrt(len);
+    if (Math.abs(rootLen - Math.round(rootLen)) < 0.001) return Math.round(rootLen);
+    if (len % 256 === 0) return 256;
+    if (len % 128 === 0) return 128;
+    if (len % 64 === 0) return 64;
+    return Math.max(16, Math.round(rootLen));
+  }
+
+  function probeAdapter(adapter) {
+    const tests = [
+      [0, 0],
+      [0.25, 0.25],
+      [0.5, 0.5],
+      [0.75, 0.42],
+      [0.9, 0.7]
+    ];
+
+    for (const pair of tests) {
+      const u = pair[0];
+      const v = pair[1];
+      const lon = uToLon(u);
+      const lat = vToLat(v);
+      const raw = adapter.sample(lon, lat, u, v);
+      const normalized = normalizeSourceSample(raw, adapter);
+
+      if (normalized && normalized.meaningful) {
+        return {
+          sampleCapable: true,
+          reason: "SAMPLE_RETURNED_MEANINGFUL_VALUE",
+          sample: normalized
+        };
+      }
+    }
+
+    return {
+      sampleCapable: false,
+      reason: "NO_MEANINGFUL_SAMPLE_RETURNED",
+      sample: null
+    };
+  }
+
+  function uToLon(u) {
+    return (u - 0.5) * Math.PI * 2;
+  }
+
+  function vToLat(v) {
+    return (0.5 - v) * Math.PI;
+  }
+
+  function lonLatToUv(lon, lat) {
+    const u = ((lon / (Math.PI * 2)) + 0.5) % 1;
+    const v = clamp(0.5 - lat / Math.PI, 0, 1);
+    return { u: u < 0 ? u + 1 : u, v };
+  }
+
+  function normalizeSourceSample(raw, adapter) {
+    if (raw === undefined || raw === null) return null;
+
+    if (typeof raw === "number") {
+      return {
+        meaningful: true,
+        sourceKey: adapter.key,
+        sourceRole: adapter.role,
+        elevation: normalizeSigned(raw),
+        water: undefined,
+        land: undefined,
+        material: "",
+        className: ""
+      };
+    }
+
+    if (typeof raw === "string") {
+      return {
+        meaningful: true,
+        sourceKey: adapter.key,
+        sourceRole: adapter.role,
+        elevation: 0,
+        water: stringLooksWater(raw),
+        land: stringLooksLand(raw),
+        material: raw,
+        className: raw
+      };
+    }
+
+    if (Array.isArray(raw) || ArrayBuffer.isView(raw)) {
+      if (raw.length >= 4 && raw.every((n) => Number.isFinite(Number(n)))) {
+        return {
+          meaningful: true,
+          sourceKey: adapter.key,
+          sourceRole: adapter.role,
+          rgba: [
+            clamp(Math.round(Number(raw[0])), 0, 255),
+            clamp(Math.round(Number(raw[1])), 0, 255),
+            clamp(Math.round(Number(raw[2])), 0, 255),
+            clamp(Math.round(Number(raw[3])), 0, 255)
+          ],
+          elevation: 0,
+          water: false,
+          land: true,
+          material: "rgba-source",
+          className: "rgba-source"
+        };
+      }
+
+      if (raw.length) {
+        return normalizeSourceSample(raw[0], adapter);
+      }
+
+      return null;
+    }
+
+    if (!isObject(raw)) return null;
+
+    const className = firstNonEmpty(
+      raw.className,
+      raw.class,
+      raw.kind,
+      raw.type,
+      raw.terrainClass,
+      raw.materialClass,
+      raw.hydrologyClass,
+      raw.surfaceClass,
+      raw.biome,
+      raw.material,
+      raw.name
+    );
+
+    const material = firstNonEmpty(raw.material, raw.materialClass, raw.terrainMaterial, className);
+
+    const elevation = firstDefined(
+      raw.elevation,
+      raw.height,
+      raw.altitude,
+      raw.z,
+      raw.relief,
+      raw.pressure,
+      raw.value,
+      raw.stateValue
+    );
+
+    const waterValue = firstDefined(
+      raw.water,
+      raw.isWater,
+      raw.ocean,
+      raw.isOcean,
+      raw.sea,
+      raw.lake,
+      raw.hydrology,
+      raw.waterMask
+    );
+
+    const landValue = firstDefined(
+      raw.land,
+      raw.isLand,
+      raw.landMask,
+      raw.terrain,
+      raw.solid,
+      raw.dry
+    );
+
+    const rgba = readRgba(raw);
+
+    const water =
+      waterValue !== undefined
+        ? sampleValueMeansTrue(waterValue)
+        : className
+          ? stringLooksWater(className)
+          : undefined;
+
+    const land =
+      landValue !== undefined
+        ? sampleValueMeansTrue(landValue)
+        : className
+          ? stringLooksLand(className)
+          : undefined;
+
+    const normalized = {
+      meaningful: Boolean(
+        className ||
+        material ||
+        elevation !== undefined ||
+        water !== undefined ||
+        land !== undefined ||
+        rgba
+      ),
+      sourceKey: adapter.key,
+      sourceRole: adapter.role,
+      elevation: elevation !== undefined ? normalizeSigned(elevation) : 0,
+      water,
+      land,
+      material,
+      className,
+      moisture: normalize01(firstDefined(raw.moisture, raw.humidity, raw.wetness), 0),
+      temperature: normalizeSigned(firstDefined(raw.temperature, raw.temp), 0),
+      state: firstDefined(raw.state, raw.stateIndex, raw.cell, raw.id, raw.code),
+      rgba
+    };
+
+    return normalized.meaningful ? normalized : null;
+  }
+
+  function readRgba(raw) {
+    const r = firstDefined(raw.r, raw.red);
+    const g = firstDefined(raw.g, raw.green);
+    const b = firstDefined(raw.b, raw.blue);
+    const a = firstDefined(raw.a, raw.alpha);
+
+    if (r !== undefined && g !== undefined && b !== undefined) {
+      return [
+        clamp(Math.round(safeNumber(r, 0)), 0, 255),
+        clamp(Math.round(safeNumber(g, 0)), 0, 255),
+        clamp(Math.round(safeNumber(b, 0)), 0, 255),
+        clamp(Math.round(safeNumber(a, 255)), 0, 255)
+      ];
+    }
+
+    if (Array.isArray(raw.rgba) && raw.rgba.length >= 3) {
+      return [
+        clamp(Math.round(safeNumber(raw.rgba[0], 0)), 0, 255),
+        clamp(Math.round(safeNumber(raw.rgba[1], 0)), 0, 255),
+        clamp(Math.round(safeNumber(raw.rgba[2], 0)), 0, 255),
+        clamp(Math.round(safeNumber(raw.rgba[3], 255)), 0, 255)
+      ];
+    }
+
+    if (Array.isArray(raw.color) && raw.color.length >= 3) {
+      return [
+        clamp(Math.round(safeNumber(raw.color[0], 0)), 0, 255),
+        clamp(Math.round(safeNumber(raw.color[1], 0)), 0, 255),
+        clamp(Math.round(safeNumber(raw.color[2], 0)), 0, 255),
+        clamp(Math.round(safeNumber(raw.color[3], 255)), 0, 255)
+      ];
+    }
+
+    return null;
+  }
+
+  function normalizeSigned(value) {
+    const n = safeNumber(value, 0);
+    if (n > 1 || n < -1) return clamp(n / 255, -1, 1);
+    return clamp(n, -1, 1);
+  }
+
+  function normalize01(value, fallback = 0) {
+    if (value === undefined || value === null || value === "") return fallback;
+    const n = safeNumber(value, fallback);
+    if (n > 1) return clamp(n / 255, 0, 1);
+    return clamp(n, 0, 1);
+  }
+
+  function sampleValueMeansTrue(value) {
+    if (typeof value === "boolean") return value;
+    if (typeof value === "number") return value > 0.5;
+    const text = safeString(value).toLowerCase();
+    if (!text) return false;
+    if (["true", "yes", "land", "water", "ocean", "sea", "dry", "solid"].includes(text)) return true;
+    if (["false", "no", "none", "void"].includes(text)) return false;
+    return stringLooksWater(text) || stringLooksLand(text);
+  }
+
+  function stringLooksWater(value) {
+    const text = safeString(value).toLowerCase();
+    return /water|ocean|sea|lake|river|bay|basin|hydro|reef|shelf|channel|submerged|wet/.test(text);
+  }
+
+  function stringLooksLand(value) {
+    const text = safeString(value).toLowerCase();
+    return /land|terrain|soil|rock|mountain|ridge|crust|plate|desert|forest|plain|summit|dry|continent|island/.test(text);
+  }
+
+  function sampleGovernedSource(lon, lat) {
+    const uv = lonLatToUv(lon, lat);
+
+    if (!sourceAdapters.length) {
+      state.sourceSampleMissCount += 1;
+      return null;
+    }
+
+    const samples = [];
+
+    for (const adapter of sourceAdapters) {
+      const raw = adapter.sample(lon, lat, uv.u, uv.v);
+      const normalized = normalizeSourceSample(raw, adapter);
+      if (normalized && normalized.meaningful) samples.push(normalized);
+    }
+
+    if (!samples.length) {
+      state.sourceSampleMissCount += 1;
+      return null;
+    }
+
+    state.sourceSampleSuccessCount += 1;
+
+    return mergeSourceSamples(samples, lon, lat);
+  }
+
+  function mergeSourceSamples(samples, lon, lat) {
+    let landVotes = 0;
+    let waterVotes = 0;
+    let elevationSum = 0;
+    let elevationCount = 0;
+    let moistureSum = 0;
+    let moistureCount = 0;
+    let temperatureSum = 0;
+    let temperatureCount = 0;
+    let material = "";
+    let className = "";
+    let rgba = null;
+
+    for (const sample of samples) {
+      if (sample.rgba && !rgba) rgba = sample.rgba;
+      if (sample.land === true) landVotes += weightForRole(sample.sourceRole);
+      if (sample.water === true) waterVotes += weightForRole(sample.sourceRole);
+      if (sample.elevation !== undefined) {
+        elevationSum += sample.elevation;
+        elevationCount += 1;
+      }
+      if (sample.moisture !== undefined) {
+        moistureSum += sample.moisture;
+        moistureCount += 1;
+      }
+      if (sample.temperature !== undefined) {
+        temperatureSum += sample.temperature;
+        temperatureCount += 1;
+      }
+      if (!material && sample.material) material = sample.material;
+      if (!className && sample.className) className = sample.className;
+    }
+
+    const elevation = elevationCount ? elevationSum / elevationCount : 0;
+    const moisture = moistureCount ? moistureSum / moistureCount : 0;
+    const temperature = temperatureCount ? temperatureSum / temperatureCount : 0;
+
+    let water = waterVotes > landVotes;
+    let land = landVotes > waterVotes;
+
+    if (!water && !land) {
+      if (className && stringLooksWater(className)) water = true;
+      else if (className && stringLooksLand(className)) land = true;
+      else if (material && stringLooksWater(material)) water = true;
+      else if (material && stringLooksLand(material)) land = true;
+      else land = elevation > -0.03;
+    }
+
+    return {
+      lon,
+      lat,
+      land,
+      water,
+      elevation,
+      moisture,
+      temperature,
+      material,
+      className,
+      rgba,
+      sourceCount: samples.length,
+      sourceKeys: samples.map((sample) => sample.sourceKey)
+    };
+  }
+
+  function weightForRole(role) {
+    const text = safeString(role);
+    if (/hydrology|water|ocean/.test(text)) return 3;
+    if (/land-channel|terrain|composition/.test(text)) return 2.5;
+    if (/elevation|materials/.test(text)) return 2;
+    return 1;
+  }
+
+  function buildGovernedTexture(reason = "build-texture") {
+    if (!sourceAdapters.length) discoverGovernedSourceAdapters(reason);
+
+    texture = new Uint8ClampedArray(TEXTURE_W * TEXTURE_H * 4);
+    textureMeta = {
+      width: TEXTURE_W,
+      height: TEXTURE_H,
+      sourceClass: state.activeSourceClass,
+      builtAt: nowIso(),
+      reason
+    };
+
+    let visible = 0;
+    let misses = 0;
+
+    for (let y = 0; y < TEXTURE_H; y += 1) {
+      const v = y / (TEXTURE_H - 1);
+
+      for (let x = 0; x < TEXTURE_W; x += 1) {
+        const u = x / (TEXTURE_W - 1);
+        const lon = uToLon(u);
+        const lat = vToLat(v);
+        const sample = sampleGovernedSource(lon, lat);
+
+        let color;
+
+        if (sample) {
+          color = colorFromSourceSample(sample, lon, lat);
+          visible += 1;
+        } else {
+          color = neutralCarrierColor(lon, lat);
+          misses += 1;
+        }
+
+        const index = (y * TEXTURE_W + x) * 4;
+        texture[index] = color[0];
+        texture[index + 1] = color[1];
+        texture[index + 2] = color[2];
+        texture[index + 3] = color[3];
+      }
+    }
+
+    state.activeTextureBuilt = true;
+    state.activeTextureStatus = sourceAdapters.length
+      ? "GOVERNED_SOURCE_TEXTURE_BUILT"
+      : "NEUTRAL_CARRIER_TEXTURE_BUILT_NO_GOVERNED_SOURCE";
+    state.activeTextureWidth = TEXTURE_W;
+    state.activeTextureHeight = TEXTURE_H;
+    state.sourceFallbackCarrierActive = sourceAdapters.length === 0;
+
+    record("HEARTH_CANVAS_GOVERNED_TEXTURE_BUILT", {
+      reason,
+      activeTextureStatus: state.activeTextureStatus,
+      visibleSamples: visible,
+      missedSamples: misses,
+      sourceSampleCapableCount: state.sourceSampleCapableCount
+    });
+
+    return texture;
+  }
+
+  function colorFromSourceSample(sample, lon, lat) {
+    if (sample.rgba) return sample.rgba;
+
+    const e = clamp(sample.elevation || 0, -1, 1);
+    const moisture = clamp(sample.moisture || 0, 0, 1);
+    const grain = fineNoise(lon, lat);
+    const material = safeString(sample.material || sample.className).toLowerCase();
+
+    if (sample.water) {
+      const depth = clamp(-e * 0.75 + 0.38 + grain * 0.06, 0, 1);
+      return [
+        Math.round(7 + 22 * depth),
+        Math.round(42 + 80 * depth),
+        Math.round(94 + 132 * depth),
+        255
+      ];
+    }
+
+    if (/ice|snow|polar|glacier/.test(material) || Math.abs(lat) > 1.28) {
+      const shade = clamp(0.78 + e * 0.15 + grain * 0.06, 0, 1);
+      return [
+        Math.round(186 + 48 * shade),
+        Math.round(207 + 34 * shade),
+        Math.round(214 + 32 * shade),
+        255
+      ];
+    }
+
+    if (/mount|ridge|summit|rock|crag|plate/.test(material) || e > 0.45) {
+      const shade = clamp(0.46 + e * 0.42 + grain * 0.09, 0, 1);
+      return [
+        Math.round(74 + 92 * shade),
+        Math.round(70 + 82 * shade),
+        Math.round(62 + 70 * shade),
+        255
+      ];
+    }
+
+    if (/desert|sand|dune|arid/.test(material) || moisture < 0.16) {
+      const shade = clamp(0.52 + e * 0.22 + grain * 0.10, 0, 1);
+      return [
+        Math.round(112 + 108 * shade),
+        Math.round(90 + 84 * shade),
+        Math.round(48 + 58 * shade),
+        255
+      ];
+    }
+
+    if (/forest|green|basin|plain|soil|land|terrain|continent|island/.test(material) || sample.land) {
+      const shade = clamp(0.36 + e * 0.28 + moisture * 0.18 + grain * 0.11, 0, 1);
+      return [
+        Math.round(38 + 86 * shade),
+        Math.round(72 + 92 * shade),
+        Math.round(46 + 62 * shade),
+        255
+      ];
+    }
+
+    const shade = clamp(0.42 + e * 0.26 + grain * 0.10, 0, 1);
+    return [
+      Math.round(58 + 85 * shade),
+      Math.round(83 + 78 * shade),
+      Math.round(62 + 58 * shade),
+      255
+    ];
+  }
+
+  function neutralCarrierColor(lon, lat) {
+    const band = 0.5 + 0.5 * Math.sin(lat * 4 + lon * 1.7);
+    return [
+      Math.round(8 + 8 * band),
+      Math.round(24 + 18 * band),
+      Math.round(48 + 32 * band),
+      255
+    ];
+  }
+
+  function fineNoise(lon, lat) {
+    const v =
+      Math.sin(lon * 17.13 + lat * 11.71) * 0.45 +
+      Math.sin(lon * 41.9 - lat * 19.3) * 0.28 +
+      Math.sin(lon * 83.1 + lat * 61.7) * 0.14;
+    return clamp(v, -1, 1);
   }
 
   function applyViewPacket(packet = {}, options = {}) {
@@ -1162,6 +2072,11 @@
       return getReceiptLight(false);
     }
 
+    if (!texture || !state.activeTextureBuilt) {
+      discoverGovernedSourceAdapters(reason);
+      buildGovernedTexture(reason);
+    }
+
     for (const surface of prepared) {
       drawVisibleSurface(surface.ctx, surface.width, surface.height, reason);
     }
@@ -1174,19 +2089,28 @@
 
     inspectPixelSample(prepared[0].canvas, prepared[0].ctx);
 
-    state.firstFailedCoordinate = state.pixelVisible ? "NONE" : "CANVAS_PIXEL_VISIBLE";
-    state.recommendedNextOwner = state.pixelVisible ? "TEACHER_REVIEW" : "CANVAS_DRAWING_OR_DOWNSTREAM_EXPRESSION_ADAPTER";
-    state.recommendedNextFile = state.pixelVisible ? FILE : FILE;
-    state.recommendedNextAction = state.pixelVisible
-      ? "REVIEW_CANVAS_SURFACE_TRUTH_CONFIRMED_WITHOUT_READY_OR_VISUAL_PASS_CLAIM"
-      : "VERIFY_CANVAS_DRAW_PATH_WRITES_VISIBLE_2D_PIXELS";
-    state.postgameStatus = state.pixelVisible
-      ? "CANVAS_SURFACE_TRUTH_VISIBLE_2D_PIXEL_OUTPUT_CONFIRMED_NO_FINAL_CLAIM"
-      : "CANVAS_SURFACE_DRAW_ATTEMPTED_PIXEL_SAMPLE_NOT_VISIBLE";
+    if (!state.pixelVisible) {
+      state.firstFailedCoordinate = "CANVAS_PIXEL_VISIBLE";
+      state.recommendedNextOwner = "CANVAS_DRAWING_OR_DOWNSTREAM_EXPRESSION_ADAPTER";
+      state.recommendedNextFile = FILE;
+      state.recommendedNextAction = "VERIFY_CANVAS_DRAW_PATH_WRITES_VISIBLE_2D_PIXELS";
+      state.postgameStatus = "CANVAS_SURFACE_DRAW_ATTEMPTED_PIXEL_SAMPLE_NOT_VISIBLE";
+    } else if (!sourceAdapters.length) {
+      state.firstFailedCoordinate = "GOVERNED_SOURCE_SAMPLE_ADAPTER";
+      state.recommendedNextOwner = "SOURCE_STACK_OR_ROUTE_CONDUCTOR";
+      state.recommendedNextFile = "/assets/hearth/";
+      state.recommendedNextAction = "LOAD_OR_EXPOSE_SAMPLE_COMPATIBLE_GOVERNED_PLANET_SOURCE_AUTHORITY";
+      state.postgameStatus = "CANVAS_VISIBLE_NEUTRAL_CARRIER_ONLY_GOVERNED_SOURCE_NOT_SAMPLE_COMPATIBLE";
+    } else {
+      state.firstFailedCoordinate = "NONE";
+      state.recommendedNextOwner = "TEACHER_REVIEW";
+      state.recommendedNextFile = FILE;
+      state.recommendedNextAction = "REVIEW_GOVERNED_SOURCE_VISIBLE_2D_OUTPUT_WITHOUT_READY_OR_VISUAL_PASS_CLAIM";
+      state.postgameStatus = "CANVAS_GOVERNED_SOURCE_VISIBLE_2D_PIXEL_OUTPUT_CONFIRMED_NO_FINAL_CLAIM";
+    }
 
     updateDataset();
     publishRenderGlobals(reason);
-    publishReceiptAliases();
 
     return getReceiptLight(false);
   }
@@ -1224,43 +2148,85 @@
 
     drawStarField(ctx, w, h, state.frameCount);
 
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-    ctx.clip();
+    const image = ctx.createImageData(w, h);
+    const data = image.data;
 
-    const ocean = ctx.createRadialGradient(cx - radius * 0.32, cy - radius * 0.42, radius * 0.08, cx, cy, radius);
-    ocean.addColorStop(0, "rgba(87,184,221,1)");
-    ocean.addColorStop(0.32, "rgba(23,91,151,1)");
-    ocean.addColorStop(0.70, "rgba(8,42,93,1)");
-    ocean.addColorStop(1, "rgba(2,16,46,1)");
-    ctx.fillStyle = ocean;
-    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+    const yaw = view.yaw + view.phase * 0.10;
+    const pitch = view.pitch * 0.44;
+    const cp = Math.cos(pitch);
+    const sp = Math.sin(pitch);
+    const cyaw = Math.cos(yaw);
+    const syaw = Math.sin(yaw);
+
+    for (let y = 0; y < h; y += 1) {
+      const ny = -(y + 0.5 - cy) / radius;
+
+      for (let x = 0; x < w; x += 1) {
+        const nx = (x + 0.5 - cx) / radius;
+        const rr = nx * nx + ny * ny;
+        const index = (y * w + x) * 4;
+
+        if (rr > 1) {
+          data[index] = 0;
+          data[index + 1] = 0;
+          data[index + 2] = 0;
+          data[index + 3] = 0;
+          continue;
+        }
+
+        const z = Math.sqrt(1 - rr);
+
+        const y0 = ny * cp + z * sp;
+        const z0 = z * cp - ny * sp;
+        const x0 = nx;
+
+        const wx = x0 * cyaw - z0 * syaw;
+        const wz = x0 * syaw + z0 * cyaw;
+        const wy = y0;
+
+        const lon = Math.atan2(wx, wz);
+        const lat = Math.asin(clamp(wy, -1, 1));
+
+        const color = textureSample(lon, lat);
+        const light = clamp(0.54 + 0.44 * (-0.38 * nx - 0.52 * ny + 0.76 * z), 0.22, 1.08);
+        const edge = clamp(1 - Math.pow(rr, 2.4) * 0.44, 0.48, 1);
+        const finalLight = light * edge;
+
+        data[index] = clamp(Math.round(color[0] * finalLight + 6), 0, 255);
+        data[index + 1] = clamp(Math.round(color[1] * finalLight + 8), 0, 255);
+        data[index + 2] = clamp(Math.round(color[2] * finalLight + 12), 0, 255);
+        data[index + 3] = 255;
+      }
+    }
+
+    ctx.putImageData(image, 0, 0);
 
     drawLatitudeLongitudeBands(ctx, cx, cy, radius, view);
-    drawContinents(ctx, cx, cy, radius, view);
-    drawAncientCoastTraces(ctx, cx, cy, radius, view);
-
-    const shade = ctx.createLinearGradient(cx - radius, cy - radius, cx + radius, cy + radius);
-    shade.addColorStop(0, "rgba(255,255,255,.18)");
-    shade.addColorStop(0.38, "rgba(255,255,255,.02)");
-    shade.addColorStop(0.66, "rgba(0,0,0,.10)");
-    shade.addColorStop(1, "rgba(0,0,0,.42)");
-    ctx.fillStyle = shade;
-    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
-
-    ctx.restore();
-
     drawAtmosphere(ctx, cx, cy, radius);
-    drawReceiptNeedle(ctx, cx, cy, radius, reason);
 
-    ctx.fillStyle = "rgba(243,201,111,.92)";
-    ctx.font = `${Math.max(10, Math.round(min * 0.018))}px ui-sans-serif, system-ui, sans-serif`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText("HEARTH", cx, cy + radius + Math.max(14, min * 0.034));
+    if (!sourceAdapters.length) {
+      drawSourceHoldNotice(ctx, cx, cy, radius);
+    } else {
+      drawReceiptNeedle(ctx, cx, cy, radius, reason);
+    }
 
-    state.viewState.phase += 0.003;
+    state.viewState.phase += sourceAdapters.length ? 0.003 : 0.001;
+  }
+
+  function textureSample(lon, lat) {
+    if (!texture) return neutralCarrierColor(lon, lat);
+
+    const uv = lonLatToUv(lon, lat);
+    const x = clamp(Math.floor(uv.u * (TEXTURE_W - 1)), 0, TEXTURE_W - 1);
+    const y = clamp(Math.floor(uv.v * (TEXTURE_H - 1)), 0, TEXTURE_H - 1);
+    const index = (y * TEXTURE_W + x) * 4;
+
+    return [
+      texture[index] || 0,
+      texture[index + 1] || 0,
+      texture[index + 2] || 0,
+      texture[index + 3] || 255
+    ];
   }
 
   function drawStarField(ctx, w, h, frame) {
@@ -1286,7 +2252,7 @@
   function drawLatitudeLongitudeBands(ctx, cx, cy, radius, view) {
     ctx.save();
     ctx.lineWidth = Math.max(0.8, radius * 0.004);
-    ctx.strokeStyle = "rgba(210,238,255,.11)";
+    ctx.strokeStyle = sourceAdapters.length ? "rgba(210,238,255,.10)" : "rgba(210,238,255,.18)";
 
     for (let i = -3; i <= 3; i += 1) {
       const y = cy + (i / 4) * radius * 0.72 + Math.sin(view.phase + i) * radius * 0.015;
@@ -1301,141 +2267,6 @@
       const angle = (Math.PI * 2 * i) / 8 + view.yaw * 0.22;
       ctx.beginPath();
       ctx.ellipse(cx, cy, radius * Math.abs(Math.cos(angle)), radius, 0, 0, Math.PI * 2);
-      ctx.stroke();
-    }
-
-    ctx.restore();
-  }
-
-  function drawContinents(ctx, cx, cy, radius, view) {
-    const continents = [
-      { lon: -2.72, lat: 0.56, sx: 0.48, sy: 0.34, twist: 0.3 },
-      { lon: -1.88, lat: -0.10, sx: 0.42, sy: 0.58, twist: -0.7 },
-      { lon: -0.92, lat: 0.38, sx: 0.55, sy: 0.36, twist: 0.9 },
-      { lon: -0.06, lat: -0.38, sx: 0.50, sy: 0.40, twist: -0.2 },
-      { lon: 0.78, lat: 0.17, sx: 0.62, sy: 0.33, twist: 0.5 },
-      { lon: 1.62, lat: -0.44, sx: 0.38, sy: 0.44, twist: 1.1 },
-      { lon: 2.48, lat: 0.04, sx: 0.52, sy: 0.34, twist: -0.4 }
-    ];
-
-    for (let i = 0; i < continents.length; i += 1) {
-      drawProjectedBlob(ctx, cx, cy, radius, view, continents[i], i);
-    }
-  }
-
-  function drawProjectedBlob(ctx, cx, cy, radius, view, blob, index) {
-    const points = [];
-    const steps = 36;
-
-    for (let i = 0; i < steps; i += 1) {
-      const t = (Math.PI * 2 * i) / steps;
-      const rough =
-        1 +
-        0.16 * Math.sin(t * 3 + index) +
-        0.10 * Math.sin(t * 7 + index * 1.7) +
-        0.06 * Math.sin(t * 11 + index * 2.3);
-
-      const lonOffset =
-        Math.cos(t + blob.twist) * blob.sx * rough +
-        Math.sin(t * 2 + index) * 0.055;
-
-      const latOffset =
-        Math.sin(t) * blob.sy * rough +
-        Math.cos(t * 3 + index) * 0.040;
-
-      const p = projectSphere(blob.lon + lonOffset, blob.lat + latOffset, view, cx, cy, radius);
-
-      if (p.visible) points.push(p);
-    }
-
-    if (points.length < 6) return;
-
-    ctx.save();
-
-    const avgX = points.reduce((sum, p) => sum + p.x, 0) / points.length;
-    const avgY = points.reduce((sum, p) => sum + p.y, 0) / points.length;
-
-    const land = ctx.createRadialGradient(avgX - radius * 0.08, avgY - radius * 0.10, radius * 0.02, avgX, avgY, radius * 0.42);
-    land.addColorStop(0, "rgba(190,158,89,.96)");
-    land.addColorStop(0.38, "rgba(104,137,82,.96)");
-    land.addColorStop(0.72, "rgba(64,104,68,.95)");
-    land.addColorStop(1, "rgba(43,76,56,.92)");
-
-    ctx.beginPath();
-    ctx.moveTo(points[0].x, points[0].y);
-
-    for (let i = 1; i < points.length; i += 1) {
-      const prev = points[i - 1];
-      const current = points[i];
-      const mx = (prev.x + current.x) / 2;
-      const my = (prev.y + current.y) / 2;
-      ctx.quadraticCurveTo(prev.x, prev.y, mx, my);
-    }
-
-    ctx.closePath();
-    ctx.fillStyle = land;
-    ctx.fill();
-
-    ctx.lineWidth = Math.max(1, radius * 0.006);
-    ctx.strokeStyle = "rgba(255,231,162,.28)";
-    ctx.stroke();
-
-    ctx.globalAlpha = 0.22;
-    ctx.lineWidth = Math.max(0.7, radius * 0.003);
-    ctx.strokeStyle = "rgba(5,20,31,.70)";
-    for (let r = 0; r < 3; r += 1) {
-      ctx.beginPath();
-      for (let i = 0; i < points.length; i += 3) {
-        const p = points[(i + r) % points.length];
-        if (i === 0) ctx.moveTo(p.x, p.y);
-        else ctx.lineTo(p.x, p.y);
-      }
-      ctx.stroke();
-    }
-
-    ctx.restore();
-  }
-
-  function drawAncientCoastTraces(ctx, cx, cy, radius, view) {
-    ctx.save();
-    ctx.lineWidth = Math.max(0.8, radius * 0.0045);
-    ctx.strokeStyle = "rgba(243,201,111,.18)";
-    ctx.globalAlpha = 0.72;
-
-    const channels = [
-      { lon: -2.2, lat: 0.16, len: 0.74, curve: 0.30 },
-      { lon: -0.4, lat: 0.06, len: 0.62, curve: -0.24 },
-      { lon: 1.25, lat: -0.12, len: 0.68, curve: 0.22 },
-      { lon: 2.55, lat: 0.36, len: 0.54, curve: -0.18 }
-    ];
-
-    for (let i = 0; i < channels.length; i += 1) {
-      const c = channels[i];
-      const pts = [];
-
-      for (let step = 0; step < 12; step += 1) {
-        const k = step / 11 - 0.5;
-        const p = projectSphere(
-          c.lon + k * c.len,
-          c.lat + Math.sin(k * Math.PI * 2 + i) * c.curve * 0.22,
-          view,
-          cx,
-          cy,
-          radius
-        );
-
-        if (p.visible) pts.push(p);
-      }
-
-      if (pts.length < 3) continue;
-
-      ctx.beginPath();
-      ctx.moveTo(pts[0].x, pts[0].y);
-
-      for (let p = 1; p < pts.length; p += 1) {
-        ctx.lineTo(pts[p].x, pts[p].y);
-      }
-
       ctx.stroke();
     }
 
@@ -1491,41 +2322,29 @@
     ctx.arc(x2, y2, Math.max(1.8, radius * 0.010), 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.restore();
-
     if (reason === "boot" || reason === "mount") {
-      ctx.save();
       ctx.fillStyle = "rgba(232,241,255,.72)";
       ctx.font = `${Math.max(9, Math.round(radius * 0.040))}px ui-sans-serif, system-ui, sans-serif`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText("Mirrorland · Unknown Location", cx, cy - radius - Math.max(12, radius * 0.11));
-      ctx.restore();
+      ctx.fillText("Mirrorland · Hearth · governed source receiver", cx, cy - radius - Math.max(12, radius * 0.11));
     }
+
+    ctx.restore();
   }
 
-  function projectSphere(lon, lat, view, cx, cy, radius) {
-    const lambda = lon + view.yaw + view.phase * 0.12;
-    const phi = clamp(lat + view.pitch * 0.22, -1.42, 1.42);
+  function drawSourceHoldNotice(ctx, cx, cy, radius) {
+    ctx.save();
+    ctx.fillStyle = "rgba(255,231,162,.88)";
+    ctx.font = `${Math.max(11, Math.round(radius * 0.045))}px ui-sans-serif, system-ui, sans-serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("SOURCE HOLD", cx, cy - radius * 0.08);
 
-    const cosPhi = Math.cos(phi);
-    const x0 = cosPhi * Math.sin(lambda);
-    const y0 = Math.sin(phi);
-    const z0 = cosPhi * Math.cos(lambda);
-
-    const pitch = view.pitch * 0.45;
-    const cp = Math.cos(pitch);
-    const sp = Math.sin(pitch);
-
-    const y = y0 * cp - z0 * sp;
-    const z = y0 * sp + z0 * cp;
-
-    return {
-      x: cx + x0 * radius,
-      y: cy - y * radius,
-      z,
-      visible: z > -0.08
-    };
+    ctx.fillStyle = "rgba(232,241,255,.72)";
+    ctx.font = `${Math.max(8, Math.round(radius * 0.030))}px ui-sans-serif, system-ui, sans-serif`;
+    ctx.fillText("no sample-compatible governed planet source", cx, cy + radius * 0.05);
+    ctx.restore();
   }
 
   function pseudo(n) {
@@ -1558,7 +2377,6 @@
     }
 
     const points = buildSamplePoints(width, height);
-    let sampleCount = 0;
     let alphaPixelCount = 0;
     let visiblePixelCount = 0;
     const unique = new Set();
@@ -1568,8 +2386,6 @@
         const x = Math.max(0, Math.min(width - 1, Math.round(point.x)));
         const y = Math.max(0, Math.min(height - 1, Math.round(point.y)));
         const data = ctx.getImageData(x, y, 1, 1).data;
-
-        sampleCount += 1;
 
         const r = data[0] || 0;
         const g = data[1] || 0;
@@ -1647,6 +2463,15 @@
       reason,
       viewState: clonePlain(state.viewState),
 
+      activeSourceClass: state.activeSourceClass,
+      activeSourceRole: state.activeSourceRole,
+      activeSourceNames: clonePlain(state.activeSourceNames),
+      sourceAuthorityObservedCount: state.sourceAuthorityObservedCount,
+      sourceSampleCapableCount: state.sourceSampleCapableCount,
+      sourceFallbackCarrierActive: state.sourceFallbackCarrierActive,
+      fallbackClass: state.fallbackClass,
+      fallbackReason: state.fallbackReason,
+
       surfaceIdentityUnified: state.surfaceIdentityUnified,
       visibleCanvasAttributeApplied: state.visibleCanvasAttributeApplied,
       expressionSurfaceAttributeApplied: state.expressionSurfaceAttributeApplied,
@@ -1720,9 +2545,9 @@
       viewState: clonePlain(state.viewState),
       renderPacket: composeRenderPacket(reason),
 
-      surfaceIdentityUnified: state.surfaceIdentityUnified,
-      visibleCanvasAttributeApplied: state.visibleCanvasAttributeApplied,
-      expressionSurfaceAttributeApplied: state.expressionSurfaceAttributeApplied,
+      activeSourceClass: state.activeSourceClass,
+      activeSourceRole: state.activeSourceRole,
+      activeSourceNames: clonePlain(state.activeSourceNames),
       canvasPixelVisible: state.pixelVisible,
       canvasPixelSampleStatus: state.pixelSampleStatus,
 
@@ -1790,7 +2615,8 @@
         method: hex.method,
         reason,
         hexSurfaceSource: hex.name,
-        pixelVisible: state.pixelVisible
+        pixelVisible: state.pixelVisible,
+        activeSourceClass: state.activeSourceClass
       });
 
       return {
@@ -1824,15 +2650,15 @@
 
     root.HEARTH_CANVAS_HEX_GATE_PACKET = cloned;
     root.HEARTH_CANVAS_LAST_HEX_GATE_PACKET = cloned;
-    root.HEARTH_CANVAS_LIVE_SURFACE_IDENTITY_HEX_GATE_PACKET = cloned;
+    root.HEARTH_CANVAS_GOVERNED_SOURCE_HEX_GATE_PACKET = cloned;
 
     hearth.canvasHexGatePacket = cloned;
     hearth.canvasLastHexGatePacket = cloned;
-    hearth.canvasLiveSurfaceIdentityHexGatePacket = cloned;
+    hearth.canvasGovernedSourceHexGatePacket = cloned;
 
     lab.hearthCanvasHexGatePacket = cloned;
     lab.hearthCanvasLastHexGatePacket = cloned;
-    lab.hearthCanvasLiveSurfaceIdentityHexGatePacket = cloned;
+    lab.hearthCanvasGovernedSourceHexGatePacket = cloned;
 
     try {
       if (doc && isFunction(doc.dispatchEvent) && typeof root.CustomEvent === "function") {
@@ -1852,17 +2678,17 @@
 
     root.HEARTH_CANVAS_RENDER_PACKET = clonePlain(packet);
     root.HEARTH_CANVAS_VISIBLE_2D_RENDER_PACKET = clonePlain(packet);
-    root.HEARTH_CANVAS_LIVE_SURFACE_IDENTITY_RENDER_PACKET = clonePlain(packet);
+    root.HEARTH_CANVAS_GOVERNED_SOURCE_RENDER_PACKET = clonePlain(packet);
     root.HEARTH_VISIBLE_PLANET_PROOF = clonePlain(packet);
 
     hearth.canvasRenderPacket = clonePlain(packet);
     hearth.canvasVisible2dRenderPacket = clonePlain(packet);
-    hearth.canvasLiveSurfaceIdentityRenderPacket = clonePlain(packet);
+    hearth.canvasGovernedSourceRenderPacket = clonePlain(packet);
     hearth.visiblePlanetProof = clonePlain(packet);
 
     lab.hearthCanvasRenderPacket = clonePlain(packet);
     lab.hearthCanvasVisible2dRenderPacket = clonePlain(packet);
-    lab.hearthCanvasLiveSurfaceIdentityRenderPacket = clonePlain(packet);
+    lab.hearthCanvasGovernedSourceRenderPacket = clonePlain(packet);
     lab.hearthVisiblePlanetProof = clonePlain(packet);
 
     return packet;
@@ -1900,10 +2726,14 @@
     return getReceiptLight(false);
   }
 
-  function tick() {
+  function tick(time) {
     if (!state.drawLoopActive || state.disposed) return;
 
-    drawFrame("raf-visible-2d-output");
+    const now = safeNumber(time, Date.now());
+    if (!lastFrameTime || now - lastFrameTime > 32) {
+      lastFrameTime = now;
+      drawFrame("raf-governed-source-visible-2d-output");
+    }
 
     const schedule = isFunction(root.requestAnimationFrame)
       ? root.requestAnimationFrame.bind(root)
@@ -1915,13 +2745,18 @@
   function mount(options = {}) {
     state.lastMountedAt = nowIso();
 
+    discoverGovernedSourceAdapters(options.reason || "mount");
+    buildGovernedTexture(options.reason || "mount");
+
     const prepared = unifySurfaceIdentity(options.reason || "mount");
     state.mounted = prepared.length > 0;
 
     if (state.mounted) {
       drawFrame("mount");
       state.postgameStatus = state.pixelVisible
-        ? "CANVAS_HUB_MOUNTED_VISIBLE_2D_OUTPUT_ACTIVE"
+        ? sourceAdapters.length
+          ? "CANVAS_HUB_MOUNTED_GOVERNED_SOURCE_VISIBLE_2D_OUTPUT_ACTIVE"
+          : "CANVAS_HUB_MOUNTED_NEUTRAL_CARRIER_SOURCE_HOLD"
         : "CANVAS_HUB_MOUNTED_PIXEL_SAMPLE_NOT_VISIBLE";
     }
 
@@ -1936,7 +2771,7 @@
 
     state.booting = true;
     state.startedAt = state.startedAt || nowIso();
-    state.postgameStatus = "CANVAS_HUB_BOOTING_LIVE_SURFACE_IDENTITY_V12_4";
+    state.postgameStatus = "CANVAS_HUB_BOOTING_GOVERNED_SOURCE_RECEIVER_V12_5";
 
     record("HEARTH_CANVAS_HUB_BOOT_START", {
       contract: PUBLIC_CONTRACT,
@@ -1953,12 +2788,15 @@
 
     startLoop("boot");
 
-    record("HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_BOOTED", {
+    record("HEARTH_CANVAS_HUB_GOVERNED_SOURCE_PACKET_VISIBLE_2D_RECEIVER_BOOTED", {
       canvasElementFound: state.canvasElementFound,
       canvasElementCount: state.canvasElementCount,
       surfaceIdentityUnified: state.surfaceIdentityUnified,
       pixelSampleStatus: state.pixelSampleStatus,
       pixelVisible: state.pixelVisible,
+      activeSourceClass: state.activeSourceClass,
+      activeSourceNames: state.activeSourceNames,
+      sourceFallbackCarrierActive: state.sourceFallbackCarrierActive,
       visualPassClaimed: false
     });
 
@@ -1971,6 +2809,8 @@
   function refresh(reason = "refresh") {
     readControlAuthority();
     readHexSurfaceAuthority();
+    discoverGovernedSourceAdapters(reason);
+    buildGovernedTexture(reason);
     unifySurfaceIdentity(reason);
     drawFrame(reason);
     updateDataset();
@@ -2115,6 +2955,15 @@
     });
   }
 
+  function rebuildSourceTexture(reason = "rebuild-source-texture") {
+    discoverGovernedSourceAdapters(reason);
+    buildGovernedTexture(reason);
+    drawFrame(reason);
+    updateDataset();
+    publishGlobals(reason);
+    return getReceipt();
+  }
+
   function updateDataset() {
     setDataset("hearthCanvasLoaded", "true");
     setDataset("hearthCanvasPresent", String(state.canvasElementFound));
@@ -2137,6 +2986,21 @@
     setDataset("hearthCanvasStageSelector", state.stageSelector);
     setDataset("hearthCanvasSelector", state.primaryCanvasSelector);
     setDataset("hearthCanvasPrimaryCanvasId", state.primaryCanvasId);
+
+    setDataset("hearthCanvasGovernedSourceReceiverActive", "true");
+    setDataset("hearthCanvasActiveSourceClass", state.activeSourceClass);
+    setDataset("hearthCanvasActiveSourceRole", state.activeSourceRole);
+    setDataset("hearthCanvasActiveSourceNames", state.activeSourceNames.join(","));
+    setDataset("hearthCanvasSourceAuthorityObservedCount", String(state.sourceAuthorityObservedCount));
+    setDataset("hearthCanvasSourceAuthorityNames", state.sourceAuthorityNames.join(","));
+    setDataset("hearthCanvasSourceSampleCapableCount", String(state.sourceSampleCapableCount));
+    setDataset("hearthCanvasSourceSampleCapableNames", state.sourceSampleCapableNames.join(","));
+    setDataset("hearthCanvasSourceAdapterStatus", state.sourceAdapterStatus);
+    setDataset("hearthCanvasSourceFallbackCarrierActive", String(state.sourceFallbackCarrierActive));
+    setDataset("hearthCanvasFallbackClass", state.fallbackClass);
+    setDataset("hearthCanvasFallbackReason", state.fallbackReason);
+    setDataset("hearthCanvasActiveTextureBuilt", String(state.activeTextureBuilt));
+    setDataset("hearthCanvasActiveTextureStatus", state.activeTextureStatus);
 
     setDataset("hearthCanvasSurfaceIdentityUnified", String(state.surfaceIdentityUnified));
     setDataset("hearthCanvasVisibleCanvasAttributeApplied", String(state.visibleCanvasAttributeApplied));
@@ -2209,7 +3073,21 @@
       CANVAS_VERSION: VERSION,
 
       CANVAS_HUB_ACTIVE: "true",
-      LIVE_SURFACE_IDENTITY_UNIFICATION_ACTIVE: "true",
+      GOVERNED_SOURCE_RECEIVER_ACTIVE: "true",
+      ACTIVE_SOURCE_CLASS: state.activeSourceClass,
+      ACTIVE_SOURCE_ROLE: state.activeSourceRole,
+      ACTIVE_SOURCE_NAMES: state.activeSourceNames.join(","),
+      SOURCE_AUTHORITY_OBSERVED_COUNT: String(state.sourceAuthorityObservedCount),
+      SOURCE_AUTHORITY_NAMES: state.sourceAuthorityNames.join(","),
+      SOURCE_SAMPLE_CAPABLE_COUNT: String(state.sourceSampleCapableCount),
+      SOURCE_SAMPLE_CAPABLE_NAMES: state.sourceSampleCapableNames.join(","),
+      SOURCE_ADAPTER_STATUS: state.sourceAdapterStatus,
+      SOURCE_FALLBACK_CARRIER_ACTIVE: String(state.sourceFallbackCarrierActive),
+      FALLBACK_CLASS: state.fallbackClass,
+      FALLBACK_REASON: state.fallbackReason,
+      ACTIVE_TEXTURE_BUILT: String(state.activeTextureBuilt),
+      ACTIVE_TEXTURE_STATUS: state.activeTextureStatus,
+
       VISIBLE_2D_OUTPUT_ACTIVE: String(state.pixelVisible),
       SURFACE_IDENTITY_UNIFIED: String(state.surfaceIdentityUnified),
       VISIBLE_CANVAS_ATTRIBUTE_APPLIED: String(state.visibleCanvasAttributeApplied),
@@ -2294,7 +3172,7 @@
 
     return {
       packetType: "HEARTH_CANVAS_HUB_RECEIPT_PACKET",
-      canvasReceiptPacketType: "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_RECEIPT_PACKET_v12_4",
+      canvasReceiptPacketType: "HEARTH_CANVAS_HUB_GOVERNED_SOURCE_PACKET_VISIBLE_2D_RECEIVER_RECEIPT_PACKET_v12_5",
       contract: PUBLIC_CONTRACT,
       CONTRACT: PUBLIC_CONTRACT,
       receipt: PUBLIC_RECEIPT,
@@ -2327,7 +3205,7 @@
       expectedHexSurfaceContract: EXPECTED_HEX_SURFACE_CONTRACT,
       expectedHexAuthorityContract: EXPECTED_HEX_AUTHORITY_CONTRACT,
 
-      role: "canvas-receiver-output-carrier-live-visible-2d-surface",
+      role: "canvas-receiver-output-carrier-governed-source-visible-2d-surface",
 
       loaded: true,
       booted: state.booted,
@@ -2338,9 +3216,25 @@
       canvasHubActive: true,
       canvasReceiverActive: true,
       canvasOutputCarrierActive: true,
-      liveSurfaceIdentityUnificationActive: true,
+      governedSourceReceiverActive: true,
       visible2dOutputActive: state.pixelVisible,
       canvasSurfaceTruthProbeCompatible: true,
+
+      activeSourceClass: state.activeSourceClass,
+      activeSourceRole: state.activeSourceRole,
+      activeSourceNames: clonePlain(state.activeSourceNames),
+      sourceAuthorityObservedCount: state.sourceAuthorityObservedCount,
+      sourceAuthorityNames: clonePlain(state.sourceAuthorityNames),
+      sourceSampleCapableCount: state.sourceSampleCapableCount,
+      sourceSampleCapableNames: clonePlain(state.sourceSampleCapableNames),
+      sourceAdapterStatus: state.sourceAdapterStatus,
+      sourceFallbackCarrierActive: state.sourceFallbackCarrierActive,
+      fallbackClass: state.fallbackClass,
+      fallbackReason: state.fallbackReason,
+      activeTextureBuilt: state.activeTextureBuilt,
+      activeTextureStatus: state.activeTextureStatus,
+      activeTextureWidth: state.activeTextureWidth,
+      activeTextureHeight: state.activeTextureHeight,
 
       surfaceIdentityUnified: state.surfaceIdentityUnified,
       visibleCanvasAttributeApplied: state.visibleCanvasAttributeApplied,
@@ -2415,6 +3309,8 @@
       supportsPlanetaryViewControlPacket: true,
       supportsCanvasHexGatePacket: true,
       supportsHexSurfaceGateForwarding: true,
+      supportsGovernedSourceDiscovery: true,
+      supportsGovernedSourceTextureRebuild: true,
 
       firstFailedCoordinate: state.firstFailedCoordinate,
       recommendedNextOwner: state.recommendedNextOwner,
@@ -2462,6 +3358,7 @@
       startedAt: state.startedAt,
       lastMountedAt: state.lastMountedAt,
       lastDrawAt: state.lastDrawAt,
+      textureMeta: clonePlain(textureMeta),
       updatedAt: nowIso(),
       ...NO_CLAIMS,
       ...UPPER_NO_CLAIMS
@@ -2472,7 +3369,7 @@
     const r = isObject(receipt) ? receipt : getReceiptLight(false);
 
     return [
-      "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_RECEIPT",
+      "HEARTH_CANVAS_HUB_GOVERNED_SOURCE_PACKET_VISIBLE_2D_RECEIVER_RECEIPT",
       "",
       "HEADER",
       line("contract", PUBLIC_CONTRACT),
@@ -2484,6 +3381,22 @@
       line("version", VERSION),
       line("file", FILE),
       line("route", ROUTE),
+      "",
+      "SOURCE",
+      line("governedSourceReceiverActive", true),
+      line("activeSourceClass", r.activeSourceClass),
+      line("activeSourceRole", r.activeSourceRole),
+      line("activeSourceNames", (r.activeSourceNames || []).join(",")),
+      line("sourceAuthorityObservedCount", r.sourceAuthorityObservedCount),
+      line("sourceAuthorityNames", (r.sourceAuthorityNames || []).join(",")),
+      line("sourceSampleCapableCount", r.sourceSampleCapableCount),
+      line("sourceSampleCapableNames", (r.sourceSampleCapableNames || []).join(",")),
+      line("sourceAdapterStatus", r.sourceAdapterStatus),
+      line("sourceFallbackCarrierActive", r.sourceFallbackCarrierActive),
+      line("fallbackClass", r.fallbackClass),
+      line("fallbackReason", r.fallbackReason),
+      line("activeTextureBuilt", r.activeTextureBuilt),
+      line("activeTextureStatus", r.activeTextureStatus),
       "",
       "SURFACE",
       line("surfaceIdentityUnified", r.surfaceIdentityUnified),
@@ -2556,10 +3469,13 @@
     const r = getReceiptLight(false);
 
     return [
-      "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_STATUS",
+      "HEARTH_CANVAS_HUB_GOVERNED_SOURCE_PACKET_VISIBLE_2D_RECEIVER_STATUS",
       line("contract", r.contract),
       line("receipt", r.receipt),
       line("internalImplementationContract", r.internalImplementationContract),
+      line("activeSourceClass", r.activeSourceClass),
+      line("sourceSampleCapableCount", r.sourceSampleCapableCount),
+      line("sourceFallbackCarrierActive", r.sourceFallbackCarrierActive),
       line("surfaceIdentityUnified", r.surfaceIdentityUnified),
       line("canvasElementFound", r.canvasElementFound),
       line("canvasSelector", r.canvasSelector),
@@ -2579,6 +3495,7 @@
     return {
       ...clonePlain(state),
       diagnosticFields: composeDiagnosticFields(),
+      textureMeta: clonePlain(textureMeta),
       ...NO_CLAIMS
     };
   }
@@ -2607,7 +3524,7 @@
     root.HEARTH_CANVAS_PARENT_RECEIPT = receipt;
     root.HEARTH_CANVAS_VISIBLE_PLANET_RECEIPT = receipt;
     root.HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT = receipt;
-    root.HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_RECEIPT = receipt;
+    root.HEARTH_CANVAS_HUB_GOVERNED_SOURCE_PACKET_VISIBLE_2D_RECEIVER_RECEIPT = receipt;
     root.HEARTH_CANVAS_DIAGNOSTIC_FIELDS = clonePlain(receipt.diagnosticFields);
 
     hearth.canvasReceipt = receipt;
@@ -2615,7 +3532,7 @@
     hearth.canvasParentReceipt = receipt;
     hearth.canvasVisiblePlanetReceipt = receipt;
     hearth.canvasHubCompositeFirstFastViewDeferredHexReceiverReceipt = receipt;
-    hearth.canvasHubLiveSurfaceIdentityUnifiedVisible2dOutputReceipt = receipt;
+    hearth.canvasHubGovernedSourcePacketVisible2dReceiverReceipt = receipt;
     hearth.canvasDiagnosticFields = clonePlain(receipt.diagnosticFields);
 
     lab.hearthCanvasReceipt = receipt;
@@ -2623,7 +3540,7 @@
     lab.hearthCanvasParentReceipt = receipt;
     lab.hearthCanvasVisiblePlanetReceipt = receipt;
     lab.hearthCanvasHubCompositeFirstFastViewDeferredHexReceiverReceipt = receipt;
-    lab.hearthCanvasHubLiveSurfaceIdentityUnifiedVisible2dOutputReceipt = receipt;
+    lab.hearthCanvasHubGovernedSourcePacketVisible2dReceiverReceipt = receipt;
     lab.hearthCanvasDiagnosticFields = clonePlain(receipt.diagnosticFields);
 
     return true;
@@ -2642,6 +3559,8 @@
       surfaceIdentityUnified: state.surfaceIdentityUnified,
       pixelSampleStatus: state.pixelSampleStatus,
       pixelVisible: state.pixelVisible,
+      activeSourceClass: state.activeSourceClass,
+      sourceSampleCapableCount: state.sourceSampleCapableCount,
       visualPassClaimed: false
     });
 
@@ -2716,6 +3635,12 @@
 
     unifySurfaceIdentity,
     collectCanvasCandidates,
+    collectSourceAuthorities,
+    discoverGovernedSourceAdapters,
+    rebuildSourceTexture,
+    buildGovernedTexture,
+    sampleGovernedSource,
+
     composeRenderPacket,
     composeCanvasHexGatePacket,
     sendHexGatePacket,
@@ -2756,11 +3681,13 @@
     supportsPlanetaryViewControlPacket: true,
     supportsCanvasHexGatePacket: true,
     supportsHexSurfaceGateForwarding: true,
+    supportsGovernedSourceDiscovery: true,
+    supportsGovernedSourceTextureRebuild: true,
 
     canvasHubActive: true,
     canvasReceiverActive: true,
     canvasOutputCarrierActive: true,
-    liveSurfaceIdentityUnificationActive: true,
+    governedSourceReceiverActive: true,
 
     ownsCanvasDrawing: true,
     ownsCanvasCreationInsideExistingMount: true,
@@ -2802,7 +3729,7 @@
       boot();
     }
   } catch (error) {
-    recordError("HEARTH_CANVAS_HUB_V12_4_INITIALIZATION_FAILED", error);
+    recordError("HEARTH_CANVAS_HUB_V12_5_INITIALIZATION_FAILED", error);
 
     try {
       publishGlobals("initialization-fallback-publication");

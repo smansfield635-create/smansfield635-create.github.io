@@ -1,25 +1,28 @@
 // /assets/hearth/hearth.canvas.js
 // HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3
 // Full-file replacement.
-// Canvas Hub / receiver-output bishop / internalized visible-expression bridge.
+// Canvas Hub / receiver-output bishop / Canvas standards NEWS+Fibonacci expression-surface proof.
 // Served CONTRACT intentionally remains v12_3 so Route Conductor, LabWest, diagnostics,
-// and accepted lineage tables continue to recognize the Canvas parent without upstream churn.
-// Internal renewal: HEARTH_CANVAS_HUB_INTERNALIZED_EXPRESSION_SURFACE_PROOF_RECEIVER_TNT_v12_4
+// Queen controls, and accepted lineage tables continue to recognize the Canvas parent.
+// Internal renewal:
+// HEARTH_CANVAS_HUB_STANDARDS_NEWS_FIBONACCI_EXPRESSION_SURFACE_PROOF_TNT_v12_5
 //
 // Purpose:
 // - Preserve Canvas as receiver/output carrier only.
-// - Internalize the former expression bridge so the expression surface is inspectable through Canvas.
-// - Publish Canvas Hub, Canvas receiver, Canvas station, expression hub, visible planet, and expression bridge aliases.
-// - Locate or create the 2D canvas expression surface under the existing Hearth stage/mount.
-// - Accept Route Conductor, LabWest, Queen, diagnostic, and finger packets.
+// - Publish current Canvas Hub / Canvas Station / Expression Hub / Visible Planet aliases.
+// - Internalize expression-surface proof so diagnostics can inspect Canvas itself.
+// - Maintain a separate Canvas standards NEWS alignment and Fibonacci synchronization,
+//   distinct from the diagnostic-track NEWS/Fibonacci result.
+// - Locate or create the 2D Canvas expression surface under the existing Hearth stage/mount.
+// - Accept Route Conductor, LabWest, Queen, diagnostic, and finger packets through public methods.
 // - Read downstream drawable adapters as external authorities only.
-// - Delegate drawing to a real downstream drawable adapter when present.
-// - Otherwise draw a native 2D projected globe expression surface.
-// - Publish pixel-visible proof upward from the Canvas file itself.
+// - Delegate drawing to a downstream drawable adapter when present.
+// - Otherwise draw a native 2D projected-globe expression surface as Canvas proof only.
+// - Publish pixel-visible proof upward from Canvas.
 // - Preserve no terrain truth, hydrology truth, elevation truth, material truth, Hex truth,
 //   finger truth, pointer truth, Queen truth, LabWest truth, Route Conductor truth,
 //   F13 final claim, F21 latch, ready text, completion latch, final visual pass,
-//   generated image, graphicBox, or WebGL.
+//   generated image, GraphicBox, or WebGL.
 
 (() => {
   "use strict";
@@ -30,15 +33,17 @@
     "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT_v12_3";
 
   const INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_CANVAS_HUB_INTERNALIZED_EXPRESSION_SURFACE_PROOF_RECEIVER_TNT_v12_4";
+    "HEARTH_CANVAS_HUB_STANDARDS_NEWS_FIBONACCI_EXPRESSION_SURFACE_PROOF_TNT_v12_5";
   const INTERNAL_RENEWAL_RECEIPT =
-    "HEARTH_CANVAS_HUB_INTERNALIZED_EXPRESSION_SURFACE_PROOF_RECEIVER_RECEIPT_v12_4";
+    "HEARTH_CANVAS_HUB_STANDARDS_NEWS_FIBONACCI_EXPRESSION_SURFACE_PROOF_RECEIPT_v12_5";
 
   const PREVIOUS_CONTRACT =
-    "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_TNT_v12_2";
+    "HEARTH_CANVAS_HUB_INTERNALIZED_EXPRESSION_SURFACE_PROOF_RECEIVER_TNT_v12_4";
   const PREVIOUS_RECEIPT =
-    "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_RECEIPT_v12_2";
+    "HEARTH_CANVAS_HUB_INTERNALIZED_EXPRESSION_SURFACE_PROOF_RECEIVER_RECEIPT_v12_4";
 
+  const LINEAGE_V12_2_CONTRACT =
+    "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_TNT_v12_2";
   const LINEAGE_V12_1_CONTRACT =
     "HEARTH_CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_TNT_v12_1";
   const LINEAGE_V12_CONTRACT =
@@ -49,18 +54,22 @@
     "HEARTH_CANVAS_EXPRESSION_HUB_FINGER_MANAGER_TNT_v11_6";
 
   const EXPRESSION_BRIDGE_CONTRACT =
-    "HEARTH_CANVAS_EXPRESSION_BRIDGE_SECOND_PAIR_TNT_v2";
+    "HEARTH_CANVAS_EXPRESSION_SURFACE_PROOF_BRIDGE_TNT_v3";
   const EXPRESSION_BRIDGE_RECEIPT =
-    "HEARTH_CANVAS_EXPRESSION_BRIDGE_SECOND_PAIR_RECEIPT_v2";
+    "HEARTH_CANVAS_EXPRESSION_SURFACE_PROOF_BRIDGE_RECEIPT_v3";
 
   const FILE = "/assets/hearth/hearth.canvas.js";
   const ROUTE = "/showroom/globe/hearth/";
   const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
+  const HTML_FILE = "/showroom/globe/hearth/index.html";
+  const INDEX_FILE = "/showroom/globe/hearth/index.js";
   const ROUTE_CONDUCTOR_FILE = "/showroom/globe/hearth/hearth.js";
   const CONTROL_FILE = "/assets/hearth/hearth.controls.js";
   const LABWEST_FILE = "/assets/lab/runtime-table.west.js";
 
-  const ROUTE_CONDUCTOR_CONTRACT =
+  const ROUTE_CONDUCTOR_SHOWTIME_CONTRACT =
+    "HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC_TNT_v10";
+  const ROUTE_CONDUCTOR_V9_9_CONTRACT =
     "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_TNT_v9_9";
   const QUEEN_CONTROL_CONTRACT =
     "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE_TNT_v1";
@@ -69,12 +78,12 @@
   const LABWEST_V4_7_CONTRACT =
     "LAB_RUNTIME_TABLE_CARDINAL_WEST_BISHOP_CHORD_CANVAS_RELEASE_BRIDGE_TNT_v4_7";
 
+  const VERSION =
+    "2026-06-06.hearth-canvas-hub-standards-news-fibonacci-expression-surface-proof-v12-5-served-v12-3";
+
   const POINTER_FINGER_FILE = "/assets/hearth/hearth.canvas.finger.inspect.js";
   const SURFACE_FINGER_FILE = "/assets/hearth/hearth.canvas.finger.surface.js";
   const COMPOSITE_FINGER_FILE = "/assets/hearth/hearth.canvas.finger.composite.js";
-
-  const VERSION =
-    "2026-06-06.hearth-canvas-hub-internalized-expression-surface-proof-receiver-v12-4-served-v12-3";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
@@ -89,6 +98,7 @@
     f21EligibleForNorth: false,
     f21SubmittedToNorth: false,
     f21Claimed: false,
+    f21ClaimedByCanvas: false,
     completionLatched: false,
     finalCompletionLatched: false,
     degradedCompletionLatched: false,
@@ -105,6 +115,21 @@
     webgl: false,
     visualPassClaimed: false,
     finalVisualPassClaimed: false
+  });
+
+  const FINGER_FILES = Object.freeze({
+    boundary: "/assets/hearth/hearth.canvas.finger.boundary.js",
+    mass: "/assets/hearth/hearth.canvas.finger.mass.js",
+    surface: SURFACE_FINGER_FILE,
+    light: "/assets/hearth/hearth.canvas.finger.light.js",
+    inspect: POINTER_FINGER_FILE,
+    landform: "/assets/hearth/hearth.canvas.finger.landform.js",
+    elevation: "/assets/hearth/hearth.canvas.finger.elevation.js",
+    material: "/assets/hearth/hearth.canvas.finger.material.js",
+    hydrology: "/assets/hearth/hearth.canvas.finger.hydrology.js",
+    atmosphere: "/assets/hearth/hearth.canvas.finger.atmosphere.js",
+    lighting: "/assets/hearth/hearth.canvas.finger.lighting.js",
+    composite: COMPOSITE_FINGER_FILE
   });
 
   const CANVAS_ALIAS_PATHS = Object.freeze([
@@ -161,22 +186,18 @@
   const EXPRESSION_BRIDGE_ALIAS_PATHS = Object.freeze([
     "HEARTH_CANVAS_EXPRESSION_BRIDGE",
     "HEARTH_CANVAS_VISIBLE_EXPRESSION_BRIDGE",
-    "HEARTH_CANVAS_SECOND_EXPRESSION_BRIDGE",
-    "HEARTH_CANVAS_EXPRESSION_BRIDGE_SECOND_PAIR",
-    "HEARTH_CANVAS_EXPRESSION_BRIDGE_SECOND_PAIR_TNT_v2",
     "HEARTH_CANVAS_EXPRESSION_SURFACE_BRIDGE",
+    "HEARTH_CANVAS_EXPRESSION_SURFACE_PROOF_BRIDGE",
 
     "HEARTH.canvasExpressionBridge",
     "HEARTH.canvasVisibleExpressionBridge",
-    "HEARTH.canvasSecondExpressionBridge",
-    "HEARTH.canvasExpressionBridgeSecondPair",
     "HEARTH.canvasExpressionSurfaceBridge",
+    "HEARTH.canvasExpressionSurfaceProofBridge",
 
     "DEXTER_LAB.hearthCanvasExpressionBridge",
     "DEXTER_LAB.hearthCanvasVisibleExpressionBridge",
-    "DEXTER_LAB.hearthCanvasSecondExpressionBridge",
-    "DEXTER_LAB.hearthCanvasExpressionBridgeSecondPair",
-    "DEXTER_LAB.hearthCanvasExpressionSurfaceBridge"
+    "DEXTER_LAB.hearthCanvasExpressionSurfaceBridge",
+    "DEXTER_LAB.hearthCanvasExpressionSurfaceProofBridge"
   ]);
 
   const EXTERNAL_ADAPTER_ALIAS_PATHS = Object.freeze([
@@ -207,26 +228,26 @@
 
     "HEARTH_HEX_SURFACE",
     "HEARTH_HEX_SURFACE_RENDERER",
-    "HEARTH_HEX_SURFACE_CANVAS_HUB_THREE_FILE_VISIBLE_EXPRESSION_RENDERER",
     "HEARTH_HEX_SURFACE_FOUR_PAIR_AUTHORITY_CONSUMER",
     "HEARTH.hexSurface",
     "HEARTH.hexSurfaceRenderer",
     "DEXTER_LAB.hearthHexSurface",
-    "DEXTER_LAB.hearthHexSurfaceRenderer",
-
-    "HEARTH_HEX_FOUR_PAIR_AUTHORITY",
-    "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY",
-    "HEARTH.hexFourPairAuthority",
-    "DEXTER_LAB.hearthHexFourPairAuthority"
+    "DEXTER_LAB.hearthHexSurfaceRenderer"
   ]);
 
   const UPSTREAM_TARGET_ALIAS_PATHS = Object.freeze([
     "HEARTH_ROUTE_CONDUCTOR",
     "HEARTH_ROUTE_NORTH_BISHOP",
+    "HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC",
+    "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL",
     "HEARTH.routeConductor",
     "HEARTH.routeNorthBishop",
+    "HEARTH.routeConductorShowtimeNewsFibonacciQueenCanvasSync",
+    "HEARTH.routeConductorBishopQueenCanvasRecognitionFunnel",
     "DEXTER_LAB.hearthRouteConductor",
     "DEXTER_LAB.hearthRouteNorthBishop",
+    "DEXTER_LAB.hearthRouteConductorShowtimeNewsFibonacciQueenCanvasSync",
+    "DEXTER_LAB.hearthRouteConductorBishopQueenCanvasRecognitionFunnel",
 
     "LAB_RUNTIME_TABLE_WEST",
     "RUNTIME_TABLE_WEST",
@@ -260,17 +281,6 @@
     "DEXTER_LAB.hearthPlanetaryControls"
   ]);
 
-  const CANVAS_SELECTORS = Object.freeze([
-    "#hearthCanvas",
-    "canvas[data-hearth-expression-surface='true']",
-    "canvas[data-hearth-visible-canvas='true']",
-    "canvas[data-hearth-canvas-hub='true']",
-    "canvas[data-hearth-base-globe-canvas='true']",
-    "canvas[data-hearth-planet-canvas='true']",
-    "canvas[data-hearth-canvas='true']",
-    "canvas"
-  ]);
-
   const MOUNT_SELECTORS = Object.freeze([
     "#hearthCanvasMount",
     "[data-hearth-canvas-mount]",
@@ -283,20 +293,15 @@
     "body"
   ]);
 
-  const FINGER_FILES = Object.freeze({
-    boundary: "/assets/hearth/hearth.canvas.finger.boundary.js",
-    mass: "/assets/hearth/hearth.canvas.finger.mass.js",
-    surface: SURFACE_FINGER_FILE,
-    light: "/assets/hearth/hearth.canvas.finger.light.js",
-    inspect: POINTER_FINGER_FILE,
-    landform: "/assets/hearth/hearth.canvas.finger.landform.js",
-    elevation: "/assets/hearth/hearth.canvas.finger.elevation.js",
-    material: "/assets/hearth/hearth.canvas.finger.material.js",
-    hydrology: "/assets/hearth/hearth.canvas.finger.hydrology.js",
-    atmosphere: "/assets/hearth/hearth.canvas.finger.atmosphere.js",
-    lighting: "/assets/hearth/hearth.canvas.finger.lighting.js",
-    composite: COMPOSITE_FINGER_FILE
-  });
+  const CANVAS_SELECTORS = Object.freeze([
+    "#hearthCanvas",
+    "canvas[data-hearth-expression-surface='true']",
+    "canvas[data-hearth-visible-canvas='true']",
+    "canvas[data-hearth-canvas-hub='true']",
+    "canvas[data-hearth-base-globe-canvas='true']",
+    "canvas[data-hearth-planet-canvas='true']",
+    "canvas[data-hearth-canvas='true']"
+  ]);
 
   const state = {
     contract: CONTRACT,
@@ -310,7 +315,7 @@
     diagnosticRoute: DIAGNOSTIC_ROUTE,
     version: VERSION,
 
-    role: "canvas-hub-receiver-output-bishop-internalized-expression-surface",
+    role: "canvas-hub-receiver-output-bishop-standards-news-fibonacci-expression-surface-proof",
     servedContractPreservedForUpstreamRecognition: true,
     internalizedExpressionBridgeActive: true,
     expressionBridgeContract: EXPRESSION_BRIDGE_CONTRACT,
@@ -422,7 +427,6 @@
     canvasPreReleaseCarrierSafeForWest: false,
     canvasParentReleaseAccepted: false,
     canvasParentReleaseLawful: false,
-    releasePacketAccepted: false,
 
     f13CanvasReadinessObserved: false,
     f13VisibleEvidenceAvailable: false,
@@ -447,6 +451,16 @@
     nextFingerKey: "inspect",
     nextFingerFile: POINTER_FINGER_FILE,
     pointerFingerObserved: false,
+
+    canvasStandardsNewsAlignmentActive: true,
+    canvasStandardsNewsAlignmentStatus: "WAITING_CANVAS_EXPRESSION_SURFACE_PROOF",
+    canvasStandardsNewsAlignmentScore: 0,
+    canvasStandardsNewsAlignmentFirstFailedStage: "CANVAS_MOUNT",
+    canvasStandardsFibonacciSynchronizationActive: true,
+    canvasStandardsFibonacciSynchronizationStatus: "WAITING_F1_CANVAS_MOUNT",
+    canvasStandardsFibonacciSynchronizationScore: 0,
+    canvasStandardsFibonacciSynchronizationFirstFailedStage: "F1_CANVAS_MOUNT",
+    canvasStandardsFibonacciF21HeldByNorthBoundary: true,
 
     firstFailedCoordinate: "VISIBLE_EXPRESSION_NOT_DRAWN",
     recommendedNextFile: FILE,
@@ -498,13 +512,50 @@
     return fallback;
   }
 
+  function firstDefined(...values) {
+    for (const value of values) {
+      if (value !== undefined && value !== null && value !== "") return value;
+    }
+    return undefined;
+  }
+
+  function line(key, value) {
+    return `${key}=${value === undefined || value === null ? "" : String(value)}`;
+  }
+
   function clonePlain(value) {
     if (!isObject(value) && !Array.isArray(value)) return value;
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
-      return Array.isArray(value) ? value.slice() : Object.assign({}, value);
+      if (Array.isArray(value)) return value.slice();
+      const output = {};
+      Object.keys(value).forEach((key) => {
+        const item = value[key];
+        if (typeof item === "function") return;
+        if (item && item.nodeType) return;
+        output[key] = item;
+      });
+      return output;
     }
+  }
+
+  function packetSummary(packet) {
+    if (!isObject(packet)) return null;
+
+    return {
+      packetType: safeString(packet.packetType || packet.type || ""),
+      contract: contractOf(packet),
+      receipt: receiptOf(packet),
+      sourceFile: safeString(packet.sourceFile || packet.file || ""),
+      targetFile: safeString(packet.targetFile || ""),
+      destinationFile: safeString(packet.destinationFile || ""),
+      handoffTo: safeString(packet.handoffTo || ""),
+      canvasReleaseAuthorized: packet.canvasReleaseAuthorized === true,
+      controlHandshakeAuthorized: packet.controlHandshakeAuthorized === true,
+      viewState: isObject(packet.viewState) ? clonePlain(packet.viewState) : null,
+      reason: safeString(packet.reason || packet.drawReason || "")
+    };
   }
 
   function trim(list, max) {
@@ -517,6 +568,7 @@
       event: safeString(event, "CANVAS_HUB_EVENT"),
       detail: clonePlain(detail)
     };
+
     state.events.push(item);
     trim(state.events, 180);
     state.updatedAt = item.at;
@@ -530,6 +582,7 @@
       message: error && error.message ? String(error.message) : safeString(error),
       detail: clonePlain(detail)
     };
+
     state.errors.push(item);
     trim(state.errors, 120);
     state.updatedAt = item.at;
@@ -573,20 +626,20 @@
     doc.documentElement.dataset[key] = value === undefined || value === null ? "" : String(value);
   }
 
-  function q(selector) {
-    if (!doc) return null;
+  function q(selector, scope) {
+    const base = scope || doc;
+    if (!base || !isFunction(base.querySelector)) return null;
+
     try {
-      return doc.querySelector(selector);
+      return base.querySelector(selector);
     } catch (_error) {
       return null;
     }
   }
 
-  function firstElement(selectors) {
-    if (!doc) return { element: null, selector: "NONE" };
-
+  function firstElement(selectors, scope) {
     for (const selector of selectors) {
-      const element = q(selector);
+      const element = q(selector, scope);
       if (element) return { element, selector };
     }
 
@@ -606,6 +659,7 @@
 
   function contractOf(value) {
     if (!isObject(value)) return "";
+
     return safeString(
       value.currentCanvasParentContract ||
       value.canvasLocalStationContract ||
@@ -613,6 +667,8 @@
       value.hearthCanvasContract ||
       value.controlContract ||
       value.controlsContract ||
+      value.routeConductorContract ||
+      value.labWestContract ||
       value.contract ||
       value.CONTRACT ||
       value.sourceContract ||
@@ -622,6 +678,7 @@
 
   function receiptOf(value) {
     if (!isObject(value)) return "";
+
     return safeString(
       value.currentCanvasParentReceipt ||
       value.canvasLocalStationReceipt ||
@@ -629,6 +686,8 @@
       value.hearthCanvasReceipt ||
       value.controlReceipt ||
       value.controlsReceipt ||
+      value.routeConductorReceipt ||
+      value.labWestReceipt ||
       value.receipt ||
       value.RECEIPT ||
       value.sourceReceipt ||
@@ -638,6 +697,7 @@
 
   function noFinalClaims(value) {
     const s = isObject(value) ? value : {};
+
     return !(
       s.f13Claimed === true ||
       s.f13ClaimedByCanvas === true ||
@@ -692,6 +752,7 @@
       "getExpressionHubReceipt",
       "getVisiblePlanetReceipt",
       "getVisibleGlobeReceipt",
+      "getCanvasVisibleProofReceipt",
       "getStructuralCarrier",
       "readStructuralCarrier",
       "getCarrierReceipt",
@@ -809,23 +870,26 @@
   function locateOrCreateCanvas() {
     if (!doc) return { canvas: null, ctx: null, mount: null };
 
-    let canvas = null;
-    let canvasSelector = "NONE";
-
-    for (const selector of CANVAS_SELECTORS) {
-      const found = q(selector);
-      if (found && found.tagName && found.tagName.toLowerCase() === "canvas") {
-        canvas = found;
-        canvasSelector = selector;
-        break;
-      }
-    }
-
     const mountResult = firstElement(MOUNT_SELECTORS);
     const mount = mountResult.element;
 
     state.canvasMountFound = Boolean(mount);
     state.canvasMountSelector = mountResult.selector;
+
+    let canvas = null;
+    let canvasSelector = "NONE";
+
+    if (mount) {
+      const scoped = firstElement(CANVAS_SELECTORS, mount);
+      canvas = scoped.element;
+      canvasSelector = scoped.selector;
+    }
+
+    if (!canvas) {
+      const global = firstElement(CANVAS_SELECTORS);
+      canvas = global.element;
+      canvasSelector = global.selector;
+    }
 
     if (!canvas && mount) {
       canvas = doc.createElement("canvas");
@@ -892,7 +956,7 @@
       const h = canvas.height;
       const sample = Math.max(4, Math.min(28, Math.floor(Math.min(w, h) / 34)));
       const points = [
-        [Math.floor(w * 0.5 - sample / 2), Math.floor(h * 0.5 - sample / 2)],
+        [Math.floor(w * 0.50 - sample / 2), Math.floor(h * 0.50 - sample / 2)],
         [Math.floor(w * 0.36 - sample / 2), Math.floor(h * 0.42 - sample / 2)],
         [Math.floor(w * 0.62 - sample / 2), Math.floor(h * 0.58 - sample / 2)],
         [Math.floor(w * 0.49 - sample / 2), Math.floor(h * 0.73 - sample / 2)]
@@ -1020,7 +1084,7 @@
 
       ctx.globalAlpha = 1;
 
-      const landMasses = [
+      const masses = [
         [-0.39, -0.22, 0.33, 1.17, 0.72, 0.10],
         [0.23, -0.30, 0.25, 0.86, 1.22, 1.40],
         [0.35, 0.15, 0.30, 0.80, 1.05, 2.20],
@@ -1030,8 +1094,8 @@
         [0.00, 0.58, 0.22, 1.58, 0.36, 6.40]
       ];
 
-      for (let index = 0; index < landMasses.length; index += 1) {
-        const item = landMasses[index];
+      for (let index = 0; index < masses.length; index += 1) {
+        const item = masses[index];
         const px = cx + item[0] * r + Math.sin(phase + index) * r * 0.03;
         const py = cy + item[1] * r + pitch * r * 0.12 + Math.cos(phase + index * 0.9) * r * 0.02;
         const rr = item[2] * r;
@@ -1150,7 +1214,7 @@
 
   function buildDrawPacket(canvas, ctx, packet = {}) {
     return {
-      packetType: "HEARTH_CANVAS_HUB_INTERNALIZED_EXPRESSION_DRAW_PACKET",
+      packetType: "HEARTH_CANVAS_HUB_STANDARDS_EXPRESSION_DRAW_PACKET",
       contract: CONTRACT,
       receipt: RECEIPT,
       internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
@@ -1172,6 +1236,8 @@
           : {},
       projectionMode: "2D_CANVAS_PROJECTED_GLOBE",
       receiverOnly: true,
+      canvasStandardsNewsAlignmentActive: true,
+      canvasStandardsFibonacciSynchronizationActive: true,
       externalAdapterAliasesReadOnly: true,
       externalAdapterOverwriteBlocked: true,
       ...FINAL_FALSE
@@ -1302,12 +1368,12 @@
     state.postgameStatus = pixelReady
       ? "CANVAS_EXPRESSION_SURFACE_PIXEL_PROOF_READY_NO_FINAL_CLAIM"
       : "CANVAS_EXPRESSION_SURFACE_WAITING_PIXEL_PROOF";
+
+    refreshCanvasStandardsState();
   }
 
   function drawToCanvas(canvasOrContext, packet = {}) {
-    if (drawingGuard) {
-      return getReceiptLight(false);
-    }
+    if (drawingGuard) return getReceiptLight(false);
 
     drawingGuard = true;
 
@@ -1316,7 +1382,7 @@
       state.drawCount += 1;
       state.lastDrawAt = nowIso();
       state.lastDrawReason = safeString(packet.reason || packet.drawReason || "drawToCanvas", "drawToCanvas");
-      state.lastPacket = isObject(packet) ? clonePlain(packet) : state.lastPacket;
+      state.lastPacket = packetSummary(packet);
 
       if (isObject(packet.viewState)) state.lastViewState = clonePlain(packet.viewState);
 
@@ -1410,8 +1476,10 @@
   function receivePacket(packet = {}, lane = "GENERIC") {
     if (!isObject(packet)) return getReceiptLight(false);
 
+    const summary = packetSummary(packet);
+
     state.packetCount += 1;
-    state.lastPacket = clonePlain(packet);
+    state.lastPacket = summary;
 
     if (isObject(packet.viewState)) state.lastViewState = clonePlain(packet.viewState);
 
@@ -1421,21 +1489,21 @@
 
     if (lane === "AUTHORITY") {
       state.authorityPacketCount += 1;
-      state.lastAuthorityPacket = clonePlain(packet);
+      state.lastAuthorityPacket = summary;
     }
 
     if (lane === "ROUTE_CONDUCTOR") {
       state.routeConductorPacketCount += 1;
-      state.lastRouteConductorPacket = clonePlain(packet);
+      state.lastRouteConductorPacket = summary;
       state.routeConductorObserved = true;
-      state.routeConductorContract = packetContract || state.routeConductorContract || ROUTE_CONDUCTOR_CONTRACT;
+      state.routeConductorContract = packetContract || state.routeConductorContract || ROUTE_CONDUCTOR_SHOWTIME_CONTRACT;
       state.routeConductorReceipt = packetReceipt || state.routeConductorReceipt;
       state.releasePacketReceived = true;
     }
 
     if (lane === "QUEEN") {
       state.queenPacketCount += 1;
-      state.lastQueenPacket = clonePlain(packet);
+      state.lastQueenPacket = summary;
       state.queenObserved = true;
       state.queenContract = packetContract || state.queenContract || QUEEN_CONTROL_CONTRACT;
       state.queenReceipt = packetReceipt || state.queenReceipt;
@@ -1443,7 +1511,7 @@
 
     if (lane === "LABWEST") {
       state.labWestPacketCount += 1;
-      state.lastLabWestPacket = clonePlain(packet);
+      state.lastLabWestPacket = summary;
       state.labWestObserved = true;
       state.labWestContract = packetContract || state.labWestContract || LABWEST_V4_9_CONTRACT;
       state.labWestReceipt = packetReceipt || state.labWestReceipt;
@@ -1452,7 +1520,7 @@
 
     if (lane === "FINGER") {
       state.fingerPacketCount += 1;
-      state.lastFingerPacket = clonePlain(packet);
+      state.lastFingerPacket = summary;
       state.anyFingerTrackActive = true;
       state.fingerAuthorityObservedCount = Math.max(1, state.fingerAuthorityObservedCount);
       state.fingerApiReadyCount = Math.max(1, state.fingerApiReadyCount);
@@ -1468,12 +1536,16 @@
 
     if (lane === "DIAGNOSTIC") {
       state.diagnosticPacketCount += 1;
-      state.lastDiagnosticPacket = clonePlain(packet);
+      state.lastDiagnosticPacket = summary;
     }
 
-    if (packetContract === ROUTE_CONDUCTOR_CONTRACT || sourceFile === ROUTE_CONDUCTOR_FILE) {
+    if (
+      packetContract === ROUTE_CONDUCTOR_SHOWTIME_CONTRACT ||
+      packetContract === ROUTE_CONDUCTOR_V9_9_CONTRACT ||
+      sourceFile === ROUTE_CONDUCTOR_FILE
+    ) {
       state.routeConductorObserved = true;
-      state.routeConductorContract = packetContract || ROUTE_CONDUCTOR_CONTRACT;
+      state.routeConductorContract = packetContract || state.routeConductorContract || ROUTE_CONDUCTOR_SHOWTIME_CONTRACT;
       state.routeConductorReceipt = packetReceipt || state.routeConductorReceipt;
     }
 
@@ -1483,7 +1555,11 @@
       state.queenReceipt = packetReceipt || state.queenReceipt;
     }
 
-    if (packetContract === LABWEST_V4_9_CONTRACT || packetContract === LABWEST_V4_7_CONTRACT || sourceFile === LABWEST_FILE) {
+    if (
+      packetContract === LABWEST_V4_9_CONTRACT ||
+      packetContract === LABWEST_V4_7_CONTRACT ||
+      sourceFile === LABWEST_FILE
+    ) {
       state.labWestObserved = true;
       state.labWestContract = packetContract || state.labWestContract || LABWEST_V4_9_CONTRACT;
       state.labWestReceipt = packetReceipt || state.labWestReceipt;
@@ -1506,13 +1582,15 @@
       packet.canvasReleaseAuthorized === true ||
       lane === "AUTHORITY" ||
       lane === "ROUTE_CONDUCTOR" ||
-      lane === "LABWEST"
+      lane === "LABWEST" ||
+      lane === "QUEEN"
     ) {
       drawToCanvas(packet.canvas || packet.ctx || packet.context || null, packet);
     } else {
       scheduleDraw(`packet-received:${lane}`);
     }
 
+    refreshCanvasStandardsState();
     updateDataset();
     schedulePublish();
     return getReceiptLight(false);
@@ -1540,6 +1618,31 @@
   function receiveViewControlPacket(packet = {}) { return receivePacket(packet, "QUEEN"); }
   function receiveControlsPacket(packet = {}) { return receivePacket(packet, "QUEEN"); }
   function receivePlanetaryControlPacket(packet = {}) { return receivePacket(packet, "QUEEN"); }
+  function consumePlanetaryControlPacket(packet = {}) { return receivePlanetaryControlPacket(packet); }
+  function consumeControlsPacket(packet = {}) { return receiveControlsPacket(packet); }
+  function consumeControlPacket(packet = {}) { return receiveControlPacket(packet); }
+  function consumeViewControlPacket(packet = {}) { return receiveViewControlPacket(packet); }
+
+  function applyViewDelta(packet = {}) {
+    const view = isObject(packet.viewState)
+      ? clonePlain(packet.viewState)
+      : {
+        yaw: safeNumber(firstDefined(packet.yaw, packet.deltaYaw, 0), 0),
+        pitch: safeNumber(firstDefined(packet.pitch, packet.deltaPitch, 0), 0),
+        zoom: safeNumber(firstDefined(packet.zoom, packet.deltaZoom, 1), 1)
+      };
+
+    state.lastViewState = view;
+    return receivePacket({ ...packet, viewState: view, sourceFile: CONTROL_FILE }, "QUEEN");
+  }
+
+  function setView(packet = {}) {
+    return applyViewDelta(packet);
+  }
+
+  function updateView(packet = {}) {
+    return applyViewDelta(packet);
+  }
 
   function receiveLabWestPacket(packet = {}) { return receivePacket(packet, "LABWEST"); }
   function receiveLabWestContext(packet = {}) { return receivePacket(packet, "LABWEST"); }
@@ -1596,15 +1699,171 @@
     }
   }
 
-  function composeReceiptLight() {
+  function composeCanvasStandardsNewsAudit() {
+    const stages = [
+      {
+        id: "CANVAS_MOUNT",
+        passed: Boolean(state.canvasMountFound),
+        file: HTML_FILE,
+        evidence: state.canvasMountSelector
+      },
+      {
+        id: "CANVAS_SURFACE",
+        passed: Boolean(state.canvasLocated && state.canvasRectNonzero),
+        file: FILE,
+        evidence: state.canvasSelector
+      },
+      {
+        id: "CANVAS_2D_CONTEXT",
+        passed: Boolean(state.context2dReady),
+        file: FILE,
+        evidence: state.context2dReady ? "2D_CONTEXT_READY" : "2D_CONTEXT_WAITING"
+      },
+      {
+        id: "CANVAS_RECEIVER_API",
+        passed: true,
+        file: FILE,
+        evidence: "PUBLIC_RECEIVER_METHODS_PUBLISHED"
+      },
+      {
+        id: "CANVAS_RELEASE_OR_SELF_BOOT",
+        passed: Boolean(state.booted || state.releasePacketReceived || state.drawAttempted),
+        file: FILE,
+        evidence: state.releasePacketReceived ? "RELEASE_PACKET_RECEIVED" : state.booted ? "SELF_BOOTED" : "WAITING"
+      },
+      {
+        id: "CANVAS_DRAW_PIPELINE",
+        passed: Boolean(state.drawAttempted),
+        file: FILE,
+        evidence: state.adapterDrawAttempted ? "ADAPTER_DRAW_ATTEMPTED" : state.nativeExpressionDrawAttempted ? "NATIVE_DRAW_ATTEMPTED" : "WAITING_DRAW"
+      },
+      {
+        id: "CANVAS_PIXEL_PROOF",
+        passed: Boolean(state.visiblePlanetProofReady && state.canvasExpressionSurfaceReady),
+        file: FILE,
+        evidence: state.canvasPixelVarianceStatus
+      },
+      {
+        id: "CANVAS_RECEIPT_PUBLICATION",
+        passed: Boolean(state.ownAliasesPublished && state.receiptPublishCount > 0),
+        file: FILE,
+        evidence: `aliasPublishCount=${state.aliasPublishCount};receiptPublishCount=${state.receiptPublishCount}`
+      }
+    ];
+
+    const satisfied = stages.filter((stage) => stage.passed).length;
+    const score = Math.round((satisfied / stages.length) * 100);
+    const firstFailed = stages.find((stage) => !stage.passed) || null;
+
     return {
-      packetType: "HEARTH_CANVAS_HUB_INTERNALIZED_EXPRESSION_SURFACE_RECEIPT_LIGHT",
+      canvasStandardsNewsAlignmentActive: true,
+      canvasStandardsNewsAlignmentRoute: "CANVAS_MOUNT -> CANVAS_SURFACE -> CANVAS_2D_CONTEXT -> CANVAS_RECEIVER_API -> CANVAS_DRAW_PIPELINE -> CANVAS_PIXEL_PROOF -> CANVAS_RECEIPT_PUBLICATION",
+      canvasStandardsNewsAlignmentStatus: firstFailed
+        ? "CANVAS_STANDARDS_NEWS_ALIGNMENT_HELD"
+        : "CANVAS_STANDARDS_NEWS_ALIGNMENT_COMPLETE",
+      canvasStandardsNewsAlignmentScore: score,
+      canvasStandardsNewsAlignmentFirstFailedStage: firstFailed ? firstFailed.id : "NONE",
+      canvasStandardsNewsAlignmentRecommendedNextFile: firstFailed ? firstFailed.file : FILE,
+      canvasStandardsNewsAlignmentStages: stages,
+      diagnosticTrackNewsAlignmentSeparate: true,
+      productionCanvasStandardsAlignmentSeparate: true
+    };
+  }
+
+  function composeCanvasStandardsFibonacciSynchronization(news) {
+    const stageMap = {};
+    (news.canvasStandardsNewsAlignmentStages || []).forEach((stage) => {
+      stageMap[stage.id] = stage;
+    });
+
+    const ladder = [
+      {
+        key: "F1",
+        stage: "CANVAS_MOUNT",
+        passed: Boolean(stageMap.CANVAS_MOUNT && stageMap.CANVAS_MOUNT.passed),
+        file: HTML_FILE
+      },
+      {
+        key: "F2",
+        stage: "CANVAS_SURFACE",
+        passed: Boolean(stageMap.CANVAS_SURFACE && stageMap.CANVAS_SURFACE.passed),
+        file: FILE
+      },
+      {
+        key: "F3",
+        stage: "CANVAS_2D_CONTEXT",
+        passed: Boolean(stageMap.CANVAS_2D_CONTEXT && stageMap.CANVAS_2D_CONTEXT.passed),
+        file: FILE
+      },
+      {
+        key: "F5",
+        stage: "CANVAS_RECEIVER_API",
+        passed: Boolean(stageMap.CANVAS_RECEIVER_API && stageMap.CANVAS_RECEIVER_API.passed),
+        file: FILE
+      },
+      {
+        key: "F8",
+        stage: "CANVAS_DRAW_PIPELINE",
+        passed: Boolean(stageMap.CANVAS_DRAW_PIPELINE && stageMap.CANVAS_DRAW_PIPELINE.passed),
+        file: FILE
+      },
+      {
+        key: "F13",
+        stage: "CANVAS_PIXEL_PROOF",
+        passed: Boolean(stageMap.CANVAS_PIXEL_PROOF && stageMap.CANVAS_PIXEL_PROOF.passed && state.f13CanvasEvidenceComplete && !state.f13HardFail),
+        file: FILE
+      }
+    ];
+
+    const satisfied = ladder.filter((item) => item.passed).length;
+    const score = Math.round((satisfied / ladder.length) * 100);
+    const firstFailed = ladder.find((item) => !item.passed) || null;
+
+    return {
+      canvasStandardsFibonacciSynchronizationActive: true,
+      canvasStandardsFibonacciSynchronizationStatus: firstFailed
+        ? `WAITING_${firstFailed.key}_${firstFailed.stage}`
+        : "CANVAS_STANDARDS_FIBONACCI_SYNCHRONIZATION_COMPLETE_TO_F13_NO_FINAL_CLAIM",
+      canvasStandardsFibonacciSynchronizationScore: score,
+      canvasStandardsFibonacciSynchronizationFirstFailedStage: firstFailed
+        ? `${firstFailed.key}_${firstFailed.stage}`
+        : "NONE",
+      canvasStandardsFibonacciSynchronizationLadder: ladder,
+      canvasStandardsFibonacciF13EvidenceComplete: Boolean(state.f13CanvasEvidenceComplete),
+      canvasStandardsFibonacciF21HeldByNorthBoundary: true,
+      canvasStandardsFibonacciF21ClaimedByCanvas: false,
+      f21BoundaryNotOwnedByCanvas: true
+    };
+  }
+
+  function refreshCanvasStandardsState() {
+    const news = composeCanvasStandardsNewsAudit();
+    const fibonacci = composeCanvasStandardsFibonacciSynchronization(news);
+
+    state.canvasStandardsNewsAlignmentStatus = news.canvasStandardsNewsAlignmentStatus;
+    state.canvasStandardsNewsAlignmentScore = news.canvasStandardsNewsAlignmentScore;
+    state.canvasStandardsNewsAlignmentFirstFailedStage = news.canvasStandardsNewsAlignmentFirstFailedStage;
+    state.canvasStandardsFibonacciSynchronizationStatus = fibonacci.canvasStandardsFibonacciSynchronizationStatus;
+    state.canvasStandardsFibonacciSynchronizationScore = fibonacci.canvasStandardsFibonacciSynchronizationScore;
+    state.canvasStandardsFibonacciSynchronizationFirstFailedStage = fibonacci.canvasStandardsFibonacciSynchronizationFirstFailedStage;
+
+    return { news, fibonacci };
+  }
+
+  function composeReceiptLight() {
+    const standards = refreshCanvasStandardsState();
+    const news = standards.news;
+    const fibonacci = standards.fibonacci;
+
+    return {
+      packetType: "HEARTH_CANVAS_HUB_STANDARDS_NEWS_FIBONACCI_EXPRESSION_SURFACE_RECEIPT_LIGHT",
       contract: CONTRACT,
       receipt: RECEIPT,
       internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
       internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       previousReceipt: PREVIOUS_RECEIPT,
+      lineageV122Contract: LINEAGE_V12_2_CONTRACT,
       lineageV121Contract: LINEAGE_V12_1_CONTRACT,
       lineageV12Contract: LINEAGE_V12_CONTRACT,
       lineageV117Contract: LINEAGE_V11_7_CONTRACT,
@@ -1633,6 +1892,18 @@
       fingerRegistryActive: true,
       compositeFirstVisiblePathActive: true,
       hexRenderReceiverExpected: true,
+
+      canvasStandardsNewsAlignment: news,
+      canvasStandardsFibonacciSynchronization: fibonacci,
+      canvasStandardsNewsAlignmentActive: true,
+      canvasStandardsNewsAlignmentStatus: news.canvasStandardsNewsAlignmentStatus,
+      canvasStandardsNewsAlignmentScore: news.canvasStandardsNewsAlignmentScore,
+      canvasStandardsNewsAlignmentFirstFailedStage: news.canvasStandardsNewsAlignmentFirstFailedStage,
+      canvasStandardsFibonacciSynchronizationActive: true,
+      canvasStandardsFibonacciSynchronizationStatus: fibonacci.canvasStandardsFibonacciSynchronizationStatus,
+      canvasStandardsFibonacciSynchronizationScore: fibonacci.canvasStandardsFibonacciSynchronizationScore,
+      canvasStandardsFibonacciSynchronizationFirstFailedStage: fibonacci.canvasStandardsFibonacciSynchronizationFirstFailedStage,
+      canvasStandardsFibonacciF21HeldByNorthBoundary: true,
 
       ownAliasesPublished: state.ownAliasesPublished,
       aliasPublishCount: state.aliasPublishCount,
@@ -1804,6 +2075,8 @@
       ownsCanvasPlacementFallback: true,
       owns2DExpressionSurface: true,
       ownsPixelProofPublication: true,
+      ownsCanvasStandardsNewsAlignment: true,
+      ownsCanvasStandardsFibonacciSynchronization: true,
 
       ownsTerrainTruth: false,
       ownsHydrologyTruth: false,
@@ -1834,11 +2107,12 @@
   function getReceipt() {
     return {
       ...getReceiptLight(false),
-      packetType: "HEARTH_CANVAS_HUB_INTERNALIZED_EXPRESSION_SURFACE_RECEIPT",
+      packetType: "HEARTH_CANVAS_HUB_STANDARDS_NEWS_FIBONACCI_EXPRESSION_SURFACE_RECEIPT",
       currentReceipt: true,
       canvasAliasPaths: CANVAS_ALIAS_PATHS.slice(),
       expressionBridgeAliasPaths: EXPRESSION_BRIDGE_ALIAS_PATHS.slice(),
       externalAdapterAliasPathsReadOnly: EXTERNAL_ADAPTER_ALIAS_PATHS.slice(),
+      upstreamTargetAliasPaths: UPSTREAM_TARGET_ALIAS_PATHS.slice(),
       externalAdapters: externalAdapters.map((item) => ({
         path: item.path,
         contract: item.contract,
@@ -1863,82 +2137,98 @@
     const r = getReceiptLight(false);
 
     return [
-      "HEARTH_CANVAS_HUB_INTERNALIZED_EXPRESSION_SURFACE_RECEIPT",
+      "HEARTH_CANVAS_HUB_STANDARDS_NEWS_FIBONACCI_EXPRESSION_SURFACE_RECEIPT",
       "",
-      `contract=${r.contract}`,
-      `receipt=${r.receipt}`,
-      `internalRenewalContract=${r.internalRenewalContract}`,
-      `internalRenewalReceipt=${r.internalRenewalReceipt}`,
-      `servedContractPreservedForUpstreamRecognition=${r.servedContractPreservedForUpstreamRecognition}`,
-      `previousContract=${r.previousContract}`,
-      `previousReceipt=${r.previousReceipt}`,
-      `expressionBridgeContract=${r.expressionBridgeContract}`,
-      `expressionBridgeReceipt=${r.expressionBridgeReceipt}`,
-      `file=${FILE}`,
-      `route=${ROUTE}`,
-      `version=${VERSION}`,
+      line("contract", r.contract),
+      line("receipt", r.receipt),
+      line("internalRenewalContract", r.internalRenewalContract),
+      line("internalRenewalReceipt", r.internalRenewalReceipt),
+      line("servedContractPreservedForUpstreamRecognition", r.servedContractPreservedForUpstreamRecognition),
+      line("previousContract", r.previousContract),
+      line("previousReceipt", r.previousReceipt),
+      line("expressionBridgeContract", r.expressionBridgeContract),
+      line("expressionBridgeReceipt", r.expressionBridgeReceipt),
+      line("file", FILE),
+      line("route", ROUTE),
+      line("version", VERSION),
+      "",
+      "CANVAS_STANDARDS_NEWS_ALIGNMENT",
+      line("canvasStandardsNewsAlignmentActive", r.canvasStandardsNewsAlignmentActive),
+      line("canvasStandardsNewsAlignmentStatus", r.canvasStandardsNewsAlignmentStatus),
+      line("canvasStandardsNewsAlignmentScore", r.canvasStandardsNewsAlignmentScore),
+      line("canvasStandardsNewsAlignmentFirstFailedStage", r.canvasStandardsNewsAlignmentFirstFailedStage),
+      line("diagnosticTrackNewsAlignmentSeparate", true),
+      line("productionCanvasStandardsAlignmentSeparate", true),
+      "",
+      "CANVAS_STANDARDS_FIBONACCI_SYNCHRONIZATION",
+      line("canvasStandardsFibonacciSynchronizationActive", r.canvasStandardsFibonacciSynchronizationActive),
+      line("canvasStandardsFibonacciSynchronizationStatus", r.canvasStandardsFibonacciSynchronizationStatus),
+      line("canvasStandardsFibonacciSynchronizationScore", r.canvasStandardsFibonacciSynchronizationScore),
+      line("canvasStandardsFibonacciSynchronizationFirstFailedStage", r.canvasStandardsFibonacciSynchronizationFirstFailedStage),
+      line("canvasStandardsFibonacciF21HeldByNorthBoundary", true),
+      line("canvasStandardsFibonacciF21ClaimedByCanvas", false),
       "",
       "CANVAS_PARENT",
-      `currentCanvasParentObserved=${r.currentCanvasParentObserved}`,
-      `currentCanvasParentContract=${r.currentCanvasParentContract}`,
-      `currentCanvasParentReceipt=${r.currentCanvasParentReceipt}`,
-      `canvasV123Recognized=${r.canvasV123Recognized}`,
-      `canvasContractAccepted=${r.canvasContractAccepted}`,
-      `canvasLocalStationApiReady=${r.canvasLocalStationApiReady}`,
-      `canvasParentBootMethodAvailable=${r.canvasParentBootMethodAvailable}`,
+      line("currentCanvasParentObserved", r.currentCanvasParentObserved),
+      line("currentCanvasParentContract", r.currentCanvasParentContract),
+      line("currentCanvasParentReceipt", r.currentCanvasParentReceipt),
+      line("canvasV123Recognized", r.canvasV123Recognized),
+      line("canvasContractAccepted", r.canvasContractAccepted),
+      line("canvasLocalStationApiReady", r.canvasLocalStationApiReady),
+      line("canvasParentBootMethodAvailable", r.canvasParentBootMethodAvailable),
       "",
       "EXPRESSION_SURFACE",
-      `internalizedExpressionBridgeActive=${r.internalizedExpressionBridgeActive}`,
-      `canvasMounted=${r.canvasMounted}`,
-      `canvasContext2dReady=${r.canvasContext2dReady}`,
-      `drawAttempted=${r.drawAttempted}`,
-      `drawComplete=${r.drawComplete}`,
-      `lastDrawSource=${r.lastDrawSource}`,
-      `adapterDrawComplete=${r.adapterDrawComplete}`,
-      `nativeExpressionDrawComplete=${r.nativeExpressionDrawComplete}`,
-      `canvasExpressionSurfaceReady=${r.canvasExpressionSurfaceReady}`,
-      `canvasExpressionRichnessReady=${r.canvasExpressionRichnessReady}`,
-      `domExpressionSurfaceProofReady=${r.domExpressionSurfaceProofReady}`,
-      `visiblePlanetProofReady=${r.visiblePlanetProofReady}`,
-      `visiblePlanetProofSource=${r.visiblePlanetProofSource}`,
-      `canvasPixelVarianceStatus=${r.canvasPixelVarianceStatus}`,
+      line("internalizedExpressionBridgeActive", r.internalizedExpressionBridgeActive),
+      line("canvasMounted", r.canvasMounted),
+      line("canvasContext2dReady", r.canvasContext2dReady),
+      line("drawAttempted", r.drawAttempted),
+      line("drawComplete", r.drawComplete),
+      line("lastDrawSource", r.lastDrawSource),
+      line("adapterDrawComplete", r.adapterDrawComplete),
+      line("nativeExpressionDrawComplete", r.nativeExpressionDrawComplete),
+      line("canvasExpressionSurfaceReady", r.canvasExpressionSurfaceReady),
+      line("canvasExpressionRichnessReady", r.canvasExpressionRichnessReady),
+      line("domExpressionSurfaceProofReady", r.domExpressionSurfaceProofReady),
+      line("visiblePlanetProofReady", r.visiblePlanetProofReady),
+      line("visiblePlanetProofSource", r.visiblePlanetProofSource),
+      line("canvasPixelVarianceStatus", r.canvasPixelVarianceStatus),
       "",
       "CARRIER",
-      `structuralCarrierReady=${r.structuralCarrierReady}`,
-      `structuralCarrierSafe=${r.structuralCarrierSafe}`,
-      `canvasParentCarrierSafe=${r.canvasParentCarrierSafe}`,
-      `structuralCarrierSafeForCanvasRelease=${r.structuralCarrierSafeForCanvasRelease}`,
-      `canvasPreReleaseCarrierSafeForWest=${r.canvasPreReleaseCarrierSafeForWest}`,
+      line("structuralCarrierReady", r.structuralCarrierReady),
+      line("structuralCarrierSafe", r.structuralCarrierSafe),
+      line("canvasParentCarrierSafe", r.canvasParentCarrierSafe),
+      line("structuralCarrierSafeForCanvasRelease", r.structuralCarrierSafeForCanvasRelease),
+      line("canvasPreReleaseCarrierSafeForWest", r.canvasPreReleaseCarrierSafeForWest),
       "",
-      "F13_NO_FINAL_CLAIM",
-      `f13CanvasEvidenceStrict=${r.f13CanvasEvidenceStrict}`,
-      `f13CanvasEvidenceDegraded=${r.f13CanvasEvidenceDegraded}`,
-      `f13CanvasEvidenceComplete=${r.f13CanvasEvidenceComplete}`,
-      `f13Claimed=false`,
-      `f21EligibleForNorth=false`,
+      "F13_EVIDENCE_NO_FINAL_CLAIM",
+      line("f13CanvasEvidenceStrict", r.f13CanvasEvidenceStrict),
+      line("f13CanvasEvidenceDegraded", r.f13CanvasEvidenceDegraded),
+      line("f13CanvasEvidenceComplete", r.f13CanvasEvidenceComplete),
+      line("f13Claimed", false),
+      line("f21EligibleForNorth", false),
       "",
       "BOUNDARIES",
-      `ownsTerrainTruth=false`,
-      `ownsHydrologyTruth=false`,
-      `ownsElevationTruth=false`,
-      `ownsMaterialTruth=false`,
-      `ownsCompositeTruth=false`,
-      `ownsHexTruth=false`,
-      `ownsFingerTruth=false`,
-      `ownsPointerTruth=false`,
-      `ownsQueenTruth=false`,
-      `ownsLabWestAdmissibilityTruth=false`,
-      `ownsRouteConductorHandshakeTruth=false`,
-      `visualPassClaimed=false`,
-      `generatedImage=false`,
-      `graphicBox=false`,
-      `webGL=false`,
+      line("ownsTerrainTruth", false),
+      line("ownsHydrologyTruth", false),
+      line("ownsElevationTruth", false),
+      line("ownsMaterialTruth", false),
+      line("ownsCompositeTruth", false),
+      line("ownsHexTruth", false),
+      line("ownsFingerTruth", false),
+      line("ownsPointerTruth", false),
+      line("ownsQueenTruth", false),
+      line("ownsLabWestAdmissibilityTruth", false),
+      line("ownsRouteConductorHandshakeTruth", false),
+      line("visualPassClaimed", false),
+      line("generatedImage", false),
+      line("graphicBox", false),
+      line("webGL", false),
       "",
       "NEXT",
-      `firstFailedCoordinate=${r.firstFailedCoordinate}`,
-      `recommendedNextFile=${r.recommendedNextFile}`,
-      `recommendedNextAction=${r.recommendedNextAction}`,
-      `postgameStatus=${r.postgameStatus}`
+      line("firstFailedCoordinate", r.firstFailedCoordinate),
+      line("recommendedNextFile", r.recommendedNextFile),
+      line("recommendedNextAction", r.recommendedNextAction),
+      line("postgameStatus", r.postgameStatus)
     ].join("\n");
   }
 
@@ -1959,6 +2249,16 @@
     setDataset("hearthCanvasExpressionBridgeReceipt", EXPRESSION_BRIDGE_RECEIPT);
     setDataset("hearthCanvasExpressionBridgeFile", FILE);
     setDataset("hearthCanvasExpressionBridgeInternalized", "true");
+
+    setDataset("hearthCanvasStandardsNewsAlignmentActive", "true");
+    setDataset("hearthCanvasStandardsNewsAlignmentStatus", state.canvasStandardsNewsAlignmentStatus);
+    setDataset("hearthCanvasStandardsNewsAlignmentScore", String(state.canvasStandardsNewsAlignmentScore));
+    setDataset("hearthCanvasStandardsNewsAlignmentFirstFailedStage", state.canvasStandardsNewsAlignmentFirstFailedStage);
+    setDataset("hearthCanvasStandardsFibonacciSynchronizationActive", "true");
+    setDataset("hearthCanvasStandardsFibonacciSynchronizationStatus", state.canvasStandardsFibonacciSynchronizationStatus);
+    setDataset("hearthCanvasStandardsFibonacciSynchronizationScore", String(state.canvasStandardsFibonacciSynchronizationScore));
+    setDataset("hearthCanvasStandardsFibonacciSynchronizationFirstFailedStage", state.canvasStandardsFibonacciSynchronizationFirstFailedStage);
+    setDataset("hearthCanvasStandardsFibonacciF21HeldByNorthBoundary", "true");
 
     setDataset("hearthCanvasAliasPublishCount", String(state.aliasPublishCount));
     setDataset("hearthCanvasOwnAliasesPublished", String(state.ownAliasesPublished));
@@ -2081,10 +2381,8 @@
 
     root.HEARTH_CANVAS_EXPRESSION_BRIDGE_RECEIPT = light;
     root.HEARTH_CANVAS_VISIBLE_EXPRESSION_BRIDGE_RECEIPT = light;
-    root.HEARTH_CANVAS_SECOND_EXPRESSION_BRIDGE_RECEIPT = light;
-    root.HEARTH_CANVAS_EXPRESSION_BRIDGE_SECOND_PAIR_RECEIPT = full;
-    root.HEARTH_CANVAS_EXPRESSION_BRIDGE_SECOND_PAIR_RECEIPT_v2 = full;
     root.HEARTH_CANVAS_EXPRESSION_SURFACE_BRIDGE_RECEIPT = light;
+    root.HEARTH_CANVAS_EXPRESSION_SURFACE_PROOF_BRIDGE_RECEIPT = full;
 
     hearth.canvasHubCompositeFirstFastViewDeferredHexReceiverReceipt = full;
     hearth.canvasCompositeFirstFastViewDeferredHexReceiverReceipt = full;
@@ -2100,9 +2398,8 @@
     hearth.canvasVisibleGlobeReceipt = light;
     hearth.canvasExpressionBridgeReceipt = light;
     hearth.canvasVisibleExpressionBridgeReceipt = light;
-    hearth.canvasSecondExpressionBridgeReceipt = light;
-    hearth.canvasExpressionBridgeSecondPairReceipt = full;
     hearth.canvasExpressionSurfaceBridgeReceipt = light;
+    hearth.canvasExpressionSurfaceProofBridgeReceipt = full;
 
     lab.hearthCanvasHubCompositeFirstFastViewDeferredHexReceiverReceipt = full;
     lab.hearthCanvasCompositeFirstFastViewDeferredHexReceiverReceipt = full;
@@ -2116,9 +2413,8 @@
     lab.hearthCanvasVisiblePlanetReceipt = light;
     lab.hearthCanvasExpressionBridgeReceipt = light;
     lab.hearthCanvasVisibleExpressionBridgeReceipt = light;
-    lab.hearthCanvasSecondExpressionBridgeReceipt = light;
-    lab.hearthCanvasExpressionBridgeSecondPairReceipt = full;
     lab.hearthCanvasExpressionSurfaceBridgeReceipt = light;
+    lab.hearthCanvasExpressionSurfaceProofBridgeReceipt = full;
 
     state.receiptPublishCount += 1;
     state.updatedAt = nowIso();
@@ -2192,14 +2488,18 @@
   function publishGlobals(reason = "publish-globals") {
     publishAliasPaths();
     publishReceipts();
+
     record(reason, {
       contract: CONTRACT,
       internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
       visiblePlanetProofReady: state.visiblePlanetProofReady,
       canvasExpressionSurfaceReady: state.canvasExpressionSurfaceReady,
+      canvasStandardsNewsAlignmentStatus: state.canvasStandardsNewsAlignmentStatus,
+      canvasStandardsFibonacciSynchronizationStatus: state.canvasStandardsFibonacciSynchronizationStatus,
       canvasPixelVarianceStatus: state.canvasPixelVarianceStatus,
       firstFailedCoordinate: state.firstFailedCoordinate
     });
+
     return api;
   }
 
@@ -2211,8 +2511,10 @@
 
     try {
       publishAliasPaths();
+      locateOrCreateCanvas();
       scanExternalAdapters();
       scanUpstreamAuthorities();
+      refreshCanvasStandardsState();
       updateDataset();
       publishReceipts();
 
@@ -2238,13 +2540,17 @@
         : "CANVAS_HUB_BOOTED_WAITING_EXPRESSION_SURFACE_PROOF";
       state.updatedAt = nowIso();
 
-      record("CANVAS_HUB_BOOTED", {
+      refreshCanvasStandardsState();
+
+      record("CANVAS_HUB_STANDARDS_NEWS_FIBONACCI_BOOTED", {
         contract: CONTRACT,
         internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
         expressionBridgeContract: EXPRESSION_BRIDGE_CONTRACT,
         ownAliasesPublished: state.ownAliasesPublished,
         externalAdapterCount: state.externalAdapterCount,
-        visiblePlanetProofReady: state.visiblePlanetProofReady
+        visiblePlanetProofReady: state.visiblePlanetProofReady,
+        canvasStandardsNewsAlignmentStatus: state.canvasStandardsNewsAlignmentStatus,
+        canvasStandardsFibonacciSynchronizationStatus: state.canvasStandardsFibonacciSynchronizationStatus
       });
 
       updateDataset();
@@ -2273,6 +2579,7 @@
     INTERNAL_RENEWAL_RECEIPT,
     PREVIOUS_CONTRACT,
     PREVIOUS_RECEIPT,
+    LINEAGE_V12_2_CONTRACT,
     LINEAGE_V12_1_CONTRACT,
     LINEAGE_V12_CONTRACT,
     LINEAGE_V11_7_CONTRACT,
@@ -2293,6 +2600,8 @@
     FILE,
     ROUTE,
     DIAGNOSTIC_ROUTE,
+    HTML_FILE,
+    INDEX_FILE,
     ROUTE_CONDUCTOR_FILE,
     CONTROL_FILE,
     LABWEST_FILE,
@@ -2304,6 +2613,7 @@
     CANVAS_ALIAS_PATHS,
     EXPRESSION_BRIDGE_ALIAS_PATHS,
     EXTERNAL_ADAPTER_ALIAS_PATHS,
+    UPSTREAM_TARGET_ALIAS_PATHS,
 
     boot,
     init,
@@ -2339,6 +2649,13 @@
     receiveViewControlPacket,
     receiveControlsPacket,
     receivePlanetaryControlPacket,
+    consumePlanetaryControlPacket,
+    consumeControlsPacket,
+    consumeControlPacket,
+    consumeViewControlPacket,
+    applyViewDelta,
+    setView,
+    updateView,
 
     receiveLabWestPacket,
     receiveLabWestContext,
@@ -2362,6 +2679,9 @@
 
     scanExternalAdapters,
     scanUpstreamAuthorities,
+    composeCanvasStandardsNewsAudit,
+    composeCanvasStandardsFibonacciSynchronization,
+    refreshCanvasStandardsState,
 
     getReceiptLight,
     getReceipt,
@@ -2395,6 +2715,8 @@
 
     supportsCurrentCanvasV123Recognition: true,
     supportsInternalizedExpressionBridge: true,
+    supportsCanvasStandardsNewsAlignment: true,
+    supportsCanvasStandardsFibonacciSynchronization: true,
     supportsCanvasExpressionBridge: true,
     supportsVisibleExpressionBridge: true,
     supportsCompositeCompatibilityBridge: true,
@@ -2417,6 +2739,8 @@
     ownsCanvasPlacementFallback: true,
     owns2DExpressionSurface: true,
     ownsPixelProofPublication: true,
+    ownsCanvasStandardsNewsAlignment: true,
+    ownsCanvasStandardsFibonacciSynchronization: true,
 
     ownsTerrainTruth: false,
     ownsHydrologyTruth: false,
@@ -2447,7 +2771,7 @@
   });
 
   try {
-    publishGlobals("immediate-canvas-hub-v12-3-internalized-expression-publication");
+    publishGlobals("immediate-canvas-hub-v12-3-standards-news-fibonacci-publication");
 
     if (doc) {
       if (doc.readyState === "loading") {

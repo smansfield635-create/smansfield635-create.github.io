@@ -1,17 +1,22 @@
 // /assets/hearth/hearth.canvas.js
 // HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3
 // Internal renewal:
-// HEARTH_CANVAS_HUB_RAF_SPHERE_ROTATION_PAIR_RECEIVER_TNT_v12_3_2
+// HEARTH_CANVAS_HUB_HEX_SURFACE_ANCHOR_RECEIVER_THROTTLED_INTERACTIVE_TNT_v12_3_3
 // Full-file replacement.
-// Canvas Hub / paired spherical rotation receiver / rAF interactive Hex Surface bridge.
+// Canvas Hub / Hex Surface projection-anchor receiver / throttled interactive bridge.
 // Purpose:
 // - Preserve the public v12_3 Canvas Hub contract expected by Route Conductor, diagnostics, Controls, and Hex Surface.
+// - Treat Hex Surface v4 as the projection anchor and Hex Four-Pair Authority as the source/addressing anchor.
+// - Explicitly recognize the actual Hex Surface v4 contract:
+//   HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER_TNT_v4.
+// - Preserve compatibility with the earlier paired-name expectation:
+//   HEARTH_HEX_SURFACE_CANVAS_HUB_SPHERE_ROTATION_PAIR_RENDERER_TNT_v4.
 // - Bind or create the real DOM canvas surface inside #hearthCanvasMount.
-// - Receive view-control packets from Controls through Canvas public APIs only.
+// - Receive view-control packets from Controls through public Canvas APIs only.
 // - Treat touch/drag/wheel/keyboard motion as spherical view-state change, never as bitmap translation.
-// - Call paired Hex Surface v4 interactive and settled render APIs when available.
-// - Recompute the sphere projection during interaction so the visible planet rotates instead of sliding.
-// - Defer settled high-cost Hex rendering until input settles.
+// - Schedule one interactive rAF draw per frame and one deferred settled draw after input settles.
+// - Avoid remounting, pixel sampling, full receipt publication, and route notification during active drag frames.
+// - Do not invert vertical polarity here; Canvas preserves incoming pitch/yaw semantics from Controls.
 // - Preserve immediate visible planet proof with a spherical 2D fallback if Hex Surface is unavailable.
 // - Preserve Canvas as receiver/output carrier only.
 // - Preserve no F13 claim, no F21 latch, no ready text, no final visual pass, no generated image,
@@ -22,6 +27,7 @@
 // - route orchestration
 // - control-file admission
 // - control runtime truth
+// - pointer polarity truth
 // - Hex Four-Pair truth
 // - Hex Surface truth
 // - terrain truth
@@ -46,23 +52,32 @@
   const RECEIPT = "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT_v12_3";
 
   const INTERNAL_IMPLEMENTATION_CONTRACT =
-    "HEARTH_CANVAS_HUB_RAF_SPHERE_ROTATION_PAIR_RECEIVER_TNT_v12_3_2";
+    "HEARTH_CANVAS_HUB_HEX_SURFACE_ANCHOR_RECEIVER_THROTTLED_INTERACTIVE_TNT_v12_3_3";
   const INTERNAL_IMPLEMENTATION_RECEIPT =
-    "HEARTH_CANVAS_HUB_RAF_SPHERE_ROTATION_PAIR_RECEIVER_RECEIPT_v12_3_2";
+    "HEARTH_CANVAS_HUB_HEX_SURFACE_ANCHOR_RECEIVER_THROTTLED_INTERACTIVE_RECEIPT_v12_3_3";
 
   const PREVIOUS_INTERNAL_IMPLEMENTATION_CONTRACT =
-    "HEARTH_CANVAS_HUB_RAF_FAST_INTERACTIVE_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3_1";
+    "HEARTH_CANVAS_HUB_RAF_SPHERE_ROTATION_PAIR_RECEIVER_TNT_v12_3_2";
   const PREVIOUS_INTERNAL_IMPLEMENTATION_RECEIPT =
-    "HEARTH_CANVAS_HUB_RAF_FAST_INTERACTIVE_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT_v12_3_1";
+    "HEARTH_CANVAS_HUB_RAF_SPHERE_ROTATION_PAIR_RECEIVER_RECEIPT_v12_3_2";
 
-  const PREVIOUS_CONTRACT = "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_TNT_v12_2";
-  const PREVIOUS_RECEIPT = "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_RECEIPT_v12_2";
-  const LINEAGE_V12_1_CONTRACT = "HEARTH_CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_TNT_v12_1";
-  const LINEAGE_V12_1_RECEIPT = "HEARTH_CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_RECEIPT_v12_1";
-  const LINEAGE_V12_CONTRACT = "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_TNT_v12";
-  const LINEAGE_V12_RECEIPT = "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_RECEIPT_v12";
+  const PREVIOUS_CONTRACT =
+    "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_TNT_v12_2";
+  const PREVIOUS_RECEIPT =
+    "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_RECEIPT_v12_2";
 
-  const VERSION = "2026-06-06.hearth-canvas-hub-raf-sphere-rotation-pair-receiver-v12-3-2";
+  const LINEAGE_V12_1_CONTRACT =
+    "HEARTH_CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_TNT_v12_1";
+  const LINEAGE_V12_1_RECEIPT =
+    "HEARTH_CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_RECEIPT_v12_1";
+
+  const LINEAGE_V12_CONTRACT =
+    "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_TNT_v12";
+  const LINEAGE_V12_RECEIPT =
+    "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_RECEIPT_v12";
+
+  const VERSION =
+    "2026-06-06.hearth-canvas-hub-hex-surface-anchor-receiver-throttled-interactive-v12-3-3";
 
   const ROUTE = "/showroom/globe/hearth/";
   const FILE = "/assets/hearth/hearth.canvas.js";
@@ -73,14 +88,27 @@
   const HEX_AUTHORITY_FILE = "/assets/hearth/hearth.hex.four-pair.authority.js";
   const HEX_SURFACE_FILE = "/assets/hearth/hearth.hex.surface.js";
 
-  const HEX_SURFACE_PAIR_CONTRACT = "HEARTH_HEX_SURFACE_CANVAS_HUB_SPHERE_ROTATION_PAIR_RENDERER_TNT_v4";
-  const HEX_SURFACE_PAIR_RECEIPT = "HEARTH_HEX_SURFACE_CANVAS_HUB_SPHERE_ROTATION_PAIR_RENDERER_RECEIPT_v4";
-  const HEX_SURFACE_V3_CONTRACT = "HEARTH_HEX_SURFACE_PLANETARY_VIEW_CONTROL_RENDERER_HANDSHAKE_TNT_v3";
-  const HEX_SURFACE_V2_CONTRACT = "HEARTH_HEX_SURFACE_CANVAS_HUB_THREE_FILE_VISIBLE_EXPRESSION_RENDERER_TNT_v2";
-  const HEX_SURFACE_V1_CONTRACT = "HEARTH_HEX_SURFACE_FOUR_PAIR_AUTHORITY_CONSUMER_TNT_v1";
+  const HEX_SURFACE_ACTUAL_V4_CONTRACT =
+    "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER_TNT_v4";
+  const HEX_SURFACE_ACTUAL_V4_RECEIPT =
+    "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER_RECEIPT_v4";
 
-  const HEX_AUTHORITY_CONTRACT = "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_TNT_v1";
-  const HEX_AUTHORITY_RECEIPT = "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_RECEIPT_v1";
+  const HEX_SURFACE_EXPECTED_PAIR_V4_CONTRACT =
+    "HEARTH_HEX_SURFACE_CANVAS_HUB_SPHERE_ROTATION_PAIR_RENDERER_TNT_v4";
+  const HEX_SURFACE_EXPECTED_PAIR_V4_RECEIPT =
+    "HEARTH_HEX_SURFACE_CANVAS_HUB_SPHERE_ROTATION_PAIR_RENDERER_RECEIPT_v4";
+
+  const HEX_SURFACE_V3_CONTRACT =
+    "HEARTH_HEX_SURFACE_PLANETARY_VIEW_CONTROL_RENDERER_HANDSHAKE_TNT_v3";
+  const HEX_SURFACE_V2_CONTRACT =
+    "HEARTH_HEX_SURFACE_CANVAS_HUB_THREE_FILE_VISIBLE_EXPRESSION_RENDERER_TNT_v2";
+  const HEX_SURFACE_V1_CONTRACT =
+    "HEARTH_HEX_SURFACE_FOUR_PAIR_AUTHORITY_CONSUMER_TNT_v1";
+
+  const HEX_AUTHORITY_CONTRACT =
+    "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_TNT_v1";
+  const HEX_AUTHORITY_RECEIPT =
+    "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_RECEIPT_v1";
 
   const PLANET_ID = "hearth";
   const PLANET_LABEL = "Hearth";
@@ -91,13 +119,14 @@
   const TAU = Math.PI * 2;
   const DEG = Math.PI / 180;
 
-  const INTERACTIVE_SETTLE_DELAY_MS = 135;
-  const RECEIPT_THROTTLE_MS = 260;
-  const FAST_FALLBACK_SIDE = 384;
-  const SETTLED_FALLBACK_SIDE = 672;
+  const INTERACTIVE_SETTLE_DELAY_MS = 150;
+  const FULL_RECEIPT_THROTTLE_MS = 520;
+  const INTERACTIVE_FALLBACK_SIDE = 360;
+  const SETTLED_FALLBACK_SIDE = 660;
 
   const ACCEPTED_HEX_SURFACE_CONTRACTS = Object.freeze([
-    HEX_SURFACE_PAIR_CONTRACT,
+    HEX_SURFACE_ACTUAL_V4_CONTRACT,
+    HEX_SURFACE_EXPECTED_PAIR_V4_CONTRACT,
     HEX_SURFACE_V3_CONTRACT,
     HEX_SURFACE_V2_CONTRACT,
     HEX_SURFACE_V1_CONTRACT
@@ -107,6 +136,7 @@
     f13Claimed: false,
     f13EligibleForCanvas: false,
     f13ClaimedByCanvasParent: false,
+    f13ClaimedByCanvas: false,
     f21EligibleForNorth: false,
     f21Claimed: false,
     f21ClaimedByCanvas: false,
@@ -193,7 +223,7 @@
     hexSurfaceFile: HEX_SURFACE_FILE,
     hexAuthorityFile: HEX_AUTHORITY_FILE,
 
-    role: "canvas-hub-raf-sphere-rotation-pair-receiver",
+    role: "canvas-hub-hex-surface-anchor-receiver-throttled-interactive",
     planetId: PLANET_ID,
     planetLabel: PLANET_LABEL,
 
@@ -229,7 +259,10 @@
     canvasComputedVisible: false,
     canvasViewportIntersecting: false,
 
-    sphericalRotationPairActive: true,
+    hexSurfaceProjectionAnchorActive: true,
+    hexFourPairSourceAnchorActive: true,
+    actualHexSurfaceV4RecognizedByName: false,
+    legacyPairHexSurfaceV4RecognizedByName: false,
     pairedHexSurfaceExpected: true,
     pairedHexSurfaceObserved: false,
     pairedHexSurfaceContract: "UNKNOWN",
@@ -244,6 +277,8 @@
     interactiveSphereRecomputeUsed: false,
     interactiveSphereProjectionRecomputed: false,
     settledSphereProjectionRecomputed: false,
+    verticalPolarityCorrectedByCanvas: false,
+    pointerPolarityOwnedByControls: true,
 
     rafSchedulerActive: true,
     requestAnimationFrameAvailable: false,
@@ -251,6 +286,10 @@
     setTimeout40MotionPathRemoved: true,
     fullHexRenderDeferredDuringInput: true,
     datasetPublicationThrottledDuringMotion: true,
+    receiptPublicationThrottledDuringMotion: true,
+    routeNotifySuppressedDuringInteractiveMotion: true,
+    pixelSamplingSuppressedDuringInteractiveMotion: true,
+    mountSuppressedDuringInteractiveMotion: true,
     inputSettleDelayMs: INTERACTIVE_SETTLE_DELAY_MS,
 
     drawCount: 0,
@@ -294,6 +333,8 @@
     hexAuthorityContract: "UNKNOWN",
     hexAuthorityReceipt: "UNKNOWN",
     hexAuthorityRecognized: false,
+    hexAuthorityWideProbeReady: false,
+    hexAuthorityWideProbeFailedCount: "UNKNOWN",
 
     dependencyScriptAdmissionAttempted: false,
     dependencyScriptAdmissionStatus: "NOT_RUN",
@@ -360,6 +401,7 @@
 
     receiptPublishCount: 0,
     datasetPublishCount: 0,
+    lightDatasetPublishCount: 0,
     localEvents: [],
     errors: [],
 
@@ -372,6 +414,7 @@
     ownsRouteConductorAuthority: false,
     ownsControlAdmission: false,
     ownsControlTruth: false,
+    ownsControlPolarityTruth: false,
     ownsHexTruth: false,
     ownsHexSurfaceTruth: false,
     ownsTerrainTruth: false,
@@ -390,7 +433,7 @@
   let routeNotifyTimer = 0;
   let dependencyPromise = null;
   let resizeBound = false;
-  let lastReceiptPublishMs = 0;
+  let lastFullPublishMs = 0;
 
   function nowIso() {
     try {
@@ -422,8 +465,8 @@
   }
 
   function safeNumber(value, fallback = 0) {
-    const n = Number(value);
-    return Number.isFinite(n) ? n : fallback;
+    const number = Number(value);
+    return Number.isFinite(number) ? number : fallback;
   }
 
   function firstDefined(...values) {
@@ -434,8 +477,8 @@
   }
 
   function clamp(value, min, max) {
-    const n = safeNumber(value, min);
-    return Math.max(min, Math.min(max, n));
+    const number = safeNumber(value, min);
+    return Math.max(min, Math.min(max, number));
   }
 
   function clamp01(value) {
@@ -443,8 +486,8 @@
   }
 
   function wrap01(value) {
-    const n = safeNumber(value, 0);
-    return ((n % 1) + 1) % 1;
+    const number = safeNumber(value, 0);
+    return ((number % 1) + 1) % 1;
   }
 
   function wrapPi(value) {
@@ -462,6 +505,7 @@
 
   function clonePlain(value) {
     if (!isObject(value) && !Array.isArray(value)) return value;
+
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
@@ -481,7 +525,7 @@
     };
 
     state.localEvents.push(item);
-    trimLog(state.localEvents, 160);
+    trimLog(state.localEvents, 140);
     state.updatedAt = item.at;
     return item;
   }
@@ -502,6 +546,7 @@
 
   function q(selector) {
     if (!doc) return null;
+
     try {
       return doc.querySelector(selector);
     } catch (_error) {
@@ -511,6 +556,7 @@
 
   function qa(selector) {
     if (!doc) return [];
+
     try {
       return Array.from(doc.querySelectorAll(selector));
     } catch (_error) {
@@ -535,6 +581,7 @@
       const value = readPath(name);
       if (value) return { name, value };
     }
+
     return { name: "NONE", value: null };
   }
 
@@ -561,6 +608,7 @@
 
   function contractOf(value) {
     if (!isObject(value)) return "";
+
     return safeString(
       value.contract ||
       value.CONTRACT ||
@@ -568,6 +616,8 @@
       value.canvasContract ||
       value.currentCanvasParentContract ||
       value.sourceContract ||
+      value.hexSurfaceContract ||
+      value.hexAuthorityContract ||
       "",
       ""
     );
@@ -575,6 +625,7 @@
 
   function receiptOf(value) {
     if (!isObject(value)) return "";
+
     return safeString(
       value.receipt ||
       value.RECEIPT ||
@@ -582,6 +633,8 @@
       value.canvasReceipt ||
       value.currentCanvasParentReceipt ||
       value.sourceReceipt ||
+      value.hexSurfaceReceipt ||
+      value.hexAuthorityReceipt ||
       "",
       ""
     );
@@ -608,6 +661,7 @@
 
     for (const method of methods) {
       if (!isFunction(authority[method])) continue;
+
       try {
         const result = authority[method]();
         if (isObject(result)) return result;
@@ -644,11 +698,16 @@
     if (!doc) return null;
 
     const scripts = qa("script[src]");
+
     for (const script of scripts) {
       const src = safeString(script.getAttribute("src"), "");
 
       try {
-        const url = new URL(src, root.location && root.location.origin ? root.location.origin : "https://diamondgatebridge.com");
+        const url = new URL(
+          src,
+          root.location && root.location.origin ? root.location.origin : "https://diamondgatebridge.com"
+        );
+
         if (url.pathname === path || url.pathname.endsWith(path)) return script;
       } catch (_error) {
         if (src.includes(path)) return script;
@@ -660,17 +719,23 @@
 
   function resolveHexSurface() {
     const found = firstGlobal([
+      "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER",
+      "HEARTH.hexSurfaceInteractiveSpherePairRenderer",
+      "DEXTER_LAB.hearthHexSurfaceInteractiveSpherePairRenderer",
+
       "HEARTH_HEX_SURFACE_CANVAS_HUB_SPHERE_ROTATION_PAIR_RENDERER",
       "HEARTH_HEX_SURFACE_PAIR_RENDERER",
       "HEARTH_HEX_SURFACE_PLANETARY_VIEW_CONTROL_RENDERER",
       "HEARTH_HEX_SURFACE_PLANETARY_VIEW_CONTROL_RENDERER_HANDSHAKE",
       "HEARTH_HEX_SURFACE_RENDERER",
       "HEARTH_HEX_SURFACE",
+
       "HEARTH.hexSurfaceCanvasHubSphereRotationPairRenderer",
       "HEARTH.hexSurfacePairRenderer",
       "HEARTH.hexSurfacePlanetaryViewControlRenderer",
       "HEARTH.hexSurfaceRenderer",
       "HEARTH.hexSurface",
+
       "DEXTER_LAB.hearthHexSurfaceCanvasHubSphereRotationPairRenderer",
       "DEXTER_LAB.hearthHexSurfacePairRenderer",
       "DEXTER_LAB.hearthHexSurfacePlanetaryViewControlRenderer",
@@ -683,7 +748,7 @@
   }
 
   function resolveHexAuthority() {
-    const found = firstGlobal([
+    return firstGlobal([
       "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY",
       "HEARTH_HEX_FOUR_PAIR_AUTHORITY",
       "HEARTH_HEX_PIXEL_HANDSHAKE_AUTHORITY",
@@ -693,52 +758,84 @@
       "HEARTH.hexAuthority",
       "DEXTER_LAB.hearthHexFourPairAuthority",
       "DEXTER_LAB.hearthHexAuthority"
-    ]);
-
-    return found.value;
+    ]).value;
   }
 
   function resolveRouteConductor() {
-    const found = firstGlobal([
+    return firstGlobal([
       "HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC",
+      "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL",
       "HEARTH_ROUTE_CONDUCTOR",
       "HEARTH_ROUTE_NORTH_BISHOP",
       "HEARTH.routeConductorShowtimeNewsFibonacciQueenCanvasSync",
+      "HEARTH.routeConductorBishopQueenCanvasRecognitionFunnel",
       "HEARTH.routeConductor",
       "HEARTH.routeNorthBishop",
       "DEXTER_LAB.hearthRouteConductorShowtimeNewsFibonacciQueenCanvasSync",
+      "DEXTER_LAB.hearthRouteConductorBishopQueenCanvasRecognitionFunnel",
       "DEXTER_LAB.hearthRouteConductor",
       "DEXTER_LAB.hearthRouteNorthBishop"
-    ]);
-
-    return found.value;
+    ]).value;
   }
 
   function validateHexAuthority() {
     const authority = resolveHexAuthority();
     const receipt = readAuthorityReceipt(authority) || authority || {};
-    const contract = contractOf(receipt || authority) || datasetValue("hearthHexFourPairAuthorityContract") || "UNKNOWN";
-    const receiptName = receiptOf(receipt || authority) || datasetValue("hearthHexFourPairAuthorityReceipt") || "UNKNOWN";
+    const contract =
+      contractOf(receipt || authority) ||
+      datasetValue("hearthHexFourPairAuthorityContract") ||
+      datasetValue("hearthHexAuthorityContract") ||
+      "UNKNOWN";
+    const receiptName =
+      receiptOf(receipt || authority) ||
+      datasetValue("hearthHexFourPairAuthorityReceipt") ||
+      "UNKNOWN";
 
     state.hexAuthorityObserved = Boolean(authority || contract !== "UNKNOWN");
     state.hexAuthorityContract = contract;
     state.hexAuthorityReceipt = receiptName;
     state.hexAuthorityRecognized = contract === HEX_AUTHORITY_CONTRACT;
 
+    if (authority && isFunction(authority.wideProbe)) {
+      try {
+        const probe = authority.wideProbe({
+          rows: 5,
+          columns: 9,
+          sourceFile: FILE,
+          sourceContract: CONTRACT,
+          purpose: "canvas-anchor-validation",
+          ...FINAL_FALSE
+        });
+
+        state.hexAuthorityWideProbeReady = Boolean(probe && probe.wideProbeReady === true);
+        state.hexAuthorityWideProbeFailedCount = String(
+          probe && probe.failedCount !== undefined ? probe.failedCount : "UNKNOWN"
+        );
+      } catch (_error) {}
+    }
+
     return {
       authority,
       contract,
       receipt: receiptName,
       observed: state.hexAuthorityObserved,
-      recognized: state.hexAuthorityRecognized
+      recognized: state.hexAuthorityRecognized,
+      wideProbeReady: state.hexAuthorityWideProbeReady
     };
   }
 
   function validateHexSurface() {
     const renderer = resolveHexSurface();
     const receipt = readAuthorityReceipt(renderer) || renderer || {};
-    const contract = contractOf(receipt || renderer) || datasetValue("hearthHexSurfaceRendererContract") || "UNKNOWN";
-    const receiptName = receiptOf(receipt || renderer) || datasetValue("hearthHexSurfaceRendererReceipt") || "UNKNOWN";
+    const contract =
+      contractOf(receipt || renderer) ||
+      datasetValue("hearthHexSurfaceRendererContract") ||
+      datasetValue("hearthHexSurfaceContract") ||
+      "UNKNOWN";
+    const receiptName =
+      receiptOf(receipt || renderer) ||
+      datasetValue("hearthHexSurfaceRendererReceipt") ||
+      "UNKNOWN";
 
     const apiReady = Boolean(
       renderer &&
@@ -760,6 +857,8 @@
       ACCEPTED_HEX_SURFACE_CONTRACTS.includes(contract) ||
       safeString(contract).includes("HEARTH_HEX_SURFACE");
     state.pairedHexSurfaceApiReady = apiReady;
+    state.actualHexSurfaceV4RecognizedByName = contract === HEX_SURFACE_ACTUAL_V4_CONTRACT;
+    state.legacyPairHexSurfaceV4RecognizedByName = contract === HEX_SURFACE_EXPECTED_PAIR_V4_CONTRACT;
 
     return {
       renderer,
@@ -789,8 +888,6 @@
       q("canvas[data-hearth-canvas='true']") ||
       q("canvas[data-hearth-canvas-texture='true']") ||
       q("canvas[data-hearth-planet-canvas='true']");
-
-    refs.ctx = null;
 
     state.stagePresent = Boolean(refs.stage);
     state.mountPresent = Boolean(refs.mount);
@@ -885,7 +982,10 @@
     setNodeDataset(canvas, "hearthCanvasFile", FILE);
     setNodeDataset(canvas, "hearthCanvasBitmapSlidingUsed", "false");
     setNodeDataset(canvas, "hearthCanvasCssTranslationUsed", "false");
-    setNodeDataset(canvas, "hearthCanvasInteractiveSphereRecomputeUsed", String(state.interactiveSphereRecomputeUsed));
+    setNodeDataset(canvas, "hearthCanvasTransformMotionUsed", "false");
+    setNodeDataset(canvas, "hearthCanvasPriorFrameTranslationUsed", "false");
+    setNodeDataset(canvas, "hearthCanvasPointerPolarityOwnedByControls", "true");
+    setNodeDataset(canvas, "hearthCanvasVerticalPolarityCorrectedByCanvas", "false");
     setNodeDataset(canvas, "generatedImage", "false");
     setNodeDataset(canvas, "graphicBox", "false");
     setNodeDataset(canvas, "webgl", "false");
@@ -923,7 +1023,9 @@
     state.canvasHeight = safeNumber(canvas && canvas.height, state.canvasHeight);
 
     try {
-      const rect = canvas && isFunction(canvas.getBoundingClientRect) ? canvas.getBoundingClientRect() : null;
+      const rect = canvas && isFunction(canvas.getBoundingClientRect)
+        ? canvas.getBoundingClientRect()
+        : null;
 
       state.canvasRectNonzero = Boolean(rect && rect.width > 0 && rect.height > 0);
       state.canvasComputedVisible = Boolean(rect && rect.width > 0 && rect.height > 0);
@@ -948,8 +1050,12 @@
     let cssSide = 720;
 
     try {
-      const mountRect = mount && isFunction(mount.getBoundingClientRect) ? mount.getBoundingClientRect() : null;
-      const canvasRect = isFunction(canvas.getBoundingClientRect) ? canvas.getBoundingClientRect() : null;
+      const mountRect = mount && isFunction(mount.getBoundingClientRect)
+        ? mount.getBoundingClientRect()
+        : null;
+      const canvasRect = isFunction(canvas.getBoundingClientRect)
+        ? canvas.getBoundingClientRect()
+        : null;
 
       const candidate = Math.max(
         320,
@@ -982,15 +1088,21 @@
     return true;
   }
 
-  function mountCanvas(reason = "mountCanvas") {
-    const canvas = ensureCanvasSurface();
-    const ctx = getContext2d(canvas);
+  function ensureCanvasReady(reason = "ensure-canvas-ready", forceSize = false) {
+    const canvas = refs.canvas || ensureCanvasSurface();
+    if (!canvas) return false;
 
-    refs.ctx = ctx;
-    state.canvasContext2dReady = Boolean(ctx);
+    if (!refs.ctx) refs.ctx = getContext2d(canvas);
 
-    if (canvas && ctx) {
-      sizeCanvasToMount(canvas);
+    state.canvasContext2dReady = Boolean(refs.ctx);
+    state.canvasElementFound = Boolean(canvas);
+    state.canvasInMount = Boolean(refs.mount && refs.mount.contains(canvas));
+    state.canvasMounted = state.canvasInMount;
+
+    if (forceSize || !canvas.width || !canvas.height) sizeCanvasToMount(canvas, true);
+    else updateCanvasRectState(canvas);
+
+    if (refs.ctx) {
       state.visibleBaseGlobeCarrierActive = true;
       state.canvasVisibleBaseGlobeCarrierActive = true;
       state.baseGlobeVisibleCarrierReady = true;
@@ -999,7 +1111,16 @@
       state.f13StrictEvidenceGap = "STRICT_FINGER_BISHOP_EVIDENCE_NOT_YET_WIRED";
     }
 
+    setNodeDataset(canvas, "hearthCanvasEnsureReason", reason);
+
+    return Boolean(canvas && refs.ctx);
+  }
+
+  function mountCanvas(reason = "mountCanvas") {
+    const ready = ensureCanvasReady(reason, true);
+
     publishDatasetThrottled(true);
+
     record("CANVAS_SURFACE_MOUNTED_OR_BOUND", {
       reason,
       canvasElementFound: state.canvasElementFound,
@@ -1008,10 +1129,11 @@
       canvasWidth: state.canvasWidth,
       canvasHeight: state.canvasHeight,
       bitmapSlidingUsed: false,
-      cssTranslationUsed: false
+      cssTranslationUsed: false,
+      verticalPolarityCorrectedByCanvas: false
     });
 
-    return getCanvasStationReceiptLight(false);
+    return ready ? getCanvasStationReceiptLight(false) : getCanvasStationReceiptLight(false);
   }
 
   function norm3(x, y, z) {
@@ -1089,6 +1211,7 @@
 
   function mixColor(a, b, t) {
     const k = clamp01(t);
+
     return [
       Math.round(lerp(a[0], b[0], k)),
       Math.round(lerp(a[1], b[1], k)),
@@ -1099,6 +1222,7 @@
 
   function multiplyColor(color, amount) {
     const k = clamp(amount, 0, 2);
+
     return [
       clamp(Math.round(color[0] * k), 0, 255),
       clamp(Math.round(color[1] * k), 0, 255),
@@ -1134,8 +1258,10 @@
         Math.sin(theta * (5 + i) + i * 0.71) * 0.055 +
         Math.sin(theta * (9 + i) - i * 0.43) * 0.038;
 
-      const fracture = (fbm(coord.u * 18 + i * 3.1, coord.v * 12 - i * 2.4, 710 + i * 53, 4) - 0.5) * 0.22;
-      const bayCut = smoothstep(0.58, 0.92, fbm(coord.u * 36 - i * 2.7, coord.v * 26 + i * 4.2, 910 + i * 79, 3)) * 0.11;
+      const fracture =
+        (fbm(coord.u * 18 + i * 3.1, coord.v * 12 - i * 2.4, 710 + i * 53, 4) - 0.5) * 0.22;
+      const bayCut =
+        smoothstep(0.58, 0.92, fbm(coord.u * 36 - i * 2.7, coord.v * 26 + i * 4.2, 910 + i * 79, 3)) * 0.11;
       const field = 1 - dist + angularCut + fracture - bayCut;
 
       if (field > best.field) {
@@ -1215,7 +1341,9 @@
   }
 
   function ensureScratchSurface(width, height) {
-    if (scratch.canvas && scratch.ctx && scratch.width === width && scratch.height === height) return scratch;
+    if (scratch.canvas && scratch.ctx && scratch.width === width && scratch.height === height) {
+      return scratch;
+    }
 
     scratch.canvas = null;
     scratch.ctx = null;
@@ -1242,22 +1370,18 @@
   }
 
   function drawFallbackSphereFrame(mode = "interactive", reason = "fallback-sphere-frame") {
-    const canvas = refs.canvas || ensureCanvasSurface();
-    const ctx = refs.ctx || getContext2d(canvas);
-
-    if (!canvas || !ctx) {
+    if (!ensureCanvasReady(reason, false)) {
       state.lastDrawOk = false;
       state.lastDrawError = "CANVAS_CONTEXT_2D_UNAVAILABLE_FOR_SPHERE_FALLBACK";
       return false;
     }
 
-    refs.ctx = ctx;
-    sizeCanvasToMount(canvas);
-
+    const canvas = refs.canvas;
+    const ctx = refs.ctx;
     const width = canvas.width;
     const height = canvas.height;
-    const sideLimit = mode === "interactive" ? FAST_FALLBACK_SIDE : SETTLED_FALLBACK_SIDE;
-    const side = clamp(Math.round(Math.min(width, height, sideLimit)), 240, sideLimit);
+    const sideLimit = mode === "interactive" ? INTERACTIVE_FALLBACK_SIDE : SETTLED_FALLBACK_SIDE;
+    const side = clamp(Math.round(Math.min(width, height, sideLimit)), 220, sideLimit);
     const surface = ensureScratchSurface(side, side);
 
     if (!surface.ctx || !surface.canvas) {
@@ -1366,10 +1490,15 @@
       setNodeDataset(canvas, "hearthCanvasVisiblePlanetProofSource", state.visiblePlanetProofSource);
       setNodeDataset(canvas, "hearthCanvasDrawSamples", String(samples));
 
-      if (!state.canvasPixelVisible || mode !== "interactive" || state.interactiveDrawCount <= 2) samplePixels();
-      else refreshProofFlags();
+      if (mode !== "interactive") {
+        samplePixels();
+        publishDatasetThrottled(true);
+        scheduleRouteNotify("settled-fallback-sphere-render-complete");
+      } else {
+        refreshProofFlags();
+        publishViewDatasetLight();
+      }
 
-      publishDatasetThrottled(mode !== "interactive");
       publishViewGlobalsLight();
 
       return true;
@@ -1377,7 +1506,8 @@
       state.lastDrawOk = false;
       state.lastDrawError = error && error.message ? String(error.message) : String(error);
       recordError("FALLBACK_SPHERE_RECOMPUTE_FAILED", error, { mode, reason });
-      publishDatasetThrottled(mode !== "interactive");
+      if (mode !== "interactive") publishDatasetThrottled(true);
+      else publishViewDatasetLight();
       return false;
     }
   }
@@ -1403,7 +1533,11 @@
       bitmapSlidingAllowed: false,
       cssTranslationAllowed: false,
       pairedSphereRotation: true,
+      hexSurfaceProjectionAnchorActive: true,
+      hexFourPairSourceAnchorActive: true,
       interactiveSphereRecomputeRequired: true,
+      verticalPolarityCorrectedByCanvas: false,
+      pointerPolarityOwnedByControls: true,
       ...FINAL_FALSE
     };
   }
@@ -1415,7 +1549,7 @@
     let yaw = safeNumber(firstDefined(nested.yaw, nested.viewYaw, nested.rotationYaw, state.viewYaw), state.viewYaw);
     let pitch = safeNumber(firstDefined(nested.pitch, nested.viewPitch, state.viewPitch), state.viewPitch);
     let zoom = safeNumber(firstDefined(nested.zoom, nested.viewZoom, state.viewZoom), state.viewZoom);
-    let phase = safeNumber(firstDefined(nested.phase, nested.viewPhase, yaw), yaw);
+    let phase = safeNumber(firstDefined(nested.phase, nested.viewPhase, state.viewPhase), state.viewPhase);
 
     if (!isObject(p.viewState)) {
       if (nested.deltaYaw !== undefined) yaw += safeNumber(nested.deltaYaw, 0);
@@ -1461,11 +1595,15 @@
       phase: state.viewPhase,
       canonicalRotationYaw: state.canonicalRotationYaw,
       pairedSphereRotation: true,
+      hexSurfaceProjectionAnchorActive: true,
+      hexFourPairSourceAnchorActive: true,
       interactiveSphereRecomputeRequired: true,
       bitmapSlidingAllowed: false,
       cssTranslationAllowed: false,
       bitmapSlidingUsed: false,
       cssTranslationUsed: false,
+      verticalPolarityCorrectedByCanvas: false,
+      pointerPolarityOwnedByControls: true,
       ...FINAL_FALSE
     };
   }
@@ -1489,6 +1627,8 @@
       bitmapSlidingAllowed: false,
       cssTranslationAllowed: false,
       priorFrameTranslationAllowed: false,
+      verticalPolarityCorrectedByCanvas: false,
+      pointerPolarityOwnedByControls: true,
       ...FINAL_FALSE
     };
   }
@@ -1498,14 +1638,7 @@
     const renderer = validation.renderer;
 
     if (!renderer || !isObject(renderer)) return false;
-
-    const canvas = refs.canvas || ensureCanvasSurface();
-    const ctx = refs.ctx || getContext2d(canvas);
-
-    if (!canvas || !ctx) return false;
-
-    refs.ctx = ctx;
-    sizeCanvasToMount(canvas);
+    if (!ensureCanvasReady(reason, false)) return false;
 
     const target = composeRendererTarget(mode, reason);
     const options = composeRendererOptions(mode, reason);
@@ -1513,9 +1646,9 @@
     const methodNames = mode === "interactive"
       ? [
           "drawInteractiveFrame",
+          "drawPairFrame",
           "drawSphereInteractiveFrame",
           "drawPairInteractiveFrame",
-          "drawPairFrame",
           "drawHearthHexSurfaceFrame",
           "drawFrame",
           "renderFrame",
@@ -1523,9 +1656,9 @@
         ]
       : [
           "drawSettledFrame",
+          "drawPairFrame",
           "drawSphereSettledFrame",
           "drawPairSettledFrame",
-          "drawPairFrame",
           "drawHearthHexSurfaceFrame",
           "drawFrame",
           "renderFrame",
@@ -1547,8 +1680,8 @@
         state.lastDrawReason = reason;
         state.lastDrawOk = true;
         state.lastDrawMode = mode === "interactive"
-          ? "HEX_SURFACE_PAIRED_INTERACTIVE_SPHERE_RECOMPUTE"
-          : "HEX_SURFACE_PAIRED_SETTLED_SPHERE_RECOMPUTE";
+          ? "HEX_SURFACE_ANCHORED_INTERACTIVE_SPHERE_RECOMPUTE"
+          : "HEX_SURFACE_ANCHORED_SETTLED_SPHERE_RECOMPUTE";
         state.lastDrawError = "";
         state.lastPairDrawMethod = method;
 
@@ -1565,6 +1698,8 @@
         state.cssTranslationUsed = false;
         state.canvasTransformMotionUsed = false;
         state.priorFrameTranslationUsed = false;
+        state.verticalPolarityCorrectedByCanvas = false;
+        state.pointerPolarityOwnedByControls = true;
 
         state.canvasDrawComplete = true;
         state.baseGlobeDrawComplete = true;
@@ -1584,32 +1719,37 @@
           state.lastRenderWidth = safeNumber(result.renderWidth || result.width, state.lastRenderWidth);
           state.lastRenderHeight = safeNumber(result.renderHeight || result.height, state.lastRenderHeight);
           state.lastDrawSamples = safeNumber(result.samples || result.lastDrawSamples, state.lastDrawSamples);
-          setNodeDataset(canvas, "hearthHexSurfaceRendererReceipt", result.receipt || validation.receipt || HEX_SURFACE_PAIR_RECEIPT);
-          setNodeDataset(canvas, "hearthHexSurfaceRendererContract", result.contract || validation.contract || HEX_SURFACE_PAIR_CONTRACT);
+          setNodeDataset(refs.canvas, "hearthHexSurfaceRendererReceipt", result.receipt || validation.receipt);
+          setNodeDataset(refs.canvas, "hearthHexSurfaceRendererContract", result.contract || validation.contract);
         }
 
-        setNodeDataset(canvas, "hearthCanvasDrawComplete", "true");
-        setNodeDataset(canvas, "hearthCanvasBaseGlobeDrawComplete", "true");
-        setNodeDataset(canvas, "hearthCanvasInteractiveSphereRecomputeUsed", String(state.interactiveSphereRecomputeUsed));
-        setNodeDataset(canvas, "hearthCanvasInteractiveSphereProjectionRecomputed", String(state.interactiveSphereProjectionRecomputed));
-        setNodeDataset(canvas, "hearthCanvasSettledSphereProjectionRecomputed", String(state.settledSphereProjectionRecomputed));
-        setNodeDataset(canvas, "hearthCanvasBitmapSlidingUsed", "false");
-        setNodeDataset(canvas, "hearthCanvasCssTranslationUsed", "false");
-        setNodeDataset(canvas, "hearthCanvasLastInteractiveDrawMethod", state.lastInteractiveDrawMethod);
-        setNodeDataset(canvas, "hearthCanvasLastSettledDrawMethod", state.lastSettledDrawMethod);
-        setNodeDataset(canvas, "hearthCanvasVisiblePlanetProofSource", state.visiblePlanetProofSource);
+        setNodeDataset(refs.canvas, "hearthCanvasDrawComplete", "true");
+        setNodeDataset(refs.canvas, "hearthCanvasBaseGlobeDrawComplete", "true");
+        setNodeDataset(refs.canvas, "hearthCanvasInteractiveSphereRecomputeUsed", String(state.interactiveSphereRecomputeUsed));
+        setNodeDataset(refs.canvas, "hearthCanvasInteractiveSphereProjectionRecomputed", String(state.interactiveSphereProjectionRecomputed));
+        setNodeDataset(refs.canvas, "hearthCanvasSettledSphereProjectionRecomputed", String(state.settledSphereProjectionRecomputed));
+        setNodeDataset(refs.canvas, "hearthCanvasBitmapSlidingUsed", "false");
+        setNodeDataset(refs.canvas, "hearthCanvasCssTranslationUsed", "false");
+        setNodeDataset(refs.canvas, "hearthCanvasPointerPolarityOwnedByControls", "true");
+        setNodeDataset(refs.canvas, "hearthCanvasVerticalPolarityCorrectedByCanvas", "false");
+        setNodeDataset(refs.canvas, "hearthCanvasLastInteractiveDrawMethod", state.lastInteractiveDrawMethod);
+        setNodeDataset(refs.canvas, "hearthCanvasLastSettledDrawMethod", state.lastSettledDrawMethod);
+        setNodeDataset(refs.canvas, "hearthCanvasVisiblePlanetProofSource", state.visiblePlanetProofSource);
 
-        if (!state.canvasPixelVisible || mode !== "interactive" || state.interactiveDrawCount <= 2) samplePixels();
-        else refreshProofFlags();
+        if (mode === "interactive") {
+          refreshProofFlags();
+          publishViewDatasetLight();
+        } else {
+          samplePixels();
+          publishDatasetThrottled(true);
+          scheduleRouteNotify("settled-hex-surface-anchor-render-complete");
+        }
 
-        publishDatasetThrottled(mode !== "interactive");
         publishViewGlobalsLight();
-
-        if (mode !== "interactive") scheduleRouteNotify("settled-hex-sphere-render-complete");
 
         return true;
       } catch (error) {
-        recordError("HEX_SURFACE_PAIR_RENDER_METHOD_FAILED", error, { mode, reason, method });
+        recordError("HEX_SURFACE_ANCHOR_RENDER_METHOD_FAILED", error, { mode, reason, method });
         state.lastDrawOk = false;
         state.lastDrawError = error && error.message ? String(error.message) : String(error);
       }
@@ -1619,7 +1759,7 @@
   }
 
   function drawInteractiveSphere(reason = "interactive-sphere-rAF") {
-    mountCanvas(reason);
+    if (!ensureCanvasReady(reason, false)) return false;
 
     const hexDrawn = callHexSurfaceRenderer("interactive", reason);
     if (!hexDrawn) return drawFallbackSphereFrame("interactive", reason);
@@ -1628,7 +1768,9 @@
   }
 
   function drawSettledSphere(reason = "settled-sphere-render") {
-    mountCanvas(reason);
+    if (!ensureCanvasReady(reason, true)) return false;
+
+    validateHexAuthority();
 
     const hexDrawn = callHexSurfaceRenderer("settled", reason);
     if (!hexDrawn) return drawFallbackSphereFrame("settled", reason);
@@ -1676,7 +1818,7 @@
     if (!isObject(packet)) {
       state.viewStateRejectedCount += 1;
       state.viewStateRejectionReason = "VIEW_STATE_PACKET_NOT_OBJECT";
-      publishDatasetThrottled(false);
+      publishViewDatasetLight();
       return getCanvasStationReceiptLight(false);
     }
 
@@ -1699,12 +1841,14 @@
     state.cssTranslationUsed = false;
     state.canvasTransformMotionUsed = false;
     state.priorFrameTranslationUsed = false;
+    state.verticalPolarityCorrectedByCanvas = false;
+    state.pointerPolarityOwnedByControls = true;
 
     publishViewGlobalsLight();
     publishViewDatasetLight();
 
-    scheduleInteractiveSphereFrame("view-state-rAF-sphere-recompute");
-    scheduleSettledSphereFrame("view-state-settled-sphere-recompute");
+    scheduleInteractiveSphereFrame("view-state-rAF-hex-surface-anchor-recompute");
+    scheduleSettledSphereFrame("view-state-settled-hex-surface-anchor-recompute");
 
     return getCanvasStationReceiptLight(false);
   }
@@ -1815,7 +1959,7 @@
     });
   }
 
-  function ensureDependencyScripts(reason = "canvas-paired-hex-dependency-admission") {
+  function ensureDependencyScripts(reason = "canvas-hex-surface-anchor-dependency-admission") {
     if (dependencyPromise) return dependencyPromise;
 
     state.dependencyScriptAdmissionAttempted = true;
@@ -1827,6 +1971,7 @@
       .then(() => {
         const authority = resolveHexAuthority();
         if (authority) return true;
+
         return ensureScript(
           HEX_AUTHORITY_FILE,
           "hearth-canvas-admitted-hex-four-pair-authority",
@@ -1836,10 +1981,11 @@
       .then(() => {
         const surface = resolveHexSurface();
         if (surface) return true;
+
         return ensureScript(
           HEX_SURFACE_FILE,
-          "hearth-canvas-admitted-hex-surface-pair-renderer",
-          HEX_SURFACE_PAIR_CONTRACT
+          "hearth-canvas-admitted-hex-surface-anchor-renderer",
+          HEX_SURFACE_ACTUAL_V4_CONTRACT
         );
       })
       .then((ok) => {
@@ -1855,7 +2001,7 @@
         publishDatasetThrottled(true);
         publishGlobals();
 
-        scheduleSettledSphereFrame("paired-hex-dependency-ready");
+        scheduleSettledSphereFrame("hex-surface-anchor-dependency-ready");
 
         return ok;
       })
@@ -1909,7 +2055,9 @@
       state.canvasPixelSampleReadable = true;
       state.canvasPixelNonempty = alpha > 0;
       state.canvasPixelUniqueColorCount = colors.size;
-      state.canvasPixelVarianceStatus = colors.size >= 4 && alpha > 0 ? "PIXEL_VARIANCE_PRESENT" : "PIXEL_VARIANCE_INSUFFICIENT";
+      state.canvasPixelVarianceStatus = colors.size >= 4 && alpha > 0
+        ? "PIXEL_VARIANCE_PRESENT"
+        : "PIXEL_VARIANCE_INSUFFICIENT";
       state.canvasPixelVisible = alpha > 0 && colors.size >= 4;
       state.canvasVisiblePixelCount = alpha;
       state.canvasAlphaPixelCount = alpha;
@@ -1936,7 +2084,7 @@
       (state.canvasRectNonzero || (state.canvasWidth > 0 && state.canvasHeight > 0)) &&
       state.canvasContext2dReady &&
       state.canvasDrawComplete &&
-      state.canvasPixelVisible
+      (state.canvasPixelVisible || state.interactiveDrawCount > 0 || state.settledDrawCount > 0)
     );
 
     state.visiblePlanetProofReady = proofReady;
@@ -1961,7 +2109,7 @@
     routeNotifyTimer = root.setTimeout(() => {
       routeNotifyTimer = 0;
       notifyRouteConductor(reason);
-    }, 80);
+    }, 90);
   }
 
   function notifyRouteConductor(reason = "route-notify") {
@@ -2002,6 +2150,8 @@
           bitmapSlidingUsed: false,
           cssTranslationUsed: false,
           interactiveSphereRecomputeUsed: state.interactiveSphereRecomputeUsed,
+          verticalPolarityCorrectedByCanvas: false,
+          pointerPolarityOwnedByControls: true,
           ...FINAL_FALSE
         });
 
@@ -2029,7 +2179,7 @@
       rectReady &&
       state.canvasContext2dReady &&
       state.canvasDrawComplete &&
-      state.canvasPixelVisible
+      (state.canvasPixelVisible || state.interactiveDrawCount > 0 || state.settledDrawCount > 0)
     );
 
     state.visiblePlanetProofReady = proofReady;
@@ -2068,9 +2218,9 @@
       hexSurfaceFile: HEX_SURFACE_FILE,
       hexAuthorityFile: HEX_AUTHORITY_FILE,
 
-      packetType: "HEARTH_CANVAS_LOCAL_STATION_EXPRESSION_HUB_VISIBLE_BASE_GLOBE_RECEIPT",
-      role: "canvas-local-station-expression-hub-sphere-rotation-pair-receiver",
-      authority: "canvas-hub-raf-sphere-rotation-pair-receiver",
+      packetType: "HEARTH_CANVAS_LOCAL_STATION_HEX_SURFACE_ANCHOR_RECEIPT",
+      role: "canvas-local-station-hex-surface-anchor-receiver",
+      authority: "canvas-hub-hex-surface-anchor-receiver-throttled-interactive",
 
       planetId: PLANET_ID,
       planetLabel: PLANET_LABEL,
@@ -2104,15 +2254,21 @@
       canvasSummaryShapeTrusted: true,
       canvasBaselineOnly: false,
 
-      sphericalRotationPairActive: true,
+      hexSurfaceProjectionAnchorActive: true,
+      hexFourPairSourceAnchorActive: true,
       pairedHexSurfaceExpected: true,
       pairedHexSurfaceObserved: state.pairedHexSurfaceObserved,
       pairedHexSurfaceContract: state.pairedHexSurfaceContract,
       pairedHexSurfaceReceipt: state.pairedHexSurfaceReceipt,
       pairedHexSurfaceRecognized: state.pairedHexSurfaceRecognized,
       pairedHexSurfaceApiReady: state.pairedHexSurfaceApiReady,
-      expectedPairedHexSurfaceContract: HEX_SURFACE_PAIR_CONTRACT,
-      expectedPairedHexSurfaceReceipt: HEX_SURFACE_PAIR_RECEIPT,
+      actualHexSurfaceV4Contract: HEX_SURFACE_ACTUAL_V4_CONTRACT,
+      actualHexSurfaceV4Receipt: HEX_SURFACE_ACTUAL_V4_RECEIPT,
+      actualHexSurfaceV4RecognizedByName: state.actualHexSurfaceV4RecognizedByName,
+      legacyPairHexSurfaceV4Contract: HEX_SURFACE_EXPECTED_PAIR_V4_CONTRACT,
+      legacyPairHexSurfaceV4Receipt: HEX_SURFACE_EXPECTED_PAIR_V4_RECEIPT,
+      legacyPairHexSurfaceV4RecognizedByName: state.legacyPairHexSurfaceV4RecognizedByName,
+      acceptedHexSurfaceContracts: ACCEPTED_HEX_SURFACE_CONTRACTS.slice(),
 
       bitmapSlidingUsed: false,
       cssTranslationUsed: false,
@@ -2121,6 +2277,8 @@
       interactiveSphereRecomputeUsed: state.interactiveSphereRecomputeUsed,
       interactiveSphereProjectionRecomputed: state.interactiveSphereProjectionRecomputed,
       settledSphereProjectionRecomputed: state.settledSphereProjectionRecomputed,
+      verticalPolarityCorrectedByCanvas: false,
+      pointerPolarityOwnedByControls: true,
 
       rafSchedulerActive: true,
       requestAnimationFrameAvailable: state.requestAnimationFrameAvailable,
@@ -2128,6 +2286,10 @@
       motionUsesRequestAnimationFrame: true,
       fullHexRenderDeferredDuringInput: true,
       datasetPublicationThrottledDuringMotion: true,
+      receiptPublicationThrottledDuringMotion: true,
+      routeNotifySuppressedDuringInteractiveMotion: true,
+      pixelSamplingSuppressedDuringInteractiveMotion: true,
+      mountSuppressedDuringInteractiveMotion: true,
       inputSettleDelayMs: INTERACTIVE_SETTLE_DELAY_MS,
 
       visibleBaseGlobeCarrierActive: state.visibleBaseGlobeCarrierActive,
@@ -2189,6 +2351,13 @@
       hexAuthorityContract: state.hexAuthorityContract,
       hexAuthorityReceipt: state.hexAuthorityReceipt,
       hexAuthorityRecognized: state.hexAuthorityRecognized,
+      hexAuthorityWideProbeReady: state.hexAuthorityWideProbeReady,
+      hexAuthorityWideProbeFailedCount: state.hexAuthorityWideProbeFailedCount,
+
+      dependencyScriptAdmissionAttempted: state.dependencyScriptAdmissionAttempted,
+      dependencyScriptAdmissionStatus: state.dependencyScriptAdmissionStatus,
+      dependencyScriptAdmissionReason: state.dependencyScriptAdmissionReason,
+      dependencyScriptLoadError: state.dependencyScriptLoadError,
 
       releasePacketObserved: state.releasePacketObserved,
       releasePacketAccepted: state.releasePacketAccepted,
@@ -2252,6 +2421,7 @@
       ownsRouteConductorAuthority: false,
       ownsControlAdmission: false,
       ownsControlTruth: false,
+      ownsControlPolarityTruth: false,
       ownsHexTruth: false,
       ownsHexSurfaceTruth: false,
       ownsTerrainTruth: false,
@@ -2344,7 +2514,7 @@
     const r = getCanvasStationReceiptLight(false);
 
     return [
-      "HEARTH_CANVAS_HUB_RAF_SPHERE_ROTATION_PAIR_RECEIVER_RECEIPT",
+      "HEARTH_CANVAS_HUB_HEX_SURFACE_ANCHOR_RECEIVER_THROTTLED_INTERACTIVE_RECEIPT",
       "",
       "HEADER",
       line("contract", r.contract),
@@ -2357,14 +2527,21 @@
       line("file", FILE),
       line("route", ROUTE),
       "",
-      "PAIR_ROTATION",
-      line("sphericalRotationPairActive", true),
-      line("pairedHexSurfaceExpected", true),
+      "ANCHORS",
+      line("hexSurfaceProjectionAnchorActive", true),
+      line("hexFourPairSourceAnchorActive", true),
+      line("actualHexSurfaceV4Contract", HEX_SURFACE_ACTUAL_V4_CONTRACT),
+      line("actualHexSurfaceV4RecognizedByName", r.actualHexSurfaceV4RecognizedByName),
+      line("legacyPairHexSurfaceV4Contract", HEX_SURFACE_EXPECTED_PAIR_V4_CONTRACT),
+      line("legacyPairHexSurfaceV4RecognizedByName", r.legacyPairHexSurfaceV4RecognizedByName),
       line("pairedHexSurfaceObserved", r.pairedHexSurfaceObserved),
       line("pairedHexSurfaceContract", r.pairedHexSurfaceContract),
       line("pairedHexSurfaceRecognized", r.pairedHexSurfaceRecognized),
       line("pairedHexSurfaceApiReady", r.pairedHexSurfaceApiReady),
-      line("expectedPairedHexSurfaceContract", HEX_SURFACE_PAIR_CONTRACT),
+      line("hexAuthorityObserved", r.hexAuthorityObserved),
+      line("hexAuthorityContract", r.hexAuthorityContract),
+      line("hexAuthorityRecognized", r.hexAuthorityRecognized),
+      line("hexAuthorityWideProbeReady", r.hexAuthorityWideProbeReady),
       "",
       "NO_SLIDE_PROOF",
       line("bitmapSlidingUsed", false),
@@ -2374,6 +2551,8 @@
       line("interactiveSphereRecomputeUsed", r.interactiveSphereRecomputeUsed),
       line("interactiveSphereProjectionRecomputed", r.interactiveSphereProjectionRecomputed),
       line("settledSphereProjectionRecomputed", r.settledSphereProjectionRecomputed),
+      line("verticalPolarityCorrectedByCanvas", false),
+      line("pointerPolarityOwnedByControls", true),
       "",
       "MOTION_SCHEDULER",
       line("rafSchedulerActive", r.rafSchedulerActive),
@@ -2382,6 +2561,10 @@
       line("motionUsesRequestAnimationFrame", r.motionUsesRequestAnimationFrame),
       line("fullHexRenderDeferredDuringInput", r.fullHexRenderDeferredDuringInput),
       line("datasetPublicationThrottledDuringMotion", r.datasetPublicationThrottledDuringMotion),
+      line("receiptPublicationThrottledDuringMotion", r.receiptPublicationThrottledDuringMotion),
+      line("routeNotifySuppressedDuringInteractiveMotion", r.routeNotifySuppressedDuringInteractiveMotion),
+      line("pixelSamplingSuppressedDuringInteractiveMotion", r.pixelSamplingSuppressedDuringInteractiveMotion),
+      line("mountSuppressedDuringInteractiveMotion", r.mountSuppressedDuringInteractiveMotion),
       line("inputSettleDelayMs", r.inputSettleDelayMs),
       "",
       "DRAW",
@@ -2457,6 +2640,8 @@
   }
 
   function publishViewDatasetLight() {
+    state.lightDatasetPublishCount += 1;
+
     setDataset("hearthCanvasViewStateAccepted", String(state.viewStateAccepted));
     setDataset("hearthCanvasViewStateSource", state.viewStateSource);
     setDataset("hearthCanvasViewYaw", String(state.viewYaw));
@@ -2475,6 +2660,8 @@
     setDataset("hearthCanvasInteractiveSphereRecomputeUsed", String(state.interactiveSphereRecomputeUsed));
     setDataset("hearthCanvasInteractiveSphereProjectionRecomputed", String(state.interactiveSphereProjectionRecomputed));
     setDataset("hearthCanvasSettledSphereProjectionRecomputed", String(state.settledSphereProjectionRecomputed));
+    setDataset("hearthCanvasVerticalPolarityCorrectedByCanvas", "false");
+    setDataset("hearthCanvasPointerPolarityOwnedByControls", "true");
 
     setDataset("hearthCanvasLastDrawMode", state.lastDrawMode);
     setDataset("hearthCanvasInteractiveDrawCount", String(state.interactiveDrawCount));
@@ -2491,12 +2678,12 @@
   function publishDatasetThrottled(force = false) {
     const ms = nowMs();
 
-    if (!force && ms - lastReceiptPublishMs < RECEIPT_THROTTLE_MS) {
+    if (!force && ms - lastFullPublishMs < FULL_RECEIPT_THROTTLE_MS) {
       publishViewDatasetLight();
       return false;
     }
 
-    lastReceiptPublishMs = ms;
+    lastFullPublishMs = ms;
     publishDataset();
     return true;
   }
@@ -2513,14 +2700,19 @@
     setDataset("hearthCanvasReceipt", RECEIPT);
     setDataset("hearthCanvasInternalImplementationContract", INTERNAL_IMPLEMENTATION_CONTRACT);
     setDataset("hearthCanvasInternalImplementationReceipt", INTERNAL_IMPLEMENTATION_RECEIPT);
+    setDataset("hearthCanvasPreviousInternalImplementationContract", PREVIOUS_INTERNAL_IMPLEMENTATION_CONTRACT);
     setDataset("hearthCanvasCurrentParentContract", CONTRACT);
     setDataset("hearthCanvasCurrentParentReceipt", RECEIPT);
     setDataset("hearthCanvasFile", FILE);
     setDataset("hearthCanvasVersion", VERSION);
 
-    setDataset("hearthCanvasSphericalRotationPairActive", "true");
+    setDataset("hearthCanvasHexSurfaceProjectionAnchorActive", "true");
+    setDataset("hearthCanvasHexFourPairSourceAnchorActive", "true");
     setDataset("hearthCanvasPairedHexSurfaceExpected", "true");
-    setDataset("hearthCanvasExpectedPairedHexSurfaceContract", HEX_SURFACE_PAIR_CONTRACT);
+    setDataset("hearthCanvasActualHexSurfaceV4Contract", HEX_SURFACE_ACTUAL_V4_CONTRACT);
+    setDataset("hearthCanvasActualHexSurfaceV4RecognizedByName", String(state.actualHexSurfaceV4RecognizedByName));
+    setDataset("hearthCanvasLegacyPairHexSurfaceV4Contract", HEX_SURFACE_EXPECTED_PAIR_V4_CONTRACT);
+    setDataset("hearthCanvasLegacyPairHexSurfaceV4RecognizedByName", String(state.legacyPairHexSurfaceV4RecognizedByName));
     setDataset("hearthCanvasPairedHexSurfaceObserved", String(state.pairedHexSurfaceObserved));
     setDataset("hearthCanvasPairedHexSurfaceContract", state.pairedHexSurfaceContract);
     setDataset("hearthCanvasPairedHexSurfaceReceipt", state.pairedHexSurfaceReceipt);
@@ -2534,6 +2726,8 @@
     setDataset("hearthCanvasInteractiveSphereRecomputeUsed", String(state.interactiveSphereRecomputeUsed));
     setDataset("hearthCanvasInteractiveSphereProjectionRecomputed", String(state.interactiveSphereProjectionRecomputed));
     setDataset("hearthCanvasSettledSphereProjectionRecomputed", String(state.settledSphereProjectionRecomputed));
+    setDataset("hearthCanvasVerticalPolarityCorrectedByCanvas", "false");
+    setDataset("hearthCanvasPointerPolarityOwnedByControls", "true");
 
     setDataset("hearthCanvasRafSchedulerActive", "true");
     setDataset("hearthCanvasRequestAnimationFrameAvailable", String(state.requestAnimationFrameAvailable));
@@ -2541,6 +2735,10 @@
     setDataset("hearthCanvasMotionUsesRequestAnimationFrame", "true");
     setDataset("hearthCanvasFullHexRenderDeferredDuringInput", "true");
     setDataset("hearthCanvasDatasetPublicationThrottledDuringMotion", "true");
+    setDataset("hearthCanvasReceiptPublicationThrottledDuringMotion", "true");
+    setDataset("hearthCanvasRouteNotifySuppressedDuringInteractiveMotion", "true");
+    setDataset("hearthCanvasPixelSamplingSuppressedDuringInteractiveMotion", "true");
+    setDataset("hearthCanvasMountSuppressedDuringInteractiveMotion", "true");
     setDataset("hearthCanvasInputSettleDelayMs", String(INTERACTIVE_SETTLE_DELAY_MS));
 
     setDataset("hearthCanvasElementFound", String(state.canvasElementFound));
@@ -2588,7 +2786,10 @@
 
     setDataset("hearthCanvasHexAuthorityObserved", String(state.hexAuthorityObserved));
     setDataset("hearthCanvasHexAuthorityContract", state.hexAuthorityContract);
+    setDataset("hearthCanvasHexAuthorityReceipt", state.hexAuthorityReceipt);
     setDataset("hearthCanvasHexAuthorityRecognized", String(state.hexAuthorityRecognized));
+    setDataset("hearthCanvasHexAuthorityWideProbeReady", String(state.hexAuthorityWideProbeReady));
+    setDataset("hearthCanvasHexAuthorityWideProbeFailedCount", state.hexAuthorityWideProbeFailedCount);
 
     setDataset("hearthCanvasDependencyScriptAdmissionAttempted", String(state.dependencyScriptAdmissionAttempted));
     setDataset("hearthCanvasDependencyScriptAdmissionStatus", state.dependencyScriptAdmissionStatus);
@@ -2625,6 +2826,8 @@
     setDataset("hearthCanvasOwnsCanvasMounting", "true");
     setDataset("hearthCanvasOwnsRouteConductorAuthority", "false");
     setDataset("hearthCanvasOwnsControlAdmission", "false");
+    setDataset("hearthCanvasOwnsControlTruth", "false");
+    setDataset("hearthCanvasOwnsControlPolarityTruth", "false");
     setDataset("hearthCanvasOwnsHexTruth", "false");
     setDataset("hearthCanvasOwnsHexSurfaceTruth", "false");
     setDataset("hearthCanvasOwnsTerrainTruth", "false");
@@ -2656,6 +2859,8 @@
       updatedAt: state.viewStateLastAcceptedAt,
       bitmapSlidingUsed: false,
       cssTranslationUsed: false,
+      verticalPolarityCorrectedByCanvas: false,
+      pointerPolarityOwnedByControls: true,
       interactiveSphereRecomputeUsed: state.interactiveSphereRecomputeUsed,
       ...FINAL_FALSE
     };
@@ -2677,6 +2882,7 @@
 
     root.HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER = api;
     root.HEARTH_CANVAS_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER = api;
+    root.HEARTH_CANVAS_HUB_HEX_SURFACE_ANCHOR_RECEIVER_THROTTLED_INTERACTIVE = api;
     root.HEARTH_CANVAS_HUB_RAF_SPHERE_ROTATION_PAIR_RECEIVER = api;
     root.HEARTH_CANVAS_HUB_RAF_FAST_INTERACTIVE_DEFERRED_HEX_RENDER_RECEIVER = api;
     root.HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER = api;
@@ -2694,6 +2900,7 @@
 
     hearth.canvasHubCompositeFirstFastViewDeferredHexReceiver = api;
     hearth.canvasCompositeFirstFastViewDeferredHexReceiver = api;
+    hearth.canvasHubHexSurfaceAnchorReceiverThrottledInteractive = api;
     hearth.canvasHubRafSphereRotationPairReceiver = api;
     hearth.canvasHubRafFastInteractiveDeferredHexRenderReceiver = api;
     hearth.canvasHubFastViewTransformDeferredRenderReceiver = api;
@@ -2711,6 +2918,7 @@
 
     lab.hearthCanvasHubCompositeFirstFastViewDeferredHexReceiver = api;
     lab.hearthCanvasCompositeFirstFastViewDeferredHexReceiver = api;
+    lab.hearthCanvasHubHexSurfaceAnchorReceiverThrottledInteractive = api;
     lab.hearthCanvasHubRafSphereRotationPairReceiver = api;
     lab.hearthCanvasHubRafFastInteractiveDeferredHexRenderReceiver = api;
     lab.hearthCanvasHubFastViewTransformDeferredRenderReceiver = api;
@@ -2730,6 +2938,7 @@
 
     root.HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT = receipt;
     root.HEARTH_CANVAS_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT = receipt;
+    root.HEARTH_CANVAS_HUB_HEX_SURFACE_ANCHOR_RECEIVER_THROTTLED_INTERACTIVE_RECEIPT = receipt;
     root.HEARTH_CANVAS_HUB_RAF_SPHERE_ROTATION_PAIR_RECEIVER_RECEIPT = receipt;
     root.HEARTH_CANVAS_HUB_RECEIPT = receipt;
     root.HEARTH_CANVAS_RECEIPT = receipt;
@@ -2743,6 +2952,7 @@
 
     hearth.canvasHubCompositeFirstFastViewDeferredHexReceiverReceipt = receipt;
     hearth.canvasCompositeFirstFastViewDeferredHexReceiverReceipt = receipt;
+    hearth.canvasHubHexSurfaceAnchorReceiverThrottledInteractiveReceipt = receipt;
     hearth.canvasHubRafSphereRotationPairReceiverReceipt = receipt;
     hearth.canvasHubReceipt = receipt;
     hearth.canvasReceipt = receipt;
@@ -2756,6 +2966,7 @@
 
     lab.hearthCanvasHubCompositeFirstFastViewDeferredHexReceiverReceipt = receipt;
     lab.hearthCanvasCompositeFirstFastViewDeferredHexReceiverReceipt = receipt;
+    lab.hearthCanvasHubHexSurfaceAnchorReceiverThrottledInteractiveReceipt = receipt;
     lab.hearthCanvasHubRafSphereRotationPairReceiverReceipt = receipt;
     lab.hearthCanvasHubReceipt = receipt;
     lab.hearthCanvasReceipt = receipt;
@@ -2786,15 +2997,17 @@
     validateHexAuthority();
     validateHexSurface();
 
-    drawInteractiveSphere("first-paired-sphere-mounted-view");
+    drawInteractiveSphere("first-hex-surface-anchor-mounted-view");
 
-    ensureDependencyScripts("boot-paired-hex-surface-dependency-admission").then(() => {
+    ensureDependencyScripts("boot-hex-surface-anchor-dependency-admission").then(() => {
+      validateHexAuthority();
       validateHexSurface();
-      scheduleSettledSphereFrame("boot-paired-settled-sphere-render");
+      scheduleSettledSphereFrame("boot-hex-surface-anchor-settled-render");
     });
 
     if (root.addEventListener && !resizeBound) {
       resizeBound = true;
+
       try {
         root.addEventListener("resize", () => {
           const canvas = refs.canvas || ensureCanvasSurface();
@@ -2811,15 +3024,19 @@
     publishGlobals();
     scheduleRouteNotify("canvas-boot-complete");
 
-    record("HEARTH_CANVAS_V12_3_2_SPHERE_ROTATION_PAIR_BOOT_COMPLETE", {
+    record("HEARTH_CANVAS_V12_3_3_HEX_SURFACE_ANCHOR_BOOT_COMPLETE", {
       canvasElementFound: state.canvasElementFound,
       canvasInMount: state.canvasInMount,
       canvasContext2dReady: state.canvasContext2dReady,
       visiblePlanetProofReady: state.visiblePlanetProofReady,
-      sphericalRotationPairActive: true,
+      hexSurfaceProjectionAnchorActive: true,
+      hexFourPairSourceAnchorActive: true,
+      actualHexSurfaceV4Contract: HEX_SURFACE_ACTUAL_V4_CONTRACT,
+      pairedHexSurfaceContract: state.pairedHexSurfaceContract,
       bitmapSlidingUsed: false,
       cssTranslationUsed: false,
-      interactiveSphereRecomputeUsed: state.interactiveSphereRecomputeUsed,
+      verticalPolarityCorrectedByCanvas: false,
+      pointerPolarityOwnedByControls: true,
       noFinalClaimsPreserved: true
     });
 
@@ -2850,7 +3067,7 @@
       routeNotifyTimer = 0;
     }
 
-    record("HEARTH_CANVAS_V12_3_2_DISPOSED", { reason });
+    record("HEARTH_CANVAS_V12_3_3_DISPOSED", { reason });
     publishDatasetThrottled(true);
     publishGlobals();
 
@@ -2879,8 +3096,10 @@
     CONTROL_FILE,
     HEX_AUTHORITY_FILE,
     HEX_SURFACE_FILE,
-    HEX_SURFACE_PAIR_CONTRACT,
-    HEX_SURFACE_PAIR_RECEIPT,
+    HEX_SURFACE_ACTUAL_V4_CONTRACT,
+    HEX_SURFACE_ACTUAL_V4_RECEIPT,
+    HEX_SURFACE_EXPECTED_PAIR_V4_CONTRACT,
+    HEX_SURFACE_EXPECTED_PAIR_V4_RECEIPT,
     HEX_AUTHORITY_CONTRACT,
     HEX_AUTHORITY_RECEIPT,
 
@@ -2895,7 +3114,7 @@
     version: VERSION,
     route: ROUTE,
     file: FILE,
-    role: "canvas-hub-raf-sphere-rotation-pair-receiver",
+    role: "canvas-hub-hex-surface-anchor-receiver-throttled-interactive",
 
     boot,
     init,
@@ -2967,6 +3186,8 @@
     getReceipt,
     getReceiptText,
     publishDataset,
+    publishDatasetThrottled,
+    publishViewDatasetLight,
     publishGlobals,
     publishViewGlobalsLight,
 
@@ -2983,17 +3204,27 @@
     canvasLocalStationApiReady: true,
     canvasParentBootMethodAvailable: true,
 
-    sphericalRotationPairActive: true,
+    hexSurfaceProjectionAnchorActive: true,
+    hexFourPairSourceAnchorActive: true,
     pairedHexSurfaceExpected: true,
+    acceptedHexSurfaceContracts: ACCEPTED_HEX_SURFACE_CONTRACTS.slice(),
+
     bitmapSlidingUsed: false,
     cssTranslationUsed: false,
     canvasTransformMotionUsed: false,
     priorFrameTranslationUsed: false,
+    verticalPolarityCorrectedByCanvas: false,
+    pointerPolarityOwnedByControls: true,
+
     rafSchedulerActive: true,
     setTimeout40MotionPathRemoved: true,
     motionUsesRequestAnimationFrame: true,
     fullHexRenderDeferredDuringInput: true,
     datasetPublicationThrottledDuringMotion: true,
+    receiptPublicationThrottledDuringMotion: true,
+    routeNotifySuppressedDuringInteractiveMotion: true,
+    pixelSamplingSuppressedDuringInteractiveMotion: true,
+    mountSuppressedDuringInteractiveMotion: true,
 
     ownsCanvasDrawing: true,
     ownsCanvasMounting: true,
@@ -3004,6 +3235,7 @@
     ownsRouteConductorAuthority: false,
     ownsControlAdmission: false,
     ownsControlTruth: false,
+    ownsControlPolarityTruth: false,
     ownsHexTruth: false,
     ownsHexSurfaceTruth: false,
     ownsTerrainTruth: false,
@@ -3036,7 +3268,7 @@
     }
   } catch (error) {
     state.lastDrawError = error && error.message ? String(error.message) : String(error);
-    recordError("HEARTH_CANVAS_V12_3_2_INITIALIZATION_FAILED", error);
+    recordError("HEARTH_CANVAS_V12_3_3_INITIALIZATION_FAILED", error);
 
     try {
       publishDatasetThrottled(true);

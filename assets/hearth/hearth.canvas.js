@@ -1,97 +1,62 @@
 // /assets/hearth/hearth.canvas.js
 // HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3
 // Internal controlled renewal:
-// HEARTH_CANVAS_LOCAL_VISIBLE_PIXEL_PROOF_HEX_GATE_RECEIVER_TNT_v12_5
+// HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_TNT_v12_4
 // Full-file replacement.
-// Canvas Hub / receiver-output carrier / local visible-pixel proof / Hex-gate transmission only.
+// Canvas Hub / live visible 2D surface identity unification only.
 // Purpose:
-// - Preserve the public v12_3 Canvas Hub contract expected by Route Conductor, Controls, diagnostics, and Hex Surface.
-// - Preserve v12_3_2 / v12_3_1 / v12_2 / v12_1 / v12 lineage aliases.
+// - Preserve the public v12_3 Canvas Hub contract expected by route, diagnostics, controls, Hex Surface, and receipts.
+// - Renew the internal implementation so the visible canvas and expression canvas resolve to the same live 2D output surface.
+// - Ensure every Hearth canvas candidate inside the Hearth mount carries visible nonblank 2D pixels.
+// - Mark the same rendered surface with both data-hearth-visible-canvas="true" and data-hearth-expression-surface="true".
 // - Keep Canvas as receiver/output carrier only.
-// - Bind a real mounted 2D canvas surface.
-// - Perform a lawful Canvas-owned receiver/output-carrier draw so the surface is no longer blank.
-// - Publish exact post-draw pixel-sample coordinates so the diagnostic rail can distinguish:
-//   1. Canvas did not mount,
-//   2. Canvas mounted but did not draw,
-//   3. Canvas drew visible pixels,
-//   4. Hex Surface gate was missing,
-//   5. Hex Surface accepted the packet,
-//   6. Pointer Finger transmission was observed downstream.
-// - Route all downstream transmission through Hex Surface as the gate before Pointer Finger.
-// - Do not call Pointer Finger directly.
-// - Do not reopen Canvas Bishops, terrain truth, hydrology truth, elevation truth, material truth, diagnostic truth,
-//   Hex truth, or Pointer Finger truth.
-// - Do not claim F13, F21, ready text, completion latch, final visual pass, generated image, GraphicBox, or WebGL.
-// Does not own:
-// - HTML shell
-// - index priest / button authority
-// - Route Conductor authority
-// - Queen/Controls authority
-// - Hex Surface truth
-// - Pointer Finger truth
-// - Canvas Bishop internals
-// - terrain truth
-// - hydrology truth
-// - elevation truth
-// - material truth
-// - North F21 latch
-// - final visual pass
+// - Receive route/control/view packets and render a live 2D carrier surface without claiming terrain, hydrology, elevation, material, or final visual truth.
+// - Forward lawful Canvas Hex Gate packets to /assets/hearth/hearth.hex.surface.js through public APIs only.
+// - Preserve controls as the input authority and Hex Surface as the Hex gate toward downstream pointer/finger instruments.
+// - Do not mutate HTML contract, route conductor ownership, control ownership, diagnostic chronology, source truth, or North readiness.
+// - Do not claim F13, F21, ready text, final completion, final visual pass, generated image, GraphicBox, or WebGL.
 
 (() => {
   "use strict";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
-  const api = {};
 
-  const CONTRACT =
+  const PUBLIC_CONTRACT =
     "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3";
-  const RECEIPT =
+  const PUBLIC_RECEIPT =
     "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT_v12_3";
 
-  const INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_CANVAS_LOCAL_VISIBLE_PIXEL_PROOF_HEX_GATE_RECEIVER_TNT_v12_5";
-  const INTERNAL_RENEWAL_RECEIPT =
-    "HEARTH_CANVAS_LOCAL_VISIBLE_PIXEL_PROOF_HEX_GATE_RECEIVER_RECEIPT_v12_5";
+  const INTERNAL_IMPLEMENTATION_CONTRACT =
+    "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_TNT_v12_4";
+  const INTERNAL_IMPLEMENTATION_RECEIPT =
+    "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_RECEIPT_v12_4";
 
-  const PREVIOUS_INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_CANVAS_HEX_GATE_POINTER_FINGER_TRANSMISSION_RECEIVER_TNT_v12_4";
-  const PREVIOUS_INTERNAL_RENEWAL_RECEIPT =
-    "HEARTH_CANVAS_HEX_GATE_POINTER_FINGER_TRANSMISSION_RECEIVER_RECEIPT_v12_4";
+  const PREVIOUS_IMPLEMENTATION_CONTRACT =
+    "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3";
+  const PREVIOUS_IMPLEMENTATION_RECEIPT =
+    "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIPT_v12_3";
 
-  const PREVIOUS_CONTRACT =
+  const LINEAGE_IMPLEMENTATION_CONTRACT =
     "HEARTH_CANVAS_HUB_RAF_SPHERE_ROTATION_PAIR_RECEIVER_TNT_v12_3_2";
-  const PREVIOUS_RECEIPT =
-    "HEARTH_CANVAS_HUB_RAF_SPHERE_ROTATION_PAIR_RECEIVER_RECEIPT_v12_3_2";
-
-  const LINEAGE_V12_3_1_CONTRACT =
-    "HEARTH_CANVAS_HUB_RAF_FAST_INTERACTIVE_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3_1";
-  const LINEAGE_V12_2_CONTRACT =
-    "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_TNT_v12_2";
-  const LINEAGE_V12_1_CONTRACT =
-    "HEARTH_CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_TNT_v12_1";
-  const LINEAGE_V12_CONTRACT =
-    "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_TNT_v12";
 
   const VERSION =
-    "2026-06-06.hearth-canvas-local-visible-pixel-proof-hex-gate-receiver-v12-5";
+    "2026-06-06.hearth-canvas-live-surface-identity-unified-visible-2d-output-v12-4";
 
-  const ROUTE = "/showroom/globe/hearth/";
   const FILE = "/assets/hearth/hearth.canvas.js";
-  const HTML_FILE = "/showroom/globe/hearth/index.html";
+  const ROUTE = "/showroom/globe/hearth/";
+  const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
+
   const INDEX_FILE = "/showroom/globe/hearth/index.js";
   const ROUTE_CONDUCTOR_FILE = "/showroom/globe/hearth/hearth.js";
   const CONTROL_FILE = "/assets/hearth/hearth.controls.js";
   const HEX_SURFACE_FILE = "/assets/hearth/hearth.hex.surface.js";
   const HEX_AUTHORITY_FILE = "/assets/hearth/hearth.hex.four-pair.authority.js";
-  const POINTER_FINGER_FILE = "/assets/hearth/hearth.canvas.finger.inspect.js";
   const POINTER_FINGER_SURFACE_FILE = "/assets/hearth/hearth.canvas.finger.surface.js";
   const POINTER_FINGER_BOUNDARY_FILE = "/assets/hearth/hearth.canvas.finger.boundary.js";
+  const POINTER_FINGER_INSPECT_FILE = "/assets/hearth/hearth.canvas.finger.inspect.js";
   const POINTER_FINGER_LIGHT_FILE = "/assets/hearth/hearth.canvas.finger.light.js";
-  const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
 
-  const EXPECTED_ROUTE_CONDUCTOR_CONTRACT =
-    "HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC_TNT_v10";
   const EXPECTED_CONTROL_CONTRACT =
     "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE_TNT_v1";
   const EXPECTED_HEX_SURFACE_CONTRACT =
@@ -99,94 +64,12 @@
   const EXPECTED_HEX_AUTHORITY_CONTRACT =
     "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_TNT_v1";
 
-  const CANVAS_MOUNT_SELECTOR = "#hearthCanvasMount";
-  const GLOBE_STAGE_SELECTOR = "#hearthGlobeStage";
-  const CANVAS_SELECTOR = "canvas[data-hearth-visible-canvas='true']";
-
-  const CONTROL_PACKET_TYPE = "HEARTH_CONTROLS_PLANETARY_VIEW_DELTA_PACKET";
-  const CANVAS_HEX_GATE_PACKET_TYPE =
-    "HEARTH_CANVAS_TO_HEX_SURFACE_POINTER_FINGER_GATE_PACKET_v12_5";
-
-  const TRANSMISSION_CHRONOLOGY = Object.freeze([
-    "ROUTE_CONDUCTOR",
-    "CONTROLS_QUEEN",
-    "CANVAS_RECEIVER_OUTPUT_CARRIER",
-    "CANVAS_LOCAL_VISIBLE_PIXEL_PROOF",
-    "HEX_SURFACE_GATE",
-    "POINTER_FINGER_DOWNSTREAM_PUBLIC_RECEIVER"
-  ]);
-
-  const ACTIVE_CANVAS_CONTRACTS = Object.freeze([
-    CONTRACT,
-    INTERNAL_RENEWAL_CONTRACT,
-    PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
-    PREVIOUS_CONTRACT,
-    LINEAGE_V12_3_1_CONTRACT,
-    LINEAGE_V12_2_CONTRACT,
-    LINEAGE_V12_1_CONTRACT,
-    LINEAGE_V12_CONTRACT,
-    "HEARTH_CANVAS_EXPRESSION_HUB_VISIBLE_BASE_GLOBE_CARRIER_TNT_v11_7",
-    "HEARTH_CANVAS_EXPRESSION_HUB_FINGER_MANAGER_TNT_v11_6",
-    "HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_4_DIAGNOSTIC_BRIDGE_ALIGNMENT_TNT_v11_5",
-    "HEARTH_CANVAS_LOCAL_STATION_DIAGNOSTIC_BRIDGE_ALIGNMENT_TNT_v11_4",
-    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_3",
-    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_2",
-    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_1",
-    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11"
-  ]);
-
-  const ACCEPTED_CONTROL_CONTRACTS = Object.freeze([
-    EXPECTED_CONTROL_CONTRACT,
-    "HEARTH_CONTROLS_VERTICAL_POLARITY_SMOOTH_CANVAS_HEX_PAIR_ALIGNMENT_TNT_v5",
-    "HEARTH_CONTROLS_VERTICAL_POLARITY_SMOOTH_CANVAS_HEX_PAIR_ALIGNMENT_TNT_v4_2",
-    "HEARTH_CONTROLS_SMOOTH_POINTER_DELTA_CANVAS_FRAME_ALIGNMENT_TNT_v4_1",
-    "HEARTH_CONTROLS_SMOOTH_POINTER_DELTA_CANVAS_FRAME_ALIGNMENT_TNT_v4",
-    "HEARTH_CONTROLS_QUEEN_WEST_GATE_HIERARCHY_SUPERCONDUCTOR_VIEW_INPUT_BRIDGE_TNT_v2"
-  ]);
-
-  const ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS = Object.freeze([
-    EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
-    "HEARTH_ROUTE_CONDUCTOR_HEX_GATE_POINTER_FINGER_TRANSMISSION_TNT_v10_2",
-    "HEARTH_ROUTE_CONDUCTOR_CANVAS_DOM_SURFACE_ADMISSION_AND_RELEASE_TNT_v10_1",
-    "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_TNT_v9_9",
-    "HEARTH_ROUTE_CONDUCTOR_CONTROL_FILE_ADMISSION_AND_HANDSHAKE_DELIVERY_TNT_v9_8",
-    "HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION_TNT_v9_7",
-    "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_TNT_v9_6",
-    "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_TNT_v9_5",
-    "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_TNT_v9_4"
-  ]);
-
-  const HEX_SURFACE_ALIASES = Object.freeze([
-    "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER",
-    "HEARTH_HEX_SURFACE_CANVAS_GATE_POINTER_FINGER_TRANSMISSION",
-    "HEARTH_HEX_SURFACE_RENDERER",
-    "HEARTH_HEX_SURFACE",
-    "HEARTH_HEX_PAIR_RENDERER",
-    "HEARTH_HEX_SURFACE_AUTHORITY",
-    "HEARTH.hexSurfaceInteractiveSpherePairRenderer",
-    "HEARTH.hexSurfaceCanvasGatePointerFingerTransmission",
-    "HEARTH.hexSurfaceRenderer",
-    "HEARTH.hexSurface",
-    "HEARTH.hexPairRenderer",
-    "HEARTH.hexSurfaceAuthority",
-    "DEXTER_LAB.hearthHexSurfaceInteractiveSpherePairRenderer",
-    "DEXTER_LAB.hearthHexSurfaceCanvasGatePointerFingerTransmission",
-    "DEXTER_LAB.hearthHexSurfaceRenderer",
-    "DEXTER_LAB.hearthHexSurface",
-    "DEXTER_LAB.hearthHexPairRenderer"
-  ]);
-
-  const HEX_AUTHORITY_ALIASES = Object.freeze([
-    "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY",
-    "HEARTH_HEX_PIXEL_HANDSHAKE_AUTHORITY",
-    "HEARTH_HEX_AUTHORITY",
-    "HEARTH.hexFourPairPixelHandshakeAuthority",
-    "HEARTH.hexPixelHandshakeAuthority",
-    "HEARTH.hexAuthority",
-    "DEXTER_LAB.hearthHexFourPairPixelHandshakeAuthority",
-    "DEXTER_LAB.hearthHexPixelHandshakeAuthority",
-    "DEXTER_LAB.hearthHexAuthority"
-  ]);
+  const CANVAS_HEX_GATE_PACKET =
+    "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_CANVAS_HEX_GATE_PACKET_v12_4";
+  const CANVAS_VIEW_PACKET =
+    "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_VIEW_PACKET_v12_4";
+  const CANVAS_RENDER_PACKET =
+    "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_VISIBLE_2D_RENDER_PACKET_v12_4";
 
   const NO_CLAIMS = Object.freeze({
     f13Claimed: false,
@@ -196,6 +79,7 @@
     f21EligibleForNorth: false,
     f21Claimed: false,
     f21ClaimedByCanvas: false,
+    f21ClaimedByDiagnosticRail: false,
     f21SubmittedToNorth: false,
     readyTextAllowed: false,
     readyTextClaimed: false,
@@ -219,8 +103,8 @@
     F13_CLAIMED: false,
     F13_CANVAS_CLAIMED: false,
     F21_ELIGIBLE_FOR_NORTH: false,
+    F21_CLAIMED: false,
     F21_CLAIMED_BY_CANVAS: false,
-    F21_SUBMITTED_TO_NORTH: false,
     READY_TEXT_ALLOWED: false,
     READY_TEXT_CLAIMED: false,
     VISUAL_PASS_CLAIMED: false,
@@ -230,196 +114,187 @@
     WEBGL: false
   });
 
-  const view = {
-    yaw: 0,
-    pitch: 0,
-    zoom: 1,
-    phase: 0,
-    minPitch: -1.25,
-    maxPitch: 1.25,
-    minZoom: 0.55,
-    maxZoom: 2.4
-  };
+  const HEX_SURFACE_ALIASES = Object.freeze([
+    "HEARTH_HEX_SURFACE",
+    "HEARTH_HEX_SURFACE_RENDERER",
+    "HEARTH_HEX_SURFACE_AUTHORITY",
+    "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER",
+    "HEARTH_HEX_SURFACE_CANVAS_GATE_POINTER_FINGER_TRANSMISSION",
+    "HEARTH.hexSurface",
+    "HEARTH.hexSurfaceRenderer",
+    "HEARTH.hexSurfaceAuthority",
+    "HEARTH.hexSurfaceInteractiveSpherePairRenderer",
+    "HEARTH.hexSurfaceCanvasGatePointerFingerTransmission",
+    "DEXTER_LAB.hearthHexSurface",
+    "DEXTER_LAB.hearthHexSurfaceRenderer",
+    "DEXTER_LAB.hearthHexSurfaceAuthority",
+    "DEXTER_LAB.hearthHexSurfaceInteractiveSpherePairRenderer",
+    "DEXTER_LAB.hearthHexSurfaceCanvasGatePointerFingerTransmission"
+  ]);
 
-  const surface = {
-    mount: null,
-    canvas: null,
-    ctx: null,
-    selector: "UNKNOWN",
-    mountSelector: "UNKNOWN",
-    width: 0,
-    height: 0,
-    cssWidth: 0,
-    cssHeight: 0,
-    dpr: 1
-  };
+  const CONTROL_ALIASES = Object.freeze([
+    "HEARTH_CONTROLS",
+    "HEARTH_PLANETARY_CONTROLS",
+    "HEARTH_CONTROL_AUTHORITY",
+    "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE",
+    "HEARTH.controls",
+    "HEARTH.planetaryControls",
+    "HEARTH.controlAuthority",
+    "HEARTH.controlsPlanetaryViewInputHandshake",
+    "DEXTER_LAB.hearthControls",
+    "DEXTER_LAB.hearthPlanetaryControls"
+  ]);
 
-  const frame = {
-    scheduled: false,
-    rafId: 0,
-    pendingReason: "",
-    pendingPacket: null,
-    flushCount: 0
-  };
+  const CANVAS_ALIAS_PATHS = Object.freeze([
+    "HEARTH_CANVAS",
+    "HEARTH_CANVAS_HUB",
+    "HEARTH_CANVAS_PARENT",
+    "HEARTH_CANVAS_AUTHORITY",
+    "HEARTH_CANVAS_LOCAL_STATION",
+    "HEARTH_CANVAS_EXPRESSION_HUB",
+    "HEARTH_CANVAS_VISIBLE_PLANET",
+    "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER",
+    "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT",
+    "HEARTH.canvas",
+    "HEARTH.canvasHub",
+    "HEARTH.canvasParent",
+    "HEARTH.canvasAuthority",
+    "HEARTH.canvasLocalStation",
+    "HEARTH.canvasExpressionHub",
+    "HEARTH.canvasVisiblePlanet",
+    "HEARTH.canvasHubCompositeFirstFastViewDeferredHexReceiver",
+    "HEARTH.canvasHubLiveSurfaceIdentityUnifiedVisible2dOutput",
+    "DEXTER_LAB.hearthCanvas",
+    "DEXTER_LAB.hearthCanvasHub",
+    "DEXTER_LAB.hearthCanvasParent",
+    "DEXTER_LAB.hearthCanvasAuthority",
+    "DEXTER_LAB.hearthCanvasExpressionHub",
+    "DEXTER_LAB.hearthCanvasVisiblePlanet",
+    "DEXTER_LAB.hearthCanvasHubCompositeFirstFastViewDeferredHexReceiver",
+    "DEXTER_LAB.hearthCanvasHubLiveSurfaceIdentityUnifiedVisible2dOutput"
+  ]);
 
   const state = {
-    contract: CONTRACT,
-    receipt: RECEIPT,
-    internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
-    internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
-    previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
-    previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
-    previousContract: PREVIOUS_CONTRACT,
-    previousReceipt: PREVIOUS_RECEIPT,
-    lineageV1231Contract: LINEAGE_V12_3_1_CONTRACT,
-    lineageV122Contract: LINEAGE_V12_2_CONTRACT,
-    lineageV121Contract: LINEAGE_V12_1_CONTRACT,
-    lineageV12Contract: LINEAGE_V12_CONTRACT,
+    contract: PUBLIC_CONTRACT,
+    receipt: PUBLIC_RECEIPT,
+    internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
+    internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
+    previousImplementationContract: PREVIOUS_IMPLEMENTATION_CONTRACT,
+    previousImplementationReceipt: PREVIOUS_IMPLEMENTATION_RECEIPT,
+    lineageImplementationContract: LINEAGE_IMPLEMENTATION_CONTRACT,
     version: VERSION,
-
     file: FILE,
     route: ROUTE,
-    htmlFile: HTML_FILE,
-    indexFile: INDEX_FILE,
-    routeConductorFile: ROUTE_CONDUCTOR_FILE,
-    controlFile: CONTROL_FILE,
-    hexSurfaceFile: HEX_SURFACE_FILE,
-    hexAuthorityFile: HEX_AUTHORITY_FILE,
-    pointerFingerFile: POINTER_FINGER_FILE,
     diagnosticRoute: DIAGNOSTIC_ROUTE,
 
     loaded: true,
     booted: false,
     booting: false,
-    disposed: false,
     mounted: false,
-    startedAt: "",
-    updatedAt: "",
-    latestEvent: "HEARTH_CANVAS_V12_5_LOADED",
+    started: false,
+    disposed: false,
 
-    receiverOutputCarrierActive: true,
-    localVisiblePixelProofActive: true,
-    hexGateTransmissionActive: true,
-    hexGateRequired: true,
-    pointerFingerDirectCallSuppressed: true,
-    canvasBishopInspectionSuppressed: true,
-    canvasBishopMutationSuppressed: true,
-    canvasExpressionTruthOwned: false,
-    canvasSurfaceCarrierOwned: true,
-    canvasOutputCarrierOwned: true,
+    mountSelector: "#hearthCanvasMount",
+    stageSelector: "#hearthGlobeStage",
+    primaryCanvasSelector: "NONE",
+    primaryCanvasId: "NONE",
+    surfaceIdentityUnified: false,
+    visibleCanvasAttributeApplied: false,
+    expressionSurfaceAttributeApplied: false,
 
-    routeReleaseAccepted: false,
-    routeReleasePacket: null,
-    routeReleaseSource: "NONE",
-    routeReleaseStatus: "WAITING_ROUTE_CONDUCTOR_RELEASE_OR_BOOT_FRAME",
-
-    controlsObserved: false,
-    controlContract: "",
-    controlReceipt: "",
-    controlPacketAccepted: false,
-    controlPacketRejected: false,
-    controlPacketRejectionReason: "",
-    lastControlPacketSignature: "",
-    lastControlPacketAt: "",
-    lastControlPacketType: "NONE",
-
-    canvasMountFound: false,
-    canvasMountSelector: "UNKNOWN",
     canvasElementFound: false,
-    canvasSelector: "UNKNOWN",
-    canvasInMount: false,
+    canvasElementCount: 0,
+    canvasCreatedByCanvasHub: false,
+    canvasContext2dReady: false,
     canvasRectNonzero: false,
     canvasComputedVisible: false,
-    canvasContext2DReady: false,
-    canvasPixelSampleStatus: "NO_PIXEL_SAMPLE",
-    canvasPixelVisible: false,
-    canvasPixelSampleCount: 0,
-    canvasVisiblePixelCount: 0,
-    canvasAlphaPixelCount: 0,
-    canvasUniqueColorCount: 0,
-    canvasDomSurfaceMounted: false,
-    canvasDomSurfaceProofReady: false,
+    canvasViewportIntersecting: false,
+    canvasWidth: 0,
+    canvasHeight: 0,
+    canvasCssWidth: 0,
+    canvasCssHeight: 0,
+    devicePixelRatio: 1,
 
-    canvasLocalVisibleDrawAttempted: false,
-    canvasLocalVisibleDrawExecuted: false,
-    canvasLocalVisibleDrawReason: "NOT_ATTEMPTED",
-    canvasLocalVisibleDrawCount: 0,
-    canvasLocalPixelSampleBeforeDraw: null,
-    canvasLocalPixelSampleAfterDraw: null,
-    canvasLocalDrawFailureReason: "NONE",
-
-    downstreamExpressionPacketObserved: false,
-    downstreamExpressionPacketSource: "NONE",
-    downstreamExpressionPacketDrawable: false,
-    downstreamExpressionPacketDrawableReason: "NO_DOWNSTREAM_PACKET_OBSERVED",
-
-    hexSurfaceObserved: false,
-    hexSurfaceAuthoritySource: "NONE",
-    hexSurfaceContract: "",
-    hexSurfaceReceipt: "",
-    hexSurfaceContractRecognized: false,
-    hexSurfaceReceiverReady: false,
-    hexSurfaceDeliveryStatus: "WAITING_HEX_SURFACE_GATE",
-    hexSurfaceDeliveryMethod: "NONE",
-    hexSurfaceDeliveryReason: "NO_PACKET_DELIVERED",
-    hexSurfaceAcceptedPacket: false,
-
-    hexAuthorityObserved: false,
-    hexAuthoritySource: "NONE",
-    hexAuthorityContract: "",
-    hexAuthorityReceipt: "",
-    hexAuthorityRecognized: false,
-
-    hexGatePacketDelivered: false,
-    hexGateAcceptedByHexSurface: false,
-    pointerFingerTransmissionObserved: false,
-    pointerFingerTransmissionSource: "NONE",
-
-    packetCount: 0,
+    drawLoopActive: false,
+    rafId: 0,
+    frameCount: 0,
+    drawCount: 0,
+    receivePacketCount: 0,
+    acceptedPacketCount: 0,
+    rejectedPacketCount: 0,
+    controlPacketCount: 0,
+    viewPacketCount: 0,
     hexGatePacketCount: 0,
     hexGateDeliveryCount: 0,
-    hexGateMissCount: 0,
-    eventCount: 0,
-    errorCount: 0,
+    surfaceUnificationCount: 0,
+    resizeCount: 0,
     receiptPublishCount: 0,
     aliasPublishCount: 0,
-    renderFrameCount: 0,
-    listenerBound: false,
+    eventCount: 0,
+    errorCount: 0,
 
-    lastViewPacket: null,
-    lastHexGatePacket: null,
-    lastHexGatePacketAt: "",
-    lastHexGateReason: "NONE",
-    lastHexGateDeliveryReceipt: null,
+    viewState: {
+      yaw: 0.48,
+      pitch: -0.08,
+      zoom: 1,
+      phase: 0,
+      minPitch: -1.25,
+      maxPitch: 1.25,
+      minZoom: 0.55,
+      maxZoom: 2.4
+    },
 
-    finalCanvasPixelVisible: false,
-    finalCanvasPixelFailureClass: "NOT_RUN",
-    firstFailedCoordinate: "BOOT_NOT_RUN",
+    lastPacketType: "NONE",
+    lastPacketSource: "NONE",
+    lastInputType: "NONE",
+    lastRejectedReason: "",
+    lastValidationStatus: "WAITING_PACKET",
+    lastDrawReason: "NOT_DRAWN",
+    lastDrawAt: "",
+    lastMountedAt: "",
+    startedAt: "",
+    updatedAt: "",
+    latestEvent: "HEARTH_CANVAS_HUB_V12_4_LOADED",
+
+    pixelSampleStatus: "NOT_SAMPLED",
+    pixelVisible: false,
+    visiblePixelCount: 0,
+    alphaPixelCount: 0,
+    uniqueColorCount: 0,
+    pixelSampleReason: "NOT_SAMPLED",
+
+    hexSurfaceObserved: false,
+    hexSurfaceSource: "NONE",
+    hexSurfaceContract: "UNKNOWN",
+    hexSurfaceReceipt: "UNKNOWN",
+    hexSurfaceReceiverMethod: "NONE",
+    hexSurfaceDeliveryStatus: "WAITING_CANVAS_HEX_GATE_PACKET",
+
+    controlObserved: false,
+    controlSource: "NONE",
+    controlContract: "UNKNOWN",
+    controlReceipt: "UNKNOWN",
+
+    postgameStatus: "CANVAS_HUB_LOADED_WAITING_BOOT",
+    firstFailedCoordinate: "WAITING_BOOT",
+    recommendedNextOwner: "CANVAS_HUB",
     recommendedNextFile: FILE,
-    recommendedNextAction: "BOOT_CANVAS_AND_SAMPLE_LOCAL_VISIBLE_PIXELS",
-    postgameStatus: "CANVAS_LOADED_WAITING_BOOT",
+    recommendedNextAction: "BOOT_CANVAS_HUB_AND_DRAW_VISIBLE_2D_SURFACE",
 
     events: [],
     errors: [],
+    surfaces: [],
 
     ...NO_CLAIMS
   };
 
-  let bootPromise = null;
+  const api = {};
 
   function nowIso() {
     try {
       return new Date().toISOString();
     } catch (_error) {
       return "";
-    }
-  }
-
-  function nowMs() {
-    try {
-      return Date.now();
-    } catch (_error) {
-      return 0;
     }
   }
 
@@ -433,12 +308,16 @@
 
   function safeString(value, fallback = "") {
     if (value === undefined || value === null) return fallback;
-    return String(value);
+    try {
+      return String(value);
+    } catch (_error) {
+      return fallback;
+    }
   }
 
   function safeNumber(value, fallback = 0) {
-    const number = Number(value);
-    return Number.isFinite(number) ? number : fallback;
+    const n = Number(value);
+    return Number.isFinite(n) ? n : fallback;
   }
 
   function safeBool(value, fallback = false) {
@@ -449,8 +328,14 @@
   }
 
   function clamp(value, min, max) {
-    const number = safeNumber(value, min);
-    return Math.max(min, Math.min(max, number));
+    return Math.max(min, Math.min(max, safeNumber(value, min)));
+  }
+
+  function firstDefined(...values) {
+    for (const value of values) {
+      if (value !== undefined && value !== null && value !== "") return value;
+    }
+    return undefined;
   }
 
   function firstNonEmpty(...values) {
@@ -463,10 +348,11 @@
 
   function clonePlain(value) {
     if (!isObject(value) && !Array.isArray(value)) return value;
+
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
-      return Array.isArray(value) ? value.slice() : { ...value };
+      return Array.isArray(value) ? value.slice() : Object.assign({}, value);
     }
   }
 
@@ -486,10 +372,11 @@
     };
 
     state.events.push(item);
-    trimLog(state.events, 160);
+    trimLog(state.events, 180);
     state.eventCount = state.events.length;
     state.latestEvent = item.event;
     state.updatedAt = item.at;
+
     return item;
   }
 
@@ -502,10 +389,11 @@
     };
 
     state.errors.push(item);
-    trimLog(state.errors, 100);
+    trimLog(state.errors, 120);
     state.errorCount = state.errors.length;
     state.latestEvent = item.code;
     state.updatedAt = item.at;
+
     return item;
   }
 
@@ -531,6 +419,7 @@
     if (!parts.length) return false;
 
     let cursor = root;
+
     for (let index = 0; index < parts.length - 1; index += 1) {
       const part = parts[index];
       if (!cursor[part] || typeof cursor[part] !== "object") cursor[part] = {};
@@ -544,30 +433,20 @@
   function firstGlobal(names) {
     for (const name of names || []) {
       const value = readPath(name);
-      if (value && isObject(value)) return { name, value };
+      if (value && (isObject(value) || isFunction(value))) return { name, value };
     }
 
     return { name: "NONE", value: null };
   }
 
-  function datasetValue(key, fallback = "") {
-    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return fallback;
-    const value = doc.documentElement.dataset[key];
-    return value === undefined || value === null || value === "" ? fallback : value;
+  function dataset() {
+    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return {};
+    return doc.documentElement.dataset;
   }
 
   function setDataset(key, value) {
     if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
     doc.documentElement.dataset[key] = value === undefined || value === null ? "" : String(value);
-  }
-
-  function q(selector) {
-    if (!doc || !doc.querySelector) return null;
-    try {
-      return doc.querySelector(selector);
-    } catch (_error) {
-      return null;
-    }
   }
 
   function readField(source, keys, fallback = "") {
@@ -577,6 +456,7 @@
       if (s[key] !== undefined && s[key] !== null && s[key] !== "") return s[key];
 
       const lower = key.toLowerCase();
+
       for (const candidate of Object.keys(s)) {
         if (candidate.toLowerCase() === lower) {
           const value = s[candidate];
@@ -588,13 +468,54 @@
     return fallback;
   }
 
-  function readAuthoritySnapshot(authority) {
-    if (!authority || !isObject(authority)) return {};
+  function readAuthorityReceipt(authority) {
+    if (!authority || (!isObject(authority) && !isFunction(authority)) || authority === api) return null;
+
+    const methods = [
+      "getReceiptLight",
+      "getReceipt",
+      "getStatus",
+      "getReport",
+      "getState",
+      "getSummary",
+      "getCanvasStationReceipt",
+      "getCanvasStationSummary",
+      "getVisiblePlanetReceipt",
+      "getControlReceipt",
+      "getControlSummary",
+      "getHexReceipt",
+      "getHexAuthorityReceipt",
+      "getHexSurfaceReceipt",
+      "getFingerReceipt",
+      "getPointerFingerReceipt"
+    ];
+
+    for (const method of methods) {
+      if (!isFunction(authority[method])) continue;
+
+      try {
+        const result = method === "getReceiptLight" ? authority[method](false) : authority[method]();
+        if (isObject(result)) return result;
+      } catch (_error) {}
+    }
+
     if (isObject(authority.receipt)) return authority.receipt;
     if (isObject(authority.receiptPacket)) return authority.receiptPacket;
-    if (isObject(authority.state)) return authority.state;
-    if (authority.contract || authority.CONTRACT || authority.receipt || authority.RECEIPT || authority.version) return authority;
-    return {};
+    if (isObject(authority.hexReceipt)) return authority.hexReceipt;
+    if (isObject(authority.hexSurfaceReceipt)) return authority.hexSurfaceReceipt;
+    if (isObject(authority.pointerFingerReceipt)) return authority.pointerFingerReceipt;
+
+    if (
+      authority.contract ||
+      authority.CONTRACT ||
+      authority.receipt ||
+      authority.RECEIPT ||
+      authority.version
+    ) {
+      return authority;
+    }
+
+    return null;
   }
 
   function contractOf(value) {
@@ -602,16 +523,15 @@
       readField(value, [
         "currentCanvasParentContract",
         "canvasContract",
-        "canvasLocalStationContract",
-        "hexSurfaceContract",
-        "hexContract",
         "controlContract",
         "controlsContract",
-        "routeConductorContract",
-        "sourceContract",
+        "hexAuthorityContract",
+        "hexContract",
+        "hexSurfaceContract",
         "contract",
-        "CONTRACT"
-      ]),
+        "CONTRACT",
+        "sourceContract"
+      ], ""),
       value && value.contract,
       value && value.CONTRACT
     );
@@ -622,1720 +542,1648 @@
       readField(value, [
         "currentCanvasParentReceipt",
         "canvasReceipt",
-        "canvasLocalStationReceipt",
-        "hexSurfaceReceipt",
-        "hexReceipt",
         "controlReceipt",
         "controlsReceipt",
-        "routeConductorReceipt",
-        "sourceReceipt",
+        "hexAuthorityReceipt",
+        "hexReceipt",
+        "hexSurfaceReceipt",
         "receipt",
-        "RECEIPT"
-      ]),
+        "RECEIPT",
+        "sourceReceipt"
+      ], ""),
       value && value.receipt,
       value && value.RECEIPT
     );
   }
 
-  function routeContractRecognized(contract) {
-    const text = safeString(contract);
-    return ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS.includes(text) || text.includes("HEARTH_ROUTE_CONDUCTOR");
-  }
+  function readControlAuthority() {
+    const found = firstGlobal(CONTROL_ALIASES);
+    const receipt = readAuthorityReceipt(found.value) || {};
+    const ds = dataset();
 
-  function controlContractRecognized(contract) {
-    const text = safeString(contract);
-    return ACCEPTED_CONTROL_CONTRACTS.includes(text) || text.includes("HEARTH_CONTROLS");
-  }
-
-  function hexContractRecognized(contract) {
-    const text = safeString(contract);
-    return (
-      text === EXPECTED_HEX_SURFACE_CONTRACT ||
-      text.includes("HEARTH_HEX_SURFACE") ||
-      text.includes("HEARTH_HEX")
-    );
-  }
-
-  function hasNoForbiddenClaims(packet) {
-    const p = isObject(packet) ? packet : {};
-
-    return !(
-      p.f13Claimed === true ||
-      p.f13CanvasClaimed === true ||
-      p.f13ClaimedByCanvas === true ||
-      p.f21EligibleForNorth === true ||
-      p.f21Claimed === true ||
-      p.f21ClaimedByCanvas === true ||
-      p.f21SubmittedToNorth === true ||
-      p.readyTextAllowed === true ||
-      p.readyTextClaimed === true ||
-      p.controlReadyClaimed === true ||
-      p.motionReadyClaimed === true ||
-      p.touchReadyClaimed === true ||
-      p.dragReadyClaimed === true ||
-      p.completionLatched === true ||
-      p.finalCompletionLatched === true ||
-      p.degradedCompletionLatched === true ||
-      p.visualPassClaimed === true ||
-      p.finalVisualPassClaimed === true ||
-      p.generatedImage === true ||
-      p.graphicBox === true ||
-      p.webGL === true ||
-      p.webgl === true
-    );
-  }
-
-  function findMount(preferred = null) {
-    if (preferred && preferred.nodeType === 1) return preferred;
-    if (!doc) return null;
-
-    return (
-      q(CANVAS_MOUNT_SELECTOR) ||
-      q("[data-hearth-canvas-mount='true']") ||
-      q("[data-hearth-canvas-mount]") ||
-      q("[data-hearth-visible-planet-mount]") ||
-      q(GLOBE_STAGE_SELECTOR) ||
-      q("[data-hearth-globe-stage]") ||
-      q("[data-hearth-planet-stage]") ||
-      q("main") ||
-      q("body")
-    );
-  }
-
-  function findCanvas(mount = null) {
-    if (!doc) return null;
-
-    return (
-      (mount && mount.querySelector && mount.querySelector(CANVAS_SELECTOR)) ||
-      q(CANVAS_SELECTOR) ||
-      (mount && mount.querySelector && mount.querySelector("canvas[data-hearth-canvas-hub='true']")) ||
-      q("canvas[data-hearth-canvas-hub='true']") ||
-      (mount && mount.querySelector && mount.querySelector("canvas[data-hearth-canvas='true']")) ||
-      q("canvas[data-hearth-canvas='true']") ||
-      (mount && mount.querySelector && mount.querySelector("canvas[data-hearth-canvas-texture='true']")) ||
-      q("canvas[data-hearth-canvas-texture='true']") ||
-      (mount && mount.querySelector && mount.querySelector("canvas")) ||
-      q("#hearthCanvasMount canvas") ||
-      q("canvas")
-    );
-  }
-
-  function describeElement(element) {
-    if (!element || !element.tagName) return "NONE";
-    const tag = safeString(element.tagName).toLowerCase();
-    const id = element.id ? `#${element.id}` : "";
-    const role =
-      element.getAttribute && element.getAttribute("data-hearth-visible-canvas") !== null
-        ? "[data-hearth-visible-canvas]"
-        : element.getAttribute && element.getAttribute("data-hearth-canvas-mount") !== null
-          ? "[data-hearth-canvas-mount]"
-          : element.getAttribute && element.getAttribute("data-hearth-globe-stage") !== null
-            ? "[data-hearth-globe-stage]"
-            : "";
-    return `${tag}${id}${role}`;
-  }
-
-  function bindSurface(options = {}) {
-    if (!doc || state.disposed) return false;
-
-    const preferredMount = options.mount && options.mount.nodeType === 1 ? options.mount : null;
-    const mount = findMount(preferredMount);
-
-    if (!mount) {
-      state.canvasMountFound = false;
-      state.canvasMountSelector = "UNKNOWN";
-      state.canvasElementFound = false;
-      state.canvasDomSurfaceMounted = false;
-      state.firstFailedCoordinate = "WAITING_CANVAS_MOUNT";
-      state.recommendedNextFile = HTML_FILE;
-      state.recommendedNextAction = "CONFIRM_HEARTH_CANVAS_MOUNT_EXISTS";
-      state.postgameStatus = "CANVAS_RECEIVER_WAITING_DOM_MOUNT";
-      updateDatasetLight();
-      return false;
-    }
-
-    let canvas = findCanvas(mount);
-
-    if (!canvas) {
-      canvas = doc.createElement("canvas");
-      canvas.setAttribute("data-hearth-visible-canvas", "true");
-      canvas.setAttribute("data-hearth-canvas-hub", "true");
-      canvas.setAttribute("data-hearth-canvas", "true");
-      canvas.setAttribute("aria-label", "Hearth canvas surface");
-      canvas.style.display = "block";
-      canvas.style.width = "100%";
-      canvas.style.height = "100%";
-      canvas.style.maxWidth = "100%";
-      canvas.style.touchAction = "none";
-      mount.appendChild(canvas);
-    }
-
-    canvas.dataset.hearthVisibleCanvas = "true";
-    canvas.dataset.hearthCanvasHub = "true";
-    canvas.dataset.hearthCanvas = "true";
-    canvas.dataset.hearthExpressionSurface = "true";
-    canvas.dataset.hearthCanvasContract = CONTRACT;
-    canvas.dataset.hearthCanvasReceipt = RECEIPT;
-    canvas.dataset.hearthCanvasInternalRenewalContract = INTERNAL_RENEWAL_CONTRACT;
-    canvas.dataset.hearthCanvasInternalRenewalReceipt = INTERNAL_RENEWAL_RECEIPT;
-    canvas.dataset.hearthCanvasLocalVisiblePixelProofActive = "true";
-    canvas.dataset.hearthCanvasHexGateTransmissionActive = "true";
-    canvas.dataset.hearthCanvasPointerFingerDirectCallSuppressed = "true";
-    canvas.dataset.generatedImage = "false";
-    canvas.dataset.graphicBox = "false";
-    canvas.dataset.webgl = "false";
-    canvas.dataset.visualPassClaimed = "false";
-
-    surface.mount = mount;
-    surface.canvas = canvas;
-    surface.selector = CANVAS_SELECTOR;
-    surface.mountSelector =
-      mount.id === "hearthCanvasMount"
-        ? CANVAS_MOUNT_SELECTOR
-        : mount.id === "hearthGlobeStage"
-          ? GLOBE_STAGE_SELECTOR
-          : describeElement(mount);
-
-    try {
-      surface.ctx =
-        canvas.getContext("2d", { alpha: true, desynchronized: true, willReadFrequently: true }) ||
-        canvas.getContext("2d", { willReadFrequently: true }) ||
-        canvas.getContext("2d");
-    } catch (_error) {
-      surface.ctx = null;
-    }
-
-    resizeSurface();
-
-    state.mounted = true;
-    state.canvasMountFound = true;
-    state.canvasMountSelector = surface.mountSelector;
-    state.canvasElementFound = true;
-    state.canvasSelector = surface.selector;
-    state.canvasInMount = Boolean(mount.contains && mount.contains(canvas));
-    state.canvasContext2DReady = Boolean(surface.ctx);
-
-    scanCanvasSurface();
-    updateDatasetLight();
-
-    return true;
-  }
-
-  function resizeSurface() {
-    if (!surface.canvas || !surface.mount) return false;
-
-    let rect = null;
-    try {
-      rect = surface.mount.getBoundingClientRect ? surface.mount.getBoundingClientRect() : null;
-    } catch (_error) {
-      rect = null;
-    }
-
-    const rectWidth = safeNumber(rect && rect.width, 0);
-    const rectHeight = safeNumber(rect && rect.height, 0);
-
-    const fallbackWidth =
-      safeNumber(surface.mount.clientWidth, 0) ||
-      safeNumber(root.innerWidth, 0) ||
-      720;
-    const fallbackHeight =
-      safeNumber(surface.mount.clientHeight, 0) ||
-      Math.round(fallbackWidth * 0.75) ||
-      720;
-
-    const cssWidth = Math.max(1, Math.round(rectWidth || fallbackWidth));
-    const cssHeight = Math.max(1, Math.round(rectHeight || fallbackHeight));
-    const dpr = Math.max(1, Math.min(2.5, safeNumber(root.devicePixelRatio, 1)));
-
-    const pixelWidth = Math.max(1, Math.round(cssWidth * dpr));
-    const pixelHeight = Math.max(1, Math.round(cssHeight * dpr));
-
-    if (surface.canvas.width !== pixelWidth) surface.canvas.width = pixelWidth;
-    if (surface.canvas.height !== pixelHeight) surface.canvas.height = pixelHeight;
-
-    surface.canvas.style.width = `${cssWidth}px`;
-    surface.canvas.style.height = `${cssHeight}px`;
-
-    surface.width = pixelWidth;
-    surface.height = pixelHeight;
-    surface.cssWidth = cssWidth;
-    surface.cssHeight = cssHeight;
-    surface.dpr = dpr;
-
-    return true;
-  }
-
-  function sampleCanvasPixels() {
-    const canvas = surface.canvas || findCanvas(surface.mount || findMount());
-    const ctx = surface.ctx || (canvas && canvas.getContext && canvas.getContext("2d", { willReadFrequently: true }));
-
-    if (!canvas || !ctx) {
-      return {
-        status: "PIXEL_SAMPLE_UNREADABLE",
-        visible: false,
-        sampleCount: 0,
-        visiblePixelCount: 0,
-        alphaPixelCount: 0,
-        uniqueColorCount: 0,
-        reason: "NO_CANVAS_CONTEXT"
-      };
-    }
-
-    const width = safeNumber(canvas.width, 0);
-    const height = safeNumber(canvas.height, 0);
-
-    if (width <= 0 || height <= 0) {
-      return {
-        status: "PIXEL_SAMPLE_UNREADABLE",
-        visible: false,
-        sampleCount: 0,
-        visiblePixelCount: 0,
-        alphaPixelCount: 0,
-        uniqueColorCount: 0,
-        reason: "CANVAS_DIMENSIONS_ZERO"
-      };
-    }
-
-    const points = [
-      [0.12, 0.12],
-      [0.25, 0.25],
-      [0.5, 0.25],
-      [0.75, 0.25],
-      [0.25, 0.5],
-      [0.5, 0.5],
-      [0.75, 0.5],
-      [0.25, 0.75],
-      [0.5, 0.75],
-      [0.75, 0.75],
-      [0.88, 0.88]
-    ];
-
-    let sampleCount = 0;
-    let visiblePixelCount = 0;
-    let alphaPixelCount = 0;
-    const unique = new Set();
-
-    try {
-      for (const [px, py] of points) {
-        const x = Math.max(0, Math.min(width - 1, Math.floor(width * px)));
-        const y = Math.max(0, Math.min(height - 1, Math.floor(height * py)));
-        const data = ctx.getImageData(x, y, 1, 1).data;
-
-        sampleCount += 1;
-
-        const red = data[0] || 0;
-        const green = data[1] || 0;
-        const blue = data[2] || 0;
-        const alpha = data[3] || 0;
-
-        if (alpha > 0) alphaPixelCount += 1;
-        if (alpha > 0 && (red > 4 || green > 4 || blue > 4)) visiblePixelCount += 1;
-        unique.add(`${red},${green},${blue},${alpha}`);
-      }
-    } catch (error) {
-      return {
-        status: "PIXEL_SAMPLE_ERROR",
-        visible: false,
-        sampleCount,
-        visiblePixelCount,
-        alphaPixelCount,
-        uniqueColorCount: unique.size,
-        reason: safeString(error && error.message ? error.message : error).slice(0, 600)
-      };
-    }
-
-    const visible = visiblePixelCount > 0;
-
-    return {
-      status: visible
-        ? "PIXEL_SAMPLE_VISIBLE"
-        : alphaPixelCount > 0
-          ? "PIXEL_SAMPLE_ALPHA_ONLY_OR_BLACK"
-          : "PIXEL_SAMPLE_BLANK",
-      visible,
-      sampleCount,
-      visiblePixelCount,
-      alphaPixelCount,
-      uniqueColorCount: unique.size,
-      reason: visible
-        ? "VISIBLE_NON_BLANK_PIXELS_FOUND"
-        : alphaPixelCount > 0
-          ? "ALPHA_PRESENT_WITH_NO_NON_BLACK_VISIBLE_RGB_SAMPLE"
-          : "NO_VISIBLE_NON_BLANK_PIXELS_IN_SAMPLE_GRID"
-    };
-  }
-
-  function scanCanvasSurface() {
-    const canvas = surface.canvas || findCanvas(surface.mount || findMount());
-    const mount = surface.mount || findMount();
-
-    let rect = null;
-    try {
-      rect = canvas && canvas.getBoundingClientRect ? canvas.getBoundingClientRect() : null;
-    } catch (_error) {
-      rect = null;
-    }
-
-    const attrWidth = safeNumber(canvas && canvas.width, 0);
-    const attrHeight = safeNumber(canvas && canvas.height, 0);
-    const rectWidth = safeNumber(rect && rect.width, 0);
-    const rectHeight = safeNumber(rect && rect.height, 0);
-    const rectNonzero = Boolean(canvas && ((attrWidth > 0 && attrHeight > 0) || (rectWidth > 0 && rectHeight > 0)));
-
-    let computedVisible = false;
-    try {
-      if (canvas && root.getComputedStyle) {
-        const style = root.getComputedStyle(canvas);
-        computedVisible = Boolean(
-          style &&
-          style.display !== "none" &&
-          style.visibility !== "hidden" &&
-          style.visibility !== "collapse" &&
-          safeNumber(style.opacity, 1) > 0
-        );
-      }
-    } catch (_error) {
-      computedVisible = rectNonzero;
-    }
-
-    const sample = sampleCanvasPixels();
-
-    state.canvasMountFound = Boolean(mount);
-    state.canvasMountSelector = mount ? surface.mountSelector || describeElement(mount) : "UNKNOWN";
-    state.canvasElementFound = Boolean(canvas);
-    state.canvasSelector = canvas ? surface.selector || describeElement(canvas) : "UNKNOWN";
-    state.canvasInMount = Boolean(canvas && mount && mount.contains && mount.contains(canvas));
-    state.canvasRectNonzero = rectNonzero;
-    state.canvasComputedVisible = computedVisible;
-    state.canvasContext2DReady = Boolean(surface.ctx || (canvas && canvas.getContext));
-    state.canvasPixelSampleStatus = sample.status;
-    state.canvasPixelVisible = sample.visible;
-    state.canvasPixelSampleCount = sample.sampleCount;
-    state.canvasVisiblePixelCount = sample.visiblePixelCount;
-    state.canvasAlphaPixelCount = sample.alphaPixelCount;
-    state.canvasUniqueColorCount = sample.uniqueColorCount;
-    state.canvasDomSurfaceMounted = Boolean(canvas && rectNonzero && computedVisible);
-    state.canvasDomSurfaceProofReady = Boolean(state.canvasDomSurfaceMounted && sample.visible);
-    state.finalCanvasPixelVisible = sample.visible;
-    state.finalCanvasPixelFailureClass = sample.visible
-      ? "NONE_CANVAS_VISIBLE_PIXELS_PRESENT"
-      : sample.status === "PIXEL_SAMPLE_BLANK"
-        ? "CANVAS_PIXEL_SAMPLE_BLANK"
-        : sample.status;
-
-    return {
-      canvasMountFound: state.canvasMountFound,
-      canvasMountSelector: state.canvasMountSelector,
-      canvasElementFound: state.canvasElementFound,
-      canvasSelector: state.canvasSelector,
-      canvasInMount: state.canvasInMount,
-      canvasRectNonzero: state.canvasRectNonzero,
-      canvasComputedVisible: state.canvasComputedVisible,
-      canvasContext2DReady: state.canvasContext2DReady,
-      canvasPixelSampleStatus: state.canvasPixelSampleStatus,
-      canvasPixelVisible: state.canvasPixelVisible,
-      canvasVisiblePixelCount: state.canvasVisiblePixelCount,
-      canvasAlphaPixelCount: state.canvasAlphaPixelCount,
-      canvasUniqueColorCount: state.canvasUniqueColorCount,
-      canvasDomSurfaceMounted: state.canvasDomSurfaceMounted,
-      canvasDomSurfaceProofReady: state.canvasDomSurfaceProofReady
-    };
-  }
-
-  function drawLocalVisibleCarrierFrame(reason = "manual") {
-    state.canvasLocalVisibleDrawAttempted = true;
-    state.canvasLocalVisibleDrawReason = reason;
-
-    if (!bindSurface()) {
-      state.canvasLocalVisibleDrawExecuted = false;
-      state.canvasLocalDrawFailureReason = "CANVAS_SURFACE_NOT_BOUND";
-      scanCanvasSurface();
-      return false;
-    }
-
-    resizeSurface();
-
-    const canvas = surface.canvas;
-    const ctx = surface.ctx;
-
-    state.canvasLocalPixelSampleBeforeDraw = sampleCanvasPixels();
-
-    if (!canvas || !ctx) {
-      state.canvasLocalVisibleDrawExecuted = false;
-      state.canvasLocalDrawFailureReason = "CANVAS_CONTEXT_2D_UNAVAILABLE";
-      scanCanvasSurface();
-      return false;
-    }
-
-    const width = safeNumber(canvas.width, 0);
-    const height = safeNumber(canvas.height, 0);
-
-    if (width <= 0 || height <= 0) {
-      state.canvasLocalVisibleDrawExecuted = false;
-      state.canvasLocalDrawFailureReason = "CANVAS_DIMENSIONS_ZERO";
-      scanCanvasSurface();
-      return false;
-    }
-
-    try {
-      if (ctx.setTransform) ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.clearRect(0, 0, width, height);
-
-      ctx.fillStyle = "rgba(7, 17, 26, 1)";
-      ctx.fillRect(0, 0, width, height);
-
-      const cx = width * 0.5;
-      const cy = height * 0.5;
-      const baseRadius = Math.max(12, Math.min(width, height) * 0.38 * clamp(view.zoom, 0.72, 1.28));
-      const pitchOffset = clamp(view.pitch, -1.25, 1.25) * baseRadius * 0.18;
-
-      const atmosphere = ctx.createRadialGradient(cx - baseRadius * 0.28, cy - baseRadius * 0.35 + pitchOffset, baseRadius * 0.05, cx, cy + pitchOffset, baseRadius * 1.16);
-      atmosphere.addColorStop(0, "rgba(108, 184, 255, 0.72)");
-      atmosphere.addColorStop(0.38, "rgba(37, 93, 136, 0.88)");
-      atmosphere.addColorStop(0.78, "rgba(13, 42, 66, 0.95)");
-      atmosphere.addColorStop(1, "rgba(2, 9, 15, 1)");
-
-      ctx.beginPath();
-      ctx.arc(cx, cy + pitchOffset, baseRadius, 0, Math.PI * 2);
-      ctx.fillStyle = atmosphere;
-      ctx.fill();
-
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(cx, cy + pitchOffset, baseRadius * 0.985, 0, Math.PI * 2);
-      ctx.clip();
-
-      const yaw = safeNumber(view.yaw, 0);
-      const pitch = safeNumber(view.pitch, 0);
-
-      ctx.globalAlpha = 0.92;
-      for (let band = -4; band <= 4; band += 1) {
-        const y = cy + pitchOffset + (band / 5) * baseRadius * 0.75 + Math.sin(yaw + band) * baseRadius * 0.025;
-        const bandWidth = baseRadius * (0.95 - Math.abs(band) * 0.075);
-        const x = cx + Math.sin(yaw * 0.7 + band * 1.7) * baseRadius * 0.18;
-        const h = Math.max(5, baseRadius * (0.06 + (band % 2 === 0 ? 0.025 : 0.012)));
-
-        ctx.beginPath();
-        ctx.ellipse(x, y, bandWidth * 0.52, h, Math.sin(yaw + band) * 0.25, 0, Math.PI * 2);
-        ctx.fillStyle = band % 2 === 0
-          ? "rgba(118, 150, 96, 0.72)"
-          : "rgba(88, 122, 86, 0.54)";
-        ctx.fill();
-      }
-
-      ctx.globalAlpha = 0.52;
-      for (let mark = 0; mark < 18; mark += 1) {
-        const angle = yaw * 0.55 + mark * 2.3999632297;
-        const r = baseRadius * (0.18 + ((mark * 37) % 61) / 100);
-        const x = cx + Math.cos(angle) * r * 0.82;
-        const y = cy + pitchOffset + Math.sin(angle + pitch) * r * 0.55;
-        const w = baseRadius * (0.035 + ((mark * 11) % 17) / 800);
-        const h = baseRadius * (0.012 + ((mark * 7) % 13) / 1200);
-
-        ctx.beginPath();
-        ctx.ellipse(x, y, w, h, angle * 0.37, 0, Math.PI * 2);
-        ctx.fillStyle = mark % 3 === 0
-          ? "rgba(175, 148, 101, 0.7)"
-          : "rgba(71, 118, 92, 0.64)";
-        ctx.fill();
-      }
-
-      ctx.restore();
-
-      ctx.beginPath();
-      ctx.arc(cx, cy + pitchOffset, baseRadius, 0, Math.PI * 2);
-      ctx.lineWidth = Math.max(1, baseRadius * 0.018);
-      ctx.strokeStyle = "rgba(185, 229, 255, 0.64)";
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.arc(cx - baseRadius * 0.18, cy - baseRadius * 0.18 + pitchOffset, baseRadius * 0.28, 0, Math.PI * 2);
-      const highlight = ctx.createRadialGradient(
-        cx - baseRadius * 0.22,
-        cy - baseRadius * 0.22 + pitchOffset,
-        0,
-        cx - baseRadius * 0.18,
-        cy - baseRadius * 0.18 + pitchOffset,
-        baseRadius * 0.42
-      );
-      highlight.addColorStop(0, "rgba(255,255,255,0.22)");
-      highlight.addColorStop(1, "rgba(255,255,255,0)");
-      ctx.fillStyle = highlight;
-      ctx.fill();
-
-      ctx.globalAlpha = 1;
-      ctx.fillStyle = "rgba(142, 218, 255, 0.55)";
-      ctx.fillRect(Math.max(0, cx - 2), Math.max(0, cy + pitchOffset - 2), 4, 4);
-
-      state.canvasLocalVisibleDrawExecuted = true;
-      state.canvasLocalDrawFailureReason = "NONE";
-      state.canvasLocalVisibleDrawCount += 1;
-      state.renderFrameCount += 1;
-
-      state.canvasLocalPixelSampleAfterDraw = sampleCanvasPixels();
-      scanCanvasSurface();
-
-      if (state.finalCanvasPixelVisible) {
-        state.firstFailedCoordinate = "NONE_CANVAS_LOCAL_VISIBLE_PIXEL_PROOF_READY";
-        state.recommendedNextFile = HEX_SURFACE_FILE;
-        state.recommendedNextAction = state.hexSurfaceReceiverReady
-          ? "OBSERVE_HEX_SURFACE_GATE_AND_POINTER_FINGER_TRANSMISSION"
-          : "CONFIRM_HEX_SURFACE_PUBLIC_GATE_RECEIVER";
-        state.postgameStatus = "CANVAS_LOCAL_VISIBLE_PIXEL_PROOF_READY";
-      } else {
-        state.firstFailedCoordinate = "CANVAS_LOCAL_DRAW_EXECUTED_BUT_PIXEL_SAMPLE_NOT_VISIBLE";
-        state.recommendedNextFile = FILE;
-        state.recommendedNextAction = "AUDIT_CANVAS_LOCAL_VISIBLE_DRAW_PATH_AND_PIXEL_SAMPLE_GRID";
-        state.postgameStatus = "CANVAS_LOCAL_DRAW_EXECUTED_PIXEL_PROOF_FAILED";
-      }
-
-      record("HEARTH_CANVAS_LOCAL_VISIBLE_PIXEL_FRAME_DRAWN", {
-        reason,
-        sampleStatus: state.canvasPixelSampleStatus,
-        visiblePixelCount: state.canvasVisiblePixelCount,
-        finalCanvasPixelVisible: state.finalCanvasPixelVisible,
-        visualPassClaimed: false
-      });
-
-      updateDatasetLight();
-      return true;
-    } catch (error) {
-      state.canvasLocalVisibleDrawExecuted = false;
-      state.canvasLocalDrawFailureReason = safeString(error && error.message ? error.message : error).slice(0, 700);
-      state.firstFailedCoordinate = "CANVAS_LOCAL_DRAW_THROWN";
-      state.recommendedNextFile = FILE;
-      state.recommendedNextAction = "AUDIT_CANVAS_LOCAL_VISIBLE_DRAW_EXCEPTION";
-      state.postgameStatus = "CANVAS_LOCAL_VISIBLE_DRAW_FAILED";
-      recordError("HEARTH_CANVAS_LOCAL_VISIBLE_DRAW_FAILED", error, { reason });
-      scanCanvasSurface();
-      updateDatasetLight();
-      return false;
-    }
-  }
-
-  function readHexAuthority() {
-    const found = firstGlobal(HEX_AUTHORITY_ALIASES);
-    const receipt = readAuthoritySnapshot(found.value);
     const contract = firstNonEmpty(
       contractOf(receipt),
       found.value && found.value.contract,
       found.value && found.value.CONTRACT,
-      datasetValue("hearthHexAuthorityContract")
+      ds.hearthControlsContract,
+      ds.hearthControlContract,
+      ds.hearthSouthControlFileContract
     );
+
     const receiptName = firstNonEmpty(
       receiptOf(receipt),
       found.value && found.value.receipt,
       found.value && found.value.RECEIPT,
-      datasetValue("hearthHexAuthorityReceipt")
+      ds.hearthControlsReceipt,
+      ds.hearthControlReceipt,
+      ds.hearthSouthControlFileReceipt
     );
 
-    state.hexAuthorityObserved = Boolean(found.value || contract);
-    state.hexAuthoritySource = found.name;
-    state.hexAuthorityContract = contract || "";
-    state.hexAuthorityReceipt = receiptName || "";
-    state.hexAuthorityRecognized = Boolean(contract === EXPECTED_HEX_AUTHORITY_CONTRACT || safeString(contract).includes("HEARTH_HEX"));
+    state.controlObserved = Boolean(found.value || contract);
+    state.controlSource = found.name;
+    state.controlContract = contract || "UNKNOWN";
+    state.controlReceipt = receiptName || "UNKNOWN";
 
     return {
       name: found.name,
       authority: found.value,
       receipt,
-      contract,
-      receiptName,
-      recognized: state.hexAuthorityRecognized
+      contract: contract || "UNKNOWN",
+      receiptName: receiptName || "UNKNOWN"
     };
   }
 
-  function getHexSurfaceReceiverMethods() {
-    return [
+  function readHexSurfaceAuthority() {
+    const found = firstGlobal(HEX_SURFACE_ALIASES);
+    const receipt = readAuthorityReceipt(found.value) || {};
+    const ds = dataset();
+
+    const contract = firstNonEmpty(
+      contractOf(receipt),
+      found.value && found.value.contract,
+      found.value && found.value.CONTRACT,
+      ds.hearthHexSurfaceContract,
+      ds.hearthHexSurfaceRendererContract
+    );
+
+    const receiptName = firstNonEmpty(
+      receiptOf(receipt),
+      found.value && found.value.receipt,
+      found.value && found.value.RECEIPT,
+      ds.hearthHexSurfaceReceipt,
+      ds.hearthHexSurfaceRendererReceipt
+    );
+
+    state.hexSurfaceObserved = Boolean(found.value || contract);
+    state.hexSurfaceSource = found.name;
+    state.hexSurfaceContract = contract || "UNKNOWN";
+    state.hexSurfaceReceipt = receiptName || "UNKNOWN";
+    state.hexSurfaceReceiverMethod = resolveHexSurfaceReceiver(found.value) || "NONE";
+
+    return {
+      name: found.name,
+      authority: found.value,
+      receipt,
+      contract: contract || "UNKNOWN",
+      receiptName: receiptName || "UNKNOWN",
+      method: state.hexSurfaceReceiverMethod
+    };
+  }
+
+  function resolveHexSurfaceReceiver(authority) {
+    if (!authority || (!isObject(authority) && !isFunction(authority))) return "";
+
+    const methods = [
       "receiveCanvasHexGatePacket",
       "consumeCanvasHexGatePacket",
       "acceptCanvasHexGatePacket",
       "receiveCanvasViewPacket",
       "consumeCanvasViewPacket",
-      "receiveCanvasFramePacket",
-      "consumeCanvasFramePacket",
-      "receivePlanetaryViewControlPacket",
-      "consumePlanetaryViewControlPacket",
-      "receiveViewControlPacket",
-      "consumeViewControlPacket",
       "receiveInteractiveFramePacket",
-      "consumeInteractiveFramePacket",
       "drawInteractiveFrame",
       "drawPairFrame",
-      "drawFrame",
-      "renderFrame"
+      "receivePlanetaryViewControlPacket",
+      "receiveViewControlPacket"
     ];
+
+    for (const method of methods) {
+      if (isFunction(authority[method])) return method;
+    }
+
+    return "";
   }
 
-  function readHexSurfaceAuthority() {
-    const found = firstGlobal(HEX_SURFACE_ALIASES);
-    const receipt = readAuthoritySnapshot(found.value);
-    const contract = firstNonEmpty(
-      contractOf(receipt),
-      found.value && found.value.contract,
-      found.value && found.value.CONTRACT,
-      datasetValue("hearthHexSurfaceContract")
+  function safeQuery(selector, base = doc) {
+    if (!base || !isFunction(base.querySelector)) return null;
+
+    try {
+      return base.querySelector(selector);
+    } catch (_error) {
+      return null;
+    }
+  }
+
+  function safeQueryAll(selector, base = doc) {
+    if (!base || !isFunction(base.querySelectorAll)) return [];
+
+    try {
+      return Array.from(base.querySelectorAll(selector));
+    } catch (_error) {
+      return [];
+    }
+  }
+
+  function isCanvas(node) {
+    return Boolean(node && safeString(node.tagName).toLowerCase() === "canvas");
+  }
+
+  function uniqueNodes(nodes) {
+    const seen = new Set();
+    const out = [];
+
+    for (const node of nodes || []) {
+      if (!node || seen.has(node)) continue;
+      seen.add(node);
+      out.push(node);
+    }
+
+    return out;
+  }
+
+  function getMount() {
+    if (!doc) return null;
+
+    return (
+      safeQuery("#hearthCanvasMount") ||
+      safeQuery("[data-hearth-canvas-mount='true']") ||
+      safeQuery("[data-hearth-visible-planet-mount='true']") ||
+      safeQuery("[data-hearth-planet-engine-mount='true']")
     );
-    const receiptName = firstNonEmpty(
-      receiptOf(receipt),
-      found.value && found.value.receipt,
-      found.value && found.value.RECEIPT,
-      datasetValue("hearthHexSurfaceReceipt")
+  }
+
+  function getStage() {
+    if (!doc) return null;
+
+    return (
+      safeQuery("#hearthGlobeStage") ||
+      safeQuery("[data-hearth-globe-stage='true']") ||
+      safeQuery("[data-hearth-planet-engine-stage='true']")
+    );
+  }
+
+  function collectCanvasCandidates() {
+    const mount = getMount();
+    const candidates = [];
+
+    if (mount) {
+      candidates.push(...safeQueryAll("canvas", mount));
+    }
+
+    candidates.push(...safeQueryAll("canvas[data-hearth-visible-canvas='true']"));
+    candidates.push(...safeQueryAll("canvas[data-hearth-expression-surface='true']"));
+    candidates.push(...safeQueryAll("canvas[data-hearth-canvas='true']"));
+    candidates.push(...safeQueryAll("canvas[data-hearth-canvas-texture='true']"));
+    candidates.push(...safeQueryAll("canvas[data-hearth-planet-canvas='true']"));
+    candidates.push(...safeQueryAll("canvas[data-hearth-canvas-hub='true']"));
+
+    return uniqueNodes(candidates).filter(isCanvas);
+  }
+
+  function createCanvasInMount() {
+    const mount = getMount();
+    if (!mount || !doc || !isFunction(doc.createElement)) return null;
+
+    const canvas = doc.createElement("canvas");
+    canvas.id = "hearthVisibleExpressionCanvas";
+    canvas.setAttribute("aria-label", "Hearth visible 2D expression canvas");
+    mount.appendChild(canvas);
+
+    state.canvasCreatedByCanvasHub = true;
+
+    record("HEARTH_CANVAS_SURFACE_CREATED_IN_EXISTING_MOUNT", {
+      mountSelector: "#hearthCanvasMount",
+      canvasId: canvas.id,
+      htmlContractMutated: false
+    });
+
+    return canvas;
+  }
+
+  function markCanvasIdentity(canvas, index = 0) {
+    if (!canvas || !canvas.dataset) return;
+
+    canvas.dataset.hearthVisibleCanvas = "true";
+    canvas.dataset.hearthExpressionSurface = "true";
+    canvas.dataset.hearthCanvas = "true";
+    canvas.dataset.hearthCanvasHub = "true";
+    canvas.dataset.hearthCanvasTexture = "true";
+    canvas.dataset.hearthPlanetCanvas = "true";
+    canvas.dataset.hearthCanvasContract = PUBLIC_CONTRACT;
+    canvas.dataset.hearthCanvasReceipt = PUBLIC_RECEIPT;
+    canvas.dataset.hearthCanvasInternalImplementationContract = INTERNAL_IMPLEMENTATION_CONTRACT;
+    canvas.dataset.hearthCanvasInternalImplementationReceipt = INTERNAL_IMPLEMENTATION_RECEIPT;
+    canvas.dataset.hearthCanvasSurfaceIdentityUnified = "true";
+    canvas.dataset.hearthCanvasVisible2dOutputActive = "true";
+    canvas.dataset.hearthCanvasGeneratedImage = "false";
+    canvas.dataset.generatedImage = "false";
+    canvas.dataset.graphicBox = "false";
+    canvas.dataset.webgl = "false";
+    canvas.dataset.visualPassClaimed = "false";
+    canvas.dataset.hearthCanvasSurfaceIndex = String(index);
+
+    if (!canvas.id) {
+      canvas.id = index === 0 ? "hearthVisibleExpressionCanvas" : `hearthVisibleExpressionCanvas${index + 1}`;
+    }
+
+    try {
+      canvas.setAttribute("data-hearth-visible-canvas", "true");
+      canvas.setAttribute("data-hearth-expression-surface", "true");
+      canvas.setAttribute("data-hearth-canvas", "true");
+      canvas.setAttribute("data-hearth-canvas-texture", "true");
+      canvas.setAttribute("data-hearth-planet-canvas", "true");
+      canvas.setAttribute("data-generated-image", "false");
+      canvas.setAttribute("data-graphic-box", "false");
+      canvas.setAttribute("data-webgl", "false");
+      canvas.setAttribute("data-visual-pass-claimed", "false");
+      canvas.setAttribute("role", "img");
+      canvas.setAttribute("aria-label", "Hearth live 2D planet carrier surface");
+    } catch (_error) {}
+
+    state.visibleCanvasAttributeApplied = true;
+    state.expressionSurfaceAttributeApplied = true;
+  }
+
+  function applyCanvasStyle(canvas, cssSize) {
+    if (!canvas || !canvas.style) return;
+
+    const sizeText = `${Math.max(1, Math.round(cssSize))}px`;
+
+    try {
+      canvas.style.setProperty("display", "block", "important");
+      canvas.style.setProperty("box-sizing", "border-box", "important");
+      canvas.style.setProperty("width", sizeText, "important");
+      canvas.style.setProperty("height", sizeText, "important");
+      canvas.style.setProperty("min-width", "238px", "important");
+      canvas.style.setProperty("min-height", "238px", "important");
+      canvas.style.setProperty("max-width", "100%", "important");
+      canvas.style.setProperty("max-height", "calc(100svh - 144px)", "important");
+      canvas.style.setProperty("aspect-ratio", "1 / 1", "important");
+      canvas.style.setProperty("object-fit", "contain", "important");
+      canvas.style.setProperty("margin", "auto", "important");
+      canvas.style.setProperty("border-radius", "50%", "important");
+      canvas.style.setProperty("opacity", "1", "important");
+      canvas.style.setProperty("visibility", "visible", "important");
+      canvas.style.setProperty("pointer-events", "auto", "important");
+      canvas.style.setProperty("touch-action", "none", "important");
+      canvas.style.setProperty("user-select", "none", "important");
+      canvas.style.setProperty("-webkit-user-select", "none", "important");
+      canvas.style.setProperty("background", "transparent", "important");
+    } catch (_error) {}
+  }
+
+  function measureAvailableSize(canvas) {
+    const mount = getMount();
+    const stage = getStage();
+    const viewportW = root.innerWidth || 720;
+    const viewportH = root.innerHeight || 720;
+
+    let mountRect = null;
+    let stageRect = null;
+    let canvasRect = null;
+
+    try {
+      mountRect = mount && isFunction(mount.getBoundingClientRect) ? mount.getBoundingClientRect() : null;
+    } catch (_error) {
+      mountRect = null;
+    }
+
+    try {
+      stageRect = stage && isFunction(stage.getBoundingClientRect) ? stage.getBoundingClientRect() : null;
+    } catch (_error) {
+      stageRect = null;
+    }
+
+    try {
+      canvasRect = canvas && isFunction(canvas.getBoundingClientRect) ? canvas.getBoundingClientRect() : null;
+    } catch (_error) {
+      canvasRect = null;
+    }
+
+    const canvasRectSize = canvasRect ? Math.min(canvasRect.width || 0, canvasRect.height || 0) : 0;
+    const mountSize = mountRect ? Math.min(mountRect.width || 0, mountRect.height || 0) : 0;
+    const stageSize = stageRect ? Math.min(stageRect.width || 0, stageRect.height || 0) : 0;
+    const viewportSize = Math.min(viewportW, viewportH);
+
+    const candidate = firstDefined(
+      canvasRectSize > 32 ? canvasRectSize : undefined,
+      mountSize > 32 ? mountSize : undefined,
+      stageSize > 32 ? Math.max(238, stageSize - 112) : undefined,
+      Math.max(238, Math.min(860, viewportSize * 0.78))
     );
 
-    let receiverReady = false;
-    let firstMethod = "NONE";
+    return clamp(candidate, 238, Math.min(920, Math.max(238, viewportSize * 0.92)));
+  }
 
-    if (found.value) {
-      for (const method of getHexSurfaceReceiverMethods()) {
-        if (isFunction(found.value[method])) {
-          receiverReady = true;
-          firstMethod = method;
-          break;
-        }
+  function prepareCanvas(canvas, index = 0) {
+    if (!canvas || !isCanvas(canvas)) return null;
+
+    markCanvasIdentity(canvas, index);
+
+    const cssSize = measureAvailableSize(canvas);
+    applyCanvasStyle(canvas, cssSize);
+
+    const dpr = clamp(root.devicePixelRatio || 1, 1, 2);
+    const width = Math.max(238, Math.round(cssSize * dpr));
+    const height = width;
+
+    if (canvas.width !== width || canvas.height !== height) {
+      canvas.width = width;
+      canvas.height = height;
+      state.resizeCount += 1;
+    }
+
+    let ctx = null;
+    let ctxStatus = "CANVAS_CONTEXT_2D_NOT_READY";
+
+    try {
+      ctx = canvas.getContext("2d", { alpha: true, willReadFrequently: true });
+      ctxStatus = ctx ? "CANVAS_CONTEXT_2D_READY" : "CANVAS_CONTEXT_2D_NULL";
+    } catch (_error) {
+      try {
+        ctx = canvas.getContext("2d");
+        ctxStatus = ctx ? "CANVAS_CONTEXT_2D_READY_FALLBACK" : "CANVAS_CONTEXT_2D_NULL";
+      } catch (error) {
+        recordError("HEARTH_CANVAS_CONTEXT_2D_FAILED", error, { canvasId: canvas.id || "NONE" });
+        ctx = null;
+        ctxStatus = "CANVAS_CONTEXT_2D_ERROR";
       }
     }
 
-    state.hexSurfaceObserved = Boolean(found.value || contract);
-    state.hexSurfaceAuthoritySource = found.name;
-    state.hexSurfaceContract = contract || "";
-    state.hexSurfaceReceipt = receiptName || "";
-    state.hexSurfaceContractRecognized = hexContractRecognized(contract);
-    state.hexSurfaceReceiverReady = receiverReady;
-
     return {
-      name: found.name,
-      authority: found.value,
-      receipt,
-      contract,
-      receiptName,
-      recognized: state.hexSurfaceContractRecognized,
-      receiverReady,
-      firstMethod
+      canvas,
+      ctx,
+      ctxStatus,
+      cssSize,
+      width,
+      height,
+      dpr,
+      id: canvas.id || "NONE",
+      selector: canvas.dataset && canvas.dataset.hearthExpressionSurface === "true"
+        ? "canvas[data-hearth-expression-surface='true']"
+        : "canvas[data-hearth-visible-canvas='true']"
     };
   }
 
-  function packetTargetsCanvas(packet) {
-    if (!isObject(packet)) return false;
+  function unifySurfaceIdentity(reason = "surface-unification") {
+    let canvases = collectCanvasCandidates();
 
-    const packetType = safeString(packet.packetType || packet.type || "");
-    const targetFile = safeString(
-      packet.targetFile ||
-      packet.destinationFile ||
-      packet.canvasFile ||
-      packet.expectedCanvasFile ||
-      ""
-    );
-    const handoffTo = safeString(packet.handoffTo || packet.destination || packet.target || "");
-
-    return Boolean(
-      packetType.includes("CANVAS") ||
-      handoffTo.toUpperCase().includes("CANVAS") ||
-      targetFile === FILE ||
-      targetFile.endsWith("/hearth.canvas.js") ||
-      packet.canvasReleaseAuthorized === true ||
-      packet.canvasReleasePacketReady === true ||
-      packet.visiblePlanetProofReady === true ||
-      packet.renderedPlanetProofReady === true
-    );
-  }
-
-  function packetSourceIsRouteConductor(packet) {
-    if (!isObject(packet)) return false;
-
-    const sourceFile = safeString(packet.sourceFile || packet.fromFile || "");
-    const sourceRole = safeString(packet.sourceRole || packet.role || packet.authority || packet.sourceAuthority || "");
-    const contract = safeString(packet.sourceContract || packet.routeConductorContract || packet.contract || packet.CONTRACT || "");
-
-    return Boolean(
-      sourceFile === ROUTE_CONDUCTOR_FILE ||
-      sourceFile.endsWith("/showroom/globe/hearth/hearth.js") ||
-      sourceRole.includes("route-conductor") ||
-      sourceRole.includes("ROUTE_CONDUCTOR") ||
-      routeContractRecognized(contract)
-    );
-  }
-
-  function validateRouteRelease(packet) {
-    if (!isObject(packet)) return { accepted: false, reason: "ROUTE_RELEASE_PACKET_NOT_OBJECT" };
-    if (!hasNoForbiddenClaims(packet)) return { accepted: false, reason: "ROUTE_RELEASE_PACKET_CONTAINS_FORBIDDEN_FINAL_CLAIM" };
-
-    const targetsCanvas = packetTargetsCanvas(packet);
-    const sourceIsRoute = packetSourceIsRouteConductor(packet);
-
-    if (!targetsCanvas && !sourceIsRoute) {
-      return { accepted: false, reason: "ROUTE_RELEASE_PACKET_DOES_NOT_TARGET_CANVAS_OR_ROUTE_CONDUCTOR" };
+    if (!canvases.length) {
+      const created = createCanvasInMount();
+      if (created) canvases = [created];
     }
 
-    return { accepted: true, reason: "ROUTE_RELEASE_ACCEPTED_BY_CANVAS" };
-  }
+    const prepared = canvases
+      .map((canvas, index) => prepareCanvas(canvas, index))
+      .filter((entry) => entry && entry.canvas && entry.ctx);
 
-  function acceptRouteRelease(packet, source = "direct") {
-    const validation = validateRouteRelease(packet);
+    state.surfaces = prepared.map((entry, index) => ({
+      index,
+      id: entry.id,
+      selector: entry.selector,
+      width: entry.width,
+      height: entry.height,
+      cssSize: entry.cssSize,
+      ctxStatus: entry.ctxStatus,
+      visibleCanvas: true,
+      expressionSurface: true
+    }));
 
-    if (!validation.accepted) {
-      state.routeReleaseAccepted = false;
-      state.routeReleasePacket = clonePlain(packet || null);
-      state.routeReleaseSource = source;
-      state.routeReleaseStatus = `REJECTED:${validation.reason}`;
-      state.firstFailedCoordinate = validation.reason;
-      state.recommendedNextFile = ROUTE_CONDUCTOR_FILE;
-      state.recommendedNextAction = "REISSUE_LAWFUL_ROUTE_CONDUCTOR_CANVAS_RELEASE_PACKET";
-      state.postgameStatus = "CANVAS_ROUTE_RELEASE_REJECTED";
+    state.canvasElementFound = prepared.length > 0;
+    state.canvasElementCount = prepared.length;
+    state.canvasContext2dReady = prepared.length > 0;
+    state.surfaceIdentityUnified = prepared.length > 0;
+    state.canvasWidth = prepared[0] ? prepared[0].width : 0;
+    state.canvasHeight = prepared[0] ? prepared[0].height : 0;
+    state.canvasCssWidth = prepared[0] ? prepared[0].cssSize : 0;
+    state.canvasCssHeight = prepared[0] ? prepared[0].cssSize : 0;
+    state.devicePixelRatio = prepared[0] ? prepared[0].dpr : 1;
+    state.primaryCanvasId = prepared[0] ? prepared[0].id : "NONE";
+    state.primaryCanvasSelector = prepared[0] ? "canvas[data-hearth-expression-surface='true']" : "NONE";
+    state.surfaceUnificationCount += 1;
 
-      record("HEARTH_CANVAS_ROUTE_RELEASE_REJECTED", {
-        source,
-        reason: validation.reason
-      });
+    inspectPrimaryCanvasGeometry(prepared[0] ? prepared[0].canvas : null);
 
-      updateDataset();
-      publishGlobals("route-release-rejected");
-      return getReceiptLight(false);
+    if (!prepared.length) {
+      state.firstFailedCoordinate = "CANVAS_SURFACE_NOT_AVAILABLE";
+      state.recommendedNextOwner = "HTML_MOUNT_OR_ROUTE_CONDUCTOR";
+      state.recommendedNextFile = ROUTE;
+      state.recommendedNextAction = "VERIFY_HEARTH_CANVAS_MOUNT_EXISTS_BEFORE_CANVAS_BOOT";
+      state.postgameStatus = "CANVAS_HUB_NO_RENDERABLE_SURFACE";
     }
 
-    state.routeReleaseAccepted = true;
-    state.routeReleasePacket = clonePlain(packet);
-    state.routeReleaseSource = source;
-    state.routeReleaseStatus = "ACCEPTED_ROUTE_CONDUCTOR_CANVAS_RELEASE";
-    state.downstreamExpressionPacketObserved = true;
-    state.downstreamExpressionPacketSource = source;
-    state.downstreamExpressionPacketDrawable = true;
-    state.downstreamExpressionPacketDrawableReason = "ROUTE_RELEASE_PACKET_ACCEPTED_AS_CANVAS_DRAWABLE_CARRIER_CONTEXT";
-
-    bindSurface({
-      mount: packet.mount && packet.mount.nodeType === 1 ? packet.mount : null
+    record("HEARTH_CANVAS_SURFACE_IDENTITY_UNIFIED", {
+      reason,
+      canvasElementCount: prepared.length,
+      primaryCanvasId: state.primaryCanvasId,
+      visibleCanvasAttributeApplied: state.visibleCanvasAttributeApplied,
+      expressionSurfaceAttributeApplied: state.expressionSurfaceAttributeApplied
     });
 
-    readHexAuthority();
-    readHexSurfaceAuthority();
-
-    drawLocalVisibleCarrierFrame("route-release");
-
-    state.firstFailedCoordinate = state.finalCanvasPixelVisible
-      ? "NONE_ROUTE_RELEASE_ACCEPTED_LOCAL_PIXEL_VISIBLE"
-      : "CANVAS_ROUTE_RELEASE_ACCEPTED_PIXEL_NOT_VISIBLE";
-    state.recommendedNextFile = state.hexSurfaceReceiverReady ? HEX_SURFACE_FILE : FILE;
-    state.recommendedNextAction = state.hexSurfaceReceiverReady
-      ? "DELIVER_CANVAS_SURFACE_VIEW_PACKET_THROUGH_HEX_GATE"
-      : "VERIFY_LOCAL_DRAW_AND_HEX_SURFACE_GATE";
-    state.postgameStatus = state.finalCanvasPixelVisible
-      ? "CANVAS_ROUTE_RELEASE_ACCEPTED_LOCAL_PIXEL_VISIBLE"
-      : "CANVAS_ROUTE_RELEASE_ACCEPTED_PIXEL_PROOF_FAILED";
-
-    record("HEARTH_CANVAS_ROUTE_RELEASE_ACCEPTED", {
-      source,
-      routeConductorContract: packet.contract || packet.sourceContract || "",
-      canvasSurfaceMounted: state.canvasDomSurfaceMounted,
-      finalCanvasPixelVisible: state.finalCanvasPixelVisible,
-      hexSurfaceReceiverReady: state.hexSurfaceReceiverReady
-    });
-
-    scheduleHexGateFrame("route-release", null);
-    publishGlobals("route-release-accepted");
-    return getReceiptLight(false);
+    return prepared;
   }
 
-  function receiveRouteConductorReleasePacket(packet) {
-    return acceptRouteRelease(packet, "receiveRouteConductorReleasePacket");
-  }
-
-  function consumeRouteConductorReleasePacket(packet) {
-    return acceptRouteRelease(packet, "consumeRouteConductorReleasePacket");
-  }
-
-  function receiveReleasePacket(packet) {
-    return acceptRouteRelease(packet, "receiveReleasePacket");
-  }
-
-  function consumeReleasePacket(packet) {
-    return acceptRouteRelease(packet, "consumeReleasePacket");
-  }
-
-  function receiveCanvasReleasePacket(packet) {
-    return acceptRouteRelease(packet, "receiveCanvasReleasePacket");
-  }
-
-  function acceptReleasePacket(packet) {
-    return acceptRouteRelease(packet, "acceptReleasePacket");
-  }
-
-  function signatureOfControlPacket(packet) {
-    if (!isObject(packet)) return "";
-
-    const viewState = isObject(packet.viewState) ? packet.viewState : {};
-    return [
-      packet.packetType || packet.type || "CONTROL",
-      packet.composedAt || packet.updatedAt || "",
-      packet.inputType || "",
-      packet.deltaYaw || 0,
-      packet.deltaPitch || 0,
-      packet.deltaZoom || 0,
-      viewState.yaw || packet.yaw || 0,
-      viewState.pitch || packet.pitch || 0,
-      viewState.zoom || packet.zoom || 1
-    ].join("|");
-  }
-
-  function validateControlPacket(packet) {
-    if (!isObject(packet)) return { accepted: false, reason: "CONTROL_PACKET_NOT_OBJECT" };
-    if (!hasNoForbiddenClaims(packet)) return { accepted: false, reason: "CONTROL_PACKET_CONTAINS_FORBIDDEN_FINAL_CLAIM" };
-
-    const contract = safeString(packet.controlContract || packet.controlsContract || packet.sourceContract || packet.contract || packet.CONTRACT || "");
-    const packetType = safeString(packet.packetType || packet.type || "");
-    const sourceFile = safeString(packet.sourceFile || "");
-    const handoffTo = safeString(packet.handoffTo || packet.destination || packet.target || "");
-    const targetFile = safeString(packet.targetFile || packet.destinationFile || packet.canvasFile || "");
-
-    const looksLikeControl =
-      packetType.includes("CONTROL") ||
-      packetType.includes("CONTROLS") ||
-      packetType.includes("QUEEN") ||
-      sourceFile.endsWith("/hearth.controls.js") ||
-      controlContractRecognized(contract) ||
-      packet.viewState ||
-      packet.deltaYaw !== undefined ||
-      packet.deltaPitch !== undefined ||
-      packet.deltaZoom !== undefined ||
-      packet.yaw !== undefined ||
-      packet.pitch !== undefined ||
-      packet.zoom !== undefined;
-
-    const targetsCanvas =
-      handoffTo.toUpperCase().includes("CANVAS") ||
-      targetFile === FILE ||
-      targetFile.endsWith("/hearth.canvas.js") ||
-      targetFile === "" ||
-      packet.canvasFile === FILE ||
-      packet.destinationFile === FILE;
-
-    if (!looksLikeControl) return { accepted: false, reason: "PACKET_NOT_RECOGNIZED_AS_CONTROL_VIEW_PACKET" };
-    if (!targetsCanvas) return { accepted: false, reason: "CONTROL_PACKET_DOES_NOT_TARGET_CANVAS" };
-
-    return { accepted: true, reason: "CONTROL_PACKET_ACCEPTED_BY_CANVAS" };
-  }
-
-  function normalizeViewFromPacket(packet) {
-    const viewState = isObject(packet && packet.viewState) ? packet.viewState : null;
-
-    if (viewState) {
-      view.yaw = safeNumber(viewState.yaw, view.yaw);
-      view.pitch = clamp(safeNumber(viewState.pitch, view.pitch), view.minPitch, view.maxPitch);
-      view.zoom = clamp(safeNumber(viewState.zoom, view.zoom), view.minZoom, view.maxZoom);
-      view.phase = 0;
+  function inspectPrimaryCanvasGeometry(canvas) {
+    if (!canvas) {
+      state.canvasRectNonzero = false;
+      state.canvasComputedVisible = false;
+      state.canvasViewportIntersecting = false;
       return;
     }
 
-    view.yaw += safeNumber(packet && packet.deltaYaw, 0);
-    view.pitch = clamp(view.pitch + safeNumber(packet && packet.deltaPitch, 0), view.minPitch, view.maxPitch);
-    view.zoom = clamp(view.zoom + safeNumber(packet && packet.deltaZoom, 0), view.minZoom, view.maxZoom);
+    let rect = null;
+    let style = null;
 
-    if (packet && packet.yaw !== undefined) view.yaw = safeNumber(packet.yaw, view.yaw);
-    if (packet && packet.pitch !== undefined) view.pitch = clamp(packet.pitch, view.minPitch, view.maxPitch);
-    if (packet && packet.zoom !== undefined) view.zoom = clamp(packet.zoom, view.minZoom, view.maxZoom);
+    try {
+      rect = canvas.getBoundingClientRect();
+    } catch (_error) {
+      rect = null;
+    }
 
-    view.phase = 0;
+    try {
+      style = root.getComputedStyle ? root.getComputedStyle(canvas) : null;
+    } catch (_error) {
+      style = null;
+    }
+
+    const width = rect ? Number(rect.width || 0) : 0;
+    const height = rect ? Number(rect.height || 0) : 0;
+    const rectNonzero = width > 0 && height > 0;
+
+    state.canvasRectNonzero = rectNonzero;
+    state.canvasComputedVisible =
+      rectNonzero &&
+      (!style ||
+        (
+          style.display !== "none" &&
+          style.visibility !== "hidden" &&
+          Number(style.opacity || 1) !== 0
+        ));
+
+    state.canvasViewportIntersecting =
+      rectNonzero &&
+      rect.left < (root.innerWidth || 0) &&
+      rect.right > 0 &&
+      rect.top < (root.innerHeight || 0) &&
+      rect.bottom > 0;
   }
 
-  function receiveControlViewPacket(packet, source = "direct") {
-    const validation = validateControlPacket(packet);
+  function applyViewPacket(packet = {}, options = {}) {
+    const source = isObject(packet.viewState) ? packet.viewState : packet;
+    const current = state.viewState;
 
+    const incomingYaw = firstDefined(source.yaw, packet.yaw);
+    const incomingPitch = firstDefined(source.pitch, packet.pitch);
+    const incomingZoom = firstDefined(source.zoom, packet.zoom);
+    const incomingPhase = firstDefined(source.phase, packet.phase);
+
+    const deltaYaw = safeNumber(firstDefined(packet.deltaYaw, source.deltaYaw), 0);
+    const deltaPitch = safeNumber(firstDefined(packet.deltaPitch, source.deltaPitch), 0);
+    const deltaZoom = safeNumber(firstDefined(packet.deltaZoom, source.deltaZoom), 0);
+
+    const yaw = incomingYaw !== undefined
+      ? safeNumber(incomingYaw, current.yaw)
+      : current.yaw + deltaYaw;
+
+    const pitch = incomingPitch !== undefined
+      ? safeNumber(incomingPitch, current.pitch)
+      : current.pitch + deltaPitch;
+
+    const zoom = incomingZoom !== undefined
+      ? safeNumber(incomingZoom, current.zoom)
+      : current.zoom + deltaZoom;
+
+    const phase = incomingPhase !== undefined
+      ? safeNumber(incomingPhase, current.phase)
+      : current.phase;
+
+    state.viewState = {
+      yaw,
+      pitch: clamp(pitch, -1.25, 1.25),
+      zoom: clamp(zoom, 0.55, 2.4),
+      phase,
+      minPitch: safeNumber(source.minPitch, current.minPitch),
+      maxPitch: safeNumber(source.maxPitch, current.maxPitch),
+      minZoom: safeNumber(source.minZoom, current.minZoom),
+      maxZoom: safeNumber(source.maxZoom, current.maxZoom)
+    };
+
+    state.lastInputType = safeString(packet.inputType || options.inputType || "view-packet");
+    state.lastPacketType = safeString(packet.packetType || packet.type || CANVAS_VIEW_PACKET);
+    state.lastPacketSource = safeString(
+      packet.sourceFile ||
+      packet.fromFile ||
+      packet.sourceAuthority ||
+      packet.sourceRole ||
+      options.source ||
+      "UNKNOWN"
+    );
+
+    return clonePlain(state.viewState);
+  }
+
+  function validateIncomingPacket(packet, options = {}) {
+    if (packet === undefined || packet === null) {
+      return { accepted: true, reason: "EMPTY_PACKET_ACCEPTED_AS_DRAW_REQUEST" };
+    }
+
+    if (!isObject(packet)) {
+      return { accepted: false, reason: "PACKET_NOT_OBJECT" };
+    }
+
+    if (
+      packet.f13Claimed === true ||
+      packet.f13CanvasClaimed === true ||
+      packet.f13ClaimedByCanvas === true ||
+      packet.f21EligibleForNorth === true ||
+      packet.f21Claimed === true ||
+      packet.f21ClaimedByCanvas === true ||
+      packet.f21SubmittedToNorth === true ||
+      packet.readyTextClaimed === true ||
+      packet.visualPassClaimed === true ||
+      packet.finalVisualPassClaimed === true ||
+      packet.generatedImage === true ||
+      packet.graphicBox === true ||
+      packet.webGL === true ||
+      packet.webgl === true
+    ) {
+      return { accepted: false, reason: "PACKET_CONTAINS_FORBIDDEN_FINAL_CLAIM" };
+    }
+
+    if (packet.canvasDrawingAuthorized === false && options.allowDrawingRequest !== true) {
+      return { accepted: false, reason: "PACKET_EXPLICITLY_DENIES_CANVAS_DRAWING" };
+    }
+
+    return { accepted: true, reason: "PACKET_ACCEPTED_BY_CANVAS_HUB" };
+  }
+
+  function receivePacket(packet = {}, options = {}) {
+    state.receivePacketCount += 1;
+
+    const validation = validateIncomingPacket(packet, options);
     if (!validation.accepted) {
-      state.controlPacketAccepted = false;
-      state.controlPacketRejected = true;
-      state.controlPacketRejectionReason = validation.reason;
+      state.rejectedPacketCount += 1;
+      state.lastRejectedReason = validation.reason;
+      state.lastValidationStatus = "REJECTED";
       state.firstFailedCoordinate = validation.reason;
-      state.recommendedNextFile = CONTROL_FILE;
-      state.recommendedNextAction = "REISSUE_LAWFUL_QUEEN_CONTROLS_VIEW_PACKET";
-      state.postgameStatus = "CANVAS_REJECTED_CONTROL_PACKET";
+      state.recommendedNextOwner = "UPSTREAM_PACKET_AUTHORITY";
+      state.recommendedNextFile = safeString(packet && packet.sourceFile, CONTROL_FILE);
+      state.recommendedNextAction = "SEND_CANVAS_PACKET_WITHOUT_FORBIDDEN_FINAL_CLAIMS";
+      state.postgameStatus = "CANVAS_PACKET_REJECTED";
 
-      record("HEARTH_CANVAS_CONTROL_PACKET_REJECTED", {
-        source,
-        reason: validation.reason
+      record("HEARTH_CANVAS_PACKET_REJECTED", {
+        reason: validation.reason,
+        packetType: packet && packet.packetType
       });
 
       updateDataset();
+      publishReceiptAliases();
+
       return getReceiptLight(false);
     }
 
-    const signature = signatureOfControlPacket(packet);
-    if (signature && signature === state.lastControlPacketSignature) {
+    state.acceptedPacketCount += 1;
+    state.lastRejectedReason = "";
+    state.lastValidationStatus = "ACCEPTED";
+
+    applyViewPacket(packet || {}, options);
+
+    if (options.controlPacket === true) state.controlPacketCount += 1;
+    if (options.viewPacket === true) state.viewPacketCount += 1;
+
+    drawFrame(options.reason || "receive-packet");
+    sendHexGatePacket("receive-packet");
+
+    updateDataset();
+    publishReceiptAliases();
+
+    return {
+      ...getReceiptLight(false),
+      renderPacket: composeRenderPacket("receive-packet"),
+      hexGatePacket: composeCanvasHexGatePacket("receive-packet")
+    };
+  }
+
+  function drawFrame(reason = "draw-frame") {
+    const prepared = unifySurfaceIdentity(reason);
+
+    if (!prepared.length) {
+      updateDataset();
+      publishReceiptAliases();
       return getReceiptLight(false);
     }
 
-    state.lastControlPacketSignature = signature;
-    state.controlPacketAccepted = true;
-    state.controlPacketRejected = false;
-    state.controlPacketRejectionReason = "";
-    state.controlsObserved = true;
-    state.controlContract = safeString(packet.controlContract || packet.controlsContract || packet.sourceContract || packet.contract || EXPECTED_CONTROL_CONTRACT);
-    state.controlReceipt = safeString(packet.controlReceipt || packet.controlsReceipt || packet.sourceReceipt || packet.receipt || "");
-    state.lastControlPacketAt = nowIso();
-    state.lastControlPacketType = safeString(packet.packetType || packet.type || CONTROL_PACKET_TYPE);
-    state.lastViewPacket = clonePlain(packet);
-    state.packetCount += 1;
+    for (const surface of prepared) {
+      drawVisibleSurface(surface.ctx, surface.width, surface.height, reason);
+    }
 
-    state.downstreamExpressionPacketObserved = true;
-    state.downstreamExpressionPacketSource = source;
-    state.downstreamExpressionPacketDrawable = true;
-    state.downstreamExpressionPacketDrawableReason = "CONTROL_VIEW_PACKET_ACCEPTED_AS_CANVAS_DRAWABLE_VIEW_CONTEXT";
+    state.frameCount += 1;
+    state.drawCount += prepared.length;
+    state.lastDrawReason = reason;
+    state.lastDrawAt = nowIso();
+    state.updatedAt = state.lastDrawAt;
 
-    normalizeViewFromPacket(packet);
-    bindSurface();
-    readHexAuthority();
-    readHexSurfaceAuthority();
-    drawLocalVisibleCarrierFrame("control-view-packet");
+    inspectPixelSample(prepared[0].canvas, prepared[0].ctx);
 
-    state.firstFailedCoordinate = state.finalCanvasPixelVisible
-      ? "NONE_CONTROL_PACKET_ACCEPTED_LOCAL_PIXEL_VISIBLE"
-      : "CANVAS_CONTROL_PACKET_ACCEPTED_PIXEL_NOT_VISIBLE";
-    state.recommendedNextFile = state.hexSurfaceReceiverReady ? HEX_SURFACE_FILE : FILE;
-    state.recommendedNextAction = state.hexSurfaceReceiverReady
-      ? "TRANSMIT_CANVAS_VIEW_PACKET_THROUGH_HEX_GATE"
-      : "VERIFY_HEX_SURFACE_PUBLIC_GATE_RECEIVER";
-    state.postgameStatus = state.finalCanvasPixelVisible
-      ? "CANVAS_CONTROL_PACKET_ACCEPTED_LOCAL_PIXEL_VISIBLE_HEX_GATE_PENDING"
-      : "CANVAS_CONTROL_PACKET_ACCEPTED_LOCAL_PIXEL_PROOF_FAILED";
+    state.firstFailedCoordinate = state.pixelVisible ? "NONE" : "CANVAS_PIXEL_VISIBLE";
+    state.recommendedNextOwner = state.pixelVisible ? "TEACHER_REVIEW" : "CANVAS_DRAWING_OR_DOWNSTREAM_EXPRESSION_ADAPTER";
+    state.recommendedNextFile = state.pixelVisible ? FILE : FILE;
+    state.recommendedNextAction = state.pixelVisible
+      ? "REVIEW_CANVAS_SURFACE_TRUTH_CONFIRMED_WITHOUT_READY_OR_VISUAL_PASS_CLAIM"
+      : "VERIFY_CANVAS_DRAW_PATH_WRITES_VISIBLE_2D_PIXELS";
+    state.postgameStatus = state.pixelVisible
+      ? "CANVAS_SURFACE_TRUTH_VISIBLE_2D_PIXEL_OUTPUT_CONFIRMED_NO_FINAL_CLAIM"
+      : "CANVAS_SURFACE_DRAW_ATTEMPTED_PIXEL_SAMPLE_NOT_VISIBLE";
 
-    scheduleHexGateFrame("control-view-packet", packet);
-    updateDatasetLight();
+    updateDataset();
+    publishRenderGlobals(reason);
+    publishReceiptAliases();
 
     return getReceiptLight(false);
   }
 
-  function receivePlanetaryViewControlPacket(packet) {
-    return receiveControlViewPacket(packet, "receivePlanetaryViewControlPacket");
+  function drawVisibleSurface(ctx, width, height, reason) {
+    if (!ctx || width <= 0 || height <= 0) return;
+
+    const w = width;
+    const h = height;
+    const cx = w / 2;
+    const cy = h / 2;
+    const min = Math.min(w, h);
+    const view = state.viewState;
+    const zoom = clamp(view.zoom, 0.55, 2.4);
+    const radius = min * 0.43 * clamp(zoom, 0.72, 1.12);
+
+    if (isFunction(ctx.resetTransform)) {
+      try {
+        ctx.resetTransform();
+      } catch (_error) {
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+      }
+    } else {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+    }
+
+    ctx.clearRect(0, 0, w, h);
+
+    const bg = ctx.createRadialGradient(cx * 0.55, cy * 0.36, min * 0.05, cx, cy, min * 0.72);
+    bg.addColorStop(0, "rgba(16,45,78,1)");
+    bg.addColorStop(0.42, "rgba(4,12,29,1)");
+    bg.addColorStop(1, "rgba(1,4,12,1)");
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, w, h);
+
+    drawStarField(ctx, w, h, state.frameCount);
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.clip();
+
+    const ocean = ctx.createRadialGradient(cx - radius * 0.32, cy - radius * 0.42, radius * 0.08, cx, cy, radius);
+    ocean.addColorStop(0, "rgba(87,184,221,1)");
+    ocean.addColorStop(0.32, "rgba(23,91,151,1)");
+    ocean.addColorStop(0.70, "rgba(8,42,93,1)");
+    ocean.addColorStop(1, "rgba(2,16,46,1)");
+    ctx.fillStyle = ocean;
+    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+
+    drawLatitudeLongitudeBands(ctx, cx, cy, radius, view);
+    drawContinents(ctx, cx, cy, radius, view);
+    drawAncientCoastTraces(ctx, cx, cy, radius, view);
+
+    const shade = ctx.createLinearGradient(cx - radius, cy - radius, cx + radius, cy + radius);
+    shade.addColorStop(0, "rgba(255,255,255,.18)");
+    shade.addColorStop(0.38, "rgba(255,255,255,.02)");
+    shade.addColorStop(0.66, "rgba(0,0,0,.10)");
+    shade.addColorStop(1, "rgba(0,0,0,.42)");
+    ctx.fillStyle = shade;
+    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+
+    ctx.restore();
+
+    drawAtmosphere(ctx, cx, cy, radius);
+    drawReceiptNeedle(ctx, cx, cy, radius, reason);
+
+    ctx.fillStyle = "rgba(243,201,111,.92)";
+    ctx.font = `${Math.max(10, Math.round(min * 0.018))}px ui-sans-serif, system-ui, sans-serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("HEARTH", cx, cy + radius + Math.max(14, min * 0.034));
+
+    state.viewState.phase += 0.003;
   }
 
-  function consumePlanetaryViewControlPacket(packet) {
-    return receiveControlViewPacket(packet, "consumePlanetaryViewControlPacket");
+  function drawStarField(ctx, w, h, frame) {
+    ctx.save();
+    ctx.globalAlpha = 0.42;
+
+    const count = 70;
+    for (let i = 0; i < count; i += 1) {
+      const x = pseudo(i * 17.13) * w;
+      const y = pseudo(i * 31.71) * h;
+      const flicker = 0.28 + 0.22 * Math.sin((frame + i * 3) * 0.035);
+      const r = 0.55 + pseudo(i * 7.91) * 1.4;
+
+      ctx.fillStyle = `rgba(210,238,255,${flicker})`;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    ctx.restore();
   }
 
-  function receiveViewControlPacket(packet) {
-    return receiveControlViewPacket(packet, "receiveViewControlPacket");
+  function drawLatitudeLongitudeBands(ctx, cx, cy, radius, view) {
+    ctx.save();
+    ctx.lineWidth = Math.max(0.8, radius * 0.004);
+    ctx.strokeStyle = "rgba(210,238,255,.11)";
+
+    for (let i = -3; i <= 3; i += 1) {
+      const y = cy + (i / 4) * radius * 0.72 + Math.sin(view.phase + i) * radius * 0.015;
+      const rx = radius * Math.sqrt(Math.max(0.04, 1 - Math.pow((y - cy) / radius, 2)));
+
+      ctx.beginPath();
+      ctx.ellipse(cx, y, rx, radius * 0.055, 0, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    for (let i = 0; i < 8; i += 1) {
+      const angle = (Math.PI * 2 * i) / 8 + view.yaw * 0.22;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, radius * Math.abs(Math.cos(angle)), radius, 0, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    ctx.restore();
   }
 
-  function consumeViewControlPacket(packet) {
-    return receiveControlViewPacket(packet, "consumeViewControlPacket");
+  function drawContinents(ctx, cx, cy, radius, view) {
+    const continents = [
+      { lon: -2.72, lat: 0.56, sx: 0.48, sy: 0.34, twist: 0.3 },
+      { lon: -1.88, lat: -0.10, sx: 0.42, sy: 0.58, twist: -0.7 },
+      { lon: -0.92, lat: 0.38, sx: 0.55, sy: 0.36, twist: 0.9 },
+      { lon: -0.06, lat: -0.38, sx: 0.50, sy: 0.40, twist: -0.2 },
+      { lon: 0.78, lat: 0.17, sx: 0.62, sy: 0.33, twist: 0.5 },
+      { lon: 1.62, lat: -0.44, sx: 0.38, sy: 0.44, twist: 1.1 },
+      { lon: 2.48, lat: 0.04, sx: 0.52, sy: 0.34, twist: -0.4 }
+    ];
+
+    for (let i = 0; i < continents.length; i += 1) {
+      drawProjectedBlob(ctx, cx, cy, radius, view, continents[i], i);
+    }
   }
 
-  function receiveCanvasViewState(packet) {
-    return receiveControlViewPacket(packet, "receiveCanvasViewState");
+  function drawProjectedBlob(ctx, cx, cy, radius, view, blob, index) {
+    const points = [];
+    const steps = 36;
+
+    for (let i = 0; i < steps; i += 1) {
+      const t = (Math.PI * 2 * i) / steps;
+      const rough =
+        1 +
+        0.16 * Math.sin(t * 3 + index) +
+        0.10 * Math.sin(t * 7 + index * 1.7) +
+        0.06 * Math.sin(t * 11 + index * 2.3);
+
+      const lonOffset =
+        Math.cos(t + blob.twist) * blob.sx * rough +
+        Math.sin(t * 2 + index) * 0.055;
+
+      const latOffset =
+        Math.sin(t) * blob.sy * rough +
+        Math.cos(t * 3 + index) * 0.040;
+
+      const p = projectSphere(blob.lon + lonOffset, blob.lat + latOffset, view, cx, cy, radius);
+
+      if (p.visible) points.push(p);
+    }
+
+    if (points.length < 6) return;
+
+    ctx.save();
+
+    const avgX = points.reduce((sum, p) => sum + p.x, 0) / points.length;
+    const avgY = points.reduce((sum, p) => sum + p.y, 0) / points.length;
+
+    const land = ctx.createRadialGradient(avgX - radius * 0.08, avgY - radius * 0.10, radius * 0.02, avgX, avgY, radius * 0.42);
+    land.addColorStop(0, "rgba(190,158,89,.96)");
+    land.addColorStop(0.38, "rgba(104,137,82,.96)");
+    land.addColorStop(0.72, "rgba(64,104,68,.95)");
+    land.addColorStop(1, "rgba(43,76,56,.92)");
+
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y);
+
+    for (let i = 1; i < points.length; i += 1) {
+      const prev = points[i - 1];
+      const current = points[i];
+      const mx = (prev.x + current.x) / 2;
+      const my = (prev.y + current.y) / 2;
+      ctx.quadraticCurveTo(prev.x, prev.y, mx, my);
+    }
+
+    ctx.closePath();
+    ctx.fillStyle = land;
+    ctx.fill();
+
+    ctx.lineWidth = Math.max(1, radius * 0.006);
+    ctx.strokeStyle = "rgba(255,231,162,.28)";
+    ctx.stroke();
+
+    ctx.globalAlpha = 0.22;
+    ctx.lineWidth = Math.max(0.7, radius * 0.003);
+    ctx.strokeStyle = "rgba(5,20,31,.70)";
+    for (let r = 0; r < 3; r += 1) {
+      ctx.beginPath();
+      for (let i = 0; i < points.length; i += 3) {
+        const p = points[(i + r) % points.length];
+        if (i === 0) ctx.moveTo(p.x, p.y);
+        else ctx.lineTo(p.x, p.y);
+      }
+      ctx.stroke();
+    }
+
+    ctx.restore();
   }
 
-  function consumeCanvasViewState(packet) {
-    return receiveControlViewPacket(packet, "consumeCanvasViewState");
+  function drawAncientCoastTraces(ctx, cx, cy, radius, view) {
+    ctx.save();
+    ctx.lineWidth = Math.max(0.8, radius * 0.0045);
+    ctx.strokeStyle = "rgba(243,201,111,.18)";
+    ctx.globalAlpha = 0.72;
+
+    const channels = [
+      { lon: -2.2, lat: 0.16, len: 0.74, curve: 0.30 },
+      { lon: -0.4, lat: 0.06, len: 0.62, curve: -0.24 },
+      { lon: 1.25, lat: -0.12, len: 0.68, curve: 0.22 },
+      { lon: 2.55, lat: 0.36, len: 0.54, curve: -0.18 }
+    ];
+
+    for (let i = 0; i < channels.length; i += 1) {
+      const c = channels[i];
+      const pts = [];
+
+      for (let step = 0; step < 12; step += 1) {
+        const k = step / 11 - 0.5;
+        const p = projectSphere(
+          c.lon + k * c.len,
+          c.lat + Math.sin(k * Math.PI * 2 + i) * c.curve * 0.22,
+          view,
+          cx,
+          cy,
+          radius
+        );
+
+        if (p.visible) pts.push(p);
+      }
+
+      if (pts.length < 3) continue;
+
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, pts[0].y);
+
+      for (let p = 1; p < pts.length; p += 1) {
+        ctx.lineTo(pts[p].x, pts[p].y);
+      }
+
+      ctx.stroke();
+    }
+
+    ctx.restore();
   }
 
-  function receiveViewState(packet) {
-    return receiveControlViewPacket(packet, "receiveViewState");
+  function drawAtmosphere(ctx, cx, cy, radius) {
+    ctx.save();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius * 1.005, 0, Math.PI * 2);
+    ctx.lineWidth = Math.max(2, radius * 0.022);
+    ctx.strokeStyle = "rgba(127,220,255,.24)";
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius * 1.035, 0, Math.PI * 2);
+    ctx.lineWidth = Math.max(1, radius * 0.010);
+    ctx.strokeStyle = "rgba(255,231,162,.12)";
+    ctx.stroke();
+
+    const glow = ctx.createRadialGradient(cx, cy, radius * 0.92, cx, cy, radius * 1.24);
+    glow.addColorStop(0, "rgba(127,220,255,0)");
+    glow.addColorStop(0.68, "rgba(127,220,255,.10)");
+    glow.addColorStop(1, "rgba(127,220,255,0)");
+
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius * 1.24, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
   }
 
-  function setViewState(packet) {
-    return receiveControlViewPacket(packet, "setViewState");
+  function drawReceiptNeedle(ctx, cx, cy, radius, reason) {
+    ctx.save();
+
+    const angle = state.viewState.phase * 0.75 + state.viewState.yaw * 0.22;
+    const x1 = cx + Math.cos(angle) * radius * 0.76;
+    const y1 = cy + Math.sin(angle) * radius * 0.76;
+    const x2 = cx + Math.cos(angle) * radius * 0.94;
+    const y2 = cy + Math.sin(angle) * radius * 0.94;
+
+    ctx.lineWidth = Math.max(1, radius * 0.006);
+    ctx.strokeStyle = "rgba(255,231,162,.34)";
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+
+    ctx.fillStyle = "rgba(255,231,162,.72)";
+    ctx.beginPath();
+    ctx.arc(x2, y2, Math.max(1.8, radius * 0.010), 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+
+    if (reason === "boot" || reason === "mount") {
+      ctx.save();
+      ctx.fillStyle = "rgba(232,241,255,.72)";
+      ctx.font = `${Math.max(9, Math.round(radius * 0.040))}px ui-sans-serif, system-ui, sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("Mirrorland · Unknown Location", cx, cy - radius - Math.max(12, radius * 0.11));
+      ctx.restore();
+    }
   }
 
-  function applyViewState(packet) {
-    return receiveControlViewPacket(packet, "applyViewState");
+  function projectSphere(lon, lat, view, cx, cy, radius) {
+    const lambda = lon + view.yaw + view.phase * 0.12;
+    const phi = clamp(lat + view.pitch * 0.22, -1.42, 1.42);
+
+    const cosPhi = Math.cos(phi);
+    const x0 = cosPhi * Math.sin(lambda);
+    const y0 = Math.sin(phi);
+    const z0 = cosPhi * Math.cos(lambda);
+
+    const pitch = view.pitch * 0.45;
+    const cp = Math.cos(pitch);
+    const sp = Math.sin(pitch);
+
+    const y = y0 * cp - z0 * sp;
+    const z = y0 * sp + z0 * cp;
+
+    return {
+      x: cx + x0 * radius,
+      y: cy - y * radius,
+      z,
+      visible: z > -0.08
+    };
   }
 
-  function receiveControlPacket(packet) {
-    return receiveControlViewPacket(packet, "receiveControlPacket");
+  function pseudo(n) {
+    const x = Math.sin(n * 12.9898) * 43758.5453123;
+    return x - Math.floor(x);
   }
 
-  function receiveControlViewPacketAlias(packet) {
-    return receiveControlViewPacket(packet, "receiveControlViewPacket");
+  function inspectPixelSample(canvas, ctx) {
+    if (!canvas || !ctx) {
+      state.pixelSampleStatus = "PIXEL_SAMPLE_UNREADABLE";
+      state.pixelVisible = false;
+      state.visiblePixelCount = 0;
+      state.alphaPixelCount = 0;
+      state.uniqueColorCount = 0;
+      state.pixelSampleReason = "NO_CANVAS_CONTEXT";
+      return;
+    }
+
+    const width = Number(canvas.width || 0);
+    const height = Number(canvas.height || 0);
+
+    if (width <= 0 || height <= 0) {
+      state.pixelSampleStatus = "PIXEL_SAMPLE_UNREADABLE";
+      state.pixelVisible = false;
+      state.visiblePixelCount = 0;
+      state.alphaPixelCount = 0;
+      state.uniqueColorCount = 0;
+      state.pixelSampleReason = "CANVAS_DIMENSIONS_ZERO";
+      return;
+    }
+
+    const points = buildSamplePoints(width, height);
+    let sampleCount = 0;
+    let alphaPixelCount = 0;
+    let visiblePixelCount = 0;
+    const unique = new Set();
+
+    try {
+      for (const point of points) {
+        const x = Math.max(0, Math.min(width - 1, Math.round(point.x)));
+        const y = Math.max(0, Math.min(height - 1, Math.round(point.y)));
+        const data = ctx.getImageData(x, y, 1, 1).data;
+
+        sampleCount += 1;
+
+        const r = data[0] || 0;
+        const g = data[1] || 0;
+        const b = data[2] || 0;
+        const a = data[3] || 0;
+
+        if (a > 0) alphaPixelCount += 1;
+        if (a > 0 && (r > 0 || g > 0 || b > 0)) visiblePixelCount += 1;
+
+        unique.add(`${r},${g},${b},${a}`);
+      }
+    } catch (error) {
+      state.pixelSampleStatus = "PIXEL_SAMPLE_ERROR";
+      state.pixelVisible = false;
+      state.visiblePixelCount = visiblePixelCount;
+      state.alphaPixelCount = alphaPixelCount;
+      state.uniqueColorCount = unique.size;
+      state.pixelSampleReason = error && error.message ? String(error.message) : safeString(error);
+      return;
+    }
+
+    state.visiblePixelCount = visiblePixelCount;
+    state.alphaPixelCount = alphaPixelCount;
+    state.uniqueColorCount = unique.size;
+    state.pixelVisible = visiblePixelCount > 0;
+    state.pixelSampleStatus = state.pixelVisible
+      ? "PIXEL_SAMPLE_VISIBLE"
+      : alphaPixelCount > 0
+        ? "PIXEL_SAMPLE_ALPHA_ONLY_OR_BLACK"
+        : "PIXEL_SAMPLE_BLANK";
+    state.pixelSampleReason = state.pixelVisible
+      ? "VISIBLE_NON_BLANK_PIXELS_FOUND"
+      : alphaPixelCount > 0
+        ? "ALPHA_PRESENT_WITH_NO_NON_BLACK_VISIBLE_RGB_SAMPLE"
+        : "NO_VISIBLE_NON_BLANK_PIXELS_IN_SAMPLE_GRID";
   }
 
-  function receiveControlsPacket(packet) {
-    return receiveControlViewPacket(packet, "receiveControlsPacket");
+  function buildSamplePoints(width, height) {
+    const xs = [0.18, 0.32, 0.5, 0.68, 0.82];
+    const ys = [0.18, 0.32, 0.5, 0.68, 0.82];
+    const points = [];
+
+    for (const y of ys) {
+      for (const x of xs) {
+        points.push({
+          x: width * x,
+          y: height * y
+        });
+      }
+    }
+
+    return points;
   }
 
-  function receivePlanetaryControlPacket(packet) {
-    return receiveControlViewPacket(packet, "receivePlanetaryControlPacket");
-  }
-
-  function receiveViewDelta(packet) {
-    return receiveControlViewPacket(packet, "receiveViewDelta");
-  }
-
-  function applyViewDelta(packet) {
-    return receiveControlViewPacket(packet, "applyViewDelta");
-  }
-
-  function setView(packet) {
-    return receiveControlViewPacket(packet, "setView");
-  }
-
-  function updateView(packet) {
-    return receiveControlViewPacket(packet, "updateView");
-  }
-
-  function composeHexGatePacket(sourcePacket = null, includeRuntimeHandles = false) {
-    const control = isObject(sourcePacket) ? sourcePacket : state.lastViewPacket || {};
-    const surfaceScan = scanCanvasSurface();
-
-    const packet = {
-      packetType: CANVAS_HEX_GATE_PACKET_TYPE,
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      canvasContract: CONTRACT,
-      canvasReceipt: RECEIPT,
-      currentCanvasParentContract: CONTRACT,
-      currentCanvasParentReceipt: RECEIPT,
-      internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
-      internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
-      previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
-      previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
-      previousContract: PREVIOUS_CONTRACT,
-      previousReceipt: PREVIOUS_RECEIPT,
+  function composeRenderPacket(reason = "render-packet") {
+    return {
+      packetType: CANVAS_RENDER_PACKET,
+      contract: PUBLIC_CONTRACT,
+      receipt: PUBLIC_RECEIPT,
+      canvasContract: PUBLIC_CONTRACT,
+      canvasReceipt: PUBLIC_RECEIPT,
+      currentCanvasParentContract: PUBLIC_CONTRACT,
+      currentCanvasParentReceipt: PUBLIC_RECEIPT,
+      internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
+      internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
+      previousImplementationContract: PREVIOUS_IMPLEMENTATION_CONTRACT,
+      previousImplementationReceipt: PREVIOUS_IMPLEMENTATION_RECEIPT,
 
       sourceFile: FILE,
       sourceAuthority: "HEARTH_CANVAS_HUB",
-      sourceRole: "canvas-receiver-output-carrier-local-visible-pixel-proof",
-      destinationFile: HEX_SURFACE_FILE,
-      targetFile: HEX_SURFACE_FILE,
-      handoffTo: "HEX_SURFACE_GATE",
-
+      sourceRole: "canvas-receiver-output-carrier",
       route: ROUTE,
-      htmlFile: HTML_FILE,
-      indexFile: INDEX_FILE,
-      routeConductorFile: ROUTE_CONDUCTOR_FILE,
-      controlFile: CONTROL_FILE,
-      canvasFile: FILE,
-      hexSurfaceFile: HEX_SURFACE_FILE,
-      hexAuthorityFile: HEX_AUTHORITY_FILE,
+      diagnosticRoute: DIAGNOSTIC_ROUTE,
 
-      pointerFingerFile: POINTER_FINGER_FILE,
-      pointerFingerSurfaceFile: POINTER_FINGER_SURFACE_FILE,
-      pointerFingerBoundaryFile: POINTER_FINGER_BOUNDARY_FILE,
-      pointerFingerLightFile: POINTER_FINGER_LIGHT_FILE,
-      pointerFingerDirectCallSuppressed: true,
+      reason,
+      viewState: clonePlain(state.viewState),
 
-      transmissionChronology: TRANSMISSION_CHRONOLOGY.slice(),
-      transmissionGate: "HEX_SURFACE",
-      transmissionToPointerFingerMustPassThroughHex: true,
-      canvasDoesNotCallPointerFingerDirectly: true,
+      surfaceIdentityUnified: state.surfaceIdentityUnified,
+      visibleCanvasAttributeApplied: state.visibleCanvasAttributeApplied,
+      expressionSurfaceAttributeApplied: state.expressionSurfaceAttributeApplied,
+      canvasElementFound: state.canvasElementFound,
+      canvasElementCount: state.canvasElementCount,
+      canvasSelector: state.primaryCanvasSelector,
+      canvasId: state.primaryCanvasId,
+      canvasWidth: state.canvasWidth,
+      canvasHeight: state.canvasHeight,
+      canvasRectNonzero: state.canvasRectNonzero,
+      canvasComputedVisible: state.canvasComputedVisible,
+      canvasViewportIntersecting: state.canvasViewportIntersecting,
+      canvasContext2dReady: state.canvasContext2dReady,
 
-      routeReleaseAccepted: state.routeReleaseAccepted,
-      controlsObserved: state.controlsObserved,
-      controlPacketAccepted: state.controlPacketAccepted,
-      controlPacketType: state.lastControlPacketType,
+      pixelSampleStatus: state.pixelSampleStatus,
+      pixelVisible: state.pixelVisible,
+      visiblePixelCount: state.visiblePixelCount,
+      alphaPixelCount: state.alphaPixelCount,
+      uniqueColorCount: state.uniqueColorCount,
+      pixelSampleReason: state.pixelSampleReason,
 
-      sourceControlPacket: clonePlain(control),
-      viewState: {
-        yaw: view.yaw,
-        pitch: view.pitch,
-        zoom: view.zoom,
-        phase: 0,
-        minPitch: view.minPitch,
-        maxPitch: view.maxPitch,
-        minZoom: view.minZoom,
-        maxZoom: view.maxZoom
-      },
-
-      yaw: view.yaw,
-      pitch: view.pitch,
-      zoom: view.zoom,
-      phase: 0,
-
-      canvasSurface: {
-        mountFound: state.canvasMountFound,
-        mountSelector: state.canvasMountSelector,
-        canvasElementFound: state.canvasElementFound,
-        canvasSelector: state.canvasSelector,
-        canvasInMount: state.canvasInMount,
-        width: surface.width || (surface.canvas && surface.canvas.width) || 0,
-        height: surface.height || (surface.canvas && surface.canvas.height) || 0,
-        dpr: surface.dpr || 1,
-        rectNonzero: state.canvasRectNonzero,
-        computedVisible: state.canvasComputedVisible,
-        context2DReady: state.canvasContext2DReady,
-        pixelSampleStatus: state.canvasPixelSampleStatus,
-        pixelVisible: state.canvasPixelVisible,
-        visiblePixelCount: state.canvasVisiblePixelCount,
-        domSurfaceMounted: state.canvasDomSurfaceMounted,
-        domSurfaceProofReady: state.canvasDomSurfaceProofReady,
-        scan: clonePlain(surfaceScan)
-      },
-
-      localVisiblePixelProof: {
-        attempted: state.canvasLocalVisibleDrawAttempted,
-        executed: state.canvasLocalVisibleDrawExecuted,
-        drawCount: state.canvasLocalVisibleDrawCount,
-        reason: state.canvasLocalVisibleDrawReason,
-        sampleBeforeDraw: clonePlain(state.canvasLocalPixelSampleBeforeDraw),
-        sampleAfterDraw: clonePlain(state.canvasLocalPixelSampleAfterDraw),
-        finalCanvasPixelVisible: state.finalCanvasPixelVisible,
-        finalCanvasPixelFailureClass: state.finalCanvasPixelFailureClass
-      },
-
-      downstreamExpression: {
-        packetObserved: state.downstreamExpressionPacketObserved,
-        packetSource: state.downstreamExpressionPacketSource,
-        packetDrawable: state.downstreamExpressionPacketDrawable,
-        packetDrawableReason: state.downstreamExpressionPacketDrawableReason
-      },
-
-      hexSurfaceGate: {
-        observed: state.hexSurfaceObserved,
-        authoritySource: state.hexSurfaceAuthoritySource,
-        contract: state.hexSurfaceContract,
-        receipt: state.hexSurfaceReceipt,
-        contractRecognized: state.hexSurfaceContractRecognized,
-        receiverReady: state.hexSurfaceReceiverReady
-      },
-
-      hexAuthority: {
-        observed: state.hexAuthorityObserved,
-        authoritySource: state.hexAuthoritySource,
-        contract: state.hexAuthorityContract,
-        receipt: state.hexAuthorityReceipt,
-        recognized: state.hexAuthorityRecognized
-      },
-
-      canvasReceiverOutputCarrierActive: true,
-      canvasLocalVisiblePixelProofActive: true,
-      hexGateTransmissionActive: true,
-      canvasBishopInspectionSuppressed: true,
-      canvasBishopMutationSuppressed: true,
-      canvasExpressionTruthOwned: false,
+      canvasDrawingPerformedByCanvasHub: true,
+      canvasDrawingOwnsSourceTruth: false,
       terrainTruthOwned: false,
       hydrologyTruthOwned: false,
       elevationTruthOwned: false,
       materialTruthOwned: false,
+      finalVisualPassAuthority: false,
 
       composedAt: nowIso(),
-      frameCoalescedByCanvas: true,
-      packetPhaseFixedAtZero: true,
-
       ...NO_CLAIMS
     };
+  }
 
-    if (includeRuntimeHandles) {
-      packet.runtimeHandles = {
-        canvas: surface.canvas,
-        context2d: surface.ctx,
-        ctx: surface.ctx,
-        mount: surface.mount,
-        mountSelector: state.canvasMountSelector,
-        canvasSelector: state.canvasSelector
+  function composeCanvasHexGatePacket(reason = "canvas-hex-gate") {
+    readHexSurfaceAuthority();
+    readControlAuthority();
+
+    return {
+      packetType: CANVAS_HEX_GATE_PACKET,
+      contract: PUBLIC_CONTRACT,
+      receipt: PUBLIC_RECEIPT,
+      canvasContract: PUBLIC_CONTRACT,
+      canvasReceipt: PUBLIC_RECEIPT,
+      currentCanvasParentContract: PUBLIC_CONTRACT,
+      currentCanvasParentReceipt: PUBLIC_RECEIPT,
+      internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
+      internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
+
+      sourceFile: FILE,
+      sourceAuthority: "HEARTH_CANVAS_HUB",
+      sourceRole: "canvas-output-carrier-to-hex-surface-gate",
+      destinationFile: HEX_SURFACE_FILE,
+      handoffTo: "HEARTH_HEX_SURFACE",
+      route: ROUTE,
+      diagnosticRoute: DIAGNOSTIC_ROUTE,
+
+      canvasFile: FILE,
+      controlFile: CONTROL_FILE,
+      hexSurfaceFile: HEX_SURFACE_FILE,
+      hexAuthorityFile: HEX_AUTHORITY_FILE,
+      pointerFingerSurfaceFile: POINTER_FINGER_SURFACE_FILE,
+      pointerFingerBoundaryFile: POINTER_FINGER_BOUNDARY_FILE,
+      pointerFingerInspectFile: POINTER_FINGER_INSPECT_FILE,
+      pointerFingerLightFile: POINTER_FINGER_LIGHT_FILE,
+
+      canvasHexGateAuthorized: true,
+      hexSurfaceGateAuthorized: true,
+      pointerFingerTransmissionAuthorized: true,
+
+      viewState: clonePlain(state.viewState),
+      renderPacket: composeRenderPacket(reason),
+
+      surfaceIdentityUnified: state.surfaceIdentityUnified,
+      visibleCanvasAttributeApplied: state.visibleCanvasAttributeApplied,
+      expressionSurfaceAttributeApplied: state.expressionSurfaceAttributeApplied,
+      canvasPixelVisible: state.pixelVisible,
+      canvasPixelSampleStatus: state.pixelSampleStatus,
+
+      hexSurfaceObserved: state.hexSurfaceObserved,
+      hexSurfaceSource: state.hexSurfaceSource,
+      hexSurfaceContract: state.hexSurfaceContract,
+      hexSurfaceReceipt: state.hexSurfaceReceipt,
+      hexSurfaceReceiverMethod: state.hexSurfaceReceiverMethod,
+
+      controlObserved: state.controlObserved,
+      controlSource: state.controlSource,
+      controlContract: state.controlContract,
+      controlReceipt: state.controlReceipt,
+
+      canvasOwnsHexSurfaceTruth: false,
+      canvasOwnsPointerFingerTruth: false,
+      canvasOwnsTerrainTruth: false,
+      canvasOwnsHydrologyTruth: false,
+      canvasOwnsElevationTruth: false,
+      canvasOwnsMaterialTruth: false,
+
+      composedAt: nowIso(),
+      ...NO_CLAIMS
+    };
+  }
+
+  function sendHexGatePacket(reason = "hex-gate") {
+    const hex = readHexSurfaceAuthority();
+    const packet = composeCanvasHexGatePacket(reason);
+
+    state.hexGatePacketCount += 1;
+
+    if (!hex.authority || !hex.method || !isFunction(hex.authority[hex.method])) {
+      state.hexSurfaceDeliveryStatus = "HEX_SURFACE_PUBLIC_RECEIVER_NOT_AVAILABLE";
+      publishHexGateGlobals(packet);
+
+      return {
+        delivered: false,
+        method: "NONE",
+        reason: "HEX_SURFACE_PUBLIC_RECEIVER_NOT_AVAILABLE",
+        packet
       };
     }
 
-    return packet;
+    try {
+      const result = hex.authority[hex.method](clonePlain(packet), {
+        source: "HEARTH_CANVAS_HUB",
+        reason
+      });
+
+      state.hexGateDeliveryCount += 1;
+      state.hexSurfaceDeliveryStatus = "CANVAS_HEX_GATE_PACKET_DELIVERED";
+
+      if (result && isFunction(result.then)) {
+        result.catch((error) => {
+          recordError("HEARTH_CANVAS_HEX_SURFACE_ASYNC_DELIVERY_FAILED", error, {
+            method: hex.method
+          });
+        });
+      }
+
+      publishHexGateGlobals(packet);
+
+      record("HEARTH_CANVAS_HEX_GATE_PACKET_DELIVERED", {
+        method: hex.method,
+        reason,
+        hexSurfaceSource: hex.name,
+        pixelVisible: state.pixelVisible
+      });
+
+      return {
+        delivered: true,
+        method: hex.method,
+        reason: "HEX_SURFACE_PUBLIC_RECEIVER_CALLED",
+        resultObserved: isObject(result),
+        packet
+      };
+    } catch (error) {
+      state.hexSurfaceDeliveryStatus = "CANVAS_HEX_GATE_PACKET_DELIVERY_ERROR";
+      recordError("HEARTH_CANVAS_HEX_SURFACE_DELIVERY_FAILED", error, {
+        method: hex.method
+      });
+
+      publishHexGateGlobals(packet);
+
+      return {
+        delivered: false,
+        method: hex.method,
+        reason: "HEX_SURFACE_PUBLIC_RECEIVER_THROWN",
+        packet
+      };
+    }
   }
 
-  function publishHexGatePacketLight(packet) {
+  function publishHexGateGlobals(packet) {
     const hearth = ensureObject(root, "HEARTH");
     const lab = ensureObject(root, "DEXTER_LAB");
-    const plain = clonePlain(packet);
+    const cloned = clonePlain(packet);
 
-    root.HEARTH_CANVAS_HEX_GATE_PACKET = plain;
-    root.HEARTH_CANVAS_TO_HEX_SURFACE_PACKET = plain;
-    root.HEARTH_HEX_GATE_PACKET = plain;
-    root.HEARTH_CANVAS_LAST_VIEW_PACKET = clonePlain(state.lastViewPacket);
-    root.HEARTH_CANVAS_VIEW_STATE = clonePlain(packet.viewState);
+    root.HEARTH_CANVAS_HEX_GATE_PACKET = cloned;
+    root.HEARTH_CANVAS_LAST_HEX_GATE_PACKET = cloned;
+    root.HEARTH_CANVAS_LIVE_SURFACE_IDENTITY_HEX_GATE_PACKET = cloned;
 
-    hearth.canvasHexGatePacket = plain;
-    hearth.canvasToHexSurfacePacket = plain;
-    hearth.hexGatePacket = plain;
-    hearth.canvasLastViewPacket = clonePlain(state.lastViewPacket);
-    hearth.canvasViewState = clonePlain(packet.viewState);
+    hearth.canvasHexGatePacket = cloned;
+    hearth.canvasLastHexGatePacket = cloned;
+    hearth.canvasLiveSurfaceIdentityHexGatePacket = cloned;
 
-    lab.hearthCanvasHexGatePacket = plain;
-    lab.hearthCanvasToHexSurfacePacket = plain;
-    lab.hearthHexGatePacket = plain;
-    lab.hearthCanvasViewState = clonePlain(packet.viewState);
-  }
+    lab.hearthCanvasHexGatePacket = cloned;
+    lab.hearthCanvasLastHexGatePacket = cloned;
+    lab.hearthCanvasLiveSurfaceIdentityHexGatePacket = cloned;
 
-  function broadcastHexGatePacket(packet) {
     try {
       if (doc && isFunction(doc.dispatchEvent) && typeof root.CustomEvent === "function") {
-        doc.dispatchEvent(new root.CustomEvent("hearth:canvas-hex-gate-packet", { detail: clonePlain(packet) }));
-        doc.dispatchEvent(new root.CustomEvent("hearth:canvas-view-state", { detail: clonePlain(packet) }));
+        doc.dispatchEvent(new root.CustomEvent("hearth:canvas-hex-gate-packet", { detail: cloned }));
       }
 
       if (isFunction(root.dispatchEvent) && typeof root.CustomEvent === "function") {
-        root.dispatchEvent(new root.CustomEvent("hearth:canvas-hex-gate-packet", { detail: clonePlain(packet) }));
-        root.dispatchEvent(new root.CustomEvent("hearth:canvas-view-state", { detail: clonePlain(packet) }));
+        root.dispatchEvent(new root.CustomEvent("hearth:canvas-hex-gate-packet", { detail: cloned }));
       }
     } catch (_error) {}
   }
 
-  function deliveryReceiptIndicatesAcceptance(receipt, method) {
-    if (!isObject(receipt)) {
-      return Boolean(
-        method.includes("draw") ||
-        method.includes("receive") ||
-        method.includes("consume") ||
-        method.includes("accept")
-      );
-    }
+  function publishRenderGlobals(reason = "render") {
+    const hearth = ensureObject(root, "HEARTH");
+    const lab = ensureObject(root, "DEXTER_LAB");
+    const packet = composeRenderPacket(reason);
 
-    return Boolean(
-      safeBool(readField(receipt, [
-        "hexGatePacketAccepted",
-        "canvasHexGatePacketAccepted",
-        "canvasPacketAccepted",
-        "viewPacketAccepted",
-        "interactiveFrameAccepted",
-        "drawAccepted",
-        "pairFrameAccepted",
-        "pointerFingerGateOpen",
-        "hexSurfaceReceivesCorrectedProjectionState",
-        "accepted"
-      ], false), false) ||
-      safeString(readField(receipt, [
-        "lastValidationStatus",
-        "validationStatus",
-        "pointerFingerTransmissionStatus",
-        "postgameStatus"
-      ], "")).includes("ACCEPTED") ||
-      safeString(readField(receipt, [
-        "pointerFingerTransmissionStatus",
-        "postgameStatus"
-      ], "")).includes("DELIVERED") ||
-      method.includes("draw") ||
-      method.includes("receive") ||
-      method.includes("consume") ||
-      method.includes("accept")
-    );
+    root.HEARTH_CANVAS_RENDER_PACKET = clonePlain(packet);
+    root.HEARTH_CANVAS_VISIBLE_2D_RENDER_PACKET = clonePlain(packet);
+    root.HEARTH_CANVAS_LIVE_SURFACE_IDENTITY_RENDER_PACKET = clonePlain(packet);
+    root.HEARTH_VISIBLE_PLANET_PROOF = clonePlain(packet);
+
+    hearth.canvasRenderPacket = clonePlain(packet);
+    hearth.canvasVisible2dRenderPacket = clonePlain(packet);
+    hearth.canvasLiveSurfaceIdentityRenderPacket = clonePlain(packet);
+    hearth.visiblePlanetProof = clonePlain(packet);
+
+    lab.hearthCanvasRenderPacket = clonePlain(packet);
+    lab.hearthCanvasVisible2dRenderPacket = clonePlain(packet);
+    lab.hearthCanvasLiveSurfaceIdentityRenderPacket = clonePlain(packet);
+    lab.hearthVisiblePlanetProof = clonePlain(packet);
+
+    return packet;
   }
 
-  function inspectPointerFingerObservationFromReceipt(receipt) {
-    if (!isObject(receipt)) return { observed: false, source: "NONE" };
+  function startLoop(reason = "start-loop") {
+    if (state.drawLoopActive || state.disposed) return getReceiptLight(false);
 
-    const transmissionPacket = receipt.transmissionPacket || receipt.lastPointerFingerTransmissionPacket;
-    const delivery = receipt.delivery;
+    state.drawLoopActive = true;
+    state.started = true;
+    state.startedAt = state.startedAt || nowIso();
+    state.postgameStatus = "CANVAS_HUB_DRAW_LOOP_ACTIVE_NO_FINAL_CLAIM";
 
-    if (transmissionPacket || isObject(delivery)) {
-      return {
-        observed: true,
-        source: transmissionPacket ? "HEX_SURFACE_TRANSMISSION_PACKET" : "HEX_SURFACE_DELIVERY_OBJECT"
-      };
-    }
+    record("HEARTH_CANVAS_DRAW_LOOP_STARTED", { reason });
 
-    const statusText = [
-      receipt.pointerFingerTransmissionStatus,
-      receipt.POINTER_FINGER_TRANSMISSION_STATUS,
-      receipt.postgameStatus,
-      receipt.POSTGAME_STATUS
-    ].map((value) => safeString(value)).join(" ");
+    tick();
 
-    if (/POINTER_FINGER|TRANSMISSION_DELIVERED|WAITING_POINTER_FINGER/i.test(statusText)) {
-      return {
-        observed: true,
-        source: "HEX_SURFACE_RECEIPT_STATUS_TEXT"
-      };
-    }
-
-    return { observed: false, source: "NONE" };
-  }
-
-  function deliverHexGatePacket(packet) {
-    bindSurface();
-    scanCanvasSurface();
-    readHexAuthority();
-
-    const hex = readHexSurfaceAuthority();
-    const payload = composeHexGatePacket(packet && packet.sourceControlPacket ? packet.sourceControlPacket : state.lastViewPacket, true);
-
-    state.lastHexGatePacket = clonePlain(payload);
-    state.lastHexGatePacketAt = payload.composedAt;
-    state.hexGatePacketCount += 1;
-
-    publishHexGatePacketLight(payload);
-
-    if (!hex.authority || !isObject(hex.authority) || !hex.receiverReady) {
-      state.hexGateMissCount += 1;
-      state.hexGatePacketDelivered = false;
-      state.hexGateAcceptedByHexSurface = false;
-      state.hexSurfaceDeliveryStatus = "HEX_SURFACE_GATE_PENDING_PACKET_PUBLISHED";
-      state.hexSurfaceDeliveryMethod = "GLOBAL_PACKET_PUBLICATION";
-      state.hexSurfaceDeliveryReason = "WAITING_HEX_SURFACE_PUBLIC_GATE_RECEIVER";
-      state.hexSurfaceAcceptedPacket = false;
-      state.firstFailedCoordinate = state.finalCanvasPixelVisible
-        ? "WAITING_HEX_SURFACE_PUBLIC_GATE_RECEIVER_AFTER_LOCAL_PIXEL_VISIBLE"
-        : "WAITING_HEX_SURFACE_PUBLIC_GATE_RECEIVER_AND_PIXEL_NOT_VISIBLE";
-      state.recommendedNextFile = state.finalCanvasPixelVisible ? HEX_SURFACE_FILE : FILE;
-      state.recommendedNextAction = state.finalCanvasPixelVisible
-        ? "CONFIRM_HEX_SURFACE_PUBLIC_GATE_RECEIVER"
-        : "VERIFY_CANVAS_LOCAL_DRAW_THEN_HEX_SURFACE_PUBLIC_GATE_RECEIVER";
-      state.postgameStatus = state.finalCanvasPixelVisible
-        ? "CANVAS_PIXEL_VISIBLE_PACKET_PUBLISHED_WAITING_HEX_GATE"
-        : "CANVAS_PACKET_PUBLISHED_WAITING_HEX_GATE_PIXEL_NOT_VISIBLE";
-
-      broadcastHexGatePacket(payload);
-      updateDatasetLight();
-      return {
-        delivered: false,
-        accepted: false,
-        method: "GLOBAL_PACKET_PUBLICATION",
-        reason: state.hexSurfaceDeliveryReason
-      };
-    }
-
-    for (const method of getHexSurfaceReceiverMethods()) {
-      if (!isFunction(hex.authority[method])) continue;
-
-      try {
-        let result;
-
-        if (
-          method === "drawInteractiveFrame" ||
-          method === "drawPairFrame" ||
-          method === "drawFrame" ||
-          method === "renderFrame"
-        ) {
-          result = hex.authority[method](payload, {
-            sourceFile: FILE,
-            targetRoute: ROUTE,
-            canvas: surface.canvas,
-            ctx: surface.ctx,
-            context2d: surface.ctx,
-            mount: surface.mount,
-            mountSelector: state.canvasMountSelector,
-            canvasSelector: state.canvasSelector,
-            pointerFingerDirectCallSuppressed: true,
-            canvasLocalVisiblePixelProofAlreadyExecuted: state.canvasLocalVisibleDrawExecuted,
-            finalCanvasPixelVisible: state.finalCanvasPixelVisible,
-            ...NO_CLAIMS
-          });
-        } else {
-          result = hex.authority[method](payload, {
-            sourceFile: FILE,
-            targetRoute: ROUTE,
-            pointerFingerDirectCallSuppressed: true,
-            finalCanvasPixelVisible: state.finalCanvasPixelVisible,
-            ...NO_CLAIMS
-          });
-        }
-
-        const receipt = isObject(result) ? result : readAuthoritySnapshot(hex.authority);
-        const accepted = deliveryReceiptIndicatesAcceptance(receipt, method);
-        const pointerObservation = inspectPointerFingerObservationFromReceipt(receipt);
-
-        state.hexGateDeliveryCount += 1;
-        state.hexGatePacketDelivered = true;
-        state.hexGateAcceptedByHexSurface = accepted;
-        state.hexSurfaceDeliveryStatus = accepted
-          ? "CANVAS_PACKET_DELIVERED_THROUGH_HEX_GATE"
-          : "HEX_SURFACE_CALLED_WITHOUT_ACCEPTANCE_RECEIPT";
-        state.hexSurfaceDeliveryMethod = method;
-        state.hexSurfaceDeliveryReason = accepted
-          ? "HEX_SURFACE_PUBLIC_GATE_RECEIVER_CALLED"
-          : "HEX_SURFACE_PUBLIC_GATE_RETURNED_WITHOUT_ACCEPTANCE";
-        state.hexSurfaceAcceptedPacket = accepted;
-        state.pointerFingerTransmissionObserved = pointerObservation.observed;
-        state.pointerFingerTransmissionSource = pointerObservation.source;
-        state.lastHexGateDeliveryReceipt = clonePlain(receipt);
-
-        state.firstFailedCoordinate = accepted
-          ? state.finalCanvasPixelVisible
-            ? "NONE_LOCAL_PIXEL_VISIBLE_HEX_GATE_ACCEPTED"
-            : "HEX_GATE_ACCEPTED_BUT_CANVAS_PIXEL_NOT_VISIBLE"
-          : "HEX_GATE_ACCEPTANCE_NOT_CONFIRMED";
-        state.recommendedNextFile = accepted
-          ? state.pointerFingerTransmissionObserved
-            ? POINTER_FINGER_FILE
-            : HEX_SURFACE_FILE
-          : HEX_SURFACE_FILE;
-        state.recommendedNextAction = accepted
-          ? state.pointerFingerTransmissionObserved
-            ? "OBSERVE_POINTER_FINGER_DOWNSTREAM_RESPONSE"
-            : "VERIFY_HEX_SURFACE_PUBLISHES_POINTER_FINGER_TRANSMISSION_RECEIPT"
-          : "CONFIRM_HEX_SURFACE_ACCEPTANCE_RECEIPT";
-        state.postgameStatus = accepted
-          ? state.finalCanvasPixelVisible
-            ? "CANVAS_LOCAL_PIXEL_VISIBLE_AND_HEX_GATE_ACCEPTED"
-            : "HEX_GATE_ACCEPTED_CANVAS_PIXEL_STILL_NOT_VISIBLE"
-          : "CANVAS_TRANSMISSION_REACHED_HEX_GATE_ACCEPTANCE_UNCONFIRMED";
-
-        broadcastHexGatePacket(payload);
-        scanCanvasSurface();
-        updateDatasetLight();
-
-        record("HEARTH_CANVAS_HEX_GATE_PACKET_DELIVERED", {
-          method,
-          accepted,
-          hexSurfaceContract: state.hexSurfaceContract,
-          canvasLocalVisibleDrawExecuted: state.canvasLocalVisibleDrawExecuted,
-          finalCanvasPixelVisible: state.finalCanvasPixelVisible,
-          pointerFingerTransmissionObserved: state.pointerFingerTransmissionObserved,
-          pointerFingerDirectCallSuppressed: true
-        });
-
-        return {
-          delivered: true,
-          accepted,
-          method,
-          reason: state.hexSurfaceDeliveryReason,
-          receipt: clonePlain(receipt),
-          pointerFingerTransmissionObserved: state.pointerFingerTransmissionObserved
-        };
-      } catch (error) {
-        recordError("HEARTH_CANVAS_HEX_GATE_METHOD_FAILED", error, { method });
-      }
-    }
-
-    state.hexGateMissCount += 1;
-    state.hexGatePacketDelivered = false;
-    state.hexGateAcceptedByHexSurface = false;
-    state.hexSurfaceDeliveryStatus = "HEX_SURFACE_METHODS_FAILED_PACKET_PUBLISHED";
-    state.hexSurfaceDeliveryMethod = "GLOBAL_PACKET_PUBLICATION";
-    state.hexSurfaceDeliveryReason = "HEX_SURFACE_PUBLIC_METHODS_FAILED";
-    state.hexSurfaceAcceptedPacket = false;
-    state.firstFailedCoordinate = "HEX_SURFACE_PUBLIC_METHODS_FAILED";
-    state.recommendedNextFile = HEX_SURFACE_FILE;
-    state.recommendedNextAction = "RENEW_HEX_SURFACE_PUBLIC_GATE_METHOD";
-    state.postgameStatus = "CANVAS_PACKET_PUBLISHED_HEX_GATE_METHOD_FAILURE";
-
-    broadcastHexGatePacket(payload);
-    updateDatasetLight();
-
-    return {
-      delivered: false,
-      accepted: false,
-      method: "GLOBAL_PACKET_PUBLICATION",
-      reason: state.hexSurfaceDeliveryReason
-    };
-  }
-
-  function requestFrame(callback) {
-    if (isFunction(root.requestAnimationFrame)) return root.requestAnimationFrame(callback);
-    if (isFunction(root.setTimeout)) return root.setTimeout(() => callback(nowMs()), 16);
-    callback(nowMs());
-    return 0;
-  }
-
-  function cancelFrame(id) {
-    if (!id) return;
-    if (isFunction(root.cancelAnimationFrame)) root.cancelAnimationFrame(id);
-    else if (isFunction(root.clearTimeout)) root.clearTimeout(id);
-  }
-
-  function scheduleHexGateFrame(reason = "manual", sourcePacket = null) {
-    if (state.disposed) return null;
-
-    frame.pendingReason = reason;
-    frame.pendingPacket = sourcePacket ? clonePlain(sourcePacket) : null;
-
-    if (frame.scheduled) return getReceiptLight(false);
-
-    frame.scheduled = true;
-    frame.rafId = requestFrame(() => flushHexGateFrame(reason));
     return getReceiptLight(false);
   }
 
-  function flushHexGateFrame(reason = "manual") {
-    if (state.disposed) return null;
+  function stopLoop(reason = "stop-loop") {
+    state.drawLoopActive = false;
 
-    const sourcePacket = frame.pendingPacket ? clonePlain(frame.pendingPacket) : state.lastViewPacket;
-    frame.scheduled = false;
-    frame.rafId = 0;
-    frame.pendingPacket = null;
-    frame.pendingReason = "";
-    frame.flushCount += 1;
+    if (state.rafId) {
+      try {
+        if (isFunction(root.cancelAnimationFrame)) root.cancelAnimationFrame(state.rafId);
+        else clearTimeout(state.rafId);
+      } catch (_error) {}
+    }
 
-    state.lastHexGateReason = reason;
+    state.rafId = 0;
 
-    drawLocalVisibleCarrierFrame(`frame:${reason}`);
+    record("HEARTH_CANVAS_DRAW_LOOP_STOPPED", { reason });
 
-    const packet = composeHexGatePacket(sourcePacket, false);
-    return deliverHexGatePacket(packet);
+    return getReceiptLight(false);
   }
 
-  function bindEventListeners() {
-    if (!doc || state.listenerBound) return false;
+  function tick() {
+    if (!state.drawLoopActive || state.disposed) return;
 
-    const receiveEvent = (event) => {
-      const detail = event && event.detail;
-      if (isObject(detail)) receiveControlViewPacket(detail, `event:${event.type}`);
-    };
+    drawFrame("raf-visible-2d-output");
 
-    try {
-      doc.addEventListener("hearth:planetary-view-control", receiveEvent, { passive: true });
-      doc.addEventListener("hearth:queen-view-control", receiveEvent, { passive: true });
-      doc.addEventListener("hearth:canvas-view-state", receiveEvent, { passive: true });
-      doc.addEventListener("hearth:controls-view-delta", receiveEvent, { passive: true });
+    const schedule = isFunction(root.requestAnimationFrame)
+      ? root.requestAnimationFrame.bind(root)
+      : (fn) => root.setTimeout(fn, 33);
 
-      if (root && isFunction(root.addEventListener)) {
-        root.addEventListener("hearth:planetary-view-control", receiveEvent, { passive: true });
-        root.addEventListener("hearth:queen-view-control", receiveEvent, { passive: true });
-        root.addEventListener("hearth:canvas-view-state", receiveEvent, { passive: true });
-        root.addEventListener("hearth:controls-view-delta", receiveEvent, { passive: true });
-      }
-
-      state.listenerBound = true;
-      return true;
-    } catch (error) {
-      recordError("HEARTH_CANVAS_EVENT_LISTENER_BIND_FAILED", error);
-      return false;
-    }
+    state.rafId = schedule(tick);
   }
 
-  function deriveNextCoordinates() {
-    if (!state.canvasMountFound) {
-      state.firstFailedCoordinate = "CANVAS_MOUNT_FOUND";
-      state.recommendedNextFile = HTML_FILE;
-      state.recommendedNextAction = "RESTORE_OR_EXPOSE_HEARTH_CANVAS_MOUNT";
-      state.postgameStatus = "CANVAS_MOUNT_NOT_FOUND";
-      return;
+  function mount(options = {}) {
+    state.lastMountedAt = nowIso();
+
+    const prepared = unifySurfaceIdentity(options.reason || "mount");
+    state.mounted = prepared.length > 0;
+
+    if (state.mounted) {
+      drawFrame("mount");
+      state.postgameStatus = state.pixelVisible
+        ? "CANVAS_HUB_MOUNTED_VISIBLE_2D_OUTPUT_ACTIVE"
+        : "CANVAS_HUB_MOUNTED_PIXEL_SAMPLE_NOT_VISIBLE";
     }
 
-    if (!state.canvasElementFound) {
-      state.firstFailedCoordinate = "CANVAS_ELEMENT_FOUND";
-      state.recommendedNextFile = FILE;
-      state.recommendedNextAction = "CREATE_OR_BIND_REAL_CANVAS_ELEMENT";
-      state.postgameStatus = "CANVAS_ELEMENT_NOT_FOUND";
-      return;
-    }
+    updateDataset();
+    publishGlobals("mount");
 
-    if (!state.canvasContext2DReady) {
-      state.firstFailedCoordinate = "CANVAS_CONTEXT_2D_READY";
-      state.recommendedNextFile = FILE;
-      state.recommendedNextAction = "VERIFY_STANDARD_2D_CANVAS_CONTEXT";
-      state.postgameStatus = "CANVAS_2D_CONTEXT_NOT_READY";
-      return;
-    }
-
-    if (!state.canvasLocalVisibleDrawExecuted) {
-      state.firstFailedCoordinate = "CANVAS_LOCAL_VISIBLE_DRAW_EXECUTED";
-      state.recommendedNextFile = FILE;
-      state.recommendedNextAction = "AUDIT_LOCAL_VISIBLE_DRAW_EXECUTION";
-      state.postgameStatus = "CANVAS_LOCAL_DRAW_NOT_EXECUTED";
-      return;
-    }
-
-    if (!state.finalCanvasPixelVisible) {
-      state.firstFailedCoordinate = "FINAL_CANVAS_PIXEL_VISIBLE";
-      state.recommendedNextFile = FILE;
-      state.recommendedNextAction = "AUDIT_CANVAS_LOCAL_DRAW_PATH_AND_PIXEL_SAMPLE";
-      state.postgameStatus = "CANVAS_PIXEL_SAMPLE_NOT_VISIBLE";
-      return;
-    }
-
-    if (!state.hexSurfaceReceiverReady) {
-      state.firstFailedCoordinate = "HEX_SURFACE_PUBLIC_GATE_RECEIVER_READY";
-      state.recommendedNextFile = HEX_SURFACE_FILE;
-      state.recommendedNextAction = "CONFIRM_HEX_SURFACE_PUBLIC_GATE_RECEIVER";
-      state.postgameStatus = "CANVAS_PIXEL_VISIBLE_WAITING_HEX_SURFACE_GATE";
-      return;
-    }
-
-    if (!state.hexGateAcceptedByHexSurface) {
-      state.firstFailedCoordinate = "HEX_GATE_ACCEPTED_BY_HEX_SURFACE";
-      state.recommendedNextFile = HEX_SURFACE_FILE;
-      state.recommendedNextAction = "VERIFY_HEX_SURFACE_ACCEPTANCE_RECEIPT";
-      state.postgameStatus = "CANVAS_PIXEL_VISIBLE_HEX_GATE_ACCEPTANCE_PENDING";
-      return;
-    }
-
-    if (!state.pointerFingerTransmissionObserved) {
-      state.firstFailedCoordinate = "POINTER_FINGER_TRANSMISSION_OBSERVED";
-      state.recommendedNextFile = HEX_SURFACE_FILE;
-      state.recommendedNextAction = "VERIFY_HEX_SURFACE_PUBLISHES_POINTER_FINGER_TRANSMISSION";
-      state.postgameStatus = "CANVAS_PIXEL_VISIBLE_HEX_GATE_ACCEPTED_POINTER_TRANSMISSION_PENDING";
-      return;
-    }
-
-    state.firstFailedCoordinate = "NONE";
-    state.recommendedNextFile = POINTER_FINGER_FILE;
-    state.recommendedNextAction = "OBSERVE_DOWNSTREAM_POINTER_FINGER_RESPONSE";
-    state.postgameStatus = "CANVAS_PIXEL_VISIBLE_HEX_GATE_ACCEPTED_POINTER_TRANSMISSION_OBSERVED_NO_FINAL_CLAIM";
+    return getReceiptLight(false);
   }
 
-  function updateDatasetLight() {
+  function boot(options = {}) {
+    if (state.booted && !options.force) return getReceipt();
+
+    state.booting = true;
+    state.startedAt = state.startedAt || nowIso();
+    state.postgameStatus = "CANVAS_HUB_BOOTING_LIVE_SURFACE_IDENTITY_V12_4";
+
+    record("HEARTH_CANVAS_HUB_BOOT_START", {
+      contract: PUBLIC_CONTRACT,
+      internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT
+    });
+
+    publishGlobals("boot-early");
+    mount({ reason: "boot" });
+    drawFrame("boot");
+    sendHexGatePacket("boot");
+
+    state.booted = true;
+    state.booting = false;
+
+    startLoop("boot");
+
+    record("HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_BOOTED", {
+      canvasElementFound: state.canvasElementFound,
+      canvasElementCount: state.canvasElementCount,
+      surfaceIdentityUnified: state.surfaceIdentityUnified,
+      pixelSampleStatus: state.pixelSampleStatus,
+      pixelVisible: state.pixelVisible,
+      visualPassClaimed: false
+    });
+
+    updateDataset();
+    publishGlobals("boot-complete");
+
+    return getReceipt();
+  }
+
+  function refresh(reason = "refresh") {
+    readControlAuthority();
+    readHexSurfaceAuthority();
+    unifySurfaceIdentity(reason);
+    drawFrame(reason);
+    updateDataset();
+    publishGlobals(reason);
+
+    return getReceiptLight(false);
+  }
+
+  function dispose(reason = "manual-dispose") {
+    stopLoop("dispose");
+    state.disposed = true;
+    state.postgameStatus = "CANVAS_HUB_DISPOSED";
+    state.recommendedNextAction = "REBOOT_CANVAS_HUB_IF_VISIBLE_SURFACE_REQUIRED";
+
+    record("HEARTH_CANVAS_HUB_DISPOSED", { reason });
+    updateDataset();
+    publishGlobals("dispose");
+
+    return getReceipt();
+  }
+
+  function receiveCanvasHexGatePacket(packet, options = {}) {
+    return receivePacket(packet, {
+      ...options,
+      source: "receiveCanvasHexGatePacket",
+      viewPacket: true,
+      reason: "receiveCanvasHexGatePacket"
+    });
+  }
+
+  function consumeCanvasHexGatePacket(packet, options = {}) {
+    return receiveCanvasHexGatePacket(packet, {
+      ...options,
+      source: "consumeCanvasHexGatePacket"
+    });
+  }
+
+  function acceptCanvasHexGatePacket(packet, options = {}) {
+    return receiveCanvasHexGatePacket(packet, {
+      ...options,
+      source: "acceptCanvasHexGatePacket"
+    });
+  }
+
+  function receiveCanvasViewPacket(packet, options = {}) {
+    return receivePacket(packet, {
+      ...options,
+      source: "receiveCanvasViewPacket",
+      viewPacket: true,
+      reason: "receiveCanvasViewPacket"
+    });
+  }
+
+  function consumeCanvasViewPacket(packet, options = {}) {
+    return receiveCanvasViewPacket(packet, {
+      ...options,
+      source: "consumeCanvasViewPacket"
+    });
+  }
+
+  function receivePlanetaryViewControlPacket(packet, options = {}) {
+    return receivePacket(packet, {
+      ...options,
+      source: "receivePlanetaryViewControlPacket",
+      controlPacket: true,
+      viewPacket: true,
+      inputType: "planetary-view-control",
+      reason: "receivePlanetaryViewControlPacket"
+    });
+  }
+
+  function consumePlanetaryViewControlPacket(packet, options = {}) {
+    return receivePlanetaryViewControlPacket(packet, {
+      ...options,
+      source: "consumePlanetaryViewControlPacket"
+    });
+  }
+
+  function receiveViewControlPacket(packet, options = {}) {
+    return receivePacket(packet, {
+      ...options,
+      source: "receiveViewControlPacket",
+      controlPacket: true,
+      viewPacket: true,
+      inputType: "view-control",
+      reason: "receiveViewControlPacket"
+    });
+  }
+
+  function consumeViewControlPacket(packet, options = {}) {
+    return receiveViewControlPacket(packet, {
+      ...options,
+      source: "consumeViewControlPacket"
+    });
+  }
+
+  function receiveControlPacket(packet, options = {}) {
+    return receivePacket(packet, {
+      ...options,
+      source: "receiveControlPacket",
+      controlPacket: true,
+      viewPacket: true,
+      inputType: "control-packet",
+      reason: "receiveControlPacket"
+    });
+  }
+
+  function acceptControlPacket(packet, options = {}) {
+    return receiveControlPacket(packet, {
+      ...options,
+      source: "acceptControlPacket"
+    });
+  }
+
+  function drawInteractiveFrame(packet, options = {}) {
+    return receivePacket(packet || {}, {
+      ...options,
+      source: "drawInteractiveFrame",
+      viewPacket: true,
+      reason: "drawInteractiveFrame"
+    });
+  }
+
+  function drawPairFrame(packet, options = {}) {
+    return receivePacket(packet || {}, {
+      ...options,
+      source: "drawPairFrame",
+      viewPacket: true,
+      reason: "drawPairFrame"
+    });
+  }
+
+  function renderFrame(packet, options = {}) {
+    if (isObject(packet)) applyViewPacket(packet, options);
+    return drawFrame(options.reason || "renderFrame");
+  }
+
+  function requestFrame(packet, options = {}) {
+    return renderFrame(packet, {
+      ...options,
+      reason: "requestFrame"
+    });
+  }
+
+  function updateDataset() {
     setDataset("hearthCanvasLoaded", "true");
-    setDataset("hearthCanvasPresent", "true");
-    setDataset("hearthCanvasHubActive", "true");
-    setDataset("hearthCanvasContract", CONTRACT);
-    setDataset("hearthCanvasReceipt", RECEIPT);
-    setDataset("hearthCanvasInternalRenewalContract", INTERNAL_RENEWAL_CONTRACT);
-    setDataset("hearthCanvasInternalRenewalReceipt", INTERNAL_RENEWAL_RECEIPT);
-    setDataset("hearthCanvasPreviousInternalRenewalContract", PREVIOUS_INTERNAL_RENEWAL_CONTRACT);
-    setDataset("hearthCanvasPreviousContract", PREVIOUS_CONTRACT);
+    setDataset("hearthCanvasPresent", String(state.canvasElementFound));
+    setDataset("hearthCanvasContract", PUBLIC_CONTRACT);
+    setDataset("hearthCanvasReceipt", PUBLIC_RECEIPT);
+    setDataset("hearthCanvasParentContract", PUBLIC_CONTRACT);
+    setDataset("hearthCanvasParentReceipt", PUBLIC_RECEIPT);
+    setDataset("hearthCanvasCurrentParentContract", PUBLIC_CONTRACT);
+    setDataset("hearthCanvasCurrentParentReceipt", PUBLIC_RECEIPT);
+    setDataset("hearthSouthCurrentCanvasParentContract", PUBLIC_CONTRACT);
+    setDataset("hearthSouthCurrentCanvasParentReceipt", PUBLIC_RECEIPT);
+    setDataset("hearthCanvasInternalImplementationContract", INTERNAL_IMPLEMENTATION_CONTRACT);
+    setDataset("hearthCanvasInternalImplementationReceipt", INTERNAL_IMPLEMENTATION_RECEIPT);
+    setDataset("hearthCanvasPreviousImplementationContract", PREVIOUS_IMPLEMENTATION_CONTRACT);
     setDataset("hearthCanvasVersion", VERSION);
 
-    setDataset("hearthCanvasReceiverOutputCarrierActive", "true");
-    setDataset("hearthCanvasLocalVisiblePixelProofActive", "true");
-    setDataset("hearthCanvasHexGateTransmissionActive", "true");
-    setDataset("hearthCanvasHexGateRequired", "true");
-    setDataset("hearthCanvasPointerFingerDirectCallSuppressed", "true");
-    setDataset("hearthCanvasBishopInspectionSuppressed", "true");
-    setDataset("hearthCanvasBishopMutationSuppressed", "true");
-    setDataset("hearthCanvasExpressionTruthOwned", "false");
+    setDataset("hearthCanvasFile", FILE);
+    setDataset("hearthCanvasRoute", ROUTE);
+    setDataset("hearthCanvasMountSelector", state.mountSelector);
+    setDataset("hearthCanvasStageSelector", state.stageSelector);
+    setDataset("hearthCanvasSelector", state.primaryCanvasSelector);
+    setDataset("hearthCanvasPrimaryCanvasId", state.primaryCanvasId);
 
-    setDataset("hearthCanvasViewYaw", String(view.yaw));
-    setDataset("hearthCanvasViewPitch", String(view.pitch));
-    setDataset("hearthCanvasViewZoom", String(view.zoom));
-    setDataset("hearthCanvasViewPhase", "0");
+    setDataset("hearthCanvasSurfaceIdentityUnified", String(state.surfaceIdentityUnified));
+    setDataset("hearthCanvasVisibleCanvasAttributeApplied", String(state.visibleCanvasAttributeApplied));
+    setDataset("hearthCanvasExpressionSurfaceAttributeApplied", String(state.expressionSurfaceAttributeApplied));
+    setDataset("hearthCanvasVisible2dOutputActive", String(state.pixelVisible));
+    setDataset("hearthCanvasElementFound", String(state.canvasElementFound));
+    setDataset("hearthCanvasElementCount", String(state.canvasElementCount));
+    setDataset("hearthCanvasContext2dReady", String(state.canvasContext2dReady));
+    setDataset("hearthCanvasRectNonzero", String(state.canvasRectNonzero));
+    setDataset("hearthCanvasComputedVisible", String(state.canvasComputedVisible));
+    setDataset("hearthCanvasViewportIntersecting", String(state.canvasViewportIntersecting));
 
-    setDataset("hearthCanvasMountFound", String(state.canvasMountFound === true));
-    setDataset("hearthCanvasMountSelector", state.canvasMountSelector);
-    setDataset("hearthCanvasElementFound", String(state.canvasElementFound === true));
-    setDataset("hearthCanvasSelector", state.canvasSelector);
-    setDataset("hearthCanvasInMount", String(state.canvasInMount === true));
-    setDataset("hearthCanvasRectNonzero", String(state.canvasRectNonzero === true));
-    setDataset("hearthCanvasComputedVisible", String(state.canvasComputedVisible === true));
-    setDataset("hearthCanvasContext2DReady", String(state.canvasContext2DReady === true));
-    setDataset("hearthCanvasPixelSampleStatus", state.canvasPixelSampleStatus);
-    setDataset("hearthCanvasPixelVisible", String(state.canvasPixelVisible === true));
-    setDataset("hearthCanvasPixelSampleCount", String(state.canvasPixelSampleCount || 0));
-    setDataset("hearthCanvasVisiblePixelCount", String(state.canvasVisiblePixelCount || 0));
-    setDataset("hearthCanvasAlphaPixelCount", String(state.canvasAlphaPixelCount || 0));
-    setDataset("hearthCanvasUniqueColorCount", String(state.canvasUniqueColorCount || 0));
-    setDataset("hearthCanvasDomSurfaceMounted", String(state.canvasDomSurfaceMounted === true));
-    setDataset("hearthCanvasDomSurfaceProofReady", String(state.canvasDomSurfaceProofReady === true));
-    setDataset("hearthCanvasVisiblePlanetProofReady", String(state.canvasDomSurfaceProofReady === true));
+    setDataset("hearthCanvasPixelSampleStatus", state.pixelSampleStatus);
+    setDataset("hearthCanvasPixelVisible", String(state.pixelVisible));
+    setDataset("hearthCanvasVisiblePixelCount", String(state.visiblePixelCount));
+    setDataset("hearthCanvasAlphaPixelCount", String(state.alphaPixelCount));
+    setDataset("hearthCanvasUniqueColorCount", String(state.uniqueColorCount));
+    setDataset("hearthCanvasPixelSampleReason", state.pixelSampleReason);
 
-    setDataset("hearthCanvasLocalVisibleDrawAttempted", String(state.canvasLocalVisibleDrawAttempted === true));
-    setDataset("hearthCanvasLocalVisibleDrawExecuted", String(state.canvasLocalVisibleDrawExecuted === true));
-    setDataset("hearthCanvasLocalVisibleDrawCount", String(state.canvasLocalVisibleDrawCount || 0));
-    setDataset("hearthCanvasLocalVisibleDrawReason", state.canvasLocalVisibleDrawReason);
-    setDataset("hearthCanvasLocalDrawFailureReason", state.canvasLocalDrawFailureReason);
-    setDataset("hearthCanvasLocalPixelSampleAfterDraw", state.canvasLocalPixelSampleAfterDraw ? state.canvasLocalPixelSampleAfterDraw.status : "NOT_RUN");
+    setDataset("hearthCanvasDrawLoopActive", String(state.drawLoopActive));
+    setDataset("hearthCanvasFrameCount", String(state.frameCount));
+    setDataset("hearthCanvasDrawCount", String(state.drawCount));
+    setDataset("hearthCanvasLastDrawReason", state.lastDrawReason);
 
-    setDataset("hearthCanvasDownstreamExpressionPacketObserved", String(state.downstreamExpressionPacketObserved === true));
-    setDataset("hearthCanvasDownstreamExpressionPacketSource", state.downstreamExpressionPacketSource);
-    setDataset("hearthCanvasDownstreamExpressionPacketDrawable", String(state.downstreamExpressionPacketDrawable === true));
-    setDataset("hearthCanvasDownstreamExpressionPacketDrawableReason", state.downstreamExpressionPacketDrawableReason);
-
-    setDataset("hearthCanvasControlsObserved", String(state.controlsObserved === true));
-    setDataset("hearthCanvasControlPacketAccepted", String(state.controlPacketAccepted === true));
-    setDataset("hearthCanvasControlPacketType", state.lastControlPacketType);
-    setDataset("hearthCanvasControlPacketAt", state.lastControlPacketAt);
-
-    setDataset("hearthCanvasHexSurfaceObserved", String(state.hexSurfaceObserved === true));
-    setDataset("hearthCanvasHexSurfaceAuthoritySource", state.hexSurfaceAuthoritySource);
+    setDataset("hearthCanvasHexSurfaceObserved", String(state.hexSurfaceObserved));
+    setDataset("hearthCanvasHexSurfaceSource", state.hexSurfaceSource);
     setDataset("hearthCanvasHexSurfaceContract", state.hexSurfaceContract);
-    setDataset("hearthCanvasHexSurfaceReceipt", state.hexSurfaceReceipt);
-    setDataset("hearthCanvasHexSurfaceContractRecognized", String(state.hexSurfaceContractRecognized === true));
-    setDataset("hearthCanvasHexSurfaceReceiverReady", String(state.hexSurfaceReceiverReady === true));
+    setDataset("hearthCanvasHexSurfaceReceiverMethod", state.hexSurfaceReceiverMethod);
     setDataset("hearthCanvasHexSurfaceDeliveryStatus", state.hexSurfaceDeliveryStatus);
-    setDataset("hearthCanvasHexSurfaceDeliveryMethod", state.hexSurfaceDeliveryMethod);
-    setDataset("hearthCanvasHexSurfaceDeliveryReason", state.hexSurfaceDeliveryReason);
-    setDataset("hearthCanvasHexSurfaceAcceptedPacket", String(state.hexSurfaceAcceptedPacket === true));
 
-    setDataset("hearthCanvasHexAuthorityObserved", String(state.hexAuthorityObserved === true));
-    setDataset("hearthCanvasHexAuthorityContract", state.hexAuthorityContract);
-    setDataset("hearthCanvasHexAuthorityRecognized", String(state.hexAuthorityRecognized === true));
+    setDataset("hearthCanvasControlObserved", String(state.controlObserved));
+    setDataset("hearthCanvasControlSource", state.controlSource);
+    setDataset("hearthCanvasControlContract", state.controlContract);
 
-    setDataset("hearthCanvasHexGatePacketCount", String(state.hexGatePacketCount));
-    setDataset("hearthCanvasHexGateDeliveryCount", String(state.hexGateDeliveryCount));
-    setDataset("hearthCanvasHexGateMissCount", String(state.hexGateMissCount));
-    setDataset("hearthCanvasHexGatePacketDelivered", String(state.hexGatePacketDelivered === true));
-    setDataset("hearthCanvasHexGateAcceptedByHexSurface", String(state.hexGateAcceptedByHexSurface === true));
-
-    setDataset("hearthCanvasPointerFingerTransmissionObserved", String(state.pointerFingerTransmissionObserved === true));
-    setDataset("hearthCanvasPointerFingerTransmissionSource", state.pointerFingerTransmissionSource);
-
-    setDataset("hearthCanvasFinalCanvasPixelVisible", String(state.finalCanvasPixelVisible === true));
-    setDataset("hearthCanvasFinalCanvasPixelFailureClass", state.finalCanvasPixelFailureClass);
+    setDataset("hearthCanvasPostgameStatus", state.postgameStatus);
     setDataset("hearthCanvasFirstFailedCoordinate", state.firstFailedCoordinate);
+    setDataset("hearthCanvasRecommendedNextOwner", state.recommendedNextOwner);
     setDataset("hearthCanvasRecommendedNextFile", state.recommendedNextFile);
     setDataset("hearthCanvasRecommendedNextAction", state.recommendedNextAction);
-    setDataset("hearthCanvasPostgameStatus", state.postgameStatus);
+
+    setDataset("hearthCanvasOwnsSourceTruth", "false");
+    setDataset("hearthCanvasOwnsTerrainTruth", "false");
+    setDataset("hearthCanvasOwnsHydrologyTruth", "false");
+    setDataset("hearthCanvasOwnsElevationTruth", "false");
+    setDataset("hearthCanvasOwnsMaterialTruth", "false");
+    setDataset("hearthCanvasOwnsHexSurfaceTruth", "false");
+    setDataset("hearthCanvasOwnsPointerFingerTruth", "false");
 
     setDataset("hearthCanvasF13Claimed", "false");
     setDataset("hearthCanvasF21EligibleForNorth", "false");
@@ -2347,252 +2195,273 @@
     setDataset("graphicBox", "false");
     setDataset("webgl", "false");
     setDataset("visualPassClaimed", "false");
+  }
 
-    if (surface.canvas && surface.canvas.dataset) {
-      surface.canvas.dataset.hearthCanvasPixelSampleStatus = state.canvasPixelSampleStatus;
-      surface.canvas.dataset.hearthCanvasPixelVisible = String(state.canvasPixelVisible === true);
-      surface.canvas.dataset.hearthCanvasFinalCanvasPixelVisible = String(state.finalCanvasPixelVisible === true);
-      surface.canvas.dataset.hearthCanvasLocalVisibleDrawExecuted = String(state.canvasLocalVisibleDrawExecuted === true);
-      surface.canvas.dataset.hearthCanvasFinalCanvasPixelFailureClass = state.finalCanvasPixelFailureClass;
+  function composeDiagnosticFields() {
+    return {
+      CANVAS_FILE: FILE,
+      CANVAS_CONTRACT: PUBLIC_CONTRACT,
+      CANVAS_RECEIPT: PUBLIC_RECEIPT,
+      CANVAS_INTERNAL_IMPLEMENTATION_CONTRACT: INTERNAL_IMPLEMENTATION_CONTRACT,
+      CANVAS_INTERNAL_IMPLEMENTATION_RECEIPT: INTERNAL_IMPLEMENTATION_RECEIPT,
+      CANVAS_PREVIOUS_IMPLEMENTATION_CONTRACT: PREVIOUS_IMPLEMENTATION_CONTRACT,
+      CANVAS_LINEAGE_IMPLEMENTATION_CONTRACT: LINEAGE_IMPLEMENTATION_CONTRACT,
+      CANVAS_VERSION: VERSION,
+
+      CANVAS_HUB_ACTIVE: "true",
+      LIVE_SURFACE_IDENTITY_UNIFICATION_ACTIVE: "true",
+      VISIBLE_2D_OUTPUT_ACTIVE: String(state.pixelVisible),
+      SURFACE_IDENTITY_UNIFIED: String(state.surfaceIdentityUnified),
+      VISIBLE_CANVAS_ATTRIBUTE_APPLIED: String(state.visibleCanvasAttributeApplied),
+      EXPRESSION_SURFACE_ATTRIBUTE_APPLIED: String(state.expressionSurfaceAttributeApplied),
+
+      CANVAS_ELEMENT_FOUND: String(state.canvasElementFound),
+      CANVAS_ELEMENT_COUNT: String(state.canvasElementCount),
+      CANVAS_SELECTOR: state.primaryCanvasSelector,
+      CANVAS_ID: state.primaryCanvasId,
+      CANVAS_CONTEXT_2D_READY: String(state.canvasContext2dReady),
+      CANVAS_RECT_NONZERO: String(state.canvasRectNonzero),
+      CANVAS_COMPUTED_VISIBLE: String(state.canvasComputedVisible),
+      CANVAS_VIEWPORT_INTERSECTING: String(state.canvasViewportIntersecting),
+      CANVAS_WIDTH: String(state.canvasWidth),
+      CANVAS_HEIGHT: String(state.canvasHeight),
+
+      CANVAS_PIXEL_SAMPLE_STATUS: state.pixelSampleStatus,
+      CANVAS_PIXEL_VISIBLE: String(state.pixelVisible),
+      CANVAS_VISIBLE_PIXEL_COUNT: String(state.visiblePixelCount),
+      CANVAS_ALPHA_PIXEL_COUNT: String(state.alphaPixelCount),
+      CANVAS_PIXEL_UNIQUE_COLOR_COUNT: String(state.uniqueColorCount),
+      CANVAS_PIXEL_SAMPLE_REASON: state.pixelSampleReason,
+
+      DRAW_LOOP_ACTIVE: String(state.drawLoopActive),
+      FRAME_COUNT: String(state.frameCount),
+      DRAW_COUNT: String(state.drawCount),
+      RECEIVE_PACKET_COUNT: String(state.receivePacketCount),
+      ACCEPTED_PACKET_COUNT: String(state.acceptedPacketCount),
+      REJECTED_PACKET_COUNT: String(state.rejectedPacketCount),
+      CONTROL_PACKET_COUNT: String(state.controlPacketCount),
+      VIEW_PACKET_COUNT: String(state.viewPacketCount),
+
+      HEX_SURFACE_OBSERVED: String(state.hexSurfaceObserved),
+      HEX_SURFACE_SOURCE: state.hexSurfaceSource,
+      HEX_SURFACE_CONTRACT: state.hexSurfaceContract,
+      HEX_SURFACE_RECEIVER_METHOD: state.hexSurfaceReceiverMethod,
+      HEX_SURFACE_DELIVERY_STATUS: state.hexSurfaceDeliveryStatus,
+      HEX_GATE_PACKET_COUNT: String(state.hexGatePacketCount),
+      HEX_GATE_DELIVERY_COUNT: String(state.hexGateDeliveryCount),
+
+      CONTROL_OBSERVED: String(state.controlObserved),
+      CONTROL_SOURCE: state.controlSource,
+      CONTROL_CONTRACT: state.controlContract,
+
+      FIRST_FAILED_COORDINATE: state.firstFailedCoordinate,
+      RECOMMENDED_NEXT_OWNER: state.recommendedNextOwner,
+      RECOMMENDED_NEXT_FILE: state.recommendedNextFile,
+      RECOMMENDED_NEXT_ACTION: state.recommendedNextAction,
+      POSTGAME_STATUS: state.postgameStatus,
+
+      CANVAS_OWNS_SOURCE_TRUTH: "false",
+      CANVAS_OWNS_TERRAIN_TRUTH: "false",
+      CANVAS_OWNS_HYDROLOGY_TRUTH: "false",
+      CANVAS_OWNS_ELEVATION_TRUTH: "false",
+      CANVAS_OWNS_MATERIAL_TRUTH: "false",
+      CANVAS_OWNS_HEX_SURFACE_TRUTH: "false",
+      CANVAS_OWNS_POINTER_FINGER_TRUTH: "false",
+      CANVAS_OWNS_FINAL_VISUAL_PASS: "false",
+
+      f13Claimed: "false",
+      f21EligibleForNorth: "false",
+      f21ClaimedByCanvas: "false",
+      readyTextAllowed: "false",
+      readyTextClaimed: "false",
+      visualPassClaimed: "false",
+      finalVisualPassClaimed: "false",
+      generatedImage: "false",
+      graphicBox: "false",
+      webGL: "false",
+      webgl: "false"
+    };
+  }
+
+  function composeReceiptLight(doRefresh = false) {
+    if (doRefresh) {
+      readControlAuthority();
+      readHexSurfaceAuthority();
+      inspectPrimaryCanvasGeometry(collectCanvasCandidates()[0] || null);
     }
-  }
 
-  function updateDataset() {
-    updateDatasetLight();
-
-    setDataset("hearthCanvasFile", FILE);
-    setDataset("hearthCanvasRoute", ROUTE);
-    setDataset("hearthCanvasRouteConductorFile", ROUTE_CONDUCTOR_FILE);
-    setDataset("hearthCanvasControlFile", CONTROL_FILE);
-    setDataset("hearthCanvasHexSurfaceFile", HEX_SURFACE_FILE);
-    setDataset("hearthCanvasHexAuthorityFile", HEX_AUTHORITY_FILE);
-    setDataset("hearthCanvasPointerFingerFile", POINTER_FINGER_FILE);
-    setDataset("hearthCanvasTransmissionChronology", TRANSMISSION_CHRONOLOGY.join(" -> "));
-    setDataset("hearthCanvasRouteReleaseAccepted", String(state.routeReleaseAccepted === true));
-    setDataset("hearthCanvasRouteReleaseStatus", state.routeReleaseStatus);
-  }
-
-  function composeReceiptLight() {
-    scanCanvasSurface();
-    deriveNextCoordinates();
+    const diagnosticFields = composeDiagnosticFields();
 
     return {
-      packetType: "HEARTH_CANVAS_HUB_RECEIPT",
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      canvasContract: CONTRACT,
-      canvasReceipt: RECEIPT,
-      currentCanvasParentContract: CONTRACT,
-      currentCanvasParentReceipt: RECEIPT,
-      internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
-      internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
-      previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
-      previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
-      previousContract: PREVIOUS_CONTRACT,
-      previousReceipt: PREVIOUS_RECEIPT,
-      lineageV1231Contract: LINEAGE_V12_3_1_CONTRACT,
-      lineageV122Contract: LINEAGE_V12_2_CONTRACT,
-      lineageV121Contract: LINEAGE_V12_1_CONTRACT,
-      lineageV12Contract: LINEAGE_V12_CONTRACT,
+      packetType: "HEARTH_CANVAS_HUB_RECEIPT_PACKET",
+      canvasReceiptPacketType: "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_RECEIPT_PACKET_v12_4",
+      contract: PUBLIC_CONTRACT,
+      CONTRACT: PUBLIC_CONTRACT,
+      receipt: PUBLIC_RECEIPT,
+      RECEIPT: PUBLIC_RECEIPT,
+      canvasContract: PUBLIC_CONTRACT,
+      canvasReceipt: PUBLIC_RECEIPT,
+      currentCanvasParentContract: PUBLIC_CONTRACT,
+      currentCanvasParentReceipt: PUBLIC_RECEIPT,
+      internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
+      internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
+      previousImplementationContract: PREVIOUS_IMPLEMENTATION_CONTRACT,
+      previousImplementationReceipt: PREVIOUS_IMPLEMENTATION_RECEIPT,
+      lineageImplementationContract: LINEAGE_IMPLEMENTATION_CONTRACT,
       version: VERSION,
-
       file: FILE,
       route: ROUTE,
-      htmlFile: HTML_FILE,
+      diagnosticRoute: DIAGNOSTIC_ROUTE,
+
       indexFile: INDEX_FILE,
       routeConductorFile: ROUTE_CONDUCTOR_FILE,
       controlFile: CONTROL_FILE,
       hexSurfaceFile: HEX_SURFACE_FILE,
       hexAuthorityFile: HEX_AUTHORITY_FILE,
-      pointerFingerFile: POINTER_FINGER_FILE,
       pointerFingerSurfaceFile: POINTER_FINGER_SURFACE_FILE,
       pointerFingerBoundaryFile: POINTER_FINGER_BOUNDARY_FILE,
+      pointerFingerInspectFile: POINTER_FINGER_INSPECT_FILE,
       pointerFingerLightFile: POINTER_FINGER_LIGHT_FILE,
-      diagnosticRoute: DIAGNOSTIC_ROUTE,
 
-      role: "canvas-receiver-output-carrier-local-visible-pixel-proof-hex-gate-transmission",
+      expectedControlContract: EXPECTED_CONTROL_CONTRACT,
+      expectedHexSurfaceContract: EXPECTED_HEX_SURFACE_CONTRACT,
+      expectedHexAuthorityContract: EXPECTED_HEX_AUTHORITY_CONTRACT,
+
+      role: "canvas-receiver-output-carrier-live-visible-2d-surface",
+
       loaded: true,
       booted: state.booted,
       mounted: state.mounted,
+      started: state.started,
       disposed: state.disposed,
 
-      receiverOutputCarrierActive: true,
-      localVisiblePixelProofActive: true,
-      hexGateTransmissionActive: true,
-      hexGateRequired: true,
-      pointerFingerDirectCallSuppressed: true,
-      transmissionChronology: TRANSMISSION_CHRONOLOGY.slice(),
+      canvasHubActive: true,
+      canvasReceiverActive: true,
+      canvasOutputCarrierActive: true,
+      liveSurfaceIdentityUnificationActive: true,
+      visible2dOutputActive: state.pixelVisible,
+      canvasSurfaceTruthProbeCompatible: true,
 
-      routeReleaseAccepted: state.routeReleaseAccepted,
-      routeReleaseStatus: state.routeReleaseStatus,
-      routeReleaseSource: state.routeReleaseSource,
-
-      controlsObserved: state.controlsObserved,
-      controlContract: state.controlContract,
-      controlReceipt: state.controlReceipt,
-      controlPacketAccepted: state.controlPacketAccepted,
-      controlPacketRejected: state.controlPacketRejected,
-      controlPacketRejectionReason: state.controlPacketRejectionReason,
-      lastControlPacketType: state.lastControlPacketType,
-      lastControlPacketAt: state.lastControlPacketAt,
-
-      canvasMountFound: state.canvasMountFound,
-      canvasMountSelector: state.canvasMountSelector,
+      surfaceIdentityUnified: state.surfaceIdentityUnified,
+      visibleCanvasAttributeApplied: state.visibleCanvasAttributeApplied,
+      expressionSurfaceAttributeApplied: state.expressionSurfaceAttributeApplied,
       canvasElementFound: state.canvasElementFound,
-      canvasSelector: state.canvasSelector,
-      canvasInMount: state.canvasInMount,
+      canvasElementCount: state.canvasElementCount,
+      canvasCreatedByCanvasHub: state.canvasCreatedByCanvasHub,
+      canvasSelector: state.primaryCanvasSelector,
+      canvasId: state.primaryCanvasId,
+      canvasContext2dReady: state.canvasContext2dReady,
       canvasRectNonzero: state.canvasRectNonzero,
       canvasComputedVisible: state.canvasComputedVisible,
-      canvasContext2DReady: state.canvasContext2DReady,
-      canvasPixelSampleStatus: state.canvasPixelSampleStatus,
-      canvasPixelVisible: state.canvasPixelVisible,
-      canvasPixelSampleCount: state.canvasPixelSampleCount,
-      canvasVisiblePixelCount: state.canvasVisiblePixelCount,
-      canvasAlphaPixelCount: state.canvasAlphaPixelCount,
-      canvasUniqueColorCount: state.canvasUniqueColorCount,
-      canvasDomSurfaceMounted: state.canvasDomSurfaceMounted,
-      canvasDomSurfaceProofReady: state.canvasDomSurfaceProofReady,
-      visiblePlanetProofReady: state.canvasDomSurfaceProofReady,
-      visiblePlanetProofSource: state.canvasDomSurfaceProofReady
-        ? "DOM_CANVAS_2D_LOCAL_VISIBLE_PIXEL_PROOF"
-        : "NONE",
+      canvasViewportIntersecting: state.canvasViewportIntersecting,
+      canvasWidth: state.canvasWidth,
+      canvasHeight: state.canvasHeight,
+      canvasCssWidth: state.canvasCssWidth,
+      canvasCssHeight: state.canvasCssHeight,
+      devicePixelRatio: state.devicePixelRatio,
 
-      canvasLocalVisibleDrawAttempted: state.canvasLocalVisibleDrawAttempted,
-      canvasLocalVisibleDrawExecuted: state.canvasLocalVisibleDrawExecuted,
-      canvasLocalVisibleDrawReason: state.canvasLocalVisibleDrawReason,
-      canvasLocalVisibleDrawCount: state.canvasLocalVisibleDrawCount,
-      canvasLocalPixelSampleBeforeDraw: clonePlain(state.canvasLocalPixelSampleBeforeDraw),
-      canvasLocalPixelSampleAfterDraw: clonePlain(state.canvasLocalPixelSampleAfterDraw),
-      canvasLocalDrawFailureReason: state.canvasLocalDrawFailureReason,
+      pixelSampleStatus: state.pixelSampleStatus,
+      canvasPixelSampleStatus: state.pixelSampleStatus,
+      pixelVisible: state.pixelVisible,
+      canvasPixelVisible: state.pixelVisible,
+      visiblePixelCount: state.visiblePixelCount,
+      alphaPixelCount: state.alphaPixelCount,
+      uniqueColorCount: state.uniqueColorCount,
+      pixelSampleReason: state.pixelSampleReason,
 
-      downstreamExpressionPacketObserved: state.downstreamExpressionPacketObserved,
-      downstreamExpressionPacketSource: state.downstreamExpressionPacketSource,
-      downstreamExpressionPacketDrawable: state.downstreamExpressionPacketDrawable,
-      downstreamExpressionPacketDrawableReason: state.downstreamExpressionPacketDrawableReason,
-
-      finalCanvasPixelVisible: state.finalCanvasPixelVisible,
-      finalCanvasPixelFailureClass: state.finalCanvasPixelFailureClass,
-
-      viewState: {
-        yaw: view.yaw,
-        pitch: view.pitch,
-        zoom: view.zoom,
-        phase: 0,
-        minPitch: view.minPitch,
-        maxPitch: view.maxPitch,
-        minZoom: view.minZoom,
-        maxZoom: view.maxZoom
-      },
-
-      hexAuthorityObserved: state.hexAuthorityObserved,
-      hexAuthoritySource: state.hexAuthoritySource,
-      hexAuthorityContract: state.hexAuthorityContract,
-      hexAuthorityReceipt: state.hexAuthorityReceipt,
-      hexAuthorityRecognized: state.hexAuthorityRecognized,
-
-      hexSurfaceObserved: state.hexSurfaceObserved,
-      hexSurfaceAuthoritySource: state.hexSurfaceAuthoritySource,
-      hexSurfaceContract: state.hexSurfaceContract,
-      hexSurfaceReceipt: state.hexSurfaceReceipt,
-      hexSurfaceContractRecognized: state.hexSurfaceContractRecognized,
-      hexSurfaceReceiverReady: state.hexSurfaceReceiverReady,
-      hexSurfaceDeliveryStatus: state.hexSurfaceDeliveryStatus,
-      hexSurfaceDeliveryMethod: state.hexSurfaceDeliveryMethod,
-      hexSurfaceDeliveryReason: state.hexSurfaceDeliveryReason,
-      hexSurfaceAcceptedPacket: state.hexSurfaceAcceptedPacket,
-
-      hexGatePacketDelivered: state.hexGatePacketDelivered,
-      hexGateAcceptedByHexSurface: state.hexGateAcceptedByHexSurface,
-      pointerFingerTransmissionObserved: state.pointerFingerTransmissionObserved,
-      pointerFingerTransmissionSource: state.pointerFingerTransmissionSource,
-
-      lastHexGatePacket: clonePlain(state.lastHexGatePacket),
-      lastHexGatePacketAt: state.lastHexGatePacketAt,
-      lastHexGateReason: state.lastHexGateReason,
-      packetCount: state.packetCount,
+      drawLoopActive: state.drawLoopActive,
+      frameCount: state.frameCount,
+      drawCount: state.drawCount,
+      receivePacketCount: state.receivePacketCount,
+      acceptedPacketCount: state.acceptedPacketCount,
+      rejectedPacketCount: state.rejectedPacketCount,
+      controlPacketCount: state.controlPacketCount,
+      viewPacketCount: state.viewPacketCount,
       hexGatePacketCount: state.hexGatePacketCount,
       hexGateDeliveryCount: state.hexGateDeliveryCount,
-      hexGateMissCount: state.hexGateMissCount,
-      renderFrameCount: state.renderFrameCount,
+      surfaceUnificationCount: state.surfaceUnificationCount,
+      resizeCount: state.resizeCount,
       receiptPublishCount: state.receiptPublishCount,
       aliasPublishCount: state.aliasPublishCount,
-      eventCount: state.eventCount,
-      errorCount: state.errorCount,
+      eventCount: state.events.length,
+      errorCount: state.errors.length,
+
+      viewState: clonePlain(state.viewState),
+      surfaces: clonePlain(state.surfaces),
+
+      hexSurfaceObserved: state.hexSurfaceObserved,
+      hexSurfaceSource: state.hexSurfaceSource,
+      hexSurfaceContract: state.hexSurfaceContract,
+      hexSurfaceReceipt: state.hexSurfaceReceipt,
+      hexSurfaceReceiverMethod: state.hexSurfaceReceiverMethod,
+      hexSurfaceDeliveryStatus: state.hexSurfaceDeliveryStatus,
+
+      controlObserved: state.controlObserved,
+      controlSource: state.controlSource,
+      controlContract: state.controlContract,
+      controlReceipt: state.controlReceipt,
+
+      supportsBoot: true,
+      supportsStart: true,
+      supportsInit: true,
+      supportsMount: true,
+      supportsRefresh: true,
+      supportsRenderFrame: true,
+      supportsRequestFrame: true,
+      supportsDrawInteractiveFrame: true,
+      supportsDrawPairFrame: true,
+      supportsCanvasViewPacket: true,
+      supportsControlPacket: true,
+      supportsPlanetaryViewControlPacket: true,
+      supportsCanvasHexGatePacket: true,
+      supportsHexSurfaceGateForwarding: true,
 
       firstFailedCoordinate: state.firstFailedCoordinate,
+      recommendedNextOwner: state.recommendedNextOwner,
       recommendedNextFile: state.recommendedNextFile,
       recommendedNextAction: state.recommendedNextAction,
       postgameStatus: state.postgameStatus,
 
-      CANVAS_LOCAL_VISIBLE_DRAW_ATTEMPTED: state.canvasLocalVisibleDrawAttempted,
-      CANVAS_LOCAL_VISIBLE_DRAW_EXECUTED: state.canvasLocalVisibleDrawExecuted,
-      CANVAS_LOCAL_PIXEL_SAMPLE_AFTER_DRAW: state.canvasLocalPixelSampleAfterDraw ? state.canvasLocalPixelSampleAfterDraw.status : "NOT_RUN",
-      HEX_GATE_PACKET_DELIVERED: state.hexGatePacketDelivered,
-      HEX_GATE_ACCEPTED_BY_HEX_SURFACE: state.hexGateAcceptedByHexSurface,
-      POINTER_FINGER_TRANSMISSION_OBSERVED: state.pointerFingerTransmissionObserved,
-      DOWNSTREAM_EXPRESSION_PACKET_OBSERVED: state.downstreamExpressionPacketObserved,
-      DOWNSTREAM_EXPRESSION_PACKET_DRAWABLE: state.downstreamExpressionPacketDrawable,
-      FINAL_CANVAS_PIXEL_VISIBLE: state.finalCanvasPixelVisible,
-      FINAL_CANVAS_PIXEL_FAILURE_CLASS: state.finalCanvasPixelFailureClass,
+      diagnosticFields: clonePlain(diagnosticFields),
+      ...diagnosticFields,
 
-      supportsRouteConductorReleasePacket: true,
-      supportsPlanetaryViewControlPacket: true,
-      supportsCanvasPublicViewReceivers: true,
-      supportsLocalVisiblePixelProof: true,
-      supportsHexGateTransmission: true,
-      supportsPointerFingerViaHexGateOnly: true,
-      supportsCanvasSurfaceTruthReceipt: true,
-      supportsV123PublicContract: true,
-      supportsV1232Aliases: true,
-      supportsV1231Aliases: true,
-
-      ownsCanvasReceiverOutputCarrier: true,
-      ownsCanvasSurfaceBinding: true,
-      ownsCanvasViewPacketReception: true,
-      ownsLocalVisiblePixelProofDraw: true,
-      ownsHexGateTransmission: true,
-      ownsPointerFingerDirectCall: false,
-      ownsCanvasBishopInternals: false,
-      ownsCanvasExpressionTruth: false,
-      ownsHexTruth: false,
-      ownsHexSurfaceTruth: false,
-      ownsPointerFingerTruth: false,
+      ownsCanvasDrawing: true,
+      ownsCanvasCreationInsideExistingMount: true,
+      ownsCanvasMountHtml: false,
+      ownsHtml: false,
+      ownsRouteConductor: false,
+      ownsControls: false,
+      ownsControlHandshakeTruth: false,
+      ownsSourceTruth: false,
       ownsTerrainTruth: false,
       ownsHydrologyTruth: false,
       ownsElevationTruth: false,
       ownsMaterialTruth: false,
+      ownsHexAuthorityTruth: false,
+      ownsHexSurfaceTruth: false,
+      ownsPointerFingerTruth: false,
       ownsNorthF21Latch: false,
       ownsReadyText: false,
       ownsFinalVisualPassClaim: false,
 
-      updatedAt: nowIso(),
-      ...NO_CLAIMS
+      ...NO_CLAIMS,
+      ...UPPER_NO_CLAIMS,
+      updatedAt: nowIso()
     };
   }
 
   function getReceiptLight(doRefresh = false) {
-    if (doRefresh) refresh();
-    return composeReceiptLight();
+    return composeReceiptLight(doRefresh);
   }
 
   function getReceipt() {
     return {
-      ...composeReceiptLight(),
-      routeReleasePacket: clonePlain(state.routeReleasePacket),
-      lastViewPacket: clonePlain(state.lastViewPacket),
-      lastHexGateDeliveryReceipt: clonePlain(state.lastHexGateDeliveryReceipt),
+      ...composeReceiptLight(false),
       events: clonePlain(state.events),
       errors: clonePlain(state.errors),
       startedAt: state.startedAt,
-      surface: {
-        selector: surface.selector,
-        mountSelector: surface.mountSelector,
-        width: surface.width,
-        height: surface.height,
-        cssWidth: surface.cssWidth,
-        cssHeight: surface.cssHeight,
-        dpr: surface.dpr
-      },
+      lastMountedAt: state.lastMountedAt,
+      lastDrawAt: state.lastDrawAt,
       updatedAt: nowIso(),
       ...NO_CLAIMS,
       ...UPPER_NO_CLAIMS
@@ -2603,83 +2472,67 @@
     const r = isObject(receipt) ? receipt : getReceiptLight(false);
 
     return [
-      "HEARTH_CANVAS_LOCAL_VISIBLE_PIXEL_PROOF_HEX_GATE_RECEIPT",
+      "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_RECEIPT",
       "",
       "HEADER",
-      line("contract", CONTRACT),
-      line("receipt", RECEIPT),
-      line("internalRenewalContract", INTERNAL_RENEWAL_CONTRACT),
-      line("internalRenewalReceipt", INTERNAL_RENEWAL_RECEIPT),
-      line("previousInternalRenewalContract", PREVIOUS_INTERNAL_RENEWAL_CONTRACT),
-      line("previousContract", PREVIOUS_CONTRACT),
+      line("contract", PUBLIC_CONTRACT),
+      line("receipt", PUBLIC_RECEIPT),
+      line("internalImplementationContract", INTERNAL_IMPLEMENTATION_CONTRACT),
+      line("internalImplementationReceipt", INTERNAL_IMPLEMENTATION_RECEIPT),
+      line("previousImplementationContract", PREVIOUS_IMPLEMENTATION_CONTRACT),
+      line("previousImplementationReceipt", PREVIOUS_IMPLEMENTATION_RECEIPT),
       line("version", VERSION),
       line("file", FILE),
       line("route", ROUTE),
       "",
       "SURFACE",
-      line("canvasMountFound", r.canvasMountFound),
-      line("canvasMountSelector", r.canvasMountSelector),
+      line("surfaceIdentityUnified", r.surfaceIdentityUnified),
+      line("visibleCanvasAttributeApplied", r.visibleCanvasAttributeApplied),
+      line("expressionSurfaceAttributeApplied", r.expressionSurfaceAttributeApplied),
       line("canvasElementFound", r.canvasElementFound),
+      line("canvasElementCount", r.canvasElementCount),
       line("canvasSelector", r.canvasSelector),
-      line("canvasInMount", r.canvasInMount),
+      line("canvasId", r.canvasId),
+      line("canvasContext2dReady", r.canvasContext2dReady),
       line("canvasRectNonzero", r.canvasRectNonzero),
       line("canvasComputedVisible", r.canvasComputedVisible),
-      line("canvasContext2DReady", r.canvasContext2DReady),
-      line("canvasPixelSampleStatus", r.canvasPixelSampleStatus),
+      line("canvasViewportIntersecting", r.canvasViewportIntersecting),
+      "",
+      "PIXELS",
+      line("pixelSampleStatus", r.pixelSampleStatus),
       line("canvasPixelVisible", r.canvasPixelVisible),
-      line("canvasVisiblePixelCount", r.canvasVisiblePixelCount),
-      line("canvasAlphaPixelCount", r.canvasAlphaPixelCount),
-      line("canvasUniqueColorCount", r.canvasUniqueColorCount),
-      line("canvasDomSurfaceMounted", r.canvasDomSurfaceMounted),
-      line("canvasDomSurfaceProofReady", r.canvasDomSurfaceProofReady),
+      line("visiblePixelCount", r.visiblePixelCount),
+      line("alphaPixelCount", r.alphaPixelCount),
+      line("uniqueColorCount", r.uniqueColorCount),
+      line("pixelSampleReason", r.pixelSampleReason),
       "",
-      "LOCAL_VISIBLE_PIXEL_PROOF",
-      line("canvasLocalVisibleDrawAttempted", r.canvasLocalVisibleDrawAttempted),
-      line("canvasLocalVisibleDrawExecuted", r.canvasLocalVisibleDrawExecuted),
-      line("canvasLocalVisibleDrawReason", r.canvasLocalVisibleDrawReason),
-      line("canvasLocalVisibleDrawCount", r.canvasLocalVisibleDrawCount),
-      line("canvasLocalPixelSampleAfterDraw", r.canvasLocalPixelSampleAfterDraw ? r.canvasLocalPixelSampleAfterDraw.status : "NOT_RUN"),
-      line("finalCanvasPixelVisible", r.finalCanvasPixelVisible),
-      line("finalCanvasPixelFailureClass", r.finalCanvasPixelFailureClass),
-      "",
-      "DOWNSTREAM_EXPRESSION",
-      line("downstreamExpressionPacketObserved", r.downstreamExpressionPacketObserved),
-      line("downstreamExpressionPacketSource", r.downstreamExpressionPacketSource),
-      line("downstreamExpressionPacketDrawable", r.downstreamExpressionPacketDrawable),
-      line("downstreamExpressionPacketDrawableReason", r.downstreamExpressionPacketDrawableReason),
-      "",
-      "HEX_GATE",
-      line("hexAuthorityObserved", r.hexAuthorityObserved),
-      line("hexAuthorityContract", r.hexAuthorityContract),
+      "GATE",
       line("hexSurfaceObserved", r.hexSurfaceObserved),
-      line("hexSurfaceAuthoritySource", r.hexSurfaceAuthoritySource),
+      line("hexSurfaceSource", r.hexSurfaceSource),
       line("hexSurfaceContract", r.hexSurfaceContract),
-      line("hexSurfaceContractRecognized", r.hexSurfaceContractRecognized),
-      line("hexSurfaceReceiverReady", r.hexSurfaceReceiverReady),
+      line("hexSurfaceReceiverMethod", r.hexSurfaceReceiverMethod),
       line("hexSurfaceDeliveryStatus", r.hexSurfaceDeliveryStatus),
-      line("hexSurfaceDeliveryMethod", r.hexSurfaceDeliveryMethod),
-      line("hexSurfaceDeliveryReason", r.hexSurfaceDeliveryReason),
-      line("hexSurfaceAcceptedPacket", r.hexSurfaceAcceptedPacket),
-      line("hexGatePacketDelivered", r.hexGatePacketDelivered),
-      line("hexGateAcceptedByHexSurface", r.hexGateAcceptedByHexSurface),
-      line("pointerFingerTransmissionObserved", r.pointerFingerTransmissionObserved),
-      line("pointerFingerTransmissionSource", r.pointerFingerTransmissionSource),
+      line("hexGatePacketCount", r.hexGatePacketCount),
+      line("hexGateDeliveryCount", r.hexGateDeliveryCount),
       "",
-      "VIEW",
-      line("yaw", r.viewState && r.viewState.yaw),
-      line("pitch", r.viewState && r.viewState.pitch),
-      line("zoom", r.viewState && r.viewState.zoom),
-      line("phase", 0),
+      "COUNTS",
+      line("frameCount", r.frameCount),
+      line("drawCount", r.drawCount),
+      line("receivePacketCount", r.receivePacketCount),
+      line("acceptedPacketCount", r.acceptedPacketCount),
+      line("rejectedPacketCount", r.rejectedPacketCount),
+      line("controlPacketCount", r.controlPacketCount),
+      line("viewPacketCount", r.viewPacketCount),
       "",
       "NEXT",
       line("firstFailedCoordinate", r.firstFailedCoordinate),
+      line("recommendedNextOwner", r.recommendedNextOwner),
       line("recommendedNextFile", r.recommendedNextFile),
       line("recommendedNextAction", r.recommendedNextAction),
       line("postgameStatus", r.postgameStatus),
       "",
       "NO_CLAIMS",
       line("f13Claimed", false),
-      line("f13CanvasClaimed", false),
       line("f21EligibleForNorth", false),
       line("f21ClaimedByCanvas", false),
       line("readyTextAllowed", false),
@@ -2699,204 +2552,46 @@
     return composeReceiptText(getReceiptLight(false));
   }
 
-  function getPacketText() {
-    return composeReceiptText(getReceiptLight(false));
-  }
-
   function getStatusText() {
     const r = getReceiptLight(false);
 
     return [
-      "HEARTH_CANVAS_LOCAL_VISIBLE_PIXEL_PROOF_HEX_GATE_STATUS",
+      "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_STATUS",
       line("contract", r.contract),
-      line("internalRenewalContract", r.internalRenewalContract),
-      line("canvasDomSurfaceMounted", r.canvasDomSurfaceMounted),
-      line("canvasLocalVisibleDrawExecuted", r.canvasLocalVisibleDrawExecuted),
-      line("canvasPixelSampleStatus", r.canvasPixelSampleStatus),
-      line("finalCanvasPixelVisible", r.finalCanvasPixelVisible),
-      line("finalCanvasPixelFailureClass", r.finalCanvasPixelFailureClass),
-      line("controlsObserved", r.controlsObserved),
-      line("controlPacketAccepted", r.controlPacketAccepted),
-      line("hexSurfaceObserved", r.hexSurfaceObserved),
-      line("hexSurfaceReceiverReady", r.hexSurfaceReceiverReady),
-      line("hexGateAcceptedByHexSurface", r.hexGateAcceptedByHexSurface),
-      line("pointerFingerTransmissionObserved", r.pointerFingerTransmissionObserved),
-      line("pointerFingerDirectCallSuppressed", true),
-      line("recommendedNextFile", r.recommendedNextFile),
-      line("postgameStatus", r.postgameStatus),
+      line("receipt", r.receipt),
+      line("internalImplementationContract", r.internalImplementationContract),
+      line("surfaceIdentityUnified", r.surfaceIdentityUnified),
+      line("canvasElementFound", r.canvasElementFound),
+      line("canvasSelector", r.canvasSelector),
+      line("canvasContext2dReady", r.canvasContext2dReady),
+      line("canvasPixelSampleStatus", r.pixelSampleStatus),
+      line("canvasPixelVisible", r.canvasPixelVisible),
+      line("drawLoopActive", r.drawLoopActive),
+      line("frameCount", r.frameCount),
+      line("hexSurfaceDeliveryStatus", r.hexSurfaceDeliveryStatus),
+      line("recommendedNextAction", r.recommendedNextAction),
       line("visualPassClaimed", false),
       line("updatedAt", r.updatedAt)
     ].join("\n");
   }
 
-  function refresh() {
-    bindSurface();
-    readHexAuthority();
-    readHexSurfaceAuthority();
-    drawLocalVisibleCarrierFrame("refresh");
-    scanCanvasSurface();
-    deriveNextCoordinates();
-
-    updateDataset();
-    publishGlobals("refresh");
-    return getReceiptLight(false);
+  function getState() {
+    return {
+      ...clonePlain(state),
+      diagnosticFields: composeDiagnosticFields(),
+      ...NO_CLAIMS
+    };
   }
 
-  function mount(options = {}) {
-    bindSurface(options || {});
-    bindEventListeners();
-    readHexAuthority();
-    readHexSurfaceAuthority();
-    drawLocalVisibleCarrierFrame("mount");
-    deriveNextCoordinates();
+  function publishAliasPaths() {
+    ensureObject(root, "HEARTH");
+    ensureObject(root, "DEXTER_LAB");
 
-    record("HEARTH_CANVAS_MOUNT_CALLED", {
-      canvasSurfaceMounted: state.canvasDomSurfaceMounted,
-      localVisiblePixelProof: state.finalCanvasPixelVisible,
-      hexSurfaceReceiverReady: state.hexSurfaceReceiverReady
-    });
-
-    updateDataset();
-    return getReceiptLight(false);
-  }
-
-  function boot(options = {}) {
-    if (bootPromise) return bootPromise;
-
-    bootPromise = Promise.resolve().then(() => {
-      if (state.booted || state.booting) return getReceipt();
-
-      state.booting = true;
-      state.startedAt = nowIso();
-      state.updatedAt = state.startedAt;
-      state.postgameStatus = "CANVAS_BOOTING_LOCAL_VISIBLE_PIXEL_PROOF_HEX_GATE";
-
-      publishGlobals("boot-early");
-      mount(options || {});
-      refresh();
-
-      state.booted = true;
-      state.booting = false;
-
-      scheduleHexGateFrame("boot", null);
-
-      record("HEARTH_CANVAS_LOCAL_VISIBLE_PIXEL_PROOF_HEX_GATE_BOOTED", {
-        contract: CONTRACT,
-        internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
-        canvasSurfaceMounted: state.canvasDomSurfaceMounted,
-        localVisiblePixelProof: state.finalCanvasPixelVisible,
-        hexSurfaceReceiverReady: state.hexSurfaceReceiverReady,
-        pointerFingerDirectCallSuppressed: true,
-        visualPassClaimed: false
-      });
-
-      publishGlobals("boot-complete");
-      return getReceipt();
-    });
-
-    return bootPromise;
-  }
-
-  function dispose(reason = "manual-dispose") {
-    if (frame.rafId) cancelFrame(frame.rafId);
-
-    frame.scheduled = false;
-    frame.rafId = 0;
-    frame.pendingPacket = null;
-    frame.pendingReason = "";
-
-    state.disposed = true;
-    state.postgameStatus = "CANVAS_DISPOSED";
-    state.firstFailedCoordinate = "CANVAS_DISPOSED";
-    state.recommendedNextFile = FILE;
-    state.recommendedNextAction = "REBOOT_CANVAS_IF_ROUTE_REQUIRES_TRANSMISSION";
-
-    record("HEARTH_CANVAS_DISPOSED", { reason });
-    updateDataset();
-    publishGlobals("dispose");
-
-    return getReceipt();
-  }
-
-  function publishApiAliases() {
-    const hearth = ensureObject(root, "HEARTH");
-    const lab = ensureObject(root, "DEXTER_LAB");
-
-    const aliases = [
-      "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER",
-      "HEARTH_CANVAS_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER",
-      "HEARTH_CANVAS_LOCAL_VISIBLE_PIXEL_PROOF_HEX_GATE_RECEIVER",
-      "HEARTH_CANVAS_HUB_LOCAL_VISIBLE_PIXEL_PROOF_HEX_GATE_RECEIVER",
-      "HEARTH_CANVAS_HEX_GATE_POINTER_FINGER_TRANSMISSION_RECEIVER",
-      "HEARTH_CANVAS_HUB_RAF_SPHERE_ROTATION_PAIR_RECEIVER",
-      "HEARTH_CANVAS_HUB_RAF_FAST_INTERACTIVE_DEFERRED_HEX_RENDER_RECEIVER",
-      "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER",
-      "HEARTH_CANVAS_PLANETARY_VIEW_CONTROL_RECEIVER",
-      "HEARTH_CANVAS_HUB",
-      "HEARTH_CANVAS",
-      "HEARTH_CANVAS_PARENT",
-      "HEARTH_CANVAS_AUTHORITY",
-      "HEARTH_CANVAS_EVIDENCE",
-      "HEARTH_CANVAS_LOCAL_STATION",
-      "HEARTH_CANVAS_STATION",
-      "HEARTH_CANVAS_EXPRESSION_HUB",
-      "HEARTH_CANVAS_FINGER_MANAGER",
-      "HEARTH_CANVAS_VISIBLE_BASE_GLOBE_CARRIER",
-      "HEARTH_CANVAS_VISIBLE_PLANET",
-      "HEARTH.canvasHubCompositeFirstFastViewDeferredHexReceiver",
-      "HEARTH.canvasCompositeFirstFastViewDeferredHexReceiver",
-      "HEARTH.canvasLocalVisiblePixelProofHexGateReceiver",
-      "HEARTH.canvasHubLocalVisiblePixelProofHexGateReceiver",
-      "HEARTH.canvasHexGatePointerFingerTransmissionReceiver",
-      "HEARTH.canvasHubRafSphereRotationPairReceiver",
-      "HEARTH.canvasHubRafFastInteractiveDeferredHexRenderReceiver",
-      "HEARTH.canvasHubFastViewTransformDeferredRenderReceiver",
-      "HEARTH.canvasPlanetaryViewControlReceiver",
-      "HEARTH.canvasHub",
-      "HEARTH.canvas",
-      "HEARTH.canvasParent",
-      "HEARTH.canvasAuthority",
-      "HEARTH.canvasEvidence",
-      "HEARTH.canvasLocalStation",
-      "HEARTH.canvasStation",
-      "HEARTH.canvasExpressionHub",
-      "HEARTH.canvasFingerManager",
-      "HEARTH.canvasVisibleBaseGlobeCarrier",
-      "HEARTH.canvasVisiblePlanet",
-      "DEXTER_LAB.hearthCanvasHubCompositeFirstFastViewDeferredHexReceiver",
-      "DEXTER_LAB.hearthCanvasCompositeFirstFastViewDeferredHexReceiver",
-      "DEXTER_LAB.hearthCanvasLocalVisiblePixelProofHexGateReceiver",
-      "DEXTER_LAB.hearthCanvasHubLocalVisiblePixelProofHexGateReceiver",
-      "DEXTER_LAB.hearthCanvasHexGatePointerFingerTransmissionReceiver",
-      "DEXTER_LAB.hearthCanvasHubRafSphereRotationPairReceiver",
-      "DEXTER_LAB.hearthCanvasHubRafFastInteractiveDeferredHexRenderReceiver",
-      "DEXTER_LAB.hearthCanvasHubFastViewTransformDeferredRenderReceiver",
-      "DEXTER_LAB.hearthCanvasPlanetaryViewControlReceiver",
-      "DEXTER_LAB.hearthCanvasHub",
-      "DEXTER_LAB.hearthCanvas",
-      "DEXTER_LAB.hearthCanvasParent",
-      "DEXTER_LAB.hearthCanvasAuthority",
-      "DEXTER_LAB.hearthCanvasEvidence",
-      "DEXTER_LAB.hearthCanvasLocalStation",
-      "DEXTER_LAB.hearthCanvasStation",
-      "DEXTER_LAB.hearthCanvasExpressionHub",
-      "DEXTER_LAB.hearthCanvasFingerManager",
-      "DEXTER_LAB.hearthCanvasVisiblePlanet"
-    ];
-
-    for (const alias of aliases) setPath(alias, api);
-
-    hearth.canvasHub = api;
-    hearth.canvas = api;
-    hearth.canvasAuthority = api;
-    hearth.canvasLocalVisiblePixelProofHexGateReceiver = api;
-    hearth.canvasHexGatePointerFingerTransmissionReceiver = api;
-    lab.hearthCanvasHub = api;
-    lab.hearthCanvas = api;
-    lab.hearthCanvasAuthority = api;
-    lab.hearthCanvasLocalVisiblePixelProofHexGateReceiver = api;
+    for (const path of CANVAS_ALIAS_PATHS) setPath(path, api);
 
     state.aliasPublishCount += 1;
+    state.updatedAt = nowIso();
+
     return true;
   }
 
@@ -2910,197 +2605,178 @@
     root.HEARTH_CANVAS_RECEIPT = receipt;
     root.HEARTH_CANVAS_HUB_RECEIPT = receipt;
     root.HEARTH_CANVAS_PARENT_RECEIPT = receipt;
-    root.HEARTH_CANVAS_AUTHORITY_RECEIPT = receipt;
+    root.HEARTH_CANVAS_VISIBLE_PLANET_RECEIPT = receipt;
     root.HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT = receipt;
-    root.HEARTH_CANVAS_LOCAL_VISIBLE_PIXEL_PROOF_HEX_GATE_RECEIPT = receipt;
-    root.HEARTH_CANVAS_LOCAL_VISIBLE_PIXEL_PROOF_HEX_GATE_RECEIPT_v12_5 = receipt;
-    root.HEARTH_CANVAS_HEX_GATE_POINTER_FINGER_TRANSMISSION_RECEIPT = receipt;
+    root.HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_RECEIPT = receipt;
+    root.HEARTH_CANVAS_DIAGNOSTIC_FIELDS = clonePlain(receipt.diagnosticFields);
 
     hearth.canvasReceipt = receipt;
     hearth.canvasHubReceipt = receipt;
     hearth.canvasParentReceipt = receipt;
-    hearth.canvasAuthorityReceipt = receipt;
+    hearth.canvasVisiblePlanetReceipt = receipt;
     hearth.canvasHubCompositeFirstFastViewDeferredHexReceiverReceipt = receipt;
-    hearth.canvasLocalVisiblePixelProofHexGateReceipt = receipt;
-    hearth.canvasHexGatePointerFingerTransmissionReceipt = receipt;
+    hearth.canvasHubLiveSurfaceIdentityUnifiedVisible2dOutputReceipt = receipt;
+    hearth.canvasDiagnosticFields = clonePlain(receipt.diagnosticFields);
 
     lab.hearthCanvasReceipt = receipt;
     lab.hearthCanvasHubReceipt = receipt;
     lab.hearthCanvasParentReceipt = receipt;
-    lab.hearthCanvasAuthorityReceipt = receipt;
-    lab.hearthCanvasLocalVisiblePixelProofHexGateReceipt = receipt;
+    lab.hearthCanvasVisiblePlanetReceipt = receipt;
+    lab.hearthCanvasHubCompositeFirstFastViewDeferredHexReceiverReceipt = receipt;
+    lab.hearthCanvasHubLiveSurfaceIdentityUnifiedVisible2dOutputReceipt = receipt;
+    lab.hearthCanvasDiagnosticFields = clonePlain(receipt.diagnosticFields);
 
-    root.HEARTH_CANVAS_LOCAL_VISIBLE_PIXEL_PROOF_HEX_GATE_PACKET_TEXT = composeReceiptText(receipt);
-
-    updateDatasetLight();
     return true;
   }
 
   function publishGlobals(reason = "publish-globals") {
-    publishApiAliases();
+    publishAliasPaths();
     updateDataset();
     publishReceiptAliases();
 
-    if (reason !== "control-frame") {
-      record("HEARTH_CANVAS_GLOBALS_PUBLISHED", {
-        reason,
-        contract: CONTRACT,
-        internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
-        canvasSurfaceMounted: state.canvasDomSurfaceMounted,
-        localVisiblePixelProof: state.finalCanvasPixelVisible,
-        hexSurfaceReceiverReady: state.hexSurfaceReceiverReady,
-        hexSurfaceDeliveryStatus: state.hexSurfaceDeliveryStatus,
-        hexGateAcceptedByHexSurface: state.hexGateAcceptedByHexSurface,
-        pointerFingerDirectCallSuppressed: true,
-        visualPassClaimed: false
-      });
-    }
+    record("HEARTH_CANVAS_GLOBALS_PUBLISHED", {
+      reason,
+      contract: PUBLIC_CONTRACT,
+      internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
+      canvasElementFound: state.canvasElementFound,
+      surfaceIdentityUnified: state.surfaceIdentityUnified,
+      pixelSampleStatus: state.pixelSampleStatus,
+      pixelVisible: state.pixelVisible,
+      visualPassClaimed: false
+    });
 
     return true;
   }
 
   Object.assign(api, {
-    contract: CONTRACT,
-    CONTRACT,
-    receipt: RECEIPT,
-    RECEIPT,
-    canvasContract: CONTRACT,
-    canvasReceipt: RECEIPT,
-    currentCanvasParentContract: CONTRACT,
-    currentCanvasParentReceipt: RECEIPT,
-    internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
-    internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
-    previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
-    previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
-    previousContract: PREVIOUS_CONTRACT,
-    previousReceipt: PREVIOUS_RECEIPT,
+    contract: PUBLIC_CONTRACT,
+    CONTRACT: PUBLIC_CONTRACT,
+    receipt: PUBLIC_RECEIPT,
+    RECEIPT: PUBLIC_RECEIPT,
+    canvasContract: PUBLIC_CONTRACT,
+    canvasReceipt: PUBLIC_RECEIPT,
+    currentCanvasParentContract: PUBLIC_CONTRACT,
+    currentCanvasParentReceipt: PUBLIC_RECEIPT,
+    internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
+    internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
+    previousImplementationContract: PREVIOUS_IMPLEMENTATION_CONTRACT,
+    previousImplementationReceipt: PREVIOUS_IMPLEMENTATION_RECEIPT,
+    lineageImplementationContract: LINEAGE_IMPLEMENTATION_CONTRACT,
     version: VERSION,
-
     file: FILE,
     route: ROUTE,
-    htmlFile: HTML_FILE,
+    diagnosticRoute: DIAGNOSTIC_ROUTE,
+
     indexFile: INDEX_FILE,
     routeConductorFile: ROUTE_CONDUCTOR_FILE,
     controlFile: CONTROL_FILE,
-    canvasFile: FILE,
     hexSurfaceFile: HEX_SURFACE_FILE,
     hexAuthorityFile: HEX_AUTHORITY_FILE,
-    pointerFingerFile: POINTER_FINGER_FILE,
     pointerFingerSurfaceFile: POINTER_FINGER_SURFACE_FILE,
     pointerFingerBoundaryFile: POINTER_FINGER_BOUNDARY_FILE,
+    pointerFingerInspectFile: POINTER_FINGER_INSPECT_FILE,
     pointerFingerLightFile: POINTER_FINGER_LIGHT_FILE,
-    diagnosticRoute: DIAGNOSTIC_ROUTE,
 
-    expectedRouteConductorContract: EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
     expectedControlContract: EXPECTED_CONTROL_CONTRACT,
     expectedHexSurfaceContract: EXPECTED_HEX_SURFACE_CONTRACT,
     expectedHexAuthorityContract: EXPECTED_HEX_AUTHORITY_CONTRACT,
 
-    activeCanvasContracts: ACTIVE_CANVAS_CONTRACTS.slice(),
-    acceptedControlContracts: ACCEPTED_CONTROL_CONTRACTS.slice(),
-    acceptedRouteConductorContracts: ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS.slice(),
-    transmissionChronology: TRANSMISSION_CHRONOLOGY.slice(),
+    canvasHexGatePacket: CANVAS_HEX_GATE_PACKET,
+    canvasViewPacket: CANVAS_VIEW_PACKET,
+    canvasRenderPacket: CANVAS_RENDER_PACKET,
 
     boot,
     start: boot,
     init: boot,
     run: boot,
     mount,
-    dispose,
     refresh,
+    dispose,
+    startLoop,
+    stopLoop,
 
-    receiveRouteConductorReleasePacket,
-    consumeRouteConductorReleasePacket,
-    receiveReleasePacket,
-    consumeReleasePacket,
-    receiveCanvasReleasePacket,
-    acceptReleasePacket,
-
+    receivePacket,
+    receiveCanvasHexGatePacket,
+    consumeCanvasHexGatePacket,
+    acceptCanvasHexGatePacket,
+    receiveCanvasViewPacket,
+    consumeCanvasViewPacket,
     receivePlanetaryViewControlPacket,
     consumePlanetaryViewControlPacket,
     receiveViewControlPacket,
     consumeViewControlPacket,
-    receiveCanvasViewState,
-    consumeCanvasViewState,
-    receiveViewState,
-    setViewState,
-    applyViewState,
     receiveControlPacket,
-    receiveControlViewPacket: receiveControlViewPacketAlias,
-    receiveControlsPacket,
-    receivePlanetaryControlPacket,
-    receiveViewDelta,
-    applyViewDelta,
-    setView,
-    updateView,
+    acceptControlPacket,
 
-    bindSurface,
-    resizeSurface,
-    scanCanvasSurface,
-    sampleCanvasPixels,
-    drawLocalVisibleCarrierFrame,
-    readHexAuthority,
+    drawInteractiveFrame,
+    drawPairFrame,
+    renderFrame,
+    requestFrame,
+    drawFrame,
+
+    unifySurfaceIdentity,
+    collectCanvasCandidates,
+    composeRenderPacket,
+    composeCanvasHexGatePacket,
+    sendHexGatePacket,
+    readControlAuthority,
     readHexSurfaceAuthority,
-    composeHexGatePacket,
-    deliverHexGatePacket,
-    scheduleHexGateFrame,
-    flushHexGateFrame,
-    bindEventListeners,
 
     getReceipt,
     getReceiptLight,
-    getCanvasStationReceipt: getReceipt,
-    getCanvasStationReceiptLight: getReceiptLight,
+    getCanvasStationReceipt: getReceiptLight,
+    getCanvasStationSummary: getReceiptLight,
     getVisiblePlanetReceipt: getReceiptLight,
-    getCanvasVisibleProofReceipt: getReceiptLight,
-    getCanvasSurfaceTruthReceipt: getReceiptLight,
+    getCanvasParentReceipt: getReceiptLight,
     getStatus: getReceiptLight,
     getReport: getReceipt,
+    getSummary: getReceiptLight,
     getReceiptText,
-    getPacketText,
     getStatusText,
+    getState,
+    composeReceiptText,
+    composeDiagnosticFields,
 
     publishGlobals,
-    publishApiAliases,
+    publishAliasPaths,
     publishReceiptAliases,
     updateDataset,
-    updateDatasetLight,
 
-    supportsRouteConductorReleasePacket: true,
+    supportsBoot: true,
+    supportsStart: true,
+    supportsInit: true,
+    supportsMount: true,
+    supportsRefresh: true,
+    supportsRenderFrame: true,
+    supportsRequestFrame: true,
+    supportsDrawInteractiveFrame: true,
+    supportsDrawPairFrame: true,
+    supportsCanvasViewPacket: true,
+    supportsControlPacket: true,
     supportsPlanetaryViewControlPacket: true,
-    supportsCanvasPublicViewReceivers: true,
-    supportsLocalVisiblePixelProof: true,
-    supportsHexGateTransmission: true,
-    supportsPointerFingerViaHexGateOnly: true,
-    supportsCanvasSurfaceTruthReceipt: true,
-    supportsV123PublicContract: true,
-    supportsV1232Aliases: true,
-    supportsV1231Aliases: true,
+    supportsCanvasHexGatePacket: true,
+    supportsHexSurfaceGateForwarding: true,
 
-    receiverOutputCarrierActive: true,
-    localVisiblePixelProofActive: true,
-    hexGateTransmissionActive: true,
-    hexGateRequired: true,
-    pointerFingerDirectCallSuppressed: true,
-    canvasBishopInspectionSuppressed: true,
-    canvasBishopMutationSuppressed: true,
-    canvasExpressionTruthOwned: false,
+    canvasHubActive: true,
+    canvasReceiverActive: true,
+    canvasOutputCarrierActive: true,
+    liveSurfaceIdentityUnificationActive: true,
 
-    ownsCanvasReceiverOutputCarrier: true,
-    ownsCanvasSurfaceBinding: true,
-    ownsCanvasViewPacketReception: true,
-    ownsLocalVisiblePixelProofDraw: true,
-    ownsHexGateTransmission: true,
-    ownsPointerFingerDirectCall: false,
-    ownsCanvasBishopInternals: false,
-    ownsCanvasExpressionTruth: false,
-    ownsHexTruth: false,
-    ownsHexSurfaceTruth: false,
-    ownsPointerFingerTruth: false,
+    ownsCanvasDrawing: true,
+    ownsCanvasCreationInsideExistingMount: true,
+    ownsCanvasMountHtml: false,
+    ownsHtml: false,
+    ownsRouteConductor: false,
+    ownsControls: false,
+    ownsControlHandshakeTruth: false,
+    ownsSourceTruth: false,
     ownsTerrainTruth: false,
     ownsHydrologyTruth: false,
     ownsElevationTruth: false,
     ownsMaterialTruth: false,
+    ownsHexAuthorityTruth: false,
+    ownsHexSurfaceTruth: false,
+    ownsPointerFingerTruth: false,
     ownsNorthF21Latch: false,
     ownsReadyText: false,
     ownsFinalVisualPassClaim: false,
@@ -3110,25 +2786,6 @@
 
     get state() {
       return state;
-    },
-
-    get view() {
-      return view;
-    },
-
-    get surface() {
-      return {
-        mount: surface.mount,
-        canvas: surface.canvas,
-        ctx: surface.ctx,
-        selector: surface.selector,
-        mountSelector: surface.mountSelector,
-        width: surface.width,
-        height: surface.height,
-        cssWidth: surface.cssWidth,
-        cssHeight: surface.cssHeight,
-        dpr: surface.dpr
-      };
     }
   });
 
@@ -3145,7 +2802,7 @@
       boot();
     }
   } catch (error) {
-    recordError("HEARTH_CANVAS_INITIALIZATION_FAILED", error);
+    recordError("HEARTH_CANVAS_HUB_V12_4_INITIALIZATION_FAILED", error);
 
     try {
       publishGlobals("initialization-fallback-publication");

@@ -1,20 +1,21 @@
 // /assets/hearth/hearth.diagnostic.rail.js
-// HEARTH_DIAGNOSTIC_RAIL_NORTH_CHRONOLOGY_HUB_STANDARD_TNT_v10
+// HEARTH_DIAGNOSTIC_RAIL_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_TNT_v11
 // Full-file replacement.
 // Diagnostic rail NORTH parent only.
 // Purpose:
 // - Preserve NORTH as the diagnostic receiver entrypoint.
-// - Renew NORTH from “eight-way bridge owner” into chronology hub.
-// - NORTH chronologizes the eight diagnostic files; it does not own their evidence.
-// - Preserve existing receiver behavior: diagnostic HTML still calls NORTH only.
-// - Load or recognize child rails and probe files in a lawful order.
-// - Record EXPECTED, LOAD_ATTEMPTED, OBSERVED, CALL_ATTEMPTED, CALL_RETURNED, CALL_FAILED.
+// - Preserve existing diagnostic HTML behavior: receiver still calls NORTH only.
+// - Renew NORTH from an eight-file chronology hub into a nine-step chronology hub.
+// - Insert a dedicated Canvas surface-truth probe after WEST rendered evidence and before SOUTH packet output.
 // - Preserve EAST as served-source evidence authority.
 // - Preserve WEST as rendered-target evidence authority.
 // - Preserve SOUTH as packet-output authority.
-// - Preserve probes as under-hood diagnostic-only deepening instruments.
-// - Detect repeated diagnostic signatures with changed timestamps as potential repeat/cache signature.
-// - Return a clearer zone of infliction from chronological failure, not assumption.
+// - Preserve existing probe files as diagnostic-only deepening instruments.
+// - Separate diagnostic-track NEWS/Fibonacci alignment from Canvas-standard NEWS/Fibonacci alignment.
+// - Detect whether the Canvas problem is DOM surface, mount placement, computed visibility, viewport intersection,
+//   2D context, pixel sample, layer obstruction, namespace mismatch, or parent-contract recognition.
+// - Detect repeated diagnostic signatures with changed timestamps.
+// - Return zone of infliction from chronology and Canvas-surface truth, not assumption.
 // - Preserve no production mutation, no Hearth repair, no runtime restart, no Canvas release.
 // - Preserve no F13 claim, no F21 claim, no ready text, no visual pass, no generated image, no GraphicBox, no WebGL.
 // Does not own:
@@ -35,20 +36,19 @@
   "use strict";
 
   const CONTRACT =
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_CHRONOLOGY_HUB_STANDARD_TNT_v10";
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_TNT_v11";
   const RECEIPT =
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_CHRONOLOGY_HUB_STANDARD_RECEIPT_v10";
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_RECEIPT_v11";
 
   const PREVIOUS_CONTRACT =
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_EIGHT_WAY_PROBE_BRIDGE_ORCHESTRATOR_TNT_v9";
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_CHRONOLOGY_HUB_STANDARD_TNT_v10";
   const PREVIOUS_RECEIPT =
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_EIGHT_WAY_PROBE_BRIDGE_ORCHESTRATOR_RECEIPT_v9";
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_CHRONOLOGY_HUB_STANDARD_RECEIPT_v10";
 
+  const LINEAGE_V9_CONTRACT =
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_EIGHT_WAY_PROBE_BRIDGE_ORCHESTRATOR_TNT_v9";
   const LINEAGE_V8_CONTRACT =
     "HEARTH_DIAGNOSTIC_RAIL_NORTH_CANVAS_EXPRESSION_WEST_STANDARD_ORCHESTRATOR_TNT_v8";
-  const LINEAGE_V8_RECEIPT =
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_CANVAS_EXPRESSION_WEST_STANDARD_ORCHESTRATOR_RECEIPT_v8";
-
   const LINEAGE_V7_CONTRACT =
     "HEARTH_DIAGNOSTIC_RAIL_NORTH_POST_SOUTH_NEWS_FIBONACCI_ALIGNMENT_ORCHESTRATOR_TNT_v7";
   const BASELINE_V6_CONTRACT =
@@ -57,21 +57,23 @@
     "HEARTH_DIAGNOSTIC_RAIL_NORTH_LAB_CANVAS_BRIDGE_SCHEMA_ORCHESTRATOR_TNT_v5";
 
   const VERSION =
-    "2026-06-05.hearth-diagnostic-rail-north-chronology-hub-standard-v10";
+    "2026-06-06.hearth-diagnostic-rail-north-canvas-surface-truth-chronology-hub-v11";
 
   const FILE = "/assets/hearth/hearth.diagnostic.rail.js";
   const TARGET_ROUTE = "/showroom/globe/hearth/";
   const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
-  const REPORT_PACKET = "HEARTH_PARALLEL_DIAGNOSTIC_RAIL_RESULT_PACKET_v1";
+  const REPORT_PACKET = "HEARTH_PARALLEL_DIAGNOSTIC_RAIL_RESULT_PACKET_v2";
 
   const RAIL_EAST_FILE = "/assets/hearth/hearth.diagnostic.east.js";
-  const RAIL_SOUTH_FILE = "/assets/hearth/hearth.diagnostic.south.js";
   const RAIL_WEST_FILE = "/assets/hearth/hearth.diagnostic.west.js";
+  const RAIL_SOUTH_FILE = "/assets/hearth/hearth.diagnostic.south.js";
 
   const PROBE_NORTH_FILE = "/assets/hearth/hearth.diagnostic.probe.north.js";
   const PROBE_EAST_FILE = "/assets/hearth/hearth.diagnostic.probe.east.js";
-  const PROBE_SOUTH_FILE = "/assets/hearth/hearth.diagnostic.probe.south.js";
   const PROBE_WEST_FILE = "/assets/hearth/hearth.diagnostic.probe.west.js";
+  const PROBE_CANVAS_SURFACE_TRUTH_FILE =
+    "/assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js";
+  const PROBE_SOUTH_FILE = "/assets/hearth/hearth.diagnostic.probe.south.js";
 
   const HTML_FILE = "/showroom/globe/hearth/index.html";
   const INDEX_FILE = "/showroom/globe/hearth/index.js";
@@ -84,6 +86,8 @@
   const EXPECTED_INDEX_JS_CONTRACT =
     "HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4";
   const EXPECTED_ROUTE_CONDUCTOR_CONTRACT =
+    "HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC_TNT_v10";
+  const EXPECTED_ROUTE_CONDUCTOR_LINEAGE_CONTRACT =
     "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_TNT_v9_9";
   const EXPECTED_CONTROL_CONTRACT =
     "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE_TNT_v1";
@@ -95,7 +99,7 @@
   const EXPECTED_WEST_CONTRACT =
     "HEARTH_DIAGNOSTIC_WEST_CANVAS_EXPRESSION_RENDERED_RANGE_OBSERVATORY_TNT_v7";
   const EXPECTED_SOUTH_CONTRACT =
-    "HEARTH_DIAGNOSTIC_SOUTH_PRIORITY_CONTROL_QUEEN_PACKET_CONFORMANCE_TNT_v7";
+    "HEARTH_DIAGNOSTIC_SOUTH_PRIORITY_CONTROL_QUEEN_PACKET_CONFORMANCE_TNT_v8";
 
   const EXPECTED_PROBE_NORTH_CONTRACT =
     "HEARTH_DIAGNOSTIC_PROBE_NORTH_FILE_COMPOSITION_ZONE_COORDINATOR_TNT_v1";
@@ -103,6 +107,8 @@
     "HEARTH_DIAGNOSTIC_PROBE_EAST_SERVED_SOURCE_FILE_COMPOSITION_TNT_v1";
   const EXPECTED_PROBE_WEST_CONTRACT =
     "HEARTH_DIAGNOSTIC_PROBE_WEST_RENDERED_TARGET_FILE_COMPOSITION_TNT_v1";
+  const EXPECTED_PROBE_CANVAS_SURFACE_TRUTH_CONTRACT =
+    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_TNT_v1";
   const EXPECTED_PROBE_SOUTH_CONTRACT =
     "HEARTH_DIAGNOSTIC_PROBE_SOUTH_PACKET_MEANING_FILE_COMPOSITION_TNT_v1";
 
@@ -120,6 +126,7 @@
 
   const ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS = Object.freeze([
     EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
+    EXPECTED_ROUTE_CONDUCTOR_LINEAGE_CONTRACT,
     "HEARTH_ROUTE_CONDUCTOR_CONTROL_FILE_ADMISSION_AND_HANDSHAKE_DELIVERY_TNT_v9_8",
     "HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION_TNT_v9_7",
     "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_TNT_v9_6",
@@ -136,7 +143,8 @@
     visualPassClaimed: false,
     generatedImage: false,
     graphicBox: false,
-    webGL: false
+    webGL: false,
+    webgl: false
   });
 
   const UPPER_NO_CLAIMS = Object.freeze({
@@ -155,7 +163,8 @@
     Object.freeze({
       id: "NORTH_RAIL",
       order: 1,
-      role: "north-chronology-hub",
+      fibonacciStage: "F1",
+      role: "north-canvas-surface-truth-chronology-hub",
       file: FILE,
       expectedContract: CONTRACT,
       owner: "DIAGNOSTIC_NORTH_CHRONOLOGY_HUB",
@@ -164,18 +173,22 @@
         "HEARTH.parallelDiagnosticRail",
         "HEARTH.diagnosticNorth",
         "HEARTH.diagnosticRailNorth",
+        "HEARTH.diagnosticNorthCanvasSurfaceTruthChronologyHub",
         "HEARTH_DIAGNOSTIC_RAIL",
         "HEARTH_PARALLEL_DIAGNOSTIC_RAIL",
         "HEARTH_DIAGNOSTIC_NORTH",
         "HEARTH_DIAGNOSTIC_RAIL_NORTH",
+        "HEARTH_DIAGNOSTIC_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB",
         "DEXTER_LAB.hearthDiagnosticRail",
-        "DEXTER_LAB.hearthDiagnosticNorth"
+        "DEXTER_LAB.hearthDiagnosticNorth",
+        "DEXTER_LAB.hearthDiagnosticNorthCanvasSurfaceTruthChronologyHub"
       ],
       methods: []
     }),
     Object.freeze({
       id: "PROBE_NORTH",
       order: 2,
+      fibonacciStage: "F2",
       role: "file-composition-zone-coordinator",
       file: PROBE_NORTH_FILE,
       expectedContract: EXPECTED_PROBE_NORTH_CONTRACT,
@@ -201,6 +214,7 @@
     Object.freeze({
       id: "RAIL_EAST",
       order: 3,
+      fibonacciStage: "F3",
       role: "served-source-evidence",
       file: RAIL_EAST_FILE,
       expectedContract: EXPECTED_EAST_CONTRACT,
@@ -225,6 +239,7 @@
     Object.freeze({
       id: "PROBE_EAST",
       order: 4,
+      fibonacciStage: "F5",
       role: "served-source-file-composition-probe",
       file: PROBE_EAST_FILE,
       expectedContract: EXPECTED_PROBE_EAST_CONTRACT,
@@ -250,6 +265,7 @@
     Object.freeze({
       id: "RAIL_WEST",
       order: 5,
+      fibonacciStage: "F8",
       role: "rendered-target-evidence",
       file: RAIL_WEST_FILE,
       expectedContract: EXPECTED_WEST_CONTRACT,
@@ -274,6 +290,7 @@
     Object.freeze({
       id: "PROBE_WEST",
       order: 6,
+      fibonacciStage: "F13",
       role: "rendered-target-file-composition-probe",
       file: PROBE_WEST_FILE,
       expectedContract: EXPECTED_PROBE_WEST_CONTRACT,
@@ -297,8 +314,39 @@
       ]
     }),
     Object.freeze({
-      id: "RAIL_SOUTH",
+      id: "PROBE_CANVAS_SURFACE_TRUTH",
       order: 7,
+      fibonacciStage: "F21",
+      role: "canvas-surface-truth-probe",
+      file: PROBE_CANVAS_SURFACE_TRUTH_FILE,
+      expectedContract: EXPECTED_PROBE_CANVAS_SURFACE_TRUTH_CONTRACT,
+      owner: "DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
+      paths: [
+        "HEARTH.diagnosticProbeCanvasSurfaceTruth",
+        "HEARTH.diagnosticCanvasSurfaceTruthProbe",
+        "HEARTH.diagnosticRailProbeCanvasSurfaceTruth",
+        "HEARTH.canvasSurfaceTruthProbe",
+        "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
+        "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PROBE",
+        "HEARTH_DIAGNOSTIC_RAIL_PROBE_CANVAS_SURFACE_TRUTH",
+        "DEXTER_LAB.hearthDiagnosticProbeCanvasSurfaceTruth",
+        "DEXTER_LAB.hearthDiagnosticCanvasSurfaceTruthProbe",
+        "DEXTER_LAB.hearthCanvasSurfaceTruthProbe"
+      ],
+      methods: [
+        "runCanvasSurfaceTruthProbe",
+        "runProbeCanvasSurfaceTruth",
+        "inspectCanvasSurfaceTruth",
+        "inspectCanvasSurface",
+        "runProbe",
+        "inspect",
+        "runDiagnostic"
+      ]
+    }),
+    Object.freeze({
+      id: "RAIL_SOUTH",
+      order: 8,
+      fibonacciStage: "F34",
       role: "packet-output",
       file: RAIL_SOUTH_FILE,
       expectedContract: EXPECTED_SOUTH_CONTRACT,
@@ -321,7 +369,8 @@
     }),
     Object.freeze({
       id: "PROBE_SOUTH",
-      order: 8,
+      order: 9,
+      fibonacciStage: "F55",
       role: "packet-meaning-file-composition-probe",
       file: PROBE_SOUTH_FILE,
       expectedContract: EXPECTED_PROBE_SOUTH_CONTRACT,
@@ -387,6 +436,7 @@
   }
 
   function clonePlain(value) {
+    if (value === undefined || value === null) return value;
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
@@ -396,23 +446,23 @@
     }
   }
 
-  function packetValue(value, fallback = "UNKNOWN") {
-    if (value === undefined || value === null || value === "") return fallback;
+  function stringifyPacketValue(value, limit = 20000) {
+    if (value === undefined || value === null || value === "") return "UNKNOWN";
 
-    if (Array.isArray(value)) {
-      const joined = value.map((entry) => bounded(entry, 1200)).filter(Boolean).join(" | ");
-      return joined || fallback;
-    }
-
-    if (isObject(value)) {
+    if (Array.isArray(value) || isObject(value)) {
       try {
-        return bounded(JSON.stringify(value), 20000) || fallback;
+        return JSON.stringify(value).slice(0, limit);
       } catch (_error) {
-        return bounded(String(value), 4000) || fallback;
+        return bounded(value, Math.min(limit, 4000)) || "UNKNOWN";
       }
     }
 
-    return bounded(value, 4000) || fallback;
+    return bounded(value, Math.min(limit, 4000)) || "UNKNOWN";
+  }
+
+  function packetValue(value, fallback = "UNKNOWN") {
+    const text = stringifyPacketValue(value);
+    return text === "UNKNOWN" ? fallback : text;
   }
 
   function line(key, value) {
@@ -470,6 +520,14 @@
     return fallback;
   }
 
+  function textIsTrue(value) {
+    return boolText(value, "false") === "true";
+  }
+
+  function textIsFalse(value) {
+    return boolText(value, "UNKNOWN") === "false";
+  }
+
   function firstKnown(...values) {
     for (const value of values) {
       const text = bounded(value, 4000);
@@ -522,7 +580,8 @@
       "getProbeReceipt",
       "getEastReceipt",
       "getWestReceipt",
-      "getSouthReceipt"
+      "getSouthReceipt",
+      "getCanvasSurfaceTruthReceipt"
     ];
 
     for (const method of methods) {
@@ -552,6 +611,7 @@
     if (isObject(output.output) && isObject(output.output.REPORT_OBJECT)) return output.output.REPORT_OBJECT;
     if (isObject(output.output) && isObject(output.output.report)) return output.output.report;
     if (isObject(output.state) && isObject(output.state.reportObject)) return output.state.reportObject;
+    if (isObject(output.canvasSurfaceTruth)) return output.canvasSurfaceTruth;
 
     return output;
   }
@@ -606,6 +666,7 @@
         script.dataset.diagnosticChronologyHub = "true";
         script.dataset.productionMutationAuthorized = "false";
         script.dataset.hearthRepairAuthorized = "false";
+        script.dataset.canvasReleaseAuthorized = "false";
         script.dataset.visualPassClaimed = "false";
         script.dataset.generatedImage = "false";
         script.dataset.graphicBox = "false";
@@ -682,10 +743,13 @@
       ]),
       routeConductor: findFirstPath([
         "HEARTH_ROUTE_CONDUCTOR",
+        "HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC",
         "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL",
         "HEARTH.routeConductor",
+        "HEARTH.routeConductorShowtimeNewsFibonacciQueenCanvasSync",
         "HEARTH.routeConductorBishopQueenCanvasRecognitionFunnel",
         "DEXTER_LAB.hearthRouteConductor",
+        "DEXTER_LAB.hearthRouteConductorShowtimeNewsFibonacciQueenCanvasSync",
         "DEXTER_LAB.hearthRouteConductorBishopQueenCanvasRecognitionFunnel"
       ]),
       controls: findFirstPath([
@@ -709,8 +773,8 @@
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       previousReceipt: PREVIOUS_RECEIPT,
+      lineageV9Contract: LINEAGE_V9_CONTRACT,
       lineageV8Contract: LINEAGE_V8_CONTRACT,
-      lineageV8Receipt: LINEAGE_V8_RECEIPT,
       lineageV7Contract: LINEAGE_V7_CONTRACT,
       baselineV6Contract: BASELINE_V6_CONTRACT,
       foundationV5Contract: FOUNDATION_V5_CONTRACT,
@@ -722,18 +786,20 @@
       diagnosticTimestamp: nowIso(),
 
       chronologyHubActive: true,
-      eightWayProbeBridgeActive: false,
-      eightFileChronologyActive: true,
+      northIsHubOnly: true,
+      nineStepChronologyActive: true,
+      canvasSurfaceTruthProbeExpected: true,
       receiverStillCallsNorthOnly: true,
       diagnosticRouteHtmlRenewalRequired: false,
 
       chronology: [],
       evidenceByStep: {},
       notes: [
-        "NORTH_V10_CHRONOLOGY_HUB_STANDARD_ACTIVE",
-        "NORTH_IS_HUB_NOT_EIGHT_FILE_BRIDGE_OWNER",
+        "NORTH_V11_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_ACTIVE",
+        "NORTH_IS_HUB_NOT_EVIDENCE_OWNER",
         "DIAGNOSTIC_RECEIVER_STILL_CALLS_NORTH_ONLY",
         "CHILDREN_AND_PROBES_RETAIN_SEPARATE_AUTHORITY",
+        "CANVAS_SURFACE_TRUTH_PROBE_INSERTED_AFTER_WEST_BEFORE_SOUTH",
         "NO_PRODUCTION_MUTATION_AUTHORIZED"
       ],
 
@@ -785,6 +851,33 @@
       currentCanvasParentContract: "UNKNOWN",
       currentCanvasParentRecognized: "UNKNOWN",
 
+      canvasSurfaceTruthProbeStatus: "NOT_RUN",
+      canvasSurfaceTruthProbeFile: PROBE_CANVAS_SURFACE_TRUTH_FILE,
+      canvasSurfaceTruthProbeContract: EXPECTED_PROBE_CANVAS_SURFACE_TRUTH_CONTRACT,
+      canvasSurfaceTruthAvailable: "UNKNOWN",
+      canvasElementFound: "UNKNOWN",
+      canvasSelector: "UNKNOWN",
+      canvasMountFound: "UNKNOWN",
+      canvasMountSelector: "UNKNOWN",
+      canvasInMount: "UNKNOWN",
+      canvasRectNonzero: "UNKNOWN",
+      canvasComputedVisible: "UNKNOWN",
+      canvasViewportIntersecting: "UNKNOWN",
+      canvasContext2dReady: "UNKNOWN",
+      canvasPixelSampleStatus: "UNKNOWN",
+      canvasPixelVisible: "UNKNOWN",
+      canvasLayerBlocked: "UNKNOWN",
+      canvasLayerBlocker: "UNKNOWN",
+      canvasNamespacePresent: "UNKNOWN",
+      canvasNamespaceMatchesDomSurface: "UNKNOWN",
+      canvasParentContractRecognized: "UNKNOWN",
+      canvasTruthFirstFailedCoordinate: "UNKNOWN",
+      canvasTruthFailureClass: "UNKNOWN",
+      canvasTruthFailureReason: "UNKNOWN",
+      canvasTruthRecommendedOwner: "UNKNOWN",
+      canvasTruthRecommendedFile: "UNKNOWN",
+      canvasTruthRecommendedAction: "UNKNOWN",
+
       controlFileStatus: "UNKNOWN",
       controlFileLoaded: "UNKNOWN",
       controlGlobalPresent: "UNKNOWN",
@@ -812,9 +905,24 @@
 
       primaryCase: "INCONCLUSIVE_EVIDENCE",
       calibrationStatus: "CALIBRATION_NOT_RUN",
-      calibrationHoldReason: "RUN_NORTH_CHRONOLOGY_HUB",
+      calibrationHoldReason: "RUN_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB",
+      diagnosticChronologyClean: "false",
       diagnosticRailClean: "false",
       calibrationPointReached: "false",
+
+      diagnosticTrackNewsAlignmentStatus: "DIAGNOSTIC_TRACK_NEWS_ALIGNMENT_NOT_RUN",
+      diagnosticTrackNewsAlignmentScore: 0,
+      diagnosticTrackNewsAlignmentFirstFailedStage: "NORTH_NOT_RUN",
+      diagnosticTrackFibonacciSynchronizationStatus: "DIAGNOSTIC_TRACK_FIBONACCI_SYNCHRONIZATION_NOT_RUN",
+      diagnosticTrackFibonacciSynchronizationScore: 0,
+      diagnosticTrackFibonacciSynchronizationFirstFailedStage: "F1",
+
+      canvasStandardNewsAlignmentStatus: "CANVAS_STANDARD_NEWS_ALIGNMENT_NOT_RUN",
+      canvasStandardNewsAlignmentScore: 0,
+      canvasStandardNewsAlignmentFirstFailedStage: "CANVAS_TRUTH_PROBE_NOT_RUN",
+      canvasStandardFibonacciSynchronizationStatus: "CANVAS_STANDARD_FIBONACCI_SYNCHRONIZATION_NOT_RUN",
+      canvasStandardFibonacciSynchronizationScore: 0,
+      canvasStandardFibonacciSynchronizationFirstFailedStage: "F1",
 
       newsAlignmentStatus: "NEWS_ALIGNMENT_NOT_RUN",
       newsAlignmentScore: 0,
@@ -825,7 +933,7 @@
 
       recommendedNextOwner: "DIAGNOSTIC_NORTH_CHRONOLOGY_HUB",
       recommendedNextFile: FILE,
-      recommendedNextAction: "RUN_NORTH_CHRONOLOGY_HUB",
+      recommendedNextAction: "RUN_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB",
 
       potentialRepeatSignature: false,
       receiptSignature: "UNKNOWN",
@@ -918,6 +1026,35 @@
     state.currentCanvasParentContract = firstKnown(getValue(evidence, "CURRENT_CANVAS_PARENT_CONTRACT", ""), state.currentCanvasParentContract);
     state.currentCanvasParentRecognized = firstKnown(getValue(evidence, "CURRENT_CANVAS_PARENT_RECOGNIZED", ""), state.currentCanvasParentRecognized);
 
+    state.canvasSurfaceTruthProbeStatus = firstKnown(
+      getValue(evidence, "CANVAS_SURFACE_TRUTH_PROBE_STATUS", ""),
+      getValue(evidence, "CANVAS_SURFACE_TRUTH_STATUS", ""),
+      state.canvasSurfaceTruthProbeStatus
+    );
+    state.canvasSurfaceTruthAvailable = firstKnown(getValue(evidence, "CANVAS_SURFACE_TRUTH_AVAILABLE", ""), state.canvasSurfaceTruthAvailable);
+    state.canvasElementFound = firstKnown(getValue(evidence, "CANVAS_ELEMENT_FOUND", ""), state.canvasElementFound);
+    state.canvasSelector = firstKnown(getValue(evidence, "CANVAS_SELECTOR", ""), state.canvasSelector);
+    state.canvasMountFound = firstKnown(getValue(evidence, "CANVAS_MOUNT_FOUND", ""), state.canvasMountFound);
+    state.canvasMountSelector = firstKnown(getValue(evidence, "CANVAS_MOUNT_SELECTOR", ""), state.canvasMountSelector);
+    state.canvasInMount = firstKnown(getValue(evidence, "CANVAS_IN_MOUNT", ""), state.canvasInMount);
+    state.canvasRectNonzero = firstKnown(getValue(evidence, "CANVAS_RECT_NONZERO", ""), state.canvasRectNonzero);
+    state.canvasComputedVisible = firstKnown(getValue(evidence, "CANVAS_COMPUTED_VISIBLE", ""), state.canvasComputedVisible);
+    state.canvasViewportIntersecting = firstKnown(getValue(evidence, "CANVAS_VIEWPORT_INTERSECTING", ""), state.canvasViewportIntersecting);
+    state.canvasContext2dReady = firstKnown(getValue(evidence, "CANVAS_CONTEXT_2D_READY", ""), state.canvasContext2dReady);
+    state.canvasPixelSampleStatus = firstKnown(getValue(evidence, "CANVAS_PIXEL_SAMPLE_STATUS", ""), state.canvasPixelSampleStatus);
+    state.canvasPixelVisible = firstKnown(getValue(evidence, "CANVAS_PIXEL_VISIBLE", ""), state.canvasPixelVisible);
+    state.canvasLayerBlocked = firstKnown(getValue(evidence, "CANVAS_LAYER_BLOCKED", ""), state.canvasLayerBlocked);
+    state.canvasLayerBlocker = firstKnown(getValue(evidence, "CANVAS_LAYER_BLOCKER", ""), state.canvasLayerBlocker);
+    state.canvasNamespacePresent = firstKnown(getValue(evidence, "CANVAS_NAMESPACE_PRESENT", ""), state.canvasNamespacePresent);
+    state.canvasNamespaceMatchesDomSurface = firstKnown(getValue(evidence, "CANVAS_NAMESPACE_MATCHES_DOM_SURFACE", ""), state.canvasNamespaceMatchesDomSurface);
+    state.canvasParentContractRecognized = firstKnown(getValue(evidence, "CANVAS_PARENT_CONTRACT_RECOGNIZED", ""), state.canvasParentContractRecognized);
+    state.canvasTruthFirstFailedCoordinate = firstKnown(getValue(evidence, "CANVAS_TRUTH_FIRST_FAILED_COORDINATE", ""), state.canvasTruthFirstFailedCoordinate);
+    state.canvasTruthFailureClass = firstKnown(getValue(evidence, "CANVAS_TRUTH_FAILURE_CLASS", ""), state.canvasTruthFailureClass);
+    state.canvasTruthFailureReason = firstKnown(getValue(evidence, "CANVAS_TRUTH_FAILURE_REASON", ""), state.canvasTruthFailureReason);
+    state.canvasTruthRecommendedOwner = firstKnown(getValue(evidence, "CANVAS_TRUTH_RECOMMENDED_OWNER", ""), state.canvasTruthRecommendedOwner);
+    state.canvasTruthRecommendedFile = firstKnown(getValue(evidence, "CANVAS_TRUTH_RECOMMENDED_FILE", ""), state.canvasTruthRecommendedFile);
+    state.canvasTruthRecommendedAction = firstKnown(getValue(evidence, "CANVAS_TRUTH_RECOMMENDED_ACTION", ""), state.canvasTruthRecommendedAction);
+
     state.controlFileStatus = firstKnown(getValue(evidence, "CONTROL_FILE_STATUS", ""), state.controlFileStatus);
     state.controlFileLoaded = firstKnown(getValue(evidence, "CONTROL_FILE_LOADED", ""), state.controlFileLoaded);
     state.controlGlobalPresent = firstKnown(getValue(evidence, "CONTROL_GLOBAL_PRESENT", ""), state.controlGlobalPresent);
@@ -948,7 +1085,8 @@
       getValue(evidence, "NORTH_SECONDARY_EVIDENCE_NOTES", ""),
       getValue(evidence, "EAST_SECONDARY_EVIDENCE_NOTES", ""),
       getValue(evidence, "WEST_SECONDARY_EVIDENCE_NOTES", ""),
-      getValue(evidence, "SOUTH_SECONDARY_OUTPUT_NOTES", "")
+      getValue(evidence, "SOUTH_SECONDARY_OUTPUT_NOTES", ""),
+      getValue(evidence, "CANVAS_SURFACE_TRUTH_NOTES", "")
     )) {
       addNote(state, note);
     }
@@ -958,6 +1096,7 @@
     const entry = {
       order: step.order,
       id: step.id,
+      fibonacciStage: step.fibonacciStage,
       role: step.role,
       file: step.file,
       expectedContract: step.expectedContract,
@@ -1056,7 +1195,8 @@
         northReceipt: RECEIPT,
         previousNorthContract: PREVIOUS_CONTRACT,
         chronologyHubActive: true,
-        eightWayProbeBridgeActive: false,
+        nineStepChronologyActive: true,
+        canvasSurfaceTruthProbeExpected: true,
         targetRoute: TARGET_ROUTE,
         diagnosticRoute: DIAGNOSTIC_ROUTE,
         currentReport: clonePlain(state.reportObject || {}),
@@ -1067,6 +1207,7 @@
         expectedRouteConductorContract: EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
         expectedControlContract: EXPECTED_CONTROL_CONTRACT,
         expectedCanvasContract: EXPECTED_CANVAS_CONTRACT,
+        expectedProbeCanvasSurfaceTruthContract: EXPECTED_PROBE_CANVAS_SURFACE_TRUTH_CONTRACT,
         acceptedHtmlContracts: ACCEPTED_HTML_CONTRACTS.slice(),
         acceptedIndexContracts: ACCEPTED_INDEX_CONTRACTS.slice(),
         acceptedRouteConductorContracts: ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS.slice(),
@@ -1084,10 +1225,18 @@
       entry.callReturned = true;
       entry.callStatus = "CALL_RETURNED";
       entry.status = "COMPLETE";
-      entry.outputKeys = Object.keys(evidence || {}).slice(0, 40).join(",") || "OUTPUT_EMPTY";
+      entry.outputKeys = Object.keys(evidence || {}).slice(0, 56).join(",") || "OUTPUT_EMPTY";
 
       state.chronology.push(entry);
       updateStateFromEvidence(state, step, evidence);
+
+      if (step.id === "PROBE_CANVAS_SURFACE_TRUTH") {
+        state.canvasSurfaceTruthProbeStatus = firstKnown(
+          state.canvasSurfaceTruthProbeStatus,
+          "CALL_RETURNED"
+        );
+        addNote(state, "CANVAS_SURFACE_TRUTH_PROBE_RETURNED_TO_NORTH");
+      }
 
       if (step.id === "RAIL_SOUTH") {
         state.southOutputStatus = firstKnown(
@@ -1156,6 +1305,168 @@
     }
   }
 
+  function deriveCanvasTruthDisposition(state) {
+    const probeEntry = state.chronology.find((entry) => entry.id === "PROBE_CANVAS_SURFACE_TRUTH");
+
+    if (!probeEntry) {
+      return {
+        available: false,
+        className: "CANVAS_SURFACE_TRUTH_PROBE_NOT_RUN",
+        reason: "NORTH_HAS_NOT_REACHED_CANVAS_SURFACE_TRUTH_PROBE",
+        owner: "DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
+        file: PROBE_CANVAS_SURFACE_TRUTH_FILE,
+        action: "RUN_NORTH_CHRONOLOGY_HUB_THROUGH_CANVAS_SURFACE_TRUTH_PROBE"
+      };
+    }
+
+    if (probeEntry.status !== "COMPLETE") {
+      return {
+        available: false,
+        className: probeEntry.status,
+        reason:
+          probeEntry.status === "NOT_OBSERVED"
+            ? "CANVAS_SURFACE_TRUTH_PROBE_NOT_OBSERVED_OR_NOT_DEPLOYED"
+            : probeEntry.status === "OBSERVED_API_MISSING"
+              ? "CANVAS_SURFACE_TRUTH_PROBE_OBSERVED_BUT_PUBLIC_API_MISSING"
+              : "CANVAS_SURFACE_TRUTH_PROBE_CALL_FAILED",
+        owner: probeEntry.owner,
+        file: probeEntry.file,
+        action: "CRAFT_OR_RENEW_CANVAS_SURFACE_TRUTH_PROBE_AND_RERUN_NORTH"
+      };
+    }
+
+    if (
+      textIsTrue(state.canvasElementFound) &&
+      textIsTrue(state.canvasRectNonzero) &&
+      textIsTrue(state.canvasComputedVisible) &&
+      textIsTrue(state.canvasViewportIntersecting) &&
+      textIsTrue(state.canvasContext2dReady) &&
+      textIsTrue(state.canvasPixelVisible) &&
+      !textIsTrue(state.canvasLayerBlocked)
+    ) {
+      return {
+        available: true,
+        className: "CANVAS_SURFACE_TRUTH_CONFIRMED",
+        reason: "CANVAS_DOM_SURFACE_CONTEXT_VISIBILITY_AND_PIXEL_SAMPLE_CONFIRMED",
+        owner: "NONE",
+        file: "NONE",
+        action: "REVIEW_WITH_CANVAS_SURFACE_TRUTH_CONFIRMED_NO_FINAL_VISUAL_PASS_CLAIM"
+      };
+    }
+
+    if (textIsFalse(state.canvasElementFound)) {
+      return {
+        available: true,
+        className: "CANVAS_DOM_SURFACE_NOT_FOUND",
+        reason: "CANVAS_ELEMENT_FOUND_FALSE",
+        owner: "CANVAS_EXPRESSION_SURFACE",
+        file: CANVAS_FILE,
+        action: "RENEW_CANVAS_TO_CREATE_OR_BIND_DOM_CANVAS_SURFACE"
+      };
+    }
+
+    if (textIsFalse(state.canvasMountFound) || textIsFalse(state.canvasInMount)) {
+      return {
+        available: true,
+        className: "CANVAS_SURFACE_PLACEMENT_FAILURE",
+        reason: textIsFalse(state.canvasMountFound) ? "CANVAS_MOUNT_FOUND_FALSE" : "CANVAS_IN_MOUNT_FALSE",
+        owner: "HTML_CANVAS_MOUNT_OR_CANVAS_PLACEMENT",
+        file: textIsFalse(state.canvasMountFound) ? HTML_FILE : CANVAS_FILE,
+        action: "AUDIT_HTML_MOUNT_AND_CANVAS_PLACEMENT_BINDING"
+      };
+    }
+
+    if (textIsFalse(state.canvasRectNonzero)) {
+      return {
+        available: true,
+        className: "CANVAS_RECT_ZERO",
+        reason: "CANVAS_RECT_NONZERO_FALSE",
+        owner: "CANVAS_LAYOUT_SURFACE",
+        file: CANVAS_FILE,
+        action: "RENEW_CANVAS_OR_LAYOUT_TO_PRODUCE_NONZERO_SURFACE_RECT"
+      };
+    }
+
+    if (textIsFalse(state.canvasComputedVisible) || textIsFalse(state.canvasViewportIntersecting)) {
+      return {
+        available: true,
+        className: "CANVAS_COMPUTED_VISIBILITY_FAILURE",
+        reason: textIsFalse(state.canvasComputedVisible)
+          ? "CANVAS_COMPUTED_VISIBLE_FALSE"
+          : "CANVAS_VIEWPORT_INTERSECTING_FALSE",
+        owner: "HTML_LAYOUT_OR_CANVAS_VISIBILITY",
+        file: HTML_FILE,
+        action: "AUDIT_LAYOUT_VISIBILITY_AND_VIEWPORT_INTERSECTION"
+      };
+    }
+
+    if (textIsTrue(state.canvasLayerBlocked)) {
+      return {
+        available: true,
+        className: "CANVAS_LAYER_BLOCKED",
+        reason: `CANVAS_LAYER_BLOCKED_TRUE:${state.canvasLayerBlocker}`,
+        owner: "HTML_LAYOUT_OR_OVERLAY_LAYER",
+        file: HTML_FILE,
+        action: "AUDIT_LAYER_STACKING_POINTER_EVENTS_AND_OVERLAY_BLOCKERS"
+      };
+    }
+
+    if (textIsFalse(state.canvasContext2dReady)) {
+      return {
+        available: true,
+        className: "CANVAS_CONTEXT_2D_NOT_READY",
+        reason: "CANVAS_CONTEXT_2D_READY_FALSE",
+        owner: "CANVAS_EXPRESSION_SURFACE",
+        file: CANVAS_FILE,
+        action: "RENEW_CANVAS_CONTEXT_CREATION_AND_SURFACE_BINDING"
+      };
+    }
+
+    if (textIsFalse(state.canvasNamespacePresent) || textIsFalse(state.canvasNamespaceMatchesDomSurface)) {
+      return {
+        available: true,
+        className: "CANVAS_NAMESPACE_DOM_MISMATCH",
+        reason: textIsFalse(state.canvasNamespacePresent)
+          ? "CANVAS_NAMESPACE_PRESENT_FALSE"
+          : "CANVAS_NAMESPACE_MATCHES_DOM_SURFACE_FALSE",
+        owner: "CANVAS_ALIAS_AND_HANDOFF_SURFACE",
+        file: CANVAS_FILE,
+        action: "RENEW_CANVAS_ALIAS_PUBLICATION_AND_DOM_SURFACE_RECEIPT"
+      };
+    }
+
+    if (textIsFalse(state.canvasParentContractRecognized) || state.currentCanvasParentContract === "UNKNOWN") {
+      return {
+        available: true,
+        className: "CANVAS_PARENT_CONTRACT_NOT_RECOGNIZED",
+        reason: "CANVAS_PARENT_CONTRACT_RECOGNIZED_FALSE_OR_UNKNOWN",
+        owner: "CANVAS_PARENT_RECEIPT_PUBLICATION",
+        file: CANVAS_FILE,
+        action: "RENEW_CANVAS_PARENT_CONTRACT_RECEIPT_PUBLICATION"
+      };
+    }
+
+    if (textIsFalse(state.canvasPixelVisible)) {
+      return {
+        available: true,
+        className: "CANVAS_PIXEL_SAMPLE_NOT_VISIBLE",
+        reason: firstKnown(state.canvasPixelSampleStatus, "CANVAS_PIXEL_VISIBLE_FALSE"),
+        owner: "CANVAS_DRAWING_OR_DOWNSTREAM_EXPRESSION_ADAPTER",
+        file: CANVAS_FILE,
+        action: "AUDIT_CANVAS_DRAW_PATH_AND_DOWNSTREAM_EXPRESSION_ADAPTER"
+      };
+    }
+
+    return {
+      available: true,
+      className: firstKnown(state.canvasTruthFailureClass, "CANVAS_SURFACE_TRUTH_INCONCLUSIVE"),
+      reason: firstKnown(state.canvasTruthFailureReason, "CANVAS_SURFACE_TRUTH_RETURNED_BUT_NOT_CONCLUSIVE"),
+      owner: firstKnown(state.canvasTruthRecommendedOwner, "CANVAS_EXPRESSION_SURFACE"),
+      file: firstKnown(state.canvasTruthRecommendedFile, CANVAS_FILE),
+      action: firstKnown(state.canvasTruthRecommendedAction, "AUDIT_CANVAS_SURFACE_TRUTH_OUTPUT")
+    };
+  }
+
   function resolveChronologyDisposition(state) {
     const firstFailure = state.chronology.find((entry) => {
       return (
@@ -1188,50 +1499,79 @@
       state.primaryCase = "INCONCLUSIVE_EVIDENCE";
       state.calibrationStatus = `CALIBRATION_HOLD_${firstFailure.id}`;
       state.calibrationHoldReason = state.firstChronologyFailureReason;
+      state.diagnosticChronologyClean = "false";
       state.diagnosticRailClean = "false";
       state.calibrationPointReached = "false";
       state.recommendedNextOwner = firstFailure.owner;
       state.recommendedNextFile = firstFailure.file;
       state.recommendedNextAction = `CRAFT_OR_RENEW_${firstFailure.id}_TO_CHRONOLOGY_STANDARD_AND_RERUN_DIAGNOSTIC`;
 
+      if (firstFailure.id === "PROBE_CANVAS_SURFACE_TRUTH") {
+        state.canvasSurfaceTruthProbeStatus = firstFailure.status;
+        state.canvasSurfaceTruthAvailable = "false";
+        state.canvasTruthFailureClass = firstFailure.status;
+        state.canvasTruthFailureReason = state.firstChronologyFailureReason;
+      }
+
       addNote(state, `ZONE_OF_INFLICTION_FROM_CHRONOLOGY:${firstFailure.id}:${firstFailure.file}`);
       return;
     }
 
-    const surfaceFalse =
-      state.canvasExpressionSurfaceReady === "false" ||
-      state.domExpressionSurfaceProofReady === "false" ||
-      state.canvasExpressionProofStatus === "HANDSHAKE_PENDING" ||
-      state.canvasExpressionProofStatus === "ACTIVE_DEGRADED";
+    const canvasDisposition = deriveCanvasTruthDisposition(state);
 
-    if (surfaceFalse) {
-      state.chronologyCompletionStatus = "CHRONOLOGY_COMPLETE_EXPRESSION_SURFACE_NOT_PROVEN";
+    state.diagnosticChronologyClean = "true";
+
+    if (!canvasDisposition.available) {
+      state.chronologyCompletionStatus = "CHRONOLOGY_COMPLETE_CANVAS_SURFACE_TRUTH_UNAVAILABLE";
       state.firstChronologyFailureOwner = "NONE";
       state.firstChronologyFailureFile = "NONE";
       state.firstChronologyFailureClass = "NONE";
       state.firstChronologyFailureReason = "ALL_OBSERVED_CHRONOLOGY_STEPS_RETURNED_OR_WERE_READABLE";
 
-      state.zoneOfInflictionOwner = "CANVAS_EXPRESSION_SURFACE";
-      state.zoneOfInflictionFile = CANVAS_FILE;
-      state.zoneOfInflictionClass = "EXPRESSION_SURFACE_NOT_PROVEN";
-      state.zoneOfInflictionReason =
-        firstKnown(state.canvasExpressionBottleneckClass, "CHRONOLOGY_COMPLETED_BUT_CANVAS_EXPRESSION_SURFACE_REMAINS_UNPROVEN");
+      state.zoneOfInflictionOwner = canvasDisposition.owner;
+      state.zoneOfInflictionFile = canvasDisposition.file;
+      state.zoneOfInflictionClass = canvasDisposition.className;
+      state.zoneOfInflictionReason = canvasDisposition.reason;
 
       state.primaryCase = "INCONCLUSIVE_EVIDENCE";
-      state.calibrationStatus = "CALIBRATION_HOLD_CANVAS_EXPRESSION_SURFACE";
-      state.calibrationHoldReason = state.zoneOfInflictionReason;
+      state.calibrationStatus = "CALIBRATION_HOLD_CANVAS_SURFACE_TRUTH_PROBE";
+      state.calibrationHoldReason = canvasDisposition.reason;
       state.diagnosticRailClean = "false";
       state.calibrationPointReached = "false";
-      state.recommendedNextOwner = "CANVAS_EXPRESSION_SURFACE";
-      state.recommendedNextFile = CANVAS_FILE;
-      state.recommendedNextAction =
-        "AUDIT_CANVAS_EXPRESSION_SURFACE_RECEIVER_AFTER_CHRONOLOGY_CONFIRMS_DIAGNOSTIC_TRACK";
+      state.recommendedNextOwner = canvasDisposition.owner;
+      state.recommendedNextFile = canvasDisposition.file;
+      state.recommendedNextAction = canvasDisposition.action;
 
-      addNote(state, "ZONE_OF_INFLICTION_FROM_EXPRESSION_SURFACE_NOT_CHRONOLOGY");
+      addNote(state, "ZONE_OF_INFLICTION_FROM_CANVAS_SURFACE_TRUTH_PROBE_AVAILABILITY");
       return;
     }
 
-    state.chronologyCompletionStatus = "CHRONOLOGY_COMPLETE";
+    if (canvasDisposition.className !== "CANVAS_SURFACE_TRUTH_CONFIRMED") {
+      state.chronologyCompletionStatus = "CHRONOLOGY_COMPLETE_CANVAS_SURFACE_TRUTH_FAILED";
+      state.firstChronologyFailureOwner = "NONE";
+      state.firstChronologyFailureFile = "NONE";
+      state.firstChronologyFailureClass = "NONE";
+      state.firstChronologyFailureReason = "ALL_OBSERVED_CHRONOLOGY_STEPS_RETURNED_OR_WERE_READABLE";
+
+      state.zoneOfInflictionOwner = canvasDisposition.owner;
+      state.zoneOfInflictionFile = canvasDisposition.file;
+      state.zoneOfInflictionClass = canvasDisposition.className;
+      state.zoneOfInflictionReason = canvasDisposition.reason;
+
+      state.primaryCase = "CANVAS_SURFACE_TRUTH_FAILURE";
+      state.calibrationStatus = "CALIBRATION_HOLD_CANVAS_SURFACE_TRUTH";
+      state.calibrationHoldReason = canvasDisposition.reason;
+      state.diagnosticRailClean = "false";
+      state.calibrationPointReached = "false";
+      state.recommendedNextOwner = canvasDisposition.owner;
+      state.recommendedNextFile = canvasDisposition.file;
+      state.recommendedNextAction = canvasDisposition.action;
+
+      addNote(state, `ZONE_OF_INFLICTION_FROM_CANVAS_SURFACE_TRUTH:${canvasDisposition.className}`);
+      return;
+    }
+
+    state.chronologyCompletionStatus = "CHRONOLOGY_COMPLETE_CANVAS_SURFACE_TRUTH_CONFIRMED";
     state.firstChronologyFailureOwner = "NONE";
     state.firstChronologyFailureFile = "NONE";
     state.firstChronologyFailureClass = "NONE";
@@ -1240,9 +1580,9 @@
     state.zoneOfInflictionOwner = "NONE";
     state.zoneOfInflictionFile = "NONE";
     state.zoneOfInflictionClass = "NONE";
-    state.zoneOfInflictionReason = "CHRONOLOGY_COMPLETE_NO_DIAGNOSTIC_FILE_FAILURE_DETECTED";
+    state.zoneOfInflictionReason = "CANVAS_SURFACE_TRUTH_CONFIRMED_NO_DIAGNOSTIC_FILE_FAILURE_DETECTED";
 
-    state.primaryCase = "DIAGNOSTIC_TRACK_COMPLETE_NO_VISUAL_PASS_CLAIM";
+    state.primaryCase = "DIAGNOSTIC_TRACK_AND_CANVAS_SURFACE_TRUTH_COMPLETE_NO_VISUAL_PASS_CLAIM";
     state.calibrationStatus = "CALIBRATION_TRACK_COMPLETE";
     state.calibrationHoldReason = "NONE";
     state.diagnosticRailClean = "true";
@@ -1250,42 +1590,102 @@
     state.recommendedNextOwner = "TEACHER_REVIEW";
     state.recommendedNextFile = CANVAS_FILE;
     state.recommendedNextAction =
-      "REVIEW_EXPRESSION_OUTPUT_WITH_DIAGNOSTIC_TRACK_COMPLETE_NO_READY_OR_VISUAL_PASS_CLAIM";
+      "REVIEW_CANVAS_SURFACE_TRUTH_CONFIRMED_WITH_NO_READY_OR_VISUAL_PASS_CLAIM";
 
-    addNote(state, "CHRONOLOGY_COMPLETE_NO_FILE_FAILURE_DETECTED");
+    addNote(state, "CHRONOLOGY_COMPLETE_AND_CANVAS_SURFACE_TRUTH_CONFIRMED");
   }
 
-  function resolveAlignment(state) {
+  function resolveDiagnosticTrackAlignment(state) {
     const required = CHRONOLOGY_STEPS.length;
     const complete = state.chronology.filter((entry) => entry.status === "COMPLETE").length;
     const firstFailed = state.chronology.find((entry) => entry.status !== "COMPLETE");
 
-    state.newsAlignmentScore = Math.round((complete / required) * 100);
-    state.newsAlignmentStatus = firstFailed ? "NEWS_ALIGNMENT_PARTIAL" : "NEWS_ALIGNMENT_COMPLETE";
-    state.newsAlignmentFirstFailedStage = firstFailed ? firstFailed.id : "NONE";
+    state.diagnosticTrackNewsAlignmentScore = Math.round((complete / required) * 100);
+    state.diagnosticTrackNewsAlignmentStatus = firstFailed
+      ? "DIAGNOSTIC_TRACK_NEWS_ALIGNMENT_PARTIAL"
+      : "DIAGNOSTIC_TRACK_NEWS_ALIGNMENT_COMPLETE";
+    state.diagnosticTrackNewsAlignmentFirstFailedStage = firstFailed ? firstFailed.id : "NONE";
+
+    const fibStages = CHRONOLOGY_STEPS.map((step) => ({
+      key: step.fibonacciStage,
+      id: step.id,
+      passed: Boolean(state.chronology.find((entry) => entry.id === step.id && entry.status === "COMPLETE"))
+    }));
+
+    const fibPassed = fibStages.filter((stage) => stage.passed).length;
+    const fibFirstFailed = fibStages.find((stage) => !stage.passed);
+
+    state.diagnosticTrackFibonacciSynchronizationScore = Math.round((fibPassed / fibStages.length) * 100);
+    state.diagnosticTrackFibonacciSynchronizationStatus = fibFirstFailed
+      ? "DIAGNOSTIC_TRACK_FIBONACCI_SYNCHRONIZATION_PARTIAL"
+      : "DIAGNOSTIC_TRACK_FIBONACCI_SYNCHRONIZATION_COMPLETE";
+    state.diagnosticTrackFibonacciSynchronizationFirstFailedStage = fibFirstFailed
+      ? `${fibFirstFailed.key}:${fibFirstFailed.id}`
+      : "NONE";
+
+    state.newsAlignmentStatus = state.diagnosticTrackNewsAlignmentStatus;
+    state.newsAlignmentScore = state.diagnosticTrackNewsAlignmentScore;
+    state.newsAlignmentFirstFailedStage = state.diagnosticTrackNewsAlignmentFirstFailedStage;
+    state.fibonacciSynchronizationStatus = state.diagnosticTrackFibonacciSynchronizationStatus;
+    state.fibonacciSynchronizationScore = state.diagnosticTrackFibonacciSynchronizationScore;
+    state.fibonacciSynchronizationFirstFailedStage = state.diagnosticTrackFibonacciSynchronizationFirstFailedStage;
+
+    if (firstFailed) addNote(state, `DIAGNOSTIC_TRACK_NEWS_ALIGNMENT_FIRST_FAILED_STAGE:${firstFailed.id}`);
+    if (fibFirstFailed) addNote(state, `DIAGNOSTIC_TRACK_FIBONACCI_SYNCHRONIZATION_FIRST_FAILED_STAGE:${fibFirstFailed.key}:${fibFirstFailed.id}`);
+  }
+
+  function resolveCanvasStandardAlignment(state) {
+    const probeComplete = Boolean(
+      state.chronology.find((entry) => entry.id === "PROBE_CANVAS_SURFACE_TRUTH" && entry.status === "COMPLETE")
+    );
+
+    const stages = [
+      { key: "SURFACE_PROBE_COMPLETE", passed: probeComplete },
+      { key: "CANVAS_ELEMENT_FOUND", passed: textIsTrue(state.canvasElementFound) },
+      { key: "CANVAS_IN_MOUNT", passed: textIsTrue(state.canvasInMount) || state.canvasInMount === "UNKNOWN" },
+      { key: "CANVAS_RECT_NONZERO", passed: textIsTrue(state.canvasRectNonzero) },
+      { key: "CANVAS_COMPUTED_VISIBLE", passed: textIsTrue(state.canvasComputedVisible) },
+      { key: "CANVAS_VIEWPORT_INTERSECTING", passed: textIsTrue(state.canvasViewportIntersecting) },
+      { key: "CANVAS_CONTEXT_2D_READY", passed: textIsTrue(state.canvasContext2dReady) },
+      { key: "CANVAS_PIXEL_VISIBLE", passed: textIsTrue(state.canvasPixelVisible) },
+      { key: "CANVAS_LAYER_NOT_BLOCKED", passed: !textIsTrue(state.canvasLayerBlocked) }
+    ];
+
+    const passed = stages.filter((stage) => stage.passed).length;
+    const firstFailed = stages.find((stage) => !stage.passed);
+
+    state.canvasStandardNewsAlignmentScore = Math.round((passed / stages.length) * 100);
+    state.canvasStandardNewsAlignmentStatus = firstFailed
+      ? "CANVAS_STANDARD_NEWS_ALIGNMENT_PARTIAL"
+      : "CANVAS_STANDARD_NEWS_ALIGNMENT_COMPLETE";
+    state.canvasStandardNewsAlignmentFirstFailedStage = firstFailed ? firstFailed.key : "NONE";
 
     const fibStages = [
-      { key: "F1", passed: Boolean(state.chronology.find((entry) => entry.id === "NORTH_RAIL" && entry.status === "COMPLETE")) },
-      { key: "F2", passed: Boolean(state.chronology.find((entry) => entry.id === "PROBE_NORTH" && entry.status === "COMPLETE")) },
-      { key: "F3", passed: Boolean(state.chronology.find((entry) => entry.id === "RAIL_EAST" && entry.status === "COMPLETE")) },
-      { key: "F5", passed: Boolean(state.chronology.find((entry) => entry.id === "PROBE_EAST" && entry.status === "COMPLETE")) },
-      { key: "F8", passed: Boolean(state.chronology.find((entry) => entry.id === "RAIL_WEST" && entry.status === "COMPLETE")) },
-      { key: "F13", passed: Boolean(state.chronology.find((entry) => entry.id === "PROBE_WEST" && entry.status === "COMPLETE")) },
-      { key: "F21", passed: Boolean(state.chronology.find((entry) => entry.id === "RAIL_SOUTH" && entry.status === "COMPLETE")) && state.f21ClaimedByDiagnosticRail === false },
-      { key: "F34", passed: Boolean(state.chronology.find((entry) => entry.id === "PROBE_SOUTH" && entry.status === "COMPLETE")) }
+      { key: "F1:PROBE_COMPLETE", passed: probeComplete },
+      { key: "F2:DOM_SURFACE", passed: textIsTrue(state.canvasElementFound) },
+      { key: "F3:MOUNT_BINDING", passed: textIsTrue(state.canvasInMount) || state.canvasInMount === "UNKNOWN" },
+      { key: "F5:RECT_NONZERO", passed: textIsTrue(state.canvasRectNonzero) },
+      { key: "F8:COMPUTED_VISIBLE", passed: textIsTrue(state.canvasComputedVisible) },
+      { key: "F13:CONTEXT_2D", passed: textIsTrue(state.canvasContext2dReady) },
+      { key: "F21:PIXEL_VISIBLE_NO_FINAL_CLAIM", passed: textIsTrue(state.canvasPixelVisible) && state.f21ClaimedByDiagnosticRail === false }
     ];
 
     const fibPassed = fibStages.filter((stage) => stage.passed).length;
     const fibFirstFailed = fibStages.find((stage) => !stage.passed);
 
-    state.fibonacciSynchronizationScore = Math.round((fibPassed / fibStages.length) * 100);
-    state.fibonacciSynchronizationStatus = fibFirstFailed
-      ? "FIBONACCI_SYNCHRONIZATION_PARTIAL"
-      : "FIBONACCI_SYNCHRONIZATION_COMPLETE";
-    state.fibonacciSynchronizationFirstFailedStage = fibFirstFailed ? fibFirstFailed.key : "NONE";
+    state.canvasStandardFibonacciSynchronizationScore = Math.round((fibPassed / fibStages.length) * 100);
+    state.canvasStandardFibonacciSynchronizationStatus = fibFirstFailed
+      ? "CANVAS_STANDARD_FIBONACCI_SYNCHRONIZATION_PARTIAL"
+      : "CANVAS_STANDARD_FIBONACCI_SYNCHRONIZATION_COMPLETE";
+    state.canvasStandardFibonacciSynchronizationFirstFailedStage = fibFirstFailed ? fibFirstFailed.key : "NONE";
 
-    if (firstFailed) addNote(state, `NEWS_ALIGNMENT_FIRST_FAILED_STAGE:${firstFailed.id}`);
-    if (fibFirstFailed) addNote(state, `FIBONACCI_SYNCHRONIZATION_FIRST_FAILED_STAGE:${fibFirstFailed.key}`);
+    if (firstFailed) addNote(state, `CANVAS_STANDARD_NEWS_ALIGNMENT_FIRST_FAILED_STAGE:${firstFailed.key}`);
+    if (fibFirstFailed) addNote(state, `CANVAS_STANDARD_FIBONACCI_SYNCHRONIZATION_FIRST_FAILED_STAGE:${fibFirstFailed.key}`);
+  }
+
+  function resolveAlignment(state) {
+    resolveDiagnosticTrackAlignment(state);
+    resolveCanvasStandardAlignment(state);
   }
 
   function stableSignatureMaterial(report) {
@@ -1315,7 +1715,7 @@
   function applyRepeatSignature(state, report) {
     const material = stableSignatureMaterial(report);
     const signature = simpleHash(material);
-    const key = "HEARTH_DIAGNOSTIC_NORTH_CHRONOLOGY_HUB_LAST_SIGNATURE";
+    const key = "HEARTH_DIAGNOSTIC_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_LAST_SIGNATURE";
 
     state.receiptSignature = signature;
     state.repeatSignatureBasis = "REPORT_WITH_TIMESTAMP_AND_SIGNATURE_FIELDS_REMOVED";
@@ -1352,10 +1752,11 @@
 
   function buildNorthVerdict(state) {
     return {
-      schema: "HEARTH_DIAGNOSTIC_NORTH_CHRONOLOGY_HUB_VERDICT_SCHEMA_v10",
+      schema: "HEARTH_DIAGNOSTIC_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_VERDICT_SCHEMA_v11",
       northContract: CONTRACT,
       northReceipt: RECEIPT,
       previousNorthContract: PREVIOUS_CONTRACT,
+      lineageV9NorthContract: LINEAGE_V9_CONTRACT,
       lineageV8NorthContract: LINEAGE_V8_CONTRACT,
       targetRoute: TARGET_ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
@@ -1364,8 +1765,8 @@
       hub: {
         chronologyHubActive: true,
         northIsHubOnly: true,
-        eightWayProbeBridgeActive: false,
-        eightFileChronologyActive: true,
+        nineStepChronologyActive: true,
+        canvasSurfaceTruthProbeExpected: true,
         receiverStillCallsNorthOnly: true,
         diagnosticRouteHtmlRenewalRequired: false
       },
@@ -1391,6 +1792,7 @@
         expectedHtmlContract: EXPECTED_HTML_CONTRACT,
         expectedIndexJsContract: EXPECTED_INDEX_JS_CONTRACT,
         expectedRouteConductorContract: EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
+        expectedRouteConductorLineageContract: EXPECTED_ROUTE_CONDUCTOR_LINEAGE_CONTRACT,
         servedHtmlContract: state.servedHtmlContract,
         servedIndexJsContract: state.servedIndexJsContract,
         servedRouteConductorContract: state.servedRouteConductorContract,
@@ -1410,6 +1812,47 @@
         domExpressionSurfaceProofReady: state.domExpressionSurfaceProofReady,
         currentCanvasParentContract: state.currentCanvasParentContract,
         currentCanvasParentRecognized: state.currentCanvasParentRecognized
+      },
+
+      canvasSurfaceTruth: {
+        probeStatus: state.canvasSurfaceTruthProbeStatus,
+        probeFile: PROBE_CANVAS_SURFACE_TRUTH_FILE,
+        probeContract: EXPECTED_PROBE_CANVAS_SURFACE_TRUTH_CONTRACT,
+        available: state.canvasSurfaceTruthAvailable,
+        canvasElementFound: state.canvasElementFound,
+        canvasSelector: state.canvasSelector,
+        canvasMountFound: state.canvasMountFound,
+        canvasMountSelector: state.canvasMountSelector,
+        canvasInMount: state.canvasInMount,
+        canvasRectNonzero: state.canvasRectNonzero,
+        canvasComputedVisible: state.canvasComputedVisible,
+        canvasViewportIntersecting: state.canvasViewportIntersecting,
+        canvasContext2dReady: state.canvasContext2dReady,
+        canvasPixelSampleStatus: state.canvasPixelSampleStatus,
+        canvasPixelVisible: state.canvasPixelVisible,
+        canvasLayerBlocked: state.canvasLayerBlocked,
+        canvasLayerBlocker: state.canvasLayerBlocker,
+        canvasNamespacePresent: state.canvasNamespacePresent,
+        canvasNamespaceMatchesDomSurface: state.canvasNamespaceMatchesDomSurface,
+        canvasParentContractRecognized: state.canvasParentContractRecognized,
+        firstFailedCoordinate: state.canvasTruthFirstFailedCoordinate,
+        failureClass: state.canvasTruthFailureClass,
+        failureReason: state.canvasTruthFailureReason
+      },
+
+      alignments: {
+        diagnosticTrackNewsAlignmentStatus: state.diagnosticTrackNewsAlignmentStatus,
+        diagnosticTrackNewsAlignmentScore: state.diagnosticTrackNewsAlignmentScore,
+        diagnosticTrackNewsAlignmentFirstFailedStage: state.diagnosticTrackNewsAlignmentFirstFailedStage,
+        diagnosticTrackFibonacciSynchronizationStatus: state.diagnosticTrackFibonacciSynchronizationStatus,
+        diagnosticTrackFibonacciSynchronizationScore: state.diagnosticTrackFibonacciSynchronizationScore,
+        diagnosticTrackFibonacciSynchronizationFirstFailedStage: state.diagnosticTrackFibonacciSynchronizationFirstFailedStage,
+        canvasStandardNewsAlignmentStatus: state.canvasStandardNewsAlignmentStatus,
+        canvasStandardNewsAlignmentScore: state.canvasStandardNewsAlignmentScore,
+        canvasStandardNewsAlignmentFirstFailedStage: state.canvasStandardNewsAlignmentFirstFailedStage,
+        canvasStandardFibonacciSynchronizationStatus: state.canvasStandardFibonacciSynchronizationStatus,
+        canvasStandardFibonacciSynchronizationScore: state.canvasStandardFibonacciSynchronizationScore,
+        canvasStandardFibonacciSynchronizationFirstFailedStage: state.canvasStandardFibonacciSynchronizationFirstFailedStage
       },
 
       repeatSignature: {
@@ -1438,6 +1881,7 @@
       primaryCase: state.primaryCase,
       calibrationStatus: state.calibrationStatus,
       calibrationHoldReason: state.calibrationHoldReason,
+      diagnosticChronologyClean: state.diagnosticChronologyClean,
       diagnosticRailClean: state.diagnosticRailClean,
       calibrationPointReached: state.calibrationPointReached,
       recommendedNextOwner: state.recommendedNextOwner,
@@ -1453,6 +1897,7 @@
     return state.chronology.map((entry) => {
       return [
         `${entry.order}.${entry.id}`,
+        `fib:${entry.fibonacciStage}`,
         `file:${entry.file}`,
         `load:${entry.loadStatus}`,
         `observed:${entry.observed}`,
@@ -1475,6 +1920,7 @@
       NORTH_RECEIPT: RECEIPT,
       PREVIOUS_NORTH_CONTRACT: PREVIOUS_CONTRACT,
       PREVIOUS_NORTH_RECEIPT: PREVIOUS_RECEIPT,
+      LINEAGE_V9_NORTH_CONTRACT: LINEAGE_V9_CONTRACT,
       LINEAGE_V8_NORTH_CONTRACT: LINEAGE_V8_CONTRACT,
       LINEAGE_V7_NORTH_CONTRACT: LINEAGE_V7_CONTRACT,
       BASELINE_V6_NORTH_CONTRACT: BASELINE_V6_CONTRACT,
@@ -1482,23 +1928,25 @@
 
       NORTH_CHRONOLOGY_HUB_ACTIVE: true,
       NORTH_IS_HUB_ONLY: true,
-      EIGHT_WAY_PROBE_BRIDGE_ACTIVE: false,
-      EIGHT_FILE_CHRONOLOGY_ACTIVE: true,
+      NINE_STEP_CHRONOLOGY_ACTIVE: true,
+      CANVAS_SURFACE_TRUTH_PROBE_EXPECTED: true,
       DIAGNOSTIC_ROUTE_HTML_RENEWAL_REQUIRED: false,
       RECEIVER_STILL_CALLS_NORTH_ONLY: true,
 
       RAIL_NORTH_FILE: FILE,
       RAIL_EAST_FILE,
-      RAIL_SOUTH_FILE,
       RAIL_WEST_FILE,
+      RAIL_SOUTH_FILE,
       PROBE_NORTH_FILE,
       PROBE_EAST_FILE,
       PROBE_WEST_FILE,
+      PROBE_CANVAS_SURFACE_TRUTH_FILE,
       PROBE_SOUTH_FILE,
 
       EXPECTED_HTML_CONTRACT,
       EXPECTED_INDEX_JS_CONTRACT,
       EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
+      EXPECTED_ROUTE_CONDUCTOR_LINEAGE_CONTRACT,
       EXPECTED_CONTROL_CONTRACT,
       EXPECTED_CANVAS_CONTRACT,
       EXPECTED_EAST_CONTRACT,
@@ -1507,9 +1955,11 @@
       EXPECTED_PROBE_NORTH_CONTRACT,
       EXPECTED_PROBE_EAST_CONTRACT,
       EXPECTED_PROBE_WEST_CONTRACT,
+      EXPECTED_PROBE_CANVAS_SURFACE_TRUTH_CONTRACT,
       EXPECTED_PROBE_SOUTH_CONTRACT,
 
       CHRONOLOGY_SEQUENCE: clonePlain(state.chronology),
+      CHRONOLOGY_SEQUENCE_JSON: clonePlain(state.chronology),
       CHRONOLOGY_SEQUENCE_TEXT: chronologyText(state),
       CHRONOLOGY_COMPLETION_STATUS: state.chronologyCompletionStatus,
 
@@ -1565,6 +2015,33 @@
       CURRENT_CANVAS_PARENT_CONTRACT: state.currentCanvasParentContract,
       CURRENT_CANVAS_PARENT_RECOGNIZED: state.currentCanvasParentRecognized,
 
+      CANVAS_SURFACE_TRUTH_PROBE_STATUS: state.canvasSurfaceTruthProbeStatus,
+      CANVAS_SURFACE_TRUTH_PROBE_FILE: PROBE_CANVAS_SURFACE_TRUTH_FILE,
+      CANVAS_SURFACE_TRUTH_PROBE_CONTRACT: EXPECTED_PROBE_CANVAS_SURFACE_TRUTH_CONTRACT,
+      CANVAS_SURFACE_TRUTH_AVAILABLE: state.canvasSurfaceTruthAvailable,
+      CANVAS_ELEMENT_FOUND: state.canvasElementFound,
+      CANVAS_SELECTOR: state.canvasSelector,
+      CANVAS_MOUNT_FOUND: state.canvasMountFound,
+      CANVAS_MOUNT_SELECTOR: state.canvasMountSelector,
+      CANVAS_IN_MOUNT: state.canvasInMount,
+      CANVAS_RECT_NONZERO: state.canvasRectNonzero,
+      CANVAS_COMPUTED_VISIBLE: state.canvasComputedVisible,
+      CANVAS_VIEWPORT_INTERSECTING: state.canvasViewportIntersecting,
+      CANVAS_CONTEXT_2D_READY: state.canvasContext2dReady,
+      CANVAS_PIXEL_SAMPLE_STATUS: state.canvasPixelSampleStatus,
+      CANVAS_PIXEL_VISIBLE: state.canvasPixelVisible,
+      CANVAS_LAYER_BLOCKED: state.canvasLayerBlocked,
+      CANVAS_LAYER_BLOCKER: state.canvasLayerBlocker,
+      CANVAS_NAMESPACE_PRESENT: state.canvasNamespacePresent,
+      CANVAS_NAMESPACE_MATCHES_DOM_SURFACE: state.canvasNamespaceMatchesDomSurface,
+      CANVAS_PARENT_CONTRACT_RECOGNIZED: state.canvasParentContractRecognized,
+      CANVAS_TRUTH_FIRST_FAILED_COORDINATE: state.canvasTruthFirstFailedCoordinate,
+      CANVAS_TRUTH_FAILURE_CLASS: state.canvasTruthFailureClass,
+      CANVAS_TRUTH_FAILURE_REASON: state.canvasTruthFailureReason,
+      CANVAS_TRUTH_RECOMMENDED_OWNER: state.canvasTruthRecommendedOwner,
+      CANVAS_TRUTH_RECOMMENDED_FILE: state.canvasTruthRecommendedFile,
+      CANVAS_TRUTH_RECOMMENDED_ACTION: state.canvasTruthRecommendedAction,
+
       CONTROL_FILE,
       CONTROL_FILE_STATUS: state.controlFileStatus,
       CONTROL_FILE_LOADED: state.controlFileLoaded,
@@ -1586,8 +2063,23 @@
       PRIMARY_CASE: state.primaryCase,
       CALIBRATION_STATUS: state.calibrationStatus,
       CALIBRATION_HOLD_REASON: state.calibrationHoldReason,
+      DIAGNOSTIC_CHRONOLOGY_CLEAN: state.diagnosticChronologyClean,
       DIAGNOSTIC_RAIL_CLEAN: state.diagnosticRailClean,
       CALIBRATION_POINT_REACHED: state.calibrationPointReached,
+
+      DIAGNOSTIC_TRACK_NEWS_ALIGNMENT_STATUS: state.diagnosticTrackNewsAlignmentStatus,
+      DIAGNOSTIC_TRACK_NEWS_ALIGNMENT_SCORE: state.diagnosticTrackNewsAlignmentScore,
+      DIAGNOSTIC_TRACK_NEWS_ALIGNMENT_FIRST_FAILED_STAGE: state.diagnosticTrackNewsAlignmentFirstFailedStage,
+      DIAGNOSTIC_TRACK_FIBONACCI_SYNCHRONIZATION_STATUS: state.diagnosticTrackFibonacciSynchronizationStatus,
+      DIAGNOSTIC_TRACK_FIBONACCI_SYNCHRONIZATION_SCORE: state.diagnosticTrackFibonacciSynchronizationScore,
+      DIAGNOSTIC_TRACK_FIBONACCI_SYNCHRONIZATION_FIRST_FAILED_STAGE: state.diagnosticTrackFibonacciSynchronizationFirstFailedStage,
+
+      CANVAS_STANDARD_NEWS_ALIGNMENT_STATUS: state.canvasStandardNewsAlignmentStatus,
+      CANVAS_STANDARD_NEWS_ALIGNMENT_SCORE: state.canvasStandardNewsAlignmentScore,
+      CANVAS_STANDARD_NEWS_ALIGNMENT_FIRST_FAILED_STAGE: state.canvasStandardNewsAlignmentFirstFailedStage,
+      CANVAS_STANDARD_FIBONACCI_SYNCHRONIZATION_STATUS: state.canvasStandardFibonacciSynchronizationStatus,
+      CANVAS_STANDARD_FIBONACCI_SYNCHRONIZATION_SCORE: state.canvasStandardFibonacciSynchronizationScore,
+      CANVAS_STANDARD_FIBONACCI_SYNCHRONIZATION_FIRST_FAILED_STAGE: state.canvasStandardFibonacciSynchronizationFirstFailedStage,
 
       NEWS_ALIGNMENT_STATUS: state.newsAlignmentStatus,
       NEWS_ALIGNMENT_SCORE: state.newsAlignmentScore,
@@ -1627,8 +2119,8 @@
       "PREVIOUS_NORTH_CONTRACT",
       "NORTH_CHRONOLOGY_HUB_ACTIVE",
       "NORTH_IS_HUB_ONLY",
-      "EIGHT_WAY_PROBE_BRIDGE_ACTIVE",
-      "EIGHT_FILE_CHRONOLOGY_ACTIVE",
+      "NINE_STEP_CHRONOLOGY_ACTIVE",
+      "CANVAS_SURFACE_TRUTH_PROBE_EXPECTED",
       "DIAGNOSTIC_ROUTE_HTML_RENEWAL_REQUIRED",
       "RECEIVER_STILL_CALLS_NORTH_ONLY",
       "CHRONOLOGY_COMPLETION_STATUS",
@@ -1641,18 +2133,9 @@
       "ZONE_OF_INFLICTION_CLASS",
       "ZONE_OF_INFLICTION_REASON",
       "CHRONOLOGY_SEQUENCE_TEXT",
-      "CHRONOLOGY_SEQUENCE",
-      "RAIL_NORTH_FILE",
-      "RAIL_EAST_FILE",
-      "RAIL_SOUTH_FILE",
-      "RAIL_WEST_FILE",
-      "PROBE_NORTH_FILE",
-      "PROBE_EAST_FILE",
-      "PROBE_WEST_FILE",
-      "PROBE_SOUTH_FILE",
-      "EXPECTED_HTML_CONTRACT",
-      "EXPECTED_INDEX_JS_CONTRACT",
-      "EXPECTED_ROUTE_CONDUCTOR_CONTRACT",
+      "CHRONOLOGY_SEQUENCE_JSON",
+      "PROBE_CANVAS_SURFACE_TRUTH_FILE",
+      "EXPECTED_PROBE_CANVAS_SURFACE_TRUTH_CONTRACT",
       "SERVED_HTML_CONTRACT",
       "SERVED_INDEX_JS_CONTRACT",
       "SERVED_ROUTE_CONDUCTOR_CONTRACT",
@@ -1662,8 +2145,6 @@
       "CACHE_KEY_STALE_NON_BLOCKING",
       "SERVED_CONTRACT_MISMATCH_IS_BLOCKING",
       "CURRENT_VISIBLE_HEARTH_STATUS",
-      "DIAGNOSTIC_TARGET_ACCESS_STATUS",
-      "DIAGNOSTIC_TARGET_ACCESS_ERROR",
       "RENDERED_PLANET_PROOF_READY",
       "VISIBLE_PLANET_PROOF_READY",
       "VISIBLE_PLANET_PROOF_SOURCE",
@@ -1673,10 +2154,26 @@
       "CANVAS_EXPRESSION_RICHNESS_READY",
       "DOM_EXPRESSION_SURFACE_PROOF_READY",
       "CANVAS_PIXEL_VARIANCE_STATUS",
-      "CANVAS_FINGER_EXPRESSION_STATUS",
-      "FOUR_WAY_CANVAS_HANDOFF_STATUS",
       "CURRENT_CANVAS_PARENT_CONTRACT",
       "CURRENT_CANVAS_PARENT_RECOGNIZED",
+      "CANVAS_SURFACE_TRUTH_PROBE_STATUS",
+      "CANVAS_SURFACE_TRUTH_AVAILABLE",
+      "CANVAS_ELEMENT_FOUND",
+      "CANVAS_SELECTOR",
+      "CANVAS_MOUNT_FOUND",
+      "CANVAS_MOUNT_SELECTOR",
+      "CANVAS_IN_MOUNT",
+      "CANVAS_RECT_NONZERO",
+      "CANVAS_COMPUTED_VISIBLE",
+      "CANVAS_VIEWPORT_INTERSECTING",
+      "CANVAS_CONTEXT_2D_READY",
+      "CANVAS_PIXEL_SAMPLE_STATUS",
+      "CANVAS_PIXEL_VISIBLE",
+      "CANVAS_LAYER_BLOCKED",
+      "CANVAS_LAYER_BLOCKER",
+      "CANVAS_NAMESPACE_PRESENT",
+      "CANVAS_NAMESPACE_MATCHES_DOM_SURFACE",
+      "CANVAS_PARENT_CONTRACT_RECOGNIZED",
       "CONTROL_FILE_STATUS",
       "CONTROL_HANDSHAKE_STATUS",
       "MOTION_TOUCH_STATUS",
@@ -1685,14 +2182,21 @@
       "PRIMARY_CASE",
       "CALIBRATION_STATUS",
       "CALIBRATION_HOLD_REASON",
+      "DIAGNOSTIC_CHRONOLOGY_CLEAN",
       "DIAGNOSTIC_RAIL_CLEAN",
       "CALIBRATION_POINT_REACHED",
-      "NEWS_ALIGNMENT_STATUS",
-      "NEWS_ALIGNMENT_SCORE",
-      "NEWS_ALIGNMENT_FIRST_FAILED_STAGE",
-      "FIBONACCI_SYNCHRONIZATION_STATUS",
-      "FIBONACCI_SYNCHRONIZATION_SCORE",
-      "FIBONACCI_SYNCHRONIZATION_FIRST_FAILED_STAGE",
+      "DIAGNOSTIC_TRACK_NEWS_ALIGNMENT_STATUS",
+      "DIAGNOSTIC_TRACK_NEWS_ALIGNMENT_SCORE",
+      "DIAGNOSTIC_TRACK_NEWS_ALIGNMENT_FIRST_FAILED_STAGE",
+      "DIAGNOSTIC_TRACK_FIBONACCI_SYNCHRONIZATION_STATUS",
+      "DIAGNOSTIC_TRACK_FIBONACCI_SYNCHRONIZATION_SCORE",
+      "DIAGNOSTIC_TRACK_FIBONACCI_SYNCHRONIZATION_FIRST_FAILED_STAGE",
+      "CANVAS_STANDARD_NEWS_ALIGNMENT_STATUS",
+      "CANVAS_STANDARD_NEWS_ALIGNMENT_SCORE",
+      "CANVAS_STANDARD_NEWS_ALIGNMENT_FIRST_FAILED_STAGE",
+      "CANVAS_STANDARD_FIBONACCI_SYNCHRONIZATION_STATUS",
+      "CANVAS_STANDARD_FIBONACCI_SYNCHRONIZATION_SCORE",
+      "CANVAS_STANDARD_FIBONACCI_SYNCHRONIZATION_FIRST_FAILED_STAGE",
       "POTENTIAL_REPEAT_SIGNATURE",
       "RECEIPT_SIGNATURE",
       "PREVIOUS_RECEIPT_SIGNATURE",
@@ -1728,18 +2232,22 @@
   function composeCompactSummary(report) {
     return [
       line("NORTH_CONTRACT", getValue(report, "NORTH_CONTRACT", CONTRACT)),
-      line("NORTH_CHRONOLOGY_HUB_ACTIVE", getValue(report, "NORTH_CHRONOLOGY_HUB_ACTIVE", "true")),
-      line("EIGHT_WAY_PROBE_BRIDGE_ACTIVE", getValue(report, "EIGHT_WAY_PROBE_BRIDGE_ACTIVE", "false")),
+      line("NINE_STEP_CHRONOLOGY_ACTIVE", getValue(report, "NINE_STEP_CHRONOLOGY_ACTIVE", "true")),
       line("CHRONOLOGY_COMPLETION_STATUS", getValue(report, "CHRONOLOGY_COMPLETION_STATUS", "UNKNOWN")),
-      line("FIRST_CHRONOLOGY_FAILURE_FILE", getValue(report, "FIRST_CHRONOLOGY_FAILURE_FILE", "UNKNOWN")),
       line("ZONE_OF_INFLICTION_OWNER", getValue(report, "ZONE_OF_INFLICTION_OWNER", "UNKNOWN")),
       line("ZONE_OF_INFLICTION_FILE", getValue(report, "ZONE_OF_INFLICTION_FILE", "UNKNOWN")),
       line("ZONE_OF_INFLICTION_CLASS", getValue(report, "ZONE_OF_INFLICTION_CLASS", "UNKNOWN")),
-      line("CANVAS_EXPRESSION_PROOF_STATUS", getValue(report, "CANVAS_EXPRESSION_PROOF_STATUS", "UNKNOWN")),
-      line("CANVAS_EXPRESSION_BOTTLENECK_CLASS", getValue(report, "CANVAS_EXPRESSION_BOTTLENECK_CLASS", "UNKNOWN")),
+      line("CANVAS_SURFACE_TRUTH_PROBE_STATUS", getValue(report, "CANVAS_SURFACE_TRUTH_PROBE_STATUS", "UNKNOWN")),
+      line("CANVAS_ELEMENT_FOUND", getValue(report, "CANVAS_ELEMENT_FOUND", "UNKNOWN")),
+      line("CANVAS_RECT_NONZERO", getValue(report, "CANVAS_RECT_NONZERO", "UNKNOWN")),
+      line("CANVAS_COMPUTED_VISIBLE", getValue(report, "CANVAS_COMPUTED_VISIBLE", "UNKNOWN")),
+      line("CANVAS_VIEWPORT_INTERSECTING", getValue(report, "CANVAS_VIEWPORT_INTERSECTING", "UNKNOWN")),
+      line("CANVAS_CONTEXT_2D_READY", getValue(report, "CANVAS_CONTEXT_2D_READY", "UNKNOWN")),
+      line("CANVAS_PIXEL_VISIBLE", getValue(report, "CANVAS_PIXEL_VISIBLE", "UNKNOWN")),
+      line("CANVAS_LAYER_BLOCKED", getValue(report, "CANVAS_LAYER_BLOCKED", "UNKNOWN")),
+      line("DIAGNOSTIC_TRACK_NEWS_ALIGNMENT_STATUS", getValue(report, "DIAGNOSTIC_TRACK_NEWS_ALIGNMENT_STATUS", "UNKNOWN")),
+      line("CANVAS_STANDARD_NEWS_ALIGNMENT_STATUS", getValue(report, "CANVAS_STANDARD_NEWS_ALIGNMENT_STATUS", "UNKNOWN")),
       line("POTENTIAL_REPEAT_SIGNATURE", getValue(report, "POTENTIAL_REPEAT_SIGNATURE", "UNKNOWN")),
-      line("PRIMARY_CASE", getValue(report, "PRIMARY_CASE", "UNKNOWN")),
-      line("CALIBRATION_STATUS", getValue(report, "CALIBRATION_STATUS", "UNKNOWN")),
       line("RECOMMENDED_NEXT_FILE", getValue(report, "RECOMMENDED_NEXT_FILE", "UNKNOWN")),
       line("RECOMMENDED_NEXT_ACTION", getValue(report, "RECOMMENDED_NEXT_ACTION", "UNKNOWN"))
     ].join("\n");
@@ -1751,27 +2259,18 @@
     try {
       applyAuthorityRead(state);
 
-      const firstSix = CHRONOLOGY_STEPS.filter((step) => step.order <= 6);
-      for (const step of firstSix) {
+      for (const step of CHRONOLOGY_STEPS) {
         await processStep(state, step, options);
+        applySpreadRecognition(state);
+        resolveAlignment(state);
+        resolveChronologyDisposition(state);
+        state.northVerdict = buildNorthVerdict(state);
+        state.reportObject = buildReportObject(state);
       }
 
       applySpreadRecognition(state);
-      resolveChronologyDisposition(state);
       resolveAlignment(state);
-
-      state.northVerdict = buildNorthVerdict(state);
-      state.reportObject = buildReportObject(state);
-
-      const southRail = CHRONOLOGY_STEPS.find((step) => step.id === "RAIL_SOUTH");
-      await processStep(state, southRail, options);
-
-      const probeSouth = CHRONOLOGY_STEPS.find((step) => step.id === "PROBE_SOUTH");
-      await processStep(state, probeSouth, options);
-
-      applySpreadRecognition(state);
       resolveChronologyDisposition(state);
-      resolveAlignment(state);
 
       state.northVerdict = buildNorthVerdict(state);
       state.reportObject = buildReportObject(state);
@@ -1790,8 +2289,8 @@
         contract: CONTRACT,
         receipt: RECEIPT,
         previousContract: PREVIOUS_CONTRACT,
-        chronologyHubActive: true,
-        eightWayProbeBridgeActive: false,
+        nineStepChronologyActive: true,
+        canvasSurfaceTruthProbeExpected: true,
         verdict: clonePlain(lastVerdict),
         report: clonePlain(lastReport),
         packetText: lastPacketText,
@@ -1800,19 +2299,20 @@
       };
     } catch (error) {
       state.primaryCase = "INCONCLUSIVE_EVIDENCE";
-      state.calibrationStatus = "CALIBRATION_NORTH_CHRONOLOGY_HUB_TOP_LEVEL_ERROR";
+      state.calibrationStatus = "CALIBRATION_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_TOP_LEVEL_ERROR";
       state.calibrationHoldReason = bounded(error && error.message ? error.message : error, 1000);
+      state.diagnosticChronologyClean = "false";
       state.diagnosticRailClean = "false";
       state.calibrationPointReached = "false";
-      state.chronologyCompletionStatus = "NORTH_CHRONOLOGY_HUB_TOP_LEVEL_ERROR";
+      state.chronologyCompletionStatus = "NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_TOP_LEVEL_ERROR";
       state.zoneOfInflictionOwner = "DIAGNOSTIC_NORTH_CHRONOLOGY_HUB";
       state.zoneOfInflictionFile = FILE;
       state.zoneOfInflictionClass = "NORTH_TOP_LEVEL_ERROR";
       state.zoneOfInflictionReason = state.calibrationHoldReason;
       state.recommendedNextOwner = "DIAGNOSTIC_NORTH_CHRONOLOGY_HUB";
       state.recommendedNextFile = FILE;
-      state.recommendedNextAction = "REVIEW_NORTH_CHRONOLOGY_HUB_TOP_LEVEL_ERROR_BEFORE_CHILD_RENEWAL";
-      addNote(state, `NORTH_CHRONOLOGY_HUB_TOP_LEVEL_ERROR:${state.calibrationHoldReason}`);
+      state.recommendedNextAction = "REVIEW_NORTH_TOP_LEVEL_ERROR_BEFORE_CHILD_RENEWAL";
+      addNote(state, `NORTH_TOP_LEVEL_ERROR:${state.calibrationHoldReason}`);
 
       resolveAlignment(state);
 
@@ -1869,13 +2369,13 @@
     const state = lastState || makeState();
 
     return {
-      parentRole: "NORTH_CHRONOLOGY_HUB_STANDARD",
+      parentRole: "NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB",
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       previousReceipt: PREVIOUS_RECEIPT,
+      lineageV9Contract: LINEAGE_V9_CONTRACT,
       lineageV8Contract: LINEAGE_V8_CONTRACT,
-      lineageV8Receipt: LINEAGE_V8_RECEIPT,
       lineageV7Contract: LINEAGE_V7_CONTRACT,
       baselineV6Contract: BASELINE_V6_CONTRACT,
       foundationV5Contract: FOUNDATION_V5_CONTRACT,
@@ -1890,8 +2390,8 @@
       northOwnsChronology: true,
       northOwnsChildEvidence: false,
       northOwnsProbeEvidence: false,
-      eightWayProbeBridgeActive: false,
-      eightFileChronologyActive: true,
+      nineStepChronologyActive: true,
+      canvasSurfaceTruthProbeExpected: true,
       diagnosticRouteHtmlRenewalRequired: false,
       receiverStillCallsNorthOnly: true,
 
@@ -1905,6 +2405,21 @@
       zoneOfInflictionFile: state.zoneOfInflictionFile,
       zoneOfInflictionClass: state.zoneOfInflictionClass,
       zoneOfInflictionReason: state.zoneOfInflictionReason,
+
+      canvasSurfaceTruthProbeStatus: state.canvasSurfaceTruthProbeStatus,
+      canvasSurfaceTruthAvailable: state.canvasSurfaceTruthAvailable,
+      canvasElementFound: state.canvasElementFound,
+      canvasRectNonzero: state.canvasRectNonzero,
+      canvasComputedVisible: state.canvasComputedVisible,
+      canvasViewportIntersecting: state.canvasViewportIntersecting,
+      canvasContext2dReady: state.canvasContext2dReady,
+      canvasPixelVisible: state.canvasPixelVisible,
+      canvasLayerBlocked: state.canvasLayerBlocked,
+
+      diagnosticTrackNewsAlignmentStatus: state.diagnosticTrackNewsAlignmentStatus,
+      diagnosticTrackNewsAlignmentScore: state.diagnosticTrackNewsAlignmentScore,
+      canvasStandardNewsAlignmentStatus: state.canvasStandardNewsAlignmentStatus,
+      canvasStandardNewsAlignmentScore: state.canvasStandardNewsAlignmentScore,
 
       potentialRepeatSignature: state.potentialRepeatSignature,
       receiptSignature: state.receiptSignature,
@@ -1955,32 +2470,39 @@
 
       railNorthFile: FILE,
       railEastFile: RAIL_EAST_FILE,
-      railSouthFile: RAIL_SOUTH_FILE,
       railWestFile: RAIL_WEST_FILE,
+      railSouthFile: RAIL_SOUTH_FILE,
       probeNorthFile: PROBE_NORTH_FILE,
       probeEastFile: PROBE_EAST_FILE,
       probeWestFile: PROBE_WEST_FILE,
+      probeCanvasSurfaceTruthFile: PROBE_CANVAS_SURFACE_TRUTH_FILE,
       probeSouthFile: PROBE_SOUTH_FILE,
 
       expectedHtmlContract: EXPECTED_HTML_CONTRACT,
       expectedIndexJsContract: EXPECTED_INDEX_JS_CONTRACT,
       expectedRouteConductorContract: EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
+      expectedRouteConductorLineageContract: EXPECTED_ROUTE_CONDUCTOR_LINEAGE_CONTRACT,
       expectedControlContract: EXPECTED_CONTROL_CONTRACT,
       expectedCanvasContract: EXPECTED_CANVAS_CONTRACT,
+      expectedProbeCanvasSurfaceTruthContract: EXPECTED_PROBE_CANVAS_SURFACE_TRUTH_CONTRACT,
 
       chronology: clonePlain((lastState || makeState()).chronology),
+      chronologySteps: clonePlain(CHRONOLOGY_STEPS),
       northVerdict: clonePlain(lastVerdict || buildNorthVerdict(lastState || makeState())),
       reportObject: clonePlain(lastReport || buildReportObject(lastState || makeState())),
 
+      supportsCanvasSurfaceTruthProbe: true,
+      supportsNineStepChronology: true,
+      supportsDiagnosticTrackAlignment: true,
+      supportsCanvasStandardAlignment: true,
       supportsChronologyHubStandard: true,
-      supportsEightFileChronology: true,
-      supportsBridgeDemotionToHub: true,
       supportsChildBoundaryPreservation: true,
       supportsProbeBoundaryPreservation: true,
       supportsRepeatSignatureDetection: true,
       supportsExistingDiagnosticRouteIntegration: true,
       supportsNorthOnlyReceiverCall: true,
       supportsZoneOfInflictionFromChronology: true,
+      supportsZoneOfInflictionFromCanvasTruth: true,
 
       ...NO_CLAIMS
     };
@@ -2009,36 +2531,43 @@
     root.HEARTH.diagnosticNorth = api;
     root.HEARTH.diagnosticRailNorth = api;
     root.HEARTH.diagnosticNorthChronologyHub = api;
+    root.HEARTH.diagnosticNorthCanvasSurfaceTruthChronologyHub = api;
 
     root.DEXTER_LAB.hearthDiagnosticRail = api;
     root.DEXTER_LAB.hearthDiagnosticNorth = api;
     root.DEXTER_LAB.hearthDiagnosticNorthChronologyHub = api;
+    root.DEXTER_LAB.hearthDiagnosticNorthCanvasSurfaceTruthChronologyHub = api;
 
     root.HEARTH_DIAGNOSTIC_RAIL = api;
     root.HEARTH_PARALLEL_DIAGNOSTIC_RAIL = api;
     root.HEARTH_DIAGNOSTIC_NORTH = api;
     root.HEARTH_DIAGNOSTIC_RAIL_NORTH = api;
     root.HEARTH_DIAGNOSTIC_NORTH_CHRONOLOGY_HUB = api;
+    root.HEARTH_DIAGNOSTIC_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB = api;
 
     root.HEARTH_DIAGNOSTIC_RAIL_RECEIPT = getReceipt();
     root.HEARTH_PARALLEL_DIAGNOSTIC_RAIL_RECEIPT = getReceipt();
     root.HEARTH_DIAGNOSTIC_NORTH_RECEIPT = getReceipt();
     root.HEARTH_DIAGNOSTIC_RAIL_NORTH_RECEIPT = getReceipt();
     root.HEARTH_DIAGNOSTIC_NORTH_CHRONOLOGY_HUB_RECEIPT = getReceipt();
+    root.HEARTH_DIAGNOSTIC_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_RECEIPT = getReceipt();
 
     root.HEARTH_DIAGNOSTIC_RAIL_REPORT = clonePlain(lastReport);
     root.HEARTH_PARALLEL_DIAGNOSTIC_RAIL_REPORT = clonePlain(lastReport);
     root.HEARTH_DIAGNOSTIC_NORTH_REPORT = clonePlain(lastReport);
     root.HEARTH_DIAGNOSTIC_NORTH_CHRONOLOGY_HUB_REPORT = clonePlain(lastReport);
+    root.HEARTH_DIAGNOSTIC_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_REPORT = clonePlain(lastReport);
 
     root.HEARTH_DIAGNOSTIC_RAIL_VERDICT = clonePlain(lastVerdict);
     root.HEARTH_PARALLEL_DIAGNOSTIC_RAIL_VERDICT = clonePlain(lastVerdict);
     root.HEARTH_DIAGNOSTIC_NORTH_VERDICT = clonePlain(lastVerdict);
     root.HEARTH_DIAGNOSTIC_NORTH_CHRONOLOGY_HUB_VERDICT = clonePlain(lastVerdict);
+    root.HEARTH_DIAGNOSTIC_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_VERDICT = clonePlain(lastVerdict);
 
     root.HEARTH_DIAGNOSTIC_RAIL_PACKET_TEXT = lastPacketText;
     root.HEARTH_DIAGNOSTIC_NORTH_PACKET_TEXT = lastPacketText;
     root.HEARTH_DIAGNOSTIC_NORTH_CHRONOLOGY_HUB_PACKET_TEXT = lastPacketText;
+    root.HEARTH_DIAGNOSTIC_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_PACKET_TEXT = lastPacketText;
   }
 
   Object.assign(api, {
@@ -2048,8 +2577,8 @@
     RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
+    lineageV9Contract: LINEAGE_V9_CONTRACT,
     lineageV8Contract: LINEAGE_V8_CONTRACT,
-    lineageV8Receipt: LINEAGE_V8_RECEIPT,
     lineageV7Contract: LINEAGE_V7_CONTRACT,
     baselineV6Contract: BASELINE_V6_CONTRACT,
     foundationV5Contract: FOUNDATION_V5_CONTRACT,
@@ -2065,26 +2594,29 @@
     northOwnsChronology: true,
     northOwnsChildEvidence: false,
     northOwnsProbeEvidence: false,
-    eightWayProbeBridgeActive: false,
-    eightFileChronologyActive: true,
+    nineStepChronologyActive: true,
+    canvasSurfaceTruthProbeExpected: true,
     diagnosticRouteHtmlRenewalRequired: false,
     receiverStillCallsNorthOnly: true,
 
     railNorthFile: FILE,
     railEastFile: RAIL_EAST_FILE,
-    railSouthFile: RAIL_SOUTH_FILE,
     railWestFile: RAIL_WEST_FILE,
+    railSouthFile: RAIL_SOUTH_FILE,
     probeNorthFile: PROBE_NORTH_FILE,
     probeEastFile: PROBE_EAST_FILE,
     probeWestFile: PROBE_WEST_FILE,
+    probeCanvasSurfaceTruthFile: PROBE_CANVAS_SURFACE_TRUTH_FILE,
     probeSouthFile: PROBE_SOUTH_FILE,
     chronologySteps: CHRONOLOGY_STEPS,
 
     expectedHtmlContract: EXPECTED_HTML_CONTRACT,
     expectedIndexJsContract: EXPECTED_INDEX_JS_CONTRACT,
     expectedRouteConductorContract: EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
+    expectedRouteConductorLineageContract: EXPECTED_ROUTE_CONDUCTOR_LINEAGE_CONTRACT,
     expectedControlContract: EXPECTED_CONTROL_CONTRACT,
     expectedCanvasContract: EXPECTED_CANVAS_CONTRACT,
+    expectedProbeCanvasSurfaceTruthContract: EXPECTED_PROBE_CANVAS_SURFACE_TRUTH_CONTRACT,
 
     runDiagnostic,
     getReport,
@@ -2095,15 +2627,18 @@
     getReceiptLight,
     getState,
 
+    supportsCanvasSurfaceTruthProbe: true,
+    supportsNineStepChronology: true,
+    supportsDiagnosticTrackAlignment: true,
+    supportsCanvasStandardAlignment: true,
     supportsChronologyHubStandard: true,
-    supportsEightFileChronology: true,
-    supportsBridgeDemotionToHub: true,
     supportsChildBoundaryPreservation: true,
     supportsProbeBoundaryPreservation: true,
     supportsRepeatSignatureDetection: true,
     supportsExistingDiagnosticRouteIntegration: true,
     supportsNorthOnlyReceiverCall: true,
     supportsZoneOfInflictionFromChronology: true,
+    supportsZoneOfInflictionFromCanvasTruth: true,
 
     diagnosticUiAuthority: false,
     productionMutationAuthorized: false,

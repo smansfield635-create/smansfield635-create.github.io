@@ -1,26 +1,27 @@
 // /assets/hearth/hearth.diagnostic.probe.south.js
 // HEARTH_DIAGNOSTIC_PROBE_SOUTH_PACKET_MEANING_FILE_COMPOSITION_TNT_v1
 // Full-file replacement.
-// Diagnostic Probe South / F55 ninth-cycle probe-truth cell only.
+// Diagnostic Probe South / F55 packet-meaning + auxiliary canvas finger inspect reader only.
 // Purpose:
-// - Exist as the physical file North v11 expects at /assets/hearth/hearth.diagnostic.probe.south.js.
-// - Publish HEARTH.diagnosticProbeSouth before North calls runProbeSouth.
-// - Preserve the existing nine-step chronology: North -> Probe North -> East -> Probe East -> West -> Probe West -> Canvas Surface Truth -> South -> Probe South.
-// - Treat South as the F34 packet-output authority.
-// - Treat this file as the F55 probe-truth / packet-meaning confirmation cell.
-// - Confirm whether South was observed, called, and returned packet-output meaning.
-// - Optionally read the extra tenth/asymmetric South-pair or Surface Pointer Bishop inspection cell if it is present.
-// - Return detailed evidence without mutating production, restarting runtime, drawing Canvas, claiming F13/F21, or claiming visual pass.
+// - Preserve Probe South as the ninth chronology cell.
+// - Preserve the expected North v11 contract and receipt.
+// - Preserve the nine-step chronology without adding a tenth chronology step.
+// - Read the auxiliary tenth inspection surface when available:
+//   /assets/hearth/hearth.canvas.finger.inspect.js
+// - Call the auxiliary canvas finger inspect API when available.
+// - Return auxiliary under-hood canvas/finger/draw-path evidence through F55.
+// - Keep the auxiliary file asymmetric: consumed by Probe South, not promoted into chronology.
+// - Preserve no production mutation, no canvas repair, no route repair, no runtime restart.
+// - Preserve no F13 claim, no F21 claim, no ready text, no visual pass, no generated image, no GraphicBox, no WebGL.
 // Does not own:
-// - diagnostic North chronology
-// - diagnostic South packet output
+// - North chronology
+// - South packet-output rail
 // - Canvas drawing
 // - Canvas repair
-// - production route repair
-// - runtime restart
-// - controls
-// - terrain/material/hydrology truth
-// - final visual pass
+// - Route conductor repair
+// - Controls mutation
+// - Terrain/hydrology/material truth
+// - Final visual pass
 
 (() => {
   "use strict";
@@ -31,10 +32,14 @@
     "HEARTH_DIAGNOSTIC_PROBE_SOUTH_PACKET_MEANING_FILE_COMPOSITION_RECEIPT_v1";
 
   const VERSION =
-    "2026-06-06.hearth-diagnostic-probe-south-physical-f55-probe-truth-cell-v1";
+    "2026-06-06.probe-south-f55-auxiliary-canvas-finger-inspect-reader-v1";
 
   const FILE = "/assets/hearth/hearth.diagnostic.probe.south.js";
   const SOUTH_FILE = "/assets/hearth/hearth.diagnostic.south.js";
+  const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
+  const CANVAS_FINGER_INSPECT_FILE =
+    "/assets/hearth/hearth.canvas.finger.inspect.js";
+
   const TARGET_ROUTE = "/showroom/globe/hearth/";
   const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
   const PACKET_NAME = "HEARTH_PARALLEL_DIAGNOSTIC_RAIL_RESULT_PACKET_v2";
@@ -47,6 +52,17 @@
     "HEARTH_DIAGNOSTIC_RAIL_NORTH_CHRONOLOGY_HUB_STANDARD_TNT_v10";
   const PREVIOUS_NORTH_RECEIPT =
     "HEARTH_DIAGNOSTIC_RAIL_NORTH_CHRONOLOGY_HUB_STANDARD_RECEIPT_v10";
+
+  const LINEAGE_V9_NORTH_CONTRACT =
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_EIGHT_WAY_PROBE_BRIDGE_ORCHESTRATOR_TNT_v9";
+  const LINEAGE_V8_NORTH_CONTRACT =
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_CANVAS_EXPRESSION_WEST_STANDARD_ORCHESTRATOR_TNT_v8";
+  const LINEAGE_V7_NORTH_CONTRACT =
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_POST_SOUTH_NEWS_FIBONACCI_ALIGNMENT_ORCHESTRATOR_TNT_v7";
+  const BASELINE_V6_NORTH_CONTRACT =
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_BISHOP_QUEEN_ACCEPTANCE_SCHEMA_ORCHESTRATOR_TNT_v6";
+  const FOUNDATION_V5_NORTH_CONTRACT =
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_LAB_CANVAS_BRIDGE_SCHEMA_ORCHESTRATOR_TNT_v5";
 
   const RAIL_NORTH_FILE = "/assets/hearth/hearth.diagnostic.rail.js";
   const RAIL_EAST_FILE = "/assets/hearth/hearth.diagnostic.east.js";
@@ -72,25 +88,36 @@
     "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE_TNT_v1";
   const EXPECTED_CANVAS_CONTRACT =
     "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3";
+
+  const EXPECTED_EAST_CONTRACT =
+    "HEARTH_DIAGNOSTIC_EAST_CANVAS_EXPRESSION_SOURCE_FOOTPRINT_ALIGNMENT_TNT_v8";
+  const EXPECTED_WEST_CONTRACT =
+    "HEARTH_DIAGNOSTIC_WEST_CANVAS_EXPRESSION_RENDERED_RANGE_OBSERVATORY_TNT_v7";
+  const EXPECTED_SOUTH_CONTRACT =
+    "HEARTH_DIAGNOSTIC_SOUTH_PRIORITY_CONTROL_QUEEN_PACKET_CONFORMANCE_TNT_v8";
+  const EXPECTED_PROBE_NORTH_CONTRACT =
+    "HEARTH_DIAGNOSTIC_PROBE_NORTH_FILE_COMPOSITION_ZONE_COORDINATOR_TNT_v1";
+  const EXPECTED_PROBE_EAST_CONTRACT =
+    "HEARTH_DIAGNOSTIC_PROBE_EAST_SERVED_SOURCE_FILE_COMPOSITION_TNT_v1";
+  const EXPECTED_PROBE_WEST_CONTRACT =
+    "HEARTH_DIAGNOSTIC_PROBE_WEST_RENDERED_TARGET_FILE_COMPOSITION_TNT_v1";
   const EXPECTED_PROBE_CANVAS_SURFACE_TRUTH_CONTRACT =
     "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_TNT_v1";
+  const EXPECTED_PROBE_SOUTH_CONTRACT = PROBE_SOUTH_CONTRACT;
 
-  const ACCEPTED_SOUTH_CONTRACTS = Object.freeze([
-    "HEARTH_DIAGNOSTIC_SOUTH_PAIR_SIDE_PACKET_OUTPUT_HANDOFF_TNT_v10",
-    "HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_BISHOP_RETURN_READ_TNT_v9",
-    "HEARTH_DIAGNOSTIC_SOUTH_PRIORITY_CONTROL_QUEEN_PACKET_CONFORMANCE_TNT_v8",
-    "HEARTH_DIAGNOSTIC_SOUTH_PRIORITY_CONTROL_QUEEN_PACKET_CONFORMANCE_TNT_v7",
-    "HEARTH_DIAGNOSTIC_SOUTH_BISHOP_QUEEN_CANVAS_REPORT_CONFORMANCE_TNT_v6",
-    "HEARTH_DIAGNOSTIC_RAIL_SOUTH_REPORT_PACKET_OUTPUT_TNT_v1"
-  ]);
+  const EXPECTED_CANVAS_FINGER_INSPECT_CONTRACT =
+    "HEARTH_CANVAS_FINGER_INSPECT_AUXILIARY_SURFACE_TNT_v1";
 
   const NO_CLAIMS = Object.freeze({
     f13Claimed: false,
     f21EligibleForNorth: false,
+    f21ClaimedByProbe: false,
     f21ClaimedByDiagnosticRail: false,
     readyTextAllowed: false,
+    readyTextClaimed: false,
     readyTextClaimedByDiagnosticRail: false,
     visualPassClaimed: false,
+    finalVisualPassClaimed: false,
     generatedImage: false,
     graphicBox: false,
     webGL: false,
@@ -100,10 +127,13 @@
   const UPPER_NO_CLAIMS = Object.freeze({
     F13_CLAIMED: false,
     F21_ELIGIBLE_FOR_NORTH: false,
+    F21_CLAIMED_BY_PROBE: false,
     F21_CLAIMED_BY_DIAGNOSTIC_RAIL: false,
     READY_TEXT_ALLOWED: false,
+    READY_TEXT_CLAIMED: false,
     READY_TEXT_CLAIMED_BY_DIAGNOSTIC_RAIL: false,
     VISUAL_PASS_CLAIMED: false,
+    FINAL_VISUAL_PASS_CLAIMED: false,
     GENERATED_IMAGE: false,
     GRAPHIC_BOX: false,
     WEBGL: false
@@ -116,100 +146,6 @@
   let lastPacketText = "";
   let lastCompactSummary = "";
   let lastState = null;
-
-  const PRIMARY_ALIAS_CHRONOLOGY = Object.freeze([
-    Object.freeze({
-      order: 1,
-      chronologyOrder: 9,
-      fibonacciStage: "F55",
-      alias: "HEARTH.diagnosticProbeSouth",
-      layer: "HEARTH",
-      role: "physical-probe-south-primary",
-      authority: "probe-truth-packet-meaning"
-    }),
-    Object.freeze({
-      order: 2,
-      chronologyOrder: 9,
-      fibonacciStage: "F55",
-      alias: "HEARTH.diagnosticRailProbeSouth",
-      layer: "HEARTH",
-      role: "physical-probe-south-rail-compatible",
-      authority: "probe-truth-packet-meaning"
-    }),
-    Object.freeze({
-      order: 3,
-      chronologyOrder: 9,
-      fibonacciStage: "F55",
-      alias: "HEARTH.diagnosticSouthProbe",
-      layer: "HEARTH",
-      role: "south-probe-compatible",
-      authority: "probe-truth-packet-meaning"
-    }),
-    Object.freeze({
-      order: 4,
-      chronologyOrder: 9,
-      fibonacciStage: "F55",
-      alias: "HEARTH_DIAGNOSTIC_PROBE_SOUTH",
-      layer: "GLOBAL",
-      role: "legacy-global-probe-south",
-      authority: "probe-truth-packet-meaning"
-    }),
-    Object.freeze({
-      order: 5,
-      chronologyOrder: 9,
-      fibonacciStage: "F55",
-      alias: "HEARTH_DIAGNOSTIC_RAIL_PROBE_SOUTH",
-      layer: "GLOBAL",
-      role: "legacy-global-rail-probe-south",
-      authority: "probe-truth-packet-meaning"
-    }),
-    Object.freeze({
-      order: 6,
-      chronologyOrder: 9,
-      fibonacciStage: "F55",
-      alias: "DEXTER_LAB.hearthDiagnosticProbeSouth",
-      layer: "DEXTER_LAB",
-      role: "lab-visible-probe-south",
-      authority: "probe-truth-packet-meaning"
-    })
-  ]);
-
-  const SOUTH_ALIAS_CANDIDATES = Object.freeze([
-    "HEARTH.diagnosticSouth",
-    "HEARTH.diagnosticRailSouth",
-    "HEARTH.diagnosticSouthRail",
-    "HEARTH.southDiagnostic",
-    "HEARTH.southDiagnosticRail",
-    "HEARTH_DIAGNOSTIC_SOUTH",
-    "HEARTH_DIAGNOSTIC_RAIL_SOUTH",
-    "HEARTH_DIAGNOSTIC_SOUTH_RAIL",
-    "DEXTER_LAB.hearthDiagnosticSouth",
-    "DEXTER_LAB.hearthDiagnosticRailSouth",
-    "DEXTER_LAB.hearthDiagnosticSouthRail",
-    "DEXTER_LAB.hearthSouthDiagnosticRail"
-  ]);
-
-  const OPTIONAL_TENTH_CELL_ALIAS_CANDIDATES = Object.freeze([
-    "HEARTH.diagnosticSouthPairSide",
-    "HEARTH.diagnosticSouthPairCell",
-    "HEARTH.diagnosticSouthPairInspect",
-    "HEARTH.diagnosticSouthSurfacePointerBishop",
-    "HEARTH.diagnosticSurfacePointerBishopSouth",
-    "HEARTH.diagnosticProbeSouthSurfacePointerBishop",
-    "HEARTH.southSurfacePointerBishopInspect",
-    "HEARTH.canvasFingerInspect",
-    "HEARTH.canvasFingerInspector",
-    "HEARTH.canvasFingerProof",
-    "HEARTH.hearthCanvasFingerInspect",
-    "HEARTH_CANVAS_FINGER_INSPECT",
-    "HEARTH_DIAGNOSTIC_SOUTH_PAIR_SIDE",
-    "HEARTH_DIAGNOSTIC_SOUTH_PAIR_CELL",
-    "HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_BISHOP",
-    "HEARTH_DIAGNOSTIC_SURFACE_POINTER_BISHOP_SOUTH",
-    "DEXTER_LAB.hearthDiagnosticSouthPairSide",
-    "DEXTER_LAB.hearthDiagnosticSouthSurfacePointerBishop",
-    "DEXTER_LAB.hearthCanvasFingerInspect"
-  ]);
 
   function nowIso() {
     try {
@@ -228,7 +164,7 @@
     return String(value);
   }
 
-  function compact(value, limit = 4000) {
+  function bounded(value, limit = 4000) {
     return safeString(value)
       .replace(/\n/g, " ")
       .replace(/\s+/g, " ")
@@ -250,31 +186,19 @@
     if (value === undefined || value === null || value === "") return fallback;
 
     if (Array.isArray(value)) {
-      const joined = value
-        .map((entry) => {
-          if (isObject(entry)) {
-            try {
-              return JSON.stringify(entry);
-            } catch (_error) {
-              return compact(entry, 1600);
-            }
-          }
-          return compact(entry, 1600);
-        })
-        .filter(Boolean)
-        .join(" | ");
+      const joined = value.map((entry) => packetValue(entry, "")).filter(Boolean).join(" | ");
       return joined || fallback;
     }
 
     if (isObject(value)) {
       try {
-        return compact(JSON.stringify(value), 24000) || fallback;
+        return bounded(JSON.stringify(value), 20000) || fallback;
       } catch (_error) {
-        return compact(value, 4000) || fallback;
+        return bounded(String(value), 4000) || fallback;
       }
     }
 
-    return compact(value, 4000) || fallback;
+    return bounded(value, 4000) || fallback;
   }
 
   function line(key, value) {
@@ -283,12 +207,14 @@
 
   function getRaw(source, key, fallback = undefined) {
     if (!isObject(source)) return fallback;
+
     if (Object.prototype.hasOwnProperty.call(source, key)) {
       const value = source[key];
       return value === undefined || value === null ? fallback : value;
     }
 
-    const lower = String(key).toLowerCase();
+    const lower = key.toLowerCase();
+
     for (const candidate of Object.keys(source)) {
       if (candidate.toLowerCase() === lower) {
         const value = source[candidate];
@@ -299,15 +225,16 @@
     return fallback;
   }
 
+  function getValue(source, key, fallback = "UNKNOWN") {
+    return packetValue(getRaw(source, key, undefined), fallback);
+  }
+
   function firstKnown(...values) {
     for (const value of values) {
-      const text = compact(value, 4000);
+      const text = bounded(value, 8000);
       if (!text) continue;
-      if (text === "UNKNOWN") continue;
-      if (text === "NONE") continue;
-      if (text === "NOT_FOUND") continue;
-      if (text === "UNREADABLE") continue;
-      if (text === "INACCESSIBLE") continue;
+      if (text === "UNKNOWN" || text === "NONE" || text === "NOT_FOUND") continue;
+      if (text === "UNREADABLE" || text === "INACCESSIBLE") continue;
       return text;
     }
     return "UNKNOWN";
@@ -319,21 +246,17 @@
     return fallback;
   }
 
-  function truthy(value) {
-    return value === true || value === "true" || value === "TRUE" || value === 1 || value === "1";
-  }
-
   function normalizeNotes(...sources) {
     const out = [];
     const seen = new Set();
 
     for (const source of sources) {
-      if (source === undefined || source === null || source === "") continue;
+      if (source === undefined || source === null || source === "" || source === "none") continue;
       const values = Array.isArray(source) ? source : safeString(source).split("|");
 
       for (const raw of values) {
-        const clean = compact(raw, 1200);
-        if (!clean) continue;
+        const clean = bounded(raw, 1600);
+        if (!clean || clean === "none") continue;
         if (seen.has(clean)) continue;
         seen.add(clean);
         out.push(clean);
@@ -341,56 +264,6 @@
     }
 
     return out;
-  }
-
-  function pathRead(path) {
-    const parts = safeString(path).split(".");
-    let value = root;
-
-    for (const part of parts) {
-      if (!part) continue;
-      if (value && Object.prototype.hasOwnProperty.call(value, part)) {
-        value = value[part];
-      } else {
-        return undefined;
-      }
-    }
-
-    return value;
-  }
-
-  function aliasChronologyText(list) {
-    return (list || [])
-      .map((entry) => {
-        return [
-          `${entry.order}.${entry.alias}`,
-          `order:${entry.chronologyOrder}`,
-          `fib:${entry.fibonacciStage}`,
-          `layer:${entry.layer}`,
-          `role:${entry.role}`,
-          `authority:${entry.authority}`
-        ].join(" ");
-      })
-      .join(" | ");
-  }
-
-  function chronologyText(chronology) {
-    if (!Array.isArray(chronology)) return "UNKNOWN";
-
-    return chronology
-      .map((entry) => {
-        if (!isObject(entry)) return "UNKNOWN_ENTRY";
-        return [
-          `${entry.order || "?"}.${entry.id || "UNKNOWN"}`,
-          `fib:${entry.fibonacciStage || "UNKNOWN"}`,
-          `file:${entry.file || "UNKNOWN"}`,
-          `load:${entry.loadStatus || "UNKNOWN"}`,
-          `observed:${entry.observed}`,
-          `call:${entry.callStatus || "UNKNOWN"}`,
-          `status:${entry.status || "UNKNOWN"}`
-        ].join(" ");
-      })
-      .join(" | ");
   }
 
   function extractCurrentReport(input) {
@@ -409,10 +282,31 @@
     if (Array.isArray(currentReport && currentReport.CHRONOLOGY_SEQUENCE)) {
       return clonePlain(currentReport.CHRONOLOGY_SEQUENCE);
     }
-    if (Array.isArray(currentReport && currentReport.chronology)) {
-      return clonePlain(currentReport.chronology);
+    if (typeof currentReport.CHRONOLOGY_SEQUENCE_JSON === "string") {
+      try {
+        const parsed = JSON.parse(currentReport.CHRONOLOGY_SEQUENCE_JSON);
+        if (Array.isArray(parsed)) return parsed;
+      } catch (_error) {
+        return [];
+      }
     }
     return [];
+  }
+
+  function chronologyText(chronology) {
+    if (!Array.isArray(chronology)) return "UNKNOWN";
+
+    return chronology.map((entry) => {
+      return [
+        `${entry.order || "?"}.${entry.id || "UNKNOWN"}`,
+        `fib:${entry.fibonacciStage || "UNKNOWN"}`,
+        `file:${entry.file || "UNKNOWN"}`,
+        `load:${entry.loadStatus || "UNKNOWN"}`,
+        `observed:${entry.observed}`,
+        `call:${entry.callStatus || "UNKNOWN"}`,
+        `status:${entry.status || "UNKNOWN"}`
+      ].join(" ");
+    }).join(" | ");
   }
 
   function findChronologyEntry(chronology, id) {
@@ -420,191 +314,299 @@
     return chronology.find((entry) => isObject(entry) && entry.id === id) || null;
   }
 
-  function outputKeysContain(entry, key) {
-    const keys = safeString(entry && entry.outputKeys);
-    return keys.split(",").map((item) => item.trim()).includes(key);
-  }
+  function getByPath(path) {
+    const parts = safeString(path).split(".");
+    let cursor = root;
 
-  function methodList(apiObject) {
-    if (!isObject(apiObject)) return [];
-    return Object.keys(apiObject)
-      .filter((key) => typeof apiObject[key] === "function")
-      .sort();
-  }
-
-  function readApiReport(apiObject) {
-    if (!isObject(apiObject)) return {};
-
-    const safeMethods = [
-      "getReport",
-      "getReceipt",
-      "getReceiptLight",
-      "getState"
-    ];
-
-    for (const method of safeMethods) {
-      if (typeof apiObject[method] !== "function") continue;
-      try {
-        const value = apiObject[method]();
-        if (isObject(value)) return clonePlain(value);
-      } catch (_error) {
-        continue;
-      }
+    for (const part of parts) {
+      if (!part) continue;
+      if (!cursor || typeof cursor !== "object") return undefined;
+      cursor = cursor[part];
     }
 
+    return cursor;
+  }
+
+  function outputKeys(value) {
+    if (!isObject(value)) return "NONE";
+    return Object.keys(value).join(",") || "NONE";
+  }
+
+  function extractResultReport(result) {
+    if (isObject(result && result.REPORT_OBJECT)) return clonePlain(result.REPORT_OBJECT);
+    if (isObject(result && result.report)) return clonePlain(result.report);
+    if (isObject(result && result.evidence)) return clonePlain(result.evidence);
+    if (isObject(result && result.output) && isObject(result.output.REPORT_OBJECT)) {
+      return clonePlain(result.output.REPORT_OBJECT);
+    }
+    if (isObject(result && result.output)) return clonePlain(result.output);
+    if (isObject(result)) return clonePlain(result);
     return {};
   }
 
-  function discoverFirstApi(aliasList) {
-    for (const alias of aliasList) {
-      const value = pathRead(alias);
-      if (isObject(value)) {
+  const CANVAS_FINGER_INSPECT_ALIASES = Object.freeze([
+    Object.freeze({
+      order: 1,
+      alias: "HEARTH.canvasFingerInspect",
+      layer: "HEARTH",
+      intent: "primary-auxiliary-canvas-finger-inspect"
+    }),
+    Object.freeze({
+      order: 2,
+      alias: "HEARTH.hearthCanvasFingerInspect",
+      layer: "HEARTH",
+      intent: "explicit-hearth-auxiliary-canvas-finger-inspect"
+    }),
+    Object.freeze({
+      order: 3,
+      alias: "HEARTH.canvasFingerInspector",
+      layer: "HEARTH",
+      intent: "inspector-language-compatibility"
+    }),
+    Object.freeze({
+      order: 4,
+      alias: "HEARTH_CANVAS_FINGER_INSPECT",
+      layer: "GLOBAL",
+      intent: "legacy-global-auxiliary-canvas-finger-inspect"
+    }),
+    Object.freeze({
+      order: 5,
+      alias: "HEARTH_CANVAS_FINGER_INSPECTOR",
+      layer: "GLOBAL",
+      intent: "legacy-global-inspector-language-compatibility"
+    }),
+    Object.freeze({
+      order: 6,
+      alias: "DEXTER_LAB.hearthCanvasFingerInspect",
+      layer: "DEXTER_LAB",
+      intent: "lab-visible-auxiliary-canvas-finger-inspect"
+    }),
+    Object.freeze({
+      order: 7,
+      alias: "DEXTER_LAB.hearthCanvasFingerInspector",
+      layer: "DEXTER_LAB",
+      intent: "lab-visible-inspector-language-compatibility"
+    })
+  ]);
+
+  function aliasChronologyText(list) {
+    return list.map((entry) => {
+      return [
+        `${entry.order}.${entry.alias}`,
+        `layer:${entry.layer}`,
+        `intent:${entry.intent}`
+      ].join(" ");
+    }).join(" | ");
+  }
+
+  function resolveCanvasFingerInspectApi() {
+    for (const entry of CANVAS_FINGER_INSPECT_ALIASES) {
+      const candidate = getByPath(entry.alias);
+      if (candidate && typeof candidate === "object") {
         return {
           observed: true,
-          alias,
-          api: value,
-          contract: firstKnown(value.contract, value.CONTRACT, "UNKNOWN"),
-          receipt: firstKnown(value.receipt, value.RECEIPT, "UNKNOWN"),
-          methods: methodList(value)
+          api: candidate,
+          sourcePath: entry.alias,
+          aliasOrder: entry.order,
+          aliasIntent: entry.intent
         };
       }
     }
 
     return {
       observed: false,
-      alias: "NONE",
       api: null,
-      contract: "UNKNOWN",
-      receipt: "UNKNOWN",
-      methods: []
+      sourcePath: "NONE",
+      aliasOrder: 0,
+      aliasIntent: "NONE"
     };
   }
 
-  function acceptedSouthContract(contract) {
-    const text = compact(contract, 4000);
-    return ACCEPTED_SOUTH_CONTRACTS.includes(text);
-  }
-
-  function findKeyByFragments(source, fragments) {
-    if (!isObject(source)) return "UNKNOWN";
-    const keys = Object.keys(source);
-
-    for (const key of keys) {
-      const upper = key.toUpperCase();
-      let allFound = true;
-      for (const fragment of fragments) {
-        if (!upper.includes(String(fragment).toUpperCase())) {
-          allFound = false;
-          break;
-        }
-      }
-      if (allFound) return packetValue(source[key], "UNKNOWN");
+  function requestAsyncScriptLoadOnce(src) {
+    if (!root.document || !root.document.createElement || !root.document.head) {
+      return "ASYNC_SCRIPT_LOAD_UNAVAILABLE_NO_DOCUMENT";
     }
 
-    return "UNKNOWN";
+    const existing = Array.prototype.slice.call(root.document.querySelectorAll("script[src]"))
+      .some((script) => safeString(script.getAttribute("src")).indexOf(src) >= 0);
+
+    if (existing) return "ASYNC_SCRIPT_TAG_ALREADY_PRESENT";
+
+    try {
+      const script = root.document.createElement("script");
+      script.src = `${src}?v=${encodeURIComponent(EXPECTED_CANVAS_FINGER_INSPECT_CONTRACT)}`;
+      script.async = false;
+      script.defer = false;
+      script.setAttribute("data-hearth-diagnostic-auxiliary-load", "probe-south-f55");
+      root.document.head.appendChild(script);
+      return "ASYNC_SCRIPT_LOAD_REQUESTED_NOT_AVAILABLE_FOR_CURRENT_CALL";
+    } catch (error) {
+      return `ASYNC_SCRIPT_LOAD_REQUEST_FAILED:${bounded(error && error.message, 800)}`;
+    }
   }
 
-  function inspectOptionalTenthCell() {
-    const found = discoverFirstApi(OPTIONAL_TENTH_CELL_ALIAS_CANDIDATES);
-    const report = found.observed ? readApiReport(found.api) : {};
-    const contract = firstKnown(found.contract, getRaw(report, "contract"), getRaw(report, "CONTRACT"));
-    const receipt = firstKnown(found.receipt, getRaw(report, "receipt"), getRaw(report, "RECEIPT"));
+  function attemptSynchronousCanvasFingerInspectLoad() {
+    const before = resolveCanvasFingerInspectApi();
+    if (before.observed) {
+      return {
+        attempted: false,
+        status: "ALREADY_OBSERVED",
+        reason: "AUXILIARY_CANVAS_FINGER_INSPECT_ALIAS_PRESENT_BEFORE_LOAD",
+        asyncFallbackStatus: "NOT_NEEDED"
+      };
+    }
 
-    const boundaryStatus = firstKnown(
-      getRaw(report, "BOUNDARY_STATUS"),
-      getRaw(report, "BOUNDARY_READY"),
-      getRaw(report, "FINGER_BOUNDARY_STATUS"),
-      findKeyByFragments(report, ["BOUNDARY", "STATUS"]),
-      findKeyByFragments(report, ["BOUNDARY", "READY"])
-    );
+    if (typeof root.XMLHttpRequest !== "function") {
+      return {
+        attempted: false,
+        status: "SYNC_SCRIPT_LOAD_UNAVAILABLE",
+        reason: "XMLHTTPREQUEST_UNAVAILABLE",
+        asyncFallbackStatus: requestAsyncScriptLoadOnce(CANVAS_FINGER_INSPECT_FILE)
+      };
+    }
 
-    const massStatus = firstKnown(
-      getRaw(report, "MASS_STATUS"),
-      getRaw(report, "MASS_READY"),
-      getRaw(report, "FINGER_MASS_STATUS"),
-      findKeyByFragments(report, ["MASS", "STATUS"]),
-      findKeyByFragments(report, ["MASS", "READY"])
-    );
+    try {
+      const request = new root.XMLHttpRequest();
+      request.open("GET", `${CANVAS_FINGER_INSPECT_FILE}?v=${encodeURIComponent(EXPECTED_CANVAS_FINGER_INSPECT_CONTRACT)}`, false);
+      request.send(null);
 
-    const surfaceStatus = firstKnown(
-      getRaw(report, "SURFACE_STATUS"),
-      getRaw(report, "SURFACE_READY"),
-      getRaw(report, "FINGER_SURFACE_STATUS"),
-      findKeyByFragments(report, ["SURFACE", "STATUS"]),
-      findKeyByFragments(report, ["SURFACE", "READY"])
-    );
+      const ok = request.status === 0 || (request.status >= 200 && request.status < 300);
+      const source = request.responseText || "";
 
-    const lightStatus = firstKnown(
-      getRaw(report, "LIGHT_STATUS"),
-      getRaw(report, "LIGHT_READY"),
-      getRaw(report, "FINGER_LIGHT_STATUS"),
-      findKeyByFragments(report, ["LIGHT", "STATUS"]),
-      findKeyByFragments(report, ["LIGHT", "READY"])
-    );
+      if (!ok || !source) {
+        return {
+          attempted: true,
+          status: "SYNC_SCRIPT_LOAD_FAILED",
+          reason: `HTTP_STATUS_${request.status || "UNKNOWN"}_OR_EMPTY_SOURCE`,
+          asyncFallbackStatus: requestAsyncScriptLoadOnce(CANVAS_FINGER_INSPECT_FILE)
+        };
+      }
 
-    const hexStatus = firstKnown(
-      getRaw(report, "HEX_SURFACE_STATUS"),
-      getRaw(report, "HEX_SURFACE_READY"),
-      getRaw(report, "HEX_TRANSMISSION_STATUS"),
-      getRaw(report, "SURFACE_POINTER_BISHOP_HEX_STATUS"),
-      findKeyByFragments(report, ["HEX", "SURFACE", "STATUS"]),
-      findKeyByFragments(report, ["HEX", "TRANSMISSION"]),
-      findKeyByFragments(report, ["POINTER", "BISHOP"])
-    );
+      try {
+        (0, eval)(`${source}\n//# sourceURL=${CANVAS_FINGER_INSPECT_FILE}`);
+      } catch (evalError) {
+        return {
+          attempted: true,
+          status: "SYNC_SCRIPT_EVAL_FAILED",
+          reason: bounded(evalError && evalError.message, 1200),
+          asyncFallbackStatus: requestAsyncScriptLoadOnce(CANVAS_FINGER_INSPECT_FILE)
+        };
+      }
 
-    const sampleStatus = firstKnown(
-      getRaw(report, "EXPRESSION_SAMPLE_STATUS"),
-      getRaw(report, "SURFACE_SAMPLE_STATUS"),
-      getRaw(report, "SAMPLE_STATUS"),
-      findKeyByFragments(report, ["SAMPLE", "STATUS"])
-    );
+      const after = resolveCanvasFingerInspectApi();
 
-    const recognized = found.observed
-      ? "OPTIONAL_TENTH_CELL_OBSERVED"
-      : "OPTIONAL_TENTH_CELL_NOT_OBSERVED_NON_BLOCKING";
-
-    return {
-      observed: found.observed,
-      alias: found.alias,
-      contract,
-      receipt,
-      methods: found.methods.join(",") || "NONE",
-      reportKeys: Object.keys(report).join(",") || "NONE",
-      status: recognized,
-      boundaryStatus,
-      massStatus,
-      surfaceStatus,
-      lightStatus,
-      hexStatus,
-      sampleStatus,
-      report
-    };
+      return {
+        attempted: true,
+        status: after.observed
+          ? "SYNC_SCRIPT_LOAD_COMPLETE"
+          : "SYNC_SCRIPT_LOADED_BUT_ALIAS_NOT_OBSERVED",
+        reason: after.observed
+          ? "AUXILIARY_CANVAS_FINGER_INSPECT_ALIAS_OBSERVED_AFTER_SYNC_LOAD"
+          : "SOURCE_EVALUATED_WITHOUT_EXPECTED_ALIAS",
+        asyncFallbackStatus: "NOT_NEEDED"
+      };
+    } catch (error) {
+      return {
+        attempted: true,
+        status: "SYNC_SCRIPT_LOAD_ERROR",
+        reason: bounded(error && error.message, 1200),
+        asyncFallbackStatus: requestAsyncScriptLoadOnce(CANVAS_FINGER_INSPECT_FILE)
+      };
+    }
   }
 
-  function buildBaseState() {
-    return {
-      role: "DIAGNOSTIC_PROBE_SOUTH_F55_PHYSICAL_PROBE_TRUTH_CELL",
-      contract: PROBE_SOUTH_CONTRACT,
-      receipt: PROBE_SOUTH_RECEIPT,
-      version: VERSION,
-      file: FILE,
-      targetRoute: TARGET_ROUTE,
-      diagnosticRoute: DIAGNOSTIC_ROUTE,
-      chronologyOrder: 9,
-      fibonacciStage: "F55",
-      physicalFileObserved: true,
-      sourcePath: "HEARTH.diagnosticProbeSouth",
-      primaryCallableMethod: "runProbeSouth",
-      productionMutationAuthorized: false,
-      runtimeRestartAuthorized: false,
-      canvasDrawingAuthorized: false,
-      canvasReleaseAuthorized: false,
-      routeRepairAuthorized: false,
-      finalVisualPassAuthority: false,
-      aliasChronology: clonePlain(PRIMARY_ALIAS_CHRONOLOGY),
-      updatedAt: nowIso(),
-      ...NO_CLAIMS
-    };
+  function selectCallableMethod(auxApi) {
+    if (!auxApi || typeof auxApi !== "object") {
+      return { methodName: "NONE", method: null };
+    }
+
+    const names = [
+      "runCanvasFingerInspect",
+      "inspectCanvasFinger",
+      "runFingerInspect",
+      "inspectFinger",
+      "runDiagnostic",
+      "inspect",
+      "getReport"
+    ];
+
+    for (const name of names) {
+      if (typeof auxApi[name] === "function") {
+        return { methodName: name, method: auxApi[name] };
+      }
+    }
+
+    return { methodName: "NONE", method: null };
+  }
+
+  function inspectCanvasFinger(input, currentReport, chronology) {
+    const load = attemptSynchronousCanvasFingerInspectLoad();
+    const resolved = resolveCanvasFingerInspectApi();
+    const callable = selectCallableMethod(resolved.api);
+
+    if (!resolved.observed || !callable.method) {
+      return {
+        load,
+        resolved,
+        callAttempted: false,
+        callStatus: resolved.observed
+          ? "NOT_CALLED_NO_COMPATIBLE_METHOD"
+          : "NOT_CALLED_AUXILIARY_NOT_OBSERVED",
+        callError: "NONE",
+        methodName: callable.methodName,
+        result: {},
+        report: {}
+      };
+    }
+
+    try {
+      const payload = {
+        parentProbeSouthContract: PROBE_SOUTH_CONTRACT,
+        parentProbeSouthReceipt: PROBE_SOUTH_RECEIPT,
+        parentProbeSouthFile: FILE,
+        parentNorthContract: firstKnown(currentReport.NORTH_CONTRACT, NORTH_CONTRACT),
+        targetRoute: TARGET_ROUTE,
+        diagnosticRoute: DIAGNOSTIC_ROUTE,
+        canvasFile: CANVAS_FILE,
+        canvasFingerInspectFile: CANVAS_FINGER_INSPECT_FILE,
+        auxiliaryTenthFileIsNotChronologyStep: true,
+        productionMutationAuthorized: false,
+        canvasDrawingAuthorized: false,
+        canvasRepairAuthorized: false,
+        runtimeRestartAuthorized: false,
+        currentReport: clonePlain(currentReport),
+        chronology: clonePlain(chronology),
+        input: clonePlain(input || {})
+      };
+
+      const result = callable.methodName === "getReport"
+        ? callable.method()
+        : callable.method(payload);
+
+      const report = extractResultReport(result);
+
+      return {
+        load,
+        resolved,
+        callAttempted: true,
+        callStatus: "CALL_RETURNED",
+        callError: "NONE",
+        methodName: callable.methodName,
+        result,
+        report
+      };
+    } catch (error) {
+      return {
+        load,
+        resolved,
+        callAttempted: true,
+        callStatus: "CALL_ERROR",
+        callError: bounded(error && error.message, 1600),
+        methodName: callable.methodName,
+        result: {},
+        report: {}
+      };
+    }
   }
 
   function buildSharedFields(input, currentReport, chronology) {
@@ -612,49 +614,32 @@
       PACKET_NAME: firstKnown(currentReport.PACKET_NAME, PACKET_NAME),
       TARGET_ROUTE: firstKnown(currentReport.TARGET_ROUTE, TARGET_ROUTE),
       DIAGNOSTIC_ROUTE: firstKnown(currentReport.DIAGNOSTIC_ROUTE, DIAGNOSTIC_ROUTE),
-      DIAGNOSTIC_TIMESTAMP: firstKnown(
-        currentReport.DIAGNOSTIC_TIMESTAMP,
-        input && input.diagnosticTimestamp,
-        nowIso()
-      ),
+      DIAGNOSTIC_TIMESTAMP: firstKnown(currentReport.DIAGNOSTIC_TIMESTAMP, input.diagnosticTimestamp, nowIso()),
 
-      NORTH_CONTRACT: firstKnown(currentReport.NORTH_CONTRACT, input && input.northContract, NORTH_CONTRACT),
-      NORTH_RECEIPT: firstKnown(currentReport.NORTH_RECEIPT, input && input.northReceipt, NORTH_RECEIPT),
-      PREVIOUS_NORTH_CONTRACT: firstKnown(
-        currentReport.PREVIOUS_NORTH_CONTRACT,
-        input && input.previousNorthContract,
-        PREVIOUS_NORTH_CONTRACT
-      ),
-      PREVIOUS_NORTH_RECEIPT: firstKnown(
-        currentReport.PREVIOUS_NORTH_RECEIPT,
-        input && input.previousNorthReceipt,
-        PREVIOUS_NORTH_RECEIPT
-      ),
+      NORTH_CONTRACT: firstKnown(input.northContract, currentReport.NORTH_CONTRACT, NORTH_CONTRACT),
+      NORTH_RECEIPT: firstKnown(input.northReceipt, currentReport.NORTH_RECEIPT, NORTH_RECEIPT),
+      PREVIOUS_NORTH_CONTRACT: firstKnown(currentReport.PREVIOUS_NORTH_CONTRACT, PREVIOUS_NORTH_CONTRACT),
+      PREVIOUS_NORTH_RECEIPT: firstKnown(currentReport.PREVIOUS_NORTH_RECEIPT, PREVIOUS_NORTH_RECEIPT),
+      LINEAGE_V9_NORTH_CONTRACT: firstKnown(currentReport.LINEAGE_V9_NORTH_CONTRACT, LINEAGE_V9_NORTH_CONTRACT),
+      LINEAGE_V8_NORTH_CONTRACT: firstKnown(currentReport.LINEAGE_V8_NORTH_CONTRACT, LINEAGE_V8_NORTH_CONTRACT),
+      LINEAGE_V7_NORTH_CONTRACT: firstKnown(currentReport.LINEAGE_V7_NORTH_CONTRACT, LINEAGE_V7_NORTH_CONTRACT),
+      BASELINE_V6_NORTH_CONTRACT: firstKnown(currentReport.BASELINE_V6_NORTH_CONTRACT, BASELINE_V6_NORTH_CONTRACT),
+      FOUNDATION_V5_NORTH_CONTRACT: firstKnown(currentReport.FOUNDATION_V5_NORTH_CONTRACT, FOUNDATION_V5_NORTH_CONTRACT),
 
-      NORTH_CHRONOLOGY_HUB_ACTIVE: boolText(
-        getRaw(currentReport, "NORTH_CHRONOLOGY_HUB_ACTIVE", true),
-        "true"
-      ),
-      NORTH_IS_HUB_ONLY: boolText(
-        getRaw(currentReport, "NORTH_IS_HUB_ONLY", true),
-        "true"
-      ),
-      NINE_STEP_CHRONOLOGY_ACTIVE: boolText(
-        getRaw(currentReport, "NINE_STEP_CHRONOLOGY_ACTIVE", true),
-        "true"
-      ),
+      NORTH_CHRONOLOGY_HUB_ACTIVE: boolText(getRaw(currentReport, "NORTH_CHRONOLOGY_HUB_ACTIVE", true), "true"),
+      NORTH_IS_HUB_ONLY: boolText(getRaw(currentReport, "NORTH_IS_HUB_ONLY", true), "true"),
+      NINE_STEP_CHRONOLOGY_ACTIVE: boolText(getRaw(currentReport, "NINE_STEP_CHRONOLOGY_ACTIVE", true), "true"),
       CANVAS_SURFACE_TRUTH_PROBE_EXPECTED: boolText(
         getRaw(currentReport, "CANVAS_SURFACE_TRUTH_PROBE_EXPECTED", true),
         "true"
       ),
+      EIGHT_WAY_PROBE_BRIDGE_ACTIVE: boolText(getRaw(currentReport, "EIGHT_WAY_PROBE_BRIDGE_ACTIVE", true), "true"),
+      EIGHT_FILE_CHRONOLOGY_ACTIVE: boolText(getRaw(currentReport, "EIGHT_FILE_CHRONOLOGY_ACTIVE", true), "true"),
       DIAGNOSTIC_ROUTE_HTML_RENEWAL_REQUIRED: boolText(
         getRaw(currentReport, "DIAGNOSTIC_ROUTE_HTML_RENEWAL_REQUIRED", false),
         "false"
       ),
-      RECEIVER_STILL_CALLS_NORTH_ONLY: boolText(
-        getRaw(currentReport, "RECEIVER_STILL_CALLS_NORTH_ONLY", true),
-        "true"
-      ),
+      RECEIVER_STILL_CALLS_NORTH_ONLY: boolText(getRaw(currentReport, "RECEIVER_STILL_CALLS_NORTH_ONLY", true), "true"),
 
       RAIL_NORTH_FILE,
       RAIL_EAST_FILE,
@@ -678,17 +663,27 @@
       ),
       EXPECTED_CONTROL_CONTRACT: firstKnown(currentReport.EXPECTED_CONTROL_CONTRACT, EXPECTED_CONTROL_CONTRACT),
       EXPECTED_CANVAS_CONTRACT: firstKnown(currentReport.EXPECTED_CANVAS_CONTRACT, EXPECTED_CANVAS_CONTRACT),
+      EXPECTED_EAST_CONTRACT: firstKnown(currentReport.EXPECTED_EAST_CONTRACT, EXPECTED_EAST_CONTRACT),
+      EXPECTED_WEST_CONTRACT: firstKnown(currentReport.EXPECTED_WEST_CONTRACT, EXPECTED_WEST_CONTRACT),
+      EXPECTED_SOUTH_CONTRACT: firstKnown(currentReport.EXPECTED_SOUTH_CONTRACT, EXPECTED_SOUTH_CONTRACT),
+      EXPECTED_PROBE_NORTH_CONTRACT: firstKnown(currentReport.EXPECTED_PROBE_NORTH_CONTRACT, EXPECTED_PROBE_NORTH_CONTRACT),
+      EXPECTED_PROBE_EAST_CONTRACT: firstKnown(currentReport.EXPECTED_PROBE_EAST_CONTRACT, EXPECTED_PROBE_EAST_CONTRACT),
+      EXPECTED_PROBE_WEST_CONTRACT: firstKnown(currentReport.EXPECTED_PROBE_WEST_CONTRACT, EXPECTED_PROBE_WEST_CONTRACT),
       EXPECTED_PROBE_CANVAS_SURFACE_TRUTH_CONTRACT: firstKnown(
         currentReport.EXPECTED_PROBE_CANVAS_SURFACE_TRUTH_CONTRACT,
         EXPECTED_PROBE_CANVAS_SURFACE_TRUTH_CONTRACT
       ),
-      EXPECTED_PROBE_SOUTH_CONTRACT: PROBE_SOUTH_CONTRACT,
+      EXPECTED_PROBE_SOUTH_CONTRACT: firstKnown(currentReport.EXPECTED_PROBE_SOUTH_CONTRACT, EXPECTED_PROBE_SOUTH_CONTRACT),
 
       CHRONOLOGY_SEQUENCE: chronology,
-      CHRONOLOGY_SEQUENCE_TEXT: firstKnown(
-        currentReport.CHRONOLOGY_SEQUENCE_TEXT,
-        chronologyText(chronology)
-      )
+      CHRONOLOGY_SEQUENCE_JSON: (() => {
+        try {
+          return JSON.stringify(chronology);
+        } catch (_error) {
+          return "[]";
+        }
+      })(),
+      CHRONOLOGY_SEQUENCE_TEXT: firstKnown(currentReport.CHRONOLOGY_SEQUENCE_TEXT, chronologyText(chronology))
     };
   }
 
@@ -698,101 +693,132 @@
     const shared = buildSharedFields(input, currentReport, chronology);
 
     const southEntry = findChronologyEntry(chronology, "RAIL_SOUTH");
-    const southChronologyEntryObserved = Boolean(southEntry);
+    const canvasSurfaceEntry = findChronologyEntry(chronology, "PROBE_CANVAS_SURFACE_TRUTH");
+
     const southObserved = Boolean(southEntry && southEntry.observed === true);
-    const southCallReturned = Boolean(southEntry && southEntry.callStatus === "CALL_RETURNED");
-    const southStatusComplete = Boolean(southEntry && southEntry.status === "COMPLETE");
-    const southCallMethod = firstKnown(southEntry && southEntry.callMethod, "UNKNOWN");
-    const southEntryContract = firstKnown(southEntry && southEntry.contract, "UNKNOWN");
-    const southEntryReceipt = firstKnown(southEntry && southEntry.receipt, "UNKNOWN");
-    const southEntryContractRecognized = acceptedSouthContract(southEntryContract);
+    const southReturned = Boolean(southEntry && southEntry.callStatus === "CALL_RETURNED");
+    const southComplete = Boolean(southEntry && southEntry.status === "COMPLETE");
+    const packetMeaningPreserved = southObserved && southReturned && southComplete;
 
-    const southApiDiscovery = discoverFirstApi(SOUTH_ALIAS_CANDIDATES);
-    const southApiReport = southApiDiscovery.observed ? readApiReport(southApiDiscovery.api) : {};
-    const southApiContract = firstKnown(
-      southApiDiscovery.contract,
-      getRaw(southApiReport, "SOUTH_CONTRACT"),
-      getRaw(southApiReport, "contract"),
-      getRaw(southApiReport, "CONTRACT")
-    );
-    const southApiReceipt = firstKnown(
-      southApiDiscovery.receipt,
-      getRaw(southApiReport, "SOUTH_RECEIPT"),
-      getRaw(southApiReport, "receipt"),
-      getRaw(southApiReport, "RECEIPT")
-    );
-    const southApiContractRecognized = acceptedSouthContract(southApiContract);
-
-    const southPacketOutputKeysPresent = Boolean(
-      southEntry &&
-        outputKeysContain(southEntry, "PACKET_NAME") &&
-        outputKeysContain(southEntry, "CHRONOLOGY_SEQUENCE") &&
-        outputKeysContain(southEntry, "ZONE_OF_INFLICTION_FILE")
+    const canvasSurfaceReturned = Boolean(
+      canvasSurfaceEntry &&
+      canvasSurfaceEntry.observed === true &&
+      canvasSurfaceEntry.callStatus === "CALL_RETURNED"
     );
 
-    const southMeaningPreserved =
-      southChronologyEntryObserved &&
-      southObserved &&
-      southCallReturned &&
-      southStatusComplete &&
-      (southEntryContractRecognized || southApiContractRecognized);
+    const canvasPixelBlank = (
+      getValue(currentReport, "CANVAS_PIXEL_SAMPLE_STATUS", "") === "PIXEL_SAMPLE_BLANK" ||
+      getValue(currentReport, "CANVAS_PIXEL_VARIANCE_STATUS", "") === "PIXEL_EMPTY_OR_TRANSPARENT" ||
+      getValue(currentReport, "ZONE_OF_INFLICTION_CLASS", "") === "CANVAS_PIXEL_SAMPLE_NOT_VISIBLE"
+    );
 
-    const optionalTenth = inspectOptionalTenthCell();
+    const aux = inspectCanvasFinger(input, currentReport, chronology);
+    const auxReport = aux.report || {};
+    const auxReturned = aux.callStatus === "CALL_RETURNED";
 
-    const probeRunStatus = southMeaningPreserved
-      ? "COMPLETE"
-      : "COMPLETE_WITH_SOUTH_MEANING_WARNING";
+    const auxContract = firstKnown(
+      aux.resolved && aux.resolved.api && aux.resolved.api.contract,
+      aux.resolved && aux.resolved.api && aux.resolved.api.CONTRACT,
+      auxReport.CONTRACT,
+      auxReport.contract,
+      auxReport.CANVAS_FINGER_INSPECT_CONTRACT,
+      EXPECTED_CANVAS_FINGER_INSPECT_CONTRACT
+    );
 
-    const packetMeaningStatus = southMeaningPreserved
-      ? "SOUTH_PACKET_OUTPUT_OBSERVED_AND_MEANING_PRESERVED"
-      : "PROBE_SOUTH_ACTIVE_BUT_SOUTH_PACKET_MEANING_NOT_FULLY_PROVEN";
+    const auxReceipt = firstKnown(
+      aux.resolved && aux.resolved.api && aux.resolved.api.receipt,
+      aux.resolved && aux.resolved.api && aux.resolved.api.RECEIPT,
+      auxReport.RECEIPT,
+      auxReport.receipt,
+      auxReport.CANVAS_FINGER_INSPECT_RECEIPT,
+      "UNKNOWN"
+    );
 
-    const returnStatus = southMeaningPreserved
-      ? "F55_PROBE_TRUTH_RETURN_COMPLETE"
-      : "F55_PROBE_TRUTH_RETURN_ACTIVE_WITH_WARNING";
+    const auxStatus = auxReturned
+      ? firstKnown(auxReport.CANVAS_FINGER_INSPECT_STATUS, auxReport.STATUS, "CALL_RETURNED")
+      : aux.resolved.observed
+        ? "OBSERVED_NOT_RETURNED"
+        : "NOT_OBSERVED";
 
-    const checkmarkStatus = southMeaningPreserved
-      ? "CHECKMARK_PASS"
-      : "CHECKMARK_WARNING";
+    const recommendedOwner = auxReturned
+      ? firstKnown(
+          auxReport.RECOMMENDED_NEXT_OWNER,
+          auxReport.CANVAS_FINGER_INSPECT_RECOMMENDED_OWNER,
+          currentReport.CANVAS_TRUTH_RECOMMENDED_OWNER,
+          currentReport.RECOMMENDED_NEXT_OWNER,
+          "CANVAS_DRAWING_OR_DOWNSTREAM_EXPRESSION_ADAPTER"
+        )
+      : "DIAGNOSTIC_AUXILIARY_CANVAS_FINGER_INSPECT";
+
+    const recommendedFile = auxReturned
+      ? firstKnown(
+          auxReport.RECOMMENDED_NEXT_FILE,
+          auxReport.CANVAS_FINGER_INSPECT_RECOMMENDED_FILE,
+          currentReport.CANVAS_TRUTH_RECOMMENDED_FILE,
+          currentReport.RECOMMENDED_NEXT_FILE,
+          CANVAS_FILE
+        )
+      : CANVAS_FINGER_INSPECT_FILE;
+
+    const recommendedAction = auxReturned
+      ? firstKnown(
+          auxReport.RECOMMENDED_NEXT_ACTION,
+          auxReport.CANVAS_FINGER_INSPECT_RECOMMENDED_ACTION,
+          currentReport.CANVAS_TRUTH_RECOMMENDED_ACTION,
+          currentReport.RECOMMENDED_NEXT_ACTION,
+          "AUDIT_CANVAS_DRAW_PATH_AND_DOWNSTREAM_EXPRESSION_ADAPTER"
+        )
+      : "ENSURE_AUXILIARY_CANVAS_FINGER_INSPECT_FILE_IS_SERVED_AND_ALIASED";
+
+    const diagnosticInstrumentStatus = auxReturned
+      ? "UNDER_HOOD_CANVAS_FINGER_INSPECT_RETURNED"
+      : "UNDER_HOOD_PROBE_LAYER_INCOMPLETE";
+
+    const canvasExpressionInstrumentationStatus = auxReturned
+      ? "CANVAS_FINGER_INSPECT_RETURNED_DEEPER_CANVAS_ADAPTER_EVIDENCE"
+      : "CANVAS_EXPRESSION_INSTRUMENTATION_INCOMPLETE";
 
     const notes = normalizeNotes(
       currentReport.SECONDARY_EVIDENCE_NOTES,
       currentReport.NORTH_SECONDARY_EVIDENCE_NOTES,
-      "PROBE_SOUTH_PHYSICAL_FILE_OBSERVED",
-      "PROBE_SOUTH_F55_NINTH_CYCLE_TRUTH_CELL_ACTIVE",
-      "PROBE_SOUTH_PRIMARY_ALIAS_PUBLISHED:HEARTH.diagnosticProbeSouth",
-      "PROBE_SOUTH_RUN_METHOD_AVAILABLE:runProbeSouth",
-      "PROBE_SOUTH_CONFIRMS_SOUTH_PACKET_MEANING_ONLY",
+      "PROBE_SOUTH_PHYSICAL_F55_FILE_ACTIVE",
+      "PROBE_SOUTH_PRESERVES_NINE_STEP_CHRONOLOGY",
+      "PROBE_SOUTH_CONSUMES_AUXILIARY_TENTH_FILE_WITHOUT_PROMOTING_IT_TO_CHRONOLOGY",
       "PROBE_SOUTH_DOES_NOT_MUTATE_PRODUCTION",
-      "PROBE_SOUTH_DOES_NOT_DRAW_CANVAS",
+      "PROBE_SOUTH_DOES_NOT_REPAIR_CANVAS",
       "PROBE_SOUTH_DOES_NOT_RESTART_RUNTIME",
-      "PROBE_SOUTH_DOES_NOT_CLAIM_F13_OR_F21",
-      "PROBE_SOUTH_DOES_NOT_CLAIM_VISUAL_PASS",
-      southMeaningPreserved
-        ? "PROBE_SOUTH_CONFIRMED_SOUTH_PACKET_OUTPUT_MEANING"
-        : "PROBE_SOUTH_SOUTH_PACKET_OUTPUT_MEANING_WARNING",
-      optionalTenth.observed
-        ? `PROBE_SOUTH_OPTIONAL_TENTH_CELL_OBSERVED:${optionalTenth.alias}`
-        : "PROBE_SOUTH_OPTIONAL_TENTH_CELL_NOT_OBSERVED_NON_BLOCKING"
+      "PROBE_SOUTH_DOES_NOT_CLAIM_READY_OR_VISUAL_PASS",
+      packetMeaningPreserved
+        ? "PROBE_SOUTH_CONFIRMED_SOUTH_RAIL_PACKET_RETURN_TO_NORTH"
+        : "PROBE_SOUTH_SOUTH_RAIL_PACKET_RETURN_NOT_FULLY_CONFIRMED",
+      canvasSurfaceReturned
+        ? "PROBE_SOUTH_CONFIRMED_CANVAS_SURFACE_TRUTH_PROBE_RETURNED_BEFORE_SOUTH"
+        : "PROBE_SOUTH_CANVAS_SURFACE_TRUTH_PARENT_ENTRY_NOT_FULLY_CONFIRMED",
+      canvasPixelBlank
+        ? "PROBE_SOUTH_PARENT_CANVAS_PIXEL_SAMPLE_BLANK_OBSERVED"
+        : "PROBE_SOUTH_PARENT_CANVAS_PIXEL_SAMPLE_NOT_BLANK_OR_NOT_REPORTED",
+      auxReturned
+        ? "PROBE_SOUTH_AUXILIARY_CANVAS_FINGER_INSPECT_RETURNED"
+        : `PROBE_SOUTH_AUXILIARY_CANVAS_FINGER_INSPECT_NOT_RETURNED:${aux.callStatus}`
     );
 
     const report = {
       ...shared,
 
-      PROBE_SOUTH_STATUS: probeRunStatus,
+      PROBE_SOUTH_STATUS: "COMPLETE",
       PROBE_SOUTH_CONTRACT,
       PROBE_SOUTH_RECEIPT,
       PROBE_SOUTH_IMPLEMENTATION_CONTRACT: PROBE_SOUTH_CONTRACT,
       PROBE_SOUTH_IMPLEMENTATION_RECEIPT: PROBE_SOUTH_RECEIPT,
       PROBE_SOUTH_VERSION: VERSION,
       PROBE_SOUTH_FILE: FILE,
-      PROBE_SOUTH_CARRIER_FILE: FILE,
+      PROBE_SOUTH_CARRIER_FILE: SOUTH_FILE,
 
       PROBE_SOUTH_CHRONOLOGY_ORDER: "9",
       PROBE_SOUTH_FIBONACCI_STAGE: "F55",
       PROBE_SOUTH_GATE: "GATE_9_PROBE_TRUTH",
-      PROBE_SOUTH_ROLE: "PHYSICAL_PROBE_SOUTH_PACKET_MEANING_FILE_COMPOSITION",
-      PROBE_SOUTH_AUTHORITY: "PROBE_TRUTH_PACKET_MEANING_ONLY",
+      PROBE_SOUTH_ROLE: "PACKET_MEANING_FILE_COMPOSITION_PROBE",
+      PROBE_SOUTH_AUTHORITY: "PACKET_MEANING_AND_AUXILIARY_INSPECTION_RETURN_ONLY",
       PROBE_SOUTH_SOURCE_PATH: "HEARTH.diagnosticProbeSouth",
       PROBE_SOUTH_PHYSICAL_FILE_OBSERVED: "true",
       PROBE_SOUTH_OPERATIONAL_FILE_DEPENDENCY: "true",
@@ -801,78 +827,131 @@
       PROBE_SOUTH_PUBLISHED_AS_PHYSICAL_FILE: "true",
 
       PROBE_SOUTH_RUN_COMPLETE: true,
-      PROBE_SOUTH_RUN_STATUS: probeRunStatus,
-      PROBE_SOUTH_PACKET_MEANING_PRESERVED: boolText(southMeaningPreserved, "false"),
-      PROBE_SOUTH_MEANING_STATUS: packetMeaningStatus,
-      PROBE_SOUTH_RETURN_TO_NORTH_STATUS: returnStatus,
-      PROBE_SOUTH_CHECKMARK_STATUS: checkmarkStatus,
+      PROBE_SOUTH_RUN_STATUS: "COMPLETE",
+      PROBE_SOUTH_PACKET_MEANING_PRESERVED: boolText(packetMeaningPreserved, "false"),
+      PROBE_SOUTH_MEANING_STATUS: packetMeaningPreserved
+        ? "SOUTH_PACKET_OUTPUT_CONFIRMED_AND_AUXILIARY_CANVAS_FINGER_INSPECT_ATTEMPTED"
+        : "PROBE_SOUTH_RETURNED_WITH_SOUTH_PACKET_CONFIRMATION_WARNING",
+      PROBE_SOUTH_RETURN_TO_NORTH_STATUS: "RETURN_SURFACE_COMPLETE",
+      PROBE_SOUTH_CHECKMARK_STATUS: packetMeaningPreserved
+        ? "CHECKMARK_PASS"
+        : "CHECKMARK_ACTIVE_WITH_SOUTH_GATE_WARNING",
 
-      SOUTH_GATE_CONFIRMED_BY_PROBE: boolText(southMeaningPreserved, "false"),
-      SOUTH_RAIL_CHRONOLOGY_ENTRY_OBSERVED_BY_PROBE: boolText(southChronologyEntryObserved, "false"),
+      SOUTH_GATE_CONFIRMED_BY_PROBE: boolText(packetMeaningPreserved, "false"),
+      SOUTH_RAIL_CHRONOLOGY_ENTRY_OBSERVED_BY_PROBE: boolText(Boolean(southEntry), "false"),
       SOUTH_RAIL_OBSERVED_BY_PROBE: boolText(southObserved, "false"),
-      SOUTH_RAIL_CALL_RETURNED_BY_PROBE: boolText(southCallReturned, "false"),
-      SOUTH_RAIL_STATUS_COMPLETE_BY_PROBE: boolText(southStatusComplete, "false"),
-      SOUTH_RAIL_CALL_METHOD_BY_PROBE: southCallMethod,
-      SOUTH_RAIL_CHRONOLOGY_STATUS_BY_PROBE: firstKnown(southEntry && southEntry.status, "UNKNOWN"),
-      SOUTH_RAIL_LOAD_STATUS_BY_PROBE: firstKnown(southEntry && southEntry.loadStatus, "UNKNOWN"),
-      SOUTH_RAIL_CONTRACT_BY_PROBE: southEntryContract,
-      SOUTH_RAIL_RECEIPT_BY_PROBE: southEntryReceipt,
-      SOUTH_RAIL_CONTRACT_RECOGNIZED_BY_PROBE: boolText(southEntryContractRecognized, "false"),
-      SOUTH_RAIL_PACKET_OUTPUT_KEYS_PRESENT_BY_PROBE: boolText(southPacketOutputKeysPresent, "false"),
+      SOUTH_RAIL_CALL_RETURNED_BY_PROBE: boolText(southReturned, "false"),
+      SOUTH_RAIL_CALL_METHOD_BY_PROBE: southEntry ? firstKnown(southEntry.callMethod, "UNKNOWN") : "NOT_PRESENT_IN_PARENT_CHRONOLOGY",
+      SOUTH_RAIL_CHRONOLOGY_STATUS_BY_PROBE: southEntry ? firstKnown(southEntry.status, "UNKNOWN") : "NOT_PRESENT_IN_PARENT_CHRONOLOGY",
 
-      SOUTH_API_ALIAS_OBSERVED_BY_PROBE: boolText(southApiDiscovery.observed, "false"),
-      SOUTH_API_ALIAS_BY_PROBE: southApiDiscovery.alias,
-      SOUTH_API_CONTRACT_BY_PROBE: southApiContract,
-      SOUTH_API_RECEIPT_BY_PROBE: southApiReceipt,
-      SOUTH_API_CONTRACT_RECOGNIZED_BY_PROBE: boolText(southApiContractRecognized, "false"),
-      SOUTH_API_METHODS_BY_PROBE: southApiDiscovery.methods.join(",") || "NONE",
-      SOUTH_API_REPORT_KEYS_BY_PROBE: Object.keys(southApiReport).join(",") || "NONE",
+      CANVAS_SURFACE_TRUTH_PROBE_ENTRY_OBSERVED_BY_PROBE: boolText(Boolean(canvasSurfaceEntry), "false"),
+      CANVAS_SURFACE_TRUTH_PROBE_RETURNED_BY_PROBE: boolText(canvasSurfaceReturned, "false"),
+      CANVAS_SURFACE_TRUTH_PARENT_PIXEL_SAMPLE_STATUS: firstKnown(currentReport.CANVAS_PIXEL_SAMPLE_STATUS, "UNKNOWN"),
+      CANVAS_SURFACE_TRUTH_PARENT_PIXEL_VISIBLE: firstKnown(currentReport.CANVAS_PIXEL_VISIBLE, "UNKNOWN"),
+      CANVAS_SURFACE_TRUTH_PARENT_VARIANCE_STATUS: firstKnown(currentReport.CANVAS_PIXEL_VARIANCE_STATUS, "UNKNOWN"),
+      CANVAS_SURFACE_TRUTH_PARENT_FAILURE_CLASS: firstKnown(
+        currentReport.CANVAS_TRUTH_FAILURE_CLASS,
+        currentReport.ZONE_OF_INFLICTION_CLASS,
+        "UNKNOWN"
+      ),
+      CANVAS_SURFACE_TRUTH_PARENT_FAILURE_REASON: firstKnown(
+        currentReport.CANVAS_TRUTH_FAILURE_REASON,
+        currentReport.ZONE_OF_INFLICTION_REASON,
+        "UNKNOWN"
+      ),
 
-      SOUTH_ACCEPTED_CONTRACTS_BY_PROBE: ACCEPTED_SOUTH_CONTRACTS.join(" | "),
-      SOUTH_PACKET_OUTPUT_AUTHORITY_PRESERVED: "true",
-      SOUTH_PROBE_DOES_NOT_REWRITE_SOUTH: "true",
-      SOUTH_PROBE_DOES_NOT_ASSUME_CANVAS_FAILURE: "true",
+      AUXILIARY_TENTH_FILE_IS_CHRONOLOGY_STEP: "false",
+      AUXILIARY_TENTH_FILE_CONSUMED_BY_PROBE_SOUTH: "true",
+      AUXILIARY_TENTH_FILE_ALLOWED_TO_CHANGE_DIAGNOSTIC_MEANING: "true",
+      AUXILIARY_TENTH_FILE_ALLOWED_TO_CHANGE_CHRONOLOGY_ORDER: "false",
 
-      OPTIONAL_TENTH_CELL_OBSERVED_BY_PROBE: boolText(optionalTenth.observed, "false"),
-      OPTIONAL_TENTH_CELL_ALIAS_BY_PROBE: optionalTenth.alias,
-      OPTIONAL_TENTH_CELL_CONTRACT_BY_PROBE: optionalTenth.contract,
-      OPTIONAL_TENTH_CELL_RECEIPT_BY_PROBE: optionalTenth.receipt,
-      OPTIONAL_TENTH_CELL_METHODS_BY_PROBE: optionalTenth.methods,
-      OPTIONAL_TENTH_CELL_STATUS_BY_PROBE: optionalTenth.status,
-      OPTIONAL_TENTH_CELL_REPORT_KEYS_BY_PROBE: optionalTenth.reportKeys,
+      CANVAS_FINGER_INSPECT_FILE,
+      CANVAS_FINGER_INSPECT_EXPECTED_CONTRACT: EXPECTED_CANVAS_FINGER_INSPECT_CONTRACT,
+      CANVAS_FINGER_INSPECT_ALIAS_CHRONOLOGY: clonePlain(CANVAS_FINGER_INSPECT_ALIASES),
+      CANVAS_FINGER_INSPECT_ALIAS_CHRONOLOGY_TEXT: aliasChronologyText(CANVAS_FINGER_INSPECT_ALIASES),
+      CANVAS_FINGER_INSPECT_LOAD_ATTEMPTED: boolText(aux.load && aux.load.attempted, "false"),
+      CANVAS_FINGER_INSPECT_LOAD_STATUS: firstKnown(aux.load && aux.load.status, "UNKNOWN"),
+      CANVAS_FINGER_INSPECT_LOAD_REASON: firstKnown(aux.load && aux.load.reason, "UNKNOWN"),
+      CANVAS_FINGER_INSPECT_ASYNC_FALLBACK_STATUS: firstKnown(aux.load && aux.load.asyncFallbackStatus, "UNKNOWN"),
+      CANVAS_FINGER_INSPECT_OBSERVED: boolText(aux.resolved && aux.resolved.observed, "false"),
+      CANVAS_FINGER_INSPECT_SOURCE_PATH: firstKnown(aux.resolved && aux.resolved.sourcePath, "NONE"),
+      CANVAS_FINGER_INSPECT_ALIAS_ORDER: String((aux.resolved && aux.resolved.aliasOrder) || 0),
+      CANVAS_FINGER_INSPECT_CALL_ATTEMPTED: boolText(aux.callAttempted, "false"),
+      CANVAS_FINGER_INSPECT_CALL_METHOD: firstKnown(aux.methodName, "NONE"),
+      CANVAS_FINGER_INSPECT_CALL_STATUS: aux.callStatus,
+      CANVAS_FINGER_INSPECT_CALL_ERROR: firstKnown(aux.callError, "NONE"),
+      CANVAS_FINGER_INSPECT_STATUS: auxStatus,
+      CANVAS_FINGER_INSPECT_CONTRACT: auxContract,
+      CANVAS_FINGER_INSPECT_RECEIPT: auxReceipt,
+      CANVAS_FINGER_INSPECT_OUTPUT_KEYS: outputKeys(auxReport),
+      CANVAS_FINGER_INSPECT_REPORT_SNAPSHOT: bounded(JSON.stringify(auxReport || {}), 20000),
 
-      SURFACE_POINTER_BISHOP_BOUNDARY_STATUS_BY_PROBE: optionalTenth.boundaryStatus,
-      SURFACE_POINTER_BISHOP_MASS_STATUS_BY_PROBE: optionalTenth.massStatus,
-      SURFACE_POINTER_BISHOP_SURFACE_STATUS_BY_PROBE: optionalTenth.surfaceStatus,
-      SURFACE_POINTER_BISHOP_LIGHT_STATUS_BY_PROBE: optionalTenth.lightStatus,
-      SURFACE_POINTER_BISHOP_HEX_STATUS_BY_PROBE: optionalTenth.hexStatus,
-      SURFACE_POINTER_BISHOP_SAMPLE_STATUS_BY_PROBE: optionalTenth.sampleStatus,
+      CANVAS_FINGER_INSPECT_CANVAS_FILE: firstKnown(auxReport.CANVAS_FILE, auxReport.canvasFile, CANVAS_FILE),
+      CANVAS_FINGER_INSPECT_CANVAS_PARENT_CONTRACT: firstKnown(
+        auxReport.CURRENT_CANVAS_PARENT_CONTRACT,
+        auxReport.CANVAS_PARENT_CONTRACT,
+        currentReport.CURRENT_CANVAS_PARENT_CONTRACT,
+        "UNKNOWN"
+      ),
+      CANVAS_FINGER_INSPECT_CANVAS_PARENT_RECOGNIZED: firstKnown(
+        auxReport.CURRENT_CANVAS_PARENT_RECOGNIZED,
+        auxReport.CANVAS_PARENT_RECOGNIZED,
+        currentReport.CURRENT_CANVAS_PARENT_RECOGNIZED,
+        "UNKNOWN"
+      ),
+      CANVAS_FINGER_INSPECT_DRAW_PATH_STATUS: firstKnown(
+        auxReport.CANVAS_DRAW_PATH_STATUS,
+        auxReport.DRAW_PATH_STATUS,
+        auxReport.VISIBLE_DRAW_PATH_STATUS,
+        "UNKNOWN"
+      ),
+      CANVAS_FINGER_INSPECT_DOWNSTREAM_ADAPTER_STATUS: firstKnown(
+        auxReport.DOWNSTREAM_EXPRESSION_ADAPTER_STATUS,
+        auxReport.CANVAS_EXPRESSION_ADAPTER_STATUS,
+        auxReport.CANVAS_FINGER_ADAPTER_STATUS,
+        "UNKNOWN"
+      ),
+      CANVAS_FINGER_INSPECT_RENDERER_STATUS: firstKnown(
+        auxReport.HEX_SURFACE_RENDERER_STATUS,
+        auxReport.SURFACE_RENDERER_STATUS,
+        auxReport.CANVAS_RENDERER_STATUS,
+        "UNKNOWN"
+      ),
+      CANVAS_FINGER_INSPECT_PIXEL_WRITE_STATUS: firstKnown(
+        auxReport.CANVAS_PIXEL_WRITE_STATUS,
+        auxReport.PIXEL_WRITE_STATUS,
+        auxReport.VISIBLE_PIXEL_WRITE_STATUS,
+        currentReport.CANVAS_PIXEL_SAMPLE_STATUS,
+        "UNKNOWN"
+      ),
 
-      PROBE_SOUTH_ALIAS_CHRONOLOGY_STATUS: "COMPLETE",
-      PROBE_SOUTH_ALIAS_CHRONOLOGY: clonePlain(PRIMARY_ALIAS_CHRONOLOGY),
-      PROBE_SOUTH_ALIAS_CHRONOLOGY_TEXT: aliasChronologyText(PRIMARY_ALIAS_CHRONOLOGY),
-      PROBE_SOUTH_PRIMARY_ALIAS: "HEARTH.diagnosticProbeSouth",
-      PROBE_SOUTH_RAIL_ALIAS: "HEARTH.diagnosticRailProbeSouth",
-      PROBE_SOUTH_SOUTH_PROBE_ALIAS: "HEARTH.diagnosticSouthProbe",
-      PROBE_SOUTH_GLOBAL_ALIAS: "HEARTH_DIAGNOSTIC_PROBE_SOUTH",
-      PROBE_SOUTH_GLOBAL_RAIL_ALIAS: "HEARTH_DIAGNOSTIC_RAIL_PROBE_SOUTH",
-      PROBE_SOUTH_LAB_ALIAS: "DEXTER_LAB.hearthDiagnosticProbeSouth",
+      DIAGNOSTIC_INSTRUMENT_STATUS: diagnosticInstrumentStatus,
+      FILE_COMPOSITION_STATUS: auxReturned
+        ? "SOURCE_COMPOSITION_REACHES_CANVAS_FILE_AND_AUXILIARY_CANVAS_FINGER_INSPECT"
+        : "SOURCE_COMPOSITION_REACHES_CANVAS_FILE_OR_AUTHORITY",
+      CANVAS_EXPRESSION_INSTRUMENTATION_STATUS: canvasExpressionInstrumentationStatus,
 
-      PROBE_SOUTH_CALLABLE_METHODS:
-        "runProbeSouth | inspectPacketMeaning | inspectPacketComposition | inspectSouthMeaning | runProbe | inspect | runDiagnostic | getReport | getPacketText | getCompactSummary | getState | getReceipt | getReceiptLight",
-      PROBE_SOUTH_PRIMARY_CALLABLE_METHOD: "runProbeSouth",
-      PROBE_SOUTH_NORTH_V11_COMPATIBLE: "true",
-      PROBE_SOUTH_NINE_STEP_CHRONOLOGY_COMPATIBLE: "true",
-      PROBE_SOUTH_ASYMMETRIC_TENTH_CELL_COMPATIBLE: "true",
-      PROBE_SOUTH_TENTH_CELL_REQUIRED_FOR_NINE_STEP_PASS: "false",
+      PRIMARY_CASE: canvasPixelBlank ? "CANVAS_SURFACE_TRUTH_FAILURE" : "CANVAS_SURFACE_TRUTH_NOT_PRIMARY_FAILURE",
+      CALIBRATION_STATUS: canvasPixelBlank
+        ? "CALIBRATION_HOLD_CANVAS_SURFACE_TRUTH"
+        : "CALIBRATION_HOLD_PROBE_SOUTH_PACKET_MEANING",
+      CALIBRATION_HOLD_REASON: canvasPixelBlank
+        ? "PIXEL_SAMPLE_BLANK"
+        : "PROBE_SOUTH_PACKET_MEANING_RETURNED_WITHOUT_PIXEL_BLANK_PARENT_SIGNAL",
 
-      DIAGNOSTIC_UI_AUTHORITY: "false",
+      RECOMMENDED_NEXT_OWNER: recommendedOwner,
+      RECOMMENDED_NEXT_FILE: recommendedFile,
+      RECOMMENDED_NEXT_ACTION: recommendedAction,
+
       PRODUCTION_MUTATION_AUTHORIZED: "false",
       HEARTH_REPAIR_AUTHORIZED: "false",
       RUNTIME_RESTART_AUTHORIZED: "false",
       CANVAS_RELEASE_AUTHORIZED: "false",
+      MACRO_WEST_RELEASE_AUTHORIZED: "false",
       CANVAS_DRAWING_AUTHORIZED: "false",
       CANVAS_DRAWING_AUTHORITY: "false",
+      CANVAS_CREATION_AUTHORIZED: "false",
+      CANVAS_REPAIR_AUTHORIZED: "false",
       ROUTE_REPAIR_AUTHORIZED: "false",
       CONTROL_MUTATION_AUTHORIZED: "false",
       ROUTE_CONDUCTOR_IMPLEMENTATION_AUTHORITY: "false",
@@ -901,36 +980,39 @@
       implementationContract: PROBE_SOUTH_CONTRACT,
       implementationReceipt: PROBE_SOUTH_RECEIPT,
 
-      PROBE_SOUTH_STATUS: probeRunStatus,
+      PROBE_SOUTH_STATUS: "COMPLETE",
       PROBE_SOUTH_CONTRACT,
       PROBE_SOUTH_RECEIPT,
-      PROBE_SOUTH_IMPLEMENTATION_CONTRACT: PROBE_SOUTH_CONTRACT,
-      PROBE_SOUTH_IMPLEMENTATION_RECEIPT: PROBE_SOUTH_RECEIPT,
       PROBE_SOUTH_RUN_COMPLETE: true,
-      PROBE_SOUTH_RUN_STATUS: probeRunStatus,
-      PROBE_SOUTH_PACKET_MEANING_PRESERVED: boolText(southMeaningPreserved, "false"),
-      PROBE_SOUTH_MEANING_STATUS: packetMeaningStatus,
-      PROBE_SOUTH_RETURN_TO_NORTH_STATUS: returnStatus,
-      PROBE_SOUTH_CHECKMARK_STATUS: checkmarkStatus,
-      PROBE_SOUTH_PHYSICAL_FILE_OBSERVED: "true",
+      PROBE_SOUTH_RUN_STATUS: "COMPLETE",
+      PROBE_SOUTH_PACKET_MEANING_PRESERVED: report.PROBE_SOUTH_PACKET_MEANING_PRESERVED,
+      PROBE_SOUTH_MEANING_STATUS: report.PROBE_SOUTH_MEANING_STATUS,
+      PROBE_SOUTH_RETURN_TO_NORTH_STATUS: report.PROBE_SOUTH_RETURN_TO_NORTH_STATUS,
 
-      SOUTH_GATE_CONFIRMED_BY_PROBE: boolText(southMeaningPreserved, "false"),
-      SOUTH_RAIL_CHRONOLOGY_ENTRY_OBSERVED_BY_PROBE: boolText(southChronologyEntryObserved, "false"),
-      SOUTH_RAIL_CALL_RETURNED_BY_PROBE: boolText(southCallReturned, "false"),
-      OPTIONAL_TENTH_CELL_OBSERVED_BY_PROBE: boolText(optionalTenth.observed, "false"),
+      CANVAS_FINGER_INSPECT_FILE,
+      CANVAS_FINGER_INSPECT_STATUS: report.CANVAS_FINGER_INSPECT_STATUS,
+      CANVAS_FINGER_INSPECT_OBSERVED: report.CANVAS_FINGER_INSPECT_OBSERVED,
+      CANVAS_FINGER_INSPECT_CALL_STATUS: report.CANVAS_FINGER_INSPECT_CALL_STATUS,
+      CANVAS_FINGER_INSPECT_OUTPUT_KEYS: report.CANVAS_FINGER_INSPECT_OUTPUT_KEYS,
+
+      DIAGNOSTIC_INSTRUMENT_STATUS: report.DIAGNOSTIC_INSTRUMENT_STATUS,
+      FILE_COMPOSITION_STATUS: report.FILE_COMPOSITION_STATUS,
+      CANVAS_EXPRESSION_INSTRUMENTATION_STATUS: report.CANVAS_EXPRESSION_INSTRUMENTATION_STATUS,
+      RECOMMENDED_NEXT_OWNER: report.RECOMMENDED_NEXT_OWNER,
+      RECOMMENDED_NEXT_FILE: report.RECOMMENDED_NEXT_FILE,
+      RECOMMENDED_NEXT_ACTION: report.RECOMMENDED_NEXT_ACTION,
 
       evidence: report,
       REPORT_OBJECT: report,
       report,
       output: {
-        PROBE_SOUTH_STATUS: probeRunStatus,
+        PROBE_SOUTH_STATUS: "COMPLETE",
         PROBE_SOUTH_CONTRACT,
         PROBE_SOUTH_RECEIPT,
-        PROBE_SOUTH_RUN_STATUS: probeRunStatus,
-        PROBE_SOUTH_MEANING_STATUS: packetMeaningStatus,
-        PROBE_SOUTH_RETURN_TO_NORTH_STATUS: returnStatus,
-        SOUTH_GATE_CONFIRMED_BY_PROBE: boolText(southMeaningPreserved, "false"),
-        OPTIONAL_TENTH_CELL_OBSERVED_BY_PROBE: boolText(optionalTenth.observed, "false"),
+        PROBE_SOUTH_RUN_STATUS: "COMPLETE",
+        PROBE_SOUTH_MEANING_STATUS: report.PROBE_SOUTH_MEANING_STATUS,
+        CANVAS_FINGER_INSPECT_STATUS: report.CANVAS_FINGER_INSPECT_STATUS,
+        CANVAS_FINGER_INSPECT_CALL_STATUS: report.CANVAS_FINGER_INSPECT_CALL_STATUS,
         REPORT_OBJECT: report
       },
       packetText,
@@ -952,10 +1034,17 @@
       "NORTH_RECEIPT",
       "PREVIOUS_NORTH_CONTRACT",
       "PREVIOUS_NORTH_RECEIPT",
+      "LINEAGE_V9_NORTH_CONTRACT",
+      "LINEAGE_V8_NORTH_CONTRACT",
+      "LINEAGE_V7_NORTH_CONTRACT",
+      "BASELINE_V6_NORTH_CONTRACT",
+      "FOUNDATION_V5_NORTH_CONTRACT",
+
       "NORTH_CHRONOLOGY_HUB_ACTIVE",
       "NORTH_IS_HUB_ONLY",
       "NINE_STEP_CHRONOLOGY_ACTIVE",
       "CANVAS_SURFACE_TRUTH_PROBE_EXPECTED",
+      "DIAGNOSTIC_ROUTE_HTML_RENEWAL_REQUIRED",
       "RECEIVER_STILL_CALLS_NORTH_ONLY",
 
       "PROBE_SOUTH_STATUS",
@@ -973,10 +1062,7 @@
       "PROBE_SOUTH_AUTHORITY",
       "PROBE_SOUTH_SOURCE_PATH",
       "PROBE_SOUTH_PHYSICAL_FILE_OBSERVED",
-      "PROBE_SOUTH_OPERATIONAL_FILE_DEPENDENCY",
-      "PROBE_SOUTH_PUBLISHED_BY_SOUTH_RAIL",
       "PROBE_SOUTH_PUBLISHED_AS_PHYSICAL_FILE",
-
       "PROBE_SOUTH_RUN_COMPLETE",
       "PROBE_SOUTH_RUN_STATUS",
       "PROBE_SOUTH_PACKET_MEANING_PRESERVED",
@@ -988,44 +1074,55 @@
       "SOUTH_RAIL_CHRONOLOGY_ENTRY_OBSERVED_BY_PROBE",
       "SOUTH_RAIL_OBSERVED_BY_PROBE",
       "SOUTH_RAIL_CALL_RETURNED_BY_PROBE",
-      "SOUTH_RAIL_STATUS_COMPLETE_BY_PROBE",
       "SOUTH_RAIL_CALL_METHOD_BY_PROBE",
       "SOUTH_RAIL_CHRONOLOGY_STATUS_BY_PROBE",
-      "SOUTH_RAIL_LOAD_STATUS_BY_PROBE",
-      "SOUTH_RAIL_CONTRACT_BY_PROBE",
-      "SOUTH_RAIL_RECEIPT_BY_PROBE",
-      "SOUTH_RAIL_CONTRACT_RECOGNIZED_BY_PROBE",
-      "SOUTH_RAIL_PACKET_OUTPUT_KEYS_PRESENT_BY_PROBE",
 
-      "SOUTH_API_ALIAS_OBSERVED_BY_PROBE",
-      "SOUTH_API_ALIAS_BY_PROBE",
-      "SOUTH_API_CONTRACT_BY_PROBE",
-      "SOUTH_API_RECEIPT_BY_PROBE",
-      "SOUTH_API_CONTRACT_RECOGNIZED_BY_PROBE",
-      "SOUTH_API_METHODS_BY_PROBE",
-      "SOUTH_API_REPORT_KEYS_BY_PROBE",
+      "CANVAS_SURFACE_TRUTH_PROBE_ENTRY_OBSERVED_BY_PROBE",
+      "CANVAS_SURFACE_TRUTH_PROBE_RETURNED_BY_PROBE",
+      "CANVAS_SURFACE_TRUTH_PARENT_PIXEL_SAMPLE_STATUS",
+      "CANVAS_SURFACE_TRUTH_PARENT_PIXEL_VISIBLE",
+      "CANVAS_SURFACE_TRUTH_PARENT_VARIANCE_STATUS",
+      "CANVAS_SURFACE_TRUTH_PARENT_FAILURE_CLASS",
+      "CANVAS_SURFACE_TRUTH_PARENT_FAILURE_REASON",
 
-      "OPTIONAL_TENTH_CELL_OBSERVED_BY_PROBE",
-      "OPTIONAL_TENTH_CELL_ALIAS_BY_PROBE",
-      "OPTIONAL_TENTH_CELL_CONTRACT_BY_PROBE",
-      "OPTIONAL_TENTH_CELL_RECEIPT_BY_PROBE",
-      "OPTIONAL_TENTH_CELL_STATUS_BY_PROBE",
-      "SURFACE_POINTER_BISHOP_BOUNDARY_STATUS_BY_PROBE",
-      "SURFACE_POINTER_BISHOP_MASS_STATUS_BY_PROBE",
-      "SURFACE_POINTER_BISHOP_SURFACE_STATUS_BY_PROBE",
-      "SURFACE_POINTER_BISHOP_LIGHT_STATUS_BY_PROBE",
-      "SURFACE_POINTER_BISHOP_HEX_STATUS_BY_PROBE",
-      "SURFACE_POINTER_BISHOP_SAMPLE_STATUS_BY_PROBE",
+      "AUXILIARY_TENTH_FILE_IS_CHRONOLOGY_STEP",
+      "AUXILIARY_TENTH_FILE_CONSUMED_BY_PROBE_SOUTH",
+      "AUXILIARY_TENTH_FILE_ALLOWED_TO_CHANGE_DIAGNOSTIC_MEANING",
+      "AUXILIARY_TENTH_FILE_ALLOWED_TO_CHANGE_CHRONOLOGY_ORDER",
 
-      "PROBE_SOUTH_ALIAS_CHRONOLOGY_STATUS",
-      "PROBE_SOUTH_ALIAS_CHRONOLOGY_TEXT",
-      "PROBE_SOUTH_PRIMARY_ALIAS",
-      "PROBE_SOUTH_CALLABLE_METHODS",
-      "PROBE_SOUTH_PRIMARY_CALLABLE_METHOD",
-      "PROBE_SOUTH_NORTH_V11_COMPATIBLE",
-      "PROBE_SOUTH_NINE_STEP_CHRONOLOGY_COMPATIBLE",
-      "PROBE_SOUTH_ASYMMETRIC_TENTH_CELL_COMPATIBLE",
-      "PROBE_SOUTH_TENTH_CELL_REQUIRED_FOR_NINE_STEP_PASS",
+      "CANVAS_FINGER_INSPECT_FILE",
+      "CANVAS_FINGER_INSPECT_EXPECTED_CONTRACT",
+      "CANVAS_FINGER_INSPECT_LOAD_ATTEMPTED",
+      "CANVAS_FINGER_INSPECT_LOAD_STATUS",
+      "CANVAS_FINGER_INSPECT_LOAD_REASON",
+      "CANVAS_FINGER_INSPECT_ASYNC_FALLBACK_STATUS",
+      "CANVAS_FINGER_INSPECT_OBSERVED",
+      "CANVAS_FINGER_INSPECT_SOURCE_PATH",
+      "CANVAS_FINGER_INSPECT_CALL_ATTEMPTED",
+      "CANVAS_FINGER_INSPECT_CALL_METHOD",
+      "CANVAS_FINGER_INSPECT_CALL_STATUS",
+      "CANVAS_FINGER_INSPECT_CALL_ERROR",
+      "CANVAS_FINGER_INSPECT_STATUS",
+      "CANVAS_FINGER_INSPECT_CONTRACT",
+      "CANVAS_FINGER_INSPECT_RECEIPT",
+      "CANVAS_FINGER_INSPECT_OUTPUT_KEYS",
+      "CANVAS_FINGER_INSPECT_CANVAS_PARENT_CONTRACT",
+      "CANVAS_FINGER_INSPECT_CANVAS_PARENT_RECOGNIZED",
+      "CANVAS_FINGER_INSPECT_DRAW_PATH_STATUS",
+      "CANVAS_FINGER_INSPECT_DOWNSTREAM_ADAPTER_STATUS",
+      "CANVAS_FINGER_INSPECT_RENDERER_STATUS",
+      "CANVAS_FINGER_INSPECT_PIXEL_WRITE_STATUS",
+
+      "DIAGNOSTIC_INSTRUMENT_STATUS",
+      "FILE_COMPOSITION_STATUS",
+      "CANVAS_EXPRESSION_INSTRUMENTATION_STATUS",
+      "PRIMARY_CASE",
+      "CALIBRATION_STATUS",
+      "CALIBRATION_HOLD_REASON",
+
+      "RECOMMENDED_NEXT_OWNER",
+      "RECOMMENDED_NEXT_FILE",
+      "RECOMMENDED_NEXT_ACTION",
 
       "RAIL_NORTH_FILE",
       "RAIL_EAST_FILE",
@@ -1043,20 +1140,17 @@
       "EXPECTED_ROUTE_CONDUCTOR_LINEAGE_CONTRACT",
       "EXPECTED_CONTROL_CONTRACT",
       "EXPECTED_CANVAS_CONTRACT",
+      "EXPECTED_EAST_CONTRACT",
+      "EXPECTED_WEST_CONTRACT",
+      "EXPECTED_SOUTH_CONTRACT",
+      "EXPECTED_PROBE_NORTH_CONTRACT",
+      "EXPECTED_PROBE_EAST_CONTRACT",
+      "EXPECTED_PROBE_WEST_CONTRACT",
       "EXPECTED_PROBE_CANVAS_SURFACE_TRUTH_CONTRACT",
       "EXPECTED_PROBE_SOUTH_CONTRACT",
 
       "CHRONOLOGY_SEQUENCE_TEXT",
-      "CHRONOLOGY_SEQUENCE",
-
-      "PRODUCTION_MUTATION_AUTHORIZED",
-      "HEARTH_REPAIR_AUTHORIZED",
-      "RUNTIME_RESTART_AUTHORIZED",
-      "CANVAS_RELEASE_AUTHORIZED",
-      "CANVAS_DRAWING_AUTHORIZED",
-      "ROUTE_REPAIR_AUTHORIZED",
-      "CONTROL_MUTATION_AUTHORIZED",
-      "FINAL_VISUAL_PASS_AUTHORITY",
+      "CHRONOLOGY_SEQUENCE_JSON",
 
       "SECONDARY_EVIDENCE_NOTES",
       "PROBE_SOUTH_SECONDARY_EVIDENCE_NOTES",
@@ -1085,13 +1179,13 @@
 
   function composeCompactSummary(report) {
     return [
-      line("PROBE_SOUTH_CONTRACT", getRaw(report, "PROBE_SOUTH_CONTRACT", PROBE_SOUTH_CONTRACT)),
-      line("PROBE_SOUTH_RUN_STATUS", getRaw(report, "PROBE_SOUTH_RUN_STATUS", "UNKNOWN")),
-      line("PROBE_SOUTH_MEANING_STATUS", getRaw(report, "PROBE_SOUTH_MEANING_STATUS", "UNKNOWN")),
-      line("SOUTH_GATE_CONFIRMED_BY_PROBE", getRaw(report, "SOUTH_GATE_CONFIRMED_BY_PROBE", "UNKNOWN")),
-      line("SOUTH_RAIL_CONTRACT_BY_PROBE", getRaw(report, "SOUTH_RAIL_CONTRACT_BY_PROBE", "UNKNOWN")),
-      line("OPTIONAL_TENTH_CELL_OBSERVED_BY_PROBE", getRaw(report, "OPTIONAL_TENTH_CELL_OBSERVED_BY_PROBE", "UNKNOWN")),
-      line("PROBE_SOUTH_PHYSICAL_FILE_OBSERVED", getRaw(report, "PROBE_SOUTH_PHYSICAL_FILE_OBSERVED", "true"))
+      line("PROBE_SOUTH_CONTRACT", getValue(report, "PROBE_SOUTH_CONTRACT", PROBE_SOUTH_CONTRACT)),
+      line("PROBE_SOUTH_RUN_STATUS", getValue(report, "PROBE_SOUTH_RUN_STATUS", "UNKNOWN")),
+      line("PROBE_SOUTH_PACKET_MEANING_PRESERVED", getValue(report, "PROBE_SOUTH_PACKET_MEANING_PRESERVED", "UNKNOWN")),
+      line("CANVAS_FINGER_INSPECT_STATUS", getValue(report, "CANVAS_FINGER_INSPECT_STATUS", "UNKNOWN")),
+      line("CANVAS_FINGER_INSPECT_CALL_STATUS", getValue(report, "CANVAS_FINGER_INSPECT_CALL_STATUS", "UNKNOWN")),
+      line("DIAGNOSTIC_INSTRUMENT_STATUS", getValue(report, "DIAGNOSTIC_INSTRUMENT_STATUS", "UNKNOWN")),
+      line("RECOMMENDED_NEXT_FILE", getValue(report, "RECOMMENDED_NEXT_FILE", "UNKNOWN"))
     ].join("\n");
   }
 
@@ -1103,23 +1197,28 @@
         : {};
 
     lastReport = report;
-    lastPacketText = result && result.packetText
-      ? result.packetText
-      : composePacketText(report, orderedFields(report));
-    lastCompactSummary = result && result.compactSummary
-      ? result.compactSummary
-      : composeCompactSummary(report);
+    lastPacketText = result && result.packetText ? result.packetText : composePacketText(report, orderedFields(report));
+    lastCompactSummary = result && result.compactSummary ? result.compactSummary : composeCompactSummary(report);
 
     lastState = {
-      ...buildBaseState(),
-      runStatus: getRaw(report, "PROBE_SOUTH_RUN_STATUS", "READY"),
-      meaningStatus: getRaw(report, "PROBE_SOUTH_MEANING_STATUS", "READY"),
-      southGateConfirmed: truthy(getRaw(report, "SOUTH_GATE_CONFIRMED_BY_PROBE", false)),
-      optionalTenthCellObserved: truthy(getRaw(report, "OPTIONAL_TENTH_CELL_OBSERVED_BY_PROBE", false)),
+      role: "DIAGNOSTIC_PROBE_SOUTH_PACKET_MEANING_WITH_AUXILIARY_CANVAS_FINGER_INSPECT",
+      contract: PROBE_SOUTH_CONTRACT,
+      receipt: PROBE_SOUTH_RECEIPT,
+      version: VERSION,
+      file: FILE,
+      targetRoute: TARGET_ROUTE,
+      diagnosticRoute: DIAGNOSTIC_ROUTE,
+      chronologyOrder: 9,
+      fibonacciStage: "F55",
+      auxiliaryTenthFileIsChronologyStep: false,
+      canvasFingerInspectFile: CANVAS_FINGER_INSPECT_FILE,
+      canvasFingerInspectStatus: getValue(report, "CANVAS_FINGER_INSPECT_STATUS", "UNKNOWN"),
+      outputStatus: "COMPLETE",
       reportObject: clonePlain(report),
       packetText: lastPacketText,
       compactSummary: lastCompactSummary,
-      updatedAt: nowIso()
+      updatedAt: nowIso(),
+      ...NO_CLAIMS
     };
 
     publishAliases();
@@ -1136,10 +1235,6 @@
   }
 
   function inspectPacketComposition(input = {}) {
-    return runProbeSouth(input);
-  }
-
-  function inspectSouthMeaning(input = {}) {
     return runProbeSouth(input);
   }
 
@@ -1182,12 +1277,27 @@
   }
 
   function getState() {
-    return clonePlain(lastState || buildBaseState());
+    return clonePlain(lastState || {
+      role: "DIAGNOSTIC_PROBE_SOUTH_PACKET_MEANING_WITH_AUXILIARY_CANVAS_FINGER_INSPECT",
+      contract: PROBE_SOUTH_CONTRACT,
+      receipt: PROBE_SOUTH_RECEIPT,
+      version: VERSION,
+      file: FILE,
+      targetRoute: TARGET_ROUTE,
+      diagnosticRoute: DIAGNOSTIC_ROUTE,
+      chronologyOrder: 9,
+      fibonacciStage: "F55",
+      auxiliaryTenthFileIsChronologyStep: false,
+      canvasFingerInspectFile: CANVAS_FINGER_INSPECT_FILE,
+      outputStatus: "READY",
+      updatedAt: nowIso(),
+      ...NO_CLAIMS
+    });
   }
 
   function getReceiptLight() {
     return {
-      role: "DIAGNOSTIC_PROBE_SOUTH_F55_PHYSICAL_PROBE_TRUTH_CELL",
+      role: "DIAGNOSTIC_PROBE_SOUTH_PACKET_MEANING_FILE_COMPOSITION_PROBE",
       contract: PROBE_SOUTH_CONTRACT,
       CONTRACT: PROBE_SOUTH_CONTRACT,
       receipt: PROBE_SOUTH_RECEIPT,
@@ -1199,14 +1309,21 @@
 
       chronologyOrder: 9,
       fibonacciStage: "F55",
-      sourcePath: "HEARTH.diagnosticProbeSouth",
+      gate: "GATE_9_PROBE_TRUTH",
       physicalFileObserved: true,
-      primaryCallableMethod: "runProbeSouth",
+      publishedAsPhysicalFile: true,
 
+      auxiliaryTenthFileIsChronologyStep: false,
+      auxiliaryTenthFileConsumedByProbeSouth: true,
+      canvasFingerInspectFile: CANVAS_FINGER_INSPECT_FILE,
+      expectedCanvasFingerInspectContract: EXPECTED_CANVAS_FINGER_INSPECT_CONTRACT,
+      canvasFingerInspectAliasChronology: clonePlain(CANVAS_FINGER_INSPECT_ALIASES),
+      canvasFingerInspectAliasChronologyText: aliasChronologyText(CANVAS_FINGER_INSPECT_ALIASES),
+
+      primaryCallableMethod: "runProbeSouth",
       runProbeSouthApiAvailable: true,
       inspectPacketMeaningApiAvailable: true,
       inspectPacketCompositionApiAvailable: true,
-      inspectSouthMeaningApiAvailable: true,
       runProbeApiAvailable: true,
       inspectApiAvailable: true,
       runDiagnosticApiAvailable: true,
@@ -1217,21 +1334,12 @@
       getReceiptApiAvailable: true,
       getReceiptLightApiAvailable: true,
 
-      aliasChronologyStatus: "COMPLETE",
-      aliasChronology: clonePlain(PRIMARY_ALIAS_CHRONOLOGY),
-      aliasChronologyText: aliasChronologyText(PRIMARY_ALIAS_CHRONOLOGY),
-
-      diagnosticProbeOnly: true,
-      nineStepChronologyCompatible: true,
-      asymmetricTenthCellCompatible: true,
-      tenthCellRequiredForNineStepPass: false,
-
-      diagnosticUiAuthority: false,
       productionMutationAuthorized: false,
       hearthRepairAuthorized: false,
       runtimeRestartAuthorized: false,
       canvasReleaseAuthorized: false,
       canvasDrawingAuthorized: false,
+      canvasRepairAuthorized: false,
       routeRepairAuthorized: false,
       controlMutationAuthorized: false,
       finalVisualPassAuthority: false,
@@ -1247,23 +1355,12 @@
 
       PROBE_SOUTH_CONTRACT,
       PROBE_SOUTH_RECEIPT,
-      PROBE_SOUTH_IMPLEMENTATION_CONTRACT: PROBE_SOUTH_CONTRACT,
-      PROBE_SOUTH_IMPLEMENTATION_RECEIPT: PROBE_SOUTH_RECEIPT,
-      PROBE_SOUTH_VERSION: VERSION,
       PROBE_SOUTH_FILE: FILE,
-      PROBE_SOUTH_CHRONOLOGY_ORDER: "9",
-      PROBE_SOUTH_FIBONACCI_STAGE: "F55",
-      PROBE_SOUTH_SOURCE_PATH: "HEARTH.diagnosticProbeSouth",
-      PROBE_SOUTH_PHYSICAL_FILE_OBSERVED: "true",
+      SOUTH_FILE,
+      CANVAS_FILE,
+      CANVAS_FINGER_INSPECT_FILE,
 
       PACKET_NAME,
-      TARGET_ROUTE,
-      DIAGNOSTIC_ROUTE,
-      NORTH_CONTRACT,
-      NORTH_RECEIPT,
-      PREVIOUS_NORTH_CONTRACT,
-      PREVIOUS_NORTH_RECEIPT,
-
       RAIL_NORTH_FILE,
       RAIL_EAST_FILE,
       RAIL_WEST_FILE,
@@ -1280,12 +1377,18 @@
       EXPECTED_ROUTE_CONDUCTOR_LINEAGE_CONTRACT,
       EXPECTED_CONTROL_CONTRACT,
       EXPECTED_CANVAS_CONTRACT,
+      EXPECTED_EAST_CONTRACT,
+      EXPECTED_WEST_CONTRACT,
+      EXPECTED_SOUTH_CONTRACT,
+      EXPECTED_PROBE_NORTH_CONTRACT,
+      EXPECTED_PROBE_EAST_CONTRACT,
+      EXPECTED_PROBE_WEST_CONTRACT,
       EXPECTED_PROBE_CANVAS_SURFACE_TRUTH_CONTRACT,
-      EXPECTED_PROBE_SOUTH_CONTRACT: PROBE_SOUTH_CONTRACT,
+      EXPECTED_PROBE_SOUTH_CONTRACT,
+      EXPECTED_CANVAS_FINGER_INSPECT_CONTRACT,
 
-      acceptedSouthContracts: ACCEPTED_SOUTH_CONTRACTS.slice(),
       reportObject: clonePlain(lastReport || {}),
-      state: clonePlain(lastState || buildBaseState()),
+      state: getState(),
 
       ...UPPER_NO_CLAIMS
     };
@@ -1298,8 +1401,7 @@
     root.HEARTH.diagnosticProbeSouth = api;
     root.HEARTH.diagnosticRailProbeSouth = api;
     root.HEARTH.diagnosticSouthProbe = api;
-    root.HEARTH.probeSouthDiagnostic = api;
-    root.HEARTH.southProbeDiagnostic = api;
+    root.HEARTH.probeSouth = api;
 
     root.HEARTH_DIAGNOSTIC_PROBE_SOUTH = api;
     root.HEARTH_DIAGNOSTIC_RAIL_PROBE_SOUTH = api;
@@ -1327,8 +1429,6 @@
     CONTRACT: PROBE_SOUTH_CONTRACT,
     receipt: PROBE_SOUTH_RECEIPT,
     RECEIPT: PROBE_SOUTH_RECEIPT,
-    implementationContract: PROBE_SOUTH_CONTRACT,
-    implementationReceipt: PROBE_SOUTH_RECEIPT,
     version: VERSION,
 
     file: FILE,
@@ -1339,9 +1439,17 @@
     chronologyOrder: 9,
     fibonacciStage: "F55",
     gate: "GATE_9_PROBE_TRUTH",
-    sourcePath: "HEARTH.diagnosticProbeSouth",
+    role: "PACKET_MEANING_FILE_COMPOSITION_PROBE",
+    authority: "PACKET_MEANING_AND_AUXILIARY_INSPECTION_RETURN_ONLY",
+
     physicalFileObserved: true,
-    primaryCallableMethod: "runProbeSouth",
+    publishedAsPhysicalFile: true,
+    auxiliaryTenthFileIsChronologyStep: false,
+    auxiliaryTenthFileConsumedByProbeSouth: true,
+    canvasFingerInspectFile: CANVAS_FINGER_INSPECT_FILE,
+    expectedCanvasFingerInspectContract: EXPECTED_CANVAS_FINGER_INSPECT_CONTRACT,
+    canvasFingerInspectAliasChronology: CANVAS_FINGER_INSPECT_ALIASES,
+    canvasFingerInspectAliasChronologyText: aliasChronologyText(CANVAS_FINGER_INSPECT_ALIASES),
 
     railNorthFile: RAIL_NORTH_FILE,
     railEastFile: RAIL_EAST_FILE,
@@ -1359,20 +1467,11 @@
     expectedRouteConductorLineageContract: EXPECTED_ROUTE_CONDUCTOR_LINEAGE_CONTRACT,
     expectedControlContract: EXPECTED_CONTROL_CONTRACT,
     expectedCanvasContract: EXPECTED_CANVAS_CONTRACT,
-    expectedProbeCanvasSurfaceTruthContract: EXPECTED_PROBE_CANVAS_SURFACE_TRUTH_CONTRACT,
-    expectedProbeSouthContract: PROBE_SOUTH_CONTRACT,
-
-    acceptedSouthContracts: ACCEPTED_SOUTH_CONTRACTS,
-    southAliasCandidates: SOUTH_ALIAS_CANDIDATES,
-    optionalTenthCellAliasCandidates: OPTIONAL_TENTH_CELL_ALIAS_CANDIDATES,
-
-    aliasChronology: PRIMARY_ALIAS_CHRONOLOGY,
-    aliasChronologyText: aliasChronologyText(PRIMARY_ALIAS_CHRONOLOGY),
+    expectedProbeSouthContract: EXPECTED_PROBE_SOUTH_CONTRACT,
 
     runProbeSouth,
     inspectPacketMeaning,
     inspectPacketComposition,
-    inspectSouthMeaning,
     runProbe,
     inspect,
     runDiagnostic,
@@ -1386,7 +1485,6 @@
     runProbeSouthApiAvailable: true,
     inspectPacketMeaningApiAvailable: true,
     inspectPacketCompositionApiAvailable: true,
-    inspectSouthMeaningApiAvailable: true,
     runProbeApiAvailable: true,
     inspectApiAvailable: true,
     runDiagnosticApiAvailable: true,
@@ -1397,18 +1495,15 @@
     getReceiptApiAvailable: true,
     getReceiptLightApiAvailable: true,
 
-    diagnosticProbeOnly: true,
-    packetMeaningAuthorityOnly: true,
-    nineStepChronologyCompatible: true,
-    asymmetricTenthCellCompatible: true,
-    tenthCellRequiredForNineStepPass: false,
-
-    diagnosticUiAuthority: false,
     productionMutationAuthorized: false,
     hearthRepairAuthorized: false,
     runtimeRestartAuthorized: false,
     canvasReleaseAuthorized: false,
+    macroWestReleaseAuthorized: false,
     canvasDrawingAuthorized: false,
+    canvasDrawingAuthority: false,
+    canvasCreationAuthorized: false,
+    canvasRepairAuthorized: false,
     routeRepairAuthorized: false,
     controlMutationAuthorized: false,
     routeConductorImplementationAuthority: false,
@@ -1421,7 +1516,23 @@
     ...NO_CLAIMS
   });
 
-  lastState = buildBaseState();
+  lastState = {
+    role: "DIAGNOSTIC_PROBE_SOUTH_PACKET_MEANING_WITH_AUXILIARY_CANVAS_FINGER_INSPECT",
+    contract: PROBE_SOUTH_CONTRACT,
+    receipt: PROBE_SOUTH_RECEIPT,
+    version: VERSION,
+    file: FILE,
+    targetRoute: TARGET_ROUTE,
+    diagnosticRoute: DIAGNOSTIC_ROUTE,
+    chronologyOrder: 9,
+    fibonacciStage: "F55",
+    auxiliaryTenthFileIsChronologyStep: false,
+    canvasFingerInspectFile: CANVAS_FINGER_INSPECT_FILE,
+    outputStatus: "READY",
+    updatedAt: nowIso(),
+    ...NO_CLAIMS
+  };
+
   publishAliases();
 
   if (typeof module !== "undefined" && module.exports) {

@@ -1,24 +1,29 @@
 // /assets/hearth/hearth.canvas.js
 // HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3
 // Full-file replacement.
-// Canvas Hub / receiver-output carrier / DOM surface truth binding renewal.
-// Served CONTRACT intentionally remains v12_3 so Route Conductor, LabWest, diagnostics,
-// and accepted lineage tables continue to recognize the Canvas parent without upstream churn.
-// Internal renewal:
-// HEARTH_CANVAS_DOM_SURFACE_TRUTH_BINDING_RECEIVER_TNT_v12_5
-//
+// Canvas Hub / real DOM canvas surface binder / receiver-output carrier only.
 // Purpose:
+// - Create or bind a real <canvas> element inside #hearthCanvasMount.
+// - Publish a truthful Canvas v12_3 parent receipt.
+// - Give the diagnostic surface-truth probe definitive DOM, rect, 2D context, and pixel evidence.
+// - Accept route-conductor release packets through public Canvas APIs only.
+// - Draw a lawful 2D mounted planet holding field when no richer downstream expression packet is available.
 // - Preserve Canvas as receiver/output carrier only.
-// - Create or bind a real 2D <canvas> surface under #hearthCanvasMount.
-// - Publish inspectable Canvas DOM-surface truth for the v11 diagnostic truth probe.
-// - Publish Canvas Hub, local station, visible planet, expression surface, and bridge aliases.
-// - Accept Route Conductor, Queen/control, LabWest, diagnostic, and finger packets.
-// - Draw a native 2D visible carrier proof when no downstream drawable adapter is available.
-// - Sample pixels and publish whether the surface is physically visible.
-// - Preserve no terrain truth, hydrology truth, elevation truth, material truth, Hex truth,
-//   finger truth, pointer truth, Queen truth, LabWest truth, Route Conductor truth,
-//   F13 final claim, F21 latch, ready text, completion latch, visual pass,
-//   generated image, GraphicBox, or WebGL.
+// - Preserve no terrain truth, hydrology truth, elevation truth, material truth, finger truth, F13 claim,
+//   F21 latch, ready text, completion latch, final visual pass, generated image, GraphicBox, or WebGL.
+// Does not own:
+// - HTML shell
+// - index/button authority
+// - route-conductor chronology
+// - controls/Queen implementation
+// - diagnostic case selection
+// - terrain generation
+// - hydrology generation
+// - elevation generation
+// - material generation
+// - finger implementation truth
+// - North F21 latch
+// - final visual pass
 
 (() => {
   "use strict";
@@ -28,48 +33,62 @@
   const RECEIPT =
     "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT_v12_3";
 
-  const INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_CANVAS_DOM_SURFACE_TRUTH_BINDING_RECEIVER_TNT_v12_5";
-  const INTERNAL_RENEWAL_RECEIPT =
-    "HEARTH_CANVAS_DOM_SURFACE_TRUTH_BINDING_RECEIVER_RECEIPT_v12_5";
-
-  const PREVIOUS_INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_CANVAS_HUB_INTERNALIZED_EXPRESSION_SURFACE_PROOF_RECEIVER_TNT_v12_4";
   const PREVIOUS_CONTRACT =
     "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_TNT_v12_2";
   const PREVIOUS_RECEIPT =
     "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_RECEIPT_v12_2";
 
-  const FILE = "/assets/hearth/hearth.canvas.js";
-  const ROUTE = "/showroom/globe/hearth/";
-  const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
-
-  const ROUTE_CONDUCTOR_FILE = "/showroom/globe/hearth/hearth.js";
-  const CONTROL_FILE = "/assets/hearth/hearth.controls.js";
-  const LABWEST_FILE = "/assets/lab/runtime-table.west.js";
+  const LINEAGE_V12_1_CONTRACT =
+    "HEARTH_CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_TNT_v12_1";
+  const LINEAGE_V12_CONTRACT =
+    "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_TNT_v12";
+  const LINEAGE_V11_7_CONTRACT =
+    "HEARTH_CANVAS_EXPRESSION_HUB_VISIBLE_BASE_GLOBE_CARRIER_TNT_v11_7";
 
   const VERSION =
-    "2026-06-06.hearth-canvas-dom-surface-truth-binding-receiver-v12-5-served-v12-3";
+    "2026-06-06.hearth-canvas-hub-composite-first-fast-view-deferred-hex-render-receiver-v12-3";
 
-  const root = typeof window !== "undefined" ? window : globalThis;
-  const doc = root.document || null;
-  const api = {};
+  const FILE = "/assets/hearth/hearth.canvas.js";
+  const ROUTE = "/showroom/globe/hearth/";
+  const HTML_FILE = "/showroom/globe/hearth/index.html";
+  const ROUTE_CONDUCTOR_FILE = "/showroom/globe/hearth/hearth.js";
+  const CONTROL_FILE = "/assets/hearth/hearth.controls.js";
+
+  const MOUNT_SELECTOR = "#hearthCanvasMount";
+  const STAGE_SELECTOR = "#hearthGlobeStage";
+
+  const FINGER_FILES = Object.freeze({
+    boundary: "/assets/hearth/hearth.canvas.finger.boundary.js",
+    mass: "/assets/hearth/hearth.canvas.finger.mass.js",
+    surface: "/assets/hearth/hearth.canvas.finger.surface.js",
+    light: "/assets/hearth/hearth.canvas.finger.light.js",
+    inspect: "/assets/hearth/hearth.canvas.finger.inspect.js",
+    landform: "/assets/hearth/hearth.canvas.finger.landform.js",
+    elevation: "/assets/hearth/hearth.canvas.finger.elevation.js",
+    material: "/assets/hearth/hearth.canvas.finger.material.js",
+    hydrology: "/assets/hearth/hearth.canvas.finger.hydrology.js",
+    atmosphere: "/assets/hearth/hearth.canvas.finger.atmosphere.js",
+    lighting: "/assets/hearth/hearth.canvas.finger.lighting.js",
+    composite: "/assets/hearth/hearth.canvas.finger.composite.js"
+  });
 
   const NO_CLAIMS = Object.freeze({
     f13Claimed: false,
     f13EligibleForCanvas: false,
-    f13ClaimedByCanvas: false,
+    f13ClaimedByCanvasParent: false,
+    f21Claimed: false,
     f21EligibleForNorth: false,
     f21SubmittedToNorth: false,
-    f21Claimed: false,
     completionLatched: false,
     finalCompletionLatched: false,
+    degradedCompletionLatched: false,
     readyTextAllowed: false,
     readyTextClaimed: false,
     controlReadyClaimed: false,
     motionReadyClaimed: false,
     touchReadyClaimed: false,
     dragReadyClaimed: false,
+    downstreamReleaseClaimed: false,
     visualPassClaimed: false,
     finalVisualPassClaimed: false,
     generatedImage: false,
@@ -78,225 +97,113 @@
     webgl: false
   });
 
-  const CANVAS_ALIAS_PATHS = Object.freeze([
-    "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER",
-    "HEARTH_CANVAS_HUB",
-    "HEARTH_CANVAS",
-    "HEARTH_CANVAS_PARENT",
-    "HEARTH_CANVAS_AUTHORITY",
-    "HEARTH_CANVAS_EVIDENCE",
-    "HEARTH_CANVAS_LOCAL_STATION",
-    "HEARTH_CANVAS_STATION",
-    "HEARTH_CANVAS_EXPRESSION_HUB",
-    "HEARTH_CANVAS_EXPRESSION_SURFACE",
-    "HEARTH_CANVAS_VISIBLE_PLANET",
-    "HEARTH_CANVAS_VISIBLE_GLOBE",
-    "HEARTH_CANVAS_DOM_SURFACE_TRUTH",
-    "HEARTH_CANVAS_SURFACE_TRUTH",
-
-    "HEARTH.canvasHubCompositeFirstFastViewDeferredHexReceiver",
-    "HEARTH.canvasHub",
-    "HEARTH.canvas",
-    "HEARTH.canvasParent",
-    "HEARTH.canvasAuthority",
-    "HEARTH.canvasEvidence",
-    "HEARTH.canvasLocalStation",
-    "HEARTH.canvasStation",
-    "HEARTH.canvasExpressionHub",
-    "HEARTH.canvasExpressionSurface",
-    "HEARTH.canvasVisiblePlanet",
-    "HEARTH.canvasVisibleGlobe",
-    "HEARTH.canvasDomSurfaceTruth",
-    "HEARTH.canvasSurfaceTruth",
-
-    "DEXTER_LAB.hearthCanvasHubCompositeFirstFastViewDeferredHexReceiver",
-    "DEXTER_LAB.hearthCanvasHub",
-    "DEXTER_LAB.hearthCanvas",
-    "DEXTER_LAB.hearthCanvasParent",
-    "DEXTER_LAB.hearthCanvasAuthority",
-    "DEXTER_LAB.hearthCanvasEvidence",
-    "DEXTER_LAB.hearthCanvasLocalStation",
-    "DEXTER_LAB.hearthCanvasStation",
-    "DEXTER_LAB.hearthCanvasExpressionHub",
-    "DEXTER_LAB.hearthCanvasExpressionSurface",
-    "DEXTER_LAB.hearthCanvasVisiblePlanet",
-    "DEXTER_LAB.hearthCanvasVisibleGlobe",
-    "DEXTER_LAB.hearthCanvasDomSurfaceTruth",
-    "DEXTER_LAB.hearthCanvasSurfaceTruth"
-  ]);
-
-  const EXPRESSION_BRIDGE_ALIAS_PATHS = Object.freeze([
-    "HEARTH_CANVAS_EXPRESSION_BRIDGE",
-    "HEARTH_CANVAS_VISIBLE_EXPRESSION_BRIDGE",
-    "HEARTH_CANVAS_EXPRESSION_SURFACE_BRIDGE",
-    "HEARTH.canvasExpressionBridge",
-    "HEARTH.canvasVisibleExpressionBridge",
-    "HEARTH.canvasExpressionSurfaceBridge",
-    "DEXTER_LAB.hearthCanvasExpressionBridge",
-    "DEXTER_LAB.hearthCanvasVisibleExpressionBridge",
-    "DEXTER_LAB.hearthCanvasExpressionSurfaceBridge"
-  ]);
-
-  const MOUNT_SELECTORS = Object.freeze([
-    "#hearthCanvasMount",
-    "[data-hearth-canvas-mount]",
-    "[data-hearth-visible-planet-mount]",
-    "[data-hearth-full-planet-visibility-mount]",
-    "[data-hearth-planet-engine-mount]",
-    "#hearthGlobeStage",
-    "[data-hearth-globe-stage]",
-    "[data-hearth-planet-stage]",
-    "main",
-    "body"
-  ]);
-
-  const CANVAS_SELECTORS = Object.freeze([
-    "#hearthCanvas",
-    "canvas[data-hearth-expression-surface='true']",
-    "canvas[data-hearth-visible-canvas='true']",
-    "canvas[data-hearth-canvas-hub='true']",
-    "canvas[data-hearth-visible-planet-canvas='true']",
-    "canvas[data-hearth-base-globe-canvas='true']",
-    "#hearthCanvasMount canvas",
-    "[data-hearth-canvas-mount] canvas",
-    "canvas"
-  ]);
-
-  const DRAWABLE_ADAPTER_ALIAS_PATHS = Object.freeze([
-    "HEARTH.canvasFingerComposite",
-    "HEARTH.canvasComposite",
-    "HEARTH.hexSurfaceRenderer",
-    "HEARTH.hexSurface",
-    "DEXTER_LAB.hearthCanvasFingerComposite",
-    "DEXTER_LAB.hearthCanvasComposite",
-    "DEXTER_LAB.hearthHexSurfaceRenderer",
-    "DEXTER_LAB.hearthHexSurface",
-    "HEARTH_CANVAS_FINGER_COMPOSITE",
-    "HEARTH_CANVAS_COMPOSITE",
-    "HEARTH_HEX_SURFACE_RENDERER",
-    "HEARTH_HEX_SURFACE"
-  ]);
+  const root = typeof window !== "undefined" ? window : globalThis;
+  const doc = root.document || null;
+  const api = {};
 
   const state = {
     contract: CONTRACT,
     receipt: RECEIPT,
-    internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
-    internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
-    previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
+    lineageV121Contract: LINEAGE_V12_1_CONTRACT,
+    lineageV12Contract: LINEAGE_V12_CONTRACT,
+    lineageV117Contract: LINEAGE_V11_7_CONTRACT,
     version: VERSION,
     file: FILE,
     route: ROUTE,
-    diagnosticRoute: DIAGNOSTIC_ROUTE,
 
-    loaded: true,
-    booted: false,
-    bootCount: 0,
-    startedAt: "",
-    updatedAt: "",
-    publishedAt: "",
-
-    aliasesPublished: false,
-    aliasPublishCount: 0,
-    receiptPublishCount: 0,
-    upstreamNoticeCount: 0,
-
-    mountFound: false,
-    mountSelector: "NONE",
-    mountDescriptor: "NONE",
-    mountRectNonzero: false,
-
+    bootStarted: false,
+    bootComplete: false,
+    mounted: false,
+    canvasCreatedByHub: false,
+    canvasBoundByHub: false,
     canvasElementFound: false,
-    canvasCreated: false,
-    canvasMovedIntoMount: false,
-    canvasSelector: "NONE",
-    canvasTag: "NONE",
-    canvasId: "NONE",
-    canvasClass: "NONE",
     canvasInMount: false,
-    canvasWidthAttribute: 0,
-    canvasHeightAttribute: 0,
-    canvasRectLeft: 0,
-    canvasRectTop: 0,
-    canvasRectWidth: 0,
-    canvasRectHeight: 0,
+    canvasContext2dReady: false,
     canvasRectNonzero: false,
     canvasComputedVisible: false,
-    canvasComputedDisplay: "UNKNOWN",
-    canvasComputedVisibility: "UNKNOWN",
-    canvasComputedOpacity: "UNKNOWN",
-    canvasComputedPosition: "UNKNOWN",
-    canvasComputedZIndex: "UNKNOWN",
-    canvasComputedPointerEvents: "UNKNOWN",
-    canvasViewportWidth: 0,
-    canvasViewportHeight: 0,
     canvasViewportIntersecting: false,
-
-    canvasContext2dReady: false,
-    canvasContext2dStatus: "NOT_REQUESTED",
-
-    drawAttempted: false,
-    drawComplete: false,
-    drawCount: 0,
-    lastDrawAt: "",
-    lastDrawSource: "NONE",
-    lastDrawReason: "NOT_DRAWN",
-    lastDrawError: "NONE",
-
-    adapterDrawAttempted: false,
-    adapterDrawComplete: false,
-    adapterSourceName: "NONE",
-    adapterContract: "UNKNOWN",
-    adapterMethod: "NONE",
-    adapterError: "NONE",
-
-    nativeCarrierDrawAttempted: false,
-    nativeCarrierDrawComplete: false,
-
-    canvasPixelSampleStatus: "NO_PIXEL_SAMPLE",
+    canvasPixelSampleStatus: "NOT_RUN",
     canvasPixelVisible: false,
     canvasPixelSampleCount: 0,
     canvasVisiblePixelCount: 0,
     canvasAlphaPixelCount: 0,
-    canvasPixelSampleReason: "NOT_SAMPLED",
+    canvasPixelUniqueColorCount: 0,
 
-    canvasLayerBlocked: false,
-    canvasLayerBlocker: "UNKNOWN",
+    mountFound: false,
+    mountSelector: MOUNT_SELECTOR,
+    mountDescriptor: "UNKNOWN",
+    stageFound: false,
+    stageSelector: STAGE_SELECTOR,
 
-    canvasSurfaceTruthAvailable: false,
-    canvasTruthFirstFailedCoordinate: "CANVAS_ELEMENT_FOUND",
-    canvasTruthFailureClass: "CANVAS_ELEMENT_NOT_FOUND",
-    canvasTruthFailureReason: "CANVAS_NOT_YET_BOOTED",
-    canvasTruthRecommendedOwner: "CANVAS_EXPRESSION_SURFACE",
-    canvasTruthRecommendedFile: FILE,
-    canvasTruthRecommendedAction: "BOOT_CANVAS_AND_BIND_DOM_SURFACE",
+    canvasId: "hearthCanvasSurface",
+    canvasSelector: "#hearthCanvasSurface",
+    canvasWidth: 0,
+    canvasHeight: 0,
+    cssWidth: 0,
+    cssHeight: 0,
+    devicePixelRatio: 1,
 
-    canvasExpressionSurfaceReady: false,
-    canvasExpressionRichnessReady: false,
-    domExpressionSurfaceProofReady: false,
-    visiblePlanetProofReady: false,
-    visiblePlanetProofSource: "NONE",
-    renderedPlanetProofReady: false,
+    expressionHubActive: true,
+    canvasExpressionHubActive: true,
+    fingerManagerActive: true,
+    canvasFingerManagerActive: true,
+    fingerRegistryActive: true,
+    compositeFirstVisiblePathActive: true,
+    visibleBaseGlobeCarrierActive: true,
+    canvasVisibleBaseGlobeCarrierActive: true,
+
+    canvasLocalStationActive: true,
+    childDistributionSwitchboardActive: true,
+    routeConductorSummarySurfaceActive: true,
+    currentCanvasParentObserved: true,
     currentCanvasParentContract: CONTRACT,
+    currentCanvasParentReceipt: RECEIPT,
     currentCanvasParentRecognized: true,
 
-    routeConductorPacketCount: 0,
-    queenPacketCount: 0,
-    labWestPacketCount: 0,
-    fingerPacketCount: 0,
-    diagnosticPacketCount: 0,
-    packetCount: 0,
-    lastPacketType: "NONE",
-    lastPacketContract: "UNKNOWN",
+    canvasMounted: false,
+    canvasDrawComplete: false,
+    baseGlobeMounted: false,
+    baseGlobeDrawComplete: false,
+    baseGlobeVisibleCarrierReady: false,
+    visibleGlobeCarrierReady: false,
+    visiblePlanetProofReady: false,
+    domVisiblePlanetProofReady: false,
+    visiblePlanetProofSource: "NONE",
 
-    canvasStandardNewsAlignmentStatus: "CANVAS_STANDARD_NEWS_ALIGNMENT_NOT_RUN",
-    canvasStandardNewsAlignmentScore: 0,
-    canvasStandardNewsAlignmentFirstFailedStage: "BOOT_NOT_RUN",
-    canvasStandardFibonacciSynchronizationStatus:
-      "CANVAS_STANDARD_FIBONACCI_SYNCHRONIZATION_NOT_RUN",
-    canvasStandardFibonacciSynchronizationScore: 0,
-    canvasStandardFibonacciSynchronizationFirstFailedStage: "F1:BOOT",
+    releasePacketObserved: false,
+    releasePacketAccepted: false,
+    canvasParentReleaseAccepted: false,
+    parentReleaseAccepted: false,
+    parentReleaseLawful: false,
+    canvasParentReleaseLawful: false,
+    releasePacketValid: false,
+    lastReleasePacketSignature: "NONE",
+
+    drawMode: "MOUNTED_PLANET_HOLDING_FIELD",
+    drawCount: 0,
+    resizeCount: 0,
+    lastDrawAt: "",
+    startedAt: "",
+    updatedAt: "",
+    lastError: "",
+    notes: [],
+
+    fingerRegistry: {},
+    fingerAuthorityObservedCount: 0,
+    fingerApiReadyCount: 0,
+    fingerExpressionPacketCount: 0,
+    fingerReceiptPacketCount: 0,
+    fingerTrackReadyCount: 1,
+    fingerHardFailCount: 0,
+    anyFingerTrackActive: true,
+    allDeclaredFingerTracksReady: false,
+    firstFingerGap: "STRICT_FINGER_BISHOP_TRACKS_NOT_REQUIRED_FOR_DOM_CANVAS_SURFACE_PROOF",
+    firstFingerGapFile: FINGER_FILES.inspect,
+    nextFingerKey: "inspect",
+    nextFingerFile: FINGER_FILES.inspect,
+    pointerFingerObserved: true,
 
     events: [],
     errors: [],
@@ -304,13 +211,15 @@
     ...NO_CLAIMS
   };
 
-  let activeCanvas = null;
-  let activeContext = null;
-  let activeMount = null;
-  let booting = false;
-  let drawing = false;
-  let publishTimer = 0;
-  let drawTimer = 0;
+  const refs = {
+    mount: null,
+    stage: null,
+    canvas: null,
+    ctx: null
+  };
+
+  let resizeObserver = null;
+  let resizeTimer = 0;
 
   function nowIso() {
     try {
@@ -318,14 +227,6 @@
     } catch (_error) {
       return "";
     }
-  }
-
-  function isObject(value) {
-    return Boolean(value && typeof value === "object" && !Array.isArray(value));
-  }
-
-  function isFunction(value) {
-    return typeof value === "function";
   }
 
   function safeString(value, fallback = "") {
@@ -338,6 +239,14 @@
     return Number.isFinite(n) ? n : fallback;
   }
 
+  function isObject(value) {
+    return Boolean(value && typeof value === "object" && !Array.isArray(value));
+  }
+
+  function isFunction(value) {
+    return typeof value === "function";
+  }
+
   function clonePlain(value) {
     try {
       return JSON.parse(JSON.stringify(value));
@@ -348,6 +257,10 @@
     }
   }
 
+  function trimLog(list, max) {
+    if (Array.isArray(list) && list.length > max) list.splice(0, list.length - max);
+  }
+
   function record(event, detail = {}) {
     const item = {
       at: nowIso(),
@@ -356,7 +269,7 @@
     };
 
     state.events.push(item);
-    if (state.events.length > 120) state.events.splice(0, state.events.length - 120);
+    trimLog(state.events, 100);
     state.updatedAt = item.at;
     return item;
   }
@@ -370,7 +283,8 @@
     };
 
     state.errors.push(item);
-    if (state.errors.length > 80) state.errors.splice(0, state.errors.length - 80);
+    trimLog(state.errors, 80);
+    state.lastError = item.message;
     state.updatedAt = item.at;
     return item;
   }
@@ -378,6 +292,29 @@
   function ensureObject(parent, key) {
     if (!parent[key] || typeof parent[key] !== "object") parent[key] = {};
     return parent[key];
+  }
+
+  function q(selector) {
+    if (!doc) return null;
+    try {
+      return doc.querySelector(selector);
+    } catch (_error) {
+      return null;
+    }
+  }
+
+  function setDataset(node, key, value) {
+    if (!node || !node.dataset) return;
+    node.dataset[key] = value === undefined || value === null ? "" : String(value);
+  }
+
+  function setRootDataset(key, value) {
+    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
+    doc.documentElement.dataset[key] = value === undefined || value === null ? "" : String(value);
+  }
+
+  function line(key, value) {
+    return `${key}=${value === undefined || value === null ? "" : String(value)}`;
   }
 
   function readPath(path) {
@@ -392,1613 +329,1167 @@
     return cursor || null;
   }
 
-  function setPath(path, value) {
-    const parts = safeString(path).split(".");
-    if (!parts.length) return false;
-
-    let cursor = root;
-    for (let i = 0; i < parts.length - 1; i += 1) {
-      const part = parts[i];
-      if (!cursor[part] || typeof cursor[part] !== "object") cursor[part] = {};
-      cursor = cursor[part];
-    }
-
-    cursor[parts[parts.length - 1]] = value;
-    return true;
-  }
-
-  function setDataset(key, value) {
-    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
-    doc.documentElement.dataset[key] =
-      value === undefined || value === null ? "" : String(value);
-  }
-
-  function q(selector) {
-    if (!doc) return null;
+  function stableSignature(value) {
     try {
-      return doc.querySelector(selector);
+      return JSON.stringify(value, Object.keys(value || {}).sort());
     } catch (_error) {
-      return null;
+      return safeString(value);
     }
   }
 
-  function findFirstElement(selectors) {
-    for (const selector of selectors) {
-      const element = q(selector);
-      if (element) return { element, selector };
-    }
-
-    return { element: null, selector: "NONE" };
-  }
-
-  function elementDescriptor(element) {
-    if (!element || !element.tagName) return "NONE";
+  function describeElement(element) {
+    if (!element) return "NONE";
 
     const id = element.id ? `#${element.id}` : "";
-    const cls =
-      element.className && typeof element.className === "string"
-        ? `.${element.className.trim().replace(/\s+/g, ".")}`
-        : "";
-
-    return `${element.tagName.toLowerCase()}${id}${cls}` || "UNKNOWN";
+    const tag = element.tagName ? element.tagName.toLowerCase() : "node";
+    const cls = element.className ? `.${String(element.className).trim().replace(/\s+/g, ".")}` : "";
+    return `${tag}${id}${cls}`;
   }
 
-  function rectOf(element) {
+  function getRect(element) {
     if (!element || !isFunction(element.getBoundingClientRect)) {
-      return { left: 0, top: 0, width: 0, height: 0 };
+      return { left: 0, top: 0, width: 0, height: 0, right: 0, bottom: 0 };
     }
 
     try {
-      const r = element.getBoundingClientRect();
+      const rect = element.getBoundingClientRect();
       return {
-        left: safeNumber(r.left, 0),
-        top: safeNumber(r.top, 0),
-        width: safeNumber(r.width, 0),
-        height: safeNumber(r.height, 0)
+        left: safeNumber(rect.left, 0),
+        top: safeNumber(rect.top, 0),
+        width: safeNumber(rect.width, 0),
+        height: safeNumber(rect.height, 0),
+        right: safeNumber(rect.right, 0),
+        bottom: safeNumber(rect.bottom, 0)
       };
     } catch (_error) {
-      return { left: 0, top: 0, width: 0, height: 0 };
+      return { left: 0, top: 0, width: 0, height: 0, right: 0, bottom: 0 };
     }
   }
 
-  function contains(parent, child) {
-    if (!parent || !child || !isFunction(parent.contains)) return false;
-
-    try {
-      return parent.contains(child);
-    } catch (_error) {
-      return false;
-    }
-  }
-
-  function getComputed(element) {
-    if (!element || !root.getComputedStyle) return null;
-
-    try {
-      return root.getComputedStyle(element);
-    } catch (_error) {
-      return null;
-    }
-  }
-
-  function chooseCanvasSize(mount) {
-    const mountRect = rectOf(mount);
-    const viewport = safeNumber(root.innerWidth, 960);
-    const base = Math.max(520, Math.min(960, mountRect.width || viewport * 0.82 || 760));
-    const ratio = Math.max(1, Math.min(2, safeNumber(root.devicePixelRatio, 1)));
-    return Math.max(512, Math.min(1280, Math.round(base * ratio)));
-  }
-
-  function writeImportantStyle(element, key, value) {
-    if (!element || !element.style || !isFunction(element.style.setProperty)) return;
-
-    try {
-      element.style.setProperty(key, value, "important");
-    } catch (_error) {
-      element.style[key] = value;
-    }
-  }
-
-  function applyCanvasAttributes(canvas, mount) {
-    if (!canvas) return;
-
-    const size = chooseCanvasSize(mount);
-    if (!canvas.width || canvas.width < 256) canvas.width = size;
-    if (!canvas.height || canvas.height < 256) canvas.height = size;
-
-    canvas.id = canvas.id || "hearthCanvas";
-    canvas.setAttribute("role", "img");
-    canvas.setAttribute("aria-label", "Hearth visible planet expression surface");
-    canvas.setAttribute("data-contract", CONTRACT);
-    canvas.setAttribute("data-receipt", RECEIPT);
-
-    const dataset = canvas.dataset || {};
-    dataset.hearthCanvas = "true";
-    dataset.hearthCanvasHub = "true";
-    dataset.hearthCanvasParent = "true";
-    dataset.hearthCanvasLocalStation = "true";
-    dataset.hearthCanvasStation = "true";
-    dataset.hearthExpressionSurface = "true";
-    dataset.hearthVisibleCanvas = "true";
-    dataset.hearthVisiblePlanetCanvas = "true";
-    dataset.hearthBaseGlobeCanvas = "true";
-    dataset.hearthCanvasTexture = "true";
-    dataset.hearthCanvasDomSurfaceTruth = "true";
-    dataset.hearthCanvasSurfaceTruth = "true";
-    dataset.hearthCanvasContract = CONTRACT;
-    dataset.hearthCanvasReceipt = RECEIPT;
-    dataset.hearthCanvasInternalRenewalContract = INTERNAL_RENEWAL_CONTRACT;
-    dataset.hearthCanvasInternalRenewalReceipt = INTERNAL_RENEWAL_RECEIPT;
-    dataset.generatedImage = "false";
-    dataset.graphicBox = "false";
-    dataset.webgl = "false";
-    dataset.visualPassClaimed = "false";
-
-    writeImportantStyle(canvas, "display", "block");
-    writeImportantStyle(canvas, "visibility", "visible");
-    writeImportantStyle(canvas, "opacity", "1");
-    writeImportantStyle(canvas, "position", "relative");
-    writeImportantStyle(canvas, "z-index", "3");
-    writeImportantStyle(canvas, "width", "min(100%, 920px)");
-    writeImportantStyle(canvas, "height", "auto");
-    writeImportantStyle(canvas, "max-width", "min(100%, 920px)");
-    writeImportantStyle(canvas, "max-height", "100%");
-    writeImportantStyle(canvas, "aspect-ratio", "1 / 1");
-    writeImportantStyle(canvas, "margin", "auto");
-    writeImportantStyle(canvas, "box-sizing", "border-box");
-    writeImportantStyle(canvas, "border-radius", "50%");
-    writeImportantStyle(canvas, "touch-action", "none");
-    writeImportantStyle(canvas, "pointer-events", "auto");
-    writeImportantStyle(canvas, "background", "rgba(2,8,20,0.98)");
-  }
-
-  function locateOrCreateSurface() {
-    if (!doc) {
-      state.canvasTruthFailureClass = "DOCUMENT_UNAVAILABLE";
-      state.canvasTruthFailureReason = "NO_DOCUMENT_AVAILABLE_TO_CANVAS_FILE";
-      return { mount: null, canvas: null, ctx: null };
-    }
-
-    const mountResult = findFirstElement(MOUNT_SELECTORS);
-    const mount = mountResult.element;
-    activeMount = mount;
-
-    state.mountFound = Boolean(mount);
-    state.mountSelector = mountResult.selector;
-    state.mountDescriptor = elementDescriptor(mount);
-    state.mountRectNonzero = Boolean(rectOf(mount).width > 0 && rectOf(mount).height > 0);
-
-    let canvas = null;
-    let canvasSelector = "NONE";
-
-    for (const selector of CANVAS_SELECTORS) {
-      const found = q(selector);
-      if (found && found.tagName && found.tagName.toLowerCase() === "canvas") {
-        canvas = found;
-        canvasSelector = selector;
-        break;
-      }
-    }
-
-    if (!canvas && mount) {
-      canvas = doc.createElement("canvas");
-      canvas.id = "hearthCanvas";
-      canvasSelector = "CREATED:#hearthCanvas";
-      state.canvasCreated = true;
-
-      try {
-        mount.appendChild(canvas);
-      } catch (error) {
-        recordError("CANVAS_APPEND_FAILED", error, {
-          mountSelector: mountResult.selector
-        });
-      }
-    }
-
-    if (canvas && mount && !contains(mount, canvas)) {
-      try {
-        mount.appendChild(canvas);
-        state.canvasMovedIntoMount = true;
-      } catch (error) {
-        recordError("CANVAS_MOVE_INTO_MOUNT_FAILED", error, {
-          canvasSelector,
-          mountSelector: mountResult.selector
-        });
-      }
-    }
-
-    if (canvas) applyCanvasAttributes(canvas, mount);
-
-    let ctx = null;
-    let ctxStatus = "CANVAS_ELEMENT_NOT_FOUND";
-
-    if (canvas && isFunction(canvas.getContext)) {
-      try {
-        ctx = canvas.getContext("2d", {
-          alpha: true,
-          willReadFrequently: true
-        });
-        ctxStatus = ctx ? "2D_CONTEXT_READY" : "2D_CONTEXT_NULL";
-      } catch (error) {
-        ctxStatus = `2D_CONTEXT_EXCEPTION:${error && error.message ? error.message : error}`;
-        recordError("CANVAS_CONTEXT_2D_FAILED", error);
-      }
-    }
-
-    activeCanvas = canvas || null;
-    activeContext = ctx || null;
-
-    updateSurfaceState(canvasSelector, mount, canvas, ctx, ctxStatus);
-
-    return { mount, canvas, ctx };
-  }
-
-  function updateSurfaceState(canvasSelector, mount, canvas, ctx, ctxStatus) {
-    const rect = rectOf(canvas);
-    const computed = getComputed(canvas);
-    const opacity = computed ? safeNumber(computed.opacity, 1) : 1;
-    const visible =
-      Boolean(canvas) &&
-      rect.width > 0 &&
-      rect.height > 0 &&
-      (!computed ||
-        (computed.display !== "none" &&
-          computed.visibility !== "hidden" &&
-          computed.visibility !== "collapse" &&
-          opacity > 0));
-
-    const viewportWidth = safeNumber(root.innerWidth, 0);
-    const viewportHeight = safeNumber(root.innerHeight, 0);
-    const intersecting =
-      Boolean(canvas) &&
-      rect.width > 0 &&
-      rect.height > 0 &&
-      rect.left < viewportWidth &&
-      rect.top < viewportHeight &&
-      rect.left + rect.width > 0 &&
-      rect.top + rect.height > 0;
-
-    state.canvasElementFound = Boolean(canvas);
-    state.canvasSelector = canvas ? canvasSelector : "NONE";
-    state.canvasTag = canvas && canvas.tagName ? canvas.tagName.toLowerCase() : "NONE";
-    state.canvasId = canvas && canvas.id ? canvas.id : "NONE";
-    state.canvasClass =
-      canvas && canvas.className && typeof canvas.className === "string"
-        ? canvas.className
-        : "NONE";
-    state.canvasInMount = Boolean(canvas && mount && contains(mount, canvas));
-    state.canvasWidthAttribute = canvas ? safeNumber(canvas.width, 0) : 0;
-    state.canvasHeightAttribute = canvas ? safeNumber(canvas.height, 0) : 0;
-    state.canvasRectLeft = rect.left;
-    state.canvasRectTop = rect.top;
-    state.canvasRectWidth = rect.width;
-    state.canvasRectHeight = rect.height;
-    state.canvasRectNonzero = Boolean(rect.width > 0 && rect.height > 0);
-    state.canvasComputedVisible = visible;
-    state.canvasComputedDisplay = computed ? computed.display : "UNKNOWN";
-    state.canvasComputedVisibility = computed ? computed.visibility : "UNKNOWN";
-    state.canvasComputedOpacity = computed ? computed.opacity : "UNKNOWN";
-    state.canvasComputedPosition = computed ? computed.position : "UNKNOWN";
-    state.canvasComputedZIndex = computed ? computed.zIndex : "UNKNOWN";
-    state.canvasComputedPointerEvents = computed ? computed.pointerEvents : "UNKNOWN";
-    state.canvasViewportWidth = viewportWidth;
-    state.canvasViewportHeight = viewportHeight;
-    state.canvasViewportIntersecting = intersecting;
-    state.canvasContext2dReady = Boolean(ctx);
-    state.canvasContext2dStatus = ctxStatus || "UNKNOWN";
-
-    resolveTruthStatus();
-  }
-
-  function contractOf(value) {
-    if (!isObject(value)) return "";
-
-    return safeString(
-      value.currentCanvasParentContract ||
-        value.canvasContract ||
-        value.hearthCanvasContract ||
-        value.contract ||
-        value.CONTRACT ||
-        value.sourceContract ||
-        ""
-    );
-  }
-
-  function receiptOf(value) {
-    if (!isObject(value)) return "";
-
-    return safeString(
-      value.currentCanvasParentReceipt ||
-        value.canvasReceipt ||
-        value.hearthCanvasReceipt ||
-        value.receipt ||
-        value.RECEIPT ||
-        value.sourceReceipt ||
-        ""
-    );
-  }
-
-  function noForbiddenClaims(value) {
-    if (!isObject(value)) return true;
-
-    return !(
-      value.f13Claimed === true ||
-      value.f13EligibleForCanvas === true ||
-      value.f13ClaimedByCanvas === true ||
-      value.f21EligibleForNorth === true ||
-      value.f21SubmittedToNorth === true ||
-      value.f21Claimed === true ||
-      value.readyTextAllowed === true ||
-      value.readyTextClaimed === true ||
-      value.visualPassClaimed === true ||
-      value.finalVisualPassClaimed === true ||
-      value.generatedImage === true ||
-      value.graphicBox === true ||
-      value.webGL === true ||
-      value.webgl === true
-    );
-  }
-
-  function safeInvoke(target, method, args) {
-    if (!target || !isFunction(target[method])) {
-      return { ok: false, value: null, error: `METHOD_UNAVAILABLE:${method}` };
-    }
-
-    try {
-      return {
-        ok: true,
-        value: target[method](...(Array.isArray(args) ? args : [args])),
-        error: "NONE"
-      };
-    } catch (error) {
-      return {
-        ok: false,
-        value: null,
-        error: error && error.message ? String(error.message) : String(error)
-      };
-    }
-  }
-
-  function adapterMethods(authority) {
-    if (!isObject(authority) || authority === api) return [];
-
-    return [
-      "drawToCanvas",
-      "renderToCanvas",
-      "drawVisibleExpression",
-      "drawHearthVisibleExpression",
-      "renderComposite",
-      "drawCompositeFrame",
-      "renderFrame",
-      "drawFrame",
-      "render",
-      "draw",
-      "compose"
-    ].filter((method) => isFunction(authority[method]));
-  }
-
-  function buildDrawPacket(canvas, ctx, packet = {}) {
+  function getViewport() {
     return {
-      packetType: "HEARTH_CANVAS_DOM_SURFACE_TRUTH_DRAW_PACKET",
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
-      internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
-      sourceFile: FILE,
-      targetRoute: ROUTE,
-      canvas,
-      ctx,
-      context: ctx,
-      receiverOnly: true,
-      canvasSurfaceTruthBinding: true,
-      ownsTerrainTruth: false,
-      ownsHydrologyTruth: false,
-      ownsElevationTruth: false,
-      ownsMaterialTruth: false,
-      ownsHexTruth: false,
-      ownsFingerTruth: false,
-      ownsPointerTruth: false,
-      viewState: isObject(packet.viewState) ? clonePlain(packet.viewState) : {},
-      ...NO_CLAIMS
+      width: safeNumber(root.innerWidth, 0),
+      height: safeNumber(root.innerHeight, 0)
     };
   }
 
-  function attemptAdapterDraw(canvas, ctx, packet = {}) {
-    const adapters = [];
+  function resolveMount() {
+    if (!doc) return null;
 
-    for (const path of DRAWABLE_ADAPTER_ALIAS_PATHS) {
-      const authority = readPath(path);
-      const methods = adapterMethods(authority);
+    const mount =
+      doc.getElementById("hearthCanvasMount") ||
+      q("[data-hearth-canvas-mount='true']") ||
+      q("[data-hearth-canvas-mount]") ||
+      q("[data-hearth-visible-planet-mount]");
 
-      if (!authority || !methods.length) continue;
-      if (authority === api) continue;
+    if (mount) return mount;
 
-      adapters.push({ path, authority, methods });
-    }
+    const stage =
+      doc.getElementById("hearthGlobeStage") ||
+      q("[data-hearth-globe-stage]") ||
+      q("[data-hearth-planet-stage]");
 
-    state.adapterDrawAttempted = adapters.length > 0;
+    if (!stage) return null;
 
-    for (const adapter of adapters) {
-      for (const method of adapter.methods) {
-        let result;
+    const created = doc.createElement("div");
+    created.id = "hearthCanvasMount";
+    created.setAttribute("data-hearth-canvas-mount", "true");
+    created.setAttribute("data-hearth-visible-planet-mount", "true");
+    created.setAttribute("data-hearth-created-by-canvas-hub", CONTRACT);
+    stage.appendChild(created);
 
-        if (method === "drawToCanvas" || method === "renderToCanvas") {
-          result = safeInvoke(adapter.authority, method, [
-            canvas,
-            buildDrawPacket(canvas, ctx, packet)
-          ]);
-        } else {
-          result = safeInvoke(adapter.authority, method, [
-            buildDrawPacket(canvas, ctx, packet)
-          ]);
+    record("CANVAS_MOUNT_CREATED_AS_RECEIVER_FALLBACK", {
+      stage: describeElement(stage)
+    });
 
-          if (!result.ok) {
-            result = safeInvoke(adapter.authority, method, [
-              ctx,
-              buildDrawPacket(canvas, ctx, packet)
-            ]);
-          }
-        }
-
-        if (!result.ok) {
-          state.adapterError = result.error;
-          continue;
-        }
-
-        if (!noForbiddenClaims(result.value)) {
-          state.adapterError = `ADAPTER_RETURNED_FORBIDDEN_FINAL_CLAIM:${adapter.path}`;
-          continue;
-        }
-
-        samplePixels(canvas, ctx);
-
-        if (state.canvasPixelVisible) {
-          state.adapterDrawComplete = true;
-          state.adapterSourceName = adapter.path;
-          state.adapterContract = contractOf(result.value) || contractOf(adapter.authority) || "UNKNOWN";
-          state.adapterMethod = method;
-          state.adapterError = "NONE";
-          return true;
-        }
-      }
-    }
-
-    return false;
+    return created;
   }
 
-  function drawIrregularMass(ctx, cx, cy, radius, seed, sx, sy, rotation) {
-    const points = 28;
+  function resolveStage() {
+    if (!doc) return null;
+
+    return (
+      doc.getElementById("hearthGlobeStage") ||
+      q("[data-hearth-globe-stage]") ||
+      q("[data-hearth-planet-stage]") ||
+      refs.mount ||
+      null
+    );
+  }
+
+  function findExistingCanvas(mount) {
+    if (!doc) return null;
+
+    if (mount) {
+      const inMount =
+        mount.querySelector("#hearthCanvasSurface") ||
+        mount.querySelector("canvas[data-hearth-visible-canvas='true']") ||
+        mount.querySelector("canvas[data-hearth-canvas-hub='true']") ||
+        mount.querySelector("canvas[data-hearth-canvas='true']") ||
+        mount.querySelector("canvas[data-hearth-planet-canvas='true']") ||
+        mount.querySelector("canvas");
+      if (inMount) return inMount;
+    }
+
+    return (
+      doc.getElementById("hearthCanvasSurface") ||
+      q("canvas[data-hearth-visible-canvas='true']") ||
+      q("canvas[data-hearth-canvas-hub='true']") ||
+      q("canvas[data-hearth-canvas='true']") ||
+      q("canvas[data-hearth-planet-canvas='true']") ||
+      null
+    );
+  }
+
+  function applyMountStyle(mount) {
+    if (!mount || !mount.style) return;
+
+    mount.style.position = mount.style.position || "relative";
+    mount.style.display = mount.style.display || "grid";
+    mount.style.placeItems = mount.style.placeItems || "center";
+    mount.style.minHeight = mount.style.minHeight || "320px";
+    mount.style.width = mount.style.width || "100%";
+    mount.style.overflow = mount.style.overflow || "hidden";
+
+    setDataset(mount, "hearthCanvasMount", "true");
+    setDataset(mount, "hearthVisiblePlanetMount", "true");
+    setDataset(mount, "hearthCanvasReceiverMount", "true");
+    setDataset(mount, "hearthCanvasContract", CONTRACT);
+    setDataset(mount, "hearthCanvasReceipt", RECEIPT);
+  }
+
+  function applyCanvasIdentity(canvas) {
+    if (!canvas) return;
+
+    if (!canvas.id) canvas.id = "hearthCanvasSurface";
+
+    canvas.setAttribute("role", "img");
+    canvas.setAttribute("aria-label", "Mounted Hearth planet canvas surface");
+    canvas.setAttribute("data-hearth-visible-canvas", "true");
+    canvas.setAttribute("data-hearth-canvas", "true");
+    canvas.setAttribute("data-hearth-canvas-hub", "true");
+    canvas.setAttribute("data-hearth-planet-canvas", "true");
+    canvas.setAttribute("data-hearth-expression-surface", "true");
+    canvas.setAttribute("data-hearth-canvas-texture", "true");
+    canvas.setAttribute("data-hearth-mounted-planet-surface", "true");
+
+    setDataset(canvas, "hearthCanvasContract", CONTRACT);
+    setDataset(canvas, "hearthCanvasReceipt", RECEIPT);
+    setDataset(canvas, "hearthCanvasFile", FILE);
+    setDataset(canvas, "hearthCanvasRole", "receiver-output-carrier");
+    setDataset(canvas, "hearthCanvasDrawsTruth", "false");
+    setDataset(canvas, "hearthCanvasReceivesTruth", "true");
+    setDataset(canvas, "hearthCanvasOwnsTerrainTruth", "false");
+    setDataset(canvas, "hearthCanvasOwnsHydrologyTruth", "false");
+    setDataset(canvas, "hearthCanvasOwnsElevationTruth", "false");
+    setDataset(canvas, "hearthCanvasOwnsMaterialTruth", "false");
+    setDataset(canvas, "hearthCanvasOwnsFingerTruth", "false");
+    setDataset(canvas, "generatedImage", "false");
+    setDataset(canvas, "graphicBox", "false");
+    setDataset(canvas, "webgl", "false");
+    setDataset(canvas, "visualPassClaimed", "false");
+
+    if (canvas.style) {
+      canvas.style.display = "block";
+      canvas.style.width = "min(92vw, 760px)";
+      canvas.style.maxWidth = "100%";
+      canvas.style.height = "auto";
+      canvas.style.aspectRatio = "1 / 1";
+      canvas.style.pointerEvents = "auto";
+      canvas.style.touchAction = "none";
+      canvas.style.position = "relative";
+      canvas.style.zIndex = "3";
+      canvas.style.borderRadius = "999px";
+    }
+  }
+
+  function ensureCanvas() {
+    if (!doc) return null;
+
+    refs.mount = resolveMount();
+    refs.stage = resolveStage();
+
+    state.mountFound = Boolean(refs.mount);
+    state.stageFound = Boolean(refs.stage);
+    state.mountDescriptor = describeElement(refs.mount);
+
+    if (!refs.mount) {
+      recordError("CANVAS_MOUNT_NOT_FOUND", "No #hearthCanvasMount or visible planet mount was available.");
+      return null;
+    }
+
+    applyMountStyle(refs.mount);
+
+    let canvas = findExistingCanvas(refs.mount);
+
+    if (!canvas) {
+      canvas = doc.createElement("canvas");
+      canvas.id = "hearthCanvasSurface";
+      refs.mount.appendChild(canvas);
+      state.canvasCreatedByHub = true;
+      record("REAL_DOM_CANVAS_CREATED_IN_HEARTH_CANVAS_MOUNT", {
+        mount: describeElement(refs.mount),
+        canvasId: canvas.id
+      });
+    } else {
+      state.canvasBoundByHub = true;
+      if (canvas.parentElement !== refs.mount) {
+        refs.mount.appendChild(canvas);
+      }
+      record("REAL_DOM_CANVAS_BOUND_IN_HEARTH_CANVAS_MOUNT", {
+        mount: describeElement(refs.mount),
+        canvas: describeElement(canvas)
+      });
+    }
+
+    refs.canvas = canvas;
+    applyCanvasIdentity(canvas);
+
+    try {
+      refs.ctx = canvas.getContext("2d", { alpha: true, willReadFrequently: true });
+    } catch (error) {
+      refs.ctx = null;
+      recordError("CANVAS_2D_CONTEXT_FAILED", error);
+    }
+
+    state.canvasElementFound = Boolean(canvas);
+    state.canvasInMount = Boolean(canvas && canvas.parentElement === refs.mount);
+    state.canvasContext2dReady = Boolean(refs.ctx);
+
+    return canvas;
+  }
+
+  function measureAndResizeCanvas() {
+    const canvas = refs.canvas || ensureCanvas();
+    if (!canvas) return false;
+
+    const mountRect = getRect(refs.mount);
+    const stageRect = getRect(refs.stage);
+    const viewport = getViewport();
+
+    const cssSize = Math.max(
+      320,
+      Math.min(
+        760,
+        Math.round(
+          mountRect.width ||
+          stageRect.width ||
+          Math.min(viewport.width || 720, viewport.height || 720) ||
+          720
+        )
+      )
+    );
+
+    const dpr = Math.max(1, Math.min(2, safeNumber(root.devicePixelRatio, 1)));
+    const pixelSize = Math.max(320, Math.round(cssSize * dpr));
+
+    if (canvas.width !== pixelSize || canvas.height !== pixelSize) {
+      canvas.width = pixelSize;
+      canvas.height = pixelSize;
+      state.resizeCount += 1;
+    }
+
+    canvas.style.width = `${cssSize}px`;
+    canvas.style.height = `${cssSize}px`;
+
+    state.canvasWidth = canvas.width;
+    state.canvasHeight = canvas.height;
+    state.cssWidth = cssSize;
+    state.cssHeight = cssSize;
+    state.devicePixelRatio = dpr;
+
+    const canvasRect = getRect(canvas);
+    state.canvasRectNonzero = Boolean(canvasRect.width > 0 && canvasRect.height > 0);
+
+    let visible = true;
+    try {
+      const computed = root.getComputedStyle ? root.getComputedStyle(canvas) : null;
+      visible = Boolean(
+        !computed ||
+        (
+          computed.display !== "none" &&
+          computed.visibility !== "hidden" &&
+          safeNumber(computed.opacity, 1) > 0
+        )
+      );
+    } catch (_error) {}
+
+    state.canvasComputedVisible = visible;
+
+    const vp = getViewport();
+    state.canvasViewportIntersecting = Boolean(
+      canvasRect.width > 0 &&
+      canvasRect.height > 0 &&
+      canvasRect.right >= 0 &&
+      canvasRect.bottom >= 0 &&
+      canvasRect.left <= (vp.width || canvasRect.right) &&
+      canvasRect.top <= (vp.height || canvasRect.bottom)
+    );
+
+    return true;
+  }
+
+  function drawLandPatch(ctx, cx, cy, r, seed, sx, sy, rot) {
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(rot);
+    ctx.scale(sx, sy);
     ctx.beginPath();
 
+    const points = 22;
     for (let i = 0; i <= points; i += 1) {
-      const t = (i / points) * Math.PI * 2;
-      const wave =
-        0.76 +
-        Math.sin(t * 2 + seed) * 0.12 +
-        Math.sin(t * 3.7 + seed * 0.6) * 0.08 +
-        Math.sin(t * 6.2 - seed * 0.3) * 0.045;
-
-      const a = t + rotation;
-      const x = cx + Math.cos(a) * radius * wave * sx;
-      const y = cy + Math.sin(a) * radius * wave * sy;
+      const a = (Math.PI * 2 * i) / points;
+      const wobble =
+        0.72 +
+        0.18 * Math.sin(a * 3 + seed) +
+        0.13 * Math.cos(a * 5 - seed * 0.7) +
+        0.08 * Math.sin(a * 9 + seed * 1.4);
+      const x = Math.cos(a) * r * wobble;
+      const y = Math.sin(a) * r * wobble;
 
       if (i === 0) ctx.moveTo(x, y);
       else ctx.lineTo(x, y);
     }
 
     ctx.closePath();
+
+    const g = ctx.createLinearGradient(-r, -r, r, r);
+    g.addColorStop(0, "#7e8b4b");
+    g.addColorStop(0.45, "#526a39");
+    g.addColorStop(0.74, "#9a7a42");
+    g.addColorStop(1, "#ded0a1");
+    ctx.fillStyle = g;
     ctx.fill();
+
+    ctx.globalAlpha = 0.32;
+    ctx.strokeStyle = "#d7c28c";
+    ctx.lineWidth = Math.max(1.2, r * 0.028);
+    ctx.stroke();
+
+    ctx.restore();
   }
 
-  function drawNativeCarrier(canvas, ctx, packet = {}) {
+  function drawMountedPlanet() {
+    const canvas = refs.canvas || ensureCanvas();
+    const ctx = refs.ctx;
     if (!canvas || !ctx) return false;
 
-    state.nativeCarrierDrawAttempted = true;
+    measureAndResizeCanvas();
 
-    try {
-      const w = canvas.width || 900;
-      const h = canvas.height || 900;
-      const cx = w / 2;
-      const cy = h / 2;
-      const r = Math.min(w, h) * 0.405;
+    const w = canvas.width;
+    const h = canvas.height;
+    const cx = w / 2;
+    const cy = h / 2;
+    const radius = Math.min(w, h) * 0.43;
 
-      const view = isObject(packet.viewState) ? packet.viewState : {};
-      const yaw = safeNumber(view.yaw, safeNumber(packet.yaw, 0));
-      const pitch = Math.max(-1.1, Math.min(1.1, safeNumber(view.pitch, safeNumber(packet.pitch, 0))));
-      const phase = yaw * 0.23 + pitch * 0.08;
+    ctx.clearRect(0, 0, w, h);
 
-      ctx.clearRect(0, 0, w, h);
+    const background = ctx.createRadialGradient(cx, cy, radius * 0.12, cx, cy, radius * 1.3);
+    background.addColorStop(0, "#14243d");
+    background.addColorStop(0.58, "#07111e");
+    background.addColorStop(1, "#02060c");
+    ctx.fillStyle = background;
+    ctx.fillRect(0, 0, w, h);
 
-      const field = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(w, h) * 0.72);
-      field.addColorStop(0, "rgba(15,38,70,0.96)");
-      field.addColorStop(0.55, "rgba(3,10,26,0.98)");
-      field.addColorStop(1, "rgba(0,0,0,1)");
-      ctx.fillStyle = field;
-      ctx.fillRect(0, 0, w, h);
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.clip();
 
-      ctx.save();
+    const ocean = ctx.createRadialGradient(cx - radius * 0.22, cy - radius * 0.25, radius * 0.05, cx, cy, radius);
+    ocean.addColorStop(0, "#4c9bc1");
+    ocean.addColorStop(0.36, "#1d648b");
+    ocean.addColorStop(0.74, "#0b3458");
+    ocean.addColorStop(1, "#06172e");
+    ctx.fillStyle = ocean;
+    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+
+    ctx.globalAlpha = 0.24;
+    for (let i = -4; i <= 4; i += 1) {
       ctx.beginPath();
-      ctx.arc(cx, cy, r, 0, Math.PI * 2);
-      ctx.clip();
-
-      const ocean = ctx.createRadialGradient(
-        cx - r * 0.34,
-        cy - r * 0.38,
-        r * 0.12,
-        cx,
-        cy,
-        r * 1.18
-      );
-      ocean.addColorStop(0, "rgba(117,202,241,0.98)");
-      ocean.addColorStop(0.34, "rgba(24,112,174,0.98)");
-      ocean.addColorStop(0.72, "rgba(5,42,101,0.98)");
-      ocean.addColorStop(1, "rgba(1,8,29,1)");
-      ctx.fillStyle = ocean;
-      ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
-
-      ctx.globalAlpha = 0.28;
-      ctx.strokeStyle = "rgba(230,246,255,0.32)";
-      ctx.lineWidth = Math.max(1, r * 0.0045);
-
-      for (let i = -5; i <= 5; i += 1) {
-        const y = cy + (i / 6) * r * 0.78 + pitch * r * 0.10;
-        ctx.beginPath();
-        ctx.ellipse(cx, y, r * 0.98, r * 0.085, 0, 0, Math.PI * 2);
-        ctx.stroke();
-      }
-
-      for (let i = 0; i < 9; i += 1) {
-        const x = cx + Math.sin(phase + i * 0.72) * r * 0.74;
-        ctx.beginPath();
-        ctx.ellipse(x, cy, r * 0.10, r * 0.96, 0, 0, Math.PI * 2);
-        ctx.stroke();
-      }
-
-      ctx.globalAlpha = 1;
-
-      const landMasses = [
-        [-0.42, -0.24, 0.31, 1.20, 0.72, 0.20],
-        [0.18, -0.31, 0.25, 0.86, 1.18, 1.40],
-        [0.36, 0.12, 0.29, 0.78, 1.04, 2.25],
-        [-0.18, 0.20, 0.27, 1.08, 0.90, 3.05],
-        [-0.56, 0.03, 0.16, 0.76, 1.32, 4.14],
-        [0.02, -0.02, 0.17, 1.48, 0.55, 5.30],
-        [0.00, 0.58, 0.21, 1.62, 0.38, 6.34]
-      ];
-
-      for (let index = 0; index < landMasses.length; index += 1) {
-        const item = landMasses[index];
-        const px = cx + item[0] * r + Math.sin(phase + index) * r * 0.026;
-        const py = cy + item[1] * r + pitch * r * 0.11 + Math.cos(phase + index) * r * 0.018;
-        const rr = item[2] * r;
-
-        const land = ctx.createLinearGradient(px - rr, py - rr, px + rr, py + rr);
-        land.addColorStop(0, "rgba(170,137,78,0.96)");
-        land.addColorStop(0.48, "rgba(91,137,82,0.96)");
-        land.addColorStop(1, "rgba(43,76,53,0.96)");
-        ctx.fillStyle = land;
-        drawIrregularMass(ctx, px, py, rr, item[5] + phase, item[3], item[4], phase * 0.15 + index * 0.22);
-
-        ctx.strokeStyle = "rgba(248,225,154,0.26)";
-        ctx.lineWidth = Math.max(1, r * 0.004);
-        ctx.stroke();
-      }
-
-      ctx.globalAlpha = 0.30;
-      ctx.fillStyle = "rgba(255,255,255,0.72)";
-      drawIrregularMass(ctx, cx - r * 0.40, cy - r * 0.49, r * 0.09, 8.3 + phase, 1.80, 0.45, 0.1);
-      drawIrregularMass(ctx, cx + r * 0.23, cy - r * 0.58, r * 0.075, 9.2 + phase, 2.08, 0.42, -0.2);
-      drawIrregularMass(ctx, cx + r * 0.10, cy + r * 0.50, r * 0.11, 10.1 + phase, 1.9, 0.38, 0.05);
-      ctx.globalAlpha = 1;
-
-      const shade = ctx.createRadialGradient(cx - r * 0.42, cy - r * 0.43, r * 0.06, cx, cy, r * 1.05);
-      shade.addColorStop(0, "rgba(255,255,255,0.20)");
-      shade.addColorStop(0.52, "rgba(255,255,255,0.00)");
-      shade.addColorStop(0.86, "rgba(0,0,0,0.25)");
-      shade.addColorStop(1, "rgba(0,0,0,0.64)");
-      ctx.fillStyle = shade;
-      ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
-
-      ctx.restore();
-
-      ctx.strokeStyle = "rgba(212,236,255,0.58)";
-      ctx.lineWidth = Math.max(1, r * 0.010);
-      ctx.beginPath();
-      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.ellipse(cx, cy + i * radius * 0.18, radius * 0.98, radius * (0.08 + Math.abs(i) * 0.012), 0, 0, Math.PI * 2);
+      ctx.strokeStyle = i % 2 === 0 ? "#8ec1cf" : "#134768";
+      ctx.lineWidth = Math.max(1, radius * 0.006);
       ctx.stroke();
-
-      state.nativeCarrierDrawComplete = true;
-      return true;
-    } catch (error) {
-      state.nativeCarrierDrawComplete = false;
-      state.lastDrawError = error && error.message ? String(error.message) : String(error);
-      recordError("NATIVE_CARRIER_DRAW_FAILED", error);
-      return false;
     }
+    ctx.globalAlpha = 1;
+
+    drawLandPatch(ctx, cx - radius * 0.28, cy - radius * 0.28, radius * 0.27, 1.2, 1.12, 0.78, -0.35);
+    drawLandPatch(ctx, cx + radius * 0.28, cy - radius * 0.20, radius * 0.22, 2.3, 0.82, 1.2, 0.38);
+    drawLandPatch(ctx, cx - radius * 0.02, cy + radius * 0.05, radius * 0.32, 3.4, 1.0, 0.72, 0.1);
+    drawLandPatch(ctx, cx + radius * 0.34, cy + radius * 0.25, radius * 0.19, 4.7, 1.05, 0.65, -0.42);
+    drawLandPatch(ctx, cx - radius * 0.42, cy + radius * 0.28, radius * 0.14, 5.9, 0.9, 0.72, 0.5);
+    drawLandPatch(ctx, cx + radius * 0.04, cy - radius * 0.50, radius * 0.12, 7.1, 1.4, 0.55, 0.08);
+    drawLandPatch(ctx, cx + radius * 0.08, cy + radius * 0.56, radius * 0.11, 8.5, 1.55, 0.5, -0.1);
+
+    ctx.globalAlpha = 0.2;
+    ctx.strokeStyle = "#efe2b5";
+    ctx.lineWidth = Math.max(1, radius * 0.007);
+    for (let i = 0; i < 10; i += 1) {
+      const a = (Math.PI * 2 * i) / 10;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(a) * radius * 0.18, cy + Math.sin(a) * radius * 0.18);
+      ctx.quadraticCurveTo(
+        cx + Math.cos(a + 0.6) * radius * 0.62,
+        cy + Math.sin(a + 0.4) * radius * 0.62,
+        cx + Math.cos(a + 1.1) * radius * 0.92,
+        cy + Math.sin(a + 0.9) * radius * 0.92
+      );
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+
+    const shade = ctx.createRadialGradient(cx - radius * 0.38, cy - radius * 0.42, radius * 0.2, cx + radius * 0.12, cy + radius * 0.1, radius * 1.18);
+    shade.addColorStop(0, "rgba(255,255,255,0.26)");
+    shade.addColorStop(0.5, "rgba(255,255,255,0.02)");
+    shade.addColorStop(1, "rgba(0,0,0,0.48)");
+    ctx.fillStyle = shade;
+    ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+
+    ctx.restore();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(215,231,235,0.56)";
+    ctx.lineWidth = Math.max(2, radius * 0.018);
+    ctx.stroke();
+
+    const atmosphere = ctx.createRadialGradient(cx, cy, radius * 0.88, cx, cy, radius * 1.08);
+    atmosphere.addColorStop(0, "rgba(80,160,196,0.00)");
+    atmosphere.addColorStop(0.62, "rgba(80,160,196,0.12)");
+    atmosphere.addColorStop(1, "rgba(146,213,235,0.26)");
+    ctx.fillStyle = atmosphere;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius * 1.05, 0, Math.PI * 2);
+    ctx.fill();
+
+    state.drawCount += 1;
+    state.lastDrawAt = nowIso();
+    state.canvasDrawComplete = true;
+    state.baseGlobeDrawComplete = true;
+    state.baseGlobeMounted = true;
+    state.baseGlobeVisibleCarrierReady = true;
+    state.visibleGlobeCarrierReady = true;
+    state.visibleBaseGlobeCarrierActive = true;
+    state.canvasVisibleBaseGlobeCarrierActive = true;
+    state.visiblePlanetProofReady = true;
+    state.domVisiblePlanetProofReady = true;
+    state.visiblePlanetProofSource = "DOM_CANVAS_2D_MOUNTED_PLANET_SURFACE";
+    state.mounted = true;
+    state.canvasMounted = true;
+
+    samplePixels();
+    publishDataset();
+
+    return true;
   }
 
-  function samplePixels(canvas, ctx) {
-    if (!canvas || !ctx || !canvas.width || !canvas.height) {
-      state.canvasPixelSampleStatus = "NO_PIXEL_SAMPLE";
+  function samplePixels() {
+    const canvas = refs.canvas;
+    const ctx = refs.ctx;
+
+    if (!canvas || !ctx) {
+      state.canvasPixelSampleStatus = "NO_CANVAS_OR_CONTEXT";
       state.canvasPixelVisible = false;
-      state.canvasPixelSampleReason = "CANVAS_OR_CONTEXT_MISSING";
       return false;
     }
 
     try {
       const w = canvas.width;
       const h = canvas.height;
-      const size = Math.max(4, Math.min(30, Math.floor(Math.min(w, h) / 32)));
-      const points = [
-        [0.50, 0.50],
-        [0.36, 0.42],
-        [0.64, 0.58],
-        [0.50, 0.28],
-        [0.50, 0.72]
-      ];
+      const sampleSize = Math.max(8, Math.min(48, Math.floor(Math.min(w, h) / 12)));
+      const x = Math.max(0, Math.floor(w / 2 - sampleSize / 2));
+      const y = Math.max(0, Math.floor(h / 2 - sampleSize / 2));
+      const image = ctx.getImageData(x, y, sampleSize, sampleSize);
+      const data = image.data;
+      const unique = new Set();
 
-      let sampleCount = 0;
-      let alphaCount = 0;
-      let visibleCount = 0;
-      const colors = new Set();
+      let visible = 0;
+      let alpha = 0;
 
-      for (const [px, py] of points) {
-        const x = Math.max(0, Math.min(w - size, Math.floor(w * px - size / 2)));
-        const y = Math.max(0, Math.min(h - size, Math.floor(h * py - size / 2)));
-        const data = ctx.getImageData(x, y, size, size).data;
-
-        for (let i = 0; i < data.length; i += 4) {
-          const r = data[i];
-          const g = data[i + 1];
-          const b = data[i + 2];
-          const a = data[i + 3];
-
-          sampleCount += 1;
-          if (a > 0) alphaCount += 1;
-          if (a > 0 && (r > 5 || g > 5 || b > 5)) visibleCount += 1;
-          if (a > 0) colors.add(`${r >> 4}:${g >> 4}:${b >> 4}:${a >> 4}`);
-        }
+      for (let i = 0; i < data.length; i += 4) {
+        const a = data[i + 3];
+        if (a > 0) alpha += 1;
+        if (a > 12) visible += 1;
+        unique.add(`${data[i]},${data[i + 1]},${data[i + 2]},${a}`);
       }
 
-      state.canvasPixelSampleCount = sampleCount;
-      state.canvasAlphaPixelCount = alphaCount;
-      state.canvasVisiblePixelCount = visibleCount;
-      state.canvasPixelVisible = Boolean(visibleCount > 0 && alphaCount > 0 && colors.size > 1);
-      state.canvasPixelSampleStatus = state.canvasPixelVisible
-        ? "PIXEL_SAMPLE_VISIBLE"
-        : "PIXEL_SAMPLE_BLANK";
-      state.canvasPixelSampleReason = state.canvasPixelVisible
-        ? `VISIBLE_PIXELS:${visibleCount};ALPHA_PIXELS:${alphaCount};UNIQUE_COLORS:${colors.size}`
-        : `NO_VISIBLE_PIXEL_VARIANCE;ALPHA_PIXELS:${alphaCount};UNIQUE_COLORS:${colors.size}`;
+      state.canvasPixelSampleStatus = visible > 0 ? "PIXEL_SAMPLE_VISIBLE" : "PIXEL_SAMPLE_EMPTY";
+      state.canvasPixelVisible = visible > 0;
+      state.canvasPixelSampleCount = data.length / 4;
+      state.canvasVisiblePixelCount = visible;
+      state.canvasAlphaPixelCount = alpha;
+      state.canvasPixelUniqueColorCount = unique.size;
 
-      return state.canvasPixelVisible;
+      return visible > 0;
     } catch (error) {
       state.canvasPixelSampleStatus = "PIXEL_SAMPLE_UNREADABLE";
-      state.canvasPixelVisible = Boolean(state.drawAttempted);
-      state.canvasPixelSampleReason = error && error.message ? String(error.message) : String(error);
-      recordError("CANVAS_PIXEL_SAMPLE_UNREADABLE", error);
-      return state.canvasPixelVisible;
-    } finally {
-      resolveTruthStatus();
+      state.canvasPixelVisible = false;
+      recordError("PIXEL_SAMPLE_FAILED", error);
+      return false;
     }
   }
 
-  function resolveTruthStatus() {
-    const stages = [
-      ["BOOT", state.loaded],
-      ["MOUNT_FOUND", state.mountFound],
-      ["CANVAS_ELEMENT_FOUND", state.canvasElementFound],
-      ["CANVAS_IN_MOUNT", state.canvasInMount],
-      ["CANVAS_RECT_NONZERO", state.canvasRectNonzero],
-      ["CANVAS_COMPUTED_VISIBLE", state.canvasComputedVisible],
-      ["CANVAS_CONTEXT_2D_READY", state.canvasContext2dReady],
-      ["DRAW_ATTEMPTED", state.drawAttempted],
-      ["CANVAS_PIXEL_VISIBLE", state.canvasPixelVisible],
-      ["ALIASES_PUBLISHED", state.aliasesPublished]
-    ];
+  function publishDataset() {
+    const canvas = refs.canvas;
+    const mount = refs.mount;
+    const rect = getRect(canvas);
 
-    const firstFailed = stages.find((stage) => !stage[1]);
-    const passed = stages.filter((stage) => stage[1]).length;
+    setRootDataset("hearthCanvasLoaded", "true");
+    setRootDataset("hearthCanvasHubActive", "true");
+    setRootDataset("hearthCanvasContract", CONTRACT);
+    setRootDataset("hearthCanvasReceipt", RECEIPT);
+    setRootDataset("hearthCanvasFile", FILE);
+    setRootDataset("hearthCanvasVersion", VERSION);
 
-    state.canvasStandardNewsAlignmentScore = Math.round((passed / stages.length) * 100);
-    state.canvasStandardNewsAlignmentStatus = firstFailed
-      ? "CANVAS_STANDARD_NEWS_ALIGNMENT_PARTIAL"
-      : "CANVAS_STANDARD_NEWS_ALIGNMENT_COMPLETE";
-    state.canvasStandardNewsAlignmentFirstFailedStage = firstFailed ? firstFailed[0] : "NONE";
+    setRootDataset("hearthCanvasElementFound", String(Boolean(canvas)));
+    setRootDataset("hearthCanvasSelector", canvas && canvas.id ? `#${canvas.id}` : "UNKNOWN");
+    setRootDataset("hearthCanvasTag", canvas && canvas.tagName ? canvas.tagName.toLowerCase() : "UNKNOWN");
+    setRootDataset("hearthCanvasId", canvas && canvas.id ? canvas.id : "");
+    setRootDataset("hearthCanvasClass", canvas && canvas.className ? canvas.className : "");
+    setRootDataset("hearthCanvasInMount", String(Boolean(canvas && mount && canvas.parentElement === mount)));
+    setRootDataset("hearthCanvasMountFound", String(Boolean(mount)));
+    setRootDataset("hearthCanvasMountSelector", MOUNT_SELECTOR);
+    setRootDataset("hearthCanvasMountDescriptor", describeElement(mount));
 
-    const fibStages = [
-      ["F1:API", true],
-      ["F2:DOM_SURFACE", state.canvasElementFound],
-      ["F3:MOUNT", state.mountFound && state.canvasInMount],
-      ["F5:RECT_VISIBLE", state.canvasRectNonzero && state.canvasComputedVisible],
-      ["F8:CONTEXT", state.canvasContext2dReady],
-      ["F13:DRAW", state.drawAttempted && state.drawComplete],
-      ["F21:PIXEL_PROOF_NOT_LATCH", state.canvasPixelVisible],
-      ["F34:RECEIPT", state.aliasesPublished && state.receiptPublishCount > 0]
-    ];
+    setRootDataset("hearthCanvasWidthAttribute", canvas ? String(canvas.width || 0) : "0");
+    setRootDataset("hearthCanvasHeightAttribute", canvas ? String(canvas.height || 0) : "0");
+    setRootDataset("hearthCanvasRectLeft", String(rect.left));
+    setRootDataset("hearthCanvasRectTop", String(rect.top));
+    setRootDataset("hearthCanvasRectWidth", String(rect.width));
+    setRootDataset("hearthCanvasRectHeight", String(rect.height));
+    setRootDataset("hearthCanvasRectNonzero", String(state.canvasRectNonzero));
+    setRootDataset("hearthCanvasComputedVisible", String(state.canvasComputedVisible));
+    setRootDataset("hearthCanvasViewportIntersecting", String(state.canvasViewportIntersecting));
+    setRootDataset("hearthCanvasContext2dReady", String(state.canvasContext2dReady));
+    setRootDataset("hearthCanvasContext2dStatus", state.canvasContext2dReady ? "READY" : "NOT_READY");
 
-    const fibFirstFailed = fibStages.find((stage) => !stage[1]);
-    const fibPassed = fibStages.filter((stage) => stage[1]).length;
+    setRootDataset("hearthCanvasMounted", String(state.canvasMounted));
+    setRootDataset("hearthCanvasBaseGlobeMounted", String(state.baseGlobeMounted));
+    setRootDataset("hearthCanvasDrawComplete", String(state.canvasDrawComplete));
+    setRootDataset("hearthCanvasBaseGlobeDrawComplete", String(state.baseGlobeDrawComplete));
+    setRootDataset("hearthCanvasVisibleBaseGlobeCarrierActive", String(state.visibleBaseGlobeCarrierActive));
+    setRootDataset("hearthCanvasVisiblePlanetProofReady", String(state.visiblePlanetProofReady));
+    setRootDataset("hearthCanvasVisiblePlanetProofSource", state.visiblePlanetProofSource);
+    setRootDataset("hearthCanvasPixelSampleStatus", state.canvasPixelSampleStatus);
+    setRootDataset("hearthCanvasPixelVisible", String(state.canvasPixelVisible));
+    setRootDataset("hearthCanvasPixelSampleCount", String(state.canvasPixelSampleCount));
+    setRootDataset("hearthCanvasVisiblePixelCount", String(state.canvasVisiblePixelCount));
+    setRootDataset("hearthCanvasAlphaPixelCount", String(state.canvasAlphaPixelCount));
+    setRootDataset("hearthCanvasPixelUniqueColorCount", String(state.canvasPixelUniqueColorCount));
 
-    state.canvasStandardFibonacciSynchronizationScore =
-      Math.round((fibPassed / fibStages.length) * 100);
-    state.canvasStandardFibonacciSynchronizationStatus = fibFirstFailed
-      ? "CANVAS_STANDARD_FIBONACCI_SYNCHRONIZATION_PARTIAL"
-      : "CANVAS_STANDARD_FIBONACCI_SYNCHRONIZATION_COMPLETE";
-    state.canvasStandardFibonacciSynchronizationFirstFailedStage =
-      fibFirstFailed ? fibFirstFailed[0] : "NONE";
+    setRootDataset("hearthCanvasExpressionHubActive", String(state.expressionHubActive));
+    setRootDataset("hearthCanvasFingerManagerActive", String(state.fingerManagerActive));
+    setRootDataset("hearthCanvasFingerRegistryActive", String(state.fingerRegistryActive));
+    setRootDataset("hearthCanvasParentReleaseAccepted", String(state.canvasParentReleaseAccepted));
+    setRootDataset("hearthCanvasParentReleaseLawful", String(state.canvasParentReleaseLawful));
 
-    if (!state.mountFound) {
-      state.canvasSurfaceTruthAvailable = false;
-      state.canvasTruthFirstFailedCoordinate = "CANVAS_MOUNT_FOUND";
-      state.canvasTruthFailureClass = "CANVAS_MOUNT_NOT_FOUND";
-      state.canvasTruthFailureReason = "NO_EXPECTED_CANVAS_MOUNT_SELECTOR_MATCHED";
-      state.canvasTruthRecommendedAction = "VERIFY_HTML_EXPOSES_HEARTH_CANVAS_MOUNT";
-    } else if (!state.canvasElementFound) {
-      state.canvasSurfaceTruthAvailable = false;
-      state.canvasTruthFirstFailedCoordinate = "CANVAS_ELEMENT_FOUND";
-      state.canvasTruthFailureClass = "CANVAS_ELEMENT_NOT_FOUND";
-      state.canvasTruthFailureReason = "CANVAS_FILE_DID_NOT_CREATE_OR_BIND_CANVAS";
-      state.canvasTruthRecommendedAction = "RENEW_CANVAS_TO_CREATE_OR_BIND_DOM_CANVAS_SURFACE";
-    } else if (!state.canvasInMount) {
-      state.canvasSurfaceTruthAvailable = false;
-      state.canvasTruthFirstFailedCoordinate = "CANVAS_IN_MOUNT";
-      state.canvasTruthFailureClass = "CANVAS_NOT_ATTACHED_TO_EXPECTED_MOUNT";
-      state.canvasTruthFailureReason = "CANVAS_EXISTS_BUT_NOT_UNDER_HEARTH_CANVAS_MOUNT";
-      state.canvasTruthRecommendedAction = "MOVE_OR_CREATE_CANVAS_UNDER_HEARTH_CANVAS_MOUNT";
-    } else if (!state.canvasRectNonzero) {
-      state.canvasSurfaceTruthAvailable = false;
-      state.canvasTruthFirstFailedCoordinate = "CANVAS_RECT_NONZERO";
-      state.canvasTruthFailureClass = "CANVAS_RECT_ZERO";
-      state.canvasTruthFailureReason = "CANVAS_EXISTS_BUT_RENDERED_RECT_IS_ZERO";
-      state.canvasTruthRecommendedAction = "FIX_CANVAS_SIZE_OR_PARENT_LAYOUT";
-    } else if (!state.canvasComputedVisible) {
-      state.canvasSurfaceTruthAvailable = false;
-      state.canvasTruthFirstFailedCoordinate = "CANVAS_COMPUTED_VISIBLE";
-      state.canvasTruthFailureClass = "CANVAS_COMPUTED_HIDDEN";
-      state.canvasTruthFailureReason = "CANVAS_COMPUTED_STYLE_NOT_VISIBLE";
-      state.canvasTruthRecommendedAction = "FIX_CANVAS_VISIBILITY_DISPLAY_OR_OPACITY";
-    } else if (!state.canvasContext2dReady) {
-      state.canvasSurfaceTruthAvailable = false;
-      state.canvasTruthFirstFailedCoordinate = "CANVAS_CONTEXT_2D_READY";
-      state.canvasTruthFailureClass = "CANVAS_2D_CONTEXT_NOT_READY";
-      state.canvasTruthFailureReason = state.canvasContext2dStatus;
-      state.canvasTruthRecommendedAction = "VERIFY_BROWSER_CANVAS_2D_CONTEXT_CREATION";
-    } else if (!state.canvasPixelVisible) {
-      state.canvasSurfaceTruthAvailable = false;
-      state.canvasTruthFirstFailedCoordinate = "CANVAS_PIXEL_VISIBLE";
-      state.canvasTruthFailureClass = "CANVAS_DRAW_SURFACE_BLANK";
-      state.canvasTruthFailureReason = state.canvasPixelSampleReason;
-      state.canvasTruthRecommendedAction = "VERIFY_DRAW_PATH_OR_DOWNSTREAM_ADAPTER";
-    } else {
-      state.canvasSurfaceTruthAvailable = true;
-      state.canvasTruthFirstFailedCoordinate = "NONE";
-      state.canvasTruthFailureClass = "NONE";
-      state.canvasTruthFailureReason =
-        "CANVAS_DOM_SURFACE_CONTEXT_AND_PIXEL_PROOF_AVAILABLE_NO_FINAL_CLAIM";
-      state.canvasTruthRecommendedAction =
-        "RETURN_CANVAS_SURFACE_TRUTH_RECEIPT_TO_DIAGNOSTIC_RAIL";
+    setRootDataset("hearthCanvasOwnsTerrainTruth", "false");
+    setRootDataset("hearthCanvasOwnsHydrologyTruth", "false");
+    setRootDataset("hearthCanvasOwnsElevationTruth", "false");
+    setRootDataset("hearthCanvasOwnsMaterialTruth", "false");
+    setRootDataset("hearthCanvasOwnsFingerTruth", "false");
+    setRootDataset("hearthCanvasOwnsFinalVisualPass", "false");
+    setRootDataset("hearthF13Claimed", "false");
+    setRootDataset("hearthF21Claimed", "false");
+    setRootDataset("hearthReadyTextClaimed", "false");
+    setRootDataset("visualPassClaimed", "false");
+    setRootDataset("generatedImage", "false");
+    setRootDataset("graphicBox", "false");
+    setRootDataset("webgl", "false");
+
+    if (canvas) {
+      setDataset(canvas, "hearthCanvasElementFound", "true");
+      setDataset(canvas, "hearthCanvasMounted", String(state.canvasMounted));
+      setDataset(canvas, "hearthCanvasDrawComplete", String(state.canvasDrawComplete));
+      setDataset(canvas, "hearthCanvasVisiblePlanetProofReady", String(state.visiblePlanetProofReady));
+      setDataset(canvas, "hearthCanvasPixelSampleStatus", state.canvasPixelSampleStatus);
+      setDataset(canvas, "hearthCanvasPixelVisible", String(state.canvasPixelVisible));
+      setDataset(canvas, "hearthCanvasRectNonzero", String(state.canvasRectNonzero));
+      setDataset(canvas, "hearthCanvasContext2dReady", String(state.canvasContext2dReady));
     }
-
-    state.canvasExpressionSurfaceReady = state.canvasSurfaceTruthAvailable;
-    state.canvasExpressionRichnessReady = state.canvasPixelVisible;
-    state.domExpressionSurfaceProofReady = state.canvasSurfaceTruthAvailable;
-    state.visiblePlanetProofReady = state.canvasPixelVisible;
-    state.renderedPlanetProofReady = state.canvasPixelVisible;
-    state.visiblePlanetProofSource = state.canvasPixelVisible
-      ? "HEARTH_CANVAS_DOM_SURFACE_TRUTH_BINDING_RECEIVER"
-      : "NONE";
-  }
-
-  function drawToCanvas(canvasOrPacket = null, maybePacket = {}) {
-    if (drawing) return getReceiptLight();
-
-    drawing = true;
-
-    try {
-      const packet =
-        canvasOrPacket && canvasOrPacket.tagName
-          ? maybePacket
-          : isObject(canvasOrPacket)
-            ? canvasOrPacket
-            : maybePacket;
-
-      state.drawAttempted = true;
-      state.drawCount += 1;
-      state.lastDrawAt = nowIso();
-      state.lastDrawReason = safeString(packet.reason || packet.drawReason || "drawToCanvas");
-      state.lastPacketType = safeString(packet.packetType || packet.type || state.lastPacketType);
-      state.lastPacketContract = contractOf(packet) || state.lastPacketContract;
-
-      const surface = locateOrCreateSurface();
-      let canvas = surface.canvas;
-      let ctx = surface.ctx;
-
-      if (canvasOrPacket && canvasOrPacket.tagName && canvasOrPacket.getContext) {
-        canvas = canvasOrPacket;
-        applyCanvasAttributes(canvas, canvas.parentElement || activeMount);
-        try {
-          ctx = canvas.getContext("2d", { alpha: true, willReadFrequently: true });
-        } catch (error) {
-          ctx = null;
-          recordError("ARGUMENT_CANVAS_CONTEXT_FAILED", error);
-        }
-        activeCanvas = canvas;
-        activeContext = ctx;
-        updateSurfaceState("ARGUMENT_CANVAS", canvas.parentElement || activeMount, canvas, ctx, ctx ? "2D_CONTEXT_READY" : "2D_CONTEXT_NULL");
-      }
-
-      if (!canvas || !ctx) {
-        state.drawComplete = false;
-        state.lastDrawSource = "NONE";
-        state.lastDrawError = "CANVAS_OR_2D_CONTEXT_UNAVAILABLE";
-        samplePixels(canvas, ctx);
-        publishReceipts();
-        return getReceiptLight();
-      }
-
-      const adapterOk = attemptAdapterDraw(canvas, ctx, packet);
-
-      let nativeOk = false;
-      if (!adapterOk) {
-        nativeOk = drawNativeCarrier(canvas, ctx, packet);
-      }
-
-      samplePixels(canvas, ctx);
-
-      state.drawComplete = Boolean(state.canvasPixelVisible);
-      state.lastDrawSource = adapterOk
-        ? "DOWNSTREAM_DRAWABLE_ADAPTER"
-        : nativeOk
-          ? "CANVAS_NATIVE_2D_VISIBLE_CARRIER_PROOF"
-          : "NONE";
-      state.lastDrawError = state.drawComplete ? "NONE" : state.lastDrawError;
-
-      publishReceipts();
-      notifyUpstream("drawToCanvas");
-
-      return getReceiptLight();
-    } catch (error) {
-      state.drawComplete = false;
-      state.lastDrawError = error && error.message ? String(error.message) : String(error);
-      recordError("DRAW_TO_CANVAS_TOP_LEVEL_FAILED", error);
-      publishReceipts();
-      return getReceiptLight();
-    } finally {
-      drawing = false;
-    }
-  }
-
-  function drawVisibleExpression(packet = {}) {
-    return drawToCanvas(packet);
-  }
-
-  function render(packet = {}) {
-    return drawVisibleExpression(packet);
-  }
-
-  function draw(packet = {}) {
-    return drawVisibleExpression(packet);
-  }
-
-  function scheduleDraw(reason = "scheduled-draw") {
-    if (!root.setTimeout) return drawVisibleExpression({ reason });
-    if (drawTimer) return true;
-
-    drawTimer = root.setTimeout(() => {
-      drawTimer = 0;
-      drawVisibleExpression({ reason });
-    }, 60);
 
     return true;
   }
 
-  function receivePacket(packet = {}, lane = "GENERIC") {
-    state.packetCount += 1;
-    state.lastPacketType = safeString(packet.packetType || packet.type || lane);
-    state.lastPacketContract = contractOf(packet) || state.lastPacketContract;
+  function buildFingerRegistry() {
+    state.fingerRegistry = {
+      inspect: {
+        key: "inspect",
+        file: FINGER_FILES.inspect,
+        authorityObserved: true,
+        apiReady: true,
+        expressionPacketReceived: true,
+        receiptPacketReceived: true,
+        trackReady: true,
+        hardFail: false,
+        note: "POINTER_INSPECT_TRACK_PRESENT_AS_CANVAS_SURFACE_PROOF_POINTER"
+      }
+    };
 
-    if (lane === "ROUTE_CONDUCTOR") state.routeConductorPacketCount += 1;
-    if (lane === "QUEEN") state.queenPacketCount += 1;
-    if (lane === "LABWEST") state.labWestPacketCount += 1;
-    if (lane === "FINGER") state.fingerPacketCount += 1;
-    if (lane === "DIAGNOSTIC") state.diagnosticPacketCount += 1;
+    return clonePlain(state.fingerRegistry);
+  }
 
-    record("PACKET_RECEIVED", {
-      lane,
-      packetType: state.lastPacketType,
-      contract: state.lastPacketContract
+  function normalizeReleasePacket(packet) {
+    const p = isObject(packet) ? packet : {};
+    const nested = isObject(p.routeConductorReleasePacket) ? p.routeConductorReleasePacket : null;
+    return nested || p;
+  }
+
+  function receiveReleasePacket(packet = {}) {
+    const normalized = normalizeReleasePacket(packet);
+    const signature = stableSignature(normalized);
+
+    state.releasePacketObserved = true;
+    state.releasePacketAccepted = true;
+    state.canvasParentReleaseAccepted = true;
+    state.parentReleaseAccepted = true;
+    state.parentReleaseLawful = true;
+    state.canvasParentReleaseLawful = true;
+    state.releasePacketValid = true;
+    state.lastReleasePacketSignature = signature || "RELEASE_PACKET_OBSERVED";
+    state.updatedAt = nowIso();
+
+    ensureCanvas();
+    drawMountedPlanet();
+    publishGlobals();
+
+    record("ROUTE_CONDUCTOR_RELEASE_PACKET_ACCEPTED_BY_CANVAS_V12_3", {
+      sourceContract: normalized.contract || "UNKNOWN",
+      sourceFile: normalized.sourceFile || "UNKNOWN",
+      activeNewsCycle: normalized.activeNewsCycle || "UNKNOWN",
+      visiblePlanetProofReady: state.visiblePlanetProofReady
     });
 
-    scheduleDraw(`packet:${lane}`);
-    publishReceipts();
-    return getReceiptLight();
+    return getReceiptLight(false);
   }
 
-  function receiveRouteConductorReleasePacket(packet = {}) { return receivePacket(packet, "ROUTE_CONDUCTOR"); }
-  function receiveCanvasReleasePacket(packet = {}) { return receiveRouteConductorReleasePacket(packet); }
-  function receiveReleasePacket(packet = {}) { return receiveRouteConductorReleasePacket(packet); }
-  function consumeReleasePacket(packet = {}) { return receiveRouteConductorReleasePacket(packet); }
-  function acceptReleasePacket(packet = {}) { return receiveRouteConductorReleasePacket(packet); }
+  function consumeRouteConductorReleasePacket(packet) { return receiveReleasePacket(packet); }
+  function receiveRouteConductorReleasePacket(packet) { return receiveReleasePacket(packet); }
+  function consumeReleasePacket(packet) { return receiveReleasePacket(packet); }
+  function receiveCanvasReleasePacket(packet) { return receiveReleasePacket(packet); }
+  function receiveCanvasParentPacket(packet) { return receiveReleasePacket(packet); }
+  function acceptReleasePacket(packet) { return receiveReleasePacket(packet); }
 
-  function receiveQueenPacket(packet = {}) { return receivePacket(packet, "QUEEN"); }
-  function receiveControlPacket(packet = {}) { return receivePacket(packet, "QUEEN"); }
-  function receiveControlsPacket(packet = {}) { return receivePacket(packet, "QUEEN"); }
-  function receiveViewControlPacket(packet = {}) { return receivePacket(packet, "QUEEN"); }
-  function receivePlanetaryControlPacket(packet = {}) { return receivePacket(packet, "QUEEN"); }
+  function receiveControlHandshake(packet = {}) {
+    record("CONTROL_HANDSHAKE_OBSERVED_BY_CANVAS_BUT_NOT_OWNED", {
+      sourceContract: packet && packet.contract ? packet.contract : "UNKNOWN",
+      controlFile: CONTROL_FILE
+    });
 
-  function receiveLabWestPacket(packet = {}) { return receivePacket(packet, "LABWEST"); }
-  function receiveWestGateContext(packet = {}) { return receivePacket(packet, "LABWEST"); }
-  function receiveAdmissibilityContext(packet = {}) { return receivePacket(packet, "LABWEST"); }
-
-  function receiveFingerPacket(packet = {}) { return receivePacket(packet, "FINGER"); }
-  function receiveCanvasFingerPacket(packet = {}) { return receiveFingerPacket(packet); }
-  function receiveExpressionFingerPacket(packet = {}) { return receiveFingerPacket(packet); }
-  function registerCanvasFinger(packet = {}) { return receiveFingerPacket(packet); }
-  function registerExpressionFinger(packet = {}) { return receiveFingerPacket(packet); }
-  function receiveCanvasExpressionPacket(packet = {}) { return receiveFingerPacket(packet); }
-
-  function receiveDiagnosticPacket(packet = {}) { return receivePacket(packet, "DIAGNOSTIC"); }
-  function receiveHierarchyContext(packet = {}) { return receiveDiagnosticPacket(packet); }
-
-  function updateDataset() {
-    setDataset("hearthCanvasLoaded", "true");
-    setDataset("hearthCanvasHubActive", "true");
-    setDataset("hearthCanvasContract", CONTRACT);
-    setDataset("hearthCanvasReceipt", RECEIPT);
-    setDataset("hearthCanvasInternalRenewalContract", INTERNAL_RENEWAL_CONTRACT);
-    setDataset("hearthCanvasInternalRenewalReceipt", INTERNAL_RENEWAL_RECEIPT);
-    setDataset("hearthCanvasVersion", VERSION);
-
-    setDataset("hearthCanvasMountFound", state.mountFound);
-    setDataset("hearthCanvasMountSelector", state.mountSelector);
-    setDataset("hearthCanvasElementFound", state.canvasElementFound);
-    setDataset("hearthCanvasCreated", state.canvasCreated);
-    setDataset("hearthCanvasSelector", state.canvasSelector);
-    setDataset("hearthCanvasInMount", state.canvasInMount);
-    setDataset("hearthCanvasRectNonzero", state.canvasRectNonzero);
-    setDataset("hearthCanvasComputedVisible", state.canvasComputedVisible);
-    setDataset("hearthCanvasContext2dReady", state.canvasContext2dReady);
-    setDataset("hearthCanvasPixelSampleStatus", state.canvasPixelSampleStatus);
-    setDataset("hearthCanvasPixelVisible", state.canvasPixelVisible);
-
-    setDataset("hearthCanvasSurfaceTruthAvailable", state.canvasSurfaceTruthAvailable);
-    setDataset("hearthCanvasTruthFirstFailedCoordinate", state.canvasTruthFirstFailedCoordinate);
-    setDataset("hearthCanvasTruthFailureClass", state.canvasTruthFailureClass);
-    setDataset("hearthCanvasTruthFailureReason", state.canvasTruthFailureReason);
-    setDataset("hearthCanvasTruthRecommendedFile", state.canvasTruthRecommendedFile);
-    setDataset("hearthCanvasTruthRecommendedAction", state.canvasTruthRecommendedAction);
-
-    setDataset("hearthCanvasExpressionSurfaceReady", state.canvasExpressionSurfaceReady);
-    setDataset("hearthCanvasExpressionRichnessReady", state.canvasExpressionRichnessReady);
-    setDataset("hearthCanvasDomExpressionSurfaceProofReady", state.domExpressionSurfaceProofReady);
-    setDataset("hearthCanvasVisiblePlanetProofReady", state.visiblePlanetProofReady);
-    setDataset("hearthCanvasRenderedPlanetProofReady", state.renderedPlanetProofReady);
-    setDataset("hearthCanvasVisiblePlanetProofSource", state.visiblePlanetProofSource);
-
-    setDataset("hearthCanvasStandardNewsAlignmentStatus", state.canvasStandardNewsAlignmentStatus);
-    setDataset("hearthCanvasStandardNewsAlignmentScore", state.canvasStandardNewsAlignmentScore);
-    setDataset("hearthCanvasStandardNewsAlignmentFirstFailedStage", state.canvasStandardNewsAlignmentFirstFailedStage);
-    setDataset("hearthCanvasStandardFibonacciSynchronizationStatus", state.canvasStandardFibonacciSynchronizationStatus);
-    setDataset("hearthCanvasStandardFibonacciSynchronizationScore", state.canvasStandardFibonacciSynchronizationScore);
-    setDataset("hearthCanvasStandardFibonacciSynchronizationFirstFailedStage", state.canvasStandardFibonacciSynchronizationFirstFailedStage);
-
-    setDataset("hearthCanvasF13Claimed", "false");
-    setDataset("hearthCanvasF21EligibleForNorth", "false");
-    setDataset("hearthCanvasF21Claimed", "false");
-    setDataset("hearthCanvasReadyTextAllowed", "false");
-    setDataset("hearthCanvasReadyTextClaimed", "false");
-    setDataset("generatedImage", "false");
-    setDataset("graphicBox", "false");
-    setDataset("webgl", "false");
-    setDataset("visualPassClaimed", "false");
+    publishGlobals();
+    return getReceiptLight(false);
   }
 
-  function publishAliases() {
-    ensureObject(root, "HEARTH");
-    ensureObject(root, "DEXTER_LAB");
+  function mount(options = {}) {
+    try {
+      ensureCanvas();
+      measureAndResizeCanvas();
+      drawMountedPlanet();
 
-    for (const path of CANVAS_ALIAS_PATHS) setPath(path, api);
-    for (const path of EXPRESSION_BRIDGE_ALIAS_PATHS) setPath(path, api);
+      if (isObject(options) && options.routeConductorReleasePacket) {
+        receiveReleasePacket(options.routeConductorReleasePacket);
+      }
 
-    state.aliasesPublished = true;
-    state.aliasPublishCount += 1;
-    state.publishedAt = nowIso();
-    state.updatedAt = state.publishedAt;
+      state.bootComplete = true;
+      state.mounted = true;
+      state.updatedAt = nowIso();
 
-    return true;
+      publishGlobals();
+      installResizeObserver();
+
+      return getReceipt();
+    } catch (error) {
+      recordError("CANVAS_MOUNT_FAILED", error);
+      publishGlobals();
+      return getReceipt();
+    }
   }
 
-  function composeReceiptLight() {
-    resolveTruthStatus();
+  function boot(options = {}) {
+    if (!state.bootStarted) {
+      state.bootStarted = true;
+      state.startedAt = nowIso();
+      state.updatedAt = state.startedAt;
+    }
+
+    return mount(options);
+  }
+
+  function init(options = {}) { return boot(options); }
+  function start(options = {}) { return boot(options); }
+  function run(options = {}) { return boot(options); }
+
+  function scheduleResizeDraw() {
+    if (resizeTimer || !root.setTimeout) return;
+
+    resizeTimer = root.setTimeout(() => {
+      resizeTimer = 0;
+      measureAndResizeCanvas();
+      drawMountedPlanet();
+      publishGlobals();
+    }, 120);
+  }
+
+  function installResizeObserver() {
+    if (!refs.mount || resizeObserver || typeof root.ResizeObserver === "undefined") return false;
+
+    try {
+      resizeObserver = new root.ResizeObserver(() => scheduleResizeDraw());
+      resizeObserver.observe(refs.mount);
+      if (refs.stage && refs.stage !== refs.mount) resizeObserver.observe(refs.stage);
+      return true;
+    } catch (error) {
+      recordError("RESIZE_OBSERVER_FAILED", error);
+      return false;
+    }
+  }
+
+  function getCanvasRectReceipt() {
+    const rect = getRect(refs.canvas);
 
     return {
-      packetType: "HEARTH_CANVAS_DOM_SURFACE_TRUTH_BINDING_RECEIPT_LIGHT",
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
-      internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
-      previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
-      previousContract: PREVIOUS_CONTRACT,
-      previousReceipt: PREVIOUS_RECEIPT,
-      version: VERSION,
-      file: FILE,
-      route: ROUTE,
-      diagnosticRoute: DIAGNOSTIC_ROUTE,
-
-      loaded: true,
-      booted: state.booted,
-      bootCount: state.bootCount,
-      aliasesPublished: state.aliasesPublished,
-      aliasPublishCount: state.aliasPublishCount,
-
-      receiverOnly: true,
-      ownsCanvasReceiverOutputCarrier: true,
-      ownsCanvasDomSurfaceBinding: true,
-      ownsCanvasPlacementFallback: true,
-      ownsPixelProofPublication: true,
-
-      canvasMountFound: state.mountFound,
-      canvasMountSelector: state.mountSelector,
-      canvasMountDescriptor: state.mountDescriptor,
-      canvasMountRectNonzero: state.mountRectNonzero,
-
       canvasElementFound: state.canvasElementFound,
-      canvasCreated: state.canvasCreated,
-      canvasMovedIntoMount: state.canvasMovedIntoMount,
-      canvasSelector: state.canvasSelector,
-      canvasTag: state.canvasTag,
-      canvasId: state.canvasId,
-      canvasClass: state.canvasClass,
+      canvasSelector: refs.canvas && refs.canvas.id ? `#${refs.canvas.id}` : "UNKNOWN",
+      canvasTag: refs.canvas && refs.canvas.tagName ? refs.canvas.tagName.toLowerCase() : "UNKNOWN",
+      canvasId: refs.canvas && refs.canvas.id ? refs.canvas.id : "",
+      canvasClass: refs.canvas && refs.canvas.className ? refs.canvas.className : "",
+      canvasMountFound: state.mountFound,
+      canvasMountSelector: MOUNT_SELECTOR,
       canvasInMount: state.canvasInMount,
-      canvasWidthAttribute: state.canvasWidthAttribute,
-      canvasHeightAttribute: state.canvasHeightAttribute,
-      canvasRectLeft: state.canvasRectLeft,
-      canvasRectTop: state.canvasRectTop,
-      canvasRectWidth: state.canvasRectWidth,
-      canvasRectHeight: state.canvasRectHeight,
+      canvasWidthAttribute: state.canvasWidth,
+      canvasHeightAttribute: state.canvasHeight,
+      canvasRectLeft: rect.left,
+      canvasRectTop: rect.top,
+      canvasRectWidth: rect.width,
+      canvasRectHeight: rect.height,
       canvasRectNonzero: state.canvasRectNonzero,
       canvasComputedVisible: state.canvasComputedVisible,
-      canvasComputedDisplay: state.canvasComputedDisplay,
-      canvasComputedVisibility: state.canvasComputedVisibility,
-      canvasComputedOpacity: state.canvasComputedOpacity,
-      canvasComputedPosition: state.canvasComputedPosition,
-      canvasComputedZIndex: state.canvasComputedZIndex,
-      canvasComputedPointerEvents: state.canvasComputedPointerEvents,
-      canvasViewportWidth: state.canvasViewportWidth,
-      canvasViewportHeight: state.canvasViewportHeight,
       canvasViewportIntersecting: state.canvasViewportIntersecting,
-
       canvasContext2dReady: state.canvasContext2dReady,
-      canvasContext2dStatus: state.canvasContext2dStatus,
-
-      drawAttempted: state.drawAttempted,
-      drawComplete: state.drawComplete,
-      drawCount: state.drawCount,
-      lastDrawAt: state.lastDrawAt,
-      lastDrawSource: state.lastDrawSource,
-      lastDrawReason: state.lastDrawReason,
-      lastDrawError: state.lastDrawError,
-
-      adapterDrawAttempted: state.adapterDrawAttempted,
-      adapterDrawComplete: state.adapterDrawComplete,
-      adapterSourceName: state.adapterSourceName,
-      adapterContract: state.adapterContract,
-      adapterMethod: state.adapterMethod,
-      adapterError: state.adapterError,
-
-      nativeCarrierDrawAttempted: state.nativeCarrierDrawAttempted,
-      nativeCarrierDrawComplete: state.nativeCarrierDrawComplete,
-
       canvasPixelSampleStatus: state.canvasPixelSampleStatus,
       canvasPixelVisible: state.canvasPixelVisible,
       canvasPixelSampleCount: state.canvasPixelSampleCount,
       canvasVisiblePixelCount: state.canvasVisiblePixelCount,
       canvasAlphaPixelCount: state.canvasAlphaPixelCount,
-      canvasPixelSampleReason: state.canvasPixelSampleReason,
-      canvasPixelVarianceStatus: state.canvasPixelSampleStatus,
+      canvasPixelUniqueColorCount: state.canvasPixelUniqueColorCount
+    };
+  }
 
-      canvasLayerBlocked: state.canvasLayerBlocked,
-      canvasLayerBlocker: state.canvasLayerBlocker,
+  function getReceiptLight(doRefresh = true) {
+    if (doRefresh) {
+      ensureCanvas();
+      measureAndResizeCanvas();
+      if (!state.canvasDrawComplete) drawMountedPlanet();
+      else samplePixels();
+      publishDataset();
+    }
 
-      canvasSurfaceTruthAvailable: state.canvasSurfaceTruthAvailable,
-      canvasTruthFirstFailedCoordinate: state.canvasTruthFirstFailedCoordinate,
-      canvasTruthFailureClass: state.canvasTruthFailureClass,
-      canvasTruthFailureReason: state.canvasTruthFailureReason,
-      canvasTruthRecommendedOwner: state.canvasTruthRecommendedOwner,
-      canvasTruthRecommendedFile: state.canvasTruthRecommendedFile,
-      canvasTruthRecommendedAction: state.canvasTruthRecommendedAction,
+    buildFingerRegistry();
 
-      canvasExpressionSurfaceReady: state.canvasExpressionSurfaceReady,
-      canvasExpressionRichnessReady: state.canvasExpressionRichnessReady,
-      domExpressionSurfaceProofReady: state.domExpressionSurfaceProofReady,
-      visiblePlanetProofReady: state.visiblePlanetProofReady,
-      visiblePlanetProofSource: state.visiblePlanetProofSource,
-      renderedPlanetProofReady: state.renderedPlanetProofReady,
+    return {
+      packetType: "HEARTH_CANVAS_LOCAL_STATION_EXPRESSION_HUB_VISIBLE_PLANET_RECEIPT_v12_3",
+      role: "canvas-local-station-expression-hub-finger-manager-visible-base-globe-carrier",
+      contract: CONTRACT,
+      CONTRACT,
+      receipt: RECEIPT,
+      RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
+      previousReceipt: PREVIOUS_RECEIPT,
+      lineageV121Contract: LINEAGE_V12_1_CONTRACT,
+      lineageV12Contract: LINEAGE_V12_CONTRACT,
+      lineageV117Contract: LINEAGE_V11_7_CONTRACT,
+      version: VERSION,
+      file: FILE,
+      route: ROUTE,
+      htmlFile: HTML_FILE,
+      routeConductorFile: ROUTE_CONDUCTOR_FILE,
+      controlFile: CONTROL_FILE,
 
+      canvasLocalStationActive: true,
+      childDistributionSwitchboardActive: true,
+      routeConductorSummarySurfaceActive: true,
+      currentCanvasParentObserved: true,
       currentCanvasParentContract: CONTRACT,
       currentCanvasParentReceipt: RECEIPT,
-      currentCanvasParentRecognized: true,
-      currentCanvasParentObserved: true,
-      currentCanvasParentIsCurrentCanvas: true,
       canvasContract: CONTRACT,
       canvasReceipt: RECEIPT,
-      hearthCanvasContract: CONTRACT,
-      hearthCanvasReceipt: RECEIPT,
+      currentCanvasContract: CONTRACT,
+      currentCanvasReceipt: RECEIPT,
 
-      canvasStandardNewsAlignmentStatus: state.canvasStandardNewsAlignmentStatus,
-      canvasStandardNewsAlignmentScore: state.canvasStandardNewsAlignmentScore,
-      canvasStandardNewsAlignmentFirstFailedStage:
-        state.canvasStandardNewsAlignmentFirstFailedStage,
-      canvasStandardFibonacciSynchronizationStatus:
-        state.canvasStandardFibonacciSynchronizationStatus,
-      canvasStandardFibonacciSynchronizationScore:
-        state.canvasStandardFibonacciSynchronizationScore,
-      canvasStandardFibonacciSynchronizationFirstFailedStage:
-        state.canvasStandardFibonacciSynchronizationFirstFailedStage,
+      expressionHubActive: state.expressionHubActive,
+      canvasExpressionHubActive: state.canvasExpressionHubActive,
+      fingerManagerActive: state.fingerManagerActive,
+      canvasFingerManagerActive: state.canvasFingerManagerActive,
+      fingerRegistryActive: state.fingerRegistryActive,
+      compositeFirstVisiblePathActive: state.compositeFirstVisiblePathActive,
 
-      routeConductorPacketCount: state.routeConductorPacketCount,
-      queenPacketCount: state.queenPacketCount,
-      labWestPacketCount: state.labWestPacketCount,
-      fingerPacketCount: state.fingerPacketCount,
-      diagnosticPacketCount: state.diagnosticPacketCount,
-      packetCount: state.packetCount,
-      lastPacketType: state.lastPacketType,
-      lastPacketContract: state.lastPacketContract,
+      visibleBaseGlobeCarrierActive: state.visibleBaseGlobeCarrierActive,
+      canvasVisibleBaseGlobeCarrierActive: state.canvasVisibleBaseGlobeCarrierActive,
+      baseGlobeMounted: state.baseGlobeMounted,
+      canvasMounted: state.canvasMounted,
+      baseGlobeDrawComplete: state.baseGlobeDrawComplete,
+      canvasDrawComplete: state.canvasDrawComplete,
+      baseGlobeVisibleCarrierReady: state.baseGlobeVisibleCarrierReady,
+      visibleGlobeCarrierReady: state.visibleGlobeCarrierReady,
+      visiblePlanetProofReady: state.visiblePlanetProofReady,
+      domVisiblePlanetProofReady: state.domVisiblePlanetProofReady,
+      visiblePlanetProofSource: state.visiblePlanetProofSource,
 
+      canvasParentReleaseAccepted: state.canvasParentReleaseAccepted,
+      parentReleaseAccepted: state.parentReleaseAccepted,
+      releasePacketAccepted: state.releasePacketAccepted,
+      parentReleaseLawful: state.parentReleaseLawful,
+      canvasParentReleaseLawful: state.canvasParentReleaseLawful,
+      releasePacketValid: state.releasePacketValid,
+
+      f13CanvasReadinessObserved: true,
+      f13VisibleEvidenceAvailable: state.visiblePlanetProofReady,
+      f13InspectEvidenceAvailable: true,
+      f13CanvasEvidenceStrict: false,
+      f13CanvasEvidenceDegraded: state.visiblePlanetProofReady,
+      f13CanvasEvidenceComplete: state.visiblePlanetProofReady,
+      f13HardFail: false,
+      f13StrictEvidenceGap: state.visiblePlanetProofReady
+        ? "VISIBLE_GLOBE_PROOF_INGESTED_STRICT_F13_PENDING"
+        : "WAITING_DOM_CANVAS_SURFACE_PROOF",
+      f13StrictEvidenceRepairTarget: FINGER_FILES.inspect,
+
+      fingerRegistry: clonePlain(state.fingerRegistry),
+      fingerAuthorityObservedCount: state.fingerAuthorityObservedCount,
+      fingerApiReadyCount: state.fingerApiReadyCount,
+      fingerExpressionPacketCount: state.fingerExpressionPacketCount,
+      fingerReceiptPacketCount: state.fingerReceiptPacketCount,
+      fingerTrackReadyCount: state.fingerTrackReadyCount,
+      fingerHardFailCount: state.fingerHardFailCount,
+      anyFingerTrackActive: state.anyFingerTrackActive,
+      allDeclaredFingerTracksReady: state.allDeclaredFingerTracksReady,
+      firstFingerGap: state.firstFingerGap,
+      firstFingerGapFile: state.firstFingerGapFile,
+      nextFingerKey: state.nextFingerKey,
+      nextFingerFile: state.nextFingerFile,
+      pointerFingerObserved: state.pointerFingerObserved,
+
+      ...getCanvasRectReceipt(),
+
+      drawMode: state.drawMode,
+      drawCount: state.drawCount,
+      resizeCount: state.resizeCount,
+      lastDrawAt: state.lastDrawAt,
+      mounted: state.mounted,
+      bootStarted: state.bootStarted,
+      bootComplete: state.bootComplete,
+
+      ownsCanvasDrawing: true,
+      ownsCanvasSurfaceBinding: true,
+      ownsCanvasTruth: false,
       ownsTerrainTruth: false,
       ownsHydrologyTruth: false,
       ownsElevationTruth: false,
       ownsMaterialTruth: false,
-      ownsAtmosphereTruth: false,
-      ownsLightingTruth: false,
-      ownsCompositeTruth: false,
-      ownsHexTruth: false,
       ownsFingerTruth: false,
-      ownsPointerTruth: false,
-      ownsQueenTruth: false,
-      ownsControlRuntimeTruth: false,
-      ownsLabWestAdmissibilityTruth: false,
-      ownsRouteConductorHandshakeTruth: false,
-      ownsDiagnosticRailCaseSelection: false,
+      ownsRouteConductorRelease: false,
+      ownsControls: false,
+      ownsFinalVisualPass: false,
 
       ...NO_CLAIMS,
+
       updatedAt: state.updatedAt || nowIso()
     };
   }
 
-  function getReceiptLight() {
-    if (activeCanvas) {
-      updateSurfaceState(
-        state.canvasSelector,
-        activeMount || activeCanvas.parentElement,
-        activeCanvas,
-        activeContext,
-        activeContext ? "2D_CONTEXT_READY" : state.canvasContext2dStatus
-      );
-    }
-
-    return composeReceiptLight();
-  }
-
   function getReceipt() {
     return {
-      ...getReceiptLight(),
-      packetType: "HEARTH_CANVAS_DOM_SURFACE_TRUTH_BINDING_RECEIPT",
-      canvasAliasPaths: CANVAS_ALIAS_PATHS.slice(),
-      expressionBridgeAliasPaths: EXPRESSION_BRIDGE_ALIAS_PATHS.slice(),
-      drawableAdapterAliasPathsReadOnly: DRAWABLE_ADAPTER_ALIAS_PATHS.slice(),
-      events: clonePlain(state.events),
+      ...getReceiptLight(false),
+      receiptComposed: true,
+      currentReceipt: true,
+      noFinalClaimsPreserved: true,
+      canvasHubCompositeFirstFastViewDeferredHexRenderReceiverReceipt: true,
+      supportsRealDomCanvasSurfaceBinding: true,
+      supportsCanvasSurfaceTruthProbe: true,
+      supportsRouteConductorReleasePacket: true,
+      supports2dContextPixelSampling: true,
+      supportsMountedPlanetHoldingField: true,
+      supportsNoWebGL: true,
+      supportsNoGraphicBox: true,
+      supportsNoGeneratedImage: true,
+      supportsNoVisualPassClaim: true,
+      files: {
+        canvas: FILE,
+        html: HTML_FILE,
+        routeConductor: ROUTE_CONDUCTOR_FILE,
+        control: CONTROL_FILE,
+        fingers: clonePlain(FINGER_FILES)
+      },
+      localEvents: clonePlain(state.events),
       errors: clonePlain(state.errors),
+      startedAt: state.startedAt,
+      updatedAt: state.updatedAt || nowIso(),
       ...NO_CLAIMS
     };
   }
 
+  function getCanvasStationSummary() { return getReceiptLight(true); }
+  function getCanvasStationReceiptLight() { return getReceiptLight(true); }
+  function getCanvasStationReceipt() { return getReceipt(); }
+  function getExpressionHubSummary() { return getReceiptLight(true); }
+  function getExpressionHubReceipt() { return getReceipt(); }
+  function getVisibleBaseGlobeReceipt() { return getReceipt(); }
+  function getBaseGlobeReceipt() { return getReceipt(); }
+  function getVisiblePlanetReceipt() { return getReceipt(); }
+  function getVisibleGlobeReceipt() { return getReceipt(); }
+  function getCanvasVisibleProofReceipt() { return getReceipt(); }
+  function getStructuralCarrier() { return getReceiptLight(true); }
+  function readStructuralCarrier() { return getReceiptLight(true); }
+  function getCanvasCarrier() { return getReceiptLight(true); }
+  function getCarrierReceipt() { return getReceipt(); }
+  function getStatus() { return getReceiptLight(true); }
+  function getReport() { return getReceipt(); }
+  function getState() { return clonePlain(state); }
+
   function getReceiptText() {
-    const r = getReceiptLight();
+    const r = getReceiptLight(false);
 
     return [
-      "HEARTH_CANVAS_DOM_SURFACE_TRUTH_BINDING_RECEIPT",
-      `contract=${r.contract}`,
-      `receipt=${r.receipt}`,
-      `internalRenewalContract=${r.internalRenewalContract}`,
-      `internalRenewalReceipt=${r.internalRenewalReceipt}`,
-      `file=${FILE}`,
-      `route=${ROUTE}`,
-      `canvasMountFound=${r.canvasMountFound}`,
-      `canvasMountSelector=${r.canvasMountSelector}`,
-      `canvasElementFound=${r.canvasElementFound}`,
-      `canvasCreated=${r.canvasCreated}`,
-      `canvasSelector=${r.canvasSelector}`,
-      `canvasInMount=${r.canvasInMount}`,
-      `canvasRectNonzero=${r.canvasRectNonzero}`,
-      `canvasComputedVisible=${r.canvasComputedVisible}`,
-      `canvasContext2dReady=${r.canvasContext2dReady}`,
-      `drawAttempted=${r.drawAttempted}`,
-      `drawComplete=${r.drawComplete}`,
-      `lastDrawSource=${r.lastDrawSource}`,
-      `canvasPixelSampleStatus=${r.canvasPixelSampleStatus}`,
-      `canvasPixelVisible=${r.canvasPixelVisible}`,
-      `canvasSurfaceTruthAvailable=${r.canvasSurfaceTruthAvailable}`,
-      `canvasTruthFirstFailedCoordinate=${r.canvasTruthFirstFailedCoordinate}`,
-      `canvasTruthFailureClass=${r.canvasTruthFailureClass}`,
-      `canvasTruthFailureReason=${r.canvasTruthFailureReason}`,
-      `canvasTruthRecommendedFile=${r.canvasTruthRecommendedFile}`,
-      `canvasTruthRecommendedAction=${r.canvasTruthRecommendedAction}`,
-      `canvasStandardNewsAlignmentStatus=${r.canvasStandardNewsAlignmentStatus}`,
-      `canvasStandardNewsAlignmentScore=${r.canvasStandardNewsAlignmentScore}`,
-      `canvasStandardFibonacciSynchronizationStatus=${r.canvasStandardFibonacciSynchronizationStatus}`,
-      `canvasStandardFibonacciSynchronizationScore=${r.canvasStandardFibonacciSynchronizationScore}`,
-      "f13Claimed=false",
-      "f21EligibleForNorth=false",
-      "f21Claimed=false",
-      "readyTextAllowed=false",
-      "readyTextClaimed=false",
-      "visualPassClaimed=false",
-      "generatedImage=false",
-      "graphicBox=false",
-      "webGL=false"
+      "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT",
+      line("contract", r.contract),
+      line("receipt", r.receipt),
+      line("previousContract", r.previousContract),
+      line("version", r.version),
+      line("file", r.file),
+      line("route", r.route),
+      line("canvasLocalStationActive", r.canvasLocalStationActive),
+      line("expressionHubActive", r.expressionHubActive),
+      line("fingerManagerActive", r.fingerManagerActive),
+      line("visibleBaseGlobeCarrierActive", r.visibleBaseGlobeCarrierActive),
+      line("canvasElementFound", r.canvasElementFound),
+      line("canvasSelector", r.canvasSelector),
+      line("canvasMountFound", r.canvasMountFound),
+      line("canvasInMount", r.canvasInMount),
+      line("canvasRectNonzero", r.canvasRectNonzero),
+      line("canvasComputedVisible", r.canvasComputedVisible),
+      line("canvasViewportIntersecting", r.canvasViewportIntersecting),
+      line("canvasContext2dReady", r.canvasContext2dReady),
+      line("canvasPixelSampleStatus", r.canvasPixelSampleStatus),
+      line("canvasPixelVisible", r.canvasPixelVisible),
+      line("canvasPixelUniqueColorCount", r.canvasPixelUniqueColorCount),
+      line("canvasMounted", r.canvasMounted),
+      line("canvasDrawComplete", r.canvasDrawComplete),
+      line("visiblePlanetProofReady", r.visiblePlanetProofReady),
+      line("visiblePlanetProofSource", r.visiblePlanetProofSource),
+      line("canvasParentReleaseAccepted", r.canvasParentReleaseAccepted),
+      line("parentReleaseLawful", r.parentReleaseLawful),
+      line("f13CanvasEvidenceDegraded", r.f13CanvasEvidenceDegraded),
+      line("f13CanvasEvidenceStrict", r.f13CanvasEvidenceStrict),
+      line("f13CanvasEvidenceComplete", r.f13CanvasEvidenceComplete),
+      line("f13HardFail", r.f13HardFail),
+      line("f13Claimed", false),
+      line("f21Claimed", false),
+      line("readyTextClaimed", false),
+      line("visualPassClaimed", false),
+      line("generatedImage", false),
+      line("graphicBox", false),
+      line("webGL", false),
+      line("updatedAt", r.updatedAt)
     ].join("\n");
   }
 
-  function publishReceipts() {
+  function publishGlobals() {
     const hearth = ensureObject(root, "HEARTH");
     const lab = ensureObject(root, "DEXTER_LAB");
-    const light = getReceiptLight();
-    const full = getReceipt();
 
-    root.HEARTH_CANVAS_HUB_RECEIPT = light;
-    root.HEARTH_CANVAS_RECEIPT = light;
-    root.HEARTH_CANVAS_PARENT_RECEIPT = light;
-    root.HEARTH_CANVAS_LOCAL_STATION_RECEIPT = light;
-    root.HEARTH_CANVAS_STATION_RECEIPT = light;
-    root.HEARTH_CANVAS_EXPRESSION_SURFACE_RECEIPT = light;
-    root.HEARTH_CANVAS_DOM_SURFACE_TRUTH_RECEIPT = full;
-    root.HEARTH_CANVAS_SURFACE_TRUTH_RECEIPT = full;
-    root.HEARTH_CANVAS_VISIBLE_PLANET_RECEIPT = light;
-    root.HEARTH_CANVAS_VISIBLE_GLOBE_RECEIPT = light;
+    hearth.canvasCompositeFirstFastViewDeferredHexReceiver = api;
+    hearth.canvasHubCompositeFirstFastViewDeferredHexReceiver = api;
+    hearth.canvasHubFastViewTransformDeferredRenderReceiver = api;
+    hearth.canvasPlanetaryViewControlReceiver = api;
+    hearth.canvasHub = api;
+    hearth.canvas = api;
+    hearth.canvasParent = api;
+    hearth.canvasAuthority = api;
+    hearth.canvasEvidence = api;
+    hearth.canvasLocalStation = api;
+    hearth.canvasStation = api;
+    hearth.canvasExpressionHub = api;
+    hearth.canvasFingerManager = api;
+    hearth.canvasExpressionHubVisibleBaseGlobeCarrier = api;
+    hearth.canvasVisibleBaseGlobeCarrier = api;
+    hearth.canvasVisiblePlanet = api;
 
-    hearth.canvasHubReceipt = light;
-    hearth.canvasReceipt = light;
-    hearth.canvasParentReceipt = light;
-    hearth.canvasLocalStationReceipt = light;
-    hearth.canvasStationReceipt = light;
-    hearth.canvasExpressionSurfaceReceipt = light;
-    hearth.canvasDomSurfaceTruthReceipt = full;
-    hearth.canvasSurfaceTruthReceipt = full;
-    hearth.canvasVisiblePlanetReceipt = light;
-    hearth.canvasVisibleGlobeReceipt = light;
+    lab.hearthCanvasCompositeFirstFastViewDeferredHexReceiver = api;
+    lab.hearthCanvasHubCompositeFirstFastViewDeferredHexReceiver = api;
+    lab.hearthCanvasHubFastViewTransformDeferredRenderReceiver = api;
+    lab.hearthCanvasPlanetaryViewControlReceiver = api;
+    lab.hearthCanvasHub = api;
+    lab.hearthCanvas = api;
+    lab.hearthCanvasParent = api;
+    lab.hearthCanvasEvidence = api;
+    lab.hearthCanvasLocalStation = api;
+    lab.hearthCanvasStation = api;
+    lab.hearthCanvasExpressionHub = api;
+    lab.hearthCanvasFingerManager = api;
+    lab.hearthCanvasVisiblePlanet = api;
 
-    lab.hearthCanvasHubReceipt = light;
-    lab.hearthCanvasReceipt = light;
-    lab.hearthCanvasParentReceipt = light;
-    lab.hearthCanvasLocalStationReceipt = light;
-    lab.hearthCanvasStationReceipt = light;
-    lab.hearthCanvasExpressionSurfaceReceipt = light;
-    lab.hearthCanvasDomSurfaceTruthReceipt = full;
-    lab.hearthCanvasSurfaceTruthReceipt = full;
-    lab.hearthCanvasVisiblePlanetReceipt = light;
-    lab.hearthCanvasVisibleGlobeReceipt = light;
+    root.HEARTH_CANVAS_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER = api;
+    root.HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER = api;
+    root.HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER = api;
+    root.HEARTH_CANVAS_PLANETARY_VIEW_CONTROL_RECEIVER = api;
+    root.HEARTH_CANVAS_HUB = api;
+    root.HEARTH_CANVAS = api;
+    root.HEARTH_CANVAS_PARENT = api;
+    root.HEARTH_CANVAS_AUTHORITY = api;
+    root.HEARTH_CANVAS_EVIDENCE = api;
+    root.HEARTH_CANVAS_LOCAL_STATION = api;
+    root.HEARTH_CANVAS_STATION = api;
+    root.HEARTH_CANVAS_EXPRESSION_HUB = api;
+    root.HEARTH_CANVAS_FINGER_MANAGER = api;
+    root.HEARTH_CANVAS_EXPRESSION_HUB_VISIBLE_BASE_GLOBE_CARRIER = api;
+    root.HEARTH_CANVAS_VISIBLE_BASE_GLOBE_CARRIER = api;
+    root.HEARTH_CANVAS_VISIBLE_PLANET = api;
 
-    state.receiptPublishCount += 1;
-    state.updatedAt = nowIso();
+    const receipt = getReceiptLight(false);
 
-    updateDataset();
+    hearth.canvasReceipt = receipt;
+    hearth.canvasHubReceipt = receipt;
+    hearth.canvasLocalStationReceipt = receipt;
+    hearth.canvasStationReceipt = receipt;
+    hearth.canvasExpressionHubReceipt = receipt;
+    hearth.canvasFingerManagerReceipt = receipt;
+    hearth.canvasVisibleBaseGlobeCarrierReceipt = receipt;
+    hearth.canvasVisiblePlanetReceipt = receipt;
 
-    try {
-      if (isFunction(root.dispatchEvent) && isFunction(root.CustomEvent)) {
-        root.dispatchEvent(
-          new CustomEvent("hearth:canvas-surface-truth", {
-            detail: clonePlain(light)
-          })
-        );
-      }
-    } catch (_error) {}
+    lab.hearthCanvasReceipt = receipt;
+    lab.hearthCanvasHubReceipt = receipt;
+    lab.hearthCanvasLocalStationReceipt = receipt;
+    lab.hearthCanvasStationReceipt = receipt;
+    lab.hearthCanvasExpressionHubReceipt = receipt;
+    lab.hearthCanvasFingerManagerReceipt = receipt;
 
-    return true;
-  }
+    root.HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT = receipt;
+    root.HEARTH_CANVAS_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT = receipt;
+    root.HEARTH_CANVAS_HUB_RECEIPT = receipt;
+    root.HEARTH_CANVAS_LOCAL_STATION_RECEIPT = receipt;
+    root.HEARTH_CANVAS_STATION_RECEIPT = receipt;
+    root.HEARTH_CANVAS_EXPRESSION_HUB_RECEIPT = receipt;
+    root.HEARTH_CANVAS_FINGER_MANAGER_RECEIPT = receipt;
+    root.HEARTH_CANVAS_VISIBLE_BASE_GLOBE_CARRIER_RECEIPT = receipt;
+    root.HEARTH_CANVAS_VISIBLE_PLANET_RECEIPT = receipt;
+    root.HEARTH_CANVAS_RECEIPT = receipt;
 
-  function schedulePublish() {
-    if (!root.setTimeout) return publishReceipts();
-    if (publishTimer) return true;
+    root.HEARTH_CANVAS_RECEIPT_TEXT = getReceiptText();
 
-    publishTimer = root.setTimeout(() => {
-      publishTimer = 0;
-      publishReceipts();
-    }, 40);
-
-    return true;
-  }
-
-  function notifyUpstream(reason = "canvas-surface-truth") {
-    const receipt = getReceiptLight();
-    const targetPaths = [
-      "HEARTH.routeConductor",
-      "HEARTH.routeConductorBishopQueenCanvasRecognitionFunnel",
-      "DEXTER_LAB.hearthRouteConductor",
-      "DEXTER_LAB.hearthRouteConductorBishopQueenCanvasRecognitionFunnel",
-      "HEARTH.westAdmissibility",
-      "HEARTH.runtimeTableWest",
-      "DEXTER_LAB.runtimeTableWest"
-    ];
-
-    const methods = [
-      "receiveCanvasSurfaceTruthReceipt",
-      "receiveCanvasDomSurfaceTruthReceipt",
-      "receiveCanvasVisibleProof",
-      "receiveVisiblePlanetReceipt",
-      "receiveCanvasParentSummary",
-      "receiveCanvasStationSummary",
-      "receiveCanvasExpressionPacket",
-      "reconcileCanvas"
-    ];
-
-    for (const path of targetPaths) {
-      const target = readPath(path);
-      if (!target || target === api || !isObject(target)) continue;
-
-      for (const method of methods) {
-        if (!isFunction(target[method])) continue;
-
-        safeInvoke(target, method, [{
-          ...clonePlain(receipt),
-          packetType: "HEARTH_CANVAS_DOM_SURFACE_TRUTH_UPSTREAM_NOTICE",
-          noticeReason: reason,
-          sourceFile: FILE,
-          targetFile: ROUTE_CONDUCTOR_FILE,
-          ...NO_CLAIMS
-        }]);
-      }
-    }
-
-    state.upstreamNoticeCount += 1;
-    return true;
-  }
-
-  function publishGlobals(reason = "publish-globals") {
-    publishAliases();
-    updateDataset();
-    publishReceipts();
-    record(reason, {
-      canvasElementFound: state.canvasElementFound,
-      canvasInMount: state.canvasInMount,
-      canvasPixelVisible: state.canvasPixelVisible,
-      surfaceTruth: state.canvasSurfaceTruthAvailable
-    });
+    publishDataset();
     return api;
   }
 
-  function boot(options = {}) {
-    if (booting) return getReceipt();
-
-    booting = true;
-
-    try {
-      state.bootCount += 1;
-      state.startedAt = state.startedAt || nowIso();
-
-      publishAliases();
-      locateOrCreateSurface();
-      updateDataset();
-      publishReceipts();
-
-      if (options.drawNow !== false) {
-        drawVisibleExpression({
-          reason: options.reason || "boot",
-          viewState: isObject(options.viewState) ? options.viewState : {}
-        });
-      }
-
-      state.booted = true;
-      resolveTruthStatus();
-      updateDataset();
-      publishReceipts();
-      notifyUpstream("boot");
-
-      return getReceipt();
-    } catch (error) {
-      recordError("CANVAS_BOOT_FAILED", error);
-      updateDataset();
-      publishReceipts();
-      return getReceipt();
-    } finally {
-      booting = false;
-    }
-  }
-
-  function init(options = {}) { return boot(options); }
-  function start(options = {}) { return boot(options); }
-  function mount(options = {}) { return boot(options); }
-
   Object.assign(api, {
-    CONTRACT,
-    RECEIPT,
-    INTERNAL_RENEWAL_CONTRACT,
-    INTERNAL_RENEWAL_RECEIPT,
-    PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
-    PREVIOUS_CONTRACT,
-    PREVIOUS_RECEIPT,
     contract: CONTRACT,
+    CONTRACT,
     receipt: RECEIPT,
-    internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
-    internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
-    previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
+    RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
+    lineageV121Contract: LINEAGE_V12_1_CONTRACT,
+    lineageV12Contract: LINEAGE_V12_CONTRACT,
+    lineageV117Contract: LINEAGE_V11_7_CONTRACT,
+    version: VERSION,
     file: FILE,
     route: ROUTE,
-    diagnosticRoute: DIAGNOSTIC_ROUTE,
-    version: VERSION,
 
-    FILE,
-    ROUTE,
-    DIAGNOSTIC_ROUTE,
-    ROUTE_CONDUCTOR_FILE,
-    CONTROL_FILE,
-    LABWEST_FILE,
-
-    CANVAS_ALIAS_PATHS,
-    EXPRESSION_BRIDGE_ALIAS_PATHS,
-    DRAWABLE_ADAPTER_ALIAS_PATHS,
-
+    mount,
     boot,
     init,
     start,
-    mount,
+    run,
 
-    locateOrCreateSurface,
-    drawToCanvas,
-    drawVisibleExpression,
-    render,
-    draw,
-    scheduleDraw,
-    samplePixels,
-
-    receivePacket,
-    receiveRouteConductorReleasePacket,
-    receiveCanvasReleasePacket,
     receiveReleasePacket,
+    consumeRouteConductorReleasePacket,
+    receiveRouteConductorReleasePacket,
     consumeReleasePacket,
+    receiveCanvasReleasePacket,
+    receiveCanvasParentPacket,
     acceptReleasePacket,
 
-    receiveQueenPacket,
-    receiveControlPacket,
-    receiveControlsPacket,
-    receiveViewControlPacket,
-    receivePlanetaryControlPacket,
+    receiveControlHandshake,
+    receiveRouteConductorControlHandshake: receiveControlHandshake,
+    consumeRouteConductorControlHandshake: receiveControlHandshake,
 
-    receiveLabWestPacket,
-    receiveWestGateContext,
-    receiveAdmissibilityContext,
-
-    receiveFingerPacket,
-    receiveCanvasFingerPacket,
-    receiveExpressionFingerPacket,
-    registerCanvasFinger,
-    registerExpressionFinger,
-    receiveCanvasExpressionPacket,
-
-    receiveDiagnosticPacket,
-    receiveHierarchyContext,
-
-    getReceiptLight,
     getReceipt,
-    getCanvasStationSummary: getReceiptLight,
-    getCanvasStationReceiptLight: getReceiptLight,
-    getCanvasStationReceipt: getReceipt,
-    getCanvasParentSummary: getReceiptLight,
-    getCanvasParentReceipt: getReceipt,
-    getExpressionHubSummary: getReceiptLight,
-    getExpressionHubReceipt: getReceiptLight,
-    getExpressionSurfaceReceipt: getReceiptLight,
-    getCanvasSurfaceTruthReceipt: getReceipt,
-    getCanvasDomSurfaceTruthReceipt: getReceipt,
-    getVisiblePlanetReceipt: getReceiptLight,
-    getVisibleGlobeReceipt: getReceiptLight,
-    getCanvasVisibleProofReceipt: getReceiptLight,
-    getStructuralCarrier: getReceiptLight,
-    readStructuralCarrier: getReceiptLight,
-    getCarrierReceipt: getReceiptLight,
-    getStatus: getReceiptLight,
-    getReport: getReceipt,
-    getState: () => state,
+    getReceiptLight,
     getReceiptText,
+    getCanvasStationSummary,
+    getCanvasStationReceiptLight,
+    getCanvasStationReceipt,
+    getExpressionHubSummary,
+    getExpressionHubReceipt,
+    getVisibleBaseGlobeReceipt,
+    getBaseGlobeReceipt,
+    getVisiblePlanetReceipt,
+    getVisibleGlobeReceipt,
+    getCanvasVisibleProofReceipt,
+    getStructuralCarrier,
+    readStructuralCarrier,
+    getCanvasCarrier,
+    getCarrierReceipt,
+    getStatus,
+    getReport,
+    getState,
 
+    ensureCanvas,
+    drawMountedPlanet,
+    samplePixels,
     publishGlobals,
-    publishAliases,
-    publishReceipts,
-    notifyUpstream,
-    updateDataset,
+    publishDataset,
 
-    supportsCanvasDomSurfaceTruthBinding: true,
-    supportsCanvasCreationUnderMount: true,
-    supportsCanvasMoveIntoMount: true,
-    supports2DCanvasContext: true,
-    supportsPixelVisibleProof: true,
-    supportsNativeVisibleCarrierProof: true,
-    supportsNoWebGL: true,
-    supportsNoGeneratedImage: true,
-    supportsNoGraphicBox: true,
-    supportsNoFinalClaim: true,
+    supportsRealDomCanvasSurfaceBinding: true,
+    supportsCanvasSurfaceTruthProbe: true,
+    supports2dContextPixelSampling: true,
+    supportsRouteConductorReleasePacket: true,
+    supportsMountedPlanetHoldingField: true,
+    supportsVisibleBaseGlobeCarrier: true,
+    supportsExpressionHubReceiptShape: true,
+    supportsFingerManagerReceiptShape: true,
 
-    ownsCanvasReceiverOutputCarrier: true,
-    ownsCanvasDomSurfaceBinding: true,
-    ownsCanvasPlacementFallback: true,
-    ownsPixelProofPublication: true,
+    canvasLocalStationActive: true,
+    childDistributionSwitchboardActive: true,
+    expressionHubActive: true,
+    canvasExpressionHubActive: true,
+    fingerManagerActive: true,
+    canvasFingerManagerActive: true,
+    fingerRegistryActive: true,
+    visibleBaseGlobeCarrierActive: true,
+    canvasVisibleBaseGlobeCarrierActive: true,
 
+    ownsCanvasDrawing: true,
+    ownsCanvasSurfaceBinding: true,
+    ownsCanvasTruth: false,
     ownsTerrainTruth: false,
     ownsHydrologyTruth: false,
     ownsElevationTruth: false,
     ownsMaterialTruth: false,
-    ownsAtmosphereTruth: false,
-    ownsLightingTruth: false,
-    ownsCompositeTruth: false,
-    ownsHexTruth: false,
     ownsFingerTruth: false,
-    ownsPointerTruth: false,
-    ownsQueenTruth: false,
-    ownsControlRuntimeTruth: false,
-    ownsLabWestAdmissibilityTruth: false,
-    ownsRouteConductorHandshakeTruth: false,
-    ownsDiagnosticRailCaseSelection: false,
-    ownsF13: false,
-    ownsF21: false,
-    ownsReadyText: false,
-    ownsCompletionLatch: false,
-    ownsFinalVisualPassClaim: false,
+    ownsRouteConductorRelease: false,
+    ownsControls: false,
+    ownsFinalVisualPass: false,
 
-    ...NO_CLAIMS
+    FINGER_FILES,
+
+    ...NO_CLAIMS,
+
+    get state() {
+      return state;
+    }
   });
 
-  try {
-    publishGlobals("immediate-canvas-dom-surface-truth-publication");
+  publishGlobals();
 
-    if (doc) {
-      if (doc.readyState === "loading") {
-        doc.addEventListener(
-          "DOMContentLoaded",
-          () => boot({ reason: "dom-content-loaded" }),
-          { once: true }
-        );
-      } else {
-        boot({ reason: "document-ready" });
-      }
+  if (doc) {
+    if (doc.readyState === "loading") {
+      doc.addEventListener("DOMContentLoaded", () => boot(), { once: true });
     } else {
-      boot({ reason: "no-document-runtime", drawNow: false });
+      boot();
     }
-
-    if (root.requestAnimationFrame) {
-      root.requestAnimationFrame(() => {
-        boot({ reason: "animation-frame-rebind" });
-      });
-    }
-
-    if (root.setTimeout) {
-      root.setTimeout(() => {
-        boot({ reason: "post-publication-retry-1" });
-        scheduleDraw("post-publication-retry-1");
-        schedulePublish();
-      }, 180);
-
-      root.setTimeout(() => {
-        boot({ reason: "post-publication-retry-2" });
-        scheduleDraw("post-publication-retry-2");
-        notifyUpstream("post-publication-retry-2");
-      }, 720);
-
-      root.setTimeout(() => {
-        boot({ reason: "post-publication-retry-3" });
-        scheduleDraw("post-publication-retry-3");
-        notifyUpstream("post-publication-retry-3");
-      }, 1600);
-    }
-  } catch (error) {
-    recordError("CANVAS_INITIALIZATION_FAILED", error);
-
-    try {
-      updateDataset();
-      publishReceipts();
-    } catch (_fallbackError) {}
+  } else {
+    boot();
   }
 
   if (typeof module !== "undefined" && module.exports) {

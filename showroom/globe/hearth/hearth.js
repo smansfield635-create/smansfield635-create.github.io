@@ -1,22 +1,23 @@
 // /showroom/globe/hearth/hearth.js
 // HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC_TNT_v10
 // Internal controlled renewal:
-// HEARTH_ROUTE_CONDUCTOR_BILATERAL_TRIANGLE_SCAN_CANVAS_PLATTER_PACKET_BRIDGE_TNT_v10_4
+// HEARTH_ROUTE_CONDUCTOR_SAFE_PACKET_BRIDGE_NO_LIFECYCLE_IGNITION_TNT_v10_5
 // Full-file replacement.
 // Showroom Globe Hearth route conductor only.
 // Purpose:
 // - Preserve the public v10 Route Conductor contract expected by diagnostics, Controls, Canvas, and Index.
-// - Preserve the v10_3 governed source stack admission lineage.
-// - Make the route conductor the active bilateral scan authority for the production construct.
-// - Stage the triangle as Route Conductor + Controls Queen + Hex Surface.
-// - Funnel governed presentation packets to /assets/hearth/hearth.canvas.js as the presentation platter.
-// - Treat Controls as the motion/input gateway baseline.
-// - Treat Hex Surface as the downstream expression gate.
-// - Treat Pointer Finger as downstream of Hex Surface; Route observes it but does not directly deliver to it.
-// - Load/scan downstream files when missing from the target document.
-// - Publish permission grants as booleans and receipts, not as prohibition language.
-// - Require bilateral confirmation: route active scan plus canvas acceptance scan.
-// - Prevent one confirmed handshake from becoming a whole-chain green light.
+// - Replace v10_4 active bilateral ignition behavior with a guarded packet bridge.
+// - Scan downstream authorities without converting one handshake into whole-chain readiness.
+// - Publish route → controls, route → hex, and route → canvas packets as evidence.
+// - Deliver only to explicit packet receiver methods.
+// - Never call Canvas lifecycle methods: boot/start/init/mount/render/run.
+// - Never direct-load Pointer Finger.
+// - Never direct-load governed source stack.
+// - Never append duplicate scripts when a matching path is already present.
+// - Use file-path script load locks, not reason-based locks.
+// - Keep Controls as motion/input gateway authority.
+// - Keep Hex Surface as downstream expression gate.
+// - Keep Canvas as presentation platter / DOM surface authority.
 // - Preserve no Canvas drawing ownership, no terrain truth, no hydrology truth, no material truth,
 //   no Hex truth, no Pointer Finger truth, no F13 claim, no F21 claim, no ready text,
 //   no final visual pass, no generated image, no GraphicBox, and no WebGL.
@@ -34,15 +35,17 @@
     "HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC_RECEIPT_v10";
 
   const RENEWAL_CONTRACT =
-    "HEARTH_ROUTE_CONDUCTOR_BILATERAL_TRIANGLE_SCAN_CANVAS_PLATTER_PACKET_BRIDGE_TNT_v10_4";
+    "HEARTH_ROUTE_CONDUCTOR_SAFE_PACKET_BRIDGE_NO_LIFECYCLE_IGNITION_TNT_v10_5";
   const RENEWAL_RECEIPT =
-    "HEARTH_ROUTE_CONDUCTOR_BILATERAL_TRIANGLE_SCAN_CANVAS_PLATTER_PACKET_BRIDGE_RECEIPT_v10_4";
+    "HEARTH_ROUTE_CONDUCTOR_SAFE_PACKET_BRIDGE_NO_LIFECYCLE_IGNITION_RECEIPT_v10_5";
 
   const PREVIOUS_RENEWAL_CONTRACT =
-    "HEARTH_ROUTE_CONDUCTOR_GOVERNED_SOURCE_STACK_ADMISSION_CANVAS_HANDOFF_TNT_v10_3";
+    "HEARTH_ROUTE_CONDUCTOR_BILATERAL_TRIANGLE_SCAN_CANVAS_PLATTER_PACKET_BRIDGE_TNT_v10_4";
   const PREVIOUS_RENEWAL_RECEIPT =
-    "HEARTH_ROUTE_CONDUCTOR_GOVERNED_SOURCE_STACK_ADMISSION_CANVAS_HANDOFF_RECEIPT_v10_3";
+    "HEARTH_ROUTE_CONDUCTOR_BILATERAL_TRIANGLE_SCAN_CANVAS_PLATTER_PACKET_BRIDGE_RECEIPT_v10_4";
 
+  const LINEAGE_V10_3_CONTRACT =
+    "HEARTH_ROUTE_CONDUCTOR_GOVERNED_SOURCE_STACK_ADMISSION_CANVAS_HANDOFF_TNT_v10_3";
   const LINEAGE_V10_2_CONTRACT =
     "HEARTH_ROUTE_CONDUCTOR_HEX_GATE_POINTER_FINGER_TRANSMISSION_TNT_v10_2";
   const LINEAGE_V10_1_CONTRACT =
@@ -61,7 +64,7 @@
     "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_TNT_v9_4";
 
   const VERSION =
-    "2026-06-07.hearth-route-conductor-bilateral-triangle-scan-canvas-platter-packet-bridge-v10-4";
+    "2026-06-07.hearth-route-conductor-safe-packet-bridge-no-lifecycle-ignition-v10-5";
 
   const ROUTE = "/showroom/globe/hearth/";
   const FILE = "/showroom/globe/hearth/hearth.js";
@@ -93,12 +96,14 @@
   const EXPECTED_POINTER_FINGER_CONTRACT =
     "HEARTH_CANVAS_FINGER_INSPECT_DOWNSTREAM_EXPRESSION_PROOF_TNT_v1";
 
-  const PACKET_TYPE =
-    "HEARTH_ROUTE_CONDUCTOR_TO_CANVAS_PRESENTATION_PLATTER_PACKET_v10_4";
   const CONTROL_HANDSHAKE_PACKET =
-    "HEARTH_ROUTE_CONDUCTOR_TO_QUEEN_CONTROLS_HEX_GATE_HANDSHAKE_PACKET_v10_4";
+    "HEARTH_ROUTE_CONDUCTOR_TO_QUEEN_CONTROLS_HEX_GATE_HANDSHAKE_PACKET_v10_5";
   const HEX_SCAN_PACKET =
-    "HEARTH_ROUTE_CONDUCTOR_TO_HEX_SURFACE_ACTIVE_SCAN_PACKET_v10_4";
+    "HEARTH_ROUTE_CONDUCTOR_TO_HEX_SURFACE_ACTIVE_SCAN_PACKET_v10_5";
+  const PRESENTATION_PACKET =
+    "HEARTH_ROUTE_CONDUCTOR_TO_CANVAS_PRESENTATION_PLATTER_PACKET_v10_5";
+  const GOVERNED_SOURCE_PACKET =
+    "HEARTH_ROUTE_CONDUCTOR_GOVERNED_SOURCE_PACKET_v10_5";
 
   const NO_CLAIMS = Object.freeze({
     f13Claimed: false,
@@ -118,6 +123,7 @@
     motionReadyClaimed: false,
     touchReadyClaimed: false,
     dragReadyClaimed: false,
+    downstreamReleaseClaimed: false,
     completionLatched: false,
     finalCompletionLatched: false,
     visualPassClaimed: false,
@@ -132,6 +138,7 @@
     CONTRACT,
     RENEWAL_CONTRACT,
     PREVIOUS_RENEWAL_CONTRACT,
+    LINEAGE_V10_3_CONTRACT,
     LINEAGE_V10_2_CONTRACT,
     LINEAGE_V10_1_CONTRACT,
     LINEAGE_V9_9_CONTRACT,
@@ -183,95 +190,13 @@
     "HEARTH_CANVAS_FINGER_INSPECT_DOWNSTREAM_EXPRESSION_PROOF_TNT_v1"
   ]);
 
-  const SOURCE_STACK = Object.freeze([
-    Object.freeze({
-      id: "ELEVATION",
-      file: "/assets/hearth/hearth.elevation.js",
-      required: true,
-      aliases: [
-        "HEARTH_ELEVATION",
-        "HEARTH.elevation",
-        "DEXTER_LAB.hearthElevation"
-      ]
-    }),
-    Object.freeze({
-      id: "COMPOSITION",
-      file: "/assets/hearth/hearth.composition.js",
-      required: true,
-      aliases: [
-        "HEARTH_COMPOSITION",
-        "HEARTH.composition",
-        "DEXTER_LAB.hearthComposition"
-      ]
-    }),
-    Object.freeze({
-      id: "TECTONICS",
-      file: "/assets/hearth/hearth.tectonics.js",
-      required: true,
-      aliases: [
-        "HEARTH_TECTONICS",
-        "HEARTH.tectonics",
-        "DEXTER_LAB.hearthTectonics"
-      ]
-    }),
-    Object.freeze({
-      id: "HYDROLOGY",
-      file: "/assets/hearth/hearth.hydrology.js",
-      required: true,
-      aliases: [
-        "HEARTH_HYDROLOGY",
-        "HEARTH.hydrology",
-        "DEXTER_LAB.hearthHydrology"
-      ]
-    }),
-    Object.freeze({
-      id: "MATERIALS",
-      file: "/assets/hearth/hearth.materials.js",
-      required: true,
-      aliases: [
-        "HEARTH_MATERIALS",
-        "HEARTH.materials",
-        "DEXTER_LAB.hearthMaterials"
-      ]
-    }),
-    Object.freeze({
-      id: "LAND_CHANNEL",
-      file: "/assets/hearth/hearth.land.channel.js",
-      required: false,
-      aliases: [
-        "HEARTH_LAND_CHANNEL",
-        "HEARTH.landChannel",
-        "DEXTER_LAB.hearthLandChannel"
-      ]
-    }),
-    Object.freeze({
-      id: "WATER_CHANNEL",
-      file: "/assets/hearth/hearth.water.channel.js",
-      required: false,
-      aliases: [
-        "HEARTH_WATER_CHANNEL",
-        "HEARTH.waterChannel",
-        "DEXTER_LAB.hearthWaterChannel"
-      ]
-    }),
-    Object.freeze({
-      id: "AIR_CHANNEL",
-      file: "/assets/hearth/hearth.air.channel.js",
-      required: false,
-      aliases: [
-        "HEARTH_AIR_CHANNEL",
-        "HEARTH.airChannel",
-        "DEXTER_LAB.hearthAirChannel"
-      ]
-    })
-  ]);
-
   const NODES = Object.freeze({
     INDEX: Object.freeze({
       id: "INDEX_PRIEST",
       role: "passive-front-end-button-and-receipt-corridor",
       file: INDEX_FILE,
       required: false,
+      loadEligible: false,
       expectedContracts: [EXPECTED_INDEX_CONTRACT],
       aliases: [
         "HEARTH_INDEX_JS",
@@ -282,16 +207,19 @@
     }),
     ROUTE: Object.freeze({
       id: "ROUTE_CONDUCTOR",
-      role: "north-bishop-route-permission-active-bilateral-scan-authority",
+      role: "route-permission-safe-packet-bridge",
       file: FILE,
       required: true,
+      loadEligible: false,
       expectedContracts: ACCEPTED_ROUTE_CONTRACTS,
       aliases: [
         "HEARTH_ROUTE_CONDUCTOR",
         "HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC",
+        "HEARTH_ROUTE_CONDUCTOR_SAFE_PACKET_BRIDGE_NO_LIFECYCLE_IGNITION",
         "HEARTH_ROUTE_CONDUCTOR_BILATERAL_TRIANGLE_SCAN_CANVAS_PLATTER_PACKET_BRIDGE",
         "HEARTH.routeConductor",
         "HEARTH.routeConductorShowtimeNewsFibonacciQueenCanvasSync",
+        "HEARTH.routeConductorSafePacketBridgeNoLifecycleIgnition",
         "HEARTH.routeConductorBilateralTriangleScanCanvasPlatterPacketBridge",
         "DEXTER_LAB.hearthRouteConductor",
         "DEXTER_LAB.hearthRouteConductorShowtimeNewsFibonacciQueenCanvasSync"
@@ -302,6 +230,7 @@
       role: "motion-input-gateway-authority",
       file: CONTROL_FILE,
       required: true,
+      loadEligible: true,
       expectedContracts: ACCEPTED_CONTROL_CONTRACTS,
       aliases: [
         "HEARTH_CONTROLS",
@@ -319,11 +248,56 @@
         "DEXTER_LAB.hearthControlsHexGatePointerFingerTransmission"
       ]
     }),
+    HEX_AUTHORITY: Object.freeze({
+      id: "HEX_AUTHORITY",
+      role: "hex-four-pair-authority",
+      file: HEX_AUTHORITY_FILE,
+      required: true,
+      loadEligible: true,
+      expectedContracts: ACCEPTED_HEX_AUTHORITY_CONTRACTS,
+      aliases: [
+        "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY",
+        "HEARTH_HEX_FOUR_PAIR_AUTHORITY",
+        "HEARTH_HEX_PIXEL_HANDSHAKE_AUTHORITY",
+        "HEARTH.hexFourPairPixelHandshakeAuthority",
+        "HEARTH.hexFourPairAuthority",
+        "HEARTH.hexPixelHandshakeAuthority",
+        "DEXTER_LAB.hearthHexFourPairPixelHandshakeAuthority",
+        "DEXTER_LAB.hearthHexFourPairAuthority"
+      ]
+    }),
+    HEX_SURFACE: Object.freeze({
+      id: "HEX_SURFACE_GATE",
+      role: "downstream-expression-gate-authority",
+      file: HEX_SURFACE_FILE,
+      required: true,
+      loadEligible: true,
+      expectedContracts: ACCEPTED_HEX_SURFACE_CONTRACTS,
+      aliases: [
+        "HEARTH_HEX_SURFACE_PAIR_POINTER_FINGER_GATE",
+        "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER",
+        "HEARTH_HEX_SURFACE_RENDERER",
+        "HEARTH_HEX_SURFACE",
+        "HEARTH_HEX_PAIR_RENDERER",
+        "HEARTH_HEX_INTERACTIVE_SURFACE",
+        "HEARTH.hexSurfacePairPointerFingerGate",
+        "HEARTH.hexSurfaceInteractiveSpherePairRenderer",
+        "HEARTH.hexSurfaceRenderer",
+        "HEARTH.hexSurface",
+        "HEARTH.hexPairRenderer",
+        "HEARTH.hexInteractiveSurface",
+        "DEXTER_LAB.hearthHexSurfacePairPointerFingerGate",
+        "DEXTER_LAB.hearthHexSurfaceInteractiveSpherePairRenderer",
+        "DEXTER_LAB.hearthHexSurfaceRenderer",
+        "DEXTER_LAB.hearthHexSurface"
+      ]
+    }),
     CANVAS: Object.freeze({
       id: "CANVAS_PLATTER",
       role: "presentation-platter-and-dom-surface-authority",
       file: CANVAS_FILE,
       required: true,
+      loadEligible: true,
       expectedContracts: ACCEPTED_CANVAS_CONTRACTS,
       aliases: [
         "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT",
@@ -362,53 +336,12 @@
         "DEXTER_LAB.hearthCanvasExpressionHub"
       ]
     }),
-    HEX_AUTHORITY: Object.freeze({
-      id: "HEX_AUTHORITY",
-      role: "hex-four-pair-authority",
-      file: HEX_AUTHORITY_FILE,
-      required: true,
-      expectedContracts: ACCEPTED_HEX_AUTHORITY_CONTRACTS,
-      aliases: [
-        "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY",
-        "HEARTH_HEX_FOUR_PAIR_AUTHORITY",
-        "HEARTH_HEX_PIXEL_HANDSHAKE_AUTHORITY",
-        "HEARTH.hexFourPairPixelHandshakeAuthority",
-        "HEARTH.hexFourPairAuthority",
-        "HEARTH.hexPixelHandshakeAuthority",
-        "DEXTER_LAB.hearthHexFourPairPixelHandshakeAuthority",
-        "DEXTER_LAB.hearthHexFourPairAuthority"
-      ]
-    }),
-    HEX_SURFACE: Object.freeze({
-      id: "HEX_SURFACE_GATE",
-      role: "downstream-expression-gate-authority",
-      file: HEX_SURFACE_FILE,
-      required: true,
-      expectedContracts: ACCEPTED_HEX_SURFACE_CONTRACTS,
-      aliases: [
-        "HEARTH_HEX_SURFACE_PAIR_POINTER_FINGER_GATE",
-        "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER",
-        "HEARTH_HEX_SURFACE_RENDERER",
-        "HEARTH_HEX_SURFACE",
-        "HEARTH_HEX_PAIR_RENDERER",
-        "HEARTH_HEX_INTERACTIVE_SURFACE",
-        "HEARTH.hexSurfacePairPointerFingerGate",
-        "HEARTH.hexSurfaceInteractiveSpherePairRenderer",
-        "HEARTH.hexSurfaceRenderer",
-        "HEARTH.hexSurface",
-        "HEARTH.hexPairRenderer",
-        "HEARTH.hexInteractiveSurface",
-        "DEXTER_LAB.hearthHexSurfacePairPointerFingerGate",
-        "DEXTER_LAB.hearthHexSurfaceInteractiveSpherePairRenderer",
-        "DEXTER_LAB.hearthHexSurfaceRenderer",
-        "DEXTER_LAB.hearthHexSurface"
-      ]
-    }),
     POINTER_FINGER: Object.freeze({
       id: "POINTER_FINGER",
       role: "downstream-expression-authority",
       file: POINTER_FINGER_FILE,
       required: false,
+      loadEligible: false,
       expectedContracts: ACCEPTED_POINTER_FINGER_CONTRACTS,
       aliases: [
         "HEARTH_CANVAS_FINGER_INSPECT",
@@ -426,6 +359,17 @@
     })
   });
 
+  const SOURCE_STACK = Object.freeze([
+    Object.freeze({ id: "ELEVATION", file: "/assets/hearth/hearth.elevation.js", required: true, aliases: ["HEARTH_ELEVATION", "HEARTH.elevation", "DEXTER_LAB.hearthElevation"] }),
+    Object.freeze({ id: "COMPOSITION", file: "/assets/hearth/hearth.composition.js", required: true, aliases: ["HEARTH_COMPOSITION", "HEARTH.composition", "DEXTER_LAB.hearthComposition"] }),
+    Object.freeze({ id: "TECTONICS", file: "/assets/hearth/hearth.tectonics.js", required: true, aliases: ["HEARTH_TECTONICS", "HEARTH.tectonics", "DEXTER_LAB.hearthTectonics"] }),
+    Object.freeze({ id: "HYDROLOGY", file: "/assets/hearth/hearth.hydrology.js", required: true, aliases: ["HEARTH_HYDROLOGY", "HEARTH.hydrology", "DEXTER_LAB.hearthHydrology"] }),
+    Object.freeze({ id: "MATERIALS", file: "/assets/hearth/hearth.materials.js", required: true, aliases: ["HEARTH_MATERIALS", "HEARTH.materials", "DEXTER_LAB.hearthMaterials"] }),
+    Object.freeze({ id: "LAND_CHANNEL", file: "/assets/hearth/hearth.land.channel.js", required: false, aliases: ["HEARTH_LAND_CHANNEL", "HEARTH.landChannel", "DEXTER_LAB.hearthLandChannel"] }),
+    Object.freeze({ id: "WATER_CHANNEL", file: "/assets/hearth/hearth.water.channel.js", required: false, aliases: ["HEARTH_WATER_CHANNEL", "HEARTH.waterChannel", "DEXTER_LAB.hearthWaterChannel"] }),
+    Object.freeze({ id: "AIR_CHANNEL", file: "/assets/hearth/hearth.air.channel.js", required: false, aliases: ["HEARTH_AIR_CHANNEL", "HEARTH.airChannel", "DEXTER_LAB.hearthAirChannel"] })
+  ]);
+
   const state = {
     contract: CONTRACT,
     receipt: RECEIPT,
@@ -436,6 +380,16 @@
     version: VERSION,
     route: ROUTE,
     file: FILE,
+
+    safePacketBridgeActive: true,
+    lifecycleIgnitionSuppressed: true,
+    canvasLifecycleMethodsSuppressed: true,
+    canvasLifecycleMethods: ["boot", "start", "init", "mount", "render", "run"],
+    pointerFingerDirectLoadSuppressed: true,
+    governedSourceStackDirectLoadSuppressed: true,
+    duplicateScriptAppendSuppressed: true,
+    filePathLoadLocksActive: true,
+    reasonBasedLoadLocksRetired: true,
 
     routeConductorActiveScanAuthority: true,
     bilateralRouteCanvasScanActive: true,
@@ -451,24 +405,24 @@
     disposed: false,
     startedAt: "",
     updatedAt: "",
-    latestEvent: "ROUTE_CONDUCTOR_V10_4_LOADED",
+    latestEvent: "ROUTE_CONDUCTOR_V10_5_LOADED",
 
     nodes: {},
     sourceStack: [],
     relationships: [],
-    admissions: [],
     events: [],
     errors: [],
 
     routeActiveScanConfirmed: false,
-    controlsGatewayPermissionGranted: false,
-    hexSurfaceScanPermissionGranted: false,
-    routeHexScanPermissionGranted: false,
     routeControlsHandshakePermissionGranted: false,
+    controlsGatewayPermissionGranted: false,
+    routeHexScanPermissionGranted: false,
+    hexSurfaceScanPermissionGranted: false,
     routeCanvasPresentationPermissionGranted: false,
     canvasAcceptanceScanRequested: false,
     canvasAcceptanceScanConfirmed: false,
     bilateralRouteCanvasScanConfirmed: false,
+    sourceStackObserved: false,
     sourceStackPermissionGranted: false,
     constructPermissionGranted: false,
     visibleSurfacePermissionGranted: false,
@@ -491,10 +445,10 @@
     canvasSelector: "UNKNOWN",
     canvasMountSelector: "UNKNOWN",
 
-    firstFailedCoordinate: "ROUTE_SCAN_NOT_RUN",
+    firstFailedCoordinate: "ROUTE_SAFE_SCAN_NOT_RUN",
     recommendedNextFile: FILE,
-    recommendedNextAction: "RUN_ROUTE_CONDUCTOR_BILATERAL_TRIANGLE_SCAN",
-    postgameStatus: "ROUTE_CONDUCTOR_LOADED_WAITING_SCAN",
+    recommendedNextAction: "RUN_ROUTE_CONDUCTOR_SAFE_PACKET_BRIDGE_SCAN",
+    postgameStatus: "ROUTE_CONDUCTOR_LOADED_SAFE_PACKET_BRIDGE_WAITING_SCAN",
 
     packetCount: 0,
     deliveryCount: 0,
@@ -502,6 +456,8 @@
     aliasPublishCount: 0,
     receiptPublishCount: 0,
     scriptLoadCount: 0,
+    duplicateScriptSuppressCount: 0,
+    lifecycleSuppressionCount: 0,
 
     lastPresentationPacket: null,
     lastControlHandshakePacket: null,
@@ -511,7 +467,7 @@
     ...NO_CLAIMS
   };
 
-  const loadPromises = Object.create(null);
+  const loadPromisesByPath = Object.create(null);
   let bootPromise = null;
 
   function nowIso() {
@@ -544,11 +500,6 @@
     if (value === true || value === 1 || value === "1" || value === "true" || value === "TRUE") return true;
     if (value === false || value === 0 || value === "0" || value === "false" || value === "FALSE") return false;
     return fallback;
-  }
-
-  function safeNumber(value, fallback = 0) {
-    const number = Number(value);
-    return Number.isFinite(number) ? number : fallback;
   }
 
   function clonePlain(value) {
@@ -661,7 +612,7 @@
     };
 
     state.events.push(item);
-    trim(state.events, 180);
+    trim(state.events, 160);
     state.latestEvent = item.event;
     state.updatedAt = item.at;
 
@@ -672,21 +623,16 @@
     const item = {
       at: nowIso(),
       code: safeString(code, "ROUTE_CONDUCTOR_ERROR"),
-      message: error && error.message ? String(error.message) : bounded(error, 1000),
+      message: error && error.message ? String(error.message) : bounded(error, 1200),
       detail: clonePlain(detail)
     };
 
     state.errors.push(item);
-    trim(state.errors, 120);
+    trim(state.errors, 100);
     state.latestEvent = item.code;
     state.updatedAt = item.at;
 
     return item;
-  }
-
-  function dataset() {
-    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return {};
-    return doc.documentElement.dataset;
   }
 
   function setDataset(key, value) {
@@ -762,75 +708,126 @@
     };
   }
 
-  function appendScript(path, reason) {
+  function shouldAutoLoadDirectChain() {
+    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return false;
+
+    return safeBool(
+      doc.documentElement.dataset.hearthRouteConductorSafeAutoLoadAllowed,
+      false
+    );
+  }
+
+  function appendScriptOnceByPath(path, reason = "SAFE_DIRECT_CHAIN_LOAD") {
     if (!doc) {
       return Promise.resolve({
         attempted: false,
         loaded: false,
         status: "DOCUMENT_UNAVAILABLE",
-        src: "DOCUMENT_UNAVAILABLE"
+        src: "DOCUMENT_UNAVAILABLE",
+        duplicateSuppressed: false
       });
     }
 
-    const key = `${path}::${reason}`;
+    const before = scriptInfo(path);
 
-    if (loadPromises[key]) return loadPromises[key];
+    if (before.present) {
+      state.duplicateScriptSuppressCount += 1;
+      return Promise.resolve({
+        attempted: false,
+        loaded: false,
+        status: "SCRIPT_ALREADY_PRESENT_NO_APPEND",
+        src: before.src,
+        duplicateSuppressed: true
+      });
+    }
 
-    loadPromises[key] = new Promise((resolve) => {
+    if (loadPromisesByPath[path]) return loadPromisesByPath[path];
+
+    loadPromisesByPath[path] = new Promise((resolve) => {
+      let settled = false;
+
+      function finish(output) {
+        if (settled) return;
+        settled = true;
+        resolve(output);
+      }
+
       try {
         const script = doc.createElement("script");
         const stamp = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
-        script.id = `hearth-route-conductor-v10-4-${bounded(reason, 40).toLowerCase()}-${stamp}`;
+        script.id = `hearth-route-conductor-v10-5-${bounded(reason, 38).toLowerCase()}-${stamp}`;
         script.src =
           `${path}?v=${encodeURIComponent(RENEWAL_CONTRACT)}` +
-          `&routeScan=${encodeURIComponent(reason)}` +
+          `&safeBridge=${encodeURIComponent(reason)}` +
           `&t=${encodeURIComponent(stamp)}`;
         script.async = false;
         script.defer = false;
 
         script.dataset.loadedBy = CONTRACT;
         script.dataset.routeConductorRenewalContract = RENEWAL_CONTRACT;
-        script.dataset.routeConductorBilateralScan = "true";
-        script.dataset.productionMutationPermissionGranted = "false";
-        script.dataset.canvasDrawingPermissionGranted = "false";
-        script.dataset.pointerFingerDirectBridgePermissionGranted = "false";
+        script.dataset.routeConductorSafePacketBridge = "true";
+        script.dataset.lifecycleIgnitionPermissionGranted = "false";
+        script.dataset.canvasLifecycleIgnitionSuppressed = "true";
+        script.dataset.pointerFingerDirectLoadSuppressed = "true";
+        script.dataset.sourceStackDirectLoadSuppressed = "true";
         script.dataset.visualPassClaimed = "false";
         script.dataset.generatedImage = "false";
         script.dataset.graphicBox = "false";
         script.dataset.webgl = "false";
 
+        const timeout = root.setTimeout(() => {
+          finish({
+            attempted: true,
+            loaded: false,
+            status: "SCRIPT_LOAD_TIMEOUT_NON_FATAL",
+            src: script.src,
+            duplicateSuppressed: false
+          });
+        }, 4500);
+
         script.addEventListener("load", () => {
+          try {
+            root.clearTimeout(timeout);
+          } catch (_error) {}
+
           state.scriptLoadCount += 1;
-          resolve({
+          finish({
             attempted: true,
             loaded: true,
             status: "SCRIPT_LOAD_COMPLETE",
-            src: script.src
+            src: script.src,
+            duplicateSuppressed: false
           });
         }, { once: true });
 
         script.addEventListener("error", () => {
-          resolve({
+          try {
+            root.clearTimeout(timeout);
+          } catch (_error) {}
+
+          finish({
             attempted: true,
             loaded: false,
             status: "SCRIPT_LOAD_ERROR_OR_NOT_DEPLOYED",
-            src: script.src
+            src: script.src,
+            duplicateSuppressed: false
           });
         }, { once: true });
 
         (doc.head || doc.documentElement || doc.body).appendChild(script);
       } catch (error) {
-        resolve({
+        finish({
           attempted: true,
           loaded: false,
-          status: `SCRIPT_LOAD_EXCEPTION:${bounded(error && error.message ? error.message : error, 800)}`,
-          src: "SCRIPT_APPEND_EXCEPTION"
+          status: `SCRIPT_APPEND_EXCEPTION:${bounded(error && error.message ? error.message : error, 900)}`,
+          src: "SCRIPT_APPEND_EXCEPTION",
+          duplicateSuppressed: false
         });
       }
     });
 
-    return loadPromises[key];
+    return loadPromisesByPath[path];
   }
 
   function contractOf(source) {
@@ -878,7 +875,7 @@
   function readAuthorityReceipt(authority) {
     if (!authority || (!isObject(authority) && !isFunction(authority))) return null;
 
-    const methods = [
+    const passiveMethods = [
       "getReceiptLight",
       "getReceipt",
       "getRoutePrimaryGateReceipt",
@@ -907,7 +904,7 @@
       "getState"
     ];
 
-    for (const method of methods) {
+    for (const method of passiveMethods) {
       if (!isFunction(authority[method])) continue;
 
       try {
@@ -954,16 +951,19 @@
       attempted: false,
       loaded: false,
       status: authority ? "AUTHORITY_ALREADY_PRESENT" : "NOT_ATTEMPTED",
-      src: beforeScript.src
+      src: beforeScript.src,
+      duplicateSuppressed: false
     };
 
-    if (!authority && options.loadMissing !== false && def.file !== FILE) {
-      if (!beforeScript.present) {
-        load = await appendScript(def.file, `${def.id}_PRIMARY_LOAD`);
-      } else {
-        load = await appendScript(def.file, `${def.id}_AUTHORITY_RECOVERY`);
-      }
+    const mayLoad = Boolean(
+      options.loadMissing === true &&
+      def.loadEligible === true &&
+      def.id !== "POINTER_FINGER" &&
+      def.file !== FILE
+    );
 
+    if (!authority && mayLoad) {
+      load = await appendScriptOnceByPath(def.file, `${def.id}_SAFE_LOAD`);
       const after = firstGlobal(def.aliases || []);
       authority = after.value;
       sourcePath = after.path;
@@ -1000,28 +1000,39 @@
                   : ""
     );
 
+    const publicMethods = methodsOf(authority);
+
     const node = {
       id: def.id,
       role: def.role || "",
       file: def.file,
       required: def.required === true,
+      loadEligible: def.loadEligible === true,
       expectedContracts: clonePlain(def.expectedContracts || []),
+
       scriptPresentBefore: beforeScript.present,
       scriptPresentAfter: afterScript.present,
       scriptCountBefore: beforeScript.count,
       scriptCountAfter: afterScript.count,
       scriptSrc: afterScript.src,
       scriptCacheKey: afterScript.cacheKey,
+
       loadAttempted: load.attempted,
       loadStatus: load.status,
       loadSrc: load.src,
+      duplicateScriptAppendSuppressed: Boolean(load.duplicateSuppressed),
+
       observed: Boolean(authority),
       selectedAliasPath: sourcePath,
       contract: contract || "UNKNOWN",
       receipt: receiptName || "UNKNOWN",
       contractRecognized: recognized,
-      publicMethodCount: methodsOf(authority).length,
-      publicMethods: methodsOf(authority),
+      publicMethodCount: publicMethods.length,
+      publicMethods,
+      lifecycleMethodsObserved: publicMethods.filter((method) => {
+        return ["boot", "start", "init", "mount", "render", "run"].includes(method);
+      }),
+      lifecycleIgnitionSuppressedByRoute: true,
       receiptObject: clonePlain(receiptObject)
     };
 
@@ -1029,49 +1040,38 @@
     return { node, authority, receipt: receiptObject };
   }
 
-  async function scanSourceStack(options = {}) {
+  async function scanSourceStack() {
     const out = [];
 
     for (const source of SOURCE_STACK) {
       const info = scriptInfo(source.file);
       const found = firstGlobal(source.aliases || []);
-      let authority = found.value;
-      let loadStatus = authority ? "SOURCE_AUTHORITY_ALREADY_PRESENT" : "SOURCE_AUTHORITY_NOT_OBSERVED";
-      let loadAttempted = false;
-
-      if (!authority && source.required && options.loadMissingSources === true) {
-        const load = await appendScript(source.file, `${source.id}_SOURCE_LOAD`);
-        loadAttempted = load.attempted;
-        loadStatus = load.status;
-
-        const after = firstGlobal(source.aliases || []);
-        authority = after.value;
-      }
-
+      const authority = found.value;
       const receipt = readAuthorityReceipt(authority) || {};
-      const entry = {
+
+      out.push({
         id: source.id,
         file: source.file,
         required: source.required === true,
         scriptPresent: info.present,
         scriptCount: info.count,
         scriptSrc: info.src,
-        loadAttempted,
+        loadAttempted: false,
+        loadStatus: "SOURCE_STACK_DIRECT_LOAD_SUPPRESSED_BY_ROUTE_CONDUCTOR",
         status: authority
           ? "SOURCE_AUTHORITY_PRESENT"
           : source.required
             ? "SOURCE_AUTHORITY_REQUIRED_PENDING"
             : "SOURCE_AUTHORITY_OPTIONAL_PENDING",
-        reason: authority ? "OBSERVED_BY_ROUTE_CONDUCTOR" : "AUTHORITY_NOT_OBSERVED",
+        reason: authority ? "OBSERVED_PASSIVELY_BY_ROUTE_CONDUCTOR" : "AUTHORITY_NOT_OBSERVED_PASSIVE_ONLY",
         sourcePath: found.path,
         contract: contractOf(receipt) || "UNKNOWN",
         receipt: receiptOf(receipt) || "UNKNOWN"
-      };
-
-      out.push(entry);
+      });
     }
 
     state.sourceStack = out;
+    state.sourceStackObserved = out.some((entry) => entry.status === "SOURCE_AUTHORITY_PRESENT");
     state.sourceStackPermissionGranted = out.every((entry) => {
       return entry.required !== true || entry.status === "SOURCE_AUTHORITY_PRESENT";
     });
@@ -1087,21 +1087,26 @@
       receipt: RECEIPT,
       renewalContract: RENEWAL_CONTRACT,
       renewalReceipt: RENEWAL_RECEIPT,
+      previousRenewalContract: PREVIOUS_RENEWAL_CONTRACT,
+      previousRenewalReceipt: PREVIOUS_RENEWAL_RECEIPT,
+
       sourceFile: FILE,
-      sourceRole: "route-conductor-active-bilateral-scan-authority",
       sourceAuthority: "HEARTH_ROUTE_CONDUCTOR",
+      sourceRole: "route-conductor-safe-packet-bridge",
       sourceContract: CONTRACT,
       sourceReceipt: RECEIPT,
+
       targetFile: CONTROL_FILE,
       destinationFile: CONTROL_FILE,
       controlsFile: CONTROL_FILE,
       canvasFile: CANVAS_FILE,
-      hexSurfaceFile: HEX_SURFACE_FILE,
       hexAuthorityFile: HEX_AUTHORITY_FILE,
+      hexSurfaceFile: HEX_SURFACE_FILE,
       pointerFingerFile: POINTER_FINGER_FILE,
 
       routeActiveScanConfirmed: state.routeActiveScanConfirmed,
-      bilateralRouteCanvasScanActive: true,
+      safePacketBridgeActive: true,
+      lifecycleIgnitionSuppressed: true,
       triangleScanActive: true,
 
       controlHandshakePermissionGranted: true,
@@ -1113,22 +1118,15 @@
       controlsAdmissionPermissionGranted: true,
       planetaryControlAdmissionPermissionGranted: true,
 
-      controlHandshakeAuthorized: true,
-      controlsHandshakeAuthorized: true,
-      planetaryControlHandshakeAuthorized: true,
-      queenHandshakeAuthorized: true,
-      queenControlAdmissionAuthorized: true,
-      controlAdmissionAuthorized: true,
-      controlsAdmissionAuthorized: true,
-      planetaryControlAdmissionAuthorized: true,
-
-      canvasPublicReceiverRequired: true,
-      hexGateRequiredBeforePointerFinger: true,
-      pointerFingerDirectDeliveryPermissionGranted: false,
-      pointerFingerDirectDeliverySuppressed: true,
       routeConductorOwnsControlFileAdmission: true,
       routeConductorOwnsControlHandshakeDelivery: true,
       controlsRemainMotionInputGatewayAuthority: true,
+      canvasPublicReceiverRequired: true,
+      hexGateRequiredBeforePointerFinger: true,
+      pointerFingerDirectDeliveryPermissionGranted: false,
+      pointerFingerDirectLoadSuppressed: true,
+      sourceStackDirectLoadSuppressed: true,
+
       composedAt: nowIso(),
       ...NO_CLAIMS
     };
@@ -1166,7 +1164,7 @@
     const method = controlHandshakeMethods().find((name) => isFunction(controls[name]));
 
     if (!method) {
-      state.controlHandshakeDeliveryStatus = "CONTROL_AUTHORITY_OBSERVED_HANDSHAKE_METHOD_PENDING";
+      state.controlHandshakeDeliveryStatus = "CONTROL_AUTHORITY_OBSERVED_HANDSHAKE_METHOD_PENDING_PACKET_PUBLISHED";
       state.controlHandshakeMethod = "GLOBAL_PACKET_PUBLICATION";
       publishPacketAliases(packet, "control");
       return false;
@@ -1199,22 +1197,28 @@
       receipt: RECEIPT,
       renewalContract: RENEWAL_CONTRACT,
       renewalReceipt: RENEWAL_RECEIPT,
+
       sourceFile: FILE,
       sourceAuthority: "HEARTH_ROUTE_CONDUCTOR",
-      sourceRole: "route-conductor-active-scan-authority",
+      sourceRole: "route-conductor-safe-packet-bridge",
       targetFile: HEX_SURFACE_FILE,
       destinationFile: HEX_SURFACE_FILE,
       hexSurfaceFile: HEX_SURFACE_FILE,
       hexAuthorityFile: HEX_AUTHORITY_FILE,
       canvasFile: CANVAS_FILE,
       pointerFingerFile: POINTER_FINGER_FILE,
-      intendedMode: "ACTIVE_SCAN",
+
+      intendedMode: "ACTIVE_SCAN_PACKET_ONLY",
       expectedReturnPort: false,
       routeHexScanPermissionGranted: true,
+      safePacketBridgeActive: true,
+      lifecycleIgnitionSuppressed: true,
       hexSurfaceRemainsDownstreamGateAuthority: true,
       routeDoesNotOwnHexTruth: true,
       routeDoesNotDeliverDirectlyToPointerFinger: true,
       pointerFingerDirectDeliveryPermissionGranted: false,
+      pointerFingerDirectLoadSuppressed: true,
+
       composedAt: nowIso(),
       ...NO_CLAIMS
     };
@@ -1277,7 +1281,8 @@
 
   function composeGovernedSourcePacket() {
     return {
-      packetType: "HEARTH_ROUTE_CONDUCTOR_GOVERNED_SOURCE_PACKET_v10_4",
+      packetType: GOVERNED_SOURCE_PACKET,
+      type: GOVERNED_SOURCE_PACKET,
       contract: CONTRACT,
       receipt: RECEIPT,
       renewalContract: RENEWAL_CONTRACT,
@@ -1285,8 +1290,11 @@
       route: ROUTE,
       sourceFile: FILE,
       sourceAuthority: "HEARTH_ROUTE_CONDUCTOR",
-      sourceStack: clonePlain(state.sourceStack),
+      safePacketBridgeActive: true,
+      sourceStackDirectLoadSuppressed: true,
+      sourceStackObserved: state.sourceStackObserved,
       sourceStackPermissionGranted: state.sourceStackPermissionGranted,
+      sourceStack: clonePlain(state.sourceStack),
       nodes: clonePlain(state.nodes),
       composedAt: nowIso(),
       ...NO_CLAIMS
@@ -1295,8 +1303,8 @@
 
   function composePresentationPacket() {
     const packet = {
-      packetType: PACKET_TYPE,
-      type: PACKET_TYPE,
+      packetType: PRESENTATION_PACKET,
+      type: PRESENTATION_PACKET,
       contract: CONTRACT,
       receipt: RECEIPT,
       routeConductorContract: CONTRACT,
@@ -1309,7 +1317,7 @@
       route: ROUTE,
       sourceFile: FILE,
       sourceAuthority: "HEARTH_ROUTE_CONDUCTOR",
-      sourceRole: "route-conductor-active-bilateral-scan-authority",
+      sourceRole: "route-conductor-safe-packet-bridge",
       destinationFile: CANVAS_FILE,
       targetFile: CANVAS_FILE,
       handoffTo: "CANVAS_PRESENTATION_PLATTER",
@@ -1323,6 +1331,9 @@
       canvasAcceptanceScanRequested: true,
       bilateralRouteCanvasScanActive: true,
       bilateralRouteCanvasScanConfirmed: state.bilateralRouteCanvasScanConfirmed,
+      safePacketBridgeActive: true,
+      lifecycleIgnitionSuppressed: true,
+      canvasLifecycleMethodsSuppressed: true,
 
       triangleScanActive: true,
       triangleMembers: ["ROUTE_CONDUCTOR", "CONTROLS_QUEEN", "HEX_SURFACE_GATE"],
@@ -1372,7 +1383,8 @@
         ],
         canvasAcceptanceScanRequested: true,
         routeActiveScanConfirmed: state.routeActiveScanConfirmed,
-        bilateralReturnPortExpected: true
+        bilateralReturnPortExpected: true,
+        lifecycleIgnitionPermissionGranted: false
       },
 
       composedAt: nowIso(),
@@ -1384,7 +1396,7 @@
     return packet;
   }
 
-  function canvasReceiverMethods() {
+  function canvasPacketReceiverMethods() {
     return [
       "receiveRoutePresentationPlatterPacket",
       "consumeRoutePresentationPlatterPacket",
@@ -1409,11 +1421,7 @@
       "receiveControlPacket",
       "receiveControlsPacket",
       "receiveViewControlPacket",
-      "receivePlanetaryViewControlPacket",
-      "boot",
-      "start",
-      "init",
-      "mount"
+      "receivePlanetaryViewControlPacket"
     ];
   }
 
@@ -1435,12 +1443,24 @@
       };
     }
 
-    const method = canvasReceiverMethods().find((name) => isFunction(canvas[name]));
+    const lifecycleMethods = ["boot", "start", "init", "mount", "render", "run"].filter((name) => {
+      return isFunction(canvas[name]);
+    });
+
+    if (lifecycleMethods.length) {
+      state.lifecycleSuppressionCount += lifecycleMethods.length;
+      record("CANVAS_LIFECYCLE_METHODS_OBSERVED_AND_SUPPRESSED", {
+        lifecycleMethods,
+        lifecycleIgnitionPermissionGranted: false
+      });
+    }
+
+    const method = canvasPacketReceiverMethods().find((name) => isFunction(canvas[name]));
 
     if (!method) {
-      state.canvasDeliveryStatus = "CANVAS_AUTHORITY_OBSERVED_PRESENTATION_RECEIVER_PENDING_PACKET_PUBLISHED";
+      state.canvasDeliveryStatus = "CANVAS_AUTHORITY_OBSERVED_EXPLICIT_PACKET_RECEIVER_PENDING_PACKET_PUBLISHED";
       state.canvasDeliveryMethod = "GLOBAL_PACKET_PUBLICATION";
-      state.canvasDeliveryReason = "CANVAS_PRESENTATION_RECEIVER_METHOD_NOT_OBSERVED";
+      state.canvasDeliveryReason = "CANVAS_EXPLICIT_PACKET_RECEIVER_METHOD_NOT_OBSERVED_LIFECYCLE_METHODS_SUPPRESSED";
       publishPacketAliases(packet, "canvas");
       return {
         delivered: false,
@@ -1456,15 +1476,16 @@
       const accepted = Boolean(
         safeBool(resolved.canvasAcceptanceScanConfirmed, false) ||
         safeBool(resolved.bilateralRouteCanvasScanConfirmed, false) ||
+        safeBool(resolved.routePresentationPacketAccepted, false) ||
         safeBool(resolved.accepted, false) ||
         safeBool(resolved.ok, false)
       );
 
-      state.canvasDeliveryStatus = "PRESENTATION_PACKET_DELIVERED_TO_CANVAS_PLATTER";
+      state.canvasDeliveryStatus = "PRESENTATION_PACKET_DELIVERED_TO_CANVAS_EXPLICIT_PACKET_RECEIVER";
       state.canvasDeliveryMethod = method;
       state.canvasDeliveryReason = accepted
-        ? "CANVAS_ACCEPTANCE_SCAN_CONFIRMED_BY_RETURN"
-        : "CANVAS_RECEIVER_CALLED_ACCEPTANCE_CONFIRMATION_PENDING";
+        ? "CANVAS_ACCEPTANCE_SCAN_CONFIRMED_BY_PACKET_RECEIVER_RETURN"
+        : "CANVAS_PACKET_RECEIVER_CALLED_ACCEPTANCE_CONFIRMATION_PENDING";
       state.deliveryCount += 1;
       state.canvasAcceptanceScanConfirmed = accepted;
 
@@ -1480,9 +1501,9 @@
     } catch (error) {
       recordError("ROUTE_CANVAS_PRESENTATION_PACKET_DELIVERY_FAILED", error, { method });
 
-      state.canvasDeliveryStatus = "CANVAS_PRESENTATION_RECEIVER_FAILED_PACKET_PUBLISHED";
+      state.canvasDeliveryStatus = "CANVAS_PRESENTATION_PACKET_RECEIVER_FAILED_PACKET_PUBLISHED";
       state.canvasDeliveryMethod = "GLOBAL_PACKET_PUBLICATION";
-      state.canvasDeliveryReason = "CANVAS_RECEIVER_THROWN";
+      state.canvasDeliveryReason = "CANVAS_PACKET_RECEIVER_THROWN";
       publishPacketAliases(packet, "canvas");
 
       return {
@@ -1662,16 +1683,17 @@
       relationshipStatus: relationshipPermissionGranted
         ? options.expectedReturnPort === true
           ? "HANDSHAKE_PERMISSION_CONFIRMED_WITH_RETURN_PORT"
-          : "INTENDED_HANDOFF_PERMISSION_CONFIRMED"
+          : "INTENDED_PACKET_HANDOFF_PERMISSION_CONFIRMED"
         : "RELATIONSHIP_PERMISSION_NOT_GRANTED",
       varianceClass: relationshipPermissionGranted
         ? options.expectedReturnPort === true
           ? "HANDSHAKE_COMPLETE"
-          : "INTENDED_ONE_WAY_HANDOFF_CONFIRMED"
+          : "INTENDED_ONE_WAY_PACKET_HANDOFF_CONFIRMED"
         : "RELATIONSHIP_VARIANCE_PRESENT",
 
       fromAlias: from.selectedAliasPath || "NONE",
       toAlias: to.selectedAliasPath || "NONE",
+      lifecycleIgnitionSuppressed: true,
       ...NO_CLAIMS
     };
   }
@@ -1709,13 +1731,13 @@
 
     const rels = [
       relationship("ROUTE_TO_CONTROLS_CONTROL_HANDSHAKE", "ROUTE_CONDUCTOR", "CONTROLS_QUEEN", {
-        intendedMode: "HANDSHAKE",
+        intendedMode: "PACKET_HANDSHAKE",
         expectedReturnPort: true,
         requiredForMotion: true,
         returnObserved: controlReturnObserved
       }),
       relationship("ROUTE_TO_HEX_SURFACE_ACTIVE_SCAN_PERMISSION", "ROUTE_CONDUCTOR", "HEX_SURFACE_GATE", {
-        intendedMode: "HANDSHAKE_OR_ACTIVE_SCAN",
+        intendedMode: "PACKET_SCAN",
         expectedReturnPort: false,
         requiredForMotion: true,
         requiredForVisibleSurface: true,
@@ -1727,14 +1749,14 @@
         requiredForMotion: true,
         returnObserved: hexReturnObserved
       }),
-      relationship("ROUTE_TO_CANVAS_PRESENTATION_PLATTER_HANDSHAKE", "ROUTE_CONDUCTOR", "CANVAS_PLATTER", {
-        intendedMode: "BILATERAL_HANDSHAKE",
+      relationship("ROUTE_TO_CANVAS_PRESENTATION_PLATTER_PACKET", "ROUTE_CONDUCTOR", "CANVAS_PLATTER", {
+        intendedMode: "EXPLICIT_PACKET_HANDOFF",
         expectedReturnPort: true,
         requiredForVisibleSurface: true,
         returnObserved: canvasReturnObserved
       }),
       relationship("HEX_SURFACE_TO_POINTER_FINGER_INTENDED_HANDOFF", "HEX_SURFACE_GATE", "POINTER_FINGER", {
-        intendedMode: "HANDOFF",
+        intendedMode: "DOWNSTREAM_HANDOFF_OBSERVED_ONLY",
         expectedReturnPort: false,
         requiredForMotion: false,
         requiredForVisibleSurface: false,
@@ -1756,7 +1778,7 @@
       byId.ROUTE_TO_HEX_SURFACE_ACTIVE_SCAN_PERMISSION.relationshipPermissionGranted &&
       byId.CONTROLS_TO_HEX_SURFACE_GATEWAY_SCAN.relationshipPermissionGranted;
     state.routeCanvasPresentationPermissionGranted =
-      byId.ROUTE_TO_CANVAS_PRESENTATION_PLATTER_HANDSHAKE.relationshipPermissionGranted;
+      byId.ROUTE_TO_CANVAS_PRESENTATION_PLATTER_PACKET.relationshipPermissionGranted;
 
     state.motionPermissionGranted = Boolean(
       state.routeControlsHandshakePermissionGranted &&
@@ -1790,16 +1812,19 @@
       const node = state.nodes[missing] || {};
       state.firstFailedCoordinate = `${missing}_AUTHORITY_NOT_OBSERVED`;
       state.recommendedNextFile = node.file || FILE;
-      state.recommendedNextAction = `CONFIRM_${missing}_SCRIPT_LOAD_AND_PUBLIC_AUTHORITY_PUBLICATION`;
-      state.postgameStatus = "ROUTE_BILATERAL_SCAN_HELD_REQUIRED_NODE_PENDING";
+      state.recommendedNextAction =
+        missing === "CANVAS_PLATTER"
+          ? "CONFIRM_CANVAS_SCRIPT_LOAD_AND_EXPLICIT_PACKET_RECEIVER_PUBLICATION_NO_LIFECYCLE_CALL"
+          : `CONFIRM_${missing}_SCRIPT_LOAD_AND_PUBLIC_AUTHORITY_PUBLICATION`;
+      state.postgameStatus = "ROUTE_SAFE_PACKET_BRIDGE_HELD_REQUIRED_NODE_PENDING";
       return;
     }
 
     if (!state.routeControlsHandshakePermissionGranted) {
-      state.firstFailedCoordinate = "ROUTE_TO_CONTROLS_CONTROL_HANDSHAKE_PERMISSION_NOT_GRANTED";
+      state.firstFailedCoordinate = "ROUTE_TO_CONTROLS_CONTROL_HANDSHAKE_RETURN_PENDING";
       state.recommendedNextFile = CONTROL_FILE;
-      state.recommendedNextAction = "REVIEW_ROUTE_CONTROL_HANDSHAKE_RETURN_PORT";
-      state.postgameStatus = "ROUTE_BILATERAL_SCAN_HELD_CONTROL_HANDSHAKE_PENDING";
+      state.recommendedNextAction = "REVIEW_CONTROLS_EXPLICIT_HANDSHAKE_RETURN_PORT";
+      state.postgameStatus = "ROUTE_SAFE_PACKET_BRIDGE_HELD_CONTROL_HANDSHAKE_PENDING";
       return;
     }
 
@@ -1807,15 +1832,15 @@
       state.firstFailedCoordinate = "HEX_SURFACE_SCAN_PERMISSION_NOT_GRANTED";
       state.recommendedNextFile = HEX_SURFACE_FILE;
       state.recommendedNextAction = "REVIEW_HEX_SURFACE_GATE_SCAN_RECEIPT";
-      state.postgameStatus = "ROUTE_BILATERAL_SCAN_HELD_HEX_GATE_SCAN_PENDING";
+      state.postgameStatus = "ROUTE_SAFE_PACKET_BRIDGE_HELD_HEX_GATE_SCAN_PENDING";
       return;
     }
 
     if (!state.routeCanvasPresentationPermissionGranted) {
-      state.firstFailedCoordinate = "ROUTE_TO_CANVAS_PRESENTATION_PLATTER_BILATERAL_RETURN_PENDING";
+      state.firstFailedCoordinate = "ROUTE_TO_CANVAS_PRESENTATION_PLATTER_PACKET_RETURN_PENDING";
       state.recommendedNextFile = CANVAS_FILE;
-      state.recommendedNextAction = "RENEW_CANVAS_PRESENTATION_PLATTER_ACCEPTANCE_SCAN_AND_DOM_SURFACE_BINDING";
-      state.postgameStatus = "ROUTE_BILATERAL_SCAN_HELD_CANVAS_ACCEPTANCE_PENDING";
+      state.recommendedNextAction = "RENEW_CANVAS_EXPLICIT_PACKET_RECEIVER_AND_DOM_SURFACE_BINDING_WITHOUT_ROUTE_LIFECYCLE_CALLS";
+      state.postgameStatus = "ROUTE_SAFE_PACKET_BRIDGE_HELD_CANVAS_PACKET_ACCEPTANCE_PENDING";
       return;
     }
 
@@ -1825,30 +1850,35 @@
         : "CANVAS_DOM_SURFACE_NOT_FOUND";
       state.recommendedNextFile = CANVAS_FILE;
       state.recommendedNextAction = "RENEW_CANVAS_TO_CREATE_OR_BIND_DOM_CANVAS_SURFACE_AS_PRESENTATION_PLATTER";
-      state.postgameStatus = "ROUTE_SCAN_COMPLETE_CANVAS_SURFACE_STILL_PENDING";
+      state.postgameStatus = "ROUTE_SAFE_SCAN_COMPLETE_CANVAS_SURFACE_STILL_PENDING";
       return;
     }
 
     state.firstFailedCoordinate = "NONE";
     state.recommendedNextFile = CANVAS_FILE;
-    state.recommendedNextAction = "REVIEW_BILATERAL_SCAN_CONFIRMED_WITH_NO_FINAL_VISUAL_PASS_CLAIM";
-    state.postgameStatus = "ROUTE_BILATERAL_TRIANGLE_SCAN_COMPLETE_PRESENTATION_SURFACE_READY_NO_FINAL_CLAIM";
+    state.recommendedNextAction = "REVIEW_SAFE_PACKET_BRIDGE_CONFIRMED_WITH_NO_FINAL_VISUAL_PASS_CLAIM";
+    state.postgameStatus = "ROUTE_SAFE_PACKET_BRIDGE_COMPLETE_PRESENTATION_SURFACE_READY_NO_FINAL_CLAIM";
   }
 
-  async function runBilateralScan(options = {}) {
+  async function runSafePacketBridgeScan(options = {}) {
     state.scanCount += 1;
     state.updatedAt = nowIso();
 
-    await scanSourceStack(options);
+    const loadMissingDirect = Boolean(
+      options.loadMissingDirect === true ||
+      (options.loadMissingDirect !== false && shouldAutoLoadDirectChain())
+    );
+
+    await scanSourceStack();
 
     await scanNode(NODES.ROUTE, { loadMissing: false });
     await scanNode(NODES.INDEX, { loadMissing: false });
 
-    await scanNode(NODES.CONTROLS, { loadMissing: true });
-    await scanNode(NODES.HEX_AUTHORITY, { loadMissing: true });
-    await scanNode(NODES.HEX_SURFACE, { loadMissing: true });
-    await scanNode(NODES.POINTER_FINGER, { loadMissing: true });
-    await scanNode(NODES.CANVAS, { loadMissing: true });
+    await scanNode(NODES.CONTROLS, { loadMissing: loadMissingDirect });
+    await scanNode(NODES.HEX_AUTHORITY, { loadMissing: loadMissingDirect });
+    await scanNode(NODES.HEX_SURFACE, { loadMissing: loadMissingDirect });
+    await scanNode(NODES.CANVAS, { loadMissing: loadMissingDirect });
+    await scanNode(NODES.POINTER_FINGER, { loadMissing: false });
 
     state.routeActiveScanConfirmed = Boolean(
       state.nodes.ROUTE_CONDUCTOR &&
@@ -1875,6 +1905,7 @@
     await scanNode(NODES.CONTROLS, { loadMissing: false });
     await scanNode(NODES.HEX_SURFACE, { loadMissing: false });
     await scanNode(NODES.CANVAS, { loadMissing: false });
+    await scanNode(NODES.POINTER_FINGER, { loadMissing: false });
 
     scanCanvasSurface();
     resolveRelationships();
@@ -1882,7 +1913,8 @@
     updateDataset();
     publishReceiptAliases();
 
-    record("ROUTE_CONDUCTOR_BILATERAL_TRIANGLE_SCAN_COMPLETE", {
+    record("ROUTE_CONDUCTOR_SAFE_PACKET_BRIDGE_SCAN_COMPLETE", {
+      loadMissingDirect,
       routeActiveScanConfirmed: state.routeActiveScanConfirmed,
       controlsGatewayPermissionGranted: state.controlsGatewayPermissionGranted,
       hexSurfaceScanPermissionGranted: state.hexSurfaceScanPermissionGranted,
@@ -1890,7 +1922,9 @@
       bilateralRouteCanvasScanConfirmed: state.bilateralRouteCanvasScanConfirmed,
       visibleSurfacePermissionGranted: state.visibleSurfacePermissionGranted,
       firstFailedCoordinate: state.firstFailedCoordinate,
-      recommendedNextFile: state.recommendedNextFile
+      recommendedNextFile: state.recommendedNextFile,
+      lifecycleIgnitionSuppressed: true,
+      pointerFingerDirectLoadSuppressed: true
     });
 
     return getReceipt();
@@ -1932,36 +1966,24 @@
     return [
       INDEX_FILE,
       FILE,
-      "GOVERNED_SOURCE_STACK",
+      "GOVERNED_SOURCE_STACK_OBSERVED_ONLY",
       CONTROL_FILE,
+      HEX_AUTHORITY_FILE,
       HEX_SURFACE_FILE,
       CANVAS_FILE,
       `${HEX_SURFACE_FILE} -> ${POINTER_FINGER_FILE}`
     ];
   }
 
-  function composeCompatibilityReceiptV94() {
-    return {
-      contract: COMPAT_V9_4_CONTRACT,
-      receipt: "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_RECEIPT_v9_4",
-      compatibilityBridgePreserved: true,
-      currentContract: CONTRACT,
-      renewalContract: RENEWAL_CONTRACT,
-      route: ROUTE,
-      file: FILE,
-      canvasFile: CANVAS_FILE,
-      ...NO_CLAIMS
-    };
-  }
-
   function composeSourceHoldPacket() {
     return {
-      packetType: "HEARTH_ROUTE_CONDUCTOR_SOURCE_HOLD_PACKET_v10_4",
+      packetType: "HEARTH_ROUTE_CONDUCTOR_SOURCE_HOLD_PACKET_v10_5",
       contract: CONTRACT,
       receipt: RECEIPT,
       renewalContract: RENEWAL_CONTRACT,
       route: ROUTE,
       file: FILE,
+      sourceStackDirectLoadSuppressed: true,
       sourceStackPermissionGranted: state.sourceStackPermissionGranted,
       sourceStack: clonePlain(state.sourceStack),
       recommendedNextFile: state.recommendedNextFile,
@@ -2036,13 +2058,15 @@
 
   function getPointerFingerTransmissionPacket() {
     return {
-      packetType: "HEARTH_ROUTE_CONDUCTOR_POINTER_FINGER_OBSERVATION_PACKET_v10_4",
+      packetType: "HEARTH_ROUTE_CONDUCTOR_POINTER_FINGER_OBSERVATION_PACKET_v10_5",
       contract: CONTRACT,
       receipt: RECEIPT,
+      renewalContract: RENEWAL_CONTRACT,
       sourceFile: FILE,
       pointerFingerFile: POINTER_FINGER_FILE,
       pointerFingerObserved: Boolean(state.nodes.POINTER_FINGER && state.nodes.POINTER_FINGER.observed),
       pointerFingerDirectDeliveryPermissionGranted: false,
+      pointerFingerDirectLoadSuppressed: true,
       intendedPath: `${HEX_SURFACE_FILE} -> ${POINTER_FINGER_FILE}`,
       ...NO_CLAIMS
     };
@@ -2050,6 +2074,21 @@
 
   function getRouteConductorPointerFingerTransmissionPacket() {
     return getPointerFingerTransmissionPacket();
+  }
+
+  function composeCompatibilityReceiptV94() {
+    return {
+      contract: COMPAT_V9_4_CONTRACT,
+      receipt: "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_RECEIPT_v9_4",
+      compatibilityBridgePreserved: true,
+      currentContract: CONTRACT,
+      renewalContract: RENEWAL_CONTRACT,
+      route: ROUTE,
+      file: FILE,
+      canvasFile: CANVAS_FILE,
+      lifecycleIgnitionSuppressed: true,
+      ...NO_CLAIMS
+    };
   }
 
   function getRouteCycleReceipt() {
@@ -2062,13 +2101,14 @@
 
   function composeReceipt() {
     return {
-      packetType: "HEARTH_ROUTE_CONDUCTOR_BILATERAL_TRIANGLE_SCAN_CANVAS_PLATTER_RECEIPT_PACKET_v10_4",
+      packetType: "HEARTH_ROUTE_CONDUCTOR_SAFE_PACKET_BRIDGE_NO_LIFECYCLE_IGNITION_RECEIPT_PACKET_v10_5",
       contract: CONTRACT,
       receipt: RECEIPT,
       renewalContract: RENEWAL_CONTRACT,
       renewalReceipt: RENEWAL_RECEIPT,
       previousRenewalContract: PREVIOUS_RENEWAL_CONTRACT,
       previousRenewalReceipt: PREVIOUS_RENEWAL_RECEIPT,
+      lineageV103Contract: LINEAGE_V10_3_CONTRACT,
       lineageV102Contract: LINEAGE_V10_2_CONTRACT,
       lineageV101Contract: LINEAGE_V10_1_CONTRACT,
       lineageV99Contract: LINEAGE_V9_9_CONTRACT,
@@ -2090,8 +2130,27 @@
       pointerFingerFile: POINTER_FINGER_FILE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
 
-      activeNewsCycle: "ROUTE_CONTROLS_HEX_SURFACE_TO_CANVAS_PLATTER_BILATERAL_SCAN",
+      expectedHtmlContract: EXPECTED_HTML_CONTRACT,
+      expectedIndexContract: EXPECTED_INDEX_CONTRACT,
+      expectedControlContract: EXPECTED_CONTROL_CONTRACT,
+      expectedControlRenewalCandidate: EXPECTED_CONTROL_RENEWAL_CANDIDATE,
+      expectedCanvasContract: EXPECTED_CANVAS_CONTRACT,
+      expectedCanvasRenewalCandidate: EXPECTED_CANVAS_RENEWAL_CANDIDATE,
+      expectedHexAuthorityContract: EXPECTED_HEX_AUTHORITY_CONTRACT,
+      expectedHexSurfaceContract: EXPECTED_HEX_SURFACE_CONTRACT,
+      expectedPointerFingerContract: EXPECTED_POINTER_FINGER_CONTRACT,
+
+      activeNewsCycle: "ROUTE_CONTROLS_HEX_SURFACE_TO_CANVAS_PLATTER_SAFE_PACKET_BRIDGE",
       activeFibonacci: "F13_HELD_F21_NORTH_ONLY",
+
+      safePacketBridgeActive: true,
+      lifecycleIgnitionSuppressed: true,
+      canvasLifecycleMethodsSuppressed: true,
+      pointerFingerDirectLoadSuppressed: true,
+      governedSourceStackDirectLoadSuppressed: true,
+      duplicateScriptAppendSuppressed: true,
+      filePathLoadLocksActive: true,
+      reasonBasedLoadLocksRetired: true,
 
       routeConductorActiveScanAuthority: true,
       bilateralRouteCanvasScanActive: true,
@@ -2109,16 +2168,6 @@
       singleHandshakeGreenLightBlocked: true,
       intendedHandoffVarianceIncluded: true,
 
-      expectedHtmlContract: EXPECTED_HTML_CONTRACT,
-      expectedIndexContract: EXPECTED_INDEX_CONTRACT,
-      expectedControlContract: EXPECTED_CONTROL_CONTRACT,
-      expectedControlRenewalCandidate: EXPECTED_CONTROL_RENEWAL_CANDIDATE,
-      expectedCanvasContract: EXPECTED_CANVAS_CONTRACT,
-      expectedCanvasRenewalCandidate: EXPECTED_CANVAS_RENEWAL_CANDIDATE,
-      expectedHexAuthorityContract: EXPECTED_HEX_AUTHORITY_CONTRACT,
-      expectedHexSurfaceContract: EXPECTED_HEX_SURFACE_CONTRACT,
-      expectedPointerFingerContract: EXPECTED_POINTER_FINGER_CONTRACT,
-
       transmissionPath: getTransmissionPath(),
 
       routeActiveScanConfirmed: state.routeActiveScanConfirmed,
@@ -2130,6 +2179,7 @@
       canvasAcceptanceScanRequested: state.canvasAcceptanceScanRequested,
       canvasAcceptanceScanConfirmed: state.canvasAcceptanceScanConfirmed,
       bilateralRouteCanvasScanConfirmed: state.bilateralRouteCanvasScanConfirmed,
+      sourceStackObserved: state.sourceStackObserved,
       sourceStackPermissionGranted: state.sourceStackPermissionGranted,
       constructPermissionGranted: state.constructPermissionGranted,
       visibleSurfacePermissionGranted: state.visibleSurfacePermissionGranted,
@@ -2167,6 +2217,8 @@
       deliveryCount: state.deliveryCount,
       scanCount: state.scanCount,
       scriptLoadCount: state.scriptLoadCount,
+      duplicateScriptSuppressCount: state.duplicateScriptSuppressCount,
+      lifecycleSuppressionCount: state.lifecycleSuppressionCount,
       aliasPublishCount: state.aliasPublishCount,
       receiptPublishCount: state.receiptPublishCount,
       booted: state.booted,
@@ -2227,7 +2279,7 @@
     const r = isObject(receipt) ? receipt : getReceiptLight();
 
     return [
-      "HEARTH_ROUTE_CONDUCTOR_BILATERAL_TRIANGLE_SCAN_CANVAS_PLATTER_RECEIPT",
+      "HEARTH_ROUTE_CONDUCTOR_SAFE_PACKET_BRIDGE_NO_LIFECYCLE_IGNITION_RECEIPT",
       "",
       "HEADER",
       line("contract", CONTRACT),
@@ -2246,6 +2298,19 @@
       line("hexAuthorityFile", HEX_AUTHORITY_FILE),
       line("hexSurfaceFile", HEX_SURFACE_FILE),
       line("pointerFingerFile", POINTER_FINGER_FILE),
+      "",
+      "SAFE_BRIDGE",
+      line("safePacketBridgeActive", true),
+      line("lifecycleIgnitionSuppressed", true),
+      line("canvasLifecycleMethodsSuppressed", true),
+      line("pointerFingerDirectLoadSuppressed", true),
+      line("governedSourceStackDirectLoadSuppressed", true),
+      line("duplicateScriptAppendSuppressed", true),
+      line("filePathLoadLocksActive", true),
+      line("reasonBasedLoadLocksRetired", true),
+      line("scriptLoadCount", r.scriptLoadCount),
+      line("duplicateScriptSuppressCount", r.duplicateScriptSuppressCount),
+      line("lifecycleSuppressionCount", r.lifecycleSuppressionCount),
       "",
       "BILATERAL_SCAN",
       line("routeConductorActiveScanAuthority", true),
@@ -2307,9 +2372,11 @@
     const r = getReceiptLight();
 
     return [
-      "HEARTH_ROUTE_CONDUCTOR_BILATERAL_TRIANGLE_SCAN_CANVAS_PLATTER_STATUS",
+      "HEARTH_ROUTE_CONDUCTOR_SAFE_PACKET_BRIDGE_NO_LIFECYCLE_IGNITION_STATUS",
       line("contract", r.contract),
       line("renewalContract", r.renewalContract),
+      line("safePacketBridgeActive", true),
+      line("lifecycleIgnitionSuppressed", true),
       line("routeActiveScanConfirmed", r.routeActiveScanConfirmed),
       line("controlsGatewayPermissionGranted", r.controlsGatewayPermissionGranted),
       line("hexSurfaceScanPermissionGranted", r.hexSurfaceScanPermissionGranted),
@@ -2335,6 +2402,15 @@
     setDataset("hearthRouteConductorRenewalReceipt", RENEWAL_RECEIPT);
     setDataset("hearthRouteConductorCurrent", RENEWAL_CONTRACT);
     setDataset("hearthRouteConductorVersion", VERSION);
+
+    setDataset("hearthRouteConductorSafePacketBridgeActive", "true");
+    setDataset("hearthRouteConductorLifecycleIgnitionSuppressed", "true");
+    setDataset("hearthRouteConductorCanvasLifecycleMethodsSuppressed", "true");
+    setDataset("hearthRouteConductorPointerFingerDirectLoadSuppressed", "true");
+    setDataset("hearthRouteConductorSourceStackDirectLoadSuppressed", "true");
+    setDataset("hearthRouteConductorDuplicateScriptAppendSuppressed", "true");
+    setDataset("hearthRouteConductorFilePathLoadLocksActive", "true");
+    setDataset("hearthRouteConductorReasonBasedLoadLocksRetired", "true");
 
     setDataset("hearthRouteConductorActiveScanAuthority", "true");
     setDataset("hearthBilateralRouteCanvasScanActive", "true");
@@ -2394,6 +2470,7 @@
     const paths = [
       "HEARTH_ROUTE_CONDUCTOR",
       "HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC",
+      "HEARTH_ROUTE_CONDUCTOR_SAFE_PACKET_BRIDGE_NO_LIFECYCLE_IGNITION",
       "HEARTH_ROUTE_CONDUCTOR_GOVERNED_SOURCE_STACK_ADMISSION_CANVAS_HANDOFF",
       "HEARTH_ROUTE_CONDUCTOR_BILATERAL_TRIANGLE_SCAN_CANVAS_PLATTER_PACKET_BRIDGE",
       "HEARTH_ROUTE_CONDUCTOR_HEX_GATE_POINTER_FINGER_TRANSMISSION",
@@ -2404,6 +2481,7 @@
       "HEARTH_ROUTE_CONDUCTOR_PRIMARY_GATE",
       "HEARTH.routeConductor",
       "HEARTH.routeConductorShowtimeNewsFibonacciQueenCanvasSync",
+      "HEARTH.routeConductorSafePacketBridgeNoLifecycleIgnition",
       "HEARTH.routeConductorGovernedSourceStackAdmissionCanvasHandoff",
       "HEARTH.routeConductorBilateralTriangleScanCanvasPlatterPacketBridge",
       "HEARTH.routeConductorHexGatePointerFingerTransmission",
@@ -2414,6 +2492,7 @@
       "HEARTH.routeConductorPrimaryGate",
       "DEXTER_LAB.hearthRouteConductor",
       "DEXTER_LAB.hearthRouteConductorShowtimeNewsFibonacciQueenCanvasSync",
+      "DEXTER_LAB.hearthRouteConductorSafePacketBridgeNoLifecycleIgnition",
       "DEXTER_LAB.hearthRouteConductorGovernedSourceStackAdmissionCanvasHandoff",
       "DEXTER_LAB.hearthRouteConductorBilateralTriangleScanCanvasPlatterPacketBridge",
       "DEXTER_LAB.hearthRouteConductorHexGatePointerFingerTransmission",
@@ -2436,17 +2515,20 @@
 
     root.HEARTH_ROUTE_CONDUCTOR_RECEIPT = receipt;
     root.HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC_RECEIPT = receipt;
+    root.HEARTH_ROUTE_CONDUCTOR_SAFE_PACKET_BRIDGE_NO_LIFECYCLE_IGNITION_RECEIPT = receipt;
     root.HEARTH_ROUTE_CONDUCTOR_GOVERNED_SOURCE_STACK_ADMISSION_CANVAS_HANDOFF_RECEIPT = receipt;
     root.HEARTH_ROUTE_CONDUCTOR_BILATERAL_TRIANGLE_SCAN_CANVAS_PLATTER_PACKET_BRIDGE_RECEIPT = receipt;
     root.HEARTH_ROUTE_CONDUCTOR_REPORT = receipt;
 
     hearth.routeConductorReceipt = receipt;
     hearth.routeConductorShowtimeNewsFibonacciQueenCanvasSyncReceipt = receipt;
+    hearth.routeConductorSafePacketBridgeNoLifecycleIgnitionReceipt = receipt;
     hearth.routeConductorGovernedSourceStackAdmissionCanvasHandoffReceipt = receipt;
     hearth.routeConductorBilateralTriangleScanCanvasPlatterPacketBridgeReceipt = receipt;
     hearth.routeConductorReport = receipt;
 
     lab.hearthRouteConductorReceipt = receipt;
+    lab.hearthRouteConductorSafePacketBridgeNoLifecycleIgnitionReceipt = receipt;
     lab.hearthRouteConductorBilateralTriangleScanCanvasPlatterPacketBridgeReceipt = receipt;
     lab.hearthRouteConductorReport = receipt;
 
@@ -2465,14 +2547,15 @@
       routeActiveScanConfirmed: state.routeActiveScanConfirmed,
       bilateralRouteCanvasScanConfirmed: state.bilateralRouteCanvasScanConfirmed,
       visibleSurfacePermissionGranted: state.visibleSurfacePermissionGranted,
+      lifecycleIgnitionSuppressed: true,
       visualPassClaimed: false
     });
 
     return true;
   }
 
-  function refresh() {
-    return runBilateralScan({ loadMissingSources: false });
+  function refresh(options = {}) {
+    return runSafePacketBridgeScan(options);
   }
 
   function observePassive() {
@@ -2481,8 +2564,8 @@
     return getReceiptLight();
   }
 
-  function render() {
-    return refresh();
+  function loadMissingDirectChain() {
+    return runSafePacketBridgeScan({ loadMissingDirect: true });
   }
 
   function run() {
@@ -2506,12 +2589,14 @@
       state.booting = true;
       state.startedAt = nowIso();
       state.updatedAt = state.startedAt;
-      state.postgameStatus = "ROUTE_CONDUCTOR_BOOTING_BILATERAL_TRIANGLE_SCAN";
+      state.postgameStatus = "ROUTE_CONDUCTOR_BOOTING_SAFE_PACKET_BRIDGE_SCAN";
 
       publishApiAliases();
       updateDataset();
 
-      await runBilateralScan({ loadMissingSources: false });
+      await runSafePacketBridgeScan({
+        loadMissingDirect: shouldAutoLoadDirectChain()
+      });
 
       state.booted = true;
       state.booting = false;
@@ -2561,8 +2646,17 @@
     pointerFingerFile: POINTER_FINGER_FILE,
     diagnosticRoute: DIAGNOSTIC_ROUTE,
 
-    activeNewsCycle: "ROUTE_CONTROLS_HEX_SURFACE_TO_CANVAS_PLATTER_BILATERAL_SCAN",
+    activeNewsCycle: "ROUTE_CONTROLS_HEX_SURFACE_TO_CANVAS_PLATTER_SAFE_PACKET_BRIDGE",
     activeFibonacci: "F13_HELD_F21_NORTH_ONLY",
+
+    safePacketBridgeActive: true,
+    lifecycleIgnitionSuppressed: true,
+    canvasLifecycleMethodsSuppressed: true,
+    pointerFingerDirectLoadSuppressed: true,
+    governedSourceStackDirectLoadSuppressed: true,
+    duplicateScriptAppendSuppressed: true,
+    filePathLoadLocksActive: true,
+    reasonBasedLoadLocksRetired: true,
 
     routeConductorActiveScanAuthority: true,
     bilateralRouteCanvasScanActive: true,
@@ -2580,11 +2674,13 @@
     init,
     run,
     refresh,
-    render,
+    render: refresh,
     observePassive,
     dispose,
 
-    runBilateralScan,
+    runSafePacketBridgeScan,
+    runBilateralScan: runSafePacketBridgeScan,
+    loadMissingDirectChain,
     scanCanvasSurface,
     scanSourceStack,
     scanNode,
@@ -2660,6 +2756,8 @@
     ownsPointerFingerTruth: false,
     ownsFinalVisualPassClaim: false,
 
+    supportsSafePacketBridge: true,
+    supportsNoLifecycleIgnition: true,
     supportsBilateralRouteCanvasScan: true,
     supportsTriangleRouteControlsHexScan: true,
     supportsCanvasPresentationPlatterPacket: true,

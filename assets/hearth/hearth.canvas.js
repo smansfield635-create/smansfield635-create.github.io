@@ -1,7 +1,7 @@
 // /assets/hearth/hearth.canvas.js
 // HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3
 // Internal controlled renewal:
-// HEARTH_CANVAS_HUB_ZERO_RECT_CANONICAL_SURFACE_BINDING_REPAIR_TNT_v12_4_1
+// HEARTH_CANVAS_HUB_DOWNSTREAM_SURFACE_ADMISSION_FALLBACK_SUPPRESSION_TNT_v12_4_2
 // Full-file replacement.
 // Hearth Canvas presentation platter only.
 //
@@ -9,15 +9,16 @@
 // - Preserve the public v12_3 Canvas contract expected by Route Conductor, Controls,
 //   diagnostics, Hex Surface, Pointer/Finger inspection, and Index.
 // - Preserve the v12_4 live-surface identity renewal as the current Canvas parent lane.
-// - Repair the CANVAS_ZERO_RECT diagnosis by binding only the canonical visible canvas:
-//   #hearthVisibleCanvas inside #hearthCanvasMount.
-// - Refuse to treat temporary/offscreen canvases or generated image buffers as the
-//   canonical visible Canvas surface.
-// - Force a measurable DOM rectangle on the canonical canvas and mount before returning
-//   Canvas surface truth receipts.
-// - Continue returning canvas-side acceptance scan proof to the Route Conductor.
-// - Receive Controls Queen view packets without owning Controls authority.
-// - Remain the presentation platter and DOM canvas surface authority.
+// - Preserve v12_4_1 canonical DOM surface binding and zero-rect repair.
+// - Correct the observed regression where the local 2D fallback can repaint after the
+//   downstream expression surface has appeared.
+// - Treat #hearthCanvasMount as the HTML-owned mount.
+// - Treat #hearthVisibleCanvas as the Canvas-owned visible presentation surface.
+// - Keep the local 2D cartoon fallback available only while no downstream surface has
+//   been observed.
+// - Once downstream surface/frame/expression evidence is observed, latch it and suppress
+//   all later local fallback repaint attempts.
+// - Never treat fallback pixels as final visual pass.
 // - Do not own Route Conductor authority, Controls motion authority, terrain truth,
 //   hydrology truth, elevation truth, material truth, Hex truth, Pointer Finger truth,
 //   F13 claim, F21 claim, ready text, final visual pass, generated image,
@@ -41,15 +42,17 @@
     "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_RECEIPT_v12_4";
 
   const INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_CANVAS_HUB_ZERO_RECT_CANONICAL_SURFACE_BINDING_REPAIR_TNT_v12_4_1";
+    "HEARTH_CANVAS_HUB_DOWNSTREAM_SURFACE_ADMISSION_FALLBACK_SUPPRESSION_TNT_v12_4_2";
   const INTERNAL_RENEWAL_RECEIPT =
+    "HEARTH_CANVAS_HUB_DOWNSTREAM_SURFACE_ADMISSION_FALLBACK_SUPPRESSION_RECEIPT_v12_4_2";
+
+  const PREVIOUS_INTERNAL_RENEWAL_CONTRACT =
+    "HEARTH_CANVAS_HUB_ZERO_RECT_CANONICAL_SURFACE_BINDING_REPAIR_TNT_v12_4_1";
+  const PREVIOUS_INTERNAL_RENEWAL_RECEIPT =
     "HEARTH_CANVAS_HUB_ZERO_RECT_CANONICAL_SURFACE_BINDING_REPAIR_RECEIPT_v12_4_1";
 
-  const PREVIOUS_RENEWAL_CONTRACT =
+  const LINEAGE_V12_4_CONTRACT =
     "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_TNT_v12_4";
-  const PREVIOUS_RENEWAL_RECEIPT =
-    "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_RECEIPT_v12_4";
-
   const LINEAGE_V12_3_CONTRACT =
     "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3";
   const LINEAGE_V12_3_2_CONTRACT =
@@ -66,7 +69,7 @@
     "HEARTH_CANVAS_EXPRESSION_HUB_VISIBLE_BASE_GLOBE_CARRIER_TNT_v11_7";
 
   const VERSION =
-    "2026-06-07.hearth-canvas-zero-rect-canonical-surface-binding-repair-v12-4-1";
+    "2026-06-07.hearth-canvas-downstream-surface-admission-fallback-suppression-v12-4-2";
 
   const ROUTE = "/showroom/globe/hearth/";
   const FILE = "/assets/hearth/hearth.canvas.js";
@@ -84,9 +87,11 @@
   const ROUTE_PACKET_TYPE =
     "HEARTH_ROUTE_CONDUCTOR_TO_CANVAS_PRESENTATION_PLATTER_PACKET_v10_4";
   const CANVAS_ACCEPTANCE_PACKET =
-    "HEARTH_CANVAS_PRESENTATION_PLATTER_ACCEPTANCE_SCAN_PACKET_v12_4_1";
+    "HEARTH_CANVAS_PRESENTATION_PLATTER_ACCEPTANCE_SCAN_PACKET_v12_4_2";
   const CONTROL_PACKET_TYPE =
     "HEARTH_CONTROLS_HEX_GATE_VIEW_DELTA_PACKET_v5";
+
+  const FALLBACK_DELAY_MS = 180;
 
   const NO_CLAIMS = Object.freeze({
     f13Claimed: false,
@@ -106,6 +111,7 @@
     motionReadyClaimed: false,
     touchReadyClaimed: false,
     dragReadyClaimed: false,
+    downstreamReleaseClaimed: false,
     completionLatched: false,
     finalCompletionLatched: false,
     visualPassClaimed: false,
@@ -139,8 +145,8 @@
     renewalReceipt: RENEWAL_RECEIPT,
     internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
     internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
-    previousRenewalContract: PREVIOUS_RENEWAL_CONTRACT,
-    previousRenewalReceipt: PREVIOUS_RENEWAL_RECEIPT,
+    previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
+    previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
     version: VERSION,
     route: ROUTE,
     file: FILE,
@@ -151,12 +157,15 @@
     disposed: false,
     startedAt: "",
     updatedAt: "",
-    latestEvent: "CANVAS_V12_4_1_LOADED",
+    latestEvent: "CANVAS_V12_4_2_LOADED",
 
     canvasPresentationPlatterAuthority: true,
     liveSurfaceIdentityActive: true,
     unifiedVisible2dOutputActive: true,
     zeroRectCanonicalSurfaceBindingRepairActive: true,
+    downstreamSurfaceAdmissionActive: true,
+    fallbackSuppressionActive: true,
+    fallbackDemotedToPlaceholder: true,
     canonicalCanvasSelectionActive: true,
     temporaryCanvasDisambiguationActive: true,
     domSurfaceCreationAuthority: true,
@@ -201,7 +210,7 @@
     canvasMovedIntoMount: false,
     canvasInMount: false,
     canvasSelector: "UNKNOWN",
-    canvasSelectionMode: "CANONICAL_SURFACE_ONLY",
+    canvasSelectionMode: "CANONICAL_HTML_MOUNT_VISIBLE_SURFACE_ONLY",
     canonicalCanvasId: CANONICAL_CANVAS_ID,
     canonicalMountId: CANONICAL_MOUNT_ID,
     nonCanonicalCanvasCount: 0,
@@ -221,6 +230,28 @@
     zeroRectRepairReason: "NOT_RUN",
     concreteFallbackSizeApplied: false,
     concreteFallbackCssSize: "NONE",
+
+    downstreamSurfaceObserved: false,
+    downstreamSurfaceLatched: false,
+    downstreamSurfaceObservedAt: "",
+    downstreamSurfaceLastObservedAt: "",
+    downstreamSurfaceSource: "NONE",
+    downstreamSurfacePacketType: "NONE",
+    downstreamSurfaceContract: "UNKNOWN",
+    downstreamSurfaceDrawableApplied: false,
+    downstreamSurfaceDrawableType: "NONE",
+    downstreamSurfaceAdmissionCount: 0,
+    downstreamSurfacePixelVisibleAfterAdmission: false,
+
+    localFallbackAllowed: true,
+    localFallbackSuppressed: false,
+    localFallbackSuppressionReason: "NO_DOWNSTREAM_SURFACE_OBSERVED",
+    localFallbackDrawAttemptCount: 0,
+    localFallbackDrawSuppressedCount: 0,
+    localFallbackDrawCount: 0,
+    localFallbackLastDrawAt: "",
+    localFallbackLastSuppressedAt: "",
+    localFallbackMode: "PLACEHOLDER_ONLY_UNTIL_DOWNSTREAM_SURFACE_OBSERVED",
 
     canvasAcceptanceScanRequested: false,
     canvasAcceptanceScanConfirmed: false,
@@ -254,6 +285,7 @@
 
     lastRoutePacket: null,
     lastControlPacket: null,
+    lastDownstreamPacket: null,
     lastAcceptancePacket: null,
     lastReceipt: null,
 
@@ -268,6 +300,7 @@
   let context2d = null;
   let bootPromise = null;
   let resizeRaf = 0;
+  let fallbackTimer = 0;
 
   function nowIso() {
     try {
@@ -301,13 +334,19 @@
 
   function safeBool(value, fallback = false) {
     if (typeof value === "boolean") return value;
-    if (value === true || value === 1 || value === "1" || value === "true" || value === "TRUE") return true;
-    if (value === false || value === 0 || value === "0" || value === "false" || value === "FALSE") return false;
+    if (value === true || value === 1 || value === "1") return true;
+    if (value === false || value === 0 || value === "0") return false;
+
+    const text = safeString(value).toLowerCase();
+    if (text === "true" || text === "yes") return true;
+    if (text === "false" || text === "no") return false;
+
     return fallback;
   }
 
   function clonePlain(value) {
     if (value === undefined || value === null) return value;
+
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
@@ -522,11 +561,6 @@
     return item;
   }
 
-  function dataset() {
-    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return {};
-    return doc.documentElement.dataset;
-  }
-
   function setDataset(key, value) {
     if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
     doc.documentElement.dataset[key] = value === undefined || value === null ? "" : String(value);
@@ -596,6 +630,7 @@
       "HEARTH.routeConductorBilateralTriangleScanCanvasPlatterPacketBridge",
       "DEXTER_LAB.hearthRouteConductor"
     ]);
+
     const routeReceipt = readAuthorityReceipt(route.value) || {};
     state.routeConductorObserved = Boolean(route.value);
     state.routeConductorContract = firstNonEmpty(contractOf(routeReceipt), route.value && route.value.contract, "UNKNOWN");
@@ -610,6 +645,7 @@
       "HEARTH.controlsQueen",
       "DEXTER_LAB.hearthControls"
     ]);
+
     const controlsReceipt = readAuthorityReceipt(controls.value) || {};
     state.controlObserved = Boolean(controls.value);
     state.controlContract = firstNonEmpty(contractOf(controlsReceipt), controls.value && controls.value.contract, "UNKNOWN");
@@ -622,6 +658,7 @@
       "HEARTH.hexFourPairAuthority",
       "DEXTER_LAB.hearthHexFourPairPixelHandshakeAuthority"
     ]);
+
     const hexAuthorityReceipt = readAuthorityReceipt(hexAuthority.value) || {};
     state.hexAuthorityObserved = Boolean(hexAuthority.value);
     state.hexAuthorityContract = firstNonEmpty(contractOf(hexAuthorityReceipt), hexAuthority.value && hexAuthority.value.contract, "UNKNOWN");
@@ -635,6 +672,7 @@
       "HEARTH.hexSurfaceRenderer",
       "DEXTER_LAB.hearthHexSurface"
     ]);
+
     const hexSurfaceReceipt = readAuthorityReceipt(hexSurface.value) || {};
     state.hexSurfaceObserved = Boolean(hexSurface.value);
     state.hexSurfaceContract = firstNonEmpty(contractOf(hexSurfaceReceipt), hexSurface.value && hexSurface.value.contract, "UNKNOWN");
@@ -647,6 +685,7 @@
       "HEARTH.pointerFinger",
       "DEXTER_LAB.hearthCanvasFingerInspect"
     ]);
+
     const pointerFingerReceipt = readAuthorityReceipt(pointerFinger.value) || {};
     state.pointerFingerObserved = Boolean(pointerFinger.value);
     state.pointerFingerContract = firstNonEmpty(contractOf(pointerFingerReceipt), pointerFinger.value && pointerFinger.value.contract, "UNKNOWN");
@@ -696,7 +735,9 @@
       mount.setAttribute("data-hearth-canvas-mount", "true");
       mount.setAttribute("data-hearth-visible-planet-mount", "true");
       mount.setAttribute("data-hearth-canonical-canvas-mount", "true");
+      mount.setAttribute("data-hearth-html-owned-mount", "true");
       mount.setAttribute("data-hearth-canvas-zero-rect-repair-mount", "true");
+      mount.setAttribute("data-hearth-downstream-surface-admission-target", "true");
 
       setImportant(mount, "position", "relative");
       setImportant(mount, "z-index", "4");
@@ -742,8 +783,30 @@
     return mountElement;
   }
 
+  function isCanvasElement(value) {
+    return Boolean(value && value.tagName && safeString(value.tagName).toLowerCase() === "canvas");
+  }
+
+  function isDrawable(value) {
+    if (!value) return false;
+
+    const tag = safeString(value.tagName).toLowerCase();
+    const ctor = value.constructor && value.constructor.name ? safeString(value.constructor.name) : "";
+
+    return Boolean(
+      tag === "canvas" ||
+      tag === "img" ||
+      tag === "video" ||
+      ctor === "ImageBitmap" ||
+      ctor === "OffscreenCanvas" ||
+      ctor === "HTMLCanvasElement" ||
+      ctor === "HTMLImageElement" ||
+      ctor === "HTMLVideoElement"
+    );
+  }
+
   function isCanonicalCanvasCandidate(canvas, mount) {
-    if (!canvas || !canvas.tagName || safeString(canvas.tagName).toLowerCase() !== "canvas") return false;
+    if (!isCanvasElement(canvas)) return false;
     if (canvas.id === CANONICAL_CANVAS_ID) return true;
     if (mount && canvas.parentNode === mount && canvas.dataset && canvas.dataset.hearthVisibleCanvas === "true") return true;
     if (mount && canvas.parentNode === mount && canvas.dataset && canvas.dataset.hearthExpressionSurface === "true") return true;
@@ -752,9 +815,11 @@
 
   function countNonCanonicalCanvases(canonical) {
     const canvases = qa("canvas");
+
     state.nonCanonicalCanvasCount = canvases.filter((canvas) => canvas !== canonical).length;
     state.temporaryCanvasIgnoredCount = canvases.filter((canvas) => {
       if (canvas === canonical) return false;
+
       if (canvas.dataset && (
         canvas.dataset.hearthTemporaryCanvas === "true" ||
         canvas.dataset.hearthGeneratedImage === "true" ||
@@ -763,6 +828,7 @@
       )) {
         return true;
       }
+
       if (!canvas.id && (!canvas.parentNode || canvas.parentNode !== mountElement)) return true;
       return false;
     }).length;
@@ -772,9 +838,7 @@
     if (!doc) return null;
 
     const byId = q(`#${CANONICAL_CANVAS_ID}`);
-    if (byId && safeString(byId.tagName).toLowerCase() === "canvas") {
-      return byId;
-    }
+    if (isCanvasElement(byId)) return byId;
 
     if (mount && mount.querySelector) {
       const local =
@@ -796,6 +860,8 @@
 
     const canvas = doc.createElement("canvas");
     canvas.id = CANONICAL_CANVAS_ID;
+    canvas.width = 1024;
+    canvas.height = 1024;
     canvas.setAttribute("aria-label", "Hearth visible 2D planet surface");
     canvas.setAttribute("role", "img");
 
@@ -833,13 +899,17 @@
       canvas.setAttribute("data-hearth-planet-canvas", "true");
       canvas.setAttribute("data-hearth-canvas-texture", "true");
       canvas.setAttribute("data-hearth-canonical-visible-canvas", "true");
-      canvas.setAttribute("data-hearth-canvas-selection-mode", "CANONICAL_SURFACE_ONLY");
+      canvas.setAttribute("data-hearth-canvas-selection-mode", "CANONICAL_HTML_MOUNT_VISIBLE_SURFACE_ONLY");
       canvas.setAttribute("data-hearth-canvas-contract", CONTRACT);
       canvas.setAttribute("data-hearth-canvas-receipt", RECEIPT);
       canvas.setAttribute("data-hearth-canvas-renewal-contract", RENEWAL_CONTRACT);
       canvas.setAttribute("data-hearth-canvas-renewal-receipt", RENEWAL_RECEIPT);
       canvas.setAttribute("data-hearth-canvas-internal-renewal-contract", INTERNAL_RENEWAL_CONTRACT);
       canvas.setAttribute("data-hearth-canvas-internal-renewal-receipt", INTERNAL_RENEWAL_RECEIPT);
+      canvas.setAttribute("data-hearth-local-fallback-mode", state.localFallbackMode);
+      canvas.setAttribute("data-hearth-local-fallback-suppressed", String(state.localFallbackSuppressed));
+      canvas.setAttribute("data-hearth-downstream-surface-observed", String(state.downstreamSurfaceObserved));
+      canvas.setAttribute("data-hearth-downstream-surface-latched", String(state.downstreamSurfaceLatched));
       canvas.setAttribute("data-generated-image", "false");
       canvas.setAttribute("data-graphic-box", "false");
       canvas.setAttribute("data-webgl", "false");
@@ -890,6 +960,7 @@
 
     try {
       const rect = element.getBoundingClientRect();
+
       return {
         width: safeNumber(rect.width, 0),
         height: safeNumber(rect.height, 0),
@@ -924,8 +995,7 @@
   function fallbackCssSize() {
     const vw = Math.max(320, safeNumber(root.innerWidth, 720));
     const vh = Math.max(320, safeNumber(root.innerHeight, 720));
-    const size = Math.max(230, Math.min(640, Math.floor(vw * 0.84), Math.floor(vh * 0.56)));
-    return size;
+    return Math.max(230, Math.min(640, Math.floor(vw * 0.84), Math.floor(vh * 0.56)));
   }
 
   function forceConcreteCanvasSize(canvas, reason) {
@@ -1054,8 +1124,12 @@
     } else {
       state.firstFailedCoordinate = "NONE_CANVAS_DOM_SURFACE_READY";
       state.recommendedNextFile = FILE;
-      state.recommendedNextAction = "ACCEPT_ROUTE_PRESENTATION_PACKET_AND_RENDER_VISIBLE_2D_OUTPUT";
-      state.postgameStatus = "CANVAS_DOM_SURFACE_READY_WAITING_OR_ACCEPTING_PRESENTATION_PACKET";
+      state.recommendedNextAction = state.downstreamSurfaceLatched
+        ? "PRESERVE_DOWNSTREAM_SURFACE_AND_SUPPRESS_LOCAL_FALLBACK"
+        : "WAIT_FOR_DOWNSTREAM_SURFACE_OR_USE_DELAYED_PLACEHOLDER_FALLBACK";
+      state.postgameStatus = state.downstreamSurfaceLatched
+        ? "CANVAS_DOM_SURFACE_READY_DOWNSTREAM_SURFACE_LATCHED_FALLBACK_SUPPRESSED"
+        : "CANVAS_DOM_SURFACE_READY_WAITING_DOWNSTREAM_SURFACE";
     }
 
     record("CANONICAL_CANVAS_SURFACE_ENSURED", {
@@ -1066,6 +1140,8 @@
       canvasMovedIntoMount: state.canvasMovedIntoMount,
       canvasRectNonzero: state.canvasRectNonzero,
       canvasSurfaceReady: state.canvasSurfaceReady,
+      downstreamSurfaceLatched: state.downstreamSurfaceLatched,
+      localFallbackSuppressed: state.localFallbackSuppressed,
       temporaryCanvasIgnoredCount: state.temporaryCanvasIgnoredCount
     });
 
@@ -1127,6 +1203,7 @@
     canvasElement = canvas || canvasElement;
 
     if (mountElement) normalizeMountLayout(mountElement);
+
     if (canvasElement) {
       markCanvas(canvasElement);
       normalizeCanvasLayout(canvasElement);
@@ -1143,6 +1220,7 @@
     }
 
     let contextReady = false;
+
     try {
       if (canvasElement && isFunction(canvasElement.getContext)) {
         context2d = context2d || canvasElement.getContext("2d", { willReadFrequently: true });
@@ -1188,7 +1266,12 @@
     );
     state.visibleSurfacePermissionGranted = state.canvasSurfaceReady;
 
+    if (state.downstreamSurfaceLatched && state.canvasPixelVisible) {
+      state.downstreamSurfacePixelVisibleAfterAdmission = true;
+    }
+
     countNonCanonicalCanvases(canvasElement);
+    updateDataset();
 
     return {
       canvasMountFound: state.mountFound,
@@ -1211,13 +1294,124 @@
       nonCanonicalCanvasCount: state.nonCanonicalCanvasCount,
       temporaryCanvasIgnoredCount: state.temporaryCanvasIgnoredCount,
       zeroRectRepairApplied: state.zeroRectRepairApplied,
-      concreteFallbackSizeApplied: state.concreteFallbackSizeApplied
+      concreteFallbackSizeApplied: state.concreteFallbackSizeApplied,
+      downstreamSurfaceObserved: state.downstreamSurfaceObserved,
+      downstreamSurfaceLatched: state.downstreamSurfaceLatched,
+      localFallbackSuppressed: state.localFallbackSuppressed
     };
   }
 
-  function drawPlanetSurface(reason = "manual") {
+  function clearFallbackTimer() {
+    if (!fallbackTimer) return;
+
+    try {
+      if (root.clearTimeout) root.clearTimeout(fallbackTimer);
+    } catch (_error) {}
+
+    fallbackTimer = 0;
+  }
+
+  function suppressLocalFallback(reason) {
+    clearFallbackTimer();
+
+    state.localFallbackSuppressed = true;
+    state.localFallbackAllowed = false;
+    state.localFallbackSuppressionReason = reason || "DOWNSTREAM_SURFACE_OBSERVED";
+    state.localFallbackLastSuppressedAt = nowIso();
+
+    record("CANVAS_LOCAL_FALLBACK_SUPPRESSED", {
+      reason: state.localFallbackSuppressionReason,
+      downstreamSurfaceLatched: state.downstreamSurfaceLatched
+    });
+
+    updateDataset();
+  }
+
+  function releaseLocalFallback(reason) {
+    if (state.downstreamSurfaceLatched) {
+      suppressLocalFallback("DOWNSTREAM_SURFACE_LATCH_PREVENTS_FALLBACK_RELEASE");
+      return false;
+    }
+
+    state.localFallbackSuppressed = false;
+    state.localFallbackAllowed = true;
+    state.localFallbackSuppressionReason = reason || "NO_DOWNSTREAM_SURFACE_OBSERVED";
+    updateDataset();
+    return true;
+  }
+
+  function shouldDrawLocalFallback(reason) {
+    if (state.downstreamSurfaceLatched || state.downstreamSurfaceObserved) {
+      state.localFallbackDrawSuppressedCount += 1;
+      suppressLocalFallback(`FALLBACK_BLOCKED_AFTER_DOWNSTREAM_SURFACE:${reason}`);
+      return false;
+    }
+
+    if (!state.localFallbackAllowed || state.localFallbackSuppressed) {
+      state.localFallbackDrawSuppressedCount += 1;
+      state.localFallbackLastSuppressedAt = nowIso();
+
+      record("CANVAS_LOCAL_FALLBACK_DRAW_SUPPRESSED", {
+        reason,
+        localFallbackAllowed: state.localFallbackAllowed,
+        localFallbackSuppressed: state.localFallbackSuppressed
+      });
+
+      return false;
+    }
+
+    return true;
+  }
+
+  function scheduleLocalFallback(reason = "scheduled-placeholder") {
+    if (state.downstreamSurfaceLatched || state.downstreamSurfaceObserved) {
+      suppressLocalFallback(`SCHEDULE_BLOCKED_AFTER_DOWNSTREAM_SURFACE:${reason}`);
+      return false;
+    }
+
+    if (!root.setTimeout) {
+      return drawLocalFallbackSurface(reason);
+    }
+
+    clearFallbackTimer();
+
+    fallbackTimer = root.setTimeout(() => {
+      fallbackTimer = 0;
+
+      if (state.downstreamSurfaceLatched || state.downstreamSurfaceObserved) {
+        suppressLocalFallback(`DELAYED_FALLBACK_CANCELLED_AFTER_DOWNSTREAM_SURFACE:${reason}`);
+        return;
+      }
+
+      scanCanvasSurface({ repairIfZero: true });
+
+      if (!state.canvasPixelVisible) {
+        drawLocalFallbackSurface(reason);
+      } else {
+        record("CANVAS_LOCAL_FALLBACK_DELAY_COMPLETED_EXISTING_PIXEL_PRESERVED", {
+          reason,
+          canvasPixelSampleStatus: state.canvasPixelSampleStatus
+        });
+      }
+    }, FALLBACK_DELAY_MS);
+
+    record("CANVAS_LOCAL_FALLBACK_SCHEDULED", {
+      reason,
+      delayMs: FALLBACK_DELAY_MS
+    });
+
+    return true;
+  }
+
+  function drawLocalFallbackSurface(reason = "manual-placeholder") {
+    state.localFallbackDrawAttemptCount += 1;
+
+    if (!shouldDrawLocalFallback(reason)) {
+      return false;
+    }
+
     if (!canvasElement || !context2d) {
-      ensureCanvasSurface(`draw:${reason}`);
+      ensureCanvasSurface(`fallback:${reason}`);
     }
 
     if (!canvasElement || !context2d) return false;
@@ -1259,22 +1453,23 @@
         cy,
         radius * 1.1
       );
+
       ocean.addColorStop(0, "#4da9cc");
       ocean.addColorStop(0.46, "#1c668d");
       ocean.addColorStop(1, "#082f4d");
       ctx.fillStyle = ocean;
       ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
-      ctx.globalAlpha = 0.88;
-      drawLandMass(ctx, cx, cy, radius, yaw, pitch, zoom, 0.16, -0.22, 0.42, 0.20);
-      drawLandMass(ctx, cx, cy, radius, yaw, pitch, zoom, -0.34, -0.08, 0.30, 0.17);
-      drawLandMass(ctx, cx, cy, radius, yaw, pitch, zoom, 0.05, 0.27, 0.34, 0.16);
-      drawLandMass(ctx, cx, cy, radius, yaw, pitch, zoom, 0.42, 0.08, 0.18, 0.12);
-      drawLandMass(ctx, cx, cy, radius, yaw, pitch, zoom, -0.12, -0.46, 0.22, 0.08);
+      ctx.globalAlpha = 0.78;
+      drawFallbackLandMass(ctx, cx, cy, radius, yaw, pitch, zoom, 0.16, -0.22, 0.42, 0.20);
+      drawFallbackLandMass(ctx, cx, cy, radius, yaw, pitch, zoom, -0.34, -0.08, 0.30, 0.17);
+      drawFallbackLandMass(ctx, cx, cy, radius, yaw, pitch, zoom, 0.05, 0.27, 0.34, 0.16);
+      drawFallbackLandMass(ctx, cx, cy, radius, yaw, pitch, zoom, 0.42, 0.08, 0.18, 0.12);
+      drawFallbackLandMass(ctx, cx, cy, radius, yaw, pitch, zoom, -0.12, -0.46, 0.22, 0.08);
       ctx.globalAlpha = 1;
 
       const shade = ctx.createLinearGradient(cx - radius, cy - radius, cx + radius, cy + radius);
-      shade.addColorStop(0, "rgba(255,255,255,0.26)");
+      shade.addColorStop(0, "rgba(255,255,255,0.24)");
       shade.addColorStop(0.45, "rgba(255,255,255,0.02)");
       shade.addColorStop(1, "rgba(0,0,0,0.34)");
       ctx.fillStyle = shade;
@@ -1295,21 +1490,30 @@
       ctx.stroke();
 
       state.renderCount += 1;
-      state.updatedAt = nowIso();
+      state.localFallbackDrawCount += 1;
+      state.localFallbackLastDrawAt = nowIso();
+      state.updatedAt = state.localFallbackLastDrawAt;
 
       scanCanvasSurface({ repairIfZero: true });
       updateDataset();
 
+      record("CANVAS_LOCAL_PLACEHOLDER_FALLBACK_DRAWN", {
+        reason,
+        localFallbackDrawCount: state.localFallbackDrawCount,
+        downstreamSurfaceLatched: state.downstreamSurfaceLatched,
+        visualPassClaimed: false
+      });
+
       return true;
     } catch (error) {
-      recordError("CANVAS_2D_RENDER_FAILED", error, { reason });
+      recordError("CANVAS_LOCAL_FALLBACK_RENDER_FAILED", error, { reason });
       scanCanvasSurface({ repairIfZero: true });
       updateDataset();
       return false;
     }
   }
 
-  function drawLandMass(ctx, cx, cy, radius, yaw, pitch, zoom, ox, oy, sx, sy) {
+  function drawFallbackLandMass(ctx, cx, cy, radius, yaw, pitch, zoom, ox, oy, sx, sy) {
     const points = 18;
     const x = cx + radius * (ox * Math.cos(yaw * 0.25) + Math.sin(yaw + ox) * 0.05) * zoom;
     const y = cy + radius * (oy + Math.sin(pitch + oy) * 0.045) * zoom;
@@ -1347,6 +1551,267 @@
     ctx.stroke();
   }
 
+  function packetText(packet) {
+    if (!packet) return "";
+
+    if (typeof packet === "string") return packet;
+
+    try {
+      return JSON.stringify(packet);
+    } catch (_error) {
+      return safeString(packet);
+    }
+  }
+
+  function isDownstreamSurfacePacket(packet) {
+    if (!packet) return false;
+
+    const p = isObject(packet) ? packet : {};
+    const text = packetText(packet).toUpperCase();
+
+    const packetType = safeString(p.packetType || p.type || p.PACKET_NAME || p.packetName).toUpperCase();
+    const sourceFile = safeString(p.sourceFile || p.fromFile || p.file || p.FILE).toLowerCase();
+    const sourceRole = safeString(p.sourceRole || p.role || p.owner || p.sourceAuthority).toUpperCase();
+    const sourceContract = safeString(p.contract || p.sourceContract || p.hexSurfaceContract || p.pointerFingerContract || p.surfaceContract).toUpperCase();
+
+    const explicitReady = Boolean(
+      safeBool(p.downstreamSurfaceReady, false) ||
+      safeBool(p.downstreamSurfaceObserved, false) ||
+      safeBool(p.hexSurfaceReady, false) ||
+      safeBool(p.pointerFingerReady, false) ||
+      safeBool(p.surfaceReady, false) ||
+      safeBool(p.expressionSurfaceReady, false) ||
+      safeBool(p.canvasExpressionSurfaceReady, false) ||
+      safeBool(p.canvasSurfaceReady, false) ||
+      safeBool(p.renderedPlanetProofReady, false) ||
+      safeBool(p.visiblePlanetProofReady, false) ||
+      safeBool(p.canvasPixelVisible, false) ||
+      safeBool(p.CANVAS_PIXEL_VISIBLE, false)
+    );
+
+    const sourceLooksDownstream = Boolean(
+      sourceFile.includes("hearth.hex.surface.js") ||
+      sourceFile.includes("hearth.canvas.finger.inspect.js") ||
+      sourceRole.includes("HEX_SURFACE") ||
+      sourceRole.includes("POINTER") ||
+      sourceRole.includes("FINGER") ||
+      sourceRole.includes("EXPRESSION") ||
+      sourceContract.includes("HEARTH_HEX_SURFACE") ||
+      sourceContract.includes("HEARTH_CANVAS_FINGER")
+    );
+
+    const typeLooksDownstream = Boolean(
+      packetType.includes("HEX_SURFACE") ||
+      packetType.includes("POINTER") ||
+      packetType.includes("FINGER") ||
+      packetType.includes("DOWNSTREAM") ||
+      packetType.includes("EXPRESSION_SURFACE") ||
+      packetType.includes("SURFACE_FRAME") ||
+      packetType.includes("VISIBLE_SURFACE")
+    );
+
+    const drawable = findDrawableSource(p).drawable;
+
+    return Boolean(
+      drawable ||
+      explicitReady ||
+      sourceLooksDownstream ||
+      typeLooksDownstream ||
+      (
+        text.includes("HEX_SURFACE") &&
+        text.includes("CANVAS") &&
+        text.includes("READY")
+      )
+    );
+  }
+
+  function findDrawableSource(packet = {}) {
+    const p = isObject(packet) ? packet : {};
+
+    const directKeys = [
+      "drawable",
+      "surface",
+      "surfaceCanvas",
+      "sourceCanvas",
+      "textureCanvas",
+      "canvas",
+      "frame",
+      "image",
+      "imageBitmap",
+      "bitmap",
+      "video"
+    ];
+
+    for (const key of directKeys) {
+      if (isDrawable(p[key])) {
+        return {
+          drawable: p[key],
+          type: key
+        };
+      }
+    }
+
+    if (isObject(p.payload)) {
+      const nested = findDrawableSource(p.payload);
+      if (nested.drawable) return nested;
+    }
+
+    if (isObject(p.framePacket)) {
+      const nested = findDrawableSource(p.framePacket);
+      if (nested.drawable) return nested;
+    }
+
+    if (isObject(p.surfacePacket)) {
+      const nested = findDrawableSource(p.surfacePacket);
+      if (nested.drawable) return nested;
+    }
+
+    return {
+      drawable: null,
+      type: "NONE"
+    };
+  }
+
+  function applyImageDataPacket(packet = {}) {
+    if (!context2d || !canvasElement || !isObject(packet)) return false;
+
+    const candidate =
+      packet.imageData ||
+      packet.surfaceImageData ||
+      packet.frameImageData ||
+      (packet.payload && packet.payload.imageData);
+
+    if (!candidate) return false;
+
+    try {
+      if (
+        typeof ImageData !== "undefined" &&
+        candidate instanceof ImageData
+      ) {
+        context2d.putImageData(candidate, 0, 0);
+        return true;
+      }
+    } catch (_error) {}
+
+    return false;
+  }
+
+  function applyDrawablePacket(packet = {}) {
+    if (!canvasElement || !context2d || !isObject(packet)) return false;
+
+    const found = findDrawableSource(packet);
+
+    if (found.drawable) {
+      try {
+        resizeCanvasToDisplayedRect();
+
+        const rect = measure(canvasElement);
+        const width = Math.max(1, Math.floor(rect.width || fallbackCssSize()));
+        const height = Math.max(1, Math.floor(rect.height || width));
+
+        context2d.clearRect(0, 0, width, height);
+        context2d.drawImage(found.drawable, 0, 0, width, height);
+
+        state.downstreamSurfaceDrawableApplied = true;
+        state.downstreamSurfaceDrawableType = found.type;
+        state.renderCount += 1;
+
+        scanCanvasSurface({ repairIfZero: true });
+
+        return true;
+      } catch (error) {
+        recordError("CANVAS_DOWNSTREAM_DRAWABLE_APPLY_FAILED", error, {
+          drawableType: found.type
+        });
+      }
+    }
+
+    if (applyImageDataPacket(packet)) {
+      state.downstreamSurfaceDrawableApplied = true;
+      state.downstreamSurfaceDrawableType = "imageData";
+      state.renderCount += 1;
+      scanCanvasSurface({ repairIfZero: true });
+      return true;
+    }
+
+    return false;
+  }
+
+  function latchDownstreamSurface(packet = {}, source = "UNKNOWN") {
+    ensureCanvasSurface(`downstream:${source}`);
+
+    clearFallbackTimer();
+
+    const p = isObject(packet) ? packet : {};
+    const now = nowIso();
+
+    state.downstreamSurfaceObserved = true;
+    state.downstreamSurfaceLatched = true;
+    state.downstreamSurfaceObservedAt = state.downstreamSurfaceObservedAt || now;
+    state.downstreamSurfaceLastObservedAt = now;
+    state.downstreamSurfaceSource = safeString(source || p.sourceFile || p.fromFile || p.file || "UNKNOWN");
+    state.downstreamSurfacePacketType = safeString(p.packetType || p.type || p.PACKET_NAME || p.packetName || "UNKNOWN");
+    state.downstreamSurfaceContract = safeString(
+      p.contract ||
+      p.sourceContract ||
+      p.hexSurfaceContract ||
+      p.pointerFingerContract ||
+      p.surfaceContract ||
+      "UNKNOWN"
+    );
+    state.downstreamSurfaceAdmissionCount += 1;
+    state.lastDownstreamPacket = clonePlain(packet);
+
+    suppressLocalFallback(`DOWNSTREAM_SURFACE_LATCHED:${state.downstreamSurfaceSource}`);
+
+    const applied = applyDrawablePacket(p);
+    state.downstreamSurfaceDrawableApplied = Boolean(state.downstreamSurfaceDrawableApplied || applied);
+
+    scanCanvasSurface({ repairIfZero: true });
+
+    state.firstFailedCoordinate = "NONE_DOWNSTREAM_SURFACE_LATCHED";
+    state.recommendedNextFile = FILE;
+    state.recommendedNextAction = "PRESERVE_DOWNSTREAM_SURFACE_AND_DO_NOT_REPAINT_LOCAL_FALLBACK";
+    state.postgameStatus = "CANVAS_DOWNSTREAM_SURFACE_LATCHED_LOCAL_FALLBACK_SUPPRESSED_NO_FINAL_CLAIM";
+
+    record("CANVAS_DOWNSTREAM_SURFACE_LATCHED", {
+      source: state.downstreamSurfaceSource,
+      packetType: state.downstreamSurfacePacketType,
+      contract: state.downstreamSurfaceContract,
+      drawableApplied: applied,
+      canvasPixelVisible: state.canvasPixelVisible,
+      visualPassClaimed: false
+    });
+
+    updateDataset();
+    publishReceiptAliases();
+
+    return {
+      packetType: "HEARTH_CANVAS_DOWNSTREAM_SURFACE_ADMISSION_RECEIPT_v12_4_2",
+      accepted: true,
+      ok: true,
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      renewalContract: RENEWAL_CONTRACT,
+      renewalReceipt: RENEWAL_RECEIPT,
+      internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
+      internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
+      downstreamSurfaceObserved: state.downstreamSurfaceObserved,
+      downstreamSurfaceLatched: state.downstreamSurfaceLatched,
+      downstreamSurfaceSource: state.downstreamSurfaceSource,
+      downstreamSurfacePacketType: state.downstreamSurfacePacketType,
+      downstreamSurfaceContract: state.downstreamSurfaceContract,
+      downstreamSurfaceDrawableApplied: state.downstreamSurfaceDrawableApplied,
+      localFallbackSuppressed: state.localFallbackSuppressed,
+      localFallbackSuppressionReason: state.localFallbackSuppressionReason,
+      canvasSurfaceReady: state.canvasSurfaceReady,
+      canvasRectNonzero: state.canvasRectNonzero,
+      canvasContext2dReady: state.canvasContext2dReady,
+      canvasPixelVisible: state.canvasPixelVisible,
+      ...NO_CLAIMS
+    };
+  }
+
   function routePacketLooksValid(packet) {
     if (!isObject(packet)) return false;
 
@@ -1379,10 +1844,14 @@
       receipt: RECEIPT,
       canvasContract: CONTRACT,
       canvasReceipt: RECEIPT,
+      currentCanvasParentContract: RENEWAL_CONTRACT,
+      currentCanvasParentReceipt: RENEWAL_RECEIPT,
       renewalContract: RENEWAL_CONTRACT,
       renewalReceipt: RENEWAL_RECEIPT,
       internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
       internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
+      previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
+      previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
       sourceFile: FILE,
       sourceAuthority: "HEARTH_CANVAS_PRESENTATION_PLATTER",
       sourceRole: "canvas-presentation-platter-canonical-dom-surface-authority",
@@ -1428,6 +1897,16 @@
       concreteFallbackSizeApplied: state.concreteFallbackSizeApplied,
       concreteFallbackCssSize: state.concreteFallbackCssSize,
 
+      downstreamSurfaceAdmissionActive: true,
+      downstreamSurfaceObserved: state.downstreamSurfaceObserved,
+      downstreamSurfaceLatched: state.downstreamSurfaceLatched,
+      downstreamSurfaceSource: state.downstreamSurfaceSource,
+      fallbackSuppressionActive: true,
+      fallbackDemotedToPlaceholder: true,
+      localFallbackAllowed: state.localFallbackAllowed,
+      localFallbackSuppressed: state.localFallbackSuppressed,
+      localFallbackSuppressionReason: state.localFallbackSuppressionReason,
+
       canvasOwnsDomSurface: true,
       canvasOwnsCanvasDrawing: true,
       canvasOwnsPresentationSurface: true,
@@ -1447,7 +1926,7 @@
       firstFailedCoordinate: accepted ? "NONE_CANVAS_ACCEPTANCE_SCAN_CONFIRMED" : state.firstFailedCoordinate,
       recommendedNextFile: accepted ? FILE : state.recommendedNextFile,
       recommendedNextAction: accepted
-        ? "OBSERVE_CANVAS_SURFACE_TRUTH_PROBE_AFTER_CANONICAL_RECT_REPAIR"
+        ? "WAIT_FOR_DOWNSTREAM_SURFACE_AND_SUPPRESS_LOCAL_FALLBACK_AFTER_OBSERVED"
         : state.recommendedNextAction,
       postgameStatus: accepted
         ? "CANVAS_PRESENTATION_PLATTER_ACCEPTED_ROUTE_PACKET_CANONICAL_SURFACE_READY_NO_FINAL_CLAIM"
@@ -1473,7 +1952,14 @@
 
     observeNeighborAuthorities();
     ensureCanvasSurface("route-presentation-packet");
-    drawPlanetSurface("route-presentation-packet");
+
+    if (isDownstreamSurfacePacket(packet)) {
+      latchDownstreamSurface(packet, "ROUTE_PRESENTATION_PACKET_WITH_DOWNSTREAM_SURFACE_SIGNAL");
+    } else if (!state.downstreamSurfaceLatched && !state.canvasPixelVisible) {
+      scheduleLocalFallback("route-presentation-packet-no-downstream-yet");
+    } else {
+      scanCanvasSurface({ repairIfZero: true });
+    }
 
     const accepted = Boolean(state.canvasSurfaceReady && routePacketLooksValid(packet));
 
@@ -1488,8 +1974,12 @@
       state.routePresentationPacketAcceptedAt = nowIso();
       state.firstFailedCoordinate = "NONE_CANVAS_PRESENTATION_PLATTER_ACCEPTED";
       state.recommendedNextFile = FILE;
-      state.recommendedNextAction = "RUN_CANVAS_SURFACE_TRUTH_PROBE_AND_CONFIRM_CANONICAL_DOM_CANVAS_RECT";
-      state.postgameStatus = "CANVAS_ACCEPTED_ROUTE_PRESENTATION_PACKET_CANONICAL_DOM_SURFACE_READY";
+      state.recommendedNextAction = state.downstreamSurfaceLatched
+        ? "PRESERVE_DOWNSTREAM_SURFACE_AND_SUPPRESS_LOCAL_FALLBACK"
+        : "WAIT_FOR_DOWNSTREAM_SURFACE_OR_ALLOW_DELAYED_PLACEHOLDER_FALLBACK";
+      state.postgameStatus = state.downstreamSurfaceLatched
+        ? "CANVAS_ACCEPTED_ROUTE_PACKET_DOWNSTREAM_SURFACE_LATCHED_FALLBACK_SUPPRESSED"
+        : "CANVAS_ACCEPTED_ROUTE_PACKET_WAITING_DOWNSTREAM_SURFACE";
     } else {
       state.rejectionCount += 1;
       state.firstFailedCoordinate = state.canvasSurfaceReady
@@ -1511,10 +2001,154 @@
       bilateralRouteCanvasScanConfirmed: state.bilateralRouteCanvasScanConfirmed,
       canvasSurfaceReady: state.canvasSurfaceReady,
       canvasRectNonzero: state.canvasRectNonzero,
-      routePacketType: state.routePresentationPacketType
+      routePacketType: state.routePresentationPacketType,
+      downstreamSurfaceLatched: state.downstreamSurfaceLatched,
+      localFallbackSuppressed: state.localFallbackSuppressed
     });
 
     return acceptance;
+  }
+
+  function applyControlPacket(packet = {}) {
+    state.controlPacketCount += 1;
+    state.controlPacketAccepted = true;
+    state.controlPacketAcceptedAt = nowIso();
+    state.lastControlPacket = clonePlain(packet);
+
+    const viewState = isObject(packet.viewState) ? packet.viewState : packet;
+
+    if (viewState.yaw !== undefined || packet.deltaYaw !== undefined) {
+      state.viewYaw = safeNumber(
+        viewState.yaw !== undefined ? viewState.yaw : state.viewYaw + safeNumber(packet.deltaYaw, 0),
+        state.viewYaw
+      );
+    }
+
+    if (viewState.pitch !== undefined || packet.deltaPitch !== undefined) {
+      state.viewPitch = safeNumber(
+        viewState.pitch !== undefined ? viewState.pitch : state.viewPitch + safeNumber(packet.deltaPitch, 0),
+        state.viewPitch
+      );
+    }
+
+    if (viewState.zoom !== undefined || packet.deltaZoom !== undefined) {
+      state.viewZoom = Math.max(
+        0.72,
+        Math.min(
+          1.55,
+          safeNumber(
+            viewState.zoom !== undefined ? viewState.zoom : state.viewZoom + safeNumber(packet.deltaZoom, 0),
+            state.viewZoom
+          )
+        )
+      );
+    }
+
+    state.viewPhase = 0;
+
+    ensureCanvasSurface("control-view-packet");
+
+    if (isDownstreamSurfacePacket(packet)) {
+      latchDownstreamSurface(packet, "CONTROL_PACKET_WITH_DOWNSTREAM_SURFACE_SIGNAL");
+    } else if (!state.downstreamSurfaceLatched && state.localFallbackDrawCount > 0) {
+      drawLocalFallbackSurface("control-view-packet-placeholder-update");
+    } else {
+      scanCanvasSurface({ repairIfZero: true });
+    }
+
+    updateDataset();
+    publishReceiptAliases();
+
+    return {
+      packetType: "HEARTH_CANVAS_CONTROL_VIEW_PACKET_ACCEPTANCE_v12_4_2",
+      accepted: true,
+      ok: true,
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      renewalContract: RENEWAL_CONTRACT,
+      renewalReceipt: RENEWAL_RECEIPT,
+      internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
+      internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
+      controlPacketType: safeString(packet.packetType || packet.type || CONTROL_PACKET_TYPE),
+      canvasSurfaceReady: state.canvasSurfaceReady,
+      canvasElementFound: state.canvasElementFound,
+      canvasRectNonzero: state.canvasRectNonzero,
+      canvasContext2dReady: state.canvasContext2dReady,
+      downstreamSurfaceObserved: state.downstreamSurfaceObserved,
+      downstreamSurfaceLatched: state.downstreamSurfaceLatched,
+      localFallbackSuppressed: state.localFallbackSuppressed,
+      viewState: {
+        yaw: state.viewYaw,
+        pitch: state.viewPitch,
+        zoom: state.viewZoom,
+        phase: 0
+      },
+      ...NO_CLAIMS
+    };
+  }
+
+  function receiveDownstreamSurfacePacket(packet) {
+    return latchDownstreamSurface(packet, "DOWNSTREAM_SURFACE_PACKET");
+  }
+
+  function consumeDownstreamSurfacePacket(packet) {
+    return receiveDownstreamSurfacePacket(packet);
+  }
+
+  function receiveHexSurfacePacket(packet) {
+    return latchDownstreamSurface(packet, "HEX_SURFACE_PACKET");
+  }
+
+  function consumeHexSurfacePacket(packet) {
+    return receiveHexSurfacePacket(packet);
+  }
+
+  function receiveHexSurfaceFrame(packet) {
+    return latchDownstreamSurface(packet, "HEX_SURFACE_FRAME");
+  }
+
+  function consumeHexSurfaceFrame(packet) {
+    return receiveHexSurfaceFrame(packet);
+  }
+
+  function receivePointerFingerPacket(packet) {
+    return latchDownstreamSurface(packet, "POINTER_FINGER_PACKET");
+  }
+
+  function consumePointerFingerPacket(packet) {
+    return receivePointerFingerPacket(packet);
+  }
+
+  function receivePointerFingerSurface(packet) {
+    return latchDownstreamSurface(packet, "POINTER_FINGER_SURFACE");
+  }
+
+  function consumePointerFingerSurface(packet) {
+    return receivePointerFingerSurface(packet);
+  }
+
+  function receiveExpressionSurfacePacket(packet) {
+    return latchDownstreamSurface(packet, "EXPRESSION_SURFACE_PACKET");
+  }
+
+  function consumeExpressionSurfacePacket(packet) {
+    return receiveExpressionSurfacePacket(packet);
+  }
+
+  function receiveSurfaceFrame(packet) {
+    return latchDownstreamSurface(packet, "SURFACE_FRAME");
+  }
+
+  function consumeSurfaceFrame(packet) {
+    return receiveSurfaceFrame(packet);
+  }
+
+  function receiveVisibleSurfacePacket(packet) {
+    return latchDownstreamSurface(packet, "VISIBLE_SURFACE_PACKET");
+  }
+
+  function consumeVisibleSurfacePacket(packet) {
+    return receiveVisibleSurfacePacket(packet);
   }
 
   function consumeRoutePresentationPlatterPacket(packet) {
@@ -1591,74 +2225,6 @@
 
   function consumeRoutePacket(packet) {
     return receiveRoutePresentationPlatterPacket(packet);
-  }
-
-  function applyControlPacket(packet = {}) {
-    state.controlPacketCount += 1;
-    state.controlPacketAccepted = true;
-    state.controlPacketAcceptedAt = nowIso();
-    state.lastControlPacket = clonePlain(packet);
-
-    const viewState = isObject(packet.viewState) ? packet.viewState : packet;
-
-    if (viewState.yaw !== undefined || packet.deltaYaw !== undefined) {
-      state.viewYaw = safeNumber(
-        viewState.yaw !== undefined ? viewState.yaw : state.viewYaw + safeNumber(packet.deltaYaw, 0),
-        state.viewYaw
-      );
-    }
-
-    if (viewState.pitch !== undefined || packet.deltaPitch !== undefined) {
-      state.viewPitch = safeNumber(
-        viewState.pitch !== undefined ? viewState.pitch : state.viewPitch + safeNumber(packet.deltaPitch, 0),
-        state.viewPitch
-      );
-    }
-
-    if (viewState.zoom !== undefined || packet.deltaZoom !== undefined) {
-      state.viewZoom = Math.max(
-        0.72,
-        Math.min(
-          1.55,
-          safeNumber(
-            viewState.zoom !== undefined ? viewState.zoom : state.viewZoom + safeNumber(packet.deltaZoom, 0),
-            state.viewZoom
-          )
-        )
-      );
-    }
-
-    state.viewPhase = 0;
-
-    ensureCanvasSurface("control-view-packet");
-    drawPlanetSurface("control-view-packet");
-
-    updateDataset();
-    publishReceiptAliases();
-
-    return {
-      packetType: "HEARTH_CANVAS_CONTROL_VIEW_PACKET_ACCEPTANCE_v12_4_1",
-      accepted: true,
-      ok: true,
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      renewalContract: RENEWAL_CONTRACT,
-      renewalReceipt: RENEWAL_RECEIPT,
-      internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
-      internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
-      controlPacketType: safeString(packet.packetType || packet.type || CONTROL_PACKET_TYPE),
-      canvasSurfaceReady: state.canvasSurfaceReady,
-      canvasElementFound: state.canvasElementFound,
-      canvasRectNonzero: state.canvasRectNonzero,
-      canvasContext2dReady: state.canvasContext2dReady,
-      viewState: {
-        yaw: state.viewYaw,
-        pitch: state.viewPitch,
-        zoom: state.viewZoom,
-        phase: 0
-      },
-      ...NO_CLAIMS
-    };
   }
 
   function receiveHexGateViewControlPacket(packet) {
@@ -1775,7 +2341,7 @@
 
   function composeReceipt() {
     return {
-      packetType: "HEARTH_CANVAS_HUB_ZERO_RECT_CANONICAL_SURFACE_BINDING_REPAIR_RECEIPT_PACKET_v12_4_1",
+      packetType: "HEARTH_CANVAS_HUB_DOWNSTREAM_SURFACE_ADMISSION_FALLBACK_SUPPRESSION_RECEIPT_PACKET_v12_4_2",
       contract: CONTRACT,
       receipt: RECEIPT,
       canvasContract: CONTRACT,
@@ -1786,8 +2352,9 @@
       renewalReceipt: RENEWAL_RECEIPT,
       internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
       internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
-      previousRenewalContract: PREVIOUS_RENEWAL_CONTRACT,
-      previousRenewalReceipt: PREVIOUS_RENEWAL_RECEIPT,
+      previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
+      previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
+      lineageV124Contract: LINEAGE_V12_4_CONTRACT,
       lineageV123Contract: LINEAGE_V12_3_CONTRACT,
       lineageV1232Contract: LINEAGE_V12_3_2_CONTRACT,
       lineageV1231Contract: LINEAGE_V12_3_1_CONTRACT,
@@ -1813,6 +2380,9 @@
       liveSurfaceIdentityActive: true,
       unifiedVisible2dOutputActive: true,
       zeroRectCanonicalSurfaceBindingRepairActive: true,
+      downstreamSurfaceAdmissionActive: true,
+      fallbackSuppressionActive: true,
+      fallbackDemotedToPlaceholder: true,
       canonicalCanvasSelectionActive: true,
       temporaryCanvasDisambiguationActive: true,
       domSurfaceCreationAuthority: true,
@@ -1878,6 +2448,28 @@
       concreteFallbackSizeApplied: state.concreteFallbackSizeApplied,
       concreteFallbackCssSize: state.concreteFallbackCssSize,
 
+      downstreamSurfaceObserved: state.downstreamSurfaceObserved,
+      downstreamSurfaceLatched: state.downstreamSurfaceLatched,
+      downstreamSurfaceObservedAt: state.downstreamSurfaceObservedAt,
+      downstreamSurfaceLastObservedAt: state.downstreamSurfaceLastObservedAt,
+      downstreamSurfaceSource: state.downstreamSurfaceSource,
+      downstreamSurfacePacketType: state.downstreamSurfacePacketType,
+      downstreamSurfaceContract: state.downstreamSurfaceContract,
+      downstreamSurfaceDrawableApplied: state.downstreamSurfaceDrawableApplied,
+      downstreamSurfaceDrawableType: state.downstreamSurfaceDrawableType,
+      downstreamSurfaceAdmissionCount: state.downstreamSurfaceAdmissionCount,
+      downstreamSurfacePixelVisibleAfterAdmission: state.downstreamSurfacePixelVisibleAfterAdmission,
+
+      localFallbackAllowed: state.localFallbackAllowed,
+      localFallbackSuppressed: state.localFallbackSuppressed,
+      localFallbackSuppressionReason: state.localFallbackSuppressionReason,
+      localFallbackMode: state.localFallbackMode,
+      localFallbackDrawAttemptCount: state.localFallbackDrawAttemptCount,
+      localFallbackDrawSuppressedCount: state.localFallbackDrawSuppressedCount,
+      localFallbackDrawCount: state.localFallbackDrawCount,
+      localFallbackLastDrawAt: state.localFallbackLastDrawAt,
+      localFallbackLastSuppressedAt: state.localFallbackLastSuppressedAt,
+
       canvasAcceptanceScanRequested: state.canvasAcceptanceScanRequested,
       canvasAcceptanceScanConfirmed: state.canvasAcceptanceScanConfirmed,
       bilateralRouteCanvasScanConfirmed: state.bilateralRouteCanvasScanConfirmed,
@@ -1924,6 +2516,9 @@
       supportsVisible2dOutput: true,
       supportsControlsViewPackets: true,
       supportsPixelSampleSurfaceProof: true,
+      supportsDownstreamSurfaceAdmission: true,
+      supportsFallbackSuppression: true,
+      supportsPlaceholderFallbackOnlyBeforeDownstream: true,
 
       ...NO_CLAIMS,
       updatedAt: nowIso()
@@ -1933,7 +2528,6 @@
   function getReceiptLight() {
     observeNeighborAuthorities();
     ensureCanvasSurface("receipt-light");
-    if (!state.canvasPixelVisible) drawPlanetSurface("receipt-light");
     scanCanvasSurface({ repairIfZero: true });
 
     const receipt = composeReceipt();
@@ -1944,13 +2538,13 @@
   function getReceipt() {
     observeNeighborAuthorities();
     ensureCanvasSurface("receipt");
-    if (!state.canvasPixelVisible) drawPlanetSurface("receipt");
     scanCanvasSurface({ repairIfZero: true });
 
     const receipt = {
       ...composeReceipt(),
       lastRoutePacket: clonePlain(state.lastRoutePacket),
       lastControlPacket: clonePlain(state.lastControlPacket),
+      lastDownstreamPacket: clonePlain(state.lastDownstreamPacket),
       lastAcceptancePacket: clonePlain(state.lastAcceptancePacket),
       events: clonePlain(state.events),
       errors: clonePlain(state.errors),
@@ -1966,7 +2560,7 @@
     const r = isObject(receipt) ? receipt : getReceiptLight();
 
     return [
-      "HEARTH_CANVAS_HUB_ZERO_RECT_CANONICAL_SURFACE_BINDING_REPAIR_RECEIPT",
+      "HEARTH_CANVAS_HUB_DOWNSTREAM_SURFACE_ADMISSION_FALLBACK_SUPPRESSION_RECEIPT",
       "",
       "HEADER",
       line("contract", CONTRACT),
@@ -1975,7 +2569,7 @@
       line("renewalReceipt", RENEWAL_RECEIPT),
       line("internalRenewalContract", INTERNAL_RENEWAL_CONTRACT),
       line("internalRenewalReceipt", INTERNAL_RENEWAL_RECEIPT),
-      line("previousRenewalContract", PREVIOUS_RENEWAL_CONTRACT),
+      line("previousInternalRenewalContract", PREVIOUS_INTERNAL_RENEWAL_CONTRACT),
       line("version", VERSION),
       line("file", FILE),
       line("route", ROUTE),
@@ -1985,6 +2579,9 @@
       line("domSurfaceCreationAuthority", true),
       line("canvasAcceptanceScanAuthority", true),
       line("zeroRectCanonicalSurfaceBindingRepairActive", true),
+      line("downstreamSurfaceAdmissionActive", true),
+      line("fallbackSuppressionActive", true),
+      line("fallbackDemotedToPlaceholder", true),
       line("canonicalCanvasSelectionActive", true),
       line("temporaryCanvasDisambiguationActive", true),
       "",
@@ -2008,6 +2605,24 @@
       line("canvasPixelVisible", r.canvasPixelVisible),
       line("canvasSurfaceReady", r.canvasSurfaceReady),
       line("visibleSurfacePermissionGranted", r.visibleSurfacePermissionGranted),
+      "",
+      "DOWNSTREAM_SURFACE",
+      line("downstreamSurfaceObserved", r.downstreamSurfaceObserved),
+      line("downstreamSurfaceLatched", r.downstreamSurfaceLatched),
+      line("downstreamSurfaceSource", r.downstreamSurfaceSource),
+      line("downstreamSurfacePacketType", r.downstreamSurfacePacketType),
+      line("downstreamSurfaceContract", r.downstreamSurfaceContract),
+      line("downstreamSurfaceDrawableApplied", r.downstreamSurfaceDrawableApplied),
+      line("downstreamSurfaceAdmissionCount", r.downstreamSurfaceAdmissionCount),
+      "",
+      "LOCAL_FALLBACK",
+      line("localFallbackMode", r.localFallbackMode),
+      line("localFallbackAllowed", r.localFallbackAllowed),
+      line("localFallbackSuppressed", r.localFallbackSuppressed),
+      line("localFallbackSuppressionReason", r.localFallbackSuppressionReason),
+      line("localFallbackDrawAttemptCount", r.localFallbackDrawAttemptCount),
+      line("localFallbackDrawSuppressedCount", r.localFallbackDrawSuppressedCount),
+      line("localFallbackDrawCount", r.localFallbackDrawCount),
       "",
       "ZERO_RECT_REPAIR",
       line("zeroRectRepairAttempted", r.zeroRectRepairAttempted),
@@ -2058,7 +2673,7 @@
     const r = getReceiptLight();
 
     return [
-      "HEARTH_CANVAS_HUB_ZERO_RECT_CANONICAL_SURFACE_BINDING_REPAIR_STATUS",
+      "HEARTH_CANVAS_HUB_DOWNSTREAM_SURFACE_ADMISSION_FALLBACK_SUPPRESSION_STATUS",
       line("contract", r.contract),
       line("renewalContract", r.renewalContract),
       line("internalRenewalContract", r.internalRenewalContract),
@@ -2067,6 +2682,11 @@
       line("canvasElementFound", r.canvasElementFound),
       line("canvasRectNonzero", r.canvasRectNonzero),
       line("canvasSurfaceReady", r.canvasSurfaceReady),
+      line("downstreamSurfaceObserved", r.downstreamSurfaceObserved),
+      line("downstreamSurfaceLatched", r.downstreamSurfaceLatched),
+      line("localFallbackAllowed", r.localFallbackAllowed),
+      line("localFallbackSuppressed", r.localFallbackSuppressed),
+      line("localFallbackSuppressionReason", r.localFallbackSuppressionReason),
       line("canvasAcceptanceScanConfirmed", r.canvasAcceptanceScanConfirmed),
       line("bilateralRouteCanvasScanConfirmed", r.bilateralRouteCanvasScanConfirmed),
       line("visibleSurfacePermissionGranted", r.visibleSurfacePermissionGranted),
@@ -2133,6 +2753,8 @@
     setDataset("hearthCanvasRenewalReceipt", RENEWAL_RECEIPT);
     setDataset("hearthCanvasInternalRenewalContract", INTERNAL_RENEWAL_CONTRACT);
     setDataset("hearthCanvasInternalRenewalReceipt", INTERNAL_RENEWAL_RECEIPT);
+    setDataset("hearthCanvasPreviousInternalRenewalContract", PREVIOUS_INTERNAL_RENEWAL_CONTRACT);
+    setDataset("hearthCanvasPreviousInternalRenewalReceipt", PREVIOUS_INTERNAL_RENEWAL_RECEIPT);
     setDataset("hearthCanvasCurrentParentContract", RENEWAL_CONTRACT);
     setDataset("hearthCanvasCurrentParentReceipt", RENEWAL_RECEIPT);
     setDataset("hearthCanvasParentContract", RENEWAL_CONTRACT);
@@ -2143,6 +2765,9 @@
     setDataset("hearthCanvasLiveSurfaceIdentityActive", "true");
     setDataset("hearthCanvasUnifiedVisible2dOutputActive", "true");
     setDataset("hearthCanvasZeroRectCanonicalSurfaceBindingRepairActive", "true");
+    setDataset("hearthCanvasDownstreamSurfaceAdmissionActive", "true");
+    setDataset("hearthCanvasFallbackSuppressionActive", "true");
+    setDataset("hearthCanvasFallbackDemotedToPlaceholder", "true");
     setDataset("hearthCanvasCanonicalCanvasSelectionActive", "true");
     setDataset("hearthCanvasTemporaryCanvasDisambiguationActive", "true");
     setDataset("hearthCanvasDomSurfaceCreationAuthority", "true");
@@ -2178,6 +2803,21 @@
     setDataset("hearthCanvasZeroRectRepairReason", state.zeroRectRepairReason);
     setDataset("hearthCanvasConcreteFallbackSizeApplied", String(state.concreteFallbackSizeApplied));
     setDataset("hearthCanvasConcreteFallbackCssSize", state.concreteFallbackCssSize);
+
+    setDataset("hearthCanvasDownstreamSurfaceObserved", String(state.downstreamSurfaceObserved));
+    setDataset("hearthCanvasDownstreamSurfaceLatched", String(state.downstreamSurfaceLatched));
+    setDataset("hearthCanvasDownstreamSurfaceSource", state.downstreamSurfaceSource);
+    setDataset("hearthCanvasDownstreamSurfacePacketType", state.downstreamSurfacePacketType);
+    setDataset("hearthCanvasDownstreamSurfaceContract", state.downstreamSurfaceContract);
+    setDataset("hearthCanvasDownstreamSurfaceDrawableApplied", String(state.downstreamSurfaceDrawableApplied));
+    setDataset("hearthCanvasDownstreamSurfaceAdmissionCount", String(state.downstreamSurfaceAdmissionCount));
+
+    setDataset("hearthCanvasLocalFallbackAllowed", String(state.localFallbackAllowed));
+    setDataset("hearthCanvasLocalFallbackSuppressed", String(state.localFallbackSuppressed));
+    setDataset("hearthCanvasLocalFallbackSuppressionReason", state.localFallbackSuppressionReason);
+    setDataset("hearthCanvasLocalFallbackMode", state.localFallbackMode);
+    setDataset("hearthCanvasLocalFallbackDrawCount", String(state.localFallbackDrawCount));
+    setDataset("hearthCanvasLocalFallbackDrawSuppressedCount", String(state.localFallbackDrawSuppressedCount));
 
     setDataset("hearthCanvasAcceptanceScanRequested", String(state.canvasAcceptanceScanRequested));
     setDataset("hearthCanvasAcceptanceScanConfirmed", String(state.canvasAcceptanceScanConfirmed));
@@ -2218,6 +2858,7 @@
     ensureObject(root, "DEXTER_LAB");
 
     const paths = [
+      "HEARTH_CANVAS_HUB_DOWNSTREAM_SURFACE_ADMISSION_FALLBACK_SUPPRESSION",
       "HEARTH_CANVAS_HUB_ZERO_RECT_CANONICAL_SURFACE_BINDING_REPAIR",
       "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT",
       "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER",
@@ -2234,6 +2875,7 @@
       "HEARTH_CANVAS_STATION",
       "HEARTH_CANVAS_EXPRESSION_HUB",
       "HEARTH_CANVAS_VISIBLE_PLANET",
+      "HEARTH.canvasHubDownstreamSurfaceAdmissionFallbackSuppression",
       "HEARTH.canvasHubZeroRectCanonicalSurfaceBindingRepair",
       "HEARTH.canvasHubLiveSurfaceIdentityUnifiedVisible2dOutput",
       "HEARTH.canvasHubCompositeFirstFastViewDeferredHexReceiver",
@@ -2250,6 +2892,7 @@
       "HEARTH.canvasStation",
       "HEARTH.canvasExpressionHub",
       "HEARTH.canvasVisiblePlanet",
+      "DEXTER_LAB.hearthCanvasHubDownstreamSurfaceAdmissionFallbackSuppression",
       "DEXTER_LAB.hearthCanvasHubZeroRectCanonicalSurfaceBindingRepair",
       "DEXTER_LAB.hearthCanvasHubLiveSurfaceIdentityUnifiedVisible2dOutput",
       "DEXTER_LAB.hearthCanvasHubCompositeFirstFastViewDeferredHexReceiver",
@@ -2282,6 +2925,7 @@
     root.HEARTH_CANVAS_HUB_RECEIPT = receipt;
     root.HEARTH_CANVAS_PARENT_RECEIPT = receipt;
     root.HEARTH_CANVAS_AUTHORITY_RECEIPT = receipt;
+    root.HEARTH_CANVAS_HUB_DOWNSTREAM_SURFACE_ADMISSION_FALLBACK_SUPPRESSION_RECEIPT = receipt;
     root.HEARTH_CANVAS_HUB_ZERO_RECT_CANONICAL_SURFACE_BINDING_REPAIR_RECEIPT = receipt;
     root.HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_RECEIPT = receipt;
     root.HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT = receipt;
@@ -2291,6 +2935,7 @@
     hearth.canvasHubReceipt = receipt;
     hearth.canvasParentReceipt = receipt;
     hearth.canvasAuthorityReceipt = receipt;
+    hearth.canvasHubDownstreamSurfaceAdmissionFallbackSuppressionReceipt = receipt;
     hearth.canvasHubZeroRectCanonicalSurfaceBindingRepairReceipt = receipt;
     hearth.canvasHubLiveSurfaceIdentityUnifiedVisible2dOutputReceipt = receipt;
     hearth.canvasHubCompositeFirstFastViewDeferredHexReceiverReceipt = receipt;
@@ -2298,6 +2943,7 @@
 
     lab.hearthCanvasReceipt = receipt;
     lab.hearthCanvasHubReceipt = receipt;
+    lab.hearthCanvasHubDownstreamSurfaceAdmissionFallbackSuppressionReceipt = receipt;
     lab.hearthCanvasHubZeroRectCanonicalSurfaceBindingRepairReceipt = receipt;
     lab.hearthCanvasHubLiveSurfaceIdentityUnifiedVisible2dOutputReceipt = receipt;
     lab.hearthCanvasReport = receipt;
@@ -2317,6 +2963,8 @@
       internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
       canvasSurfaceReady: state.canvasSurfaceReady,
       canvasRectNonzero: state.canvasRectNonzero,
+      downstreamSurfaceLatched: state.downstreamSurfaceLatched,
+      localFallbackSuppressed: state.localFallbackSuppressed,
       visualPassClaimed: false
     });
 
@@ -2326,7 +2974,12 @@
   function refresh() {
     observeNeighborAuthorities();
     ensureCanvasSurface("refresh");
-    drawPlanetSurface("refresh");
+    scanCanvasSurface({ repairIfZero: true });
+
+    if (!state.downstreamSurfaceLatched && !state.canvasPixelVisible) {
+      scheduleLocalFallback("refresh-no-downstream-no-pixels");
+    }
+
     updateDataset();
     publishReceiptAliases();
     return getReceiptLight();
@@ -2338,17 +2991,34 @@
 
   function render() {
     ensureCanvasSurface("render");
-    drawPlanetSurface("render");
+
+    if (state.downstreamSurfaceLatched || state.downstreamSurfaceObserved) {
+      suppressLocalFallback("RENDER_CALLED_AFTER_DOWNSTREAM_SURFACE_LATCH");
+      scanCanvasSurface({ repairIfZero: true });
+    } else if (!state.canvasPixelVisible) {
+      scheduleLocalFallback("render-no-downstream-no-pixels");
+    } else {
+      scanCanvasSurface({ repairIfZero: true });
+    }
+
     updateDataset();
     publishReceiptAliases();
     return getReceiptLight();
   }
 
-  function drawFrame() {
+  function drawFrame(packet) {
+    if (packet && isDownstreamSurfacePacket(packet)) {
+      return receiveSurfaceFrame(packet);
+    }
+
     return render();
   }
 
-  function drawVisibleExpression() {
+  function drawVisibleExpression(packet) {
+    if (packet && isDownstreamSurfacePacket(packet)) {
+      return receiveExpressionSurfacePacket(packet);
+    }
+
     return render();
   }
 
@@ -2373,12 +3043,12 @@
       state.booting = true;
       state.startedAt = nowIso();
       state.updatedAt = state.startedAt;
-      state.postgameStatus = "CANVAS_BOOTING_ZERO_RECT_CANONICAL_SURFACE_BINDING_REPAIR";
+      state.postgameStatus = "CANVAS_BOOTING_DOWNSTREAM_SURFACE_ADMISSION_FALLBACK_SUPPRESSION";
 
       publishApiAliases();
       observeNeighborAuthorities();
       ensureCanvasSurface("boot");
-      drawPlanetSurface("boot");
+      scanCanvasSurface({ repairIfZero: true });
 
       state.booted = true;
       state.booting = false;
@@ -2389,11 +3059,15 @@
         : state.firstFailedCoordinate;
       state.recommendedNextFile = state.canvasSurfaceReady ? ROUTE_CONDUCTOR_FILE : FILE;
       state.recommendedNextAction = state.canvasSurfaceReady
-        ? "DELIVER_ROUTE_PRESENTATION_PLATTER_PACKET_OR_RUN_CANVAS_SURFACE_TRUTH_PROBE"
+        ? "WAIT_FOR_DOWNSTREAM_SURFACE_PACKET_OR_DELAYED_PLACEHOLDER_FALLBACK"
         : state.recommendedNextAction;
       state.postgameStatus = state.canvasSurfaceReady
-        ? "CANVAS_BOOTED_CANONICAL_VISIBLE_2D_SURFACE_READY_WAITING_ROUTE_PACKET"
+        ? "CANVAS_BOOTED_CANONICAL_SURFACE_READY_DOWNSTREAM_SURFACE_NOT_YET_LATCHED"
         : state.postgameStatus;
+
+      if (!state.downstreamSurfaceLatched && !state.canvasPixelVisible) {
+        scheduleLocalFallback("boot-delayed-placeholder");
+      }
 
       publishGlobals("boot-complete");
 
@@ -2403,6 +3077,16 @@
 
           const callback = () => {
             resizeRaf = 0;
+
+            if (state.downstreamSurfaceLatched || state.downstreamSurfaceObserved) {
+              suppressLocalFallback("RESIZE_AFTER_DOWNSTREAM_SURFACE_LATCH");
+              ensureCanvasSurface("resize-downstream-preserve");
+              scanCanvasSurface({ repairIfZero: true });
+              updateDataset();
+              publishReceiptAliases();
+              return;
+            }
+
             render();
           };
 
@@ -2425,6 +3109,7 @@
   }
 
   function dispose(reason = "manual-dispose") {
+    clearFallbackTimer();
     state.disposed = true;
     state.postgameStatus = "CANVAS_DISPOSED";
     record("CANVAS_DISPOSED", { reason });
@@ -2446,8 +3131,8 @@
     renewalReceipt: RENEWAL_RECEIPT,
     internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
     internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
-    previousRenewalContract: PREVIOUS_RENEWAL_CONTRACT,
-    previousRenewalReceipt: PREVIOUS_RENEWAL_RECEIPT,
+    previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
+    previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
     version: VERSION,
     route: ROUTE,
     file: FILE,
@@ -2461,12 +3146,15 @@
 
     canonicalCanvasId: CANONICAL_CANVAS_ID,
     canonicalMountId: CANONICAL_MOUNT_ID,
-    canvasSelectionMode: "CANONICAL_SURFACE_ONLY",
+    canvasSelectionMode: "CANONICAL_HTML_MOUNT_VISIBLE_SURFACE_ONLY",
 
     canvasPresentationPlatterAuthority: true,
     liveSurfaceIdentityActive: true,
     unifiedVisible2dOutputActive: true,
     zeroRectCanonicalSurfaceBindingRepairActive: true,
+    downstreamSurfaceAdmissionActive: true,
+    fallbackSuppressionActive: true,
+    fallbackDemotedToPlaceholder: true,
     canonicalCanvasSelectionActive: true,
     temporaryCanvasDisambiguationActive: true,
     domSurfaceCreationAuthority: true,
@@ -2488,7 +3176,28 @@
 
     ensureCanvasSurface,
     scanCanvasSurface,
-    drawPlanetSurface,
+    drawPlanetSurface: drawLocalFallbackSurface,
+    drawLocalFallbackSurface,
+    scheduleLocalFallback,
+    suppressLocalFallback,
+    releaseLocalFallback,
+
+    receiveDownstreamSurfacePacket,
+    consumeDownstreamSurfacePacket,
+    receiveHexSurfacePacket,
+    consumeHexSurfacePacket,
+    receiveHexSurfaceFrame,
+    consumeHexSurfaceFrame,
+    receivePointerFingerPacket,
+    consumePointerFingerPacket,
+    receivePointerFingerSurface,
+    consumePointerFingerSurface,
+    receiveExpressionSurfacePacket,
+    consumeExpressionSurfacePacket,
+    receiveSurfaceFrame,
+    consumeSurfaceFrame,
+    receiveVisibleSurfacePacket,
+    consumeVisibleSurfacePacket,
 
     receiveRoutePresentationPlatterPacket,
     consumeRoutePresentationPlatterPacket,
@@ -2566,6 +3275,9 @@
     supportsVisible2dOutput: true,
     supportsControlsViewPackets: true,
     supportsPixelSampleSurfaceProof: true,
+    supportsDownstreamSurfaceAdmission: true,
+    supportsFallbackSuppression: true,
+    supportsPlaceholderFallbackOnlyBeforeDownstream: true,
 
     ownsCanvasDomSurface: true,
     ownsCanvasDrawing: true,

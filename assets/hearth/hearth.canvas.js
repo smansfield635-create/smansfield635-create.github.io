@@ -1,16 +1,22 @@
 // /assets/hearth/hearth.canvas.js
 // HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3
 // Internal controlled renewal:
-// HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_TNT_v12_4
+// HEARTH_CANVAS_HUB_ZERO_RECT_CANONICAL_SURFACE_BINDING_REPAIR_TNT_v12_4_1
 // Full-file replacement.
 // Hearth Canvas presentation platter only.
+//
 // Purpose:
-// - Preserve the public v12_3 Canvas contract expected by Route Conductor, Controls, diagnostics, Hex Surface, and Index.
-// - Accept the v10_4 Route Conductor bilateral triangle scan presentation packet.
-// - Create or bind the visible 2D canvas surface inside #hearthCanvasMount.
-// - Return canvas-side acceptance scan proof to the Route Conductor.
+// - Preserve the public v12_3 Canvas contract expected by Route Conductor, Controls,
+//   diagnostics, Hex Surface, Pointer/Finger inspection, and Index.
+// - Preserve the v12_4 live-surface identity renewal as the current Canvas parent lane.
+// - Repair the CANVAS_ZERO_RECT diagnosis by binding only the canonical visible canvas:
+//   #hearthVisibleCanvas inside #hearthCanvasMount.
+// - Refuse to treat temporary/offscreen canvases or generated image buffers as the
+//   canonical visible Canvas surface.
+// - Force a measurable DOM rectangle on the canonical canvas and mount before returning
+//   Canvas surface truth receipts.
+// - Continue returning canvas-side acceptance scan proof to the Route Conductor.
 // - Receive Controls Queen view packets without owning Controls authority.
-// - Receive governed presentation packets from /showroom/globe/hearth/hearth.js.
 // - Remain the presentation platter and DOM canvas surface authority.
 // - Do not own Route Conductor authority, Controls motion authority, terrain truth,
 //   hydrology truth, elevation truth, material truth, Hex truth, Pointer Finger truth,
@@ -34,11 +40,18 @@
   const RENEWAL_RECEIPT =
     "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_RECEIPT_v12_4";
 
-  const PREVIOUS_RENEWAL_CONTRACT =
-    "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3";
-  const PREVIOUS_RENEWAL_RECEIPT =
-    "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIPT_v12_3";
+  const INTERNAL_RENEWAL_CONTRACT =
+    "HEARTH_CANVAS_HUB_ZERO_RECT_CANONICAL_SURFACE_BINDING_REPAIR_TNT_v12_4_1";
+  const INTERNAL_RENEWAL_RECEIPT =
+    "HEARTH_CANVAS_HUB_ZERO_RECT_CANONICAL_SURFACE_BINDING_REPAIR_RECEIPT_v12_4_1";
 
+  const PREVIOUS_RENEWAL_CONTRACT =
+    "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_TNT_v12_4";
+  const PREVIOUS_RENEWAL_RECEIPT =
+    "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_RECEIPT_v12_4";
+
+  const LINEAGE_V12_3_CONTRACT =
+    "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3";
   const LINEAGE_V12_3_2_CONTRACT =
     "HEARTH_CANVAS_HUB_RAF_SPHERE_ROTATION_PAIR_RECEIVER_TNT_v12_3_2";
   const LINEAGE_V12_3_1_CONTRACT =
@@ -53,7 +66,7 @@
     "HEARTH_CANVAS_EXPRESSION_HUB_VISIBLE_BASE_GLOBE_CARRIER_TNT_v11_7";
 
   const VERSION =
-    "2026-06-07.hearth-canvas-live-surface-identity-unified-visible-2d-output-v12-4";
+    "2026-06-07.hearth-canvas-zero-rect-canonical-surface-binding-repair-v12-4-1";
 
   const ROUTE = "/showroom/globe/hearth/";
   const FILE = "/assets/hearth/hearth.canvas.js";
@@ -65,10 +78,13 @@
   const POINTER_FINGER_FILE = "/assets/hearth/hearth.canvas.finger.inspect.js";
   const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
 
+  const CANONICAL_MOUNT_ID = "hearthCanvasMount";
+  const CANONICAL_CANVAS_ID = "hearthVisibleCanvas";
+
   const ROUTE_PACKET_TYPE =
     "HEARTH_ROUTE_CONDUCTOR_TO_CANVAS_PRESENTATION_PLATTER_PACKET_v10_4";
   const CANVAS_ACCEPTANCE_PACKET =
-    "HEARTH_CANVAS_PRESENTATION_PLATTER_ACCEPTANCE_SCAN_PACKET_v12_4";
+    "HEARTH_CANVAS_PRESENTATION_PLATTER_ACCEPTANCE_SCAN_PACKET_v12_4_1";
   const CONTROL_PACKET_TYPE =
     "HEARTH_CONTROLS_HEX_GATE_VIEW_DELTA_PACKET_v5";
 
@@ -101,6 +117,8 @@
   });
 
   const ACCEPTED_ROUTE_CONTRACTS = Object.freeze([
+    "HEARTH_ROUTE_CONDUCTOR_PASSIVE_UI_SAFE_MANUAL_SCAN_TNT_v10_7",
+    "HEARTH_ROUTE_CONDUCTOR_SAFE_PACKET_BRIDGE_NO_LIFECYCLE_IGNITION_TNT_v10_5",
     "HEARTH_ROUTE_CONDUCTOR_BILATERAL_TRIANGLE_SCAN_CANVAS_PLATTER_PACKET_BRIDGE_TNT_v10_4",
     "HEARTH_ROUTE_CONDUCTOR_GOVERNED_SOURCE_STACK_ADMISSION_CANVAS_HANDOFF_TNT_v10_3",
     "HEARTH_ROUTE_CONDUCTOR_HEX_GATE_POINTER_FINGER_TRANSMISSION_TNT_v10_2",
@@ -119,6 +137,8 @@
     receipt: RECEIPT,
     renewalContract: RENEWAL_CONTRACT,
     renewalReceipt: RENEWAL_RECEIPT,
+    internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
+    internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
     previousRenewalContract: PREVIOUS_RENEWAL_CONTRACT,
     previousRenewalReceipt: PREVIOUS_RENEWAL_RECEIPT,
     version: VERSION,
@@ -131,11 +151,14 @@
     disposed: false,
     startedAt: "",
     updatedAt: "",
-    latestEvent: "CANVAS_V12_4_LOADED",
+    latestEvent: "CANVAS_V12_4_1_LOADED",
 
     canvasPresentationPlatterAuthority: true,
     liveSurfaceIdentityActive: true,
     unifiedVisible2dOutputActive: true,
+    zeroRectCanonicalSurfaceBindingRepairActive: true,
+    canonicalCanvasSelectionActive: true,
+    temporaryCanvasDisambiguationActive: true,
     domSurfaceCreationAuthority: true,
     canvasAcceptanceScanAuthority: true,
     bilateralRouteCanvasAcceptanceActive: true,
@@ -170,17 +193,34 @@
     mountFound: false,
     mountCreated: false,
     mountSelector: "UNKNOWN",
+    mountRectNonzero: false,
+    mountComputedVisible: false,
+
     canvasElementFound: false,
     canvasCreated: false,
+    canvasMovedIntoMount: false,
     canvasInMount: false,
     canvasSelector: "UNKNOWN",
+    canvasSelectionMode: "CANONICAL_SURFACE_ONLY",
+    canonicalCanvasId: CANONICAL_CANVAS_ID,
+    canonicalMountId: CANONICAL_MOUNT_ID,
+    nonCanonicalCanvasCount: 0,
+    temporaryCanvasIgnoredCount: 0,
+
     canvasRectNonzero: false,
     canvasComputedVisible: false,
+    canvasViewportIntersecting: false,
     canvasContext2dReady: false,
     canvasPixelSampleStatus: "NO_PIXEL_SAMPLE",
     canvasPixelVisible: false,
     canvasSurfaceReady: false,
     visibleSurfacePermissionGranted: false,
+
+    zeroRectRepairAttempted: false,
+    zeroRectRepairApplied: false,
+    zeroRectRepairReason: "NOT_RUN",
+    concreteFallbackSizeApplied: false,
+    concreteFallbackCssSize: "NONE",
 
     canvasAcceptanceScanRequested: false,
     canvasAcceptanceScanConfirmed: false,
@@ -268,7 +308,6 @@
 
   function clonePlain(value) {
     if (value === undefined || value === null) return value;
-
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
@@ -331,7 +370,7 @@
   }
 
   function readField(source, keys, fallback = "") {
-    const object = isObject(source) ? source : {};
+    const object = isObject(source) || isFunction(source) ? source : {};
 
     for (const key of keys || []) {
       if (object[key] !== undefined && object[key] !== null && object[key] !== "") {
@@ -363,8 +402,8 @@
   function contractOf(source) {
     return firstNonEmpty(
       readField(source, [
+        "internalRenewalContract",
         "renewalContract",
-        "internalImplementationContract",
         "currentCanvasParentContract",
         "canvasContract",
         "controlContract",
@@ -385,8 +424,8 @@
   function receiptOf(source) {
     return firstNonEmpty(
       readField(source, [
+        "internalRenewalReceipt",
         "renewalReceipt",
-        "internalImplementationReceipt",
         "currentCanvasParentReceipt",
         "canvasReceipt",
         "controlReceipt",
@@ -410,6 +449,7 @@
     const methods = [
       "getReceiptLight",
       "getReceipt",
+      "getDebugReceipt",
       "getRoutePrimaryGateReceipt",
       "getRouteCycleReceipt",
       "getControlReceipt",
@@ -502,11 +542,37 @@
     }
   }
 
+  function qa(selector) {
+    if (!doc) return [];
+
+    try {
+      return Array.from(doc.querySelectorAll(selector));
+    } catch (_error) {
+      return [];
+    }
+  }
+
   function describeElement(element) {
     if (!element || !element.tagName) return "NONE";
     const tag = safeString(element.tagName).toLowerCase();
     const id = element.id ? `#${element.id}` : "";
     return `${tag}${id}`;
+  }
+
+  function setImportant(element, property, value) {
+    if (!element || !element.style || !element.style.setProperty) return false;
+
+    try {
+      element.style.setProperty(property, value, "important");
+      return true;
+    } catch (_error) {
+      try {
+        element.style[property] = value;
+        return true;
+      } catch (__error) {
+        return false;
+      }
+    }
   }
 
   function routeContractRecognized(contract) {
@@ -523,6 +589,7 @@
   function observeNeighborAuthorities() {
     const route = firstGlobal([
       "HEARTH_ROUTE_CONDUCTOR",
+      "HEARTH_ROUTE_CONDUCTOR_PASSIVE_UI_SAFE_MANUAL_SCAN",
       "HEARTH_ROUTE_CONDUCTOR_BILATERAL_TRIANGLE_SCAN_CANVAS_PLATTER_PACKET_BRIDGE",
       "HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC",
       "HEARTH.routeConductor",
@@ -552,6 +619,7 @@
       "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY",
       "HEARTH_HEX_FOUR_PAIR_AUTHORITY",
       "HEARTH.hexFourPairPixelHandshakeAuthority",
+      "HEARTH.hexFourPairAuthority",
       "DEXTER_LAB.hearthHexFourPairPixelHandshakeAuthority"
     ]);
     const hexAuthorityReceipt = readAuthorityReceipt(hexAuthority.value) || {};
@@ -564,6 +632,7 @@
       "HEARTH_HEX_SURFACE_RENDERER",
       "HEARTH_HEX_SURFACE",
       "HEARTH.hexSurface",
+      "HEARTH.hexSurfaceRenderer",
       "DEXTER_LAB.hearthHexSurface"
     ]);
     const hexSurfaceReceipt = readAuthorityReceipt(hexSurface.value) || {};
@@ -573,6 +642,7 @@
     const pointerFinger = firstGlobal([
       "HEARTH_CANVAS_FINGER_INSPECT",
       "HEARTH_POINTER_FINGER",
+      "HEARTH.pointerFingerReceiver",
       "HEARTH.canvasFingerInspect",
       "HEARTH.pointerFinger",
       "DEXTER_LAB.hearthCanvasFingerInspect"
@@ -586,46 +656,31 @@
     if (!doc) return null;
 
     return (
-      q("#hearthCanvasMount") ||
-      q("[data-hearth-canvas-mount]") ||
-      q("#hearthGlobeStage") ||
-      q("[data-hearth-globe-stage]") ||
-      q("[data-hearth-visible-planet-mount]")
+      q(`#${CANONICAL_MOUNT_ID}`) ||
+      q("[data-hearth-canvas-mount='true']") ||
+      q("[data-hearth-visible-planet-mount='true']")
     );
   }
 
   function createMount() {
-    if (!doc) return null;
+    if (!doc || !isFunction(doc.createElement)) return null;
 
     const target =
-      q("#hearthPlanetStage") ||
-      q("[data-hearth-planet-stage]") ||
       q("#hearthGlobeStage") ||
-      q("[data-hearth-globe-stage]") ||
+      q("[data-hearth-globe-stage='true']") ||
+      q("#hearthPlanetStage") ||
+      q("[data-hearth-planet-stage='true']") ||
       q("main") ||
       doc.body ||
       doc.documentElement;
 
-    if (!target || !isFunction(doc.createElement)) return null;
+    if (!target) return null;
 
     const mount = doc.createElement("section");
-    mount.id = "hearthCanvasMount";
+    mount.id = CANONICAL_MOUNT_ID;
     mount.setAttribute("data-hearth-canvas-mount", "true");
     mount.setAttribute("data-hearth-visible-planet-mount", "true");
     mount.setAttribute("aria-label", "Hearth visible canvas mount");
-
-    mount.style.position = "relative";
-    mount.style.display = "block";
-    mount.style.width = "min(92vw, 820px)";
-    mount.style.height = "min(92vw, 820px)";
-    mount.style.maxWidth = "820px";
-    mount.style.maxHeight = "820px";
-    mount.style.minWidth = "280px";
-    mount.style.minHeight = "280px";
-    mount.style.margin = "1rem auto";
-    mount.style.overflow = "hidden";
-    mount.style.borderRadius = "999px";
-    mount.style.touchAction = "none";
 
     target.appendChild(mount);
     state.mountCreated = true;
@@ -633,8 +688,44 @@
     return mount;
   }
 
+  function normalizeMountLayout(mount) {
+    if (!mount) return false;
+
+    try {
+      if (!mount.id) mount.id = CANONICAL_MOUNT_ID;
+      mount.setAttribute("data-hearth-canvas-mount", "true");
+      mount.setAttribute("data-hearth-visible-planet-mount", "true");
+      mount.setAttribute("data-hearth-canonical-canvas-mount", "true");
+      mount.setAttribute("data-hearth-canvas-zero-rect-repair-mount", "true");
+
+      setImportant(mount, "position", "relative");
+      setImportant(mount, "z-index", "4");
+      setImportant(mount, "display", "grid");
+      setImportant(mount, "place-items", "center");
+      setImportant(mount, "width", "100%");
+      setImportant(mount, "max-width", "100%");
+      setImportant(mount, "min-width", "0");
+      setImportant(mount, "min-height", "clamp(300px, 56svh, 680px)");
+      setImportant(mount, "height", "auto");
+      setImportant(mount, "overflow", "visible");
+      setImportant(mount, "visibility", "visible");
+      setImportant(mount, "opacity", "1");
+      setImportant(mount, "pointer-events", "auto");
+      setImportant(mount, "touch-action", "none");
+      setImportant(mount, "contain", "none");
+    } catch (error) {
+      recordError("CANVAS_MOUNT_LAYOUT_NORMALIZE_ERROR", error);
+      return false;
+    }
+
+    return true;
+  }
+
   function ensureMount() {
-    if (mountElement && doc && doc.contains && doc.contains(mountElement)) return mountElement;
+    if (mountElement && doc && doc.contains && doc.contains(mountElement)) {
+      normalizeMountLayout(mountElement);
+      return mountElement;
+    }
 
     mountElement = findMount();
 
@@ -647,47 +738,64 @@
       ? (mountElement.id ? `#${mountElement.id}` : describeElement(mountElement))
       : "UNKNOWN";
 
-    if (mountElement) {
-      try {
-        mountElement.setAttribute("data-hearth-canvas-mount", "true");
-        mountElement.setAttribute("data-hearth-visible-planet-mount", "true");
-
-        if (mountElement.style) {
-          if (!mountElement.style.position) mountElement.style.position = "relative";
-          if (!mountElement.style.minHeight) mountElement.style.minHeight = "280px";
-          if (!mountElement.style.touchAction) mountElement.style.touchAction = "none";
-        }
-      } catch (_error) {}
-    }
-
+    normalizeMountLayout(mountElement);
     return mountElement;
   }
 
-  function findCanvas(mount) {
+  function isCanonicalCanvasCandidate(canvas, mount) {
+    if (!canvas || !canvas.tagName || safeString(canvas.tagName).toLowerCase() !== "canvas") return false;
+    if (canvas.id === CANONICAL_CANVAS_ID) return true;
+    if (mount && canvas.parentNode === mount && canvas.dataset && canvas.dataset.hearthVisibleCanvas === "true") return true;
+    if (mount && canvas.parentNode === mount && canvas.dataset && canvas.dataset.hearthExpressionSurface === "true") return true;
+    return false;
+  }
+
+  function countNonCanonicalCanvases(canonical) {
+    const canvases = qa("canvas");
+    state.nonCanonicalCanvasCount = canvases.filter((canvas) => canvas !== canonical).length;
+    state.temporaryCanvasIgnoredCount = canvases.filter((canvas) => {
+      if (canvas === canonical) return false;
+      if (canvas.dataset && (
+        canvas.dataset.hearthTemporaryCanvas === "true" ||
+        canvas.dataset.hearthGeneratedImage === "true" ||
+        canvas.dataset.generatedImage === "true" ||
+        canvas.dataset.graphicBox === "true"
+      )) {
+        return true;
+      }
+      if (!canvas.id && (!canvas.parentNode || canvas.parentNode !== mountElement)) return true;
+      return false;
+    }).length;
+  }
+
+  function findCanonicalCanvas(mount) {
     if (!doc) return null;
 
-    return (
-      (mount && mount.querySelector && (
-        mount.querySelector("canvas[data-hearth-expression-surface='true']") ||
+    const byId = q(`#${CANONICAL_CANVAS_ID}`);
+    if (byId && safeString(byId.tagName).toLowerCase() === "canvas") {
+      return byId;
+    }
+
+    if (mount && mount.querySelector) {
+      const local =
         mount.querySelector("canvas[data-hearth-visible-canvas='true']") ||
+        mount.querySelector("canvas[data-hearth-expression-surface='true']") ||
+        mount.querySelector("canvas[data-hearth-canvas-hub='true']") ||
         mount.querySelector("canvas[data-hearth-canvas='true']") ||
-        mount.querySelector("canvas")
-      )) ||
-      q("#hearthCanvasMount canvas") ||
-      q("[data-hearth-canvas-mount] canvas") ||
-      q("canvas[data-hearth-expression-surface='true']") ||
-      q("canvas[data-hearth-visible-canvas='true']") ||
-      q("canvas[data-hearth-canvas-hub='true']") ||
-      q("canvas[data-hearth-canvas='true']") ||
-      q("canvas[data-hearth-planet-canvas='true']")
-    );
+        mount.querySelector("canvas");
+
+      if (local && isCanonicalCanvasCandidate(local, mount)) return local;
+      if (local && !local.id) return local;
+    }
+
+    return null;
   }
 
   function createCanvas(mount) {
     if (!doc || !mount || !isFunction(doc.createElement)) return null;
 
     const canvas = doc.createElement("canvas");
-    canvas.id = "hearthVisibleCanvas";
+    canvas.id = CANONICAL_CANVAS_ID;
     canvas.setAttribute("aria-label", "Hearth visible 2D planet surface");
     canvas.setAttribute("role", "img");
 
@@ -697,59 +805,173 @@
     return canvas;
   }
 
+  function moveCanvasIntoMountIfNeeded(canvas, mount) {
+    if (!canvas || !mount) return false;
+
+    try {
+      if (canvas.parentNode !== mount) {
+        mount.appendChild(canvas);
+        state.canvasMovedIntoMount = true;
+        return true;
+      }
+    } catch (error) {
+      recordError("CANVAS_MOVE_INTO_MOUNT_FAILED", error);
+    }
+
+    return false;
+  }
+
   function markCanvas(canvas) {
     if (!canvas) return;
 
-    canvas.setAttribute("data-hearth-expression-surface", "true");
-    canvas.setAttribute("data-hearth-visible-canvas", "true");
-    canvas.setAttribute("data-hearth-canvas-hub", "true");
-    canvas.setAttribute("data-hearth-canvas", "true");
-    canvas.setAttribute("data-hearth-planet-canvas", "true");
-    canvas.setAttribute("data-hearth-canvas-texture", "true");
-    canvas.setAttribute("data-hearth-canvas-contract", CONTRACT);
-    canvas.setAttribute("data-hearth-canvas-renewal-contract", RENEWAL_CONTRACT);
-    canvas.setAttribute("data-generated-image", "false");
-    canvas.setAttribute("data-graphic-box", "false");
-    canvas.setAttribute("data-webgl", "false");
-    canvas.setAttribute("data-visual-pass-claimed", "false");
-
-    if (canvas.style) {
-      canvas.style.display = "block";
-      canvas.style.width = "100%";
-      canvas.style.height = "100%";
-      canvas.style.maxWidth = "100%";
-      canvas.style.maxHeight = "100%";
-      canvas.style.touchAction = "none";
-      canvas.style.userSelect = "none";
-      canvas.style.webkitUserSelect = "none";
+    try {
+      canvas.id = CANONICAL_CANVAS_ID;
+      canvas.setAttribute("data-hearth-expression-surface", "true");
+      canvas.setAttribute("data-hearth-visible-canvas", "true");
+      canvas.setAttribute("data-hearth-canvas-hub", "true");
+      canvas.setAttribute("data-hearth-canvas", "true");
+      canvas.setAttribute("data-hearth-planet-canvas", "true");
+      canvas.setAttribute("data-hearth-canvas-texture", "true");
+      canvas.setAttribute("data-hearth-canonical-visible-canvas", "true");
+      canvas.setAttribute("data-hearth-canvas-selection-mode", "CANONICAL_SURFACE_ONLY");
+      canvas.setAttribute("data-hearth-canvas-contract", CONTRACT);
+      canvas.setAttribute("data-hearth-canvas-receipt", RECEIPT);
+      canvas.setAttribute("data-hearth-canvas-renewal-contract", RENEWAL_CONTRACT);
+      canvas.setAttribute("data-hearth-canvas-renewal-receipt", RENEWAL_RECEIPT);
+      canvas.setAttribute("data-hearth-canvas-internal-renewal-contract", INTERNAL_RENEWAL_CONTRACT);
+      canvas.setAttribute("data-hearth-canvas-internal-renewal-receipt", INTERNAL_RENEWAL_RECEIPT);
+      canvas.setAttribute("data-generated-image", "false");
+      canvas.setAttribute("data-graphic-box", "false");
+      canvas.setAttribute("data-webgl", "false");
+      canvas.setAttribute("data-visual-pass-claimed", "false");
+    } catch (error) {
+      recordError("CANVAS_MARK_FAILED", error);
     }
   }
 
-  function resizeCanvasToMount() {
-    const mount = ensureMount();
-    const canvas = canvasElement;
-
-    if (!mount || !canvas) return false;
-
-    let width = 720;
-    let height = 720;
+  function normalizeCanvasLayout(canvas) {
+    if (!canvas) return false;
 
     try {
-      const rect = mount.getBoundingClientRect ? mount.getBoundingClientRect() : null;
-      if (rect && rect.width > 0 && rect.height > 0) {
-        width = Math.max(280, Math.floor(rect.width));
-        height = Math.max(280, Math.floor(rect.height));
-      }
-    } catch (_error) {}
-
-    if (width <= 0 || height <= 0) {
-      width = 720;
-      height = 720;
+      setImportant(canvas, "position", "relative");
+      setImportant(canvas, "z-index", "5");
+      setImportant(canvas, "display", "block");
+      setImportant(canvas, "visibility", "visible");
+      setImportant(canvas, "opacity", "1");
+      setImportant(canvas, "box-sizing", "border-box");
+      setImportant(canvas, "width", "min(84vw, 56svh, 640px)");
+      setImportant(canvas, "height", "min(84vw, 56svh, 640px)");
+      setImportant(canvas, "min-width", "230px");
+      setImportant(canvas, "min-height", "230px");
+      setImportant(canvas, "max-width", "100%");
+      setImportant(canvas, "max-height", "640px");
+      setImportant(canvas, "aspect-ratio", "1 / 1");
+      setImportant(canvas, "object-fit", "contain");
+      setImportant(canvas, "margin", "auto");
+      setImportant(canvas, "border-radius", "50%");
+      setImportant(canvas, "transform", "none");
+      setImportant(canvas, "translate", "none");
+      setImportant(canvas, "pointer-events", "auto");
+      setImportant(canvas, "touch-action", "none");
+      setImportant(canvas, "user-select", "none");
+      setImportant(canvas, "-webkit-user-select", "none");
+    } catch (error) {
+      recordError("CANVAS_LAYOUT_NORMALIZE_ERROR", error);
+      return false;
     }
 
+    return true;
+  }
+
+  function measure(element) {
+    if (!element || !element.getBoundingClientRect) {
+      return { width: 0, height: 0, left: 0, top: 0, right: 0, bottom: 0 };
+    }
+
+    try {
+      const rect = element.getBoundingClientRect();
+      return {
+        width: safeNumber(rect.width, 0),
+        height: safeNumber(rect.height, 0),
+        left: safeNumber(rect.left, 0),
+        top: safeNumber(rect.top, 0),
+        right: safeNumber(rect.right, 0),
+        bottom: safeNumber(rect.bottom, 0)
+      };
+    } catch (_error) {
+      return { width: 0, height: 0, left: 0, top: 0, right: 0, bottom: 0 };
+    }
+  }
+
+  function computedVisible(element) {
+    if (!element) return false;
+
+    try {
+      const style = root.getComputedStyle ? root.getComputedStyle(element) : null;
+      if (!style) return true;
+
+      return Boolean(
+        style.display !== "none" &&
+        style.visibility !== "hidden" &&
+        style.visibility !== "collapse" &&
+        safeNumber(style.opacity, 1) > 0
+      );
+    } catch (_error) {
+      return true;
+    }
+  }
+
+  function fallbackCssSize() {
+    const vw = Math.max(320, safeNumber(root.innerWidth, 720));
+    const vh = Math.max(320, safeNumber(root.innerHeight, 720));
+    const size = Math.max(230, Math.min(640, Math.floor(vw * 0.84), Math.floor(vh * 0.56)));
+    return size;
+  }
+
+  function forceConcreteCanvasSize(canvas, reason) {
+    if (!canvas) return false;
+
+    const size = fallbackCssSize();
+
+    setImportant(canvas, "width", `${size}px`);
+    setImportant(canvas, "height", `${size}px`);
+    setImportant(canvas, "min-width", `${Math.min(size, 230)}px`);
+    setImportant(canvas, "min-height", `${Math.min(size, 230)}px`);
+
+    if (mountElement) {
+      setImportant(mountElement, "min-height", `${Math.max(size, 300)}px`);
+    }
+
+    state.zeroRectRepairAttempted = true;
+    state.zeroRectRepairApplied = true;
+    state.zeroRectRepairReason = reason || "CANVAS_RECT_ZERO_CONCRETE_SIZE_APPLIED";
+    state.concreteFallbackSizeApplied = true;
+    state.concreteFallbackCssSize = `${size}px`;
+
+    record("CANVAS_ZERO_RECT_CONCRETE_SIZE_APPLIED", {
+      reason,
+      size
+    });
+
+    return true;
+  }
+
+  function resizeCanvasToDisplayedRect() {
+    const canvas = canvasElement;
+    if (!canvas) return false;
+
+    let rect = measure(canvas);
+
+    if (rect.width <= 0 || rect.height <= 0) {
+      forceConcreteCanvasSize(canvas, "resize-before-buffer-zero-rect");
+      rect = measure(canvas);
+    }
+
+    const cssWidth = Math.max(1, Math.floor(rect.width || fallbackCssSize()));
+    const cssHeight = Math.max(1, Math.floor(rect.height || cssWidth));
     const dpr = Math.max(1, Math.min(2, safeNumber(root.devicePixelRatio, 1)));
-    const pixelWidth = Math.max(1, Math.floor(width * dpr));
-    const pixelHeight = Math.max(1, Math.floor(height * dpr));
+    const pixelWidth = Math.max(1, Math.floor(cssWidth * dpr));
+    const pixelHeight = Math.max(1, Math.floor(cssHeight * dpr));
 
     if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
       canvas.width = pixelWidth;
@@ -757,12 +979,12 @@
       state.resizeCount += 1;
     }
 
-    canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
-
-    if (context2d && isFunction(context2d.setTransform)) {
-      context2d.setTransform(dpr, 0, 0, dpr, 0, 0);
-    }
+    try {
+      context2d = context2d || canvas.getContext("2d", { willReadFrequently: true });
+      if (context2d && isFunction(context2d.setTransform)) {
+        context2d.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+    } catch (_error) {}
 
     return true;
   }
@@ -776,42 +998,59 @@
       state.visibleSurfacePermissionGranted = false;
       state.firstFailedCoordinate = "CANVAS_MOUNT_NOT_FOUND";
       state.recommendedNextFile = FILE;
-      state.recommendedNextAction = "CONFIRM_HTML_CONTAINS_CANVAS_MOUNT_OR_ALLOW_CANVAS_TO_CREATE_MOUNT";
+      state.recommendedNextAction = "CONFIRM_HTML_CONTAINS_CANONICAL_CANVAS_MOUNT_OR_ALLOW_CANVAS_TO_CREATE_MOUNT";
       state.postgameStatus = "CANVAS_SURFACE_HELD_MOUNT_PENDING";
       updateDataset();
       return false;
     }
 
-    canvasElement = findCanvas(mount) || createCanvas(mount);
+    let canvas = findCanonicalCanvas(mount);
 
-    if (!canvasElement) {
+    if (!canvas) {
+      canvas = createCanvas(mount);
+    }
+
+    if (!canvas) {
       state.canvasElementFound = false;
       state.canvasSurfaceReady = false;
       state.visibleSurfacePermissionGranted = false;
       state.firstFailedCoordinate = "CANVAS_ELEMENT_CREATE_OR_BIND_FAILED";
       state.recommendedNextFile = FILE;
-      state.recommendedNextAction = "REVIEW_CANVAS_DOM_SURFACE_CREATION";
+      state.recommendedNextAction = "REVIEW_CANONICAL_CANVAS_DOM_SURFACE_CREATION";
       state.postgameStatus = "CANVAS_SURFACE_HELD_ELEMENT_PENDING";
       updateDataset();
       return false;
     }
 
+    canvasElement = canvas;
+    moveCanvasIntoMountIfNeeded(canvasElement, mount);
     markCanvas(canvasElement);
+    normalizeMountLayout(mount);
+    normalizeCanvasLayout(canvasElement);
+    countNonCanonicalCanvases(canvasElement);
 
     try {
       context2d = canvasElement.getContext("2d", { willReadFrequently: true });
     } catch (_error) {
-      context2d = null;
+      try {
+        context2d = canvasElement.getContext("2d");
+      } catch (__error) {
+        context2d = null;
+      }
     }
 
-    resizeCanvasToMount();
-    scanCanvasSurface();
+    resizeCanvasToDisplayedRect();
+    scanCanvasSurface({ repairIfZero: true });
 
     if (!state.canvasSurfaceReady) {
-      state.firstFailedCoordinate = "CANVAS_SURFACE_CREATED_BUT_NOT_READY";
+      state.firstFailedCoordinate = state.canvasRectNonzero
+        ? "CANVAS_SURFACE_CREATED_BUT_NOT_READY"
+        : "CANVAS_RECT_NONZERO";
       state.recommendedNextFile = FILE;
-      state.recommendedNextAction = "RECHECK_CANVAS_RECT_AND_2D_CONTEXT";
-      state.postgameStatus = "CANVAS_SURFACE_CREATED_PENDING_CONTEXT_OR_RECT";
+      state.recommendedNextAction = state.canvasRectNonzero
+        ? "RECHECK_CANVAS_CONTEXT_AND_COMPUTED_VISIBILITY"
+        : "VERIFY_CANONICAL_CANVAS_STYLE_SIZE_AND_PARENT_LAYOUT";
+      state.postgameStatus = "CANVAS_SURFACE_CREATED_PENDING_CONTEXT_RECT_OR_VISIBILITY";
     } else {
       state.firstFailedCoordinate = "NONE_CANVAS_DOM_SURFACE_READY";
       state.recommendedNextFile = FILE;
@@ -819,80 +1058,126 @@
       state.postgameStatus = "CANVAS_DOM_SURFACE_READY_WAITING_OR_ACCEPTING_PRESENTATION_PACKET";
     }
 
-    record("CANVAS_SURFACE_ENSURED", {
+    record("CANONICAL_CANVAS_SURFACE_ENSURED", {
       reason,
       mountFound: state.mountFound,
       canvasElementFound: state.canvasElementFound,
       canvasCreated: state.canvasCreated,
-      canvasSurfaceReady: state.canvasSurfaceReady
+      canvasMovedIntoMount: state.canvasMovedIntoMount,
+      canvasRectNonzero: state.canvasRectNonzero,
+      canvasSurfaceReady: state.canvasSurfaceReady,
+      temporaryCanvasIgnoredCount: state.temporaryCanvasIgnoredCount
     });
 
     updateDataset();
     return state.canvasSurfaceReady;
   }
 
-  function scanCanvasSurface() {
+  function sampleCanvasPixel(canvas, ctx) {
+    if (!canvas || !ctx || canvas.width <= 0 || canvas.height <= 0) {
+      return { status: "PIXEL_SAMPLE_UNREADABLE", visible: false };
+    }
+
+    const points = [
+      [0.5, 0.5],
+      [0.34, 0.5],
+      [0.66, 0.5],
+      [0.5, 0.34],
+      [0.5, 0.66],
+      [0.25, 0.25],
+      [0.75, 0.75]
+    ];
+
+    let alpha = 0;
+    let visible = 0;
+
+    try {
+      for (const point of points) {
+        const x = Math.max(0, Math.min(canvas.width - 1, Math.floor(canvas.width * point[0])));
+        const y = Math.max(0, Math.min(canvas.height - 1, Math.floor(canvas.height * point[1])));
+        const data = ctx.getImageData(x, y, 1, 1).data;
+        const r = data[0] || 0;
+        const g = data[1] || 0;
+        const b = data[2] || 0;
+        const a = data[3] || 0;
+
+        if (a > 0) alpha += 1;
+        if (a > 0 && (r > 4 || g > 4 || b > 4)) visible += 1;
+      }
+    } catch (error) {
+      return {
+        status: "PIXEL_SAMPLE_ERROR",
+        visible: false,
+        reason: safeString(error && error.message, "PIXEL_SAMPLE_ERROR")
+      };
+    }
+
+    if (visible > 0) return { status: "PIXEL_SAMPLE_VISIBLE", visible: true };
+    if (alpha > 0) return { status: "PIXEL_SAMPLE_ALPHA_ONLY_OR_BLACK", visible: false };
+    return { status: "PIXEL_SAMPLE_BLANK", visible: false };
+  }
+
+  function scanCanvasSurface(options = {}) {
+    const repairIfZero = options.repairIfZero !== false;
+
     const mount = mountElement || findMount();
-    const canvas = canvasElement || findCanvas(mount);
+    const canvas = canvasElement || findCanonicalCanvas(mount);
 
-    let rectNonzero = false;
-    let computedVisible = false;
+    mountElement = mount || mountElement;
+    canvasElement = canvas || canvasElement;
+
+    if (mountElement) normalizeMountLayout(mountElement);
+    if (canvasElement) {
+      markCanvas(canvasElement);
+      normalizeCanvasLayout(canvasElement);
+    }
+
+    let mountRect = measure(mountElement);
+    let canvasRect = measure(canvasElement);
+
+    if (repairIfZero && canvasElement && (canvasRect.width <= 0 || canvasRect.height <= 0)) {
+      forceConcreteCanvasSize(canvasElement, "scan-canvas-zero-rect");
+      resizeCanvasToDisplayedRect();
+      canvasRect = measure(canvasElement);
+      mountRect = measure(mountElement);
+    }
+
     let contextReady = false;
-    let pixelVisible = false;
-    let pixelSampleStatus = "NO_PIXEL_SAMPLE";
-
     try {
-      if (canvas && canvas.getBoundingClientRect) {
-        const rect = canvas.getBoundingClientRect();
-        rectNonzero = rect.width > 0 && rect.height > 0;
-      }
-    } catch (_error) {}
-
-    try {
-      if (doc && root.getComputedStyle && canvas) {
-        const computed = root.getComputedStyle(canvas);
-        computedVisible = Boolean(
-          computed &&
-          computed.display !== "none" &&
-          computed.visibility !== "hidden" &&
-          safeNumber(computed.opacity, 1) > 0
-        );
-      } else {
-        computedVisible = Boolean(canvas);
+      if (canvasElement && isFunction(canvasElement.getContext)) {
+        context2d = context2d || canvasElement.getContext("2d", { willReadFrequently: true });
+        contextReady = Boolean(context2d);
       }
     } catch (_error) {
-      computedVisible = Boolean(canvas);
+      contextReady = Boolean(context2d);
     }
 
-    try {
-      if (canvas && isFunction(canvas.getContext)) {
-        const ctx = context2d || canvas.getContext("2d", { willReadFrequently: true });
-        contextReady = Boolean(ctx);
+    const pixel = sampleCanvasPixel(canvasElement, context2d);
+    const viewportWidth = safeNumber(root.innerWidth, 0);
+    const viewportHeight = safeNumber(root.innerHeight, 0);
 
-        if (ctx && canvas.width > 0 && canvas.height > 0) {
-          const x = Math.max(0, Math.floor(canvas.width / 2));
-          const y = Math.max(0, Math.floor(canvas.height / 2));
-          const data = ctx.getImageData(x, y, 1, 1).data;
-          pixelVisible = Boolean(data && (data[0] || data[1] || data[2] || data[3]));
-          pixelSampleStatus = "PIXEL_SAMPLE_READABLE";
-        } else {
-          pixelSampleStatus = "CONTEXT_OR_DIMENSION_PENDING";
-        }
-      }
-    } catch (_error) {
-      pixelSampleStatus = "PIXEL_SAMPLE_UNREADABLE";
-    }
+    state.mountFound = Boolean(mountElement);
+    state.mountSelector = mountElement ? (mountElement.id ? `#${mountElement.id}` : describeElement(mountElement)) : "UNKNOWN";
+    state.mountRectNonzero = mountRect.width > 0 && mountRect.height > 0;
+    state.mountComputedVisible = computedVisible(mountElement);
 
-    state.mountFound = Boolean(mount);
-    state.mountSelector = mount ? (mount.id ? `#${mount.id}` : describeElement(mount)) : "UNKNOWN";
-    state.canvasElementFound = Boolean(canvas);
-    state.canvasInMount = Boolean(mount && canvas && mount.contains && mount.contains(canvas));
-    state.canvasSelector = canvas ? (canvas.id ? `#${canvas.id}` : describeElement(canvas)) : "UNKNOWN";
-    state.canvasRectNonzero = rectNonzero;
-    state.canvasComputedVisible = computedVisible;
+    state.canvasElementFound = Boolean(canvasElement);
+    state.canvasInMount = Boolean(mountElement && canvasElement && mountElement.contains && mountElement.contains(canvasElement));
+    state.canvasSelector = canvasElement ? `#${CANONICAL_CANVAS_ID}` : "UNKNOWN";
+    state.canvasRectNonzero = canvasRect.width > 0 && canvasRect.height > 0;
+    state.canvasComputedVisible = computedVisible(canvasElement);
+    state.canvasViewportIntersecting = Boolean(
+      state.canvasRectNonzero &&
+      viewportWidth > 0 &&
+      viewportHeight > 0 &&
+      canvasRect.left < viewportWidth &&
+      canvasRect.right > 0 &&
+      canvasRect.top < viewportHeight &&
+      canvasRect.bottom > 0
+    );
     state.canvasContext2dReady = contextReady;
-    state.canvasPixelVisible = pixelVisible;
-    state.canvasPixelSampleStatus = pixelSampleStatus;
+    state.canvasPixelVisible = Boolean(pixel.visible);
+    state.canvasPixelSampleStatus = pixel.status;
     state.canvasSurfaceReady = Boolean(
       state.mountFound &&
       state.canvasElementFound &&
@@ -903,19 +1188,30 @@
     );
     state.visibleSurfacePermissionGranted = state.canvasSurfaceReady;
 
+    countNonCanonicalCanvases(canvasElement);
+
     return {
       canvasMountFound: state.mountFound,
+      canvasMountSelector: state.mountSelector,
+      canvasMountRectNonzero: state.mountRectNonzero,
       canvasElementFound: state.canvasElementFound,
       canvasInMount: state.canvasInMount,
       canvasRectNonzero: state.canvasRectNonzero,
       canvasComputedVisible: state.canvasComputedVisible,
+      canvasViewportIntersecting: state.canvasViewportIntersecting,
       canvasContext2dReady: state.canvasContext2dReady,
       canvasPixelVisible: state.canvasPixelVisible,
       canvasPixelSampleStatus: state.canvasPixelSampleStatus,
       canvasSurfaceReady: state.canvasSurfaceReady,
       visibleSurfacePermissionGranted: state.visibleSurfacePermissionGranted,
       canvasSelector: state.canvasSelector,
-      canvasMountSelector: state.mountSelector
+      canonicalCanvasId: CANONICAL_CANVAS_ID,
+      canonicalMountId: CANONICAL_MOUNT_ID,
+      canvasSelectionMode: state.canvasSelectionMode,
+      nonCanonicalCanvasCount: state.nonCanonicalCanvasCount,
+      temporaryCanvasIgnoredCount: state.temporaryCanvasIgnoredCount,
+      zeroRectRepairApplied: state.zeroRectRepairApplied,
+      concreteFallbackSizeApplied: state.concreteFallbackSizeApplied
     };
   }
 
@@ -926,10 +1222,11 @@
 
     if (!canvasElement || !context2d) return false;
 
-    resizeCanvasToMount();
+    resizeCanvasToDisplayedRect();
 
-    const cssWidth = Math.max(1, Math.floor(canvasElement.clientWidth || canvasElement.width || 720));
-    const cssHeight = Math.max(1, Math.floor(canvasElement.clientHeight || canvasElement.height || 720));
+    const rect = measure(canvasElement);
+    const cssWidth = Math.max(1, Math.floor(rect.width || fallbackCssSize()));
+    const cssHeight = Math.max(1, Math.floor(rect.height || cssWidth));
     const w = cssWidth;
     const h = cssHeight;
     const cx = w / 2;
@@ -938,7 +1235,6 @@
     const yaw = state.viewYaw;
     const pitch = state.viewPitch;
     const zoom = state.viewZoom;
-
     const ctx = context2d;
 
     try {
@@ -1001,13 +1297,13 @@
       state.renderCount += 1;
       state.updatedAt = nowIso();
 
-      scanCanvasSurface();
+      scanCanvasSurface({ repairIfZero: true });
       updateDataset();
 
       return true;
     } catch (error) {
       recordError("CANVAS_2D_RENDER_FAILED", error, { reason });
-      scanCanvasSurface();
+      scanCanvasSurface({ repairIfZero: true });
       updateDataset();
       return false;
     }
@@ -1085,9 +1381,11 @@
       canvasReceipt: RECEIPT,
       renewalContract: RENEWAL_CONTRACT,
       renewalReceipt: RENEWAL_RECEIPT,
+      internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
+      internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
       sourceFile: FILE,
       sourceAuthority: "HEARTH_CANVAS_PRESENTATION_PLATTER",
-      sourceRole: "canvas-presentation-platter-dom-surface-authority",
+      sourceRole: "canvas-presentation-platter-canonical-dom-surface-authority",
       targetFile: ROUTE_CONDUCTOR_FILE,
       destinationFile: ROUTE_CONDUCTOR_FILE,
       routeConductorFile: ROUTE_CONDUCTOR_FILE,
@@ -1104,16 +1402,31 @@
       canvasAcceptanceScanRequested: true,
       bilateralRouteCanvasScanConfirmed: Boolean(accepted && routeActiveScanConfirmed),
 
+      canonicalCanvasSelectionActive: true,
+      canvasSelectionMode: state.canvasSelectionMode,
+      canonicalCanvasId: CANONICAL_CANVAS_ID,
+      canonicalMountId: CANONICAL_MOUNT_ID,
+      temporaryCanvasIgnoredCount: state.temporaryCanvasIgnoredCount,
+      nonCanonicalCanvasCount: state.nonCanonicalCanvasCount,
+
       canvasMountFound: state.mountFound,
+      canvasMountRectNonzero: state.mountRectNonzero,
       canvasElementFound: state.canvasElementFound,
       canvasInMount: state.canvasInMount,
       canvasRectNonzero: state.canvasRectNonzero,
       canvasComputedVisible: state.canvasComputedVisible,
+      canvasViewportIntersecting: state.canvasViewportIntersecting,
       canvasContext2dReady: state.canvasContext2dReady,
       canvasPixelVisible: state.canvasPixelVisible,
       canvasPixelSampleStatus: state.canvasPixelSampleStatus,
       canvasSurfaceReady: state.canvasSurfaceReady,
       visibleSurfacePermissionGranted: state.visibleSurfacePermissionGranted,
+
+      zeroRectRepairAttempted: state.zeroRectRepairAttempted,
+      zeroRectRepairApplied: state.zeroRectRepairApplied,
+      zeroRectRepairReason: state.zeroRectRepairReason,
+      concreteFallbackSizeApplied: state.concreteFallbackSizeApplied,
+      concreteFallbackCssSize: state.concreteFallbackCssSize,
 
       canvasOwnsDomSurface: true,
       canvasOwnsCanvasDrawing: true,
@@ -1134,10 +1447,10 @@
       firstFailedCoordinate: accepted ? "NONE_CANVAS_ACCEPTANCE_SCAN_CONFIRMED" : state.firstFailedCoordinate,
       recommendedNextFile: accepted ? FILE : state.recommendedNextFile,
       recommendedNextAction: accepted
-        ? "OBSERVE_CANVAS_SURFACE_TRUTH_PROBE_AFTER_PRESENTATION_PACKET_ACCEPTANCE"
+        ? "OBSERVE_CANVAS_SURFACE_TRUTH_PROBE_AFTER_CANONICAL_RECT_REPAIR"
         : state.recommendedNextAction,
       postgameStatus: accepted
-        ? "CANVAS_PRESENTATION_PLATTER_ACCEPTED_ROUTE_PACKET_VISIBLE_SURFACE_READY_NO_FINAL_CLAIM"
+        ? "CANVAS_PRESENTATION_PLATTER_ACCEPTED_ROUTE_PACKET_CANONICAL_SURFACE_READY_NO_FINAL_CLAIM"
         : state.postgameStatus,
 
       acceptedAt: nowIso(),
@@ -1175,15 +1488,15 @@
       state.routePresentationPacketAcceptedAt = nowIso();
       state.firstFailedCoordinate = "NONE_CANVAS_PRESENTATION_PLATTER_ACCEPTED";
       state.recommendedNextFile = FILE;
-      state.recommendedNextAction = "RUN_CANVAS_SURFACE_TRUTH_PROBE_AND_CONFIRM_DOM_CANVAS_SURFACE";
-      state.postgameStatus = "CANVAS_ACCEPTED_ROUTE_PRESENTATION_PACKET_DOM_SURFACE_READY";
+      state.recommendedNextAction = "RUN_CANVAS_SURFACE_TRUTH_PROBE_AND_CONFIRM_CANONICAL_DOM_CANVAS_RECT";
+      state.postgameStatus = "CANVAS_ACCEPTED_ROUTE_PRESENTATION_PACKET_CANONICAL_DOM_SURFACE_READY";
     } else {
       state.rejectionCount += 1;
       state.firstFailedCoordinate = state.canvasSurfaceReady
         ? "ROUTE_PRESENTATION_PACKET_NOT_RECOGNIZED"
-        : "CANVAS_DOM_SURFACE_NOT_READY";
+        : "CANONICAL_CANVAS_DOM_SURFACE_NOT_READY";
       state.recommendedNextFile = FILE;
-      state.recommendedNextAction = "REVIEW_ROUTE_PRESENTATION_PACKET_OR_CANVAS_DOM_SURFACE";
+      state.recommendedNextAction = "REVIEW_ROUTE_PRESENTATION_PACKET_OR_CANONICAL_CANVAS_DOM_SURFACE";
       state.postgameStatus = "CANVAS_PRESENTATION_PACKET_HELD";
     }
 
@@ -1197,6 +1510,7 @@
       accepted,
       bilateralRouteCanvasScanConfirmed: state.bilateralRouteCanvasScanConfirmed,
       canvasSurfaceReady: state.canvasSurfaceReady,
+      canvasRectNonzero: state.canvasRectNonzero,
       routePacketType: state.routePresentationPacketType
     });
 
@@ -1287,18 +1601,33 @@
 
     const viewState = isObject(packet.viewState) ? packet.viewState : packet;
 
-    state.viewYaw = safeNumber(
-      viewState.yaw !== undefined ? viewState.yaw : packet.yaw,
-      state.viewYaw + safeNumber(packet.deltaYaw, 0)
-    );
-    state.viewPitch = safeNumber(
-      viewState.pitch !== undefined ? viewState.pitch : packet.pitch,
-      state.viewPitch + safeNumber(packet.deltaPitch, 0)
-    );
-    state.viewZoom = safeNumber(
-      viewState.zoom !== undefined ? viewState.zoom : packet.zoom,
-      state.viewZoom + safeNumber(packet.deltaZoom, 0)
-    );
+    if (viewState.yaw !== undefined || packet.deltaYaw !== undefined) {
+      state.viewYaw = safeNumber(
+        viewState.yaw !== undefined ? viewState.yaw : state.viewYaw + safeNumber(packet.deltaYaw, 0),
+        state.viewYaw
+      );
+    }
+
+    if (viewState.pitch !== undefined || packet.deltaPitch !== undefined) {
+      state.viewPitch = safeNumber(
+        viewState.pitch !== undefined ? viewState.pitch : state.viewPitch + safeNumber(packet.deltaPitch, 0),
+        state.viewPitch
+      );
+    }
+
+    if (viewState.zoom !== undefined || packet.deltaZoom !== undefined) {
+      state.viewZoom = Math.max(
+        0.72,
+        Math.min(
+          1.55,
+          safeNumber(
+            viewState.zoom !== undefined ? viewState.zoom : state.viewZoom + safeNumber(packet.deltaZoom, 0),
+            state.viewZoom
+          )
+        )
+      );
+    }
+
     state.viewPhase = 0;
 
     ensureCanvasSurface("control-view-packet");
@@ -1308,15 +1637,19 @@
     publishReceiptAliases();
 
     return {
-      packetType: "HEARTH_CANVAS_CONTROL_VIEW_PACKET_ACCEPTANCE_v12_4",
+      packetType: "HEARTH_CANVAS_CONTROL_VIEW_PACKET_ACCEPTANCE_v12_4_1",
       accepted: true,
       ok: true,
       contract: CONTRACT,
       receipt: RECEIPT,
       renewalContract: RENEWAL_CONTRACT,
+      renewalReceipt: RENEWAL_RECEIPT,
+      internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
+      internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
       controlPacketType: safeString(packet.packetType || packet.type || CONTROL_PACKET_TYPE),
       canvasSurfaceReady: state.canvasSurfaceReady,
       canvasElementFound: state.canvasElementFound,
+      canvasRectNonzero: state.canvasRectNonzero,
       canvasContext2dReady: state.canvasContext2dReady,
       viewState: {
         yaw: state.viewYaw,
@@ -1442,7 +1775,7 @@
 
   function composeReceipt() {
     return {
-      packetType: "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_RECEIPT_PACKET_v12_4",
+      packetType: "HEARTH_CANVAS_HUB_ZERO_RECT_CANONICAL_SURFACE_BINDING_REPAIR_RECEIPT_PACKET_v12_4_1",
       contract: CONTRACT,
       receipt: RECEIPT,
       canvasContract: CONTRACT,
@@ -1451,8 +1784,11 @@
       currentCanvasParentReceipt: RENEWAL_RECEIPT,
       renewalContract: RENEWAL_CONTRACT,
       renewalReceipt: RENEWAL_RECEIPT,
+      internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
+      internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
       previousRenewalContract: PREVIOUS_RENEWAL_CONTRACT,
       previousRenewalReceipt: PREVIOUS_RENEWAL_RECEIPT,
+      lineageV123Contract: LINEAGE_V12_3_CONTRACT,
       lineageV1232Contract: LINEAGE_V12_3_2_CONTRACT,
       lineageV1231Contract: LINEAGE_V12_3_1_CONTRACT,
       lineageV122Contract: LINEAGE_V12_2_CONTRACT,
@@ -1471,11 +1807,14 @@
       pointerFingerFile: POINTER_FINGER_FILE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
 
-      role: "canvas-presentation-platter-dom-surface-authority",
+      role: "canvas-presentation-platter-canonical-dom-surface-authority",
 
       canvasPresentationPlatterAuthority: true,
       liveSurfaceIdentityActive: true,
       unifiedVisible2dOutputActive: true,
+      zeroRectCanonicalSurfaceBindingRepairActive: true,
+      canonicalCanvasSelectionActive: true,
+      temporaryCanvasDisambiguationActive: true,
       domSurfaceCreationAuthority: true,
       canvasAcceptanceScanAuthority: true,
       bilateralRouteCanvasAcceptanceActive: true,
@@ -1510,17 +1849,34 @@
       canvasMountFound: state.mountFound,
       canvasMountCreated: state.mountCreated,
       canvasMountSelector: state.mountSelector,
+      canvasMountRectNonzero: state.mountRectNonzero,
+      canvasMountComputedVisible: state.mountComputedVisible,
+
       canvasElementFound: state.canvasElementFound,
       canvasCreated: state.canvasCreated,
+      canvasMovedIntoMount: state.canvasMovedIntoMount,
       canvasInMount: state.canvasInMount,
       canvasSelector: state.canvasSelector,
+      canvasSelectionMode: state.canvasSelectionMode,
+      canonicalCanvasId: state.canonicalCanvasId,
+      canonicalMountId: state.canonicalMountId,
+      nonCanonicalCanvasCount: state.nonCanonicalCanvasCount,
+      temporaryCanvasIgnoredCount: state.temporaryCanvasIgnoredCount,
+
       canvasRectNonzero: state.canvasRectNonzero,
       canvasComputedVisible: state.canvasComputedVisible,
+      canvasViewportIntersecting: state.canvasViewportIntersecting,
       canvasContext2dReady: state.canvasContext2dReady,
       canvasPixelSampleStatus: state.canvasPixelSampleStatus,
       canvasPixelVisible: state.canvasPixelVisible,
       canvasSurfaceReady: state.canvasSurfaceReady,
       visibleSurfacePermissionGranted: state.visibleSurfacePermissionGranted,
+
+      zeroRectRepairAttempted: state.zeroRectRepairAttempted,
+      zeroRectRepairApplied: state.zeroRectRepairApplied,
+      zeroRectRepairReason: state.zeroRectRepairReason,
+      concreteFallbackSizeApplied: state.concreteFallbackSizeApplied,
+      concreteFallbackCssSize: state.concreteFallbackCssSize,
 
       canvasAcceptanceScanRequested: state.canvasAcceptanceScanRequested,
       canvasAcceptanceScanConfirmed: state.canvasAcceptanceScanConfirmed,
@@ -1562,6 +1918,9 @@
       supportsBilateralRouteCanvasScan: true,
       supportsCanvasAcceptanceScanReturn: true,
       supportsCanvasDomSurfaceCreation: true,
+      supportsCanonicalVisibleCanvasSelection: true,
+      supportsTemporaryCanvasDisambiguation: true,
+      supportsZeroRectRepair: true,
       supportsVisible2dOutput: true,
       supportsControlsViewPackets: true,
       supportsPixelSampleSurfaceProof: true,
@@ -1573,22 +1932,20 @@
 
   function getReceiptLight() {
     observeNeighborAuthorities();
-    scanCanvasSurface();
+    ensureCanvasSurface("receipt-light");
+    if (!state.canvasPixelVisible) drawPlanetSurface("receipt-light");
+    scanCanvasSurface({ repairIfZero: true });
 
     const receipt = composeReceipt();
-
-    delete receipt.events;
-    delete receipt.errors;
-    delete receipt.lastRoutePacket;
-    delete receipt.lastControlPacket;
-
     state.lastReceipt = clonePlain(receipt);
     return receipt;
   }
 
   function getReceipt() {
     observeNeighborAuthorities();
-    scanCanvasSurface();
+    ensureCanvasSurface("receipt");
+    if (!state.canvasPixelVisible) drawPlanetSurface("receipt");
+    scanCanvasSurface({ repairIfZero: true });
 
     const receipt = {
       ...composeReceipt(),
@@ -1609,13 +1966,15 @@
     const r = isObject(receipt) ? receipt : getReceiptLight();
 
     return [
-      "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_RECEIPT",
+      "HEARTH_CANVAS_HUB_ZERO_RECT_CANONICAL_SURFACE_BINDING_REPAIR_RECEIPT",
       "",
       "HEADER",
       line("contract", CONTRACT),
       line("receipt", RECEIPT),
       line("renewalContract", RENEWAL_CONTRACT),
       line("renewalReceipt", RENEWAL_RECEIPT),
+      line("internalRenewalContract", INTERNAL_RENEWAL_CONTRACT),
+      line("internalRenewalReceipt", INTERNAL_RENEWAL_RECEIPT),
       line("previousRenewalContract", PREVIOUS_RENEWAL_CONTRACT),
       line("version", VERSION),
       line("file", FILE),
@@ -1625,19 +1984,37 @@
       line("canvasPresentationPlatterAuthority", true),
       line("domSurfaceCreationAuthority", true),
       line("canvasAcceptanceScanAuthority", true),
-      line("unifiedVisible2dOutputActive", true),
+      line("zeroRectCanonicalSurfaceBindingRepairActive", true),
+      line("canonicalCanvasSelectionActive", true),
+      line("temporaryCanvasDisambiguationActive", true),
+      "",
+      "CANONICAL_SURFACE",
+      line("canvasSelectionMode", r.canvasSelectionMode),
+      line("canonicalCanvasId", r.canonicalCanvasId),
+      line("canonicalMountId", r.canonicalMountId),
+      line("nonCanonicalCanvasCount", r.nonCanonicalCanvasCount),
+      line("temporaryCanvasIgnoredCount", r.temporaryCanvasIgnoredCount),
       "",
       "SURFACE",
       line("canvasMountFound", r.canvasMountFound),
+      line("canvasMountRectNonzero", r.canvasMountRectNonzero),
       line("canvasElementFound", r.canvasElementFound),
       line("canvasInMount", r.canvasInMount),
       line("canvasRectNonzero", r.canvasRectNonzero),
       line("canvasComputedVisible", r.canvasComputedVisible),
+      line("canvasViewportIntersecting", r.canvasViewportIntersecting),
       line("canvasContext2dReady", r.canvasContext2dReady),
       line("canvasPixelSampleStatus", r.canvasPixelSampleStatus),
       line("canvasPixelVisible", r.canvasPixelVisible),
       line("canvasSurfaceReady", r.canvasSurfaceReady),
       line("visibleSurfacePermissionGranted", r.visibleSurfacePermissionGranted),
+      "",
+      "ZERO_RECT_REPAIR",
+      line("zeroRectRepairAttempted", r.zeroRectRepairAttempted),
+      line("zeroRectRepairApplied", r.zeroRectRepairApplied),
+      line("zeroRectRepairReason", r.zeroRectRepairReason),
+      line("concreteFallbackSizeApplied", r.concreteFallbackSizeApplied),
+      line("concreteFallbackCssSize", r.concreteFallbackCssSize),
       "",
       "BILATERAL_ACCEPTANCE",
       line("canvasAcceptanceScanRequested", r.canvasAcceptanceScanRequested),
@@ -1681,15 +2058,20 @@
     const r = getReceiptLight();
 
     return [
-      "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_STATUS",
+      "HEARTH_CANVAS_HUB_ZERO_RECT_CANONICAL_SURFACE_BINDING_REPAIR_STATUS",
       line("contract", r.contract),
       line("renewalContract", r.renewalContract),
+      line("internalRenewalContract", r.internalRenewalContract),
+      line("canvasSelectionMode", r.canvasSelectionMode),
       line("canvasMountFound", r.canvasMountFound),
       line("canvasElementFound", r.canvasElementFound),
+      line("canvasRectNonzero", r.canvasRectNonzero),
       line("canvasSurfaceReady", r.canvasSurfaceReady),
       line("canvasAcceptanceScanConfirmed", r.canvasAcceptanceScanConfirmed),
       line("bilateralRouteCanvasScanConfirmed", r.bilateralRouteCanvasScanConfirmed),
       line("visibleSurfacePermissionGranted", r.visibleSurfacePermissionGranted),
+      line("zeroRectRepairApplied", r.zeroRectRepairApplied),
+      line("temporaryCanvasIgnoredCount", r.temporaryCanvasIgnoredCount),
       line("routePresentationPacketAccepted", r.routePresentationPacketAccepted),
       line("recommendedNextFile", r.recommendedNextFile),
       line("recommendedNextAction", r.recommendedNextAction),
@@ -1749,6 +2131,8 @@
     setDataset("hearthCanvasReceipt", RECEIPT);
     setDataset("hearthCanvasRenewalContract", RENEWAL_CONTRACT);
     setDataset("hearthCanvasRenewalReceipt", RENEWAL_RECEIPT);
+    setDataset("hearthCanvasInternalRenewalContract", INTERNAL_RENEWAL_CONTRACT);
+    setDataset("hearthCanvasInternalRenewalReceipt", INTERNAL_RENEWAL_RECEIPT);
     setDataset("hearthCanvasCurrentParentContract", RENEWAL_CONTRACT);
     setDataset("hearthCanvasCurrentParentReceipt", RENEWAL_RECEIPT);
     setDataset("hearthCanvasParentContract", RENEWAL_CONTRACT);
@@ -1758,24 +2142,42 @@
     setDataset("hearthCanvasPresentationPlatterAuthority", "true");
     setDataset("hearthCanvasLiveSurfaceIdentityActive", "true");
     setDataset("hearthCanvasUnifiedVisible2dOutputActive", "true");
+    setDataset("hearthCanvasZeroRectCanonicalSurfaceBindingRepairActive", "true");
+    setDataset("hearthCanvasCanonicalCanvasSelectionActive", "true");
+    setDataset("hearthCanvasTemporaryCanvasDisambiguationActive", "true");
     setDataset("hearthCanvasDomSurfaceCreationAuthority", "true");
     setDataset("hearthCanvasAcceptanceScanAuthority", "true");
     setDataset("hearthCanvasBilateralRouteCanvasAcceptanceActive", "true");
 
+    setDataset("hearthCanvasSelectionMode", state.canvasSelectionMode);
+    setDataset("hearthCanvasCanonicalCanvasId", state.canonicalCanvasId);
+    setDataset("hearthCanvasCanonicalMountId", state.canonicalMountId);
+    setDataset("hearthCanvasNonCanonicalCanvasCount", String(state.nonCanonicalCanvasCount));
+    setDataset("hearthCanvasTemporaryCanvasIgnoredCount", String(state.temporaryCanvasIgnoredCount));
+
     setDataset("hearthCanvasMountFound", String(state.mountFound));
     setDataset("hearthCanvasMountCreated", String(state.mountCreated));
     setDataset("hearthCanvasMountSelector", state.mountSelector);
+    setDataset("hearthCanvasMountRectNonzero", String(state.mountRectNonzero));
     setDataset("hearthCanvasElementFound", String(state.canvasElementFound));
     setDataset("hearthCanvasCreated", String(state.canvasCreated));
+    setDataset("hearthCanvasMovedIntoMount", String(state.canvasMovedIntoMount));
     setDataset("hearthCanvasInMount", String(state.canvasInMount));
     setDataset("hearthCanvasSelector", state.canvasSelector);
     setDataset("hearthCanvasRectNonzero", String(state.canvasRectNonzero));
     setDataset("hearthCanvasComputedVisible", String(state.canvasComputedVisible));
+    setDataset("hearthCanvasViewportIntersecting", String(state.canvasViewportIntersecting));
     setDataset("hearthCanvasContext2dReady", String(state.canvasContext2dReady));
     setDataset("hearthCanvasPixelSampleStatus", state.canvasPixelSampleStatus);
     setDataset("hearthCanvasPixelVisible", String(state.canvasPixelVisible));
     setDataset("hearthCanvasSurfaceReady", String(state.canvasSurfaceReady));
     setDataset("hearthVisibleSurfacePermissionGranted", String(state.visibleSurfacePermissionGranted));
+
+    setDataset("hearthCanvasZeroRectRepairAttempted", String(state.zeroRectRepairAttempted));
+    setDataset("hearthCanvasZeroRectRepairApplied", String(state.zeroRectRepairApplied));
+    setDataset("hearthCanvasZeroRectRepairReason", state.zeroRectRepairReason);
+    setDataset("hearthCanvasConcreteFallbackSizeApplied", String(state.concreteFallbackSizeApplied));
+    setDataset("hearthCanvasConcreteFallbackCssSize", state.concreteFallbackCssSize);
 
     setDataset("hearthCanvasAcceptanceScanRequested", String(state.canvasAcceptanceScanRequested));
     setDataset("hearthCanvasAcceptanceScanConfirmed", String(state.canvasAcceptanceScanConfirmed));
@@ -1816,6 +2218,7 @@
     ensureObject(root, "DEXTER_LAB");
 
     const paths = [
+      "HEARTH_CANVAS_HUB_ZERO_RECT_CANONICAL_SURFACE_BINDING_REPAIR",
       "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT",
       "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER",
       "HEARTH_CANVAS_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER",
@@ -1831,6 +2234,7 @@
       "HEARTH_CANVAS_STATION",
       "HEARTH_CANVAS_EXPRESSION_HUB",
       "HEARTH_CANVAS_VISIBLE_PLANET",
+      "HEARTH.canvasHubZeroRectCanonicalSurfaceBindingRepair",
       "HEARTH.canvasHubLiveSurfaceIdentityUnifiedVisible2dOutput",
       "HEARTH.canvasHubCompositeFirstFastViewDeferredHexReceiver",
       "HEARTH.canvasCompositeFirstFastViewDeferredHexReceiver",
@@ -1846,6 +2250,7 @@
       "HEARTH.canvasStation",
       "HEARTH.canvasExpressionHub",
       "HEARTH.canvasVisiblePlanet",
+      "DEXTER_LAB.hearthCanvasHubZeroRectCanonicalSurfaceBindingRepair",
       "DEXTER_LAB.hearthCanvasHubLiveSurfaceIdentityUnifiedVisible2dOutput",
       "DEXTER_LAB.hearthCanvasHubCompositeFirstFastViewDeferredHexReceiver",
       "DEXTER_LAB.hearthCanvasCompositeFirstFastViewDeferredHexReceiver",
@@ -1877,6 +2282,7 @@
     root.HEARTH_CANVAS_HUB_RECEIPT = receipt;
     root.HEARTH_CANVAS_PARENT_RECEIPT = receipt;
     root.HEARTH_CANVAS_AUTHORITY_RECEIPT = receipt;
+    root.HEARTH_CANVAS_HUB_ZERO_RECT_CANONICAL_SURFACE_BINDING_REPAIR_RECEIPT = receipt;
     root.HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_RECEIPT = receipt;
     root.HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT = receipt;
     root.HEARTH_CANVAS_REPORT = receipt;
@@ -1885,12 +2291,14 @@
     hearth.canvasHubReceipt = receipt;
     hearth.canvasParentReceipt = receipt;
     hearth.canvasAuthorityReceipt = receipt;
+    hearth.canvasHubZeroRectCanonicalSurfaceBindingRepairReceipt = receipt;
     hearth.canvasHubLiveSurfaceIdentityUnifiedVisible2dOutputReceipt = receipt;
     hearth.canvasHubCompositeFirstFastViewDeferredHexReceiverReceipt = receipt;
     hearth.canvasReport = receipt;
 
     lab.hearthCanvasReceipt = receipt;
     lab.hearthCanvasHubReceipt = receipt;
+    lab.hearthCanvasHubZeroRectCanonicalSurfaceBindingRepairReceipt = receipt;
     lab.hearthCanvasHubLiveSurfaceIdentityUnifiedVisible2dOutputReceipt = receipt;
     lab.hearthCanvasReport = receipt;
 
@@ -1906,8 +2314,9 @@
       reason,
       contract: CONTRACT,
       renewalContract: RENEWAL_CONTRACT,
+      internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
       canvasSurfaceReady: state.canvasSurfaceReady,
-      canvasAcceptanceScanConfirmed: state.canvasAcceptanceScanConfirmed,
+      canvasRectNonzero: state.canvasRectNonzero,
       visualPassClaimed: false
     });
 
@@ -1964,7 +2373,7 @@
       state.booting = true;
       state.startedAt = nowIso();
       state.updatedAt = state.startedAt;
-      state.postgameStatus = "CANVAS_BOOTING_LIVE_SURFACE_IDENTITY";
+      state.postgameStatus = "CANVAS_BOOTING_ZERO_RECT_CANONICAL_SURFACE_BINDING_REPAIR";
 
       publishApiAliases();
       observeNeighborAuthorities();
@@ -1976,14 +2385,14 @@
       state.updatedAt = nowIso();
 
       state.firstFailedCoordinate = state.canvasSurfaceReady
-        ? "NONE_CANVAS_BOOTED_DOM_SURFACE_READY"
+        ? "NONE_CANVAS_BOOTED_CANONICAL_DOM_SURFACE_READY"
         : state.firstFailedCoordinate;
       state.recommendedNextFile = state.canvasSurfaceReady ? ROUTE_CONDUCTOR_FILE : FILE;
       state.recommendedNextAction = state.canvasSurfaceReady
-        ? "DELIVER_ROUTE_PRESENTATION_PLATTER_PACKET"
+        ? "DELIVER_ROUTE_PRESENTATION_PLATTER_PACKET_OR_RUN_CANVAS_SURFACE_TRUTH_PROBE"
         : state.recommendedNextAction;
       state.postgameStatus = state.canvasSurfaceReady
-        ? "CANVAS_BOOTED_VISIBLE_2D_SURFACE_READY_WAITING_ROUTE_PACKET"
+        ? "CANVAS_BOOTED_CANONICAL_VISIBLE_2D_SURFACE_READY_WAITING_ROUTE_PACKET"
         : state.postgameStatus;
 
       publishGlobals("boot-complete");
@@ -2035,6 +2444,8 @@
     currentCanvasParentReceipt: RENEWAL_RECEIPT,
     renewalContract: RENEWAL_CONTRACT,
     renewalReceipt: RENEWAL_RECEIPT,
+    internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
+    internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
     previousRenewalContract: PREVIOUS_RENEWAL_CONTRACT,
     previousRenewalReceipt: PREVIOUS_RENEWAL_RECEIPT,
     version: VERSION,
@@ -2048,9 +2459,16 @@
     pointerFingerFile: POINTER_FINGER_FILE,
     diagnosticRoute: DIAGNOSTIC_ROUTE,
 
+    canonicalCanvasId: CANONICAL_CANVAS_ID,
+    canonicalMountId: CANONICAL_MOUNT_ID,
+    canvasSelectionMode: "CANONICAL_SURFACE_ONLY",
+
     canvasPresentationPlatterAuthority: true,
     liveSurfaceIdentityActive: true,
     unifiedVisible2dOutputActive: true,
+    zeroRectCanonicalSurfaceBindingRepairActive: true,
+    canonicalCanvasSelectionActive: true,
+    temporaryCanvasDisambiguationActive: true,
     domSurfaceCreationAuthority: true,
     canvasAcceptanceScanAuthority: true,
     bilateralRouteCanvasAcceptanceActive: true,
@@ -2142,6 +2560,9 @@
     supportsBilateralRouteCanvasScan: true,
     supportsCanvasAcceptanceScanReturn: true,
     supportsCanvasDomSurfaceCreation: true,
+    supportsCanonicalVisibleCanvasSelection: true,
+    supportsTemporaryCanvasDisambiguation: true,
+    supportsZeroRectRepair: true,
     supportsVisible2dOutput: true,
     supportsControlsViewPackets: true,
     supportsPixelSampleSurfaceProof: true,

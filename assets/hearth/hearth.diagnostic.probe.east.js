@@ -1,80 +1,68 @@
 // /assets/hearth/hearth.diagnostic.probe.east.js
 // HEARTH_DIAGNOSTIC_PROBE_EAST_SERVED_SOURCE_FILE_COMPOSITION_TNT_v1
+// Internal controlled renewal:
+// HEARTH_DIAGNOSTIC_PROBE_EAST_ANCHOR_SAFE_CHRONOLOGY_OBSERVATION_TNT_v1_1
 // Full-file replacement.
 // Diagnostic probe EAST child only.
 // Purpose:
-// - Add the under-hood EAST probe required by North v9 eight-way bridge.
-// - Read source-side file composition and bridge surfaces without renewing diagnostic rail EAST.
-// - Confirm whether the visible diagnostic receiver can keep calling NORTH only.
-// - Inspect loaded script composition, global authority footprints, dataset bridge surfaces,
+// - Preserve the public v1 Probe EAST contract expected by North chronology.
+// - Fix the chronology failure class where the script is already present but the Probe EAST
+//   authority is not observed at HEARTH.diagnosticProbeEast.
+// - Publish the Probe EAST authority immediately and synchronously before any target probing.
+// - Preserve runProbeEast as the public call method expected by North.
+// - Read source-side file composition, script footprints, global authority footprints,
 //   target-stage/mount/canvas/expression-surface selectors, and source-to-canvas handoff claims.
-// - Distinguish served source presence from rendered-target proof.
-// - Preserve Rail EAST as the source-footprint evidence standard and Probe EAST as the
-//   file-composition / bridge-surface under-hood instrument.
-// - Treat stale script query keys as secondary if rendered/global authority proves the current contract.
-// - Report missing canvas parent / expression surface / finger composition as probe evidence, not repair.
-// - Preserve no production mutation, no cache repair, no runtime restart, no Canvas release,
-//   no Macro West release, no visual-pass claim, no generated image, no GraphicBox, no WebGL.
-//
-// Does not own:
-// - final PRIMARY_CASE selection
-// - final recommendation selection
-// - diagnostic UI
-// - diagnostic receiver HTML
-// - Rail EAST replacement
-// - rendered-target proof
-// - hit-test proof
-// - packet formatting
-// - Hearth repair
-// - production mutation
-// - cache mutation
-// - runtime restart
-// - Canvas release
-// - Macro West release
-// - terrain/material/hydrology truth
-// - control implementation
-// - canvas implementation
-// - bishop implementation
-// - queen implementation
+// - Distinguish diagnostic-anchor failure from production/canvas failure.
+// - Preserve Rail EAST as the source-footprint evidence standard.
+// - Preserve Probe EAST as the under-hood file-composition / bridge-surface instrument.
+// - Do not renew Rail EAST.
+// - Do not mutate production, route, cache, controls, canvas, diagnostics chronology, or receiver HTML.
+// - Do not claim F13, F21, ready text, final readiness, visual pass, generated image, GraphicBox, or WebGL.
 
 (() => {
   "use strict";
 
-  const CONTRACT = "HEARTH_DIAGNOSTIC_PROBE_EAST_SERVED_SOURCE_FILE_COMPOSITION_TNT_v1";
-  const RECEIPT = "HEARTH_DIAGNOSTIC_PROBE_EAST_SERVED_SOURCE_FILE_COMPOSITION_RECEIPT_v1";
+  const root = typeof window !== "undefined" ? window : globalThis;
+  const doc = root.document || null;
+
+  const CONTRACT =
+    "HEARTH_DIAGNOSTIC_PROBE_EAST_SERVED_SOURCE_FILE_COMPOSITION_TNT_v1";
+  const RECEIPT =
+    "HEARTH_DIAGNOSTIC_PROBE_EAST_SERVED_SOURCE_FILE_COMPOSITION_RECEIPT_v1";
+
+  const INTERNAL_IMPLEMENTATION_CONTRACT =
+    "HEARTH_DIAGNOSTIC_PROBE_EAST_ANCHOR_SAFE_CHRONOLOGY_OBSERVATION_TNT_v1_1";
+  const INTERNAL_IMPLEMENTATION_RECEIPT =
+    "HEARTH_DIAGNOSTIC_PROBE_EAST_ANCHOR_SAFE_CHRONOLOGY_OBSERVATION_RECEIPT_v1_1";
 
   const VERSION =
-    "2026-06-05.hearth-diagnostic-probe-east-served-source-file-composition-v1";
+    "2026-06-07.hearth-diagnostic-probe-east-anchor-safe-chronology-observation-v1-1";
 
   const FILE = "/assets/hearth/hearth.diagnostic.probe.east.js";
   const TARGET_ROUTE = "/showroom/globe/hearth/";
   const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
 
   const PARENT_NORTH_CONTRACT =
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_EIGHT_WAY_PROBE_BRIDGE_ORCHESTRATOR_TNT_v9";
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_TNT_v11";
   const PARENT_NORTH_RECEIPT =
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_EIGHT_WAY_PROBE_BRIDGE_ORCHESTRATOR_RECEIPT_v9";
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_RECEIPT_v11";
+
+  const PREVIOUS_PARENT_NORTH_CONTRACT =
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_EIGHT_WAY_PROBE_BRIDGE_ORCHESTRATOR_TNT_v9";
 
   const RAIL_EAST_CONTRACT =
     "HEARTH_DIAGNOSTIC_RAIL_EAST_SERVED_SOURCE_EVIDENCE_TNT_v1";
   const RAIL_EAST_IMPLEMENTATION_CONTRACT =
     "HEARTH_DIAGNOSTIC_EAST_CANVAS_EXPRESSION_SOURCE_FOOTPRINT_ALIGNMENT_TNT_v8";
 
-  const PROBE_NORTH_CONTRACT =
-    "HEARTH_DIAGNOSTIC_PROBE_NORTH_FILE_COMPOSITION_ZONE_COORDINATOR_TNT_v1";
-  const PROBE_SOUTH_CONTRACT =
-    "HEARTH_DIAGNOSTIC_PROBE_SOUTH_PACKET_MEANING_FILE_COMPOSITION_TNT_v1";
-  const PROBE_WEST_CONTRACT =
-    "HEARTH_DIAGNOSTIC_PROBE_WEST_RENDERED_TARGET_FILE_COMPOSITION_TNT_v1";
-
-  const CURRENT_HTML_CONTRACT =
+  const EXPECTED_HTML_CONTRACT =
     "HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1";
-  const CURRENT_INDEX_JS_CONTRACT =
+  const EXPECTED_INDEX_JS_CONTRACT =
     "HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4";
-  const CURRENT_ROUTE_CONDUCTOR_CONTRACT =
+  const EXPECTED_ROUTE_CONDUCTOR_CONTRACT =
+    "HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC_TNT_v10";
+  const EXPECTED_ROUTE_CONDUCTOR_LINEAGE_CONTRACT =
     "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_TNT_v9_9";
-  const ROUTE_CONDUCTOR_SCRIPT_CACHE_CONTRACT =
-    "HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION_TNT_v9_7";
   const EXPECTED_CONTROL_CONTRACT =
     "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE_TNT_v1";
   const EXPECTED_CANVAS_CONTRACT =
@@ -83,19 +71,20 @@
   const FILES = Object.freeze({
     railNorth: "/assets/hearth/hearth.diagnostic.rail.js",
     railEast: "/assets/hearth/hearth.diagnostic.east.js",
-    railSouth: "/assets/hearth/hearth.diagnostic.south.js",
     railWest: "/assets/hearth/hearth.diagnostic.west.js",
+    railSouth: "/assets/hearth/hearth.diagnostic.south.js",
 
     probeNorth: "/assets/hearth/hearth.diagnostic.probe.north.js",
     probeEast: FILE,
-    probeSouth: "/assets/hearth/hearth.diagnostic.probe.south.js",
     probeWest: "/assets/hearth/hearth.diagnostic.probe.west.js",
+    probeCanvasSurfaceTruth:
+      "/assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js",
+    probeSouth: "/assets/hearth/hearth.diagnostic.probe.south.js",
 
     index: "/showroom/globe/hearth/index.js",
     routeConductor: "/showroom/globe/hearth/hearth.js",
     controls: "/assets/hearth/hearth.controls.js",
     canvas: "/assets/hearth/hearth.canvas.js",
-
     hexAuthority: "/assets/hearth/hearth.hex.four-pair.authority.js",
     hexSurface: "/assets/hearth/hearth.hex.surface.js",
 
@@ -106,15 +95,9 @@
 
     macroWest: "/assets/hearth/hearth.west.index-handoff.table.js",
 
-    canvasNorth: "/assets/hearth/hearth.canvas.north.js",
-    canvasEast: "/assets/hearth/hearth.canvas.east.js",
-    canvasSouth: "/assets/hearth/hearth.canvas.south.js",
-    canvasWest: "/assets/hearth/hearth.canvas.west.js",
-
-    bishopNorth: "/assets/hearth/hearth.bishop.north.js",
-    bishopEast: "/assets/hearth/hearth.bishop.east.js",
-    bishopSouth: "/assets/hearth/hearth.bishop.south.js",
-    bishopWest: "/assets/hearth/hearth.bishop.west.js",
+    landChannel: "/assets/hearth/hearth.land.channel.js",
+    waterChannel: "/assets/hearth/hearth.water.channel.js",
+    airChannel: "/assets/hearth/hearth.air.channel.js",
 
     fingerBoundary: "/assets/hearth/hearth.canvas.finger.boundary.js",
     fingerMass: "/assets/hearth/hearth.canvas.finger.mass.js",
@@ -122,78 +105,7 @@
     fingerPointer: "/assets/hearth/hearth.canvas.finger.pointer.js",
     fingerLight: "/assets/hearth/hearth.canvas.finger.light.js",
     fingerInspect: "/assets/hearth/hearth.canvas.finger.inspect.js",
-    fingerComposite: "/assets/hearth/hearth.canvas.finger.composite.js",
-
-    landChannel: "/assets/hearth/hearth.land.channel.js",
-    waterChannel: "/assets/hearth/hearth.water.channel.js",
-    airChannel: "/assets/hearth/hearth.air.channel.js"
-  });
-
-  const EXPECTED_CONTRACTS = Object.freeze({
-    html: CURRENT_HTML_CONTRACT,
-    index: CURRENT_INDEX_JS_CONTRACT,
-    routeConductor: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
-    routeConductorScriptCache: ROUTE_CONDUCTOR_SCRIPT_CACHE_CONTRACT,
-    controls: EXPECTED_CONTROL_CONTRACT,
-    canvas: EXPECTED_CANVAS_CONTRACT,
-    railEast: RAIL_EAST_CONTRACT,
-    railEastImplementation: RAIL_EAST_IMPLEMENTATION_CONTRACT,
-    probeNorth: PROBE_NORTH_CONTRACT,
-    probeEast: CONTRACT,
-    probeSouth: PROBE_SOUTH_CONTRACT,
-    probeWest: PROBE_WEST_CONTRACT
-  });
-
-  const ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS = Object.freeze([
-    CURRENT_ROUTE_CONDUCTOR_CONTRACT,
-    "HEARTH_ROUTE_CONDUCTOR_CONTROL_FILE_ADMISSION_AND_HANDSHAKE_DELIVERY_TNT_v9_8",
-    ROUTE_CONDUCTOR_SCRIPT_CACHE_CONTRACT,
-    "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_TNT_v9_6",
-    "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_TNT_v9_5",
-    "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_TNT_v9_4",
-    "HEARTH_ROUTE_CONDUCTOR_CONTROL_OWNERSHIP_PASSIVE_WATCHDOG_REPAIR_TNT_v9_3",
-    "HEARTH_ROUTE_CONDUCTOR_NORTH_STAR_COMPLETION_CYCLE_GOVERNOR_TNT_v9_2"
-  ]);
-
-  const FALLBACK = Object.freeze({
-    UNKNOWN: "UNKNOWN",
-    NONE: "none",
-    NOT_FOUND: "NOT_FOUND",
-    NOT_APPLICABLE: "NOT_APPLICABLE",
-    UNREADABLE: "UNREADABLE",
-    INACCESSIBLE: "INACCESSIBLE",
-    BLOCKED: "BLOCKED",
-    PRESENT: "PRESENT",
-    ABSENT: "ABSENT",
-    COMPLETE: "COMPLETE",
-    PARTIAL: "PARTIAL",
-    FAILED: "FAILED",
-    READY: "READY",
-    ACTIVE: "ACTIVE",
-    ACTIVE_DEGRADED: "ACTIVE_DEGRADED",
-    HANDSHAKE_PENDING: "HANDSHAKE_PENDING",
-    EXPECTED_NOT_YET_BUILT: "EXPECTED_NOT_YET_BUILT",
-    EXPECTED_NOT_YET_WIRED: "EXPECTED_NOT_YET_WIRED"
-  });
-
-  const STATUS = Object.freeze({
-    READY: "READY",
-    RUNNING: "RUNNING",
-    COMPLETE: "COMPLETE",
-    PARTIAL: "PARTIAL",
-    FAILED: "FAILED"
-  });
-
-  const FINAL_FALSE = Object.freeze({
-    f13Claimed: false,
-    f21EligibleForNorth: false,
-    f21ClaimedByDiagnosticRail: false,
-    readyTextAllowed: false,
-    readyTextClaimedByDiagnosticRail: false,
-    visualPassClaimed: false,
-    generatedImage: false,
-    graphicBox: false,
-    webGL: false
+    fingerComposite: "/assets/hearth/hearth.canvas.finger.composite.js"
   });
 
   const TARGET_SELECTORS = Object.freeze({
@@ -214,22 +126,26 @@
       "[data-hearth-canvas-expression-mount]"
     ],
     canvas: [
+      "canvas[data-hearth-visible-canvas='true']",
+      "canvas[data-hearth-expression-surface='true']",
       "canvas[data-hearth-canvas='true']",
       "canvas[data-hearth-canvas-texture='true']",
       "canvas[data-hearth-planet-canvas='true']",
+      "canvas[data-hearth-canvas-hub='true']",
       "#hearthCanvasMount canvas",
       "[data-hearth-canvas-mount] canvas",
       "[data-hearth-expression-mount] canvas",
       "canvas"
     ],
     expressionSurface: [
-      "[data-hearth-canvas-texture='true']",
+      "canvas[data-hearth-visible-canvas='true']",
+      "canvas[data-hearth-expression-surface='true']",
+      "[data-hearth-expression-surface='true']",
+      "[data-hearth-canvas-surface]",
       "[data-hearth-visible-planet='true']",
       "[data-hearth-visible-globe='true']",
       "[data-hearth-visible-globe-carrier]",
       "[data-hearth-base-globe-carrier]",
-      "[data-hearth-canvas-surface]",
-      "[data-hearth-expression-surface]",
       "[data-hearth-planet-surface]",
       "[data-hearth-surface-layer]",
       "[data-hearth-land-layer]",
@@ -242,14 +158,6 @@
   });
 
   const GLOBAL_PATHS = Object.freeze({
-    railNorth: [
-      "HEARTH.diagnosticRailNorth",
-      "HEARTH.diagnosticNorth",
-      "HEARTH_DIAGNOSTIC_RAIL_NORTH",
-      "HEARTH_DIAGNOSTIC_NORTH",
-      "DEXTER_LAB.hearthDiagnosticRailNorth",
-      "DEXTER_LAB.hearthDiagnosticNorth"
-    ],
     railEast: [
       "HEARTH.diagnosticRailEast",
       "HEARTH.diagnosticEast",
@@ -258,23 +166,6 @@
       "DEXTER_LAB.hearthDiagnosticRailEast",
       "DEXTER_LAB.hearthDiagnosticEast"
     ],
-    railSouth: [
-      "HEARTH.diagnosticRailSouth",
-      "HEARTH.diagnosticSouth",
-      "HEARTH_DIAGNOSTIC_RAIL_SOUTH",
-      "HEARTH_DIAGNOSTIC_SOUTH",
-      "DEXTER_LAB.hearthDiagnosticRailSouth",
-      "DEXTER_LAB.hearthDiagnosticSouth"
-    ],
-    railWest: [
-      "HEARTH.diagnosticRailWest",
-      "HEARTH.diagnosticWest",
-      "HEARTH_DIAGNOSTIC_RAIL_WEST",
-      "HEARTH_DIAGNOSTIC_WEST",
-      "DEXTER_LAB.hearthDiagnosticRailWest",
-      "DEXTER_LAB.hearthDiagnosticWest"
-    ],
-
     probeNorth: [
       "HEARTH.diagnosticProbeNorth",
       "HEARTH.diagnosticNorthProbe",
@@ -285,13 +176,8 @@
       "HEARTH.diagnosticProbeEast",
       "HEARTH.diagnosticEastProbe",
       "HEARTH_DIAGNOSTIC_PROBE_EAST",
+      "HEARTH_DIAGNOSTIC_EAST_PROBE",
       "DEXTER_LAB.hearthDiagnosticProbeEast"
-    ],
-    probeSouth: [
-      "HEARTH.diagnosticProbeSouth",
-      "HEARTH.diagnosticSouthProbe",
-      "HEARTH_DIAGNOSTIC_PROBE_SOUTH",
-      "DEXTER_LAB.hearthDiagnosticProbeSouth"
     ],
     probeWest: [
       "HEARTH.diagnosticProbeWest",
@@ -299,7 +185,18 @@
       "HEARTH_DIAGNOSTIC_PROBE_WEST",
       "DEXTER_LAB.hearthDiagnosticProbeWest"
     ],
-
+    probeCanvasSurfaceTruth: [
+      "HEARTH.diagnosticProbeCanvasSurfaceTruth",
+      "HEARTH.diagnosticCanvasSurfaceTruthProbe",
+      "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
+      "DEXTER_LAB.hearthDiagnosticProbeCanvasSurfaceTruth"
+    ],
+    probeSouth: [
+      "HEARTH.diagnosticProbeSouth",
+      "HEARTH.diagnosticSouthProbe",
+      "HEARTH_DIAGNOSTIC_PROBE_SOUTH",
+      "DEXTER_LAB.hearthDiagnosticProbeSouth"
+    ],
     index: [
       "HEARTH.indexJs",
       "HEARTH.indexBridge",
@@ -310,52 +207,42 @@
       "DEXTER_LAB.hearthIndexJs"
     ],
     routeConductor: [
-      "HEARTH.routeConductorBishopQueenCanvasRecognitionFunnel",
-      "HEARTH.hearthRouteConductorBishopQueenCanvasRecognitionFunnel",
       "HEARTH.routeConductor",
       "HEARTH.southRouteConductor",
-      "HEARTH.routeConductorControlFileAdmissionAndHandshakeDelivery",
-      "HEARTH.routeConductorCanvasExpressionHubVisibleGlobeProofIngestion",
-      "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL",
+      "HEARTH.routeConductorBishopQueenCanvasRecognitionFunnel",
+      "HEARTH.hearthRouteConductorBishopQueenCanvasRecognitionFunnel",
+      "HEARTH.routeConductorGovernedSourceStackAdmissionCanvasHandoff",
       "HEARTH_ROUTE_CONDUCTOR",
       "HEARTH_SOUTH_ROUTE_CONDUCTOR",
-      "DEXTER_LAB.hearthRouteConductorBishopQueenCanvasRecognitionFunnel",
-      "DEXTER_LAB.hearthRouteConductor"
+      "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL",
+      "DEXTER_LAB.hearthRouteConductor",
+      "DEXTER_LAB.hearthRouteConductorBishopQueenCanvasRecognitionFunnel"
     ],
     controls: [
       "HEARTH.controls",
-      "HEARTH.planetControls",
+      "HEARTH.planetaryControls",
       "HEARTH.motionTouchControls",
       "HEARTH.viewControls",
       "HEARTH_CONTROLS",
-      "HEARTH_PLANET_CONTROLS",
       "HEARTH_PLANETARY_CONTROLS",
       "HEARTH_MOTION_TOUCH_CONTROLS",
       "DEXTER_LAB.hearthControls"
     ],
     canvas: [
-      "HEARTH.canvasLocalStation",
-      "HEARTH.canvasStation",
-      "HEARTH.canvasChildDistributionSwitchboard",
+      "HEARTH.canvas",
       "HEARTH.canvasHub",
       "HEARTH.canvasParent",
-      "HEARTH.canvasExpressionHubVisibleBaseGlobeCarrier",
-      "HEARTH.canvasVisibleBaseGlobeCarrier",
-      "HEARTH.canvasExpressionHub",
-      "HEARTH.canvasFingerManager",
-      "HEARTH.canvas",
-      "HEARTH_CANVAS_LOCAL_STATION",
-      "HEARTH_CANVAS_STATION",
-      "HEARTH_CANVAS_CHILD_DISTRIBUTION_SWITCHBOARD",
+      "HEARTH.canvasAuthority",
+      "HEARTH.canvasVisiblePlanet",
+      "HEARTH.canvasHubGovernedSourcePacketVisible2dReceiver",
+      "HEARTH_CANVAS",
       "HEARTH_CANVAS_HUB",
       "HEARTH_CANVAS_PARENT",
-      "HEARTH_CANVAS_EXPRESSION_HUB",
-      "HEARTH_CANVAS_FINGER_MANAGER",
-      "HEARTH_CANVAS",
-      "DEXTER_LAB.hearthCanvasLocalStation",
+      "HEARTH_CANVAS_AUTHORITY",
+      "HEARTH_CANVAS_HUB_GOVERNED_SOURCE_PACKET_VISIBLE_2D_RECEIVER",
+      "DEXTER_LAB.hearthCanvas",
       "DEXTER_LAB.hearthCanvasHub",
-      "DEXTER_LAB.hearthCanvasParent",
-      "DEXTER_LAB.hearthCanvas"
+      "DEXTER_LAB.hearthCanvasParent"
     ],
     hexAuthority: [
       "HEARTH.hexFourPairAuthority",
@@ -366,102 +253,53 @@
     ],
     hexSurface: [
       "HEARTH.hexSurface",
-      "HEARTH.hexFourPairSurface",
+      "HEARTH.hexSurfaceRenderer",
       "HEARTH_HEX_SURFACE",
-      "HEARTH_HEX_FOUR_PAIR_SURFACE",
       "DEXTER_LAB.hearthHexSurface"
     ],
     labNorth: [
       "LAB_RUNTIME_TABLE",
       "LAB_RUNTIME_TABLE_NORTH",
-      "LAB_CARDINAL_RUNTIME_TABLE_NORTH",
       "HEARTH.northCommandRuntimeTable",
-      "HEARTH.northCentralTrainStation",
-      "DEXTER_LAB.runtimeTable",
-      "DEXTER_LAB.cardinalRuntimeTableNorth"
+      "DEXTER_LAB.runtimeTable"
     ],
     labEast: [
       "LAB_RUNTIME_TABLE_EAST",
-      "LAB_CARDINAL_RUNTIME_TABLE_EAST",
       "HEARTH_EAST_FIBONACCI_MAGNIFIER",
-      "DEXTER_LAB.runtimeTableEast",
-      "DEXTER_LAB.cardinalRuntimeTableEast"
+      "DEXTER_LAB.runtimeTableEast"
     ],
     labSouth: [
       "LAB_RUNTIME_TABLE_SOUTH",
       "LAB_RUNTIME_TABLE_SOUTH_PRIMARY_GATE",
-      "LAB_CARDINAL_RUNTIME_TABLE_SOUTH",
       "HEARTH_VISIBLE_STATE_COMPOSER",
-      "DEXTER_LAB.runtimeTableSouth",
-      "DEXTER_LAB.southPrimaryGate"
+      "DEXTER_LAB.runtimeTableSouth"
     ],
     labWest: [
       "LAB_RUNTIME_TABLE_WEST",
-      "LAB_CARDINAL_RUNTIME_TABLE_WEST",
       "LAB_GAP_CLASSIFIER_WEST",
       "HEARTH.runtimeTableWest",
-      "HEARTH.westAdmissibility",
-      "DEXTER_LAB.runtimeTableWest",
-      "DEXTER_LAB.gapClassifierWest"
+      "DEXTER_LAB.runtimeTableWest"
     ],
     macroWest: [
       "HEARTH_WEST_INDEX_HANDOFF_TABLE",
       "HEARTH.westIndexHandoffTable",
       "HEARTH.macroWestBridge",
-      "HEARTH.westBishopCanvasBridge",
       "DEXTER_LAB.hearthWestIndexHandoffTable"
-    ],
-    bishopNorth: [
-      "HEARTH.bishopNorth",
-      "HEARTH.northBishop",
-      "HEARTH_BISHOP_NORTH",
-      "HEARTH_NORTH_BISHOP",
-      "DEXTER_LAB.hearthBishopNorth"
-    ],
-    bishopEast: [
-      "HEARTH.bishopEast",
-      "HEARTH.eastBishop",
-      "HEARTH_BISHOP_EAST",
-      "HEARTH_EAST_BISHOP",
-      "DEXTER_LAB.hearthBishopEast"
-    ],
-    bishopSouth: [
-      "HEARTH.bishopSouth",
-      "HEARTH.southBishop",
-      "HEARTH_BISHOP_SOUTH",
-      "HEARTH_SOUTH_BISHOP",
-      "DEXTER_LAB.hearthBishopSouth"
-    ],
-    bishopWest: [
-      "HEARTH.bishopWest",
-      "HEARTH.westBishop",
-      "HEARTH_BISHOP_WEST",
-      "HEARTH_WEST_BISHOP",
-      "DEXTER_LAB.hearthBishopWest"
-    ],
-    queen: [
-      "HEARTH.queenCanvasRecognition",
-      "HEARTH.canvasQueen",
-      "HEARTH.routeConductorQueen",
-      "HEARTH_QUEEN_CANVAS_RECOGNITION",
-      "HEARTH_ROUTE_CONDUCTOR_QUEEN",
-      "DEXTER_LAB.hearthQueenCanvasRecognition"
     ],
     landChannel: [
       "HEARTH.landChannel",
-      "HEARTH_HEARTH_LAND_CHANNEL",
       "HEARTH_LAND_CHANNEL",
       "DEXTER_LAB.hearthLandChannel"
     ],
     waterChannel: [
       "HEARTH.waterChannel",
-      "HEARTH_HEARTH_WATER_CHANNEL",
       "HEARTH_WATER_CHANNEL",
       "DEXTER_LAB.hearthWaterChannel"
     ],
     airChannel: [
       "HEARTH.airChannel",
       "HEARTH_AIR_CHANNEL",
+      "HEARTH.atmosphere",
       "DEXTER_LAB.hearthAirChannel"
     ]
   });
@@ -469,52 +307,92 @@
   const FINGER_PATHS = Object.freeze({
     boundary: [
       "HEARTH.canvasFingerBoundary",
-      "HEARTH.boundaryFinger",
       "HEARTH_CANVAS_FINGER_BOUNDARY",
       "DEXTER_LAB.hearthCanvasFingerBoundary"
     ],
     mass: [
       "HEARTH.canvasFingerMass",
-      "HEARTH.massFinger",
       "HEARTH_CANVAS_FINGER_MASS",
       "DEXTER_LAB.hearthCanvasFingerMass"
     ],
     surface: [
       "HEARTH.canvasFingerSurface",
-      "HEARTH.surfaceFinger",
       "HEARTH_CANVAS_FINGER_SURFACE",
       "DEXTER_LAB.hearthCanvasFingerSurface"
     ],
     pointer: [
       "HEARTH.canvasFingerPointer",
-      "HEARTH.pointerFinger",
       "HEARTH_CANVAS_FINGER_POINTER",
       "DEXTER_LAB.hearthCanvasFingerPointer"
     ],
     light: [
       "HEARTH.canvasFingerLight",
-      "HEARTH.lightFinger",
       "HEARTH_CANVAS_FINGER_LIGHT",
       "DEXTER_LAB.hearthCanvasFingerLight"
     ],
     inspect: [
       "HEARTH.canvasFingerInspect",
-      "HEARTH.inspectFinger",
       "HEARTH_CANVAS_FINGER_INSPECT",
       "DEXTER_LAB.hearthCanvasFingerInspect"
     ],
     composite: [
       "HEARTH.canvasFingerComposite",
-      "HEARTH.compositeFinger",
       "HEARTH_CANVAS_FINGER_COMPOSITE",
       "DEXTER_LAB.hearthCanvasFingerComposite"
     ]
   });
 
-  const root = typeof window !== "undefined" ? window : globalThis;
-  const doc = root.document || null;
-  const api = {};
+  const ACCEPTED_INDEX_CONTRACTS = Object.freeze([
+    EXPECTED_INDEX_JS_CONTRACT,
+    "HEARTH_INDEX_JS_VISIBLE_EXPRESSION_CHAIN_LOADER_BRIDGE_TNT_v5_4_2",
+    "HEARTH_INDEX_JS_PAGE_RECEIPT_TARGET_BINDING_RENEWAL_TNT_v5_4_1",
+    "HEARTH_INDEX_JS_PASSIVE_BUTTON_RECEIPT_CORRIDOR_ALIGNMENT_TNT_v5_4_3"
+  ]);
 
+  const ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS = Object.freeze([
+    EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
+    EXPECTED_ROUTE_CONDUCTOR_LINEAGE_CONTRACT,
+    "HEARTH_ROUTE_CONDUCTOR_GOVERNED_SOURCE_STACK_ADMISSION_CANVAS_HANDOFF_TNT_v10_3",
+    "HEARTH_ROUTE_CONDUCTOR_CANVAS_DOM_SURFACE_ADMISSION_AND_RELEASE_TNT_v10_1",
+    "HEARTH_ROUTE_CONDUCTOR_CONTROL_FILE_ADMISSION_AND_HANDSHAKE_DELIVERY_TNT_v9_8",
+    "HEARTH_ROUTE_CONDUCTOR_CONTROL_HANDSHAKE_INTEGRATION_TNT_v9_7",
+    "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_TNT_v9_6",
+    "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_TNT_v9_5",
+    "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_TNT_v9_4"
+  ]);
+
+  const NO_CLAIMS = Object.freeze({
+    f13Claimed: false,
+    f21EligibleForNorth: false,
+    f21ClaimedByProbe: false,
+    f21ClaimedByDiagnosticRail: false,
+    readyTextAllowed: false,
+    readyTextClaimed: false,
+    readyTextClaimedByDiagnosticRail: false,
+    visualPassClaimed: false,
+    finalVisualPassClaimed: false,
+    generatedImage: false,
+    graphicBox: false,
+    webGL: false,
+    webgl: false
+  });
+
+  const UPPER_NO_CLAIMS = Object.freeze({
+    F13_CLAIMED: false,
+    F21_ELIGIBLE_FOR_NORTH: false,
+    F21_CLAIMED_BY_PROBE: false,
+    F21_CLAIMED_BY_DIAGNOSTIC_RAIL: false,
+    READY_TEXT_ALLOWED: false,
+    READY_TEXT_CLAIMED: false,
+    READY_TEXT_CLAIMED_BY_DIAGNOSTIC_RAIL: false,
+    VISUAL_PASS_CLAIMED: false,
+    FINAL_VISUAL_PASS_CLAIMED: false,
+    GENERATED_IMAGE: false,
+    GRAPHIC_BOX: false,
+    WEBGL: false
+  });
+
+  const api = {};
   let lastState = null;
   let lastEvidencePacket = null;
 
@@ -536,26 +414,31 @@
 
   function safeString(value, fallback = "") {
     if (value === undefined || value === null) return fallback;
-    return String(value);
+    try {
+      return String(value);
+    } catch (_error) {
+      return fallback;
+    }
   }
 
-  function clean(value, limit = 2000) {
+  function clean(value, limit = 1600) {
     return safeString(value)
       .replace(/\s+/g, " ")
       .trim()
       .slice(0, limit);
   }
 
-  function boolText(value, fallback = FALLBACK.UNKNOWN) {
+  function boolText(value, fallback = "UNKNOWN") {
     if (value === true || value === "true" || value === "TRUE" || value === 1 || value === "1") return "true";
     if (value === false || value === "false" || value === "FALSE" || value === 0 || value === "0") return "false";
     return fallback;
   }
 
-  function boolValue(value, fallback = false) {
-    if (value === true || value === "true" || value === "TRUE" || value === 1 || value === "1") return true;
-    if (value === false || value === "false" || value === "FALSE" || value === 0 || value === "0") return false;
-    return fallback;
+  function firstDefined(...values) {
+    for (const value of values) {
+      if (value !== undefined && value !== null && value !== "") return value;
+    }
+    return undefined;
   }
 
   function clonePlain(value) {
@@ -568,17 +451,9 @@
     }
   }
 
-  function addNote(state, note) {
-    const value = clean(note, 1600);
-    if (!state || !Array.isArray(state.probeEastNotes) || !value) return;
-    if (!state.probeEastNotes.includes(value)) state.probeEastNotes.push(value);
-  }
-
-  function firstDefined(...values) {
-    for (const value of values) {
-      if (value !== undefined && value !== null && value !== "") return value;
-    }
-    return undefined;
+  function ensureObject(parent, key) {
+    if (!parent[key] || typeof parent[key] !== "object") parent[key] = {};
+    return parent[key];
   }
 
   function readPath(base, path) {
@@ -595,6 +470,12 @@
     } catch (_error) {
       return null;
     }
+  }
+
+  function addNote(state, note) {
+    if (!state || !Array.isArray(state.notes)) return;
+    const text = clean(note, 1200);
+    if (text && !state.notes.includes(text)) state.notes.push(text);
   }
 
   function q(context, selector) {
@@ -621,14 +502,6 @@
       if (found) return found;
     }
     return null;
-  }
-
-  function datasetOf(el) {
-    try {
-      return el && el.dataset ? el.dataset : {};
-    } catch (_error) {
-      return {};
-    }
   }
 
   function readDataset(targetDocument) {
@@ -682,7 +555,12 @@
             : "https://diamondgatebridge.com";
 
       const url = new URL(text, origin);
-      return url.searchParams.get("v") || url.searchParams.get("cache") || url.searchParams.get("version") || "";
+      return (
+        url.searchParams.get("v") ||
+        url.searchParams.get("cache") ||
+        url.searchParams.get("version") ||
+        ""
+      );
     } catch (_error) {
       const match = text.match(/[?&](?:v|cache|version)=([^&]+)/);
       return match ? decodeURIComponent(match[1]) : "";
@@ -705,50 +583,62 @@
     }
   }
 
-  function findScript(targetDocument, file, targetWindow) {
-    const scripts = qa(targetDocument, "script[src]");
-    return scripts.find((script) => scriptMatches(script, file, targetWindow)) || null;
-  }
-
   function readScript(targetDocument, targetWindow, file) {
-    const script = targetDocument ? findScript(targetDocument, file, targetWindow) : null;
+    const scripts = qa(targetDocument, "script[src]");
+    const script = scripts.find((item) => scriptMatches(item, file, targetWindow)) || null;
     const rawSrc = script && script.getAttribute ? script.getAttribute("src") : "";
 
     return {
       file,
       present: Boolean(script),
-      src: script ? normalizeSrc(rawSrc, targetWindow) : FALLBACK.NOT_FOUND,
-      cacheKey: script ? readCacheKey(rawSrc, targetWindow) : "",
-      datasetContract: script && script.dataset
-        ? clean(firstDefined(
-            script.dataset.contract,
-            script.dataset.hearthContract,
-            script.dataset.hearthDiagnosticExpectedContract,
-            script.dataset.routeConductorCurrentContract,
-            script.dataset.hearthRouteConductorContract,
-            script.dataset.hearthCanvasContract
-          ), 500)
-        : ""
+      src: script ? normalizeSrc(rawSrc, targetWindow) : "NOT_FOUND",
+      cacheKey: script ? readCacheKey(rawSrc, targetWindow) : "NONE",
+      datasetContract:
+        script && script.dataset
+          ? clean(firstDefined(
+              script.dataset.contract,
+              script.dataset.hearthContract,
+              script.dataset.hearthDiagnosticExpectedContract,
+              script.dataset.routeConductorCurrentContract,
+              script.dataset.hearthRouteConductorContract,
+              script.dataset.hearthCanvasContract
+            ), 500)
+          : "NONE"
     };
   }
 
   function readAllScripts(targetDocument, targetWindow) {
     const out = {};
-
     Object.keys(FILES).forEach((key) => {
       out[key] = readScript(targetDocument, targetWindow, FILES[key]);
     });
-
     return out;
   }
 
+  function receiptValue(receipt, keys, fallback = undefined) {
+    if (!isObject(receipt)) return fallback;
+
+    for (const key of keys || []) {
+      if (receipt[key] !== undefined && receipt[key] !== null && receipt[key] !== "") return receipt[key];
+
+      const lower = safeString(key).toLowerCase();
+      for (const candidate of Object.keys(receipt)) {
+        if (candidate.toLowerCase() === lower) {
+          const value = receipt[candidate];
+          if (value !== undefined && value !== null && value !== "") return value;
+        }
+      }
+    }
+
+    return fallback;
+  }
+
   function readReceipt(authority) {
-    if (!authority || !isObject(authority)) return {};
+    if (!authority || (!isObject(authority) && !isFunction(authority))) return {};
 
     const methods = [
       "getReceiptLight",
       "getReceipt",
-      "getProbeNorthReceipt",
       "getProbeEastReceipt",
       "getEastReceipt",
       "getWestReceipt",
@@ -756,7 +646,7 @@
       "getState",
       "getStatus",
       "getReport",
-      "read"
+      "getSummary"
     ];
 
     for (const method of methods) {
@@ -770,7 +660,6 @@
 
     if (isObject(authority.receipt)) return authority.receipt;
     if (isObject(authority.receiptPacket)) return authority.receiptPacket;
-    if (isObject(authority.receiptObject)) return authority.receiptObject;
     if (isObject(authority.state)) return authority.state;
 
     if (
@@ -787,29 +676,8 @@
     return {};
   }
 
-  function receiptValue(receipt, keys, fallback = undefined) {
-    if (!isObject(receipt)) return fallback;
-
-    for (const key of keys || []) {
-      if (receipt[key] !== undefined && receipt[key] !== null && receipt[key] !== "") {
-        return receipt[key];
-      }
-
-      const lower = safeString(key).toLowerCase();
-
-      for (const candidate of Object.keys(receipt)) {
-        if (candidate.toLowerCase() === lower) {
-          const value = receipt[candidate];
-          if (value !== undefined && value !== null && value !== "") return value;
-        }
-      }
-    }
-
-    return fallback;
-  }
-
   function readContract(authority) {
-    if (!authority || !isObject(authority)) return "";
+    if (!authority || (!isObject(authority) && !isFunction(authority))) return "";
 
     const receipt = readReceipt(authority);
 
@@ -842,7 +710,7 @@
 
     for (const path of paths || []) {
       const value = readPath(win, path);
-      if (value && isObject(value)) {
+      if (value && (isObject(value) || isFunction(value))) {
         const receipt = readReceipt(value);
         return {
           path,
@@ -869,7 +737,8 @@
     });
 
     Object.keys(FINGER_PATHS).forEach((key) => {
-      out[`finger${key.charAt(0).toUpperCase()}${key.slice(1)}`] = findAuthority(targetWindow, FINGER_PATHS[key]);
+      const authorityKey = `finger${key.charAt(0).toUpperCase()}${key.slice(1)}`;
+      out[authorityKey] = findAuthority(targetWindow, FINGER_PATHS[key]);
     });
 
     return out;
@@ -912,7 +781,10 @@
         data.contract,
         targetDocument.documentElement.getAttribute("data-contract")
       ), 500);
-      const page = clean(firstDefined(data.page, targetDocument.documentElement.getAttribute("data-page")), 500);
+      const page = clean(firstDefined(
+        data.page,
+        targetDocument.documentElement.getAttribute("data-page")
+      ), 500);
       const route = documentRoute(targetDocument);
 
       return Boolean(
@@ -936,8 +808,8 @@
       const body = targetDocument.body;
       const htmlData = readDataset(targetDocument);
       const bodyData = readBodyDataset(targetDocument);
-
       const route = documentRoute(targetDocument);
+
       const page = clean(firstDefined(htmlData.page, html.getAttribute("data-page")), 500);
       const alias = clean(firstDefined(htmlData.pageAlias, html.getAttribute("data-page-alias")), 500);
       const context = clean(firstDefined(
@@ -1005,7 +877,6 @@
 
     if (opts.targetDocument && opts.targetDocument.documentElement) {
       const targetWindow = opts.targetWindow || opts.targetDocument.defaultView || null;
-
       if (!isDiagnosticReceiver(opts.targetDocument, targetWindow)) {
         state.targetAccessStatus = "TARGET_DOCUMENT_SUPPLIED";
         return {
@@ -1014,7 +885,6 @@
           source: "options.targetDocument"
         };
       }
-
       addNote(state, "PROBE_EAST_IGNORED_SUPPLIED_DIAGNOSTIC_RECEIVER_DOCUMENT");
     }
 
@@ -1022,12 +892,10 @@
       try {
         const targetWindow = opts.targetWindow;
         const targetDocument = targetWindow.document;
-
         if (targetDocument && targetDocument.documentElement && !isDiagnosticReceiver(targetDocument, targetWindow)) {
           state.targetAccessStatus = "TARGET_WINDOW_SUPPLIED";
           return { targetDocument, targetWindow, source: "options.targetWindow" };
         }
-
         addNote(state, "PROBE_EAST_IGNORED_SUPPLIED_DIAGNOSTIC_RECEIVER_WINDOW");
       } catch (error) {
         state.targetAccessStatus = "TARGET_WINDOW_BLOCKED";
@@ -1037,10 +905,10 @@
     }
 
     if (opts.frameElement) {
-      const frameTarget = readFrameTarget(opts.frameElement, state);
-      if (frameTarget) {
+      const suppliedFrameTarget = readFrameTarget(opts.frameElement, state);
+      if (suppliedFrameTarget) {
         state.targetAccessStatus = "TARGET_FRAME_SUPPLIED";
-        return frameTarget;
+        return suppliedFrameTarget;
       }
     }
 
@@ -1053,7 +921,11 @@
 
     if (doc && doc.documentElement && !isDiagnosticReceiver(doc, root) && hasHearthTargetSignals(doc, root)) {
       state.targetAccessStatus = "CURRENT_HEARTH_DOCUMENT";
-      return { targetDocument: doc, targetWindow: root, source: "currentHearthDocument" };
+      return {
+        targetDocument: doc,
+        targetWindow: root,
+        source: "currentHearthDocument"
+      };
     }
 
     state.targetAccessStatus = "SOURCE_ONLY_NO_HEARTH_TARGET";
@@ -1064,7 +936,7 @@
   }
 
   function contractFromDataset(targetDocument) {
-    if (!targetDocument || !targetDocument.documentElement) return FALLBACK.UNKNOWN;
+    if (!targetDocument || !targetDocument.documentElement) return "UNKNOWN";
 
     const data = readDataset(targetDocument);
     const bodyData = readBodyDataset(targetDocument);
@@ -1076,27 +948,29 @@
       data.hearthShellContract,
       html.getAttribute("data-contract"),
       bodyData.hearthHtmlContract
-    ), 500) || FALLBACK.UNKNOWN;
+    ), 500) || "UNKNOWN";
   }
 
   function selectorName(el) {
-    if (!el) return FALLBACK.NOT_FOUND;
+    if (!el) return "NOT_FOUND";
 
     try {
       const tag = el.tagName ? el.tagName.toLowerCase() : "node";
       if (el.id) return `${tag}#${el.id}`;
 
       const attrs = [
-        "data-hearth-globe-stage",
-        "data-hearth-visible-globe-stage",
-        "data-hearth-canvas-stage",
-        "data-hearth-canvas-mount",
-        "data-hearth-expression-mount",
+        "data-hearth-visible-canvas",
         "data-hearth-expression-surface",
-        "data-hearth-canvas-surface",
+        "data-hearth-canvas",
+        "data-hearth-canvas-texture",
+        "data-hearth-planet-canvas",
+        "data-hearth-globe-stage",
+        "data-hearth-canvas-mount",
+        "data-hearth-visible-planet-mount",
+        "data-hearth-expression-mount",
         "data-hearth-visible-planet",
         "data-hearth-visible-globe",
-        "data-hearth-canvas-texture",
+        "data-hearth-canvas-surface",
         "data-hearth-land-layer",
         "data-hearth-water-layer",
         "data-hearth-ocean-layer",
@@ -1119,13 +993,13 @@
 
       return tag;
     } catch (_error) {
-      return FALLBACK.UNREADABLE;
+      return "UNREADABLE";
     }
   }
 
   function rectPacket(el) {
     try {
-      if (!el || !isFunction(el.getBoundingClientRect)) return FALLBACK.NOT_FOUND;
+      if (!el || !isFunction(el.getBoundingClientRect)) return "NOT_FOUND";
       const rect = el.getBoundingClientRect();
 
       return [
@@ -1135,17 +1009,114 @@
         `height:${Math.round(rect.height)}`
       ].join(";");
     } catch (_error) {
-      return FALLBACK.UNREADABLE;
+      return "UNREADABLE";
     }
   }
 
-  function rectNonZero(el) {
+  function rectNonzero(el) {
     try {
       if (!el || !isFunction(el.getBoundingClientRect)) return false;
       const rect = el.getBoundingClientRect();
       return rect.width > 0 && rect.height > 0;
     } catch (_error) {
       return false;
+    }
+  }
+
+  function compactScriptFootprint(scriptMap) {
+    const out = {};
+    Object.keys(scriptMap || {}).forEach((key) => {
+      const script = scriptMap[key] || {};
+      out[key] = {
+        file: script.file || "UNKNOWN",
+        present: Boolean(script.present),
+        src: script.src || "NOT_FOUND",
+        cacheKey: script.cacheKey || "NONE",
+        datasetContract: script.datasetContract || "NONE"
+      };
+    });
+    return out;
+  }
+
+  function compactAuthorityFootprint(authorityMap) {
+    const out = {};
+    Object.keys(authorityMap || {}).forEach((key) => {
+      const found = authorityMap[key] || {};
+      out[key] = {
+        source: found.path || "NONE",
+        present: Boolean(found.authority),
+        contract: found.contract || "UNKNOWN",
+        receiptPresent: Boolean(found.receipt && Object.keys(found.receipt).length)
+      };
+    });
+    return out;
+  }
+
+  function readReceiptStatus(found) {
+    const receipt = found && found.receipt ? found.receipt : {};
+
+    return clean(firstDefined(
+      receiptValue(receipt, ["status", "STATUS", "eastStatus", "westStatus", "southStatus", "probeEastStatus"]),
+      receiptValue(receipt, ["state", "STATE"]),
+      found && found.authority && found.authority.status,
+      found && found.authority && found.authority.state
+    ), 500) || "UNKNOWN";
+  }
+
+  function readAuthorityBoolean(found, keys) {
+    const receipt = found && found.receipt ? found.receipt : {};
+    const authority = found && found.authority ? found.authority : {};
+
+    return boolText(firstDefined(
+      receiptValue(receipt, keys),
+      ...keys.map((key) => authority[key])
+    ), "UNKNOWN");
+  }
+
+  function readTargetDatasets(targetDocument, state) {
+    const htmlData = readDataset(targetDocument);
+    const bodyData = readBodyDataset(targetDocument);
+
+    state.targetHtmlContract = contractFromDataset(targetDocument);
+    state.targetRouteSignal = documentRoute(targetDocument) || "UNKNOWN";
+    state.targetPageSignal = clean(firstDefined(htmlData.page, bodyData.page), 500) || "UNKNOWN";
+    state.targetPageContextSignal = clean(firstDefined(htmlData.pageContext, bodyData.pageContext), 1200) || "UNKNOWN";
+
+    state.targetDatasetIndexJsContract = clean(firstDefined(
+      htmlData.hearthIndexJsContract,
+      htmlData.expectedIndexJsContract,
+      bodyData.hearthIndexJsContract
+    ), 500) || "UNKNOWN";
+
+    state.targetDatasetRouteConductorContract = clean(firstDefined(
+      htmlData.hearthRouteConductorContract,
+      htmlData.expectedRouteConductorContract,
+      htmlData.routeConductorCurrentContract,
+      bodyData.hearthRouteConductorContract
+    ), 500) || "UNKNOWN";
+
+    state.targetDatasetRouteConductorCurrent = clean(firstDefined(
+      htmlData.routeConductorCurrent,
+      htmlData.hearthRouteConductorCurrent,
+      bodyData.routeConductorCurrent
+    ), 500) || "UNKNOWN";
+
+    state.targetDatasetCanvasContract = clean(firstDefined(
+      htmlData.hearthCanvasContract,
+      htmlData.currentCanvasParentContract,
+      bodyData.hearthCanvasContract
+    ), 500) || "UNKNOWN";
+
+    state.targetDatasetControlContract = clean(firstDefined(
+      htmlData.hearthControlsContract,
+      htmlData.hearthControlContract,
+      bodyData.hearthControlsContract
+    ), 500) || "UNKNOWN";
+
+    if (state.targetHtmlContract === EXPECTED_HTML_CONTRACT) {
+      addNote(state, "PROBE_EAST_HTML_CURRENT_CONTRACT_RECOGNIZED");
+    } else {
+      addNote(state, `PROBE_EAST_HTML_CONTRACT_NOT_CURRENT:${state.targetHtmlContract}`);
     }
   }
 
@@ -1158,169 +1129,50 @@
     state.stagePresent = boolText(Boolean(stage));
     state.stageSelector = selectorName(stage);
     state.stageRect = rectPacket(stage);
-    state.stageRectNonZero = boolText(rectNonZero(stage));
+    state.stageRectNonzero = boolText(rectNonzero(stage));
 
     state.mountPresent = boolText(Boolean(mount));
     state.mountSelector = selectorName(mount);
     state.mountRect = rectPacket(mount);
-    state.mountRectNonZero = boolText(rectNonZero(mount));
+    state.mountRectNonzero = boolText(rectNonzero(mount));
 
     state.canvasElementPresent = boolText(Boolean(canvas));
     state.canvasElementSelector = selectorName(canvas);
     state.canvasElementRect = rectPacket(canvas);
-    state.canvasElementRectNonZero = boolText(rectNonZero(canvas));
-    state.canvasAttributeWidth = canvas ? clean(canvas.width || 0, 60) : FALLBACK.NOT_FOUND;
-    state.canvasAttributeHeight = canvas ? clean(canvas.height || 0, 60) : FALLBACK.NOT_FOUND;
+    state.canvasElementRectNonzero = boolText(rectNonzero(canvas));
+    state.canvasAttributeWidth = canvas ? clean(canvas.width || 0, 60) : "NOT_FOUND";
+    state.canvasAttributeHeight = canvas ? clean(canvas.height || 0, 60) : "NOT_FOUND";
 
     state.expressionSurfacePresent = boolText(Boolean(surface));
     state.expressionSurfaceSelector = selectorName(surface);
     state.expressionSurfaceRect = rectPacket(surface);
-    state.expressionSurfaceRectNonZero = boolText(rectNonZero(surface));
+    state.expressionSurfaceRectNonzero = boolText(rectNonzero(surface));
 
     state.stageMountBridgeStatus =
-      state.stageRectNonZero === "true" && state.mountRectNonZero === "true"
+      state.stageRectNonzero === "true" && state.mountRectNonzero === "true"
         ? "STAGE_AND_MOUNT_BRIDGE_PRESENT"
         : state.stagePresent === "true" || state.mountPresent === "true"
           ? "STAGE_OR_MOUNT_PARTIAL"
           : "STAGE_AND_MOUNT_NOT_FOUND";
 
     state.expressionSurfaceBridgeStatus =
-      state.expressionSurfaceRectNonZero === "true"
+      state.expressionSurfaceRectNonzero === "true"
         ? "EXPRESSION_SURFACE_BRIDGE_PRESENT"
-        : state.canvasElementRectNonZero === "true"
+        : state.canvasElementRectNonzero === "true"
           ? "CANVAS_ELEMENT_BRIDGE_PRESENT"
           : "EXPRESSION_SURFACE_NOT_PROVEN";
 
-    if (state.stageRectNonZero === "true") addNote(state, "PROBE_EAST_STAGE_NONZERO_BRIDGE_SURFACE_OBSERVED");
+    if (state.stageRectNonzero === "true") addNote(state, "PROBE_EAST_STAGE_NONZERO_BRIDGE_SURFACE_OBSERVED");
     else addNote(state, "PROBE_EAST_STAGE_BRIDGE_SURFACE_NOT_CONFIRMED");
 
-    if (state.mountRectNonZero === "true") addNote(state, "PROBE_EAST_MOUNT_NONZERO_BRIDGE_SURFACE_OBSERVED");
+    if (state.mountRectNonzero === "true") addNote(state, "PROBE_EAST_MOUNT_NONZERO_BRIDGE_SURFACE_OBSERVED");
     else addNote(state, "PROBE_EAST_MOUNT_BRIDGE_SURFACE_NOT_CONFIRMED");
 
-    if (state.canvasElementRectNonZero === "true") addNote(state, "PROBE_EAST_CANVAS_ELEMENT_BRIDGE_SURFACE_OBSERVED");
+    if (state.canvasElementRectNonzero === "true") addNote(state, "PROBE_EAST_CANVAS_ELEMENT_BRIDGE_SURFACE_OBSERVED");
     else addNote(state, "PROBE_EAST_CANVAS_ELEMENT_NOT_CONFIRMED_AS_SOURCE_BRIDGE_SURFACE");
 
-    if (state.expressionSurfaceRectNonZero === "true") addNote(state, "PROBE_EAST_EXPRESSION_SURFACE_BRIDGE_OBSERVED");
+    if (state.expressionSurfaceRectNonzero === "true") addNote(state, "PROBE_EAST_EXPRESSION_SURFACE_BRIDGE_OBSERVED");
     else addNote(state, "PROBE_EAST_EXPRESSION_SURFACE_NOT_CONFIRMED");
-  }
-
-  function compactScriptFootprint(scriptMap) {
-    const out = {};
-
-    Object.keys(scriptMap || {}).forEach((key) => {
-      const script = scriptMap[key];
-      out[key] = {
-        file: script.file,
-        present: script.present,
-        src: script.src,
-        cacheKey: script.cacheKey || FALLBACK.NONE,
-        datasetContract: script.datasetContract || FALLBACK.NONE
-      };
-    });
-
-    return out;
-  }
-
-  function compactAuthorityFootprint(authorityMap) {
-    const out = {};
-
-    Object.keys(authorityMap || {}).forEach((key) => {
-      const found = authorityMap[key] || {};
-      out[key] = {
-        source: found.path || "NONE",
-        present: Boolean(found.authority),
-        contract: found.contract || FALLBACK.UNKNOWN,
-        receiptPresent: Boolean(found.receipt && Object.keys(found.receipt).length)
-      };
-    });
-
-    return out;
-  }
-
-  function readReceiptStatus(found) {
-    const receipt = found && found.receipt ? found.receipt : {};
-
-    return clean(firstDefined(
-      receiptValue(receipt, ["status", "STATUS", "eastStatus", "westStatus", "southStatus", "probeEastStatus"]),
-      receiptValue(receipt, ["state", "STATE"]),
-      found && found.authority && found.authority.status,
-      found && found.authority && found.authority.state
-    ), 500) || FALLBACK.UNKNOWN;
-  }
-
-  function readAuthorityBoolean(found, keys) {
-    const receipt = found && found.receipt ? found.receipt : {};
-    const authority = found && found.authority ? found.authority : {};
-
-    return boolText(firstDefined(
-      receiptValue(receipt, keys),
-      ...keys.map((key) => authority[key])
-    ), FALLBACK.UNKNOWN);
-  }
-
-  function deriveRouteConductorStatus(state, scripts, authorities) {
-    const script = scripts.routeConductor || {};
-    const found = authorities.routeConductor || {};
-    const receipt = found.receipt || {};
-    const authorityContract = found.contract || "";
-    const servedContract = firstDefined(
-      authorityContract,
-      receiptValue(receipt, ["currentRouteConductorContract", "routeConductorContract", "contract", "CONTRACT"]),
-      script.datasetContract,
-      state.targetDatasetRouteConductorContract,
-      state.targetDatasetRouteConductorCurrent,
-      script.cacheKey
-    );
-
-    state.routeConductorScriptPresent = boolText(script.present);
-    state.routeConductorScriptSrc = script.src || FALLBACK.NOT_FOUND;
-    state.routeConductorScriptCacheKey = script.cacheKey || FALLBACK.NONE;
-    state.routeConductorAuthoritySource = found.path || "NONE";
-    state.routeConductorAuthorityPresent = boolText(Boolean(found.authority));
-    state.routeConductorAuthorityContract = authorityContract || FALLBACK.UNKNOWN;
-    state.routeConductorServedContract = clean(servedContract, 500) || FALLBACK.UNKNOWN;
-    state.routeConductorCurrentSpreadRecognized = boolText(
-      state.routeConductorServedContract === CURRENT_ROUTE_CONDUCTOR_CONTRACT ||
-      ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS.includes(state.routeConductorServedContract)
-    );
-
-    state.routeConductorRenderedAuthorityOverridesScriptCache = boolText(
-      Boolean(
-        authorityContract &&
-        script.cacheKey &&
-        authorityContract !== script.cacheKey &&
-        authorityContract === CURRENT_ROUTE_CONDUCTOR_CONTRACT
-      )
-    );
-
-    state.cacheKeyStaleNonBlocking = state.routeConductorRenderedAuthorityOverridesScriptCache;
-    state.servedContractMismatchIsBlocking = state.routeConductorCurrentSpreadRecognized === "true" ? "false" : FALLBACK.UNKNOWN;
-
-    state.bishopQueenRecognitionFunnelClaim = readAuthorityBoolean(found, [
-      "bishopQueenCanvasRecognitionFunnelActive",
-      "bishopQueenCanvasRecognitionActive",
-      "queenCanvasRecognitionActive"
-    ]);
-
-    state.routeConductorCanvasHandoffClaim = readAuthorityBoolean(found, [
-      "canvasHandoffActive",
-      "fourWayCanvasHandoffActive",
-      "routeCanvasHandshakeReady",
-      "visiblePlanetProofReady"
-    ]);
-
-    if (state.routeConductorCurrentSpreadRecognized === "true") {
-      addNote(state, "PROBE_EAST_ROUTE_CONDUCTOR_CURRENT_OR_ACCEPTED_SPREAD_RECOGNIZED");
-    } else {
-      addNote(state, "PROBE_EAST_ROUTE_CONDUCTOR_CURRENT_SPREAD_NOT_CONFIRMED");
-    }
-
-    if (state.routeConductorRenderedAuthorityOverridesScriptCache === "true") {
-      addNote(
-        state,
-        `PROBE_EAST_ROUTE_CONDUCTOR_AUTHORITY_OVERRIDES_STALE_SCRIPT_CACHE:${authorityContract}>${script.cacheKey}`
-      );
-    }
   }
 
   function deriveIndexStatus(state, scripts, authorities) {
@@ -1333,19 +1185,15 @@
       script.datasetContract,
       state.targetDatasetIndexJsContract,
       script.cacheKey
-    ), 500) || FALLBACK.UNKNOWN;
+    ), 500) || "UNKNOWN";
 
     state.indexScriptPresent = boolText(script.present);
-    state.indexScriptSrc = script.src || FALLBACK.NOT_FOUND;
-    state.indexScriptCacheKey = script.cacheKey || FALLBACK.NONE;
+    state.indexScriptSrc = script.src || "NOT_FOUND";
+    state.indexScriptCacheKey = script.cacheKey || "NONE";
     state.indexAuthoritySource = found.path || "NONE";
     state.indexAuthorityPresent = boolText(Boolean(found.authority));
     state.indexContract = contract;
-    state.indexCurrentSpreadRecognized = boolText(
-      contract === CURRENT_INDEX_JS_CONTRACT ||
-      contract === "HEARTH_INDEX_JS_VISIBLE_EXPRESSION_CHAIN_LOADER_BRIDGE_TNT_v5_4_2" ||
-      contract === "HEARTH_INDEX_JS_PAGE_RECEIPT_TARGET_BINDING_RENEWAL_TNT_v5_4_1"
-    );
+    state.indexCurrentSpreadRecognized = boolText(ACCEPTED_INDEX_CONTRACTS.includes(contract));
 
     state.indexExpressionChainLoadClaim = readAuthorityBoolean(found, [
       "visibleExpressionChainLoaded",
@@ -1356,10 +1204,67 @@
       "canvasLoaded"
     ]);
 
-    if (state.indexCurrentSpreadRecognized === "true") {
-      addNote(state, "PROBE_EAST_INDEX_CURRENT_OR_ACCEPTED_SPREAD_RECOGNIZED");
+    if (state.indexCurrentSpreadRecognized === "true") addNote(state, "PROBE_EAST_INDEX_CURRENT_OR_ACCEPTED_SPREAD_RECOGNIZED");
+    else addNote(state, "PROBE_EAST_INDEX_CURRENT_SPREAD_NOT_CONFIRMED");
+  }
+
+  function deriveRouteConductorStatus(state, scripts, authorities) {
+    const script = scripts.routeConductor || {};
+    const found = authorities.routeConductor || {};
+    const receipt = found.receipt || {};
+    const authorityContract = found.contract || "";
+
+    const servedContract = clean(firstDefined(
+      authorityContract,
+      receiptValue(receipt, ["currentRouteConductorContract", "routeConductorContract", "contract", "CONTRACT"]),
+      script.datasetContract,
+      state.targetDatasetRouteConductorContract,
+      state.targetDatasetRouteConductorCurrent,
+      script.cacheKey
+    ), 500) || "UNKNOWN";
+
+    state.routeConductorScriptPresent = boolText(script.present);
+    state.routeConductorScriptSrc = script.src || "NOT_FOUND";
+    state.routeConductorScriptCacheKey = script.cacheKey || "NONE";
+    state.routeConductorAuthoritySource = found.path || "NONE";
+    state.routeConductorAuthorityPresent = boolText(Boolean(found.authority));
+    state.routeConductorAuthorityContract = authorityContract || "UNKNOWN";
+    state.routeConductorServedContract = servedContract;
+    state.routeConductorCurrentSpreadRecognized = boolText(ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS.includes(servedContract));
+
+    state.routeConductorRenderedAuthorityOverridesScriptCache = boolText(Boolean(
+      authorityContract &&
+      script.cacheKey &&
+      authorityContract !== script.cacheKey &&
+      ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS.includes(authorityContract)
+    ));
+
+    state.cacheKeyStaleNonBlocking = state.routeConductorRenderedAuthorityOverridesScriptCache;
+    state.servedContractMismatchIsBlocking =
+      state.routeConductorCurrentSpreadRecognized === "true" ? "false" : "UNKNOWN";
+
+    state.bishopQueenRecognitionFunnelClaim = readAuthorityBoolean(found, [
+      "bishopQueenCanvasRecognitionFunnelActive",
+      "bishopQueenCanvasRecognitionActive",
+      "queenCanvasRecognitionActive"
+    ]);
+
+    state.routeConductorCanvasHandoffClaim = readAuthorityBoolean(found, [
+      "canvasHandoffActive",
+      "fourWayCanvasHandoffActive",
+      "routeCanvasHandshakeReady",
+      "visiblePlanetProofReady",
+      "renderedPlanetProofReady"
+    ]);
+
+    if (state.routeConductorCurrentSpreadRecognized === "true") {
+      addNote(state, "PROBE_EAST_ROUTE_CONDUCTOR_CURRENT_OR_ACCEPTED_SPREAD_RECOGNIZED");
     } else {
-      addNote(state, "PROBE_EAST_INDEX_CURRENT_SPREAD_NOT_CONFIRMED");
+      addNote(state, `PROBE_EAST_ROUTE_CONDUCTOR_CURRENT_SPREAD_NOT_CONFIRMED:${servedContract}`);
+    }
+
+    if (state.routeConductorRenderedAuthorityOverridesScriptCache === "true") {
+      addNote(state, `PROBE_EAST_ROUTE_CONDUCTOR_AUTHORITY_OVERRIDES_STALE_SCRIPT_CACHE:${authorityContract}>${script.cacheKey}`);
     }
   }
 
@@ -1367,6 +1272,9 @@
     const script = scripts.controls || {};
     const found = authorities.controls || {};
     const receipt = found.receipt || {};
+
+    const present = Boolean(script.present || found.authority || found.contract || Object.keys(receipt).length);
+
     const motionReady = Boolean(
       found.authority &&
       (
@@ -1386,37 +1294,39 @@
       receipt.controlHandshakeReady === true
     );
 
-    const present = Boolean(script.present || found.authority || found.contract || Object.keys(receipt).length);
-
     state.controlScriptPresent = boolText(script.present);
-    state.controlScriptSrc = script.src || FALLBACK.NOT_FOUND;
+    state.controlScriptSrc = script.src || "NOT_FOUND";
     state.controlAuthoritySource = found.path || "NONE";
     state.controlAuthorityPresent = boolText(Boolean(found.authority));
     state.controlReceiptPresent = boolText(Boolean(Object.keys(receipt).length));
-    state.controlContract = found.contract || clean(receiptValue(receipt, ["contract", "CONTRACT", "controlsContract"]), 500) || FALLBACK.UNKNOWN;
+    state.controlContract = found.contract || clean(receiptValue(receipt, ["contract", "CONTRACT", "controlsContract"]), 500) || "UNKNOWN";
+
     state.controlFileStatus = present
       ? motionReady
         ? "CONTROL_FILE_LOADED_AND_MOTION_TOUCH_READY"
         : "CONTROL_FILE_PRESENT_HANDSHAKE_PENDING"
-      : FALLBACK.EXPECTED_NOT_YET_BUILT;
+      : "CONTROL_FILE_NOT_CONFIRMED";
+
     state.controlHandshakeStatus = present
       ? motionReady
         ? "HANDSHAKE_VALID"
         : "HANDSHAKE_PENDING"
-      : FALLBACK.EXPECTED_NOT_YET_WIRED;
-    state.motionTouchStatus = motionReady ? "ACTIVE" : FALLBACK.EXPECTED_NOT_YET_WIRED;
-    state.dragStatus = motionReady ? "ACTIVE" : FALLBACK.EXPECTED_NOT_YET_WIRED;
-    state.viewControlStatus = motionReady ? "ACTIVE" : FALLBACK.EXPECTED_NOT_YET_WIRED;
+      : "CONTROL_HANDSHAKE_NOT_CONFIRMED";
+
+    state.motionTouchStatus = motionReady ? "ACTIVE" : "NOT_CONFIRMED";
+    state.dragStatus = motionReady ? "ACTIVE" : "NOT_CONFIRMED";
+    state.viewControlStatus = motionReady ? "ACTIVE" : "NOT_CONFIRMED";
 
     if (motionReady) addNote(state, "PROBE_EAST_CONTROL_FILE_PRESENT_AND_MOTION_TOUCH_READY");
     else if (present) addNote(state, "PROBE_EAST_CONTROL_FILE_PRESENT_HANDSHAKE_PENDING");
-    else addNote(state, "PROBE_EAST_CONTROL_FILE_NOT_YET_CONFIRMED");
+    else addNote(state, "PROBE_EAST_CONTROL_FILE_NOT_CONFIRMED");
   }
 
   function deriveCanvasStatus(state, scripts, authorities) {
     const script = scripts.canvas || {};
     const found = authorities.canvas || {};
     const receipt = found.receipt || {};
+
     const contract = clean(firstDefined(
       found.contract,
       receiptValue(receipt, [
@@ -1427,31 +1337,31 @@
         "CONTRACT"
       ]),
       script.datasetContract,
-      state.targetDatasetCanvasContract,
-      state.expectedCanvasContract
-    ), 500) || FALLBACK.UNKNOWN;
+      state.targetDatasetCanvasContract
+    ), 500) || "UNKNOWN";
 
     const present = Boolean(script.present || found.authority || found.contract || Object.keys(receipt).length);
 
     state.canvasScriptPresent = boolText(script.present);
-    state.canvasScriptSrc = script.src || FALLBACK.NOT_FOUND;
+    state.canvasScriptSrc = script.src || "NOT_FOUND";
     state.canvasAuthoritySource = found.path || "NONE";
     state.canvasAuthorityPresent = boolText(Boolean(found.authority));
     state.canvasReceiptPresent = boolText(Boolean(Object.keys(receipt).length));
     state.canvasContract = contract;
-    state.canvasParentRecognized = boolText(
+    state.canvasParentRecognized = boolText(Boolean(
       present &&
       (
         contract === EXPECTED_CANVAS_CONTRACT ||
         contract.includes("HEARTH_CANVAS_") ||
         state.canvasAuthorityPresent === "true"
       )
-    );
+    ));
 
     state.canvasExpressionHubClaim = readAuthorityBoolean(found, [
       "expressionHubActive",
       "canvasExpressionHubActive",
-      "canvasExpressionHubReady"
+      "canvasExpressionHubReady",
+      "governedSourceReceiverActive"
     ]);
 
     state.canvasFingerManagerClaim = readAuthorityBoolean(found, [
@@ -1465,14 +1375,19 @@
       "visibleBaseGlobeCarrierActive",
       "canvasVisibleBaseGlobeCarrierActive",
       "baseGlobeVisibleCarrierReady",
-      "visiblePlanetProofReady"
+      "visiblePlanetProofReady",
+      "visible2dOutputActive",
+      "pixelVisible",
+      "canvasPixelVisible"
     ]);
 
     state.canvasDrawClaim = readAuthorityBoolean(found, [
       "canvasMounted",
       "canvasDrawComplete",
       "baseGlobeDrawComplete",
-      "drawComplete"
+      "drawComplete",
+      "pixelVisible",
+      "canvasPixelVisible"
     ]);
 
     state.canvasSourceCompositionStatus =
@@ -1504,70 +1419,62 @@
           ? "VISIBLE_EXPRESSION_CHAIN_PARTIAL"
           : "VISIBLE_EXPRESSION_CHAIN_NOT_CONFIRMED";
 
-    if (state.indexVisibleExpressionChainStatus === "VISIBLE_EXPRESSION_CHAIN_PRESENT") {
-      addNote(state, "PROBE_EAST_VISIBLE_EXPRESSION_CHAIN_PRESENT_HEX_AUTHORITY_HEX_SURFACE_CANVAS");
-    } else if (state.indexVisibleExpressionChainStatus === "VISIBLE_EXPRESSION_CHAIN_PARTIAL") {
-      addNote(state, "PROBE_EAST_VISIBLE_EXPRESSION_CHAIN_PARTIAL");
-    } else {
-      addNote(state, "PROBE_EAST_VISIBLE_EXPRESSION_CHAIN_NOT_CONFIRMED");
-    }
+    addNote(state, `PROBE_EAST_VISIBLE_EXPRESSION_CHAIN_STATUS:${state.indexVisibleExpressionChainStatus}`);
   }
 
   function deriveRailProbeStatus(state, scripts, authorities) {
-    const railEast = authorities.railEast || {};
-    const probeNorth = authorities.probeNorth || {};
-
     state.railEastScriptPresent = boolText(Boolean(scripts.railEast && scripts.railEast.present));
-    state.railEastAuthoritySource = railEast.path || "NONE";
-    state.railEastAuthorityPresent = boolText(Boolean(railEast.authority));
-    state.railEastContract = railEast.contract || FALLBACK.UNKNOWN;
-    state.railEastStatus = readReceiptStatus(railEast);
+    state.railEastAuthoritySource = authorities.railEast ? authorities.railEast.path : "NONE";
+    state.railEastAuthorityPresent = boolText(Boolean(authorities.railEast && authorities.railEast.authority));
+    state.railEastContract = authorities.railEast && authorities.railEast.contract ? authorities.railEast.contract : "UNKNOWN";
+    state.railEastStatus = readReceiptStatus(authorities.railEast || {});
 
     state.probeNorthScriptPresent = boolText(Boolean(scripts.probeNorth && scripts.probeNorth.present));
-    state.probeNorthAuthoritySource = probeNorth.path || "NONE";
-    state.probeNorthAuthorityPresent = boolText(Boolean(probeNorth.authority));
-    state.probeNorthContract = probeNorth.contract || FALLBACK.UNKNOWN;
-    state.probeNorthStatus = readReceiptStatus(probeNorth);
+    state.probeNorthAuthoritySource = authorities.probeNorth ? authorities.probeNorth.path : "NONE";
+    state.probeNorthAuthorityPresent = boolText(Boolean(authorities.probeNorth && authorities.probeNorth.authority));
+    state.probeNorthContract = authorities.probeNorth && authorities.probeNorth.contract ? authorities.probeNorth.contract : "UNKNOWN";
+    state.probeNorthStatus = readReceiptStatus(authorities.probeNorth || {});
 
     state.probeEastSelfObserved = "true";
     state.probeEastAuthoritySource = "HEARTH.diagnosticProbeEast";
-    state.probeEastContract = CONTRACT;
-
-    state.probeSouthScriptPresent = boolText(Boolean(scripts.probeSouth && scripts.probeSouth.present));
-    state.probeSouthAuthoritySource = authorities.probeSouth ? authorities.probeSouth.path : "NONE";
-    state.probeSouthAuthorityPresent = boolText(Boolean(authorities.probeSouth && authorities.probeSouth.authority));
-    state.probeSouthContract = authorities.probeSouth && authorities.probeSouth.contract ? authorities.probeSouth.contract : FALLBACK.UNKNOWN;
+    state.probeEastObservedContract = CONTRACT;
 
     state.probeWestScriptPresent = boolText(Boolean(scripts.probeWest && scripts.probeWest.present));
     state.probeWestAuthoritySource = authorities.probeWest ? authorities.probeWest.path : "NONE";
     state.probeWestAuthorityPresent = boolText(Boolean(authorities.probeWest && authorities.probeWest.authority));
-    state.probeWestContract = authorities.probeWest && authorities.probeWest.contract ? authorities.probeWest.contract : FALLBACK.UNKNOWN;
+    state.probeWestContract = authorities.probeWest && authorities.probeWest.contract ? authorities.probeWest.contract : "UNKNOWN";
+
+    state.probeCanvasSurfaceTruthScriptPresent = boolText(Boolean(scripts.probeCanvasSurfaceTruth && scripts.probeCanvasSurfaceTruth.present));
+    state.probeCanvasSurfaceTruthAuthoritySource = authorities.probeCanvasSurfaceTruth ? authorities.probeCanvasSurfaceTruth.path : "NONE";
+    state.probeCanvasSurfaceTruthAuthorityPresent = boolText(Boolean(authorities.probeCanvasSurfaceTruth && authorities.probeCanvasSurfaceTruth.authority));
+    state.probeCanvasSurfaceTruthContract = authorities.probeCanvasSurfaceTruth && authorities.probeCanvasSurfaceTruth.contract
+      ? authorities.probeCanvasSurfaceTruth.contract
+      : "UNKNOWN";
+
+    state.probeSouthScriptPresent = boolText(Boolean(scripts.probeSouth && scripts.probeSouth.present));
+    state.probeSouthAuthoritySource = authorities.probeSouth ? authorities.probeSouth.path : "NONE";
+    state.probeSouthAuthorityPresent = boolText(Boolean(authorities.probeSouth && authorities.probeSouth.authority));
+    state.probeSouthContract = authorities.probeSouth && authorities.probeSouth.contract ? authorities.probeSouth.contract : "UNKNOWN";
 
     if (state.railEastAuthorityPresent === "true" || state.railEastScriptPresent === "true") {
       addNote(state, "PROBE_EAST_RAIL_EAST_OBSERVED_NOT_RENEWED");
     }
 
-    if (state.probeNorthAuthorityPresent === "true" || state.probeNorthScriptPresent === "true") {
-      addNote(state, "PROBE_EAST_PROBE_NORTH_OBSERVED_AS_PARENT_COMPOSITION_COORDINATOR");
+    if (state.probeCanvasSurfaceTruthScriptPresent === "true" && state.probeCanvasSurfaceTruthAuthorityPresent !== "true") {
+      addNote(state, "PROBE_EAST_SURFACE_TRUTH_PROBE_SCRIPT_PRESENT_BUT_AUTHORITY_NOT_OBSERVED");
     }
   }
 
-  function deriveLabBishopFingerStatus(state, scripts, authorities) {
+  function deriveLabChannelFingerStatus(state, scripts, authorities) {
     const labKeys = ["labNorth", "labEast", "labSouth", "labWest"];
-    const bishopKeys = ["bishopNorth", "bishopEast", "bishopSouth", "bishopWest"];
     const channelKeys = ["landChannel", "waterChannel", "airChannel"];
 
     let labObserved = 0;
-    let bishopObserved = 0;
     let channelObserved = 0;
     let fingerObserved = 0;
 
     labKeys.forEach((key) => {
       if ((scripts[key] && scripts[key].present) || (authorities[key] && authorities[key].authority)) labObserved += 1;
-    });
-
-    bishopKeys.forEach((key) => {
-      if ((scripts[key] && scripts[key].present) || (authorities[key] && authorities[key].authority)) bishopObserved += 1;
     });
 
     channelKeys.forEach((key) => {
@@ -1576,104 +1483,46 @@
 
     Object.keys(FINGER_PATHS).forEach((finger) => {
       const key = `finger${finger.charAt(0).toUpperCase()}${finger.slice(1)}`;
-      const fileKey = `finger${finger.charAt(0).toUpperCase()}${finger.slice(1)}`;
-      if ((scripts[fileKey] && scripts[fileKey].present) || (authorities[key] && authorities[key].authority)) {
-        fingerObserved += 1;
-      }
+      if ((scripts[key] && scripts[key].present) || (authorities[key] && authorities[key].authority)) fingerObserved += 1;
     });
 
     state.labFileObservedCount = String(labObserved);
-    state.labBridgeCompositionStatus = labObserved > 0
-      ? labObserved >= 4
+    state.labBridgeCompositionStatus =
+      labObserved >= 4
         ? "LAB_FOUR_WAY_COMPOSITION_OBSERVED"
-        : "LAB_PARTIAL_COMPOSITION_OBSERVED"
-      : "LAB_COMPOSITION_NOT_CONFIRMED";
-
-    state.bishopFileObservedCount = String(bishopObserved);
-    state.bishopBridgeCompositionStatus = bishopObserved > 0
-      ? bishopObserved >= 4
-        ? "BISHOP_FOUR_WAY_COMPOSITION_OBSERVED"
-        : "BISHOP_PARTIAL_COMPOSITION_OBSERVED"
-      : "BISHOP_COMPOSITION_NOT_CONFIRMED";
+        : labObserved > 0
+          ? "LAB_PARTIAL_COMPOSITION_OBSERVED"
+          : "LAB_COMPOSITION_NOT_CONFIRMED";
 
     state.channelObservedCount = String(channelObserved);
-    state.channelCompositionStatus = channelObserved > 0
-      ? channelObserved >= 2
+    state.channelCompositionStatus =
+      channelObserved >= 2
         ? "LAND_WATER_AIR_CHANNEL_COMPOSITION_PARTIAL_OR_COMPLETE"
-        : "CHANNEL_COMPOSITION_PARTIAL"
-      : "CHANNEL_COMPOSITION_NOT_CONFIRMED";
+        : channelObserved > 0
+          ? "CHANNEL_COMPOSITION_PARTIAL"
+          : "CHANNEL_COMPOSITION_NOT_CONFIRMED";
 
     state.fingerObservedCount = String(fingerObserved);
-    state.fingerCompositionStatus = fingerObserved > 0
-      ? fingerObserved >= 7
+    state.fingerCompositionStatus =
+      fingerObserved >= 7
         ? "MODERN_FINGER_COMPOSITION_COMPLETE"
-        : "MODERN_FINGER_COMPOSITION_PARTIAL"
-      : "MODERN_FINGER_COMPOSITION_NOT_CONFIRMED";
+        : fingerObserved > 0
+          ? "MODERN_FINGER_COMPOSITION_PARTIAL"
+          : "MODERN_FINGER_COMPOSITION_NOT_CONFIRMED";
 
-    if (labObserved > 0) addNote(state, `PROBE_EAST_LAB_FILE_COMPOSITION_OBSERVED_COUNT:${labObserved}`);
-    if (bishopObserved > 0) addNote(state, `PROBE_EAST_BISHOP_FILE_COMPOSITION_OBSERVED_COUNT:${bishopObserved}`);
-    if (channelObserved > 0) addNote(state, `PROBE_EAST_CHANNEL_COMPOSITION_OBSERVED_COUNT:${channelObserved}`);
-    if (fingerObserved > 0) addNote(state, `PROBE_EAST_FINGER_COMPOSITION_OBSERVED_COUNT:${fingerObserved}`);
-
-    if (fingerObserved === 0) addNote(state, "PROBE_EAST_FINGER_COMPOSITION_NOT_CONFIRMED");
-  }
-
-  function readTargetDatasets(targetDocument, state) {
-    const htmlData = readDataset(targetDocument);
-    const bodyData = readBodyDataset(targetDocument);
-
-    state.targetHtmlContract = contractFromDataset(targetDocument);
-    state.targetRouteSignal = documentRoute(targetDocument) || FALLBACK.UNKNOWN;
-    state.targetPageSignal = clean(firstDefined(htmlData.page, bodyData.page), 500) || FALLBACK.UNKNOWN;
-    state.targetPageContextSignal = clean(firstDefined(htmlData.pageContext, bodyData.pageContext), 1200) || FALLBACK.UNKNOWN;
-
-    state.targetDatasetIndexJsContract = clean(firstDefined(
-      htmlData.hearthIndexJsContract,
-      htmlData.expectedIndexJsContract,
-      bodyData.hearthIndexJsContract
-    ), 500) || FALLBACK.UNKNOWN;
-
-    state.targetDatasetRouteConductorContract = clean(firstDefined(
-      htmlData.hearthRouteConductorContract,
-      htmlData.expectedRouteConductorContract,
-      htmlData.routeConductorCurrentContract,
-      bodyData.hearthRouteConductorContract
-    ), 500) || FALLBACK.UNKNOWN;
-
-    state.targetDatasetRouteConductorCurrent = clean(firstDefined(
-      htmlData.routeConductorCurrent,
-      htmlData.hearthRouteConductorCurrent,
-      bodyData.routeConductorCurrent
-    ), 500) || FALLBACK.UNKNOWN;
-
-    state.targetDatasetCanvasContract = clean(firstDefined(
-      htmlData.hearthCanvasContract,
-      htmlData.currentCanvasParentContract,
-      bodyData.hearthCanvasContract
-    ), 500) || FALLBACK.UNKNOWN;
-
-    state.targetDatasetControlContract = clean(firstDefined(
-      htmlData.hearthControlsContract,
-      htmlData.hearthControlContract,
-      bodyData.hearthControlsContract
-    ), 500) || FALLBACK.UNKNOWN;
-
-    if (state.targetHtmlContract === CURRENT_HTML_CONTRACT) {
-      addNote(state, "PROBE_EAST_HTML_CURRENT_CONTRACT_RECOGNIZED");
-    } else {
-      addNote(`PROBE_EAST_HTML_CONTRACT_NOT_CURRENT:${state.targetHtmlContract}`);
-    }
+    addNote(state, `PROBE_EAST_LAB_FILE_COMPOSITION_OBSERVED_COUNT:${labObserved}`);
+    addNote(state, `PROBE_EAST_CHANNEL_COMPOSITION_OBSERVED_COUNT:${channelObserved}`);
+    addNote(state, `PROBE_EAST_FINGER_COMPOSITION_OBSERVED_COUNT:${fingerObserved}`);
   }
 
   function deriveCompositionVerdict(state) {
-    const currentSpreadOk =
-      state.indexCurrentSpreadRecognized === "true" &&
-      state.routeConductorCurrentSpreadRecognized === "true" &&
-      state.targetHtmlContract === CURRENT_HTML_CONTRACT;
-
     const sourceCoreOk =
       state.indexScriptPresent === "true" &&
       state.routeConductorScriptPresent === "true";
+
+    const currentSpreadOk =
+      state.indexCurrentSpreadRecognized === "true" &&
+      state.routeConductorCurrentSpreadRecognized === "true";
 
     const controlOk =
       state.controlFileStatus === "CONTROL_FILE_LOADED_AND_MOTION_TOUCH_READY" ||
@@ -1709,81 +1558,78 @@
       : "STAGE_MOUNT_BRIDGE_NOT_CONFIRMED";
 
     state.canvasExpressionInstrumentationStatus =
-      stageMountOk && !expressionConfirmed
-        ? "STAGE_AND_MOUNT_CAN_BE_RECOGNIZED_BUT_EXPRESSION_SURFACE_COMPOSITION_PENDING"
-        : stageMountOk && expressionConfirmed
-          ? "STAGE_MOUNT_AND_EXPRESSION_SURFACE_CAN_BE_RECOGNIZED"
+      stageMountOk && expressionConfirmed
+        ? "STAGE_MOUNT_AND_EXPRESSION_SURFACE_CAN_BE_RECOGNIZED"
+        : stageMountOk
+          ? "STAGE_AND_MOUNT_CAN_BE_RECOGNIZED_BUT_EXPRESSION_SURFACE_COMPOSITION_PENDING"
           : "CANVAS_EXPRESSION_INSTRUMENTATION_INCOMPLETE";
 
-    state.zoneOfInflictionOwner =
-      canvasConfirmed
-        ? expressionConfirmed
-          ? "UNRESOLVED_AFTER_PROBE_EAST_SOURCE_AND_SURFACE_PRESENT"
-          : "CANVAS_EXPRESSION_SURFACE_OR_FINGER_COMPOSITION"
-        : sourceCoreOk
-          ? "CANVAS_PARENT_SOURCE_COMPOSITION"
-          : "INDEX_ROUTE_CONDUCTOR_SOURCE_COMPOSITION";
-
-    state.zoneOfInflictionFile =
-      canvasConfirmed
-        ? expressionConfirmed
-          ? FILE
-          : FILES.canvas
-        : sourceCoreOk
-          ? FILES.canvas
-          : FILES.index;
-
-    state.zoneOfInflictionClass =
-      canvasConfirmed
-        ? expressionConfirmed
-          ? "PROBE_EAST_NO_FINAL_REPAIR_SELECTION"
-          : "EXPRESSION_SURFACE_NOT_PROVEN"
-        : sourceCoreOk
-          ? "CANVAS_PARENT_NOT_CONFIRMED"
-          : "SOURCE_COMPOSITION_INCOMPLETE";
-
-    state.zoneOfInflictionReason =
-      canvasConfirmed
-        ? expressionConfirmed
-          ? "PROBE_EAST_CONFIRMED_SOURCE_REACH_AND_SURFACE_BRIDGE_BUT_NORTH_RETAINS_FINAL_DISPOSITION"
-          : "SOURCE_REACHES_CANVAS_BUT_EXPRESSION_SURFACE_OR_FINGER_COMPOSITION_IS_NOT_PROVEN"
-        : sourceCoreOk
-          ? "INDEX_AND_ROUTE_CONDUCTOR_PRESENT_BUT_CANVAS_PARENT_AUTHORITY_OR_SCRIPT_IS_NOT_CONFIRMED"
-          : "INDEX_OR_ROUTE_CONDUCTOR_SOURCE_COMPOSITION_IS_NOT_CONFIRMED";
+    if (!sourceCoreOk) {
+      state.zoneOfInflictionOwner = "INDEX_ROUTE_CONDUCTOR_SOURCE_COMPOSITION";
+      state.zoneOfInflictionFile = FILES.index;
+      state.zoneOfInflictionClass = "SOURCE_COMPOSITION_INCOMPLETE";
+      state.zoneOfInflictionReason = "INDEX_OR_ROUTE_CONDUCTOR_SOURCE_COMPOSITION_IS_NOT_CONFIRMED";
+    } else if (!canvasConfirmed) {
+      state.zoneOfInflictionOwner = "CANVAS_PARENT_SOURCE_COMPOSITION";
+      state.zoneOfInflictionFile = FILES.canvas;
+      state.zoneOfInflictionClass = "CANVAS_PARENT_NOT_CONFIRMED";
+      state.zoneOfInflictionReason = "INDEX_AND_ROUTE_CONDUCTOR_PRESENT_BUT_CANVAS_PARENT_AUTHORITY_OR_SCRIPT_IS_NOT_CONFIRMED";
+    } else if (!expressionConfirmed) {
+      state.zoneOfInflictionOwner = "CANVAS_EXPRESSION_SURFACE";
+      state.zoneOfInflictionFile = FILES.canvas;
+      state.zoneOfInflictionClass = "EXPRESSION_SURFACE_NOT_PROVEN";
+      state.zoneOfInflictionReason = "SOURCE_REACHES_CANVAS_BUT_DOM_CANVAS_OR_EXPRESSION_SURFACE_IS_NOT_PROVEN_BY_PROBE_EAST";
+    } else {
+      state.zoneOfInflictionOwner = "NONE";
+      state.zoneOfInflictionFile = "NONE";
+      state.zoneOfInflictionClass = "NONE";
+      state.zoneOfInflictionReason = "PROBE_EAST_CONFIRMED_SOURCE_REACH_AND_BRIDGE_SURFACE;NORTH_RETAINS_FINAL_DISPOSITION";
+    }
 
     state.probeEastDisposition =
-      currentSpreadOk && sourceCoreOk && controlOk && stageMountOk && !expressionConfirmed
-        ? "SOURCE_SIDE_OK_CONTROL_OK_STAGE_MOUNT_OK_CANVAS_EXPRESSION_SURFACE_PENDING"
-        : currentSpreadOk && sourceCoreOk && controlOk && stageMountOk && expressionConfirmed
-          ? "SOURCE_SIDE_OK_CONTROL_OK_STAGE_MOUNT_AND_EXPRESSION_SURFACE_PRESENT"
+      currentSpreadOk && sourceCoreOk && controlOk && stageMountOk && expressionConfirmed
+        ? "SOURCE_SIDE_OK_CONTROL_OK_STAGE_MOUNT_AND_EXPRESSION_SURFACE_PRESENT"
+        : sourceCoreOk && controlOk && stageMountOk && !expressionConfirmed
+          ? "SOURCE_SIDE_OK_CONTROL_OK_STAGE_MOUNT_OK_CANVAS_EXPRESSION_SURFACE_PENDING"
           : sourceCoreOk
-            ? "SOURCE_SIDE_PARTIAL_NEXT_CANVAS_EXPRESSION_COMPOSITION_REQUIRES_WEST_OR_CANVAS_PROBE"
+            ? "SOURCE_SIDE_PARTIAL_NEXT_CANVAS_EXPRESSION_COMPOSITION_REQUIRES_WEST_OR_CANVAS_SURFACE_TRUTH_PROBE"
             : "SOURCE_SIDE_INCOMPLETE";
 
-    if (state.probeEastDisposition === "SOURCE_SIDE_OK_CONTROL_OK_STAGE_MOUNT_OK_CANVAS_EXPRESSION_SURFACE_PENDING") {
-      addNote(state, "PROBE_EAST_DEFINITIVE_DISPOSITION_SOURCE_AND_CONTROL_OK_EXPRESSION_SURFACE_PENDING");
-    } else {
-      addNote(`PROBE_EAST_DISPOSITION:${state.probeEastDisposition}`);
-    }
+    addNote(state, `PROBE_EAST_DISPOSITION:${state.probeEastDisposition}`);
   }
 
-  function makeState() {
+  function makeState(status = "ANCHOR_PUBLISHED_WAITING_RUN") {
     return {
-      probeEastStatus: STATUS.READY,
-      probeEastContract: CONTRACT,
-      probeEastReceipt: RECEIPT,
+      PROBE_EAST_STATUS: status === "COMPLETE" ? "COMPLETE" : "READY",
+      probeEastStatus: status === "COMPLETE" ? "COMPLETE" : "READY",
+
+      contract: CONTRACT,
+      receipt: RECEIPT,
       version: VERSION,
       file: FILE,
       targetRoute: TARGET_ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
 
+      internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
+      internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
+
       parentNorthContract: PARENT_NORTH_CONTRACT,
       parentNorthReceipt: PARENT_NORTH_RECEIPT,
+      previousParentNorthContract: PREVIOUS_PARENT_NORTH_CONTRACT,
       railEastContract: RAIL_EAST_CONTRACT,
       railEastImplementationContract: RAIL_EAST_IMPLEMENTATION_CONTRACT,
 
+      anchorStatus: "ANCHOR_PUBLISHED_SYNCHRONOUSLY",
+      anchorSourcePathPrimary: "HEARTH.diagnosticProbeEast",
+      anchorSourcePaths:
+        "HEARTH.diagnosticProbeEast,HEARTH.diagnosticEastProbe,HEARTH_DIAGNOSTIC_PROBE_EAST,DEXTER_LAB.hearthDiagnosticProbeEast",
+      anchorObserved: "true",
+      chronologyObservationGuard: "PUBLIC_AUTHORITY_PUBLISHED_BEFORE_TARGET_PROBE",
+      chronologyFailureClassAddressed: "SCRIPT_ALREADY_PRESENT_AUTHORITY_NOT_OBSERVED",
+
       diagnosticRouteHtmlRenewalRequired: false,
       receiverStillCallsNorthOnly: true,
+
       productionMutationAuthorized: false,
       cacheRepairAuthorized: false,
       hearthRepairAuthorized: false,
@@ -1796,172 +1642,190 @@
       finalRecommendationAuthority: false,
 
       probeEastRunComplete: "false",
-      probeEastRunStatus: FALLBACK.UNKNOWN,
-      targetAccessStatus: FALLBACK.UNKNOWN,
-      targetAccessError: FALLBACK.UNKNOWN,
-      targetDocumentSource: FALLBACK.UNKNOWN,
-      hearthTargetConfirmed: FALLBACK.UNKNOWN,
+      probeEastRunStatus: status,
+      targetAccessStatus: "UNKNOWN",
+      targetAccessError: "UNKNOWN",
+      targetDocumentSource: "UNKNOWN",
+      hearthTargetConfirmed: "UNKNOWN",
 
-      targetHtmlContract: FALLBACK.UNKNOWN,
-      targetRouteSignal: FALLBACK.UNKNOWN,
-      targetPageSignal: FALLBACK.UNKNOWN,
-      targetPageContextSignal: FALLBACK.UNKNOWN,
-      targetDatasetIndexJsContract: FALLBACK.UNKNOWN,
-      targetDatasetRouteConductorContract: FALLBACK.UNKNOWN,
-      targetDatasetRouteConductorCurrent: FALLBACK.UNKNOWN,
-      targetDatasetCanvasContract: FALLBACK.UNKNOWN,
-      targetDatasetControlContract: FALLBACK.UNKNOWN,
-
-      expectedHtmlContract: CURRENT_HTML_CONTRACT,
-      expectedIndexJsContract: CURRENT_INDEX_JS_CONTRACT,
-      expectedRouteConductorContract: CURRENT_ROUTE_CONDUCTOR_CONTRACT,
+      expectedHtmlContract: EXPECTED_HTML_CONTRACT,
+      expectedIndexJsContract: EXPECTED_INDEX_JS_CONTRACT,
+      expectedRouteConductorContract: EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
+      expectedRouteConductorLineageContract: EXPECTED_ROUTE_CONDUCTOR_LINEAGE_CONTRACT,
       expectedControlContract: EXPECTED_CONTROL_CONTRACT,
       expectedCanvasContract: EXPECTED_CANVAS_CONTRACT,
 
-      indexScriptPresent: FALLBACK.UNKNOWN,
-      indexScriptSrc: FALLBACK.UNKNOWN,
-      indexScriptCacheKey: FALLBACK.UNKNOWN,
-      indexAuthoritySource: FALLBACK.UNKNOWN,
-      indexAuthorityPresent: FALLBACK.UNKNOWN,
-      indexContract: FALLBACK.UNKNOWN,
-      indexCurrentSpreadRecognized: FALLBACK.UNKNOWN,
-      indexExpressionChainLoadClaim: FALLBACK.UNKNOWN,
+      targetHtmlContract: "UNKNOWN",
+      targetRouteSignal: "UNKNOWN",
+      targetPageSignal: "UNKNOWN",
+      targetPageContextSignal: "UNKNOWN",
+      targetDatasetIndexJsContract: "UNKNOWN",
+      targetDatasetRouteConductorContract: "UNKNOWN",
+      targetDatasetRouteConductorCurrent: "UNKNOWN",
+      targetDatasetCanvasContract: "UNKNOWN",
+      targetDatasetControlContract: "UNKNOWN",
 
-      routeConductorScriptPresent: FALLBACK.UNKNOWN,
-      routeConductorScriptSrc: FALLBACK.UNKNOWN,
-      routeConductorScriptCacheKey: FALLBACK.UNKNOWN,
-      routeConductorAuthoritySource: FALLBACK.UNKNOWN,
-      routeConductorAuthorityPresent: FALLBACK.UNKNOWN,
-      routeConductorAuthorityContract: FALLBACK.UNKNOWN,
-      routeConductorServedContract: FALLBACK.UNKNOWN,
-      routeConductorCurrentSpreadRecognized: FALLBACK.UNKNOWN,
-      routeConductorRenderedAuthorityOverridesScriptCache: FALLBACK.UNKNOWN,
-      cacheKeyStaleNonBlocking: FALLBACK.UNKNOWN,
-      servedContractMismatchIsBlocking: FALLBACK.UNKNOWN,
-      bishopQueenRecognitionFunnelClaim: FALLBACK.UNKNOWN,
-      routeConductorCanvasHandoffClaim: FALLBACK.UNKNOWN,
+      indexScriptPresent: "UNKNOWN",
+      indexScriptSrc: "UNKNOWN",
+      indexScriptCacheKey: "UNKNOWN",
+      indexAuthoritySource: "UNKNOWN",
+      indexAuthorityPresent: "UNKNOWN",
+      indexContract: "UNKNOWN",
+      indexCurrentSpreadRecognized: "UNKNOWN",
+      indexExpressionChainLoadClaim: "UNKNOWN",
 
-      controlScriptPresent: FALLBACK.UNKNOWN,
-      controlScriptSrc: FALLBACK.UNKNOWN,
-      controlAuthoritySource: FALLBACK.UNKNOWN,
-      controlAuthorityPresent: FALLBACK.UNKNOWN,
-      controlReceiptPresent: FALLBACK.UNKNOWN,
-      controlContract: FALLBACK.UNKNOWN,
-      controlFileStatus: FALLBACK.UNKNOWN,
-      controlHandshakeStatus: FALLBACK.UNKNOWN,
-      motionTouchStatus: FALLBACK.UNKNOWN,
-      dragStatus: FALLBACK.UNKNOWN,
-      viewControlStatus: FALLBACK.UNKNOWN,
+      routeConductorScriptPresent: "UNKNOWN",
+      routeConductorScriptSrc: "UNKNOWN",
+      routeConductorScriptCacheKey: "UNKNOWN",
+      routeConductorAuthoritySource: "UNKNOWN",
+      routeConductorAuthorityPresent: "UNKNOWN",
+      routeConductorAuthorityContract: "UNKNOWN",
+      routeConductorServedContract: "UNKNOWN",
+      routeConductorCurrentSpreadRecognized: "UNKNOWN",
+      routeConductorRenderedAuthorityOverridesScriptCache: "UNKNOWN",
+      cacheKeyStaleNonBlocking: "UNKNOWN",
+      servedContractMismatchIsBlocking: "UNKNOWN",
+      bishopQueenRecognitionFunnelClaim: "UNKNOWN",
+      routeConductorCanvasHandoffClaim: "UNKNOWN",
 
-      canvasScriptPresent: FALLBACK.UNKNOWN,
-      canvasScriptSrc: FALLBACK.UNKNOWN,
-      canvasAuthoritySource: FALLBACK.UNKNOWN,
-      canvasAuthorityPresent: FALLBACK.UNKNOWN,
-      canvasReceiptPresent: FALLBACK.UNKNOWN,
-      canvasContract: FALLBACK.UNKNOWN,
-      canvasParentRecognized: FALLBACK.UNKNOWN,
-      canvasExpressionHubClaim: FALLBACK.UNKNOWN,
-      canvasFingerManagerClaim: FALLBACK.UNKNOWN,
-      visibleBaseGlobeCarrierClaim: FALLBACK.UNKNOWN,
-      canvasDrawClaim: FALLBACK.UNKNOWN,
-      canvasSourceCompositionStatus: FALLBACK.UNKNOWN,
+      controlScriptPresent: "UNKNOWN",
+      controlScriptSrc: "UNKNOWN",
+      controlAuthoritySource: "UNKNOWN",
+      controlAuthorityPresent: "UNKNOWN",
+      controlReceiptPresent: "UNKNOWN",
+      controlContract: "UNKNOWN",
+      controlFileStatus: "UNKNOWN",
+      controlHandshakeStatus: "UNKNOWN",
+      motionTouchStatus: "UNKNOWN",
+      dragStatus: "UNKNOWN",
+      viewControlStatus: "UNKNOWN",
 
-      hexAuthorityScriptPresent: FALLBACK.UNKNOWN,
-      hexSurfaceScriptPresent: FALLBACK.UNKNOWN,
-      hexAuthorityGlobalPresent: FALLBACK.UNKNOWN,
-      hexSurfaceGlobalPresent: FALLBACK.UNKNOWN,
-      indexVisibleExpressionChainStatus: FALLBACK.UNKNOWN,
+      canvasScriptPresent: "UNKNOWN",
+      canvasScriptSrc: "UNKNOWN",
+      canvasAuthoritySource: "UNKNOWN",
+      canvasAuthorityPresent: "UNKNOWN",
+      canvasReceiptPresent: "UNKNOWN",
+      canvasContract: "UNKNOWN",
+      canvasParentRecognized: "UNKNOWN",
+      canvasExpressionHubClaim: "UNKNOWN",
+      canvasFingerManagerClaim: "UNKNOWN",
+      visibleBaseGlobeCarrierClaim: "UNKNOWN",
+      canvasDrawClaim: "UNKNOWN",
+      canvasSourceCompositionStatus: "UNKNOWN",
 
-      railEastScriptPresent: FALLBACK.UNKNOWN,
-      railEastAuthoritySource: FALLBACK.UNKNOWN,
-      railEastAuthorityPresent: FALLBACK.UNKNOWN,
-      railEastContract: FALLBACK.UNKNOWN,
-      railEastStatus: FALLBACK.UNKNOWN,
+      hexAuthorityScriptPresent: "UNKNOWN",
+      hexSurfaceScriptPresent: "UNKNOWN",
+      hexAuthorityGlobalPresent: "UNKNOWN",
+      hexSurfaceGlobalPresent: "UNKNOWN",
+      indexVisibleExpressionChainStatus: "UNKNOWN",
 
-      probeNorthScriptPresent: FALLBACK.UNKNOWN,
-      probeNorthAuthoritySource: FALLBACK.UNKNOWN,
-      probeNorthAuthorityPresent: FALLBACK.UNKNOWN,
-      probeNorthContract: FALLBACK.UNKNOWN,
-      probeNorthStatus: FALLBACK.UNKNOWN,
+      railEastScriptPresent: "UNKNOWN",
+      railEastAuthoritySource: "UNKNOWN",
+      railEastAuthorityPresent: "UNKNOWN",
+      railEastContractObserved: "UNKNOWN",
+      railEastStatus: "UNKNOWN",
+
+      probeNorthScriptPresent: "UNKNOWN",
+      probeNorthAuthoritySource: "UNKNOWN",
+      probeNorthAuthorityPresent: "UNKNOWN",
+      probeNorthContract: "UNKNOWN",
+      probeNorthStatus: "UNKNOWN",
 
       probeEastSelfObserved: "true",
       probeEastAuthoritySource: "HEARTH.diagnosticProbeEast",
-      probeEastContract: CONTRACT,
+      probeEastObservedContract: CONTRACT,
 
-      probeSouthScriptPresent: FALLBACK.UNKNOWN,
-      probeSouthAuthoritySource: FALLBACK.UNKNOWN,
-      probeSouthAuthorityPresent: FALLBACK.UNKNOWN,
-      probeSouthContract: FALLBACK.UNKNOWN,
+      probeWestScriptPresent: "UNKNOWN",
+      probeWestAuthoritySource: "UNKNOWN",
+      probeWestAuthorityPresent: "UNKNOWN",
+      probeWestContract: "UNKNOWN",
 
-      probeWestScriptPresent: FALLBACK.UNKNOWN,
-      probeWestAuthoritySource: FALLBACK.UNKNOWN,
-      probeWestAuthorityPresent: FALLBACK.UNKNOWN,
-      probeWestContract: FALLBACK.UNKNOWN,
+      probeCanvasSurfaceTruthScriptPresent: "UNKNOWN",
+      probeCanvasSurfaceTruthAuthoritySource: "UNKNOWN",
+      probeCanvasSurfaceTruthAuthorityPresent: "UNKNOWN",
+      probeCanvasSurfaceTruthContract: "UNKNOWN",
 
-      stagePresent: FALLBACK.UNKNOWN,
-      stageSelector: FALLBACK.UNKNOWN,
-      stageRect: FALLBACK.UNKNOWN,
-      stageRectNonZero: FALLBACK.UNKNOWN,
-      mountPresent: FALLBACK.UNKNOWN,
-      mountSelector: FALLBACK.UNKNOWN,
-      mountRect: FALLBACK.UNKNOWN,
-      mountRectNonZero: FALLBACK.UNKNOWN,
-      canvasElementPresent: FALLBACK.UNKNOWN,
-      canvasElementSelector: FALLBACK.UNKNOWN,
-      canvasElementRect: FALLBACK.UNKNOWN,
-      canvasElementRectNonZero: FALLBACK.UNKNOWN,
-      canvasAttributeWidth: FALLBACK.UNKNOWN,
-      canvasAttributeHeight: FALLBACK.UNKNOWN,
-      expressionSurfacePresent: FALLBACK.UNKNOWN,
-      expressionSurfaceSelector: FALLBACK.UNKNOWN,
-      expressionSurfaceRect: FALLBACK.UNKNOWN,
-      expressionSurfaceRectNonZero: FALLBACK.UNKNOWN,
-      stageMountBridgeStatus: FALLBACK.UNKNOWN,
-      expressionSurfaceBridgeStatus: FALLBACK.UNKNOWN,
+      probeSouthScriptPresent: "UNKNOWN",
+      probeSouthAuthoritySource: "UNKNOWN",
+      probeSouthAuthorityPresent: "UNKNOWN",
+      probeSouthContract: "UNKNOWN",
+
+      stagePresent: "UNKNOWN",
+      stageSelector: "UNKNOWN",
+      stageRect: "UNKNOWN",
+      stageRectNonzero: "UNKNOWN",
+      mountPresent: "UNKNOWN",
+      mountSelector: "UNKNOWN",
+      mountRect: "UNKNOWN",
+      mountRectNonzero: "UNKNOWN",
+      canvasElementPresent: "UNKNOWN",
+      canvasElementSelector: "UNKNOWN",
+      canvasElementRect: "UNKNOWN",
+      canvasElementRectNonzero: "UNKNOWN",
+      canvasAttributeWidth: "UNKNOWN",
+      canvasAttributeHeight: "UNKNOWN",
+      expressionSurfacePresent: "UNKNOWN",
+      expressionSurfaceSelector: "UNKNOWN",
+      expressionSurfaceRect: "UNKNOWN",
+      expressionSurfaceRectNonzero: "UNKNOWN",
+      stageMountBridgeStatus: "UNKNOWN",
+      expressionSurfaceBridgeStatus: "UNKNOWN",
 
       labFileObservedCount: "0",
-      labBridgeCompositionStatus: FALLBACK.UNKNOWN,
-      bishopFileObservedCount: "0",
-      bishopBridgeCompositionStatus: FALLBACK.UNKNOWN,
+      labBridgeCompositionStatus: "UNKNOWN",
       channelObservedCount: "0",
-      channelCompositionStatus: FALLBACK.UNKNOWN,
+      channelCompositionStatus: "UNKNOWN",
       fingerObservedCount: "0",
-      fingerCompositionStatus: FALLBACK.UNKNOWN,
+      fingerCompositionStatus: "UNKNOWN",
 
-      sourceSideCurrentSpreadStatus: FALLBACK.UNKNOWN,
-      fileCompositionStatus: FALLBACK.UNKNOWN,
-      bridgeSurfaceCompositionStatus: FALLBACK.UNKNOWN,
-      canvasExpressionInstrumentationStatus: FALLBACK.UNKNOWN,
-      zoneOfInflictionOwner: FALLBACK.UNKNOWN,
-      zoneOfInflictionFile: FILE,
-      zoneOfInflictionClass: FALLBACK.UNKNOWN,
-      zoneOfInflictionReason: FALLBACK.UNKNOWN,
-      probeEastDisposition: FALLBACK.UNKNOWN,
+      sourceSideCurrentSpreadStatus: "UNKNOWN",
+      fileCompositionStatus: "ANCHOR_READY_TARGET_NOT_YET_PROBED",
+      bridgeSurfaceCompositionStatus: "ANCHOR_READY_TARGET_NOT_YET_PROBED",
+      canvasExpressionInstrumentationStatus: "ANCHOR_READY_TARGET_NOT_YET_PROBED",
+
+      zoneOfInflictionOwner: "NONE",
+      zoneOfInflictionFile: "NONE",
+      zoneOfInflictionClass: "NONE",
+      zoneOfInflictionReason: "PROBE_EAST_ANCHOR_PUBLISHED_WAITING_FOR_NORTH_CALL",
+      probeEastDisposition: "ANCHOR_READY_WAITING_RUN",
 
       scriptFootprint: {},
       authorityFootprint: {},
+      notes: ["PROBE_EAST_ANCHOR_PUBLISHED_SYNCHRONOUSLY"],
 
-      probeEastNotes: [],
       updatedAt: nowIso(),
-
-      ...FINAL_FALSE
+      ...NO_CLAIMS,
+      ...UPPER_NO_CLAIMS
     };
   }
 
   function makeEvidencePacket(state) {
     return {
-      PROBE_EAST_STATUS: state.probeEastStatus,
+      PACKET_NAME: "HEARTH_DIAGNOSTIC_PROBE_EAST_ANCHOR_SAFE_EVIDENCE_PACKET_v1_1",
+
+      PROBE_EAST_STATUS: state.probeEastStatus || state.PROBE_EAST_STATUS || "READY",
       PROBE_EAST_CONTRACT: CONTRACT,
       PROBE_EAST_RECEIPT: RECEIPT,
+      PROBE_EAST_IMPLEMENTATION_CONTRACT: INTERNAL_IMPLEMENTATION_CONTRACT,
+      PROBE_EAST_IMPLEMENTATION_RECEIPT: INTERNAL_IMPLEMENTATION_RECEIPT,
       PROBE_EAST_VERSION: VERSION,
       PROBE_EAST_FILE: FILE,
+
       TARGET_ROUTE: TARGET_ROUTE,
       DIAGNOSTIC_ROUTE: DIAGNOSTIC_ROUTE,
 
-      PARENT_NORTH_CONTRACT: state.parentNorthContract,
-      PARENT_NORTH_RECEIPT: state.parentNorthReceipt,
+      PARENT_NORTH_CONTRACT: PARENT_NORTH_CONTRACT,
+      PARENT_NORTH_RECEIPT: PARENT_NORTH_RECEIPT,
+      PREVIOUS_PARENT_NORTH_CONTRACT: PREVIOUS_PARENT_NORTH_CONTRACT,
       RAIL_EAST_CONTRACT: RAIL_EAST_CONTRACT,
       RAIL_EAST_IMPLEMENTATION_CONTRACT: RAIL_EAST_IMPLEMENTATION_CONTRACT,
+
+      PROBE_EAST_ANCHOR_STATUS: state.anchorStatus,
+      PROBE_EAST_ANCHOR_OBSERVED: state.anchorObserved,
+      PROBE_EAST_ANCHOR_SOURCE_PATH_PRIMARY: state.anchorSourcePathPrimary,
+      PROBE_EAST_ANCHOR_SOURCE_PATHS: state.anchorSourcePaths,
+      PROBE_EAST_CHRONOLOGY_OBSERVATION_GUARD: state.chronologyObservationGuard,
+      PROBE_EAST_CHRONOLOGY_FAILURE_CLASS_ADDRESSED: state.chronologyFailureClassAddressed,
 
       DIAGNOSTIC_ROUTE_HTML_RENEWAL_REQUIRED: false,
       RECEIVER_STILL_CALLS_NORTH_ONLY: true,
@@ -1976,6 +1840,7 @@
       EXPECTED_HTML_CONTRACT: state.expectedHtmlContract,
       EXPECTED_INDEX_JS_CONTRACT: state.expectedIndexJsContract,
       EXPECTED_ROUTE_CONDUCTOR_CONTRACT: state.expectedRouteConductorContract,
+      EXPECTED_ROUTE_CONDUCTOR_LINEAGE_CONTRACT: state.expectedRouteConductorLineageContract,
       EXPECTED_CONTROL_CONTRACT: state.expectedControlContract,
       EXPECTED_CANVAS_CONTRACT: state.expectedCanvasContract,
 
@@ -2046,7 +1911,7 @@
       RAIL_EAST_SCRIPT_PRESENT: state.railEastScriptPresent,
       RAIL_EAST_AUTHORITY_SOURCE: state.railEastAuthoritySource,
       RAIL_EAST_AUTHORITY_PRESENT: state.railEastAuthorityPresent,
-      RAIL_EAST_OBSERVED_CONTRACT: state.railEastContract,
+      RAIL_EAST_OBSERVED_CONTRACT: state.railEastContractObserved,
       RAIL_EAST_STATUS: state.railEastStatus,
 
       PROBE_NORTH_SCRIPT_PRESENT: state.probeNorthScriptPresent,
@@ -2057,43 +1922,46 @@
 
       PROBE_EAST_SELF_OBSERVED: state.probeEastSelfObserved,
       PROBE_EAST_AUTHORITY_SOURCE: state.probeEastAuthoritySource,
-      PROBE_EAST_OBSERVED_CONTRACT: state.probeEastContract,
-
-      PROBE_SOUTH_SCRIPT_PRESENT: state.probeSouthScriptPresent,
-      PROBE_SOUTH_AUTHORITY_SOURCE: state.probeSouthAuthoritySource,
-      PROBE_SOUTH_AUTHORITY_PRESENT: state.probeSouthAuthorityPresent,
-      PROBE_SOUTH_CONTRACT: state.probeSouthContract,
+      PROBE_EAST_OBSERVED_CONTRACT: state.probeEastObservedContract,
 
       PROBE_WEST_SCRIPT_PRESENT: state.probeWestScriptPresent,
       PROBE_WEST_AUTHORITY_SOURCE: state.probeWestAuthoritySource,
       PROBE_WEST_AUTHORITY_PRESENT: state.probeWestAuthorityPresent,
       PROBE_WEST_CONTRACT: state.probeWestContract,
 
+      PROBE_CANVAS_SURFACE_TRUTH_SCRIPT_PRESENT: state.probeCanvasSurfaceTruthScriptPresent,
+      PROBE_CANVAS_SURFACE_TRUTH_AUTHORITY_SOURCE: state.probeCanvasSurfaceTruthAuthoritySource,
+      PROBE_CANVAS_SURFACE_TRUTH_AUTHORITY_PRESENT: state.probeCanvasSurfaceTruthAuthorityPresent,
+      PROBE_CANVAS_SURFACE_TRUTH_CONTRACT: state.probeCanvasSurfaceTruthContract,
+
+      PROBE_SOUTH_SCRIPT_PRESENT: state.probeSouthScriptPresent,
+      PROBE_SOUTH_AUTHORITY_SOURCE: state.probeSouthAuthoritySource,
+      PROBE_SOUTH_AUTHORITY_PRESENT: state.probeSouthAuthorityPresent,
+      PROBE_SOUTH_CONTRACT: state.probeSouthContract,
+
       STAGE_PRESENT: state.stagePresent,
       STAGE_SELECTOR: state.stageSelector,
       STAGE_RECT: state.stageRect,
-      STAGE_RECT_NONZERO: state.stageRectNonZero,
+      STAGE_RECT_NONZERO: state.stageRectNonzero,
       MOUNT_PRESENT: state.mountPresent,
       MOUNT_SELECTOR: state.mountSelector,
       MOUNT_RECT: state.mountRect,
-      MOUNT_RECT_NONZERO: state.mountRectNonZero,
+      MOUNT_RECT_NONZERO: state.mountRectNonzero,
       CANVAS_ELEMENT_PRESENT: state.canvasElementPresent,
       CANVAS_ELEMENT_SELECTOR: state.canvasElementSelector,
       CANVAS_ELEMENT_RECT: state.canvasElementRect,
-      CANVAS_ELEMENT_RECT_NONZERO: state.canvasElementRectNonZero,
+      CANVAS_ELEMENT_RECT_NONZERO: state.canvasElementRectNonzero,
       CANVAS_ATTRIBUTE_WIDTH: state.canvasAttributeWidth,
       CANVAS_ATTRIBUTE_HEIGHT: state.canvasAttributeHeight,
       EXPRESSION_SURFACE_PRESENT: state.expressionSurfacePresent,
       EXPRESSION_SURFACE_SELECTOR: state.expressionSurfaceSelector,
       EXPRESSION_SURFACE_RECT: state.expressionSurfaceRect,
-      EXPRESSION_SURFACE_RECT_NONZERO: state.expressionSurfaceRectNonZero,
+      EXPRESSION_SURFACE_RECT_NONZERO: state.expressionSurfaceRectNonzero,
       STAGE_MOUNT_BRIDGE_STATUS: state.stageMountBridgeStatus,
       EXPRESSION_SURFACE_BRIDGE_STATUS: state.expressionSurfaceBridgeStatus,
 
       LAB_FILE_OBSERVED_COUNT: state.labFileObservedCount,
       LAB_BRIDGE_COMPOSITION_STATUS: state.labBridgeCompositionStatus,
-      BISHOP_FILE_OBSERVED_COUNT: state.bishopFileObservedCount,
-      BISHOP_BRIDGE_COMPOSITION_STATUS: state.bishopBridgeCompositionStatus,
       CHANNEL_OBSERVED_COUNT: state.channelObservedCount,
       CHANNEL_COMPOSITION_STATUS: state.channelCompositionStatus,
       FINGER_OBSERVED_COUNT: state.fingerObservedCount,
@@ -2111,8 +1979,7 @@
 
       SCRIPT_FOOTPRINT: clonePlain(state.scriptFootprint),
       AUTHORITY_FOOTPRINT: clonePlain(state.authorityFootprint),
-
-      PROBE_EAST_NOTES: state.probeEastNotes.length ? state.probeEastNotes.join(" | ") : FALLBACK.NONE,
+      PROBE_EAST_NOTES: state.notes.length ? state.notes.join(" | ") : "NONE",
 
       PRODUCTION_MUTATION_AUTHORIZED: false,
       CACHE_REPAIR_AUTHORIZED: false,
@@ -2125,38 +1992,65 @@
       FINAL_PRIMARY_CASE_AUTHORITY: false,
       FINAL_RECOMMENDATION_AUTHORITY: false,
 
-      F13_CLAIMED: false,
-      F21_ELIGIBLE_FOR_NORTH: false,
-      F21_CLAIMED_BY_DIAGNOSTIC_RAIL: false,
-      READY_TEXT_ALLOWED: false,
-      READY_TEXT_CLAIMED_BY_DIAGNOSTIC_RAIL: false,
-      VISUAL_PASS_CLAIMED: false,
-      GENERATED_IMAGE: false,
-      GRAPHIC_BOX: false,
-      WEBGL: false,
+      ...NO_CLAIMS,
+      ...UPPER_NO_CLAIMS,
 
       updatedAt: state.updatedAt
     };
   }
 
-  async function runProbeEast(options = {}) {
-    const state = makeState();
+  function publish(state) {
+    lastState = clonePlain(state || makeState());
+    lastEvidencePacket = makeEvidencePacket(lastState);
 
-    state.probeEastStatus = STATUS.RUNNING;
+    const hearth = ensureObject(root, "HEARTH");
+    const lab = ensureObject(root, "DEXTER_LAB");
+
+    hearth.diagnosticProbeEast = api;
+    hearth.diagnosticEastProbe = api;
+    hearth.diagnosticProbeEastServedSourceFileComposition = api;
+    hearth.diagnosticProbeEastAnchorSafeChronologyObservation = api;
+    hearth.diagnosticProbeEastReceipt = getProbeEastReceipt();
+    hearth.diagnosticProbeEastEvidence = clonePlain(lastEvidencePacket);
+
+    lab.hearthDiagnosticProbeEast = api;
+    lab.hearthDiagnosticEastProbe = api;
+    lab.hearthDiagnosticProbeEastServedSourceFileComposition = api;
+    lab.hearthDiagnosticProbeEastAnchorSafeChronologyObservation = api;
+
+    root.HEARTH_DIAGNOSTIC_PROBE_EAST = api;
+    root.HEARTH_DIAGNOSTIC_EAST_PROBE = api;
+    root.HEARTH_DIAGNOSTIC_PROBE_EAST_SERVED_SOURCE_FILE_COMPOSITION = api;
+    root.HEARTH_DIAGNOSTIC_PROBE_EAST_ANCHOR_SAFE_CHRONOLOGY_OBSERVATION = api;
+    root.HEARTH_DIAGNOSTIC_PROBE_EAST_RECEIPT = getProbeEastReceipt();
+    root.HEARTH_DIAGNOSTIC_PROBE_EAST_EVIDENCE = clonePlain(lastEvidencePacket);
+
+    return true;
+  }
+
+  function runProbeEast(options = {}) {
+    const state = makeState("RUNNING");
+
+    state.probeEastStatus = "RUNNING";
+    state.PROBE_EAST_STATUS = "RUNNING";
     state.probeEastRunStatus = "RUNNING";
+    state.probeEastRunComplete = "false";
     state.updatedAt = nowIso();
+
+    publish(state);
 
     try {
       const target = resolveTarget(options, state);
 
-      state.targetDocumentSource = target.source || FALLBACK.UNKNOWN;
+      state.targetDocumentSource = target.source || "UNKNOWN";
       state.hearthTargetConfirmed = boolText(Boolean(
         target.targetDocument &&
         hasHearthTargetSignals(target.targetDocument, target.targetWindow)
       ));
 
       if (!target.targetDocument) {
-        state.probeEastStatus = STATUS.PARTIAL;
+        state.probeEastStatus = "PARTIAL";
+        state.PROBE_EAST_STATUS = "PARTIAL";
         state.probeEastRunComplete = "false";
         state.probeEastRunStatus = "PARTIAL_SOURCE_ONLY_NO_TARGET_DOCUMENT";
         state.fileCompositionStatus = "TARGET_DOCUMENT_REQUIRED_FOR_PROBE_EAST_SOURCE_COMPOSITION";
@@ -2171,13 +2065,7 @@
         state.updatedAt = nowIso();
         publish(state);
 
-        return {
-          ok: true,
-          contract: CONTRACT,
-          receipt: RECEIPT,
-          evidence: clonePlain(lastEvidencePacket),
-          state: clonePlain(lastState)
-        };
+        return clonePlain(lastEvidencePacket);
       }
 
       const targetDocument = target.targetDocument;
@@ -2198,35 +2086,31 @@
       deriveHexChainStatus(state, scripts, authorities);
       deriveRailProbeStatus(state, scripts, authorities);
       readBridgeSurfaces(targetDocument, state);
-      deriveLabBishopFingerStatus(state, scripts, authorities);
+      deriveLabChannelFingerStatus(state, scripts, authorities);
       deriveCompositionVerdict(state);
 
       state.probeEastRunComplete = "true";
-      state.probeEastRunStatus = FALLBACK.COMPLETE;
-      state.probeEastStatus = STATUS.COMPLETE;
+      state.probeEastRunStatus = "COMPLETE";
+      state.probeEastStatus = "COMPLETE";
+      state.PROBE_EAST_STATUS = "COMPLETE";
       state.updatedAt = nowIso();
 
       addNote(state, "PROBE_EAST_SOURCE_SIDE_FILE_COMPOSITION_READ_COMPLETE");
       addNote(state, "PROBE_EAST_BRIDGE_SURFACE_COMPOSITION_READ_COMPLETE");
+      addNote(state, "PROBE_EAST_ANCHOR_SAFE_OBSERVATION_COMPLETE");
       addNote(state, "PROBE_EAST_NO_REPAIR_NO_MUTATION_NO_RELEASE");
 
       publish(state);
-
-      return {
-        ok: true,
-        contract: CONTRACT,
-        receipt: RECEIPT,
-        evidence: clonePlain(lastEvidencePacket),
-        state: clonePlain(lastState)
-      };
+      return clonePlain(lastEvidencePacket);
     } catch (error) {
-      state.probeEastStatus = STATUS.FAILED;
+      state.probeEastStatus = "FAILED";
+      state.PROBE_EAST_STATUS = "FAILED";
       state.probeEastRunComplete = "false";
-      state.probeEastRunStatus = FALLBACK.FAILED;
+      state.probeEastRunStatus = "FAILED";
       state.targetAccessError = `PROBE_EAST_TOP_LEVEL_ERROR:${clean(error && error.message ? error.message : error, 1000)}`;
-      state.fileCompositionStatus = FALLBACK.FAILED;
-      state.bridgeSurfaceCompositionStatus = FALLBACK.FAILED;
-      state.canvasExpressionInstrumentationStatus = FALLBACK.FAILED;
+      state.fileCompositionStatus = "FAILED";
+      state.bridgeSurfaceCompositionStatus = "FAILED";
+      state.canvasExpressionInstrumentationStatus = "FAILED";
       state.zoneOfInflictionOwner = "PROBE_EAST_ERROR";
       state.zoneOfInflictionFile = FILE;
       state.zoneOfInflictionClass = "PROBE_EAST_RUNTIME_ERROR";
@@ -2234,17 +2118,9 @@
       addNote(state, state.targetAccessError);
 
       state.updatedAt = nowIso();
-
       publish(state);
 
-      return {
-        ok: false,
-        contract: CONTRACT,
-        receipt: RECEIPT,
-        error: state.targetAccessError,
-        evidence: clonePlain(lastEvidencePacket),
-        state: clonePlain(lastState)
-      };
+      return clonePlain(lastEvidencePacket);
     }
   }
 
@@ -2255,6 +2131,8 @@
       childRole: "PROBE_EAST_SERVED_SOURCE_FILE_COMPOSITION",
       contract: CONTRACT,
       receipt: RECEIPT,
+      implementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
+      implementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
       version: VERSION,
       file: FILE,
       targetRoute: TARGET_ROUTE,
@@ -2262,12 +2140,15 @@
 
       parentNorthContract: PARENT_NORTH_CONTRACT,
       parentNorthReceipt: PARENT_NORTH_RECEIPT,
+      previousParentNorthContract: PREVIOUS_PARENT_NORTH_CONTRACT,
       railEastContract: RAIL_EAST_CONTRACT,
       railEastImplementationContract: RAIL_EAST_IMPLEMENTATION_CONTRACT,
 
-      expectedContracts: clonePlain(EXPECTED_CONTRACTS),
-      files: clonePlain(FILES),
-      targetSelectors: clonePlain(TARGET_SELECTORS),
+      anchorStatus: evidence.PROBE_EAST_ANCHOR_STATUS || "ANCHOR_PUBLISHED_SYNCHRONOUSLY",
+      anchorObserved: true,
+      anchorSourcePathPrimary: "HEARTH.diagnosticProbeEast",
+      chronologyObservationGuard: "PUBLIC_AUTHORITY_PUBLISHED_BEFORE_TARGET_PROBE",
+      chronologyFailureClassAddressed: "SCRIPT_ALREADY_PRESENT_AUTHORITY_NOT_OBSERVED",
 
       servesNorth: true,
       underHoodProbeLayer: true,
@@ -2288,8 +2169,6 @@
       macroWestReleaseAuthorized: false,
       controlImplementationAuthority: false,
       canvasImplementationAuthority: false,
-      bishopImplementationAuthority: false,
-      queenImplementationAuthority: false,
 
       diagnosticRouteHtmlRenewalRequired: false,
       receiverStillCallsNorthOnly: true,
@@ -2298,18 +2177,19 @@
       getProbeEastReceiptApiAvailable: true,
       getProbeEastStateApiAvailable: true,
 
-      lastProbeEastStatus: evidence.PROBE_EAST_STATUS || STATUS.READY,
-      lastProbeEastRunStatus: evidence.PROBE_EAST_RUN_STATUS || FALLBACK.UNKNOWN,
-      lastSourceSideCurrentSpreadStatus: evidence.SOURCE_SIDE_CURRENT_SPREAD_STATUS || FALLBACK.UNKNOWN,
-      lastFileCompositionStatus: evidence.FILE_COMPOSITION_STATUS || FALLBACK.UNKNOWN,
-      lastBridgeSurfaceCompositionStatus: evidence.BRIDGE_SURFACE_COMPOSITION_STATUS || FALLBACK.UNKNOWN,
-      lastCanvasExpressionInstrumentationStatus: evidence.CANVAS_EXPRESSION_INSTRUMENTATION_STATUS || FALLBACK.UNKNOWN,
-      lastZoneOfInflictionOwner: evidence.ZONE_OF_INFLICTION_OWNER || FALLBACK.UNKNOWN,
+      lastProbeEastStatus: evidence.PROBE_EAST_STATUS || "READY",
+      lastProbeEastRunStatus: evidence.PROBE_EAST_RUN_STATUS || "UNKNOWN",
+      lastSourceSideCurrentSpreadStatus: evidence.SOURCE_SIDE_CURRENT_SPREAD_STATUS || "UNKNOWN",
+      lastFileCompositionStatus: evidence.FILE_COMPOSITION_STATUS || "UNKNOWN",
+      lastBridgeSurfaceCompositionStatus: evidence.BRIDGE_SURFACE_COMPOSITION_STATUS || "UNKNOWN",
+      lastCanvasExpressionInstrumentationStatus: evidence.CANVAS_EXPRESSION_INSTRUMENTATION_STATUS || "UNKNOWN",
+      lastZoneOfInflictionOwner: evidence.ZONE_OF_INFLICTION_OWNER || "UNKNOWN",
       lastZoneOfInflictionFile: evidence.ZONE_OF_INFLICTION_FILE || FILE,
-      lastZoneOfInflictionClass: evidence.ZONE_OF_INFLICTION_CLASS || FALLBACK.UNKNOWN,
-      lastProbeEastDisposition: evidence.PROBE_EAST_DISPOSITION || FALLBACK.UNKNOWN,
+      lastZoneOfInflictionClass: evidence.ZONE_OF_INFLICTION_CLASS || "UNKNOWN",
+      lastProbeEastDisposition: evidence.PROBE_EAST_DISPOSITION || "UNKNOWN",
 
-      ...FINAL_FALSE,
+      ...NO_CLAIMS,
+      ...UPPER_NO_CLAIMS,
 
       updatedAt: nowIso()
     };
@@ -2319,32 +2199,62 @@
     return clonePlain(lastState || makeState());
   }
 
-  function publish(state) {
-    lastState = clonePlain(state);
-    lastEvidencePacket = makeEvidencePacket(state);
+  function getReceipt() {
+    return getProbeEastReceipt();
+  }
 
-    root.HEARTH = root.HEARTH || {};
-    root.HEARTH.diagnosticProbeEast = api;
-    root.HEARTH.diagnosticEastProbe = api;
-    root.HEARTH.diagnosticProbeEastServedSourceFileComposition = api;
-    root.HEARTH.diagnosticProbeEastReceipt = getProbeEastReceipt();
-    root.HEARTH.diagnosticProbeEastEvidence = clonePlain(lastEvidencePacket);
+  function getReceiptLight() {
+    return getProbeEastReceipt();
+  }
 
-    root.DEXTER_LAB = root.DEXTER_LAB || {};
-    root.DEXTER_LAB.hearthDiagnosticProbeEast = api;
-    root.DEXTER_LAB.hearthDiagnosticEastProbe = api;
-    root.DEXTER_LAB.hearthDiagnosticProbeEastServedSourceFileComposition = api;
+  function getState() {
+    return getProbeEastState();
+  }
 
-    root.HEARTH_DIAGNOSTIC_PROBE_EAST = api;
-    root.HEARTH_DIAGNOSTIC_EAST_PROBE = api;
-    root.HEARTH_DIAGNOSTIC_PROBE_EAST_SERVED_SOURCE_FILE_COMPOSITION = api;
-    root.HEARTH_DIAGNOSTIC_PROBE_EAST_RECEIPT = getProbeEastReceipt();
-    root.HEARTH_DIAGNOSTIC_PROBE_EAST_EVIDENCE = clonePlain(lastEvidencePacket);
+  function getReport() {
+    return {
+      receipt: getProbeEastReceipt(),
+      evidence: clonePlain(lastEvidencePacket || makeEvidencePacket(makeState())),
+      state: getProbeEastState()
+    };
+  }
+
+  function getStatusText() {
+    const evidence = lastEvidencePacket || makeEvidencePacket(makeState());
+
+    return [
+      "HEARTH_DIAGNOSTIC_PROBE_EAST_ANCHOR_SAFE_STATUS",
+      `contract=${CONTRACT}`,
+      `receipt=${RECEIPT}`,
+      `implementationContract=${INTERNAL_IMPLEMENTATION_CONTRACT}`,
+      `file=${FILE}`,
+      `anchorStatus=${evidence.PROBE_EAST_ANCHOR_STATUS}`,
+      `anchorObserved=${evidence.PROBE_EAST_ANCHOR_OBSERVED}`,
+      `probeEastStatus=${evidence.PROBE_EAST_STATUS}`,
+      `probeEastRunStatus=${evidence.PROBE_EAST_RUN_STATUS}`,
+      `targetAccessStatus=${evidence.TARGET_ACCESS_STATUS}`,
+      `fileCompositionStatus=${evidence.FILE_COMPOSITION_STATUS}`,
+      `bridgeSurfaceCompositionStatus=${evidence.BRIDGE_SURFACE_COMPOSITION_STATUS}`,
+      `zoneOfInflictionOwner=${evidence.ZONE_OF_INFLICTION_OWNER}`,
+      `zoneOfInflictionFile=${evidence.ZONE_OF_INFLICTION_FILE}`,
+      `zoneOfInflictionClass=${evidence.ZONE_OF_INFLICTION_CLASS}`,
+      "f13Claimed=false",
+      "f21EligibleForNorth=false",
+      "readyTextAllowed=false",
+      "visualPassClaimed=false",
+      "generatedImage=false",
+      "graphicBox=false",
+      "webGL=false"
+    ].join("\n");
   }
 
   Object.assign(api, {
     contract: CONTRACT,
+    CONTRACT,
     receipt: RECEIPT,
+    RECEIPT,
+    implementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
+    implementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
     version: VERSION,
     file: FILE,
     targetRoute: TARGET_ROUTE,
@@ -2352,18 +2262,30 @@
 
     parentNorthContract: PARENT_NORTH_CONTRACT,
     parentNorthReceipt: PARENT_NORTH_RECEIPT,
+    previousParentNorthContract: PREVIOUS_PARENT_NORTH_CONTRACT,
     railEastContract: RAIL_EAST_CONTRACT,
     railEastImplementationContract: RAIL_EAST_IMPLEMENTATION_CONTRACT,
 
-    expectedContracts: clonePlain(EXPECTED_CONTRACTS),
     files: clonePlain(FILES),
     targetSelectors: clonePlain(TARGET_SELECTORS),
     globalPaths: clonePlain(GLOBAL_PATHS),
     fingerPaths: clonePlain(FINGER_PATHS),
 
+    anchorStatus: "ANCHOR_PUBLISHED_SYNCHRONOUSLY",
+    anchorObserved: true,
+    anchorSourcePathPrimary: "HEARTH.diagnosticProbeEast",
+    chronologyObservationGuard: "PUBLIC_AUTHORITY_PUBLISHED_BEFORE_TARGET_PROBE",
+    chronologyFailureClassAddressed: "SCRIPT_ALREADY_PRESENT_AUTHORITY_NOT_OBSERVED",
+
     runProbeEast,
     getProbeEastReceipt,
     getProbeEastState,
+    getReceipt,
+    getReceiptLight,
+    getStatus: getReceiptLight,
+    getState,
+    getReport,
+    getStatusText,
 
     supportsSourceSideFileComposition: true,
     supportsBridgeSurfaceComposition: true,
@@ -2380,6 +2302,7 @@
     supportsRailEastNonRenewalBoundary: true,
     supportsNorthOnlyReceiverBoundary: true,
     supportsNoHtmlRenewalRequired: true,
+    supportsAnchorSafeChronologyObservation: true,
 
     ownsSourceSideFileComposition: true,
     ownsBridgeSurfaceComposition: true,
@@ -2397,8 +2320,6 @@
     ownsMacroWestRelease: false,
     ownsControlImplementation: false,
     ownsCanvasImplementation: false,
-    ownsBishopImplementation: false,
-    ownsQueenImplementation: false,
 
     diagnosticRouteHtmlRenewalRequired: false,
     receiverStillCallsNorthOnly: true,
@@ -2409,10 +2330,19 @@
     canvasReleaseAuthorized: false,
     macroWestReleaseAuthorized: false,
 
-    ...FINAL_FALSE
+    ...NO_CLAIMS,
+    ...UPPER_NO_CLAIMS,
+
+    get evidence() {
+      return clonePlain(lastEvidencePacket || makeEvidencePacket(makeState()));
+    },
+
+    get state() {
+      return getProbeEastState();
+    }
   });
 
-  publish(makeState());
+  publish(makeState("ANCHOR_PUBLISHED_WAITING_RUN"));
 
   if (typeof module !== "undefined" && module.exports) {
     module.exports = api;

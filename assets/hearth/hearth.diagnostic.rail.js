@@ -1,18 +1,25 @@
 // /assets/hearth/hearth.diagnostic.rail.js
 // HEARTH_DIAGNOSTIC_RAIL_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_TNT_v11
 // Internal controlled renewal:
-// HEARTH_DIAGNOSTIC_RAIL_NORTH_DELEGATORY_HANDSHAKE_HANDOFF_VARIANCE_MATRIX_TNT_v11_3
+// HEARTH_DIAGNOSTIC_RAIL_NORTH_POST_EVIDENCE_LANE_ARBITRATION_TNT_v11_4
 // Full-file replacement.
 // Diagnostic rail NORTH parent only.
 //
 // Purpose:
 // - Preserve public NORTH v11 contract and receipt expected by diagnostic route.
 // - Preserve diagnostic receiver behavior: receiver still calls NORTH only.
-// - Preserve v11_2 route/canvas permission-gate pair audit.
-// - Add full construct-level delegatory handshake / intended-handoff variance matrix.
-// - Prevent one confirmed handshake from being treated as whole-chain permission.
-// - Report each file relationship independently as permission granted, not granted, pending, or unobserved.
-// - Distinguish handshake from handoff without forcing every edge to be bidirectional.
+// - Preserve v11_3 delegatory handshake / intended-handoff variance matrix.
+// - Correct the prior self-conflict where chronology success, canvas-surface failure,
+//   and delegatory permission failure competed for the same recommendation slot.
+// - Split post-evidence handling into separate lanes:
+//   1. chronology execution lane
+//   2. canvas surface truth lane
+//   3. delegatory permission lane
+//   4. final arbitration lane
+// - Treat completed diagnostic chronology as execution success, not visual success.
+// - Treat explicit Canvas Surface Truth failure as the primary visible-surface owner.
+// - Keep delegatory permission gaps reportable without letting them override a harder
+//   canvas/load/draw/viewport failure.
 // - Preserve Controls as Queen motion/input authority.
 // - Preserve Route Conductor / neighboring Showroom Bishop as upstream permission and active scan authority.
 // - Preserve Canvas as presentation/output receiver, DOM surface owner, and bridge to downstream surface expression.
@@ -48,18 +55,23 @@
     "HEARTH_DIAGNOSTIC_RAIL_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_RECEIPT_v11";
 
   const INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_DELEGATORY_HANDSHAKE_HANDOFF_VARIANCE_MATRIX_TNT_v11_3";
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_POST_EVIDENCE_LANE_ARBITRATION_TNT_v11_4";
   const INTERNAL_RENEWAL_RECEIPT =
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_DELEGATORY_HANDSHAKE_HANDOFF_VARIANCE_MATRIX_RECEIPT_v11_3";
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_POST_EVIDENCE_LANE_ARBITRATION_RECEIPT_v11_4";
 
   const PREVIOUS_INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_ROUTE_CANVAS_PERMISSION_GATE_PAIR_AUDIT_ANCHOR_TNT_v11_2";
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_DELEGATORY_HANDSHAKE_HANDOFF_VARIANCE_MATRIX_TNT_v11_3";
   const PREVIOUS_INTERNAL_RENEWAL_RECEIPT =
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_ROUTE_CANVAS_PERMISSION_GATE_PAIR_AUDIT_ANCHOR_RECEIPT_v11_2";
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_DELEGATORY_HANDSHAKE_HANDOFF_VARIANCE_MATRIX_RECEIPT_v11_3";
 
   const LINEAGE_INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_SCRIPT_PRESENT_AUTHORITY_RECOVERY_AND_F21_FAILURE_TAXONOMY_TNT_v11_1";
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_ROUTE_CANVAS_PERMISSION_GATE_PAIR_AUDIT_ANCHOR_TNT_v11_2";
   const LINEAGE_INTERNAL_RENEWAL_RECEIPT =
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_ROUTE_CANVAS_PERMISSION_GATE_PAIR_AUDIT_ANCHOR_RECEIPT_v11_2";
+
+  const FOUNDATION_INTERNAL_RENEWAL_CONTRACT =
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_SCRIPT_PRESENT_AUTHORITY_RECOVERY_AND_F21_FAILURE_TAXONOMY_TNT_v11_1";
+  const FOUNDATION_INTERNAL_RENEWAL_RECEIPT =
     "HEARTH_DIAGNOSTIC_RAIL_NORTH_SCRIPT_PRESENT_AUTHORITY_RECOVERY_AND_F21_FAILURE_TAXONOMY_RECEIPT_v11_1";
 
   const PREVIOUS_NORTH_CONTRACT =
@@ -68,7 +80,7 @@
     "HEARTH_DIAGNOSTIC_RAIL_NORTH_CHRONOLOGY_HUB_STANDARD_RECEIPT_v10";
 
   const VERSION =
-    "2026-06-07.hearth-diagnostic-rail-north-delegatory-handshake-handoff-variance-matrix-v11-3";
+    "2026-06-07.hearth-diagnostic-rail-north-post-evidence-lane-arbitration-v11-4";
 
   const FILE = "/assets/hearth/hearth.diagnostic.rail.js";
   const TARGET_ROUTE = "/showroom/globe/hearth/";
@@ -173,7 +185,7 @@
       id: "NORTH_RAIL",
       order: 1,
       fibonacciStage: "F1",
-      role: "north-delegatory-handshake-handoff-variance-hub",
+      role: "north-post-evidence-lane-arbitration-hub",
       file: FILE,
       expectedContract: CONTRACT,
       owner: "DIAGNOSTIC_NORTH_CHRONOLOGY_HUB",
@@ -185,6 +197,7 @@
         "HEARTH.diagnosticNorthChronologyHub",
         "HEARTH.diagnosticNorthCanvasSurfaceTruthChronologyHub",
         "HEARTH.diagnosticNorthDelegatoryHandshakeMatrix",
+        "HEARTH.diagnosticNorthPostEvidenceLaneArbitration",
         "HEARTH_DIAGNOSTIC_RAIL",
         "HEARTH_PARALLEL_DIAGNOSTIC_RAIL",
         "HEARTH_DIAGNOSTIC_NORTH",
@@ -192,11 +205,13 @@
         "HEARTH_DIAGNOSTIC_NORTH_CHRONOLOGY_HUB",
         "HEARTH_DIAGNOSTIC_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB",
         "HEARTH_DIAGNOSTIC_NORTH_DELEGATORY_HANDSHAKE_MATRIX",
+        "HEARTH_DIAGNOSTIC_NORTH_POST_EVIDENCE_LANE_ARBITRATION",
         "DEXTER_LAB.hearthDiagnosticRail",
         "DEXTER_LAB.hearthDiagnosticNorth",
         "DEXTER_LAB.hearthDiagnosticNorthChronologyHub",
         "DEXTER_LAB.hearthDiagnosticNorthCanvasSurfaceTruthChronologyHub",
-        "DEXTER_LAB.hearthDiagnosticNorthDelegatoryHandshakeMatrix"
+        "DEXTER_LAB.hearthDiagnosticNorthDelegatoryHandshakeMatrix",
+        "DEXTER_LAB.hearthDiagnosticNorthPostEvidenceLaneArbitration"
       ],
       methods: []
     },
@@ -430,6 +445,8 @@
       expectedContracts: [
         EXPECTED_ROUTE_CONDUCTOR_RENEWAL_CONTRACT,
         EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
+        "HEARTH_ROUTE_CONDUCTOR_SAFE_PACKET_BRIDGE_NO_LIFECYCLE_IGNITION_TNT_v10_5",
+        "HEARTH_ROUTE_CONDUCTOR_BILATERAL_TRIANGLE_SCAN_CANVAS_PLATTER_PACKET_BRIDGE_TNT_v10_4",
         "HEARTH_ROUTE_CONDUCTOR_HEX_GATE_POINTER_FINGER_TRANSMISSION_TNT_v10_2",
         "HEARTH_ROUTE_CONDUCTOR_CANVAS_DOM_SURFACE_ADMISSION_AND_RELEASE_TNT_v10_1",
         "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_TNT_v9_9",
@@ -442,14 +459,6 @@
       family: "HEARTH_ROUTE_CONDUCTOR",
       aliases: [
         "HEARTH_ROUTE_CONDUCTOR",
-        "HearthRouteConductor",
-        "HEARTH_ROUTE_CONDUCTOR_PRIMARY_GATE",
-        "HEARTH_ROUTE_NORTH_BISHOP",
-        "HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC",
-        "HEARTH_ROUTE_CONDUCTOR_GOVERNED_SOURCE_STACK_ADMISSION_CANVAS_HANDOFF",
-        "HEARTH_ROUTE_CONDUCTOR_HEX_GATE_POINTER_FINGER_TRANSMISSION",
-        "HEARTH_ROUTE_CONDUCTOR_CANVAS_DOM_SURFACE_ADMISSION_AND_RELEASE",
-        "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL",
         "HEARTH.routeConductor",
         "HEARTH.routeConductorPrimaryGate",
         "HEARTH.routeNorthBishop",
@@ -481,13 +490,6 @@
       family: "HEARTH_CONTROLS",
       aliases: [
         "HEARTH_CONTROLS",
-        "HEARTH_PLANETARY_CONTROLS",
-        "HEARTH_CONTROL_FILE",
-        "HEARTH_CONTROL_AUTHORITY",
-        "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE",
-        "HEARTH_CONTROLS_QUEEN",
-        "HEARTH_QUEEN_CONTROLS",
-        "HEARTH_CONTROLS_HEX_GATE_POINTER_FINGER_TRANSMISSION",
         "HEARTH.controls",
         "HEARTH.planetaryControls",
         "HEARTH.controlFile",
@@ -524,19 +526,7 @@
       aliases: [
         "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT",
         "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER",
-        "HEARTH_CANVAS_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER",
-        "HEARTH_CANVAS_HUB_RAF_SPHERE_ROTATION_PAIR_RECEIVER",
-        "HEARTH_CANVAS_HUB_RAF_FAST_INTERACTIVE_DEFERRED_HEX_RENDER_RECEIVER",
-        "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER",
-        "HEARTH_CANVAS_PLANETARY_VIEW_CONTROL_RECEIVER",
-        "HEARTH_CANVAS_HUB",
         "HEARTH_CANVAS",
-        "HEARTH_CANVAS_PARENT",
-        "HEARTH_CANVAS_AUTHORITY",
-        "HEARTH_CANVAS_LOCAL_STATION",
-        "HEARTH_CANVAS_STATION",
-        "HEARTH_CANVAS_EXPRESSION_HUB",
-        "HEARTH_CANVAS_VISIBLE_PLANET",
         "HEARTH.canvasHubLiveSurfaceIdentityUnifiedVisible2dOutput",
         "HEARTH.canvasHubCompositeFirstFastViewDeferredHexReceiver",
         "HEARTH.canvasCompositeFirstFastViewDeferredHexReceiver",
@@ -579,12 +569,7 @@
       ],
       family: "HEARTH_HEX_SURFACE",
       aliases: [
-        "HEARTH_HEX_SURFACE_PAIR_POINTER_FINGER_GATE",
-        "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER",
-        "HEARTH_HEX_SURFACE_RENDERER",
         "HEARTH_HEX_SURFACE",
-        "HEARTH_HEX_GATE",
-        "HEARTH_HEX_RENDER_GATE",
         "HEARTH.hexSurfacePairPointerFingerGate",
         "HEARTH.hexSurfaceInteractiveSpherePairRenderer",
         "HEARTH.hexSurfaceRenderer",
@@ -606,9 +591,6 @@
       family: "HEARTH_HEX_FOUR_PAIR",
       aliases: [
         "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY",
-        "HEARTH_HEX_PIXEL_HANDSHAKE_AUTHORITY",
-        "HEARTH_HEX_AUTHORITY",
-        "HEARTH_HEX_FOUR_PAIR_AUTHORITY",
         "HEARTH.hexFourPairPixelHandshakeAuthority",
         "HEARTH.hexPixelHandshakeAuthority",
         "HEARTH.hexAuthority",
@@ -626,12 +608,6 @@
       family: "HEARTH_CANVAS_FINGER",
       aliases: [
         "HEARTH_CANVAS_FINGER_INSPECT",
-        "HEARTH_CANVAS_POINTER_FINGER",
-        "HEARTH_POINTER_FINGER",
-        "HEARTH_CANVAS_FINGER_POINTER",
-        "HEARTH_CANVAS_FINGER_LIGHT",
-        "HEARTH_CANVAS_FINGER_BOUNDARY",
-        "HEARTH_CANVAS_FINGER_SURFACE",
         "HEARTH.pointerFinger",
         "HEARTH.canvasPointerFinger",
         "HEARTH.canvasFingerInspect",
@@ -1015,7 +991,9 @@
   }
 
   function findFirstPath(paths, bases) {
-    const contexts = Array.isArray(bases) && bases.length ? bases : [{ label: "DIAGNOSTIC", root }];
+    const contexts = Array.isArray(bases) && bases.length
+      ? bases
+      : [{ label: "DIAGNOSTIC", root }];
 
     for (const context of contexts) {
       for (const path of paths || []) {
@@ -1037,22 +1015,6 @@
       contextLabel: "NONE",
       fullPath: "NONE"
     };
-  }
-
-  function setPath(path, value) {
-    const parts = safeString(path).split(".");
-    if (!parts.length) return false;
-
-    let cursor = root;
-
-    for (let index = 0; index < parts.length - 1; index += 1) {
-      const key = parts[index];
-      if (!cursor[key] || typeof cursor[key] !== "object") cursor[key] = {};
-      cursor = cursor[key];
-    }
-
-    cursor[parts[parts.length - 1]] = value;
-    return true;
   }
 
   function getDataset(targetDocument) {
@@ -1397,7 +1359,7 @@
       return Object.keys(authority)
         .filter((key) => isFunction(authority[key]))
         .sort()
-        .slice(0, 120);
+        .slice(0, 140);
     } catch (_error) {
       return [];
     }
@@ -1411,6 +1373,43 @@
     if (node.family && text.includes(node.family)) return true;
 
     return false;
+  }
+
+  function buildAuthoritySignalText(authority, receipt, ds) {
+    const pieces = [];
+
+    try {
+      pieces.push(JSON.stringify(receipt || {}));
+    } catch (_error) {}
+
+    if (authority && isObject(authority)) {
+      try {
+        pieces.push(Object.keys(authority).join(" "));
+      } catch (_error) {}
+
+      for (const key of [
+        "contract",
+        "CONTRACT",
+        "receipt",
+        "RECEIPT",
+        "controlHandshakePacket",
+        "queenControlHandshakePacket",
+        "governedSourcePacket",
+        "canvasHandoffPacket",
+        "hexGateTransmissionPacket",
+        "pointerFingerTransmissionPacket"
+      ]) {
+        try {
+          if (authority[key] !== undefined) pieces.push(`${key}:${packetValue(authority[key], "", 2000)}`);
+        } catch (_error) {}
+      }
+    }
+
+    try {
+      pieces.push(JSON.stringify(ds || {}));
+    } catch (_error) {}
+
+    return pieces.join(" | ").slice(0, 60000);
   }
 
   function readNode(node, targetContext) {
@@ -1472,43 +1471,6 @@
     };
   }
 
-  function buildAuthoritySignalText(authority, receipt, ds) {
-    const pieces = [];
-
-    try {
-      pieces.push(JSON.stringify(receipt || {}));
-    } catch (_error) {}
-
-    if (authority && isObject(authority)) {
-      try {
-        pieces.push(Object.keys(authority).join(" "));
-      } catch (_error) {}
-
-      for (const key of [
-        "contract",
-        "CONTRACT",
-        "receipt",
-        "RECEIPT",
-        "controlHandshakePacket",
-        "queenControlHandshakePacket",
-        "governedSourcePacket",
-        "canvasHandoffPacket",
-        "hexGateTransmissionPacket",
-        "pointerFingerTransmissionPacket"
-      ]) {
-        try {
-          if (authority[key] !== undefined) pieces.push(`${key}:${packetValue(authority[key], "", 2000)}`);
-        } catch (_error) {}
-      }
-    }
-
-    try {
-      pieces.push(JSON.stringify(ds || {}));
-    } catch (_error) {}
-
-    return pieces.join(" | ").slice(0, 60000);
-  }
-
   function signalObserved(text, signals) {
     const hay = safeString(text).toUpperCase();
 
@@ -1568,7 +1530,6 @@
       } else if (requestObserved && grantObserved && !returnObserved) {
         relationshipStatus = "HANDSHAKE_PERMISSION_FRONTPORT_CONFIRMED_RETURN_PORT_PENDING";
         varianceClass = "HANDSHAKE_FRONTPORT_ONLY";
-        permissionGranted = false;
       } else if (requestObserved && !grantObserved) {
         relationshipStatus = "HANDSHAKE_REQUEST_OBSERVED_PERMISSION_NOT_GRANTED";
         varianceClass = "REQUEST_OBSERVED_GRANT_NOT_CONFIRMED";
@@ -1635,148 +1596,6 @@
     };
   }
 
-  function runDelegatoryAudit(state, targetContext) {
-    const nodes = NODE_REGISTRY.map((node) => readNode(node, targetContext));
-    const nodesById = {};
-    nodes.forEach((node) => { nodesById[node.id] = node; });
-
-    const relationships = RELATIONSHIP_REGISTRY.map((relationship) => {
-      return evaluateRelationship(relationship, nodesById);
-    });
-
-    const firstNotGranted = relationships.find((entry) => entry.relationshipPermissionGranted !== true) || null;
-    const handshakeFrontOnly = relationships.filter((entry) => entry.varianceClass === "HANDSHAKE_FRONTPORT_ONLY");
-    const missingEndpoints = relationships.filter((entry) => entry.varianceClass.includes("ENDPOINT_UNOBSERVED"));
-    const complete = relationships.filter((entry) => entry.relationshipPermissionGranted === true);
-
-    const motionRequired = relationships.filter((entry) => entry.requiredForMotion);
-    const visibleRequired = relationships.filter((entry) => entry.requiredForVisibleSurface);
-
-    const motionGranted = motionRequired.every((entry) => entry.relationshipPermissionGranted === true);
-    const visibleGranted = visibleRequired.every((entry) => entry.relationshipPermissionGranted === true);
-
-    let status = "DELEGATORY_PERMISSION_MATRIX_COMPLETE";
-    let nextOwner = "TEACHER_REVIEW";
-    let nextFile = CANVAS_FILE;
-    let nextAction = "REVIEW_COMPLETED_DELEGATORY_MATRIX_WITHOUT_FINAL_VISUAL_PASS_CLAIM";
-
-    if (firstNotGranted) {
-      status = "DELEGATORY_PERMISSION_MATRIX_PARTIAL";
-      nextOwner = firstNotGranted.fromObserved ? firstNotGranted.to : firstNotGranted.from;
-      nextFile = firstNotGranted.fromObserved ? firstNotGranted.toFile : firstNotGranted.fromFile;
-      nextAction =
-        firstNotGranted.varianceClass === "HANDSHAKE_FRONTPORT_ONLY"
-          ? "ADD_OR_CONFIRM_RETURN_PORT_RECEIPT_FOR_THIS_HANDSHAKE"
-          : firstNotGranted.varianceClass.includes("ENDPOINT_UNOBSERVED")
-            ? "CONFIRM_PUBLIC_AUTHORITY_PUBLICATION_FOR_UNOBSERVED_ENDPOINT"
-            : "CONFIRM_RELATIONSHIP_PERMISSION_REQUEST_AND_GRANT_SIGNALS";
-    }
-
-    const canvasNode = nodesById.CANVAS_RECEIVER || {};
-    const routeNode = nodesById.ROUTE_CONDUCTOR || {};
-    const controlsNode = nodesById.CONTROLS_QUEEN || {};
-    const hexSurfaceNode = nodesById.HEX_SURFACE_GATE || {};
-
-    const routeCanvasPair = relationships.find((entry) => entry.id === "ROUTE_TO_CANVAS_GOVERNED_SOURCE_HANDSHAKE") || {};
-    const controlCanvasPair = relationships.find((entry) => entry.id === "CONTROLS_TO_CANVAS_VIEW_DELTA_HANDSHAKE") || {};
-    const canvasHexPair = relationships.find((entry) => entry.id === "CANVAS_TO_HEX_SURFACE_EXPRESSION_GATE") || {};
-
-    const threeFileStrategy = {
-      strategyName: "ROUTE_CONTROLS_CANVAS_HEX_SURFACE_DELEGATORY_PERMISSION_STRATEGY_v11_3",
-      routeConductorActiveScanAuthority: true,
-      controlsRemainMotionAndInputGatewayAuthority: true,
-      canvasRemainsPresentationSurfaceAndBridgeAuthority: true,
-      hexSurfaceRemainsDownstreamGateAuthority: true,
-      pointerFingerRemainsDownstreamExpressionAuthority: true,
-      canvasDoesNotOwnSourceTruth: true,
-      controlsDoNotOwnCanvasDrawing: true,
-      routeDoesNotOwnCanvasDrawing: true,
-      routeCanvasPairPermissionGranted: routeCanvasPair.relationshipPermissionGranted === true,
-      controlsCanvasMotionPermissionGranted: controlCanvasPair.relationshipPermissionGranted === true,
-      canvasHexSurfacePermissionGranted: canvasHexPair.relationshipPermissionGranted === true,
-      routeObserved: routeNode.observed === true,
-      controlsObserved: controlsNode.observed === true,
-      canvasObserved: canvasNode.observed === true,
-      hexSurfaceObserved: hexSurfaceNode.observed === true,
-      recommendedConstructAction:
-        canvasNode.observed !== true
-          ? "RENEW_CANVAS_PUBLIC_AUTHORITY_AND_DOM_SURFACE_BINDING"
-          : routeNode.observed !== true
-            ? "RENEW_ROUTE_CONDUCTOR_PUBLIC_AUTHORITY_PUBLICATION_IN_TARGET_CONTEXT"
-            : controlsNode.observed !== true
-              ? "RENEW_CONTROLS_PUBLIC_AUTHORITY_PUBLICATION_IN_TARGET_CONTEXT"
-              : hexSurfaceNode.observed !== true
-                ? "RENEW_OR_LOAD_HEX_SURFACE_PUBLIC_GATE"
-                : firstNotGranted
-                  ? nextAction
-                  : "PROCEED_TO_TARGETED_PAIR_OR_TRIAD_RENEWAL_WITH_MATRIX_AS_CONTROL_RECEIPT"
-    };
-
-    state.delegatoryHandshakeMatrixActive = true;
-    state.multiHandshakeVarianceAuditActive = true;
-    state.intendedHandoffVarianceIncluded = true;
-    state.singleHandshakeGreenLightBlocked = true;
-
-    state.delegatoryAuditStatus = status;
-    state.delegatoryAuditCompleteRelationshipCount = complete.length;
-    state.delegatoryAuditTotalRelationshipCount = relationships.length;
-    state.delegatoryAuditFirstNotGrantedRelationship = firstNotGranted ? firstNotGranted.id : "NONE";
-    state.delegatoryAuditFirstVarianceClass = firstNotGranted ? firstNotGranted.varianceClass : "NONE";
-    state.delegatoryAuditFirstRecommendedFile = firstNotGranted ? nextFile : "NONE";
-    state.delegatoryAuditFirstRecommendedAction = firstNotGranted ? nextAction : "NONE";
-
-    state.motionPermissionGranted = motionGranted;
-    state.visibleSurfacePermissionGranted = visibleGranted;
-    state.pairPermissionGranted = routeCanvasPair.relationshipPermissionGranted === true;
-    state.constructPermissionGranted = relationships.every((entry) => entry.relationshipPermissionGranted === true);
-
-    state.handshakeFrontOnlyCount = handshakeFrontOnly.length;
-    state.unobservedEndpointRelationshipCount = missingEndpoints.length;
-
-    state.delegatoryNodes = nodes;
-    state.delegatoryRelationships = relationships;
-    state.threeFileConstructStrategy = threeFileStrategy;
-
-    if (firstNotGranted) {
-      addNote(state, `DELEGATORY_FIRST_PERMISSION_NOT_GRANTED:${firstNotGranted.id}:${firstNotGranted.varianceClass}`);
-    }
-
-    if (handshakeFrontOnly.length) {
-      addNote(state, `HANDSHAKE_FRONTPORT_ONLY_COUNT:${handshakeFrontOnly.length}`);
-    }
-
-    if (missingEndpoints.length) {
-      addNote(state, `UNOBSERVED_ENDPOINT_RELATIONSHIP_COUNT:${missingEndpoints.length}`);
-    }
-
-    return {
-      packetType: "HEARTH_DIAGNOSTIC_NORTH_DELEGATORY_HANDSHAKE_HANDOFF_VARIANCE_MATRIX_PACKET_v11_3",
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
-      internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
-      status,
-      completeRelationshipCount: complete.length,
-      totalRelationshipCount: relationships.length,
-      firstNotGrantedRelationship: state.delegatoryAuditFirstNotGrantedRelationship,
-      firstVarianceClass: state.delegatoryAuditFirstVarianceClass,
-      firstRecommendedFile: state.delegatoryAuditFirstRecommendedFile,
-      firstRecommendedAction: state.delegatoryAuditFirstRecommendedAction,
-      motionPermissionGranted: motionGranted,
-      visibleSurfacePermissionGranted: visibleGranted,
-      pairPermissionGranted: state.pairPermissionGranted,
-      constructPermissionGranted: state.constructPermissionGranted,
-      handshakeFrontOnlyCount: state.handshakeFrontOnlyCount,
-      unobservedEndpointRelationshipCount: state.unobservedEndpointRelationshipCount,
-      nodes,
-      relationships,
-      threeFileConstructStrategy: threeFileStrategy,
-      auditedAt: nowIso(),
-      ...NO_CLAIMS,
-      ...UPPER_NO_CLAIMS
-    };
-  }
-
   function makeState() {
     return {
       contract: CONTRACT,
@@ -1787,6 +1606,8 @@
       previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
       lineageInternalRenewalContract: LINEAGE_INTERNAL_RENEWAL_CONTRACT,
       lineageInternalRenewalReceipt: LINEAGE_INTERNAL_RENEWAL_RECEIPT,
+      foundationInternalRenewalContract: FOUNDATION_INTERNAL_RENEWAL_CONTRACT,
+      foundationInternalRenewalReceipt: FOUNDATION_INTERNAL_RENEWAL_RECEIPT,
       previousNorthContract: PREVIOUS_NORTH_CONTRACT,
       previousNorthReceipt: PREVIOUS_NORTH_RECEIPT,
       version: VERSION,
@@ -1806,6 +1627,9 @@
       multiHandshakeVarianceAuditActive: true,
       intendedHandoffVarianceIncluded: true,
       singleHandshakeGreenLightBlocked: true,
+      postEvidenceLaneArbitrationActive: true,
+      chronologyLaneSeparatedFromSurfaceTruth: true,
+      delegatoryMatrixAdvisoryWhenSurfaceTruthFailed: true,
       canvasSurfaceTruthProbeExpected: true,
       receiverStillCallsNorthOnly: true,
       diagnosticRouteHtmlRenewalRequired: false,
@@ -1814,13 +1638,15 @@
       evidenceByStep: {},
       notes: [
         "NORTH_V11_PUBLIC_CONTRACT_PRESERVED",
-        "NORTH_INTERNAL_V11_3_DELEGATORY_HANDSHAKE_HANDOFF_VARIANCE_MATRIX_ACTIVE",
-        "PREVIOUS_V11_2_ROUTE_CANVAS_PERMISSION_GATE_PAIR_AUDIT_PRESERVED",
-        "PREVIOUS_V11_1_SCRIPT_PRESENT_AUTHORITY_RECOVERY_PRESERVED",
+        "NORTH_INTERNAL_V11_4_POST_EVIDENCE_LANE_ARBITRATION_ACTIVE",
+        "PREVIOUS_V11_3_DELEGATORY_HANDSHAKE_HANDOFF_VARIANCE_MATRIX_PRESERVED",
+        "LINEAGE_V11_2_ROUTE_CANVAS_PERMISSION_GATE_PAIR_AUDIT_PRESERVED",
+        "FOUNDATION_V11_1_SCRIPT_PRESENT_AUTHORITY_RECOVERY_PRESERVED",
         "NORTH_IS_HUB_NOT_EVIDENCE_OWNER",
         "DIAGNOSTIC_RECEIVER_STILL_CALLS_NORTH_ONLY",
         "CHILDREN_AND_PROBES_RETAIN_SEPARATE_AUTHORITY",
-        "CANVAS_SURFACE_TRUTH_PROBE_REMAINS_AFTER_WEST_BEFORE_SOUTH",
+        "CHRONOLOGY_EXECUTION_SEPARATED_FROM_CANVAS_SURFACE_TRUTH",
+        "DELEGATORY_PERMISSION_SEPARATED_FROM_VISIBLE_SURFACE_FAILURE",
         "ONE_CONFIRMED_HANDSHAKE_DOES_NOT_GRANT_WHOLE_CHAIN_PERMISSION",
         "INTENDED_HANDOFF_VARIANCE_INCLUDED",
         "NO_PRODUCTION_MUTATION_PERMISSION_GRANTED"
@@ -1841,8 +1667,6 @@
       servedContractMismatchIsBlocking: "UNKNOWN",
       currentVisibleHearthStatus: "UNKNOWN",
 
-      diagnosticTargetAccessStatus: "UNKNOWN",
-      diagnosticTargetAccessError: "UNKNOWN",
       renderedPlanetProofReady: "UNKNOWN",
       visiblePlanetProofReady: "UNKNOWN",
       visiblePlanetProofSource: "UNKNOWN",
@@ -1892,6 +1716,33 @@
       viewControlStatus: "UNKNOWN",
       visiblePlanetAllowedWithoutControls: "true",
 
+      chronologyExecutionLaneStatus: "NOT_RUN",
+      chronologyExecutionLaneClean: "false",
+      chronologyExecutionFirstFailureOwner: "UNKNOWN",
+      chronologyExecutionFirstFailureFile: "UNKNOWN",
+      chronologyExecutionFirstFailureClass: "UNKNOWN",
+      chronologyExecutionFirstFailureReason: "UNKNOWN",
+
+      canvasSurfaceTruthLaneStatus: "NOT_RUN",
+      canvasSurfaceTruthLaneClean: "false",
+      canvasSurfaceTruthLaneOwner: "UNKNOWN",
+      canvasSurfaceTruthLaneFile: "UNKNOWN",
+      canvasSurfaceTruthLaneClass: "UNKNOWN",
+      canvasSurfaceTruthLaneReason: "UNKNOWN",
+      canvasSurfaceTruthLaneAction: "UNKNOWN",
+
+      delegatoryPermissionLaneStatus: "NOT_RUN",
+      delegatoryPermissionLaneClean: "false",
+      delegatoryPermissionLaneOwner: "UNKNOWN",
+      delegatoryPermissionLaneFile: "UNKNOWN",
+      delegatoryPermissionLaneClass: "UNKNOWN",
+      delegatoryPermissionLaneReason: "UNKNOWN",
+      delegatoryPermissionLaneAction: "UNKNOWN",
+
+      finalArbitrationStatus: "NOT_RUN",
+      finalArbitrationSource: "UNKNOWN",
+      finalArbitrationReason: "UNKNOWN",
+
       chronologyCompletionStatus: "NOT_RUN",
       firstChronologyFailureOwner: "UNKNOWN",
       firstChronologyFailureFile: "UNKNOWN",
@@ -1908,6 +1759,7 @@
       delegatoryAuditTotalRelationshipCount: 0,
       delegatoryAuditFirstNotGrantedRelationship: "UNKNOWN",
       delegatoryAuditFirstVarianceClass: "UNKNOWN",
+      delegatoryAuditFirstRecommendedOwner: "UNKNOWN",
       delegatoryAuditFirstRecommendedFile: "UNKNOWN",
       delegatoryAuditFirstRecommendedAction: "UNKNOWN",
       motionPermissionGranted: false,
@@ -1922,7 +1774,7 @@
 
       primaryCase: "INCONCLUSIVE_EVIDENCE",
       calibrationStatus: "CALIBRATION_NOT_RUN",
-      calibrationHoldReason: "RUN_NORTH_DELEGATORY_HANDSHAKE_MATRIX",
+      calibrationHoldReason: "RUN_NORTH_POST_EVIDENCE_LANE_ARBITRATION",
       diagnosticChronologyClean: "false",
       diagnosticRailClean: "false",
       calibrationPointReached: "false",
@@ -1943,7 +1795,7 @@
 
       recommendedNextOwner: "DIAGNOSTIC_NORTH_CHRONOLOGY_HUB",
       recommendedNextFile: FILE,
-      recommendedNextAction: "RUN_NORTH_DELEGATORY_HANDSHAKE_HANDOFF_VARIANCE_MATRIX",
+      recommendedNextAction: "RUN_NORTH_POST_EVIDENCE_LANE_ARBITRATION",
 
       reportObject: {},
       northVerdict: {},
@@ -1983,8 +1835,6 @@
     state.cacheOrServedContractMismatch = firstKnown(getValue(evidence, "CACHE_OR_SERVED_CONTRACT_MISMATCH", ""), state.cacheOrServedContractMismatch);
     state.currentVisibleHearthStatus = firstKnown(getValue(evidence, "CURRENT_VISIBLE_HEARTH_STATUS", ""), state.currentVisibleHearthStatus);
 
-    state.diagnosticTargetAccessStatus = firstKnown(getValue(evidence, "DIAGNOSTIC_TARGET_ACCESS_STATUS", ""), state.diagnosticTargetAccessStatus);
-    state.diagnosticTargetAccessError = firstKnown(getValue(evidence, "DIAGNOSTIC_TARGET_ACCESS_ERROR", ""), state.diagnosticTargetAccessError);
     state.renderedPlanetProofReady = firstKnown(getValue(evidence, "RENDERED_PLANET_PROOF_READY", ""), state.renderedPlanetProofReady);
     state.visiblePlanetProofReady = firstKnown(getValue(evidence, "VISIBLE_PLANET_PROOF_READY", ""), state.visiblePlanetProofReady);
     state.visiblePlanetProofSource = firstKnown(getValue(evidence, "VISIBLE_PLANET_PROOF_SOURCE", ""), state.visiblePlanetProofSource);
@@ -2036,13 +1886,6 @@
     state.motionTouchStatus = firstKnown(getValue(evidence, "MOTION_TOUCH_STATUS", ""), state.motionTouchStatus);
     state.dragStatus = firstKnown(getValue(evidence, "DRAG_STATUS", ""), state.dragStatus);
     state.viewControlStatus = firstKnown(getValue(evidence, "VIEW_CONTROL_STATUS", ""), state.viewControlStatus);
-
-    state.primaryCase = firstKnown(getValue(evidence, "PRIMARY_CASE", ""), state.primaryCase);
-    state.calibrationStatus = firstKnown(getValue(evidence, "CALIBRATION_STATUS", ""), state.calibrationStatus);
-    state.calibrationHoldReason = firstKnown(getValue(evidence, "CALIBRATION_HOLD_REASON", ""), state.calibrationHoldReason);
-    state.recommendedNextOwner = firstKnown(getValue(evidence, "RECOMMENDED_NEXT_OWNER", ""), state.recommendedNextOwner);
-    state.recommendedNextFile = firstKnown(getValue(evidence, "RECOMMENDED_NEXT_FILE", ""), state.recommendedNextFile);
-    state.recommendedNextAction = firstKnown(getValue(evidence, "RECOMMENDED_NEXT_ACTION", ""), state.recommendedNextAction);
 
     for (const note of normalizeNotes(
       getValue(evidence, "SECONDARY_EVIDENCE_NOTES", ""),
@@ -2102,13 +1945,6 @@
       }
     } else {
       entry.loadStatus = "SCRIPT_ALREADY_PRESENT_AUTHORITY_NOT_OBSERVED";
-    }
-
-    const foundBeforeRecovery = findFirstPath(step.paths, [{ label: "DIAGNOSTIC", root }]);
-    if (foundBeforeRecovery.value) {
-      entry.authorityObservedAfterRecovery = true;
-      entry.authorityRecoveryStatus = "AUTHORITY_APPEARED_BEFORE_RECOVERY_RELOAD";
-      return foundBeforeRecovery;
     }
 
     const recoveryLoad = await appendScript(step.file, step.id, "AUTHORITY_RECOVERY");
@@ -2239,6 +2075,9 @@
         routeCanvasPermissionGatePairAuditActive: true,
         delegatoryHandshakeMatrixActive: true,
         multiHandshakeVarianceAuditActive: true,
+        postEvidenceLaneArbitrationActive: true,
+        chronologyLaneSeparatedFromSurfaceTruth: true,
+        delegatoryMatrixAdvisoryWhenSurfaceTruthFailed: true,
         intendedHandoffVarianceIncluded: true,
         singleHandshakeGreenLightBlocked: true,
         canvasSurfaceTruthProbeExpected: true,
@@ -2263,7 +2102,7 @@
         noClaims: clonePlain(NO_CLAIMS),
         options: {
           loadMissingScripts: options.loadMissingScripts !== false,
-          source: "DIAGNOSTIC_NORTH_DELEGATORY_HANDSHAKE_MATRIX"
+          source: "DIAGNOSTIC_NORTH_POST_EVIDENCE_LANE_ARBITRATION"
         }
       };
 
@@ -2347,107 +2186,7 @@
     };
   }
 
-  function deriveCanvasTruthDisposition(state) {
-    const probeEntry = state.chronology.find((entry) => entry.id === "PROBE_CANVAS_SURFACE_TRUTH");
-
-    if (!probeEntry) {
-      return {
-        available: false,
-        className: "CANVAS_SURFACE_TRUTH_PROBE_NOT_RUN",
-        reason: "NORTH_HAS_NOT_REACHED_CANVAS_SURFACE_TRUTH_PROBE",
-        owner: "DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
-        file: PROBE_CANVAS_SURFACE_TRUTH_FILE,
-        action: "RUN_NORTH_CHRONOLOGY_HUB_THROUGH_CANVAS_SURFACE_TRUTH_PROBE"
-      };
-    }
-
-    if (probeEntry.status !== "COMPLETE") {
-      const classified = classifyChronologyFailure(probeEntry);
-
-      return {
-        available: false,
-        className: classified.className,
-        reason: classified.reason,
-        owner: probeEntry.owner,
-        file: probeEntry.file,
-        action: classified.action
-      };
-    }
-
-    if (
-      textIsTrue(state.canvasElementFound) &&
-      textIsTrue(state.canvasRectNonzero) &&
-      textIsTrue(state.canvasComputedVisible) &&
-      textIsTrue(state.canvasViewportIntersecting) &&
-      textIsTrue(state.canvasContext2dReady) &&
-      textIsTrue(state.canvasPixelVisible) &&
-      !textIsTrue(state.canvasLayerBlocked)
-    ) {
-      return {
-        available: true,
-        className: "CANVAS_SURFACE_TRUTH_CONFIRMED",
-        reason: "CANVAS_DOM_SURFACE_CONTEXT_VISIBILITY_AND_PIXEL_SAMPLE_CONFIRMED",
-        owner: "NONE",
-        file: "NONE",
-        action: "REVIEW_WITH_CANVAS_SURFACE_TRUTH_CONFIRMED_NO_FINAL_VISUAL_PASS_CLAIM"
-      };
-    }
-
-    if (textIsFalse(state.canvasElementFound)) {
-      return {
-        available: true,
-        className: "CANVAS_DOM_SURFACE_NOT_FOUND",
-        reason: "CANVAS_ELEMENT_FOUND_FALSE",
-        owner: "CANVAS_EXPRESSION_SURFACE",
-        file: CANVAS_FILE,
-        action: "RENEW_CANVAS_TO_CREATE_OR_BIND_DOM_CANVAS_SURFACE"
-      };
-    }
-
-    if (textIsFalse(state.canvasRectNonzero)) {
-      return {
-        available: true,
-        className: "CANVAS_RECT_ZERO",
-        reason: "CANVAS_RECT_NONZERO_FALSE",
-        owner: "CANVAS_LAYOUT_SURFACE",
-        file: CANVAS_FILE,
-        action: "RENEW_CANVAS_OR_LAYOUT_TO_PRODUCE_NONZERO_SURFACE_RECT"
-      };
-    }
-
-    if (textIsFalse(state.canvasContext2dReady)) {
-      return {
-        available: true,
-        className: "CANVAS_CONTEXT_2D_NOT_READY",
-        reason: "CANVAS_CONTEXT_2D_READY_FALSE",
-        owner: "CANVAS_EXPRESSION_SURFACE",
-        file: CANVAS_FILE,
-        action: "RENEW_CANVAS_CONTEXT_CREATION_AND_SURFACE_BINDING"
-      };
-    }
-
-    if (textIsFalse(state.canvasPixelVisible)) {
-      return {
-        available: true,
-        className: "CANVAS_PIXEL_SAMPLE_NOT_VISIBLE",
-        reason: firstKnown(state.canvasPixelSampleStatus, "CANVAS_PIXEL_VISIBLE_FALSE"),
-        owner: "CANVAS_DRAWING_OR_DOWNSTREAM_EXPRESSION_ADAPTER",
-        file: CANVAS_FILE,
-        action: "AUDIT_CANVAS_DRAW_PATH_AND_DOWNSTREAM_EXPRESSION_ADAPTER"
-      };
-    }
-
-    return {
-      available: true,
-      className: firstKnown(state.canvasTruthFailureClass, "CANVAS_SURFACE_TRUTH_INCONCLUSIVE"),
-      reason: firstKnown(state.canvasTruthFailureReason, "CANVAS_SURFACE_TRUTH_RETURNED_BUT_NOT_CONCLUSIVE"),
-      owner: firstKnown(state.canvasTruthRecommendedOwner, "CANVAS_EXPRESSION_SURFACE"),
-      file: firstKnown(state.canvasTruthRecommendedFile, CANVAS_FILE),
-      action: firstKnown(state.canvasTruthRecommendedAction, "AUDIT_CANVAS_SURFACE_TRUTH_OUTPUT")
-    };
-  }
-
-  function resolveChronologyDisposition(state) {
+  function resolveChronologyExecutionLane(state) {
     const firstFailure = state.chronology.find((entry) => {
       return (
         entry.id !== "NORTH_RAIL" &&
@@ -2462,86 +2201,292 @@
     if (firstFailure) {
       const classified = classifyChronologyFailure(firstFailure);
 
-      state.chronologyCompletionStatus = "CHRONOLOGY_STOPPED_AT_FIRST_FAILURE";
+      state.chronologyExecutionLaneStatus = "CHRONOLOGY_EXECUTION_LANE_FAILED";
+      state.chronologyExecutionLaneClean = "false";
+      state.chronologyExecutionFirstFailureOwner = firstFailure.owner;
+      state.chronologyExecutionFirstFailureFile = firstFailure.file;
+      state.chronologyExecutionFirstFailureClass = classified.className;
+      state.chronologyExecutionFirstFailureReason = classified.reason;
+
       state.firstChronologyFailureOwner = firstFailure.owner;
       state.firstChronologyFailureFile = firstFailure.file;
       state.firstChronologyFailureClass = classified.className;
       state.firstChronologyFailureReason = classified.reason;
+      state.chronologyCompletionStatus = "CHRONOLOGY_EXECUTION_STOPPED_AT_FIRST_FAILURE";
 
-      state.zoneOfInflictionOwner = firstFailure.owner;
-      state.zoneOfInflictionFile = firstFailure.file;
-      state.zoneOfInflictionClass = classified.className;
-      state.zoneOfInflictionReason = classified.reason;
-
-      state.primaryCase = "INCONCLUSIVE_EVIDENCE";
-      state.calibrationStatus = `CALIBRATION_HOLD_${firstFailure.id}`;
-      state.calibrationHoldReason = classified.reason;
-      state.diagnosticChronologyClean = "false";
-      state.diagnosticRailClean = "false";
-      state.calibrationPointReached = "false";
-      state.recommendedNextOwner = firstFailure.owner;
-      state.recommendedNextFile = firstFailure.file;
-      state.recommendedNextAction = classified.action;
-
-      addNote(state, `ZONE_OF_INFLICTION_FROM_CHRONOLOGY:${firstFailure.id}:${classified.className}`);
+      addNote(state, `CHRONOLOGY_EXECUTION_LANE_FAILED:${firstFailure.id}:${classified.className}`);
       return;
     }
 
-    const canvasDisposition = deriveCanvasTruthDisposition(state);
-    state.diagnosticChronologyClean = "true";
+    state.chronologyExecutionLaneStatus = "CHRONOLOGY_EXECUTION_LANE_COMPLETE";
+    state.chronologyExecutionLaneClean = "true";
+    state.chronologyExecutionFirstFailureOwner = "NONE";
+    state.chronologyExecutionFirstFailureFile = "NONE";
+    state.chronologyExecutionFirstFailureClass = "NONE";
+    state.chronologyExecutionFirstFailureReason = "ALL_OBSERVED_CHRONOLOGY_STEPS_RETURNED_OR_WERE_READABLE";
 
-    if (canvasDisposition.className !== "CANVAS_SURFACE_TRUTH_CONFIRMED") {
-      state.chronologyCompletionStatus = canvasDisposition.available
-        ? "CHRONOLOGY_COMPLETE_CANVAS_SURFACE_TRUTH_FAILED"
-        : "CHRONOLOGY_COMPLETE_CANVAS_SURFACE_TRUTH_UNAVAILABLE";
-
-      state.firstChronologyFailureOwner = "NONE";
-      state.firstChronologyFailureFile = "NONE";
-      state.firstChronologyFailureClass = "NONE";
-      state.firstChronologyFailureReason = "ALL_OBSERVED_CHRONOLOGY_STEPS_RETURNED_OR_WERE_READABLE";
-
-      state.zoneOfInflictionOwner = canvasDisposition.owner;
-      state.zoneOfInflictionFile = canvasDisposition.file;
-      state.zoneOfInflictionClass = canvasDisposition.className;
-      state.zoneOfInflictionReason = canvasDisposition.reason;
-
-      state.primaryCase = canvasDisposition.available
-        ? "CANVAS_SURFACE_TRUTH_FAILURE"
-        : "INCONCLUSIVE_EVIDENCE";
-      state.calibrationStatus = "CALIBRATION_HOLD_CANVAS_SURFACE_TRUTH";
-      state.calibrationHoldReason = canvasDisposition.reason;
-      state.diagnosticRailClean = "false";
-      state.calibrationPointReached = "false";
-      state.recommendedNextOwner = canvasDisposition.owner;
-      state.recommendedNextFile = canvasDisposition.file;
-      state.recommendedNextAction = canvasDisposition.action;
-
-      addNote(state, `ZONE_OF_INFLICTION_FROM_CANVAS_SURFACE_TRUTH:${canvasDisposition.className}`);
-      return;
-    }
-
-    state.chronologyCompletionStatus = "CHRONOLOGY_COMPLETE_CANVAS_SURFACE_TRUTH_CONFIRMED";
     state.firstChronologyFailureOwner = "NONE";
     state.firstChronologyFailureFile = "NONE";
     state.firstChronologyFailureClass = "NONE";
-    state.firstChronologyFailureReason = "NONE";
+    state.firstChronologyFailureReason = "ALL_OBSERVED_CHRONOLOGY_STEPS_RETURNED_OR_WERE_READABLE";
+    state.chronologyCompletionStatus = "CHRONOLOGY_EXECUTION_COMPLETE_SURFACE_TRUTH_SEPARATE";
 
-    state.zoneOfInflictionOwner = "NONE";
-    state.zoneOfInflictionFile = "NONE";
-    state.zoneOfInflictionClass = "NONE";
-    state.zoneOfInflictionReason = "CANVAS_SURFACE_TRUTH_CONFIRMED_NO_DIAGNOSTIC_FILE_FAILURE_DETECTED";
+    addNote(state, "CHRONOLOGY_EXECUTION_LANE_COMPLETE");
+  }
 
-    state.primaryCase = "DIAGNOSTIC_TRACK_AND_CANVAS_SURFACE_TRUTH_COMPLETE_NO_VISUAL_PASS_CLAIM";
-    state.calibrationStatus = "CALIBRATION_TRACK_COMPLETE";
-    state.calibrationHoldReason = "NONE";
-    state.diagnosticRailClean = "true";
-    state.calibrationPointReached = "true";
-    state.recommendedNextOwner = "TEACHER_REVIEW";
-    state.recommendedNextFile = CANVAS_FILE;
-    state.recommendedNextAction =
-      "REVIEW_CANVAS_SURFACE_TRUTH_CONFIRMED_WITH_NO_READY_OR_VISUAL_PASS_CLAIM";
+  function resolveCanvasSurfaceTruthLane(state) {
+    const probeEntry = state.chronology.find((entry) => entry.id === "PROBE_CANVAS_SURFACE_TRUTH");
 
-    addNote(state, "CHRONOLOGY_COMPLETE_AND_CANVAS_SURFACE_TRUTH_CONFIRMED");
+    if (!probeEntry) {
+      state.canvasSurfaceTruthLaneStatus = "CANVAS_SURFACE_TRUTH_LANE_NOT_RUN";
+      state.canvasSurfaceTruthLaneClean = "false";
+      state.canvasSurfaceTruthLaneOwner = "DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH";
+      state.canvasSurfaceTruthLaneFile = PROBE_CANVAS_SURFACE_TRUTH_FILE;
+      state.canvasSurfaceTruthLaneClass = "CANVAS_SURFACE_TRUTH_PROBE_NOT_RUN";
+      state.canvasSurfaceTruthLaneReason = "NORTH_HAS_NOT_REACHED_CANVAS_SURFACE_TRUTH_PROBE";
+      state.canvasSurfaceTruthLaneAction = "RUN_NORTH_CHRONOLOGY_HUB_THROUGH_CANVAS_SURFACE_TRUTH_PROBE";
+      return;
+    }
+
+    if (probeEntry.status !== "COMPLETE") {
+      const classified = classifyChronologyFailure(probeEntry);
+
+      state.canvasSurfaceTruthLaneStatus = "CANVAS_SURFACE_TRUTH_LANE_UNAVAILABLE";
+      state.canvasSurfaceTruthLaneClean = "false";
+      state.canvasSurfaceTruthLaneOwner = probeEntry.owner;
+      state.canvasSurfaceTruthLaneFile = probeEntry.file;
+      state.canvasSurfaceTruthLaneClass = classified.className;
+      state.canvasSurfaceTruthLaneReason = classified.reason;
+      state.canvasSurfaceTruthLaneAction = classified.action;
+      return;
+    }
+
+    const explicitClass = firstKnown(state.canvasTruthFailureClass, "");
+    const explicitReason = firstKnown(state.canvasTruthFailureReason, "");
+    const explicitOwner = firstKnown(state.canvasTruthRecommendedOwner, "");
+    const explicitFile = firstKnown(state.canvasTruthRecommendedFile, "");
+    const explicitAction = firstKnown(state.canvasTruthRecommendedAction, "");
+
+    const explicitlyConfirmed =
+      explicitClass === "CANVAS_SURFACE_TRUTH_CONFIRMED" ||
+      explicitClass === "CANVAS_SURFACE_TRUTH_PASS" ||
+      explicitClass === "SURFACE_TRUTH_CONFIRMED";
+
+    const allSurfaceCoordinatesPass =
+      textIsTrue(state.canvasElementFound) &&
+      textIsTrue(state.canvasRectNonzero) &&
+      textIsTrue(state.canvasComputedVisible) &&
+      textIsTrue(state.canvasViewportIntersecting) &&
+      textIsTrue(state.canvasContext2dReady) &&
+      textIsTrue(state.canvasPixelVisible) &&
+      !textIsTrue(state.canvasLayerBlocked);
+
+    if (explicitlyConfirmed || allSurfaceCoordinatesPass) {
+      state.canvasSurfaceTruthLaneStatus = "CANVAS_SURFACE_TRUTH_LANE_CONFIRMED";
+      state.canvasSurfaceTruthLaneClean = "true";
+      state.canvasSurfaceTruthLaneOwner = "NONE";
+      state.canvasSurfaceTruthLaneFile = "NONE";
+      state.canvasSurfaceTruthLaneClass = "CANVAS_SURFACE_TRUTH_CONFIRMED";
+      state.canvasSurfaceTruthLaneReason = "CANVAS_DOM_SURFACE_CONTEXT_VISIBILITY_AND_PIXEL_SAMPLE_CONFIRMED";
+      state.canvasSurfaceTruthLaneAction = "REVIEW_WITH_CANVAS_SURFACE_TRUTH_CONFIRMED_NO_FINAL_VISUAL_PASS_CLAIM";
+      addNote(state, "CANVAS_SURFACE_TRUTH_LANE_CONFIRMED");
+      return;
+    }
+
+    if (explicitClass !== "UNKNOWN") {
+      state.canvasSurfaceTruthLaneStatus = "CANVAS_SURFACE_TRUTH_LANE_FAILED";
+      state.canvasSurfaceTruthLaneClean = "false";
+      state.canvasSurfaceTruthLaneOwner = firstKnown(explicitOwner, "CANVAS_SURFACE_TRUTH_PROBE");
+      state.canvasSurfaceTruthLaneFile = firstKnown(explicitFile, CANVAS_FILE);
+      state.canvasSurfaceTruthLaneClass = explicitClass;
+      state.canvasSurfaceTruthLaneReason = firstKnown(explicitReason, "CANVAS_SURFACE_TRUTH_EXPLICIT_FAILURE_CLASS_RETURNED");
+      state.canvasSurfaceTruthLaneAction = firstKnown(explicitAction, "AUDIT_CANVAS_SURFACE_TRUTH_RECOMMENDED_FILE");
+      addNote(state, `CANVAS_SURFACE_TRUTH_EXPLICIT_FAILURE_ACCEPTED:${explicitClass}`);
+      return;
+    }
+
+    if (textIsFalse(state.canvasElementFound)) {
+      state.canvasSurfaceTruthLaneStatus = "CANVAS_SURFACE_TRUTH_LANE_FAILED";
+      state.canvasSurfaceTruthLaneClean = "false";
+      state.canvasSurfaceTruthLaneOwner = "CANVAS_EXPRESSION_SURFACE";
+      state.canvasSurfaceTruthLaneFile = CANVAS_FILE;
+      state.canvasSurfaceTruthLaneClass = "CANVAS_DOM_SURFACE_NOT_FOUND";
+      state.canvasSurfaceTruthLaneReason = "CANVAS_ELEMENT_FOUND_FALSE";
+      state.canvasSurfaceTruthLaneAction = "RENEW_CANVAS_TO_CREATE_OR_BIND_DOM_CANVAS_SURFACE";
+      return;
+    }
+
+    if (textIsFalse(state.canvasRectNonzero)) {
+      state.canvasSurfaceTruthLaneStatus = "CANVAS_SURFACE_TRUTH_LANE_FAILED";
+      state.canvasSurfaceTruthLaneClean = "false";
+      state.canvasSurfaceTruthLaneOwner = "CANVAS_LAYOUT_SURFACE";
+      state.canvasSurfaceTruthLaneFile = CANVAS_FILE;
+      state.canvasSurfaceTruthLaneClass = "CANVAS_RECT_ZERO";
+      state.canvasSurfaceTruthLaneReason = "CANVAS_RECT_NONZERO_FALSE";
+      state.canvasSurfaceTruthLaneAction = "RENEW_CANVAS_OR_LAYOUT_TO_PRODUCE_NONZERO_SURFACE_RECT";
+      return;
+    }
+
+    if (textIsFalse(state.canvasViewportIntersecting)) {
+      state.canvasSurfaceTruthLaneStatus = "CANVAS_SURFACE_TRUTH_LANE_FAILED";
+      state.canvasSurfaceTruthLaneClean = "false";
+      state.canvasSurfaceTruthLaneOwner = "CSS_LAYOUT_OR_SCROLL_POSITION";
+      state.canvasSurfaceTruthLaneFile = HTML_FILE;
+      state.canvasSurfaceTruthLaneClass = "CANVAS_OUTSIDE_VIEWPORT";
+      state.canvasSurfaceTruthLaneReason = "CANVAS_HAS_GEOMETRY_BUT_DOES_NOT_INTERSECT_VIEWPORT";
+      state.canvasSurfaceTruthLaneAction = "AUDIT_STAGE_PLACEMENT_SCROLL_AND_VIEWPORT_INTERSECTION";
+      return;
+    }
+
+    if (textIsFalse(state.canvasContext2dReady)) {
+      state.canvasSurfaceTruthLaneStatus = "CANVAS_SURFACE_TRUTH_LANE_FAILED";
+      state.canvasSurfaceTruthLaneClean = "false";
+      state.canvasSurfaceTruthLaneOwner = "CANVAS_EXPRESSION_SURFACE";
+      state.canvasSurfaceTruthLaneFile = CANVAS_FILE;
+      state.canvasSurfaceTruthLaneClass = "CANVAS_CONTEXT_2D_NOT_READY";
+      state.canvasSurfaceTruthLaneReason = "CANVAS_CONTEXT_2D_READY_FALSE";
+      state.canvasSurfaceTruthLaneAction = "RENEW_CANVAS_CONTEXT_CREATION_AND_SURFACE_BINDING";
+      return;
+    }
+
+    if (textIsFalse(state.canvasPixelVisible)) {
+      state.canvasSurfaceTruthLaneStatus = "CANVAS_SURFACE_TRUTH_LANE_FAILED";
+      state.canvasSurfaceTruthLaneClean = "false";
+      state.canvasSurfaceTruthLaneOwner = "CANVAS_DRAWING_OR_DOWNSTREAM_EXPRESSION_ADAPTER";
+      state.canvasSurfaceTruthLaneFile = CANVAS_FILE;
+      state.canvasSurfaceTruthLaneClass = "CANVAS_PIXEL_SAMPLE_NOT_VISIBLE";
+      state.canvasSurfaceTruthLaneReason = firstKnown(state.canvasPixelSampleStatus, "CANVAS_PIXEL_VISIBLE_FALSE");
+      state.canvasSurfaceTruthLaneAction = "AUDIT_CANVAS_DRAW_PATH_AND_DOWNSTREAM_EXPRESSION_ADAPTER";
+      return;
+    }
+
+    state.canvasSurfaceTruthLaneStatus = "CANVAS_SURFACE_TRUTH_LANE_INCONCLUSIVE";
+    state.canvasSurfaceTruthLaneClean = "false";
+    state.canvasSurfaceTruthLaneOwner = "CANVAS_SURFACE_TRUTH_PROBE";
+    state.canvasSurfaceTruthLaneFile = PROBE_CANVAS_SURFACE_TRUTH_FILE;
+    state.canvasSurfaceTruthLaneClass = "CANVAS_SURFACE_TRUTH_INCONCLUSIVE";
+    state.canvasSurfaceTruthLaneReason = "CANVAS_SURFACE_TRUTH_RETURNED_WITHOUT_CONFIRMATION_OR_EXPLICIT_FAILURE";
+    state.canvasSurfaceTruthLaneAction = "AUDIT_CANVAS_SURFACE_TRUTH_OUTPUT";
+  }
+
+  function runDelegatoryAudit(state, targetContext) {
+    const nodes = NODE_REGISTRY.map((node) => readNode(node, targetContext));
+    const nodesById = {};
+    nodes.forEach((node) => { nodesById[node.id] = node; });
+
+    const relationships = RELATIONSHIP_REGISTRY.map((relationship) => {
+      return evaluateRelationship(relationship, nodesById);
+    });
+
+    const firstNotGranted = relationships.find((entry) => entry.relationshipPermissionGranted !== true) || null;
+    const handshakeFrontOnly = relationships.filter((entry) => entry.varianceClass === "HANDSHAKE_FRONTPORT_ONLY");
+    const missingEndpoints = relationships.filter((entry) => entry.varianceClass.includes("ENDPOINT_UNOBSERVED"));
+    const complete = relationships.filter((entry) => entry.relationshipPermissionGranted === true);
+
+    const motionRequired = relationships.filter((entry) => entry.requiredForMotion);
+    const visibleRequired = relationships.filter((entry) => entry.requiredForVisibleSurface);
+
+    const motionGranted = motionRequired.every((entry) => entry.relationshipPermissionGranted === true);
+    const visibleGranted = visibleRequired.every((entry) => entry.relationshipPermissionGranted === true);
+
+    let status = "DELEGATORY_PERMISSION_MATRIX_COMPLETE";
+    let nextOwner = "NONE";
+    let nextFile = "NONE";
+    let nextAction = "NONE";
+    let laneClass = "NONE";
+    let laneReason = "ALL_DELEGATORY_RELATIONSHIPS_CONFIRMED";
+
+    if (firstNotGranted) {
+      status = "DELEGATORY_PERMISSION_MATRIX_PARTIAL";
+      nextOwner = firstNotGranted.fromObserved ? firstNotGranted.to : firstNotGranted.from;
+      nextFile = firstNotGranted.fromObserved ? firstNotGranted.toFile : firstNotGranted.fromFile;
+      laneClass = firstNotGranted.varianceClass;
+      laneReason = firstNotGranted.relationshipStatus;
+      nextAction =
+        firstNotGranted.varianceClass === "HANDSHAKE_FRONTPORT_ONLY"
+          ? "ADD_OR_CONFIRM_RETURN_PORT_RECEIPT_FOR_THIS_HANDSHAKE"
+          : firstNotGranted.varianceClass.includes("ENDPOINT_UNOBSERVED")
+            ? "CONFIRM_PUBLIC_AUTHORITY_PUBLICATION_FOR_UNOBSERVED_ENDPOINT"
+            : "CONFIRM_RELATIONSHIP_PERMISSION_REQUEST_AND_GRANT_SIGNALS";
+    }
+
+    const canvasNode = nodesById.CANVAS_RECEIVER || {};
+    const routeNode = nodesById.ROUTE_CONDUCTOR || {};
+    const controlsNode = nodesById.CONTROLS_QUEEN || {};
+    const hexSurfaceNode = nodesById.HEX_SURFACE_GATE || {};
+
+    const routeCanvasPair = relationships.find((entry) => entry.id === "ROUTE_TO_CANVAS_GOVERNED_SOURCE_HANDSHAKE") || {};
+    const controlCanvasPair = relationships.find((entry) => entry.id === "CONTROLS_TO_CANVAS_VIEW_DELTA_HANDSHAKE") || {};
+    const canvasHexPair = relationships.find((entry) => entry.id === "CANVAS_TO_HEX_SURFACE_EXPRESSION_GATE") || {};
+
+    const threeFileStrategy = {
+      strategyName: "ROUTE_CONTROLS_CANVAS_HEX_SURFACE_DELEGATORY_PERMISSION_STRATEGY_v11_4",
+      routeConductorActiveScanAuthority: true,
+      controlsRemainMotionAndInputGatewayAuthority: true,
+      canvasRemainsPresentationSurfaceAndBridgeAuthority: true,
+      hexSurfaceRemainsDownstreamGateAuthority: true,
+      pointerFingerRemainsDownstreamExpressionAuthority: true,
+      canvasDoesNotOwnSourceTruth: true,
+      controlsDoNotOwnCanvasDrawing: true,
+      routeDoesNotOwnCanvasDrawing: true,
+      routeCanvasPairPermissionGranted: routeCanvasPair.relationshipPermissionGranted === true,
+      controlsCanvasMotionPermissionGranted: controlCanvasPair.relationshipPermissionGranted === true,
+      canvasHexSurfacePermissionGranted: canvasHexPair.relationshipPermissionGranted === true,
+      routeObserved: routeNode.observed === true,
+      controlsObserved: controlsNode.observed === true,
+      canvasObserved: canvasNode.observed === true,
+      hexSurfaceObserved: hexSurfaceNode.observed === true,
+      matrixRecommendationIsAdvisoryWhenCanvasSurfaceTruthFailed: true,
+      recommendedConstructAction:
+        canvasNode.observed !== true
+          ? "RENEW_CANVAS_PUBLIC_AUTHORITY_AND_DOM_SURFACE_BINDING"
+          : routeNode.observed !== true
+            ? "RENEW_ROUTE_CONDUCTOR_PUBLIC_AUTHORITY_PUBLICATION_IN_TARGET_CONTEXT"
+            : controlsNode.observed !== true
+              ? "RENEW_CONTROLS_PUBLIC_AUTHORITY_PUBLICATION_IN_TARGET_CONTEXT"
+              : hexSurfaceNode.observed !== true
+                ? "RENEW_OR_LOAD_HEX_SURFACE_PUBLIC_GATE"
+                : firstNotGranted
+                  ? nextAction
+                  : "PROCEED_TO_TARGETED_PAIR_OR_TRIAD_RENEWAL_WITH_MATRIX_AS_CONTROL_RECEIPT"
+    };
+
+    state.delegatoryPermissionLaneStatus = firstNotGranted
+      ? "DELEGATORY_PERMISSION_LANE_PARTIAL"
+      : "DELEGATORY_PERMISSION_LANE_COMPLETE";
+    state.delegatoryPermissionLaneClean = firstNotGranted ? "false" : "true";
+    state.delegatoryPermissionLaneOwner = nextOwner;
+    state.delegatoryPermissionLaneFile = nextFile;
+    state.delegatoryPermissionLaneClass = laneClass;
+    state.delegatoryPermissionLaneReason = laneReason;
+    state.delegatoryPermissionLaneAction = nextAction;
+
+    state.delegatoryAuditStatus = status;
+    state.delegatoryAuditCompleteRelationshipCount = complete.length;
+    state.delegatoryAuditTotalRelationshipCount = relationships.length;
+    state.delegatoryAuditFirstNotGrantedRelationship = firstNotGranted ? firstNotGranted.id : "NONE";
+    state.delegatoryAuditFirstVarianceClass = firstNotGranted ? firstNotGranted.varianceClass : "NONE";
+    state.delegatoryAuditFirstRecommendedOwner = firstNotGranted ? nextOwner : "NONE";
+    state.delegatoryAuditFirstRecommendedFile = firstNotGranted ? nextFile : "NONE";
+    state.delegatoryAuditFirstRecommendedAction = firstNotGranted ? nextAction : "NONE";
+
+    state.motionPermissionGranted = motionGranted;
+    state.visibleSurfacePermissionGranted = visibleGranted;
+    state.pairPermissionGranted = routeCanvasPair.relationshipPermissionGranted === true;
+    state.constructPermissionGranted = relationships.every((entry) => entry.relationshipPermissionGranted === true);
+
+    state.handshakeFrontOnlyCount = handshakeFrontOnly.length;
+    state.unobservedEndpointRelationshipCount = missingEndpoints.length;
+
+    state.delegatoryNodes = nodes;
+    state.delegatoryRelationships = relationships;
+    state.threeFileConstructStrategy = threeFileStrategy;
+
+    if (firstNotGranted) {
+      addNote(state, `DELEGATORY_PERMISSION_LANE_PARTIAL:${firstNotGranted.id}:${firstNotGranted.varianceClass}`);
+    } else {
+      addNote(state, "DELEGATORY_PERMISSION_LANE_COMPLETE");
+    }
   }
 
   function resolveAlignment(state) {
@@ -2617,6 +2562,100 @@
     state.canvasStandardFibonacciSynchronizationFirstFailedStage = canvasFibFirstFailed ? canvasFibFirstFailed.key : "NONE";
   }
 
+  function runFinalArbitration(state) {
+    if (state.chronologyExecutionLaneClean !== "true") {
+      state.finalArbitrationStatus = "FINAL_ARBITRATION_HOLD_CHRONOLOGY_EXECUTION";
+      state.finalArbitrationSource = "CHRONOLOGY_EXECUTION_LANE";
+      state.finalArbitrationReason = state.chronologyExecutionFirstFailureReason;
+
+      state.zoneOfInflictionOwner = state.chronologyExecutionFirstFailureOwner;
+      state.zoneOfInflictionFile = state.chronologyExecutionFirstFailureFile;
+      state.zoneOfInflictionClass = state.chronologyExecutionFirstFailureClass;
+      state.zoneOfInflictionReason = state.chronologyExecutionFirstFailureReason;
+
+      state.primaryCase = "INCONCLUSIVE_EVIDENCE";
+      state.calibrationStatus = "CALIBRATION_HOLD_CHRONOLOGY_EXECUTION_LANE";
+      state.calibrationHoldReason = state.chronologyExecutionFirstFailureReason;
+      state.diagnosticChronologyClean = "false";
+      state.diagnosticRailClean = "false";
+      state.calibrationPointReached = "false";
+      state.recommendedNextOwner = state.chronologyExecutionFirstFailureOwner;
+      state.recommendedNextFile = state.chronologyExecutionFirstFailureFile;
+      state.recommendedNextAction = "RENEW_OR_REPAIR_FIRST_FAILED_CHRONOLOGY_EXECUTION_STEP";
+      addNote(state, "FINAL_ARBITRATION_SELECTED_CHRONOLOGY_EXECUTION_LANE");
+      return;
+    }
+
+    state.diagnosticChronologyClean = "true";
+
+    if (state.canvasSurfaceTruthLaneClean !== "true") {
+      state.finalArbitrationStatus = "FINAL_ARBITRATION_HOLD_CANVAS_SURFACE_TRUTH";
+      state.finalArbitrationSource = "CANVAS_SURFACE_TRUTH_LANE";
+      state.finalArbitrationReason = state.canvasSurfaceTruthLaneReason;
+
+      state.zoneOfInflictionOwner = state.canvasSurfaceTruthLaneOwner;
+      state.zoneOfInflictionFile = state.canvasSurfaceTruthLaneFile;
+      state.zoneOfInflictionClass = state.canvasSurfaceTruthLaneClass;
+      state.zoneOfInflictionReason = state.canvasSurfaceTruthLaneReason;
+
+      state.primaryCase = "CANVAS_SURFACE_TRUTH_FAILURE";
+      state.calibrationStatus = "CALIBRATION_HOLD_CANVAS_SURFACE_TRUTH";
+      state.calibrationHoldReason = state.canvasSurfaceTruthLaneReason;
+      state.diagnosticRailClean = "false";
+      state.calibrationPointReached = "false";
+      state.recommendedNextOwner = state.canvasSurfaceTruthLaneOwner;
+      state.recommendedNextFile = state.canvasSurfaceTruthLaneFile;
+      state.recommendedNextAction = state.canvasSurfaceTruthLaneAction;
+
+      addNote(state, "FINAL_ARBITRATION_SELECTED_CANVAS_SURFACE_TRUTH_LANE");
+      addNote(state, "DELEGATORY_PERMISSION_LANE_RETAINED_AS_ADVISORY_UNTIL_SURFACE_TRUTH_CONFIRMS");
+      return;
+    }
+
+    if (state.delegatoryPermissionLaneClean !== "true") {
+      state.finalArbitrationStatus = "FINAL_ARBITRATION_HOLD_DELEGATORY_PERMISSION";
+      state.finalArbitrationSource = "DELEGATORY_PERMISSION_LANE";
+      state.finalArbitrationReason = state.delegatoryPermissionLaneReason;
+
+      state.zoneOfInflictionOwner = state.delegatoryPermissionLaneOwner;
+      state.zoneOfInflictionFile = state.delegatoryPermissionLaneFile;
+      state.zoneOfInflictionClass = state.delegatoryPermissionLaneClass;
+      state.zoneOfInflictionReason = state.delegatoryPermissionLaneReason;
+
+      state.primaryCase = "DELEGATORY_HANDSHAKE_VARIANCE_REQUIRES_REVIEW";
+      state.calibrationStatus = "CALIBRATION_HOLD_DELEGATORY_PERMISSION_MATRIX";
+      state.calibrationHoldReason = state.delegatoryPermissionLaneClass;
+      state.diagnosticRailClean = "false";
+      state.calibrationPointReached = "false";
+      state.recommendedNextOwner = state.delegatoryPermissionLaneOwner;
+      state.recommendedNextFile = state.delegatoryPermissionLaneFile;
+      state.recommendedNextAction = state.delegatoryPermissionLaneAction;
+
+      addNote(state, "FINAL_ARBITRATION_SELECTED_DELEGATORY_PERMISSION_LANE");
+      return;
+    }
+
+    state.finalArbitrationStatus = "FINAL_ARBITRATION_COMPLETE";
+    state.finalArbitrationSource = "ALL_LANES";
+    state.finalArbitrationReason = "CHRONOLOGY_SURFACE_TRUTH_AND_DELEGATORY_PERMISSION_LANES_COMPLETE";
+
+    state.zoneOfInflictionOwner = "NONE";
+    state.zoneOfInflictionFile = "NONE";
+    state.zoneOfInflictionClass = "NONE";
+    state.zoneOfInflictionReason = "ALL_POST_EVIDENCE_LANES_COMPLETE_NO_VISUAL_PASS_CLAIM";
+
+    state.primaryCase = "DIAGNOSTIC_TRACK_CANVAS_SURFACE_TRUTH_AND_DELEGATORY_MATRIX_COMPLETE_NO_VISUAL_PASS_CLAIM";
+    state.calibrationStatus = "CALIBRATION_TRACK_COMPLETE";
+    state.calibrationHoldReason = "NONE";
+    state.diagnosticRailClean = "true";
+    state.calibrationPointReached = "true";
+    state.recommendedNextOwner = "TEACHER_REVIEW";
+    state.recommendedNextFile = CANVAS_FILE;
+    state.recommendedNextAction = "REVIEW_COMPLETE_DIAGNOSTIC_TRACK_WITH_NO_READY_OR_VISUAL_PASS_CLAIM";
+
+    addNote(state, "FINAL_ARBITRATION_COMPLETE_ALL_LANES");
+  }
+
   function chronologyText(state) {
     return state.chronology.map((entry) => {
       return [
@@ -2634,7 +2673,7 @@
 
   function buildNorthVerdict(state) {
     return {
-      schema: "HEARTH_DIAGNOSTIC_NORTH_DELEGATORY_HANDSHAKE_HANDOFF_VARIANCE_MATRIX_VERDICT_SCHEMA_v11_3",
+      schema: "HEARTH_DIAGNOSTIC_NORTH_POST_EVIDENCE_LANE_ARBITRATION_VERDICT_SCHEMA_v11_4",
       northContract: CONTRACT,
       northReceipt: RECEIPT,
       internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
@@ -2642,6 +2681,7 @@
       previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
       previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
       lineageInternalRenewalContract: LINEAGE_INTERNAL_RENEWAL_CONTRACT,
+      foundationInternalRenewalContract: FOUNDATION_INTERNAL_RENEWAL_CONTRACT,
       previousNorthContract: PREVIOUS_NORTH_CONTRACT,
       targetRoute: TARGET_ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
@@ -2656,11 +2696,48 @@
         routeCanvasPermissionGatePairAuditActive: true,
         delegatoryHandshakeMatrixActive: true,
         multiHandshakeVarianceAuditActive: true,
+        postEvidenceLaneArbitrationActive: true,
+        chronologyLaneSeparatedFromSurfaceTruth: true,
+        delegatoryMatrixAdvisoryWhenSurfaceTruthFailed: true,
         intendedHandoffVarianceIncluded: true,
         singleHandshakeGreenLightBlocked: true,
         canvasSurfaceTruthProbeExpected: true,
         receiverStillCallsNorthOnly: true,
         diagnosticRouteHtmlRenewalRequired: false
+      },
+
+      lanes: {
+        chronologyExecution: {
+          status: state.chronologyExecutionLaneStatus,
+          clean: state.chronologyExecutionLaneClean,
+          firstFailureOwner: state.chronologyExecutionFirstFailureOwner,
+          firstFailureFile: state.chronologyExecutionFirstFailureFile,
+          firstFailureClass: state.chronologyExecutionFirstFailureClass,
+          firstFailureReason: state.chronologyExecutionFirstFailureReason
+        },
+        canvasSurfaceTruth: {
+          status: state.canvasSurfaceTruthLaneStatus,
+          clean: state.canvasSurfaceTruthLaneClean,
+          owner: state.canvasSurfaceTruthLaneOwner,
+          file: state.canvasSurfaceTruthLaneFile,
+          class: state.canvasSurfaceTruthLaneClass,
+          reason: state.canvasSurfaceTruthLaneReason,
+          action: state.canvasSurfaceTruthLaneAction
+        },
+        delegatoryPermission: {
+          status: state.delegatoryPermissionLaneStatus,
+          clean: state.delegatoryPermissionLaneClean,
+          owner: state.delegatoryPermissionLaneOwner,
+          file: state.delegatoryPermissionLaneFile,
+          class: state.delegatoryPermissionLaneClass,
+          reason: state.delegatoryPermissionLaneReason,
+          action: state.delegatoryPermissionLaneAction
+        },
+        finalArbitration: {
+          status: state.finalArbitrationStatus,
+          source: state.finalArbitrationSource,
+          reason: state.finalArbitrationReason
+        }
       },
 
       chronology: clonePlain(state.chronology),
@@ -2679,6 +2756,7 @@
         totalRelationshipCount: state.delegatoryAuditTotalRelationshipCount,
         firstNotGrantedRelationship: state.delegatoryAuditFirstNotGrantedRelationship,
         firstVarianceClass: state.delegatoryAuditFirstVarianceClass,
+        firstRecommendedOwner: state.delegatoryAuditFirstRecommendedOwner,
         firstRecommendedFile: state.delegatoryAuditFirstRecommendedFile,
         firstRecommendedAction: state.delegatoryAuditFirstRecommendedAction,
         motionPermissionGranted: state.motionPermissionGranted,
@@ -2741,6 +2819,8 @@
       NORTH_PREVIOUS_INTERNAL_RENEWAL_RECEIPT: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
       NORTH_LINEAGE_INTERNAL_RENEWAL_CONTRACT: LINEAGE_INTERNAL_RENEWAL_CONTRACT,
       NORTH_LINEAGE_INTERNAL_RENEWAL_RECEIPT: LINEAGE_INTERNAL_RENEWAL_RECEIPT,
+      NORTH_FOUNDATION_INTERNAL_RENEWAL_CONTRACT: FOUNDATION_INTERNAL_RENEWAL_CONTRACT,
+      NORTH_FOUNDATION_INTERNAL_RENEWAL_RECEIPT: FOUNDATION_INTERNAL_RENEWAL_RECEIPT,
       PREVIOUS_NORTH_CONTRACT,
       PREVIOUS_NORTH_RECEIPT,
 
@@ -2752,6 +2832,9 @@
       ROUTE_CANVAS_PERMISSION_GATE_PAIR_AUDIT_ACTIVE: true,
       DELEGATORY_HANDSHAKE_MATRIX_ACTIVE: true,
       MULTI_HANDSHAKE_VARIANCE_AUDIT_ACTIVE: true,
+      POST_EVIDENCE_LANE_ARBITRATION_ACTIVE: true,
+      CHRONOLOGY_LANE_SEPARATED_FROM_SURFACE_TRUTH: true,
+      DELEGATORY_MATRIX_ADVISORY_WHEN_SURFACE_TRUTH_FAILED: true,
       INTENDED_HANDOFF_VARIANCE_INCLUDED: true,
       SINGLE_HANDSHAKE_GREEN_LIGHT_BLOCKED: true,
       CANVAS_SURFACE_TRUTH_PROBE_EXPECTED: true,
@@ -2797,6 +2880,34 @@
       CHRONOLOGY_SEQUENCE_JSON: clonePlain(state.chronology),
       CHRONOLOGY_SEQUENCE_TEXT: chronologyText(state),
       CHRONOLOGY_COMPLETION_STATUS: state.chronologyCompletionStatus,
+
+      CHRONOLOGY_EXECUTION_LANE_STATUS: state.chronologyExecutionLaneStatus,
+      CHRONOLOGY_EXECUTION_LANE_CLEAN: state.chronologyExecutionLaneClean,
+      CHRONOLOGY_EXECUTION_FIRST_FAILURE_OWNER: state.chronologyExecutionFirstFailureOwner,
+      CHRONOLOGY_EXECUTION_FIRST_FAILURE_FILE: state.chronologyExecutionFirstFailureFile,
+      CHRONOLOGY_EXECUTION_FIRST_FAILURE_CLASS: state.chronologyExecutionFirstFailureClass,
+      CHRONOLOGY_EXECUTION_FIRST_FAILURE_REASON: state.chronologyExecutionFirstFailureReason,
+
+      CANVAS_SURFACE_TRUTH_LANE_STATUS: state.canvasSurfaceTruthLaneStatus,
+      CANVAS_SURFACE_TRUTH_LANE_CLEAN: state.canvasSurfaceTruthLaneClean,
+      CANVAS_SURFACE_TRUTH_LANE_OWNER: state.canvasSurfaceTruthLaneOwner,
+      CANVAS_SURFACE_TRUTH_LANE_FILE: state.canvasSurfaceTruthLaneFile,
+      CANVAS_SURFACE_TRUTH_LANE_CLASS: state.canvasSurfaceTruthLaneClass,
+      CANVAS_SURFACE_TRUTH_LANE_REASON: state.canvasSurfaceTruthLaneReason,
+      CANVAS_SURFACE_TRUTH_LANE_ACTION: state.canvasSurfaceTruthLaneAction,
+
+      DELEGATORY_PERMISSION_LANE_STATUS: state.delegatoryPermissionLaneStatus,
+      DELEGATORY_PERMISSION_LANE_CLEAN: state.delegatoryPermissionLaneClean,
+      DELEGATORY_PERMISSION_LANE_OWNER: state.delegatoryPermissionLaneOwner,
+      DELEGATORY_PERMISSION_LANE_FILE: state.delegatoryPermissionLaneFile,
+      DELEGATORY_PERMISSION_LANE_CLASS: state.delegatoryPermissionLaneClass,
+      DELEGATORY_PERMISSION_LANE_REASON: state.delegatoryPermissionLaneReason,
+      DELEGATORY_PERMISSION_LANE_ACTION: state.delegatoryPermissionLaneAction,
+
+      FINAL_ARBITRATION_STATUS: state.finalArbitrationStatus,
+      FINAL_ARBITRATION_SOURCE: state.finalArbitrationSource,
+      FINAL_ARBITRATION_REASON: state.finalArbitrationReason,
+
       FIRST_CHRONOLOGY_FAILURE_OWNER: state.firstChronologyFailureOwner,
       FIRST_CHRONOLOGY_FAILURE_FILE: state.firstChronologyFailureFile,
       FIRST_CHRONOLOGY_FAILURE_CLASS: state.firstChronologyFailureClass,
@@ -2872,6 +2983,7 @@
       DELEGATORY_AUDIT_TOTAL_RELATIONSHIP_COUNT: state.delegatoryAuditTotalRelationshipCount,
       DELEGATORY_AUDIT_FIRST_NOT_GRANTED_RELATIONSHIP: state.delegatoryAuditFirstNotGrantedRelationship,
       DELEGATORY_AUDIT_FIRST_VARIANCE_CLASS: state.delegatoryAuditFirstVarianceClass,
+      DELEGATORY_AUDIT_FIRST_RECOMMENDED_OWNER: state.delegatoryAuditFirstRecommendedOwner,
       DELEGATORY_AUDIT_FIRST_RECOMMENDED_FILE: state.delegatoryAuditFirstRecommendedFile,
       DELEGATORY_AUDIT_FIRST_RECOMMENDED_ACTION: state.delegatoryAuditFirstRecommendedAction,
       MOTION_PERMISSION_GRANTED: state.motionPermissionGranted,
@@ -2938,10 +3050,19 @@
       "ROUTE_CANVAS_PERMISSION_GATE_PAIR_AUDIT_ACTIVE",
       "DELEGATORY_HANDSHAKE_MATRIX_ACTIVE",
       "MULTI_HANDSHAKE_VARIANCE_AUDIT_ACTIVE",
+      "POST_EVIDENCE_LANE_ARBITRATION_ACTIVE",
+      "CHRONOLOGY_LANE_SEPARATED_FROM_SURFACE_TRUTH",
+      "DELEGATORY_MATRIX_ADVISORY_WHEN_SURFACE_TRUTH_FAILED",
       "INTENDED_HANDOFF_VARIANCE_INCLUDED",
       "SINGLE_HANDSHAKE_GREEN_LIGHT_BLOCKED",
       "CANVAS_SURFACE_TRUTH_PROBE_EXPECTED",
       "CHRONOLOGY_COMPLETION_STATUS",
+      "CHRONOLOGY_EXECUTION_LANE_STATUS",
+      "CANVAS_SURFACE_TRUTH_LANE_STATUS",
+      "DELEGATORY_PERMISSION_LANE_STATUS",
+      "FINAL_ARBITRATION_STATUS",
+      "FINAL_ARBITRATION_SOURCE",
+      "FINAL_ARBITRATION_REASON",
       "ZONE_OF_INFLICTION_OWNER",
       "ZONE_OF_INFLICTION_FILE",
       "ZONE_OF_INFLICTION_CLASS",
@@ -2955,8 +3076,6 @@
       "VISIBLE_SURFACE_PERMISSION_GRANTED",
       "ROUTE_CANVAS_PAIR_PERMISSION_GRANTED",
       "CONSTRUCT_PERMISSION_GRANTED",
-      "HANDSHAKE_FRONTPORT_ONLY_COUNT",
-      "UNOBSERVED_ENDPOINT_RELATIONSHIP_COUNT",
       "CANVAS_SURFACE_TRUTH_PROBE_STATUS",
       "CANVAS_ELEMENT_FOUND",
       "CANVAS_RECT_NONZERO",
@@ -2966,9 +3085,6 @@
       "MOTION_TOUCH_STATUS",
       "DRAG_STATUS",
       "VIEW_CONTROL_STATUS",
-      "THREE_FILE_CONSTRUCT_STRATEGY",
-      "DELEGATORY_RELATIONSHIPS",
-      "DELEGATORY_NODES",
       "PRIMARY_CASE",
       "CALIBRATION_STATUS",
       "CALIBRATION_HOLD_REASON",
@@ -3003,16 +3119,15 @@
     return [
       line("NORTH_CONTRACT", getValue(report, "NORTH_CONTRACT", CONTRACT)),
       line("NORTH_INTERNAL_RENEWAL_CONTRACT", getValue(report, "NORTH_INTERNAL_RENEWAL_CONTRACT", INTERNAL_RENEWAL_CONTRACT)),
-      line("DELEGATORY_AUDIT_STATUS", getValue(report, "DELEGATORY_AUDIT_STATUS", "UNKNOWN")),
+      line("CHRONOLOGY_EXECUTION_LANE_STATUS", getValue(report, "CHRONOLOGY_EXECUTION_LANE_STATUS", "UNKNOWN")),
+      line("CANVAS_SURFACE_TRUTH_LANE_STATUS", getValue(report, "CANVAS_SURFACE_TRUTH_LANE_STATUS", "UNKNOWN")),
+      line("DELEGATORY_PERMISSION_LANE_STATUS", getValue(report, "DELEGATORY_PERMISSION_LANE_STATUS", "UNKNOWN")),
+      line("FINAL_ARBITRATION_SOURCE", getValue(report, "FINAL_ARBITRATION_SOURCE", "UNKNOWN")),
+      line("ZONE_OF_INFLICTION_FILE", getValue(report, "ZONE_OF_INFLICTION_FILE", "UNKNOWN")),
+      line("ZONE_OF_INFLICTION_CLASS", getValue(report, "ZONE_OF_INFLICTION_CLASS", "UNKNOWN")),
       line("DELEGATORY_AUDIT_FIRST_NOT_GRANTED_RELATIONSHIP", getValue(report, "DELEGATORY_AUDIT_FIRST_NOT_GRANTED_RELATIONSHIP", "UNKNOWN")),
-      line("DELEGATORY_AUDIT_FIRST_VARIANCE_CLASS", getValue(report, "DELEGATORY_AUDIT_FIRST_VARIANCE_CLASS", "UNKNOWN")),
-      line("MOTION_PERMISSION_GRANTED", getValue(report, "MOTION_PERMISSION_GRANTED", "false")),
-      line("VISIBLE_SURFACE_PERMISSION_GRANTED", getValue(report, "VISIBLE_SURFACE_PERMISSION_GRANTED", "false")),
-      line("ROUTE_CANVAS_PAIR_PERMISSION_GRANTED", getValue(report, "ROUTE_CANVAS_PAIR_PERMISSION_GRANTED", "false")),
-      line("CONSTRUCT_PERMISSION_GRANTED", getValue(report, "CONSTRUCT_PERMISSION_GRANTED", "false")),
       line("CANVAS_SURFACE_TRUTH_PROBE_STATUS", getValue(report, "CANVAS_SURFACE_TRUTH_PROBE_STATUS", "UNKNOWN")),
-      line("CANVAS_ELEMENT_FOUND", getValue(report, "CANVAS_ELEMENT_FOUND", "UNKNOWN")),
-      line("CONTROL_HANDSHAKE_STATUS", getValue(report, "CONTROL_HANDSHAKE_STATUS", "UNKNOWN")),
+      line("CANVAS_PIXEL_VISIBLE", getValue(report, "CANVAS_PIXEL_VISIBLE", "UNKNOWN")),
       line("RECOMMENDED_NEXT_FILE", getValue(report, "RECOMMENDED_NEXT_FILE", "UNKNOWN")),
       line("RECOMMENDED_NEXT_ACTION", getValue(report, "RECOMMENDED_NEXT_ACTION", "UNKNOWN"))
     ].join("\n");
@@ -3045,12 +3160,14 @@
     root.HEARTH.diagnosticNorthChronologyHub = api;
     root.HEARTH.diagnosticNorthCanvasSurfaceTruthChronologyHub = api;
     root.HEARTH.diagnosticNorthDelegatoryHandshakeMatrix = api;
+    root.HEARTH.diagnosticNorthPostEvidenceLaneArbitration = api;
 
     root.DEXTER_LAB.hearthDiagnosticRail = api;
     root.DEXTER_LAB.hearthDiagnosticNorth = api;
     root.DEXTER_LAB.hearthDiagnosticNorthChronologyHub = api;
     root.DEXTER_LAB.hearthDiagnosticNorthCanvasSurfaceTruthChronologyHub = api;
     root.DEXTER_LAB.hearthDiagnosticNorthDelegatoryHandshakeMatrix = api;
+    root.DEXTER_LAB.hearthDiagnosticNorthPostEvidenceLaneArbitration = api;
 
     root.HEARTH_DIAGNOSTIC_RAIL = api;
     root.HEARTH_PARALLEL_DIAGNOSTIC_RAIL = api;
@@ -3059,6 +3176,7 @@
     root.HEARTH_DIAGNOSTIC_NORTH_CHRONOLOGY_HUB = api;
     root.HEARTH_DIAGNOSTIC_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB = api;
     root.HEARTH_DIAGNOSTIC_NORTH_DELEGATORY_HANDSHAKE_MATRIX = api;
+    root.HEARTH_DIAGNOSTIC_NORTH_POST_EVIDENCE_LANE_ARBITRATION = api;
 
     root.HEARTH_DIAGNOSTIC_RAIL_RECEIPT = getReceipt();
     root.HEARTH_PARALLEL_DIAGNOSTIC_RAIL_RECEIPT = getReceipt();
@@ -3067,6 +3185,7 @@
     root.HEARTH_DIAGNOSTIC_NORTH_CHRONOLOGY_HUB_RECEIPT = getReceipt();
     root.HEARTH_DIAGNOSTIC_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_RECEIPT = getReceipt();
     root.HEARTH_DIAGNOSTIC_NORTH_DELEGATORY_HANDSHAKE_MATRIX_RECEIPT = getReceipt();
+    root.HEARTH_DIAGNOSTIC_NORTH_POST_EVIDENCE_LANE_ARBITRATION_RECEIPT = getReceipt();
 
     root.HEARTH_DIAGNOSTIC_RAIL_REPORT = clonePlain(lastReport);
     root.HEARTH_PARALLEL_DIAGNOSTIC_RAIL_REPORT = clonePlain(lastReport);
@@ -3074,6 +3193,7 @@
     root.HEARTH_DIAGNOSTIC_NORTH_CHRONOLOGY_HUB_REPORT = clonePlain(lastReport);
     root.HEARTH_DIAGNOSTIC_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_REPORT = clonePlain(lastReport);
     root.HEARTH_DIAGNOSTIC_NORTH_DELEGATORY_HANDSHAKE_MATRIX_REPORT = clonePlain(lastReport);
+    root.HEARTH_DIAGNOSTIC_NORTH_POST_EVIDENCE_LANE_ARBITRATION_REPORT = clonePlain(lastReport);
 
     root.HEARTH_DIAGNOSTIC_RAIL_VERDICT = clonePlain(lastVerdict);
     root.HEARTH_PARALLEL_DIAGNOSTIC_RAIL_VERDICT = clonePlain(lastVerdict);
@@ -3081,12 +3201,14 @@
     root.HEARTH_DIAGNOSTIC_NORTH_CHRONOLOGY_HUB_VERDICT = clonePlain(lastVerdict);
     root.HEARTH_DIAGNOSTIC_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_VERDICT = clonePlain(lastVerdict);
     root.HEARTH_DIAGNOSTIC_NORTH_DELEGATORY_HANDSHAKE_MATRIX_VERDICT = clonePlain(lastVerdict);
+    root.HEARTH_DIAGNOSTIC_NORTH_POST_EVIDENCE_LANE_ARBITRATION_VERDICT = clonePlain(lastVerdict);
 
     root.HEARTH_DIAGNOSTIC_RAIL_PACKET_TEXT = lastPacketText;
     root.HEARTH_DIAGNOSTIC_NORTH_PACKET_TEXT = lastPacketText;
     root.HEARTH_DIAGNOSTIC_NORTH_CHRONOLOGY_HUB_PACKET_TEXT = lastPacketText;
     root.HEARTH_DIAGNOSTIC_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_PACKET_TEXT = lastPacketText;
     root.HEARTH_DIAGNOSTIC_NORTH_DELEGATORY_HANDSHAKE_MATRIX_PACKET_TEXT = lastPacketText;
+    root.HEARTH_DIAGNOSTIC_NORTH_POST_EVIDENCE_LANE_ARBITRATION_PACKET_TEXT = lastPacketText;
 
     return true;
   }
@@ -3098,32 +3220,17 @@
     state.targetContextStatus = targetContext.accessStatus;
     state.targetContextSource = targetContext.source;
     state.targetContextError = targetContext.accessError;
-    state.diagnosticTargetAccessStatus = targetContext.accessStatus;
-    state.diagnosticTargetAccessError = targetContext.accessError;
 
     try {
       for (const step of CHRONOLOGY_STEPS) {
         await processStep(state, step, targetContext, options);
-        resolveAlignment(state);
-        resolveChronologyDisposition(state);
       }
 
+      resolveChronologyExecutionLane(state);
+      resolveCanvasSurfaceTruthLane(state);
       runDelegatoryAudit(state, targetContext);
       resolveAlignment(state);
-      resolveChronologyDisposition(state);
-
-      if (state.delegatoryAuditStatus === "DELEGATORY_PERMISSION_MATRIX_PARTIAL") {
-        state.diagnosticRailClean = "false";
-        state.calibrationPointReached = "false";
-        state.primaryCase = state.primaryCase === "DIAGNOSTIC_TRACK_AND_CANVAS_SURFACE_TRUTH_COMPLETE_NO_VISUAL_PASS_CLAIM"
-          ? "DELEGATORY_HANDSHAKE_VARIANCE_REQUIRES_REVIEW"
-          : state.primaryCase;
-        state.calibrationStatus = "CALIBRATION_HOLD_DELEGATORY_PERMISSION_MATRIX";
-        state.calibrationHoldReason = state.delegatoryAuditFirstVarianceClass;
-        state.recommendedNextOwner = "DELEGATORY_MATRIX_FIRST_NOT_GRANTED";
-        state.recommendedNextFile = state.delegatoryAuditFirstRecommendedFile;
-        state.recommendedNextAction = state.delegatoryAuditFirstRecommendedAction;
-      }
+      runFinalArbitration(state);
 
       state.northVerdict = buildNorthVerdict(state);
       state.reportObject = buildReportObject(state);
@@ -3139,10 +3246,9 @@
         internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
         internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
         previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
-        delegatoryHandshakeMatrixActive: true,
-        multiHandshakeVarianceAuditActive: true,
-        intendedHandoffVarianceIncluded: true,
-        singleHandshakeGreenLightBlocked: true,
+        postEvidenceLaneArbitrationActive: true,
+        chronologyLaneSeparatedFromSurfaceTruth: true,
+        delegatoryMatrixAdvisoryWhenSurfaceTruthFailed: true,
         verdict: clonePlain(lastVerdict),
         report: clonePlain(lastReport),
         packetText: lastPacketText,
@@ -3153,12 +3259,17 @@
       };
     } catch (error) {
       state.primaryCase = "INCONCLUSIVE_EVIDENCE";
-      state.calibrationStatus = "CALIBRATION_NORTH_DELEGATORY_HANDSHAKE_MATRIX_TOP_LEVEL_ERROR";
+      state.calibrationStatus = "CALIBRATION_NORTH_POST_EVIDENCE_LANE_ARBITRATION_TOP_LEVEL_ERROR";
       state.calibrationHoldReason = bounded(error && error.message ? error.message : error, 1000);
       state.diagnosticChronologyClean = "false";
       state.diagnosticRailClean = "false";
       state.calibrationPointReached = "false";
-      state.chronologyCompletionStatus = "NORTH_DELEGATORY_HANDSHAKE_MATRIX_TOP_LEVEL_ERROR";
+      state.chronologyCompletionStatus = "NORTH_POST_EVIDENCE_LANE_ARBITRATION_TOP_LEVEL_ERROR";
+      state.chronologyExecutionLaneStatus = "CHRONOLOGY_EXECUTION_LANE_TOP_LEVEL_ERROR";
+      state.chronologyExecutionLaneClean = "false";
+      state.finalArbitrationStatus = "FINAL_ARBITRATION_TOP_LEVEL_ERROR";
+      state.finalArbitrationSource = "DIAGNOSTIC_NORTH_CHRONOLOGY_HUB";
+      state.finalArbitrationReason = state.calibrationHoldReason;
       state.zoneOfInflictionOwner = "DIAGNOSTIC_NORTH_CHRONOLOGY_HUB";
       state.zoneOfInflictionFile = FILE;
       state.zoneOfInflictionClass = "NORTH_TOP_LEVEL_ERROR";
@@ -3224,7 +3335,7 @@
     const state = lastState || makeState();
 
     return {
-      parentRole: "NORTH_DELEGATORY_HANDSHAKE_HANDOFF_VARIANCE_MATRIX_HUB",
+      parentRole: "NORTH_POST_EVIDENCE_LANE_ARBITRATION_HUB",
       contract: CONTRACT,
       receipt: RECEIPT,
       internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
@@ -3232,6 +3343,7 @@
       previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
       previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
       lineageInternalRenewalContract: LINEAGE_INTERNAL_RENEWAL_CONTRACT,
+      foundationInternalRenewalContract: FOUNDATION_INTERNAL_RENEWAL_CONTRACT,
       previousNorthContract: PREVIOUS_NORTH_CONTRACT,
       previousNorthReceipt: PREVIOUS_NORTH_RECEIPT,
       version: VERSION,
@@ -3251,11 +3363,20 @@
       routeCanvasPermissionGatePairAuditActive: true,
       delegatoryHandshakeMatrixActive: true,
       multiHandshakeVarianceAuditActive: true,
+      postEvidenceLaneArbitrationActive: true,
+      chronologyLaneSeparatedFromSurfaceTruth: true,
+      delegatoryMatrixAdvisoryWhenSurfaceTruthFailed: true,
       intendedHandoffVarianceIncluded: true,
       singleHandshakeGreenLightBlocked: true,
       canvasSurfaceTruthProbeExpected: true,
       diagnosticRouteHtmlRenewalRequired: false,
       receiverStillCallsNorthOnly: true,
+
+      chronologyExecutionLaneStatus: state.chronologyExecutionLaneStatus,
+      canvasSurfaceTruthLaneStatus: state.canvasSurfaceTruthLaneStatus,
+      delegatoryPermissionLaneStatus: state.delegatoryPermissionLaneStatus,
+      finalArbitrationStatus: state.finalArbitrationStatus,
+      finalArbitrationSource: state.finalArbitrationSource,
 
       chronologyCompletionStatus: state.chronologyCompletionStatus,
       zoneOfInflictionOwner: state.zoneOfInflictionOwner,
@@ -3274,8 +3395,6 @@
       visibleSurfacePermissionGranted: state.visibleSurfacePermissionGranted,
       pairPermissionGranted: state.pairPermissionGranted,
       constructPermissionGranted: state.constructPermissionGranted,
-      handshakeFrontOnlyCount: state.handshakeFrontOnlyCount,
-      unobservedEndpointRelationshipCount: state.unobservedEndpointRelationshipCount,
 
       canvasSurfaceTruthProbeStatus: state.canvasSurfaceTruthProbeStatus,
       canvasSurfaceTruthAvailable: state.canvasSurfaceTruthAvailable,
@@ -3360,6 +3479,9 @@
       supportsRouteCanvasPermissionGatePairAudit: true,
       supportsDelegatoryHandshakeMatrix: true,
       supportsMultiHandshakeVarianceAudit: true,
+      supportsPostEvidenceLaneArbitration: true,
+      supportsChronologyLaneSurfaceTruthSeparation: true,
+      supportsDelegatoryMatrixAdvisoryWhenSurfaceTruthFailed: true,
       supportsIntendedHandoffVariance: true,
       supportsSingleHandshakeGreenLightBlock: true,
       supportsConstructWidePermissionAudit: true,
@@ -3381,6 +3503,7 @@
     previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
     previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
     lineageInternalRenewalContract: LINEAGE_INTERNAL_RENEWAL_CONTRACT,
+    foundationInternalRenewalContract: FOUNDATION_INTERNAL_RENEWAL_CONTRACT,
     previousNorthContract: PREVIOUS_NORTH_CONTRACT,
     previousNorthReceipt: PREVIOUS_NORTH_RECEIPT,
     version: VERSION,
@@ -3401,6 +3524,9 @@
     routeCanvasPermissionGatePairAuditActive: true,
     delegatoryHandshakeMatrixActive: true,
     multiHandshakeVarianceAuditActive: true,
+    postEvidenceLaneArbitrationActive: true,
+    chronologyLaneSeparatedFromSurfaceTruth: true,
+    delegatoryMatrixAdvisoryWhenSurfaceTruthFailed: true,
     intendedHandoffVarianceIncluded: true,
     singleHandshakeGreenLightBlocked: true,
     canvasSurfaceTruthProbeExpected: true,
@@ -3454,6 +3580,9 @@
     supportsRouteCanvasPermissionGatePairAudit: true,
     supportsDelegatoryHandshakeMatrix: true,
     supportsMultiHandshakeVarianceAudit: true,
+    supportsPostEvidenceLaneArbitration: true,
+    supportsChronologyLaneSurfaceTruthSeparation: true,
+    supportsDelegatoryMatrixAdvisoryWhenSurfaceTruthFailed: true,
     supportsIntendedHandoffVariance: true,
     supportsSingleHandshakeGreenLightBlock: true,
     supportsConstructWidePermissionAudit: true,

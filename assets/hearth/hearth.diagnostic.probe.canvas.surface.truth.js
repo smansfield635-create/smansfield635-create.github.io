@@ -1,35 +1,21 @@
 // /assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js
 // HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_TNT_v1
-// Internal renewal:
-// HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_RECEIPT_HUB_EXPANSION_TNT_v1_1
+// Internal controlled renewal:
+// HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_ANCHOR_SAFE_COORDINATE_LADDER_TNT_v1_2
 // Full-file replacement.
 // Diagnostic-only Canvas surface truth / receipt hub probe.
 // Purpose:
 // - Preserve the existing NORTH-facing Canvas surface truth probe contract.
-// - Keep NORTH wiring stable while expanding this probe into the downstream receipt hub.
-// - Inspect rendered Hearth Canvas surface truth.
-// - Receive/ingest Probe South packet meaning when Probe South sends it here.
-// - Split returned evidence into four compact receipt lanes:
-//   1. LAB_CARDINAL_RECEIPT_BUNDLE: North/East/South/West lab/runtime/engine receipts.
-//   2. DIAGNOSTIC_TRACK_RECEIPT: diagnostic rail/probe chronology and alignment.
-//   3. CANVAS_BISHOP_RECEIPT: canvas/bishop/route-conductor expression alignment.
-//   4. FINGER_FILE_RECEIPT: surface pointer, finger inspect, hex surface, four-pair files.
-// - Publish compact packet text so the diagnostic receipt button has a small readable return surface.
-// - Preserve no production mutation, no drawing, no repair, no route mutation,
-//   no control mutation, no runtime restart, no F13, no F21, no ready text,
-//   no visual pass, no generated image, no GraphicBox, no WebGL.
-// Does not own:
-// - Canvas drawing
-// - Canvas creation
-// - Canvas repair
-// - route conductor implementation
-// - controls implementation
-// - terrain/material/hydrology/elevation truth
-// - diagnostic UI shell
-// - final readiness or visual pass
+// - Publish the F21 diagnostic authority synchronously before target probing.
+// - Prevent SCRIPT_ALREADY_PRESENT / observed:false chronology failures.
+// - Preserve the four-lane receipt hub from v1_1.
+// - Expand Canvas truth diagnosis into a coordinate-level ladder.
+// - Do not create, draw, repair, release, restart, or mutate production state.
 
 (() => {
   "use strict";
+
+  const root = typeof window !== "undefined" ? window : globalThis;
 
   const CONTRACT =
     "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_TNT_v1";
@@ -37,23 +23,25 @@
     "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_RECEIPT_v1";
 
   const INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_RECEIPT_HUB_EXPANSION_TNT_v1_1";
+    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_ANCHOR_SAFE_COORDINATE_LADDER_TNT_v1_2";
   const INTERNAL_RENEWAL_RECEIPT =
-    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_RECEIPT_HUB_EXPANSION_RECEIPT_v1_1";
+    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_ANCHOR_SAFE_COORDINATE_LADDER_RECEIPT_v1_2";
 
   const VERSION =
-    "2026-06-06.hearth-diagnostic-probe-canvas-surface-truth-receipt-hub-v1-1";
+    "2026-06-07.hearth-diagnostic-probe-canvas-surface-truth-anchor-safe-coordinate-ladder-v1-2";
 
   const FILE = "/assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js";
   const TARGET_ROUTE = "/showroom/globe/hearth/";
   const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
+
   const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
   const PROBE_SOUTH_FILE = "/assets/hearth/hearth.diagnostic.probe.south.js";
   const SOUTH_SURFACE_POINTER_FILE =
     "/assets/hearth/hearth.diagnostic.south.surface.pointer.js";
   const FINGER_INSPECT_FILE = "/assets/hearth/hearth.canvas.finger.inspect.js";
   const HEX_SURFACE_FILE = "/assets/hearth/hearth.hex.surface.js";
-  const HEX_FOUR_PAIR_FILE = "/assets/hearth/hearth.hex.four-pair.authority.js";
+  const HEX_FOUR_PAIR_FILE =
+    "/assets/hearth/hearth.hex.four-pair.authority.js";
 
   const EXPECTED_CANVAS_CONTRACT =
     "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3";
@@ -71,11 +59,14 @@
   const NO_CLAIMS = Object.freeze({
     f13Claimed: false,
     f21EligibleForNorth: false,
+    f21ClaimedByProbe: false,
     f21ClaimedByDiagnosticRail: false,
     f55ClaimedByTruthHub: false,
     readyTextAllowed: false,
+    readyTextClaimed: false,
     readyTextClaimedByDiagnosticRail: false,
     visualPassClaimed: false,
+    finalVisualPassClaimed: false,
     generatedImage: false,
     graphicBox: false,
     webGL: false,
@@ -85,11 +76,14 @@
   const UPPER_NO_CLAIMS = Object.freeze({
     F13_CLAIMED: false,
     F21_ELIGIBLE_FOR_NORTH: false,
+    F21_CLAIMED_BY_PROBE: false,
     F21_CLAIMED_BY_DIAGNOSTIC_RAIL: false,
     F55_CLAIMED_BY_TRUTH_HUB: false,
     READY_TEXT_ALLOWED: false,
+    READY_TEXT_CLAIMED: false,
     READY_TEXT_CLAIMED_BY_DIAGNOSTIC_RAIL: false,
     VISUAL_PASS_CLAIMED: false,
+    FINAL_VISUAL_PASS_CLAIMED: false,
     GENERATED_IMAGE: false,
     GRAPHIC_BOX: false,
     WEBGL: false
@@ -104,6 +98,9 @@
     "canvas[data-hearth-planet-canvas='true']",
     "canvas[data-hearth-canvas='true']",
     "canvas[data-hearth-canvas-texture='true']",
+    "#hearthCanvasMount canvas",
+    "[data-hearth-canvas-mount] canvas",
+    "[data-hearth-expression-mount] canvas",
     "canvas"
   ]);
 
@@ -116,6 +113,7 @@
     "#hearthGlobeStage",
     "[data-hearth-globe-stage]",
     "[data-hearth-planet-stage]",
+    "[data-hearth-expression-stage]",
     "main",
     "body"
   ]);
@@ -125,9 +123,8 @@
       "LAB_RUNTIME_TABLE_NORTH",
       "LAB_RUNTIME_TABLE",
       "HEARTH_NORTH_COMMAND_RUNTIME_TABLE",
-      "HEARTH_NORTH_COMMAND",
-      "HEARTH.northCentralTrainStation",
       "HEARTH.northCommandRuntimeTable",
+      "HEARTH.northCentralTrainStation",
       "DEXTER_LAB.runtimeTable",
       "DEXTER_LAB.cardinalRuntimeTableNorth",
       "DEXTER_LAB.northCentralTrainStation"
@@ -220,9 +217,13 @@
       "HEARTH.canvasHubCompositeFirstFastViewDeferredHexReceiver",
       "HEARTH.canvasHub",
       "HEARTH.canvas",
+      "HEARTH.canvasParent",
+      "HEARTH.canvasAuthority",
       "HEARTH.canvasExpressionHub",
+      "HEARTH.canvasVisiblePlanet",
       "DEXTER_LAB.hearthCanvasHub",
       "DEXTER_LAB.hearthCanvas",
+      "DEXTER_LAB.hearthCanvasParent",
       "DEXTER_LAB.hearthCanvasExpressionHub"
     ]),
     bishopQueen: Object.freeze([
@@ -237,6 +238,7 @@
       "HEARTH.routeConductor",
       "HEARTH.routeConductorShowtimeNewsFibonacciQueenCanvasSync",
       "HEARTH.routeConductorBishopQueenCanvasRecognitionFunnel",
+      "HEARTH.routeConductorGovernedSourceStackAdmissionCanvasHandoff",
       "DEXTER_LAB.hearthRouteConductor",
       "DEXTER_LAB.hearthRouteConductorShowtimeNewsFibonacciQueenCanvasSync",
       "DEXTER_LAB.hearthRouteConductorBishopQueenCanvasRecognitionFunnel"
@@ -290,7 +292,6 @@
     ])
   });
 
-  const root = typeof window !== "undefined" ? window : globalThis;
   const api = {};
   let lastReport = null;
   let lastReceipt = null;
@@ -316,7 +317,11 @@
 
   function safeString(value, fallback = "") {
     if (value === undefined || value === null) return fallback;
-    return String(value);
+    try {
+      return String(value);
+    } catch (_error) {
+      return fallback;
+    }
   }
 
   function safeNumber(value, fallback = 0) {
@@ -361,8 +366,26 @@
   }
 
   function boolText(value, fallback = "UNKNOWN") {
-    if (value === true || value === "true" || value === "TRUE" || value === 1 || value === "1") return "true";
-    if (value === false || value === "false" || value === "FALSE" || value === 0 || value === "0") return "false";
+    if (
+      value === true ||
+      value === "true" ||
+      value === "TRUE" ||
+      value === 1 ||
+      value === "1"
+    ) {
+      return "true";
+    }
+
+    if (
+      value === false ||
+      value === "false" ||
+      value === "FALSE" ||
+      value === 0 ||
+      value === "0"
+    ) {
+      return "false";
+    }
+
     return fallback;
   }
 
@@ -374,6 +397,7 @@
       if (text === "UNREADABLE" || text === "INACCESSIBLE") continue;
       return text;
     }
+
     return "UNKNOWN";
   }
 
@@ -397,12 +421,499 @@
     return fallback;
   }
 
+  function makeAnchorReport() {
+    return {
+      PACKET_NAME: "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_ANCHOR_PACKET_v1_2",
+      CONTRACT,
+      RECEIPT,
+      INTERNAL_RENEWAL_CONTRACT,
+      INTERNAL_RENEWAL_RECEIPT,
+      VERSION,
+      FILE,
+      TARGET_ROUTE,
+      DIAGNOSTIC_ROUTE,
+      CANVAS_FILE,
+      EXPECTED_CANVAS_CONTRACT,
+      DIAGNOSTIC_TIMESTAMP: nowIso(),
+
+      CANVAS_SURFACE_TRUTH_PROBE_STATUS: "ANCHOR_READY",
+      CANVAS_SURFACE_TRUTH_AVAILABLE: "UNKNOWN",
+      TRUTH_HUB_ACTIVE: "true",
+      TRUTH_HUB_STATUS: "ANCHOR_READY_TARGET_NOT_YET_PROBED",
+      TRUTH_HUB_RECEIPT_LANE_COUNT: "4",
+      TRUTH_HUB_RECEIPT_ROUTES:
+        "LAB_CARDINAL_RECEIPT_BUNDLE | DIAGNOSTIC_TRACK_RECEIPT | CANVAS_BISHOP_RECEIPT | FINGER_FILE_RECEIPT",
+      TRUTH_HUB_PACKET_TEXT_SAFE: "true",
+      RECEIPT_RETURN_MECHANISM_STATUS: "ANCHOR_SAFE_RECEIPT_READY",
+      DIAGNOSTIC_UI_READABLE_RECEIPT_SURFACE_READY: "true",
+      NORTH_READABLE_RECEIPT_SURFACE_READY: "true",
+
+      TARGET_CONTEXT_STATUS: "NOT_RUN",
+      TARGET_CONTEXT_SOURCE: "ANCHOR_ONLY",
+
+      CANVAS_ELEMENT_FOUND: false,
+      CANVAS_SELECTOR: "NOT_RUN",
+      CANVAS_MOUNT_FOUND: "UNKNOWN",
+      CANVAS_MOUNT_SELECTOR: "NOT_RUN",
+      CANVAS_IN_MOUNT: "UNKNOWN",
+      CANVAS_RECT_NONZERO: false,
+      CANVAS_COMPUTED_VISIBLE: "UNKNOWN",
+      CANVAS_VIEWPORT_INTERSECTING: "UNKNOWN",
+      CANVAS_CONTEXT_2D_READY: "UNKNOWN",
+      CANVAS_PIXEL_SAMPLE_STATUS: "NO_PIXEL_SAMPLE_ANCHOR_ONLY",
+      CANVAS_PIXEL_VISIBLE: "UNKNOWN",
+      CANVAS_LAYER_BLOCKED: "UNKNOWN",
+      CANVAS_LAYER_BLOCKER: "UNKNOWN",
+      CANVAS_NAMESPACE_PRESENT: "UNKNOWN",
+      CANVAS_NAMESPACE_PATH: "NONE",
+      CANVAS_NAMESPACE_CONTRACT: "UNKNOWN",
+      CANVAS_NAMESPACE_RECEIPT: "UNKNOWN",
+      CANVAS_NAMESPACE_MATCHES_DOM_SURFACE: "UNKNOWN",
+      CANVAS_PARENT_CONTRACT_RECOGNIZED: "UNKNOWN",
+
+      CANVAS_TRUTH_STATUS: "ANCHOR_READY_TARGET_NOT_YET_PROBED",
+      CANVAS_TRUTH_FIRST_FAILED_COORDINATE: "NOT_RUN",
+      CANVAS_TRUTH_FAILURE_CLASS: "NOT_RUN",
+      CANVAS_TRUTH_FAILURE_REASON: "ANCHOR_PUBLISHED_WAITING_FOR_NORTH_CALL",
+      CANVAS_TRUTH_RECOMMENDED_OWNER: "NONE",
+      CANVAS_TRUTH_RECOMMENDED_FILE: "NONE",
+      CANVAS_TRUTH_RECOMMENDED_ACTION:
+        "CALL_runProbeCanvasSurfaceTruth_TO_MEASURE_CANVAS_SURFACE",
+
+      LAB_CARDINAL_RECEIPT_BUNDLE_STATUS: "ANCHOR_READY",
+      DIAGNOSTIC_TRACK_RECEIPT_STATUS: "ANCHOR_READY",
+      CANVAS_BISHOP_RECEIPT_STATUS: "ANCHOR_READY",
+      FINGER_FILE_RECEIPT_STATUS: "ANCHOR_READY",
+      PROBE_SOUTH_TO_TRUTH_HUB_TRANSFER_STATUS: "ANCHOR_READY",
+
+      PRODUCTION_MUTATION_AUTHORIZED: false,
+      CANVAS_DRAWING_AUTHORIZED: false,
+      CANVAS_CREATION_AUTHORIZED: false,
+      CANVAS_REPAIR_AUTHORIZED: false,
+      ROUTE_REPAIR_AUTHORIZED: false,
+      CONTROL_MUTATION_AUTHORIZED: false,
+      RUNTIME_RESTART_AUTHORIZED: false,
+
+      SECONDARY_EVIDENCE_NOTES:
+        "CANVAS_SURFACE_TRUTH_ANCHOR_PUBLISHED_SYNCHRONOUSLY | TARGET_NOT_YET_PROBED | NO_PRODUCTION_MUTATION_AUTHORIZED",
+      CANVAS_SURFACE_TRUTH_NOTES:
+        "ANCHOR_SAFE_CHRONOLOGY_OBSERVATION_READY | HEAVY_TARGET_PROBE_NOT_RUN_DURING_PUBLISH",
+
+      ...NO_CLAIMS,
+      ...UPPER_NO_CLAIMS
+    };
+  }
+
+  function buildReceipt(report = lastReport || makeAnchorReport()) {
+    const r = report || makeAnchorReport();
+
+    return {
+      packetType: "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_RECEIPT_v1_2",
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
+      internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
+      version: VERSION,
+      file: FILE,
+      targetRoute: TARGET_ROUTE,
+      diagnosticRoute: DIAGNOSTIC_ROUTE,
+      canvasFile: CANVAS_FILE,
+      expectedCanvasContract: EXPECTED_CANVAS_CONTRACT,
+
+      diagnosticOnly: true,
+      anchorSafeChronologyObservation: true,
+      productionMutationAuthorized: false,
+      canvasDrawingAuthorized: false,
+      canvasCreationAuthorized: false,
+      canvasRepairAuthorized: false,
+      routeRepairAuthorized: false,
+      controlMutationAuthorized: false,
+      runtimeRestartAuthorized: false,
+
+      canvasSurfaceTruthProbeStatus: getRaw(
+        r,
+        "CANVAS_SURFACE_TRUTH_PROBE_STATUS",
+        "ANCHOR_READY"
+      ),
+      canvasSurfaceTruthAvailable: getRaw(
+        r,
+        "CANVAS_SURFACE_TRUTH_AVAILABLE",
+        "UNKNOWN"
+      ),
+      truthHubActive: true,
+      truthHubStatus: getRaw(
+        r,
+        "TRUTH_HUB_STATUS",
+        "ANCHOR_READY_TARGET_NOT_YET_PROBED"
+      ),
+      receiptLaneCount: 4,
+      receiptRoutes: [
+        "LAB_CARDINAL_RECEIPT_BUNDLE",
+        "DIAGNOSTIC_TRACK_RECEIPT",
+        "CANVAS_BISHOP_RECEIPT",
+        "FINGER_FILE_RECEIPT"
+      ],
+
+      canvasElementFound: getRaw(r, "CANVAS_ELEMENT_FOUND", false),
+      canvasMountFound: getRaw(r, "CANVAS_MOUNT_FOUND", "UNKNOWN"),
+      canvasInMount: getRaw(r, "CANVAS_IN_MOUNT", "UNKNOWN"),
+      canvasRectNonzero: getRaw(r, "CANVAS_RECT_NONZERO", false),
+      canvasComputedVisible: getRaw(r, "CANVAS_COMPUTED_VISIBLE", "UNKNOWN"),
+      canvasViewportIntersecting: getRaw(
+        r,
+        "CANVAS_VIEWPORT_INTERSECTING",
+        "UNKNOWN"
+      ),
+      canvasContext2dReady: getRaw(r, "CANVAS_CONTEXT_2D_READY", "UNKNOWN"),
+      canvasPixelSampleStatus: getRaw(
+        r,
+        "CANVAS_PIXEL_SAMPLE_STATUS",
+        "NO_PIXEL_SAMPLE"
+      ),
+      canvasPixelVisible: getRaw(r, "CANVAS_PIXEL_VISIBLE", "UNKNOWN"),
+      canvasLayerBlocked: getRaw(r, "CANVAS_LAYER_BLOCKED", "UNKNOWN"),
+      canvasNamespacePresent: getRaw(r, "CANVAS_NAMESPACE_PRESENT", "UNKNOWN"),
+      canvasParentContractRecognized: getRaw(
+        r,
+        "CANVAS_PARENT_CONTRACT_RECOGNIZED",
+        "UNKNOWN"
+      ),
+      canvasNamespaceMatchesDomSurface: getRaw(
+        r,
+        "CANVAS_NAMESPACE_MATCHES_DOM_SURFACE",
+        "UNKNOWN"
+      ),
+
+      canvasTruthStatus: getRaw(
+        r,
+        "CANVAS_TRUTH_STATUS",
+        "ANCHOR_READY_TARGET_NOT_YET_PROBED"
+      ),
+      canvasTruthFirstFailedCoordinate: getRaw(
+        r,
+        "CANVAS_TRUTH_FIRST_FAILED_COORDINATE",
+        "NOT_RUN"
+      ),
+      canvasTruthFailureClass: getRaw(r, "CANVAS_TRUTH_FAILURE_CLASS", "NOT_RUN"),
+      canvasTruthFailureReason: getRaw(
+        r,
+        "CANVAS_TRUTH_FAILURE_REASON",
+        "ANCHOR_PUBLISHED_WAITING_FOR_NORTH_CALL"
+      ),
+      canvasTruthRecommendedOwner: getRaw(
+        r,
+        "CANVAS_TRUTH_RECOMMENDED_OWNER",
+        "NONE"
+      ),
+      canvasTruthRecommendedFile: getRaw(
+        r,
+        "CANVAS_TRUTH_RECOMMENDED_FILE",
+        "NONE"
+      ),
+      canvasTruthRecommendedAction: getRaw(
+        r,
+        "CANVAS_TRUTH_RECOMMENDED_ACTION",
+        "CALL_runProbeCanvasSurfaceTruth_TO_MEASURE_CANVAS_SURFACE"
+      ),
+
+      labCardinalReceiptBundleStatus: getRaw(
+        r,
+        "LAB_CARDINAL_RECEIPT_BUNDLE_STATUS",
+        "ANCHOR_READY"
+      ),
+      diagnosticTrackReceiptStatus: getRaw(
+        r,
+        "DIAGNOSTIC_TRACK_RECEIPT_STATUS",
+        "ANCHOR_READY"
+      ),
+      canvasBishopReceiptStatus: getRaw(
+        r,
+        "CANVAS_BISHOP_RECEIPT_STATUS",
+        "ANCHOR_READY"
+      ),
+      fingerFileReceiptStatus: getRaw(
+        r,
+        "FINGER_FILE_RECEIPT_STATUS",
+        "ANCHOR_READY"
+      ),
+      probeSouthToTruthHubTransferStatus: getRaw(
+        r,
+        "PROBE_SOUTH_TO_TRUTH_HUB_TRANSFER_STATUS",
+        "ANCHOR_READY"
+      ),
+
+      receiptReturnMechanismStatus: getRaw(
+        r,
+        "RECEIPT_RETURN_MECHANISM_STATUS",
+        "ANCHOR_SAFE_RECEIPT_READY"
+      ),
+      diagnosticUiReadableReceiptSurfaceReady: getRaw(
+        r,
+        "DIAGNOSTIC_UI_READABLE_RECEIPT_SURFACE_READY",
+        "true"
+      ),
+      northReadableReceiptSurfaceReady: getRaw(
+        r,
+        "NORTH_READABLE_RECEIPT_SURFACE_READY",
+        "true"
+      ),
+
+      runProbeCanvasSurfaceTruthApiAvailable: true,
+      runCanvasSurfaceTruthApiAvailable: true,
+      receiveSouthProbeReceiptApiAvailable: true,
+      receiveProbeSouthReceiptApiAvailable: true,
+      runProbeApiAvailable: true,
+      inspectApiAvailable: true,
+      runDiagnosticApiAvailable: true,
+      getReportApiAvailable: true,
+      getReceiptApiAvailable: true,
+      getReceiptLightApiAvailable: true,
+      getPacketTextApiAvailable: true,
+      getCompactSummaryApiAvailable: true,
+
+      ...NO_CLAIMS,
+      ...UPPER_NO_CLAIMS
+    };
+  }
+
+  function getReport() {
+    return clonePlain(lastReport || makeAnchorReport());
+  }
+
+  function getReceiptLight() {
+    if (!lastReceipt) lastReceipt = buildReceipt(lastReport || makeAnchorReport());
+    return clonePlain(lastReceipt);
+  }
+
+  function getReceipt() {
+    const report = lastReport || makeAnchorReport();
+
+    return {
+      ...getReceiptLight(),
+      report: clonePlain(report),
+      labCardinalReceiptBundle: clonePlain(
+        getRaw(report, "LAB_CARDINAL_RECEIPT_BUNDLE", {})
+      ),
+      diagnosticTrackReceipt: clonePlain(
+        getRaw(report, "DIAGNOSTIC_TRACK_RECEIPT", {})
+      ),
+      canvasBishopReceipt: clonePlain(getRaw(report, "CANVAS_BISHOP_RECEIPT", {})),
+      fingerFileReceipt: clonePlain(getRaw(report, "FINGER_FILE_RECEIPT", {})),
+      acceptedCanvasContracts: ACCEPTED_CANVAS_CONTRACTS.slice(),
+      canvasSelectors: CANVAS_SELECTORS.slice(),
+      mountSelectors: MOUNT_SELECTORS.slice(),
+      supportsAnchorSafeChronologyObservation: true,
+      supportsCoordinateSpecificFailure: true,
+      supportsFourLaneReceiptHub: true,
+      ...NO_CLAIMS,
+      ...UPPER_NO_CLAIMS
+    };
+  }
+
+  function getPacketText() {
+    if (!lastPacketText) {
+      lastPacketText = composePacketText(lastReport || makeAnchorReport());
+    }
+
+    return lastPacketText;
+  }
+
+  function getCompactSummary() {
+    if (!lastCompactSummary) {
+      lastCompactSummary = composeCompactSummary(lastReport || makeAnchorReport());
+    }
+
+    return lastCompactSummary;
+  }
+
+  function getStatusText() {
+    return getCompactSummary();
+  }
+
+  function publish() {
+    root.HEARTH = root.HEARTH || {};
+    root.DEXTER_LAB = root.DEXTER_LAB || {};
+
+    root.HEARTH.diagnosticProbeCanvasSurfaceTruth = api;
+    root.HEARTH.diagnosticCanvasSurfaceTruthProbe = api;
+    root.HEARTH.diagnosticProbeCanvasTruth = api;
+    root.HEARTH.diagnosticCanvasTruthProbe = api;
+    root.HEARTH.diagnosticRailProbeCanvasSurfaceTruth = api;
+    root.HEARTH.diagnosticCanvasSurfaceTruthReceiptHub = api;
+    root.HEARTH.diagnosticTruthHub = api;
+
+    root.DEXTER_LAB.hearthDiagnosticProbeCanvasSurfaceTruth = api;
+    root.DEXTER_LAB.hearthDiagnosticCanvasSurfaceTruthProbe = api;
+    root.DEXTER_LAB.hearthDiagnosticCanvasTruthProbe = api;
+    root.DEXTER_LAB.hearthDiagnosticRailProbeCanvasSurfaceTruth = api;
+    root.DEXTER_LAB.hearthDiagnosticCanvasSurfaceTruthReceiptHub = api;
+    root.DEXTER_LAB.hearthDiagnosticTruthHub = api;
+
+    root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH = api;
+    root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PROBE = api;
+    root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_TRUTH = api;
+    root.HEARTH_DIAGNOSTIC_RAIL_PROBE_CANVAS_SURFACE_TRUTH = api;
+    root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_RECEIPT_HUB = api;
+    root.HEARTH_DIAGNOSTIC_TRUTH_HUB = api;
+
+    root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_RECEIPT =
+      getReceiptLight();
+    root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PROBE_RECEIPT =
+      getReceiptLight();
+    root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_TRUTH_RECEIPT = getReceiptLight();
+    root.HEARTH_DIAGNOSTIC_RAIL_PROBE_CANVAS_SURFACE_TRUTH_RECEIPT =
+      getReceiptLight();
+    root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_RECEIPT_HUB_RECEIPT =
+      getReceiptLight();
+    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_RECEIPT = getReceiptLight();
+
+    root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_REPORT = clonePlain(
+      lastReport || makeAnchorReport()
+    );
+    root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PROBE_REPORT = clonePlain(
+      lastReport || makeAnchorReport()
+    );
+    root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_RECEIPT_HUB_REPORT = clonePlain(
+      lastReport || makeAnchorReport()
+    );
+    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_REPORT = clonePlain(
+      lastReport || makeAnchorReport()
+    );
+
+    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_LAB_CARDINAL_RECEIPT = clonePlain(
+      getRaw(lastReport || {}, "LAB_CARDINAL_RECEIPT_BUNDLE", {})
+    );
+    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_DIAGNOSTIC_TRACK_RECEIPT = clonePlain(
+      getRaw(lastReport || {}, "DIAGNOSTIC_TRACK_RECEIPT", {})
+    );
+    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_CANVAS_BISHOP_RECEIPT = clonePlain(
+      getRaw(lastReport || {}, "CANVAS_BISHOP_RECEIPT", {})
+    );
+    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_FINGER_FILE_RECEIPT = clonePlain(
+      getRaw(lastReport || {}, "FINGER_FILE_RECEIPT", {})
+    );
+
+    root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PACKET_TEXT =
+      lastPacketText || "";
+    root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_RECEIPT_HUB_PACKET_TEXT =
+      lastPacketText || "";
+    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_PACKET_TEXT = lastPacketText || "";
+    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_COMPACT_SUMMARY =
+      lastCompactSummary || "";
+
+    return true;
+  }
+
+  Object.assign(api, {
+    CONTRACT,
+    RECEIPT,
+    contract: CONTRACT,
+    receipt: RECEIPT,
+    internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
+    internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
+    version: VERSION,
+    file: FILE,
+    targetRoute: TARGET_ROUTE,
+    diagnosticRoute: DIAGNOSTIC_ROUTE,
+    canvasFile: CANVAS_FILE,
+    expectedCanvasContract: EXPECTED_CANVAS_CONTRACT,
+
+    diagnosticOnly: true,
+    anchorSafeChronologyObservation: true,
+    receiptHubActive: true,
+    fourLaneReceiptHubActive: true,
+
+    runProbeCanvasSurfaceTruth,
+    runCanvasSurfaceTruth,
+    runProbe,
+    inspect,
+    runDiagnostic,
+    receiveSouthProbeReceipt,
+    receiveProbeSouthReceipt,
+    ingestSouthProbeReceipt,
+
+    getReport,
+    getReceiptLight,
+    getReceipt,
+    getStatus: getReceiptLight,
+    getPacketText,
+    getCompactSummary,
+    getStatusText,
+
+    canvasSelectors: CANVAS_SELECTORS,
+    mountSelectors: MOUNT_SELECTORS,
+    acceptedCanvasContracts: ACCEPTED_CANVAS_CONTRACTS,
+
+    supportsAnchorSafeChronologyObservation: true,
+    supportsCanvasElementProbe: true,
+    supportsCanvasMountProbe: true,
+    supportsCanvasRectProbe: true,
+    supportsComputedVisibilityProbe: true,
+    supportsViewportIntersectionProbe: true,
+    supportsContext2dProbe: true,
+    supportsPixelSampleProbe: true,
+    supportsLayerObstructionProbe: true,
+    supportsNamespaceDomMatchProbe: true,
+    supportsCoordinateSpecificFailure: true,
+    supportsFourLaneReceiptHub: true,
+    supportsLabCardinalReceiptBundle: true,
+    supportsDiagnosticTrackReceipt: true,
+    supportsCanvasBishopReceipt: true,
+    supportsFingerFileReceipt: true,
+    supportsProbeSouthReceiptIngestion: true,
+    supportsCompactPacketText: true,
+
+    ownsDiagnosticProbeOnly: true,
+    ownsCanvasDrawing: false,
+    ownsCanvasCreation: false,
+    ownsCanvasRepair: false,
+    ownsRouteRepair: false,
+    ownsControlMutation: false,
+    ownsRuntimeRestart: false,
+    ownsTerrainTruth: false,
+    ownsHydrologyTruth: false,
+    ownsElevationTruth: false,
+    ownsMaterialTruth: false,
+    ownsF13: false,
+    ownsF21: false,
+    ownsReadyText: false,
+    ownsVisualPass: false,
+
+    productionMutationAuthorized: false,
+    canvasDrawingAuthorized: false,
+    canvasCreationAuthorized: false,
+    canvasRepairAuthorized: false,
+    routeRepairAuthorized: false,
+    controlMutationAuthorized: false,
+    runtimeRestartAuthorized: false,
+
+    ...NO_CLAIMS,
+    ...UPPER_NO_CLAIMS,
+
+    get evidence() {
+      return getReport();
+    },
+
+    get state() {
+      return getReport();
+    }
+  });
+
+  lastReceipt = buildReceipt(makeAnchorReport());
+  lastPacketText = composePacketText(makeAnchorReport());
+  lastCompactSummary = composeCompactSummary(makeAnchorReport());
+
+  publish();
+
   function readPath(base, path) {
     const parts = safeString(path).split(".");
     let cursor = base || root;
 
     for (const part of parts) {
-      if (!cursor || cursor[part] === undefined || cursor[part] === null) return null;
+      if (!cursor || cursor[part] === undefined || cursor[part] === null) {
+        return null;
+      }
+
       cursor = cursor[part];
     }
 
@@ -410,20 +921,21 @@
   }
 
   function getReceiptFromAuthority(authority) {
-    if (!authority || !isObject(authority)) return null;
+    if (!authority || (!isObject(authority) && !isFunction(authority))) {
+      return null;
+    }
 
     const methods = [
       "getReceiptLight",
       "getReceipt",
-      "getReport",
       "getState",
       "getStatus",
-      "getCompactSummary",
       "getCanvasStationReceiptLight",
       "getCanvasStationReceipt",
       "getExpressionHubReceipt",
       "getVisiblePlanetReceipt",
-      "getCarrierReceipt"
+      "getCarrierReceipt",
+      "getCompactSummary"
     ];
 
     for (const method of methods) {
@@ -435,28 +947,39 @@
       } catch (_error) {}
     }
 
-    if (isObject(authority.receipt)) return authority.receipt;
     if (isObject(authority.receiptPacket)) return authority.receiptPacket;
-    if (isObject(authority.report)) return authority.report;
+    if (isObject(authority.receipt)) return authority.receipt;
     if (isObject(authority.state)) return authority.state;
-    if (authority.contract || authority.CONTRACT || authority.receipt || authority.RECEIPT) return authority;
+    if (isObject(authority.report)) return authority.report;
+
+    if (
+      authority.contract ||
+      authority.CONTRACT ||
+      authority.receipt ||
+      authority.RECEIPT
+    ) {
+      return authority;
+    }
 
     return null;
   }
 
   function contractOf(value) {
-    if (!isObject(value)) return "UNKNOWN";
+    if (!isObject(value) && !isFunction(value)) return "UNKNOWN";
 
     return firstKnown(
       value.CONTRACT,
       value.contract,
       value.IMPLEMENTATION_CONTRACT,
       value.implementationContract,
+      value.INTERNAL_RENEWAL_CONTRACT,
+      value.internalRenewalContract,
       value.currentCanvasParentContract,
       value.canvasContract,
       value.hearthCanvasContract,
+      value.CANVAS_CONTRACT,
+      value.CANVAS_NAMESPACE_CONTRACT,
       value.SOUTH_CONTRACT,
-      value.SOUTH_SURFACE_POINTER_CONTRACT,
       value.PROBE_SOUTH_CONTRACT,
       value.EAST_CONTRACT,
       value.WEST_CONTRACT,
@@ -467,18 +990,21 @@
   }
 
   function receiptOf(value) {
-    if (!isObject(value)) return "UNKNOWN";
+    if (!isObject(value) && !isFunction(value)) return "UNKNOWN";
 
     return firstKnown(
       value.RECEIPT,
       value.receipt,
       value.IMPLEMENTATION_RECEIPT,
       value.implementationReceipt,
+      value.INTERNAL_RENEWAL_RECEIPT,
+      value.internalRenewalReceipt,
       value.currentCanvasParentReceipt,
       value.canvasReceipt,
       value.hearthCanvasReceipt,
+      value.CANVAS_RECEIPT,
+      value.CANVAS_NAMESPACE_RECEIPT,
       value.SOUTH_RECEIPT,
-      value.SOUTH_SURFACE_POINTER_RECEIPT,
       value.PROBE_SOUTH_RECEIPT,
       value.EAST_RECEIPT,
       value.WEST_RECEIPT,
@@ -496,6 +1022,7 @@
 
     for (const key of keys) {
       let item;
+
       try {
         item = value[key];
       } catch (_error) {
@@ -540,9 +1067,14 @@
         const receipt = getReceiptFromAuthority(authority) || {};
         const contract = firstKnown(contractOf(receipt), contractOf(authority));
         const receiptName = firstKnown(receiptOf(receipt), receiptOf(authority));
-        const methods = isObject(authority)
-          ? Object.keys(authority).filter((key) => isFunction(authority[key])).sort().slice(0, 24)
-          : [];
+
+        const methods =
+          isObject(authority) || isFunction(authority)
+            ? Object.keys(authority)
+                .filter((key) => isFunction(authority[key]))
+                .sort()
+                .slice(0, 24)
+            : [];
 
         candidates.push({
           name,
@@ -585,26 +1117,47 @@
     };
   }
 
+  function compactAuthority(item) {
+    return {
+      observed: Boolean(item && item.observed),
+      scope: item ? item.scope : "NONE",
+      path: item ? item.path : "NONE",
+      contract: item ? item.contract : "UNKNOWN",
+      receipt: item ? item.receipt : "UNKNOWN",
+      methodCount: item ? item.methodCount : 0
+    };
+  }
+
   function extractCurrentReport(input) {
     if (isObject(input && input.currentReport)) return clonePlain(input.currentReport);
     if (isObject(input && input.report)) return clonePlain(input.report);
     if (isObject(input && input.REPORT_OBJECT)) return clonePlain(input.REPORT_OBJECT);
+
     if (isObject(input && input.output) && isObject(input.output.REPORT_OBJECT)) {
       return clonePlain(input.output.REPORT_OBJECT);
     }
+
     if (isObject(lastSouthProbeEnvelope && lastSouthProbeEnvelope.report)) {
       return clonePlain(lastSouthProbeEnvelope.report);
     }
+
     return {};
   }
 
   function extractChronology(input, currentReport) {
     if (Array.isArray(input && input.chronology)) return clonePlain(input.chronology);
-    if (Array.isArray(input && input.CHRONOLOGY_SEQUENCE)) return clonePlain(input.CHRONOLOGY_SEQUENCE);
+    if (Array.isArray(input && input.CHRONOLOGY_SEQUENCE)) {
+      return clonePlain(input.CHRONOLOGY_SEQUENCE);
+    }
+
     if (Array.isArray(currentReport && currentReport.CHRONOLOGY_SEQUENCE)) {
       return clonePlain(currentReport.CHRONOLOGY_SEQUENCE);
     }
-    if (Array.isArray(currentReport && currentReport.chronology)) return clonePlain(currentReport.chronology);
+
+    if (Array.isArray(currentReport && currentReport.chronology)) {
+      return clonePlain(currentReport.chronology);
+    }
+
     return [];
   }
 
@@ -613,7 +1166,14 @@
     const seen = new Set();
 
     for (const source of sources) {
-      if (source === undefined || source === null || source === "" || source === "none") continue;
+      if (
+        source === undefined ||
+        source === null ||
+        source === "" ||
+        source === "none"
+      ) {
+        continue;
+      }
 
       const values = Array.isArray(source) ? source : safeString(source).split("|");
 
@@ -629,72 +1189,6 @@
     return out;
   }
 
-  function getTargetContext(payload = {}) {
-    const ownDocument = root.document || null;
-
-    let targetWindow = null;
-    let targetDocument = null;
-    let targetSource = "UNKNOWN";
-
-    if (payload.targetWindow && payload.targetDocument) {
-      targetWindow = payload.targetWindow;
-      targetDocument = payload.targetDocument;
-      targetSource = "PAYLOAD_TARGET_WINDOW_DOCUMENT";
-    } else if (payload.targetWindow && payload.targetWindow.document) {
-      targetWindow = payload.targetWindow;
-      targetDocument = payload.targetWindow.document;
-      targetSource = "PAYLOAD_TARGET_WINDOW";
-    } else if (payload.targetDocument) {
-      targetWindow = payload.targetDocument.defaultView || root;
-      targetDocument = payload.targetDocument;
-      targetSource = "PAYLOAD_TARGET_DOCUMENT";
-    }
-
-    if (!targetDocument && payload.frameElement) {
-      try {
-        const frameWindow = payload.frameElement.contentWindow;
-        const frameDocument = payload.frameElement.contentDocument || (frameWindow && frameWindow.document);
-        if (frameWindow && frameDocument) {
-          targetWindow = frameWindow;
-          targetDocument = frameDocument;
-          targetSource = "PAYLOAD_FRAME_ELEMENT";
-        }
-      } catch (_error) {}
-    }
-
-    if (!targetDocument && ownDocument) {
-      try {
-        const frame = Array.from(ownDocument.querySelectorAll("iframe")).find((candidate) => {
-          const src = safeString(candidate.getAttribute("src"));
-          return src.includes(TARGET_ROUTE) || src === TARGET_ROUTE;
-        });
-
-        if (frame) {
-          const frameWindow = frame.contentWindow;
-          const frameDocument = frame.contentDocument || (frameWindow && frameWindow.document);
-          if (frameWindow && frameDocument) {
-            targetWindow = frameWindow;
-            targetDocument = frameDocument;
-            targetSource = "DISCOVERED_TARGET_IFRAME";
-          }
-        }
-      } catch (_error) {}
-    }
-
-    if (!targetDocument && ownDocument) {
-      targetWindow = root;
-      targetDocument = ownDocument;
-      targetSource = "CURRENT_DOCUMENT_FALLBACK";
-    }
-
-    return {
-      targetWindow,
-      targetDocument,
-      targetSource,
-      targetAvailable: Boolean(targetWindow && targetDocument)
-    };
-  }
-
   function q(doc, selector) {
     if (!doc || !isFunction(doc.querySelector)) return null;
 
@@ -705,13 +1199,237 @@
     }
   }
 
+  function qa(doc, selector) {
+    if (!doc || !isFunction(doc.querySelectorAll)) return [];
+
+    try {
+      return Array.from(doc.querySelectorAll(selector));
+    } catch (_error) {
+      return [];
+    }
+  }
+
   function firstElement(doc, selectors) {
-    for (const selector of selectors) {
+    for (const selector of selectors || []) {
       const element = q(doc, selector);
       if (element) return { element, selector };
     }
 
     return { element: null, selector: "NONE" };
+  }
+
+  function pathMatches(targetWindow, route) {
+    try {
+      const path = targetWindow && targetWindow.location
+        ? targetWindow.location.pathname
+        : "";
+
+      const normal = safeString(route).replace(/\/$/, "");
+      return path === route || path === normal;
+    } catch (_error) {
+      return false;
+    }
+  }
+
+  function dataValue(doc, key) {
+    try {
+      const html = doc && doc.documentElement;
+      const body = doc && doc.body;
+
+      return firstKnown(
+        html && html.dataset ? html.dataset[key] : "",
+        body && body.dataset ? body.dataset[key] : "",
+        html && html.getAttribute ? html.getAttribute(`data-${key}`) : "",
+        body && body.getAttribute ? body.getAttribute(`data-${key}`) : ""
+      );
+    } catch (_error) {
+      return "UNKNOWN";
+    }
+  }
+
+  function documentRoute(doc) {
+    try {
+      const html = doc && doc.documentElement;
+      const body = doc && doc.body;
+
+      return firstKnown(
+        html && html.dataset ? html.dataset.route : "",
+        body && body.dataset ? body.dataset.route : "",
+        html && html.getAttribute ? html.getAttribute("data-route") : "",
+        body && body.getAttribute ? body.getAttribute("data-route") : ""
+      );
+    } catch (_error) {
+      return "UNKNOWN";
+    }
+  }
+
+  function contractFromDataset(doc) {
+    try {
+      const html = doc && doc.documentElement;
+      const body = doc && doc.body;
+
+      return firstKnown(
+        html && html.dataset ? html.dataset.contract : "",
+        html && html.dataset ? html.dataset.hearthHtmlContract : "",
+        html && html.dataset ? html.dataset.hearthShellContract : "",
+        body && body.dataset ? body.dataset.contract : "",
+        body && body.dataset ? body.dataset.hearthHtmlContract : "",
+        html && html.getAttribute ? html.getAttribute("data-contract") : ""
+      );
+    } catch (_error) {
+      return "UNKNOWN";
+    }
+  }
+
+  function isDiagnosticReceiver(doc, win) {
+    try {
+      if (!doc || !doc.documentElement) return false;
+
+      const contract = contractFromDataset(doc);
+      const page = dataValue(doc, "page");
+      const route = documentRoute(doc);
+
+      return Boolean(
+        pathMatches(win, DIAGNOSTIC_ROUTE) ||
+        route === DIAGNOSTIC_ROUTE ||
+        route === DIAGNOSTIC_ROUTE.replace(/\/$/, "") ||
+        /diagnostic/i.test(page) ||
+        /HEARTH_DIAGNOSTIC_ROUTE/i.test(contract)
+      );
+    } catch (_error) {
+      return false;
+    }
+  }
+
+  function hasHearthTargetSignals(doc, win) {
+    try {
+      if (!doc || !doc.documentElement) return false;
+      if (isDiagnosticReceiver(doc, win)) return false;
+
+      const page = dataValue(doc, "page");
+      const alias = dataValue(doc, "pageAlias");
+      const context = firstKnown(dataValue(doc, "pageContext"), dataValue(doc, "context"));
+      const route = documentRoute(doc);
+
+      return Boolean(
+        pathMatches(win, TARGET_ROUTE) ||
+        route === TARGET_ROUTE ||
+        route === TARGET_ROUTE.replace(/\/$/, "") ||
+        /hearth/i.test(page) ||
+        /hearth/i.test(alias) ||
+        /planet engine|planet factory|visible globe|visible planet|canvas expression|mirrorland formation/i.test(context) ||
+        firstElement(doc, CANVAS_SELECTORS).element ||
+        firstElement(doc, MOUNT_SELECTORS).element
+      );
+    } catch (_error) {
+      return false;
+    }
+  }
+
+  function getTargetContext(payload = {}) {
+    const ownDocument = root.document || null;
+
+    let targetWindow = null;
+    let targetDocument = null;
+    let targetSource = "UNKNOWN";
+
+    try {
+      if (payload.targetWindow && payload.targetDocument) {
+        targetWindow = payload.targetWindow;
+        targetDocument = payload.targetDocument;
+        targetSource = "PAYLOAD_TARGET_WINDOW_DOCUMENT";
+      } else if (payload.targetWindow && payload.targetWindow.document) {
+        targetWindow = payload.targetWindow;
+        targetDocument = payload.targetWindow.document;
+        targetSource = "PAYLOAD_TARGET_WINDOW";
+      } else if (payload.targetDocument) {
+        targetWindow = payload.targetDocument.defaultView || root;
+        targetDocument = payload.targetDocument;
+        targetSource = "PAYLOAD_TARGET_DOCUMENT";
+      }
+    } catch (_error) {
+      targetWindow = null;
+      targetDocument = null;
+      targetSource = "PAYLOAD_TARGET_BLOCKED";
+    }
+
+    if (targetDocument && isDiagnosticReceiver(targetDocument, targetWindow)) {
+      targetWindow = null;
+      targetDocument = null;
+      targetSource = "PAYLOAD_DIAGNOSTIC_RECEIVER_REJECTED";
+    }
+
+    if (!targetDocument && payload.frameElement) {
+      try {
+        const frameWindow = payload.frameElement.contentWindow;
+        const frameDocument =
+          payload.frameElement.contentDocument ||
+          (frameWindow && frameWindow.document);
+
+        if (
+          frameWindow &&
+          frameDocument &&
+          !isDiagnosticReceiver(frameDocument, frameWindow)
+        ) {
+          targetWindow = frameWindow;
+          targetDocument = frameDocument;
+          targetSource = "PAYLOAD_FRAME_ELEMENT";
+        }
+      } catch (_error) {}
+    }
+
+    if (!targetDocument && ownDocument) {
+      try {
+        const frames = qa(ownDocument, "iframe");
+        const frame = frames.find((candidate) => {
+          const src = safeString(candidate.getAttribute("src"));
+          const id = safeString(candidate.id);
+          const flag =
+            candidate.dataset &&
+            candidate.dataset.hearthDiagnosticTargetFrame === "true";
+
+          return (
+            flag ||
+            id === "hearthDiagnosticTargetFrame" ||
+            src.includes(TARGET_ROUTE) ||
+            src === TARGET_ROUTE
+          );
+        });
+
+        if (frame) {
+          const frameWindow = frame.contentWindow;
+          const frameDocument =
+            frame.contentDocument || (frameWindow && frameWindow.document);
+
+          if (
+            frameWindow &&
+            frameDocument &&
+            !isDiagnosticReceiver(frameDocument, frameWindow)
+          ) {
+            targetWindow = frameWindow;
+            targetDocument = frameDocument;
+            targetSource = "DISCOVERED_TARGET_IFRAME";
+          }
+        }
+      } catch (_error) {}
+    }
+
+    if (!targetDocument && ownDocument) {
+      try {
+        if (!isDiagnosticReceiver(ownDocument, root) && hasHearthTargetSignals(ownDocument, root)) {
+          targetWindow = root;
+          targetDocument = ownDocument;
+          targetSource = "CURRENT_HEARTH_DOCUMENT";
+        }
+      } catch (_error) {}
+    }
+
+    return {
+      targetWindow,
+      targetDocument,
+      targetSource,
+      targetAvailable: Boolean(targetWindow && targetDocument)
+    };
   }
 
   function getRect(element) {
@@ -721,6 +1439,7 @@
 
     try {
       const rect = element.getBoundingClientRect();
+
       return {
         left: safeNumber(rect.left),
         top: safeNumber(rect.top),
@@ -777,10 +1496,9 @@
       return {
         visible: Boolean(
           display !== "none" &&
-          visibility !== "hidden" &&
-          visibility !== "collapse" &&
-          safeNumber(opacity, 1) > 0 &&
-          pointerEvents !== "none"
+            visibility !== "hidden" &&
+            visibility !== "collapse" &&
+            safeNumber(opacity, 1) > 0
         ),
         display,
         visibility,
@@ -821,16 +1539,22 @@
     let classes = "";
 
     try {
-      classes = element.classList && element.classList.length
-        ? `.${Array.from(element.classList).slice(0, 4).join(".")}`
-        : "";
+      classes =
+        element.classList && element.classList.length
+          ? `.${Array.from(element.classList).slice(0, 4).join(".")}`
+          : "";
     } catch (_error) {}
 
     return `${tag}${id}${classes}` || "UNKNOWN_ELEMENT";
   }
 
   function inspectLayerBlock(targetWindow, targetDocument, canvas, rect) {
-    if (!targetDocument || !canvas || !rectNonzero(rect) || !isFunction(targetDocument.elementFromPoint)) {
+    if (
+      !targetDocument ||
+      !canvas ||
+      !rectNonzero(rect) ||
+      !isFunction(targetDocument.elementFromPoint)
+    ) {
       return {
         blocked: false,
         blocker: "UNREADABLE",
@@ -879,8 +1603,12 @@
     }
 
     const firstHit = hits[0];
-    const canvasHit = hits.some((hit) => containsOrEquals(canvas, hit) || containsOrEquals(hit, canvas));
-    const firstBlocker = hits.find((hit) => !containsOrEquals(canvas, hit) && !containsOrEquals(hit, canvas));
+    const canvasHit = hits.some(
+      (hit) => containsOrEquals(canvas, hit) || containsOrEquals(hit, canvas)
+    );
+    const firstBlocker = hits.find(
+      (hit) => !containsOrEquals(canvas, hit) && !containsOrEquals(hit, canvas)
+    );
 
     return {
       blocked: Boolean(!canvasHit && firstBlocker),
@@ -896,7 +1624,11 @@
     }
 
     try {
-      const ctx = canvas.getContext("2d", { alpha: true, willReadFrequently: true });
+      const ctx = canvas.getContext("2d", {
+        alpha: true,
+        willReadFrequently: true
+      });
+
       return {
         ready: Boolean(ctx),
         ctx,
@@ -906,7 +1638,10 @@
       return {
         ready: false,
         ctx: null,
-        status: `CONTEXT_2D_ERROR:${bounded(error && error.message ? error.message : error, 500)}`
+        status: `CONTEXT_2D_ERROR:${bounded(
+          error && error.message ? error.message : error,
+          500
+        )}`
       };
     }
   }
@@ -938,7 +1673,11 @@
     }
 
     try {
-      const sampleSize = Math.max(4, Math.min(24, Math.floor(Math.min(width, height) / 28)));
+      const sampleSize = Math.max(
+        4,
+        Math.min(24, Math.floor(Math.min(width, height) / 28))
+      );
+
       const points = [
         [0.5, 0.5],
         [0.35, 0.35],
@@ -952,10 +1691,16 @@
       let visiblePixelCount = 0;
 
       for (const [px, py] of points) {
-        const x = Math.max(0, Math.min(width - sampleSize, Math.floor(width * px - sampleSize / 2)));
-        const y = Math.max(0, Math.min(height - sampleSize, Math.floor(height * py - sampleSize / 2)));
-        const data = ctx.getImageData(x, y, sampleSize, sampleSize).data;
+        const x = Math.max(
+          0,
+          Math.min(width - sampleSize, Math.floor(width * px - sampleSize / 2))
+        );
+        const y = Math.max(
+          0,
+          Math.min(height - sampleSize, Math.floor(height * py - sampleSize / 2))
+        );
 
+        const data = ctx.getImageData(x, y, sampleSize, sampleSize).data;
         sampleCount += data.length / 4;
 
         for (let index = 0; index < data.length; index += 4) {
@@ -965,7 +1710,9 @@
           const alpha = data[index + 3];
 
           if (alpha > 0) alphaPixelCount += 1;
-          if (alpha > 0 && (red > 4 || green > 4 || blue > 4)) visiblePixelCount += 1;
+          if (alpha > 0 && (red > 4 || green > 4 || blue > 4)) {
+            visiblePixelCount += 1;
+          }
         }
       }
 
@@ -981,7 +1728,9 @@
         sampleCount,
         visiblePixelCount,
         alphaPixelCount,
-        reason: visible ? "VISIBLE_NON_BLANK_PIXELS_FOUND" : "NO_VISIBLE_NON_BLANK_PIXELS_FOUND"
+        reason: visible
+          ? "VISIBLE_NON_BLANK_PIXELS_FOUND"
+          : "NO_VISIBLE_NON_BLANK_PIXELS_FOUND"
       };
     } catch (error) {
       return {
@@ -998,69 +1747,41 @@
   function namespaceMatchesDomSurface(namespaceInfo, canvas) {
     if (!namespaceInfo || !namespaceInfo.observed || !canvas) return false;
 
-    const contractConsistent =
+    let datasetContract = "UNKNOWN";
+
+    try {
+      datasetContract =
+        canvas.dataset &&
+        firstKnown(
+          canvas.dataset.hearthCanvasContract,
+          canvas.dataset.contract,
+          canvas.dataset.hearthCanvasInternalRenewalContract
+        );
+    } catch (_error) {}
+
+    const contractConsistent = Boolean(
       ACCEPTED_CANVAS_CONTRACTS.includes(namespaceInfo.contract) ||
-      (canvas.dataset &&
-        ACCEPTED_CANVAS_CONTRACTS.includes(
-          firstKnown(
-            canvas.dataset.hearthCanvasContract,
-            canvas.dataset.contract,
-            canvas.dataset.hearthCanvasInternalRenewalContract
-          )
-        ));
+        ACCEPTED_CANVAS_CONTRACTS.includes(datasetContract) ||
+        (namespaceInfo.contract && namespaceInfo.contract.includes("HEARTH_CANVAS_"))
+    );
 
     const sizeConsistent =
-      safeNumber(canvas.width, 0) > 0 &&
-      safeNumber(canvas.height, 0) > 0;
+      safeNumber(canvas.width, 0) > 0 && safeNumber(canvas.height, 0) > 0;
 
     return Boolean(contractConsistent && sizeConsistent);
   }
 
-  function resolveFailure(report) {
-    const checks = [
-      ["CANVAS_ELEMENT_FOUND", report.CANVAS_ELEMENT_FOUND !== true, "CANVAS_ELEMENT_NOT_FOUND", "NO_CANVAS_ELEMENT_MATCHED_EXPECTED_SELECTORS", "CANVAS_EXPRESSION_SURFACE", CANVAS_FILE, "VERIFY_CANVAS_FILE_CREATES_OR_MOUNTS_A_REAL_CANVAS_SURFACE"],
-      ["CANVAS_MOUNT_FOUND", report.CANVAS_MOUNT_FOUND !== true, "CANVAS_MOUNT_NOT_FOUND", "NO_EXPECTED_HEARTH_CANVAS_MOUNT_FOUND", "HTML_SHELL_OR_STAGE_MARKUP", "/showroom/globe/hearth/index.html", "RESTORE_EXPECTED_CANVAS_MOUNT_SELECTOR_OR_STAGE_MARKUP"],
-      ["CANVAS_IN_MOUNT", report.CANVAS_IN_MOUNT !== true, "CANVAS_OUTSIDE_EXPECTED_MOUNT", "CANVAS_EXISTS_BUT_IS_NOT_CONTAINED_BY_EXPECTED_HEARTH_MOUNT", "CANVAS_PLACEMENT_OR_HTML_MOUNT_ALIGNMENT", CANVAS_FILE, "ALIGN_CANVAS_PLACEMENT_WITH_HEARTH_CANVAS_MOUNT"],
-      ["CANVAS_RECT_NONZERO", report.CANVAS_RECT_NONZERO !== true, "CANVAS_ZERO_RECT", "CANVAS_ELEMENT_EXISTS_BUT_BOUNDING_RECT_IS_ZERO", "CSS_LAYOUT_OR_CANVAS_PLACEMENT", CANVAS_FILE, "VERIFY_CANVAS_STYLE_SIZE_AND_PARENT_LAYOUT"],
-      ["CANVAS_COMPUTED_VISIBLE", report.CANVAS_COMPUTED_VISIBLE !== true, "CANVAS_COMPUTED_STYLE_HIDDEN", "CANVAS_COMPUTED_STYLE_IS_NOT_VISIBLE", "CSS_LAYOUT_OR_VISIBILITY_RULE", "/showroom/globe/hearth/index.html", "AUDIT_COMPUTED_STYLE_DISPLAY_VISIBILITY_OPACITY_POINTER_EVENTS"],
-      ["CANVAS_VIEWPORT_INTERSECTING", report.CANVAS_VIEWPORT_INTERSECTING !== true, "CANVAS_OUTSIDE_VIEWPORT", "CANVAS_HAS_GEOMETRY_BUT_DOES_NOT_INTERSECT_VIEWPORT", "CSS_LAYOUT_OR_SCROLL_POSITION", "/showroom/globe/hearth/index.html", "AUDIT_STAGE_PLACEMENT_SCROLL_AND_VIEWPORT_INTERSECTION"],
-      ["CANVAS_CONTEXT_2D_READY", report.CANVAS_CONTEXT_2D_READY !== true, "CANVAS_CONTEXT_2D_NOT_READY", "CANVAS_DOES_NOT_EXPOSE_A_2D_CONTEXT", "CANVAS_EXPRESSION_SURFACE", CANVAS_FILE, "VERIFY_CANVAS_ELEMENT_IS_A_STANDARD_2D_CANVAS"],
-      ["CANVAS_PIXEL_VISIBLE", report.CANVAS_PIXEL_VISIBLE !== true, "CANVAS_PIXEL_SAMPLE_NOT_VISIBLE", report.CANVAS_PIXEL_SAMPLE_STATUS || "CANVAS_PIXEL_VISIBLE_FALSE", "CANVAS_DRAWING_OR_DOWNSTREAM_EXPRESSION_ADAPTER", CANVAS_FILE, "AUDIT_CANVAS_DRAW_PATH_AND_DOWNSTREAM_EXPRESSION_ADAPTER"],
-      ["CANVAS_LAYER_BLOCKED", report.CANVAS_LAYER_BLOCKED === true, "CANVAS_LAYER_OBSTRUCTED", "CANVAS_IS_PRESENT_BUT_ELEMENT_FROM_POINT_HIT_TEST_INDICATES_OVERLAY_BLOCKAGE", "CSS_LAYERING_OR_OVERLAY", "/showroom/globe/hearth/index.html", "AUDIT_Z_INDEX_POINTER_LAYER_AND_OVERLAY_ELEMENTS"],
-      ["CANVAS_NAMESPACE_PRESENT", report.CANVAS_NAMESPACE_PRESENT !== true, "CANVAS_NAMESPACE_NOT_PRESENT", "DOM_CANVAS_EXISTS_BUT_CANVAS_AUTHORITY_NAMESPACE_NOT_FOUND", "CANVAS_ALIAS_PUBLICATION", CANVAS_FILE, "VERIFY_CANVAS_FILE_PUBLISHES_EXPECTED_GLOBAL_ALIASES"],
-      ["CANVAS_PARENT_CONTRACT_RECOGNIZED", report.CANVAS_PARENT_CONTRACT_RECOGNIZED !== true, "CANVAS_PARENT_CONTRACT_UNRECOGNIZED", "CANVAS_NAMESPACE_EXISTS_BUT_CONTRACT_IS_NOT_IN_ACCEPTED_CANVAS_LINEAGE", "CANVAS_CONTRACT_PUBLICATION", CANVAS_FILE, "VERIFY_CANVAS_PARENT_CONTRACT_AND_ACCEPTED_LINEAGE"],
-      ["CANVAS_NAMESPACE_MATCHES_DOM_SURFACE", report.CANVAS_NAMESPACE_MATCHES_DOM_SURFACE !== true, "CANVAS_NAMESPACE_DOM_MISMATCH", "CANVAS_NAMESPACE_RECEIPT_DOES_NOT_MATCH_THE_DOM_CANVAS_SURFACE", "CANVAS_RECEIPT_PUBLICATION", CANVAS_FILE, "ALIGN_CANVAS_RECEIPT_WITH_DOM_SURFACE_PROOF"]
-    ];
-
-    const failed = checks.find((entry) => entry[1]);
-
-    if (!failed) {
-      return {
-        coordinate: "NONE",
-        failureClass: "CANVAS_SURFACE_TRUTH_PROVEN_NO_FINAL_CLAIM",
-        reason: "DOM_CANVAS_NAMESPACE_PIXEL_AND_LAYER_PROOF_PASSED",
-        owner: "NONE",
-        file: "NONE",
-        action: "RETURN_CANVAS_SURFACE_TRUTH_TO_NORTH_FOR_NEXT_STANDARD_CHECK"
-      };
-    }
-
-    return {
-      coordinate: failed[0],
-      failureClass: failed[2],
-      reason: failed[3],
-      owner: failed[4],
-      file: failed[5],
-      action: failed[6]
-    };
-  }
-
   function inspectCanvas(targetWindow, targetDocument, contextSource) {
     const report = {
-      TARGET_CONTEXT_STATUS: targetDocument && targetWindow
-        ? "TARGET_CONTEXT_AVAILABLE"
-        : "TARGET_CONTEXT_UNAVAILABLE",
+      TARGET_CONTEXT_STATUS:
+        targetDocument && targetWindow
+          ? "TARGET_CONTEXT_AVAILABLE"
+          : "TARGET_CONTEXT_UNAVAILABLE",
       TARGET_CONTEXT_SOURCE: contextSource || "UNKNOWN",
+
+      CANVAS_MOUNT_FOUND: false,
+      CANVAS_MOUNT_SELECTOR: "NONE",
+      CANVAS_MOUNT_DESCRIPTOR: "NONE",
 
       CANVAS_ELEMENT_FOUND: false,
       CANVAS_SELECTOR: "NONE",
@@ -1069,14 +1790,12 @@
       CANVAS_CLASS: "NONE",
       CANVAS_DATASET_CONTRACT: "UNKNOWN",
       CANVAS_DATASET_RECEIPT: "UNKNOWN",
-
-      CANVAS_MOUNT_FOUND: false,
-      CANVAS_MOUNT_SELECTOR: "NONE",
-      CANVAS_MOUNT_DESCRIPTOR: "NONE",
       CANVAS_IN_MOUNT: false,
 
       CANVAS_WIDTH_ATTRIBUTE: 0,
       CANVAS_HEIGHT_ATTRIBUTE: 0,
+      CANVAS_INTERNAL_SIZE_NONZERO: false,
+
       CANVAS_RECT_LEFT: 0,
       CANVAS_RECT_TOP: 0,
       CANVAS_RECT_WIDTH: 0,
@@ -1125,27 +1844,37 @@
         reason: "TARGET_DOCUMENT_OR_WINDOW_UNAVAILABLE",
         owner: "DIAGNOSTIC_TARGET_ACCESS",
         file: FILE,
-        action: "PROVIDE_TARGET_DOCUMENT_OR_TARGET_WINDOW_TO_CANVAS_SURFACE_TRUTH_PROBE"
+        action:
+          "PROVIDE_TARGET_DOCUMENT_OR_TARGET_WINDOW_TO_CANVAS_SURFACE_TRUTH_PROBE"
       };
+
       return { ...report, failure };
     }
 
-    const canvasResult = firstElement(targetDocument, CANVAS_SELECTORS);
     const mountResult = firstElement(targetDocument, MOUNT_SELECTORS);
-    const canvas = canvasResult.element;
+    const canvasResult = firstElement(targetDocument, CANVAS_SELECTORS);
     const mount = mountResult.element;
+    const canvas = canvasResult.element;
     const canvasNamespace = selectAuthority("canvasHub", PATHS.canvasHub, targetWindow);
 
     report.CANVAS_NAMESPACE_PRESENT = canvasNamespace.observed;
     report.CANVAS_NAMESPACE_PATH = canvasNamespace.path;
     report.CANVAS_NAMESPACE_CONTRACT = canvasNamespace.contract;
     report.CANVAS_NAMESPACE_RECEIPT = canvasNamespace.receipt;
-    report.CANVAS_PARENT_CONTRACT_RECOGNIZED =
-      ACCEPTED_CANVAS_CONTRACTS.includes(canvasNamespace.contract);
+    report.CANVAS_PARENT_CONTRACT_RECOGNIZED = Boolean(
+      ACCEPTED_CANVAS_CONTRACTS.includes(canvasNamespace.contract) ||
+        (canvasNamespace.contract && canvasNamespace.contract.includes("HEARTH_CANVAS_"))
+    );
+
+    report.CANVAS_MOUNT_FOUND = Boolean(mount);
+    report.CANVAS_MOUNT_SELECTOR = mountResult.selector;
+    report.CANVAS_MOUNT_DESCRIPTOR = elementDescriptor(mount);
 
     report.CANVAS_ELEMENT_FOUND = Boolean(canvas);
     report.CANVAS_SELECTOR = canvasResult.selector;
-    report.CANVAS_TAG = canvas ? safeString(canvas.tagName, "UNKNOWN").toLowerCase() : "NONE";
+    report.CANVAS_TAG = canvas
+      ? safeString(canvas.tagName, "UNKNOWN").toLowerCase()
+      : "NONE";
     report.CANVAS_ID = canvas && canvas.id ? canvas.id : "NONE";
 
     try {
@@ -1153,6 +1882,8 @@
     } catch (_error) {
       report.CANVAS_CLASS = "UNREADABLE";
     }
+
+    report.CANVAS_IN_MOUNT = Boolean(canvas && mount && containsOrEquals(mount, canvas));
 
     if (canvas && canvas.dataset) {
       report.CANVAS_DATASET_CONTRACT = firstKnown(
@@ -1167,11 +1898,6 @@
       );
     }
 
-    report.CANVAS_MOUNT_FOUND = Boolean(mount);
-    report.CANVAS_MOUNT_SELECTOR = mountResult.selector;
-    report.CANVAS_MOUNT_DESCRIPTOR = elementDescriptor(mount);
-    report.CANVAS_IN_MOUNT = Boolean(canvas && mount && containsOrEquals(mount, canvas));
-
     if (canvas) {
       const rect = getRect(canvas);
       const css = cssSummary(targetWindow, canvas);
@@ -1181,6 +1907,10 @@
 
       report.CANVAS_WIDTH_ATTRIBUTE = safeNumber(canvas.width, 0);
       report.CANVAS_HEIGHT_ATTRIBUTE = safeNumber(canvas.height, 0);
+      report.CANVAS_INTERNAL_SIZE_NONZERO = Boolean(
+        report.CANVAS_WIDTH_ATTRIBUTE > 0 && report.CANVAS_HEIGHT_ATTRIBUTE > 0
+      );
+
       report.CANVAS_RECT_LEFT = rect.left;
       report.CANVAS_RECT_TOP = rect.top;
       report.CANVAS_RECT_WIDTH = rect.width;
@@ -1214,10 +1944,175 @@
       report.CANVAS_LAYER_HIT_TARGET = layer.hitTarget;
       report.CANVAS_LAYER_HIT_WITHIN_CANVAS = layer.hitWithinCanvas;
 
-      report.CANVAS_NAMESPACE_MATCHES_DOM_SURFACE = namespaceMatchesDomSurface(canvasNamespace, canvas);
+      report.CANVAS_NAMESPACE_MATCHES_DOM_SURFACE = namespaceMatchesDomSurface(
+        canvasNamespace,
+        canvas
+      );
     }
 
     return { ...report, failure: resolveFailure(report) };
+  }
+
+  function resolveFailure(report) {
+    const checks = [
+      [
+        "TARGET_CONTEXT_STATUS",
+        report.TARGET_CONTEXT_STATUS !== "TARGET_CONTEXT_AVAILABLE",
+        "TARGET_CONTEXT_UNAVAILABLE",
+        "TARGET_DOCUMENT_OR_WINDOW_UNAVAILABLE",
+        "DIAGNOSTIC_TARGET_ACCESS",
+        FILE,
+        "PROVIDE_TARGET_DOCUMENT_OR_TARGET_WINDOW_TO_CANVAS_SURFACE_TRUTH_PROBE"
+      ],
+      [
+        "CANVAS_MOUNT_FOUND",
+        report.CANVAS_MOUNT_FOUND !== true,
+        "CANVAS_MOUNT_NOT_FOUND",
+        "NO_EXPECTED_HEARTH_CANVAS_MOUNT_FOUND",
+        "HTML_SHELL_OR_STAGE_MARKUP",
+        "/showroom/globe/hearth/index.html",
+        "VERIFY_EXPECTED_CANVAS_MOUNT_OR_STAGE_MARKUP"
+      ],
+      [
+        "CANVAS_ELEMENT_FOUND",
+        report.CANVAS_ELEMENT_FOUND !== true,
+        "CANVAS_ELEMENT_NOT_FOUND",
+        "NO_CANVAS_ELEMENT_MATCHED_EXPECTED_SELECTORS",
+        "CANVAS_EXPRESSION_SURFACE",
+        CANVAS_FILE,
+        "VERIFY_CANVAS_FILE_CREATES_OR_BINDS_A_REAL_DOM_CANVAS_SURFACE"
+      ],
+      [
+        "CANVAS_IN_MOUNT",
+        report.CANVAS_IN_MOUNT !== true,
+        "CANVAS_OUTSIDE_EXPECTED_MOUNT",
+        "CANVAS_EXISTS_BUT_IS_NOT_CONTAINED_BY_EXPECTED_HEARTH_MOUNT",
+        "CANVAS_PLACEMENT_OR_HTML_MOUNT_ALIGNMENT",
+        CANVAS_FILE,
+        "ALIGN_CANVAS_DOM_SURFACE_WITH_HEARTH_CANVAS_MOUNT"
+      ],
+      [
+        "CANVAS_WIDTH_ATTRIBUTE",
+        safeNumber(report.CANVAS_WIDTH_ATTRIBUTE, 0) <= 0,
+        "CANVAS_WIDTH_ATTRIBUTE_ZERO",
+        "CANVAS_WIDTH_ATTRIBUTE_IS_ZERO",
+        "CANVAS_EXPRESSION_SURFACE",
+        CANVAS_FILE,
+        "VERIFY_CANVAS_INTERNAL_WIDTH_ATTRIBUTE"
+      ],
+      [
+        "CANVAS_HEIGHT_ATTRIBUTE",
+        safeNumber(report.CANVAS_HEIGHT_ATTRIBUTE, 0) <= 0,
+        "CANVAS_HEIGHT_ATTRIBUTE_ZERO",
+        "CANVAS_HEIGHT_ATTRIBUTE_IS_ZERO",
+        "CANVAS_EXPRESSION_SURFACE",
+        CANVAS_FILE,
+        "VERIFY_CANVAS_INTERNAL_HEIGHT_ATTRIBUTE"
+      ],
+      [
+        "CANVAS_RECT_NONZERO",
+        report.CANVAS_RECT_NONZERO !== true,
+        "CANVAS_ZERO_RECT",
+        "CANVAS_ELEMENT_EXISTS_BUT_BOUNDING_RECT_IS_ZERO",
+        "CSS_LAYOUT_OR_CANVAS_PLACEMENT",
+        CANVAS_FILE,
+        "VERIFY_CANVAS_STYLE_SIZE_AND_PARENT_LAYOUT"
+      ],
+      [
+        "CANVAS_COMPUTED_VISIBLE",
+        report.CANVAS_COMPUTED_VISIBLE !== true,
+        "CANVAS_COMPUTED_STYLE_HIDDEN",
+        "CANVAS_COMPUTED_STYLE_IS_NOT_VISIBLE",
+        "CSS_VISIBILITY_OR_ROUTE_SHELL",
+        "/showroom/globe/hearth/index.html",
+        "AUDIT_DISPLAY_VISIBILITY_OPACITY_POINTER_EVENTS"
+      ],
+      [
+        "CANVAS_VIEWPORT_INTERSECTING",
+        report.CANVAS_VIEWPORT_INTERSECTING !== true,
+        "CANVAS_OUTSIDE_VIEWPORT",
+        "CANVAS_HAS_GEOMETRY_BUT_DOES_NOT_INTERSECT_VIEWPORT",
+        "CSS_LAYOUT_OR_SCROLL_POSITION",
+        "/showroom/globe/hearth/index.html",
+        "AUDIT_STAGE_PLACEMENT_SCROLL_AND_VIEWPORT_INTERSECTION"
+      ],
+      [
+        "CANVAS_CONTEXT_2D_READY",
+        report.CANVAS_CONTEXT_2D_READY !== true,
+        "CANVAS_CONTEXT_2D_NOT_READY",
+        "CANVAS_DOES_NOT_EXPOSE_A_2D_CONTEXT",
+        "CANVAS_EXPRESSION_SURFACE",
+        CANVAS_FILE,
+        "VERIFY_DOM_SURFACE_IS_STANDARD_2D_CANVAS"
+      ],
+      [
+        "CANVAS_PIXEL_VISIBLE",
+        report.CANVAS_PIXEL_VISIBLE !== true,
+        "CANVAS_PIXEL_SAMPLE_NOT_VISIBLE",
+        report.CANVAS_PIXEL_SAMPLE_STATUS || "CANVAS_PIXEL_VISIBLE_FALSE",
+        "CANVAS_DRAWING_OR_DOWNSTREAM_EXPRESSION_ADAPTER",
+        CANVAS_FILE,
+        "AUDIT_CANVAS_DRAW_PATH_AND_DOWNSTREAM_EXPRESSION_ADAPTER"
+      ],
+      [
+        "CANVAS_LAYER_BLOCKED",
+        report.CANVAS_LAYER_BLOCKED === true,
+        "CANVAS_LAYER_OBSTRUCTED",
+        "CANVAS_IS_PRESENT_BUT_ELEMENT_FROM_POINT_HIT_TEST_INDICATES_OVERLAY_BLOCKAGE",
+        "CSS_LAYERING_OR_OVERLAY",
+        "/showroom/globe/hearth/index.html",
+        "AUDIT_Z_INDEX_POINTER_LAYER_AND_OVERLAY_ELEMENTS"
+      ],
+      [
+        "CANVAS_NAMESPACE_PRESENT",
+        report.CANVAS_NAMESPACE_PRESENT !== true,
+        "CANVAS_NAMESPACE_NOT_PRESENT",
+        "DOM_CANVAS_EXISTS_BUT_CANVAS_AUTHORITY_NAMESPACE_NOT_FOUND",
+        "CANVAS_ALIAS_PUBLICATION",
+        CANVAS_FILE,
+        "VERIFY_CANVAS_FILE_PUBLISHES_EXPECTED_PUBLIC_ALIASES"
+      ],
+      [
+        "CANVAS_PARENT_CONTRACT_RECOGNIZED",
+        report.CANVAS_PARENT_CONTRACT_RECOGNIZED !== true,
+        "CANVAS_PARENT_CONTRACT_UNRECOGNIZED",
+        "CANVAS_NAMESPACE_EXISTS_BUT_CONTRACT_IS_NOT_IN_ACCEPTED_CANVAS_LINEAGE",
+        "CANVAS_CONTRACT_PUBLICATION",
+        CANVAS_FILE,
+        "VERIFY_CANVAS_PARENT_CONTRACT_AND_ACCEPTED_LINEAGE"
+      ],
+      [
+        "CANVAS_NAMESPACE_MATCHES_DOM_SURFACE",
+        report.CANVAS_NAMESPACE_MATCHES_DOM_SURFACE !== true,
+        "CANVAS_NAMESPACE_DOM_MISMATCH",
+        "CANVAS_NAMESPACE_RECEIPT_DOES_NOT_MATCH_THE_DOM_CANVAS_SURFACE",
+        "CANVAS_RECEIPT_PUBLICATION",
+        CANVAS_FILE,
+        "ALIGN_CANVAS_RECEIPT_WITH_DOM_SURFACE_PROOF"
+      ]
+    ];
+
+    const failed = checks.find((entry) => entry[1]);
+
+    if (!failed) {
+      return {
+        coordinate: "NONE",
+        failureClass: "CANVAS_SURFACE_TRUTH_PROVEN_NO_FINAL_CLAIM",
+        reason: "DOM_CANVAS_NAMESPACE_PIXEL_AND_LAYER_PROOF_PASSED",
+        owner: "NONE",
+        file: "NONE",
+        action: "RETURN_CANVAS_SURFACE_TRUTH_TO_NORTH_FOR_NEXT_STANDARD_CHECK"
+      };
+    }
+
+    return {
+      coordinate: failed[0],
+      failureClass: failed[2],
+      reason: failed[3],
+      owner: failed[4],
+      file: failed[5],
+      action: failed[6]
+    };
   }
 
   function collectLabCardinalReceiptBundle(targetWindow, currentReport) {
@@ -1226,20 +2121,34 @@
     const south = selectAuthority("south", PATHS.labSouth, targetWindow);
     const west = selectAuthority("west", PATHS.labWest, targetWindow);
 
-    if (currentReport.NORTH_CONTRACT && north.contract === "UNKNOWN") north.contract = currentReport.NORTH_CONTRACT;
-    if (currentReport.EAST_CONTRACT && east.contract === "UNKNOWN") east.contract = currentReport.EAST_CONTRACT;
-    if (currentReport.SOUTH_CONTRACT && south.contract === "UNKNOWN") south.contract = currentReport.SOUTH_CONTRACT;
-    if (currentReport.WEST_CONTRACT && west.contract === "UNKNOWN") west.contract = currentReport.WEST_CONTRACT;
+    if (currentReport.NORTH_CONTRACT && north.contract === "UNKNOWN") {
+      north.contract = currentReport.NORTH_CONTRACT;
+    }
 
-    const observedCount = [north, east, south, west].filter((item) => item.observed || item.contract !== "UNKNOWN").length;
+    if (currentReport.EAST_CONTRACT && east.contract === "UNKNOWN") {
+      east.contract = currentReport.EAST_CONTRACT;
+    }
+
+    if (currentReport.SOUTH_CONTRACT && south.contract === "UNKNOWN") {
+      south.contract = currentReport.SOUTH_CONTRACT;
+    }
+
+    if (currentReport.WEST_CONTRACT && west.contract === "UNKNOWN") {
+      west.contract = currentReport.WEST_CONTRACT;
+    }
+
+    const observedCount = [north, east, south, west].filter(
+      (item) => item.observed || item.contract !== "UNKNOWN"
+    ).length;
 
     return {
       receiptName: "LAB_CARDINAL_RECEIPT_BUNDLE",
-      status: observedCount === 4
-        ? "LAB_CARDINAL_RECEIPT_BUNDLE_COMPLETE"
-        : observedCount > 0
-          ? "LAB_CARDINAL_RECEIPT_BUNDLE_PARTIAL"
-          : "LAB_CARDINAL_RECEIPT_BUNDLE_NOT_OBSERVED",
+      status:
+        observedCount === 4
+          ? "LAB_CARDINAL_RECEIPT_BUNDLE_COMPLETE"
+          : observedCount > 0
+            ? "LAB_CARDINAL_RECEIPT_BUNDLE_PARTIAL"
+            : "LAB_CARDINAL_RECEIPT_BUNDLE_NOT_OBSERVED",
       observedCount,
       expectedCount: 4,
       north: compactAuthority(north),
@@ -1249,36 +2158,33 @@
     };
   }
 
-  function compactAuthority(item) {
-    return {
-      observed: Boolean(item && item.observed),
-      scope: item ? item.scope : "NONE",
-      path: item ? item.path : "NONE",
-      contract: item ? item.contract : "UNKNOWN",
-      receipt: item ? item.receipt : "UNKNOWN",
-      methodCount: item ? item.methodCount : 0
-    };
-  }
-
   function collectDiagnosticTrackReceipt(targetWindow, currentReport, chronology) {
     const north = selectAuthority("diagnosticNorth", PATHS.diagnosticNorth, targetWindow);
     const east = selectAuthority("diagnosticEast", PATHS.diagnosticEast, targetWindow);
     const west = selectAuthority("diagnosticWest", PATHS.diagnosticWest, targetWindow);
     const south = selectAuthority("diagnosticSouth", PATHS.diagnosticSouth, targetWindow);
-    const probeSouth = selectAuthority("diagnosticProbeSouth", PATHS.diagnosticProbeSouth, targetWindow);
+    const probeSouth = selectAuthority(
+      "diagnosticProbeSouth",
+      PATHS.diagnosticProbeSouth,
+      targetWindow
+    );
 
     const entries = Array.isArray(chronology) ? chronology : [];
-    const completeCount = entries.filter((entry) => entry && entry.status === "COMPLETE").length;
+    const completeCount = entries.filter(
+      (entry) => entry && entry.status === "COMPLETE"
+    ).length;
     const firstFailure =
-      entries.find((entry) => entry && entry.status && entry.status !== "COMPLETE") || null;
+      entries.find((entry) => entry && entry.status && entry.status !== "COMPLETE") ||
+      null;
 
     return {
       receiptName: "DIAGNOSTIC_TRACK_RECEIPT",
-      status: entries.length && completeCount === entries.length
-        ? "DIAGNOSTIC_TRACK_RECEIPT_COMPLETE"
-        : entries.length
-          ? "DIAGNOSTIC_TRACK_RECEIPT_PARTIAL"
-          : "DIAGNOSTIC_TRACK_RECEIPT_FROM_ALIASES_ONLY",
+      status:
+        entries.length && completeCount === entries.length
+          ? "DIAGNOSTIC_TRACK_RECEIPT_COMPLETE"
+          : entries.length
+            ? "DIAGNOSTIC_TRACK_RECEIPT_PARTIAL"
+            : "DIAGNOSTIC_TRACK_RECEIPT_FROM_ALIASES_ONLY",
       chronologyObserved: entries.length > 0,
       chronologyStepCount: entries.length,
       chronologyCompleteCount: completeCount,
@@ -1304,25 +2210,32 @@
   function collectCanvasBishopReceipt(targetWindow, canvasReport, currentReport) {
     const canvasHub = selectAuthority("canvasHub", PATHS.canvasHub, targetWindow);
     const bishopQueen = selectAuthority("bishopQueen", PATHS.bishopQueen, targetWindow);
-    const routeConductor = selectAuthority("routeConductor", PATHS.routeConductor, targetWindow);
+    const routeConductor = selectAuthority(
+      "routeConductor",
+      PATHS.routeConductor,
+      targetWindow
+    );
 
-    const bishopReady =
+    const bishopReady = Boolean(
       bishopQueen.observed ||
-      /BISHOP_QUEEN/i.test(packetValue(currentReport.SECONDARY_EVIDENCE_NOTES, ""));
+        /BISHOP_QUEEN/i.test(packetValue(currentReport.SECONDARY_EVIDENCE_NOTES, ""))
+    );
 
-    const canvasReady =
+    const canvasReady = Boolean(
       canvasReport.CANVAS_ELEMENT_FOUND === true &&
-      canvasReport.CANVAS_RECT_NONZERO === true &&
-      canvasReport.CANVAS_CONTEXT_2D_READY === true &&
-      canvasReport.CANVAS_NAMESPACE_PRESENT === true;
+        canvasReport.CANVAS_RECT_NONZERO === true &&
+        canvasReport.CANVAS_CONTEXT_2D_READY === true &&
+        canvasReport.CANVAS_NAMESPACE_PRESENT === true
+    );
 
     return {
       receiptName: "CANVAS_BISHOP_RECEIPT",
-      status: canvasReady && bishopReady
-        ? "CANVAS_BISHOP_RECEIPT_COMPLETE"
-        : canvasReady || bishopReady
-          ? "CANVAS_BISHOP_RECEIPT_PARTIAL"
-          : "CANVAS_BISHOP_RECEIPT_NOT_OBSERVED",
+      status:
+        canvasReady && bishopReady
+          ? "CANVAS_BISHOP_RECEIPT_COMPLETE"
+          : canvasReady || bishopReady
+            ? "CANVAS_BISHOP_RECEIPT_PARTIAL"
+            : "CANVAS_BISHOP_RECEIPT_NOT_OBSERVED",
       canvasReady,
       bishopReady,
       pixelVisible: canvasReport.CANVAS_PIXEL_VISIBLE === true,
@@ -1345,8 +2258,19 @@
     };
   }
 
+  function truthyAny(...values) {
+    return values.some((value) => {
+      if (value === true || value === 1 || value === "1") return true;
+      if (typeof value === "string" && /true|ready|active|complete|observed|present|valid/i.test(value)) {
+        return true;
+      }
+
+      return false;
+    });
+  }
+
   function callSidecarIfAvailable(authority, payload) {
-    if (!authority || !isObject(authority)) return null;
+    if (!authority || (!isObject(authority) && !isFunction(authority))) return null;
 
     const methods = [
       "runSouthSurfacePointerRead",
@@ -1354,18 +2278,14 @@
       "inspectSurfacePointer",
       "runProbeSidecar",
       "inspect",
-      "runDiagnostic",
-      "getReport"
+      "runDiagnostic"
     ];
 
     for (const method of methods) {
       if (!isFunction(authority[method])) continue;
 
       try {
-        const output =
-          method === "getReport"
-            ? authority[method]()
-            : authority[method](payload);
+        const output = authority[method](payload);
         if (isObject(output)) {
           if (isObject(output.evidence)) return output.evidence;
           if (isObject(output.REPORT_OBJECT)) return output.REPORT_OBJECT;
@@ -1379,25 +2299,37 @@
   }
 
   function collectFingerFileReceipt(targetWindow, currentReport, chronology, payload) {
-    const surfacePointer = selectAuthority("southSurfacePointer", PATHS.southSurfacePointer, targetWindow);
+    const surfacePointer = selectAuthority(
+      "southSurfacePointer",
+      PATHS.southSurfacePointer,
+      targetWindow
+    );
     const fingerInspect = selectAuthority("fingerInspect", PATHS.fingerInspect, targetWindow);
     const hexSurface = selectAuthority("hexSurface", PATHS.hexSurface, targetWindow);
-    const fourPairAuthority = selectAuthority("fourPairAuthority", PATHS.fourPairAuthority, targetWindow);
+    const fourPairAuthority = selectAuthority(
+      "fourPairAuthority",
+      PATHS.fourPairAuthority,
+      targetWindow
+    );
     const surfacePacket = selectAuthority("surfacePacket", PATHS.surfacePacket, targetWindow);
 
-    const sidecarReport = callSidecarIfAvailable(surfacePointer.authority, {
-      currentReport,
-      chronology,
-      fromCanvasTruthHub: true,
-      southProbeEnvelope: clonePlain(lastSouthProbeEnvelope || payload.southProbeReceipt || {})
-    }) || {};
+    const sidecarReport =
+      callSidecarIfAvailable(surfacePointer.authority, {
+        currentReport,
+        chronology,
+        fromCanvasTruthHub: true,
+        southProbeEnvelope: clonePlain(
+          lastSouthProbeEnvelope || payload.southProbeReceipt || {}
+        )
+      }) || {};
 
-    const southEnvelopePresent =
-      Boolean(lastSouthProbeEnvelope) ||
-      Boolean(payload.southProbeReceipt) ||
-      Boolean(payload.probeSouthReceipt) ||
-      Boolean(getRaw(currentReport, "PROBE_SOUTH_RETURN_PACKET_READY", false)) ||
-      Boolean(getRaw(currentReport, "RECEIPT_RETURN_MECHANISM_STATUS", ""));
+    const southEnvelopePresent = Boolean(
+      lastSouthProbeEnvelope ||
+        payload.southProbeReceipt ||
+        payload.probeSouthReceipt ||
+        getRaw(currentReport, "PROBE_SOUTH_RETURN_PACKET_READY", false) ||
+        getRaw(currentReport, "RECEIPT_RETURN_MECHANISM_STATUS", "")
+    );
 
     const boundaryReady = truthyAny(
       sidecarReport.BOUNDARY_FINGER_READY,
@@ -1439,11 +2371,12 @@
 
     return {
       receiptName: "FINGER_FILE_RECEIPT",
-      status: readyCount >= 6
-        ? "FINGER_FILE_RECEIPT_COMPLETE"
-        : readyCount > 0 || surfacePointer.observed || southEnvelopePresent
-          ? "FINGER_FILE_RECEIPT_PARTIAL"
-          : "FINGER_FILE_RECEIPT_NOT_OBSERVED",
+      status:
+        readyCount >= 6
+          ? "FINGER_FILE_RECEIPT_COMPLETE"
+          : readyCount > 0 || surfacePointer.observed || southEnvelopePresent
+            ? "FINGER_FILE_RECEIPT_PARTIAL"
+            : "FINGER_FILE_RECEIPT_NOT_OBSERVED",
       southProbeToTruthHubTransferStatus: southEnvelopePresent
         ? "PROBE_SOUTH_DATA_RECEIVED_OR_AVAILABLE"
         : "PROBE_SOUTH_DIRECT_DATA_NOT_PRESENT_ALIAS_READ_ATTEMPTED",
@@ -1467,16 +2400,15 @@
       sidecarRecommendedFile: firstKnown(
         sidecarReport.SURFACE_POINTER_RECOMMENDED_FILE,
         "UNKNOWN"
-      )
+      ),
+      files: {
+        probeSouthFile: PROBE_SOUTH_FILE,
+        southSurfacePointerFile: SOUTH_SURFACE_POINTER_FILE,
+        fingerInspectFile: FINGER_INSPECT_FILE,
+        hexSurfaceFile: HEX_SURFACE_FILE,
+        hexFourPairFile: HEX_FOUR_PAIR_FILE
+      }
     };
-  }
-
-  function truthyAny(...values) {
-    return values.some((value) => {
-      if (value === true || value === 1 || value === "1") return true;
-      if (typeof value === "string" && /true|ready|active|complete|observed|present|valid/i.test(value)) return true;
-      return false;
-    });
   }
 
   function buildHubStatus(lab, diagnostic, canvasBishop, finger) {
@@ -1519,9 +2451,20 @@
 
     delete canvasReport.failure;
 
-    const labBundle = collectLabCardinalReceiptBundle(context.targetWindow, currentReport);
-    const diagnosticTrackReceipt = collectDiagnosticTrackReceipt(context.targetWindow, currentReport, chronology);
-    const canvasBishopReceipt = collectCanvasBishopReceipt(context.targetWindow, canvasReport, currentReport);
+    const labBundle = collectLabCardinalReceiptBundle(
+      context.targetWindow,
+      currentReport
+    );
+    const diagnosticTrackReceipt = collectDiagnosticTrackReceipt(
+      context.targetWindow,
+      currentReport,
+      chronology
+    );
+    const canvasBishopReceipt = collectCanvasBishopReceipt(
+      context.targetWindow,
+      canvasReport,
+      currentReport
+    );
     const fingerFileReceipt = collectFingerFileReceipt(
       context.targetWindow,
       currentReport,
@@ -1539,7 +2482,7 @@
     const notes = normalizeNotes(
       currentReport.SECONDARY_EVIDENCE_NOTES,
       currentReport.NORTH_SECONDARY_EVIDENCE_NOTES,
-      "CANVAS_SURFACE_TRUTH_RECEIPT_HUB_ACTIVE",
+      "CANVAS_SURFACE_TRUTH_ANCHOR_SAFE_COORDINATE_LADDER_ACTIVE",
       "TRUTH_HUB_RETURNS_FOUR_COMPACT_RECEIPT_LANES",
       "LAB_CARDINAL_RECEIPT_BUNDLE_INCLUDED",
       "DIAGNOSTIC_TRACK_RECEIPT_INCLUDED",
@@ -1547,12 +2490,14 @@
       "FINGER_FILE_RECEIPT_INCLUDED",
       "TRUTH_HUB_DOES_NOT_DRAW_CANVAS",
       "TRUTH_HUB_DOES_NOT_MUTATE_PRODUCTION",
+      `CANVAS_TRUTH_FIRST_FAILED_COORDINATE:${canvasReport.CANVAS_TRUTH_FIRST_FAILED_COORDINATE}`,
       `CANVAS_TRUTH_FAILURE_CLASS:${canvasReport.CANVAS_TRUTH_FAILURE_CLASS}`,
       `TRUTH_HUB_STATUS:${truthHubStatus}`
     );
 
     const report = {
-      PACKET_NAME: "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_RECEIPT_HUB_PACKET_v1",
+      PACKET_NAME:
+        "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_ANCHOR_SAFE_COORDINATE_LADDER_PACKET_v1_2",
       CONTRACT,
       RECEIPT,
       INTERNAL_RENEWAL_CONTRACT,
@@ -1573,7 +2518,8 @@
       TRUTH_HUB_RECEIPT_ROUTES:
         "LAB_CARDINAL_RECEIPT_BUNDLE | DIAGNOSTIC_TRACK_RECEIPT | CANVAS_BISHOP_RECEIPT | FINGER_FILE_RECEIPT",
       TRUTH_HUB_PACKET_TEXT_SAFE: "true",
-      RECEIPT_RETURN_MECHANISM_STATUS: "TRUTH_HUB_COMPACT_RECEIPT_RETURN_READY",
+      RECEIPT_RETURN_MECHANISM_STATUS:
+        "TRUTH_HUB_COMPACT_RECEIPT_RETURN_READY",
       DIAGNOSTIC_UI_READABLE_RECEIPT_SURFACE_READY: "true",
       NORTH_READABLE_RECEIPT_SURFACE_READY: "true",
 
@@ -1619,85 +2565,60 @@
     return clonePlain(report);
   }
 
-  function buildReceipt(report = lastReport || {}) {
-    const r = report || {};
+  function runProbeCanvasSurfaceTruth(payload = {}) {
+    return inspectCanvasSurfaceTruth(payload);
+  }
+
+  function runCanvasSurfaceTruth(payload = {}) {
+    return inspectCanvasSurfaceTruth(payload);
+  }
+
+  function runProbe(payload = {}) {
+    return inspectCanvasSurfaceTruth(payload);
+  }
+
+  function inspect(payload = {}) {
+    return inspectCanvasSurfaceTruth(payload);
+  }
+
+  function runDiagnostic(payload = {}) {
+    return inspectCanvasSurfaceTruth(payload);
+  }
+
+  function receiveSouthProbeReceipt(input = {}) {
+    lastSouthProbeEnvelope = clonePlain({
+      receivedAt: nowIso(),
+      source: "PROBE_SOUTH_TO_CANVAS_SURFACE_TRUTH_HUB",
+      report: extractCurrentReport(input),
+      raw: input
+    });
+
+    const report = inspectCanvasSurfaceTruth({
+      currentReport: lastSouthProbeEnvelope.report,
+      southProbeReceipt: lastSouthProbeEnvelope.raw,
+      chronology: input.chronology || getRaw(input, "CHRONOLOGY_SEQUENCE", [])
+    });
 
     return {
-      packetType: "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_RECEIPT_HUB_PACKET_v1",
+      ok: true,
       contract: CONTRACT,
       receipt: RECEIPT,
       internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
-      internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
-      version: VERSION,
-      file: FILE,
-      targetRoute: TARGET_ROUTE,
-      diagnosticRoute: DIAGNOSTIC_ROUTE,
-      canvasFile: CANVAS_FILE,
-      expectedCanvasContract: EXPECTED_CANVAS_CONTRACT,
-
-      diagnosticOnly: true,
-      productionMutationAuthorized: false,
-      canvasDrawingAuthorized: false,
-      canvasCreationAuthorized: false,
-      canvasRepairAuthorized: false,
-      routeRepairAuthorized: false,
-      controlMutationAuthorized: false,
-      runtimeRestartAuthorized: false,
-
-      truthHubActive: true,
-      truthHubStatus: getRaw(r, "TRUTH_HUB_STATUS", "UNKNOWN"),
-      receiptLaneCount: 4,
-      receiptRoutes: [
-        "LAB_CARDINAL_RECEIPT_BUNDLE",
-        "DIAGNOSTIC_TRACK_RECEIPT",
-        "CANVAS_BISHOP_RECEIPT",
-        "FINGER_FILE_RECEIPT"
-      ],
-
-      canvasElementFound: getRaw(r, "CANVAS_ELEMENT_FOUND", false),
-      canvasRectNonzero: getRaw(r, "CANVAS_RECT_NONZERO", false),
-      canvasComputedVisible: getRaw(r, "CANVAS_COMPUTED_VISIBLE", false),
-      canvasViewportIntersecting: getRaw(r, "CANVAS_VIEWPORT_INTERSECTING", false),
-      canvasContext2dReady: getRaw(r, "CANVAS_CONTEXT_2D_READY", false),
-      canvasPixelSampleStatus: getRaw(r, "CANVAS_PIXEL_SAMPLE_STATUS", "NO_PIXEL_SAMPLE"),
-      canvasPixelVisible: getRaw(r, "CANVAS_PIXEL_VISIBLE", false),
-      canvasLayerBlocked: getRaw(r, "CANVAS_LAYER_BLOCKED", false),
-      canvasNamespacePresent: getRaw(r, "CANVAS_NAMESPACE_PRESENT", false),
-      canvasParentContractRecognized: getRaw(r, "CANVAS_PARENT_CONTRACT_RECOGNIZED", false),
-
-      canvasTruthStatus: getRaw(r, "CANVAS_TRUTH_STATUS", "CANVAS_TRUTH_NOT_RUN"),
-      canvasTruthFirstFailedCoordinate: getRaw(r, "CANVAS_TRUTH_FIRST_FAILED_COORDINATE", "UNKNOWN"),
-      canvasTruthFailureClass: getRaw(r, "CANVAS_TRUTH_FAILURE_CLASS", "UNKNOWN"),
-      canvasTruthFailureReason: getRaw(r, "CANVAS_TRUTH_FAILURE_REASON", "UNKNOWN"),
-      canvasTruthRecommendedOwner: getRaw(r, "CANVAS_TRUTH_RECOMMENDED_OWNER", "UNKNOWN"),
-      canvasTruthRecommendedFile: getRaw(r, "CANVAS_TRUTH_RECOMMENDED_FILE", "UNKNOWN"),
-      canvasTruthRecommendedAction: getRaw(r, "CANVAS_TRUTH_RECOMMENDED_ACTION", "UNKNOWN"),
-
-      labCardinalReceiptBundleStatus: getRaw(r, "LAB_CARDINAL_RECEIPT_BUNDLE_STATUS", "UNKNOWN"),
-      diagnosticTrackReceiptStatus: getRaw(r, "DIAGNOSTIC_TRACK_RECEIPT_STATUS", "UNKNOWN"),
-      canvasBishopReceiptStatus: getRaw(r, "CANVAS_BISHOP_RECEIPT_STATUS", "UNKNOWN"),
-      fingerFileReceiptStatus: getRaw(r, "FINGER_FILE_RECEIPT_STATUS", "UNKNOWN"),
-      probeSouthToTruthHubTransferStatus: getRaw(r, "PROBE_SOUTH_TO_TRUTH_HUB_TRANSFER_STATUS", "UNKNOWN"),
-
-      receiptReturnMechanismStatus: getRaw(r, "RECEIPT_RETURN_MECHANISM_STATUS", "UNKNOWN"),
-      diagnosticUiReadableReceiptSurfaceReady: getRaw(r, "DIAGNOSTIC_UI_READABLE_RECEIPT_SURFACE_READY", "UNKNOWN"),
-      northReadableReceiptSurfaceReady: getRaw(r, "NORTH_READABLE_RECEIPT_SURFACE_READY", "UNKNOWN"),
-
-      runProbeCanvasSurfaceTruthApiAvailable: true,
-      runCanvasSurfaceTruthApiAvailable: true,
-      receiveSouthProbeReceiptApiAvailable: true,
-      receiveProbeSouthReceiptApiAvailable: true,
-      runProbeApiAvailable: true,
-      inspectApiAvailable: true,
-      runDiagnosticApiAvailable: true,
-      getReportApiAvailable: true,
-      getReceiptApiAvailable: true,
-      getReceiptLightApiAvailable: true,
-      getPacketTextApiAvailable: true,
-      getCompactSummaryApiAvailable: true,
-
-      ...NO_CLAIMS
+      received: true,
+      report,
+      packetText: getPacketText(),
+      compactSummary: getCompactSummary(),
+      ...NO_CLAIMS,
+      ...UPPER_NO_CLAIMS
     };
+  }
+
+  function receiveProbeSouthReceipt(input = {}) {
+    return receiveSouthProbeReceipt(input);
+  }
+
+  function ingestSouthProbeReceipt(input = {}) {
+    return receiveSouthProbeReceipt(input);
   }
 
   function orderedFields(report) {
@@ -1729,25 +2650,53 @@
       "TARGET_CONTEXT_STATUS",
       "TARGET_CONTEXT_SOURCE",
 
-      "CANVAS_ELEMENT_FOUND",
-      "CANVAS_SELECTOR",
       "CANVAS_MOUNT_FOUND",
       "CANVAS_MOUNT_SELECTOR",
+      "CANVAS_MOUNT_DESCRIPTOR",
+      "CANVAS_ELEMENT_FOUND",
+      "CANVAS_SELECTOR",
+      "CANVAS_TAG",
+      "CANVAS_ID",
+      "CANVAS_CLASS",
+      "CANVAS_DATASET_CONTRACT",
+      "CANVAS_DATASET_RECEIPT",
       "CANVAS_IN_MOUNT",
+      "CANVAS_WIDTH_ATTRIBUTE",
+      "CANVAS_HEIGHT_ATTRIBUTE",
+      "CANVAS_INTERNAL_SIZE_NONZERO",
+      "CANVAS_RECT_LEFT",
+      "CANVAS_RECT_TOP",
+      "CANVAS_RECT_WIDTH",
+      "CANVAS_RECT_HEIGHT",
       "CANVAS_RECT_NONZERO",
       "CANVAS_COMPUTED_VISIBLE",
+      "CANVAS_COMPUTED_DISPLAY",
+      "CANVAS_COMPUTED_VISIBILITY",
+      "CANVAS_COMPUTED_OPACITY",
+      "CANVAS_COMPUTED_POSITION",
+      "CANVAS_COMPUTED_Z_INDEX",
+      "CANVAS_COMPUTED_POINTER_EVENTS",
+      "CANVAS_VIEWPORT_WIDTH",
+      "CANVAS_VIEWPORT_HEIGHT",
       "CANVAS_VIEWPORT_INTERSECTING",
       "CANVAS_CONTEXT_2D_READY",
+      "CANVAS_CONTEXT_2D_STATUS",
       "CANVAS_PIXEL_SAMPLE_STATUS",
       "CANVAS_PIXEL_VISIBLE",
+      "CANVAS_PIXEL_SAMPLE_COUNT",
+      "CANVAS_VISIBLE_PIXEL_COUNT",
+      "CANVAS_ALPHA_PIXEL_COUNT",
+      "CANVAS_PIXEL_SAMPLE_REASON",
       "CANVAS_LAYER_BLOCKED",
       "CANVAS_LAYER_BLOCKER",
+      "CANVAS_LAYER_HIT_TARGET",
+      "CANVAS_LAYER_HIT_WITHIN_CANVAS",
       "CANVAS_NAMESPACE_PRESENT",
       "CANVAS_NAMESPACE_PATH",
       "CANVAS_NAMESPACE_CONTRACT",
       "CANVAS_NAMESPACE_RECEIPT",
-      "CANVAS_NAMESPACE_MATCHES_DOM_SURFACE",
       "CANVAS_PARENT_CONTRACT_RECOGNIZED",
+      "CANVAS_NAMESPACE_MATCHES_DOM_SURFACE",
 
       "CANVAS_TRUTH_STATUS",
       "CANVAS_TRUTH_FIRST_FAILED_COORDINATE",
@@ -1768,6 +2717,14 @@
       "CANVAS_BISHOP_RECEIPT",
       "FINGER_FILE_RECEIPT",
 
+      "PRODUCTION_MUTATION_AUTHORIZED",
+      "CANVAS_DRAWING_AUTHORIZED",
+      "CANVAS_CREATION_AUTHORIZED",
+      "CANVAS_REPAIR_AUTHORIZED",
+      "ROUTE_REPAIR_AUTHORIZED",
+      "CONTROL_MUTATION_AUTHORIZED",
+      "RUNTIME_RESTART_AUTHORIZED",
+
       "SECONDARY_EVIDENCE_NOTES",
       "CANVAS_SURFACE_TRUTH_NOTES",
 
@@ -1787,229 +2744,73 @@
     return out;
   }
 
-  function composePacketText(report = lastReport || {}) {
+  function composePacketText(report = lastReport || makeAnchorReport()) {
     return orderedFields(report)
       .map((field) => line(field, getRaw(report, field, "UNKNOWN")))
       .join("\n");
   }
 
-  function composeCompactSummary(report = lastReport || {}) {
+  function composeCompactSummary(report = lastReport || makeAnchorReport()) {
     return [
       line("CONTRACT", getRaw(report, "CONTRACT", CONTRACT)),
-      line("INTERNAL_RENEWAL_CONTRACT", getRaw(report, "INTERNAL_RENEWAL_CONTRACT", INTERNAL_RENEWAL_CONTRACT)),
+      line(
+        "INTERNAL_RENEWAL_CONTRACT",
+        getRaw(report, "INTERNAL_RENEWAL_CONTRACT", INTERNAL_RENEWAL_CONTRACT)
+      ),
+      line(
+        "CANVAS_SURFACE_TRUTH_PROBE_STATUS",
+        getRaw(report, "CANVAS_SURFACE_TRUTH_PROBE_STATUS", "ANCHOR_READY")
+      ),
       line("TRUTH_HUB_STATUS", getRaw(report, "TRUTH_HUB_STATUS", "UNKNOWN")),
-      line("RECEIPT_RETURN_MECHANISM_STATUS", getRaw(report, "RECEIPT_RETURN_MECHANISM_STATUS", "UNKNOWN")),
-      line("LAB_CARDINAL_RECEIPT_BUNDLE_STATUS", getRaw(report, "LAB_CARDINAL_RECEIPT_BUNDLE_STATUS", "UNKNOWN")),
-      line("DIAGNOSTIC_TRACK_RECEIPT_STATUS", getRaw(report, "DIAGNOSTIC_TRACK_RECEIPT_STATUS", "UNKNOWN")),
-      line("CANVAS_BISHOP_RECEIPT_STATUS", getRaw(report, "CANVAS_BISHOP_RECEIPT_STATUS", "UNKNOWN")),
-      line("FINGER_FILE_RECEIPT_STATUS", getRaw(report, "FINGER_FILE_RECEIPT_STATUS", "UNKNOWN")),
-      line("CANVAS_TRUTH_FAILURE_CLASS", getRaw(report, "CANVAS_TRUTH_FAILURE_CLASS", "UNKNOWN")),
-      line("CANVAS_TRUTH_RECOMMENDED_FILE", getRaw(report, "CANVAS_TRUTH_RECOMMENDED_FILE", "UNKNOWN")),
-      line("PROBE_SOUTH_TO_TRUTH_HUB_TRANSFER_STATUS", getRaw(report, "PROBE_SOUTH_TO_TRUTH_HUB_TRANSFER_STATUS", "UNKNOWN"))
+      line(
+        "RECEIPT_RETURN_MECHANISM_STATUS",
+        getRaw(report, "RECEIPT_RETURN_MECHANISM_STATUS", "UNKNOWN")
+      ),
+      line(
+        "LAB_CARDINAL_RECEIPT_BUNDLE_STATUS",
+        getRaw(report, "LAB_CARDINAL_RECEIPT_BUNDLE_STATUS", "UNKNOWN")
+      ),
+      line(
+        "DIAGNOSTIC_TRACK_RECEIPT_STATUS",
+        getRaw(report, "DIAGNOSTIC_TRACK_RECEIPT_STATUS", "UNKNOWN")
+      ),
+      line(
+        "CANVAS_BISHOP_RECEIPT_STATUS",
+        getRaw(report, "CANVAS_BISHOP_RECEIPT_STATUS", "UNKNOWN")
+      ),
+      line(
+        "FINGER_FILE_RECEIPT_STATUS",
+        getRaw(report, "FINGER_FILE_RECEIPT_STATUS", "UNKNOWN")
+      ),
+      line(
+        "CANVAS_TRUTH_FIRST_FAILED_COORDINATE",
+        getRaw(report, "CANVAS_TRUTH_FIRST_FAILED_COORDINATE", "UNKNOWN")
+      ),
+      line(
+        "CANVAS_TRUTH_FAILURE_CLASS",
+        getRaw(report, "CANVAS_TRUTH_FAILURE_CLASS", "UNKNOWN")
+      ),
+      line(
+        "CANVAS_TRUTH_RECOMMENDED_FILE",
+        getRaw(report, "CANVAS_TRUTH_RECOMMENDED_FILE", "UNKNOWN")
+      ),
+      line(
+        "PROBE_SOUTH_TO_TRUTH_HUB_TRANSFER_STATUS",
+        getRaw(report, "PROBE_SOUTH_TO_TRUTH_HUB_TRANSFER_STATUS", "UNKNOWN")
+      ),
+      "f13Claimed=false",
+      "f21EligibleForNorth=false",
+      "f21ClaimedByDiagnosticRail=false",
+      "readyTextAllowed=false",
+      "visualPassClaimed=false",
+      "generatedImage=false",
+      "graphicBox=false",
+      "webGL=false"
     ].join("\n");
   }
 
-  function receiveSouthProbeReceipt(input = {}) {
-    lastSouthProbeEnvelope = clonePlain({
-      receivedAt: nowIso(),
-      source: "PROBE_SOUTH_TO_CANVAS_SURFACE_TRUTH_HUB",
-      report: extractCurrentReport(input),
-      raw: input
-    });
-
-    const report = inspectCanvasSurfaceTruth({
-      currentReport: lastSouthProbeEnvelope.report,
-      southProbeReceipt: lastSouthProbeEnvelope.raw,
-      chronology: input.chronology || getRaw(input, "CHRONOLOGY_SEQUENCE", [])
-    });
-
-    return {
-      ok: true,
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
-      received: true,
-      report,
-      packetText: getPacketText(),
-      compactSummary: getCompactSummary(),
-      ...NO_CLAIMS
-    };
-  }
-
-  function receiveProbeSouthReceipt(input = {}) {
-    return receiveSouthProbeReceipt(input);
-  }
-
-  function ingestSouthProbeReceipt(input = {}) {
-    return receiveSouthProbeReceipt(input);
-  }
-
-  function runProbeCanvasSurfaceTruth(payload = {}) {
-    return inspectCanvasSurfaceTruth(payload);
-  }
-
-  function runCanvasSurfaceTruth(payload = {}) {
-    return inspectCanvasSurfaceTruth(payload);
-  }
-
-  function runProbe(payload = {}) {
-    return inspectCanvasSurfaceTruth(payload);
-  }
-
-  function inspect(payload = {}) {
-    return inspectCanvasSurfaceTruth(payload);
-  }
-
-  function runDiagnostic(payload = {}) {
-    return inspectCanvasSurfaceTruth(payload);
-  }
-
-  function getReport() {
-    return clonePlain(lastReport || inspectCanvasSurfaceTruth({}));
-  }
-
-  function getReceiptLight() {
-    return clonePlain(lastReceipt || buildReceipt(lastReport || {}));
-  }
-
-  function getReceipt() {
-    const report = lastReport || inspectCanvasSurfaceTruth({});
-
-    return {
-      ...getReceiptLight(),
-      report: clonePlain(report),
-      labCardinalReceiptBundle: clonePlain(getRaw(report, "LAB_CARDINAL_RECEIPT_BUNDLE", {})),
-      diagnosticTrackReceipt: clonePlain(getRaw(report, "DIAGNOSTIC_TRACK_RECEIPT", {})),
-      canvasBishopReceipt: clonePlain(getRaw(report, "CANVAS_BISHOP_RECEIPT", {})),
-      fingerFileReceipt: clonePlain(getRaw(report, "FINGER_FILE_RECEIPT", {})),
-      acceptedCanvasContracts: ACCEPTED_CANVAS_CONTRACTS.slice(),
-      canvasSelectors: CANVAS_SELECTORS.slice(),
-      mountSelectors: MOUNT_SELECTORS.slice(),
-      supportsCanvasElementProbe: true,
-      supportsCanvasMountProbe: true,
-      supportsCanvasRectProbe: true,
-      supportsComputedVisibilityProbe: true,
-      supportsViewportIntersectionProbe: true,
-      supportsContext2dProbe: true,
-      supportsPixelSampleProbe: true,
-      supportsLayerObstructionProbe: true,
-      supportsNamespaceDomMatchProbe: true,
-      supportsCoordinateSpecificFailure: true,
-      supportsFourLaneReceiptHub: true,
-      supportsProbeSouthReceiptIngestion: true,
-      ...NO_CLAIMS
-    };
-  }
-
-  function getPacketText() {
-    if (!lastPacketText) lastPacketText = composePacketText(lastReport || inspectCanvasSurfaceTruth({}));
-    return lastPacketText;
-  }
-
-  function getCompactSummary() {
-    if (!lastCompactSummary) lastCompactSummary = composeCompactSummary(lastReport || inspectCanvasSurfaceTruth({}));
-    return lastCompactSummary;
-  }
-
-  function publish() {
-    root.HEARTH = root.HEARTH || {};
-    root.DEXTER_LAB = root.DEXTER_LAB || {};
-
-    root.HEARTH.diagnosticProbeCanvasSurfaceTruth = api;
-    root.HEARTH.diagnosticCanvasSurfaceTruthProbe = api;
-    root.HEARTH.diagnosticProbeCanvasTruth = api;
-    root.HEARTH.diagnosticCanvasTruthProbe = api;
-    root.HEARTH.diagnosticRailProbeCanvasSurfaceTruth = api;
-    root.HEARTH.diagnosticCanvasSurfaceTruthReceiptHub = api;
-    root.HEARTH.diagnosticTruthHub = api;
-
-    root.DEXTER_LAB.hearthDiagnosticProbeCanvasSurfaceTruth = api;
-    root.DEXTER_LAB.hearthDiagnosticCanvasSurfaceTruthProbe = api;
-    root.DEXTER_LAB.hearthDiagnosticCanvasTruthProbe = api;
-    root.DEXTER_LAB.hearthDiagnosticRailProbeCanvasSurfaceTruth = api;
-    root.DEXTER_LAB.hearthDiagnosticCanvasSurfaceTruthReceiptHub = api;
-    root.DEXTER_LAB.hearthDiagnosticTruthHub = api;
-
-    root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH = api;
-    root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PROBE = api;
-    root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_TRUTH = api;
-    root.HEARTH_DIAGNOSTIC_RAIL_PROBE_CANVAS_SURFACE_TRUTH = api;
-    root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_RECEIPT_HUB = api;
-    root.HEARTH_DIAGNOSTIC_TRUTH_HUB = api;
-
-    root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_RECEIPT = getReceiptLight();
-    root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PROBE_RECEIPT = getReceiptLight();
-    root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_TRUTH_RECEIPT = getReceiptLight();
-    root.HEARTH_DIAGNOSTIC_RAIL_PROBE_CANVAS_SURFACE_TRUTH_RECEIPT = getReceiptLight();
-    root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_RECEIPT_HUB_RECEIPT = getReceiptLight();
-    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_RECEIPT = getReceiptLight();
-
-    root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_REPORT = clonePlain(lastReport || {});
-    root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PROBE_REPORT = clonePlain(lastReport || {});
-    root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_RECEIPT_HUB_REPORT = clonePlain(lastReport || {});
-    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_REPORT = clonePlain(lastReport || {});
-
-    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_LAB_CARDINAL_RECEIPT =
-      clonePlain(getRaw(lastReport || {}, "LAB_CARDINAL_RECEIPT_BUNDLE", {}));
-    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_DIAGNOSTIC_TRACK_RECEIPT =
-      clonePlain(getRaw(lastReport || {}, "DIAGNOSTIC_TRACK_RECEIPT", {}));
-    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_CANVAS_BISHOP_RECEIPT =
-      clonePlain(getRaw(lastReport || {}, "CANVAS_BISHOP_RECEIPT", {}));
-    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_FINGER_FILE_RECEIPT =
-      clonePlain(getRaw(lastReport || {}, "FINGER_FILE_RECEIPT", {}));
-
-    root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PACKET_TEXT = lastPacketText || "";
-    root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_RECEIPT_HUB_PACKET_TEXT = lastPacketText || "";
-    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_PACKET_TEXT = lastPacketText || "";
-    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_COMPACT_SUMMARY = lastCompactSummary || "";
-
-    return true;
-  }
-
   Object.assign(api, {
-    CONTRACT,
-    RECEIPT,
-    contract: CONTRACT,
-    receipt: RECEIPT,
-    internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
-    internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
-    version: VERSION,
-    file: FILE,
-    targetRoute: TARGET_ROUTE,
-    diagnosticRoute: DIAGNOSTIC_ROUTE,
-    canvasFile: CANVAS_FILE,
-    expectedCanvasContract: EXPECTED_CANVAS_CONTRACT,
-
-    diagnosticOnly: true,
-    receiptHubActive: true,
-    fourLaneReceiptHubActive: true,
-    productionMutationAuthorized: false,
-    canvasDrawingAuthorized: false,
-    canvasCreationAuthorized: false,
-    canvasRepairAuthorized: false,
-    routeRepairAuthorized: false,
-    controlMutationAuthorized: false,
-    runtimeRestartAuthorized: false,
-
-    runProbeCanvasSurfaceTruth,
-    runCanvasSurfaceTruth,
-    runProbe,
-    inspect,
-    runDiagnostic,
-    receiveSouthProbeReceipt,
-    receiveProbeSouthReceipt,
-    ingestSouthProbeReceipt,
-
-    getReport,
-    getReceiptLight,
-    getReceipt,
-    getPacketText,
-    getCompactSummary,
-
-    canvasSelectors: CANVAS_SELECTORS,
-    mountSelectors: MOUNT_SELECTORS,
-    acceptedCanvasContracts: ACCEPTED_CANVAS_CONTRACTS,
-
+    supportsAnchorSafeChronologyObservation: true,
     supportsCanvasElementProbe: true,
     supportsCanvasMountProbe: true,
     supportsCanvasRectProbe: true,
@@ -2044,10 +2845,10 @@
     ownsReadyText: false,
     ownsVisualPass: false,
 
-    ...NO_CLAIMS
+    ...NO_CLAIMS,
+    ...UPPER_NO_CLAIMS
   });
 
-  lastReceipt = buildReceipt({});
   publish();
 
   if (typeof module !== "undefined" && module.exports) {
